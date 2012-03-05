@@ -917,20 +917,6 @@ static void __engine( iOLoc inst, iONode cmd ) {
           data->fn25 ? "25":"--", data->fn26 ? "26":"--", data->fn27 ? "27":"--", data->fn28 ? "28":"--"
       );
 
-      /* sound */
-      if( wFunCmd.getfnchanged(cmd) != -1 ) {
-        const char* sound = __getFnSound(inst, wFunCmd.getfnchanged(cmd) );
-        if( sound != NULL && StrOp.len(sound) > 0 ) {
-          /* play */
-          char* s = NULL;
-          s = StrOp.fmt("%s \"%s%c%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
-              wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
-          SystemOp.system( s, True, False );
-          StrOp.free(s);
-        }
-      }
-
       /* secondary decoder check */
       if( wFunCmd.getfnchanged(cmd) != -1 ) {
         int mappedfn = 0;
@@ -954,6 +940,25 @@ static void __engine( iOLoc inst, iONode cmd ) {
       else {
         __cpFn2Node(inst, cmd, -1, 0);
       }
+
+      /* sound */
+      if( wFunCmd.getfnchanged(cmd) != -1 ) {
+        int fx = wLoc.getfx( data->props );
+        if( fx & 1 << wFunCmd.getfnchanged(cmd)-1 ) {
+          const char* sound = __getFnSound(inst, wFunCmd.getfnchanged(cmd) );
+          if( sound != NULL && StrOp.len(sound) > 0 ) {
+            /* play */
+            char* s = NULL;
+            s = StrOp.fmt("%s \"%s%c%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
+                wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
+            SystemOp.system( s, True, False );
+            StrOp.free(s);
+          }
+        }
+      }
+
+
 
 
 
