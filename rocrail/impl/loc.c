@@ -157,7 +157,7 @@ static void __cpFn2Node(iOLoc inst, iONode cmd, int fn, int addr) {
   if( addr == 0 || __getFnAddr(inst, 4, &mappedfn) == addr )
     if( fn == -1 || fn != 4 ) __FnOnOff(inst, mappedfn==-1?4:mappedfn, data->fn4, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 5, &mappedfn) == addr )
-    if( fn == -1 || fn != 5 ) __FnOnOff(inst, mappedfn==-1?5:mappedfn, data->fn5, cmd, False);
+    if( fn == -1 || fn != 5 ) __FnOnOff(inst, mappedfn==-1 ? 5:mappedfn, data->fn5, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 6, &mappedfn) == addr )
     if( fn == -1 || fn != 6 ) __FnOnOff(inst, mappedfn==-1?6:mappedfn, data->fn6, cmd, False);
   if( addr == 0 || __getFnAddr(inst, 7, &mappedfn) == addr )
@@ -742,7 +742,7 @@ static int __getFnAddr( iOLoc inst, int function, int* mappedfn) {
 
   iONode fundef = wLoc.getfundef( data->props );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "looking up function %d...", function );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "looking up function %d...", function );
 
 
   while( fundef != NULL ) {
@@ -750,18 +750,21 @@ static int __getFnAddr( iOLoc inst, int function, int* mappedfn) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "function address for %d = %d:%d", function, wFunDef.getaddr(fundef), wFunDef.getmappedfn(fundef) );
       if( mappedfn != NULL ) {
-        if( wFunDef.getmappedfn(fundef) > 0 )
+        if( wFunDef.getmappedfn(fundef) > 0 ) {
           *mappedfn = wFunDef.getmappedfn(fundef);
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "mapped function is %d", *mappedfn );
+        }
         else
           *mappedfn = function;
       }
+
       return wFunDef.getaddr(fundef);
     }
     fundef = wLoc.nextfundef( data->props, fundef );
   };
   if( mappedfn != NULL ) {
     *mappedfn = function;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function %d not defined", *mappedfn );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function %d not defined", *mappedfn );
   }
   return 0;
 }
@@ -916,6 +919,13 @@ static void __engine( iOLoc inst, iONode cmd ) {
           __cpFn2Node(inst, cmdFn==NULL?cmd:cmdFn, -1, decaddr);
           wFunCmd.setfnchanged(cmdFn==NULL?cmd:cmdFn, mappedfn);
         }
+        else {
+          /* some controllers use this information because they make no diff between loc or fun cmd: */
+          __cpFn2Node(inst, cmd, -1, 0);
+        }
+      }
+      else {
+        __cpFn2Node(inst, cmd, -1, 0);
       }
 
 
@@ -1040,8 +1050,6 @@ static void __engine( iOLoc inst, iONode cmd ) {
     wLoc.setoid( cmd, wLoc.getoid(data->props) );
     wLoc.setid( cmd, wLoc.getid(data->props) );
 
-    /* some controllers use this information because they make no diff between loc or fun cmd: */
-    __cpFn2Node(inst, cmd, -1, 0);
 
     if( wLoc.getV( cmd ) == -1 )
       wLoc.setV( cmd, data->drvSpeed );
