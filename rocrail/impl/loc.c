@@ -769,6 +769,20 @@ static int __getFnAddr( iOLoc inst, int function, int* mappedfn) {
   return 0;
 }
 
+static const char* __getFnSound( iOLoc inst, int function) {
+  iOLocData    data = Data(inst);
+
+  iONode fundef = wLoc.getfundef( data->props );
+
+  while( fundef != NULL ) {
+    if( wFunDef.getfn(fundef) == function ) {
+      return wFunDef.getsound(fundef);
+    }
+    fundef = wLoc.nextfundef( data->props, fundef );
+  };
+  return NULL;
+}
+
 /*
   Using the new V_* attributes for controlling loc speed.
 */
@@ -903,6 +917,19 @@ static void __engine( iOLoc inst, iONode cmd ) {
           data->fn25 ? "25":"--", data->fn26 ? "26":"--", data->fn27 ? "27":"--", data->fn28 ? "28":"--"
       );
 
+      /* sound */
+      if( wFunCmd.getfnchanged(cmd) != -1 ) {
+        const char* sound = __getFnSound(inst, wFunCmd.getfnchanged(cmd) );
+        if( sound != NULL && StrOp.len(sound) > 0 ) {
+          /* play */
+          char* s = NULL;
+          s = StrOp.fmt("%s \"%s%c%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
+              wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
+          SystemOp.system( s, True, False );
+          StrOp.free(s);
+        }
+      }
 
       /* secondary decoder check */
       if( wFunCmd.getfnchanged(cmd) != -1 ) {
