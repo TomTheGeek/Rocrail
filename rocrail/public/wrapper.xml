@@ -198,7 +198,8 @@
     </jsmap>
     <clock wrappername="Clock" cardinality="1" remark="clock synchronizer.">
       <var name="time" vt="long" defval="0" range="*" remark="time in seconds"/>
-      <var name="divider" vt="int" defval="1" range="1,2,4,5,10,20,25,40,50" remark="time devider: 1 = realtime"/>
+      <var name="divider" vt="int" defval="1" range="1-100" remark="time devider: 1 = realtime"/>
+      <var name="update" vt="int" defval="1" range="1-60" remark="update frequency in minutes"/>
       <var name="hour" vt="int" defval="24" range="0-24" remark="start hour; 24 not used"/>
       <var name="minute" vt="int" defval="60" range="0-60" remark="start minute; 60 not used"/>
       <var name="temp" vt="int" defval="20" range="-127...127" remark="Model temperature."/>

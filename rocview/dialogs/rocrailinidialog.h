@@ -246,6 +246,7 @@ public:
     wxStaticBoxSizer* m_ClockBox;
     wxStaticText* m_labDevider;
     wxTextCtrl* m_Divider;
+    wxTextCtrl* m_ClockUpdate;
     wxStaticText* m_labHour;
     wxTextCtrl* m_Hour;
     wxStaticText* m_labMinute;

@@ -1050,24 +1050,36 @@ static void __clockticker( void* threadinst ) {
   iONode    clockini = wRocRail.getclock( ini );
   int        seconds = 0;
   Boolean    timeset = False;
-  Boolean    firstsync = True;
+  Boolean  firstsync = True;
+  int         update = 1;
+  int   updateticker = 0;
 
   data->time = time(NULL);
   data->devider = 1;
 
   if( clockini != NULL ) {
     data->devider = wClock.getdivider( clockini );
+    update = wClock.getupdate( clockini );
     if( wClock.gethour( clockini ) < 24 && wClock.getminute( clockini ) < 60 ) {
       struct tm* ltm = localtime( &data->time );
       ltm->tm_hour = wClock.gethour( clockini );
       ltm->tm_min  = wClock.getminute( clockini );
       data->time = mktime(ltm);
     }
+    else {
+      clockini = NodeOp.inst( wClock.name(), ini, ELEMENT_NODE );
+      NodeOp.addChild( ini, clockini );
+    }
   }
 
   if( data->devider > 100 || data->devider < 1 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ClockTicker: unexpected devider value [%d] reset to [1].", data->devider );
     data->devider = 1;
+  }
+
+  if( update > 60 || update < 1 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ClockTicker: unexpected update value [%d] reset to [1].", update );
+    update = 1;
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ClockTicker started." );
@@ -1078,8 +1090,10 @@ static void __clockticker( void* threadinst ) {
     ThreadOp.sleep( 1000 / data->devider );
 
     if( data->timeset ) {
+      wClock.setdivider( clockini, data->devider );
       timeset = True;
       data->timeset = False;
+      firstsync = True;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ClockTicker time set." );
     }
     else if( data->clockrun ) {
@@ -1098,7 +1112,9 @@ static void __clockticker( void* threadinst ) {
     else
       data->time = time(NULL);
 
-    {
+    updateticker++;
+
+    if( firstsync || updateticker >= update ) {
       iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
       wClock.setdivider( tick, data->devider );
       wClock.settime( tick, data->time );
@@ -1108,6 +1124,7 @@ static void __clockticker( void* threadinst ) {
       /* inform all digints */
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "new clock event" );
       ControlOp.cmd( control, tick, NULL );
+      updateticker = 0;
     }
 
     if( firstsync )
