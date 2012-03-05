@@ -17728,4 +17728,7 @@
   <Msg id="display">
     <en txt="Display"/>
   </Msg>
+  <Msg id="systemactions" dialog="true">
+    <en txt="System Actions"/>
+  </Msg>
 </Messages>

@@ -160,6 +160,7 @@ public:
   void OnEditMVTrack(wxCommandEvent& event);
   void OnEditTimedActions(wxCommandEvent& event);
   void OnEditBoosters(wxCommandEvent& event);
+  void OnEditActions(wxCommandEvent& event);
 
   void OnCtrlBoosters(wxCommandEvent& event);
   void OnDonKey(wxCommandEvent& event);
@@ -542,6 +543,7 @@ enum
     ME_Uhlenbrock,
     ME_EditBoosters,
     ME_CtrlBoosters,
+    ME_EditActions,
     ME_DonKey,
     ME_DonKeyInfo,
     ME_F1,

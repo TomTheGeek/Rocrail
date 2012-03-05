@@ -87,6 +87,7 @@
 #include "rocview/dialogs/powerctrldlg.h"
 #include "rocview/dialogs/donkey.h"
 #include "rocview/dialogs/toursdlg.h"
+#include "rocview/dialogs/actionsctrldlg.h"
 
 #include "rocview/dialogs/decoders/locoio.h"
 #include "rocview/dialogs/decoders/mgvdlg.h"
@@ -285,6 +286,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_EditTimedActions, RocGuiFrame::OnEditTimedActions)
     EVT_MENU( ME_EditBoosters   , RocGuiFrame::OnEditBoosters)
     EVT_MENU( ME_CtrlBoosters   , RocGuiFrame::OnCtrlBoosters)
+    EVT_MENU( ME_EditActions    , RocGuiFrame::OnEditActions)
     EVT_MENU( ME_PanelProps     , RocGuiFrame::OnPanelProps)
     EVT_MENU( ME_AddPanel       , RocGuiFrame::OnAddPanel)
     EVT_MENU( ME_Undo           , RocGuiFrame::OnUndo)
@@ -1482,6 +1484,7 @@ void RocGuiFrame::initFrame() {
   menuTables->Append(ME_EditMVTrack, wxGetApp().getMenu("mvtrack"), wxGetApp().getTip("mvtrack") );
   menuTables->Append(ME_EditTimedActions, wxGetApp().getMenu("actiontable"), wxGetApp().getTip("actiontable") );
   menuTables->Append(ME_EditBoosters, wxGetApp().getMenu("boostertable"), wxGetApp().getTip("boostertable") );
+  menuTables->Append(ME_EditActions, wxGetApp().getMenu("systemactions"), wxGetApp().getTip("systemactions") );
 
   // Turntable dialog has no index tab... disable
   //menuTables->Append(ME_EditTurntables, wxGetApp().getMenu("turntabletable"), wxGetApp().getTip("turntabletable") );
@@ -3006,6 +3009,21 @@ void RocGuiFrame::OnEditBlockGroups( wxCommandEvent& event ) {
   }
   dlg->Destroy();
 }
+
+
+void RocGuiFrame::OnEditActions( wxCommandEvent& event ) {
+  if( wxGetApp().getModel() == NULL )
+    return;
+
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, wxGetApp().getModel() );
+
+  if( wxID_OK == dlg->ShowModal() ) {
+    // TODO: inform
+  }
+
+  dlg->Destroy();
+}
+
 
 void RocGuiFrame::OnUhl63350( wxCommandEvent& event ) {
   m_Uhl633x0 = new Uhl633x0Dlg(this);
