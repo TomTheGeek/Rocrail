@@ -641,6 +641,17 @@ static void __callback( obj inst, iONode nodeA ) {
     return;
   }
   else if( StrOp.equals( wSysCmd.name(), nodeName ) ) {
+
+    /* Update status */
+    if( StrOp.equals( wSysCmd.go, wSysCmd.getcmd( nodeA ) ) ) {
+      data->power = True;
+    }
+    else if( StrOp.equals( wSysCmd.stop, wSysCmd.getcmd( nodeA ) ) ) {
+      data->power = False;
+    }
+
+
+
     if( StrOp.equals( wSysCmd.shutdown, wSysCmd.getcmd( nodeA ) ) ) {
       /* TODO: Cleanup... */
       if( AppOp.isConsoleMode() ) {
@@ -701,16 +712,6 @@ static void __callback( obj inst, iONode nodeA ) {
     }
     else if( StrOp.equals( wSysCmd.analyze, wSysCmd.getcmd( nodeA ) ) ) {
       ModelOp.analyse( AppOp.getModel(), False );
-      NodeOp.base.del( nodeA );
-      return;
-    }
-    else if( StrOp.equals( wSysCmd.go, wSysCmd.getcmd( nodeA ) ) ) {
-      data->power = True;
-      NodeOp.base.del( nodeA );
-      return;
-    }
-    else if( StrOp.equals( wSysCmd.stop, wSysCmd.getcmd( nodeA ) ) ) {
-      data->power = False;
       NodeOp.base.del( nodeA );
       return;
     }

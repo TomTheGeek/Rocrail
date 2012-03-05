@@ -147,6 +147,8 @@
     <var name="createmodplan" vt="bool" defval="false" remark="Create a modplan if the planfile does not jet exist."/>
     <var name="libpath" vt="string" defval="." range="*" remark="Location of the rocrail libraries."/>
     <var name="imgpath" vt="string" defval="images" range="*" remark="Location of (loco)images."/>
+    <var name="soundpath" vt="string" defval="sounds" range="*" remark="Location of (loco)sounds."/>
+    <var name="soundplayer" vt="string" defval="" range="*" remark="Sound player program."/>
     <var name="runasroot" vt="bool" defval="false" remark="Force rocrail to run as root."/>
     <var name="ptiid" vt="string" defval="" range="*" remark="IID to use with programming; using default in case not set."/>
     <var name="lciid" vt="string" defval="" range="*" remark="IID to use for mobile decoders; using default in case not set."/>
@@ -1957,6 +1959,7 @@
           <var name="fn" vt="int" defval="1" range="1-*" remark="function number"/>
           <var name="timer" vt="int" defval="0" range="0-99" unit="s" remark="function timer"/>
           <var name="text" vt="string" defval="function" range="*" remark="function label"/>
+          <var name="sound" vt="string" defval="" range="*" remark="sound file"/>
           <var name="on" vt="bool" defval="false" remark="activation"/>
           <var name="onevent" vt="string" defval="enter_block" range="enter_block,exit_block,in_block,out_block" remark="Activation event."/>
           <var name="onblockid" vt="string" defval="NULL" range="*" remark="BlockID."/>
