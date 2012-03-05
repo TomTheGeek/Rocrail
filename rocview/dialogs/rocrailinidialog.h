@@ -207,6 +207,10 @@ public:
     wxTextCtrl* m_LibPath;
     wxStaticText* m_labImgPath;
     wxTextCtrl* m_ImgPath;
+    wxStaticText* m_labSoundPath;
+    wxTextCtrl* m_SoundPath;
+    wxStaticText* m_labSoundPlayer;
+    wxTextCtrl* m_SoundPlayer;
     wxStaticText* m_LabelTraceFile;
     wxTextCtrl* m_TraceFile;
     wxStaticText* m_labPTIID;

@@ -17731,4 +17731,13 @@
   <Msg id="systemactions" dialog="true">
     <en txt="System Actions"/>
   </Msg>
+  <Msg id="sound">
+    <en txt="Sound"/>
+  </Msg>
+  <Msg id="soundpath">
+    <en txt="Sound path"/>
+  </Msg>
+  <Msg id="soundplayer">
+    <en txt="Sound player"/>
+  </Msg>
 </Messages>

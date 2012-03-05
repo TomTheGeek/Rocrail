@@ -5621,3 +5621,21 @@ msgstr ""
 msgid "System Actions"
 msgstr ""
 
+#. 
+# id="sound"
+#, c-format
+msgid "Sound"
+msgstr ""
+
+#. 
+# id="soundpath"
+#, c-format
+msgid "Sound path"
+msgstr ""
+
+#. 
+# id="soundplayer"
+#, c-format
+msgid "Sound player"
+msgstr ""
+

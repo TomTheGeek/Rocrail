@@ -2529,6 +2529,7 @@ void RocGuiFrame::OnUpload( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnGo( wxCommandEvent& event ) {
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "GO" );
   wxMenuItem* mi_go = menuBar->FindItem(ME_Go);
 
   bool power = event.IsChecked();
