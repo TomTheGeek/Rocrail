@@ -234,6 +234,9 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
     if( this->devider <= 10 ) {
       WxTimer->Start(TIMER/devider);
     }
+    else {
+      WxTimer->Start((TIMER*60)/devider);
+    }
   }
 
   if( run ) {
