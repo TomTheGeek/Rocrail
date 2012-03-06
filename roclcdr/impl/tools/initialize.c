@@ -198,10 +198,12 @@ Boolean initializeSwap( iOLcDriver inst, iORoute route ) {
 const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexit, iORoute street, Boolean reverse, int* maxkmh ) {
   iOLcDriverData data = Data(inst);
   int percent = 0;
+  Boolean reduceSpeed = False;
 
   /* the route velocity has a higher priority, so check first: */
   if( street != NULL ) {
     const char* V_hint_route = street->getVelocity( street, &percent );
+    reduceSpeed = street->hasThrownSwitch(street);
     if( !StrOp.equals( V_hint_route, wRoute.V_none ) ) {
       StrOp.copy( data->V_hint, V_hint_route );
       if( StrOp.equals( wBlock.percent, data->V_hint ) ) {
@@ -218,7 +220,15 @@ const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexi
     StrOp.fmtb( data->V_hint, "%d", percent );
   }
   *maxkmh = block->getMaxKmh(block);
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block[%s] V_hint [%s] (%s)", block->base.id(block), data->V_hint, onexit?"on exit":"on enter" );
+
+  /* check for thrown switches in route */
+  if( !StrOp.equals( data->V_hint, wLoc.min ) && reduceSpeed ) {
+    StrOp.copy( data->V_hint, wLoc.mid );
+  }
+
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block[%s] V_hint [%s] (%s) %s",
+      block->base.id(block), data->V_hint, onexit?"on exit":"on enter", reduceSpeed?"(reduced)":"" );
   return data->V_hint;
 }
 
