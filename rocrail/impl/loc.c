@@ -949,8 +949,12 @@ static void __engine( iOLoc inst, iONode cmd ) {
           if( sound != NULL && StrOp.len(sound) > 0 ) {
             /* play */
             char* s = NULL;
-            s = StrOp.fmt("%s \"%s%c%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
-                wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound );
+            if( wRocRail.issoundplayerlocation(AppOp.getIni()) && data->curBlock != NULL )
+              s = StrOp.fmt("%s \"%s%c%s\" \"%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
+                  wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound, data->curBlock );
+            else
+              s = StrOp.fmt("%s \"%s%c%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
+                  wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound );
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
             SystemOp.system( s, True, False );
             StrOp.free(s);

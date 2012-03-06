@@ -149,6 +149,7 @@
     <var name="imgpath" vt="string" defval="images" range="*" remark="Location of (loco)images."/>
     <var name="soundpath" vt="string" defval="sounds" range="*" remark="Location of (loco)sounds."/>
     <var name="soundplayer" vt="string" defval="" range="*" remark="Sound player program."/>
+    <var name="soundplayerlocation" vt="bool" defval="false" remark="Add loco location as second parameter."/>
     <var name="runasroot" vt="bool" defval="false" remark="Force rocrail to run as root."/>
     <var name="ptiid" vt="string" defval="" range="*" remark="IID to use with programming; using default in case not set."/>
     <var name="lciid" vt="string" defval="" range="*" remark="IID to use for mobile decoders; using default in case not set."/>

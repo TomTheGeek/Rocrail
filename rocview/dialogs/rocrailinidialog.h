@@ -211,6 +211,7 @@ public:
     wxTextCtrl* m_SoundPath;
     wxStaticText* m_labSoundPlayer;
     wxTextCtrl* m_SoundPlayer;
+    wxCheckBox* m_SoundPlayerLocation;
     wxStaticText* m_LabelTraceFile;
     wxTextCtrl* m_TraceFile;
     wxStaticText* m_labPTIID;

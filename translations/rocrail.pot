@@ -5639,3 +5639,9 @@ msgstr ""
 msgid "Sound player"
 msgstr ""
 
+#. 
+# id="soundplayerlocation"
+#, c-format
+msgid "Add loco location parameter"
+msgstr ""
+

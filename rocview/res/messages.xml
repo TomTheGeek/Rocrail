@@ -17740,4 +17740,7 @@
   <Msg id="soundplayer">
     <en txt="Sound player"/>
   </Msg>
+  <Msg id="soundplayerlocation">
+    <en txt="Add loco location parameter"/>
+  </Msg>
 </Messages>
