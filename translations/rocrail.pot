@@ -5642,6 +5642,6 @@ msgstr ""
 #. 
 # id="soundplayerlocation"
 #, c-format
-msgid "Add loco location parameter"
+msgid "Add location parameter"
 msgstr ""
 
