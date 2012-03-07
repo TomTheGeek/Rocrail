@@ -530,6 +530,7 @@
       <param name="event" vt="int" remark="Event code"/>
       <param name="wait" vt="int" units="ms" remark="wait time before processing the event"/>
       <param name="forcewait" vt="Boolean" remark="Force to use this wait time instead of the optional loco event wait."/>
+      <param name="id" vt="const char*" remark="Sensor ID"/>
     </fun>
     <fun name="reset" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>
@@ -641,6 +642,7 @@
       <var name="curGroup" vt="const char*"/>
       <var name="prevBlock" vt="const char*"/>
       <var name="curBlock" vt="const char*"/>
+      <var name="curSensor" vt="const char*"/>
       <var name="destBlock" vt="const char*"/>
       <var name="gotoBlock" vt="const char*" remark="goto this block if found"/>
       <var name="driver" vt="iILcDriverInt"/>

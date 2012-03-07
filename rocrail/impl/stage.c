@@ -214,7 +214,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,
 
         if( loc != NULL ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "informing loco %s of ENTER event", data->locId );
-          LocOp.event( loc, (obj)inst, enter_event, 0, True );
+          LocOp.event( loc, (obj)inst, enter_event, 0, True, NULL );
         }
 
       }
@@ -234,7 +234,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,long ident ,
 
       if( loc != NULL ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "informing loco %s of IN event", data->locId );
-        LocOp.event( loc, (obj)inst, in_event, 0, True );
+        LocOp.event( loc, (obj)inst, in_event, 0, True, NULL );
         if( !isEndSection ) {
           /* stop loco */
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "stop loco %s because its not in the end section", data->locId );

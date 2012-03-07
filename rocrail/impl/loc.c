@@ -949,7 +949,10 @@ static void __engine( iOLoc inst, iONode cmd ) {
           if( sound != NULL && StrOp.len(sound) > 0 ) {
             /* play */
             char* s = NULL;
-            if( wRocRail.issoundplayerlocation(AppOp.getIni()) && data->curBlock != NULL )
+            if( wRocRail.issoundplayerlocation(AppOp.getIni()) && data->curBlock != NULL && data->curSensor != NULL )
+              s = StrOp.fmt("%s \"%s%c%s\" \"%s\" \"%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
+                  wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound, data->curBlock, data->curSensor );
+            else if( wRocRail.issoundplayerlocation(AppOp.getIni()) && data->curBlock != NULL )
               s = StrOp.fmt("%s \"%s%c%s\" \"%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
                   wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound, data->curBlock );
             else
@@ -1530,10 +1533,11 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer ) {
   }
 }
 
-static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewait ) {
+static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewait, const char* id ) {
   iOLocData data = Data(inst);
-  if( data->runner != NULL ) {
+  data->curSensor = id;
 
+  if( data->runner != NULL ) {
     iOMsg msg = MsgOp.inst( emitter, evt );
     iIBlockBase block = (iIBlockBase)MsgOp.getSender(msg);
     const char* blockid = block->base.id( block );

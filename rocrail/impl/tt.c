@@ -2015,7 +2015,7 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
 
           if( event == wFeedbackEvent.enter2in_event ) {
             int timing = wLoc.getevttimer(LocOp.base.properties(loc));
-            LocOp.event( loc, inst, in_event, timing > 0 ? timing:1, False );
+            LocOp.event( loc, inst, in_event, timing > 0 ? timing:1, False, NULL );
           }
 
           /* V_min for enter and V_0 for in */
@@ -2049,7 +2049,7 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, int ident, 
 
         }
         else {
-          LocOp.event( loc, inst, BlockOp.getEventCode(NULL, event), 0, False );
+          LocOp.event( loc, inst, BlockOp.getEventCode(NULL, event), 0, False, NULL );
         }
       }
     }

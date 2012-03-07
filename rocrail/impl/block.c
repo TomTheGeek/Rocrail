@@ -278,7 +278,7 @@ static void __TurntableEvent( obj inst, const char* event, const char* id ) {
     iOModel model = AppOp.getModel();
     loc = ModelOp.getLoc( model, data->locId );
     if( loc != NULL )
-      LocOp.event( loc, inst, evt, data->forceblocktimer?data->timer:0, data->forceblocktimer );
+      LocOp.event( loc, inst, evt, data->forceblocktimer?data->timer:0, data->forceblocktimer, NULL );
   }
 
 }
@@ -502,32 +502,32 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
 
     if( evt == enter2in_event ) {
       int timing = wFeedbackEvent.isuse_timer2( fbevt ) ? data->timer2:data->timer;
-      LocOp.event( loc, manager, enter_event, 0, data->forceblocktimer );
+      LocOp.event( loc, manager, enter_event, 0, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
       if( data->indelay > 0 )
-        LocOp.event( loc, manager, in_event, data->indelay, data->forceblocktimer );
+        LocOp.event( loc, manager, in_event, data->indelay, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
       else
-        LocOp.event( loc, manager, in_event, timing > 0 ? timing:1, data->forceblocktimer );
+        LocOp.event( loc, manager, in_event, timing > 0 ? timing:1, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
     }
     else if(evt == enter2pre_event ) {
       int timing = wFeedbackEvent.isuse_timer2( fbevt ) ? data->timer2:data->timer;
-      LocOp.event( loc, manager, enter_event, 0, data->forceblocktimer );
+      LocOp.event( loc, manager, enter_event, 0, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
       if( data->indelay > 0 )
-        LocOp.event( loc, manager, pre2in_event, data->indelay, data->forceblocktimer );
+        LocOp.event( loc, manager, pre2in_event, data->indelay, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
       else
-        LocOp.event( loc, manager, pre2in_event, timing > 0 ? timing:1, data->forceblocktimer );
+        LocOp.event( loc, manager, pre2in_event, timing > 0 ? timing:1, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
     }
     else if( evt == pre2in_event ) {
       int timing = wFeedbackEvent.isuse_timer2( fbevt ) ? data->timer2:data->timer;
-      LocOp.event( loc, manager, pre2in_event, timing, data->forceblocktimer );
+      LocOp.event( loc, manager, pre2in_event, timing, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
     }
     else if( evt == in_event ) {
       int timing = wFeedbackEvent.isuse_timer2( fbevt ) ? data->timer2:data->timer;
       if( data->indelay > 0 ){
         /* an in event delay can be set with lock for a schedule entry */
-        LocOp.event( loc, manager, in_event, data->indelay, data->forceblocktimer );
+        LocOp.event( loc, manager, in_event, data->indelay, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
         data->indelay = 0;
       } else {
-        LocOp.event( loc, manager, in_event, timing, data->forceblocktimer );
+        LocOp.event( loc, manager, in_event, timing, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
       }
       /* reset wheel counter */
       {
@@ -538,7 +538,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
       }
     }
     else
-      LocOp.event( loc, manager, evt, 0, data->forceblocktimer );
+      LocOp.event( loc, manager, evt, 0, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
 
     if( evt == enter2in_event || evt == in_event ) {
       /* TODO: check if the shortin_event does not ruin the auto mode */
