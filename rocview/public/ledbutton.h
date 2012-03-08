@@ -21,6 +21,8 @@
 #ifndef LEDBUTTON_H_
 #define LEDBUTTON_H_
 
+#include <wx/graphics.h>
+
 class LEDButton : public wxPanel
 {
     wxPanel* Parent;
