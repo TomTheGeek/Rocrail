@@ -68,6 +68,7 @@ Slider::Slider(wxPanel* parent, int width, int height) : wxPanel(parent)
   ThumbRange = Height - ThumbHeight;
   ThumbOffset = ThumbHeight / 2;
   ThumbPos = ThumbRange;
+  PrevThumbPos = ThumbPos;
   Step = (double)ThumbRange / (double)Max;
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "Height=%d Step=%f ThumbPos=%d ThumbRange=%d", Height, Step, ThumbPos, ThumbRange );
 }
@@ -136,7 +137,6 @@ void Slider::render(wxDC&  dc)
 
     delete gc;
   }
-
 }
 
 void Slider::SetValue(int value) {
@@ -185,7 +185,7 @@ void Slider::mouseReleased(wxMouseEvent& event)
 }
 void Slider::mouseLeftWindow(wxMouseEvent& event)
 {
-  Drag = false;
+  //Drag = false;
 }
 
 // currently unused events
@@ -212,11 +212,21 @@ void Slider::mouseWheelMoved(wxMouseEvent& event) {
   else {
     ThumbPos--;
   }
+
+  if( ThumbPos < 0 )
+    ThumbPos = 0;
+  if( ThumbPos > ThumbRange )
+    ThumbPos = ThumbRange;
+
   Refresh();
-  wxCommandEvent cmdevent( wxEVT_SCROLL_THUMBRELEASE,-1 );
-  cmdevent.SetId(-1);
-  cmdevent.SetEventObject(this);
-  wxPostEvent( Parent, cmdevent);
+
+  if( PrevThumbPos - ThumbPos >= 5 || PrevThumbPos - ThumbPos <= -5 ) {
+    PrevThumbPos = ThumbPos;
+    wxCommandEvent cmdevent( wxEVT_SCROLL_THUMBRELEASE,-1 );
+    cmdevent.SetId(-1);
+    cmdevent.SetEventObject(this);
+    wxPostEvent( Parent, cmdevent);
+  }
 }
 
 

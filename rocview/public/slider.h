@@ -35,6 +35,7 @@ class Slider : public wxPanel
     int ThumbRange;
     int ThumbOffset;
     int ThumbPos;
+    int PrevThumbPos;
     double Step;
 
 
