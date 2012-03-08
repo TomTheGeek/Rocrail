@@ -17741,6 +17741,6 @@
     <en txt="Sound player"/>
   </Msg>
   <Msg id="soundplayerlocation">
-    <en txt="Add loco location parameter"/>
+    <en txt="Add location parameter"/>
   </Msg>
 </Messages>

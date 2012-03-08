@@ -27,6 +27,7 @@
 #ifndef WX_PRECOMP
     #include "wx/wx.h"
 #endif
+#include <wx/graphics.h>
 
 
 #include "rocs/public/node.h"
@@ -250,6 +251,16 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
 void Clock::drawClock() {
   int width, height;
   wxPaintDC dc(this);
+
+  if( !IsShownOnScreen() )
+    return;
+
+  wxGraphicsContext* gc = wxGraphicsContext::Create(this);
+#ifdef wxANTIALIAS_DEFAULT
+  gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
+#endif
+
+
   GetSize(&width, &height);
 
   if( height < width )
@@ -257,10 +268,9 @@ void Clock::drawClock() {
 
   double c = width/2;
 
-#if defined __APPLE__
-  dc.SetPen(*wxBLACK_PEN);
-  dc.SetBrush(*wxWHITE_BRUSH);
-  dc.DrawCircle( c, c, c );
+  gc->SetPen(*wxBLACK_PEN);
+  gc->SetBrush(*wxWHITE_BRUSH);
+  gc->DrawEllipse(0, 0, width-1, width-1);
 
   int i;
   for (i = 0; i < 60; i++) {
@@ -268,30 +278,23 @@ void Clock::drawClock() {
 
     wxPen pen( wxColour(0, 0, 0), wxSOLID );
     pen.SetWidth(1);
-    dc.SetPen( pen );
-
-    dc.DrawLine((int)(c + 0.85 * c * cos(k)), (int)(c - 0.85 * c * sin(k)), (int)(c + 0.90 * c * cos(k)), (int)(c - 0.90 * c * sin(k)));
+    gc->SetPen( pen );
+    wxGraphicsPath path = gc->CreatePath();
+    path.MoveToPoint(c + 0.85 * c * cos(k), c - 0.85 * c * sin(k));
+    path.AddLineToPoint(c + 0.90 * c * cos(k), c - 0.90 * c * sin(k));
+    gc->StrokePath(path);
 
     if( i%5 == 0 ) {
       pen.SetWidth(4);
-      dc.SetPen( pen );
-      dc.DrawLine((int)(c + 0.75 * c * cos(k)), (int)(c - 0.75 * c * sin(k)), (int)(c + 0.90 * c * cos(k)), (int)(c - 0.90 * c * sin(k)));
+      gc->SetPen( pen );
+      wxGraphicsPath path = gc->CreatePath();
+      path.MoveToPoint(c + 0.75 * c * cos(k), c - 0.75 * c * sin(k));
+      path.AddLineToPoint(c + 0.90 * c * cos(k), c - 0.90 * c * sin(k));
+      gc->StrokePath(path);
     }
   }
-#else
-  width = m_Plate->GetWidth();
-  c = width/2;
 
-  dc.SetPen(*wxWHITE_PEN);
-  dc.SetBrush(*wxWHITE_BRUSH);
-  dc.DrawCircle( c-1, c-1, c );
-
-  // draw now
-  if(m_Plate != NULL)
-    dc.DrawBitmap(wxBitmap(*m_Plate),0,0,true);
-#endif
-
-  dc.SetPen(*wxBLACK_PEN);
+  gc->SetPen(*wxBLACK_PEN);
 
   if( type > 0 ) {
     wxString timestring;
@@ -301,48 +304,75 @@ void Clock::drawClock() {
       timestring = wxString::Format(_T("PM %d:%02d"), hours-12, minutes);
     else
       timestring = wxString::Format(_T("%02d:%02d"), hours, minutes);
-    int w = 0;
-    int h = 0;
-    dc.GetTextExtent(timestring, &w, &h);
-    dc.DrawText(timestring, (width/2)-(w/2),width*0.6);
+
+    wxFont font(11, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    gc->SetFont(font,*wxBLACK);
+
+    double w;
+    double h;
+    double descent;
+    double externalLeading;
+    gc->GetTextExtent( timestring,&w,&h,&descent,&externalLeading);
+    gc->DrawText( timestring, (width/2)-(w/2),width*0.6 );
+
+
   }
 
   if(m_Logo != NULL && m_Logo->Ok()) {
     int w = m_Logo->GetWidth();
-    dc.DrawBitmap(wxBitmap(*m_Logo),(width/2)-(w/2),width*0.3,true);
+    int h = m_Logo->GetHeight();
+    gc->DrawBitmap(wxBitmap(*m_Logo),(width/2)-(w/2),width*0.3,w,h);
   }
 
 
   // hour
   wxPen blackPen( wxColour(0, 0, 0), wxSOLID );
   blackPen.SetWidth(4);
-  dc.SetPen( blackPen );
-  dc.DrawLine((int)c, (int)c, (int)(c + 0.6 * c * cos(z)), (int)(c - 0.6  * c * sin(z))); // hour hand
+  gc->SetPen( blackPen );
+  wxGraphicsPath hpath = gc->CreatePath();
+  hpath.MoveToPoint(c, c);
+  hpath.AddLineToPoint(c + 0.6 * c * cos(z), c - 0.6  * c * sin(z));
+  gc->StrokePath(hpath);
 
 
   // minute
-  dc.DrawLine((int)c, (int)c, (int)(c + 0.85 * c * cos(y)), (int)(c - 0.85  * c * sin(y))); // minute hand
+  //dc.DrawLine((int)c, (int)c, (int)(c + 0.85 * c * cos(y)), (int)(c - 0.85  * c * sin(y))); // minute hand
+  wxGraphicsPath mpath = gc->CreatePath();
+  mpath.MoveToPoint(c, c);
+  mpath.AddLineToPoint(c + 0.85 * c * cos(y), c - 0.85  * c * sin(y));
+  gc->StrokePath(mpath);
 
 
   // second
   if( this->devider <= 10 ) {
     wxBrush brush( wxColour(255, 0, 0), wxSOLID );
-    dc.SetBrush( brush );
+    gc->SetBrush( brush );
     wxPen redPen( wxColour(255, 0, 0), wxSOLID );
     redPen.SetWidth(2);
-    dc.SetPen( redPen );
-    //dc.DrawLine((int)c, (int)c, (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
-#if defined __APPLE__
-    dc.DrawLine((int)c, (int)c, (int)(c + 0.52 * c * cos(x)), (int)(c - 0.52 * c * sin(x))); // second hand
-    dc.SetBrush(*wxTRANSPARENT_BRUSH);
-    dc.DrawCircle((int)(c + 0.60 * c * cos(x)), (int)(c - 0.60 * c * sin(x)), 4); // second hand
-    dc.DrawLine((int)(c + 0.68 * c * cos(x)), (int)(c - 0.68 * c * sin(x)), (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
-#else
-    dc.DrawLine((int)c, (int)c, (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
-#endif
+    gc->SetPen( redPen );
+
+    //dc.DrawLine((int)c, (int)c, (int)(c + 0.52 * c * cos(x)), (int)(c - 0.52 * c * sin(x))); // second hand
+    wxGraphicsPath path = gc->CreatePath();
+    path.MoveToPoint(c, c);
+    path.AddLineToPoint(c + 0.52 * c * cos(x), c - 0.52 * c * sin(x));
+    gc->StrokePath(path);
+
+
+    gc->SetBrush(*wxTRANSPARENT_BRUSH);
+    //dc.DrawCircle((int)(c + 0.60 * c * cos(x)), (int)(c - 0.60 * c * sin(x)), 4); // second hand
+    gc->DrawEllipse(c - 4 + 0.60 * c * cos(x), c - 4 - 0.60 * c * sin(x), 8, 8);
+
+    //dc.DrawLine((int)(c + 0.68 * c * cos(x)), (int)(c - 0.68 * c * sin(x)), (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
+    path = gc->CreatePath();
+    path.MoveToPoint(c + 0.68 * c * cos(x), c - 0.68 * c * sin(x));
+    path.AddLineToPoint(c + 0.90 * c * cos(x), c - 0.90 * c * sin(x));
+    gc->StrokePath(path);
   }
-  dc.SetBrush(*wxRED_BRUSH);
-  dc.DrawCircle( c, c, 2 );
+  gc->SetBrush(*wxRED_BRUSH);
+  gc->DrawEllipse(c-2, c-2, 4, 4);
+
+
+  delete gc;
 
 
 }
