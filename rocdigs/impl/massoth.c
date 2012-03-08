@@ -248,6 +248,7 @@ static iOSlot __configureVehicle(iOMassothData data, iONode node) {
   int steps  = wLoc.getspcnt(node);
   int addr  = wLoc.getaddr(node);
   int nsteps = __normalizeSteps(steps);
+  int protver = wLoc.getprotver(node);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s not configured", wLoc.getid(node) );
   cmd[0] = 0x85;
   cmd[1] = 0; /*xor*/
@@ -259,7 +260,7 @@ static iOSlot __configureVehicle(iOMassothData data, iONode node) {
     cmd[4] = 0x01;
   else
     cmd[4] = 0x00;
-  cmd[4] |= data->useParallelFunctions ? 0x04:0x00;
+  cmd[4] |= (protver == 1) ? 0x04:0x00;
   cmd[4] |= 0x80; /* store */
   cmd[5] = wLoc.getimagenr(node);
 
@@ -1035,8 +1036,6 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid           = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device        = %s", data->device );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate      = 57600 (fix)" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset sensors = %s", data->fbreset ? "yes":"no" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "functions     = %s", data->useParallelFunctions ? "parallel":"serial" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset sensors = %s", data->fbreset ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "system info   = %s", data->systeminfo ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
