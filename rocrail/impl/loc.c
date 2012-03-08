@@ -965,12 +965,13 @@ static void __engine( iOLoc inst, iONode cmd ) {
         }
       }
 
-
-
-
-
-
     }
+    else {
+      /* copy functions */
+      __cpFn2Node(inst, cmd, -1, 0);
+    }
+
+
   }
 
   else if( !LocOp.isAutomode(inst) || data->gomanual ) {
