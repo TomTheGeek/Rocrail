@@ -164,7 +164,7 @@ void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
 
     //TraceOp.trc( "clock", TRCLEVEL_INFO, __LINE__, 9999, "clock paint" );
-		wxPaintDC dc(this);
+		//wxPaintDC dc(this);
     drawClock();
 }
 
