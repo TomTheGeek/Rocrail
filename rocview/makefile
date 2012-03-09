@@ -68,7 +68,7 @@ MINGWINSTALL=$(FS)usr$(FS)i586-mingw32msvc
 
 
 ifeq ($(PLATFORM),WIN32)
-	LIBS=-liphlpapi -lmpr
+	LIBS=-lgdiplus -liphlpapi -lmpr
 	LNK_FLAGS=`$(FS)usr$(FS)i586-mingw32msvc$(FS)bin$(FS)wx-config --libs` -mthreads
 	WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
 	ifeq ($(NATIVE),WIN32)
