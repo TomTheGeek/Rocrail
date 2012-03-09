@@ -186,6 +186,13 @@ void Slider::mouseDown(wxMouseEvent& event)
 {
   Move = event.m_y;
   Drag = true;
+  ThumbPos = Move - (ThumbHeight/2);
+
+  if( ThumbPos < 0 )
+    ThumbPos = 0;
+  if( ThumbPos > ThumbRange )
+    ThumbPos = ThumbRange;
+
   Refresh();
 }
 void Slider::mouseReleased(wxMouseEvent& event)
