@@ -119,7 +119,11 @@ void Slider::render(wxDC&  dc)
     double tick = (double)ThumbRange / 10.0;
     for( int i = 0; i < 10; i++ ) {
 
-      gc->DrawRectangle(Width/2+4, ThumbRange - (i * tick), 2+i*2, 0);
+      wxGraphicsPath path = gc->CreatePath();
+      path.MoveToPoint(Width/2+4, ThumbRange - (i * tick));
+      path.AddLineToPoint(Width/2+4 + 2+i*2, ThumbRange - (i * tick));
+      gc->StrokePath(path);
+
     }
 
     // make a path that contains a circle and some lines
@@ -131,9 +135,19 @@ void Slider::render(wxDC&  dc)
     gc->DrawRoundedRectangle(2, ThumbPos, Width-4, ThumbHeight, 5.0);
 
     gc->SetPen(*wxGREY_PEN);
-    gc->DrawRectangle(4, ThumbPos+4, Width-8, 0);
-    gc->DrawRectangle(4, ThumbPos+8, Width-8, 0);
-    gc->DrawRectangle(4, ThumbPos+12, Width-8, 0);
+
+    wxGraphicsPath path = gc->CreatePath();
+    path.MoveToPoint(4, ThumbPos+4);
+    path.AddLineToPoint(4 + Width-8, ThumbPos+4);
+
+    path.MoveToPoint(4, ThumbPos+8);
+    path.AddLineToPoint(4 + Width-8, ThumbPos+8);
+
+    path.MoveToPoint(4, ThumbPos+12);
+    path.AddLineToPoint(4 + Width-8, ThumbPos+12);
+    gc->StrokePath(path);
+
+
 
     delete gc;
   }
