@@ -121,7 +121,8 @@ void LEDButton::render(wxDC&  dc)
       // make a path that contains a circle and some lines
       gc->SetPen( *wxGREY_PEN );
       gc->SetBrush( pressedDown ? *wxGREY_BRUSH:*wxLIGHT_GREY_BRUSH );
-      gc->DrawRoundedRectangle(0, 0, buttonWidth-1, buttonHeight-1, 5.0);
+      gc->DrawRoundedRectangle(1, 1, buttonWidth-2, buttonHeight-2, 5.0);
+      gc->DrawRoundedRectangle(0, 0, buttonWidth-2, buttonHeight-2, 5.0);
 
       if( useLED ) {
         gc->SetBrush( ON ? wxBrush(wxColour(255,255,0)):*wxLIGHT_GREY_BRUSH );

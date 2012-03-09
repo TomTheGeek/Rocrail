@@ -132,6 +132,7 @@ void Slider::render(wxDC&  dc)
     gc->DrawRoundedRectangle(Width/2-2, ThumbHeight/2, 4, Height-ThumbHeight, 1.0);
 
     gc->SetBrush( *wxLIGHT_GREY_BRUSH );
+    gc->DrawRoundedRectangle(2+1, ThumbPos+1, Width-4, ThumbHeight, 5.0);
     gc->DrawRoundedRectangle(2, ThumbPos, Width-4, ThumbHeight, 5.0);
 
     gc->SetPen(*wxGREY_PEN);
