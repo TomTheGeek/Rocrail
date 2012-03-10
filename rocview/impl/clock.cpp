@@ -242,7 +242,7 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
 
   if( run ) {
     calculate();
-    Refresh(true);
+    Refresh(false);
   }
 }
 
