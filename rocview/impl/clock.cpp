@@ -288,27 +288,34 @@ void Clock::drawClock() {
     drawSecondHand(gc, c, true);
   }
 
+
   int i;
+  wxGraphicsPath platePath = gc->CreatePath();
+  wxPen platePen( wxColour(0, 0, 0), wxSOLID );
   for (i = 0; i < 60; i++) {
     double k = sm_angle( i );
 
-    wxPen pen( wxColour(0, 0, 0), wxSOLID );
-    pen.SetWidth(1);
-    gc->SetPen( pen );
-    wxGraphicsPath path = gc->CreatePath();
-    path.MoveToPoint(c + 0.85 * c * cos(k), c - 0.85 * c * sin(k));
-    path.AddLineToPoint(c + 0.90 * c * cos(k), c - 0.90 * c * sin(k));
-    gc->StrokePath(path);
+    platePath.MoveToPoint(c + 0.85 * c * cos(k), c - 0.85 * c * sin(k));
+    platePath.AddLineToPoint(c + 0.90 * c * cos(k), c - 0.90 * c * sin(k));
+    gc->StrokePath(platePath);
+
+  }
+  platePen.SetWidth(1);
+  gc->SetPen( platePen );
+  gc->StrokePath(platePath);
+
+  platePath = gc->CreatePath();
+  for (i = 0; i < 60; i++) {
+    double k = sm_angle( i );
 
     if( i%5 == 0 ) {
-      pen.SetWidth(4);
-      gc->SetPen( pen );
-      wxGraphicsPath path = gc->CreatePath();
-      path.MoveToPoint(c + 0.75 * c * cos(k), c - 0.75 * c * sin(k));
-      path.AddLineToPoint(c + 0.90 * c * cos(k), c - 0.90 * c * sin(k));
-      gc->StrokePath(path);
+      platePath.MoveToPoint(c + 0.75 * c * cos(k), c - 0.75 * c * sin(k));
+      platePath.AddLineToPoint(c + 0.90 * c * cos(k), c - 0.90 * c * sin(k));
     }
   }
+  platePen.SetWidth(4);
+  gc->SetPen( platePen );
+  gc->StrokePath(platePath);
 
   gc->SetPen(*wxBLACK_PEN);
 
