@@ -50,6 +50,16 @@ BEGIN_EVENT_TABLE(Clock, wxPanel)
   EVT_MENU( ME_AdjustTime , Clock::OnAdjustTime )
   EVT_MENU( ME_FreezeTime , Clock::OnFreezeTime )
   EVT_MENU( ME_ResumeTime , Clock::OnResumeTime )
+
+  EVT_MOTION(Clock::mouseMoved)
+  EVT_LEFT_DOWN(Clock::mouseDown)
+  EVT_LEFT_UP(Clock::mouseReleased)
+  EVT_RIGHT_DOWN(Clock::rightClick)
+  EVT_LEAVE_WINDOW(Clock::mouseLeftWindow)
+  EVT_KEY_DOWN(Clock::keyPressed)
+  EVT_KEY_UP(Clock::keyReleased)
+  EVT_MOUSEWHEEL(Clock::mouseWheelMoved)
+
 END_EVENT_TABLE()
 
 Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_devider, int clocktype)
@@ -216,12 +226,8 @@ void Clock::calculate() {
   }
   SetToolTip( datetime->FormatISOTime());
 
-  /*
-  if ((datetime->GetSecond() == 0) || start)
-    Refresh(true);
-  start = false;
-*/
   x = sm_angle(datetime->GetSecond());
+  xpre = sm_angle(datetime->GetSecond()-1);
   y = sm_angle(datetime->GetMinute());
   z = h_angle(datetime->GetHour(),datetime->GetMinute());
   hours   = datetime->GetHour();
@@ -269,13 +275,18 @@ void Clock::drawClock() {
   double c = width/2;
 
   gc->SetPen(*wxBLACK_PEN);
-#if defined __linux__ || defined __APPLE__
-  gc->SetBrush(*wxWHITE_BRUSH);
-#else
-  gc->SetBrush(this->GetBackgroundColour());
-#endif
+  gc->SetBrush(*wxTRANSPARENT_BRUSH);
 
-  gc->DrawEllipse(0, 0, width-1, width-1);
+  if ((datetime->GetSecond() == 0) || start) {
+    gc->SetBrush(GetBackgroundColour());
+    gc->DrawEllipse(0, 0, width-1, width-1);
+    start = false;
+  }
+  else {
+    gc->SetBrush(*wxTRANSPARENT_BRUSH);
+    gc->DrawEllipse(0, 0, width-1, width-1);
+    drawSecondHand(gc, c, true);
+  }
 
   int i;
   for (i = 0; i < 60; i++) {
@@ -349,10 +360,23 @@ void Clock::drawClock() {
 
 
   // second
+  drawSecondHand(gc, c);
+
+  gc->SetBrush(*wxRED_BRUSH);
+  gc->DrawEllipse(c-2, c-2, 4, 4);
+
+
+  delete gc;
+
+
+}
+
+void Clock::drawSecondHand(wxGraphicsContext* gc, double c, bool erase) {
+  // second
   if( this->devider <= 10 ) {
-    wxBrush brush( wxColour(255, 0, 0), wxSOLID );
+    wxBrush brush( erase?GetBackgroundColour():wxColour(255, 0, 0), wxSOLID );
     gc->SetBrush( brush );
-    wxPen redPen( wxColour(255, 0, 0), wxSOLID );
+    wxPen redPen( erase?GetBackgroundColour():wxColour(255, 0, 0), wxSOLID );
     redPen.SetWidth(2);
     gc->SetPen( redPen );
 
@@ -363,7 +387,7 @@ void Clock::drawClock() {
     gc->StrokePath(path);
 
 
-    gc->SetBrush(*wxTRANSPARENT_BRUSH);
+    gc->SetBrush(erase?GetBackgroundColour():*wxTRANSPARENT_BRUSH);
     //dc.DrawCircle((int)(c + 0.60 * c * cos(x)), (int)(c - 0.60 * c * sin(x)), 4); // second hand
     gc->DrawEllipse(c - 4 + 0.60 * c * cos(x), c - 4 - 0.60 * c * sin(x), 8, 8);
 
@@ -373,12 +397,31 @@ void Clock::drawClock() {
     path.AddLineToPoint(c + 0.90 * c * cos(x), c - 0.90 * c * sin(x));
     gc->StrokePath(path);
   }
-  gc->SetBrush(*wxRED_BRUSH);
-  gc->DrawEllipse(c-2, c-2, 4, 4);
-
-
-  delete gc;
-
-
 }
 
+
+
+void Clock::mouseDown(wxMouseEvent& event)
+{
+}
+
+
+void Clock::mouseReleased(wxMouseEvent& event)
+{
+}
+void Clock::mouseLeftWindow(wxMouseEvent& event)
+{
+}
+
+// currently unused events
+void Clock::mouseMoved(wxMouseEvent& event) {
+}
+
+
+void Clock::mouseWheelMoved(wxMouseEvent& event) {
+}
+void Clock::rightClick(wxMouseEvent& event) {}
+void Clock::keyPressed(wxKeyEvent& event) {
+}
+void Clock::keyReleased(wxKeyEvent& event) {
+}

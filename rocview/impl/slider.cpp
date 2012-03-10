@@ -234,10 +234,10 @@ void Slider::keyPressed(wxKeyEvent& event) {
 
 }
 void Slider::keyReleased(wxKeyEvent& event) {
-  if( event.GetKeyCode() == WXK_DOWN ) {
+  if( event.GetKeyCode() == WXK_DOWN || event.GetKeyCode() == WXK_NUMPAD_DOWN) {
     ThumbPos++;
   }
-  else if( event.GetKeyCode() == WXK_UP ) {
+  else if( event.GetKeyCode() == WXK_UP || event.GetKeyCode() == WXK_NUMPAD_UP) {
     ThumbPos--;
   }
   else {
@@ -256,10 +256,12 @@ void Slider::moveThumb() {
 
   Refresh();
   PrevThumbPos = ThumbPos;
+
   wxCommandEvent cmdevent( wxEVT_SCROLL_THUMBRELEASE,-1 );
   cmdevent.SetId(-1);
   cmdevent.SetEventObject(this);
   wxPostEvent( Parent, cmdevent);
+
 }
 
 

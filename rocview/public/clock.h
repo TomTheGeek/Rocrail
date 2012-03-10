@@ -35,12 +35,24 @@ class Clock : public wxPanel{
     void stopTimer();
     void calculate();
     void drawClock();
+    void drawSecondHand(wxGraphicsContext* gc, double c, bool erase=false);
+
+    // some useful events
+    void mouseMoved(wxMouseEvent& event);
+    void mouseDown(wxMouseEvent& event);
+    void mouseWheelMoved(wxMouseEvent& event);
+    void mouseReleased(wxMouseEvent& event);
+    void rightClick(wxMouseEvent& event);
+    void mouseLeftWindow(wxMouseEvent& event);
+    void keyPressed(wxKeyEvent& event);
+    void keyReleased(wxKeyEvent& event);
+
 
 	private:
 		wxBitmap* m_Plate;
     wxBitmap* m_Logo;
 		wxTimer *WxTimer;
-		double x,y,z;
+		double x,y,z,xpre;
 		bool start;
     wxDateTime* datetime;
     time_t ltime;
