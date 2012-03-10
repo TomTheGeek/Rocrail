@@ -71,7 +71,7 @@ Slider::Slider(wxPanel* parent, int width, int height) : wxPanel(parent)
   ThumbOffset = ThumbHeight / 2;
   ThumbPos = ThumbRange;
   PrevThumbPos = ThumbPos;
-  PrevWheelTime = 0;
+  PrevWheelTime = -1;
   Step = (double)ThumbRange / (double)Max;
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "Height=%d Step=%f ThumbPos=%d ThumbRange=%d", Height, Step, ThumbPos, ThumbRange );
 }
@@ -124,7 +124,7 @@ void Slider::render(wxDC&  dc)
 
       wxGraphicsPath path = gc->CreatePath();
       path.MoveToPoint(Width/2+4, ThumbRange - (i * tick));
-      path.AddLineToPoint(Width/2+4 + 2+i*2, ThumbRange - (i * tick));
+      path.AddLineToPoint(Width/2+4 + 2+i, ThumbRange - (i * tick));
       gc->StrokePath(path);
 
     }
@@ -134,21 +134,20 @@ void Slider::render(wxDC&  dc)
     gc->SetBrush( *wxLIGHT_GREY_BRUSH );
     gc->DrawRoundedRectangle(Width/2-2, ThumbHeight/2, 4, Height-ThumbHeight, 1.0);
 
-    gc->SetBrush( *wxLIGHT_GREY_BRUSH );
-    gc->DrawRoundedRectangle(2+1, ThumbPos+1, Width-4, ThumbHeight, 5.0);
-    gc->DrawRoundedRectangle(2, ThumbPos, Width-4, ThumbHeight, 5.0);
+    gc->DrawRoundedRectangle(2+1, ThumbPos+3, Width-4, ThumbHeight-4, 5.0);
+    gc->DrawRoundedRectangle(2+0, ThumbPos+2, Width-4, ThumbHeight-4, 5.0);
 
     gc->SetPen(*wxGREY_PEN);
 
     wxGraphicsPath path = gc->CreatePath();
-    path.MoveToPoint(4, ThumbPos+4);
-    path.AddLineToPoint(4 + Width-8, ThumbPos+4);
+    path.MoveToPoint(4, ThumbPos+5);
+    path.AddLineToPoint(4 + Width-8, ThumbPos+5);
 
     path.MoveToPoint(4, ThumbPos+8);
     path.AddLineToPoint(4 + Width-8, ThumbPos+8);
 
-    path.MoveToPoint(4, ThumbPos+12);
-    path.AddLineToPoint(4 + Width-8, ThumbPos+12);
+    path.MoveToPoint(4, ThumbPos+11);
+    path.AddLineToPoint(4 + Width-8, ThumbPos+11);
     gc->StrokePath(path);
 
 
@@ -158,7 +157,7 @@ void Slider::render(wxDC&  dc)
 }
 
 void Slider::SetValue(int value) {
-  if( InitSet && SystemOp.getMillis() - PrevWheelTime < 500 ) {
+  if( InitSet && PrevWheelTime != -1 && SystemOp.getMillis() - PrevWheelTime < 500 ) {
     return;
   }
 
