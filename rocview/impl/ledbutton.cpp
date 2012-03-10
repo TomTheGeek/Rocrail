@@ -139,7 +139,7 @@ void LEDButton::render(wxDC&  dc)
         double height;
         double descent;
         double externalLeading;
-        gc->GetTextExtent( text,&width,&height,&descent,&externalLeading);
+        gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
         gc->DrawText( text, (buttonWidth-width)/2, (buttonHeight-height)/2 );
       }
       delete gc;

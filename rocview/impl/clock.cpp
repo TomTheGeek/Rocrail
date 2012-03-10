@@ -312,7 +312,7 @@ void Clock::drawClock() {
     double h;
     double descent;
     double externalLeading;
-    gc->GetTextExtent( timestring,&w,&h,&descent,&externalLeading);
+    gc->GetTextExtent( timestring,(wxDouble*)&w,(wxDouble*)&h,(wxDouble*)&descent,(wxDouble*)&externalLeading);
     gc->DrawText( timestring, (width/2)-(w/2),width*0.6 );
 
 
