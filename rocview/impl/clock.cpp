@@ -250,7 +250,7 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
 
 void Clock::drawClock() {
   int width, height;
-  wxPaintDC dc(this);
+  //wxPaintDC dc(this);
 
   if( !IsShownOnScreen() )
     return;

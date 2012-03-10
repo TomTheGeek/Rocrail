@@ -49,17 +49,18 @@ BEGIN_EVENT_TABLE(Slider, wxPanel)
     EVT_MOUSEWHEEL(Slider::mouseWheelMoved)
 
     // catch paint events
-    EVT_PAINT(Slider::paintEvent)
+    EVT_PAINT(Slider::OnPaint)
 
 END_EVENT_TABLE()
 
 
 
-Slider::Slider(wxPanel* parent, int width, int height) : wxPanel(parent)
+Slider::Slider(wxPanel* parent, int width, int height)
+  :wxPanel(parent, -1,  wxPoint(0, 0), wxSize(width,height), wxBORDER_NONE)
 {
   Width = width;
   Height = height;
-  SetMinSize( wxSize(Width, Height) );
+  SetSize( wxSize(Width, Height) );
   Parent = parent;
   InitSet = false;
   Min = 0;
@@ -77,83 +78,63 @@ Slider::Slider(wxPanel* parent, int width, int height) : wxPanel(parent)
 }
 
 
-void Slider::paintEvent(wxPaintEvent & evt)
+void Slider::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
     // depending on your system you may need to look at double-buffered dcs
-    wxPaintDC dc(this);
-    render(dc);
+    render();
 }
-
-/*
- * Alternatively, you can use a clientDC to paint on the panel
- * at any time. Using this generally does not free you from
- * catching paint events, since it is possible that e.g. the window
- * manager throws away your drawing when the window comes to the
- * background, and expects you will redraw it when the window comes
- * back (by sending a paint event).
- */
-void Slider::paintNow()
-{
-    // depending on your system you may need to look at double-buffered dcs
-    wxClientDC dc(this);
-    render(dc);
-}
-
 
 /*
  * Here we do the actual rendering. I put it in a separate
  * method so that it can work no matter what type of DC
  * (e.g. wxPaintDC or wxClientDC) is used.
  */
-void Slider::render(wxDC&  dc)
+void Slider::render()
 {
-
   if( !IsShownOnScreen() )
     return;
 
   wxGraphicsContext* gc = wxGraphicsContext::Create(this);
-  if (gc) {
 #ifdef wxANTIALIAS_DEFAULT
-    gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
+  gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
 #endif
-    gc->SetPen( *wxGREY_PEN );
-    gc->SetBrush( *wxLIGHT_GREY_BRUSH );
+  gc->SetPen( *wxGREY_PEN );
+  gc->SetBrush( *wxLIGHT_GREY_BRUSH );
 
-    double tick = (double)ThumbRange / 10.0;
-    for( int i = 0; i < 10; i++ ) {
-
-      wxGraphicsPath path = gc->CreatePath();
-      path.MoveToPoint(Width/2+4, ThumbRange - (i * tick));
-      path.AddLineToPoint(Width/2+4 + 2+i, ThumbRange - (i * tick));
-      gc->StrokePath(path);
-
-    }
-
-    // make a path that contains a circle and some lines
-    gc->SetPen( *wxGREY_PEN );
-    gc->SetBrush( *wxLIGHT_GREY_BRUSH );
-    gc->DrawRoundedRectangle(Width/2-2, ThumbHeight/2, 4, Height-ThumbHeight, 1.0);
-
-    gc->DrawRoundedRectangle(2+1, ThumbPos+3, Width-4, ThumbHeight-4, 5.0);
-    gc->DrawRoundedRectangle(2+0, ThumbPos+2, Width-4, ThumbHeight-4, 5.0);
-
-    gc->SetPen(*wxGREY_PEN);
+  double tick = (double)ThumbRange / 10.0;
+  for( int i = 0; i < 10; i++ ) {
 
     wxGraphicsPath path = gc->CreatePath();
-    path.MoveToPoint(4, ThumbPos+5);
-    path.AddLineToPoint(4 + Width-8, ThumbPos+5);
-
-    path.MoveToPoint(4, ThumbPos+8);
-    path.AddLineToPoint(4 + Width-8, ThumbPos+8);
-
-    path.MoveToPoint(4, ThumbPos+11);
-    path.AddLineToPoint(4 + Width-8, ThumbPos+11);
+    path.MoveToPoint(Width/2+4, ThumbRange - (i * tick));
+    path.AddLineToPoint(Width/2+4 + 2+i, ThumbRange - (i * tick));
     gc->StrokePath(path);
 
-
-
-    delete gc;
   }
+
+  // make a path that contains a circle and some lines
+  gc->SetPen( *wxGREY_PEN );
+  gc->SetBrush( *wxLIGHT_GREY_BRUSH );
+  gc->DrawRoundedRectangle(Width/2-2, ThumbHeight/2, 4, Height-ThumbHeight, 1.0);
+
+  gc->DrawRoundedRectangle(2+1, ThumbPos+3, Width-4, ThumbHeight-4, 5.0);
+  gc->DrawRoundedRectangle(2+0, ThumbPos+2, Width-4, ThumbHeight-4, 5.0);
+
+  gc->SetPen(*wxGREY_PEN);
+
+  wxGraphicsPath path = gc->CreatePath();
+  path.MoveToPoint(4, ThumbPos+5);
+  path.AddLineToPoint(4 + Width-8, ThumbPos+5);
+
+  path.MoveToPoint(4, ThumbPos+8);
+  path.AddLineToPoint(4 + Width-8, ThumbPos+8);
+
+  path.MoveToPoint(4, ThumbPos+11);
+  path.AddLineToPoint(4 + Width-8, ThumbPos+11);
+  gc->StrokePath(path);
+
+
+
+  delete gc;
 }
 
 void Slider::SetValue(int value) {

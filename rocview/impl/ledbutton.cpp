@@ -47,18 +47,18 @@ BEGIN_EVENT_TABLE(LEDButton, wxPanel)
     EVT_MOUSEWHEEL(LEDButton::mouseWheelMoved)
 
     // catch paint events
-    EVT_PAINT(LEDButton::paintEvent)
+    EVT_PAINT(LEDButton::OnPaint)
 
 END_EVENT_TABLE()
 
 
 
-LEDButton::LEDButton(wxPanel* parent, wxString text, int width, int height, bool useLED, bool textOnly) :
-wxPanel(parent)
+LEDButton::LEDButton(wxPanel* parent, wxString text, int width, int height, bool useLED, bool textOnly)
+  :wxPanel(parent, -1,  wxPoint(0, 0), wxSize(width,height), wxBORDER_NONE)
 {
   buttonWidth = width;
   buttonHeight = height;
-  SetMinSize( wxSize(buttonWidth, buttonHeight) );
+  SetSize( wxSize(buttonWidth, buttonHeight) );
   this->text = text;
   pressedDown = false;
   ON = false;
@@ -73,26 +73,10 @@ wxPanel(parent)
  * calling Refresh()/Update().
  */
 
-void LEDButton::paintEvent(wxPaintEvent & evt)
+void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
     // depending on your system you may need to look at double-buffered dcs
-    wxPaintDC dc(this);
-    render(dc);
-}
-
-/*
- * Alternatively, you can use a clientDC to paint on the panel
- * at any time. Using this generally does not free you from
- * catching paint events, since it is possible that e.g. the window
- * manager throws away your drawing when the window comes to the
- * background, and expects you will redraw it when the window comes
- * back (by sending a paint event).
- */
-void LEDButton::paintNow()
-{
-    // depending on your system you may need to look at double-buffered dcs
-    wxClientDC dc(this);
-    render(dc);
+    render();
 }
 
 /*
@@ -100,50 +84,45 @@ void LEDButton::paintNow()
  * method so that it can work no matter what type of DC
  * (e.g. wxPaintDC or wxClientDC) is used.
  */
-void LEDButton::render(wxDC&  dc)
+void LEDButton::render()
 {
 
   if( !IsShownOnScreen() )
+
     return;
-
-
   wxGraphicsContext* gc = wxGraphicsContext::Create(this);
-
-    if (pressedDown)
-      dc.SetBrush( *wxGREY_BRUSH );
-    else
-        dc.SetBrush( *wxLIGHT_GREY_BRUSH );
-
-    if (gc) {
 #ifdef wxANTIALIAS_DEFAULT
-      gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
+  gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
 #endif
-      // make a path that contains a circle and some lines
-      gc->SetPen( *wxGREY_PEN );
-      gc->SetBrush( pressedDown ? *wxGREY_BRUSH:*wxLIGHT_GREY_BRUSH );
-      gc->DrawRoundedRectangle(1, 1, buttonWidth-2, buttonHeight-2, 5.0);
-      gc->DrawRoundedRectangle(0, 0, buttonWidth-2, buttonHeight-2, 5.0);
+  // make a path that contains a circle and some lines
+  if (pressedDown)
+    gc->SetBrush( *wxGREY_BRUSH );
+  else
+    gc->SetBrush( *wxLIGHT_GREY_BRUSH );
+  gc->SetPen( *wxGREY_PEN );
+  gc->SetBrush( pressedDown ? *wxGREY_BRUSH:*wxLIGHT_GREY_BRUSH );
+  gc->DrawRoundedRectangle(1, 1, buttonWidth-2, buttonHeight-2, 5.0);
+  gc->DrawRoundedRectangle(0, 0, buttonWidth-2, buttonHeight-2, 5.0);
 
-      if( useLED ) {
-        gc->SetBrush( ON ? wxBrush(wxColour(255,255,0)):*wxLIGHT_GREY_BRUSH );
-        gc->DrawEllipse(2.5, 2.5, 7.0, 7.0);
-      }
-      wxFont font(textOnly?14:10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-      gc->SetFont(font,*wxBLACK);
+  if( useLED ) {
+    gc->SetBrush( ON ? wxBrush(wxColour(255,255,0)):*wxLIGHT_GREY_BRUSH );
+    gc->DrawEllipse(2.5, 2.5, 7.0, 7.0);
+  }
+  wxFont font(textOnly?14:10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+  gc->SetFont(font,*wxBLACK);
 
-      if(textOnly) {
-        Display7Segement(gc);
-      }
-      else {
-        double width;
-        double height;
-        double descent;
-        double externalLeading;
-        gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
-        gc->DrawText( text, (buttonWidth-width)/2, (buttonHeight-height)/2 );
-      }
-      delete gc;
-    }
+  if(textOnly) {
+    Display7Segement(gc);
+  }
+  else {
+    double width;
+    double height;
+    double descent;
+    double externalLeading;
+    gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+    gc->DrawText( text, (buttonWidth-width)/2, (buttonHeight-height)/2 );
+  }
+  delete gc;
 
 }
 
@@ -201,12 +180,12 @@ void LEDButton::Display7Segement(wxGraphicsContext* gc) {
 
 void LEDButton::setLED(bool ON) {
   this->ON = ON;
-  paintNow();
+  render();
 }
 
 void LEDButton::SetLabel(const wxString &text) {
   this->text = text;
-  paintNow();
+  render();
 }
 
 void LEDButton::SetValue(const wxString& value) {
@@ -223,7 +202,7 @@ void LEDButton::mouseDown(wxMouseEvent& event)
     return;
 
     pressedDown = true;
-    paintNow();
+    render();
 }
 void LEDButton::mouseReleased(wxMouseEvent& event)
 {
@@ -231,7 +210,7 @@ void LEDButton::mouseReleased(wxMouseEvent& event)
     return;
 
     pressedDown = false;
-    paintNow();
+    render();
 
     wxCommandEvent bttn_event( wxEVT_COMMAND_BUTTON_CLICKED,-1 );
     bttn_event.SetId(-1);
@@ -243,7 +222,7 @@ void LEDButton::mouseLeftWindow(wxMouseEvent& event)
     if (pressedDown)
     {
         pressedDown = false;
-        paintNow();
+        render();
     }
 }
 

@@ -39,14 +39,13 @@ class LEDButton : public wxPanel
 public:
     LEDButton(wxPanel* parent, wxString text, int width, int height, bool useLED=true, bool textOnly=false);
 
-    void paintEvent(wxPaintEvent & evt);
-    void paintNow();
+    void OnPaint(wxPaintEvent& event);
 
     void setLED(bool ON);
     void SetLabel(const wxString &text);
     void SetValue(const wxString& value);
     bool SetBackgroundColour(const wxColour& colour);
-    void render(wxDC& dc);
+    void render();
     void Display7Segement(wxGraphicsContext* gc);
     void draw7Segement(wxGraphicsContext* gc, int val, int offset);
 

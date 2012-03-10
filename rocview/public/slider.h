@@ -46,10 +46,9 @@ public:
     void SetValue(int value);
     int GetValue();
     void SetRange(int minValue, int maxValue);
-    void paintEvent(wxPaintEvent & evt);
-    void paintNow();
-    void render(wxDC&  dc);
+    void render();
     void moveThumb();
+    void OnPaint(wxPaintEvent& event);
 
     // some useful events
     void mouseMoved(wxMouseEvent& event);
