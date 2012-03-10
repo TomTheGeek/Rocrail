@@ -36,7 +36,9 @@ class Slider : public wxPanel
     int ThumbOffset;
     int ThumbPos;
     int PrevThumbPos;
+    long PrevWheelTime;
     double Step;
+    bool InitSet;
 
 
 public:
@@ -47,6 +49,7 @@ public:
     void paintEvent(wxPaintEvent & evt);
     void paintNow();
     void render(wxDC&  dc);
+    void moveThumb();
 
     // some useful events
     void mouseMoved(wxMouseEvent& event);

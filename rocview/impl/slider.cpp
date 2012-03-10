@@ -33,6 +33,7 @@
 #include <wx/graphics.h>
 
 #include "rocview/public/slider.h"
+#include "rocs/public/system.h"
 #include "rocs/public/trace.h"
 
 
@@ -60,6 +61,7 @@ Slider::Slider(wxPanel* parent, int width, int height) : wxPanel(parent)
   Height = height;
   SetMinSize( wxSize(Width, Height) );
   Parent = parent;
+  InitSet = false;
   Min = 0;
   Max = 100;
   Value = 0;
@@ -69,6 +71,7 @@ Slider::Slider(wxPanel* parent, int width, int height) : wxPanel(parent)
   ThumbOffset = ThumbHeight / 2;
   ThumbPos = ThumbRange;
   PrevThumbPos = ThumbPos;
+  PrevWheelTime = 0;
   Step = (double)ThumbRange / (double)Max;
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "Height=%d Step=%f ThumbPos=%d ThumbRange=%d", Height, Step, ThumbPos, ThumbRange );
 }
@@ -155,6 +158,12 @@ void Slider::render(wxDC&  dc)
 }
 
 void Slider::SetValue(int value) {
+  if( InitSet && SystemOp.getMillis() - PrevWheelTime < 500 ) {
+    return;
+  }
+
+  InitSet = true;
+
   Value = value;
   if( Value < 0 )
     Value = 0;
@@ -199,15 +208,12 @@ void Slider::mouseDown(wxMouseEvent& event)
 void Slider::mouseReleased(wxMouseEvent& event)
 {
   Drag = false;
-  Refresh();
-  wxCommandEvent cmdevent( wxEVT_SCROLL_THUMBRELEASE,-1 );
-  cmdevent.SetId(-1);
-  cmdevent.SetEventObject(this);
-  wxPostEvent( Parent, cmdevent);
+  moveThumb();
 }
 void Slider::mouseLeftWindow(wxMouseEvent& event)
 {
-  //Drag = false;
+  if(Drag)
+    mouseReleased(event);
 }
 
 // currently unused events
@@ -226,6 +232,8 @@ void Slider::mouseMoved(wxMouseEvent& event) {
     Refresh();
   }
 }
+
+
 void Slider::mouseWheelMoved(wxMouseEvent& event) {
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "mouseWheelMoved %d %d", event.m_wheelDelta, event.m_wheelRotation );
   if( event.m_wheelRotation < 0 ) {
@@ -235,25 +243,42 @@ void Slider::mouseWheelMoved(wxMouseEvent& event) {
     ThumbPos--;
   }
 
+  PrevWheelTime = SystemOp.getMillis();
+  moveThumb();
+}
+
+
+void Slider::rightClick(wxMouseEvent& event) {}
+void Slider::keyPressed(wxKeyEvent& event) {
+
+}
+void Slider::keyReleased(wxKeyEvent& event) {
+  if( event.GetKeyCode() == WXK_DOWN ) {
+    ThumbPos++;
+  }
+  else if( event.GetKeyCode() == WXK_UP ) {
+    ThumbPos--;
+  }
+  else {
+    return;
+  }
+
+  moveThumb();
+
+}
+
+void Slider::moveThumb() {
   if( ThumbPos < 0 )
     ThumbPos = 0;
   if( ThumbPos > ThumbRange )
     ThumbPos = ThumbRange;
 
   Refresh();
-
-  if( PrevThumbPos - ThumbPos >= 5 || PrevThumbPos - ThumbPos <= -5 ) {
-    PrevThumbPos = ThumbPos;
-    wxCommandEvent cmdevent( wxEVT_SCROLL_THUMBRELEASE,-1 );
-    cmdevent.SetId(-1);
-    cmdevent.SetEventObject(this);
-    wxPostEvent( Parent, cmdevent);
-  }
+  PrevThumbPos = ThumbPos;
+  wxCommandEvent cmdevent( wxEVT_SCROLL_THUMBRELEASE,-1 );
+  cmdevent.SetId(-1);
+  cmdevent.SetEventObject(this);
+  wxPostEvent( Parent, cmdevent);
 }
-
-
-void Slider::rightClick(wxMouseEvent& event) {}
-void Slider::keyPressed(wxKeyEvent& event) {}
-void Slider::keyReleased(wxKeyEvent& event) {}
 
 
