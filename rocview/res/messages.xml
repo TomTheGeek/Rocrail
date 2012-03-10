@@ -17743,4 +17743,7 @@
   <Msg id="soundplayerlocation">
     <en txt="Add location parameter"/>
   </Msg>
+  <Msg id="nodenumber">
+    <en txt="Node number"/>
+  </Msg>
 </Messages>

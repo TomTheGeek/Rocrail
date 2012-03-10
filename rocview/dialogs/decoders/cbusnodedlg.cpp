@@ -95,7 +95,7 @@ void CBusNodeDlg::init( iONode event ) {
   // Node tab
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_labNodeType->SetLabel( wxGetApp().getMsg( "type" ) );
-  m_labNumber->SetLabel( wxGetApp().getMsg( "number" ) );
+  m_labNumber->SetLabel( wxGetApp().getMsg( "nodenumber" ) );
   m_SetNodeNumber->SetLabel( wxGetApp().getMsg( "set" ) );
 
   // Index tab

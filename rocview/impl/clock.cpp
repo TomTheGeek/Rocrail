@@ -270,7 +270,9 @@ void Clock::drawClock() {
 
   gc->SetPen(*wxBLACK_PEN);
   gc->SetBrush(*wxWHITE_BRUSH);
+#if defined __linux__ || defined __APPLE__
   gc->DrawEllipse(0, 0, width-1, width-1);
+#endif
 
   int i;
   for (i = 0; i < 60; i++) {

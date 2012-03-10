@@ -193,6 +193,7 @@ void Slider::SetRange(int minValue, int maxValue) {
 
 void Slider::mouseDown(wxMouseEvent& event)
 {
+  SetFocus();
   Move = event.m_y;
   Drag = true;
   ThumbPos = Move - (ThumbHeight/2);

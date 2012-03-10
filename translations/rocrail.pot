@@ -5645,3 +5645,9 @@ msgstr ""
 msgid "Add location parameter"
 msgstr ""
 
+#. 
+# id="nodenumber"
+#, c-format
+msgid "Node number"
+msgstr ""
+
