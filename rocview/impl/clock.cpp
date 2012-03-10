@@ -269,10 +269,13 @@ void Clock::drawClock() {
   double c = width/2;
 
   gc->SetPen(*wxBLACK_PEN);
-  gc->SetBrush(*wxWHITE_BRUSH);
 #if defined __linux__ || defined __APPLE__
-  gc->DrawEllipse(0, 0, width-1, width-1);
+  gc->SetBrush(*wxWHITE_BRUSH);
+#else
+  gc->SetBrush(this->GetBackgroundColour());
 #endif
+
+  gc->DrawEllipse(0, 0, width-1, width-1);
 
   int i;
   for (i = 0; i < 60; i++) {
