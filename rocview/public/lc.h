@@ -32,8 +32,6 @@
 
 #include "rocs/public/node.h"
 #include "rocview/public/clock.h"
-#include "rocview/public/ledbutton.h"
-#include "rocview/public/slider.h"
 
 class LC
 {
@@ -54,7 +52,7 @@ private:
     void init();
     void funCmd(int fidx);
     void speedCmd(bool sendCmd);
-    bool setButtonColor( LEDButton* button, bool state );
+    bool setButtonColor( wxButton* button, bool state );
 
     /// Creates the controls and sizers
     void CreateControls();
@@ -65,20 +63,19 @@ private:
 
     wxBoxSizer* m_MainSizer;
     wxBoxSizer* m_ButtonSizer;
-    //wxButton* m_FG;
-    LEDButton* m_FG;
-    LEDButton* m_V;
+    wxButton* m_FG;
+    wxTextCtrl* m_V;
     wxBoxSizer* m_Button1Sizer;
-    LEDButton* m_F0;
-    LEDButton* m_F1;
-    LEDButton* m_F2;
+    wxButton* m_F0;
+    wxButton* m_F1;
+    wxButton* m_F2;
     wxBoxSizer* m_Button2Sizer;
-    LEDButton* m_F3;
-    LEDButton* m_F4;
-    LEDButton* m_Dir;
+    wxButton* m_F3;
+    wxButton* m_F4;
+    wxButton* m_Dir;
     wxBoxSizer* m_SliderSizer;
-    Slider* m_Vslider;
-    LEDButton* m_Stop;
+    wxSlider* m_Vslider;
+    wxButton* m_Stop;
 
     Clock* m_Clock;
 
