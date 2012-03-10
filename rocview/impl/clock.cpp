@@ -248,7 +248,7 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
 
   if( run ) {
     calculate();
-    Refresh(false);
+    Refresh(true);
   }
 }
 
@@ -275,18 +275,10 @@ void Clock::drawClock() {
   double c = width/2;
 
   gc->SetPen(*wxBLACK_PEN);
-  gc->SetBrush(*wxTRANSPARENT_BRUSH);
+  gc->SetBrush(*wxWHITE_BRUSH);
 
-  if ((datetime->GetSecond() == 0) || start) {
-    gc->SetBrush(GetBackgroundColour());
-    gc->DrawEllipse(0, 0, width-1, width-1);
-    start = false;
-  }
-  else {
-    gc->SetBrush(*wxTRANSPARENT_BRUSH);
-    gc->DrawEllipse(0, 0, width-1, width-1);
-    drawSecondHand(gc, c, true);
-  }
+  gc->DrawEllipse(0, 0, width-1, width-1);
+  drawSecondHand(gc, c, true);
 
 
   int i;
@@ -381,9 +373,8 @@ void Clock::drawClock() {
 void Clock::drawSecondHand(wxGraphicsContext* gc, double c, bool erase) {
   // second
   if( this->devider <= 10 ) {
-    wxBrush brush( erase?GetBackgroundColour():wxColour(255, 0, 0), wxSOLID );
-    gc->SetBrush( brush );
-    wxPen redPen( erase?GetBackgroundColour():wxColour(255, 0, 0), wxSOLID );
+    gc->SetBrush( erase?*wxWHITE_BRUSH:wxColour(255, 0, 0) );
+    wxPen redPen( erase?wxColour(255, 255, 255):wxColour(255, 0, 0), wxSOLID );
     redPen.SetWidth(2);
     gc->SetPen( redPen );
 
@@ -394,7 +385,7 @@ void Clock::drawSecondHand(wxGraphicsContext* gc, double c, bool erase) {
     gc->StrokePath(path);
 
 
-    gc->SetBrush(erase?GetBackgroundColour():*wxTRANSPARENT_BRUSH);
+    gc->SetBrush(erase?*wxWHITE_BRUSH:*wxTRANSPARENT_BRUSH);
     //dc.DrawCircle((int)(c + 0.60 * c * cos(x)), (int)(c - 0.60 * c * sin(x)), 4); // second hand
     gc->DrawEllipse(c - 4 + 0.60 * c * cos(x), c - 4 - 0.60 * c * sin(x), 8, 8);
 

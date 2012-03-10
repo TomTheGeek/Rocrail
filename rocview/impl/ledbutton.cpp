@@ -75,8 +75,8 @@ LEDButton::LEDButton(wxPanel* parent, wxString text, int width, int height, bool
 
 void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
-    // depending on your system you may need to look at double-buffered dcs
-    render();
+  // depending on your system you may need to look at double-buffered dcs
+  render();
 }
 
 /*
@@ -88,9 +88,13 @@ void LEDButton::render()
 {
 
   if( !IsShownOnScreen() )
-
     return;
+
   wxGraphicsContext* gc = wxGraphicsContext::Create(this);
+
+  if( gc == NULL )
+    return;
+
 #ifdef wxANTIALIAS_DEFAULT
   gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
 #endif

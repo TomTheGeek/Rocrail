@@ -95,9 +95,18 @@ void Slider::render()
     return;
 
   wxGraphicsContext* gc = wxGraphicsContext::Create(this);
+  if( gc == NULL )
+    return;
+
 #ifdef wxANTIALIAS_DEFAULT
   gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
 #endif
+/*
+  gc->SetPen( GetBackgroundColour() );
+  gc->SetBrush(GetBackgroundColour());
+
+  gc->DrawRectangle(0, 0, Width, Height);
+*/
   gc->SetPen( *wxGREY_PEN );
   gc->SetBrush( *wxLIGHT_GREY_BRUSH );
 
@@ -154,7 +163,7 @@ void Slider::SetValue(int value) {
   // MaxPos = 0, MinPos = ThumbRange
   ThumbPos = ThumbRange - (Value * Step);
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "SET Value=%d Step=%f ThumbPos=%d ThumbRange=%d", Value, Step, ThumbPos, ThumbRange );
-  Refresh();
+  Refresh(true);
 }
 
 int Slider::GetValue() {
@@ -184,7 +193,7 @@ void Slider::mouseDown(wxMouseEvent& event)
   if( ThumbPos > ThumbRange )
     ThumbPos = ThumbRange;
 
-  Refresh();
+  Refresh(true);
 }
 void Slider::mouseReleased(wxMouseEvent& event)
 {
@@ -210,7 +219,7 @@ void Slider::mouseMoved(wxMouseEvent& event) {
     if( ThumbPos > ThumbRange )
       ThumbPos = ThumbRange;
 
-    Refresh();
+    Refresh(true);
   }
 }
 
@@ -254,7 +263,7 @@ void Slider::moveThumb() {
   if( ThumbPos > ThumbRange )
     ThumbPos = ThumbRange;
 
-  Refresh();
+  Refresh(true);
   PrevThumbPos = ThumbPos;
 
   wxCommandEvent cmdevent( wxEVT_SCROLL_THUMBRELEASE,-1 );
