@@ -160,8 +160,9 @@ void Clock::OnResumeTime(wxCommandEvent& event) {
   wxGetApp().sendToRocrail( tick, false );
 }
 
-
+#if defined __APPLE__ || defined _WIN32
 #define USENEWLOOK
+#endif
 void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
 #ifdef USENEWLOOK
