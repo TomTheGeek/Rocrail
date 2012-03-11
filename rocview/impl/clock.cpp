@@ -161,10 +161,12 @@ void Clock::OnResumeTime(wxCommandEvent& event) {
 
 void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
+#ifdef USENEWLOOK
+  drawNewClock();
+#else
+  drawClock();
+#endif
 
-    //TraceOp.trc( "clock", TRCLEVEL_INFO, __LINE__, 9999, "clock paint" );
-		wxPaintDC dc(this);
-    drawClock();
 }
 
 void Clock::stopTimer() {

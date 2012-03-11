@@ -45,7 +45,6 @@ public:
     void SetLabel(const wxString &text);
     void SetValue(const wxString& value);
     bool SetBackgroundColour(const wxColour& colour);
-    void render();
     void Display7Segement(wxGraphicsContext* gc);
     void draw7Segement(wxGraphicsContext* gc, int val, int offset);
 

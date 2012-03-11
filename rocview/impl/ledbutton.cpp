@@ -75,21 +75,11 @@ LEDButton::LEDButton(wxPanel* parent, wxString text, int width, int height, bool
 
 void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
-  // depending on your system you may need to look at double-buffered dcs
-  render();
-}
-
-/*
- * Here we do the actual rendering. I put it in a separate
- * method so that it can work no matter what type of DC
- * (e.g. wxPaintDC or wxClientDC) is used.
- */
-void LEDButton::render()
-{
 
   if( !IsShownOnScreen() )
     return;
 
+  //wxPaintDC dc(this);
   wxGraphicsContext* gc = wxGraphicsContext::Create(this);
 
   if( gc == NULL )
@@ -184,12 +174,12 @@ void LEDButton::Display7Segement(wxGraphicsContext* gc) {
 
 void LEDButton::setLED(bool ON) {
   this->ON = ON;
-  render();
+  Refresh();
 }
 
 void LEDButton::SetLabel(const wxString &text) {
   this->text = text;
-  render();
+  Refresh();
 }
 
 void LEDButton::SetValue(const wxString& value) {
@@ -206,7 +196,7 @@ void LEDButton::mouseDown(wxMouseEvent& event)
     return;
 
     pressedDown = true;
-    render();
+    Refresh();
 }
 void LEDButton::mouseReleased(wxMouseEvent& event)
 {
@@ -214,7 +204,7 @@ void LEDButton::mouseReleased(wxMouseEvent& event)
     return;
 
     pressedDown = false;
-    render();
+    Refresh();
 
     wxCommandEvent bttn_event( wxEVT_COMMAND_BUTTON_CLICKED,-1 );
     bttn_event.SetId(-1);
@@ -226,7 +216,7 @@ void LEDButton::mouseLeftWindow(wxMouseEvent& event)
     if (pressedDown)
     {
         pressedDown = false;
-        render();
+        Refresh();
     }
 }
 

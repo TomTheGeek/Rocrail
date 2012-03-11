@@ -46,7 +46,6 @@ public:
     void SetValue(int value);
     int GetValue();
     void SetRange(int minValue, int maxValue);
-    void render();
     void moveThumb();
     void OnPaint(wxPaintEvent& event);
 

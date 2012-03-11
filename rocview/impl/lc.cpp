@@ -720,6 +720,11 @@ void LC::CreateControls() {
   m_V = new LEDButton( m_Parent, _("0"), 102, 25, false, true );
 #else
   m_V = new wxTextCtrl( m_Parent, -1, _("0"), wxDefaultPosition, wxSize(103, 25), wxTE_READONLY|wxTE_CENTRE );
+  wxFont f = m_V->GetFont();
+  f.SetWeight(wxFONTWEIGHT_BOLD);
+  f.SetPointSize(f.GetPointSize()+2);
+  m_V->SetFont(f);
+
 #endif
   l_sizer0->Add(m_V, 0, wxALIGN_CENTER_VERTICAL|wxGROW|wxALL, 1);
 

@@ -80,17 +80,6 @@ Slider::Slider(wxPanel* parent, int width, int height)
 
 void Slider::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
-    // depending on your system you may need to look at double-buffered dcs
-    render();
-}
-
-/*
- * Here we do the actual rendering. I put it in a separate
- * method so that it can work no matter what type of DC
- * (e.g. wxPaintDC or wxClientDC) is used.
- */
-void Slider::render()
-{
   if( !IsShownOnScreen() )
     return;
 
