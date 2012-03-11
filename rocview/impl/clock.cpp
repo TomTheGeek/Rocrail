@@ -354,7 +354,7 @@ void Clock::drawClock() {
 
 void Clock::drawNewClock() {
   int width, height;
-  //wxPaintDC dc(this);
+  wxPaintDC dc(this);
 
   if( !IsShownOnScreen() )
     return;

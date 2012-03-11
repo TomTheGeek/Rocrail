@@ -35,7 +35,7 @@
 #include "rocview/public/ledbutton.h"
 #include "rocview/public/slider.h"
 
-//#define USENEWLOOK
+#define USENEWLOOK
 
 class LC
 {

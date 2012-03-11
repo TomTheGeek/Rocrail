@@ -75,11 +75,11 @@ LEDButton::LEDButton(wxPanel* parent, wxString text, int width, int height, bool
 
 void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
+  wxPaintDC dc(this);
 
   if( !IsShownOnScreen() )
     return;
 
-  //wxPaintDC dc(this);
   wxGraphicsContext* gc = wxGraphicsContext::Create(this);
 
   if( gc == NULL )
@@ -93,7 +93,11 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
     gc->SetBrush( *wxGREY_BRUSH );
   else
     gc->SetBrush( *wxLIGHT_GREY_BRUSH );
-  gc->SetPen( *wxGREY_PEN );
+
+  wxPen pen( wxColour(100, 100, 100), wxSOLID );
+  pen.SetWidth(1);
+  gc->SetPen( pen );
+
   gc->SetBrush( pressedDown ? *wxGREY_BRUSH:*wxLIGHT_GREY_BRUSH );
   gc->DrawRoundedRectangle(1, 1, buttonWidth-2, buttonHeight-2, 5.0);
   gc->DrawRoundedRectangle(0, 0, buttonWidth-2, buttonHeight-2, 5.0);
@@ -125,7 +129,9 @@ void LEDButton::draw7Segement(wxGraphicsContext* gc, int segval, int segoff) {
   int segwidth = (buttonWidth-12) / 4;
   int segheight = buttonHeight - 8;
   // horizontal
-  gc->SetPen( *wxGREY_PEN );
+  wxPen pen( wxColour(100, 100, 100), wxSOLID );
+  pen.SetWidth(1);
+  gc->SetPen( pen );
   gc->SetBrush( *wxBLACK_BRUSH );
 
   if( segval == 0 || segval == 2 || segval == 3 || segval == 5 || segval == 6 || segval == 7 || segval == 8 || segval == 9 )

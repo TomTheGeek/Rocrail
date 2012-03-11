@@ -80,59 +80,85 @@ Slider::Slider(wxPanel* parent, int width, int height)
 
 void Slider::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
+  wxPaintDC dc(this);
+
   if( !IsShownOnScreen() )
     return;
 
-  wxGraphicsContext* gc = wxGraphicsContext::Create(this);
-  if( gc == NULL )
-    return;
+  bool useGC = true;
 
-#ifdef wxANTIALIAS_DEFAULT
-  gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
-#endif
-/*
-  gc->SetPen( GetBackgroundColour() );
-  gc->SetBrush(GetBackgroundColour());
+  if( useGC ) {
+    wxGraphicsContext* gc = wxGraphicsContext::Create(this);
+    if( gc == NULL )
+      return;
 
-  gc->DrawRectangle(0, 0, Width, Height);
-*/
-  gc->SetPen( *wxGREY_PEN );
-  gc->SetBrush( *wxLIGHT_GREY_BRUSH );
+  #ifdef wxANTIALIAS_DEFAULT
+    gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
+  #endif
+  /*
+    gc->SetPen( GetBackgroundColour() );
+    gc->SetBrush(GetBackgroundColour());
 
-  double tick = (double)ThumbRange / 10.0;
-  for( int i = 0; i < 10; i++ ) {
+    gc->DrawRectangle(0, 0, Width, Height);
+  */
+    wxPen pen( wxColour(100, 100, 100), wxSOLID );
+    pen.SetWidth(1);
+    gc->SetPen( pen );
+    gc->SetBrush( *wxLIGHT_GREY_BRUSH );
+
+    double tick = (double)ThumbRange / 10.0;
+    for( int i = 0; i < 10; i++ ) {
+
+      wxGraphicsPath path = gc->CreatePath();
+      path.MoveToPoint(Width/2+4, ThumbRange - (i * tick));
+      path.AddLineToPoint(Width/2+4 + 2+i, ThumbRange - (i * tick));
+      gc->StrokePath(path);
+
+    }
+
+    // make a path that contains a circle and some lines
+    gc->DrawRoundedRectangle(Width/2-2, ThumbHeight/2, 4, Height-ThumbHeight, 1.0);
+
+    gc->DrawRoundedRectangle(2+1, ThumbPos+3, Width-4, ThumbHeight-4, 5.0);
+    gc->DrawRoundedRectangle(2+0, ThumbPos+2, Width-4, ThumbHeight-4, 5.0);
 
     wxGraphicsPath path = gc->CreatePath();
-    path.MoveToPoint(Width/2+4, ThumbRange - (i * tick));
-    path.AddLineToPoint(Width/2+4 + 2+i, ThumbRange - (i * tick));
+    path.MoveToPoint(4, ThumbPos+5);
+    path.AddLineToPoint(4 + Width-8, ThumbPos+5);
+
+    path.MoveToPoint(4, ThumbPos+8);
+    path.AddLineToPoint(4 + Width-8, ThumbPos+8);
+
+    path.MoveToPoint(4, ThumbPos+11);
+    path.AddLineToPoint(4 + Width-8, ThumbPos+11);
     gc->StrokePath(path);
 
+    delete gc;
+  }
+  else {
+    // use DC
+    wxPen pen( wxColour(100, 100, 100), wxSOLID );
+    pen.SetWidth(1);
+    dc.SetPen( pen );
+    dc.SetBrush( *wxLIGHT_GREY_BRUSH );
+
+    double tick = (double)ThumbRange / 10.0;
+    for( int i = 0; i < 10; i++ ) {
+      dc.DrawLine(Width/2+4, ThumbRange - (i * tick), Width/2+4 + 2+i, ThumbRange - (i * tick));
+    }
+
+    // make a path that contains a circle and some lines
+    dc.DrawRoundedRectangle(Width/2-2, ThumbHeight/2, 4, Height-ThumbHeight, 1.0);
+
+    dc.DrawRoundedRectangle(2+1, ThumbPos+3, Width-4, ThumbHeight-4, 5.0);
+    dc.DrawRoundedRectangle(2+0, ThumbPos+2, Width-4, ThumbHeight-4, 5.0);
+
+    dc.DrawLine(4, ThumbPos+5, 4 + Width-8, ThumbPos+5);
+    dc.DrawLine(4, ThumbPos+8, 4 + Width-8, ThumbPos+8);
+    dc.DrawLine(4, ThumbPos+11, 4 + Width-8, ThumbPos+11);
   }
 
-  // make a path that contains a circle and some lines
-  gc->SetPen( *wxGREY_PEN );
-  gc->SetBrush( *wxLIGHT_GREY_BRUSH );
-  gc->DrawRoundedRectangle(Width/2-2, ThumbHeight/2, 4, Height-ThumbHeight, 1.0);
 
-  gc->DrawRoundedRectangle(2+1, ThumbPos+3, Width-4, ThumbHeight-4, 5.0);
-  gc->DrawRoundedRectangle(2+0, ThumbPos+2, Width-4, ThumbHeight-4, 5.0);
-
-  gc->SetPen(*wxGREY_PEN);
-
-  wxGraphicsPath path = gc->CreatePath();
-  path.MoveToPoint(4, ThumbPos+5);
-  path.AddLineToPoint(4 + Width-8, ThumbPos+5);
-
-  path.MoveToPoint(4, ThumbPos+8);
-  path.AddLineToPoint(4 + Width-8, ThumbPos+8);
-
-  path.MoveToPoint(4, ThumbPos+11);
-  path.AddLineToPoint(4 + Width-8, ThumbPos+11);
-  gc->StrokePath(path);
-
-
-
-  delete gc;
 }
 
 void Slider::SetValue(int value) {
@@ -209,6 +235,11 @@ void Slider::mouseMoved(wxMouseEvent& event) {
       ThumbPos = ThumbRange;
 
     Refresh(true);
+
+    wxCommandEvent cmdevent( wxEVT_SCROLL_THUMBTRACK,-1 );
+    cmdevent.SetId(-1);
+    cmdevent.SetEventObject(this);
+    wxPostEvent( Parent, cmdevent);
   }
 }
 

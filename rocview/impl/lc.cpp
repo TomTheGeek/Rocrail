@@ -36,7 +36,7 @@
 #include "rocview/public/guiapp.h"
 #include "rocview/public/base.h"
 
-//#define USENEWLOOK
+#define USENEWLOOK
 #include "rocview/public/lc.h"
 #include "rocview/public/ledbutton.h"
 
