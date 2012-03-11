@@ -159,6 +159,7 @@ void Clock::OnResumeTime(wxCommandEvent& event) {
 }
 
 
+#define USENEWLOOK
 void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
 #ifdef USENEWLOOK
@@ -260,7 +261,9 @@ void Clock::drawClock() {
   double c = width/2;
 
 #if defined __APPLE__
-  dc.SetPen(*wxBLACK_PEN);
+  wxPen borderPen( wxColour(0, 0, 0), wxSOLID );
+  borderPen.SetWidth(1);
+  dc.SetPen( borderPen );
   dc.SetBrush(*wxWHITE_BRUSH);
   dc.DrawCircle( c, c, c );
 
