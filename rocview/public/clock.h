@@ -35,6 +35,8 @@ class Clock : public wxPanel{
     void stopTimer();
     void calculate();
     void drawClock();
+    void drawNewClock();
+    void drawSecondHand(wxGraphicsContext* gc, double c, bool erase=false);
 
 	private:
 		wxBitmap* m_Plate;

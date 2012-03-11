@@ -36,7 +36,9 @@
 #include "rocview/public/guiapp.h"
 #include "rocview/public/base.h"
 
+//#define USENEWLOOK
 #include "rocview/public/lc.h"
+#include "rocview/public/ledbutton.h"
 
 #include "rocview/wrapper/public/Gui.h"
 
@@ -192,7 +194,14 @@ void LC::funCmd(int fidx)
 }
 
 
-bool LC::setButtonColor( wxButton* button, bool state ) {
+#ifdef USENEWLOOK
+bool LC::setButtonColor( LEDButton* button, bool state ) {
+#else
+  bool LC::setButtonColor( wxButton* button, bool state ) {
+#endif
+#ifdef USENEWLOOK
+  button->setLED(!state);
+#endif
   if( state ) {
     button->SetBackgroundColour( Base::getGreen() );
     //button->SetForegroundColour( Base::getGreen() );
@@ -700,43 +709,83 @@ void LC::CreateControls() {
   wxBoxSizer* l_sizer0 = new wxBoxSizer(wxHORIZONTAL);
   m_ButtonSizer->Add(l_sizer0, 0, wxGROW|wxALIGN_CENTER_HORIZONTAL|wxALL, 0);
 
+#ifdef USENEWLOOK
+  m_FG = new LEDButton( m_Parent, _("FG"), 50, 25, false );
+#else
   m_FG = new wxButton( m_Parent, -1, _("FG"), wxDefaultPosition, wxSize(50, -1), wxBU_EXACTFIT );
+#endif
   l_sizer0->Add(m_FG, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 1);
 
-  m_V = new wxTextCtrl( m_Parent, -1, _("0"), wxDefaultPosition, wxSize(-1, -1), wxTE_READONLY|wxTE_CENTRE );
+#ifdef USENEWLOOK
+  m_V = new LEDButton( m_Parent, _("0"), 102, 25, false, true );
+#else
+  m_V = new wxTextCtrl( m_Parent, -1, _("0"), wxDefaultPosition, wxSize(103, 25), wxTE_READONLY|wxTE_CENTRE );
+#endif
   l_sizer0->Add(m_V, 0, wxALIGN_CENTER_VERTICAL|wxGROW|wxALL, 1);
 
   m_Button1Sizer = new wxBoxSizer(wxHORIZONTAL);
   m_ButtonSizer->Add(m_Button1Sizer, 0, wxGROW|wxALIGN_CENTER_HORIZONTAL|wxALL, 0);
 
+#ifdef USENEWLOOK
+  m_F1 = new LEDButton( m_Parent, _("F1"), 50, 25 );
+#else
   m_F1 = new wxButton( m_Parent, -1, _("F1"), wxDefaultPosition, wxSize(50, -1), wxBU_EXACTFIT );
+#endif
   m_Button1Sizer->Add(m_F1, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
+#ifdef USENEWLOOK
+  m_F2 = new LEDButton( m_Parent, _("F2"), 50, 25 );
+#else
   m_F2 = new wxButton( m_Parent, -1, _("F2"), wxDefaultPosition, wxSize(50, -1), wxBU_EXACTFIT );
+#endif
   m_Button1Sizer->Add(m_F2, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
+#ifdef USENEWLOOK
+  m_F0 = new LEDButton( m_Parent, _("F0"), 50, 25 );
+#else
   m_F0 = new wxButton( m_Parent, -1, _("F0"), wxDefaultPosition, wxSize(50, -1), wxBU_EXACTFIT );
+#endif
   m_Button1Sizer->Add(m_F0, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_Button2Sizer = new wxBoxSizer(wxHORIZONTAL);
   m_ButtonSizer->Add(m_Button2Sizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 0);
 
+#ifdef USENEWLOOK
+  m_F3 = new LEDButton( m_Parent, _("F3"), 50, 25 );
+#else
   m_F3 = new wxButton( m_Parent, -1, _("F3"), wxDefaultPosition, wxSize(50, -1), wxBU_EXACTFIT );
+#endif
   m_Button2Sizer->Add(m_F3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
+#ifdef USENEWLOOK
+  m_F4 = new LEDButton( m_Parent, _("F4"), 50, 25 );
+#else
   m_F4 = new wxButton( m_Parent, -1, _("F4"), wxDefaultPosition, wxSize(50, -1), wxBU_EXACTFIT );
+#endif
   m_Button2Sizer->Add(m_F4, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
+#ifdef USENEWLOOK
+  m_Dir = new LEDButton( m_Parent, _(">>"), 50, 25, false );
+#else
   m_Dir = new wxButton( m_Parent, -1, _(">>"), wxDefaultPosition, wxSize(50, -1), wxBU_EXACTFIT );
+#endif
   m_Button2Sizer->Add(m_Dir, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   m_SliderSizer = new wxBoxSizer(wxHORIZONTAL);
-  m_MainSizer->Add(m_SliderSizer, 0, wxGROW|wxALL, 0);
+  m_MainSizer->Add(m_SliderSizer, 0, wxGROW|wxALL, 5);
 
+#ifdef USENEWLOOK
+  m_Vslider = new Slider( m_Parent, 35, 106 );
+#else
   m_Vslider = new wxSlider( m_Parent, -1, 0, 0, 100, wxDefaultPosition, wxSize(-1, -1), wxSL_VERTICAL|wxSL_INVERSE );
-  m_SliderSizer->Add(m_Vslider, 1, wxGROW|wxALL, 4);
+#endif
+  m_SliderSizer->Add(m_Vslider, 1, wxGROW|wxALL, 1);
 
+#ifdef USENEWLOOK
+  m_Stop = new LEDButton( m_Parent, _(">>"), 154, 25, false );
+#else
   m_Stop = new wxButton( m_Parent, -1, _("Stop"), wxDefaultPosition, wxSize(130, -1), 0 );
+#endif
   m_ButtonSizer->Add(m_Stop, 0, wxGROW|wxALL, 1);
 
   const char* clocktype = wGui.getclocktype( wxGetApp().getIni() );
