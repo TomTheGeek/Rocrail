@@ -372,7 +372,9 @@ void Clock::drawNewClock() {
 
   double c = width/2;
 
-  gc->SetPen(*wxBLACK_PEN);
+  wxPen borderPen( wxColour(0, 0, 0), wxSOLID );
+  borderPen.SetWidth(1);
+  gc->SetPen( borderPen );
   gc->SetBrush(*wxWHITE_BRUSH);
 
   gc->DrawEllipse(0, 0, width-1, width-1);
