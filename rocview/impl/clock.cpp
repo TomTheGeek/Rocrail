@@ -28,6 +28,8 @@
     #include "wx/wx.h"
 #endif
 
+#include <wx/dcbuffer.h>
+
 
 #include "rocs/public/node.h"
 #include "rocs/public/str.h"
@@ -244,7 +246,7 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
 
   if( run ) {
     calculate();
-    Refresh(true);
+    Refresh(false);
   }
 }
 
@@ -357,18 +359,29 @@ void Clock::drawClock() {
 
 void Clock::drawNewClock() {
   int width, height;
-  wxPaintDC dc(this);
+  //wxPaintDC dc(this);
 
   if( !IsShownOnScreen() )
     return;
 
-  wxGraphicsContext* gc = wxGraphicsContext::Create(this);
+  SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+  wxBufferedPaintDC dc(this);
+  wxGraphicsContext* gc = wxGraphicsContext::Create(dc);
+
+  //wxGraphicsContext* gc = wxGraphicsContext::Create(this);
 #ifdef wxANTIALIAS_DEFAULT
   gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
 #endif
 
 
   GetSize(&width, &height);
+
+#if defined __APPLE__
+#else
+  //Background workaround
+  gc->SetBrush(this->GetBackgroundColour());
+  gc->DrawRectangle(0, 0, width, height);
+#endif
 
   if( height < width )
     width = height;
