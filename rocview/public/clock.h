@@ -21,7 +21,7 @@
 
 class Clock : public wxPanel{
 	public:
-    Clock(wxWindow *parent, wxWindowID id, int x, int y, int handwidth, int devider=1, int clocktype=0);
+    Clock(wxWindow *parent, wxWindowID id, int x, int y, int handwidth, int devider=1, int clocktype=0, bool showsecondhand=true);
 
     void OnPaint(wxPaintEvent& event);
     void Timer(wxTimerEvent& event);
@@ -50,6 +50,7 @@ class Clock : public wxPanel{
     int m_Temp;
     bool deviderchanged;
     bool run;
+    bool showsecondhand;
     int type;
     int hours, minutes;
 

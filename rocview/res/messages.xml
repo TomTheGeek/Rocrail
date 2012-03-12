@@ -17749,4 +17749,7 @@
   <Msg id="triggerlowevents">
     <en txt="Trigger low events after 100ms"/>
   </Msg>
+  <Msg id="showsecondhand">
+    <en txt="Show secondhand"/>
+  </Msg>
 </Messages>

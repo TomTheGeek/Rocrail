@@ -77,6 +77,7 @@
     <const name="clock_ampm" vt="string" val="ampm"/>
     <const name="clock_24h" vt="string" val="24h"/>
     <var name="clocktype" vt="string" defval="default" range="default,ampm,24h" remark="clock type select"/>
+    <var name="showsecondhand" vt="bool" defval="true"/>
     <var name="lang" vt="string" defval="en" range="en,de,nl,sv,fr,tr" remark=""/>
     <var name="host" vt="string" defval="localhost" remark="last used rrcon"/>
     <var name="openpath" vt="string" defval="." remark="use this path for init the file open dialog"/>

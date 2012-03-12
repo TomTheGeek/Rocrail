@@ -801,7 +801,7 @@ void LC::CreateControls() {
   else if( StrOp.equals( wGui.clock_24h, clocktype ) ) type = 2;
 
   TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "creating clock...");
-  m_Clock = new Clock(m_Parent, -1, 0, 0, 2, 1, type);
+  m_Clock = new Clock(m_Parent, -1, 0, 0, 2, 1, type, wGui.isshowsecondhand( wxGetApp().getIni() ));
   m_SliderSizer->Add(m_Clock, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
 
 }

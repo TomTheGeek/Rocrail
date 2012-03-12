@@ -5657,3 +5657,9 @@ msgstr ""
 msgid "Trigger low events after 100ms"
 msgstr ""
 
+#. 
+# id="showsecondhand"
+#, c-format
+msgid "Show secondhand"
+msgstr ""
+

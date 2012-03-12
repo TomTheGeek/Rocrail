@@ -53,12 +53,13 @@ BEGIN_EVENT_TABLE(Clock, wxPanel)
   EVT_MENU( ME_ResumeTime , Clock::OnResumeTime )
 END_EVENT_TABLE()
 
-Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_devider, int clocktype)
+Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_devider, int clocktype, bool showsecondhand)
                   : wxPanel(parent, id,  wxPoint(x, y), wxSize(110,110), wxBORDER_NONE)
 {
   start = true;
   run   = true;
   deviderchanged = false;
+  this->showsecondhand = showsecondhand;
   m_Plate = _img_plate;
   m_Logo  = _img_logo;
   m_Temp = 20;
@@ -201,7 +202,8 @@ void Clock::SetDevider(int p_devider) {
 }
 
 void Clock::SetTime(long p_time) {
-  ltime = (p_time / 60) * 60 - 60; // Filter out the seconds.
+  //ltime = (p_time / 60) * 60; // Filter out the seconds.
+  ltime = p_time; // Filter out the seconds.
   if( run ) {
     calculate();
     Refresh(true);
@@ -493,7 +495,7 @@ void Clock::drawNewClock() {
 
 void Clock::drawSecondHand(wxGraphicsContext* gc, double c, bool erase) {
   // second
-  if( this->devider <= 10 ) {
+  if( showsecondhand && this->devider <= 10 ) {
     gc->SetBrush( erase?*wxWHITE_BRUSH:wxColour(255, 0, 0) );
     wxPen redPen( erase?wxColour(255, 255, 255):wxColour(255, 0, 0), wxSOLID );
     redPen.SetWidth(2);
