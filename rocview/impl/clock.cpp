@@ -133,6 +133,7 @@ void Clock::OnAdjustTime(wxCommandEvent& event) {
 
     datetime->SetHour( hour );
     datetime->SetMinute( minute );
+    datetime->SetSecond( 0 );
 
     ltime = datetime->GetTicks();
 
