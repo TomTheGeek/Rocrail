@@ -1097,19 +1097,17 @@ static void __clockticker( void* threadinst ) {
   data->time = time(NULL);
   data->devider = 1;
 
-  if( clockini != NULL ) {
-    data->devider = wClock.getdivider( clockini );
-    update = wClock.getupdate( clockini );
-    if( wClock.gethour( clockini ) < 24 && wClock.getminute( clockini ) < 60 ) {
-      struct tm* ltm = localtime( &data->time );
-      ltm->tm_hour = wClock.gethour( clockini );
-      ltm->tm_min  = wClock.getminute( clockini );
-      data->time = mktime(ltm);
-    }
-    else {
-      clockini = NodeOp.inst( wClock.name(), ini, ELEMENT_NODE );
-      NodeOp.addChild( ini, clockini );
-    }
+  if( clockini == NULL ) {
+    clockini = NodeOp.inst( wClock.name(), ini, ELEMENT_NODE );
+    NodeOp.addChild( ini, clockini );
+  }
+  data->devider = wClock.getdivider( clockini );
+  update = wClock.getupdate( clockini );
+  if( wClock.gethour( clockini ) < 24 && wClock.getminute( clockini ) < 60 ) {
+    struct tm* ltm = localtime( &data->time );
+    ltm->tm_hour = wClock.gethour( clockini );
+    ltm->tm_min  = wClock.getminute( clockini );
+    data->time = mktime(ltm);
   }
 
   if( data->devider > 100 || data->devider < 1 ) {
