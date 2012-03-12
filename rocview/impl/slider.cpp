@@ -191,6 +191,9 @@ int Slider::GetValue() {
   // MaxPos = 0, MinPos = ThumbRange
   double v = (double)(ThumbRange - ThumbPos) / Step;
   Value = v;
+  if( v - (double)Value >= 0.5 )
+    Value++;
+
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "GET Value=%d Step=%f ThumbPos=%d ThumbRange=%d", Value, Step, ThumbPos, ThumbRange );
   return Value;
 }
