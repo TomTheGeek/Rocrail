@@ -73,6 +73,7 @@ Slider::Slider(wxPanel* parent, int width, int height)
   ThumbPos = ThumbRange;
   PrevThumbPos = ThumbPos;
   PrevWheelTime = -1;
+  SystemOp.inst();
   Step = (double)ThumbRange / (double)Max;
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "Height=%d Step=%f ThumbPos=%d ThumbRange=%d", Height, Step, ThumbPos, ThumbRange );
 }
@@ -164,8 +165,11 @@ void Slider::OnPaint(wxPaintEvent& WXUNUSED(event))
 }
 
 void Slider::SetValue(int value, bool force) {
-  if( !force && InitSet && PrevWheelTime != -1 && SystemOp.getMillis() - PrevWheelTime < 500 ) {
-    return;
+
+  if( !force && InitSet ) {
+    if( PrevWheelTime != -1 && (SystemOp.getTick() - PrevWheelTime) < 50 ) {
+      return;
+    }
   }
 
   InitSet = true;
@@ -257,7 +261,7 @@ void Slider::mouseWheelMoved(wxMouseEvent& event) {
     ThumbPos--;
   }
 
-  PrevWheelTime = SystemOp.getMillis();
+  PrevWheelTime = SystemOp.getTick();
   moveThumb();
 }
 
