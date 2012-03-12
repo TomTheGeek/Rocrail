@@ -214,8 +214,8 @@ macapp:
 	cp ../unxbin/rocrail Rocrail.app/Contents/MacOS/rocrail
 	cp ../unxbin/*.dylib Rocrail.app/Contents/MacOS
 	cp Run Rocrail.app/Contents/MacOS/
-	-cp /usr/lib/libwx* Rocrail.app/Contents/MacOS/
-	-cp /usr/local/lib/libwx* Rocrail.app/Contents/MacOS/
+	-cp /usr/lib/libwx*2.8.dylib Rocrail.app/Contents/MacOS/
+	-cp /usr/local/lib/libwx*2.9.dylib Rocrail.app/Contents/MacOS/
 	rm -rf ../unxbin/Rocrail.app
 	mv -f Rocrail.app ../unxbin
 	
