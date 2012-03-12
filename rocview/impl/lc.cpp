@@ -400,7 +400,7 @@ void LC::OnButton(wxCommandEvent& event)
 
   if ( event.GetEventObject() == m_Stop ) {
     m_iSpeed = 0;
-    m_Vslider->SetValue( m_iSpeed );
+    m_Vslider->SetValue( m_iSpeed, true );
     speedCmd(true);
   }
   else if ( event.GetEventObject() == m_FG ) {
