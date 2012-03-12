@@ -85,6 +85,8 @@ void Slider::OnPaint(wxPaintEvent& WXUNUSED(event))
   if( !IsShownOnScreen() )
     return;
 
+  TraceOp.trc( "clock", TRCLEVEL_DEBUG, __LINE__, 9999, "draw slider" );
+
   bool useGC = true;
 
   if( useGC ) {
@@ -161,8 +163,8 @@ void Slider::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 }
 
-void Slider::SetValue(int value) {
-  if( InitSet && PrevWheelTime != -1 && SystemOp.getMillis() - PrevWheelTime < 500 ) {
+void Slider::SetValue(int value, bool force) {
+  if( !force && InitSet && PrevWheelTime != -1 && SystemOp.getMillis() - PrevWheelTime < 500 ) {
     return;
   }
 

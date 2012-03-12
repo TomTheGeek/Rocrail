@@ -105,7 +105,7 @@ void LC::setLocProps( iONode props ) {
     setButtonColor( m_F0, !m_bFn );
 
     m_Vslider->SetRange( 0, wLoc.getV_max(m_LocProps) );
-    m_Vslider->SetValue( wLoc.getV(m_LocProps) );
+    m_Vslider->SetValue( wLoc.getV(m_LocProps), true );
     m_iSpeed = wLoc.getV(m_LocProps);
     wxString value;
     value.Printf( _T("%d"), m_iSpeed );

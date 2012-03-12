@@ -43,7 +43,7 @@ class Slider : public wxPanel
 
 public:
     Slider(wxPanel* parent, int width, int height);
-    void SetValue(int value);
+    void SetValue(int value, bool force=false);
     int GetValue();
     void SetRange(int minValue, int maxValue);
     void moveThumb();
