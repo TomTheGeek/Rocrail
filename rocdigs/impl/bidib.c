@@ -49,7 +49,7 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 
-#include "rocdigs/impl/bidib/bidib.h"
+#include "rocdigs/impl/bidib/bidib_messages.h"
 #include "rocdigs/impl/bidib/serial.h"
 
 static int instCnt = 0;
@@ -312,7 +312,103 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     }
     else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
+      msg[0] = 3; // length
+      msg[1] = 0; // address
+      msg[2] = data->downSeq; // sequence number 1...255
+      msg[3] = MSG_BOOST_OFF; //data
+      int size = __makeMessage(msg, 4);
+      data->subWrite((obj)inst, msg, size);
+      data->downSeq++;
+      data->power = False;
+      __inform(inst);
     }
+  }
+
+  /* Switch command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    int delay = wSwitch.getdelay(node) > 0 ? wSwitch.getdelay(node):data->swtime;
+    int addr = wSwitch.getaddr1( node );
+    if( addr == 0 ) {
+      addr = wSwitch.getport1( node );
+    }
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch %d:%d",
+        wSwitch.getbus( node ), wSwitch.getaddr1( node ) );
+
+    msg[0] = 7; // length
+    msg[1] = 0; // address
+    msg[2] = data->downSeq; // sequence number 1...255
+    msg[3] = addr / 256;
+    msg[4] = addr % 256;
+    msg[5] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 1:0;
+    msg[5] += 0x10;
+    msg[6] = ((delay / 40) << 4);
+    msg[7] = MSG_CS_ACCESSORY; //data
+    int size = __makeMessage(msg, 8);
+    data->subWrite((obj)inst, msg, size);
+    data->downSeq++;
+  }
+
+
+  /* Output command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    byte cmd[5];
+    byte* frame = allocMem(32);
+    Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+
+    int addr = wOutput.getaddr( node );
+    if( addr == 0 ) {
+      addr = wOutput.getport( node );
+    }
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d:%d.%d %s",
+        wOutput.getbus( node ), wOutput.getaddr( node ), wOutput.getgate(node), on?"ON":"OFF" );
+
+    msg[0] = 7; // length
+    msg[1] = 0; // address
+    msg[2] = data->downSeq; // sequence number 1...255
+    msg[3] = addr / 256;
+    msg[4] = addr % 256;
+    msg[5] = wOutput.getgate(node);
+    msg[5] += on ? 0x10:0x00;
+    msg[6] = 0;
+    msg[7] = MSG_CS_ACCESSORY; //data
+    int size = __makeMessage(msg, 8);
+    data->subWrite((obj)inst, msg, size);
+    data->downSeq++;
+  }
+
+  /* Loc command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    int   addr = wLoc.getaddr( node );
+    int  steps = wLoc.getspcnt( node );
+    int  speed = 0;
+    Boolean fn  = wLoc.isfn( node );
+    Boolean dir = wLoc.isdir( node ); /* True == forwards */
+
+    if( wLoc.getV( node ) != -1 ) {
+      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+        speed = (wLoc.getV( node ) * steps) / 100;
+      else if( wLoc.getV_max( node ) > 0 )
+        speed = (wLoc.getV( node ) * steps) / wLoc.getV_max( node );
+    }
+
+    msg[ 0] = 12; // length
+    msg[ 1] = 0; // address
+    msg[ 2] = data->downSeq; // sequence number 1...255
+    msg[ 3] = addr / 256;
+    msg[ 4] = addr % 256;
+    msg[ 5] = (dir ? 0x00:0x80) + (steps==128?0x30:0x20); // 128 speed steps
+    msg[ 6] = 0x3F;
+    msg[ 7] = speed;
+    msg[ 8] = (fn?0x10:0x00);
+    msg[ 9] = 0;
+    msg[10] = 0;
+    msg[11] = 0;
+    msg[12] = MSG_CS_DRIVE; //data
+    int size = __makeMessage(msg, 13);
+    data->subWrite((obj)inst, msg, size);
+    data->downSeq++;
   }
 
   /* Sensor command. */
@@ -504,7 +600,7 @@ static void __seqAck(iOBiDiB bidib, byte* msg, int size) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "seqAck for addr=%d seq=%d...", msg[1], msg[2] );
     TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg, size );
     msg[2] = data->downSeq; // sequence number 1...255
-    msg[3] = MSG_BM_MIRROR;
+    msg[3] = MSG_BM_MIRROR_MULTIPLE;
     size = __makeMessage(msg, size);
     TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg, size );
     data->subWrite((obj)bidib, msg, size);
@@ -1015,6 +1111,7 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   data->mux      = MutexOp.inst( NULL, True );
   data->nodemap  = MapOp.inst();
   data->localmap = MapOp.inst();
+  data->swtime   = wDigInt.getswtime( ini );
 
   if( data->bidibini == NULL ) {
     data->bidibini = NodeOp.inst( wBiDiB.name(), data->ini, ELEMENT_NODE);

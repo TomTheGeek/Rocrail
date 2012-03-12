@@ -1257,6 +1257,7 @@
       <var name="bidibini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="device" vt="const char*"/>
+      <var name="swtime" vt="int"/>
       <var name="run" vt="Boolean"/>
       <var name="power" vt="Boolean"/>
       <var name="tabver" vt="int"/>
