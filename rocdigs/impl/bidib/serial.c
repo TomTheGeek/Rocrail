@@ -32,7 +32,7 @@
 
 #include "rocrail/wrapper/public/DigInt.h"
 
-#include "rocdigs/impl/bidib/bidib.h"
+#include "rocdigs/impl/bidib/bidib_messages.h"
 
 
 
