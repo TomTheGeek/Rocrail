@@ -160,10 +160,8 @@ void Clock::OnResumeTime(wxCommandEvent& event) {
   wxGetApp().sendToRocrail( tick, false );
 }
 
-#if defined __APPLE__ || defined _WIN32
 #define USENEWLOOK
-#endif
-void Clock::OnPaint(wxPaintEvent& WXUNUSED(event))
+void Clock::OnPaint(wxPaintEvent& event)
 {
 #ifdef USENEWLOOK
   drawNewClock();
@@ -247,6 +245,7 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
 
   if( run ) {
     calculate();
+    TraceOp.trc( "clock", TRCLEVEL_DEBUG, __LINE__, 9999, "clock timer" );
     Refresh(false);
   }
 }
@@ -257,6 +256,8 @@ void Clock::drawClock() {
   int width, height;
   wxPaintDC dc(this);
   GetSize(&width, &height);
+
+  TraceOp.trc( "clock", TRCLEVEL_DEBUG, __LINE__, 9999, "draw clock" );
 
   if( height < width )
     width = height;
@@ -360,25 +361,27 @@ void Clock::drawClock() {
 
 void Clock::drawNewClock() {
   int width, height;
-  //wxPaintDC dc(this);
 
   if( !IsShownOnScreen() )
     return;
 
+  TraceOp.trc( "clock", TRCLEVEL_DEBUG, __LINE__, 9999, "draw new clock" );
+#if defined __WIN32
   SetBackgroundStyle(wxBG_STYLE_CUSTOM);
   wxBufferedPaintDC dc(this);
   wxGraphicsContext* gc = wxGraphicsContext::Create(dc);
+#else
+  wxPaintDC dc(this);
+  wxGraphicsContext* gc = wxGraphicsContext::Create(dc);
+#endif
 
-  //wxGraphicsContext* gc = wxGraphicsContext::Create(this);
 #ifdef wxANTIALIAS_DEFAULT
   gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
 #endif
 
-
   GetSize(&width, &height);
 
-#if defined __APPLE__
-#else
+#if defined __WIN32
   //Background workaround
   gc->SetBrush(this->GetBackgroundColour());
   gc->DrawRectangle(0, 0, width, height);
@@ -395,6 +398,7 @@ void Clock::drawNewClock() {
   gc->SetBrush(*wxWHITE_BRUSH);
 
   gc->DrawEllipse(0, 0, width-1, width-1);
+
   drawSecondHand(gc, c, true);
 
 

@@ -36,9 +36,9 @@
 #include "rocview/public/guiapp.h"
 #include "rocview/public/base.h"
 
-#if defined __APPLE__ || defined _WIN32
+
 #define USENEWLOOK
-#endif
+
 #include "rocview/public/lc.h"
 #include "rocview/public/ledbutton.h"
 

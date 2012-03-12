@@ -35,9 +35,7 @@
 #include "rocview/public/ledbutton.h"
 #include "rocview/public/slider.h"
 
-#if defined __APPLE__ || defined _WIN32
 #define USENEWLOOK
-#endif
 
 class LC
 {
