@@ -99,6 +99,8 @@ void Hsi88CntrlDlg::initLabels() {
   m_labLeft->SetLabel( wxGetApp().getMsg( "left" ) );
   m_labMid->SetLabel( wxGetApp().getMsg( "middle" ) );
   m_labRight->SetLabel( wxGetApp().getMsg( "right" ) );
+  m_OptionsBox->SetLabel( wxGetApp().getMsg( "options" ) );
+  m_Smooth->SetLabel( wxGetApp().getMsg( "triggerlowevents" ) );
 }
 
 void Hsi88CntrlDlg::initValues() {
@@ -125,6 +127,7 @@ void Hsi88CntrlDlg::initValues() {
   val = StrOp.fmt( "%d", wHSI88.getfbright( hsi88ini ) );
   m_Right->SetValue( wxString( val, wxConvUTF8 ) );
   StrOp.free( val );
+  m_Smooth->SetValue( wHSI88.issmooth( hsi88ini )?true:false );
 }
 
 
@@ -145,6 +148,7 @@ void Hsi88CntrlDlg::evaluate() {
   wHSI88.setfbleft( hsi88ini, atoi( m_Left->GetValue().mb_str(wxConvUTF8) ) );
   wHSI88.setfbmiddle( hsi88ini, atoi( m_Mid->GetValue().mb_str(wxConvUTF8) ) );
   wHSI88.setfbright( hsi88ini, atoi( m_Right->GetValue().mb_str(wxConvUTF8) ) );
+  wHSI88.setsmooth( hsi88ini, m_Smooth->IsChecked()?True:False );
 }
 
 
@@ -169,6 +173,8 @@ bool Hsi88CntrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& cap
     m_Left = NULL;
     m_Mid = NULL;
     m_Right = NULL;
+    m_OptionsBox = NULL;
+    m_Smooth = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end Hsi88CntrlDlg member initialisation
@@ -206,7 +212,6 @@ void Hsi88CntrlDlg::CreateControls()
     m_Panel->SetSizer(itemBoxSizer4);
 
     wxFlexGridSizer* itemFlexGridSizer5 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer5->AddGrowableCol(1);
     itemBoxSizer4->Add(itemFlexGridSizer5, 0, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( m_Panel, ID_STATICTEXT_HSI_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -220,6 +225,8 @@ void Hsi88CntrlDlg::CreateControls()
 
     m_Device = new wxTextCtrl( m_Panel, ID_TEXTCTRL_HSI_DEVICE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer5->AddGrowableCol(1);
 
     wxArrayString m_TypeStrings;
     m_TypeStrings.Add(_("&RS232"));
@@ -256,17 +263,25 @@ void Hsi88CntrlDlg::CreateControls()
     m_Right->SetMaxLength(5);
     itemFlexGridSizer12->Add(m_Right, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer19 = new wxStdDialogButtonSizer;
+    m_OptionsBox = new wxStaticBox(m_Panel, wxID_ANY, _("Options"));
+    wxStaticBoxSizer* itemStaticBoxSizer19 = new wxStaticBoxSizer(m_OptionsBox, wxVERTICAL);
+    itemBoxSizer4->Add(itemStaticBoxSizer19, 0, wxGROW|wxALL, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer19, 0, wxALIGN_RIGHT|wxALL, 5);
+    m_Smooth = new wxCheckBox( m_Panel, wxID_ANY, _("Low events stable at 100ms"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Smooth->SetValue(false);
+    itemStaticBoxSizer19->Add(m_Smooth, 0, wxALIGN_LEFT|wxALL, 5);
+
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer21 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer21, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer19->AddButton(m_OK);
+    itemStdDialogButtonSizer21->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer19->AddButton(m_Cancel);
+    itemStdDialogButtonSizer21->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer19->Realize();
+    itemStdDialogButtonSizer21->Realize();
 
 ////@end Hsi88CntrlDlg content construction
 }

@@ -17746,4 +17746,7 @@
   <Msg id="nodenumber">
     <en txt="Node number"/>
   </Msg>
+  <Msg id="triggerlowevents">
+    <en txt="Trigger low events after 100ms"/>
+  </Msg>
 </Messages>

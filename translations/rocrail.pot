@@ -5651,3 +5651,9 @@ msgstr ""
 msgid "Node number"
 msgstr ""
 
+#. 
+# id="triggerlowevents"
+#, c-format
+msgid "Trigger low events after 100ms"
+msgstr ""
+
