@@ -231,8 +231,8 @@ void Slider::mouseLeftWindow(wxMouseEvent& event)
   if(Drag)
     mouseReleased(event);
 
-  if( PrevFocusWindow )
-    PrevFocusWindow->SetFocus();
+  //if( PrevFocusWindow )
+  //  PrevFocusWindow->SetFocus();
 }
 
 // currently unused events
