@@ -273,10 +273,9 @@ void Slider::mouseWheelMoved(wxMouseEvent& event) {
 
 
 void Slider::rightClick(wxMouseEvent& event) {}
-void Slider::keyPressed(wxKeyEvent& event) {
-
-}
 void Slider::keyReleased(wxKeyEvent& event) {
+}
+void Slider::keyPressed(wxKeyEvent& event) {
   if( event.GetKeyCode() == WXK_DOWN || event.GetKeyCode() == WXK_NUMPAD_DOWN) {
     ThumbPos++;
   }
