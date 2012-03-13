@@ -73,6 +73,7 @@
 #include "rocrail/wrapper/public/Booster.h"
 #include "rocrail/wrapper/public/R2RnetIni.h"
 #include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/SystemActions.h"
 
 typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 /* proto types */
@@ -1056,22 +1057,25 @@ static void __checkAction( iOControl inst, const char* state ) {
   if( model != NULL ) {
     iONode plan   = ModelOp.getModel( model );
     if( plan != NULL ) {
-      iONode action = wPlan.getactionctrl(plan);
-      /* loop over all actions */
-      while( action != NULL ) {
-        if( StrOp.equals(state, wActionCtrl.getstate( action )) )
-        {
-          iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
-          if( Action != NULL ) {
-            ActionOp.exec(Action, action);
+      iONode system = wPlan.getsystem(plan);
+      if( system != NULL ) {
+        iONode action = wSystemActions.getactionctrl(system);
+        /* loop over all actions */
+        while( action != NULL ) {
+          if( StrOp.equals(state, wActionCtrl.getstate( action )) )
+          {
+            iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
+            if( Action != NULL ) {
+              ActionOp.exec(Action, action);
+            }
           }
-        }
-        else {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
-              wActionCtrl.getstate( action ), state );
-        }
+          else {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
+                wActionCtrl.getstate( action ), state );
+          }
 
-        action = wPlan.nextactionctrl( plan, action );
+          action = wSystemActions.nextactionctrl( system, action );
+        }
       }
     }
   }

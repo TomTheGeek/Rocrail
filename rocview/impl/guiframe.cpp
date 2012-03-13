@@ -149,6 +149,7 @@
 #include "rocrail/wrapper/public/Booster.h"
 #include "rocrail/wrapper/public/BoosterList.h"
 #include "rocrail/wrapper/public/PwrEvent.h"
+#include "rocrail/wrapper/public/SystemActions.h"
 
 #include "rocview/symbols/svg.h"
 #include "rocview/res/icons.hpp"
@@ -3015,8 +3016,12 @@ void RocGuiFrame::OnEditBlockGroups( wxCommandEvent& event ) {
 void RocGuiFrame::OnEditActions( wxCommandEvent& event ) {
   if( wxGetApp().getModel() == NULL )
     return;
-
-  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, wxGetApp().getModel() );
+  iONode system = wPlan.getsystem(wxGetApp().getModel());
+  if( system == NULL ) {
+    system = NodeOp.inst(wSystemActions.name(), wxGetApp().getModel(), ELEMENT_NODE );
+    NodeOp.addChild(wxGetApp().getModel(), system);
+  }
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, system );
 
   if( wxID_OK == dlg->ShowModal() ) {
     // TODO: inform

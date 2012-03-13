@@ -120,6 +120,7 @@
 #include "rocrail/wrapper/public/Accessory.h"
 #include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/TourList.h"
+#include "rocrail/wrapper/public/SystemActions.h"
 
 static int instCnt = 0;
 
@@ -910,6 +911,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
   Boolean modified = False;
 
   if( !StrOp.equals(wMVTrack.name(), NodeOp.getName(item) ) &&
+      !StrOp.equals(wSystemActions.name(), NodeOp.getName(item) ) &&
       !StrOp.equals(wZLevel.name(), NodeOp.getName(item) ) && (id == NULL ||
       StrOp.len(id) == 0 || StrOp.equals("(null)", id) ) ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "invalid id for modify [%s]", name );
@@ -1359,6 +1361,27 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       }
       zlevel = wPlan.nextzlevel( data->model, zlevel );
     };
+  }
+  else if( StrOp.equals( wSystemActions.name(), name ) ) {
+    iONode system = wPlan.getsystem( data->model );
+    if( system == NULL ) {
+      system = (iONode)NodeOp.base.clone( item );
+      NodeOp.addChild( data->model, system );
+    }
+    else {
+      int cnt = NodeOp.getChildCnt( system );
+      int i = 0;
+      while( cnt > 0 ) {
+        iONode child = NodeOp.getChild( system, 0 );
+        NodeOp.removeChild( system, child );
+        cnt = NodeOp.getChildCnt( system );
+      }
+      cnt = NodeOp.getChildCnt( item );
+      for( i = 0; i < cnt; i++ ) {
+        iONode child = NodeOp.getChild( item, i );
+        NodeOp.addChild( system, (iONode)NodeOp.base.clone(child) );
+      }
+    }
   }
 
   return modified;
