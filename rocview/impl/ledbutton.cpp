@@ -32,6 +32,8 @@
 #include "wx/print.h"
 #include <wx/graphics.h>
 
+#include "rocs/public/trace.h"
+
 #include "rocview/public/ledbutton.h"
 
 
@@ -79,6 +81,7 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
 
   if( !IsShownOnScreen() )
     return;
+  TraceOp.trc( "clock", TRCLEVEL_DEBUG, __LINE__, 9999, "draw ledbutton" );
 
   wxGraphicsContext* gc = wxGraphicsContext::Create(this);
 
@@ -126,8 +129,9 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 
 void LEDButton::draw7Segement(wxGraphicsContext* gc, int segval, int segoff) {
-  int segwidth = (buttonWidth-12) / 4;
+  //int segwidth = (buttonWidth-12) / 4;
   int segheight = buttonHeight - 8;
+  int segwidth  = segheight;
   // horizontal
   wxPen pen( wxColour(100, 100, 100), wxSOLID );
   pen.SetWidth(1);
@@ -161,9 +165,11 @@ void LEDButton::draw7Segement(wxGraphicsContext* gc, int segval, int segoff) {
 
 
 void LEDButton::Display7Segement(wxGraphicsContext* gc) {
-  int segwidth = (buttonWidth-12) / 4;
+  //int segwidth = (buttonWidth-12) / 4;
   int segheight = buttonHeight - 8;
+  int segwidth  = segheight;
   int seggap = segwidth / 4;
+  int segoffset = (buttonWidth - 3 * segwidth - 2 * seggap) / 2;
   int val = atoi(text.mb_str(wxConvUTF8));
   int val100 = val / 100;
   int val10 = (val % 100) / 10;
@@ -171,10 +177,10 @@ void LEDButton::Display7Segement(wxGraphicsContext* gc) {
 
 
   if( val100 > 0 )
-    draw7Segement(gc, val100, 6 + seggap);
+    draw7Segement(gc, val100, segoffset);
   if( val100 > 0 || val10 > 0 )
-    draw7Segement(gc, val10, 6 + seggap*2 + segwidth);
-  draw7Segement(gc, val1, 6 + seggap*3 + segwidth*2);
+    draw7Segement(gc, val10, segoffset + seggap*1 + segwidth);
+  draw7Segement(gc, val1, segoffset + seggap*2 + segwidth*2);
 }
 
 

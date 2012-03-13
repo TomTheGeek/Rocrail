@@ -24,6 +24,7 @@
 class Slider : public wxPanel
 {
     wxPanel* Parent;
+    wxWindow* PrevFocusWindow;
     int Value;
     int Min;
     int Max;

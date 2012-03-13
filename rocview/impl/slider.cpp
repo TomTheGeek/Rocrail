@@ -74,6 +74,7 @@ Slider::Slider(wxPanel* parent, int width, int height)
   PrevThumbPos = ThumbPos;
   PrevWheelTime = -1;
   SystemOp.inst();
+  PrevFocusWindow = NULL;
   Step = (double)ThumbRange / (double)Max;
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "Height=%d Step=%f ThumbPos=%d ThumbRange=%d", Height, Step, ThumbPos, ThumbRange );
 }
@@ -207,6 +208,7 @@ void Slider::SetRange(int minValue, int maxValue) {
 
 void Slider::mouseDown(wxMouseEvent& event)
 {
+  PrevFocusWindow = FindFocus();
   SetFocus();
   Move = event.m_y;
   Drag = true;
@@ -229,7 +231,8 @@ void Slider::mouseLeftWindow(wxMouseEvent& event)
   if(Drag)
     mouseReleased(event);
 
-  Parent->SetFocus();
+  if( PrevFocusWindow )
+    PrevFocusWindow->SetFocus();
 }
 
 // currently unused events
@@ -256,7 +259,7 @@ void Slider::mouseMoved(wxMouseEvent& event) {
 
 
 void Slider::mouseWheelMoved(wxMouseEvent& event) {
-  TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "mouseWheelMoved %d %d", event.m_wheelDelta, event.m_wheelRotation );
+  TraceOp.trc( "slider", TRCLEVEL_DEBUG, __LINE__, 9999, "mouseWheelMoved %d %d", event.m_wheelDelta, event.m_wheelRotation );
   if( event.m_wheelRotation < 0 ) {
     ThumbPos++;
   }
@@ -294,14 +297,15 @@ void Slider::moveThumb() {
   if( ThumbPos > ThumbRange )
     ThumbPos = ThumbRange;
 
-  Refresh(true);
-  PrevThumbPos = ThumbPos;
+  if( PrevThumbPos != ThumbPos ) {
+    Refresh(true);
+    PrevThumbPos = ThumbPos;
 
-  wxCommandEvent cmdevent( wxEVT_SCROLL_THUMBRELEASE,-1 );
-  cmdevent.SetId(-1);
-  cmdevent.SetEventObject(this);
-  wxPostEvent( Parent, cmdevent);
-
+    wxCommandEvent cmdevent( wxEVT_SCROLL_THUMBRELEASE,-1 );
+    cmdevent.SetId(-1);
+    cmdevent.SetEventObject(this);
+    wxPostEvent( Parent, cmdevent);
+  }
 }
 
 
