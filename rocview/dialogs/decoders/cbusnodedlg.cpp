@@ -1310,6 +1310,9 @@ void CBusNodeDlg::onGC2SetAll( wxCommandEvent& event ) {
 
 
 void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
+  m_bGC2SetAll = false;
+  m_bGC4SetAll = false;
+  m_bGC6SetAll = false;
   for( int i = 0; i < 16; i++ ) {
     int conf = 0;
     int nn = 0;
@@ -1332,6 +1335,7 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
 
   if( m_SOD != m_GC2SOD->GetValue() ) {
     m_SOD = m_GC2SOD->GetValue();
+    TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "GC2 new SoD=%d", m_SOD);
     m_GC2SetIndex = 18;
     m_bGC2SetAll = false;
     setLearn();
@@ -1348,6 +1352,7 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
     m_ShortEvents = m_GC2ShortEvents->IsChecked();
     m_SODAll = m_GC2SODAll->IsChecked();
     m_PulseTime = m_GC2PulseTime->GetSelection();
+    TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "GC2 new options");
     m_GC2SetIndex = 0;
     m_bGC2SetAll = false;
     m_Timer->Start( 100, wxTIMER_ONE_SHOT );
@@ -1356,6 +1361,7 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
   if(m_GC2CanID->GetValue() != m_CANID )
   {
     m_CANID = m_GC2CanID->GetValue();
+    TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "GC2 new CanID=%d", m_CANID);
     m_GC2SetIndex = 21;
     m_bGC2SetAll = false;
     m_Timer->Start( 100, wxTIMER_ONE_SHOT );
@@ -1514,7 +1520,7 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
       varSet(20, canid, false);
     }
     m_GC2SetIndex++;
-    if( m_bGC2SetAll && m_GC2SetIndex < 21 ) {
+    if( m_bGC2SetAll && m_GC2SetIndex < 22 ) {
       m_Timer->Start( 100, wxTIMER_ONE_SHOT );
     }
     else {
