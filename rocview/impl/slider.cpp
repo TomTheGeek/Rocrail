@@ -231,8 +231,8 @@ void Slider::mouseReleased(wxMouseEvent& event)
 void Slider::mouseLeftWindow(wxMouseEvent& event)
 {
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "mouseLeftWindow");
-  if(Drag)
-    mouseReleased(event);
+  //if(Drag)
+    //mouseReleased(event);
 
   //if( PrevFocusWindow )
   //  PrevFocusWindow->SetFocus();

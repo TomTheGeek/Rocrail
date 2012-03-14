@@ -56,7 +56,7 @@ END_EVENT_TABLE()
 
 
 LEDButton::LEDButton(wxPanel* parent, wxString text, int width, int height, bool useLED, bool textOnly)
-  :wxPanel(parent, -1,  wxPoint(0, 0), wxSize(width,height), wxBORDER_NONE)
+  :wxPanel(parent, -1,  wxPoint(0, 0), wxSize(width,height), wxBORDER_NONE|wxWANTS_CHARS)
 {
   buttonWidth = width;
   buttonHeight = height;
@@ -204,6 +204,8 @@ bool LEDButton::SetBackgroundColour(const wxColour& colour) {
 
 void LEDButton::mouseDown(wxMouseEvent& event)
 {
+  SetFocus();
+
   if( textOnly )
     return;
 
