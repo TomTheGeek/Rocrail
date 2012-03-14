@@ -17744,7 +17744,10 @@
     <en txt="Add location parameter"/>
   </Msg>
   <Msg id="nodenumber">
-    <en txt="Node number"/>
+    <en txt="Node Nr."/>
+  </Msg>
+  <Msg id="eventnumber">
+    <en txt="Event Nr."/>
   </Msg>
   <Msg id="triggerlowevents">
     <en txt="Trigger low events after 100ms"/>

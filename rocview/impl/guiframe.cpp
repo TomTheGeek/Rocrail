@@ -1625,9 +1625,10 @@ void RocGuiFrame::initFrame() {
   //menuPTDCC->Append( ME_OpenDecoder, wxGetApp().getMenu("opendecoder"), wxGetApp().getTip("opendecoder") );
   //menuProgramming->Append( -1, _T("NMRA DCC"), menuPTDCC );
 
-  wxMenu *menuCBus = new wxMenu();
-  menuCBus->Append( ME_CBusNode, _T("CBUS Node"), _T("CBUS Node") );
-  menuProgramming->Append( -1, _T("CBUS"), menuCBus );
+  //wxMenu *menuCBus = new wxMenu();
+  //menuCBus->Append( ME_CBusNode, _T("CBUS Node"), _T("CBUS Node") );
+  //menuProgramming->Append( -1, _T("CBUS"), menuCBus );
+  menuProgramming->Append( ME_CBusNode, _T("CBUS Node"), _T("CBUS Node") );
 
   // the "About" item should be in the help menu
   wxMenu *menuHelp = new wxMenu();

@@ -55,17 +55,6 @@ CBusNodeDlg::CBusNodeDlg( wxWindow* parent ):cbusnodedlggen( parent )
 
 CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( parent )
 {
-  m_bGC2GetAll = false;
-  m_bGC2SetAll = false;
-  m_bGC7GetAll = false;
-  m_bGC4GetAll = false;
-  m_bGC4SetAll = false;
-  m_bGC6GetAll = false;
-  m_bGC6SetAll = false;
-  m_bGC2SetAll = true;
-  m_GC2SetIndex = 0;
-  m_GC6SetIndex = 0;
-  m_GC4SetIndex = 0;
   init(event);
 }
 
@@ -80,6 +69,17 @@ void CBusNodeDlg::init( iONode event ) {
   m_CANID = 0;
   m_DigInt = NULL;
 
+  m_bGC2GetAll = false;
+  m_bGC2SetAll = false;
+  m_bGC7GetAll = false;
+  m_bGC4GetAll = false;
+  m_bGC4SetAll = false;
+  m_bGC6GetAll = false;
+  m_bGC6SetAll = false;
+  m_bGC2SetAll = true;
+  m_GC2SetIndex = 0;
+  m_GC6SetIndex = 0;
+  m_GC4SetIndex = 0;
 
 
   m_Timer = new wxTimer( this, ME_GC2Timer );
@@ -108,8 +108,8 @@ void CBusNodeDlg::init( iONode event ) {
   m_VarSet->SetLabel( wxGetApp().getMsg( "set" ) );
 
   // Events tab
-  m_labEventNode->SetLabel( wxGetApp().getMsg( "node" ) );
-  m_labEventAddr->SetLabel( wxGetApp().getMsg( "event" ) );
+  m_labEventNode->SetLabel( wxGetApp().getMsg( "nodenumber" ) );
+  m_labEventAddr->SetLabel( wxGetApp().getMsg( "eventnumber" ) );
   m_labEventIndex->SetLabel( wxGetApp().getMsg( "index" ) );
   m_labEventVar->SetLabel( wxGetApp().getMsg( "variable" ) );
   m_EvtGetVar->SetLabel( wxGetApp().getMsg( "get" ) );
