@@ -126,6 +126,14 @@ void CBusNodeDlg::init( iONode event ) {
   m_BootMode->SetLabel( wxGetApp().getMsg( "bootmode" ) );
   m_ResetBoot->SetLabel( wxGetApp().getMsg( "reset" ) );
 
+  // GC2 tab
+  m_lab1GC2Port->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_lab1GC2EvtNN->SetLabel( wxGetApp().getMsg( "nodenumber" ) );
+  m_lab1GC2EvtAddr->SetLabel( wxGetApp().getMsg( "eventnumber" ) );
+  m_lab2GC2Port->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_lab2GC2EvtNN->SetLabel( wxGetApp().getMsg( "nodenumber" ) );
+  m_lab2GC2EvtAddr->SetLabel( wxGetApp().getMsg( "eventnumber" ) );
+
   // Buttons
   m_stdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_stdButtonCancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
@@ -137,6 +145,9 @@ void CBusNodeDlg::init( iONode event ) {
   m_EventsPanel->GetSizer()->Layout();
   m_FirmwarePanel->GetSizer()->Layout();
   m_CANGC2Panel->GetSizer()->Layout();
+  m_CANGC4Panel->GetSizer()->Layout();
+  m_CANGC6Panel->GetSizer()->Layout();
+  m_CANGC7Panel->GetSizer()->Layout();
 
   m_NoteBook->Fit();
 
