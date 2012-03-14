@@ -56,7 +56,7 @@ END_EVENT_TABLE()
 
 
 Slider::Slider(wxPanel* parent, int width, int height)
-  :wxPanel(parent, -1,  wxPoint(0, 0), wxSize(width,height), wxBORDER_NONE)
+  :wxPanel(parent, -1,  wxPoint(0, 0), wxSize(width,height), wxBORDER_NONE|wxWANTS_CHARS)
 {
   Width = width;
   Height = height;
@@ -208,6 +208,7 @@ void Slider::SetRange(int minValue, int maxValue) {
 
 void Slider::mouseDown(wxMouseEvent& event)
 {
+  TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "mouseDown");
   PrevFocusWindow = FindFocus();
   SetFocus();
   Move = event.m_y;
@@ -223,11 +224,13 @@ void Slider::mouseDown(wxMouseEvent& event)
 }
 void Slider::mouseReleased(wxMouseEvent& event)
 {
+  TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "mouseReleased");
   Drag = false;
   moveThumb();
 }
 void Slider::mouseLeftWindow(wxMouseEvent& event)
 {
+  TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "mouseLeftWindow");
   if(Drag)
     mouseReleased(event);
 
@@ -274,22 +277,23 @@ void Slider::mouseWheelMoved(wxMouseEvent& event) {
 
 void Slider::rightClick(wxMouseEvent& event) {}
 void Slider::keyReleased(wxKeyEvent& event) {
-  event.Skip();
+  TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "keyReleased %d", event.GetKeyCode());
 }
 void Slider::keyPressed(wxKeyEvent& event) {
-  if( event.GetKeyCode() == WXK_DOWN || event.GetKeyCode() == WXK_NUMPAD_DOWN) {
+  TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "keyPressed %d", event.GetKeyCode());
+  if( event.GetKeyCode() == WXK_DOWN || event.GetKeyCode() == WXK_PAGEDOWN) {
     ThumbPos++;
   }
-  else if( event.GetKeyCode() == WXK_UP || event.GetKeyCode() == WXK_NUMPAD_UP) {
+  else if( event.GetKeyCode() == WXK_UP || event.GetKeyCode() == WXK_PAGEUP) {
     ThumbPos--;
   }
   else {
+    TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "keyPressed != %d %d", WXK_UP, WXK_DOWN);
     event.Skip();
     return;
   }
-
+  event.Skip();
   moveThumb();
-
 }
 
 void Slider::moveThumb() {
@@ -301,11 +305,15 @@ void Slider::moveThumb() {
   if( PrevThumbPos != ThumbPos ) {
     Refresh(true);
     PrevThumbPos = ThumbPos;
+    TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "moveThumb %d", ThumbPos);
 
     wxCommandEvent cmdevent( wxEVT_SCROLL_THUMBRELEASE,-1 );
     cmdevent.SetId(-1);
     cmdevent.SetEventObject(this);
     wxPostEvent( Parent, cmdevent);
+  }
+  else {
+    TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "PrevThumbPos = ThumbPos %d", ThumbPos);
   }
 }
 
