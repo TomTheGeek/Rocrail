@@ -238,6 +238,10 @@ void LEDButton::mouseLeftWindow(wxMouseEvent& event)
 void LEDButton::mouseMoved(wxMouseEvent& event) {}
 void LEDButton::mouseWheelMoved(wxMouseEvent& event) {}
 void LEDButton::rightClick(wxMouseEvent& event) {}
-void LEDButton::keyPressed(wxKeyEvent& event) {}
-void LEDButton::keyReleased(wxKeyEvent& event) {}
+void LEDButton::keyPressed(wxKeyEvent& event) {
+  event.Skip();
+}
+void LEDButton::keyReleased(wxKeyEvent& event) {
+  event.Skip();
+}
 

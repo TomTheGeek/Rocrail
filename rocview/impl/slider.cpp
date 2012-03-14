@@ -281,18 +281,22 @@ void Slider::keyReleased(wxKeyEvent& event) {
 }
 void Slider::keyPressed(wxKeyEvent& event) {
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "keyPressed %d", event.GetKeyCode());
-  if( event.GetKeyCode() == WXK_DOWN || event.GetKeyCode() == WXK_PAGEDOWN) {
+  if( event.GetKeyCode() == WXK_DOWN) {
     ThumbPos++;
   }
-  else if( event.GetKeyCode() == WXK_UP || event.GetKeyCode() == WXK_PAGEUP) {
+  else if( event.GetKeyCode() == WXK_UP) {
     ThumbPos--;
   }
+  else if( event.GetKeyCode() == WXK_PAGEDOWN) {
+    ThumbPos+=10;
+  }
+  else if( event.GetKeyCode() == WXK_PAGEUP) {
+    ThumbPos-=10;
+  }
   else {
-    TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "keyPressed != %d %d", WXK_UP, WXK_DOWN);
     event.Skip();
     return;
   }
-  event.Skip();
   moveThumb();
 }
 
