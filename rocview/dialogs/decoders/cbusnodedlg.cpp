@@ -367,6 +367,7 @@ const char* CBusNodeDlg::getTypeString( int manu, int mtype ) {
     case MTYP_CANGC4:    return "ROCRAIL::CAN-GC4";
     case MTYP_CANGC6:    return "ROCRAIL::CAN-GC6";
     case MTYP_CANGC7:    return "ROCRAIL::CAN-GC7";
+    case MTYP_CANGC1E:   return "ROCRAIL::CAN-GC1e";
     }
   }
   else  {
