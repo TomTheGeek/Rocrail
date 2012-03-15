@@ -1179,7 +1179,8 @@
         <const name="ccrossing" vt="string" val="ccrossing" remark="Switch type for center crossing."/>
         <const name="crossing" vt="string" val="crossing" remark="Switch type for crossing."/>
         <const name="dcrossing" vt="string" val="dcrossing" remark="Switch type for dubble crossing."/>
-        <const name="threeway" vt="string" val="threeway" remark="Switch type for a 2way switch."/>
+        <const name="threeway" vt="string" val="threeway" remark="Switch type for a 3way switch."/>
+        <const name="twoway" vt="string" val="twoway" remark="Switch type for a 2way switch."/>
         <var name="type" vt="string" defval="right" range="right,left,turnout,crossing,ccrossing,dcrossing,threeway,decoupler"/>
         <var name="accnr" vt="int" defval="1" range="0-*" required="false" remark="Accessory number."/>
         <const name="swtype_default" vt="string" val="default"/>

@@ -196,6 +196,7 @@ void SwitchDialog::initLabels() {
   m_Type->Append( wxGetApp().getMsg( "threeway" ), (void*)wSwitch.threeway );
   m_Type->Append( wxGetApp().getMsg( "decoupler" ), (void*)wSwitch.decoupler );
   m_Type->Append( wxGetApp().getMsg( "accessory" ), (void*)wSwitch.accessory );
+  m_Type->Append( wxGetApp().getMsg( "twoway" ), (void*)wSwitch.twoway );
 
   // Location
   m_LabelX->SetLabel( wxGetApp().getMsg( "x" ) );
@@ -360,6 +361,8 @@ void SwitchDialog::initValues() {
     type = 5;
   else if( StrOp.equals( wSwitch.accessory, wSwitch.gettype( m_Props ) ) )
     type = 6;
+  else if( StrOp.equals( wSwitch.twoway, wSwitch.gettype( m_Props ) ) )
+    type = 7;
 
   m_Type->Select( type );
 
@@ -584,6 +587,9 @@ bool SwitchDialog::evaluate() {
       break;
     case 6:
       wSwitch.settype( m_Props, wSwitch.accessory );
+      break;
+    case 7:
+      wSwitch.settype( m_Props, wSwitch.twoway );
       break;
   }
 

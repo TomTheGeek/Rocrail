@@ -17755,4 +17755,7 @@
   <Msg id="showsecondhand">
     <en txt="Show secondhand"/>
   </Msg>
+  <Msg id="twoway">
+    <en txt="Twoway"/>
+  </Msg>
 </Messages>

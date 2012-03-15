@@ -287,6 +287,16 @@ void SymbolRenderer::initSym() {
         m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tr_occ );
       }
     }
+    else if( StrOp.equals( wSwitch.twoway, wSwitch.gettype( m_Props ) ) ) {
+      m_iSymSubType = switchtype::i_twoway;
+      if( m_SymMap != NULL ) {
+        m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_tr );
+        m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_tl );
+        m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_tl );
+        m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_tr_occ );
+        m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_tl_occ );
+      }
+    }
     else if( StrOp.equals( wSwitch.accessory, wSwitch.gettype( m_Props ) ) ) {
       m_iSymSubType = switchtype::i_accessory;
       if( m_SymMap != NULL ) {
@@ -1264,6 +1274,7 @@ void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, co
 
     case switchtype::i_turnoutleft:
     case switchtype::i_turnoutright:
+    case switchtype::i_twoway:
       drawTurnout( dc, occupied, ori );
       break;
 

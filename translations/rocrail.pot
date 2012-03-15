@@ -5648,7 +5648,13 @@ msgstr ""
 #. 
 # id="nodenumber"
 #, c-format
-msgid "Node number"
+msgid "Node Nr."
+msgstr ""
+
+#. 
+# id="eventnumber"
+#, c-format
+msgid "Event Nr."
 msgstr ""
 
 #. 
@@ -5661,5 +5667,11 @@ msgstr ""
 # id="showsecondhand"
 #, c-format
 msgid "Show secondhand"
+msgstr ""
+
+#. 
+# id="twoway"
+#, c-format
+msgid "Twoway"
 msgstr ""
 

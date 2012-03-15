@@ -148,6 +148,11 @@ namespace switchtype {
   static const char* threeway_tl_occ = "threeway-tl-occ.svg";
   static const char* threeway_tr_occ = "threeway-tr-occ.svg";
 
+  static const char* twoway_tr     = "twoway-tr.svg";
+  static const char* twoway_tl     = "twoway-tl.svg";
+  static const char* twoway_tl_occ = "twoway-tl-occ.svg";
+  static const char* twoway_tr_occ = "twoway-tr-occ.svg";
+
   static const char* decoupler        = "decoupler.svg";
   static const char* decoupler_on     = "decoupler-on.svg";
   static const char* decoupler_occ    = "decoupler-occ.svg";
@@ -203,7 +208,8 @@ namespace switchtype {
   static const int i_crossingleft   = 8;
   static const int i_crossingright  = 9;
   static const int i_ccrossing      = 10;
-  static const int i_accessory     = 11;
+  static const int i_accessory      = 11;
+  static const int i_twoway         = 12;
 }
 
 namespace signaltype {

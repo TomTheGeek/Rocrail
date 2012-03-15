@@ -1,0 +1,14 @@
+<svg width="32" height="32">
+  <g>
+  <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 24,12 L 31,12 L 31,19 L 24,19 z " /> 
+  <!-- Abzweig unten links -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 31,19 L 24,19 L 12,31 L 20,31 L 31,20 z " />
+  <!-- Ausleuchtung Abzweig unten links grau -->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 19,26 L 25,20 L 27,22 L 21,28 z " />
+  <!-- Abzweig oben rechts -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 31,12 L 24,12 L 12,0 L 20,0 L 31,11  z " />
+  <!-- Ausleuchtung Abzweig oben links grau -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 21,3 L 27,9 L 25,11 L 19,5 z " />
+  </g>
+</svg>
