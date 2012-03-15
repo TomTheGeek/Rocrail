@@ -1871,7 +1871,8 @@ static void _reset( iOLoc inst, Boolean saveCurBlock ) {
   data->exit  = False;
   data->out   = False;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "reset [%s] in block [%s]", LocOp.getId(inst), data->curBlock==NULL?"?":data->curBlock );
+      "reset [%s] in current block [%s]", LocOp.getId(inst), data->curBlock==NULL?"?":data->curBlock );
+  data->destBlock = NULL;
   if( data->driver != NULL )
     data->driver->reset( data->driver, saveCurBlock );
 }

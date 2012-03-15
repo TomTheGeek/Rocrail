@@ -629,8 +629,6 @@ static Boolean _isState( iOFBack inst, const char* state ) {
 static void _doTimedOff( iOFBack inst ) {
   iOFBackData data = Data(inst);
   if( data->timedoff > 0 ){
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "timer=%d, timecnt=%d, state=%d",
-        data->timedoff, data->timer, data->state );
 
     if( data->timer == 0 ) {
       iONode nodeD = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );

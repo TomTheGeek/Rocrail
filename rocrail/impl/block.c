@@ -1712,6 +1712,9 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
 
       /* wait only 10ms for getting the mutex: */
       if( !MutexOp.trywait( data->muxLock, 10 ) ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                       "time out on unlocking block \"%s\" by \"%s\"",
+                       data->id, id );
         return False;
       }
 
@@ -2197,6 +2200,10 @@ static void _reset( iIBlockBase inst ) {
   /*Unlock the occupying must be done manual */
   /*BlockOp.unLock(inst, data->locId);*/
   BlockOp.resetTrigs(inst);
+  if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+             "reseted block [%s] is reserved by [%s]", data->id, data->locId );
+  }
 }
 
 static void _acceptIdent( iIBlockBase inst, Boolean accept ) {

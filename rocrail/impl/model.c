@@ -1680,6 +1680,10 @@ static void __reset( iOModel inst, Boolean saveCurBlock ) {
     iIBlockBase block = (iIBlockBase)MapOp.first( data->blockMap );
     while( block != NULL ) {
       block->reset( block );
+      if( block->getLoc( block ) != NULL && StrOp.len(block->getLoc( block )) > 0 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "Block [%s] is occupied by [%d] after reset.", block->base.id(block), block->getLoc( block ) );
+      }
       block = (iIBlockBase)MapOp.next( data->blockMap );
     }
   }
