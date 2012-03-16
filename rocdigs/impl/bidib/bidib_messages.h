@@ -2,7 +2,7 @@
 //
 // OpenDCC - BiDiB
 //
-// Copyright (c) 2010 Wolfgang Kufer
+// Copyright (c) 2010-2012 Wolfgang Kufer
 //
 //-------------------------------------------------------------------------------
 //
@@ -22,7 +22,7 @@
 //                                 moved MSG_BM_GET_ADDR_RANGE
 //            2012-02-13 V0.03 kw  added Local Ping, removed BIDIBUS_LOGON_ACK
 //                                 added BIDIBUS_BUSY
-//            2012-03-06       kw  added messages for switch/light control, 
+//            2012-03-14       kw  added messages for switch/light control, 
 //                                       and command station
 // 
 //===============================================================================
@@ -69,27 +69,27 @@
 
 #define MSG_DSTRM  0x00
 
-//-- system messages
+//-- system messages                                    // Parameters
 #define MSG_DSYS                (MSG_DSTRM + 0x00)
-#define MSG_SYS_GET_MAGIC       (MSG_DSYS + 0x01)       // these must stay here
-#define MSG_SYS_GET_P_VERSION   (MSG_DSYS + 0x02)
-#define MSG_SYS_ENABLE          (MSG_DSYS + 0x03)
-#define MSG_SYS_DISABLE         (MSG_DSYS + 0x04)
-#define MSG_SYS_GET_UNIQUE_ID   (MSG_DSYS + 0x05)
-#define MSG_SYS_GET_SW_VERSION  (MSG_DSYS + 0x06)
-#define MSG_SYS_PING            (MSG_DSYS + 0x07)
-#define MSG_SYS_IDENTIFY        (MSG_DSYS + 0x08)
-#define MSG_SYS_RESET           (MSG_DSYS + 0x09)
-#define MSG_GET_NODE_TAB        (MSG_DSYS + 0x0a)
-#define MSG_GET_PKT_CAPACITY    (MSG_DSYS + 0x0b)
-#define MSG_NODE_CHANGED_ACK    (MSG_DSYS + 0x0c)
-#define MSG_SYS_GET_ERROR       (MSG_DSYS + 0x0d)
+#define MSG_SYS_GET_MAGIC       (MSG_DSYS + 0x01)       // - // these must stay here
+#define MSG_SYS_GET_P_VERSION   (MSG_DSYS + 0x02)       // - // these must stay here
+#define MSG_SYS_ENABLE          (MSG_DSYS + 0x03)       // -
+#define MSG_SYS_DISABLE         (MSG_DSYS + 0x04)       // -
+#define MSG_SYS_GET_UNIQUE_ID   (MSG_DSYS + 0x05)       // -
+#define MSG_SYS_GET_SW_VERSION  (MSG_DSYS + 0x06)       // -
+#define MSG_SYS_PING            (MSG_DSYS + 0x07)       // -
+#define MSG_SYS_IDENTIFY        (MSG_DSYS + 0x08)       // 1:id_state
+#define MSG_SYS_RESET           (MSG_DSYS + 0x09)       // -
+#define MSG_GET_NODE_TAB        (MSG_DSYS + 0x0a)       // -
+#define MSG_GET_PKT_CAPACITY    (MSG_DSYS + 0x0b)       // -
+#define MSG_NODE_CHANGED_ACK    (MSG_DSYS + 0x0c)       // 1:nodetab_version
+#define MSG_SYS_GET_ERROR       (MSG_DSYS + 0x0d)       // -
 
 //-- feature and user config messages
 #define MSG_DFC                 (MSG_DSTRM + 0x10)
-#define MSG_FEATURE_GETALL      (MSG_DFC + 0x00)
-#define MSG_FEATURE_GET         (MSG_DFC + 0x01)
-#define MSG_FEATURE_SET         (MSG_DFC + 0x02)
+#define MSG_FEATURE_GETALL      (MSG_DFC + 0x00)        // -
+#define MSG_FEATURE_GET         (MSG_DFC + 0x01)        // 1:feature_num
+#define MSG_FEATURE_SET         (MSG_DFC + 0x02)        // 1:feature_num, 2:feature_val
 #define MSG_VENDOR_ENABLE       (MSG_DFC + 0x03)
 #define MSG_VENDOR_DISABLE      (MSG_DFC + 0x04)
 #define MSG_VENDOR_SET          (MSG_DFC + 0x05)
@@ -97,27 +97,27 @@
 
 //-- occupancy messages
 #define MSG_DBM                 (MSG_DSTRM + 0x20)
-#define MSG_BM_GET_RANGE        (MSG_DBM + 0x00)
-#define MSG_BM_MIRROR_MULTIPLE  (MSG_DBM + 0x01)
-#define MSG_BM_MIRROR_OCC       (MSG_DBM + 0x02)
-#define MSG_BM_MIRROR_FREE      (MSG_DBM + 0x03)
-#define MSG_BM_ADDR_GET_RANGE   (MSG_DBM + 0x04)
+#define MSG_BM_GET_RANGE        (MSG_DBM + 0x00)        // 1:start, 2:end
+#define MSG_BM_MIRROR_MULTIPLE  (MSG_DBM + 0x01)        // 1:start, 2:size, 3..n:data
+#define MSG_BM_MIRROR_OCC       (MSG_DBM + 0x02)        // 1:mnum
+#define MSG_BM_MIRROR_FREE      (MSG_DBM + 0x03)        // 1:mnum
+#define MSG_BM_ADDR_GET_RANGE   (MSG_DBM + 0x04)        // 1:start, 2:end
 
 //-- booster messages
 #define MSG_DBST                (MSG_DSTRM + 0x30)
-#define MSG_BOOST_OFF           (MSG_DBST + 0x00)
-#define MSG_BOOST_ON            (MSG_DBST + 0x01)
+#define MSG_BOOST_OFF           (MSG_DBST + 0x00)       // -
+#define MSG_BOOST_ON            (MSG_DBST + 0x01)       // -
 
 //-- switch/light control messages
 #define MSG_DLC                 (MSG_DSTRM + 0x40)
-#define MSG_LC_OUTPUT           (MSG_DLC + 0x00)
-#define MSG_LC_CONFIG_SET       (MSG_DLC + 0x01)
-#define MSG_LC_CONFIG_GET       (MSG_DLC + 0x02)
-#define MSG_LC_KEY_QUERY        (MSG_DLC + 0x03)
+#define MSG_LC_OUTPUT           (MSG_DLC + 0x00)        // 1:port, 2:state
+#define MSG_LC_CONFIG_SET       (MSG_DLC + 0x01)        // 1:port, 2:off_val, 3:on_val, 4:dimm_off, 5:dimm_on
+#define MSG_LC_CONFIG_GET       (MSG_DLC + 0x02)        // 1:port
+#define MSG_LC_KEY_QUERY        (MSG_DLC + 0x03)        // 1:port
 
 //-- macro messages
 #define MSG_DMAC                (MSG_DSTRM + 0x48)
-#define MSG_LC_MACRO_HANDLE     (MSG_DMAC + 0x00)
+#define MSG_LC_MACRO_HANDLE     (MSG_DMAC + 0x00)       // 1:macro, 2:CV_ADDR_L, 3:CV_ADDR_H, 4:CV_DAT
 #define MSG_LC_MACRO_SET        (MSG_DMAC + 0x01)
 #define MSG_LC_MACRO_GET        (MSG_DMAC + 0x02)
 
@@ -126,17 +126,14 @@
 #define  MSG_CS_ALLOCATE        (MSG_DGEN + 0x00)
 #define  MSG_CS_CONNECT         (MSG_DGEN + 0x01)
 #define  MSG_CS_SET_STATE       (MSG_DGEN + 0x02)
-#define  MSG_CS_GET_STATE       (MSG_DGEN + 0x03)    // könnte ev. entfallen
+#define  MSG_CS_GET_STATE       (MSG_DGEN + 0x03)    // could be obsolete
 #define  MSG_CS_DRIVE           (MSG_DGEN + 0x04)
 #define  MSG_CS_ACCESSORY       (MSG_DGEN + 0x05)
+#define  MSG_PRG_CV_WRITE       (MSG_DGEN + 0x07)       // 1:method, 2:CV_ADDR_L, 3:CV_ADDR_H, 4:CV_DAT
+#define  MSG_PRG_CV_BLOCKWRITE  (MSG_DGEN + 0x08)
+#define  MSG_PRG_CV_READ        (MSG_DGEN + 0x09)       // 1:method, 2:CV_ADDR_L, 3:CV_ADDR_H
+#define  MSG_PRG_CV_BLOCKREAD   (MSG_DGEN + 0x0A)
 
-/*
-#define MSG_PRG_METHOD
-#define MSG_PRG_CV_WRITE
-#define MSG_PRG_CV_BLOCK_WRITE
-#define MSG_PRG_CV_READ 
-#define MSG_PRG_CV_BLOCK_READ 
-*/
 
 //-- local message
 #define MSG_DLOCAL              (MSG_DSTRM + 0x70)                           // only locally used
@@ -153,52 +150,55 @@
 
 //-- system messages
 #define MSG_USYS                (MSG_USTRM +  0x00)
-#define MSG_SYS_MAGIC           (MSG_USYS + 0x01)     
-#define MSG_SYS_PONG            (MSG_USYS + 0x02)
-#define MSG_SYS_P_VERSION       (MSG_USYS + 0x03)
-#define MSG_SYS_UNIQUE_ID       (MSG_USYS + 0x04)
-#define MSG_SYS_SW_VERSION      (MSG_USYS + 0x05)
+#define MSG_SYS_MAGIC           (MSG_USYS + 0x01)       // 1:0xFE 2:0xAF
+#define MSG_SYS_PONG            (MSG_USYS + 0x02)       // -
+#define MSG_SYS_P_VERSION       (MSG_USYS + 0x03)       // 1:proto-ver_l, 2:proto-ver_h
+#define MSG_SYS_UNIQUE_ID       (MSG_USYS + 0x04)       // 1:class, 2:classx, 3:vid, 4..7:pid+uid    
+#define MSG_SYS_SW_VERSION      (MSG_USYS + 0x05)       // 1:sw-ver_l, 2:sw_-ver_h, 3:sw-ver_u
 #define MSG_SYS_ERROR           (MSG_USYS + 0x06)
-#define MSG_SYS_IDENTIFY_STATE  (MSG_USYS + 0x07)
-#define MSG_NODE_TAB_NA         (MSG_USYS + 0x08)
-#define MSG_NODE_TAB            (MSG_USYS + 0x09)
-#define MSG_PKT_CAPACITY        (MSG_USYS + 0x0a)
-#define MSG_NODE_NA             (MSG_USYS + 0x0b)
-#define MSG_NODE_LOST           (MSG_USYS + 0x0c)
-#define MSG_NODE_NEW            (MSG_USYS + 0x0d)
+#define MSG_SYS_IDENTIFY_STATE  (MSG_USYS + 0x07)       // 1:state
+#define MSG_NODE_TAB_NA         (MSG_USYS + 0x08)       // -
+#define MSG_NODE_TAB            (MSG_USYS + 0x09)       // 1:version, 2:length, 3:start, 4..n:nodes
+                                                        //      node: local num, unique
+#define MSG_PKT_CAPACITY        (MSG_USYS + 0x0a)       // 1:capacity
+#define MSG_NODE_NA             (MSG_USYS + 0x0b)       // 1:node
+#define MSG_NODE_LOST           (MSG_USYS + 0x0c)       // 1:node
+#define MSG_NODE_NEW            (MSG_USYS + 0x0d)       // 1:version, 2:local num, 3..9: unique
 
 //-- feature and user config messages
 #define MSG_UFC                 (MSG_USTRM +  0x10)
-#define MSG_FEATURE             (MSG_UFC + 0x00)
-#define MSG_FEATURE_NA          (MSG_UFC + 0x01)
-#define MSG_FEATURE_COUNT       (MSG_UFC + 0x02)
-#define MSG_VENDOR              (MSG_UFC + 0x03)
-#define MSG_VENDOR_ACK          (MSG_UFC + 0x04)
+#define MSG_FEATURE             (MSG_UFC + 0x00)        // 1:feature_num, 2:data
+#define MSG_FEATURE_NA          (MSG_UFC + 0x01)        // 1:feature_num
+#define MSG_FEATURE_COUNT       (MSG_UFC + 0x02)        // 1:count
+#define MSG_VENDOR              (MSG_UFC + 0x03)        // 1..n: length,'string',length,'value'
+#define MSG_VENDOR_ACK          (MSG_UFC + 0x04)        // 1:ack
 
 //-- occupancy messages
 #define MSG_UBM                 (MSG_USTRM +  0x20)
-#define MSG_BM_OCC              (MSG_UBM + 0x00)
-#define MSG_BM_FREE             (MSG_UBM + 0x01)
-#define MSG_BM_MULTIPLE         (MSG_UBM + 0x02)
-#define MSG_BM_ADDRESS          (MSG_UBM + 0x03)
-#define MSG_BM_ACCESSORY        (MSG_UBM + 0x04)
-#define MSG_BM_CV               (MSG_UBM + 0x05)
-#define MSG_BM_SPEED            (MSG_UBM + 0x06)
-#define MSG_BM_CURRENT          (MSG_UBM + 0x07)
-#define MSG_BM_BLOCK_CV         (MSG_UBM + 0x08)
+#define MSG_BM_OCC              (MSG_UBM + 0x00)        // 1:mnum
+#define MSG_BM_FREE             (MSG_UBM + 0x01)        // 1:mnum
+#define MSG_BM_MULTIPLE         (MSG_UBM + 0x02)        // 1:base, 2:size; 3..n:data
+#define MSG_BM_ADDRESS          (MSG_UBM + 0x03)        // 1:mnum, [2,3:addr_l, addr_h]
+#define MSG_BM_ACCESSORY        (MSG_UBM + 0x04)        //
+#define MSG_BM_CV               (MSG_UBM + 0x05)        //
+#define MSG_BM_SPEED            (MSG_UBM + 0x06)        //
+#define MSG_BM_CURRENT          (MSG_UBM + 0x07)        // 1:current
+#define MSG_BM_BLOCK_CV         (MSG_UBM + 0x08)        //
 
 //-- booster messages
 #define MSG_UBST                (MSG_USTRM +  0x30)
-#define MSG_BOOST_STAT          (MSG_UBST + 0x00)    // short, temperatur, ...
-#define MSG_BOOST_CURRENT       (MSG_UBST + 0x01)
+#define MSG_BOOST_STAT          (MSG_UBST + 0x00)       // 1:state
+#define MSG_BOOST_CURRENT       (MSG_UBST + 0x01)       // 1:current
+#define MSG_NEW_DECODER         (MSG_UBST + 0x02)       // 1:mnum, 2: dec_vid, 3,4,5,6:dec_uid    
+#define MSG_ID_SEARCH_ACK       (MSG_UBST + 0x03)       // 1:mnum, 2: s_vid, 3,4,5,6:s_uid,  7: dec_vid, 8,9,10,11:dec_uid  
+#define MSG_ADDR_CHANGE_ACK     (MSG_UBST + 0x04)       // 1:mnum, 2: dec_vid, 3,4,5,6:dec_uid, 7:addr_l, 8:addr_h
 
 //-- switch/light control messages
 #define MSG_ULC                 (MSG_USTRM +  0x40)
-#define MSG_LC_STAT             (MSG_ULC + 0x00)
-#define MSG_LC_NA               (MSG_ULC + 0x01)
-#define MSG_LC_CONFIG           (MSG_ULC + 0x02)
-#define MSG_LC_KEY              (MSG_ULC + 0x03)
-
+#define MSG_LC_STAT             (MSG_ULC + 0x00)        // 1:port, 2:state
+#define MSG_LC_NA               (MSG_ULC + 0x01)        // 1:port
+#define MSG_LC_CONFIG           (MSG_ULC + 0x02)        // 1:port, 2:off_val, 3:on_val, 4:dimm_off, 5:dimm_on
+#define MSG_LC_KEY              (MSG_ULC + 0x03)        // 1:port, 2:state
 
 //-- macro messages
 #define MSG_UMAC                (MSG_USTRM +  0x48)
@@ -207,19 +207,16 @@
 
 //-- dcc control messages
 #define MSG_UGEN                (MSG_USTRM +  0x60)
-#define  MSG_CS_ALLOC_ACK       (MSG_UGEN + 0x00)    // noch genauer zu klären
-#define  MSG_CS_STATE           (MSG_UGEN + 0x01)
-#define  MSG_CS_DRIVE_ACK       (MSG_UGEN + 0x02)
-#define  MSG_CS_ACCESSORY_ACK   (MSG_UGEN + 0x03)
-
-/*
-MSG_PRG_CV_STAT
-*/
+#define MSG_CS_ALLOC_ACK        (MSG_UGEN + 0x00)    // noch genauer zu klaeren
+#define MSG_CS_STATE            (MSG_UGEN + 0x01)
+#define MSG_CS_DRIVE_ACK        (MSG_UGEN + 0x02)
+#define MSG_CS_ACCESSORY_ACK    (MSG_UGEN + 0x03)
+#define MSG_PRG_CV_STAT         (MSG_UGEN + 0x04)       // 1: PRG_STATE, 2:PRG_DATA 
 
 //-- local message
-#define MSG_ULOCAL              (MSG_USTRM +  0x70)                           // only locally used
+#define MSG_ULOCAL              (MSG_USTRM +  0x70)     // only locally used
 #define MSG_LOGON               (MSG_ULOCAL + 0x00) 
-#define MSG_LOCAL_PONG          (MSG_ULOCAL + 0x01)   // only locally used
+#define MSG_LOCAL_PONG          (MSG_ULOCAL + 0x01)     // only locally used
 
 //===============================================================================
 //
@@ -338,7 +335,7 @@ typedef enum
 #define BIDIB_PKT_MAGIC         0xFE            // frame delimiter for serial link
 #define BIDIB_PKT_ESCAPE        0xFD
 
-// 6.b) defines für BiDiBus, system messages
+// 6.b) defines for BiDiBus, system messages
 // (system messages are 9 bits, bit8 is set (1), bits 0..7 do have even parity)
 #define BIDIBUS_SYS_MSG         0x40            // System Part of BiDiBus
 
