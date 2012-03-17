@@ -1370,7 +1370,8 @@ void PlanPanel::addMultipleItem(wxCommandEvent& event) {
     NodeOp.base.del( node );
     Show(true);
     wxCursor cursor = wxCursor(wxCURSOR_ARROW);
-    SetCursor( cursor );
+    RocGuiFrame* frame = wxGetApp().getFrame();
+    frame->SetCursor( cursor );
     return;
   }
 
@@ -1651,7 +1652,8 @@ static void initRunner( void* threadinst ) {
 void PlanPanel::init( bool modview ) {
   m_bModView = modview;
   wxCursor cursor = wxCursor(wxCURSOR_WAIT);
-  SetCursor( cursor );
+  RocGuiFrame* frame = wxGetApp().getFrame();
+  frame->SetCursor( cursor );
   Show(false);
   m_InitThread = ThreadOp.inst( NULL, &initRunner, this );
   ThreadOp.start( m_InitThread );
