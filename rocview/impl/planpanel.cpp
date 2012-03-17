@@ -1369,6 +1369,8 @@ void PlanPanel::addMultipleItem(wxCommandEvent& event) {
     wxGetApp().sendToRocrail( node );
     NodeOp.base.del( node );
     Show(true);
+    wxCursor cursor = wxCursor(wxCURSOR_ARROW);
+    SetCursor( cursor );
     return;
   }
 
@@ -1592,8 +1594,6 @@ static void initPlan( PlanPanel* o ) {
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Title = %s", wPlan.gettitle( model ) );
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Level = %d(%d)", o->m_Z, wZLevel.getz(o->m_zLevel) );
 
-  o->Show(false);
-
   if( wPlan.gettxlist( model ) != NULL ) {
     iONode images = NodeOp.inst( wTextList.name(), NULL, ELEMENT_NODE);
     iONode texts  = NodeOp.inst( wTextList.name(), NULL, ELEMENT_NODE);
@@ -1650,6 +1650,9 @@ static void initRunner( void* threadinst ) {
 
 void PlanPanel::init( bool modview ) {
   m_bModView = modview;
+  wxCursor cursor = wxCursor(wxCURSOR_WAIT);
+  SetCursor( cursor );
+  Show(false);
   m_InitThread = ThreadOp.inst( NULL, &initRunner, this );
   ThreadOp.start( m_InitThread );
 }
