@@ -1368,6 +1368,7 @@ void PlanPanel::addMultipleItem(wxCommandEvent& event) {
   if( StrOp.equals( NodeOp.getName( node ), wModelCmd.name() ) ) {
     wxGetApp().sendToRocrail( node );
     NodeOp.base.del( node );
+    Show(true);
     return;
   }
 
@@ -1591,6 +1592,8 @@ static void initPlan( PlanPanel* o ) {
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Title = %s", wPlan.gettitle( model ) );
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Level = %d(%d)", o->m_Z, wZLevel.getz(o->m_zLevel) );
 
+  o->Show(false);
+
   if( wPlan.gettxlist( model ) != NULL ) {
     iONode images = NodeOp.inst( wTextList.name(), NULL, ELEMENT_NODE);
     iONode texts  = NodeOp.inst( wTextList.name(), NULL, ELEMENT_NODE);
@@ -1610,15 +1613,25 @@ static void initPlan( PlanPanel* o ) {
   }
 
   o->addItems( wPlan.gettklist( model ) );
+  ThreadOp.sleep(10);
   o->addItems( wPlan.getbklist( model ) );
+  ThreadOp.sleep(10);
   o->addItems( wPlan.getfblist( model ) );
+  ThreadOp.sleep(10);
   o->addItems( wPlan.getswlist( model ) );
+  ThreadOp.sleep(10);
   o->addItems( wPlan.getcolist( model ) );
+  ThreadOp.sleep(10);
   o->addItems( wPlan.getsglist( model ) );
+  ThreadOp.sleep(10);
   o->addItems( wPlan.getttlist( model ) );
+  ThreadOp.sleep(10);
   o->addItems( wPlan.getseltablist( model ) );
+  ThreadOp.sleep(10);
   o->addItems( wPlan.getstlist( model ) );
+  ThreadOp.sleep(10);
   o->addItems( wPlan.getsblist( model ) );
+  ThreadOp.sleep(10);
 
   iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
   wModelCmd.setcmd( cmd, wModelCmd.fstat );
