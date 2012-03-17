@@ -1376,12 +1376,14 @@ void PlanPanel::addMultipleItem(wxCommandEvent& event) {
   }
 
   int cnt = NodeOp.getChildCnt( node );
+  char* text = StrOp.fmt( "adding %d from %s...", cnt, NodeOp.getName(node) );
+  wxGetApp().getFrame()->setInfoText( text );
+  StrOp.free( text );
   for( int i = 0; i < cnt; i++ ) {
     iONode child = NodeOp.getChild( node, i );
     addItem( child, false );
-    //wxGetApp().Yield();
   }
-  char* text = StrOp.fmt( "%d items", m_ChildTable->GetCount() );
+  text = StrOp.fmt( "%d items added", m_ChildTable->GetCount() );
   wxGetApp().getFrame()->setInfoText( text );
   StrOp.free( text );
 
