@@ -53,6 +53,7 @@ public:
   void addSwitchCrossing(wxCommandEvent& event);
   void addSwitchDCrossing(wxCommandEvent& event);
   void addSwitchThreeway(wxCommandEvent& event);
+  void addSwitchTwoway(wxCommandEvent& event);
   void addSwitchDecoupler(wxCommandEvent& event);
   void addSwitchAccessory(wxCommandEvent& event);
   void addSignal(wxCommandEvent& event);
@@ -160,6 +161,7 @@ enum {
   ME_AddSwitchCrossing,
   ME_AddSwitchDCrossing,
   ME_AddSwitchThreeway,
+  ME_AddSwitchTwoway,
   ME_AddSwitchDecoupler,
   ME_AddSwitchAccessory,
   ME_AddSignal,

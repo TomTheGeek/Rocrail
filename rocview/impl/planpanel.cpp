@@ -132,6 +132,7 @@ BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
   EVT_MENU( ME_AddSwitchThreeway , PlanPanel::addSwitchThreeway)
   EVT_MENU( ME_AddSwitchDecoupler, PlanPanel::addSwitchDecoupler)
   EVT_MENU( ME_AddSwitchAccessory,PlanPanel::addSwitchAccessory)
+  EVT_MENU( ME_AddSwitchTwoway , PlanPanel::addSwitchTwoway)
 
   EVT_MENU( ME_AddSignal , PlanPanel::addSignal)
   EVT_MENU( ME_AddOutput , PlanPanel::addOutput)
@@ -733,6 +734,7 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       menuTurnout->Append( ME_AddSwitchCrossing , wxGetApp().getMenu("crossing") );
       menuTurnout->Append( ME_AddSwitchDCrossing, wxGetApp().getMenu("dcrossing") );
       menuTurnout->Append( ME_AddSwitchThreeway , wxGetApp().getMenu("threeway") );
+      menuTurnout->Append( ME_AddSwitchTwoway   , wxGetApp().getMenu("twoway") );
       menuTurnout->Append( ME_AddSwitchDecoupler, wxGetApp().getMenu("decoupler") );
       menuTurnout->Append( ME_AddSwitchAccessory, wxGetApp().getMenu("accessory") );
 
@@ -1110,6 +1112,12 @@ void PlanPanel::addSwitchDCrossing(wxCommandEvent& event) {
 void PlanPanel::addSwitchThreeway(wxCommandEvent& event) {
   iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.settype( node, wSwitch.threeway );
+  addItemAttr( node );
+}
+
+void PlanPanel::addSwitchTwoway(wxCommandEvent& event) {
+  iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+  wSwitch.settype( node, wSwitch.twoway );
   addItemAttr( node );
 }
 
