@@ -1906,9 +1906,7 @@ void Symbol::OnProps(wxCommandEvent& event) {
 
   if( StrOp.equals( wBlock.name(), name ) ) {
     BlockDialog* blockDlg = new BlockDialog( this, m_Props );
-
-    wxID_OK == blockDlg->ShowModal();
-
+    blockDlg->ShowModal();
     updateLabel();
     Show(FALSE);
     Refresh();
@@ -1917,7 +1915,7 @@ void Symbol::OnProps(wxCommandEvent& event) {
   }
   else if( StrOp.equals( wSwitch.name(), name ) ) {
     SwitchDialog* swDlg = new SwitchDialog( this, m_Props );
-    wxID_OK == swDlg->ShowModal();
+    swDlg->ShowModal();
     sizeToScale();
     Show(wSwitch.isshow(m_Props));
     Refresh();
@@ -1925,60 +1923,59 @@ void Symbol::OnProps(wxCommandEvent& event) {
   }
   else if( StrOp.equals( wSignal.name(), name ) ) {
     SignalDialog* sgDlg = new SignalDialog( this, m_Props );
-    wxID_OK == sgDlg->ShowModal();
+    sgDlg->ShowModal();
     Refresh();
     sgDlg->Destroy();
   }
   else if( StrOp.equals( wOutput.name(), name ) ) {
     OutputDialog* coDlg = new OutputDialog( this, m_Props );
-    wxID_OK == coDlg->ShowModal();
+    coDlg->ShowModal();
     Show(wOutput.isshow(m_Props));
     Refresh();
     coDlg->Destroy();
   }
   else if( StrOp.equals( wFeedback.name(), name ) ) {
     FeedbackDialog* fbDlg = new FeedbackDialog( this, m_Props );
-    wxID_OK == fbDlg->ShowModal();
+    fbDlg->ShowModal();
     Show(wFeedback.isshow(m_Props));
     Refresh();
     fbDlg->Destroy();
   }
   else if( StrOp.equals( wRoute.name(), name ) ) {
     RouteDialog* dlg = new RouteDialog( this, m_Props );
-    wxID_OK == dlg->ShowModal();
+    dlg->ShowModal();
     Show(wRoute.isshow(m_Props));
     Refresh();
     dlg->Destroy();
   }
   else if( StrOp.equals( wTrack.name(), name ) ) {
     TrackDialog* tkDlg = new TrackDialog( this, m_Props );
-    wxID_OK == tkDlg->ShowModal();
-    Show(wRoute.isshow(m_Props));
+    tkDlg->ShowModal();
     Refresh();
     tkDlg->Destroy();
   }
   else if( StrOp.equals( wText.name(), name ) ) {
     TextDialog* txDlg = new TextDialog( this, m_Props );
-    wxID_OK == txDlg->ShowModal();
+    txDlg->ShowModal();
     Refresh();
     txDlg->Destroy();
   }
   else if( StrOp.equals( wTurntable.name(), name ) ) {
     TurntableDialog* ttDlg = new TurntableDialog( this, m_Props );
-    wxID_OK == ttDlg->ShowModal();
+    ttDlg->ShowModal();
     Refresh();
     ttDlg->Destroy();
   }
   else if( StrOp.equals( wSelTab.name(), name ) ) {
     /* dialog for selection table */
     SelTabDialog* dlg = new SelTabDialog( this, m_Props );
-    wxID_OK == dlg->ShowModal();
+    dlg->ShowModal();
     Refresh();
     dlg->Destroy();
   }
   else if( StrOp.equals( wStage.name(), name ) ) {
     StageDlg* dlg = new StageDlg( this, m_Props );
-    wxID_OK == dlg->ShowModal();
+    dlg->ShowModal();
     Refresh();
     dlg->Destroy();
   }
