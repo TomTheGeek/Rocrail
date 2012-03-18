@@ -207,7 +207,7 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
   TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "OnPaint() z=%d", m_Z );
 
   if( !wZLevel.isactive(m_zLevel) && !m_bModView) {
-    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Level %d is not active (z=%d)", wZLevel.getz(m_zLevel), m_Z );
+    //TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Level %d is not active (z=%d)", wZLevel.getz(m_zLevel), m_Z );
     return;
   }
 
