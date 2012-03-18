@@ -206,16 +206,19 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
 {
   TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "OnPaint() z=%d", m_Z );
 
-  wxPaintDC dc(this);
-  if( !wZLevel.isactive(m_zLevel) && !m_bModView)
+  if( !wZLevel.isactive(m_zLevel) && !m_bModView) {
+    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Level %d is not active (z=%d)", wZLevel.getz(m_zLevel), m_Z );
     return;
+  }
 
+  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Level %d is active (z=%d)", wZLevel.getz(m_zLevel), m_Z );
 
+  wxPaintDC dc(this);
   dc.SetPen( *wxLIGHT_GREY_PEN );
 
   int x, y;
   GetViewStart( &x, &y );
-  TraceOp.trc( "planpanel", TRCLEVEL_DEBUG, __LINE__, 9999, "x_off=%d, y_off=%d", x, y );
+  TraceOp.trc( "planpanel", TRCLEVEL_INFO, __LINE__, 9999, "x_off=%d, y_off=%d", x, y );
 
   int cx, cy;
   GetClientSize( &cx, &cy );
