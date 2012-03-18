@@ -208,7 +208,7 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
   TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "OnPaint() z=%d", m_Z );
 
   if( !wZLevel.isactive(m_zLevel) && !m_bModView) {
-    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Level %d is not active (z=%d)", wZLevel.getz(m_zLevel), m_Z );
+    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Level %d is not active (modview=%d)", wZLevel.getz(m_zLevel), m_bModView );
     return;
   }
 
@@ -1380,7 +1380,7 @@ void PlanPanel::addMultipleItem(wxCommandEvent& event) {
   if( StrOp.equals( NodeOp.getName( node ), wModelCmd.name() ) ) {
     wxGetApp().sendToRocrail( node );
     NodeOp.base.del( node );
-    Show(true);
+    //Show(true);
     wxCursor cursor = wxCursor(wxCURSOR_ARROW);
     RocGuiFrame* frame = wxGetApp().getFrame();
     frame->SetCursor( cursor );
@@ -1668,7 +1668,7 @@ void PlanPanel::init( bool modview ) {
   wxCursor cursor = wxCursor(wxCURSOR_WAIT);
   RocGuiFrame* frame = wxGetApp().getFrame();
   frame->SetCursor( cursor );
-  Show(false);
+  //Show(false);
   m_InitThread = ThreadOp.inst( NULL, &initRunner, this );
   ThreadOp.start( m_InitThread );
 }
