@@ -566,7 +566,7 @@ iONode ecos_parser( const char* reply ) {
 
         /* This is start of event */
 
-      TraceOp.trc( "ecosparser", TRCLEVEL_INFO, __LINE__, 9999, "parsing event..." );
+      TraceOp.trc( "ecosparser", TRCLEVEL_DEBUG, __LINE__, 9999, "parsing event..." );
       node = NodeOp.inst( "event", NULL, ELEMENT_NODE );
       NodeOp.setInt( node, "rtype", REPLY_TYPE_EVENT );
       __parseEVENT( node, cpreplyline );
