@@ -39,7 +39,7 @@ public:
   void updateItemCmd(wxCommandEvent& event);
   void update4Route(wxCommandEvent& event);
   void updateTTItemCmd(wxCommandEvent& event);
-  void addItem(iONode child, bool add2list=true);
+  void addItem(iONode child, bool add2list=true, bool focus=true);
   void addItem(const char* nodename, const char* id, wxWindow* item);
   void addMultipleItem(wxCommandEvent& event);
   void addTrackStraight(wxCommandEvent& event);
