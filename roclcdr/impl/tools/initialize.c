@@ -222,7 +222,7 @@ const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexi
   *maxkmh = block->getMaxKmh(block);
 
   /* check for thrown switches in route */
-  if( !StrOp.equals( data->V_hint, wLoc.min ) && reduceSpeed ) {
+  if( !StrOp.equals( data->V_hint, wLoc.min ) && (reduceSpeed && onexit) ) {
     StrOp.copy( data->V_hint, wLoc.mid );
   }
 
