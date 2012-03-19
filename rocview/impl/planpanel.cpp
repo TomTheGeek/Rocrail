@@ -1380,8 +1380,8 @@ void PlanPanel::addMultipleItem(wxCommandEvent& event) {
   if( StrOp.equals( NodeOp.getName( node ), wModelCmd.name() ) ) {
     wxGetApp().sendToRocrail( node );
     NodeOp.base.del( node );
-    if( wZLevel.isactive(m_zLevel) )
-      Show(true);
+    //if( wZLevel.isactive(m_zLevel) )
+      //Show(true);
     wxCursor cursor = wxCursor(wxCURSOR_ARROW);
     RocGuiFrame* frame = wxGetApp().getFrame();
     frame->SetCursor( cursor );
@@ -1669,7 +1669,7 @@ void PlanPanel::init( bool modview ) {
   wxCursor cursor = wxCursor(wxCURSOR_WAIT);
   RocGuiFrame* frame = wxGetApp().getFrame();
   frame->SetCursor( cursor );
-  Show(false);
+  //Show(false);
   m_InitThread = ThreadOp.inst( NULL, &initRunner, this );
   ThreadOp.start( m_InitThread );
 }
