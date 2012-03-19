@@ -538,7 +538,7 @@ void Symbol::sizeToScale() {
   }
   else if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) ||
            StrOp.equals( wRoute.name(), name ) || StrOp.equals( wBlock.name(), name ) || StrOp.equals( wStage.name(), name ) ) {
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "set show to %d for %s, %s in level %d",
+    TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "set show to %d for %s, %s in level %d",
         wOutput.isshow(m_Props), name, wItem.getid( m_Props ), m_Z);
     Show(wOutput.isshow(m_Props));
   }
@@ -2155,7 +2155,7 @@ void Symbol::modelEvent( iONode node ) {
   bool refresh = false;
   const char* id = wItem.getid( node );
 
-  TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999,
+  TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999,
       "Symbol::modelEvent id=[%s] ori=%s state=%s", id, wItem.getori(node)!=NULL?wItem.getori(node):"-", wItem.getstate(node) );
 
   if( StrOp.equals( NodeOp.getName( node ), NodeOp.getName( m_Props ) ) ) {

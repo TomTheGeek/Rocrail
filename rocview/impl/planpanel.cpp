@@ -205,6 +205,7 @@ const char* PlanPanel::getZLevelTitle() {
 
 void PlanPanel::OnPaint(wxPaintEvent& event)
 {
+  wxPaintDC dc(this);
   TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "OnPaint() z=%d", m_Z );
 
   if( !wZLevel.isactive(m_zLevel) && !m_bModView) {
@@ -214,7 +215,6 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
 
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Level %d is active (z=%d)", wZLevel.getz(m_zLevel), m_Z );
 
-  wxPaintDC dc(this);
   dc.SetPen( *wxLIGHT_GREY_PEN );
 
   int x, y;
@@ -1332,7 +1332,7 @@ void PlanPanel::update4Route(wxCommandEvent& event) {
   NodeOp.base.del( node );
 }
 
-void PlanPanel::addItem( iONode child, bool add2list ) {
+void PlanPanel::addItem( iONode child, bool add2list, bool focus ) {
   const char* id = wItem.getid( child );
   int z = wItem.getz( child );
   if( id == NULL )
@@ -1347,7 +1347,8 @@ void PlanPanel::addItem( iONode child, bool add2list ) {
 
       if(wItem.isshow( child )) {
         Symbol* item = new Symbol( (PlanPanel*)this, child, m_ItemSize, m_Z, m_Scale, m_Bktext );
-        item->SetFocus();
+        if( focus )
+          item->SetFocus();
         m_ChildTable->Put( wxString(key,wxConvUTF8), item );
         item->SetBackgroundColour( GetBackgroundColour() );
       }
@@ -1380,11 +1381,6 @@ void PlanPanel::addMultipleItem(wxCommandEvent& event) {
   if( StrOp.equals( NodeOp.getName( node ), wModelCmd.name() ) ) {
     wxGetApp().sendToRocrail( node );
     NodeOp.base.del( node );
-    //if( wZLevel.isactive(m_zLevel) )
-      //Show(true);
-    wxCursor cursor = wxCursor(wxCURSOR_ARROW);
-    RocGuiFrame* frame = wxGetApp().getFrame();
-    frame->SetCursor( cursor );
     return;
   }
 
@@ -1394,7 +1390,7 @@ void PlanPanel::addMultipleItem(wxCommandEvent& event) {
   StrOp.free( text );
   for( int i = 0; i < cnt; i++ ) {
     iONode child = NodeOp.getChild( node, i );
-    addItem( child, false );
+    addItem( child, false, false );
   }
   text = StrOp.fmt( "%d items added", m_ChildTable->GetCount() );
   wxGetApp().getFrame()->setInfoText( text );
@@ -1666,10 +1662,6 @@ static void initRunner( void* threadinst ) {
 
 void PlanPanel::init( bool modview ) {
   m_bModView = modview;
-  wxCursor cursor = wxCursor(wxCURSOR_WAIT);
-  RocGuiFrame* frame = wxGetApp().getFrame();
-  frame->SetCursor( cursor );
-  //Show(false);
   m_InitThread = ThreadOp.inst( NULL, &initRunner, this );
   ThreadOp.start( m_InitThread );
 }
