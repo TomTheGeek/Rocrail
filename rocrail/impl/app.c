@@ -45,6 +45,7 @@
 #include "rocrail/wrapper/public/ConCmd.h"
 #include "rocrail/wrapper/public/Global.h"
 #include "rocrail/wrapper/public/RocRail.h"
+#include "rocrail/wrapper/public/Ctrl.h"
 #include "rocrail/wrapper/public/Tcp.h"
 #include "rocrail/wrapper/public/Trace.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -633,6 +634,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   {
     char* iniXml = NULL;
     iODoc iniDoc = NULL;
+    Boolean newIni = False;
     iOFile iniFile = FileOp.inst( nf?nf:wRocRail.getfile(NULL), True );
     data->szIniFile = nf?nf:wRocRail.getfile(NULL);
     if( iniFile != NULL ) {
@@ -644,12 +646,19 @@ static int _Main( iOApp inst, int argc, char** argv ) {
     }
     else {
       iniXml = StrOp.fmt( "<%s/>", wRocRail.name());
+      newIni = True;
     }
 
     /* Parse the Inifile: */
     iniDoc = DocOp.parse( iniXml );
     if( iniDoc != NULL ) {
       data->ini = DocOp.getRootNode( iniDoc );
+      if( newIni ) {
+        /* activate use block side routes for new work spaces */
+        iONode ctrl = NodeOp.inst( wCtrl.name(), data->ini, ELEMENT_NODE );
+        NodeOp.addChild( data->ini, ctrl );
+        wCtrl.setuseblockside(ctrl, True);
+      }
     }
     else {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Invalid ini file! [%s]", nf?nf:wRocRail.getfile(NULL) );
