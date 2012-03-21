@@ -1762,12 +1762,50 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
     dc.SetBackgroundMode(wxSOLID);
   }
 
-  if( StrOp.equals( ori, wItem.south ) )
-    dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0 );
-  else if( StrOp.equals( ori, wItem.north ) )
-    dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 5, (32 * wText.getcx( m_Props ))-3, 90.0 );
-  else
-    dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 3, 5, 0.0 );
+  wxSize size = dc.GetTextExtent(wxString(m_Label,wxConvUTF8));
+  int height = size.GetHeight();
+  double rotation = 0.0;
+  int xoff = 3;
+  int yoff = 5;
+  int xinc = 0;
+  int yinc = height;
+
+  if( StrOp.equals( ori, wItem.south ) ) {
+    xoff = (32 * wText.getcy( m_Props ))-5;
+    yoff = 3;
+    xinc = -height;
+    yinc = 0;
+    rotation = 270.0;
+  }
+  else if( StrOp.equals( ori, wItem.north ) ) {
+    xoff = 5;
+    yoff = (32 * wText.getcx( m_Props ))-3;
+    xinc = height;
+    yinc = 0;
+    rotation = 90.0;
+  }
+
+
+  if( StrOp.find(m_Label, "|") ) {
+    char s[256] = {'\0'};
+    StrOp.copy( s, m_Label);
+    char* p = s;
+    char* ps = p;
+    while( p = StrOp.find(p, "|") ) {
+      p[0] = '\0';
+      p++;
+      //TraceOp.trc( "renderer", TRCLEVEL_INFO, __LINE__, 9999, "text %d,%d [%s] %s", xoff, yoff,  ps, ori );
+      dc.DrawRotatedText(  wxString(ps,wxConvUTF8), xoff, yoff, rotation );
+      yoff += yinc;
+      xoff += xinc;
+      ps = p;
+    }
+    //TraceOp.trc( "renderer", TRCLEVEL_INFO, __LINE__, 9999, "text %d,%d [%s] %s", xoff, yoff,  ps, ori );
+    dc.DrawRotatedText(  wxString(ps,wxConvUTF8), xoff, yoff, rotation );
+  }
+  else {
+    dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), xoff, yoff, rotation );
+  }
 
   delete font;
 }

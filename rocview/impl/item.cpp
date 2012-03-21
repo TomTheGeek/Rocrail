@@ -2040,6 +2040,9 @@ void Symbol::OnRotate(wxCommandEvent& event) {
   iONode item = NodeOp.inst( NodeOp.getName( m_Props ), NULL, ELEMENT_NODE );
   wItem.setid( item, wItem.getid( m_Props ) );
   wItem.setori( item, wItem.getori( m_Props ) );
+  if( StrOp.equals( NodeOp.getName(m_Props), wText.name()) ) {
+    wText.settext( item, wText.gettext(m_Props) );
+  }
   NodeOp.addChild( cmd, item );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del( cmd );

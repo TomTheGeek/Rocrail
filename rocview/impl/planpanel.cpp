@@ -209,17 +209,17 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
   TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "OnPaint() z=%d", m_Z );
 
   if( !wZLevel.isactive(m_zLevel) && !m_bModView) {
-    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Level %d is not active (modview=%d)", wZLevel.getz(m_zLevel), m_bModView );
+    TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "Level %d is not active (modview=%d)", wZLevel.getz(m_zLevel), m_bModView );
     return;
   }
 
-  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Level %d is active (z=%d)", wZLevel.getz(m_zLevel), m_Z );
+  TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "Level %d is active (z=%d)", wZLevel.getz(m_zLevel), m_Z );
 
   dc.SetPen( *wxLIGHT_GREY_PEN );
 
   int x, y;
   GetViewStart( &x, &y );
-  TraceOp.trc( "planpanel", TRCLEVEL_INFO, __LINE__, 9999, "x_off=%d, y_off=%d", x, y );
+  TraceOp.trc( "planpanel", TRCLEVEL_DEBUG, __LINE__, 9999, "x_off=%d, y_off=%d", x, y );
 
   int cx, cy;
   GetClientSize( &cx, &cy );
@@ -1238,7 +1238,7 @@ void PlanPanel::updateItemCmd(wxCommandEvent& event) {
   }
   else if( item != NULL ) {
     item->modelEvent( node );
-    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Item with id=%s is informed", key );
+    TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "Item with id=%s is informed", key );
 
     if( wItem.getz(item->getProperties()) != this->m_Z ) {
       m_ChildTable->Delete(wxString(prevkey,wxConvUTF8));
@@ -1736,12 +1736,12 @@ void PlanPanel::reScale( double scale ) {
   }
 
   if( needSize ) {
-    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "needSize cx=%d, cy=%d", cx, cy );
+    TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "needSize cx=%d, cy=%d", cx, cy );
     cx++; cy++;
   }
 
 
-  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "size2fit cx=%d, cy=%d", cx, cy );
+  TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "size2fit cx=%d, cy=%d", cx, cy );
 
   if( m_bModView ) {
   /*
