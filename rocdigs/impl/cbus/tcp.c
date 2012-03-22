@@ -67,19 +67,36 @@ void tcpDisconnect( obj inst ) {
 
   if( data->socket != NULL ) {
     TraceOp.trc( "cbustcp", TRCLEVEL_INFO, __LINE__, 9999, "disconnecting..." );
-    SocketOp.disConnect( data->socket );
-    SocketOp.base.del( data->socket );
+    iOSocket socket = data->socket;
     data->socket = NULL;
+    SocketOp.disConnect( socket );
+    SocketOp.base.del( socket );
   }
 }
 
-
 Boolean tcpRead ( obj inst, unsigned char *frame, int len ) {
   iOCBUSData data = Data(inst);
-  if( data->socket != NULL )
-    return SocketOp.read( data->socket, frame, len );
-  else
+
+  if( data->socket == NULL ) {
     return False;
+  }
+  
+  if( data->socket == NULL ||  SocketOp.isBroken(data->socket) ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "problem reading CBUS: Disconnect" );
+    tcpDisconnect(inst);
+    ThreadOp.sleep(1000);
+    return False;
+  }
+
+  if( SocketOp.read( data->socket, frame, len ) ) {
+    return True;
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "problem reading CBUS: Disconnect" );
+    tcpDisconnect(inst);
+    ThreadOp.sleep(1000);
+  }
+  return False;
 }
 
 
@@ -95,6 +112,12 @@ Boolean tcpWrite( obj inst, unsigned char *frame, int len ) {
 
 Boolean tcpAvailable( obj inst ) {
   iOCBUSData data = Data(inst);
-  return True;
+  char msgStr[32];
+  if( data->socket == NULL || SocketOp.isBroken(data->socket) ) {
+    tcpDisconnect(inst);
+    tcpConnect(inst);
+    return False;
+  }
+  return SocketOp.peek( data->socket, msgStr, 1 );
 }
 
