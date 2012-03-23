@@ -69,6 +69,8 @@ void CBusNodeDlg::init( iONode event ) {
   m_CANID = 0;
   m_DigInt = NULL;
 
+  m_bGC1eGetAll = false;
+  m_bGC1eSetAll = false;
   m_bGC2GetAll = false;
   m_bGC2SetAll = false;
   m_bGC7GetAll = false;
@@ -80,6 +82,7 @@ void CBusNodeDlg::init( iONode event ) {
   m_GC2SetIndex = 0;
   m_GC6SetIndex = 0;
   m_GC4SetIndex = 0;
+  m_GC1eSetIndex = 0;
 
 
   m_Timer = new wxTimer( this, ME_GC2Timer );
@@ -290,6 +293,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
         initGC4Var(nr, val);
         initGC6Var(nr, val);
         initGC7Var(nr, val);
+        initGC1eVar(nr, val);
         return cbusnodevar;
       }
       cbusnodevar = wCBusNode.nextcbnodevar( node, cbusnodevar );
@@ -303,6 +307,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
     initGC4Var(nr, val);
     initGC6Var(nr, val);
     initGC7Var(nr, val);
+    initGC1eVar(nr, val);
     return cbusnodevar;
   }
   return NULL;
@@ -791,8 +796,8 @@ void CBusNodeDlg::event( iONode event ) {
     int nn   = wProgram.getdecaddr(event);
     int cv = wProgram.getcv(event);
     int val = wProgram.getvalue(event);
-    TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "node variable %d, val=%d gc2=%d gc4=%d gc6=%d gc7=%d",
-        cv, val, m_bGC2GetAll, m_bGC4GetAll, m_bGC6GetAll, m_bGC7GetAll);
+    TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "node variable %d, val=%d gc1e=%d gc2=%d gc4=%d gc6=%d gc7=%d",
+        cv, val, m_bGC1eGetAll, m_bGC2GetAll, m_bGC4GetAll, m_bGC6GetAll, m_bGC7GetAll);
 
     iONode nv = getNodeVar(nn, m_NodeTypeNr->GetValue(), cv, val );
     if( m_bGC2GetAll ) {
@@ -833,6 +838,16 @@ void CBusNodeDlg::event( iONode event ) {
       else {
         m_bGC7GetAll = false;
         eventGetAll();
+      }
+    }
+    else if( m_bGC1eGetAll ) {
+      if( cv < 16 ) {
+        varGet(cv+1);
+      }
+      else {
+        m_GC1eSetAll->Enable(true);
+        m_GC1eGetAll->Enable(true);
+        m_bGC1eGetAll = false;
       }
     }
   }
@@ -1310,6 +1325,7 @@ void CBusNodeDlg::onGC2Test( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onGC2SetAll( wxCommandEvent& event ) {
+  m_bGC1eSetAll = false;
   m_bGC2SetAll = true;
   m_bGC4SetAll = false;
   m_bGC6SetAll = false;
@@ -1322,6 +1338,7 @@ void CBusNodeDlg::onGC2SetAll( wxCommandEvent& event ) {
 
 
 void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
+  m_bGC1eSetAll = false;
   m_bGC2SetAll = false;
   m_bGC4SetAll = false;
   m_bGC6SetAll = false;
@@ -1384,8 +1401,49 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
 
 void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
   TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
-      "timer gc2=%d[%d] gc4=%d[%d] gc6=%d[%d]", m_bGC2SetAll, m_GC2SetIndex, m_bGC4SetAll, m_GC4SetIndex, m_bGC6SetAll, m_GC6SetIndex);
-  if( m_bGC6SetAll ) {
+      "timer gc1e=%d[%d] gc2=%d[%d] gc4=%d[%d] gc6=%d[%d]",
+      m_bGC1eSetAll, m_GC1eSetIndex, m_bGC2SetAll, m_GC2SetIndex, m_bGC4SetAll, m_GC4SetIndex, m_bGC6SetAll, m_GC6SetIndex);
+
+  if( m_bGC1eSetAll ) {
+    wxSpinCtrl* gc1eip[] = {m_GC1eIP1,m_GC1eIP2,m_GC1eIP3,m_GC1eIP4};
+    wxSpinCtrl* gc1emask[] = {m_GC1eNetmask1,m_GC1eNetmask2,m_GC1eNetmask3,m_GC1eNetmask4};
+    wxSpinCtrl* gc1emac[] = {m_GC1eMAC1,m_GC1eMAC2,m_GC1eMAC3,m_GC1eMAC4,m_GC1eMAC5,m_GC1eMAC6};
+    if( m_GC1eSetIndex == 0 ) {
+      int nv1 = 0;
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e nv1=0x%02X", nv1);
+      varSet(1, nv1, false);
+    }
+    else if( m_GC1eSetIndex == 1 ) {
+      int canid = m_GC1eCanID->GetValue();
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e nv2=0x%02X", canid);
+      varSet(2, canid, false);
+    }
+    else if( m_GC1eSetIndex > 2 && m_GC1eSetIndex < 7) {
+      // IP Address
+      int nv = gc1eip[m_GC1eSetIndex-3]->GetValue();
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e nv%d=0x%02X", m_GC1eSetIndex, nv);
+      varSet(m_GC1eSetIndex, nv, false);
+    }
+    else if( m_GC1eSetIndex > 6 && m_GC1eSetIndex < 11) {
+      // Netmask
+      int nv = gc1emask[m_GC1eSetIndex-7]->GetValue();
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e nv%d=0x%02X", m_GC1eSetIndex, nv);
+      varSet(m_GC1eSetIndex, nv, false);
+    }
+    else if( m_GC1eSetIndex > 10 && m_GC1eSetIndex < 17) {
+      // MAC
+      int nv = gc1emac[m_GC1eSetIndex-11]->GetValue();
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e nv%d=0x%02X", m_GC1eSetIndex, nv);
+      varSet(m_GC1eSetIndex, nv, false);
+    }
+    else {
+      m_bGC1eSetAll = false;
+      m_GC1eSetAll->Enable(true);
+      m_GC1eGetAll->Enable(true);
+    }
+  }
+
+  else if( m_bGC6SetAll ) {
     if( m_GC6SetIndex == 0 ) {
       int nv1 = m_GC6SaveServoPos->IsChecked() ? 0x01:0x00;
       nv1 += m_GC6ShortEvents->IsChecked() ? 0x02:0x00;
@@ -1603,6 +1661,34 @@ void CBusNodeDlg::initGC7Var( int nr, int val ) {
 
 
 
+void CBusNodeDlg::initGC1eVar( int nr, int val ) {
+  wxSpinCtrl* gc1eip[] = {m_GC1eIP1,m_GC1eIP2,m_GC1eIP3,m_GC1eIP4};
+  wxSpinCtrl* gc1emask[] = {m_GC1eNetmask1,m_GC1eNetmask2,m_GC1eNetmask3,m_GC1eNetmask4};
+  wxSpinCtrl* gc1emac[] = {m_GC1eMAC1,m_GC1eMAC2,m_GC1eMAC3,m_GC1eMAC4,m_GC1eMAC5,m_GC1eMAC6};
+
+  if( nr == 1 ) {
+    // node var1
+  }
+  else if( nr == 2 ) {
+    // node var1
+    m_GC1eCanID->SetValue( val);
+  }
+  else if( nr > 2 && nr < 7 ) {
+    // ip address
+    gc1eip[nr-3]->SetValue( val);
+  }
+  else if( nr > 6 && nr < 11 ) {
+    // netmask
+    gc1emask[nr-7]->SetValue( val);
+  }
+  else if( nr > 10 && nr < 17 ) {
+    // mac address
+    gc1emac[nr-11]->SetValue( val);
+  }
+}
+
+
+
 // GC6
 void CBusNodeDlg::OnServoSelect( wxCommandEvent& event ) {
 }
@@ -1676,6 +1762,7 @@ void CBusNodeDlg::onGC6GetAll( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onGC6SetAll( wxCommandEvent& event ) {
+  m_bGC1eSetAll = false;
   m_bGC2SetAll = false;
   m_bGC4SetAll = false;
   m_bGC6SetAll = true;
@@ -1686,6 +1773,7 @@ void CBusNodeDlg::onGC6SetAll( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onGC4GetAll( wxCommandEvent& event ) {
+  m_bGC1eGetAll = false;
   m_bGC2GetAll = false;
   m_bGC4GetAll = true;
   m_bGC6GetAll = false;
@@ -1695,6 +1783,7 @@ void CBusNodeDlg::onGC4GetAll( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onGC4SetAll( wxCommandEvent& event ) {
+  m_bGC1eSetAll = false;
   m_bGC2SetAll = false;
   m_bGC4SetAll = true;
   m_bGC6SetAll = false;
@@ -1705,8 +1794,23 @@ void CBusNodeDlg::onGC4SetAll( wxCommandEvent& event ) {
 }
 
 void CBusNodeDlg::onGC1eGetAll( wxCommandEvent& event ) {
+  m_bGC1eGetAll = true;
+  m_bGC2GetAll = false;
+  m_bGC4GetAll = false;
+  m_bGC6GetAll = false;
+  m_GC1eSetAll->Enable(false);
+  m_GC1eGetAll->Enable(false);
+  varGet(1);
 }
 
 void CBusNodeDlg::onGC1eSetAll( wxCommandEvent& event ) {
+  m_bGC1eSetAll = true;
+  m_bGC2SetAll = false;
+  m_bGC4SetAll = false;
+  m_bGC6SetAll = false;
+  m_GC1eSetAll->Enable(false);
+  m_GC1eGetAll->Enable(false);
+  m_GC1eSetIndex = 0;
+  m_Timer->Start( 100, wxTIMER_ONE_SHOT );
 }
 
