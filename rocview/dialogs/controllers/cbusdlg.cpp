@@ -62,6 +62,7 @@ void CbusDlg::initLabels() {
   // Options
   m_OptionsBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "options" ) );
   m_ShortEvents->SetLabel( wxGetApp().getMsg( "shortevents" ) );
+  m_FastClock->SetLabel( wxGetApp().getMsg( "fastclock" ) );
   m_labSwTime->SetLabel( wxGetApp().getMsg( "switchtime" ) );
   m_labPurgetime->SetLabel( wxGetApp().getMsg( "purgetime" ) );
   m_labLoaderTime->SetLabel( wxGetApp().getMsg( "loadertime" ) );
@@ -110,6 +111,7 @@ void CbusDlg::initValues() {
   OnSublib(event);
 
   m_ShortEvents->SetValue( wCBus.isshortevents(cbusini) ? true:false);
+  m_FastClock->SetValue( wCBus.isfastclock(cbusini) ? true:false);
   m_FonFof->SetValue( wCBus.isfonfof(cbusini) ? true:false);
   m_CTS->SetValue( StrOp.equals( wDigInt.cts, wDigInt.getflow( m_Props ) ) ? true:false );
 }
@@ -141,6 +143,7 @@ void CbusDlg::evaluate() {
 
 
   wCBus.setshortevents(cbusini, m_ShortEvents->IsChecked()?True:False);
+  wCBus.setfastclock(cbusini, m_FastClock->IsChecked()?True:False);
   wCBus.setfonfof(cbusini, m_FonFof->IsChecked()?True:False);
   wDigInt.setflow( m_Props, m_CTS->IsChecked() ? wDigInt.cts:wDigInt.none );
 

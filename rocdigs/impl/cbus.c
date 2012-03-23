@@ -1989,7 +1989,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
   }
 
   /* Clock command. */
-  else if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
+  else if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) && data->fastclock ) {
     /* Fast Clock */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "clock: %s", wClock.getcmd( node ) );
 
@@ -2073,6 +2073,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->cid         = wCBus.getcid(data->cbusini);
   data->sodaddr     = wCBus.getsodaddr(data->cbusini);
   data->shortevents = wCBus.isshortevents(data->cbusini);
+  data->fastclock   = wCBus.isfastclock(data->cbusini);
   data->fonfof      = wCBus.isfonfof(data->cbusini);
   data->slotserver  = wCBus.isslotserver(data->cbusini);
   data->purgetime   = wCBus.getpurgetime(data->cbusini);
@@ -2104,6 +2105,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "canid         = %d", data->cid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SoD address   = %d", data->sodaddr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short events  = %s", data->shortevents ? "yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fast clock    = %s", data->fastclock ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "use FON/FOF   = %s", data->fonfof ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot server   = %s", data->slotserver ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib        = %s", wDigInt.getsublib(data->ini) );

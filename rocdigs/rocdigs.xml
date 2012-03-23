@@ -1430,7 +1430,8 @@
       <var name="fcnode" vt="int"/>
       <var name="fcaddr" vt="int"/>
       <var name="fcsync" vt="Boolean"/>
-    </data>
+      <var name="fastclock" vt="Boolean"/>
+      </data>
   </object>
 
   <object name="OpenLCB" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,map,socket" include="$rocint/public/digint">
