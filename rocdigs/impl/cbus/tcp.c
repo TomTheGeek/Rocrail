@@ -32,30 +32,71 @@
 
 #include "rocrail/wrapper/public/DigInt.h"
 
+Boolean tcpConnect( obj inst );
 
+static void __watchdog( void* threadinst ) {
+  iOThread     th = (iOThread)threadinst;
+  iOCBUS     cbus = (iOCBUS)ThreadOp.getParm(th);
+  iOCBUSData data = Data(cbus);
 
+  int retry = 0;
+
+  ThreadOp.sleep(1000);
+  TraceOp.trc( "cbustcp", TRCLEVEL_INFO, __LINE__, 9999, "cbus tcp watchdog started" );
+
+  while( data->run ) {
+    if( data->socket == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to reconnect..." );
+      if( !data->connectpending && retry < 60 && !tcpConnect((obj)cbus) ) {
+        retry++;
+      }
+      else {
+      }
+    }
+    ThreadOp.sleep(1000);
+  }
+  TraceOp.trc( "cbustcp", TRCLEVEL_INFO, __LINE__, 9999, "cbus tcp watchdog ended" );
+}
 
 
 Boolean tcpConnect( obj inst ) {
   iOCBUSData data = Data(inst);
+  iOSocket socket = NULL;
 
+  data->connectpending = True;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "IP address [%s]", wDigInt.gethost( data->ini )  );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "IP port    [%d]", wDigInt.getport( data->ini )  );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-
-  TraceOp.trc( "cbustcp", TRCLEVEL_WARNING, __LINE__, 9999, "trying to connect to %s:%d...", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
-  data->socket = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
-  if( data->socket != NULL ) {
-    SocketOp.setNodelay(data->socket, True);
-    if ( SocketOp.connect( data->socket ) ) {
-      TraceOp.trc( "cbustcp", TRCLEVEL_INFO, __LINE__, 9999, "connected to %s:%d", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini )  );
-      return True;
-    }
+  if( wDigInt.gethost( data->ini ) == NULL || StrOp.len(wDigInt.gethost( data->ini )) == 0 ) {
+    wDigInt.sethost( data->ini, "192.168.0.200" );
   }
-  if( data->socket != NULL ) {
-    SocketOp.base.del( data->socket );
-    data->socket = NULL;
+  if( wDigInt.getport( data->ini ) == 0 ) {
+    wDigInt.setport( data->ini, 5550 );
+  }
+
+  TraceOp.trc( "cbustcp", TRCLEVEL_WARNING, __LINE__, 9999,
+      "trying to connect to %s:%d...", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
+
+  socket = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
+  SocketOp.setRcvTimeout( socket, wDigInt.gettimeout(data->ini) / 1000);
+
+  if ( SocketOp.connect( socket ) ) {
+    data->socket = socket;
+    if( data->watchdog == NULL ) {
+      data->watchdog = ThreadOp.inst( "cbustcpwd", &__watchdog, inst );
+      ThreadOp.start( data->watchdog );
+    }
+    TraceOp.trc( "cbustcp", TRCLEVEL_WARNING, __LINE__, 9999, "connect to %s:%d...", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
+    data->connectpending = False;
+    return True;
+  }
+  else {
+    TraceOp.trc( "cbustcp", TRCLEVEL_WARNING, __LINE__, 9999, "unable to connect to %s:%d; check the network...",
+        wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
+    if( socket != NULL ) {
+      SocketOp.base.del( socket );
+      socket = NULL;
+    }
+    data->connectpending = False;
+    return False;
   }
 
   return False;
@@ -74,6 +115,8 @@ void tcpDisconnect( obj inst ) {
   }
 }
 
+
+
 Boolean tcpRead ( obj inst, unsigned char *frame, int len ) {
   iOCBUSData data = Data(inst);
 
@@ -81,18 +124,11 @@ Boolean tcpRead ( obj inst, unsigned char *frame, int len ) {
     return False;
   }
   
-  if( data->socket == NULL ||  SocketOp.isBroken(data->socket) ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "problem reading CBUS: Disconnect" );
-    tcpDisconnect(inst);
-    ThreadOp.sleep(1000);
-    return False;
-  }
-
-  if( SocketOp.read( data->socket, frame, len ) ) {
+  if( !SocketOp.isBroken(data->socket) && SocketOp.read( data->socket, frame, len ) ) {
     return True;
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "problem reading CBUS: Disconnect" );
+    TraceOp.trc( "cbustcp", TRCLEVEL_EXCEPTION, __LINE__, 9999, "problem reading CBUS: Disconnect" );
     tcpDisconnect(inst);
     ThreadOp.sleep(1000);
   }
@@ -102,11 +138,22 @@ Boolean tcpRead ( obj inst, unsigned char *frame, int len ) {
 
 Boolean tcpWrite( obj inst, unsigned char *frame, int len ) {
   iOCBUSData data = Data(inst);
-  TraceOp.dump ( "cbustcp", TRCLEVEL_BYTE, (char*)frame, len );
-  if( data->socket != NULL )
-    return SocketOp.write( data->socket, frame, len );
-  else
+
+  if( data->socket == NULL ) {
     return False;
+  }
+
+  if( !SocketOp.isBroken(data->socket) && SocketOp.write( data->socket, frame, len ) ) {
+    TraceOp.dump ( "cbustcp", TRCLEVEL_BYTE, (char*)frame, len );
+    return True;
+  }
+  else {
+    TraceOp.trc( "cbustcp", TRCLEVEL_WARNING, __LINE__, 9999, "could not write to CBUS" );
+    tcpDisconnect(inst);
+    ThreadOp.sleep(1000);
+  }
+
+  return False;
 }
 
 
@@ -114,8 +161,6 @@ Boolean tcpAvailable( obj inst ) {
   iOCBUSData data = Data(inst);
   char msgStr[32];
   if( data->socket == NULL || SocketOp.isBroken(data->socket) ) {
-    tcpDisconnect(inst);
-    tcpConnect(inst);
     return False;
   }
   return SocketOp.peek( data->socket, msgStr, 1 );

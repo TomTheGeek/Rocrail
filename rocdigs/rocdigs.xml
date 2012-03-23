@@ -1431,6 +1431,8 @@
       <var name="fcaddr" vt="int"/>
       <var name="fcsync" vt="Boolean"/>
       <var name="fastclock" vt="Boolean"/>
+      <var name="watchdog" vt="iOThread"/>
+      <var name="connectpending" vt="Boolean"/>
       </data>
   </object>
 
