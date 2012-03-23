@@ -165,6 +165,8 @@ protected:
   void OnBounce( wxCommandEvent& event );
   void onGC4GetAll( wxCommandEvent& event );
   void onGC4SetAll( wxCommandEvent& event );
+  void onGC1eGetAll( wxCommandEvent& event );
+  void onGC1eSetAll( wxCommandEvent& event );
 
 
 public:

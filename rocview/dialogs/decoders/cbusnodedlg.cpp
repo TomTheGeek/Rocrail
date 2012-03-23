@@ -1704,3 +1704,9 @@ void CBusNodeDlg::onGC4SetAll( wxCommandEvent& event ) {
   m_Timer->Start( 100, wxTIMER_ONE_SHOT );
 }
 
+void CBusNodeDlg::onGC1eGetAll( wxCommandEvent& event ) {
+}
+
+void CBusNodeDlg::onGC1eSetAll( wxCommandEvent& event ) {
+}
+
