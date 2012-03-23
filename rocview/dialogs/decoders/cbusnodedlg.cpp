@@ -1436,6 +1436,12 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e nv%d=0x%02X", m_GC1eSetIndex, nv);
       varSet(m_GC1eSetIndex, nv, false);
     }
+
+
+    m_GC1eSetIndex++;
+    if( m_bGC1eSetAll && m_GC1eSetIndex < 17 ) {
+      m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+    }
     else {
       m_bGC1eSetAll = false;
       m_GC1eSetAll->Enable(true);
