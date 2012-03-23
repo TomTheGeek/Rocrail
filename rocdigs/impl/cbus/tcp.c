@@ -84,7 +84,7 @@ Boolean tcpConnect( obj inst ) {
       data->watchdog = ThreadOp.inst( "cbustcpwd", &__watchdog, inst );
       ThreadOp.start( data->watchdog );
     }
-    TraceOp.trc( "cbustcp", TRCLEVEL_WARNING, __LINE__, 9999, "connect to %s:%d...", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
+    TraceOp.trc( "cbustcp", TRCLEVEL_WARNING, __LINE__, 9999, "connected to %s:%d", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
     data->connectpending = False;
     return True;
   }
