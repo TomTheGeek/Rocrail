@@ -487,9 +487,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       if( wActionCtrl.getparam(actionctrl) != NULL && StrOp.len(wActionCtrl.getparam(actionctrl)) > 0 ) {
         char* s = NULL;
         if( extparam != NULL && StrOp.len(extparam) > 0 )
-          s = StrOp.fmt("%s %s \"%s\"", extaction, extparam, wActionCtrl.getparam(actionctrl) );
+          s = StrOp.fmt("\"%s %s\" \"%s\"", extaction, extparam, wActionCtrl.getparam(actionctrl) );
         else
-          s = StrOp.fmt("%s \"%s\"", extaction, wActionCtrl.getparam(actionctrl) );
+          s = StrOp.fmt("\"%s\" \"%s\"", extaction, wActionCtrl.getparam(actionctrl) );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
         SystemOp.system( s, True, False );
         StrOp.free(s);
@@ -497,9 +497,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       else {
         char* s = NULL;
         if( extparam != NULL && StrOp.len(extparam) > 0 )
-          s = StrOp.fmt("%s %s", extaction, extparam );
+          s = StrOp.fmt("\"%s %s\"", extaction, extparam );
         else
-          s = StrOp.fmt("%s", extaction );
+          s = StrOp.fmt("\"%s\"", extaction );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
         SystemOp.system( s, True, False );
         StrOp.free(s);
