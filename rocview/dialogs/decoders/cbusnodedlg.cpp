@@ -1683,6 +1683,8 @@ void CBusNodeDlg::initGC1eVar( int nr, int val ) {
     // node var1
     m_GC1eIdleWD->SetValue( (val&0x01) ? true:false );
     m_GC1ePowerOffAtIdle->SetValue( (val&0x02) ? true:false );
+    m_GC1eIdleTime->Enable( m_GC1eIdleWD->IsChecked() );
+    m_GC1ePowerOffAtIdle->Enable( m_GC1eIdleWD->IsChecked() );
   }
   else if( nr == 2 ) {
     // canid
@@ -1833,3 +1835,7 @@ void CBusNodeDlg::onGC1eSetAll( wxCommandEvent& event ) {
   m_Timer->Start( 100, wxTIMER_ONE_SHOT );
 }
 
+void CBusNodeDlg::onGC1eIdleWatchDog( wxCommandEvent& event ) {
+  m_GC1eIdleTime->Enable( m_GC1eIdleWD->IsChecked() );
+  m_GC1ePowerOffAtIdle->Enable( m_GC1eIdleWD->IsChecked() );
+}

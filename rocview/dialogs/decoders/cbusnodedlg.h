@@ -171,6 +171,7 @@ protected:
   void onGC4SetAll( wxCommandEvent& event );
   void onGC1eGetAll( wxCommandEvent& event );
   void onGC1eSetAll( wxCommandEvent& event );
+  void onGC1eIdleWatchDog( wxCommandEvent& event );
 
 
 public:
