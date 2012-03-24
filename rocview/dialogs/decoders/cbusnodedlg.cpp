@@ -1409,13 +1409,13 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
     wxSpinCtrl* gc1emask[] = {m_GC1eNetmask1,m_GC1eNetmask2,m_GC1eNetmask3,m_GC1eNetmask4};
     wxSpinCtrl* gc1emac[] = {m_GC1eMAC1,m_GC1eMAC2,m_GC1eMAC3,m_GC1eMAC4,m_GC1eMAC5,m_GC1eMAC6};
     if( m_GC1eSetIndex == 0 ) {
-      int nv1 = 0;
+      int nv1 = m_GC1eIdleWD->IsChecked() ? 0x01:0x00;
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e nv1=0x%02X", nv1);
       varSet(1, nv1, false);
     }
     else if( m_GC1eSetIndex == 1 ) {
       int canid = m_GC1eCanID->GetValue();
-      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e nv2=0x%02X", canid);
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e canid=0x%02X", canid);
       varSet(2, canid, false);
     }
     else if( m_GC1eSetIndex > 2 && m_GC1eSetIndex < 7) {
@@ -1674,9 +1674,10 @@ void CBusNodeDlg::initGC1eVar( int nr, int val ) {
 
   if( nr == 1 ) {
     // node var1
+    m_GC1eIdleWD->SetValue( (val&0x01) ? true:false );
   }
   else if( nr == 2 ) {
-    // node var1
+    // canid
     m_GC1eCanID->SetValue( val);
   }
   else if( nr > 2 && nr < 7 ) {
