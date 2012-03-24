@@ -158,6 +158,7 @@ void CBusNodeDlg::init( iONode event ) {
   GetSizer()->SetSizeHints(this);
 
   m_FirmwarePanel->Enable(false);
+  m_NoteBook->RemovePage(4);
 
   if( event != NULL ) {
     char ver[32] = {'0'};
