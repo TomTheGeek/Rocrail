@@ -445,7 +445,7 @@ static void __syscmd( const char* command ) {
 }
 
 
-static void __queryLocoIO() {
+static void __queryModules() {
   iOAppData data = Data(__appinst);
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setlntype( cmd, wProgram.lntype_sv );
@@ -453,7 +453,7 @@ static void __queryLocoIO() {
   wProgram.setaddr( cmd, 0 );
   wProgram.setmodid( cmd, 0 );
   wProgram.setcv( cmd, 0 );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Query LocoIO..." );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Query modules..." );
   ControlOp.cmd( data->control, cmd, NULL );
 }
 
@@ -510,7 +510,7 @@ static __checkConsole( iOAppData data ) {
     __syscmd( wSysCmd.slots );
   }
   else if( c == '5' ) {
-    __queryLocoIO();
+    __queryModules();
   }
   else if( c == wConCmd.stopautomode ) {
     iONode cmd = NULL;
