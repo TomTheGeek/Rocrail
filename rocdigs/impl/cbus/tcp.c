@@ -32,7 +32,7 @@
 
 #include "rocrail/wrapper/public/DigInt.h"
 
-Boolean tcpConnect( obj inst );
+Boolean tcpConnectInternal( obj inst );
 
 static void __watchdog( void* threadinst ) {
   iOThread     th = (iOThread)threadinst;
@@ -41,16 +41,17 @@ static void __watchdog( void* threadinst ) {
 
   int retry = 0;
 
-  ThreadOp.sleep(1000);
+  ThreadOp.sleep(10);
   TraceOp.trc( "cbustcp", TRCLEVEL_INFO, __LINE__, 9999, "cbus tcp watchdog started" );
 
   while( data->run ) {
     if( data->socket == NULL ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to reconnect..." );
-      if( !data->connectpending && retry < 60 && !tcpConnect((obj)cbus) ) {
+      TraceOp.trc( "cbustcp", TRCLEVEL_DEBUG, __LINE__, 9999, "connecting..." );
+      if( !data->connectpending && retry < 60 && !tcpConnectInternal((obj)cbus) ) {
         retry++;
       }
       else {
+        retry = 0;
       }
     }
     ThreadOp.sleep(1000);
@@ -60,6 +61,17 @@ static void __watchdog( void* threadinst ) {
 
 
 Boolean tcpConnect( obj inst ) {
+  iOCBUSData data = Data(inst);
+  data->connectpending = False;
+  data->socket = NULL;
+  if( data->watchdog == NULL ) {
+    data->watchdog = ThreadOp.inst( "cbustcpwd", &__watchdog, inst );
+    ThreadOp.start( data->watchdog );
+  }
+  return True;
+}
+
+Boolean tcpConnectInternal( obj inst ) {
   iOCBUSData data = Data(inst);
   iOSocket socket = NULL;
 
@@ -80,10 +92,6 @@ Boolean tcpConnect( obj inst ) {
 
   if ( SocketOp.connect( socket ) ) {
     data->socket = socket;
-    if( data->watchdog == NULL ) {
-      data->watchdog = ThreadOp.inst( "cbustcpwd", &__watchdog, inst );
-      ThreadOp.start( data->watchdog );
-    }
     TraceOp.trc( "cbustcp", TRCLEVEL_WARNING, __LINE__, 9999, "connected to %s:%d", wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
     data->connectpending = False;
     return True;
