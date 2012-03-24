@@ -842,7 +842,7 @@ void CBusNodeDlg::event( iONode event ) {
       }
     }
     else if( m_bGC1eGetAll ) {
-      if( cv < 16 ) {
+      if( cv < 17 ) {
         varGet(cv+1);
       }
       else {
@@ -1411,6 +1411,7 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
     wxSpinCtrl* gc1emac[] = {m_GC1eMAC1,m_GC1eMAC2,m_GC1eMAC3,m_GC1eMAC4,m_GC1eMAC5,m_GC1eMAC6};
     if( m_GC1eSetIndex == 0 ) {
       int nv1 = m_GC1eIdleWD->IsChecked() ? 0x01:0x00;
+      nv1 |= m_GC1ePowerOffAtIdle->IsChecked() ? 0x02:0x00;
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e nv1=0x%02X", nv1);
       varSet(1, nv1, false);
     }
@@ -1437,10 +1438,15 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e nv%d=0x%02X", m_GC1eSetIndex, nv);
       varSet(m_GC1eSetIndex, nv, false);
     }
+    else if( m_GC1eSetIndex == 17 ) {
+      int idletime = m_GC1eIdleTime->GetValue();
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e idletime=0x%02X", idletime);
+      varSet(17, idletime, false);
+    }
 
 
     m_GC1eSetIndex++;
-    if( m_bGC1eSetAll && m_GC1eSetIndex < 17 ) {
+    if( m_bGC1eSetAll && m_GC1eSetIndex < 18 ) {
       m_Timer->Start( 100, wxTIMER_ONE_SHOT );
     }
     else {
@@ -1676,6 +1682,7 @@ void CBusNodeDlg::initGC1eVar( int nr, int val ) {
   if( nr == 1 ) {
     // node var1
     m_GC1eIdleWD->SetValue( (val&0x01) ? true:false );
+    m_GC1ePowerOffAtIdle->SetValue( (val&0x02) ? true:false );
   }
   else if( nr == 2 ) {
     // canid
@@ -1692,6 +1699,10 @@ void CBusNodeDlg::initGC1eVar( int nr, int val ) {
   else if( nr > 10 && nr < 17 ) {
     // mac address
     gc1emac[nr-11]->SetValue( val);
+  }
+  else if( nr == 17 ) {
+    // canid
+    m_GC1eIdleTime->SetValue( val);
   }
 }
 
