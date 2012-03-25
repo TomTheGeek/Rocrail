@@ -50,16 +50,17 @@
 
 CBusNodeDlg::CBusNodeDlg( wxWindow* parent ):cbusnodedlggen( parent )
 {
+  initLabels();
   init(NULL);
 }
 
 CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( parent )
 {
+  initLabels();
   init(event);
 }
 
-void CBusNodeDlg::init( iONode event ) {
-  MemOp.set( m_Ports, sizeof(Port), 0 );
+void CBusNodeDlg::initLabels() {
   m_SOD = 0;
   m_SaveOutputState = false;
   m_ShortEvents = false;
@@ -159,6 +160,11 @@ void CBusNodeDlg::init( iONode event ) {
 
   m_FirmwarePanel->Enable(false);
   m_NoteBook->RemovePage(4);
+}
+
+
+void CBusNodeDlg::init( iONode event ) {
+  MemOp.set( m_Ports, sizeof(Port), 0 );
 
   if( event != NULL ) {
     char ver[32] = {'0'};
@@ -180,6 +186,7 @@ void CBusNodeDlg::init( iONode event ) {
   wxCommandEvent cmd( wxEVT_COMMAND_MENU_SELECTED, wxID_CBUSNODE_BOOK );
   wxPostEvent( m_NoteBook, cmd );
 }
+
 
 void CBusNodeDlg::initIndex() {
   m_IndexList->Clear();

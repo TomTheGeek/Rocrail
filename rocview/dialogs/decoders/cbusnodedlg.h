@@ -67,6 +67,7 @@ class CBusNodeDlg : public cbusnodedlggen
   int m_CANID;
   iONode m_DigInt;
 
+  void initLabels();
   void init(iONode event);
   void initIndex();
   void initVarList(iONode node);
