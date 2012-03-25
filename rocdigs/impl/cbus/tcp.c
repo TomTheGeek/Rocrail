@@ -62,6 +62,7 @@ static void __watchdog( void* threadinst ) {
       cmd[0] = OPC_ACK;
       makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid );
       ThreadOp.post(data->writer, (obj)frame);
+      TraceOp.trc( "cbustcp", TRCLEVEL_DEBUG, __LINE__, 9999, "keep alive ack" );
     }
     ThreadOp.sleep(1000);
   }
@@ -180,6 +181,7 @@ Boolean tcpAvailable( obj inst ) {
   iOCBUSData data = Data(inst);
   char msgStr[32];
   if( data->socket == NULL || SocketOp.isBroken(data->socket) ) {
+    TraceOp.trc( "cbustcp", TRCLEVEL_WARNING, __LINE__, 9999, "not connected" );
     return False;
   }
   return SocketOp.peek( data->socket, msgStr, 1 );

@@ -1736,6 +1736,17 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
   }
 
 
+  /* Loc dispatch command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals(wLoc.dispatch, wLoc.getcmd(node)) ) {
+    iOSlot slot = __getSlot(cbus, node );
+    if( slot != NULL && slot->session > 0 ) {
+      slot->releasereq = True;
+    }
+    else if( slot != NULL && slot->session == 0 ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "no session for loco %d", slot->addr );
+    }
+  }
+
   /* Loc release command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals(wLoc.release, wLoc.getcmd(node)) ) {
     iOSlot slot = __getSlot(cbus, node );
