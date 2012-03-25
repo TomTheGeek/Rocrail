@@ -4448,9 +4448,14 @@ static void _saveBlockOccupancy( iOModel inst ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writing occupancy file [%s]", occFileName );
 
     f = FileOp.inst( occFileName, OPEN_WRITE );
-    FileOp.write( f, modoccStr, StrOp.len(modoccStr) );
-    FileOp.close( f );
-    FileOp.base.del( f );
+    if( f != NULL ) {
+      FileOp.write( f, modoccStr, StrOp.len(modoccStr) );
+      FileOp.close( f );
+      FileOp.base.del( f );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to write occupancy file [%s]", occFileName );
+    }
   }
 
   /* Unlock the semaphore: */
