@@ -1433,6 +1433,7 @@
       <var name="fastclock" vt="Boolean"/>
       <var name="watchdog" vt="iOThread"/>
       <var name="connectpending" vt="Boolean"/>
+      <var name="lastcmdtick" vt="unsigned long"/>
       </data>
   </object>
 

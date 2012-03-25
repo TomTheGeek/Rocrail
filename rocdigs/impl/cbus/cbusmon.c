@@ -175,7 +175,9 @@ void cbusMon(byte* frame, int opc) {
   break;
 
   default:
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%03d] evaluate OPC=0x%02X", canid, opc );
+    if( opc != OPC_ACK ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%03d] evaluate OPC=0x%02X", canid, opc );
+    }
     break;
   }
 

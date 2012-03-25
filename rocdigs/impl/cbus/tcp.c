@@ -21,6 +21,8 @@
 #include "rocdigs/impl/cbus_impl.h"
 
 #include "rocdigs/impl/cbus/tcp.h"
+#include "rocdigs/impl/cbus/cbusdefs.h"
+#include "rocdigs/impl/cbus/utils.h"
 
 #include "rocs/public/trace.h"
 #include "rocs/public/mem.h"
@@ -54,6 +56,13 @@ static void __watchdog( void* threadinst ) {
         retry = 0;
       }
     }
+    else if( SystemOp.getTick() - data->lastcmdtick > 100 ){
+      byte cmd[2];
+      byte* frame = allocMem(32);
+      cmd[0] = OPC_ACK;
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid );
+      ThreadOp.post(data->writer, (obj)frame);
+    }
     ThreadOp.sleep(1000);
   }
   TraceOp.trc( "cbustcp", TRCLEVEL_INFO, __LINE__, 9999, "cbus tcp watchdog ended" );
@@ -62,6 +71,7 @@ static void __watchdog( void* threadinst ) {
 
 Boolean tcpConnect( obj inst ) {
   iOCBUSData data = Data(inst);
+  data->lastcmdtick = SystemOp.getTick();
   data->connectpending = False;
   data->socket = NULL;
   if( data->watchdog == NULL ) {
@@ -153,6 +163,7 @@ Boolean tcpWrite( obj inst, unsigned char *frame, int len ) {
 
   if( !SocketOp.isBroken(data->socket) && SocketOp.write( data->socket, frame, len ) ) {
     TraceOp.dump ( "cbustcp", TRCLEVEL_BYTE, (char*)frame, len );
+    data->lastcmdtick = SystemOp.getTick();
     return True;
   }
   else {
