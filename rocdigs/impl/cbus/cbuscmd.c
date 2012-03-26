@@ -51,7 +51,7 @@ void slotServer(obj cbus, int opc, byte* frame) {
       cmd[6] = 0;   // f1
       cmd[7] = 0;   // f2
 
-      makeFrame(frame, PRIORITY_NORMAL, cmd, 7, data->cid );
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 7, data->cid, False );
       TraceOp.trc( "slotserv", TRCLEVEL_MONITOR, __LINE__, 9999, "OPC_PLOC response" );
       ThreadOp.post(data->writer, (obj)frame);
     }
