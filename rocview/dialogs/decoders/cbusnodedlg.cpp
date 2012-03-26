@@ -160,6 +160,8 @@ void CBusNodeDlg::initLabels() {
 
   m_FirmwarePanel->Enable(false);
   m_NoteBook->RemovePage(4);
+
+  m_GC1eCanID->Enable(false);
 }
 
 
@@ -1425,7 +1427,7 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
     else if( m_GC1eSetIndex == 1 ) {
       int canid = m_GC1eCanID->GetValue();
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e canid=0x%02X", canid);
-      varSet(2, canid, false);
+      //varSet(2, canid, false); // CANID is read only and is taken from the frame.
     }
     else if( m_GC1eSetIndex > 2 && m_GC1eSetIndex < 7) {
       // IP Address

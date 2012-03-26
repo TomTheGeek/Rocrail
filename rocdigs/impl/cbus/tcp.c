@@ -59,10 +59,10 @@ static void __watchdog( void* threadinst ) {
     else if( SystemOp.getTick() - data->lastcmdtick > 100 ){
       byte cmd[2];
       byte* frame = allocMem(32);
-      cmd[0] = OPC_ACK;
-      makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid );
+      cmd[0] = 0;
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid, True );
       ThreadOp.post(data->writer, (obj)frame);
-      TraceOp.trc( "cbustcp", TRCLEVEL_DEBUG, __LINE__, 9999, "keep alive ack" );
+      TraceOp.trc( "cbustcp", TRCLEVEL_DEBUG, __LINE__, 9999, "keep alive message" );
     }
     ThreadOp.sleep(1000);
   }

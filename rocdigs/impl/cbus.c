@@ -153,7 +153,7 @@ static void _halt( obj inst ,Boolean poweroff ) {
     byte cmd[2];
     byte* frame = allocMem(32);
     cmd[0] = OPC_RTOF;
-    makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid, False );
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "power OFF" );
     ThreadOp.post(data->writer, (obj)frame);
   }
@@ -208,28 +208,35 @@ static int _version( obj inst ) {
 
 
 static int __getOPC(byte* frame) {
-  int offset = (frame[1] == 'S') ? 0:4;
+  int offset = (frame[1] != 'X') ? 0:4;
   int opc = HEXA2Byte(frame+7+offset);
   return opc;
 }
 
 
-static int __getDataLen(int OPC) {
-  if( OPC < 0x20 )
-    return 0;
-  if( OPC < 0x40 )
-    return 1;
-  if( OPC < 0x60 )
-    return 2;
-  if( OPC < 0x80 )
-    return 3;
-  if( OPC < 0xA0 )
-    return 4;
-  if( OPC < 0xC0 )
-    return 5;
-  if( OPC < 0xE0 )
-    return 6;
-  return 7;
+static int __getDataLen(int OPC, byte frametype) {
+  if( frametype != 'Y' ) {
+    if( OPC < 0x20 )
+      return 0;
+    if( OPC < 0x40 )
+      return 1;
+    if( OPC < 0x60 )
+      return 2;
+    if( OPC < 0x80 )
+      return 3;
+    if( OPC < 0xA0 )
+      return 4;
+    if( OPC < 0xC0 )
+      return 5;
+    if( OPC < 0xE0 )
+      return 6;
+    return 7;
+  }
+  else {
+    if( OPC == 1 )
+      return 2;
+  }
+  return 0;
 }
 
 static void __QueryLoco(iOCBUSData data, int session) {
@@ -238,7 +245,7 @@ static void __QueryLoco(iOCBUSData data, int session) {
   byte* frame = allocMem(32);
   cmd[0] = OPC_QLOC;
   cmd[1] = session;
-  makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid );
+  makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid, False );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "query loco for session %d", session );
   ThreadOp.post(data->writer, (obj)frame);
 
@@ -378,7 +385,7 @@ static void __releaseSessions(iOCBUS cbus) {
         byte* frame = allocMem(32);
         cmd[0] = OPC_KLOC;
         cmd[1] = slot->session;
-        makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid );
+        makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid, False );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "release session %d for address %d", slot->session, slot->addr );
         ThreadOp.post(data->writer, (obj)frame);
         slot->session = 0;
@@ -401,7 +408,7 @@ static void __requestSession(iOCBUS cbus, int addr) {
   if( addr > 127 ) {
     cmd[1] |= 0xC0;
   }
-  makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
+  makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid, False );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request session for address %d", addr );
   ThreadOp.post(data->writer, (obj)frame);
@@ -659,7 +666,7 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
       else if( slot->steps == 28 )
         cmd[2] = TMOD_SPD_28;
       cmd[2] |= (slot->lights ? 0x04:0x00);
-      makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid, False );
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "set engine speed steps to %d for loco %s", slot->steps, slot->id );
@@ -746,7 +753,7 @@ static __evaluateErr( iOCBUS cbus, byte* frame ) {
         if( addr > 127 ) {
           cmd[1] |= 0xC0;
         }
-        makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
+        makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid, False );
 
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request session for address %d", addr );
         ThreadOp.post(data->writer, (obj)frame);
@@ -988,7 +995,7 @@ static const char* PTSTATUS[] = {"Reserved", "No Acknowledge", "Overload", "Writ
 
 static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
   iOCBUSData data = Data(cbus);
-  int offset = (frame[1] == 'S') ? 0:4;
+  int offset = (frame[1] != 'X') ? 0:4;
   cbusMon(frame, opc);
 
   if( frame[1] == 'S' ) {
@@ -1141,6 +1148,21 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
       }
     }
   }
+  else if( frame[1] == 'Y' ) {
+    /* Ethernet frame: CAN-GC1e */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"CAN-GC1e status: %s opc=%d", frame, opc);
+    switch(opc) {
+      case 0:
+        break;
+      case 1: /* status report */
+      {
+        byte rc = HEXA2Byte(frame + OFFSET_D1);
+        TraceOp.trc( name, rc==0?TRCLEVEL_INFO:TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "Ethernet status: rc=%d con=%d", rc, HEXA2Byte(frame + OFFSET_D2) );
+        break;
+      }
+    }
+  }
   else {
     /* Extended frame: boot loader */
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Extended frame: boot loader..." );
@@ -1170,7 +1192,7 @@ static void __stressRunner( void* threadinst ) {
       cmd[2] = 0;
       cmd[3] = data->sodaddr / 256;
       cmd[4] = data->sodaddr % 256;
-      makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid );
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
       ThreadOp.post(data->writer, (obj)frame);
     }
     ThreadOp.sleep(50);
@@ -1201,7 +1223,7 @@ static void __reader( void* threadinst ) {
     cmd[2] = 0;
     cmd[3] = data->sodaddr / 256;
     cmd[4] = data->sodaddr % 256;
-    makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "query input state" );
     ThreadOp.post(data->writer, (obj)frame);
   }
@@ -1210,7 +1232,7 @@ static void __reader( void* threadinst ) {
     byte cmd[8];
     byte* frame = allocMem(64);
     cmd[0] = OPC_RSTAT;
-    makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid, False );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "query cs state" );
     ThreadOp.post(data->writer, (obj)frame);
   }
@@ -1231,7 +1253,7 @@ static void __reader( void* threadinst ) {
       if( data->subRead( (obj)cbus, frame, 1) ) {
         if( frame[0] == ':' ) {
           if( data->subRead( (obj)cbus, frame+1, 1) ) {
-            if( frame[1] == 'S' ) {
+            if( frame[1] == 'S' || frame[1] == 'Y' ) {
               int offset = 0;
 
               if( data->subRead( (obj)cbus, frame + 2, OFFSET_TYPE + offset ) ) {
@@ -1243,7 +1265,7 @@ static void __reader( void* threadinst ) {
                   else {
                     if( data->subRead( (obj)cbus, frame + 2 + OFFSET_TYPE + offset, OFFSET_OPC - OFFSET_TYPE ) ) {
                       int opc = __getOPC(frame);
-                      int datalen = __getDataLen(opc);
+                      int datalen = __getDataLen(opc, frame[1]);
                       TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset );
                       if( data->subRead( (obj)cbus, frame + 2 + OFFSET_OPC + offset, datalen*2 + 1 ) ) {
                         TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset + datalen*2 + 1 );
@@ -1303,7 +1325,7 @@ static void __reader( void* threadinst ) {
               int n = 2;
               TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "reading binary frame" );
               if( data->subRead( (obj)cbus, frame + n, 4 ) ) {
-                int datalen = __getDataLen(frame[5]);
+                int datalen = __getDataLen(frame[5], frame[1]);
                 n+=4;
                 TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "binary frame: OPC=0x%02X data=%d",
                     frame[5], datalen );
@@ -1314,7 +1336,7 @@ static void __reader( void* threadinst ) {
                   int canid = ((hh&0x1F) << 3) + ((hl&0xE0) >> 5);
 
                   n += datalen +1;
-                  makeFrame(cmd, PRIORITY_NORMAL, frame+5, datalen, canid );
+                  makeFrame(cmd, PRIORITY_NORMAL, frame+5, datalen, canid, False );
                   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "binary frame: %s", cmd+1 );
                   __evaluateFrame(cbus, cmd+1, frame[5]);
                 }
@@ -1411,7 +1433,7 @@ static void __keep( void* threadinst ) {
             byte* frame = allocMem(32);
             cmd[0] = OPC_KLOC;
             cmd[1] = slot->session;
-            makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid );
+            makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid, False );
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "release session %d for loco %d", slot->session, slot->addr );
             ThreadOp.post(data->writer, (obj)frame);
             slot->session = 0;
@@ -1422,7 +1444,7 @@ static void __keep( void* threadinst ) {
             byte* frame = allocMem(32);
             cmd[0] = OPC_DKEEP;
             cmd[1] = slot->session;
-            makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid );
+            makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid, False );
 
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
                 "keep session %d for %s: tick=%ld, lastkeep=%ld, purgetime=%d",
@@ -1619,7 +1641,7 @@ static void __setFastClock(iOCBUS cbus, iONode node) {
   cmd[5] = mday;
   cmd[6] = temp;
 
-  makeFrame(frame, PRIORITY_NORMAL, cmd, 6, data->cid );
+  makeFrame(frame, PRIORITY_NORMAL, cmd, 6, data->cid, False );
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "fast clock sync %02d:%02d wday=%d divider=%d date=%d-%d temp=%d",
       hours, mins, wday, div, mday, mon+1, temp );
@@ -1648,7 +1670,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       byte cmd[2];
       byte* frame = allocMem(32);
       cmd[0] = OPC_RTOF;
-      makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid );
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid, False );
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power OFF" );
       ThreadOp.post(data->writer, (obj)frame);
     }
@@ -1658,7 +1680,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       byte cmd[2];
       byte* frame = allocMem(32);
       cmd[0] = OPC_RESTP;
-      makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid );
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid, False );
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request emergency break" );
       ThreadOp.post(data->writer, (obj)frame);
     }
@@ -1668,7 +1690,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       byte cmd[2];
       byte* frame = allocMem(32);
       cmd[0] = OPC_RTON;
-      makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid );
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid, False );
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power ON" );
       ThreadOp.post(data->writer, (obj)frame);
     }
@@ -1690,7 +1712,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     cmd[2] = wSwitch.getbus( node ) % 256;
     cmd[3] = addr / 256;
     cmd[4] = addr % 256;
-    makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "single gate switch %d:%d",
         wSwitch.getbus( node ), wSwitch.getaddr1( node ) );
@@ -1718,7 +1740,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     cmd[2] = wOutput.getbus( node ) % 256;
     cmd[3] = addr / 256;
     cmd[4] = addr % 256;
-    makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid );
+    makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d:%d.%d %s",
         wOutput.getbus( node ), wOutput.getaddr( node ), wOutput.getgate(node), on?"ON":"OFF" );
@@ -1792,7 +1814,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       cmd[0] = OPC_DSPD;
       cmd[1] = slot->session;
       cmd[2] = speed | (slot->dir ? 0x80:0x00);
-      makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid, False );
       slot->lastkeep = SystemOp.getTick();
       ThreadOp.post(data->writer, (obj)frame);
     }
@@ -1803,7 +1825,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       cmd[0] = OPC_DSPD;
       cmd[1] = slot->session;
       cmd[2] = speed | (slot->dir ? 0x80:0x00);
-      makeFrame(qcmd->out, PRIORITY_NORMAL, cmd, 2, data->cid );
+      makeFrame(qcmd->out, PRIORITY_NORMAL, cmd, 2, data->cid, False );
       ThreadOp.post( data->timedqueue, (obj)qcmd );
     }
 
@@ -1854,11 +1876,11 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[0] = fnstate?OPC_DFNON:OPC_DFNOF;
         cmd[1] = slot->session;
         cmd[2] = fnchanged;
-        makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid );
+        makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid, False );
       }
       else {
         __makeDFUN(slot, node, cmd);
-        makeFrame(frame, PRIORITY_NORMAL, cmd, 3, data->cid );
+        makeFrame(frame, PRIORITY_NORMAL, cmd, 3, data->cid, False );
       }
       slot->lastkeep = SystemOp.getTick();
       ThreadOp.post(data->writer, (obj)frame);
@@ -1872,11 +1894,11 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[0] = fnstate?OPC_DFNON:OPC_DFNOF;
         cmd[1] = slot->session;
         cmd[2] = fnchanged;
-        makeFrame(qcmd->out, PRIORITY_NORMAL, cmd, 2, data->cid );
+        makeFrame(qcmd->out, PRIORITY_NORMAL, cmd, 2, data->cid, False );
       }
       else {
         __makeDFUN(slot, node, cmd);
-        makeFrame(qcmd->out, PRIORITY_NORMAL, cmd, 3, data->cid );
+        makeFrame(qcmd->out, PRIORITY_NORMAL, cmd, 3, data->cid, False );
       }
       ThreadOp.post( data->timedqueue, (obj)qcmd );
     }
@@ -1925,7 +1947,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[2] = cv / 256;
         cmd[3] = cv % 256;
         cmd[4] = direct?CVMODE_DIRECTBYTE:CVMODE_PAGE; /* Programming mode; Default is paged. */
-        makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid );
+        makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
         ThreadOp.post(data->writer, (obj)frame);
       }
     }
@@ -1950,7 +1972,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
           cmd[2] = cv / 256;
           cmd[3] = cv % 256;
           cmd[4] = value;
-          makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid );
+          makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
           ThreadOp.post(data->writer, (obj)frame);
         }
         else {
@@ -1969,7 +1991,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[3] = cv % 256;
         cmd[4] = direct?CVMODE_DIRECTBYTE:CVMODE_PAGE; /* Programming mode; Default is paged. */
         cmd[5] = value;
-        makeFrame(frame, PRIORITY_NORMAL, cmd, 5, data->cid );
+        makeFrame(frame, PRIORITY_NORMAL, cmd, 5, data->cid, False );
 
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d:%d %s",
             wOutput.getaddr( node ), wOutput.getport( node ), on?"ON":"OFF" );
@@ -2049,7 +2071,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       cmd[5] = len > i*4+1 ? text[i*4+1]:0;
       cmd[6] = len > i*4+2 ? text[i*4+2]:0;
       cmd[7] = len > i*4+3 ? text[i*4+3]:0;
-      makeFrame(frame, PRIORITY_NORMAL, cmd, 7, data->cid );
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 7, data->cid, False );
 
       ThreadOp.post(data->writer, (obj)frame);
       ThreadOp.sleep(10);

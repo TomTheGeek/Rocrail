@@ -39,7 +39,7 @@
 #define OFFSET_D6 19
 #define OFFSET_D7 21
 
-int makeFrame(byte* frame, int prio, byte* cmd, int datalen, int cid );
+int makeFrame(byte* frame, int prio, byte* cmd, int datalen, int cid, Boolean eth );
 byte HEXA2Byte( const char* s );
 void Byte2HEXA( char* s, byte b );
 

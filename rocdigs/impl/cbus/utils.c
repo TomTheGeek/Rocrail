@@ -29,11 +29,11 @@
 
 
 
-int makeFrame(byte* frame, int prio, byte* cmd, int datalen, int cid ) {
+int makeFrame(byte* frame, int prio, byte* cmd, int datalen, int cid, Boolean eth ) {
   int i = 0;
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "makeFrame for OPC=0x%02X", cmd[0] );
 
-  StrOp.fmtb( frame+1, ":S%02X%02XN%02X;", (0x80 + (prio << 5) + (cid >> 3)) &0xFF, (cid << 5) & 0xFF, cmd[0] );
+  StrOp.fmtb( frame+1, ":%c%02X%02XN%02X;", (eth?'Y':'S'), (0x80 + (prio << 5) + (cid >> 3)) &0xFF, (cid << 5) & 0xFF, cmd[0] );
 
   if( datalen > 0 ) {
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "datalen=%d", datalen );
