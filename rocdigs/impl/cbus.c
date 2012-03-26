@@ -1760,7 +1760,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
 
   /* Loc dispatch command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals(wLoc.dispatch, wLoc.getcmd(node)) ) {
-    iOSlot slot = __getSlot(cbus, node );
+    iOSlot slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
     if( slot != NULL && slot->session > 0 ) {
       slot->releasereq = True;
     }
