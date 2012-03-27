@@ -148,6 +148,7 @@ void CBusNodeDlg::initLabels() {
   m_VarPanel->GetSizer()->Layout();
   m_EventsPanel->GetSizer()->Layout();
   m_FirmwarePanel->GetSizer()->Layout();
+  m_CANGC1ePanel->GetSizer()->Layout();
   m_CANGC2Panel->GetSizer()->Layout();
   m_CANGC4Panel->GetSizer()->Layout();
   m_CANGC6Panel->GetSizer()->Layout();
@@ -158,8 +159,8 @@ void CBusNodeDlg::initLabels() {
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
-  m_FirmwarePanel->Enable(false);
-  m_NoteBook->RemovePage(4);
+  //m_FirmwarePanel->Enable(false);
+  //m_NoteBook->RemovePage(4);
 
   m_GC1eCanID->Enable(false);
 }
