@@ -248,40 +248,6 @@ static Boolean _supportPT( obj inst ) {
   return 0;
 }
 
-
-static void __RcLinkTicker( void* threadinst ) {
-  iOThread th = (iOThread)threadinst;
-  iORcLink inst = (iORcLink)ThreadOp.getParm( th );
-  iORcLinkData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RcLink ticker started." );
-  ThreadOp.sleep(1000);
-
-  while( data->run ) {
-    int i = 0;
-    for( i = 0; i < 256; i++ ) {
-      if( data->readerTick[i] > 0 && (SystemOp.getTick() - data->readerTick[i]) > 250 ) {
-        iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-        wFeedback.setstate( evt, False );
-        wFeedback.setaddr( evt, i + 1 + data->fboffset );
-        wFeedback.setbus( evt, wFeedback.fbtype_railcom );
-        wFeedback.setidentifier( evt, 0 );
-        if( data->iid != NULL )
-          wFeedback.setiid( evt, data->iid );
-
-        data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
-
-        data->readerTick[i] = 0;
-        ThreadOp.sleep( 100 );
-      }
-    }
-
-    ThreadOp.sleep( 100 );
-  };
-
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RcLink ticker ended." );
-}
-
-
 static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
   iORcLinkData data = Data(inst);
 
@@ -307,19 +273,30 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
     break;
   case 0xFC:
     /* Address report */
-  if( ((packet[2] & 0x7F)*256 + packet[3]) > 0 ){
-    iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    if((packet[1] == 0) || (packet[1] > 239))
+      break;
     /*
      * Bit7=0 Lok nach rechts
      * Bit7=1 Lok nach links
      */
+    unsigned short addr = ((packet[2] & 0xBF) << 8) | packet[3];
     Boolean direction = (packet[2] & 0x80) ? False:True;
+
+    if((addr & 0x3FFF) > 0x27FF)
+      addr = 0x3FFF;
+    if(addr == data->prevAddress[packet[1]-1])
+      break;
+
+    iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
     wFeedback.setaddr( evt, packet[1] );
     wFeedback.setbus( evt, wFeedback.fbtype_railcom );
     wFeedback.setdirection( evt, direction );
-    wFeedback.setidentifier( evt, (packet[2] & 0x7F)*256 + packet[3] );
-    wFeedback.setstate( evt, wFeedback.getidentifier(evt) > 0 ? True:False );
+    if(addr == 0x3FFF)
+      wFeedback.setidentifier(evt,0);
+    else
+      wFeedback.setidentifier(evt,addr & 0x3FFF);
+    wFeedback.setstate(evt,!!addr);
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );
 
@@ -328,8 +305,7 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
 
     data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
 
-    data->readerTick[packet[1]] = SystemOp.getTick();
-  }
+    data->prevAddress[packet[1]-1] = addr;
     break;
   case 0xFD:
     /* System report
@@ -523,7 +499,7 @@ static struct ORcLink* _inst( const iONode ini ,const iOTrace trc ) {
   data->bps      = wDigInt.getbps(ini);
   data->fboffset = wDigInt.getfboffset( ini );
 
-  MemOp.set( data->readerTick, 0, sizeof(data->readerTick) );
+  MemOp.set(data->prevAddress,0,sizeof(data->prevAddress));
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
@@ -552,13 +528,6 @@ static struct ORcLink* _inst( const iONode ini ,const iOTrace trc ) {
     data->reader = ThreadOp.inst( thname, &__RcLinkReader, __RcLink );
     StrOp.free(thname),
     ThreadOp.start( data->reader );
-
-    /*
-    thname = StrOp.fmt("rclinktick%X", __RcLink);
-    data->ticker = ThreadOp.inst( thname, &__RcLinkTicker, __RcLink );
-    StrOp.free(thname),
-    ThreadOp.start( data->ticker );
-    */
   }
   else
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init rclink port!" );
