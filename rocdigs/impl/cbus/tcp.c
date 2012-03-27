@@ -181,7 +181,7 @@ Boolean tcpAvailable( obj inst ) {
   iOCBUSData data = Data(inst);
   char msgStr[32];
   if( data->socket == NULL || SocketOp.isBroken(data->socket) ) {
-    TraceOp.trc( "cbustcp", TRCLEVEL_WARNING, __LINE__, 9999, "not connected" );
+    TraceOp.trc( "cbustcp", TRCLEVEL_DEBUG, __LINE__, 9999, "not connected" );
     return False;
   }
   return SocketOp.peek( data->socket, msgStr, 1 );
