@@ -1202,7 +1202,7 @@ void CBusNodeDlg::initGC4Var( int nr, int val ) {
     m_GC4Acc4RFID->SetValue((val & 0x08) ? true:false );
     // reset allowed rfids
     for( int i = 0; i < 5; i++ )
-      for( int n = 0; i < 5; n++ )
+      for( int n = 0; n < 5; n++ )
         m_GC4AllowedRFID[i][n] = 0;
   }
   else if( nr == 2 ) {
