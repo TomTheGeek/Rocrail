@@ -1535,7 +1535,8 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
       int idx  = (m_GC4SetIndex - 2) % 5;
       wxTextCtrl* allowedRFID[] = {m_GC4AllowedRFID1,m_GC4AllowedRFID2,m_GC4AllowedRFID3,m_GC4AllowedRFID4,m_GC4AllowedRFID5};
 
-      const char* sval = allowedRFID[rfid]->GetValue().mb_str(wxConvUTF8);
+      char* sval = StrOp.dup(allowedRFID[rfid]->GetValue().mb_str(wxConvUTF8));
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc4 rfid%d[%d]=%s", rfid, idx, sval);
       iOStrTok tok = StrTokOp.inst(sval, '.');
       int n = 0;
       while( StrTokOp.hasMoreTokens(tok) ) {
@@ -1549,6 +1550,7 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
         n++;
       }
       StrTokOp.base.del(tok);
+      StrOp.free(sval);
     }
     else if( m_GC4SetIndex == 27 ) {
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set gc4 learn mode");
