@@ -209,9 +209,10 @@ static void __RFIReader( void* threadinst ) {
       if( ok ) {
         /* */
         int reader = buffer[0];
-        int ident  = buffer[2];
+        int rfid  = buffer[2];
+        char ident[32];
         /* create a key: */
-        char* key = StrOp.fmt( "%d_%d", reader, ident );
+        char* key = StrOp.fmt( "%d_%d", reader, rfid );
 
         /* check if key is already in map: every read cycle is the occupancy send */
         if( MapOp.get( map, key ) == NULL ) {
@@ -221,6 +222,7 @@ static void __RFIReader( void* threadinst ) {
           wFeedback.setstate( evt, True );
           wFeedback.setaddr( evt, reader );
           wFeedback.setbus( evt, 5 );
+          StrOp.fmtb(ident, "%d", rfid);
           wFeedback.setidentifier( evt, ident );
           if( data->iid != NULL )
             wFeedback.setiid( evt, data->iid );

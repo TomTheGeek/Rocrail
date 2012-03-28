@@ -365,7 +365,7 @@
 
 
   <object name="FBack" interface="HtmlInt" use="node,list" include="htmlint" remark="Feedback object">
-    <typedef def="void (*fback_listener)(obj,Boolean,const char*,int,int,int)"/>
+    <typedef def="void (*fback_listener)(obj,Boolean,const char*,const char*,int,int)"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Feedback node"/>
     </fun>
@@ -404,7 +404,7 @@
     <fun name="getState" vt="Boolean">
       <param name="inst" vt="this" remark="Feedback instance"/>
     </fun>
-    <fun name="getIdentifier" vt="int">
+    <fun name="getIdentifier" vt="const char*">
       <param name="inst" vt="this" remark="Feedback instance"/>
     </fun>
     <fun name="setState" vt="void">
@@ -561,7 +561,7 @@
     <fun name="getAddress" vt="int">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
-    <fun name="getIdent" vt="long">
+    <fun name="getIdent" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
     <fun name="getCV" vt="int">
@@ -622,7 +622,7 @@
     </fun>
     <fun name="matchIdent" vt="Boolean">
       <param name="inst" vt="this" remark="Loco instance"/>
-      <param name="ident" vt="long" remark="Loco ident code"/>
+      <param name="ident" vt="const char*" remark="Loco ident code"/>
     </fun>
     <fun name="getCarCount" vt="int">
       <param name="inst" vt="this" remark="Loco instance"/>
@@ -794,7 +794,7 @@
     </fun>
     <fun name="getLocByIdent" vt="iOLoc">
       <param name="inst" vt="this" remark="Model instance"/>
-      <param name="ident" vt="long" remark="Loc identifier to search for"/>
+      <param name="ident" vt="const char*" remark="Loc identifier to search for"/>
     </fun>
     <fun name="getLocIDs" vt="iOList">
       <param name="inst" vt="this" remark="Model instance"/>

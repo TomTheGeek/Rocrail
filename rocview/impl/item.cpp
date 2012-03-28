@@ -2261,7 +2261,7 @@ void Symbol::modelEvent( iONode node ) {
 
   if( StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ) ) {
     Boolean state = wFeedback.isstate( node );
-    int ident = wFeedback.getidentifier( node );
+    const char* ident = wFeedback.getidentifier( node );
     int counter = wFeedback.getcounter( node );
     int wheelcount = wFeedback.getwheelcount( node );
     int carcount = wFeedback.getcarcount( node );
@@ -2270,10 +2270,10 @@ void Symbol::modelEvent( iONode node ) {
     int addr = wFeedback.getaddr( m_Props );
     const char* info = wFeedback.getinfo( node );
 
-    char* str = StrOp.fmt( "%s addr=%d ident=%d val=%d count=%d info=%s cars=%d/%d wheelcount=%d",
+    char* str = StrOp.fmt( "%s addr=%d ident=%s val=%d count=%d info=%s cars=%d/%d wheelcount=%d",
                            wFeedback.getid( node ), addr, ident, val, counter, info, countedcars, carcount, wheelcount );
     SetToolTip( wxString(str,wxConvUTF8) );
-    if( ident > 0 )
+    if( StrOp.len(ident) > 0 )
       wxGetApp().getFrame()->setInfoText( str );
     StrOp.free( str );
 

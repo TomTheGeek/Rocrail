@@ -642,6 +642,7 @@ __getBarjutData(
 	unsigned short  lastTime;
 	unsigned char   data[260];
 	int             i;
+  char            ident[64];
 
 	/*
 	   already sended RIF's
@@ -708,7 +709,8 @@ __getBarjutData(
 									wFeedback.setstate( evt, True );
 									wFeedback.setaddr( evt, address );
                   wFeedback.setbus( evt, 3 );
-									wFeedback.setidentifier( evt, barcode );
+                  StrOp.fmtb(ident, "%d", barcode);
+									wFeedback.setidentifier( evt, ident );
 									if( o->iid != NULL )
 										wFeedback.setiid( evt, o->iid );
 

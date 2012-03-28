@@ -491,6 +491,7 @@ static void __handleLissy(iOLocoNet loconet, byte* msg) {
   int         sensdata  = ( msg[6] & 0x7F ) + 128 * ( msg[5] & 0x7F );
   Boolean     dir       = ( msg[3] & 0x20 ) ? True:False;
   Boolean     wheelcnt  = ( msg[2] & 0x01 ) ? True:False;
+  char        ident[32];
 
   if( wheelcnt )
     lissyaddr = (msg[4] & 0x7F) + (128 * ( msg[3] & 0x7F ));
@@ -515,7 +516,8 @@ static void __handleLissy(iOLocoNet loconet, byte* msg) {
     wFeedback.setbus( nodeC, wFeedback.fbtype_lissy );
     wFeedback.setfbtype( nodeC, wFeedback.fbtype_lissy );
 
-    wFeedback.setidentifier( nodeC, sensdata );
+    StrOp.fmtb(ident, "%d", sensdata);
+    wFeedback.setidentifier( nodeC, ident );
     wFeedback.setdirection( nodeC, dir );
   }
 
@@ -560,6 +562,7 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
   const char* zone = "";
   Boolean present  = False;
   Boolean enter    = (msg[1] & 0x20) != 0 ? True:False;
+  char ident[32];
 
   boardaddr++;
   addr++;
@@ -605,7 +608,8 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
     if( data->iid != NULL )
       wFeedback.setiid( nodeC, data->iid );
 
-    wFeedback.setidentifier( nodeC, locoaddr );
+    StrOp.fmtb(ident, "%d", locoaddr);
+    wFeedback.setidentifier( nodeC, ident );
     wFeedback.setstate( nodeC, present );
 /*
 D0 20 06 7D 01 75

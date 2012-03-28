@@ -27,7 +27,7 @@
 #include "rocrail/wrapper/public/Feedback.h"
 
 
-static void _fbEvent( obj inst ,Boolean puls ,const char* id ,int ident, int val );
+static void _fbEvent( obj inst ,Boolean puls ,const char* id ,const char* ident, int val );
 
 static int instCnt = 0;
 
@@ -93,14 +93,14 @@ static void* __properties( void* inst ) {
 /** ----- OMVTrack ----- */
 
 
-static void _fbEvent( obj inst ,Boolean puls ,const char* id ,int ident, int val ) {
+static void _fbEvent( obj inst ,Boolean puls ,const char* id ,const char* ident, int val ) {
   iOMVTrackData data = Data(inst);
   int event = 0; /* 1=enter, 2=in */
 
   time_t     t = time(NULL);
   int        ms = SystemOp.getMillis();
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbid=%s state=%s ident=%d",
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbid=%s state=%s ident=%s",
                  id, puls?"true":"false", ident );
   
   
@@ -109,7 +109,7 @@ static void _fbEvent( obj inst ,Boolean puls ,const char* id ,int ident, int val
     return;
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbid=[%s] ident=[%d]", id, ident );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbid=[%s] ident=[%s]", id, ident );
   
   /* check the event */
   if( StrOp.equals( id, wMVTrack.gets1( data->props ) ) ) {

@@ -294,7 +294,7 @@ static void _setCarCount( iOFBack inst, int count ) {
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "[%s] CAR COUNT = %d", FBackOp.getId(inst), data->carcount );
 }
 
-static int _getIdentifier( iOFBack inst ) {
+static const char* _getIdentifier( iOFBack inst ) {
   iOFBackData data = Data(inst);
   return wFeedback.getidentifier( data->props );
 }

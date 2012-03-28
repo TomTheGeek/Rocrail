@@ -2360,14 +2360,16 @@ static iOLoc _getLocByAddress( iOModel inst, int addr ) {
   return NULL;
 }
 
-static iOLoc _getLocByIdent( iOModel inst, long ident ) {
+static iOLoc _getLocByIdent( iOModel inst, const char* ident ) {
   iOModelData o = Data(inst);
   iOLoc locAddr = NULL;
   iOLoc loc = (iOLoc)MapOp.first( o->locMap );
   while( loc != NULL ) {
-    if( LocOp.getIdent(loc) == ident )
+    char locoAddrStr[32];
+    StrOp.fmtb(locoAddrStr, "%d", LocOp.getAddress(loc) );
+    if( StrOp.equals(LocOp.getIdent(loc), ident) )
       return loc;
-    else if( LocOp.getAddress(loc) == ident )
+    else if( StrOp.equals(locoAddrStr, ident) )
       locAddr = loc;
     loc = (iOLoc)MapOp.next( o->locMap );
   };

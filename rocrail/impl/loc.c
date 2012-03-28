@@ -2454,7 +2454,7 @@ static int _getAddress( iOLoc loc ) {
   iOLocData data = Data(loc);
   return wLoc.getaddr( data->props );
 }
-static long _getIdent( iOLoc loc ) {
+static const char* _getIdent( iOLoc loc ) {
   iOLocData data = Data(loc);
   return wLoc.getidentifier( data->props );
 }
@@ -2594,11 +2594,11 @@ static Boolean _isUseManualRoutes( iOLoc loc ) {
 }
 
 
-static Boolean _matchIdent( iOLoc loc, long ident ) {
+static Boolean _matchIdent( iOLoc loc, const char* ident ) {
   iOLocData data = Data(loc);
   Boolean match = False;
 
-  if( wLoc.getidentifier( data->props ) == ident )
+  if( StrOp.equals( wLoc.getidentifier( data->props ), ident) )
     match = True;
   else {
     /* check consist */

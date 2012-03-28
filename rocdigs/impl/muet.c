@@ -802,6 +802,7 @@ static void __reader( void* threadinst ) {
           int addr = in[0] & 0x7F;
           if( SerialOp.read(data->serial, in+1, 1) ) {
             char key[32] = {'\0'};
+            char ident[32];
             int val = in[1] & 0x7F;
             TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 2 );
 
@@ -821,7 +822,8 @@ static void __reader( void* threadinst ) {
               wFeedback.setaddr( evt, rraddr );
               wFeedback.setbus( evt, data->activebus );
               wFeedback.setfbtype( evt, wFeedback.fbtype_lissy );
-              wFeedback.setidentifier( evt, arrived?val:0 );
+              StrOp.fmtb(ident, "%d", val);
+              wFeedback.setidentifier( evt, arrived ? ident:"0" );
               if( data->iid != NULL )
                 wFeedback.setiid( evt, data->iid );
 

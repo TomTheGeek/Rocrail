@@ -117,7 +117,7 @@ class CBusNodeDlg : public cbusnodedlggen
   bool m_bGC1eGetAll;
   bool m_bGC1eSetAll;
 
-  long m_GC4AllowedRFID[5];
+  unsigned char m_GC4AllowedRFID[5][5];
 
 protected:
 	// Handlers for cbusnodedlggen events.

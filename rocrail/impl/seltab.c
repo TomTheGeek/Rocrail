@@ -52,7 +52,7 @@
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 
-static void _fbEvent( obj inst ,Boolean puls ,const char* id ,int ident, int val );
+static void _fbEvent( obj inst ,Boolean puls ,const char* id ,const char* ident, int val );
 static void _sysEvent( obj inst, const char* cmd );
 
 static int instCnt = 0;
@@ -329,7 +329,7 @@ static void _sysEvent( obj inst, const char* cmd ) {
 
 
 /**  */
-static void _fbEvent( obj inst ,Boolean state ,const char* id ,int ident, int val ) {
+static void _fbEvent( obj inst ,Boolean state ,const char* id ,const char* ident, int val ) {
   iOSelTabData data = Data(inst);
   iOModel model = AppOp.getModel();
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbid=%s state=%s ident=%d",
@@ -1181,7 +1181,7 @@ static const char* _getInLoc( iIBlockBase inst ) {
   return block != NULL ? block->getInLoc( block ) : "";
 }
 
-static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, int val, int wheelcount, iONode fbevt ) {
+static void _event( iIBlockBase inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, iONode fbevt ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "event");
   /* dispatch to active tracke block */

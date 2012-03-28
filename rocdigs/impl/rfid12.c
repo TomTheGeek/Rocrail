@@ -232,18 +232,15 @@ static void __evaluateRFID(iORFID12 inst, char* rfid, int idx) {
   /* STX data[10] CRC[2] cr lf ETX */
   iORFID12Data data = Data(inst);
   iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-  long id = 0;
   int addr = 1;
   int i = 0;
+  char ident[64];
 
   rfid[11] = '\0';
   byte* b = StrOp.strToByte(rfid + 1);
 
-  for( i = 0; i < 5; i++ ) {
-    long tmp = b[i];
-    tmp = tmp << ((4-i)*8);
-    id = id + tmp;
-  }
+  StrOp.fmtb(ident, "%d.%d.%d.%d.%d", b[0], b[1], b[2], b[3], b[4]);
+
   freeMem(b);
 
   if( rfid[0] >= 'A' ) {
@@ -253,12 +250,12 @@ static void __evaluateRFID(iORFID12 inst, char* rfid, int idx) {
   data->readerTick[addr-1] = SystemOp.getTick();
   addr = addr + data->fboffset;
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "evaluateRFID[%c][%s]: addr=%d id=%ld", rfid[0], rfid+1, addr, id );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "evaluateRFID[%c][%s]: addr=%d id=%s", rfid[0], rfid+1, addr, ident );
 
   wFeedback.setstate( evt, True );
   wFeedback.setaddr( evt, addr );
   wFeedback.setbus( evt, wFeedback.fbtype_rfid );
-  wFeedback.setidentifier( evt, id );
+  wFeedback.setidentifier( evt, ident );
   if( data->iid != NULL )
     wFeedback.setiid( evt, data->iid );
 

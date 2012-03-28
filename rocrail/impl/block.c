@@ -332,7 +332,7 @@ static void __measureVelocity( iOBlock inst, int event ) {
 /**
  * event listener callback for all fbevents
  */
-static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, int val, int wheelcount, iONode fbevt ) {
+static void _event( iIBlockBase inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, iONode fbevt ) {
   iOBlockData data = Data(inst);
   iOLoc        loc = NULL;
   obj      manager = (obj)(data->manager == NULL ? inst:data->manager);
@@ -388,7 +388,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
   }
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block[%s] fbid=%s state=%s ident=%d fbfrom=%s from=%s byroute=%s",
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block[%s] fbid=%s state=%s ident=%s fbfrom=%s from=%s byroute=%s",
       data->id, key, puls?"true":"false", ident,
                  fbevt != NULL ? wFeedbackEvent.getfrom(fbevt):"NULL",
                  data->fromBlockId?data->fromBlockId:"?",
@@ -413,13 +413,9 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
   if( wCtrl.isusebicom( wRocRail.getctrl( AppOp.getIni())) ) {
     /*if( fbevt != NULL && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) == ident_event ) {*/
     /*if( fbevt != NULL && ident > 0 ) {*/
-    if( ident > 0 ) {
-      /* display ident code */
-      char identString[32];
-      StrOp.fmtb( identString, "%04d", ident );
-
+    if( StrOp.len(ident) > 0 ) {
       /* Set in block if a loco was found with the ident. */
-      if( ident > 0 && wCtrl.isuseident( wRocRail.getctrl( AppOp.getIni())) ) {
+      if( StrOp.len(ident) > 0 && wCtrl.isuseident( wRocRail.getctrl( AppOp.getIni())) ) {
         iOModel model = AppOp.getModel(  );
         iOLoc identLoc = ModelOp.getLocByIdent(model, ident);
         if( (identLoc != NULL && data->acceptident ) || (identLoc != NULL && !ModelOp.isAuto(model)) ) {
@@ -459,34 +455,34 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
       else {
         iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
         wBlock.setid( nodeD, data->id );
-        wBlock.setlocid( nodeD, puls ? identString:data->locId );
+        wBlock.setlocid( nodeD, puls ? ident:data->locId );
         wBlock.setacceptident(nodeD, data->acceptident);
         AppOp.broadcastEvent( nodeD );
       }
     }
 
   }
-  else if( ident > 0 ){
+  else if( StrOp.len(ident) > 0 ){
     /* reset ident */
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "reset ident[%d] in block[%s] to zero; bi-com is disabled", ident, data->id);
-    ident = 0;
+        "reset ident[%s] in block[%s] to zero; bi-com is disabled", ident, data->id);
+    ident = "";
   }
 
   if( fbevt != NULL && puls == !wFeedbackEvent.isendpuls( fbevt ) && loc != NULL ) {
     int evt = _getEventCode( (iOBlock)inst, wFeedbackEvent.getaction( fbevt ) );
-    long locident = LocOp.getIdent(loc);
+    const char* locident = LocOp.getIdent(loc);
 
     __measureVelocity( (iOBlock)inst, evt );
 
-    if( ident > 0 && locident > 0 && ident != locident || ident > 0 && locident == 0 ) {
+    if( StrOp.len(ident) > 0 && StrOp.len(locident) > 0 && !StrOp.equals(ident, locident) || StrOp.len(ident) > 0 && StrOp.len(locident) == 0 ) {
       /* TODO: Check MU consist */
       if( LocOp.matchIdent(loc, ident) ) {
-        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "ident matched: block=%s loc(MU)=%d ident=%d",
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "ident matched: block=%s loc(MU)=%d ident=%s",
             data->id, locident, ident );
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Loc identifier does not match! block=%s loc=%d ident=%d",
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Loc identifier does not match! block=%s locident=%s ident=%s",
             data->id, locident, ident );
         /* Power off? */
         if( wCtrl.ispoweroffonidentmismatch( AppOp.getIniNode( wCtrl.name() ) ) ) {
@@ -495,8 +491,8 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
         }
       }
     }
-    else if( ident > 0 && locident > 0 && ident == locident ) {
-      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "ident matched: block=%s loc=%d ident=%d",
+    else if( StrOp.len(ident) > 0 && StrOp.len(locident) > 0 && StrOp.equals(ident, locident) ) {
+      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "ident matched: block=%s locident=%s ident=%s",
           data->id, locident, ident );
     }
 
@@ -574,14 +570,14 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
         }
         tl = TRCLEVEL_EXCEPTION;
 
-        TraceOp.trc( name, tl, __LINE__, 9999, "Ghost train in block %s, fbid=%s, ident=%d",
+        TraceOp.trc( name, tl, __LINE__, 9999, "Ghost train in block %s, fbid=%s, ident=%s",
             data->id, key, ident );
 
       }
     }
     else {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-          "train in block [%s], fbid=[%s], ident=[%d]", data->id, key, ident );
+          "train in block [%s], fbid=[%s], ident=[%s]", data->id, key, ident );
     }
 
   }
@@ -589,7 +585,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
     /* ghost train! */
     /* broadcast ghost state */
     if( __isElectricallyFree((iOBlock)inst) ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Ghost train no longer in block %s, fbid=%s, ident=%d",
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Ghost train no longer in block %s, fbid=%s, ident=%s",
           data->id, key, ident );
 
       if( !wCtrl.iskeepghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
@@ -611,25 +607,25 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, long ident, 
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Ghost train still remains in block %s, fbid=%s, ident=%d",
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Ghost train still remains in block %s, fbid=%s, ident=%s",
           data->id, key, ident );
     }
   }
   else if( fbevt == NULL && data->fromBlockId != NULL ) {
     /* undefined event! */
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sensor %s in block %s is undefined! ident=%d fromBlockId=%s",
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sensor %s in block %s is undefined! ident=%s fromBlockId=%s",
                    key, data->id, ident, data->fromBlockId );
   }
   else {
     /* unhandled event! */
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unhandled sensor [%s] in block [%s]! puls=[%d], ident=[%d], ghost=[%d], loc=[%s], fromBlockId=[%s]",
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unhandled sensor [%s] in block [%s]! puls=[%d], ident=[%s], ghost=[%d], loc=[%s], fromBlockId=[%s]",
                    key, data->id, puls, ident, data->ghost,
                    (loc == NULL ? "NULL":LocOp.getId(loc)),
                    (data->fromBlockId == NULL ? "NULL":data->fromBlockId) );
   }
 }
 
-static void _fbEvent( obj inst, Boolean puls, const char* id, int ident, int val, int wheelcount ) {
+static void _fbEvent( obj inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount ) {
   iOBlockData data = Data(inst);
   if( wheelcount > 0 ) {
     data->wheelcount = wheelcount;

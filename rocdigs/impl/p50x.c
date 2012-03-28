@@ -935,11 +935,13 @@ static void __evaluateState( iOP50xData o, unsigned char* fb1, unsigned char* fb
 
 static void __evaluateLocoNet( iOP50xData o, int module, byte* value ) {
   /* assuming Lissy */
+  char ident[32];
   int identifier = (value[1] << 8) + value[0];
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
   wFeedback.setaddr( nodeC, module );
   wFeedback.setstate( nodeC, identifier > 0 ? True:False );
-  wFeedback.setidentifier( nodeC, identifier );
+  StrOp.fmtb(ident, "%d", identifier);
+  wFeedback.setidentifier( nodeC, ident );
   if( o->iid != NULL )
     wFeedback.setiid( nodeC, o->iid );
 
@@ -1597,6 +1599,7 @@ static void __feedbackReader( void* threadinst ) {
                 {
                   int bidiAddr = bidi_in[1] + ((bidi_in[0] & 0x0F) << 8);
                   int locoAddr = bidi_in[2] + ((bidi_in[3] & 0x3F) << 8);
+                  char ident[32];
                   Boolean dir = (bidi_in[3] & 0x80) ? True:False;
                   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
@@ -1607,7 +1610,8 @@ static void __feedbackReader( void* threadinst ) {
                   if( o->iid != NULL )
                     wFeedback.setiid( nodeC, o->iid );
 
-                  wFeedback.setidentifier( nodeC, locoAddr );
+                  StrOp.fmtb(ident, "%d", locoAddr);
+                  wFeedback.setidentifier( nodeC, ident );
                   wFeedback.setstate( nodeC, locoAddr > 0 ?True:False );
                   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
                       "BiDi[%d] reports decoder address [%d] %s",

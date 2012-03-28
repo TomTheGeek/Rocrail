@@ -1384,7 +1384,7 @@
         <var name="ori" vt="string" defval="NULL" range="north,south,west,east" remark="Orientation in the plan."/>
         <var name="val" vt="int" defval="0" remark="multiple port value"/>
         <var name="accnr" vt="int" defval="0" range="0-*" required="false" remark="Accessory number."/>
-        <var name="identifier" vt="long" defval="0" remark="Loc identifier"/>
+        <var name="identifier" vt="string" defval="" remark="Loc identifier"/>
         <var name="category" vt="int" defval="0" remark="Train category."/>
         <var name="counter" vt="int" defval="0" remark="occupied counter"/>
         <var name="carcount" vt="int" defval="0" remark="car counter (only for client info)"/>
@@ -1876,7 +1876,7 @@
         <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
         <var name="throttleid" vt="char*" defval="" range="*" remark="Throttle ID to which this loco is dispatched."/>
         <var name="throttlenr" vt="int" defval="0" range="0-255" remark="Throttle number for receiving the short id."/>
-        <var name="identifier" vt="long" defval="0" remark="Loc identifier incase of RFID, Lissy, Barcode..."/>
+        <var name="identifier" vt="string" defval="" remark="Loc identifier incase of RFID, Lissy, Barcode..."/>
         <var name="prev_id" vt="string" defval="" range="*" remark="in case of an id change this should help to find the original in the loc table"/>
         <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID."/>
         <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
@@ -2077,7 +2077,7 @@
     <carlist cardinality="1" remark="Car table" wrappername="CarList">
       <car cardinality="n" wrappername="Car" remark="Car definition.">
         <var name="id" vt="string" defval="" range="*" required="true"/>
-        <var name="ident" vt="long" defval="0" range="*"/>
+        <var name="ident" vt="string" defval="" range="*"/>
         <var name="remark" vt="string" defval="" range="*"/>
         <var name="image" vt="string" defval="NULL" range="*" remark="image file to show in dialogs"/>
         <var name="number" vt="string" defval="" range="*"/>

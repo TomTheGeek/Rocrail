@@ -153,7 +153,7 @@ static void __informClientOfShortcut(obj inst, iONode booster, Boolean cleared )
 }
 
 
-static void __processEvent( obj inst ,Boolean pulse ,const char* id ,int ident, int val ) {
+static void __processEvent( obj inst ,Boolean pulse ,const char* id ,const char* ident, int val ) {
   iOPowerManData data = Data(inst);
   iONode scbooster = (iONode)MapOp.get( data->scmap, id );
   iONode pwbooster = (iONode)MapOp.get( data->pwmap, id );

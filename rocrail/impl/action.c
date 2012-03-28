@@ -188,7 +188,6 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           iOFBack fb = ModelOp.getFBack( model, id );
           const char* state = "";
           const char* direction = NULL;
-          int ident = 0;
 
           iOStrTok tok = StrTokOp.inst(wActionCond.getstate(actionCond), ',');
           if(StrTokOp.hasMoreTokens(tok))
@@ -197,11 +196,10 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
             direction = StrTokOp.nextToken(tok);
           StrTokOp.base.del(tok);
 
-          ident = atoi(state);
           if( fb != NULL ) {
-            if( ident > 0 && ident == FBackOp.getIdentifier(fb) )
+            if( StrOp.len(state) > 0 && StrOp.equals(state, FBackOp.getIdentifier(fb)) )
               rc = True;
-            else if( ident == 0 )
+            else if( StrOp.len(state) == 0 )
               rc = FBackOp.isState(fb, state );
 
             if( rc && direction != NULL && lc != NULL ) {

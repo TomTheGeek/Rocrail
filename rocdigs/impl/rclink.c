@@ -293,9 +293,12 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
     wFeedback.setbus( evt, wFeedback.fbtype_railcom );
     wFeedback.setdirection( evt, direction );
     if(addr == 0x3FFF)
-      wFeedback.setidentifier(evt,0);
-    else
-      wFeedback.setidentifier(evt,addr & 0x3FFF);
+      wFeedback.setidentifier(evt,"0");
+    else {
+      char ident[32];
+      StrOp.fmtb(ident, "%d", addr & 0x3FFF);
+      wFeedback.setidentifier(evt,ident);
+    }
     wFeedback.setstate(evt,!!addr);
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );

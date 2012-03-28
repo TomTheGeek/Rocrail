@@ -866,33 +866,34 @@ static __evaluateCV( iOCBUS cbus, byte* frame ) {
  */
 static __evaluateRFID( iOCBUS cbus, byte* frame ) {
   iOCBUSData data = Data(cbus);
+  char ident[64] = {'\0'};
+  Boolean isZero = False;
 
   int offset  = (frame[1] == 'S') ? 0:4;
   int addrh   = HEXA2Byte(frame + OFFSET_D1 + offset);
   int addrl   = HEXA2Byte(frame + OFFSET_D2 + offset);
   int addr    = addrh * 256 + addrl;
 
-  long rfid1  = HEXA2Byte(frame + OFFSET_D3 + offset);
-  long rfid2  = HEXA2Byte(frame + OFFSET_D4 + offset);
-  long rfid3  = HEXA2Byte(frame + OFFSET_D5 + offset);
-  long rfid4  = HEXA2Byte(frame + OFFSET_D6 + offset);
-  long rfid5  = HEXA2Byte(frame + OFFSET_D7 + offset);
+  int rfid1  = HEXA2Byte(frame + OFFSET_D3 + offset);
+  int rfid2  = HEXA2Byte(frame + OFFSET_D4 + offset);
+  int rfid3  = HEXA2Byte(frame + OFFSET_D5 + offset);
+  int rfid4  = HEXA2Byte(frame + OFFSET_D6 + offset);
+  int rfid5  = HEXA2Byte(frame + OFFSET_D7 + offset);
 
-  long rfid = rfid5;
-  rfid += rfid4 << 1 * 8;
-  rfid += rfid3 << 2 * 8;
-  rfid += rfid2 << 3 * 8;
-  rfid += rfid1 << 4 * 8;
+  if( rfid1 == 0 && rfid2 == 0 && rfid3 == 0 && rfid4 == 0 && rfid5 == 0 )
+    isZero = True;
 
-  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "RFID %02X %02X %02X %02X %02X",rfid1,rfid2,rfid3,rfid4,rfid5);
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RFID %sevent %d id=%ld",
-      data->shortevents?"short ":"", addr, rfid );
+
+  StrOp.fmtb( ident, "%d.%d.%d.%d.%d", rfid1, rfid2, rfid3, rfid4, rfid5);
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "RFID %s",ident);
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RFID %sevent %d id=%s",
+      data->shortevents?"short ":"", addr, ident );
 
   /* inform listener: Node3 */
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
   wFeedback.setaddr( nodeC, addr );
-  wFeedback.setstate( nodeC, rfid > 0 ? True:False );
-  wFeedback.setidentifier( nodeC, rfid );
+  wFeedback.setstate( nodeC, isZero ? False:True );
+  wFeedback.setidentifier( nodeC, ident );
   if( data->iid != NULL )
     wFeedback.setiid( nodeC, data->iid );
 
@@ -918,6 +919,9 @@ static __evaluateIR( iOCBUS cbus, byte* frame ) {
   int locoaddr = ir1 * 256 + ir2;
   int lococat  = HEXA2Byte(frame + OFFSET_D7 + offset);
 
+  char ident[32];
+  StrOp.fmtb(ident, "%d", locoaddr);
+
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "IR %sevent %d loco=%d (node=%d)",
       data->shortevents?"short ":"", addr, locoaddr, node );
 
@@ -926,7 +930,7 @@ static __evaluateIR( iOCBUS cbus, byte* frame ) {
   wFeedback.setbus( nodeC, node );
   wFeedback.setaddr( nodeC, addr );
   wFeedback.setstate( nodeC, True );
-  wFeedback.setidentifier( nodeC, locoaddr );
+  wFeedback.setidentifier( nodeC, ident );
   wFeedback.setcategory( nodeC, lococat );
   if( data->iid != NULL )
     wFeedback.setiid( nodeC, data->iid );

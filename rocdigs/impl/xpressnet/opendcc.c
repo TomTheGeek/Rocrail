@@ -89,10 +89,12 @@ static void __evaluateBiDi(obj xpressnet, byte* buffer) {
     /* Loco address from detector
      * 0x75 0xF2 SID_H SID_L D+AddrH AddrL
      */
+    char ident[32];
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
     wFeedback.setaddr( evt, buffer[2] * 256 + buffer[3] );
     wFeedback.setbus( evt, wFeedback.fbtype_railcom );
-    wFeedback.setidentifier( evt, buffer[2] * 256 + buffer[3] );
+    StrOp.fmtb(ident, "%d", buffer[2] * 256 + buffer[3]);
+    wFeedback.setidentifier( evt, ident );
     wFeedback.setstate( evt, wFeedback.getidentifier(evt) > 0 ? True:False );
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );

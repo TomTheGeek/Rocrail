@@ -43,6 +43,7 @@
 #include "rocrail/wrapper/public/CBusNodeEvent.h"
 
 #include "rocs/public/trace.h"
+#include "rocs/public/strtok.h"
 #include "rocdigs/impl/cbus/cbusdefs.h"
 #include "rocdigs/impl/cbus/rocrail.h"
 
@@ -1201,7 +1202,8 @@ void CBusNodeDlg::initGC4Var( int nr, int val ) {
     m_GC4Acc4RFID->SetValue((val & 0x08) ? true:false );
     // reset allowed rfids
     for( int i = 0; i < 5; i++ )
-      m_GC4AllowedRFID[i] = 0;
+      for( int n = 0; i < 5; n++ )
+        m_GC4AllowedRFID[i][n] = 0;
   }
   else if( nr == 2 ) {
     m_CANID = val;
@@ -1209,13 +1211,14 @@ void CBusNodeDlg::initGC4Var( int nr, int val ) {
   }
   else if( nr < 28 ) {
     // allowed rfid
-    long lval = val;
     int idx = (nr-3)/5;
     int offset = (nr-3)%5;
-    m_GC4AllowedRFID[idx] += lval << ((4-offset)*8);
+    m_GC4AllowedRFID[idx][offset] = val;
     if( offset == 4 ) {
       wxTextCtrl* allowedRFID[] = {m_GC4AllowedRFID1,m_GC4AllowedRFID2,m_GC4AllowedRFID3,m_GC4AllowedRFID4,m_GC4AllowedRFID5};
-      allowedRFID[idx]->SetValue(wxString::Format(_T("%ld"),m_GC4AllowedRFID[idx]));
+      allowedRFID[idx]->SetValue(wxString::Format(_T("%d.%d.%d.%d.%d"),
+          m_GC4AllowedRFID[idx][0],m_GC4AllowedRFID[idx][1],m_GC4AllowedRFID[idx][2],m_GC4AllowedRFID[idx][3],m_GC4AllowedRFID[idx][4])
+      );
     }
   }
 }
@@ -1531,11 +1534,21 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
       int rfid = (m_GC4SetIndex - 2) / 5;
       int idx  = (m_GC4SetIndex - 2) % 5;
       wxTextCtrl* allowedRFID[] = {m_GC4AllowedRFID1,m_GC4AllowedRFID2,m_GC4AllowedRFID3,m_GC4AllowedRFID4,m_GC4AllowedRFID5};
-      long lval = 0;
-      allowedRFID[rfid]->GetValue().ToLong(&lval);
-      int val = (int)((lval >> ((4-idx)*8)) & 0xFF);
-      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc4 nv%d=0x%02X", m_GC4SetIndex+1, val);
-      varSet(m_GC4SetIndex+1, val, false);
+
+      const char* sval = allowedRFID[rfid]->GetValue().mb_str(wxConvUTF8);
+      iOStrTok tok = StrTokOp.inst(sval, '.');
+      int n = 0;
+      while( StrTokOp.hasMoreTokens(tok) ) {
+        const char* tval = StrTokOp.nextToken(tok);
+        if( n == idx) {
+          int val = atoi(tval);
+          TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc4 nv%d=0x%02X", m_GC4SetIndex+1, val);
+          varSet(m_GC4SetIndex+1, val, false);
+          break;
+        }
+        n++;
+      }
+      StrTokOp.base.del(tok);
     }
     else if( m_GC4SetIndex == 27 ) {
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set gc4 learn mode");

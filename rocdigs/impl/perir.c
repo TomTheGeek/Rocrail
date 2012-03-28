@@ -241,7 +241,7 @@ static void __PerIRReader( void* threadinst ) {
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
     wFeedback.setaddr( evt, (decoder-1) * 8 + port );
     wFeedback.setbus( evt, wFeedback.fbtype_lissy );
-    wFeedback.setidentifier( evt, 4711 );
+    wFeedback.setidentifier( evt, "4711" );
     wFeedback.setstate( evt, wFeedback.getidentifier(evt) > 0 ? True:False );
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );
@@ -283,11 +283,13 @@ static void __PerIRReader( void* threadinst ) {
             int decoder = packet[0] / 2 + 1;
             int port    = packet[1] + 1;
             int loco    = packet[2];
+            char ident[32];
 
             iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
             wFeedback.setaddr( evt, (decoder-1) * 8 + port );
             wFeedback.setbus( evt, wFeedback.fbtype_lissy );
-            wFeedback.setidentifier( evt, loco );
+            StrOp.fmtb(ident, "%d", loco);
+            wFeedback.setidentifier( evt, ident );
             wFeedback.setstate( evt, wFeedback.getidentifier(evt) > 0 ? True:False );
             if( data->iid != NULL )
               wFeedback.setiid( evt, data->iid );

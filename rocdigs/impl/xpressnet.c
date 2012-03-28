@@ -970,12 +970,14 @@ static void __evaluateResponse( iOXpressNet xpressnet, byte* in ) {
   /* BiDi 0x75 0xF2 SID_H SID_L D+AddrH AddrL */
   if( in[0] == 0x75 && in[1] == 0xF2 ) {
     int addr = in[2] * 256 + in[3];
-    long ident = (in[4]&0x7F) * 256 + in[5];
+    long identifier = (in[4]&0x7F) * 256 + in[5];
+    char ident[32];
     iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
     wFeedback.setaddr( nodeC, addr );
     wFeedback.setstate( nodeC, True );
     wFeedback.setdirection( nodeC, in[4]&0x80?True:False);
+    StrOp.fmtb(ident, "%ld", identifier);
     wFeedback.setidentifier( nodeC, ident);
     if( data->iid != NULL )
       wFeedback.setiid( nodeC, data->iid );

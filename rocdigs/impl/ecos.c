@@ -1727,6 +1727,7 @@ static void __processS88Events( iOECoS inst, iONode node ) {
       int chanel = 0;
       int loco   = 0;
       int dir    = 0;
+      char ident[32];
       iOStrTok tok = StrTokOp.inst(railcomstring, ',' );
       if( StrTokOp.hasMoreTokens( tok ) ) {
         const char* schanel = StrTokOp.nextToken( tok );
@@ -1755,7 +1756,8 @@ static void __processS88Events( iOECoS inst, iONode node ) {
       wFeedback.setdirection( nodeC, dir == 1 ? True:False );
 
       wFeedback.setstate( nodeC, loco > 0 ? True:False );
-      wFeedback.setidentifier( nodeC, loco);
+      StrOp.fmtb(ident, "%d", loco);
+      wFeedback.setidentifier( nodeC, ident);
 
       data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 

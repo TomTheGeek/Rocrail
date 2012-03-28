@@ -513,6 +513,7 @@ static int __getOffset4LocalAddr(iOBiDiB bidib, int local) {
  */
 static void __handleSensor(iOBiDiB bidib, int localAddr, int port, Boolean state, int locoAddr, int type ) {
   iOBiDiBData data = Data(bidib);
+  char ident[32];
   int addr = __getOffset4LocalAddr(bidib, localAddr) + port;
 
   /* Type:
@@ -541,7 +542,8 @@ static void __handleSensor(iOBiDiB bidib, int localAddr, int port, Boolean state
       wFeedback.setiid( nodeC, data->iid );
 
     wFeedback.setstate( nodeC, state );
-    wFeedback.setidentifier( nodeC, locoAddr);
+    StrOp.fmtb(ident, "%d", locoAddr);
+    wFeedback.setidentifier( nodeC, ident);
     if( type == 0 || type == 2 )
       wFeedback.setdirection( nodeC, type == 0 ? True:False );
 
