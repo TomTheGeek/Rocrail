@@ -234,7 +234,7 @@ static int __getDataLen(int OPC, byte frametype) {
   }
   else {
     if( OPC == 1 )
-      return 2;
+      return 4;
   }
   return 0;
 }
@@ -1162,7 +1162,8 @@ static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
       {
         byte rc = HEXA2Byte(frame + OFFSET_D1);
         TraceOp.trc( name, rc==0?TRCLEVEL_INFO:TRCLEVEL_EXCEPTION, __LINE__, 9999,
-            "Ethernet status: rc=%d con=%d", rc, HEXA2Byte(frame + OFFSET_D2) );
+            "Ethernet status: rc=%d con=%d maxcanQ=%d maxethQ=%d", rc,
+            HEXA2Byte(frame + OFFSET_D2), HEXA2Byte(frame + OFFSET_D3), HEXA2Byte(frame + OFFSET_D4) );
         break;
       }
     }
