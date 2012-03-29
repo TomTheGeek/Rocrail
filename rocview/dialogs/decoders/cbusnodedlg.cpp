@@ -30,8 +30,10 @@
 
 #include "rocview/public/guiapp.h"
 
-#include "rocrail/wrapper/public/Program.h"
 #include "rocview/wrapper/public/Gui.h"
+#include "rocview/wrapper/public/CBUS.h"
+
+#include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Output.h"
@@ -160,8 +162,17 @@ void CBusNodeDlg::initLabels() {
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
-  //m_FirmwarePanel->Enable(false);
-  //m_NoteBook->RemovePage(4);
+  iONode cbus = wGui.getcbus( wxGetApp().getIni() );
+  if( cbus == NULL ) {
+    cbus = NodeOp.inst(wCBUS.name(), wxGetApp().getIni(), ELEMENT_NODE);
+    NodeOp.addChild(wxGetApp().getIni(), cbus);
+  }
+
+
+  if( !wCBUS.isfirmware(cbus) ) {
+    m_FirmwarePanel->Enable(false);
+    m_NoteBook->RemovePage(4);
+  }
 
   m_GC1eCanID->Enable(false);
 }
