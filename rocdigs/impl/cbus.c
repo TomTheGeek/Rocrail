@@ -1325,7 +1325,7 @@ static void __reader( void* threadinst ) {
               }
             }
 
-            /* binary frame CAN-GC2 */
+            /* binary standard frame CAN-GC2 */
             else if( frame[1] == 's' ) {
               int n = 2;
               TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "reading binary frame" );
@@ -1342,9 +1342,30 @@ static void __reader( void* threadinst ) {
 
                   n += datalen +1;
                   makeFrame(cmd, PRIORITY_NORMAL, frame+5, datalen, canid, False );
-                  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "binary frame: %s", cmd+1 );
+                  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "binary standard frame: %s", cmd+1 );
                   __evaluateASCIIFrame(cbus, cmd+1, frame[5]);
                 }
+              }
+            }
+
+            /* binary extended frame CAN-GC2 */
+            else if( frame[1] == 'x' ) {
+              int n = 2;
+              TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "reading extended frame" );
+              while( data->subRead( (obj)cbus, frame + n, 1 ) && n < 20 ) {
+                if( frame[n] == ';' ) {
+                  byte cmd[32];
+                  frame[n+1] = '\0';
+                  TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, n+1 );
+                  makeFrame(cmd, PRIORITY_NORMAL, frame+7, 7, 0, False );
+                  __evaluateXFrame(cbus, cmd);
+                  break;
+                }
+                else {
+                  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "read byte [%c] for extended frame at index[%d]",
+                      frame[n], n );
+                }
+                n++;
               }
             }
 
