@@ -997,7 +997,7 @@ static iONode __evaluateXFrame(iOCBUS cbus, byte* frame) {
 
 static const char* PTSTATUS[] = {"Reserved", "No Acknowledge", "Overload", "Write Acknowledge", "Busy", "CV out of range"};
 
-static iONode __evaluateFrame(iOCBUS cbus, byte* frame, int opc) {
+static iONode __evaluateASCIIFrame(iOCBUS cbus, byte* frame, int opc) {
   iOCBUSData data = Data(cbus);
   int offset = (frame[1] != 'X') ? 0:4;
   cbusMon(frame, opc);
@@ -1274,7 +1274,7 @@ static void __reader( void* threadinst ) {
                       TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset );
                       if( data->subRead( (obj)cbus, frame + 2 + OFFSET_OPC + offset, datalen*2 + 1 ) ) {
                         TraceOp.dump( name, TRCLEVEL_BYTE, (char*)frame, 2 + OFFSET_OPC + offset + datalen*2 + 1 );
-                        __evaluateFrame(cbus, frame, opc);
+                        __evaluateASCIIFrame(cbus, frame, opc);
                       }
                     }
                   }
@@ -1343,7 +1343,7 @@ static void __reader( void* threadinst ) {
                   n += datalen +1;
                   makeFrame(cmd, PRIORITY_NORMAL, frame+5, datalen, canid, False );
                   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "binary frame: %s", cmd+1 );
-                  __evaluateFrame(cbus, cmd+1, frame[5]);
+                  __evaluateASCIIFrame(cbus, cmd+1, frame[5]);
                 }
               }
             }
@@ -1367,8 +1367,10 @@ static void __reader( void* threadinst ) {
         ThreadOp.sleep(1000);
       }
     }
-
-    ThreadOp.sleep(10);
+    else {
+      /* Sleep only if there was nothing to read. */
+      ThreadOp.sleep(10);
+    }
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reader ended." );
