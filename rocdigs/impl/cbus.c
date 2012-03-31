@@ -958,37 +958,59 @@ static void __reportState(iOCBUS cbus) {
 
 static iONode __evaluateXFrame(iOCBUS cbus, byte* frame) {
   iOCBUSData data = Data(cbus);
-  if( frame[2] == '0' ) {
+  byte reqrsp  = HEXA2Byte(frame+2);
+  byte cargo   = HEXA2Byte(frame+8);
+  byte cmd     = HEXA2Byte(frame+21);
+
+  if( (reqrsp & 0x80) == 0 ) {
     /* Commands:
     :X00080004N000000000D000000; NOP
-    :X00080004N000000000D100000; Reset
-    :X00080004N000000000D200000; Init
-    :X00080004N000000000D300000; Check
-    :X00080004N000000000D400000; Test
+    :X00080004N000000000D010000; Reset
+    :X00080004N000000000D020000; Init
+    :X00080004N000000000D030000; Check
+    :X00080004N000000000D040000; Test
     :X00080005N0000000000000000; Data
     */
+    if( cargo == 5 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader data frame [%s]", frame+11 );
+    }
+    else {
+      if( cmd == 0x00 )
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command NOP: 0x%02X", cmd );
+      else if( cmd == 0x01 )
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command RESET: 0x%02X", cmd );
+      else if( cmd == 0x02 )
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command INIT: 0x%02X", cmd );
+      else if( cmd == 0x03 )
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command CHECK: 0x%02X", cmd );
+      else if( cmd == 0x04 )
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command TEST: 0x%02X", cmd );
+      else
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown bootloader command: 0x%02X", cmd );
+    }
   }
 
-  else if( frame[2] == '8' ) {
+  else if( reqrsp & 0x80 ) {
+    byte rc = HEXA2Byte(frame+11);
     /* Responses:
     :X80080004N00; Error, on response of a Check command.
     :X80080004N01; OK, on response of a Check command.
     :X80080004N02; Boot mode confirm, on response of a Test command.
     */
     /* ToDo: Generate program nodes. */
-    if(frame[12] == '0') {
+    if(rc == 0) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "error response from bootloader" );
     }
-    else if(frame[12] == '1') {
+    else if(rc == 1) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OK response from bootloader" );
     }
-    else if(frame[12] == '2') {
+    else if(rc == 2) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "boot mode confirmed" );
     }
   }
 
   else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown extended frame" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown extended frame: %s", frame );
   }
 
   return NULL;
