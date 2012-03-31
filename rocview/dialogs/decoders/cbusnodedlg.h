@@ -65,7 +65,7 @@ class CBusNodeDlg : public cbusnodedlggen
   int m_PulseTime;
   int m_GC2IgnorePortTest;
   int m_CANID;
-  iONode m_DigInt;
+  iONode m_CBus;
 
   void initLabels();
   void init(iONode event);
@@ -122,7 +122,6 @@ class CBusNodeDlg : public cbusnodedlggen
 protected:
 	// Handlers for cbusnodedlggen events.
 	void onOK( wxCommandEvent& event );
-  void onCancel( wxCommandEvent& event );
   void onSetNodeNumber( wxCommandEvent& event );
   void onIndexSelect( wxCommandEvent& event );
   void onIndexDelete( wxCommandEvent& event );
