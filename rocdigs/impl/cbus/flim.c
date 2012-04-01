@@ -67,6 +67,11 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
     int prod  = HEXA2Byte(frame + OFFSET_D4 + offset);
     int nv1   = HEXA2Byte(frame + OFFSET_D5 + offset);
 
+    int l_sidh, l_sidl, canid;
+    l_sidh = HEXA2Byte(frame + OFFSET_SIDH);
+    l_sidl = HEXA2Byte(frame + OFFSET_SIDL);
+    canid = (l_sidl >> 5 ) + ((l_sidh&0x0F) << 3);
+
     iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcmd( node, wProgram.type );
     wProgram.setiid( node, data->iid );
@@ -76,7 +81,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
     wProgram.setprod(node, prod);
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "FLiM: node [%d] manufacturer=%d product=%d nv=%d", nn, manu, prod, nv1 );
+        "FLiM: node[%d] CANID=%d manufacturer=%d product=%d nv=%d", nn, canid, manu, prod, nv1 );
     return node;
   }
     break;

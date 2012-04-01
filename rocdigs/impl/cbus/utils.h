@@ -29,6 +29,8 @@
 #define PRIORITY_NORMAL 2
 #define PRIORITY_LOW 3
 
+#define OFFSET_SIDH 2
+#define OFFSET_SIDL 4
 #define OFFSET_TYPE 6
 #define OFFSET_OPC 7
 #define OFFSET_D1 9

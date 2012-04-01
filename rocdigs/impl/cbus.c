@@ -1023,6 +1023,7 @@ static const char* PTSTATUS[] = {"Reserved", "No Acknowledge", "Overload", "Writ
 static iONode __evaluateASCIIFrame(iOCBUS cbus, byte* frame, int opc) {
   iOCBUSData data = Data(cbus);
   int offset = (frame[1] != 'X') ? 0:4;
+
   cbusMon(frame, opc);
 
   if( frame[1] == 'S' ) {
