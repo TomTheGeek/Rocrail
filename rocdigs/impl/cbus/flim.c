@@ -81,7 +81,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
     wProgram.setprod(node, prod);
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "FLiM: node[%d] CANID=%d manufacturer=%d product=%d nv=%d", nn, canid, manu, prod, nv1 );
+        "FLiM: canid=%d node=%d manufacturer=%d product=%d config=0x%02X", canid, nn, manu, prod, nv1 );
     return node;
   }
     break;
