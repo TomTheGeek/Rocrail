@@ -197,8 +197,8 @@ void CBusNodeDlg::initIndex() {
   if( m_CBus != NULL ) {
     iONode cbusnode = wCBus.getcbnode(m_CBus);
     while( cbusnode != NULL ) {
-      char* s = StrOp.fmt("number %d, type %d (%s)",
-          wCBusNode.getnr(cbusnode), wCBusNode.getmtyp(cbusnode),
+      char* s = StrOp.fmt("Node# %d, CANID %d, ManuID %d, Type %d, %s",
+          wCBusNode.getnr(cbusnode), wCBusNode.getcanid(cbusnode), wCBusNode.getmanuid(cbusnode), wCBusNode.getmtyp(cbusnode),
           getTypeString(wCBusNode.getmanuid(cbusnode), wCBusNode.getmtyp(cbusnode)) );
 
       m_IndexList->Append( wxString(s,wxConvUTF8), cbusnode );
@@ -238,7 +238,7 @@ void CBusNodeDlg::initEvtList(iONode node) {
 }
 
 
-iONode CBusNodeDlg::getNode(int nr, int mtype, int manu, const char* ver) {
+iONode CBusNodeDlg::getNode(int nr, int mtype, int manu, const char* ver, int canid) {
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( m_CBus != NULL ) {
     iONode cbusnode = wCBus.getcbnode(m_CBus);
@@ -249,6 +249,7 @@ iONode CBusNodeDlg::getNode(int nr, int mtype, int manu, const char* ver) {
     }
     cbusnode = NodeOp.inst( wCBusNode.name(), m_CBus, ELEMENT_NODE );
     NodeOp.addChild(m_CBus, cbusnode);
+    wCBusNode.setcanid( cbusnode, canid );
     wCBusNode.setnr( cbusnode, nr );
     wCBusNode.setmtyp( cbusnode, mtype );
     if( manu > 0 )
@@ -738,10 +739,11 @@ void CBusNodeDlg::event( iONode event ) {
     init( event );
   }
   else if( wProgram.getcmd( event ) == wProgram.type  ) {
+    int canid = wProgram.getmodid(event);
     int nn = wProgram.getdecaddr(event);
     int manu = wProgram.getmanu(event);
     int prod = wProgram.getprod(event);
-    getNode(nn, prod, manu, NULL);
+    getNode(nn, prod, manu, NULL, canid);
   }
   else if( wProgram.getcmd( event ) == wProgram.evget || wProgram.getcmd( event ) == wProgram.evgetvar ) {
     // Add event to the list.

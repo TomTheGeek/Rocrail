@@ -516,6 +516,7 @@
         <var name="fcnode" vt="int" defval="0" range="0-*" remark="Fast clock node number."/>
         <var name="fcaddr" vt="int" defval="9999" range="0-*" remark="Fast clock event address."/>
 	      <cbnode cardinality="n" wrappername="CBusNode">
+          <var name="canid" vt="int" defval="0" range="0-127" remark="CANID"/>
 	        <var name="nr" vt="int" defval="0" range="0-65535" remark="NodeNumber"/>
 	        <var name="manuid" vt="int" defval="0" range="0-65535" remark="NMRA manufacturer ID."/>
           <var name="version" vt="string" defval="" range="*" remark="Firmware version."/>

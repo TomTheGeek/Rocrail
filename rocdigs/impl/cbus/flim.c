@@ -76,6 +76,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
     wProgram.setcmd( node, wProgram.type );
     wProgram.setiid( node, data->iid );
     wProgram.setlntype(node, wProgram.lntype_cbus);
+    wProgram.setmodid(node, canid);
     wProgram.setdecaddr(node, nn);
     wProgram.setmanu(node, manu);
     wProgram.setprod(node, prod);
