@@ -708,7 +708,7 @@ __getBarjutData(
 
 									wFeedback.setstate( evt, True );
 									wFeedback.setaddr( evt, address );
-                  wFeedback.setbus( evt, 3 );
+                  wFeedback.setfbtype( evt, wFeedback.fbtype_barcode );
                   StrOp.fmtb(ident, "%d", barcode);
 									wFeedback.setidentifier( evt, ident );
 									if( o->iid != NULL )

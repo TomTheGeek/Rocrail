@@ -893,7 +893,7 @@ static __evaluateRFID( iOCBUS cbus, byte* frame ) {
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
   wFeedback.setaddr( nodeC, addr );
   wFeedback.setstate( nodeC, isZero ? False:True );
-  wFeedback.setbus( nodeC, wFeedback.fbtype_rfid );
+  wFeedback.setfbtype( nodeC, wFeedback.fbtype_rfid );
   wFeedback.setidentifier( nodeC, ident );
   if( data->iid != NULL )
     wFeedback.setiid( nodeC, data->iid );

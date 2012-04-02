@@ -1347,7 +1347,7 @@ static void __processSwitchSet( iOECoS inst, iONode node ) {
 
         /* clear event red, inform listener: Node */
         iONode eventRed = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-        wFeedback.setbus( eventRed, 4 );
+        wFeedback.setfbtype( eventRed, wFeedback.fbtype_railcom );
         wFeedback.setaddr( eventRed, switchAddress * 2 );
         if ( data->iid != NULL )
           wFeedback.setiid( eventRed, data->iid );
@@ -1356,7 +1356,7 @@ static void __processSwitchSet( iOECoS inst, iONode node ) {
 
         /* clear event green, inform listener: Node */
         iONode eventGreen = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-        wFeedback.setbus( eventGreen, 4 );
+        wFeedback.setfbtype( eventGreen, wFeedback.fbtype_railcom );
         wFeedback.setaddr( eventGreen, ( switchAddress * 2 ) - 1);
         if ( data->iid != NULL )
           wFeedback.setiid( eventGreen, data->iid );
@@ -1414,7 +1414,7 @@ static void __processSwitchManagerEvents( iOECoS inst, iONode node ) {
 
             /* clear event red, inform listener: Node */
             iONode eventRed = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-            wFeedback.setbus( eventRed, 4 );
+            wFeedback.setfbtype( eventRed, wFeedback.fbtype_railcom );
             wFeedback.setaddr( eventRed, switchAddress * 2 );
             if ( data->iid != NULL )
               wFeedback.setiid( eventRed, data->iid );
@@ -1423,7 +1423,7 @@ static void __processSwitchManagerEvents( iOECoS inst, iONode node ) {
 
             /* clear event green, inform listener: Node */
             iONode eventGreen = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-            wFeedback.setbus( eventGreen, 4 );
+            wFeedback.setfbtype( eventGreen, wFeedback.fbtype_railcom );
             wFeedback.setaddr( eventGreen, ( switchAddress * 2 ) - 1);
             if ( data->iid != NULL )
               wFeedback.setiid( eventGreen, data->iid );
@@ -1642,7 +1642,7 @@ static void __processSwitchEvents( iOECoS inst, iONode node ) {
 
               /* event red, inform listener: Node */
               iONode eventRed = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-              wFeedback.setbus( eventRed, 4 );
+              wFeedback.setfbtype( eventRed, wFeedback.fbtype_railcom );
               wFeedback.setaddr( eventRed, switchAddress * 2 );
               if ( data->iid != NULL )
                 wFeedback.setiid( eventRed, data->iid );
@@ -1651,7 +1651,7 @@ static void __processSwitchEvents( iOECoS inst, iONode node ) {
 
               /* event green, inform listener: Node */
               iONode eventGreen = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-              wFeedback.setbus( eventGreen, 4 );
+              wFeedback.setfbtype( eventGreen, wFeedback.fbtype_railcom );
               wFeedback.setaddr( eventGreen, ( switchAddress * 2 ) - 1);
               if ( data->iid != NULL )
                 wFeedback.setiid( eventGreen, data->iid );
@@ -1664,7 +1664,7 @@ static void __processSwitchEvents( iOECoS inst, iONode node ) {
 
               /* clear event red, inform listener: Node */
               iONode eventRed = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-              wFeedback.setbus( eventRed, 4 );
+              wFeedback.setfbtype( eventRed, wFeedback.fbtype_railcom );
               wFeedback.setaddr( eventRed, switchAddress * 2 );
               if ( data->iid != NULL )
                 wFeedback.setiid( eventRed, data->iid );
@@ -1673,7 +1673,7 @@ static void __processSwitchEvents( iOECoS inst, iONode node ) {
 
               /* clear event green, inform listener: Node */
               iONode eventGreen = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-              wFeedback.setbus( eventGreen, 4 );
+              wFeedback.setfbtype( eventGreen, wFeedback.fbtype_railcom );
               wFeedback.setaddr( eventGreen, ( switchAddress * 2 ) - 1);
               if ( data->iid != NULL )
                 wFeedback.setiid( eventGreen, data->iid );

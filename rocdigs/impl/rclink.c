@@ -290,7 +290,7 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
     wFeedback.setaddr( evt, packet[1] );
-    wFeedback.setbus( evt, wFeedback.fbtype_railcom );
+    wFeedback.setfbtype( evt, wFeedback.fbtype_railcom );
     wFeedback.setdirection( evt, direction );
     if(addr == 0x3FFF)
       wFeedback.setidentifier(evt,"0");

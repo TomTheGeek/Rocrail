@@ -254,7 +254,7 @@ static void __evaluateRFID(iORFID12 inst, char* rfid, int idx) {
 
   wFeedback.setstate( evt, True );
   wFeedback.setaddr( evt, addr );
-  wFeedback.setbus( evt, wFeedback.fbtype_rfid );
+  wFeedback.setfbtype( evt, wFeedback.fbtype_rfid );
   wFeedback.setidentifier( evt, ident );
   if( data->iid != NULL )
     wFeedback.setiid( evt, data->iid );
@@ -276,7 +276,7 @@ static void __RFIDTicker( void* threadinst ) {
         iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
         wFeedback.setstate( evt, False );
         wFeedback.setaddr( evt, i + 1 + data->fboffset );
-        wFeedback.setbus( evt, wFeedback.fbtype_rfid );
+        wFeedback.setfbtype( evt, wFeedback.fbtype_rfid );
         wFeedback.setidentifier( evt, 0 );
         if( data->iid != NULL )
           wFeedback.setiid( evt, data->iid );

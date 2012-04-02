@@ -221,7 +221,7 @@ static void __RFIReader( void* threadinst ) {
 
           wFeedback.setstate( evt, True );
           wFeedback.setaddr( evt, reader );
-          wFeedback.setbus( evt, 5 );
+          wFeedback.setfbtype( evt, wFeedback.fbtype_rfid );
           StrOp.fmtb(ident, "%d", rfid);
           wFeedback.setidentifier( evt, ident );
           if( data->iid != NULL )
@@ -251,7 +251,7 @@ static void __RFIReader( void* threadinst ) {
 
         wFeedback.setstate( evt, False );
         wFeedback.setaddr( evt, reader );
-        wFeedback.setbus( evt, 5 );
+        wFeedback.setfbtype( evt, wFeedback.fbtype_rfid );
         wFeedback.setidentifier( evt, 0 );
         if( data->iid != NULL )
           wFeedback.setiid( evt, data->iid );

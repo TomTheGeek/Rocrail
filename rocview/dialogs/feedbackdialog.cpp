@@ -83,7 +83,7 @@ BEGIN_EVENT_TABLE( FeedbackDialog, wxDialog )
 
     EVT_BUTTON( ID_FEEDBACK_ACTIONS, FeedbackDialog::OnFeedbackActionsClick )
 
-    EVT_RADIOBOX( ID_FB_BUS, FeedbackDialog::OnFbBusSelected )
+    EVT_RADIOBOX( ID_FB_TYPE, FeedbackDialog::OnFbTypeSelected )
 
     EVT_BUTTON( wxID_CANCEL, FeedbackDialog::OnCancelClick )
 
@@ -308,7 +308,9 @@ void FeedbackDialog::initValues() {
   // Interface
   char * str;
   m_iid->SetValue( wFeedback.getiid( m_Props )==NULL?_T(""):wxString(wFeedback.getiid( m_Props ),wxConvUTF8) );
-  m_Bus->SetSelection( wFeedback.getbus(m_Props) );
+
+  m_Type->SetSelection( wFeedback.getfbtype(m_Props) );
+
   str = StrOp.fmt( "%d", wFeedback.getaddr(m_Props) );
   m_Address->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
   str = StrOp.fmt( "%d", wFeedback.getbus(m_Props) );
@@ -366,11 +368,8 @@ bool FeedbackDialog::evaluate() {
 
   // Interface
   wFeedback.setiid( m_Props, m_iid->GetValue().mb_str(wxConvUTF8) );
-  int bus = m_Bus->GetSelection();
-  if( bus == 0 )
-    wFeedback.setbus( m_Props, atoi( m_BusNr->GetValue().mb_str(wxConvUTF8) ) );
-  else
-    wFeedback.setbus( m_Props, m_Bus->GetSelection() );
+  wFeedback.setbus( m_Props, atoi( m_BusNr->GetValue().mb_str(wxConvUTF8) ) );
+  wFeedback.setfbtype( m_Props, m_Type->GetSelection() );
 
   wFeedback.setaddr( m_Props, atoi( m_Address->GetValue().mb_str(wxConvUTF8) ) );
   wFeedback.setactivelow( m_Props , m_ActiveLow->GetValue() ? True:False);
@@ -430,7 +429,7 @@ bool FeedbackDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_Labeliid = NULL;
     m_iid = NULL;
     m_Label_Bus = NULL;
-    m_Bus = NULL;
+    m_Type = NULL;
     m_labBusNr = NULL;
     m_BusNr = NULL;
     m_LabelAddress = NULL;
@@ -620,17 +619,17 @@ void FeedbackDialog::CreateControls()
     m_Label_Bus = new wxStaticText( m_Interface, wxID_STATIC_FB_BUS, _("Bus:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer44->Add(m_Label_Bus, 0, wxALIGN_RIGHT|wxALIGN_TOP|wxALL, 5);
 
-    wxArrayString m_BusStrings;
-    m_BusStrings.Add(_("&0 Sensor"));
-    m_BusStrings.Add(_("&1 Lissy"));
-    m_BusStrings.Add(_("&2 Transponding"));
-    m_BusStrings.Add(_("&3 Barcode"));
-    m_BusStrings.Add(_("&4 Railcom"));
-    m_BusStrings.Add(_("&5 RFID"));
-    m_BusStrings.Add(_("&6 Wheel counter"));
-    m_Bus = new wxRadioBox( m_Interface, ID_FB_BUS, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BusStrings, 1, wxRA_SPECIFY_COLS );
-    m_Bus->SetSelection(0);
-    itemFlexGridSizer44->Add(m_Bus, 0, wxALIGN_LEFT|wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    wxArrayString m_TypeStrings;
+    m_TypeStrings.Add(_("&Sensor"));
+    m_TypeStrings.Add(_("&Lissy"));
+    m_TypeStrings.Add(_("&Transponding"));
+    m_TypeStrings.Add(_("&Barcode"));
+    m_TypeStrings.Add(_("&Railcom"));
+    m_TypeStrings.Add(_("&RFID"));
+    m_TypeStrings.Add(_("&Wheel counter"));
+    m_Type = new wxRadioBox( m_Interface, ID_FB_TYPE, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_TypeStrings, 1, wxRA_SPECIFY_COLS );
+    m_Type->SetSelection(0);
+    itemFlexGridSizer44->Add(m_Type, 0, wxALIGN_LEFT|wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxFlexGridSizer* itemFlexGridSizer49 = new wxFlexGridSizer(0, 4, 0, 0);
     itemFlexGridSizer49->AddGrowableCol(1);
@@ -917,14 +916,7 @@ void FeedbackDialog::OnFeedbackActionsClick( wxCommandEvent& event )
  * wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_FB_BUS
  */
 
-void FeedbackDialog::OnFbBusSelected( wxCommandEvent& event )
+void FeedbackDialog::OnFbTypeSelected( wxCommandEvent& event )
 {
-  int bus = m_Bus->GetSelection();
-  m_BusNr->Enable(bus==0);
-  if( bus != 0 ) {
-    char* str = StrOp.fmt( "%d", bus );
-    m_BusNr->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
-  }
-
 }
 

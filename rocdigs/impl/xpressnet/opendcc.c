@@ -92,7 +92,7 @@ static void __evaluateBiDi(obj xpressnet, byte* buffer) {
     char ident[32];
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
     wFeedback.setaddr( evt, buffer[2] * 256 + buffer[3] );
-    wFeedback.setbus( evt, wFeedback.fbtype_railcom );
+    wFeedback.setfbtype( evt, wFeedback.fbtype_railcom );
     StrOp.fmtb(ident, "%d", buffer[2] * 256 + buffer[3]);
     wFeedback.setidentifier( evt, ident );
     wFeedback.setstate( evt, wFeedback.getidentifier(evt) > 0 ? True:False );
@@ -109,7 +109,7 @@ static void __evaluateBiDi(obj xpressnet, byte* buffer) {
      * 0x73 0xF0/0xF1 SID_H SID_L */
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
     wFeedback.setaddr( evt, buffer[2] * 256 + buffer[3] );
-    wFeedback.setbus( evt, wFeedback.fbtype_railcom );
+    wFeedback.setfbtype( evt, wFeedback.fbtype_railcom );
     wFeedback.setstate( evt, buffer[1] == 0xF1 ? True:False );
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );

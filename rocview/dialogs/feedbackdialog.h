@@ -80,7 +80,7 @@ class wxSpinCtrl;
 #define wxID_STATIC_FB_IID 10000
 #define ID_TEXTCTRL_FB_IID 10001
 #define wxID_STATIC_FB_BUS 10254
-#define ID_FB_BUS 10396
+#define ID_FB_TYPE 10396
 #define wxID_STATIC_FB_ADDRESS1 10002
 #define ID_TEXTCTRL_FB_ADDRESS1 10003
 #define ID_PANEL_FB_WIRING 10334
@@ -147,8 +147,8 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_FEEDBACK_ACTIONS
     void OnFeedbackActionsClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_FB_BUS
-    void OnFbBusSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_FB_TYPE
+    void OnFbTypeSelected( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
@@ -213,7 +213,7 @@ public:
     wxStaticText* m_Labeliid;
     wxTextCtrl* m_iid;
     wxStaticText* m_Label_Bus;
-    wxRadioBox* m_Bus;
+    wxRadioBox* m_Type;
     wxStaticText* m_labBusNr;
     wxTextCtrl* m_BusNr;
     wxStaticText* m_LabelAddress;

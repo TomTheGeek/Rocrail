@@ -506,14 +506,12 @@ static void __handleLissy(iOLocoNet loconet, byte* msg) {
 
   if(wheelcnt) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "wheelcounter=%d count=%d", lissyaddr, sensdata );
-    wFeedback.setbus( nodeC, wFeedback.fbtype_wheelcounter );
     wFeedback.setfbtype( nodeC, wFeedback.fbtype_wheelcounter );
     wFeedback.setwheelcount( nodeC, sensdata );
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lissy=%d ident=%d dir=%d", lissyaddr, sensdata, dir );
 
-    wFeedback.setbus( nodeC, wFeedback.fbtype_lissy );
     wFeedback.setfbtype( nodeC, wFeedback.fbtype_lissy );
 
     StrOp.fmtb(ident, "%d", sensdata);

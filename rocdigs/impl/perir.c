@@ -193,7 +193,7 @@ static void __irTicker( void* threadinst ) {
       if( data->readerTick[i] > 0 && (SystemOp.getTick() - data->readerTick[i]) > 250 ) {
         iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
         wFeedback.setstate( evt, False );
-        wFeedback.setbus( evt, wFeedback.fbtype_lissy );
+        wFeedback.setfbtype( evt, wFeedback.fbtype_lissy );
         wFeedback.setaddr( evt, i );
         wFeedback.setidentifier( evt, 0 );
         if( data->iid != NULL )
@@ -240,7 +240,7 @@ static void __PerIRReader( void* threadinst ) {
     int port = 6;
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
     wFeedback.setaddr( evt, (decoder-1) * 8 + port );
-    wFeedback.setbus( evt, wFeedback.fbtype_lissy );
+    wFeedback.setfbtype( evt, wFeedback.fbtype_lissy );
     wFeedback.setidentifier( evt, "4711" );
     wFeedback.setstate( evt, wFeedback.getidentifier(evt) > 0 ? True:False );
     if( data->iid != NULL )
@@ -287,7 +287,7 @@ static void __PerIRReader( void* threadinst ) {
 
             iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
             wFeedback.setaddr( evt, (decoder-1) * 8 + port );
-            wFeedback.setbus( evt, wFeedback.fbtype_lissy );
+            wFeedback.setfbtype( evt, wFeedback.fbtype_lissy );
             StrOp.fmtb(ident, "%d", loco);
             wFeedback.setidentifier( evt, ident );
             wFeedback.setstate( evt, wFeedback.getidentifier(evt) > 0 ? True:False );

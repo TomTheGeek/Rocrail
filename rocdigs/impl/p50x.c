@@ -1604,7 +1604,6 @@ static void __feedbackReader( void* threadinst ) {
                   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
                   wFeedback.setaddr( nodeC, bidiAddr );
-                  wFeedback.setbus( nodeC, wFeedback.fbtype_railcom );
                   wFeedback.setfbtype( nodeC, wFeedback.fbtype_railcom );
 
                   if( o->iid != NULL )
