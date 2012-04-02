@@ -212,7 +212,7 @@ public:
     wxPanel* m_Interface;
     wxStaticText* m_Labeliid;
     wxTextCtrl* m_iid;
-    wxStaticText* m_Label_Bus;
+    wxStaticText* m_labType;
     wxRadioBox* m_Type;
     wxStaticText* m_labBusNr;
     wxTextCtrl* m_BusNr;

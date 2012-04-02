@@ -197,7 +197,7 @@ void FeedbackDialog::initLabels() {
 
   // Interface
   m_Labeliid->SetLabel( wxGetApp().getMsg( "iid" ) );
-  m_Label_Bus->SetLabel( wxGetApp().getMsg( "bus" ) );
+  m_labType->SetLabel( wxGetApp().getMsg( "type" ) );
   m_LabelAddress->SetLabel( wxGetApp().getMsg( "address" ) );
   m_ActiveLow->SetLabel( wxGetApp().getMsg( "activelow" ) );
 
@@ -428,7 +428,7 @@ bool FeedbackDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_Interface = NULL;
     m_Labeliid = NULL;
     m_iid = NULL;
-    m_Label_Bus = NULL;
+    m_labType = NULL;
     m_Type = NULL;
     m_labBusNr = NULL;
     m_BusNr = NULL;
@@ -616,8 +616,8 @@ void FeedbackDialog::CreateControls()
     m_iid = new wxTextCtrl( m_Interface, ID_TEXTCTRL_FB_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer44->Add(m_iid, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Label_Bus = new wxStaticText( m_Interface, wxID_STATIC_FB_BUS, _("Bus:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer44->Add(m_Label_Bus, 0, wxALIGN_RIGHT|wxALIGN_TOP|wxALL, 5);
+    m_labType = new wxStaticText( m_Interface, wxID_STATIC_FB_BUS, _("Type:"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer44->Add(m_labType, 0, wxALIGN_RIGHT|wxALIGN_TOP|wxALL, 5);
 
     wxArrayString m_TypeStrings;
     m_TypeStrings.Add(_("&Sensor"));
