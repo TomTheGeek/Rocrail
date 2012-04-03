@@ -448,6 +448,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, const char* 
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "set loco %s in block %s", LocOp.getId(identLoc), data->id );
             LocOp.cmd( identLoc, cmd );
             loc = identLoc;
+            __checkAction((iOBlock)inst, "acceptident");
 
           /*}*/
         }
