@@ -141,7 +141,7 @@ static Boolean __readPacket( iOMassothData data, byte* in ) {
       if( rc ) {
         rc = SerialOp.read( data->serial, in+offset, insize );
         if( rc ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s packet read:", isInfo ? "info":"command" );
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "%s packet read:", isInfo ? "info":"command" );
           TraceOp.dump( name, TRCLEVEL_BYTE, in, insize+offset );
         }
         else {
@@ -274,7 +274,7 @@ static iOSlot __configureVehicle(iOMassothData data, iONode node) {
       MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
       MutexOp.post(data->lcmux);
     }
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s, protver=%d", wLoc.getid(node), protver );
   }
 
   return slot;
