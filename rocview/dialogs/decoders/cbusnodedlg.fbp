@@ -4227,7 +4227,7 @@
                             <property name="bitmap"></property>
                             <property name="label">GC1e</property>
                             <property name="select">0</property>
-                            <object class="wxPanel" expanded="1">
+                            <object class="wxPanel" expanded="0">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
@@ -4274,16 +4274,16 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnUpdateUI"></event>
-                                <object class="wxBoxSizer" expanded="1">
+                                <object class="wxBoxSizer" expanded="0">
                                     <property name="minimum_size"></property>
                                     <property name="name">bSizer28</property>
                                     <property name="orient">wxVERTICAL</property>
                                     <property name="permission">none</property>
-                                    <object class="sizeritem" expanded="1">
+                                    <object class="sizeritem" expanded="0">
                                         <property name="border">5</property>
                                         <property name="flag">wxEXPAND</property>
                                         <property name="proportion">0</property>
-                                        <object class="wxStaticBoxSizer" expanded="1">
+                                        <object class="wxStaticBoxSizer" expanded="0">
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">Ethernet</property>
                                             <property name="minimum_size"></property>
@@ -4291,11 +4291,11 @@
                                             <property name="orient">wxVERTICAL</property>
                                             <property name="permission">none</property>
                                             <event name="OnUpdateUI"></event>
-                                            <object class="sizeritem" expanded="1">
+                                            <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
                                                 <property name="flag"></property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxFlexGridSizer" expanded="1">
+                                                <object class="wxFlexGridSizer" expanded="0">
                                                     <property name="cols">5</property>
                                                     <property name="flexible_direction">wxBOTH</property>
                                                     <property name="growablecols"></property>
@@ -4307,11 +4307,11 @@
                                                     <property name="permission">none</property>
                                                     <property name="rows">0</property>
                                                     <property name="vgap">0</property>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxStaticText" expanded="1">
+                                                        <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -4363,11 +4363,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -4423,11 +4423,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -4483,11 +4483,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -4543,11 +4543,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -4603,11 +4603,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxStaticText" expanded="1">
+                                                        <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -4659,11 +4659,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -4719,11 +4719,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -4779,11 +4779,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -4839,11 +4839,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -4901,11 +4901,11 @@
                                                     </object>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem" expanded="1">
+                                            <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
                                                 <property name="flag"></property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxFlexGridSizer" expanded="1">
+                                                <object class="wxFlexGridSizer" expanded="0">
                                                     <property name="cols">7</property>
                                                     <property name="flexible_direction">wxBOTH</property>
                                                     <property name="growablecols"></property>
@@ -4917,11 +4917,11 @@
                                                     <property name="permission">none</property>
                                                     <property name="rows">0</property>
                                                     <property name="vgap">0</property>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxStaticText" expanded="1">
+                                                        <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -4973,11 +4973,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -5033,11 +5033,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -5093,11 +5093,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -5153,11 +5153,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -5213,11 +5213,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -5273,11 +5273,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -5335,11 +5335,11 @@
                                                     </object>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem" expanded="1">
+                                            <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
                                                 <property name="flag">wxALL</property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxCheckBox" expanded="1">
+                                                <object class="wxCheckBox" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="checked">1</property>
                                                     <property name="context_help"></property>
@@ -5392,11 +5392,11 @@
                                                     <event name="OnUpdateUI"></event>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem" expanded="1">
+                                            <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
                                                 <property name="flag">wxBOTTOM|wxRIGHT|wxLEFT</property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxCheckBox" expanded="1">
+                                                <object class="wxCheckBox" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="checked">0</property>
                                                     <property name="context_help"></property>
@@ -5449,11 +5449,11 @@
                                                     <event name="OnUpdateUI"></event>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem" expanded="1">
+                                            <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
                                                 <property name="flag">wxEXPAND</property>
                                                 <property name="proportion">1</property>
-                                                <object class="wxFlexGridSizer" expanded="1">
+                                                <object class="wxFlexGridSizer" expanded="0">
                                                     <property name="cols">2</property>
                                                     <property name="flexible_direction">wxBOTH</property>
                                                     <property name="growablecols"></property>
@@ -5465,11 +5465,11 @@
                                                     <property name="permission">none</property>
                                                     <property name="rows">2</property>
                                                     <property name="vgap">0</property>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxStaticText" expanded="1">
+                                                        <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -5521,11 +5521,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxBOTTOM|wxRIGHT|wxLEFT</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -5585,11 +5585,11 @@
                                             </object>
                                         </object>
                                     </object>
-                                    <object class="sizeritem" expanded="1">
+                                    <object class="sizeritem" expanded="0">
                                         <property name="border">5</property>
                                         <property name="flag">wxEXPAND</property>
                                         <property name="proportion">0</property>
-                                        <object class="wxStaticBoxSizer" expanded="1">
+                                        <object class="wxStaticBoxSizer" expanded="0">
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">CBUS</property>
                                             <property name="minimum_size"></property>
@@ -5597,11 +5597,11 @@
                                             <property name="orient">wxVERTICAL</property>
                                             <property name="permission">none</property>
                                             <event name="OnUpdateUI"></event>
-                                            <object class="sizeritem" expanded="1">
+                                            <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
                                                 <property name="flag">wxEXPAND</property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxFlexGridSizer" expanded="1">
+                                                <object class="wxFlexGridSizer" expanded="0">
                                                     <property name="cols">2</property>
                                                     <property name="flexible_direction">wxBOTH</property>
                                                     <property name="growablecols"></property>
@@ -5613,11 +5613,11 @@
                                                     <property name="permission">none</property>
                                                     <property name="rows">2</property>
                                                     <property name="vgap">0</property>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxStaticText" expanded="1">
+                                                        <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -5669,11 +5669,11 @@
                                                             <event name="OnUpdateUI"></event>
                                                         </object>
                                                     </object>
-                                                    <object class="sizeritem" expanded="1">
+                                                    <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
                                                         <property name="flag">wxALL</property>
                                                         <property name="proportion">0</property>
-                                                        <object class="wxSpinCtrl" expanded="1">
+                                                        <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
                                                             <property name="context_help"></property>
                                                             <property name="context_menu">1</property>
@@ -5733,20 +5733,20 @@
                                             </object>
                                         </object>
                                     </object>
-                                    <object class="sizeritem" expanded="1">
+                                    <object class="sizeritem" expanded="0">
                                         <property name="border">5</property>
                                         <property name="flag">wxEXPAND</property>
                                         <property name="proportion">0</property>
-                                        <object class="wxBoxSizer" expanded="1">
+                                        <object class="wxBoxSizer" expanded="0">
                                             <property name="minimum_size"></property>
                                             <property name="name">bSizer29</property>
                                             <property name="orient">wxHORIZONTAL</property>
                                             <property name="permission">none</property>
-                                            <object class="sizeritem" expanded="1">
+                                            <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
                                                 <property name="flag">wxALL</property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxButton" expanded="1">
+                                                <object class="wxButton" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
@@ -5799,11 +5799,11 @@
                                                     <event name="OnUpdateUI"></event>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem" expanded="1">
+                                            <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
                                                 <property name="flag">wxALL</property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxButton" expanded="1">
+                                                <object class="wxButton" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
@@ -6670,7 +6670,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType1</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -6727,7 +6727,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType1</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -6784,7 +6784,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType1</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -6841,7 +6841,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType1</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -7188,7 +7188,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType2</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -7245,7 +7245,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType2</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -7302,7 +7302,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType2</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -7359,7 +7359,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType2</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -7706,7 +7706,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType3</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -7763,7 +7763,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType3</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -7820,7 +7820,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType3</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -7877,7 +7877,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType3</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -8224,7 +8224,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType4</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -8281,7 +8281,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType4</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -8338,7 +8338,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType4</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -8395,7 +8395,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType4</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -8742,7 +8742,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType5</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -8799,7 +8799,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType5</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -8856,7 +8856,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType5</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -8913,7 +8913,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType5</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -9260,7 +9260,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType6</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -9317,7 +9317,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType6</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -9374,7 +9374,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType6</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -9431,7 +9431,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType6</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -9778,7 +9778,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType7</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -9835,7 +9835,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType7</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -9892,7 +9892,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType7</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -9949,7 +9949,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType7</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -10296,7 +10296,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType8</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -10353,7 +10353,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType8</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -10410,7 +10410,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType8</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -10467,7 +10467,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType8</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -11390,7 +11390,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType9</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -11447,7 +11447,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType9</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -11504,7 +11504,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType9</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -11561,7 +11561,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType9</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -11908,7 +11908,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType10</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -11965,7 +11965,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType10</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -12022,7 +12022,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType10</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -12079,7 +12079,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType10</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -12426,7 +12426,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType11</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -12483,7 +12483,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType11</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -12540,7 +12540,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType11</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -12597,7 +12597,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType11</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -12944,7 +12944,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType12</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -13001,7 +13001,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType12</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -13058,7 +13058,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType12</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -13115,7 +13115,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType12</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -13462,7 +13462,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType13</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -13519,7 +13519,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType13</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -13576,7 +13576,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType13</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -13633,7 +13633,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType13</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -13980,7 +13980,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType14</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -14037,7 +14037,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType14</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -14094,7 +14094,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType14</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -14151,7 +14151,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType14</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -14498,7 +14498,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType15</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -14555,7 +14555,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType15</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -14612,7 +14612,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType15</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -14669,7 +14669,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType15</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -15016,7 +15016,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType16</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -15073,7 +15073,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType16</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -15130,7 +15130,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType16</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>
@@ -15187,7 +15187,7 @@
                                                             <event name="OnMouseEvents"></event>
                                                             <event name="OnMouseWheel"></event>
                                                             <event name="OnPaint"></event>
-                                                            <event name="OnRadioButton"></event>
+                                                            <event name="OnRadioButton">onGC2PortType16</event>
                                                             <event name="OnRightDClick"></event>
                                                             <event name="OnRightDown"></event>
                                                             <event name="OnRightUp"></event>

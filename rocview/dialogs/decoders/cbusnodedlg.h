@@ -172,6 +172,22 @@ protected:
   void onGC1eGetAll( wxCommandEvent& event );
   void onGC1eSetAll( wxCommandEvent& event );
   void onGC1eIdleWatchDog( wxCommandEvent& event );
+  void onGC2PortType1( wxCommandEvent& event );
+  void onGC2PortType2( wxCommandEvent& event );
+  void onGC2PortType3( wxCommandEvent& event );
+  void onGC2PortType4( wxCommandEvent& event );
+  void onGC2PortType5( wxCommandEvent& event );
+  void onGC2PortType6( wxCommandEvent& event );
+  void onGC2PortType7( wxCommandEvent& event );
+  void onGC2PortType8( wxCommandEvent& event );
+  void onGC2PortType9( wxCommandEvent& event );
+  void onGC2PortType10( wxCommandEvent& event );
+  void onGC2PortType11( wxCommandEvent& event );
+  void onGC2PortType12( wxCommandEvent& event );
+  void onGC2PortType13( wxCommandEvent& event );
+  void onGC2PortType14( wxCommandEvent& event );
+  void onGC2PortType15( wxCommandEvent& event );
+  void onGC2PortType16( wxCommandEvent& event );
 
 
 public:

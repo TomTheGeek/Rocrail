@@ -1003,6 +1003,9 @@ void CBusNodeDlg::gc2SetPort(int port, int conf, int nn, int addr) {
       gc2Switch[port]->SetValue(true);
 
     gc2C2[port]->SetValue((conf & 0x04) ? true:false);
+    gc2NN[port]->Enable(!input);
+    if( input )
+      gc2NN[port]->SetValue(0);
   }
 
 }
@@ -1815,4 +1818,86 @@ void CBusNodeDlg::onGC1eSetAll( wxCommandEvent& event ) {
 void CBusNodeDlg::onGC1eIdleWatchDog( wxCommandEvent& event ) {
   m_GC1eIdleTime->Enable( m_GC1eIdleWD->IsChecked() );
   m_GC1ePowerOffAtIdle->Enable( m_GC1eIdleWD->IsChecked() );
+}
+
+
+void CBusNodeDlg::onGC2PortType1( wxCommandEvent& event ) {
+  m_GC2EvtNN1->Enable(m_GC2Switch1->GetValue() | m_GC2Pulse1->GetValue());
+  if( m_GC2Input1->GetValue() || m_GC2Block1->GetValue() )
+    m_GC2EvtNN1->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType2( wxCommandEvent& event ) {
+  m_GC2EvtNN2->Enable(m_GC2Switch2->GetValue() | m_GC2Pulse2->GetValue());
+  if( m_GC2Input2->GetValue() || m_GC2Block2->GetValue() )
+    m_GC2EvtNN2->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType3( wxCommandEvent& event ) {
+  m_GC2EvtNN3->Enable(m_GC2Switch3->GetValue() | m_GC2Pulse3->GetValue());
+  if( m_GC2Input3->GetValue() || m_GC2Block3->GetValue() )
+    m_GC2EvtNN3->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType4( wxCommandEvent& event ) {
+  m_GC2EvtNN4->Enable(m_GC2Switch4->GetValue() | m_GC2Pulse4->GetValue());
+  if( m_GC2Input4->GetValue() || m_GC2Block4->GetValue() )
+    m_GC2EvtNN4->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType5( wxCommandEvent& event ) {
+  m_GC2EvtNN5->Enable(m_GC2Switch5->GetValue() | m_GC2Pulse5->GetValue());
+  if( m_GC2Input5->GetValue() || m_GC2Block5->GetValue() )
+    m_GC2EvtNN5->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType6( wxCommandEvent& event ) {
+  m_GC2EvtNN6->Enable(m_GC2Switch6->GetValue() | m_GC2Pulse6->GetValue());
+  if( m_GC2Input6->GetValue() || m_GC2Block6->GetValue() )
+    m_GC2EvtNN6->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType7( wxCommandEvent& event ) {
+  m_GC2EvtNN7->Enable(m_GC2Switch7->GetValue() | m_GC2Pulse7->GetValue());
+  if( m_GC2Input7->GetValue() || m_GC2Block7->GetValue() )
+    m_GC2EvtNN7->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType8( wxCommandEvent& event ) {
+  m_GC2EvtNN8->Enable(m_GC2Switch8->GetValue() | m_GC2Pulse8->GetValue());
+  if( m_GC2Input8->GetValue() || m_GC2Block8->GetValue() )
+    m_GC2EvtNN8->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType9( wxCommandEvent& event ) {
+  m_GC2EvtNN9->Enable(m_GC2Switch9->GetValue() | m_GC2Pulse9->GetValue());
+  if( m_GC2Input9->GetValue() || m_GC2Block9->GetValue() )
+    m_GC2EvtNN9->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType10( wxCommandEvent& event ) {
+  m_GC2EvtNN10->Enable(m_GC2Switch10->GetValue() | m_GC2Pulse10->GetValue());
+  if( m_GC2Input10->GetValue() || m_GC2Block10->GetValue() )
+    m_GC2EvtNN10->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType11( wxCommandEvent& event ) {
+  m_GC2EvtNN11->Enable(m_GC2Switch11->GetValue() | m_GC2Pulse11->GetValue());
+  if( m_GC2Input11->GetValue() || m_GC2Block11->GetValue() )
+    m_GC2EvtNN11->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType12( wxCommandEvent& event ) {
+  m_GC2EvtNN12->Enable(m_GC2Switch12->GetValue() | m_GC2Pulse12->GetValue());
+  if( m_GC2Input12->GetValue() || m_GC2Block12->GetValue() )
+    m_GC2EvtNN12->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType13( wxCommandEvent& event ) {
+  m_GC2EvtNN13->Enable(m_GC2Switch13->GetValue() | m_GC2Pulse13->GetValue());
+  if( m_GC2Input13->GetValue() || m_GC2Block13->GetValue() )
+    m_GC2EvtNN13->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType14( wxCommandEvent& event ) {
+  m_GC2EvtNN14->Enable(m_GC2Switch14->GetValue() | m_GC2Pulse14->GetValue());
+  if( m_GC2Input14->GetValue() || m_GC2Block14->GetValue() )
+    m_GC2EvtNN14->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType15( wxCommandEvent& event ) {
+  m_GC2EvtNN15->Enable(m_GC2Switch15->GetValue() | m_GC2Pulse15->GetValue());
+  if( m_GC2Input15->GetValue() || m_GC2Block15->GetValue() )
+    m_GC2EvtNN15->SetValue(0);
+}
+void CBusNodeDlg::onGC2PortType16( wxCommandEvent& event ) {
+  m_GC2EvtNN16->Enable(m_GC2Switch16->GetValue() | m_GC2Pulse16->GetValue());
+  if( m_GC2Input16->GetValue() || m_GC2Block16->GetValue() )
+    m_GC2EvtNN16->SetValue(0);
 }
