@@ -431,6 +431,7 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
 
     if( StrOp.equals( wBlock.getid(m_Props), fromid) ) {
       TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D on same block: %s", fromid );
+      StrTokOp.base.del(tok); // Clean up.
       return false;
     }
   }
