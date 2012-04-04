@@ -128,7 +128,7 @@ static void __infoWriter( void* threadinst ) {
 
         TraceOp.trc( name, TRCLEVEL_XMLH, __LINE__, 9999, "%s", xmlhStr );
 
-        TraceOp.trc( name, TRCLEVEL_XMLH, __LINE__, 9999, "%180.180s...", info );
+        TraceOp.trc( name, TRCLEVEL_XMLH, __LINE__, 9999, "%.320s...", info );
 
         if( SocketOp.write( o->clntSocket, xmlhStr, xmlhLen ) )
           ok = SocketOp.write( o->clntSocket, info, infoLen );
