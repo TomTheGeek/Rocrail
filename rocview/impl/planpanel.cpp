@@ -1565,7 +1565,6 @@ void PlanPanel::addItems( iONode node ) {
     event.SetClientData( node );
     // send in a thread-safe way
     wxPostEvent( this, event );
-    ThreadOp.sleep( 10 );
   }
   else {
     if( StrOp.equals( NodeOp.getName( node ), wModelCmd.name() ) ) {
@@ -1582,7 +1581,6 @@ void PlanPanel::addItems( iONode node ) {
       event.SetClientData( child );
       // send in a thread-safe way
       wxPostEvent( this, event );
-      ThreadOp.sleep( 0 );
     }
   }
 }
@@ -1625,25 +1623,15 @@ static void initPlan( PlanPanel* o ) {
   }
 
   o->addItems( wPlan.gettklist( model ) );
-  ThreadOp.sleep(10);
   o->addItems( wPlan.getbklist( model ) );
-  ThreadOp.sleep(10);
   o->addItems( wPlan.getfblist( model ) );
-  ThreadOp.sleep(10);
   o->addItems( wPlan.getswlist( model ) );
-  ThreadOp.sleep(10);
   o->addItems( wPlan.getcolist( model ) );
-  ThreadOp.sleep(10);
   o->addItems( wPlan.getsglist( model ) );
-  ThreadOp.sleep(10);
   o->addItems( wPlan.getttlist( model ) );
-  ThreadOp.sleep(10);
   o->addItems( wPlan.getseltablist( model ) );
-  ThreadOp.sleep(10);
   o->addItems( wPlan.getstlist( model ) );
-  ThreadOp.sleep(10);
   o->addItems( wPlan.getsblist( model ) );
-  ThreadOp.sleep(10);
 
   iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
   wModelCmd.setcmd( cmd, wModelCmd.fstat );

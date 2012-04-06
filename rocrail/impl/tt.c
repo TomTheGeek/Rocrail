@@ -2266,7 +2266,7 @@ static void __initTTTrack(iOTT inst, iONode track) {
   char* routeId = StrOp.fmt( "autogen-[%s%s]-[%s%s]", wRoute.getbka(route), "+", wRoute.getbkb(route), "-" );
   wRoute.setid(route, routeId );
   StrOp.free(routeId);
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "TTTrack route added: %s", wRoute.getid(route) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TTTrack route added: %s", wRoute.getid(route) );
 
   ModelOp.addItem(model, route);
 }
@@ -2373,6 +2373,7 @@ static iONode __findFreeTrack(iIBlockBase inst, const char* locId) {
   iOTTData data = Data(inst);
   iOModel model = AppOp.getModel();
   iONode track = wTurntable.gettrack( data->props );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "find free Turntable %s block...", wTurntable.getid(data->props));
   while( track != NULL ) {
     const char* bkid = wTTTrack.getbkid( track );
     iIBlockBase block = ModelOp.getBlock(model, bkid );
@@ -2862,6 +2863,7 @@ static void _resetTrigs( iIBlockBase inst ) {
   if( wTurntable.ismanager(data->props) ) {
     /* dispatch to all track blocks */
     iONode pos = wTurntable.gettrack( data->props );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Reset Turntable %s blocks...", wTurntable.getid(data->props));
     while( pos != NULL ) {
       iIBlockBase block = ModelOp.getBlock( model, wTTTrack.getbkid(pos) );
       if( block != NULL ) {
@@ -2935,6 +2937,7 @@ static void _init( iIBlockBase inst ) {
 
   if( wTurntable.ismanager(data->props) ) {
     /* TODO: init all track blocks */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TODO: Turntable %s init blocks...", wTurntable.getid(data->props));
   }
 }
 

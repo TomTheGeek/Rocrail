@@ -116,6 +116,7 @@ TurntableDialog::TurntableDialog( wxWindow* parent, iONode p_Props )
   m_TracksGrid->SetColLabelValue(2, wxGetApp().getMsg("description") );
   m_TracksGrid->SetColLabelValue(3, wxGetApp().getMsg("decoder") + _T(" ") + wxGetApp().getMsg("track") );
   m_TracksGrid->SetColLabelValue(4, wxGetApp().getMsg("opposite") + _T(" ") + wxGetApp().getMsg("track") );
+  m_TracksGrid->SetColLabelValue(5, wxGetApp().getMsg("blockid") );
   m_TracksGrid->AutoSizeColumns();
   m_TracksGrid->AutoSizeRows();
 
@@ -231,7 +232,7 @@ void TurntableDialog::initLabels() {
   m_Manager->SetLabel( wxGetApp().getMsg( "managetrackblocks" ) );
   m_EmbeddedBlock->SetLabel( wxGetApp().getMsg( "embeddedblock" ) );
   m_Traverser->SetLabel( wxGetApp().getMsg( "traverser" ) );
-  m_Manager->Enable(false);
+  //m_Manager->Enable(false);
   m_Actions->SetLabel( wxGetApp().getMsg( "actions" )+_T("...") );
 
   // Location
@@ -491,11 +492,15 @@ void TurntableDialog::initValues() {
     nr = StrOp.fmt( "%d", wTTTrack.getoppositetrack( track ) );
     m_TracksGrid->SetCellValue(m_TracksGrid->GetNumberRows()-1, 4, wxString(nr,wxConvUTF8 ) );
     StrOp.free( nr );
+    if( wTTTrack.getbkid( track ) != NULL )
+      m_TracksGrid->SetCellValue(m_TracksGrid->GetNumberRows()-1, 5, wxString(wTTTrack.getbkid( track ),wxConvUTF8 ) );
+
     m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 0, true );
     m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 1, true );
     m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 2, true );
     m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 3, true );
     m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 4, true );
+    m_TracksGrid->SetReadOnly( m_TracksGrid->GetNumberRows()-1, 5, true );
 
     if( wTTTrack.isshow( track )) {
       m_TracksGrid->SetCellBackgroundColour( m_TracksGrid->GetNumberRows()-1, 0,
@@ -1156,7 +1161,7 @@ void TurntableDialog::CreateControls()
     m_TracksGrid->SetDefaultRowSize(20);
     m_TracksGrid->SetColLabelSize(20);
     m_TracksGrid->SetRowLabelSize(0);
-    m_TracksGrid->CreateGrid(1, 5, wxGrid::wxGridSelectRows);
+    m_TracksGrid->CreateGrid(1, 6, wxGrid::wxGridSelectRows);
     itemBoxSizer119->Add(m_TracksGrid, 2, wxGROW|wxALL, 2);
 
     wxBoxSizer* itemBoxSizer121 = new wxBoxSizer(wxHORIZONTAL);
