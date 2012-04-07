@@ -71,6 +71,8 @@ enum {
 BEGIN_EVENT_TABLE( TurntableDialog, wxDialog )
 
 ////@begin TurntableDialog event table entries
+    EVT_CHECKBOX( ID_TT_MANAGER, TurntableDialog::OnManagerClick )
+
     EVT_BUTTON( ID_TT_ACTIONS, TurntableDialog::OnTtActionsClick )
 
     EVT_COMBOBOX( ID_COMBOBOX_TT_TYPE, TurntableDialog::OnTypeSelected )
@@ -370,6 +372,9 @@ void TurntableDialog::initValues() {
   m_Manager->SetValue(wTurntable.ismanager( m_Props ));
   m_EmbeddedBlock->SetValue(wTurntable.isembeddedblock( m_Props ));
   m_Traverser->SetValue(wTurntable.istraverser( m_Props ));
+
+  wxCommandEvent dummyEvent(0, 0);
+  OnManagerClick(dummyEvent);
 
   // Location
   char* str = StrOp.fmt( "%d", wTurntable.getx( m_Props ) );
@@ -798,7 +803,7 @@ void TurntableDialog::CreateControls()
     wxStaticBox* itemStaticBoxSizer11Static = new wxStaticBox(m_GeneralPanel, wxID_ANY, _("Options"));
     m_OptionsBox = new wxStaticBoxSizer(itemStaticBoxSizer11Static, wxVERTICAL);
     itemBoxSizer5->Add(m_OptionsBox, 0, wxGROW|wxALL, 5);
-    m_Manager = new wxCheckBox( m_GeneralPanel, wxID_ANY, _("Manage Track Blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Manager = new wxCheckBox( m_GeneralPanel, ID_TT_MANAGER, _("Manage Track Blocks"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Manager->SetValue(false);
     m_OptionsBox->Add(m_Manager, 0, wxALIGN_LEFT|wxALL, 5);
 
@@ -1376,5 +1381,17 @@ void TurntableDialog::OnTtActionsClick( wxCommandEvent& event )
   }
 
   dlg->Destroy();
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_ANY
+ */
+
+void TurntableDialog::OnManagerClick( wxCommandEvent& event )
+{
+  if(m_Manager->IsChecked())
+    m_EmbeddedBlock->SetValue(true);
+  m_EmbeddedBlock->Enable(!m_Manager->IsChecked());
 }
 

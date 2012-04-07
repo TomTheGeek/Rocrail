@@ -59,6 +59,7 @@ class wxGrid;
 #define ID_TEXTCTRL_TT_ID 10002
 #define wxID_STATIC_TT_DESC 10133
 #define ID_TEXTCTRL_TT_DESC 10129
+#define ID_TT_MANAGER 10400
 #define ID_TT_ACTIONS 10144
 #define ID_PANEL_TT_LOCATION 10006
 #define wxID_STATIC_TT_X 10010
@@ -131,6 +132,9 @@ public:
     void CreateControls();
 
 ////@begin TurntableDialog event handler declarations
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_TT_MANAGER
+    void OnManagerClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_TT_ACTIONS
     void OnTtActionsClick( wxCommandEvent& event );

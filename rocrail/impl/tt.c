@@ -49,6 +49,7 @@
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Route.h"
+#include "rocrail/wrapper/public/SwitchCmd.h"
 #include "rocrail/wrapper/public/Item.h"
 
 static int instCnt = 0;
@@ -2256,6 +2257,8 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident
 static void __initTTTrack(iOTT inst, iONode track) {
   iOModel model = AppOp.getModel();
   iONode route = NodeOp.inst(wRoute.name(), NULL, ELEMENT_NODE);
+  iONode swcmd = NodeOp.inst(wSwitchCmd.name(), NULL, ELEMENT_NODE);
+
   wItem.setgenerated( route, True );
 
   wRoute.setbka( route, wTTTrack.getbkid(track) );
@@ -2263,12 +2266,19 @@ static void __initTTTrack(iOTT inst, iONode track) {
   wRoute.setspeed( route, wBlock.min );
   wRoute.setdesc( route, "TT Manager generated route.");
 
+  /* Add TT command */
+  wSwitchCmd.setid( swcmd, TTOp.base.id(inst) );
+  wSwitchCmd.setcmd( swcmd, wSwitchCmd.cmd_track );
+  wSwitchCmd.settrack( swcmd, wTTTrack.getnr(track) );
+  NodeOp.addChild( route, swcmd );
+
   char* routeId = StrOp.fmt( "autogen-[%s%s]-[%s%s]", wRoute.getbka(route), "+", wRoute.getbkb(route), "-" );
   wRoute.setid(route, routeId );
   StrOp.free(routeId);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TTTrack route added: %s", wRoute.getid(route) );
 
   ModelOp.addItem(model, route);
+  NodeOp.base.del(route);
 }
 
 
@@ -2582,6 +2592,11 @@ static iOTT _inst( iONode props ) {
 
   data->props = props;
   data->muxLock = MutexOp.inst( NULL, True );
+
+  if( wTurntable.ismanager(data->props) ) {
+    wTurntable.setembeddedblock(data->props, True);
+  }
+
   __initCallback( tt );
   data->tablepos = wTurntable.getbridgepos(data->props);
   data->gotopos = -1;
@@ -2593,6 +2608,9 @@ static iOTT _inst( iONode props ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "turntable [%s] initialized at position [%d]", tt->base.id(tt), data->tablepos );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "turntable [%s] manager=%s embeddedblock=%s", tt->base.id(tt),
+      wTurntable.ismanager(data->props)?"yes":"no", wTurntable.isembeddedblock(data->props)?"yes":"no" );
 
   instCnt++;
 

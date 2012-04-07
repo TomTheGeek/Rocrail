@@ -788,7 +788,7 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     iONode clone = (iONode)item->base.clone( item );
     iORoute st = RouteOp.inst( clone );
     __addItemInList( data, wRouteList.name(), clone );
-    MapOp.put( data->routeMap, wRoute.getid( item ), (obj)st );
+    MapOp.put( data->routeMap, wRoute.getid( clone ), (obj)st );
     ListOp.add( data->routeList, (obj)st);
     added = True;
   }
