@@ -380,6 +380,8 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
           iONode event = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
           wTurntable.setid( event, wTurntable.getid( data->props ) );
           wTurntable.setbridgepos( event, data->gotopos );
+          if( data->lockedId != NULL )
+            wTurntable.setlocid( event, data->lockedId );
           if( wTurntable.getiid( data->props ) != NULL )
             wTurntable.setiid( event, wTurntable.getiid( data->props ) );
           AppOp.broadcastEvent( event );
@@ -391,6 +393,8 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
           iONode event = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
           wTurntable.setid( event, wTurntable.getid( data->props ) );
           wTurntable.setbridgepos( event, -1 );
+          if( data->lockedId != NULL )
+            wTurntable.setlocid( event, data->lockedId );
           if( wTurntable.getiid( data->props ) != NULL )
             wTurntable.setiid( event, wTurntable.getiid( data->props ) );
           AppOp.broadcastEvent( event );
@@ -606,6 +610,8 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
           iONode event = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
           wTurntable.setid( event, wTurntable.getid( data->props ) );
           wTurntable.setbridgepos( event, data->gotopos );
+          if( data->lockedId != NULL )
+            wTurntable.setlocid( event, data->lockedId );
           if( wTurntable.getiid( data->props ) != NULL )
             wTurntable.setiid( event, wTurntable.getiid( data->props ) );
           AppOp.broadcastEvent( event );
@@ -617,6 +623,8 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
           iONode event = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
           wTurntable.setid( event, wTurntable.getid( data->props ) );
           wTurntable.setbridgepos( event, -1 );
+          if( data->lockedId != NULL )
+            wTurntable.setlocid( event, data->lockedId );
           if( wTurntable.getiid( data->props ) != NULL )
             wTurntable.setiid( event, wTurntable.getiid( data->props ) );
           AppOp.broadcastEvent( event );
@@ -983,6 +991,8 @@ static Boolean __cmd_f6915( iOTT inst, iONode nodeA ) {
       wTurntable.setbridgepos( event, rrtracknr );
       wTurntable.setstate1( event, wTurntable.isstate1(data->props) );
       wTurntable.setstate2( event, wTurntable.isstate2(data->props) );
+      if( data->lockedId != NULL )
+        wTurntable.setlocid( event, data->lockedId );
       if( wTurntable.getiid( data->props ) != NULL )
         wTurntable.setiid( event, wTurntable.getiid( data->props ) );
       AppOp.broadcastEvent( event );
@@ -1837,6 +1847,8 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, const cha
       wTurntable.setbridgepos( event, data->tablepos );
       wTurntable.setstate1( event, wTurntable.isstate1(data->props) );
       wTurntable.setstate2( event, wTurntable.isstate2(data->props) );
+      if( data->lockedId != NULL )
+        wTurntable.setlocid( event, data->lockedId );
       if( wTurntable.getiid( data->props ) != NULL )
         wTurntable.setiid( event, wTurntable.getiid( data->props ) );
       AppOp.broadcastEvent( event );
@@ -1916,15 +1928,6 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, const cha
         iOModel model = AppOp.getModel();
         iOLoc loc = ModelOp.getLoc( model, data->lockedId );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s in on the bridge of managed TT %s", data->lockedId, TTOp.base.id(inst) );
-        if( loc != NULL ) {
-          /* V_min: TODO: The block must inform the TT when the loco is IN. */
-          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-          wLoc.setV_hint( cmd, wBlock.min );
-          wLoc.setdir( cmd, LocOp.getDir( loc) );
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "run loco %s to block %s from managed TT %s",
-              data->lockedId, wTTTrack.getbkid(data->selectedTrack), TTOp.base.id(inst) );
-          LocOp.cmd( loc, cmd );
-        }
       }
     }
 
@@ -2010,48 +2013,7 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, const char*
       iOModel model = AppOp.getModel();
       iOLoc loc = ModelOp.getLoc( model, data->lockedId );
       if( loc != NULL ) {
-        /* check managed TT */
-        if( wTurntable.ismanager(data->props) ) {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "handle bridge event on managed TT %s", TTOp.base.id(inst) );
-
-          if( event == wFeedbackEvent.enter2in_event ) {
-            int timing = wLoc.getevttimer(LocOp.base.properties(loc));
-            LocOp.event( loc, inst, in_event, timing > 0 ? timing:1, False, NULL );
-          }
-
-          /* V_min for enter and V_0 for in */
-          if( event == wFeedbackEvent.enter_event || event == wFeedbackEvent.enter2in_event ) {
-            iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-            wLoc.setV_hint( cmd, wBlock.min );
-            wLoc.setdir( cmd, LocOp.getDir( loc) );
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "enter bridge event on managed TT %s", TTOp.base.id(inst) );
-            LocOp.cmd( loc, cmd );
-          }
-          else if( event == wFeedbackEvent.in_event ||
-              event == wFeedbackEvent.pre2in_event && wLoc.isinatpre2in(LocOp.base.properties(loc)))
-          {
-            iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-            wLoc.setV( cmd, 0 );
-            wLoc.setdir( cmd, LocOp.getDir( loc) );
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "in bridge event on managed TT %s", TTOp.base.id(inst) );
-            LocOp.cmd( loc, cmd );
-
-            data->locoOnBridge = True;
-
-            /* Bring the bridge into place for the selected track block. */
-            if( data->selectedTrack != NULL ) {
-              int pos = wTTTrack.getnr(data->selectedTrack);
-              iONode cmd = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "command the bridge to track %s %d", wTTTrack.getdesc(data->selectedTrack), pos );
-              wTurntable.setcmd( cmd, NodeOp.getStr(data->selectedTrack, "nr", "0"));
-              TTOp.cmd( (iIBlockBase)inst, cmd);
-            }
-          }
-
-        }
-        else {
-          LocOp.event( loc, inst, BlockOp.getEventCode(NULL, event), 0, False, NULL );
-        }
+        LocOp.event( loc, inst, BlockOp.getEventCode(NULL, event), 0, False, NULL );
       }
     }
   }
@@ -2073,6 +2035,8 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, const char*
     wTurntable.setstate2( node, state2 );
     wTurntable.setstateMid( node, stateMid1 | stateMid2 );
     wTurntable.setbridgepos( node, wTurntable.getbridgepos( data->props) );
+    if( data->lockedId != NULL )
+      wTurntable.setlocid( node, data->lockedId );
     if( wTurntable.getiid( data->props ) != NULL )
       wTurntable.setiid( node, wTurntable.getiid( data->props ) );
     AppOp.broadcastEvent( node );
@@ -2161,6 +2125,8 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident
     wTurntable.setbridgepos( event, pos );
     wTurntable.setstate1( event, wTurntable.isstate1(data->props) );
     wTurntable.setstate2( event, wTurntable.isstate2(data->props) );
+    if( data->lockedId != NULL )
+      wTurntable.setlocid( event, data->lockedId );
     if( wTurntable.getiid( data->props ) != NULL )
       wTurntable.setiid( event, wTurntable.getiid( data->props ) );
     AppOp.broadcastEvent( event );
@@ -2262,7 +2228,9 @@ static void __initTTTrack(iOTT inst, iONode track) {
   wItem.setgenerated( route, True );
 
   wRoute.setbka( route, wTTTrack.getbkid(track) );
+  wRoute.setbkaside( route, False );
   wRoute.setbkb( route, TTOp.base.id(inst) );
+  wRoute.setbkbside( route, True );
   wRoute.setspeed( route, wBlock.min );
   wRoute.setdesc( route, "TT Manager generated route.");
 
@@ -2272,13 +2240,42 @@ static void __initTTTrack(iOTT inst, iONode track) {
   wSwitchCmd.settrack( swcmd, wTTTrack.getnr(track) );
   NodeOp.addChild( route, swcmd );
 
-  char* routeId = StrOp.fmt( "autogen-[%s%s]-[%s%s]", wRoute.getbka(route), "+", wRoute.getbkb(route), "-" );
+  char* routeId = StrOp.fmt( "autogen-[%s%s]-[%s%s]",
+      wRoute.getbka(route), wRoute.isbkaside(route)?"+":"-", wRoute.getbkb(route), wRoute.isbkbside(route)?"+":"-" );
   wRoute.setid(route, routeId );
   StrOp.free(routeId);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TTTrack route added: %s", wRoute.getid(route) );
 
   ModelOp.addItem(model, route);
   NodeOp.base.del(route);
+
+  route = NodeOp.inst(wRoute.name(), NULL, ELEMENT_NODE);
+  swcmd = NodeOp.inst(wSwitchCmd.name(), NULL, ELEMENT_NODE);
+
+  wItem.setgenerated( route, True );
+
+  wRoute.setbka( route, TTOp.base.id(inst) );
+  wRoute.setbkaside( route, True );
+  wRoute.setbkb( route, wTTTrack.getbkid(track) );
+  wRoute.setbkbside( route, False );
+  wRoute.setspeed( route, wBlock.min );
+  wRoute.setdesc( route, "TT Manager generated route.");
+
+  /* Add TT command */
+  wSwitchCmd.setid( swcmd, TTOp.base.id(inst) );
+  wSwitchCmd.setcmd( swcmd, wSwitchCmd.cmd_track );
+  wSwitchCmd.settrack( swcmd, wTTTrack.getnr(track) );
+  NodeOp.addChild( route, swcmd );
+
+  routeId = StrOp.fmt( "autogen-[%s%s]-[%s%s]",
+      wRoute.getbka(route), wRoute.isbkaside(route)?"+":"-", wRoute.getbkb(route), wRoute.isbkbside(route)?"+":"-" );
+  wRoute.setid(route, routeId );
+  StrOp.free(routeId);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TTTrack route added: %s", wRoute.getid(route) );
+
+  ModelOp.addItem(model, route);
+  NodeOp.base.del(route);
+
 }
 
 
@@ -2415,24 +2412,6 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
 
     data->selectedTrack = NULL;
 
-    if( wTurntable.ismanager( data->props ) ) {
-      /* find a free track block */
-      iOModel model = AppOp.getModel();
-      iONode track = __findFreeTrack(inst, id);
-      if( track != NULL ) {
-        iIBlockBase block = ModelOp.getBlock(model, wTTTrack.getbkid(track));
-        if( block != NULL ) {
-          ok = block->lock( block, id, blockid, routeid, crossing, reset, reverse, indelay);
-          if( ok ) {
-            data->selectedTrack = track;
-          }
-        }
-      }
-      else {
-        ok = False;
-      }
-    }
-
     /* Broadcast to clients. Node6 */
     if( ok ) {
       iONode nodeF = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
@@ -2487,6 +2466,8 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
       wTurntable.setlocid( nodeF, NULL );
       wTurntable.setstate1( nodeF, wTurntable.isstate1(data->props) );
       wTurntable.setstate2( nodeF, wTurntable.isstate2(data->props) );
+      if( data->lockedId != NULL )
+        wTurntable.setlocid( nodeF, data->lockedId );
       if( wTurntable.getiid( data->props ) != NULL )
         wTurntable.setiid( nodeF, wTurntable.getiid( data->props ) );
       AppOp.broadcastEvent( nodeF );
@@ -2692,7 +2673,10 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
       iONode nodeD = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
       wTurntable.setid( nodeD, wTurntable.getid(data->props) );
       wTurntable.setentering( nodeD, True );
-      wTurntable.setlocid( nodeD, id );
+      if( data->lockedId != NULL )
+        wTurntable.setlocid( nodeD, data->lockedId );
+      if( wTurntable.getiid( data->props ) != NULL )
+        wTurntable.setiid( nodeD, wTurntable.getiid( data->props ) );
       AppOp.broadcastEvent( nodeD );
     }
   }
@@ -2774,7 +2758,10 @@ static void _inBlock( iIBlockBase inst, const char* id ) {
       iONode nodeD = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
       wTurntable.setid( nodeD, wTurntable.getid(data->props) );
       wTurntable.setentering( nodeD, False );
-      wTurntable.setlocid( nodeD, id );
+      if( data->lockedId != NULL )
+        wTurntable.setlocid( nodeD, data->lockedId );
+      if( wTurntable.getiid( data->props ) != NULL )
+        wTurntable.setiid( nodeD, wTurntable.getiid( data->props ) );
       AppOp.broadcastEvent( nodeD );
     }
   }
@@ -2954,8 +2941,7 @@ static void _init( iIBlockBase inst ) {
   }
 
   if( wTurntable.ismanager(data->props) ) {
-    /* TODO: init all track blocks */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TODO: Turntable %s init blocks...", wTurntable.getid(data->props));
+    /* All blocks are initialized by the Model. */
   }
 }
 

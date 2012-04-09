@@ -2929,6 +2929,7 @@ static void _init( iOModel inst ) {
     while( block != NULL ) {
       block->init( block );
       if( wTurntable.isembeddedblock(block->base.properties(block) ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "adding TT %s as block",  block->base.id(block));
         MapOp.put( o->blockMap, block->base.id(block), (obj)block );
       }
       block = (iIBlockBase)MapOp.next( o->ttMap );
@@ -3921,6 +3922,9 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
 
     for( i = 0; i < size; i++ ) {
       iORoute route = (iORoute)ListOp.get( o->routeList, i );
+
+      if( route != NULL )
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Evaluating route [%s].", RouteOp.getId(route));
 
       if( route != NULL ) {
         Boolean fromTo = True;
