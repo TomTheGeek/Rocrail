@@ -1312,7 +1312,7 @@ void RocrailIniDialog::CreateControls()
     m_labSemaphoreWait = new wxStaticText( m_AtomatPanel, wxID_ANY, _("Semaphore wait"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer103->Add(m_labSemaphoreWait, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_SemaphoreWait = new wxSpinCtrl( m_AtomatPanel, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 10, 1 );
+    m_SemaphoreWait = new wxSpinCtrl( m_AtomatPanel, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 30, 1 );
     itemFlexGridSizer103->Add(m_SemaphoreWait, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labSignalWait = new wxStaticText( m_AtomatPanel, wxID_ANY, _("Signal wait"), wxDefaultPosition, wxDefaultSize, 0 );
