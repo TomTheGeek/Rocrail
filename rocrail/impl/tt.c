@@ -2692,6 +2692,10 @@ static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit,
 }
 
 
+static int _getDepartDelay( iIBlockBase inst ) {
+  return 0;
+}
+
 static int _getMaxKmh( iIBlockBase inst ) {
   return 0;
 }

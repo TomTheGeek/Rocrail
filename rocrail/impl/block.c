@@ -938,6 +938,11 @@ static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit,
 }
 
 
+static int _getDepartDelay( iIBlockBase inst ) {
+  iOBlockData data = Data(inst);
+  return wBlock.getdepartdelay(data->props) ;
+}
+
 static int _getMaxKmh( iIBlockBase inst ) {
   iOBlockData data = Data(inst);
   return wBlock.getmaxkmh(data->props);

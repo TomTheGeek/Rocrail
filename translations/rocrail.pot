@@ -5675,3 +5675,9 @@ msgstr ""
 msgid "Twoway"
 msgstr ""
 
+#. 
+# id="departdelay"
+#, c-format
+msgid "Depart delay"
+msgstr ""
+

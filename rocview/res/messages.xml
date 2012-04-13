@@ -17758,4 +17758,7 @@
   <Msg id="twoway">
     <en txt="Twoway"/>
   </Msg>
+  <Msg id="departdelay">
+    <en txt="Depart delay"/>
+  </Msg>
 </Messages>

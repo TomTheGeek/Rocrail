@@ -283,6 +283,9 @@
     <fun name="getMaxKmh" vt="int">
       <param name="inst" vt="this" remark="Block instance"/>
     </fun>
+    <fun name="getDepartDelay" vt="int">
+      <param name="inst" vt="this" remark="Block departure delay"/>
+    </fun>
     <fun name="getVelocity" vt="const char*">
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="percent" vt="int*" remark="Speed percent"/>

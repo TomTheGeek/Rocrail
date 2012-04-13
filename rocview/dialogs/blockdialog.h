@@ -30,8 +30,8 @@
 
 ////@begin includes
 #include "wx/notebook.h"
-#include "wx/statline.h"
 #include "wx/spinctrl.h"
+#include "wx/statline.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -292,6 +292,8 @@ public:
     wxTextCtrl* m_Description;
     wxStaticText* m_Label_Length;
     wxTextCtrl* m_Length;
+    wxStaticText* m_labDepartDelay;
+    wxSpinCtrl* m_DepartDelay;
     wxStaticText* m_LabelLocID;
     wxTextCtrl* m_LocID;
     wxButton* m_LocProps;
