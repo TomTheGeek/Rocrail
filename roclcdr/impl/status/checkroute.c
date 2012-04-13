@@ -89,12 +89,12 @@ void statusCheckRoute( iILcDriverInt inst ) {
       }
 
       /* wait for departdelay if set for the current block*/
-      /* Not sure if data->curBlock is set always correctly. Otherwise the next line will be needed ... 
-      data->curBlock = data->model->getBlock( data->model, data->loc->getCurBlock( data->loc) );*/
       departdelay = data->curBlock->getDepartDelay( data->curBlock ) ; 
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "delay departure for departdelay [%d] sec of block [%s].",
-                     departdelay, data->loc->getCurBlock( data->loc) );
-      ThreadOp.sleep(departdelay * 1000);
+      if( departdelay > 0 ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "delay departure for departdelay [%d] sec of block [%s].",
+                       departdelay, data->loc->getCurBlock( data->loc) );
+        ThreadOp.sleep(departdelay * 1000);
+      }
 
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Setting direction for [%s] to [%s] at velocity [%s].",
