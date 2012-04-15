@@ -82,6 +82,8 @@ BEGIN_EVENT_TABLE( ScheduleDialog, wxDialog )
 
     EVT_BUTTON( ID_BUTTON_SC_DOC, ScheduleDialog::OnButtonScDocClick )
 
+    EVT_BUTTON( ID_BUTTON_SCHEDULE_COPY, ScheduleDialog::OnButtonScheduleCopyClick )
+
     EVT_TEXT( ID_TEXTCTRL_SCHEDULE_ID, ScheduleDialog::OnTextctrlScheduleIdUpdated )
 
     EVT_SPINCTRL( ID_SCHEDULE_FROMHOUR, ScheduleDialog::OnScheduleFromhourUpdated )
@@ -274,6 +276,7 @@ void ScheduleDialog::initLabels() {
   m_ShowAll->SetLabel( wxGetApp().getMsg( "showall" ) );
   m_labStartBlock->SetLabel( wxGetApp().getMsg( "startblock" ) );
   m_Doc->SetLabel( wxGetApp().getMsg( "doc_report" ) );
+  m_CopySchedule->SetLabel( wxGetApp().getMsg( "copy" ) );
 
   // Detail
   m_LabelID->SetLabel( wxGetApp().getMsg( "id" ) );
@@ -466,7 +469,8 @@ void ScheduleDialog::initSchedule() {
   m_ToHour->Enable(m_TimeProcessing->GetSelection() == wSchedule.time_hourly);
 
   // Entries
-  m_Entries->DeleteRows(0,m_Entries->GetNumberRows());
+  if( m_Entries->GetNumberRows() > 0 )
+    m_Entries->DeleteRows(0,m_Entries->GetNumberRows());
   ListOp.clear( m_EntryPropsList );
 
 
@@ -600,6 +604,7 @@ bool ScheduleDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_New = NULL;
     m_Delete = NULL;
     m_Doc = NULL;
+    m_CopySchedule = NULL;
     m_Destinations = NULL;
     m_LabelID = NULL;
     m_ID = NULL;
@@ -693,7 +698,7 @@ void ScheduleDialog::CreateControls()
     m_StartBlockID->Enable(false);
     itemFlexGridSizer7->Add(m_StartBlockID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer11 = new wxFlexGridSizer(0, 3, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer11 = new wxFlexGridSizer(0, 4, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer11, 0, wxGROW|wxALL, 5);
     m_New = new wxButton( m_Index, ID_BUTTON_SCHEDULE_NEW, _("New"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer11->Add(m_New, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -704,47 +709,50 @@ void ScheduleDialog::CreateControls()
     m_Doc = new wxButton( m_Index, ID_BUTTON_SC_DOC, _("Doc"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer11->Add(m_Doc, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    m_CopySchedule = new wxButton( m_Index, ID_BUTTON_SCHEDULE_COPY, _("Copy"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer11->Add(m_CopySchedule, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
     m_NoteBook->AddPage(m_Index, _("Index"));
 
     m_Destinations = new wxPanel( m_NoteBook, ID_PANEL_SCHEDULE_DESTINATIONS, wxDefaultPosition, wxDefaultSize, wxSIMPLE_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
-    m_Destinations->SetSizer(itemBoxSizer16);
+    wxBoxSizer* itemBoxSizer17 = new wxBoxSizer(wxHORIZONTAL);
+    m_Destinations->SetSizer(itemBoxSizer17);
 
-    wxBoxSizer* itemBoxSizer17 = new wxBoxSizer(wxVERTICAL);
-    itemBoxSizer16->Add(itemBoxSizer17, 1, wxALIGN_TOP|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer18 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer18->AddGrowableRow(1);
-    itemFlexGridSizer18->AddGrowableCol(1);
-    itemBoxSizer17->Add(itemFlexGridSizer18, 0, wxGROW|wxALL, 5);
+    wxBoxSizer* itemBoxSizer18 = new wxBoxSizer(wxVERTICAL);
+    itemBoxSizer17->Add(itemBoxSizer18, 1, wxALIGN_TOP|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer19 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer19->AddGrowableRow(1);
+    itemFlexGridSizer19->AddGrowableCol(1);
+    itemBoxSizer18->Add(itemFlexGridSizer19, 0, wxGROW|wxALL, 5);
     m_LabelID = new wxStaticText( m_Destinations, wxID_STATIC_SCHEDULE_ID, _("ID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer19->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_ID = new wxTextCtrl( m_Destinations, ID_TEXTCTRL_SCHEDULE_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_ID, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer19->Add(m_ID, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labTimeFrame = new wxStaticText( m_Destinations, wxID_ANY, _("Delay time frame"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labTimeFrame, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer19->Add(m_labTimeFrame, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_TimeFrame = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 30, 0 );
-    itemFlexGridSizer18->Add(m_TimeFrame, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer19->Add(m_TimeFrame, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labFromHour = new wxStaticText( m_Destinations, wxID_ANY, _("From hour"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labFromHour, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_labFromHour, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_FromHour = new wxSpinCtrl( m_Destinations, ID_SCHEDULE_FROMHOUR, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
-    itemFlexGridSizer18->Add(m_FromHour, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer19->Add(m_FromHour, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labToHour = new wxStaticText( m_Destinations, wxID_ANY, _("To hour"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labToHour, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer19->Add(m_labToHour, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_ToHour = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
-    itemFlexGridSizer18->Add(m_ToHour, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer19->Add(m_ToHour, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labCycle = new wxStaticText( m_Destinations, wxID_ANY, _("Recycle"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer18->Add(m_labCycle, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer19->Add(m_labCycle, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_Cycle = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
-    itemFlexGridSizer18->Add(m_Cycle, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer19->Add(m_Cycle, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxArrayString m_TimeProcessingStrings;
     m_TimeProcessingStrings.Add(_("&Real"));
@@ -752,136 +760,136 @@ void ScheduleDialog::CreateControls()
     m_TimeProcessingStrings.Add(_("&Hourly"));
     m_TimeProcessing = new wxRadioBox( m_Destinations, ID_SC_TIMEPROCESSING, _("Time processing"), wxDefaultPosition, wxDefaultSize, m_TimeProcessingStrings, 1, wxRA_SPECIFY_ROWS );
     m_TimeProcessing->SetSelection(0);
-    itemBoxSizer17->Add(m_TimeProcessing, 0, wxALIGN_LEFT|wxALL, 5);
+    itemBoxSizer18->Add(m_TimeProcessing, 0, wxALIGN_LEFT|wxALL, 5);
 
-    wxStaticLine* itemStaticLine30 = new wxStaticLine( m_Destinations, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
-    itemBoxSizer16->Add(itemStaticLine30, 0, wxGROW|wxALL, 5);
+    wxStaticLine* itemStaticLine31 = new wxStaticLine( m_Destinations, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+    itemBoxSizer17->Add(itemStaticLine31, 0, wxGROW|wxALL, 5);
 
-    wxBoxSizer* itemBoxSizer31 = new wxBoxSizer(wxVERTICAL);
-    itemBoxSizer16->Add(itemBoxSizer31, 0, wxGROW|wxLEFT|wxRIGHT, 5);
+    wxBoxSizer* itemBoxSizer32 = new wxBoxSizer(wxVERTICAL);
+    itemBoxSizer17->Add(itemBoxSizer32, 0, wxGROW|wxLEFT|wxRIGHT, 5);
     m_Entries = new wxGrid( m_Destinations, ID_GRID_SCHEDULE, wxDefaultPosition, wxSize(-1, 200), wxSUNKEN_BORDER|wxVSCROLL );
     m_Entries->SetDefaultColSize(50);
     m_Entries->SetDefaultRowSize(25);
     m_Entries->SetColLabelSize(25);
     m_Entries->SetRowLabelSize(50);
     m_Entries->CreateGrid(1, 5, wxGrid::wxGridSelectRows);
-    itemBoxSizer31->Add(m_Entries, 2, wxGROW|wxALL, 5);
+    itemBoxSizer32->Add(m_Entries, 2, wxGROW|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer33 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer33->AddGrowableCol(0);
-    itemFlexGridSizer33->AddGrowableCol(1);
-    itemBoxSizer31->Add(itemFlexGridSizer33, 0, wxGROW|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer34 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer34->AddGrowableCol(0);
+    itemFlexGridSizer34->AddGrowableCol(1);
+    itemBoxSizer32->Add(itemFlexGridSizer34, 0, wxGROW|wxALL, 5);
     m_LabelLocation = new wxStaticText( m_Destinations, ID_STATICTEXT_SCHEDULE_FROM, _("Location"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer33->Add(m_LabelLocation, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer34->Add(m_LabelLocation, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_LabelBlock = new wxStaticText( m_Destinations, ID_STATICTEXT_SCHEDULE_TO, _("Block"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer33->Add(m_LabelBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer34->Add(m_LabelBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxArrayString m_LocationStrings;
     m_Location = new wxComboBox( m_Destinations, ID_COMBOBOX_SCHEDULE_FROM_LOCATION, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LocationStrings, wxCB_READONLY );
-    itemFlexGridSizer33->Add(m_Location, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer34->Add(m_Location, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxArrayString m_BlockStrings;
     m_Block = new wxComboBox( m_Destinations, ID_COMBOBOX_SCHEDULE_TO_LOCATION, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BlockStrings, wxCB_READONLY );
-    itemFlexGridSizer33->Add(m_Block, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer34->Add(m_Block, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_AddLocation = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_ADD_LOCATION, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer33->Add(m_AddLocation, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer34->Add(m_AddLocation, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_AddBlock = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_ADD_BLOCK, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer33->Add(m_AddBlock, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer34->Add(m_AddBlock, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxBoxSizer* itemBoxSizer40 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer31->Add(itemBoxSizer40, 0, wxGROW, 5);
-    wxFlexGridSizer* itemFlexGridSizer41 = new wxFlexGridSizer(0, 1, 0, 0);
-    itemBoxSizer40->Add(itemFlexGridSizer41, 0, wxALIGN_TOP|wxLEFT|wxRIGHT, 5);
+    wxBoxSizer* itemBoxSizer41 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer32->Add(itemBoxSizer41, 0, wxGROW, 5);
+    wxFlexGridSizer* itemFlexGridSizer42 = new wxFlexGridSizer(0, 1, 0, 0);
+    itemBoxSizer41->Add(itemFlexGridSizer42, 0, wxALIGN_TOP|wxLEFT|wxRIGHT, 5);
     m_labDeparture = new wxStaticBox(m_Destinations, wxID_ANY, _("Departure"));
-    wxStaticBoxSizer* itemStaticBoxSizer42 = new wxStaticBoxSizer(m_labDeparture, wxVERTICAL);
-    itemFlexGridSizer41->Add(itemStaticBoxSizer42, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
-    wxFlexGridSizer* itemFlexGridSizer43 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemStaticBoxSizer42->Add(itemFlexGridSizer43, 0, wxGROW, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer43 = new wxStaticBoxSizer(m_labDeparture, wxVERTICAL);
+    itemFlexGridSizer42->Add(itemStaticBoxSizer43, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    wxFlexGridSizer* itemFlexGridSizer44 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemStaticBoxSizer43->Add(itemFlexGridSizer44, 0, wxGROW, 5);
     m_labHour = new wxStaticText( m_Destinations, wxID_ANY, _("hour"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer43->Add(m_labHour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer44->Add(m_labHour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labMinute = new wxStaticText( m_Destinations, wxID_ANY, _("minute"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer43->Add(m_labMinute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer44->Add(m_labMinute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_Hour = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
-    itemFlexGridSizer43->Add(m_Hour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer44->Add(m_Hour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_Minute = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 59, 0 );
-    itemFlexGridSizer43->Add(m_Minute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer44->Add(m_Minute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_EntryDetails = new wxStaticBox(m_Destinations, wxID_ANY, _("Details"));
-    wxStaticBoxSizer* itemStaticBoxSizer48 = new wxStaticBoxSizer(m_EntryDetails, wxVERTICAL);
-    itemBoxSizer40->Add(itemStaticBoxSizer48, 0, wxALIGN_TOP|wxLEFT|wxRIGHT, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer49 = new wxStaticBoxSizer(m_EntryDetails, wxVERTICAL);
+    itemBoxSizer41->Add(itemStaticBoxSizer49, 0, wxALIGN_TOP|wxLEFT|wxRIGHT, 5);
     m_EntrySwap = new wxCheckBox( m_Destinations, wxID_ANY, _("Swap placing"), wxDefaultPosition, wxDefaultSize, 0 );
     m_EntrySwap->SetValue(false);
-    itemStaticBoxSizer48->Add(m_EntrySwap, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemStaticBoxSizer49->Add(m_EntrySwap, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_Free2Go = new wxCheckBox( m_Destinations, wxID_ANY, _("Free before start"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Free2Go->SetValue(false);
-    itemStaticBoxSizer48->Add(m_Free2Go, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemStaticBoxSizer49->Add(m_Free2Go, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer51 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemStaticBoxSizer48->Add(itemFlexGridSizer51, 0, wxGROW, 5);
+    wxFlexGridSizer* itemFlexGridSizer52 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemStaticBoxSizer49->Add(itemFlexGridSizer52, 0, wxGROW, 5);
     m_labInDelay = new wxStaticText( m_Destinations, wxID_ANY, _("IN delay"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer51->Add(m_labInDelay, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer52->Add(m_labInDelay, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_InDelay = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 10000, 0 );
-    itemFlexGridSizer51->Add(m_InDelay, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer52->Add(m_InDelay, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxBoxSizer* itemBoxSizer54 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer31->Add(itemBoxSizer54, 0, wxALIGN_LEFT, 5);
+    wxBoxSizer* itemBoxSizer55 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer32->Add(itemBoxSizer55, 0, wxALIGN_LEFT, 5);
     m_RemoveDestination = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_REMOVE_DESTINATION, _("Remove"), wxDefaultPosition, wxDefaultSize, 0 );
     m_RemoveDestination->SetDefault();
-    itemBoxSizer54->Add(m_RemoveDestination, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer55->Add(m_RemoveDestination, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_ModifyDestination = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_MODIFY_DESTINATION, _("Modify"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer54->Add(m_ModifyDestination, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer55->Add(m_ModifyDestination, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_DestUp = new wxButton( m_Destinations, ID_DESTUP, _("Up"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer54->Add(m_DestUp, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer55->Add(m_DestUp, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_DestDown = new wxButton( m_Destinations, ID_DESTDOWN, _("Down"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer54->Add(m_DestDown, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer55->Add(m_DestDown, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_EntryActions = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS, _("Actions..."), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer54->Add(m_EntryActions, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer55->Add(m_EntryActions, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_NoteBook->AddPage(m_Destinations, _("Destinations"));
 
     m_ScheduleActions = new wxPanel( m_NoteBook, ID_PANEL_SCHEDULES_ACTIONS, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer61 = new wxBoxSizer(wxVERTICAL);
-    m_ScheduleActions->SetSizer(itemBoxSizer61);
+    wxBoxSizer* itemBoxSizer62 = new wxBoxSizer(wxVERTICAL);
+    m_ScheduleActions->SetSizer(itemBoxSizer62);
 
     m_ScheduleBox = new wxStaticBox(m_ScheduleActions, wxID_ANY, _("Schedule"));
-    wxStaticBoxSizer* itemStaticBoxSizer62 = new wxStaticBoxSizer(m_ScheduleBox, wxHORIZONTAL);
-    itemBoxSizer61->Add(itemStaticBoxSizer62, 0, wxGROW|wxALL, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer63 = new wxStaticBoxSizer(m_ScheduleBox, wxHORIZONTAL);
+    itemBoxSizer62->Add(itemStaticBoxSizer63, 0, wxGROW|wxALL, 5);
     wxArrayString m_ScheduleActionStrings;
     m_ScheduleAction = new wxComboBox( m_ScheduleActions, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_ScheduleActionStrings, wxCB_DROPDOWN );
-    itemStaticBoxSizer62->Add(m_ScheduleAction, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemStaticBoxSizer63->Add(m_ScheduleAction, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Actions = new wxButton( m_ScheduleActions, ID_SCHEDULE_ACTIONS, _("Actions..."), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer61->Add(m_Actions, 0, wxALIGN_LEFT|wxALL, 5);
+    itemBoxSizer62->Add(m_Actions, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_NoteBook->AddPage(m_ScheduleActions, _("Actions"));
 
     itemBoxSizer2->Add(m_NoteBook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer65 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer66 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer65, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer66, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer65->AddButton(m_OK);
+    itemStdDialogButtonSizer66->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer65->AddButton(m_Cancel);
+    itemStdDialogButtonSizer66->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer65->AddButton(m_Apply);
+    itemStdDialogButtonSizer66->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer65->Realize();
+    itemStdDialogButtonSizer66->Realize();
 
 ////@end ScheduleDialog content construction
 }
@@ -1355,5 +1363,34 @@ void ScheduleDialog::OnDestdownClick( wxCommandEvent& event ) {
   }
 
   initSchedule();
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SCHEDULE_COPY
+ */
+
+void ScheduleDialog::OnButtonScheduleCopyClick( wxCommandEvent& event )
+{
+  if( m_Props != NULL ) {
+    iONode model = wxGetApp().getModel();
+    if( model != NULL ) {
+      iONode sclist = wPlan.getsclist( model );
+      if( sclist == NULL ) {
+        sclist = NodeOp.inst( wScheduleList.name(), model, ELEMENT_NODE );
+        NodeOp.addChild( model, sclist );
+      }
+
+      if( sclist != NULL ) {
+        iONode sccopy = (iONode)NodeOp.base.clone( m_Props );
+        char* id = StrOp.fmt( "%s (copy)", wSchedule.getid(sccopy));
+        wSchedule.setid(sccopy, id);
+        StrOp.free(id);
+        NodeOp.addChild( sclist, sccopy );
+        initIndex();
+      }
+
+    }
+  }
 }
 

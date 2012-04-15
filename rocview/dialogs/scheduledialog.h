@@ -63,6 +63,7 @@ class wxGrid;
 #define ID_BUTTON_SCHEDULE_NEW 10295
 #define ID_BUTTON_SCHEDULE_DELETE 10296
 #define ID_BUTTON_SC_DOC 10353
+#define ID_BUTTON_SCHEDULE_COPY 10402
 #define ID_PANEL_SCHEDULE_DESTINATIONS 10293
 #define wxID_STATIC_SCHEDULE_ID 10308
 #define ID_TEXTCTRL_SCHEDULE_ID 10307
@@ -151,6 +152,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SC_DOC
     void OnButtonScDocClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SCHEDULE_COPY
+    void OnButtonScheduleCopyClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_TEXTCTRL_SCHEDULE_ID
     void OnTextctrlScheduleIdUpdated( wxCommandEvent& event );
 
@@ -232,6 +236,7 @@ public:
     wxButton* m_New;
     wxButton* m_Delete;
     wxButton* m_Doc;
+    wxButton* m_CopySchedule;
     wxPanel* m_Destinations;
     wxStaticText* m_LabelID;
     wxTextCtrl* m_ID;
