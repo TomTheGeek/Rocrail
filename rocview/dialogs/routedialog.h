@@ -61,6 +61,7 @@ class wxGrid;
 #define ID_BUTTON_ST_DELETE_ROUTE 10017
 #define ID_BUTTON_ST_TEST 10312
 #define ID_BUTTON_ST_DOC 10353
+#define ID_BUTTON_ST_COPY 10401
 #define ID_PANEL_ST_GENERAL 10005
 #define wxID_STATIC_ST_ID 10006
 #define ID_TEXTCTRL_ST_ID 10007
@@ -157,6 +158,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_ST_DOC
     void OnButtonStDocClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_ST_COPY
+    void OnButtonStCopyClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_ROUTE_VELOCITY
     void OnRouteVelocitySelected( wxCommandEvent& event );
 
@@ -233,6 +237,7 @@ public:
     wxButton* m_DeleteRoute;
     wxButton* m_Test;
     wxButton* m_Doc;
+    wxButton* m_CopyRoute;
     wxPanel* m_GeneralPanel;
     wxStaticText* m_LabelId;
     wxTextCtrl* m_Id;
