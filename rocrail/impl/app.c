@@ -304,6 +304,7 @@ static iOSrcpCon _getSrcpCon( void ) {
 
 static int __logo( void ) {
   int svn = 0;
+  int expdays = 0;
   /* Logo. */
   TraceOp.println( "--------------------------------------------------" );
   TraceOp.println( "                                            lll   " );
@@ -355,7 +356,7 @@ static int __logo( void ) {
   /*TraceOp.printHeader();*/
 
   if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wRocRail.getdonkey(AppOp.getIni())),
-      StrOp.len(wRocRail.getdonkey(AppOp.getIni()))/2, wRocRail.getdoneml(AppOp.getIni())), NULL) ) {
+      StrOp.len(wRocRail.getdonkey(AppOp.getIni()))/2, wRocRail.getdoneml(AppOp.getIni())), NULL, &expdays) ) {
     TraceOp.println( "*******************************************************************" );
     TraceOp.println( "* Rocrail runs entirely on volunteer labor.                       *");
     TraceOp.println( "* However, Rocrail also needs contributions of money.             *");

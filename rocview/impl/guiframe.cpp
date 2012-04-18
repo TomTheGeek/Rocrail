@@ -3112,10 +3112,17 @@ void RocGuiFrame::setOnline( bool online ) {
 
 
 void RocGuiFrame::OnDonKey( wxCommandEvent& event ) {
+  int expdays = 0;
   if( m_SymbolMap == NULL || MapOp.size(m_SymbolMap) == 0 ) {
     wxMessageDialog( this, wxGetApp().getMsg("setupsvgtheme"), _T("Rocrail"), wxOK | wxICON_EXCLAMATION ).ShowModal();
   }
-  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini)), NULL) ) {
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini)), NULL, &expdays) ) {
+    DonKey* dlg = new DonKey(this, m_Ini );
+    if( wxID_OK == dlg->ShowModal() ) {
+    }
+    dlg->Destroy();
+  }
+  else if( expdays < 8 ) {
     DonKey* dlg = new DonKey(this, m_Ini );
     if( wxID_OK == dlg->ShowModal() ) {
     }
@@ -3132,7 +3139,7 @@ void RocGuiFrame::OnDonKeyInfo( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   bool l_bOffline = wxGetApp().isOffline();
-  Boolean l_Expired = SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini)), NULL);
+  Boolean l_Expired = SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini)), NULL, NULL);
 
   wxMenuItem* mi = menuBar->FindItem(ME_New);
   if( mi != NULL ) mi->Enable( l_bOffline );

@@ -156,12 +156,14 @@ void FunctionDialog::InitValues() {
   };
   StrTokOp.base.del( offblocks );
 
+  m_BlockOnEvent->Append( wxString("",wxConvUTF8) );
   m_BlockOnEvent->Append( wxString(wFunDef.enter_block,wxConvUTF8) );
   m_BlockOnEvent->Append( wxString(wFunDef.in_block,wxConvUTF8) );
   m_BlockOnEvent->Append( wxString(wFunDef.exit_block,wxConvUTF8) );
   m_BlockOnEvent->Append( wxString(wFunDef.run,wxConvUTF8) );
   m_BlockOnEvent->Append( wxString(wFunDef.stall,wxConvUTF8) );
 
+  m_BlockOffEvent->Append( wxString("",wxConvUTF8) );
   m_BlockOffEvent->Append( wxString(wFunDef.enter_block,wxConvUTF8) );
   m_BlockOffEvent->Append( wxString(wFunDef.in_block,wxConvUTF8) );
   m_BlockOffEvent->Append( wxString(wFunDef.exit_block,wxConvUTF8) );
@@ -215,7 +217,12 @@ void FunctionDialog::Evaluate() {
     wFunDef.setoffblockid( m_FunDef, "" );
 
   wFunDef.setonevent(m_FunDef, m_BlockOnEvent->GetValue().mb_str(wxConvUTF8) );
+  if( StrOp.len(wFunDef.getonevent(m_FunDef)) == 0 )
+    wFunDef.setonblockid( m_FunDef, "" );
+
   wFunDef.setoffevent(m_FunDef, m_BlockOffEvent->GetValue().mb_str(wxConvUTF8) );
+  if( StrOp.len(wFunDef.getoffevent(m_FunDef)) == 0 )
+    wFunDef.setoffblockid( m_FunDef, "" );
 }
 
 
