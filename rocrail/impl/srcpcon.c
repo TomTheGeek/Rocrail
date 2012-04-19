@@ -416,8 +416,9 @@ static char* __rr2srcp(iOSrcpCon srcpcon, iONode evt, char* str) {
       int addr2 = AddrOp.toPADA( wSwitch.getaddr2(swProps), wSwitch.getport2(swProps) );
       int srcpBus = getSrcpBus( data, wSwitch.getiid(swProps));
 
-      if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.left) 
-       || StrOp.equals( wSwitch.gettype(swProps), wSwitch.right) 
+      if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.left)
+       || StrOp.equals( wSwitch.gettype(swProps), wSwitch.right)
+       || StrOp.equals( wSwitch.gettype(swProps), wSwitch.twoway)
        || StrOp.equals( wSwitch.gettype(swProps), wSwitch.crossing) 
        || StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)) {
         /*100 INFO <bus> GA <addr> <port> <value>*/
@@ -1035,6 +1036,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
 
         if(  ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.left))
           || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.right))
+          || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.twoway))
           || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.crossing))
           || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)) ) {
           cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
