@@ -235,7 +235,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       response = data->sublib->cmd((obj)data->sublib, iocmd);
     }
   }
-  else if( StrOp.equals( NodeOp.getName( cmd ), wFunCmd.name() ) && wFunCmd.getgroup(cmd)  > 3 ) {
+  else if( StrOp.equals( NodeOp.getName( cmd ), wFunCmd.name() ) && wFunCmd.getgroup(cmd)  > 4 ) {
     /*
     *** XFunc34 (0x8A) - L‰nge = 1+4 bytes
        Command:
