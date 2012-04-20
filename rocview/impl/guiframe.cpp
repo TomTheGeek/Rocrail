@@ -1381,7 +1381,7 @@ void RocGuiFrame::initFrame() {
   acc_entries[43].Set(wxACCEL_ALT, (int) 'C', ME_LocoViewCommuter);
   acc_entries[44].Set(wxACCEL_ALT, (int) 'P', ME_LocoViewSpecial);
 
-  wxAcceleratorTable m_accel(46, acc_entries);
+  wxAcceleratorTable m_accel(45, acc_entries);
   this->SetAcceleratorTable(m_accel);
 //DA
 
