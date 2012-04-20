@@ -1597,7 +1597,7 @@ static void __feedbackReader( void* threadinst ) {
                              255: Kennzeichnet eine ungueltige Geschwindkeit (wird u.a. intern verwendet).
                 */
                 {
-                  int bidiAddr = bidi_in[1] + ((bidi_in[0] & 0x0F) << 8);
+                  int bidiAddr = bidi_in[1] + ((bidi_in[0] & 0x0F) << 8) + 1;
                   int locoAddr = bidi_in[2] + ((bidi_in[3] & 0x3F) << 8);
                   char ident[32];
                   Boolean dir = (bidi_in[3] & 0x80) ? True:False;
