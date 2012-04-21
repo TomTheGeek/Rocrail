@@ -329,7 +329,7 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   m_locidStr = NULL;
   //m_RouteID = NULL;
   m_locidStr = NULL;
-  m_Timer = new wxTimer( this, ME_Timer );
+  m_Timer = NULL;
   m_RotateSym = False;
   m_dragX = 0;
   m_dragY = 0;
@@ -342,12 +342,6 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   }
 
   m_Renderer = new SymbolRenderer( props, this, wxGetApp().getFrame()->getSymMap(), itemidps );
-
-  const char* tip = wItem.getid( m_Props );
-  if( StrOp.len( wItem.getdesc( m_Props ) ) > 0 )
-    tip = wItem.getdesc( m_Props );
-
-  SetToolTip( wxString(tip,wxConvUTF8) );
   modelEvent(m_Props);
 
   if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
@@ -366,9 +360,8 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
     SetDropTarget(m_BlockDrop);
   }
 
-  sizeToScale();
-
   // define accelerator keys for some frequently used functions
+
   wxAcceleratorEntry acc_entries[8];
   acc_entries[0].Set(wxACCEL_ALT, (int) 'R', ME_Rotate);
   acc_entries[1].Set(wxACCEL_ALT, (int) 'r', ME_Rotate);
@@ -1066,6 +1059,9 @@ void Symbol::OnMouseEnter(wxMouseEvent& event) {
     const char* state = wBlock.getstate( m_Props );
     Boolean hasLoc = StrOp.len( locId ) > 0 ? True:False;
     if( hasLoc ) {
+      if( m_Timer == NULL ) {
+        m_Timer = new wxTimer( this, ME_Timer );
+      }
       m_Timer->Start( 1000, true );
       //wxGetApp().getFrame()->setLocID( locId );
       if( wxGetApp().getFrame()->isAutoMode() ) {
