@@ -342,7 +342,7 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   }
 
   m_Renderer = new SymbolRenderer( props, this, wxGetApp().getFrame()->getSymMap(), itemidps );
-  modelEvent(m_Props);
+  modelEvent(m_Props, true);
 
   if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
     bridgepos = 0.0;
@@ -2151,7 +2151,7 @@ void Symbol::OnTTTrack(wxCommandEvent& event) {
   cmd->base.del(cmd);
 }
 
-void Symbol::modelEvent( iONode node ) {
+void Symbol::modelEvent( iONode node, bool oncreate ) {
   bool refresh = false;
   const char* id = wItem.getid( node );
 
@@ -2172,9 +2172,11 @@ void Symbol::modelEvent( iONode node ) {
       wItem.sety( m_Props, y );
       if( !StrOp.equals( wModelCmd.getcmd( node), wModelCmd.move) &&  wItem.getori( node ) != NULL )
         wItem.setori( m_Props, wItem.getori( node ) );
-      setPosition();
+      if( !oncreate )
+        setPosition();
     }
-    m_Renderer->initSym();
+    if( !oncreate )
+      m_Renderer->initSym();
     sizeToScale();
   }
 

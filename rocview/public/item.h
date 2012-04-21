@@ -102,7 +102,7 @@ public:
   void OnTTTrack(wxCommandEvent& event);
   void OnTTCalibrate(wxCommandEvent& event);
 
-  void modelEvent( iONode node );
+  void modelEvent( iONode node, bool oncreate=false );
   const char* getId();
   iONode getProperties();
   void reScale( double scale );
