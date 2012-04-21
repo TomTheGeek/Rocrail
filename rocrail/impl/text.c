@@ -182,6 +182,7 @@ static void* __event( void* inst, const void* evt ) {
 
       iONode sc = ModelOp.getSchedule(AppOp.getModel(), scid);
       char* scidxStr = StrOp.fmt("%d", scidx);
+      char* speedStr = StrOp.fmt("%.1f", bk->getmvspeed(bk));
 
       char hour[8];
       char min[8];
@@ -201,6 +202,7 @@ static void* __event( void* inst, const void* evt ) {
       MapOp.put(map, "lcimg", (obj)wLoc.getimage(lcprops));
       MapOp.put(map, "bkid", (obj)bk->base.id(bk));
       MapOp.put(map, "bkdesc", (obj)wBlock.getdesc(bkprops));
+      MapOp.put(map, "bkmvspeed", (obj)speedStr); 
       MapOp.put(map, "frombkid", (obj)bk->getFromBlockId(bk));
       MapOp.put(map, "lcdir", (obj)(LocOp.getDir(lc)?"fwd":"rev" ) );
       MapOp.put(map, "lcplacing", (obj)(wLoc.isplacing(lcprops)?"norm":"swap" ) );
@@ -226,14 +228,17 @@ static void* __event( void* inst, const void* evt ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
       __checkAction(inst, msg);
 
+      StrOp.free(speedStr);
       StrOp.free(scidxStr);
       StrOp.free(msg);
     }
     else if( bk != NULL ) {
       char* msg = NULL;
+      char* speedStr = StrOp.fmt("%.1f", bk->getmvspeed(bk));
       iOMap map = MapOp.inst();
       MapOp.put(map, "bkid", (obj)bk->base.id(bk));
       MapOp.put(map, "bkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)));
+      MapOp.put(map, "bkmvspeed", (obj)speedStr); 
       MapOp.put(map, "counter", (obj)NodeOp.getStr(node, "counter", "0") );
       MapOp.put(map, "carcount", (obj)NodeOp.getStr(node, "carcount", "0") );
       MapOp.put(map, "countedcars", (obj)NodeOp.getStr(node, "countedcars", "0") );
@@ -250,6 +255,7 @@ static void* __event( void* inst, const void* evt ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
       __checkAction(inst, msg);
       StrOp.free(msg);
+      StrOp.free(speedStr);
     }
     else {
       char* msg = NULL;

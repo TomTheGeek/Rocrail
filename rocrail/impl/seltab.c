@@ -1268,6 +1268,10 @@ static int _getDepartDelay( iIBlockBase inst ) {
   return 0;
 }
 
+static float _getmvspeed( iIBlockBase inst ) {
+  return 0;
+}
+
 static int _getMaxKmh( iIBlockBase inst ) {
   return 0;
 }

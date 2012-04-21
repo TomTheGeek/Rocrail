@@ -321,14 +321,16 @@ static void __measureVelocity( iOBlock inst, int event ) {
 
         if( wBlock.ismvmph( data->props ) ) {
         /* kmh * 0.621371192 = mph */
+          data->mvspeed = kmh * 0.621371192;
           TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999,
               "average velocity of [%s] in block [%s] was %.1f MPH",
-              data->locId, data->id, kmh * 0.621371192 );
+              data->locId, data->id, data->mvspeed);
         }
         else {
+          data->mvspeed = kmh;
           TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999,
               "average velocity of [%s] in block [%s] was %.1f KM/H",
-              data->locId, data->id, kmh );
+              data->locId, data->id, data->mvspeed);
         }
       }
     }
@@ -941,6 +943,11 @@ static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit,
 static int _getDepartDelay( iIBlockBase inst ) {
   iOBlockData data = Data(inst);
   return wBlock.getdepartdelay(data->props) ;
+}
+
+static float _getmvspeed( iIBlockBase inst ) {
+  iOBlockData data = Data(inst);
+  return data->mvspeed;
 }
 
 static int _getMaxKmh( iIBlockBase inst ) {

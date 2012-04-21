@@ -283,6 +283,9 @@
     <fun name="getMaxKmh" vt="int">
       <param name="inst" vt="this" remark="Block instance"/>
     </fun>
+    <fun name="getmvspeed" vt="float">
+      <param name="inst" vt="this" remark="get last speed measured in this block"/>
+    </fun> 
     <fun name="getDepartDelay" vt="int">
       <param name="inst" vt="this" remark="Block departure delay"/>
     </fun>

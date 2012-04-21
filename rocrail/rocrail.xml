@@ -161,6 +161,7 @@
       <var name="muxLock" vt="iOMutex"/>
       <var name="mvMillis" vt="int"/>
       <var name="mvTime" vt="long"/>
+      <var name="mvspeed" vt="float"/>
       <var name="manager" vt="iIBlockBase"/>
       <var name="occtime" vt="long"/>
       <var name="ghost" vt="Boolean"/>
