@@ -1379,6 +1379,7 @@ static void __runner( void* threadinst ) {
           if( data->fxtimer[i] == 0 ) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset timed function %d", i);
             fncmd = __resetTimedFunction(loc, NULL, i);
+            break;
           }
         }
       }
