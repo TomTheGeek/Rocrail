@@ -1329,7 +1329,7 @@ void RocGuiFrame::initFrame() {
   SetIcon(wxIcon(rocrail_32_xpm));
 
   // define accelerator keys for some frequently used functions
-  wxAcceleratorEntry acc_entries[64];
+  wxAcceleratorEntry acc_entries[46];
   acc_entries[0].Set(wxACCEL_CTRL, (int) 'Z', ME_Undo);
   acc_entries[1].Set(wxACCEL_CTRL, (int) 'N', ME_New);
   acc_entries[2].Set(wxACCEL_CTRL, (int) 'S', ME_Save);
@@ -1337,6 +1337,7 @@ void RocGuiFrame::initFrame() {
   acc_entries[4].Set(wxACCEL_CTRL, (int) 'P', ME_Go);
   acc_entries[5].Set(wxACCEL_CTRL, (int) 'M', ME_MIC);
   acc_entries[6].Set(wxACCEL_CTRL, (int) 'L', ME_LcDlg);
+  acc_entries[7].Set(wxACCEL_ALT , (int) 'P', ME_LocoViewSpecial);
   acc_entries[8].Set(wxACCEL_CTRL, (int) 'T', ME_SwDlg);
 
   acc_entries[9].Set(wxACCEL_CTRL, (int) '1', ME_EditLocs);
@@ -1379,9 +1380,8 @@ void RocGuiFrame::initFrame() {
   acc_entries[41].Set(wxACCEL_ALT, (int) 'I', ME_LocoViewDiesel);
   acc_entries[42].Set(wxACCEL_ALT, (int) 'E', ME_LocoViewElectric);
   acc_entries[43].Set(wxACCEL_ALT, (int) 'C', ME_LocoViewCommuter);
-  acc_entries[44].Set(wxACCEL_ALT, (int) 'P', ME_LocoViewSpecial);
 
-  wxAcceleratorTable m_accel(45, acc_entries);
+  wxAcceleratorTable m_accel(44, acc_entries);
   this->SetAcceleratorTable(m_accel);
 //DA
 
