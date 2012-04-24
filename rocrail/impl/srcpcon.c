@@ -306,6 +306,34 @@ static iOSignal SRCPgetSgByAddressAndIid( iOModel model, int addr, int port, cha
   return NULL;
 }
 
+/* get feedback-object by iid and address */
+static iOFBack getFeedbackBySrcpbusAndSrcpaddr( char *srcpBusIid, int addr) {
+  iOModel model = AppOp.getModel();
+  char str[1025] = {'\0'};
+
+  iOMap fbackMap = ModelOp.getFeedbackMap( model );
+  iOFBack fb = (iOFBack)MapOp.first( fbackMap );
+
+  while( fb != NULL ) {
+    iONode fbProps = FBackOp.base.properties(fb);
+    int fbAddr = wFeedback.getaddr(fbProps) ;
+    const char *fbIid  = wFeedback.getiid(fbProps) ;
+    
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "getFeedbackBySrcpbusAndSrcpaddr: srcpBusIid %s addr %d ; fbAddr = %d fbIid=%s", srcpBusIid, addr, fbAddr, fbIid );
+    if( StrOp.equals( "", fbIid ) ) {
+      fbIid = getDefaultIid() ;
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "getFeedbackBySrcpbusAndSrcpaddr: srcpBusIid %s addr %d ; fbAddr = %d fbIid=%s", srcpBusIid, addr, fbAddr, fbIid );
+    }
+
+    if( addr == wFeedback.getaddr(fbProps) ) {
+      if( StrOp.equals( srcpBusIid, fbIid) ) {
+        return fb ;
+      }
+    }
+    fb = (iOFBack)MapOp.next( fbackMap );
+  };
+  return NULL ;
+}
 
 /* Send powerState to all srcp info connections */
 static void sendPWstate2InfoChannels( struct timeval time, int busId, char* state ) {
@@ -793,6 +821,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER OFF %s\n", time.tv_sec, time.tv_usec / 1000, srcpBus, freeText );
         SocketOp.fmt(o->clntSocket, str);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND to session %d [%s]: %s", o->id, o->infomode?"INFO":"COMMAND", str );
+        *reqRespCode = (int) 0;
         ThreadOp.sleep( 10 );
       }
       else if( StrOp.equals( busType, "POWER" ) && StrOp.equals( optionString, "ON" ) ) {
@@ -810,6 +839,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER ON %s\n", time.tv_sec, time.tv_usec / 1000, srcpBus, freeText );
         SocketOp.fmt(o->clntSocket, str);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND to session %d [%s]: %s", o->id, o->infomode?"INFO":"COMMAND", str );
+        *reqRespCode = (int) 0;
         ThreadOp.sleep( 10 );
       }
       else {
@@ -1301,6 +1331,8 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
 
         /* send INFO <bus> POWER answer back to requesting command channel */
         SocketOp.fmt(o->clntSocket, str);
+
+        *reqRespCode = (int) 0;
       }
     } /* GET <bus> POWER */
     /* GET <bus> DESCRIPTION GL <addr> */
@@ -1665,7 +1697,62 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         /* 412 ERROR wrong value */
         *reqRespCode = (int) 412;
       }
-    }else {
+    }
+    else if( StrOp.findi( req, "FB" ) ) {
+      /* "100 INFO <bus> FB <addr> <value>" */
+      char str[1025] = {'\0'};
+      int idx = 0;
+      int srcpBus = 0;
+      int srcpAddr = 0;
+      int addr = 0;
+      char srcpBusIid[1024];
+
+      iOStrTok tok = StrTokOp.inst(req, ' ');
+      while( StrTokOp.hasMoreTokens(tok)) {
+        const char* s = StrTokOp.nextToken(tok);
+        switch(idx) {
+        case 1: srcpBus = atoi(s); break;
+        case 3: srcpAddr = atoi(s); break;
+        case 4:
+          /* too many arguments ; 418 ERROR list too long */
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> 418 ERROR list too long", req);
+          *reqRespCode = 418 ;
+          break;
+        }
+        idx++;
+      };
+      StrTokOp.base.del(tok);
+
+      getSrcpIid( data, srcpBus, srcpBusIid);
+
+      if( srcpAddr > 0 ) {
+        iOFBack fb;
+        /*
+         * Q: "GET <bus> FB <addr>"
+         * A: "100 INFO <bus> FB <addr> <value>"
+         * or
+         * A: "412 wrong value"
+         */
+
+        fb = getFeedbackBySrcpbusAndSrcpaddr( srcpBusIid, srcpAddr);
+        if( fb != NULL) {
+          iONode fbProps = FBackOp.base.properties(fb);
+          int value = wFeedback.isstate(fbProps);
+
+          StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d FB %d %d\n",
+                time.tv_sec, time.tv_usec / 1000, srcpBus, srcpAddr, value );
+          SocketOp.fmt(o->clntSocket, str);
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Answer: %s", str);
+          *reqRespCode = (int) 0 ;
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "GET REQ for undefined Feedback: bus %d, addr %d", srcpBus, srcpAddr );
+          /* 412 wrong value */
+          *reqRespCode = (int) 412 ;
+        }
+      }
+    }
+    else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unhandled GET REQ %s", req );
       /* 416 ERROR no data */
       *reqRespCode = (int) 416 ;
@@ -1994,8 +2081,9 @@ static void sendSwitchList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendSwitchList2InfoChannel: iidSP %s srcpBus %d swType %s",
         wSwitch.getiid(swProps), srcpBus, wSwitch.gettype(swProps) );
 
-    if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.left) 
-     || StrOp.equals( wSwitch.gettype(swProps), wSwitch.right) 
+    if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.left)
+     || StrOp.equals( wSwitch.gettype(swProps), wSwitch.right)
+     || StrOp.equals( wSwitch.gettype(swProps), wSwitch.twoway)
      || StrOp.equals( wSwitch.gettype(swProps), wSwitch.crossing) 
      || StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)) {
       StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
@@ -2215,12 +2303,12 @@ static void sendLocoList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
       /* 101 INFO <bus> GL <addr> <protocol> <optional further parameters> */
       StrOp.fmtb(str, "%lu.%.3lu 101 INFO %d GL %d %c %d %d %d\n",
               time.tv_sec, time.tv_usec / 1000, srcpBus, loAddr, srcpProt, srcpProtver, loSpcnt, loFnCnt+1 );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", str);
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s", str);
       SocketOp.fmt(o->clntSocket, str);
       /* 100 INFO <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn> */
       StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GL %d %d %d %d %d%s\n", 
               time.tv_sec, time.tv_usec / 1000, srcpBus, loAddr, loDir?1:0, decStep, loSpcnt, loFn?1:0, funcString);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", str);
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s", str);
       SocketOp.fmt(o->clntSocket, str);
     }
     loco = (iOLoc)MapOp.next( locoMap );
