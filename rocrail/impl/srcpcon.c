@@ -1818,7 +1818,90 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED TERM req %s from session %d [%s]", req, o->id, o->infomode?"INFO":"COMMAND" );
       *reqRespCode = (int) 410 ;
     }
-  }
+  } /* TERM */
+
+  else if( StrOp.startsWithi( req, "WAIT " ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "WAIT req: %s", req );
+
+    if( StrOp.findi( req, "FB" ) ) {
+    /*
+     * Q: "WAIT <bus> FB <addr> <value> <timeout>"
+     * <addr> out of range:
+     *   A: "412 wrong value"
+     * <value> reached within <timeout>:
+     *   A: "100 INFO <bus> FB <addr> <value>"
+     * <value> not reached within <timeout>
+     *   A: "417 ERROR timeout"
+     */
+      char str[1025] = {'\0'};
+      int idx = 0;
+      int srcpBus = 0;
+      int srcpAddr = 0;
+      int srcpValue = 0;
+      int srcpTimeout = 0;
+      int addr = 0;
+      char srcpBusIid[1024];
+
+      iOStrTok tok = StrTokOp.inst(req, ' ');
+      while( StrTokOp.hasMoreTokens(tok)) {
+        const char* s = StrTokOp.nextToken(tok);
+        switch(idx) {
+        case 1: srcpBus = atoi(s); break;
+        case 3: srcpAddr = atoi(s); break;
+        case 4: srcpValue = atoi(s); break;
+        case 5: srcpTimeout = atoi(s); break;
+        case 6:
+          /* too many arguments ; 418 ERROR list too long */
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> 418 ERROR list too long", req);
+          *reqRespCode = 418 ;
+          break;
+        }
+        idx++;
+      };
+      StrTokOp.base.del(tok);
+
+      getSrcpIid( data, srcpBus, srcpBusIid);
+
+      if( srcpAddr > 0 ) {
+        iOFBack fb;
+        fb = getFeedbackBySrcpbusAndSrcpaddr( srcpBusIid, srcpAddr);
+        if( fb != NULL) {
+          iONode fbProps = FBackOp.base.properties(fb);
+          int value = wFeedback.isstate(fbProps);
+          int timeout_reached = 0;
+          unsigned long endTime;
+          struct timeval currTime;
+
+          gettimeofday(&currTime, NULL);
+          endTime = currTime.tv_sec + (unsigned long) srcpTimeout;
+
+          while ( currTime.tv_sec <= endTime ) {
+            if( srcpValue == wFeedback.isstate(fbProps) ) {
+              StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d FB %d %d\n",
+                    currTime.tv_sec, currTime.tv_usec / 1000, srcpBus, srcpAddr, srcpValue );
+              SocketOp.fmt(o->clntSocket, str);
+              TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Answer: %s", str);
+              *reqRespCode = (int) 0 ;
+              return cmd;
+            }
+            else {
+              /* wait 100 ms and let others do their jobs */
+              ThreadOp.sleep( 100 );
+              gettimeofday(&currTime, NULL);
+            }
+          }
+          /* 417 timeout */
+          *reqRespCode = (int) 417 ;
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "GET REQ for undefined Feedback: bus %d, addr %d", srcpBus, srcpAddr );
+          /* 412 wrong value */
+          *reqRespCode = (int) 412 ;
+        }
+      }
+    }
+  } /* WAIT */
+
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED req/unkown command %s from session %d [%s]", req, o->id, o->infomode?"INFO":"COMMAND" );
     *reqRespCode = (int) 410 ;
