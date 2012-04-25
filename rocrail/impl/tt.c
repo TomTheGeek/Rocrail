@@ -2707,8 +2707,7 @@ static int _getMaxKmh( iIBlockBase inst ) {
 
 static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   iOTTData data = Data(inst);
-  /* TODO: dispatch to active tracke block */
-  return 0;
+  return 1; /* always wait on the bridge */
 }
 
 static Boolean _green( iIBlockBase inst, Boolean distant, Boolean reverse ) {
@@ -2915,10 +2914,15 @@ static iIBlockBase __getBlock4Loc(iIBlockBase inst, const char* locid) {
 static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
   iOTTData data = Data(inst);
 
+  if( wTurntable.isembeddedblock(data->props) ) {
+    return True;
+  }
+
   if( wTurntable.ismanager(data->props) ) {
     iIBlockBase block = __getBlock4Loc(inst, LocOp.getId(loc));
     return block != NULL ? block->wait( block, loc, reverse ) : False;
   }
+
   return False;
 }
 
