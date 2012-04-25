@@ -62,6 +62,8 @@
 #define ID_BUTTON_LCCTRL_F11 10014
 #define ID_BUTTON_LCCTRL_F12 10015
 #define ID_BUTTON_LOCCTRL_FN 10004
+#define ID_BUTTON_LCCTRL_F13 10016
+#define ID_BUTTON_FCCTRL_F14 10017
 #define ID_FG 10318
 #define ID_BITMAPBUTTON_LOCCTRL_DIR 10009
 #define ID_COMBOBOX_LOCCTRL_LOC 10002
@@ -172,6 +174,12 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCCTRL_FN
     void OnButtonLocctrlFnClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LCCTRL_F13
+    void OnButtonLcctrlF13Click( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FCCTRL_F14
+    void OnButtonFcctrlF14Click( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_FG
     void OnFgClick( wxCommandEvent& event );
 
@@ -245,6 +253,8 @@ public:
     wxButton* m_F11;
     wxButton* m_F12;
     wxButton* m_Fn;
+    wxButton* m_F13;
+    wxButton* m_F14;
     wxButton* m_FG;
     wxBitmapButton* m_Dir;
     wxComboBox* m_LcList;
