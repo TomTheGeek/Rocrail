@@ -1220,33 +1220,7 @@ void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, co
    */
   switch( m_iSymSubType ) {
     case switchtype::i_decoupler:
-      // SVG Symbol:
-      if( m_SvgSym3!=NULL && StrOp.equals( state, wSwitch.straight ) ) {
-        if( occupied && !actroute && m_SvgSym4 != NULL )
-          drawSvgSym(dc, m_SvgSym4, ori);
-        else if( occupied && actroute && m_SvgSym7 != NULL )
-          drawSvgSym(dc, m_SvgSym7, ori);
-        else if( occupied && actroute && m_SvgSym4 != NULL )
-          drawSvgSym(dc, m_SvgSym4, ori);
-        else if( !occupied && actroute && m_SvgSym6 != NULL )
-          drawSvgSym(dc, m_SvgSym6, ori);
-        else if( m_SvgSym3 != NULL )
-          drawSvgSym(dc, m_SvgSym3, ori);
-        return;
-      }
-      else if( m_SvgSym1!=NULL ) {
-        if( occupied && !actroute && m_SvgSym2 != NULL )
-          drawSvgSym(dc, m_SvgSym2, ori);
-        else if( occupied && actroute && m_SvgSym8 != NULL )
-          drawSvgSym(dc, m_SvgSym8, ori);
-        else if( occupied && actroute && m_SvgSym2 != NULL )
-          drawSvgSym(dc, m_SvgSym2, ori);
-        else if( !occupied && actroute && m_SvgSym5 != NULL )
-          drawSvgSym(dc, m_SvgSym5, ori);
-        else if( m_SvgSym1 != NULL )
-          drawSvgSym(dc, m_SvgSym1, ori);
-        return;
-      }
+      drawDecoupler( dc, occupied, actroute, ori );
       break;
 
     case switchtype::i_ccrossing:
@@ -1280,6 +1254,54 @@ void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, co
 
   }
 }
+
+
+void SymbolRenderer::drawDecoupler( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
+  const char* state = wSwitch.getstate( m_Props );
+
+  // SVG Symbol:
+  if( m_SvgSym3!=NULL && StrOp.equals( state, wSwitch.straight ) ) {
+    if( occupied && !actroute && m_SvgSym4 != NULL )
+      drawSvgSym(dc, m_SvgSym4, ori);
+    else if( occupied && actroute && m_SvgSym7 != NULL )
+      drawSvgSym(dc, m_SvgSym7, ori);
+    else if( occupied && actroute && m_SvgSym4 != NULL )
+      drawSvgSym(dc, m_SvgSym4, ori);
+    else if( !occupied && actroute && m_SvgSym6 != NULL )
+      drawSvgSym(dc, m_SvgSym6, ori);
+    else if( m_SvgSym3 != NULL )
+      drawSvgSym(dc, m_SvgSym3, ori);
+  }
+  else if( m_SvgSym1!=NULL ) {
+    if( occupied && !actroute && m_SvgSym2 != NULL )
+      drawSvgSym(dc, m_SvgSym2, ori);
+    else if( occupied && actroute && m_SvgSym8 != NULL )
+      drawSvgSym(dc, m_SvgSym8, ori);
+    else if( occupied && actroute && m_SvgSym2 != NULL )
+      drawSvgSym(dc, m_SvgSym2, ori);
+    else if( !occupied && actroute && m_SvgSym5 != NULL )
+      drawSvgSym(dc, m_SvgSym5, ori);
+    else if( m_SvgSym1 != NULL )
+      drawSvgSym(dc, m_SvgSym1, ori);
+  }
+
+  if( m_bShowID ) {
+    wxFont* font = new wxFont( dc.GetFont() );
+    font->SetPointSize( m_iItemIDps );
+    dc.SetFont(*font);
+
+    if( StrOp.equals( ori, wItem.south ) )
+      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
+    else if( StrOp.equals( ori, wItem.north ) )
+      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
+    else
+      dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
+
+    delete font;
+  }
+}
+
+
 
 
 /**
