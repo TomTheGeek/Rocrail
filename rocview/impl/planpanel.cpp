@@ -526,9 +526,6 @@ void PlanPanel::OnSelect(wxCommandEvent& event) {
 }
 
 void PlanPanel::OnMotion(wxMouseEvent& event) {
-  if( !wxGetApp().getFrame()->isEditModPlan() )
-    return;
-
   m_mouseX = event.GetX();
   m_mouseY = event.GetY();
 
@@ -538,9 +535,14 @@ void PlanPanel::OnMotion(wxMouseEvent& event) {
   int x = 0, y = 0;
   GetViewStart( &x, &y );
 
-  char* text = StrOp.fmt( "(%d,%d)", m_X+x, m_Y+y );
-  wxGetApp().getFrame()->setInfoText( text );
-  StrOp.free( text );
+  if( wxGetApp().getFrame()->isEditMode() || wxGetApp().getFrame()->isEditModPlan() ) {
+    char* text = StrOp.fmt( "(%d,%d)", m_X+x, m_Y+y );
+    wxGetApp().getFrame()->setInfoText( text );
+    StrOp.free( text );
+  }
+
+  if( !wxGetApp().getFrame()->isEditModPlan() )
+    return;
 
   wxGetMousePosition( &x, &y );
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "drag move x=%d(%d), y=%d(%d)", x, m_dragX, y, m_dragY );
