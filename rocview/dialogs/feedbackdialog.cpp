@@ -138,6 +138,15 @@ void FeedbackDialog::OnSelectPage(wxCommandEvent& event) {
   m_Notebook->SetSelection( 1 );
 }
 
+/* comparator for sorting by id: */
+static int __sortStr(obj* _a, obj* _b)
+{
+    const char* a = (const char*)*_a;
+    const char* b = (const char*)*_b;
+    return strcmp( a, b );
+}
+
+
 void FeedbackDialog::initLabels() {
   m_Notebook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
   m_Notebook->SetPageText( 1, wxGetApp().getMsg( "general" ) );
@@ -165,13 +174,17 @@ void FeedbackDialog::initLabels() {
 
   m_BlockID->Append( _T("") );
   iONode model = wxGetApp().getModel();
+  iOList list = ListOp.inst();
+
+
   if( model != NULL ) {
     iONode bklist = wPlan.getbklist( model );
     if( bklist != NULL ) {
       int cnt = NodeOp.getChildCnt( bklist );
       for( int i = 0; i < cnt; i++ ) {
         iONode bk = NodeOp.getChild( bklist, i );
-        m_BlockID->Append( wxString(wBlock.getid( bk ),wxConvUTF8), bk );
+        //m_BlockID->Append( wxString(wBlock.getid( bk ),wxConvUTF8), bk );
+        ListOp.add(list, (obj)wBlock.getid( bk ));
       }
     }
     iONode fblist = wPlan.getfblist( model );
@@ -179,10 +192,20 @@ void FeedbackDialog::initLabels() {
       int cnt = NodeOp.getChildCnt( fblist );
       for( int i = 0; i < cnt; i++ ) {
         iONode fb = NodeOp.getChild( fblist, i );
-        m_BlockID->Append( wxString(wFeedback.getid( fb ),wxConvUTF8), fb );
+        //m_BlockID->Append( wxString(wFeedback.getid( fb ),wxConvUTF8), fb );
+        ListOp.add(list, (obj)wFeedback.getid( fb ));
       }
     }
+
+    ListOp.sort(list, &__sortStr);
+    int cnt = ListOp.size( list );
+    for( int i = 0; i < cnt; i++ ) {
+      const char* id = (const char*)ListOp.get( list, i );
+      m_BlockID->Append( wxString(id,wxConvUTF8) );
+    }
+
   }
+  ListOp.base.del(list);
 
   // Location
   m_LabelX->SetLabel( wxGetApp().getMsg( "x" ) );
