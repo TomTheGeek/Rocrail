@@ -205,6 +205,9 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
             if( rc && direction != NULL && lc != NULL ) {
               /**/
               Boolean dir = LocOp.getDir(lc);
+              Boolean placing = LocOp.getPlacing(lc);
+              if( !placing )
+                dir = !dir;
               if( StrOp.equals( "forwards", direction ) && !dir ) {
                 rc = False;
                 TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -477,6 +480,22 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   }
 
   /* ext action */
+
+  /* Windows needs the complete command line quoted */
+  /*
+      if( SystemOp.isWindows() ) {
+        if( FileOp.isAbsolute(szFilename) )
+          StrOp.fmtb(cmdStr, "\"\"%s\" \"%s\"\"", execall, szFilename);
+        else
+          StrOp.fmtb(cmdStr, "\"\"%s\" \"%s%c%s\"\"", execall, FileOp.pwd(), SystemOp.getFileSeparator(), szFilename);
+      }
+      else {
+        if( FileOp.isAbsolute(szFilename) )
+          StrOp.fmtb(cmdStr, "\"%s\" \"%s\"", execall, szFilename);
+        else
+          StrOp.fmtb(cmdStr, "\"%s\" \"%s%c%s\"", execall, FileOp.pwd(), SystemOp.getFileSeparator(), szFilename);
+      }
+  */
   else if( StrOp.equals( "ext", wAction.gettype( data->action ) ) ) {
     /* check for a external action */
     const char* extaction = wAction.getcmd( data->action );

@@ -591,6 +591,9 @@
     <fun name="getDir" vt="Boolean">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
+    <fun name="getPlacing" vt="Boolean">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
     <fun name="isAutomode" vt="Boolean">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
