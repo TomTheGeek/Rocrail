@@ -2652,6 +2652,9 @@ static void __manager( void* threadinst ) {
       cargo->infomode	= False;
       idCnt++;
 
+      /* we need non blocking ports but at least one OS uses blocking as default */
+      SocketOp.setBlocking( cargo->clntSocket, False );
+
       servername        = StrOp.fmt( "cmdrSRCP%08X", client );
       SrcpService         = ThreadOp.inst( servername, __SrcpService, cargo );
       ThreadOp.setDescription( SrcpService, SocketOp.getPeername(client) );
