@@ -9,6 +9,7 @@
 #define MTYP_CANGC6  6 // 4 Chanal Servo
 #define MTYP_CANGC7  7 // Fast clock
 #define MTYP_CANGC1E  11 // Ethernet bridge
+#define MTYP_CANGCLN  56 // LocoNet bridge
 
 #define OPC_PNN    0xB6    // <NN hi><NN lo><manu id><module id><flags>
 
