@@ -1879,7 +1879,7 @@ void SymbolRenderer::drawSensor( wxPaintDC& dc, bool occupied, bool actroute, co
       dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
     else if( StrOp.equals( ori, wItem.north ) )
       dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
-    else if(wFeedback.iscurve( m_Props ))
+    else if(StrOp.equals( ori, wItem.east ) && wFeedback.iscurve( m_Props ))
       dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 22, 0.0 );
     else
       dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
