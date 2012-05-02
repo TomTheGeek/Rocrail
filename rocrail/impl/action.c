@@ -211,12 +211,14 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
               if( StrOp.equals( "forwards", direction ) && !dir ) {
                 rc = False;
                 TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                    "loco %s direction %s does not match [%s]", LocOp.getId(lc), dir?"forwards":"reverse", direction );
+                    "loco %s direction %s does not match [%s] dir=%d(%d) placing=%d",
+                    LocOp.getId(lc), dir?"forwards":"reverse", direction, dir, LocOp.getDir(lc), placing );
               }
               else if( StrOp.equals( "reverse", direction ) && dir ) {
                 rc = False;
                 TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                    "loco %s direction %s does not match [%s]", LocOp.getId(lc), dir?"forwards":"reverse", direction );
+                    "loco %s direction %s does not match [%s] dir=%d(%d) placing=%d",
+                    LocOp.getId(lc), dir?"forwards":"reverse", direction, dir, LocOp.getDir(lc), placing );
               }
             }
           }
@@ -307,6 +309,9 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
               if( lc != NULL ) {
                 Boolean dir = LocOp.getDir(lc);
                 Boolean enterside = LocOp.getBlockEnterSide(lc);
+                Boolean placing = LocOp.getPlacing(lc);
+                if( !placing )
+                  dir = !dir;
                 rc = True;
                 if( StrOp.equals( "forwards", wActionCond.getstate(actionCond) ) && !dir ) {
                   rc = False;
