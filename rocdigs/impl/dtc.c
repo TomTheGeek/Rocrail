@@ -299,6 +299,7 @@ static void __reader( void* threadinst ) {
 
   while( data->run ) {
     byte in[32] = {0};
+    int len = 4;
 
     ThreadOp.sleep(10);
     if( SerialOp.available(data->serial) ) {
@@ -307,9 +308,10 @@ static void __reader( void* threadinst ) {
         MemOp.set(in+1, 0, 31);
         SerialOp.read(data->serial, in+1, 3);
         if( in[2] > 0 ) {
+          len += in[2];
           SerialOp.read(data->serial, in+4, in[2]);
         }
-        TraceOp.dump ( name, TRCLEVEL_INFO, (char*)in, 32 );
+        TraceOp.dump ( name, TRCLEVEL_INFO, (char*)in, len );
         __evaluateDatagram(dtc, in);
       }
     }
