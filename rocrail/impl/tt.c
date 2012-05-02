@@ -799,6 +799,8 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
     data->pending = True;
 
     if( StrOp.equals( wTurntable.prot_MP, wTurntable.getprot(data->props) ) ) {
+      Boolean ttdir = True;
+      Boolean move = __bridgeDir(inst, tracknr, &ttdir );
       /* rename node to program */
       NodeOp.setName( cmd, wProgram.name() );
       /* set type to multiport */
@@ -808,6 +810,7 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
       wProgram.setmodid( cmd, wTurntable.getaddr1(data->props) );
       wProgram.setcv( cmd, 0x000F ); /* mask */
       wProgram.setvalue( cmd, tracknr ); /* value */
+      wProgram.setval1( cmd, ttdir?1:2 ); /* direction */
       ControlOp.cmd( control, cmd, NULL );
 
     }

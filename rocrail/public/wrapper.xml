@@ -346,6 +346,7 @@
       <const name="editspro" vt="string" val="editspro"/>
       <const name="infracar" vt="string" val="infracar"/>
       <const name="cti" vt="string" val="cti"/>
+      <const name="dtc" vt="string" val="dtc"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>

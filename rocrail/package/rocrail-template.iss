@@ -87,6 +87,7 @@ Source: "..\..\winbin\bidib.dll"; DestDir: "{app}"
 Source: "..\..\winbin\editspro.dll"; DestDir: "{app}"
 Source: "..\..\winbin\infracar.dll"; DestDir: "{app}"
 Source: "..\..\winbin\cti.dll"; DestDir: "{app}"
+Source: "..\..\winbin\dtc.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
 Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "rocrail.mib"; DestDir: "{userdocs}\Rocrail";
