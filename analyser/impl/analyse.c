@@ -97,6 +97,7 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/SelTab.h"
+#include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
 
 
@@ -285,7 +286,10 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody, Boolean m
             modx, mody );
 
   while( node != NULL ) {
-    if( StrOp.equals( wBlock.name(), NodeOp.getName(node) ) || StrOp.equals( "seltab", NodeOp.getName(node) )) {
+    if( StrOp.equals( wBlock.name(), NodeOp.getName(node) ) ||
+        StrOp.equals( wSelTab.name(), NodeOp.getName(node) ) ||
+        StrOp.equals( wStage.name(), NodeOp.getName(node) ))
+    {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ------>  block %s with key (old) %s",
           wBlock.getid(node), __createKey( key, node, 0+modx, 0+mody, 0) );
 
