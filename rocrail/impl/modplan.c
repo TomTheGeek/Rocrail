@@ -21,6 +21,7 @@
 #include "rocrail/wrapper/public/RouteList.h"
 
 #include "rocrail/wrapper/public/BlockList.h"
+#include "rocrail/wrapper/public/StageList.h"
 #include "rocrail/wrapper/public/TrackList.h"
 #include "rocrail/wrapper/public/LocList.h"
 #include "rocrail/wrapper/public/CarList.h"
@@ -42,6 +43,7 @@
 #include "rocrail/wrapper/public/OperatorList.h"
 
 #include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/Track.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Turntable.h"
@@ -698,10 +700,23 @@ static iONode __mergeModule( iOModPlanData data, iONode model, iONode module, in
           block = wBlockList.nextbk(list, block);
         }
       }
+
+      list = NodeOp.findNode( moduleRoot, wStageList.name() );
+      if( list != NULL ) {
+        const char* modid = wModule.getid( module );
+        iONode block = wStageList.getsb(list);
+        while(block != NULL) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "put [%s]-[%s] in the blockmap",
+              wBlock.getid(block), modid );
+          MapOp.put( data->blockMap, wBlock.getid(block), (obj)modid);
+          block = wStageList.nextsb(list, block);
+        }
+      }
     }
 
     __mergeList(wTrackList.name()    , model, moduleRoot, level, r, cx, cy, informClients);
     __mergeList(wBlockList.name()    , model, moduleRoot, level, r, cx, cy, informClients);
+    __mergeList(wStageList.name()    , model, moduleRoot, level, r, cx, cy, informClients);
     __mergeList(wSwitchList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
     __mergeList(wSignalList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
     __mergeList(wOutputList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
@@ -801,6 +816,8 @@ static iONode __parseModPlan( iOModPlan inst ) {
 
   /* add all lists: */
   const char*  dbkey = wBlockList.name();
+  NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
+  dbkey = wStageList.name();
   NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
   dbkey = wTurntableList.name();
   NodeOp.addChild( model, NodeOp.inst( dbkey, model, ELEMENT_NODE ) );
@@ -1251,6 +1268,7 @@ static void __saveModule( iOModPlan inst, iONode module, int level ) {
   __copyLevel( inst, model, level, wSignalList.name() );
   __copyLevel( inst, model, level, wOutputList.name() );
   __copyLevel( inst, model, level, wBlockList.name() );
+  __copyLevel( inst, model, level, wStageList.name() );
   __copyLevel( inst, model, level, wTextList.name() );
   __copyLevel( inst, model, level, wTurntableList.name() );
   __copyLevel( inst, model, level, wSelTabList.name() );
