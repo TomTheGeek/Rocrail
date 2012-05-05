@@ -456,7 +456,11 @@ void LocControlDialog::initValues() {
 
   iONode lc = (iONode)MapOp.get( m_lcMap, selVal.mb_str(wxConvUTF8) );
 
+  SetTitle(wxGetApp().getMsg( "locctrl" ));
+
   if( lc != NULL && wLoc.getimage( lc ) != NULL && StrOp.len(wLoc.getimage( lc )) > 0 ) {
+    SetTitle(wxGetApp().getMsg( "locctrl" ) + _T(" ") + wxString(wLoc.getid( lc ),wxConvUTF8) );
+
     wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
     if( StrOp.endsWithi( wLoc.getimage( lc ), ".gif" ) )
       bmptype = wxBITMAP_TYPE_GIF;
