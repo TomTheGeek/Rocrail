@@ -979,6 +979,13 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
   }
 
+  case MSG_SYS_P_VERSION:
+  {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_SYS_P_VERSION %d.%d", msg[2], msg[1] );
+    break;
+  }
+
   default:
   {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
