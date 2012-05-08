@@ -1632,6 +1632,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
 
   /* Broadcast to clients. */
   {
+    iIBlockBase block = ModelOp.getBlock( AppOp.getModel(), data->destBlock );
     iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     wLoc.setid( node, wLoc.getid( data->props ) );
     wLoc.setaddr( node, wLoc.getaddr( data->props ) );
@@ -1644,7 +1645,9 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
     wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
     wLoc.setmanual( node, data->gomanual );
     wLoc.setblockid( node, data->curBlock );
-    wLoc.setdestblockid( node, data->destBlock );
+    if( block != NULL && StrOp.equals( block->getLoc(block),wLoc.getid( data->props )) ) {
+      wLoc.setdestblockid( node, data->destBlock );
+    }
     wLoc.setruntime( node, wLoc.getruntime(data->props) );
     wLoc.setmtime( node, wLoc.getmtime(data->props) );
     wLoc.setmint( node, wLoc.getmint(data->props) );
@@ -1662,6 +1665,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
 static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
   iOLocData data = Data(inst);
   iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  iIBlockBase block = ModelOp.getBlock( AppOp.getModel(), destid );
   data->destBlock = destid;
   data->curBlock  = curid;
   /* Broadcast to clients. */
@@ -1675,7 +1679,9 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
   wLoc.setmode( node, wLoc.getmode( data->props ) );
   wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
   wLoc.setmanual( node, data->gomanual );
-  wLoc.setdestblockid( node, destid );
+  if( block != NULL && StrOp.equals( block->getLoc(block),wLoc.getid( data->props )) ) {
+    wLoc.setdestblockid( node, destid );
+  }
   wLoc.setruntime( node, wLoc.getruntime(data->props) );
   wLoc.setmtime( node, wLoc.getmtime(data->props) );
   wLoc.setmint( node, wLoc.getmint(data->props) );
