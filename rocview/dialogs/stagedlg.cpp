@@ -176,7 +176,7 @@ bool StageDlg::evaluate() {
   wStage.setslen( m_Props, m_SectionLength->GetValue() );
   wStage.setgap( m_Props, m_TrainGap->GetValue() );
   wStage.setfbenterid( m_Props, m_EnterSensor->GetStringSelection().mb_str(wxConvUTF8) );
-
+  return true;
 }
 
 void StageDlg::initSections() {

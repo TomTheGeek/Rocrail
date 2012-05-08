@@ -1144,7 +1144,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
             }
           }
           else {
-            m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, wxT("") );
+            //m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, wxT("") );
           }
 
         }
