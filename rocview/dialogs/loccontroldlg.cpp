@@ -459,8 +459,6 @@ void LocControlDialog::initValues() {
   SetTitle(wxGetApp().getMsg( "locctrl" ));
 
   if( lc != NULL && wLoc.getimage( lc ) != NULL && StrOp.len(wLoc.getimage( lc )) > 0 ) {
-    SetTitle(wxGetApp().getMsg( "locctrl" ) + _T(" ") + wxString(wLoc.getid( lc ),wxConvUTF8) );
-
     wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
     if( StrOp.endsWithi( wLoc.getimage( lc ), ".gif" ) )
       bmptype = wxBITMAP_TYPE_GIF;
@@ -485,6 +483,8 @@ void LocControlDialog::initValues() {
     m_Image->SetBitmapLabel( wxBitmap(nopict_xpm) );
   }
   m_Image->Refresh();
+
+  SetTitle(wxGetApp().getMsg( "locctrl" ) + _T(" ") + wxString(wLoc.getid( lc ),wxConvUTF8) );
 
   m_SpeedCtrl->SetRange( 0, wLoc.getV_max(lc) );
   m_SpeedCtrl->SetValue( wLoc.getV(lc) );
