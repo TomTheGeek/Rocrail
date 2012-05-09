@@ -912,9 +912,11 @@ bool RouteDialog::evaluate() {
   if( m_Props == NULL )
     return false;
 
-  if( m_Id->GetValue().Len() == 0 ) {
-    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
-    m_Id->SetValue( wxString(wRoute.getid( m_Props ),wxConvUTF8) );
+  iONode model  = wxGetApp().getModel();
+  iONode stlist = wPlan.getstlist( model );
+
+  if( existID( this, stlist, m_Props, m_Id->GetValue() ) ) {
+    m_Id->SetValue( wxString(wItem.getid( m_Props ),wxConvUTF8) );
     return false;
   }
 

@@ -5681,3 +5681,9 @@ msgstr ""
 msgid "Depart delay"
 msgstr ""
 
+#. 
+# id="existingid"
+#, c-format
+msgid "The ID already exists at position: %d,%d."
+msgstr ""
+

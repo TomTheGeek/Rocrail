@@ -27,6 +27,7 @@
 /*!
  * Includes
  */
+#include "basedlg.h"
 #include "rocs/public/node.h"
 
 ////@begin includes
@@ -101,7 +102,7 @@ class wxSpinCtrl;
  * OutputDialog class declaration
  */
 
-class OutputDialog: public wxDialog
+class OutputDialog: public wxDialog, public BaseDialog
 {
     DECLARE_DYNAMIC_CLASS( OutputDialog )
     DECLARE_EVENT_TABLE()

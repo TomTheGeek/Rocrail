@@ -33,6 +33,7 @@
 #include "wx/spinctrl.h"
 ////@end includes
 
+#include "basedlg.h"
 #include "rocs/public/node.h"
 
 /*!
@@ -95,7 +96,7 @@ class wxSpinCtrl;
  * TextDialog class declaration
  */
 
-class TextDialog: public wxDialog
+class TextDialog: public wxDialog, public BaseDialog
 {
     DECLARE_DYNAMIC_CLASS( TextDialog )
     DECLARE_EVENT_TABLE()

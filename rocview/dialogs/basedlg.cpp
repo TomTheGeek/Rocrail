@@ -5,6 +5,7 @@
 #include "basedlg.h"
 
 #include "rocrail/wrapper/public/Plan.h"
+#include "rocrail/wrapper/public/Item.h"
 #include "rocview/wrapper/public/Gui.h"
 
 #include "rocview/public/guiapp.h"
@@ -12,6 +13,31 @@
 #include "rocs/public/node.h"
 #include "rocs/public/file.h"
 #include "rocs/public/system.h"
+
+
+bool BaseDialog::existID( wxWindow* dlg, iONode list, iONode props, wxString  id ) {
+  if( StrOp.equals( wItem.getid(props), id.mb_str(wxConvUTF8) ) ) {
+    return false;
+  }
+
+  if( id.Len() == 0 ) {
+    wxMessageDialog( dlg, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    return true;
+  }
+  if( list != NULL ) {
+    int cnt = NodeOp.getChildCnt( list );
+    for( int i = 0; i < cnt; i++ ) {
+      iONode child = NodeOp.getChild( list, i );
+      if( StrOp.equals( wItem.getid(child), id.mb_str(wxConvUTF8) )) {
+        wxMessageDialog( dlg,
+            wxString::Format(wxGetApp().getMsg("existingid"), wItem.getx(child), wItem.gety(child)) + _T("\n") + wxString(wItem.getdesc(child)),
+            _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+        return true;
+      }
+    }
+  }
+  return false;
+}
 
 
 void BaseDialog::doDoc( wxCommandEvent& event, const char* xslName ) {

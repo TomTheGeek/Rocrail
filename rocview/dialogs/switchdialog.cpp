@@ -565,8 +565,10 @@ bool SwitchDialog::evaluate() {
   if( m_Props == NULL )
     return false;
 
-  if( m_ID->GetValue().Len() == 0 ) {
-    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+  iONode model  = wxGetApp().getModel();
+  iONode swlist = wPlan.getswlist( model );
+
+  if( existID( this, swlist, m_Props, m_ID->GetValue() ) ) {
     m_ID->SetValue( wxString(wSwitch.getid( m_Props ),wxConvUTF8) );
     return false;
   }

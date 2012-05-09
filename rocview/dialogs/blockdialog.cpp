@@ -821,9 +821,11 @@ bool BlockDialog::evaluate() {
   if( m_Props == NULL )
     return false;
 
-  if( m_ID->GetValue().Len() == 0 ) {
-    wxMessageDialog( this, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
-    m_ID->SetValue( wxString(wBlock.getid( m_Props ),wxConvUTF8) );
+  iONode model  = wxGetApp().getModel();
+  iONode bklist = wPlan.getbklist( model );
+
+  if( existID( this, bklist, m_Props, m_ID->GetValue() ) ) {
+    m_ID->SetValue( wxString(wItem.getid( m_Props ),wxConvUTF8) );
     return false;
   }
   // General

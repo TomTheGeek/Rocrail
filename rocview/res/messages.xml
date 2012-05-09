@@ -17761,4 +17761,7 @@
   <Msg id="departdelay">
     <en txt="Depart delay"/>
   </Msg>
+  <Msg id="existingid">
+    <en txt="The ID already exists at position: %d,%d."/>
+  </Msg>
 </Messages>
