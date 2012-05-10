@@ -30,7 +30,7 @@ bool BaseDialog::existID( wxWindow* dlg, iONode list, iONode props, wxString  id
       iONode child = NodeOp.getChild( list, i );
       if( StrOp.equals( wItem.getid(child), id.mb_str(wxConvUTF8) )) {
         wxMessageDialog( dlg,
-            wxString::Format(wxGetApp().getMsg("existingid"), wItem.getx(child), wItem.gety(child)) + _T("\n") + wxString(wItem.getdesc(child)),
+            wxString::Format(wxGetApp().getMsg("existingid"), wItem.getx(child), wItem.gety(child)) + _T("\n") + wxString(wItem.getdesc(child),wxConvUTF8),
             _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
         return true;
       }
