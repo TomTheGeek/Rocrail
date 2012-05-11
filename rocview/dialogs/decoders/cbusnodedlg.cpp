@@ -1257,7 +1257,7 @@ void CBusNodeDlg::initGC4Event( int idx, int nn, int addr ) {
 void CBusNodeDlg::initGCLNEvent( int idx, int nn, int addr ) {
   if( idx == 0 ) {
     // SOD
-    m_GCLNSoD->SetValue( addr );
+    m_GCLNSoDAddr->SetValue( addr );
     m_SOD = addr;
   }
   else if( idx == 1 ) {
