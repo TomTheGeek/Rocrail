@@ -70,6 +70,8 @@ void CBusNodeDlg::initLabels() {
   m_CANID = 0;
   m_CBus = NodeOp.inst(wCBus.name(), NULL, ELEMENT_NODE);
 
+  m_bGCLNGetAll = false;
+  m_bGCLNSetAll = false;
   m_bGC1eGetAll = false;
   m_bGC1eSetAll = false;
   m_bGC2GetAll = false;
@@ -84,6 +86,7 @@ void CBusNodeDlg::initLabels() {
   m_GC6SetIndex = 0;
   m_GC4SetIndex = 0;
   m_GC1eSetIndex = 0;
+  m_GCLNSetIndex = 0;
 
 
   m_Timer = new wxTimer( this, ME_GC2Timer );
@@ -277,6 +280,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
         initGC6Var(nr, val);
         initGC7Var(nr, val);
         initGC1eVar(nr, val);
+        initGCLNVar(nr, val);
         return cbusnodevar;
       }
       cbusnodevar = wCBusNode.nextcbnodevar( node, cbusnodevar );
@@ -291,6 +295,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
     initGC6Var(nr, val);
     initGC7Var(nr, val);
     initGC1eVar(nr, val);
+    initGCLNVar(nr, val);
     return cbusnodevar;
   }
   return NULL;
@@ -315,6 +320,7 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
         initGC2Event(evnr, evnn, evaddr);
         initGC4Event(evnr, evnn, evaddr);
         initGC6Event(evnr, evnn, evaddr);
+        initGCLNEvent(evnr, evnn, evaddr);
         TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999,"update event value to %d", evval);
         return cbusnodeevt;
       }
@@ -330,6 +336,7 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
     initGC2Event(evnr, evnn, evaddr);
     initGC4Event(evnr, evnn, evaddr);
     initGC6Event(evnr, evnn, evaddr);
+    initGCLNEvent(evnr, evnn, evaddr);
     return cbusnodeevt;
   }
   return NULL;
@@ -761,8 +768,8 @@ void CBusNodeDlg::event( iONode event ) {
     int nn   = wProgram.getdecaddr(event);
     int cv = wProgram.getcv(event);
     int val = wProgram.getvalue(event);
-    TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "node variable %d, val=%d gc1e=%d gc2=%d gc4=%d gc6=%d gc7=%d",
-        cv, val, m_bGC1eGetAll, m_bGC2GetAll, m_bGC4GetAll, m_bGC6GetAll, m_bGC7GetAll);
+    TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "node variable %d, val=%d gc1e=%d gc2=%d gc4=%d gc6=%d gc7=%d gcln=%d",
+        cv, val, m_bGC1eGetAll, m_bGC2GetAll, m_bGC4GetAll, m_bGC6GetAll, m_bGC7GetAll, m_bGCLNGetAll);
 
     iONode nv = getNodeVar(nn, m_NodeTypeNr->GetValue(), cv, val );
     if( m_bGC2GetAll ) {
@@ -782,6 +789,17 @@ void CBusNodeDlg::event( iONode event ) {
         m_bGC6GetAll = false;
         m_GC6SetAll->Enable(true);
         m_GC6GetAll->Enable(true);
+        eventGetAll();
+      }
+    }
+    else if( m_bGCLNGetAll ) {
+      if( cv < 2 ) {
+        varGet(cv+1);
+      }
+      else {
+        m_bGCLNGetAll = false;
+        m_GCLNSetAll->Enable(true);
+        m_GCLNGetAll->Enable(true);
         eventGetAll();
       }
     }
@@ -1147,6 +1165,19 @@ void CBusNodeDlg::initGC6Var( int nr, int val ) {
   }
 }
 
+void CBusNodeDlg::initGCLNVar( int nr, int val ) {
+  if( nr == 1 ) {
+    // node var1
+    m_GCLNReadOnly->SetValue((val & 0x01) ? true:false );
+    m_GCLNCBusSensorEvents->SetValue((val & 0x02) ? true:false );
+    m_GCLNSoD->SetValue((val & 0x04) ? true:false );
+  }
+  else if( nr == 2 ) {
+    m_CANID = val;
+    m_GCLNCANID->SetValue(val);
+  }
+}
+
 void CBusNodeDlg::initGC4Var( int nr, int val ) {
   if( nr == 1 ) {
     // node var1
@@ -1220,6 +1251,30 @@ void CBusNodeDlg::initGC4Event( int idx, int nn, int addr ) {
     // SOD
     m_GC4SOD->SetValue( addr );
     m_SOD = addr;
+  }
+}
+
+void CBusNodeDlg::initGCLNEvent( int idx, int nn, int addr ) {
+  if( idx == 0 ) {
+    // SOD
+    m_GCLNSoD->SetValue( addr );
+    m_SOD = addr;
+  }
+  else if( idx == 1 ) {
+    // switch filter start
+    m_GCLNSwitchFilterStart->SetValue( addr );
+  }
+  else if( idx == 2 ) {
+    // switch filter end
+    m_GCLNSwitchFilterEnd->SetValue( addr );
+  }
+  else if( idx == 3 ) {
+    // sensor filter start
+    m_GCLNSensorFilterStart->SetValue( addr );
+  }
+  else if( idx == 4 ) {
+    // sensor filter end
+    m_GCLNSensorFilterEnd->SetValue( addr );
   }
 }
 
@@ -1371,8 +1426,8 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
 
 void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
   TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
-      "timer gc1e=%d[%d] gc2=%d[%d] gc4=%d[%d] gc6=%d[%d]",
-      m_bGC1eSetAll, m_GC1eSetIndex, m_bGC2SetAll, m_GC2SetIndex, m_bGC4SetAll, m_GC4SetIndex, m_bGC6SetAll, m_GC6SetIndex);
+      "timer gc1e=%d[%d] gc2=%d[%d] gc4=%d[%d] gc6=%d[%d] gcln=%d[%d]",
+      m_bGC1eSetAll, m_GC1eSetIndex, m_bGC2SetAll, m_GC2SetIndex, m_bGC4SetAll, m_GC4SetIndex, m_bGC6SetAll, m_GC6SetIndex, m_bGCLNSetAll, m_GCLNSetIndex);
 
   if( m_bGC1eSetAll ) {
     wxSpinCtrl* gc1eip[] = {m_GC1eIP1,m_GC1eIP2,m_GC1eIP3,m_GC1eIP4};
@@ -1422,6 +1477,56 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
       m_bGC1eSetAll = false;
       m_GC1eSetAll->Enable(true);
       m_GC1eGetAll->Enable(true);
+    }
+  }
+
+  else if( m_bGCLNSetAll ) {
+    if( m_GCLNSetIndex == 0 ) {
+      int nv1 = m_GCLNReadOnly->IsChecked() ? 0x01:0x00;
+      nv1 += m_GCLNCBusSensorEvents->IsChecked() ? 0x02:0x00;
+      nv1 += m_GCLNSoD->IsChecked() ? 0x04:0x00;
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gcln nv1=0x%02X", nv1);
+      varSet(1, nv1, false);
+    }
+    else if( m_GCLNSetIndex == 1 ) {
+      int canid = m_GCLNCANID->GetValue();
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gcln nv2=0x%02X", canid);
+      varSet(2, canid, false);
+    }
+    else if( m_GCLNSetIndex == 2 ) {
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set gcln learn mode");
+      setLearn();
+    }
+    else if( m_GCLNSetIndex == 3 ) {
+      // SoD
+      eventSet( 0, m_GCLNSoD->GetValue(), m_GCLNSetIndex-3, 0, false );
+    }
+    else if( m_GCLNSetIndex == 4 ) {
+      // Switch start
+      eventSet( 0, m_GCLNSwitchFilterStart->GetValue(), m_GCLNSetIndex-3, 0, false );
+    }
+    else if( m_GCLNSetIndex == 5 ) {
+      // Switch end
+      eventSet( 0, m_GCLNSwitchFilterEnd->GetValue(), m_GCLNSetIndex-3, 0, false );
+    }
+    else if( m_GCLNSetIndex == 6 ) {
+      // Sensor start
+      eventSet( 0, m_GCLNSensorFilterStart->GetValue(), m_GCLNSetIndex-3, 0, false );
+    }
+    else if( m_GCLNSetIndex == 7 ) {
+      // Switch end
+      eventSet( 0, m_GCLNSensorFilterEnd->GetValue(), m_GCLNSetIndex-3, 0, false );
+    }
+
+    m_GCLNSetIndex++;
+    if( m_bGCLNSetAll && m_GCLNSetIndex < 7 ) {
+      m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+    }
+    else {
+      m_bGCLNSetAll = false;
+      m_GCLNSetAll->Enable(true);
+      m_GCLNGetAll->Enable(true);
+      setUnlearn();
     }
   }
 
@@ -1902,3 +2007,28 @@ void CBusNodeDlg::onGC2PortType16( wxCommandEvent& event ) {
   if( m_GC2Input16->GetValue() || m_GC2Block16->GetValue() )
     m_GC2EvtNN16->SetValue(0);
 }
+
+
+void CBusNodeDlg::onGCLNGetAll( wxCommandEvent& event ) {
+  m_bGC1eGetAll = false;
+  m_bGC2GetAll = false;
+  m_bGC4GetAll = false;
+  m_bGC6GetAll = false;
+  m_bGCLNGetAll = true;
+  m_GCLNSetAll->Enable(false);
+  m_GCLNGetAll->Enable(false);
+  varGet(1);
+}
+
+void CBusNodeDlg::onGCLNSetAll( wxCommandEvent& event ) {
+  m_bGC1eSetAll = false;
+  m_bGC2SetAll = false;
+  m_bGC4SetAll = false;
+  m_bGC6SetAll = false;
+  m_bGCLNSetAll = true;
+  m_GCLNSetAll->Enable(false);
+  m_GCLNGetAll->Enable(false);
+  m_GCLNSetIndex = 0;
+  m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+}
+

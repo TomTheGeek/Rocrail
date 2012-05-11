@@ -25185,7 +25185,7 @@
                                                             <property name="maximum_size"></property>
                                                             <property name="min">0</property>
                                                             <property name="minimum_size"></property>
-                                                            <property name="name">m_GCLNCanID</property>
+                                                            <property name="name">m_GCLNCANID</property>
                                                             <property name="permission">protected</property>
                                                             <property name="pos"></property>
                                                             <property name="size">100,-1</property>

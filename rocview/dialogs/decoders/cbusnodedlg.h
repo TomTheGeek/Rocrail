@@ -91,6 +91,8 @@ class CBusNodeDlg : public cbusnodedlggen
   void initGC6Var(int nr, int val);
   void initGC4Var(int nr, int val);
   void initGC1eVar(int nr, int val);
+  void initGCLNVar(int nr, int val);
+  void initGCLNEvent(int idx, int nn, int addr);
   void initGC6Event(int idx, int nn, int addr);
   void initGC4Event(int idx, int nn, int addr);
   void gc6GetServoConf(int servo, int idx, int* conf);
@@ -105,6 +107,7 @@ class CBusNodeDlg : public cbusnodedlggen
   int m_GC6SetIndex;
   int m_GC4SetIndex;
   int m_GC1eSetIndex;
+  int m_GCLNSetIndex;
 
   int m_SetPage;
   bool m_bGC2GetAll;
@@ -116,6 +119,8 @@ class CBusNodeDlg : public cbusnodedlggen
   bool m_bGC4SetAll;
   bool m_bGC1eGetAll;
   bool m_bGC1eSetAll;
+  bool m_bGCLNGetAll;
+  bool m_bGCLNSetAll;
 
   unsigned char m_GC4AllowedRFID[5][5];
 
@@ -188,6 +193,8 @@ protected:
   void onGC2PortType14( wxCommandEvent& event );
   void onGC2PortType15( wxCommandEvent& event );
   void onGC2PortType16( wxCommandEvent& event );
+  void onGCLNGetAll( wxCommandEvent& event );
+  void onGCLNSetAll( wxCommandEvent& event );
 
 
 public:
