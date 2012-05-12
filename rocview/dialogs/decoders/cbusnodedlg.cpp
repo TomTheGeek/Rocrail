@@ -1499,7 +1499,7 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
     }
     else if( m_GCLNSetIndex == 3 ) {
       // SoD
-      eventSet( 0, m_GCLNSoD->GetValue(), m_GCLNSetIndex-3, 0, false );
+      eventSet( 0, m_GCLNSoDAddr->GetValue(), m_GCLNSetIndex-3, 0, false );
     }
     else if( m_GCLNSetIndex == 4 ) {
       // Switch start
