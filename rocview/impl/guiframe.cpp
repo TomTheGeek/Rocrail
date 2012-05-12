@@ -1743,7 +1743,7 @@ void RocGuiFrame::initFrame() {
   m_ToolBar->AddSeparator();
 #endif
 
-  m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(80,-1) );
+  m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(80,-1), 0, NULL, wxTE_PROCESS_ENTER );
   m_ScaleComboBox->Append(_T("10"));
   m_ScaleComboBox->Append(_T("20"));
   m_ScaleComboBox->Append(_T("30"));
@@ -2629,36 +2629,32 @@ void RocGuiFrame::OnZoom100( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnScaleComboCheck(wxCommandEvent& event)
 {
-  if( !event.GetString().IsNumber() ) {
+  int zoom = atoi(event.GetString().mb_str(wxConvUTF8));
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Combobox zoom=%d", zoom );
+  if( zoom < 0 || zoom > 200 ) {
     ((wxComboBox*)event.GetEventObject())->SetValue(_T(""));
-  }
-  else {
-    int zoom = atoi(event.GetString().mb_str(wxConvUTF8));
-    if( zoom < 0 || zoom > 200 )
-      ((wxComboBox*)event.GetEventObject())->SetValue(_T(""));
   }
 }
 
 void RocGuiFrame::OnScaleCombo(wxCommandEvent& event)
 {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999,
-      "Combobox string '%s' selected", (const char*)m_ScaleComboBox->GetStringSelection().c_str() );
+      "Combobox string '%s' selected", (const char*)m_ScaleComboBox->GetValue().c_str() );
   int zoom = 100;
 
-  if( !m_ScaleComboBox->GetStringSelection().IsNumber() ) {
-    m_ScaleComboBox->SetValue(_T(""));
-    return;
-  }
-  else {
-    zoom = atoi(m_ScaleComboBox->GetStringSelection().mb_str(wxConvUTF8));
+  if( m_ScaleComboBox->GetValue().IsNumber() ) {
+    zoom = atoi(m_ScaleComboBox->GetValue().mb_str(wxConvUTF8));
     if( zoom < 0 || zoom > 200 ) {
       m_ScaleComboBox->SetValue(_T(""));
-      return;
+    }
+    else {
+      Zoom(zoom);
     }
   }
+  else {
+    m_ScaleComboBox->SetValue(_T(""));
+  }
 
-  if( zoom > 0 && zoom <= 200 )
-    Zoom(zoom);
 }
 
 void RocGuiFrame::Zoom( int zoom ) {
