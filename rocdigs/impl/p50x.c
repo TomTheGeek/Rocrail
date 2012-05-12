@@ -286,7 +286,7 @@ static Boolean __transact( iOP50xData o, char* out, int outsize, char* in, int i
  * @param insize Responce size.
  * @return Request size.
  */
-static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insize, int* inendbyte ) {
+static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insize, int* inendbyte, iONode* rsp ) {
   *insize = 0;
   /* BinCmd command. */
   if( StrOp.equals( NodeOp.getName( node ), wBinCmd.name() ) ) {
@@ -495,10 +495,12 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
   }
   /* Feedback command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFeedback.name() ) ) {
-    int mod = wFeedback.getaddr( node )/16;
-    p50[0] = (unsigned char)(192+mod);
-    *insize = 2;
-    return 1;
+    int addr = wFeedback.getaddr( node );
+    Boolean state = wFeedback.isstate( node );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
+    *rsp = (iONode)NodeOp.base.clone( node );
+    return 0;
   }
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
@@ -833,7 +835,7 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
   MemOp.set( in, 0x00, sizeof( in ) );
 
   if( nodeA != NULL ) {
-    int size = __translate( o, nodeA, out, &insize, &inendbyte );
+    int size = __translate( o, nodeA, out, &insize, &inendbyte, &nodeB );
 
     if( StrOp.equals( NodeOp.getName( nodeA ), wSysCmd.name() ) && StrOp.equals( wSysCmd.getcmd( nodeA ), "stopio" ) ) {
       o->stopio = True;
@@ -842,7 +844,7 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
       o->stopio = False;
     }
 
-    else if( __transact( o, (char*)out, size, (char*)in, insize, inendbyte, o->timeout ) ) {
+    else if( size > 0 && __transact( o, (char*)out, size, (char*)in, insize, inendbyte, o->timeout ) ) {
       /* inform listener */
       if( insize > 0 ) {
         if( StrOp.equals( NodeOp.getName( nodeA ), wSwitch.name() ) ) {
