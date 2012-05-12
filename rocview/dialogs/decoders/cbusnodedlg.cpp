@@ -1519,7 +1519,7 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
     }
 
     m_GCLNSetIndex++;
-    if( m_bGCLNSetAll && m_GCLNSetIndex < 7 ) {
+    if( m_bGCLNSetAll && m_GCLNSetIndex < 8 ) {
       m_Timer->Start( 100, wxTIMER_ONE_SHOT );
     }
     else {
