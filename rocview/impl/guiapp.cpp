@@ -773,10 +773,12 @@ static Boolean __hasIDinList(iONode list, const char* newid ) {
 static void rocrailCallback( obj me, iONode node ) {
   RocGui* guiApp = (RocGui*)me;
 
-  if( (TraceOp.getLevel(NULL) & TRCLEVEL_INFO) == TRCLEVEL_INFO ) {
-    //char* xmlStr = NodeOp.toEscString(node);
-    //TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback %.240s", xmlStr );
-    //StrOp.free(xmlStr);
+  if( (TraceOp.getLevel(NULL) & TRCLEVEL_DEBUG) == TRCLEVEL_DEBUG ) {
+    char* xmlStr = NodeOp.toEscString(node);
+    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback %.240s", xmlStr );
+    StrOp.free(xmlStr);
+  }
+  else {
     TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback %s", NodeOp.getName(node) );
   }
 
