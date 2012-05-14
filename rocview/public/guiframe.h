@@ -91,6 +91,7 @@ public:
   void OnMouse(wxMouseEvent& event);
   void OnClose(wxCloseEvent& event);
   void OnSave(wxCommandEvent& event);
+  void OnGoOffline(wxCommandEvent& event);
   void OnAnalyze(wxCommandEvent& event);
   void OnSaveAs(wxCommandEvent& event);
   void OnOpen(wxCommandEvent& event);
@@ -577,6 +578,7 @@ enum
     ID_SCALE_COMBO,
     ME_INITACTIVELOCS,
     ME_SetStatusText,
+    ME_GoOffline,
     ME_OpenWorkspace,
     ME_RecentWorkspaces = ME_OpenWorkspace + 10,
 };

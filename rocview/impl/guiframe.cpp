@@ -232,6 +232,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_OpenWorkspace+9, RocGuiFrame::OnOpenWorkspace)
     EVT_MENU( ME_New            , RocGuiFrame::OnNew)
     EVT_MENU( ME_Upload         , RocGuiFrame::OnUpload)
+    EVT_MENU( ME_GoOffline      , RocGuiFrame::OnGoOffline)
     EVT_MENU( wxID_ABOUT        , RocGuiFrame::OnAbout)
     EVT_MENU( ME_Update         , RocGuiFrame::OnUpdate)
     EVT_MENU( wxID_HELP         , RocGuiFrame::OnHelp)
@@ -1391,6 +1392,7 @@ void RocGuiFrame::initFrame() {
   wxMenuItem *connect_menuFile = new wxMenuItem(menuFile, ME_Connect, wxGetApp().getMenu("connect"), wxGetApp().getTip("connect") );
   connect_menuFile->SetBitmap(*_img_connect);
   menuFile->Append(connect_menuFile);
+  menuFile->Append(ME_GoOffline, wxGetApp().getMenu("gooffline"), wxGetApp().getTip("gooffline") );
 
   menuFile->Append(wxID_PREFERENCES, wxGetApp().getMenu("rocguiini"), wxGetApp().getTip("rocguiini") );
   menuFile->Append(ME_RocrailIni, wxGetApp().getMenu("rocrailini"), wxGetApp().getTip("rocrailini") );
@@ -2248,6 +2250,17 @@ void RocGuiFrame::OnAnalyze( wxCommandEvent& event ) {
     wSysCmd.setcmd( cmd, wSysCmd.analyze );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
+  }
+}
+
+
+void RocGuiFrame::OnGoOffline( wxCommandEvent& event ) {
+  if( !wxGetApp().isOffline() ) {
+    wxGetApp().disConnect();
+    setOnline(false);
+    iONode plan = NodeOp.inst( wPlan.name(), NULL, ELEMENT_NODE);
+    wxGetApp().Callback( (obj)&wxGetApp(), plan );
+    NodeOp.base.del(plan);
   }
 }
 
@@ -3142,6 +3155,9 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
 
   GetToolBar()->EnableTool(ME_Open, l_bOffline);
+
+  mi = menuBar->FindItem(ME_GoOffline);
+  if( mi != NULL ) mi->Enable( !l_bOffline );
 
   mi = menuBar->FindItem(ME_Open);
   if( mi != NULL ) mi->Enable( l_bOffline );

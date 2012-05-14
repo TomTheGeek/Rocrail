@@ -195,6 +195,13 @@ bool RocGui::isModelSet() {
   return m_Model != NULL ? true:false;
 }
 
+void RocGui::disConnect() {
+  RConOp.close( m_RCon );
+  m_RCon = NULL;
+  m_bStayOffline = true;
+  m_bOffline = true;
+}
+
 int RocGui::OnExit() {
   if( !m_bOnExit ) {
     TraceOp.setExceptionListener( m_Trace, NULL, False, False );
@@ -791,7 +798,7 @@ static void rocrailCallback( obj me, iONode node ) {
     wxGetApp().getFrame()->setEditMode(false);
 
     if( guiApp->getFrame()->getNotebook() != NULL ) {
-      if( !guiApp->isModelSet() ) {
+      if( !guiApp->isModelSet() || guiApp->isOffline() ) {
         TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999,
             "isModelSet=%d stayOffline=%d", guiApp->isModelSet(), guiApp->isStayOffline() );
         guiApp->setModel( node );

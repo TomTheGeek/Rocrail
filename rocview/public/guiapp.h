@@ -61,6 +61,7 @@ public:
   void setConsoleMode(bool consolemode) { m_bConsoleMode = consolemode; }
   bool isStayOffline() { return m_bStayOffline; }
   void setStayOffline( bool stay ) { m_bStayOffline = stay; }
+  void disConnect();
   wxString getMsg( const char* key );
   wxString getTip( const char* key );
   wxString getMenu( const char* key );

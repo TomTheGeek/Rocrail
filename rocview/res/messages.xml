@@ -17764,4 +17764,7 @@
   <Msg id="existingid">
     <en txt="The ID already exists at position: %d,%d."/>
   </Msg>
+  <Msg id="gooffline">
+    <en txt="Go offline"/>
+  </Msg>
 </Messages>

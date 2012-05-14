@@ -5687,3 +5687,9 @@ msgstr ""
 msgid "The ID already exists at position: %d,%d."
 msgstr ""
 
+#. 
+# id="gooffline"
+#, c-format
+msgid "Go offline"
+msgstr ""
+
