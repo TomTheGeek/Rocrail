@@ -62,7 +62,6 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
   data->curBlock->red( data->curBlock, True, !data->next1RouteFromTo );
   data->curBlock->red( data->curBlock, False, !data->next1RouteFromTo );
   */
-  data->next1Block->enterBlock( data->next1Block, data->loc->getId( data->loc ) );
 
   if( !data->next1Block->wait( data->next1Block, data->loc, !data->next1RouteFromTo ) &&
       data->run &&
@@ -337,6 +336,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
       else
         data->loc->setBlockEnterSide(data->loc, data->next1Route->getFromBlockSide(data->next1Route), data->next1Route->getFromBlock(data->next1Route));
     }
+    data->next1Block->enterBlock( data->next1Block, data->loc->getId( data->loc ) );
   }
 
 
