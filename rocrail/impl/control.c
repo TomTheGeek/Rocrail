@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2007 - Rob Versluis <r.j.versluis@rocrail.net>
+ Copyright (C) Rob Versluis <r.j.versluis@rocrail.net>
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -79,7 +79,7 @@ typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 /* proto types */
 static void __informDigInts( iOControl inst );
 static void __listener( obj inst, iONode nodeC, int level );
-static void __checkAction( iOControl inst, const char* state );
+static void __checkAction( iOControl inst, const char* state, const char* by );
 
 static int instCnt = 0;
 
@@ -328,7 +328,7 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
     if( StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) ) {
       /* keep a copy of the command to inform the model after the digints */
       modelSysCmd = (iONode)NodeOp.base.clone(node);
-      __checkAction(inst, wSysCmd.getcmd(node));
+      __checkAction(inst, wSysCmd.getcmd(node), "cmd");
     }
 
     if( StrOp.equals( wPwrCmd.name(), NodeOp.getName(node) ) && data->powerman != NULL ) {
@@ -847,7 +847,7 @@ static void __listener( obj inst, iONode nodeC, int level ) {
         "State event from=%s: track power is %s",
         wState.getiid( nodeC )==NULL?"":wState.getiid( nodeC ), data->power?"ON":"OFF" );
     AppOp.broadcastEvent( nodeC );
-    __checkAction((iOControl)inst, data->power?wSysCmd.go:wSysCmd.stop);
+    __checkAction((iOControl)inst, data->power?wSysCmd.go:wSysCmd.stop, "event");
   }
   else
     ModelOp.event( model, nodeC );
@@ -1050,9 +1050,11 @@ static void __checkActions( iOControl control ) {
 
 
 
-static void __checkAction( iOControl inst, const char* state ) {
+static void __checkAction( iOControl inst, const char* cmd, const char* by ) {
   iOControlData data   = Data(inst);
   iOModel       model  = AppOp.getModel();
+  char state[64];
+  StrOp.fmtb(state, "%s-%s", cmd, by);
 
   if( model != NULL ) {
     iONode plan   = ModelOp.getModel( model );
