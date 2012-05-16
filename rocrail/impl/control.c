@@ -1054,7 +1054,10 @@ static void __checkAction( iOControl inst, const char* cmd, const char* by ) {
   iOControlData data   = Data(inst);
   iOModel       model  = AppOp.getModel();
   char state[64];
-  StrOp.fmtb(state, "%s-%s", cmd, by);
+  if( StrOp.equals(cmd, wSysCmd.go) || StrOp.equals(cmd, wSysCmd.stop) )
+    StrOp.fmtb(state, "%s-%s", cmd, by);
+  else
+    StrOp.fmtb(state, "%s", cmd);
 
   if( model != NULL ) {
     iONode plan   = ModelOp.getModel( model );
