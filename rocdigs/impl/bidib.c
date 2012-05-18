@@ -676,6 +676,40 @@ static void __addNode(iOBiDiB bidib, byte* msg, int entry) {
 }
 
 
+static void __handleNodeFeature(iOBiDiB bidib, byte* msg, int size) {
+  iOBiDiBData data = Data(bidib);
+  byte l_msg[32];
+
+  int Addr = msg[1];
+  int  Seq = msg[2];
+  int Type = msg[3]; // MSG_SYS_MAGIC
+
+  if( Type == MSG_FEATURE_COUNT ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "MSG_FEATURE_COUNT, addr=%d seq=%d features=%d", Addr, Seq, msg[4] );
+    l_msg[0] = 3; // length
+    l_msg[1] = 0; // address
+    l_msg[2] = data->downSeq; // sequence number 1...255
+    l_msg[3] = MSG_FEATURE_GETNEXT; //data
+    int size = __makeMessage(l_msg, 4);
+    data->subWrite((obj)bidib, l_msg, size);
+    data->downSeq++;
+  }
+  else if( Type == MSG_FEATURE ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "MSG_FEATURE, addr=%d seq=%d feature=(%d) %s value=%d", Addr, Seq, msg[4], __getFeatureName(msg[4]), msg[5] );
+    l_msg[0] = 3; // length
+    l_msg[1] = 0; // address
+    l_msg[2] = data->downSeq; // sequence number 1...255
+    l_msg[3] = MSG_FEATURE_GETNEXT; //data
+    int size = __makeMessage(l_msg, 4);
+    data->subWrite((obj)bidib, l_msg, size);
+    data->downSeq++;
+  }
+
+}
+
+
 static void __handleNodeTab(iOBiDiB bidib, byte* msg, int size) {
   iOBiDiBData data = Data(bidib);
   //                                 UID
@@ -851,7 +885,6 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     msg[1] = 0; // address
     msg[2] = data->downSeq; // sequence number 1...255
     msg[3] = MSG_NODETAB_GETALL; //data
-    //msg[4] = 0; // start index
 
     size = __makeMessage(msg, 4);
     data->subWrite((obj)bidib, msg, size);
@@ -938,16 +971,10 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   }
 
   case MSG_FEATURE_COUNT:
-  {
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "MSG_FEATURE_COUNT, addr=%d seq=%d features=%d", Addr, Seq, msg[4] );
-    break;
-  }
-
   case MSG_FEATURE:
-  { // 05 00 02 90 08 01 EC
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "MSG_FEATURE, addr=%d seq=%d feature=(%d) %s value=%d", Addr, Seq, msg[4], __getFeatureName(msg[4]), msg[5] );
+  case MSG_FEATURE_NA:
+  {
+    __handleNodeFeature(bidib, msg, size);
     break;
   }
 
