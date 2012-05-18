@@ -24,6 +24,10 @@
 //                                 added BIDIBUS_BUSY
 //            2012-03-14       kw  added messages for switch/light control, 
 //                                       and command station
+//            2012-03-18 V0.04 kw  added FEATURE_GETNEXT, moved following messages
+//                             kw  changed NODETAB-Handling
+//                                 --> update of all firmware/software required!
+//            2012-04-18 V0.05 kw  added defines for Switch / Output / Makros
 // 
 //===============================================================================
 //
@@ -39,6 +43,7 @@
 //            4. feature codes
 //            5. error codes
 //            6. Defines for serial protocol / BiDiBus
+//............7. Defines for command station handling
 //
 //===============================================================================
 // 
@@ -57,7 +62,7 @@
 //===============================================================================
 
 //                              Mainversion   Subversion
-#define BIDIB_VERSION           (0 * 256 +    3)
+#define BIDIB_VERSION           (0 * 256 +    4)
 
 #define BIDIB_SYS_MAGIC         0xAFFE
 
@@ -80,20 +85,22 @@
 #define MSG_SYS_PING            (MSG_DSYS + 0x07)       // -
 #define MSG_SYS_IDENTIFY        (MSG_DSYS + 0x08)       // 1:id_state
 #define MSG_SYS_RESET           (MSG_DSYS + 0x09)       // -
-#define MSG_GET_NODE_TAB        (MSG_DSYS + 0x0a)       // -
-#define MSG_GET_PKT_CAPACITY    (MSG_DSYS + 0x0b)       // -
-#define MSG_NODE_CHANGED_ACK    (MSG_DSYS + 0x0c)       // 1:nodetab_version
-#define MSG_SYS_GET_ERROR       (MSG_DSYS + 0x0d)       // -
+#define MSG_GET_PKT_CAPACITY    (MSG_DSYS + 0x0a)       // -
+#define MSG_NODETAB_GETALL      (MSG_DSYS + 0x0b)       // -
+#define MSG_NODETAB_GETNEXT     (MSG_DSYS + 0x0c)       // -
+#define MSG_NODE_CHANGED_ACK    (MSG_DSYS + 0x0d)       // 1:nodetab_version
+#define MSG_SYS_GET_ERROR       (MSG_DSYS + 0x0e)       // -
 
 //-- feature and user config messages
 #define MSG_DFC                 (MSG_DSTRM + 0x10)
 #define MSG_FEATURE_GETALL      (MSG_DFC + 0x00)        // -
-#define MSG_FEATURE_GET         (MSG_DFC + 0x01)        // 1:feature_num
-#define MSG_FEATURE_SET         (MSG_DFC + 0x02)        // 1:feature_num, 2:feature_val
-#define MSG_VENDOR_ENABLE       (MSG_DFC + 0x03)
-#define MSG_VENDOR_DISABLE      (MSG_DFC + 0x04)
-#define MSG_VENDOR_SET          (MSG_DFC + 0x05)
-#define MSG_VENDOR_GET          (MSG_DFC + 0x06)
+#define MSG_FEATURE_GETNEXT     (MSG_DFC + 0x01)        // -
+#define MSG_FEATURE_GET         (MSG_DFC + 0x02)        // 1:feature_num
+#define MSG_FEATURE_SET         (MSG_DFC + 0x03)        // 1:feature_num, 2:feature_val
+#define MSG_VENDOR_ENABLE       (MSG_DFC + 0x04)
+#define MSG_VENDOR_DISABLE      (MSG_DFC + 0x05)
+#define MSG_VENDOR_SET          (MSG_DFC + 0x06)
+#define MSG_VENDOR_GET          (MSG_DFC + 0x07)
 
 //-- occupancy messages
 #define MSG_DBM                 (MSG_DSTRM + 0x20)
@@ -111,22 +118,24 @@
 //-- switch/light control messages
 #define MSG_DLC                 (MSG_DSTRM + 0x40)
 #define MSG_LC_OUTPUT           (MSG_DLC + 0x00)        // 1:port, 2:state
-#define MSG_LC_CONFIG_SET       (MSG_DLC + 0x01)        // 1:port, 2:off_val, 3:on_val, 4:dimm_off, 5:dimm_on
-#define MSG_LC_CONFIG_GET       (MSG_DLC + 0x02)        // 1:port
+#define MSG_LC_CONFIG_SET       (MSG_DLC + 0x01)        // 1:type, 2:port, 3:off_val, 4:on_val, 5:dimm_off, 6:dimm_on
+#define MSG_LC_CONFIG_GET       (MSG_DLC + 0x02)        // 1:type, 2:port
 #define MSG_LC_KEY_QUERY        (MSG_DLC + 0x03)        // 1:port
 
 //-- macro messages
 #define MSG_DMAC                (MSG_DSTRM + 0x48)
-#define MSG_LC_MACRO_HANDLE     (MSG_DMAC + 0x00)       // 1:macro, 2:CV_ADDR_L, 3:CV_ADDR_H, 4:CV_DAT
-#define MSG_LC_MACRO_SET        (MSG_DMAC + 0x01)
-#define MSG_LC_MACRO_GET        (MSG_DMAC + 0x02)
+#define MSG_LC_MACRO_HANDLE     (MSG_DMAC + 0x00)       // 1:macro, 2:opcode
+#define MSG_LC_MACRO_SET        (MSG_DMAC + 0x01)       // 1:macro, 2:item, 3:delay, 4:lstate,  5:lvalue 
+#define MSG_LC_MACRO_GET        (MSG_DMAC + 0x02)       // 1:macro, 2:item
+#define MSG_LC_MACRO_PARA_SET   (MSG_DMAC + 0x03)       // 1:macro, 2:para_idx, 3:value
+#define MSG_LC_MACRO_PARA_GET   (MSG_DMAC + 0x04)       // 1:macro, 2:para_idx
 
 //-- dcc gen messages
 #define MSG_DGEN                (MSG_DSTRM + 0x60)
 #define  MSG_CS_ALLOCATE        (MSG_DGEN + 0x00)
 #define  MSG_CS_CONNECT         (MSG_DGEN + 0x01)
 #define  MSG_CS_SET_STATE       (MSG_DGEN + 0x02)
-#define  MSG_CS_GET_STATE       (MSG_DGEN + 0x03)    // could be obsolete
+#define  MSG_CS_GET_STATE       (MSG_DGEN + 0x03)       // could be obsolete
 #define  MSG_CS_DRIVE           (MSG_DGEN + 0x04)
 #define  MSG_CS_ACCESSORY       (MSG_DGEN + 0x05)
 #define  MSG_PRG_CV_WRITE       (MSG_DGEN + 0x07)       // 1:method, 2:CV_ADDR_L, 3:CV_ADDR_H, 4:CV_DAT
@@ -155,15 +164,18 @@
 #define MSG_SYS_P_VERSION       (MSG_USYS + 0x03)       // 1:proto-ver_l, 2:proto-ver_h
 #define MSG_SYS_UNIQUE_ID       (MSG_USYS + 0x04)       // 1:class, 2:classx, 3:vid, 4..7:pid+uid    
 #define MSG_SYS_SW_VERSION      (MSG_USYS + 0x05)       // 1:sw-ver_l, 2:sw_-ver_h, 3:sw-ver_u
-#define MSG_SYS_ERROR           (MSG_USYS + 0x06)
+#define MSG_SYS_ERROR           (MSG_USYS + 0x06)       // 1:err_code, 2:msg
 #define MSG_SYS_IDENTIFY_STATE  (MSG_USYS + 0x07)       // 1:state
-#define MSG_NODE_TAB_NA         (MSG_USYS + 0x08)       // -
-#define MSG_NODE_TAB            (MSG_USYS + 0x09)       // 1:version, 2:length, 3:start, 4..n:nodes
+#define MSG_NODETAB_COUNT       (MSG_USYS + 0x08)       // 1:length
+#define MSG_NODETAB_OLD         (MSG_USYS + 0x09)       // this is only old version, to be removed!
+                                                        // 1:version, 2:length, 3:start, 4..n:nodes
                                                         //      node: local num, unique
+#define MSG_NODETAB             (MSG_USYS + 0x09)       // 1:version, 2:local num, 3..9: unique
 #define MSG_PKT_CAPACITY        (MSG_USYS + 0x0a)       // 1:capacity
 #define MSG_NODE_NA             (MSG_USYS + 0x0b)       // 1:node
 #define MSG_NODE_LOST           (MSG_USYS + 0x0c)       // 1:node
 #define MSG_NODE_NEW            (MSG_USYS + 0x0d)       // 1:version, 2:local num, 3..9: unique
+#define MSG_STALL               (MSG_USYS + 0x0e)       // 1:msg
 
 //-- feature and user config messages
 #define MSG_UFC                 (MSG_USTRM +  0x10)
@@ -196,14 +208,15 @@
 //-- switch/light control messages
 #define MSG_ULC                 (MSG_USTRM +  0x40)
 #define MSG_LC_STAT             (MSG_ULC + 0x00)        // 1:port, 2:state
-#define MSG_LC_NA               (MSG_ULC + 0x01)        // 1:port
-#define MSG_LC_CONFIG           (MSG_ULC + 0x02)        // 1:port, 2:off_val, 3:on_val, 4:dimm_off, 5:dimm_on
+#define MSG_LC_NA               (MSG_ULC + 0x01)        // 1:type, 2:port
+#define MSG_LC_CONFIG           (MSG_ULC + 0x02)        // 1:type, 2:port, 3:off_val, 4:on_val, 5:dimm_off, 6:dimm_on
 #define MSG_LC_KEY              (MSG_ULC + 0x03)        // 1:port, 2:state
 
 //-- macro messages
 #define MSG_UMAC                (MSG_USTRM +  0x48)
 #define MSG_LC_MACRO_STATE      (MSG_UMAC + 0x00)
 #define MSG_LC_MACRO            (MSG_UMAC + 0x01)
+#define MSG_LC_MACRO_PARA       (MSG_UMAC + 0x02)
 
 //-- dcc control messages
 #define MSG_UGEN                (MSG_USTRM +  0x60)
@@ -292,18 +305,29 @@ typedef enum
 #define FEATURE_BST_AMPERE_ADJUSTABLE      21
 #define FEATURE_BST_AMPERE                 22
 //-- control
-#define FEATURE_CTRL_CHANNEL_COUNT         50   // numbers to be reviewed!
-#define FEATURE_CTRL_KEY_COUNT             51
-#define FEATURE_CTRL_MAC1_SAVE             52
-#define FEATURE_CTRL_MAC1_COUNT            53
-#define FEATURE_CTRL_MAC1_SIZE             54
+#define FEATURE_CTRL_INPUT_COUNT           50
+#define FEATURE_CTRL_INPUT_NOTIFY          51   // 1: report to host
+#define FEATURE_CTRL_SPORT_COUNT           52
+#define FEATURE_CTRL_LPORT_COUNT           53
+#define FEATURE_CTRL_SERVO_COUNT           54
+#define FEATURE_CTRL_SOUND_COUNT           55
+#define FEATURE_CTRL_MOTOR_COUNT           56
+#define FEATURE_CTRL_ANALOG_COUNT          57
+#define FEATURE_CTRL_MAC_LEVEL             60
+#define FEATURE_CTRL_MAC_SAVE              61
+#define FEATURE_CTRL_MAC_COUNT             62
+#define FEATURE_CTRL_MAC_SIZE              63
+#define FEATURE_CTRL_MAC_START_MAN         64
+#define FEATURE_CTRL_MAC_START_DCC         65
+
 //-- dcc gen
-#define FEATURE_GEN_SPYMODE                100  // numbers to be reviewed!
-#define FEATURE_GEN_WATCHDOG               101  // 
-#define FEATURE_GEN_DRIVE_ACK              102  // 
+#define FEATURE_GEN_SPYMODE                100  // 1: watch bidib handsets
+#define FEATURE_GEN_WATCHDOG               101  // watchdog (MSG_CS_ALLOCATE)
+#define FEATURE_GEN_DRIVE_ACK              102  //  
 #define FEATURE_GEN_SWITCH_ACK             103  // 
 #define FEATURE_GEN_LOK_DB_SIZE            104  // 
 #define FEATURE_GEN_LOK_DB_STRING          105  // 
+#define FEATURE_GEN_SERVICE_MODES          106  // 
 
 
 //===============================================================================
@@ -312,16 +336,16 @@ typedef enum
 //
 //===============================================================================
 
-#define BIDIB_ERR_NONE      0x00    // void
-#define BIDIB_ERR_TXT       0x01    // general text error
-#define BIDIB_ERR_CRC       0x02    // received crc was errornous
-#define BIDIB_ERR_SIZE      0x03    //
-#define BIDIB_ERR_SEQUENCE  0x04    // sequence was wrong
-#define BIDIB_ERR_PARAMETER 0x05    // parameter out of range
-#define BIDIB_ERR_BUS       0x10    // Bus Fault, capacity exceeded
-#define BIDIB_ERR_ADDRSTACK 0x11    // Address Stack, 4 bytes follow 
-#define BIDIB_ERR_IDDOUBLE  0x12    // Double ID, 7 bytes follow 
-#define BIDIB_ERR_HW        0x20    // self test failed
+#define BIDIB_ERR_NONE              0x00        // void
+#define BIDIB_ERR_TXT               0x01        // general text error
+#define BIDIB_ERR_CRC               0x02        // received crc was errornous
+#define BIDIB_ERR_SIZE              0x03        //
+#define BIDIB_ERR_SEQUENCE          0x04        // sequence was wrong
+#define BIDIB_ERR_PARAMETER         0x05        // parameter out of range
+#define BIDIB_ERR_BUS               0x10        // Bus Fault, capacity exceeded
+#define BIDIB_ERR_ADDRSTACK         0x11        // Address Stack, 4 bytes follow 
+#define BIDIB_ERR_IDDOUBLE          0x12        // Double ID, 7 bytes follow 
+#define BIDIB_ERR_HW                0x20        // self test failed
 
 
 //===============================================================================
@@ -330,24 +354,104 @@ typedef enum
 //
 //===============================================================================
 
-// 6.a) serial Link
+// 6.a) Serial Link
 
-#define BIDIB_PKT_MAGIC         0xFE            // frame delimiter for serial link
-#define BIDIB_PKT_ESCAPE        0xFD
+#define BIDIB_PKT_MAGIC             0xFE        // frame delimiter for serial link
+#define BIDIB_PKT_ESCAPE            0xFD
 
 // 6.b) defines for BiDiBus, system messages
 // (system messages are 9 bits, bit8 is set (1), bits 0..7 do have even parity)
-#define BIDIBUS_SYS_MSG         0x40            // System Part of BiDiBus
-
-#define BIDIBUS_POWER_UP        0x7F            // Bus Reset
-#define BIDIBUS_POWER_UP_par    0xFF            // Bus Reset (including parity)
-#define BIDIBUS_LOGON           0x7E            // Logon Prompt
-#define BIDIBUS_LOGON_par       0x7E            // Logon Prompt (including parity)
-#define BIDIBUS_BUSY            0x7D            // Interface Busy
-#define BIDIBUS_BUSY_par        0x7D            // Interface Busy (including parity)
+#define BIDIBUS_SYS_MSG             0x40        // System Part of BiDiBus
+                                                
+#define BIDIBUS_POWER_UP            0x7F        // Bus Reset
+#define BIDIBUS_POWER_UP_par        0xFF        // Bus Reset (including parity)
+#define BIDIBUS_LOGON               0x7E        // Logon Prompt
+#define BIDIBUS_LOGON_par           0x7E        // Logon Prompt (including parity)
+#define BIDIBUS_BUSY                0x7D        // Interface Busy
+#define BIDIBUS_BUSY_par            0x7D        // Interface Busy (including parity)
 
 // from Node
 #define BIDIBUS_NODE_READY      0
 #define BIDIBUS_NODE_BUSY       1
+
+//===============================================================================
+//
+// 7. Command Station Handling (useful defines)
+//
+//===============================================================================
+
+#define BIDIB_CS_STATE_OFF          0x00
+#define BIDIB_CS_STATE_STOP         0x01
+#define BIDIB_CS_STATE_SOFTSTOP     0x02
+#define BIDIB_CS_STATE_SHORT        0x03
+#define BIDIB_CS_STATE_GO           0x10
+#define BIDIB_CS_STATE_PROG         0x80
+#define BIDIB_CS_STATE_PROGBUSY     0x81
+#define BIDIB_CS_STATE_BUSY         0xF0
+
+//===============================================================================
+//
+// 7. IO-Control and Macro (useful defines)
+//
+//===============================================================================
+
+// Macro / Switch Pointparameters
+// type codes
+#define BIDIB_OUTTYPE_SPORT          0     // standard port
+#define BIDIB_OUTTYPE_LPORT          1     // light port
+#define BIDIB_OUTTYPE_SERVO          2     
+#define BIDIB_OUTTYPE_SOUND          3     
+#define BIDIB_OUTTYPE_MOTOR          4     
+#define BIDIB_OUTTYPE_ANALOG         5     
+
+// control codes  - one nibble, here for PORTs
+
+#define BIDIB_PORT_TURN_OFF          0      // for standard
+#define BIDIB_PORT_TURN_ON           1      // for standard
+#define BIDIB_PORT_DIMM_OFF          2
+#define BIDIB_PORT_DIMM_ON           3
+#define BIDIB_PORT_TURN_ON_NEON      4
+#define BIDIB_PORT_BLINK_A           5
+#define BIDIB_PORT_BLINK_B           6
+#define BIDIB_PORT_FLASH_A           7
+#define BIDIB_PORT_FLASH_B           8
+#define BIDIB_PORT_DOUBLE_FLASH      9
+#define BIDIB_PORT_QUERY            15
+
+// Macro Global States
+#define BIDIB_MACRO_OFF             0x00
+#define BIDIB_MACRO_START           0x01
+#define BIDIB_MACRO_RUNNING         0x02   
+#define BIDIB_MACRO_SAVE            0xFD
+#define BIDIB_MACRO_DELETE          0xFE
+#define BIDIB_MACRO_NOTEXIST        0xFF
+
+// Macro System Commands (Level 2)
+// These are opcodes inside a macro-syscommand of level 2 
+#define BIDIB_MSYS_END_OF_MACRO     255     // end of macro (EOF)
+#define BIDIB_MSYS_START_MACRO      254     // start a macro
+#define BIDIB_MSYS_STOP_MACRO       253     // stop a macro
+#define BIDIB_MSYS_BEGIN_CRITCAL    252     // current macro will ignore stop requests
+#define BIDIB_MSYS_END_CRITCAL      251     // current macro can be stopped by a stop (default)
+
+#define BIDIB_MSYS_FLAG_QUERY       250     // query flag and pause as long as flag is not set
+#define BIDIB_MSYS_FLAG_SET         249     // set flag
+#define BIDIB_MSYS_FLAG_CLEAR       248     // reset flag
+
+#define BIDIB_MSYS_INPUT_QUERY1     247     // query input for 'pressed / activated'
+#define BIDIB_MSYS_INPUT_QUERY0     246     // query input for 'released'
+#define BIDIB_MSYS_DELAY_RANDOM     245     // make a random delay
+
+
+
+// Macro global parameters
+#define BIDIB_MACRO_PARA_SLOWDOWN   0x01      
+
+// here additional run parameters are to be defined. like:
+// start condition: from DCC, DCC addr low, DCC addr high
+//                  from system clock: time
+// repeat mode:     single, n-times, forever
+// stop condition:
+
 
 #endif // __BIDIB_MESSAGES_H__

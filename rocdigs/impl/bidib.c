@@ -21,7 +21,6 @@
 
 
 
-
 #include "rocdigs/impl/bidib_impl.h"
 
 #include "rocs/public/trace.h"
@@ -684,12 +683,42 @@ static void __handleNodeTab(iOBiDiB bidib, byte* msg, int size) {
   // 0E 00 04 89 01  01  00    00      40    00  0D  65 00 01 00 E1
   int Addr     = msg[1];
   int  Seq     = msg[2];
+  int Type     = msg[3];
   data->tabver = msg[4];
   int entries  = msg[5];
   int entry    = 0;
   int offset   = 7;
+
+
+  if( Type == MSG_NODETAB_COUNT ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "MSG_NODETAB_COUNT, addr=%d seq=%d count=%d", Addr, Seq, msg[4] );
+    // request next
+    if( msg[4] > 0 ) {
+      byte l_msg[32];
+      l_msg[0] = 3; // length
+      l_msg[1] = 0; // address
+      l_msg[2] = data->downSeq; // sequence number 1...255
+      l_msg[3] = MSG_NODETAB_GETNEXT; //data
+      int size = __makeMessage(l_msg, 4);
+      data->subWrite((obj)bidib, l_msg, size);
+      data->downSeq++;
+    }
+    return;
+  }
+  else {
+    byte l_msg[32];
+    l_msg[0] = 3; // length
+    l_msg[1] = 0; // address
+    l_msg[2] = data->downSeq; // sequence number 1...255
+    l_msg[3] = MSG_NODETAB_GETNEXT; //data
+    int size = __makeMessage(l_msg, 4);
+    data->subWrite((obj)bidib, l_msg, size);
+    data->downSeq++;
+  }
+
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-      "MSG_NODE_TAB, addr=%d seq=%d tab-ver=%d tab-len=%d", Addr, Seq, data->tabver, entries );
+      "MSG_NODETAB, addr=%d seq=%d tab-ver=%d tab-len=%d", Addr, Seq, data->tabver, entries );
 
   for( entry = 0; entry < entries; entry++ ) {
     __addNode(bidib, msg+offset+entry*8, entry );
@@ -761,7 +790,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     msg[0] = 3; // length
     msg[1] = 0; // address
     msg[2] = data->downSeq; // sequence number 1...255
-    msg[3] = MSG_SYS_GET_P_VERSION; //data
+    msg[3] = MSG_SYS_GET_SW_VERSION; //data
 
     size = __makeMessage(msg, 4);
     data->subWrite((obj)bidib, msg, size);
@@ -817,14 +846,14 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
       data->downSeq++;
     }
 
-    // MSG_GET_NODE_TAB
-    msg[0] = 4; // length
+    // MSG_NODETAB_GETALL
+    msg[0] = 3; // length
     msg[1] = 0; // address
     msg[2] = data->downSeq; // sequence number 1...255
-    msg[3] = MSG_GET_NODE_TAB; //data
-    msg[4] = 0; // start index
+    msg[3] = MSG_NODETAB_GETALL; //data
+    //msg[4] = 0; // start index
 
-    size = __makeMessage(msg, 5);
+    size = __makeMessage(msg, 4);
     data->subWrite((obj)bidib, msg, size);
     data->downSeq++;
 
@@ -854,7 +883,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
   }
 
-  case MSG_NODE_TAB:
+  case MSG_NODETAB_COUNT:
+  case MSG_NODETAB:
   {
     __handleNodeTab(bidib, msg, size);
     break;
@@ -1030,6 +1060,21 @@ static void __bidibReader( void* threadinst ) {
 
   while( data->run ) {
 
+    if( !data->magicOK && SystemOp.getTick() - data->lastMagicReq > 100 ) {
+      /* no magic received; request again */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "magic request #%d", magicreq );
+      magicreq++;
+      data->lastMagicReq = SystemOp.getTick();
+      msg[0] = 3; // length
+      msg[1] = 0; // address
+      msg[2] = data->downSeq; // sequence number 1...255
+      msg[3] = MSG_SYS_GET_MAGIC; //data
+
+      size = __makeMessage(msg, 4);
+      data->subWrite((obj)bidib, msg, size);
+      data->downSeq++;
+    }
+
     if( !data->subAvailable( (obj)bidib) ) {
       ThreadOp.sleep( 10 );
       continue;
@@ -1052,20 +1097,6 @@ static void __bidibReader( void* threadinst ) {
         __processBidiMsg(bidib, msg, size);
       }
 
-      if( !data->magicOK && SystemOp.getTick() - data->lastMagicReq > 100 ) {
-        /* no magic received; request again */
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "magic request #%d", magicreq );
-        magicreq++;
-        data->lastMagicReq = SystemOp.getTick();
-        msg[0] = 3; // length
-        msg[1] = 0; // address
-        msg[2] = data->downSeq; // sequence number 1...255
-        msg[3] = MSG_SYS_GET_MAGIC; //data
-
-        size = __makeMessage(msg, 4);
-        data->subWrite((obj)bidib, msg, size);
-        data->downSeq++;
-      }
     }
 
   };
