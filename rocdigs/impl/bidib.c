@@ -122,6 +122,8 @@ static void __inform( iOBiDiB inst ) {
 /*
  */
 static const char* __getFeatureName(int feature) {
+
+  /* Occupancy detector */
   if( feature == FEATURE_BM_SIZE ) return "number of sensors";
   if( feature == FEATURE_BM_ON ) return "activated sensors events";
   if( feature == FEATURE_BM_SECACK_AVAILABLE ) return "secure-ACK available";
@@ -137,10 +139,42 @@ static const char* __getFeatureName(int feature) {
   if( feature == FEATURE_BM_ISTSPEED_ON ) return "dcc-speed enabled";
   if( feature == FEATURE_BM_CV_AVAILABLE ) return "cv-messages available";
   if( feature == FEATURE_BM_CV_ON ) return "cv-messages enabled";
-  if( feature == 15 ) return "adjustable output voltage";
-  if( feature == 16 ) return "output voltage value in V";
-  if( feature == 17 ) return "cutout available";
-  if( feature == 18 ) return "cutout enabled";
+
+  /* Booster */
+  if( feature == FEATURE_BST_VOLT_ADJUSTABLE ) return "adjustable output voltage";
+  if( feature == FEATURE_BST_VOLT ) return "output voltage value in V";
+  if( feature == FEATURE_BST_CUTOUT_AVAIALABLE ) return "cutout available";
+  if( feature == FEATURE_BST_CUTOUT_ON ) return "cutout enabled";
+  if( feature == FEATURE_BST_TURNOFF_TIME ) return "turnoff time";
+  if( feature == FEATURE_BST_INRUSH_TURNOFF_TIME ) return "inrush turnoff time";
+  if( feature == FEATURE_BST_AMPERE_ADJUSTABLE ) return "ampere adjustable";
+  if( feature == FEATURE_BST_AMPERE ) return "ampere";
+
+  /* Control */
+  if( feature == FEATURE_CTRL_INPUT_COUNT ) return "input count";
+  if( feature == FEATURE_CTRL_INPUT_NOTIFY ) return "input notify";
+  if( feature == FEATURE_CTRL_SPORT_COUNT ) return "short port count";
+  if( feature == FEATURE_CTRL_LPORT_COUNT ) return "long port count";
+  if( feature == FEATURE_CTRL_SERVO_COUNT ) return "servo count";
+  if( feature == FEATURE_CTRL_SOUND_COUNT ) return "sound count";
+  if( feature == FEATURE_CTRL_MOTOR_COUNT ) return "motor count";
+  if( feature == FEATURE_CTRL_ANALOG_COUNT ) return "analog count";
+  if( feature == FEATURE_CTRL_MAC_LEVEL ) return "MAC level";
+  if( feature == FEATURE_CTRL_MAC_SAVE ) return "MAC save";
+  if( feature == FEATURE_CTRL_MAC_COUNT ) return "MAC count";
+  if( feature == FEATURE_CTRL_MAC_SIZE ) return "MAC size";
+  if( feature == FEATURE_CTRL_MAC_START_MAN ) return "MAC start manuel";
+  if( feature == FEATURE_CTRL_MAC_START_DCC ) return "MAC start DCC";
+
+  /* DCC Gen */
+  if( feature == FEATURE_GEN_SPYMODE ) return "DCC spymode";
+  if( feature == FEATURE_GEN_WATCHDOG ) return "DCC watchdog";
+  if( feature == FEATURE_GEN_DRIVE_ACK ) return "DCC drive ack";
+  if( feature == FEATURE_GEN_SWITCH_ACK ) return "DCC switch ack";
+  if( feature == FEATURE_GEN_LOK_DB_SIZE ) return "DCC loco DB size";
+  if( feature == FEATURE_GEN_LOK_DB_STRING ) return "DCC loco DB string";
+  if( feature == FEATURE_GEN_SERVICE_MODES ) return "DCC service modes";
+
   return "*** unknown feature ***";
 }
 
@@ -497,7 +531,7 @@ static int __getOffset4LocalAddr(iOBiDiB bidib, int local) {
   if( node != NULL )
     return wBiDiBnode.getoffset(node);
 
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no mapping found for local addr [%s]", key );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no mapping found for local addr [%s]", key );
   return 1;
 }
 
@@ -906,8 +940,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     msg[1] = 0; // address
     msg[2] = data->downSeq; // sequence number 1...255
     msg[3] = MSG_BM_GET_RANGE; //data
-    msg[4] = 0; // address range
-    msg[5] = 0; // address range
+    msg[4] = 1; // address range
+    msg[5] = 16; // address range
 
     size = __makeMessage(msg, 6);
     data->subWrite((obj)bidib, msg, size);
