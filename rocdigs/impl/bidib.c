@@ -677,7 +677,7 @@ static const char* __getClass(int classid ) {
   return wBiDiBnode.class_sensor;
 }
 
-static void __addNode(iOBiDiB bidib, byte* msg, int entry) {
+static void __addNode(iOBiDiB bidib, byte* msg) {
   iOBiDiBData data = Data(bidib);
 
   //                                 UID
@@ -690,8 +690,7 @@ static void __addNode(iOBiDiB bidib, byte* msg, int entry) {
   StrOp.fmtb( uidKey, "%d", uid );
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-      "entry=%d local=%s class=0x%02X vid=%d uid=%s", entry,
-      localKey, msg[1], msg[3], uidKey);
+      "local=%s class=0x%02X vid=%d uid=%s", localKey, msg[1], msg[3], uidKey);
 
   iONode node = (iONode)MapOp.get( data->nodemap, uidKey );
   if( node != NULL ) {
@@ -774,8 +773,25 @@ static void __handleNodeTab(iOBiDiB bidib, byte* msg, int size) {
     }
     return;
   }
-  else {
+  else if( Type == MSG_NODETAB ) {
     byte l_msg[32];
+
+    /*
+    00000000: 0C 00 07 89 01 00 40 00 0D 66 00 00 01 00
+    20120519.082709.379 r9999c bidibrea OBiDiB   0779 MSG_NODETAB, addr=0 seq=7 tab-ver=1 tab-len=0
+
+    MSG_NODETAB:
+    Es folgt ein Eintrag der Zuordnungstabelle, dieser hat folgenden Aufbau:
+      MSG_NODETAB_DATA ::= NODETAB_VERSION NODETAB_ENTRY
+      NODE_TAB_VERSION ::= [ 0x01 .. 0xff ] (Wird bei jeder Änderung inkrementiert, Überlauf: 255→1)
+      NODETAB_ENTRY ::= NODE_ADDR UNIQUE_ID
+
+    NODE_ADDR Zugewiesene lokale Adresse des Melders (Wertebereich 0..127)
+    UNIQUE_ID die eindeutige Hardwarekennung des Melders, diese besteht aus 7 Bytes
+    */
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "MSG_NODETAB, addr=%d seq=%d tab-ver=%d tab-len=%d", Addr, Seq, data->tabver, entries );
     l_msg[0] = 3; // length
     l_msg[1] = 0; // address
     l_msg[2] = data->downSeq; // sequence number 1...255
@@ -783,14 +799,12 @@ static void __handleNodeTab(iOBiDiB bidib, byte* msg, int size) {
     int size = __makeMessage(l_msg, 4);
     data->subWrite((obj)bidib, l_msg, size);
     data->downSeq++;
+
+    __addNode(bidib, msg+5 );
   }
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-      "MSG_NODETAB, addr=%d seq=%d tab-ver=%d tab-len=%d", Addr, Seq, data->tabver, entries );
-
-  for( entry = 0; entry < entries; entry++ ) {
-    __addNode(bidib, msg+offset+entry*8, entry );
     /*
+
     char localKey[32];
     char uidKey[32];
     int uid = msg[offset+4+entry*8] + (msg[offset+5+entry*8] << 8) + (msg[offset+6+entry*8] << 16) + (msg[offset+7+entry*8] << 24);
@@ -811,7 +825,6 @@ static void __handleNodeTab(iOBiDiB bidib, byte* msg, int size) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no mapping found for product ID [%s]", uidKey );
     }
     */
-  }
 }
 
 
@@ -820,7 +833,7 @@ static void __handleNewNode(iOBiDiB bidib, byte* msg, int size) {
   int Addr     = msg[1];
   int  Seq     = msg[2];
   data->tabver = msg[4];
-  __addNode(bidib, msg+5, 0);
+  __addNode(bidib, msg+5);
 }
 
 
