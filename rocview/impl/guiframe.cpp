@@ -3382,9 +3382,9 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   mi = menuBar->FindItem(ME_Connect);
   if( mi != NULL )
-    mi->Enable( !wxGetApp().isStayOffline() && !m_bActiveWorkspace);
+    mi->Enable( l_bOffline && !m_bActiveWorkspace);
 
-  GetToolBar()->EnableTool(ME_Connect, (!wxGetApp().isStayOffline() && !m_bActiveWorkspace) );
+  GetToolBar()->EnableTool(ME_Connect, (l_bOffline && !m_bActiveWorkspace) );
   GetToolBar()->EnableTool(ME_OpenWorkspace, (!m_bActiveWorkspace && l_bOffline) );
 
   wxMenuItem* mi_zoom25  = menuBar->FindItem(ME_Zoom25);
