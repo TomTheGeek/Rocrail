@@ -953,7 +953,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     msg[1] = 0; // address
     msg[2] = data->downSeq; // sequence number 1...255
     msg[3] = MSG_BM_GET_RANGE; //data
-    msg[4] = 1; // address range
+    msg[4] = 0; // address range
     msg[5] = 16; // address range
 
     size = __makeMessage(msg, 6);
@@ -1078,8 +1078,21 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_NODE_NA:
   {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_NODE_NA, addr=%d seq=%d na-node=%d", Addr, Seq, msg[4] );
+
+    // MSG_BM_GET_RANGE
+    msg[0] = 5; // length
+    msg[1] = 0; // address
+    msg[2] = data->downSeq; // sequence number 1...255
+    msg[3] = MSG_BM_GET_RANGE; //data
+    msg[4] = 0; // address range
+    msg[5] = 16; // address range
+
+    size = __makeMessage(msg, 6);
+    data->subWrite((obj)bidib, msg, size);
+    data->downSeq++;
+
     break;
   }
 
