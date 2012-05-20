@@ -3115,7 +3115,7 @@ void RocGuiFrame::setOnline( bool online ) {
   GetToolBar()->EnableTool(ME_New, !online);
   GetToolBar()->EnableTool(ME_Open, !online);
   GetToolBar()->EnableTool(ME_Upload, online);
-  GetToolBar()->EnableTool(ME_Connect, (!wxGetApp().isStayOffline() && !m_bActiveWorkspace) );
+  GetToolBar()->EnableTool(ME_Connect, (!online && !m_bActiveWorkspace) );
   GetToolBar()->EnableTool(ME_OpenWorkspace, (!m_bActiveWorkspace && !online) );
 }
 
