@@ -448,6 +448,24 @@ const char* CBusNodeDlg::getTypeDesc( int manu, int mtype ) {
   return "UNKNOWN";
 }
 
+void CBusNodeDlg::selectPage4Type( int manu, int mtype ) {
+  int offset = 0;
+  if( !wGui.isfirmwaretab(wxGetApp().getIni()) ) {
+    offset = 1;
+  }
+
+  if( manu == MANU_ROCRAIL ) {
+    switch( mtype ) {
+    case MTYP_CANGC2:    m_NoteBook->SetSelection( 6 - offset);   break;
+    case MTYP_CANGC4:    m_NoteBook->SetSelection( 7 - offset );  break;
+    case MTYP_CANGC6:    m_NoteBook->SetSelection( 8 - offset );  break;
+    case MTYP_CANGC7:    m_NoteBook->SetSelection( 9 - offset );  break;
+    case MTYP_CANGC1E:   m_NoteBook->SetSelection( 5 - offset );  break;
+    case MTYP_CANGCLN:   m_NoteBook->SetSelection( 10 - offset ); break;
+    }
+  }
+}
+
 void CBusNodeDlg::onSetPage(wxCommandEvent& event) {
   TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "set page to %d", m_SetPage );
   m_NoteBook->SetSelection( m_SetPage );
@@ -488,6 +506,16 @@ void CBusNodeDlg::onIndexSelect2( wxListEvent& event ) {
         wCBusNode.getnr(node) );
     SetTitle( wxString(title,wxConvUTF8) );
     StrOp.free(title);
+  }
+  else
+    TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+}
+
+void CBusNodeDlg::onIndexActivated( wxListEvent& event ) {
+  int index = event.GetIndex();
+  iONode node = (iONode)m_IndexList2->GetItemData(index);
+  if( node != NULL ) {
+    selectPage4Type(wCBusNode.getmanuid(node), wCBusNode.getmtyp(node));
   }
   else
     TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );

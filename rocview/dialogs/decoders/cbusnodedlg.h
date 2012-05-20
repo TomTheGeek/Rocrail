@@ -73,6 +73,7 @@ class CBusNodeDlg : public cbusnodedlggen
   void initVarList(iONode node);
   void initEvtList(iONode node);
   void initType(int manu, int mtype, const char* ver);
+  void selectPage4Type( int manu, int mtype );
   const char* getType( int manu, int mtype );
   const char* getTypeDesc( int manu, int mtype );
   const char* getManu( int manu );
@@ -130,9 +131,8 @@ protected:
 	// Handlers for cbusnodedlggen events.
 	void onOK( wxCommandEvent& event );
   void onSetNodeNumber( wxCommandEvent& event );
-  //void onIndexSelect( wxCommandEvent& event );
   void onIndexSelect2( wxListEvent& event );
-  //void onIndexDelete( wxCommandEvent& event );
+  void onIndexActivated( wxListEvent& event );
   void onVarSelect( wxCommandEvent& event );
   void onVarValue( wxSpinEvent& event );
   void onVarBit( wxCommandEvent& event );
