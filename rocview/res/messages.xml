@@ -17767,4 +17767,7 @@
   <Msg id="gooffline">
     <en txt="Go offline"/>
   </Msg>
+  <Msg id="query">
+    <en txt="Query"/>
+  </Msg>
 </Messages>

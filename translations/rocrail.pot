@@ -5693,3 +5693,9 @@ msgstr ""
 msgid "Go offline"
 msgstr ""
 
+#. 
+# id="query"
+#, c-format
+msgid "Query"
+msgstr ""
+

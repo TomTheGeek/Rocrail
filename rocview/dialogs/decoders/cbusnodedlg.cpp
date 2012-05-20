@@ -107,6 +107,8 @@ void CBusNodeDlg::initLabels() {
 
   // Index tab
   m_IndexDelete->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_labIndexIID->SetLabel( wxGetApp().getMsg( "iid" ) );
+  m_QueryNN->SetLabel( wxGetApp().getMsg( "query" ) );
 
   // Variables tab
   m_labVarIndex->SetLabel( wxGetApp().getMsg( "index" ) );
@@ -466,7 +468,7 @@ void CBusNodeDlg::onQuery( wxCommandEvent& event ) {
 
     iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcmd( cmd, wProgram.query );
-    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setiid( cmd, m_IndexIID->GetValue().mb_str(wxConvUTF8) );
     wProgram.setlntype(cmd, wProgram.lntype_cbus);
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
