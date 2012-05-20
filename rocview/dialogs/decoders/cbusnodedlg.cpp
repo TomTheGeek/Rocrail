@@ -224,7 +224,7 @@ void CBusNodeDlg::initIndex() {
       m_IndexList2->SetItem( index, 1, wxString::Format(_T("%d"), wCBusNode.getcanid(cbusnode)));
       m_IndexList2->SetItem( index, 2, wxString::Format(_T("%d"), wCBusNode.getmanuid(cbusnode)));
       m_IndexList2->SetItem( index, 3, wxString::Format(_T("%d"), wCBusNode.getmtyp(cbusnode)));
-      m_IndexList2->SetItem( index, 4, wxString::Format(_T("%s"), getTypeString(wCBusNode.getmanuid(cbusnode), wCBusNode.getmtyp(cbusnode))));
+      m_IndexList2->SetItem( index, 4, wxString(getTypeString(wCBusNode.getmanuid(cbusnode), wCBusNode.getmtyp(cbusnode)),wxConvUTF8) );
       m_IndexList2->SetItemPtrData(index, (wxUIntPtr)cbusnode);
       index++;
 
