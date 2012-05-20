@@ -701,8 +701,8 @@ static __evaluateAcc( iOCBUS cbus, byte* frame, Boolean state ) {
 
   int addr = event;
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%sevent %d %s (node=%d)",
-      data->shortevents?"short ":"", addr, state?"ON":"OFF", node );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%sevent %d:%d %s",
+      data->shortevents?"short ":"", node, addr, state?"ON":"OFF" );
 
   /* inform listener: Node3 */
   iONode nodeC = NodeOp.inst( wAccessory.name(), NULL, ELEMENT_NODE );
