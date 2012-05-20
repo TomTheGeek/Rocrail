@@ -1759,16 +1759,32 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       addr = wSwitch.getport1( node );
     }
 
-    cmd[0] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? OPC_ACON:OPC_ACOF;
-    cmd[1] = wSwitch.getbus( node ) / 256;
-    cmd[2] = wSwitch.getbus( node ) % 256;
-    cmd[3] = addr / 256;
-    cmd[4] = addr % 256;
-    makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
+    if( wSwitch.issinglegate( node ) ) {
+      cmd[0] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? OPC_ACON:OPC_ACOF;
+      cmd[1] = wSwitch.getbus( node ) / 256;
+      cmd[2] = wSwitch.getbus( node ) % 256;
+      cmd[3] = addr / 256;
+      cmd[4] = addr % 256;
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "single gate switch %d:%d",
-        wSwitch.getbus( node ), wSwitch.getaddr1( node ) );
-    ThreadOp.post(data->writer, (obj)frame);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "single gate switch %d:%d",
+          wSwitch.getbus( node ), wSwitch.getaddr1( node ) );
+      ThreadOp.post(data->writer, (obj)frame);
+    }
+    else {
+      if( StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) )
+        addr++;
+      cmd[0] = OPC_ACON;
+      cmd[1] = wSwitch.getbus( node ) / 256;
+      cmd[2] = wSwitch.getbus( node ) % 256;
+      cmd[3] = addr / 256;
+      cmd[4] = addr % 256;
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dual gate switch %d:%d",
+          wSwitch.getbus( node ), addr );
+      ThreadOp.post(data->writer, (obj)frame);
+    }
 
   }
 
