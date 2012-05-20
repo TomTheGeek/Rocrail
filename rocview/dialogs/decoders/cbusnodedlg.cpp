@@ -106,9 +106,16 @@ void CBusNodeDlg::initLabels() {
   m_SetNodeNumber->SetLabel( wxGetApp().getMsg( "set" ) );
 
   // Index tab
-  m_IndexDelete->SetLabel( wxGetApp().getMsg( "delete" ) );
+  //m_IndexDelete->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_labIndexIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_QueryNN->SetLabel( wxGetApp().getMsg( "query" ) );
+
+  m_IndexList2->InsertColumn(0, wxGetApp().getMsg( "nodenumber" ), wxLIST_FORMAT_RIGHT );
+  m_IndexList2->InsertColumn(1, wxGetApp().getMsg( "CANID" ), wxLIST_FORMAT_RIGHT );
+  m_IndexList2->InsertColumn(2, wxGetApp().getMsg( "manufactured_ID" ), wxLIST_FORMAT_RIGHT );
+  m_IndexList2->InsertColumn(3, wxGetApp().getMsg( "type" ), wxLIST_FORMAT_RIGHT );
+  m_IndexList2->InsertColumn(4, wxGetApp().getMsg( "name" ), wxLIST_FORMAT_LEFT, 300 );
+
 
   // Variables tab
   m_labVarIndex->SetLabel( wxGetApp().getMsg( "index" ) );
@@ -198,16 +205,29 @@ void CBusNodeDlg::init( iONode event ) {
 
 
 void CBusNodeDlg::initIndex() {
-  m_IndexList->Clear();
+  //m_IndexList->Clear();
+  m_IndexList2->DeleteAllItems();
+  int index = 0;
   if( m_CBus != NULL ) {
     iONode cbusnode = wCBus.getcbnode(m_CBus);
     while( cbusnode != NULL ) {
+      /*
       char* s = StrOp.fmt("Node# %d, CANID %d, ManuID %d, Type %d, %s",
           wCBusNode.getnr(cbusnode), wCBusNode.getcanid(cbusnode), wCBusNode.getmanuid(cbusnode), wCBusNode.getmtyp(cbusnode),
           getTypeString(wCBusNode.getmanuid(cbusnode), wCBusNode.getmtyp(cbusnode)) );
 
       m_IndexList->Append( wxString(s,wxConvUTF8), cbusnode );
       StrOp.free(s);
+      */
+
+      m_IndexList2->InsertItem( index, wxString::Format(_T("%d"), wCBusNode.getnr(cbusnode)));
+      m_IndexList2->SetItem( index, 1, wxString::Format(_T("%d"), wCBusNode.getcanid(cbusnode)));
+      m_IndexList2->SetItem( index, 2, wxString::Format(_T("%d"), wCBusNode.getmanuid(cbusnode)));
+      m_IndexList2->SetItem( index, 3, wxString::Format(_T("%d"), wCBusNode.getmtyp(cbusnode)));
+      m_IndexList2->SetItem( index, 4, wxString::Format(_T("%s"), getTypeString(wCBusNode.getmanuid(cbusnode), wCBusNode.getmtyp(cbusnode))));
+      m_IndexList2->SetItemPtrData(index, (wxUIntPtr)cbusnode);
+      index++;
+
       cbusnode = wCBus.nextcbnode( m_CBus, cbusnode );
     }
   }
@@ -419,6 +439,24 @@ void CBusNodeDlg::onSetNodeNumber( wxCommandEvent& event ) {
   getNode(nn, m_NodeTypeNr->GetValue(), m_NodeManuNr->GetValue(), m_Version->GetValue().mb_str(wxConvUTF8) );
 }
 
+void CBusNodeDlg::onIndexSelect2( wxListEvent& event ) {
+  int index = event.GetIndex();
+  iONode node = (iONode)m_IndexList2->GetItemData(index);
+  if( node != NULL ) {
+    initType(wCBusNode.getmanuid(node), wCBusNode.getmtyp(node), wCBusNode.getversion(node));
+    m_NodeNumber->SetValue(wCBusNode.getnr(node));
+    initVarList(node);
+    initEvtList(node);
+    char* title = StrOp.fmt("CBUS: %s %d",
+        (const char*)m_NodeType->GetValue().mb_str(wxConvUTF8),
+        wCBusNode.getnr(node) );
+    SetTitle( wxString(title,wxConvUTF8) );
+    StrOp.free(title);
+  }
+  else
+    TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+}
+/*
 void CBusNodeDlg::onIndexSelect( wxCommandEvent& event ) {
   if( m_IndexList->GetSelection() != wxNOT_FOUND ) {
     iONode node = (iONode)m_IndexList->GetClientData(m_IndexList->GetSelection());
@@ -437,7 +475,10 @@ void CBusNodeDlg::onIndexSelect( wxCommandEvent& event ) {
       TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
   }
 }
+*/
 
+
+/*
 void CBusNodeDlg::onIndexDelete( wxCommandEvent& event ) {
   if( m_IndexList->GetSelection() != wxNOT_FOUND ) {
     iONode node = (iONode)m_IndexList->GetClientData(m_IndexList->GetSelection());
@@ -456,6 +497,8 @@ void CBusNodeDlg::onIndexDelete( wxCommandEvent& event ) {
       TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
   }
 }
+*/
+
 
 void CBusNodeDlg::onQuery( wxCommandEvent& event ) {
   if( m_CBus != NULL ) {

@@ -128,8 +128,9 @@ protected:
 	// Handlers for cbusnodedlggen events.
 	void onOK( wxCommandEvent& event );
   void onSetNodeNumber( wxCommandEvent& event );
-  void onIndexSelect( wxCommandEvent& event );
-  void onIndexDelete( wxCommandEvent& event );
+  //void onIndexSelect( wxCommandEvent& event );
+  void onIndexSelect2( wxListEvent& event );
+  //void onIndexDelete( wxCommandEvent& event );
   void onVarSelect( wxCommandEvent& event );
   void onVarValue( wxSpinEvent& event );
   void onVarBit( wxCommandEvent& event );
