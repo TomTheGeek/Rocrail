@@ -385,6 +385,7 @@ const char* CBusNodeDlg::getType( int manu, int mtype ) {
     case MTYP_CANGC4:    return "CAN-GC4";
     case MTYP_CANGC6:    return "CAN-GC6";
     case MTYP_CANGC7:    return "CAN-GC7";
+    case MTYP_CANGC8:    return "CAN-GC8";
     case MTYP_CANGC1E:   return "CAN-GC1e";
     case MTYP_CANGCLN:   return "CAN-GCLN";
     }
@@ -420,6 +421,7 @@ const char* CBusNodeDlg::getTypeDesc( int manu, int mtype ) {
     case MTYP_CANGC4:    return "RFID concentrator";
     case MTYP_CANGC6:    return "4 Channel Servo";
     case MTYP_CANGC7:    return "Fast clock";
+    case MTYP_CANGC8:    return "Display driver";
     case MTYP_CANGC1E:   return "Ethernet interface";
     case MTYP_CANGCLN:   return "CBUS-LocoNet bridge";
     }

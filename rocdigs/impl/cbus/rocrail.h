@@ -8,6 +8,7 @@
 #define MTYP_CANGC4  4 // 8 channel rfid12 concentrator
 #define MTYP_CANGC6  6 // 4 Chanal Servo
 #define MTYP_CANGC7  7 // Fast clock
+#define MTYP_CANGC8  8 // Display driver
 #define MTYP_CANGC1E  11 // Ethernet bridge
 #define MTYP_CANGCLN  56 // LocoNet bridge
 
