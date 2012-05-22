@@ -100,7 +100,7 @@ void DonKey::initLabels() {
 
 void DonKey::initValues() {
   char* expdate = NULL;
-  int expdays = 0;
+  long expdays = 0;
   if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini)), &expdate, &expdays) ) {
     m_DonateText->SetValue( wxGetApp().getMsg( "donatekey" ) );
   }

@@ -1560,7 +1560,7 @@
     <fun name="isExpired" vt="Boolean">
       <param name="s" vt="const char*"/>
       <param name="expdate" vt="char**"/>
-      <param name="expdays" vt="int*"/>
+      <param name="expdays" vt="long*"/>
     </fun>
     <fun name="decode" vt="char*">
       <param name="b" vt="const byte*"/>

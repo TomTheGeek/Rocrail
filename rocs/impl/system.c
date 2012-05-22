@@ -504,7 +504,7 @@ static const char* _getEyecatcher(void) {
   return eyecatcher;
 }
 
-static Boolean _isExpired(const char* s, char** expdate, int* expdays) {
+static Boolean _isExpired(const char* s, char** expdate, long* expdays) {
   Boolean expired = False;
   char licdate[11] = {0,0,0,0,0,0,0,0,0,0,0};
   time_t     tt = time(NULL);
@@ -554,7 +554,7 @@ static Boolean _isExpired(const char* s, char** expdate, int* expdays) {
     tl = mktime(t);
     remainingdays = (tl-tt)/86400;
     *expdays = (int)remainingdays;
-    TraceOp.println("The license expires in %d days.", *expdays);
+    TraceOp.println("The license expires in %ld days.", *expdays);
   }
 
   return expired;

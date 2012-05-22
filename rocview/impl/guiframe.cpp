@@ -3121,7 +3121,7 @@ void RocGuiFrame::setOnline( bool online ) {
 
 
 void RocGuiFrame::OnDonKey( wxCommandEvent& event ) {
-  int expdays = 0;
+  long expdays = 0;
   if( m_SymbolMap == NULL || MapOp.size(m_SymbolMap) == 0 ) {
     wxMessageDialog( this, wxGetApp().getMsg("setupsvgtheme"), _T("Rocrail"), wxOK | wxICON_EXCLAMATION ).ShowModal();
   }

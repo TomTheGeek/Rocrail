@@ -304,7 +304,7 @@ static iOSrcpCon _getSrcpCon( void ) {
 
 static int __logo( void ) {
   int svn = 0;
-  int expdays = 0;
+  long expdays = 0;
   /* Logo. */
   TraceOp.println( "--------------------------------------------------" );
   TraceOp.println( "                                            lll   " );
