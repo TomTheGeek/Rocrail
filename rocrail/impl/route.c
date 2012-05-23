@@ -538,11 +538,13 @@ static Boolean __checkSwitches( iORoute inst, const char* id ) {
   iONode      sw = wRoute.getswcmd( o->props );
   while( sw != NULL ) {
     const char* swId  = wSwitchCmd.getid( sw );
-    Boolean tt = StrOp.equals( wSwitchCmd.cmd_track, wSwitchCmd.getcmd(sw) );
+    const char* swCmd = wSwitchCmd.getcmd( sw );
+    Boolean tt = StrOp.equals( wSwitchCmd.cmd_track, swCmd );
+    Boolean output = StrOp.equals( wOutput.on, swCmd ) || StrOp.equals( wOutput.off, swCmd );
     Boolean lock = wSwitchCmd.islock(sw);
 
-    if( StrOp.equals( wSignal.red, wSwitchCmd.getcmd(sw) ) || StrOp.equals( wSignal.green, wSwitchCmd.getcmd(sw) ) ||
-        StrOp.equals( wSignal.yellow, wSwitchCmd.getcmd(sw) ) || StrOp.equals( wSignal.white, wSwitchCmd.getcmd(sw) ) )
+    if( StrOp.equals( wSignal.red, swCmd ) || StrOp.equals( wSignal.green, swCmd ) ||
+        StrOp.equals( wSignal.yellow, swCmd ) || StrOp.equals( wSignal.white, swCmd ) )
     {
       iOSignal isw = ModelOp.getSignal( model, swId );
       if( isw == NULL ) {
@@ -565,6 +567,9 @@ static Boolean __checkSwitches( iORoute inst, const char* id ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No turntable object found for %s", swId );
         return False;
       }
+    }
+    else if( output ) {
+
     }
     else {
       iOSwitch isw = ModelOp.getSwitch( model, swId );
