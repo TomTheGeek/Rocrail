@@ -1390,7 +1390,7 @@ int createCVsetpacket(int cv, int value, char* SendStream, int verify) {
    int ack = 0;
 
    /* no special error handling, it's job of the clients */
-   if (cv<0 || cv>1024 || value<0 || value>255) return;
+   if (cv<0 || cv>1024 || value<0 || value>255) return 0;
 
    if (!smInitialized)
      smInit();

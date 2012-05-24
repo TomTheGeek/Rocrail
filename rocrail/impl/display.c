@@ -97,7 +97,7 @@ static const char* __getSystemMenu(Boolean select) {
   iODisplayData data = NULL;
   
   if( __displayinst == NULL ) {
-    return;
+    return "";
   }
   data = Data(__displayinst);
   if( data->menulevel == 0 ) { 

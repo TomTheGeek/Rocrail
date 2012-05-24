@@ -962,7 +962,7 @@ static iONode _setModule( iOModPlan inst, iONode module ) {
   if( planmodule == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
         "no module found with id [%s] or [%s]", wModule.getid(module), wItem.getprev_id(module) );
-    return;
+    return NULL;
   }
 
   wModule.settitle( planmodule, wModule.gettitle(module) );

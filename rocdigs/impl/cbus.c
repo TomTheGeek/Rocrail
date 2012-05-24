@@ -1860,7 +1860,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
 
     if( slot == NULL ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
-      return;
+      return NULL;
     }
 
     if( wLoc.getV( node ) != -1 ) {
@@ -1933,7 +1933,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
 
     if( slot == NULL ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not get slot for loco %s", wLoc.getid(node) );
-      return;
+      return NULL;
     }
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco fn=%d state=%s", fnchanged, fnstate?"ON":"OFF" );

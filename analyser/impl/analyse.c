@@ -1206,7 +1206,7 @@ static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList rout
            __analyseItem(inst, nextitem, route, occ, travel, 0, depth, searchingSignal, behindABlock );
          }
 
-         return;
+         return found;
        }
      }
   }
@@ -1436,7 +1436,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
           searchingSignal = False;
 
           if( behindABlock) {
-            return;
+            return False;
           }
         }
 
@@ -1453,7 +1453,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
         if( behindABlock) {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "behind a block");
 
-          return;
+          return False;
         }
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next is a block: [%s]", wItem.getid(nextitem));
@@ -1502,7 +1502,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
         if( travelp > 10 && behindABlock){
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " found a turnout [%s] behind the end block: return", wItem.getid(nextitem));
-          return;
+          return False;
         }
 
         /* item is a turnout -> coming from the points: dive into branches */
