@@ -109,7 +109,7 @@ void DonKey::initValues() {
     //m_Donate->Enable(false);
     m_DonateText->SetValue( wxGetApp().getMsg( "donatethanks" ) );
     m_stdButtonOK->SetDefault();
-    if( expdays < 8 ) {
+    if( expdays < 8 && expdays >= 0 ) {
       m_ExpDate->SetBackgroundColour(*wxRED);
     }
   }

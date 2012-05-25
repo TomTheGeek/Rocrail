@@ -3131,7 +3131,7 @@ void RocGuiFrame::OnDonKey( wxCommandEvent& event ) {
     }
     dlg->Destroy();
   }
-  else if( expdays < 8 ) {
+  else if( expdays < 8 && expdays >= 0 ) {
     DonKey* dlg = new DonKey(this, m_Ini );
     if( wxID_OK == dlg->ShowModal() ) {
     }

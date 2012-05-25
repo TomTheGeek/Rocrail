@@ -554,7 +554,9 @@ static Boolean _isExpired(const char* s, char** expdate, long* expdays) {
     tl = mktime(t);
     remainingdays = (tl-tt)/86400;
     *expdays = (int)remainingdays;
-    TraceOp.println("The license expires in %ld days.", *expdays);
+    if( *expdays >= 0 ) {
+      TraceOp.println("The license expires in %ld days.", *expdays);
+    }
   }
 
   return expired;
