@@ -3075,19 +3075,27 @@ static void _event( iOModel inst, iONode nodeC ) {
     }
     StrOp.free( key );
     */
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "trying to match %s event: %d:%d:%d",
+        wAccessory.isaccevent(nodeC)?"accessory":"switch", bus, addr, port );
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "iterating switch list %d", ListOp.size(o->switchList) );
     iOSwitch sw = (iOSwitch)ListOp.first(o->switchList);
     while( sw != NULL ) {
       iONode props = SwitchOp.base.properties(sw);
 
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "testing: %d:%d:%d", bus, wSwitch.getaddr1(props), wSwitch.getport1(props) );
+
       matchaddr1 = wSwitch.getaddr1(props);
       matchport1 = wSwitch.getport1(props);
-      if( matchport1 == 0 && matchaddr1 > 0 ) {
+      if( matchaddr1 > 0 && matchport1 == 0 && addr > 0 && port == 0 ) {
+        /* flat */
+      }
+      else if( matchport1 == 0 && matchaddr1 > 0 ) {
         fada = matchaddr1;
         matchaddr1 = fada / 8 + 1;
         matchport1 = (fada % 8) /2 + 1;
-      } else if( matchaddr1 == 0 && matchport1 > 0 ) {
+      }
+      else if( matchaddr1 == 0 && matchport1 > 0 ) {
         pada = matchport1;
         matchaddr1 = (pada - 1) / 4 + 1;
         matchport1 = (pada - 1) % 4 + 1;
@@ -3095,11 +3103,15 @@ static void _event( iOModel inst, iONode nodeC ) {
 
       matchaddr2 = wSwitch.getaddr2(props);
       matchport2 = wSwitch.getport2(props);
-      if( matchport2 == 0 && matchaddr2 > 0 ) {
+      if( matchaddr2 > 0 && matchport2 == 0 && addr > 0 && port == 0 ) {
+        /* flat */
+      }
+      else if( matchport2 == 0 && matchaddr2 > 0 ) {
         fada = matchaddr2;
         matchaddr2 = fada / 8 + 1;
         matchport2 = (fada % 8) /2 + 1;
-      } else if( matchaddr2 == 0 && matchport2 > 0 ) {
+      }
+      else if( matchaddr2 == 0 && matchport2 > 0 ) {
         pada = matchport2;
         matchaddr2 = (pada - 1) / 4 + 1;
         matchport2 = (pada - 1) % 4 + 1;
