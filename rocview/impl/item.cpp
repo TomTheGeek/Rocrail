@@ -544,13 +544,9 @@ void Symbol::sizeToScale() {
   int cy = 1;
   double c = getSize();
   m_Renderer->sizeToScale( c, m_Scale, m_Bktext, &cx, &cy, ori );
-  //updateLabel();
 
-  SetSize( (int)(x*c), (int)(y*c), (int)(c*cx), (int)(c*cy) );
+  SetSize( (int)(c*cx), (int)(c*cy) );
   setPosition();
-  //TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s set size: x=%d, y=%d*%f=%d", wItem.getid(m_Props), (int)(x*c), y, c, (int)(y*c) );
-
-  //SetBackgroundColour( *wxWHITE );
 }
 
 void Symbol::blockEvent( const char* id ) {
@@ -721,11 +717,11 @@ void Symbol::setPosition() {
 
   int x_off, y_off;
   m_PlanPanel->GetViewStart( &x_off, &y_off );
-  int x = wItem.getx( m_Props ) - x_off;
-  int y = wItem.gety( m_Props ) - y_off;
+  double x = wItem.getx( m_Props ) - x_off;
+  double y = wItem.gety( m_Props ) - y_off;
 
   SetSize( (int)(x*c), (int)(y*c), s.GetWidth(), s.GetHeight() );
-  TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s set size: x=%d, y=%d", wItem.getid(m_Props), (int)(x*c), (int)(y*c) );
+  TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "%s set size: x=%d, y=%d", wItem.getid(m_Props), (int)(x*c), (int)(y*c) );
 }
 
 
