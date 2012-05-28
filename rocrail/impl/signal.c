@@ -128,6 +128,69 @@ static void _event( iOSignal inst, iONode nodeC ) {
     wSignal.setstate( data->props, StrOp.equals( state, wSwitch.turnout ) ? wSignal.green:wSignal.red );
     update = True;
   }
+  else if( wSignal.getusepatterns(data->props)  == 0 ) {
+    int bus = wSwitch.getbus( nodeC );
+    int addr = wSwitch.getaddr1( nodeC );
+    int port = wSwitch.getport1( nodeC );
+    int gate = StrOp.equals( state, wSwitch.turnout ) ? 1:0;
+    int pada, fada;
+
+    int matchaddr1 = wSignal.getaddr(data->props);
+    int matchport1 = wSignal.getport1(data->props);
+    int matchaddr2 = wSignal.getaddr2(data->props);
+    int matchport2 = wSignal.getport2(data->props);
+    int matchaddr3 = wSignal.getaddr3(data->props);
+    int matchport3 = wSignal.getport3(data->props);
+    int matchaddr4 = wSignal.getaddr4(data->props);
+    int matchport4 = wSignal.getport4(data->props);
+
+    if( addr > 0 && port == 0 ) {
+      /* flat */
+      fada = matchaddr1;
+      matchaddr1 = fada / 8 + 1;
+      matchport1 = (fada % 8) /2 + 1;
+      fada = matchaddr2;
+      matchaddr2 = fada / 8 + 1;
+      matchport2 = (fada % 8) /2 + 1;
+      fada = matchaddr3;
+      matchaddr3 = fada / 8 + 1;
+      matchport3 = (fada % 8) /2 + 1;
+      fada = matchaddr4;
+      matchaddr4 = fada / 8 + 1;
+      matchport4 = (fada % 8) /2 + 1;
+    }
+    else if( matchaddr1 == 0 && matchport1 > 0 ) {
+      pada = matchport1;
+      matchaddr1 = (pada - 1) / 4 + 1;
+      matchport1 = (pada - 1) % 4 + 1;
+      pada = matchport2;
+      matchaddr2 = (pada - 1) / 4 + 1;
+      matchport2 = (pada - 1) % 4 + 1;
+      pada = matchport3;
+      matchaddr3 = (pada - 1) / 4 + 1;
+      matchport3 = (pada - 1) % 4 + 1;
+      pada = matchport4;
+      matchaddr4 = (pada - 1) / 4 + 1;
+      matchport4 = (pada - 1) % 4 + 1;
+    }
+
+    if( matchaddr1 == addr && matchport1 == port && wSignal.getgate1(data->props) == gate ) {
+      wSignal.setstate( data->props, wSignal.red );
+      update = True;
+    }
+    else if( matchaddr2 == addr && matchport2 == port && wSignal.getgate1(data->props) == gate ) {
+      wSignal.setstate( data->props, wSignal.yellow );
+      update = True;
+    }
+    else if( matchaddr3 == addr && matchport3 == port && wSignal.getgate1(data->props) == gate ) {
+      wSignal.setstate( data->props, wSignal.green );
+      update = True;
+    }
+    else if( matchaddr4 == addr && matchport4 == port && wSignal.getgate1(data->props) == gate ) {
+      wSignal.setstate( data->props, wSignal.white );
+      update = True;
+    }
+  }
 
   /* Broadcast to clients. */
   if( update ) {
