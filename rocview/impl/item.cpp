@@ -712,7 +712,6 @@ void Symbol::OnPaint(wxPaintEvent& event)
 
 void Symbol::setPosition() {
   double c = getSize();
-  wxPoint p = GetPosition();
   wxSize s = GetSize();
 
   int x_off, y_off;
@@ -720,8 +719,8 @@ void Symbol::setPosition() {
   double x = wItem.getx( m_Props ) - x_off;
   double y = wItem.gety( m_Props ) - y_off;
 
-  SetSize( (int)(x*c), (int)(y*c), s.GetWidth(), s.GetHeight() );
-  TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "%s set size: x=%d, y=%d", wItem.getid(m_Props), (int)(x*c), (int)(y*c) );
+  SetSize( (int)((double)x*c), (int)((double)y*c), s.GetWidth(), s.GetHeight() );
+  TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "%s set size: x=%d, y=%d", wItem.getid(m_Props), (int)((double)x*c), (int)((double)y*c) );
 }
 
 

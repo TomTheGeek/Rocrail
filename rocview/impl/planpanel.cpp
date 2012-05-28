@@ -215,33 +215,34 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
 
   TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "Level %d is active (z=%d)", wZLevel.getz(m_zLevel), m_Z );
 
-  dc.SetPen( *wxLIGHT_GREY_PEN );
-
-  int x, y;
-  GetViewStart( &x, &y );
-  TraceOp.trc( "planpanel", TRCLEVEL_DEBUG, __LINE__, 9999, "x_off=%d, y_off=%d", x, y );
-
-  int cx, cy;
-  GetClientSize( &cx, &cy );
-
-  double itemsize = (double)(m_ItemSize * m_Scale);
-  double dx = x;
-  dx = dx / itemsize;
-  x = (int)dx;
-  double dy = y;
-  dy = dy / itemsize;
-  y = (int)dy;
-
-  int xcnt = (int)(cx / itemsize);
-  int ycnt = (int)(cy / itemsize);
-  int i = 0;
-
   if( wxGetApp().getFrame()->isRaster() ) {
+    int x, y;
+    GetViewStart( &x, &y );
+    TraceOp.trc( "planpanel", TRCLEVEL_DEBUG, __LINE__, 9999, "x_off=%d, y_off=%d", x, y );
+
+    int cx, cy;
+    GetClientSize( &cx, &cy );
+
+    double itemsize = (double)(m_ItemSize * m_Scale);
+    double dx = x;
+    dx = dx / itemsize;
+    x = (int)dx;
+    double dy = y;
+    dy = dy / itemsize;
+    y = (int)dy;
+
+    int xcnt = (int)(cx / itemsize);
+    int ycnt = (int)(cy / itemsize);
+    int i = 0;
+
+    dc.SetPen( *wxLIGHT_GREY_PEN );
+
+
     for( i = 0; i <= ycnt; i++ ) {
-      dc.DrawLine( x, (int)(i * itemsize), cx, int(i * itemsize) );
+      dc.DrawLine( x, (int)((double)i * itemsize), cx, int((double)i * itemsize) );
     }
     for( i = 0; i <= xcnt; i++ ) {
-      dc.DrawLine( (int)(i * itemsize), y, (int)(i * itemsize), cy );
+      dc.DrawLine( (int)((double)i * itemsize), y, (int)((double)i * itemsize), cy );
     }
   }
 }
