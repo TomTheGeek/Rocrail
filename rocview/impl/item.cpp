@@ -547,6 +547,8 @@ void Symbol::sizeToScale() {
   //updateLabel();
 
   SetSize( (int)(x*c), (int)(y*c), (int)(c*cx), (int)(c*cy) );
+  setPosition();
+  //TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s set size: x=%d, y=%d*%f=%d", wItem.getid(m_Props), (int)(x*c), y, c, (int)(y*c) );
 
   //SetBackgroundColour( *wxWHITE );
 }
@@ -617,6 +619,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
 
   if( m_Z == z ) {
     //Show( true );
+    setPosition();
 
     if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) ||
         StrOp.equals( wRoute.name(), name ) || StrOp.equals( wBlock.name(), name ) ) {
@@ -625,7 +628,6 @@ void Symbol::OnPaint(wxPaintEvent& event)
     }
 
     dc.SetPen( *wxLIGHT_GREY_PEN );
-    double c = getSize();
     int cx = m_Renderer->getcx();
     int cy = m_Renderer->getcy();
     bool occupied = false;
@@ -685,12 +687,12 @@ void Symbol::OnPaint(wxPaintEvent& event)
       status = wRoute.getstatus(m_Props);
     }
 
+    dc.SetUserScale( m_Scale, m_Scale );
     if( wxGetApp().getFrame()->isRaster() ) {
+      double c = getSize();
       dc.DrawLine( 0, 0, (int)(c*cx), 0 );
       dc.DrawLine( 0, 0, 0, (int)(c*cy) );
     }
-
-    dc.SetUserScale( m_Scale, m_Scale );
 /*
 */
     dc.SetPen( *wxBLACK_PEN );
@@ -723,6 +725,7 @@ void Symbol::setPosition() {
   int y = wItem.gety( m_Props ) - y_off;
 
   SetSize( (int)(x*c), (int)(y*c), s.GetWidth(), s.GetHeight() );
+  TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s set size: x=%d, y=%d", wItem.getid(m_Props), (int)(x*c), (int)(y*c) );
 }
 
 
