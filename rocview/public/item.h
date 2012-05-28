@@ -112,6 +112,7 @@ public:
   void locoDropped() {m_locoIsDropped = true;};
   void setZ(int z){m_Z = z;}
   void setPanel(PlanPanel* panel);
+  void setPosition();
 
 private:
   SymbolRenderer* m_Renderer;
@@ -126,7 +127,6 @@ private:
   //char* m_RouteID;
   void sizeToScale();
   double getSize();
-  void setPosition();
   void updateLabel();
 	wxWindow* m_Parent;
   iONode m_Props;

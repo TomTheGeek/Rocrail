@@ -206,6 +206,8 @@ const char* PlanPanel::getZLevelTitle() {
 void PlanPanel::OnPaint(wxPaintEvent& event)
 {
   wxPaintDC dc(this);
+  DoPrepareDC(dc);
+
   TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "OnPaint() z=%d", m_Z );
 
   if( !wZLevel.isactive(m_zLevel) && !m_bModView) {
@@ -218,12 +220,13 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
   if( wxGetApp().getFrame()->isRaster() ) {
     int x, y;
     GetViewStart( &x, &y );
-    TraceOp.trc( "planpanel", TRCLEVEL_DEBUG, __LINE__, 9999, "x_off=%d, y_off=%d", x, y );
+    TraceOp.trc( "planpanel", TRCLEVEL_DEBUG, __LINE__, 9999, "viewstart x_off=%d, y_off=%d", x, y );
 
     int cx, cy;
     GetClientSize( &cx, &cy );
 
-    double itemsize = (double)(m_ItemSize * m_Scale);
+    double itemsize = m_ItemSize;
+    itemsize *= m_Scale;
     double dx = x;
     dx = dx / itemsize;
     x = (int)dx;
@@ -239,11 +242,26 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
 
 
     for( i = 0; i <= ycnt; i++ ) {
-      dc.DrawLine( x, (int)((double)i * itemsize), cx, int((double)i * itemsize) );
+      dy = i;
+      dy *= itemsize;
+      dc.DrawLine( x, (int)(dy), cx, int(dy) );
     }
     for( i = 0; i <= xcnt; i++ ) {
-      dc.DrawLine( (int)((double)i * itemsize), y, (int)((double)i * itemsize), cy );
+      dx = i;
+      dx *= itemsize;
+      dc.DrawLine( (int)(dx), y, (int)(dx), cy );
     }
+  }
+
+
+  // iterate the items in this panel
+  m_ChildTable->BeginFind();
+  Symbol* item = NULL;
+  wxNode* node = (wxNode*)m_ChildTable->Next();
+  while( node != NULL ) {
+    item = (Symbol*)node->GetData();
+    item->setPosition();
+    node = (wxNode*)m_ChildTable->Next();
   }
 }
 
