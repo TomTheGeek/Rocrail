@@ -223,7 +223,10 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
     TraceOp.trc( "planpanel", TRCLEVEL_DEBUG, __LINE__, 9999, "viewstart x_off=%d, y_off=%d", x, y );
 
     int cx, cy;
-    GetClientSize( &cx, &cy );
+    //GetClientSize( &cx, &cy );
+    iONode ini = wGui.getplanpanel(wxGetApp().getIni());
+    cx = wPlanPanel.getcx(ini) * m_ItemSize * m_Scale;
+    cy = wPlanPanel.getcy(ini) * m_ItemSize * m_Scale;
 
     double itemsize = m_ItemSize;
     itemsize *= m_Scale;
