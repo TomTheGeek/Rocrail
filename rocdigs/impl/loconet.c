@@ -626,10 +626,7 @@ loconet  0549 Transponder [7] [present] in section [96] zone [D] decoder address
 static void __handleSwitch(iOLocoNet loconet, int addr, int port, int value) {
   iOLocoNetData data = Data(loconet);
 
-  if( value == 0 )
-    return;
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sw %d=%s", addr, port?"straight":"thrown" );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sw addr=%d port=%d value=%d", addr, port, value );
   {
     /* inform listener: Node3 */
     iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
@@ -641,6 +638,7 @@ static void __handleSwitch(iOLocoNet loconet, int addr, int port, int value) {
       wSwitch.setiid( nodeC, data->iid );
 
     wSwitch.setstate( nodeC, port?"straight":"turnout" );
+    wSwitch.setgatevalue(nodeC, value);
 
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }

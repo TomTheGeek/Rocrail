@@ -1239,7 +1239,13 @@ static void _event( iOSwitch inst, iONode nodeC ) {
     }
     else {
       /* single motor */
-      if( !inv ) {
+      if( wSwitch.issinglegate(data->props) && wSwitch.getgatevalue(nodeC) != -1 ) {
+        if( inv )
+          wSwitch.setstate( data->props, wSwitch.getgatevalue(nodeC) ? wSwitch.straight:wSwitch.turnout );
+        else
+          wSwitch.setstate( data->props, wSwitch.getgatevalue(nodeC) ? wSwitch.turnout:wSwitch.straight );
+      }
+      else if( !inv ) {
         if( StrOp.equals(wSwitch.left, state ) )
           wSwitch.setstate( data->props, wSwitch.left );
         else if( StrOp.equals(wSwitch.straight, state ) )

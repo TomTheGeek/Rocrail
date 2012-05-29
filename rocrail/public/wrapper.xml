@@ -1142,7 +1142,8 @@
         <var name="port2" vt="int" defval="0" range="0-*" required="false" remark="Only in case of type 3way."/>
         <var name="gate2" vt="int" defval="0" range="0-*" required="false" remark="Only in case of type 3way."/>
 
-        <var name="singlegate" vt="bool" defval="false" remark="Switch works with only one gate."/>
+        <var name="singlegate" vt="bool" defval="false"/>
+        <var name="gatevalue" vt="int" defval="-1" range="0-1" required="false"/>
         <var name="inv" vt="bool" defval="false" remark="Switch inverted. (Software wiring correction)"/>
         <var name="inv2" vt="bool" defval="false" remark="Switch inverted. (Software wiring correction)"/>
         <var name="delay" vt="int" defval="0" range="0-*" required="false" remark="overwrites control.swtimeout if greater then 0"/>
