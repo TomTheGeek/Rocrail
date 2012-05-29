@@ -711,8 +711,21 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     }
     if( lc != NULL ) {
       if( StrOp.equals(wLoc.go, wAction.getcmd(data->action) ) ) {
-        if( wAction.getparam(data->action) != NULL && StrOp.len( wAction.getparam(data->action) ) > 0 )
-          LocOp.useSchedule( lc, wAction.getparam(data->action));
+        if( wAction.getparam(data->action) != NULL && StrOp.len( wAction.getparam(data->action) ) > 0 ) {
+          iONode scedule = ModelOp.getSchedule(model, wAction.getparam(data->action));
+          iIBlockBase block = ModelOp.getBlock(model, wAction.getparam(data->action));
+          iOLocation location = ModelOp.getLocation(model, wAction.getparam(data->action));
+          if( scedule != NULL ) {
+            LocOp.useSchedule( lc, wAction.getparam(data->action));
+          }
+          else if( block != NULL ) {
+            LocOp.gotoBlock(lc, wAction.getparam(data->action));
+          }
+          else if( location != NULL ) {
+            LocOp.gotoBlock(lc, wAction.getparam(data->action));
+          }
+
+        }
         LocOp.go(lc);
       }
       else if( StrOp.equals(wAction.loco_carcount, wAction.getcmd(data->action) ) ) {
