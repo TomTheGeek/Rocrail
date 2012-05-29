@@ -614,6 +614,7 @@ static void __reader( void* threadinst ) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
       __evaluateMCS2Switch( data, in );
     } else {
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Unhandled packet:" );
       TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
     }
     ThreadOp.sleep(10);
