@@ -1793,11 +1793,14 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
     byte cmd[5];
     byte* frame = allocMem(32);
     Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+    int gate = wOutput.getgate( node );
 
     int addr = wOutput.getaddr( node );
     if( addr == 0 ) {
       addr = wOutput.getport( node );
     }
+
+    addr += gate;
 
     if( StrOp.equals( wOutput.getcmd( node ), wOutput.sod ) )
       cmd[0] = OPC_ASRQ;
