@@ -108,6 +108,66 @@ static void* _getProperties( void* inst ) {
   return data->props;
 }
 
+static const char* __getState(iOSignal inst, int pattern, int gate) {
+  iOSignalData o = Data(inst);
+  int pattern1, pattern2;
+  const char* state = wSignal.getstate(o->props);
+  int pattern1green = wSignal.getgreen( o->props ) & 0x0F;
+  int pattern2green = (wSignal.getgreen( o->props ) & 0xF0) >> 4;
+  int pattern1red = wSignal.getred( o->props ) & 0x0F;
+  int pattern2red = (wSignal.getred( o->props ) & 0xF0) >> 4;
+  int pattern1yellow = wSignal.getyellow( o->props ) & 0x0F;
+  int pattern2yellow = (wSignal.getyellow( o->props ) & 0xF0) >> 4;
+  int pattern1white = wSignal.getwhite( o->props ) & 0x0F;
+  int pattern2white = (wSignal.getwhite( o->props ) & 0xF0) >> 4;
+  int pattern1blank = wSignal.getblank( o->props ) & 0x0F;
+  int pattern2blank = (wSignal.getblank( o->props ) & 0xF0) >> 4;
+
+  if( StrOp.equals( state, wSignal.green ) ) {
+    pattern1 = pattern1green;
+    pattern2 = pattern2green;
+  }
+  else if( StrOp.equals( state, wSignal.red ) ) {
+    pattern1 = pattern1red;
+    pattern2 = pattern2red;
+  }
+  else if( StrOp.equals( state, wSignal.yellow ) ) {
+    pattern1 = pattern1yellow;
+    pattern2 = pattern2yellow;
+  }
+  else if( StrOp.equals( state, wSignal.white ) ) {
+    pattern1 = pattern1white;
+    pattern2 = pattern2white;
+  }
+  else if( StrOp.equals( state, wSignal.blank ) ) {
+    pattern1 = pattern1blank;
+    pattern2 = pattern2blank;
+  }
+
+  if( pattern == 1 ) {
+    pattern1 = gate;
+  }
+  else if( pattern == 2 ) {
+    pattern2 = gate;
+  }
+
+  if( pattern1 == pattern1green || pattern1green == 2 && pattern2 == pattern2green || pattern2green == 2 ) {
+    return wSignal.green;
+  }
+  else if( pattern1 == pattern1red || pattern1red == 2 && pattern2 == pattern2red || pattern2red == 2 ) {
+    return wSignal.red;
+  }
+  else if( pattern1 == pattern1yellow || pattern1yellow == 2 && pattern2 == pattern2yellow || pattern2yellow == 2 ) {
+    return wSignal.yellow;
+  }
+  else if( pattern1 == pattern1white || pattern1white == 2 && pattern2 == pattern2white || pattern2white == 2 ) {
+    return wSignal.white;
+  }
+  else if( pattern1 == pattern1blank || pattern1blank == 2 && pattern2 == pattern2blank || pattern2blank == 2 ) {
+    return wSignal.blank;
+  }
+}
+
 
 static void _event( iOSignal inst, iONode nodeC ) {
   iOSignalData data = Data(inst);
@@ -128,7 +188,7 @@ static void _event( iOSignal inst, iONode nodeC ) {
     wSignal.setstate( data->props, StrOp.equals( state, wSwitch.turnout ) ? wSignal.green:wSignal.red );
     update = True;
   }
-  else if( wSignal.getusepatterns(data->props)  == 0 ) {
+  else {
     int bus = wSwitch.getbus( nodeC );
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
@@ -174,22 +234,38 @@ static void _event( iOSignal inst, iONode nodeC ) {
       matchport4 = (pada - 1) % 4 + 1;
     }
 
-    if( matchaddr1 == addr && matchport1 == port && wSignal.getgate1(data->props) == gate ) {
-      wSignal.setstate( data->props, wSignal.red );
-      update = True;
+    if( wSignal.getusepatterns(data->props)  == 0 ) {
+      if( matchaddr1 == addr && matchport1 == port && wSignal.getgate1(data->props) == gate ) {
+        wSignal.setstate( data->props, wSignal.red );
+        update = True;
+      }
+      else if( matchaddr2 == addr && matchport2 == port && wSignal.getgate2(data->props) == gate ) {
+        wSignal.setstate( data->props, wSignal.yellow );
+        update = True;
+      }
+      else if( matchaddr3 == addr && matchport3 == port && wSignal.getgate3(data->props) == gate ) {
+        wSignal.setstate( data->props, wSignal.green );
+        update = True;
+      }
+      else if( matchaddr4 == addr && matchport4 == port && wSignal.getgate4(data->props) == gate ) {
+        wSignal.setstate( data->props, wSignal.white );
+        update = True;
+      }
     }
-    else if( matchaddr2 == addr && matchport2 == port && wSignal.getgate1(data->props) == gate ) {
-      wSignal.setstate( data->props, wSignal.yellow );
-      update = True;
+
+    /* Patterns */
+    else if( wSignal.getusepatterns(data->props)  == 1 ) {
+      if( matchaddr1 == addr && matchport1 == port ) {
+        wSignal.setstate( data->props, __getState( inst, 1, gate ^ 1 ) );
+        update = True;
+      }
+      else if( matchaddr2 == addr && matchport2 == port ) {
+        wSignal.setstate( data->props, __getState( inst, 2, gate ^ 1 ) );
+        update = True;
+      }
     }
-    else if( matchaddr3 == addr && matchport3 == port && wSignal.getgate1(data->props) == gate ) {
-      wSignal.setstate( data->props, wSignal.green );
-      update = True;
-    }
-    else if( matchaddr4 == addr && matchport4 == port && wSignal.getgate1(data->props) == gate ) {
-      wSignal.setstate( data->props, wSignal.white );
-      update = True;
-    }
+
+
   }
 
   /* Broadcast to clients. */
