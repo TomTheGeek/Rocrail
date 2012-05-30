@@ -145,11 +145,16 @@ static const char* __getState(iOSignal inst, int pattern, int gate) {
   }
 
   if( pattern == 1 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "event for signal %s, pattern1 ", wSignal.getid( o->props ), gate);
     pattern1 = gate;
   }
   else if( pattern == 2 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "event for signal %s, pattern2 ", wSignal.getid( o->props ), gate);
     pattern2 = gate;
   }
+
 
   if( pattern1 == pattern1green || pattern1green == 2 && pattern2 == pattern2green || pattern2green == 2 ) {
     return wSignal.green;
@@ -176,7 +181,7 @@ static void _event( iOSignal inst, iONode nodeC ) {
   int val = wAccessory.getval1( nodeC );
   const char* state = wSwitch.getstate(nodeC);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "ToDo: event for signal %s acc=%d sw=%s...", wSignal.getid( data->props ), val, state);
+      "event for signal %s acc=%d sw=%s...", wSignal.getid( data->props ), val, state);
 
   if( TraceOp.getLevel(NULL) & TRCLEVEL_DEBUG ) {
     char* strNode = (char*)NodeOp.base.toString( nodeC );
