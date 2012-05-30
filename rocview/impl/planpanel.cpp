@@ -263,7 +263,8 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
   wxNode* node = (wxNode*)m_ChildTable->Next();
   while( node != NULL ) {
     item = (Symbol*)node->GetData();
-    item->setPosition();
+    if( !item->isDragged() )
+      item->setPosition();
     node = (wxNode*)m_ChildTable->Next();
   }
 }

@@ -113,6 +113,7 @@ public:
   void setZ(int z){m_Z = z;}
   void setPanel(PlanPanel* panel);
   void setPosition();
+  bool isDragged() {return m_isDragged;}
 
 private:
   SymbolRenderer* m_Renderer;

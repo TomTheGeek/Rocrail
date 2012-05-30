@@ -614,9 +614,6 @@ void Symbol::OnPaint(wxPaintEvent& event)
   int z = wItem.getz( m_Props );
 
   if( m_Z == z ) {
-    //Show( true );
-    setPosition();
-
     if( StrOp.equals( wOutput.name(), name ) || StrOp.equals( wFeedback.name(), name ) ||
         StrOp.equals( wRoute.name(), name ) || StrOp.equals( wBlock.name(), name ) ) {
       TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "set show to %d for %s", wOutput.isshow(m_Props), name);
