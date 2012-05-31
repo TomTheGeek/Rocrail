@@ -2329,18 +2329,47 @@ static iOSwitch _getSwByAddress( iOModel inst, int addr, int port ) {
 }
 
 
+
+static Boolean __isSignalAddres(int addr, int port, int sgaddr, int sgport) {
+  if( sgport == 0 && sgaddr > 0 ) {
+    int fada = sgaddr;
+    sgaddr = fada / 8 + 1;
+    sgport = (fada % 8) /2 + 1;
+  }
+  else if( sgaddr == 0 && sgport > 0 ) {
+    int pada = sgport;
+    sgaddr = (pada - 1) / 4 + 1;
+    sgport = (pada - 1) % 4 + 1;
+  }
+  if( sgaddr == addr && sgport == port )
+    return True;
+  return False;
+}
+
 static iOSignal _getSgByAddress( iOModel inst, int addr, int port ) {
   iOModelData o = Data(inst);
   iOSignal sg = (iOSignal)MapOp.first( o->signalMap );
   while( sg != NULL ) {
-    if( wSignal.getaddr( SignalOp.base.properties(sg)) == addr && wSignal.getport1( SignalOp.base.properties(sg)) == port )
+    int sgaddr = wSignal.getaddr( SignalOp.base.properties(sg));
+    int sgport = wSignal.getport1( SignalOp.base.properties(sg));
+    if( __isSignalAddres( addr, port, sgaddr, sgport ) )
       return sg;
-    if( wSignal.getaddr2( SignalOp.base.properties(sg)) == addr && wSignal.getport2( SignalOp.base.properties(sg)) == port )
+
+    sgaddr = wSignal.getaddr2( SignalOp.base.properties(sg));
+    sgport = wSignal.getport2( SignalOp.base.properties(sg));
+    if( __isSignalAddres( addr, port, sgaddr, sgport ) )
       return sg;
-    if( wSignal.getaddr3( SignalOp.base.properties(sg)) == addr && wSignal.getport3( SignalOp.base.properties(sg)) == port )
+
+    sgaddr = wSignal.getaddr3( SignalOp.base.properties(sg));
+    sgport = wSignal.getport3( SignalOp.base.properties(sg));
+    if( __isSignalAddres( addr, port, sgaddr, sgport ) )
       return sg;
-    if( wSignal.getaddr4( SignalOp.base.properties(sg)) == addr && wSignal.getport4( SignalOp.base.properties(sg)) == port )
+
+    sgaddr = wSignal.getaddr4( SignalOp.base.properties(sg));
+    sgport = wSignal.getport4( SignalOp.base.properties(sg));
+    if( __isSignalAddres( addr, port, sgaddr, sgport ) )
       return sg;
+
     sg = (iOSignal)MapOp.next( o->signalMap );
   };
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "no signal found by address [%d,%d]", addr, port );
