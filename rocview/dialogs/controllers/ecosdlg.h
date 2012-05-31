@@ -122,6 +122,8 @@ public:
     wxTextCtrl* m_Port;
     wxStaticText* m_labFBMod;
     wxSpinCtrl* m_FBMod;
+    wxStaticText* m_labVersion;
+    wxSpinCtrl* m_Version;
     wxRadioBox* m_SubLib;
     wxButton* m_OK;
     wxButton* m_Cancel;

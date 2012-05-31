@@ -168,6 +168,8 @@ static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, lon
   msg[8]  = (addr & 0x000000FF);
   msg[9]  = subcmd;
   msg[10] = subcmd2;
+  msg[11] = 0;
+  msg[12] = 0;
 }
 
 static iONode __translate( iOMCS2 inst, iONode node ) {
@@ -457,6 +459,19 @@ static void __evaluateMCS2S88( iOMCS2Data mcs2, byte* in, unsigned char* prev ) 
   }
 }
 
+
+static void __evaluateSensorEvent( iOMCS2Data mcs2, byte* in ) {
+  int addr   = in[7] * 256 + in[8];
+  int state = in[10];
+  iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  wFeedback.setaddr( nodeC, addr );
+  wFeedback.setstate( nodeC, state?True:False );
+  if( mcs2->iid != NULL )
+    wFeedback.setiid( nodeC, mcs2->iid );
+  mcs2->listenerFun( mcs2->listenerObj, nodeC, TRCLEVEL_INFO );
+}
+
+
 static void __evaluateMCS2Loc( iOMCS2Data mcs2, byte* in ) {
   int addr  = ( ( in[7] & 0x0F ) << 8 ) + in[8];
   /* mask left nibble of high byte because this is protocol dependent 0x0 for MM, 0x4 for MFX, 0xC for DCC */
@@ -593,29 +608,32 @@ static void __reader( void* threadinst ) {
       }
     }
 
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
     /* CS2 communication consists of commands (command byte always even) and replies. Reply byte is equal to command byte but with
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
        is broadcasted. When a command is issued from the CS2 user interface, both the command and the reply is broadcasted.
        This means that when a command (even) is received, Rocrail did not send that command. */
     if( in[1] == 0x21 ) {
       /* unoffcial reply to unofficial polling command, don't care if the poll was from Rocrail or not, always good to have the S88 state. */
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
       __evaluateMCS2S88( data, in, store );
-    } else if( in[1] == 0x0A | in[1] == 0x08 ) {
+    }
+    else if( in[1] == CMD_ACC_SENSOR && in[4] == 8 ) {
+      __evaluateSensorEvent( data, in );
+    }
+    else if( in[1] == 0x0A | in[1] == 0x08 ) {
       /* loc speed or direction comamnd, not from Rocrail. */
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
       __evaluateMCS2Loc( data, in );
-    } else if( in[1] == 0x0C ) {
+    }
+    else if( in[1] == 0x0C ) {
       /* locfunction command, not from Rocrail. */
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
       __evaluateMCS2Function( data, in );
-    } else if( in[1] == 0x16 && in[10] == 0x01 ) {
+    }
+    else if( in[1] == 0x16 && in[10] == 0x01 ) {
       /* switch command gate activated, second command with gate deactivated again is ignored, not from Rocrail. */
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
       __evaluateMCS2Switch( data, in );
-    } else {
+    }
+    else {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Unhandled packet:" );
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
     }
     ThreadOp.sleep(10);
 
@@ -678,7 +696,7 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.set( trc );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2(1.0) %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2(%d) %d.%d.%d", wDigInt.getprotver( data->ini ), vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  s88 modules [%d]", wDigInt.getfbmod( ini ) );
 
@@ -719,7 +737,26 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   data->writer = ThreadOp.inst( "mcs2writer", &__writer, __MCS2 );
   ThreadOp.start( data->writer );
 
-  if( data->fbmod > 0 ) {
+
+  if( wDigInt.getprotver( data->ini ) == 2 ) {
+    byte*  msg   = allocMem(32);
+    msg[0] = (CMD_ACC_SENSOR >> 7);
+    msg[1]  = ((CMD_ACC_SENSOR & 0x7F) << 1 );
+    msg[2]  = 0x03;
+    msg[3]  = 0x00;
+    msg[4]  = 7;
+    msg[5]  = 0; /* Geraetekenner */
+    msg[6]  = 0;
+    msg[7]  = (0 & 0xFF00) >> 8; /* Kontaktkennung Start */
+    msg[8]  = (0 & 0x00FF);
+    msg[9]  = (0x3FFF & 0xFF00) >> 8; /* Kontaktkennung Ende */
+    msg[10] = (0x3FFF & 0x00FF);
+    msg[11] = 0xFF; /* Broadcast ein */
+    msg[12] = 0;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Activate sensor events for version 2..." );
+    ThreadOp.post( data->writer, (obj)msg );
+  }
+  else if( data->fbmod > 0 ) {
     data->feedbackReader = ThreadOp.inst( "fbreader", &__feedbackMCS2Reader, __MCS2 );
     ThreadOp.start( data->feedbackReader );
   }

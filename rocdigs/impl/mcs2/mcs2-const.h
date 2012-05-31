@@ -75,6 +75,7 @@
 /* ACCESSORIES */
 #define CMD_ACC_SWITCH        0x0B
 #define ID_ACC_SWITCH         0x16
+#define CMD_ACC_SENSOR        0x11
 
 
 /* SOFTWARE */
