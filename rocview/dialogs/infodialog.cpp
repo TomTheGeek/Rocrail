@@ -103,6 +103,9 @@ InfoDialog::InfoDialog( wxWindow* parent, wxWindowID id, const wxString& caption
   m_Thanks->AppendText( _T("The name Rocrail and the associated logo is our trademark and is officially registered in Germany with number 302008050592.") );
   m_Thanks->AppendText( _T("\n\n") );
 
+  m_Thanks->AppendText( _T("Without an official permission commercial use is not permitted.\n\n" ));
+
+
   m_Thanks->AppendText( _T("This program is free software; you can redistribute it and/or ") );
   m_Thanks->AppendText( _T("modify it under the terms of the GNU General Public License ") );
   m_Thanks->AppendText( _T("as published by the Free Software Foundation; either version 2 ") );

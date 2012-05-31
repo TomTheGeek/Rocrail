@@ -678,6 +678,7 @@ bool RocGui::OnInit() {
   TraceOp.println( "   http://www.rocrail.net"                          );
   TraceOp.println( " License: GNU GPL 2"                                );
   TraceOp.println( "   http://www.gnu.org/licenses/gpl.txt"             );
+  TraceOp.println( " Without an official permission commercial use is not permitted." );
   TraceOp.println( "--------------------------------------------------" );
 
   // trace version
