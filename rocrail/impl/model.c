@@ -3133,7 +3133,7 @@ static void _event( iOModel inst, iONode nodeC ) {
 
     if( !matched ) {
       iOSignal sg = ModelOp.getSgByAddress(inst, addr, port);
-      if( sg != NULL ) {
+      if( sg != NULL && wCtrl.issgevents( wRocRail.getctrl( AppOp.getIni() ) ) ) {
         SignalOp.event( sg, (iONode)NodeOp.base.clone(nodeC) );
       }
       else {

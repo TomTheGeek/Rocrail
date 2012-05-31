@@ -308,6 +308,7 @@ public:
     wxStaticText* m_labSyncRouteTimeout;
     wxSpinCtrl* m_SyncRouteTimeout;
     wxCheckBox* m_ResetFxSp;
+    wxCheckBox* m_ProcessSignalEvents;
     wxCheckBox* m_Check2In;
     wxCheckBox* m_secondNextBlock;
     wxCheckBox* m_EnableSwFb;

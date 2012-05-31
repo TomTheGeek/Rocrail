@@ -5699,3 +5699,9 @@ msgstr ""
 msgid "Query"
 msgstr ""
 
+#. 
+# id="processsignalevents"
+#, c-format
+msgid "Process signal events"
+msgstr ""
+

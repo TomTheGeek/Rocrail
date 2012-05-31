@@ -655,6 +655,7 @@
       <var name="triggerblockevents" vt="bool" defval="false"/>
       <var name="releaseonidle" vt="bool" defval="false"/>
       <var name="closeonghost" vt="bool" defval="false"/>
+      <var name="sgevents" vt="bool" defval="false" remark="Process field events for signals."/>
     </ctrl>
   </rocrail>
 

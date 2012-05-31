@@ -17770,4 +17770,7 @@
   <Msg id="query">
     <en txt="Query"/>
   </Msg>
+  <Msg id="processsignalevents">
+    <en txt="Process signal events"/>
+  </Msg>
 </Messages>
