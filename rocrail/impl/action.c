@@ -177,7 +177,13 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           const char* id = wActionCond.getid( actionCond );
           iOSignal sg = ModelOp.getSignal( model, id );
           if( sg != NULL ) {
-            rc = SignalOp.isState(sg, wActionCond.getstate(actionCond) );
+            iOStrTok tok = StrTokOp.inst(wActionCond.getstate(actionCond), ',');
+            while( StrTokOp.hasMoreTokens(tok) ) {
+              rc = SignalOp.isState(sg, StrTokOp.nextToken(tok) );
+              if( rc )
+                break;
+            }
+            StrTokOp.base.del(tok);
           }
           else
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "object not found [%s]", id );
