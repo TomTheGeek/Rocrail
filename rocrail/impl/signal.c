@@ -180,8 +180,15 @@ static void _event( iOSignal inst, iONode nodeC ) {
   Boolean acc = wAccessory.isaccevent(nodeC);
   int val = wAccessory.getval1( nodeC );
   const char* state = wSwitch.getstate(nodeC);
+  const char* id = wSignal.getid( data->props );
+
+  if( wSwitch.getgatevalue(nodeC) == 0 ) {
+    /* Ignore off events */
+    return;
+  }
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "event for signal %s acc=%d sw=%s...", wSignal.getid( data->props ), val, state);
+      "event for signal %s acc=%d state=%s active=%d...", id, val, state, wSwitch.getgatevalue(nodeC));
 
   if( TraceOp.getLevel(NULL) & TRCLEVEL_DEBUG ) {
     char* strNode = (char*)NodeOp.base.toString( nodeC );
@@ -189,15 +196,19 @@ static void _event( iOSignal inst, iONode nodeC ) {
     StrOp.free( strNode );
   }
 
-  if( wSignal.getaspects(data->props) == 2 ) {
-    wSignal.setstate( data->props, StrOp.equals( state, wSwitch.turnout ) ? wSignal.green:wSignal.red );
+  if( wSignal.getaspects(data->props) == 2 && wSignal.isasswitch(data->props) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"%s two aspect as switch", id);
+    if( wSignal.isinv(data->props) )
+      wSignal.setstate( data->props, StrOp.equals( state, wSwitch.turnout ) ? wSignal.red:wSignal.green );
+    else
+      wSignal.setstate( data->props, StrOp.equals( state, wSwitch.turnout ) ? wSignal.green:wSignal.red );
     update = True;
   }
   else {
     int bus = wSwitch.getbus( nodeC );
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
-    int gate = StrOp.equals( state, wSwitch.turnout ) ? 1:0;
+    int gate = StrOp.equals( state, wSwitch.turnout ) ? 0:1;
     int pada, fada;
 
     int matchaddr1 = wSignal.getaddr(data->props);
@@ -239,13 +250,21 @@ static void _event( iOSignal inst, iONode nodeC ) {
       matchport4 = (pada - 1) % 4 + 1;
     }
 
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "addr=%d port=%d gate=%d, ma1=%d mp1=%d, ma2=%d mp2=%d, ma3=%d mp3=%d, ma4=%d mp4=%d",
+        addr, port, gate, matchaddr1, matchport1, matchaddr2, matchport2, matchaddr3, matchport3, matchaddr4, matchport4);
+
     if( wSignal.getusepatterns(data->props)  == 0 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"%s multi aspect", id);
       if( matchaddr1 == addr && matchport1 == port && wSignal.getgate1(data->props) == gate ) {
         wSignal.setstate( data->props, wSignal.red );
         update = True;
       }
       else if( matchaddr2 == addr && matchport2 == port && wSignal.getgate2(data->props) == gate ) {
-        wSignal.setstate( data->props, wSignal.yellow );
+        if( wSignal.getaspects(data->props) == 2 )
+          wSignal.setstate( data->props, wSignal.green );
+        else
+          wSignal.setstate( data->props, wSignal.yellow );
         update = True;
       }
       else if( matchaddr3 == addr && matchport3 == port && wSignal.getgate3(data->props) == gate ) {
@@ -256,10 +275,13 @@ static void _event( iOSignal inst, iONode nodeC ) {
         wSignal.setstate( data->props, wSignal.white );
         update = True;
       }
+      if( update )
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"set %s to aspect %s", id, wSignal.getstate(data->props) );
     }
 
     /* Patterns */
     else if( wSignal.getusepatterns(data->props)  == 1 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"%s multi aspect with patterns", id);
       if( matchaddr1 == addr && matchport1 == port ) {
         wSignal.setstate( data->props, __getState( inst, 1, gate ^ 1 ) );
         update = True;
@@ -268,6 +290,8 @@ static void _event( iOSignal inst, iONode nodeC ) {
         wSignal.setstate( data->props, __getState( inst, 2, gate ^ 1 ) );
         update = True;
       }
+      if( update )
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"set %s to aspect %s", id, wSignal.getstate(data->props) );
     }
 
 
