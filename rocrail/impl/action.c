@@ -199,7 +199,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           if( fb != NULL ) {
             if( StrOp.len(state) > 0 && StrOp.equals(state, FBackOp.getIdentifier(fb)) )
               rc = True;
-            else if( StrOp.len(state) == 0 )
+            else
               rc = FBackOp.isState(fb, state );
 
             if( rc && direction != NULL && lc != NULL ) {
