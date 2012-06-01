@@ -108,7 +108,7 @@ static void* _getProperties( void* inst ) {
   return data->props;
 }
 
-static const char* __getState(iOSignal inst, int pattern, int gate) {
+static const char* __getPatternState(iOSignal inst, int pattern, int gate) {
   iOSignalData o = Data(inst);
   int pattern1, pattern2;
   const char* state = wSignal.getstate(o->props);
@@ -155,22 +155,34 @@ static const char* __getState(iOSignal inst, int pattern, int gate) {
     pattern2 = gate;
   }
 
+  /*
+    OSignal  0167 p=2, pg1=0 pg2=0, pr1=1 pr2=0, py1=0 py2=1, pw1=0 pw2=0, pb1=0 pb2=0, state=green gate=1, p1=0 p2=1
+    OSignal  0307 set sg3p to aspect green
+   */
 
-  if( pattern1 == pattern1green || pattern1green == 2 && pattern2 == pattern2green || pattern2green == 2 ) {
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "p=%d, pg1=%d pg2=%d, pr1=%d pr2=%d, py1=%d py2=%d, pw1=%d pw2=%d, pb1=%d pb2=%d, state=%s gate=%d, p1=%d p2=%d",
+      pattern, pattern1green, pattern2green, pattern1red, pattern2red, pattern1yellow, pattern2yellow,
+      pattern1white, pattern2white, pattern1blank, pattern2blank, state, gate, pattern1, pattern2);
+
+  if( (pattern1 == pattern1green || pattern1green == 2) && (pattern2 == pattern2green || pattern2green == 2) ) {
     return wSignal.green;
   }
-  else if( pattern1 == pattern1red || pattern1red == 2 && pattern2 == pattern2red || pattern2red == 2 ) {
+  else if( (pattern1 == pattern1red || pattern1red == 2) && (pattern2 == pattern2red || pattern2red == 2) ) {
     return wSignal.red;
   }
-  else if( pattern1 == pattern1yellow || pattern1yellow == 2 && pattern2 == pattern2yellow || pattern2yellow == 2 ) {
+  else if( (pattern1 == pattern1yellow || pattern1yellow == 2) && (pattern2 == pattern2yellow || pattern2yellow == 2) ) {
     return wSignal.yellow;
   }
-  else if( pattern1 == pattern1white || pattern1white == 2 && pattern2 == pattern2white || pattern2white == 2 ) {
+  else if( (pattern1 == pattern1white || pattern1white == 2) && (pattern2 == pattern2white || pattern2white == 2) ) {
     return wSignal.white;
   }
-  else if( pattern1 == pattern1blank || pattern1blank == 2 && pattern2 == pattern2blank || pattern2blank == 2 ) {
+  else if( (pattern1 == pattern1blank || pattern1blank == 2) && (pattern2 == pattern2blank || pattern2blank == 2) ) {
     return wSignal.blank;
   }
+
+  /* Default red. */
+  return wSignal.red;
 }
 
 
@@ -283,11 +295,11 @@ static void _event( iOSignal inst, iONode nodeC ) {
     else if( wSignal.getusepatterns(data->props)  == 1 ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"%s multi aspect with patterns", id);
       if( matchaddr1 == addr && matchport1 == port ) {
-        wSignal.setstate( data->props, __getState( inst, 1, gate ^ 1 ) );
+        wSignal.setstate( data->props, __getPatternState( inst, 1, gate ^ 1 ) );
         update = True;
       }
       else if( matchaddr2 == addr && matchport2 == port ) {
-        wSignal.setstate( data->props, __getState( inst, 2, gate ^ 1 ) );
+        wSignal.setstate( data->props, __getPatternState( inst, 2, gate ^ 1 ) );
         update = True;
       }
       if( update )
