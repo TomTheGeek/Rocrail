@@ -47,6 +47,7 @@
 
 
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/MCS2.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/Loc.h"
@@ -701,6 +702,13 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  s88 modules [%d]", wDigInt.getfbmod( ini ) );
 
   data->ini = ini;
+  data->mcs2ini = wDigInt.getmcs2(ini);
+  if( data->mcs2ini == NULL ) {
+    data->mcs2ini = NodeOp.inst( wMCS2.name(), NULL, ELEMENT_NODE );
+    NodeOp.addChild( ini, data->mcs2ini);
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor device ID [%d]", wMCS2.getfbdevid(data->mcs2ini) );
+
   data->udp = !StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib(data->ini));
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sublib      [%s]", wDigInt.getsublib(data->ini) );

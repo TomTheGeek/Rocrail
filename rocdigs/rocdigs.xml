@@ -856,6 +856,7 @@
     </fun>
     <data>
       <var name="ini" vt="iONode" remark="DigInt Ini"/>
+      <var name="mcs2ini" vt="iONode" remark="MCS2 Ini"/>
       <var name="trace" vt="iOTrace" remark="Trace pointer"/>
       <var name="listenerObj" vt="obj" remark="Listener pointer"/>
       <var name="listenerFun" vt="digint_listener" remark="Listener Function pointer"/>

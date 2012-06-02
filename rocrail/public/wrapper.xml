@@ -505,6 +505,10 @@
         <var name="crc" vt="bool" defval="false"/>
       </rocnet>
 
+      <mcs2 remark="CS2 options" wrappername="MCS2">
+        <var name="fbdevid" vt="int" defval="0" range="0-*" remark="Sensor device ID"/>
+      </mcs2>
+      
       <cbus remark="CBUS options" wrappername="CBus">
         <var name="cid" vt="int" defval="1" range="0-*" remark="CANID"/>
         <var name="sodaddr" vt="int" defval="0" range="0-*" remark="Start of Day input address."/>
