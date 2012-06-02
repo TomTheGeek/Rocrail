@@ -206,7 +206,6 @@ const char* PlanPanel::getZLevelTitle() {
 void PlanPanel::OnPaint(wxPaintEvent& event)
 {
   wxPaintDC dc(this);
-  DoPrepareDC(dc);
 
   TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "OnPaint() z=%d", m_Z );
 
@@ -222,11 +221,11 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
     GetViewStart( &x, &y );
     TraceOp.trc( "planpanel", TRCLEVEL_DEBUG, __LINE__, 9999, "viewstart x_off=%d, y_off=%d", x, y );
 
-    int cx, cy;
+    double cx, cy;
     //GetClientSize( &cx, &cy );
     iONode ini = wGui.getplanpanel(wxGetApp().getIni());
-    cx = wPlanPanel.getcx(ini) * m_ItemSize * m_Scale;
-    cy = wPlanPanel.getcy(ini) * m_ItemSize * m_Scale;
+    cx = (double)(wPlanPanel.getcx(ini)+1) * m_ItemSize * m_Scale;
+    cy = (double)(wPlanPanel.getcy(ini)+1) * m_ItemSize * m_Scale;
 
     double itemsize = m_ItemSize;
     itemsize *= m_Scale;
@@ -244,18 +243,17 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
     dc.SetPen( *wxLIGHT_GREY_PEN );
 
 
-    for( i = 0; i <= ycnt; i++ ) {
-      dy = i;
-      dy *= itemsize;
-      dc.DrawLine( x, (int)(dy), cx, int(dy) );
+    for( i = 0; i <= ycnt+1; i++ ) {
+      dy = i * m_ItemSize;
+      dy *= m_Scale;
+      dc.DrawLine( x, (int)dy, cx, (int)dy );
     }
-    for( i = 0; i <= xcnt; i++ ) {
-      dx = i;
-      dx *= itemsize;
-      dc.DrawLine( (int)(dx), y, (int)(dx), cy );
+    for( i = 0; i <= xcnt+1; i++ ) {
+      dx = i * m_ItemSize;
+      dx *= m_Scale;
+      dc.DrawLine( (int)dx, y, (int)dx, cy );
     }
   }
-
 
   // iterate the items in this panel
   m_ChildTable->BeginFind();

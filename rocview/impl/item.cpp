@@ -715,8 +715,10 @@ void Symbol::setPosition() {
   m_PlanPanel->GetViewStart( &x_off, &y_off );
   double x = wItem.getx( m_Props ) - x_off;
   double y = wItem.gety( m_Props ) - y_off;
+  x = x * c;
+  y = y * c;
 
-  SetSize( (int)((double)x*c), (int)((double)y*c), s.GetWidth(), s.GetHeight() );
+  SetSize( (int)x, (int)y, s.GetWidth(), s.GetHeight() );
   TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "%s set size: x=%d, y=%d", wItem.getid(m_Props), (int)((double)x*c), (int)((double)y*c) );
 }
 
@@ -2587,6 +2589,6 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
 double Symbol::getSize() {
   double itemSize = m_ItemSize;
-  return itemSize * m_Scale;
+  return (double)(itemSize * m_Scale);
 }
 
