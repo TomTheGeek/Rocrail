@@ -1279,10 +1279,12 @@ void CBusNodeDlg::initGC8Var( int nr, int val ) {
     m_GC8CANID->SetValue(val);
   }
   else if( nr == 3 ) {
-    m_GC8Display1Contrast->SetValue(val);
+    m_GC8Display1Contrast->SetValue(val&0x0F);
+    m_GC8Display1FirstDH->SetValue(val&0x10?true:false);
   }
   else if( nr == 4 ) {
-    m_GC8Display2Contrast->SetValue(val);
+    m_GC8Display2Contrast->SetValue(val&0x0F);
+    m_GC8Display2FirstDH->SetValue(val&0x10?true:false);
   }
 }
 
@@ -1605,10 +1607,14 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
       varSet(2, canid, false); // CANID
     }
     if( m_GC8SetIndex == 2 ) {
-      varSet(3, m_GC8Display1Contrast->GetValue(), false);
+      int var = m_GC8Display1Contrast->GetValue();
+      var += m_GC8Display1FirstDH->IsChecked() ? 0x10:0x00;
+      varSet(3, var, false);
     }
     else if( m_GC8SetIndex == 3 ) {
-      varSet(4, m_GC8Display2Contrast->GetValue(), false);
+      int var = m_GC8Display2Contrast->GetValue();
+      var += m_GC8Display2FirstDH->IsChecked() ? 0x10:0x00;
+      varSet(4, var, false);
     }
     else if( m_GC8SetIndex == 4 ) {
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set gc8 learn mode");
