@@ -297,6 +297,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
         initGC7Var(nr, val);
         initGC1eVar(nr, val);
         initGCLNVar(nr, val);
+        initGC8Var(nr, val);
         return cbusnodevar;
       }
       cbusnodevar = wCBusNode.nextcbnodevar( node, cbusnodevar );
@@ -312,6 +313,7 @@ iONode CBusNodeDlg::getNodeVar(int nn, int mtype, int nr, int val) {
     initGC7Var(nr, val);
     initGC1eVar(nr, val);
     initGCLNVar(nr, val);
+    initGC8Var(nr, val);
     return cbusnodevar;
   }
   return NULL;
@@ -337,6 +339,7 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
         initGC4Event(evnr, evnn, evaddr);
         initGC6Event(evnr, evnn, evaddr);
         initGCLNEvent(evnr, evnn, evaddr);
+        initGC8Event(evnr, evnn, evaddr);
         TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999,"update event value to %d", evval);
         return cbusnodeevt;
       }
@@ -353,6 +356,7 @@ iONode CBusNodeDlg::getNodeEvent(int nn, int mtype, int evnn, int evaddr, int ev
     initGC4Event(evnr, evnn, evaddr);
     initGC6Event(evnr, evnn, evaddr);
     initGCLNEvent(evnr, evnn, evaddr);
+    initGC8Event(evnr, evnn, evaddr);
     return cbusnodeevt;
   }
   return NULL;
@@ -841,8 +845,8 @@ void CBusNodeDlg::event( iONode event ) {
     int nn   = wProgram.getdecaddr(event);
     int cv = wProgram.getcv(event);
     int val = wProgram.getvalue(event);
-    TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "node variable %d, val=%d gc1e=%d gc2=%d gc4=%d gc6=%d gc7=%d gcln=%d",
-        cv, val, m_bGC1eGetAll, m_bGC2GetAll, m_bGC4GetAll, m_bGC6GetAll, m_bGC7GetAll, m_bGCLNGetAll);
+    TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "node variable %d, val=%d gc1e=%d gc2=%d gc4=%d gc6=%d gc7=%d gcln=%d gc8=%d",
+        cv, val, m_bGC1eGetAll, m_bGC2GetAll, m_bGC4GetAll, m_bGC6GetAll, m_bGC7GetAll, m_bGCLNGetAll, m_bGC8GetAll);
 
     iONode nv = getNodeVar(nn, m_NodeTypeNr->GetValue(), cv, val );
     if( m_bGC2GetAll ) {
@@ -854,6 +858,19 @@ void CBusNodeDlg::event( iONode event ) {
         eventGetAll();
       }
     }
+
+    else if( m_bGC8GetAll ) {
+      if( cv < 4 ) {
+        varGet(cv+1);
+      }
+      else {
+        m_bGC8GetAll = false;
+        m_GC8SetAll->Enable(true);
+        m_GC8GetAll->Enable(true);
+        eventGetAll();
+      }
+    }
+
     else if( m_bGC6GetAll ) {
       if( cv < 22 ) {
         varGet(cv+1);
@@ -887,6 +904,7 @@ void CBusNodeDlg::event( iONode event ) {
         eventGetAll();
       }
     }
+
     else if( m_bGC7GetAll ) {
       if( cv < 2 ) {
         varGet(cv+1);
@@ -896,6 +914,7 @@ void CBusNodeDlg::event( iONode event ) {
         eventGetAll();
       }
     }
+
     else if( m_bGC1eGetAll ) {
       if( cv < 17 ) {
         varGet(cv+1);
@@ -1251,6 +1270,22 @@ void CBusNodeDlg::initGCLNVar( int nr, int val ) {
   }
 }
 
+void CBusNodeDlg::initGC8Var( int nr, int val ) {
+  if( nr == 1 ) {
+    // node var1
+  }
+  else if( nr == 2 ) {
+    m_CANID = val;
+    m_GC8CANID->SetValue(val);
+  }
+  else if( nr == 3 ) {
+    m_GC8Display1Contrast->SetValue(val);
+  }
+  else if( nr == 4 ) {
+    m_GC8Display2Contrast->SetValue(val);
+  }
+}
+
 void CBusNodeDlg::initGC4Var( int nr, int val ) {
   if( nr == 1 ) {
     // node var1
@@ -1306,6 +1341,15 @@ void CBusNodeDlg::initGC6Event( int idx, int nn, int addr ) {
     // SOD
     m_GC6SOD->SetValue( addr );
     m_SOD = addr;
+  }
+}
+
+void CBusNodeDlg::initGC8Event( int idx, int nn, int addr ) {
+  if( idx == 0 ) {
+    m_GC8Display1Event->SetValue(addr);
+  }
+  else if( idx == 1 ) {
+    m_GC8Display2Event->SetValue(addr);
   }
 }
 
@@ -1499,8 +1543,9 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
 
 void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
   TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
-      "timer gc1e=%d[%d] gc2=%d[%d] gc4=%d[%d] gc6=%d[%d] gcln=%d[%d]",
-      m_bGC1eSetAll, m_GC1eSetIndex, m_bGC2SetAll, m_GC2SetIndex, m_bGC4SetAll, m_GC4SetIndex, m_bGC6SetAll, m_GC6SetIndex, m_bGCLNSetAll, m_GCLNSetIndex);
+      "timer gc1e=%d[%d] gc2=%d[%d] gc4=%d[%d] gc6=%d[%d] gcln=%d[%d] gc8=%d[%d]",
+      m_bGC1eSetAll, m_GC1eSetIndex, m_bGC2SetAll, m_GC2SetIndex, m_bGC4SetAll, m_GC4SetIndex,
+      m_bGC6SetAll, m_GC6SetIndex, m_bGCLNSetAll, m_GCLNSetIndex, m_bGC8SetAll, m_GC8SetIndex);
 
   if( m_bGC1eSetAll ) {
     wxSpinCtrl* gc1eip[] = {m_GC1eIP1,m_GC1eIP2,m_GC1eIP3,m_GC1eIP4};
@@ -1552,6 +1597,41 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
       m_GC1eGetAll->Enable(true);
     }
   }
+
+  else if( m_bGC8SetAll ) {
+    if( m_GC8SetIndex == 1 ) {
+      int canid = m_GC8CANID->GetValue();
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc8 canid=0x%02X", canid);
+      varSet(2, canid, false); // CANID
+    }
+    if( m_GC8SetIndex == 2 ) {
+      varSet(3, m_GC8Display1Contrast->GetValue(), false);
+    }
+    else if( m_GC8SetIndex == 3 ) {
+      varSet(4, m_GC8Display2Contrast->GetValue(), false);
+    }
+    else if( m_GCLNSetIndex == 4 ) {
+      TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set gc8 learn mode");
+      setLearn();
+    }
+    else if( m_GCLNSetIndex == 5 ) {
+      eventSet( 0, m_GC8Display1Event->GetValue(), m_GC8SetIndex-5, 0, false );
+    }
+    else if( m_GCLNSetIndex == 6 ) {
+      eventSet( 0, m_GC8Display2Event->GetValue(), m_GC8SetIndex-5, 0, false );
+    }
+
+    m_GC8SetIndex++;
+    if( m_bGC8SetAll && m_GC8SetIndex < 6 ) {
+      m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+    }
+    else {
+      m_bGC8SetAll = false;
+      m_GC8SetAll->Enable(true);
+      m_GC8GetAll->Enable(true);
+    }
+  }
+
 
   else if( m_bGCLNSetAll ) {
     if( m_GCLNSetIndex == 0 ) {
@@ -2107,8 +2187,17 @@ void CBusNodeDlg::onGCLNSetAll( wxCommandEvent& event ) {
 
 
 void CBusNodeDlg::onGC8GetAll( wxCommandEvent& event ) {
+  m_bGC8GetAll = true;
+  m_GC8SetAll->Enable(false);
+  m_GC8GetAll->Enable(false);
+  varGet(1);
 }
 
 void CBusNodeDlg::onGC8SetAll( wxCommandEvent& event ) {
+  m_bGC8SetAll = true;
+  m_GC8SetAll->Enable(false);
+  m_GC8GetAll->Enable(false);
+  m_GC8SetIndex = 0;
+  m_Timer->Start( 100, wxTIMER_ONE_SHOT );
 }
 

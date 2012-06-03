@@ -103,6 +103,8 @@ class CBusNodeDlg : public cbusnodedlggen
   void gc6SetServoConf(int servo, int idx, int conf);
   void gc6SetServoEvent(int idx, int nn, int addr);
   void gc6UpdateServoEvent(int servo);
+  void initGC8Var(int nr, int val);
+  void initGC8Event(int idx, int nn, int addr);
 
   wxTimer* m_Timer;
   iOQueue m_Queue;
@@ -111,6 +113,7 @@ class CBusNodeDlg : public cbusnodedlggen
   int m_GC4SetIndex;
   int m_GC1eSetIndex;
   int m_GCLNSetIndex;
+  int m_GC8SetIndex;
 
   int m_SetPage;
   bool m_bGC2GetAll;
