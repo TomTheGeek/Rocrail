@@ -1610,19 +1610,19 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
     else if( m_GC8SetIndex == 3 ) {
       varSet(4, m_GC8Display2Contrast->GetValue(), false);
     }
-    else if( m_GCLNSetIndex == 4 ) {
+    else if( m_GC8SetIndex == 4 ) {
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "set gc8 learn mode");
       setLearn();
     }
-    else if( m_GCLNSetIndex == 5 ) {
-      eventSet( 0, m_GC8Display1Event->GetValue(), m_GC8SetIndex-5, 0, false );
+    else if( m_GC8SetIndex == 5 ) {
+      eventSet( 0, m_GC8Display1Event->GetValue(), 0, 0, false );
     }
-    else if( m_GCLNSetIndex == 6 ) {
-      eventSet( 0, m_GC8Display2Event->GetValue(), m_GC8SetIndex-5, 0, false );
+    else if( m_GC8SetIndex == 6 ) {
+      eventSet( 0, m_GC8Display2Event->GetValue(), 1, 0, false );
     }
 
     m_GC8SetIndex++;
-    if( m_bGC8SetAll && m_GC8SetIndex < 6 ) {
+    if( m_bGC8SetAll && m_GC8SetIndex < 7 ) {
       m_Timer->Start( 100, wxTIMER_ONE_SHOT );
     }
     else {
