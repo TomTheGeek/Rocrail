@@ -70,6 +70,8 @@ void CBusNodeDlg::initLabels() {
   m_CANID = 0;
   m_CBus = NodeOp.inst(wCBus.name(), NULL, ELEMENT_NODE);
 
+  m_bGC8GetAll = false;
+  m_bGC8SetAll = false;
   m_bGCLNGetAll = false;
   m_bGCLNSetAll = false;
   m_bGC1eGetAll = false;
@@ -465,6 +467,7 @@ void CBusNodeDlg::selectPage4Type( int manu, int mtype ) {
     case MTYP_CANGC7:    m_NoteBook->SetSelection( 9 - offset );  onGC7GetAll( evt ); break;
     case MTYP_CANGC1E:   m_NoteBook->SetSelection( 5 - offset );  onGC1eGetAll( evt ); break;
     case MTYP_CANGCLN:   m_NoteBook->SetSelection( 10 - offset ); onGCLNGetAll( evt ); break;
+    case MTYP_CANGC8:    m_NoteBook->SetSelection( 11 - offset );  onGC8GetAll( evt ); break;
     }
   }
 }
@@ -2100,5 +2103,12 @@ void CBusNodeDlg::onGCLNSetAll( wxCommandEvent& event ) {
   m_GCLNGetAll->Enable(false);
   m_GCLNSetIndex = 0;
   m_Timer->Start( 100, wxTIMER_ONE_SHOT );
+}
+
+
+void CBusNodeDlg::onGC8GetAll( wxCommandEvent& event ) {
+}
+
+void CBusNodeDlg::onGC8SetAll( wxCommandEvent& event ) {
 }
 

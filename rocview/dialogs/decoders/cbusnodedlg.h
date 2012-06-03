@@ -124,6 +124,8 @@ class CBusNodeDlg : public cbusnodedlggen
   bool m_bGC1eSetAll;
   bool m_bGCLNGetAll;
   bool m_bGCLNSetAll;
+  bool m_bGC8GetAll;
+  bool m_bGC8SetAll;
 
   unsigned char m_GC4AllowedRFID[5][5];
 
@@ -198,6 +200,8 @@ protected:
   void onGC2PortType16( wxCommandEvent& event );
   void onGCLNGetAll( wxCommandEvent& event );
   void onGCLNSetAll( wxCommandEvent& event );
+  void onGC8GetAll( wxCommandEvent& event );
+  void onGC8SetAll( wxCommandEvent& event );
 
 
 public:
