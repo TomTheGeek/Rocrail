@@ -682,9 +682,8 @@ void Symbol::OnPaint(wxPaintEvent& event)
 
     dc.SetUserScale( m_Scale, m_Scale );
     if( wxGetApp().getFrame()->isRaster() ) {
-      double c = getSize();
-      dc.DrawLine( 0, 0, (int)(c*cx), 0 );
-      dc.DrawLine( 0, 0, 0, (int)(c*cy) );
+      dc.DrawLine( 0, 0, (int)(m_ItemSize*cx), 0 );
+      dc.DrawLine( 0, 0, 0, (int)(m_ItemSize*cy) );
     }
 /*
 */
