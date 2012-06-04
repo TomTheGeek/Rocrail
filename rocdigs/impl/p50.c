@@ -93,6 +93,9 @@ static Boolean __isCTS( iOP50Data o ) {
   int wait4cts = 0;
   while( wait4cts < o->ctsretry ) {
     if( SerialOp.isCTS( o->serial ) ) {
+      if( wDigInt.getprotver(o->ini) == 1 ) {
+        ThreadOp.sleep(50);
+      }
       return True;
     }
     ThreadOp.sleep( 10 );
@@ -489,6 +492,7 @@ static iOP50 _inst( const iONode settings, const iOTrace trace ) {
   data->mux = MutexOp.inst( StrOp.fmt( "serialMux%08X", data ), True );
 
   /* Evaluate attributes. */
+  data->ini      = settings;
   data->device   = StrOp.dup( wDigInt.getdevice( settings ) );
   data->iid      = StrOp.dup( wDigInt.getiid( settings ) );
 
@@ -523,6 +527,8 @@ static iOP50 _inst( const iONode settings, const iOTrace trace ) {
     data->flow = cts;
   else if( StrOp.equals( wDigInt.xon, flow ) )
     data->flow = xon;
+  else
+    data->flow = none;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50 %d.%d.%d", vmajor, vminor, patch );

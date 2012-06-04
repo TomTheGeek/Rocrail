@@ -52,7 +52,8 @@
       <var name="run" vt="Boolean"/>
       <var name="serialOK" vt="Boolean"/>
       <var name="initOK" vt="Boolean"/>
-    </data>
+      <var name="ini" vt="iONode"/>
+      </data>
   </object>
 
 
