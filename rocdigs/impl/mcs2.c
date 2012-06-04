@@ -466,6 +466,7 @@ static void __evaluateSensorEvent( iOMCS2Data mcs2, byte* in ) {
   int addr   = in[7] * 256 + in[8];
   int state = in[10];
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "fb %d = %d", addr, state );
   wFeedback.setaddr( nodeC, addr );
   wFeedback.setstate( nodeC, state?True:False );
   if( mcs2->iid != NULL )
