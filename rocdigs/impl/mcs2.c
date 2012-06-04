@@ -461,6 +461,7 @@ static void __evaluateMCS2S88( iOMCS2Data mcs2, byte* in, unsigned char* prev ) 
 }
 
 
+/* 00 23 67 78 08 00 00 00 0B 00 01 00 00 */
 static void __evaluateSensorEvent( iOMCS2Data mcs2, byte* in ) {
   int addr   = in[7] * 256 + in[8];
   int state = in[10];
@@ -618,7 +619,7 @@ static void __reader( void* threadinst ) {
       /* unoffcial reply to unofficial polling command, don't care if the poll was from Rocrail or not, always good to have the S88 state. */
       __evaluateMCS2S88( data, in, store );
     }
-    else if( in[1] == CMD_ACC_SENSOR && in[4] == 8 ) {
+    else if( in[1] == 0x23 ) {
       __evaluateSensorEvent( data, in );
     }
     else if( in[1] == 0x0A | in[1] == 0x08 ) {
@@ -753,8 +754,8 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
     msg[2]  = 0x03;
     msg[3]  = 0x00;
     msg[4]  = 7;
-    msg[5]  = 0; /* Geraetekenner */
-    msg[6]  = 0;
+    msg[5]  = wMCS2.getfbdevid(data->mcs2ini) / 256; /* Geraetekenner */
+    msg[6]  = wMCS2.getfbdevid(data->mcs2ini) % 256;
     msg[7]  = (0 & 0xFF00) >> 8; /* Kontaktkennung Start */
     msg[8]  = (0 & 0x00FF);
     msg[9]  = (0x3FFF & 0xFF00) >> 8; /* Kontaktkennung Ende */

@@ -514,6 +514,7 @@ static int __translate( iOSprog sprog, iONode node, char* outa, int* insize ) {
       data->slots[slot].V = V;
       data->slots[slot].steps = steps;
       data->slots[slot].addr = wLoc.getaddr( node );
+      data->slots[slot].longaddr = (wLoc.getaddr( node ) > 127) ? True:False;
       data->slots[slot].lights = wLoc.isfn( node );
       data->slots[slot].fn[0]  = wLoc.isfn( node );
       data->slots[slot].changedfgrp = wLoc.isfn( node ) ? 1:-1;
@@ -538,6 +539,7 @@ static int __translate( iOSprog sprog, iONode node, char* outa, int* insize ) {
       if( data->slots[slot].addr == 0 ) {
         /* first use of this slot */
         data->slots[slot].addr = addr;
+        data->slots[slot].longaddr = (addr > 127) ? True:False;
       }
       data->slots[slot].changedfgrp = group;
       data->slots[slot].lights = wFunCmd.isf0 ( node );
