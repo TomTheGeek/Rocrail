@@ -131,11 +131,13 @@ static void __del( void* inst ) {
     while (plist != NULL) {
       iONode item = (iONode) ListOp.first(plist);
       while (item != NULL) {
-        StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
-        if(!MapOp.haskey(delMap, delkey)) {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) item)->name(), (unsigned int)item);
-          MapOp.put(delMap, delkey, (obj)delkey);
-          NodeOp.base.del(item);
+        if( item != NULL ) {
+          StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
+          if(!MapOp.haskey(delMap, delkey)) {
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) item)->name(), (unsigned int)item);
+            MapOp.put(delMap, delkey, (obj)delkey);
+            NodeOp.base.del(item);
+          }
         }
         item = (iONode) ListOp.next(plist);
       }
