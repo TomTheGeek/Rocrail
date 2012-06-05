@@ -3164,21 +3164,27 @@ static void _event( iOModel inst, iONode nodeC ) {
       iOSignal sg = ModelOp.getSgByAddress(inst, addr, port);
       if( sg != NULL && wCtrl.issgevents( wRocRail.getctrl( AppOp.getIni() ) ) ) {
         SignalOp.event( sg, (iONode)NodeOp.base.clone(nodeC) );
+        NodeOp.base.del(nodeC);
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered %s event: %d:%d:%d",
-            wAccessory.isaccevent(nodeC)?"accessory":"switch", bus, addr, port );
+        /* Try an output object... */
+        NodeOp.setName(nodeC, wOutput.name() );
       }
     }
 
 
-    NodeOp.base.del(nodeC);
   }
 
-  else if( StrOp.equals( wOutput.name(), NodeOp.getName( nodeC ) ) ) {
-    int bus = wOutput.getbus( nodeC );
-    int addr = wOutput.getaddr( nodeC );
-    int port = wOutput.getport( nodeC );
+  if( StrOp.equals( wOutput.name(), NodeOp.getName( nodeC ) ) ) {
+    int bus  = wSwitch.getbus( nodeC );
+    int addr = wSwitch.getaddr1( nodeC );
+    int port = wSwitch.getport1( nodeC );
+
+    if( addr == 0 && wOutput.getaddr(nodeC) > 0 )
+      addr = wOutput.getaddr(nodeC);
+    if( port == 0 && wOutput.getport(nodeC) > 0 )
+      port = wOutput.getport(nodeC);
+
     const char* iid = wOutput.getiid( nodeC );
     char* key = OutputOp.createAddrKey( bus, addr, port, iid );
     iOOutput co = (iOOutput)MapOp.get( o->coAddrMap, key );
@@ -3195,7 +3201,10 @@ static void _event( iOModel inst, iONode nodeC ) {
 
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "unsupported event" );
+    int bus = wSwitch.getbus( nodeC );
+    int addr = wSwitch.getaddr1( nodeC );
+    int port = wSwitch.getport1( nodeC );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered event: %d:%d:%d", bus, addr, port );
     /* Cleanup Node3 */
     nodeC->base.del(nodeC);
   }
