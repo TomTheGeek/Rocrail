@@ -1830,6 +1830,9 @@ static void _stop( iOLoc inst, Boolean resume ) {
 
   if( data->driver != NULL )
     data->driver->stop( data->driver );
+
+  __checkAction(inst, "stop");
+
 }
 
 static void _stopNet( iOLoc inst ) {
