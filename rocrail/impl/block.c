@@ -847,6 +847,18 @@ static Boolean _isState( iIBlockBase inst, const char* state ) {
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOBlockData data = Data(inst);
 
+  if( wBlock.getfbevent( data->props ) == NULL ) {
+    iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+    wBlock.setstate(data->props, wBlock.closed);
+
+    wBlock.setid( nodeD, data->id );
+    wBlock.setstate( nodeD, wBlock.getstate(data->props) );
+    AppOp.broadcastEvent( nodeD );
+
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "No events defined for block [%s]; Closed.", data->id );
+    return False;
+  }
+
   if( wBlock.isremote(data->props) ) {
     iOR2Rnet r2rnet = ControlOp.getR2Rnet(AppOp.getControl());
     if( r2rnet != NULL ) {
