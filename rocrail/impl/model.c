@@ -3047,6 +3047,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       nodeC->base.del(nodeC);
     }
     StrOp.free( key );
+    return;
   }
 
   else if( StrOp.equals( wLoc.name(), NodeOp.getName( nodeC ) ) ||
@@ -3070,6 +3071,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       /* Cleanup Node3 */
     }
     nodeC->base.del(nodeC);
+    return;
   }
 
   else if( StrOp.equals( wSwitch.name(), NodeOp.getName( nodeC ) ) ) {
@@ -3165,6 +3167,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       if( sg != NULL && wCtrl.issgevents( wRocRail.getctrl( AppOp.getIni() ) ) ) {
         SignalOp.event( sg, (iONode)NodeOp.base.clone(nodeC) );
         NodeOp.base.del(nodeC);
+        return;
       }
       else {
         /* Try an output object... */
@@ -3198,9 +3201,10 @@ static void _event( iOModel inst, iONode nodeC ) {
       nodeC->base.del(nodeC);
     }
     StrOp.free( key );
-
+    return;
   }
-  else {
+
+  {
     int bus = wSwitch.getbus( nodeC );
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
