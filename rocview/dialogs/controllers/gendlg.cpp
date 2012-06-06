@@ -115,6 +115,7 @@ void GenericCtrlDlg::initLabels() {
   m_PTSupport->SetLabel( wxGetApp().getMsg( "pt" ) );
   m_SystemInfo->SetLabel( wxGetApp().getMsg( "systeminfo" ) );
   m_labVersion->SetLabel( wxGetApp().getMsg( "version" ) );
+  m_labSwTime->SetLabel( wxGetApp().getMsg( "switchtime" ) );
   m_labPollSleep->SetLabel( wxGetApp().getMsg( "sleep" ) );
 }
 
@@ -132,6 +133,7 @@ void GenericCtrlDlg::initValues() {
   m_PTSupport->SetValue( wDigInt.isptsupport( m_Props ) );
   m_SystemInfo->SetValue( wDigInt.issysteminfo( m_Props ) );
   m_Version->SetValue( wDigInt.getprotver( m_Props ) );
+  m_SwTime->SetValue( wDigInt.getswtime( m_Props ) );
   m_PollSleep->SetValue( wDigInt.getpsleep( m_Props ) );
 
   // flow control
@@ -191,6 +193,7 @@ void GenericCtrlDlg::evaluate() {
   wDigInt.setptsupport( m_Props, m_PTSupport->IsChecked()?True:False );
   wDigInt.setsysteminfo( m_Props, m_SystemInfo->IsChecked()?True:False );
   wDigInt.setprotver( m_Props, m_Version->GetValue() );
+  wDigInt.setswtime( m_Props, m_SwTime->GetValue() );
   wDigInt.setpsleep( m_Props, m_PollSleep->GetValue() );
 
   // flow control
@@ -262,6 +265,8 @@ bool GenericCtrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_SystemInfo = NULL;
     m_labVersion = NULL;
     m_Version = NULL;
+    m_labSwTime = NULL;
+    m_SwTime = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end GenericCtrlDlg member initialisation
@@ -418,22 +423,28 @@ void GenericCtrlDlg::CreateControls()
     itemStaticBoxSizer32->Add(itemFlexGridSizer35, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_labVersion = new wxStaticText( m_Panel, wxID_ANY, _("Version"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer35->Add(m_labVersion, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer35->Add(m_labVersion, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Version = new wxSpinCtrl( m_Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000, 0 );
-    itemFlexGridSizer35->Add(m_Version, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_Version = new wxSpinCtrl( m_Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
+    itemFlexGridSizer35->Add(m_Version, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer38 = new wxStdDialogButtonSizer;
+    m_labSwTime = new wxStaticText( m_Panel, wxID_ANY, _("Switch time"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer35->Add(m_labSwTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer38, 0, wxALIGN_RIGHT|wxALL, 5);
+    m_SwTime = new wxSpinCtrl( m_Panel, wxID_ANY, _T("250"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 10000, 250 );
+    itemFlexGridSizer35->Add(m_SwTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer40 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer40, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer38->AddButton(m_OK);
+    itemStdDialogButtonSizer40->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer38->AddButton(m_Cancel);
+    itemStdDialogButtonSizer40->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer38->Realize();
+    itemStdDialogButtonSizer40->Realize();
 
 ////@end GenericCtrlDlg content construction
 }

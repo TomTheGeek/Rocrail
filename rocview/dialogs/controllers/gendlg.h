@@ -145,6 +145,8 @@ public:
     wxCheckBox* m_SystemInfo;
     wxStaticText* m_labVersion;
     wxSpinCtrl* m_Version;
+    wxStaticText* m_labSwTime;
+    wxSpinCtrl* m_SwTime;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end GenericCtrlDlg member variables
