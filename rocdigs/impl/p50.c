@@ -94,7 +94,7 @@ static Boolean __isCTS( iOP50Data o ) {
   while( wait4cts < o->ctsretry ) {
     if( SerialOp.isCTS( o->serial ) ) {
       if( wDigInt.getprotver(o->ini) == 1 ) {
-        ThreadOp.sleep(50);
+        ThreadOp.sleep(10);
       }
       return True;
     }
@@ -115,23 +115,33 @@ static Boolean __transact( iOP50Data o, char* out, int outsize, char* in, int in
     /* Transact */
     if( __isCTS( o ) ) {
       int i = 0;
-      for( i = 0; i < outsize && state == P50_OK; i++ ) {
-        if( __isCTS(o) ) {
-          if( !SerialOp.write( o->serial, out+i, 1 ) )
-            state = P50_SNDERR;
+      if( outsize > 0 ) {
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "transact write %d:", outsize );
+        TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, outsize );
+
+        for( i = 0; i < outsize && state == P50_OK; i++ ) {
+          if( __isCTS(o) ) {
+            if( !SerialOp.write( o->serial, out+i, 1 ) )
+              state = P50_SNDERR;
+          }
+          else
+            state = P50_CTSERR;
         }
-        else
-          state = P50_CTSERR;
       }
+
       if( state == P50_OK && insize > 0 ) {
-        if( SerialOp.read( o->serial, in, insize ) )
+        if( SerialOp.read( o->serial, in, insize ) ) {
           state = P50_OK;
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "transact read %d:", insize );
+          TraceOp.dump( name, TRCLEVEL_BYTE, (char*)in, insize );
+        }
         else
           state = P50_RCVERR;
       }
     }
-    else
+    else {
       state = P50_CTSERR;
+    }
 
     /* Release the mutex. */
     MutexOp.post( o->mux );
@@ -151,6 +161,7 @@ static Boolean __transact( iOP50Data o, char* out, int outsize, char* in, int in
         errLevel = TRCLEVEL_INFO;
         break;
       case P50_CTSERR:
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "CTS timeout" );
         wResponse.setmsg( nodeC, "CTS error." );
         wResponse.setstate( nodeC, wResponse.ctserr );
         errLevel = TRCLEVEL_EXCEPTION;
@@ -207,8 +218,10 @@ static int __translate( iOP50Data o, iONode node, unsigned char* p50, int* insiz
 
     addr = (mod-1) * 4 + pin;
 
-    if( mod < 1 )
+    if( mod < 1 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "invalid addressing: %d:%d", mod, pin);
       return 0;
+    }
     if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
       cmd = 34;
     p50[0] = (unsigned char)cmd;
@@ -328,7 +341,6 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
 
   if( nodeA != NULL ) {
     int size = __translate( o, nodeA, out, &insize );
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, size );
     if( __transact( o, (char*)out, size, (char*)in, insize ) ) {
       /* Inform timer. */
       if( StrOp.equals( NodeOp.getName( nodeA ), wSwitch.name() ) ) {
