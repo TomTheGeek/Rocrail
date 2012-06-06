@@ -43,7 +43,11 @@
 
 static int instCnt = 0;
 
+#define P50_POWERON 96
+#define P50_POWEROFF 97
+
 static int dir6021[81]; //internal representation of (probable) loco direction stored in 6021.
+
 
 /*
  ***** OBase functions.
@@ -127,6 +131,11 @@ static Boolean __transact( iOP50Data o, char* out, int outsize, char* in, int in
           else
             state = P50_CTSERR;
         }
+      }
+
+      if( state == P50_OK && out[0] == P50_POWERON ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "extra sleep after a power on command..." );
+        ThreadOp.sleep(100);
       }
 
       if( state == P50_OK && insize > 0 ) {
@@ -295,11 +304,11 @@ static int __translate( iOP50Data o, iONode node, unsigned char* p50, int* insiz
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
     if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
-      p50[0] = (unsigned char)97;
+      p50[0] = (unsigned char)P50_POWEROFF;
       return 1;
     }
     if( StrOp.equals( cmd, wSysCmd.go ) ) {
-      p50[0] = (unsigned char)96;
+      p50[0] = (unsigned char)P50_POWERON;
       return 1;
     }
   }
@@ -522,6 +531,8 @@ static iOP50 _inst( const iONode settings, const iOTrace trace ) {
 
   data->serialOK = False;
   data->initOK = False;
+
+  data->lastSwCmd = -1;
 
   parity      = wDigInt.getparity( settings );
   flow        = wDigInt.getflow( settings );
