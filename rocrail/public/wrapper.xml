@@ -1014,7 +1014,7 @@
     <var name="savemodules" vt="bool" defval="true" remark="Leave modules un touched if set to false, but all changes are lost."/>
     <var name="modroutes" vt="bool" defval="false" remark="Use internal module routes in conjunction with connections."/>
     <module cardinality="n" remark="Module definition" wrappername="Module">
-      <var name="title" vt="string" defval="Module 1" range="*" remark="Text to show in the tab."/>
+      <var name="title" vt="string" defval="Rename me!" required="true" range="*" remark="Text to show in the tab."/>
       <var name="filename" vt="string" defval="m1.xml" range="*" remark="File name of module track plan."/>
       <var name="id" vt="string" defval="" range="*" required="true" remark="Module ID."/>
       <var name="idprefix" vt="string" defval="" range="*" remark="Add a prefix to all objects to make them unique."/>
