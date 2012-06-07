@@ -39,6 +39,7 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Response.h"
+#include "rocrail/wrapper/public/State.h"
 
 
 static int instCnt = 0;
@@ -310,11 +311,27 @@ static int __translate( iOP50Data o, iONode node, unsigned char* p50, int* insiz
     if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
       p50[0] = (unsigned char)P50_POWEROFF;
+
+      iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+      if( o->iid != NULL )
+        wState.setiid( node, o->iid );
+      wState.setpower( node, False );
+      wState.settrackbus( node, False );
+      o->listenerFun( o->listenerObj, node, TRCLEVEL_INFO );
+
       return 1;
     }
     if( StrOp.equals( cmd, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       p50[0] = (unsigned char)P50_POWERON;
+
+      iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+      if( o->iid != NULL )
+        wState.setiid( node, o->iid );
+      wState.setpower( node, True );
+      wState.settrackbus( node, True );
+      o->listenerFun( o->listenerObj, node, TRCLEVEL_INFO );
+
       return 1;
     }
   }
