@@ -133,11 +133,6 @@ static Boolean __transact( iOP50Data o, char* out, int outsize, char* in, int in
         }
       }
 
-      if( state == P50_OK && out[0] == P50_POWERON ) {
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "extra sleep after a power on command..." );
-        ThreadOp.sleep(100);
-      }
-
       if( state == P50_OK && insize > 0 ) {
         if( SerialOp.read( o->serial, in, insize ) ) {
           state = P50_OK;
@@ -233,6 +228,10 @@ static int __translate( iOP50Data o, iONode node, unsigned char* p50, int* insiz
     }
     if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
       cmd = 34;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "switch addr=%d cmd=%s", addr, wSwitch.getcmd( node ) );
+
     p50[0] = (unsigned char)cmd;
     p50[1] = (unsigned char)addr;
     return 2;
@@ -278,11 +277,13 @@ static int __translate( iOP50Data o, iONode node, unsigned char* p50, int* insiz
       p50[4] = (unsigned char)info;
       p50[5] = (unsigned char)addr;
       dir6021[addr]=dir6021[addr] ^ 1; //invert internal representation
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reversing lc=%d spd=%d, 6021 dir=%s, rocrail dir=%d",
-		   addr, speed, dir6021[addr]==0?"forward":"reverse",dir);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reversing loco=%d speed=%d, 6021 dir=%s, rocrail dir=%d lights=%s",
+		   addr, speed, dir6021[addr]==0?"forward":"reverse",dir, fn?"on":"off");
       return 6;
     }
     else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco addr=%d speed=%d dir=%s lights=%s",
+          addr, speed, dir?"forwards":"reverse", fn?"on":"off" );
       p50[0] = (unsigned char)info;
       p50[1] = (unsigned char)addr;
       return 2;
@@ -296,6 +297,9 @@ static int __translate( iOP50Data o, iONode node, unsigned char* p50, int* insiz
     Boolean f3 = wFunCmd.isf3( node );
     Boolean f4 = wFunCmd.isf4( node );
     int   info = 64 + (f1?1:0) + (f2?2:0) + (f3?4:0) + (f4?8:0);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+            "loco function addr=%d f1=%s f2=%s f3=%s f4=%s",
+            addr, f1?"on":"off", f2?"on":"off", f3?"on":"off", f4?"on":"off");
     p50[0] = (unsigned char)info;
     p50[1] = (unsigned char)addr;
     return 2;
@@ -304,20 +308,28 @@ static int __translate( iOP50Data o, iONode node, unsigned char* p50, int* insiz
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
     if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
       p50[0] = (unsigned char)P50_POWEROFF;
       return 1;
     }
     if( StrOp.equals( cmd, wSysCmd.go ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       p50[0] = (unsigned char)P50_POWERON;
       return 1;
     }
   }
+
   /* Feedback command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFeedback.name() ) ) {
-    int mod = wFeedback.getaddr( node )/16;
-    p50[0] = (unsigned char)(192+mod);
-    *insize = 2;
-    return 1;
+    int addr = wFeedback.getaddr( node );
+    Boolean state = wFeedback.isstate( node );
+
+    if( wFeedback.isactivelow(node) )
+      wFeedback.setstate( node, !state);
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
+    o->listenerFun( o->listenerObj, (iONode)NodeOp.base.clone( node ), TRCLEVEL_INFO );
+
   }
   return 0;
 }
