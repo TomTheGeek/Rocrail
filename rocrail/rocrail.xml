@@ -169,7 +169,8 @@
       <var name="wheelcount" vt="int"/>
       <var name="wheelcounterId" vt="const char*"/>
       <var name="forceblocktimer" vt="Boolean"/>
-    </data>
+      <var name="pendingFree" vt="Boolean"/>
+      </data>
   </object>
 
   <object name="Stage" interface="$../rocint/rocint.xml:BlockBase" use="list,map,node,mutex" include="loc,htmlint,$rocint/public/blockbase" remark="Block object">

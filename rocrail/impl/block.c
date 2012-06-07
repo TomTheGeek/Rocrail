@@ -643,6 +643,13 @@ static void _fbEvent( obj inst, Boolean puls, const char* id, const char* ident,
     data->wheelcounterId = id;
   }
   _event( (iIBlockBase)inst, puls, id, ident, val, wheelcount, NULL );
+
+  if( data->pendingFree ) {
+    if( __isElectricallyFree((iOBlock)inst) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block [%s] is finally unlocked", data->id );
+      data->pendingFree = False;
+    }
+  }
 }
 
 
@@ -846,6 +853,16 @@ static Boolean _isState( iIBlockBase inst, const char* state ) {
 
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOBlockData data = Data(inst);
+
+  if( data->pendingFree ) {
+    if( !__isElectricallyFree((iOBlock)inst) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block [%s] waits to get electrically free", data->id );
+      return False;
+    }
+    else {
+      data->pendingFree = False;
+    }
+  }
 
   if( wBlock.getfbevent( data->props ) == NULL ) {
     iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
@@ -1765,6 +1782,11 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
           data->closereq = False;
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set block to close: requested" );
           __checkAction((iOBlock)inst, "closed");
+        }
+
+        if( !__isElectricallyFree((iOBlock)inst) ) {
+          data->pendingFree = True;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "pending unlock: still electrically occupied" );
         }
 
         ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, "", False, 0, 0, NULL );
