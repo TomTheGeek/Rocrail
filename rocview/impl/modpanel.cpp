@@ -143,6 +143,7 @@ void ModPanel::OnAddModule(wxCommandEvent& event) {
 
     if( wxID_OK == dlg->ShowModal() ) {
       wModule.setid( module, dlg->GetValue().mb_str(wxConvUTF8) );
+      wModule.settitle( module, dlg->GetValue().mb_str(wxConvUTF8) );
     }
     dlg->Destroy();
 
