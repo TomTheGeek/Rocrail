@@ -490,7 +490,7 @@ static void __handleLissy(iOLocoNet loconet, byte* msg) {
   int         lissyaddr = msg[4] & 0x7F;
   int         sensdata  = ( msg[6] & 0x7F ) + 128 * ( msg[5] & 0x7F );
   Boolean     dir       = ( msg[3] & 0x20 ) ? True:False;
-  Boolean     wheelcnt  = ( msg[2] & 0x01 ) ? True:False;
+  Boolean     wheelcnt  = ( msg[2] & 0x40 ) ? True:False;
   char        ident[32];
 
   if( wheelcnt )

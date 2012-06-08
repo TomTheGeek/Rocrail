@@ -913,26 +913,39 @@ static __evaluateIR( iOCBUS cbus, byte* frame ) {
 
   int addrh   = HEXA2Byte(frame + OFFSET_D3 + offset);
   int addrl   = HEXA2Byte(frame + OFFSET_D4 + offset);
-  int addr    = addrh * 256 + addrl;
+  int lissyaddr = addrh * 256 + addrl;
 
   int ir1  = HEXA2Byte(frame + OFFSET_D5 + offset);
   int ir2  = HEXA2Byte(frame + OFFSET_D6 + offset);
-  int locoaddr = ir1 * 256 + ir2;
-  int lococat  = HEXA2Byte(frame + OFFSET_D7 + offset);
+  int sensdata = ir1 * 256 + ir2;
+  int flags = HEXA2Byte(frame + OFFSET_D7 + offset);
+  Boolean wheelcnt = ((flags & 0x02) ? True:False);
+  Boolean dir = ((flags & 0x01) ? True:False);
 
   char ident[32];
-  StrOp.fmtb(ident, "%d", locoaddr);
-
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "IR %sevent %d loco=%d (node=%d)",
-      data->shortevents?"short ":"", addr, locoaddr, node );
+  StrOp.fmtb(ident, "%d", sensdata);
 
   /* inform listener: Node3 */
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+  if(wheelcnt) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "wheelcounter=%d count=%d", lissyaddr, sensdata );
+    wFeedback.setfbtype( nodeC, wFeedback.fbtype_wheelcounter );
+    wFeedback.setwheelcount( nodeC, sensdata );
+  }
+  else {
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "IR %sevent %d loco=%d dir=%s (node=%d)",
+      data->shortevents?"short ":"", lissyaddr, sensdata, dir?"fwd":"rev", node );
+    wFeedback.setfbtype( nodeC, wFeedback.fbtype_lissy );
+
+    wFeedback.setidentifier( nodeC, ident );
+    wFeedback.setdirection( nodeC, dir );
+  }
+
   wFeedback.setbus( nodeC, node );
-  wFeedback.setaddr( nodeC, addr );
+  wFeedback.setaddr( nodeC, lissyaddr );
   wFeedback.setstate( nodeC, True );
-  wFeedback.setidentifier( nodeC, ident );
-  wFeedback.setcategory( nodeC, lococat );
+
   if( data->iid != NULL )
     wFeedback.setiid( nodeC, data->iid );
 
