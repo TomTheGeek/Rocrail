@@ -780,6 +780,9 @@ static Boolean __freeSections(iIBlockBase inst, const char* locid) {
   }
 
   if( unlocked ) {
+    if( StrOp.equals( data->locId, locid ) ) {
+      data->locId = NULL;
+    }
     data->pendingFree = True;
     __moveStageLocos(inst);
   }
