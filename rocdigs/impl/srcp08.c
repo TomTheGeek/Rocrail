@@ -227,6 +227,8 @@ static iONode __translate( iOSRCP08Data o, iONode node, char* srcp )
     int port  = 1;
     int action = 1;
     int activationTime = wDigInt.getswtime( o->ini );
+    if( wSwitch.getdelay(node) > 0 )
+      activationTime = wSwitch.getdelay(node);
 
     int ga_bus = wSRCP.getsrcpbusGA_ps( o->srcpini );
     if( StrOp.equals( wSwitch.prot_M, wSwitch.getprot( node ) ) )
