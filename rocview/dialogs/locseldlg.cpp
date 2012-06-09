@@ -45,6 +45,7 @@
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/FunDef.h"
+#include "rocrail/wrapper/public/DataReq.h"
 
 #include "rocview/wrapper/public/Gui.h"
 #include "rocview/wrapper/public/MIC.h"
@@ -168,6 +169,15 @@ void LocSelDlg::InitValues() {
     else {
       TraceOp.trc( "locdlg", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
       m_LocImageIndex->SetBitmapLabel( wxBitmap(nopict_xpm) );
+      if( StrOp.len(imagename) > 0 ) {
+        // request the image from server:
+        iONode node = NodeOp.inst( wDataReq.name(), NULL, ELEMENT_NODE );
+        wDataReq.setid( node, wLoc.getid(m_Props) );
+        wDataReq.setcmd( node, wDataReq.get );
+        wDataReq.settype( node, wDataReq.image );
+        wDataReq.setfilename( node, imagename );
+        wxGetApp().sendToRocrail( node );
+      }
     }
     m_LocImageIndex->SetToolTip(wxString(wLoc.getdesc( m_Props ),wxConvUTF8));
 
