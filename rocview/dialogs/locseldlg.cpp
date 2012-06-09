@@ -167,9 +167,9 @@ void LocSelDlg::InitValues() {
       m_LocImageIndex->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
     }
     else {
-      TraceOp.trc( "locdlg", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
       m_LocImageIndex->SetBitmapLabel( wxBitmap(nopict_xpm) );
       if( StrOp.len(imagename) > 0 ) {
+        TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s] not found; request it from server.", pixpath );
         // request the image from server:
         iONode node = NodeOp.inst( wDataReq.name(), NULL, ELEMENT_NODE );
         wDataReq.setid( node, wLoc.getid(m_Props) );
