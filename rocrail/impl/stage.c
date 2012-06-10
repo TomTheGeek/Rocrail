@@ -261,7 +261,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
         else {
           if( !LocOp.isAutomode(loc) ) {
             iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed in auto mode", data->locId );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed in auto mode", LocOp.getId(loc) );
             LocOp.setCurBlock(loc, data->id);
             wLoc.setcmd(cmd, wLoc.velocity);
             wLoc.setV(cmd, 0);
@@ -275,7 +275,8 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
             }
           }
         }
-        ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, data->locId, False, 0, 0, wStageSection.getid(section) );
+        ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, LocOp.getId(loc), False, 0, 0, wStageSection.getid(section) );
+        data->locId = NULL;
       }
     }
   }
@@ -499,7 +500,7 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
       if( lock ) {
         data->locId = locid;
         data->targetSection = targetSection;
-        for( i = targetSection; i < (targetSection + nrSections); i++ ) {
+        for( i = targetSection - (nrSections-1); i < targetSection + 1; i++ ) {
           iONode section = (iONode)ListOp.get( data->sectionList, i);
           wStageSection.setlcid( section, locid );
         }
