@@ -427,8 +427,15 @@ static void __feedbackMCS2Reader( void* threadinst ) {
       out = NULL;
       freeMem( out );
     }
+
+    if( wDigInt.getprotver( data->ini ) == 2 ) {
+      /* Just poll once for Start of Day. */
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Just poll once for Start of Day. V2" );
+      break;
+    }
+
   } while( data->run );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback MCS2 reader ended." );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "feedbackpoll ended." );
 }
 
 static void __evaluateMCS2S88( iOMCS2Data mcs2, byte* in, unsigned char* prev ) {
@@ -766,7 +773,8 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Activate sensor events for version 2..." );
     ThreadOp.post( data->writer, (obj)msg );
   }
-  else if( data->fbmod > 0 ) {
+
+  if( data->fbmod > 0 ) {
     data->feedbackReader = ThreadOp.inst( "fbreader", &__feedbackMCS2Reader, __MCS2 );
     ThreadOp.start( data->feedbackReader );
   }
