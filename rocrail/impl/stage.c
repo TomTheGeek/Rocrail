@@ -232,7 +232,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
       iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId);
       iONode nodeD = (iONode)NodeOp.base.clone(data->props);
       wStage.setid( nodeD, data->id );
-      wStage.setlocid( nodeD, data->locId );
+      wStage.setlocid( nodeD, "" );
       AppOp.broadcastEvent( nodeD );
 
       if( loc != NULL ) {
@@ -251,12 +251,16 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
             wLoc.setV(cmd, 0);
             LocOp.cmd(loc, cmd);
           }
-          if( data->pendingFree ) {
+
+          if( data->pendingFree && data->pendingSection != -1 ) {
             iONode s = (iONode)ListOp.get(data->sectionList, data->pendingSection );
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "pendingFree for section [%d]", data->pendingSection );
             if( s != NULL )
               wStageSection.setlcid(s, NULL);
             data->pendingFree = False;
+            data->pendingSection = -1;
           }
+
         }
         else {
           if( !LocOp.isAutomode(loc) ) {
@@ -277,6 +281,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
         }
         ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, LocOp.getId(loc), False, 0, 0, wStageSection.getid(section) );
         data->locId = NULL;
+        wStage.setlocid( data->props, "" );
       }
     }
   }
@@ -436,7 +441,7 @@ static void _inBlock( iIBlockBase inst ,const char* locid ) {
     iONode nodeD = (iONode)NodeOp.base.clone(data->props);
     wStage.setid( nodeD, data->id );
     wStage.setreserved( nodeD, False );
-    wStage.setlocid( nodeD, locid );
+    wStage.setlocid( nodeD, "" );
     AppOp.broadcastEvent( nodeD );
   }
   return;
@@ -481,7 +486,7 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%d free sections, target section is %d", data->freeSections, targetSection );
 
 
-  if( data->freeSections > 1 ) {
+  if( data->freeSections >= 1 ) {
 
     int lclen   = LocOp.getLen(loco);
     int freeLen = data->freeSections * data->sectionLength;
@@ -498,11 +503,14 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
       nrSections += ((lclen + data->trainGap) % data->sectionLength) > 0 ? 1:0;
 
       if( lock ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "locking section(s) for [%s]", locid);
         data->locId = locid;
         data->targetSection = targetSection;
         for( i = targetSection - (nrSections-1); i < targetSection + 1; i++ ) {
           iONode section = (iONode)ListOp.get( data->sectionList, i);
           wStageSection.setlcid( section, locid );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "section [%d] locked for [%s]", wStageSection.getidx(section), locid);
         }
       }
     }
@@ -783,6 +791,7 @@ static Boolean __freeSections(iIBlockBase inst, const char* locid) {
   if( unlocked ) {
     if( StrOp.equals( data->locId, locid ) ) {
       data->locId = NULL;
+      wStage.setlocid( data->props, "" );
     }
     data->pendingFree = True;
     __moveStageLocos(inst);
@@ -1005,13 +1014,14 @@ static struct OStage* _inst( iONode props ) {
   MemOp.basecpy( __Stage, &StageOp, 0, sizeof( struct OStage ), data );
 
   /* Initialize data->xxx members... */
-  data->props         = props;
-  data->id            = wStage.getid( props );
-  data->fbMap         = MapOp.inst();
-  data->sectionList   = ListOp.inst();
-  data->sectionLength = wStage.getslen(props);
-  data->trainGap      = wStage.getgap(props);
-  data->pendingFree   = True;
+  data->props          = props;
+  data->id             = wStage.getid( props );
+  data->fbMap          = MapOp.inst();
+  data->sectionList    = ListOp.inst();
+  data->sectionLength  = wStage.getslen(props);
+  data->trainGap       = wStage.getgap(props);
+  data->pendingFree    = True;
+  data->pendingSection = -1;
 
   wStage.setlocid(data->props, NULL);
 
