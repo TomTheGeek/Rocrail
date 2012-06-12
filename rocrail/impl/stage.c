@@ -713,16 +713,22 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
   }
 
   int i = 0;
-  for( i = 0; i < ListOp.size(data->sectionList); i++) {
+  for( i = ListOp.size(data->sectionList)-1; i >= 0; i--) {
     iONode section = (iONode)ListOp.get(data->sectionList, i);
-    if( firstOccupiedSection == NULL && (wStageSection.getlcid(section) != NULL && StrOp.len(wStageSection.getlcid(section)) > 0) ) {
-      firstOccupiedSection = section;
-    }
-    if( firstOccupiedSection != NULL && nextFreeSection == NULL && (wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0) ) {
+
+    if( nextFreeSection == NULL && (wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0) ) {
+      /* Last free section in the list */
       nextFreeSection = section;
+    }
+
+    if( firstOccupiedSection == NULL && (wStageSection.getlcid(section) != NULL && StrOp.len(wStageSection.getlcid(section)) > 0) ) {
+      /* Last occpupied section in the list */
+      firstOccupiedSection = section;
       break;
     }
   }
+
+
   if( nextFreeSection != NULL && firstOccupiedSection != NULL ) {
     iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(firstOccupiedSection) );
     if( lc != NULL ) {
