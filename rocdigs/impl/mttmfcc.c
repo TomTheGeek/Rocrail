@@ -279,6 +279,59 @@ static Boolean __transact( iOMttmFccData data, byte* out, int outsize, byte* in,
 }
 
 
+static iOPoint __getPointByAddr(iOMttmFccData data, int bus, int addr, int port) {
+  char key[32] = {'\0'};
+  iOPoint point = NULL;
+
+  StrOp.fmtb( key, "%d_%d_%d", bus, addr, port );
+
+  if( MutexOp.wait( data->pointmux ) ) {
+    point = (iOPoint)MapOp.first( data->pointmap);
+    while( point != NULL ) {
+      if( point->bus == bus && point->addr == addr && point->port == port) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "point found for %s by address %s", point->id, key );
+        break;
+      }
+      point = (iOPoint)MapOp.next( data->pointmap);
+    };
+    MutexOp.post(data->pointmux);
+  }
+  return point;
+}
+
+
+static iOPoint __getPoint(iOMttmFccData data, iONode node) {
+  int bus   = wSwitch.getbus(node);
+  int addr  = wSwitch.getaddr1(node);
+  int port  = wSwitch.getport1(node);
+  char key[32] = {'\0'};
+  iOPoint point = NULL;
+
+  StrOp.fmtb( key, "%d_%d_%d", bus, addr, port );
+
+  point = (iOPoint)MapOp.get( data->pointmap, key );
+  if( point != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "point exist for %s", key );
+    return point;
+  }
+
+  point = allocMem( sizeof( struct point) );
+  point->bus  = bus;
+  point->addr = addr;
+  point->port = port;
+  point->id = StrOp.dup(wSwitch.getid(node));
+  if( MutexOp.wait( data->pointmux ) ) {
+    MapOp.put( data->pointmap, key, (obj)point);
+    MutexOp.post(data->pointmux);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch created for %s", key );
+  return point;
+}
+
+
+
+
 static iOSlot __getSlot(iOMttmFccData data, iONode node) {
   int steps = wLoc.getspcnt(node);
   int addr  = wLoc.getaddr(node);
@@ -428,6 +481,11 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
     int addr  = wSwitch.getaddr1( node ) & 0x7F;
     byte pin  = 0x01 << ( wSwitch.getport1( node ) - 1 );
     byte mask = ~pin;
+
+    iOPoint point = __getPoint(data, node);
+    if( point != NULL ) {
+      point->lastcmd = SystemOp.getTick();
+    }
 
     out[0] = bus;
     out[1] = addr | 0x80;
@@ -715,6 +773,34 @@ static __evaluateFB( iOMttmFccData data ) {
     }
   }
   
+
+  /* Check switches */
+  if( MutexOp.wait( data->pointmux ) ) {
+    iOPoint point = (iOPoint)MapOp.first( data->pointmap );
+    while( point != NULL ) {
+      byte pin  = 0x01 << ( point->port - 1 );
+      byte mask = ~pin;
+
+      if( (data->sx1[point->bus][point->addr] & pin) != (data->swstate[point->bus][point->addr] & pin) ) {
+        data->swstate[point->bus][point->addr] &= mask;
+        data->swstate[point->bus][point->addr] |= (data->sx1[point->bus][point->addr] & pin);
+
+        if( SystemOp.getTick() - point->lastcmd > 100  ) {
+          iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+          if( data->iid != NULL )
+            wSwitch.setiid( nodeC, data->iid );
+          wSwitch.setid( nodeC, point->id );
+          wSwitch.setstate( nodeC, (data->sx1[point->bus][point->addr] & pin) ? "straight":"turnout" );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch update %s", point->id );
+          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+        }
+      }
+
+      point = (iOPoint)MapOp.next(data->pointmap);
+    }
+    MutexOp.post(data->pointmux);
+  }
+
 }
 
 
@@ -862,9 +948,11 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
   SystemOp.inst();
 
   /* Initialize data->xxx members... */
-  data->mux     = MutexOp.inst( NULL, True );
-  data->lcmux   = MutexOp.inst( NULL, True );
-  data->lcmap   = MapOp.inst();
+  data->mux      = MutexOp.inst( NULL, True );
+  data->lcmux    = MutexOp.inst( NULL, True );
+  data->lcmap    = MapOp.inst();
+  data->pointmux = MutexOp.inst( NULL, True );
+  data->pointmap = MapOp.inst();
 
   data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
