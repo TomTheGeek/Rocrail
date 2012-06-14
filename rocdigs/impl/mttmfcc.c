@@ -325,7 +325,7 @@ static iOPoint __getPoint(iOMttmFccData data, iONode node) {
     MutexOp.post(data->pointmux);
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch created for %s", key );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch %s created for %s", wSwitch.getid(node), key );
   return point;
 }
 
