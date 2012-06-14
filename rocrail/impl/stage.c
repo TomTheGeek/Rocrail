@@ -18,6 +18,64 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+
+/*
+ Example:
+--------------------------------------------------------------------------------
+ ->-[b1]-(b1sen)->-(sb1ent)-[[sb1]]-(1)-(2)-(3)-(4)-(5)---[b2]-(b2sen)->-
+
+
+ Sensors:
+--------------------------------------------------------------------------------
+ ID     | event   | owner
+ -------+---------+-------
+ b1sen  = enter2in  b1
+ sb1ent = enter     sb1
+ 1      = section1  sb1[0]
+ 2      = section2  sb1[1]
+ 3      = section3  sb1[2]
+ 4      = section4  sb1[3]
+ 5      = section5  sb1[4]
+ b2sen  = enter2in  b2
+
+
+XML:
+--------------------------------------------------------------------------------
+  <sblist>
+    <sb id="sb1" x="5" y="2" z="0" desc="" slen="30" gap="5" fbenterid="sb1ent">
+      <section id="1" fbid="1" nr="0" idx="0" lcid=""/>
+      <section id="2" fbid="2" nr="1" idx="1" lcid=""/>
+      <section id="3" fbid="3" nr="2" idx="2" lcid=""/>
+      <section id="4" fbid="4" nr="3" idx="3" lcid=""/>
+      <section id="5" fbid="5" nr="4" idx="4" lcid=""/>
+    </sb>
+  </sblist>
+
+  The idx attribute is for internal use and will be overwritten at every initialization.
+
+
+Sequences:
+--------------------------------------------------------------------------------
+1) The isFree function checks if there is room for a train.
+2) Train locks the stage block and the number of sections needed for the length if the isFree was positive.
+3) Train runs in auto mode to the first free section seen from the exit side.
+4) The train remains in auto mode if the target section is at the exit, otherwise it will be put in manual mode.
+5) After the train at the exit section has left and has unlocked the stage block a move will be triggered.
+
+
+Moving:
+--------------------------------------------------------------------------------
+A move can be triggered manually, by unlocking the stage block or after a move event.
+If a train reaches the exit section it will be put back into auto mode.
+1) The move function searches the first free section seen from the exit side, and the first one which
+   is occupied also seen from the exit side.
+2) The found train will be set speed to V_min.
+3) After the event came in of the target section the speed will be reset to zero and
+   section list must be updated regarding the number of sections occupied. (lcid)
+4) Another move will be triggered: -> 1)
+
+ */
+
 #include "rocrail/impl/stage_impl.h"
 #include "rocrail/public/app.h"
 #include "rocrail/public/fback.h"
@@ -198,6 +256,39 @@ static Boolean __isEndSection(iIBlockBase inst, iONode section ) {
 }
 
 
+/**
+ * Update the section list after a train has been moved.
+ */
+static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targetSection ) {
+  iOStageData data = Data(inst);
+  int sections = ListOp.size( data->sectionList );
+  int i = 0;
+  int nrSections = 0;
+
+  /* check the sections */
+  for( i = 0; i < sections; i++ ) {
+    iONode section = (iONode)ListOp.get( data->sectionList, i);
+    if( StrOp.equals( locId, wStageSection.getlcid(section) ) ) {
+      nrSections++;
+      wStageSection.setlcid(section, NULL );
+    }
+  }
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+      "moving %d sections of loco %s to section head %d", nrSections, data->locId, targetSection );
+
+  if( nrSections >  0 ) {
+    for( i = targetSection ; i >= nrSections; i-- ) {
+      iONode section = (iONode)ListOp.get( data->sectionList, i);
+      wStageSection.setlcid(section, locId );
+    }
+    return True;
+  }
+
+  return False;
+}
+
+
 /**  */
 static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* ident ,int val, int wheelcount ,iONode evtDescr ) {
   iOStageData data = Data(inst);
@@ -250,6 +341,18 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
             wLoc.setcmd(cmd, wLoc.velocity);
             wLoc.setV(cmd, 0);
             LocOp.cmd(loc, cmd);
+
+            if( data->pendingMove ) {
+              data->pendingMove = False;
+              /* Move the train in the section list. */
+              if( __updateList4Move( inst, data->locId, data->targetSection ) ) {
+                iONode nodeD = (iONode)NodeOp.base.clone(data->props);
+                wStage.setid( nodeD, data->id );
+                wStage.setlocid( nodeD, "" );
+                AppOp.broadcastEvent( nodeD );
+                __moveStageLocos(inst);
+              }
+            }
           }
 
           if( data->pendingFree && data->pendingSection != -1 ) {
@@ -747,7 +850,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
       wLoc.setcmd(cmd, wLoc.velocity);
       wLoc.setV_hint(cmd, wLoc.min);
       LocOp.cmd(lc, cmd);
-      /* TODO: V_min and wait for event of sensor firstFreeSection */
+      data->pendingMove = True;
       locoMoved = True;
     }
     else {

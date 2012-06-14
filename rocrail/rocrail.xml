@@ -192,6 +192,7 @@
       <var name="targetSection" vt="int"/>
       <var name="pendingSection" vt="int"/>
       <var name="pendingFree" vt="Boolean"/>
+      <var name="pendingMove" vt="Boolean"/>
       <var name="props" vt="iONode" remark="Stage properties"/>
       <var name="sectionList" vt="iOList"/>
       <var name="fbMap" vt="iOMap"/>
