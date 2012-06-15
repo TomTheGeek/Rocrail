@@ -421,10 +421,15 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident
   Boolean isSet = True;
 
   if( !StrOp.equals( strState, wSwitch.getstate( data->props) ) ) {
-    isSet = False;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "Switch[%s] current state [%s], reported state [%s]",
-      SwitchOp.getId( (iOSwitch)inst ), wSwitch.getstate( data->props), strState );
+    if( wSwitch.isfbset(data->props) ) {
+      wSwitch.setstate( data->props, strState);
+    }
+    else {
+      isSet = False;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "Switch[%s] current state [%s], reported state [%s]",
+        SwitchOp.getId( (iOSwitch)inst ), wSwitch.getstate( data->props), strState );
+    }
   }
 
   {

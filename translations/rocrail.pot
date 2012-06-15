@@ -5705,3 +5705,9 @@ msgstr ""
 msgid "Process signal events"
 msgstr ""
 
+#. 
+# id="overwritestatus"
+#, c-format
+msgid "Overwrite status"
+msgstr ""
+

@@ -1174,6 +1174,7 @@
         <var name="activate" vt="bool" defval="true"/>
         <const name="unlocked" vt="string" val="-unlocked-" remark="Place holder for locid not set."/>
         <var name="locid" vt="string" defval="NULL" range="*" remark="The loc who locked this switch."/>
+        <var name="fbset" vt="bool" defval="false" remark="Feedback sets the switch unconditional."/>
         <var name="fbR" vt="string" defval="NULL" range="*" remark="Optional feedback for turnout(Red) state."/>
         <var name="fbRinv" vt="bool" defval="false"/>
         <var name="fbG" vt="string" defval="NULL" range="*" remark="Optional feedback for straigh(Green) state."/>

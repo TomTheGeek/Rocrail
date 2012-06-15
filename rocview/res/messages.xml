@@ -17773,4 +17773,7 @@
   <Msg id="processsignalevents">
     <en txt="Process signal events"/>
   </Msg>
+  <Msg id="overwritestatus">
+    <en txt="Overwrite status"/>
+  </Msg>
 </Messages>

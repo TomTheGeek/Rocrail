@@ -292,6 +292,7 @@ public:
     wxCheckBox* m_Fb2Ginvert;
     wxStaticText* m_labFbOcc;
     wxComboBox* m_FbOcc;
+    wxCheckBox* m_FbSet;
     wxStaticBox* m_CTCBox;
     wxStaticText* m_labCTCMotor;
     wxStaticText* m_labCTCIID;
