@@ -266,7 +266,7 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
   int nrSections = 0;
 
   /* check the sections */
-  for( i = 0; i < sections; i++ ) {
+  for( i = 0; i < targetSection; i++ ) {
     iONode section = (iONode)ListOp.get( data->sectionList, i);
     if( StrOp.equals( locId, wStageSection.getlcid(section) ) ) {
       nrSections++;
@@ -274,14 +274,22 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
     }
   }
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "moving %d sections of loco %s to section head %d", nrSections, data->locId, targetSection );
 
   if( nrSections >  0 ) {
-    for( i = targetSection ; i >= nrSections; i-- ) {
+    for( i = targetSection ; i >= (sections-nrSections); i-- ) {
       iONode section = (iONode)ListOp.get( data->sectionList, i);
       wStageSection.setlcid(section, locId );
     }
+
+    for( i = 0; i < sections; i++ ) {
+      iONode section = (iONode)ListOp.get( data->sectionList, i);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "section[%i] locoID=%s", wStageSection.getidx(section),
+          wStageSection.getlcid(section ) == NULL ? "-":wStageSection.getlcid(section ) );
+    }
+
     return True;
   }
 
@@ -329,6 +337,19 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
       if( loc != NULL ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing loco %s of IN event (endsection=%d)", data->locId, endSection );
         LocOp.event( loc, (obj)inst, in_event, 0, True, NULL );
+
+        if( data->pendingMove ) {
+          data->pendingMove = False;
+          /* Move the train in the section list. */
+          if( __updateList4Move( inst, data->locId, data->targetSection ) ) {
+            iONode nodeD = (iONode)NodeOp.base.clone(data->props);
+            wStage.setid( nodeD, data->id );
+            wStage.setlocid( nodeD, "" );
+            AppOp.broadcastEvent( nodeD );
+            __moveStageLocos(inst);
+          }
+        }
+
         if( !endSection ) {
           /* stop loco */
           if( LocOp.isAutomode(loc) ) {
@@ -342,17 +363,6 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
             wLoc.setV(cmd, 0);
             LocOp.cmd(loc, cmd);
 
-            if( data->pendingMove ) {
-              data->pendingMove = False;
-              /* Move the train in the section list. */
-              if( __updateList4Move( inst, data->locId, data->targetSection ) ) {
-                iONode nodeD = (iONode)NodeOp.base.clone(data->props);
-                wStage.setid( nodeD, data->id );
-                wStage.setlocid( nodeD, "" );
-                AppOp.broadcastEvent( nodeD );
-                __moveStageLocos(inst);
-              }
-            }
           }
 
           if( data->pendingFree && data->pendingSection != -1 ) {
