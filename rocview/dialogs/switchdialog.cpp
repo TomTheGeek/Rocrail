@@ -478,19 +478,28 @@ void SwitchDialog::initValues() {
   m_Fb2G->Append( _T("-") );
   m_FbOcc->Append( _T("-") );
   if( model != NULL ) {
+    iOList list = ListOp.inst();
     iONode fblist = wPlan.getfblist( model );
     if( fblist != NULL ) {
       int cnt = NodeOp.getChildCnt( fblist );
       for( int i = 0; i < cnt; i++ ) {
         iONode fb = NodeOp.getChild( fblist, i );
-        const char* id = wFeedback.getid( fb );
-        m_Fb1R->Append( wxString(id,wxConvUTF8) );
-        m_Fb1G->Append( wxString(id,wxConvUTF8) );
-        m_Fb2R->Append( wxString(id,wxConvUTF8) );
-        m_Fb2G->Append( wxString(id,wxConvUTF8) );
-        m_FbOcc->Append( wxString(id,wxConvUTF8) );
+        ListOp.add(list, (obj)wFeedback.getid( fb ));
       }
     }
+    ListOp.sort(list, &__sortStr);
+    int cnt = ListOp.size( list );
+    for( int i = 0; i < cnt; i++ ) {
+      const char* id = (const char*)ListOp.get( list, i );
+      m_Fb1R->Append( wxString(id,wxConvUTF8) );
+      m_Fb1G->Append( wxString(id,wxConvUTF8) );
+      m_Fb2R->Append( wxString(id,wxConvUTF8) );
+      m_Fb2G->Append( wxString(id,wxConvUTF8) );
+      m_FbOcc->Append( wxString(id,wxConvUTF8) );
+    }
+
+    ListOp.base.del(list);
+
   }
 
   if( wSwitch.getfbR (m_Props)==NULL || StrOp.len(wSwitch.getfbR (m_Props)) == 0 )
