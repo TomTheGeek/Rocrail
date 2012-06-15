@@ -335,6 +335,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
       AppOp.broadcastEvent( nodeD );
 
       if( loc != NULL ) {
+        Boolean execMove = False;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing loco %s of IN event (endsection=%d)", data->locId, endSection );
         LocOp.event( loc, (obj)inst, in_event, 0, True, NULL );
 
@@ -346,7 +347,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
             wStage.setid( nodeD, data->id );
             wStage.setlocid( nodeD, "" );
             AppOp.broadcastEvent( nodeD );
-            __moveStageLocos(inst);
+            execMove = True;
           }
         }
 
@@ -395,6 +396,11 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
         ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, LocOp.getId(loc), False, 0, 0, wStageSection.getid(section) );
         data->locId = NULL;
         wStage.setlocid( data->props, "" );
+
+        if( execMove ) {
+          __moveStageLocos(inst);
+        }
+
       }
     }
   }
