@@ -627,6 +627,9 @@ static void __reader( void* threadinst ) {
       /* unoffcial reply to unofficial polling command, don't care if the poll was from Rocrail or not, always good to have the S88 state. */
       __evaluateMCS2S88( data, in, store );
     }
+    else if( in[1] == 0x22 ) { /* Without response bit set!? */
+      __evaluateSensorEvent( data, in );
+    }
     else if( in[1] == 0x23 ) {
       __evaluateSensorEvent( data, in );
     }
