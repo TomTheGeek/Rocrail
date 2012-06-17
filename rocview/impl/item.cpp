@@ -2263,6 +2263,9 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       wxGetApp().getFrame()->setInfoText( str );
     StrOp.free( str );
 
+    SetBackgroundColour( wFeedback.isshortcut(node) ? *wxRED:m_PlanPanel->GetBackgroundColour() );
+
+    wFeedback.setshortcut( m_Props, wFeedback.isshortcut(node) );
     wFeedback.setstate( m_Props, state );
     wFeedback.setcarcount( m_Props, carcount );
     wFeedback.setcountedcars( m_Props, countedcars );

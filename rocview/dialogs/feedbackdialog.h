@@ -79,10 +79,8 @@ class wxSpinCtrl;
 #define ID_PANEL_FB_INTERFACE 10012
 #define wxID_STATIC_FB_IID 10000
 #define ID_TEXTCTRL_FB_IID 10001
-#define wxID_STATIC_FB_BUS 10254
-#define ID_FB_TYPE 10396
 #define wxID_STATIC_FB_ADDRESS1 10002
-#define ID_TEXTCTRL_FB_ADDRESS1 10003
+#define ID_FB_TYPE 10396
 #define ID_PANEL_FB_WIRING 10334
 #define SYMBOL_FEEDBACKDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_FEEDBACKDIALOG_TITLE _("Sensors")
@@ -212,12 +210,18 @@ public:
     wxPanel* m_Interface;
     wxStaticText* m_Labeliid;
     wxTextCtrl* m_iid;
-    wxStaticText* m_labType;
-    wxRadioBox* m_Type;
+    wxStaticBox* m_AddressBox;
     wxStaticText* m_labBusNr;
-    wxTextCtrl* m_BusNr;
+    wxSpinCtrl* m_BusNr;
     wxStaticText* m_LabelAddress;
-    wxTextCtrl* m_Address;
+    wxSpinCtrl* m_Address;
+    wxStaticBox* m_CutoutBox;
+    wxStaticText* m_labCutoutBus;
+    wxSpinCtrl* m_CutoutBus;
+    wxStaticText* m_labCutoutAddr;
+    wxSpinCtrl* m_CutoutAddr;
+    wxRadioBox* m_Type;
+    wxStaticBox* m_OptionsBox;
     wxCheckBox* m_ActiveLow;
     wxPanel* m_Wiring;
     wxStaticBox* m_CTCBox;

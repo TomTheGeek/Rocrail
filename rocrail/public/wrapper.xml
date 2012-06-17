@@ -1377,6 +1377,9 @@
         <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID."/>
         <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
         <var name="addr" vt="int" defval="0" range="0-*" required="true" remark="address"/>
+        <var name="cutoutbus" vt="int" defval="0" range="0-*" remark=""/>
+        <var name="cutoutaddr" vt="int" defval="0" range="0-*" remark=""/>
+
         <var name="activelow" vt="bool" defval="false" remark=""/>
         <var name="timer" vt="int" defval="0" range="0-100" remark="Delayed off timer in 100ms units."/>
 
@@ -1416,6 +1419,7 @@
         <var name="state" vt="bool" defval="false" remark="Current feedback state."/>
         <var name="show" vt="bool" defval="true" remark="Visibility flag."/>
         <var name="curve" vt="bool" defval="false" remark="Curved feedback track."/>
+        <var name="shortcut" vt="bool" defval="false" remark="Shortcut reported by the cutout sensor; Red background in Rocview."/>
         <var name="blockid" vt="string" defval="NULL" range="*"/>
         <actionctrl cardinality="n"/>
       </fb>

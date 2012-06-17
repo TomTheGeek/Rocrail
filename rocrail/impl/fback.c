@@ -361,6 +361,17 @@ static void _event( iOFBack inst, iONode nodeC ) {
     StrOp.free( strNode );
   }
 
+  if( wFeedback.getaddr(nodeC) == wFeedback.getcutoutaddr(data->props) ) {
+    data->shortcut = state;
+    wFeedback.setshortcut(data->props, state);
+    TraceOp.trc( name, state ? TRCLEVEL_EXCEPTION:TRCLEVEL_INFO, __LINE__, 9999,
+        "Sensor [%s] report: %s", wFeedback.getid(data->props), state?"SHORTCUT detected":"Cutout is OK" );
+    AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
+    nodeC->base.del(nodeC);
+    return;
+  }
+
+
   /* check for active low */
   if( wFeedback.isactivelow( data->props ) )
     state = !state;
@@ -485,6 +496,19 @@ static void _event( iOFBack inst, iONode nodeC ) {
   nodeC->base.del(nodeC);
 }
 
+static void __initCutout(iOFBack inst) {
+  iOFBackData data  = Data(inst);
+  iOModel     model = AppOp.getModel();
+
+  if( wFeedback.getcutoutaddr(data->props) > 0 ) {
+    data->cutoutAddrKey = FBackOp.createAddrKey( wFeedback.getcutoutbus(data->props),
+                                           wFeedback.getcutoutaddr(data->props),
+                                           wFeedback.getiid(data->props) );
+    /* inform model with new addrkey to add to map. */
+    ModelOp.addFbKey( model, data->cutoutAddrKey, (obj)inst );
+  }
+}
+
 /**
  * Checks for property changes.
  * todo: Range checking?
@@ -538,6 +562,13 @@ static void _modify( iOFBack inst, iONode props ) {
     /* inform model with new addrkey to add to map. */
     ModelOp.addFbKey( model, data->addrKey, (obj)inst );
     
+    if( data->cutoutAddrKey != NULL ) {
+      ModelOp.removeFbKey( model, data->cutoutAddrKey, (obj)inst );
+      StrOp.free( data->cutoutAddrKey );
+    }
+
+    __initCutout(inst);
+
   }
   else {
     NodeOp.removeAttrByName(data->props, "cmd");
@@ -609,6 +640,8 @@ static iOFBack _inst( iONode props ) {
 
   NodeOp.removeAttrByName(data->props, "cmd");
 
+  __initCutout(fback);
+
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "inst[%d] for %s, %s",
         instCnt,
         _getId(fback),
@@ -628,6 +661,12 @@ static Boolean _isState( iOFBack inst, const char* state ) {
     return True;
 
   return False;
+}
+
+
+static Boolean _hasShortcut( iOFBack inst ) {
+  iOFBackData data = Data(inst);
+  return data->shortcut;
 }
 
 
