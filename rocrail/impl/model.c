@@ -110,6 +110,7 @@
 #include "rocrail/wrapper/public/MVTrack.h"
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ActionList.h"
+#include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/ModuleConnection.h"
 #include "rocrail/wrapper/public/Booster.h"
 #include "rocrail/wrapper/public/BoosterList.h"
@@ -358,6 +359,11 @@ static Boolean __checkPlanHealth(iOModelData data) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking list [%s]...", NodeOp.getName(db) );
     for( n = 0; n < items; n++ ) {
       iONode item = NodeOp.getChild( db, n );
+
+      if( StrOp.equals( wActionCtrl.name(), NodeOp.getName(item) ) ) {
+        /* Ignore */
+        continue;
+      }
 
       StrOp.fmtb( key, "%d-%d-%d", wItem.getx(item), wItem.gety(item), wItem.getz(item) );
 
