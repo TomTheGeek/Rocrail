@@ -200,6 +200,7 @@ static void __checkEventTimeout( iILcDriverInt inst ) {
       /* warning */
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                    "Event timeout for [%s]", data->loc->getId( data->loc ) );
+      data->eventTimeout = 0;
     }
   }
 
