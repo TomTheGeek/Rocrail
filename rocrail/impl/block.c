@@ -851,6 +851,24 @@ static Boolean _isState( iIBlockBase inst, const char* state ) {
   return False;
 }
 
+
+static Boolean __hasShortcut(iIBlockBase inst) {
+  iOBlockData data = Data(inst);
+  Boolean shortcut = False;
+  iONode fbevt = wBlock.getfbevent( data->props );
+
+  while( fbevt != NULL ) {
+    const char* fbid = wFeedbackEvent.getid( fbevt );
+    iOFBack fb = ModelOp.getFBack( AppOp.getModel(), fbid );
+    if(fb != NULL && FBackOp.hasShortcut(fb)) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Sensor [%s] is short-circuited", fbid );
+      shortcut = True;
+    }
+    fbevt = wBlock.nextfbevent( data->props, fbevt );
+  };
+  return shortcut;
+}
+
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOBlockData data = Data(inst);
 
@@ -898,11 +916,17 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
       return True;
 
   /* check all sensors... */
+    if( __hasShortcut(inst) ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                     "Block [%s] has a shortcut reported.",
+                     data->id );
+      return False;
+    }
 
     if( !__isElectricallyFree((iOBlock)inst) ) {
       if( data->locId == NULL || StrOp.len( data->locId ) == 0 ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                       "Block \"%s\" is electrically occupied without locId set!",
+                       "Block [%s] is electrically occupied without locId set!",
                        data->id );
 
         /* Broadcast to clients. */
