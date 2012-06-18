@@ -344,6 +344,9 @@ static Boolean _cmd( iOFBack inst, iONode cmd, Boolean update ) {
     wFeedback.setfbtype( cmd, wFeedback.getfbtype( data->props ) );
     wFeedback.setaddr( cmd, wFeedback.getaddr( data->props ) );
     wFeedback.setactivelow( cmd, wFeedback.isactivelow( data->props ) );
+    wFeedback.setcounter( cmd, data->counter );
+    wFeedback.setcarcount( cmd, data->carcount );
+    wFeedback.setcountedcars( cmd, data->countedcars );
     ControlOp.cmd( control, cmd, &error );
   }
   return True;
@@ -484,7 +487,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
     wFeedback.setbus( nodeD, wFeedback.getbus( data->props ) );
     wFeedback.setfbtype( nodeD, wFeedback.getfbtype( data->props ) );
     wFeedback.setidentifier( nodeD, wFeedback.getidentifier( nodeC ) );
-    wFeedback.setcounter( data->props, data->counter );
+    wFeedback.setcounter( nodeD, data->counter );
     wFeedback.setcarcount( nodeD, data->carcount );
     wFeedback.setcountedcars( nodeD, data->countedcars );
     wFeedback.setwheelcount( nodeD, wFeedback.getwheelcount( nodeC ) + data->wheelcount );
