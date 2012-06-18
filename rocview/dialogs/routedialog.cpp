@@ -1234,7 +1234,6 @@ void RouteDialog::CreateControls()
     wxBoxSizer* itemBoxSizer15 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer14->Add(itemBoxSizer15, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer16 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer16->AddGrowableCol(1);
     itemBoxSizer15->Add(itemFlexGridSizer16, 0, wxGROW|wxALL, 5);
     m_LabelId = new wxStaticText( m_GeneralPanel, wxID_STATIC_ST_ID, _("Id"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer16->Add(m_LabelId, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1248,8 +1247,9 @@ void RouteDialog::CreateControls()
     m_ModID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer16->Add(m_ModID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    itemFlexGridSizer16->AddGrowableCol(1);
+
     wxFlexGridSizer* itemFlexGridSizer21 = new wxFlexGridSizer(0, 3, 0, 0);
-    itemFlexGridSizer21->AddGrowableCol(1);
     itemBoxSizer15->Add(itemFlexGridSizer21, 0, wxGROW, 5);
     m_LabelBlockA = new wxStaticText( m_GeneralPanel, wxID_STATIC_ST_BLOCKA, _("from block"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer21->Add(m_LabelBlockA, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1273,14 +1273,17 @@ void RouteDialog::CreateControls()
     m_ToSide->SetValue(false);
     itemFlexGridSizer21->Add(m_ToSide, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    itemFlexGridSizer21->AddGrowableCol(1);
+
     wxFlexGridSizer* itemFlexGridSizer28 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer28->AddGrowableCol(1);
     itemBoxSizer15->Add(itemFlexGridSizer28, 0, wxGROW, 5);
     m_labCrossingBlock = new wxStaticText( m_GeneralPanel, wxID_STATIC_BLOCKC, _("crossing block"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer28->Add(m_labCrossingBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_BlockC = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer28->Add(m_BlockC, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer28->AddGrowableCol(1);
 
     wxFlexGridSizer* itemFlexGridSizer31 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer14->Add(itemFlexGridSizer31, 0, wxGROW|wxLEFT|wxRIGHT, 5);
@@ -1394,7 +1397,6 @@ void RouteDialog::CreateControls()
     itemBoxSizer54->Add(m_Modify, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer57 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer57->AddGrowableCol(0);
     itemBoxSizer52->Add(itemFlexGridSizer57, 1, wxGROW|wxALL, 5);
     wxBoxSizer* itemBoxSizer58 = new wxBoxSizer(wxVERTICAL);
     itemFlexGridSizer57->Add(itemBoxSizer58, 1, wxGROW|wxALIGN_TOP|wxALL, 5);
@@ -1410,7 +1412,7 @@ void RouteDialog::CreateControls()
     m_labTrackNumber = new wxStaticText( m_CommandPanel, wxID_ANY, _("Track number"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer61->Add(m_labTrackNumber, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_TrackNumber = new wxSpinCtrl( m_CommandPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 47, 0 );
+    m_TrackNumber = new wxSpinCtrl( m_CommandPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 127, 0 );
     itemFlexGridSizer61->Add(m_TrackNumber, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Add = new wxButton( m_CommandPanel, ID_BUTTON_ST_ADD, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1437,6 +1439,8 @@ void RouteDialog::CreateControls()
     m_Lock = new wxCheckBox( m_CommandPanel, wxID_ANY, _("Lock"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Lock->SetValue(false);
     itemBoxSizer65->Add(m_Lock, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    itemFlexGridSizer57->AddGrowableCol(0);
 
     m_Notebook->AddPage(m_CommandPanel, _("Turnouts"));
 
@@ -1497,7 +1501,6 @@ void RouteDialog::CreateControls()
     itemBoxSizer76->Add(m_PermType, 0, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer82 = new wxFlexGridSizer(0, 3, 0, 0);
-    itemFlexGridSizer82->AddGrowableCol(1);
     itemBoxSizer76->Add(itemFlexGridSizer82, 0, wxGROW|wxALL, 5);
     m_labMaxLen = new wxStaticText( m_PermissionsPanel, wxID_ANY, _("Max. train length"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer82->Add(m_labMaxLen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1508,6 +1511,8 @@ void RouteDialog::CreateControls()
     m_Commuter = new wxCheckBox( m_PermissionsPanel, wxID_ANY, _("Commuter train"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Commuter->SetValue(false);
     itemFlexGridSizer82->Add(m_Commuter, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer82->AddGrowableCol(1);
 
     m_Notebook->AddPage(m_PermissionsPanel, _("Persmissions"));
 

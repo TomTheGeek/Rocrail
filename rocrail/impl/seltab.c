@@ -223,6 +223,9 @@ static void __initSensors( iOSelTab inst ) {
   iOFBack b1 = ModelOp.getFBack( model, wSelTab.getb1sen(data->props) );
   iOFBack b2 = ModelOp.getFBack( model, wSelTab.getb2sen(data->props) );
   iOFBack b3 = ModelOp.getFBack( model, wSelTab.getb3sen(data->props) );
+  iOFBack b4 = ModelOp.getFBack( model, wSelTab.getb4sen(data->props) );
+  iOFBack b5 = ModelOp.getFBack( model, wSelTab.getb5sen(data->props) );
+  iOFBack b6 = ModelOp.getFBack( model, wSelTab.getb6sen(data->props) );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sensor for the Selectiontable..." );
 
@@ -238,10 +241,14 @@ static void __initSensors( iOSelTab inst ) {
     FBackOp.addListener( b1, (obj)inst );
     FBackOp.addListener( b2, (obj)inst );
     FBackOp.addListener( b3, (obj)inst );
+    if( b4 != NULL ) FBackOp.addListener( b4, (obj)inst );
+    if( b5 != NULL ) FBackOp.addListener( b5, (obj)inst );
+    if( b6 != NULL ) FBackOp.addListener( b6, (obj)inst );
   }
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Position sensors for the Selectiontable could not be initialized." );
   }
+
 }
 
 
@@ -253,6 +260,9 @@ static void __removeSensors( iOSelTab inst ) {
   iOFBack b1 = ModelOp.getFBack( model, wSelTab.getb1sen(data->props) );
   iOFBack b2 = ModelOp.getFBack( model, wSelTab.getb2sen(data->props) );
   iOFBack b3 = ModelOp.getFBack( model, wSelTab.getb3sen(data->props) );
+  iOFBack b4 = ModelOp.getFBack( model, wSelTab.getb4sen(data->props) );
+  iOFBack b5 = ModelOp.getFBack( model, wSelTab.getb5sen(data->props) );
+  iOFBack b6 = ModelOp.getFBack( model, wSelTab.getb6sen(data->props) );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Remove sensor for the Selectiontable..." );
 
@@ -266,6 +276,9 @@ static void __removeSensors( iOSelTab inst ) {
     FBackOp.removeListener( b2, (obj)inst );
     FBackOp.removeListener( b3, (obj)inst );
   }
+  if( b4 ) FBackOp.removeListener( b4, (obj)inst );
+  if( b5 ) FBackOp.removeListener( b5, (obj)inst );
+  if( b6 ) FBackOp.removeListener( b6, (obj)inst );
 }
 
 
@@ -277,17 +290,22 @@ static void __evaluatePosition( obj inst ) {
   iOFBack b1 = ModelOp.getFBack( model, wSelTab.getb1sen(data->props) );
   iOFBack b2 = ModelOp.getFBack( model, wSelTab.getb2sen(data->props) );
   iOFBack b3 = ModelOp.getFBack( model, wSelTab.getb3sen(data->props) );
+  iOFBack b4 = ModelOp.getFBack( model, wSelTab.getb4sen(data->props) );
+  iOFBack b5 = ModelOp.getFBack( model, wSelTab.getb5sen(data->props) );
+  iOFBack b6 = ModelOp.getFBack( model, wSelTab.getb6sen(data->props) );
 
   int tablepos = data->tablepos;
 
   if( b0 != NULL && b1 != NULL && b2 != NULL && b3 != NULL ) {
-    data->reportedPos  = FBackOp.getState( b0 ) ? 1:0;
-    data->reportedPos |= FBackOp.getState( b1 ) ? 2:0;
-    data->reportedPos |= FBackOp.getState( b2 ) ? 4:0;
-    data->reportedPos |= FBackOp.getState( b3 ) ? 8:0;
+    data->reportedPos  = FBackOp.getState( b0 ) ? 0x01:0;
+    data->reportedPos |= FBackOp.getState( b1 ) ? 0x02:0;
+    data->reportedPos |= FBackOp.getState( b2 ) ? 0x04:0;
+    data->reportedPos |= FBackOp.getState( b3 ) ? 0x08:0;
+    if( b4 != NULL ) data->reportedPos |= FBackOp.getState( b4 ) ? 0x10:0;
+    if( b5 != NULL ) data->reportedPos |= FBackOp.getState( b5 ) ? 0x20:0;
+    if( b6 != NULL ) data->reportedPos |= FBackOp.getState( b6 ) ? 0x40:0;
 
     tablepos = data->reportedPos;
-
   }
   else {
     data->reportedPos = -1;
@@ -405,9 +423,12 @@ static void _fbEvent( obj inst ,Boolean state ,const char* id ,const char* ident
     }
   }
   else if( StrOp.equals( wSelTab.getb0sen(data->props), id) ||
-           StrOp.equals( wSelTab.getb1sen(data->props), id) ||
-           StrOp.equals( wSelTab.getb2sen(data->props), id) ||
-           StrOp.equals( wSelTab.getb3sen(data->props), id) )
+            StrOp.equals( wSelTab.getb1sen(data->props), id) ||
+            StrOp.equals( wSelTab.getb2sen(data->props), id) ||
+            StrOp.equals( wSelTab.getb3sen(data->props), id) ||
+            StrOp.equals( wSelTab.getb4sen(data->props), id) ||
+            StrOp.equals( wSelTab.getb5sen(data->props), id) ||
+            StrOp.equals( wSelTab.getb6sen(data->props), id) )
   {
     __evaluatePosition(inst);
 
@@ -612,6 +633,39 @@ static void __processCmd( struct OSelTab* inst ,iONode nodeA ) {
         wSwitch.setcmd( cmd, gotopos & 0x08 ? wSwitch.turnout:wSwitch.straight );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
+
+      if( wSelTab.getaddr5(data->props) != 0 || wSelTab.getport5(data->props) != 0 ) {
+        wSwitch.setaddr1( cmd, wSelTab.getaddr5(data->props) );
+        wSwitch.setport1( cmd, wSelTab.getport5(data->props) );
+        if( inv )
+          wSwitch.setcmd( cmd, gotopos & 0x10 ? wSwitch.straight:wSwitch.turnout );
+        else
+          wSwitch.setcmd( cmd, gotopos & 0x10 ? wSwitch.turnout:wSwitch.straight );
+        lcmd = (iONode)NodeOp.base.clone(cmd);
+        ControlOp.cmd( control, lcmd, NULL );
+      }
+
+      if( wSelTab.getaddr6(data->props) != 0 || wSelTab.getport6(data->props) != 0 ) {
+        wSwitch.setaddr1( cmd, wSelTab.getaddr6(data->props) );
+        wSwitch.setport1( cmd, wSelTab.getport6(data->props) );
+        if( inv )
+          wSwitch.setcmd( cmd, gotopos & 0x20 ? wSwitch.straight:wSwitch.turnout );
+        else
+          wSwitch.setcmd( cmd, gotopos & 0x20 ? wSwitch.turnout:wSwitch.straight );
+        lcmd = (iONode)NodeOp.base.clone(cmd);
+        ControlOp.cmd( control, lcmd, NULL );
+      }
+
+      if( wSelTab.getaddr7(data->props) != 0 || wSelTab.getport7(data->props) != 0 ) {
+        wSwitch.setaddr1( cmd, wSelTab.getaddr7(data->props) );
+        wSwitch.setport1( cmd, wSelTab.getport7(data->props) );
+        if( inv )
+          wSwitch.setcmd( cmd, gotopos & 0x40 ? wSwitch.straight:wSwitch.turnout );
+        else
+          wSwitch.setcmd( cmd, gotopos & 0x40 ? wSwitch.turnout:wSwitch.straight );
+        lcmd = (iONode)NodeOp.base.clone(cmd);
+        ControlOp.cmd( control, lcmd, NULL );
+      }
 
       /* signal new position is set: */
       ThreadOp.sleep(10);

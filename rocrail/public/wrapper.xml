@@ -2270,10 +2270,16 @@
         <var name="port2" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
         <var name="addr3" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
         <var name="port3" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
-        <var name="addr4" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
-        <var name="port4" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="addr4" vt="int" defval="0" range="0-*" required="true" remark="decoder address to signal new position"/>
+        <var name="port4" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit to signal new position."/>
+        <var name="addr5" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port5" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="addr6" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port6" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
+        <var name="addr7" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
+        <var name="port7" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
 
-        <var name="nrtracks" vt="int" defval="12" range="4-16" required="true"/>
+        <var name="nrtracks" vt="int" defval="12" range="4-128" required="true"/>
 
         <var name="sharedfb" vt="bool" defval="false" remark="Use one set of sensors for all blocks."/>
         <var name="manager" vt="bool" defval="false" remark="Manager mode: Act like a block and manage all sub blocks.(Tracks)"/>
@@ -2295,6 +2301,9 @@
         <var name="b1sen" vt="string" defval="NULL" range="*" remark="ID bit 1 of position"/>
         <var name="b2sen" vt="string" defval="NULL" range="*" remark="ID bit 2 of position"/>
         <var name="b3sen" vt="string" defval="NULL" range="*" remark="ID bit 3 of position"/>
+        <var name="b4sen" vt="string" defval="NULL" range="*" remark="ID bit 4 of position"/>
+        <var name="b5sen" vt="string" defval="NULL" range="*" remark="ID bit 5 of position"/>
+        <var name="b6sen" vt="string" defval="NULL" range="*" remark="ID bit 6 of position"/>
         <var name="pos" vt="int" defval="0" range="*" remark="position of table"/>
         <const name="next" vt="string" val="next" remark="Go to next track."/>
         <const name="prev" vt="string" val="prev" remark="Go to previous track."/>

@@ -722,10 +722,14 @@ void SymbolRenderer::sizeToScale( double symsize, double scale, double bktext, i
       // vertical
       *cx = 1;
       *cy = wSelTab.getnrtracks(m_Props);
+      if( *cy > 32 )
+        *cy = 32;
     }
     else { // horizontal
       *cx = wSelTab.getnrtracks(m_Props);
       *cy = 1;
+      if( *cx > 32 )
+        *cx = 32;
     }
     /*
       wxFont* font = new wxFont( m_BlockLabel->GetFont() );
@@ -1637,6 +1641,9 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
 void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool occupied, const char* ori ) {
   m_bRotateable = true;
   int nrtracks = wSelTab.getnrtracks(m_Props);
+  if( nrtracks > 32 ) {
+    nrtracks = 32;
+  }
 
   const wxBrush& b = dc.GetBrush();
   if( m_iOccupied == 1 ) {
