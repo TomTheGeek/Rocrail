@@ -2036,25 +2036,26 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   if( yellow != NULL )
     delete yellow;
 
-  // TODO: Blocktext scaling!!!
-#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-  //wxFont* font = new wxFont( dc.GetFont() );
-  //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-  //dc.SetFont(*font);
-#else
-  wxFont* font = new wxFont( dc.GetFont() );
-  font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-  dc.SetFont(*font);
-#endif
+  if( m_bShowID ) {
+      // TODO: Blocktext scaling!!!
+    #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
+      //wxFont* font = new wxFont( dc.GetFont() );
+      //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
+      //dc.SetFont(*font);
+    #else
+      wxFont* font = new wxFont( dc.GetFont() );
+      font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
+      dc.SetFont(*font);
+    #endif
 
-  if (ttdiam >= 5)
-    dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 5, 5, 0.0 );
+      if (ttdiam >= 5)
+        dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 5, 5, 0.0 );
 
-#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-#else
-  delete font;
-#endif
-
+    #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
+    #else
+      delete font;
+    #endif
+  }
 }
 
 
