@@ -2407,6 +2407,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
   else if( StrOp.equals( wStage.name(), NodeOp.getName( m_Props ) ) ) {
     char* l_locidStr = NULL;
     const char* locid = wStage.getlocid( node );
+    char* tip = StrOp.dup(wStage.getid( node ));
     int nrlocos = 0;
     int occupied = 0;
     Boolean isReserved    = wStage.isreserved( node );
@@ -2420,7 +2421,10 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     while( section != NULL ) {
       iONode l_section = wStage.getsection(m_Props);
       if(wStageSection.getlcid(section) != NULL && StrOp.len( wStageSection.getlcid(section) ) > 0 ) {
+        char* formatS = StrOp.fmt("\n%d: %s", wStageSection.getidx(section), wStageSection.getlcid(section));
         nrlocos++;
+        tip = StrOp.cat( tip, formatS);
+        StrOp.free(formatS);
       }
       while( section != NULL ) {
         if( StrOp.equals( wStageSection.getid( section ), wStageSection.getid( l_section ) ) ) {
@@ -2450,6 +2454,11 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     m_locidStr = l_locidStr;
     TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "%s, occupied=%d", m_locidStr, occupied );
 
+    SetToolTip( wxString(tip,wxConvUTF8) );
+    StrOp.free( tip );
+  }
+
+  else if( StrOp.equals( wStage.name(), NodeOp.getName( m_Props ) ) ) {
   }
 
   else if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
