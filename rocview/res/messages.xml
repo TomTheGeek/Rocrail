@@ -17776,4 +17776,7 @@
   <Msg id="overwritestatus">
     <en txt="Overwrite status"/>
   </Msg>
+  <Msg id="closenoevents">
+    <en txt="Close on no events"/>
+  </Msg>
 </Messages>

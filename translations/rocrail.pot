@@ -5711,3 +5711,9 @@ msgstr ""
 msgid "Overwrite status"
 msgstr ""
 
+#. 
+# id="closenoevents"
+#, c-format
+msgid "Close on no events"
+msgstr ""
+

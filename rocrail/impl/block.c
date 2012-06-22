@@ -882,7 +882,7 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
     }
   }
 
-  if( wBlock.getfbevent( data->props ) == NULL && data->manager == NULL ) {
+  if( wBlock.getfbevent( data->props ) == NULL && data->manager == NULL && wCtrl.isclosenoevents(wRocRail.getctrl( AppOp.getIni() ) ) ) {
     iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
     wBlock.setstate(data->props, wBlock.closed);
 
