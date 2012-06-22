@@ -736,10 +736,24 @@ static Boolean _red( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
 /**  */
 static void _reset( iIBlockBase inst ) {
   iOStageData data = Data(inst);
+  int sections = ListOp.size( data->sectionList );
+  int i = 0;
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
              "reset stageblock [%s]", data->id );
-  /*Unlock the occupying must be done manual */
+
   StageOp.resetTrigs(inst);
+
+  /* Unlock the occupyied sections */
+  for( i = 0; i < sections; i++ ) {
+    iONode section = (iONode)ListOp.get( data->sectionList, i);
+    const char* locid = wStageSection.getlcid(section);
+    if( locid != NULL && StrOp.len( locid ) > 0 ) {
+      /* free section */
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlock section[%d] from %s", i, locid );
+      wStageSection.setlcid(section, NULL);
+    }
+  }
+
 }
 
 
