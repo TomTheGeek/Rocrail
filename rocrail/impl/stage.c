@@ -738,8 +738,8 @@ static void _reset( iIBlockBase inst ) {
   iOStageData data = Data(inst);
   int sections = ListOp.size( data->sectionList );
   int i = 0;
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-             "reset stageblock [%s]", data->id );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+             "reset stageblock [%s][%d]", data->id, sections );
 
   StageOp.resetTrigs(inst);
 
@@ -749,10 +749,17 @@ static void _reset( iIBlockBase inst ) {
     const char* locid = wStageSection.getlcid(section);
     if( locid != NULL && StrOp.len( locid ) > 0 ) {
       /* free section */
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlock section[%d] from %s", i, locid );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock section[%d] from %s", i, locid );
       wStageSection.setlcid(section, NULL);
     }
+    else {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "section[%d] is not occupied", i );
+    }
   }
+
+  /* Broadcast to clients. */
+  AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
+
 
 }
 

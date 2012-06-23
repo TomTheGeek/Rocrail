@@ -1682,6 +1682,7 @@ static void __reset( iOModel inst, Boolean saveCurBlock ) {
     }
   }
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset blocks..." );
   {
     iIBlockBase block = (iIBlockBase)MapOp.first( data->blockMap );
     while( block != NULL ) {
@@ -1694,6 +1695,7 @@ static void __reset( iOModel inst, Boolean saveCurBlock ) {
     }
   }
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset block groups..." );
   {
     iOBlockGroup bg = (iOBlockGroup)MapOp.first( data->blockGroupMap );
     while( bg != NULL ) {
@@ -1702,6 +1704,7 @@ static void __reset( iOModel inst, Boolean saveCurBlock ) {
     }
   }
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset routes..." );
   {
     iORoute route = (iORoute)MapOp.first( data->routeMap );
     while( route != NULL ) {
@@ -1710,6 +1713,7 @@ static void __reset( iOModel inst, Boolean saveCurBlock ) {
     }
   }
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset turntables..." );
   {
     iIBlockBase tt = (iIBlockBase)MapOp.first( data->ttMap );
     while( tt != NULL ) {
@@ -1718,6 +1722,7 @@ static void __reset( iOModel inst, Boolean saveCurBlock ) {
     }
   }
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset switches..." );
   {
     iOSwitch sw = (iOSwitch)MapOp.first( data->switchMap );
     while( sw != NULL ) {
