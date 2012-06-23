@@ -1663,6 +1663,22 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
       };
     }
   }
+  else if( StrOp.equals( wBooster.name(), name ) ) {
+    iONode booster = NULL;
+    iONode boosterlist = wPlan.getboosterlist( o->model );
+    if( boosterlist != NULL ) {
+      iONode node = wBoosterList.getbooster( boosterlist );
+      while( node != NULL ) {
+        if( StrOp.equals( wBooster.getid( item ), wBooster.getid( node ) ) ) {
+          NodeOp.removeChild( boosterlist, node );
+          node->base.del( node );
+          removed = True;
+          break;
+        }
+        node = wBoosterList.nextbooster( boosterlist, node );
+      };
+    }
+  }
   return removed;
 }
 

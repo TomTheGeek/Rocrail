@@ -406,6 +406,14 @@ void PowerManDlg::OnDelBooster( wxCommandEvent& event )
     m_BlockList->Clear();
     m_ModuleID->SetValue(_T(""));
 
+    /* Notify RocRail. */
+    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+    wModelCmd.setcmd( cmd, wModelCmd.remove );
+    NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+
+
     iONode model = wxGetApp().getModel();
     iONode boosterlist = wPlan.getboosterlist( model );
 
