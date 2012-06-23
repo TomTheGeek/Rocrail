@@ -99,6 +99,12 @@ SwCtrlDlg::SwCtrlDlg(wxWindow *parent)
 
   m_IID->SetValue(wxString(wSwCtrl.getiid(swctrl),wxConvUTF8));
   m_Unit = wSwCtrl.getmodule(swctrl);
+  m_Bus  = wSwCtrl.getbus(swctrl);
+
+  m_labBus = new wxStaticText( this, -1, wxGetApp().getMsg("bus"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+  m_BusSpin = new wxSpinCtrl( this, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 9, 0 );
+  m_BusSpin->SetToolTip( wxGetApp().getTip("bus") );
+  m_BusSpin->SetValue( m_Bus );
 
   m_UnitSpin = new wxSpinCtrl( this, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 256, 0 );
   m_UnitSpin->SetToolTip( wxGetApp().getTip("decoder") );
@@ -107,25 +113,28 @@ SwCtrlDlg::SwCtrlDlg(wxWindow *parent)
 
   m_UnitSpin->SetValue( m_Unit );
 
-  sizer2->Add( m_Pin1Green, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 2);
-  sizer2->Add( m_Pin1Red  , 0, wxALIGN_CENTER | wxEXPAND | wxALL, 2);
-  sizer2->Add( m_Pin2Green, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 2);
-  sizer2->Add( m_Pin2Red  , 0, wxALIGN_CENTER | wxEXPAND | wxALL, 2);
-  sizer2->Add( m_Pin3Green, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 2);
-  sizer2->Add( m_Pin3Red  , 0, wxALIGN_CENTER | wxEXPAND | wxALL, 2);
-  sizer2->Add( m_Pin4Green, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 2);
-  sizer2->Add( m_Pin4Red  , 0, wxALIGN_CENTER | wxEXPAND | wxALL, 2);
+  sizer2->Add( m_Pin1Green, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
+  sizer2->Add( m_Pin1Red  , 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
+  sizer2->Add( m_Pin2Green, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
+  sizer2->Add( m_Pin2Red  , 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
+  sizer2->Add( m_Pin3Green, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
+  sizer2->Add( m_Pin3Red  , 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
+  sizer2->Add( m_Pin4Green, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
+  sizer2->Add( m_Pin4Red  , 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
 
-  sizer2->Add( m_labIID , 0, wxALIGN_BOTTOM | wxEXPAND | wxALL, 2);
-  sizer2->Add( m_IID, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 2);
+  sizer2->Add( m_labIID, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
+  sizer2->Add( m_IID   , 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
+
+  sizer2->Add( m_labBus , 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
+  sizer2->Add( m_BusSpin, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
 
   wxStaticText* unitlabel = new wxStaticText( this, -1, wxGetApp().getMsg("decoder"), wxPoint(0,0), wxDefaultSize, wxALIGN_RIGHT );
-  sizer2->Add( unitlabel , 0, wxALIGN_BOTTOM | wxEXPAND | wxALL, 2);
-  sizer2->Add( m_UnitSpin, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 2);
+  sizer2->Add( unitlabel , 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
+  sizer2->Add( m_UnitSpin, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 2);
 
-  sizer1->Add( sizer2 , 0, wxALIGN_CENTER | wxEXPAND | wxALL, 0 );
+  sizer1->Add( sizer2 , 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 3 );
   //sizer1->Add( m_UnitSpin , 0, wxALIGN_CENTER | wxEXPAND | wxALL, 5 );
-  sizer1->Add( m_Quit , 0, wxALIGN_CENTER | wxEXPAND | wxALL, 2 );
+  sizer1->Add( m_Quit , 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5 );
 
   SetAutoLayout(TRUE);
   SetSizer(sizer1);
@@ -165,12 +174,14 @@ void SwCtrlDlg::OnButton(wxCommandEvent& event)
   int pin = 0;
   const char* cmd = wSwitch.straight;
 
+  m_Bus  = m_BusSpin->GetValue();
   m_Unit = m_UnitSpin->GetValue();
   
   if ( event.GetEventObject() == m_Quit ) {
     iONode swctrl = wGui.getswctrl( wxGetApp().getIni() );
 
     wSwCtrl.setiid(swctrl, m_IID->GetValue().mb_str(wxConvUTF8));
+    wSwCtrl.setbus(swctrl, m_BusSpin->GetValue());
     wSwCtrl.setmodule(swctrl, m_UnitSpin->GetValue());
     Destroy();
     //EndModal(0);
@@ -214,6 +225,7 @@ void SwCtrlDlg::OnButton(wxCommandEvent& event)
 
   if( pin != 0 ) {
     iONode swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    wSwitch.setbus( swcmd, m_Bus );
     wSwitch.setaddr1( swcmd, m_Unit );
     wSwitch.setport1( swcmd, pin );
     wSwitch.setiid( swcmd, m_IID->GetValue().mb_str(wxConvUTF8) );

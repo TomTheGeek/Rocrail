@@ -35,6 +35,7 @@ public:
 
 private:
   void setTooltips(void);
+  int m_Bus;
   int m_Unit;
 
   wxButton*   m_Pin1Red;
@@ -48,6 +49,9 @@ private:
 
   wxStaticText* m_labIID;
   wxTextCtrl* m_IID;
+
+  wxStaticText* m_labBus;
+  wxSpinCtrl* m_BusSpin;
 
   wxSpinCtrl* m_UnitSpin;
   wxButton*   m_Quit;

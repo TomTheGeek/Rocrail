@@ -113,6 +113,7 @@
     </workspaces>
     <swctrl cardinality="1" wrappername="SwCtrl">
       <var name="iid" vt="string" defval=""/>
+      <var name="bus" vt="int" defval="0"/>
       <var name="module" vt="int" defval="1"/>
     </swctrl>
     <mgv cardinality="1" wrappername="MGV">
