@@ -150,6 +150,7 @@ public:
     wxStaticText* m_labTimer;
     wxSpinCtrl* m_Timer;
     wxCheckBox* m_Timed;
+    wxCheckBox* m_Every;
     wxStaticText* m_labHour;
     wxSpinCtrl* m_Hour;
     wxStaticText* m_labMin;

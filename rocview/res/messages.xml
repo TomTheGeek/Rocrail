@@ -17779,4 +17779,7 @@
   <Msg id="closenoevents">
     <en txt="Close on no events"/>
   </Msg>
+  <Msg id="every">
+    <en txt="every"/>
+  </Msg>
 </Messages>

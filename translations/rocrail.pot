@@ -5717,3 +5717,9 @@ msgstr ""
 msgid "Close on no events"
 msgstr ""
 
+#. 
+# id="every"
+#, c-format
+msgid "every"
+msgstr ""
+

@@ -134,6 +134,7 @@ void TimedActions::initLabels() {
     m_Del->SetLabel( wxGetApp().getMsg( "delete" ) );
     m_Timed->SetLabel( wxGetApp().getMsg( "use" ) );
     m_Timer->SetLabel( wxGetApp().getMsg( "timer" ) );
+    m_Every->SetLabel( wxGetApp().getMsg( "every" ) );
     m_Random->SetLabel( wxGetApp().getMsg( "random" ) );
 
     m_ExecCmd->Enable(false);
@@ -203,6 +204,7 @@ void TimedActions::initValues() {
   m_Hour->SetValue( wAction.gethour( m_Props ) );
   m_Min->SetValue( wAction.getmin( m_Props) );
   m_Random->SetValue(wAction.israndom( m_Props )?true:false);
+  m_Every->SetValue(wAction.isevery( m_Props )?true:false);
   m_ActTime->SetValue( wAction.getactiontime( m_Props) );
   m_Command->SetValue( wxString( wAction.getcmd( m_Props), wxConvUTF8) );
   m_Parameter->SetValue( wxString( wAction.getparam( m_Props), wxConvUTF8) );
@@ -281,6 +283,7 @@ bool TimedActions::evaluate() {
   wAction.setid( m_Props, m_ActionID->GetValue().mb_str(wxConvUTF8) );
   wAction.settimed( m_Props, m_Timed->IsChecked() ? True:False );
   wAction.setrandom( m_Props, m_Random->IsChecked() ? True:False );
+  wAction.setevery( m_Props, m_Every->IsChecked() ? True:False );
   wAction.sethour( m_Props, m_Hour->GetValue() );
   wAction.setmin( m_Props, m_Min->GetValue() );
   wAction.setcmd( m_Props, m_Command->GetValue().mb_str(wxConvUTF8) );
@@ -430,6 +433,7 @@ void TimedActions::Init()
     m_labTimer = NULL;
     m_Timer = NULL;
     m_Timed = NULL;
+    m_Every = NULL;
     m_labHour = NULL;
     m_Hour = NULL;
     m_labMin = NULL;
@@ -523,52 +527,56 @@ void TimedActions::CreateControls()
 
     m_Timed = new wxCheckBox( itemDialog1, wxID_ANY, _("Use"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Timed->SetValue(false);
-    itemStaticBoxSizer21->Add(m_Timed, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemStaticBoxSizer21->Add(m_Timed, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
+
+    m_Every = new wxCheckBox( itemDialog1, wxID_ANY, _("every"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Every->SetValue(false);
+    itemStaticBoxSizer21->Add(m_Every, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
     m_labHour = new wxStaticText( itemDialog1, wxID_ANY, _("Hour"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer21->Add(m_labHour, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
     m_Hour = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
-    itemStaticBoxSizer21->Add(m_Hour, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
+    itemStaticBoxSizer21->Add(m_Hour, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
     m_labMin = new wxStaticText( itemDialog1, wxID_ANY, _("Minute"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer21->Add(m_labMin, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
     m_Min = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 59, 0 );
-    itemStaticBoxSizer21->Add(m_Min, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
+    itemStaticBoxSizer21->Add(m_Min, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
     m_Random = new wxCheckBox( itemDialog1, wxID_ANY, _("Random"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Random->SetValue(false);
-    itemStaticBoxSizer21->Add(m_Random, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemStaticBoxSizer21->Add(m_Random, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    wxBoxSizer* itemBoxSizer28 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer2->Add(itemBoxSizer28, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    wxBoxSizer* itemBoxSizer29 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer2->Add(itemBoxSizer29, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_Add = new wxButton( itemDialog1, ID_BT_ADD, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer28->Add(m_Add, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer29->Add(m_Add, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Del = new wxButton( itemDialog1, ID_BT_DEL, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer28->Add(m_Del, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer29->Add(m_Del, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Modify = new wxButton( itemDialog1, ID_BT_MODIFY, _("Modify"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer28->Add(m_Modify, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer29->Add(m_Modify, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStaticLine* itemStaticLine32 = new wxStaticLine( itemDialog1, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-    itemBoxSizer2->Add(itemStaticLine32, 0, wxGROW|wxALL, 5);
+    wxStaticLine* itemStaticLine33 = new wxStaticLine( itemDialog1, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+    itemBoxSizer2->Add(itemStaticLine33, 0, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer33 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer34 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer33, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer34, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer33->AddButton(m_OK);
+    itemStdDialogButtonSizer34->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer33->AddButton(m_Cancel);
+    itemStdDialogButtonSizer34->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer33->AddButton(m_Apply);
+    itemStdDialogButtonSizer34->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer33->Realize();
+    itemStdDialogButtonSizer34->Realize();
 
 ////@end TimedActions content construction
 }

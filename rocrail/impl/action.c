@@ -922,6 +922,14 @@ static void _tick( iOAction inst ) {
       }
     }
 
+    else if( wAction.isevery(data->action) ) {
+      int actmins = wAction.gethour(data->action) * 60 + wAction.getmin(data->action);
+      int mins = lTime->tm_hour * 60 + lTime->tm_min;
+      if( mins - data->lastactmin >= actmins ) {
+        data->lastactmin  = mins;
+      }
+    }
+
     else if( lTime->tm_hour == wAction.gethour(data->action) && lTime->tm_min == wAction.getmin(data->action) ) {
       _exec( inst, NULL );
     }

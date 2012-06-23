@@ -1890,7 +1890,9 @@
       <var name="actionctrl" vt="iONode"/>
       <var name="randommins" vt="int"/>
       <var name="ticker" vt="int"/>
-    </data>
+      <var name="lastacthour" vt="int"/>
+      <var name="lastactmin" vt="int"/>
+      </data>
   </object>
 
 
