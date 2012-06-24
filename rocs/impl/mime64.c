@@ -1,17 +1,9 @@
-/** ------------------------------------------------------------
-  * Generator: Rocs ogen (build Nov 29 2007 11:39:59)
-  * Module: rocs
-  * XML: $Source: /home/cvs/xspooler/rocs/impl/mime64.c,v $
-  * XML: $Revision: 1.1 $
-  * Object: Mime64
-  * Date: Mon Dec 10 11:51:28 2007
-  * ------------------------------------------------------------
-  * $Source: /home/cvs/xspooler/rocs/impl/mime64.c,v $
-  * $Author: rob $
-  * $Date: 2007/12/10 13:58:46 $
-  * $Revision: 1.1 $
-  * $Name:  $
-  */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,18 +1,10 @@
-/** ------------------------------------------------------------
-  * A U T O   G E N E R A T E D  (First time only!)
-  * Generator: Rocs ogen (build Aug 15 2009 12:57:04)
-  * Module: RocDigs
-  * XML: $Source: /cvsroot/rojav/rocdigs/rocdigs.xml,v $
-  * XML: $Revision: 1.14 $
-  * Object: io8255
-  * Date: Mon Aug 17 18:07:39 2009
-  * ------------------------------------------------------------
-  * $Source$
-  * $Author$
-  * $Date$
-  * $Revision$
-  * $Name$
-  */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+
+ */
 
 #include "rocdigs/impl/io8255_impl.h"
 

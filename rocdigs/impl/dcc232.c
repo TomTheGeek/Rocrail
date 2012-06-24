@@ -1,18 +1,9 @@
-/** ------------------------------------------------------------
-  * A U T O   G E N E R A T E D  (First time only!)
-  * Generator: Rocs ogen (build Jun 11 2009 07:08:17)
-  * Module: RocDigs
-  * XML: $Source: /cvsroot/rojav/rocdigs/rocdigs.xml,v $
-  * XML: $Revision: 1.14 $
-  * Object: DCC232
-  * Date: Thu Jun 11 11:57:39 2009
-  * ------------------------------------------------------------
-  * $Source$
-  * $Author$
-  * $Date$
-  * $Revision$
-  * $Name$
-  */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 
 #include "rocdigs/impl/dcc232_impl.h"
 

@@ -1,8 +1,9 @@
-/** ------------------------------------------------------------
-  * Module: RocRail
-  * Object: Module
-  * ------------------------------------------------------------
-  */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 
 #include "rocrail/impl/module_impl.h"
 #include "rocrail/public/clntcon.h"

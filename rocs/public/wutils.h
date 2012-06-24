@@ -1,10 +1,9 @@
-/** ------------------------------------------------------------
-  * $Source: /cvsroot/rojav/rocs/public/wutils.h,v $
-  * $Author: robvrs $
-  * $Date: 2004/03/17 13:36:40 $
-  * $Revision: 1.1 $
-  * $Name:  $
-  * ------------------------------------------------------------ */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 #ifndef __ROCS_WUTILS_H
 #define __ROCS_WUTILS_H
 

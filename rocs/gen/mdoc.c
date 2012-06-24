@@ -1,9 +1,9 @@
-/** ------------------------------------------------------------
-  * $Author: rob $
-  * $Date: 2007/01/19 13:58:16 $
-  * $Revision: 1.3 $
-  * $Source: /home/cvs/xspooler/rocs/gen/mdoc.c,v $
-  */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 
 
 /** ------------------------------------------------------------

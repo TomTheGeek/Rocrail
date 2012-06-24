@@ -1,13 +1,9 @@
-/** ------------------------------------------------------------
-  * Module:
-  * Object:
-  * ------------------------------------------------------------
-  * $Source: /cvsroot/rojav/rocgui/dialogs/rocgui-dialogs.pjd,v $
-  * $Author: robvrs $
-  * $Date: 2006/02/22 14:10:57 $
-  * $Revision: 1.63 $
-  * $Name:  $
-  */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "clockdialog.h"
 #endif

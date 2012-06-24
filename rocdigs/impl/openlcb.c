@@ -1,18 +1,9 @@
-/** ------------------------------------------------------------
-  * A U T O   G E N E R A T E D  (First time only!)
-  * Generator: Rocs ogen (build Jul 24 2011 12:30:33)
-  * Module: RocDigs
-  * XML: $Source: /cvsroot/rojav/rocdigs/rocdigs.xml,v $
-  * XML: $Revision: 1.14 $
-  * Object: OpenLCB
-  * Date: Sun Jul 24 16:15:46 2011
-  * ------------------------------------------------------------
-  * $Source$
-  * $Author$
-  * $Date$
-  * $Revision$
-  * $Name$
-  */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 
 #include "rocdigs/impl/openlcb_impl.h"
 

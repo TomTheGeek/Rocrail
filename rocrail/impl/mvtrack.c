@@ -1,15 +1,9 @@
-/** ------------------------------------------------------------
-  * Module: RocRail
-  * XML: $Source: /cvsroot/rojav/rocrail/rocrail.xml,v $
-  * Object: MVTrack
-  * Date: Tue Apr  8 18:25:30 2008
-  * ------------------------------------------------------------
-  * $Source$
-  * $Author$
-  * $Date$
-  * $Revision$
-  * $Name$
-  */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 
 #include <time.h>
 

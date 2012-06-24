@@ -1,18 +1,9 @@
-/** ------------------------------------------------------------
-  * A U T O   G E N E R A T E D  (First time only!)
-  * Generator: Rocs ogen (build Nov  9 2006 08:04:42)
-  * Module: RocDigs
-  * XML: $Source: /cvsroot/rojav/rocdigs/rocdigs.xml,v $
-  * XML: $Revision: 1.14 $
-  * Object: OpenDCC
-  * Date: Mon Mar  3 17:05:53 2008
-  * ------------------------------------------------------------
-  * $Source$
-  * $Author$
-  * $Date$
-  * $Revision$
-  * $Name$
-  */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 
 #include "rocdigs/impl/opendcc_impl.h"
 

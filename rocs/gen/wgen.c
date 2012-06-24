@@ -1,9 +1,9 @@
-/** ------------------------------------------------------------
-  * $Author: rob $
-  * $Date: 2006/08/16 09:01:43 $
-  * $Revision: 1.32 $
-  * $Source: /home/cvs/xspooler/rocs/gen/wgen.c,v $
-  */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 
 
 /* ------------------------------------------------------------

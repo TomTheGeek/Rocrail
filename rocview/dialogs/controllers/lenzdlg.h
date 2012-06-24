@@ -1,14 +1,9 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        lenzdlg.h
-// Purpose:
-// Author:
-// Modified by:
-// Created:     Tue 06 Jan 2009 04:49:35 PM CET
-// RCS-ID:
-// Copyright:
-// Licence:
-/////////////////////////////////////////////////////////////////////////////
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
 
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 #ifndef _LENZDLG_H_
 #define _LENZDLG_H_
 

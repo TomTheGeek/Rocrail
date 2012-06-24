@@ -1,6 +1,9 @@
 #!/bin/sh
 #
-# makemac.sh -- Copyright 2010 Rocrail.net.  See www.rocrail.net for license details
+#    Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+#
+#    Without an official permission commercial use is not permitted.
+#    Forking this project is not permitted.  
 #
 echo ""
 echo "*** Rocrail makemac.sh starting (see www.rocrail.net)..."

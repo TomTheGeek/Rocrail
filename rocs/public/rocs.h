@@ -1,10 +1,9 @@
-/** ------------------------------------------------------------
-  * $Source: /cvsroot/rojav/rocs/public/rocs.h,v $
-  * $Author: robvrs $
-  * $Date: 2004/02/27 08:12:39 $
-  * $Revision: 1.10 $
-  * $Name:  $
-  * ------------------------------------------------------------ */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 #ifndef __ROCS_H
 #define __ROCS_H
 

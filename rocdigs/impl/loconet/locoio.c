@@ -1,16 +1,8 @@
 /*
--------------------------------------------------------------------
- Project     Rocrail - Model Railroad Software
--------------------------------------------------------------------
- File name   rocdigs/impl/loconet/locoio.c
--------------------------------------------------------------------
- Author      Rob Versluis
--------------------------------------------------------------------
- License:    This piece of code is part of the Rocrail
-             project (http://www.rocrail.net) and therefore
-             published under the terms of the GNU General Public
-             Licence (http://www.gnu.org/licenses/gpl.html).
--------------------------------------------------------------------
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
 */
 #include "rocs/public/rocs.h"
 #include "rocs/public/objbase.h"

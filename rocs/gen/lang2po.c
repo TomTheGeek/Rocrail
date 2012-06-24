@@ -1,9 +1,9 @@
-/** ------------------------------------------------------------
-  * $Author: rob $
-  * $Date: 2007-06-28 08:49:41 $
-  * $Revision: 1.3 $
-  * $Source $
-  */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 
 
 

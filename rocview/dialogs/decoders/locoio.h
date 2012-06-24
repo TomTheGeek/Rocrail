@@ -1,14 +1,9 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        locoio.h
-// Purpose:     
-// Author:      
-// Modified by: 
-// Created:     Sat 12 Jan 2008 09:07:06 CET
-// RCS-ID:      
-// Copyright:   
-// Licence:     
-/////////////////////////////////////////////////////////////////////////////
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
 
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 #ifndef _LOCOIO_H_
 #define _LOCOIO_H_
 

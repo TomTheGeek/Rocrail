@@ -1,14 +1,9 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        ecosdlg.cpp
-// Purpose:
-// Author:
-// Modified by:
-// Created:     Fri 27 Jul 2007 20:32:42 CEST
-// RCS-ID:
-// Copyright:
-// Licence:
-/////////////////////////////////////////////////////////////////////////////
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
 
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "ecosdlg.h"
 #endif

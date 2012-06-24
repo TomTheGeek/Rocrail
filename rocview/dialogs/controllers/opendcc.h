@@ -1,14 +1,9 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        opendcc.h
-// Purpose:
-// Author:
-// Modified by:
-// Created:     Sun 02 Mar 2008 11:51:45 CET
-// RCS-ID:
-// Copyright:
-// Licence:
-/////////////////////////////////////////////////////////////////////////////
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
 
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 #ifndef _OPENDCC_H_
 #define _OPENDCC_H_
 

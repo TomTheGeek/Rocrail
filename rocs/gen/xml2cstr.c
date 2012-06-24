@@ -1,9 +1,9 @@
-/** ------------------------------------------------------------
-  * $Author: robvrs $
-  * $Date: 2005/12/31 13:24:29 $
-  * $Revision: 1.7 $
-  * $Source: /cvsroot/rojav/rocs/gen/xml2cstr.c,v $
-  */
+/*
+ Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
+ */
 
 
 /* ------------------------------------------------------------
