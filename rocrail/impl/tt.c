@@ -581,14 +581,14 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "Turn 180 ---> Goto track [%d], current pos=[%d]", tracknr, data->tablepos );
         port   = TTDEC_TURN;
-        cmdstr = wSwitch.turnout;
+        cmdstr = wSwitch.straight;
       }
       else if( (data->tablepos-orig_tracknr) == -24)
       {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "Turn 180 ---> Goto track [%d], current pos=[%d]", tracknr, data->tablepos );
         port   = TTDEC_TURN;
-        cmdstr = wSwitch.turnout;
+        cmdstr = wSwitch.straight;
       }
       /* DA check whether 180 degrees turn is required */
 
