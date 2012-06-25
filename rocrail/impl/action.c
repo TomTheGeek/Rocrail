@@ -915,8 +915,11 @@ static void _tick( iOAction inst ) {
     else if( wAction.isevery(data->action) ) {
       int actmins = wAction.gethour(data->action) * 60 + wAction.getmin(data->action);
       int mins = lTime->tm_hour * 60 + lTime->tm_min;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action every timer [%s] actionmins=%d scale minutes=%d.",
+          wAction.getid(data->action), actmins, mins);
       if( (mins - data->lastactmin) >= actmins ) {
         data->lastactmin  = mins;
+        _exec( inst, NULL );
       }
     }
 
