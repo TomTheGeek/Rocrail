@@ -494,33 +494,20 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   }
 
   /* ext action */
-
-  /* Windows needs the complete command line quoted */
-  /*
-      if( SystemOp.isWindows() ) {
-        if( FileOp.isAbsolute(szFilename) )
-          StrOp.fmtb(cmdStr, "\"\"%s\" \"%s\"\"", execall, szFilename);
-        else
-          StrOp.fmtb(cmdStr, "\"\"%s\" \"%s%c%s\"\"", execall, FileOp.pwd(), SystemOp.getFileSeparator(), szFilename);
-      }
-      else {
-        if( FileOp.isAbsolute(szFilename) )
-          StrOp.fmtb(cmdStr, "\"%s\" \"%s\"", execall, szFilename);
-        else
-          StrOp.fmtb(cmdStr, "\"%s\" \"%s%c%s\"", execall, FileOp.pwd(), SystemOp.getFileSeparator(), szFilename);
-      }
-  */
   else if( StrOp.equals( "ext", wAction.gettype( data->action ) ) ) {
     /* check for a external action */
     const char* extaction = wAction.getcmd( data->action );
     const char* extparam  = wAction.getparam( data->action );
+    const char* quote = SystemOp.isWindows() ? "\"":"";
     if( extaction != NULL && StrOp.len(extaction) > 0 ) {
       if( wActionCtrl.getparam(actionctrl) != NULL && StrOp.len(wActionCtrl.getparam(actionctrl)) > 0 ) {
         char* s = NULL;
-        if( extparam != NULL && StrOp.len(extparam) > 0 )
-          s = StrOp.fmt("%s %s \"%s\"", extaction, extparam, wActionCtrl.getparam(actionctrl) );
-        else
-          s = StrOp.fmt("%s \"%s\"", extaction, wActionCtrl.getparam(actionctrl) );
+        if( extparam != NULL && StrOp.len(extparam) > 0 ) {
+          s = StrOp.fmt("%s\"%s\" \"%s\" \"%s\"%s", quote, extaction, extparam, wActionCtrl.getparam(actionctrl), quote );
+        }
+        else {
+          s = StrOp.fmt("%s\"%s\" \"%s\"%s", quote, extaction, wActionCtrl.getparam(actionctrl), quote );
+        }
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
         SystemOp.system( s, True, False );
         StrOp.free(s);
@@ -528,9 +515,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       else {
         char* s = NULL;
         if( extparam != NULL && StrOp.len(extparam) > 0 )
-          s = StrOp.fmt("%s %s", extaction, extparam );
+          s = StrOp.fmt("%s\"%s\" \"%s\"%s", quote, extaction, extparam, quote );
         else
-          s = StrOp.fmt("%s", extaction );
+          s = StrOp.fmt("\"%s\"", extaction );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
         SystemOp.system( s, True, False );
         StrOp.free(s);
