@@ -1895,6 +1895,7 @@
       <var name="ticker" vt="int"/>
       <var name="lastacthour" vt="int"/>
       <var name="lastactmin" vt="int"/>
+      <var name="enabled" vt="Boolean"/>
       </data>
   </object>
 

@@ -871,6 +871,13 @@ static void _exec( struct OAction* inst, iONode actionctrl ) {
     return;
   }
 
+  if( wAction.istimed(data->action) && wAction.isevery(data->action) && actionctrl != NULL) {
+    data->enabled = StrOp.equals( wOutput.on, wActionCtrl.getstate(actionctrl) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "%s the timed every action %s", data->enabled?"enable":"disable", wAction.getid(data->action) );
+    return;
+  }
+
   if( wAction.gettimer(data->action) == 0 ) {
     __executeAction( inst, actionctrl );
   }
@@ -912,7 +919,7 @@ static void _tick( iOAction inst ) {
       }
     }
 
-    else if( wAction.isevery(data->action) ) {
+    else if( wAction.isevery(data->action) && data->enabled ) {
       int actmins = wAction.gethour(data->action) * 60 + wAction.getmin(data->action);
       int mins = lTime->tm_hour * 60 + lTime->tm_min;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action every timer [%s] actionmins=%d scale minutes=%d.",
