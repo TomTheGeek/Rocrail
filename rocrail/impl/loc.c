@@ -1542,6 +1542,11 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
   iOLocData data = Data(inst);
   data->curSensor = id;
 
+  if( emitter == (obj)data->driver ) {
+    __checkAction(inst, id);
+    return;
+  }
+
   if( data->runner != NULL ) {
     iOMsg msg = MsgOp.inst( emitter, evt );
     iIBlockBase block = (iIBlockBase)MsgOp.getSender(msg);
