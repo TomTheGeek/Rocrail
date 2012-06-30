@@ -215,7 +215,8 @@
       <var name="trig_exit_mid" vt="Boolean"/>
       <var name="trig_renter_mid" vt="Boolean" remark="reverse enter"/>
       <var name="trig_rexit_mid" vt="Boolean" remark="reverse exit"/>
-    </data>
+      <var name="mapMux" vt="iOMutex"/>
+      </data>
   </object>
 
   <object name="ClntCon" use="node,map,socket,thread,mutex" remark="Client connection.">

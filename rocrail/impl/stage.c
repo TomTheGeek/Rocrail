@@ -860,8 +860,15 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
     iONode section = (iONode)ListOp.get(data->sectionList, i);
 
     if( nextFreeSection == NULL && (wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0) ) {
-      /* Last free section in the list */
-      nextFreeSection = section;
+      iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbid(section) );
+      if( fb != NULL && FBackOp.isState(fb, "false") ) {
+        /* Last free section in the list */
+        nextFreeSection = section;
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "section [%d] is electrically occupied", wStageSection.getidx(section) );
+        break;
+      }
     }
 
     if( firstOccupiedSection == NULL && (wStageSection.getlcid(section) != NULL && StrOp.len(wStageSection.getlcid(section)) > 0) ) {
