@@ -52,7 +52,7 @@ Boolean isLNOPSW(byte* msg) {
   D3       Lower 7 bits of LocoIO Version
   D4
   PXCT2    High order bit of requested data
-  D5
+  D5       sub address
   D6       Requested Data
   D7       Requested Data + 1
   D8       Requested Data + 2
