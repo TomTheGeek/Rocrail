@@ -134,23 +134,7 @@ static void* __event( void* inst, const void* evt ) {
 
 
 /* Update 8-bit CRC value
-��using polynomial� X^8 + X^5 + X^4 + 1 */
-#define POLYVAL 0x8C
-static void __updateCRC(byte new, byte* crc)
-{
-  int i;
-  byte c = *crc;
-  for (i = 0; i < 8; i++) {
-    if ((c ^ new) & 1)
-      c = (c >> 1 ) ^ POLYVAL;
-    else
-      c >>= 1;
-    new >>= 1;
-  }
-  *crc = c;
-}
 
-/*
 CRC-8-Dallas/Maxim
 x8 + x5 + x4 + 1 (1-Wire bus)
 
@@ -160,17 +144,121 @@ Representations: normal / **reversed** / reverse of reciprocal
 Initialized with 0xFF
 
  */
-static byte __checkSum(byte* packet, int len) {
-  byte checksum = 0xFF;
+
+const byte crc8_table[256] = {
+        0x00, 0x5e, 0xbc, 0xe2, 0x61, 0x3f, 0xdd, 0x83,
+        0xc2, 0x9c, 0x7e, 0x20, 0xa3, 0xfd, 0x1f, 0x41,
+        0x9d, 0xc3, 0x21, 0x7f, 0xfc, 0xa2, 0x40, 0x1e,
+        0x5f, 0x01, 0xe3, 0xbd, 0x3e, 0x60, 0x82, 0xdc,
+        0x23, 0x7d, 0x9f, 0xc1, 0x42, 0x1c, 0xfe, 0xa0,
+        0xe1, 0xbf, 0x5d, 0x03, 0x80, 0xde, 0x3c, 0x62,
+        0xbe, 0xe0, 0x02, 0x5c, 0xdf, 0x81, 0x63, 0x3d,
+        0x7c, 0x22, 0xc0, 0x9e, 0x1d, 0x43, 0xa1, 0xff,
+        0x46, 0x18, 0xfa, 0xa4, 0x27, 0x79, 0x9b, 0xc5,
+        0x84, 0xda, 0x38, 0x66, 0xe5, 0xbb, 0x59, 0x07,
+        0xdb, 0x85, 0x67, 0x39, 0xba, 0xe4, 0x06, 0x58,
+        0x19, 0x47, 0xa5, 0xfb, 0x78, 0x26, 0xc4, 0x9a,
+        0x65, 0x3b, 0xd9, 0x87, 0x04, 0x5a, 0xb8, 0xe6,
+        0xa7, 0xf9, 0x1b, 0x45, 0xc6, 0x98, 0x7a, 0x24,
+        0xf8, 0xa6, 0x44, 0x1a, 0x99, 0xc7, 0x25, 0x7b,
+        0x3a, 0x64, 0x86, 0xd8, 0x5b, 0x05, 0xe7, 0xb9,
+        0x8c, 0xd2, 0x30, 0x6e, 0xed, 0xb3, 0x51, 0x0f,
+        0x4e, 0x10, 0xf2, 0xac, 0x2f, 0x71, 0x93, 0xcd,
+        0x11, 0x4f, 0xad, 0xf3, 0x70, 0x2e, 0xcc, 0x92,
+        0xd3, 0x8d, 0x6f, 0x31, 0xb2, 0xec, 0x0e, 0x50,
+        0xaf, 0xf1, 0x13, 0x4d, 0xce, 0x90, 0x72, 0x2c,
+        0x6d, 0x33, 0xd1, 0x8f, 0x0c, 0x52, 0xb0, 0xee,
+        0x32, 0x6c, 0x8e, 0xd0, 0x53, 0x0d, 0xef, 0xb1,
+        0xf0, 0xae, 0x4c, 0x12, 0x91, 0xcf, 0x2d, 0x73,
+        0xca, 0x94, 0x76, 0x28, 0xab, 0xf5, 0x17, 0x49,
+        0x08, 0x56, 0xb4, 0xea, 0x69, 0x37, 0xd5, 0x8b,
+        0x57, 0x09, 0xeb, 0xb5, 0x36, 0x68, 0x8a, 0xd4,
+        0x95, 0xcb, 0x29, 0x77, 0xf4, 0xaa, 0x48, 0x16,
+        0xe9, 0xb7, 0x55, 0x0b, 0x88, 0xd6, 0x34, 0x6a,
+        0x2b, 0x75, 0x97, 0xc9, 0x4a, 0x14, 0xf6, 0xa8,
+        0x74, 0x2a, 0xc8, 0x96, 0x15, 0x4b, 0xa9, 0xf7,
+        0xb6, 0xe8, 0x0a, 0x54, 0xd7, 0x89, 0x6b, 0x35
+};
+
+static byte __checkSum8(byte* packet, int len) {
+  byte checksum = 0xff;
   int i = 0;
   for( i = 0; i < len; i++ ) {
-    __updateCRC(packet[i], &checksum);
+    checksum = crc8_table[checksum ^ packet[i]];
+  }
+
+  return checksum;
+}
+
+/* Update 16-bit CRC value
+ * CRC parameters used:
+ *   bits:       16
+ *   poly:       0x1021
+ *   init:       0xffff
+ *   xor:        0x0000
+ *   reverse:    false
+ *   non-direct: false
+ *
+ * CRC of the string "123456789" is 0x29b1
+ */
+
+
+const unsigned short crc16_table[256] = {
+        0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
+        0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef,
+        0x1231, 0x0210, 0x3273, 0x2252, 0x52b5, 0x4294, 0x72f7, 0x62d6,
+        0x9339, 0x8318, 0xb37b, 0xa35a, 0xd3bd, 0xc39c, 0xf3ff, 0xe3de,
+        0x2462, 0x3443, 0x0420, 0x1401, 0x64e6, 0x74c7, 0x44a4, 0x5485,
+        0xa56a, 0xb54b, 0x8528, 0x9509, 0xe5ee, 0xf5cf, 0xc5ac, 0xd58d,
+        0x3653, 0x2672, 0x1611, 0x0630, 0x76d7, 0x66f6, 0x5695, 0x46b4,
+        0xb75b, 0xa77a, 0x9719, 0x8738, 0xf7df, 0xe7fe, 0xd79d, 0xc7bc,
+        0x48c4, 0x58e5, 0x6886, 0x78a7, 0x0840, 0x1861, 0x2802, 0x3823,
+        0xc9cc, 0xd9ed, 0xe98e, 0xf9af, 0x8948, 0x9969, 0xa90a, 0xb92b,
+        0x5af5, 0x4ad4, 0x7ab7, 0x6a96, 0x1a71, 0x0a50, 0x3a33, 0x2a12,
+        0xdbfd, 0xcbdc, 0xfbbf, 0xeb9e, 0x9b79, 0x8b58, 0xbb3b, 0xab1a,
+        0x6ca6, 0x7c87, 0x4ce4, 0x5cc5, 0x2c22, 0x3c03, 0x0c60, 0x1c41,
+        0xedae, 0xfd8f, 0xcdec, 0xddcd, 0xad2a, 0xbd0b, 0x8d68, 0x9d49,
+        0x7e97, 0x6eb6, 0x5ed5, 0x4ef4, 0x3e13, 0x2e32, 0x1e51, 0x0e70,
+        0xff9f, 0xefbe, 0xdfdd, 0xcffc, 0xbf1b, 0xaf3a, 0x9f59, 0x8f78,
+        0x9188, 0x81a9, 0xb1ca, 0xa1eb, 0xd10c, 0xc12d, 0xf14e, 0xe16f,
+        0x1080, 0x00a1, 0x30c2, 0x20e3, 0x5004, 0x4025, 0x7046, 0x6067,
+        0x83b9, 0x9398, 0xa3fb, 0xb3da, 0xc33d, 0xd31c, 0xe37f, 0xf35e,
+        0x02b1, 0x1290, 0x22f3, 0x32d2, 0x4235, 0x5214, 0x6277, 0x7256,
+        0xb5ea, 0xa5cb, 0x95a8, 0x8589, 0xf56e, 0xe54f, 0xd52c, 0xc50d,
+        0x34e2, 0x24c3, 0x14a0, 0x0481, 0x7466, 0x6447, 0x5424, 0x4405,
+        0xa7db, 0xb7fa, 0x8799, 0x97b8, 0xe75f, 0xf77e, 0xc71d, 0xd73c,
+        0x26d3, 0x36f2, 0x0691, 0x16b0, 0x6657, 0x7676, 0x4615, 0x5634,
+        0xd94c, 0xc96d, 0xf90e, 0xe92f, 0x99c8, 0x89e9, 0xb98a, 0xa9ab,
+        0x5844, 0x4865, 0x7806, 0x6827, 0x18c0, 0x08e1, 0x3882, 0x28a3,
+        0xcb7d, 0xdb5c, 0xeb3f, 0xfb1e, 0x8bf9, 0x9bd8, 0xabbb, 0xbb9a,
+        0x4a75, 0x5a54, 0x6a37, 0x7a16, 0x0af1, 0x1ad0, 0x2ab3, 0x3a92,
+        0xfd2e, 0xed0f, 0xdd6c, 0xcd4d, 0xbdaa, 0xad8b, 0x9de8, 0x8dc9,
+        0x7c26, 0x6c07, 0x5c64, 0x4c45, 0x3ca2, 0x2c83, 0x1ce0, 0x0cc1,
+        0xef1f, 0xff3e, 0xcf5d, 0xdf7c, 0xaf9b, 0xbfba, 0x8fd9, 0x9ff8,
+        0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
+};
+
+static unsigned short __checkSum16(byte* packet, int len) {
+  unsigned short checksum = 0xffff;
+  int i = 0;
+  for( i = 0; i < len; i++ ) {
+    checksum = (checksum << 8) ^ crc16_table[((checksum >> 8) & 0xff) ^ packet[i]];
   }
 
   return checksum;
 }
 
 
+
+/* Structure for post/get
+ *
+ * byte type 1 short tele (8bit crc), 0 long tele (16bit crc)
+ * byte packetlen
+ * byte data
+ * byte data
+ * .....
+ *
+ */
 
 
 
@@ -262,6 +350,53 @@ static int __uncontrolPacket(byte* packet, int inlen) {
   return len;
 }
 
+static void __send_ack(iOZimoBin zimobin, byte seqid, byte msgt) {
+  iOZimoBinData data = Data(zimobin);
+
+  byte* outa = allocMem(32);
+  outa[0] = 1;      /* short packet */
+  outa[1] = 3;      /* packet length */
+  outa[2] = 0x50;   /* short ack */
+  outa[3] = msgt;       /* message type */
+  outa[4] = seqid;      /* seqid */
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "ack %d:%d", seqid, msgt);
+
+  ThreadOp.prioPost( data->transactor, (obj)outa, high );
+
+}
+
+static void __send_lack(iOZimoBin zimobin, byte seqid, byte msgt) {
+  iOZimoBinData data = Data(zimobin);
+
+  byte* outa = allocMem(32);
+  outa[0] = 0;      /* long packet */
+  outa[1] = 4;      /* packet length */
+  outa[2] = 0xd0;   /* long ack */
+  outa[3] = msgt;       /* msgt */
+  outa[4] = 5;          /* header length */
+  outa[5] = seqid;      /* seqid */
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lack %d:%d", seqid, msgt);
+
+  ThreadOp.prioPost( data->transactor, (obj)outa, high );
+
+}
+
+static void __send_nak(iOZimoBin zimobin) {
+  iOZimoBinData data = Data(zimobin);
+
+  byte* outa = allocMem(32);
+  outa[0] = 1;      /* short packet */
+  outa[1] = 2;      /* packet length */
+  outa[2] = 0x10;   /* command station instruction */
+  outa[3] = 1;          /* nak */
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "send nak");
+
+  ThreadOp.prioPost( data->transactor, (obj)outa, high );
+
+}
 
 static int __dccSteps(int steps) {
   if( steps < 28 )
@@ -271,12 +406,9 @@ static int __dccSteps(int steps) {
   return 0x08;
 }
 
-
 static iONode __translate( iOZimoBin zimobin, iONode node ) {
   iOZimoBinData data = Data(zimobin);
   iONode rsp = NULL;
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "translate %s", NodeOp.getName( node ) );
 
   /* Clock command. */
   if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
@@ -289,7 +421,13 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     int port = wSwitch.getport1( node );
     int gate = wSwitch.getgate1( node );
 
-    int state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 1:0;
+    int state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0:1;
+    byte addrFormat = 0x00;
+
+    if( StrOp.equals( wSwitch.prot_M, wSwitch.getprot( node ) ) ) /* Motorola */
+      addrFormat = 0x40;
+    if( StrOp.equals( wSwitch.prot_N, wSwitch.getprot( node ) ) ) /* DCC */
+      addrFormat = 0x80;
 
     if( port == 0 ) {
       AddrOp.fromFADA( addr, &addr, &port, &gate );
@@ -298,20 +436,26 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       AddrOp.fromPADA( port, &addr, &port );
     }
 
+    if( addr > 0 )
+      addr--;
     if( port > 0 )
       port--;
 
     byte* outa = allocMem(32);
-    outa[0] = 5;    /* packet length */
-    outa[1] = 0x10; /* command station instruction */
-    outa[2] = 7;    /* accessory command */
-    outa[3] = addr / 256 | 0x80;
-    outa[4] = addr % 256;
-    outa[5] = (port+state) | 0x08; /* TODO: Reset thge other gate? */
+    outa[0] = 1;    /* short packet */
+    outa[1] = 5;    /* packet length */
+    outa[2] = 0x10; /* command station instruction */
+    outa[3] = 7;    /* accessory command */
+    outa[4] = addr / 256 | addrFormat;
+    outa[5] = addr % 256;
+    outa[6] = ((port * 2) + state) & 0x07 | 0x08;  /* gate 0 is red, gate 1 is green */
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch %d:%d, %s", addr, port, state?"on":"off");
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch %d:%d:%d %s, 0x%02X", addr, port, gate, state?"green":"red", outa[6]);
 
     ThreadOp.post( data->transactor, (obj)outa );
+    if( wSwitch.isactdelay( node ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output must turn off %d:%d %s, 0x%02X", addr, port, state?"green":"red", outa[6]);
+    }
   }
 
   /* Output command. */
@@ -322,26 +466,35 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     int addr   = wOutput.getaddr( node );
     int port   = wOutput.getport( node );
     int gate   = wOutput.getgate( node );
+    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 1:0;
 
-    int state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x08:0x00;
+    byte addrFormat = 0x00;
+
+    if( StrOp.equals( wOutput.prot_M, wOutput.getprot( node ) ) ) /* Motorola */
+      addrFormat = 0x40;
+    if( StrOp.equals( wOutput.prot_N, wOutput.getprot( node ) ) ) /* DCC */
+      addrFormat = 0x80;
 
     if( port == 0 )
       AddrOp.fromFADA( addr, &addr, &port, &gate );
     else if( addr == 0 && port > 0 )
       AddrOp.fromPADA( port, &addr, &port );
 
+    if( addr > 0 )
+      addr--;
     if( port > 0 )
       port--;
 
     byte* outa = allocMem(32);
-    outa[0] = 5;    /* packet length */
-    outa[1] = 0x10; /* command station instruction */
-    outa[2] = 7;    /* accessory command */
-    outa[3] = addr / 256 | 0x80;
-    outa[4] = addr % 256;
-    outa[5] = (port+gate) | state;
+    outa[0] = 1;    /* short packet */
+    outa[1] = 5;    /* packet length */
+    outa[2] = 0x10; /* command station instruction */
+    outa[3] = 7;    /* accessory command */
+    outa[4] = addr / 256 | addrFormat;
+    outa[5] = addr % 256;
+    outa[6] = ((port * 2) + gate) & 0x07 | action;
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d:%d, %s", addr, port, state?"on":"off");
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d:%d:%d %s, 0x%02X", addr, port, gate, action?"red":"green", outa[6]);
 
     ThreadOp.post( data->transactor, (obj)outa );
   }
@@ -367,7 +520,17 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     int addr = wLoc.getaddr( node );
     int V = 0;
     int steps = wLoc.getspcnt( node );
-    byte* outa = allocMem(32);
+    byte addrFormat = 0x00;
+
+    if( StrOp.equals( wLoc.prot_M, wLoc.getprot( node ) ) ) /* Motorola */
+      addrFormat = 0x40;
+    if( StrOp.equals( wLoc.prot_N, wLoc.getprot( node ) ) ) /* DCC */
+      addrFormat = 0x80;
+    if( StrOp.equals( wLoc.prot_L, wLoc.getprot( node ) ) ) /* DCC Long */
+      addrFormat = 0x80;
+
+    if( steps > 126 ) 
+      steps = 126;
 
     if( wLoc.getV( node ) != -1 ) {
       if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
@@ -375,6 +538,13 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       else if( wLoc.getV_max( node ) > 0 )
         V = (wLoc.getV( node ) * steps) / wLoc.getV_max( node );
     }
+    if( V < 1 && wLoc.getV( node ) > 0)
+      V=1;
+
+    if( V > 126 )
+      V=126;      /* 127 not used, 128 ist emergency stop for this loco */
+              /* deocder has 0 = 0, 1 = emg stop, 2-127 drive       */
+
 
     Boolean f0 = wFunCmd.isf0( node );
     Boolean f1 = wFunCmd.isf1( node );
@@ -389,21 +559,45 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     Boolean f10 = wFunCmd.isf10( node );
     Boolean f11 = wFunCmd.isf11( node );
     Boolean f12 = wFunCmd.isf12( node );
+    Boolean f13 = wFunCmd.isf13( node );
+    Boolean f14 = wFunCmd.isf14( node );
+    Boolean f15 = wFunCmd.isf15( node );
+    Boolean f16 = wFunCmd.isf16( node );
+    Boolean f17 = wFunCmd.isf17( node );
+    Boolean f18 = wFunCmd.isf18( node );
+    Boolean f19 = wFunCmd.isf19( node );
+    Boolean f20 = wFunCmd.isf20( node );
+    Boolean f21 = wFunCmd.isf21( node );
+    Boolean f22 = wFunCmd.isf22( node );
+    Boolean f23 = wFunCmd.isf23( node );
+    Boolean f24 = wFunCmd.isf24( node );
+    Boolean f25 = wFunCmd.isf25( node );
+    Boolean f26 = wFunCmd.isf26( node );
+    Boolean f27 = wFunCmd.isf27( node );
+    Boolean f28 = wFunCmd.isf28( node );
+
+
 
     byte functions1 = (f1 ?0x01:0) + (f2 ?0x02:0) + (f3 ?0x04:0) + (f4 ?0x08:0) +
                       (f5 ?0x10:0) + (f6 ?0x20:0) + (f7 ?0x40:0) + (f8 ?0x80:0);
-    byte functions2 = (f9 ?0x01:0) + (f10?0x02:0) + (f11?0x04:0) + (f12?0x08:0);
+    byte functions2 = (f9 ?0x01:0) + (f10?0x02:0) + (f11?0x04:0) + (f12?0x08:0) +
+                      (f13?0x10:0) + (f14?0x20:0) + (f15?0x40:0) + (f16?0x80:0);
+    byte functions3 = (f17?0x01:0) + (f18?0x02:0) + (f19?0x04:0) + (f20?0x08:0) +
+                      (f21?0x10:0) + (f22?0x20:0) + (f23?0x40:0) + (f24?0x80:0);
+    byte functions4 = (f25?0x01:0) + (f26?0x02:0) + (f27?0x04:0) + (f28?0x08:0);
 
 
-    outa[0] = 8;    /* packet length */
-    outa[1] = 0x10; /* command station instruction */
-    outa[2] = 3;    /* loco control */
-    outa[3] = addr / 256 | 0x80; /* force dcc */
-    outa[4] = addr % 256;
-    outa[5] = V;
-    outa[6] = (wLoc.isdir( node )?0x00:0x20) | (wLoc.isfn( node )?0x10:0x00) | __dccSteps(steps);
-    outa[7] = functions1;
-    outa[8] = functions2;
+    byte* outa = allocMem(32);
+    outa[0] = 1;    /* short packet */
+    outa[1] = 8;    /* packet length */
+    outa[2] = 0x10; /* command station instruction */
+    outa[3] = 3;    /* loco control */
+    outa[4] = addr / 256 | addrFormat;
+    outa[5] = addr % 256;
+    outa[6] = V;
+    outa[7] = (wLoc.isdir( node )?0x00:0x20) | (wLoc.isfn( node )?0x10:0x00) | __dccSteps(steps);
+    outa[8] = functions1;
+    outa[9] = functions2;
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco: V=%d, dir=%s, lights=%s",
         V, wLoc.isdir( node )?"fwd":"rev", wLoc.isfn( node )?"on":"off" );
@@ -419,25 +613,31 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
-    byte* outa = allocMem(256);
+    byte* outa = allocMem(32);
 
-    outa[0] = 3;    /* packet length */
-    outa[1] = 0x10; /* command station instruction */
-    outa[2] = 2;    /* track control */
+    outa[0] = 1;    /* short packet */
+    outa[1] = 3;    /* packet length */
+    outa[2] = 0x10; /* command station instruction */
+    outa[3] = 2;    /* track control */
 
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
-      outa[3] = 1; /* switch track voltage OFF */
+      outa[4] = 1; /* switch track voltage OFF */
+      ThreadOp.post( data->transactor, (obj)outa );
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
-      outa[3] = 2; /* switch track voltage ON */
+      outa[4] = 2; /* switch track voltage ON */
+      ThreadOp.post( data->transactor, (obj)outa );
     }
     else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
-      outa[3] = 0; /* stop broadcast */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Broadcast STOP" );
+      outa[4] = 0; /* stop broadcast */
+      ThreadOp.post( data->transactor, (obj)outa );
     }
-    ThreadOp.post( data->transactor, (obj)outa );
+    else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SYSCMD %s", cmd );
+    }
 
   }
   /* Program command. */
@@ -464,7 +664,6 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     }
 
   }
-
 
   return rsp;
 }
@@ -528,36 +727,186 @@ static Boolean _supportPT( obj inst ) {
 }
 
 
-static void __handleTrackSection(iOZimoBin zimobin, byte* packet) {
+static void __handleTrackSection(iOZimoBin zimobin, byte mx9_id, byte mx9_sec, byte bstat) {
   iOZimoBinData data = Data(zimobin);
-  int addr = packet[3] * 8 + packet[4];
-
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "tracksection: addr=%d, section=%d, status=0x%02X", packet[3], packet[4], packet[5] );
-
-  /* inform listener: Node3 */
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-  wFeedback.setaddr( nodeC, addr );
-  wFeedback.setstate( nodeC, (packet[5]&0x18)?True:False );
-  if( data->iid != NULL )
-    wFeedback.setiid( nodeC, data->iid );
 
-  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  byte valid   = bstat & 0x80;
+  byte changed = bstat & 0x40;
+  byte ues     = bstat & 0x20;
+  byte secb    = (bstat & 0x10) ? 0x02 : 0x00;
+  byte seca    = (bstat & 0x08) ? 0x01 : 0x00;
+  byte loks    = bstat & 0x07;
+
+  if (valid && changed) {
+    int addr = (mx9_id * 16) + (mx9_sec * 2) + 1;
+
+    /* inform listener: Node3 */
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "tracksection: MX9=%d, section=%d, addr=%d status=0x%02X", mx9_id, mx9_sec, addr, seca );
+
+    wFeedback.setaddr( nodeC, addr );
+    wFeedback.setstate( nodeC, (seca)?True:False );
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+    
+    addr++;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "tracksection: MX9=%d, section=%d, addr=%d status=0x%02X", mx9_id, mx9_sec, addr, secb );
+
+    wFeedback.setaddr( nodeC, addr );
+    wFeedback.setstate( nodeC, (secb)?True:False );
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+  } else {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "tracksection: MX9=%d, section=%d, invalid", mx9_id, mx9_sec );
+  }
+
 }
 
 
 static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
   iOZimoBinData data    = Data(zimobin);
   Boolean ok = True;
+  byte seqid = packet[0];
+  byte msgt  = packet[1];
+  byte subt  = packet[2];
+  int i;
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sequenceID=%d message=0x%02X", packet[0], packet[1] );
-
-  switch( packet[1] ) {
-  case 0x0A: /* command station instruction */
-    break;
-  case 0x02: /* MX9 track section */
-    if( packet[2] == 255 )
-      __handleTrackSection(zimobin, packet);
-    break;
+  if (msgt & 0x80) {  /* long packet */
+    unsigned short crc = __checkSum16(packet, len);
+    if (crc) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "wrong crc sequenceID=%d message=0x%02X", seqid, msgt );
+      __send_nak(zimobin);
+      return 1;
+    }
+    switch (msgt) {
+      case 0xc0:  /* command station */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "long CMD %d", subt );
+        break;
+      case 0xc1:  /* MX8 */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "long MX8 %d", subt );
+        break;
+      case 0xc2:  /* MX9 */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "long MX9 %d", subt );
+      switch (subt) {
+        case 0x04:
+                __send_lack(zimobin, seqid, msgt);
+          __handleTrackSection(zimobin, packet[5], packet[6], packet[7]);
+          break;
+      }
+      break;
+      default:
+          break;
+      }
+    } else {      /* short packet */
+    byte crc = __checkSum8(packet, len);
+    if (crc) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "wrong crc sequenceID=%d message=0x%02X", seqid, msgt );
+      __send_nak(zimobin);
+      return 1;
+    }
+    switch (msgt) {
+      case 0x00:    /* command station */
+        switch (subt) {
+    case 0:    /* reset message */
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get reset message" );
+      __send_ack(zimobin, seqid, msgt);
+      break;
+    case 1:    /* got nak */
+      break;
+    case 254:    /* monitor external accessory decoder change */
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get external accessory decoder change" );
+      __send_ack(zimobin, seqid, msgt);
+      break;
+    case 255:    /* monitor external loco memory change */
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get external loco memory change" );
+      __send_ack(zimobin, seqid, msgt);
+      break;
+  }
+        break;
+      case 0x01:    /* MX8 */
+        switch (subt) {
+    case 255:    /* MX8 feedback */
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get MX8 feedback" );
+      __send_ack(zimobin, seqid, msgt);
+      break;
+  }
+  break;
+      case 0x02:    /* MX9 */
+        switch (subt) {
+    case 255:    /* MX9 feedback */
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get MX9 feedback" );
+      __send_ack(zimobin, seqid, msgt);
+      __handleTrackSection(zimobin, packet[5], packet[6], packet[7]);
+      break;
+  }
+  break;
+      case 0x20:    /* CV Read */
+  __send_ack(zimobin, seqid, msgt);
+        break;
+      case 0x21:    /* MX8 CV Read */
+  __send_ack(zimobin, seqid, msgt);
+        break;
+      case 0x22:    /* MX9 CV Read */
+  __send_ack(zimobin, seqid, msgt);
+        break;
+      case 0x40:
+        switch (subt) {
+    case 0:    /* ack for reset message */
+      break;
+    case 2:    /* ack for power status */
+      break;
+    case 3:    /* ack for loco */
+      break;
+    case 4:    /* ack for func */
+      break;
+    case 5:    /* ack for ifunc */
+      break;
+    case 6:    /* ack for shuttle */
+      break;
+    case 7:    /* ack for accessory decoder */
+      break;
+    case 8:    /* loc status */
+      break;
+    case 9:    /* accessory status */
+      break;
+    case 10:    /* address control */
+      break;
+    case 11:    /* command station io state */
+      break;
+    case 12:    /* command station cv */
+      break;
+    case 13:    /* command station equipment */
+      break;
+    case 17:    /* ack 17 */
+      break;
+    case 18:    /* mx1 display write ack */
+      break;
+    default:
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "TODO message=0x%02X type=%d", msgt, subt );
+      break;
+  }
+        break;
+      case 0x41:  /* MX8 */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "TODO message=0x%02X type=%d", msgt, subt );
+        break;
+      case 0x42:  /* MX9 */
+        switch (subt) {
+          case 3:
+            for (i=0; i<8; i++) {
+              __handleTrackSection(zimobin, packet[5], i, packet[6+i]);
+            }
+            break;
+          default:
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "TODO message=0x%02X type=%d", msgt, subt );
+            break;
+        }
+        break;
+    }
   }
 
   return ok;
@@ -576,36 +925,62 @@ static void __transactor( void* threadinst ) {
   ThreadOp.setDescription( th, "Transactor for ZimoBin" );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Transactor started." );
 
-  /* send reset packet */
+  /* send init packet */
   {
     byte* outa = allocMem(32);
 
-    outa[0] = 2;    /* packet length */
-    outa[1] = 0x10; /* command station instruction */
-    outa[2] = 0;    /* track control */
+    outa[0] = 1;    /* short packet */
+    outa[1] = 4;    /* packet length */
+    outa[2] = 0x10; /* command station instruction */
+    outa[3] = 17;    /* serial info  */
+    outa[4] = 0;     /* toolid */
+    outa[5] = 1;     /* action start */
+    ThreadOp.post( data->transactor, (obj)outa );
+  }
+
+  /* send qctrl packet */
+  {
+    byte* outa = allocMem(32);
+
+    outa[0] = 1;    /* short packet */
+    outa[1] = 3;    /* packet length */
+    outa[2] = 0x10; /* command station instruction */
+    outa[3] = 2;    /* track control */
+    outa[4] = 3;    /* query status */
     ThreadOp.post( data->transactor, (obj)outa );
   }
 
 
   do {
-    /* get next command only if the last command was successfull,
+    /* TODO get next command only if the last command was successfull,
        otherwise work on the current node until the cs will answer, or give up after numtries */
     if (True) {
       post = ThreadOp.getPost( th );
       if (post != NULL) {
-        int packetlen = ((byte*) post)[0] & 0xFF;
+
+        int packettyp = ((byte*) post)[0] & 0xFF;
+        int packetlen = ((byte*) post)[1] & 0xFF;
         esqid++;
         if( esqid > 255 )
           esqid = 1;
 
         /* sequence byte */
         out[0] = esqid;
-        MemOp.copy( out+1, (byte*) post+1, packetlen);
+        MemOp.copy( out+1, (byte*) post+2, packetlen);
         packetlen++; /* add one for the sequence byte */
         freeMem( post);
 
-        out[packetlen] = __checkSum(out, packetlen);
-        packetlen++;
+        if (packettyp) {
+          out[packetlen] = __checkSum8(out, packetlen);
+          packetlen++;
+        }
+        else {
+          unsigned short crc = __checkSum16(out, packetlen);
+          out[packetlen] = crc / 256;
+          packetlen++;
+          out[packetlen] = crc % 256;
+          packetlen++;
+        }
         packetlen = __escapePacket(out, packetlen);
         packetlen = __controlPacket(out, packetlen);
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
@@ -613,8 +988,8 @@ static void __transactor( void* threadinst ) {
 
       }
 
+      byte inbuf[512];
       int dataAvailable = SerialOp.available(data->serial);
-      byte inbuf[256];
       int inIdx = 0;
       Boolean packetReceived = False;
       while( dataAvailable > 0 && inIdx < 256) {
@@ -638,6 +1013,9 @@ static void __transactor( void* threadinst ) {
         if( inIdx == 1  && inbuf[inIdx] != SOH  && inbuf[inIdx-1] != SOH  ) {
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "No valid start sequence: idx=%d in=%02X", inIdx, inbuf[inIdx] );
           TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx+1 );
+          SerialOp.read( data->serial, (char*) inbuf, sizeof(inbuf) );
+          inbuf[511]=0;
+          fprintf(stderr, "read: %s\n", inbuf);
           inIdx = 0;
           break;
         }
@@ -647,7 +1025,6 @@ static void __transactor( void* threadinst ) {
             /* end of packet */
             packetReceived = True;
             inIdx++;
-            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "End of packet detected." );
             break;
           }
         }
