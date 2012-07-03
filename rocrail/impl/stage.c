@@ -657,7 +657,11 @@ static Boolean _isState( iIBlockBase inst, const char* state ) {
  */
 static Boolean _isFree( iIBlockBase inst ,const char* locid ) {
   iOStageData data = Data(inst);
-  return __willLocoFit(inst, locid, False);
+  Boolean locoFit = __willLocoFit(inst, locid, False);
+  if( !locoFit ) {
+    __moveStageLocos(inst);
+  }
+  return locoFit;
 }
 
 
