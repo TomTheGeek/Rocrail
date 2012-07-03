@@ -483,9 +483,9 @@ bool SelTabDialog::evaluate() {
   wSelTab.setport2( m_Props, atoi( m_Port2->GetValue().mb_str(wxConvUTF8) ) );
   wSelTab.setport3( m_Props, atoi( m_Port3->GetValue().mb_str(wxConvUTF8) ) );
   wSelTab.setport4( m_Props, atoi( m_Port4->GetValue().mb_str(wxConvUTF8) ) );
-  wSelTab.setport5( m_Props, atoi( m_Port4->GetValue().mb_str(wxConvUTF8) ) );
-  wSelTab.setport6( m_Props, atoi( m_Port4->GetValue().mb_str(wxConvUTF8) ) );
-  wSelTab.setport7( m_Props, atoi( m_Port4->GetValue().mb_str(wxConvUTF8) ) );
+  wSelTab.setport5( m_Props, atoi( m_Port5->GetValue().mb_str(wxConvUTF8) ) );
+  wSelTab.setport6( m_Props, atoi( m_Port6->GetValue().mb_str(wxConvUTF8) ) );
+  wSelTab.setport7( m_Props, atoi( m_Port7->GetValue().mb_str(wxConvUTF8) ) );
 
   wSelTab.setinv(m_Props, m_Invert->IsChecked()?True:False);
   wSelTab.setinvnew(m_Props, m_InvertNew->IsChecked()?True:False);
