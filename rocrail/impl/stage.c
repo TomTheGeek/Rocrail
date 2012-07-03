@@ -369,12 +369,12 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
 
           }
 
-          if( data->pendingFree && data->pendingSection != -1 ) {
+          if( !data->pendingFree && data->pendingSection != -1 ) {
             iONode s = (iONode)ListOp.get(data->sectionList, data->pendingSection );
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "pendingFree for section [%d]", data->pendingSection );
             if( s != NULL )
               wStageSection.setlcid(s, NULL);
-            data->pendingFree = False;
+            data->pendingFree = True;
             data->pendingSection = -1;
           }
 
@@ -851,7 +851,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
 
   if( (data->locId != NULL && StrOp.len(data->locId) > 0) || !data->pendingFree ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "can not move a loco because %s is pending", data->locId!=NULL?data->locId:"?");
+        "can not move a loco because %s is pending(%d)", data->locId!=NULL?data->locId:"-", data->pendingFree);
     return locoMoved;
   }
 
@@ -867,7 +867,6 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "section [%d] is electrically occupied", wStageSection.getidx(section) );
-        break;
       }
     }
 
