@@ -207,7 +207,7 @@ static iIBlockBase __getBlock4Loc(iIBlockBase inst, const char* locid, Boolean* 
       return block;
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block=0x%08X does not have set locid to %s...", locid );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block=0x%08X does not have set locid to %s...", block, locid );
     }
     pos = wSelTab.nextseltabpos( data->props, pos );
   };
