@@ -612,6 +612,10 @@ static void __callback( obj inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wBlock.name(), nodeName ) ) {
     iIBlockBase block = ModelOp.getBlock( model, wBlock.getid( nodeA ) );
+    if( block == NULL ) {
+      block = ModelOp.getBlockByAddr( model, wBlock.getiid( nodeA ), wBlock.getaddr( nodeA ) );
+    }
+
     if( block != NULL ) {
       block->cmd( block, nodeA );
       return;

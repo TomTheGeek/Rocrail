@@ -664,11 +664,24 @@ static void __alEvent( iODINAMO dinamo, byte* datagram ) {
     char* sAddr = StrOp.fmt("%d", block );
     const char* blockID = (const char*)MapOp.get( data->blockMap, sAddr );
     if( blockID != NULL ) {
-      /* inform listener: */
+      /* ToDo: Inform listener. */
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "block [%s] [%d] has short-circuit", blockID, block );
+
+      iONode node = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+      wBlock.setid( node, blockID );
+      wBlock.setstate( node, wBlock.shortcut );
+      if( data->listenerFun != NULL && data->listenerObj != NULL )
+        data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
     }
     else {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "block address [%d] has short-circuit", block );
+      iONode node = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+      wBlock.setaddr( node, block );
+      wBlock.setstate( node, wBlock.shortcut );
+      if( data->iid != NULL )
+        wBlock.setiid( node, data->iid );
+      if( data->listenerFun != NULL && data->listenerObj != NULL )
+        data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
     }
     StrOp.free(sAddr);
   }

@@ -816,8 +816,13 @@
     </fun>
     <fun name="getBlock" vt="iIBlockBase">
       <param name="inst" vt="this" remark="Model instance"/>
-      <param name="id" vt="const char*" remark="BlocID to search for"/>
-    </fun>
+      <param name="id" vt="const char*" remark="BlockID to search for"/>
+      </fun>
+    <fun name="getBlockByAddr" vt="iIBlockBase">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="iid" vt="const char*" remark="Block trackdriver IID"/>
+      <param name="addr" vt="int" remark="Block trackdriver address"/>
+      </fun>
     <fun name="getTrack" vt="iOTrack">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="TrackID to search for"/>

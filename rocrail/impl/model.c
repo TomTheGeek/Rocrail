@@ -2569,7 +2569,24 @@ static iOList _getLevelItems( iOModel inst, int level, int* cx, int* cy, Boolean
 
 static iIBlockBase _getBlock( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
-  return (iIBlockBase)MapOp.get( o->blockMap, id );
+  iIBlockBase bk = (iIBlockBase)MapOp.get( o->blockMap, id );
+  return bk;
+}
+
+static iIBlockBase _getBlockByAddr( iOModel inst, const char* iid, int addr ) {
+  iOModelData o = Data(inst);
+  iIBlockBase bk = NULL;
+  if( addr > 0 ) {
+    iIBlockBase b = (iIBlockBase)MapOp.first(o->blockMap);
+    while( b != NULL ) {
+      if( b->getTDaddress(b) == addr ) {
+        bk = b;
+        break;
+      }
+      b = (iIBlockBase)MapOp.next(o->blockMap);
+    }
+  }
+  return bk;
 }
 
 static iIBlockBase _getBlock4Signal( iOModel inst, const char* id ) {
