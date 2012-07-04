@@ -196,7 +196,7 @@
   </object>
 
 
-  <object name="DINAMO" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint" remark="DINAMO object">
+  <object name="DINAMO" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,map" include="$rocint/public/digint" remark="DINAMO object">
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -217,7 +217,8 @@
       <var name="hold" vt="Boolean"/>
       <var name="swtime" vt="int"/>
       <var name="dummyio" vt="Boolean"/>
-    </data>
+      <var name="blockMap" vt="iOMap"/>
+      </data>
   </object>
 
 

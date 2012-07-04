@@ -1449,6 +1449,7 @@ static Boolean _link( iIBlockBase inst, iIBlockBase linkto ) {
     iOControl control = AppOp.getControl();
     iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
     wSysCmd.setcmd( cmd, wSysCmd.link );
+    wSysCmd.setid( cmd, wBlock.getid(data->props));
     wSysCmd.setiid( cmd, wBlock.getiid(data->props));
     wSysCmd.setvalA( cmd, inst->getTDport( inst ) );
     wSysCmd.setvalB( cmd, linkto->getTDport( linkto ) );

@@ -220,7 +220,13 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
     }
     else if( StrOp.equals( cmdstr, wSysCmd.link ) ) {
       /* TODO: */
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "link %d to %d", wSysCmd.getvalA( node ), wSysCmd.getvalB( node ) );
+      char* sAddr = StrOp.fmt( "%d", wSysCmd.getvalA( node ) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "link %d(%s) to %d",
+          wSysCmd.getvalA( node ), wSysCmd.getid( node ), wSysCmd.getvalB( node ) );
+      if( MapOp.get( data->blockMap, sAddr ) == NULL ) {
+        MapOp.put( data->blockMap, sAddr, (obj)StrOp.dup(wSysCmd.getid( node )) );
+      }
+      StrOp.free(sAddr);
       datagram[0] = 4 | VER3_FLAG | data->header;
       datagram[1] = 0x3A | ((wSysCmd.getvalA( node ) / 128) & 0x01 );
       datagram[2] = wSysCmd.getvalA( node ) % 128;
@@ -654,11 +660,17 @@ static void __alEvent( iODINAMO dinamo, byte* datagram ) {
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Alarm Event" );
 
-  if( shortcircuit )
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "block %d has short-circuit", block );
-  {
-    /* inform listener: */
-    /* TODO: */
+  if( shortcircuit ) {
+    char* sAddr = StrOp.fmt("%d", block );
+    const char* blockID = (const char*)MapOp.get( data->blockMap, sAddr );
+    if( blockID != NULL ) {
+      /* inform listener: */
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "block [%s] [%d] has short-circuit", blockID, block );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "block address [%d] has short-circuit", block );
+    }
+    StrOp.free(sAddr);
   }
 }
 
@@ -1119,6 +1131,7 @@ static struct ODINAMO* _inst( const iONode ini ,const iOTrace trc ) {
   data->iid = StrOp.dup( wDigInt.getiid( ini ) );
   data->swtime = (wDigInt.getswtime( ini ) * 60) / 1000; /* units of 1/60 sec. */
   data->dummyio = wDigInt.isdummyio( ini );
+  data->blockMap = MapOp.inst();
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dinamo %d.%d.%d", vmajor, vminor, patch );
