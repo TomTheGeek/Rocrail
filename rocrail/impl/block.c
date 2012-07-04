@@ -1990,13 +1990,13 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
         data->closereq = True;
         return False;
       }
-    }
 
-    if( data->closereq ) {
-      state = wBlock.closed;
-      wBlock.setstate( nodeA, state );
-      data->closereq = False;
-      __checkAction((iOBlock)inst, "closed");
+      if( data->closereq ) {
+        state = wBlock.closed;
+        wBlock.setstate( nodeA, state );
+        data->closereq = False;
+        __checkAction((iOBlock)inst, "closed");
+      }
     }
     wBlock.setstate( data->props, state );
     ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, locid, StrOp.equals( wBlock.closed, state ), 0, 0, NULL );
