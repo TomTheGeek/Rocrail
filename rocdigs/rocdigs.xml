@@ -876,7 +876,8 @@
       <var name="writer" vt="iOThread"/>
       <var name="feedbackReader" vt="iOThread"/>
       <var name="fbmod" vt="int"/>
-    </data>
+      <var name="swtime" vt="int"/>
+      </data>
   </object>
 
   <object name="Clock" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint" remark="clock driver object">

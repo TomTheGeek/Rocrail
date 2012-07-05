@@ -158,7 +158,7 @@ static Boolean __getFunctionState(iONode node, int fnchanged) {
 }
 
 
-static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, long addr, int subcmd, int subcmd2 ) {
+static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, long addr, int subcmd, int subcmd2, int subcmd3, int subcmd4 ) {
   msg[0]  = (prio << 1);
   msg[0] |= (cmd >> 7);
   msg[1]  = ((cmd & 0x7F) << 1 );
@@ -172,8 +172,8 @@ static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, lon
   msg[8]  = (addr & 0x000000FF);
   msg[9]  = subcmd;
   msg[10] = subcmd2;
-  msg[11] = 0;
-  msg[12] = 0;
+  msg[11] = subcmd3;
+  msg[12] = subcmd4;
 }
 
 static iONode __translate( iOMCS2 inst, iONode node ) {
@@ -188,19 +188,19 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
 
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System STOP" );
-      __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_STOP, 0);
+      __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_STOP, 0, 0, 0);
       ThreadOp.post( data->writer, (obj)out );
       return rsp;
     }
     else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System HALT" );
-      __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_HALT, 0);
+      __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_HALT, 0, 0, 0);
       ThreadOp.post( data->writer, (obj)out );
       return rsp;
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System GO" );
-      __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_GO, 0);
+      __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_GO, 0, 0, 0);
       ThreadOp.post( data->writer, (obj)out );
       return rsp;
     }
@@ -215,6 +215,12 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
 
     int port = wSwitch.getport1( node );
     int gate = wSwitch.getgate1( node );
+    int swtime = wSwitch.getdelay( node ) / 10;
+
+    if( swtime == 0 ) {
+      swtime = data->swtime / 10;
+    }
+
     Boolean dccswitch = StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_N );
     if( port == 0 )
       AddrOp.fromFADA( module, &module, &port, &gate );
@@ -224,11 +230,11 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
 
     if ( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout )) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch %d (%s) to turnout", (address - (dccswitch?0x37FF:0x2FFF) ), dccswitch?"dcc":"mm" );
-      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, 0, 1);
+      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 8, address, 0, 1, swtime/256, swtime%256);
     }
     else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch %d (%s) to straight", (address - (dccswitch?0x37FF:0x2FFF) ), dccswitch?"dcc":"mm" );
-      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, 1, 1);
+      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 8, address, 1, 1, swtime/256, swtime%256);
     }
 
     ThreadOp.post( data->writer, (obj)out );
@@ -251,11 +257,11 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
 
     if ( StrOp.equals( wOutput.getcmd( node ), wOutput.on )) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s (%s) on", (address - (dccoutput?0x37FF:0x2FFF) ), gate?"b":"a", dccoutput?"dcc":"mm" );
-      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, gate, 1);
+      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, gate, 1, 0, 0);
     }
     else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s (%s) off", (address - (dccoutput?0x37FF:0x2FFF) ), gate?"b":"a", dccoutput?"dcc":"mm" );
-      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, gate, 0);
+      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, gate, 0, 0, 0);
     }
 
     ThreadOp.post( data->writer, (obj)out );
@@ -301,14 +307,14 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
 
     if (sw) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d (%s) %s", addr, prot, (dir==1)?"forwards":"backwards" );
-      __setSysMsg(out, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0);
-      __setSysMsg(out2, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2);
+      __setSysMsg(out, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0, 0, 0);
+      __setSysMsg(out2, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2, 0, 0);
       /* when changing direction cs2 set speed to 0 internally, so after direction change also send speed */
     } else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d (%s) speedstep=%d %s", addr, prot, (speed * wLoc.getspcnt( node ) / 1000), (dir==1)?"forwards":"backwards");
-      __setSysMsg(out2, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2);
+      __setSysMsg(out2, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2, 0, 0);
       /* also send direction to prevent going wrong way when user has changed direction on the cs2 */
-      __setSysMsg(out, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0);
+      __setSysMsg(out, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0, 0, 0);
     }
     /* send direction first, speed as second, because of CS2 setting speed to 0 on dir change */
     ThreadOp.post( data->writer, (obj)out );
@@ -342,7 +348,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
         "Loc %d (%s) function f%d to %s", addr, prot, fnchanged, __getFunctionState(node, fnchanged)?"on":"off" );
 
     if( fnchanged != -1 ) {
-      __setSysMsg(out, 0, CMD_LOCO_FUNCTION , False, 6, address, fnchanged, __getFunctionState(node, fnchanged));
+      __setSysMsg(out, 0, CMD_LOCO_FUNCTION , False, 6, address, fnchanged, __getFunctionState(node, fnchanged), 0, 0);
       ThreadOp.post( data->writer, (obj)out );
       return rsp;
     }
@@ -424,7 +430,7 @@ static void __feedbackMCS2Reader( void* threadinst ) {
 
     for( mod = 0; mod < data->fbmod; mod++ ) {
       byte* out = allocMem(16);
-      __setSysMsg(out, 0, 0x10, False, 5, dummy, mod, 0);
+      __setSysMsg(out, 0, 0x10, False, 5, dummy, mod, 0, 0, 0);
       /* unofficial command 0x10 request status of feedback module mod, one module has 16 inputs */
       ThreadOp.post( data->writer, (obj)out );
       out = NULL;
@@ -750,9 +756,10 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
     data->conOK = SerialOp.open( data->serial );
   }
 
-  data->fbmod = wDigInt.getfbmod( ini );
-  data->iid   = StrOp.dup( wDigInt.getiid( ini ) );
-  data->run   = True;
+  data->fbmod  = wDigInt.getfbmod( ini );
+  data->iid    = StrOp.dup( wDigInt.getiid( ini ) );
+  data->swtime = wDigInt.getswtime( ini );
+  data->run    = True;
 
   data->reader = ThreadOp.inst( "mcs2reader", &__reader, __MCS2 );
   ThreadOp.start( data->reader );
