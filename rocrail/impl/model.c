@@ -2576,10 +2576,10 @@ static iIBlockBase _getBlock( iOModel inst, const char* id ) {
 static iIBlockBase _getBlockByAddr( iOModel inst, const char* iid, int addr ) {
   iOModelData o = Data(inst);
   iIBlockBase bk = NULL;
-  if( addr > 0 ) {
+  if( addr >= 0 ) {
     iIBlockBase b = (iIBlockBase)MapOp.first(o->blockMap);
     while( b != NULL ) {
-      if( b->getTDaddress(b) == addr ) {
+      if( wBlock.istd(b->base.properties(b)) && b->getTDport(b) == addr ) {
         bk = b;
         break;
       }
