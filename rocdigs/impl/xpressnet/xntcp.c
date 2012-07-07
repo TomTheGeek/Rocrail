@@ -111,7 +111,7 @@ Boolean xntcpWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
   out[i] = bXor;
   len++; /* checksum */
 
-  if( data->socket != NULL && MutexOp.wait( data->serialmux ) ) {
+  if( data->socket != NULL ) {
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
     rc = SocketOp.write( data->socket, out, len );
   }
