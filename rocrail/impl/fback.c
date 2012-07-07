@@ -237,6 +237,9 @@ static void* _getProperties( void* inst ) {
 static char* _createAddrKey( int bus, int addr, const char* iid ) {
   iONode node = AppOp.getIniNode( wDigInt.name() );
   const char* def_iid = wDigInt.getiid( node );
+  if( def_iid == NULL || StrOp.len(def_iid) == 0 ) {
+    def_iid = "vcs-1";
+  }
   return StrOp.fmt( "%d_%d_%s", bus, addr, (iid != NULL && StrOp.len( iid ) > 0) ? iid:def_iid );
 }
 

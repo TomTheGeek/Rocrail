@@ -3089,7 +3089,6 @@ static void _event( iOModel inst, iONode nodeC ) {
 
     char* key = FBackOp.createAddrKey( bus, addr, iid );
     iOList list = (iOList)MapOp.get( o->fbAddrMap, key );
-    StrOp.free( key );
     if( list != NULL ) {
       obj fb = ListOp.first( list );
       while( fb != NULL ) {
@@ -3105,6 +3104,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       /* Cleanup Node3 */
       nodeC->base.del(nodeC);
     }
+    StrOp.free( key );
     return;
   }
 

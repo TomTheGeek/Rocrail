@@ -191,7 +191,8 @@ static Boolean __informDigInt( iOControl inst, iIDigInt pDi, iONode node, int* e
       }
       else if( StrOp.equals( NodeOp.getName( rsp ), wFeedback.name() ) ) {
         /* sensor simulation response: */
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Sensor event...addr=%d", wFeedback.getaddr( rsp ) );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "Sensor event...addr=%d state=%s", wFeedback.getaddr( rsp ), wFeedback.isstate( rsp )?"true":"false" );
         __listener( (obj)inst, rsp, TRCLEVEL_INFO );
       }
       else if( wResponse.iserror( rsp ) ) {
