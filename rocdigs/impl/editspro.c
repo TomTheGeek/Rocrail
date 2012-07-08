@@ -445,7 +445,7 @@ static void __poller( void* threadinst ) {
               out[0] = 191 + mod;
               if( SerialOp.write( data->serial, &out[0], 1 ) ) {
                 if( SerialOp.read( data->serial, &out[0], 1 ) ) {
-                  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "fb module %d = 0x%02X ", mod, out[0] );
+                  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "fb module %d = 0x%02X ", mod, out[0] );
                   __evaluateState(data, mod, out[0]);
                 }
               }
