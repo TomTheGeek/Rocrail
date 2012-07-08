@@ -277,9 +277,22 @@
       <var name="mux" vt="iOMutex"/>
       <var name="dummyio" vt="Boolean"/>
       <var name="fbmod" vt="int"/>
+      <var name="fboffset" vt="int"/>
+      <var name="swtime" vt="int"/>
+      <var name="timeout" vt="int"/>
       <var name="readfb" vt="Boolean"/>
       <var name="transactor" vt="iOThread"/>
+      <var name="packethandler" vt="iOThread"/>
+      <var name="pqueue" vt="iOQueue"/>
+      <var name="pmux" vt="iOMutex"/>
+      <var name="tqueue" vt="iOQueue"/>
+      <var name="tmux" vt="iOMutex"/>
       <var name="run" vt="Boolean"/>
+      <var name="power" vt="int"/>
+      <var name="halt" vt="int"/>
+      <var name="ues" vt="int"/>
+      <var name="pt" vt="int"/>
+      <var name="comm" vt="int"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
     </data>
