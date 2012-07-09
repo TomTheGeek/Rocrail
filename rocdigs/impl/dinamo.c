@@ -1142,9 +1142,11 @@ static struct ODINAMO* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dinamo %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device [%s]", wDigInt.getdevice( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  timeout [%d]", wDigInt.gettimeout( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  dummy I/O %s", data->dummyio ? "true":"false" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init serial %s", wDigInt.getdevice( ini ) );
 
   if( !data->dummyio ) {
     data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );
