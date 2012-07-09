@@ -406,6 +406,8 @@
       <var name="fastclock" vt="bool" defval="false" remark="send fast clock commands to the connected command station"/>
       <var name="ignorebusy" vt="bool" defval="false" remark="ignore the busy message from command station"/>
       <var name="protver" vt="int" defval="0" remark="Protocol version. Default implementation is 0."/>
+      <var name="locolist" vt="bool" defval="false" remark="Initial send the digint the list of locos."/>
+      <var name="switchlist" vt="bool" defval="false" remark="Initial send the digint the list of switches."/>
 
 
       <!-- HSI88 -->

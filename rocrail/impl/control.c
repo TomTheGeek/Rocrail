@@ -979,6 +979,23 @@ static Boolean __initDigInts( iOControl inst ) {
     if( iid != NULL )
       MapOp.put( o->diMap, iid, (obj)pDi );
 
+    if( wDigInt.islocolist(digint)) {
+      iONode lclist = wPlan.getlclist(ModelOp.getModel(AppOp.getModel()));
+      if( lclist != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send loco list to digint...");
+        lclist = (iONode)NodeOp.base.clone(lclist);
+        pDi->cmd((obj)pDi, lclist);
+      }
+    }
+    if( wDigInt.isswitchlist(digint)) {
+      iONode swlist = wPlan.getswlist(ModelOp.getModel(AppOp.getModel()));
+      if( swlist != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send switch list to digint...");
+        swlist = (iONode)NodeOp.base.clone(swlist);
+        pDi->cmd((obj)pDi, swlist);
+      }
+    }
+
     /* First digint is default! */
     if( o->pDi == NULL ) {
       o->pDi = pDi;
