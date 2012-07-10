@@ -172,7 +172,7 @@ void LocControlDialog::initLabels() {
   m_Break->SetLabel( wxGetApp().getMsg( "break" ) );
 
   wxFont font = m_Speed->GetFont();
-  wxFont font2( font.GetPointSize() * 2, font.GetFamily(), font.GetStyle(), wxBOLD );
+  wxFont font2( font.GetPointSize() * 2, font.GetFamily(), font.GetStyle(), wxFONTWEIGHT_BOLD );
   m_Speed->SetFont( font2 );
   m_Speed->SetBackgroundColour( Base::getBlue() );
 

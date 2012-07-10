@@ -16,8 +16,8 @@
  */
 
 ////@begin includes
+#include "wx/notebook.h"
 #include "wx/spinctrl.h"
-#include "wx/statline.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -27,6 +27,7 @@
  */
 
 ////@begin forward declarations
+class wxNotebook;
 class wxSpinCtrl;
 ////@end forward declarations
 
@@ -36,13 +37,17 @@ class wxSpinCtrl;
 
 ////@begin control identifiers
 #define ID_TIMEDACTIONS 10139
+#define ID_ACTIONBOOK 10254
+#define ID_INDEXPANEL 10403
 #define ID_LB_TimedActions 10143
+#define ID_BT_ADD 10217
+#define ID_BT_DEL 10218
+#define ID_DEFINITIONPANEL 10404
 #define ID_ACTIONS_TYPE 10195
 #define ID_COMBOBOX 10371
 #define ID_ACTIONS_EXEC_CMD 10245
-#define ID_BT_ADD 10217
-#define ID_BT_DEL 10218
-#define ID_BT_MODIFY 10219
+#define ID_USEPANEL 10405
+#define ID_USELIST 10406
 #define SYMBOL_TIMEDACTIONS_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL
 #define SYMBOL_TIMEDACTIONS_TITLE _("TimedActions")
 #define SYMBOL_TIMEDACTIONS_IDNAME ID_TIMEDACTIONS
@@ -66,6 +71,7 @@ class TimedActions: public wxDialog
   bool evaluate();
   void initOutputList();
   void initCommands();
+  void initUse();
   iONode m_Props;
 
 public:
@@ -90,20 +96,23 @@ public:
     /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LB_TimedActions
     void OnLBTimedActionsSelected( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_ACTIONS_TYPE
-    void OnActionsTypeSelected( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONS_EXEC_CMD
-    void OnActionsExecCmdClick( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BT_ADD
     void OnBtAddClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BT_DEL
     void OnBtDelClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BT_MODIFY
-    void OnBtModifyClick( wxCommandEvent& event );
+    /// wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_ACTIONS_TYPE
+    void OnActionsTypeSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONS_EXEC_CMD
+    void OnActionsExecCmdClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_USELIST
+    void OnUselistSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_LISTBOX_DOUBLECLICKED event handler for ID_USELIST
+    void OnUselistDoubleClicked( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
@@ -129,9 +138,13 @@ public:
     static bool ShowToolTips();
 
 ////@begin TimedActions member variables
-    wxStaticText* m_labIndex;
+    wxNotebook* m_ActionBook;
+    wxPanel* m_IndexPanel;
     wxListBox* m_TimedActions;
     wxTextCtrl* m_ActionID;
+    wxButton* m_Add;
+    wxButton* m_Del;
+    wxPanel* m_DefinitionPanel;
     wxStaticText* m_labType;
     wxChoice* m_Type;
     wxStaticText* m_labID;
@@ -152,9 +165,8 @@ public:
     wxStaticText* m_labMin;
     wxSpinCtrl* m_Min;
     wxCheckBox* m_Random;
-    wxButton* m_Add;
-    wxButton* m_Del;
-    wxButton* m_Modify;
+    wxPanel* m_UsePanel;
+    wxListBox* m_UseList;
     wxButton* m_OK;
     wxButton* m_Cancel;
     wxButton* m_Apply;

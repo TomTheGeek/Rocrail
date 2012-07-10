@@ -20,9 +20,11 @@
 #endif
 
 ////@begin includes
+#include "wx/imaglist.h"
 ////@end includes
 
 #include "timedactions.h"
+#include "actionsctrldlg.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -31,6 +33,7 @@
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Action.h"
+#include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/ActionList.h"
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/ExtCmd.h"
@@ -69,15 +72,16 @@ BEGIN_EVENT_TABLE( TimedActions, wxDialog )
 ////@begin TimedActions event table entries
     EVT_LISTBOX( ID_LB_TimedActions, TimedActions::OnLBTimedActionsSelected )
 
-    EVT_CHOICE( ID_ACTIONS_TYPE, TimedActions::OnActionsTypeSelected )
-
-    EVT_BUTTON( ID_ACTIONS_EXEC_CMD, TimedActions::OnActionsExecCmdClick )
-
     EVT_BUTTON( ID_BT_ADD, TimedActions::OnBtAddClick )
 
     EVT_BUTTON( ID_BT_DEL, TimedActions::OnBtDelClick )
 
-    EVT_BUTTON( ID_BT_MODIFY, TimedActions::OnBtModifyClick )
+    EVT_CHOICE( ID_ACTIONS_TYPE, TimedActions::OnActionsTypeSelected )
+
+    EVT_BUTTON( ID_ACTIONS_EXEC_CMD, TimedActions::OnActionsExecCmdClick )
+
+    EVT_LISTBOX( ID_USELIST, TimedActions::OnUselistSelected )
+    EVT_LISTBOX_DCLICK( ID_USELIST, TimedActions::OnUselistDoubleClicked )
 
     EVT_BUTTON( wxID_OK, TimedActions::OnOkClick )
 
@@ -116,14 +120,17 @@ TimedActions::TimedActions( wxWindow* parent )
 }
 
 void TimedActions::initLabels() {
+  m_ActionBook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
+  m_ActionBook->SetPageText( 1, wxGetApp().getMsg( "definition" ) );
+  m_ActionBook->SetPageText( 2, wxGetApp().getMsg( "usage" ) );
+
+
     m_Add->SetLabel( wxGetApp().getMsg( "new" ) );
     m_labCommand->SetLabel( wxGetApp().getMsg( "command" ) );
-    m_labIndex->SetLabel( wxGetApp().getMsg( "index" ) );
     m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
     m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
     m_labHour->SetLabel( wxGetApp().getMsg( "hour" ) );
     m_labMin->SetLabel( wxGetApp().getMsg( "minute" ) );
-    m_Modify->SetLabel( wxGetApp().getMsg( "modify" ) );
     m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
     m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
     m_Apply->SetLabel( wxGetApp().getMsg( "apply" ) );
@@ -207,6 +214,30 @@ void TimedActions::initValues() {
   m_ID->SetStringSelection( wxString( wAction.getoid( m_Props), wxConvUTF8) );
   m_Timer->SetValue( wAction.gettimer( m_Props) );
 
+  initUse();
+
+}
+
+void TimedActions::initUse() {
+  TraceOp.trc( "scdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitUse" );
+  m_UseList->Clear();
+  // TODO: Update the use tab.
+  iONode model = wxGetApp().getModel();
+  TraceOp.trc( "scdlg", TRCLEVEL_INFO, __LINE__, 9999, "find objects..." );
+  for( int i = 0; i < NodeOp.getChildCnt(model); i++ ) {
+    iONode list = NodeOp.getChild(model, i);
+    for( int n = 0; n < NodeOp.getChildCnt(list); n++ ) {
+      iONode child = NodeOp.getChild(list, n);
+      iONode ctrl = NodeOp.findNode( child, wActionCtrl.name() );
+      while( ctrl != NULL ) {
+        if( StrOp.equals( wActionCtrl.getid(ctrl), wAction.getid( m_Props ) ) ) {
+          m_UseList->Append( wxString(wItem.getid(child),wxConvUTF8) + _T(" (") + wxString(NodeOp.getName(child),wxConvUTF8) + _T(")"), child );
+          break;
+        }
+        ctrl = NodeOp.findNextNode( child, ctrl );
+      }
+    }
+  }
 }
 
 
@@ -412,9 +443,13 @@ TimedActions::~TimedActions()
 void TimedActions::Init()
 {
 ////@begin TimedActions member initialisation
-    m_labIndex = NULL;
+    m_ActionBook = NULL;
+    m_IndexPanel = NULL;
     m_TimedActions = NULL;
     m_ActionID = NULL;
+    m_Add = NULL;
+    m_Del = NULL;
+    m_DefinitionPanel = NULL;
     m_labType = NULL;
     m_Type = NULL;
     m_labID = NULL;
@@ -435,9 +470,8 @@ void TimedActions::Init()
     m_labMin = NULL;
     m_Min = NULL;
     m_Random = NULL;
-    m_Add = NULL;
-    m_Del = NULL;
-    m_Modify = NULL;
+    m_UsePanel = NULL;
+    m_UseList = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
     m_Apply = NULL;
@@ -457,122 +491,137 @@ void TimedActions::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    m_labIndex = new wxStaticText( itemDialog1, wxID_ANY, _("Index"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer2->Add(m_labIndex, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
+    m_ActionBook = new wxNotebook( itemDialog1, ID_ACTIONBOOK, wxDefaultPosition, wxDefaultSize, wxBK_DEFAULT );
+
+    m_IndexPanel = new wxPanel( m_ActionBook, ID_INDEXPANEL, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
+    m_IndexPanel->SetSizer(itemBoxSizer5);
 
     wxArrayString m_TimedActionsStrings;
-    m_TimedActions = new wxListBox( itemDialog1, ID_LB_TimedActions, wxDefaultPosition, wxSize(200, 100), m_TimedActionsStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
-    itemBoxSizer2->Add(m_TimedActions, 1, wxGROW|wxALL, 5);
+    m_TimedActions = new wxListBox( m_IndexPanel, ID_LB_TimedActions, wxDefaultPosition, wxSize(200, 100), m_TimedActionsStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
+    itemBoxSizer5->Add(m_TimedActions, 1, wxGROW|wxALL, 5);
 
-    m_ActionID = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer2->Add(m_ActionID, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_ActionID = new wxTextCtrl( m_IndexPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer5->Add(m_ActionID, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer6->AddGrowableCol(1);
-    itemBoxSizer2->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
+    wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer5->Add(itemBoxSizer8, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_Add = new wxButton( m_IndexPanel, ID_BT_ADD, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer8->Add(m_Add, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_labType = new wxStaticText( itemDialog1, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labType, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_Del = new wxButton( m_IndexPanel, ID_BT_DEL, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer8->Add(m_Del, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_ActionBook->AddPage(m_IndexPanel, _("Index"));
+
+    m_DefinitionPanel = new wxPanel( m_ActionBook, ID_DEFINITIONPANEL, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    wxBoxSizer* itemBoxSizer12 = new wxBoxSizer(wxVERTICAL);
+    m_DefinitionPanel->SetSizer(itemBoxSizer12);
+
+    wxFlexGridSizer* itemFlexGridSizer13 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemBoxSizer12->Add(itemFlexGridSizer13, 0, wxGROW|wxALL, 5);
+    m_labType = new wxStaticText( m_DefinitionPanel, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer13->Add(m_labType, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxArrayString m_TypeStrings;
-    m_Type = new wxChoice( itemDialog1, ID_ACTIONS_TYPE, wxDefaultPosition, wxDefaultSize, m_TypeStrings, 0 );
-    itemFlexGridSizer6->Add(m_Type, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_Type = new wxChoice( m_DefinitionPanel, ID_ACTIONS_TYPE, wxDefaultPosition, wxDefaultSize, m_TypeStrings, 0 );
+    itemFlexGridSizer13->Add(m_Type, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_labID = new wxStaticText( itemDialog1, wxID_ANY, _("ID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_labID = new wxStaticText( m_DefinitionPanel, wxID_ANY, _("ID"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer13->Add(m_labID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxArrayString m_IDStrings;
-    m_ID = new wxChoice( itemDialog1, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_IDStrings, 0 );
-    itemFlexGridSizer6->Add(m_ID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_ID = new wxChoice( m_DefinitionPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_IDStrings, 0 );
+    itemFlexGridSizer13->Add(m_ID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_labCommand = new wxStaticText( itemDialog1, wxID_ANY, _("Command"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labCommand, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_labCommand = new wxStaticText( m_DefinitionPanel, wxID_ANY, _("Command"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer13->Add(m_labCommand, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer12 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer12->AddGrowableCol(0);
-    itemFlexGridSizer6->Add(itemFlexGridSizer12, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5);
-
+    wxFlexGridSizer* itemFlexGridSizer19 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer13->Add(itemFlexGridSizer19, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5);
     wxArrayString m_CommandStrings;
-    m_Command = new wxComboBox( itemDialog1, ID_COMBOBOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_CommandStrings, wxCB_DROPDOWN );
-    itemFlexGridSizer12->Add(m_Command, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_Command = new wxComboBox( m_DefinitionPanel, ID_COMBOBOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_CommandStrings, wxCB_DROPDOWN );
+    itemFlexGridSizer19->Add(m_Command, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_ExecCmd = new wxButton( itemDialog1, ID_ACTIONS_EXEC_CMD, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
-    itemFlexGridSizer12->Add(m_ExecCmd, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM, 5);
+    m_ExecCmd = new wxButton( m_DefinitionPanel, ID_ACTIONS_EXEC_CMD, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
+    itemFlexGridSizer19->Add(m_ExecCmd, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM, 5);
 
-    m_labParam = new wxStaticText( itemDialog1, wxID_ANY, _("Parameter"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labParam, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer19->AddGrowableCol(0);
 
-    m_Parameter = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, 80), wxTE_MULTILINE );
-    itemFlexGridSizer6->Add(m_Parameter, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_labParam = new wxStaticText( m_DefinitionPanel, wxID_ANY, _("Parameter"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer13->Add(m_labParam, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_labDuration = new wxStaticText( itemDialog1, wxID_ANY, _("Duration"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labDuration, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    m_Parameter = new wxTextCtrl( m_DefinitionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, 80), wxTE_MULTILINE );
+    itemFlexGridSizer13->Add(m_Parameter, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_ActTime = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
-    itemFlexGridSizer6->Add(m_ActTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    m_labDuration = new wxStaticText( m_DefinitionPanel, wxID_ANY, _("Duration"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer13->Add(m_labDuration, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_labTimer = new wxStaticText( itemDialog1, wxID_ANY, _("Timer"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labTimer, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_ActTime = new wxSpinCtrl( m_DefinitionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
+    itemFlexGridSizer13->Add(m_ActTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Timer = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 0 );
-    itemFlexGridSizer6->Add(m_Timer, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_labTimer = new wxStaticText( m_DefinitionPanel, wxID_ANY, _("Timer"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer13->Add(m_labTimer, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStaticBox* itemStaticBoxSizer21Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Activation time"));
-    wxStaticBoxSizer* itemStaticBoxSizer21 = new wxStaticBoxSizer(itemStaticBoxSizer21Static, wxHORIZONTAL);
-    itemBoxSizer2->Add(itemStaticBoxSizer21, 0, wxGROW|wxALL, 5);
+    m_Timer = new wxSpinCtrl( m_DefinitionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 0 );
+    itemFlexGridSizer13->Add(m_Timer, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_Timed = new wxCheckBox( itemDialog1, wxID_ANY, _("Use"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer13->AddGrowableCol(1);
+
+    wxStaticBox* itemStaticBoxSizer28Static = new wxStaticBox(m_DefinitionPanel, wxID_ANY, _("Activation time"));
+    wxStaticBoxSizer* itemStaticBoxSizer28 = new wxStaticBoxSizer(itemStaticBoxSizer28Static, wxHORIZONTAL);
+    itemBoxSizer12->Add(itemStaticBoxSizer28, 0, wxGROW|wxALL, 5);
+    m_Timed = new wxCheckBox( m_DefinitionPanel, wxID_ANY, _("Use"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Timed->SetValue(false);
-    itemStaticBoxSizer21->Add(m_Timed, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
+    itemStaticBoxSizer28->Add(m_Timed, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    m_Every = new wxCheckBox( itemDialog1, wxID_ANY, _("every"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Every = new wxCheckBox( m_DefinitionPanel, wxID_ANY, _("every"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Every->SetValue(false);
-    itemStaticBoxSizer21->Add(m_Every, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
+    itemStaticBoxSizer28->Add(m_Every, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    m_labHour = new wxStaticText( itemDialog1, wxID_ANY, _("Hour"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer21->Add(m_labHour, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
+    m_labHour = new wxStaticText( m_DefinitionPanel, wxID_ANY, _("Hour"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer28->Add(m_labHour, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    m_Hour = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
-    itemStaticBoxSizer21->Add(m_Hour, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
+    m_Hour = new wxSpinCtrl( m_DefinitionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
+    itemStaticBoxSizer28->Add(m_Hour, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
-    m_labMin = new wxStaticText( itemDialog1, wxID_ANY, _("Minute"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer21->Add(m_labMin, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
+    m_labMin = new wxStaticText( m_DefinitionPanel, wxID_ANY, _("Minute"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer28->Add(m_labMin, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    m_Min = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 59, 0 );
-    itemStaticBoxSizer21->Add(m_Min, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
+    m_Min = new wxSpinCtrl( m_DefinitionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 59, 0 );
+    itemStaticBoxSizer28->Add(m_Min, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
-    m_Random = new wxCheckBox( itemDialog1, wxID_ANY, _("Random"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Random = new wxCheckBox( m_DefinitionPanel, wxID_ANY, _("Random"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Random->SetValue(false);
-    itemStaticBoxSizer21->Add(m_Random, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
+    itemStaticBoxSizer28->Add(m_Random, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    wxBoxSizer* itemBoxSizer29 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer2->Add(itemBoxSizer29, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_ActionBook->AddPage(m_DefinitionPanel, _("Definition"));
 
-    m_Add = new wxButton( itemDialog1, ID_BT_ADD, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer29->Add(m_Add, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_UsePanel = new wxPanel( m_ActionBook, ID_USEPANEL, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    wxBoxSizer* itemBoxSizer37 = new wxBoxSizer(wxVERTICAL);
+    m_UsePanel->SetSizer(itemBoxSizer37);
 
-    m_Del = new wxButton( itemDialog1, ID_BT_DEL, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer29->Add(m_Del, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxArrayString m_UseListStrings;
+    m_UseList = new wxListBox( m_UsePanel, ID_USELIST, wxDefaultPosition, wxDefaultSize, m_UseListStrings, wxLB_SINGLE );
+    itemBoxSizer37->Add(m_UseList, 1, wxGROW|wxALL, 5);
 
-    m_Modify = new wxButton( itemDialog1, ID_BT_MODIFY, _("Modify"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer29->Add(m_Modify, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_ActionBook->AddPage(m_UsePanel, _("Use"));
 
-    wxStaticLine* itemStaticLine33 = new wxStaticLine( itemDialog1, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-    itemBoxSizer2->Add(itemStaticLine33, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(m_ActionBook, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer34 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer39 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer34, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer39, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer34->AddButton(m_OK);
+    itemStdDialogButtonSizer39->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer34->AddButton(m_Cancel);
+    itemStdDialogButtonSizer39->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer34->AddButton(m_Apply);
+    itemStdDialogButtonSizer39->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer34->Realize();
+    itemStdDialogButtonSizer39->Realize();
 
 ////@end TimedActions content construction
 }
@@ -753,17 +802,6 @@ void TimedActions::OnBtDelClick( wxCommandEvent& event )
 
 
 /*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BT_MODIFY
- */
-
-void TimedActions::OnBtModifyClick( wxCommandEvent& event )
-{
-  evaluate();
-  initIndex();
-}
-
-
-/*!
  * wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_ACTIONS_TYPE
  */
 
@@ -880,4 +918,36 @@ void TimedActions::OnActionsExecCmdClick( wxCommandEvent& event )
     m_Command->SetValue( fdlg->GetPath() );
   }
   fdlg->Destroy();}
+
+
+/*!
+ * wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_USELIST
+ */
+
+void TimedActions::OnUselistSelected( wxCommandEvent& event )
+{
+////@begin wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_USELIST in TimedActions.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_USELIST in TimedActions. 
+}
+
+
+/*!
+ * wxEVT_COMMAND_LISTBOX_DOUBLECLICKED event handler for ID_USELIST
+ */
+
+void TimedActions::OnUselistDoubleClicked( wxCommandEvent& event )
+{
+  iONode node = (iONode)m_UseList->GetClientData(m_UseList->GetSelection());
+  if( node != NULL ) {
+    ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, node );
+
+    if( wxID_OK == dlg->ShowModal() ) {
+      // TODO: inform
+    }
+
+    dlg->Destroy();
+  }
+}
 
