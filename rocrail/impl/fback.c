@@ -370,7 +370,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
     StrOp.free( strNode );
   }
 
-  if( wFeedback.getaddr(nodeC) == wFeedback.getcutoutaddr(data->props) ) {
+  if( wFeedback.getcutoutaddr(data->props) > 0 && wFeedback.getaddr(nodeC) == wFeedback.getcutoutaddr(data->props) ) {
     data->shortcut = state;
     wFeedback.setshortcut(data->props, state);
     TraceOp.trc( name, state ? TRCLEVEL_EXCEPTION:TRCLEVEL_INFO, __LINE__, 9999,
