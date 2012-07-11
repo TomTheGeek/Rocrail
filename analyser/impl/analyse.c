@@ -135,18 +135,18 @@ static void __del( void* inst ) {
       iONode item = (iONode) ListOp.first(plist);
       while (item != NULL) {
         if( item != NULL ) {
-          StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
+          StrOp.fmtb(delkey, "0x%08X", (void*)item);
           if(!MapOp.haskey(delMap, delkey)) {
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) item)->name(), (unsigned int)item);
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) item)->name(), (void*)item);
             MapOp.put(delMap, delkey, (obj)delkey);
             NodeOp.base.del(item);
           }
         }
         item = (iONode) ListOp.next(plist);
       }
-      StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
+      StrOp.fmtb(delkey, "0x%08X", (void*)item);
       if(!MapOp.haskey(delMap, delkey)) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) plist)->name(), (unsigned int)plist);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) plist)->name(), (void*)plist);
         MapOp.put(delMap, delkey, (obj)delkey);
         ListOp.base.del(plist);
       }
@@ -155,9 +155,9 @@ static void __del( void* inst ) {
 
     iONode item = (iONode) ListOp.first(data->bklist);
     while (item != NULL) {
-      StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
+      StrOp.fmtb(delkey, "0x%08X", (void*)item);
       if(!MapOp.haskey(delMap, delkey)) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) item)->name(), (unsigned int)item);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) item)->name(), (void*)item);
         MapOp.put(delMap, delkey, (obj)delkey);
         NodeOp.base.del(item);
       }
@@ -168,17 +168,17 @@ static void __del( void* inst ) {
     while (occlist) {
       iONode item = (iONode) ListOp.first(occlist);
       while (item) {
-        StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
+        StrOp.fmtb(delkey, "0x%08X", (void*)item);
         if(!MapOp.haskey(delMap, delkey)) {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) item)->name(), (unsigned int)item);
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) item)->name(), (void*)item);
           MapOp.put(delMap, delkey, (obj)delkey);
           NodeOp.base.del(item);
         }
         item = (iONode) ListOp.next(occlist);
       }
-      StrOp.fmtb(delkey, "0x%08X", (unsigned int)item);
+      StrOp.fmtb(delkey, "0x%08X", (void*)item);
       if(!MapOp.haskey(delMap, delkey)) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) occlist)->name(), (unsigned int)occlist);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "delete %s[0x%08X]", ((obj) occlist)->name(), (void*)occlist);
         MapOp.put(delMap, delkey, (obj)delkey);
         ListOp.base.del(occlist);
       }
@@ -1278,8 +1278,8 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
     }
   }
 
-  if( (!StrOp.equals(NodeOp.getName(item) , "bk" ) ) ||
-      (depth == 0 && StrOp.equals(NodeOp.getName(item) , "bk" )) ) {
+  if( (!StrOp.equals(NodeOp.getName(item) , "bk" ) && !StrOp.equals(NodeOp.getName(item) , "seltab" ) ) ||
+      (depth == 0 && (StrOp.equals(NodeOp.getName(item) , "bk" ) || StrOp.equals(NodeOp.getName(item) , "seltab" )) ) ) {
     /* ADD TO LIST */
     iONode itemA = (iONode)NodeOp.base.clone( item);
     wItem.setstate(itemA, state);
