@@ -502,31 +502,15 @@ void Symbol::sizeToScale() {
   int x_off, y_off;
   m_PlanPanel->GetViewStart( &x_off, &y_off );
 
-  int x = 0;
-  int y = 0;
-
-  int mod_x = wItem.getx( m_Props );
-  int mod_y = wItem.gety( m_Props );
-
   int z = wItem.getz( m_Props );
 
   const char* name = NodeOp.getName( m_Props );
 
-  x = NodeOp.getInt(m_Props, "prev_x", mod_x);
-  y = NodeOp.getInt(m_Props, "prev_y", mod_y);
-
   const char* mod_ori = wItem.getori(m_Props);
   const char* ori     = NodeOp.getStr(m_Props, "prev_ori", mod_ori);
   if( wxGetApp().isModView() || !wxGetApp().isForceTabView() ) {
-    x = mod_x;
-    y = mod_y;
     ori = mod_ori;
   }
-
-  x -= x_off;
-  y -= y_off;
-
-
 
   if( m_Z != z ) {
     Show( false );
@@ -715,8 +699,25 @@ void Symbol::setPosition() {
 
   int x_off, y_off;
   m_PlanPanel->GetViewStart( &x_off, &y_off );
-  double x = wItem.getx( m_Props ) - x_off;
-  double y = wItem.gety( m_Props ) - y_off;
+
+  int org_x = 0;
+  int org_y = 0;
+
+  int mod_x = wItem.getx( m_Props );
+  int mod_y = wItem.gety( m_Props );
+
+  int z = wItem.getz( m_Props );
+
+  org_x = NodeOp.getInt(m_Props, "prev_x", mod_x);
+  org_y = NodeOp.getInt(m_Props, "prev_y", mod_y);
+
+  if( wxGetApp().isModView() || !wxGetApp().isForceTabView() ) {
+    org_x = mod_x;
+    org_y = mod_y;
+  }
+
+  double x = org_x - x_off;
+  double y = org_y - y_off;
   x = x * c;
   y = y * c;
 

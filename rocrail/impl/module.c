@@ -217,8 +217,14 @@ static void __getItemSize( iONode item, int* iCX, int* iCY, Boolean defSize ) {
         *iCY = defOri ? 1:2;
       }
       else if( StrOp.equals( wSwitch.crossing, wSwitch.gettype(item) ) ) {
-        *iCX = defOri ? 2:1;
-        *iCY = defOri ? 1:2;
+        if( ( wSwitch.getaddr1(item) == 0 ) && ( wSwitch.getport1(item) == 0 ) ) {
+          /* a crossing without an address is just a 1x1 cross */
+          /* do nothing, keep defaults */
+        }
+        else {
+          *iCX = defOri ? 2:1;
+          *iCY = defOri ? 1:2;
+        }
       }
       else if( StrOp.equals( wSwitch.ccrossing, wSwitch.gettype(item) ) ) {
         *iCX = defOri ? 2:1;
