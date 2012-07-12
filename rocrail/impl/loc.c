@@ -1207,6 +1207,8 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
 
   if( function != -1 )
     wFunCmd.setfnchanged( fncmd, function );
+  else if( timedfn != -1 )
+    wFunCmd.setfnchanged( fncmd, timedfn );
 
   wFunCmd.setid ( fncmd, wLoc.getid(data->props) );
   wFunCmd.setf0 ( fncmd, timedfn== 0?False:data->fn0 );
