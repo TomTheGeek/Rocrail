@@ -2001,8 +2001,28 @@ static void __analyseList(iOAnalyse inst) {
           wItem.setrouteids(tracknode, wRoute.getid( newRoute) );
         }
 
-        if( cleanrun) {
-          wItem.setrouteids(tracknode, "" );
+        if( cleanrun ) {
+          /* remove all "autogen-"-routeids */
+          const char *prevrouteids = wItem.getrouteids(tracknode);
+          char *userrouteids = "";
+
+          if( prevrouteids != NULL ) {
+            iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
+            while ( StrTokOp.hasMoreTokens( tok )) {
+              const char * token = StrTokOp.nextToken( tok );
+              // check if id starts with autogen- 
+              if( ( StrOp.len(token) > 0 ) && ( ! StrOp.startsWith( token, "autogen-") ) ) {
+                /* not "autogen-" so append to new list*/
+                if( StrOp.len(userrouteids)>0 ) {
+                  userrouteids = StrOp.cat( userrouteids, ",");
+                }
+                userrouteids = StrOp.cat( userrouteids, token );
+              }
+            }
+            StrTokOp.base.del(tok);
+          }
+          wItem.setrouteids(tracknode, userrouteids );
+          StrOp.free(userrouteids);
         }
       } // tk || fb || sw
 
