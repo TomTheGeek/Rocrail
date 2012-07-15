@@ -508,7 +508,7 @@ void Symbol::sizeToScale() {
 
   const char* mod_ori = wItem.getori(m_Props);
   const char* ori     = NodeOp.getStr(m_Props, "prev_ori", mod_ori);
-  if( wxGetApp().isModView() || !wxGetApp().isForceTabView() ) {
+  if( wxGetApp().isModView() || !wxGetApp().isForceTabView() || wxGetApp().isTabViewRotated() ) {
     ori = mod_ori;
   }
 
@@ -681,7 +681,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
 
     const char* mod_ori = wItem.getori(m_Props);
     const char* ori     = NodeOp.getStr(m_Props, "prev_ori", mod_ori);
-    if( wxGetApp().isModView() || !wxGetApp().isForceTabView() ) {
+    if( wxGetApp().isModView() || !wxGetApp().isForceTabView() || wxGetApp().isTabViewRotated() ) {
       ori = mod_ori;
     }
 
@@ -711,7 +711,7 @@ void Symbol::setPosition() {
   org_x = NodeOp.getInt(m_Props, "prev_x", mod_x);
   org_y = NodeOp.getInt(m_Props, "prev_y", mod_y);
 
-  if( wxGetApp().isModView() || !wxGetApp().isForceTabView() ) {
+  if( wxGetApp().isModView() || !wxGetApp().isForceTabView() || wxGetApp().isTabViewRotated() ) {
     org_x = mod_x;
     org_y = mod_y;
   }

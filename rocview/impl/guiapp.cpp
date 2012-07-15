@@ -566,6 +566,11 @@ bool RocGui::OnInit() {
   const char* tp      = CmdLnOp.getStr( m_CmdLn, wCmdline.themespath );
   const char* lang    = CmdLnOp.getStr( m_CmdLn, wCmdline.langfile );
   m_bForceTabView     = CmdLnOp.hasKey(m_CmdLn, wCmdline.tabview);
+  m_bTabViewRotated   = CmdLnOp.hasKey(m_CmdLn, wCmdline.tabviewrotated);
+
+  if( m_bTabViewRotated ) {
+    m_bForceTabView = true;
+  }
 
   // check for plan file:
   readArgs(lang);

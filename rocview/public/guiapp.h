@@ -81,6 +81,7 @@ public:
   bool isInit() { return m_bInit; }
   bool isRestrictedEdit();
   bool isForceTabView() { return m_bForceTabView; }
+  bool isTabViewRotated() { return m_bTabViewRotated; }
   const char* findID(bool output, int addr);
 
   iORCon        m_RCon;
@@ -110,6 +111,7 @@ private:
   bool          m_LocalModelModified;
   bool          m_bModView;
   bool          m_bForceTabView;
+  bool          m_bTabViewRotated;
   iORes         m_Res;
   iOWrpInf      m_WrpInf;
   bool          m_bInit;
