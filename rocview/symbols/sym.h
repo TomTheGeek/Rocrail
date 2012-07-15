@@ -157,6 +157,9 @@ namespace switchtype {
   static const char* twoway_tl_occ = "twoway-tl-occ.svg";
   static const char* twoway_tr_occ = "twoway-tr-occ.svg";
 
+  static const char* road_twoway_tr = "road-twoway-tr.svg";
+  static const char* road_twoway_tl = "road-twoway-tl.svg";
+
   static const char* decoupler        = "decoupler.svg";
   static const char* decoupler_on     = "decoupler-on.svg";
   static const char* decoupler_occ    = "decoupler-occ.svg";
@@ -392,6 +395,10 @@ namespace blocktype {
   static const char* road_block_occ = "road-block-occ.svg";
   static const char* road_block_res = "road-block-res.svg";
   static const char* road_block_ent = "road-block-ent.svg";
+  static const char* road_block_s     = "road-block-s.svg";
+  static const char* road_block_occ_s = "road-block-occ-s.svg";
+  static const char* road_block_res_s = "road-block-res-s.svg";
+  static const char* road_block_ent_s = "road-block-ent-s.svg";
 
   static const int i_block = 1;
 }
