@@ -158,6 +158,7 @@ void TrackDialog::initLabels() {
   m_Type->Append( wxString(wTrack.buffer,wxConvUTF8) );
   m_Type->Append( wxString(wTrack.connector,wxConvUTF8) );
   m_Type->Append( wxString(wTrack.tracknr,wxConvUTF8) );
+  m_Type->Append( wxString(wTrack.curve90,wxConvUTF8) );
 
   // Location
   m_LabelX->SetLabel( wxGetApp().getMsg( "x" ) );
