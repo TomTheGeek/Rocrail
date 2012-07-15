@@ -466,6 +466,8 @@ static int __dccSteps(int steps) {
   return 0x08;
 }
 
+#define PTIME  500
+
 static iONode __translate( iOZimoBin zimobin, iONode node ) {
   iOZimoBinData data = Data(zimobin);
   iONode rsp = NULL;
@@ -486,8 +488,14 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       delay = 0;
     }
 
-    int state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0:1;
     byte addrFormat = 0x00;
+    int state;
+
+    if( data->protver > 0 ) {
+      state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0:1;
+    } else {
+      state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 1:0;
+    }
 
     if( StrOp.equals( wSwitch.prot_M, wSwitch.getprot( node ) ) ) /* Motorola */
       addrFormat = 0x40;
@@ -562,15 +570,18 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
 
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
-    int action1 = 0x00;
-    int action2 = 0x00;
 
     int addr   = wOutput.getaddr( node );
     int port   = wOutput.getport( node );
     int gate   = wOutput.getgate( node );
-    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 1:0;
-
     byte addrFormat = 0x00;
+    int action;
+
+    if( data->protver > 0 ) {
+      action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x08:0x00;
+    } else {
+      action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x00:0x08;
+    }
 
     if( StrOp.equals( wOutput.prot_M, wOutput.getprot( node ) ) ) /* Motorola */
       addrFormat = 0x40;
@@ -582,8 +593,6 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     else if( addr == 0 && port > 0 )
       AddrOp.fromPADA( port, &addr, &port );
 
-    if( addr > 0 )
-      addr--;
     if( port > 0 )
       port--;
 
@@ -599,6 +608,7 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d:%d %s, 0x%02X", addr, port, gate, action?"red":"green", outa[6]);
 
     ThreadOp.post( data->transactor, (obj)outa );
+
   }
 
 
@@ -770,15 +780,20 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       outa[5] = 0;              /* addr low   0=use PT */
       outa[6] = cv / 256;       /* cv addr high */
       outa[7] = cv % 256;       /* cv addr low */
+      outa[8] = PTIME / 256;
+      outa[9] = PTIME % 256;
 
-      ThreadOp.post( data->transactor, (obj)outa );
+      MutexOp.wait( data->tmux );
+      QueueOp.post( data->tqueue, (obj)outa, normal );
+      MutexOp.post( data->tmux );
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d...", cv );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV %d...", cv );
     }
     else if( wProgram.getcmd( node ) == wProgram.set ) {
-      int cv = wProgram.getcv( node );
+
+      int cv    = wProgram.getcv( node );
       int value = wProgram.getvalue( node );
-      int addr = wProgram.getaddr( node );
+      int addr  = wProgram.getaddr( node );
 
 
       if( wProgram.ispom(node) ) {
@@ -794,10 +809,14 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
         outa[6] = cv / 256;       /* cv addr high */
         outa[7] = cv % 256;       /* cv addr low */
         outa[8] = value;          /* cv value */
+        outa[9] = PTIME / 256;
+        outa[10] = PTIME % 256;
 
-        ThreadOp.post( data->transactor, (obj)outa );
+        MutexOp.wait( data->tmux );
+        QueueOp.post( data->tqueue, (obj)outa, normal );
+        MutexOp.post( data->tmux );
 
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "POM: set CV%d of loc %d to %d...", cv, addr, value );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "POM: set CV %d of loc %d to %d...", cv, addr, value );
       } else {
         byte* outa = allocMem(32);
         byte  addrFormat = 0x80;  /* Only DCC */
@@ -811,10 +830,14 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
         outa[6] = cv / 256;       /* cv addr high */
         outa[7] = cv % 256;       /* cv addr low */
         outa[8] = value;          /* cv value */
+        outa[9] = PTIME / 256;
+        outa[10] = PTIME % 256;
 
-        ThreadOp.post( data->transactor, (obj)outa );
+        MutexOp.wait( data->tmux );
+        QueueOp.post( data->tqueue, (obj)outa, normal );
+        MutexOp.post( data->tmux );
 
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: set CV%d to %d...", cv, value );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: set CV %d to %d...", cv, value );
       }
     }
     else if(  wProgram.getcmd( node ) == wProgram.pton ) {
@@ -1319,7 +1342,7 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
             if ( len == 8 ) {
               int addr   = ((packet[4] & 0x3f) * 256) + packet[5];
               byte err   = packet[6];
-              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cv read addr=%d err=%s",addr ,__getErrCode(err) );
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV addr=%d err=%s",addr ,__getErrCode(err) );
             } else if ( len == 10 ) {
               iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
               int addr   = ((packet[4] & 0x3f) * 256) + packet[5];
@@ -1336,12 +1359,11 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
               if( data->listenerFun != NULL && data->listenerObj != NULL )
                 data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 
-              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cv read %d addr=%d cvaddr=%d val=%d",len, addr, cvaddr, val );
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV addr=%d cvaddr=%d val=%d",addr, cvaddr, val );
                                                   
             } else {
-              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cv read unknown length %d",len );
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV unknown length %d",len );
             }
-            ThreadOp.sleep( 50 );
             break;
           default:
             __send_ack(zimobin, seqid, msgt);
@@ -1950,8 +1972,6 @@ static struct OZimoBin* _inst( const iONode ini ,const iOTrace trc ) {
   data->fbmod    = wDigInt.getfbmod( ini );
   data->fboffset = wDigInt.getfboffset( ini );
   data->swtime   = wDigInt.getswtime( ini );
-
-  /* Use 'wrong' port for accessories if protver=0. */
   data->protver  = wDigInt.getprotver( ini );
 
   data->power = False;
