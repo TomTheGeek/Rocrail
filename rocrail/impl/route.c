@@ -60,6 +60,7 @@
 #include "rocrail/wrapper/public/PermExclude.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Item.h"
 
 static int instCnt = 0;
 static iOMutex __routeSem = NULL;
@@ -74,18 +75,37 @@ static const char* __id( void* inst ) {
 
 static void __ctcAction( void* inst, iONode evt ) {
   iORouteData data = Data(inst);
-  Boolean state = wFeedback.isstate(evt);
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ctc action %d", wFeedback.getaddr(evt));
 
-  if( wFeedback.getaddr(evt) == wRoute.getctcaddr1(data->props) ) {
-    data->ctc1 = state;
+  if( StrOp.equals( wFeedback.name(), NodeOp.getName( (iONode)evt ) ) ) {
+    Boolean state = wFeedback.isstate(evt);
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ctc action %d", wFeedback.getaddr(evt));
+
+    if( wFeedback.getaddr(evt) == wRoute.getctcaddr1(data->props) ) {
+      data->ctc1 = state;
+    }
+    else if( wFeedback.getaddr(evt) == wRoute.getctcaddr2(data->props) ) {
+      data->ctc2 = state;
+    }
+    else if( wFeedback.getaddr(evt) == wRoute.getctcaddr3(data->props) ) {
+      data->ctc3 = state;
+    }
   }
-  else if( wFeedback.getaddr(evt) == wRoute.getctcaddr2(data->props) ) {
-    data->ctc2 = state;
-  }
-  else if( wFeedback.getaddr(evt) == wRoute.getctcaddr3(data->props) ) {
-    data->ctc3 = state;
+  else if( StrOp.equals( wOutput.name(), NodeOp.getName( (iONode)evt ) ) ) {
+    Boolean state = StrOp.equals( wSwitch.turnout, wSwitch.getstate(evt)) | StrOp.equals( wOutput.on, wItem.getstate(evt));
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ctc action %s=%s", wOutput.getid(evt), wItem.getstate(evt));
+
+    if( wRoute.getctcoutput1(data->props) != NULL && StrOp.equals( wOutput.getid(evt), wRoute.getctcoutput1(data->props) ) ) {
+      data->ctc1 = state;
+    }
+    if( wRoute.getctcoutput2(data->props) != NULL && StrOp.equals( wOutput.getid(evt), wRoute.getctcoutput2(data->props) ) ) {
+      data->ctc2 = state;
+    }
+    if( wRoute.getctcoutput3(data->props) != NULL && StrOp.equals( wOutput.getid(evt), wRoute.getctcoutput3(data->props) ) ) {
+      data->ctc3 = state;
+    }
   }
 
   if( data->ctc2 && data->ctc3 ) {
@@ -102,7 +122,15 @@ static void __ctcAction( void* inst, iONode evt ) {
 
 
 static void* __event( void* inst, const void* evt ) {
+  iORouteData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "ctc event [%s] for route [%s] with status %s",
+      wItem.getid((iONode)evt), wRoute.getid( data->props ), wItem.getstate((iONode)evt));
+
   if( StrOp.equals( wFeedback.name(), NodeOp.getName( (iONode)evt ) ) ) {
+    __ctcAction(inst, (iONode)evt);
+  }
+  else if( StrOp.equals( wOutput.name(), NodeOp.getName( (iONode)evt ) ) ) {
     __ctcAction(inst, (iONode)evt);
   }
   return NULL;
@@ -171,6 +199,35 @@ static void __initCTC(iORoute inst, Boolean remove) {
       ModelOp.addFbKey( model, key, (obj)inst );
     StrOp.free(key);
   }
+
+  if( wRoute.getctcoutput1(data->props) != NULL && StrOp.len(wRoute.getctcoutput1(data->props)) > 0 ) {
+    iOOutput co = ModelOp.getOutput(model, wRoute.getctcoutput1(data->props));
+    if( co != NULL ) {
+      if( remove )
+        OutputOp.removeListener(co, (obj)inst);
+      else
+        OutputOp.addListener(co, (obj)inst);
+    }
+  }
+  if( wRoute.getctcoutput2(data->props) != NULL && StrOp.len(wRoute.getctcoutput2(data->props)) > 0 ) {
+    iOOutput co = ModelOp.getOutput(model, wRoute.getctcoutput2(data->props));
+    if( co != NULL ) {
+      if( remove )
+        OutputOp.removeListener(co, (obj)inst);
+      else
+        OutputOp.addListener(co, (obj)inst);
+    }
+  }
+  if( wRoute.getctcoutput3(data->props) != NULL && StrOp.len(wRoute.getctcoutput3(data->props)) > 0 ) {
+    iOOutput co = ModelOp.getOutput(model, wRoute.getctcoutput3(data->props));
+    if( co != NULL ) {
+      if( remove )
+        OutputOp.removeListener(co, (obj)inst);
+      else
+        OutputOp.addListener(co, (obj)inst);
+    }
+  }
+
 }
 
 

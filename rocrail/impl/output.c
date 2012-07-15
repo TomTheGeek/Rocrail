@@ -268,6 +268,8 @@ static void _event( iOOutput inst, iONode nodeC ) {
     AppOp.broadcastEvent( nodeD );
   }
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing %d listeners [%s]", ListOp.size( data->listeners ), wOutput.getid( data->props ) );
+
   {
     obj listener = ListOp.first( data->listeners );
     while( listener != NULL ) {

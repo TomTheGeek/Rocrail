@@ -1732,6 +1732,9 @@
         <const name="forwards" vt="string" val="forwards"/>
         <const name="reverse" vt="string" val="reverse"/>
         <!-- CTC Address -->
+        <var name="ctcoutput1" vt="string" defval="NULL" range="*" remark="CTC Output1"/>
+        <var name="ctcoutput2" vt="string" defval="NULL" range="*" remark="CTC Output2"/>
+        <var name="ctcoutput3" vt="string" defval="NULL" range="*" remark="CTC Output3"/>
         <var name="ctciid1" vt="string" defval="NULL" range="*" remark="Interface ID."/>
         <var name="ctcbus1" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
         <var name="ctcaddr1" vt="int" defval="0" range="0-*" required="true" remark="address"/>

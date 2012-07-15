@@ -146,7 +146,7 @@ static Boolean __sendRequest( iOVirtual virtual, byte* outin ) {
 /** */
 static iONode __translate( iOVirtual virtual, iONode node ) {
   iOVirtualData data = Data(virtual);
-  iONode rsp = NULL;
+  iONode rsp = (iONode)NodeOp.base.clone(node);
 
   /*
   char* cmdStr = NodeOp.base.toString(node);
@@ -443,7 +443,8 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
 
   if( nodeA != NULL ) {
     nodeB = __translate( (iOVirtual)inst, nodeA );
-
+    data->listenerFun( data->listenerObj, nodeB, TRCLEVEL_INFO );
+    nodeB = NULL;
     /* Cleanup Node1 */
     nodeA->base.del(nodeA);
   }
