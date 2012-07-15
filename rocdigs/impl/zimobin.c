@@ -1951,6 +1951,9 @@ static struct OZimoBin* _inst( const iONode ini ,const iOTrace trc ) {
   data->fboffset = wDigInt.getfboffset( ini );
   data->swtime   = wDigInt.getswtime( ini );
 
+  /* Use 'wrong' port for accessories if protver=0. */
+  data->protver  = wDigInt.getprotver( ini );
+
   data->power = False;
   data->halt = True;
   data->pt = False;

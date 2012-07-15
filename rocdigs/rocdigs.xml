@@ -271,6 +271,7 @@
     </fun>
     <data>
       <var name="ini" vt="iONode"/>
+      <var name="protver" vt="int"/>
       <var name="iid" vt="const char*"/>
       <var name="serial" vt="iOSerial"/>
       <var name="ctsretry" vt="int"/>
