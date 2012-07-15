@@ -1,0 +1,11 @@
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,5 L 31,5 L 31,26 L 0,26 z " />
+<path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 5,0 L 26,0 L 26,31 L 5,31 L 5,0 z " />
+    <!-- Grey -->
+<path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 7,31 L 24,31 L 24,0 L 7,0 z " />
+
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 0,7 L 31,7 L 31,24 L 0,24 z " />
+  </g>
+</svg>
