@@ -1304,7 +1304,7 @@
   </object>
 
 
-  <object name="Switch" interface="HtmlInt" use="node,mutex,thread" include="htmlint,route" remark="Switch object">
+  <object name="Switch" interface="HtmlInt" use="node,mutex,thread,list" include="htmlint,route" remark="Switch object">
     <typedef def="enum {SW_STRAIGHT=0,SW_TURNOUT,SW_LEFT,SW_RIGHT,SW_UNKNOWN} sw_state"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Switch node"/>
@@ -1381,6 +1381,14 @@
       <param name="inst" vt="this"/>
       <param name="state" vt="const char*" remark="State to compare with."/>
     </fun>
+    <fun name="addListener" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="listener" vt="obj"/>
+    </fun>
+    <fun name="removeListener" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="listener" vt="obj"/>
+    </fun>
     <data include="fback">
       <var name="id" vt="const char*"/>
       <var name="lockedId" vt="const char*"/>
@@ -1413,7 +1421,8 @@
       <var name="ctc1" vt="Boolean"/>
       <var name="ctc2" vt="Boolean"/>
       <var name="pendingflip" vt="Boolean"/>
-    </data>
+      <var name="listeners" vt="iOList"/>
+      </data>
   </object>
 
 
@@ -1469,7 +1478,7 @@
   </object>
 
 
-  <object name="Output" interface="HtmlInt" use="node" include="htmlint" remark="Common Output object">
+  <object name="Output" interface="HtmlInt" use="node,list" include="htmlint" remark="Common Output object">
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Output node"/>
     </fun>
@@ -1508,10 +1517,19 @@
       <param name="inst" vt="this"/>
       <param name="state" vt="const char*" remark="State to compare with."/>
     </fun>
+    <fun name="addListener" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="listener" vt="obj"/>
+    </fun>
+    <fun name="removeListener" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="listener" vt="obj"/>
+    </fun>
     <data>
       <var name="props" vt="iONode"/>
       <var name="addrKey" vt="char*" remark="Address key"/>
-    </data>
+      <var name="listeners" vt="iOList"/>
+      </data>
   </object>
 
 

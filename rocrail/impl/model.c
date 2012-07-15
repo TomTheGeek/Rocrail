@@ -3166,7 +3166,7 @@ static void _event( iOModel inst, iONode nodeC ) {
         wAccessory.isaccevent(nodeC)?"accessory":"switch", bus, addr, port );
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "iterating switch list %d", ListOp.size(o->switchList) );
-    iOSwitch sw = (iOSwitch)ListOp.first(o->switchList);
+    obj sw = ListOp.first(o->switchList);
     while( sw != NULL ) {
       iONode props = SwitchOp.base.properties(sw);
 
@@ -3208,17 +3208,17 @@ static void _event( iOModel inst, iONode nodeC ) {
           wSwitch.getbus(props) == bus && matchaddr2 == addr && matchport2 == port )
       {
         matched = True;
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "matching sw", SwitchOp.getId(sw) );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "matching sw", sw->id(sw) );
 
         if( wSwitch.getiid(props) != "" && StrOp.equals(iid, wSwitch.getiid(props)) )
-          SwitchOp.event( sw, (iONode)NodeOp.base.clone(nodeC) );
+          sw->event( sw, (iONode)NodeOp.base.clone(nodeC) );
         else if( StrOp.len( wSwitch.getiid(props) ) == 0  && StrOp.equals( iid, defiid ) )
-          SwitchOp.event( sw, (iONode)NodeOp.base.clone(nodeC) );
+          sw->event( sw, (iONode)NodeOp.base.clone(nodeC) );
 
         NodeOp.base.del(nodeC);
         return;
       }
-      sw = (iOSwitch)ListOp.next(o->switchList);
+      sw = ListOp.next(o->switchList);
     }
 
     /* Try a signal object... */

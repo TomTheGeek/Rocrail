@@ -64,7 +64,8 @@ static Boolean __unregisterCallback( iOSwitch inst );
  ***** OBase functions.
  */
 static const char* __id( void* inst ) {
-  return NULL;
+  iOSwitchData data  = Data(inst);
+  return data->id;
 }
 
 static void __initCTC(iOSwitch inst, Boolean remove) {
@@ -270,6 +271,18 @@ static Boolean __equals( void* inst1, void* inst2 ) {
 static int __count(void) {
   return instCnt;
 }
+
+static Boolean _addListener( iOSwitch inst, obj listener ) {
+  iOSwitchData data = Data(inst);
+  ListOp.add( data->listeners, listener );
+  return True;
+}
+static Boolean _removeListener( iOSwitch inst, obj listener ) {
+  iOSwitchData data = Data(inst);
+  ListOp.removeObj( data->listeners, listener );
+  return True;
+}
+
 
 
 static void __checkAction( iOSwitch inst ) {
@@ -1291,6 +1304,16 @@ static void _event( iOSwitch inst, iONode nodeC ) {
         wSwitch.setlocid( nodeD, data->lockedId );
       AppOp.broadcastEvent( nodeD );
     }
+
+
+    {
+      obj listener = ListOp.first( data->listeners );
+      while( listener != NULL ) {
+        listener->event( listener, data->props );
+        listener = ListOp.next( data->listeners );
+      };
+    }
+
   }
 
   /* Cleanup Node3 */
@@ -1449,6 +1472,8 @@ static iOSwitch _inst( iONode props ) {
   data->muxCmd  = MutexOp.inst( NULL, True );
   data->id      = wSwitch.getid( props );
   data->accctrl = wSwitch.getaccessoryctrl(props);
+  data->listeners = ListOp.inst();
+
 
   if( __initCallback( sw ) ) {
     data->fbstate = SW_UNKNOWN;

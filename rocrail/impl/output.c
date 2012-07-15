@@ -268,6 +268,13 @@ static void _event( iOOutput inst, iONode nodeC ) {
     AppOp.broadcastEvent( nodeD );
   }
 
+  {
+    obj listener = ListOp.first( data->listeners );
+    while( listener != NULL ) {
+      listener->event( listener, data->props );
+      listener = ListOp.next( data->listeners );
+    };
+  }
 
 }
 
@@ -276,6 +283,18 @@ static const char* _getId( struct OOutput* inst ) {
   iOOutputData data = Data(inst);
   return wOutput.getid( data->props );
 }
+
+static Boolean _addListener( iOOutput inst, obj listener ) {
+  iOOutputData data = Data(inst);
+  ListOp.add( data->listeners, listener );
+  return True;
+}
+static Boolean _removeListener( iOOutput inst, obj listener ) {
+  iOOutputData data = Data(inst);
+  ListOp.removeObj( data->listeners, listener );
+  return True;
+}
+
 
 
 /**  */
@@ -286,6 +305,7 @@ static struct OOutput* _inst( iONode props ) {
 
   /* Initialize data->xxx members... */
   data->props = props;
+  data->listeners = ListOp.inst();
 
   data->addrKey = _createAddrKey(
     wOutput.getbus( props ),
