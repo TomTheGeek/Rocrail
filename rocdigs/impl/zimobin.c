@@ -711,9 +711,9 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     outa[8] = functions1;
     outa[9] = functions2;
 
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "loco: V=%d, dir=%s, lights=%s",
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco: V=%d, dir=%s, lights=%s",
         V, wLoc.isdir( node )?"fwd":"rev", wLoc.isfn( node )?"on":"off" );
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
         (f1?"ON":"OFF"), (f2?"ON":"OFF"), (f3?"ON":"OFF"), (f4?"ON":"OFF"),
         (f5?"ON":"OFF"), (f6?"ON":"OFF"), (f7?"ON":"OFF"), (f8?"ON":"OFF"),
@@ -1128,7 +1128,7 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
     wLoc.setV_rawMax( node, sstep );
     wLoc.setcmd( node, wLoc.velocity );
     wLoc.setthrottleid( node, sthrottleid );
-    data->listenerFun( data->listenerObj, node, TRCLEVEL_DEBUG );
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
   }
   {
     iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
@@ -1139,7 +1139,7 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
     wLoc.setfn( node, f0 ? True:False );
     wLoc.setcmd( node, wLoc.dirfun );
     wLoc.setthrottleid( node, sthrottleid );
-    data->listenerFun( data->listenerObj, node, TRCLEVEL_DEBUG );
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
   }
   {
     iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
@@ -1153,7 +1153,7 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
     wFunCmd.setf4( node, (f0108 & 0x08) ? True:False );
     wFunCmd.setgroup( node, 1 );
     wLoc.setthrottleid( node, sthrottleid );
-    data->listenerFun( data->listenerObj, node, TRCLEVEL_DEBUG );
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
   }
   {
     iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
@@ -1167,7 +1167,7 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
     wFunCmd.setf8( node, (f0108 & 0x80) ? True:False );
     wFunCmd.setgroup( node, 2 );
     wLoc.setthrottleid( node, sthrottleid );
-    data->listenerFun( data->listenerObj, node, TRCLEVEL_DEBUG );
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
   }
   {
     iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
@@ -1181,7 +1181,7 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
     wFunCmd.setf12( node, (f0912 & 0x08) ? True:False );
     wFunCmd.setgroup( node, 3 );
     wLoc.setthrottleid( node, sthrottleid );
-    data->listenerFun( data->listenerObj, node, TRCLEVEL_DEBUG );
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
   }
   StrOp.free(sthrottleid);
 }
