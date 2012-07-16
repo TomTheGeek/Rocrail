@@ -711,8 +711,8 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     outa[8] = functions1;
     outa[9] = functions2;
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco: V=%d, dir=%s, lights=%s",
-        V, wLoc.isdir( node )?"fwd":"rev", wLoc.isfn( node )?"on":"off" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco: V=%d, dir=%s, lights=%s nf=%s",
+        V, wLoc.isdir( node )?"fwd":"rev", wLoc.isfn( node )?"on":"off", NodeOp.getName( node ) );
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
         (f1?"ON":"OFF"), (f2?"ON":"OFF"), (f3?"ON":"OFF"), (f4?"ON":"OFF"),
@@ -1102,88 +1102,90 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
   int azbz      = locop[6];
   Boolean lakt  = locop[7];
 
-  char* sthrottleid = StrOp.fmt("zimo/%d", daddr);
+  if( data->protver > 0 ) {
+    char* sthrottleid = StrOp.fmt("zimo/%d", daddr);
 
-  switch (sstep) {
-    case 1:
-      sstep = 14;
-      break;
-    case 2:
-      sstep = 28;
-      break;
-    case 3:
-      sstep = 126;
-      break;
-    default:
-      sstep = 0;
-  }
+    switch (sstep) {
+      case 1:
+        sstep = 14;
+        break;
+      case 2:
+        sstep = 28;
+        break;
+      case 3:
+        sstep = 126;
+        break;
+      default:
+        sstep = 0;
+    }
 
-  /* inform listener */
-  {
-    iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    if( data->iid != NULL )
-      wLoc.setiid( node, data->iid );
-    wLoc.setaddr( node, daddr );
-    wLoc.setV_raw( node, cspeed );
-    wLoc.setV_rawMax( node, sstep );
-    wLoc.setcmd( node, wLoc.velocity );
-    wLoc.setthrottleid( node, sthrottleid );
-    data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
-  }
-  {
-    iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    if( data->iid != NULL )
-      wLoc.setiid( node, data->iid );
-    wLoc.setaddr( node, daddr );
-    wLoc.setdir( node, dir ? False:True );
-    wLoc.setfn( node, f0 ? True:False );
-    wLoc.setcmd( node, wLoc.dirfun );
-    wLoc.setthrottleid( node, sthrottleid );
-    data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
-  }
-  {
-    iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-    if( data->iid != NULL )
-      wLoc.setiid( node, data->iid );
-    wLoc.setaddr( node, daddr );
+    /* inform listener */
+    {
+      iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      if( data->iid != NULL )
+        wLoc.setiid( node, data->iid );
+      wLoc.setaddr( node, daddr );
+      wLoc.setV_raw( node, cspeed );
+      wLoc.setV_rawMax( node, sstep );
+      wLoc.setcmd( node, wLoc.velocity );
+      wLoc.setthrottleid( node, sthrottleid );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
+    }
+    {
+      iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      if( data->iid != NULL )
+        wLoc.setiid( node, data->iid );
+      wLoc.setaddr( node, daddr );
+      wLoc.setdir( node, dir ? False:True );
+      wLoc.setfn( node, f0 ? True:False );
+      wLoc.setcmd( node, wLoc.dirfun );
+      wLoc.setthrottleid( node, sthrottleid );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
+    }
+    {
+      iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      if( data->iid != NULL )
+        wLoc.setiid( node, data->iid );
+      wFunCmd.setaddr( node, daddr );
 
-    wFunCmd.setf1( node, (f0108 & 0x01) ? True:False );
-    wFunCmd.setf2( node, (f0108 & 0x02) ? True:False );
-    wFunCmd.setf3( node, (f0108 & 0x04) ? True:False );
-    wFunCmd.setf4( node, (f0108 & 0x08) ? True:False );
-    wFunCmd.setgroup( node, 1 );
-    wLoc.setthrottleid( node, sthrottleid );
-    data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
-  }
-  {
-    iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-    if( data->iid != NULL )
-      wLoc.setiid( node, data->iid );
-    wLoc.setaddr( node, daddr );
+      wFunCmd.setf1( node, (f0108 & 0x01) ? True:False );
+      wFunCmd.setf2( node, (f0108 & 0x02) ? True:False );
+      wFunCmd.setf3( node, (f0108 & 0x04) ? True:False );
+      wFunCmd.setf4( node, (f0108 & 0x08) ? True:False );
+      wFunCmd.setgroup( node, 1 );
+      wLoc.setthrottleid( node, sthrottleid );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
+    }
+    {
+      iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      if( data->iid != NULL )
+        wLoc.setiid( node, data->iid );
+      wFunCmd.setaddr( node, daddr );
 
-    wFunCmd.setf5( node, (f0108 & 0x10) ? True:False );
-    wFunCmd.setf6( node, (f0108 & 0x20) ? True:False );
-    wFunCmd.setf7( node, (f0108 & 0x40) ? True:False );
-    wFunCmd.setf8( node, (f0108 & 0x80) ? True:False );
-    wFunCmd.setgroup( node, 2 );
-    wLoc.setthrottleid( node, sthrottleid );
-    data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
-  }
-  {
-    iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-    if( data->iid != NULL )
-      wLoc.setiid( node, data->iid );
-    wLoc.setaddr( node, daddr );
+      wFunCmd.setf5( node, (f0108 & 0x10) ? True:False );
+      wFunCmd.setf6( node, (f0108 & 0x20) ? True:False );
+      wFunCmd.setf7( node, (f0108 & 0x40) ? True:False );
+      wFunCmd.setf8( node, (f0108 & 0x80) ? True:False );
+      wFunCmd.setgroup( node, 2 );
+      wLoc.setthrottleid( node, sthrottleid );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
+    }
+    {
+      iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      if( data->iid != NULL )
+        wLoc.setiid( node, data->iid );
+      wFunCmd.setaddr( node, daddr );
 
-    wFunCmd.setf9(  node, (f0912 & 0x01) ? True:False );
-    wFunCmd.setf10( node, (f0912 & 0x02) ? True:False );
-    wFunCmd.setf11( node, (f0912 & 0x04) ? True:False );
-    wFunCmd.setf12( node, (f0912 & 0x08) ? True:False );
-    wFunCmd.setgroup( node, 3 );
-    wLoc.setthrottleid( node, sthrottleid );
-    data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
+      wFunCmd.setf9(  node, (f0912 & 0x01) ? True:False );
+      wFunCmd.setf10( node, (f0912 & 0x02) ? True:False );
+      wFunCmd.setf11( node, (f0912 & 0x04) ? True:False );
+      wFunCmd.setf12( node, (f0912 & 0x08) ? True:False );
+      wFunCmd.setgroup( node, 3 );
+      wLoc.setthrottleid( node, sthrottleid );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
+    }
+    StrOp.free(sthrottleid);
   }
-  StrOp.free(sthrottleid);
 }
 
 static Boolean __ackHandler(iOZimoBin zimobin, byte* packet, int len) {
@@ -1565,7 +1567,7 @@ static void __packethandler( void* threadinst ) {
           {
             byte* outa = allocMem(128);
             MemOp.copy( outa+3, (byte*) out, packetlen);
-            outa[0] = 10;
+            outa[0] = 50;
             outa[1] = packettyp;
             outa[2] = packetlen;
             QueueOp.post( data->pqueue, (obj)outa, normal );
@@ -1781,6 +1783,7 @@ static void __transactor( void* threadinst ) {
   byte inbuf[512];
   int po = 1;
   int uics = 1;
+  int pscnt = 0;
 
   ThreadOp.setDescription( th, "Transactor for ZimoBin" );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Transactor started." );
@@ -1850,7 +1853,11 @@ static void __transactor( void* threadinst ) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx );
     }
 
-    post = ThreadOp.getPost( th );
+    if( pscnt++ % 10 ) {
+      post = NULL;
+    } else {
+      post = ThreadOp.getPost( th );
+    }
     if (post != NULL) {
       byte out[64];
 
@@ -1881,11 +1888,7 @@ static void __transactor( void* threadinst ) {
         byte* outa = allocMem(128);
         MemOp.copy( outa+3, (byte*) out, packetlen);
 
-        if ( data->pt ) {
-          outa[0] = 10;
-        } else {
-          outa[0] = 5;
-        }
+        outa[0] = 50;
         outa[1] = packettyp;
         outa[2] = packetlen;
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "write %d:%d message=0x%02X type=%d %d %d %d", outa[2], outa[3], outa[4], outa[5], outa[6], outa[7], outa[8] );
