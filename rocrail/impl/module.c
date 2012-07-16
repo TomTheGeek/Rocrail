@@ -259,8 +259,8 @@ static void __getItemSize( iONode item, int* iCX, int* iCY, Boolean defSize ) {
     }
     else if( StrOp.equals( wTurntable.name(), NodeOp.getName(item) ) ) {
       if( wTurntable.istraverser(item) ) {
-        *iCX = 4;
-        *iCY = 8;
+        *iCX = defOri ? 4:8;
+        *iCY = defOri ? 8:4;
       }
       else {
         *iCX = wTurntable.getsymbolsize(item);
@@ -395,6 +395,8 @@ static void _rotate180( iONode item, int cx, int cy ) {
 
   nX = rX - iX;
   nY = rY - iY;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Rotate 180 iX=%d iY=%d cx=%d cy=%d x=%d y=%d", iX, iY, iCX, iCY, nX, nY );
 
   wItem.setx( item, nX );
   wItem.sety( item, nY );

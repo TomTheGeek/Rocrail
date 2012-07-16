@@ -791,8 +791,7 @@ void SymbolRenderer::sizeToScale( double symsize, double scale, double bktext, i
     *cx = 4;
     *cy = 1;
   }
-  else if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
-
+  else if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) && !wTurntable.istraverser(m_Props) ) {
     int ttdiam = wTurntable.getsymbolsize( m_Props );
 
     if (ttdiam < 1)
@@ -885,13 +884,13 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
   if( StrOp.equals( wItem.north, ori ) && m_cy > 1) {
     yOffset = 32 * (m_cy-1);
   }
-  else if( StrOp.equals( wItem.east, ori ) && m_cx > 1) {
+  if( StrOp.equals( wItem.east, ori ) && m_cx > 1) {
     xOffset = 32 * (m_cx-1);
   }
-  else if( StrOp.equals( wItem.east, ori ) && m_cy > 1) {
+  if( StrOp.equals( wItem.east, ori ) && m_cy > 1) {
     yOffset = 32 * (m_cy-1);
   }
-  else if( StrOp.equals( wItem.south, ori ) && m_cx > 1) {
+  if( StrOp.equals( wItem.south, ori ) && m_cx > 1) {
     xOffset = 32 * (m_cx-1);
   }
   xOffset += xOff * 32;
