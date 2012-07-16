@@ -1974,31 +1974,32 @@ static void __analyseList(iOAnalyse inst) {
 
         }
 
-
-        const char * prevrouteids = wItem.getrouteids(tracknode);
-        if( prevrouteids != NULL ) {
-          iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
-          // check if id is all ready in the list
-          Boolean isInList = False;
-          while ( StrTokOp.hasMoreTokens( tok )) {
-            const char * token = StrTokOp.nextToken( tok );
-            if( StrOp.equals( token, wRoute.getid( newRoute))) {
-              isInList = True;
-            }
-          }
-
-          if( !isInList ) {
-              if( StrOp.len(prevrouteids)>0 ) {
-                prevrouteids = StrOp.cat( (char*)prevrouteids, ",");
+        if ( addToList ) {
+          const char * prevrouteids = wItem.getrouteids(tracknode);
+          if( prevrouteids != NULL ) {
+            iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
+            // check if id is all ready in the list
+            Boolean isInList = False;
+            while ( StrTokOp.hasMoreTokens( tok )) {
+              const char * token = StrTokOp.nextToken( tok );
+              if( StrOp.equals( token, wRoute.getid( newRoute))) {
+                isInList = True;
               }
-              char* newval = StrOp.cat( (char*)prevrouteids, wRoute.getid( newRoute) );
-              wItem.setrouteids(tracknode, newval );
-              StrOp.free(newval);
-          }
+            }
 
-          StrTokOp.base.del(tok);
-        } else { // empty attribute
-          wItem.setrouteids(tracknode, wRoute.getid( newRoute) );
+            if( !isInList ) {
+                if( StrOp.len(prevrouteids)>0 ) {
+                  prevrouteids = StrOp.cat( (char*)prevrouteids, ",");
+                }
+                char* newval = StrOp.cat( (char*)prevrouteids, wRoute.getid( newRoute) );
+                wItem.setrouteids(tracknode, newval );
+                StrOp.free(newval);
+            }
+
+            StrTokOp.base.del(tok);
+            } else { // empty attribute
+            wItem.setrouteids(tracknode, wRoute.getid( newRoute) );
+          }
         }
 
         if( cleanrun ) {
