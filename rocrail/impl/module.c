@@ -258,8 +258,14 @@ static void __getItemSize( iONode item, int* iCX, int* iCY, Boolean defSize ) {
       *iCY = defOri ? 1:wText.getcx(item);
     }
     else if( StrOp.equals( wTurntable.name(), NodeOp.getName(item) ) ) {
-      *iCX = 5;
-      *iCY = 5;
+      if( wTurntable.istraverser(item) ) {
+        *iCX = 4;
+        *iCY = 8;
+      }
+      else {
+        *iCX = wTurntable.getsymbolsize(item);
+        *iCY = wTurntable.getsymbolsize(item);
+      }
     }
   }
   else {
