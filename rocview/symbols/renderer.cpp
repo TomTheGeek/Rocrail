@@ -304,12 +304,19 @@ void SymbolRenderer::initSym() {
     else if( StrOp.equals( wSwitch.threeway, wSwitch.gettype( m_Props ) ) ) {
       m_iSymSubType = switchtype::i_threeway;
       if( m_SymMap != NULL ) {
-        m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway );
-        m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tl );
-        m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tr );
-        m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_occ );
-        m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tl_occ );
-        m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tr_occ );
+        if( wItem.isroad( m_Props ) ) {
+          m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_threeway );
+          m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_threeway_tl );
+          m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_threeway_tr );
+        }
+        else {
+          m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway );
+          m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tl );
+          m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tr );
+          m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_occ );
+          m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tl_occ );
+          m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tr_occ );
+        }
       }
     }
     else if( StrOp.equals( wSwitch.twoway, wSwitch.gettype( m_Props ) ) ) {
@@ -485,9 +492,9 @@ void SymbolRenderer::initSym() {
           }
           else {
             if( wItem.isroad( m_Props ) ) {
-              m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::road_signalmain_r );
-              m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::road_signalmain_y );
-              m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::road_signalmain_g );
+              m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::road_signalmain_dwarf_r:signaltype::road_signalmain_r );
+              m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::road_signalmain_dwarf_r:signaltype::road_signalmain_y );
+              m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::road_signalmain_dwarf_r:signaltype::road_signalmain_g );
             }
             else {
               m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_r:signaltype::signalmain_r );

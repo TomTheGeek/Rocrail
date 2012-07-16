@@ -154,6 +154,10 @@ namespace switchtype {
   static const char* threeway_tl_occ = "threeway-tl-occ.svg";
   static const char* threeway_tr_occ = "threeway-tr-occ.svg";
 
+  static const char* road_threeway    = "road-threeway.svg";
+  static const char* road_threeway_tl = "road-threeway-tl.svg";
+  static const char* road_threeway_tr = "road-threeway-tr.svg";
+
   static const char* twoway_tr     = "twoway-tr.svg";
   static const char* twoway_tl     = "twoway-tl.svg";
   static const char* twoway_tl_occ = "twoway-tl-occ.svg";
@@ -257,6 +261,10 @@ namespace signaltype {
   static const char* signalmain_dwarf_y_route = "signalmain-dwarf-y-route.svg";
   static const char* signalmain_dwarf_g_route = "signalmain-dwarf-g-route.svg";
   static const char* signalmain_dwarf_w_route = "signalmain-dwarf-w-route.svg";
+
+  static const char* road_signalmain_dwarf_r = "road-signalmain-dwarf-r.svg";
+  static const char* road_signalmain_dwarf_y = "road-signalmain-dwarf-y.svg";
+  static const char* road_signalmain_dwarf_g = "road-signalmain-dwarf-g.svg";
 
   static const char* signaldistant_r = "signaldistant-r.svg";
   static const char* signaldistant_y = "signaldistant-y.svg";
