@@ -84,6 +84,7 @@ Boolean liethConnect(obj xpressnet) {
 
   socket = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
   SocketOp.setRcvTimeout( socket, wDigInt.gettimeout(data->ini) / 1000);
+  SocketOp.setNodelay( socket, True );
 
   if ( SocketOp.connect( socket ) ) {
     data->socket = socket;
