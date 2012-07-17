@@ -42,6 +42,21 @@ soh soh seq ack pri seq crc8 eot
 01  01  80  40  00  21  7e   17
 */
 
+/* data->protver 
+        0 acessory decoder invers       no error handling
+        1 acessory decoder normal       no error handling
+        2 acessory decoder normal       on error 1 resend of packet
+        3 acessory decoder normal       on error resend while no ack for msg received
+                this let you start rocrail and then power up yout layout
+
+  data->fbmod
+        number of MX9 * 2 
+  data->fboffset
+        offset for MX9 sensor address
+        +1000 shortcut sensor address for this MX9 section
+        +2000 Loco address railcom  sensor address for this MX9 section (UNTESTED)
+*/
+
 
 #include "rocdigs/impl/zimobin_impl.h"
 
@@ -711,9 +726,9 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     outa[8] = functions1;
     outa[9] = functions2;
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco: V=%d, dir=%s, lights=%s nf=%s",
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco: V=%d, dir=%s, lights=%s nf=%s",
         V, wLoc.isdir( node )?"fwd":"rev", wLoc.isfn( node )?"on":"off", NodeOp.getName( node ) );
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
         (f1?"ON":"OFF"), (f2?"ON":"OFF"), (f3?"ON":"OFF"), (f4?"ON":"OFF"),
         (f5?"ON":"OFF"), (f6?"ON":"OFF"), (f7?"ON":"OFF"), (f8?"ON":"OFF"),
@@ -980,7 +995,7 @@ static void __handleTrackSection(iOZimoBin zimobin, byte mx9_id, byte mx9_sec, b
       if( data->listenerFun != NULL && data->listenerObj != NULL )
         data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "tracksection: BiDi MX9=%d, section=%d:%d, value=%d", mx9_id, mx9_sec, fstat, loco );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "tracksection: BiDi MX9=%d, section=%d:%d, value=%d", mx9_id, mx9_sec, fstat, loco );
 
       lstat++;
       lstat++;
@@ -1102,7 +1117,7 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
   int azbz      = locop[6];
   Boolean lakt  = locop[7];
 
-  if( data->protver > 0 ) {
+  if( data->protver >= 0 ) {
     char* sthrottleid = StrOp.fmt("zimo/%d", daddr);
 
     switch (sstep) {
@@ -1129,7 +1144,7 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
       wLoc.setV_rawMax( node, sstep );
       wLoc.setcmd( node, wLoc.velocity );
       wLoc.setthrottleid( node, sthrottleid );
-      data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
     }
     {
       iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
@@ -1140,7 +1155,7 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
       wLoc.setfn( node, f0 ? True:False );
       wLoc.setcmd( node, wLoc.dirfun );
       wLoc.setthrottleid( node, sthrottleid );
-      data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
     }
     {
       iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
@@ -1154,7 +1169,7 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
       wFunCmd.setf4( node, (f0108 & 0x08) ? True:False );
       wFunCmd.setgroup( node, 1 );
       wLoc.setthrottleid( node, sthrottleid );
-      data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
     }
     {
       iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
@@ -1168,7 +1183,7 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
       wFunCmd.setf8( node, (f0108 & 0x80) ? True:False );
       wFunCmd.setgroup( node, 2 );
       wLoc.setthrottleid( node, sthrottleid );
-      data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
     }
     {
       iONode node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
@@ -1182,7 +1197,7 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
       wFunCmd.setf12( node, (f0912 & 0x08) ? True:False );
       wFunCmd.setgroup( node, 3 );
       wLoc.setthrottleid( node, sthrottleid );
-      data->listenerFun( data->listenerObj, node, TRCLEVEL_MONITOR );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
     }
     StrOp.free(sthrottleid);
   }
@@ -1197,13 +1212,15 @@ static Boolean __ackHandler(iOZimoBin zimobin, byte* packet, int len) {
 
   if (len < 6) msgerr = 0;
   if (msgerr) {
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "message=0x%02X type=%d seqid=%d error=%s", packet[1], packet[2], msgack, __getErrCode(msgerr));
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ack for %d message=0x%02X type=%d error=%s", msgack, packet[1], packet[2], __getErrCode(msgerr));
     switch (msgerr) {
       case ERR_BUSY:
         return;
       default:
         break;
     }
+  } else {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "ack for %d message=0x%02X type=%d error=%s", msgack, packet[1], packet[2], __getErrCode(msgerr));
   }
 
   int cnt;
@@ -1564,15 +1581,15 @@ static void __packethandler( void* threadinst ) {
           MemOp.copy( out, (byte*) omsg+3, packetlen );
           freeMem( omsg );
 
-          {
+          if( data->protver > 2 ) {
             byte* outa = allocMem(128);
             MemOp.copy( outa+3, (byte*) out, packetlen);
             outa[0] = 50;
             outa[1] = packettyp;
             outa[2] = packetlen;
             QueueOp.post( data->pqueue, (obj)outa, normal );
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write again %d:%d message=0x%02X type=%d %d %d %d", outa[2], outa[3], outa[4], outa[5], outa[6], outa[7], outa[8] );
           }
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write again %d:%d message=0x%02X type=%d %d %d %d", packetlen, out[0], out[1], out[2], out[3], out[4], out[5] );
           packetlen = __escapePacket(out, packetlen);
           packetlen = __controlPacket(out, packetlen);
           SerialOp.write( data->serial, (char*) out, packetlen );
@@ -1839,7 +1856,7 @@ static void __transactor( void* threadinst ) {
       }
 
       inIdx++;
-    };
+    }
 
     if( packetReceived ) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx );
@@ -1849,7 +1866,7 @@ static void __transactor( void* threadinst ) {
     }
     else if(inIdx > 0) {
       /* Invalid packet? */
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Invalid packet." );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Invalid packet. len %d", inIdx );
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx );
     }
 
@@ -1884,7 +1901,7 @@ static void __transactor( void* threadinst ) {
         out[packetlen] = crc % 256;
         packetlen++;
       }
-      if ( (((out[1] & 0xf0) == 0x10) || ((out[1] & 0xf0) == 0x90)) && (out[2] != 17) ) {
+      if ( data->protver > 1 && ((((out[1] & 0xf0) == 0x10) || ((out[1] & 0xf0) == 0x90)) && (out[2] != 17)) ) {
         byte* outa = allocMem(128);
         MemOp.copy( outa+3, (byte*) out, packetlen);
 
@@ -1983,8 +2000,8 @@ static struct OZimoBin* _inst( const iONode ini ,const iOTrace trc ) {
   data->comm = False;
   data->ues = 1;
 
-  if (data->timeout < 100)
-    data->timeout = 100;
+  if (data->timeout < 500)
+    data->timeout = 500;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ZimoBin %d.%d.%d", vmajor, vminor, patch );
