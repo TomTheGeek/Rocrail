@@ -142,6 +142,7 @@ int liethRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
     SocketOp.read( data->socket, buffer, 1 );
     len = (buffer[0] & 0x0F) + 1;
     if( SocketOp.read( data->socket, buffer+1, len ) )
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "read from LI-ETH" );
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len+1 );
       return len;
   }
@@ -156,8 +157,6 @@ int liethRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
 Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   iOXpressNetData data = Data(xpressnet);
 
-  ThreadOp.sleep( 50 );
-
   int len = 0;
   Boolean rc = False;
   unsigned char out[256];
@@ -171,7 +170,7 @@ Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   len = makeChecksum(outin);
 
   if( len == 0 ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zero bytes to write LI-USB" );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zero bytes to write LI-ETH" );
     return False;
   }
 
@@ -189,6 +188,7 @@ Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   }
 
   if( data->socket != NULL && !SocketOp.isBroken(data->socket) ) {
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "write to LI-ETH" );
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
     rc = SocketOp.write( data->socket, out, len );
     data->lastcmd = time(NULL);
