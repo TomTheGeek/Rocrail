@@ -467,9 +467,8 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       outb[4] = dir ? 0x80:0x00;
       outb[4] |= lenzspeed;
     }
-    ThreadOp.post( data->transactor, (obj)outb );
-
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d velocity=%d direction=%s", addr, lenzspeed, (dir?"fwd":"rev") );
+    ThreadOp.post( data->transactor, (obj)outb );
   }
 
   /* Function command. */
@@ -535,7 +534,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         outb[2] |= lenzspeed;
         outb[3] = functions1; /* function 1-4 */
         outb[4] = modsel; /* step selection */
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "V2 function group 1" );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "V2 function group 1" );
         ThreadOp.post( data->transactor, (obj)outb );
         /*ThreadOp.sleep(50);*/
       }
@@ -547,7 +546,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         outa[1] = 0x20;
         __setLocAddr( addr, outa+2 );
         outa[4] = functions1;
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 1" );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "function group 1" );
         ThreadOp.post( data->transactor, (obj)outa );
         /*ThreadOp.sleep(50);*/
       }
@@ -558,7 +557,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         outb[1] = 0x21;
         __setLocAddr( addr, outb+2 );
         outb[4] = functions2;
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 2" );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "function group 2" );
         ThreadOp.post( data->transactor, (obj)outb );
         /*ThreadOp.sleep(50);*/
       }
@@ -570,7 +569,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         outc[1] = 0x22;
         __setLocAddr( addr, outc+2 );
         outc[4] = functions3;
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 3" );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "function group 3" );
         ThreadOp.post( data->transactor, (obj)outc );
         /*ThreadOp.sleep(50);*/
       }
@@ -581,7 +580,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         outc[1] = 0x23;
         __setLocAddr( addr, outc+2 );
         outc[4] = functions4;
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 4" );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "function group 4" );
         ThreadOp.post( data->transactor, (obj)outc );
         /*ThreadOp.sleep(50);*/
       }
@@ -592,7 +591,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         outc[1] = 0x28;
         __setLocAddr( addr, outc+2 );
         outc[4] = functions5;
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function group 5" );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "function group 5" );
         ThreadOp.post( data->transactor, (obj)outc );
       }
     }
@@ -635,10 +634,10 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     if( wProgram.getcmd( node ) == wProgram.get ) {
       int cv = wProgram.getcv( node );
       int addr = wProgram.getaddr( node );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d on %s...", cv, wProgram.ispom(node)?"POM":"PT" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d on %s...", cv, wProgram.ispom(node)?"POM":"PT" );
 
       if( wProgram.ispom(node) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM: read CV%d of loc %d...", cv, addr );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "POM: read CV%d of loc %d...", cv, addr );
         if( data->power ) {
           if (cv > 0) cv--;
 
@@ -679,7 +678,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 
 
       if( wProgram.ispom(node) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM: set CV%d of loc %d to %d...", cv, decaddr, value );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "POM: set CV%d of loc %d to %d...", cv, decaddr, value );
 
         if( data->power) {
           if (cv > 0) cv--;
@@ -709,7 +708,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       }
       else {
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d to %d...", cv, value );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set CV%d to %d...", cv, value );
 
         byte* outa = allocMem(32);
         outa[0] = 0x23;
@@ -1181,6 +1180,7 @@ static void __transactor( void* threadinst ) {
     if (rspReceived) {
       if( reSend ) {
         reSend = False;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "resend request" );
         if( data->subWrite( (obj)xpressnet, out, &rspExpected ) ) {
           rspReceived = !rspExpected;
         }
@@ -1192,7 +1192,7 @@ static void __transactor( void* threadinst ) {
       else {
         post = ThreadOp.getPost( th );
         if (post != NULL) {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "processing post..." );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing post 0x%08X...", post );
           MemOp.copy(out, post, 32);
           MemOp.copy(lastPacket, post, 32);
           freeMem( post);
