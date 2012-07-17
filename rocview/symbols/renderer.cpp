@@ -136,6 +136,21 @@ void SymbolRenderer::initSym() {
         }
       }
     }
+    else if( StrOp.equals( wTrack.dcurve, wTrack.gettype( m_Props ) ) ) {
+      m_iSymSubType = tracktype::i_curve;
+      if( m_SymMap != NULL ) {
+        if( wItem.isroad( m_Props ) ) {
+          m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::road_dcurve );
+          m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::road_dcurve_occ );
+        }
+        else {
+          m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::curve );
+          m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::curve_occ );
+          m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::curve_route );
+          m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::curve_occroute );
+        }
+      }
+    }
     else if( StrOp.equals( wTrack.buffer, wTrack.gettype( m_Props ) ) ) {
       m_iSymSubType = tracktype::i_buffer;
       if( m_SymMap != NULL ) {
