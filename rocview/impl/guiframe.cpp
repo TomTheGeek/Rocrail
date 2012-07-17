@@ -220,6 +220,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
 
     EVT_MENU( wxID_EXIT         , RocGuiFrame::OnQuit)
     EVT_MENU( ME_Analyze        , RocGuiFrame::OnAnalyze)
+    EVT_MENU( ME_AnalyzeClean   , RocGuiFrame::OnAnalyze)
     EVT_MENU( ME_Save           , RocGuiFrame::OnSave)
     EVT_MENU( ME_SaveAs         , RocGuiFrame::OnSaveAs)
     EVT_MENU( ME_Open           , RocGuiFrame::OnOpen)
@@ -1436,7 +1437,10 @@ void RocGuiFrame::initFrame() {
   menuFile->Append(ME_SaveAs, wxGetApp().getMenu("saveas"), wxGetApp().getTip("saveas") );
 
   menuFile->AppendSeparator();
-  menuFile->Append(ME_Analyze, wxGetApp().getMenu("analyze"), wxGetApp().getTip("analyze") );
+  wxMenu *menuAnalyze = new wxMenu();
+  menuAnalyze->Append(ME_Analyze, wxGetApp().getMenu("analyze"), wxGetApp().getTip("analyze") );
+  menuAnalyze->Append(ME_AnalyzeClean, wxGetApp().getMenu("clearall") + _T(" ") +  wxGetApp().getMenu("analyze"), wxGetApp().getTip("analyze") );
+  menuFile->Append( -1, wxGetApp().getMenu("analyze"), menuAnalyze );
   menuFile->AppendSeparator();
 
   wxMenuItem *upload_menuFile = new wxMenuItem(menuFile, ME_Upload, wxGetApp().getMenu("upload"), wxGetApp().getTip("upload") );
@@ -2251,6 +2255,9 @@ void RocGuiFrame::OnAnalyze( wxCommandEvent& event ) {
   if( !wxGetApp().isOffline() ) {
     iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
     wSysCmd.setcmd( cmd, wSysCmd.analyze );
+    if( event.GetId() == ME_AnalyzeClean ) {
+      wSysCmd.setval( cmd, 1 );
+    }
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }

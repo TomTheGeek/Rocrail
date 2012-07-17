@@ -405,6 +405,7 @@ enum
     // menu items
     ME_Quit = 10000,
     ME_Analyze,
+    ME_AnalyzeClean,
     ME_Save,
     ME_SaveAs,
     ME_Upload,
