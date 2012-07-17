@@ -1975,7 +1975,7 @@ static void __analyseList(iOAnalyse inst) {
         }
 
         if ( addToList ) {
-          const char * prevrouteids = wItem.getrouteids(tracknode);
+          char * prevrouteids = StrOp.dup( wItem.getrouteids(tracknode) );
           if( prevrouteids != NULL ) {
             iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
             // check if id is all ready in the list
@@ -1991,21 +1991,21 @@ static void __analyseList(iOAnalyse inst) {
                 if( StrOp.len(prevrouteids)>0 ) {
                   prevrouteids = StrOp.cat( (char*)prevrouteids, ",");
                 }
-                char* newval = StrOp.cat( (char*)prevrouteids, wRoute.getid( newRoute) );
-                wItem.setrouteids(tracknode, newval );
-                StrOp.free(newval);
+                prevrouteids = StrOp.cat( (char*)prevrouteids, wRoute.getid( newRoute) );
+                wItem.setrouteids(tracknode, prevrouteids );
             }
 
             StrTokOp.base.del(tok);
             } else { // empty attribute
             wItem.setrouteids(tracknode, wRoute.getid( newRoute) );
           }
+          StrOp.free(prevrouteids);
         }
 
         if( cleanrun ) {
           /* remove all "autogen-"-routeids */
-          const char *prevrouteids = wItem.getrouteids(tracknode);
-          char *userrouteids = "";
+          char *prevrouteids = StrOp.dup(wItem.getrouteids(tracknode));
+          char *userrouteids = StrOp.dup("");
 
           if( prevrouteids != NULL ) {
             iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
@@ -2024,6 +2024,7 @@ static void __analyseList(iOAnalyse inst) {
           }
           wItem.setrouteids(tracknode, userrouteids );
           StrOp.free(userrouteids);
+          StrOp.free(prevrouteids);
         }
       } // tk || fb || sw
 
