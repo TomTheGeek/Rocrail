@@ -493,8 +493,8 @@ void SymbolRenderer::initSym() {
           else {
             if( wItem.isroad( m_Props ) ) {
               m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::road_signalmain_dwarf_r:signaltype::road_signalmain_r );
-              m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::road_signalmain_dwarf_r:signaltype::road_signalmain_y );
-              m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::road_signalmain_dwarf_r:signaltype::road_signalmain_g );
+              m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::road_signalmain_dwarf_y:signaltype::road_signalmain_y );
+              m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::road_signalmain_dwarf_g:signaltype::road_signalmain_g );
             }
             else {
               m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_r:signaltype::signalmain_r );
