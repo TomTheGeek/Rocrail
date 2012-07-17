@@ -71,6 +71,7 @@ namespace tracktype {
   static const char* road_dcurve_occ    = "road-dcurve-occ.svg";
   static const char* road_dir           = "road-dir.svg";
   static const char* road_dir_occ       = "road-dir-occ.svg";
+  static const char* road_dirall        = "road-dirall.svg";
 
   static const char* tracknr       = "track-%d.svg";
   static const char* tracknr_occ   = "track-%d-occ.svg";

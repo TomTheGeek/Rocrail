@@ -184,9 +184,14 @@ void SymbolRenderer::initSym() {
     else if( StrOp.equals( wTrack.dirall, wTrack.gettype( m_Props ) ) ) {
       m_iSymSubType = tracktype::i_dirall;
       if( m_SymMap != NULL ) {
-        m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::dirall );
-        m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::dirall_occ );
-        m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::dirall_route );
+        if( wItem.isroad( m_Props ) ) {
+          m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::road_dirall );
+        }
+        else {
+          m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::dirall );
+          m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::dirall_occ );
+          m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::dirall_route );
+        }
       }
     }
     else if( StrOp.equals( wTrack.tracknr, wTrack.gettype( m_Props ) ) ) {
