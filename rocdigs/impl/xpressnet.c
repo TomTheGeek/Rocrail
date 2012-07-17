@@ -552,7 +552,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         /*ThreadOp.sleep(50);*/
       }
 
-      if( group == 0 || group == 2 ) {
+      if( group == 2 ) {
         byte* outb = allocMem(32);
         outb[0] = 0xE4;
         outb[1] = 0x21;
@@ -564,7 +564,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       }
 
 
-      if( group == 0 || group == 3 ) {
+      if( group == 3 ) {
         byte* outc = allocMem(32);
         outc[0] = 0xE4;
         outc[1] = 0x22;
@@ -575,7 +575,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         /*ThreadOp.sleep(50);*/
       }
 
-      if( group == 0 || group == 4 || group == 5 ) {
+      if( group == 4 || group == 5 ) {
         byte* outc = allocMem(32);
         outc[0] = 0xE4;
         outc[1] = 0x23;
@@ -586,7 +586,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         /*ThreadOp.sleep(50);*/
       }
 
-      if( group == 0 || group == 6 || group == 7 ) {
+      if( group == 6 || group == 7 ) {
         byte* outc = allocMem(32);
         outc[0] = 0xE4;
         outc[1] = 0x28;
