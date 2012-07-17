@@ -1,0 +1,28 @@
+#!/usr/bin/python
+import time
+import datetime
+from socket import *
+myHost = ''
+myPort = 5550
+s = socket(AF_INET, SOCK_STREAM)
+s.bind((myHost, myPort))
+s.listen(5)
+
+print '---------------------------'
+print '----- LiEth simulator -----'
+print '---------------------------'
+
+while 1:
+  # wait for next client to connect
+  connection, address = s.accept()
+  while 1:
+    data = connection.recv(32) # receive up to 1K
+    if data:
+      print datetime.datetime.utcfromtimestamp(time.time()),
+      print 'Command received:',
+      print '['+ data.encode("hex") + ']'
+      connection.send('\xFF\xFE\x01\x04\x05')
+
+      
+connection.close()               # close socket
+
