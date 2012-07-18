@@ -146,7 +146,8 @@ static Boolean __sendRequest( iOVirtual virtual, byte* outin ) {
 /** */
 static iONode __translate( iOVirtual virtual, iONode node ) {
   iOVirtualData data = Data(virtual);
-  iONode rsp = (iONode)NodeOp.base.clone(node);
+  //iONode rsp = (iONode)NodeOp.base.clone(node);
+  iONode rsp = NULL;
 
   /*
   char* cmdStr = NodeOp.base.toString(node);

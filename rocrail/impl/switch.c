@@ -1017,7 +1017,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       wSwitch.setiid( nodeF, wSwitch.getiid( o->props ) );
     if( o->lockedId != NULL )
       wSwitch.setlocid( nodeF, o->lockedId );
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "broadcasting switch state [%s]", wSwitch.getstate( o->props ) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "broadcasting switch[%s] state [%s]", o->id, wSwitch.getstate( o->props ) );
     AppOp.broadcastEvent( nodeF );
 
     __ctcActionLED(inst);
@@ -1309,6 +1309,8 @@ static void _event( iOSwitch inst, iONode nodeC ) {
     {
       obj listener = ListOp.first( data->listeners );
       while( listener != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+            "switch [%s] informs listener=%s", SwitchOp.getId(inst), listener->id(listener)!=NULL?listener->id(listener):"?" );
         listener->event( listener, data->props );
         listener = ListOp.next( data->listeners );
       };

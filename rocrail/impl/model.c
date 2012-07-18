@@ -3168,7 +3168,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "iterating switch list %d", ListOp.size(o->switchList) );
     obj sw = ListOp.first(o->switchList);
     while( sw != NULL ) {
-      iONode props = SwitchOp.base.properties(sw);
+      iONode props = sw->properties(sw);
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "testing: %d:%d:%d", bus, wSwitch.getaddr1(props), wSwitch.getport1(props) );
 
@@ -3208,12 +3208,16 @@ static void _event( iOModel inst, iONode nodeC ) {
           wSwitch.getbus(props) == bus && matchaddr2 == addr && matchport2 == port )
       {
         matched = True;
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "matching sw", sw->id(sw) );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+            "matching sw=%s iid=%s (iid=%s defiid=%s)",
+            sw->id(sw), wSwitch.getiid(props)!=NULL?wSwitch.getiid(props):"?", iid, defiid );
 
-        if( wSwitch.getiid(props) != "" && StrOp.equals(iid, wSwitch.getiid(props)) )
+        if( StrOp.len( wSwitch.getiid(props) ) > 0 && StrOp.equals(iid, wSwitch.getiid(props)) )
           sw->event( sw, (iONode)NodeOp.base.clone(nodeC) );
-        else if( StrOp.len( wSwitch.getiid(props) ) == 0  && StrOp.equals( iid, defiid ) )
+        else if( iid == NULL || StrOp.equals( iid, defiid ) || StrOp.len(iid) == 0 )
           sw->event( sw, (iONode)NodeOp.base.clone(nodeC) );
+        else
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "IID does not match" );
 
         NodeOp.base.del(nodeC);
         return;
