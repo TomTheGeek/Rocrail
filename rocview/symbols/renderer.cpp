@@ -325,9 +325,16 @@ void SymbolRenderer::initSym() {
       m_iSymSubType = switchtype::i_threeway;
       if( m_SymMap != NULL ) {
         if( wItem.isroad( m_Props ) ) {
-          m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_threeway );
-          m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_threeway_tl );
-          m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_threeway_tr );
+          if( wSwitch.isrectcrossing(m_Props) ) {
+            m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_rect_threeway );
+            m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_rect_threeway_tl );
+            m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_rect_threeway_tr );
+          }
+          else {
+            m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_threeway );
+            m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_threeway_tl );
+            m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_threeway_tr );
+          }
         }
         else {
           m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway );
