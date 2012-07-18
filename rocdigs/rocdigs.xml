@@ -371,6 +371,8 @@
       <var name="timedQueue" vt="iOThread"/>
       <var name="lastcmd" vt="long"/>
       <var name="timeOutWD" vt="iOThread"/>
+      <var name="availWD" vt="iOThread"/>
+      <var name="availFlag" vt="Boolean"/>
       <var name="run" vt="Boolean"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
