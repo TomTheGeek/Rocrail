@@ -3,20 +3,44 @@
 
 
 /* CBUS definitions for use with C18 compiler
- * These definitions taken from CBUS specifications document rev 7h
- * Derived from opcodes.h originally by Andrew Crosland.
- * Pete Brownlow  6/4/11
- * Roger Healey	  6/4/11 - Add OPC_CMDERR response codes
- * Pete Brownlow  7/6/11 - Updated to spec ver 7f and add new module ids
- * Pete Brownlow  4/7/11 - Updated to spec ver 7g
- * Pete Brownlow  14/8/11 - Updated to spec ver 7h
- */
 
+   (c) Pete Brownlow 2011-2012
+   Derived from opcodes.h (c) Andrew Crosland.
 
-// 7H BETA 2  - still to be finalised for version 7h
+ Pete Brownlow  6/4/11 - Original from spec version 7e 
+ Roger Healey	6/4/11 - Add OPC_CMDERR response codes
+ Pete Brownlow  7/6/11 - Updated to spec ver 7f and add new module ids
+ Pete Brownlow  4/7/11 - Updated to spec ver 7g
+ Pete Brownlow  14/8/11 - Updated to spec ver 7h
+ Pete Brownlow  18/2/12 - Updated to spec ver 8a, Rocrail and animated modeller module types added
+ Pete browlnow  17/4/12 - Updated parameter block definitions, added processor type definitions.
+ *
+*/
 
-// NOTE: To display this file with everyting correctly lined up set your editor or IDE tab stop to 4
+// NOTE: To display this file with everything correctly lined up set your editor or IDE tab stop to 4
 
+//   This program is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation, version 3 of the License, as set out
+//   at <http://www.gnu.org/licenses/>.
+//
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+//   See the GNU General Public License for more details.
+//
+//   As set out in the GNU General Public License, you must retain and acknowledge
+//   the statements above relating to copyright and licensing. You must also
+//   state clearly any modifications made.  Please therefore retain this header
+//   and add documentation of any changes you make. If you distribute a changed
+//   version, you must make those changes publicly available.
+//
+//   The GNU license requires that if you distribute this software, changed or
+//   unchanged, or software which includes code from this software, including
+//   the supply of hardware that incorporates this software, you MUST either
+//   include the source code or a link to a location where you make the source
+//   publicly available. The best way to make your changes publicly available is
+//   via the MERG online resources.  See <www.merg.co.uk> 
 
 
 // Manufacturers
@@ -25,10 +49,9 @@
 #define MANU_ROCRAIL	70	// http://www.rocrail.net
 #define MANU_SPECTRUM	80	// http://animatedmodeler.com  (Spectrum Engineering)
 
+// MERG Module types
 
-// Module types
-
-#define MTYP_SLIM        0  // default NN for SLiM nodes
+#define MTYP_SLIM	 0      // default for SLiM nodes
 #define MTYP_CANACC4     1	// Solenoid point driver
 #define MTYP_CANACC5     2	// Motorised point driver
 #define MTYP_CANACC8     3	// 8 digital outputs
@@ -46,6 +69,9 @@
 #define MTYP_CANTTCB	 15 // Turntable controller (control panel end)
 #define MTYP_CANHS		 16	// Handset controller for old BC1a type handsets
 
+#define MTYP_EMPTY       0xFE   // Empty module, bootloader only
+
+// Rocrail Module types
 
 #define	MTYP_CANGC1		 1	//	RS232 PC interface
 #define MTYP_CANGC2  	 2	// 	16 I/O
@@ -54,6 +80,7 @@
 #define MTYP_CANGC5		 5	//  Cab for fixed panels (derived from cancab)
 #define MTYP_CANGC6		 6	//  4 channel servo controller
 #define MTYP_CANGC7		 7	//	Fast clock module
+#define MTYP_CANGC1e    11      // CAN<->Ethernet interface
 
 // Animated Modeller module types
 
@@ -62,7 +89,6 @@
 
 
 //  CBUS opcodes list
-//  Ref: CBUS Specifications dcoument
 
 // Packets with no data bytes
 
@@ -87,7 +113,6 @@
 
 // Packets with 1 data byte
 
-#define OPC_STAT    0x20    // Command station status report
 #define OPC_KLOC    0x21    // Release engine by handle
 #define OPC_QLOC    0x22    // Query engine by handle
 #define OPC_DKEEP   0x23   	// Keep alive for cab
@@ -214,6 +239,7 @@ CC=11: DDDDDD = 00FFFFF, this denotes the acceleration factor, range 0..31;
 #define OPC_RDCC6  	0xE0    // 6 byte DCC packets
 #define OPC_PLOC	0xE1    // Loco session report
 #define OPC_NAME	0xE2	// Module name response
+#define OPC_STAT    0xE3    // Command station status report
 #define OPC_PARAMS	0xEF    // Node parameters response
 
 #define OPC_ACON3   0xF0    // On event with 3 data bytes
@@ -276,6 +302,8 @@ CC=11: DDDDDD = 00FFFFF, this denotes the acceleration factor, range 0..31;
 #define	CMDERR_INV_NV_VALUE		12
 
 // Parameter index numbers (readable by OPC_RQNPN, returned in OPC_PARAN)
+// Index numbers count from 1, subtract 1 for offset into parameter block
+// Note that RQNPN with index 0 returns the parameter count
 
 #define	PAR_MANU				1	// Manufacturer id
 #define	PAR_MINVER				2	// Minor version letter
@@ -285,6 +313,17 @@ CC=11: DDDDDD = 00FFFFF, this denotes the acceleration factor, range 0..31;
 #define	PAR_NVNUM				6	// Number of Node variables
 #define	PAR_MAJVER				7	// Major version number
 #define	PAR_FLAGS				8	// Node flags
+#define PAR_CPUID		9	// Processor type
+#define PAR_BUSTYPE		10	// Bus type
+#define PAR_LOAD		11	// load address, 4 bytes
+
+// Offsets to other values stored at the top of the parameter block.
+// These are not returned by opcode PARAN, but are present in the hex
+// file for FCU.
+
+#define PAR_COUNT		0x18    // Number of parameters implemented
+#define PAR_NAME		0x1A    // 4 byte Address of Module type name, up to 8 characters null terminated
+#define PAR_CKSUM		0x1E    // Checksum word at end of parameters
 
 // Flags in PAR_FLAGS
 
@@ -292,7 +331,44 @@ CC=11: DDDDDD = 00FFFFF, this denotes the acceleration factor, range 0..31;
 #define	PF_PRODUCER				2
 #define	PF_COMBI				3
 #define PF_FLiM					4
+#define PF_BOOT			8
 
+// BUS type that module is connected to
+
+#define PB_CAN			1
+#define PB_ETH			2
+
+// Processor type codes (identifies to FCU for bootload compatiblity)
+
+#define P18F2480		1
+#define P18F4480		2
+#define P18F2580		3
+#define P18F4580		4
+#define P18F2585		5
+#define P18F4585		6
+#define P18F2680		7
+#define P18F4680		8
+#define P18F2682		9
+#define P18F4682		10
+#define P18F2685		11
+#define P18F4685		12
+
+#define P18F25K80		13
+#define P18F45K80		14
+#define P18F26K80		15
+#define P18F46K80		16
+#define P18F65K80		17
+#define P18F66K80		18
+
+#define P32MX534F064            30
+#define P32MX564F064            31
+#define P32MX564F128            32
+#define P32MX575F256            33
+#define P32MX575F512            34
+#define P32MX764F128            35
+#define P32MX775F256            36
+#define P32MX775F512            37
+#define P32MX795F512            38
 
 #endif		// __OPCODES_H
 
