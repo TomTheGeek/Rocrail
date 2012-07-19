@@ -286,7 +286,13 @@ void SymbolRenderer::initSym() {
     else if( StrOp.equals( wSwitch.dcrossing, wSwitch.gettype( m_Props ) ) ) {
       m_iSymSubType = wSwitch.isdir(m_Props) ? switchtype::i_dcrossingleft:switchtype::i_dcrossingright;
       if( m_SymMap != NULL ) {
-        if( raster ) {
+        if( wItem.isroad( m_Props ) ) {
+          m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_dcrossingright );
+          m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_dcrossingright_t );
+          m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_dcrossingright_tl );
+          m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_dcrossingright_tr );
+        }
+        else if( raster ) {
           m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::dcrossingleft_r:switchtype::dcrossingright_r );
           m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::dcrossingleft_r_t:switchtype::dcrossingright_r_t );
           m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::dcrossingleft_r_tl:switchtype::dcrossingright_r_tl );

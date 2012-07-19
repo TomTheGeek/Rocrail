@@ -1,0 +1,31 @@
+<svg width="64" height="64">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 5,0 L 0,5 L 0,26 L 26,0 z " />
+    <!-- Grey -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 7,0 L 0,7 L 0,24 L 24,0 z " />
+
+<!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,37 L 0,58 L 58,0 L 37,0 z " />
+    <!-- Grey -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 0,39 L 0,56 L 56,0 L 39,0 z " />
+
+
+
+<!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 6,63 L 27,63 L 63,27 L 63,6 z " />
+    <!-- Grey -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,63 L 25,63 L 63,25 L 63,8 z " />
+
+
+<!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 38,63 L 58,63 L 63,58 L 63,38 z " />
+    <!-- Grey -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 40,63 L 56,63 L 63,56 L 63,40 z " />
+
+
+
+
+
+  </g>
+</svg>
