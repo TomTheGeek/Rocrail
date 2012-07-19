@@ -1814,7 +1814,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
 
         if( !__isElectricallyFree((iOBlock)inst) ) {
           data->pendingFree = True;
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "pending unlock: still electrically occupied" );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "pending unlock: still electrically occupied" );
         }
 
         ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, "", False, 0, 0, NULL );
