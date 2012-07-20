@@ -229,7 +229,10 @@ static void __ctcActionLED( void* inst ) {
 
 
 static void* __event( void* inst, const void* evt ) {
-  if( StrOp.equals( wFeedback.name(), NodeOp.getName( (iONode)evt ) ) ) {
+  if( StrOp.equals( wSwitch.name(), NodeOp.getName( (iONode)evt ) ) ) {
+    SwitchOp.event((iOSwitch)inst, (iONode)evt);
+  }
+  else if( StrOp.equals( wFeedback.name(), NodeOp.getName( (iONode)evt ) ) ) {
     __ctcAction(inst, (iONode)evt);
   }
   return NULL;
