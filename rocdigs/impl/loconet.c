@@ -481,6 +481,7 @@ static void __loconetSensorQuery( void* threadinst ) {
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LocoNet Sensor Query ended." );
+  data->SensorQuery = NULL;
   ThreadOp.base.del(th);
 }
 
@@ -1013,10 +1014,9 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
       data->power = True;
       _stateChanged(loconet);
       if( !data->didSensorQuery && data->doSensorQuery ) {
-        iOThread t =  NULL;
         data->didSensorQuery = True;
-        t =  ThreadOp.inst( "lnqGPON", &__loconetSensorQuery, loconet );
-        ThreadOp.start( t );
+        data->SensorQuery =  ThreadOp.inst( "lnqGPON", &__loconetSensorQuery, loconet );
+        ThreadOp.start( data->SensorQuery );
       }
       __post2SlotServer( loconet, rsp, 2 );
       break;
@@ -1282,10 +1282,9 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
          */
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System slot data: track = 0x%02X", track );
         if( (track & GTRK_POWER) && (!data->didSensorQuery) ) {
-          iOThread t =  NULL;
           data->didSensorQuery = True;
-          t =  ThreadOp.inst( "lnqCNFG", &__loconetSensorQuery, loconet );
-          ThreadOp.start( t );
+          data->SensorQuery =  ThreadOp.inst( "lnqCNFG", &__loconetSensorQuery, loconet );
+          ThreadOp.start( data->SensorQuery );
         }
       }
     }
@@ -2085,6 +2084,17 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       cmd[0] = OPC_IDLE;
       cmd[1] = LocoNetOp.checksum( cmd, 1 );
       return 2;
+    }
+    if( StrOp.equals( cmdstr, wSysCmd.sod ) ) {
+      if( data->SensorQuery == NULL ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day [%s]", data->iid );
+        data->SensorQuery =  ThreadOp.inst( "lnqGPON", &__loconetSensorQuery, loconet_inst );
+        ThreadOp.start( data->SensorQuery );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day is already running [%s]", data->iid );
+      }
+      return 0;
     }
     if( StrOp.equals( cmdstr, wSysCmd.slots ) ) {
       __getSlots(loconet_inst);

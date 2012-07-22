@@ -611,6 +611,7 @@
       <var name="loconetReader" vt="iOThread"/>
       <var name="loconetWriter" vt="iOThread"/>
       <var name="swReset" vt="iOThread"/>
+      <var name="SensorQuery" vt="iOThread"/>
       <var name="lastSwCmd" vt="unsigned long"/>
       <var name="device" vt="const char*"/>
       <var name="bps" vt="serial_bps"/>
