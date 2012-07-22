@@ -357,6 +357,21 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       data->power = False;
       __inform(inst);
     }
+    else if( StrOp.equals( cmd, wSysCmd.sod ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day" );
+      // MSG_BM_GET_RANGE
+      msg[0] = 5; // length
+      msg[1] = 0; // address
+      msg[2] = data->downSeq; // sequence number 1...255
+      msg[3] = MSG_BM_GET_RANGE; //data
+      msg[4] = 0; // address range
+      msg[5] = 16; // address range
+
+      int size = __makeMessage(msg, 6);
+      data->subWrite((obj)inst, msg, size);
+      data->downSeq++;
+
+    }
   }
 
   /* Switch command. */
