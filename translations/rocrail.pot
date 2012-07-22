@@ -254,7 +254,7 @@ msgstr ""
 #. 
 # id="initfield"
 #, c-format
-msgid "Start of Day"
+msgid "Init field"
 msgstr ""
 
 #. 
@@ -5721,5 +5721,29 @@ msgstr ""
 # id="every"
 #, c-format
 msgid "every"
+msgstr ""
+
+#. 
+# id="startofday"
+#, c-format
+msgid "Start of Day"
+msgstr ""
+
+#. 
+# id="startofday"
+#, c-format
+msgid "Initialize accessories and query sensors."
+msgstr ""
+
+#. 
+# id="querysensors"
+#, c-format
+msgid "Query sensors"
+msgstr ""
+
+#. 
+# id="querysensors"
+#, c-format
+msgid "Query actual state of all sensors."
 msgstr ""
 

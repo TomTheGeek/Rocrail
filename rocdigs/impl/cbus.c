@@ -1761,6 +1761,20 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power ON" );
       ThreadOp.post(data->writer, (obj)frame);
     }
+
+    else if( StrOp.equals( cmdstr, wSysCmd.sod ) ) {
+      /* Start of Day */
+      byte cmd[8];
+      byte* frame = allocMem(32);
+      cmd[0] = OPC_ASRQ;
+      cmd[1] = 0;
+      cmd[2] = 0;
+      cmd[3] = data->sodaddr / 256;
+      cmd[4] = data->sodaddr % 256;
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SoD: query input state" );
+      ThreadOp.post(data->writer, (obj)frame);
+    }
   }
 
   /* Switch command. */

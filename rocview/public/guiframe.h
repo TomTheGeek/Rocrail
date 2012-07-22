@@ -141,6 +141,7 @@ public:
   void setInfoText( const char* text );
   void setDigintText( const char* text );
   void OnInitField(wxCommandEvent& event);
+  void OnQuerySensors(wxCommandEvent& event);
   void OnEditMode(wxCommandEvent& event);
   void OnEditModPlan(wxCommandEvent& event);
   void OnCtrlMode(wxCommandEvent& event);
@@ -433,6 +434,7 @@ enum
     SHOWLOGO_EVENT,
     ME_ShutdownRocRail,
     ME_InitField,
+    ME_QuerySensors,
     ME_TxShortIDs,
     ADDEXCEPTION_EVENT,
     LOC_EVENT,

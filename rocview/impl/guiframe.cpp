@@ -269,6 +269,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_ClearMsg       , RocGuiFrame::OnClearMsg)
     EVT_MENU( ME_ShutdownRocRail, RocGuiFrame::OnShutdownRocRail)
     EVT_MENU( ME_InitField      , RocGuiFrame::OnInitField)
+    EVT_MENU( ME_QuerySensors   , RocGuiFrame::OnQuerySensors)
     EVT_MENU( ME_TxShortIDs     , RocGuiFrame::OnTxShortIDs)
     EVT_MENU( ME_EditMode       , RocGuiFrame::OnEditMode)
     EVT_MENU( ME_EditModPlan    , RocGuiFrame::OnEditModPlan)
@@ -1505,7 +1506,11 @@ void RocGuiFrame::initFrame() {
   menuControl->Append(ME_CtrlBoosters, wxGetApp().getMenu("powerctrl"), wxGetApp().getTip("powerctrl") );
 
   menuControl->AppendSeparator();
-  menuControl->Append(ME_InitField, wxGetApp().getMenu("initfield"), wxGetApp().getTip("initfield") );
+  wxMenu *menuSoD = new wxMenu();
+  menuSoD->Append(ME_InitField, wxGetApp().getMenu("initfield"), wxGetApp().getTip("initfield") );
+  menuSoD->Append(ME_QuerySensors, wxGetApp().getMenu("querysensors"), wxGetApp().getTip("querysensors") );
+  menuControl->Append( -1, wxGetApp().getMenu("startofday"), menuSoD );
+
   menuControl->AppendSeparator();
   menuControl->Append(ME_TxShortIDs, wxGetApp().getMenu("txshortids"), wxGetApp().getTip("txshortids") );
   menuControl->AppendSeparator();
@@ -2602,6 +2607,13 @@ void RocGuiFrame::OnInitField( wxCommandEvent& event ) {
   cmd->base.del(cmd);
 }
 
+void RocGuiFrame::OnQuerySensors( wxCommandEvent& event ) {
+  iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+  wModelCmd.setcmd( cmd, wSysCmd.sod );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
 void RocGuiFrame::OnTxShortIDs( wxCommandEvent& event ) {
   iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
   wSysCmd.setcmd( cmd, wSysCmd.txshortids );
@@ -3194,6 +3206,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_InitField);
   if( mi != NULL ) mi->Enable( !l_bOffline && !m_bAutoMode );
+  mi = menuBar->FindItem(ME_QuerySensors);
+  if( mi != NULL ) mi->Enable( !l_bOffline && !m_bAutoMode );
 
   mi = menuBar->FindItem(ME_AutoMode);
   if( mi != NULL ) mi->Enable( !l_bOffline );
@@ -3239,9 +3253,6 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
   mi = menuBar->FindItem(ME_EditTurntables);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
-
-  mi = menuBar->FindItem(ME_InitField);
-  if( mi != NULL ) mi->Enable( !m_bAutoMode );
 
   if( wxGetApp().isModView() ) {
     mi = menuBar->FindItem(ME_EditMode);
