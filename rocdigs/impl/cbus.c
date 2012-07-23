@@ -237,6 +237,8 @@ static int __getDataLen(int OPC, byte frametype) {
   else {
     if( OPC == 1 )
       return 4;
+    if( OPC == 2 )
+      return 3;
   }
   return 0;
 }
@@ -1039,9 +1041,9 @@ static iONode __evaluateASCIIFrame(iOCBUS cbus, byte* frame, int opc) {
   iOCBUSData data = Data(cbus);
   int offset = (frame[1] != 'X') ? 0:4;
 
-  cbusMon(frame, opc);
 
   if( frame[1] == 'S' ) {
+    cbusMon(frame, opc);
     switch(opc) {
     case OPC_ERR:
       __evaluateErr(cbus, frame);
@@ -1193,16 +1195,29 @@ static iONode __evaluateASCIIFrame(iOCBUS cbus, byte* frame, int opc) {
   }
   else if( frame[1] == 'Y' ) {
     /* Ethernet frame: CAN-GC1e */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"CAN-GC1e status: %s opc=%d", frame, opc);
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"CAN-GC1e status: %s opc=%d", frame, opc);
     switch(opc) {
       case 0:
         break;
       case 1: /* status report */
       {
         byte rc = HEXA2Byte(frame + OFFSET_D1);
-        TraceOp.trc( name, rc==0?TRCLEVEL_INFO:TRCLEVEL_EXCEPTION, __LINE__, 9999,
+        TraceOp.trc( name, rc==0?TRCLEVEL_MONITOR:TRCLEVEL_EXCEPTION, __LINE__, 9999,
             "Ethernet status: rc=%d con=%d maxcanQ=%d maxethQ=%d", rc,
             HEXA2Byte(frame + OFFSET_D2), HEXA2Byte(frame + OFFSET_D3), HEXA2Byte(frame + OFFSET_D4) );
+        break;
+      }
+      case 2: /* command ack */
+      {
+        byte rc  = HEXA2Byte(frame + OFFSET_D1);
+        byte ackopc = HEXA2Byte(frame + OFFSET_D2);
+        byte cmdticker = HEXA2Byte(frame + OFFSET_D3);
+        TraceOp.trc( name, rc==0?TRCLEVEL_MONITOR:TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "Ethernet command Ack: rc=%d opc=0x%02X cmdticker=%d", rc, ackopc, cmdticker );
+        /* ToDo: process the Ack. */
+        if( ackopc == data->lastSendOPC ) {
+          data->wait4Ack = False;
+        }
         break;
       }
     }
@@ -1444,6 +1459,7 @@ static void __writer( void* threadinst ) {
   iOCBUS cbus = (iOCBUS)ThreadOp.getParm( th );
   iOCBUSData data = Data(cbus);
   byte* cmd = NULL;
+  int ackwait = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer started." );
   while( data->run ) {
@@ -1452,7 +1468,8 @@ static void __writer( void* threadinst ) {
     byte out[64] = {0};
 
     ThreadOp.sleep(10);
-    if( data->connOK && data->buson ) {
+    if( data->connOK && data->buson && !data->wait4Ack ) {
+      ackwait = 0;
       post = (byte*)ThreadOp.getPost( th );
 
       if (post != NULL) {
@@ -1461,12 +1478,26 @@ static void __writer( void* threadinst ) {
         MemOp.copy( out, post+1, len);
         freeMem( post);
 
-        if( !data->bootmode )
+        if( !data->bootmode ) {
+          data->lastSendOPC = __getOPC(out);
           cbusMon(out, __getOPC(out));
+        }
 
-        if( !data->subWrite((obj)cbus, out, len) ) {
+        if( data->subWrite((obj)cbus, out, len) ) {
+          if( out[1] == 'S' )
+            data->wait4Ack = True;
+        }
+        else {
           /* sleep and send it again? */
         }
+      }
+    }
+    else if( data->wait4Ack && data->commandAck ) {
+      ackwait++;
+      if( ackwait > 50 ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "time out on command ack 0x%02X", data->lastSendOPC );
+        ackwait = 0;
+        data->wait4Ack = False;
       }
     }
     else if( !data->connOK ) {
@@ -1474,6 +1505,7 @@ static void __writer( void* threadinst ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "CBUS is disconnected, try a reconnect..." );
       data->connOK = data->subConnect((obj)cbus);
     }
+
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer ended." );
 
@@ -2224,6 +2256,8 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->loaderMux= MutexOp.inst( NULL, True );
   data->stress   = wDigInt.isstress(ini);
   data->dummyio  = wDigInt.isdummyio(ini);
+  data->wait4Ack = False;
+  data->commandAck = wCBus.iscommandack(data->cbusini);
 
   if( data->purgetime < 1 || data->purgetime > 19 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "purgetime out of range: %d, reset to 10", data->purgetime );
@@ -2245,6 +2279,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switchtime    = %d", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purgetime     = %d", data->purgetime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dummy I/O     = %s", data->dummyio ? "yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command ack   = %s", data->commandAck ? "yes":"no" );
 
 
   /* choose interface: */

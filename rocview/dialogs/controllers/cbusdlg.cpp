@@ -115,6 +115,7 @@ void CbusDlg::initValues() {
 
   m_ShortEvents->SetValue( wCBus.isshortevents(cbusini) ? true:false);
   m_FastClock->SetValue( wCBus.isfastclock(cbusini) ? true:false);
+  m_CommandAck->SetValue( wCBus.iscommandack(cbusini) ? true:false);
   m_FonFof->SetValue( wCBus.isfonfof(cbusini) ? true:false);
   m_CTS->SetValue( StrOp.equals( wDigInt.cts, wDigInt.getflow( m_Props ) ) ? true:false );
 }
@@ -147,6 +148,7 @@ void CbusDlg::evaluate() {
 
   wCBus.setshortevents(cbusini, m_ShortEvents->IsChecked()?True:False);
   wCBus.setfastclock(cbusini, m_FastClock->IsChecked()?True:False);
+  wCBus.setcommandack(cbusini, m_CommandAck->IsChecked()?True:False);
   wCBus.setfonfof(cbusini, m_FonFof->IsChecked()?True:False);
   wDigInt.setflow( m_Props, m_CTS->IsChecked() ? wDigInt.cts:wDigInt.none );
 
@@ -158,11 +160,14 @@ void CbusDlg::OnSublib( wxCommandEvent& event ) {
     m_Host->Enable(true);
     m_Port->Enable(true);
     m_Device->Enable(false);
+    m_CommandAck->Enable(true);
   }
   else {
     m_Host->Enable(false);
     m_Port->Enable(false);
     m_Device->Enable(true);
+    m_CommandAck->SetValue(false);
+    m_CommandAck->Enable(false);
   }
   if( m_Sublib->GetSelection() == 1 ) {
     m_BPS->Enable(true);

@@ -1559,6 +1559,7 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
     if( m_GC1eSetIndex == 0 ) {
       int nv1 = m_GC1eIdleWD->IsChecked() ? 0x01:0x00;
       nv1 |= m_GC1ePowerOffAtIdle->IsChecked() ? 0x02:0x00;
+      nv1 |= m_GC1eCommandAck->IsChecked() ? 0x04:0x00;
       TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "gc1e nv1=0x%02X", nv1);
       varSet(1, nv1, false);
     }
@@ -1931,6 +1932,7 @@ void CBusNodeDlg::initGC1eVar( int nr, int val ) {
     // node var1
     m_GC1eIdleWD->SetValue( (val&0x01) ? true:false );
     m_GC1ePowerOffAtIdle->SetValue( (val&0x02) ? true:false );
+    m_GC1eCommandAck->SetValue( (val&0x04) ? true:false );
     m_GC1eIdleTime->Enable( m_GC1eIdleWD->IsChecked() );
     m_GC1ePowerOffAtIdle->Enable( m_GC1eIdleWD->IsChecked() );
   }

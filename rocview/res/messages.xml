@@ -17791,4 +17791,7 @@
   <Msg id="querysensors">
     <en txt="Query sensors" tip="Query actual state of all sensors."/>
   </Msg>
+  <Msg id="canid">
+    <en txt="CAN ID"/>
+  </Msg>
 </Messages>
