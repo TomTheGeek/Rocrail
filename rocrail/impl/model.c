@@ -328,7 +328,11 @@ static Boolean _createEmptyPlan( iOModelData o ) {
       planXml = NodeOp.base.toString( root );
     }
     else {
+      iONode zlevel = NULL;
       o->model = NodeOp.inst( wPlan.name(), NULL, ELEMENT_NODE );
+      zlevel = NodeOp.inst( wZLevel.name(), o->model, ELEMENT_NODE );
+      wZLevel.settitle(zlevel, "Level 0" );
+      NodeOp.addChild(o->model, zlevel );
       o->title = wPlan.gettitle( o->model );
       planXml = NodeOp.base.toString( o->model );
     }
