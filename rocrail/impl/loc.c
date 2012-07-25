@@ -1950,6 +1950,9 @@ static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent ) {
         if( wLoc.isconsist_lightsoff(data->props) ) {
           wLoc.setfn( consistcmd, False );
         }
+        else {
+          wLoc.setignorefn(consistcmd, True);
+        }
 
         wLoc.setconsistcmd( consistcmd, True );
 
@@ -2011,11 +2014,15 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     if( master != NULL && StrOp.equals(wLoc.name(), nodename ) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "redirecting command %s:%s from %s to master %s",
           nodename, cmd, wLoc.getid( data->props ), LocOp.getId(master) );
+      wLoc.setignorefn(nodeA, True);
       LocOp.cmd(master, nodeA);
       return True;
     }
   }
 
+  if( StrOp.equals(wLoc.name(), nodename ) && wLoc.isignorefn(nodeA) ) {
+    wLoc.setfn(nodeA, data->fn0);
+  }
 
   if( wCtrl.isdisablesteal( AppOp.getIniNode( wCtrl.name() ) ) ) {
     if( wLoc.getthrottleid( nodeA ) != NULL && StrOp.len(wLoc.getthrottleid( nodeA)) > 0 ) {
