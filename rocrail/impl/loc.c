@@ -2006,6 +2006,17 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   const char* nodename = NodeOp.getName( nodeA );
   const char* cmd  = wLoc.getcmd( nodeA );
 
+  if( !wLoc.isconsistcmd( nodeA ) ) {
+    iOLoc master = ModelOp.getMasterLoc(model, wLoc.getid( data->props ));
+    if( master != NULL && StrOp.equals(wLoc.name(), nodename ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "redirecting command %s:%s from %s to master %s",
+          nodename, cmd, wLoc.getid( data->props ), LocOp.getId(master) );
+      LocOp.cmd(master, nodeA);
+      return True;
+    }
+  }
+
+
   if( wCtrl.isdisablesteal( AppOp.getIniNode( wCtrl.name() ) ) ) {
     if( wLoc.getthrottleid( nodeA ) != NULL && StrOp.len(wLoc.getthrottleid( nodeA)) > 0 ) {
       if( wLoc.getthrottleid( data->props ) != NULL && StrOp.len(wLoc.getthrottleid( data->props)) > 0 ) {

@@ -1113,6 +1113,10 @@
     <fun name="forceUnlock" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
     </fun>
+    <fun name="getMasterLoc" vt="iOLoc">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="slaveID" vt="const char*"/>
+    </fun>
     <data include="mvtrack,modplan,$rocint/public/analyserint">
       <var name="callback" vt="model_listener"/>
       <var name="cbCargo" vt="obj"/>
@@ -1124,6 +1128,7 @@
       <var name="planDoc" vt="iODoc"/>
       <var name="model" vt="iONode"/>
       <var name="locMap" vt="iOMap"/>
+      <var name="masterLocMap" vt="iOMap"/>
       <var name="carMap" vt="iOMap"/>
       <var name="operatorMap" vt="iOMap"/>
       <var name="switchMap" vt="iOMap"/>

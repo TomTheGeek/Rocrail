@@ -130,6 +130,7 @@ static int instCnt = 0;
 
 
 static Boolean __removeLoco(iOModelData o, iONode item );
+static void __initMasterLocMap(iOModel inst);
 
 
 /*
@@ -1014,6 +1015,9 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
     }
     else if( wLoc.getid( item ) != NULL && StrOp.len( wLoc.getid( item ) ) > 0 ) {
       _addItem( inst, item );
+    }
+    if( modified ) {
+      __initMasterLocMap(inst);
     }
   }
   else if( StrOp.equals( wCar.name(), name ) ) {
@@ -2916,6 +2920,31 @@ static void __reinitRoutes( iOModel inst ) {
 }
 
 
+static iOLoc _getMasterLoc(iOModel inst, const char* slaveID ) {
+  iOModelData data = Data(inst);
+  return (iOLoc)MapOp.get( data->masterLocMap, slaveID);
+}
+
+
+static void __initMasterLocMap(iOModel inst) {
+  iOModelData data = Data(inst);
+  MapOp.clear( data->masterLocMap );
+
+  iOLoc loc = (iOLoc)MapOp.first( data->locMap );
+  while( loc != NULL ) {
+    const char* consist = wLoc.getconsist( LocOp.base.properties(loc) );
+    if( consist != NULL && StrOp.len( consist ) > 0 ) {
+      iOStrTok tok = StrTokOp.inst( consist, ',' );
+      while( StrTokOp.hasMoreTokens(tok) ) {
+        const char* slaveID = StrTokOp.nextToken(tok);
+        MapOp.put( data->masterLocMap, slaveID, (obj)loc );
+      }
+      StrTokOp.base.del(tok);
+    }
+    loc = (iOLoc)MapOp.next( data->locMap );
+  }
+
+}
 
 
 static void _init( iOModel inst ) {
@@ -3027,6 +3056,8 @@ static void _init( iOModel inst ) {
   }
 
   __initGroups(inst);
+
+  __initMasterLocMap(inst);
 
   /* Reset FxSp flag. */
   wRocRail.setresetspfx(AppOp.getIni(), False);
@@ -4791,6 +4822,7 @@ static iOModel _inst( const char* fileName ) {
   data->fileName = fileName;
 
   data->locMap      = MapOp.inst();
+  data->masterLocMap = MapOp.inst();
   data->carMap      = MapOp.inst();
   data->waybillMap  = MapOp.inst();
   data->operatorMap = MapOp.inst();
