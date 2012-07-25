@@ -2084,6 +2084,7 @@
         </cvbyte>
 
         <var name="consist_lightsoff" vt="bool" defval="False" remark="Keep lights turned off for all slave locos."/>
+        <var name="consist_syncfun" vt="bool" defval="False" remark="Synchronise functions for all slave locos."/>
         <var name="consist" vt="string" defval="" range="*" remark="Slave locomotives"/>
         <var name="consistcmd" vt="bool" defval="False" remark="Consist context command; Flag for preventing loops."/>
 

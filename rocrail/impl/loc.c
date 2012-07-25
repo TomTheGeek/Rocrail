@@ -1958,7 +1958,10 @@ static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent ) {
           wLoc.setV(consistcmd, V);
         }
 
-        LocOp.cmd( consistloc, consistcmd );
+        if( wLoc.isconsist_syncfun( data->props ) )
+          LocOp.cmd( consistloc, consistcmd );
+        else if( StrOp.equals(wLoc.name(), NodeOp.getName(consistcmd) ) )
+          LocOp.cmd( consistloc, consistcmd );
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "consist loco [%s] not found", tok );

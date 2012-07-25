@@ -469,6 +469,7 @@ public:
     wxPanel* m_ConsistsPanel;
     wxStaticBox* m_labDetails;
     wxCheckBox* m_LightsOff;
+    wxCheckBox* m_SyncFun;
     wxStaticText* m_labConsistList;
     wxListBox* m_ConsistList;
     wxStaticText* m_labConsistLocID;
