@@ -499,12 +499,13 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     int gate  = wSwitch.getgate1( node );
     int delay = wSwitch.getdelay( node );
 
+    byte addrFormat = 0x00;
+    Boolean lock = False;
+    int state;
+
     if ( !wSwitch.isactdelay( node ) ) {
       delay = 0;
     }
-
-    byte addrFormat = 0x00;
-    int state;
 
     if( data->protver > 0 ) {
       state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0:1;
@@ -529,7 +530,6 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
 
     {
       byte* outa = allocMem(32);
-      byte lock = 0;                    /* TODO lock/unlock switch */
 
       outa[0] = 1;    /* short packet */
       outa[1] = 6;    /* packet length */
@@ -558,7 +558,7 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch %d:%d:%d %s, 0x%02X", addr, port, gate, state?"green":"red", outa[6]);
     }
 
-    if (False) {
+    if (False) {                /* switch off gate after swtime */
       byte* outa = allocMem(32);
 
       outa[0] = 1;    /* short packet */
@@ -773,9 +773,8 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       outa[3] = 2;    /* track control */
       outa[4] = 0; /* stop broadcast */
       ThreadOp.post( data->transactor, (obj)outa );
-    }
-    else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SYSCMD %s", cmd );
+    } else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SYSCMD %s", cmd );
     }
   }
   /* Program command. */
@@ -971,11 +970,18 @@ static void __handleTrackSection(iOZimoBin zimobin, byte mx9_id, byte mx9_sec, b
   byte secb    = (bstat & 0x10) ? 0x01 : 0x00;
   byte seca    = (bstat & 0x08) ? 0x01 : 0x00;
   byte nrloco  = bstat & 0x07;
+  byte fstat;
   int i;
+
+  if( lstat != NULL ) {
+    fstat = lstat[0];
+  } else {
+    fstat = 255;
+  }
 
   if ( nrloco && (lstat != NULL) ) {
     int  addr    = ((((mx9_id-1) * 16) + (mx9_sec * 2) + 1) + (data->fboffset * 8)) + 2000;
-    byte fstat = lstat[0];
+
     lstat++;
     for (i=0; i<nrloco; i++) {
 
@@ -1018,63 +1024,66 @@ static void __handleTrackSection(iOZimoBin zimobin, byte mx9_id, byte mx9_sec, b
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "tracksection: BiDi MX9=%d, section=%d no Loc", mx9_id, mx9_sec );
   }
 
-  if (valid && changed) {
-    int addr = (((mx9_id-1) * 16) + (mx9_sec * 2) + 1) + (data->fboffset * 8);
+  if( valid ) {
+    if( changed ) {
+      int addr = (((mx9_id-1) * 16) + (mx9_sec * 2) + 1) + (data->fboffset * 8);
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "tracksection: MX9=%d, section=%d, addr=%d status=0x%02X:0x%02X", mx9_id, mx9_sec, addr, seca, ues );
-    {
-      iONode nodeF = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-      wFeedback.setaddr( nodeF, addr );
-      wFeedback.setstate( nodeF, seca?True:False );
-      if ( data->iid != NULL )
-        wFeedback.setiid( nodeF, data->iid );
-      if( data->listenerFun != NULL && data->listenerObj != NULL )
-        data->listenerFun( data->listenerObj, nodeF, TRCLEVEL_INFO );
-    }
-    addr++;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "tracksection: MX9=%d, section=%d, addr=%d status=0x%02X:0x%02X", mx9_id, mx9_sec, addr, seca, ues );
+      {
+        iONode nodeF = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        wFeedback.setaddr( nodeF, addr );
+        wFeedback.setstate( nodeF, seca?True:False );
+        if ( data->iid != NULL )
+          wFeedback.setiid( nodeF, data->iid );
+        if( data->listenerFun != NULL && data->listenerObj != NULL )
+          data->listenerFun( data->listenerObj, nodeF, TRCLEVEL_INFO );
+      }
+      addr++;
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "tracksection: MX9=%d, section=%d, addr=%d status=0x%02X:0x%02X", mx9_id, mx9_sec, addr, secb, ues );
-    {
-      iONode nodeF = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-      wFeedback.setaddr( nodeF, addr );
-      wFeedback.setstate( nodeF, secb?True:False );
-      if ( data->iid != NULL )
-        wFeedback.setiid( nodeF, data->iid );
-      if( data->listenerFun != NULL && data->listenerObj != NULL )
-        data->listenerFun( data->listenerObj, nodeF, TRCLEVEL_INFO );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "tracksection: MX9=%d, section=%d, addr=%d status=0x%02X:0x%02X", mx9_id, mx9_sec, addr, secb, ues );
+      {
+        iONode nodeF = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        wFeedback.setaddr( nodeF, addr );
+        wFeedback.setstate( nodeF, secb?True:False );
+        if ( data->iid != NULL )
+          wFeedback.setiid( nodeF, data->iid );
+        if( data->listenerFun != NULL && data->listenerObj != NULL )
+          data->listenerFun( data->listenerObj, nodeF, TRCLEVEL_INFO );
+      }
+      addr = addr + 999;
+      {
+        iONode nodeF = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        wFeedback.setaddr( nodeF, addr );
+        wFeedback.setstate( nodeF, ues?True:False );
+        if ( data->iid != NULL )
+          wFeedback.setiid( nodeF, data->iid );
+        if( data->listenerFun != NULL && data->listenerObj != NULL )
+          data->listenerFun( data->listenerObj, nodeF, TRCLEVEL_INFO );
+      }
+      addr++;
+      {
+        iONode nodeF = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        wFeedback.setaddr( nodeF, addr );
+        wFeedback.setstate( nodeF, ues?True:False );
+        if ( data->iid != NULL )
+          wFeedback.setiid( nodeF, data->iid );
+        if( data->listenerFun != NULL && data->listenerObj != NULL )
+          data->listenerFun( data->listenerObj, nodeF, TRCLEVEL_INFO );
+      }
     }
-    addr = addr + 999;
-    {
-      iONode nodeF = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-      wFeedback.setaddr( nodeF, addr );
-      wFeedback.setstate( nodeF, ues?True:False );
-      if ( data->iid != NULL )
-        wFeedback.setiid( nodeF, data->iid );
-      if( data->listenerFun != NULL && data->listenerObj != NULL )
-        data->listenerFun( data->listenerObj, nodeF, TRCLEVEL_INFO );
-    }
-    addr++;
-    {
-      iONode nodeF = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-      wFeedback.setaddr( nodeF, addr );
-      wFeedback.setstate( nodeF, ues?True:False );
-      if ( data->iid != NULL )
-        wFeedback.setiid( nodeF, data->iid );
-      if( data->listenerFun != NULL && data->listenerObj != NULL )
-        data->listenerFun( data->listenerObj, nodeF, TRCLEVEL_INFO );
-    }
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "tracksection: MX9=%d, section=%d, speed=%d", mx9_id, mx9_sec, fstat );
   } else {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "tracksection: MX9=%d, section=%d, invalid", mx9_id, mx9_sec );
   }
 
 }
 
-static void __handleAccessoryFeedback(iOZimoBin zimobin, byte* locop) {
+static void __handleAccessoryFeedback(iOZimoBin zimobin, byte* swp) {
   iOZimoBinData data = Data(zimobin);
 
-  int daddr     = ((locop[0] & 0x3f) * 256) + locop[1];
-  int cPair     = locop[2];
-  int cOutput   = locop[3];
+  int daddr     = ((swp[0] & 0x3f) * 256) + swp[1];
+  int cPair     = swp[2];
+  int cOutput   = swp[3];
 
   int i;
   int port;
@@ -1090,15 +1099,15 @@ static void __handleAccessoryFeedback(iOZimoBin zimobin, byte* locop) {
     gate  = (cOutput >> (i*2)) & 0x03;
 
     /* inform listener */
-    iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     if( data->iid != NULL )
-      wSwitch.setiid( node, data->iid );
+      wSwitch.setiid( nodeC, data->iid );
 
-    wSwitch.setaddr1( node, daddr );
-    wSwitch.setport1( node, port );
-    wSwitch.setstate( node, state?"straight":"turnout" );
-    
-    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+    wSwitch.setaddr1( nodeC, daddr );
+    wSwitch.setport1( nodeC, port );
+    wSwitch.setstate( nodeC, state?"straight":"turnout" );
+
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }
 
 }
@@ -1212,7 +1221,7 @@ static Boolean __ackHandler(iOZimoBin zimobin, byte* packet, int len) {
 
   if (len < 6) msgerr = 0;
   if (msgerr) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ack for %d message=0x%02X type=%d error=%s", msgack, packet[1], packet[2], __getErrCode(msgerr));
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "ack for %d message=0x%02X type=%d error=%s", msgack, packet[1], packet[2], __getErrCode(msgerr));
     switch (msgerr) {
       case ERR_BUSY:
         return;
@@ -1306,13 +1315,14 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
             /* Do nothing, the packethandler will resend */
             break;
           case 254:   /* monitor external accessory decoder change */
-                      /* cOutput is wrong in Zimo 3.03 */
+                      /* cOutput is wrong in Zimo 3.06 */
                       /* the last switched turnout is not in the data */
                       /* workaround query Accessory decoder memory after a short delay */ 
             __send_ack(zimobin, seqid, msgt);
             /* in case off correction
             __handleAccessoryFeedback( zimobin, &packet[3] );
             */
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get external accesory decoder change" );
 
             {
               byte* outa = allocMem(32);
@@ -1323,8 +1333,8 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
               outa[3] = 9;    /* accessory command */
               outa[4] = packet[3];
               outa[5] = packet[4];
-              outa[6] = 400 / 256;
-              outa[7] = 400 % 256;
+              outa[6] = 500 / 256;
+              outa[7] = 500 % 256;
 
               MutexOp.wait( data->tmux );
               QueueOp.post( data->tqueue, (obj)outa, normal );
@@ -1513,7 +1523,7 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
         }
         break;
       case 0x41:  /* MX8 */
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TODO message=0x%02X type=%d", msgt, subt );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "TODO message=0x%02X type=%d", msgt, subt );
         __ackHandler( zimobin, packet, len );
         break;
       case 0x42:  /* MX9 */
@@ -1534,7 +1544,7 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
             __ackHandler( zimobin, packet, len );
             break;
           default:
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TODO message=0x%02X type=%d", msgt, subt );
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "TODO message=0x%02X type=%d", msgt, subt );
             __ackHandler( zimobin, packet, len );
             break;
         }
@@ -1545,7 +1555,7 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
   return ok;
 }
 
-#define PSLEEP 50
+#define PSLEEP 100
 
 static void __packethandler( void* threadinst ) {
   iOThread      th      = (iOThread)threadinst;
@@ -1554,6 +1564,8 @@ static void __packethandler( void* threadinst ) {
   obj omsg = NULL;
 
   int pcnt;
+
+  /* SystemOp.getTick(); */
 
   ThreadOp.setDescription( th, "Packet Handler for ZimoBin" );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Packet Handler started." );
@@ -1584,12 +1596,12 @@ static void __packethandler( void* threadinst ) {
           if( data->protver > 2 ) {
             byte* outa = allocMem(128);
             MemOp.copy( outa+3, (byte*) out, packetlen);
-            outa[0] = 50;
+            outa[0] = 10;
             outa[1] = packettyp;
             outa[2] = packetlen;
             QueueOp.post( data->pqueue, (obj)outa, normal );
           }
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write again %d:%d message=0x%02X type=%d %d %d %d", packetlen, out[0], out[1], out[2], out[3], out[4], out[5] );
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "write again %d:%d message=0x%02X type=%d %d %d %d", packetlen, out[0], out[1], out[2], out[3], out[4], out[5] );
           packetlen = __escapePacket(out, packetlen);
           packetlen = __controlPacket(out, packetlen);
           SerialOp.write( data->serial, (char*) out, packetlen );
@@ -1629,8 +1641,19 @@ static void __packethandler( void* threadinst ) {
 static void __initComm( iOZimoBin zimobin ) {
   iOZimoBinData data    = Data(zimobin);
 
+  while ( !SerialOp.open( data->serial ) && !data->dummyio ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init ZimoBin port %s!", wDigInt.getdevice( data->ini ) );
+
+    ThreadOp.sleep(2500); /* wait some time for usb-devices */
+  }
+
+  TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Init ZimoBin port %s!", wDigInt.getdevice( data->ini ) );
+
+  data->comm = True;
+
+
   /* prepare init packet */
-  {
+  if( False ) { /* dont need reset packet */
     byte* outa = allocMem(32);
 
     outa[0] = 1;    /* short packet */
@@ -1649,6 +1672,17 @@ static void __initComm( iOZimoBin zimobin ) {
     outa[3] = 17;   /* serial info  */
     outa[4] = TOOLID;    /* toolid */
     outa[5] = 1;    /* action start */
+    ThreadOp.post( data->transactor, (obj)outa );
+  }
+
+  {
+    byte* outa = allocMem(32);
+
+    outa[0] = 1;    /* short packet */
+    outa[1] = 4;    /* packet length */
+    outa[2] = 0x10; /* command station instruction */
+    outa[3] = 2;    /* status */
+    outa[4] = 3;    /* query */
     ThreadOp.post( data->transactor, (obj)outa );
   }
 
@@ -1795,12 +1829,13 @@ static void __transactor( void* threadinst ) {
   iOZimoBinData data    = Data(zimobin);
 
   obj post = NULL;
-  int esqid = 0x20;
-  int refresh = (data->timeout / 10);
+  byte esqid = 0x20;
   byte inbuf[512];
-  int po = 1;
-  int uics = 1;
-  int pscnt = 0;
+  unsigned long ctick = SystemOp.getTick();
+  unsigned long sswt = SystemOp.getTick();
+  unsigned long ssqt = SystemOp.getTick();
+  unsigned long suit = SystemOp.getTick();
+  unsigned long spat = SystemOp.getTick();
 
   ThreadOp.setDescription( th, "Transactor for ZimoBin" );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Transactor started." );
@@ -1818,6 +1853,7 @@ static void __transactor( void* threadinst ) {
       Boolean ok = SerialOp.read( data->serial, (char*) &inbuf[inIdx], 1 );
       if( !ok ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Read from port failed." );
+        data->comm = False;
         break;
       }
       /*
@@ -1848,13 +1884,12 @@ static void __transactor( void* threadinst ) {
 
       /* 1char at 2400bps 4ms */
       dataAvailable = SerialOp.available(data->serial);
-      int waitformore = 10;
+      int waitformore = 50;
       while( dataAvailable == 0 && waitformore > 0) {
-        ThreadOp.sleep(4);
+        ThreadOp.sleep(1);
         dataAvailable = SerialOp.available(data->serial);
         waitformore--;
       }
-
       inIdx++;
     }
 
@@ -1864,13 +1899,15 @@ static void __transactor( void* threadinst ) {
       inIdx = __uncontrolPacket(inbuf, inIdx);
       __evaluatePacket(zimobin, inbuf, inIdx);
     }
-    else if(inIdx > 0) {
+    else if(inIdx > 1) {
       /* Invalid packet? */
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Invalid packet. len %d", inIdx );
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)inbuf, inIdx );
-    }
+    } 
 
-    if( pscnt++ % 10 ) {
+    ctick = SystemOp.getTick();
+
+    if( (ctick - sswt) < (data->swtime / 10) ) {
       post = NULL;
     } else {
       post = ThreadOp.getPost( th );
@@ -1881,8 +1918,6 @@ static void __transactor( void* threadinst ) {
       int packettyp = ((byte*) post)[0] & 0xFF;
       int packetlen = ((byte*) post)[1] & 0xFF;
       esqid++;
-      if( esqid > 255 )
-        esqid = 0;
 
       /* sequence byte */
       out[0] = esqid;
@@ -1905,7 +1940,7 @@ static void __transactor( void* threadinst ) {
         byte* outa = allocMem(128);
         MemOp.copy( outa+3, (byte*) out, packetlen);
 
-        outa[0] = 50;
+        outa[0] = 10;
         outa[1] = packettyp;
         outa[2] = packetlen;
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "write %d:%d message=0x%02X type=%d %d %d %d", outa[2], outa[3], outa[4], outa[5], outa[6], outa[7], outa[8] );
@@ -1913,47 +1948,53 @@ static void __transactor( void* threadinst ) {
         QueueOp.post( data->pqueue, (obj)outa, normal );
         MutexOp.post( data->pmux );
       }
+      if( ((out[1] & 0xf0) == 0x10) && (out[2] == 7) ) { /* accessory command */
+        sswt = SystemOp.getTick();
+      }
       packetlen = __escapePacket(out, packetlen);
       packetlen = __controlPacket(out, packetlen);
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, packetlen );
-      SerialOp.write( data->serial, (char*) out, packetlen );
+      data->comm = SerialOp.write( data->serial, (char*) out, packetlen );
 
-      refresh=(data->timeout / 10);
-    } else if (!refresh--) {
-      if ( !data->pt ) {
-        byte* outa = allocMem(32);
-        outa[0] = 1;    /* short packet */
-        outa[1] = 4;    /* packet length */
-        outa[2] = 0x10; /* command station instruction */
-        outa[3] = 17;    /* serial info  */
-        outa[4] = TOOLID;     /* toolid */
-        outa[5] = 2;     /* action refresh */
-        ThreadOp.post( data->transactor, (obj)outa );
+      spat = SystemOp.getTick();
+    }
 
-        if ( po-- < 1 ) {
-          byte* outa = allocMem(32);
-          outa[0] = 1;    /* short packet */
-          outa[1] = 3;    /* packet length */
-          outa[2] = 0x10; /* command station instruction */
-          outa[3] = 2;    /* track control */
-          outa[4] = 3;    /* query status */
-          ThreadOp.post( data->transactor, (obj)outa );
-          po = 10;
-        }
+    if ( (ctick - spat) > 190 ) {
+      byte* outa = allocMem(32);
+      outa[0] = 1;    /* short packet */
+      outa[1] = 4;    /* packet length */
+      outa[2] = 0x10; /* command station instruction */
+      outa[3] = 17;    /* serial info  */
+      outa[4] = TOOLID;     /* toolid */
+      outa[5] = 2;     /* action refresh */
+      ThreadOp.post( data->transactor, (obj)outa );
+    }
 
-        if ( uics-- < 1 ) {
-          byte* outa = allocMem(32);
-          outa[0] = 1;    /* short packet */
-          outa[1] = 3;    /* packet length */
-          outa[2] = 0x10; /* command station instruction */
-          outa[3] = 11;   /* ui status */
-          outa[4] = 0;    /* query status */
-          ThreadOp.post( data->transactor, (obj)outa );
-          uics = 5;
-        }
-      }
+    if ( (ctick - ssqt) > 990 ) {
+      byte* outa = allocMem(32);
+      outa[0] = 1;    /* short packet */
+      outa[1] = 3;    /* packet length */
+      outa[2] = 0x10; /* command station instruction */
+      outa[3] = 2;    /* track control */
+      outa[4] = 3;    /* query status */
+      ThreadOp.post( data->transactor, (obj)outa );
+      ssqt = ctick;
+    }
 
-      refresh=(data->timeout / 10);
+    if ( (ctick - suit) > 490 ) {
+      byte* outa = allocMem(32);
+      outa[0] = 1;    /* short packet */
+      outa[1] = 3;    /* packet length */
+      outa[2] = 0x10; /* command station instruction */
+      outa[3] = 11;   /* ui status */
+      outa[4] = 0;    /* query status */
+      ThreadOp.post( data->transactor, (obj)outa );
+      suit = ctick;
+    }
+
+    if( !data->comm ) {
+      SerialOp.close( data->serial );
+      __initComm( zimobin );
     }
 
     /* Give up timeslice:*/
@@ -2000,9 +2041,6 @@ static struct OZimoBin* _inst( const iONode ini ,const iOTrace trc ) {
   data->comm = False;
   data->ues = 1;
 
-  if (data->timeout < 500)
-    data->timeout = 500;
-
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ZimoBin %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
@@ -2016,11 +2054,13 @@ static struct OZimoBin* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );
-  SerialOp.setBlocking( data->serial, 1 );
+
+  SerialOp.setBlocking( data->serial, True );
   SerialOp.setFlow( data->serial, cts );
   SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
-  SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
+  SerialOp.setTimeout( data->serial, data->timeout, data->timeout );
 
+  /*
   if( !SerialOp.open( data->serial ) && !data->dummyio ) {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init ZimoBin port %s!", wDigInt.getdevice( ini ) );
   }
@@ -2036,8 +2076,17 @@ static struct OZimoBin* _inst( const iONode ini ,const iOTrace trc ) {
     ThreadOp.start( data->packethandler );
     data->comm = True;
   }
+  */
 
-
+  data->run = True;
+  data->pqueue = QueueOp.inst( 100 );
+  data->pmux = MutexOp.inst( NULL, True );
+  data->tqueue = QueueOp.inst( 100 );
+  data->tmux = MutexOp.inst( NULL, True );
+  data->transactor = ThreadOp.inst( "transactor", &__transactor, __ZimoBin );
+  ThreadOp.start( data->transactor );
+  data->packethandler = ThreadOp.inst( "packethandler", &__packethandler, __ZimoBin );
+  ThreadOp.start( data->packethandler );
 
   instCnt++;
   return __ZimoBin;
