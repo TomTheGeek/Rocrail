@@ -195,6 +195,7 @@ Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
     return 0;
   }
 
+  ThreadOp.sleep( 50 );
 
   len = makeChecksum(outin);
 
