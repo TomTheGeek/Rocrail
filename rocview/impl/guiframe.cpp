@@ -2609,7 +2609,8 @@ void RocGuiFrame::OnInitField( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnQuerySensors( wxCommandEvent& event ) {
   iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
-  wModelCmd.setcmd( cmd, wSysCmd.sod );
+  wSysCmd.setcmd( cmd, wSysCmd.sod );
+  wSysCmd.setinformall( cmd, True );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
