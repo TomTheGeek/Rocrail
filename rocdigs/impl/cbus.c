@@ -1484,7 +1484,7 @@ static void __writer( void* threadinst ) {
         }
 
         if( data->subWrite((obj)cbus, out, len) ) {
-          if( out[1] == 'S' )
+          if( data->commandAck && out[1] == 'S' )
             data->wait4Ack = True;
         }
         else {
@@ -1505,7 +1505,10 @@ static void __writer( void* threadinst ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "CBUS is disconnected, try a reconnect..." );
       data->connOK = data->subConnect((obj)cbus);
     }
-
+    else {
+      ThreadOp.sleep(1000);
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "CBUS commandAck=%d wait4Ack=%d buson=%d", data->commandAck, data->wait4Ack, data->buson );
+    }
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writer ended." );
 
