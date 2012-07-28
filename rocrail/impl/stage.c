@@ -406,6 +406,10 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
 
       }
     }
+    else if(!puls) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensors [%s] for stage [%s] came free; move locos...", id, data->id );
+      __moveStageLocos(inst);
+    }
   }
 
   else {
@@ -868,13 +872,14 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
       if( fb != NULL && FBackOp.isState(fb, "false") ) {
         /* Last free section in the list */
         nextFreeSection = section;
+        continue;
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "section [%d] is electrically occupied", wStageSection.getidx(section) );
       }
     }
 
-    if( firstOccupiedSection == NULL && (wStageSection.getlcid(section) != NULL && StrOp.len(wStageSection.getlcid(section)) > 0) ) {
+    if( nextFreeSection != NULL && firstOccupiedSection == NULL && (wStageSection.getlcid(section) != NULL && StrOp.len(wStageSection.getlcid(section)) > 0) ) {
       /* Last occpupied section in the list */
       firstOccupiedSection = section;
       break;
@@ -913,14 +918,14 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
     lastSection = (iONode)ListOp.get(data->sectionList, cnt - 1);
     if( lastSection != NULL ) {
       iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(lastSection) );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"start loco %s in the last section %s", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
       if( lc != NULL && !LocOp.isAutomode(lc) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"start loco %s in the last section %s", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
         iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
         LocOp.setCurBlock(lc, data->id);
         wLoc.setcmd(cmd, wLoc.go);
         LocOp.cmd(lc, cmd);
       }
-      else {
+      else if( lc != NULL && LocOp.isAutomode(lc) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"loco %s is in the last section %s and in auto mode", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
       }
 
