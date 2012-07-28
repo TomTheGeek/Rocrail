@@ -874,6 +874,7 @@ void ActionsCtrlDlg::OnCancelClick( wxCommandEvent& event )
 
 void ActionsCtrlDlg::OnApplyClick( wxCommandEvent& event )
 {
+  evaluateCond();
   evaluate();
   apply();
 }

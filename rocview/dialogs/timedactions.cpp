@@ -287,6 +287,7 @@ void TimedActions::initIndex() {
         m_TimedActions->SetStringSelection( wxString(wAction.getid( l_Props ),wxConvUTF8) );
         m_TimedActions->SetFirstItem( wxString(wAction.getid( l_Props ),wxConvUTF8) );
         m_Props = l_Props;
+        initValues();
       }
     }
   }
