@@ -307,7 +307,6 @@ void ActionsCtrlDlg::initValues() {
       initCondValues();
     }
     else {
-      m_CondType->SetSelection(0);
       m_CondID->SetStringSelection( _T("*") );
       m_CondState->SetValue( _T("") );
     }
@@ -524,7 +523,9 @@ void ActionsCtrlDlg::deleteSelectedCond() {
     NodeOp.removeChild(actionctrl, node);
     NodeOp.base.del(node);
     m_Conditions->Delete(condsel);
-    m_Conditions->SetSelection(0);
+    if(m_Conditions->GetCount() > 0) {
+      m_Conditions->SetSelection(0);
+    }
     initCondValues();
   }
 }
