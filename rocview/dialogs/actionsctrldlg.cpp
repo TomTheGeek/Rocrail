@@ -306,6 +306,11 @@ void ActionsCtrlDlg::initValues() {
       m_Conditions->SetSelection(0);
       initCondValues();
     }
+    else {
+      m_CondType->SetSelection(0);
+      m_CondID->SetStringSelection( _T("*") );
+      m_CondState->SetValue( _T("") );
+    }
 
   }
   else {
@@ -537,6 +542,7 @@ void ActionsCtrlDlg::addActionCtrl() {
   m_CtrlList->Append( wxString( wActionCtrl.getid(node),wxConvUTF8 ), node );
   m_CtrlList->SetStringSelection( m_ID->GetStringSelection() );
   m_CtrlList->SetFirstItem( m_ID->GetStringSelection() );
+  initValues();
   evaluate();
 }
 
