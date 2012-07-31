@@ -34,6 +34,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/listctrl.h"
 #include "wx/statline.h"
 #include "wx/spinctrl.h"
 #include "wx/grid.h"
@@ -48,6 +49,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxListCtrl;
 class wxBoxSizer;
 class wxSpinCtrl;
 class wxGrid;
@@ -62,7 +64,7 @@ class wxGrid;
 #define ID_BITMAPBUTTON 10123
 #define ID_NOTEBOOK 10001
 #define ID_PANEL_INDEX 10060
-#define ID_LISTBOX 10120
+#define ID_LISTCTRLINDEX 10062
 #define ID_BUTTON_LOC_NEW 10121
 #define ID_BUTTON_DELETE 10122
 #define ID_BUTTON_LOCO_DOC 10353
@@ -169,7 +171,7 @@ class LocDialog: public wxDialog, public BaseDialog
     DECLARE_EVENT_TABLE()
 
   void initLabels();
-  void InitIndex();
+  bool InitIndex();
   void InitValues();
   void initFunctions();
   bool Evaluate();
@@ -202,8 +204,11 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BITMAPBUTTON
     void OnBitmapbuttonClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX
-    void OnListboxSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRLINDEX
+    void OnListctrlindexSelected( wxListEvent& event );
+
+    /// wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRLINDEX
+    void OnListctrlindexColLeftClick( wxListEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOC_NEW
     void OnButtonLocNewClick( wxCommandEvent& event );
@@ -310,7 +315,7 @@ public:
     wxBitmapButton* m_LocImage;
     wxNotebook* m_Notebook;
     wxPanel* m_IndexPanel;
-    wxListBox* m_List;
+    wxListCtrl* m_List2;
     wxButton* m_New;
     wxButton* m_Delete;
     wxButton* m_Doc;

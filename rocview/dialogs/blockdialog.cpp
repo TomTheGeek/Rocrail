@@ -85,7 +85,8 @@ IMPLEMENT_DYNAMIC_CLASS( BlockDialog, wxDialog )
 BEGIN_EVENT_TABLE( BlockDialog, wxDialog )
 
 ////@begin BlockDialog event table entries
-    EVT_LISTBOX( ID_LISTBOX_BLOCKS, BlockDialog::OnListboxBlocksSelected )
+    EVT_LIST_ITEM_SELECTED( ID_LISTCTRL, BlockDialog::OnListctrlSelected )
+    EVT_LIST_COL_CLICK( ID_LISTCTRL, BlockDialog::OnListctrlColLeftClick )
 
     EVT_BUTTON( ID_BUTTON_BLOCK_NEW, BlockDialog::OnButtonBlockNewClick )
 
@@ -203,10 +204,8 @@ BlockDialog::BlockDialog( wxWindow* parent, iONode p_Props, bool save )
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
-  initIndex();
-  if( m_Props != NULL ) {
+  if( initIndex() ) {
     initValues();
-    //m_Notebook->SetSelection( 1 );
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_BK_GENERAL );
     wxPostEvent( this, event );
   }
@@ -334,6 +333,7 @@ void BlockDialog::initLabels() {
   m_Notebook->SetPageText( 7, wxGetApp().getMsg( "permissions" ) );
 
   // Index
+  initList(m_List2, this);
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
 
@@ -496,43 +496,28 @@ static int __sortID(obj* _a, obj* _b)
 }
 
 
-void BlockDialog::initIndex() {
+bool BlockDialog::initIndex() {
   TraceOp.trc( "blockdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
   iONode l_Props = m_Props;
-  m_List->Clear();
 
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode bklist = wPlan.getbklist( model );
     if( bklist != NULL ) {
-      iOList list = ListOp.inst();
-      int cnt = NodeOp.getChildCnt( bklist );
-      for( int i = 0; i < cnt; i++ ) {
-        iONode bk = NodeOp.getChild( bklist, i );
-        const char* id = wBlock.getid( bk );
-        if( id != NULL ) {
-          ListOp.add(list, (obj)bk);
-        }
-      }
-
-      ListOp.sort(list, &__sortID);
-      cnt = ListOp.size( list );
-      for( int i = 0; i < cnt; i++ ) {
-        iONode bk = (iONode)ListOp.get( list, i );
-        const char* id = wBlock.getid( bk );
-        m_List->Append( wxString(id,wxConvUTF8), bk );
-      }
-      /* clean up the temp. list */
-      ListOp.base.del(list);
+      fillIndex(bklist);
 
       if( l_Props != NULL ) {
-        m_List->SetStringSelection( wxString(wBlock.getid( l_Props ),wxConvUTF8) );
-        m_List->SetFirstItem( wxString(wBlock.getid( l_Props ),wxConvUTF8) );
+        setIDSelection(wBlock.getid( l_Props ));
         m_Props = l_Props;
+        return true;
+      }
+      else {
+        m_Props = setSelection(0);
       }
 
     }
   }
+  return false;
 }
 
 
@@ -1123,7 +1108,7 @@ bool BlockDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capti
 ////@begin BlockDialog member initialisation
     m_Notebook = NULL;
     m_IndexPanel = NULL;
-    m_List = NULL;
+    m_List2 = NULL;
     m_New = NULL;
     m_Delete = NULL;
     m_General_Panel = NULL;
@@ -1297,9 +1282,8 @@ void BlockDialog::CreateControls()
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     m_IndexPanel->SetSizer(itemBoxSizer5);
 
-    wxArrayString m_ListStrings;
-    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_BLOCKS, wxDefaultPosition, wxSize(-1, 400), m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
-    itemBoxSizer5->Add(m_List, 1, wxGROW|wxALL, 5);
+    m_List2 = new wxListCtrl( m_IndexPanel, ID_LISTCTRL, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES );
+    itemBoxSizer5->Add(m_List2, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer7, 0, wxGROW|wxALL, 5);
@@ -1923,38 +1907,13 @@ void BlockDialog::CreateControls()
 }
 
 /*!
- * wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_BLOCKS
- */
-
-void BlockDialog::OnListboxBlocksSelected( wxCommandEvent& event )
-{
-  iONode model = wxGetApp().getModel();
-  if( model != NULL ) {
-    iONode bklist = wPlan.getbklist( model );
-    if( bklist != NULL ) {
-      int cnt = NodeOp.getChildCnt( bklist );
-      for( int i = 0; i < cnt; i++ ) {
-        iONode bk = NodeOp.getChild( bklist, i );
-        const char* id = wBlock.getid( bk );
-        if( id != NULL && StrOp.equals( id, m_List->GetStringSelection().mb_str(wxConvUTF8) ) ) {
-          m_Props = bk;
-          initValues();
-          break;
-        }
-      }
-    }
-  }
-}
-
-/*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BLOCK_NEW
  */
 
 void BlockDialog::OnButtonBlockNewClick( wxCommandEvent& event )
 {
-  int i = m_List->FindString( _T("NEW") );
+  int i = findID("NEW");
   if( i == wxNOT_FOUND ) {
-    m_List->Append( _T("NEW") );
     iONode model = wxGetApp().getModel();
     if( model != NULL ) {
       iONode bklist = wPlan.getbklist( model );
@@ -1967,12 +1926,12 @@ void BlockDialog::OnButtonBlockNewClick( wxCommandEvent& event )
         NodeOp.addChild( bklist, bk );
         wBlock.setid( bk, "NEW" );
         m_Props = bk;
+        appendItem(bk);
+        setIDSelection(wItem.getid(bk));
         initValues();
       }
     }
   }
-  m_List->SetStringSelection( _T("NEW") );
-  m_List->SetFirstItem( _T("NEW") );
 }
 
 /*!
@@ -2577,5 +2536,30 @@ void BlockDialog::OnButtonBlockActionsClick( wxCommandEvent& event )
   }
 
   dlg->Destroy();
+}
+
+
+/*!
+ * wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL
+ */
+
+void BlockDialog::OnListctrlSelected( wxListEvent& event )
+{
+  m_Props = getSelection(event.GetIndex());
+  initValues();
+}
+
+
+
+
+
+
+/*!
+ * wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRL
+ */
+
+void BlockDialog::OnListctrlColLeftClick( wxListEvent& event )
+{
+  sortOnColumn(event.GetColumn());
 }
 

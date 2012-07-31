@@ -7,6 +7,8 @@
 #ifndef BASEDLG_CPP_
 #define BASEDLG_CPP_
 
+#include <wx/listctrl.h>
+
 #include "rocs/public/node.h"
 
 
@@ -15,6 +17,23 @@ class BaseDialog
 public:
   void doDoc( wxCommandEvent& event, const char* xslName );
   bool existID( wxWindow* dlg, iONode list, iONode props, wxString id );
+  void initList(wxListCtrl* list, wxWindow* parent, bool showPos=true);
+  void fillIndex( iONode Items);
+  void setIDSelection( const char* ID );
+  iONode setSelection( int index );
+  iONode getSelection(int index=-1);
+  iONode selectNext();
+  iONode selectPrev();
+  int findID( const char* ID );
+  void appendItem( iONode Item);
+  void sortOnColumn( int col );
+
+  wxWindow* m_Parent;
+  wxListCtrl* m_ItemList;
+  iONode m_Items;
+  int m_SortCol;
+  bool m_ShowPos;
+  const char* m_SelectedID;
 };
 
 

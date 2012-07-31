@@ -79,7 +79,8 @@ BEGIN_EVENT_TABLE( LocDialog, wxDialog )
 ////@begin LocDialog event table entries
     EVT_BUTTON( ID_BITMAPBUTTON, LocDialog::OnBitmapbuttonClick )
 
-    EVT_LISTBOX( ID_LISTBOX, LocDialog::OnListboxSelected )
+    EVT_LIST_ITEM_SELECTED( ID_LISTCTRLINDEX, LocDialog::OnListctrlindexSelected )
+    EVT_LIST_COL_CLICK( ID_LISTCTRLINDEX, LocDialog::OnListctrlindexColLeftClick )
 
     EVT_BUTTON( ID_BUTTON_LOC_NEW, LocDialog::OnButtonLocNewClick )
 
@@ -157,16 +158,11 @@ LocDialog::LocDialog(  wxWindow* parent, iONode p_Props, bool save )
   initLabels();
   initCVDesc();
 
-  InitIndex();
-
-  if( m_Props != NULL ) {
+  if( InitIndex() ) {
     InitValues();
     //m_Notebook->SetSelection( 1 );
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_GENERAL );
     wxPostEvent( this, event );
-  }
-  else if( m_List->GetCount() > 0 ) {
-    //m_List->Select( 0 );
   }
 
   m_IndexPanel->GetSizer()->Layout();
@@ -181,36 +177,18 @@ LocDialog::LocDialog(  wxWindow* parent, iONode p_Props, bool save )
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
-  m_List->SetFocus();
+  m_List2->SetFocus();
 }
 
 
 void LocDialog::SelectNext() {
-  int cnt = m_List->GetCount();
-  int sel = m_List->GetSelection();
-  if( sel == wxNOT_FOUND )
-    m_List->Select( 0 );
-  else if( cnt > 0 && sel + 1 < cnt ) {
-    m_List->Select( sel + 1 );
-    m_List->SetFirstItem( sel + 1 );
-  }
-
-  m_Props = wxGetApp().getFrame()->findLoc( m_List->GetStringSelection().mb_str(wxConvUTF8) );
+  m_Props = selectNext();
   InitValues();
 }
 
 
 void LocDialog::SelectPrev() {
-  int cnt = m_List->GetCount();
-  int sel = m_List->GetSelection();
-  if( sel == wxNOT_FOUND )
-    m_List->Select( 0 );
-  else if( sel > 0 ) {
-    m_List->Select( sel - 1 );
-    m_List->SetFirstItem( sel - 1 );
-  }
-
-  m_Props = wxGetApp().getFrame()->findLoc( m_List->GetStringSelection().mb_str(wxConvUTF8) );
+  m_Props = selectPrev();
   InitValues();
 }
 
@@ -248,6 +226,7 @@ void LocDialog::initLabels() {
   m_Notebook->SetPageText( 5, wxGetApp().getMsg( "multipleunit" ) );
 
   // Index
+  initList(m_List2, this, false);
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_Doc->SetLabel( wxGetApp().getMsg( "doc_report" ) );
@@ -428,17 +407,17 @@ static int __sortCV(obj* _a, obj* _b)
 }
 
 
-void LocDialog::InitIndex() {
+bool LocDialog::InitIndex() {
   TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
   iONode l_Props = m_Props;
 
-  m_List->Clear();
   m_ConsistLocID->Clear();
 
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode lclist = wPlan.getlclist( model );
     if( lclist != NULL ) {
+      fillIndex(lclist);
       iOList list = ListOp.inst();
       int cnt = NodeOp.getChildCnt( lclist );
       for( int i = 0; i < cnt; i++ ) {
@@ -454,22 +433,23 @@ void LocDialog::InitIndex() {
       for( int i = 0; i < cnt; i++ ) {
         iONode lc = (iONode)ListOp.get( list, i );
         const char* id = wLoc.getid( lc );
-        m_List->Append( wxString(id,wxConvUTF8), lc );
         m_ConsistLocID->Append( wxString(id,wxConvUTF8) );
       }
       /* clean up the temp. list */
       ListOp.base.del(list);
 
       if( l_Props != NULL ) {
-        m_List->SetStringSelection( wxString(wLoc.getid( l_Props ),wxConvUTF8) );
-        m_List->SetFirstItem( wxString(wLoc.getid( l_Props ),wxConvUTF8) );
+        setIDSelection(wLoc.getid( l_Props ));
         m_Props = l_Props;
+        return true;
       }
-      else
-        TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection" );
+      else {
+        m_Props = setSelection(0);
+      }
     }
 
   }
+  return false;
 }
 
 
@@ -549,6 +529,10 @@ void LocDialog::initFunctions() {
 
 
 void LocDialog::InitValues() {
+  if( m_Props == NULL ) {
+    return;
+  }
+
   char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("loc").mb_str(wxConvUTF8), wLoc.getid( m_Props ) );
   SetTitle( wxString(title,wxConvUTF8) );
   StrOp.free( title );
@@ -1085,7 +1069,7 @@ bool LocDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption
     m_LocImage = NULL;
     m_Notebook = NULL;
     m_IndexPanel = NULL;
-    m_List = NULL;
+    m_List2 = NULL;
     m_New = NULL;
     m_Delete = NULL;
     m_Doc = NULL;
@@ -1296,9 +1280,8 @@ void LocDialog::CreateControls()
     wxBoxSizer* itemBoxSizer6 = new wxBoxSizer(wxVERTICAL);
     m_IndexPanel->SetSizer(itemBoxSizer6);
 
-    wxArrayString m_ListStrings;
-    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
-    itemBoxSizer6->Add(m_List, 1, wxGROW|wxALL, 5);
+    m_List2 = new wxListCtrl( m_IndexPanel, ID_LISTCTRLINDEX, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES );
+    itemBoxSizer6->Add(m_List2, 1, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer6->Add(itemBoxSizer8, 0, wxGROW|wxALL, 5);
@@ -2122,22 +2105,6 @@ void LocDialog::OnButtonF0Click( wxCommandEvent& event )
  * wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX
  */
 
-void LocDialog::OnListboxSelected( wxCommandEvent& event )
-{
-  m_Props = wxGetApp().getFrame()->findLoc( m_List->GetStringSelection().mb_str(wxConvUTF8) );
-  if( m_Props != NULL ) {
-    InitValues();
-    m_CVPanel->GetSizer()->Layout();
-  }
-  else
-    TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
-}
-
-
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
- */
-
 void LocDialog::OnOkClick( wxCommandEvent& event )
 {
   if( m_bSave )
@@ -2152,9 +2119,8 @@ void LocDialog::OnOkClick( wxCommandEvent& event )
 
 void LocDialog::OnButtonLocNewClick( wxCommandEvent& event )
 {
-  int i = m_List->FindString( _T("NEW") );
+  int i = findID("NEW");
   if( i == wxNOT_FOUND ) {
-    m_List->Append( _T("NEW") );
     iONode model = wxGetApp().getModel();
     if( model != NULL ) {
       iONode lclist = wPlan.getlclist( model );
@@ -2166,13 +2132,13 @@ void LocDialog::OnButtonLocNewClick( wxCommandEvent& event )
         iONode lc = NodeOp.inst( wLoc.name(), lclist, ELEMENT_NODE );
         NodeOp.addChild( lclist, lc );
         wLoc.setid( lc, "NEW" );
+        appendItem(lc);
+        setIDSelection(wItem.getid(lc));
         m_Props = lc;
         InitValues();
       }
     }
   }
-  m_List->SetStringSelection( _T("NEW") );
-  m_List->SetFirstItem( _T("NEW") );
 }
 
 /*!
@@ -2652,5 +2618,26 @@ void LocDialog::OnRestoreSpeedClick( wxCommandEvent& event )
 void LocDialog::OnRestoreFxClick( wxCommandEvent& event )
 {
   OnShowClick(event);
+}
+
+
+/*!
+ * wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRLINDEX
+ */
+
+void LocDialog::OnListctrlindexSelected( wxListEvent& event )
+{
+  m_Props = getSelection(event.GetIndex());
+  InitValues();
+}
+
+
+/*!
+ * wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRLINDEX
+ */
+
+void LocDialog::OnListctrlindexColLeftClick( wxListEvent& event )
+{
+  sortOnColumn(event.GetColumn());
 }
 

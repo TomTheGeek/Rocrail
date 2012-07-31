@@ -33,6 +33,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/listctrl.h"
 #include "wx/spinctrl.h"
 #include "wx/statline.h"
 ////@end includes
@@ -47,6 +48,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxListCtrl;
 class wxSpinCtrl;
 ////@end forward declarations
 
@@ -58,7 +60,7 @@ class wxSpinCtrl;
 #define ID_DIALOG_BLOCKS 10061
 #define ID_NOTEBOOK_BLOCKS 10000
 #define ID_PANEL_INDEX_BLOCKS 10060
-#define ID_LISTBOX_BLOCKS 10062
+#define ID_LISTCTRL 10219
 #define ID_BUTTON_BLOCK_NEW 10063
 #define ID_BUTTON_BLOCK_DELETE 10064
 #define ID_PANEL_BK_GENERAL 10004
@@ -182,7 +184,7 @@ class BlockDialog: public wxDialog, public BaseDialog
     DECLARE_EVENT_TABLE()
 
   void initLabels();
-  void initIndex();
+  bool initIndex();
   void initValues();
   bool evaluate();
   bool m_bSave;
@@ -210,8 +212,11 @@ public:
 
 ////@begin BlockDialog event handler declarations
 
-    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_BLOCKS
-    void OnListboxBlocksSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL
+    void OnListctrlSelected( wxListEvent& event );
+
+    /// wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRL
+    void OnListctrlColLeftClick( wxListEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BLOCK_NEW
     void OnButtonBlockNewClick( wxCommandEvent& event );
@@ -287,7 +292,7 @@ public:
 ////@begin BlockDialog member variables
     wxNotebook* m_Notebook;
     wxPanel* m_IndexPanel;
-    wxListBox* m_List;
+    wxListCtrl* m_List2;
     wxButton* m_New;
     wxButton* m_Delete;
     wxPanel* m_General_Panel;
