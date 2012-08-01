@@ -205,7 +205,7 @@ void RouteDialog::initLabels() {
   m_Notebook->SetPageText( 7, wxGetApp().getMsg( "wiring" ) );
 
   // Index
-  initList(m_List2, this);
+  initList(m_List2, this, true, false);
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
   m_DeleteRoute->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_Test->SetLabel( wxGetApp().getMsg( "test" ) );

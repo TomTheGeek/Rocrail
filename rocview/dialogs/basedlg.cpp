@@ -11,6 +11,9 @@
 
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Item.h"
+#include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Signal.h"
 #include "rocview/wrapper/public/Gui.h"
 
 #include "rocview/public/guiapp.h"
@@ -31,20 +34,42 @@ void BaseDialog::sortOnColumn( int col ) {
 }
 
 
-void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos ) {
+void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, bool showAddr ) {
   m_ItemList = list;
   m_Parent = parent;
   m_SortCol = 0;
   m_ShowPos = showPos;
+  m_ShowAddr = showAddr;
   m_SelectedID = NULL;
-  list->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
-  list->InsertColumn(1, wxGetApp().getMsg( "IID" ), wxLIST_FORMAT_LEFT );
-  list->InsertColumn(2, wxGetApp().getMsg( "address" ), wxLIST_FORMAT_RIGHT );
-  list->InsertColumn(3, wxGetApp().getMsg( "description" ), wxLIST_FORMAT_LEFT );
-  list->InsertColumn(4, wxGetApp().getMsg( "show" ), wxLIST_FORMAT_LEFT );
+  int col = 0;
+  m_colID = col;
+  list->InsertColumn(col, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
+  col++;
+  m_colIID = -1;
+  m_colAddr = -1;
+  if( m_ShowAddr ) {
+    m_colIID = col;
+    list->InsertColumn(col, wxGetApp().getMsg( "IID" ), wxLIST_FORMAT_LEFT );
+    col++;
+    m_colAddr = col;
+    list->InsertColumn(col, wxGetApp().getMsg( "address" ), wxLIST_FORMAT_RIGHT );
+    col++;
+  }
+  m_colDesc = col;
+  list->InsertColumn(col, wxGetApp().getMsg( "description" ), wxLIST_FORMAT_LEFT );
+  col++;
+  m_colShow = col;
+  list->InsertColumn(col, wxGetApp().getMsg( "show" ), wxLIST_FORMAT_LEFT );
+  col++;
+  m_colPos = -1;
+  m_colOri = -1;
   if( m_ShowPos ) {
-    list->InsertColumn(5, wxGetApp().getMsg( "position" ), wxLIST_FORMAT_LEFT );
-    list->InsertColumn(6, wxGetApp().getMsg( "orientation" ), wxLIST_FORMAT_LEFT );
+    m_colPos = col;
+    list->InsertColumn(col, wxGetApp().getMsg( "position" ), wxLIST_FORMAT_LEFT );
+    col++;
+    m_colOri = col;
+    list->InsertColumn(col, wxGetApp().getMsg( "orientation" ), wxLIST_FORMAT_LEFT );
+    col++;
   }
 }
 
@@ -142,17 +167,17 @@ void BaseDialog::fillIndex( iONode Items) {
 
   ListOp.sort(sortlist, &__sortID);
 
-  if( m_SortCol == 1 )
+  if( m_SortCol == m_colIID )
     ListOp.sort(sortlist, &__sortIID);
-  else if( m_SortCol == 2 )
+  else if( m_SortCol == m_colAddr )
     ListOp.sort(sortlist, &__sortAddr);
-  else if( m_SortCol == 3 )
+  else if( m_SortCol == m_colDesc )
     ListOp.sort(sortlist, &__sortDesc);
-  else if( m_SortCol == 4 )
+  else if( m_SortCol == m_colShow )
     ListOp.sort(sortlist, &__sortShow);
-  else if( m_SortCol == 5 )
+  else if( m_SortCol == m_colPos )
     ListOp.sort(sortlist, &__sortPos);
-  else if( m_SortCol == 6 )
+  else if( m_SortCol == m_colOri )
     ListOp.sort(sortlist, &__sortOri);
 
   size = ListOp.size( sortlist );
@@ -167,24 +192,36 @@ void BaseDialog::fillIndex( iONode Items) {
 void BaseDialog::appendItem( iONode Item) {
   int index = m_ItemList->GetItemCount();
   m_ItemList->InsertItem( index, wxString::Format(_T("%s"), wItem.getid(Item)));
-  m_ItemList->SetItem( index, 1, wxString::Format(_T("%s"), wItem.getiid(Item)));
-  m_ItemList->SetItem( index, 2, wxString::Format(_T("%d"), wItem.getaddr(Item)));
-  m_ItemList->SetItem( index, 3, wxString::Format(_T("%s"), wItem.getdesc(Item)));
-  m_ItemList->SetItem( index, 4, wxString::Format(_T("%s"), wItem.isshow(Item)?"true":"false"));
+  if( m_ShowAddr ) {
+    m_ItemList->SetItem( index, m_colIID, wxString::Format(_T("%s"), wItem.getiid(Item)));
+    if( StrOp.equals( wOutput.name(), NodeOp.getName(Item) ) )
+      m_ItemList->SetItem( index, m_colAddr, wxString::Format(_T("%d-%d"),
+          wOutput.getaddr(Item), wOutput.getport(Item)));
+    else if( StrOp.equals( wSwitch.name(), NodeOp.getName(Item) ) )
+      m_ItemList->SetItem( index, m_colAddr, wxString::Format(_T("%d-%d"),
+          wSwitch.getaddr1(Item), wSwitch.getport1(Item)));
+    else if( StrOp.equals( wSignal.name(), NodeOp.getName(Item) ) )
+      m_ItemList->SetItem( index, m_colAddr, wxString::Format(_T("%d-%d"),
+          wSignal.getaddr(Item), wSignal.getport1(Item)));
+    else
+      m_ItemList->SetItem( index, m_colAddr, wxString::Format(_T("%d"), wItem.getaddr(Item)));
+    m_ItemList->SetColumnWidth(m_colIID, wxLIST_AUTOSIZE_USEHEADER);
+    m_ItemList->SetColumnWidth(m_colAddr, wxLIST_AUTOSIZE_USEHEADER);
+  }
+  m_ItemList->SetItem( index, m_colDesc, wxString::Format(_T("%s"), wItem.getdesc(Item)));
+  m_ItemList->SetItem( index, m_colShow, wxString::Format(_T("%s"), wItem.isshow(Item)?"true":"false"));
   if( m_ShowPos ) {
-    m_ItemList->SetItem( index, 5, wxString::Format(_T("%d, %d, %d"), wItem.getx(Item), wItem.gety(Item), wItem.getz(Item)) );
-    m_ItemList->SetItem( index, 6, wxString::Format(_T("%s"), wItem.getori(Item)!=NULL?wItem.getori(Item):wItem.west));
-    m_ItemList->SetColumnWidth(5, wxLIST_AUTOSIZE_USEHEADER);
-    m_ItemList->SetColumnWidth(6, wxLIST_AUTOSIZE_USEHEADER);
+    m_ItemList->SetItem( index, m_colPos, wxString::Format(_T("%d, %d, %d"), wItem.getx(Item), wItem.gety(Item), wItem.getz(Item)) );
+    m_ItemList->SetItem( index, m_colOri, wxString::Format(_T("%s"), wItem.getori(Item)!=NULL?wItem.getori(Item):wItem.west));
+    m_ItemList->SetColumnWidth(m_colPos, wxLIST_AUTOSIZE_USEHEADER);
+    m_ItemList->SetColumnWidth(m_colOri, wxLIST_AUTOSIZE_USEHEADER);
   }
   m_ItemList->SetItemPtrData(index, (wxUIntPtr)Item);
-  m_ItemList->SetColumnWidth(0, wxLIST_AUTOSIZE);
-  m_ItemList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
-  m_ItemList->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
-  m_ItemList->SetColumnWidth(3, wxLIST_AUTOSIZE);
-  m_ItemList->SetColumnWidth(4, wxLIST_AUTOSIZE_USEHEADER);
-  if( m_ItemList->GetColumnWidth(3) < 40 )
-    m_ItemList->SetColumnWidth(3, wxLIST_AUTOSIZE_USEHEADER);
+  m_ItemList->SetColumnWidth(m_colID, wxLIST_AUTOSIZE);
+  m_ItemList->SetColumnWidth(m_colDesc, wxLIST_AUTOSIZE);
+  m_ItemList->SetColumnWidth(m_colShow, wxLIST_AUTOSIZE_USEHEADER);
+  if( m_ItemList->GetColumnWidth(m_colDesc) < 40 )
+    m_ItemList->SetColumnWidth(m_colDesc, wxLIST_AUTOSIZE_USEHEADER);
 }
 
 
