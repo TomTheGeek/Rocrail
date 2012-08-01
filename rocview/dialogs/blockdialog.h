@@ -60,7 +60,7 @@ class wxSpinCtrl;
 #define ID_DIALOG_BLOCKS 10061
 #define ID_NOTEBOOK_BLOCKS 10000
 #define ID_PANEL_INDEX_BLOCKS 10060
-#define ID_LISTCTRL 10219
+#define ID_LISTCTRLINDEX_BK 10219
 #define ID_BUTTON_BLOCK_NEW 10063
 #define ID_BUTTON_BLOCK_DELETE 10064
 #define ID_PANEL_BK_GENERAL 10004
@@ -212,11 +212,11 @@ public:
 
 ////@begin BlockDialog event handler declarations
 
-    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL
-    void OnListctrlSelected( wxListEvent& event );
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRLINDEX_BK
+    void OnListctrlindexBkSelected( wxListEvent& event );
 
-    /// wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRL
-    void OnListctrlColLeftClick( wxListEvent& event );
+    /// wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRLINDEX_BK
+    void OnListctrlindexBkColLeftClick( wxListEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BLOCK_NEW
     void OnButtonBlockNewClick( wxCommandEvent& event );

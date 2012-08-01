@@ -33,6 +33,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/listctrl.h"
 #include "wx/spinctrl.h"
 #include "wx/statline.h"
 ////@end includes
@@ -47,6 +48,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxListCtrl;
 class wxSpinCtrl;
 ////@end forward declarations
 
@@ -58,7 +60,7 @@ class wxSpinCtrl;
 #define ID_DIALOG_SIGNAL 10081
 #define ID_NOTEBOOK_SG 10045
 #define ID_PANEL_SG_INDEX 10005
-#define ID_LISTBOX_SG 10006
+#define ID_LISTCTRLINDEX_SG 10408
 #define ID_BUTTON_SG_NEW 10007
 #define ID_BUTTON_SG_DELETE 10008
 #define ID_BUTTON_SG_DOC 10373
@@ -130,7 +132,7 @@ class SignalDialog: public wxDialog, public BaseDialog
     DECLARE_EVENT_TABLE()
 
   void initLabels();
-  void initIndex();
+  bool initIndex();
   void initValues();
   bool evaluate();
   int m_TabAlign;
@@ -150,8 +152,11 @@ public:
 
 ////@begin SignalDialog event handler declarations
 
-    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_SG
-    void OnListboxSgSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRLINDEX_SG
+    void OnListctrlindexSgSelected( wxListEvent& event );
+
+    /// wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRLINDEX_SG
+    void OnListctrlindexSgColLeftClick( wxListEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SG_NEW
     void OnButtonSgNewClick( wxCommandEvent& event );
@@ -200,7 +205,7 @@ public:
 ////@begin SignalDialog member variables
     wxNotebook* m_Notebook;
     wxPanel* m_IndexPanel;
-    wxListBox* m_List;
+    wxListCtrl* m_List2;
     wxButton* m_New;
     wxButton* m_Delete;
     wxButton* m_Doc;

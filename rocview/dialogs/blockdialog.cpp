@@ -85,8 +85,8 @@ IMPLEMENT_DYNAMIC_CLASS( BlockDialog, wxDialog )
 BEGIN_EVENT_TABLE( BlockDialog, wxDialog )
 
 ////@begin BlockDialog event table entries
-    EVT_LIST_ITEM_SELECTED( ID_LISTCTRL, BlockDialog::OnListctrlSelected )
-    EVT_LIST_COL_CLICK( ID_LISTCTRL, BlockDialog::OnListctrlColLeftClick )
+    EVT_LIST_ITEM_SELECTED( ID_LISTCTRLINDEX_BK, BlockDialog::OnListctrlindexBkSelected )
+    EVT_LIST_COL_CLICK( ID_LISTCTRLINDEX_BK, BlockDialog::OnListctrlindexBkColLeftClick )
 
     EVT_BUTTON( ID_BUTTON_BLOCK_NEW, BlockDialog::OnButtonBlockNewClick )
 
@@ -1282,7 +1282,7 @@ void BlockDialog::CreateControls()
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     m_IndexPanel->SetSizer(itemBoxSizer5);
 
-    m_List2 = new wxListCtrl( m_IndexPanel, ID_LISTCTRL, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES );
+    m_List2 = new wxListCtrl( m_IndexPanel, ID_LISTCTRLINDEX_BK, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES );
     itemBoxSizer5->Add(m_List2, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 2, 0, 0);
@@ -2543,7 +2543,7 @@ void BlockDialog::OnButtonBlockActionsClick( wxCommandEvent& event )
  * wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL
  */
 
-void BlockDialog::OnListctrlSelected( wxListEvent& event )
+void BlockDialog::OnListctrlindexBkSelected( wxListEvent& event )
 {
   m_Props = getSelection(event.GetIndex());
   initValues();
@@ -2558,7 +2558,7 @@ void BlockDialog::OnListctrlSelected( wxListEvent& event )
  * wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRL
  */
 
-void BlockDialog::OnListctrlColLeftClick( wxListEvent& event )
+void BlockDialog::OnListctrlindexBkColLeftClick( wxListEvent& event )
 {
   sortOnColumn(event.GetColumn());
 }

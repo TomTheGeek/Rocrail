@@ -68,7 +68,8 @@ IMPLEMENT_DYNAMIC_CLASS( SwitchDialog, wxDialog )
 BEGIN_EVENT_TABLE( SwitchDialog, wxDialog )
 
 ////@begin SwitchDialog event table entries
-    EVT_LISTBOX( ID_LISTBOX_SW, SwitchDialog::OnListboxSwSelected )
+    EVT_LIST_ITEM_SELECTED( ID_LISTCTRLINDEX_SW, SwitchDialog::OnListctrlindexSwSelected )
+    EVT_LIST_COL_CLICK( ID_LISTCTRLINDEX_SW, SwitchDialog::OnListctrlindexSwColLeftClick )
 
     EVT_BUTTON( ID_BUTTON_SW_NEW, SwitchDialog::OnButtonSwNewClick )
 
@@ -119,9 +120,8 @@ SwitchDialog::SwitchDialog( wxWindow* parent, iONode p_Props )
   m_Notebook->Fit();
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
-  initIndex();
 
-  if( m_Props != NULL ) {
+  if( initIndex() ) {
     initValues();
     //m_Notebook->SetSelection( 1 );
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_SW_GENERAL );
@@ -152,6 +152,7 @@ void SwitchDialog::initLabels() {
   m_Notebook->SetPageText( 4, wxGetApp().getMsg( "wiring" ) );
 
   // Index
+  initList(m_List2, this);
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_Doc->SetLabel( wxGetApp().getMsg( "doc_report" ) );
@@ -307,44 +308,27 @@ static int __sortID(obj* _a, obj* _b)
 }
 
 
-void SwitchDialog::initIndex() {
+bool SwitchDialog::initIndex() {
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
   iONode l_Props = m_Props;
-  m_List->Clear();
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode swlist = wPlan.getswlist( model );
     if( swlist != NULL ) {
-      iOList list = ListOp.inst();
-      int cnt = NodeOp.getChildCnt( swlist );
-
-      for( int i = 0; i < cnt; i++ ) {
-        iONode sw = NodeOp.getChild( swlist, i );
-        const char* id = wSwitch.getid( sw );
-        if( id != NULL ) {
-          ListOp.add(list, (obj)sw);
-        }
-      }
-
-      ListOp.sort(list, &__sortID);
-      cnt = ListOp.size( list );
-      for( int i = 0; i < cnt; i++ ) {
-        iONode sw = (iONode)ListOp.get( list, i );
-        const char* id = wSwitch.getid( sw );
-        m_List->Append( wxString(id,wxConvUTF8), sw );
-      }
-      /* clean up the temp. list */
-      ListOp.base.del(list);
-
+      fillIndex(swlist);
 
       if( l_Props != NULL ) {
-        m_List->SetStringSelection( wxString(wSwitch.getid( l_Props ),wxConvUTF8) );
-        m_List->SetFirstItem( wxString(wSwitch.getid( l_Props ),wxConvUTF8) );
+        setIDSelection(wItem.getid( l_Props ));
         m_Props = l_Props;
+        return true;
+      }
+      else {
+        m_Props = setSelection(0);
       }
 
     }
   }
+  return false;
 }
 
 
@@ -772,7 +756,7 @@ bool SwitchDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capt
 ////@begin SwitchDialog member initialisation
     m_Notebook = NULL;
     m_IndexPanel = NULL;
-    m_List = NULL;
+    m_List2 = NULL;
     m_New = NULL;
     m_Delete = NULL;
     m_Doc = NULL;
@@ -928,9 +912,8 @@ void SwitchDialog::CreateControls()
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     m_IndexPanel->SetSizer(itemBoxSizer5);
 
-    wxArrayString m_ListStrings;
-    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_SW, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
-    itemBoxSizer5->Add(m_List, 1, wxGROW|wxALL, 5);
+    m_List2 = new wxListCtrl( m_IndexPanel, ID_LISTCTRLINDEX_SW, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES );
+    itemBoxSizer5->Add(m_List2, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 3, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer7, 0, wxGROW|wxALL, 5);
@@ -1471,29 +1454,6 @@ void SwitchDialog::OnOkClick( wxCommandEvent& event )
 }
 
 
-/*!
- * wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX
- */
-
-void SwitchDialog::OnListboxSwSelected( wxCommandEvent& event )
-{
-  iONode model = wxGetApp().getModel();
-  if( model != NULL ) {
-    iONode swlist = wPlan.getswlist( model );
-    if( swlist != NULL ) {
-      int cnt = NodeOp.getChildCnt( swlist );
-      for( int i = 0; i < cnt; i++ ) {
-        iONode sw = NodeOp.getChild( swlist, i );
-        const char* id = wSwitch.getid( sw );
-        if( id != NULL && StrOp.equals( id, m_List->GetStringSelection().mb_str(wxConvUTF8) ) ) {
-          m_Props = sw;
-          initValues();
-          break;
-        }
-      }
-    }
-  }
-}
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOC_NEW
@@ -1501,9 +1461,8 @@ void SwitchDialog::OnListboxSwSelected( wxCommandEvent& event )
 
 void SwitchDialog::OnButtonSwNewClick( wxCommandEvent& event )
 {
-  int i = m_List->FindString( _T("NEW") );
+  int i = findID("NEW");
   if( i == wxNOT_FOUND ) {
-    m_List->Append( _T("NEW") );
     iONode model = wxGetApp().getModel();
     if( model != NULL ) {
       iONode swlist = wPlan.getswlist( model );
@@ -1515,13 +1474,13 @@ void SwitchDialog::OnButtonSwNewClick( wxCommandEvent& event )
         iONode sw = NodeOp.inst( wSwitch.name(), swlist, ELEMENT_NODE );
         NodeOp.addChild( swlist, sw );
         wSwitch.setid( sw, "NEW" );
+        appendItem(sw);
+        setIDSelection(wItem.getid(sw));
         m_Props = sw;
         initValues();
       }
     }
   }
-  m_List->SetStringSelection( _T("NEW") );
-  m_List->SetFirstItem( _T("NEW") );
 }
 
 /*!
@@ -1647,5 +1606,26 @@ void SwitchDialog::OnSwitchSinglegateClick( wxCommandEvent& event )
 void SwitchDialog::OnButtonSwDocClick( wxCommandEvent& event )
 {
   doDoc( event, "switches");
+}
+
+
+/*!
+ * wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRLINDEX
+ */
+
+void SwitchDialog::OnListctrlindexSwSelected( wxListEvent& event )
+{
+  m_Props = getSelection(event.GetIndex());
+  initValues();
+}
+
+
+/*!
+ * wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRLINDEX
+ */
+
+void SwitchDialog::OnListctrlindexSwColLeftClick( wxListEvent& event )
+{
+  sortOnColumn(event.GetColumn());
 }
 

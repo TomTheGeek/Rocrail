@@ -33,6 +33,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/listctrl.h"
 #include "wx/spinctrl.h"
 ////@end includes
 
@@ -47,6 +48,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxListCtrl;
 class wxSpinCtrl;
 ////@end forward declarations
 
@@ -58,7 +60,7 @@ class wxSpinCtrl;
 #define ID_DIALOG_FEEDBACK 10084
 #define ID_NOTEBOOK_FEEDBACK 10085
 #define ID_PANEL_FB_INDEX 10013
-#define ID_LISTBOX_FB 10014
+#define ID_LISTCTRLINDEX_FB 10407
 #define ID_BUTTON_FB_NEW 10015
 #define ID_BUTTON_FB_DELETE 10016
 #define ID_BUTTON_FB_DOC 10353
@@ -113,7 +115,7 @@ class FeedbackDialog: public wxDialog, public BaseDialog
   DECLARE_EVENT_TABLE()
 
   void initLabels();
-  void initIndex();
+  bool initIndex();
   void initValues();
   bool evaluate();
   int m_TabAlign;
@@ -133,8 +135,11 @@ public:
 
 ////@begin FeedbackDialog event handler declarations
 
-    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_FB
-    void OnListboxFbSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRLINDEX_FB
+    void OnListctrlindexFbSelected( wxListEvent& event );
+
+    /// wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRLINDEX_FB
+    void OnListctrlindexFbColLeftClick( wxListEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FB_NEW
     void OnButtonFbNewClick( wxCommandEvent& event );
@@ -180,7 +185,7 @@ public:
 ////@begin FeedbackDialog member variables
     wxNotebook* m_Notebook;
     wxPanel* m_IndexPanel;
-    wxListBox* m_List;
+    wxListCtrl* m_List2;
     wxButton* m_New;
     wxButton* m_Delete;
     wxButton* m_Doc;

@@ -68,7 +68,8 @@ IMPLEMENT_DYNAMIC_CLASS( SignalDialog, wxDialog )
 BEGIN_EVENT_TABLE( SignalDialog, wxDialog )
 
 ////@begin SignalDialog event table entries
-    EVT_LISTBOX( ID_LISTBOX_SG, SignalDialog::OnListboxSgSelected )
+    EVT_LIST_ITEM_SELECTED( ID_LISTCTRLINDEX_SG, SignalDialog::OnListctrlindexSgSelected )
+    EVT_LIST_COL_CLICK( ID_LISTCTRLINDEX_SG, SignalDialog::OnListctrlindexSgColLeftClick )
 
     EVT_BUTTON( ID_BUTTON_SG_NEW, SignalDialog::OnButtonSgNewClick )
 
@@ -117,11 +118,9 @@ SignalDialog::SignalDialog( wxWindow* parent, iONode p_Props )
   m_Notebook->Fit();
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
-  initIndex();
 
-  if( m_Props != NULL ) {
+  if( initIndex() ) {
     initValues();
-    //m_Notebook->SetSelection( 1 );
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_SG_GENERAL );
     wxPostEvent( this, event );
   }
@@ -146,6 +145,7 @@ void SignalDialog::initLabels() {
   m_Notebook->SetPageText( 4, wxGetApp().getMsg( "details" ) );
 
   // Index
+  initList(m_List2, this);
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_Doc->SetLabel( wxGetApp().getMsg( "doc_report" ) );
@@ -280,44 +280,28 @@ static int __sortID(obj* _a, obj* _b)
 }
 
 
-void SignalDialog::initIndex() {
+bool SignalDialog::initIndex() {
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
   iONode l_Props = m_Props;
-  m_List->Clear();
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode sglist = wPlan.getsglist( model );
 
     if( sglist != NULL ) {
-      iOList list = ListOp.inst();
-      int cnt = NodeOp.getChildCnt( sglist );
-      for( int i = 0; i < cnt; i++ ) {
-        iONode sg = NodeOp.getChild( sglist, i );
-        const char* id = wSignal.getid( sg );
-        if( id != NULL ) {
-          ListOp.add(list, (obj)sg);
-        }
-      }
-
-      ListOp.sort(list, &__sortID);
-      cnt = ListOp.size( list );
-      for( int i = 0; i < cnt; i++ ) {
-        iONode sg = (iONode)ListOp.get( list, i );
-        const char* id = wSignal.getid( sg );
-        m_List->Append( wxString(id,wxConvUTF8), sg );
-      }
-      /* clean up the temp. list */
-      ListOp.base.del(list);
-
+      fillIndex(sglist);
 
       if( l_Props != NULL ) {
-        m_List->SetStringSelection( wxString(wSignal.getid( l_Props ),wxConvUTF8) );
-        m_List->SetFirstItem( wxString(wSignal.getid( l_Props ),wxConvUTF8) );
+        setIDSelection(wItem.getid( l_Props ));
         m_Props = l_Props;
+        return true;
+      }
+      else {
+        m_Props = setSelection(0);
       }
 
     }
   }
+  return false;
 }
 
 void SignalDialog::initValues() {
@@ -561,7 +545,7 @@ bool SignalDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capt
 ////@begin SignalDialog member initialisation
     m_Notebook = NULL;
     m_IndexPanel = NULL;
-    m_List = NULL;
+    m_List2 = NULL;
     m_New = NULL;
     m_Delete = NULL;
     m_Doc = NULL;
@@ -684,9 +668,8 @@ void SignalDialog::CreateControls()
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     m_IndexPanel->SetSizer(itemBoxSizer5);
 
-    wxArrayString m_ListStrings;
-    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_SG, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
-    itemBoxSizer5->Add(m_List, 1, wxGROW|wxALL, 5);
+    m_List2 = new wxListCtrl( m_IndexPanel, ID_LISTCTRLINDEX_SG, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES );
+    itemBoxSizer5->Add(m_List2, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 3, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer7, 0, wxGROW|wxALL, 5);
@@ -1146,38 +1129,13 @@ wxIcon SignalDialog::GetIconResource( const wxString& name )
 ////@end SignalDialog icon retrieval
 }
 /*!
- * wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_SW
- */
-
-void SignalDialog::OnListboxSgSelected( wxCommandEvent& event )
-{
-  iONode model = wxGetApp().getModel();
-  if( model != NULL ) {
-    iONode sglist = wPlan.getsglist( model );
-    if( sglist != NULL ) {
-      int cnt = NodeOp.getChildCnt( sglist );
-      for( int i = 0; i < cnt; i++ ) {
-        iONode sg = NodeOp.getChild( sglist, i );
-        const char* id = wSignal.getid( sg );
-        if( id != NULL && StrOp.equals( id, m_List->GetStringSelection().mb_str(wxConvUTF8) ) ) {
-          m_Props = sg;
-          initValues();
-          break;
-        }
-      }
-    }
-  }
-}
-
-/*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SW_NEW
  */
 
 void SignalDialog::OnButtonSgNewClick( wxCommandEvent& event )
 {
-  int i = m_List->FindString( _T("NEW") );
+  int i = findID("NEW");
   if( i == wxNOT_FOUND ) {
-    m_List->Append( _T("NEW") );
     iONode model = wxGetApp().getModel();
     if( model != NULL ) {
       iONode sglist = wPlan.getsglist( model );
@@ -1189,13 +1147,13 @@ void SignalDialog::OnButtonSgNewClick( wxCommandEvent& event )
         iONode sg = NodeOp.inst( wSignal.name(), sglist, ELEMENT_NODE );
         NodeOp.addChild( sglist, sg );
         wSignal.setid( sg, "NEW" );
+        appendItem(sg);
+        setIDSelection(wItem.getid(sg));
         m_Props = sg;
         initValues();
       }
     }
   }
-  m_List->SetStringSelection( _T("NEW") );
-  m_List->SetFirstItem( _T("NEW") );
 }
 
 /*!
@@ -1354,5 +1312,27 @@ void SignalDialog::OnSignalcontrolSelected( wxCommandEvent& event )
   m_Address4->Enable(!patterns);
   m_Port4->Enable(!patterns);
   m_PairGates->Enable(!patterns);
+}
+
+
+/*!
+ * wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRLINDEX_SG
+ */
+
+void SignalDialog::OnListctrlindexSgSelected( wxListEvent& event )
+{
+  m_Props = getSelection(event.GetIndex());
+  initValues();
+  m_Delete->Enable( true );
+}
+
+
+/*!
+ * wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRLINDEX_SG
+ */
+
+void SignalDialog::OnListctrlindexSgColLeftClick( wxListEvent& event )
+{
+  sortOnColumn(event.GetColumn());
 }
 

@@ -68,7 +68,8 @@ BEGIN_EVENT_TABLE( OutputDialog, wxDialog )
 ////@begin OutputDialog event table entries
     EVT_NOTEBOOK_PAGE_CHANGED( ID_NOTEBOOK_CO, OutputDialog::OnNotebookCoPageChanged )
 
-    EVT_LISTBOX( ID_LISTBOX_CO, OutputDialog::OnListboxCoSelected )
+    EVT_LIST_ITEM_SELECTED( ID_LISTCTRLINDEX_CO, OutputDialog::OnListctrlindexCoSelected )
+    EVT_LIST_COL_CLICK( ID_LISTCTRLINDEX_CO, OutputDialog::OnListctrlindexCoColLeftClick )
 
     EVT_BUTTON( ID_BUTTON_CO_NEW, OutputDialog::OnButtonCoNewClick )
 
@@ -113,11 +114,9 @@ OutputDialog::OutputDialog( wxWindow* parent, iONode p_Props )
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
-  initIndex();
 
-  if( m_Props != NULL ) {
+  if( initIndex() ) {
     initValues();
-    //m_Notebook->SetSelection( 1 );
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_CO_GENERAL );
     wxPostEvent( this, event );
   }
@@ -131,6 +130,7 @@ void OutputDialog::initLabels() {
   m_Notebook->SetPageText( 3, wxGetApp().getMsg( "position" ) );
 
   // Index
+  initList(m_List2, this);
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
 
@@ -225,42 +225,26 @@ static int __sortID(obj* _a, obj* _b)
 }
 
 
-void OutputDialog::initIndex() {
+bool OutputDialog::initIndex() {
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
   iONode l_Props = m_Props;
-  m_List->Clear();
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode colist = wPlan.getcolist( model );
     if( colist != NULL ) {
-      iOList list = ListOp.inst();
-      int cnt = NodeOp.getChildCnt( colist );
-
-      for( int i = 0; i < cnt; i++ ) {
-        iONode co = NodeOp.getChild( colist, i );
-        const char* id = wOutput.getid( co );
-        if( id != NULL ) {
-          ListOp.add(list, (obj)co);
-        }
-      }
-
-      ListOp.sort(list, &__sortID);
-      cnt = ListOp.size( list );
-      for( int i = 0; i < cnt; i++ ) {
-        iONode co = (iONode)ListOp.get( list, i );
-        const char* id = wOutput.getid( co );
-        m_List->Append( wxString(id,wxConvUTF8), co );
-      }
-      /* clean up the temp. list */
-      ListOp.base.del(list);
+      fillIndex(colist);
 
       if( l_Props != NULL ) {
-        m_List->SetStringSelection( wxString(wOutput.getid( l_Props ),wxConvUTF8) );
-        m_List->SetFirstItem( wxString(wOutput.getid( l_Props ),wxConvUTF8) );
+        setIDSelection(wItem.getid( l_Props ));
         m_Props = l_Props;
+        return true;
+      }
+      else {
+        m_Props = setSelection(0);
       }
     }
   }
+  return false;
 }
 
 void OutputDialog::initValues() {
@@ -405,7 +389,7 @@ bool OutputDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capt
 ////@begin OutputDialog member initialisation
     m_Notebook = NULL;
     m_IndexPanel = NULL;
-    m_List = NULL;
+    m_List2 = NULL;
     m_New = NULL;
     m_Delete = NULL;
     m_GeneralPanel = NULL;
@@ -484,9 +468,8 @@ void OutputDialog::CreateControls()
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     m_IndexPanel->SetSizer(itemBoxSizer5);
 
-    wxArrayString m_ListStrings;
-    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_CO, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
-    itemBoxSizer5->Add(m_List, 1, wxGROW|wxALL, 5);
+    m_List2 = new wxListCtrl( m_IndexPanel, ID_LISTCTRLINDEX_CO, wxDefaultPosition, wxSize(400, 100), wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES );
+    itemBoxSizer5->Add(m_List2, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer7, 0, wxGROW|wxALL, 5);
@@ -709,29 +692,6 @@ wxIcon OutputDialog::GetIconResource( const wxString& name )
     return wxNullIcon;
 ////@end OutputDialog icon retrieval
 }
-/*!
- * wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_CO
- */
-
-void OutputDialog::OnListboxCoSelected( wxCommandEvent& event )
-{
-  iONode model = wxGetApp().getModel();
-  if( model != NULL ) {
-    iONode colist = wPlan.getcolist( model );
-    if( colist != NULL ) {
-      int cnt = NodeOp.getChildCnt( colist );
-      for( int i = 0; i < cnt; i++ ) {
-        iONode co = NodeOp.getChild( colist, i );
-        const char* id = wOutput.getid( co );
-        if( id != NULL && StrOp.equals( id, m_List->GetStringSelection().mb_str(wxConvUTF8) ) ) {
-          m_Props = co;
-          initValues();
-          break;
-        }
-      }
-    }
-  }
-}
 
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_CO_NEW
@@ -739,9 +699,8 @@ void OutputDialog::OnListboxCoSelected( wxCommandEvent& event )
 
 void OutputDialog::OnButtonCoNewClick( wxCommandEvent& event )
 {
-  int i = m_List->FindString( _T("NEW") );
+  int i = findID("NEW");
   if( i == wxNOT_FOUND ) {
-    m_List->Append( _T("NEW") );
     iONode model = wxGetApp().getModel();
     if( model != NULL ) {
       iONode colist = wPlan.getcolist( model );
@@ -753,13 +712,13 @@ void OutputDialog::OnButtonCoNewClick( wxCommandEvent& event )
         iONode co = NodeOp.inst( wOutput.name(), colist, ELEMENT_NODE );
         NodeOp.addChild( colist, co );
         wOutput.setid( co, "NEW" );
+        appendItem(co);
+        setIDSelection(wItem.getid(co));
         m_Props = co;
         initValues();
       }
     }
   }
-  m_List->SetStringSelection( _T("NEW") );
-  m_List->SetFirstItem( _T("NEW") );
 }
 
 /*!
@@ -881,5 +840,27 @@ void OutputDialog::OnOutputActionsClick( wxCommandEvent& event )
 void OutputDialog::OnOutputSwitchClick( wxCommandEvent& event )
 {
   m_Gate->Enable(!m_AsSwitch->GetValue());
+}
+
+
+/*!
+ * wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRLINDEX_CO
+ */
+
+void OutputDialog::OnListctrlindexCoSelected( wxListEvent& event )
+{
+  m_Props = getSelection(event.GetIndex());
+  initValues();
+  m_Delete->Enable( true );
+}
+
+
+/*!
+ * wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRLINDEX_CO
+ */
+
+void OutputDialog::OnListctrlindexCoColLeftClick( wxListEvent& event )
+{
+  sortOnColumn(event.GetColumn());
 }
 

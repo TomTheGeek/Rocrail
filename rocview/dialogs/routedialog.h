@@ -33,6 +33,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/listctrl.h"
 #include "wx/spinctrl.h"
 #include "wx/grid.h"
 ////@end includes
@@ -47,6 +48,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxListCtrl;
 class wxSpinCtrl;
 class wxGrid;
 ////@end forward declarations
@@ -59,7 +61,7 @@ class wxGrid;
 #define ID_DIALOG_STREET 10099
 #define ID_NOTEBOOK_STREET 10100
 #define ID_PANEL_ST_INDEX 10001
-#define ID_LISTBOX_ST 10002
+#define ID_LISTCTRLINDEX_ST 10410
 #define ID_BUTTON_ST_NEW 10003
 #define ID_BUTTON_ST_DELETE_ROUTE 10017
 #define ID_BUTTON_ST_TEST 10312
@@ -120,7 +122,7 @@ class RouteDialog: public wxDialog, public BaseDialog
     DECLARE_EVENT_TABLE()
 
   void initLabels();
-  void initIndex();
+  bool initIndex();
   void initValues();
   void initCommands();
   bool evaluate();
@@ -146,8 +148,11 @@ public:
 
 ////@begin RouteDialog event handler declarations
 
-    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_ST
-    void OnListboxStSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRLINDEX_ST
+    void OnListctrlindexStSelected( wxListEvent& event );
+
+    /// wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRLINDEX_ST
+    void OnListctrlindexStColLeftClick( wxListEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_ST_NEW
     void OnButtonStNewClick( wxCommandEvent& event );
@@ -235,7 +240,7 @@ public:
 ////@begin RouteDialog member variables
     wxNotebook* m_Notebook;
     wxPanel* m_IndexPanel;
-    wxListBox* m_List;
+    wxListCtrl* m_List2;
     wxButton* m_New;
     wxButton* m_DeleteRoute;
     wxButton* m_Test;
@@ -246,6 +251,8 @@ public:
     wxTextCtrl* m_Id;
     wxStaticText* m_labModID;
     wxTextCtrl* m_ModID;
+    wxStaticText* m_labDescription;
+    wxTextCtrl* m_Description;
     wxStaticText* m_LabelBlockA;
     wxComboBox* m_BlockA;
     wxCheckBox* m_FromSide;

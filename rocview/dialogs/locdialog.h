@@ -64,7 +64,7 @@ class wxGrid;
 #define ID_BITMAPBUTTON 10123
 #define ID_NOTEBOOK 10001
 #define ID_PANEL_INDEX 10060
-#define ID_LISTCTRLINDEX 10062
+#define ID_LISTCTRLINDEX_LC 10062
 #define ID_BUTTON_LOC_NEW 10121
 #define ID_BUTTON_DELETE 10122
 #define ID_BUTTON_LOCO_DOC 10353
@@ -204,11 +204,11 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BITMAPBUTTON
     void OnBitmapbuttonClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRLINDEX
-    void OnListctrlindexSelected( wxListEvent& event );
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRLINDEX_LC
+    void OnListctrlindexLcSelected( wxListEvent& event );
 
-    /// wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRLINDEX
-    void OnListctrlindexColLeftClick( wxListEvent& event );
+    /// wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRLINDEX_LC
+    void OnListctrlindexLcColLeftClick( wxListEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOC_NEW
     void OnButtonLocNewClick( wxCommandEvent& event );

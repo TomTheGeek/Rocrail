@@ -35,6 +35,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/listctrl.h"
 #include "wx/spinctrl.h"
 ////@end includes
 
@@ -44,6 +45,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxListCtrl;
 class wxSpinCtrl;
 ////@end forward declarations
 
@@ -55,7 +57,7 @@ class wxSpinCtrl;
 #define ID_OUTPUT_DLG 10210
 #define ID_NOTEBOOK_CO 10012
 #define ID_PANEL_CO_INDEX 10005
-#define ID_LISTBOX_CO 10006
+#define ID_LISTCTRLINDEX_CO 10409
 #define ID_BUTTON_CO_NEW 10007
 #define ID_BUTTON_CO_DELETE 10008
 #define ID_PANEL_CO_GENERAL 10009
@@ -111,7 +113,7 @@ class OutputDialog: public wxDialog, public BaseDialog
     DECLARE_EVENT_TABLE()
 
   void initLabels();
-  void initIndex();
+  bool initIndex();
   void initValues();
   bool evaluate();
   int m_TabAlign;
@@ -134,8 +136,11 @@ public:
     /// wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED event handler for ID_NOTEBOOK_CO
     void OnNotebookCoPageChanged( wxNotebookEvent& event );
 
-    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_CO
-    void OnListboxCoSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRLINDEX_CO
+    void OnListctrlindexCoSelected( wxListEvent& event );
+
+    /// wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRLINDEX_CO
+    void OnListctrlindexCoColLeftClick( wxListEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_CO_NEW
     void OnButtonCoNewClick( wxCommandEvent& event );
@@ -178,7 +183,7 @@ public:
 ////@begin OutputDialog member variables
     wxNotebook* m_Notebook;
     wxPanel* m_IndexPanel;
-    wxListBox* m_List;
+    wxListCtrl* m_List2;
     wxButton* m_New;
     wxButton* m_Delete;
     wxPanel* m_GeneralPanel;

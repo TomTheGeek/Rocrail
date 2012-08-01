@@ -79,8 +79,8 @@ BEGIN_EVENT_TABLE( LocDialog, wxDialog )
 ////@begin LocDialog event table entries
     EVT_BUTTON( ID_BITMAPBUTTON, LocDialog::OnBitmapbuttonClick )
 
-    EVT_LIST_ITEM_SELECTED( ID_LISTCTRLINDEX, LocDialog::OnListctrlindexSelected )
-    EVT_LIST_COL_CLICK( ID_LISTCTRLINDEX, LocDialog::OnListctrlindexColLeftClick )
+    EVT_LIST_ITEM_SELECTED( ID_LISTCTRLINDEX_LC, LocDialog::OnListctrlindexLcSelected )
+    EVT_LIST_COL_CLICK( ID_LISTCTRLINDEX_LC, LocDialog::OnListctrlindexLcColLeftClick )
 
     EVT_BUTTON( ID_BUTTON_LOC_NEW, LocDialog::OnButtonLocNewClick )
 
@@ -1280,7 +1280,7 @@ void LocDialog::CreateControls()
     wxBoxSizer* itemBoxSizer6 = new wxBoxSizer(wxVERTICAL);
     m_IndexPanel->SetSizer(itemBoxSizer6);
 
-    m_List2 = new wxListCtrl( m_IndexPanel, ID_LISTCTRLINDEX, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES );
+    m_List2 = new wxListCtrl( m_IndexPanel, ID_LISTCTRLINDEX_LC, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES );
     itemBoxSizer6->Add(m_List2, 1, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxHORIZONTAL);
@@ -2625,7 +2625,7 @@ void LocDialog::OnRestoreFxClick( wxCommandEvent& event )
  * wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRLINDEX
  */
 
-void LocDialog::OnListctrlindexSelected( wxListEvent& event )
+void LocDialog::OnListctrlindexLcSelected( wxListEvent& event )
 {
   m_Props = getSelection(event.GetIndex());
   InitValues();
@@ -2636,7 +2636,7 @@ void LocDialog::OnListctrlindexSelected( wxListEvent& event )
  * wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRLINDEX
  */
 
-void LocDialog::OnListctrlindexColLeftClick( wxListEvent& event )
+void LocDialog::OnListctrlindexLcColLeftClick( wxListEvent& event )
 {
   sortOnColumn(event.GetColumn());
 }
