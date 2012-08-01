@@ -42,6 +42,13 @@ public:
   int m_colShow;
   int m_colPos;
   int m_colOri;
+  bool m_sortID;
+  bool m_sortIID;
+  bool m_sortAddr;
+  bool m_sortDesc;
+  bool m_sortShow;
+  bool m_sortPos;
+  bool m_sortOri;
 };
 
 

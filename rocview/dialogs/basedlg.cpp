@@ -23,6 +23,17 @@
 #include "rocs/public/system.h"
 
 
+static wxString __getAddrStr(iONode Item) {
+  if( StrOp.equals( wOutput.name(), NodeOp.getName(Item) ) )
+    return wxString::Format(_T("%d-%d"), wOutput.getaddr(Item), wOutput.getport(Item));
+  else if( StrOp.equals( wSwitch.name(), NodeOp.getName(Item) ) )
+    return wxString::Format(_T("%d-%d"), wSwitch.getaddr1(Item), wSwitch.getport1(Item));
+  else if( StrOp.equals( wSignal.name(), NodeOp.getName(Item) ) )
+    return wxString::Format(_T("%d-%d"), wSignal.getaddr(Item), wSignal.getport1(Item));
+  else
+    return wxString::Format(_T("%d"), wItem.getaddr(Item));
+}
+
 void BaseDialog::sortOnColumn( int col ) {
   TraceOp.trc( "basedlg", TRCLEVEL_INFO, __LINE__, 9999,"sort on column %d", col);
   if( col != -1 ) {
@@ -43,6 +54,15 @@ void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, boo
   m_SelectedID = NULL;
   int col = 0;
   m_colID = col;
+  m_sortID = false;
+  m_sortIID = false;
+  m_sortAddr = false;
+  m_sortDesc = false;
+  m_sortShow = false;
+  m_sortPos = false;
+  m_sortOri = false;
+
+
   list->InsertColumn(col, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
   col++;
   m_colIID = -1;
@@ -73,6 +93,7 @@ void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, boo
   }
 }
 
+static bool order = false;
 /* comparator for sorting by id: */
 static int __sortID(obj* _a, obj* _b)
 {
@@ -80,7 +101,7 @@ static int __sortID(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* idA = wItem.getid( a );
     const char* idB = wItem.getid( b );
-    return strcmp( idA, idB );
+    return order?strcmp( idB, idA ):strcmp( idA, idB );
 }
 static int __sortIID(obj* _a, obj* _b)
 {
@@ -88,20 +109,15 @@ static int __sortIID(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* idA = wItem.getiid( a );
     const char* idB = wItem.getiid( b );
-    return strcmp( idA, idB );
+    return order?strcmp( idB, idA ):strcmp( idA, idB );
 }
 static int __sortAddr(obj* _a, obj* _b)
 {
     iONode a = (iONode)*_a;
     iONode b = (iONode)*_b;
-    int idA = wItem.getaddr( a );
-    int idB = wItem.getaddr( b );
-    if( idA == idB )
-      return 0;
-    if( idA > idB )
-      return 1;
-    if( idA < idB )
-      return -1;
+    wxString sA = __getAddrStr(a);
+    wxString sB = __getAddrStr(b);
+    return order?sB.Cmp(sA):sA.Cmp(sB);
 }
 static int __sortPos(obj* _a, obj* _b)
 {
@@ -116,17 +132,17 @@ static int __sortPos(obj* _a, obj* _b)
     if( xA == xB && yA == yB && zA == zB )
       return 0;
     if( xA > xB )
-      return 1;
+      return order?-1:1;
     if( xA < xB )
-      return -1;
+      return order?1:-1;
     if( yA > yB )
-      return 1;
+      return order?-1:1;
     if( yA < yB )
-      return -1;
+      return order?1:-1;
     if( zA > zB )
-      return 1;
+      return order?-1:1;
     if( zA < zB )
-      return -1;
+      return order?1:-1;
 }
 static int __sortDesc(obj* _a, obj* _b)
 {
@@ -134,7 +150,7 @@ static int __sortDesc(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* idA = wItem.getdesc( a );
     const char* idB = wItem.getdesc( b );
-    return strcmp( idA, idB );
+    return order?strcmp( idB, idA ):strcmp( idA, idB );
 }
 static int __sortOri(obj* _a, obj* _b)
 {
@@ -142,7 +158,7 @@ static int __sortOri(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* idA = (wItem.getori(a)!=NULL?wItem.getori(a):wItem.west);
     const char* idB = (wItem.getori(b)!=NULL?wItem.getori(b):wItem.west);
-    return strcmp( idA, idB );
+    return order?strcmp( idB, idA ):strcmp( idA, idB );
 }
 static int __sortShow(obj* _a, obj* _b)
 {
@@ -150,7 +166,7 @@ static int __sortShow(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* idA = wItem.isshow( a )?"true":"false";
     const char* idB = wItem.isshow( b )?"true":"false";
-    return strcmp( idA, idB );
+    return order?strcmp( idB, idA ):strcmp( idA, idB );
 }
 
 
@@ -165,20 +181,45 @@ void BaseDialog::fillIndex( iONode Items) {
       ListOp.add(sortlist, (obj)Item);
   }
 
-  ListOp.sort(sortlist, &__sortID);
+  if( m_SortCol == m_colID ) {
+    order = m_sortID;
+    ListOp.sort(sortlist, &__sortID);
+    m_sortID = !m_sortID;
+  }
+  else {
+    ListOp.sort(sortlist, &__sortID);
+  }
 
-  if( m_SortCol == m_colIID )
+  if( m_SortCol == m_colIID ) {
+    order = m_sortIID;
     ListOp.sort(sortlist, &__sortIID);
-  else if( m_SortCol == m_colAddr )
+    m_sortIID = !m_sortIID;
+  }
+  else if( m_SortCol == m_colAddr ) {
+    order = m_sortAddr;
     ListOp.sort(sortlist, &__sortAddr);
-  else if( m_SortCol == m_colDesc )
+    m_sortAddr = !m_sortAddr;
+  }
+  else if( m_SortCol == m_colDesc ) {
+    order = m_sortDesc;
     ListOp.sort(sortlist, &__sortDesc);
-  else if( m_SortCol == m_colShow )
+    m_sortDesc = !m_sortDesc;
+  }
+  else if( m_SortCol == m_colShow ) {
+    order = m_sortShow;
     ListOp.sort(sortlist, &__sortShow);
-  else if( m_SortCol == m_colPos )
+    m_sortShow = !m_sortShow;
+  }
+  else if( m_SortCol == m_colPos ) {
+    order = m_sortPos;
     ListOp.sort(sortlist, &__sortPos);
-  else if( m_SortCol == m_colOri )
+    m_sortPos = !m_sortPos;
+  }
+  else if( m_SortCol == m_colOri ) {
+    order = m_sortOri;
     ListOp.sort(sortlist, &__sortOri);
+    m_sortOri = !m_sortOri;
+  }
 
   size = ListOp.size( sortlist );
   for( int i = 0; i < size; i++ ) {
@@ -194,17 +235,7 @@ void BaseDialog::appendItem( iONode Item) {
   m_ItemList->InsertItem( index, wxString::Format(_T("%s"), wItem.getid(Item)));
   if( m_ShowAddr ) {
     m_ItemList->SetItem( index, m_colIID, wxString::Format(_T("%s"), wItem.getiid(Item)));
-    if( StrOp.equals( wOutput.name(), NodeOp.getName(Item) ) )
-      m_ItemList->SetItem( index, m_colAddr, wxString::Format(_T("%d-%d"),
-          wOutput.getaddr(Item), wOutput.getport(Item)));
-    else if( StrOp.equals( wSwitch.name(), NodeOp.getName(Item) ) )
-      m_ItemList->SetItem( index, m_colAddr, wxString::Format(_T("%d-%d"),
-          wSwitch.getaddr1(Item), wSwitch.getport1(Item)));
-    else if( StrOp.equals( wSignal.name(), NodeOp.getName(Item) ) )
-      m_ItemList->SetItem( index, m_colAddr, wxString::Format(_T("%d-%d"),
-          wSignal.getaddr(Item), wSignal.getport1(Item)));
-    else
-      m_ItemList->SetItem( index, m_colAddr, wxString::Format(_T("%d"), wItem.getaddr(Item)));
+    m_ItemList->SetItem( index, m_colAddr, __getAddrStr(Item));
     m_ItemList->SetColumnWidth(m_colIID, wxLIST_AUTOSIZE_USEHEADER);
     m_ItemList->SetColumnWidth(m_colAddr, wxLIST_AUTOSIZE_USEHEADER);
   }
