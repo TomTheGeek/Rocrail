@@ -594,6 +594,8 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
   int i = 0;
   int targetSection = -1;
   int nrSections    = 0;
+  int lenSections   = 0;
+  int len[256];
 
   /* check the sections */
   data->freeSections = 0;
@@ -602,6 +604,15 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
     if( wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0 ) {
       /* free section */
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "section[%d] is free", i );
+
+      len[i] = data->sectionLength;
+      if( wStageSection.getlen(section) > 0 ) {
+        lenSections += wStageSection.getlen(section);
+        len[i] = wStageSection.getlen(section);
+      }
+      else
+        lenSections += data->sectionLength;
+
       data->freeSections++;
       targetSection = i;
     }
@@ -615,7 +626,10 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
   if( data->freeSections >= 1 ) {
 
     int lclen   = LocOp.getLen(loco);
+
     int freeLen = data->freeSections * data->sectionLength;
+    if( lenSections > 0 )
+      freeLen = lenSections;
 
     if( lclen == 0 ) {
       fit = False;
@@ -623,10 +637,21 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
           locid, data->id );
       return fit;
     }
-    else if( (lclen + data->trainGap) < freeLen ) {
+    else if( (lclen + data->trainGap) <= freeLen ) {
       fit = True;
+      int lentmp = 0;
+      nrSections = 0;
+      for( i = targetSection; i >= 0; i-- ) {
+        lentmp += len[i];
+        nrSections++;
+        if( (lclen + data->trainGap) <= lentmp ) {
+          break;
+        }
+      }
+      /*
       nrSections = (lclen + data->trainGap) / data->sectionLength;
       nrSections += ((lclen + data->trainGap) % data->sectionLength) > 0 ? 1:0;
+      */
 
       if( lock ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "locking section(s) for [%s]", locid);

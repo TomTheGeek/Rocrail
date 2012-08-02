@@ -103,6 +103,7 @@ void StageDlg::initLabels() {
   m_DeleteSection->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_SetLoco->SetLabel( wxGetApp().getMsg( "setloco" ) );
   m_FreeSection->SetLabel( wxGetApp().getMsg( "free" ) );
+  m_labOwnSectionLength->SetLabel( wxGetApp().getMsg( "length" ) );
 
   m_EnterSensor->Append( _T("") );
   m_SectionSensor->Append( _T("") );
@@ -237,6 +238,7 @@ void StageDlg::OnSectionList( wxCommandEvent& event )
           _T(""):wxString(wStageSection.getfbid( m_Section ),wxConvUTF8) );
       m_SectionLocoId->SetStringSelection( wStageSection.getlcid( m_Section ) == NULL ?
           _T(""):wxString(wStageSection.getlcid( m_Section ),wxConvUTF8) );
+      m_OwnSectionLength->SetValue( wStageSection.getlen( m_Section ) );
       m_ModifySection->Enable(true);
       m_DeleteSection->Enable(true);
       m_SetLoco->Enable(true);
@@ -293,6 +295,7 @@ void StageDlg::OnSectionModify( wxCommandEvent& event )
       wStageSection.setid( node, m_SectionID->GetValue().mb_str(wxConvUTF8) );
       wStageSection.setfbid( node, m_SectionSensor->GetStringSelection().mb_str(wxConvUTF8) );
       wStageSection.setlcid( node, m_SectionLocoId->GetStringSelection().mb_str(wxConvUTF8) );
+      wStageSection.setlen( node, m_OwnSectionLength->GetValue() );
       initSections();
     }
     else

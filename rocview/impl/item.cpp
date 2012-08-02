@@ -2431,7 +2431,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     while( section != NULL ) {
       iONode l_section = wStage.getsection(m_Props);
       if(wStageSection.getlcid(section) != NULL && StrOp.len( wStageSection.getlcid(section) ) > 0 ) {
-        char* formatS = StrOp.fmt("\n%d: %s", wStageSection.getidx(section), wStageSection.getlcid(section));
+        char* formatS = StrOp.fmt("\n%s: %s", wStageSection.getid(section), wStageSection.getlcid(section));
         nrlocos++;
         tip = StrOp.cat( tip, formatS);
         StrOp.free(formatS);
