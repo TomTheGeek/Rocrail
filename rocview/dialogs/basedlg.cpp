@@ -232,18 +232,18 @@ void BaseDialog::fillIndex( iONode Items) {
 
 void BaseDialog::appendItem( iONode Item) {
   int index = m_ItemList->GetItemCount();
-  m_ItemList->InsertItem( index, wxString::Format(_T("%s"), wItem.getid(Item)));
+  m_ItemList->InsertItem( index, wxString( wItem.getid(Item), wxConvUTF8));
   if( m_ShowAddr ) {
-    m_ItemList->SetItem( index, m_colIID, wxString::Format(_T("%s"), wItem.getiid(Item)));
+    m_ItemList->SetItem( index, m_colIID, wxString( wItem.getiid(Item), wxConvUTF8));
     m_ItemList->SetItem( index, m_colAddr, __getAddrStr(Item));
     m_ItemList->SetColumnWidth(m_colIID, wxLIST_AUTOSIZE_USEHEADER);
     m_ItemList->SetColumnWidth(m_colAddr, wxLIST_AUTOSIZE_USEHEADER);
   }
-  m_ItemList->SetItem( index, m_colDesc, wxString::Format(_T("%s"), wItem.getdesc(Item)));
-  m_ItemList->SetItem( index, m_colShow, wxString::Format(_T("%s"), wItem.isshow(Item)?"true":"false"));
+  m_ItemList->SetItem( index, m_colDesc, wxString( wItem.getdesc(Item), wxConvUTF8));
+  m_ItemList->SetItem( index, m_colShow, wxString( wItem.isshow(Item)?"true":"false", wxConvUTF8));
   if( m_ShowPos ) {
     m_ItemList->SetItem( index, m_colPos, wxString::Format(_T("%d, %d, %d"), wItem.getx(Item), wItem.gety(Item), wItem.getz(Item)) );
-    m_ItemList->SetItem( index, m_colOri, wxString::Format(_T("%s"), wItem.getori(Item)!=NULL?wItem.getori(Item):wItem.west));
+    m_ItemList->SetItem( index, m_colOri, wxString( wItem.getori(Item)!=NULL?wItem.getori(Item):wItem.west, wxConvUTF8));
     m_ItemList->SetColumnWidth(m_colPos, wxLIST_AUTOSIZE_USEHEADER);
     m_ItemList->SetColumnWidth(m_colOri, wxLIST_AUTOSIZE_USEHEADER);
   }
