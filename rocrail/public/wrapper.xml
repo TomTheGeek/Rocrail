@@ -987,6 +987,7 @@
     <var name="id" vt="string" defval="" range="*"/>
     <var name="iid" vt="string" defval="" range="*"/>
     <var name="addr" vt="int" defval="0" range="0-*"/>
+    <var name="len" vt="int" defval="0" range="0-*"/>
     <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
     <var name="blockid" vt="string" defval="NULL" range="*"/>
     <var name="routeids" vt="string" defval="NULL" range="*" remark="comma separated list of route ids used to show a special route representation"/>

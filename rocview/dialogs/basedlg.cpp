@@ -14,6 +14,8 @@
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
+#include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Block.h"
 #include "rocview/wrapper/public/Gui.h"
 
 #include "rocview/public/guiapp.h"
@@ -49,16 +51,18 @@ void BaseDialog::sortOnColumn( int col ) {
   if( m_SortCol != m_colShow ) m_sortShow = true;
   if( m_SortCol != m_colAddr ) m_sortAddr = true;
   if( m_SortCol != m_colOri ) m_sortOri = true;
+  if( m_SortCol != m_colLen ) m_sortLen = true;
 
 }
 
 
-void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, bool showAddr ) {
+void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, bool showAddr, bool showLen ) {
   m_ItemList = list;
   m_Parent = parent;
   m_SortCol = 0;
   m_ShowPos = showPos;
   m_ShowAddr = showAddr;
+  m_ShowLen = showLen;
   m_SelectedID = NULL;
   int col = 0;
   m_colID = col;
@@ -69,12 +73,14 @@ void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, boo
   m_sortShow = true;
   m_sortPos = true;
   m_sortOri = true;
+  m_sortLen = true;
 
 
   list->InsertColumn(col, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
   col++;
   m_colIID = -1;
   m_colAddr = -1;
+  m_colLen = -1;
   if( m_ShowAddr ) {
     m_colIID = col;
     list->InsertColumn(col, wxGetApp().getMsg( "IID" ), wxLIST_FORMAT_LEFT );
@@ -86,6 +92,11 @@ void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, boo
   m_colDesc = col;
   list->InsertColumn(col, wxGetApp().getMsg( "description" ), wxLIST_FORMAT_LEFT );
   col++;
+  if( m_ShowLen ) {
+    m_colLen = col;
+    list->InsertColumn(col, wxGetApp().getMsg( "length" ), wxLIST_FORMAT_RIGHT );
+    col++;
+  }
   m_colShow = col;
   list->InsertColumn(col, wxGetApp().getMsg( "show" ), wxLIST_FORMAT_LEFT );
   col++;
@@ -126,6 +137,19 @@ static int __sortAddr(obj* _a, obj* _b)
     wxString sA = __getAddrStr(a);
     wxString sB = __getAddrStr(b);
     return order?sB.Cmp(sA):sA.Cmp(sB);
+}
+static int __sortLen(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int lenA = wItem.getlen( a );
+    int lenB = wItem.getlen( b );
+    if( lenA == lenB )
+      return 0;
+    if( lenA > lenB )
+      return order?-1:1;
+    if( lenA < lenB )
+      return order?1:-1;
 }
 static int __sortPos(obj* _a, obj* _b)
 {
@@ -228,6 +252,11 @@ void BaseDialog::fillIndex( iONode Items, bool sort) {
     order = m_sortOri;
     ListOp.sort(sortlist, &__sortOri);
   }
+  else if( m_SortCol == m_colLen ) {
+    if(sort) m_sortLen = !m_sortLen;
+    order = m_sortLen;
+    ListOp.sort(sortlist, &__sortLen);
+  }
 
   size = ListOp.size( sortlist );
   for( int i = 0; i < size; i++ ) {
@@ -248,6 +277,10 @@ void BaseDialog::appendItem( iONode Item) {
     m_ItemList->SetColumnWidth(m_colAddr, wxLIST_AUTOSIZE_USEHEADER);
   }
   m_ItemList->SetItem( index, m_colDesc, wxString( wItem.getdesc(Item), wxConvUTF8));
+  if( m_ShowLen ) {
+    m_ItemList->SetItem( index, m_colLen, wxString::Format(_T("%d"), wItem.getlen(Item)));
+    m_ItemList->SetColumnWidth(m_colLen, wxLIST_AUTOSIZE_USEHEADER);
+  }
   m_ItemList->SetItem( index, m_colShow, wxString( wItem.isshow(Item)?"true":"false", wxConvUTF8));
   if( m_ShowPos ) {
     m_ItemList->SetItem( index, m_colPos, wxString::Format(_T("%d, %d, %d"), wItem.getx(Item), wItem.gety(Item), wItem.getz(Item)) );
@@ -259,7 +292,7 @@ void BaseDialog::appendItem( iONode Item) {
   m_ItemList->SetColumnWidth(m_colID, wxLIST_AUTOSIZE);
   m_ItemList->SetColumnWidth(m_colDesc, wxLIST_AUTOSIZE);
   m_ItemList->SetColumnWidth(m_colShow, wxLIST_AUTOSIZE_USEHEADER);
-  if( m_ItemList->GetColumnWidth(m_colDesc) < 40 )
+  if( m_ItemList->GetColumnWidth(m_colDesc) < 60 )
     m_ItemList->SetColumnWidth(m_colDesc, wxLIST_AUTOSIZE_USEHEADER);
 }
 
