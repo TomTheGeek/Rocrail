@@ -2022,6 +2022,7 @@ static struct OZimoBin* _inst( const iONode ini ,const iOTrace trc ) {
   MemOp.basecpy( __ZimoBin, &ZimoBinOp, 0, sizeof( struct OZimoBin ), data );
 
   TraceOp.set( trc );
+  SystemOp.inst();
 
   /* data vars in ./rocdigs/rocdigs.xml */
 
