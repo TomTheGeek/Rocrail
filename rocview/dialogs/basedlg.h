@@ -18,7 +18,7 @@ public:
   void doDoc( wxCommandEvent& event, const char* xslName );
   bool existID( wxWindow* dlg, iONode list, iONode props, wxString id );
   void initList(wxListCtrl* list, wxWindow* parent, bool showPos=true, bool showAddr=true);
-  void fillIndex( iONode Items);
+  void fillIndex( iONode Items, bool sort=false);
   void setIDSelection( const char* ID );
   iONode setSelection( int index );
   iONode getSelection(int index=-1);

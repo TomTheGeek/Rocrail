@@ -38,7 +38,7 @@ void BaseDialog::sortOnColumn( int col ) {
   TraceOp.trc( "basedlg", TRCLEVEL_INFO, __LINE__, 9999,"sort on column %d", col);
   if( col != -1 ) {
     m_SortCol = col;
-    fillIndex(m_Items);
+    fillIndex(m_Items, true);
     if( m_SelectedID != NULL )
       setIDSelection(m_SelectedID);
   }
@@ -170,7 +170,7 @@ static int __sortShow(obj* _a, obj* _b)
 }
 
 
-void BaseDialog::fillIndex( iONode Items) {
+void BaseDialog::fillIndex( iONode Items, bool sort) {
   m_Items = Items;
   m_ItemList->DeleteAllItems();
   iOList sortlist = ListOp.inst();
@@ -182,43 +182,43 @@ void BaseDialog::fillIndex( iONode Items) {
   }
 
   if( m_SortCol == m_colID ) {
+    if(sort) m_sortID = !m_sortID;
     order = m_sortID;
     ListOp.sort(sortlist, &__sortID);
-    m_sortID = !m_sortID;
   }
   else {
     ListOp.sort(sortlist, &__sortID);
   }
 
   if( m_SortCol == m_colIID ) {
+    if(sort) m_sortIID = !m_sortIID;
     order = m_sortIID;
     ListOp.sort(sortlist, &__sortIID);
-    m_sortIID = !m_sortIID;
   }
   else if( m_SortCol == m_colAddr ) {
+    if(sort) m_sortAddr = !m_sortAddr;
     order = m_sortAddr;
     ListOp.sort(sortlist, &__sortAddr);
-    m_sortAddr = !m_sortAddr;
   }
   else if( m_SortCol == m_colDesc ) {
+    if(sort) m_sortDesc = !m_sortDesc;
     order = m_sortDesc;
     ListOp.sort(sortlist, &__sortDesc);
-    m_sortDesc = !m_sortDesc;
   }
   else if( m_SortCol == m_colShow ) {
+    if(sort) m_sortShow = !m_sortShow;
     order = m_sortShow;
     ListOp.sort(sortlist, &__sortShow);
-    m_sortShow = !m_sortShow;
   }
   else if( m_SortCol == m_colPos ) {
+    if(sort) m_sortPos = !m_sortPos;
     order = m_sortPos;
     ListOp.sort(sortlist, &__sortPos);
-    m_sortPos = !m_sortPos;
   }
   else if( m_SortCol == m_colOri ) {
+    if(sort) m_sortOri = !m_sortOri;
     order = m_sortOri;
     ListOp.sort(sortlist, &__sortOri);
-    m_sortOri = !m_sortOri;
   }
 
   size = ListOp.size( sortlist );
