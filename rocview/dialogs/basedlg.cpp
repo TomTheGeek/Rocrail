@@ -42,6 +42,14 @@ void BaseDialog::sortOnColumn( int col ) {
     if( m_SelectedID != NULL )
       setIDSelection(m_SelectedID);
   }
+  if( m_SortCol != m_colID ) m_sortID = true;
+  if( m_SortCol != m_colIID ) m_sortIID = true;
+  if( m_SortCol != m_colDesc ) m_sortDesc = true;
+  if( m_SortCol != m_colPos ) m_sortPos = true;
+  if( m_SortCol != m_colShow ) m_sortShow = true;
+  if( m_SortCol != m_colAddr ) m_sortAddr = true;
+  if( m_SortCol != m_colOri ) m_sortOri = true;
+
 }
 
 
@@ -55,12 +63,12 @@ void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, boo
   int col = 0;
   m_colID = col;
   m_sortID = false;
-  m_sortIID = false;
-  m_sortAddr = false;
-  m_sortDesc = false;
-  m_sortShow = false;
-  m_sortPos = false;
-  m_sortOri = false;
+  m_sortIID = true;
+  m_sortAddr = true;
+  m_sortDesc = true;
+  m_sortShow = true;
+  m_sortPos = true;
+  m_sortOri = true;
 
 
   list->InsertColumn(col, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
