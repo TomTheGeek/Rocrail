@@ -2011,12 +2011,20 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
 
   if( !wLoc.isconsistcmd( nodeA ) ) {
     iOLoc master = ModelOp.getMasterLoc(model, wLoc.getid( data->props ));
+
     if( master != NULL && StrOp.equals(wLoc.name(), nodename ) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "redirecting command %s:%s from %s to master %s",
-          nodename, cmd, wLoc.getid( data->props ), LocOp.getId(master) );
-      wLoc.setignorefn(nodeA, True);
-      LocOp.cmd(master, nodeA);
-      return True;
+      iOLoc slave  = ModelOp.getMasterLoc(model, LocOp.getId(master) );
+      if( slave != inst ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "redirecting command %s:%s from %s to master %s",
+            nodename, (cmd==NULL?"-":cmd), wLoc.getid( data->props ), LocOp.getId(master) );
+        wLoc.setignorefn(nodeA, True);
+        LocOp.cmd(master, nodeA);
+        return True;
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "rejecting command %s:%s from %s to master %s -> master/slave loop!",
+            nodename, (cmd==NULL?"-":cmd), wLoc.getid( data->props ), LocOp.getId(master) );
+      }
     }
   }
 

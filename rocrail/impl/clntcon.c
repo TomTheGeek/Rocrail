@@ -483,6 +483,7 @@ static void _broadcastEvent( iOClntCon inst, iONode nodeDF ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Broadcast event...%s", NodeOp.getName(nodeDF) );
     if( !ThreadOp.post( data->broadcaster, (obj)nodeDF ) ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unable to broadcast event!" );
+      NodeOp.base.del(nodeDF);
     }
   }
 }
