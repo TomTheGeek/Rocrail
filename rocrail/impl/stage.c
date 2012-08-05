@@ -944,8 +944,14 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
     if( lastSection != NULL ) {
       iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(lastSection) );
       if( lc != NULL && !LocOp.isAutomode(lc) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"start loco %s in the last section %s", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
         iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero", data->locId );
+        wLoc.setcmd(cmd, wLoc.velocity);
+        wLoc.setV(cmd, 0);
+        LocOp.cmd(lc, cmd);
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"start loco %s in the last section %s", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
+        cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
         LocOp.setCurBlock(lc, data->id);
         wLoc.setcmd(cmd, wLoc.go);
         LocOp.cmd(lc, cmd);
