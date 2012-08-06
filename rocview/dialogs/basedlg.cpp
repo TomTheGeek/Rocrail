@@ -130,13 +130,73 @@ static int __sortIID(obj* _a, obj* _b)
     const char* idB = wItem.getiid( b );
     return order?strcmp( idB, idA ):strcmp( idA, idB );
 }
-static int __sortAddr(obj* _a, obj* _b)
+static int __sortAddr_byAlphabet(obj* _a, obj* _b)
 {
     iONode a = (iONode)*_a;
     iONode b = (iONode)*_b;
     wxString sA = __getAddrStr(a);
     wxString sB = __getAddrStr(b);
     return order?sB.Cmp(sA):sA.Cmp(sB);
+}
+static int __sortAddr(obj* _a, obj* _b)
+{   /* sort numerical, first by address, then by port (where applicable) */
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    
+    int addrA = 0;
+    int portA = 0;
+    int addrB = 0;
+    int portB = 0;
+
+    /* node a */
+    if( StrOp.equals( wOutput.name(), NodeOp.getName(a) ) ) {
+      addrA = wOutput.getaddr(a);
+      portA = wOutput.getport(a);
+    }
+    else if( StrOp.equals( wSwitch.name(), NodeOp.getName(a) ) ) {
+      addrA = wSwitch.getaddr1(a);
+      portA = wSwitch.getport1(a);
+    }
+    else if(  StrOp.equals( wSignal.name(), NodeOp.getName(a) ) ) {
+      addrA = wSignal.getaddr(a);
+      portA = wSignal.getport1(a);
+    }
+    else {
+      addrA = wItem.getaddr(a);
+    }
+
+    /* node b */
+    if( StrOp.equals( wOutput.name(), NodeOp.getName(b) ) ) {
+      addrB = wOutput.getaddr(b);
+      portB = wOutput.getport(b);
+    }
+    else if( StrOp.equals( wSwitch.name(), NodeOp.getName(b) ) ) {
+      addrB = wSwitch.getaddr1(b);
+      portB = wSwitch.getport1(b);
+    }
+    else if(  StrOp.equals( wSignal.name(), NodeOp.getName(b) ) ) {
+      addrB = wSignal.getaddr(b);
+      portB = wSignal.getport1(b);
+    }
+    else {
+      addrB = wItem.getaddr(b);
+    }
+
+    /* check/compare */
+    if( addrA == addrB && portA == portB )
+      return 0;
+    if( addrA > addrB )
+      return order?-1:1;
+    if( addrA < addrB )
+      return order?1:-1;
+    if( portA > portB )
+      return order?-1:1;
+    if( portA < portB )
+      return order?1:-1;
+
+    /* this should never be reached because it is addrA == addrB && portA == portB */
+    TraceOp.trc( "__sortAddr", TRCLEVEL_WARNING, __LINE__, 9999, "WARNING unreachable code reached" );
+    return 0;
 }
 static int __sortLen(obj* _a, obj* _b)
 {
