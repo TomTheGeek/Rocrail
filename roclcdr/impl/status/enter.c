@@ -81,8 +81,8 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                                               data->loc, &data->next2Route, data->gotoBlock,
                                               wLoc.istrysamedir( data->loc->base.properties( data->loc ) ),
                                               wLoc.istryoppositedir( data->loc->base.properties( data->loc ) ),
-                wLoc.isforcesamedir( data->loc->base.properties( data->loc ) ),
-                      data->next1Route->isSwapPost( data->next1Route ) );
+                                              wLoc.isforcesamedir( data->loc->base.properties( data->loc ) ),
+                                              data->next1Route->isSwapPost( data->next1Route ), False );
       }
       else {
         /* next2Block already locked */

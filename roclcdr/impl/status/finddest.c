@@ -53,7 +53,7 @@ void statusFindDest( iILcDriverInt inst ) {
                                         data->opponly ? False:wLoc.istrysamedir( data->loc->base.properties( data->loc ) ),
                                         data->opponly | wLoc.istryoppositedir( (iONode)data->loc->base.properties( data->loc ) ),
                                         data->opponly ? False:wLoc.isforcesamedir( data->loc->base.properties( data->loc ) ),
-                                        False ); /* currently is no prev route running */
+                                        False, data->opponly ); /* currently is no prev route running */
   }
   else {
     Boolean wait = False;
