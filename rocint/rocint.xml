@@ -232,7 +232,8 @@
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
       <param name="reverse" vt="Boolean" remark="reverse signal"/>
-    </fun>
+      <param name="oppwait" vt="Boolean*" remark="Wait for opposite direction."/>
+      </fun>
     <fun name="inBlock" vt="void">
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="locid" vt="const char*" remark="Loc id"/>
@@ -282,7 +283,8 @@
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
       <param name="reverse" vt="Boolean" remark="reverse signal"/>
-    </fun>
+      <param name="oppwait" vt="int*" remark="Wait for opposite direction."/>
+      </fun>
     <fun name="getMaxKmh" vt="int">
       <param name="inst" vt="this" remark="Block instance"/>
     </fun>

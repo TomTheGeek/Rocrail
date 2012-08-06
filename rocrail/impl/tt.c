@@ -2711,8 +2711,9 @@ static int _getMaxKmh( iIBlockBase inst ) {
 }
 
 
-static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
+static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse, int* oppwait ) {
   iOTTData data = Data(inst);
+  *oppwait = 1;
   return 1; /* always wait on the bridge */
 }
 
@@ -2917,7 +2918,7 @@ static iIBlockBase __getBlock4Loc(iIBlockBase inst, const char* locid) {
 }
 
 
-static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
+static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse, Boolean* oppwait ) {
   iOTTData data = Data(inst);
 
   if( wTurntable.isembeddedblock(data->props) ) {
@@ -2926,7 +2927,7 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
 
   if( wTurntable.ismanager(data->props) ) {
     iIBlockBase block = __getBlock4Loc(inst, LocOp.getId(loc));
-    return block != NULL ? block->wait( block, loc, reverse ) : False;
+    return block != NULL ? block->wait( block, loc, reverse, oppwait ) : False;
   }
 
   return False;

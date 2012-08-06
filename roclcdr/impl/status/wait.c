@@ -47,7 +47,7 @@ void statusWait( iILcDriverInt inst, Boolean reverse ) {
 
   iONode bkprops = (iONode)data->curBlock->base.properties( data->curBlock );
   /* Station wait or all destinations are occupied. */
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Wait in block for \"%s\"...",
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Wait in block for [%s]...",
                  data->loc->getId( data->loc ) );
 
 
@@ -55,13 +55,16 @@ void statusWait( iILcDriverInt inst, Boolean reverse ) {
 
     data->state = LC_TIMER;
     data->loc->setMode(data->loc, wLoc.mode_wait);
+    Boolean oppwait = True;
+    int    ioppwait = 0;
+    Boolean wait    = data->curBlock->wait(data->curBlock, data->loc, reverse, &oppwait );
 
-    if( data->curBlock->wait(data->curBlock, data->loc, reverse ) ) {
+    if( wait ) {
       Boolean ice = StrOp.equals( wLoc.cargo_ice, wLoc.getcargo( data->loc->base.properties( data->loc ) ) );
       if( ice && data->prevState == LC_FINDDEST )
         data->timer = 1; /* just wait 100ms */
       else {
-        data->timer = data->curBlock->getWait( data->curBlock, data->loc, reverse );
+        data->timer = data->curBlock->getWait( data->curBlock, data->loc, reverse, &ioppwait );
 
         if( data->timer != -1 ) {
           if( data->prevState == LC_FINDDEST )

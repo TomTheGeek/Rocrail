@@ -129,11 +129,13 @@ void statusInitDest( iILcDriverInt inst ) {
                      data->loc->getId( data->loc ) );
     }
     else {
+      Boolean oppwait = True;
+      int ioppwait = 0;
       /* Error! */
       /* if running a schedule the schedule index should be decreased by one to match the current block */
       /* TODO: wait and getWait reverse signal flag */
-      if( data->curBlock->wait(data->curBlock, data->loc, False ) ) {
-        data->pause = data->curBlock->getWait(data->curBlock, data->loc, False );
+      if( data->curBlock->wait(data->curBlock, data->loc, False, &oppwait ) ) {
+        data->pause = data->curBlock->getWait(data->curBlock, data->loc, False, &ioppwait );
         if( data->pause != -1 )
           data->pause = data->pause * wLoc.getpriority( data->loc->base.properties( data->loc ) );
       } else

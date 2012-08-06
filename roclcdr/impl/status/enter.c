@@ -45,6 +45,7 @@
 void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
   iOLcDriverData data = Data(inst);
   int indelay = 0;
+  Boolean oppwait = True;
 
   /* Signal of destination block; wait or search for next destination? (_event) */
   iONode bkprops = (iONode)data->curBlock->base.properties( data->curBlock );
@@ -66,7 +67,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
   data->curBlock->red( data->curBlock, False, !data->next1RouteFromTo );
   */
 
-  if( !data->next1Block->wait( data->next1Block, data->loc, !data->next1RouteFromTo ) &&
+  if( !data->next1Block->wait( data->next1Block, data->loc, !data->next1RouteFromTo, &oppwait ) &&
       data->run &&
       !data->reqstop &&
       !data->next1Block->isTerminalStation(data->next1Block) )

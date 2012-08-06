@@ -62,11 +62,12 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
   iIBlockBase nextBlock = NULL;
   Boolean     fromto    = False;
   int         indelay   = 0;
+  Boolean     oppwait   = True;
 
   /*Boolean direction = fromRoute->getDirection( fromRoute, fromBlock->getId(fromBlock), &fromto );*/
   /* TODO: use the right direction for finding the next block in the same direction */
 
-  if( !fromBlock->wait( fromBlock, data->loc, reverse ) &&
+  if( !fromBlock->wait( fromBlock, data->loc, reverse, &oppwait ) &&
       !fromBlock->isTerminalStation(fromBlock)  && data->run && !data->reqstop )
   {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,

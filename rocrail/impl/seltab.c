@@ -1334,11 +1334,11 @@ static int _getMaxKmh( iIBlockBase inst ) {
 }
 
 
-static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
+static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse, int* oppwait ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "getWait");
   /* dispatch to active tracke block */
-  return block != NULL ? block->getWait( block, loc, reverse ) : 0;
+  return block != NULL ? block->getWait( block, loc, reverse, oppwait ) : 0;
 }
 
 static Boolean _green( iIBlockBase inst, Boolean distant, Boolean reverse ) {
@@ -1467,11 +1467,11 @@ static void _resetTrigs( iIBlockBase inst ) {
     block->resetTrigs( block );
 }
 
-static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
+static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse, Boolean* oppwait ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "wait");
   /* dispatch to active tracke block */
-  return block != NULL ? block->wait( block, loc, reverse ) : False;
+  return block != NULL ? block->wait( block, loc, reverse, oppwait ) : False;
 }
 
 static void _setCarCount( iIBlockBase inst, int count ) {

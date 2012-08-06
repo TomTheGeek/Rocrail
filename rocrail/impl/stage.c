@@ -518,8 +518,9 @@ static int _getMaxKmh( iIBlockBase inst ) {
 
 
 /**  */
-static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse ) {
+static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse, int* oppwait ) {
   iOStageData data = Data(inst);
+  *oppwait = 1;
   return 1;
 }
 
@@ -1058,7 +1059,7 @@ static Boolean _unLockForGroup( iIBlockBase inst ,const char* locid ) {
 
 
 /**  */
-static Boolean _wait( iIBlockBase inst ,iOLoc loc ,Boolean reverse ) {
+static Boolean _wait( iIBlockBase inst ,iOLoc loc ,Boolean reverse, Boolean* oppwait ) {
   iOStageData data = Data(inst);
   return True;
 }

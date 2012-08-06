@@ -1219,7 +1219,7 @@ static iOSignal _inst( iONode props ) {
 
 static Boolean _isState( iOSignal inst, const char* state ) {
   iOSignalData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "signal [%s] is %s (%s)",
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "signal [%s] is %s (%s)",
       _getId(inst), wSignal.getstate(data->props), state );
   return StrOp.equals( state, wSignal.getstate(data->props) );
 }

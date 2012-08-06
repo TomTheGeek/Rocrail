@@ -44,11 +44,12 @@
 
 void statusWait4Event( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
+  Boolean oppwait = True;
 
   if( data->next1Block != NULL ) {
     if( data->next2Block == NULL ) {
       if( data->model->isCheck2In( data->model ) &&
-          !data->next1Block->wait( data->next1Block, data->loc, !data->next1RouteFromTo ) &&
+          !data->next1Block->wait( data->next1Block, data->loc, !data->next1RouteFromTo, &oppwait ) &&
           data->run && !data->reqstop )
       {
         /* set step back to ENTER? may be a possible destination block did come free... */

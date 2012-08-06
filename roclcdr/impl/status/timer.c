@@ -44,11 +44,16 @@
 
 void statusTimer( iILcDriverInt inst, Boolean reverse ) {
   iOLcDriverData data = Data(inst);
+  Boolean oppwait = True;
+  data->opponly   = False;
 
   if( data->timer == -1 ) {
     /* handle manual operated signal */
-    if( !data->curBlock->wait(data->curBlock, data->loc, reverse ) ) {
+    Boolean wait = data->curBlock->wait(data->curBlock, data->loc, reverse, &oppwait );
+    if( !wait || !oppwait ) {
       data->timer = 0;
+      if( wait && !oppwait )
+        data->opponly = True;
     }
   }
 
@@ -77,18 +82,6 @@ void statusTimer( iILcDriverInt inst, Boolean reverse ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "next3Block for [%s] is [%s]",
                      data->loc->getId( data->loc ), data->next3Block->base.id(data->next3Block) );
 
-    /* Correct the direction for helping the P50 interface. */
-    /*
-    if( !data->loc->getDir( data->loc ) ) {
-      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-      wLoc.setdir( cmd, True );
-      wLoc.setV( cmd, 0 );
-      data->loc->cmd( data->loc, cmd );
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Setting direction for \"%s\" back to default.",
-                   data->loc->getId( data->loc ) );
-    }
-    */
   }
   else {
     if( data->timer > 0 )

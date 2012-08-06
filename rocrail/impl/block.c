@@ -1012,22 +1012,37 @@ static int _getMaxKmh( iIBlockBase inst ) {
 }
 
 
-static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
+static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse, int* oppwait ) {
   iOBlockData data = Data(inst);
   iOSignal signal = NULL;
+  iOSignal oppsignal = NULL;
 
   if ( wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
     Boolean bkeside = wLoc.isblockenterside( (iONode)loc->base.properties( loc ) );
     signal = (iOSignal)inst->hasManualSignal(inst, False, !bkeside );
-  } else {
+    oppsignal = (iOSignal)inst->hasManualSignal(inst, False, bkeside );
+  }
+  else {
     signal = (iOSignal)inst->hasManualSignal(inst, False, reverse );
+    oppsignal = (iOSignal)inst->hasManualSignal(inst, False, !reverse );
   }
 
   /* check the manual operated signal */
+  if( oppsignal != NULL && SignalOp.isState(oppsignal, wSignal.red) ) {
+    *oppwait = -1; /* wait until it is set to green */
+  }
+  else if( oppsignal != NULL ) {
+    *oppwait = 0;
+  }
+
   if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
+    if( oppsignal == NULL )
+      *oppwait = -1;
     return -1; /* wait until it is set to green */
   }
   else if( signal != NULL ) {
+    if( oppsignal == NULL )
+      *oppwait = 0;
     return 0;
   }
 
@@ -1332,16 +1347,29 @@ static int _isSuited( iIBlockBase inst, iOLoc loc ) {
   return __crossCheckType((iOBlock)inst, loc, NULL);
 }
 
-static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
+static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse, Boolean* oppwait ) {
   iOBlockData data = Data(inst);
   Boolean wait = False;
   iOSignal signal = NULL;
+  iOSignal oppsignal = NULL;
 
   if ( wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
     Boolean bkeside = wLoc.isblockenterside( (iONode)loc->base.properties( loc ) );
     signal = (iOSignal)inst->hasManualSignal(inst, False, !bkeside );
-  } else {
+    oppsignal = (iOSignal)inst->hasManualSignal(inst, False, bkeside );
+  }
+  else {
     signal = (iOSignal)inst->hasManualSignal(inst, False, reverse );
+    oppsignal = (iOSignal)inst->hasManualSignal(inst, False, !reverse );
+  }
+
+  if( oppsignal != NULL && SignalOp.isState(oppsignal, wSignal.red) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has an oppwait red manual signal", inst->base.id(inst) );
+    *oppwait = True;
+  }
+  else if( oppsignal != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has a NONE oppwait red manual signal", inst->base.id(inst) );
+    *oppwait = False;
   }
 
   if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
@@ -1358,6 +1386,7 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse ) {
     return False;
   }
   __crossCheckType( (iOBlock)inst, loc, &wait);
+  *oppwait = wait;
   return wait;
 }
 

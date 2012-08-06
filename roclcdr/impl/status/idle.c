@@ -45,10 +45,20 @@
 
 void statusIdle( iILcDriverInt inst, Boolean reverse ) {
   iOLcDriverData data = Data(inst);
+  int wait = 0;
+  int oppwait = 0;
+
+  if(data->loc->getCurBlock( data->loc ) != NULL) {
+    wait = data->curBlock->getWait(data->curBlock, data->loc, reverse, &oppwait );
+    /* manual signal in opposite direction */
+    if( data->opponly ) {
+      wait = oppwait;
+    }
+  }
 
   /* Waiting for run-flag. */
   if( data->run && !data->reqstop && data->loc->getCurBlock( data->loc ) != NULL &&
-      data->curBlock->getWait(data->curBlock, data->loc, reverse ) != -1 &&
+      wait != -1 &&
       data->curBlock->isDepartureAllowed(data->curBlock, data->loc->getId(data->loc)) )
   {
 

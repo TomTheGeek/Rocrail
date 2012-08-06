@@ -94,7 +94,8 @@
       <var name="indelay" vt="int"/>
       <var name="stopnonecommuter" vt="Boolean"/>
       <var name="useblockside" vt="Boolean"/>
-    </data>
+      <var name="opponly" vt="Boolean"/>
+      </data>
   </object>
 
 
