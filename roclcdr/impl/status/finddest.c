@@ -44,6 +44,7 @@
 void statusFindDest( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
   int scheduleIdx = data->scheduleIdx;
+  Boolean mansignal = (data->curBlock->hasManualSignal(data->curBlock, False, False) != NULL ? True:False);
 
   /* Find a free destination. */
   if( data->schedule == NULL || StrOp.len( data->schedule ) == 0 ) {
@@ -52,7 +53,7 @@ void statusFindDest( iILcDriverInt inst ) {
                                         data->loc, &data->next1Route, data->gotoBlock,
                                         data->opponly ? False:wLoc.istrysamedir( data->loc->base.properties( data->loc ) ),
                                         data->opponly | wLoc.istryoppositedir( (iONode)data->loc->base.properties( data->loc ) ),
-                                        data->opponly ? False:wLoc.isforcesamedir( data->loc->base.properties( data->loc ) ),
+                                        data->opponly ? False:(mansignal|wLoc.isforcesamedir( data->loc->base.properties( data->loc ) )),
                                         False, data->opponly ); /* currently is no prev route running */
   }
   else {
