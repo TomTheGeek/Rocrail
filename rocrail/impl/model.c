@@ -4006,7 +4006,7 @@ static const char* _getManagedID(iOModel inst, const char* fromBlockId) {
 static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char* fromRouteId, iOLoc loc,
                           iORoute* routeref, const char* gotoBlockId,
                           Boolean trysamedir, Boolean tryoppositedir, Boolean forceSameDir,
-                          Boolean swapPlacingInPrevRoute, Boolean forseOppDir) {
+                          Boolean swapPlacingInPrevRoute, Boolean forceOppDir) {
   iOModelData o = Data(inst);
 
   iIBlockBase   blockBest = NULL;
@@ -4223,7 +4223,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
               if( suits == suits_well ) {
                 Boolean dirOK = True;
                 /* using blockside, in case of a commuter changing direction making sure that it is an alternative route */
-                if( (!samedir && !allowChgDir)  || (swap4BlockSide && useBlockSide) || (forseOppDir && samedir))
+                if( (!samedir && !allowChgDir)  || (swap4BlockSide && useBlockSide) || (forceOppDir && samedir))
                   dirOK = False;
 
                 if( dirOK && (!trysamedir && !forceSameDir && !tryoppositedir) ) {
@@ -4258,7 +4258,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
               }
               else if( suits == suits_ok ) {
                 Boolean dirOK = True;
-                if( (!samedir && !allowChgDir) || (forseOppDir && samedir) )
+                if( (!samedir && !allowChgDir) || (forceOppDir && samedir) )
                   dirOK = False;
 
                 TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
