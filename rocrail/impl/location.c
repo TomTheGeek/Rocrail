@@ -81,7 +81,8 @@ static void* __properties( void* inst ) {
 }
 
 static const char* __id( void* inst ) {
-  return NULL;
+  iOLocationData data = Data(inst);
+  return wLocation.getid(data->props);
 }
 
 static void* __event( void* inst, const void* evt ) {

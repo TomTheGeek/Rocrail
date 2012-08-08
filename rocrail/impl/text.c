@@ -136,7 +136,8 @@ static void __evaluateSchedule(iONode schedule, int scidx, iOMap map, char* hour
     while( entry != NULL ) {
       if( idx == scidx ) {
         MapOp.put(map, "lcscbk", (obj)wScheduleEntry.getblock( entry ));
-        MapOp.put(map, "lcscbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )));
+        if( ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )) != NULL )
+          MapOp.put(map, "lcscbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )));
 
         StrOp.fmtb(hour, "%d", wScheduleEntry.gethour( entry ));
         MapOp.put(map, "lcschour", (obj)hour);
@@ -146,12 +147,14 @@ static void __evaluateSchedule(iONode schedule, int scidx, iOMap map, char* hour
         entry = wSchedule.nextscentry( schedule, entry );
         if( entry!= NULL ) {
           MapOp.put(map, "lcscnextbk", (obj)wScheduleEntry.getblock( entry ));
-          MapOp.put(map, "lcscnextbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )));
+          if( ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )) != NULL )
+            MapOp.put(map, "lcscnextbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )));
         }
 
         if( preventry != NULL ) {
           MapOp.put(map, "lcscprevbk", (obj)wScheduleEntry.getblock( preventry ));
-          MapOp.put(map, "lcscprevbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( preventry )));
+          if(ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( preventry )) != NULL)
+            MapOp.put(map, "lcscprevbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( preventry )));
         }
 
         break;
@@ -215,14 +218,18 @@ static void* __event( void* inst, const void* evt ) {
         MapOp.put(map, "frombkdesc", (obj)wBlock.getdesc(frombkprops));
       }
 
-      MapOp.put(map, "bkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)));
-      MapOp.put(map, "frombkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->getFromBlockId(bk)));
+      if( ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)) != NULL )
+        MapOp.put(map, "bkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)));
+      if( ModelOp.getBlockLocation(AppOp.getModel(), bk->getFromBlockId(bk)) != NULL )
+        MapOp.put(map, "frombkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->getFromBlockId(bk)));
 
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
       wText.settext(data->props, msg );
       wText.setblock(data->props, bk->base.id(bk) );
-      if( MapOp.haskey(map, "frombkloc") )
-        wText.setlocation(data->props, (const char*)MapOp.get(map, "frombkloc") );
+      if( MapOp.haskey(map, "frombkloc") ) {
+        iOLocation location = (iOLocation)MapOp.get(map, "frombkloc");
+        wText.setlocation(data->props, location->base.id(location) );
+      }
       else
         wText.setlocation(data->props, "" );
 
@@ -240,7 +247,8 @@ static void* __event( void* inst, const void* evt ) {
       char* speedStr = StrOp.fmt("%.1f", bk->getmvspeed(bk));
       iOMap map = MapOp.inst();
       MapOp.put(map, "bkid", (obj)bk->base.id(bk));
-      MapOp.put(map, "bkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)));
+      if(ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)) != NULL)
+        MapOp.put(map, "bkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)));
       MapOp.put(map, "bkmvspeed", (obj)speedStr); 
       MapOp.put(map, "counter", (obj)NodeOp.getStr(node, "counter", "0") );
       MapOp.put(map, "carcount", (obj)NodeOp.getStr(node, "carcount", "0") );
