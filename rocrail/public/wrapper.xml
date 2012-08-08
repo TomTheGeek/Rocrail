@@ -667,6 +667,7 @@
       <var name="closeonghost" vt="bool" defval="false"/>
       <var name="sgevents" vt="bool" defval="false" remark="Process field events for signals."/>
       <var name="closenoevents" vt="bool" defval="false" remark="Close block if no event is defined."/>
+      <var name="selectshortestblock" vt="bool" defval="false" remark="Select shortest block in case block and train length are set."/>
     </ctrl>
   </rocrail>
 

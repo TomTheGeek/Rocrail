@@ -157,7 +157,9 @@
     <fun name="isSuited" vt="int">
       <param name="inst" vt="this"/>
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
-    </fun>
+      <param name="restlen" vt="int*"/>
+      <param name="checkprev" vt="Boolean"/>
+      </fun>
     <fun name="isState" vt="Boolean">
       <param name="inst" vt="this"/>
       <param name="state" vt="const char*" remark="State to compare with."/>

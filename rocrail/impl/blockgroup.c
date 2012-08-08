@@ -30,6 +30,8 @@
 
 #include "rocrail/wrapper/public/Link.h"
 #include "rocrail/wrapper/public/LinkCond.h"
+#include "rocrail/wrapper/public/Ctrl.h"
+#include "rocrail/wrapper/public/RocRail.h"
 
 static int instCnt = 0;
 
@@ -132,7 +134,8 @@ static void __rewind(struct OBlockGroup* inst, const char* LocoId) {
 /**  */
 static Boolean _lock( struct OBlockGroup* inst ,const char* BlockId ,const char* LocoId ) {
   iOBlockGroupData data = Data(inst);
-  iOModel     model  = AppOp.getModel();
+  iOModel model  = AppOp.getModel();
+  Boolean selectShortest = wCtrl.isselectshortestblock( wRocRail.getctrl( AppOp.getIni() ) );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s request to lock blockgroup %s with block %s",
       LocoId, wLink.getid(data->props), BlockId);
@@ -172,13 +175,14 @@ static Boolean _lock( struct OBlockGroup* inst ,const char* BlockId ,const char*
             wLink.getid(data->props), wLinkCond.getfirst(cond) );
         if( StrOp.equals( wLinkCond.getfirst(cond), BlockId )) {
           Boolean freeBlock = False;
+          int restlen = 0;
           iOStrTok tok = StrTokOp.inst(wLinkCond.getfree(cond), ',');
           while( StrTokOp.hasMoreTokens(tok) ) {
             const char* id = StrTokOp.nextToken( tok );
             iIBlockBase block = ModelOp.getBlock( model, id );
             if( block != NULL && block->isFree(block, LocoId) ) {
               iOLoc loc = ModelOp.getLoc( model, LocoId );
-              block_suits  suits = block->isSuited( block, loc );
+              block_suits  suits = block->isSuited( block, loc, &restlen, !selectShortest );
               if( suits != suits_not ) {
                 freeBlock = True;
                 break;

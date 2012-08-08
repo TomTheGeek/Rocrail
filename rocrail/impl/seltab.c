@@ -964,7 +964,7 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   return block != NULL ? True:False;
 }
 
-static int _isSuited( iIBlockBase inst, iOLoc loc ) {
+static int _isSuited( iIBlockBase inst, iOLoc loc, int* restlen, Boolean checkprev ) {
   iOSelTabData data = Data(inst);
   return suits_ok;
 }

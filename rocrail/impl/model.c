@@ -4009,15 +4009,19 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                           Boolean swapPlacingInPrevRoute, Boolean forceOppDir) {
   iOModelData o = Data(inst);
 
+  int size = ListOp.size( o->routeList );
+
   iIBlockBase   blockBest = NULL;
   iIBlockBase   blockAlt  = NULL;
   iORoute       routeBest = NULL;
   iORoute       routeAlt  = NULL;
-  iOList        fitBlocks = ListOp.inst();
-  iOList        fitRoutes = ListOp.inst();
-  iOList        altBlocks = ListOp.inst();
-  iOList        altRoutes = ListOp.inst();
-  iOMap         swapRoutes= MapOp.inst();
+  iOList        fitBlocks  = ListOp.inst();
+  iOList        fitRoutes  = ListOp.inst();
+  int           fitRestLen[size];
+  iOList        altBlocks  = ListOp.inst();
+  iOList        altRoutes  = ListOp.inst();
+  int           altRestLen[size];
+  iOMap         swapRoutes = MapOp.inst();
 
   /* try to find a block in the same direction of the train */
   Boolean locdir  = LocOp.getDir( loc );
@@ -4027,6 +4031,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
 
   /* The use blockside option works only with one way type, so both directions will fail. */
   Boolean useBlockSide     = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni(  ) ) );
+  Boolean selectShortest   = wCtrl.isselectshortestblock( wRocRail.getctrl( AppOp.getIni(  ) ) );
 
   Boolean destdir = False;
   Boolean samedir = False;
@@ -4060,7 +4065,6 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   MutexOp.wait( o->muxFindDest );
   {
     /* Iterate all streets for destinations: */
-    int size = ListOp.size( o->routeList );
     int i = 0;
     Boolean allowChgDir = True;
 
@@ -4196,6 +4200,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
             /* Is it free? Does it fit? */
             if( block->isFree( block, LocOp.getId( loc ) ) ) {
               block_suits suits;
+              int restlen = 0;
 
               /* Check for wanted block: */
               if( gotoBlockId != NULL && StrOp.equals( gotoBlockId, blockId ) ) {
@@ -4212,7 +4217,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                 break;
               }
 
-              suits = block->isSuited( block, loc );
+              suits = block->isSuited( block, loc, &restlen, !selectShortest );
               if( !route->hasPermission( route, loc, fromBlockId, !samedir ) ) {
                 suits = suits_not;
               }
@@ -4232,6 +4237,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                   routeBest = route;
                   ListOp.add( fitBlocks, (obj)block );
                   ListOp.add( fitRoutes, (obj)route );
+                  fitRestLen[ListOp.size(fitBlocks)-1] = restlen;
                 }
                 else if( (dirOK && ( trysamedir || forceSameDir) && samedir) || (dirOK && tryoppositedir && !destdir) ) {
                   /* direction flags fits */
@@ -4242,6 +4248,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                   routeBest = route;
                   ListOp.add( fitBlocks, (obj)block );
                   ListOp.add( fitRoutes, (obj)route );
+                  fitRestLen[ListOp.size(fitBlocks)-1] = restlen;
                 }
                 else if( !forceSameDir && allowChgDir ) {
                   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "found a block [%s] for [%s] in the other direction", blockId, LocOp.getId( loc ) );
@@ -4249,6 +4256,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                   routeAlt = route;
                   ListOp.add( altBlocks, (obj)block );
                   ListOp.add( altRoutes, (obj)route );
+                  altRestLen[ListOp.size(altBlocks)-1] = restlen;
                 }
                 else if( forceSameDir ) {
                   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -4275,6 +4283,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                     routeAlt = route;
                     ListOp.add( altBlocks, (obj)block );
                     ListOp.add( altRoutes, (obj)route );
+                    altRestLen[ListOp.size(altBlocks)-1] = restlen;
                   }
                   else if( dirOK && !forceSameDir ) {
                     /* wrong direction alternative */
@@ -4285,6 +4294,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                     routeAlt = route;
                     ListOp.add( altBlocks, (obj)block );
                     ListOp.add( altRoutes, (obj)route );
+                    altRestLen[ListOp.size(altBlocks)-1] = restlen;
                     MapOp.put( swapRoutes, route->base.id(route), (obj)route );
                   }
                   else {
@@ -4302,6 +4312,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                   routeAlt = route;
                   ListOp.add( altBlocks, (obj)block );
                   ListOp.add( altRoutes, (obj)route );
+                  altRestLen[ListOp.size(altBlocks)-1] = restlen;
                 }
                 else {
                   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -4346,6 +4357,22 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                      blockBest->base.id(blockBest), LocOp.getId( loc ) );
       *routeref = routeBest;
     }
+    else if( selectShortest ) {
+      int i = 0;
+      int shortest = fitRestLen[0];
+      blockBest = (iIBlockBase)ListOp.get( fitBlocks, 0 );
+      *routeref = (iORoute)ListOp.get( fitRoutes, 0 );
+      for( i = 1; i < cnt; i++ ) {
+        if( fitRestLen[i] < shortest ) {
+          shortest = fitRestLen[i];
+          blockBest = (iIBlockBase)ListOp.get( fitBlocks, i );
+          *routeref = (iORoute)ListOp.get( fitRoutes, i );
+        }
+      }
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Block [%s] is shortest, restlen=%d,  of the well suited for [%s]",
+                     blockBest->base.id(blockBest), shortest, LocOp.getId( loc ) );
+    }
     else {
       int randNumber = rand();
       int randChoice = randNumber % cnt;
@@ -4377,6 +4404,22 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Block [%s] is suited for [%s]",
                      blockBest->base.id(blockBest), LocOp.getId( loc ) );
+    }
+    else if( selectShortest ) {
+      int i = 0;
+      int shortest = altRestLen[0];
+      blockBest = (iIBlockBase)ListOp.get( altBlocks, 0 );
+      *routeref = (iORoute)ListOp.get( altRoutes, 0 );
+      for( i = 1; i < cnt; i++ ) {
+        if( altRestLen[i] < shortest ) {
+          shortest = altRestLen[i];
+          blockBest = (iIBlockBase)ListOp.get( altBlocks, i );
+          *routeref = (iORoute)ListOp.get( altRoutes, i );
+        }
+      }
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Block [%s] is shortest, restlen=%d, of the well suited for [%s]",
+                     blockBest->base.id(blockBest), shortest, LocOp.getId( loc ) );
     }
     else {
       int randNumber = rand();

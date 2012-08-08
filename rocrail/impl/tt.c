@@ -3019,7 +3019,7 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   return False;
 }
 
-static int _isSuited( iIBlockBase inst, iOLoc loc ) {
+static int _isSuited( iIBlockBase inst, iOLoc loc, int* restlen, Boolean checkprev ) {
   iOTTData data = Data(inst);
   return 1;
 }

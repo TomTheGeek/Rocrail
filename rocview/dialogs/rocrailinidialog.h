@@ -336,6 +336,7 @@ public:
     wxCheckBox* m_ReleaseOnIdle;
     wxCheckBox* m_CloseOnGhost;
     wxCheckBox* m_CloseNoEvents;
+    wxCheckBox* m_SelectShortestBlock;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;

@@ -529,8 +529,10 @@ void BlockDialog::initValues() {
   // General
   m_ID->SetValue( wxString(wBlock.getid( m_Props ),wxConvUTF8) );
   m_Description->SetValue( wxString(wBlock.getdesc( m_Props ),wxConvUTF8) );
-  wxString val; val.Printf( _T("%d"), wBlock.getlen( m_Props ) );
-  m_Length->SetValue( val );
+  char* str = StrOp.fmt( "%d", wBlock.getlen( m_Props ) );
+  m_Length->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
+
+
   m_DepartDelay->SetValue( wBlock.getdepartdelay( m_Props ) );
   m_LocID->Disable();
   if( wBlock.getlocid( m_Props ) != NULL )
@@ -642,7 +644,6 @@ void BlockDialog::initValues() {
     speed = 3;
   m_ExitSpeed->SetSelection( speed );
 
-  char * str;
   str = StrOp.fmt( "%d", wBlock.getspeedpercent(m_Props) );
   m_SpeedPercent->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
 
@@ -691,6 +692,7 @@ void BlockDialog::initValues() {
     wait = 3;
   m_Wait->SetSelection( wait );
 
+  wxString val;
   val.Printf( _T("%d"), wBlock.getminwaittime( m_Props ) );
   m_RandomMin->SetValue( val );
   val.Printf( _T("%d"), wBlock.getmaxwaittime( m_Props ) );

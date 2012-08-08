@@ -1083,7 +1083,7 @@ static Boolean _isTTBlock( iIBlockBase inst ) {
 
 
 /* cross checking block and train types */
-static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
+static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait, Boolean checkPrev) {
   iOBlockData data = Data(block);
   const char* traintype = wLoc.getcargo( LocOp.base.properties(loc) );
   const char* blocktype = wBlock.gettype( BlockOp.base.properties(block) );
@@ -1109,7 +1109,7 @@ static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
   if( StrOp.equals( wLoc.cargo_cleaning, traintype ) ) {
     if( wait != NULL )
       *wait = ttwait;
-    if( data->prevLocId != NULL ) {
+    if( checkPrev && data->prevLocId != NULL ) {
       const char* locid = LocOp.getId( loc );
       if( StrOp.equals( data->prevLocId, locid ) ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -1127,7 +1127,7 @@ static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
   if( StrOp.equals( wLoc.cargo_all, traintype ) ) {
     if( wait != NULL )
       *wait = blockwait;
-    if( data->prevLocId != NULL ) {
+    if( checkPrev && data->prevLocId != NULL ) {
       const char* locid = LocOp.getId( loc );
       if( StrOp.equals( data->prevLocId, locid ) ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -1147,7 +1147,7 @@ static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
   if( StrOp.equals( wBlock.type_none, blocktype ) || ( ttId != NULL && StrOp.len( ttId ) > 0 ) ) {
     if( data->prevLocId != NULL ) {
       const char* locid = LocOp.getId( loc );
-      if( StrOp.equals( data->prevLocId, locid ) ) {
+      if( checkPrev && StrOp.equals( data->prevLocId, locid ) ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
                        "Block \"%s\" is last visited by \"%s\"",
                        data->id, locid );
@@ -1231,7 +1231,7 @@ static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait) {
 }
 
 
-static int _isSuited( iIBlockBase inst, iOLoc loc ) {
+static int _isSuited( iIBlockBase inst, iOLoc loc, int* restlen, Boolean checkPrev ) {
   iOBlockData data = Data(inst);
   /* ToDo: Check if loc can run in this block. */
 
@@ -1242,6 +1242,12 @@ static int _isSuited( iIBlockBase inst, iOLoc loc ) {
   /* Permissions */
   iONode incl = wBlock.getincl( data->props );
   iONode excl = wBlock.getexcl( data->props );
+
+  if( restlen != NULL ) {
+    *restlen = 0;
+    if( bklen > 0 && lclen > 0 && lclen < bklen )
+      *restlen = bklen - lclen;
+  }
 
   /* test if the id is included: */
   if( incl != NULL ) {
@@ -1344,7 +1350,7 @@ static int _isSuited( iIBlockBase inst, iOLoc loc ) {
 
 
   /* this only returns suits_ok or suits_well */
-  return __crossCheckType((iOBlock)inst, loc, NULL);
+  return __crossCheckType((iOBlock)inst, loc, NULL, checkPrev);
 }
 
 static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse, Boolean* oppwait ) {
@@ -1385,7 +1391,7 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse, Boolean* opp
   if( StrOp.equals( wLoc.cargo_cleaning, wLoc.getcargo( (iONode)loc->base.properties( loc ) ) ) ){
     return False;
   }
-  __crossCheckType( (iOBlock)inst, loc, &wait);
+  __crossCheckType( (iOBlock)inst, loc, &wait, True);
   *oppwait = wait;
   return wait;
 }
