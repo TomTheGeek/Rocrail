@@ -26,6 +26,7 @@
 #include "rocdigs/impl/xpressnet/li101.h"
 #include "rocrail/wrapper/public/DigInt.h"
 
+Boolean liethConnectInternal(obj xpressnet);
 Boolean liethConnect(obj xpressnet);
 
 static void __timeoutwd( void* threadinst ) {
@@ -35,34 +36,34 @@ static void __timeoutwd( void* threadinst ) {
 
   int retry = 0;
 
-  ThreadOp.sleep(1000);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout watchdog started" );
+  TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "timeout watchdog started" );
 
   while( data->run ) {
-    if( data->socket != NULL ) {
+    if( data->socket == NULL ) {
+      TraceOp.trc( "lieth", TRCLEVEL_DEBUG, __LINE__, 9999, "connecting..." );
+      if( !data->connectpending && retry < 60 && !liethConnectInternal((obj)xpressnet) ) {
+        retry++;
+      }
+      else {
+        retry = 0;
+      }
+    }
+    else {
       long t = time(NULL);
       if( t - data->lastcmd >= 30 ) {
         /* send a packet: (0xFF 0xFE) 0xF1 0x01 (0xF0) */
         byte* outa = allocMem(32);
         outa[0] = 0xF1;
         outa[1] = 0x01;
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting a keep alive packet" );
+        TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "posting a keep alive packet" );
         ThreadOp.post( data->transactor, (obj)outa );
       }
       retry = 0;
     }
-    else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to reconnect..." );
-      if( !data->connectpending && retry < 60 && !liethConnect((obj)xpressnet) ) {
-        retry++;
-      }
-      else {
-      }
-    }
     ThreadOp.sleep(1000);
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout watchdog ended" );
+  TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "timeout watchdog ended" );
 }
 
 
@@ -72,7 +73,7 @@ static void __availwd( void* threadinst ) {
   iOXpressNetData data = Data(xpressnet);
 
   ThreadOp.sleep(10);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "available watchdog started" );
+  TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "available watchdog started" );
 
   while( data->run ) {
     if( MutexOp.wait( data->serialmux ) ) {
@@ -81,15 +82,36 @@ static void __availwd( void* threadinst ) {
         data->availFlag = SocketOp.read( data->socket, buffer, 2 );
       }
       MutexOp.post( data->serialmux );
+      if( data->socket != NULL && SocketOp.isBroken(data->socket)) {
+        TraceOp.trc( "lieth", TRCLEVEL_EXCEPTION, __LINE__, 9999, "problem reading LiEth: Disconnect" );
+        liethDisconnect(xpressnet);
+        ThreadOp.sleep(1000);
+      }
     }
     ThreadOp.sleep(10);
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout watchdog ended" );
+  TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "available watchdog ended" );
 }
 
+Boolean liethConnect( obj xpressnet ) {
+  iOXpressNetData data = Data(xpressnet);
+  data->connectpending = False;
+  data->availFlag = False;
+  data->socket = NULL;
+  if( data->timeOutWD == NULL ) {
+    data->timeOutWD = ThreadOp.inst( "timeoutwd", &__timeoutwd, xpressnet );
+    ThreadOp.start( data->timeOutWD );
+    ThreadOp.sleep(100); /* time to connect... */
+  }
+  if( data->availWD == NULL ) {
+    data->availWD = ThreadOp.inst( "availwd", &__availwd, xpressnet );
+    ThreadOp.start( data->availWD );
+  }
+  return True;
+}
 
-Boolean liethConnect(obj xpressnet) {
+Boolean liethConnectInternal(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
   iOSocket socket = NULL;
 
@@ -110,17 +132,13 @@ Boolean liethConnect(obj xpressnet) {
   SocketOp.setNodelay( socket, True );
   SocketOp.setBlocking( socket, True );
 
+  TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "trying to connect to %s:%d...",
+      wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
   if ( SocketOp.connect( socket ) ) {
     data->socket = socket;
-    if( data->timeOutWD == NULL ) {
-      data->timeOutWD = ThreadOp.inst( "timeoutwd", &__timeoutwd, xpressnet );
-      ThreadOp.start( data->timeOutWD );
-    }
-    if( data->availWD == NULL ) {
-      data->availWD = ThreadOp.inst( "availwd", &__availwd, xpressnet );
-      ThreadOp.start( data->availWD );
-    }
     data->connectpending = False;
+    TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "connected to %s:%d",
+        wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
     return True;
   }
   else {
@@ -137,11 +155,13 @@ Boolean liethConnect(obj xpressnet) {
 
 void liethDisConnect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
-  if( data->socket != NULL ) {
+  if( data->socket != NULL && MutexOp.wait( data->serialmux ) ) {
     iOSocket socket = data->socket;
+    TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "disconnecting..." );
     data->socket = NULL;
     SocketOp.disConnect( socket );
     SocketOp.base.del( socket );
+    MutexOp.post( data->serialmux );
   }
 }
 
@@ -151,7 +171,9 @@ Boolean liethAvail(obj xpressnet) {
 }
 
 void liethInit(obj xpressnet) {
+  iOXpressNetData data = Data(xpressnet);
   li101Init(xpressnet);
+  data->availFlag = False;
 }
 
 int liethRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
@@ -166,17 +188,19 @@ int liethRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
     if( data->availFlag || SocketOp.read( data->socket, buffer, 2 ) ) {
       SocketOp.read( data->socket, buffer, 1 );
       len = (buffer[0] & 0x0F) + 1;
-      if( SocketOp.read( data->socket, buffer+1, len ) )
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "read from LI-ETH" );
+      if( SocketOp.read( data->socket, buffer+1, len ) ) {
+        TraceOp.trc( "lieth", TRCLEVEL_BYTE, __LINE__, 9999, "read from LI-ETH" );
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len+1 );
+      }
+      MutexOp.post( data->serialmux );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "problem reading XpressNet: Disconnect" );
+      TraceOp.trc( "lieth", TRCLEVEL_EXCEPTION, __LINE__, 9999, "problem reading XpressNet: Disconnect" );
+      MutexOp.post( data->serialmux );
       liethDisConnect(xpressnet);
       ThreadOp.sleep(1000);
     }
     data->availFlag = False;
-    MutexOp.post( data->serialmux );
   }
 
   return len;
@@ -187,10 +211,10 @@ Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   iOXpressNetData data = Data(xpressnet);
 
   int len = 0;
-  Boolean rc = False;
+  Boolean ok = False;
   unsigned char out[256];
 
-  *rspexpected = True; /* LIUSB/ETH or CS will confirm every command */
+  *rspexpected = False;
   if( data->socket == NULL ) {
     return 0;
   }
@@ -200,7 +224,7 @@ Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   len = makeChecksum(outin);
 
   if( len == 0 ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zero bytes to write LI-ETH" );
+    TraceOp.trc( "lieth", TRCLEVEL_WARNING, __LINE__, 9999, "zero bytes to write LI-ETH" );
     return False;
   }
 
@@ -218,15 +242,18 @@ Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   }
 
   if( data->socket != NULL && !SocketOp.isBroken(data->socket) ) {
-    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "write to LI-ETH" );
+    TraceOp.trc( "lieth", TRCLEVEL_BYTE, __LINE__, 9999, "write to LI-ETH" );
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
-    rc = SocketOp.write( data->socket, out, len );
+    ok = SocketOp.write( data->socket, out, len );
     data->lastcmd = time(NULL);
-    if( !rc ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to XpressNet" );
+    if( ok ) {
+      *rspexpected = True; /* LIUSB/ETH or CS will confirm every command */
+    }
+    else {
+      TraceOp.trc( "lieth", TRCLEVEL_WARNING, __LINE__, 9999, "could not write to XpressNet" );
     }
   }
 
-  return rc;
+  return ok;
 }
 

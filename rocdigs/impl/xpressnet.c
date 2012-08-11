@@ -1164,7 +1164,7 @@ static void __transactor( void* threadinst ) {
   byte in[32];
   byte lastPacket[32];
   int  inlen = 0;
-  int  repeats = 0;
+  int  timeout = 0;
   Boolean rspReceived = True;
   Boolean rspExpected = False;
   Boolean reSend      = False;
@@ -1214,6 +1214,16 @@ static void __transactor( void* threadinst ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "read incomming packet..." );
       inlen = data->subRead((obj)xpressnet, in, &rspReceived);
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "incomming packet = %d", inlen );
+    }
+
+    if( inlen == 0 && rspExpected ) {
+      timeout++;
+      if( timeout > 500 ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "timeout on response" );
+        rspReceived = True;
+        rspExpected = False;
+        timeout = 0;
+      }
     }
 
     if ( inlen > 0 ) {
@@ -1652,9 +1662,9 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->subAvail   = li101Avail;
   }
 
+  data->run = True;
   if( data->subConnect((obj)__XpressNet) ) {
     /* start transactor */
-    data->run = True;
 
     data->transactor = ThreadOp.inst( "transactor", &__transactor, __XpressNet );
     ThreadOp.start( data->transactor );
@@ -1673,6 +1683,7 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
     ThreadOp.start( data->initializer );
   }
   else {
+    data->run = False;
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "unable to initialize the XpressNet connection" );
   }
 
