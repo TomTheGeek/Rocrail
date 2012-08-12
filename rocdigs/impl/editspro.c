@@ -157,7 +157,7 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
     addr = (addr-1) * 4 + (port-1);
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set switch %d to %s",
-        wSwitch.getaddr1( node ), wSwitch.getcmd(node) );
+        addr, wSwitch.getcmd(node) );
 
     if( data->v10 ) {
       int v10addr = wSwitch.getaddr1( node );
@@ -188,7 +188,7 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
       byte* cmd = allocMem(32);
       cmd[0] = 2; // length
       cmd[1] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node))?33:34;
-      cmd[2] = addr;
+      cmd[2] = addr+1;
       ThreadOp.post(data->writer, (obj)cmd);
       data->lastSwCmd = 0;
     }
@@ -210,7 +210,7 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
     addr = (addr-1) * 4 + (port-1);
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d.%d %s",
-        wOutput.getaddr( node ), wOutput.getgate(node), on?"ON":"OFF" );
+        addr, wOutput.getgate(node), on?"ON":"OFF" );
 
     if( data->v10 ) {
       int v10addr = wSwitch.getaddr1( node );
@@ -232,7 +232,7 @@ static iONode __translate( iOEditsPro edits, iONode node ) {
       if( on ) {
         cmd[0] = 2;
         cmd[1] = gate ? 34:33;
-        cmd[2] = wSwitch.getaddr1( node );
+        cmd[2] = addr+1;
       }
       else {
         cmd[0] = 1;
