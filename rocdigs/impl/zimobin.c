@@ -638,11 +638,11 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     int addr = wFeedback.getaddr( node );
     Boolean state = wFeedback.isstate( node );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
     rsp = (iONode)NodeOp.base.clone( node );
   }
 
-  /* Loc command. */
+  /* Loc and Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) || StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int addr = wLoc.getaddr( node );
     int V = 0;
@@ -742,7 +742,7 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     const char* cmd = wSysCmd.getcmd( node );
 
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Power OFF" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
       byte* outa = allocMem(32);
 
       outa[0] = 1;    /* short packet */
@@ -753,7 +753,7 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       ThreadOp.post( data->transactor, (obj)outa );
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Power ON" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       byte* outa = allocMem(32);
 
       outa[0] = 1;    /* short packet */
@@ -764,7 +764,7 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       ThreadOp.post( data->transactor, (obj)outa );
     }
     else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Broadcast STOP" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency STOP" );
       byte* outa = allocMem(32);
 
       outa[0] = 1;    /* short packet */
@@ -773,6 +773,40 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       outa[3] = 2;    /* track control */
       outa[4] = 0; /* stop broadcast */
       ThreadOp.post( data->transactor, (obj)outa );
+    }
+    else if( StrOp.equals( cmd, wSysCmd.sod ) ) {
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day" );
+
+      int MX9_id;
+      int MX9_sec;
+
+      for (MX9_id=1; MX9_id < ((( data->fbmod + 1 ) / 2 ) + 1 ); MX9_id++) {
+        byte* outa = allocMem(32);
+        int delay  = (MX9_id * 20) + 800;
+
+        outa[0] = 1;         /* short packet */
+        outa[1] = 3;         /* packet length */
+        outa[2] = 0x12;      /* command station instruction */
+        outa[3] = 3;         /* MX9 control */
+        outa[4] = MX9_id;    /* id */
+
+        ThreadOp.post( data->transactor, (obj)outa );
+
+        for (MX9_sec=0; MX9_sec<8; MX9_sec++) {
+          byte* outa = allocMem(32);
+
+          outa[0] = 1;         /* short packet */
+          outa[1] = 4;         /* packet length */
+          outa[2] = 0x12;      /* command station instruction */
+          outa[3] = 4;         /* MX9 control */
+          outa[4] = MX9_id;    /* id */
+          outa[5] = MX9_sec;   /* section */
+
+          ThreadOp.post( data->transactor, (obj)outa );
+        }
+      }
+
     } else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SYSCMD %s", cmd );
     }
@@ -1075,7 +1109,6 @@ static void __handleTrackSection(iOZimoBin zimobin, byte mx9_id, byte mx9_sec, b
   } else {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "tracksection: MX9=%d, section=%d, invalid", mx9_id, mx9_sec );
   }
-
 }
 
 static void __handleAccessoryFeedback(iOZimoBin zimobin, byte* swp) {
@@ -1289,8 +1322,10 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "long MX9 %d", subt );
         switch (subt) {
           case 0x04:
-            __send_lack(zimobin, seqid, msgt);
-            __handleTrackSection(zimobin, packet[5], packet[6], packet[7], &packet[8]);
+            __handleTrackSection(zimobin, packet[5], packet[6], packet[7] | 0x40, &packet[8]);
+            packet[3] = packet[4];
+            packet[4] = 0;
+            __ackHandler( zimobin, packet, len );
             break;
         }
         break;
@@ -1371,7 +1406,7 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
             if ( len == 8 ) {
               int addr   = ((packet[4] & 0x3f) * 256) + packet[5];
               byte err   = packet[6];
-              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV addr=%d err=%s",addr ,__getErrCode(err) );
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV addr=%d error=%s",addr ,__getErrCode(err) );
             } else if ( len == 10 ) {
               iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
               int addr   = ((packet[4] & 0x3f) * 256) + packet[5];
@@ -1653,7 +1688,7 @@ static void __initComm( iOZimoBin zimobin ) {
 
 
   /* prepare init packet */
-  if( False ) { /* dont need reset packet */
+  { /* reset packet       MX1 resets sometimes after power on if missed */
     byte* outa = allocMem(32);
 
     outa[0] = 1;    /* short packet */
@@ -1675,7 +1710,7 @@ static void __initComm( iOZimoBin zimobin ) {
     ThreadOp.post( data->transactor, (obj)outa );
   }
 
-  {
+  if ( False ) {
     byte* outa = allocMem(32);
 
     outa[0] = 1;    /* short packet */
@@ -1692,7 +1727,7 @@ static void __initComm( iOZimoBin zimobin ) {
 
   for (MX9_id=1; MX9_id < ((( data->fbmod + 1 ) / 2 ) + 1 ); MX9_id++) {
     byte* outa = allocMem(32);
-    int delay  = (MX9_id * 20) + 800;
+    int delay  = (MX9_id * 250) + 3000;
 
     outa[0] = 1;         /* short packet */
     outa[1] = 4;         /* packet length */
@@ -1710,7 +1745,7 @@ static void __initComm( iOZimoBin zimobin ) {
 
     for (MX9_sec=0; MX9_sec<8; MX9_sec++) {
       byte* outa = allocMem(32);
-      int delay  = (MX9_id * 80) + 5000;
+      int delay  = (MX9_sec * 250) + (MX9_id * 8000);
 
       outa[0] = 1;         /* short packet */
       outa[1] = 5;         /* packet length */
@@ -1735,7 +1770,7 @@ static void __initComm( iOZimoBin zimobin ) {
 
     while ( swProps != NULL ) {
       const char *swName = wSwitch.getid( swProps );
-      int delay  = (cnt * 10) + 500;
+      int delay  = (cnt * 100) + 1000;
 
       int addr  = wSwitch.getaddr1( swProps );
       int port  = wSwitch.getport1( swProps );
@@ -1788,7 +1823,7 @@ static void __initComm( iOZimoBin zimobin ) {
 
     while ( loProps != NULL ) {
       const char *loName = wLoc.getid( loProps );
-      int delay  = (cnt * 10) + 300;
+      int delay  = (cnt * 100) + 7000;
 
       int addr  = wLoc.getaddr(loProps);
 
@@ -1936,7 +1971,9 @@ static void __transactor( void* threadinst ) {
         out[packetlen] = crc % 256;
         packetlen++;
       }
-      if ( data->protver > 1 && ((((out[1] & 0xf0) == 0x10) || ((out[1] & 0xf0) == 0x90)) && (out[2] != 17)) ) {
+      if ( data->protver > 1 && 
+           ((((out[1] & 0xf0) == 0x10) || ((out[1] & 0xf0) == 0x90)) && 
+           !((out[2] == 17) || out[2] == 1)) ) {
         byte* outa = allocMem(128);
         MemOp.copy( outa+3, (byte*) out, packetlen);
 
@@ -1959,7 +1996,7 @@ static void __transactor( void* threadinst ) {
       spat = SystemOp.getTick();
     }
 
-    if ( (ctick - spat) > 190 ) {
+    if ( (ctick - spat) > 110 ) {
       byte* outa = allocMem(32);
       outa[0] = 1;    /* short packet */
       outa[1] = 4;    /* packet length */
@@ -1970,7 +2007,7 @@ static void __transactor( void* threadinst ) {
       ThreadOp.post( data->transactor, (obj)outa );
     }
 
-    if ( (ctick - ssqt) > 990 ) {
+    if ( (ctick - ssqt) > 590 ) {
       byte* outa = allocMem(32);
       outa[0] = 1;    /* short packet */
       outa[1] = 3;    /* packet length */
@@ -1981,7 +2018,7 @@ static void __transactor( void* threadinst ) {
       ssqt = ctick;
     }
 
-    if ( (ctick - suit) > 490 ) {
+    if ( (ctick - suit) > 190 ) {
       byte* outa = allocMem(32);
       outa[0] = 1;    /* short packet */
       outa[1] = 3;    /* packet length */
@@ -2023,8 +2060,6 @@ static struct OZimoBin* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.set( trc );
   SystemOp.inst();
-
-  /* data vars in ./rocdigs/rocdigs.xml */
 
   /* Initialize data->xxx members... */
   data->ini      = ini;
