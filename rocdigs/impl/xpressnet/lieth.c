@@ -84,7 +84,7 @@ static void __availwd( void* threadinst ) {
       MutexOp.post( data->serialmux );
       if( data->socket != NULL && SocketOp.isBroken(data->socket)) {
         TraceOp.trc( "lieth", TRCLEVEL_EXCEPTION, __LINE__, 9999, "problem reading LiEth: Disconnect" );
-        liethDisconnect(xpressnet);
+        liethDisConnect(xpressnet);
         ThreadOp.sleep(1000);
       }
     }
