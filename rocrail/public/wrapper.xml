@@ -1313,7 +1313,7 @@
         <const name="distant" vt="string" val="distant"/>
         <const name="main" vt="string" val="main"/>
         <var name="signal" vt="string" defval="main" range="main,distant,shunting"/>
-        <var name="aspects" vt="int" defval="3" range="2-4" remark="number of aspects to show"/>
+        <var name="aspects" vt="int" defval="3" range="2-32" remark="number of aspects to show"/>
         <var name="dwarf" vt="bool" defval="false"/>
 
         <!-- patterns -->

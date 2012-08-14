@@ -95,6 +95,14 @@ void SymbolRenderer::initSym() {
   m_SvgSym15 = NULL;
   m_SvgSym16 = NULL;
 
+
+  // Aspect array
+  for( int i = 0; i < 32; i++) {
+    m_SvgSym[i] = NULL;
+    m_SvgSymOcc[i] = NULL;
+    m_SvgSymRoute[i] = NULL;
+  }
+
   const char* nodeName = NodeOp.getName( m_Props );
 
   TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "nodename=%s", nodeName );
@@ -444,7 +452,21 @@ void SymbolRenderer::initSym() {
     int aspects = wSignal.getaspects( m_Props );
     Boolean dwarf = wSignal.isdwarf( m_Props );
     m_iSymType = symtype::i_signal;
-    if( StrOp.equals( wSignal.semaphore, wSignal.gettype( m_Props ) ) ) {
+    if( wSignal.getaspects( m_Props ) > 4 ) {
+      m_iSymSubType = signaltype::i_signalaspect;
+      if( m_SymMap != NULL ) {
+        char key[256];
+        for( int i = 0; i < wSignal.getaspects( m_Props ); i++ ) {
+          StrOp.fmtb( key, signaltype::signalaspect, i );
+          m_SvgSym[i] = (svgSymbol*)MapOp.get( m_SymMap, key );
+          StrOp.fmtb( key, signaltype::signalaspect_occ, i );
+          m_SvgSymOcc[i] = (svgSymbol*)MapOp.get( m_SymMap, key );
+          StrOp.fmtb( key, signaltype::signalaspect_route, i );
+          m_SvgSymRoute[i] = (svgSymbol*)MapOp.get( m_SymMap, key );
+        }
+      }
+    }
+    else if( StrOp.equals( wSignal.semaphore, wSignal.gettype( m_Props ) ) ) {
       if( StrOp.equals( wSignal.main, wSignal.getsignal( m_Props ) ) ) {
         m_iSymSubType = signaltype::i_semaphoremain;
         if( m_SymMap != NULL ) {
@@ -1399,7 +1421,16 @@ void SymbolRenderer::drawSignal( wxPaintDC& dc, bool occupied, bool actroute, co
   TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to %s", wSignal.getid( m_Props ), state );
 
   // SVG Symbol:
-  if( m_SvgSym2!=NULL && StrOp.equals( state, wSignal.yellow ) ) {
+  int nr = wSignal.getaspect(m_Props);
+  if( wSignal.getaspects( m_Props ) > 4 && m_SvgSym[nr] != NULL) {
+    if( occupied && m_SvgSymOcc[nr] != NULL)
+      drawSvgSym(dc, m_SvgSymOcc[nr], ori);
+    else if( actroute && m_SvgSymRoute[nr] != NULL)
+      drawSvgSym(dc, m_SvgSymRoute[nr], ori);
+    else
+      drawSvgSym(dc, m_SvgSym[nr], ori);
+  }
+  else if( m_SvgSym2!=NULL && StrOp.equals( state, wSignal.yellow ) ) {
     if( occupied && m_SvgSym5 != NULL)
       drawSvgSym(dc, m_SvgSym5, ori);
     else if( actroute && m_SvgSym10 != NULL)

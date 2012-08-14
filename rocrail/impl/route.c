@@ -356,10 +356,18 @@ static Boolean __syncGo( iORoute inst ) {
       else
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "*PANIC* No turntable object found for %s:%s", swId, swCmd );
     }
-    else if( StrOp.equals( wSignal.red   , swCmd ) ||
-             StrOp.equals( wSignal.green , swCmd ) ||
+    else if( StrOp.equals( wSignal.aspect, swCmd ) )
+    {
+      iOSignal isg = ModelOp.getSignal( model, swId );
+
+      if( isg != NULL ) {
+        SignalOp.aspect(isg, NodeOp.getInt( sw, "track", 0));
+      }
+    }
+    else if( StrOp.equals( wSignal.red, swCmd ) ||
+             StrOp.equals( wSignal.green, swCmd ) ||
              StrOp.equals( wSignal.yellow, swCmd ) ||
-             StrOp.equals( wSignal.white , swCmd ) )
+             StrOp.equals( wSignal.white, swCmd ) )
     {
       iOSignal isg = ModelOp.getSignal( model, swId );
 
@@ -604,7 +612,7 @@ static Boolean __checkSwitches( iORoute inst, const char* id ) {
     Boolean lock = wSwitchCmd.islock(sw);
 
     if( StrOp.equals( wSignal.red, swCmd ) || StrOp.equals( wSignal.green, swCmd ) ||
-        StrOp.equals( wSignal.yellow, swCmd ) || StrOp.equals( wSignal.white, swCmd ) )
+        StrOp.equals( wSignal.yellow, swCmd ) || StrOp.equals( wSignal.white, swCmd ) || StrOp.equals( wSignal.aspect, swCmd ) )
     {
       iOSignal isw = ModelOp.getSignal( model, swId );
       if( isw == NULL ) {

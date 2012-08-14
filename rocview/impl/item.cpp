@@ -157,7 +157,8 @@ enum {
                // because ME_TTTrack+0...ME_TTTrack+47 are also used!!!.
     ME_ScheduleGo = ME_TTTrack + 48,
     ME_FYGo = ME_ScheduleGo + 20,
-    ME_TTGo = ME_FYGo + 10
+    ME_TTGo = ME_FYGo + 10,
+    ME_CmdSignalAspect = ME_TTGo + 10
 };
 
 BEGIN_EVENT_TABLE(Symbol, wxWindow)
@@ -216,6 +217,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_CmdSignalYellow, Symbol::OnCmdSignalYellow )
   EVT_MENU     (ME_CmdSignalGreen, Symbol::OnCmdSignalGreen )
   EVT_MENU     (ME_CmdSignalWhite, Symbol::OnCmdSignalWhite )
+  EVT_MENU     (ME_CmdSignalAspect, Symbol::OnCmdSignalAspect )
 
   EVT_MENU     (ME_Info, Symbol::OnInfo)
   EVT_MENU     (ME_ResetWheelcounter, Symbol::OnResetWheelcounter)
@@ -813,6 +815,20 @@ void Symbol::OnCmdSignalWhite(wxCommandEvent& event) {
   wSignal.setcmd( cmd, wSignal.white );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+}
+
+void Symbol::OnCmdSignalAspect(wxCommandEvent& event) {
+  wxTextEntryDialog* dlg = new wxTextEntryDialog(m_PlanPanel, wxGetApp().getMenu("aspect") );
+  if( wxID_OK == dlg->ShowModal() ) {
+    iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+    wSignal.setid( cmd, wSignal.getid( m_Props ) );
+    wSignal.setcmd( cmd, wSignal.aspect );
+    wSignal.setaspect( cmd, atoi(dlg->GetValue().mb_str(wxConvUTF8)) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+  dlg->Destroy();
+
 }
 
 void Symbol::OnCmdSignalAuto(wxCommandEvent& event) {
@@ -1438,6 +1454,8 @@ void Symbol::OnPopup(wxMouseEvent& event)
         menuSgCmd->Append( ME_CmdSignalYellow, wxGetApp().getMenu("yellow") );
       if( wSignal.getaspects( m_Props ) > 3 )
         menuSgCmd->Append( ME_CmdSignalWhite, wxGetApp().getMenu("white") );
+      if( wSignal.getaspects( m_Props ) > 4 )
+        menuSgCmd->Append( ME_CmdSignalAspect, wxGetApp().getMenu("aspect") );
       menu.Append( -1, wxGetApp().getMenu("command"), menuSgCmd );
     }
     else if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {

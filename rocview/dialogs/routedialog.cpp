@@ -277,6 +277,7 @@ void RouteDialog::initLabels() {
   m_SwitchCmd->SetString( 8, wxGetApp().getMsg( "white" ) );
   m_SwitchCmd->SetString( 9, wxGetApp().getMsg( "on" ) );
   m_SwitchCmd->SetString( 10, wxGetApp().getMsg( "off" ) );
+  m_SwitchCmd->SetString( 11, wxGetApp().getMsg( "aspect" ) );
   m_Lock->SetLabel( wxGetApp().getMsg( "lock" ) );
 
   // Sensors
@@ -762,6 +763,7 @@ void RouteDialog::initValues() {
   m_SwitchCmd->Enable( 8, false );
   m_SwitchCmd->Enable( 9, false );
   m_SwitchCmd->Enable( 10, false );
+  m_SwitchCmd->Enable( 11, false );
 
   m_Lock->SetValue(true);
 
@@ -1269,7 +1271,6 @@ void RouteDialog::CreateControls()
     wxBoxSizer* itemBoxSizer15 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer14->Add(itemBoxSizer15, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer16 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer16->AddGrowableCol(1);
     itemBoxSizer15->Add(itemFlexGridSizer16, 0, wxGROW|wxALL, 5);
     m_LabelId = new wxStaticText( m_GeneralPanel, wxID_STATIC_ST_ID, _("Id"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer16->Add(m_LabelId, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1289,8 +1290,9 @@ void RouteDialog::CreateControls()
     m_Description = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer16->Add(m_Description, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
+    itemFlexGridSizer16->AddGrowableCol(1);
+
     wxFlexGridSizer* itemFlexGridSizer23 = new wxFlexGridSizer(0, 3, 0, 0);
-    itemFlexGridSizer23->AddGrowableCol(1);
     itemBoxSizer15->Add(itemFlexGridSizer23, 0, wxGROW, 5);
     m_LabelBlockA = new wxStaticText( m_GeneralPanel, wxID_STATIC_ST_BLOCKA, _("from block"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer23->Add(m_LabelBlockA, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1314,14 +1316,17 @@ void RouteDialog::CreateControls()
     m_ToSide->SetValue(false);
     itemFlexGridSizer23->Add(m_ToSide, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    itemFlexGridSizer23->AddGrowableCol(1);
+
     wxFlexGridSizer* itemFlexGridSizer30 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer30->AddGrowableCol(1);
     itemBoxSizer15->Add(itemFlexGridSizer30, 0, wxGROW, 5);
     m_labCrossingBlock = new wxStaticText( m_GeneralPanel, wxID_STATIC_BLOCKC, _("crossing block"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer30->Add(m_labCrossingBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_BlockC = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer30->Add(m_BlockC, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer30->AddGrowableCol(1);
 
     wxFlexGridSizer* itemFlexGridSizer33 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer14->Add(itemFlexGridSizer33, 0, wxGROW|wxLEFT|wxRIGHT, 5);
@@ -1435,7 +1440,6 @@ void RouteDialog::CreateControls()
     itemBoxSizer56->Add(m_Modify, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer59 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer59->AddGrowableCol(0);
     itemBoxSizer54->Add(itemFlexGridSizer59, 1, wxGROW|wxALL, 5);
     wxBoxSizer* itemBoxSizer60 = new wxBoxSizer(wxVERTICAL);
     itemFlexGridSizer59->Add(itemBoxSizer60, 1, wxGROW|wxALIGN_TOP|wxALL, 5);
@@ -1471,6 +1475,7 @@ void RouteDialog::CreateControls()
     m_SwitchCmdStrings.Add(_("&white"));
     m_SwitchCmdStrings.Add(_("&on"));
     m_SwitchCmdStrings.Add(_("&off"));
+    m_SwitchCmdStrings.Add(_("&aspect"));
     m_SwitchCmd = new wxRadioBox( m_CommandPanel, ID_RADIOBOX_ST_SW_CMD, _("Command"), wxDefaultPosition, wxDefaultSize, m_SwitchCmdStrings, 2, wxRA_SPECIFY_COLS );
     m_SwitchCmd->SetSelection(0);
     itemBoxSizer67->Add(m_SwitchCmd, 0, wxALIGN_LEFT|wxALL, 5);
@@ -1478,6 +1483,8 @@ void RouteDialog::CreateControls()
     m_Lock = new wxCheckBox( m_CommandPanel, wxID_ANY, _("Lock"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Lock->SetValue(false);
     itemBoxSizer67->Add(m_Lock, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    itemFlexGridSizer59->AddGrowableCol(0);
 
     m_Notebook->AddPage(m_CommandPanel, _("Turnouts"));
 
@@ -1538,7 +1545,6 @@ void RouteDialog::CreateControls()
     itemBoxSizer78->Add(m_PermType, 0, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer84 = new wxFlexGridSizer(0, 3, 0, 0);
-    itemFlexGridSizer84->AddGrowableCol(1);
     itemBoxSizer78->Add(itemFlexGridSizer84, 0, wxGROW|wxALL, 5);
     m_labMaxLen = new wxStaticText( m_PermissionsPanel, wxID_ANY, _("Max. train length"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer84->Add(m_labMaxLen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1549,6 +1555,8 @@ void RouteDialog::CreateControls()
     m_Commuter = new wxCheckBox( m_PermissionsPanel, wxID_ANY, _("Commuter train"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Commuter->SetValue(false);
     itemFlexGridSizer84->Add(m_Commuter, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer84->AddGrowableCol(1);
 
     m_Notebook->AddPage(m_PermissionsPanel, _("Persmissions"));
 
@@ -1646,7 +1654,6 @@ void RouteDialog::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer114 = new wxStaticBoxSizer(m_CTCBox, wxVERTICAL);
     itemBoxSizer113->Add(itemStaticBoxSizer114, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer115 = new wxFlexGridSizer(0, 4, 0, 0);
-    itemFlexGridSizer115->AddGrowableCol(3);
     itemStaticBoxSizer114->Add(itemFlexGridSizer115, 0, wxGROW|wxALL, 5);
     m_labCTCbutton = new wxStaticText( m_WiringPanel, wxID_ANY, _("Button"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer115->Add(m_labCTCbutton, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1698,6 +1705,8 @@ void RouteDialog::CreateControls()
     wxArrayString m_Output3Strings;
     m_Output3 = new wxComboBox( m_WiringPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_Output3Strings, wxCB_DROPDOWN );
     itemFlexGridSizer115->Add(m_Output3, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer115->AddGrowableCol(3);
 
     m_Notebook->AddPage(m_WiringPanel, _("Wiring"));
 
@@ -1801,6 +1810,10 @@ void RouteDialog::OnButtonTurnoutAddClick( wxCommandEvent& event )
     case 10:
         wSwitchCmd.setcmd( swcmd, wOutput.off );
         break;
+    case 11:
+      wSwitchCmd.setcmd( swcmd, wSignal.aspect );
+      wSwitchCmd.settrack( swcmd, m_TrackNumber->GetValue() );
+      break;
     }
 
   wSwitchCmd.setlock( swcmd, m_Lock->IsChecked() ? True:False );
@@ -1872,6 +1885,11 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
       dir = 9;
     else if( StrOp.equals( wOutput.off, wSwitchCmd.getcmd(swcmd) ) )
       dir = 10;
+    else if( StrOp.equals( wSignal.aspect, wSwitchCmd.getcmd(swcmd) ) ) {
+      dir = 11;
+      m_TrackNumber->SetValue(wSwitchCmd.gettrack(swcmd));
+      m_TrackNumber->Enable(true);
+    }
     m_SwitchCmd->SetSelection(dir);
 
     m_Lock->Enable(true);
@@ -1888,6 +1906,7 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
     m_SwitchCmd->Enable( 8, false );
     m_SwitchCmd->Enable( 9, false );
     m_SwitchCmd->Enable( 10, false );
+    m_SwitchCmd->Enable( 11, false );
 
     int swidx = m_SwitchId->FindString( wxString(wSwitchCmd.getid(swcmd),wxConvUTF8) );
     if( swidx != wxNOT_FOUND ) {
@@ -1914,6 +1933,7 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
         m_SwitchCmd->Enable( 6, true );
         m_SwitchCmd->Enable( 7, true );
         m_SwitchCmd->Enable( 8, true );
+        m_SwitchCmd->Enable( 11, true );
         m_Lock->Enable(false);
         m_Lock->SetValue(false);
       }
@@ -2091,6 +2111,10 @@ void RouteDialog::OnButtonTurnoutModifyClick( wxCommandEvent& event )
       case 10:
         wSwitchCmd.setcmd( swcmd, wOutput.off );
         break;
+      case 11:
+        wSwitchCmd.setcmd( swcmd, wSignal.aspect );
+        wSwitchCmd.settrack( swcmd, m_TrackNumber->GetValue() );
+        break;
     }
 
     initCommands();
@@ -2142,6 +2166,7 @@ void RouteDialog::OnComboboxStSwitchIdSelected( wxCommandEvent& event )
     m_SwitchCmd->Enable( 8, false );
     m_SwitchCmd->Enable( 9, false );
     m_SwitchCmd->Enable( 10, false );
+    m_SwitchCmd->Enable( 11, false );
     m_TrackNumber->Enable(false);
     if( StrOp.equals( wTurntable.name(), NodeOp.getName( sw ) ) ||
         StrOp.equals( wSelTab.name(), NodeOp.getName( sw ) )) {
@@ -2154,9 +2179,11 @@ void RouteDialog::OnComboboxStSwitchIdSelected( wxCommandEvent& event )
       m_SwitchCmd->Enable( 6, true );
       m_SwitchCmd->Enable( 7, true );
       m_SwitchCmd->Enable( 8, true );
+      m_SwitchCmd->Enable( 11, true );
       m_SwitchCmd->SetSelection(5);
       m_Lock->Enable(false);
       m_Lock->SetValue(false);
+      m_TrackNumber->Enable(true);
     }
     else if( StrOp.equals( wOutput.name(), NodeOp.getName( sw ) ) ) {
       m_SwitchCmd->Enable( 9, true );

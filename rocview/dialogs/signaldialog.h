@@ -265,7 +265,8 @@ public:
     wxPanel* m_PropsPanel;
     wxRadioBox* m_Type;
     wxRadioBox* m_Signal;
-    wxRadioBox* m_Aspects;
+    wxStaticText* m_labAspects;
+    wxSpinCtrl* m_Aspects;
     wxCheckBox* m_Dwarf;
     wxStaticText* m_labAspect;
     wxStaticText* m_labPatternAddr1;

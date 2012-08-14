@@ -317,6 +317,7 @@ static void _event( iOSignal inst, iONode nodeC ) {
     iONode nodeF = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
     wSignal.setid( nodeF, wSignal.getid( data->props ) );
     wSignal.setstate( nodeF, wSignal.getstate( data->props ) );
+    wSignal.setaspect( nodeF, wSignal.getaspect( data->props ) );
     wSignal.setmanual( nodeF, wSignal.ismanual( data->props ) );
     if( wSignal.getiid( data->props ) != NULL )
       wSignal.setiid( nodeF, wSignal.getiid( data->props ) );
@@ -383,6 +384,18 @@ static void _blank( iOSignal inst ) {
     iOSignalData data = Data(inst);
     iONode node = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
     wSignal.setcmd( node, wSignal.blank );
+    wSignal.setid( node, SignalOp.getId( inst ) );
+    SignalOp.cmd( inst, node, True );
+  }
+}
+
+
+static void _aspect( iOSignal inst, int nr ) {
+  if( inst != NULL && !SignalOp.isManualOperated(inst) ) {
+    iOSignalData data = Data(inst);
+    iONode node = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+    wSignal.setcmd( node, wSignal.aspect );
+    wSignal.setaspect( node, nr );
     wSignal.setid( node, SignalOp.getId( inst ) );
     SignalOp.cmd( inst, node, True );
   }
@@ -826,7 +839,7 @@ static Boolean __process2AspectsCmd( iOSignal inst, const char* state ) {
 
 
 
-static Boolean __processAspectNrCmd( iOSignal inst, const char* state ) {
+static Boolean __processAspectNrCmd( iOSignal inst, const char* state, int nr ) {
   iOSignalData o = Data(inst);
   iOControl control = AppOp.getControl(  );
   const char* iid = wSignal.getiid( o->props );
@@ -837,7 +850,9 @@ static Boolean __processAspectNrCmd( iOSignal inst, const char* state ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "aspect number processing for signal [%s][%s]...", wSignal.getid( o->props ), state );
 
-  if( StrOp.equals( wSignal.green, state ) )
+  if( nr != -1 )
+    aspect = nr;
+  else if( StrOp.equals( wSignal.green, state ) )
     aspect = wSignal.getgreennr(o->props);
   else if( StrOp.equals( wSignal.red, state ) )
     aspect = wSignal.getrednr(o->props);
@@ -857,9 +872,32 @@ static Boolean __processAspectNrCmd( iOSignal inst, const char* state ) {
   wSignal.setprot( cmd, wSignal.getprot( o->props ) );
   wSignal.setcmd( cmd, wSignal.aspect );
   wSignal.setaspect( cmd, aspect );
-  wSignal.setaddr( cmd, wSignal.getaddr( o->props ) );
-  wSignal.setport1( cmd, wSignal.getport1( o->props ) );
-  wSignal.setgate1( cmd, wSignal.getgate1( o->props ) );
+  if( nr != -1 ) {
+    /* addressing the aspect on the base */
+    if( wSignal.getaddr( o->props ) > 0 && wSignal.getport1( o->props ) > 0 ) {
+      /* NMRA */
+      wSignal.setaddr ( cmd, wSignal.getaddr( o->props ) + (aspect / 8) );
+      wSignal.setport1( cmd, (aspect % 4) + 1 );
+      wSignal.setgate1( cmd, aspect % 2 );
+    }
+    else if( wSignal.getaddr( o->props ) == 0 && wSignal.getport1( o->props ) > 0 ) {
+      /* PADA */
+      wSignal.setaddr ( cmd, 0 );
+      wSignal.setport1( cmd, wSignal.getport1( o->props ) + (aspect / 2) );
+      wSignal.setgate1( cmd, aspect % 2 );
+    }
+    else {
+      /* FADA */
+      wSignal.setaddr ( cmd, wSignal.getaddr( o->props ) + aspect );
+      wSignal.setport1( cmd, 0 );
+      wSignal.setgate1( cmd, 0 );
+    }
+  }
+  else {
+    wSignal.setaddr( cmd, wSignal.getaddr( o->props ) );
+    wSignal.setport1( cmd, wSignal.getport1( o->props ) );
+    wSignal.setgate1( cmd, wSignal.getgate1( o->props ) );
+  }
 
   /* invoke the command by calling the control */
   if( !ControlOp.cmd( control, cmd, NULL ) ) {
@@ -948,10 +986,11 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
   Boolean ok = True;
 
   const char* state      = wSignal.getcmd( nodeA );
+  int          aspectnr   = -1;
   const char* iid        = wSignal.getiid( o->props );
   const char* savedState = wSignal.getstate( o->props );
-  Boolean     inv        = wSignal.isinv( o->props );
-  Boolean     chgState   = True;
+  Boolean     inv         = wSignal.isinv( o->props );
+  Boolean     chgState    = True;
 
 
   if( control == NULL ) {
@@ -984,6 +1023,13 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
     else {
       state = wSignal.green;
     }
+  }
+  else if( StrOp.equals( wSignal.aspect, state ) ) {
+    wSignal.setaspect( o->props, aspectnr );
+    chgState = True;
+    aspectnr = wSignal.getaspect( nodeA );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to aspect %d",
+                 wSignal.getid( o->props ), aspectnr );
   }
   else if( StrOp.equals( wSignal.autooperated, state ) ) {
     wSignal.setmanual( o->props, False);
@@ -1047,7 +1093,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
       }
     }
     else if( hasAddr && wSignal.getusepatterns( o->props ) == wSignal.use_aspectnrs ) {
-      if( !__processAspectNrCmd( inst, state ) ) {
+      if( !__processAspectNrCmd( inst, state, aspectnr ) ) {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
             "Signal [%s] could not be set!", wSignal.getid( o->props ) );
         ok = False;
@@ -1103,6 +1149,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
     iONode nodeF = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
     wSignal.setid( nodeF, wSignal.getid( o->props ) );
     wSignal.setstate( nodeF, wSignal.getstate( o->props ) );
+    wSignal.setaspect( nodeF, wSignal.getaspect( o->props ) );
     wSignal.setmanual( nodeF, wSignal.ismanual( o->props ) );
     if( wSignal.getiid( o->props ) != NULL )
       wSignal.setiid( nodeF, wSignal.getiid( o->props ) );

@@ -79,6 +79,10 @@ class SymbolRenderer {
   svgSymbol* m_SvgSym14;
   svgSymbol* m_SvgSym15;
   svgSymbol* m_SvgSym16;
+  svgSymbol* m_SvgSym[32];
+  svgSymbol* m_SvgSymOcc[32];
+  svgSymbol* m_SvgSymRoute[32];
+
   int m_iSymType;
   int m_iSymSubType;
   iOMap m_SymMap;

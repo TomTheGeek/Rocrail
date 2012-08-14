@@ -552,6 +552,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       int error = 0;
       iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
       wSignal.setcmd( cmd, wAction.getcmd( data->action ) );
+      wSignal.setaspect( cmd, atoi(wAction.getparam( data->action )) );
       SignalOp.cmd( sg, cmd, True );
     }
   }

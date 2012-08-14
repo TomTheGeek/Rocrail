@@ -23,7 +23,6 @@
 #ifndef SYM_H_
 #define SYM_H_
 
-
 namespace symtype {
   static const int i_track      = 1;
   static const int i_switch     = 2;
@@ -238,6 +237,10 @@ namespace switchtype {
 }
 
 namespace signaltype {
+  static const char* signalaspect       = "signalaspect-%d.svg";
+  static const char* signalaspect_occ   = "signalaspect-%d-occ.svg";
+  static const char* signalaspect_route = "signalaspect-%d-route.svg";
+
   static const char* signalmain_r = "signalmain-r.svg";
   static const char* signalmain_y = "signalmain-y.svg";
   static const char* signalmain_g = "signalmain-g.svg";
@@ -369,6 +372,7 @@ namespace signaltype {
   static const int i_semaphoredistant  = 4;
   static const int i_signalshunting    = 5;
   static const int i_semaphoreshunting = 6;
+  static const int i_signalaspect      = 7;
 }
 
 namespace outputtype {

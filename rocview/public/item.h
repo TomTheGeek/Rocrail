@@ -95,6 +95,7 @@ public:
   void OnCmdSignalGreen(wxCommandEvent& event);
   void OnCmdSignalYellow(wxCommandEvent& event);
   void OnCmdSignalWhite(wxCommandEvent& event);
+  void OnCmdSignalAspect(wxCommandEvent& event);
 
   void OnTimer(wxTimerEvent& event);
 
