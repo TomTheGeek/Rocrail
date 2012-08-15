@@ -1298,7 +1298,7 @@
         <const name="autooperated" vt="string" val="autooperated"/>
         <var name="state" vt="string" defval="NULL" range="*" remark="Current state of signal."/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
-        <var name="aspect" vt="int" defval="0" range="0-31" remark="Aspect to show: Extended DCC."/>
+        <var name="aspect" vt="int" defval="0" range="0-15" remark="Aspect to show: Extended DCC."/>
         <var name="prot" vt="string" defval="M" range="M,N,D,mdd,om32"
              remark="Protocol to use for this output."/>
         <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>
@@ -1313,7 +1313,7 @@
         <const name="distant" vt="string" val="distant"/>
         <const name="main" vt="string" val="main"/>
         <var name="signal" vt="string" defval="main" range="main,distant,shunting"/>
-        <var name="aspects" vt="int" defval="3" range="2-32" remark="number of aspects to show"/>
+        <var name="aspects" vt="int" defval="3" range="2-16" remark="number of aspects to show"/>
         <var name="dwarf" vt="bool" defval="false"/>
 
         <!-- patterns -->
