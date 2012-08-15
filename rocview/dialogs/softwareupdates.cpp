@@ -232,7 +232,7 @@ void updateReaderThread( void* threadinst ) {
     /* Reading rest of HTTP header: */
 
     int contlen = 0;
-    while( SocketOp.readln( sh, str ) && !SocketOp.isBroken( sh ) ) {
+    while( SocketOp.isConnected(sh) && !SocketOp.isBroken( sh ) && SocketOp.readln( sh, str ) ) {
       if( str[0] == '\r' || str[0] == '\n' ) {
         break;
       }
@@ -243,7 +243,7 @@ void updateReaderThread( void* threadinst ) {
       }
       TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, str );
     };
-    if( contlen > 0 ) {
+    if( SocketOp.isConnected(sh) && !SocketOp.isBroken( sh ) && contlen > 0 ) {
       char* release = (char*)allocMem(contlen+1);
       SocketOp.read( sh, release, contlen );
       TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, release );
