@@ -224,16 +224,19 @@ public:
   void OnLangGreek(wxCommandEvent& event);
   void OnLangRussian(wxCommandEvent& event);
   void OnLangPortuguese(wxCommandEvent& event);
+  void OnLangPortugueseBR(wxCommandEvent& event);
   void OnLangHungarian(wxCommandEvent& event);
   void OnLangPolish(wxCommandEvent& event);
   void OnLangNorwegian(wxCommandEvent& event);
   void OnLangChinese(wxCommandEvent& event);
+  void OnLangChineseCH(wxCommandEvent& event);
   void OnLangEnglishAU(wxCommandEvent& event);
   void OnLangEnglishGB(wxCommandEvent& event);
   void OnLangEnglishCA(wxCommandEvent& event);
   void OnLangIndonesian(wxCommandEvent& event);
   void OnLangJapanese(wxCommandEvent& event);
   void OnLangRomanian(wxCommandEvent& event);
+  void OnLangKorean(wxCommandEvent& event);
 
   void OnRocrailIni(wxCommandEvent& event);
   void OnRocguiIni(wxCommandEvent& event);
@@ -511,6 +514,9 @@ enum
     ME_LangIndonesian,
     ME_LangJapanese,
     ME_LangRomanian,
+    ME_LangKorean,
+    ME_LangChineseCH,
+    ME_LangPortugueseBR,
     ME_RocrailIni,
     ME_PowerEvent,
     ME_RocguiIni,

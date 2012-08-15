@@ -73,6 +73,9 @@
   <Msg id="lang_pt">
     <all txt="Português" tip="Portoguese"/>
   </Msg>
+  <Msg id="lang_pt_BR">
+    <all txt="Português BR" tip="Portoguese BR"/>
+  </Msg>
   <Msg id="lang_hu">
     <all txt="Magyar nyelv" tip="Hungarian"/>
   </Msg>
@@ -84,6 +87,9 @@
   </Msg>
   <Msg id="lang_zh_TW">
     <all txt="汉语" tip="Chinese"/>
+  </Msg>
+  <Msg id="lang_zh_CH_TW">
+    <all txt="普通话" tip="Chinese simplified"/>
   </Msg>
   <Msg id="lang_en_AU">
     <all txt="English (Australia)" tip="Australien English"/>
@@ -99,6 +105,9 @@
   </Msg>
   <Msg id="lang_ja">
     <all txt="日本語" tip="Japanese"/>
+  </Msg>
+  <Msg id="lang_ko">
+    <all txt="한국어/조선말" tip="Korean"/>
   </Msg>
   <Msg id="changelang">
     <en txt="Restart to change language."/>
@@ -125,11 +134,13 @@
     <en_CA txt="Restart to change language."/>
     <en_GB txt="Restart to change language."/>
     <ja txt="言語を変えるために再起動してください。"/>
+    <ko txt="사용 언어 변경을 위해 재시작"/>
+    <pt_BR txt="Reinicie para mudar o idioma."/>
   </Msg>
   <Msg id="cancel">
-    <de txt="Abbrechen" tip="Dialog beenden."/>
+    <de txt="Abbruch" tip="Dialog beenden."/>
     <en txt="Cancel" tip="Cancel the dialog."/>
-    <nl txt="Annuleren" tip="Annuleer de dialoog."/>
+    <nl txt="Anulleren" tip="Annuleer de dialoog."/>
     <sv txt="Avbryt" tip="Stäng dialogrutan utan att spara."/>
     <fr txt="Annuler" tip="Fermer la boite de dialogue."/>
     <tr txt="İptal" tip="Diyaloğu iptal et."/>
@@ -153,11 +164,14 @@
     <en_CA txt="Cancel"/>
     <en_GB txt="Cancel"/>
     <ja txt="キャンセル"/>
+    <ko txt="아니오"/>
+    <pt_BR txt="Cancelar"/>
+    <zh_CN txt="更换语言前请重新运行软件"/>
   </Msg>
   <Msg id="on">
-    <de txt="an"/>
+    <de txt="ein"/>
     <en txt="on"/>
-    <nl txt="aan"/>
+    <nl txt="ingeschakeld"/>
     <sv txt="på"/>
     <fr txt="marche"/>
     <tr txt="açık"/>
@@ -182,11 +196,14 @@
     <en_GB txt="on"/>
     <ja txt="オン"/>
     <ro txt="conectat"/>
+    <ko txt="켜기"/>
+    <pt_BR txt="ligado"/>
+    <zh_CN txt="开启"/>
   </Msg>
   <Msg id="off">
     <de txt="Aus"/>
     <en txt="off"/>
-    <nl txt="uit"/>
+    <nl txt="uitgeschakeld"/>
     <sv txt="av"/>
     <fr txt="arrêt"/>
     <tr txt="kapalı"/>
@@ -211,9 +228,12 @@
     <en_GB txt="off"/>
     <ja txt="オフ"/>
     <ro txt="deconectat"/>
+    <ko txt="끄기"/>
+    <pt_BR txt="desligado"/>
+    <zh_CN txt="关闭"/>
   </Msg>
   <Msg id="ok">
-    <de txt="OK"/>
+    <de txt="ok"/>
     <en txt="OK"/>
     <nl txt="OK"/>
     <sv txt="OK"/>
@@ -240,9 +260,12 @@
     <en_GB txt="OK"/>
     <ja txt="OK"/>
     <ro txt="Bine"/>
+    <ko txt="확인"/>
+    <pt_BR txt="OK"/>
+    <zh_CN txt="确定(O)"/>
   </Msg>
   <Msg id="no">
-    <de txt="nein"/>
+    <de txt="Nein"/>
     <en txt="no"/>
     <nl txt="nee"/>
     <sv txt="nej"/>
@@ -269,6 +292,9 @@
     <en_GB txt="no"/>
     <ja txt="いいえ（no）"/>
     <ro txt="nu"/>
+    <ko txt="아니오"/>
+    <pt_BR txt="não"/>
+    <zh_CN txt="否"/>
   </Msg>
   <Msg id="yes">
     <de txt="ja"/>
@@ -298,6 +324,9 @@
     <en_GB txt="yes"/>
     <ja txt="はい（yes）"/>
     <ro txt="da"/>
+    <ko txt="예"/>
+    <pt_BR txt="sim"/>
+    <zh_CN txt="是"/>
   </Msg>
   <Msg id="only">
     <de txt="nur"/>
@@ -327,11 +356,14 @@
     <en_GB txt="only"/>
     <ja txt="だけ"/>
     <ro txt="numai"/>
+    <ko txt="유일"/>
+    <pt_BR txt="apenas"/>
+    <zh_CN txt="仅"/>
   </Msg>
   <Msg id="stop">
     <de txt="Stopp" tip="Stopp Lokomotive"/>
     <en txt="Stop" tip="Stop locomotive"/>
-    <nl txt="Stop" tip="Stop locomotief"/>
+    <nl txt="Stoppen" tip="Stop locomotief"/>
     <sv txt="Stoppa" tip="Stoppa lok"/>
     <fr txt="Arrêter" tip="Freiner la locomotive"/>
     <tr txt="Dur" tip="Lokomotifi durdur"/>
@@ -356,6 +388,9 @@
     <en_GB txt="Stop"/>
     <ja txt="ストップ"/>
     <ro txt="Oprire"/>
+    <ko txt="정지"/>
+    <pt_BR txt="Parar"/>
+    <zh_CN txt="停止(P)"/>
   </Msg>
   <Msg id="station">
     <de txt="Bahnhof"/>
@@ -385,6 +420,9 @@
     <en_GB txt="Station"/>
     <ja txt="駅"/>
     <ro txt="Gară"/>
+    <ko txt="역"/>
+    <pt_BR txt="Estação"/>
+    <zh_CN txt="车站"/>
   </Msg>
   <Msg id="break">
     <de txt="HALT" tip="Nothalt aller Triebfahrzeuge!"/>
@@ -413,6 +451,9 @@
     <en_CA txt="B R E A K"/>
     <en_GB txt="B R E A K"/>
     <ja txt="中断"/>
+    <ko txt="제동"/>
+    <pt_BR txt="INTERROMPER"/>
+    <zh_CN txt="中断"/>
   </Msg>
   <Msg id="connect" dialog="true">
     <de txt="Verbinden mit" tip="Mit einen Rocrail Server verbinden."/>
@@ -442,6 +483,9 @@
     <en_GB txt="Connect to"/>
     <ja txt="接続"/>
     <ro txt="Conectează la"/>
+    <ko txt="연결"/>
+    <pt_BR txt="Conecte ao (à)"/>
+    <zh_CN txt="连接到"/>
   </Msg>
   <Msg id="open" dialog="true" key="Ctrl-O">
     <de txt="Öffnen" tip="Ein Gleisbild öffnen."/>
@@ -471,6 +515,9 @@
     <en_GB txt="Open"/>
     <ja txt="開く"/>
     <ro txt="Deschide"/>
+    <ko txt="열림"/>
+    <pt_BR txt="Abrir"/>
+    <zh_CN txt="打开(O)"/>
   </Msg>
   <Msg id="upload" dialog="true">
     <de txt="Hochladen" tip="Ein Gleisbild zum Server senden."/>
@@ -499,6 +546,9 @@
     <en_CA txt="Upload"/>
     <en_GB txt="Upload"/>
     <ja txt="アップロード"/>
+    <ko txt="업로드"/>
+    <pt_BR txt="Enviar"/>
+    <zh_CN txt="上传"/>
   </Msg>
   <Msg id="server">
     <de txt="Server"/>
@@ -527,6 +577,9 @@
     <en_CA txt="Server"/>
     <en_GB txt="Server"/>
     <ja txt="送信サーバ"/>
+    <ko txt="서버"/>
+    <pt_BR txt="Servidor"/>
+    <zh_CN txt="服务器"/>
   </Msg>
   <Msg id="save" key="Ctrl-S">
     <de txt="Speichern" tip="Gleisbild speichern."/>
@@ -555,6 +608,9 @@
     <en_CA txt="Save"/>
     <en_GB txt="Save"/>
     <ja txt="保存"/>
+    <ko txt="저장"/>
+    <pt_BR txt="Salvar"/>
+    <zh_CN txt="保存(S)"/>
   </Msg>
   <Msg id="saveas" dialog="true">
     <de txt="Speichern unter" tip="Gleisbild unter einem anderen Namen speichern."/>
@@ -583,6 +639,9 @@
     <en_GB txt="Save As"/>
     <en_AU txt="Save As"/>
     <ja txt="別名で保存"/>
+    <ko txt="다른 이름으로 저장"/>
+    <pt_BR txt="Salvar como"/>
+    <zh_CN txt="另存为..."/>
   </Msg>
   <Msg id="shutdown" key="Ctrl-D">
     <de txt="Rocrail und Rocview beenden" tip="Rocrail Server beenden."/>
@@ -611,6 +670,9 @@
     <en_GB txt="Shutdown Rocrail and Rocview"/>
     <ja txt="RocrailとRocviewを終了"/>
     <ro txt="Oprește Rocrail și Rocview"/>
+    <ko txt="Rocrail 및 Rocview 종료"/>
+    <pt_BR txt="Deslique o Rocrail e o Rocview"/>
+    <zh_CN txt="关闭Rocrail和Rociew"/>
   </Msg>
   <Msg id="exit">
     <de txt="Beenden" tip="Graphische Benutzeroberfläche beenden."/>
@@ -639,6 +701,9 @@
     <en_CA txt="Exit"/>
     <en_GB txt="Exit"/>
     <ja txt="終了"/>
+    <ko txt="종료"/>
+    <pt_BR txt="Sair"/>
+    <zh_CN txt="退出(X)"/>
   </Msg>
   <Msg id="editmode">
     <de txt="Plan bearbeiten" tip="Gleisbild bearbeiten."/>
@@ -670,6 +735,9 @@
     <ro txt="Editează panoul"/>
     <em_GB txt="Edit panel" tip="Edit track panel."/>
     <em_AU txt="Edit panel" tip="Edit track panel."/>
+    <ko txt="패널 수정"/>
+    <pt_BR txt="Editar o painel"/>
+    <zh_CN txt="编辑控制面板"/>
   </Msg>
   <Msg id="undo" key="Ctrl-Z">
     <de txt="Rückgängig machen" tip="Rückgängig"/>
@@ -698,6 +766,9 @@
     <en_CA txt="Undo"/>
     <en_GB txt="Undo"/>
     <ja txt="取り消す"/>
+    <ko txt="실행취소"/>
+    <pt_BR txt="Desfazer"/>
+    <zh_CN txt="撤消"/>
   </Msg>
   <Msg id="editlocs" dialog="true">
     <de txt="Lokeigenschaften"/>
@@ -726,6 +797,9 @@
     <en_GB txt="Loc Properties"/>
     <ja txt="車輌のプロパティ"/>
     <ro txt="Proprietățile locomotivelor"/>
+    <ko txt="차량 특성"/>
+    <pt_BR txt="Propiedades da locomotiva"/>
+    <zh_CN txt="机车属性"/>
   </Msg>
   <Msg id="about" dialog="true">
     <de txt="Info" accel="0" tip="Information über Rocrail."/>
@@ -753,11 +827,14 @@
     <en_AU txt="Info"/>
     <en_CA txt="Info"/>
     <en_GB txt="Info"/>
+    <ko txt="정보"/>
+    <pt_BR txt="Informações"/>
+    <zh_CN txt="备注"/>
   </Msg>
   <Msg id="poweron" key="Ctrl-P">
     <de txt="Fahrstrom ein" accel="5" tip="Fahrstrom einschalten."/>
     <en txt="Power On" accel="6" tip="Switch power on."/>
-    <nl txt="Spanning Aan" accel="9" tip="Schakel de baan spanning aan."/>
+    <nl txt="Schakel in" accel="9" tip="Schakel de baan spanning aan."/>
     <sv txt="Körström på" accel="9" tip="Sänder GO kommando."/>
     <fr txt="Mettre sous tension" accel="1" tip="Mettre sous tension avec la commande GO."/>
     <tr txt="Güç Açık" accel="6" tip="GO komutu ile gücü aç."/>
@@ -781,11 +858,13 @@
     <en_CA txt="Power On"/>
     <en_GB txt="Power On"/>
     <ro txt="Sursă activă"/>
+    <ko txt="전원 투입"/>
+    <zh_CN txt="开启"/>
   </Msg>
   <Msg id="poweroff">
     <de txt="Fahrstrom aus" accel="5" tip="Fahrstrom ausschalten."/>
     <en txt="Power Off" accel="0" tip="Switch power off."/>
-    <nl txt="Spanning Uit" accel="9" tip="Schakel de baan spanning uit."/>
+    <nl txt="Schakel uit" accel="9" tip="Schakel de baan spanning uit."/>
     <sv txt="Körström av" accel="9" tip="Sänder STOP kommando."/>
     <fr txt="Couper l'alimentation" accel="2" tip="Coupe la tension avec la commande STOP."/>
     <tr txt="Güç Kapalı" accel="0" tip="STOP komutu ile gücü kapat."/>
@@ -810,11 +889,14 @@
     <en_GB txt="Power Off"/>
     <ja txt="電源オフ"/>
     <ro txt="Sursă inactivă"/>
+    <ko txt="전원 차단"/>
+    <pt_BR txt="Desligar"/>
+    <zh_CN txt="关闭电源"/>
   </Msg>
   <Msg id="initfield">
-    <de txt="Weichen/Signale/Zähler initialisieren" accel="8" tip="Schaltet Weichen wie im Gleisbild vorgegeben"/>
+    <de txt="Feld initialisieren" accel="8" tip="Schaltet Weichen wie im Gleisbild vorgegeben"/>
     <en txt="Init field" accel="0" tip="Initialize switches according the track plan."/>
-    <nl txt="Initialisatie veld" accel="8" tip="Zet de wissels zoals ze in het spoorplan staan."/>
+    <nl txt="Init veld" accel="8" tip="Zet de wissels zoals ze in het spoorplan staan."/>
     <sv txt="Initiera anläggning" accel="8" tip="Ställ växlar och signaler enligt spårplan."/>
     <fr txt="Positionner les aiguillages" accel="0" tip="Positionner les aiguillages comme sur le TCO."/>
     <tr txt="Makasları hazırla" accel="0" tip="Ray diyagramına göre demiryolu makaslarını başlangıç durumuna getir."/>
@@ -837,6 +919,7 @@
     <en_CA txt="Init field"/>
     <en_GB txt="Init field"/>
     <ro txt="Câmp de inițializare"/>
+    <ko txt="초기 상태"/>
   </Msg>
   <Msg id="locctrl" dialog="true" key="Ctrl-L">
     <de txt="Fahrregler" accel="0" tip="Dialog um Züge zu bedienen."/>
@@ -864,6 +947,9 @@
     <en_CA txt="Loc Control"/>
     <en_GB txt="Loc Control"/>
     <ro txt="Controlul locomotivelor"/>
+    <ko txt="차량 제어"/>
+    <pt_BR txt="Controle da Locomotiva"/>
+    <zh_CN txt="机车控制"/>
   </Msg>
   <Msg id="swctrl" dialog="true" key="Ctrl-T">
     <de txt="Weichensteuerung" accel="0" tip="Dialog um Weichen zu testen."/>
@@ -891,6 +977,9 @@
     <en_CA txt="Switch Control"/>
     <en_GB txt="Switch Control"/>
     <ro txt="Conectează controlul"/>
+    <ko txt="선로전환기 제어"/>
+    <pt_BR txt="Controle da chave"/>
+    <zh_CN txt="切换控制"/>
   </Msg>
   <Msg id="stctrl" dialog="true" key="Ctrl-R">
     <de txt="Fahrstraßensteuerung" accel="0" tip="Dialog um Fahrstraßen zu testen."/>
@@ -918,6 +1007,8 @@
     <en_CA txt="Routes Control"/>
     <en_GB txt="Routes Control"/>
     <ro txt="Control trasee"/>
+    <ko txt="진로 제어"/>
+    <pt_BR txt="Controle de rotas"/>
   </Msg>
   <Msg id="planprops" dialog="true">
     <de txt="Gleisplan-Eigenschaften" accel="0" tip="Dialog zum abfragen und ändern der Gleisbild Eigenschaften."/>
@@ -947,6 +1038,7 @@
     <ro txt="Proprietăți panou linii"/>
     <em_GB txt="Track panel properties" accel="0" tip="Dialog to view and set Track panel properties."/>
     <em_AU txt="Track panel properties" accel="0" tip="Dialog to view and set Track panel properties."/>
+    <ko txt="선로도 특성"/>
   </Msg>
   <Msg id="startall">
     <de txt="Alle Loks starten" tip="Versetzt alle Züge in den Automatikbetrieb."/>
@@ -974,6 +1066,8 @@
     <en_CA txt="Start all locs"/>
     <en_GB txt="Start all locs"/>
     <ro txt="Pornirea tuturor locomotivelor"/>
+    <ko txt="전체 차량 출발"/>
+    <pt_BR txt="Ligar todas as locomotivas"/>
   </Msg>
   <Msg id="stopall">
     <de txt="Alle Loks stoppen" tip="Versetzt alle Züge in Manualbetrieb."/>
@@ -1001,6 +1095,9 @@
     <en_CA txt="Stop all locs"/>
     <en_GB txt="Stop all locs"/>
     <ro txt="Oprește toate locomotivele"/>
+    <ko txt="전체 차량 정지"/>
+    <pt_BR txt="Parar todas as locomotivas"/>
+    <zh_CN txt="停止所有机车"/>
   </Msg>
   <Msg id="startloc">
     <de txt="Lok starten" tip="Versetzt Zug in den Automatikbetrieb."/>
@@ -1028,6 +1125,9 @@
     <en_CA txt="Start locomotive"/>
     <en_GB txt="Start locomotive"/>
     <ro txt="Pornește locomotiva"/>
+    <ko txt="차량 출발"/>
+    <pt_BR txt="Ligar locomotiva"/>
+    <zh_CN txt="机车开始运行"/>
   </Msg>
   <Msg id="stoploc">
     <de txt="Zug anhalten" tip="Versetzt Zug in Manualbetrieb."/>
@@ -1053,6 +1153,9 @@
     <en_CA txt="Stop locomotive automat"/>
     <en_GB txt="Stop locomotive automat"/>
     <ro txt="Oprește locomotiva automat"/>
+    <ko txt="차량 오토매트 정지"/>
+    <pt_BR txt="Parar a locomotiva em modo automatico"/>
+    <zh_CN txt="退出机车自动运行模式"/>
   </Msg>
   <Msg id="resetall">
     <de txt="Alles zurücksetzen" tip="Versetzt Automatik zurück in den Anfangszustand."/>
@@ -1079,6 +1182,9 @@
     <en_CA txt="Reset all"/>
     <en_GB txt="Reset all"/>
     <ro txt="Resetează totul"/>
+    <ko txt="전체 재기동"/>
+    <pt_BR txt="Limpar tudo"/>
+    <zh_CN txt="全部重置"/>
   </Msg>
   <Msg id="softresetall">
     <de txt="Zurücksetzen; außer Blockbelegung" tip="Versetzt Automatik zurück in den Anfangszustand außer Blockbelegung."/>
@@ -1108,6 +1214,8 @@
     <ro txt="Rsetare program"/>
     <em_GB txt="Soft reset" tip="Reset automat but save current block occupancy."/>
     <em_AU txt="Soft reset" tip="Reset automat but save current block occupancy."/>
+    <ko txt="소프트 재기동"/>
+    <zh_CN txt="软复位"/>
   </Msg>
   <Msg id="level">
     <de txt="Ebene"/>
@@ -1135,6 +1243,8 @@
     <en_CA txt="Level"/>
     <en_GB txt="Level"/>
     <ro txt="Nivel"/>
+    <ko txt="레벨"/>
+    <pt_BR txt="Nível"/>
   </Msg>
   <Msg id="levelup">
     <de txt="höhere Ebene" tip="Zeigt die nächtste Gleisbild Ebene an."/>
@@ -1151,7 +1261,7 @@
     <ca txt="Nivell superior"/>
     <el txt="Επίπεδο μέχρι"/>
     <hu txt="Egy szinttel feljebb"/>
-    <ru txt="Уровень вверх"/>
+    <ru txt="На Уровень вверх"/>
     <pt txt="Nível acima"/>
     <nb txt="Nivå opp"/>
     <pl txt="Poziom wyżej"/>
@@ -1161,6 +1271,7 @@
     <en_CA txt="Level up"/>
     <en_GB txt="Level up"/>
     <ro txt="Un nivel mai sus"/>
+    <ko txt="레벨 상승"/>
   </Msg>
   <Msg id="leveldown">
     <de txt="tiefere Ebene" tip="Zeigt die vorherige Gleisbild Ebene an."/>
@@ -1177,7 +1288,7 @@
     <ca txt="Nivell inferior"/>
     <el txt="Επίπεδο προβλέπεται"/>
     <hu txt="Egy szinttel lejjebb"/>
-    <ru txt="Уровень вниз"/>
+    <ru txt="На Уровень вниз"/>
     <pt txt="Nível abaixo"/>
     <nb txt="Nivå ned"/>
     <pl txt="Poziom niżej"/>
@@ -1187,6 +1298,7 @@
     <en_CA txt="Level down"/>
     <en_GB txt="Level down"/>
     <ro txt="Un nivel mai jos"/>
+    <ko txt="레벨 하강"/>
   </Msg>
   <Msg id="properties" dialog="true">
     <de txt="Eigenschaften" accel="0" tip="Dialog zum anzeigen und ändern von Eigenschaften."/>
@@ -1214,6 +1326,8 @@
     <en_CA txt="Properties"/>
     <en_GB txt="Properties"/>
     <ja txt="プロパティ"/>
+    <ko txt="속성"/>
+    <pt_BR txt="Propriedades"/>
   </Msg>
   <Msg id="clearmsg">
     <de txt="Meldungen löschen" tip="Löscht den kompletten Inhalt der Meldungsansicht."/>
@@ -1242,6 +1356,7 @@
     <en_CA txt="Clear messages"/>
     <en_GB txt="Clear messages"/>
     <ro txt="Curăță mesajele"/>
+    <pt_BR txt="Remover mensagens"/>
   </Msg>
   <Msg id="file">
     <de txt="Datei" accel="0"/>
@@ -1268,6 +1383,7 @@
     <en_AU txt="File"/>
     <en_CA txt="File"/>
     <en_GB txt="File"/>
+    <pt_BR txt="Arquivo"/>
   </Msg>
   <Msg id="edit">
     <de txt="Bearbeiten" accel="0"/>
@@ -1294,6 +1410,7 @@
     <en_AU txt="Edit"/>
     <en_CA txt="Edit"/>
     <en_GB txt="Edit"/>
+    <pt_BR txt="Editar"/>
   </Msg>
   <Msg id="control">
     <de txt="Steuerung" accel="0"/>
@@ -1320,6 +1437,7 @@
     <en_AU txt="Control"/>
     <en_CA txt="Control"/>
     <en_GB txt="Control"/>
+    <pt_BR txt="Controlar"/>
   </Msg>
   <Msg id="test">
     <de txt="Test" accel="0"/>
@@ -1346,6 +1464,7 @@
     <en_AU txt="Test"/>
     <en_CA txt="Test"/>
     <en_GB txt="Test"/>
+    <pt_BR txt="Testar"/>
   </Msg>
   <Msg id="automode">
     <de txt="Automatikmodus" accel="1" tip="Schaltet Automatikmodus ein."/>
@@ -1372,6 +1491,7 @@
     <en_CA txt="Auto mode"/>
     <en_GB txt="Auto mode"/>
     <ro txt="Mod automat"/>
+    <pt_BR txt="Modo automático"/>
   </Msg>
   <Msg id="shutdownwarning">
     <de txt="Der Rocrail Server wird hiermit beendet! Herunterfahren und beenden?"/>
@@ -2297,7 +2417,7 @@
     <bg txt="Изходна таблица"/>
     <el txt="Εκροών"/>
     <hu txt="Kimenet lista"/>
-    <ru txt="Выводы"/>
+    <ru txt="Выходы"/>
     <pt txt="Tabela output"/>
     <cs txt="Tabulka výstupů"/>
     <nb txt="Utgangstabell"/>
@@ -3004,7 +3124,7 @@
     <bg txt="Крива"/>
     <el txt="Καμπύλη"/>
     <hu txt="Kanyar"/>
-    <ru txt="Отклонённый путь"/>
+    <ru txt="Радиусный путь"/>
     <pt txt="Curva"/>
     <nb txt="Sving"/>
     <pl txt="Łuk"/>
@@ -5142,7 +5262,7 @@
     <bg txt="На събитието"/>
     <el txt="Σε περίπτωση"/>
     <hu txt="Be esemény"/>
-    <ru txt="Вкл. событие"/>
+    <ru txt="Событие On"/>
     <pt txt="Evento ligado"/>
     <nb txt="På-hendelse"/>
     <ca txt="En activació"/>
@@ -5166,7 +5286,7 @@
     <bg txt="Ново събитие"/>
     <el txt="Off περίπτωση"/>
     <hu txt="Ki esemény"/>
-    <ru txt="Выкл. событие"/>
+    <ru txt="Событие Off"/>
     <pt txt="Evento desligado"/>
     <nb txt="Av-hendelse"/>
     <ca txt="En desactivació"/>
@@ -5946,6 +6066,7 @@
     <en_CA txt="Trace file"/>
     <en_GB txt="Trace file"/>
     <ro txt="Fișierul urmelor"/>
+    <ca txt="Fitxer de seguiment"/>
   </Msg>
   <Msg id="tracelevel">
     <de txt="Log Protokoll Intensität"/>
@@ -6465,7 +6586,7 @@
     <bg txt="Изходна ID"/>
     <el txt="Υλοποίηση ID"/>
     <hu txt="Kimenet ID"/>
-    <ru txt="Идентификатор вывода"/>
+    <ru txt="Идентификатор выхода"/>
     <pt txt="ID saida"/>
     <bs txt="ID Izlaza"/>
     <nb txt="Utgang ID"/>
@@ -6490,7 +6611,7 @@
     <bg txt="Изходна"/>
     <el txt="Υλοποίηση"/>
     <hu txt="Kimenet"/>
-    <ru txt="Вывод"/>
+    <ru txt="Выход"/>
     <pt txt="Saída (output)"/>
     <bs txt="Izlaz"/>
     <nb txt="Utgang"/>
@@ -6642,6 +6763,7 @@
     <en_CA txt="Sensor straight"/>
     <en_GB txt="Sensor straight"/>
     <ro txt="Senzor deschis"/>
+    <ca txt="Sensor recte"/>
   </Msg>
   <Msg id="sensor_red">
     <de txt="Rückmeldung Abbiegen"/>
@@ -8542,13 +8664,13 @@
     <sv txt="Schedule and Go"/>
     <fr txt="Démarrage avec trajet ou trajets multiple"/>
     <tr txt="Schedule and Go"/>
-    <es txt="Proceder con agenda"/>
+    <es txt="Iniciar tour u horario"/>
     <it txt="Avvia con schedulazione"/>
     <da txt="Start med køreplan"/>
     <bg txt="Schedule and Go"/>
     <el txt="Schedule and Go"/>
     <hu txt="Schedule and Go"/>
-    <ru txt="Следовать по расписанию"/>
+    <ru txt="Начать с тура или расписания"/>
     <pt txt="Avançe com o horário"/>
     <bs txt="Schedule and Go"/>
     <cs txt="Spusť podle harmonogramu"/>
@@ -10010,7 +10132,7 @@
     <bg txt="Икона на пътя"/>
     <el txt="Εικονίδιο διαδρομή"/>
     <hu txt="Ikon elérési út"/>
-    <ru txt="Путь иконки"/>
+    <ru txt="Путь к иконкам"/>
     <pt txt="Localização de ícone"/>
     <nb txt="Ikonsti"/>
     <ca txt="Carpeta de les icones"/>
@@ -10033,7 +10155,7 @@
     <bg txt="Image пътека"/>
     <el txt="Εικόνα διαδρομή"/>
     <hu txt="Kép elérési út"/>
-    <ru txt="Путь картинки"/>
+    <ru txt="Путь к картинкам"/>
     <pt txt="Localização de imagem"/>
     <nb txt="Bildesti"/>
     <ca txt="Carpeta de les imatges"/>
@@ -10327,7 +10449,7 @@
     <bg txt="Състав"/>
     <el txt="Μέλη"/>
     <hu txt="Tagok"/>
-    <ru txt="Члены"/>
+    <ru txt="Подвижные единицы сплотки"/>
     <pt txt="Membros"/>
     <nb txt="Medlemmer"/>
     <ca txt="Membres"/>
@@ -10490,6 +10612,7 @@
     <en_AU txt="Raster"/>
     <en_CA txt="Raster"/>
     <en_GB txt="Raster"/>
+    <ca txt="Trames"/>
   </Msg>
   <Msg id="showall">
     <de txt="Zeige alle"/>
@@ -10845,7 +10968,7 @@
     <sv txt="Byt plats xxx"/>
     <fr txt="Changement d'orientation"/>
     <tr txt="Swap placing post"/>
-    <es txt="Cambiar dirección xxx"/>
+    <es txt="Intercambiar situación"/>
     <it txt="Inverti orientamento in seguito"/>
     <da txt="Skift placeringspost"/>
     <bg txt="Размени пускането пост"/>
@@ -12250,6 +12373,7 @@
     <en_CA txt="Switch sensors"/>
     <en_GB txt="Switch sensors"/>
     <ro txt="Senzori de schimbători"/>
+    <ca txt="Detector agulles"/>
   </Msg>
   <Msg id="swinvert">
     <de txt="Umkehrung des Weichenbefehls" tip=""/>
@@ -12266,7 +12390,7 @@
     <hu txt="Fordított kapcsolás"/>
     <pt txt="Inverção de interruptor"/>
     <cs txt="Invertuj polohu přepínače"/>
-    <ru txt="Разворот стрелки"/>
+    <ru txt="Инвертировать стрелку"/>
     <en_AU txt="Switch invert"/>
     <en_CA txt="Switch invert"/>
     <en_GB txt="Switch invert"/>
@@ -12309,7 +12433,7 @@
     <pt txt="Distancia do interruptor de sensor"/>
     <cs txt="Nastavení offsetu senzoru"/>
     <nb txt="Pensefølerforskyvning"/>
-    <ru txt="Смещение стрелочного сенсора"/>
+    <ru txt="Смещение стрелочного датчика"/>
     <en_AU txt="Switch sensor offset"/>
     <en_CA txt="Switch sensor offset"/>
     <en_GB txt="Switch sensor offset"/>
@@ -12865,7 +12989,7 @@
     <sv txt="Block occupancy"/>
     <fr txt="Occupation des blocs"/>
     <tr txt="Block occupancy"/>
-    <es txt="Block occupancy"/>
+    <es txt="Ocupación de bloque"/>
     <it txt="Occupazione blocco"/>
     <da txt="Block besættelse"/>
     <bg txt="Блокиране на професията"/>
@@ -12873,7 +12997,7 @@
     <hu txt="Térköz foglaltság"/>
     <pt txt="Ocupação do bloco"/>
     <cs txt="Blok obsazení"/>
-    <ru txt="Блочная занятость"/>
+    <ru txt="Занятость Блока"/>
     <en_AU txt="Block occupancy"/>
     <en_CA txt="Block occupancy"/>
     <en_GB txt="Block occupancy"/>
@@ -12994,6 +13118,7 @@
     <en_CA txt="Side"/>
     <en_GB txt="Side"/>
     <ro txt="Parte"/>
+    <ca txt="Lateral"/>
   </Msg>
   <Msg id="initfieldpause">
     <de txt="Pause bei Initialisierung"/>
@@ -13079,6 +13204,7 @@
     <en_CA txt="Event from block [%s] is not used. Remove it from the list?"/>
     <en_GB txt="Event from block [%s] is not used. Remove it from the list?"/>
     <ro txt="Eveniment de la blocul [%s] nu se folosește. Înlăturăm din listă ?"/>
+    <ca txt="Esdeveniment del bloc [%s] no usat. Esborrar-lo de la llista?"/>
   </Msg>
   <Msg id="allowchgdir">
     <de txt="Richtungswechsel erlaubt"/>
@@ -13101,6 +13227,7 @@
     <en_CA txt="Allow change direction"/>
     <en_GB txt="Allow change direction"/>
     <ro txt="Permite schimbarea direcției"/>
+    <ca txt="Permet canvi de sentit"/>
   </Msg>
   <Msg id="eventtimeout">
     <de txt="Ereignis-Zeitüberschreitung"/>
@@ -13229,13 +13356,14 @@
     <el txt="Επαναφορά μήνυμα"/>
     <hu txt="Jelzők alaphelyzetbe"/>
     <pt txt="Reiniciar sinal"/>
-    <ru txt="Сигнал сброса"/>
+    <ru txt="Сброс сигнала"/>
     <cs txt="Signál Reset"/>
     <nb txt="Tilbakestillingssignal"/>
     <en_AU txt="Reset signal"/>
     <en_CA txt="Reset signal"/>
     <en_GB txt="Reset signal"/>
     <ro txt="Resetează semnal"/>
+    <ca txt="Reseteja senyal"/>
   </Msg>
   <Msg id="routeswtime">
     <de txt="Schaltzeit für Fahrstraße"/>
@@ -13340,7 +13468,7 @@
     <el txt="Ξεκινήστε τώρα locs όλα από την προηγούμενη συνεδρία;"/>
     <hu txt="Összes mozdony indítása az előző futásnál mentett állapotból?"/>
     <pt txt="Iniciar todas as locomotivas da sessão anterior?"/>
-    <ru txt="Запустить все локомотивы из предыдущей сессии сейчас?"/>
+    <ru txt="Запустить все локомотивы из предыдущей сессии?"/>
     <cs txt="Zapnout všechny lokomotivy z předchozí relace ?"/>
     <en_AU txt="Start all locs now from the previous session?"/>
     <en_CA txt="Start all locs now from the previous session?"/>
@@ -13362,7 +13490,7 @@
     <hu txt="A kitérőkön nincs sebességcsökkentés"/>
     <pt txt="Sem mudança de velocidade nos interruptores"/>
     <cs txt="Žádná změna rychlosti přepínačů"/>
-    <ru txt="Нельзя изменять скорость стрелок"/>
+    <ru txt="Не изменять скорость стрелок"/>
     <en_AU txt="No speed change for switches"/>
     <en_CA txt="No speed change for switches"/>
     <en_GB txt="No speed change for switches"/>
@@ -13675,6 +13803,7 @@
     <en_CA txt="CTS Flow"/>
     <en_GB txt="CTS Flow"/>
     <ro txt="Flux CTS"/>
+    <ca txt="Flux CTS"/>
   </Msg>
   <Msg id="savelocoiofileas">
     <de txt="Speichern der LocoIO-Datei als"/>
@@ -13712,7 +13841,7 @@
     <sv txt="Open LocoIO file"/>
     <tr txt="Open LocoIO file"/>
     <pt txt="Abrir ficheiro LocoIO"/>
-    <ru txt="Отркрыть LocoIO файл"/>
+    <ru txt="Открыть LocoIO файл"/>
     <cs txt="Otevři LocoIO soubor"/>
     <ca txt="Obre fitxer de LocoIO"/>
     <en_AU txt="Open LocoIO file"/>
@@ -14092,7 +14221,7 @@
     <tr txt="Era"/>
     <pt txt="Era"/>
     <bs txt="Era"/>
-    <ru txt="Эра"/>
+    <ru txt="Эпоха"/>
     <ca txt="Época"/>
     <en_AU txt="Era"/>
     <en_CA txt="Era"/>
@@ -14145,6 +14274,7 @@
     <en_GB txt="Car"/>
     <nb txt="Bil"/>
     <ro txt="Vagon"/>
+    <ca txt="Cotxe"/>
   </Msg>
   <Msg id="poladdr">
     <en txt="Polarization addr."/>
@@ -14207,6 +14337,7 @@
     <en_AU txt="Read current speed curve from decoder?"/>
     <en_CA txt="Read current speed curve from decoder?"/>
     <en_GB txt="Read current speed curve from decoder?"/>
+    <ca txt="Llegir corba de velocitat del decóder?"/>
   </Msg>
   <Msg id="sync">
     <en txt="Synchronize"/>
@@ -14344,6 +14475,7 @@
     <en_AU txt="Routing"/>
     <en_CA txt="Routing"/>
     <en_GB txt="Routing"/>
+    <ca txt="Itineraris"/>
   </Msg>
   <Msg id="shipper">
     <en txt="Shipper"/>
@@ -14622,6 +14754,7 @@
     <en_AU txt="Gondola"/>
     <en_CA txt="Gondola"/>
     <en_GB txt="Gondola"/>
+    <ca txt="Góndola"/>
   </Msg>
   <Msg id="flatcar">
     <en txt="Flatcar"/>
@@ -14640,6 +14773,7 @@
     <en_AU txt="Flatcar"/>
     <en_CA txt="Flatcar"/>
     <en_GB txt="Flatcar"/>
+    <es txt="Flatcar"/>
   </Msg>
   <Msg id="reefer">
     <en txt="Reefer"/>
@@ -14660,6 +14794,7 @@
     <en_AU txt="Reefer"/>
     <en_CA txt="Reefer"/>
     <en_GB txt="Reefer"/>
+    <es txt="Furgón"/>
   </Msg>
   <Msg id="stockcar">
     <en txt="Stockcar"/>
@@ -14678,6 +14813,7 @@
     <en_AU txt="Stockcar"/>
     <en_CA txt="Stockcar"/>
     <en_GB txt="Stockcar"/>
+    <es txt="Borreguero"/>
   </Msg>
   <Msg id="tankcar">
     <en txt="Tankcar"/>
@@ -14717,6 +14853,7 @@
     <en_AU txt="Wellcar"/>
     <en_CA txt="Wellcar"/>
     <en_GB txt="Wellcar"/>
+    <es txt="Plataforma baja"/>
   </Msg>
   <Msg id="hopper">
     <en txt="Hopper"/>
@@ -14773,6 +14910,7 @@
     <en_AU txt="Autorack"/>
     <en_CA txt="Autorack"/>
     <en_GB txt="Autorack"/>
+    <es txt="Vagón coches"/>
   </Msg>
   <Msg id="autocarrier">
     <en txt="Autocarrier"/>
@@ -14809,6 +14947,7 @@
     <en_AU txt="Logdumpcar"/>
     <en_CA txt="Logdumpcar"/>
     <en_GB txt="Logdumpcar"/>
+    <es txt="Plataforma mercancías"/>
   </Msg>
   <Msg id="coilcar">
     <en txt="Coilcar"/>
@@ -14867,6 +15006,7 @@
     <en_AU txt="Lounge"/>
     <en_CA txt="Lounge"/>
     <en_GB txt="Lounge"/>
+    <es txt="Vagón comedor"/>
   </Msg>
   <Msg id="dome">
     <en txt="Dome"/>
@@ -14886,6 +15026,7 @@
     <en_AU txt="Dome"/>
     <en_CA txt="Dome"/>
     <en_GB txt="Dome"/>
+    <es txt="Vagón comedor alto"/>
   </Msg>
   <Msg id="express">
     <en txt="Express"/>
@@ -14950,6 +15091,7 @@
     <en_AU txt="Sleeper"/>
     <en_CA txt="Sleeper"/>
     <en_GB txt="Sleeper"/>
+    <es txt="Coche-cama"/>
   </Msg>
   <Msg id="baggage">
     <en txt="Baggage"/>
@@ -15072,13 +15214,14 @@
     <pt txt="Absoluto"/>
     <it txt="Assoluto"/>
     <bs txt="Apsolutno"/>
-    <ru txt="Абсолютно"/>
+    <ru txt="Абсолютное"/>
     <da txt="Absolut"/>
     <es txt="Absoluto"/>
     <tr txt="Mutlak"/>
     <en_AU txt="Absolute"/>
     <en_CA txt="Absolute"/>
     <en_GB txt="Absolute"/>
+    <ca txt="Absolut"/>
   </Msg>
   <Msg id="relative">
     <en txt="Relative"/>
@@ -15090,12 +15233,13 @@
     <pt txt="Relativo"/>
     <it txt="Relativo"/>
     <bs txt="Odnosan"/>
-    <ru txt="Относительно"/>
+    <ru txt="Относительное"/>
     <da txt="Relativ"/>
     <es txt="Relativo"/>
     <en_AU txt="Relative"/>
     <en_CA txt="Relative"/>
     <en_GB txt="Relative"/>
+    <ca txt="Relatiu"/>
   </Msg>
   <Msg id="hourly">
     <en txt="Hourly"/>
@@ -15107,7 +15251,7 @@
     <pt txt="De hora em hora"/>
     <it txt="Ogni ora"/>
     <bs txt="Satno"/>
-    <ru txt="Ежечасно"/>
+    <ru txt="Каждый час"/>
     <ca txt="Cada hora"/>
     <da txt="Hver time"/>
     <es txt="Cada hora"/>
@@ -15154,6 +15298,7 @@
     <en_AU txt="Time frame"/>
     <en_CA txt="Time frame"/>
     <en_GB txt="Time frame"/>
+    <ca txt="Marc de temps"/>
   </Msg>
   <Msg id="usebicom">
     <en txt="Use Bi-Directional Communication"/>
@@ -15289,6 +15434,7 @@
     <en_AU txt="Power off at ident mismatch"/>
     <en_CA txt="Power off at ident mismatch"/>
     <en_GB txt="Power off at ident mismatch"/>
+    <es txt="Apagar al encontrar un idéntico"/>
   </Msg>
   <Msg id="manualoperated">
     <en txt="Manual operated"/>
@@ -15636,7 +15782,7 @@
     <ca txt="Mida de text dels ID"/>
     <da txt="Konto-id punktstørrelse"/>
     <it txt="Dimensione caratteri identificativi"/>
-    <ru txt="Размер точки ID юнита"/>
+    <ru txt="Размер точки ID элемента"/>
     <en_AU txt="Item ID pointsize"/>
     <en_CA txt="Item ID pointsize"/>
     <en_GB txt="Item ID pointsize"/>
@@ -15937,6 +16083,7 @@
     <en_AU txt="Use mode column to dispatch"/>
     <en_CA txt="Use mode column to dispatch"/>
     <en_GB txt="Use mode column to dispatch"/>
+    <es txt="Usar modo columna para despachar"/>
   </Msg>
   <Msg id="poweroffatghost">
     <en txt="Power off at ghost train"/>
@@ -16208,6 +16355,7 @@
     <en_CA txt="Both"/>
     <en_GB txt="Both"/>
     <nb txt="Begge"/>
+    <ca txt="Ambdós"/>
   </Msg>
   <Msg id="email">
     <en txt="Email"/>
@@ -16403,6 +16551,7 @@
     <en_CA txt="CTC"/>
     <en_GB txt="CTC"/>
     <fr txt="CCT"/>
+    <es txt="CTC"/>
   </Msg>
   <Msg id="motor">
     <en txt="Motor"/>
@@ -16420,6 +16569,7 @@
     <en_CA txt="Motor"/>
     <en_GB txt="Motor"/>
     <nb txt="Motor"/>
+    <ca txt="Motor"/>
   </Msg>
   <Msg id="usemanualroutes">
     <en txt="Use manual routes"/>
@@ -16466,6 +16616,7 @@
     <em_GB txt="Block init pause"/>
     <em_AU txt="Block init pause"/>
     <pt txt="Pausa no inicio do bloco"/>
+    <es txt="Inicio pausa bloque"/>
   </Msg>
   <Msg id="skipsetsg">
     <en txt="Skip signal commands" tip="Skip signal commands if already set"/>
@@ -16499,6 +16650,7 @@
     <em_GB txt="From signal pair"/>
     <em_AU txt="From signal pair"/>
     <pt txt="Do par de sinal"/>
+    <es txt="Del par de señal"/>
   </Msg>
   <Msg id="tosignals">
     <en txt="To signal pair"/>
@@ -16515,6 +16667,7 @@
     <em_GB txt="To signal pair"/>
     <em_AU txt="To signal pair"/>
     <pt txt="Para par de sinal"/>
+    <es txt="Al par de señal"/>
   </Msg>
   <Msg id="button">
     <en txt="Button"/>
@@ -16572,6 +16725,7 @@
     <em_GB txt="Light freight"/>
     <em_AU txt="Light freight"/>
     <pt txt="Cargas leves"/>
+    <es txt="Mercancías ligero"/>
   </Msg>
   <Msg id="regional">
     <en txt="Regional"/>
@@ -16590,6 +16744,7 @@
     <en_GB txt="Regional"/>
     <em_GB txt="Regional"/>
     <em_AU txt="Regional"/>
+    <ca txt="Regional"/>
   </Msg>
   <Msg id="size">
     <en txt="size"/>
@@ -16714,6 +16869,7 @@
     <em_AU txt="Ignore Busy message"/>
     <it txt="Ignora il messaggio di Occupato"/>
     <pt txt="Ignorar mensagem de ocupado"/>
+    <es txt="Ignorar mensaje Ocupado"/>
   </Msg>
   <Msg id="indelay">
     <en txt="IN delay"/>
@@ -16730,6 +16886,7 @@
     <em_AU txt="IN delay"/>
     <it txt="Ritardo IN"/>
     <pt txt="a aguardar"/>
+    <es txt="retraso IN"/>
   </Msg>
   <Msg id="led">
     <en txt="LED"/>
@@ -16763,6 +16920,7 @@
     <em_AU txt="Power off at reset"/>
     <it txt="Spegni al reset"/>
     <pt txt="Desligar ao reiniciar"/>
+    <es txt="Apagar al resetear"/>
   </Msg>
   <Msg id="poweroffonexit">
     <en txt="Power off on exit"/>
@@ -16812,6 +16970,7 @@
     <em_AU txt="Servo"/>
     <it txt="Servo"/>
     <pt txt="Motor para acessórios"/>
+    <ca txt="Servo"/>
   </Msg>
   <Msg id="setup">
     <en txt="Setup"/>
@@ -16827,6 +16986,8 @@
     <em_GB txt="Setup"/>
     <em_AU txt="Setup"/>
     <pt txt="Configurar"/>
+    <ca txt="Configura"/>
+    <es txt="Configuración"/>
   </Msg>
   <Msg id="reset">
     <en txt="Reset"/>
@@ -16846,6 +17007,7 @@
     <en_GB txt="Reset"/>
     <nb txt="Tilbakestill"/>
     <pl txt="Przywróć"/>
+    <pt_BR txt="Reiniciar"/>
   </Msg>
   <Msg id="recentworkspaces">
     <en txt="Recent Workspaces"/>
@@ -16860,6 +17022,7 @@
     <em_GB txt="Recent Workspaces"/>
     <em_AU txt="Recent Workspaces"/>
     <it txt="Spazi di lavoro recenti"/>
+    <es txt="Areas de trabajo recientes"/>
   </Msg>
   <Msg id="ignorepowercmds">
     <en txt="Ignore power commands"/>
@@ -16874,6 +17037,7 @@
     <em_GB txt="Ignore power commands"/>
     <em_AU txt="Ignore power commands"/>
     <pt txt="Ignorar comandos de energia"/>
+    <es txt="Ignorar comandos de encendido/apagado"/>
   </Msg>
   <Msg id="manually">
     <en txt="Manually"/>
@@ -16890,6 +17054,8 @@
     <em_AU txt="Manually"/>
     <it txt="Manualmente"/>
     <pt txt="Manualmente"/>
+    <ca txt="Manualment"/>
+    <es txt="Manualmente"/>
   </Msg>
   <Msg id="evtcorrection">
     <en txt="Event correction"/>
@@ -16904,6 +17070,7 @@
     <em_GB txt="Event correction"/>
     <em_AU txt="Event correction"/>
     <pt txt="Correcção de eventos"/>
+    <es txt="Corrección de evento"/>
   </Msg>
   <Msg id="relay">
     <en txt="Relay"/>
@@ -16917,6 +17084,7 @@
     <em_GB txt="Relay"/>
     <em_AU txt="Relay"/>
     <pt txt="Relé"/>
+    <es txt="Relé"/>
   </Msg>
   <Msg id="countcars">
     <en txt="Count cars before firing events."/>
@@ -16930,6 +17098,7 @@
     <em_GB txt="Count cars before firing events."/>
     <em_AU txt="Count cars before firing events."/>
     <fr txt="Compter les voitures avant de déclencher les évenements"/>
+    <es txt="Contar vagones antes de disparar eventos"/>
   </Msg>
   <Msg id="odsernum">
     <en txt="Serial Number" tip="OpenDCC serial number"/>
@@ -16960,6 +17129,7 @@
     <em_GB txt="XpressNet feedback mapping" tip="Read OpenDCC documentation"/>
     <em_AU txt="XpressNet feedback mapping" tip="Read OpenDCC documentation"/>
     <ru txt="Маппинг обратной связи на шине XpressNet"/>
+    <es txt="Mapeado de feedback XpressNet"/>
   </Msg>
   <Msg id="allowfollowup">
     <en txt="Allow follow up" tip="Allow critical section follow up in same direction."/>
@@ -16973,6 +17143,7 @@
     <em_GB txt="Allow follow up" tip="Allow critical section follow up in same direction."/>
     <em_AU txt="Allow follow up" tip="Allow critical section follow up in same direction."/>
     <pt txt="Permite seguinte"/>
+    <es txt="Permitir seguimiento"/>
   </Msg>
   <Msg id="fiddleyard2go">
     <en txt="Goto FiddleYard"/>
@@ -16996,6 +17167,7 @@
     <em_GB txt="Polarisationsrelais"/>
     <em_AU txt="Polarisationsrelais"/>
     <pt txt="Polarização do relé"/>
+    <es txt="Relés biestables"/>
   </Msg>
   <Msg id="allowzerothrottleid">
     <en txt="Allow zero throttle ID"/>
@@ -17008,6 +17180,7 @@
     <em_GB txt="Allow zero throttle ID"/>
     <em_AU txt="Allow zero throttle ID"/>
     <ru txt="Разрешить нулевой ID пульта управления"/>
+    <es txt="Permitir ID mando cero"/>
   </Msg>
   <Msg id="monitoring">
     <en txt="Monitoring"/>
@@ -17021,6 +17194,8 @@
     <em_GB txt="Monitoring"/>
     <em_AU txt="Monitoring"/>
     <pt txt="Monitorizar"/>
+    <ca txt="Monitorització"/>
+    <es txt="Monitorización"/>
   </Msg>
   <Msg id="notfromblock">
     <en txt="Not from block"/>
@@ -17032,6 +17207,8 @@
     <em_GB txt="Not from block"/>
     <em_AU txt="Not from block"/>
     <pt txt="Não vindo do bloco"/>
+    <es txt="No desde bloque"/>
+    <ru txt="Не из блока"/>
   </Msg>
   <Msg id="allowschedules">
     <en txt="Allow schedules"/>
@@ -17044,6 +17221,7 @@
     <em_GB txt="Allow schedules"/>
     <em_AU txt="Allow schedules"/>
     <pt txt="Permite horários"/>
+    <es txt="Permitir horarios"/>
   </Msg>
   <Msg id="not">
     <en txt="Not"/>
@@ -17057,6 +17235,8 @@
     <em_AU txt="Not"/>
     <pt txt="Não"/>
     <ru txt="Нет"/>
+    <ca txt="NO"/>
+    <es txt="No"/>
   </Msg>
   <Msg id="speak4block">
     <en txt="Speak for block"/>
@@ -17068,6 +17248,7 @@
     <em_GB txt="Speak for block"/>
     <em_AU txt="Speak for block"/>
     <pt txt="Voz para o Bloco"/>
+    <es txt="Habla para bloque"/>
   </Msg>
   <Msg id="speakcmd">
     <en txt="Speak command"/>
@@ -17079,6 +17260,7 @@
     <em_GB txt="Speak command"/>
     <em_AU txt="Speak command"/>
     <pt txt="Comando de voz"/>
+    <es txt="Comando de habla"/>
   </Msg>
   <Msg id="acceptident">
     <en txt="Accept BiDi Loco"/>
@@ -17090,6 +17272,7 @@
     <ca txt="Accepta locomotores amb RailCom"/>
     <en_AU txt="Accept BiDi Loco"/>
     <ru txt="Принять BiDi Loco"/>
+    <es txt="Aceptar locomotora BiDi"/>
   </Msg>
   <Msg id="useblockside">
     <en txt="Use block side for routes"/>
@@ -17101,6 +17284,7 @@
     <pt txt="Usa lados do bloco para rotas"/>
     <en_AU txt="Use block side for routes"/>
     <ru txt="Использовать стороны Блока для маршрутов"/>
+    <es txt="Usar lados del bloque para rutas"/>
   </Msg>
   <Msg id="swapblockenterside">
     <en txt="Swap block enter side"/>
@@ -17112,6 +17296,7 @@
     <pt txt="Ignora lado de entrada do bloco"/>
     <ru txt="Cменить сторону въезда на блок"/>
     <en_AU txt="Swap block enter side"/>
+    <es txt="Intercambiar lado de entrada al bloque"/>
   </Msg>
   <Msg id="stopnonecommuter">
     <en txt="Stop none commuter in terminal"/>
@@ -17121,6 +17306,8 @@
     <em_AU txt="Stop none commuter in terminal"/>
     <en_AU txt="Stop none commuter in terminal"/>
     <fr txt="Pas d'arrêt des trains de banlieue dans un terminus"/>
+    <es txt="No detener suburbanos en terminal"/>
+    <ru txt="Останавливать непригородный поезд на конечной станции"/>
   </Msg>
   <Msg id="slotmanagement">
     <en txt="Slot management"/>
@@ -17131,6 +17318,7 @@
     <em_AU txt="Slot management"/>
     <ru txt="Слот управления"/>
     <en_AU txt="Slot management"/>
+    <es txt="Manejo de slots"/>
   </Msg>
   <Msg id="decodertype">
     <en txt="Decoder type"/>
@@ -17142,6 +17330,8 @@
     <pt txt="Tipo de descodificador"/>
     <ru txt="Тип декодера"/>
     <en_AU txt="Decoder type"/>
+    <ca txt="Tipus de decóder"/>
+    <es txt="Tipo de decodificador"/>
   </Msg>
   <Msg id="analyze">
     <en txt="Analyze" tip="Analyze track plan for generating routes."/>
@@ -17153,6 +17343,7 @@
     <pt txt="Analisar"/>
     <ru txt="Анализировать"/>
     <en_AU txt="Analyze"/>
+    <es txt="Analizar"/>
   </Msg>
   <Msg id="systeminfo">
     <en txt="System info" tip="Enable extra CS system info."/>
@@ -17165,6 +17356,8 @@
     <pt txt="Informação do sistema"/>
     <ru txt="Информация о системе"/>
     <en_AU txt="System info"/>
+    <ca txt="Informació del sistema"/>
+    <es txt="Información del sistema"/>
   </Msg>
   <Msg id="showonlystartschedules">
     <en txt="Show only start schedules"/>
@@ -17176,6 +17369,7 @@
     <pt txt="Mostra só horários activos"/>
     <ru txt="Использовать только начальные расписания"/>
     <en_AU txt="Show only start schedules"/>
+    <es txt="Mostrar solo horarios de inicio"/>
   </Msg>
   <Msg id="blankatredsignal">
     <en txt="Blank warning at red main signal."/>
@@ -17186,6 +17380,7 @@
     <em_AU txt="Blank warning at red main signal."/>
     <pt txt="Mostra aviso com sinal vermelho"/>
     <en_AU txt="Blank warning at red main signal."/>
+    <ru txt="Погасить предупредительный сигнал, при красном на основном сигнале"/>
   </Msg>
   <Msg id="overwriteall">
     <en txt="Overwrite all settings?"/>
@@ -17197,6 +17392,8 @@
     <ru txt="Перезаписать все настройки?"/>
     <en_AU txt="Overwrite all settings?"/>
     <pt txt="Substituir todas as definições?"/>
+    <ca txt="Sobreescriure tots els paràmetres?"/>
+    <es txt="¿Sobreescribir toda la configuración?"/>
   </Msg>
   <Msg id="free2go">
     <en txt="Free before start"/>
@@ -17207,6 +17404,7 @@
     <em_AU txt="Free before start"/>
     <pt txt="Liberta antes de iniciar"/>
     <en_AU txt="Free before start"/>
+    <es txt="Libre antes de inicio"/>
   </Msg>
   <Msg id="embeddedblock">
     <en txt="Embedded block"/>
@@ -17217,6 +17415,7 @@
     <em_AU txt="Embedded block"/>
     <ru txt="Встроенный блок"/>
     <en_AU txt="Embedded block"/>
+    <es txt="Bloque embebido"/>
   </Msg>
   <Msg id="setupsvgtheme">
     <en txt="No SVG Theme was found; Check the Rocview SVG settings."/>
@@ -17228,6 +17427,7 @@
     <pt txt="O tema não foi encontrado. Reveja configurações dos temas."/>
     <en_AU txt="No SVG Theme was found; Check the Rocview SVG settings."/>
     <ru txt="Тема SVG не была найдена; проверьте настройки SVG в Rocview"/>
+    <es txt="No se encontro tema SVG; Chequear configuración de SVG de Rocview"/>
   </Msg>
   <Msg id="useownwaittime">
     <en txt="Use own wait time in blocks"/>
@@ -17237,6 +17437,7 @@
     <en_AU txt="Use own wait time in blocks"/>
     <ru txt="Использовать собственное время ожидание на блоках"/>
     <fr txt="Utiliser le temps d'attente propre à chaque bloc"/>
+    <es txt="Usuar tiempo de espera propio en bloques"/>
   </Msg>
   <Msg id="forceblocktimer">
     <en txt="Force block timer"/>
@@ -17246,6 +17447,7 @@
     <pt txt="Forçe o tempo de espera definido no bloco"/>
     <en_AU txt="Force block timer"/>
     <ru txt="Форсировать таймер блока"/>
+    <es txt="Forzar temporizador de bloque"/>
   </Msg>
   <Msg id="useseq">
     <en txt="Use sequence check"/>
@@ -17255,6 +17457,7 @@
     <pt txt="Usar lista de verificações"/>
     <ru txt="Использовать проверку очерёдности"/>
     <fr txt="Utiliser la vérification de séquence"/>
+    <es txt="Usar chequeo de secuencia"/>
   </Msg>
   <Msg id="usedouble">
     <en txt="Use double packets"/>
@@ -17264,6 +17467,7 @@
     <en_AU txt="Use double packets"/>
     <ru txt="Использовать двойные пакеты"/>
     <fr txt="Utiliser des paquets double"/>
+    <es txt="Usar paquetes dobles"/>
   </Msg>
   <Msg id="rectangular">
     <en txt="Rectangular"/>
@@ -17272,6 +17476,8 @@
     <pt txt="Rectangular"/>
     <en_AU txt="Rectangular"/>
     <fr txt="Rectangulaire"/>
+    <ca txt="Rectangular"/>
+    <es txt="Rectangular"/>
   </Msg>
   <Msg id="sublib">
     <en txt="Sub-Library"/>
@@ -17279,6 +17485,7 @@
     <de txt="Sub-Bibliothek"/>
     <en_AU txt="Sub-Library"/>
     <fr txt="Sous-librairie"/>
+    <es txt="Sub-Librería"/>
   </Msg>
   <Msg id="nodes">
     <en txt="Nodes"/>
@@ -17287,6 +17494,8 @@
     <pt txt="Nós"/>
     <en_AU txt="Nodes"/>
     <fr txt="Noeuds"/>
+    <ca txt="Nodes"/>
+    <ru txt="Узлы"/>
   </Msg>
   <Msg id="stagingyard">
     <en txt="Staging yard"/>
@@ -17310,6 +17519,7 @@
     <pt txt="Secções"/>
     <ru txt="Секции"/>
     <fr txt="Sections"/>
+    <ca txt="Seccions"/>
   </Msg>
   <Msg id="section">
     <en txt="Section"/>
@@ -17319,6 +17529,7 @@
     <pt txt="Secção"/>
     <ru txt="Секция"/>
     <fr txt="Section"/>
+    <ca txt="Secció"/>
   </Msg>
   <Msg id="train">
     <en txt="Train"/>
@@ -17328,6 +17539,7 @@
     <pt txt="Comboio"/>
     <ru txt="Поезд"/>
     <fr txt="Train"/>
+    <ca txt="Tren"/>
   </Msg>
   <Msg id="gap">
     <en txt="gap"/>
@@ -17337,6 +17549,7 @@
     <pt txt="Intervalo"/>
     <ru txt="Интервал"/>
     <fr txt="Intervalle"/>
+    <ca txt="forat"/>
   </Msg>
   <Msg id="patterns">
     <en txt="Patterns"/>
@@ -17370,6 +17583,7 @@
     <en_AU txt="Communication"/>
     <pt txt="Comunicação"/>
     <fr txt="Communication"/>
+    <ca txt="Comunicació"/>
   </Msg>
   <Msg id="swaptimer">
     <en txt="Swap timer"/>
@@ -17377,6 +17591,7 @@
     <de txt="Zeit vor Richtungswechsel"/>
     <en_AU txt="Swap timer"/>
     <fr txt="Temps de changement"/>
+    <ru txt="Таймер перестановки"/>
   </Msg>
   <Msg id="slotping">
     <en txt="Slot ping"/>
@@ -17392,6 +17607,7 @@
     <pt txt="IP Local"/>
     <ru txt="Локальный IP"/>
     <fr txt="IP locale"/>
+    <ca txt="IP LOCAL"/>
   </Msg>
   <Msg id="setloco">
     <en txt="Set loco"/>
@@ -17399,6 +17615,7 @@
     <de txt="Lokbelegung setzten"/>
     <en_AU txt="Set loco"/>
     <fr txt="Met la loco"/>
+    <ru txt="Установить локомотив"/>
   </Msg>
   <Msg id="compress">
     <en txt="Compress"/>
@@ -17448,6 +17665,7 @@
     <de txt="Zugriffscode"/>
     <en_AU txt="Control code"/>
     <fr txt="Code de controle"/>
+    <ru txt="Код доступа к управлению"/>
   </Msg>
   <Msg id="turntable2go">
     <en txt="Goto Turntable"/>
@@ -17462,6 +17680,7 @@
     <de txt="Bitte Rocrail-Server-Einstellungen laden, bevor CBUS-Knoten konfiguriert werden."/>
     <en_AU txt="Please load the Rocrail server settings before configuring CBUS nodes."/>
     <fr txt="Svp, chargez les réglages du serveur avant de configurer les modes CBUS"/>
+    <ru txt="Пожалуйста, загрузите настройки сервера Rocrail, перед  настройкой  CBUS узлов"/>
   </Msg>
   <Msg id="node">
     <en txt="Node"/>
@@ -17469,6 +17688,7 @@
     <de txt="Knoten"/>
     <en_AU txt="Node"/>
     <fr txt="Nœud"/>
+    <ru txt="Узел"/>
   </Msg>
   <Msg id="variables">
     <en txt="Variables"/>
@@ -17476,6 +17696,7 @@
     <de txt="Variablen"/>
     <en_AU txt="Variables"/>
     <fr txt="Variables"/>
+    <ru txt="Переменные"/>
   </Msg>
   <Msg id="variable">
     <en txt="Variable"/>
@@ -17483,13 +17704,16 @@
     <de txt="Variable"/>
     <en_AU txt="Variable"/>
     <fr txt="Variable"/>
+    <ru txt="Переменная"/>
   </Msg>
   <Msg id="events">
     <en txt="Events"/>
-    <nl txt="Gebeurtenissen"/>
+    <nl txt="Events"/>
     <de txt="Ereignisse"/>
     <en_AU txt="Events"/>
     <fr txt="Évènements"/>
+    <ca txt="Esdeveniment"/>
+    <ru txt="События"/>
   </Msg>
   <Msg id="firmware">
     <en txt="Firmware"/>
@@ -17497,6 +17721,7 @@
     <de txt="Firmware"/>
     <en_AU txt="Firmware"/>
     <fr txt="Firmware"/>
+    <ca txt="Firmware"/>
   </Msg>
   <Msg id="get">
     <en txt="Get"/>
@@ -17504,6 +17729,8 @@
     <de txt="Abrufen"/>
     <en_AU txt="Get"/>
     <fr txt="Obtenir"/>
+    <ca txt="Aconsegueix"/>
+    <ru txt="Получить"/>
   </Msg>
   <Msg id="set">
     <en txt="Set"/>
@@ -17511,6 +17738,8 @@
     <de txt="Einstellen"/>
     <en_AU txt="Set"/>
     <fr txt="Définir"/>
+    <ca txt="Estableix"/>
+    <ru txt="Установить"/>
   </Msg>
   <Msg id="getall">
     <en txt="Get all"/>
@@ -17518,6 +17747,7 @@
     <de txt="Alles lesen"/>
     <en_AU txt="Get all"/>
     <fr txt="Tout obtenir"/>
+    <ru txt="Получить всё"/>
   </Msg>
   <Msg id="clearall">
     <en txt="Clear all"/>
@@ -17525,6 +17755,7 @@
     <de txt="Alles zurücksetzen"/>
     <en_AU txt="Clear all"/>
     <fr txt="Tout effacer"/>
+    <ru txt="Очистить всё"/>
   </Msg>
   <Msg id="learn">
     <en txt="Learn"/>
@@ -17546,6 +17777,8 @@
     <de txt="Senden"/>
     <en_AU txt="Send"/>
     <fr txt="Envoyer"/>
+    <ca txt="ENVIA"/>
+    <ru txt="Отправить"/>
   </Msg>
   <Msg id="bootmode">
     <en txt="Boot mode"/>
@@ -17553,6 +17786,7 @@
     <de txt="Boot-Modus"/>
     <en_AU txt="Boot mode"/>
     <fr txt="Mode de démarrage"/>
+    <ru txt="Режим загрузки"/>
   </Msg>
   <Msg id="loadertime">
     <en txt="Loader time (ms)"/>
@@ -17560,13 +17794,15 @@
     <de txt="Ladeprogramm-Zeit"/>
     <en_AU txt="Loader time (ms)"/>
     <fr txt="Temps de chargement (ms)"/>
+    <ru txt="Время загрузчика"/>
   </Msg>
   <Msg id="shortevents">
     <en txt="Short events"/>
-    <nl txt="Korte gebeurtenissen"/>
+    <nl txt="Korte events"/>
     <de txt="Kurz-Ereignisse"/>
     <en_AU txt="Short events"/>
     <fr txt="Evènements courts"/>
+    <ru txt="Короткие события"/>
   </Msg>
   <Msg id="startofday">
     <en txt="Start of day"/>
@@ -17574,6 +17810,7 @@
     <de txt="Tages-Anfang"/>
     <en_AU txt="Start of day"/>
     <fr txt="Debut du jour"/>
+    <ru txt="Начало дня"/>
   </Msg>
   <Msg id="resetstatus">
     <en txt="Reset status"/>
@@ -17581,6 +17818,7 @@
     <de txt="Status zurücksetzen"/>
     <en_AU txt="Reset status"/>
     <fr txt="Remet a zéro les états"/>
+    <ru txt="Сброс статуса"/>
   </Msg>
   <Msg id="occupancy">
     <en txt="Occupancy"/>
@@ -17588,6 +17826,7 @@
     <de txt="Belegung"/>
     <en_AU txt="Occupancy"/>
     <fr txt="Occupation"/>
+    <ru txt="Занятость"/>
   </Msg>
   <Msg id="restorespeed">
     <en txt="Restore speed"/>
@@ -17595,12 +17834,15 @@
     <de txt="Geschwindigkeit wiederherstellen"/>
     <en_AU txt="Restore speed"/>
     <fr txt="Restorer la vitesse"/>
+    <ru txt="Восстановить скорость"/>
   </Msg>
   <Msg id="calibrate">
     <en txt="Calibrate"/>
     <nl txt="Kalibreer"/>
     <de txt="Kalibrieren"/>
     <fr txt="Calibrer"/>
+    <ca txt="Calibra"/>
+    <ru txt="Калибровать"/>
   </Msg>
   <Msg id="traverser">
     <en txt="Traverser"/>
@@ -17619,12 +17861,14 @@
     <nl txt="Vertraagde melders"/>
     <de txt="Zeitgesteuerte Rückmelder"/>
     <fr txt="Capteurs temporisés"/>
+    <ru txt="Датчики с задержкой времени на откл."/>
   </Msg>
   <Msg id="enableanalyzer">
     <en txt="Enable analyzer"/>
     <nl txt="Aktiveer analyzer"/>
     <de txt="Auswerteprogramm aktivieren"/>
     <fr txt="Mettre en service l'analyseur"/>
+    <ru txt="Разрешить анализатор"/>
   </Msg>
   <Msg id="forceunlockatebreak">
     <en txt="Force unlock at EBreak"/>
@@ -17637,164 +17881,254 @@
     <nl txt="Trigger blok gebeurtenissen"/>
     <de txt="Trigger Block-Ereignisse"/>
     <fr txt="Réglage des événements de blocs"/>
+    <ru txt="Триггер событий блока"/>
   </Msg>
   <Msg id="locofilter">
     <en txt="Loco view filter"/>
     <nl txt="Loc aanzicht filter"/>
     <de txt="Lokanzeigefilter"/>
     <fr txt="Filtre de vue des loco"/>
+    <ru txt="Фильтр просмотра локомотивов"/>
   </Msg>
   <Msg id="locoviewall" key="Alt-A">
     <en txt="View All"/>
     <nl txt="Toon Alles"/>
     <de txt="Alle anzeigen"/>
     <fr txt="Tout voir"/>
+    <ca txt="Mostra-ho tot"/>
+    <ru txt="Показать все"/>
   </Msg>
   <Msg id="locoviewsteam" key="Alt-S">
     <en txt="Steamers"/>
     <nl txt="Stomers"/>
     <de txt="Dampfloks"/>
     <fr txt="Vapeur"/>
+    <ru txt="Паровозы"/>
   </Msg>
   <Msg id="locoviewdiesel" key="Alt-I">
     <en txt="Diesels"/>
     <nl txt="Diesels"/>
     <de txt="Dieselloks"/>
     <fr txt="Diesels"/>
+    <ca txt="Dièsels"/>
+    <ru txt="Тепловозы"/>
   </Msg>
   <Msg id="locoviewelectric" key="Alt-E">
     <en txt="Electrics"/>
     <nl txt="Elektrische"/>
     <de txt="Elektroloks"/>
     <fr txt="Electriques"/>
+    <ca txt="Elèctrics"/>
+    <ru txt="Электровозы"/>
   </Msg>
   <Msg id="locoviewcommuter" key="Alt-C">
     <en txt="Commuters"/>
     <nl txt="Pendels"/>
     <de txt="Pendelzüge"/>
     <fr txt="Commutateur"/>
+    <ru txt="Пассажирские"/>
   </Msg>
   <Msg id="locoviewspecial" key="Alt-P">
     <en txt="Specials"/>
     <nl txt="Specialen"/>
     <de txt="Specials"/>
     <fr txt="Spéciaux"/>
+    <ca txt="Especials"/>
+    <ru txt="Особый"/>
   </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
     <nl txt="Sorteer locs naar adres"/>
     <de txt="Loks nach Adresse sortieren"/>
     <fr txt="Classer les loco par adresse"/>
+    <ru txt="Сортировать локомотивы по адресу"/>
   </Msg>
   <Msg id="selecttour" dialog="true">
     <en txt="Select tour"/>
     <nl txt="Selecteer tour"/>
     <de txt="Tour wählen"/>
     <fr txt="Selection du trajet compilé"/>
+    <ru txt="Выбор тура"/>
   </Msg>
   <Msg id="tourtable" dialog="true">
     <en txt="Tour table" alttxt="Tours" tip="Tour table"/>
     <nl txt="Touren"/>
     <de txt="Touren"/>
     <fr txt="Tableau de trajets compilés"/>
+    <ru txt="Туры"/>
   </Msg>
   <Msg id="tour">
     <en txt="Tour"/>
     <nl txt="Tour"/>
     <de txt="Tour"/>
     <fr txt="Trajet compilé"/>
+    <ru txt="Тур"/>
   </Msg>
   <Msg id="resetspfx">
     <en txt="Reset speed and functions"/>
     <nl txt="Snelheid en functies terugzetten"/>
     <de txt="Zurücksetzen von Geschwindigkeit und Funktionen"/>
     <fr txt="Remettre à zéro la vitesse et les fonctions"/>
+    <ru txt="Сброс скорости и функции"/>
   </Msg>
   <Msg id="divider">
     <en txt="divider"/>
+    <de txt="Teiler"/>
+    <nl txt="verdeler"/>
+    <ru txt="делитель"/>
   </Msg>
   <Msg id="temperature">
     <en txt="temperature"/>
+    <ca txt="temperatura"/>
+    <de txt="Temperatur"/>
+    <nl txt="temperatuur"/>
+    <ru txt="Температура"/>
   </Msg>
   <Msg id="info4throttle">
     <en txt="Poll info"/>
+    <de txt="Info abfragen"/>
+    <nl txt="Informatie afvragen"/>
   </Msg>
   <Msg id="releaseonidle">
     <en txt="Release loco on idle"/>
+    <de txt="Lok freigeben wenn inaktiv"/>
+    <nl txt="Loc vrijgeven indien inactief"/>
+    <ru txt="Освобождать локомотив при простое"/>
   </Msg>
   <Msg id="sleep">
     <en txt="Sleep"/>
+    <de txt="Pause"/>
+    <nl txt="Pause"/>
   </Msg>
   <Msg id="closeonghost">
     <en txt="Close block on ghost"/>
+    <de txt="Block schließen nach Geistermeldung"/>
+    <nl txt="Sluit block na spook melding"/>
+    <ru txt="Закрывать блок при призраке поезда"/>
   </Msg>
   <Msg id="display">
     <en txt="Display"/>
+    <de txt="Anzeige"/>
+    <nl txt="Weergave"/>
   </Msg>
   <Msg id="systemactions" dialog="true">
     <en txt="System Actions"/>
+    <de txt="System Aktionen"/>
+    <nl txt="Systeemacties"/>
+    <ru txt="Действия системы"/>
   </Msg>
   <Msg id="sound">
     <en txt="Sound"/>
+    <de txt="Sound"/>
+    <nl txt="Geluid"/>
+    <ru txt="Звуковые файлы"/>
   </Msg>
   <Msg id="soundpath">
     <en txt="Sound path"/>
+    <de txt="Sound-Ordner"/>
+    <nl txt="Geluiden map"/>
+    <ru txt="Путь к звуковым файлам"/>
   </Msg>
   <Msg id="soundplayer">
     <en txt="Sound player"/>
+    <de txt="Sound-Abspieler"/>
+    <nl txt="Geluid afspeler"/>
   </Msg>
   <Msg id="soundplayerlocation">
     <en txt="Add location parameter"/>
+    <de txt="Standortparameter hinzufügen"/>
+    <nl txt="Voeg lokatie parameter toe"/>
+    <ru txt="Добавить параметр местоположения"/>
   </Msg>
   <Msg id="nodenumber">
     <en txt="Node Nr."/>
+    <de txt="Knoten Nr."/>
+    <nl txt="Node nummer"/>
+    <ru txt="Узел №"/>
   </Msg>
   <Msg id="eventnumber">
     <en txt="Event Nr."/>
+    <de txt="Ereignis Nr."/>
+    <nl txt="Event nr."/>
+    <ru txt="Событие №"/>
   </Msg>
   <Msg id="triggerlowevents">
     <en txt="Trigger low events after 100ms"/>
+    <de txt="Niedrige Ereignisse nach 100ms anstoßen"/>
+    <nl txt="Trigger laag na 100ms"/>
   </Msg>
   <Msg id="showsecondhand">
     <en txt="Show secondhand"/>
+    <de txt="Sekundenzeiger anzeigen"/>
+    <nl txt="Laat secondenwijzer zien"/>
+    <ru txt="Показать секундную стрелку"/>
   </Msg>
   <Msg id="twoway">
     <en txt="Twoway"/>
+    <de txt="Zweiweg"/>
+    <nl txt="Tweeweg"/>
+    <ru txt="Симметричная стрелка"/>
   </Msg>
   <Msg id="departdelay">
     <en txt="Depart delay"/>
+    <de txt="Abfahrt-Verzögerung"/>
+    <nl txt="Vertrek vertraging"/>
   </Msg>
   <Msg id="existingid">
     <en txt="The ID already exists at position: %d,%d."/>
+    <de txt="Die Kennung existiert bereits bei Position: %d,%d."/>
+    <nl txt="De ID bestaat al op positie: %d,%d."/>
   </Msg>
   <Msg id="gooffline">
     <en txt="Go offline"/>
+    <de txt="Serververbindung trennen"/>
+    <nl txt="Ga offline"/>
   </Msg>
   <Msg id="query">
     <en txt="Query"/>
+    <de txt="Abfrage"/>
+    <nl txt="Query"/>
   </Msg>
   <Msg id="processsignalevents">
     <en txt="Process signal events"/>
+    <de txt="Signal-Ereignisse verarbeiten"/>
+    <nl txt="Verwerk signaal meldingen"/>
   </Msg>
   <Msg id="overwritestatus">
     <en txt="Overwrite status"/>
+    <de txt="Status überschreiben"/>
+    <nl txt="Overschrijf status"/>
   </Msg>
   <Msg id="closenoevents">
     <en txt="Close on no events"/>
+    <de txt="Blöcke ohne Ereignisse schließen"/>
+    <nl txt="Sluit indien geen melder"/>
   </Msg>
   <Msg id="every">
     <en txt="every"/>
+    <nl txt="iedere"/>
   </Msg>
   <Msg id="startofday">
     <en txt="Start of Day" tip="Initialize accessories and query sensors."/>
+    <de txt="Weichen/Signale/Zähler initialisieren"/>
+    <es txt="Inicio de Día"/>
+    <fr txt="Début de journée"/>
+    <nl txt="Begin van de dag"/>
+    <zh_CN txt="起始日"/>
   </Msg>
   <Msg id="querysensors">
     <en txt="Query sensors" tip="Query actual state of all sensors."/>
+    <de txt="Rückmelder abfragen"/>
+    <nl txt="Bezetmelders afvragen"/>
   </Msg>
   <Msg id="canid">
     <en txt="CAN ID"/>
+    <de txt="CAN ID"/>
+    <nl txt="CAN ID"/>
   </Msg>
   <Msg id="selectshortestblock">
     <en txt="Select shortest block"/>
+    <de txt="Wähle kürzesten Block"/>
+    <nl txt="Kies het kortste blok"/>
   </Msg>
 </Messages>
