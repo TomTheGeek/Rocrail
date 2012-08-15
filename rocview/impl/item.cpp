@@ -2348,6 +2348,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
   }
   else if( StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ) {
     const char* state = wSignal.getstate( node );
+    wSignal.setaspect( m_Props, wSignal.getaspect( node ) );
     if( state != NULL ) {
       wSignal.setstate( m_Props, state );
       refresh = true;

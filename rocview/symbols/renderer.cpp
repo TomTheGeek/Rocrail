@@ -1418,11 +1418,13 @@ void SymbolRenderer::drawDecoupler( wxPaintDC& dc, bool occupied, bool actroute,
 void SymbolRenderer::drawSignal( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSignal.getstate( m_Props );
   int aspects = wSignal.getaspects( m_Props );
-  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to %s", wSignal.getid( m_Props ), state );
-
-  // SVG Symbol:
   int nr = wSignal.getaspect(m_Props);
-  if( wSignal.getaspects( m_Props ) > 4 && m_SvgSym[nr] != NULL) {
+  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "setting %d aspect signal %s to %s (nr=%d)", aspects, wSignal.getid( m_Props ), state, nr );
+
+  if( nr == -1 )
+    nr = 0;
+  // SVG Symbol:
+  if( nr >= 0 && nr < 16 && aspects > 4 && m_SvgSym[nr] != NULL) {
     if( occupied && m_SvgSymOcc[nr] != NULL)
       drawSvgSym(dc, m_SvgSymOcc[nr], ori);
     else if( actroute && m_SvgSymRoute[nr] != NULL)

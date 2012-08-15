@@ -1,0 +1,9 @@
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <circle cx="15" cy="15" r="12" fill="none" stroke="rgb(0,0,0)"/>
+    <circle cx="15" cy="15" r="9" fill="rgb(100,255,100)" stroke="rgb(200,255,200)"/>
+  </g>
+</svg>
+
+

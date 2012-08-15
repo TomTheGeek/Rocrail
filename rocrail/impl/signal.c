@@ -1053,6 +1053,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
     wSignal.setaspect( o->props, aspectnr );
     chgState = True;
     aspectnr = wSignal.getaspect( nodeA );
+    wSignal.setaspect( o->props, aspectnr );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to aspect %d",
                  wSignal.getid( o->props ), aspectnr );
   }
