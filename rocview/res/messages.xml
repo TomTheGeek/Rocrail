@@ -138,7 +138,7 @@
     <pt_BR txt="Reinicie para mudar o idioma."/>
   </Msg>
   <Msg id="cancel">
-    <de txt="Abbruch" tip="Dialog beenden."/>
+    <de txt="Abbrechen" tip="Dialog beenden."/>
     <en txt="Cancel" tip="Cancel the dialog."/>
     <nl txt="Anulleren" tip="Annuleer de dialoog."/>
     <sv txt="Avbryt" tip="Stäng dialogrutan utan att spara."/>
@@ -18107,6 +18107,7 @@
   <Msg id="every">
     <en txt="every"/>
     <nl txt="iedere"/>
+    <de txt="alle"/>
   </Msg>
   <Msg id="startofday">
     <en txt="Start of Day" tip="Initialize accessories and query sensors."/>
