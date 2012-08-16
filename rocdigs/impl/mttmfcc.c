@@ -256,8 +256,46 @@ static Boolean __updateSlots(iOMttmFccData data) {
 }
 
 
-static void __evaluateRsp( iOMttmFccData data, byte* out, int outsize, byte* in, int insize ) {
+static void __evaluatePT( iOMttmFccData data, byte* out, byte* in) {
+  int cv = out[1] * 256 + out[2];
+  if( in[0] == 0x00 ) {
+    /* write cv */
+    if( data->listenerFun != NULL && data->listenerObj != NULL ) {
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setcv( node, cv );
+      wProgram.setvalue( node, -1 );
+      wProgram.setcmd( node, wProgram.datarsp );
+      if( data->iid != NULL )
+        wProgram.setiid( node, data->iid );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+    }
+  }
+  else if( in[0] == 0x01 ) {
+    /* read cv */
+    int val = in[1];
+    if( data->listenerFun != NULL && data->listenerObj != NULL ) {
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setcv( node, cv );
+      wProgram.setvalue( node, val );
+      wProgram.setcmd( node, wProgram.datarsp );
+      if( data->iid != NULL )
+        wProgram.setiid( node, data->iid );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+    }
+  }
 }
+
+
+static void __evaluateRsp( iOMttmFccData data, byte* out, int outsize, byte* in, int insize ) {
+  switch( in[0] ) {
+  case 0x00:
+  case 0x01:
+    if( insize == 3 )
+      __evaluatePT(data, out, in);
+    break;
+  }
+}
+
 
 static Boolean __transact( iOMttmFccData data, byte* out, int outsize, byte* in, int insize ) {
   Boolean rc = data->dummyio;
@@ -716,9 +754,62 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
       slot->f1_8  = out[3];
       slot->f9_16 = out[4];
       *insize = 1;
-      return 5;
+      return 6;
     }
     
+  }
+
+
+  /* Program command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    if( wProgram.getcmd( node ) == wProgram.set ) {
+      int cv    = wProgram.getcv( node );
+      int value = wProgram.getvalue( node );
+      int addr  = wProgram.getaddr( node );
+
+      if( wProgram.ispom(node) ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "POM: set CV%d of SX2 loc %d to %d...", cv, addr, value );
+        /* SX2: 0x7A Adresse (High) Adresse (Low) PA (High) PA (Low) Wert */
+        out[0] = 0x7A;
+        out[1] = addr/256;
+        out[2] = addr%256;
+        out[3] = cv/256;
+        out[4] = cv%256;
+        out[5] = value;
+        *insize = 1;
+        return 6;
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set CV%d of SX2 loc %d to %d...", cv, addr, value );
+        /* SX2: 0x83 0xCA High Low Wert */
+        out[0] = 0x83;
+        out[1] = 0xCA;
+        out[2] = cv/256;
+        out[3] = cv%256;
+        out[4] = value;
+        *insize = 3;
+        return 5;
+      }
+    }
+    else if( wProgram.getcmd( node ) == wProgram.get ) {
+      int cv    = wProgram.getcv( node );
+      int addr  = wProgram.getaddr( node );
+      if( wProgram.ispom(node) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*** not supported *** POM: read CV%d of loc %d...", cv, addr );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "read CV%d of SX2 loc %d...", cv, addr );
+        /* SX2: 0x83 0xC2 High Low 0x00 */
+        out[0] = 0x83;
+        out[1] = 0xC2;
+        out[2] = cv/256;
+        out[3] = cv%256;
+        out[4] = 0;
+        *insize = 3;
+        return 5;
+      }
+    }
+
   }
 
   return 0;
@@ -933,7 +1024,7 @@ static Boolean _supportPT( obj inst ) {
 
 /** vmajor*1000 + vminor*100 + patch */
 static int vmajor = 2;
-static int vminor = 0;
+static int vminor = 1;
 static int patch  = 0;
 static int _version( obj inst ) {
   iOMttmFccData data = Data(inst);
