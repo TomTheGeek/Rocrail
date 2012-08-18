@@ -19,6 +19,7 @@
 #define MTYP_CANGC1E  11 // Ethernet bridge
 #define MTYP_CANGCLN  56 // LocoNet bridge
 
+#define OPC_DLOC   0x24    // <session>
 #define OPC_PNN    0xB6    // <NN hi><NN lo><manu id><module id><flags>
 
 /* Requested at 20-09-2011. (Mike & Pete)
