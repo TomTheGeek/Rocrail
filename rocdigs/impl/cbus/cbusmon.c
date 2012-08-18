@@ -177,6 +177,12 @@ void cbusMon(byte* frame, int opc) {
   }
   break;
 
+  case OPC_DSPLOC:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "OPC_DSPLOC(0x%02X) session=%d",
+        opc, HEXA2Byte(frame + OFFSET_D1 + offset) );
+    break;
+
   default:
     if( opc != OPC_ACK ) {
       char char0  = HEXA2Byte(frame + OFFSET_D1 + offset);

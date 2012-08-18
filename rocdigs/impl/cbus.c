@@ -1897,7 +1897,13 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals(wLoc.dispatch, wLoc.getcmd(node)) ) {
     iOSlot slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
     if( slot != NULL && slot->session > 0 ) {
-      slot->releasereq = True;
+      byte cmd[5];
+      byte* frame = allocMem(32);
+      cmd[0] = OPC_DSPLOC;
+      cmd[1] = slot->session;
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 1, data->cid, False );
+      slot->lastkeep = SystemOp.getTick();
+      ThreadOp.post(data->writer, (obj)frame);
     }
     else if( slot != NULL && slot->session == 0 ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "no session for loco %d", slot->addr );
