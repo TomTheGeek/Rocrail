@@ -217,7 +217,7 @@ $(OUTDIR)$(FS)cti$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)cti.o $(COMMONOBJS) $(RRLIBS)
 $(OUTDIR)$(FS)dtc$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)dtc.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)dtc$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)dtc.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)easydcc$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)easydcc.o $(COMMONOBJS) $(RRLIBS)
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)dtc$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)easydcc.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)easydcc$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)easydcc.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
