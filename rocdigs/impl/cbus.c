@@ -838,7 +838,7 @@ static __evaluateCV( iOCBUS cbus, byte* frame ) {
   int offset  = (frame[1] == 'S') ? 0:4;
   int cvh   = HEXA2Byte(frame + OFFSET_D2 + offset);
   int cvl   = HEXA2Byte(frame + OFFSET_D3 + offset);
-  int cv    = cvh * 256 + cv;
+  int cv    = cvh * 256 + cvl;
 
   int value = HEXA2Byte(frame + OFFSET_D4 + offset);
 
