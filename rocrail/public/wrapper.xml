@@ -1944,12 +1944,14 @@
                remark="use 30 incase of mins=4, 70 incase of maxs=10... (Replaces attr controlled)"/>
         <var name="V_mode" vt="string" defval="percent" range="kmh,percent"
              remark="How the V values should be interpreted by the digint: percent is used for decoders without max speed tuning.(Delta...)"/>
-        <var name="V_max" vt="int" defval="100" range="*" unit="kmh" remark="Maximal speed in kmh"/>
-        <var name="V_mid" vt="int" defval="50" range="*" unit="kmh" remark="Middle speed in kmh"/>
-        <var name="V_min" vt="int" defval="10" range="*" unit="kmh" remark="Minimal speed in kmh"/>
-        <var name="V_Rmax" vt="int" defval="0" range="*" unit="kmh" remark="Maximal reverse speed.(not used when 0)"/>
-        <var name="V_Rmid" vt="int" defval="0" range="*" unit="kmh" remark="Minimal reverse speed.(not used when 0)"/>
-        <var name="V_Rmin" vt="int" defval="0" range="*" unit="kmh" remark="Minimal reverse speed.(not used when 0)"/>
+        <var name="V_max" vt="int" defval="100" range="*" remark="Maximal speed."/>
+        <var name="V_cru" vt="int" defval="0" range="*" remark="Cruise speed.(not used when 0)"/>
+        <var name="V_mid" vt="int" defval="50" range="*" remark="Middle speed."/>
+        <var name="V_min" vt="int" defval="10" range="*" remark="Minimal speed."/>
+        <var name="V_Rmax" vt="int" defval="0" range="*" remark="Maximal reverse speed.(not used when 0)"/>
+        <var name="V_Rcru" vt="int" defval="0" range="*" remark="Cruise reverse speed.(not used when 0)"/>
+        <var name="V_Rmid" vt="int" defval="0" range="*" remark="Middle reverse speed.(not used when 0)"/>
+        <var name="V_Rmin" vt="int" defval="0" range="*" remark="Minimal reverse speed.(not used when 0)"/>
         <var name="V" vt="int" defval="-1" range="*" unit="kmh" remark="Loc speed in kmh."/>
         <var name="V_raw" vt="int" defval="-1" range="*" remark="Loc speed in CS speed steps."/>
         <var name="V_rawMax" vt="int" defval="-1" range="*" remark="Max loc speed in CS speed steps."/>

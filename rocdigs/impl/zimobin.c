@@ -620,8 +620,7 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     outa[5] = addr % 256;
     outa[6] = ((port * 2) + gate) & 0x07 | action;
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d:%d %s, 0x%02X", addr, port, gate, action?"red":"green", outa[6]);
-
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d:%d %s, 0x%02X", addr, port, gate, action?"ON":"OFF", outa[6]);
     ThreadOp.post( data->transactor, (obj)outa );
 
   }

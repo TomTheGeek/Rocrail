@@ -662,6 +662,7 @@ static int __translateVhint(iOLoc inst, const char* V_hint, int V_maxkmh ) {
   int V_max = wLoc.getV_max( data->props );
   int V_mid = wLoc.getV_mid( data->props );
   int V_min = wLoc.getV_min( data->props );
+  int V_cru = wLoc.getV_cru( data->props );
 
   if( !wLoc.isdir(data->props) || (wLoc.isdir(data->props) && !wLoc.isplacing( data->props ) ) ){
     if( wLoc.getV_Rmax( data->props ) > 0 ) {
@@ -672,6 +673,9 @@ static int __translateVhint(iOLoc inst, const char* V_hint, int V_maxkmh ) {
     }
     if( wLoc.getV_Rmin( data->props ) > 0 ) {
       V_min = wLoc.getV_Rmin( data->props );
+    }
+    if( wLoc.getV_Rcru( data->props ) > 0 ) {
+      V_cru = wLoc.getV_Rcru( data->props );
     }
   }
 
@@ -685,8 +689,13 @@ static int __translateVhint(iOLoc inst, const char* V_hint, int V_maxkmh ) {
     V_new = V_max;
 
   else if( StrOp.equals( wLoc.cruise, V_hint ) ) {
-    V_new = V_max;
-    V_new = (V_new * 80) / 100;
+    if( V_cru > 0 ) {
+      V_new = V_cru;
+    }
+    else {
+      V_new = V_max;
+      V_new = (V_new * 80) / 100;
+    }
   }
 
   else if( StrOp.equals( wLoc.climb, V_hint ) ) {

@@ -5475,6 +5475,9 @@
     <en_GB txt="V_Mid"/>
     <ro txt="Viteză medie"/>
   </Msg>
+  <Msg id="v_cru">
+    <en txt="V_Cru"/>
+  </Msg>
   <Msg id="v_max">
     <de txt="V_Max" tip="Maximale Geschwindigkeit vorwärts"/>
     <en txt="V_Max"/>
@@ -5548,6 +5551,9 @@
     <en_AU txt="V_RMid"/>
     <en_CA txt="V_RMid"/>
     <en_GB txt="V_RMid"/>
+  </Msg>
+  <Msg id="v_rcru">
+    <en txt="V_RCru"/>
   </Msg>
   <Msg id="v_rmax">
     <de txt="V_RMax" tip="Maximale Geschwindigkeit rückwärts"/>

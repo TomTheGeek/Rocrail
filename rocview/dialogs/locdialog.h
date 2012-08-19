@@ -388,6 +388,10 @@ public:
     wxTextCtrl* m_V_mid;
     wxStaticText* m_Label_V_Rmid;
     wxTextCtrl* m_V_Rmid;
+    wxStaticText* m_labVcru;
+    wxTextCtrl* m_V_cru;
+    wxStaticText* m_labVRcru;
+    wxTextCtrl* m_V_Rcru;
     wxStaticText* m_Label_V_max;
     wxTextCtrl* m_V_max;
     wxStaticText* m_Label_V_Rmax;
