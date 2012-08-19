@@ -4136,10 +4136,19 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
           /* need to change direction */
           /* if commuter: allow and flag for swap. */
           if( LocOp.getV(loc) == 0 &&  (fromBlock->isTTBlock(fromBlock) || wLoc.iscommuter( LocOp.base.properties(loc) ) ) ) {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+            if( !fromBlock->isTTBlock(fromBlock) ) {
+              /* REB: For turntable allow routes with swap still as best when suited well,
+               * do not set swap4blockside in that case */
+              swap4BlockSide = True;
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "allow route [%s] for a commuter train: the exit side is equal to the enter side [%s]. Swap needed.",
                 RouteOp.getId(route), stEnterSide?"+":"-" );
-            swap4BlockSide = True;
+            }
+            else {  /*REB added */
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "allow route [%s] from a turntable: the exit side is equal to the enter side [%s]. Swap needed.",
+                RouteOp.getId(route), stEnterSide?"+":"-" );
+            }
             MapOp.put( swapRoutes, route->base.id(route), (obj)route );
           }
           else {
