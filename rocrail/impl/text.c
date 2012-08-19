@@ -200,6 +200,7 @@ static void* __event( void* inst, const void* evt ) {
       MapOp.put(map, "countedcars", (obj)NodeOp.getStr(node, "countedcars", "0") );
       MapOp.put(map, "wheelcount", (obj)NodeOp.getStr(node, "wheelcount", "0") );
       MapOp.put(map, "lcid", (obj)LocOp.getId(lc));
+      MapOp.put(map, "lcident", (obj)wLoc.getidentifier(lcprops));
       MapOp.put(map, "lcdest", (obj)LocOp.getDestination(lc));
       MapOp.put(map, "lcscid", (obj)scid);
       MapOp.put(map, "lcscidx", (obj)scidxStr);
