@@ -4133,25 +4133,25 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
         }
 
         if( useBlockSide && stEnterSide == stExitSide ) {
-          /* need to change direction */
-          /* if commuter: allow and flag for swap. */
+          /* need to change direction but blocksides are used, check if allowed*/
           if( LocOp.getV(loc) == 0 &&  (fromBlock->isTTBlock(fromBlock) || wLoc.iscommuter( LocOp.base.properties(loc) ) ) ) {
-            if( !fromBlock->isTTBlock(fromBlock) ) {
-              /* REB: For turntable allow routes with swap still as best when suited well,
-               * do not set swap4blockside in that case */
+            if( fromBlock->isTTBlock(fromBlock) ) {
+              /* for turntable allow routes with swap still as best when suited well, do not set swap4blockside in that case (REB)*/
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "allow route [%s] from a turntable: the exit side is equal to the enter side [%s]. Swap needed.",
+                RouteOp.getId(route), stEnterSide?"+":"-" );
+            }
+            else {
+              /* commuter: allow, set swap4BlockSide flag so that well suited routes are put in the alt list and not in the best list. (REB)*/
               swap4BlockSide = True;
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "allow route [%s] for a commuter train: the exit side is equal to the enter side [%s]. Swap needed.",
                 RouteOp.getId(route), stEnterSide?"+":"-" );
             }
-            else {  /*REB added */
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                "allow route [%s] from a turntable: the exit side is equal to the enter side [%s]. Swap needed.",
-                RouteOp.getId(route), stEnterSide?"+":"-" );
-            }
             MapOp.put( swapRoutes, route->base.id(route), (obj)route );
           }
           else {
+            /* other case, do not allow */
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "ignoring route [%s] because the exit side is equal to the enter side [%s]",
                 RouteOp.getId(route), stEnterSide?"+":"-" );
