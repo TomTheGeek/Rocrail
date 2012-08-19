@@ -269,6 +269,7 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
   int nrSections = 0;
 
   /* check the sections */
+  /* TODO: Check train length and sections length... */
   for( i = 0; i < targetSection; i++ ) {
     iONode section = (iONode)ListOp.get( data->sectionList, i);
     if( StrOp.equals( locId, wStageSection.getlcid(section) ) ) {
@@ -897,6 +898,8 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
       iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbid(section) );
       if( fb != NULL && FBackOp.isState(fb, "false") ) {
         /* Last free section in the list */
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "section [%d] is free (%s)",
+            wStageSection.getidx(section), wStageSection.getlcid(section) == NULL ? "-":wStageSection.getlcid(section) );
         nextFreeSection = section;
         continue;
       }
@@ -913,29 +916,37 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
   }
 
 
+
+
   if( nextFreeSection != NULL && firstOccupiedSection != NULL ) {
+    if( wStageSection.getidx(nextFreeSection) > wStageSection.getidx(firstOccupiedSection) )
+    {
     iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(firstOccupiedSection) );
-    if( lc != NULL ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "moving loco %s from %s to %s in stage %s",
-          wStageSection.getlcid(firstOccupiedSection), wStageSection.getid(firstOccupiedSection),
-          wStageSection.getid(nextFreeSection), data->id );
+      if( lc != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "moving loco %s from %s to %s in stage %s",
+            wStageSection.getlcid(firstOccupiedSection), wStageSection.getid(firstOccupiedSection),
+            wStageSection.getid(nextFreeSection), data->id );
 
-      data->targetSection = wStageSection.getidx(nextFreeSection);
-      data->pendingSection =  wStageSection.getidx(firstOccupiedSection);
-      data->pendingFree = False;
-      data->locId = LocOp.getId(lc);
+        data->targetSection = wStageSection.getidx(nextFreeSection);
+        data->pendingSection =  wStageSection.getidx(firstOccupiedSection);
+        data->pendingFree = False;
+        data->locId = LocOp.getId(lc);
 
-      wStageSection.setlcid(nextFreeSection, wStageSection.getlcid(firstOccupiedSection) );
-      iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-      wLoc.setcmd(cmd, wLoc.velocity);
-      wLoc.setV_hint(cmd, wLoc.min);
-      LocOp.cmd(lc, cmd);
-      data->pendingMove = True;
-      locoMoved = True;
+        wStageSection.setlcid(nextFreeSection, wStageSection.getlcid(firstOccupiedSection) );
+        iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+        wLoc.setcmd(cmd, wLoc.velocity);
+        wLoc.setV_hint(cmd, wLoc.min);
+        LocOp.cmd(lc, cmd);
+        data->pendingMove = True;
+        locoMoved = True;
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "loco %s not found", wStageSection.getlcid(firstOccupiedSection) );
+      }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "loco %s not found", wStageSection.getlcid(firstOccupiedSection) );
+      /* free section is before the one last occupied section... */
     }
   }
 
