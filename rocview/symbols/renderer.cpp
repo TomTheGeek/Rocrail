@@ -455,13 +455,14 @@ void SymbolRenderer::initSym() {
     if( wSignal.getaspects( m_Props ) > 4 ) {
       m_iSymSubType = signaltype::i_signalaspect;
       if( m_SymMap != NULL ) {
+        const char* prefix = wSignal.getsymbolprefix( m_Props );
         char key[256];
         for( int i = 0; i < wSignal.getaspects( m_Props ); i++ ) {
-          StrOp.fmtb( key, signaltype::signalaspect, i );
+          StrOp.fmtb( key, prefix, signaltype::signalaspect, i );
           m_SvgSym[i] = (svgSymbol*)MapOp.get( m_SymMap, key );
-          StrOp.fmtb( key, signaltype::signalaspect_occ, i );
+          StrOp.fmtb( key, prefix, signaltype::signalaspect_occ, i );
           m_SvgSymOcc[i] = (svgSymbol*)MapOp.get( m_SymMap, key );
-          StrOp.fmtb( key, signaltype::signalaspect_route, i );
+          StrOp.fmtb( key, prefix, signaltype::signalaspect_route, i );
           m_SvgSymRoute[i] = (svgSymbol*)MapOp.get( m_SymMap, key );
         }
       }

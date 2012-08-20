@@ -267,6 +267,8 @@ public:
     wxRadioBox* m_Signal;
     wxStaticText* m_labAspects;
     wxSpinCtrl* m_Aspects;
+    wxStaticText* m_labSymbolPrefix;
+    wxTextCtrl* m_SymbolPrefix;
     wxCheckBox* m_Dwarf;
     wxStaticText* m_labAspect;
     wxStaticText* m_labPatternAddr1;

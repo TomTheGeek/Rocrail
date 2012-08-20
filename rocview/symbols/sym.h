@@ -237,9 +237,9 @@ namespace switchtype {
 }
 
 namespace signaltype {
-  static const char* signalaspect       = "signalaspect-%d.svg";
-  static const char* signalaspect_occ   = "signalaspect-%d-occ.svg";
-  static const char* signalaspect_route = "signalaspect-%d-route.svg";
+  static const char* signalaspect       = "%ssignalaspect-%d.svg";
+  static const char* signalaspect_occ   = "%ssignalaspect-%d-occ.svg";
+  static const char* signalaspect_route = "%ssignalaspect-%d-route.svg";
 
   static const char* signalmain_r = "signalmain-r.svg";
   static const char* signalmain_y = "signalmain-y.svg";

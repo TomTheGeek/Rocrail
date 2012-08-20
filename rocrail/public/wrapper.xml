@@ -1316,6 +1316,7 @@
         <var name="signal" vt="string" defval="main" range="main,distant,shunting"/>
         <var name="aspects" vt="int" defval="3" range="2-16" remark="number of aspects to show"/>
         <var name="dwarf" vt="bool" defval="false"/>
+        <var name="symbolprefix" vt="string" defval="" range="*" remark="Optional symbol name prefix for multiaspect signals."/>
 
         <!-- patterns -->
         <const name="use_patterns" vt="int" val="1"/>
