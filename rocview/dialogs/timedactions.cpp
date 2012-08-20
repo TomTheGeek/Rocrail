@@ -853,6 +853,7 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wAction.signal_yellow, wxConvUTF8));
       m_Command->Append(wxString( wAction.signal_green, wxConvUTF8));
       m_Command->Append(wxString( wAction.signal_white, wxConvUTF8));
+      m_Command->Append(wxString( wSignal.aspect, wxConvUTF8));
       break;
     case 6: // block
       m_Command->Append(wxString( wAction.block_unlock, wxConvUTF8));

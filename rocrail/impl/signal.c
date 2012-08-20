@@ -613,6 +613,20 @@ static Boolean __processMultiAspectsCmd( iOSignal inst, const char* state, int n
   if( iid != NULL )
     wOutput.setiid( cmd, iid );
 
+  if( nr == -1 ) {
+    /* Use default aspects: */
+    if( StrOp.equals( wSignal.green, state ) )
+      nr = wSignal.getgreennr(o->props);
+    else if( StrOp.equals( wSignal.red, state ) )
+      nr = wSignal.getrednr(o->props);
+    else if( StrOp.equals( wSignal.yellow, state ) )
+      nr = wSignal.getyellownr(o->props);
+    else if( StrOp.equals( wSignal.white, state ) )
+      nr = wSignal.getwhitenr(o->props);
+    else if( StrOp.equals( wSignal.blank, state ) )
+      nr = wSignal.getblanknr(o->props);
+  }
+
   wOutput.setbus( cmd, wSignal.getbus( o->props ) );
 
   wOutput.setprot( cmd, wSignal.getprot( o->props ) );
