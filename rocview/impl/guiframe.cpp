@@ -1329,6 +1329,9 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LocoCategory       = LOCO_VIEW_ALL;
   m_LocoSortByAddress  = wGui.islocosortbyaddress(m_Ini)?true:false;
   m_FakeLeftClick      = false;
+  m_LC                 = NULL;
+  m_CV                 = NULL;
+  m_LNCV               = NULL; 
 }
 
 void RocGuiFrame::initFrame() {
