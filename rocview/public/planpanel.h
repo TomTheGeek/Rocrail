@@ -90,6 +90,7 @@ public:
   void moveSelection(iONode sel);
   void copySelection(iONode sel);
   void deleteSelection(iONode sel);
+  void routeidSelection(iONode sel);
   void OnRemovePanel(wxCommandEvent& event);
   const char* getZLevelTitle();
   bool isBlockOccupied( const char* id );

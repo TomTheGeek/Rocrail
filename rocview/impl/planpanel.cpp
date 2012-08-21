@@ -487,6 +487,48 @@ void PlanPanel::deleteSelection(iONode sel) {
 }
 
 
+void PlanPanel::routeidSelection(iONode sel) {
+  int x  = NodeOp.getInt(sel, "x", 0);
+  int y  = NodeOp.getInt(sel, "y", 0);
+  int cx = NodeOp.getInt(sel, "cx", 0);
+  int cy = NodeOp.getInt(sel, "cy", 0);
+
+  /* prepare notify RocRail */
+  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "routeIDs selection" );
+  iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+  wModelCmd.setcmd( cmd, wModelCmd.modify );
+  NodeOp.setStr( cmd, "id", "routeids" );
+
+  // iterate the items in this panel
+  m_ChildTable->BeginFind();
+  Symbol* item = NULL;
+  wxNode* node = (wxNode*)m_ChildTable->Next();
+
+  while( node != NULL ) {
+    item = (Symbol*)node->GetData();
+    iONode props = item->getProperties();
+    if( wItem.getx(props) >= x && wItem.getx(props) < x+cx &&
+        wItem.gety(props) >= y && wItem.gety(props) < y+cy )
+    {
+      wItem.setrouteids(props, NodeOp.getStr(sel, "routeids", "" ) );
+      NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( props ) );
+    }
+    node = (wxNode*)m_ChildTable->Next();
+  }
+
+  /* notify RocRail */
+  if( NodeOp.getChildCnt(cmd) > 0 ) {
+    if( !wxGetApp().isOffline() )
+      wxGetApp().sendToRocrail( cmd );
+
+    wxGetApp().pushUndoItem( (iONode)NodeOp.base.clone( cmd ) );
+  }
+
+  cmd->base.del(cmd);
+
+}
+
+
 void PlanPanel::processSelection(iONode sel) {
   // TODO: process the selection
   char* str = NodeOp.base.toString(sel);
@@ -515,6 +557,10 @@ void PlanPanel::processSelection(iONode sel) {
       case 2:
         // delete
         deleteSelection(sel);
+        break;
+      case 3:
+        // route ids
+        routeidSelection(sel);
         break;
     }
   }
