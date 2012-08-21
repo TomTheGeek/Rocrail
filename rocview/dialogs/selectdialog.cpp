@@ -27,6 +27,8 @@
 #include "rocview/public/guiapp.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/ZLevel.h"
+#include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/Feedback.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -110,6 +112,15 @@ SelectDialog::~SelectDialog()
 }
 
 
+/* comparator for sorting by id: */
+static int __sortStr(obj* _a, obj* _b)
+{
+    const char* a = (const char*)*_a;
+    const char* b = (const char*)*_b;
+    return strcmp( a, b );
+}
+
+
 void SelectDialog::initLabels() {
   m_RangeBox->SetLabel( wxGetApp().getMsg( "range" ) );
   m_TargetBox->SetLabel( wxGetApp().getMsg( "target" ) );
@@ -117,6 +128,8 @@ void SelectDialog::initLabels() {
   m_ActionBox->SetString( 0, wxGetApp().getMsg( "move" ) );
   m_ActionBox->SetString( 1, wxGetApp().getMsg( "copy" ) );
   m_ActionBox->SetString( 2, wxGetApp().getMsg( "delete" ) );
+  m_ActionBox->SetString( 3, wxGetApp().getMsg( "routeids" ) );
+  m_ActionBox->SetString( 4, wxGetApp().getMsg( "blockid" ) );
   
   m_labRangCX->SetLabel( wxGetApp().getMsg( "width" ) );
   m_labRangeCY->SetLabel( wxGetApp().getMsg( "height" ) );
@@ -135,6 +148,35 @@ void SelectDialog::initLabels() {
     zlevel = wPlan.nextzlevel( wxGetApp().getModel(), zlevel );
   };
   
+  m_BlockID->Append( _T("") );
+  iONode model = wxGetApp().getModel();
+  iOList list = ListOp.inst();
+
+  if( model != NULL ) {
+    iONode bklist = wPlan.getbklist( model );
+    if( bklist != NULL ) {
+      int cnt = NodeOp.getChildCnt( bklist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode bk = NodeOp.getChild( bklist, i );
+        ListOp.add(list, (obj)wBlock.getid( bk ));
+      }
+    }
+    iONode fblist = wPlan.getfblist( model );
+    if( fblist != NULL ) {
+      int cnt = NodeOp.getChildCnt( fblist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode fb = NodeOp.getChild( fblist, i );
+        ListOp.add(list, (obj)wFeedback.getid( fb ));
+      }
+    }
+
+    ListOp.sort(list, &__sortStr);
+    int cnt = ListOp.size( list );
+    for( int i = 0; i < cnt; i++ ) {
+      const char* id = (const char*)ListOp.get( list, i );
+      m_BlockID->Append( wxString(id,wxConvUTF8) );
+    }
+  }
   
 }
 
@@ -189,6 +231,7 @@ iONode SelectDialog::getSelection() {
   NodeOp.setStr( sel, "desttitle", m_destTitle );
   NodeOp.setInt( sel, "action", m_action );
   NodeOp.setStr( sel, "routeids", m_RouteIDs->GetValue().mb_str(wxConvUTF8) );
+  NodeOp.setStr( sel, "blockid", m_BlockID->GetStringSelection().mb_str(wxConvUTF8) );
   return sel;
 }
 
@@ -219,6 +262,8 @@ void SelectDialog::Init()
     m_ActionBox = NULL;
     m_labRouteIDs = NULL;
     m_RouteIDs = NULL;
+    m_labBlockID = NULL;
+    m_BlockID = NULL;
     m_Cancel = NULL;
     m_OK = NULL;
 ////@end SelectDialog member initialisation
@@ -303,7 +348,8 @@ void SelectDialog::CreateControls()
     m_ActionBoxStrings.Add(_("&Copy"));
     m_ActionBoxStrings.Add(_("&Delete"));
     m_ActionBoxStrings.Add(_("&RouteID"));
-    m_ActionBox = new wxRadioBox( itemDialog1, ID_SELECT_ACTION, _("Action"), wxDefaultPosition, wxDefaultSize, m_ActionBoxStrings, 1, wxRA_SPECIFY_COLS );
+    m_ActionBoxStrings.Add(_("&BlockID"));
+    m_ActionBox = new wxRadioBox( itemDialog1, ID_SELECT_ACTION, _("Action"), wxDefaultPosition, wxDefaultSize, m_ActionBoxStrings, 1, wxRA_SPECIFY_ROWS );
     m_ActionBox->SetSelection(0);
     itemBoxSizer2->Add(m_ActionBox, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
@@ -312,21 +358,28 @@ void SelectDialog::CreateControls()
     itemBoxSizer2->Add(itemFlexGridSizer23, 0, wxGROW|wxALL, 5);
 
     m_labRouteIDs = new wxStaticText( itemDialog1, wxID_ANY, _("Route IDs"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer23->Add(m_labRouteIDs, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer23->Add(m_labRouteIDs, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_RouteIDs = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer23->Add(m_RouteIDs, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer26 = new wxStdDialogButtonSizer;
+    m_labBlockID = new wxStaticText( itemDialog1, wxID_ANY, _("BlockID"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer23->Add(m_labBlockID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer26, 0, wxALIGN_RIGHT|wxALL, 5);
+    wxArrayString m_BlockIDStrings;
+    m_BlockID = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BlockIDStrings, wxCB_DROPDOWN );
+    itemFlexGridSizer23->Add(m_BlockID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer28 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer28, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer26->AddButton(m_Cancel);
+    itemStdDialogButtonSizer28->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer26->AddButton(m_OK);
+    itemStdDialogButtonSizer28->AddButton(m_OK);
 
-    itemStdDialogButtonSizer26->Realize();
+    itemStdDialogButtonSizer28->Realize();
 
 ////@end SelectDialog content construction
 }

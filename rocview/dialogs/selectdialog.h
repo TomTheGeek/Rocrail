@@ -127,6 +127,8 @@ public:
     wxRadioBox* m_ActionBox;
     wxStaticText* m_labRouteIDs;
     wxTextCtrl* m_RouteIDs;
+    wxStaticText* m_labBlockID;
+    wxComboBox* m_BlockID;
     wxButton* m_Cancel;
     wxButton* m_OK;
 ////@end SelectDialog member variables
