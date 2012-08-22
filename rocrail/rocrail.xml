@@ -64,6 +64,8 @@
       <param name="count" vt="int" remark="Link count."/>
       <param name="up" vt="Boolean" remark="upLink."/>
     </fun>
+    <fun name="getdonkey" vt="const char*"/>
+    <fun name="getdoneml" vt="const char*"/>
     <data>
       <var name="ini" vt="iONode" remark="RocRail ini"/>
       <var name="newini" vt="iONode" remark="RocRail ini"/>
@@ -83,6 +85,8 @@
       <var name="createmodplan" vt="Boolean"/>
       <var name="revno" vt="int"/>
       <var name="run" vt="Boolean"/>
+      <var name="donkey" vt="const char*"/>
+      <var name="doneml" vt="const char*"/>
     </data>
   </object>
 

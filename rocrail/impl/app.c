@@ -33,6 +33,7 @@
 #include "rocs/public/file.h"
 #include "rocs/public/mem.h"
 #include "rocs/public/str.h"
+#include "rocs/public/strtok.h"
 #include "rocs/public/cmdln.h"
 #include "rocs/public/stats.h"
 #include "rocs/public/system.h"
@@ -237,6 +238,24 @@ static iONode _getNewIni( void ) {
 }
 
 
+static const char* _getdonkey( void ) {
+  if( __appinst != NULL ) {
+    iOAppData data = Data(__appinst);
+    return data->donkey;
+  }
+  else
+    return "";
+}
+
+static const char* _getdoneml( void ) {
+  if( __appinst != NULL ) {
+    iOAppData data = Data(__appinst);
+    return data->doneml;
+  }
+  else
+    return "";
+}
+
 static void _setIni( iONode ini ) {
   if( __appinst != NULL ) {
     iOAppData data  = Data(__appinst);
@@ -248,8 +267,6 @@ static void _setIni( iONode ini ) {
       wTrace.setautomatic( curtrace, wTrace.isautomatic( trace ) );
       wTrace.setbyte( curtrace, wTrace.isbyte( trace ) );
       wTrace.setdebug( curtrace, wTrace.isdebug( trace ) );
-      wRocRail.setdonkey(data->ini, wRocRail.getdonkey( ini ) );
-      wRocRail.setdoneml(data->ini, wRocRail.getdoneml( ini ) );
     }
 
     /* free up newini from previous setIni */
@@ -306,6 +323,7 @@ static iOSrcpCon _getSrcpCon( void ) {
 }
 
 static int __logo( void ) {
+  iOAppData data = Data(__appinst);
   int svn = 0;
   long expdays = 0;
   /* Logo. */
@@ -359,8 +377,8 @@ static int __logo( void ) {
   TraceOp.println( "--------------------------------------------------" );
   /*TraceOp.printHeader();*/
 
-  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wRocRail.getdonkey(AppOp.getIni())),
-      StrOp.len(wRocRail.getdonkey(AppOp.getIni()))/2, wRocRail.getdoneml(AppOp.getIni())), NULL, &expdays) ) {
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(data->donkey),
+      StrOp.len(data->donkey)/2, data->doneml), NULL, &expdays) ) {
     TraceOp.println( "*******************************************************************" );
     TraceOp.println( "* Rocrail runs entirely on volunteer labor.                       *");
     TraceOp.println( "* However, Rocrail also needs contributions of money.             *");
@@ -535,12 +553,6 @@ static __checkConsole( iOAppData data ) {
     __syscmd( wSysCmd.config );
   }
   else if( c == wConCmd.analyse ) {
-    /*
-    if( !SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wRocRail.getdonkey(AppOp.getIni())),
-          StrOp.len(wRocRail.getdonkey(AppOp.getIni()))/2, wRocRail.getdoneml(AppOp.getIni())), NULL) ) {
-      ModelOp.analyse( data->model );
-    }
-    */
     ModelOp.analyse( data->model, False );
   }
   else if( c == wConCmd.analyseclean ) {
@@ -669,6 +681,24 @@ static int _Main( iOApp inst, int argc, char** argv ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Invalid ini file! [%s]", nf?nf:wRocRail.getfile(NULL) );
       return -1;
     }
+  }
+
+  if( FileOp.exist("lic.dat") ) {
+    iOFile f = FileOp.inst( "lic.dat", OPEN_READONLY );
+    char* buffer = (char*)allocMem( FileOp.size( f ) +1 );
+    FileOp.read( f, buffer, FileOp.size( f ) );
+    FileOp.base.del( f );
+    iOStrTok tok = StrTokOp.inst( buffer, ';' );
+    if( StrTokOp.hasMoreTokens(tok))
+      data->doneml = StrOp.dup(StrTokOp.nextToken(tok) );
+    if( StrTokOp.hasMoreTokens(tok))
+      data->donkey = StrOp.dup(StrTokOp.nextToken(tok) );
+    StrTokOp.base.del( tok );
+    freeMem(buffer);
+  }
+  if( data->donkey == NULL || StrOp.len(data->donkey) == 0 ) {
+    data->donkey = wRocRail.getdonkey( data->ini );
+    data->donkey = wRocRail.getdoneml( data->ini );
   }
 
   if( wRocRail.isrunasroot( data->ini ) ) {
@@ -927,6 +957,7 @@ static void _saveIni( void ) {
   if( __appinst != NULL ) {
 
     iOAppData data = Data(__appinst);
+    iONode ini = (data->newini != NULL ? data->newini:data->ini);
 
     /* backup existing ini: */
 
@@ -939,16 +970,27 @@ static void _saveIni( void ) {
       StrOp.free( backupfile );
     }
 
+    /* write the donkey in a file and remove it from the ini: */
+    if( StrOp.len(wRocRail.getdonkey(ini)) > 0 ) {
+      char* lic = StrOp.fmt("%s;%s", wRocRail.getdoneml( ini ), wRocRail.getdonkey( ini ) );
+      iOFile f = FileOp.inst( "lic.dat", OPEN_WRITE );
+      FileOp.writeStr(f, lic);
+      FileOp.base.del(f);
+      StrOp.free(lic);
+      data->donkey = StrOp.dup(wRocRail.getdonkey( ini ));
+      data->doneml = StrOp.dup(wRocRail.getdoneml( ini ));
+
+      wRocRail.setdonkey(ini, "" );
+      wRocRail.setdoneml(ini, "" );
+    }
+
+
     /* Write the Inifile: */
     {
       iOFile iniFile = FileOp.inst( data->szIniFile, OPEN_WRITE );
 
       if( iniFile != NULL ) {
-        char* iniStr = NULL;
-        if(data->newini != NULL)
-          iniStr = NodeOp.base.toString( data->newini );
-        else
-          iniStr = NodeOp.base.toString( data->ini );
+        char* iniStr = NodeOp.base.toString( ini );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "saving ini %s%s...", data->szIniFile, data->newini==NULL?"":"(new)" );
         FileOp.write( iniFile, iniStr, StrOp.len( iniStr ) );
@@ -1138,6 +1180,8 @@ static iOApp _inst(void) {
 
     data->appstartTime = time(NULL);
     data->szLibPath = NULL;
+    data->donkey = "";
+    data->doneml = "";
 
     SystemOp.inst();
   }

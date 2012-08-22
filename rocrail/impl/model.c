@@ -2009,8 +2009,8 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
     wPlan.setrocrailversion( data->model, version );
     StrOp.free(version);
 
-    unsigned char* donkey = StrOp.strToByte(wRocRail.getdonkey(AppOp.getIni()));
-    char* decodedKey = SystemOp.decode(donkey, StrOp.len(wRocRail.getdonkey(AppOp.getIni()))/2, wRocRail.getdoneml(AppOp.getIni()));
+    unsigned char* donkey = StrOp.strToByte(AppOp.getdonkey());
+    char* decodedKey = SystemOp.decode(donkey, StrOp.len(AppOp.getdonkey())/2, AppOp.getdoneml());
 
     if( !SystemOp.isExpired(decodedKey, NULL, NULL) ) {
       wPlan.setdonkey(data->model, True);
