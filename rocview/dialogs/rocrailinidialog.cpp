@@ -1727,9 +1727,9 @@ void RocrailIniDialog::OnOkClick( wxCommandEvent& event )
 {
   evaluate();
   /* set donation key */
-  if( wGui.getdonkey(wxGetApp().getIni()) != NULL && StrOp.len(wGui.getdonkey(wxGetApp().getIni())) > 0 ) {
-    wRocRail.setdonkey(m_Props, wGui.getdonkey(wxGetApp().getIni()));
-    wRocRail.setdoneml(m_Props, wGui.getdoneml(wxGetApp().getIni()));
+  if( wxGetApp().m_donkey != NULL && StrOp.len(wxGetApp().m_donkey) > 0 ) {
+    wRocRail.setdonkey(m_Props, wxGetApp().m_donkey);
+    wRocRail.setdoneml(m_Props, wxGetApp().m_doneml);
   }
   /* Notify RocRail. */
   iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );

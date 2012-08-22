@@ -293,7 +293,6 @@ int RocGui::OnExit() {
       }
     }
 
-
     char* l_Ini = NodeOp.base.toString( m_Ini );
     printf( "ini=%s\n", l_Ini );
     m_IniFileName = CmdLnOp.getStrDef( m_CmdLn,"-i", wGui.inifile );
@@ -542,6 +541,8 @@ bool RocGui::OnInit() {
   m_OldModel = NULL;
   m_UndoItems = ListOp.inst();
   m_InitialRocrailIni = false;
+  m_donkey = "";
+  m_doneml = "";
 
   // we could need some of these:
   wxInitAllImageHandlers();
@@ -612,6 +613,25 @@ bool RocGui::OnInit() {
 
   if( m_Ini == NULL )
     m_Ini = NodeOp.inst( wGui.name(), NULL, ELEMENT_NODE );
+
+  if( FileOp.exist("lic.dat") ) {
+    iOFile f = FileOp.inst( "lic.dat", OPEN_READONLY );
+    char* buffer = (char*)allocMem( FileOp.size( f ) +1 );
+    FileOp.read( f, buffer, FileOp.size( f ) );
+    FileOp.base.del( f );
+    iOStrTok tok = StrTokOp.inst( buffer, ';' );
+    if( StrTokOp.hasMoreTokens(tok))
+      m_doneml = StrOp.dup(StrTokOp.nextToken(tok) );
+    if( StrTokOp.hasMoreTokens(tok))
+      m_donkey = StrOp.dup(StrTokOp.nextToken(tok) );
+    StrTokOp.base.del( tok );
+    freeMem(buffer);
+  }
+  if( m_donkey == NULL || StrOp.len(m_donkey) == 0 ) {
+    m_donkey = wGui.getdonkey( m_Ini );
+    m_donkey = wGui.getdoneml( m_Ini );
+  }
+
 
   initialize_images();
 

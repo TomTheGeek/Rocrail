@@ -93,6 +93,8 @@ public:
   bool          m_bOffline;
   bool          m_bConsoleMode;
   bool          m_InitialRocrailIni;
+  const char*   m_donkey;
+  const char*   m_doneml;
 
 private:
   void saveSizePos();

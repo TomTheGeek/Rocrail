@@ -69,12 +69,19 @@ void DonKey::OnLoadKey( wxCommandEvent& event )
       FileOp.base.del( f );
       iOStrTok tok = StrTokOp.inst( buffer, ';' );
       if( StrTokOp.hasMoreTokens(tok))
-        wGui.setdoneml( m_Ini, StrTokOp.nextToken(tok) );
+        wxGetApp().m_doneml = StrOp.dup( StrTokOp.nextToken(tok) );
       if( StrTokOp.hasMoreTokens(tok))
-        wGui.setdonkey( m_Ini, StrTokOp.nextToken(tok) );
+        wxGetApp().m_donkey = StrOp.dup( StrTokOp.nextToken(tok) );
       StrTokOp.base.del( tok );
 
-    if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini)), NULL, NULL) )
+      f = FileOp.inst( "lic.dat", OPEN_WRITE );
+      if( f != NULL ) {
+        FileOp.write( f, buffer, StrOp.len(buffer) );
+        FileOp.base.del( f );
+      }
+
+
+    if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL) )
       wxMessageDialog( this, wxGetApp().getMsg("expireddonkey"), _T("Rocrail"), wxOK ).ShowModal();
     }
     initValues();
@@ -104,7 +111,7 @@ void DonKey::initLabels() {
 void DonKey::initValues() {
   char* expdate = NULL;
   long expdays = 0;
-  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wGui.getdonkey(m_Ini)), StrOp.len(wGui.getdonkey(m_Ini))/2, wGui.getdoneml(m_Ini)), &expdate, &expdays) ) {
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), &expdate, &expdays) ) {
     m_DonateText->SetValue( wxGetApp().getMsg( "donatekey" ) );
   }
   else {
@@ -116,7 +123,7 @@ void DonKey::initValues() {
       m_ExpDate->SetBackgroundColour(*wxRED);
     }
   }
-  m_Email->SetValue( wxString( wGui.getdoneml( m_Ini ),wxConvUTF8) );
+  m_Email->SetValue( wxString( wxGetApp().m_doneml,wxConvUTF8) );
   if( expdate != NULL ) {
     m_ExpDate->SetValue(wxString( expdate,wxConvUTF8));
     StrOp.free(expdate);
