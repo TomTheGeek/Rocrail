@@ -281,12 +281,12 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
 
     for( i = targetSection; i >= 0 ; i-- ) {
       iONode section = (iONode)ListOp.get( data->sectionList, i);
-      freelen += wStageSection.getlen(section);
       if( wStageSection.getlen(section) > 0 ) {
         freelen += wStageSection.getlen(section);
       }
-      else
+      else {
         freelen += data->sectionLength;
+      }
       freeupsection = i;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "freelen=%d trainlen=%d", freelen, data->trainGap + lclen );
       if( freelen >= (data->trainGap + lclen) ) {
