@@ -156,6 +156,9 @@ static void __makeMessage(char* buffer, char* cmd, byte* retVal, int len) {
     StrOp.free(s);
   }
   buffer[idx] = '\r';
+  idx++;
+  buffer[idx] = '\0';
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "message: [%s]", buffer );
 }
 
 
