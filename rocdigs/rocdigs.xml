@@ -397,6 +397,8 @@
       <var name="infoQueue" vt="iOThread"/>
       <var name="infoaddr" vt="int"/>
       <var name="connectpending" vt="Boolean"/>
+      <var name="fbmodcnt" vt="int"/>
+      <var name="fbmods[256]" vt="byte"/>
     </data>
   </object>
 

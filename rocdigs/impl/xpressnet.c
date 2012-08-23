@@ -252,6 +252,39 @@ static int __lenzSpeed(iONode node, int spcnt) {
 }
 
 
+/* fbmods is a comman separated address list of connected feedback modules. */
+static void __updateFB( iOXpressNet xpressnet, iONode fbInfo ) {
+  iOXpressNetData data = Data(xpressnet);
+  int cnt = NodeOp.getChildCnt( fbInfo );
+  int i = 0;
+
+  char* str = NodeOp.base.toString( fbInfo );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "updateFB\n%s", str );
+  StrOp.free( str );
+
+  /* reset the list: */
+  data->fbmodcnt = 0;
+  MemOp.set( data->fbmods, 0, 256 );
+
+  for( i = 0; i < cnt; i++ ) {
+    iONode fbmods = NodeOp.getChild( fbInfo, i );
+    const char* mods = wFbMods.getmodules( fbmods );
+    if( mods != NULL && StrOp.len( mods ) > 0 ) {
+      iOStrTok tok = StrTokOp.inst( mods, ',' );
+      int idx = 0;
+      while( StrTokOp.hasMoreTokens( tok ) ) {
+        int addr = atoi( StrTokOp.nextToken(tok) );
+        data->fbmods[idx] = addr*2; /* xpressnet has groups of 4 */
+        idx++;
+      };
+      data->fbmodcnt = idx;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "updateFB count=%d", idx );
+    }
+  }
+
+}
+
+
 static iONode __translate( iOXpressNet xpressnet, iONode node ) {
   iOXpressNetData data = Data(xpressnet);
   iONode rsp = NULL;
@@ -270,8 +303,11 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
     }
   }
 
+  if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
+    __updateFB( xpressnet, node );
+  }
   /* Switch command. */
-  if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
 
     int addr = wSwitch.getaddr1( node );
     int port = wSwitch.getport1( node );
@@ -604,8 +640,8 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
 
-    byte* outa = allocMem(32);
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+      byte* outa = allocMem(32);
       outa[0] = 0x21;
       outa[1] = 0x80;
       outa[2] = 0xA1;
@@ -613,6 +649,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       ThreadOp.post( data->transactor, (obj)outa );
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
+      byte* outa = allocMem(32);
       outa[0] = 0x21;
       outa[1] = 0x81;
       outa[2] = 0xA0;
@@ -620,14 +657,33 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
       ThreadOp.post( data->transactor, (obj)outa );
     }
     else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      byte* outa = allocMem(32);
       outa[0] = 0x80;
       outa[1] = 0x80;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
       ThreadOp.post( data->transactor, (obj)outa );
     }
+    else if( StrOp.equals( cmd, wSysCmd.sod ) ) {
+      int i = 0;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day" );
+      for( i = 0; i < data->fbmodcnt; i++ ) {
+        byte* outa = allocMem(32);
+        outa[0] = 0x42;
+        outa[1] = data->fbmods[i];
+        outa[2] = 0x80 + 0; /* nibble 0 */
+        ThreadOp.post( data->transactor, (obj)outa );
 
-
+        outa = allocMem(32);
+        outa[0] = 0x42;
+        outa[1] = data->fbmods[i];
+        outa[2] = 0x80 + 1; /* nibble 1 */
+        ThreadOp.post( data->transactor, (obj)outa );
+      }
+    }
   }
+
+
+
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
 
@@ -1562,6 +1618,8 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->readfb        = wDigInt.isreadfb( ini );
   data->ignoreBusy    = wDigInt.isignorebusy( ini );
   data->v2            = wDigInt.getprotver( ini ) == 2;
+  data->fbmodcnt      = 0;
+
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "XpressNet %d.%d.%d", vmajor, vminor, patch );
