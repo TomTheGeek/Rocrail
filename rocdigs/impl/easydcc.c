@@ -116,6 +116,7 @@ static void __reportState(iOEasyDCCData data) {
 static Boolean __sendCommand(iOEasyDCCData data, char* cmd) {
   Boolean rc = False;
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send command: %s", cmd );
+  TraceOp.dump( name, TRCLEVEL_BYTE, cmd, StrOp.len(cmd) );
   if( !data->dummyio ) {
     rc = SerialOp.write( data->serial, cmd, StrOp.len(cmd) );
   }
@@ -388,6 +389,11 @@ static void __reader( void* threadinst ) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC is ready" );
           }
         }
+        else if( buffer[0] == '?' ) {
+          if( SerialOp.read( data->serial, buffer, 1 ) ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unknown command" );
+          }
+        }
       }
     }
 
@@ -419,7 +425,7 @@ static struct OEasyDCC* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = %s", wDigInt.getdevice( ini )  );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps      = %d", wDigInt.getbps( ini )  );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow     = %d", wDigInt.getflow( ini )  );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow     = %s", wDigInt.getflow( ini )  );
 
 
   data->serialOK = False;
