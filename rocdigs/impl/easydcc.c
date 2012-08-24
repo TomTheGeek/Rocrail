@@ -42,6 +42,8 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 
+#include "rocutils/public/addr.h"
+
 static int instCnt = 0;
 
 /** ----- OBase ----- */
@@ -190,12 +192,45 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
   /* Switch command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
     int addr = wSwitch.getaddr1(node);
-    int outputChannel = StrOp.equals( wSwitch.turnout, wSwitch.getcmd(node)) ? 1:0;
+    int port = wSwitch.getport1( node );
+    int gate = wSwitch.getgate1( node );
+    int fada = 0;
+    int pada = 0;
+    int dir  = 1;
+    int action = 1;
     int len = 0;
-    byte retVal[32];
-    len = accDecoderPkt2(retVal, addr, True, outputChannel);
+    byte dcc[32];
 
-    __makeMessage(buffer, "S 02", retVal, len);
+    if( port == 0 ) {
+      fada = addr;
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
+    }
+    else if( addr == 0 && port > 0 ) {
+      pada = port;
+      AddrOp.fromPADA( port, &addr, &port );
+    }
+
+    if( fada == 0 )
+      fada = AddrOp.toFADA( addr, port, gate );
+    if( pada == 0 )
+      pada = AddrOp.toPADA( addr, port );
+
+    if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
+      dir = 0; /* thrown */
+
+    if( wSwitch.issinglegate( node ) ) {
+      dir = gate;
+      if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.straight ) )
+        action = 0;
+    }
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "turnout %04d %d %-10.10s fada=%04d pada=%04d addr=%d port=%d gate=%d dir=%d action=%d",
+        addr, port, wSwitch.getcmd( node ), fada, pada, addr, port, gate, dir, action );
+
+    len = accDecoderPkt2(dcc, addr, action, (port-1)*2+dir);
+
+    __makeMessage(buffer, "S 02", dcc, len);
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout %d %s", addr, wSwitch.getcmd(node) );
     __sendCommand(data, buffer);
@@ -203,15 +238,38 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
 
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
-    int addr = wOutput.getaddr(node);
-    int outputChannel = wOutput.getgate(node);
+    int addr = wOutput.getaddr( node );
+    int port = wOutput.getport( node );
+    int gate = wOutput.getgate( node );
+    int fada = 0;
+    int pada = 0;
+    int cmdsize = 0;
     int len = 0;
-    byte retVal[32];
-    len = accDecoderPkt2(retVal, addr, StrOp.equals(wOutput.on, wOutput.getcmd(node)), outputChannel);
+    byte dcc[32];
+    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
 
-    __makeMessage(buffer, "S 02", retVal, len);
+    if( port == 0 ) {
+      fada = addr;
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
+    }
+    else if( addr == 0 && port > 0 ) {
+      pada = port;
+      AddrOp.fromPADA( port, &addr, &port );
+    }
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d %s", addr, wSwitch.getcmd(node) );
+    if( fada == 0 )
+      fada = AddrOp.toFADA( addr, port, gate );
+    if( pada == 0 )
+      pada = AddrOp.toPADA( addr, port );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %04d %d %d fada=%04d pada=%04d",
+        addr, port, gate, fada, pada );
+
+
+    len = accDecoderPkt2(dcc, addr, action, (port-1)*2+gate);
+
+    __makeMessage(buffer, "S 02", dcc, len);
+
     __sendCommand(data, buffer);
   }
 
@@ -294,7 +352,41 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
 
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    Boolean pom = wProgram.ispom( node );
+
+    if( !pom && !data->power ) {
+      if( wProgram.getcmd( node ) == wProgram.get ) {
+        char cmd[32] = {0};
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d get", wProgram.getcv(node) );
+        StrOp.fmtb( cmd, "%c %d\r", wProgram.isdirect(node)?'C':'V', wProgram.getcv(node) );
+        data->lastcmd = CV_READ;
+        data->lastvalue = 0;
+        __sendCommand(data, cmd);
+      }
+      else if( wProgram.getcmd( node ) == wProgram.set ) {
+        char cmd[32] = {0};
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d set %d", wProgram.getcv(node), wProgram.getvalue(node) );
+        StrOp.fmtb( cmd, "%c %d %d\r", wProgram.isdirect(node)?'C':'V', wProgram.getcv(node), wProgram.getvalue(node) );
+        data->lastcmd = CV_WRITE;
+        data->lastvalue = wProgram.getvalue(node);
+        __sendCommand(data, cmd);
+      }
+    }
+    else if( pom && data->power ) {
+      if( wProgram.getcmd( node ) == wProgram.set ) {
+        byte dcc[12];
+        char cmd[32] = {0};
+        int len = opsCvWriteByte(dcc, wProgram.getaddr(node), wProgram.islongaddr(node), wProgram.getcv(node), wProgram.getvalue(node) );
+        __makeMessage(cmd, "S 01", dcc, len);
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "POM DCC out: %s", cmd );
+        __sendCommand(data, cmd);
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "turn power %s before programming", pom?"ON (POM)":"OFF" );
+    }
   }
+
 
 
   return rsp;
@@ -415,6 +507,7 @@ static void __reader( void* threadinst ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unknown command" );
           }
         }
+        /* ToDo: Handle service track response. */
       }
     }
 

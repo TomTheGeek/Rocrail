@@ -1618,6 +1618,7 @@
   </object>
 
   <object name="EasyDCC" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint">
+    <typedef def="enum {CV_READ=1, CV_WRITE} sprogcmd"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -1634,6 +1635,9 @@
       <var name="listenerFun" vt="digint_listener"/>
       <var name="dummyio" vt="Boolean"/>
       <var name="power" vt="Boolean"/>
+      <var name="lastcmd" vt="int"/>
+      <var name="lastcv" vt="int"/>
+      <var name="lastvalue" vt="int"/>
     </data>
   </object>
 
