@@ -1422,6 +1422,12 @@ msgid "V_Mid"
 msgstr ""
 
 #. 
+# id="v_cru"
+#, c-format
+msgid "V_Cru"
+msgstr ""
+
+#. 
 # id="v_max"
 #, c-format
 msgid "V_Max"
@@ -1449,6 +1455,12 @@ msgstr ""
 # id="v_rmid"
 #, c-format
 msgid "Reverse middle speed"
+msgstr ""
+
+#. 
+# id="v_rcru"
+#, c-format
+msgid "V_RCru"
 msgstr ""
 
 #. 
@@ -5757,5 +5769,17 @@ msgstr ""
 # id="selectshortestblock"
 #, c-format
 msgid "Select shortest block"
+msgstr ""
+
+#. 
+# id="prefix"
+#, c-format
+msgid "Prefix"
+msgstr ""
+
+#. 
+# id="backup"
+#, c-format
+msgid "Backup"
 msgstr ""
 
