@@ -387,11 +387,6 @@ void SignalDialog::initValues() {
   m_SymbolPrefix->SetValue( wxString(wSignal.getsymbolprefix( m_Props ),wxConvUTF8) );
   m_Dwarf->SetValue( wSignal.isdwarf( m_Props ) );
 
-  /* check using patterns previous type (backwards compatibility) */
-  if( NodeOp.getBool( m_Props, "usepatterns", False ) ) {
-    wSignal.setusepatterns( m_Props, wSignal.use_patterns );
-  }
-
   m_SignalControl->SetSelection( wSignal.getusepatterns( m_Props ) );
 
   wxCommandEvent event( -1, -1 );
