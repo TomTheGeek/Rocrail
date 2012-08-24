@@ -93,6 +93,7 @@ If a train reaches the exit section it will be put back into auto mode.
 #include "rocs/public/mem.h"
 #include "rocs/public/str.h"
 
+#include "rocrail/wrapper/public/Ctrl.h"
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/StageSection.h"
 #include "rocrail/wrapper/public/Block.h"
@@ -348,6 +349,21 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
         }
 
       }
+    }
+    else {
+      if( wCtrl.ispoweroffatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
+        /* power off */
+        AppOp.stop();
+      }
+      /* broadcast ghost state */
+      {
+        iONode nodeD = (iONode)NodeOp.base.clone(data->props);
+        wStage.setstate( nodeD, wBlock.ghost );
+        AppOp.broadcastEvent( nodeD );
+      }
+
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Ghost train in staging block %s, fbid=%s, ident=%s",
+          data->id, id, ident );
     }
   }
 
