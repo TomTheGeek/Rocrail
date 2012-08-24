@@ -148,6 +148,8 @@
     <var name="planfile" vt="string" defval="plan.xml" remark="RocRail plan-file."/>
     <var name="occupancy" vt="string" defval="occ.xml" range="*" remark="File name of block occupancy."/>
     <var name="createmodplan" vt="bool" defval="false" remark="Create a modplan if the planfile does not jet exist."/>
+    <var name="backup" vt="bool" defval="true" remark="Activate backup for plan files."/>
+    <var name="backuppath" vt="string" defval="backup" range="*" remark="Location of the plan file backups."/>
     <var name="libpath" vt="string" defval="." range="*" remark="Location of the rocrail libraries."/>
     <var name="imgpath" vt="string" defval="images" range="*" remark="Location of (loco)images."/>
     <var name="soundpath" vt="string" defval="sounds" range="*" remark="Location of (loco)sounds."/>

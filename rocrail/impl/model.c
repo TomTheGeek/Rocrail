@@ -288,6 +288,19 @@ static void __backupSave( const char* fileName, const char* xml ) {
   char* backupfile;
   iOFile planFile;
 
+  if( wRocRail.isbackup(AppOp.getIni()) ) {
+    if( !FileOp.exist(wRocRail.getbackuppath(AppOp.getIni())) ) {
+      FileOp.mkdir(wRocRail.getbackuppath(AppOp.getIni()));
+    }
+    if( FileOp.exist(wRocRail.getbackuppath(AppOp.getIni())) ) {
+      backupfile = StrOp.fmt( "%s%c%s-%s",
+          wRocRail.getbackuppath(AppOp.getIni()), SystemOp.getFileSeparator(), StrOp.createStampNoDots(), fileName );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "backup %s to %s", fileName, backupfile);
+      FileOp.cp(fileName,backupfile);
+      StrOp.free(backupfile);
+    }
+  }
+
   backupfile = StrOp.fmt( "%s.bak",fileName );
   /* Make Backup copy! Somtimes rocrail loses the plan and writes an empty plan! */
   if( FileOp.exist(backupfile) )

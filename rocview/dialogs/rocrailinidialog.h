@@ -206,6 +206,8 @@ public:
     wxTextCtrl* m_OccFile;
     wxStaticText* m_labPlanType;
     wxRadioBox* m_PlanType;
+    wxCheckBox* m_Backup;
+    wxTextCtrl* m_BackupPath;
     wxStaticText* m_LabelLibPath;
     wxTextCtrl* m_LibPath;
     wxStaticText* m_labImgPath;
