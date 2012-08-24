@@ -242,8 +242,8 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
       else if( wLoc.getV_max( node ) > 0 )
         speed = (wLoc.getV( node ) * steps) / wLoc.getV_max( node );
     }
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d speed=%d lights=%s dir=%s",
-        addr, speed, fn?"on":"off", dir?"forwards":"reverse" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco addr=%d speed=%d steps=%d lights=%s dir=%s",
+        addr, speed, steps, fn?"on":"off", dir?"forwards":"reverse" );
 
     if( steps == 128 )
       len = speedStep128Packet( retVal, addr, longAddr, speed, dir );
@@ -266,8 +266,26 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
     int len = 0;
     byte retVal[32];
 
-    if( fg == 0 || fg == 1 )
+    if( fg == 1 )
       len = function0Through4Packet( retVal, addr, longAddr, wFunCmd.isf0(node), wFunCmd.isf1(node), wFunCmd.isf2(node), wFunCmd.isf3(node), wFunCmd.isf4(node) );
+    else if( fg == 2 ) {
+      len = function5Through8Packet(retVal, addr, longAddr,
+          wFunCmd.isf5(node), wFunCmd.isf6(node), wFunCmd.isf7(node), wFunCmd.isf8(node) );
+    }
+    else if( fg == 3 ) {
+      len = function9Through12Packet(retVal, addr, longAddr,
+          wFunCmd.isf9(node), wFunCmd.isf10(node), wFunCmd.isf11(node), wFunCmd.isf12(node) );
+    }
+    else if( fg == 4 || fg == 5 ) {
+      len = function13Through20Packet(retVal, addr, longAddr,
+          wFunCmd.isf13(node), wFunCmd.isf14(node), wFunCmd.isf15(node), wFunCmd.isf16(node),
+          wFunCmd.isf17(node), wFunCmd.isf18(node), wFunCmd.isf19(node), wFunCmd.isf20(node));
+    }
+    else if( fg == 6 || fg == 7 ) {
+      len = function21Through28Packet(retVal, addr, longAddr,
+          wFunCmd.isf21(node), wFunCmd.isf22(node), wFunCmd.isf23(node), wFunCmd.isf24(node),
+          wFunCmd.isf25(node), wFunCmd.isf26(node), wFunCmd.isf27(node), wFunCmd.isf28(node));
+    }
 
     __makeMessage(buffer, "S 01", retVal, len);
 
