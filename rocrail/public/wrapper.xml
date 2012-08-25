@@ -1634,7 +1634,6 @@
         <const name="compress" vt="string" val="compress"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <var name="secid" vt="string" defval="NULL" range="*"/>
-        <var name="state" vt="string" defval="open" range="*"/>
         <section cardinality="n" wrappername="StageSection">
           <var name="id" vt="string" defval="?" range="*" required="true"/>
           <var name="lcid" vt="string" defval="NULL" range="*" remark=""/>

@@ -115,14 +115,15 @@ static void __reportState(iOEasyDCCData data) {
 
 
 
-static Boolean __sendCommand(iOEasyDCCData data, char* cmd) {
-  Boolean rc = False;
+static void __sendCommand(iOEasyDCCData data, char* cmd) {
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send command: %s", cmd );
   TraceOp.dump( name, TRCLEVEL_BYTE, cmd, StrOp.len(cmd) );
   if( !data->dummyio ) {
-    rc = SerialOp.write( data->serial, cmd, StrOp.len(cmd) );
+    byte* out = allocMem(StrOp.len(cmd) + 2);
+    out[0] = StrOp.len(cmd) & 0xFF;
+    MemOp.copy(out+1, cmd, StrOp.len(cmd));
+    ThreadOp.post(data->writer, (obj)out);
   }
-  return rc;
 }
 
 
@@ -470,6 +471,39 @@ static int _version( obj inst ) {
   return vmajor*10000 + vminor*100 + patch;
 }
 
+static void __writer( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOEasyDCC easydcc = (iOEasyDCC)ThreadOp.getParm( th );
+  iOEasyDCCData data = Data(easydcc);
+  byte * post = NULL;
+  int len = 0;
+  byte out[64] = {0};
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC writer started." );
+  ThreadOp.sleep( 10 );
+
+  while( data->run ) {
+    Boolean ok = True;
+    post = (byte*)ThreadOp.getPost( th );
+
+    if (post != NULL) {
+      /* first byte is the message length */
+      len = post[0];
+      MemOp.copy( out, post+1, len);
+      freeMem( post);
+
+      if( EventOp.trywait(data->readyEvt, 1000) ) {
+        SerialOp.write( data->serial, out, len );
+        EventOp.reset(data->readyEvt);
+      }
+
+    }
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC writer ended." );
+}
+
+
 static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOEasyDCC easydcc = (iOEasyDCC)ThreadOp.getParm( th );
@@ -508,6 +542,7 @@ static void __reader( void* threadinst ) {
           }
         }
         /* ToDo: Handle service track response. */
+        EventOp.set(data->readyEvt);
       }
     }
 
@@ -559,6 +594,10 @@ static struct OEasyDCC* _inst( const iONode ini ,const iOTrace trc ) {
 
   if(data->serialOK) {
     data->run = True;
+    data->readyEvt = EventOp.inst( "easydccevt", True );
+
+    data->writer = ThreadOp.inst( "easyWriter", &__writer, __EasyDCC );
+    ThreadOp.start( data->writer );
     data->reader = ThreadOp.inst( "easyReader", &__reader, __EasyDCC );
     ThreadOp.start( data->reader );
   }
