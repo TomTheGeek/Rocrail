@@ -116,8 +116,6 @@ static void __reportState(iOEasyDCCData data) {
 
 
 static void __sendCommand(iOEasyDCCData data, char* cmd) {
-  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send command: %s", cmd );
-  TraceOp.dump( name, TRCLEVEL_BYTE, cmd, StrOp.len(cmd) );
   if( !data->dummyio ) {
     byte* out = allocMem(StrOp.len(cmd) + 2);
     out[0] = StrOp.len(cmd) & 0xFF;
@@ -489,12 +487,18 @@ static void __writer( void* threadinst ) {
     if (post != NULL) {
       /* first byte is the message length */
       len = post[0];
+      MemOp.set(out, 0, 64);
       MemOp.copy( out, post+1, len);
       freeMem( post);
 
       if( EventOp.trywait(data->readyEvt, 1000) ) {
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send command: %s", out );
+        TraceOp.dump( name, TRCLEVEL_BYTE, out, len );
         SerialOp.write( data->serial, out, len );
         EventOp.reset(data->readyEvt);
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "can't send command: EasyDCC not ready." );
       }
 
     }
@@ -595,6 +599,8 @@ static struct OEasyDCC* _inst( const iONode ini ,const iOTrace trc ) {
   if(data->serialOK) {
     data->run = True;
     data->readyEvt = EventOp.inst( "easydccevt", True );
+    EventOp.set(data->readyEvt);
+
 
     data->writer = ThreadOp.inst( "easyWriter", &__writer, __EasyDCC );
     ThreadOp.start( data->writer );
