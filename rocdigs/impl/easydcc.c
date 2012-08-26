@@ -353,36 +353,29 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
     Boolean pom = wProgram.ispom( node );
 
-    if( !pom && !data->power ) {
-      if( wProgram.getcmd( node ) == wProgram.get ) {
-        char cmd[32] = {0};
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d get", wProgram.getcv(node) );
-        StrOp.fmtb( cmd, "%c %d\r", wProgram.isdirect(node)?'C':'V', wProgram.getcv(node) );
-        data->lastcmd = CV_READ;
-        data->lastvalue = 0;
-        __sendCommand(data, cmd);
-      }
-      else if( wProgram.getcmd( node ) == wProgram.set ) {
-        char cmd[32] = {0};
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d set %d", wProgram.getcv(node), wProgram.getvalue(node) );
-        StrOp.fmtb( cmd, "%c %d %d\r", wProgram.isdirect(node)?'C':'V', wProgram.getcv(node), wProgram.getvalue(node) );
-        data->lastcmd = CV_WRITE;
-        data->lastvalue = wProgram.getvalue(node);
-        __sendCommand(data, cmd);
-      }
+    if( wProgram.getcmd( node ) == wProgram.pton ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "programming mode ON" );
+      __sendCommand(data, "M\r");
     }
-    else if( pom && data->power ) {
-      if( wProgram.getcmd( node ) == wProgram.set ) {
-        byte dcc[12];
-        char cmd[32] = {0};
-        int len = opsCvWriteByte(dcc, wProgram.getaddr(node), wProgram.islongaddr(node), wProgram.getcv(node), wProgram.getvalue(node) );
-        __makeMessage(cmd, "S 01", dcc, len);
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "POM DCC out: %s", cmd );
-        __sendCommand(data, cmd);
-      }
+    else if( wProgram.getcmd( node ) == wProgram.ptoff ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "programming mode OFF" );
+      __sendCommand(data, "X\r");
     }
-    else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "turn power %s before programming", pom?"ON (POM)":"OFF" );
+    else if( wProgram.getcmd( node ) == wProgram.get ) {
+      char cmd[32] = {0};
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d get", wProgram.getcv(node) );
+      StrOp.fmtb( cmd, "R %03X\r", wProgram.getcv(node) );
+      data->lastcmd = CV_READ;
+      data->lastvalue = 0;
+      __sendCommand(data, cmd);
+    }
+    else if( wProgram.getcmd( node ) == wProgram.set ) {
+      char cmd[32] = {0};
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d set %d", wProgram.getcv(node), wProgram.getvalue(node) );
+      StrOp.fmtb( cmd, "P %03X %02X\r", wProgram.getcv(node), wProgram.getvalue(node) & 0xFF );
+      data->lastcmd = CV_WRITE;
+      data->lastvalue = wProgram.getvalue(node);
+      __sendCommand(data, cmd);
     }
   }
 
@@ -512,6 +505,29 @@ static void __writer( void* threadinst ) {
 }
 
 
+static void __evaluateCV(iOEasyDCCData data, char* buffer) {
+  /* CV xxx yy */
+  int cv = 0;
+  int value = 0;
+  iONode node = NULL;
+  buffer[6] = '\0';
+  cv    = strtol(buffer+3, NULL, 16);
+  value = strtol(buffer+7, NULL, 16);
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cv %d has a value of %d", cv, value );
+
+  node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcv( node, cv );
+  wProgram.setvalue( node, value );
+  wProgram.setcmd( node, wProgram.datarsp );
+  if( data->iid != NULL )
+    wProgram.setiid( node, data->iid );
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+}
+
+
 static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOEasyDCC easydcc = (iOEasyDCC)ThreadOp.getParm( th );
@@ -546,9 +562,22 @@ static void __reader( void* threadinst ) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC is ready" );
           }
         }
+        else if( buffer[0] == 'P' ) {
+          if( SerialOp.read( data->serial, buffer, 1 ) ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "programming is ready" );
+          }
+        }
         else if( buffer[0] == '?' ) {
           if( SerialOp.read( data->serial, buffer, 1 ) ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unknown command" );
+          }
+        }
+        else if( buffer[0] == 'C' ) {
+          /* CV xxx yy<CR> */
+          if( SerialOp.read( data->serial, buffer + 1, 9 ) ) {
+            buffer[9] = '\0';
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming response: %s", buffer );
+            __evaluateCV(data, buffer);
           }
         }
         /* ToDo: Handle service track response. */
