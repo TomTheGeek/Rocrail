@@ -97,6 +97,9 @@
 #include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/TourList.h"
 
+#include <wx/dcbuffer.h>
+
+
 BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
 
   EVT_MENU     (ME_ModuleRotate , PlanPanel::OnRotate )
@@ -191,6 +194,7 @@ PlanPanel::PlanPanel(wxWindow *parent, int itemsize, double scale, double bktext
   m_Initialized = false;
   m_ChildTable = new wxHashTable( wxKEY_STRING );
   SetBackgroundColour( *wxWHITE );
+  SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
   m_MultiAdd = true;
 
@@ -208,7 +212,8 @@ const char* PlanPanel::getZLevelTitle() {
 
 void PlanPanel::OnPaint(wxPaintEvent& event)
 {
-  wxPaintDC dc(this);
+  //wxPaintDC dc(this);
+  wxAutoBufferedPaintDC dc(this);
 
   TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "OnPaint() z=%d", m_Z );
 

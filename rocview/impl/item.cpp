@@ -101,6 +101,7 @@
 #include <math.h>
 #include <stdio.h>
 
+#include <wx/dcbuffer.h>
 
 static double PI25DT = 3.141592653589793238462643;
 
@@ -339,6 +340,7 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   m_dragX = 0;
   m_dragY = 0;
 
+  SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
   int itemidps = 7;
   iONode planpanelIni = wGui.getplanpanel(wxGetApp().getIni());
@@ -593,7 +595,8 @@ void Symbol::OnPaint(wxPaintEvent& event)
 {
   const char* name = NodeOp.getName( m_Props );
 
-  wxPaintDC dc(this);
+  //wxPaintDC dc(this);
+  wxAutoBufferedPaintDC dc(this);
   if( m_Props == NULL )
     return;
 
