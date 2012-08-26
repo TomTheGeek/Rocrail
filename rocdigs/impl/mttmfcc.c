@@ -39,6 +39,7 @@
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/SwitchList.h"
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Program.h"
@@ -964,9 +965,19 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
   MemOp.set( in, 0x00, sizeof( in ) );
 
   if( cmd != NULL ) {
-    int size = __translate( data, cmd, out, &insize );
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, out, size );
-    if( __transact( data, (char*)out, size, (char*)in, insize ) ) {
+    if( StrOp.equals( NodeOp.getName( cmd ), wSwitchList.name() ) ) {
+      int cnt = NodeOp.getChildCnt(cmd);
+      int i;
+      for( i = 0; i < cnt; i++ ) {
+        /* build the point map */
+        __getPoint(data, NodeOp.getChild(cmd, i) );
+      }
+    }
+    else {
+      int size = __translate( data, cmd, out, &insize );
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, out, size );
+      if( __transact( data, (char*)out, size, (char*)in, insize ) ) {
+      }
     }
   }
 
