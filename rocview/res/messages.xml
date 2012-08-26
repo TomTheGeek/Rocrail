@@ -18147,4 +18147,7 @@
   <Msg id="keypath">
     <en txt="Key path"/>
   </Msg>
+  <Msg id="openkeyfile">
+    <en txt="Open Key file"/>
+  </Msg>
 </Messages>

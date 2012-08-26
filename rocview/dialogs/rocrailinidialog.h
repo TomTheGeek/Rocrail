@@ -58,6 +58,7 @@ class wxSpinCtrl;
 #define ID_PANEL_RR_INI 10092
 #define wxID_STATIC_RR_PLANFILE 10093
 #define ID_TEXTCTRL_RR_PLANFILE 10094
+#define ID_BUTTON_KEYPATH 10411
 #define wxID_STATIC_RR_LIBPATH 10095
 #define ID_TEXTCTRL_RR_LIBPATH 10096
 #define wxID_STATIC_RR_TRACEFILE 10097
@@ -152,6 +153,9 @@ public:
 
     /// wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED event handler for ID_NOTEBOOK_RR
     void OnNotebookRrPageChanged( wxNotebookEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_KEYPATH
+    void OnButtonKeypathClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_RR_CONTROLLERS
     void OnListboxRrControllersSelected( wxCommandEvent& event );

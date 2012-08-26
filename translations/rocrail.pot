@@ -5789,3 +5789,9 @@ msgstr ""
 msgid "Key path"
 msgstr ""
 
+#. 
+# id="openkeyfile"
+#, c-format
+msgid "Open Key file"
+msgstr ""
+
