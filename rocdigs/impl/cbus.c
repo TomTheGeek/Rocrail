@@ -2075,7 +2075,21 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d on %s...", cv, wProgram.ispom(node)?"POM":"PT" );
 
       if( wProgram.ispom(node) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*** not supported *** POM: read CV%d of loc %d...", cv, addr );
+        iOSlot slot = __getSlotByAddr(data, addr );
+        if( slot != NULL && slot->session > 0 ) {
+          byte cmd[5];
+          byte* frame = allocMem(32);
+          cmd[0] = OPC_QCVO;
+          cmd[1] = 0;
+          cmd[2] = slot->session;
+          cmd[3] = cv / 256;
+          cmd[4] = cv % 256;
+          makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
+          ThreadOp.post(data->writer, (obj)frame);
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "POM: no session for loc %d", addr );
+        }
       }
       else {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "read CV%d of loc %d...", cv, addr );

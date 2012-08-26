@@ -170,6 +170,7 @@
 #define OPC_WCVB    0x83    // Write CV bit Ops mode by handle
 #define OPC_QCVS    0x84    // Read CV
 #define OPC_PCVS    0x85    // Report CV
+#define OPC_QCVO    0x86    // Read CV byte Ops mode by handle
 
 #define OPC_ACON	0x90	// on event
 #define OPC_ACOF	0x91	// off event
