@@ -418,8 +418,12 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
   iOEasyDCCData data = Data(inst);
-  data->run = False;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shutting down <%s>...", data->iid );
+  if( poweroff ) {
+    __sendCommand(data, "K\r");
+  }
+  ThreadOp.sleep(100);
+  data->run = False;
   ThreadOp.sleep(100);
   if( data->serial != NULL )
     SerialOp.close( data->serial );
@@ -517,10 +521,12 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC reader started." );
   ThreadOp.sleep( 100 );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying to get the version..." );
-  StrOp.fmtb( buffer, "V\r" );
-  __sendCommand(data, buffer);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power off at initial start" );
+  __sendCommand(data, "K\r");
+  ThreadOp.sleep( 100 );
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying to get the version..." );
+  __sendCommand(data, "V\r");
   ThreadOp.sleep( 100 );
 
   while( data->run ) {
