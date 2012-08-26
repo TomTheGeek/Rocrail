@@ -374,6 +374,7 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d set %d", wProgram.getcv(node), wProgram.getvalue(node) );
       StrOp.fmtb( cmd, "P %03X %02X\r", wProgram.getcv(node), wProgram.getvalue(node) & 0xFF );
       data->lastcmd = CV_WRITE;
+      data->lastcv = wProgram.getcv(node);
       data->lastvalue = wProgram.getvalue(node);
       __sendCommand(data, cmd);
     }
@@ -565,6 +566,19 @@ static void __reader( void* threadinst ) {
         else if( buffer[0] == 'P' ) {
           if( SerialOp.read( data->serial, buffer, 1 ) ) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "programming is ready" );
+            if( data->lastcmd = CV_WRITE ) {
+              iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+              wProgram.setcv( node, data->lastcv );
+              wProgram.setvalue( node, data->lastvalue );
+              wProgram.setcmd( node, wProgram.datarsp );
+              if( data->iid != NULL )
+                wProgram.setiid( node, data->iid );
+
+              if( data->listenerFun != NULL && data->listenerObj != NULL )
+                data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+              data->lastcmd = 0;
+            }
           }
         }
         else if( buffer[0] == '?' ) {
