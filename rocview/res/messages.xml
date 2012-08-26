@@ -18144,4 +18144,7 @@
   <Msg id="backup">
     <en txt="Backup"/>
   </Msg>
+  <Msg id="keypath">
+    <en txt="Key path"/>
+  </Msg>
 </Messages>

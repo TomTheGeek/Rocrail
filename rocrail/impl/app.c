@@ -683,8 +683,8 @@ static int _Main( iOApp inst, int argc, char** argv ) {
     }
   }
 
-  if( FileOp.exist("lic.dat") ) {
-    iOFile f = FileOp.inst( "lic.dat", OPEN_READONLY );
+  if( FileOp.exist(wRocRail.getkeypath(data->ini)) ) {
+    iOFile f = FileOp.inst( wRocRail.getkeypath(data->ini), OPEN_READONLY );
     char* buffer = (char*)allocMem( FileOp.size( f ) +1 );
     FileOp.read( f, buffer, FileOp.size( f ) );
     FileOp.base.del( f );
@@ -973,7 +973,7 @@ static void _saveIni( void ) {
     /* write the donkey in a file and remove it from the ini: */
     if( StrOp.len(wRocRail.getdonkey(ini)) > 0 ) {
       char* lic = StrOp.fmt("%s;%s", wRocRail.getdoneml( ini ), wRocRail.getdonkey( ini ) );
-      iOFile f = FileOp.inst( "lic.dat", OPEN_WRITE );
+      iOFile f = FileOp.inst( wRocRail.getkeypath(data->ini), OPEN_WRITE );
       FileOp.writeStr(f, lic);
       FileOp.base.del(f);
       StrOp.free(lic);
