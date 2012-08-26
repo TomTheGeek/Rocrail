@@ -597,6 +597,9 @@ void Symbol::OnPaint(wxPaintEvent& event)
 
   //wxPaintDC dc(this);
   wxAutoBufferedPaintDC dc(this);
+  dc.SetBackground(GetBackgroundColour());
+  dc.Clear();
+
   if( m_Props == NULL )
     return;
 

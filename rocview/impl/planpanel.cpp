@@ -214,6 +214,8 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
 {
   //wxPaintDC dc(this);
   wxAutoBufferedPaintDC dc(this);
+  dc.SetBackground(GetBackgroundColour());
+  dc.Clear();
 
   TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "OnPaint() z=%d", m_Z );
 
