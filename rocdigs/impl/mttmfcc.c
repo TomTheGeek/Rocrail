@@ -1035,8 +1035,8 @@ static Boolean _supportPT( obj inst ) {
 
 /** vmajor*1000 + vminor*100 + patch */
 static int vmajor = 2;
-static int vminor = 1;
-static int patch  = 0;
+static int vminor = 0;
+static int patch  = 1;
 static int _version( obj inst ) {
   iOMttmFccData data = Data(inst);
   return vmajor*10000 + vminor*100 + patch;
