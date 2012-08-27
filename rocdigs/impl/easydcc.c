@@ -560,7 +560,7 @@ static void __reader( void* threadinst ) {
 
     if( SerialOp.available(data->serial) > 0 ) {
       if( SerialOp.read( data->serial, buffer, 1 ) ) {
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "read command: %c", buffer[0] );
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "read command: %c [0x%02X]", buffer[0], buffer[0] & 0xFF );
         if( buffer[0] == 'V' ) {
           if( SerialOp.read( data->serial, buffer, 13 ) ) {
             buffer[12] = '\0';
