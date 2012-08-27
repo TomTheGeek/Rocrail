@@ -694,7 +694,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
     }
 
 
-    m_Renderer->drawShape( dc, occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), ori, status );
+    m_Renderer->drawShape( (wxPaintDC&)dc, occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), ori, status );
   }
   else {
     Show( false );

@@ -214,6 +214,7 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
 {
   //wxPaintDC dc(this);
   wxAutoBufferedPaintDC dc(this);
+  DoPrepareDC(dc);
   dc.SetBackground(GetBackgroundColour());
   dc.Clear();
 
