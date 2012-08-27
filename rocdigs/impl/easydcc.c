@@ -507,13 +507,22 @@ static void __writer( void* threadinst ) {
 
 
 static void __evaluateCV(iOEasyDCCData data, char* buffer) {
-  /* CV xxx yy */
+  /* CVxxxyy */
   int cv = 0;
   int value = 0;
+  char tmp[8];
   iONode node = NULL;
-  buffer[6] = '\0';
-  cv    = strtol(buffer+3, NULL, 16);
-  value = strtol(buffer+7, NULL, 16);
+
+  tmp[0] = buffer[2];
+  tmp[1] = buffer[3];
+  tmp[2] = buffer[4];
+  tmp[3] = '\0';
+  cv    = strtol(tmp, NULL, 16);
+
+  tmp[0] = buffer[5];
+  tmp[1] = buffer[6];
+  tmp[2] = '\0';
+  value = strtol(tmp, NULL, 16);
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cv %d has a value of %d", cv, value );
 
@@ -587,9 +596,9 @@ static void __reader( void* threadinst ) {
           }
         }
         else if( buffer[0] == 'C' ) {
-          /* CV xxx yy<CR> */
-          if( SerialOp.read( data->serial, buffer + 1, 9 ) ) {
-            buffer[9] = '\0';
+          /* CVxxxyy<CR> */
+          if( SerialOp.read( data->serial, buffer + 1, 7 ) ) {
+            buffer[7] = '\0';
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming response: %s", buffer );
             __evaluateCV(data, buffer);
           }
