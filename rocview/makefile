@@ -24,11 +24,14 @@
 #   make DEBUG=... MOUNTPOINT=... OUTDIR=...
 #
 # commandline for mingw cross compiling:
-#   make PLATFORM=WIN32 clean
+#   make PLATFORM=WIN32 clean??
 #   make TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc PLATFORM=WIN32 MINGWINSTALL=/usr/i586-mingw32msvc all
 #
-# commandline for mingw cross compiling:
-#   make PLATFORM=WIN32 NATIVE=WIN32 clean
+# commandline for mingw i686-w64 cross compiling:
+#   make all PLATFORM=WIN32 TOOLPREFIX=i686-w64-mingw32- LIBSUFFIX=-i686-w64-mingw32 MINGWINSTALL=/usr/i686-w64-mingw32
+#
+# commandline for mingw compiling under windows:
+#   make PLATFORM=WIN32 NATIVE=WIN32 clean??
 #   make TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc PLATFORM=WIN32 NATIVE=WIN32 MINGWINSTALL=/usr/i586-mingw32msvc all
 #
 # commandline for osx compiling:
@@ -67,12 +70,20 @@ PLATFORM=LINUX
 ARCH=
 LIBRARY=unicode
 LIBEXT=u
-MINGWINSTALL=$(FS)usr$(FS)i586-mingw32msvc
+ifeq ($(TOOLPREFIX),i686-w64-mingw32-)
+  MINGWINSTALL=$(FS)usr$(FS)i686-w64-mingw32
+else
+  MINGWINSTALL=$(FS)usr$(FS)i586-mingw32msvc
+endif
 
 
 ifeq ($(PLATFORM),WIN32)
 	LIBS=-lgdiplus -liphlpapi -lmpr
-	LNK_FLAGS=`$(FS)usr$(FS)i586-mingw32msvc$(FS)bin$(FS)wx-config --libs` -mthreads
+	ifeq ($(TOOLPREFIX),i686-w64-mingw32-)
+	  LNK_FLAGS=`$(FS)usr$(FS)i686-w64-mingw32$(FS)bin$(FS)wx-config --libs` -mthreads
+	else
+	  LNK_FLAGS=`$(FS)usr$(FS)i586-mingw32msvc$(FS)bin$(FS)wx-config --libs` -mthreads
+	endif
 	WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
 	ifeq ($(NATIVE),WIN32)
 		LNK_FLAGS=-L$(MINGWINSTALL)\lib-$(LIBRARY) -mthreads -Wl,--subsystem,windows -mwindows -lwx_msw$(LIBEXT)_html-$(wxversion) -lwx_msw$(LIBEXT)_core-$(wxversion) -lwx_base$(LIBEXT)-$(wxversion) -lwxtiff-$(wxversion) -lwxjpeg-$(wxversion) -lwxpng-$(wxversion) -lwxzlib-$(wxversion) -lwxregex$(LIBEXT)-$(wxversion) -lwxexpat-$(wxversion) -lwx_msw$(LIBEXT)_adv-$(wxversion) -lwx_msw$(LIBEXT)_qa-$(wxversion) -lwx_base$(LIBEXT)_xml-$(wxversion) -lwx_base$(LIBEXT)_net-$(wxversion)
@@ -81,7 +92,11 @@ ifeq ($(PLATFORM),WIN32)
 	DIRPREFIX=win
 	CC_EXTRA_FLAGS=-mthreads
 	BINSUFFIX=.exe
-	LIBSUFFIX=-i586-mingw32msvc
+  ifeq ($(TOOLPREFIX),i686-w64-mingw32-)
+    LIBSUFFIX=-i686-w64-mingw32
+	else
+	  LIBSUFFIX=-i586-mingw32msvc
+	endif
 	WINRESOURCE=$(TMPOUTDIR)$(FS)rocview_rc.o
 	WX_INCL=-I$(MINGWINSTALL)$(FS)include$(WXSUBINCL)
 else ifeq ($(PLATFORM),WIN64)
