@@ -1809,6 +1809,7 @@ static void _goNet( iOLoc inst, const char* curblock, const char* nextblock, con
 
 static Boolean _go( iOLoc inst ) {
   iOLocData data = Data(inst);
+  iOModel model = AppOp.getModel(  );
 
   if( data->driver != NULL && data->driver->isRun( data->driver ) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco [%s] is already running in auto mode; reset wait.", LocOp.getId(inst) );
@@ -1819,11 +1820,14 @@ static Boolean _go( iOLoc inst ) {
   wLoc.setresumeauto( data->props, False);
   if( wLoc.isactive(data->props)) {
     if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
-      data->go = True;
-      data->released = False;
-      data->gomanual = False;
-      if( data->driver != NULL )
-        data->driver->go( data->driver, data->gomanual );
+      iIBlockBase block = ModelOp.getBlock( model, data->curBlock );
+      if( block != NULL && block->isDepartureAllowed( block, wLoc.getid(data->props) ) ) {
+        data->go = True;
+        data->released = False;
+        data->gomanual = False;
+        if( data->driver != NULL )
+          data->driver->go( data->driver, data->gomanual );
+      }
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] cannot be started because it is not in a block.", LocOp.getId(inst) );
