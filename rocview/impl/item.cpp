@@ -596,7 +596,6 @@ void Symbol::OnPaint(wxPaintEvent& event)
   const char* name = NodeOp.getName( m_Props );
 
   wxPaintDC dc(this);
-  //wxAutoBufferedPaintDC dc(this);
   dc.SetBackground(GetBackgroundColour());
   dc.Clear();
 
