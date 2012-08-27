@@ -507,6 +507,7 @@ static void __writer( void* threadinst ) {
 
 
 static void __evaluateCV(iOEasyDCCData data, char* buffer) {
+  /* 0123456 */
   /* CVxxxyy */
   int cv = 0;
   int value = 0;
@@ -603,12 +604,13 @@ static void __reader( void* threadinst ) {
             __evaluateCV(data, buffer);
           }
         }
-        /* ToDo: Handle service track response. */
+
         EventOp.set(data->readyEvt);
       }
     }
-
-    ThreadOp.sleep( 10 );
+    else {
+      ThreadOp.sleep( 10 );
+    }
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC reader ended." );
