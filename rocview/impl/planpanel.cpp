@@ -212,8 +212,9 @@ const char* PlanPanel::getZLevelTitle() {
 
 void PlanPanel::OnPaint(wxPaintEvent& event)
 {
-  wxPaintDC dc(this);
-  DoPrepareDC(dc); // Sets the device origin according to the current scroll position.
+  //wxPaintDC dc(this);
+  wxAutoBufferedPaintDC dc(this);
+  DoPrepareDC(dc);
   dc.SetBackground(GetBackgroundColour());
   dc.Clear();
 
