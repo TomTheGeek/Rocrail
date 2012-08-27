@@ -407,6 +407,11 @@
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
     </fun>
+    <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
+      <var name="node" vt="iONode"/>
+      <var name="time" vt="unsigned long"/>
+      <var name="delay" vt="unsigned long"/>
+    </struct>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="iid" vt="const char*"/>

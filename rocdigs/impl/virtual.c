@@ -27,6 +27,7 @@
 #include "rocs/public/mem.h"
 #include "rocs/public/objbase.h"
 #include "rocs/public/string.h"
+#include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -266,6 +267,16 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
     rsp = (iONode)NodeOp.base.clone( node );
+
+    if( wDigInt.isfbreset( data->ini ) ) {
+      iQCmd cmd = allocMem(sizeof(struct QCmd));
+      cmd->time  = SystemOp.getTick();
+      cmd->delay = wDigInt.getpsleep( data->ini ) / 10; /* ms -> ticks */
+      cmd->node  = (iONode)NodeOp.base.clone(node);
+      wFeedback.setstate( cmd->node, !state );
+      ThreadOp.post( data->transactor, (obj)cmd );
+    }
+
   }
 
   /* Loc command. */
@@ -421,14 +432,43 @@ static void __transactor( void* threadinst ) {
   iOThread      th   = (iOThread)threadinst;
   iOVirtual     vcs  = (iOVirtual)ThreadOp.getParm(th);
   iOVirtualData data = Data(vcs);
+  iOList list = ListOp.inst();
 
-/* Maybe we will do some fancy stuff here in the future ...
-   ThreadOp.setDescription( th, "Transactor for Virtual" );
-   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Transactor started." );
-*/
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Transactor is started.");
 
   do {
+    iQCmd cmd = (iQCmd)ThreadOp.getPost( th );
+    if (cmd != NULL) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "new timed command time=%d delay=%d tick=%d", cmd->time, cmd->delay, SystemOp.getTick() );
+      ListOp.add(list, (obj)cmd);
+    }
+
+    int i = 0;
+    for( i = 0; i < ListOp.size(list); i++ ) {
+      iQCmd cmd = (iQCmd)ListOp.get(list, i);
+      if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
+
+        /* Sensor command. */
+        if( StrOp.equals( NodeOp.getName( cmd->node ), wFeedback.name() ) ) {
+          int addr = wFeedback.getaddr( cmd->node );
+          Boolean state = wFeedback.isstate( cmd->node );
+
+          if( wFeedback.isactivelow(cmd->node) )
+            wFeedback.setstate( cmd->node, !state);
+
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
+          data->listenerFun( data->listenerObj, (iONode)NodeOp.base.clone( cmd->node ), TRCLEVEL_INFO );
+        }
+
+
+        NodeOp.base.del(cmd->node);
+        ListOp.removeObj(list, (obj)cmd);
+        freeMem(cmd);
+        break;
+      }
+    }
+
     // Give up timeslize:
     ThreadOp.sleep( 10 );
 
@@ -508,6 +548,7 @@ static struct OVirtual* _inst( const iONode ini ,const iOTrace trc ) {
   MemOp.basecpy( __Virtual, &VirtualOp, 0, sizeof( struct OVirtual ), data );
 
   TraceOp.set( trc );
+  SystemOp.inst();
 
   /* Initialize data->xxx members... */
   data->ini    = ini;
