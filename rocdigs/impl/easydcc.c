@@ -538,6 +538,25 @@ static void __evaluateCV(iOEasyDCCData data, char* buffer) {
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 }
 
+static int __readResponse( iOEasyDCCData data, char* buffer) {
+  int i = 0;
+  for( i = 0; i < 32; i++ ) {
+    if( SerialOp.read( data->serial, buffer + i, 1 ) ) {
+      if( buffer[i] == '\r' ) {
+        TraceOp.dump( name, TRCLEVEL_BYTE, buffer, i+1 );
+        buffer[i] = '\0';
+        return i;
+      }
+    }
+    else {
+      break;
+    }
+  }
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no valid response:" );
+  if( i > 0 )
+    TraceOp.dump( name, TRCLEVEL_BYTE, buffer, i );
+  return 0;
+}
 
 static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
@@ -560,58 +579,38 @@ static void __reader( void* threadinst ) {
     Boolean ok = True;
 
     if( SerialOp.available(data->serial) > 0 ) {
-      if( SerialOp.read( data->serial, buffer, 1 ) ) {
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "read command: %c [0x%02X]", buffer[0], buffer[0] & 0xFF );
-        if( buffer[0] == 'V' ) {
-          if( SerialOp.read( data->serial, buffer, 13 ) ) {
-            buffer[12] = '\0';
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Version: %s", buffer );
-          }
-        }
-        else if( buffer[0] == 'O' ) {
-          if( SerialOp.read( data->serial, buffer, 1 ) ) {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC is ready" );
-          }
+      if( __readResponse(data, buffer) > 0 ) {
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "read response: [%s]", buffer );
+        if( buffer[0] == 'O' ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC is ready" );
         }
         else if( buffer[0] == 'P' ) {
-          if( SerialOp.read( data->serial, buffer, 1 ) ) {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "programming is ready" );
-            if( data->lastcmd = CV_WRITE ) {
-              iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-              wProgram.setcv( node, data->lastcv );
-              wProgram.setvalue( node, data->lastvalue );
-              wProgram.setcmd( node, wProgram.datarsp );
-              if( data->iid != NULL )
-                wProgram.setiid( node, data->iid );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "programming is ready" );
+          if( data->lastcmd = CV_WRITE ) {
+            iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+            wProgram.setcv( node, data->lastcv );
+            wProgram.setvalue( node, data->lastvalue );
+            wProgram.setcmd( node, wProgram.datarsp );
+            if( data->iid != NULL )
+              wProgram.setiid( node, data->iid );
 
-              if( data->listenerFun != NULL && data->listenerObj != NULL )
-                data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+            if( data->listenerFun != NULL && data->listenerObj != NULL )
+              data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 
-              data->lastcmd = 0;
-            }
+            data->lastcmd = 0;
           }
         }
         else if( buffer[0] == '?' ) {
-          if( SerialOp.read( data->serial, buffer, 1 ) ) {
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unknown command" );
-          }
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unknown command" );
         }
         else if( buffer[0] == 'C' ) {
-          int i = 0;
           /* CVxxxyy<CR>
            * R 012
            * [3-4 second delay]
            * CV012EA
            * */
-          for( i = 1; i < 32; i++ ) {
-            if( SerialOp.read( data->serial, buffer + i, 1 ) ) {
-              if( buffer[i] == '\r' ) {
-                buffer[i] = '\0';
-                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming response: %s", buffer );
-                __evaluateCV(data, buffer);
-              }
-            }
-          }
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming response: %s", buffer );
+          __evaluateCV(data, buffer);
         }
 
         EventOp.set(data->readyEvt);
