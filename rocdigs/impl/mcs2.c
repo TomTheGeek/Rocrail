@@ -216,6 +216,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     int port = wSwitch.getport1( node );
     int gate = wSwitch.getgate1( node );
     int swtime = wSwitch.getdelay( node ) / 10;
+    int action = 1;
 
     if( swtime == 0 ) {
       swtime = data->swtime / 10;
@@ -230,12 +231,19 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
 
     if ( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout )) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch %d (%s) to turnout", (address - (dccswitch?0x37FF:0x2FFF) ), dccswitch?"dcc":"mm" );
-      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 8, address, 0, 1, swtime/256, swtime%256);
+      if( wSwitch.issinglegate( node ) )
+        action = 1;
+      else
+        gate = 0;
     }
     else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch %d (%s) to straight", (address - (dccswitch?0x37FF:0x2FFF) ), dccswitch?"dcc":"mm" );
-      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 8, address, 1, 1, swtime/256, swtime%256);
+      if( wSwitch.issinglegate( node ) )
+        action = 0;
+      else
+        gate = 1;
     }
+    __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 8, address, gate, action, swtime/256, swtime%256);
 
     ThreadOp.post( data->writer, (obj)out );
     return rsp;
