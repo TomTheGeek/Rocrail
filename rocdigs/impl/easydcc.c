@@ -46,6 +46,8 @@
 
 static int instCnt = 0;
 
+#define BUFFERSIZE 32
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -198,7 +200,7 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
     int dir  = 1;
     int action = 1;
     int len = 0;
-    byte dcc[32];
+    byte dcc[BUFFERSIZE];
 
     if( port == 0 ) {
       fada = addr;
@@ -244,7 +246,7 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
     int pada = 0;
     int cmdsize = 0;
     int len = 0;
-    byte dcc[32];
+    byte dcc[BUFFERSIZE];
     int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
 
     if( port == 0 ) {
@@ -290,7 +292,7 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
     int     dir   = wLoc.isdir( node );
 
     int len = 0;
-    byte retVal[32];
+    byte retVal[BUFFERSIZE];
     int  speed = 0;
 
     if( wLoc.getV( node ) != -1 ) {
@@ -321,7 +323,7 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
     Boolean longAddr = StrOp.equals( wLoc.getprot( node ), wLoc.prot_L );
     int fg = wFunCmd.getgroup(node);
     int len = 0;
-    byte retVal[32];
+    byte retVal[BUFFERSIZE];
 
     if( fg == 1 )
       len = function0Through4Packet( retVal, addr, longAddr, wFunCmd.isf0(node), wFunCmd.isf1(node), wFunCmd.isf2(node), wFunCmd.isf3(node), wFunCmd.isf4(node) );
@@ -362,7 +364,7 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
       __sendCommand(data, "X\r");
     }
     else if( wProgram.getcmd( node ) == wProgram.get ) {
-      char cmd[32] = {0};
+      char cmd[BUFFERSIZE] = {0};
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d get", wProgram.getcv(node) );
       StrOp.fmtb( cmd, "R %03X\r", wProgram.getcv(node) );
       data->lastcmd = CV_READ;
@@ -370,7 +372,7 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
       __sendCommand(data, cmd);
     }
     else if( wProgram.getcmd( node ) == wProgram.set ) {
-      char cmd[32] = {0};
+      char cmd[BUFFERSIZE] = {0};
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d set %d", wProgram.getcv(node), wProgram.getvalue(node) );
       StrOp.fmtb( cmd, "P %03X %02X\r", wProgram.getcv(node), wProgram.getvalue(node) & 0xFF );
       data->lastcmd = CV_WRITE;
@@ -388,8 +390,8 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
   iOEasyDCCData data = Data(inst);
-  char out[32];
-  char in [32];
+  char out[BUFFERSIZE];
+  char in [BUFFERSIZE];
   iONode reply = NULL;
 
   if( cmd != NULL ) {
@@ -540,7 +542,7 @@ static void __evaluateCV(iOEasyDCCData data, char* buffer) {
 
 static int __readResponse( iOEasyDCCData data, char* buffer) {
   int i = 0;
-  for( i = 0; i < 32; i++ ) {
+  for( i = 0; i < BUFFERSIZE; i++ ) {
     if( SerialOp.read( data->serial, buffer + i, 1 ) ) {
       if( buffer[i] == '\r' ) {
         TraceOp.dump( name, TRCLEVEL_BYTE, buffer, i+1 );
@@ -562,7 +564,7 @@ static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOEasyDCC easydcc = (iOEasyDCC)ThreadOp.getParm( th );
   iOEasyDCCData data = Data(easydcc);
-  char buffer[32];
+  char buffer[BUFFERSIZE];
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC reader started." );
   ThreadOp.sleep( 100 );
