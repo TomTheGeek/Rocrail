@@ -569,6 +569,10 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC reader started." );
   ThreadOp.sleep( 100 );
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "programming off at initial start" );
+  __sendCommand(data, "X\r");
+  ThreadOp.sleep( 100 );
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power off at initial start" );
   __sendCommand(data, "K\r");
   ThreadOp.sleep( 100 );
