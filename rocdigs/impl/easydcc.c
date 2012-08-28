@@ -543,7 +543,7 @@ static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOEasyDCC easydcc = (iOEasyDCC)ThreadOp.getParm( th );
   iOEasyDCCData data = Data(easydcc);
-  char buffer[256];
+  char buffer[32];
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC reader started." );
   ThreadOp.sleep( 100 );
@@ -597,20 +597,27 @@ static void __reader( void* threadinst ) {
           }
         }
         else if( buffer[0] == 'C' ) {
-          /* CVxxxyy<CR> */
-          if( SerialOp.read( data->serial, buffer + 1, 7 ) ) {
-            buffer[7] = '\0';
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming response: %s", buffer );
-            __evaluateCV(data, buffer);
+          int i = 0;
+          /* CVxxxyy<CR>
+           * R 012
+           * [3-4 second delay]
+           * CV012EA
+           * */
+          for( i = 1; i < 32; i++ ) {
+            if( SerialOp.read( data->serial, buffer + i, 1 ) ) {
+              if( buffer[i] == '\r' ) {
+                buffer[i] = '\0';
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming response: %s", buffer );
+                __evaluateCV(data, buffer);
+              }
+            }
           }
         }
 
         EventOp.set(data->readyEvt);
       }
     }
-    else {
-      ThreadOp.sleep( 10 );
-    }
+    ThreadOp.sleep( 10 );
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC reader ended." );
