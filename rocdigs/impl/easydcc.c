@@ -491,15 +491,14 @@ static void __writer( void* threadinst ) {
       MemOp.copy( out, post+1, len);
       freeMem( post);
 
-      if( EventOp.trywait(data->readyEvt, 1000) ) {
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send command: %s", out );
-        TraceOp.dump( name, TRCLEVEL_BYTE, out, len );
-        SerialOp.write( data->serial, out, len );
-        EventOp.reset(data->readyEvt);
-      }
-      else {
+      if( !EventOp.trywait(data->readyEvt, 5000) ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "can't send command: EasyDCC not ready." );
+        EventOp.set(data->readyEvt);
       }
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send command: %s", out );
+      TraceOp.dump( name, TRCLEVEL_BYTE, out, len );
+      SerialOp.write( data->serial, out, len );
+      EventOp.reset(data->readyEvt);
 
     }
   }
