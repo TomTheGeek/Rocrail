@@ -1018,7 +1018,8 @@ static void rocrailCallback( obj me, iONode node ) {
           int stcnt = NodeOp.getChildCnt(stlist);
           for( int i = 0; i < stcnt; i++ ) {
             iONode st = NodeOp.getChild( stlist, i);
-            if( StrOp.equals( wRoute.getid(st), wRoute.getid(child))) {
+            if( StrOp.equals( wRoute.getid(st), wRoute.getid(child)) && !wRoute.isshow(st) ) {
+              // If the route is visible it must be deleted from the plan panel.
               NodeOp.removeChild(stlist, st);
               break;
             }
