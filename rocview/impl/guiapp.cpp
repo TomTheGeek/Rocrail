@@ -1010,6 +1010,21 @@ static void rocrailCallback( obj me, iONode node ) {
         wxPostEvent( guiApp->getFrame(), event );
         hadZLevel = True;
       }
+      // lp:1027064 Deleted routes.
+      else if( StrOp.equals( wRoute.name(), NodeOp.getName( child ) ) ) {
+        iONode model = wxGetApp().getModel();
+        iONode stlist = wPlan.getstlist(model);
+        if( stlist != NULL ) {
+          int stcnt = NodeOp.getChildCnt(stlist);
+          for( int i = 0; i < stcnt; i++ ) {
+            iONode st = NodeOp.getChild( stlist, i);
+            if( StrOp.equals( wRoute.getid(st), wRoute.getid(child))) {
+              NodeOp.removeChild(stlist, st);
+              break;
+            }
+          }
+        }
+      }
     }
     if( !hadZLevel ) {
       int pagecnt = guiApp->getFrame()->getNotebook()->GetPageCount();
