@@ -220,6 +220,7 @@
       <var name="trig_renter_mid" vt="Boolean" remark="reverse enter"/>
       <var name="trig_rexit_mid" vt="Boolean" remark="reverse exit"/>
       <var name="mapMux" vt="iOMutex"/>
+      <var name="wait4enter" vt="Boolean"/>
       </data>
   </object>
 

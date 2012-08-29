@@ -332,8 +332,8 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
   iONode section = (iONode)MapOp.get( data->fbMap, id );
   Boolean endSection = __isEndSection(inst, section);
 
-  if( StrOp.equals( wStage.getfbenterid(data->props), id ) ) {
-    if( data->locId != NULL && StrOp.len(data->locId) > 0 ) {
+  if( StrOp.equals( wStage.getfbenterid(data->props), id ) && puls ) {
+    if( data->locId != NULL && StrOp.len(data->locId) > 0 && data->wait4enter ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "expecting loco %s: ENTER", data->locId );
       if( data->locId != NULL ) {
         iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId);
@@ -347,6 +347,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "informing loco %s of ENTER event", data->locId );
           LocOp.event( loc, (obj)inst, enter_event, 0, True, NULL );
         }
+        data->wait4enter = False;
 
       }
     }
@@ -367,7 +368,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
     }
   }
 
-  else if( section != NULL ) {
+  else if( section != NULL && !data->wait4enter ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensors [%s] %s event for stage [%s] section [%s][%d] of [%d]",
         id, puls?"on":"off", data->id, wStageSection.getid(section), wStageSection.getnr(section), data->sectionCount );
 
@@ -459,7 +460,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
   }
 
   else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown sensors [%s] for stage [%s]...", id, data->id );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unexpected sensors [%s] event for stage [%s]...", id, data->id );
   }
 
   return;
@@ -704,6 +705,7 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "locking section(s) for [%s]", locid);
         data->locId = locid;
         data->targetSection = targetSection;
+        data->wait4enter = True;
         for( i = targetSection - (nrSections-1); i < targetSection + 1; i++ ) {
           iONode section = (iONode)ListOp.get( data->sectionList, i);
           wStageSection.setlcid( section, locid );
@@ -866,6 +868,8 @@ static void _resetTrigs( iIBlockBase inst ) {
   data->trig_exit_mid   = False;
   data->trig_renter_mid = False;
   data->trig_rexit_mid  = False;
+
+  data->wait4enter = False;
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                  "StageBlock [%s] resetTrigs.", data->id );
