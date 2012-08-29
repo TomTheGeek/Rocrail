@@ -427,12 +427,15 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
         else {
           if( !LocOp.isAutomode(loc) ) {
             iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed in auto mode", LocOp.getId(loc) );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero", LocOp.getId(loc) );
             LocOp.setCurBlock(loc, data->id);
             wLoc.setcmd(cmd, wLoc.velocity);
             wLoc.setV(cmd, 0);
             LocOp.cmd(loc, cmd);
-            LocOp.go(loc);
+            if( ModelOp.isAuto( AppOp.getModel() ) ) {
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s in auto mode", LocOp.getId(loc) );
+              LocOp.go(loc);
+            }
             if( !data->pendingFree ) {
               /*
               iONode s = (iONode)ListOp.get(data->sectionList, data->pendingSection );
