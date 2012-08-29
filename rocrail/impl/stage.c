@@ -733,7 +733,14 @@ static Boolean _isState( iIBlockBase inst, const char* state ) {
  */
 static Boolean _isFree( iIBlockBase inst ,const char* locid ) {
   iOStageData data = Data(inst);
-  Boolean locoFit = __willLocoFit(inst, locid, False);
+  Boolean locoFit = False;
+  iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wStage.getfbenterid(data->props) );
+  if( fb != NULL && FBackOp.getState(fb) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "enter sensor [%s] is occupied", FBackOp.getId(fb));
+    return False;
+  }
+
+  locoFit = __willLocoFit(inst, locid, False);
   if( !locoFit ) {
     __moveStageLocos(inst);
   }
