@@ -389,8 +389,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     msg[1] = 0; // address
     msg[2] = data->downSeq; // sequence number 1...255
     msg[3] = MSG_CS_ACCESSORY; //data
-    msg[4] = addr / 256;
-    msg[5] = addr % 256;
+    msg[4] = addr % 256;
+    msg[5] = addr / 256;
     msg[6] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 1:0;
     msg[6] += 0x10;
     msg[7] = ((delay / 40) << 4);
@@ -418,8 +418,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     msg[1] = 0; // address
     msg[2] = data->downSeq; // sequence number 1...255
     msg[3] = MSG_CS_ACCESSORY; //data
-    msg[4] = addr / 256;
-    msg[5] = addr % 256;
+    msg[4] = addr % 256;
+    msg[5] = addr / 256;
     msg[6] = wOutput.getgate(node);
     msg[6] += on ? 0x10:0x00;
     msg[7] = 0;
