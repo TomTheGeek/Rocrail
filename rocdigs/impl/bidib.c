@@ -394,7 +394,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     msg[6] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 1:0;
     msg[6] += 0x10;
     msg[7] = ((delay / 40) << 4);
-    int size = __makeMessa00ge(msg, 8);
+    int size = __makeMessage(msg, 8);
     data->subWrite((obj)inst, msg, size);
     data->downSeq++;
   }
