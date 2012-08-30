@@ -17,5 +17,5 @@ fi
 
 cd ~/rocrail
 
-/opt/rocrail/rocview -sp /opt/rocrail $1 $2 $3
+/opt/rocrail/rocview -sp /opt/rocrail $*
 
