@@ -1272,14 +1272,22 @@ static void _acceptIdent( iIBlockBase inst, Boolean accept ) {
 
 static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
   iOStageData data = Data(inst);
-  iONode section = (iONode)MapOp.get( data->fbMap, id );
-  if( __isEndSection(inst, section) )
-    return True;
-  else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "departure of loco %s from stage %s is not allowed; its not in the end section", id, data->id );
-    return False;
+  iONode section = NULL;
+  int i = 0;
+
+  for( i = 0; i < ListOp.size(data->sectionList); i++ ) {
+    iONode section = (iONode)ListOp.get( data->sectionList, i);
+    if( StrOp.equals( id, wStageSection.getlcid(section) ) ) {
+      if( __isEndSection(inst, section) )
+        return True;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "departure of loco %s from stage %s is not allowed; its not in the end section %s",
+          id, data->id, wStageSection.getid( section ) );
+      break;
+    }
   }
+
+  return False;
 }
 
 
