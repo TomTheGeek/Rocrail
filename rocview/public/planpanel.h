@@ -116,6 +116,9 @@ private:
   iOMap m_LockedRoutes;
   int m_dragX;
   int m_dragY;
+  int m_selX;
+  int m_selY;
+  bool m_Selecting;
   bool m_hasMouse;
   bool m_isDragged;
   wxStaticText* m_ModViewLabel;

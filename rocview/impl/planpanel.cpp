@@ -187,6 +187,9 @@ PlanPanel::PlanPanel(wxWindow *parent, int itemsize, double scale, double bktext
   m_LockedRoutes = MapOp.inst();
   m_dragX = 0;
   m_dragY = 0;
+  m_selX = 0;
+  m_selY = 0;
+  m_Selecting = false;
   m_bModView = false;
 
   m_Z = z;
@@ -646,6 +649,8 @@ void PlanPanel::OnSelect(wxCommandEvent& event) {
 }
 
 void PlanPanel::OnMotion(wxMouseEvent& event) {
+  int l_mouseX = m_mouseX;
+  int l_mouseY = m_mouseY;
   m_mouseX = event.GetX();
   m_mouseY = event.GetY();
 
@@ -661,6 +666,28 @@ void PlanPanel::OnMotion(wxMouseEvent& event) {
     StrOp.free( text );
   }
 
+  bool dragging = event.Dragging();
+
+  if( event.CmdDown() && dragging && wxGetApp().getFrame()->isEditMode() && !wxGetApp().getFrame()->isEditModPlan() ) {
+    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999,
+        "select rect start=%d,%d size=%d,%d", m_selX, m_selY, m_mouseX-m_selX, m_mouseY-m_selY );
+    if( m_Selecting ) {
+      int sx = (m_selX < l_mouseX) ? m_selX:l_mouseX;
+      int sy = (m_selY < l_mouseY) ? m_selY:l_mouseY;
+      int cx = (m_selX < l_mouseX) ? l_mouseX-m_selX:m_selX-l_mouseX;
+      int cy = (m_selY < l_mouseY) ? l_mouseY-m_selY:m_selY-l_mouseY;
+      RefreshRect(wxRect(sx, sy, cx, cy));
+    }
+    Update();
+    wxClientDC dc(this);
+    DoPrepareDC(dc);
+    dc.SetPen( *wxRED_PEN );
+    dc.SetBrush(*wxTRANSPARENT_BRUSH);
+    dc.DrawRectangle(m_selX, m_selY, m_mouseX-m_selX, m_mouseY-m_selY);
+    m_Selecting = true;
+  }
+
+
   if( !wxGetApp().getFrame()->isEditModPlan() )
     return;
 
@@ -670,7 +697,6 @@ void PlanPanel::OnMotion(wxMouseEvent& event) {
   wxGetMousePosition( &x, &y );
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "drag move x=%d(%d), y=%d(%d)", x, m_dragX, y, m_dragY );
 
-  bool dragging = event.Dragging();
 
 
   if( m_bModView && dragging && event.m_leftDown && !m_isDragged ) {
@@ -739,6 +765,8 @@ void PlanPanel::setPosition() {
 
 
 void PlanPanel::OnLeftUp(wxMouseEvent& event) {
+  int l_mouseX = m_mouseX;
+  int l_mouseY = m_mouseY;
   m_mouseX = event.GetX();
   m_mouseY = event.GetY();
 
@@ -804,6 +832,31 @@ void PlanPanel::OnLeftUp(wxMouseEvent& event) {
     if( m_lastAddedItem != NULL && wxGetApp().getFrame()->isEditMode() ) {
       wItem.setori(m_lastAddedItem, m_Ori);
       addItemAttr(m_lastAddedItem);
+    }
+
+    if( m_Selecting && wxGetApp().getFrame()->isEditMode() && !wxGetApp().getFrame()->isEditModPlan() ) {
+      int sx = (m_selX < l_mouseX) ? m_selX:l_mouseX;
+      int sy = (m_selY < l_mouseY) ? m_selY:l_mouseY;
+      int cx = (m_selX < l_mouseX) ? l_mouseX-m_selX:m_selX-l_mouseX;
+      int cy = (m_selY < l_mouseY) ? l_mouseY-m_selY:m_selY-l_mouseY;
+      RefreshRect(wxRect(sx, sy, cx, cy));
+      m_Selecting = false;
+
+      iONode sel = NodeOp.inst( "selection", NULL, ELEMENT_NODE );
+      int div = m_ItemSize*m_Scale;
+      NodeOp.setInt( sel, "x", sx/div + (sx%div > div/2 ? 1:0));
+      NodeOp.setInt( sel, "y", sy/div + (sy%div > div/2 ? 1:0));
+      NodeOp.setInt( sel, "z", m_Z );
+      NodeOp.setInt( sel, "cx", cx/div + (cx%div > div/2 ? 1:0) );
+      NodeOp.setInt( sel, "cy", cy/div + (cy%div > div/2 ? 1:0) );
+      NodeOp.setStr( sel, "title", wZLevel.gettitle( m_zLevel ) );
+
+      SelectDialog* dlg = new SelectDialog( this, sel );
+      if( wxID_OK == dlg->ShowModal() ) {
+        processSelection(dlg->getSelection());
+      }
+      dlg->Destroy();
+      NodeOp.base.del(sel);
     }
   }
 
@@ -1926,7 +1979,9 @@ void PlanPanel::OnLeftDown(wxMouseEvent& event) {
 
   m_dragX = x;
   m_dragY = y;
-  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "drag start x=%d, y=%d", x, y );
+  m_selX = event.GetX();
+  m_selY = event.GetY();
+  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "drag start x=%d, y=%d (%d,%d)", x, y, event.GetX(), event.GetY() );
 
 }
 
