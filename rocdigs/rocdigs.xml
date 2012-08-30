@@ -1328,6 +1328,8 @@
       <var name="subWriter" vt="iOThread"/>
       <var name="subReadQueue" vt="iOQueue"/>
       <var name="subWriteQueue" vt="iOQueue"/>
+      <var name="cv" vt="int"/>
+      <var name="value" vt="int"/>
     </data>
   </object>
 

@@ -388,13 +388,13 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     msg[0] = 7; // length
     msg[1] = 0; // address
     msg[2] = data->downSeq; // sequence number 1...255
-    msg[3] = addr / 256;
-    msg[4] = addr % 256;
-    msg[5] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 1:0;
-    msg[5] += 0x10;
-    msg[6] = ((delay / 40) << 4);
-    msg[7] = MSG_CS_ACCESSORY; //data
-    int size = __makeMessage(msg, 8);
+    msg[3] = MSG_CS_ACCESSORY; //data
+    msg[4] = addr / 256;
+    msg[5] = addr % 256;
+    msg[6] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 1:0;
+    msg[6] += 0x10;
+    msg[7] = ((delay / 40) << 4);
+    int size = __makeMessa00ge(msg, 8);
     data->subWrite((obj)inst, msg, size);
     data->downSeq++;
   }
@@ -417,12 +417,12 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     msg[0] = 7; // length
     msg[1] = 0; // address
     msg[2] = data->downSeq; // sequence number 1...255
-    msg[3] = addr / 256;
-    msg[4] = addr % 256;
-    msg[5] = wOutput.getgate(node);
-    msg[5] += on ? 0x10:0x00;
-    msg[6] = 0;
-    msg[7] = MSG_CS_ACCESSORY; //data
+    msg[3] = MSG_CS_ACCESSORY; //data
+    msg[4] = addr / 256;
+    msg[5] = addr % 256;
+    msg[6] = wOutput.getgate(node);
+    msg[6] += on ? 0x10:0x00;
+    msg[7] = 0;
     int size = __makeMessage(msg, 8);
     data->subWrite((obj)inst, msg, size);
     data->downSeq++;
@@ -446,16 +446,42 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     msg[ 0] = 12; // length
     msg[ 1] = 0; // address
     msg[ 2] = data->downSeq; // sequence number 1...255
-    msg[ 3] = addr / 256;
+    msg[ 3] = MSG_CS_DRIVE; //data
     msg[ 4] = addr % 256;
-    msg[ 5] = (dir ? 0x00:0x80) + (steps==128?0x30:0x20); // 128 speed steps
-    msg[ 6] = 0x3F;
-    msg[ 7] = speed;
-    msg[ 8] = (fn?0x10:0x00);
-    msg[ 9] = 0;
+    msg[ 5] = addr / 256;
+    msg[ 6] = (dir ? 0x00:0x80) + (steps==128?0x30:0x20); // 128 speed steps
+    msg[ 7] = 0x01; // speed only
+    msg[ 8] = speed;
+    msg[ 9] = (fn?0x10:0x00);
     msg[10] = 0;
     msg[11] = 0;
-    msg[12] = MSG_CS_DRIVE; //data
+    msg[12] = 0;
+    int size = __makeMessage(msg, 13);
+    data->subWrite((obj)inst, msg, size);
+    data->downSeq++;
+  }
+
+  /* Function command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    int     addr = wFunCmd.getaddr( node );
+    Boolean fn   = wFunCmd.isf0( node );
+
+    msg[ 0] = 12; // length
+    msg[ 1] = 0; // address
+    msg[ 2] = data->downSeq; // sequence number 1...255
+    msg[ 3] = MSG_CS_DRIVE; //data
+    msg[ 4] = addr % 256;
+    msg[ 5] = addr / 256;
+    msg[ 6] = 0;
+    msg[ 7] = 0x3E; // functions only
+    msg[ 8] = 0;
+    msg[ 9] = (fn?0x10:0x00) + (wFunCmd.isf1(node)?0x01:0x00) + (wFunCmd.isf2(node)?0x02:0x00) + (wFunCmd.isf3(node)?0x04:0x00) + (wFunCmd.isf4(node)?0x08:0x00);
+    msg[10] = (wFunCmd.isf5(node)?0x01:0x00) + (wFunCmd.isf6(node)?0x02:0x00) + (wFunCmd.isf7(node)?0x04:0x00) + (wFunCmd.isf8(node)?0x08:0x00);
+    msg[10]+= (wFunCmd.isf9(node)?0x10:0x00) + (wFunCmd.isf10(node)?0x20:0x00) + (wFunCmd.isf11(node)?0x40:0x00) + (wFunCmd.isf12(node)?0x80:0x00);
+    msg[11] = (wFunCmd.isf13(node)?0x01:0x00) + (wFunCmd.isf14(node)?0x02:0x00) + (wFunCmd.isf15(node)?0x04:0x00) + (wFunCmd.isf16(node)?0x08:0x00);
+    msg[11]+= (wFunCmd.isf17(node)?0x10:0x00) + (wFunCmd.isf18(node)?0x20:0x00) + (wFunCmd.isf19(node)?0x40:0x00) + (wFunCmd.isf20(node)?0x80:0x00);
+    msg[12] = (wFunCmd.isf21(node)?0x01:0x00) + (wFunCmd.isf22(node)?0x02:0x00) + (wFunCmd.isf23(node)?0x04:0x00) + (wFunCmd.isf24(node)?0x08:0x00);
+    msg[12]+= (wFunCmd.isf25(node)?0x10:0x00) + (wFunCmd.isf26(node)?0x20:0x00) + (wFunCmd.isf27(node)?0x40:0x00) + (wFunCmd.isf28(node)?0x80:0x00);
     int size = __makeMessage(msg, 13);
     data->subWrite((obj)inst, msg, size);
     data->downSeq++;
@@ -473,6 +499,37 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     rsp = (iONode)NodeOp.base.clone( node );
   }
 
+  /* Program command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    if( wProgram.getcmd( node ) == wProgram.get ) {
+      data->cv = wProgram.getcv( node );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d...", data->cv );
+      msg[ 0] = 5; // length
+      msg[ 1] = 0; // address
+      msg[ 2] = data->downSeq; // sequence number 1...255
+      msg[ 3] = MSG_PRG_CV_READ; //data
+      msg[ 4] = data->cv % 256;
+      msg[ 5] = data->cv / 256;
+      int size = __makeMessage(msg, 6);
+      data->subWrite((obj)inst, msg, size);
+      data->downSeq++;
+    }
+    else if( wProgram.getcmd( node ) == wProgram.set ) {
+      data->cv = wProgram.getcv( node );
+      data->value = wProgram.getvalue( node );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set CV%d to %d...", data->cv, data->value );
+      msg[ 0] = 6; // length
+      msg[ 1] = 0; // address
+      msg[ 2] = data->downSeq; // sequence number 1...255
+      msg[ 3] = MSG_PRG_CV_WRITE; //data
+      msg[ 4] = data->cv % 256;
+      msg[ 5] = data->cv / 256;
+      msg[ 6] = data->value;
+      int size = __makeMessage(msg, 7);
+      data->subWrite((obj)inst, msg, size);
+      data->downSeq++;
+    }
+  }
 
   return rsp;
 }
@@ -636,6 +693,35 @@ static void __handleCV(iOBiDiB bidib, int addr, int cv, int val) {
   wProgram.setcmd( node, wProgram.datarsp );
   wProgram.setcv( node, cv );
   wProgram.setdecaddr( node, addr );
+  if( data->iid != NULL )
+    wProgram.setiid( node, data->iid );
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+}
+
+static void __handlePT(iOBiDiB bidib, int state, int val) {
+  iOBiDiBData data = Data(bidib);
+
+  iONode node = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT response %d:%d", state, val );
+  if( state == 3 ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cv %d has a value of %d", data->cv, val );
+    data->value = val;
+  }
+  else if( state == 6 ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cv %d is programmed to %d", data->cv, data->value );
+  }
+  else {
+    return;
+  }
+
+  node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcv( node, data->cv );
+  wProgram.setvalue( node, data->value );
+  wProgram.setcmd( node, wProgram.datarsp );
   if( data->iid != NULL )
     wProgram.setiid( node, data->iid );
 
@@ -1115,8 +1201,13 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_SYS_P_VERSION:
   {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "MSG_SYS_P_VERSION %d.%d", msg[2], msg[1] );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MSG_SYS_P_VERSION %d.%d", msg[2], msg[1] );
+    break;
+  }
+
+  case MSG_PRG_CV_STAT:
+  {
+    __handlePT(bidib, msg[1], msg[2]);
     break;
   }
 
