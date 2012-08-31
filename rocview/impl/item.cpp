@@ -1031,6 +1031,10 @@ void Symbol::OnLeftDown(wxMouseEvent& event) {
       cmd->base.del(cmd);
     }
   }
+  else if( wxGetApp().getFrame()->isEditMode() && event.CmdDown() ) {
+    wxPoint p = GetPosition();
+    m_PlanPanel->OnLeftDown(event);
+  }
 
   /*
   m_X = (int)(m_mouseX / (itemSize*m_Scale));

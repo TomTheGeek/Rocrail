@@ -1973,16 +1973,21 @@ void PlanPanel::refresh(bool eraseBackground ) {
 void PlanPanel::OnLeftDown(wxMouseEvent& event) {
   int x = 0;
   int y = 0;
+  int sx = 0;
+  int sy = 0;
 
   Raise();
 
   wxGetMousePosition( &x, &y );
+  GetScreenPosition(&sx, &sy);
 
   m_dragX = x;
   m_dragY = y;
   if(event.CmdDown()) {
-    m_selX = event.GetX();
-    m_selY = event.GetY();
+    //m_selX = event.GetX();
+    //m_selY = event.GetY();
+    m_selX = x-sx;
+    m_selY = y-sy;
     m_Selecting = true;
     CaptureMouse();
   }
