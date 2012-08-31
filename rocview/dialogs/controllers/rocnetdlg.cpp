@@ -77,11 +77,20 @@ void RocNetDlg::initValues() {
     m_BPS->SetSelection(3);
   else if( wDigInt.getbps( m_Props ) == 115200 )
     m_BPS->SetSelection(4);
+  else if( wDigInt.getbps( m_Props ) == 125000 )
+    m_BPS->SetSelection(5);
   else
     m_BPS->SetSelection(1); // default 19200
 
-  if( StrOp.equals( wDigInt.sublib_udp, wDigInt.getsublib(m_Props) )) {
+  if( StrOp.equals( wDigInt.sublib_udp, wDigInt.getsublib(m_Props) ) ) {
     m_Sublib->SetSelection(0);
+    m_BPS->Enable(false);
+    m_Device->Enable(false);
+    m_Address->Enable(true);
+    m_Port->Enable(true);
+  }
+  else if( StrOp.equals( wDigInt.sublib_tcp, wDigInt.getsublib(m_Props) )) {
+    m_Sublib->SetSelection(2);
     m_BPS->Enable(false);
     m_Device->Enable(false);
     m_Address->Enable(true);
@@ -114,6 +123,8 @@ void RocNetDlg::evaluate() {
 
   if( m_Sublib->GetSelection() == 0 )
     wDigInt.setsublib(m_Props, wDigInt.sublib_udp );
+  else if( m_Sublib->GetSelection() == 2 )
+    wDigInt.setsublib(m_Props, wDigInt.sublib_tcp );
   else
     wDigInt.setsublib(m_Props, wDigInt.sublib_serial );
 
@@ -127,6 +138,8 @@ void RocNetDlg::evaluate() {
     wDigInt.setbps( m_Props, 57600 );
   else if( m_BPS->GetSelection() == 4 )
     wDigInt.setbps( m_Props, 115200 );
+  else if( m_BPS->GetSelection() == 5 )
+    wDigInt.setbps( m_Props, 125000 );
 
   wRocNet.setcrc(m_Props, m_CRC->IsChecked()?True:False);
 }

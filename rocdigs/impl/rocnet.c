@@ -27,6 +27,7 @@
 #include "rocdigs/impl/rocnet/rn-utils.h"
 #include "rocdigs/impl/rocnet/rnserial.h"
 #include "rocdigs/impl/rocnet/rnudp.h"
+#include "rocdigs/impl/rocnet/rntcp.h"
 
 #include "rocs/public/mem.h"
 #include "rocs/public/objbase.h"
@@ -740,6 +741,16 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->rnRead       = rnSerialRead;
     data->rnWrite      = rnSerialWrite;
     data->rnAvailable  = rnSerialAvailable;
+    data->seven = True;
+    data->run = True;
+  }
+  else if( StrOp.equals( wDigInt.sublib_tcp, wDigInt.getsublib( ini ) ) ) {
+    /* rnserial */
+    data->rnConnect    = rnTcpConnect;
+    data->rnDisconnect = rnTcpDisconnect;
+    data->rnRead       = rnTcpRead;
+    data->rnWrite      = rnTcpWrite;
+    data->rnAvailable  = rnTcpAvailable;
     data->seven = True;
     data->run = True;
   }
