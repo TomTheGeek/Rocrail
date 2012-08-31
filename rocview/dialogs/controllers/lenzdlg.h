@@ -119,8 +119,6 @@ public:
     wxCheckBox* m_AccPower;
     wxCheckBox* m_IgnoreBusy;
     wxCheckBox* m_V2;
-    wxStaticText* m_labSensorOffset;
-    wxSpinCtrl* m_SensorOffset;
     wxStaticText* m_labSwitchTime;
     wxSpinCtrl* m_SwitchTime;
 ////@end LenzDlg member variables
