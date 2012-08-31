@@ -841,6 +841,7 @@ void PlanPanel::OnLeftUp(wxMouseEvent& event) {
       int cy = (m_selY < l_mouseY) ? l_mouseY-m_selY:m_selY-l_mouseY;
       RefreshRect(wxRect(sx, sy, cx, cy));
       m_Selecting = false;
+      ReleaseMouse();
 
       iONode sel = NodeOp.inst( "selection", NULL, ELEMENT_NODE );
       int div = m_ItemSize*m_Scale;
@@ -1979,8 +1980,12 @@ void PlanPanel::OnLeftDown(wxMouseEvent& event) {
 
   m_dragX = x;
   m_dragY = y;
-  m_selX = event.GetX();
-  m_selY = event.GetY();
+  if(event.CmdDown()) {
+    m_selX = event.GetX();
+    m_selY = event.GetY();
+    m_Selecting = true;
+    CaptureMouse();
+  }
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "drag start x=%d, y=%d (%d,%d)", x, y, event.GetX(), event.GetY() );
 
 }
