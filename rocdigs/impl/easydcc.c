@@ -363,7 +363,7 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "programming mode OFF" );
       __sendCommand(data, "X\r");
     }
-    else if( wProgram.getcmd( node ) == wProgram.get ) {
+    else if( !pom && wProgram.getcmd( node ) == wProgram.get ) {
       char cmd[BUFFERSIZE] = {0};
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d get", wProgram.getcv(node) );
       StrOp.fmtb( cmd, "R %03X\r", wProgram.getcv(node) );
@@ -371,7 +371,10 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
       data->lastvalue = 0;
       __sendCommand(data, cmd);
     }
-    else if( wProgram.getcmd( node ) == wProgram.set ) {
+    else if( pom && wProgram.getcmd( node ) == wProgram.get ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "POM CV %d get is not supported", wProgram.getcv(node) );
+    }
+    else if( !pom && wProgram.getcmd( node ) == wProgram.set ) {
       char cmd[BUFFERSIZE] = {0};
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d set %d", wProgram.getcv(node), wProgram.getvalue(node) );
       StrOp.fmtb( cmd, "P %03X %02X\r", wProgram.getcv(node), wProgram.getvalue(node) & 0xFF );
@@ -379,6 +382,13 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
       data->lastcv = wProgram.getcv(node);
       data->lastvalue = wProgram.getvalue(node);
       __sendCommand(data, cmd);
+    }
+    else if(pom && wProgram.getcmd( node ) == wProgram.set) {
+      int len = 0;
+      byte retVal[BUFFERSIZE];
+      len = opsCvWriteByte(retVal, wProgram.getaddr(node), wProgram.islongaddr(node), wProgram.getcv(node), wProgram.getvalue(node) );
+      __makeMessage(buffer, "S 01", retVal, len);
+      __sendCommand(data, buffer);
     }
   }
 
