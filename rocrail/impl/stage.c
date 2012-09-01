@@ -1280,12 +1280,10 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
     if( StrOp.equals( id, wStageSection.getlcid(section) ) ) {
       if( __isEndSection(inst, section) )
         return True;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "departure of loco %s from stage %s is not allowed; its not in the end section %s",
-          id, data->id, wStageSection.getid( section ) );
-      break;
     }
   }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "departure of loco %s from stage %s is not allowed; its not in the end section", id, data->id );
 
   return False;
 }
