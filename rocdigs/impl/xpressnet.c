@@ -274,7 +274,7 @@ static void __updateFB( iOXpressNet xpressnet, iONode fbInfo ) {
       int idx = 0;
       while( StrTokOp.hasMoreTokens( tok ) ) {
         int addr = atoi( StrTokOp.nextToken(tok) );
-        data->fbmods[idx] = addr + 1 - (data->fboffset / 8); /* xpressnet has groups of 8 */
+        data->fbmods[idx] = addr - (data->fboffset / 8); /* xpressnet has groups of 8 */
         idx++;
       };
       data->fbmodcnt = idx;
