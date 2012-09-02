@@ -672,18 +672,23 @@ void PlanPanel::OnMotion(wxMouseEvent& event) {
     TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999,
         "select rect start=%d,%d size=%d,%d", m_selX, m_selY, m_mouseX-m_selX, m_mouseY-m_selY );
     if( m_Selecting ) {
+      l_mouseX += (x * m_ItemSize*m_Scale);
+      l_mouseY += (y * m_ItemSize*m_Scale);
       int sx = (m_selX < l_mouseX) ? m_selX:l_mouseX;
       int sy = (m_selY < l_mouseY) ? m_selY:l_mouseY;
       int cx = (m_selX < l_mouseX) ? l_mouseX-m_selX:m_selX-l_mouseX;
       int cy = (m_selY < l_mouseY) ? l_mouseY-m_selY:m_selY-l_mouseY;
-      RefreshRect(wxRect(sx, sy, cx, cy));
+      RefreshRect(wxRect(sx-(x * m_ItemSize*m_Scale), sy-(y * m_ItemSize*m_Scale), cx, cy));
+      //Refresh();
     }
     Update();
     wxClientDC dc(this);
     DoPrepareDC(dc);
     dc.SetPen( *wxRED_PEN );
     dc.SetBrush(*wxTRANSPARENT_BRUSH);
-    dc.DrawRectangle(m_selX, m_selY, m_mouseX-m_selX, m_mouseY-m_selY);
+    l_mouseX = m_mouseX + (x * m_ItemSize*m_Scale);
+    l_mouseY = m_mouseY + (y * m_ItemSize*m_Scale);
+    dc.DrawRectangle(m_selX, m_selY, l_mouseX-m_selX, l_mouseY-m_selY);
     m_Selecting = true;
   }
 
@@ -835,11 +840,15 @@ void PlanPanel::OnLeftUp(wxMouseEvent& event) {
     }
 
     if( m_Selecting && wxGetApp().getFrame()->isEditMode() && !wxGetApp().getFrame()->isEditModPlan() ) {
+      int x_off, y_off;
+      GetViewStart( &x_off, &y_off );
+      l_mouseX += x_off * (m_ItemSize*m_Scale);
+      l_mouseY += y_off * (m_ItemSize*m_Scale);
       int sx = (m_selX < l_mouseX) ? m_selX:l_mouseX;
       int sy = (m_selY < l_mouseY) ? m_selY:l_mouseY;
       int cx = (m_selX < l_mouseX) ? l_mouseX-m_selX:m_selX-l_mouseX;
       int cy = (m_selY < l_mouseY) ? l_mouseY-m_selY:m_selY-l_mouseY;
-      RefreshRect(wxRect(sx, sy, cx, cy));
+      RefreshRect(wxRect(sx-(x_off * m_ItemSize*m_Scale), sy-(y_off * m_ItemSize*m_Scale), cx, cy));
       m_Selecting = false;
       ReleaseMouse();
 
@@ -1973,6 +1982,8 @@ void PlanPanel::refresh(bool eraseBackground ) {
 void PlanPanel::OnLeftDown(wxMouseEvent& event) {
   int x = 0;
   int y = 0;
+  int xoff = 0;
+  int yoff = 0;
   int sx = 0;
   int sy = 0;
 
@@ -1980,15 +1991,17 @@ void PlanPanel::OnLeftDown(wxMouseEvent& event) {
 
   wxGetMousePosition( &x, &y );
   GetScreenPosition(&sx, &sy);
+  GetViewStart( &xoff, &yoff );
 
   m_dragX = x;
   m_dragY = y;
   if(event.CmdDown()) {
     //m_selX = event.GetX();
     //m_selY = event.GetY();
-    m_selX = x-sx;
-    m_selY = y-sy;
+    m_selX = (x - sx) + (xoff*m_ItemSize*m_Scale);
+    m_selY = (y - sy) + (yoff*m_ItemSize*m_Scale);
     m_Selecting = true;
+    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "select start %d,%d (%d,%d)", m_selX, m_selY );
     CaptureMouse();
   }
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "drag start x=%d, y=%d (%d,%d)", x, y, event.GetX(), event.GetY() );
