@@ -196,6 +196,7 @@ static Boolean __transact( iOP50Data o, char* out, int outsize, char* in, int in
   else return False;
 }
 
+
 /**
  * Fahrstufe = (V * DecoderFahrstufen) / V_max
  * undef V = -1
@@ -320,6 +321,9 @@ static int __translate( iOP50Data o, iONode node, unsigned char* p50, int* insiz
         wState.setiid( node, o->iid );
       wState.setpower( node, False );
       wState.settrackbus( node, False );
+      wState.setaccessorybus( node, False );
+      if( o->fbmod > 0 )
+        wState.setsensorbus( node, o->readfb );
       o->listenerFun( o->listenerObj, node, TRCLEVEL_INFO );
 
       return 1;
@@ -333,6 +337,9 @@ static int __translate( iOP50Data o, iONode node, unsigned char* p50, int* insiz
         wState.setiid( node, o->iid );
       wState.setpower( node, True );
       wState.settrackbus( node, True );
+      wState.setaccessorybus( node, True );
+      if( o->fbmod > 0 )
+        wState.setsensorbus( node, o->readfb );
       o->listenerFun( o->listenerObj, node, TRCLEVEL_INFO );
 
       return 1;
