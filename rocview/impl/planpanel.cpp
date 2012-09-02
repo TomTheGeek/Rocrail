@@ -674,12 +674,13 @@ void PlanPanel::OnMotion(wxMouseEvent& event) {
     if( m_Selecting ) {
       l_mouseX += (x * m_ItemSize*m_Scale);
       l_mouseY += (y * m_ItemSize*m_Scale);
-      int sx = (m_selX < l_mouseX) ? m_selX:l_mouseX;
-      int sy = (m_selY < l_mouseY) ? m_selY:l_mouseY;
-      int cx = (m_selX < l_mouseX) ? l_mouseX-m_selX:m_selX-l_mouseX;
-      int cy = (m_selY < l_mouseY) ? l_mouseY-m_selY:m_selY-l_mouseY;
-      RefreshRect(wxRect(sx-(x * m_ItemSize*m_Scale), sy-(y * m_ItemSize*m_Scale), cx, cy));
-      //Refresh();
+      if( m_selX < l_mouseX && m_selY < l_mouseY ) {
+        // The rectangle area is without offset.
+        RefreshRect(wxRect(m_selX-(x * m_ItemSize*m_Scale), m_selY-(y * m_ItemSize*m_Scale), l_mouseX-m_selX, l_mouseY-m_selY));
+      }
+      else {
+        Refresh();
+      }
     }
     Update();
     wxClientDC dc(this);
@@ -841,6 +842,7 @@ void PlanPanel::OnLeftUp(wxMouseEvent& event) {
 
     if( m_Selecting && wxGetApp().getFrame()->isEditMode() && !wxGetApp().getFrame()->isEditModPlan() ) {
       int x_off, y_off;
+      ReleaseMouse();
       GetViewStart( &x_off, &y_off );
       l_mouseX += x_off * (m_ItemSize*m_Scale);
       l_mouseY += y_off * (m_ItemSize*m_Scale);
@@ -848,9 +850,14 @@ void PlanPanel::OnLeftUp(wxMouseEvent& event) {
       int sy = (m_selY < l_mouseY) ? m_selY:l_mouseY;
       int cx = (m_selX < l_mouseX) ? l_mouseX-m_selX:m_selX-l_mouseX;
       int cy = (m_selY < l_mouseY) ? l_mouseY-m_selY:m_selY-l_mouseY;
-      RefreshRect(wxRect(sx-(x_off * m_ItemSize*m_Scale), sy-(y_off * m_ItemSize*m_Scale), cx, cy));
+      if( m_selX < l_mouseX && m_selY < l_mouseY ) {
+        // The rectangle area is without offset.
+        RefreshRect(wxRect(m_selX-(x_off * m_ItemSize*m_Scale), m_selY-(y_off * m_ItemSize*m_Scale), l_mouseX-m_selX, l_mouseY-m_selY));
+      }
+      else {
+        Refresh();
+      }
       m_Selecting = false;
-      ReleaseMouse();
 
       iONode sel = NodeOp.inst( "selection", NULL, ELEMENT_NODE );
       int div = m_ItemSize*m_Scale;
