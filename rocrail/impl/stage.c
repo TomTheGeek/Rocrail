@@ -363,8 +363,8 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
         AppOp.broadcastEvent( nodeD );
       }
 
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Ghost train in staging block %s, fbid=%s, ident=%s",
-          data->id, id, ident );
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Ghost train in staging block %s, fbid=%s, ident=%s, wait4enter=%d",
+          data->id, id, ident, data->wait4enter );
     }
   }
 
@@ -837,6 +837,8 @@ static void _reset( iIBlockBase inst ) {
              "reset stageblock [%s][%d]", data->id, sections );
 
   StageOp.resetTrigs(inst);
+  data->wait4enter = False;
+
 
   /* Unlock the occupyied sections */
   for( i = 0; i < sections; i++ ) {
@@ -862,17 +864,6 @@ static void _reset( iIBlockBase inst ) {
 /**  */
 static void _resetTrigs( iIBlockBase inst ) {
   iOStageData data = Data(inst);
-  data->trig_enter = False;
-  data->trig_in    = False;
-  data->trig_exit  = False;
-  data->trig_out   = False;
-
-  data->trig_enter_mid   = False;
-  data->trig_exit_mid   = False;
-  data->trig_renter_mid = False;
-  data->trig_rexit_mid  = False;
-
-  data->wait4enter = False;
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                  "StageBlock [%s] resetTrigs.", data->id );
