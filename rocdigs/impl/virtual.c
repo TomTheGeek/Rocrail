@@ -268,7 +268,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
     rsp = (iONode)NodeOp.base.clone( node );
 
-    if( wDigInt.isfbreset( data->ini ) ) {
+    if( wDigInt.isfbreset( data->ini ) && state ) {
       iQCmd cmd = allocMem(sizeof(struct QCmd));
       cmd->time  = SystemOp.getTick();
       cmd->delay = wDigInt.getpsleep( data->ini ) / 10; /* ms -> ticks */
