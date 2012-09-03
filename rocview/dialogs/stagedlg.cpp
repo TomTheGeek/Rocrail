@@ -106,6 +106,7 @@ void StageDlg::initLabels() {
   m_DeleteSection->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_SetLoco->SetLabel( wxGetApp().getMsg( "setloco" ) );
   m_FreeSection->SetLabel( wxGetApp().getMsg( "free" ) );
+  m_FreeAll->SetLabel( wxGetApp().getMsg( "freeall" ) );
   m_labOwnSectionLength->SetLabel( wxGetApp().getMsg( "length" ) );
 
   m_EnterSensor->Append( _T("") );

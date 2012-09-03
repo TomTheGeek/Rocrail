@@ -5795,3 +5795,9 @@ msgstr ""
 msgid "Open Key file"
 msgstr ""
 
+#. 
+# id="freeall"
+#, c-format
+msgid "Free all"
+msgstr ""
+

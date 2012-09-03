@@ -18150,4 +18150,7 @@
   <Msg id="openkeyfile">
     <en txt="Open Key file"/>
   </Msg>
+  <Msg id="freeall">
+    <en txt="Free all"/>
+  </Msg>
 </Messages>
