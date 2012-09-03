@@ -355,6 +355,14 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
           LocOp.event( loc, (obj)inst, enter_event, 0, True, NULL );
         }
         data->wait4enter = False;
+
+        if( wStage.getentersignal( data->props ) != NULL && StrOp.len( wStage.getentersignal( data->props ) ) > 0 ) {
+          iOModel model = AppOp.getModel();
+          iOSignal sg = ModelOp.getSignal( model, wStage.getentersignal( data->props ) );
+          if( sg != NULL ) {
+            SignalOp.red( sg );
+          }
+        }
       }
     }
     else {
@@ -591,7 +599,7 @@ static Boolean _green( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
   Boolean semaphore = False;
   const char* sgId = NULL;
 
-  if( reverse )
+  if( reverse || distant )
     return False;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set green %s signal", distant?"enter":"exit" );
@@ -843,6 +851,16 @@ static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,
     wStage.setlocid( nodeD, locid );
     AppOp.broadcastEvent( nodeD );
   }
+
+
+  if( wStage.getentersignal( data->props ) != NULL && StrOp.len( wStage.getentersignal( data->props ) ) > 0 ) {
+    iOModel model = AppOp.getModel();
+    iOSignal sg = ModelOp.getSignal( model, wStage.getentersignal( data->props ) );
+    if( sg != NULL ) {
+      SignalOp.yellow( sg );
+    }
+  }
+
   return True;
 }
 
@@ -861,7 +879,7 @@ static Boolean _red( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
   Boolean semaphore = False;
   const char* sgId = NULL;
 
-  if( reverse )
+  if( reverse || distant )
     return False;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set red %s signal", distant?"enter":"exit" );
@@ -1222,7 +1240,7 @@ static Boolean _white( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
   Boolean semaphore = False;
   const char* sgId = NULL;
 
-  if( reverse )
+  if( reverse || distant )
     return False;
 
   sgId = distant ? wStage.getentersignal( data->props ):wStage.getexitsignal( data->props );
@@ -1245,7 +1263,7 @@ static Boolean _yellow( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
   Boolean semaphore = False;
   const char* sgId = NULL;
 
-  if( reverse )
+  if( reverse || distant )
     return False;
 
   sgId = distant ? wStage.getentersignal( data->props ):wStage.getexitsignal( data->props );
