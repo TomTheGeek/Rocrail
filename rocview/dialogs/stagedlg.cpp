@@ -39,6 +39,7 @@
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Signal.h"
 
 StageDlg::StageDlg( wxWindow* parent, iONode p_Props ):stagedlggen( parent )
 {
@@ -94,6 +95,8 @@ void StageDlg::initLabels() {
   m_labSectionLength->SetLabel( wxGetApp().getMsg( "section" ) + _T(" ") + wxGetApp().getMsg( "length" ) );
   m_labTrainGap->SetLabel( wxGetApp().getMsg( "train" ) + _T(" ") + wxGetApp().getMsg( "gap" ) );
   m_labEnterSensor->SetLabel( _T("Enter ") + wxGetApp().getMsg( "sensor" ) );
+  m_labEnterSignal->SetLabel( _T("Enter ") + wxGetApp().getMsg( "signal" ) );
+  m_labExitSignal->SetLabel( _T("Exit ") + wxGetApp().getMsg( "signal" ) );
 
   // Sections
   m_labSectionID->SetLabel( wxGetApp().getMsg( "id" ) );
@@ -131,7 +134,36 @@ void StageDlg::initLabels() {
 
   }
 
+
+
+  m_EnterSignal->Append( _T("") );
+  m_ExitSignal->Append( _T("") );
+
+  ListOp.clear(list);
+
+  if( model != NULL ) {
+    iONode sglist = wPlan.getsglist( model );
+    if( sglist != NULL ) {
+      int cnt = NodeOp.getChildCnt( sglist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode sg = NodeOp.getChild( sglist, i );
+        const char* id = wSignal.getid( sg );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)id);
+    }
+    }
+      ListOp.sort(list, &__sortStr);
+      cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        const char* id = (const char*)ListOp.get( list, i );
+          m_EnterSignal->Append( wxString(id,wxConvUTF8) );
+          m_ExitSignal->Append( wxString(id,wxConvUTF8) );
+      }
+    }
+  }
+  /* clean up the temp. list */
   ListOp.base.del(list);
+
 
 
   // init loco combo
@@ -180,6 +212,8 @@ bool StageDlg::evaluate() {
   wStage.setslen( m_Props, m_SectionLength->GetValue() );
   wStage.setgap( m_Props, m_TrainGap->GetValue() );
   wStage.setfbenterid( m_Props, m_EnterSensor->GetStringSelection().mb_str(wxConvUTF8) );
+  wStage.setentersignal( m_Props, m_EnterSignal->GetStringSelection().mb_str(wxConvUTF8) );
+  wStage.setexitsignal( m_Props, m_ExitSignal->GetStringSelection().mb_str(wxConvUTF8) );
   return true;
 }
 
@@ -222,6 +256,10 @@ void StageDlg::initValues() {
   m_TrainGap->SetValue( wStage.getgap( m_Props ) );
   m_EnterSensor->SetStringSelection( wStage.getfbenterid( m_Props ) == NULL ?
       _T(""):wxString(wStage.getfbenterid( m_Props ),wxConvUTF8) );
+  m_EnterSignal->SetStringSelection( wStage.getentersignal( m_Props ) == NULL ?
+      _T(""):wxString(wStage.getentersignal( m_Props ),wxConvUTF8) );
+  m_ExitSignal->SetStringSelection( wStage.getexitsignal( m_Props ) == NULL ?
+      _T(""):wxString(wStage.getexitsignal( m_Props ),wxConvUTF8) );
 
   initSections();
 
@@ -248,6 +286,24 @@ void StageDlg::OnSectionList( wxCommandEvent& event )
       TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
   }
 }
+
+
+void StageDlg::OnFreeAll( wxCommandEvent& event ) {
+  iONode section = wStage.getsection(m_Props);
+  while( section != NULL ) {
+    wStageSection.setlcid(section, NULL);
+    section = wStage.nextsection(m_Props, section);
+  }
+  initSections();
+
+  m_SectionLocoId->SetSelection(0);
+  iONode cmd = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+  wStage.setid( cmd, wStage.getid( m_Props ) );
+  wStage.setcmd( cmd, wBlock.loc );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
 
 void StageDlg::OnFreeSection( wxCommandEvent& event ) {
   m_SectionLocoId->SetSelection(0);

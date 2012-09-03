@@ -1632,6 +1632,8 @@
         <var name="reserved" vt="bool" defval="false" remark=""/>
         <var name="entering" vt="bool" defval="false" remark=""/>
         <var name="fbenterid" vt="string" defval="" range="*" required="true" remark="feedback ID"/>
+        <var name="entersignal" vt="string" defval="NULL" range="*"/>
+        <var name="exitsignal" vt="string" defval="NULL" range="*"/>
         <const name="compress" vt="string" val="compress"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <var name="secid" vt="string" defval="NULL" range="*"/>

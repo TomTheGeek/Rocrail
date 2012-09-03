@@ -86,6 +86,7 @@ If a train reaches the exit section it will be put back into auto mode.
 #include "rocrail/public/control.h"
 #include "rocrail/public/model.h"
 #include "rocrail/public/loc.h"
+#include "rocrail/public/signal.h"
 
 #include "rocs/public/doc.h"
 #include "rocs/public/trace.h"
@@ -102,6 +103,7 @@ If a train reaches the exit section it will be put back into auto mode.
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Signal.h"
 
 
 
@@ -113,6 +115,7 @@ static Boolean __freeSection(iIBlockBase inst, const char* secid);
 static Boolean __occSection(iIBlockBase inst, const char* secid, const char* lcid);
 static Boolean __moveStageLocos(iIBlockBase inst);
 static void __dumpSections( iOStage inst );
+static Boolean __freeSections(iIBlockBase inst, const char* locid);
 
 
 /** ----- OBase ----- */
@@ -199,6 +202,10 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
         __freeSection(inst, secid);
       }
       AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "free all section" );
+      __freeSections(inst, NULL);
     }
   }
 
@@ -348,7 +355,6 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
           LocOp.event( loc, (obj)inst, enter_event, 0, True, NULL );
         }
         data->wait4enter = False;
-
       }
     }
     else {
@@ -432,10 +438,14 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
             wLoc.setcmd(cmd, wLoc.velocity);
             wLoc.setV(cmd, 0);
             LocOp.cmd(loc, cmd);
-            if( ModelOp.isAuto( AppOp.getModel() ) ) {
+            if( !data->closereq && ModelOp.isAuto( AppOp.getModel() ) ) {
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s in auto mode", LocOp.getId(loc) );
               LocOp.go(loc);
             }
+            else if( data->closereq ) {
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s not in auto mode; block is closed.", LocOp.getId(loc) );
+            }
+
             if( !data->pendingFree ) {
               /*
               iONode s = (iONode)ListOp.get(data->sectionList, data->pendingSection );
@@ -578,7 +588,25 @@ static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse, int* oppwait 
 /**  */
 static Boolean _green( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
   iOStageData data = Data(inst);
-  return False;
+  Boolean semaphore = False;
+  const char* sgId = NULL;
+
+  if( reverse )
+    return False;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set green %s signal", distant?"enter":"exit" );
+
+  sgId = distant ? wStage.getentersignal( data->props ):wStage.getexitsignal( data->props );
+
+  if( sgId != NULL && StrOp.len( sgId ) > 0 ) {
+    iOModel model = AppOp.getModel();
+    iOSignal sg = ModelOp.getSignal( model, sgId );
+    if( sg != NULL ) {
+      SignalOp.green( sg );
+      semaphore = StrOp.equals( wSignal.semaphore, wSignal.gettype(sg->base.properties(sg)) );
+    }
+  }
+  return semaphore;
 }
 
 
@@ -629,7 +657,8 @@ static void _inBlock( iIBlockBase inst ,const char* locid ) {
 static void _init( iIBlockBase inst ) {
   iOStageData data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init stageblock [%s]", data->id );
-  return;
+  StageOp.red( inst, False, False );
+  StageOp.red( inst, True, False );
 }
 
 /**
@@ -745,6 +774,11 @@ static Boolean _isFree( iIBlockBase inst ,const char* locid ) {
     return False;
   }
 
+  if( data->closereq ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stagingblock %s is closed", data->id );
+    return False;
+  }
+
   locoFit = __willLocoFit(inst, locid, False);
   if( !locoFit ) {
     __moveStageLocos(inst);
@@ -824,7 +858,25 @@ static Boolean _lockForGroup( iIBlockBase inst ,const char* locid ) {
 /**  */
 static Boolean _red( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
   iOStageData data = Data(inst);
-  return 0;
+  Boolean semaphore = False;
+  const char* sgId = NULL;
+
+  if( reverse )
+    return False;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set red %s signal", distant?"enter":"exit" );
+
+  sgId = distant ? wStage.getentersignal( data->props ):wStage.getexitsignal( data->props );
+
+  if( sgId != NULL && StrOp.len( sgId ) > 0 ) {
+    iOModel model = AppOp.getModel();
+    iOSignal sg = ModelOp.getSignal( model, sgId );
+    if( sg != NULL ) {
+      SignalOp.red( sg );
+      semaphore = StrOp.equals( wSignal.semaphore, wSignal.gettype(sg->base.properties(sg)) );
+    }
+  }
+  return semaphore;
 }
 
 
@@ -880,7 +932,34 @@ static void _setAnalog( iIBlockBase inst ,Boolean analog ) {
 /**  */
 static void _setDefaultAspect( iIBlockBase inst ,Boolean signalpair ) {
   iOStageData data = Data(inst);
-  return;
+  /* set default signal aspect */
+  int aspect = 0;
+  const char* defaspect = wCtrl.getdefaspect( AppOp.getIniNode( wCtrl.name() ) );
+  if( StrOp.equals( wSignal.green, defaspect) )
+    aspect = 1;
+  else if( StrOp.equals( wSignal.yellow, defaspect) )
+    aspect = 2;
+  else if( StrOp.equals( wSignal.white, defaspect) )
+    aspect = 3;
+
+  switch( aspect ) {
+    case 0:
+      StageOp.red( inst, False, signalpair );
+      StageOp.red( inst, True, signalpair );
+      break;
+    case 1:
+      StageOp.green( inst, False, signalpair );
+      StageOp.green( inst, True, signalpair );
+      break;
+    case 2:
+      StageOp.yellow( inst, False, signalpair );
+      StageOp.yellow( inst, True, signalpair );
+      break;
+    case 3:
+      StageOp.white( inst, False, signalpair );
+      StageOp.white( inst, True, signalpair );
+      break;
+  }
 }
 
 
@@ -1045,9 +1124,9 @@ static Boolean __freeSections(iIBlockBase inst, const char* locid) {
 
   for( i = 0; i < sections; i++ ) {
     iONode section = (iONode)ListOp.get( data->sectionList, i);
-    if( wStageSection.getlcid(section) != NULL && StrOp.equals(wStageSection.getlcid(section), locid) ) {
+    if( locid == NULL || ( wStageSection.getlcid(section) != NULL && StrOp.equals(wStageSection.getlcid(section), locid) ) ) {
       /* free section */
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock section[%d] from %s", i, locid );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock section[%d] from %s", i, locid!=NULL?locid:"-" );
       wStageSection.setlcid(section, NULL);
       unlocked = True;
     }
@@ -1114,8 +1193,11 @@ static Boolean __occSection(iIBlockBase inst, const char* secid, const char* lci
 /**  */
 static Boolean _unLock( iIBlockBase inst ,const char* locid ) {
   iOStageData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlock for loco %d", locid );
-  return __freeSections(inst, locid);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock for loco %s", locid!=NULL?locid:"?" );
+  if( locid != NULL ) {
+    return __freeSections(inst, locid);
+  }
+  return False;
 }
 
 
@@ -1137,14 +1219,46 @@ static Boolean _wait( iIBlockBase inst ,iOLoc loc ,Boolean reverse, Boolean* opp
 /**  */
 static Boolean _white( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
   iOStageData data = Data(inst);
-  return 0;
+  Boolean semaphore = False;
+  const char* sgId = NULL;
+
+  if( reverse )
+    return False;
+
+  sgId = distant ? wStage.getentersignal( data->props ):wStage.getexitsignal( data->props );
+
+  if( sgId != NULL && StrOp.len( sgId ) > 0 ) {
+    iOModel model = AppOp.getModel();
+    iOSignal sg = ModelOp.getSignal( model, sgId );
+    if( sg != NULL ) {
+      SignalOp.white( sg );
+      semaphore = StrOp.equals( wSignal.semaphore, wSignal.gettype(sg->base.properties(sg)) );
+    }
+  }
+  return semaphore;
 }
 
 
 /**  */
 static Boolean _yellow( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
   iOStageData data = Data(inst);
-  return 0;
+  Boolean semaphore = False;
+  const char* sgId = NULL;
+
+  if( reverse )
+    return False;
+
+  sgId = distant ? wStage.getentersignal( data->props ):wStage.getexitsignal( data->props );
+
+  if( sgId != NULL && StrOp.len( sgId ) > 0 ) {
+    iOModel model = AppOp.getModel();
+    iOSignal sg = ModelOp.getSignal( model, sgId );
+    if( sg != NULL ) {
+      SignalOp.yellow( sg );
+      semaphore = StrOp.equals( wSignal.semaphore, wSignal.gettype(sg->base.properties(sg)) );
+    }
+  }
+  return semaphore;
 }
 
 
