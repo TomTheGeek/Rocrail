@@ -900,7 +900,7 @@ void TimedActions::initCommands()
     case 12: // sensor
       m_Command->Append(wxString( wAction.output_on, wxConvUTF8));
       m_Command->Append(wxString( wAction.output_off, wxConvUTF8));
-      m_Command->Append(wxString( wAction.sensor_counter_reset, wxConvUTF8));
+      m_Command->Append(wxString( wFeedback.reset, wxConvUTF8));
       break;
   }
 

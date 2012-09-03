@@ -467,12 +467,12 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       const char* cmdStr = wAction.getcmd( data->action );
       int error = 0;
       wFeedback.setid( cmd, id );
-      if( StrOp.equals("resetcounter", cmdStr) ) {
+      if( StrOp.equals(wFeedback.reset, cmdStr) ) {
         wFeedback.setcmd( cmd, wFeedback.reset );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "resetting counter sensor [%s]", id );
         FBackOp.cmd( fb, cmd, True );
       } else {
-        wFeedback.setstate( cmd, StrOp.equals("on", cmdStr) ? True:False);
+        wFeedback.setstate( cmd, StrOp.equals(wOutput.on, cmdStr) ? True:False);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting sensor [%s] to [%s]", id, cmdStr );
         FBackOp.event( fb, cmd );
       }

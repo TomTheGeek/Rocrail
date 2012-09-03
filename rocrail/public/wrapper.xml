@@ -2258,7 +2258,6 @@
         <const name="route_lockset" vt="string" val="lockset"/>
         <const name="route_unlock" vt="string" val="unlock"/>
         <const name="text_update" vt="string" val="update"/>
-        <const name="sensor_counter_reset" vt="string" val="resetcounter"/>
         <var name="id" vt="string" defval="NULL" range="*" remark="action id"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
         <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>
