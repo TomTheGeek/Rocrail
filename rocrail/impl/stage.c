@@ -1043,8 +1043,13 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
     iONode section = (iONode)ListOp.get(data->sectionList, i);
 
     if( nextFreeSection == NULL && (wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0) ) {
-      iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbid(section) );
-      if( fb != NULL && FBackOp.isState(fb, "false") ) {
+      iOFBack fb    = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbid(section) );
+      iOFBack fbocc = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbidocc(section) );
+      Boolean occ = False;
+      if( fbocc != NULL )
+        occ = FBackOp.isState(fb, "true");
+
+      if( fb != NULL && FBackOp.isState(fb, "false") && !occ ) {
         /* Last free section in the list */
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "section %d [%d] is free (%s)",
             i, wStageSection.getidx(section), wStageSection.getlcid(section) == NULL ? "-":wStageSection.getlcid(section) );

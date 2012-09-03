@@ -1641,6 +1641,7 @@
           <var name="id" vt="string" defval="?" range="*" required="true"/>
           <var name="lcid" vt="string" defval="NULL" range="*" remark=""/>
           <var name="fbid" vt="string" defval="" range="*" required="true" remark="feedback ID"/>
+          <var name="fbidocc" vt="string" defval="" range="*" required="true" remark="feedback ID of section body."/>
           <var name="action" vt="string" defval=""/>
           <var name="nr" vt="int" defval="0"/>
           <var name="idx" vt="int" defval="0"/>

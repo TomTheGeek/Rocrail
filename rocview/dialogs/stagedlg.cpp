@@ -101,6 +101,7 @@ void StageDlg::initLabels() {
   // Sections
   m_labSectionID->SetLabel( wxGetApp().getMsg( "id" ) );
   m_labSectionSensor->SetLabel( wxGetApp().getMsg( "sensor" ) );
+  m_labOccSensor->SetLabel( wxGetApp().getMsg( "occupancy" ) );
   m_AddSection->SetLabel( wxGetApp().getMsg( "add" ) );
   m_ModifySection->SetLabel( wxGetApp().getMsg( "modify" ) );
   m_DeleteSection->SetLabel( wxGetApp().getMsg( "delete" ) );
@@ -111,6 +112,7 @@ void StageDlg::initLabels() {
 
   m_EnterSensor->Append( _T("") );
   m_SectionSensor->Append( _T("") );
+  m_OccSensor->Append( _T("") );
 
   iONode model = wxGetApp().getModel();
   iOList list = ListOp.inst();
@@ -131,6 +133,7 @@ void StageDlg::initLabels() {
       const char* id = (const char*)ListOp.get( list, i );
       m_EnterSensor->Append( wxString(id,wxConvUTF8) );
       m_SectionSensor->Append( wxString(id,wxConvUTF8) );
+      m_OccSensor->Append( wxString(id,wxConvUTF8) );
     }
 
   }
@@ -275,6 +278,8 @@ void StageDlg::OnSectionList( wxCommandEvent& event )
       m_SectionID->SetValue( wxString(wStageSection.getid( m_Section ),wxConvUTF8) );
       m_SectionSensor->SetStringSelection( wStageSection.getfbid( m_Section ) == NULL ?
           _T(""):wxString(wStageSection.getfbid( m_Section ),wxConvUTF8) );
+      m_OccSensor->SetStringSelection( wStageSection.getfbidocc( m_Section ) == NULL ?
+          _T(""):wxString(wStageSection.getfbidocc( m_Section ),wxConvUTF8) );
       m_SectionLocoId->SetStringSelection( wStageSection.getlcid( m_Section ) == NULL ?
           _T(""):wxString(wStageSection.getlcid( m_Section ),wxConvUTF8) );
       m_OwnSectionLength->SetValue( wStageSection.getlen( m_Section ) );
@@ -336,6 +341,7 @@ void StageDlg::OnSectionAdd( wxCommandEvent& event )
   iONode node = NodeOp.inst(wStageSection.name(), m_Props, ELEMENT_NODE);
   wStageSection.setid( node, m_SectionID->GetValue().mb_str(wxConvUTF8) );
   wStageSection.setfbid( node, m_SectionSensor->GetStringSelection().mb_str(wxConvUTF8) );
+  wStageSection.setfbidocc( node, m_OccSensor->GetStringSelection().mb_str(wxConvUTF8) );
   NodeOp.addChild( m_Props, node );
   initSections();
 }
@@ -351,6 +357,7 @@ void StageDlg::OnSectionModify( wxCommandEvent& event )
     if( node != NULL ) {
       wStageSection.setid( node, m_SectionID->GetValue().mb_str(wxConvUTF8) );
       wStageSection.setfbid( node, m_SectionSensor->GetStringSelection().mb_str(wxConvUTF8) );
+      wStageSection.setfbidocc( node, m_OccSensor->GetStringSelection().mb_str(wxConvUTF8) );
       wStageSection.setlcid( node, m_SectionLocoId->GetStringSelection().mb_str(wxConvUTF8) );
       wStageSection.setlen( node, m_OwnSectionLength->GetValue() );
       initSections();
