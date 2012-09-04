@@ -1538,7 +1538,7 @@
         <const name="wait_fixed" vt="string" val="fixed" remark="Wait a fixed period of time."/>
         <const name="wait_loc" vt="string" val="loc" remark="Takes the loc wait time as defined in lc."/>
         <const name="wait_none" vt="string" val="none"/>
-        <var name="waitmode" vt="string" defval="random" range="random,fixed,loc"/>
+        <var name="waitmode" vt="string" defval="none" range="random,fixed,loc,none"/>
         <var name="waittime" vt="int" defval="10" unit="s" range="0-*" remark="Wait time in case of wait_fixed."/>
         <var name="minwaittime" vt="int" defval="1" unit="s" range="0-*" remark="Min. wait time in case of wait_random."/>
         <var name="maxwaittime" vt="int" defval="30" unit="s" range="0-*" remark="Max. wait time in case of wait_random."/>

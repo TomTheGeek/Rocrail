@@ -202,8 +202,8 @@ void StageDlg::initLabels() {
   m_WaitType->SetLabel( wxGetApp().getMsg( "type" ) );
   m_WaitType->SetString( 0, wxGetApp().getMsg( "random" ) );
   m_WaitType->SetString( 1, wxGetApp().getMsg( "fixed" ) );
-  m_WaitType->SetString( 2, wxGetApp().getMsg( "loc" ) );
-  m_WaitType->SetString( 3, wxGetApp().getMsg( "no" ) );
+  m_WaitType->SetString( 2, wxGetApp().getMsg( "locomotive" ) );
+  m_WaitType->SetString( 3, wxGetApp().getMsg( "none" ) );
   m_labRandomMin->SetLabel( wxGetApp().getMsg( "randommin" ) );
   m_labRandomMax->SetLabel( wxGetApp().getMsg( "randommax" ) );
   m_labFixed->SetLabel( wxGetApp().getMsg( "fixed" ) );
