@@ -196,7 +196,24 @@ void StageDlg::initLabels() {
 
   ListOp.base.del(list);
 
+  // Details
+  m_labDepartDelay->SetLabel( wxGetApp().getMsg( "departdelay" ) );
+  m_WaitBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "wait" ) );
+  m_WaitType->SetLabel( wxGetApp().getMsg( "type" ) );
+  m_WaitType->SetString( 0, wxGetApp().getMsg( "random" ) );
+  m_WaitType->SetString( 1, wxGetApp().getMsg( "fixed" ) );
+  m_WaitType->SetString( 2, wxGetApp().getMsg( "loc" ) );
+  m_WaitType->SetString( 3, wxGetApp().getMsg( "no" ) );
+  m_labRandomMin->SetLabel( wxGetApp().getMsg( "randommin" ) );
+  m_labRandomMax->SetLabel( wxGetApp().getMsg( "randommax" ) );
+  m_labFixed->SetLabel( wxGetApp().getMsg( "fixed" ) );
 
+  m_SpeedBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "speed" ) );
+  m_ExitSpeed->SetLabel( wxGetApp().getMsg( "departure" ) );
+  m_ExitSpeed->SetString( 0, wxGetApp().getMsg( "min" ) );
+  m_ExitSpeed->SetString( 1, wxGetApp().getMsg( "mid" ) );
+  m_ExitSpeed->SetString( 2, wxGetApp().getMsg( "cruise" ) );
+  m_ExitSpeed->SetString( 3, wxGetApp().getMsg( "max" ) );
 
   // Buttons
   m_stdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -218,6 +235,34 @@ bool StageDlg::evaluate() {
   wStage.setfbenterid( m_Props, m_EnterSensor->GetStringSelection().mb_str(wxConvUTF8) );
   wStage.setentersignal( m_Props, m_EnterSignal->GetStringSelection().mb_str(wxConvUTF8) );
   wStage.setexitsignal( m_Props, m_ExitSignal->GetStringSelection().mb_str(wxConvUTF8) );
+
+  // Details
+  wStage.setdepartdelay( m_Props, m_DepartDelay->GetValue() );
+
+
+  if( m_WaitType->GetSelection() == 0 )
+    wStage.setwaitmode( m_Props, wBlock.wait_random );
+  else if( m_WaitType->GetSelection() == 1 )
+    wStage.setwaitmode( m_Props, wBlock.wait_fixed );
+  else if( m_WaitType->GetSelection() == 2 )
+    wStage.setwaitmode( m_Props, wBlock.wait_loc );
+  else
+    wStage.setwaitmode( m_Props, wBlock.wait_none );
+
+  wStage.setminwaittime( m_Props, m_RandomMin->GetValue() );
+  wStage.setmaxwaittime( m_Props, m_RandomMax->GetValue() );
+  wStage.setwaittime( m_Props, m_Fixed->GetValue() );
+
+  if( m_ExitSpeed->GetSelection() == 0 )
+    wStage.setexitspeed( m_Props, wBlock.min );
+  else if( m_ExitSpeed->GetSelection() == 1 )
+    wStage.setexitspeed( m_Props, wBlock.mid );
+  else if( m_ExitSpeed->GetSelection() == 2 )
+    wStage.setexitspeed( m_Props, wBlock.cruise );
+  else if( m_ExitSpeed->GetSelection() == 3 )
+    wStage.setexitspeed( m_Props, wBlock.max );
+
+
   return true;
 }
 
@@ -264,6 +309,33 @@ void StageDlg::initValues() {
       _T(""):wxString(wStage.getentersignal( m_Props ),wxConvUTF8) );
   m_ExitSignal->SetStringSelection( wStage.getexitsignal( m_Props ) == NULL ?
       _T(""):wxString(wStage.getexitsignal( m_Props ),wxConvUTF8) );
+
+  // Details
+  m_DepartDelay->SetValue( wStage.getdepartdelay( m_Props ) );
+
+  int wait = 3;
+  if( StrOp.equals( wBlock.wait_random, wStage.getwaitmode( m_Props ) ) )
+    wait = 0;
+  else if( StrOp.equals( wBlock.wait_fixed, wStage.getwaitmode( m_Props ) ) )
+    wait = 1;
+  else if( StrOp.equals( wBlock.wait_loc, wStage.getwaitmode( m_Props ) ) )
+    wait = 2;
+  m_WaitType->SetSelection( wait );
+
+  m_RandomMin->SetValue( wStage.getminwaittime( m_Props ) );
+  m_RandomMax->SetValue( wStage.getwaittime( m_Props ) );
+  m_Fixed->SetValue( wStage.getwaittime( m_Props ) );
+
+  int speed = 0;
+  if( StrOp.equals( wBlock.min, wStage.getexitspeed( m_Props ) ) )
+    speed = 0;
+  else if( StrOp.equals( wBlock.mid, wStage.getexitspeed( m_Props ) ) )
+    speed = 1;
+  else if( StrOp.equals( wBlock.cruise, wStage.getexitspeed( m_Props ) ) )
+    speed = 2;
+  else if( StrOp.equals( wBlock.max, wStage.getexitspeed( m_Props ) ) )
+    speed = 3;
+  m_ExitSpeed->SetSelection( speed );
 
   initSections();
 

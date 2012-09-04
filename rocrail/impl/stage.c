@@ -339,30 +339,35 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
   iONode section = (iONode)MapOp.get( data->fbMap, id );
   Boolean endSection = __isEndSection(inst, section);
 
-  if( StrOp.equals( wStage.getfbenterid(data->props), id ) && puls ) {
+  if( StrOp.equals( wStage.getfbenterid(data->props), id ) ) {
     if( data->locId != NULL && StrOp.len(data->locId) > 0 && data->wait4enter ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "expecting loco %s: ENTER", data->locId );
-      if( data->locId != NULL ) {
-        iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId);
-        iONode nodeD = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
-        wStage.setid( nodeD, data->id );
-        wStage.setentering( nodeD, True );
-        wStage.setlocid( nodeD, data->locId );
-        AppOp.broadcastEvent( nodeD );
+      if( puls ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "expecting loco %s: ENTER", data->locId );
+        if( data->locId != NULL ) {
+          iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId);
+          iONode nodeD = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+          wStage.setid( nodeD, data->id );
+          wStage.setentering( nodeD, True );
+          wStage.setlocid( nodeD, data->locId );
+          AppOp.broadcastEvent( nodeD );
 
-        if( loc != NULL ) {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "informing loco %s of ENTER event", data->locId );
-          LocOp.event( loc, (obj)inst, enter_event, 0, True, NULL );
-        }
-        data->wait4enter = False;
+          if( loc != NULL ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "informing loco %s of ENTER event", data->locId );
+            LocOp.event( loc, (obj)inst, enter_event, 0, True, NULL );
+          }
+          data->wait4enter = False;
 
-        if( wStage.getentersignal( data->props ) != NULL && StrOp.len( wStage.getentersignal( data->props ) ) > 0 ) {
-          iOModel model = AppOp.getModel();
-          iOSignal sg = ModelOp.getSignal( model, wStage.getentersignal( data->props ) );
-          if( sg != NULL ) {
-            SignalOp.red( sg );
+          if( wStage.getentersignal( data->props ) != NULL && StrOp.len( wStage.getentersignal( data->props ) ) > 0 ) {
+            iOModel model = AppOp.getModel();
+            iOSignal sg = ModelOp.getSignal( model, wStage.getentersignal( data->props ) );
+            if( sg != NULL ) {
+              SignalOp.red( sg );
+            }
           }
         }
+      }
+      else {
+        /* Ignore off event. */
       }
     }
     else {
@@ -561,7 +566,10 @@ static int _getTDport( iIBlockBase inst ) {
 /**  */
 static const char* _getVelocity( iIBlockBase inst ,int* percent ,Boolean onexit ,Boolean reverse, Boolean onstop ) {
   iOStageData data = Data(inst);
-  return wBlock.min;
+  if( onexit )
+    return wStage.getexitspeed(data->props);
+  else
+    return wBlock.min;
 }
 
 
@@ -573,7 +581,8 @@ static int _getVisitCnt( iIBlockBase inst ,const char* locid ) {
 
 
 static int _getDepartDelay( iIBlockBase inst ) {
-  return 0;
+  iOStageData data = Data(inst);
+  return wStage.getdepartdelay(data->props) ;
 }
 
 static float _getmvspeed( iIBlockBase inst ) {
@@ -589,7 +598,35 @@ static int _getMaxKmh( iIBlockBase inst ) {
 static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse, int* oppwait ) {
   iOStageData data = Data(inst);
   *oppwait = 1;
-  return 1;
+
+  if( StrOp.equals( wLoc.cargo_cleaning, wLoc.getcargo( (iONode)loc->base.properties( loc ) ) ) ||
+      StrOp.equals( wBlock.wait_none, wBlock.getwaitmode( data->props ) ) )
+  {
+    return 0;
+  }
+  else if( StrOp.equals( wBlock.wait_random, wBlock.getwaitmode( data->props ) ) ) {
+    /* Random between 1 and 30. */
+    int min = wStage.getminwaittime( data->props );
+    int max = wStage.getmaxwaittime( data->props );
+    float fmax = max;
+    int rwait = 0;
+    if( max < min ) {
+      fmax = min;
+      min = max;
+    }
+    rwait = min + (int) (fmax*rand()/(RAND_MAX+1.0));
+    return rwait;
+  }
+  else if( StrOp.equals( wBlock.wait_loc, wStage.getwaitmode( data->props ) ) ) {
+    return wLoc.getblockwaittime( (iONode)loc->base.properties( loc ) );
+  }
+  else if( wLoc.isuseownwaittime( (iONode)loc->base.properties( loc ) ) ) {
+    return wLoc.getblockwaittime( (iONode)loc->base.properties( loc ) );
+  }
+  else if( StrOp.equals( wBlock.wait_fixed, wStage.getwaitmode( data->props ) ) ) {
+    return wStage.getwaittime( data->props ) ;
+  }
+  return 0;
 }
 
 
