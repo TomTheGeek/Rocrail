@@ -1084,7 +1084,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
       iOFBack fbocc = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbidocc(section) );
       Boolean occ = False;
       if( fbocc != NULL )
-        occ = FBackOp.isState(fb, "true");
+        occ = FBackOp.isState(fbocc, "true");
 
       if( fb != NULL && FBackOp.isState(fb, "false") && !occ ) {
         /* Last free section in the list */
