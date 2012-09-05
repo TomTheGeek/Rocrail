@@ -888,7 +888,7 @@ static void __transactor( void* threadinst ) {
   iODINAMO   dinamo = (iODINAMO)ThreadOp.getParm(th);
   iODINAMOData data = Data(dinamo);
   Boolean        ok = True;
-  Boolean    gotrsp = False;
+  Boolean    gotrsp = True;
 
   byte lastdatagram[32];
   int lastdatagramsize = 0;
@@ -942,13 +942,14 @@ static void __transactor( void* threadinst ) {
 
     if( !data->dummyio ) {
       if( !gotrsp && lastdatagramsize > 0 && (SystemOp.getTick() - timer) > 20 ) {
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "resend last datagram size=%d timer=%d", lastdatagramsize, timer );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "resend last datagram size=%d timer=%d", lastdatagramsize, timer );
         TraceOp.dump( "lastdatagram", TRCLEVEL_BYTE, (char*)lastdatagram, lastdatagramsize );
         SerialOp.write( data->serial, (char*)lastdatagram, lastdatagramsize );
         timer = SystemOp.getTick();
         gotrsp = False;
       }
-      else {
+
+      if(gotrsp || (SystemOp.getTick() - timer) > 25 ) {
         int  lsize = 0;
         byte lbuffer[32]; /* make a local send buffer to preserve the datagram for checking */
         /* Send NULL datagram to signal Rocrail is still a live: */
@@ -956,6 +957,7 @@ static void __transactor( void* threadinst ) {
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send null datagram size=%d", lsize );
         TraceOp.dump( "nullreq", TRCLEVEL_BYTE, (char*)lbuffer, lsize );
         SerialOp.write( data->serial, (char*)lbuffer, lsize );
+        lastdatagramsize = 0;
         gotrsp = False;
       }
     }
@@ -963,7 +965,8 @@ static void __transactor( void* threadinst ) {
     /* check if there is a response waiting: */
     dsize = 0;
     ok = False;
-    if( !data->dummyio ) {
+    if( !data->dummyio && SerialOp.available(data->serial) > 0 ) {
+      MemOp.set( rbuffer, 0, 32 );
       do {
         /* check if it is the start of the datagram */
         ok = SerialOp.read( data->serial, (char*)rbuffer, 1 );
@@ -990,7 +993,8 @@ static void __transactor( void* threadinst ) {
         }
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "no startbyte = 0x%02X  rbuffer[0] & 0x80 = 0x%02X (ok=%d)", rbuffer[0], (rbuffer[0] & 0x80), ok );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+            "no startbyte = 0x%02X  rbuffer[0] & 0x80 = 0x%02X (ok=%d gotrsp=%d)", rbuffer[0], (rbuffer[0] & 0x80), ok, gotrsp );
         ok = False;
       }
     }
@@ -1151,14 +1155,15 @@ static struct ODINAMO* _inst( const iONode ini ,const iOTrace trc ) {
   if( !data->dummyio ) {
     data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );
 
-    SerialOp.setFlow( data->serial, -1 );
+    SerialOp.setFlow( data->serial, none );
     SerialOp.setLine( data->serial, 19200, 8, 1, odd, wDigInt.isrtsdisabled( ini ) );
-    SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), 200 );
+    SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
   }
 
 
   if( data->dummyio || SerialOp.open( data->serial ) ) {
     SystemOp.inst();
+    SerialOp.flush(data->serial);
     data->run = True;
     data->transactor = ThreadOp.inst( "transactor", &__transactor, __DINAMO );
     ThreadOp.start( data->transactor );
