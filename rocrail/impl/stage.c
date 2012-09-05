@@ -114,7 +114,7 @@ static void __initSensors( iOStage inst );
 static Boolean __freeSection(iIBlockBase inst, const char* secid);
 static Boolean __occSection(iIBlockBase inst, const char* secid, const char* lcid);
 static Boolean __moveStageLocos(iIBlockBase inst);
-static void __dumpSections( iOStage inst );
+static Boolean __dumpSections( iOStage inst );
 static Boolean __freeSections(iIBlockBase inst, const char* locid);
 
 
@@ -1125,9 +1125,9 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
     if( wStageSection.getidx(nextFreeSection) > wStageSection.getidx(firstOccupiedSection) )
     {
     iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(firstOccupiedSection) );
-    __dumpSections((iOStage)inst);
+    Boolean eOcc = __dumpSections((iOStage)inst);
 
-      if( lc != NULL ) {
+      if( lc != NULL && !eOcc ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "moving loco %s from %s[%d] to %s[%d] in stage %s",
             wStageSection.getlcid(firstOccupiedSection), wStageSection.getid(firstOccupiedSection), wStageSection.getidx(firstOccupiedSection),
@@ -1147,6 +1147,9 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
         LocOp.cmd(lc, cmd);
         data->pendingMove = True;
         locoMoved = True;
+      }
+      else if(eOcc) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "cannot move locos because of electrically occupied section(s)" );
       }
       else {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "loco %s not found", wStageSection.getlcid(firstOccupiedSection) );
@@ -1380,15 +1383,30 @@ static void _modify( iOStage inst, iONode props ) {
 
 
 
-static void __dumpSections( iOStage inst ) {
+static Boolean __dumpSections( iOStage inst ) {
   iOStageData data = Data(inst);
+  Boolean eOcc = False;
   iONode section = wStage.getsection( data->props );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "---------- dump sections" );
   while( section != NULL ) {
     const char* lcid = wStageSection.getlcid( section );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "section %d, loco %s", wStageSection.getnr(section), lcid==NULL?"-":lcid );
+    iOFBack fb    = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbid(section) );
+    iOFBack fbocc = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbidocc(section) );
+    Boolean occ = False;
+    if( fb != NULL )
+      occ = FBackOp.isState(fb, "true");
+    if( fbocc != NULL )
+      occ |= FBackOp.isState(fbocc, "true");
+
+    if( occ && lcid == NULL || occ && StrOp.len(lcid) == 0 ) {
+      eOcc = True;
+    }
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "section %d, loco %s, occ=%s",
+        wStageSection.getnr(section), lcid==NULL?"-":lcid, occ?"true":"false" );
     section = wStage.nextsection( data->props, section );
   }
+  return eOcc;
 }
 
 /**
