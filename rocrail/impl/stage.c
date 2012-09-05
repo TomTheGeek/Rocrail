@@ -726,7 +726,15 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
   data->freeSections = 0;
   for( i = 0; i < sections; i++ ) {
     iONode section = (iONode)ListOp.get( data->sectionList, i);
-    if( wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0 ) {
+    iOFBack fb    = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbid(section) );
+    iOFBack fbocc = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbidocc(section) );
+    Boolean occ = False;
+    if( fb != NULL )
+      occ = FBackOp.isState(fb, "true");
+    if( fbocc != NULL )
+      occ |= FBackOp.isState(fbocc, "true");
+
+    if( (!occ && wStageSection.getlcid(section) == NULL) || (!occ && StrOp.len(wStageSection.getlcid(section)) == 0) ) {
       /* free section */
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "section[%d] is free", i );
 
@@ -742,6 +750,9 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
       targetSection = i;
     }
     else {
+      if( (occ && wStageSection.getlcid(section) == NULL) || ( occ && StrOp.len(wStageSection.getlcid(section)) == 0) ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "section[%d] is electrically occupied", i );
+      }
       break;
     }
   }
