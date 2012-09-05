@@ -109,10 +109,15 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
         else {
           /* tour end */
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"tour [%s] has ended", wTour.getid(tour));
-          data->tour = NULL;
           data->tourIdx = 0;
-          data->run = False;
           data->state = LC_IDLE;
+          if( !wTour.isrecycle(tour) ) {
+            data->tour = NULL;
+            data->run = False;
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"recycle tour [%s]", wTour.getid(tour));
+          }
         }
         StrTokOp.base.del(tok);
       }

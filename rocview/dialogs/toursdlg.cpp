@@ -96,6 +96,7 @@ void ToursDlg::initLabels() {
   m_DeleteTour->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_labStartBlock->SetLabel( wxGetApp().getMsg( "startblock" ) );
   m_ShowAll->SetLabel( wxGetApp().getMsg( "showall" ) );
+  m_Recycle->SetLabel( wxGetApp().getMsg( "recycle" ) );
 
   // Schedules
   m_EntryAdd->SetLabel( wxGetApp().getMsg( "add" ) );
@@ -300,6 +301,7 @@ void ToursDlg::initValues() {
 
   // Index
   m_ID->SetValue( wxString(wTour.getid( m_Props ),wxConvUTF8) );
+  m_Recycle->SetValue(wTour.isrecycle( m_Props )?true:false);
 
   // Schedules
   m_EntryList->Clear();
@@ -325,6 +327,8 @@ bool ToursDlg::evaluate() {
     return false;
   }
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
+
+  wTour.setrecycle( m_Props, m_Recycle->IsChecked()?True:False);
 
   int cnt = m_EntryList->GetCount();
   TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "schedules in list: %d", cnt );
