@@ -88,6 +88,7 @@ void StageDlg::initLabels() {
   SetTitle(wxGetApp().getMsg( "stagingblock" ));
   m_Notebook->SetPageText( 0, wxGetApp().getMsg( "general" ) );
   m_Notebook->SetPageText( 1, wxGetApp().getMsg( "sections" ) );
+  m_Notebook->SetPageText( 2, wxGetApp().getMsg( "details" ) );
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );

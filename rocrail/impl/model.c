@@ -1867,6 +1867,19 @@ static void __startAllLocosRunner( void* threadinst ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Loco %s could not be started; skipping start gap.", LocOp.getId(loc) );
     loc = (iOLoc)MapOp.next( data->locMap );
   }
+
+  if( MapOp.size(data->stageMap) > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s stages...", ThreadOp.getName(th) );
+    iOStage stage = (iOStage)MapOp.first( data->stageMap );
+    while( stage != NULL ) {
+      iONode cmd = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+      wStage.setcmd( cmd, wStage.compress );
+      StageOp.cmd((iIBlockBase)stage, cmd);
+      ThreadOp.sleep( 10 + gap * 1000 );
+      stage = (iOStage)MapOp.next( data->stageMap );
+    }
+  }
+
   data->pendingstartall = False;
   ThreadOp.base.del(threadinst);
 }

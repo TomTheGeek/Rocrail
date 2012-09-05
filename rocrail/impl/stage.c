@@ -394,7 +394,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
     __dumpSections((iOStage)inst);
 
 
-    if( wStageSection.getidx(section) == data->targetSection ) {
+    if( puls && wStageSection.getidx(section) == data->targetSection ) {
       iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId);
       iONode nodeD = (iONode)NodeOp.base.clone(data->props);
       wStage.setid( nodeD, data->id );
