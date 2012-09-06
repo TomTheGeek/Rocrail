@@ -79,7 +79,7 @@ GenericCtrlDlg::GenericCtrlDlg( )
 
 GenericCtrlDlg::GenericCtrlDlg( wxWindow* parent, iONode props, const char* controllername, int bps, const char* hs )
 {
-  Create(parent, -1, wxGetApp().getMsg(controllername));
+  Create(parent, -1, wxString::From8BitData(controllername).Upper() );
   m_Props = props;
   initLabels();
 

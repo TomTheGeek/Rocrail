@@ -48,7 +48,8 @@ public:
     void OnButton(wxCommandEvent& event);
     void OnSlider(wxScrollEvent& event);
     void setLocProps( iONode props );
-    void updateLoc( iONode node );
+    bool updateLoc( iONode node );
+    bool setFX( iONode loco, iONode node );
     void SyncClock( iONode node );
     void stopTimer();
     iONode getLocProps();

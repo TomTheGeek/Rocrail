@@ -1074,7 +1074,12 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       LocControlDialog* dlg = (LocControlDialog*)ListOp.get(m_LocCtrlList, i);
       dlg->modelEvent(node);
     }
-    m_LC->updateLoc( node );
+    if( !m_LC->updateLoc( node ) ) {
+      // Update loco not selected in the loco panel.
+      iONode loco = findLoc(wFunCmd.getid(node));
+      if( loco != NULL )
+        m_LC->setFX(loco, node);
+    }
   }
   else if( StrOp.equals( wLoc.name(), NodeOp.getName( node ) ) )
   {

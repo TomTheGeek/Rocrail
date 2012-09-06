@@ -229,51 +229,54 @@ bool LC::setButtonColor( LEDButton* button, bool state ) {
   }
 }
 
-void LC::updateLoc( iONode node ) {
+bool LC::setFX( iONode l_LocProps, iONode node ) {
+  int fx = wLoc.getfx(l_LocProps);
+  wLoc.setfx(l_LocProps,
+      (NodeOp.getBool(node, "f1",  fx&0x0001?True:False)?0x0001:0x00) |
+      (NodeOp.getBool(node, "f2",  fx&0x0002?True:False)?0x0002:0x00) |
+      (NodeOp.getBool(node, "f3",  fx&0x0004?True:False)?0x0004:0x00) |
+      (NodeOp.getBool(node, "f4",  fx&0x0008?True:False)?0x0008:0x00) |
+      (NodeOp.getBool(node, "f5",  fx&0x0010?True:False)?0x0010:0x00) |
+      (NodeOp.getBool(node, "f6",  fx&0x0020?True:False)?0x0020:0x00) |
+      (NodeOp.getBool(node, "f7",  fx&0x0040?True:False)?0x0040:0x00) |
+      (NodeOp.getBool(node, "f8",  fx&0x0080?True:False)?0x0080:0x00) |
+
+      (NodeOp.getBool(node, "f9" ,  fx&0x0100?True:False)?0x0100:0x00) |
+      (NodeOp.getBool(node, "f10",  fx&0x0200?True:False)?0x0200:0x00) |
+      (NodeOp.getBool(node, "f11",  fx&0x0400?True:False)?0x0400:0x00) |
+      (NodeOp.getBool(node, "f12",  fx&0x0800?True:False)?0x0800:0x00) |
+      (NodeOp.getBool(node, "f13",  fx&0x1000?True:False)?0x1000:0x00) |
+      (NodeOp.getBool(node, "f14",  fx&0x2000?True:False)?0x2000:0x00) |
+      (NodeOp.getBool(node, "f15",  fx&0x4000?True:False)?0x4000:0x00) |
+      (NodeOp.getBool(node, "f16",  fx&0x8000?True:False)?0x8000:0x00) |
+
+      (NodeOp.getBool(node, "f17",  fx&0x010000?True:False)?0x010000:0x00) |
+      (NodeOp.getBool(node, "f18",  fx&0x020000?True:False)?0x020000:0x00) |
+      (NodeOp.getBool(node, "f19",  fx&0x040000?True:False)?0x040000:0x00) |
+      (NodeOp.getBool(node, "f20",  fx&0x080000?True:False)?0x080000:0x00) |
+      (NodeOp.getBool(node, "f21",  fx&0x100000?True:False)?0x100000:0x00) |
+      (NodeOp.getBool(node, "f22",  fx&0x200000?True:False)?0x200000:0x00) |
+      (NodeOp.getBool(node, "f23",  fx&0x400000?True:False)?0x400000:0x00) |
+      (NodeOp.getBool(node, "f24",  fx&0x800000?True:False)?0x800000:0x00) |
+
+      (NodeOp.getBool(node, "f25",  fx&0x01000000?True:False)?0x01000000:0x00) |
+      (NodeOp.getBool(node, "f26",  fx&0x02000000?True:False)?0x02000000:0x00) |
+      (NodeOp.getBool(node, "f27",  fx&0x04000000?True:False)?0x04000000:0x00) |
+      (NodeOp.getBool(node, "f28",  fx&0x08000000?True:False)?0x08000000:0x00)
+
+      );
+}
+
+
+bool LC::updateLoc( iONode node ) {
   if( m_LocProps != NULL && node != NULL ) {
     if( StrOp.equals( wLoc.getid( m_LocProps ), wLoc.getid( node ) ) ) {
       TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "updating %s", wLoc.getid( node ) );
 
       if( StrOp.equals( wFunCmd.name(), NodeOp.getName( node ) ) ) {
-        int fx = wLoc.getfx(m_LocProps);
         TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "function update %s", wLoc.getid( node ) );
 
-
-
-        wLoc.setfx(m_LocProps,
-            (NodeOp.getBool(node, "f1",  fx&0x0001?True:False)?0x0001:0x00) |
-            (NodeOp.getBool(node, "f2",  fx&0x0002?True:False)?0x0002:0x00) |
-            (NodeOp.getBool(node, "f3",  fx&0x0004?True:False)?0x0004:0x00) |
-            (NodeOp.getBool(node, "f4",  fx&0x0008?True:False)?0x0008:0x00) |
-            (NodeOp.getBool(node, "f5",  fx&0x0010?True:False)?0x0010:0x00) |
-            (NodeOp.getBool(node, "f6",  fx&0x0020?True:False)?0x0020:0x00) |
-            (NodeOp.getBool(node, "f7",  fx&0x0040?True:False)?0x0040:0x00) |
-            (NodeOp.getBool(node, "f8",  fx&0x0080?True:False)?0x0080:0x00) |
-
-            (NodeOp.getBool(node, "f9" ,  fx&0x0100?True:False)?0x0100:0x00) |
-            (NodeOp.getBool(node, "f10",  fx&0x0200?True:False)?0x0200:0x00) |
-            (NodeOp.getBool(node, "f11",  fx&0x0400?True:False)?0x0400:0x00) |
-            (NodeOp.getBool(node, "f12",  fx&0x0800?True:False)?0x0800:0x00) |
-            (NodeOp.getBool(node, "f13",  fx&0x1000?True:False)?0x1000:0x00) |
-            (NodeOp.getBool(node, "f14",  fx&0x2000?True:False)?0x2000:0x00) |
-            (NodeOp.getBool(node, "f15",  fx&0x4000?True:False)?0x4000:0x00) |
-            (NodeOp.getBool(node, "f16",  fx&0x8000?True:False)?0x8000:0x00) |
-
-            (NodeOp.getBool(node, "f17",  fx&0x010000?True:False)?0x010000:0x00) |
-            (NodeOp.getBool(node, "f18",  fx&0x020000?True:False)?0x020000:0x00) |
-            (NodeOp.getBool(node, "f19",  fx&0x040000?True:False)?0x040000:0x00) |
-            (NodeOp.getBool(node, "f20",  fx&0x080000?True:False)?0x080000:0x00) |
-            (NodeOp.getBool(node, "f21",  fx&0x100000?True:False)?0x100000:0x00) |
-            (NodeOp.getBool(node, "f22",  fx&0x200000?True:False)?0x200000:0x00) |
-            (NodeOp.getBool(node, "f23",  fx&0x400000?True:False)?0x400000:0x00) |
-            (NodeOp.getBool(node, "f24",  fx&0x800000?True:False)?0x800000:0x00) |
-
-            (NodeOp.getBool(node, "f25",  fx&0x01000000?True:False)?0x01000000:0x00) |
-            (NodeOp.getBool(node, "f26",  fx&0x02000000?True:False)?0x02000000:0x00) |
-            (NodeOp.getBool(node, "f27",  fx&0x04000000?True:False)?0x04000000:0x00) |
-            (NodeOp.getBool(node, "f28",  fx&0x08000000?True:False)?0x08000000:0x00)
-
-            );
+        setFX(m_LocProps, node);
 
         setFLabels();
 
@@ -307,8 +310,10 @@ void LC::updateLoc( iONode node ) {
           TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "velocity lights=%d", m_bFn );
         }
       }
+      return true;
     }
   }
+  return false;
 }
 
 
