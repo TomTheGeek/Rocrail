@@ -1676,8 +1676,9 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     return False;
   }
 
-  if( atoi(wTurntable.getcmd( nodeA )) > 0 ) {
+  if( atoi(wTurntable.getcmd( nodeA )) > 0 || StrOp.equals( wTurntable.getcmd(nodeA), "0" ) ) {
     __checkAction( (iOTT)inst, "goto");
+    __checkAction( (iOTT)inst, StrOp.fmt( "goto %s", wTurntable.getcmd( nodeA ) ) );
   }
   else {
     __checkAction( (iOTT)inst, wTurntable.getcmd( nodeA ));
