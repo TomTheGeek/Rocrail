@@ -1974,14 +1974,19 @@ static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent ) {
           wLoc.setV(consistcmd, V);
         }
 
-        if( wLoc.isconsist_syncfun( data->props ) ) {
-          int fchg = wFunCmd.getfnchanged( consistcmd );
-          int fmap = wLoc.getconsist_syncfunmap( data->props );
-          if( fchg > 0 && (fmap & 1 << (fchg-1) )  )
-            LocOp.cmd( consistloc, consistcmd );
+        if( StrOp.equals(wFunCmd.name(), NodeOp.getName(consistcmd) ) ) {
+          if( wLoc.isconsist_syncfun( data->props ) ) {
+            int fchg = wFunCmd.getfnchanged( consistcmd );
+            int fmap = wLoc.getconsist_syncfunmap( data->props );
+            if( fchg > 0 && (fmap & 1 << (fchg-1) )  )
+              LocOp.cmd( consistloc, consistcmd );
+          }
         }
-        else if( StrOp.equals(wLoc.name(), NodeOp.getName(consistcmd) ) )
+
+        if( StrOp.equals(wLoc.name(), NodeOp.getName(consistcmd) ) ) {
           LocOp.cmd( consistloc, consistcmd );
+        }
+
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "consist loco [%s] not found", tok );
