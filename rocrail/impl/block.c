@@ -1853,6 +1853,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
         }
 
         ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, "", False, 0, 0, NULL );
+        wBlock.setlocid( data->props, "" );
 
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Block \"%s\" unlock %s, group lock=[%s]",

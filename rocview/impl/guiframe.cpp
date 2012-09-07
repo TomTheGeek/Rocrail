@@ -1083,8 +1083,9 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
   }
   else if( StrOp.equals( wLoc.name(), NodeOp.getName( node ) ) )
   {
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loc event: [%s] destblock=[%s] throttleID=%s",
-        wLoc.getid( node ), (wLoc.getdestblockid( node ) != NULL ? wLoc.getdestblockid( node ):"-"), wLoc.getthrottleid(node) );
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loc event: [%s] block=[%s] destblock=[%s] throttleID=%s",
+        wLoc.getid( node ), (wLoc.getblockid( node ) != NULL ? wLoc.getblockid( node ):"-"),
+        (wLoc.getdestblockid( node ) != NULL ? wLoc.getdestblockid( node ):"-") , wLoc.getthrottleid(node) );
 
     for( int i = 0; i < ListOp.size(m_LocCtrlList); i++ ) {
       LocControlDialog* dlg = (LocControlDialog*)ListOp.get(m_LocCtrlList, i);

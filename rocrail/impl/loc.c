@@ -1644,7 +1644,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
     data->prevBlock = data->curBlock;
   }
   data->curBlock = id;
-  wLoc.setblockid( data->props, id );
+  wLoc.setblockid( data->props, id==NULL?"":id );
 
   if( data->driver != NULL )
     data->driver->curblock( data->driver, id );
@@ -1663,7 +1663,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
     wLoc.setmode( node, wLoc.getmode( data->props ) );
     wLoc.setresumeauto( node, wLoc.isresumeauto(data->props) );
     wLoc.setmanual( node, data->gomanual );
-    wLoc.setblockid( node, data->curBlock );
+    wLoc.setblockid( node, data->curBlock==NULL?"":data->curBlock );
     if( block != NULL && StrOp.equals( block->getLoc(block),wLoc.getid( data->props )) ) {
       wLoc.setdestblockid( node, data->destBlock );
     }
@@ -1903,12 +1903,25 @@ static void _reset( iOLoc inst, Boolean saveCurBlock ) {
   data->in    = False;
   data->exit  = False;
   data->out   = False;
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "reset [%s] in current block [%s]", LocOp.getId(inst), data->curBlock==NULL?"?":data->curBlock );
+      "reset [%s] in current block [%s]%s",
+      LocOp.getId(inst), data->curBlock==NULL?"?":data->curBlock, saveCurBlock?" (save current block)":"" );
+
+  if( !saveCurBlock ) {
+    wLoc.setblockid(data->props, "");
+    data->curBlock = NULL;
+  }
+
   data->destBlock = NULL;
-  wLoc.setblockid(data->props, NULL);
+  wLoc.setdestblockid(data->props, "");
+
   if( data->driver != NULL )
     data->driver->reset( data->driver, saveCurBlock );
+
+  /* Broadcast to clients. */
+  AppOp.broadcastEvent( (iONode)NodeOp.base.clone( data->props ) );
+
 }
 
 static void __stopgo( iOLoc inst ) {
@@ -2323,14 +2336,22 @@ static void _modify( iOLoc inst, iONode props ) {
 
     for( i = 0; i < cnt; i++ ) {
       iOAttr attr = NodeOp.getAttr( props, i );
-      const char* name  = AttrOp.getName( attr );
+      const char* attname  = AttrOp.getName( attr );
       const char* value = AttrOp.getVal( attr );
 
-      if( StrOp.equals("id", name) && StrOp.equals( value, wLoc.getid(data->props) ) )
+      if( StrOp.equals("id", attname) && StrOp.equals( value, wLoc.getid(data->props) ) )
         continue; /* skip to avoid making invalid pointers */
 
-      if( !StrOp.equals( "runtime", name ) )
-        NodeOp.setStr( data->props, name, value );
+
+      if( StrOp.equals( "blockid", attname ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "modify: %s blockid=\"%s\" (%s)",
+            LocOp.getId(inst), value, wLoc.getblockid(data->props)!=NULL?wLoc.getblockid(data->props):"-" );
+      }
+      if( StrOp.equals( "destblockid", attname ) )
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "modify: %s destblockid=\"%s\"", LocOp.getId(inst), value );
+
+      if( !StrOp.equals( "runtime", attname ) )
+        NodeOp.setStr( data->props, attname, value );
     }
 
     /* Leave the childs if no new are comming */
