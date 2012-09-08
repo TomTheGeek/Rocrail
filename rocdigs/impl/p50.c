@@ -595,10 +595,19 @@ static iOP50 _inst( const iONode settings, const iOTrace trace ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50 %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iOP50[%s]: %s,%d,%s,%d,%d,%s,%d",
-        wDigInt.getiid( settings ) != NULL ? wDigInt.getiid( settings ):"",
-        data->device, data->bps, parity, data->bits, data->stopBits, flow, data->timeout );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid        = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device     = %s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate   = %d", data->bps );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bits       = %d", data->bits );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stop bits  = %d", data->stopBits );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow       = %s", data->flow );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout    = %d", data->timeout );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ctsretry   = %d", data->ctsretry );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "readfb     = %d", data->readfb );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbmod      = %d", data->fbmod );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "poll sleep = %d", data->psleep );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "swtime     = %d", data->swtime );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
   SerialOp.setFlow( data->serial, data->flow );
