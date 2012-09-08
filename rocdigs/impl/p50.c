@@ -467,6 +467,8 @@ static void __feedbackReader( void* threadinst ) {
   iOP50Data o = Data(p50);
   unsigned char* fb = allocMem(256);
 
+  ThreadOp.sleep( 100 );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback reader started." );
   do {
     unsigned char out[256];
     unsigned char in [512];
@@ -491,6 +493,11 @@ static void __swTimeWatcher( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOP50 p50 = (iOP50)ThreadOp.getParm( th );
   iOP50Data o = Data(p50);
+
+
+  ThreadOp.sleep( 100 );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Switch time watcher started." );
+
   do {
     ThreadOp.sleep( 10 );
     if( o->lastSwCmd != -1 && o->lastSwCmd >= o->swtime ) {
@@ -508,6 +515,7 @@ static void __swTimeWatcher( void* threadinst ) {
       o->lastSwCmd += 10;
     }
   } while( o->run );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Switch time watcher ended." );
 }
 
 /* Status */
