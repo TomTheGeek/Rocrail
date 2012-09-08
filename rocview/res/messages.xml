@@ -18153,4 +18153,7 @@
   <Msg id="freeall">
     <en txt="Free all"/>
   </Msg>
+  <Msg id="merge">
+    <en txt="Merge"/>
+  </Msg>
 </Messages>
