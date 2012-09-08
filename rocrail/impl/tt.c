@@ -2528,7 +2528,7 @@ static Boolean _getRunDir( iOTT inst ) {
 }
 
 
-static void _reset( iIBlockBase inst ) {
+static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
   iOTTData data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
              "reset turntable [%s]", inst->base.id(inst) );

@@ -947,7 +947,7 @@ static Boolean _red( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
 
 
 /**  */
-static void _reset( iIBlockBase inst ) {
+static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
   iOStageData data = Data(inst);
   int sections = ListOp.size( data->sectionList );
   int i = 0;
@@ -963,9 +963,15 @@ static void _reset( iIBlockBase inst ) {
     iONode section = (iONode)ListOp.get( data->sectionList, i);
     const char* locid = wStageSection.getlcid(section);
     if( locid != NULL && StrOp.len( locid ) > 0 ) {
-      /* free section */
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock section[%d] from %s", i, locid );
-      wStageSection.setlcid(section, NULL);
+      if( ! saveCurBlock ) {
+        /* free section */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock section[%d] from %s", i, locid );
+        wStageSection.setlcid(section, NULL);
+      }
+      else {
+        /* soft reset: just inform about occupation */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "section[%d] is occupied by %s", i, locid );
+      }
     }
     else {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "section[%d] is not occupied", i );

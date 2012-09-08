@@ -1728,7 +1728,7 @@ static void __reset( iOModel inst, Boolean saveCurBlock ) {
   {
     iIBlockBase block = (iIBlockBase)MapOp.first( data->blockMap );
     while( block != NULL ) {
-      block->reset( block );
+      block->reset( block, saveCurBlock );
       if( block->getLoc( block ) != NULL && StrOp.len(block->getLoc( block )) > 0 ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "Block [%s] is occupied by [%d] after reset.", block->base.id(block), block->getLoc( block ) );
@@ -1759,7 +1759,7 @@ static void __reset( iOModel inst, Boolean saveCurBlock ) {
   {
     iIBlockBase tt = (iIBlockBase)MapOp.first( data->ttMap );
     while( tt != NULL ) {
-      tt->reset( tt );
+      tt->reset( tt, saveCurBlock );
       tt = (iIBlockBase)MapOp.next( data->ttMap );
     }
   }
@@ -2108,7 +2108,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
     iONode  fstat = NULL;
     /* Send all feedbacks with high state to the client. */
     fstat = (iONode)ListOp.first( fstats );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Sending %d fstat's to client...", ListOp.size( fstats ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Sending %d fstats to client...", ListOp.size( fstats ) );
     while( fstat != NULL ) {
       ClntConOp.postEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone( fstat ), wCommand.getserver( cmd ) );
       fstat = (iONode)ListOp.next( fstats );

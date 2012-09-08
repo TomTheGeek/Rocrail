@@ -333,6 +333,7 @@
     </fun>
     <fun name="reset" vt="void">
       <param name="inst" vt="this" remark="Block instance"/>
+      <param name="saveCurBlock" vt="Boolean" remark="save current block occupation"/>
     </fun>
     <fun name="setManager" vt="void">
       <param name="inst" vt="this" remark="Block instance"/>
