@@ -48,7 +48,7 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
   int wait = 0;
   int oppwait = 0;
 
-  if(data->loc->getCurBlock( data->loc ) != NULL) {
+  if(data->loc->getCurBlock( data->loc ) != NULL && data->curBlock != NULL) {
     wait = data->curBlock->getWait(data->curBlock, data->loc, reverse, &oppwait );
     /* manual signal in opposite direction */
     if( data->opponly ) {
