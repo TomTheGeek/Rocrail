@@ -370,7 +370,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
         /* Ignore off event. */
       }
     }
-    else if( puls ) {
+    else if( data->locId == NULL && puls ) {
       if( wCtrl.ispoweroffatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
         /* power off */
         AppOp.stop();
