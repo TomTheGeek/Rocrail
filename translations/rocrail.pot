@@ -5801,3 +5801,9 @@ msgstr ""
 msgid "Free all"
 msgstr ""
 
+#. 
+# id="merge"
+#, c-format
+msgid "Merge"
+msgstr ""
+
