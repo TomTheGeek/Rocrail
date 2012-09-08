@@ -503,6 +503,7 @@ void PlanPanel::routeidSelection(iONode sel) {
   int y  = NodeOp.getInt(sel, "y", 0);
   int cx = NodeOp.getInt(sel, "cx", 0);
   int cy = NodeOp.getInt(sel, "cy", 0);
+  Boolean merge = NodeOp.getBool(sel, "mergerouteids", False);
 
   /* prepare notify RocRail */
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "routeIDs selection" );
@@ -521,7 +522,16 @@ void PlanPanel::routeidSelection(iONode sel) {
     if( wItem.getx(props) >= x && wItem.getx(props) < x+cx &&
         wItem.gety(props) >= y && wItem.gety(props) < y+cy )
     {
-      wItem.setrouteids(props, NodeOp.getStr(sel, "routeids", "" ) );
+      const char* oldroutes = wItem.getrouteids(props );
+      const char* newroutes = NodeOp.getStr(sel, "routeids", "" );
+      if( merge && oldroutes != NULL && StrOp.len(oldroutes) > 0 ) {
+        char* s = StrOp.fmt("%s,%s", oldroutes, newroutes );
+        wItem.setrouteids(props, s );
+        StrOp.free(s);
+      }
+      else
+        wItem.setrouteids(props, newroutes );
+
       NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( props ) );
     }
     node = (wxNode*)m_ChildTable->Next();

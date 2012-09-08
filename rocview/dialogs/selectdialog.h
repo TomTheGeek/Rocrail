@@ -127,6 +127,7 @@ public:
     wxRadioBox* m_ActionBox;
     wxStaticText* m_labRouteIDs;
     wxTextCtrl* m_RouteIDs;
+    wxCheckBox* m_MergeRouteIDs;
     wxStaticText* m_labBlockID;
     wxComboBox* m_BlockID;
     wxButton* m_Cancel;

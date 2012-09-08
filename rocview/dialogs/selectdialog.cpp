@@ -136,6 +136,10 @@ void SelectDialog::initLabels() {
 
   m_labLevel->SetLabel( wxGetApp().getMsg( "level" ) );
 
+  m_labRouteIDs->SetLabel( wxGetApp().getMsg( "routeids" ) );
+  m_MergeRouteIDs->SetLabel( wxGetApp().getMsg( "merge" ) );
+  m_labBlockID->SetLabel( wxGetApp().getMsg( "blockid" ) );
+
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
@@ -231,6 +235,7 @@ iONode SelectDialog::getSelection() {
   NodeOp.setStr( sel, "desttitle", m_destTitle );
   NodeOp.setInt( sel, "action", m_action );
   NodeOp.setStr( sel, "routeids", m_RouteIDs->GetValue().mb_str(wxConvUTF8) );
+  NodeOp.setBool( sel, "mergerouteids", m_MergeRouteIDs->IsChecked()?True:False );
   NodeOp.setStr( sel, "blockid", m_BlockID->GetStringSelection().mb_str(wxConvUTF8) );
   return sel;
 }
@@ -262,6 +267,7 @@ void SelectDialog::Init()
     m_ActionBox = NULL;
     m_labRouteIDs = NULL;
     m_RouteIDs = NULL;
+    m_MergeRouteIDs = NULL;
     m_labBlockID = NULL;
     m_BlockID = NULL;
     m_Cancel = NULL;
@@ -353,7 +359,7 @@ void SelectDialog::CreateControls()
     m_ActionBox->SetSelection(0);
     itemBoxSizer2->Add(m_ActionBox, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer23 = new wxFlexGridSizer(0, 2, 0, 0);
+    wxFlexGridSizer* itemFlexGridSizer23 = new wxFlexGridSizer(0, 3, 0, 0);
     itemFlexGridSizer23->AddGrowableCol(1);
     itemBoxSizer2->Add(itemFlexGridSizer23, 0, wxGROW|wxALL, 5);
 
@@ -363,6 +369,10 @@ void SelectDialog::CreateControls()
     m_RouteIDs = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer23->Add(m_RouteIDs, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    m_MergeRouteIDs = new wxCheckBox( itemDialog1, wxID_ANY, _("Merge"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_MergeRouteIDs->SetValue(false);
+    itemFlexGridSizer23->Add(m_MergeRouteIDs, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
     m_labBlockID = new wxStaticText( itemDialog1, wxID_ANY, _("BlockID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer23->Add(m_labBlockID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
@@ -370,16 +380,16 @@ void SelectDialog::CreateControls()
     m_BlockID = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BlockIDStrings, wxCB_DROPDOWN );
     itemFlexGridSizer23->Add(m_BlockID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer28 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer29 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer28, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer29, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer28->AddButton(m_Cancel);
+    itemStdDialogButtonSizer29->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer28->AddButton(m_OK);
+    itemStdDialogButtonSizer29->AddButton(m_OK);
 
-    itemStdDialogButtonSizer28->Realize();
+    itemStdDialogButtonSizer29->Realize();
 
 ////@end SelectDialog content construction
 }
