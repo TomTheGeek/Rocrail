@@ -2307,7 +2307,7 @@ static Boolean _hasPre2In( iIBlockBase inst, const char* fromBlockID ) {
 }
 
 
-static void _reset( iIBlockBase inst ) {
+static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
   iOBlockData data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
              "reset block [%s]", data->id );

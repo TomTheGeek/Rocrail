@@ -66,6 +66,7 @@
     </fun>
     <fun name="getdonkey" vt="const char*"/>
     <fun name="getdoneml" vt="const char*"/>
+    <fun name="isKeyValid" vt="Boolean"/>
     <data>
       <var name="ini" vt="iONode" remark="RocRail ini"/>
       <var name="newini" vt="iONode" remark="RocRail ini"/>

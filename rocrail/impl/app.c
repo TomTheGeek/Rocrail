@@ -256,6 +256,27 @@ static const char* _getdoneml( void ) {
     return "";
 }
 
+static Boolean _isKeyValid( void ) {
+  if( __appinst != NULL ) {
+    iOAppData data = Data(__appinst);
+    unsigned char* donkey = StrOp.strToByte(data->donkey);
+    char* decodedKey = SystemOp.decode(donkey, StrOp.len(data->donkey)/2, data->doneml);
+    Boolean isExpired = SystemOp.isExpired(decodedKey, NULL, NULL);
+
+    freeMem(decodedKey);
+    freeMem(donkey);
+
+    if( isExpired ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no valid donation key found" );
+    }
+    else {
+      return True;
+    }
+  }
+  return False;
+}
+
+
 static void _setIni( iONode ini ) {
   if( __appinst != NULL ) {
     iOAppData data  = Data(__appinst);

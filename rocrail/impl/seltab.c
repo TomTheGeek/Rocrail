@@ -1114,7 +1114,7 @@ static void _modify( struct OSelTab* inst ,iONode props ) {
 
 
 /**  */
-static void _reset( iIBlockBase inst ) {
+static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
   iOSelTabData data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
              "reset selectiontable [%s]", inst->base.id( inst ) );
