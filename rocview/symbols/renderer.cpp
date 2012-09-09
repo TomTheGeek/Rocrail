@@ -686,6 +686,7 @@ void SymbolRenderer::initSym() {
       m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, stagetype::stage_occ );
       m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, stagetype::stage_res );
       m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, stagetype::stage_ent );
+      m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, stagetype::stage_closed );
     }
   }
   else if( StrOp.equals( wSelTab.name(), nodeName ) ) {
@@ -1583,6 +1584,10 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
   else if( m_SvgSym4!=NULL && m_iOccupied == 3 ) {
     /* enter state */
     drawSvgSym(dc, m_SvgSym4, ori);
+  }
+  else if( m_SvgSym5!=NULL && m_iOccupied == 4 ) {
+    /* closed state */
+    drawSvgSym(dc, m_SvgSym5, ori);
   }
 
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3

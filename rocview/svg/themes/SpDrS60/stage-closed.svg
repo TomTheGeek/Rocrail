@@ -1,0 +1,11 @@
+<svg width="128" height="32">
+  <g>
+    <!-- Stage -->
+    <path stroke="rgb(0,0,0)" fill="black" d="M 0,3 L 117,3 L 127,13 L 127,17 L 117,28 L 0,28 z " />
+    <path stroke="rgb(0,0,0)" fill="white" d="M 1,4 L 116,4 L 126,14 L 126,16 L 116,27 L 1,27 z " />
+    <!--path stroke="rgb(0,0,0)" fill="none" d="M 1,4 L 126,4 L 126,27 L 1,27 z " /-->
+    <path stroke="rgb(255,200,200)" fill="rgb(200,200,200)" d="M 2,5 L 115,5 L 125,13 L 125,15 L 115,26 L 2,26 z " />
+    <path stroke="rgb(0,0,0)" fill="none" d="M 3,23 L 7,23 z " />
+    <path stroke="rgb(0,0,0)" fill="none" d="M 5,21 L 5,25 z " />
+  </g>
+</svg>

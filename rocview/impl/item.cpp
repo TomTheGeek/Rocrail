@@ -1552,6 +1552,14 @@ void Symbol::OnPopup(wxMouseEvent& event)
 
     else if( StrOp.equals( wStage.name(), NodeOp.getName( m_Props ) ) ) {
       menu.Append( ME_Compress, wxGetApp().getMenu("compress") );
+      const char* state = wBlock.getstate( m_Props );
+      if( StrOp.equals( wBlock.open, state ) ) {
+        menu.Append( ME_CloseBlock, wxGetApp().getMenu("outoforder") );
+        wxMenuItem *mi_Close = menu.FindItem( ME_CloseBlock );
+      }
+      else {
+        menu.Append( ME_OpenBlock, wxGetApp().getMenu("operational") );
+      }
     }
 
     //menu.AppendSeparator();
@@ -2478,6 +2486,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if (locid!=NULL && StrOp.len(locid)>0) {
       occupied = isReserved ? 2:1;
       occupied = isEntering ? 3:occupied;
+      occupied = StrOp.equals(wBlock.closed,wStage.getstate( node ))?4:occupied;
     }
 
     if( locid != NULL && StrOp.len( locid ) > 0 )

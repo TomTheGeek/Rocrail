@@ -229,9 +229,10 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
 
     StageOp.init( inst );
     /* Broadcast to clients. */
-    AppOp.broadcastEvent( cmd );
+    AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
   }
 
+  NodeOp.base.del(cmd);
 
   return True;
 }
