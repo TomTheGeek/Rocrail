@@ -2488,6 +2488,11 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       occupied = isEntering ? 3:occupied;
       occupied = StrOp.equals(wBlock.closed,wStage.getstate( node ))?4:occupied;
     }
+    else {
+      wStage.setstate( m_Props, wStage.getstate( node ) );
+      occupied = StrOp.equals(wBlock.closed,wStage.getstate( node ))?4:occupied;
+    }
+
 
     if( locid != NULL && StrOp.len( locid ) > 0 )
       l_locidStr = StrOp.fmt( "%s %s", wStage.getid( node ), locid );

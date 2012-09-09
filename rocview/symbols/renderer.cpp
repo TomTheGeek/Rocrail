@@ -1577,7 +1577,7 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
     // occupied
     drawSvgSym(dc, m_SvgSym2, ori);
   }
-  else if( m_SvgSym3!=NULL && m_iOccupied == 2 || m_SvgSym3!=NULL && m_SvgSym4==NULL && m_iOccupied == 3 ) {
+  else if( m_SvgSym3!=NULL && m_iOccupied == 2 ) {
     /* reserved state */
     drawSvgSym(dc, m_SvgSym3, ori);
   }
