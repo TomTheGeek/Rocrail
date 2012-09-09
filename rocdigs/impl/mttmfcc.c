@@ -876,7 +876,7 @@ static __evaluateFB( iOMttmFccData data ) {
       byte pin  = 0x01 << ( point->port - 1 );
       byte mask = ~pin;
 
-      if( (data->sx1[point->bus][point->addr] & pin) != (data->swstate[point->bus][point->addr] & pin) ) {
+      if( !data->swInited || (data->sx1[point->bus][point->addr] & pin) != (data->swstate[point->bus][point->addr] & pin) ) {
         data->swstate[point->bus][point->addr] &= mask;
         data->swstate[point->bus][point->addr] |= (data->sx1[point->bus][point->addr] & pin);
 
@@ -896,6 +896,7 @@ static __evaluateFB( iOMttmFccData data ) {
 
       point = (iOPoint)MapOp.next(data->pointmap);
     }
+    data->swInited = True;
     MutexOp.post(data->pointmux);
   }
 
@@ -975,6 +976,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         /* build the point map */
         __getPoint(data, NodeOp.getChild(cmd, i) );
       }
+      data->swInited = False;
     }
     else {
       int size = __translate( data, cmd, out, &insize );
