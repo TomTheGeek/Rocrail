@@ -2606,6 +2606,8 @@ static iOList _getLevelItems( iOModel inst, int level, int* cx, int* cy, Boolean
 static iIBlockBase _getBlock( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
   iIBlockBase bk = (iIBlockBase)MapOp.get( o->blockMap, id );
+  if( bk == NULL )
+    bk = (iIBlockBase)MapOp.get( o->stageMap, id );
   return bk;
 }
 

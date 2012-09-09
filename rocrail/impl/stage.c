@@ -703,9 +703,28 @@ static void _inBlock( iIBlockBase inst ,const char* locid ) {
 /**  */
 static void _init( iIBlockBase inst ) {
   iOStageData data = Data(inst);
+  int i = 0;
+  int sections = 0;
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init stageblock [%s]", data->id );
   StageOp.red( inst, False, False );
   StageOp.red( inst, True, False );
+
+  sections = ListOp.size( data->sectionList );
+
+  for( i = 0; i < sections; i++ ) {
+    iONode section = (iONode)ListOp.get( data->sectionList, i);
+    if( wStageSection.getlcid(section) != NULL && StrOp.len( wStageSection.getlcid(section) ) > 0 ) {
+      iOLoc loc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(section) );
+      if( loc != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "set current block for loco %s to %s", wStageSection.getlcid(section), data->id );
+        LocOp.setCurBlock( loc, data->id );
+      }
+    }
+
+  }
+
 }
 
 /**
@@ -1217,6 +1236,7 @@ static Boolean __freeSections(iIBlockBase inst, const char* locid) {
       /* free section */
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock section[%d] from %s", i, locid!=NULL?locid:"-" );
       wStageSection.setlcid(section, NULL);
+      ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, "", False, 0, 0, wStageSection.getid(section) );
       unlocked = True;
     }
   }
@@ -1242,6 +1262,9 @@ static Boolean __freeSection(iIBlockBase inst, const char* secid) {
   Boolean unlocked = False;
   int i = 0;
   int sections = ListOp.size( data->sectionList );
+
+  if( secid == NULL || StrOp.len(secid) == 0 )
+    return unlocked;
 
   for( i = 0; i < sections; i++ ) {
     iONode section = (iONode)ListOp.get( data->sectionList, i);
@@ -1500,7 +1523,6 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
 
 static void _setSectionOcc(iOStage inst, const char* sectionid, const char* locoid) {
   iOStageData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set stage %s section %s occ to %s", data->id, sectionid, locoid );
 
   int sections = ListOp.size( data->sectionList );
   int i = 0;
@@ -1509,6 +1531,7 @@ static void _setSectionOcc(iOStage inst, const char* sectionid, const char* loco
   for( i = 0; i < sections; i++ ) {
     iONode section = (iONode)ListOp.get( data->sectionList, i);
     if( StrOp.equals( wStageSection.getid( section ), sectionid ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set stage %s section %s occ to %s", data->id, sectionid, locoid );
       wStageSection.setlcid( section, locoid);
       break;
     }
