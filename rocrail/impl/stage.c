@@ -852,7 +852,7 @@ static Boolean _isFree( iIBlockBase inst ,const char* locid ) {
     return False;
   }
 
-  if( data->closereq ) {
+  if( data->closereq || StrOp.equals( wStage.getstate(data->props), wBlock.closed ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stagingblock %s is closed", data->id );
     return False;
   }
@@ -1207,11 +1207,14 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
         wLoc.setV(cmd, 0);
         LocOp.cmd(lc, cmd);
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"start loco %s in the last section %s", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
-        cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
         LocOp.setCurBlock(lc, data->id);
-        wLoc.setcmd(cmd, wLoc.go);
-        LocOp.cmd(lc, cmd);
+
+        if( !StrOp.equals( wStage.getstate(data->props), wBlock.closed ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"start loco %s in the last section %s", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
+          cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+          wLoc.setcmd(cmd, wLoc.go);
+          LocOp.cmd(lc, cmd);
+        }
       }
       else if( lc != NULL && LocOp.isAutomode(lc) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"loco %s is in the last section %s and in auto mode", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
