@@ -186,8 +186,14 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
 
   /* Cmds: lcid="" state="" */
   const char* command   = wStage.getcmd( cmd );
-  const char* state     = wStage.getstate( cmd );
-  const char* exitstate = wStage.getexitstate( cmd );
+  const char* state     = NULL;
+  const char* exitstate = NULL;
+
+  if( NodeOp.findAttr( cmd, "state" ) )
+    state = wStage.getstate( cmd );
+  if( NodeOp.findAttr( cmd, "exitstate" ) )
+    exitstate = wStage.getexitstate( cmd );
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stage command: %s", command );
 
   if( StrOp.equals( wBlock.loc, command ) ) {
@@ -235,7 +241,7 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
 
   if( exitstate != NULL ) {
     wStage.setexitstate( data->props, exitstate );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s exitstate=%s", NodeOp.getStr( data->props, "id", "" ), exitstate );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s exitstate=%s", data->id, exitstate );
     /* Broadcast to clients. */
     AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
   }
@@ -1222,6 +1228,9 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
           cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
           wLoc.setcmd(cmd, wLoc.go);
           LocOp.cmd(lc, cmd);
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"exit of stage %s is closed", data->id );
         }
       }
       else if( lc != NULL && LocOp.isAutomode(lc) ) {
