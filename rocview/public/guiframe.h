@@ -182,6 +182,7 @@ public:
   iONode findCar(const char* carid);
   iONode findWaybill(const char* carid);
   iONode findBlock4Loc(const char* locid, const char* blockid);
+  bool isInStage(const char* locid, const char* blockid);
   iONode getRocrailIni(){return m_RocrailIni;}
   void setRocrailIni(iONode ini){m_RocrailIni = ini;}
   void OnCellLeftDClick( wxGridEvent& event );

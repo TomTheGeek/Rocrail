@@ -153,6 +153,8 @@
 #include "rocrail/wrapper/public/BoosterList.h"
 #include "rocrail/wrapper/public/PwrEvent.h"
 #include "rocrail/wrapper/public/SystemActions.h"
+#include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/StageSection.h"
 
 #include "rocview/symbols/svg.h"
 #include "rocview/res/icons.hpp"
@@ -460,6 +462,32 @@ iONode RocGuiFrame::findWaybill( const char* billid ) {
     }
   }
   return NULL;
+}
+
+
+bool RocGuiFrame::isInStage( const char* locid, const char* blockid ) {
+  iONode model = wxGetApp().getModel();
+  iONode sblist = wPlan.getsblist( model );
+  if( sblist != NULL ) {
+    int cnt = NodeOp.getChildCnt( sblist );
+    if( blockid != NULL ) {
+      for( int i = 0; i < cnt; i++ ) {
+        iONode sb = NodeOp.getChild( sblist, i );
+        const char* id = wStage.getid( sb );
+
+        if( id != NULL && StrOp.equals( blockid, id ) ) {
+          iONode section = wStage.getsection( sb );
+          while( section != NULL ) {
+            if( StrOp.equals( locid, wStageSection.getlcid(section) ) ) {
+              return true;
+            }
+            section = wStage.nextsection( sb, section );
+          }
+        }
+      }
+    }
+  }
+  return false;
 }
 
 
@@ -898,6 +926,13 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
           m_ActiveLocs->SetCellValue(m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK,
               (wLoc.isblockenterside(lc)?_T(""):_T("-")) + wxString(wBlock.getid( bk ),wxConvUTF8) );
         }
+        else if( wLoc.getblockid(lc) != NULL && StrOp.len(wLoc.getblockid(lc)) > 0 ) {
+          // Could be a staging block.
+          if( isInStage(id, wLoc.getblockid(lc)) ) {
+            m_ActiveLocs->SetCellValue(m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK,
+                (wLoc.isblockenterside(lc)?_T(""):_T("-")) + wxString(wLoc.getblockid(lc),wxConvUTF8) );
+          }
+        }
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK, true );
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK, wxALIGN_LEFT, wxALIGN_CENTRE );
 
@@ -1144,7 +1179,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         if( wLoc.getblockid( node ) != NULL ) {
           m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, (wLoc.isblockenterside(node)?_T(""):_T("-")) + wxString(wLoc.getblockid( node ),wxConvUTF8) );
 
-          iONode block = wxGetApp().getFrame()->findBlock4Loc(wLoc.getid( node ), wLoc.getblockid( node ));
+          iONode block = findBlock4Loc(wLoc.getid( node ), wLoc.getblockid( node ));
           if(block != NULL ) {
             wBlock.setlocid(block, wLoc.getid( node ) );
             wBlock.setupdateenterside(block, True);
