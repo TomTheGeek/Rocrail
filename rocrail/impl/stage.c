@@ -194,7 +194,8 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
   if( NodeOp.findAttr( cmd, "exitstate" ) )
     exitstate = wStage.getexitstate( cmd );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stage command: %s", command );
+  if( command != NULL )
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stage command: %s", command );
 
   if( StrOp.equals( wBlock.loc, command ) ) {
     const char* lcid  = wStage.getlocid(cmd);
