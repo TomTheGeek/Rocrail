@@ -1535,6 +1535,12 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
   iONode section = NULL;
   int i = 0;
 
+  if( StrOp.equals( wStage.getexitstate(data->props), wBlock.closed ) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "departure of loco %s from stage %s is not allowed; stageblock exit is closed", id, data->id );
+    return False;
+  }
+
   for( i = 0; i < ListOp.size(data->sectionList); i++ ) {
     iONode section = (iONode)ListOp.get( data->sectionList, i);
     if( StrOp.equals( id, wStageSection.getlcid(section) ) ) {
@@ -1542,7 +1548,7 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
         return True;
     }
   }
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
       "departure of loco %s from stage %s is not allowed; its not in the end section", id, data->id );
 
   return False;
