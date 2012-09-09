@@ -18156,4 +18156,10 @@
   <Msg id="merge">
     <en txt="Merge"/>
   </Msg>
+  <Msg id="closeexit">
+    <en txt="Close exit"/>
+  </Msg>
+  <Msg id="openexit">
+    <en txt="Open exit"/>
+  </Msg>
 </Messages>

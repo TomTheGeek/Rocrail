@@ -142,6 +142,8 @@ enum {
     ME_LocDeActivate,
     ME_CloseBlock,
     ME_OpenBlock,
+    ME_CloseExitBlock,
+    ME_OpenExitBlock,
     ME_AcceptIdent,
     ME_ResetWheelcounter,
     ME_ResetSensor,
@@ -204,7 +206,9 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_LocActivate, Symbol::OnLocActivate  )
   EVT_MENU     (ME_LocDeActivate, Symbol::OnLocDeActivate  )
   EVT_MENU     (ME_CloseBlock, Symbol::OnCloseBlock)
+  EVT_MENU     (ME_CloseExitBlock, Symbol::OnCloseExitBlock)
   EVT_MENU     (ME_OpenBlock, Symbol::OnOpenBlock)
+  EVT_MENU     (ME_OpenExitBlock, Symbol::OnOpenExitBlock)
   EVT_MENU     (ME_AcceptIdent, Symbol::OnAcceptIdent)
 
   EVT_MENU     (ME_CmdStraight, Symbol::OnCmdStraight )
@@ -1555,10 +1559,16 @@ void Symbol::OnPopup(wxMouseEvent& event)
       const char* state = wBlock.getstate( m_Props );
       if( StrOp.equals( wBlock.open, state ) ) {
         menu.Append( ME_CloseBlock, wxGetApp().getMenu("outoforder") );
-        wxMenuItem *mi_Close = menu.FindItem( ME_CloseBlock );
       }
       else {
         menu.Append( ME_OpenBlock, wxGetApp().getMenu("operational") );
+      }
+
+      if( StrOp.equals( wBlock.open, wStage.getexitstate(m_Props) ) ) {
+        menu.Append( ME_CloseExitBlock, wxGetApp().getMenu("closeexit") );
+      }
+      else {
+        menu.Append( ME_OpenExitBlock, wxGetApp().getMenu("openexit") );
       }
     }
 
@@ -1894,6 +1904,24 @@ void Symbol::OnOpenBlock(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( NodeOp.getName(m_Props), NULL, ELEMENT_NODE );
   wBlock.setid( cmd, wBlock.getid( m_Props ) );
   wBlock.setstate( cmd, wBlock.open );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnCloseExitBlock(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( NodeOp.getName(m_Props), NULL, ELEMENT_NODE );
+  wStage.setid( cmd, wBlock.getid( m_Props ) );
+  wStage.setexitstate( cmd, wBlock.closed );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnOpenExitBlock(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( NodeOp.getName(m_Props), NULL, ELEMENT_NODE );
+  wStage.setid( cmd, wBlock.getid( m_Props ) );
+  wStage.setexitstate( cmd, wBlock.open );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -2493,6 +2521,9 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       occupied = StrOp.equals(wBlock.closed,wStage.getstate( node ))?4:occupied;
     }
 
+    if( NodeOp.findAttr( node, "exitstate" ) ) {
+      wStage.setexitstate( m_Props, wStage.getexitstate( node ) );
+    }
 
     if( locid != NULL && StrOp.len( locid ) > 0 )
       l_locidStr = StrOp.fmt( "%s %s", wStage.getid( node ), locid );

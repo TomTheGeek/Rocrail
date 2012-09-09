@@ -185,8 +185,9 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
   iOModel model = AppOp.getModel(  );
 
   /* Cmds: lcid="" state="" */
-  const char* command = wStage.getcmd( cmd );
-  const char* state   = wStage.getstate( cmd );
+  const char* command   = wStage.getcmd( cmd );
+  const char* state     = wStage.getstate( cmd );
+  const char* exitstate = wStage.getexitstate( cmd );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stage command: %s", command );
 
   if( StrOp.equals( wBlock.loc, command ) ) {
@@ -228,6 +229,13 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s state=%s", NodeOp.getStr( data->props, "id", "" ), state );
 
     StageOp.init( inst );
+    /* Broadcast to clients. */
+    AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
+  }
+
+  if( exitstate != NULL ) {
+    wStage.setexitstate( data->props, exitstate );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s exitstate=%s", NodeOp.getStr( data->props, "id", "" ), exitstate );
     /* Broadcast to clients. */
     AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
   }
@@ -1209,7 +1217,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
 
         LocOp.setCurBlock(lc, data->id);
 
-        if( !StrOp.equals( wStage.getstate(data->props), wBlock.closed ) ) {
+        if( !StrOp.equals( wStage.getexitstate(data->props), wBlock.closed ) ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"start loco %s in the last section %s", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
           cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
           wLoc.setcmd(cmd, wLoc.go);

@@ -1630,6 +1630,7 @@
         <var name="remote" vt="bool" defval="false" remark="This flag is set by the R2Rnet object."/>
         <var name="rrid" vt="const char*" defval="" remark="This id is set by the R2Rnet object."/>
         <var name="state" vt="string" defval="open" range="open,closed"/>
+        <var name="exitstate" vt="string" defval="open" range="open,closed"/>
         <var name="locid" vt="string" defval="NULL" range="*" remark="The loc which is actualy in the block or is comming or going."/>
         <var name="reserved" vt="bool" defval="false" remark=""/>
         <var name="entering" vt="bool" defval="false" remark=""/>

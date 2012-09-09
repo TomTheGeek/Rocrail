@@ -5807,3 +5807,15 @@ msgstr ""
 msgid "Merge"
 msgstr ""
 
+#. 
+# id="closeexit"
+#, c-format
+msgid "Close exit"
+msgstr ""
+
+#. 
+# id="openexit"
+#, c-format
+msgid "Open exit"
+msgstr ""
+

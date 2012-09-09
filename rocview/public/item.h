@@ -74,7 +74,9 @@ public:
   void OnLocReset(wxCommandEvent& event);
   void OnLocResetAll(wxCommandEvent& event);
   void OnCloseBlock(wxCommandEvent& event);
+  void OnCloseExitBlock(wxCommandEvent& event);
   void OnOpenBlock(wxCommandEvent& event);
+  void OnOpenExitBlock(wxCommandEvent& event);
   void OnAcceptIdent(wxCommandEvent& event);
   void OnInfo(wxCommandEvent& event);
   void OnResetWheelcounter(wxCommandEvent& event);
