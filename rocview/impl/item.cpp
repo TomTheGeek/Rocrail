@@ -2528,7 +2528,8 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if( locid != NULL && StrOp.len( locid ) > 0 )
       l_locidStr = StrOp.fmt( "%s %s", wStage.getid( node ), locid );
     else if( nrlocos > 0 )
-      l_locidStr = StrOp.fmt( "%s [%d]", wStage.getid( node ), nrlocos );
+      l_locidStr = StrOp.fmt( "%s [%d]%s",
+          wStage.getid( node ), nrlocos, StrOp.equals(wBlock.closed,wStage.getexitstate(m_Props))?"<":"" );
     else
       l_locidStr = StrOp.fmt( "%s", wStage.getid( node ) );
 
