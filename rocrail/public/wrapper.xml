@@ -1641,6 +1641,8 @@
         <var name="waittime" vt="int" defval="1" unit="s" range="0-*" remark="Wait time in case of wait_fixed."/>
         <var name="minwaittime" vt="int" defval="1" unit="s" range="0-*" remark="Min. wait time in case of wait_random."/>
         <var name="maxwaittime" vt="int" defval="30" unit="s" range="0-*" remark="Max. wait time in case of wait_random."/>
+        <var name="speedpercent" vt="int" defval="10" unit="%" range="0-100" remark="Block arrive speed in percent."/>
+        <var name="stopspeed" vt="string" defval="min" range="min,percent" remark="Block speed on arrive and stop."/>
         <var name="exitspeed" vt="string" defval="cruise" range="*" remark="Block speed on departure."/>
         <const name="compress" vt="string" val="compress"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>

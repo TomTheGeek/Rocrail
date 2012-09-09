@@ -568,8 +568,10 @@ static const char* _getVelocity( iIBlockBase inst ,int* percent ,Boolean onexit 
   iOStageData data = Data(inst);
   if( onexit )
     return wStage.getexitspeed(data->props);
-  else
-    return wBlock.min;
+  else {
+    *percent = wStage.getspeedpercent(data->props);
+    return wStage.getstopspeed(data->props);
+  }
 }
 
 
@@ -1149,7 +1151,14 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
         wStageSection.setlcid(nextFreeSection, wStageSection.getlcid(firstOccupiedSection) );
         iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
         wLoc.setcmd(cmd, wLoc.velocity);
-        wLoc.setV_hint(cmd, wLoc.min);
+        if( StrOp.equals( wBlock.percent, wStage.getstopspeed(data->props) ) ) {
+          char percent[32];
+          StrOp.fmtb( percent, "%d", wStage.getspeedpercent(data->props) );
+          wLoc.setV_hint(cmd, percent );
+        }
+        else
+          wLoc.setV_hint(cmd, wStage.getstopspeed(data->props));
+
         LocOp.cmd(lc, cmd);
         data->pendingMove = True;
         locoMoved = True;

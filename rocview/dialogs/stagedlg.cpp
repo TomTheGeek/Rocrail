@@ -210,6 +210,10 @@ void StageDlg::initLabels() {
   m_labFixed->SetLabel( wxGetApp().getMsg( "fixed" ) );
 
   m_SpeedBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "speed" ) );
+  m_ArriveSpeed->SetLabel( wxGetApp().getMsg( "arrive" ) );
+  m_ArriveSpeed->SetString( 0, wxGetApp().getMsg( "min" ) );
+  m_ArriveSpeed->SetString( 1, _T("%") );
+
   m_ExitSpeed->SetLabel( wxGetApp().getMsg( "departure" ) );
   m_ExitSpeed->SetString( 0, wxGetApp().getMsg( "min" ) );
   m_ExitSpeed->SetString( 1, wxGetApp().getMsg( "mid" ) );
@@ -263,6 +267,12 @@ bool StageDlg::evaluate() {
   else if( m_ExitSpeed->GetSelection() == 3 )
     wStage.setexitspeed( m_Props, wBlock.max );
 
+  if( m_ArriveSpeed->GetSelection() == 0 )
+    wStage.setstopspeed( m_Props, wBlock.min );
+  else if( m_ArriveSpeed->GetSelection() == 1 ) {
+    wStage.setstopspeed( m_Props, wBlock.percent );
+  }
+  wStage.setspeedpercent( m_Props, m_ArriveSpeedPercent->GetValue() );
 
   return true;
 }
@@ -337,6 +347,17 @@ void StageDlg::initValues() {
   else if( StrOp.equals( wBlock.max, wStage.getexitspeed( m_Props ) ) )
     speed = 3;
   m_ExitSpeed->SetSelection( speed );
+
+  speed = 0;
+  if( StrOp.equals( wBlock.min, wStage.getstopspeed( m_Props ) ) )
+    speed = 0;
+  else if( StrOp.equals( wBlock.percent, wStage.getstopspeed( m_Props ) ) )
+    speed = 1;
+  m_ArriveSpeed->SetSelection( speed );
+
+  char* str = StrOp.fmt( "%d", wStage.getspeedpercent(m_Props) );
+  m_ArriveSpeedPercent->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
+
 
   initSections();
 
