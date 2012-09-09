@@ -886,6 +886,9 @@ static __evaluateFB( iOMttmFccData data ) {
             wSwitch.setiid( nodeC, data->iid );
           wSwitch.setid( nodeC, point->id );
           wSwitch.setstate( nodeC, (data->sx1[point->bus][point->addr] & pin) ? "straight":"turnout" );
+          wSwitch.setbus(nodeC, point->bus);
+          wSwitch.setaddr1(nodeC, point->addr);
+          wSwitch.setport1(nodeC, point->port);
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch update %s", point->id );
           data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
         }
