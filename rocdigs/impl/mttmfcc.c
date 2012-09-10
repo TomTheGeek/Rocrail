@@ -910,7 +910,7 @@ static void __sxReader( void* threadinst ) {
   byte buffer[256];
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SX reader started." );
-  ThreadOp.sleep( 1000 );
+  ThreadOp.sleep( 5000 );
   
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying to get the FCC version..." );
   buffer[0] = 0x81;
