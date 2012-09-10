@@ -516,6 +516,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
 
   if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
     __updateFB( data, node );
+    data->fbInited = False;
   }
   /* Switch command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
@@ -845,7 +846,7 @@ static __evaluateFB( iOMttmFccData data ) {
         int port = 0;
         int state = 0;
         for( n = 0; n < 8; n++ ) {
-          if( (in & (0x01 << n)) != (data->fbstate[bus][addr] & (0x01 << n)) ) {
+          if( !data->fbInited || (in & (0x01 << n)) != (data->fbstate[bus][addr] & (0x01 << n)) ) {
             port = n;
             state = (in & (0x01 << n)) ? 1:0;
             TraceOp.dump ( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_BYTE, (char*)&in, 1 );
@@ -867,6 +868,7 @@ static __evaluateFB( iOMttmFccData data ) {
       }
     }
   }
+  data->fbInited = True;
   
 
   /* Check switches */
