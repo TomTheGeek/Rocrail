@@ -818,8 +818,8 @@ static Boolean __isElectricallyFree(iOBlock inst) {
     iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wFeedbackEvent.getid(fbevt));
     if( fb != NULL && FBackOp.getState(fb) && _getEventCode( inst, wFeedbackEvent.getaction( fbevt ) ) != ident_event ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 5001,
-                     "Block [%s] is electrically occupied. %s",
-                     data->id, shunting ? "(ignored for shunting)":"" );
+                     "Block [%s] is electrically occupied by sensor [%s]. %s",
+                     data->id, FBackOp.getId(fb), shunting ? "(ignored for shunting)":"" );
 
       if( !shunting )
         return False;
