@@ -315,6 +315,17 @@ static Boolean __transact( iOMttmFccData data, byte* out, int outsize, byte* in,
         }
       }
     }
+    else if(insize == 226) {
+      /*
+      if( in[1] > 0 )
+        in[1] = 0;
+      else
+        in[1] = 0xFF;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "transact in=0x%08X", in );
+      TraceOp.dump( name, TRCLEVEL_BYTE, in, 16 );
+      ThreadOp.sleep(1000);
+      */
+    }
     MutexOp.post( data->mux );
   }
   return rc;
@@ -505,9 +516,6 @@ static void __updateFB( iOMttmFccData data, iONode fbInfo ) {
     }
   }
 
-  if( data->dummyio ) {
-    __evaluateFB(data);
-  }
 }
 
 
@@ -831,7 +839,7 @@ static __evaluateFB( iOMttmFccData data ) {
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }
 
-  TraceOp.trc( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "evaluate sensors..." );
+  TraceOp.trc( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "evaluate sensors (initial=%d)...", data->fbInited );
 
   for( bus = 0; bus < 2; bus++ ) {
     if( data->fbmodcnt[bus] == 0 )
@@ -841,15 +849,15 @@ static __evaluateFB( iOMttmFccData data ) {
       int addr = data->fbmods[bus][mod];
       byte in = data->sx1[bus][addr];
       
-      if( in != data->fbstate[bus][addr] ) {
+      if( !data->fbInited || (in != data->fbstate[bus][addr]) ) {
         int n = 0;
         int port = 0;
         int state = 0;
         for( n = 0; n < 8; n++ ) {
-          if( !data->fbInited || (in & (0x01 << n)) != (data->fbstate[bus][addr] & (0x01 << n)) ) {
+          if( !data->fbInited || ((in & (0x01 << n)) != (data->fbstate[bus][addr] & (0x01 << n))) ) {
             port = n;
             state = (in & (0x01 << n)) ? 1:0;
-            TraceOp.dump ( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_BYTE, (char*)&in, 1 );
+            TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)&in, 1 );
             TraceOp.trc( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "fb %d = %d", addr*8+port+1, state );
             {
               /* inform listener: Node3 */
@@ -872,13 +880,14 @@ static __evaluateFB( iOMttmFccData data ) {
   
 
   /* Check switches */
+  TraceOp.trc( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "evaluate switches (initial=%d)...", data->swInited );
   if( MutexOp.wait( data->pointmux ) ) {
     iOPoint point = (iOPoint)MapOp.first( data->pointmap );
     while( point != NULL ) {
       byte pin  = 0x01 << ( point->port - 1 );
       byte mask = ~pin;
 
-      if( !data->swInited || (data->sx1[point->bus][point->addr] & pin) != (data->swstate[point->bus][point->addr] & pin) ) {
+      if( !data->swInited || ((data->sx1[point->bus][point->addr] & pin) != (data->swstate[point->bus][point->addr] & pin)) ) {
         data->swstate[point->bus][point->addr] &= mask;
         data->swstate[point->bus][point->addr] |= (data->sx1[point->bus][point->addr] & pin);
 
@@ -891,7 +900,7 @@ static __evaluateFB( iOMttmFccData data ) {
           wSwitch.setbus(nodeC, point->bus);
           wSwitch.setaddr1(nodeC, point->addr);
           wSwitch.setport1(nodeC, point->port);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch update %s", point->id );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch %s update to 0x%02X", point->id, data->sx1[point->bus][point->addr] & pin );
           data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
         }
       }
@@ -1000,7 +1009,8 @@ static void _halt( obj inst, Boolean poweroff ) {
   iOMttmFccData data = Data(inst);
   data->run = False;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shutting down <%s>...", data->iid );
-  SerialOp.close( data->serial );
+  if( data->serial != NULL )
+    SerialOp.close( data->serial );
 }
 
 
@@ -1094,8 +1104,9 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unable to initialize device; switch to dummy mode" );
     data->dummyio = True;
-    data->sx1[0][8] = 0x40;
-    data->sx1[0][112] = 0x01;
+    data->run = True;
+    data->sxReader = ThreadOp.inst( "sxReader", &__sxReader, __MttmFcc );
+    ThreadOp.start( data->sxReader );
   }
 
   instCnt++;
