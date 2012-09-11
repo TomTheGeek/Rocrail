@@ -1042,7 +1042,12 @@ static void __PTeventReader( void* threadinst ) {
       Boolean ptEvent   = False;
       Boolean bidiEvent = False;
       out[1] = 0xC8;
-      state = __cts( o );
+      if (o->flow) {
+        state = __cts( o );
+      }
+      else {
+    	  state = P50_OK;
+      }
       if( state == P50_OK ) {
         if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
           byte evt[3] = {0,0,0};
