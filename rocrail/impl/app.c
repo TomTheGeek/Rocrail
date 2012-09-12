@@ -995,8 +995,10 @@ static void _saveIni( void ) {
     if( StrOp.len(wRocRail.getdonkey(ini)) > 0 ) {
       char* lic = StrOp.fmt("%s;%s", wRocRail.getdoneml( ini ), wRocRail.getdonkey( ini ) );
       iOFile f = FileOp.inst( wRocRail.getkeypath(data->ini), OPEN_WRITE );
-      FileOp.writeStr(f, lic);
-      FileOp.base.del(f);
+      if( f != NULL ) {
+        FileOp.writeStr(f, lic);
+        FileOp.base.del(f);
+      }
       StrOp.free(lic);
       data->donkey = StrOp.dup(wRocRail.getdonkey( ini ));
       data->doneml = StrOp.dup(wRocRail.getdoneml( ini ));
