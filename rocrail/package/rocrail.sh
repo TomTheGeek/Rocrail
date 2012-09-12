@@ -2,6 +2,7 @@
 if [ ! -e ~/rocrail ] ; then
 	mkdir ~/rocrail
 fi
+gnome_terminal=`command -v gnome-terminal`
 
 cd ~/rocrail
 
@@ -10,7 +11,12 @@ if ps --no-heading -C rocrail
     echo "rocrail is running"
   else
     echo "rocrail is not running. start..."
-#    gnome-terminal --hide-menubar --title=Rocrail --working-directory="~/rocrail" --geometry=132x50 -e "/opt/rocrail/rocrail -console -l /opt/rocrail"
-    /opt/rocrail/rocrail -console -l /opt/rocrail $*
-fi
+    
+    if [ $gnome_terminal ]
+      then
+        $gnome_terminal --hide-menubar --title=Rocrail --working-directory="~/rocrail" --geometry=132x50 -e "/opt/rocrail/rocrail -console -l /opt/rocrail"
+      else
+        /opt/rocrail/rocrail -console -l /opt/rocrail $*
+    fi
+fi    
 
