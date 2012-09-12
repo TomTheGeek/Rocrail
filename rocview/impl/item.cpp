@@ -558,18 +558,8 @@ void Symbol::blockEvent( const char* id ) {
 }
 
 void Symbol::routeEvent( const char* id, bool locked ) {
-  if( StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) ||
-      StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
-      StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) && StrOp.equals( wSwitch.decoupler, wSwitch.gettype(m_Props) ) ||
-      StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) && StrOp.equals( wSwitch.crossing, wSwitch.gettype(m_Props) ) ||
-      StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) && StrOp.equals( wSwitch.ccrossing, wSwitch.gettype(m_Props) ) ||
-      StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
-      StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) )) {
-    if( wItem.getrouteids( m_Props ) != NULL && StrOp.len(wItem.getrouteids( m_Props )) > 0 ) {
-      //StrOp.free(m_RouteID);
-      //m_RouteID = StrOp.dup(id);
-      Refresh();
-    }
+  if( StrOp.len(wItem.getrouteids( m_Props )) > 0 ) {
+    Refresh();
   }
 }
 
@@ -626,14 +616,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
     int status = 0;
 
     TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "check actroute for %s...", wItem.getid(m_Props));
-    if( StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) ||
-        StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ||
-        StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
-        StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) && StrOp.equals( wSwitch.decoupler, wSwitch.gettype(m_Props) ) ||
-        StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) && StrOp.equals( wSwitch.crossing, wSwitch.gettype(m_Props) ) ||
-        StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) && StrOp.equals( wSwitch.ccrossing, wSwitch.gettype(m_Props) ) ||
-        StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ))
-    {
+    if( StrOp.len( wItem.getrouteids( m_Props ) ) > 0 ) {
       iOStrTok tok = StrTokOp.inst( wItem.getrouteids( m_Props ), ',' );
 
       const char* routeid = StrTokOp.nextToken(tok);
@@ -651,27 +634,20 @@ void Symbol::OnPaint(wxPaintEvent& event)
     }
 
 
-    if( StrOp.equals( wTrack.name()   , NodeOp.getName( m_Props ) ) ||
-        StrOp.equals( wSignal.name()  , NodeOp.getName( m_Props ) ) ||
-        StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ) ||
-        StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ||
-        StrOp.equals( wSwitch.name()  , NodeOp.getName( m_Props ) ) )
-      {
-      if( wTrack.getblockid( m_Props ) != NULL && StrOp.len( wItem.getblockid( m_Props )) > 0 ) {
-        occupied = m_PlanPanel->isBlockOccupied( wItem.getblockid( m_Props ) );
-        bool isReserved = m_PlanPanel->isBlockReserved( wItem.getblockid( m_Props ) );
-        if( occupied && !isReserved )
-          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s is %s occupied by %s",
-            wItem.getid( m_Props ), occupied? "":"not", wItem.getblockid( m_Props ));
-        else if( isReserved ) {
-          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s is reserved by %s",
-            wItem.getid( m_Props ), wItem.getblockid( m_Props ));
-          occupied = false;
-        }
+    if( StrOp.len( wItem.getblockid( m_Props )) > 0 ) {
+      occupied = m_PlanPanel->isBlockOccupied( wItem.getblockid( m_Props ) );
+      bool isReserved = m_PlanPanel->isBlockReserved( wItem.getblockid( m_Props ) );
+      if( occupied && !isReserved )
+        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s is %s occupied by %s",
+          wItem.getid( m_Props ), occupied? "":"not", wItem.getblockid( m_Props ));
+      else if( isReserved ) {
+        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s is reserved by %s",
+          wItem.getid( m_Props ), wItem.getblockid( m_Props ));
+        occupied = false;
       }
-
     }
-    else if( StrOp.equals( wSelTab.name(), NodeOp.getName( m_Props ) ) ) {
+
+    if( StrOp.equals( wSelTab.name(), NodeOp.getName( m_Props ) ) ) {
       occupied = wSelTab.ispending(m_Props);
     }
     else if( StrOp.equals( wRoute.name(), NodeOp.getName( m_Props ) ) ) {
