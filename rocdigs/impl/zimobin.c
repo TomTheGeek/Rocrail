@@ -89,6 +89,8 @@ soh soh seq ack pri seq crc8 eot
 
 static int instCnt = 0;
 
+static void __initComm( iOZimoBin zimobin );
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -805,7 +807,6 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
           ThreadOp.post( data->transactor, (obj)outa );
         }
       }
-
     } else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SYSCMD %s", cmd );
     }
@@ -1344,6 +1345,7 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
           case 0:    /* reset message */
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get reset message" );
             __send_ack(zimobin, seqid, msgt);
+            __initComm( zimobin );
             break;
           case 1:    /* got nak */
             /* Do nothing, the packethandler will resend */
@@ -1675,13 +1677,16 @@ static void __packethandler( void* threadinst ) {
 static void __initComm( iOZimoBin zimobin ) {
   iOZimoBinData data    = Data(zimobin);
 
-  while ( !SerialOp.open( data->serial ) && !data->dummyio ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init ZimoBin port %s!", wDigInt.getdevice( data->ini ) );
+  if ( !data->comm ) {
+    while ( !SerialOp.open( data->serial ) && !data->dummyio ) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init ZimoBin port %s!", wDigInt.getdevice( data->ini ) );
 
-    ThreadOp.sleep(2500); /* wait some time for usb-devices */
+      ThreadOp.sleep(2500); /* wait some time for usb-devices */
+    }
+
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Init ZimoBin port %s!", wDigInt.getdevice( data->ini ) );
+
   }
-
-  TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Init ZimoBin port %s!", wDigInt.getdevice( data->ini ) );
 
   data->comm = True;
 
@@ -1706,17 +1711,6 @@ static void __initComm( iOZimoBin zimobin ) {
     outa[3] = 17;   /* serial info  */
     outa[4] = TOOLID;    /* toolid */
     outa[5] = 1;    /* action start */
-    ThreadOp.post( data->transactor, (obj)outa );
-  }
-
-  if ( False ) {
-    byte* outa = allocMem(32);
-
-    outa[0] = 1;    /* short packet */
-    outa[1] = 4;    /* packet length */
-    outa[2] = 0x10; /* command station instruction */
-    outa[3] = 2;    /* status */
-    outa[4] = 3;    /* query */
     ThreadOp.post( data->transactor, (obj)outa );
   }
 
@@ -1854,7 +1848,6 @@ static void __initComm( iOZimoBin zimobin ) {
       loProps = wLocList.nextlc(data->locolist, loProps);
     }
   }
-
 }
 
 static void __transactor( void* threadinst ) {
