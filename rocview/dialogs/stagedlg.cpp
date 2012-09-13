@@ -388,7 +388,7 @@ void StageDlg::OnSectionList( wxCommandEvent& event )
           _T(""):wxString(wStageSection.getlcid( m_Section ),wxConvUTF8) );
       m_OwnSectionLength->SetValue( wStageSection.getlen( m_Section ) );
       m_ModifySection->Enable(true);
-      m_DeleteSection->Enable(true);
+      m_DeleteSection->Enable(!wxGetApp().getFrame()->isAutoMode());
       m_SetLoco->Enable(true);
       m_FreeSection->Enable(true);
     }
