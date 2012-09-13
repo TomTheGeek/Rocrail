@@ -309,6 +309,27 @@ static iOSignal SRCPgetSgByAddressAndIid( iOModel model, int addr, int port, cha
   return NULL;
 }
 
+/* "extended" version of ModelOp.getLocByAddress */
+static iOLoc SRCPgetLocByAddressAndIid( iOModel model, int addr, const char *iid ) {
+  iOMap lcMap = ModelOp.getLocoMap( model );
+  
+  iOLoc lc = (iOLoc)MapOp.first( lcMap );
+  while( lc != NULL ) {
+    if( LocOp.getAddress(lc) == addr ) {
+      iONode lcProps = LocOp.base.properties(lc);
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SRCPgetLocByAddressAndIid addr %d searchIid=%s lcIid=%s defIid=%s", addr, iid, wLoc.getiid(lcProps), getDefaultIid() );
+
+      if( StrOp.equals( wLoc.getiid(lcProps), iid ) || ( StrOp.len(wLoc.getiid(lcProps)) == 0 && StrOp.equals( iid, getDefaultIid() ) ) ) {
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SRCPgetLocByAddressAndIid ( addr=%d) iid=%s , locIid=%s", addr, iid, wLoc.getiid(lcProps) );
+        return lc;
+      }
+    }
+    lc = (iOLoc)MapOp.next( lcMap );
+  };
+
+  return NULL;
+}
+
 /* get feedback-object by iid and address */
 static iOFBack getFeedbackBySrcpbusAndSrcpaddr( char *srcpBusIid, int addr) {
   iOModel model = AppOp.getModel();
@@ -625,7 +646,7 @@ static char* __rr2srcp(iOSrcpCon srcpcon, iONode evt, char* str) {
       const char *loIid = wLoc.getiid(loProps);
       const char *loOid = wLoc.getoid(loProps);
 
-      iOLoc loco = ModelOp.getLocByAddress(model, loAddr);
+      iOLoc loco = SRCPgetLocByAddressAndIid(model, loAddr, loIid);
       int i, mask ;
 
       int decStep = (wLoc.getV( loProps ) * loSpcnt) / wLoc.getV_max( loProps );
@@ -767,7 +788,8 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Invalid GA at %d, reqRespCode %d", addrGA, *reqRespCode );
       }
     }else if( StrOp.equals( busType, "GL" )) {
-      iOLoc loco = ModelOp.getLocByAddress(model, addrGL);
+      char srcpBusIid[1025];
+      iOLoc loco = SRCPgetLocByAddressAndIid(model, addrGL, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ));
       if( loco != NULL ) {
         /* 200 OK */
         *reqRespCode = (int) 200;
@@ -855,6 +877,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       int idx = 0;
       const char* lcID = NULL;
       int srcpBus = 0;
+      char srcpBusIid[1025] ;
       int srcpLoco = 0;
       Boolean srcpDir = True;
       int srcpNewStep = 0;
@@ -873,7 +896,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         case 3: {
           iOLoc loco = NULL;
           srcpLoco = atoi(s);
-          loco = ModelOp.getLocByAddress(model, srcpLoco);
+          loco = SRCPgetLocByAddressAndIid(model, srcpLoco, getSrcpIid( Data(srcpcon), srcpBus, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) ) );
           if( loco != NULL ) {
             lcID = LocOp.getId(loco);
           }
@@ -1374,7 +1397,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       getSrcpIid( data, srcpBus, srcpBusIid);
 
       if( addrGL > 0 ) {
-        iOLoc loco = ModelOp.getLocByAddress(model, addrGL);
+        iOLoc loco = SRCPgetLocByAddressAndIid(model, addrGL, srcpBusIid);
         if( loco != NULL ) {
           iONode  loProps = LocOp.base.properties(loco);
           const char *loIid = StrOp.equals(wLoc.getiid(loProps), "" ) ? getDefaultIid() : wLoc.getiid(loProps) ;
@@ -1457,7 +1480,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       getSrcpIid( data, srcpBus, srcpBusIid);
 
       if( addrGL > 0) {
-        iOLoc loco = ModelOp.getLocByAddress(model, addrGL);
+        iOLoc loco = SRCPgetLocByAddressAndIid(model, addrGL, srcpBusIid);
         if( loco != NULL ) {
           iONode loProps = LocOp.base.properties(loco);
           const char *loIid = StrOp.equals(wLoc.getiid(loProps), "" ) ? getDefaultIid() : wLoc.getiid(loProps) ;
