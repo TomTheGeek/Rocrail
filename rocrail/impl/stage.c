@@ -105,6 +105,8 @@ If a train reaches the exit section it will be put back into auto mode.
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Signal.h"
 
+#include "rocrail/wrapper/public/Action.h"
+#include "rocrail/wrapper/public/ActionCtrl.h"
 
 
 static int instCnt = 0;
@@ -175,8 +177,39 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OStage ----- */
 
-static void _depart(iIBlockBase inst) {
+static void __checkAction( iOStage inst, const char* state ) {
+  iOStageData data   = Data(inst);
+  iOModel     model  = AppOp.getModel();
+  iONode      action = wStage.getactionctrl( data->props );
+
+  /* loop over all actions */
+  while( action != NULL ) {
+    int counter = atoi(wActionCtrl.getstate( action ));
+
+    if( StrOp.len(wActionCtrl.getstate( action )) == 0 ||
+        StrOp.equals(state, wActionCtrl.getstate( action )) )
+    {
+
+      iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
+      if( Action != NULL ) {
+        wActionCtrl.setbkid(action, data->id);
+        wActionCtrl.setlcid(action, data->locId);
+        ActionOp.exec(Action, action);
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
+          wActionCtrl.getstate( action ), state );
+    }
+
+    action = wStage.nextactionctrl( data->props, action );
+  }
 }
+
+static void _depart(iIBlockBase inst) {
+  __checkAction((iOStage)inst, "depart");
+}
+
 
 
 /**  */
@@ -230,6 +263,7 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
       state = wBlock.closed;
       wStage.setstate( cmd, state );
       data->closereq = False;
+      __checkAction((iOStage)inst, "closed");
     }
     wStage.setstate( data->props, state );
     ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, NULL, StrOp.equals( wBlock.closed, state ), 0, 0, NULL );
@@ -264,6 +298,7 @@ static void _enterBlock( iIBlockBase inst ,const char* locid ) {
     wBlock.setentering( nodeD, True );
     wBlock.setlocid( nodeD, locid );
     AppOp.broadcastEvent( nodeD );
+    __checkAction((iOStage)inst, "enter");
   }
 }
 
@@ -366,6 +401,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
           wStage.setentering( nodeD, True );
           wStage.setlocid( nodeD, data->locId );
           AppOp.broadcastEvent( nodeD );
+          __checkAction((iOStage)inst, "enter");
 
           if( loc != NULL ) {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "informing loco %s of ENTER event", data->locId );
@@ -396,6 +432,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
         iONode nodeD = (iONode)NodeOp.base.clone(data->props);
         wStage.setstate( nodeD, wBlock.ghost );
         AppOp.broadcastEvent( nodeD );
+        __checkAction((iOStage)inst, "ghost");
       }
 
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Ghost train in staging block %s, fbid=%s, ident=%s, wait4enter=%d",
@@ -470,6 +507,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
             if( !data->closereq && ModelOp.isAuto( AppOp.getModel() ) ) {
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s in auto mode", LocOp.getId(loc) );
               LocOp.go(loc);
+              __checkAction((iOStage)inst, "exit");
             }
             else if( data->closereq ) {
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s not in auto mode; block is closed.", LocOp.getId(loc) );
@@ -711,6 +749,7 @@ static void _inBlock( iIBlockBase inst ,const char* locid ) {
     wStage.setreserved( nodeD, False );
     wStage.setlocid( nodeD, "" );
     AppOp.broadcastEvent( nodeD );
+    __checkAction((iOStage)inst, "occupied");
   }
   return;
 }
@@ -863,10 +902,6 @@ static Boolean _isFree( iIBlockBase inst ,const char* locid ) {
   Boolean locoFit = False;
   iOFBack fb = NULL;
 
-  if( !AppOp.isKeyValid() ) {
-    return False;
-  }
-
   fb = ModelOp.getFBack( AppOp.getModel(), wStage.getfbenterid(data->props) );
   if( fb != NULL && FBackOp.getState(fb) ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "enter sensor [%s] is occupied", FBackOp.getId(fb));
@@ -942,6 +977,7 @@ static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,
     wStage.setlocid( nodeD, locid );
     AppOp.broadcastEvent( nodeD );
   }
+  __checkAction((iOStage)inst, "reserved");
 
 
   if( wStage.getentersignal( data->props ) != NULL && StrOp.len( wStage.getentersignal( data->props ) ) > 0 ) {
@@ -1335,7 +1371,10 @@ static Boolean _unLock( iIBlockBase inst ,const char* locid ) {
   iOStageData data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock for loco %s", locid!=NULL?locid:"?" );
   if( locid != NULL ) {
-    return __freeSections(inst, locid);
+    if(__freeSections(inst, locid)) {
+      __checkAction((iOStage)inst, "free");
+      return True;
+    }
   }
   return False;
 }

@@ -1658,6 +1658,7 @@
           <var name="idx" vt="int" defval="0"/>
           <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Section length."/>
         </section>
+        <actionctrl cardinality="n"/>
       </sb>
     </sblist>
 
