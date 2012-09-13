@@ -67,6 +67,7 @@
 #include "rocview/dialogs/routedialog.h"
 #include "rocview/dialogs/stagedlg.h"
 #include "rocview/dialogs/toursdlg.h"
+#include "rocview/dialogs/gotodlg.h"
 
 #include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -1550,7 +1551,8 @@ void Symbol::OnPopup(wxMouseEvent& event)
 
     //menu.AppendSeparator();
     wxMenuItem* mi = menu.Append( ME_Props , wxGetApp().getMenu("properties") );
-    mi->Enable( !wxGetApp().getFrame()->isAutoMode() || !wxGetApp().isRestrictedEdit() );
+    if( !StrOp.equals( wStage.name(), NodeOp.getName(m_Props) ))
+      mi->Enable( !wxGetApp().getFrame()->isAutoMode() || !wxGetApp().isRestrictedEdit() );
 
     if( wxGetApp().getFrame()->isEditMode() ) {
       menu.Append( ME_Delete, wxGetApp().getMenu("delete") );
@@ -1643,6 +1645,22 @@ void Symbol::OnUnLoc(wxCommandEvent& event) {
 }
 
 void Symbol::OnLocGoTo(wxCommandEvent& event) {
+  GotoDlg* gotoDlg = new GotoDlg( this );
+  if( wxID_OK == gotoDlg->ShowModal() ) {
+    iONode selection = gotoDlg->getSelected();
+    if( selection != NULL ) {
+      /* Inform RocRail... */
+      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
+      wLoc.setcmd( cmd, wLoc.gotoblock );
+      wLoc.setblockid( cmd, wItem.getid(selection) );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
+  }
+  gotoDlg->Destroy();
+
+/*
   BlockDialog* blockDlg = new BlockDialog( this, NULL, false );
   if( wxID_OK == blockDlg->ShowModal() ) {
     iONode sel = blockDlg->getProperties();
@@ -1650,7 +1668,7 @@ void Symbol::OnLocGoTo(wxCommandEvent& event) {
       const char* id = wBlock.getid( sel );
 
       if( id != NULL ) {
-        /* Inform RocRail... */
+        // Inform RocRail...
         iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
         wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
         wLoc.setcmd( cmd, wLoc.gotoblock );
@@ -1661,6 +1679,8 @@ void Symbol::OnLocGoTo(wxCommandEvent& event) {
     }
   }
   blockDlg->Destroy();
+*/
+
 }
 
 void Symbol::OnLocSchedule(wxCommandEvent& event) {

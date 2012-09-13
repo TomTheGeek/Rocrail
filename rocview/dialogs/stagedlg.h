@@ -56,7 +56,8 @@ protected:
   void OnSetPage(wxCommandEvent& event);
   void OnFreeSection( wxCommandEvent& event );
   void OnSetLoco( wxCommandEvent& event );
-  virtual void OnFreeAll( wxCommandEvent& event );
+  void OnFreeAll( wxCommandEvent& event );
+  void onActions( wxCommandEvent& event );
 
 public:
 	/** Constructor */

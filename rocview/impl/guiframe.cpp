@@ -91,6 +91,7 @@
 #include "rocview/dialogs/donkey.h"
 #include "rocview/dialogs/toursdlg.h"
 #include "rocview/dialogs/actionsctrldlg.h"
+#include "rocview/dialogs/gotodlg.h"
 
 #include "rocview/dialogs/decoders/locoio.h"
 #include "rocview/dialogs/decoders/mgvdlg.h"
@@ -120,6 +121,7 @@
 #include "rocview/wrapper/public/WorkSpaces.h"
 #include "rocview/wrapper/public/WorkSpace.h"
 
+#include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/JsEvent.h"
 #include "rocrail/wrapper/public/JsMap.h"
 #include "rocrail/wrapper/public/Plan.h"
@@ -4168,25 +4170,21 @@ void RocGuiFrame::OnSlider(wxScrollEvent& event)
 }
 
 void RocGuiFrame::OnLocGoTo(wxCommandEvent& event) {
-  BlockDialog* blockDlg = new BlockDialog( this, NULL, false );
-  if( wxID_OK == blockDlg->ShowModal() ) {
-    iONode sel = blockDlg->getProperties();
-    if( sel != NULL ) {
-      const char* id = wBlock.getid( sel );
-
-      if( id != NULL ) {
-        /* Inform RocRail... */
-        iONode lc = findLoc(m_LocID);
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-        wLoc.setid( cmd, wLoc.getid( lc ) );
-        wLoc.setcmd( cmd, wLoc.gotoblock );
-        wLoc.setblockid( cmd, id );
-        wxGetApp().sendToRocrail( cmd );
-        cmd->base.del(cmd);
-      }
+  GotoDlg* gotoDlg = new GotoDlg( this );
+  if( wxID_OK == gotoDlg->ShowModal() ) {
+    iONode selection = gotoDlg->getSelected();
+    if( selection != NULL ) {
+      /* Inform RocRail... */
+      iONode lc = findLoc(m_LocID);
+      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setid( cmd, wLoc.getid( lc ) );
+      wLoc.setcmd( cmd, wLoc.gotoblock );
+      wLoc.setblockid( cmd, wItem.getid(selection) );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
     }
   }
-  blockDlg->Destroy();
+  gotoDlg->Destroy();
 }
 
 

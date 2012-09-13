@@ -41,6 +41,8 @@
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Signal.h"
 
+#include "actionsctrldlg.h"
+
 StageDlg::StageDlg( wxWindow* parent, iONode p_Props ):stagedlggen( parent )
 {
   TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "stagedlg" );
@@ -62,7 +64,7 @@ StageDlg::StageDlg( wxWindow* parent, iONode p_Props ):stagedlggen( parent )
 
   if( m_Props != NULL ) {
     initValues();
-    m_SetPage = 0;
+    m_SetPage = wxGetApp().getFrame()->isAutoMode()?1:0;
   }
   wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_STAGEBOOK );
   wxPostEvent( m_Notebook, event );
@@ -89,6 +91,14 @@ void StageDlg::initLabels() {
   m_Notebook->SetPageText( 0, wxGetApp().getMsg( "general" ) );
   m_Notebook->SetPageText( 1, wxGetApp().getMsg( "sections" ) );
   m_Notebook->SetPageText( 2, wxGetApp().getMsg( "details" ) );
+
+  if( wxGetApp().getFrame()->isAutoMode() ) {
+    m_General->Enable(false);
+    m_Details->Enable(false);
+    m_AddSection->Enable(false);
+    m_DeleteSection->Enable(false);
+    m_SectionSensor->Enable(false);
+  }
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
@@ -500,4 +510,16 @@ void StageDlg::OnOK( wxCommandEvent& event )
 void StageDlg::OnCancel( wxCommandEvent& event )
 {
   EndModal( 0 );
+}
+
+void StageDlg::onActions( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props );
+
+  if( wxID_OK == dlg->ShowModal() ) {
+    // TODO: inform
+  }
+  dlg->Destroy();
 }
