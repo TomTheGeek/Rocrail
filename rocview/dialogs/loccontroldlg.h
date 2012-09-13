@@ -41,6 +41,8 @@
  */
 
 ////@begin forward declarations
+class wxBoxSizer;
+class wxFlexGridSizer;
 ////@end forward declarations
 
 /*!
@@ -243,6 +245,8 @@ public:
     wxBitmapButton* m_Image;
     wxTextCtrl* m_Speed;
     wxSlider* m_SpeedCtrl;
+    wxBoxSizer* m_FunctionBox;
+    wxFlexGridSizer* m_FunctionGrid;
     wxButton* m_F1;
     wxButton* m_F2;
     wxButton* m_F3;
