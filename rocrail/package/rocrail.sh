@@ -17,7 +17,7 @@ if ps --no-heading -C rocrail
     
     if [ $gnome_terminal ]
       then
-        $gnome_terminal --hide-menubar --title=Rocrail --geometry=132x50 -e "/opt/rocrail/rocrail -console -l /opt/rocrailn $*" 
+        $gnome_terminal --hide-menubar --title=Rocrail --geometry=132x50 -e "/opt/rocrail/rocrail -console -l /opt/rocrail $*" 
       else
         /opt/rocrail/rocrail -console -l /opt/rocrail $*
     fi
