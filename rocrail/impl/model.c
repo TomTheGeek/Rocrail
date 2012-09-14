@@ -388,6 +388,26 @@ static Boolean __checkPlanHealth(iOModelData data) {
         continue;
       }
 
+      /* check the basic addressing */
+      if( StrOp.equals( wLoc.name(), NodeOp.getName(item) ) ) {
+        if( wLoc.getaddr(item) == 0 && !StrOp.equals(wLoc.getprot(item), wLoc.prot_A) ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "loco %s has no address set", wItem.getid(item) );
+          healthy = False;
+        }
+      }
+      if( StrOp.equals( wFeedback.name(), NodeOp.getName(item) ) ) {
+        if( wFeedback.getaddr(item) == 0 ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "sensor %s has no address set", wItem.getid(item) );
+          healthy = False;
+        }
+      }
+      if( StrOp.equals( wSwitch.name(), NodeOp.getName(item) ) ) {
+        if( wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "switch %s has no address set", wItem.getid(item) );
+          healthy = False;
+        }
+      }
+
       StrOp.fmtb( key, "%d-%d-%d", wItem.getx(item), wItem.gety(item), wItem.getz(item) );
 
       if( MapOp.haskey(idMap, wItem.getid(item)) ) {
