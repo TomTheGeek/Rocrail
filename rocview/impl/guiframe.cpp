@@ -2152,16 +2152,19 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxRED));
       m_WarningPanel->AppendText( wxString(text,wxConvUTF8) );
       m_WarningPanel->AppendText( _T("\n") );
+      m_WarningPanel->ScrollLines(1);
     }
     else if( level == TRCLEVEL_WARNING ) {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxBLACK));
       m_WarningPanel->AppendText( wxString(text,wxConvUTF8) );
       m_WarningPanel->AppendText( _T("\n") );
+      m_WarningPanel->ScrollLines(1);
     }
     else if( level == TRCLEVEL_CALC ) {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxBLUE));
       m_WarningPanel->AppendText( wxString(text,wxConvUTF8) );
       m_WarningPanel->AppendText( _T("\n") );
+      m_WarningPanel->ScrollLines(1);
     }
     else if( level == TRCLEVEL_MONITOR && m_MonitorPanel != NULL) {
       long i = m_MonitorPanel->GetLastPosition();
@@ -2170,11 +2173,13 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
       m_MonitorPanel->SetDefaultStyle(wxTextAttr(*wxBLACK));
       m_MonitorPanel->AppendText( wxString(text,wxConvUTF8) );
       m_MonitorPanel->AppendText( _T("\n") );
+      m_MonitorPanel->ScrollLines(1);
     }
     else {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxBLUE));
       m_WarningPanel->AppendText( wxString(text,wxConvUTF8) );
       m_WarningPanel->AppendText( _T("\n") );
+      m_MonitorPanel->ScrollLines(1);
     }
   }
 
