@@ -1677,8 +1677,14 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   }
 
   if( atoi(wTurntable.getcmd( nodeA )) > 0 || StrOp.equals( wTurntable.getcmd(nodeA), "0" ) ) {
-    __checkAction( (iOTT)inst, "goto");
-    __checkAction( (iOTT)inst, StrOp.fmt( "goto %s", wTurntable.getcmd( nodeA ) ) );
+    if( atoi(wTurntable.getcmd( nodeA )) == 180 ) {
+      wTurntable.setcmd( nodeA, wTurntable.turn180 );
+      __checkAction( (iOTT)inst, wTurntable.turn180);
+    }
+    else {
+      __checkAction( (iOTT)inst, "goto");
+      __checkAction( (iOTT)inst, StrOp.fmt( "goto %s", wTurntable.getcmd( nodeA ) ) );
+    }
   }
   else {
     __checkAction( (iOTT)inst, wTurntable.getcmd( nodeA ));
