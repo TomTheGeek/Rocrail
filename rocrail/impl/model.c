@@ -383,7 +383,10 @@ static Boolean __checkPlanHealth(iOModelData data) {
     for( n = 0; n < items; n++ ) {
       iONode item = NodeOp.getChild( db, n );
 
-      if( StrOp.equals( wActionCtrl.name(), NodeOp.getName(item) ) ) {
+      if( StrOp.equals( wActionCtrl.name(), NodeOp.getName(item) ) ||
+          StrOp.equals( wAction.name(), NodeOp.getName(item) ) ||
+          StrOp.equals( wLocation.name(), NodeOp.getName(item) ))
+      {
         /* Ignore */
         continue;
       }
