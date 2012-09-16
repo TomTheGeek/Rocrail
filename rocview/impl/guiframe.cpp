@@ -2934,6 +2934,12 @@ void RocGuiFrame::OnRaster( wxCommandEvent& event ) {
 void RocGuiFrame::OnTooltip( wxCommandEvent& event ) {
   wxMenuItem* mi_tooltip = menuBar->FindItem(ME_Tooltip);
   m_bTooltip = mi_tooltip->IsChecked();
+
+  int pages = m_PlanNotebook->GetPageCount();
+  for( int i = 0; i < pages; i++ ) {
+    BasePanel* p = (BasePanel*)m_PlanNotebook->GetPage(i);
+    p->reScale( m_Scale );
+  }
 }
 
 void RocGuiFrame::OnEditLocs( wxCommandEvent& event ) {
