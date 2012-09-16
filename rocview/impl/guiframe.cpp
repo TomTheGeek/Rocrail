@@ -320,6 +320,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_ShowID         , RocGuiFrame::OnShowID)
     EVT_MENU( ME_FullScreen     , RocGuiFrame::OnFullScreen)
     EVT_MENU( ME_Raster         , RocGuiFrame::OnRaster)
+    EVT_MENU( ME_Tooltip        , RocGuiFrame::OnTooltip)
     EVT_MENU( ME_BackColor      , RocGuiFrame::OnBackColor)
     EVT_MENU( ME_UHL_63350      , RocGuiFrame::OnUhl63350)
     EVT_MENU( ME_UHL_68610      , RocGuiFrame::OnUhl68610)
@@ -1666,6 +1667,7 @@ void RocGuiFrame::initFrame() {
   menuView->AppendSeparator();
   menuView->AppendCheckItem( ME_ShowID, wxGetApp().getMenu("showid"), wxGetApp().getTip("showid") );
   menuView->AppendCheckItem( ME_Raster, wxGetApp().getMenu("raster"), wxGetApp().getTip("raster") );
+  menuView->AppendCheckItem( ME_Tooltip, wxGetApp().getMenu("tooltip"), wxGetApp().getTip("tooltip") );
   menuView->AppendCheckItem( ME_FullScreen, wxGetApp().getMenu("fullscreen"), wxGetApp().getTip("fullscreen") );
   menuView->Append( ME_BackColor, wxGetApp().getMenu("panelcolor"), wxGetApp().getTip("panelcolor") );
 
@@ -1955,6 +1957,7 @@ void RocGuiFrame::create() {
   m_Bktext = wPlanPanel.getbktext( wGui.getplanpanel( m_Ini ) );
   m_bShowID = (wPlanPanel.isshowid( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bRaster = (wPlanPanel.israster( wGui.getplanpanel( m_Ini ) ) ? true:false);
+  m_bTooltip = (wPlanPanel.istooltip( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bLocoBook = (wPlanPanel.islocobook( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bPlanBook = (wPlanPanel.isplanbook( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bTraceWindow = (wPlanPanel.istracewindow( wGui.getplanpanel( m_Ini ) ) ? true:false);
@@ -2928,6 +2931,11 @@ void RocGuiFrame::OnRaster( wxCommandEvent& event ) {
   }
 }
 
+void RocGuiFrame::OnTooltip( wxCommandEvent& event ) {
+  wxMenuItem* mi_tooltip = menuBar->FindItem(ME_Tooltip);
+  m_bTooltip = mi_tooltip->IsChecked();
+}
+
 void RocGuiFrame::OnEditLocs( wxCommandEvent& event ) {
   LocDialog* locdialog = new LocDialog(this, (iONode)NULL );
   if( wxID_OK == locdialog->ShowModal() ) {
@@ -3494,6 +3502,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi_showid->Check( m_bShowID );
   wxMenuItem* mi_raster  = menuBar->FindItem(ME_Raster);
   mi_raster->Check( m_bRaster );
+  wxMenuItem* mi_tooltip  = menuBar->FindItem(ME_Tooltip);
+  mi_tooltip->Check( m_bTooltip );
 
 }
 

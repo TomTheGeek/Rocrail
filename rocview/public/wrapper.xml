@@ -167,6 +167,7 @@
       <var name="showborder" vt="bool" defval="true"/>
       <var name="showid" vt="bool" defval="false"/>
       <var name="raster" vt="bool" defval="false"/>
+      <var name="tooltip" vt="bool" defval="true"/>
       <var name="svgpath" vt="string" defval="svg/themes/SpDrS60" remark="scan this path for svg symbols"/>
       <var name="svgpath2" vt="string" defval="." remark="scan this path for svg symbols"/>
       <var name="svgpath3" vt="string" defval="." remark="scan this path for svg symbols"/>

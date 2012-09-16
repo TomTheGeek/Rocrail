@@ -18162,4 +18162,7 @@
   <Msg id="openexit">
     <en txt="Open exit"/>
   </Msg>
+  <Msg id="tooltip">
+    <en txt="Tooltip"/>
+  </Msg>
 </Messages>

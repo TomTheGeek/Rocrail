@@ -5819,3 +5819,9 @@ msgstr ""
 msgid "Open exit"
 msgstr ""
 
+#. 
+# id="tooltip"
+#, c-format
+msgid "Tooltip"
+msgstr ""
+

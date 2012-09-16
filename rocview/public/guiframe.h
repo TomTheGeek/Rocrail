@@ -262,6 +262,7 @@ public:
   void OnLocoViewSpecial(wxCommandEvent& event);
   void OnShowID(wxCommandEvent& event);
   void OnRaster(wxCommandEvent& event);
+  void OnTooltip(wxCommandEvent& event);
   void OnBackColor(wxCommandEvent& event);
   void OnFullScreen(wxCommandEvent& event);
 
@@ -291,6 +292,7 @@ public:
   bool isTraceWindow() { return m_bTraceWindow; }
   bool isShowID() { return m_bShowID; }
   bool isRaster() { return m_bRaster; }
+  bool isTooltip() { return m_bTooltip; }
   bool isInitialized() { return m_bInitialized; }
   void setLocID( const char* locid );
   double getScale() { return m_Scale; }
@@ -375,6 +377,7 @@ private:
   int   m_LocoCategory; // 0=all 1=steam 2=diesel 3=electric 4=commuter 5=special
   bool  m_bShowID;
   bool  m_bRaster;
+  bool  m_bTooltip;
   bool  m_bServerConsoleMode;
   bool  m_bInitialized;
   bool  m_bActiveWorkspace;
@@ -538,6 +541,7 @@ enum
     ME_ShowID,
     ME_FullScreen,
     ME_Raster,
+    ME_Tooltip,
     NEWUPDATES_EVENT,
     ME_RUG,
     ME_GCA,
