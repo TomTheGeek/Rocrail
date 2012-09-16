@@ -52,17 +52,20 @@ void BaseDialog::sortOnColumn( int col ) {
   if( m_SortCol != m_colAddr ) m_sortAddr = true;
   if( m_SortCol != m_colOri ) m_sortOri = true;
   if( m_SortCol != m_colLen ) m_sortLen = true;
+  if( m_SortCol != m_colType ) m_sortType = true;
 
 }
 
 
-void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, bool showAddr, bool showLen ) {
+void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, bool showAddr, bool showLen, bool showShow, bool showType ) {
   m_ItemList = list;
   m_Parent = parent;
   m_SortCol = 0;
   m_ShowPos = showPos;
   m_ShowAddr = showAddr;
   m_ShowLen = showLen;
+  m_ShowType = showType;
+  m_ShowShow = showShow;
   m_SelectedID = NULL;
   int col = 0;
   m_colID = col;
@@ -74,6 +77,7 @@ void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, boo
   m_sortPos = true;
   m_sortOri = true;
   m_sortLen = true;
+  m_sortType = true;
 
 
   list->InsertColumn(col, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
@@ -97,9 +101,11 @@ void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, boo
     list->InsertColumn(col, wxGetApp().getMsg( "length" ), wxLIST_FORMAT_RIGHT );
     col++;
   }
-  m_colShow = col;
-  list->InsertColumn(col, wxGetApp().getMsg( "show" ), wxLIST_FORMAT_LEFT );
-  col++;
+  if( m_ShowShow ) {
+    m_colShow = col;
+    list->InsertColumn(col, wxGetApp().getMsg( "show" ), wxLIST_FORMAT_LEFT );
+    col++;
+  }
   m_colPos = -1;
   m_colOri = -1;
   if( m_ShowPos ) {
@@ -108,6 +114,11 @@ void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, boo
     col++;
     m_colOri = col;
     list->InsertColumn(col, wxGetApp().getMsg( "orientation" ), wxLIST_FORMAT_LEFT );
+    col++;
+  }
+  if( m_ShowType ) {
+    m_colType = col;
+    list->InsertColumn(col, wxGetApp().getMsg( "type" ), wxLIST_FORMAT_LEFT );
     col++;
   }
 }
@@ -244,6 +255,14 @@ static int __sortDesc(obj* _a, obj* _b)
     const char* idB = wItem.getdesc( b );
     return order?strcmp( idB, idA ):strcmp( idA, idB );
 }
+static int __sortType(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wItem.gettype( a );
+    const char* idB = wItem.gettype( b );
+    return order?strcmp( idB, idA ):strcmp( idA, idB );
+}
 static int __sortOri(obj* _a, obj* _b)
 {
     iONode a = (iONode)*_a;
@@ -317,6 +336,11 @@ void BaseDialog::fillIndex( iONode Items, bool sort) {
     order = m_sortLen;
     ListOp.sort(sortlist, &__sortLen);
   }
+  else if( m_SortCol == m_colType ) {
+    if(sort) m_sortType = !m_sortType;
+    order = m_sortType;
+    ListOp.sort(sortlist, &__sortType);
+  }
 
   size = ListOp.size( sortlist );
   for( int i = 0; i < size; i++ ) {
@@ -341,7 +365,9 @@ void BaseDialog::appendItem( iONode Item) {
     m_ItemList->SetItem( index, m_colLen, wxString::Format(_T("%d"), wItem.getlen(Item)));
     m_ItemList->SetColumnWidth(m_colLen, wxLIST_AUTOSIZE_USEHEADER);
   }
-  m_ItemList->SetItem( index, m_colShow, wxString( wItem.isshow(Item)?"true":"false", wxConvUTF8));
+  if( m_ShowShow ) {
+    m_ItemList->SetItem( index, m_colShow, wxString( wItem.isshow(Item)?"true":"false", wxConvUTF8));
+  }
   if( m_ShowPos ) {
     m_ItemList->SetItem( index, m_colPos, wxString::Format(_T("%d, %d, %d"), wItem.getx(Item), wItem.gety(Item), wItem.getz(Item)) );
     m_ItemList->SetItem( index, m_colOri, wxString( wItem.getori(Item)!=NULL?wItem.getori(Item):wItem.west, wxConvUTF8));
@@ -351,9 +377,14 @@ void BaseDialog::appendItem( iONode Item) {
   m_ItemList->SetItemPtrData(index, (wxUIntPtr)Item);
   m_ItemList->SetColumnWidth(m_colID, wxLIST_AUTOSIZE);
   m_ItemList->SetColumnWidth(m_colDesc, wxLIST_AUTOSIZE);
-  m_ItemList->SetColumnWidth(m_colShow, wxLIST_AUTOSIZE_USEHEADER);
+  if( m_ShowShow )
+    m_ItemList->SetColumnWidth(m_colShow, wxLIST_AUTOSIZE_USEHEADER);
   if( m_ItemList->GetColumnWidth(m_colDesc) < 60 )
     m_ItemList->SetColumnWidth(m_colDesc, wxLIST_AUTOSIZE_USEHEADER);
+  if( m_ShowType ) {
+    m_ItemList->SetItem( index, m_colType, wxString( wItem.gettype(Item), wxConvUTF8));
+    m_ItemList->SetColumnWidth(m_colType, wxLIST_AUTOSIZE);
+  }
 }
 
 

@@ -17,8 +17,11 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/listctrl.h"
 #include "wx/spinctrl.h"
 ////@end includes
+
+#include "basedlg.h"
 
 #include "rocs/public/node.h"
 
@@ -28,6 +31,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxListCtrl;
 class wxSpinCtrl;
 ////@end forward declarations
 
@@ -39,9 +43,10 @@ class wxSpinCtrl;
 #define ID_TIMEDACTIONS 10139
 #define ID_ACTIONBOOK 10254
 #define ID_INDEXPANEL 10403
-#define ID_LB_TimedActions 10143
+#define ID_LISTCTRL 10412
 #define ID_BT_ADD 10217
 #define ID_BT_DEL 10218
+#define ID_BUTTON_AC_DOC 10143
 #define ID_DEFINITIONPANEL 10404
 #define ID_ACTIONS_TYPE 10195
 #define ID_COMBOBOX 10371
@@ -60,12 +65,12 @@ class wxSpinCtrl;
  * TimedActions class declaration
  */
 
-class TimedActions: public wxDialog
+class TimedActions: public wxDialog, public BaseDialog
 {
     DECLARE_DYNAMIC_CLASS( TimedActions )
     DECLARE_EVENT_TABLE()
 
-  void initIndex();
+  bool initIndex();
   void initLabels();
   void initValues();
   bool evaluate();
@@ -93,14 +98,20 @@ public:
 
 ////@begin TimedActions event handler declarations
 
-    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LB_TimedActions
-    void OnLBTimedActionsSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTCTRL
+    void OnListctrlSelected( wxListEvent& event );
+
+    /// wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRL
+    void OnListctrlColLeftClick( wxListEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BT_ADD
     void OnBtAddClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BT_DEL
     void OnBtDelClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_AC_DOC
+    void OnButtonAcDocClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_ACTIONS_TYPE
     void OnActionsTypeSelected( wxCommandEvent& event );
@@ -140,10 +151,11 @@ public:
 ////@begin TimedActions member variables
     wxNotebook* m_ActionBook;
     wxPanel* m_IndexPanel;
-    wxListBox* m_TimedActions;
+    wxListCtrl* m_TimedActions;
     wxTextCtrl* m_ActionID;
     wxButton* m_Add;
     wxButton* m_Del;
+    wxButton* m_Doc;
     wxPanel* m_DefinitionPanel;
     wxStaticText* m_labType;
     wxChoice* m_Type;
@@ -158,6 +170,8 @@ public:
     wxSpinCtrl* m_ActTime;
     wxStaticText* m_labTimer;
     wxSpinCtrl* m_Timer;
+    wxStaticText* m_labDescription;
+    wxTextCtrl* m_Description;
     wxCheckBox* m_Timed;
     wxCheckBox* m_Every;
     wxStaticText* m_labHour;

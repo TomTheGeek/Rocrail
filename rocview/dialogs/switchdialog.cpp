@@ -152,7 +152,7 @@ void SwitchDialog::initLabels() {
   m_Notebook->SetPageText( 4, wxGetApp().getMsg( "wiring" ) );
 
   // Index
-  initList(m_List2, this);
+  initList(m_List2, this, true, true, false, true);
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_Doc->SetLabel( wxGetApp().getMsg( "doc_report" ) );
