@@ -2527,7 +2527,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       l_locidStr = StrOp.fmt( "%s [%d]%s",
           wStage.getid( node ), nrlocos, StrOp.equals(wBlock.closed,wStage.getexitstate(m_Props))?"<":"" );
     else
-      l_locidStr = StrOp.fmt( "%s", wStage.getid( node ) );
+      l_locidStr = StrOp.fmt( "%s %s", wStage.getid( node ), StrOp.equals(wBlock.closed,wStage.getexitstate(m_Props))?"<":"" );
 
     m_Renderer->setLabel( l_locidStr, occupied, false );
     StrOp.free( m_locidStr );

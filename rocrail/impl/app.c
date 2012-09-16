@@ -467,13 +467,13 @@ static void __conhelp() {
     TraceOp.println( " e - Emergency break" );
 
     TraceOp.println( " m - Shows memory(object) use" );
-    TraceOp.println( " d - Toggle debug tracelevel" );
-    TraceOp.println( " b - Toggle byte tracelevel" );
-    TraceOp.println( " w - Toggle wrapper tracelevel" );
-    TraceOp.println( " a - Toggle automat tracelevel" );
-    TraceOp.println( " h - Toggle http tracelevel" );
-    TraceOp.println( " o - Toggle monitor tracelevel" );
-    TraceOp.println( " r - Toggle memory tracelevel" );
+    TraceOp.println( " d - Toggle debug tracelevel [%s]",   (TraceOp.getLevel( NULL ) & TRCLEVEL_DEBUG)?"ON":"OFF" );
+    TraceOp.println( " b - Toggle byte tracelevel [%s]",    (TraceOp.getLevel( NULL ) & TRCLEVEL_BYTE)?"ON":"OFF" );
+/*  TraceOp.println( " w - Toggle wrapper tracelevel" ); not defined/used */
+    TraceOp.println( " a - Toggle automat tracelevel [%s]", (TraceOp.getLevel( NULL ) & TRCLEVEL_USER1)?"ON":"OFF" );
+    TraceOp.println( " h - Toggle http tracelevel [%s]",    (TraceOp.getLevel( NULL ) & TRCLEVEL_USER2)?"ON":"OFF" );
+    TraceOp.println( " o - Toggle monitor tracelevel [%s]", (TraceOp.getLevel( NULL ) & TRCLEVEL_MONITOR)?"ON":"OFF" );
+    TraceOp.println( " r - Toggle memory tracelevel [%s]",  (TraceOp.getLevel( NULL ) & TRCLEVEL_MEMORY)?"ON":"OFF" );
 }
 
 
