@@ -701,6 +701,7 @@
 
   <datareq remark="Data request" wrappername="DataReq">
     <var name="id" vt="string" defval="NULL" range="*" remark="reference ID"/>
+    <var name="function" vt="int" defval="0" range="0-*"/>
     <const name="get" vt="int" val="0"/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="image" vt="int" val="0"/>
@@ -2020,6 +2021,7 @@
           <var name="timer" vt="int" defval="0" range="0-99" unit="s" remark="function timer"/>
           <var name="text" vt="string" defval="function" range="*" remark="function label"/>
           <var name="sound" vt="string" defval="" range="*" remark="sound file"/>
+          <var name="icon" vt="string" defval="" range="*" remark="icon file"/>
           <var name="on" vt="bool" defval="false" remark="activation"/>
           <var name="onevent" vt="string" defval="enter_block" range="enter_block,exit_block,in_block,out_block" remark="Activation event."/>
           <var name="onblockid" vt="string" defval="NULL" range="*" remark="BlockID."/>
