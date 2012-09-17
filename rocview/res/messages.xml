@@ -18165,4 +18165,7 @@
   <Msg id="tooltip">
     <en txt="Tooltip"/>
   </Msg>
+  <Msg id="icon">
+    <en txt="Icon"/>
+  </Msg>
 </Messages>

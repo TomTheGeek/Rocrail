@@ -5825,3 +5825,9 @@ msgstr ""
 msgid "Tooltip"
 msgstr ""
 
+#. 
+# id="icon"
+#, c-format
+msgid "Icon"
+msgstr ""
+

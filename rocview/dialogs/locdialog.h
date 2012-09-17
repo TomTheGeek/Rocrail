@@ -445,6 +445,7 @@ public:
     wxStaticText* m_labFnTimer;
     wxStaticText* m_labFnEvents;
     wxStaticText* m_labSound;
+    wxStaticText* m_labIcon;
     wxStaticText* m_labFnAddr;
     wxStaticText* m_labAddrFn;
     wxStaticText* m_Label_f1;
@@ -452,6 +453,7 @@ public:
     wxSpinCtrl* m_TimerF1;
     wxButton* m_Button_f1;
     wxTextCtrl* m_Sound1;
+    wxTextCtrl* m_Icon_f1;
     wxSpinCtrl* m_F1Addr;
     wxSpinCtrl* m_F1AddrFn;
     wxStaticText* m_Label_f2;
@@ -459,6 +461,7 @@ public:
     wxSpinCtrl* m_TimerF2;
     wxButton* m_Button_f2;
     wxTextCtrl* m_Sound2;
+    wxTextCtrl* m_Icon_f2;
     wxSpinCtrl* m_F2Addr;
     wxSpinCtrl* m_F2AddrFn;
     wxStaticText* m_Label_f3;
@@ -466,6 +469,7 @@ public:
     wxSpinCtrl* m_TimerF3;
     wxButton* m_Button_f3;
     wxTextCtrl* m_Sound3;
+    wxTextCtrl* m_Icon_f3;
     wxSpinCtrl* m_F3Addr;
     wxSpinCtrl* m_F3AddrFn;
     wxStaticText* m_Label_f4;
@@ -473,6 +477,7 @@ public:
     wxSpinCtrl* m_TimerF4;
     wxButton* m_Button_f4;
     wxTextCtrl* m_Sound4;
+    wxTextCtrl* m_Icon_f4;
     wxSpinCtrl* m_F4Addr;
     wxSpinCtrl* m_F4AddrFn;
     wxPanel* m_ConsistsPanel;
