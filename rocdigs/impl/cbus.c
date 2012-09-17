@@ -705,19 +705,24 @@ static __evaluateAcc( iOCBUS cbus, byte* frame, Boolean state ) {
 
   int addr = event;
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%sevent %d:%d %s",
-      data->shortevents?"short ":"", node, addr, state?"ON":"OFF" );
+  if( addr >  0 ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%sevent %d:%d %s",
+        data->shortevents?"short ":"", node, addr, state?"ON":"OFF" );
+    /* inform listener: Node3 */
+    iONode nodeC = NodeOp.inst( wAccessory.name(), NULL, ELEMENT_NODE );
+    wAccessory.setnodenr( nodeC, data->shortevents?0:node );
+    wAccessory.setdevid( nodeC, addr );
+    wAccessory.setval1( nodeC, state );
+    wAccessory.setaccevent( nodeC, True );
+    if( data->iid != NULL )
+      wAccessory.setiid( nodeC, data->iid );
 
-  /* inform listener: Node3 */
-  iONode nodeC = NodeOp.inst( wAccessory.name(), NULL, ELEMENT_NODE );
-  wAccessory.setnodenr( nodeC, data->shortevents?0:node );
-  wAccessory.setdevid( nodeC, addr );
-  wAccessory.setval1( nodeC, state );
-  wAccessory.setaccevent( nodeC, True );
-  if( data->iid != NULL )
-    wAccessory.setiid( nodeC, data->iid );
-
-  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%sevent %d:%d %s (ignored)",
+        data->shortevents?"short ":"", node, addr, state?"ON":"OFF" );
+  }
 }
 
 
