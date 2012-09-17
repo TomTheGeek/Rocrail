@@ -149,6 +149,7 @@ void CarDlg::initLabels() {
   m_NewCar->SetLabel( wxGetApp().getMsg( "new" ) );
   m_DeleteCar->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_Copy->SetLabel( wxGetApp().getMsg( "copy" ) );
+  m_Doc->SetLabel( wxGetApp().getMsg( "doc_report" ) );
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
@@ -624,5 +625,10 @@ void CarDlg::onOK( wxCommandEvent& event ){
   if( m_bSave )
     onApply(event);
   EndModal( wxID_OK );
+}
+
+void CarDlg::onDoc( wxCommandEvent& event )
+{
+  doDoc( event, "cars");
 }
 
