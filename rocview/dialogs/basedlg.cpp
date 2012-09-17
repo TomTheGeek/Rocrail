@@ -85,6 +85,7 @@ void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, boo
   m_colIID = -1;
   m_colAddr = -1;
   m_colLen = -1;
+  m_colType = -1;
   if( m_ShowAddr ) {
     m_colIID = col;
     list->InsertColumn(col, wxGetApp().getMsg( "iid" ), wxLIST_FORMAT_LEFT );
@@ -261,7 +262,10 @@ static int __sortType(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* idA = wItem.gettype( a );
     const char* idB = wItem.gettype( b );
-    return order?strcmp( idB, idA ):strcmp( idA, idB );
+    if( idA != NULL && idB != NULL )
+      return order?strcmp( idB, idA ):strcmp( idA, idB );
+    else
+      return 0;
 }
 static int __sortOri(obj* _a, obj* _b)
 {
