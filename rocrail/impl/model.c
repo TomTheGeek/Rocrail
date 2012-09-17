@@ -368,6 +368,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
   char key[64] = {'\0'};
   Boolean healthy = True;
   iOMap xyzMap = MapOp.inst();
+  iOMap sensorMap = MapOp.inst();
   int dbs = NodeOp.getChildCnt(data->model);
   int i = 0;
 
@@ -402,6 +403,20 @@ static Boolean __checkPlanHealth(iOModelData data) {
         if( wFeedback.getaddr(item) == 0 ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "sensor %s has no address set", wItem.getid(item) );
           healthy = False;
+        }
+        else {
+          char key[32];
+          StrOp.fmtb( key, "%d", wFeedback.getaddr(item) );
+          if( MapOp.haskey(sensorMap, key ) ) {
+            iONode sensorItem = (iONode)MapOp.get( sensorMap, key );
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+                "sensor %s has an already used address %d by %s",
+                wItem.getid(item), wFeedback.getaddr(item), wItem.getid(sensorItem) );
+            healthy = False;
+          }
+          else {
+            MapOp.put( sensorMap, key, (obj)item );
+          }
         }
       }
       if( StrOp.equals( wSwitch.name(), NodeOp.getName(item) ) ) {
@@ -506,6 +521,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
   }
 
   MapOp.base.del(xyzMap);
+  MapOp.base.del(sensorMap);
   data->healthy = healthy;
   return healthy;
 }
