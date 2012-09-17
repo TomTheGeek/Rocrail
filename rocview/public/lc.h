@@ -58,6 +58,7 @@ private:
     /// Creation
     bool Create();
     void init();
+    wxBitmap* getIcon(const char* icon);
     void funCmd(int fidx);
     void speedCmd(bool sendCmd);
 #ifdef USENEWLOOK

@@ -36,6 +36,7 @@
 #endif
 
 #include "rocs/public/trace.h"
+#include "rocs/public/system.h"
 #include "rocview/public/guiapp.h"
 #include "rocview/public/base.h"
 
@@ -53,6 +54,7 @@
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/DataReq.h"
 
 /*!
  * Programming type definition
@@ -325,6 +327,35 @@ void LC::OnSlider(wxScrollEvent& event)
   }
 }
 
+wxBitmap* LC::getIcon(const char* icon) {
+  wxBitmap* bitmap = NULL;
+
+  wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
+  if( StrOp.endsWithi( icon, ".gif" ) )
+    bmptype = wxBITMAP_TYPE_GIF;
+  else if( StrOp.endsWithi( icon, ".png" ) )
+    bmptype = wxBITMAP_TYPE_PNG;
+
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "get icon %s", icon );
+
+  const char* imagepath = wGui.getimagepath(wxGetApp().m_Ini);
+  static char pixpath[256];
+  StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( icon ) );
+
+  if( FileOp.exist(pixpath))
+    bitmap = new wxBitmap(wxString(pixpath,wxConvUTF8), bmptype);
+  else {
+    // request the image from server:
+    iONode node = NodeOp.inst( wDataReq.name(), NULL, ELEMENT_NODE );
+    wDataReq.setid( node, wLoc.getid(this->m_LocProps) );
+    wDataReq.setcmd( node, wDataReq.get );
+    wDataReq.settype( node, wDataReq.image );
+    wDataReq.setfilename( node, icon );
+    wxGetApp().sendToRocrail( node );
+  }
+  return bitmap;
+}
+
 void LC::setFLabels() {
   if( m_iFnGroup == 0 ) {
     m_F1->SetLabel( _T("F1") );
@@ -387,6 +418,9 @@ void LC::setFLabels() {
       wxString fntxt = wxString(wFunDef.gettext( fundef ),wxConvUTF8);
       if( wFunDef.getfn( fundef ) == 1 + (m_iFnGroup * 4 )) {
         m_F1->SetToolTip( fntxt );
+        if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
+          m_F1->SetIcon(getIcon(wFunDef.geticon(fundef)));
+        }
       }
       else if( wFunDef.getfn( fundef ) == 2 + (m_iFnGroup * 4 ) ) {
         m_F2->SetToolTip( fntxt );

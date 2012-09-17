@@ -38,6 +38,8 @@ class LEDButton : public wxPanel
     int buttonWidth;
     int buttonHeight;
 
+    wxBitmap* icon;
+
 
 public:
     LEDButton(wxPanel* parent, wxString text, int width, int height, bool useLED=true, bool textOnly=false);
@@ -46,6 +48,7 @@ public:
 
     void setLED(bool ON);
     void SetLabel(const wxString &text);
+    void SetIcon(wxBitmap* icon);
     void SetValue(const wxString& value);
     bool SetBackgroundColour(const wxColour& colour);
     void Display7Segement(wxGraphicsContext* gc);

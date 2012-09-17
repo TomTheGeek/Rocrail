@@ -70,6 +70,7 @@ LEDButton::LEDButton(wxPanel* parent, wxString text, int width, int height, bool
   Parent = parent;
   this->useLED = useLED;
   this->textOnly = textOnly;
+  this->icon = NULL;
 }
 
 /*
@@ -119,12 +120,17 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
     Display7Segement(gc);
   }
   else {
-    double width;
-    double height;
-    double descent;
-    double externalLeading;
-    gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
-    gc->DrawText( text, (buttonWidth-width)/2, (buttonHeight-height)/2 );
+    if( icon != NULL ) {
+      dc.DrawBitmap(*icon, (buttonWidth-icon->GetWidth())/2, (buttonHeight-icon->GetHeight())/2, true);
+    }
+    else {
+      double width;
+      double height;
+      double descent;
+      double externalLeading;
+      gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+      gc->DrawText( text, (buttonWidth-width)/2, (buttonHeight-height)/2 );
+    }
   }
   delete gc;
 
@@ -196,6 +202,12 @@ void LEDButton::SetLabel(const wxString &text) {
   this->text = text;
   Refresh();
 }
+
+void LEDButton::SetIcon(wxBitmap* icon) {
+  this->icon = icon;
+  Refresh();
+}
+
 
 void LEDButton::SetValue(const wxString& value) {
   SetLabel(value);
