@@ -2273,12 +2273,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
   else
     m_Tip = StrOp.dup(wItem.getid( m_Props ));
 
-  if( wxGetApp().getFrame()->isTooltip() ) {
-    SetToolTip( wxString(m_Tip,wxConvUTF8) );
-  }
-  else {
-    SetToolTip( wxString("",wxConvUTF8) );
-  }
+  showTooltip(wxGetApp().getFrame()->isTooltip());
 
   if( StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ) {
     TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "signal set to %s", wSignal.ismanual(node) ? "manual":"auto" );
@@ -2346,12 +2341,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     m_Tip = StrOp.fmt( "%s addr=%d ident=%s val=%d count=%d info=%s cars=%d/%d wheelcount=%d",
                            wFeedback.getid( node ), addr, ident, val, counter, info, countedcars, carcount, wheelcount );
 
-    if( wxGetApp().getFrame()->isTooltip() ) {
-      SetToolTip( wxString(m_Tip,wxConvUTF8) );
-    }
-    else {
-      SetToolTip( wxString("",wxConvUTF8) );
-    }
+    showTooltip(wxGetApp().getFrame()->isTooltip());
 
     if( StrOp.len(ident) > 0 )
       wxGetApp().getFrame()->setInfoText( m_Tip );
@@ -2372,12 +2362,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     StrOp.free(m_Tip);
     m_Tip = StrOp.fmt( "%s lock=%s",
                            wRoute.getid( node ), locid == NULL ? "unlocked":locid );
-    if( wxGetApp().getFrame()->isTooltip() ) {
-      SetToolTip( wxString(m_Tip,wxConvUTF8) );
-    }
-    else {
-      SetToolTip( wxString("",wxConvUTF8) );
-    }
+    showTooltip(wxGetApp().getFrame()->isTooltip());
 
     wRoute.setstatus( m_Props, status );
   }
@@ -2414,11 +2399,9 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
                              wSwitch.getlocid( node )==NULL?"unlocked":wSwitch.getlocid( node ) );
       StrOp.free(m_Tip);
       m_Tip = StrOp.dup(l_locidStr);
-      if( wxGetApp().getFrame()->isTooltip() ) {
-        SetToolTip( wxString(l_locidStr,wxConvUTF8) );
-      }
       StrOp.free( m_locidStr );
       m_locidStr = l_locidStr;
+      showTooltip(wxGetApp().getFrame()->isTooltip());
     }
 
   }
@@ -2447,15 +2430,14 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     l_tipStr = StrOp.fmt( "%s addr=%d(%d)",
                            wSignal.getid( node ),
                            addr, pada );
-    if( wxGetApp().getFrame()->isTooltip() ) {
-      SetToolTip( wxString(l_tipStr,wxConvUTF8) );
-    }
+
     StrOp.free( m_locidStr );
     m_locidStr = l_tipStr;
     StrOp.free(m_Tip);
     m_Tip = StrOp.dup(l_tipStr);
     StrOp.free(l_tipStr);
 
+    showTooltip(wxGetApp().getFrame()->isTooltip());
   }
   else if( StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) ) {
     const char* state = wOutput.getstate( node );
@@ -2495,9 +2477,8 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     StrOp.free(m_Tip);
     m_Tip = StrOp.dup( l_locidStr );
 
-    if( wxGetApp().getFrame()->isTooltip() ) {
-      SetToolTip( wxString(m_Tip,wxConvUTF8) );
-    }
+    showTooltip(wxGetApp().getFrame()->isTooltip());
+
     m_Renderer->setLabel( l_locidStr, pending );
     StrOp.free( m_locidStr );
     m_locidStr = l_locidStr;
@@ -2578,9 +2559,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     m_locidStr = l_locidStr;
     TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "%s, occupied=%d", m_locidStr, occupied );
 
-    if( wxGetApp().getFrame()->isTooltip() ) {
-      SetToolTip( wxString(m_Tip,wxConvUTF8) );
-    }
+    showTooltip(wxGetApp().getFrame()->isTooltip());
   }
 
   else if( StrOp.equals( wStage.name(), NodeOp.getName( m_Props ) ) ) {
@@ -2631,24 +2610,21 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       }
 
       if( locid != NULL && StrOp.len( locid ) > 0 ) {
-        if( wxGetApp().getFrame()->isTooltip() ) {
-          char* tip = StrOp.fmt( wxGetApp().getMsg("clickblock").mb_str(wxConvUTF8), locid );
-          StrOp.free(m_Tip);
-          m_Tip = StrOp.fmt("%s: %s", wBlock.getid( node ), tip);
-          StrOp.free(tip);
-          SetToolTip( wxString(m_Tip,wxConvUTF8) );
-        }
+        char* tip = StrOp.fmt( wxGetApp().getMsg("clickblock").mb_str(wxConvUTF8), locid );
+        StrOp.free(m_Tip);
+        m_Tip = StrOp.fmt("%s: %s", wBlock.getid( node ), tip);
+        StrOp.free(tip);
+        showTooltip(wxGetApp().getFrame()->isTooltip());
+
          occupied = isReserved ? 2:1;
          occupied = isEntering ? 3:occupied;
          occupied = StrOp.equals(wBlock.closed,wBlock.getstate( node ))?4:occupied;
        }
        else {
          occupied = isAcceptIdent ? 7:occupied;
-         if( wxGetApp().getFrame()->isTooltip() ) {
-           StrOp.free(m_Tip);
-           m_Tip = StrOp.dup(wBlock.getid( node ));
-           SetToolTip( wxString(m_Tip,wxConvUTF8) );
-         }
+         StrOp.free(m_Tip);
+         m_Tip = StrOp.dup(wBlock.getid( node ));
+         showTooltip(wxGetApp().getFrame()->isTooltip());
        }
 
       if (locid!=NULL && StrOp.len(locid)>0) {
@@ -2695,13 +2671,10 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       else
         l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
 
-      if( wxGetApp().getFrame()->isTooltip() ) {
-        SetToolTip( wxString(l_locidStr,wxConvUTF8) );
-      }
-
       StrOp.free(m_Tip);
       m_Tip = StrOp.dup(l_locidStr);
       StrOp.free(l_locidStr);
+      showTooltip(wxGetApp().getFrame()->isTooltip());
 
     }
 
