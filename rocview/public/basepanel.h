@@ -30,6 +30,7 @@ public:
   virtual bool SetBackgroundColor(int red, int green, int blue, bool savecolor) = 0;
   virtual void OnPanelProps(wxCommandEvent& event) = 0;
   virtual BasePanel* updateZLevel(iONode zlevel) = 0;
+  virtual void showTooltip(bool show) = 0;
 
 };
 

@@ -206,12 +206,37 @@ PlanPanel::PlanPanel(wxWindow *parent, int itemsize, double scale, double bktext
   SetVirtualSize( (int)(m_ItemSize*m_Scale * wPlanPanel.getcx(ini)), (int)(m_ItemSize*m_Scale * wPlanPanel.getcy(ini)) );
   SetScrollRate( (int)(m_ItemSize*m_Scale), (int)(m_ItemSize*m_Scale) );
 
-  SetToolTip( wxString(wZLevel.getmodid(m_zLevel),wxConvUTF8) + _T(" ") + wxString(wZLevel.gettitle(m_zLevel),wxConvUTF8) );
+  if( wxGetApp().getFrame()->isTooltip() ) {
+    SetToolTip( wxString(wZLevel.getmodid(m_zLevel),wxConvUTF8) + _T(" ") + wxString(wZLevel.gettitle(m_zLevel),wxConvUTF8) );
+  }
+  else {
+    SetToolTip( wxString("",wxConvUTF8) );
+  }
 }
 
 const char* PlanPanel::getZLevelTitle() {
   return wZLevel.gettitle( m_zLevel );
 }
+
+void PlanPanel::showTooltip(bool show) {
+  if( show ) {
+    SetToolTip( wxString(wZLevel.getmodid(m_zLevel),wxConvUTF8) + _T(" ") + wxString(wZLevel.gettitle(m_zLevel),wxConvUTF8) );
+  }
+  else {
+    SetToolTip( wxString("",wxConvUTF8) );
+  }
+  // iterate the items in this panel
+  m_ChildTable->BeginFind();
+  Symbol* item = NULL;
+  wxNode* node = (wxNode*)m_ChildTable->Next();
+  while( node != NULL ) {
+    item = (Symbol*)node->GetData();
+    if( !item->isDragged() )
+      item->showTooltip(show);
+    node = (wxNode*)m_ChildTable->Next();
+  }
+}
+
 
 void PlanPanel::OnPaint(wxPaintEvent& event)
 {
@@ -229,6 +254,13 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
   }
 
   TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "Level %d is active (z=%d)", wZLevel.getz(m_zLevel), m_Z );
+
+  if( wxGetApp().getFrame()->isTooltip() ) {
+    SetToolTip( wxString(wZLevel.getmodid(m_zLevel),wxConvUTF8) + _T(" ") + wxString(wZLevel.gettitle(m_zLevel),wxConvUTF8) );
+  }
+  else {
+    SetToolTip( wxString("",wxConvUTF8) );
+  }
 
   if( wxGetApp().getFrame()->isRaster() ) {
     int x, y;
@@ -293,7 +325,12 @@ void PlanPanel::OnPanelProps(wxCommandEvent& event) {
   else if( m_zLevel != NULL ) {
     PlanPanelProps* dlg = new PlanPanelProps( this, m_zLevel );
     if( wxID_OK == dlg->ShowModal() ) {
-      SetToolTip( wxString(wZLevel.getmodid(m_zLevel),wxConvUTF8) + _T(" ") + wxString(wZLevel.gettitle(m_zLevel),wxConvUTF8) );
+      if( wxGetApp().getFrame()->isTooltip() ) {
+        SetToolTip( wxString(wZLevel.getmodid(m_zLevel),wxConvUTF8) + _T(" ") + wxString(wZLevel.gettitle(m_zLevel),wxConvUTF8) );
+      }
+      else {
+        SetToolTip( wxString("",wxConvUTF8) );
+      }
     }
     dlg->Destroy();
   }

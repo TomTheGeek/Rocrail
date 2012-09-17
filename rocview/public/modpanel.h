@@ -51,6 +51,7 @@ public:
   void OnAddModule(wxCommandEvent& event);
   void OnProperties(wxCommandEvent& event);
 
+  void showTooltip(bool show);
   void modelEvent( iONode node );
   void reScale( double scale );
   void removeItemFromList( iONode item );

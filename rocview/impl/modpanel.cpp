@@ -325,6 +325,9 @@ BasePanel* ModPanel::updateZLevel(iONode zlevel) {
   return NULL;
 }
 
+void ModPanel::showTooltip(bool show)
+{
+}
 
 void ModPanel::OnPaint(wxPaintEvent& event)
 {

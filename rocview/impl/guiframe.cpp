@@ -2938,7 +2938,7 @@ void RocGuiFrame::OnTooltip( wxCommandEvent& event ) {
   int pages = m_PlanNotebook->GetPageCount();
   for( int i = 0; i < pages; i++ ) {
     BasePanel* p = (BasePanel*)m_PlanNotebook->GetPage(i);
-    p->reScale( m_Scale );
+    p->showTooltip( m_bTooltip );
   }
 }
 

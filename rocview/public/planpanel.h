@@ -35,6 +35,7 @@ public:
   void OnPaint(wxPaintEvent& event);
   void init(bool modview=false);
   void clean();
+  void showTooltip(bool show);
   char* itemKey( iONode node, char* key, char* prevkey );
   char* itemKey( const char* nodename, const char* id, char* key );
   void addItems( iONode node );

@@ -108,6 +108,7 @@ public:
   void OnTTTrack(wxCommandEvent& event);
   void OnTTCalibrate(wxCommandEvent& event);
 
+  void showTooltip(bool show);
   void modelEvent( iONode node, bool oncreate=false );
   const char* getId();
   iONode getProperties();
@@ -131,6 +132,7 @@ private:
   bool m_isDragged;
   bool m_locoIsDropped;
   char* m_locidStr;
+  char* m_Tip;
   //char* m_RouteID;
   void sizeToScale();
   double getSize();
