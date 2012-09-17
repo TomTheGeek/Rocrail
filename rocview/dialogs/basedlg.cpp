@@ -82,10 +82,14 @@ void BaseDialog::initList( wxListCtrl* list, wxWindow* parent, bool showPos, boo
 
   list->InsertColumn(col, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
   col++;
-  m_colIID = -1;
+  m_colIID  = -1;
   m_colAddr = -1;
-  m_colLen = -1;
+  m_colLen  = -1;
   m_colType = -1;
+  m_colLen  = -1;
+  m_colShow = -1;
+  m_colPos  = -1;
+
   if( m_ShowAddr ) {
     m_colIID = col;
     list->InsertColumn(col, wxGetApp().getMsg( "iid" ), wxLIST_FORMAT_LEFT );
