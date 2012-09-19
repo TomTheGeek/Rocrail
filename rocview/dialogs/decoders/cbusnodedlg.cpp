@@ -1284,10 +1284,12 @@ void CBusNodeDlg::initGC8Var( int nr, int val ) {
   else if( nr == 3 ) {
     m_GC8Display1Contrast->SetValue(val&0x0F);
     m_GC8Display1FirstDH->SetValue(val&0x10?true:false);
+    m_GC8Display1Clock->SetValue(val&0x20?true:false);
   }
   else if( nr == 4 ) {
     m_GC8Display2Contrast->SetValue(val&0x0F);
     m_GC8Display2FirstDH->SetValue(val&0x10?true:false);
+    m_GC8Display2Clock->SetValue(val&0x20?true:false);
   }
 }
 
@@ -1613,11 +1615,13 @@ void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
     if( m_GC8SetIndex == 2 ) {
       int var = m_GC8Display1Contrast->GetValue();
       var += m_GC8Display1FirstDH->IsChecked() ? 0x10:0x00;
+      var += m_GC8Display1Clock->IsChecked() ? 0x20:0x00;
       varSet(3, var, false);
     }
     else if( m_GC8SetIndex == 3 ) {
       int var = m_GC8Display2Contrast->GetValue();
       var += m_GC8Display2FirstDH->IsChecked() ? 0x10:0x00;
+      var += m_GC8Display2Clock->IsChecked() ? 0x20:0x00;
       varSet(4, var, false);
     }
     else if( m_GC8SetIndex == 4 ) {
