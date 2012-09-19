@@ -468,13 +468,13 @@ void CBusNodeDlg::selectPage4Type( int manu, int mtype ) {
   if( manu == MANU_ROCRAIL ) {
     wxCommandEvent evt;
     switch( mtype ) {
+    case MTYP_CANGC1E:   m_NoteBook->SetSelection( 5 - offset );  onGC1eGetAll( evt ); break;
     case MTYP_CANGC2:    m_NoteBook->SetSelection( 6 - offset);   onGC2GetAll( evt ); break;
     case MTYP_CANGC4:    m_NoteBook->SetSelection( 7 - offset );  onGC4GetAll( evt ); break;
     case MTYP_CANGC6:    m_NoteBook->SetSelection( 8 - offset );  onGC6GetAll( evt ); break;
     case MTYP_CANGC7:    m_NoteBook->SetSelection( 9 - offset );  onGC7GetAll( evt ); break;
-    case MTYP_CANGC1E:   m_NoteBook->SetSelection( 5 - offset );  onGC1eGetAll( evt ); break;
-    case MTYP_CANGCLN:   m_NoteBook->SetSelection( 10 - offset ); onGCLNGetAll( evt ); break;
-    case MTYP_CANGC8:    m_NoteBook->SetSelection( 11 - offset );  onGC8GetAll( evt ); break;
+    case MTYP_CANGC8:    m_NoteBook->SetSelection( 10 - offset );  onGC8GetAll( evt ); break;
+    case MTYP_CANGCLN:   m_NoteBook->SetSelection( 11 - offset ); onGCLNGetAll( evt ); break;
     }
   }
 }
