@@ -681,6 +681,7 @@
       <var name="usedouble" vt="Boolean"/>
       <var name="expectdouble" vt="Boolean"/>
       <var name="packetloss" vt="int"/>
+      <var name="swack" vt="Boolean"/>
     </data>
   </object>
 

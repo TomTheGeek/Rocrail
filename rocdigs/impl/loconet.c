@@ -293,6 +293,7 @@ static Boolean _transact( iOLocoNet loconet, byte* out, int outsize, byte* in, i
 
       if( in != NULL && insize != NULL ) {
         int retry = 0;
+        in[0] = 0;
         do {
           ThreadOp.sleep(50);
           *insize = data->lnRead( (obj)loconet, in );
@@ -305,6 +306,7 @@ static Boolean _transact( iOLocoNet loconet, byte* out, int outsize, byte* in, i
               break;
             }
             if( waitforOPC_FAIL > 0 && in[0] == waitforOPC_FAIL ) {
+              ok = False;
               break;
             }
             __evaluatePacket(loconet, in, *insize);
@@ -778,11 +780,14 @@ static void __swReset( void* threadinst ) {
       ThreadOp.sleep( wSwitch.getdelay( node ) > 0 ? wSwitch.getdelay( node ):data->swtime );
       {
         byte cmd[32];
+        byte rsp[32];
         int addr = wSwitch.getaddr1( node );
         int port  = wSwitch.getport1( node );
         int gate = 0;
         int dir  = 1;
         int action = 0;
+        int insize = 0;
+        int retry = 0;
 
         if( port == 0 )
           AddrOp.fromFADA( addr, &addr, &port, &gate );
@@ -802,7 +807,15 @@ static void __swReset( void* threadinst ) {
         cmd[2] |= (unsigned short int) ( (action & 0x0001) << 4);
         cmd[3] = LocoNetOp.checksum( cmd, 3 );
 
-        LocoNetOp.transact( loconet, cmd, 4, NULL, NULL, 0, 0, False );
+        while( !LocoNetOp.transact( loconet, cmd, 4, rsp, &insize, 0, OPC_LONG_ACK, False ) && retry < 10) {
+          if( data->swack && insize > 0 && rsp[0] == OPC_LONG_ACK && rsp[1] == (OPC_SW_REQ & 0x7F) && rsp[2] == 0 ) {
+            ThreadOp.sleep(50);
+          }
+          else {
+            break;
+          }
+          retry++;
+        }
 
       }
       node->base.del( node );
@@ -956,7 +969,21 @@ static void __loconetWriter( void* threadinst ) {
       continue;
     }
     /* first byte is the message length */
-    if( !LocoNetOp.transact( (iOLocoNet)loconet, out+1, out[0], NULL, NULL, 0, 0, False ) ) {
+    if( data->swack && out[1] == OPC_SW_REQ ) {
+      byte rsp[32];
+      int insize = 0;
+      int retry = 0;
+      while( !LocoNetOp.transact( (iOLocoNet)loconet, out+1, out[0], rsp, &insize, 0, OPC_LONG_ACK, False ) && retry < 10) {
+        if( insize > 0 && rsp[0] == OPC_LONG_ACK && rsp[1] == (OPC_SW_REQ & 0x7F) && rsp[2] == 0 ) {
+          ThreadOp.sleep(50);
+        }
+        else {
+          break;
+        }
+        retry++;
+      }
+    }
+    else if( !LocoNetOp.transact( (iOLocoNet)loconet, out+1, out[0], NULL, NULL, 0, 0, False ) ) {
       /* sleep and send it again? */
     }
 
@@ -2489,6 +2516,7 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->serveLConly = wLNSlotServer.islconly(data->slotserver);
   data->doSensorQuery = wLocoNet.issensorquery(data->loconet);
   data->stress = wDigInt.isstress(ini);
+  data->swack = wLocoNet.isswack(data->loconet);
 
   data->didSensorQuery = False;
 

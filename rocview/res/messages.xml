@@ -18168,4 +18168,7 @@
   <Msg id="icon">
     <en txt="Icon"/>
   </Msg>
+  <Msg id="swack">
+    <en txt="Check switch acknowledge"/>
+  </Msg>
 </Messages>
