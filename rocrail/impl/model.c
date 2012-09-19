@@ -400,6 +400,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
           healthy = False;
         }
       }
+
       if( StrOp.equals( wFeedback.name(), NodeOp.getName(item) ) ) {
         if( wFeedback.getaddr(item) == 0 ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "sensor %s has no address set", wItem.getid(item) );
@@ -420,6 +421,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
           }
         }
       }
+
       if( StrOp.equals( wSwitch.name(), NodeOp.getName(item) ) ) {
         if( wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "switch %s has no address set", wItem.getid(item) );
@@ -437,8 +439,101 @@ static Boolean __checkPlanHealth(iOModelData data) {
           else {
             MapOp.put( switchMap, key, (obj)item );
           }
+
+          if( wSwitch.getaddr2(item) > 0 || wSwitch.getport2(item) > 0 ) {
+            StrOp.fmtb( key, "%d-%d", wSwitch.getaddr2(item), wSwitch.getport2(item) );
+            if( MapOp.haskey(switchMap, key ) ) {
+              iONode switchItem = (iONode)MapOp.get( switchMap, key );
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                  "switch %s has an already used second address %d-%d by %s",
+                  wItem.getid(item), wSwitch.getaddr2(item), wSwitch.getport2(item), wItem.getid(switchItem) );
+            }
+            else {
+              MapOp.put( switchMap, key, (obj)item );
+            }
+          }
         }
       }
+
+      if( StrOp.equals( wOutput.name(), NodeOp.getName(item) ) ) {
+        if( wOutput.getaddr(item) > 0 || wOutput.getport(item) > 0 ) {
+          char key[32];
+          StrOp.fmtb( key, "%d-%d", wOutput.getaddr(item), wOutput.getport(item) );
+          if( MapOp.haskey(switchMap, key ) ) {
+            iONode switchItem = (iONode)MapOp.get( switchMap, key );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "output %s has an already used address %d-%d by %s",
+                wItem.getid(item), wOutput.getaddr(item), wOutput.getport(item), wItem.getid(switchItem) );
+          }
+          else {
+            MapOp.put( switchMap, key, (obj)item );
+          }
+        }
+      }
+
+      if( StrOp.equals( wSignal.name(), NodeOp.getName(item) ) ) {
+        if( wSignal.getaddr(item) == 0 && wSignal.getport1(item) == 0 ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "signal %s has no address set", wItem.getid(item) );
+          healthy = False;
+        }
+        else {
+          char key[32];
+          StrOp.fmtb( key, "%d-%d", wSignal.getaddr(item), wSignal.getport1(item) );
+          if( MapOp.haskey(switchMap, key ) ) {
+            iONode switchItem = (iONode)MapOp.get( switchMap, key );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "signal %s has an already used first address %s by %s",
+                wItem.getid(item), key, wItem.getid(switchItem) );
+          }
+          else {
+            MapOp.put( switchMap, key, (obj)item );
+          }
+        }
+
+        if( wSignal.getaddr2(item) > 0 || wSignal.getport2(item) > 0 ) {
+          char key[32];
+          StrOp.fmtb( key, "%d-%d", wSignal.getaddr2(item), wSignal.getport2(item) );
+          if( MapOp.haskey(switchMap, key ) ) {
+            iONode switchItem = (iONode)MapOp.get( switchMap, key );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "signal %s has an already used second address %s by %s",
+                wItem.getid(item), key, wItem.getid(switchItem) );
+          }
+          else {
+            MapOp.put( switchMap, key, (obj)item );
+          }
+        }
+
+        if( wSignal.getaddr3(item) > 0 || wSignal.getport3(item) > 0 ) {
+          char key[32];
+          StrOp.fmtb( key, "%d-%d", wSignal.getaddr3(item), wSignal.getport3(item) );
+          if( MapOp.haskey(switchMap, key ) ) {
+            iONode switchItem = (iONode)MapOp.get( switchMap, key );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "signal %s has an already used third address %s by %s",
+                wItem.getid(item), key, wItem.getid(switchItem) );
+          }
+          else {
+            MapOp.put( switchMap, key, (obj)item );
+          }
+        }
+
+        if( wSignal.getaddr4(item) > 0 || wSignal.getport4(item) > 0 ) {
+          char key[32];
+          StrOp.fmtb( key, "%d-%d", wSignal.getaddr4(item), wSignal.getport4(item) );
+          if( MapOp.haskey(switchMap, key ) ) {
+            iONode switchItem = (iONode)MapOp.get( switchMap, key );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "signal %s has an already used fourth address %s by %s",
+                wItem.getid(item), key, wItem.getid(switchItem) );
+          }
+          else {
+            MapOp.put( switchMap, key, (obj)item );
+          }
+        }
+      }
+
+
 
       StrOp.fmtb( key, "%d-%d-%d", wItem.getx(item), wItem.gety(item), wItem.getz(item) );
 
