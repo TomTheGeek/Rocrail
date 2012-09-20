@@ -413,6 +413,11 @@ void LC::setFLabels() {
     m_F3->SetToolTip( wxString::Format(_T("F%d"), 3 + (m_iFnGroup * 4 ) ));
     m_F4->SetToolTip( wxString::Format(_T("F%d"), 4 + (m_iFnGroup * 4 ) ));
 
+    m_F1->SetIcon(NULL);
+    m_F2->SetIcon(NULL);
+    m_F3->SetIcon(NULL);
+    m_F4->SetIcon(NULL);
+
     iONode fundef = wLoc.getfundef( m_LocProps );
     while( fundef != NULL ) {
       wxString fntxt = wxString(wFunDef.gettext( fundef ),wxConvUTF8);
