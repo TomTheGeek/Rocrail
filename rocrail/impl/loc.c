@@ -1996,8 +1996,7 @@ static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent ) {
               LocOp.cmd( consistloc, consistcmd );
           }
         }
-
-        if( StrOp.equals(wLoc.name(), NodeOp.getName(consistcmd) ) ) {
+        else if( StrOp.equals(wLoc.name(), NodeOp.getName(consistcmd) ) ) {
           LocOp.cmd( consistloc, consistcmd );
         }
 
