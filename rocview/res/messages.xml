@@ -18171,4 +18171,7 @@
   <Msg id="swack">
     <en txt="Check switch acknowledge"/>
   </Msg>
+  <Msg id="retries">
+    <en txt="Retries"/>
+  </Msg>
 </Messages>

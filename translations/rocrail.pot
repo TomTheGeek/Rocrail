@@ -5831,3 +5831,15 @@ msgstr ""
 msgid "Icon"
 msgstr ""
 
+#. 
+# id="swack"
+#, c-format
+msgid "Check switch acknowledge"
+msgstr ""
+
+#. 
+# id="retries"
+#, c-format
+msgid "Retries"
+msgstr ""
+
