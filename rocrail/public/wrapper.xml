@@ -597,6 +597,8 @@
         <var name="useseq" vt="bool" defval="false" remark="Use sequence counter for lnudp."/>
         <var name="usedouble" vt="bool" defval="false" remark="Use double packets for lnudp."/>
         <var name="swack" vt="bool" defval="false" remark="Check long ack for switch commands."/>
+        <var name="swretry" vt="int" defval="10" range="1-*" remark="Number of switch command retries."/>
+        <var name="swsleep" vt="int" defval="50" range="10-*" remark="Number of ms sleep between switch command retries."/>
         <options wrappername="CSOptions">
           <var name="store" vt="bool" defval="false" remark="set by client to signal to store the options in the command station"/>
           <var name="opsw" vt="string" defval="" range="*" remark="zero based options list 0=open 1=set"/>

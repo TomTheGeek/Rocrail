@@ -807,9 +807,9 @@ static void __swReset( void* threadinst ) {
         cmd[2] |= (unsigned short int) ( (action & 0x0001) << 4);
         cmd[3] = LocoNetOp.checksum( cmd, 3 );
 
-        while( !LocoNetOp.transact( loconet, cmd, 4, rsp, &insize, 0, OPC_LONG_ACK, False ) && retry < 10) {
+        while( !LocoNetOp.transact( loconet, cmd, 4, rsp, &insize, 0, OPC_LONG_ACK, False ) && retry < data->swretry) {
           if( data->swack && insize > 0 && rsp[0] == OPC_LONG_ACK && rsp[1] == (OPC_SW_REQ & 0x7F) && rsp[2] == 0 ) {
-            ThreadOp.sleep(50);
+            ThreadOp.sleep(data->swsleep);
           }
           else {
             break;
@@ -973,9 +973,9 @@ static void __loconetWriter( void* threadinst ) {
       byte rsp[32];
       int insize = 0;
       int retry = 0;
-      while( !LocoNetOp.transact( (iOLocoNet)loconet, out+1, out[0], rsp, &insize, 0, OPC_LONG_ACK, False ) && retry < 10) {
+      while( !LocoNetOp.transact( (iOLocoNet)loconet, out+1, out[0], rsp, &insize, 0, OPC_LONG_ACK, False ) && retry < data->swretry) {
         if( insize > 0 && rsp[0] == OPC_LONG_ACK && rsp[1] == (OPC_SW_REQ & 0x7F) && rsp[2] == 0 ) {
-          ThreadOp.sleep(50);
+          ThreadOp.sleep(data->swsleep);
         }
         else {
           break;
@@ -2517,6 +2517,8 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->doSensorQuery = wLocoNet.issensorquery(data->loconet);
   data->stress = wDigInt.isstress(ini);
   data->swack = wLocoNet.isswack(data->loconet);
+  data->swretry = wLocoNet.getswretry(data->loconet);
+  data->swsleep = wLocoNet.getswsleep(data->loconet);
 
   data->didSensorQuery = False;
 

@@ -34,6 +34,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/spinctrl.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -43,6 +44,7 @@
  */
 
 ////@begin forward declarations
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -154,6 +156,12 @@ public:
     wxTextCtrl* m_PurgeTime;
     wxCheckBox* m_SlotPing;
     wxCheckBox* m_SwAck;
+    wxStaticText* m_labSwRetries;
+    wxSpinCtrl* m_SwRetries;
+    wxStaticText* m_labSwRetriesSuffix;
+    wxStaticText* m_labSwSleep;
+    wxSpinCtrl* m_SwSleep;
+    wxStaticText* m_SwSleepUnit;
     wxStaticBox* m_FastClockBox;
     wxCheckBox* m_UseFC;
     wxCheckBox* m_SyncFC;

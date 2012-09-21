@@ -682,7 +682,9 @@
       <var name="expectdouble" vt="Boolean"/>
       <var name="packetloss" vt="int"/>
       <var name="swack" vt="Boolean"/>
-    </data>
+      <var name="swretry" vt="int"/>
+      <var name="swsleep" vt="int"/>
+      </data>
   </object>
 
 

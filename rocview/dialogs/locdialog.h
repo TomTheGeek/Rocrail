@@ -434,10 +434,16 @@ public:
     wxRadioBox* m_EngineBox;
     wxRadioBox* m_CargoBox;
     wxPanel* m_FunctionPanel;
+    wxStaticText* m_labF0Nr;
+    wxStaticText* m_labF0Desc;
+    wxStaticText* m_labF0Timer;
+    wxStaticText* m_labF0Events;
+    wxStaticText* m_labF0Icon;
     wxStaticText* m_Label_f0;
     wxTextCtrl* m_f0;
     wxSpinCtrl* m_TimerF0;
     wxButton* m_Button_f0;
+    wxTextCtrl* m_F0Icon;
     wxStaticText* m_labFnGroup;
     wxButton* m_FunctionGroup;
     wxStaticText* m_labFnNr;
