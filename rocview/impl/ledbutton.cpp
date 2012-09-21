@@ -57,8 +57,7 @@ BEGIN_EVENT_TABLE(LEDButton, wxPanel)
 END_EVENT_TABLE()
 
 
-
-LEDButton::LEDButton(wxPanel* parent, wxString text, int width, int height, bool useLED, bool textOnly)
+LEDButton::LEDButton(wxWindow* parent, wxString text, int width, int height, bool useLED, bool textOnly)
   :wxPanel(parent, -1,  wxPoint(0, 0), wxSize(width,height), wxBORDER_NONE|wxWANTS_CHARS)
 {
   buttonWidth = width;

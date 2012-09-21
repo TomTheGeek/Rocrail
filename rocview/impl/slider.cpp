@@ -57,8 +57,7 @@ BEGIN_EVENT_TABLE(Slider, wxPanel)
 END_EVENT_TABLE()
 
 
-
-Slider::Slider(wxPanel* parent, int width, int height)
+Slider::Slider(wxWindow* parent, int width, int height)
   :wxPanel(parent, -1,  wxPoint(0, 0), wxSize(width,height), wxBORDER_NONE|wxWANTS_CHARS)
 {
   Width = width;

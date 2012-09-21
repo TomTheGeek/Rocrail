@@ -26,7 +26,7 @@
 
 class Slider : public wxPanel
 {
-    wxPanel* Parent;
+    wxWindow* Parent;
     wxWindow* PrevFocusWindow;
     int Value;
     int Min;
@@ -46,7 +46,7 @@ class Slider : public wxPanel
 
 
 public:
-    Slider(wxPanel* parent, int width, int height);
+    Slider(wxWindow* parent, int width, int height);
     void SetValue(int value, bool force=false);
     int GetValue();
     void SetRange(int minValue, int maxValue);

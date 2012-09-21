@@ -28,9 +28,8 @@
 
 class LEDButton : public wxPanel
 {
-    wxPanel* Parent;
+    wxWindow* Parent;
     bool pressedDown;
-    bool ON;
     bool useLED;
     bool textOnly;
     wxString text;
@@ -42,7 +41,8 @@ class LEDButton : public wxPanel
 
 
 public:
-    LEDButton(wxPanel* parent, wxString text, int width, int height, bool useLED=true, bool textOnly=false);
+    bool ON;
+    LEDButton(wxWindow* parent, wxString text, int width, int height, bool useLED=true, bool textOnly=false);
 
     void OnPaint(wxPaintEvent& event);
 
