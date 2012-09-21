@@ -408,11 +408,13 @@ void LC::setFLabels() {
     m_bFx[2+m_iFnGroup * 4] = setButtonColor( m_F3, (fx & 0x04)?false:true );
     m_bFx[3+m_iFnGroup * 4] = setButtonColor( m_F4, (fx & 0x08)?false:true );
 
+    m_F0->SetToolTip( wxString::Format(_T("F%d"), 0 ));
     m_F1->SetToolTip( wxString::Format(_T("F%d"), 1 + (m_iFnGroup * 4 ) ));
     m_F2->SetToolTip( wxString::Format(_T("F%d"), 2 + (m_iFnGroup * 4 ) ));
     m_F3->SetToolTip( wxString::Format(_T("F%d"), 3 + (m_iFnGroup * 4 ) ));
     m_F4->SetToolTip( wxString::Format(_T("F%d"), 4 + (m_iFnGroup * 4 ) ));
 
+    m_F0->SetIcon(NULL);
     m_F1->SetIcon(NULL);
     m_F2->SetIcon(NULL);
     m_F3->SetIcon(NULL);
@@ -421,7 +423,15 @@ void LC::setFLabels() {
     iONode fundef = wLoc.getfundef( m_LocProps );
     while( fundef != NULL ) {
       wxString fntxt = wxString(wFunDef.gettext( fundef ),wxConvUTF8);
-      if( wFunDef.getfn( fundef ) == 1 + (m_iFnGroup * 4 )) {
+      if( wFunDef.getfn( fundef ) == 0 ) {
+        m_F0->SetToolTip( fntxt );
+        if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
+          m_F0->SetIcon(getIcon(wFunDef.geticon(fundef)));
+        }
+        else
+          m_F0->SetIcon(NULL);
+      }
+      else if( wFunDef.getfn( fundef ) == 1 + (m_iFnGroup * 4 )) {
         m_F1->SetToolTip( fntxt );
         if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
           m_F1->SetIcon(getIcon(wFunDef.geticon(fundef)));
