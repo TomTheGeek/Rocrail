@@ -49,7 +49,7 @@ static void __reader( void* threadinst ) {
 
     int packetSize = SocketOp.recvfrom( data->readUDP, packet, 0x7F, NULL, NULL );
 
-    if( packetSize > 0 ) {
+    if( packetSize > 0 && packetSize < 0x7F ) {
       if( data->usedouble && MemOp.cmp( data->prevPacket, packet, packetSize ) ) {
         /* reject double packet */
         MemOp.set(data->prevPacket, 0, 0x7F );
@@ -98,7 +98,7 @@ static void __reader( void* threadinst ) {
       }
     }
     else {
-      TraceOp.trc( "lbudp", TRCLEVEL_WARNING, __LINE__, 9999, "unexpected packet size %d received" );
+      TraceOp.trc( "lbudp", TRCLEVEL_WARNING, __LINE__, 9999, "unexpected packet size %d received", packetSize );
       ThreadOp.sleep(10);
     }
 
