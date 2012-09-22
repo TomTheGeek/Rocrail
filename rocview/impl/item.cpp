@@ -337,7 +337,6 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   m_Props = props;
   m_isDragged = false;
   m_locoIsDropped = false;
-  m_locidStr = NULL;
   //m_RouteID = NULL;
   m_locidStr = NULL;
   m_Timer = NULL;
@@ -2683,18 +2682,22 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
     if( updateEnterside ) {
       m_Renderer->setLabel( m_locidStr, -1, m_RotateSym );
+      if( l_locidStr != NULL ) {
+        // Unused local string.
+        StrOp.free( l_locidStr );
+      }
     }
     else {
       m_Renderer->setLabel( l_locidStr, occupied, m_RotateSym );
+      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "free 0x%08X [%s]", m_locidStr, m_locidStr );
+      // Free previous string.
       StrOp.free( m_locidStr );
+      // Save current string in member.
       m_locidStr = l_locidStr;
     }
 
     m_PlanPanel->blockEvent( wBlock.getid( m_Props ) );
 
-    if( l_locidStr != NULL ) {
-      StrOp.free(l_locidStr);
-    }
   }
   // In case of 2 or more panels we must refresh always because the state could be set already.
   //if( refresh )
