@@ -1908,6 +1908,11 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
     int dir  = 1;
     int action = 1;
 
+    if( addr == 0 && port == 0 ) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "not processing zero address and port");
+      return 0;
+    }
+
     if( port == 0 )
       AddrOp.fromFADA( addr, &addr, &port, &gate );
     else if( addr == 0 && port > 0 )
@@ -1951,6 +1956,11 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
     int port = wOutput.getport( node );
     int gate = wOutput.getgate( node );
     int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+
+    if( addr == 0 && port == 0 ) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "not processing zero address and port");
+      return 0;
+    }
 
     if( port == 0 )
       AddrOp.fromFADA( addr, &addr, &port, &gate );
