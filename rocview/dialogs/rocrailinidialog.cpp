@@ -1743,6 +1743,8 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
     m_CSDialog = new RocNetDlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.massoth, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ), 57600, wDigInt.cts);
+  else if( StrOp.equals( wDigInt.z21, wDigInt.getlib( m_Controller ) ) )
+    m_CSDialog = new ECoSCtrlDialog(this,m_Controller);
   else
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ));
 
