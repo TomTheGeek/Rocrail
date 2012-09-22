@@ -233,7 +233,6 @@ public:
     wxTextCtrl* m_DPIID;
     wxStaticText* m_labSVIID;
     wxTextCtrl* m_SVIID;
-    wxStaticText* m_labAnalyze;
     wxStaticBox* m_ScBox;
     wxStaticText* m_labScSensor;
     wxComboBox* m_ScSensor;
@@ -324,7 +323,6 @@ public:
     wxCheckBox* m_secondNextBlock;
     wxCheckBox* m_EnableSwFb;
     wxCheckBox* m_DisableRouteVreduce;
-    wxCheckBox* m_GreenAspect;
     wxCheckBox* m_SkipSetSw;
     wxCheckBox* m_SkipSetSg;
     wxCheckBox* m_UseBiCom;
@@ -345,6 +343,7 @@ public:
     wxCheckBox* m_CloseOnGhost;
     wxCheckBox* m_CloseNoEvents;
     wxCheckBox* m_SelectShortestBlock;
+    wxCheckBox* m_GreenAspect;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;
