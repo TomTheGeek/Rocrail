@@ -2673,7 +2673,6 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
       StrOp.free(m_Tip);
       m_Tip = StrOp.dup(l_locidStr);
-      StrOp.free(l_locidStr);
       showTooltip(wxGetApp().getFrame()->isTooltip());
 
     }
@@ -2684,7 +2683,6 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
     if( updateEnterside ) {
       m_Renderer->setLabel( m_locidStr, -1, m_RotateSym );
-      StrOp.free( l_locidStr );
     }
     else {
       m_Renderer->setLabel( l_locidStr, occupied, m_RotateSym );
@@ -2694,6 +2692,9 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
     m_PlanPanel->blockEvent( wBlock.getid( m_Props ) );
 
+    if( l_locidStr != NULL ) {
+      StrOp.free(l_locidStr);
+    }
   }
   // In case of 2 or more panels we must refresh always because the state could be set already.
   //if( refresh )
