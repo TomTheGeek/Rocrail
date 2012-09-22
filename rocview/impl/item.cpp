@@ -2689,7 +2689,6 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     }
     else {
       m_Renderer->setLabel( l_locidStr, occupied, m_RotateSym );
-      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "free 0x%08X [%s]", m_locidStr, m_locidStr );
       // Free previous string.
       StrOp.free( m_locidStr );
       // Save current string in member.
