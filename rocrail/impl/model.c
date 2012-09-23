@@ -4972,6 +4972,10 @@ static void _loadBlockOccupancy( iOModel inst ) {
                 wBlock.setlocid( props, StrOp.dup( LocoID ) );
             }
           }
+          else if( wBlock.getlocid(props) != NULL && StrOp.len(wBlock.getlocid(props)) > 0 ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset block [%s] occupancy", BlockID );
+            wBlock.setlocid( props, "" );
+          }
 
           if( location != NULL && loco != NULL ) {
             LocationOp.locoDidArrive(location, LocOp.getId(loco));
