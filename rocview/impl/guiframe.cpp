@@ -92,7 +92,6 @@
 #include "rocview/dialogs/toursdlg.h"
 #include "rocview/dialogs/actionsctrldlg.h"
 #include "rocview/dialogs/gotodlg.h"
-#include "rocview/dialogs/lococtrldlg.h"
 
 
 #include "rocview/dialogs/decoders/locoio.h"
