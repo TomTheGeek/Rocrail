@@ -611,12 +611,11 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
   /* FeedBack command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFeedback.name() ) ) {
     int   addr = wFeedback.getaddr( node ); /* feedback address */
-
-    datagram[0] = 2 | VER3_FLAG | data->header;
-    datagram[1] = 0x60 | (addr / 128) ;
-    datagram[2] = addr % 128;
-    datagram[3] = (byte)__generateChecksum( datagram );
-    size = 4;
+    Boolean state = wFeedback.isstate( node );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
+      data->listenerFun( data->listenerObj, (iONode)NodeOp.base.clone(node), TRCLEVEL_INFO );
+    size = 0;
   }
 
   return size;
