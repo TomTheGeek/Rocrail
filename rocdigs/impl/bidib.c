@@ -22,7 +22,6 @@
 */
 
 
-
 #include "rocdigs/impl/bidib_impl.h"
 
 #include "rocs/public/trace.h"
@@ -180,133 +179,6 @@ static const char* __getFeatureName(int feature) {
   return "*** unknown feature ***";
 }
 
-/*
-Ein serielles Paket ist prinzipiell wie folgt aufgebaut:
-  PAKET ::= MAGIC MESSAGE_SEQ CRC [MAGIC]
-  MESSAGE_SEQ ::= MESSAGE MESSAGE_SEQ
-
-Ein serielles PAKET beginnt immer mit speziellen Zeichen ([MAGIC]=0xFE) und kann eine oder mehrere Nachrichten (MESSAGE) enthalten.
-Das ganze Paket ist mit einer CRC (Cyclic Redundancy Check) abgesichert, um Datenfehler bei der Übertragung erkennen zu können.
-MAGIC-Zeichen, welche innerhalb von Nachrichten auftauchen, werden 'Escaped'. Hierzu wird ein ESCAPE Zeichen (=0xFD) eingefügt und
-das nachfolgende Zeichen mit 0x20 xor-verknüpft. Auch das ESCAPE-Zeichen selbst wird innerhalb der Nachricht Escaped.
-Das heißt: Anstelle des MAGIC wird ein ESCAPE-Zeichen (=0xFD), gefolgt von MAGIC ^ 0x20 = 0xDE gesendet.
-Anstelle des ESCAPE-Zeichen wird 0xFD + 0xDD gesendet. Das Escapen erfolgt auf dem fertig kodierten PAKET inkl.
-*/
-static void __escapeMessage(byte* msg, int* newLen, int inLen) {
-  int outLen = 0;
-  int i = 0;
-  byte buffer[256];
-
-  for( i = 0; i < inLen; i++ ) {
-    if( (msg[i] == BIDIB_PKT_MAGIC) || (msg[i] == BIDIB_PKT_ESCAPE) )
-    {
-      buffer[outLen] = BIDIB_PKT_ESCAPE;        // escape this char
-      outLen++;
-      buffer[outLen] = msg[i] ^ 0x20;           // 'veraendern'
-      outLen++;
-    }
-    else {
-      buffer[outLen] = msg[i];
-      outLen++;
-    }
-  }
-
-  *newLen = outLen;
-  MemOp.copy( msg, buffer, outLen );
-  TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)msg, outLen );
-}
-
-
-static int __deEscapeMessage(byte* msg, int inLen) {
-  int outLen = 0;
-  int i = 0;
-  byte buffer[256];
-  Boolean escape = False;
-
-  for( i = 0; i < inLen; i++ ) {
-    if( msg[i] == BIDIB_PKT_ESCAPE ) {
-      escape = True;
-    }
-    else {
-      buffer[outLen] = (escape ? msg[i]^0x20:msg[i]);
-      outLen++;
-      escape = False;
-    }
-  }
-
-  MemOp.copy( msg, buffer, outLen );
-  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "message de-escaped" );
-  TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)msg, outLen );
-  return outLen;
-}
-
-
-
-/*
-CRC (d.h. die CRC wird über die Nachricht(en) ohne MAGIC, ohne ESCAPE gebildet).
-Die MESSAGE ist vom Host an einen bestimmten Knoten adressiert. In einem Paket können MESSAGES auch an verschiedene Knoten
-adressiert sein.
-
-CRC bezeichnet das CRC8-Byte; Auf der Senderseite wird das gemäß Polynom x8 + x5 + x4 + 1 über die Nachricht gebildet,
-beginnend beim ersten Byte der Nachricht, Init=0, nicht invertiert. Empfängerseitig wird die CRC mit dem gleichen Polynom über
-die gesamte Nachricht inkl. CRC gebildet, das Ergebnis muß 0 sein.
-Nach den Paket schließt sich ein MAGIC an, dies kann auch gleichzeitig der Beginn des nächsten Paketes sein.
-Wenn kein weiteres Paket zum Senden bereit ist, so wird trotzdem die MAGIC übertragen.
-*/
-/* Update 8-bit CRC value
-   using polynomial X^8 + X^5 + X^4 + 1 */
-#define POLYVAL 0x8C
-static void __updateCRC(byte new, byte* crc)
-{
-  int i;
-  byte c = *crc;
-  for (i = 0; i < 8; i++) {
-    if ((c ^ new) & 1)
-      c = (c >> 1 ) ^ POLYVAL;
-    else
-      c >>= 1;
-    new >>= 1;
-  }
-  *crc = c;
-}
-
-/*
-CRC-8-Dallas/Maxim
-x8 + x5 + x4 + 1 (1-Wire bus)
-
-Representations: normal / **reversed** / reverse of reciprocal
-0x31 / 0x8C / 0x98
-
-Initialized with 0x00
-
- */
-static byte __checkSum(byte* packet, int len) {
-  byte checksum = 0x00;
-  int i = 0;
-  for( i = 0; i < len; i++ ) {
-    __updateCRC(packet[i], &checksum);
-  }
-
-  return checksum;
-}
-
-static int __makeMessage(byte* msg, int inLen) {
-  int outLen = 0;
-  byte buffer[256];
-  buffer[outLen] = BIDIB_PKT_MAGIC;
-  outLen++;
-  MemOp.copy( buffer + 1, msg, inLen );
-  outLen += inLen;
-  buffer[outLen] = __checkSum(buffer+1, outLen-1 );
-  outLen++;
-  __escapeMessage(buffer+1, &outLen, outLen-1);
-  outLen++;
-  buffer[outLen] = BIDIB_PKT_MAGIC;
-  outLen++;
-  MemOp.copy(msg, buffer, outLen);
-  return outLen;
-}
-
 
 
 
@@ -325,11 +197,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
       msg[0] = 3; // length
       msg[1] = 0; // address
-      msg[2] = data->downSeq; // sequence number 1...255
       msg[3] = MSG_BOOST_OFF; //data
-      int size = __makeMessage(msg, 4);
-      data->subWrite((obj)inst, msg, size);
-      data->downSeq++;
+      data->subWrite((obj)inst, msg);
       data->power = False;
       __inform(inst);
     }
@@ -337,11 +206,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       msg[0] = 3; // length
       msg[1] = 0; // address
-      msg[2] = data->downSeq; // sequence number 1...255
       msg[3] = MSG_BOOST_ON; //data
-      int size = __makeMessage(msg, 4);
-      data->subWrite((obj)inst, msg, size);
-      data->downSeq++;
+      data->subWrite((obj)inst, msg);
       data->power = True;
       __inform(inst);
     }
@@ -349,11 +215,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
       msg[0] = 3; // length
       msg[1] = 0; // address
-      msg[2] = data->downSeq; // sequence number 1...255
       msg[3] = MSG_BOOST_OFF; //data
-      int size = __makeMessage(msg, 4);
-      data->subWrite((obj)inst, msg, size);
-      data->downSeq++;
+      data->subWrite((obj)inst, msg);
       data->power = False;
       __inform(inst);
     }
@@ -362,14 +225,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       // MSG_BM_GET_RANGE
       msg[0] = 5; // length
       msg[1] = 0; // address
-      msg[2] = data->downSeq; // sequence number 1...255
       msg[3] = MSG_BM_GET_RANGE; //data
       msg[4] = 0; // address range
       msg[5] = 16; // address range
-
-      int size = __makeMessage(msg, 6);
-      data->subWrite((obj)inst, msg, size);
-      data->downSeq++;
+      data->subWrite((obj)inst, msg);
 
     }
   }
@@ -387,16 +246,13 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
     msg[0] = 7; // length
     msg[1] = 0; // address
-    msg[2] = data->downSeq; // sequence number 1...255
     msg[3] = MSG_CS_ACCESSORY; //data
     msg[4] = addr % 256;
     msg[5] = addr / 256;
     msg[6] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 1:0;
     msg[6] += 0x10;
     msg[7] = ((delay / 40) << 4);
-    int size = __makeMessage(msg, 8);
-    data->subWrite((obj)inst, msg, size);
-    data->downSeq++;
+    data->subWrite((obj)inst, msg);
   }
 
 
@@ -416,16 +272,13 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
     msg[0] = 7; // length
     msg[1] = 0; // address
-    msg[2] = data->downSeq; // sequence number 1...255
     msg[3] = MSG_CS_ACCESSORY; //data
     msg[4] = addr % 256;
     msg[5] = addr / 256;
     msg[6] = wOutput.getgate(node);
     msg[6] += on ? 0x10:0x00;
     msg[7] = 0;
-    int size = __makeMessage(msg, 8);
-    data->subWrite((obj)inst, msg, size);
-    data->downSeq++;
+    data->subWrite((obj)inst, msg);
   }
 
   /* Loc command. */
@@ -445,7 +298,6 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
     msg[ 0] = 12; // length
     msg[ 1] = 0; // address
-    msg[ 2] = data->downSeq; // sequence number 1...255
     msg[ 3] = MSG_CS_DRIVE; //data
     msg[ 4] = addr % 256;
     msg[ 5] = addr / 256;
@@ -456,9 +308,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     msg[10] = 0;
     msg[11] = 0;
     msg[12] = 0;
-    int size = __makeMessage(msg, 13);
-    data->subWrite((obj)inst, msg, size);
-    data->downSeq++;
+    data->subWrite((obj)inst, msg);
   }
 
   /* Function command. */
@@ -468,7 +318,6 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
     msg[ 0] = 12; // length
     msg[ 1] = 0; // address
-    msg[ 2] = data->downSeq; // sequence number 1...255
     msg[ 3] = MSG_CS_DRIVE; //data
     msg[ 4] = addr % 256;
     msg[ 5] = addr / 256;
@@ -482,9 +331,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     msg[11]+= (wFunCmd.isf17(node)?0x10:0x00) + (wFunCmd.isf18(node)?0x20:0x00) + (wFunCmd.isf19(node)?0x40:0x00) + (wFunCmd.isf20(node)?0x80:0x00);
     msg[12] = (wFunCmd.isf21(node)?0x01:0x00) + (wFunCmd.isf22(node)?0x02:0x00) + (wFunCmd.isf23(node)?0x04:0x00) + (wFunCmd.isf24(node)?0x08:0x00);
     msg[12]+= (wFunCmd.isf25(node)?0x10:0x00) + (wFunCmd.isf26(node)?0x20:0x00) + (wFunCmd.isf27(node)?0x40:0x00) + (wFunCmd.isf28(node)?0x80:0x00);
-    int size = __makeMessage(msg, 13);
-    data->subWrite((obj)inst, msg, size);
-    data->downSeq++;
+    data->subWrite((obj)inst, msg);
   }
 
   /* Sensor command. */
@@ -506,13 +353,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d...", data->cv );
       msg[ 0] = 5; // length
       msg[ 1] = 0; // address
-      msg[ 2] = data->downSeq; // sequence number 1...255
       msg[ 3] = MSG_PRG_CV_READ; //data
       msg[ 4] = data->cv % 256;
       msg[ 5] = data->cv / 256;
-      int size = __makeMessage(msg, 6);
-      data->subWrite((obj)inst, msg, size);
-      data->downSeq++;
+      data->subWrite((obj)inst, msg);
     }
     else if( wProgram.getcmd( node ) == wProgram.set ) {
       data->cv = wProgram.getcv( node );
@@ -520,14 +364,11 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set CV%d to %d...", data->cv, data->value );
       msg[ 0] = 6; // length
       msg[ 1] = 0; // address
-      msg[ 2] = data->downSeq; // sequence number 1...255
       msg[ 3] = MSG_PRG_CV_WRITE; //data
       msg[ 4] = data->cv % 256;
       msg[ 5] = data->cv / 256;
       msg[ 6] = data->value;
-      int size = __makeMessage(msg, 7);
-      data->subWrite((obj)inst, msg, size);
-      data->downSeq++;
+      data->subWrite((obj)inst, msg);
     }
   }
 
@@ -736,13 +577,11 @@ static void __seqAck(iOBiDiB bidib, byte* msg, int size) {
   if( data->secAck && data->secAckInt > 0 ) {
     size--; // strip crc
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "seqAck for addr=%d seq=%d...", msg[1], msg[2] );
-    TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg, size );
+    TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)msg, size );
     msg[2] = data->downSeq; // sequence number 1...255
     msg[3] = MSG_BM_MIRROR_MULTIPLE;
-    size = __makeMessage(msg, size);
-    TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg, size );
-    data->subWrite((obj)bidib, msg, size);
-    data->downSeq++;
+    TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)msg, size );
+    data->subWrite((obj)bidib, msg);
   }
 }
 
@@ -840,8 +679,10 @@ static void __addNode(iOBiDiB bidib, byte* msg) {
     MapOp.put( data->localmap, localKey, (obj)node);
   }
   else {
+    byte l_msg[32];
+    int size = 0;
     char* classname = __getClass(msg[1]);
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no mapping found for product ID [%s] %s; adding to list", uidKey, classname );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "adding product ID=[%s] class=[%s] to the list", uidKey, classname );
     node = NodeOp.inst(wBiDiBnode.name(), data->bidibini, ELEMENT_NODE);
     wBiDiBnode.setuid(node, uid);
     wBiDiBnode.setclassid(node, msg[1]);
@@ -849,6 +690,14 @@ static void __addNode(iOBiDiB bidib, byte* msg) {
     wBiDiBnode.setvendor(node, msg[3]);
     NodeOp.addChild(data->bidibini, node);
     StrOp.free(classname);
+
+    /* Get features... */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get features for %s", localKey );
+    // MSG_FEATURE_GETALL
+    l_msg[0] = 3; // length
+    l_msg[1] = msg[0]; // address
+    l_msg[3] = MSG_FEATURE_GETALL; //data
+    data->subWrite((obj)bidib, l_msg);
   }
 }
 
@@ -866,22 +715,16 @@ static void __handleNodeFeature(iOBiDiB bidib, byte* msg, int size) {
         "MSG_FEATURE_COUNT, addr=%d seq=%d features=%d", Addr, Seq, msg[4] );
     l_msg[0] = 3; // length
     l_msg[1] = 0; // address
-    l_msg[2] = data->downSeq; // sequence number 1...255
     l_msg[3] = MSG_FEATURE_GETNEXT; //data
-    int size = __makeMessage(l_msg, 4);
-    data->subWrite((obj)bidib, l_msg, size);
-    data->downSeq++;
+    data->subWrite((obj)bidib, l_msg);
   }
   else if( Type == MSG_FEATURE ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "MSG_FEATURE, addr=%d seq=%d feature=(%d) %s value=%d", Addr, Seq, msg[4], __getFeatureName(msg[4]), msg[5] );
     l_msg[0] = 3; // length
     l_msg[1] = 0; // address
-    l_msg[2] = data->downSeq; // sequence number 1...255
     l_msg[3] = MSG_FEATURE_GETNEXT; //data
-    int size = __makeMessage(l_msg, 4);
-    data->subWrite((obj)bidib, l_msg, size);
-    data->downSeq++;
+    data->subWrite((obj)bidib, l_msg);
   }
 
 }
@@ -909,11 +752,8 @@ static void __handleNodeTab(iOBiDiB bidib, byte* msg, int size) {
       byte l_msg[32];
       l_msg[0] = 3; // length
       l_msg[1] = 0; // address
-      l_msg[2] = data->downSeq; // sequence number 1...255
       l_msg[3] = MSG_NODETAB_GETNEXT; //data
-      int size = __makeMessage(l_msg, 4);
-      data->subWrite((obj)bidib, l_msg, size);
-      data->downSeq++;
+      data->subWrite((obj)bidib, l_msg);
     }
     return;
   }
@@ -938,11 +778,8 @@ static void __handleNodeTab(iOBiDiB bidib, byte* msg, int size) {
         "MSG_NODETAB, addr=%d seq=%d tab-ver=%d tab-len=%d", Addr, Seq, data->tabver, entries );
     l_msg[0] = 3; // length
     l_msg[1] = 0; // address
-    l_msg[2] = data->downSeq; // sequence number 1...255
     l_msg[3] = MSG_NODETAB_GETNEXT; //data
-    int size = __makeMessage(l_msg, 4);
-    data->subWrite((obj)bidib, l_msg, size);
-    data->downSeq++;
+    data->subWrite((obj)bidib, l_msg);
 
     __addNode(bidib, msg+5 );
   }
@@ -1014,12 +851,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     // query MSG_SYS_GET_P_VERSION
     msg[0] = 3; // length
     msg[1] = 0; // address
-    msg[2] = data->downSeq; // sequence number 1...255
     msg[3] = MSG_SYS_GET_SW_VERSION; //data
-
-    size = __makeMessage(msg, 4);
-    data->subWrite((obj)bidib, msg, size);
-    data->downSeq++;
+    data->subWrite((obj)bidib, msg);
     break;
   }
 
@@ -1030,80 +863,49 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     // query MSG_SYS_ENABLE
     msg[0] = 3; // length
     msg[1] = 0; // address
-    msg[2] = data->downSeq; // sequence number 1...255
     msg[3] = MSG_SYS_ENABLE; //data
-
-    size = __makeMessage(msg, 4);
-    data->subWrite((obj)bidib, msg, size);
-    data->downSeq++;
+    data->subWrite((obj)bidib, msg);
 
     if( data->secAck && data->secAckInt > 0 ) {
       // MSG_FEATURE_SET
       msg[0] = 5; // length
       msg[1] = 0; // address
-      msg[2] = data->downSeq; // sequence number 1...255
       msg[3] = MSG_FEATURE_SET; //data
       msg[4] = 2;
       msg[5] = 1;
-      size = __makeMessage(msg, 6);
-      data->subWrite((obj)bidib, msg, size);
-      data->downSeq++;
+      data->subWrite((obj)bidib, msg);
 
       msg[0] = 5; // length
       msg[1] = 0; // address
-      msg[2] = data->downSeq; // sequence number 1...255
       msg[3] = MSG_FEATURE_SET; //data
       msg[4] = 3;
       msg[5] = data->secAckInt;
-      size = __makeMessage(msg, 6);
-      data->subWrite((obj)bidib, msg, size);
-      data->downSeq++;
+      data->subWrite((obj)bidib, msg);
     }
     else {
       msg[0] = 5; // length
       msg[1] = 0; // address
-      msg[2] = data->downSeq; // sequence number 1...255
       msg[3] = MSG_FEATURE_SET; //data
       msg[4] = 3;
       msg[5] = 0;
-      size = __makeMessage(msg, 6);
-      data->subWrite((obj)bidib, msg, size);
-      data->downSeq++;
+      data->subWrite((obj)bidib, msg);
     }
 
     // MSG_NODETAB_GETALL
     msg[0] = 3; // length
     msg[1] = 0; // address
-    msg[2] = data->downSeq; // sequence number 1...255
     msg[3] = MSG_NODETAB_GETALL; //data
+    data->subWrite((obj)bidib, msg);
 
-    size = __makeMessage(msg, 4);
-    data->subWrite((obj)bidib, msg, size);
-    data->downSeq++;
-
-
-    // MSG_FEATURE_GETALL
-    msg[0] = 3; // length
-    msg[1] = 0; // address
-    msg[2] = data->downSeq; // sequence number 1...255
-    msg[3] = MSG_FEATURE_GETALL; //data
-
-    size = __makeMessage(msg, 4);
-    data->subWrite((obj)bidib, msg, size);
-    data->downSeq++;
-
+/*
     // MSG_BM_GET_RANGE
     msg[0] = 5; // length
     msg[1] = 0; // address
-    msg[2] = data->downSeq; // sequence number 1...255
     msg[3] = MSG_BM_GET_RANGE; //data
     msg[4] = 0; // address range
     msg[5] = 16; // address range
-
-    size = __makeMessage(msg, 6);
-    data->subWrite((obj)bidib, msg, size);
-    data->downSeq++;
-
+    data->subWrite((obj)bidib, msg);
+*/
     break;
   }
 
@@ -1117,14 +919,14 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_NODE_NEW:
   {
     __handleNewNode(bidib, msg, size);
-    __seqAck(bidib, msg, size);
+    //__seqAck(bidib, msg, size);
     break;
   }
 
   case MSG_NODE_LOST:
   {
     __handleLostNode(bidib, msg, size);
-    __seqAck(bidib, msg, size);
+    //__seqAck(bidib, msg, size);
     break;
   }
 
@@ -1228,14 +1030,10 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     // MSG_BM_GET_RANGE
     msg[0] = 5; // length
     msg[1] = 0; // address
-    msg[2] = data->downSeq; // sequence number 1...255
     msg[3] = MSG_BM_GET_RANGE; //data
     msg[4] = 0; // address range
     msg[5] = 16; // address range
-
-    size = __makeMessage(msg, 6);
-    data->subWrite((obj)bidib, msg, size);
-    data->downSeq++;
+    data->subWrite((obj)bidib, msg);
 
     break;
   }
@@ -1285,12 +1083,8 @@ static void __bidibReader( void* threadinst ) {
   data->lastMagicReq = SystemOp.getTick();
   msg[0] = 3; // length
   msg[1] = 0; // address
-  msg[2] = data->downSeq; // sequence number 1...255
   msg[3] = MSG_SYS_GET_MAGIC; //data
-
-  size = __makeMessage(msg, 4);
-  data->subWrite((obj)bidib, msg, size);
-  data->downSeq++;
+  data->subWrite((obj)bidib, msg);
 
   ThreadOp.sleep(100);
 
@@ -1303,12 +1097,8 @@ static void __bidibReader( void* threadinst ) {
       data->lastMagicReq = SystemOp.getTick();
       msg[0] = 3; // length
       msg[1] = 0; // address
-      msg[2] = data->downSeq; // sequence number 1...255
       msg[3] = MSG_SYS_GET_MAGIC; //data
-
-      size = __makeMessage(msg, 4);
-      data->subWrite((obj)bidib, msg, size);
-      data->downSeq++;
+      data->subWrite((obj)bidib, msg);
     }
 
     if( !data->subAvailable( (obj)bidib) ) {
@@ -1316,23 +1106,12 @@ static void __bidibReader( void* threadinst ) {
       continue;
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "bidib message available" );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "bidib message available" );
     }
 
     size = data->subRead( (obj)bidib, msg );
     if( size > 0 ) {
-      TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)msg, size );
-
-      size = __deEscapeMessage(msg, size);
-      TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg, size );
-      byte crc = __checkSum(msg, size );
-      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "crc=0x%02X", crc );
-
-      if( crc == 0 ) {
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "valid message received; processing" );
         __processBidiMsg(bidib, msg, size);
-      }
-
     }
 
   };
