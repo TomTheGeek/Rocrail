@@ -777,7 +777,24 @@ static void __handleError(iOBiDiB bidib, byte* msg, int size) {
 
 
 static const char* __getClass(int classid ) {
-  return wBiDiBnode.class_sensor;
+  const char* classname = "";
+  if( classid & 0x80 )
+    classname = wBiDiBnode.class_bridge;
+  if( classid & 0x40 )
+    classname = wBiDiBnode.class_sensor;
+  if( classid & 0x20 )
+    classname = wBiDiBnode.class_ui;
+  if( classid & 0x10 )
+    classname = wBiDiBnode.class_dcc_loco;
+  if( classid & 0x08 )
+    classname = wBiDiBnode.class_dcc_acc;
+  if( classid & 0x04 )
+    classname = wBiDiBnode.class_prog;
+  if( classid & 0x02 )
+    classname = wBiDiBnode.class_booster;
+  if( classid & 0x01 )
+    classname = wBiDiBnode.class_switch;
+  return classname;
 }
 
 static void __addNode(iOBiDiB bidib, byte* msg) {
@@ -805,6 +822,7 @@ static void __addNode(iOBiDiB bidib, byte* msg) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no mapping found for product ID [%s]; adding to list", uidKey );
     node = NodeOp.inst(wBiDiBnode.name(), data->bidibini, ELEMENT_NODE);
     wBiDiBnode.setuid(node, uid);
+    wBiDiBnode.setclassid(node, msg[1]);
     wBiDiBnode.setclass(node, __getClass(msg[1]));
     wBiDiBnode.setvendor(node, msg[3]);
     NodeOp.addChild(data->bidibini, node);
@@ -956,11 +974,11 @@ static void __handleLostNode(iOBiDiB bidib, byte* msg, int size) {
  */
 static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   iOBiDiBData data = Data(bidib);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing bidib message..." );
-
   int Addr = msg[1];
   int  Seq = msg[2];
   int Type = msg[3]; // MSG_SYS_MAGIC
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing bidib message Addr=%d Type=0x%02X...", Addr, Type );
 
   switch( Type ) {
   case MSG_SYS_MAGIC:
