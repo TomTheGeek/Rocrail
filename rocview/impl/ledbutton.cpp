@@ -111,8 +111,8 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
   gc->DrawRoundedRectangle(1, 1, buttonWidth-2, buttonHeight-2, 5.0);
   gc->DrawRoundedRectangle(0, 0, buttonWidth-2, buttonHeight-2, 5.0);
 
-  if( useLED ) {
-    gc->SetBrush( ON ? wxBrush(wxColour(255,255,0)):*wxLIGHT_GREY_BRUSH );
+  if( useLED && ON) {
+    gc->SetBrush( ON ? wxBrush(wxColour(255,255,0)):wxBrush(wxColour(200,255,200)) );
     gc->DrawEllipse(2.5, 2.5, 7.0, 7.0);
   }
   wxFont font(textOnly?14:10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
