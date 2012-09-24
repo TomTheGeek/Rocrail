@@ -3710,8 +3710,6 @@ void RocGuiFrame::OnOperatorDlg(wxCommandEvent& event){
 
 void RocGuiFrame::OnLcDlg(wxCommandEvent& event){
   LocControlDialog* dlg = new LocControlDialog(this, m_LocCtrlList, m_LocDlgMap, m_LocID);
-  // Test with new dialog. (WIP)
-  //LocoCtrlDlg* dlg = new LocoCtrlDlg(this, m_LocCtrlList, m_LocDlgMap, m_LocID);
   dlg->Show(TRUE);
 
   if( m_LocID != NULL && StrOp.len(m_LocID) > 0 ) {
