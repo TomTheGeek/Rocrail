@@ -117,7 +117,7 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
   }
 
   if(textOnly) {
-    wxFont font(wxSize(0, buttonHeight - 2), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    wxFont font(16, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     gc->SetFont(font,*wxBLACK);
     //Display7Segement(gc);
     double width;
