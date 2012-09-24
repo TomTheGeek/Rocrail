@@ -776,24 +776,45 @@ static void __handleError(iOBiDiB bidib, byte* msg, int size) {
 }
 
 
-static const char* __getClass(int classid ) {
-  const char* classname = "";
-  if( classid & 0x80 )
-    classname = wBiDiBnode.class_bridge;
-  if( classid & 0x40 )
-    classname = wBiDiBnode.class_sensor;
-  if( classid & 0x20 )
-    classname = wBiDiBnode.class_ui;
-  if( classid & 0x10 )
-    classname = wBiDiBnode.class_dcc_loco;
-  if( classid & 0x08 )
-    classname = wBiDiBnode.class_dcc_acc;
-  if( classid & 0x04 )
-    classname = wBiDiBnode.class_prog;
-  if( classid & 0x02 )
-    classname = wBiDiBnode.class_booster;
-  if( classid & 0x01 )
-    classname = wBiDiBnode.class_switch;
+static char* __getClass(int classid ) {
+  char* classname = NULL;
+  if( classid & 0x80 ) {
+    if( classname != NULL ) classname = StrOp.cat( classname, ",");
+    classname = StrOp.cat( classname, wBiDiBnode.class_bridge);
+  }
+  if( classid & 0x40 ) {
+    if( classname != NULL ) classname = StrOp.cat( classname, ",");
+    classname = StrOp.cat( classname, wBiDiBnode.class_sensor);
+  }
+  if( classid & 0x20 ) {
+    if( classname != NULL ) classname = StrOp.cat( classname, ",");
+    classname = StrOp.cat( classname, wBiDiBnode.class_ui);
+  }
+  if( classid & 0x10 ) {
+    if( classname != NULL ) classname = StrOp.cat( classname, ",");
+    classname = StrOp.cat( classname, wBiDiBnode.class_dcc_loco);
+  }
+  if( classid & 0x08 ) {
+    if( classname != NULL ) classname = StrOp.cat( classname, ",");
+    classname = StrOp.cat( classname, wBiDiBnode.class_dcc_acc);
+  }
+  if( classid & 0x04 ) {
+    if( classname != NULL ) classname = StrOp.cat( classname, ",");
+    classname = StrOp.cat( classname, wBiDiBnode.class_prog);
+  }
+  if( classid & 0x02 ) {
+    if( classname != NULL ) classname = StrOp.cat( classname, ",");
+    classname = StrOp.cat( classname, wBiDiBnode.class_booster);
+  }
+  if( classid & 0x01 ) {
+    if( classname != NULL ) classname = StrOp.cat( classname, ",");
+    classname = StrOp.cat( classname, wBiDiBnode.class_switch);
+  }
+
+  if( classname == NULL )
+    classname = StrOp.dup("");
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Class %d name: [%s]", classid, classname );
   return classname;
 }
 
@@ -819,13 +840,15 @@ static void __addNode(iOBiDiB bidib, byte* msg) {
     MapOp.put( data->localmap, localKey, (obj)node);
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no mapping found for product ID [%s]; adding to list", uidKey );
+    char* classname = __getClass(msg[1]);
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no mapping found for product ID [%s] %s; adding to list", uidKey, classname );
     node = NodeOp.inst(wBiDiBnode.name(), data->bidibini, ELEMENT_NODE);
     wBiDiBnode.setuid(node, uid);
     wBiDiBnode.setclassid(node, msg[1]);
-    wBiDiBnode.setclass(node, __getClass(msg[1]));
+    wBiDiBnode.setclass(node, classname);
     wBiDiBnode.setvendor(node, msg[3]);
     NodeOp.addChild(data->bidibini, node);
+    StrOp.free(classname);
   }
 }
 

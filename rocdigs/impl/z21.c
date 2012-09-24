@@ -171,11 +171,12 @@ static void __reader( void* threadinst ) {
 
     int packetSize = SocketOp.recvfrom( data->readUDP, packet, 256, NULL, NULL );
 
-    if( packetSize > 0 ) {
+    if( packetSize > 0 && packetSize < 256 ) {
       TraceOp.dump ( name, TRCLEVEL_INFO, (char*)packet, packetSize );
+      //Boolean rc = SocketOp.sendto( data->writeUDP, packet, packetSize, NULL, 0 );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unexpected packet size %d received" );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unexpected packet size %d received", packetSize );
       ThreadOp.sleep(10);
     }
 
