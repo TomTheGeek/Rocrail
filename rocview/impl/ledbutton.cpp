@@ -115,10 +115,10 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
     //gc->SetBrush( ON ? wxBrush(wxColour(255,255,0)):wxBrush(wxColour(200,255,200)) );
     //gc->DrawEllipse(2.5, 2.5, 7.0, 7.0);
   }
-  wxFont font(textOnly?16:10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-  gc->SetFont(font,*wxBLACK);
 
   if(textOnly) {
+    wxFont font(wxSize(0, buttonHeight - 2), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    gc->SetFont(font,*wxBLACK);
     //Display7Segement(gc);
     double width;
     double height;
@@ -128,6 +128,9 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
     gc->DrawText( text, (buttonWidth-width)/2, (buttonHeight-height)/2 );
   }
   else {
+    wxFont font(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    gc->SetFont(font,*wxBLACK);
+
     if( icon != NULL ) {
       dc.DrawBitmap(*icon, (buttonWidth-icon->GetWidth())/2, (buttonHeight-icon->GetHeight())/2, true);
     }
