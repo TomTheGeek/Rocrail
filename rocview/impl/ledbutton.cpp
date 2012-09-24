@@ -112,14 +112,20 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
   gc->DrawRoundedRectangle(0, 0, buttonWidth-2, buttonHeight-2, 5.0);
 
   if( useLED && ON) {
-    gc->SetBrush( ON ? wxBrush(wxColour(255,255,0)):wxBrush(wxColour(200,255,200)) );
-    gc->DrawEllipse(2.5, 2.5, 7.0, 7.0);
+    //gc->SetBrush( ON ? wxBrush(wxColour(255,255,0)):wxBrush(wxColour(200,255,200)) );
+    //gc->DrawEllipse(2.5, 2.5, 7.0, 7.0);
   }
-  wxFont font(textOnly?14:10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+  wxFont font(textOnly?16:10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
   gc->SetFont(font,*wxBLACK);
 
   if(textOnly) {
-    Display7Segement(gc);
+    //Display7Segement(gc);
+    double width;
+    double height;
+    double descent;
+    double externalLeading;
+    gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+    gc->DrawText( text, (buttonWidth-width)/2, (buttonHeight-height)/2 );
   }
   else {
     if( icon != NULL ) {
