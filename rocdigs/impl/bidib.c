@@ -62,6 +62,10 @@
 static int instCnt = 0;
 static Boolean TEST = False;
 
+
+static void __SoD( iOBiDiB inst );
+
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -187,6 +191,22 @@ static const char* __getFeatureName(int feature) {
 }
 
 
+static void __SoD( iOBiDiB inst ) {
+  iOBiDiBData data = Data(inst);
+  byte msgdata[127];
+
+  iOBiDiBNode node = (iOBiDiBNode)MapOp.first(data->nodemap);
+  while(node != NULL) {
+    if( node->classid & 0x40 ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day: uid=0x%08X", node->uid );
+      msgdata[0] = 0; // address range
+      msgdata[1] = 16; // address range
+      data->subWrite((obj)inst, node->path, MSG_BM_GET_RANGE, msgdata, 2);
+      ThreadOp.sleep(10);
+    }
+    node = (iOBiDiBNode)MapOp.next(data->nodemap);
+  }
+}
 
 
 static iONode __translate( iOBiDiB inst, iONode node ) {
@@ -227,12 +247,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       __inform(inst);
     }
     else if( StrOp.equals( cmd, wSysCmd.sod ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day" );
-      msgdata[0] = 0; // address range
-      msgdata[1] = 16; // address range
-      path[0] = 0;
-      data->subWrite((obj)inst, path, MSG_BM_GET_RANGE, msgdata, 2);
-
+      __SoD(inst);
     }
   }
 
@@ -1066,6 +1081,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_NODE_NA, path=%s seq=%d na-node=%d", pathKey, Seq, pdata[0] );
+    __SoD(bidib);
     break;
   }
 
