@@ -1198,6 +1198,14 @@ static void _event( iOSwitch inst, iONode nodeC ) {
   iOSwitchData data = Data(inst);
   Boolean has2Units = ( wSwitch.getaddr2( data->props ) > 0 || wSwitch.getport2( data->props ) > 0 )  ? True:False;
 
+  if( !wSwitch.issinglegate(data->props) && wSwitch.getgatevalue(nodeC) == 0 ) {
+    /* Port off command is only processed for single gate switches only. */
+    if( nodeC != NULL )
+      NodeOp.base.del(nodeC);
+    return;
+  }
+
+
   if( !data->hasFbSignal ) {
     Boolean inv  = wSwitch.isinv( data->props );
     Boolean inv2 = wSwitch.isinv2( data->props );
