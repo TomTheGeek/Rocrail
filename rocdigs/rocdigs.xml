@@ -1294,12 +1294,18 @@
     <typedef def="Boolean(*sublib_connect)(obj)"/>
     <typedef def="void(*sublib_disconnect)(obj)"/>
     <typedef def="int(*sublib_read)(obj,byte*)"/>
-    <typedef def="Boolean(*sublib_write)(obj,byte*)"/>
+    <typedef def="Boolean(*sublib_write)(obj,byte*,byte,byte*,int)"/>
     <typedef def="Boolean(*sublib_available)(obj)"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
     </fun>
+    <struct name="bidibnode" typedef="*iOBiDiBNode">
+      <var name="uid" vt="int"/>
+      <var name="path[4]" vt="byte" remark=""/>
+      <var name="classid" vt="int"/>
+      <var name="vendorid" vt="int"/>
+    </struct>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="bidibini" vt="iONode"/>
@@ -1335,7 +1341,11 @@
       <var name="subWriteQueue" vt="iOQueue"/>
       <var name="cv" vt="int"/>
       <var name="value" vt="int"/>
-    </data>
+      <var name="nodepath[4]" vt="byte"/>
+      <var name="defaultbooster" vt="iOBiDiBNode"/>
+      <var name="defaultprog" vt="iOBiDiBNode"/>
+      <var name="defaultswitch" vt="iOBiDiBNode"/>
+      </data>
   </object>
 
 

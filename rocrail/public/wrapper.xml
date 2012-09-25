@@ -452,7 +452,6 @@
         <var name="secAck" vt="bool" defval="false" remark="Enable secure acknowledge."/>
         <var name="secAckInt" vt="int" defval="20" remark="Secure acknowledge interval in 10ms units."/>
         <bidibnode cardinality="n" remark="BiDiB options" wrappername="BiDiBnode">
-          <var name="uid" vt="int" defval="0" remark="Vendor product/serialnumber ID."/>
           <const name="class_bridge" vt="string" val="bridge"/>
           <const name="class_sensor" vt="string" val="sensor"/>
           <const name="class_ui" vt="string" val="ui"/>
@@ -461,10 +460,6 @@
           <const name="class_prog" vt="string" val="prog"/>
           <const name="class_booster" vt="string" val="booster"/>
           <const name="class_switch" vt="string" val="switch"/>
-          <var name="class" vt="string" defval="" remark="Class name."/>
-          <var name="classid" vt="int" defval="0" remark="Class ID."/>
-          <var name="offset" vt="int" defval="1" remark="Rocrail addressing offset."/>
-          <var name="vendor" vt="int" defval="0" remark="DCC vendor ID."/>
         </bidibnode>
       </bidib>
 
@@ -868,6 +863,7 @@
     <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
     <var name="id" vt="string" defval="NULL" range="*" remark="ID"/>
     <var name="oid" vt="string" defval="NULL" range="*" remark="Object ID"/>
+    <var name="bus" vt="int" defval="0" range="0-*" remark="Interface bus"/>
     <var name="addr" vt="int" defval="0" range="0-*" remark="Interface address"/>
     <var name="port" vt="int" defval="0" range="0-*" remark="Interface port"/>
     <var name="val" vt="int" defval="0" range="*" remark="optional value"/>

@@ -170,6 +170,7 @@ static void __writer( void* threadinst ) {
       int len = post[0];
       MemOp.copy( msg, post+1, len);
       freeMem( post);
+      TraceOp.dump ( "bidibWrite", TRCLEVEL_BYTE, (char*)msg, len );
       if( SerialOp.write( data->serial, (char*)msg, len ) ) {
       }
       else {
@@ -296,18 +297,45 @@ int serialRead ( obj inst, unsigned char *msg ) {
   return 0;
 }
 
-Boolean serialWrite( obj inst, unsigned char *msg ) {
+Boolean serialWrite( obj inst, unsigned char *path, unsigned char code, unsigned char* pdata, int datalen ) {
   iOBiDiBData data = Data(inst);
   int   size = 0;
+  byte  msg[127];
   byte* post = NULL;
 
   if( MutexOp.wait( data->mux ) ) {
-    msg[2]   = data->downSeq++; // sequence number 1...255
-    TraceOp.dump ( "bidibWrite", TRCLEVEL_BYTE, (char*)msg, msg[0]+1 );
-    size = __makeMessage(msg, msg[0]+1);
+    int msgidx  = 0;
+    int dataidx = 0;
+
+    /*                  pathidx: 0  1  2  3
+     * Addr can be 4 bytes long. XX XX XX XX */
+    for( msgidx = 0; msgidx < 4; msgidx++ ) {
+      msg[1+msgidx] = path[msgidx]; // address
+      if( msg[1+msgidx] == 0 )
+        break;
+    }
+
+    msgidx += 2; // point to sequence offset
+
+    msg[msgidx] = data->downSeq++; // sequence number 1...255
+    msgidx++;
+
+    msg[msgidx] = code;
+    msgidx++;
+
+    if( pdata != NULL ) {
+      for( dataidx = 0; dataidx < datalen; dataidx++ )
+        msg[msgidx+dataidx] = pdata[dataidx]; // address
+    }
+
+    size = msgidx+dataidx;
+    msg[0] = size;
+
+    TraceOp.dump ( "preWrite", TRCLEVEL_BYTE, (char*)msg, size+1 );
+    size = __makeMessage(msg, size+1);
     post = allocMem(size+1);
 
-    post[0] = (size&0xFF);
+    post[0] = (size & 0xFF);
     MemOp.copy(post+1, msg, size );
     ThreadOp.post(data->subWriter, (obj)post);
     MutexOp.post(data->mux);
