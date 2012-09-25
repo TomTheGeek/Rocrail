@@ -460,6 +460,10 @@
           <const name="class_prog" vt="string" val="prog"/>
           <const name="class_booster" vt="string" val="booster"/>
           <const name="class_switch" vt="string" val="switch"/>
+          <var name="uid" vt="int" defval="0" remark="Vendor product/serialnumber ID."/>
+          <var name="class" vt="string" defval="sensor" remark="Class ID."/>
+          <var name="path" vt="string" defval="0.0.0.0" remark="Local path."/>
+          <var name="vendor" vt="int" defval="0" remark="DCC vendor ID."/>
         </bidibnode>
       </bidib>
 

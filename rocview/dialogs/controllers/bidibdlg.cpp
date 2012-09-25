@@ -74,9 +74,6 @@ void BidibDlg::initLabels() {
   m_labSecAckInt->SetLabel(wxGetApp().getMsg( "interval" ));
 
   // Nodes
-  m_AddNode->SetLabel(wxGetApp().getMsg( "add" ));
-  m_ModifyNode->SetLabel(wxGetApp().getMsg( "modify" ));
-  m_DeleteNode->SetLabel(wxGetApp().getMsg( "delete" ));
 
   // Buttons
   m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -127,17 +124,12 @@ void BidibDlg::initNodes() {
   iONode node = wBiDiB.getbidibnode(bidib);
   while( node != NULL ) {
     char uid[256];
-    StrOp.fmtb( uid, "%d, %s, %d, %s",
-        wBiDiBnode.getuid(node), wBiDiBnode.getclass(node), wBiDiBnode.getoffset(node), m_Vendor[wBiDiBnode.getvendor(node)] );
+    StrOp.fmtb( uid, "0x%08X, %s, %s, %s",
+        wBiDiBnode.getuid(node), wBiDiBnode.getpath(node), wBiDiBnode.getclass(node), m_Vendor[wBiDiBnode.getvendor(node)] );
 
     m_NodeList->Append( wxString(uid,wxConvUTF8), node );
     node = wBiDiB.nextbidibnode(bidib, node);
   }
-  m_ModifyNode->Enable(false);
-  m_DeleteNode->Enable(false);
-  m_UID->SetValue( wxString( "", wxConvUTF8 ) );
-  m_Offset->SetValue( 0 );
-
 }
 
 
@@ -173,69 +165,12 @@ void BidibDlg::OnNodeList( wxCommandEvent& event ) {
   if( m_NodeList->GetSelection() != wxNOT_FOUND ) {
     iONode node = (iONode)m_NodeList->GetClientData(m_NodeList->GetSelection());
     if( node != NULL ) {
-			char* val = StrOp.fmt( "%d", wBiDiBnode.getuid(node) );
-			m_UID->SetValue( wxString( val, wxConvUTF8 ) );
-			StrOp.free( val );
-      m_Offset->SetValue( wBiDiBnode.getoffset( node ) );
-      m_ModifyNode->Enable(true);
-      m_DeleteNode->Enable(true);
     }
     else
       TraceOp.trc( "bidibdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
   }
   else
     TraceOp.trc( "bidibdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
-}
-
-
-void BidibDlg::OnAddNode( wxCommandEvent& event ) {
-  if( m_Props == NULL )
-    return;
-  TraceOp.trc( "bidibdlg", TRCLEVEL_INFO, __LINE__, 9999, "add node..." );
-
-  iONode bidib = wDigInt.getbidib(m_Props);
-
-  iONode node = NodeOp.inst(wBiDiBnode.name(), m_Props, ELEMENT_NODE);
-  wBiDiBnode.setuid( node, atoi(m_UID->GetValue().mb_str(wxConvUTF8)) );
-  wBiDiBnode.setoffset( node, m_Offset->GetValue() );
-  NodeOp.addChild( bidib, node );
-  initNodes();
-}
-
-
-void BidibDlg::OnModifyNode( wxCommandEvent& event ) {
-  if( m_Props == NULL )
-    return;
-  TraceOp.trc( "bidibdlg", TRCLEVEL_INFO, __LINE__, 9999, "modify node..." );
-
-  if( m_NodeList->GetSelection() != wxNOT_FOUND ) {
-    iONode node = (iONode)m_NodeList->GetClientData(m_NodeList->GetSelection());
-    if( node != NULL ) {
-      wBiDiBnode.setuid( node, atoi(m_UID->GetValue().mb_str(wxConvUTF8)) );
-      wBiDiBnode.setoffset( node, m_Offset->GetValue() );
-      initNodes();
-    }
-    else
-      TraceOp.trc( "bidibdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
-  }
-}
-
-
-void BidibDlg::OnDeleteNode( wxCommandEvent& event ) {
-  if( m_Props == NULL )
-    return;
-  TraceOp.trc( "bidibdlg", TRCLEVEL_INFO, __LINE__, 9999, "delete node..." );
-
-  iONode bidib = wDigInt.getbidib(m_Props);
-  if( m_NodeList->GetSelection() != wxNOT_FOUND ) {
-    iONode node = (iONode)m_NodeList->GetClientData(m_NodeList->GetSelection());
-    if( node != NULL ) {
-      NodeOp.removeChild( bidib, node );
-      initNodes();
-    }
-    else
-      TraceOp.trc( "bidibdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
-  }
 }
 
 

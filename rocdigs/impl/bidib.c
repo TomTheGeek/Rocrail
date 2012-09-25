@@ -701,6 +701,13 @@ static void __addNode(iOBiDiB bidib, byte* msg) {
     MapOp.put( data->nodemap, uidKey, (obj)node );
     MapOp.put( data->localmap, localKey, (obj)node);
 
+    iONode child = NodeOp.inst(wBiDiBnode.name(), data->bidibini, ELEMENT_NODE);
+    wBiDiBnode.setuid(child, uid);
+    wBiDiBnode.setclass(child, classname);
+    wBiDiBnode.setpath(child, localKey);
+    wBiDiBnode.setvendor(child, node->vendorid);
+    NodeOp.addChild(data->bidibini, child);
+ 
     if( data->defaultbooster == NULL && StrOp.find(classname, wBiDiBnode.class_booster) != NULL ) {
       data->defaultbooster = node;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, classname);
@@ -901,7 +908,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     int Magic = (msg[5]<<8)+msg[4];
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "MSG_SYS_MAGIC, path=%s seq=%d magic=0x%04X", pathKey, Seq, Magic );
-    data->upSeq   = msg[2];
+    data->upSeq   = Seq;
     data->magicOK = True;
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "MSG_SYS_GET_SW_VERSION path=%s", pathKey );
@@ -1020,9 +1027,9 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_BM_CV:
   { //             ADDRL, ADDRH, CVL, CVH, DAT
     // 08 00 0D A5 5E     13     06   00   02 38
-    int locoAddr = (msg[5]&0x3F) * 256 + msg[4];
-    int cv       = msg[7] * 256 + msg[6];
-    __handleCV(bidib, locoAddr, cv, msg[8]);
+    int locoAddr = (pdata[1]&0x3F) * 256 + pdata[0];
+    int cv       = pdata[3] * 256 + pdata[2];
+    __handleCV(bidib, locoAddr, cv, pdata[4]);
     break;
   }
 
@@ -1030,8 +1037,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_BM_SPEED:
   { //             ADDRL, ADDRH, DAT
     // 08 00 0D A6 5E     13     02
-    int locoAddr = (msg[5]&0x3F) * 256 + msg[4];
-    int speed    = msg[6];
+    int locoAddr = (pdata[1]&0x3F) * 256 + pdata[0];
+    int speed    = pdata[2];
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "MSG_BM_SPEED, path=%s seq=%d loco-addr=%d dcc-speed=%d", pathKey, Seq, locoAddr, speed );
     break;
@@ -1042,14 +1049,14 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { //             MNUM, DAT
     // 08 00 0D A7 00    00
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "MSG_BM_CURRENT, path=%s seq=%d current=%d", pathKey, Seq, msg[5] );
+        "MSG_BM_CURRENT, path=%s seq=%d current=%d", pathKey, Seq, pdata[1] );
     break;
   }
 
   case MSG_SYS_ERROR:
   { // MSG_SYS_ERROR
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-        "MSG_SYS_ERROR, path=%s seq=%d error=%d", pathKey, Seq, msg[4] );
+        "MSG_SYS_ERROR, path=%s seq=%d error=%d", pathKey, Seq, pdata[0] );
     __handleError(bidib, msg, size);
     break;
   }
@@ -1058,7 +1065,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_NODE_NA:
   {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "MSG_NODE_NA, path=%s seq=%d na-node=%d", pathKey, Seq, msg[4] );
+        "MSG_NODE_NA, path=%s seq=%d na-node=%d", pathKey, Seq, pdata[0] );
     break;
   }
 
@@ -1076,6 +1083,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_LC_STAT:
   {
+    // ToDo: Report it to the server.
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_LC_STAT path=%s type=%d port=%d state=%d", pathKey, pdata[0], pdata[1], pdata[2] );
     break;
@@ -1178,6 +1186,12 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   if( data->bidibini == NULL ) {
     data->bidibini = NodeOp.inst( wBiDiB.name(), data->ini, ELEMENT_NODE);
     NodeOp.addChild( data->ini, data->bidibini);
+  }
+
+  iONode child = wBiDiB.getbidibnode(data->bidibini);
+  while( child != NULL ) {
+    NodeOp.removeChild(data->bidibini, child);
+    child = wBiDiB.getbidibnode(data->bidibini);
   }
 
   data->secAck    = wBiDiB.issecAck( data->bidibini );
