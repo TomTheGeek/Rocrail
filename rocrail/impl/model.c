@@ -396,57 +396,63 @@ static Boolean __checkPlanHealth(iOModelData data) {
       /* check the basic addressing */
       if( StrOp.equals( wLoc.name(), NodeOp.getName(item) ) ) {
         if( wLoc.getaddr(item) == 0 && !StrOp.equals(wLoc.getprot(item), wLoc.prot_A) ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "loco %s has no address set", wItem.getid(item) );
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: loco %s has no address set", wItem.getid(item) );
           healthy = False;
         }
       }
 
       if( StrOp.equals( wFeedback.name(), NodeOp.getName(item) ) ) {
         if( wFeedback.getaddr(item) == 0 ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "sensor %s has no address set", wItem.getid(item) );
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: sensor %s has no address set", wItem.getid(item) );
           healthy = False;
         }
         else {
-          char key[32];
-          StrOp.fmtb( key, "%d", wFeedback.getaddr(item) );
+          char* key = FBackOp.createAddrKey( wFeedback.getbus(item), wFeedback.getaddr(item), wFeedback.getiid(item) );
           if( MapOp.haskey(sensorMap, key ) ) {
             iONode sensorItem = (iONode)MapOp.get( sensorMap, key );
             TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-                "sensor %s has an already used address %d by %s",
-                wItem.getid(item), wFeedback.getaddr(item), wItem.getid(sensorItem) );
+                "ERROR: sensor %s has an already used address %d by %s (%s)",
+                wItem.getid(item), wFeedback.getaddr(item), wItem.getid(sensorItem), key );
             healthy = False;
           }
           else {
             MapOp.put( sensorMap, key, (obj)item );
           }
+          StrOp.free( key );
         }
       }
 
       if( StrOp.equals( wSwitch.name(), NodeOp.getName(item) ) ) {
         if( wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "switch %s has no address set", wItem.getid(item) );
-          healthy = False;
+          if( StrOp.equals( wSwitch.gettype(item), wSwitch.crossing ) ) {
+            /* simple cross must not have an address */
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "INFO: simple cross \"%s\" has no address.", wItem.getid(item) );
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: switch %s has no address set", wItem.getid(item) );
+            healthy = False;
+          }
         }
         else {
           char key[32];
-          StrOp.fmtb( key, "%d-%d", wSwitch.getaddr1(item), wSwitch.getport1(item) );
+          StrOp.fmtb( key, "%d-%d-%d-%s", wSwitch.getaddr1(item), wSwitch.getport1(item), wSwitch.getgate1(item), wItem.getiid(item) );
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                "switch %s has an already used address %d-%d by %s",
-                wItem.getid(item), wSwitch.getaddr1(item), wSwitch.getport1(item), wItem.getid(switchItem) );
+                "INFO: switch %s has an already used address %d-%d by %s (%s)",
+                wItem.getid(item), wSwitch.getaddr1(item), wSwitch.getport1(item), wItem.getid(switchItem), key );
           }
           else {
             MapOp.put( switchMap, key, (obj)item );
           }
 
-          if( wSwitch.getaddr2(item) > 0 || wSwitch.getport2(item) > 0 ) {
-            StrOp.fmtb( key, "%d-%d", wSwitch.getaddr2(item), wSwitch.getport2(item) );
+          if( ( StrOp.equals( wSwitch.gettype(item), wSwitch.dcrossing ) || StrOp.equals( wSwitch.gettype(item), wSwitch.threeway ) ) && ( wSwitch.getaddr2(item) > 0 || wSwitch.getport2(item) > 0 ) ) {
+            StrOp.fmtb( key, "%d-%d-%d-%s", wSwitch.getaddr2(item), wSwitch.getport2(item), wSwitch.getgate2(item), wItem.getiid(item) );
             if( MapOp.haskey(switchMap, key ) ) {
               iONode switchItem = (iONode)MapOp.get( switchMap, key );
               TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                  "switch %s has an already used second address %d-%d by %s",
-                  wItem.getid(item), wSwitch.getaddr2(item), wSwitch.getport2(item), wItem.getid(switchItem) );
+                  "INFO: switch %s has an already used second address %d-%d by %s (%s)",
+                  wItem.getid(item), wSwitch.getaddr2(item), wSwitch.getport2(item), wItem.getid(switchItem), key );
             }
             else {
               MapOp.put( switchMap, key, (obj)item );
@@ -458,12 +464,12 @@ static Boolean __checkPlanHealth(iOModelData data) {
       if( StrOp.equals( wOutput.name(), NodeOp.getName(item) ) ) {
         if( wOutput.getaddr(item) > 0 || wOutput.getport(item) > 0 ) {
           char key[32];
-          StrOp.fmtb( key, "%d-%d", wOutput.getaddr(item), wOutput.getport(item) );
+          StrOp.fmtb( key, "%d-%d-%s", wOutput.getaddr(item), wOutput.getport(item), wItem.getiid(item) );
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                "output %s has an already used address %d-%d by %s",
-                wItem.getid(item), wOutput.getaddr(item), wOutput.getport(item), wItem.getid(switchItem) );
+                "INFO: output %s has an already used address %d-%d by %s (%s)",
+                wItem.getid(item), wOutput.getaddr(item), wOutput.getport(item), wItem.getid(switchItem), key );
           }
           else {
             MapOp.put( switchMap, key, (obj)item );
@@ -473,17 +479,17 @@ static Boolean __checkPlanHealth(iOModelData data) {
 
       if( StrOp.equals( wSignal.name(), NodeOp.getName(item) ) ) {
         if( wSignal.getaddr(item) == 0 && wSignal.getport1(item) == 0 ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "signal %s has no address set", wItem.getid(item) );
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: signal %s has no address set", wItem.getid(item) );
           healthy = False;
         }
         else {
           char key[32];
-          StrOp.fmtb( key, "%d-%d", wSignal.getaddr(item), wSignal.getport1(item) );
+          StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr(item), wSignal.getport1(item), wSignal.getgate1(item), wItem.getiid(item) );
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                "signal %s has an already used first address %s by %s",
-                wItem.getid(item), key, wItem.getid(switchItem) );
+                "INFO: signal %s has an already used first address %s by %s (%s)",
+                wItem.getid(item), key, wItem.getid(switchItem), key );
           }
           else {
             MapOp.put( switchMap, key, (obj)item );
@@ -492,40 +498,40 @@ static Boolean __checkPlanHealth(iOModelData data) {
 
         if( wSignal.getaddr2(item) > 0 || wSignal.getport2(item) > 0 ) {
           char key[32];
-          StrOp.fmtb( key, "%d-%d", wSignal.getaddr2(item), wSignal.getport2(item) );
+          StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr2(item), wSignal.getport2(item), wSignal.getgate2(item), wItem.getiid(item) );
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                "signal %s has an already used second address %s by %s",
-                wItem.getid(item), key, wItem.getid(switchItem) );
+                "INFO: signal %s has an already used second address %s by %s (%s)",
+                wItem.getid(item), key, wItem.getid(switchItem), key );
           }
           else {
             MapOp.put( switchMap, key, (obj)item );
           }
         }
 
-        if( wSignal.getaddr3(item) > 0 || wSignal.getport3(item) > 0 ) {
+        if( wSignal.getaspects(item) >= 3 && ( wSignal.getaddr3(item) > 0 || wSignal.getport3(item) > 0 ) ) {
           char key[32];
-          StrOp.fmtb( key, "%d-%d", wSignal.getaddr3(item), wSignal.getport3(item) );
+          StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr3(item), wSignal.getport3(item), wSignal.getgate3(item), wItem.getiid(item) );
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                "signal %s has an already used third address %s by %s",
-                wItem.getid(item), key, wItem.getid(switchItem) );
+                "INFO: signal %s has an already used third address %s by %s (%s)",
+                wItem.getid(item), key, wItem.getid(switchItem), key );
           }
           else {
             MapOp.put( switchMap, key, (obj)item );
           }
         }
 
-        if( wSignal.getaddr4(item) > 0 || wSignal.getport4(item) > 0 ) {
+        if( wSignal.getaspects(item) >= 4 && ( wSignal.getaddr4(item) > 0 || wSignal.getport4(item) > 0 ) ) {
           char key[32];
-          StrOp.fmtb( key, "%d-%d", wSignal.getaddr4(item), wSignal.getport4(item) );
+          StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr4(item), wSignal.getport4(item), wSignal.getgate4(item), wItem.getiid(item) );
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                "signal %s has an already used fourth address %s by %s",
-                wItem.getid(item), key, wItem.getid(switchItem) );
+                "INFO: signal %s has an already used fourth address %s by %s (%s)",
+                wItem.getid(item), key, wItem.getid(switchItem), key );
           }
           else {
             MapOp.put( switchMap, key, (obj)item );
@@ -540,7 +546,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
       if( MapOp.haskey(idMap, wItem.getid(item)) ) {
         iONode firstItem = (iONode)MapOp.get(idMap, wItem.getid(item));
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-            "object [%s] with id [%s] at [%d,%d,%d] already exist at [%d,%d,%d]",
+            "ERROR: object [%s] with id [%s] at [%d,%d,%d] already exist at [%d,%d,%d]",
             NodeOp.getName(item), wItem.getid(item),
             wItem.getx(item), wItem.gety(item), wItem.getz(item),
             wItem.getx(firstItem), wItem.gety(firstItem), wItem.getz(firstItem));
@@ -555,7 +561,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
         if( MapOp.haskey(xyzMap, key) ) {
           iONode firstItem = (iONode)MapOp.get(xyzMap, key);
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-              "object [%s] with id [%s] at [%d,%d,%d] overlaps object [%s] with id [%s]",
+              "ERROR: object [%s] with id [%s] at [%d,%d,%d] overlaps object [%s] with id [%s]",
               NodeOp.getName(item), wItem.getid(item),
               wItem.getx(item), wItem.gety(item), wItem.getz(item),
               NodeOp.getName(firstItem), wItem.getid(firstItem));
@@ -565,7 +571,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
         if( wItem.getx(item) != -1 && wItem.gety(item) != -1 ) {
           if( wItem.getx(item) < -1 || wItem.gety(item) < -1 ) {
             TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-                "object [%s] with id [%s] has invalid coordinates [%d,%d,%d]",
+                "ERROR: object [%s] with id [%s] has invalid coordinates [%d,%d,%d]",
                 NodeOp.getName(item), wItem.getid(item),
                 wItem.getx(item), wItem.gety(item), wItem.getz(item));
             if( wItem.getx(item) < -1 )
@@ -580,7 +586,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
 
         if( wItem.getx(item) > 256 || wItem.gety(item) > 256 ) {
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-              "object [%s] with id [%s] has invalid coordinates [%d,%d,%d]",
+              "ERROR: object [%s] with id [%s] has invalid coordinates [%d,%d,%d]",
               NodeOp.getName(item), wItem.getid(item),
               wItem.getx(item), wItem.gety(item), wItem.getz(item));
           if( wItem.getx(item) > 256 )
@@ -592,7 +598,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "invisible object [%s] with id [%s] and coordinates [%d,%d,%d]",
+            "INFO: invisible object [%s] with id [%s] and coordinates [%d,%d,%d]",
             NodeOp.getName(item), wItem.getid(item),
             wItem.getx(item), wItem.gety(item), wItem.getz(item));
       }
@@ -623,7 +629,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
 
     if( lonelyItem != NULL ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "object [%s] with id [%s] at [%d,%d,%d] is the most far away object in the plan",
+          "INFO: object [%s] with id [%s] at [%d,%d,%d] is the most far away object in the plan",
           NodeOp.getName(lonelyItem), wItem.getid(lonelyItem),
           wItem.getx(lonelyItem), wItem.gety(lonelyItem), wItem.getz(lonelyItem));
     }
@@ -677,9 +683,12 @@ static Boolean _parsePlan( iOModelData o ) {
           if( !__checkPlanHealth(o) ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "------------------------------------------------------------" );
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " ***** This plan is not healthy! *****" );
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " One or more double ID's and or overlapping symbols are found." );
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " One or more double IDs and or overlapping symbols are found." );
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Check the trace and correct the exceptions before using it." );
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "------------------------------------------------------------" );
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "plan is healthy." );
           }
 
         }
