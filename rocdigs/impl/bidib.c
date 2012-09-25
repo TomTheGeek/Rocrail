@@ -884,7 +884,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   pdata = msg+4+pathidx;
   int datasize = size - (4 + pathidx);
 
-  StrOp.fmtb( pathKey, "%d.%d.%d.%d", path[3], path[2], path[1], path[0] );
+  StrOp.fmtb( pathKey, "%d.%d.%d.%d", path[0], path[1], path[2], path[3] );
 
   bidibnode = (iOBiDiBNode)MapOp.get( data->localmap, pathKey );
 
@@ -1071,6 +1071,13 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_PRG_CV_STAT:
   {
     __handlePT(bidib, msg[1], msg[2]);
+    break;
+  }
+
+  case MSG_LC_STAT:
+  {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_LC_STAT path=%s type=%d port=%d state=%d", pathKey, pdata[0], pdata[1], pdata[2] );
     break;
   }
 
