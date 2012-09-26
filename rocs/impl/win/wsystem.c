@@ -190,7 +190,7 @@ Boolean rocs_system_accessPort( int from, int num ) {
     h = CreateFile("\\\\.\\giveio", GENERIC_READ, 0, NULL,
                    OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     if(h == INVALID_HANDLE_VALUE) {
-        TraceOp.trc( "wunc", TRCLEVEL_DEBUG, __LINE__, 9999, "Couldn't access giveio device\n");
+        TraceOp.trc( "wunc", TRCLEVEL_DEBUG, __LINE__, 9999, "no giveio device available\n");
         return False;
     }
     CloseHandle(h);
