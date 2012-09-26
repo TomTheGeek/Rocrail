@@ -1092,6 +1092,19 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
       m_CBusNodeDlg = NULL;
     }
   }
+  else if( wProgram.getlntype(node) == wProgram.lntype_bidib ) {
+    /* New BiDiB dialog for selecting the UID of the identified node. */
+    if( m_BidibIdentDlg != NULL )
+      m_BidibIdentDlg->event( node );
+    else {
+      m_BidibIdentDlg = new BidibIdentDlg(this, node);
+      if( wxID_OK == m_BidibIdentDlg->ShowModal() ) {
+        /* Copy UID on the clipboard? */
+      }
+      m_BidibIdentDlg->Destroy();
+      m_BidibIdentDlg = NULL;
+    }
+  }
   else if( wProgram.getlntype(node) == wProgram.lntype_cs ) {
     if( m_RocrailIniDlg != NULL )
       m_RocrailIniDlg->event( node );
@@ -1354,6 +1367,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LocalPlan          = _T("");
   m_LocoIO             = NULL;
   m_CBusNodeDlg        = NULL;
+  m_BidibIdentDlg      = NULL;
   m_MGV141             = NULL;
   m_DTOpSw             = NULL;
   m_RocrailIniDlg      = NULL;

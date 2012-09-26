@@ -881,6 +881,46 @@ static void __handleLostNode(iOBiDiB bidib, byte* msg, int size) {
 }
 
 
+static void __handleStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  // Report it to the server.
+  if( bidibnode != NULL ) {
+    iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+
+    wSwitch.setbus( nodeC, bidibnode->uid );
+    wSwitch.setaddr1( nodeC, pdata[1] );
+
+    if( data->iid != NULL )
+      wSwitch.setiid( nodeC, data->iid );
+
+    if( pdata[0] == BIDIB_OUTTYPE_SERVO )
+      wSwitch.setsinglegate(nodeC, True);
+
+    wSwitch.setstate( nodeC, pdata[2]?"straight":"turnout" );
+    wSwitch.setgatevalue(nodeC, pdata[2]);
+
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+}
+
+static void __handleIdentify(iOBiDiB bidib, iOBiDiBNode bidibnode, const char* path) {
+  iOBiDiBData data = Data(bidib);
+  /* Notify server. */
+  if( bidibnode != NULL ) {
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setcmd( node, wProgram.type );
+    wProgram.setiid( node, data->iid );
+    wProgram.setlntype(node, wProgram.lntype_bidib);
+    wProgram.setmodid(node, bidibnode->uid);
+    wProgram.setmanu(node, bidibnode->vendorid);
+    wProgram.setprod(node, bidibnode->classid);
+    wProgram.setfilename(node, path);
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+}
+
+
+
 /**
  * len addr seq type data  crc
  * 05  00   00  81   FE AF 89
@@ -1099,9 +1139,15 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_LC_STAT:
   {
-    // ToDo: Report it to the server.
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_LC_STAT path=%s type=%d port=%d state=%d", pathKey, pdata[0], pdata[1], pdata[2] );
+    __handleStat(bidib, bidibnode, pdata);
+    break;
+  }
+
+  case MSG_SYS_IDENTIFY_STATE:
+  {
+    __handleIdentify(bidib, bidibnode, pathKey);
     break;
   }
 

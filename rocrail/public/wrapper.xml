@@ -777,6 +777,7 @@
     <const name="lntype_mp" vt="int" val="4" remark="LocoIO MP's"/>
     <const name="lntype_opsw" vt="int" val="5" remark="Stationary decoder programming"/>
     <const name="lntype_cbus" vt="int" val="6" remark="CBUS"/>
+    <const name="lntype_bidib" vt="int" val="7" remark="BiDiB"/>
     <var name="lntype" vt="int" defval="0" remark="LNCV programming type"/>
     <var name="lncv" vt="bool" defval="false"/>
     <var name="filename" vt="string" defval=""/>

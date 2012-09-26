@@ -47,6 +47,7 @@
 
 #include "rocview/dialogs/decoders/locoio.h"
 #include "rocview/dialogs/decoders/cbusnodedlg.h"
+#include "rocview/dialogs/decoders/bidibidentdlg.h"
 #include "rocview/dialogs/decoders/mgvdlg.h"
 #include "rocview/dialogs/decoders/mgv141dlg.h"
 #include "rocview/dialogs/decoders/dtopswdlg.h"
@@ -356,6 +357,7 @@ private:
 
   LocoIO* m_LocoIO;
   CBusNodeDlg* m_CBusNodeDlg;
+  BidibIdentDlg* m_BidibIdentDlg;
   DTOpSwDlg* m_DTOpSw;
   RocrailIniDialog* m_RocrailIniDlg;
   Uhl68610Dlg* m_Uhl68610;
