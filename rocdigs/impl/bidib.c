@@ -58,6 +58,7 @@
 
 #include "rocdigs/impl/bidib/bidib_messages.h"
 #include "rocdigs/impl/bidib/serial.h"
+#include "rocdigs/impl/bidib/bidibutils.h"
 
 static int instCnt = 0;
 static Boolean TEST = False;
@@ -634,48 +635,6 @@ static void __handleError(iOBiDiB bidib, byte* msg, int size) {
 }
 
 
-static char* __getClass(int classid ) {
-  char* classname = NULL;
-  if( classid & 0x80 ) {
-    if( classname != NULL ) classname = StrOp.cat( classname, ",");
-    classname = StrOp.cat( classname, wBiDiBnode.class_bridge);
-  }
-  if( classid & 0x40 ) {
-    if( classname != NULL ) classname = StrOp.cat( classname, ",");
-    classname = StrOp.cat( classname, wBiDiBnode.class_sensor);
-  }
-  if( classid & 0x20 ) {
-    if( classname != NULL ) classname = StrOp.cat( classname, ",");
-    classname = StrOp.cat( classname, wBiDiBnode.class_ui);
-  }
-  if( classid & 0x10 ) {
-    if( classname != NULL ) classname = StrOp.cat( classname, ",");
-    classname = StrOp.cat( classname, wBiDiBnode.class_dcc_loco);
-  }
-  if( classid & 0x08 ) {
-    if( classname != NULL ) classname = StrOp.cat( classname, ",");
-    classname = StrOp.cat( classname, wBiDiBnode.class_dcc_acc);
-  }
-  if( classid & 0x04 ) {
-    if( classname != NULL ) classname = StrOp.cat( classname, ",");
-    classname = StrOp.cat( classname, wBiDiBnode.class_prog);
-  }
-  if( classid & 0x02 ) {
-    if( classname != NULL ) classname = StrOp.cat( classname, ",");
-    classname = StrOp.cat( classname, wBiDiBnode.class_booster);
-  }
-  if( classid & 0x01 ) {
-    if( classname != NULL ) classname = StrOp.cat( classname, ",");
-    classname = StrOp.cat( classname, wBiDiBnode.class_switch);
-  }
-
-  if( classname == NULL )
-    classname = StrOp.dup("");
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Class %d name: [%s]", classid, classname );
-  return classname;
-}
-
 static void __addNode(iOBiDiB bidib, byte* msg) {
   iOBiDiBData data = Data(bidib);
 
@@ -698,7 +657,7 @@ static void __addNode(iOBiDiB bidib, byte* msg) {
     byte l_msg[32];
     int size = 0;
     int msgidx = 0;
-    char* classname = __getClass(msg[1]);
+    char* classname = bidibGetClassName(msg[1]);
 
     node = allocMem(sizeof(struct bidibnode));
     node->classid = msg[1];

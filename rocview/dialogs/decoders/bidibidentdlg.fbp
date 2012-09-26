@@ -460,10 +460,10 @@
                                 <property name="maximum_size"></property>
                                 <property name="maxlength">0</property>
                                 <property name="minimum_size"></property>
-                                <property name="name">m_Vendor</property>
+                                <property name="name">m_VendorName</property>
                                 <property name="permission">protected</property>
                                 <property name="pos"></property>
-                                <property name="size">120,-1</property>
+                                <property name="size">160,-1</property>
                                 <property name="style">wxTE_READONLY</property>
                                 <property name="subclass"></property>
                                 <property name="tooltip"></property>
@@ -523,7 +523,7 @@
                                 <property name="name">m_Class</property>
                                 <property name="permission">protected</property>
                                 <property name="pos"></property>
-                                <property name="size">200,-1</property>
+                                <property name="size">160,-1</property>
                                 <property name="style">wxTE_READONLY</property>
                                 <property name="subclass"></property>
                                 <property name="tooltip"></property>

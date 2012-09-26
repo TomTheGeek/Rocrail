@@ -25,8 +25,9 @@
 
 #include <wx/clipbrd.h>
 
-
+#include "rocutils/public/vendors.h"
 #include "rocrail/wrapper/public/Program.h"
+#include "rocdigs/impl/bidib/bidibutils.h"
 
 BidibIdentDlg::BidibIdentDlg( wxWindow* parent ):BidibIdentDlgGen( parent )
 {
@@ -36,6 +37,7 @@ BidibIdentDlg::BidibIdentDlg( wxWindow* parent ):BidibIdentDlgGen( parent )
 BidibIdentDlg::BidibIdentDlg( wxWindow* parent, iONode node ):BidibIdentDlgGen( parent )
 {
   this->node = node;
+  __initVendors();
   initLabels();
   initValues();
 }
@@ -69,9 +71,12 @@ void BidibIdentDlg::initLabels() {
 }
 
 
+
 void BidibIdentDlg::initValues() {
+  char* classname = bidibGetClassName(wProgram.getprod(node));
   m_Path->SetValue( wxString( wProgram.getfilename(node), wxConvUTF8) );
   m_UID->SetValue( wxString::Format(_T("%d"), wProgram.getmodid(node) ) );
-  m_Vendor->SetValue( wxString::Format(_T("%d"), wProgram.getmanu(node) ) );
-  m_Class->SetValue( wxString::Format(_T("0x%02X"), wProgram.getprod(node) ) );
+  m_VendorName->SetValue( wxString( m_Vendor[wProgram.getmanu(node)&0xFF],wxConvUTF8) );
+  m_Class->SetValue( wxString( classname, wxConvUTF8) );
+  StrOp.free(classname);
 }
