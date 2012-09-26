@@ -424,9 +424,9 @@ static Boolean __checkPlanHealth(iOModelData data) {
 
       if( StrOp.equals( wSwitch.name(), NodeOp.getName(item) ) ) {
         if( wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
-          if( StrOp.equals( wSwitch.gettype(item), wSwitch.crossing ) ) {
-            /* simple cross must not have an address */
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "INFO: simple cross \"%s\" has no address.", wItem.getid(item) );
+          if( StrOp.equals( wSwitch.gettype(item), wSwitch.crossing ) || StrOp.equals( wSwitch.gettype(item), wSwitch.ccrossing ) ) {
+            /* crossing and centered crossing do not need an address */
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "INFO: crossing \"%s\" has no address.", wItem.getid(item) );
           }
           else {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: switch %s has no address set", wItem.getid(item) );

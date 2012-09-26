@@ -64,6 +64,7 @@
     <const name="automat" vt="char" val="a" remark="Toggle auto tracelevel."/>
     <const name="http" vt="char" val="h" remark="Toggle http tracelevel."/>
     <const name="monitor" vt="char" val="o" remark="Toggle monitor tracelevel."/>
+    <const name="info" vt="char" val="n" remark="Toggle info tracelevel."/>
     <const name="help" vt="char" val="?" remark="Shows console commands."/>
     <const name="initfield" vt="char" val="i" remark="Field initialization: flip all switches twice"/>
     <const name="slots" vt="char" val="x" remark="Read all slots."/>
@@ -1197,6 +1198,7 @@
         <var name="activate" vt="bool" defval="true"/>
         <const name="unlocked" vt="string" val="-unlocked-" remark="Place holder for locid not set."/>
         <var name="locid" vt="string" defval="NULL" range="*" remark="The loc who locked this switch."/>
+        <var name="fbusefield" vt="bool" defval="false" remark="Use field events as feedback."/>
         <var name="fbset" vt="bool" defval="false" remark="Feedback sets the switch unconditional."/>
         <var name="fbR" vt="string" defval="NULL" range="*" remark="Optional feedback for turnout(Red) state."/>
         <var name="fbRinv" vt="bool" defval="false"/>

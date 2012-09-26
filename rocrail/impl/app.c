@@ -467,13 +467,14 @@ static void __conhelp() {
     TraceOp.println( " e - Emergency break" );
 
     TraceOp.println( " m - Shows memory(object) use" );
-    TraceOp.println( " d - Toggle debug tracelevel [%s]",   (TraceOp.getLevel( NULL ) & TRCLEVEL_DEBUG)?"ON":"OFF" );
-    TraceOp.println( " b - Toggle byte tracelevel [%s]",    (TraceOp.getLevel( NULL ) & TRCLEVEL_BYTE)?"ON":"OFF" );
-/*  TraceOp.println( " w - Toggle wrapper tracelevel" ); not defined/used */
-    TraceOp.println( " a - Toggle automat tracelevel [%s]", (TraceOp.getLevel( NULL ) & TRCLEVEL_USER1)?"ON":"OFF" );
-    TraceOp.println( " h - Toggle http tracelevel [%s]",    (TraceOp.getLevel( NULL ) & TRCLEVEL_USER2)?"ON":"OFF" );
-    TraceOp.println( " o - Toggle monitor tracelevel [%s]", (TraceOp.getLevel( NULL ) & TRCLEVEL_MONITOR)?"ON":"OFF" );
-    TraceOp.println( " r - Toggle memory tracelevel [%s]",  (TraceOp.getLevel( NULL ) & TRCLEVEL_MEMORY)?"ON":"OFF" );
+    TraceOp.println( " %c - Toggle info tracelevel [%s]",    wConCmd.info,    (TraceOp.getLevel( NULL ) & TRCLEVEL_INFO)?"ON":"OFF" );
+    TraceOp.println( " %c - Toggle debug tracelevel [%s]",   wConCmd.debug,   (TraceOp.getLevel( NULL ) & TRCLEVEL_DEBUG)?"ON":"OFF" );
+    TraceOp.println( " %c - Toggle byte tracelevel [%s]",    wConCmd.byte,    (TraceOp.getLevel( NULL ) & TRCLEVEL_BYTE)?"ON":"OFF" );
+/*  TraceOp.println( " %c - Toggle wrapper tracelevel" ); not defined/used */
+    TraceOp.println( " %c - Toggle automat tracelevel [%s]", wConCmd.automat, (TraceOp.getLevel( NULL ) & TRCLEVEL_USER1)?"ON":"OFF" );
+    TraceOp.println( " %c - Toggle http tracelevel [%s]",    wConCmd.http,    (TraceOp.getLevel( NULL ) & TRCLEVEL_USER2)?"ON":"OFF" );
+    TraceOp.println( " %c - Toggle monitor tracelevel [%s]", wConCmd.monitor, (TraceOp.getLevel( NULL ) & TRCLEVEL_MONITOR)?"ON":"OFF" );
+    TraceOp.println( " %c - Toggle memory tracelevel [%s]",  wConCmd.memtrc,  (TraceOp.getLevel( NULL ) & TRCLEVEL_MEMORY)?"ON":"OFF" );
 }
 
 
@@ -531,6 +532,10 @@ static __checkConsole( iOAppData data ) {
   else if( c == wConCmd.monitor ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Toggle monitor tracelevel." );
     TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) ^ TRCLEVEL_MONITOR );
+  }
+  else if( c == wConCmd.info ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Toggle info tracelevel." );
+    TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) ^ TRCLEVEL_INFO );
   }
   else if( c == wConCmd.quit ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutdown requested." );
