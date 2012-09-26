@@ -24,6 +24,7 @@
 #include "bidibidentdlg.h"
 
 #include <wx/clipbrd.h>
+#include <wx/dataobj.h>
 
 #include "rocutils/public/vendors.h"
 #include "rocrail/wrapper/public/Program.h"
