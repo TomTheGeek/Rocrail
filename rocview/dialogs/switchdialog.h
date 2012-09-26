@@ -117,6 +117,7 @@ class wxSpinCtrl;
 #define ID_COMBOBOX_SW_FB2R 10042
 #define wxID_STATIC_SW_FB2G 10043
 #define ID_COMBOBOX_SW_FB2G 10044
+#define ID_SW_WIRING_USEFIELD 10413
 #define ID_SPINCTRL 10333
 #define ID_PANEL_SWITCH_CONTROL 10370
 #define SYMBOL_SWITCHDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -301,6 +302,7 @@ public:
     wxStaticText* m_labFbOcc;
     wxComboBox* m_FbOcc;
     wxCheckBox* m_FbSet;
+    wxCheckBox* m_FbUseField;
     wxStaticBox* m_CTCBox;
     wxStaticText* m_labCTCMotor;
     wxStaticText* m_labCTCIID;

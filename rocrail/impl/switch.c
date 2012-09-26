@@ -433,10 +433,8 @@ static const char* __checkFbState( iOSwitch inst ) {
   return currentState;
 }
 
-
-static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount ) {
+static Boolean __isSet(obj inst, const char* strState) {
   iOSwitchData data = Data(inst);
-  const char* strState = __checkFbState( (iOSwitch)inst );
   Boolean isSet = True;
 
   if( !StrOp.equals( strState, wSwitch.getstate( data->props) ) ) {
@@ -450,6 +448,14 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident
         SwitchOp.getId( (iOSwitch)inst ), wSwitch.getstate( data->props), strState );
     }
   }
+  return isSet;
+}
+
+
+static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount ) {
+  iOSwitchData data = Data(inst);
+  const char* strState = __checkFbState( (iOSwitch)inst );
+  Boolean isSet = __isSet(inst, strState);
 
   {
     iONode nodeF = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
@@ -1015,6 +1021,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
 
     if( o->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel()) )
       wSwitch.setset( nodeF, SwitchOp.isSet(inst) );
+    else if( wSwitch.isfbusefield( o->props ) )
+      wSwitch.setset( nodeF, SwitchOp.isSet(inst) );
 
     if( wSwitch.getiid( o->props ) != NULL )
       wSwitch.setiid( nodeF, wSwitch.getiid( o->props ) );
@@ -1311,6 +1319,11 @@ static void _event( iOSwitch inst, iONode nodeC ) {
         wSwitch.setaddr2( nodeD, wSwitch.getaddr2( data->props ) );
         wSwitch.setport2( nodeD, wSwitch.getport2( data->props ) );
       }
+
+      if( wSwitch.isfbusefield(data->props ) ) {
+        wSwitch.setset( nodeD, __isSet((obj)inst, wSwitch.getstate( data->props)) );
+      }
+
       if( data->lockedId != NULL )
         wSwitch.setlocid( nodeD, data->lockedId );
       AppOp.broadcastEvent( nodeD );
