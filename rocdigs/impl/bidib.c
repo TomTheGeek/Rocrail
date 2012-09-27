@@ -927,6 +927,14 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "MSG_SYS_GET_SW_VERSION path=%s", pathKey );
     data->subWrite((obj)bidib, path, MSG_SYS_GET_SW_VERSION, NULL, 0);
+
+    /* Clean up node list. */
+    iONode child = wBiDiB.getbidibnode(data->bidibini);
+    while( child != NULL ) {
+      NodeOp.removeChild(data->bidibini, child);
+      child = wBiDiB.getbidibnode(data->bidibini);
+    }
+
     break;
   }
 
@@ -1207,12 +1215,6 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   if( data->bidibini == NULL ) {
     data->bidibini = NodeOp.inst( wBiDiB.name(), data->ini, ELEMENT_NODE);
     NodeOp.addChild( data->ini, data->bidibini);
-  }
-
-  iONode child = wBiDiB.getbidibnode(data->bidibini);
-  while( child != NULL ) {
-    NodeOp.removeChild(data->bidibini, child);
-    child = wBiDiB.getbidibnode(data->bidibini);
   }
 
   data->secAck    = wBiDiB.issecAck( data->bidibini );
