@@ -677,7 +677,7 @@ static Boolean _isSet( iOSwitch inst ) {
   iOSwitchData data  = Data(inst);
   Boolean      isSet = True;
 
-  if( data->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel()) ) {
+  if( data->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel()) || wSwitch.isfbusefield(data->props) ) {
     sw_state stateCmd = SW_STRAIGHT;
 
     if( StrOp.equals( wSwitch.straight, wSwitch.getstate( data->props ) ) )
@@ -689,6 +689,14 @@ static Boolean _isSet( iOSwitch inst ) {
     else if( StrOp.equals( wSwitch.right, wSwitch.getstate( data->props ) ) )
       stateCmd = SW_RIGHT;
 
+    if( data->hasFbSignal ) {
+      __checkFbState( inst );
+      if( stateCmd != data->fbstate )
+        isSet = False;
+    }
+    else {
+      isSet = __isSet((obj)inst, wSwitch.getstate( data->props));
+    }
     __checkFbState( inst );
     if( stateCmd != data->fbstate )
       isSet = False;
