@@ -52,6 +52,8 @@ class BidibIdentDlg : public BidibIdentDlgGen
 		void onOK( wxCommandEvent& event );
     void onTreeSelChanged( wxTreeEvent& event );
     void onSetup( wxCommandEvent& event );
+    void onBeginDrag( wxTreeEvent& event );
+    void onItemActivated( wxTreeEvent& event );
 	public:
 		/** Constructor */
 		BidibIdentDlg( wxWindow* parent );

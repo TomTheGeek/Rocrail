@@ -144,14 +144,14 @@
                                 <event name="OnRightUp"></event>
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
-                                <event name="OnTreeBeginDrag"></event>
+                                <event name="OnTreeBeginDrag">onBeginDrag</event>
                                 <event name="OnTreeBeginLabelEdit"></event>
                                 <event name="OnTreeBeginRDrag"></event>
                                 <event name="OnTreeDeleteItem"></event>
                                 <event name="OnTreeEndDrag"></event>
                                 <event name="OnTreeEndLabelEdit"></event>
                                 <event name="OnTreeGetInfo"></event>
-                                <event name="OnTreeItemActivated"></event>
+                                <event name="OnTreeItemActivated">onItemActivated</event>
                                 <event name="OnTreeItemCollapsed"></event>
                                 <event name="OnTreeItemCollapsing"></event>
                                 <event name="OnTreeItemExpanded"></event>

@@ -443,7 +443,10 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
 
   bool ok = false;
 
-  if( StrOp.equals( "moveto", dropcmd ) ) {
+  if( StrOp.equals( "bus", dropcmd ) ) {
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: set bus to %s", dropid );
+  }
+  else if( StrOp.equals( "moveto", dropcmd ) ) {
     if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ||
         (StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) && wTurntable.isembeddedblock(m_Props)) )
     {

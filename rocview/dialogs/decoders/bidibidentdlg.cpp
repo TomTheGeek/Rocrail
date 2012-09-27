@@ -32,6 +32,7 @@
 
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
+#include <wx/dnd.h>
 
 #include "rocs/public/trace.h"
 
@@ -196,14 +197,13 @@ void BidibIdentDlg::initLabels() {
     iONode** r2 = (iONode**)allocMem(128 * sizeof(iONode*));
     iONode*** r3 = (iONode***)allocMem(128 * sizeof(iONode**));
 
+    // ToDo: Maybe alloc first when needed?
     for(int x=0; x<128; x++) {
       r2[x] = (iONode*)allocMem(128 * sizeof(iONode));
       r3[x] = (iONode**)allocMem(128 * sizeof(iONode*));
       for(int y=0; y<128; y++)
         r3[x][y] = (iONode*)allocMem(128 * sizeof(iONode));
     }
-
-    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"r1=%d r2=%d r3=%d", r1, r2, r3 );
 
     for( int i = 1; i < ListOp.size(nodeList); i++ ) {
       iONode bidibnode = (iONode)ListOp.get( nodeList, i );
@@ -337,3 +337,21 @@ wxTreeItemId BidibIdentDlg::findTreeItem( const wxTreeItemId& root, const wxStri
 void BidibIdentDlg::onSetup( wxCommandEvent& event ) {
 
 }
+
+void BidibIdentDlg::onItemActivated( wxTreeEvent& event ) {
+}
+
+
+void BidibIdentDlg::onBeginDrag( wxTreeEvent& event ) {
+  wxString itemText = m_Tree->GetItemText(event.GetItem());
+  const char* uid = itemText.mb_str(wxConvUTF8);
+  iONode bidibnode = (iONode)MapOp.get( nodeMap, uid );
+
+  wxString my_text = _T("bus:")+wxString::Format(_T("%d"), wBiDiBnode.getuid(bidibnode) );
+  wxTextDataObject my_data(my_text);
+  wxDropSource dragSource( this );
+  dragSource.SetData( my_data );
+  wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+  //event.Allow();
+}
+
