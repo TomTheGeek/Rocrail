@@ -365,12 +365,8 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
     }
   }
 
-  if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ||
-      (StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) && wTurntable.isembeddedblock(m_Props)) )
-  {
-    m_BlockDrop = new BlockDrop(m_Props, this);
-    SetDropTarget(m_BlockDrop);
-  }
+  m_BlockDrop = new BlockDrop(m_Props, this);
+  SetDropTarget(m_BlockDrop);
 
   // define accelerator keys for some frequently used functions
 
@@ -445,6 +441,22 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
 
   if( StrOp.equals( "bus", dropcmd ) ) {
     TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: set bus to %s", dropid );
+
+    if( NodeOp.findAttr(m_Props, "addr") || NodeOp.findAttr(m_Props, "addr1") ) {
+      wItem.setbus(m_Props, atoi(dropid));
+
+      if( !wxGetApp().isStayOffline() ) {
+        /* Notify RocRail. */
+        iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+        wModelCmd.setcmd( cmd, wModelCmd.modify );
+        NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+        wxGetApp().sendToRocrail( cmd );
+        cmd->base.del(cmd);
+      }
+      else {
+        wxGetApp().setLocalModelModified(true);
+      }
+    }
   }
   else if( StrOp.equals( "moveto", dropcmd ) ) {
     if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ||
@@ -469,39 +481,37 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
 
     }
   }
-  else {
-    if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ||
+  else if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ||
         (StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) && wTurntable.isembeddedblock(m_Props)) )
-    {
-      iONode cmd = NULL;
+  {
+    iONode cmd = NULL;
 
-      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: go from %s to %s", fromid, wBlock.getid(m_Props) );
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: go from %s to %s", fromid, wBlock.getid(m_Props) );
 
-      if( wxGetApp().getFrame()->isAutoMode() ) {
-        /* flash the block */
-        const char* blockloc = wBlock.getlocid(m_Props);
+    if( wxGetApp().getFrame()->isAutoMode() ) {
+      /* flash the block */
+      const char* blockloc = wBlock.getlocid(m_Props);
 
-        /* go to block */
-        cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-        wLoc.setid( cmd, dropid );
-        wLoc.setcmd( cmd, wLoc.gotoblock );
-        wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
-        wxGetApp().sendToRocrail( cmd );
-        cmd->base.del(cmd);
+      /* go to block */
+      cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setid( cmd, dropid );
+      wLoc.setcmd( cmd, wLoc.gotoblock );
+      wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
 
-        /* loco go */
-        cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-        wLoc.setid( cmd, dropid );
-        wLoc.setcmd( cmd, wLoc.go );
-        wxGetApp().sendToRocrail( cmd );
-        cmd->base.del(cmd);
-      }
-      ok = true;
-
+      /* loco go */
+      cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setid( cmd, dropid );
+      wLoc.setcmd( cmd, wLoc.go );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
     }
-    else {
-      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&Dis not possible" );
-    }
+    ok = true;
+
+  }
+  else {
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&Dis not possible" );
   }
 
   m_Parent->locoDropped();
