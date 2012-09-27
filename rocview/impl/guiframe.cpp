@@ -304,6 +304,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Undo           , RocGuiFrame::OnUndo)
     EVT_MENU( ME_OpenDecoder    , RocGuiFrame::OnOpenDecoder)
     EVT_MENU( ME_CBusNode       , RocGuiFrame::OnCBusNode)
+    EVT_MENU( ME_BiDiB          , RocGuiFrame::OnBiDiB)
     EVT_MENU( ME_Zoom25         , RocGuiFrame::OnZoom25)
     EVT_MENU( ME_Zoom50         , RocGuiFrame::OnZoom50)
     EVT_MENU( ME_Zoom75         , RocGuiFrame::OnZoom75)
@@ -1712,6 +1713,7 @@ void RocGuiFrame::initFrame() {
   //menuCBus->Append( ME_CBusNode, _T("CBUS Node"), _T("CBUS Node") );
   //menuProgramming->Append( -1, _T("CBUS"), menuCBus );
   menuProgramming->Append( ME_CBusNode, _T("CBUS Node"), _T("CBUS Node") );
+  menuProgramming->Append( ME_BiDiB, _T("BiDiB"), _T("BiDiB") );
 
   // the "About" item should be in the help menu
   wxMenu *menuHelp = new wxMenu();
@@ -3218,6 +3220,13 @@ void RocGuiFrame::OnCBusNode( wxCommandEvent& event ) {
   m_CBusNodeDlg->ShowModal();
   m_CBusNodeDlg->Destroy();
   m_CBusNodeDlg = NULL;
+}
+
+void RocGuiFrame::OnBiDiB( wxCommandEvent& event ) {
+  m_BidibIdentDlg = new BidibIdentDlg(this);
+  m_BidibIdentDlg->ShowModal();
+  m_BidibIdentDlg->Destroy();
+  m_BidibIdentDlg = NULL;
 }
 
 void RocGuiFrame::setOnline( bool online ) {

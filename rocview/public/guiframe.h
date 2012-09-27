@@ -275,6 +275,7 @@ public:
   void OnOpenDecoder(wxCommandEvent& event);
   void OnDTOpSw(wxCommandEvent& event);
   void OnCBusNode(wxCommandEvent& event);
+  void OnBiDiB(wxCommandEvent& event);
 
   void OnButton(wxCommandEvent& event);
   void OnSlider(wxScrollEvent& event);
@@ -559,6 +560,7 @@ enum
     ME_MGV141,
     ME_OpenDecoder,
     ME_CBusNode,
+    ME_BiDiB,
     ME_DTOpSw,
     ME_Uhlenbrock,
     ME_EditBoosters,
