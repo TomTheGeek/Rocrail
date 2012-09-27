@@ -32,7 +32,8 @@
 
 BidibIdentDlg::BidibIdentDlg( wxWindow* parent ):BidibIdentDlgGen( parent )
 {
-
+  __initVendors();
+  initLabels();
 }
 
 BidibIdentDlg::BidibIdentDlg( wxWindow* parent, iONode node ):BidibIdentDlgGen( parent )
@@ -68,7 +69,8 @@ void BidibIdentDlg::event(iONode node) {
 
 
 void BidibIdentDlg::initLabels() {
-
+  wxTreeItemId root  = m_Tree->AddRoot(wxT("bridge"));
+  wxTreeItemId child = m_Tree->AppendItem( root, wxT("switch"));
 }
 
 
