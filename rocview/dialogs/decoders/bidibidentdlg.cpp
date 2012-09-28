@@ -473,3 +473,9 @@ void BidibIdentDlg::onServoSpeed( wxScrollEvent& event ) {
 void BidibIdentDlg::onServoPort( wxSpinEvent& event ) {
 }
 
+void BidibIdentDlg::onServoLeftTest( wxCommandEvent& event ) {
+}
+
+void BidibIdentDlg::onServoRightTest( wxCommandEvent& event ) {
+}
+
