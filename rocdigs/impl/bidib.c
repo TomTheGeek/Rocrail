@@ -132,66 +132,6 @@ static void __inform( iOBiDiB inst ) {
 }
 
 
-/*
- */
-static const char* __getFeatureName(int feature) {
-
-  /* Occupancy detector */
-  if( feature == FEATURE_BM_SIZE ) return "number of sensors";
-  if( feature == FEATURE_BM_ON ) return "activated sensors events";
-  if( feature == FEATURE_BM_SECACK_AVAILABLE ) return "secure-ACK available";
-  if( feature == FEATURE_BM_SECACK_ON ) return "secure-ACK interval";
-  if( feature == FEATURE_BM_CURMEAS_AVAILABLE ) return "current measurement available";
-  if( feature == FEATURE_BM_CURMEAS_INTERVAL ) return "current measurement interval";
-  if( feature == FEATURE_BM_DC_MEAS_AVAILABLE ) return "replacement detection available";
-  if( feature == FEATURE_BM_DC_MEAS_ON ) return "replacement detection enabled";
-  if( feature == FEATURE_BM_ADDR_DETECT_AVAILABLE ) return "address detection available";
-  if( feature == FEATURE_BM_ADDR_DETECT_ON ) return "address detection enabled";
-  if( feature == FEATURE_BM_ADDR_AND_DIR ) return "direction available";
-  if( feature == FEATURE_BM_ISTSPEED_AVAILABLE ) return "dcc-speed available";
-  if( feature == FEATURE_BM_ISTSPEED_ON ) return "dcc-speed enabled";
-  if( feature == FEATURE_BM_CV_AVAILABLE ) return "cv-messages available";
-  if( feature == FEATURE_BM_CV_ON ) return "cv-messages enabled";
-
-  /* Booster */
-  if( feature == FEATURE_BST_VOLT_ADJUSTABLE ) return "adjustable output voltage";
-  if( feature == FEATURE_BST_VOLT ) return "output voltage value in V";
-  if( feature == FEATURE_BST_CUTOUT_AVAIALABLE ) return "cutout available";
-  if( feature == FEATURE_BST_CUTOUT_ON ) return "cutout enabled";
-  if( feature == FEATURE_BST_TURNOFF_TIME ) return "turnoff time";
-  if( feature == FEATURE_BST_INRUSH_TURNOFF_TIME ) return "inrush turnoff time";
-  if( feature == FEATURE_BST_AMPERE_ADJUSTABLE ) return "ampere adjustable";
-  if( feature == FEATURE_BST_AMPERE ) return "ampere";
-
-  /* Control */
-  if( feature == FEATURE_CTRL_INPUT_COUNT ) return "input count";
-  if( feature == FEATURE_CTRL_INPUT_NOTIFY ) return "input notify";
-  if( feature == FEATURE_CTRL_SPORT_COUNT ) return "short port count";
-  if( feature == FEATURE_CTRL_LPORT_COUNT ) return "long port count";
-  if( feature == FEATURE_CTRL_SERVO_COUNT ) return "servo count";
-  if( feature == FEATURE_CTRL_SOUND_COUNT ) return "sound count";
-  if( feature == FEATURE_CTRL_MOTOR_COUNT ) return "motor count";
-  if( feature == FEATURE_CTRL_ANALOG_COUNT ) return "analog count";
-  if( feature == FEATURE_CTRL_MAC_LEVEL ) return "MAC level";
-  if( feature == FEATURE_CTRL_MAC_SAVE ) return "MAC save";
-  if( feature == FEATURE_CTRL_MAC_COUNT ) return "MAC count";
-  if( feature == FEATURE_CTRL_MAC_SIZE ) return "MAC size";
-  if( feature == FEATURE_CTRL_MAC_START_MAN ) return "MAC start manuel";
-  if( feature == FEATURE_CTRL_MAC_START_DCC ) return "MAC start DCC";
-
-  /* DCC Gen */
-  if( feature == FEATURE_GEN_SPYMODE ) return "DCC spymode";
-  if( feature == FEATURE_GEN_WATCHDOG ) return "DCC watchdog";
-  if( feature == FEATURE_GEN_DRIVE_ACK ) return "DCC drive ack";
-  if( feature == FEATURE_GEN_SWITCH_ACK ) return "DCC switch ack";
-  if( feature == FEATURE_GEN_LOK_DB_SIZE ) return "DCC loco DB size";
-  if( feature == FEATURE_GEN_LOK_DB_STRING ) return "DCC loco DB string";
-  if( feature == FEATURE_GEN_SERVICE_MODES ) return "DCC service modes";
-
-  return "*** unknown feature ***";
-}
-
-
 static void __SoD( iOBiDiB inst ) {
   iOBiDiBData data = Data(inst);
   byte msgdata[127];
@@ -402,7 +342,9 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_SET, msgdata, 2);
         }
         else if( wProgram.getcmd( node ) == wProgram.evgetall ) {
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get all features from module %s...", uidKey );
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+              "get all features from module %d.%d.%d.%d %s...",
+              bidibnode->path[0], bidibnode->path[1], bidibnode->path[2], bidibnode->path[3], uidKey );
           data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_GETALL, NULL, 0);
         }
       }
@@ -630,10 +572,10 @@ static void __seqAck(iOBiDiB bidib, byte* msg, int size, byte* pdata, int datasi
 }
 
 
-static void __handleError(iOBiDiB bidib, byte* msg, int size) {
+static void __handleError(iOBiDiB bidib, byte* pdata) {
   iOBiDiBData data = Data(bidib);
 
-  switch( msg[4] ) {
+  switch( pdata[0] ) {
   case BIDIB_ERR_TXT: // Txt
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error message" );
     break;
@@ -651,10 +593,10 @@ static void __handleError(iOBiDiB bidib, byte* msg, int size) {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Parameter error" );
     break;
   case BIDIB_ERR_BUS: // Bus fault
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Bus fault: %d", msg[5] );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Bus fault: %d", pdata[1] );
     break;
   case BIDIB_ERR_HW: // Hardware error
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Hardware error: %d", msg[5] );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Hardware error: %d", pdata[1] );
     break;
   }
 }
@@ -759,7 +701,7 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
       int feature = pdata[0];
       int value   = pdata[1];
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-          "MSG_FEATURE, uid=%08X feature=(%d) %s value=%d", bidibnode->uid, feature, __getFeatureName(feature), value );
+          "MSG_FEATURE, uid=%08X feature=(%d) %s value=%d", bidibnode->uid, feature, bidibGetFeatureName(feature), value );
       l_msg[0] = 3; // length
       l_msg[1] = 0; // address
       l_msg[3] = MSG_FEATURE_GETNEXT; //data
@@ -1116,7 +1058,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // MSG_SYS_ERROR
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
         "MSG_SYS_ERROR, path=%s seq=%d error=%d", pathKey, Seq, pdata[0] );
-    __handleError(bidib, msg, size);
+    __handleError(bidib, pdata);
     break;
   }
 

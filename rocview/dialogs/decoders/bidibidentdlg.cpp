@@ -100,6 +100,8 @@ BidibIdentDlg::~BidibIdentDlg() {
   ListOp.base.del(nodeList);
   MapOp.base.del(nodeMap);
   MapOp.base.del(nodePathMap);
+  if( this->node != NULL )
+    NodeOp.base.del(this->node);
 }
 
 
@@ -119,10 +121,17 @@ void BidibIdentDlg::onOK( wxCommandEvent& event ) {
   EndModal( wxID_OK );
 }
 
-
 void BidibIdentDlg::event(iONode node) {
-  this->node = node;
-  initValues();
+  if(  wProgram.getcmd( node ) == wProgram.datarsp ) {
+    handleFeature(node);
+    NodeOp.base.del(node);
+  }
+  else {
+    if( this->node != NULL )
+      NodeOp.base.del(this->node);
+    this->node = node;
+    initValues();
+  }
 }
 
 
@@ -161,12 +170,15 @@ void BidibIdentDlg::initLabels() {
   nodeMap  = MapOp.inst();
   nodePathMap  = MapOp.inst();
   nodeList = ListOp.inst();
+  bidibnode = NULL;
+
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
     iONode digint = wRocRail.getdigint(l_RocrailIni);
     if( digint != NULL ) {
       iONode bidib = wDigInt.getbidib(digint);
       if( bidib != NULL ) {
+        m_IID->SetValue( wxString( wDigInt.getiid(digint), wxConvUTF8) );
         iONode bidibnode = wBiDiB.getbidibnode(bidib);
         while( bidibnode != NULL ) {
           ListOp.add(nodeList, (obj)bidibnode);
@@ -281,7 +293,7 @@ void BidibIdentDlg::initLabels() {
 void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
   wxString itemText = m_Tree->GetItemText(event.GetItem());
   const char* uid = itemText.mb_str(wxConvUTF8);
-  iONode bidibnode = (iONode)MapOp.get( nodeMap, uid );
+  bidibnode = (iONode)MapOp.get( nodeMap, uid );
   TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"tree selection: %s", wBiDiBnode.getpath(bidibnode) );
 
   m_Path->SetValue( wxString( wBiDiBnode.getpath(bidibnode), wxConvUTF8) );
@@ -384,10 +396,46 @@ void BidibIdentDlg::onFeatureSelect( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::onFeaturesGet( wxCommandEvent& event ) {
+  // Get all features.
+  m_FeatureList->Clear();
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.evgetall );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
 
 
 void BidibIdentDlg::onFeatureSet( wxCommandEvent& event ) {
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.set );
+    wProgram.setcv( cmd, m_Feature->GetValue() );
+    wProgram.setvalue( cmd, m_FeatureValue->GetValue() );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
 
+
+void BidibIdentDlg::handleFeature(iONode node) {
+  if( wProgram.getcmd( node) == wProgram.datarsp ) {
+    char uidKey[32];
+    StrOp.fmtb( uidKey, "%08X", wProgram.getmodid(node) );
+    iONode l_bidibnode = (iONode)MapOp.get( nodeMap, uidKey );
+    if( l_bidibnode != NULL ) {
+      int feature = wProgram.getcv(node);
+      int value   = wProgram.getvalue(node);
+      const char* featureName = bidibGetFeatureName(feature);
+      m_FeatureList->Append( wxString(featureName,wxConvUTF8));
+    }
+  }
+}
 

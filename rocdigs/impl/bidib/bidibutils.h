@@ -30,6 +30,7 @@
 #endif
 
 char* bidibGetClassName(int classid );
+const char* bidibGetFeatureName(int feature);
 
 /* C++ */
 #ifdef __cplusplus
