@@ -49,6 +49,8 @@ class BidibIdentDlg : public BidibIdentDlgGen
   int getLevel(const char* path );
   wxTreeItemId addTreeChild( const wxTreeItemId& root, iONode bidibnode);
   void handleFeature(iONode node);
+  void clearFeatureList();
+
 
   protected:
 		// Handlers for BidibIdentDlgGen events.

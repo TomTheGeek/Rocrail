@@ -1294,7 +1294,7 @@
     <typedef def="Boolean(*sublib_connect)(obj)"/>
     <typedef def="void(*sublib_disconnect)(obj)"/>
     <typedef def="int(*sublib_read)(obj,byte*)"/>
-    <typedef def="Boolean(*sublib_write)(obj,byte*,byte,byte*,int)"/>
+    <typedef def="Boolean(*sublib_write)(obj,byte*,byte,byte*,int,int)"/>
     <typedef def="Boolean(*sublib_available)(obj)"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
@@ -1305,7 +1305,8 @@
       <var name="path[4]" vt="byte" remark=""/>
       <var name="classid" vt="int"/>
       <var name="vendorid" vt="int"/>
-    </struct>
+      <var name="seq" vt="int"/>
+      </struct>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="bidibini" vt="iONode"/>

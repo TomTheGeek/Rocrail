@@ -102,6 +102,7 @@ BidibIdentDlg::~BidibIdentDlg() {
   MapOp.base.del(nodePathMap);
   if( this->node != NULL )
     NodeOp.base.del(this->node);
+  clearFeatureList();
 }
 
 
@@ -392,12 +393,30 @@ void BidibIdentDlg::onItemRightClick( wxTreeEvent& event ) {
 
 
 void BidibIdentDlg::onFeatureSelect( wxCommandEvent& event ) {
+  int sel = m_FeatureList->GetSelection();
+  if( sel == wxNOT_FOUND )
+    return;
+  iONode node = (iONode)m_FeatureList->GetClientData(sel);
+  if( node != NULL ) {
+    m_Feature->SetValue(wProgram.getcv(node));
+    m_FeatureValue->SetValue(wProgram.getvalue(node));
+  }
+}
+
+
+void BidibIdentDlg::clearFeatureList() {
+  while( m_FeatureList->GetCount() > 0 ) {
+    iONode node = (iONode)m_FeatureList->GetClientData(0);
+    NodeOp.base.del(node);
+    m_FeatureList->Delete(0);
+  }
 }
 
 
 void BidibIdentDlg::onFeaturesGet( wxCommandEvent& event ) {
   // Get all features.
-  m_FeatureList->Clear();
+  clearFeatureList();
+
   if( bidibnode != NULL ) {
     iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
@@ -431,10 +450,11 @@ void BidibIdentDlg::handleFeature(iONode node) {
     StrOp.fmtb( uidKey, "%08X", wProgram.getmodid(node) );
     iONode l_bidibnode = (iONode)MapOp.get( nodeMap, uidKey );
     if( l_bidibnode != NULL ) {
+      iONode program = (iONode)NodeOp.base.clone(node);
       int feature = wProgram.getcv(node);
       int value   = wProgram.getvalue(node);
       const char* featureName = bidibGetFeatureName(feature);
-      m_FeatureList->Append( wxString(featureName,wxConvUTF8));
+      m_FeatureList->Append( wxString(featureName,wxConvUTF8), program);
     }
   }
 }

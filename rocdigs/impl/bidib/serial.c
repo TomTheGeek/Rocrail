@@ -297,7 +297,7 @@ int serialRead ( obj inst, unsigned char *msg ) {
   return 0;
 }
 
-Boolean serialWrite( obj inst, unsigned char *path, unsigned char code, unsigned char* pdata, int datalen ) {
+Boolean serialWrite( obj inst, unsigned char *path, unsigned char code, unsigned char* pdata, int datalen, int seq ) {
   iOBiDiBData data = Data(inst);
   int   size = 0;
   byte  msg[127];
@@ -317,7 +317,7 @@ Boolean serialWrite( obj inst, unsigned char *path, unsigned char code, unsigned
 
     msgidx += 2; // point to sequence offset
 
-    msg[msgidx] = data->downSeq++; // sequence number 1...255
+    msg[msgidx] = seq;
     msgidx++;
 
     msg[msgidx] = code;
