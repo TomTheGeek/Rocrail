@@ -450,8 +450,8 @@ byte* programFLiM(obj inst, iONode node) {
         "FLiM: set node %d in boot mode.", wProgram.getdecaddr(node) );
     byte* frame = allocMem(32);
     cmd[0] = OPC_BOOT;
-    cmd[1] = wProgram.getval2(node) / 256; // nn
-    cmd[2] = wProgram.getval2(node) % 256;
+    cmd[1] = wProgram.getdecaddr(node) / 256; // nn
+    cmd[2] = wProgram.getdecaddr(node) % 256;
     makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid, False );
     return frame;
   }

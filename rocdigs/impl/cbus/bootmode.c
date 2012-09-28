@@ -74,9 +74,9 @@
 #define CONFIG_BLOCK 1
 #define EEPROM_BLOCK 2
 
-#define PROGRAM_SIZE 16384
-#define CONFIG_SIZE 32
-#define EEPROM_SIZE 512
+#define PROGRAM_SIZE 0xC000
+#define CONFIG_SIZE 0x20
+#define EEPROM_SIZE 0x1000
 
 struct BootData {
   int block;
@@ -140,10 +140,6 @@ static Boolean evaluateLine(const char* hexline, struct BootData* bootData) {
     for( i = addr; i < (addr+cnt); i++ ) {
       bootData->data[bootData->block][i*2] = hexline[9+(i-addr)*2];
       bootData->data[bootData->block][i*2+1] = hexline[9+(i-addr)*2+1];
-
-      MemOp.copy( s, hexline+9+(i-addr)*2, 2);
-      int val = (int)strtol( s, NULL, 16);
-      bootData->checksum += val;
     }
     bootData->count[bootData->block] = addr + cnt;
   }
@@ -163,30 +159,41 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
   /* Program block */
 
   byte* frame = allocMem(32);
-  StrOp.copy( frame+1, ":X00080004N000800000D020000;" );
+
+  // offset 0x200 for pic program
+  StrOp.copy( frame+1, ":X00080004N000200000D020000;" );
+
   frame[0] = StrOp.len(frame+1);
   ThreadOp.post(data->writer, (obj)frame);
 
   int i = 0;
   int nrlines = bootData->count[PROGRAM_BLOCK] / 8;
   if(bootData->count[PROGRAM_BLOCK] % 8 > 0 ) {
-    /* Checksum correction is needed for the padding 0xFF bytes. */
-    int padding = 8 - (bootData->count[PROGRAM_BLOCK] % 8);
-    bootData->checksum += padding * 0xFF;
     nrlines++;
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending %d PROGRAM blocks...", nrlines );
-  for( i = 0; i < nrlines; i++ ) {
-    if( i % 10 == 0 )
+
+  // skip first 0x200 bytes, bootloader code is there
+  for( i = 64; i < nrlines; i++ ) {
+    int j;
+
+    if( i % 16 == 0 )
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending PROGRAM block[%d of %d] (%d)", i+1, nrlines, i*8*2 );
-    ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
     frame = allocMem(32);
     StrOp.copy( frame+1, ":X00080005N");
     MemOp.copy( frame+1+11, &bootData->data[PROGRAM_BLOCK][i*8*2], 16 );
     StrOp.copy( frame+1+11+16, ";");
     frame[0] = StrOp.len(frame+1);
+    ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
     ThreadOp.post(data->writer, (obj)frame);
+    // compute checksum
+    for ( j = 0; j < 8; j++ ) {
+      char s[3] = {0,0,0};
+      MemOp.copy( s, &bootData->data[PROGRAM_BLOCK][(i*8*2)+(j*2)], 2);
+      int val = (int)strtol( s, NULL, 16);
+      bootData->checksum += val;
+    }
   }
 
   /* Config block */
@@ -198,24 +205,26 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
     ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
     ThreadOp.post(data->writer, (obj)frame);
 
-    if(bootData->count[CONFIG_BLOCK] < 32 ) {
-      /* Checksum correction is needed for the padding 0xFF bytes. */
-      int padding = 32 - bootData->count[CONFIG_BLOCK];
-      bootData->checksum += padding * 0xFF;
-    }
     nrlines = 32 / 8;
 
     for( i = 0; i < nrlines; i++ ) {
+      int j;
+
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sending CONFIG block[%d of %d]", i+1, nrlines );
-      ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
       frame = allocMem(32);
       StrOp.copy( frame+1, ":X00080005N");
       MemOp.copy( frame+1+11, &bootData->data[CONFIG_BLOCK][i*8*2], 16 );
       StrOp.copy( frame+1+11+16, ";");
       frame[0] = StrOp.len(frame+1);
+      ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
       ThreadOp.post(data->writer, (obj)frame);
+      for ( j = 0; j < 8; j++ ) {
+        char s[3] = {0,0,0};
+        MemOp.copy( s, &bootData->data[CONFIG_BLOCK][(i*8*2)+(j*2)], 2);
+        int val = (int)strtol( s, NULL, 16);
+        bootData->checksum += val;
+      }
     }
-
   }
 
   /* EEProm block */
@@ -227,39 +236,42 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr) {
     ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
     ThreadOp.post(data->writer, (obj)frame);
 
-    if(bootData->count[EEPROM_BLOCK] < 512 ) {
-      /* Checksum correction is needed for the padding 0xFF bytes. */
-      int padding = 512 - bootData->count[CONFIG_BLOCK];
-      bootData->checksum += padding * 0xFF;
-    }
     nrlines = 512 / 8;
 
     for( i = 0; i < nrlines; i++ ) {
+      int j;
+
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending EEPROM block[%d of %d]", i+1, nrlines );
-      ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
       frame = allocMem(32);
       StrOp.copy( frame+1, ":X00080005N");
       MemOp.copy( frame+1+11, &bootData->data[EEPROM_BLOCK][i*8*2], 16 );
       StrOp.copy( frame+1+11+16, ";");
       frame[0] = StrOp.len(frame+1);
+      ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
       ThreadOp.post(data->writer, (obj)frame);
+      for ( j = 0; j < 8; j++ ) {
+        char s[3] = {0,0,0};
+        MemOp.copy( s, &bootData->data[EEPROM_BLOCK][(i*8*2)+(j*2)], 2);
+        int val = (int)strtol( s, NULL, 16);
+        bootData->checksum += val;
+      }
     }
   }
 
   /* Checksum. */
   int checksum = 65536 - (bootData->checksum & 0xFFFF);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checksum data bytes: 0x%04X", checksum );
-  ThreadOp.sleep(50);
   frame = allocMem(32);
   StrOp.fmtb( frame+1, ":X00080004N000000000D03%02X%02X;", checksum & 0xFF, (checksum >> 8) & 0xFF );
   frame[0] = StrOp.len(frame+1);
+  ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
   ThreadOp.post(data->writer, (obj)frame);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset" );
-  ThreadOp.sleep(50);
   frame = allocMem(32);
   StrOp.copy( frame+1, ":X00080004N000000000D010000;" );
   frame[0] = StrOp.len(frame+1);
+  ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
   ThreadOp.post(data->writer, (obj)frame);
 
   data->bootmode = False;
