@@ -64,6 +64,10 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onFeatureSelect( wxCommandEvent& event );
     void onFeaturesGet( wxCommandEvent& event );
     void onFeatureSet( wxCommandEvent& event );
+    void onServoLeft( wxScrollEvent& event );
+    void onServoRight( wxScrollEvent& event );
+    void onServoSpeed( wxScrollEvent& event );
+    void onServoPort( wxSpinEvent& event );
 	public:
 		/** Constructor */
 		BidibIdentDlg( wxWindow* parent );

@@ -459,3 +459,17 @@ void BidibIdentDlg::handleFeature(iONode node) {
   }
 }
 
+
+
+void BidibIdentDlg::onServoLeft( wxScrollEvent& event ) {
+}
+
+void BidibIdentDlg::onServoRight( wxScrollEvent& event ) {
+}
+
+void BidibIdentDlg::onServoSpeed( wxScrollEvent& event ) {
+}
+
+void BidibIdentDlg::onServoPort( wxSpinEvent& event ) {
+}
+
