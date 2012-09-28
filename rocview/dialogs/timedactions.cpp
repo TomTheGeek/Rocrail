@@ -116,7 +116,7 @@ TimedActions::TimedActions( wxWindow* parent )
     initOutputList();
     initIndex();
 
-	GetSizer()->Fit(this);
+    GetSizer()->Fit(this);
     GetSizer()->SetSizeHints(this);
     GetSizer()->Layout();
 
@@ -565,7 +565,7 @@ void TimedActions::CreateControls()
     m_labTimer = new wxStaticText( m_DefinitionPanel, wxID_ANY, _("Timer"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer14->Add(m_labTimer, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_Timer = new wxSpinCtrl( m_DefinitionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 0 );
+    m_Timer = new wxSpinCtrl( m_DefinitionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 300000, 0 );  /*reb changed max from 100000 to 300000*/
     itemFlexGridSizer14->Add(m_Timer, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labDescription = new wxStaticText( m_DefinitionPanel, wxID_ANY, _("Description"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -889,6 +889,7 @@ void TimedActions::initCommands()
     case 8: // function
       m_Command->Append(wxString( wAction.fun_on, wxConvUTF8));
       m_Command->Append(wxString( wAction.fun_off, wxConvUTF8));
+      m_Command->Append(wxString( wOutput.flip, wxConvUTF8));
       break;
     case 9: // turntable
       m_Command->Append(wxString( wAction.tt_goto, wxConvUTF8));
