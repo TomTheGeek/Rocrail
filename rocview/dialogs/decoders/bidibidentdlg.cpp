@@ -99,6 +99,7 @@ BidibIdentDlg::BidibIdentDlg( wxWindow* parent, iONode node ):BidibIdentDlgGen( 
 BidibIdentDlg::~BidibIdentDlg() {
   ListOp.base.del(nodeList);
   MapOp.base.del(nodeMap);
+  MapOp.base.del(nodePathMap);
 }
 
 
@@ -151,12 +152,14 @@ wxTreeItemId BidibIdentDlg::addTreeChild( const wxTreeItemId& root, iONode bidib
   StrOp.fmtb(key, "%08X", wBiDiBnode.getuid(bidibnode) );
   wxTreeItemId item = m_Tree->AppendItem( root, wxString( key, wxConvUTF8));
   MapOp.put( nodeMap, key, (obj)bidibnode);
+  MapOp.put( nodePathMap, wBiDiBnode.getpath(bidibnode), (obj)bidibnode);
   return item;
 }
 
 
 void BidibIdentDlg::initLabels() {
   nodeMap  = MapOp.inst();
+  nodePathMap  = MapOp.inst();
   nodeList = ListOp.inst();
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -178,8 +181,6 @@ void BidibIdentDlg::initLabels() {
   imgList->Add(wxIcon(pcb_xpm));
   m_Tree->AssignImageList(imgList);
   */
-  m_Setup->Enable(false);
-
   if( ListOp.size(nodeList) > 0 ) {
     ListOp.sort(nodeList, &__sortPath);
 
@@ -288,6 +289,8 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
   m_UID->SetValue( wxString::Format(_T("%d"), wBiDiBnode.getuid(bidibnode) ) );
   m_VendorName->SetValue( wxString( m_Vendor[wBiDiBnode.getvendor(bidibnode)&0xFF],wxConvUTF8) );
   m_Class->SetValue( wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
+
+  SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(bidibnode) ) + wxT(" ") + wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
 }
 
 
@@ -304,6 +307,7 @@ void BidibIdentDlg::initValues() {
   wxTreeItemId item = findTreeItem( m_Tree->GetRootItem(), wxString( key, wxConvUTF8));
   if( item.IsOk() ) {
     m_Tree->SelectItem(item);
+    m_Tree->ScrollTo(item);
   }
 }
 
@@ -334,10 +338,6 @@ wxTreeItemId BidibIdentDlg::findTreeItem( const wxTreeItemId& root, const wxStri
 }
 
 
-void BidibIdentDlg::onSetup( wxCommandEvent& event ) {
-
-}
-
 void BidibIdentDlg::onItemActivated( wxTreeEvent& event ) {
 }
 
@@ -354,4 +354,40 @@ void BidibIdentDlg::onBeginDrag( wxTreeEvent& event ) {
   wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
   //event.Allow();
 }
+
+
+void BidibIdentDlg::onMenu( wxCommandEvent& event ) {
+  int path = event.GetId();
+  char pathStr[32] = {'\0'};
+  StrOp.fmtb( pathStr, "%d.%d.%d.%d", path/1000, (path%1000)/100, (path%100)/10, (path%10) );
+  TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999, "%d [%s]", path, pathStr );
+  iONode bidibnode = (iONode)MapOp.get( nodePathMap, pathStr );
+  wxLaunchDefaultBrowser(wxT("http://www.opendcc.de/bidib/overview/overview.html"), wxBROWSER_NEW_WINDOW );
+}
+
+void BidibIdentDlg::onItemRightClick( wxTreeEvent& event ) {
+  wxString itemText = m_Tree->GetItemText(event.GetItem());
+  const char* uid = itemText.mb_str(wxConvUTF8);
+  iONode bidibnode = (iONode)MapOp.get( nodeMap, uid );
+  const char* pathStr = wBiDiBnode.getpath(bidibnode);
+  int path = (pathStr[0]-'0')*1000 + (pathStr[2]-'0')*100 + (pathStr[4]-'0')*10 + (pathStr[6]-'0');
+  wxMenu menu( wxString(wBiDiBnode.getpath( bidibnode ),wxConvUTF8) );
+  menu.Append( path, wxGetApp().getMenu("info") );
+  menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BidibIdentDlg::onMenu ), NULL, this );
+
+  PopupMenu(&menu );
+}
+
+
+void BidibIdentDlg::onFeatureSelect( wxCommandEvent& event ) {
+}
+
+
+void BidibIdentDlg::onFeaturesGet( wxCommandEvent& event ) {
+}
+
+
+void BidibIdentDlg::onFeatureSet( wxCommandEvent& event ) {
+}
+
 

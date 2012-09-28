@@ -43,6 +43,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
   iONode node;
   iOList nodeList;
   iOMap nodeMap;
+  iOMap nodePathMap;
   wxTreeItemId findTreeItem( const wxTreeItemId& root, const wxString& text);
   int getLevel(const char* path );
   wxTreeItemId addTreeChild( const wxTreeItemId& root, iONode bidibnode);
@@ -51,9 +52,13 @@ class BidibIdentDlg : public BidibIdentDlgGen
 		void onCancel( wxCommandEvent& event );
 		void onOK( wxCommandEvent& event );
     void onTreeSelChanged( wxTreeEvent& event );
-    void onSetup( wxCommandEvent& event );
     void onBeginDrag( wxTreeEvent& event );
     void onItemActivated( wxTreeEvent& event );
+    void onItemRightClick( wxTreeEvent& event );
+    void onMenu( wxCommandEvent& event );
+    void onFeatureSelect( wxCommandEvent& event );
+    void onFeaturesGet( wxCommandEvent& event );
+    void onFeatureSet( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		BidibIdentDlg( wxWindow* parent );
