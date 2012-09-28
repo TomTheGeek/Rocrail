@@ -384,24 +384,49 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
-    if( wProgram.getcmd( node ) == wProgram.get ) {
-      data->cv = wProgram.getcv( node );
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d...", data->cv );
-      if( data->defaultprog != NULL ) {
-        msgdata[0] = data->cv % 256;
-        msgdata[1] = data->cv / 256;
-        data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_READ, msgdata, 2);
+    if( wProgram.getlntype(node) == wProgram.lntype_bidib ) {
+      byte msgdata[32];
+      char uidKey[32];
+      iOBiDiBNode bidibnode = NULL;
+      StrOp.fmtb( uidKey, "0x%08X", wProgram.getmodid(node) );
+      bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
+
+      if( bidibnode != NULL ) {
+        if( wProgram.getcmd( node ) == wProgram.get ) {
+          msgdata[0] = wProgram.getcv(node);
+          data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_SET, msgdata, 1);
+        }
+        else if( wProgram.getcmd( node ) == wProgram.set ) {
+          msgdata[0] = wProgram.getcv(node);
+          msgdata[1] = wProgram.getvalue(node);
+          data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_SET, msgdata, 2);
+        }
+        else if( wProgram.getcmd( node ) == wProgram.evgetall ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get all features from module %s...", uidKey );
+          data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_GETALL, NULL, 0);
+        }
       }
     }
-    else if( wProgram.getcmd( node ) == wProgram.set ) {
-      data->cv = wProgram.getcv( node );
-      data->value = wProgram.getvalue( node );
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set CV%d to %d...", data->cv, data->value );
-      if( data->defaultprog != NULL ) {
-        msgdata[0] = data->cv % 256;
-        msgdata[1] = data->cv / 256;
-        msgdata[2] = data->value;
-        data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_WRITE, msgdata, 3);
+    else {
+      if( wProgram.getcmd( node ) == wProgram.get ) {
+        data->cv = wProgram.getcv( node );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d...", data->cv );
+        if( data->defaultprog != NULL ) {
+          msgdata[0] = data->cv % 256;
+          msgdata[1] = data->cv / 256;
+          data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_READ, msgdata, 2);
+        }
+      }
+      else if( wProgram.getcmd( node ) == wProgram.set ) {
+        data->cv = wProgram.getcv( node );
+        data->value = wProgram.getvalue( node );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set CV%d to %d...", data->cv, data->value );
+        if( data->defaultprog != NULL ) {
+          msgdata[0] = data->cv % 256;
+          msgdata[1] = data->cv / 256;
+          msgdata[2] = data->value;
+          data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_WRITE, msgdata, 3);
+        }
       }
     }
   }
@@ -716,30 +741,42 @@ static void __addNode(iOBiDiB bidib, byte* msg) {
 }
 
 
-static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode node, byte* msg, int size, byte* pdata, int datasize) {
+static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type, int size, byte* pdata, int datasize) {
   iOBiDiBData data = Data(bidib);
 
-  if( node != NULL ) {
+  if( bidibnode != NULL ) {
     byte l_msg[32];
-    int Addr = msg[1];
-    int  Seq = msg[2];
-    int Type = msg[3]; // MSG_SYS_MAGIC
 
     if( Type == MSG_FEATURE_COUNT ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-          "MSG_FEATURE_COUNT, addr=%d seq=%d features=%d", Addr, Seq, msg[4] );
+          "MSG_FEATURE_COUNT, uid=%08X features=%d", bidibnode->uid, pdata[0] );
       l_msg[0] = 3; // length
       l_msg[1] = 0; // address
       l_msg[3] = MSG_FEATURE_GETNEXT; //data
-      data->subWrite((obj)bidib, node->path, MSG_FEATURE_GETNEXT, NULL, 0);
+      data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0);
     }
     else if( Type == MSG_FEATURE ) {
+      int feature = pdata[0];
+      int value   = pdata[1];
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-          "MSG_FEATURE, addr=%d seq=%d feature=(%d) %s value=%d", Addr, Seq, msg[4], __getFeatureName(msg[4]), msg[5] );
+          "MSG_FEATURE, uid=%08X feature=(%d) %s value=%d", bidibnode->uid, feature, __getFeatureName(feature), value );
       l_msg[0] = 3; // length
       l_msg[1] = 0; // address
       l_msg[3] = MSG_FEATURE_GETNEXT; //data
-      data->subWrite((obj)bidib, node->path, MSG_FEATURE_GETNEXT, NULL, 0);
+      data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0);
+
+      if( bidibnode != NULL ) {
+        iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        wProgram.setcmd( node, wProgram.datarsp );
+        wProgram.setiid( node, data->iid );
+        wProgram.setlntype(node, wProgram.lntype_bidib);
+        wProgram.setmodid(node, bidibnode->uid);
+        wProgram.setmanu(node, bidibnode->vendorid);
+        wProgram.setprod(node, bidibnode->classid);
+        wProgram.setcv(node, feature);
+        wProgram.setvalue(node, value);
+        data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+      }
     }
   }
   else {
@@ -1033,7 +1070,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_FEATURE:
   case MSG_FEATURE_NA:
   {
-    __handleNodeFeature(bidib, bidibnode, msg, size, pdata, datasize);
+    __handleNodeFeature(bidib, bidibnode, Type, size, pdata, datasize);
     break;
   }
 
