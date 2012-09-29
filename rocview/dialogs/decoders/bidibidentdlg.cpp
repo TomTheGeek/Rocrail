@@ -493,10 +493,10 @@ void BidibIdentDlg::onServoSet() {
     wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
     wProgram.setlntype(cmd, wProgram.lntype_bidib);
     wProgram.setporttype(cmd, wProgram.porttype_servo);
-    wProgram.setval1(node, m_ServoLeft->GetValue());
-    wProgram.setval2(node, m_ServoRight->GetValue());
-    wProgram.setval3(node, m_ServoSpeed->GetValue());
-    wProgram.setval4(node, 0);
+    wProgram.setval1(cmd, m_ServoLeft->GetValue());
+    wProgram.setval2(cmd, m_ServoRight->GetValue());
+    wProgram.setval3(cmd, m_ServoSpeed->GetValue());
+    wProgram.setval4(cmd, 0);
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }
