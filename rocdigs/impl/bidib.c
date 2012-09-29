@@ -239,7 +239,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d:%d %s",
           wOutput.getbus( node ), wOutput.getaddr( node ), on?"ON":"OFF" );
 
-      msgdata[0] = BIDIB_OUTTYPE_SPORT;
+      msgdata[0] = wOutput.getporttype(node);
       msgdata[1] = addr-1;
       msgdata[2] = on ? 1:0;
       data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode->seq++);
