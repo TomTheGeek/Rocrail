@@ -108,6 +108,7 @@ class wxSpinCtrl;
 #define ID_CHECKBOX_SW_INVERT2 10035
 #define ID_CHECKBOX_SW_DELAY 10236
 #define ID_TEXTCTRL_SW_DELAY 10275
+#define ID_SW_PORT_TYPE 10414
 #define ID_PANEL_SW_WIRERING 10036
 #define wxID_STATIC_SW_FB1R 10037
 #define ID_COMBOBOX_SW_FB1R 10038
@@ -285,6 +286,7 @@ public:
     wxCheckBox* m_Invert2;
     wxCheckBox* m_ActDelay;
     wxTextCtrl* m_Delay;
+    wxRadioBox* m_PortType;
     wxPanel* m_WireringPanel;
     wxStaticBox* m_WiringBox;
     wxStaticText* m_LabelFb1R;

@@ -1168,6 +1168,7 @@
         <var name="blockid" vt="string" defval="NULL" range="*"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
         <var name="switched" vt="int" defval="0" range="0-*" remark="Number of switch commands."/>
+        <var name="porttype" vt="int" defval="0" range="0-*" required="false" remark=""/>
 
         <!-- Addressing -->
         <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>

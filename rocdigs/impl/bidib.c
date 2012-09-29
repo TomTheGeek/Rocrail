@@ -207,12 +207,12 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
       /* ToDo: Check the switch type. (Servo...) */
       if( wSwitch.issinglegate(node) ) {
-        msgdata[0] = BIDIB_OUTTYPE_SERVO;
+        msgdata[0] = wSwitch.getporttype(node);
         msgdata[1] = addr-1; // Null offset.
         msgdata[2] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 255:0;
       }
       else {
-        msgdata[0] = BIDIB_OUTTYPE_SPORT;
+        msgdata[0] = wSwitch.getporttype(node);
         msgdata[1] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? addr-1:addr;
         msgdata[2] = 1; // ToDo: Switch off other coil.
       }

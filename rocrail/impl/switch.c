@@ -738,6 +738,12 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
   Boolean inv2 = wSwitch.isinv2( o->props );
   const char* iid = wSwitch.getiid( o->props );
 
+  /*ToDo: If the frog polarisation needs to be switched separately.
+   * addrpol1,portpol1
+   * addrpol2,portpol2
+   */
+
+
   if( SwitchOp.isLocked(inst, NULL, wSwitch.ismanualcmd( nodeA )) ) {
     if( lcid == NULL || !StrOp.equals( lcid, o->lockedId ) || StrOp.len(lcid) == 0 ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch [%s] is locked by [%s]: reject any commands from others",
