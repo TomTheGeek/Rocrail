@@ -1109,10 +1109,16 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
   }
 
+  case MSG_LC_NA: {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+        "MSG_LC_NA: msg=0x%02X, path=%s porttype=%d portnr=%d", Type, pathKey, pdata[0], pdata[1] );
+    break;
+  }
+
   default:
   {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-        "UNSUPPORTED: msg=0x%02X, addr=%s seq=%d", Type, pathKey, Seq );
+        "UNSUPPORTED: msg=0x%02X, path=%s", Type, pathKey );
     break;
   }
 

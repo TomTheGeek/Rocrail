@@ -521,7 +521,8 @@ void BidibIdentDlg::onServoLeftTest( wxCommandEvent& event ) {
   if( bidibnode != NULL ) {
     iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setbus( cmd, wBiDiBnode.getuid(bidibnode) );
-    wSwitch.setaddr1( cmd, m_ServoPort->GetValue() );
+    wSwitch.setaddr1( cmd, m_ServoPort->GetValue()+1 );
+    wSwitch.setsinglegate(cmd, True);
     wSwitch.setcmd( cmd, wSwitch.straight );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
@@ -532,7 +533,8 @@ void BidibIdentDlg::onServoRightTest( wxCommandEvent& event ) {
   if( bidibnode != NULL ) {
     iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setbus( cmd, wBiDiBnode.getuid(bidibnode) );
-    wSwitch.setaddr1( cmd, m_ServoPort->GetValue() );
+    wSwitch.setaddr1( cmd, m_ServoPort->GetValue()+1 );
+    wSwitch.setsinglegate(cmd, True);
     wSwitch.setcmd( cmd, wSwitch.turnout );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
