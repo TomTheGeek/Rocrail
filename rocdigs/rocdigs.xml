@@ -1306,6 +1306,8 @@
       <var name="classid" vt="int"/>
       <var name="vendorid" vt="int"/>
       <var name="seq" vt="int"/>
+      <var name="load" vt="int"/>
+      <var name="stat" vt="int"/>
       </struct>
     <data>
       <var name="ini" vt="iONode"/>
@@ -1315,6 +1317,7 @@
       <var name="swtime" vt="int"/>
       <var name="run" vt="Boolean"/>
       <var name="power" vt="Boolean"/>
+      <var name="load" vt="int"/>
       <var name="tabver" vt="int"/>
       <var name="nodemap" vt="iOMap"/>
       <var name="localmap" vt="iOMap"/>

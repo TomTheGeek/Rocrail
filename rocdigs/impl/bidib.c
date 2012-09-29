@@ -721,6 +721,78 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
 
 }
 
+
+static void __reportState(iOBiDiB bidib) {
+  iOBiDiBData data = Data(bidib);
+  iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+  if( data->iid != NULL )
+    wState.setiid( node, data->iid );
+  wState.setpower( node, data->power );
+  wState.settrackbus( node, data->power );
+  wState.setsensorbus( node, data->power );
+  wState.setaccessorybus( node, data->power );
+  wState.setload( node, data->load );
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+}
+
+
+static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  /*
+    0x00  Booster ist abgeschaltet (auf Grund Host-Befehl).
+    0x01  Booster ist abgeschaltet (wegen Kurzschluß).
+    0x02  Booster ist abgeschaltet (wegen Übertemperatur).
+    0x03  Booster ist abgeschaltet (wegen fehlender Netzspannung).
+    0x7F  Booster ist abgeschaltet (unbekannte Ursache).
+    0x80  Booster ist eingeschaltet.
+    0x81  Booster ist eingeschaltet und läuft in der Strombegrenzung.
+    0x82  Booster ist eingeschaltet und ist im kritischen Temperaturbereich.
+   */
+  if( bidibnode != NULL ) {
+    bidibnode->stat = pdata[0];
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster %08X state=0x%02X", pdata[0] );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster state=0x%02X", pdata[0] );
+  }
+  data->power = (pdata[0] & 0x80) ? True:False;
+  __reportState(bidib);
+}
+
+
+static void __handleBoosterCurrent(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  /*
+    0 kein Stromverbrauch, Gleis ist frei.
+    1..100  Stromverbrauch, in mA. Möglicher Bereich: 1..100mA
+    101..200  Stromverbrauch, Wert ist Datum - 100 * 10mA. Möglicher Bereich: 10..1000mA
+    201..250  Stromverbrauch, Wert ist Datum - 200 * 100mA. Möglicher Bereich: 100..5000mA
+    251..253  reserviert.
+    254 Overcurrent aufgetreten.
+    0xFF  kein exakter Verbrauch bekannt.
+  */
+  int load = pdata[0];
+  if( load <= 100 )
+    data->load = load;
+  else if( load <= 200 )
+    data->load = (load-100) * 10;
+  else if( load <= 250 )
+    data->load = (load-200) * 100;
+  else
+    data->load = 0;
+
+  if( bidibnode != NULL ) {
+    bidibnode->load = load;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster %08X load=%d mA", bidibnode->uid, data->load );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster load=%d mA", data->load );
+  }
+  __reportState(bidib);
+}
+
+
 static void __handleConfig(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
   iOBiDiBData data = Data(bidib);
   int feature = pdata[0];
@@ -1115,12 +1187,18 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
   }
 
+  case MSG_BOOST_STAT:
+    __handleBoosterStat(bidib, bidibnode, pdata);
+    break;
+
+  case MSG_BOOST_CURRENT:
+    __handleBoosterCurrent(bidib, bidibnode, pdata);
+    break;
+
   default:
-  {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
         "UNSUPPORTED: msg=0x%02X, path=%s", Type, pathKey );
     break;
-  }
 
   }
 
