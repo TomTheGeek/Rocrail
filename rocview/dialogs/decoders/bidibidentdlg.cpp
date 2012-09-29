@@ -129,11 +129,15 @@ void BidibIdentDlg::event(iONode node) {
     NodeOp.base.del(node);
   }
   else if(  wProgram.getcmd( node ) == wProgram.nvget ) {
-    if( wProgram.getporttype(node) == wProgram.porttype_servo ) {
-      m_ServoLeft->SetValue( wProgram.getval1(node));
-      m_ServoRight->SetValue( wProgram.getval2(node));
-      m_ServoSpeed->SetValue( wProgram.getval3(node));
-    }
+    m_PortType->SetSelection(wProgram.getporttype(node));
+    m_ServoLeft->SetValue( wProgram.getval1(node));
+    m_ServoRight->SetValue( wProgram.getval2(node));
+    m_ServoSpeed->SetValue( wProgram.getval3(node));
+    m_ServoReserved->SetValue( wProgram.getval4(node));
+    m_ConfigL->SetValue( wProgram.getval1(node));
+    m_ConfigR->SetValue( wProgram.getval2(node));
+    m_ConfigV->SetValue( wProgram.getval3(node));
+    m_ConfigS->SetValue( wProgram.getval4(node));
     NodeOp.base.del(node);
   }
   else {
@@ -492,7 +496,7 @@ void BidibIdentDlg::onServoSet() {
     wProgram.setcv( cmd, m_ServoPort->GetValue() );
     wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
     wProgram.setlntype(cmd, wProgram.lntype_bidib);
-    wProgram.setporttype(cmd, wProgram.porttype_servo);
+    wProgram.setporttype(cmd, m_PortType->GetSelection());
     wProgram.setval1(cmd, m_ServoLeft->GetValue());
     wProgram.setval2(cmd, m_ServoRight->GetValue());
     wProgram.setval3(cmd, m_ServoSpeed->GetValue());
@@ -503,14 +507,22 @@ void BidibIdentDlg::onServoSet() {
 }
 
 void BidibIdentDlg::onServoLeft( wxScrollEvent& event ) {
+  m_ConfigL->SetValue(m_ServoLeft->GetValue());
   onServoSet();
 }
 
 void BidibIdentDlg::onServoRight( wxScrollEvent& event ) {
+  m_ConfigR->SetValue(m_ServoRight->GetValue());
   onServoSet();
 }
 
 void BidibIdentDlg::onServoSpeed( wxScrollEvent& event ) {
+  m_ConfigV->SetValue(m_ServoSpeed->GetValue());
+  onServoSet();
+}
+
+void BidibIdentDlg::onServoReserved( wxScrollEvent& event ) {
+  m_ConfigS->SetValue(m_ServoReserved->GetValue());
   onServoSet();
 }
 
@@ -522,7 +534,7 @@ void BidibIdentDlg::onServoLeftTest( wxCommandEvent& event ) {
     iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setbus( cmd, wBiDiBnode.getuid(bidibnode) );
     wSwitch.setaddr1( cmd, m_ServoPort->GetValue()+1 );
-    wSwitch.setsinglegate(cmd, True);
+    wSwitch.setsinglegate(cmd, m_PortType->GetSelection()==2?True:False);
     wSwitch.setcmd( cmd, wSwitch.straight );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
@@ -534,10 +546,45 @@ void BidibIdentDlg::onServoRightTest( wxCommandEvent& event ) {
     iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setbus( cmd, wBiDiBnode.getuid(bidibnode) );
     wSwitch.setaddr1( cmd, m_ServoPort->GetValue()+1 );
-    wSwitch.setsinglegate(cmd, True);
+    wSwitch.setsinglegate(cmd, m_PortType->GetSelection()==2?True:False);
     wSwitch.setcmd( cmd, wSwitch.turnout );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }
 }
 
+void BidibIdentDlg::onConfigL( wxSpinEvent& event ) {
+  m_ServoLeft->SetValue(m_ConfigL->GetValue());
+}
+
+
+void BidibIdentDlg::onConfigR( wxSpinEvent& event ) {
+  m_ServoRight->SetValue(m_ConfigR->GetValue());
+}
+
+
+void BidibIdentDlg::onConfigV( wxSpinEvent& event ) {
+  m_ServoSpeed->SetValue(m_ConfigV->GetValue());
+}
+
+void BidibIdentDlg::onConfigS( wxSpinEvent& event ) {
+  m_ServoReserved->SetValue(m_ConfigS->GetValue());
+}
+
+void BidibIdentDlg::onConfigLtxt( wxCommandEvent& event ) {
+  m_ServoLeft->SetValue(m_ConfigL->GetValue());
+}
+void BidibIdentDlg::onConfigRtxt( wxCommandEvent& event ) {
+  m_ServoRight->SetValue(m_ConfigR->GetValue());
+}
+void BidibIdentDlg::onConfigVtxt( wxCommandEvent& event ) {
+  m_ServoSpeed->SetValue(m_ConfigV->GetValue());
+}
+void BidibIdentDlg::onConfigStxt( wxCommandEvent& event ) {
+  m_ServoReserved->SetValue(m_ConfigS->GetValue());
+}
+
+
+
+void BidibIdentDlg::onPortType( wxCommandEvent& event ) {
+}
