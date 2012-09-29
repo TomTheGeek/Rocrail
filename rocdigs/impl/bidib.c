@@ -347,6 +347,20 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
               bidibnode->path[0], bidibnode->path[1], bidibnode->path[2], bidibnode->path[3], uidKey );
           data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_GETALL, NULL, 0, bidibnode->seq++);
         }
+        else if( wProgram.getcmd( node ) == wProgram.nvset ) {
+          msgdata[0] = wProgram.getporttype(node);
+          msgdata[1] = wProgram.getcv(node);
+          msgdata[2] = wProgram.getval1(node);
+          msgdata[3] = wProgram.getval2(node);
+          msgdata[4] = wProgram.getval3(node);
+          msgdata[5] = wProgram.getval4(node);
+          data->subWrite((obj)inst, bidibnode->path, MSG_LC_CONFIG_SET, msgdata, 6, bidibnode->seq++);
+        }
+        else if( wProgram.getcmd( node ) == wProgram.nvget ) {
+          msgdata[0] = wProgram.getporttype(node);
+          msgdata[1] = wProgram.getcv(node);
+          data->subWrite((obj)inst, bidibnode->path, MSG_LC_CONFIG_GET, msgdata, 2, bidibnode->seq++);
+        }
       }
     }
     else {
@@ -707,6 +721,29 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
 
 }
 
+static void __handleConfig(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  int feature = pdata[0];
+  int value   = pdata[1];
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+      "MSG_LC_CONFIG, uid=%08X type=%d port=%d val1=%d val2=%d val3=%d val4=%d",
+      bidibnode->uid, pdata[0], pdata[1], pdata[2], pdata[3], pdata[4], pdata[5]);
+
+  if( bidibnode != NULL ) {
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setcmd( node, wProgram.nvget );
+    wProgram.setiid( node, data->iid );
+    wProgram.setlntype(node, wProgram.lntype_bidib);
+    wProgram.setporttype(node, pdata[0]);
+    wProgram.setmodid(node, bidibnode->uid);
+    wProgram.setcv(node, pdata[1]);
+    wProgram.setval1(node, pdata[2]);
+    wProgram.setval2(node, pdata[3]);
+    wProgram.setval3(node, pdata[4]);
+    wProgram.setval4(node, pdata[5]);
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+}
 
 static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, byte* msg, int size, byte* pdata, int datasize) {
   iOBiDiBData data = Data(bidib);
@@ -1063,6 +1100,12 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_SYS_IDENTIFY_STATE:
   {
     __handleIdentify(bidib, bidibnode, pathKey);
+    break;
+  }
+
+  case MSG_LC_CONFIG:
+  {
+    __handleConfig(bidib, bidibnode, pdata);
     break;
   }
 

@@ -780,6 +780,13 @@
     <const name="lntype_cbus" vt="int" val="6" remark="CBUS"/>
     <const name="lntype_bidib" vt="int" val="7" remark="BiDiB"/>
     <var name="lntype" vt="int" defval="0" remark="LNCV programming type"/>
+    <const name="porttype_port" vt="int" val="0"/>
+    <const name="porttype_light" vt="int" val="1"/>
+    <const name="porttype_servo" vt="int" val="2"/>
+    <const name="porttype_sound" vt="int" val="3"/>
+    <const name="porttype_motor" vt="int" val="4"/>
+    <const name="porttype_analog" vt="int" val="5"/>
+    <var name="porttype" vt="int" defval="0" remark="Port type"/>
     <var name="lncv" vt="bool" defval="false"/>
     <var name="filename" vt="string" defval=""/>
   </program>
@@ -1171,6 +1178,14 @@
         <var name="addr2" vt="int" defval="0" range="0-*" required="true" remark="decoder address in case of type 3way"/>
         <var name="port2" vt="int" defval="0" range="0-*" required="false" remark="Only in case of type 3way."/>
         <var name="gate2" vt="int" defval="0" range="0-*" required="false" remark="Only in case of type 3way."/>
+        
+        <!-- If the frog polarisation needs to be switched separately.  -->
+        <var name="addrpol1" vt="int" defval="0" range="0-*" required="false" remark="decoder address of the polarisation"/>
+        <var name="portpol1" vt="int" defval="0" range="0-*" required="false" remark="port of decoder unit."/>
+        <var name="gatepol1" vt="int" defval="0" range="0-1" required="false" remark="gate of port."/>
+        <var name="addrpol2" vt="int" defval="0" range="0-*" required="false" remark="decoder address of the polarisation"/>
+        <var name="portpol2" vt="int" defval="0" range="0-*" required="false" remark="port of decoder unit."/>
+        <var name="gatepol2" vt="int" defval="0" range="0-1" required="false" remark="gate of port."/>
 
         <var name="singlegate" vt="bool" defval="false"/>
         <var name="gatevalue" vt="int" defval="-1" range="0-1" required="false"/>

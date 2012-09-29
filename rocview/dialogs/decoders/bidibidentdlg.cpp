@@ -42,6 +42,7 @@
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/BiDiB.h"
 #include "rocrail/wrapper/public/BiDiBnode.h"
 #include "rocdigs/impl/bidib/bidibutils.h"
@@ -125,6 +126,14 @@ void BidibIdentDlg::onOK( wxCommandEvent& event ) {
 void BidibIdentDlg::event(iONode node) {
   if(  wProgram.getcmd( node ) == wProgram.datarsp ) {
     handleFeature(node);
+    NodeOp.base.del(node);
+  }
+  else if(  wProgram.getcmd( node ) == wProgram.nvget ) {
+    if( wProgram.getporttype(node) == wProgram.porttype_servo ) {
+      m_ServoLeft->SetValue( wProgram.getval1(node));
+      m_ServoRight->SetValue( wProgram.getval2(node));
+      m_ServoSpeed->SetValue( wProgram.getval3(node));
+    }
     NodeOp.base.del(node);
   }
   else {
@@ -460,22 +469,73 @@ void BidibIdentDlg::handleFeature(iONode node) {
 }
 
 
+void BidibIdentDlg::onServoGet( wxCommandEvent& event ) {
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.nvget );
+    wProgram.setcv( cmd, m_ServoPort->GetValue() );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wProgram.setporttype(cmd, wProgram.porttype_servo);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+}
+
+
+void BidibIdentDlg::onServoSet() {
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.nvset );
+    wProgram.setcv( cmd, m_ServoPort->GetValue() );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wProgram.setporttype(cmd, wProgram.porttype_servo);
+    wProgram.setval1(node, m_ServoLeft->GetValue());
+    wProgram.setval2(node, m_ServoRight->GetValue());
+    wProgram.setval3(node, m_ServoSpeed->GetValue());
+    wProgram.setval4(node, 0);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+}
 
 void BidibIdentDlg::onServoLeft( wxScrollEvent& event ) {
+  onServoSet();
 }
 
 void BidibIdentDlg::onServoRight( wxScrollEvent& event ) {
+  onServoSet();
 }
 
 void BidibIdentDlg::onServoSpeed( wxScrollEvent& event ) {
+  onServoSet();
 }
 
 void BidibIdentDlg::onServoPort( wxSpinEvent& event ) {
 }
 
 void BidibIdentDlg::onServoLeftTest( wxCommandEvent& event ) {
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    wSwitch.setbus( cmd, wBiDiBnode.getuid(bidibnode) );
+    wSwitch.setaddr1( cmd, m_ServoPort->GetValue() );
+    wSwitch.setcmd( cmd, wSwitch.straight );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
 
 void BidibIdentDlg::onServoRightTest( wxCommandEvent& event ) {
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    wSwitch.setbus( cmd, wBiDiBnode.getuid(bidibnode) );
+    wSwitch.setaddr1( cmd, m_ServoPort->GetValue() );
+    wSwitch.setcmd( cmd, wSwitch.turnout );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
 

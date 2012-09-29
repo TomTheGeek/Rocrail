@@ -70,6 +70,9 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onServoPort( wxSpinEvent& event );
     void onServoLeftTest( wxCommandEvent& event );
     void onServoRightTest( wxCommandEvent& event );
+    void onServoGet( wxCommandEvent& event );
+    void onServoSet();
+
 	public:
 		/** Constructor */
 		BidibIdentDlg( wxWindow* parent );
