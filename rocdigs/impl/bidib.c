@@ -729,11 +729,36 @@ static void __reportState(iOBiDiB bidib) {
     wState.setiid( node, data->iid );
   wState.setpower( node, data->power );
   wState.settrackbus( node, data->power );
-  wState.setsensorbus( node, data->power );
-  wState.setaccessorybus( node, data->power );
+  wState.setsensorbus( node, True );
+  wState.setaccessorybus( node, True );
   wState.setload( node, data->load );
   if( data->listenerFun != NULL && data->listenerObj != NULL )
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+}
+
+
+static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  /*
+    0x00  BIDIB_CS_STATE_OFF  Die Gleisausgabe wird abgeschaltet.
+    0x01  BIDIB_CS_STATE_STOP Alle Loks werden mittels Nothalt angehalten, jedoch Weichen können nach wie vor geschaltet werden.
+          Wenn Stop von der Zentrale nicht unterstützt wird, so wird OFF ausgeführt.
+    0x02  BIDIB_CS_STATE_SOFTSTOP Alle Loks werden mit Fahrstufe 0 (also mit ihrer eigenen Verzögerung) angehalten,
+          Weichen können weiterhin geschaltet werden. Wenn Soft-Stop von der Zentrale nicht unterstützt wird,
+          so wird STOP ausgeführt.
+    0x03  BIDIB_CS_STATE_SHORT  Die Zentrale hat einen Fehler am Ausgang erkannt. Diese Nachricht ist nur relevant für
+          Zentralen mit eigener Ausgang.
+    0x10  BIDIB_CS_STATE_GO Wiederaufnahme des Betriebes, Loks und Weichen können geschaltet werden.
+    0x80  BIDIB_CS_STATE_PROG Programmiermode; Die Zentrale hat in den Programmiermode umgeschaltet und ist zur Ausführung von
+          Programmierbefehlen (auf den Programmiergleis) bereit. Der normale Betrieb ruht.
+    0x81  BIDIB_CS_STATE_PROGBUSY Programmiermode; diese Meldung zeigt an, dass aktuell ein Programmiervorgang auf dem
+          Programmiergleis durchgeführt wird. (nur bei Abfrage)
+    0xF0  BIDIB_CS_STATE_BUSY Die Gleisausgabe ist nicht mehr aufnahmefähig für neue Befehle, z.B. weil entsprechende
+          Ausgabe-Fifos voll sind. (nur bei Abfrage oder beim Senden einer MSG_CS_DRIVE )
+   */
+
+  data->power = (pdata[0] == BIDIB_CS_STATE_OFF) ? False:True;
+  __reportState(bidib);
 }
 
 
@@ -1193,6 +1218,10 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_BOOST_CURRENT:
     __handleBoosterCurrent(bidib, bidibnode, pdata);
+    break;
+
+  case MSG_CS_STATE:
+    __handleCSStat(bidib, bidibnode, pdata);
     break;
 
   default:
