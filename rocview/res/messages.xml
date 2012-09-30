@@ -18177,4 +18177,7 @@
   <Msg id="issue" dialog="true">
     <en txt="Issue" tip="Create a server issue context."/>
   </Msg>
+  <Msg id="issuepath">
+    <en txt="Issue path"/>
+  </Msg>
 </Messages>

@@ -5843,3 +5843,21 @@ msgstr ""
 msgid "Retries"
 msgstr ""
 
+#. 
+# id="issue"
+#, c-format
+msgid "Issue"
+msgstr ""
+
+#. 
+# id="issue"
+#, c-format
+msgid "Create a server issue context."
+msgstr ""
+
+#. 
+# id="issuepath"
+#, c-format
+msgid "Issue path"
+msgstr ""
+
