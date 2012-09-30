@@ -336,9 +336,9 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
       if( bidibnode != NULL ) {
         if( wProgram.getcmd( node ) == wProgram.writehex ) {
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-              "load hex file %s into node %d.", wProgram.getfilename(node), uidKey );
           if( data->hexstate == 0 ) {
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+                "load hex file %s into node %d.", wProgram.getfilename(node), uidKey );
             if( data->hexfile != NULL )
               StrOp.free(data->hexfile);
             data->hexfile = StrOp.dup(wProgram.getfilename(node));
@@ -998,6 +998,64 @@ static void __handleIdentify(iOBiDiB bidib, iOBiDiBNode bidibnode, const char* p
 }
 
 
+static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  char msgdata[256];
+
+  if( bidibnode != NULL ) {
+    if( pdata[0] == BIDIB_MSG_FW_UPDATE_STAT_READY ) {
+      const char* dest = StrOp.findc(data->hexfile, '.');
+      msgdata[0] = BIDIB_MSG_FW_UPDATE_OP_SETDEST;
+      msgdata[1] = atoi(dest); /* dest memory: name_version.ddd.hex */
+      bidibnode->seq = 0;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"BIDIB_MSG_FW_UPDATE_OP_SETDEST destination=%d", msgdata[1]);
+      data->subWrite((obj)bidib, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 2, 0);
+    }
+    else if(pdata[0] == BIDIB_MSG_FW_UPDATE_STAT_DATA) {
+      if( pdata[1] > 0 ) {
+        ThreadOp.sleep(pdata[1]*10);
+      }
+      // Send a HEX line
+      if( data->hexline == 0 ) {
+        data->hexfh = FileOp.inst( data->hexfile, OPEN_READONLY );
+      }
+
+      if( data->hexfh != NULL ) {
+        FILE* fs = FileOp.getStream(data->hexfh);
+        fgets( msgdata+1, 256, fs );
+        if( !ferror(fs) && !feof(fs) ) {
+          StrOp.replaceAll(msgdata+1, '\r', '\0');
+          StrOp.replaceAll(msgdata+1, '\n', '\0');
+          TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "update line=%d [%s]", data->hexline++, msgdata+1);
+
+          msgdata[0] = BIDIB_MSG_FW_UPDATE_OP_DATA;
+          data->subWrite((obj)bidib, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 1 + StrOp.len(msgdata+1), 0);
+        }
+        else {
+          // Last line processed? BIDIB_MSG_FW_UPDATE_OP_DONE
+          FileOp.base.del( data->hexfh );
+          data->hexfh = NULL;
+          data->hexstate = 0;
+          msgdata[0] = BIDIB_MSG_FW_UPDATE_OP_DONE;
+          data->subWrite((obj)bidib, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 1, 0);
+        }
+      }
+
+    }
+    else if(pdata[0] == BIDIB_MSG_FW_UPDATE_STAT_EXIT) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"BIDIB_MSG_FW_UPDATE_STAT_EXIT");
+    }
+    else if(pdata[0] == BIDIB_MSG_FW_UPDATE_STAT_ERROR) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,"MSG_FW_UPDATE_STAT error=%d", pdata[1]);
+      if( data->hexfh != NULL )
+        FileOp.base.del( data->hexfh );
+      data->hexfh = NULL;
+      data->hexstate = 0;
+    }
+  }
+}
+
+
 
 /**
  * len addr seq type data  crc
@@ -1253,6 +1311,10 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_BM_CONFIDENCE:
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
         "MSG_BM_CONFIDENCE: path=%s void=%d freeze=%d signal=%d", pathKey, pdata[0], pdata[1], pdata[2] );
+    break;
+
+  case MSG_FW_UPDATE_STAT:
+    __handleUpdateStat(bidib, bidibnode, pdata);
     break;
 
   default:
