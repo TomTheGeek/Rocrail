@@ -638,7 +638,7 @@ void BidibIdentDlg::onUpdateStart( wxCommandEvent& event ) {
     iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcmd( cmd, wProgram.writehex );
     wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
-    wProgram.setlntype(cmd, wProgram.lntype_cbus);
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
     wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
     wProgram.setfilename( cmd,  m_UpdateFile->GetValue().mb_str(wxConvUTF8) );
     wxGetApp().sendToRocrail( cmd );

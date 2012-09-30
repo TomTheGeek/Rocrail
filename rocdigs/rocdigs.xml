@@ -1349,6 +1349,10 @@
       <var name="defaultbooster" vt="iOBiDiBNode"/>
       <var name="defaultprog" vt="iOBiDiBNode"/>
       <var name="defaultswitch" vt="iOBiDiBNode"/>
+      <var name="hexnode" vt="iOBiDiBNode"/>
+      <var name="hexfile" vt="char*"/>
+      <var name="hexline" vt="int"/>
+      <var name="hexstate" vt="int"/>
       </data>
   </object>
 

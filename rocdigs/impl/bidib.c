@@ -324,6 +324,9 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"program type=%d cmd=%d uid=0x%08X",
+        wProgram.getlntype(node), wProgram.getcmd( node ), wProgram.getmodid(node) );
+
     if( wProgram.getlntype(node) == wProgram.lntype_bidib ) {
       byte msgdata[32];
       char uidKey[32];
@@ -332,7 +335,26 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
 
       if( bidibnode != NULL ) {
-        if( wProgram.getcmd( node ) == wProgram.get ) {
+        if( wProgram.getcmd( node ) == wProgram.writehex ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+              "load hex file %s into node %d.", wProgram.getfilename(node), uidKey );
+          if( data->hexstate == 0 ) {
+            if( data->hexfile != NULL )
+              StrOp.free(data->hexfile);
+            data->hexfile = StrOp.dup(wProgram.getfilename(node));
+            data->hexline = 0;
+            data->hexstate = 1; /* pending */
+            data->hexnode = bidibnode;
+            msgdata[0] = BIDIB_MSG_FW_UPDATE_OP_ENTER;
+            data->subWrite((obj)inst, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 1, bidibnode->seq++);
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                "loading hex file %s into node %d is pending: line=%d", data->hexfile, data->hexnode->uid, data->hexline );
+          }
+
+        }
+        else if( wProgram.getcmd( node ) == wProgram.get ) {
           msgdata[0] = wProgram.getcv(node);
           data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_SET, msgdata, 1, bidibnode->seq++);
         }
@@ -361,6 +383,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           msgdata[1] = wProgram.getcv(node);
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_CONFIG_GET, msgdata, 2, bidibnode->seq++);
         }
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+            "programming: unknown uid=%s.", uidKey );
       }
     }
     else {
