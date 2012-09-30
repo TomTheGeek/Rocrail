@@ -477,8 +477,27 @@ static void __handleIssue(obj inst, iONode node) {
         }
       }
 
+      {
+        iOList thList = ThreadOp.getAll();
+        int i = 0;
+        int cnt = ListOp.size( thList );
+        FileOp.fmt( f, "\n\n%d threads:\n----------------------------------------\n", cnt );
+        for( i = 0; i < cnt; i++ ) {
+          iOThread th = (iOThread)ListOp.get( thList, i );
+          const char* tname = ThreadOp.getName( th );
+          char* tdesc = ThreadOp.base.toString( th );
+          FileOp.fmt( f, "%s \"%s\"\n", tname, tdesc );
+          StrOp.free( tdesc );
+        }
+        /* Cleanup. */
+        thList->base.del( thList );
+      }
+
+
       FileOp.base.del(f);
     }
+
+
 
     /* Write the Inifile from memory: */
     tmp = StrOp.fmt("%s%c%s", issueDir, SystemOp.getFileSeparator(), "rocrail.ini" );
