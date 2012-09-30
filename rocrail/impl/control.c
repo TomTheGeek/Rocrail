@@ -428,8 +428,9 @@ static void __handleIssue(obj inst, iONode node) {
     issueTxt = StrOp.fmt("%s%c%s", issueDir, SystemOp.getFileSeparator(), "issue.txt" );
     f = FileOp.inst(issueTxt, OPEN_WRITE );
     if( f != NULL ) {
+      /* Write statistics: */
       char* stamp = StrOp.createStamp();
-      tmp = StrOp.fmt( "%s %s %d.%d.%d-%d %s (%s)\n\n",
+      tmp = StrOp.fmt( "Date: %s\n%s %d.%d.%d-%d %s (%s)\n\n",
           stamp,
           wGlobal.productname,
           wGlobal.vmajor,
@@ -462,17 +463,26 @@ static void __handleIssue(obj inst, iONode node) {
       FileOp.fmt( f, "locos             = %d\n", LocOp.base.count() );
 
 
-      FileOp.fmt( f, "\n\nIssue description:\n----------------------------------------\n", LocOp.base.count() );
+      FileOp.fmt( f, "\n\n%s:\n----------------------------------------\n", wIssue.getsubject(node) );
       FileOp.writeStr( f, wIssue.getdesc(node) );
 
+      {
+        int i = 0;
+        const char** ex = AppOp.getBackTrace();
+        FileOp.fmt( f, "\n\nBackTrace: (last 10 exceptions and warnings)\n----------------------------------------\n" );
+        for( i = 9; i >= 0; i-- ) {
+          if( ex[i] != NULL ) {
+            FileOp.fmt( f, " %s\n", ex[i] );
+          }
+        }
+      }
 
       FileOp.base.del(f);
     }
 
-
-
-    /* Write the Inifile: */
+    /* Write the Inifile from memory: */
     tmp = StrOp.fmt("%s%c%s", issueDir, SystemOp.getFileSeparator(), "rocrail.ini" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writing ini: %s", tmp );
     {
       iOFile iniFile = FileOp.inst( tmp, OPEN_WRITE );
       if( iniFile != NULL ) {
@@ -484,6 +494,27 @@ static void __handleIssue(obj inst, iONode node) {
     }
     StrOp.free(tmp);
 
+    /* Write the model from memory: */
+    tmp = StrOp.fmt("%s%c%s", issueDir, SystemOp.getFileSeparator(), "model.xml" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writing model: %s", tmp );
+    {
+      iOFile iniFile = FileOp.inst( tmp, OPEN_WRITE );
+      if( iniFile != NULL ) {
+        char* iniStr = NodeOp.base.toString( ModelOp.getModel(AppOp.getModel()) );
+        FileOp.write( iniFile, iniStr, StrOp.len( iniStr ) );
+        FileOp.close( iniFile );
+        StrOp.free(iniStr);
+      }
+    }
+    StrOp.free(tmp);
+
+    /* Copy trace file: */
+    tmp = StrOp.fmt("%s%c%s", issueDir, SystemOp.getFileSeparator(), "rocrail.trc" );
+    {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "copy trace %s to %s", TraceOp.getCurrentFilename(NULL), tmp );
+      FileOp.cp( TraceOp.getCurrentFilename(NULL), tmp );
+    }
+    StrOp.free(tmp);
 
     StrOp.free(issueTxt);
     StrOp.free(issueDir);
