@@ -77,6 +77,7 @@
 #include "rocrail/wrapper/public/R2RnetIni.h"
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/SystemActions.h"
+#include "rocrail/wrapper/public/Issue.h"
 
 typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 /* proto types */
@@ -406,6 +407,74 @@ static void  __grouplink( obj inst, iONode link ) {
 }
 
 
+static void __handleIssue(obj inst, iONode node) {
+  iOControlData data    = Data(inst);
+  const char* issuePath = wRocRail.getissuepath( AppOp.getIni() );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "issue: %s", wIssue.getsubject(node) );
+  if( !FileOp.exist(issuePath) ) {
+    FileOp.mkdir(issuePath);
+  }
+  if( FileOp.exist(issuePath) ) {
+    char* issueDir = StrOp.fmt("%s%c%s", issuePath, SystemOp.getFileSeparator(), wIssue.getsubject(node) );
+    char* issueTxt = NULL;
+    iOFile f = NULL;
+    StrOp.replaceAll(issueDir, ' ', '_');
+    if( !FileOp.exist(issueDir) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating issue directory: %s", issueDir );
+      FileOp.mkdir(issueDir);
+    }
+
+    issueTxt = StrOp.fmt("%s%c%s", issueDir, SystemOp.getFileSeparator(), "issue.txt" );
+    f = FileOp.inst(issueTxt, OPEN_WRITE );
+    if( f != NULL ) {
+      char* stamp = StrOp.createStamp();
+      char* tmp = StrOp.fmt( "%s %s %d.%d.%d-%d %s (%s)\n\n",
+          stamp,
+          wGlobal.productname,
+          wGlobal.vmajor,
+          wGlobal.vminor,
+          wGlobal.patch,
+          AppOp.getrevno(),
+          wGlobal.releasename,
+          TraceOp.getOS() );
+
+      StrOp.free(stamp);
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writing issue text: %s", issueTxt );
+
+      FileOp.writeStr( f, tmp );
+      StrOp.free(tmp);
+
+      {
+        long t = AppOp.getStartTime();
+        FileOp.fmt( f, "started at %s\n", ctime( &t ) );
+      }
+
+      FileOp.fmt(f, "process id         = %d\n", SystemOp.getpid());
+      tmp = FileOp.pwd();
+      FileOp.fmt( f, "working directory = %s\n", tmp );
+      StrOp.free(tmp);
+      FileOp.fmt( f, "allocation count  = %u\n", MemOp.getAllocCount() );
+      FileOp.fmt( f, "allocated memory  = %d MB\n", MemOp.getAllocSize() / (1024*1024) );
+      FileOp.fmt( f, "clients           = %d\n", ClntConOp.getClientCount( AppOp.getClntCon() ) );
+      FileOp.fmt( f, "connections       = %d\n", ClntConOp.getConCount( AppOp.getClntCon() ) );
+      FileOp.fmt( f, "locos             = %d\n", LocOp.base.count() );
+
+
+      FileOp.fmt( f, "\n\nIssue description:\n----------------------------------------\n", LocOp.base.count() );
+      FileOp.writeStr( f, wIssue.getdesc(node) );
+
+
+      FileOp.base.del(f);
+    }
+
+
+    StrOp.free(issueTxt);
+    StrOp.free(issueDir);
+  }
+}
+
+
 static void __callback( obj inst, iONode nodeA ) {
   iOControlData data    = Data(inst);
   iOModel model         = AppOp.getModel(  );
@@ -418,6 +487,11 @@ static void __callback( obj inst, iONode nodeA ) {
   if( StrOp.equals( wBooster.name(), nodeName ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "modify booster %s", wBooster.getid(nodeA) );
     ModelOp.cmd( AppOp.getModel(), nodeA );
+  }
+  else if( StrOp.equals( wIssue.name(), nodeName ) ) {
+    __handleIssue(inst, nodeA);
+    NodeOp.base.del( nodeA );
+    return;
   }
   else if( StrOp.equals( wClock.name(), nodeName ) ) {
     if( StrOp.equals( wClock.getcmd(nodeA), wClock.freeze ) ) {

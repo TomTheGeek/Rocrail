@@ -1224,6 +1224,11 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     __handleCSStat(bidib, bidibnode, pdata);
     break;
 
+  case MSG_BM_CONFIDENCE:
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+        "MSG_BM_CONFIDENCE: path=%s void=%d freeze=%d signal=%d", pathKey, pdata[0], pdata[1], pdata[2] );
+    break;
+
   default:
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
         "UNSUPPORTED: msg=0x%02X, path=%s", Type, pathKey );

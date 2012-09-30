@@ -92,6 +92,7 @@
 #include "rocview/dialogs/toursdlg.h"
 #include "rocview/dialogs/actionsctrldlg.h"
 #include "rocview/dialogs/gotodlg.h"
+#include "rocview/dialogs/issuedlg.h"
 
 
 #include "rocview/dialogs/decoders/locoio.h"
@@ -158,6 +159,7 @@
 #include "rocrail/wrapper/public/SystemActions.h"
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/StageSection.h"
+#include "rocrail/wrapper/public/Issue.h"
 
 #include "rocview/symbols/svg.h"
 #include "rocview/res/icons.hpp"
@@ -253,6 +255,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Bug            , RocGuiFrame::OnBug)
     EVT_MENU( ME_Feature        , RocGuiFrame::OnFeature)
     EVT_MENU( ME_Survey         , RocGuiFrame::OnService)
+    EVT_MENU( ME_Issue          , RocGuiFrame::OnIssue)
     EVT_MENU( ME_MIC            , RocGuiFrame::OnMIC)
     EVT_MENU( ME_LcDlg          , RocGuiFrame::OnLcDlg)
     EVT_MENU( ME_OperatorDlg    , RocGuiFrame::OnOperatorDlg)
@@ -1739,6 +1742,9 @@ void RocGuiFrame::initFrame() {
   wxMenuItem *bug_menuHelp = new wxMenuItem(menuHelp, ME_Bug, wxGetApp().getMenu("bug"), wxGetApp().getTip("bug") );
   bug_menuHelp->SetBitmap(*_img_bug);
   menuHelp->Append(bug_menuHelp);
+
+  wxMenuItem *issue_menuHelp = new wxMenuItem(menuHelp, ME_Issue, wxGetApp().getMenu("issue"), wxGetApp().getTip("issue") );
+  menuHelp->Append(issue_menuHelp);
 
   wxMenuItem *feature_menuHelp = new wxMenuItem(menuHelp, ME_Feature, wxGetApp().getMenu("feature"), wxGetApp().getTip("feature") );
   feature_menuHelp->SetBitmap(*_img_lp);
@@ -3719,6 +3725,15 @@ void RocGuiFrame::OnService(wxCommandEvent& WXUNUSED(event)) {
 
 void RocGuiFrame::OnBug(wxCommandEvent& WXUNUSED(event)) {
   wxLaunchDefaultBrowser(wxGetApp().getMsg("rocrail_bug"), wxBROWSER_NEW_WINDOW );
+}
+
+void RocGuiFrame::OnIssue(wxCommandEvent& WXUNUSED(event)) {
+  IssueDlg* issueDlg = new IssueDlg( this );
+  if( wxID_OK == issueDlg->ShowModal() ) {
+    wxGetApp().sendToRocrail( issueDlg->getIssue() );
+    NodeOp.base.del(issueDlg->getIssue());
+  }
+  issueDlg->Destroy();
 }
 
 void RocGuiFrame::OnFeature(wxCommandEvent& WXUNUSED(event)) {

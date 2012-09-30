@@ -108,6 +108,7 @@ public:
   void OnGCA(wxCommandEvent& event);
   void OnTranslations(wxCommandEvent& event);
   void OnBug(wxCommandEvent& event);
+  void OnIssue(wxCommandEvent& event);
   void OnFeature(wxCommandEvent& event);
   void OnService(wxCommandEvent& event);
   void OnLcDlg(wxCommandEvent& event);
@@ -550,6 +551,7 @@ enum
     ME_GCA,
     ME_Translations,
     ME_Bug,
+    ME_Issue,
     ME_Feature,
     ME_Survey,
     ME_BackColor,

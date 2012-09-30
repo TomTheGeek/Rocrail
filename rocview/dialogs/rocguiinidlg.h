@@ -169,6 +169,7 @@ public:
     wxCheckBox* m_ShowOnlyStartSchedules;
     wxCheckBox* m_ShowBlockID;
     wxCheckBox* m_ShowSecondhand;
+    wxCheckBox* m_ReconnectAfterServerShutdown;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;

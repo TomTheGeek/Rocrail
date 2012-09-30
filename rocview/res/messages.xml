@@ -18174,4 +18174,7 @@
   <Msg id="retries">
     <en txt="Retries"/>
   </Msg>
+  <Msg id="issue" dialog="true">
+    <en txt="Issue" tip="Create a server issue context."/>
+  </Msg>
 </Messages>
