@@ -417,6 +417,7 @@ static void __handleIssue(obj inst, iONode node) {
   if( FileOp.exist(issuePath) ) {
     char* issueDir = StrOp.fmt("%s%c%s", issuePath, SystemOp.getFileSeparator(), wIssue.getsubject(node) );
     char* issueTxt = NULL;
+    char* tmp = NULL;
     iOFile f = NULL;
     StrOp.replaceAll(issueDir, ' ', '_');
     if( !FileOp.exist(issueDir) ) {
@@ -428,7 +429,7 @@ static void __handleIssue(obj inst, iONode node) {
     f = FileOp.inst(issueTxt, OPEN_WRITE );
     if( f != NULL ) {
       char* stamp = StrOp.createStamp();
-      char* tmp = StrOp.fmt( "%s %s %d.%d.%d-%d %s (%s)\n\n",
+      tmp = StrOp.fmt( "%s %s %d.%d.%d-%d %s (%s)\n\n",
           stamp,
           wGlobal.productname,
           wGlobal.vmajor,
@@ -469,8 +470,26 @@ static void __handleIssue(obj inst, iONode node) {
     }
 
 
+
+    /* Write the Inifile: */
+    tmp = StrOp.fmt("%s%c%s", issueDir, SystemOp.getFileSeparator(), "rocrail.ini" );
+    {
+      iOFile iniFile = FileOp.inst( tmp, OPEN_WRITE );
+      if( iniFile != NULL ) {
+        char* iniStr = NodeOp.base.toString( AppOp.getIni() );
+        FileOp.write( iniFile, iniStr, StrOp.len( iniStr ) );
+        FileOp.close( iniFile );
+        StrOp.free(iniStr);
+      }
+    }
+    StrOp.free(tmp);
+
+
     StrOp.free(issueTxt);
     StrOp.free(issueDir);
+
+
+
   }
 }
 
