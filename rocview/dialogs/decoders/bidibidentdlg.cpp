@@ -33,10 +33,12 @@
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
 #include <wx/dnd.h>
+#include <wx/filedlg.h>
 
 #include "rocs/public/trace.h"
 
 #include "rocview/public/guiapp.h"
+#include "rocview/wrapper/public/Gui.h"
 
 #include "rocutils/public/vendors.h"
 #include "rocrail/wrapper/public/RocRail.h"
@@ -590,3 +592,58 @@ void BidibIdentDlg::onConfigStxt( wxCommandEvent& event ) {
 
 void BidibIdentDlg::onPortType( wxCommandEvent& event ) {
 }
+
+
+void BidibIdentDlg::onSelectUpdateFile( wxCommandEvent& event ) {
+  wxString ms_FileExt = _T("PIC HEX (*.HEX;*.hex)|*.HEX;*.hex");
+  const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("openhexfile"),
+      wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_OPEN);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    //fdlg->GetPath();
+    wGui.setopenpath( wxGetApp().getIni(), fdlg->GetPath().mb_str(wxConvUTF8) );
+    // strip filename:
+    wGui.setopenpath( wxGetApp().getIni(), FileOp.getPath(wGui.getopenpath( wxGetApp().getIni() ) ) );
+
+    TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "reading [%s]...", (const char*)fdlg->GetPath().mb_str(wxConvUTF8));
+    iOFile f = FileOp.inst( fdlg->GetPath().mb_str(wxConvUTF8), OPEN_READONLY );
+    if( f != NULL ) {
+      TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "file opened...");
+      m_UpdateFile->SetValue(fdlg->GetPath());
+      FILE* fs = FileOp.getStream(f);
+      char str[256];
+      fgets( str, 256, fs );
+
+      /* until end of stream or error: */
+      m_HEXFileText->Clear();
+      int lines = 0;
+      while( !ferror(fs) && !feof(fs) && lines < 50 ) {
+        StrOp.replaceAll(str, '\r', ' ');
+        TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "line=[%s]", str);
+        m_HEXFileText->AppendText(wxString(str,wxConvUTF8));
+        fgets( str, 256, fs );
+        lines++;
+      };
+
+      m_HEXFileText->ShowPosition(0);
+
+      FileOp.base.del( f );
+    }
+  }
+  fdlg->Destroy();
+}
+
+void BidibIdentDlg::onUpdateStart( wxCommandEvent& event ) {
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setcmd( cmd, wProgram.writehex );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_cbus);
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setfilename( cmd,  m_UpdateFile->GetValue().mb_str(wxConvUTF8) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+}
+
+

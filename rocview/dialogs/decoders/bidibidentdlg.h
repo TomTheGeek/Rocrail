@@ -81,6 +81,8 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onConfigRtxt( wxCommandEvent& event );
     void onConfigVtxt( wxCommandEvent& event );
     void onConfigStxt( wxCommandEvent& event );
+    void onSelectUpdateFile( wxCommandEvent& event );
+    void onUpdateStart( wxCommandEvent& event );
 
     void onServoSet();
 
