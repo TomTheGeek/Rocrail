@@ -325,7 +325,7 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
     int len = 0;
     byte retVal[BUFFERSIZE];
 
-    if( fg == 1 )
+    if( fg <= 1 )
       len = function0Through4Packet( retVal, addr, longAddr, wFunCmd.isf0(node), wFunCmd.isf1(node), wFunCmd.isf2(node), wFunCmd.isf3(node), wFunCmd.isf4(node) );
     else if( fg == 2 ) {
       len = function5Through8Packet(retVal, addr, longAddr,
