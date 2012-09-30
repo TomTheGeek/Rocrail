@@ -391,6 +391,7 @@ void LocControlDialog::modelEvent( iONode evt ) {
     value.Printf( _T("%d"), wLoc.getV( evt ) );
     m_Speed->SetValue( value );
     m_SpeedCtrl->SetValue( wLoc.getV( evt ) );
+    m_iSpeed = wLoc.getV( evt );
 
     /* update direction */
     m_bDir = wLoc.isdir( evt)?true:false;
