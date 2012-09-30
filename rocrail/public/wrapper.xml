@@ -476,6 +476,7 @@
           <var name="class" vt="string" defval="sensor" remark="Class ID."/>
           <var name="path" vt="string" defval="0.0.0.0" remark="Local path."/>
           <var name="vendor" vt="int" defval="0" remark="DCC vendor ID."/>
+          <var name="version" vt="string" defval="" remark="Software version."/>
         </bidibnode>
       </bidib>
 

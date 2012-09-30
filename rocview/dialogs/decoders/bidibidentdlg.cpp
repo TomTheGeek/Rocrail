@@ -317,6 +317,7 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
   m_UID->SetValue( wxString::Format(_T("%d"), wBiDiBnode.getuid(bidibnode) ) );
   m_VendorName->SetValue( wxString( m_Vendor[wBiDiBnode.getvendor(bidibnode)&0xFF],wxConvUTF8) );
   m_Class->SetValue( wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
+  m_Version->SetValue( wxString( wBiDiBnode.getversion(bidibnode), wxConvUTF8) );
 
   SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(bidibnode) ) + wxT(" ") + wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
 }

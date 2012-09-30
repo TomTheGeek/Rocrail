@@ -144,6 +144,26 @@ static void __SoD( iOBiDiB inst ) {
       msgdata[1] = 16; // address range
       data->subWrite((obj)inst, node->path, MSG_BM_GET_RANGE, msgdata, 2, node->seq++);
       ThreadOp.sleep(10);
+
+      data->subWrite((obj)inst, node->path, MSG_SYS_ENABLE, NULL, 0, node->seq++);
+      ThreadOp.sleep(10);
+
+      if( data->secAck && data->secAckInt > 0 ) {
+        // MSG_FEATURE_SET
+        msgdata[0] = 2;
+        msgdata[1] = 1;
+        data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+
+        msgdata[0] = 3;
+        msgdata[1] = data->secAckInt;
+        data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+      }
+      else {
+        msgdata[0] = 3;
+        msgdata[1] = 0;
+        data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+      }
+      ThreadOp.sleep(10);
     }
     node = (iOBiDiBNode)MapOp.next(data->nodemap);
   }
@@ -681,6 +701,8 @@ static void __addNode(iOBiDiB bidib, byte* msg) {
     MapOp.put( data->nodemap, uidKey, (obj)node );
     MapOp.put( data->localmap, localKey, (obj)node);
 
+    data->subWrite((obj)bidib, node->path, MSG_SYS_GET_SW_VERSION, NULL, 0, 0);
+
     iONode child = NodeOp.inst(wBiDiBnode.name(), data->bidibini, ELEMENT_NODE);
     wBiDiBnode.setuid(child, uid);
     wBiDiBnode.setclass(child, classname);
@@ -1056,6 +1078,16 @@ static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
 }
 
 
+static iONode __getIniNode(iOBiDiB bidib, int uid) {
+  iOBiDiBData data = Data(bidib);
+  iONode child = wBiDiB.getbidibnode(data->bidibini);
+  while( child != NULL ) {
+    if( wBiDiBnode.getuid(child) == uid )
+      return child;
+    child = wBiDiB.nextbidibnode(data->bidibini, child);
+  }
+  return NULL;
+}
 
 /**
  * len addr seq type data  crc
@@ -1102,9 +1134,6 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     data->upSeq   = Seq;
     data->magicOK = True;
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "MSG_SYS_GET_SW_VERSION path=%s", pathKey );
-    data->subWrite((obj)bidib, path, MSG_SYS_GET_SW_VERSION, NULL, 0, 0);
-
     /* Clean up node list. */
     iONode child = wBiDiB.getbidibnode(data->bidibini);
     while( child != NULL ) {
@@ -1112,39 +1141,30 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
       child = wBiDiB.getbidibnode(data->bidibini);
     }
 
+    // start getting the node table from the PC interface
+    data->nodepath[0] = 0;
+    path[0] = 0; // address
+    data->subWrite((obj)bidib, path, MSG_NODETAB_GETALL, NULL, 0, 0);
+
     break;
   }
 
   case MSG_SYS_SW_VERSION:
   { // len = 6
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "MSG_SYS_SW_VERSION, path=%s seq=%d version=%d.%d.%d", pathKey, Seq, msg[4], msg[5], msg[6] );
-    path[0] = 0; // address
-    data->subWrite((obj)bidib, path, MSG_SYS_ENABLE, NULL, 0, 0);
+        "MSG_SYS_SW_VERSION, path=%s version=%d.%d.%d", pathKey, pdata[2], pdata[1], pdata[0] );
 
-    if( data->secAck && data->secAckInt > 0 ) {
-      // MSG_FEATURE_SET
-      path[0] = 0; // address
-      msgdata[0] = 2;
-      msgdata[1] = 1;
-      data->subWrite((obj)bidib, path, MSG_FEATURE_SET, msgdata, 2, 0);
-
-      path[0] = 0; // address
-      msgdata[0] = 3;
-      msgdata[1] = data->secAckInt;
-      data->subWrite((obj)bidib, path, MSG_FEATURE_SET, msgdata, 2, 0);
+    if( bidibnode != NULL ) {
+      iONode child = __getIniNode(bidib, bidibnode->uid);
+      if( child != NULL ) {
+        char ver[32];
+        StrOp.fmtb( ver, "%d.%d.%d", pdata[2], pdata[1], pdata[0] );
+        wBiDiBnode.setversion(child, ver);
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"no ini node found for uid=%d", bidibnode->uid);
+      }
     }
-    else {
-      path[0] = 0; // address
-      msgdata[0] = 3;
-      msgdata[1] = 0;
-      data->subWrite((obj)bidib, path, MSG_FEATURE_SET, msgdata, 2, 0);
-    }
-
-    // MSG_NODETAB_GETALL
-    data->nodepath[0] = 0;
-    path[0] = 0; // address
-    data->subWrite((obj)bidib, path, MSG_NODETAB_GETALL, NULL, 0, 0);
 
     break;
   }
