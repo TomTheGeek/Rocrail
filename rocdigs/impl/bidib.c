@@ -1053,7 +1053,7 @@ static void __handleNewNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, i
   iOBiDiBData data = Data(bidib);
   data->tabver = pdata[0];
   __addNode(bidib, pdata);
-  data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, 0);
+  data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode->seq++);
 }
 
 
@@ -1061,7 +1061,7 @@ static void __handleLostNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, 
   iOBiDiBData data = Data(bidib);
   TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "MSG_NODE_LOST" );
   __delNode(bidib, pdata);
-  data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, 0);
+  data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode->seq++);
   {
     iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
     wSysCmd.setcmd(cmd, wSysCmd.stop);
