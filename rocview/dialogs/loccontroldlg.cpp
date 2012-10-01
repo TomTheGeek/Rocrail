@@ -666,7 +666,7 @@ void LocControlDialog::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    m_Image = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_IMAGE, wxNullBitmap, wxDefaultPosition, wxSize(240, 88), wxBU_AUTODRAW );
+    m_Image = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_IMAGE, wxNullBitmap, wxDefaultPosition, wxSize(-1, 88), wxBU_AUTODRAW );
     itemBoxSizer2->Add(m_Image, 0, wxGROW|wxALL, 2);
 
     wxFlexGridSizer* itemFlexGridSizer4 = new wxFlexGridSizer(0, 2, 0, 0);
@@ -676,14 +676,14 @@ void LocControlDialog::CreateControls()
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     itemFlexGridSizer4->Add(itemBoxSizer5, 0, wxGROW|wxALIGN_TOP, 0);
 
-    m_Speed = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_LOCCTRL_SPEED, _("0"), wxDefaultPosition, wxSize(-1, 40), wxTE_READONLY|wxTE_CENTRE );
+    m_Speed = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_LOCCTRL_SPEED, _("0"), wxDefaultPosition, wxSize(60, 30), wxTE_READONLY|wxTE_CENTRE );
     itemBoxSizer5->Add(m_Speed, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
 
     m_SpeedCtrl = new wxSlider( itemDialog1, ID_SLIDER_LOCCTRL_SPEED, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VERTICAL|wxSL_INVERSE );
     itemBoxSizer5->Add(m_SpeedCtrl, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
 
     m_FunctionBox = new wxBoxSizer(wxVERTICAL);
-    itemFlexGridSizer4->Add(m_FunctionBox, 1, wxGROW|wxGROW, 0);
+    itemFlexGridSizer4->Add(m_FunctionBox, 0, wxGROW|wxGROW, 0);
 
     m_FunctionGrid = new wxFlexGridSizer(0, 3, 0, 0);
     m_FunctionGrid->AddGrowableCol(0);
@@ -748,7 +748,7 @@ void LocControlDialog::CreateControls()
 
     wxArrayString m_LcListStrings;
     m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY );
-    itemBoxSizer2->Add(m_LcList, 0, wxGROW|wxALL, 4);
+    m_FunctionBox->Add(m_LcList, 0, wxGROW|wxALL, 4);
 
     wxBoxSizer* itemBoxSizer29 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer2->Add(itemBoxSizer29, 0, wxGROW|wxALL, 0);
