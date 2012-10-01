@@ -283,6 +283,7 @@ static Boolean _cmd(iOPowerMan inst, iONode cmd) {
   iOPowerManData data = Data(inst);
   iOModel model = AppOp.getModel();
   const char* boosterid = wPwrCmd.getid(cmd);
+  TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "%s=%s", NodeOp.getName(cmd), wPwrCmd.getcmd(cmd));
 
   if( boosterid == NULL || StrOp.len( boosterid ) == 0 ) {
     iONode booster = (iONode)MapOp.first( data->boostermap );
@@ -295,7 +296,7 @@ static Boolean _cmd(iOPowerMan inst, iONode cmd) {
       if( output != NULL ) {
         if( StrOp.equals( wPwrCmd.on, wPwrCmd.getcmd(cmd) ) )
           OutputOp.on(output);
-        else
+        else if( StrOp.equals( wPwrCmd.off, wPwrCmd.getcmd(cmd) ) )
           OutputOp.off(output);
       }
       booster = (iONode)MapOp.next( data->boostermap );

@@ -2077,7 +2077,9 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s: %s", cmdName, cmdVal );
 
-  if( StrOp.equals( wSysCmd.name(), cmdName ) && !StrOp.equals( wSysCmd.dcc, cmdVal ) && !StrOp.equals( wSysCmd.loccnfg, cmdVal ) ) {
+  if( StrOp.equals( wSysCmd.name(), cmdName ) && !StrOp.equals( wSysCmd.dcc, cmdVal ) &&
+      !StrOp.equals( wSysCmd.loccnfg, cmdVal ) && !StrOp.equals( wSysCmd.link, cmdVal ) )
+  {
     if( StrOp.equals( wSysCmd.ebreak, cmdVal ) ) {
       if( wCtrl.isebreakforceunlock( wRocRail.getctrl( AppOp.getIni() ) ) ) {
         ModelOp.forceUnlock(inst);
