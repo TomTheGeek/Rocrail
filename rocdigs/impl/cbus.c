@@ -504,7 +504,7 @@ static void __updateSpeedDir(iOCBUS cbus, byte* frame) {
   int offset  = (frame[1] == 'S') ? 0:4;
   int session = HEXA2Byte(frame + OFFSET_D1 + offset);
   int speed   = HEXA2Byte(frame + OFFSET_D2 + offset);
-  Boolean dir = (speed & 0x80) ? True:False;
+  Boolean dir = (speed & 0x80) ? False:True;
 
   iOSlot slot = __getSlotBySession(data, session);
 
@@ -645,7 +645,7 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
   int f5_8    =  HEXA2Byte(frame + OFFSET_D6 + offset);
   int f9_12   =  HEXA2Byte(frame + OFFSET_D7 + offset);
 
-  Boolean dir = (speed & 0x80) ? True:False;
+  Boolean dir = (speed & 0x80) ? False:True;
 
   speed &= speed & 0x7F;
 
@@ -1959,7 +1959,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       byte* frame = allocMem(32);
       cmd[0] = OPC_DSPD;
       cmd[1] = slot->session;
-      cmd[2] = speed | (slot->dir ? 0x80:0x80);
+      cmd[2] = speed | (slot->dir ? 0x00:0x80);
       makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid, False );
       slot->lastkeep = SystemOp.getTick();
       ThreadOp.post(data->writer, (obj)frame);
