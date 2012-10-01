@@ -129,6 +129,18 @@ static void __uid2Array(int uid, byte* b) {
   b[3] = (uid & 0xFF000000) >> 24;
 }
 
+static iONode __getIniNode(iOBiDiB bidib, int uid) {
+  iOBiDiBData data = Data(bidib);
+  iONode child = wBiDiB.getbidibnode(data->bidibini);
+  while( child != NULL ) {
+    if( wBiDiBnode.getuid(child) == uid )
+      return child;
+    child = wBiDiB.nextbidibnode(data->bidibini, child);
+  }
+  return NULL;
+}
+
+
 static void __inform( iOBiDiB inst ) {
   iOBiDiBData data = Data(inst);
   iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
@@ -671,6 +683,30 @@ static void __handleError(iOBiDiB bidib, byte* pdata) {
 }
 
 
+static void __delNode(iOBiDiB bidib, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  char uidKey[32];
+  int uid = pdata[5] + (pdata[6] << 8) + (pdata[7] << 16) + (pdata[8] << 24);
+  StrOp.fmtb( uidKey, "0x%08X", uid );
+  iOBiDiBNode bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
+
+  if( bidibnode != NULL ) {
+    iONode node = __getIniNode(bidib, bidibnode->uid);
+    char localKey[32];
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "removing node %s", uidKey);
+
+
+    MapOp.remove( data->nodemap, uidKey );
+
+    StrOp.fmtb( localKey, "%d.%d.%d.%d", bidibnode->path[0], bidibnode->path[1], bidibnode->path[2], bidibnode->path[3] );
+    MapOp.remove( data->localmap, localKey);
+
+    NodeOp.removeChild( data->bidibini, node );
+  }
+}
+
+
 static void __addNode(iOBiDiB bidib, byte* pdata) {
   iOBiDiBData data = Data(bidib);
   /*
@@ -998,9 +1034,9 @@ static void __handleNewNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, i
 
 static void __handleLostNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, int size) {
   iOBiDiBData data = Data(bidib);
-  // ToDo: Remove from map.
   TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-      "MSG_NODE_LOST TODO: POWER OFF" );
+      "MSG_NODE_LOST" );
+  __delNode(bidib, pdata);
 }
 
 
@@ -1118,17 +1154,6 @@ static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
   }
 }
 
-
-static iONode __getIniNode(iOBiDiB bidib, int uid) {
-  iOBiDiBData data = Data(bidib);
-  iONode child = wBiDiB.getbidibnode(data->bidibini);
-  while( child != NULL ) {
-    if( wBiDiBnode.getuid(child) == uid )
-      return child;
-    child = wBiDiB.nextbidibnode(data->bidibini, child);
-  }
-  return NULL;
-}
 
 /**
  * len addr seq type data  crc
