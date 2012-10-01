@@ -206,6 +206,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     if( bidibnode == NULL )
       bidibnode = data->defaultbooster;
 
+    if( bidibnode == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no command station available for command=%s", cmd );
+    }
+
     if( bidibnode != NULL && StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
       iONode node = (iONode)MapOp.get( data->nodemap, uidKey );
@@ -1049,14 +1053,21 @@ static void __handleNewNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, i
   iOBiDiBData data = Data(bidib);
   data->tabver = pdata[0];
   __addNode(bidib, pdata);
+  data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, 0);
 }
 
 
 static void __handleLostNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, int size) {
   iOBiDiBData data = Data(bidib);
-  TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-      "MSG_NODE_LOST" );
+  TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "MSG_NODE_LOST" );
   __delNode(bidib, pdata);
+  data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, 0);
+  {
+    iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
+    wSysCmd.setcmd(cmd, wSysCmd.stop);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "power off on lost node..." );
+    BiDiBOp.cmd((obj)bidib, cmd);
+  }
 }
 
 
