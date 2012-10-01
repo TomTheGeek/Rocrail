@@ -673,9 +673,9 @@ static void __addNode(iOBiDiB bidib, byte* pdata) {
   UNIQUE_ID die eindeutige Hardwarekennung des Knotens, diese besteht aus 7 Bytes
   */
   //                                 UID
-  // tab ent nodeaddr class res vid productid   crc
-  // 01   00 00       40    00  0D  65 00 01 00 E1
-  //  0    1  2        3     4   5   6  7  8  9
+  // tab nodeaddr class res vid productid   crc
+  // 01  00       40    00  0D  65 00 01 00 E1
+  //  0   1        2     3   4   5  6  7  8
 
   // 0C 00 02 89 01 00 C0 00 0D 65 00 01 00 2F
   // pdata       01 00 C0 00 0D 65 00 01 00 2F
