@@ -394,12 +394,13 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
             else {
               iONode rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
               wProgram.setcmd( rsp, wProgram.writehex );
+              wProgram.setlntype(rsp, wProgram.lntype_bidib);
               wProgram.setrc( rsp, wProgram.rc_notfwup );
               wProgram.setmodid( rsp, bidibnode->uid );
               if( data->iid != NULL )
                 wProgram.setiid( rsp, data->iid );
               if( data->listenerFun != NULL && data->listenerObj != NULL )
-                data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+                data->listenerFun( data->listenerObj, rsp, TRCLEVEL_INFO );
               TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                   "the update feature flag is not set for node %s; try to read the features first", uidKey );
             }
@@ -1123,6 +1124,7 @@ static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
         data->subWrite((obj)bidib, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 1, 0);
 
         wProgram.setcmd( rsp, wProgram.writehex );
+        wProgram.setlntype(rsp, wProgram.lntype_bidib);
         wProgram.setrc( rsp, wProgram.rc_ok );
         wProgram.setmodid( rsp, bidibnode->uid );
         if( data->iid != NULL )
@@ -1170,6 +1172,7 @@ static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
       iONode rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"BIDIB_MSG_FW_UPDATE_STAT_EXIT");
       wProgram.setcmd( rsp, wProgram.writehex );
+      wProgram.setlntype(rsp, wProgram.lntype_bidib);
       wProgram.setrc( rsp, wProgram.rc_ok );
       wProgram.setmodid( rsp, bidibnode->uid );
       if( data->iid != NULL )
@@ -1185,6 +1188,7 @@ static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
       data->hexfh = NULL;
       data->hexstate = 0;
       wProgram.setcmd( rsp, wProgram.writehex );
+      wProgram.setlntype(rsp, wProgram.lntype_bidib);
       wProgram.setrc( rsp, wProgram.rc_error );
       wProgram.setrs( rsp, pdata[1] );
       wProgram.setmodid( rsp, bidibnode->uid );
@@ -1473,7 +1477,7 @@ static void __bidibReader( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDiB reader started." );
 
-  ThreadOp.sleep(500); /* resume some time to get it all being setup */
+  ThreadOp.sleep(50); /* resume some time to get it all being setup */
 
   while( data->run ) {
 

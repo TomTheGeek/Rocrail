@@ -126,6 +126,7 @@ void BidibIdentDlg::onOK( wxCommandEvent& event ) {
 }
 
 void BidibIdentDlg::event(iONode node) {
+  TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"event cmd=%d", wProgram.getcmd( node ) );
   if(  wProgram.getcmd( node ) == wProgram.datarsp ) {
     handleFeature(node);
     NodeOp.base.del(node);
@@ -144,6 +145,7 @@ void BidibIdentDlg::event(iONode node) {
   }
   else if(  wProgram.getcmd( node ) == wProgram.writehex ) {
     m_UpdateStart->Enable(true);
+    m_UpdateStart->SetLabel( wxGetApp().getMsg( "start" ) );
   }
   else {
     if( this->node != NULL )
@@ -648,6 +650,7 @@ void BidibIdentDlg::onUpdateStart( wxCommandEvent& event ) {
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
     m_UpdateStart->Enable(false);
+    m_UpdateStart->SetLabel( wxGetApp().getMsg( "wait" )+wxT("...") );
   }
 }
 

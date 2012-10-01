@@ -801,6 +801,11 @@
     <var name="porttype" vt="int" defval="0" remark="Port type"/>
     <var name="lncv" vt="bool" defval="false"/>
     <var name="filename" vt="string" defval=""/>
+    <const name="rc_ok" vt="int" val="0"/>
+    <const name="rc_notfwup" vt="int" val="1"/>
+    <const name="rc_error" vt="int" val="2" remork="see rs"/>
+    <var name="rc" vt="int" defval="0" range="0-*" remark="return code"/>
+    <var name="rs" vt="int" defval="0" range="0-*" remark="reason code"/>
   </program>
 
   <exception remark="Exception wrapper" wrappername="Exception">
