@@ -1466,6 +1466,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   default:
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
         "UNSUPPORTED: msg=0x%02X, path=%s", Type, pathKey );
+    TraceOp.dump ( name, TRCLEVEL_INFO, (char*)msg, size );
     break;
 
   }

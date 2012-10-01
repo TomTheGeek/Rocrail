@@ -41,7 +41,8 @@ protected:
 	void OnNodeList( wxCommandEvent& event );
 	void OnCancel( wxCommandEvent& event );
 	void OnOK( wxCommandEvent& event );
-	
+  void onConfigureNodes( wxCommandEvent& event );
+
   void initLabels();
   void initValues();
   void initNodes();

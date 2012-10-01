@@ -31,6 +31,8 @@
 
 
 #include "rocview/public/guiapp.h"
+#include "rocview/dialogs/decoders/bidibidentdlg.h"
+
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/BiDiB.h"
 #include "rocrail/wrapper/public/BiDiBnode.h"
@@ -183,3 +185,10 @@ void BidibDlg::OnOK( wxCommandEvent& event ) {
   evaluate();
   EndModal( wxID_OK );
 }
+
+void BidibDlg::onConfigureNodes( wxCommandEvent& event ) {
+  BidibIdentDlg* dlg = new BidibIdentDlg(this);
+  dlg->ShowModal();
+  dlg->Destroy();
+}
+

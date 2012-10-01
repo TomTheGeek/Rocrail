@@ -160,6 +160,9 @@ public:
     /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_RR_CONTROLLERS
     void OnListboxRrControllersSelected( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_LISTBOX_DOUBLECLICKED event handler for ID_LISTBOX_RR_CONTROLLERS
+    void OnListboxRrControllersDoubleClicked( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_RR_DELETE
     void OnButtonRrDeleteClick( wxCommandEvent& event );
 

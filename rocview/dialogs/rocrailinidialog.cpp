@@ -97,6 +97,7 @@ BEGIN_EVENT_TABLE( RocrailIniDialog, wxDialog )
     EVT_BUTTON( ID_BUTTON_KEYPATH, RocrailIniDialog::OnButtonKeypathClick )
 
     EVT_LISTBOX( ID_LISTBOX_RR_CONTROLLERS, RocrailIniDialog::OnListboxRrControllersSelected )
+    EVT_LISTBOX_DCLICK( ID_LISTBOX_RR_CONTROLLERS, RocrailIniDialog::OnListboxRrControllersDoubleClicked )
 
     EVT_BUTTON( ID_BUTTON_RR_DELETE, RocrailIniDialog::OnButtonRrDeleteClick )
 
@@ -1849,6 +1850,20 @@ void RocrailIniDialog::OnButtonKeypathClick( wxCommandEvent& event )
     iONode r2rnet = wRocRail.getr2rnet( m_Props );
     wRocRail.setkeypath(m_Props, fdlg->GetPath().mb_str(wxConvUTF8) );
     m_KeyPath->SetValue( wxString( wRocRail.getkeypath(m_Props),wxConvUTF8) );
+  }
+}
+
+
+/*!
+ * wxEVT_COMMAND_LISTBOX_DOUBLECLICKED event handler for ID_LISTBOX_RR_CONTROLLERS
+ */
+
+void RocrailIniDialog::OnListboxRrControllersDoubleClicked( wxCommandEvent& event )
+{
+  int sel = m_Controllers->GetSelection();
+  if( sel != wxNOT_FOUND ) {
+    m_Controller = (iONode)m_Controllers->GetClientData( sel );
+    OnButtonRrPropsClick(event);
   }
 }
 
