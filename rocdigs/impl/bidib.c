@@ -375,20 +375,34 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       if( bidibnode != NULL ) {
         if( wProgram.getcmd( node ) == wProgram.writehex ) {
           if( data->hexstate == 0 ) {
-            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-                "load hex file %s into node %d.", wProgram.getfilename(node), uidKey );
-            if( data->hexfile != NULL )
-              StrOp.free(data->hexfile);
-            data->hexfile = StrOp.dup(wProgram.getfilename(node));
-            data->hexline = 0;
-            data->hexstate = 1; /* pending */
-            data->hexnode = bidibnode;
-            msgdata[0] = BIDIB_MSG_FW_UPDATE_OP_ENTER;
-            msgdata[1] = bidibnode->classid;
-            msgdata[2] = 0;
-            msgdata[3] = bidibnode->vendorid;
-            __uid2Array(bidibnode->uid, msgdata+4 );
-            data->subWrite((obj)inst, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 8, bidibnode->seq++);
+            if( bidibnode->fwup ) {
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+                  "load hex file %s into node %s.", wProgram.getfilename(node), uidKey );
+              if( data->hexfile != NULL )
+                StrOp.free(data->hexfile);
+              data->hexfile = StrOp.dup(wProgram.getfilename(node));
+              data->hexline = 0;
+              data->hexstate = 1; /* pending */
+              data->hexnode = bidibnode;
+              msgdata[0] = BIDIB_MSG_FW_UPDATE_OP_ENTER;
+              msgdata[1] = bidibnode->classid;
+              msgdata[2] = 0;
+              msgdata[3] = bidibnode->vendorid;
+              __uid2Array(bidibnode->uid, msgdata+4 );
+              data->subWrite((obj)inst, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 8, bidibnode->seq++);
+            }
+            else {
+              iONode rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+              wProgram.setcmd( rsp, wProgram.writehex );
+              wProgram.setrc( rsp, wProgram.rc_notfwup );
+              wProgram.setmodid( rsp, bidibnode->uid );
+              if( data->iid != NULL )
+                wProgram.setiid( rsp, data->iid );
+              if( data->listenerFun != NULL && data->listenerObj != NULL )
+                data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                  "the update feature flag is not set for node %s; try to read the features first", uidKey );
+            }
           }
           else {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
@@ -814,6 +828,11 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
           "MSG_FEATURE, uid=%08X feature=(%d) %s value=%d", bidibnode->uid, feature, bidibGetFeatureName(feature), value );
       data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode->seq++);
 
+      if( feature == FEATURE_FW_UPDATE_MODE ) {
+        bidibnode->fwup = (value ? True:False);
+      }
+
+
       if( bidibnode != NULL ) {
         iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
         wProgram.setcmd( node, wProgram.datarsp );
@@ -1097,10 +1116,19 @@ static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
         }
       }
       if( data->hexstate == 2 ) {
+        iONode rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
         data->hexstate = 0;
         msgdata[0] = BIDIB_MSG_FW_UPDATE_OP_EXIT;
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "node is ready; exit update...");
         data->subWrite((obj)bidib, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 1, 0);
+
+        wProgram.setcmd( rsp, wProgram.writehex );
+        wProgram.setrc( rsp, wProgram.rc_ok );
+        wProgram.setmodid( rsp, bidibnode->uid );
+        if( data->iid != NULL )
+          wProgram.setiid( rsp, data->iid );
+        if( data->listenerFun != NULL && data->listenerObj != NULL )
+          data->listenerFun( data->listenerObj, rsp, TRCLEVEL_INFO );
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "node is ready but no update is pending...");
@@ -1139,14 +1167,31 @@ static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
 
     }
     else if(pdata[0] == BIDIB_MSG_FW_UPDATE_STAT_EXIT) {
+      iONode rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"BIDIB_MSG_FW_UPDATE_STAT_EXIT");
+      wProgram.setcmd( rsp, wProgram.writehex );
+      wProgram.setrc( rsp, wProgram.rc_ok );
+      wProgram.setmodid( rsp, bidibnode->uid );
+      if( data->iid != NULL )
+        wProgram.setiid( rsp, data->iid );
+      if( data->listenerFun != NULL && data->listenerObj != NULL )
+        data->listenerFun( data->listenerObj, rsp, TRCLEVEL_INFO );
     }
     else if(pdata[0] == BIDIB_MSG_FW_UPDATE_STAT_ERROR) {
+      iONode rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,"MSG_FW_UPDATE_STAT error=%d", pdata[1]);
       if( data->hexfh != NULL )
         FileOp.base.del( data->hexfh );
       data->hexfh = NULL;
       data->hexstate = 0;
+      wProgram.setcmd( rsp, wProgram.writehex );
+      wProgram.setrc( rsp, wProgram.rc_error );
+      wProgram.setrs( rsp, pdata[1] );
+      wProgram.setmodid( rsp, bidibnode->uid );
+      if( data->iid != NULL )
+        wProgram.setiid( rsp, data->iid );
+      if( data->listenerFun != NULL && data->listenerObj != NULL )
+        data->listenerFun( data->listenerObj, rsp, TRCLEVEL_INFO );
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,"MSG_FW_UPDATE_STAT status=%d ???", pdata[0]);

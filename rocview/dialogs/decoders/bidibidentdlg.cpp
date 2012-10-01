@@ -142,6 +142,9 @@ void BidibIdentDlg::event(iONode node) {
     m_ConfigS->SetValue( wProgram.getval4(node));
     NodeOp.base.del(node);
   }
+  else if(  wProgram.getcmd( node ) == wProgram.writehex ) {
+    m_UpdateStart->Enable(true);
+  }
   else {
     if( this->node != NULL )
       NodeOp.base.del(this->node);
@@ -644,6 +647,7 @@ void BidibIdentDlg::onUpdateStart( wxCommandEvent& event ) {
     wProgram.setfilename( cmd,  m_UpdateFile->GetValue().mb_str(wxConvUTF8) );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
+    m_UpdateStart->Enable(false);
   }
 }
 

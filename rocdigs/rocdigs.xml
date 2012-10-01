@@ -1308,6 +1308,7 @@
       <var name="seq" vt="int"/>
       <var name="load" vt="int"/>
       <var name="stat" vt="int"/>
+      <var name="fwup" vt="Boolean"/>
       </struct>
     <data>
       <var name="ini" vt="iONode"/>
