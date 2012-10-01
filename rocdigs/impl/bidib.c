@@ -661,21 +661,40 @@ static void __handleError(iOBiDiB bidib, byte* pdata) {
 }
 
 
-static void __addNode(iOBiDiB bidib, byte* msg) {
+static void __addNode(iOBiDiB bidib, byte* pdata) {
   iOBiDiBData data = Data(bidib);
-
-  /* ToDo: path can be 4 bytes long. */
+  /*
+  MSG_NODETAB:
+  Es folgt ein Eintrag der Zuordnungstabelle, dieser hat folgenden Aufbau:
+    MSG_NODETAB_DATA ::= NODETAB_VERSION NODETAB_ENTRY
+    NODE_TAB_VERSION ::= [ 0x01 .. 0xff ] (Wird bei jeder Änderung inkrementiert, Überlauf: 255→1)
+    NODETAB_ENTRY ::= NODE_ADDR UNIQUE_ID
+  NODE_ADDR Zugewiesene lokale Adresse des Knotens (Wertebereich 0..127)
+  UNIQUE_ID die eindeutige Hardwarekennung des Knotens, diese besteht aus 7 Bytes
+  */
   //                                 UID
-  // locaddr class res vid productid   crc
-  // 00      40    00  0D  65 00 01 00 E1
+  // tab ent nodeaddr class res vid productid   crc
+  // 01   00 00       40    00  0D  65 00 01 00 E1
+  //  0    1  2        3     4   5   6  7  8  9
+
+  // 0C 00 02 89 01 00 C0 00 0D 65 00 01 00 2F
+  // pdata       01 00 C0 00 0D 65 00 01 00 2F
+  // 0C 00 04 89 01 01 01 00 0D 6B 00 00 02 A0
+  // pdata       01 01 01 00 0D 6B 00 00 02 A0
   char localKey[32];
   char uidKey[32];
-  int uid = msg[4] + (msg[5] << 8) + (msg[6] << 16) + (msg[7] << 24);
+
+  int uid = pdata[5] + (pdata[6] << 8) + (pdata[7] << 16) + (pdata[8] << 24);
+  int classid = pdata[2];
+  int vid = pdata[4];
+  int localaddr = pdata[1];
 
   StrOp.fmtb( uidKey, "0x%08X", uid );
 
+  //TraceOp.dump ( "bidibWrite", TRCLEVEL_INFO, (char*)pdata, 10 );
+
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-      "add node: class=0x%02X vid=%d uid=%s", msg[1], msg[3], uidKey);
+      "add node: class=0x%02X vid=%d uid=%s", classid, vid, uidKey);
 
   iOBiDiBNode node = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
 
@@ -683,15 +702,15 @@ static void __addNode(iOBiDiB bidib, byte* msg) {
     byte l_msg[32];
     int size = 0;
     int msgidx = 0;
-    char* classname = bidibGetClassName(msg[1]);
+    char* classname = bidibGetClassName(classid);
 
     node = allocMem(sizeof(struct bidibnode));
-    node->classid = msg[1];
+    node->classid = classid;
     node->uid = uid;
-    node->vendorid = msg[3];
+    node->vendorid = vid;
 
     MemOp.copy(node->path+1, data->nodepath, 3);
-    node->path[0] = msg[0];
+    node->path[0] = localaddr;
 
     StrOp.fmtb( localKey, "%d.%d.%d.%d", node->path[0], node->path[1], node->path[2], node->path[3] );
 
@@ -890,30 +909,27 @@ static void __handleConfig(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
   }
 }
 
-static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, byte* msg, int size, byte* pdata, int datasize) {
+static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, int Type, const char* pathKey, byte* pdata, int datasize) {
   iOBiDiBData data = Data(bidib);
   byte path[4] = {0,0,0,0}; // Default path in case no node was found.
 
   //                                 UID
   //             ver len start locaddr class res vid productid   crc
   // 0E 00 04 89 01  01  00    00      40    00  0D  65 00 01 00 E1
-  int Addr     = msg[1];
-  int  Seq     = msg[2];
-  int Type     = msg[3];
-  data->tabver = msg[4];
-  int entries  = msg[5];
   int entry    = 0;
   int offset   = 7;
 
 
   if( Type == MSG_NODETAB_COUNT ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "MSG_NODETAB_COUNT, addr=%d seq=%d count=%d", Addr, Seq, msg[4] );
+        "MSG_NODETAB_COUNT, path=%s count=%d", pathKey, pdata[0] );
     // request next
     data->subWrite((obj)bidib, node==NULL?path:node->path, MSG_NODETAB_GETNEXT, NULL, 0, node==NULL?0:node->seq++);
     return;
   }
   else if( Type == MSG_NODETAB ) {
+    data->tabver = pdata[0];
+    int entry  = pdata[1];
     byte l_msg[32];
 
     /*
@@ -931,10 +947,11 @@ static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, byte* msg, int size
     */
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "MSG_NODETAB, addr=%d seq=%d tab-ver=%d tab-len=%d", Addr, Seq, data->tabver, entries );
-    data->subWrite((obj)bidib, node==NULL?path:node->path, MSG_NODETAB_GETNEXT, NULL, 0, node==NULL?0:node->seq++);
+        "MSG_NODETAB, path=%s tab-ver=%d tab-idx=%d", pathKey, data->tabver, entry );
     // ToDo: Data offset in TAB message.
-    __addNode(bidib, msg+5 );
+    __addNode(bidib, pdata );
+
+    data->subWrite((obj)bidib, node==NULL?path:node->path, MSG_NODETAB_GETNEXT, NULL, 0, node==NULL?0:node->seq++);
   }
 
     /*
@@ -962,22 +979,18 @@ static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, byte* msg, int size
 }
 
 
-static void __handleNewNode(iOBiDiB bidib, byte* msg, int size) {
+static void __handleNewNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, int size) {
   iOBiDiBData data = Data(bidib);
-  int Addr     = msg[1];
-  int  Seq     = msg[2];
-  data->tabver = msg[4];
-  __addNode(bidib, msg+5);
+  data->tabver = pdata[0];
+  __addNode(bidib, pdata);
 }
 
 
-static void __handleLostNode(iOBiDiB bidib, byte* msg, int size) {
+static void __handleLostNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, int size) {
   iOBiDiBData data = Data(bidib);
-  int Addr      = msg[1];
-  int Seq       = msg[2];
-  int localAddr = msg[4];
+  // ToDo: Remove from map.
   TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-      "MSG_NODE_LOST, addr=%d seq=%d local-addr=%d TODO: POWER OFF", Addr, Seq, localAddr );
+      "MSG_NODE_LOST TODO: POWER OFF" );
 }
 
 
@@ -1172,19 +1185,19 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_NODETAB_COUNT:
   case MSG_NODETAB:
   {
-    __handleNodeTab(bidib, bidibnode, msg, size, pdata, datasize);
+    __handleNodeTab(bidib, bidibnode, Type, pathKey, pdata, datasize);
     break;
   }
 
   case MSG_NODE_NEW:
   {
-    __handleNewNode(bidib, msg, size);
+    __handleNewNode(bidib, bidibnode, pdata, datasize);
     break;
   }
 
   case MSG_NODE_LOST:
   {
-    __handleLostNode(bidib, msg, size);
+    __handleLostNode(bidib, bidibnode, pdata, datasize);
     break;
   }
 
