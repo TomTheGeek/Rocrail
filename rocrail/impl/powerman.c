@@ -294,8 +294,10 @@ static Boolean _cmd(iOPowerMan inst, iONode cmd) {
       boosterid = wBooster.getid(booster);
       TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Power command for booster [%s].", boosterid);
       if( output != NULL ) {
-        if( StrOp.equals( wPwrCmd.on, wPwrCmd.getcmd(cmd) ) )
+        if( StrOp.equals( wPwrCmd.on, wPwrCmd.getcmd(cmd) ) ) {
+          ThreadOp.sleep(50);
           OutputOp.on(output);
+        }
         else if( StrOp.equals( wPwrCmd.off, wPwrCmd.getcmd(cmd) ) )
           OutputOp.off(output);
       }
