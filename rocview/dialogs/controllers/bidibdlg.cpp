@@ -126,8 +126,8 @@ void BidibDlg::initNodes() {
   iONode node = wBiDiB.getbidibnode(bidib);
   while( node != NULL ) {
     char uid[256];
-    StrOp.fmtb( uid, "0x%08X, %s, %s, %s",
-        wBiDiBnode.getuid(node), wBiDiBnode.getpath(node), wBiDiBnode.getclass(node), m_Vendor[wBiDiBnode.getvendor(node)] );
+    StrOp.fmtb( uid, "%08X, %s, %s",
+        wBiDiBnode.getuid(node), wBiDiBnode.getpath(node), wBiDiBnode.getclass(node) );
 
     m_NodeList->Append( wxString(uid,wxConvUTF8), node );
     node = wBiDiB.nextbidibnode(bidib, node);
