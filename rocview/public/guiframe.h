@@ -323,7 +323,7 @@ public:
   void initLocCtrlDialogs();
   void setOffline( bool p_bOffline );
   void initFrame();
-  void Connect( const char* host, int port, bool wait4rr=false );
+  bool Connect( const char* host, int port, bool wait4rr=false, bool showpopup=true );
   void putChild( void* item, int z  );
 
 

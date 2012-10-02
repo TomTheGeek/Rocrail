@@ -61,6 +61,15 @@ static char* __toString(void* inst) {
 }
 static void __del(void* inst) {
   iORConData data = Data(inst);
+  if( data->sh != NULL ) {
+    SocketOp.disConnect( data->sh );
+    SocketOp.base.del(data->sh);
+  }
+  data->run = False;
+  if( data->infoReader != NULL ) {
+    ThreadOp.kill(data->infoReader);
+  }
+  ThreadOp.sleep(10);
   StrOp.free( data->host );
   freeMem( data );
   freeMem( inst );

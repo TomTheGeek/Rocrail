@@ -2254,12 +2254,12 @@ void RocGuiFrame::OnConnect( wxCommandEvent& event ) {
 }
 
 
-void RocGuiFrame::Connect( const char* host, int port, bool wait4rr ) {
+bool RocGuiFrame::Connect( const char* host, int port, bool wait4rr, bool showpopup ) {
   wxGetApp().setHost( host, port );
 
   wxGetApp().setStayOffline( false );
 
-  if( wxGetApp().sendToRocrail( (char*)NULL, wait4rr, false ) ) {
+  if( wxGetApp().sendToRocrail( (char*)NULL, wait4rr, false, showpopup ) ) {
 
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
     wModelCmd.setcmd( cmd, wModelCmd.themes );
@@ -2277,7 +2277,9 @@ void RocGuiFrame::Connect( const char* host, int port, bool wait4rr ) {
     cmd->base.del( cmd );
 
     this->setOnline( true );
+    return true;
   }
+  return false;
 }
 
 

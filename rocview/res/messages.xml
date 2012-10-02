@@ -18180,4 +18180,7 @@
   <Msg id="issuepath">
     <en txt="Issue path"/>
   </Msg>
+  <Msg id="reconnectafterservershutdown">
+    <en txt="Reconnect after server shutdown"/>
+  </Msg>
 </Messages>

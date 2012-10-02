@@ -200,6 +200,7 @@ bool RocGui::isModelSet() {
 
 void RocGui::disConnect() {
   RConOp.close( m_RCon );
+  RConOp.base.del( m_RCon );
   m_RCon = NULL;
   m_bStayOffline = true;
   m_bOffline = true;
@@ -367,6 +368,24 @@ iONode RocGui::popUndoItem() {
 }
 
 
+static void reconThread( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  RocGui* o = (RocGui*)ThreadOp.getParm( th );
+
+  TraceOp.trc( "reconthread", TRCLEVEL_INFO, __LINE__, 9999, "reconThread started" );
+  ThreadOp.sleep(100);
+  o->setModel(NULL);
+  o->setStayOffline(false);
+  bool connected = false;
+  do {
+    connected = o->getFrame()->Connect(o->m_Host, o->m_Port, false, false);
+    if(!connected)
+      ThreadOp.sleep(1000);
+  } while(!connected);
+  TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "conThread ended" );
+
+}
+
 
 static void conThread( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
@@ -386,6 +405,7 @@ static void conThread( void* threadinst ) {
   // connect to the rocrail daemon:
   int tries = 0;
   int retry = wRRCon.getretry( wGui.getrrcon( o->m_Ini ) );
+  int sleep = wRRCon.getretryinterval( wGui.getrrcon( o->m_Ini ) );
   int retryinterval = wRRCon.getretryinterval( wGui.getrrcon( o->m_Ini ) );
 
   do {
@@ -405,7 +425,14 @@ static void conThread( void* threadinst ) {
       TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "4");
     }
 
+    if( o->m_RCon == NULL && tries < retry) {
+      TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "sleep %dms tries=%d retry=%d", sleep, tries, retry);
+      ThreadOp.sleep(sleep);
+    }
+
   } while( o->m_RCon == NULL && tries < retry );
+
+  wRRCon.setretry( wGui.getrrcon(o->m_Ini), 1 );
 
   TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "5");
 
@@ -972,9 +999,21 @@ static void rocrailCallback( obj me, iONode node ) {
   /* System on/off */
   else if( StrOp.equals( wSysCmd.name(), NodeOp.getName( node ) ) ) {
     if( StrOp.equals( wSysCmd.shutdown, wSysCmd.getcmd(node) ) ) {
-      TraceOp.trc( "app", TRCLEVEL_EXCEPTION, __LINE__, 9999, "SHUTDOWN");
-      wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, wxID_EXIT );
-      wxPostEvent( guiApp->getFrame(), event );
+      if( wGui.isreconnectafterservershutdown(guiApp->getIni()) ) {
+        TraceOp.trc( "app", TRCLEVEL_WARNING , __LINE__, 9999, "SHUTDOWN -> reconnect after shutdown...");
+        wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_GoOffline );
+        wxPostEvent( guiApp->getFrame(), event );
+
+        TraceOp.trc( "app", TRCLEVEL_INFO , __LINE__, 9999, "start reconnection connection...");
+        iOThread th = ThreadOp.inst( "reconthread", &reconThread, guiApp );
+        ThreadOp.start( th );
+
+      }
+      else {
+        TraceOp.trc( "app", TRCLEVEL_EXCEPTION, __LINE__, 9999, "SHUTDOWN");
+        wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, wxID_EXIT );
+        wxPostEvent( guiApp->getFrame(), event );
+      }
     }
     else {
       wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, SYSTEM_EVENT );
@@ -1358,7 +1397,7 @@ void RocGui::sendToRocrail( iONode cmd, bool disconnect ) {
   }
 }
 
-bool RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect ) {
+bool RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect, bool showpopup ) {
   if( m_bStayOffline )
     return true;
 
@@ -1402,7 +1441,7 @@ bool RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect ) {
     }
     else {
       // show popup with message
-      if( m_Frame != NULL ) {
+      if( showpopup && m_Frame != NULL ) {
         char* val = StrOp.fmt( " (%s:%d)", m_Host, m_Port );
         wxMessageDialog( m_Frame,
             wxGetApp().getMsg("connectionwarning") +

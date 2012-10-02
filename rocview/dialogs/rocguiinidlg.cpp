@@ -190,6 +190,7 @@ void RocguiIniDialog::initLabels() {
   m_ShowOnlyStartSchedules->SetLabel( wxGetApp().getMsg( "showonlystartschedules" ) );
   m_ShowBlockID->SetLabel( wxGetApp().getMsg( "blockid" ) );
   m_ShowSecondhand->SetLabel( wxGetApp().getMsg( "showsecondhand" ) );
+  m_ReconnectAfterServerShutdown->SetLabel( wxGetApp().getMsg( "reconnectafterservershutdown" ) );
 
   m_labSpeak4Block->SetLabel( wxGetApp().getMsg( "speak4block" ) );
   m_labSpeakCmd->SetLabel( wxGetApp().getMsg( "speakcmd" ) );
@@ -231,6 +232,7 @@ void RocguiIniDialog::initValues() {
   m_ShowOnlyStartSchedules->SetValue( wGui.isshowonlystartschedules( m_Ini ) ? true:false );
   m_ShowBlockID->SetValue( wPlanPanel.isbktextid(planpanel) ? true:false );
   m_ShowSecondhand->SetValue( wGui.isshowsecondhand( m_Ini ) ? true:false );
+  m_ReconnectAfterServerShutdown->SetValue( wGui.isreconnectafterservershutdown( m_Ini ) ? true:false );
 
   // MIC
   iONode mic = wGui.getmic( m_Ini );
@@ -387,6 +389,7 @@ void RocguiIniDialog::evaluate() {
   wGui.setmonitoring( m_Ini, m_Monitoring->GetValue() ? True:False );
   wGui.setshowonlystartschedules( m_Ini, m_ShowOnlyStartSchedules->GetValue() ? True:False );
   wGui.setshowsecondhand( m_Ini, m_ShowSecondhand->GetValue() ? True:False );
+  wGui.setreconnectafterservershutdown( m_Ini, m_ReconnectAfterServerShutdown->IsChecked() ? True:False );
 
   // MIC
   iONode mic = wGui.getmic( m_Ini );
