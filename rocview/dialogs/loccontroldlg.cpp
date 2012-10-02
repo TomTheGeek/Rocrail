@@ -121,13 +121,11 @@ BEGIN_EVENT_TABLE( LocControlDialog, wxDialog )
 
     EVT_BUTTON( ID_FG, LocControlDialog::OnFgClick )
 
+    EVT_BUTTON( ID_BUTTON_LOCCTRL_STOP, LocControlDialog::OnButtonLocctrlStopClick )
+
     EVT_BUTTON( ID_BITMAPBUTTON_LOCCTRL_DIR, LocControlDialog::OnBitmapbuttonLocctrlDirClick )
 
     EVT_COMBOBOX( ID_COMBOBOX_LOCCTRL_LOC, LocControlDialog::OnComboboxLocctrlLocSelected )
-
-    EVT_BUTTON( ID_BUTTON_LOCCTRL_CANCEL, LocControlDialog::OnButtonLocctrlCancelClick )
-
-    EVT_BUTTON( ID_BUTTON_LOCCTRL_STOP, LocControlDialog::OnButtonLocctrlStopClick )
 
     EVT_BUTTON( ID_BUTTON_LOCCTRL_BREAK, LocControlDialog::OnButtonLocctrlBreakClick )
 
@@ -170,7 +168,6 @@ LocControlDialog::LocControlDialog( wxWindow* parent, iOList list, iOMap map, co
 
 
 void LocControlDialog::initLabels() {
-  m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
   m_Stop->SetLabel( wxGetApp().getMsg( "stop" ) );
   m_Break->SetLabel( wxGetApp().getMsg( "break" ) );
 
@@ -633,10 +630,9 @@ bool LocControlDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     m_F13 = NULL;
     m_F14 = NULL;
     m_FG = NULL;
+    m_Stop = NULL;
     m_Dir = NULL;
     m_LcList = NULL;
-    m_Cancel = NULL;
-    m_Stop = NULL;
     m_Break = NULL;
 ////@end LocControlDialog member initialisation
 
@@ -666,8 +662,8 @@ void LocControlDialog::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    m_Image = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_IMAGE, wxNullBitmap, wxDefaultPosition, wxSize(-1, 88), wxBU_AUTODRAW );
-    itemBoxSizer2->Add(m_Image, 0, wxGROW|wxALL, 2);
+    m_Image = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_IMAGE, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
+    itemBoxSizer2->Add(m_Image, 1, wxGROW|wxALL, 2);
 
     wxFlexGridSizer* itemFlexGridSizer4 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer4->AddGrowableCol(1);
@@ -740,31 +736,27 @@ void LocControlDialog::CreateControls()
     itemFlexGridSizer25->AddGrowableCol(1);
     m_FunctionBox->Add(itemFlexGridSizer25, 0, wxGROW|wxRIGHT, 5);
 
+    wxBoxSizer* itemBoxSizer26 = new wxBoxSizer(wxVERTICAL);
+    itemFlexGridSizer25->Add(itemBoxSizer26, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+
     m_FG = new wxButton( itemDialog1, ID_FG, _("FG"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer25->Add(m_FG, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP|wxBOTTOM, 2);
+    itemBoxSizer26->Add(m_FG, 0, wxGROW|wxRIGHT|wxBOTTOM, 2);
+
+    m_Stop = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_STOP, _("Stop"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer26->Add(m_Stop, 0, wxGROW|wxRIGHT|wxBOTTOM, 2);
 
     m_Dir = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_LOCCTRL_DIR, itemDialog1->GetBitmapResource(wxT("../xpm/dir.xpm")), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-    itemFlexGridSizer25->Add(m_Dir, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
+    itemFlexGridSizer25->Add(m_Dir, 0, wxGROW|wxGROW|wxLEFT|wxBOTTOM, 2);
+
+    wxBoxSizer* itemBoxSizer30 = new wxBoxSizer(wxHORIZONTAL);
+    m_FunctionBox->Add(itemBoxSizer30, 0, wxGROW|wxADJUST_MINSIZE, 0);
 
     wxArrayString m_LcListStrings;
     m_LcList = new wxComboBox( itemDialog1, ID_COMBOBOX_LOCCTRL_LOC, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LcListStrings, wxCB_READONLY );
-    m_FunctionBox->Add(m_LcList, 0, wxGROW|wxALL, 4);
-
-    wxBoxSizer* itemBoxSizer29 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer2->Add(itemBoxSizer29, 0, wxGROW|wxALL, 0);
-
-    m_Cancel = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_CANCEL, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_Cancel->SetDefault();
-    itemBoxSizer29->Add(m_Cancel, 0, wxALIGN_CENTER_VERTICAL|wxALL, 4);
-
-    m_Stop = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_STOP, _("Stop"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer29->Add(m_Stop, 1, wxALIGN_CENTER_VERTICAL|wxALL, 4);
-
-    wxBoxSizer* itemBoxSizer32 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer2->Add(itemBoxSizer32, 0, wxGROW|wxALL, 0);
+    m_FunctionBox->Add(m_LcList, 0, wxGROW|wxRIGHT|wxTOP|wxBOTTOM, 4);
 
     m_Break = new wxButton( itemDialog1, ID_BUTTON_LOCCTRL_BREAK, _("BREAK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer32->Add(m_Break, 1, wxGROW|wxALL, 4);
+    m_FunctionBox->Add(m_Break, 0, wxGROW|wxRIGHT|wxBOTTOM, 4);
 
     // Connect events and objects
     itemDialog1->Connect(ID_LOCCONTROL, wxEVT_DESTROY, wxWindowDestroyEventHandler(LocControlDialog::OnDestroy), NULL, this);
@@ -994,38 +986,6 @@ void LocControlDialog::OnComboboxLocctrlLocSelected( wxCommandEvent& event )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCCTRL_CANCEL
  */
 
-void LocControlDialog::OnButtonLocctrlCancelClick( wxCommandEvent& event )
-{
-  ListOp.removeObj( m_DlgList, (obj)this );
-
-  if( m_LcList->GetSelection() == wxNOT_FOUND ) {
-    Destroy();
-    return;
-  }
-
-  int x,y;
-  GetPosition(&x,&y);
-
-  wxString id = m_LcList->GetStringSelection();
-  char* LocID = StrOp.dup((const char*)id.mb_str(wxConvUTF8));
-
-  TraceOp.trc( "locdialog", TRCLEVEL_INFO, __LINE__, 9999, "position [%d,%d] for [%s]", x, y, LocID );
-  if( StrOp.len(LocID) > 0 ) {
-    char* pos = (char*)MapOp.get(m_DlgMap, LocID);
-    if( pos != NULL ) {
-      TraceOp.trc( "locdialog", TRCLEVEL_INFO, __LINE__, 9999, "remove previous position [%s] for [%s]", pos, LocID );
-      StrOp.free(pos);
-      MapOp.remove(m_DlgMap, LocID);
-    }
-    pos = StrOp.fmt("%d,%d", x, y);
-    MapOp.put( m_DlgMap, LocID, (obj)pos );
-  }
-
-  StrOp.free(LocID);
-
-  Destroy();
-}
-
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCCTRL_STOP
  */
@@ -1197,7 +1157,34 @@ void LocControlDialog::OnButtonLcctrlF11Click( wxCommandEvent& event )
 
 void LocControlDialog::OnCloseWindow( wxCloseEvent& event )
 {
-  OnButtonLocctrlCancelClick((wxCommandEvent&)event);
+  ListOp.removeObj( m_DlgList, (obj)this );
+
+  if( m_LcList->GetSelection() == wxNOT_FOUND ) {
+    Destroy();
+    return;
+  }
+
+  int x,y;
+  GetPosition(&x,&y);
+
+  wxString id = m_LcList->GetStringSelection();
+  char* LocID = StrOp.dup((const char*)id.mb_str(wxConvUTF8));
+
+  TraceOp.trc( "locdialog", TRCLEVEL_INFO, __LINE__, 9999, "position [%d,%d] for [%s]", x, y, LocID );
+  if( StrOp.len(LocID) > 0 ) {
+    char* pos = (char*)MapOp.get(m_DlgMap, LocID);
+    if( pos != NULL ) {
+      TraceOp.trc( "locdialog", TRCLEVEL_INFO, __LINE__, 9999, "remove previous position [%s] for [%s]", pos, LocID );
+      StrOp.free(pos);
+      MapOp.remove(m_DlgMap, LocID);
+    }
+    pos = StrOp.fmt("%d,%d", x, y);
+    MapOp.put( m_DlgMap, LocID, (obj)pos );
+  }
+
+  StrOp.free(LocID);
+
+  Destroy();
 }
 
 
@@ -1207,7 +1194,7 @@ void LocControlDialog::OnCloseWindow( wxCloseEvent& event )
 
 void LocControlDialog::OnDestroy( wxWindowDestroyEvent& event )
 {
-  OnButtonLocctrlCancelClick((wxCommandEvent&)event);
+  OnCloseWindow((wxCloseEvent&)event);
 }
 
 

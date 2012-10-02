@@ -70,10 +70,9 @@ class wxFlexGridSizer;
 #define ID_BUTTON_LCCTRL_F13 10016
 #define ID_BUTTON_FCCTRL_F14 10017
 #define ID_FG 10318
+#define ID_BUTTON_LOCCTRL_STOP 10011
 #define ID_BITMAPBUTTON_LOCCTRL_DIR 10009
 #define ID_COMBOBOX_LOCCTRL_LOC 10002
-#define ID_BUTTON_LOCCTRL_CANCEL 10010
-#define ID_BUTTON_LOCCTRL_STOP 10011
 #define ID_BUTTON_LOCCTRL_BREAK 10013
 #define SYMBOL_LOCCONTROLDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_LOCCONTROLDIALOG_TITLE _("Loc Control")
@@ -188,17 +187,14 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_FG
     void OnFgClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCCTRL_STOP
+    void OnButtonLocctrlStopClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BITMAPBUTTON_LOCCTRL_DIR
     void OnBitmapbuttonLocctrlDirClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_LOCCTRL_LOC
     void OnComboboxLocctrlLocSelected( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCCTRL_CANCEL
-    void OnButtonLocctrlCancelClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCCTRL_STOP
-    void OnButtonLocctrlStopClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCCTRL_BREAK
     void OnButtonLocctrlBreakClick( wxCommandEvent& event );
@@ -263,10 +259,9 @@ public:
     wxButton* m_F13;
     wxButton* m_F14;
     wxButton* m_FG;
+    wxButton* m_Stop;
     wxBitmapButton* m_Dir;
     wxComboBox* m_LcList;
-    wxButton* m_Cancel;
-    wxButton* m_Stop;
     wxButton* m_Break;
     iOMap m_lcMap;
     int m_bFn;
