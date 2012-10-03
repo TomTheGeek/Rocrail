@@ -3263,6 +3263,20 @@ static void _event( iOModel inst, iONode nodeC ) {
   }
 
 
+  /* Block track driver event. */
+  if( StrOp.equals( wBlock.name(), NodeOp.getName( nodeC ) ) ) {
+    iIBlockBase block = ModelOp.getBlock(inst, wBlock.getid(nodeC));
+    if( block != NULL ) {
+      BlockOp.base.event(block, nodeC);
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block [%s] not found", wBlock.getid(nodeC) );
+      nodeC->base.del(nodeC);
+    }
+    return;
+  }
+
+
   /* Accessory: Sensor or Switch? */
   if( StrOp.equals( wAccessory.name(), NodeOp.getName( nodeC ) ) ) {
     int bus = wAccessory.getnodenr( nodeC );

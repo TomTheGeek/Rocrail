@@ -71,6 +71,19 @@ static const char* __id( void* inst ) {
 }
 
 static void* __event( void* inst, const void* evt ) {
+  iOBlockData data = Data(inst);
+  iONode node = (iONode)evt;
+  if( StrOp.equals( wBlock.name(), NodeOp.getName( node ) ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "block [%s] event: %s", data->id, wBlock.getstate(node) );
+    wBlock.setstate(data->props, wBlock.getstate(node) );
+    /* Broadcast to clients. */
+    wBlock.setid(node, data->id );
+    AppOp.broadcastEvent( node );
+  }
+  else {
+    NodeOp.base.del(node);
+  }
   return NULL;
 }
 
