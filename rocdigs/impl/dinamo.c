@@ -648,7 +648,11 @@ static void __fbEvent( iODINAMO dinamo, byte* datagram ) {
 
 
 /** ------------------------------------------------------------
- * generate a rocrail event node and call the event listener
+ * generate a rocrail event node and call the event listener 4A B0 80 86
+ * < Alarm event (01100CB) (bbbbbbb)
+ * Dit is een EVENT gegenereerd door Dinamo
+ * C=1: blok Bbbbbbbb heeft kortsluiting
+ * C=0: kortsluiting van blok Bbbbbbbb is opgeheven
  */
 static void __alEvent( iODINAMO dinamo, byte* datagram ) {
   iODINAMOData data = Data(dinamo);
@@ -659,7 +663,7 @@ static void __alEvent( iODINAMO dinamo, byte* datagram ) {
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Alarm Event" );
 
-  if( shortcircuit ) {
+  {
     char* sAddr = StrOp.fmt("%d", block );
     const char* blockID = (const char*)MapOp.get( data->blockMap, sAddr );
     StrOp.free(sAddr);
