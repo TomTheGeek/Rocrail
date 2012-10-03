@@ -319,6 +319,7 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
   m_Path->SetValue( wxString( wBiDiBnode.getpath(bidibnode), wxConvUTF8) );
   //m_UID->SetValue( wxString( uid, wxConvUTF8 ) );
   m_UID->SetValue( wxString::Format(_T("%d"), wBiDiBnode.getuid(bidibnode) ) );
+  m_UIDX->SetValue( wxString::Format(_T("0x%08X"), wBiDiBnode.getuid(bidibnode) ) );
   m_VendorName->SetValue( wxString( m_Vendor[wBiDiBnode.getvendor(bidibnode)&0xFF],wxConvUTF8) );
   m_Class->SetValue( wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
   m_Version->SetValue( wxString( wBiDiBnode.getversion(bidibnode), wxConvUTF8) );
@@ -332,6 +333,7 @@ void BidibIdentDlg::initValues() {
   char* classname = bidibGetClassName(wProgram.getprod(node), mnemonic);
   m_Path->SetValue( wxString( wProgram.getfilename(node), wxConvUTF8) );
   m_UID->SetValue( wxString::Format(_T("%d"), wProgram.getmodid(node) ) );
+  m_UIDX->SetValue( wxString::Format(_T("0x%08X"), wProgram.getmodid(node) ) );
   m_VendorName->SetValue( wxString( m_Vendor[wProgram.getmanu(node)&0xFF],wxConvUTF8) );
   m_Class->SetValue( wxString( classname, wxConvUTF8) );
   StrOp.free(classname);
