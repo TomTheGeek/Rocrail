@@ -45,6 +45,7 @@ static void __watchdog( void* threadinst ) {
   iOCBUSData data = Data(cbus);
 
   int retry = 0;
+  int stick = 0;
 
   ThreadOp.sleep(10);
   TraceOp.trc( "cbustcp", TRCLEVEL_INFO, __LINE__, 9999, "cbus tcp watchdog started" );
@@ -66,6 +67,14 @@ static void __watchdog( void* threadinst ) {
       makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid, True );
       ThreadOp.post(data->writer, (obj)frame);
       TraceOp.trc( "cbustcp", TRCLEVEL_DEBUG, __LINE__, 9999, "keep alive message" );
+      if ( stick++ > 60 ) {
+        byte cmd[2];
+        byte* frame = allocMem(32);
+        cmd[0] = 3;
+        makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid, True );
+        ThreadOp.post(data->writer, (obj)frame);
+        stick = 0;
+      }
     }
     ThreadOp.sleep(1000);
   }

@@ -239,6 +239,8 @@ static int __getDataLen(int OPC, byte frametype) {
       return 4;
     if( OPC == 2 )
       return 3;
+    if( OPC == 3 )
+      return 6;
   }
   return 0;
 }
@@ -1225,6 +1227,14 @@ static iONode __evaluateASCIIFrame(iOCBUS cbus, byte* frame, int opc) {
         }
         break;
       }
+      case 3: /* ECAN Status */
+      {
+        byte rc = HEXA2Byte(frame + OFFSET_D1);
+        TraceOp.trc( name, rc==0?TRCLEVEL_MONITOR:TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "ECAN: rc=%d canBufOvl=%d ethOvl=%d canTxErr=%d canRxErr=%d", rc,
+            HEXA2Byte(frame + OFFSET_D2), HEXA2Byte(frame + OFFSET_D3), HEXA2Byte(frame + OFFSET_D4), HEXA2Byte(frame + OFFSET_D5) );
+        break;
+      }
     }
   }
   else {
@@ -1485,7 +1495,8 @@ static void __writer( void* threadinst ) {
 
         if( !data->bootmode ) {
           data->lastSendOPC = __getOPC(out);
-          cbusMon(out, __getOPC(out));
+          if ( out[1] != 'Y' )
+            cbusMon(out, __getOPC(out));
         }
 
         if( data->subWrite((obj)cbus, out, len) ) {
