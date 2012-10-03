@@ -474,6 +474,7 @@
           <const name="class_switch" vt="string" val="switch"/>
           <var name="uid" vt="int" defval="0" remark="Vendor product/serialnumber ID."/>
           <var name="class" vt="string" defval="sensor" remark="Class ID."/>
+          <var name="classmnemonic" vt="string" defval="sensor" remark="Class ID mnemonic."/>
           <var name="path" vt="string" defval="0.0.0.0" remark="Local path."/>
           <var name="vendor" vt="int" defval="0" remark="DCC vendor ID."/>
           <var name="version" vt="string" defval="" remark="Software version."/>

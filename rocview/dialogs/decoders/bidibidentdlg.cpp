@@ -179,7 +179,7 @@ int BidibIdentDlg::getLevel(const char* path ) {
 
 wxTreeItemId BidibIdentDlg::addTreeChild( const wxTreeItemId& root, iONode bidibnode) {
   char key[32];
-  StrOp.fmtb(key, "%08X", wBiDiBnode.getuid(bidibnode) );
+  StrOp.fmtb(key, "[%s] %08X", wBiDiBnode.getclassmnemonic(bidibnode), wBiDiBnode.getuid(bidibnode) );
   wxTreeItemId item = m_Tree->AppendItem( root, wxString( key, wxConvUTF8));
   MapOp.put( nodeMap, key, (obj)bidibnode);
   MapOp.put( nodePathMap, wBiDiBnode.getpath(bidibnode), (obj)bidibnode);
@@ -268,10 +268,9 @@ void BidibIdentDlg::initLabels() {
 
     char key[32];
     int level = 0;
-    StrOp.fmtb(key, "%08X", wBiDiBnode.getuid(bidibnode) );
+    StrOp.fmtb(key, "[%s] %08X", wBiDiBnode.getclassmnemonic(bidibnode), wBiDiBnode.getuid(bidibnode) );
     wxTreeItemId root  = m_Tree->AddRoot(wxString( key, wxConvUTF8));
     MapOp.put( nodeMap, key, (obj)bidibnode);
-
 
     for(int n = 1; n < 127; n++ ) {
       if( r1[n] == NULL )
@@ -329,7 +328,8 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
 
 
 void BidibIdentDlg::initValues() {
-  char* classname = bidibGetClassName(wProgram.getprod(node));
+  char mnemonic[32];
+  char* classname = bidibGetClassName(wProgram.getprod(node), mnemonic);
   m_Path->SetValue( wxString( wProgram.getfilename(node), wxConvUTF8) );
   m_UID->SetValue( wxString::Format(_T("%d"), wProgram.getmodid(node) ) );
   m_VendorName->SetValue( wxString( m_Vendor[wProgram.getmanu(node)&0xFF],wxConvUTF8) );
@@ -337,7 +337,7 @@ void BidibIdentDlg::initValues() {
   StrOp.free(classname);
 
   char key[32];
-  StrOp.fmtb(key, "%08X", wProgram.getmodid(node) );
+  StrOp.fmtb(key, "[%s] %08X", mnemonic, wProgram.getmodid(node) );
   wxTreeItemId item = findTreeItem( m_Tree->GetRootItem(), wxString( key, wxConvUTF8));
   if( item.IsOk() ) {
     m_Tree->SelectItem(item);
@@ -468,7 +468,7 @@ void BidibIdentDlg::onFeatureSet( wxCommandEvent& event ) {
 void BidibIdentDlg::handleFeature(iONode node) {
   if( wProgram.getcmd( node) == wProgram.datarsp ) {
     char uidKey[32];
-    StrOp.fmtb( uidKey, "%08X", wProgram.getmodid(node) );
+    StrOp.fmtb(uidKey, "[%s] %08X", wBiDiBnode.getclassmnemonic(node), wBiDiBnode.getuid(node) );
     iONode l_bidibnode = (iONode)MapOp.get( nodeMap, uidKey );
     if( l_bidibnode != NULL ) {
       iONode program = (iONode)NodeOp.base.clone(node);

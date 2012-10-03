@@ -764,10 +764,11 @@ static void __addNode(iOBiDiB bidib, byte* pdata) {
   iOBiDiBNode node = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
 
   if( node == NULL ) {
+    char mnemonic[32] = {'\0'};
     byte l_msg[32];
     int size = 0;
     int msgidx = 0;
-    char* classname = bidibGetClassName(classid);
+    char* classname = bidibGetClassName(classid, mnemonic);
 
     node = allocMem(sizeof(struct bidibnode));
     node->classid = classid;
@@ -790,6 +791,7 @@ static void __addNode(iOBiDiB bidib, byte* pdata) {
     iONode child = NodeOp.inst(wBiDiBnode.name(), data->bidibini, ELEMENT_NODE);
     wBiDiBnode.setuid(child, uid);
     wBiDiBnode.setclass(child, classname);
+    wBiDiBnode.setclassmnemonic(child, mnemonic);
     wBiDiBnode.setpath(child, localKey);
     wBiDiBnode.setvendor(child, node->vendorid);
     NodeOp.addChild(data->bidibini, child);

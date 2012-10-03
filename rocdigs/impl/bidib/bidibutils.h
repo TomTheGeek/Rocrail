@@ -29,7 +29,7 @@
   extern "C" {
 #endif
 
-char* bidibGetClassName(int classid );
+char* bidibGetClassName(int classid, char* mnemonic );
 const char* bidibGetFeatureName(int feature);
 
 /* C++ */

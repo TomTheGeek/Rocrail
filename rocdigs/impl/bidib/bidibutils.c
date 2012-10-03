@@ -26,39 +26,65 @@
 #include "rocdigs/impl/bidib/bidib_messages.h"
 
 
-char* bidibGetClassName(int classid ) {
+char* bidibGetClassName(int classid, char* mnemonic ) {
   char* classname = NULL;
+  int idx = 0;
+  mnemonic[idx] = '\0';
   if( classid & 0x80 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
     classname = StrOp.cat( classname, wBiDiBnode.class_bridge);
+    mnemonic[idx] = 'L';
+    idx++;
+    mnemonic[idx] = '\0';
   }
   if( classid & 0x40 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
     classname = StrOp.cat( classname, wBiDiBnode.class_sensor);
+    mnemonic[idx] = 'O';
+    idx++;
+    mnemonic[idx] = '\0';
   }
   if( classid & 0x20 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
     classname = StrOp.cat( classname, wBiDiBnode.class_ui);
+    mnemonic[idx] = 'U';
+    idx++;
+    mnemonic[idx] = '\0';
   }
   if( classid & 0x10 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
     classname = StrOp.cat( classname, wBiDiBnode.class_dcc_loco);
+    mnemonic[idx] = 'T';
+    idx++;
+    mnemonic[idx] = '\0';
   }
   if( classid & 0x08 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
     classname = StrOp.cat( classname, wBiDiBnode.class_dcc_acc);
+    mnemonic[idx] = 'A';
+    idx++;
+    mnemonic[idx] = '\0';
   }
   if( classid & 0x04 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
     classname = StrOp.cat( classname, wBiDiBnode.class_prog);
+    mnemonic[idx] = 'P';
+    idx++;
+    mnemonic[idx] = '\0';
   }
   if( classid & 0x02 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
     classname = StrOp.cat( classname, wBiDiBnode.class_booster);
+    mnemonic[idx] = 'B';
+    idx++;
+    mnemonic[idx] = '\0';
   }
   if( classid & 0x01 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
     classname = StrOp.cat( classname, wBiDiBnode.class_switch);
+    mnemonic[idx] = 'S';
+    idx++;
+    mnemonic[idx] = '\0';
   }
 
   if( classname == NULL )
