@@ -49,6 +49,8 @@
 #include "rocrail/wrapper/public/BiDiBnode.h"
 #include "rocdigs/impl/bidib/bidibutils.h"
 
+#include "rocview/res/icons.hpp"
+
 /* XPM */
 static const char * pcb_xpm[] = {
 "32 20 11 1",
@@ -188,6 +190,9 @@ wxTreeItemId BidibIdentDlg::addTreeChild( const wxTreeItemId& root, iONode bidib
 
 
 void BidibIdentDlg::initLabels() {
+
+  m_BiDiBlogo->SetBitmap(*_img_bidib);
+
   nodeMap  = MapOp.inst();
   nodePathMap  = MapOp.inst();
   nodeList = ListOp.inst();
