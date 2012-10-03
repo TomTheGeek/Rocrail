@@ -3726,7 +3726,8 @@ void RocGuiFrame::OnService(wxCommandEvent& WXUNUSED(event)) {
 }
 
 void RocGuiFrame::OnBug(wxCommandEvent& WXUNUSED(event)) {
-  wxLaunchDefaultBrowser(wxGetApp().getMsg("rocrail_bug"), wxBROWSER_NEW_WINDOW );
+  //wxLaunchDefaultBrowser(wxGetApp().getMsg("rocrail_bug"), wxBROWSER_NEW_WINDOW );
+  wxLaunchDefaultBrowser(wxT("http://wiki.rocrail.net/doku.php?id=bugreporting-int"), wxBROWSER_NEW_WINDOW );
 }
 
 void RocGuiFrame::OnIssue(wxCommandEvent& WXUNUSED(event)) {
