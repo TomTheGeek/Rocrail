@@ -362,8 +362,10 @@ static void __restoreFx( void* threadinst ) {
 
     if( wLoc.isfn(data->props) ) {
       iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-      wFunCmd.setgroup ( fcmd,1 );
-      wFunCmd.setfnchanged ( fcmd, 0 );
+      wFunCmd.setgroup( fcmd, 1 );
+      wFunCmd.setfnchanged( fcmd, 0 );
+      wFunCmd.setf0(fcmd, True);
+      wLoc.setfn(fcmd, True);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring lights for %s", wLoc.getid(data->props) );
       LocOp.cmd(loc, fcmd);
       ThreadOp.sleep(500);
