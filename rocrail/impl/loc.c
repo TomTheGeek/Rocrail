@@ -360,6 +360,15 @@ static void __restoreFx( void* threadinst ) {
       ThreadOp.sleep(500);
     }
 
+    if( wLoc.isfn(data->props) ) {
+      iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      wFunCmd.setgroup ( fcmd,1 );
+      wFunCmd.setfnchanged ( fcmd, 0 );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring lights for %s", wLoc.getid(data->props) );
+      LocOp.cmd(loc, fcmd);
+      ThreadOp.sleep(500);
+    }
+
     for( i = 0; i < 28; i++ ) {
       int f = (1 << i);
       if( fx & f ) {
