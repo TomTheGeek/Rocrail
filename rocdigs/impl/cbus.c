@@ -1954,9 +1954,9 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
 
     if( wLoc.getV( node ) != -1 ) {
       if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
-        speed = (wLoc.getV( node ) * slot->steps) / 100;
+        speed = (wLoc.getV( node ) * 127) / 100;
       else if( wLoc.getV_max( node ) > 0 )
-        speed = (wLoc.getV( node ) * slot->steps) / wLoc.getV_max( node );
+        speed = (wLoc.getV( node ) * 127) / wLoc.getV_max( node );
     }
 
     slot->speed  = speed;
