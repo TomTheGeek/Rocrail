@@ -1736,6 +1736,7 @@ void RocGuiFrame::initFrame() {
   menuHelp->AppendSeparator();
   wxMenuItem *gca_menuHelp = new wxMenuItem(menuHelp,
       ME_GCA, wxT("Giling Computer Applications..."), wxT("LocoNet - CBus - Interfaces") );
+  gca_menuHelp->SetBitmap(*_img_gca);
   menuHelp->Append(gca_menuHelp);
 
   wxMenuItem *opendcc_menuHelp = new wxMenuItem(menuHelp,
