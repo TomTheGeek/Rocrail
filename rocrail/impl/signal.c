@@ -424,6 +424,7 @@ static Boolean __processPairCmd( iOSignal inst, const char* state, Boolean inver
   wSwitch.setaddr1( swcmd, wSignal.getaddr( o->props ) );
   wSwitch.setport1( swcmd, wSignal.getport1( o->props ) );
   wSwitch.setcmd( swcmd, invert?wSwitch.straight:wSwitch.turnout );
+  wSwitch.setporttype( swcmd, wSwitch.getporttype( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(swcmd), NULL );
 	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
@@ -568,6 +569,7 @@ static Boolean __processPatternCmd( iOSignal inst, const char* state ) {
     wOutput.setport( cmd, port1 );
     wOutput.setgate( cmd, gate1 );
     wOutput.setcmd ( cmd, wOutput.on);
+    wOutput.setporttype( cmd, wSignal.getporttype( o->props ) );
 
     /* invoke the command by calling the control */
     if(  !ControlOp.cmd( control, cmd, NULL ) ) {
@@ -587,6 +589,7 @@ static Boolean __processPatternCmd( iOSignal inst, const char* state ) {
     wOutput.setport( cmd, port2 );
     wOutput.setgate( cmd, gate2 );
     wOutput.setcmd ( cmd, wOutput.on);
+    wOutput.setporttype( cmd, wSignal.getporttype( o->props ) );
 
     /* invoke the command by calling the control */
     if( !ControlOp.cmd( control, cmd, NULL ) ) {
@@ -634,6 +637,7 @@ static Boolean __processMultiAspectsCmd( iOSignal inst, const char* state, int n
   wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
   wOutput.setport( cmd, wSignal.getport1( o->props ) );
   wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
+  wOutput.setporttype( cmd, wSignal.getporttype( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
   ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 

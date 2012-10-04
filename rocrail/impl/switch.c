@@ -916,7 +916,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     wSwitch.setdelay( nodeA2, wSwitch.getdelay( o->props ) );
     wSwitch.setactdelay( nodeA2, wSwitch.isactdelay( o->props ) );
     wSwitch.setsinglegate( nodeA2, wSwitch.issinglegate( o->props ) );
-    wSwitch.setporttype( nodeA, wSwitch.getporttype( o->props ) );
+    wSwitch.setporttype( nodeA2, wSwitch.getporttype( o->props ) );
     if( !ControlOp.cmd( control, nodeA2, error ) ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Switch \"%s\" could not be switched!",
                      SwitchOp.getId( inst ) );
@@ -975,7 +975,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       wSwitch.setdelay( nodeA2, wSwitch.getdelay( o->props ) );
       wSwitch.setactdelay( nodeA2, wSwitch.isactdelay( o->props ) );
       wSwitch.setsinglegate( nodeA2, wSwitch.issinglegate( o->props ) );
-      wSwitch.setporttype( nodeA, wSwitch.getporttype( o->props ) );
+      wSwitch.setporttype( nodeA2, wSwitch.getporttype( o->props ) );
       wSwitch.setcmd( nodeA2, state2 );
       if( !ControlOp.cmd( control, nodeA2, error ) ) {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Switch \"%s\" could not be switched!",

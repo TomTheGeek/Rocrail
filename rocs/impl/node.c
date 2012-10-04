@@ -212,7 +212,7 @@ static void _removeAttr( iONode inst, iOAttr attr ) {
       data->attrs[i] = 0;
       /* should this be done here? */
       attr->base.del( attr );
-      memcpy( &data->attrs[i], &data->attrs[i+1], (data->attrCnt - (i + 1)) * sizeof( iOAttr ) );
+      memmove( &data->attrs[i], &data->attrs[i+1], (data->attrCnt - (i + 1)) * sizeof( iOAttr ) );
       data->attrCnt--;
       data->attrs = reallocMem( data->attrs, (data->attrCnt+1) * sizeof( iOAttr ) );
       break;
