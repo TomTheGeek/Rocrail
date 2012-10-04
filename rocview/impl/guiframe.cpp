@@ -1741,7 +1741,7 @@ void RocGuiFrame::initFrame() {
 
   wxMenuItem *opendcc_menuHelp = new wxMenuItem(menuHelp,
       ME_OPENDCC, wxT("OpenDCC..."), wxT("OpenDCC Z1 - BiDiB") );
-  opendcc_menuHelp->SetBitmap(*_img_bidib);
+  opendcc_menuHelp->SetBitmap(*_img_bidib48);
   menuHelp->Append(opendcc_menuHelp);
 
   menuHelp->AppendSeparator();
