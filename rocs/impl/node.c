@@ -180,7 +180,7 @@ static iONode _removeChild( iONode inst, iONode child ) {
   for( i = 0; i < cnt; i++ ) {
     if( data->childs[i] == child ) {
       data->childs[i] = 0;
-      memcpy( &data->childs[i], &data->childs[i+1], ( data->childCnt - (i + 1) )* sizeof( iONode ) );
+      memmove( &data->childs[i], &data->childs[i+1], ( data->childCnt - (i + 1) )* sizeof( iONode ) );
       data->childCnt--;
       data->childs = reallocMem( data->childs, (data->childCnt+1) * sizeof( iONode ) );
       return child;
