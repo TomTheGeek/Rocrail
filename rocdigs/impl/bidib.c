@@ -1486,7 +1486,7 @@ static void __bidibReader( void* threadinst ) {
   iOThread    th    = (iOThread)threadinst;
   iOBiDiB     bidib = (iOBiDiB)ThreadOp.getParm( th );
   iOBiDiBData data  = Data(bidib);
-  byte msg[127];
+  byte msg[256];
   byte path[4] = {0,0,0,0};
   int size = 0;
   int addr = 0;
