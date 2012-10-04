@@ -1739,16 +1739,18 @@ void RocGuiFrame::initFrame() {
   menuHelp->AppendSeparator();
 
 
-  wxMenuItem *bug_menuHelp = new wxMenuItem(menuHelp, ME_Bug, wxGetApp().getMenu("bug"), wxGetApp().getTip("bug") );
+  wxMenuItem *bug_menuHelp = new wxMenuItem(menuHelp, ME_Bug,
+      wxGetApp().getMsg("bug") + wxT(" / ") + wxGetApp().getMenu("feature"), wxGetApp().getTip("bug") );
   bug_menuHelp->SetBitmap(*_img_bug);
   menuHelp->Append(bug_menuHelp);
-
-  wxMenuItem *issue_menuHelp = new wxMenuItem(menuHelp, ME_Issue, wxGetApp().getMenu("issue"), wxGetApp().getTip("issue") );
-  menuHelp->Append(issue_menuHelp);
-
+/*
   wxMenuItem *feature_menuHelp = new wxMenuItem(menuHelp, ME_Feature, wxGetApp().getMenu("feature"), wxGetApp().getTip("feature") );
   feature_menuHelp->SetBitmap(*_img_lp);
   menuHelp->Append(feature_menuHelp);
+*/
+  wxMenuItem *issue_menuHelp = new wxMenuItem(menuHelp, ME_Issue, wxGetApp().getMenu("issue"), wxGetApp().getTip("issue") );
+  issue_menuHelp->SetBitmap(*_img_trace);
+  menuHelp->Append(issue_menuHelp);
 
   menuHelp->AppendSeparator();
   wxMenuItem *update_menuHelp = new wxMenuItem(menuHelp, ME_Update, wxGetApp().getMenu("softwareupdates"), wxGetApp().getTip("softwareupdates") );
@@ -3740,7 +3742,8 @@ void RocGuiFrame::OnIssue(wxCommandEvent& WXUNUSED(event)) {
 }
 
 void RocGuiFrame::OnFeature(wxCommandEvent& WXUNUSED(event)) {
-  wxLaunchDefaultBrowser(wxGetApp().getMsg("rocrail_feature"), wxBROWSER_NEW_WINDOW );
+  //wxLaunchDefaultBrowser(wxGetApp().getMsg("rocrail_feature"), wxBROWSER_NEW_WINDOW );
+  wxLaunchDefaultBrowser(wxT("http://wiki.rocrail.net/doku.php?id=bugreporting-int"), wxBROWSER_NEW_WINDOW );
 }
 
 void RocGuiFrame::OnOperatorDlg(wxCommandEvent& event){
