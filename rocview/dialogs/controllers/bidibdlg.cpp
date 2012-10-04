@@ -94,7 +94,7 @@ void BidibDlg::initValues() {
 
   if( wDigInt.getbps( m_Props ) == 19200 )
     m_BPS->SetSelection(0);
-  else if( wDigInt.getbps( m_Props ) == 1048576 )
+  else if( wDigInt.getbps( m_Props ) == 1000000 )
     m_BPS->SetSelection(2);
   else
     m_BPS->SetSelection(1);
@@ -148,7 +148,7 @@ void BidibDlg::evaluate() {
   else if( m_BPS->GetSelection() == 1 )
     wDigInt.setbps( m_Props, 115200 );
   else
-    wDigInt.setbps( m_Props, 1048576 );
+    wDigInt.setbps( m_Props, 1000000 );
 
   wDigInt.setsublib( m_Props, wDigInt.sublib_serial);
 
