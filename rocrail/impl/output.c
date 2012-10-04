@@ -220,6 +220,7 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
       wOutput.setcmd( nodeA, state );
     }
 
+    wOutput.setporttype( nodeA, wOutput.getporttype( o->props ) );
     if( !ControlOp.cmd( control, nodeA, NULL ) ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Output \"%s\" could not be set!",
                      wOutput.getid( o->props ) );
