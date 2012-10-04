@@ -2447,7 +2447,6 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     m_locidStr = l_tipStr;
     StrOp.free(m_Tip);
     m_Tip = StrOp.dup(l_tipStr);
-    StrOp.free(l_tipStr);
 
     showTooltip(wxGetApp().getFrame()->isTooltip());
   }
