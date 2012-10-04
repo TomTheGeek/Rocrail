@@ -1080,7 +1080,7 @@ static void __handleStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
     iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
 
     wSwitch.setbus( nodeC, bidibnode->uid );
-    wSwitch.setaddr1( nodeC, pdata[1] );
+    wSwitch.setaddr1( nodeC, pdata[1]+1 );
 
     if( data->iid != NULL )
       wSwitch.setiid( nodeC, data->iid );
@@ -1463,6 +1463,11 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_FW_UPDATE_STAT:
     __handleUpdateStat(bidib, bidibnode, pdata);
+    break;
+
+  case MSG_LC_WAIT:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_LC_WAIT path=%s type=%d port=%d time=%d", pathKey, pdata[0], pdata[1], pdata[2] );
     break;
 
   default:

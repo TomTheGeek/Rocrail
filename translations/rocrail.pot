@@ -5861,3 +5861,9 @@ msgstr ""
 msgid "Issue path"
 msgstr ""
 
+#. 
+# id="reconnectafterservershutdown"
+#, c-format
+msgid "Reconnect after server shutdown"
+msgstr ""
+

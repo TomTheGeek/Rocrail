@@ -473,17 +473,22 @@ void BidibIdentDlg::onFeatureSet( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::handleFeature(iONode node) {
-  if( wProgram.getcmd( node) == wProgram.datarsp ) {
-    char uidKey[32];
-    StrOp.fmtb(uidKey, "[%s] %08X", wBiDiBnode.getclassmnemonic(node), wBiDiBnode.getuid(node) );
-    iONode l_bidibnode = (iONode)MapOp.get( nodeMap, uidKey );
-    if( l_bidibnode != NULL ) {
-      iONode program = (iONode)NodeOp.base.clone(node);
-      int feature = wProgram.getcv(node);
-      int value   = wProgram.getvalue(node);
-      const char* featureName = bidibGetFeatureName(feature);
-      m_FeatureList->Append( wxString(featureName,wxConvUTF8), program);
-    }
+  char mnemonic[32] = {'\0'};
+  char* classname = bidibGetClassName(wProgram.getprod(node), mnemonic);
+  StrOp.free(classname);
+
+  char uidKey[32];
+  StrOp.fmtb(uidKey, "[%s] %08X", mnemonic, wProgram.getmodid(node) );
+  iONode l_bidibnode = (iONode)MapOp.get( nodeMap, uidKey );
+  if( l_bidibnode != NULL ) {
+    iONode program = (iONode)NodeOp.base.clone(node);
+    int feature = wProgram.getcv(node);
+    int value   = wProgram.getvalue(node);
+    const char* featureName = bidibGetFeatureName(feature);
+    m_FeatureList->Append( wxString(featureName,wxConvUTF8), program);
+  }
+  else {
+    TraceOp.trc( "bidibident", TRCLEVEL_WARNING, __LINE__, 9999,"bidib node \"%s\" not found", uidKey );
   }
 }
 
