@@ -373,7 +373,7 @@ static void reconThread( void* threadinst ) {
   RocGui* o = (RocGui*)ThreadOp.getParm( th );
 
   TraceOp.trc( "reconthread", TRCLEVEL_INFO, __LINE__, 9999, "reconThread started" );
-  ThreadOp.sleep(100);
+  ThreadOp.sleep(1000);
   o->setModel(NULL);
   o->setStayOffline(false);
   bool connected = false;
@@ -863,7 +863,8 @@ static void rocrailCallback( obj me, iONode node ) {
         wxPostEvent( guiApp->getFrame(), event );
       }
       else {
-        TraceOp.trc( "app", TRCLEVEL_WARNING, __LINE__, 9999, "*** already had the plan model!!!" );
+        TraceOp.trc( "app", TRCLEVEL_WARNING, __LINE__, 9999,
+            "***** already had the plan model: modelset=%d offline=%d", guiApp->isModelSet(), guiApp->isOffline() );
       }
     }
     else {
@@ -1080,7 +1081,7 @@ static void rocrailCallback( obj me, iONode node ) {
     }
   }
   /* default */
-  else if(wxGetApp().getFrame() != NULL && guiApp->isInit() ){
+  else if(wxGetApp().getFrame() != NULL && guiApp->isInit() && guiApp->isModelSet() ){
     const char* nodeName = NodeOp.getName( node );
     TraceOp.trc( "app", TRCLEVEL_DEBUG, __LINE__, 9999, "rocrailCallback node=%s", nodeName );
 

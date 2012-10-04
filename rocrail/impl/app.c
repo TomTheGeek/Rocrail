@@ -1053,6 +1053,9 @@ static Boolean _shutdown( void ) {
       ThreadOp.sleep(100);
     }
 
+    /* time for clients to disconnect propperly */
+    ThreadOp.sleep(100);
+
     if( data->snmp != NULL )
       SNMPOp.shutdown( data->snmp );
 
