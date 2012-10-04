@@ -106,6 +106,7 @@ public:
   void OnHelp(wxCommandEvent& event);
   void OnRUG(wxCommandEvent& event);
   void OnGCA(wxCommandEvent& event);
+  void OnOpenDCC(wxCommandEvent& event);
   void OnTranslations(wxCommandEvent& event);
   void OnBug(wxCommandEvent& event);
   void OnIssue(wxCommandEvent& event);
@@ -549,6 +550,7 @@ enum
     NEWUPDATES_EVENT,
     ME_RUG,
     ME_GCA,
+    ME_OPENDCC,
     ME_Translations,
     ME_Bug,
     ME_Issue,
