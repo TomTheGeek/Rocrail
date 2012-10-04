@@ -76,14 +76,22 @@ static void* __event( void* inst, const void* evt ) {
   if( StrOp.equals( wBlock.name(), NodeOp.getName( node ) ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "block [%s] event: %s", data->id, wBlock.getstate(node) );
-    wBlock.setstate(data->props, wBlock.getstate(node) );
+
+    if( StrOp.equals(wBlock.getstate( node ), wBlock.shortcut) ) {
+      wBlock.setprevstate(data->props, wBlock.getstate(data->props) );
+      wBlock.setstate(data->props, wBlock.getstate(node) );
+    }
+    else if( StrOp.equals(wBlock.getstate( node ), wBlock.shortcutcleared) ) {
+      if( StrOp.equals(wBlock.getstate( data->props ), wBlock.shortcut) ) {
+        wBlock.setstate(data->props, wBlock.getprevstate(data->props) );
+      }
+    }
+
     /* Broadcast to clients. */
-    wBlock.setid(node, data->id );
-    AppOp.broadcastEvent( node );
+    AppOp.broadcastEvent( (iONode)NodeOp.base.clone( data->props ) );
   }
-  else {
-    NodeOp.base.del(node);
-  }
+
+  NodeOp.base.del(node);
   return NULL;
 }
 

@@ -1575,6 +1575,7 @@
         <const name="open" vt="string" val="open"/>
         <const name="closed" vt="string" val="closed" remark="In this state the block is not chooseable for locs."/>
         <var name="state" vt="string" defval="open" range="open,closed"/>
+        <var name="prevstate" vt="string" defval="open" range="open,closed"/>
         <var name="locid" vt="string" defval="NULL" range="*" remark="The loc which is actualy in the block or is comming or going."/>
         <var name="manual" vt="bool" defval="false" remark="Block not chooseable for locs in auto-mode if set to true."/>
         <var name="reserved" vt="bool" defval="false" remark=""/>
