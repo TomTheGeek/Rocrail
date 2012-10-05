@@ -303,7 +303,8 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
     }
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "loco (%s) speed=%d dir=%s port=%d", analog?"analog":"DCC", speed, dir?"fwd":"rev", block );
+        "loco %s (%s %d) speed=%d dir=%s trackport=%d",
+        wLoc.getid(node), analog?"analog":"DCC", addr, speed, dir?"fwd":"rev", block );
 
     if( analog ) {
       datagram[0] = 4 | VER3_FLAG | data->header;
@@ -383,8 +384,8 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
     Boolean f4 = wFunCmd.isf4( node );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "function: (%s) port=%d lights=%s f1=%s f2=%s f3=%s f4=%s",
-        analog?"analog":"DCC", block, lights?"on":"off", f1?"on":"off", f2?"on":"off", f3?"on":"off", f4?"on":"off" );
+        "function %s (%s %d) trackport=%d lights=%s f1=%s f2=%s f3=%s f4=%s",
+        wFunCmd.getid(node), analog?"analog":"DCC", addr, block, lights?"on":"off", f1?"on":"off", f2?"on":"off", f3?"on":"off", f4?"on":"off" );
 
     if( ! analog ) {
       byte f0 = wLoc.isfn( node ) ? 0x10:0x00;
