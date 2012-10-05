@@ -1392,7 +1392,7 @@ void CV::CreateControls() {
   wxBoxSizer* buttonSizer1 = new wxBoxSizer(wxHORIZONTAL);
   m_PanelMainBox->Add(buttonSizer1, 0, wxALL|wxADJUST_MINSIZE, 2);
 
-  m_saveCVs = new wxButton( m_ItemPanel, -1, _("Save"), wxDefaultPosition, wxSize(60, 26), 0 );
+  m_saveCVs = new wxButton( m_ItemPanel, -1, _("Copy"), wxDefaultPosition, wxSize(60, 26), 0 );
   buttonSizer1->Add(m_saveCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
   m_loadCVs = new wxButton( m_ItemPanel, -1, _("Load"), wxDefaultPosition, wxSize(60, 26), 0 );
   buttonSizer1->Add(m_loadCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
