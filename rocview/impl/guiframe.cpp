@@ -1767,6 +1767,7 @@ void RocGuiFrame::initFrame() {
 
   menuHelp->AppendSeparator();
   wxMenuItem *donkey_menuHelp = new wxMenuItem(menuHelp, ME_DonKeyInfo, wxGetApp().getMenu("donkey"), wxGetApp().getTip("donkey") );
+  donkey_menuHelp->SetBitmap(*_img_donate);
   menuHelp->Append(donkey_menuHelp);
 
 #ifndef __APPLE__
