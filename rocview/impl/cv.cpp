@@ -1341,7 +1341,7 @@ void CV::CreateControls() {
   TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "Create CV Controls..." );
 
   // CV:
-  wxStaticBox* itemStaticBoxSizer20Static = new wxStaticBox(m_ItemPanel, -1, _("CV"));
+  wxStaticBox* itemStaticBoxSizer20Static = new wxStaticBox(m_ItemPanel, -1, _("CV-Box"));
   m_CVbox = new wxStaticBoxSizer(itemStaticBoxSizer20Static, wxHORIZONTAL);
   m_PanelMainBox->Add(m_CVbox, 0, wxALL, 3);
 
