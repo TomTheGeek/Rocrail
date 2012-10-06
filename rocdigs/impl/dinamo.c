@@ -644,7 +644,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
 
   /* Block command. */
   else if( StrOp.equals( NodeOp.getName( node ), wBlock.name() ) ) {
-    int   addr = wBlock.getaddr( node ); /* block address */
+    int   addr = wBlock.getport( node ); /* trackport */
     Boolean power = wBlock.ispower( node );
 
     datagram[0] = 3 | VER3_FLAG | data->header;
@@ -721,14 +721,15 @@ static void __alEvent( iODINAMO dinamo, byte* datagram ) {
         "block [%s][%d] has %sshort-circuit", blockID!=NULL?blockID:"?", block, shortcircuit ? "":"no longer " );
 
     iONode node = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-    if( blockID != NULL )
+    if( blockID != NULL ) {
       wBlock.setid( node, blockID );
-    wBlock.setaddr( node, block );
-    if( data->iid != NULL )
-      wBlock.setiid( node, data->iid );
-    wBlock.setstate( node, shortcircuit ? wBlock.shortcut:wBlock.shortcutcleared );
-    if( data->listenerFun != NULL && data->listenerObj != NULL )
-      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+      wBlock.setport( node, block );
+      if( data->iid != NULL )
+        wBlock.setiid( node, data->iid );
+      wBlock.setstate( node, shortcircuit ? wBlock.shortcut:wBlock.shortcutcleared );
+      if( data->listenerFun != NULL && data->listenerObj != NULL )
+        data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+    }
   }
 }
 
