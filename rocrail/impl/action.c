@@ -57,6 +57,7 @@
 #include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/Text.h"
 #include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/Stage.h"
 
 static int instCnt = 0;
 
@@ -567,7 +568,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   else if( StrOp.equals( wBlock.name(), wAction.gettype( data->action ) ) ) {
     iIBlockBase bl = ModelOp.getBlock( model, wAction.getoid( data->action ) );
     if( bl != NULL ) {
-      if( StrOp.equals( "unlock", wAction.getcmd( data->action ) ) ) {
+      if( StrOp.equals( wAction.block_unlock, wAction.getcmd( data->action ) ) ) {
         bl->unLock(bl, wAction.getparam( data->action ));
       }
       else if( StrOp.equals( wAction.block_event, wAction.getcmd( data->action ) ) ) {
@@ -596,7 +597,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       else if( StrOp.equals( wSignal.red, wAction.getcmd( data->action ) ) ) {
         bl->red(bl, False, False);
       }
-      else if( StrOp.equals( "schedule", wAction.getcmd( data->action ) ) ) {
+      else if( StrOp.equals( wAction.block_schedule, wAction.getcmd( data->action ) ) ) {
         bl->setLocSchedule(bl, wAction.getparam( data->action ));
       }
       else if( StrOp.equals( wTour.name(), wAction.getcmd( data->action ) ) ) {
@@ -630,6 +631,54 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
           LocOp.cmd(lc, cmd);
         }
 
+      }
+    }
+  }
+
+  /* stageblock action */
+  else if( StrOp.equals( wStage.name(), wAction.gettype( data->action ) ) ) {
+    iIBlockBase bl = ModelOp.getBlock( model, wAction.getoid( data->action ) );
+    if( bl != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "stageblock: cmd %s",
+          wAction.getcmd( data->action ) );
+      if( StrOp.equals( wAction.block_unlock, wAction.getcmd( data->action ) ) ) {
+        bl->unLock(bl, wAction.getparam( data->action ));
+      }
+      else if( StrOp.equals( wStage.closed, wAction.getcmd( data->action ) ) ) {
+        iONode cmd = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+        wStage.setstate( cmd, wStage.closed );
+        bl->cmd(bl, cmd);
+      }
+      else if( StrOp.equals( wStage.open, wAction.getcmd( data->action ) ) ) {
+        iONode cmd = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+        wStage.setstate( cmd, wStage.open );
+        bl->cmd(bl, cmd);
+      }
+      else if( StrOp.equals( wStage.exitclosed, wAction.getcmd( data->action ) ) ) {
+        iONode cmd = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+        wStage.setexitstate( cmd, wStage.closed );
+        bl->cmd(bl, cmd);
+      }
+      else if( StrOp.equals( wStage.exitopen, wAction.getcmd( data->action ) ) ) {
+        iONode cmd = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+        wStage.setexitstate( cmd, wStage.open );
+        bl->cmd(bl, cmd);
+      }
+      else if( StrOp.equals( wSignal.white, wAction.getcmd( data->action ) ) ) {
+        bl->white(bl, False, False);
+      }
+      else if( StrOp.equals( wSignal.yellow, wAction.getcmd( data->action ) ) ) {
+        bl->yellow(bl, False, False);
+      }
+      else if( StrOp.equals( wSignal.green, wAction.getcmd( data->action ) ) ) {
+        bl->green(bl, False, False);
+      }
+      else if( StrOp.equals( wSignal.red, wAction.getcmd( data->action ) ) ) {
+        bl->red(bl, False, False);
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "stageblock: unsupported cmd: %s",
+            wAction.getcmd( data->action ) );
       }
     }
   }

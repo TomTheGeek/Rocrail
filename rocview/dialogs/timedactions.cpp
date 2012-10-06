@@ -49,6 +49,7 @@
 #include "rocrail/wrapper/public/Text.h"
 #include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Stage.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -162,6 +163,7 @@ void TimedActions::initLabels() {
     m_Type->Append( wxGetApp().getMsg( "seltab" ) );
     m_Type->Append( wxGetApp().getMsg( "text" ) );
     m_Type->Append( wxGetApp().getMsg( "sensor" ) );
+    m_Type->Append( wxGetApp().getMsg( "stagingblock" ) );
 }
 
 
@@ -206,6 +208,8 @@ void TimedActions::initValues() {
     m_Type->SetSelection(11);
   else if( StrOp.equals( wFeedback.name(), type ) )
     m_Type->SetSelection(12);
+  else if( StrOp.equals( wStage.name(), type ) )
+    m_Type->SetSelection(13);
 
   initOutputList();
   initCommands();
@@ -334,6 +338,7 @@ bool TimedActions::evaluate() {
     case 10: wAction.settype(m_Props, wSelTab.name()); break;
     case 11: wAction.settype(m_Props, wText.name()); break;
     case 12: wAction.settype(m_Props, wFeedback.name()); break;
+    case 13: wAction.settype(m_Props, wStage.name()); break;
   }
 
   return true;
@@ -375,6 +380,7 @@ void TimedActions::initOutputList() {
       case 10: colist = wPlan.getseltablist( model ); break;
       case 11: colist = wPlan.gettxlist( model ); break;
       case 12: colist = wPlan.getfblist( model ); break;
+      case 13: colist = wPlan.getsblist( model ); break;
     }
 
     m_ExecCmd->Enable(false);
@@ -386,8 +392,8 @@ void TimedActions::initOutputList() {
         const char* id = wOutput.getid( co );
         if( id != NULL ) {
           ListOp.add(list, (obj)id);
-    }
-    }
+        }
+      }
       ListOp.sort(list, &__sortStr);
       cnt = ListOp.size( list );
       for( int i = 0; i < cnt; i++ ) {
@@ -818,7 +824,6 @@ void TimedActions::OnActionsTypeSelected( wxCommandEvent& event )
 
 void TimedActions::initCommands()
 {
-
   m_Command->Clear();
   m_Command->SetValue(_T(""));
   // "co,ext,sw,st,sys,sg,bk,lc,fn"
@@ -906,8 +911,18 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wAction.output_off, wxConvUTF8));
       m_Command->Append(wxString( wFeedback.reset, wxConvUTF8));
       break;
+    case 13: // stageblock
+      m_Command->Append(wxString( wAction.block_unlock, wxConvUTF8));
+      m_Command->Append(wxString( wAction.signal_red, wxConvUTF8));
+      m_Command->Append(wxString( wAction.signal_yellow, wxConvUTF8));
+      m_Command->Append(wxString( wAction.signal_green, wxConvUTF8));
+      m_Command->Append(wxString( wAction.signal_white, wxConvUTF8));
+      m_Command->Append(wxString( wStage.open, wxConvUTF8));
+      m_Command->Append(wxString( wStage.closed, wxConvUTF8));
+      m_Command->Append(wxString( wStage.exitopen, wxConvUTF8));
+      m_Command->Append(wxString( wStage.exitclosed, wxConvUTF8));
+      break;
   }
-
 }
 
 
