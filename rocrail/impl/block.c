@@ -594,11 +594,14 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, const char* 
           AppOp.stop();
         }
 
-        if( wBlock.getport( data->props ) >= 0 ) {
+        if( wBlock.istd( data->props ) ) {
           iOControl control = AppOp.getControl();
           iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
           wSysCmd.setcmd(cmd, wSysCmd.resetblock);
           wSysCmd.setvalA(cmd, wBlock.getport( data->props ));
+          wSysCmd.setiid( cmd, wBlock.getiid( data->props ) );
+          wSysCmd.setaddr( cmd, wBlock.getaddr( data->props ) );
+          wSysCmd.setport( cmd, wBlock.getport( data->props ) );
           ControlOp.cmd( control, cmd, NULL );
         }
 
