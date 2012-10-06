@@ -128,6 +128,23 @@ static int __count(void) {
 }
 
 
+static void __resetTD(iIBlockBase inst) {
+  iOBlockData data   = Data(inst);
+  if( wBlock.istd(data->props) ) {
+    iOControl control = AppOp.getControl();
+    iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+    wSysCmd.setcmd(cmd, wSysCmd.resetblock);
+    wSysCmd.setvalA(cmd, wBlock.getport( data->props ));
+    wSysCmd.setiid( cmd, wBlock.getiid( data->props ) );
+    wSysCmd.setid( cmd, wBlock.getid( data->props ) );
+    wSysCmd.setaddr( cmd, wBlock.getaddr( data->props ) );
+    wSysCmd.setport( cmd, wBlock.getport( data->props ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+             "reset trackdriver block [%s]", data->id );
+    ControlOp.cmd( control, cmd, NULL );
+  }
+}
+
 static void __checkAction( iOBlock inst, const char* state ) {
   iOBlockData data   = Data(inst);
   iOModel     model  = AppOp.getModel();
@@ -594,17 +611,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, const char* 
           AppOp.stop();
         }
 
-        if( wBlock.istd( data->props ) ) {
-          iOControl control = AppOp.getControl();
-          iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
-          wSysCmd.setcmd(cmd, wSysCmd.resetblock);
-          wSysCmd.setvalA(cmd, wBlock.getport( data->props ));
-          wSysCmd.setiid( cmd, wBlock.getiid( data->props ) );
-          wSysCmd.setid( cmd, wBlock.getid( data->props ) );
-          wSysCmd.setaddr( cmd, wBlock.getaddr( data->props ) );
-          wSysCmd.setport( cmd, wBlock.getport( data->props ) );
-          ControlOp.cmd( control, cmd, NULL );
-        }
+        __resetTD(inst);
 
         /* broadcast ghost state */
         {
@@ -2055,6 +2062,10 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
         "%s locid=%s", NodeOp.getStr( data->props, "id", "" ), locid );
   }
 
+  if( locid == NULL || StrOp.len(locid) == 0 ) {
+    __resetTD(inst);
+  }
+
   if( state != NULL ) {
     if( StrOp.equals( wBlock.closed, state ) ) {
       if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
@@ -2357,19 +2368,8 @@ static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
              "reseted block [%s] is reserved by [%s]", data->id, data->locId );
   }
 
-  if( wBlock.istd(data->props) ) {
-    iOControl control = AppOp.getControl();
-    iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
-    wSysCmd.setcmd(cmd, wSysCmd.resetblock);
-    wSysCmd.setvalA(cmd, wBlock.getport( data->props ));
-    wSysCmd.setiid( cmd, wBlock.getiid( data->props ) );
-    wSysCmd.setid( cmd, wBlock.getid( data->props ) );
-    wSysCmd.setaddr( cmd, wBlock.getaddr( data->props ) );
-    wSysCmd.setport( cmd, wBlock.getport( data->props ) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-             "reset trackdriver block [%s]", data->id );
-    ControlOp.cmd( control, cmd, NULL );
-  }
+  __resetTD(inst);
+
 }
 
 static void _acceptIdent( iIBlockBase inst, Boolean accept ) {
