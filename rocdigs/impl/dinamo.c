@@ -290,8 +290,8 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
         speed = ( wLoc.getV( node ) * range) / 100;
       else  if( wLoc.getV_max( node ) > 0 )
         speed = (wLoc.getV( node ) * range) / wLoc.getV_max( node );
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dinamo car speed=%d", speed );
     }
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dinamo car speed=%d", speed );
     /*
      Snelheid (0000110) (00AAAAA) (aaaaaaa) (00DSSSS) [(0000 XXX)]
        ·   AAAAAaaaaaaa = decoder adres (1..4095)
@@ -492,6 +492,9 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
     int  port    = wSwitch.getport1( node );
     int  delay   = wSwitch.getdelay( node );
     int  nr      = 0;
+
+    if( delay == 0 )
+      delay = data->swtime;
 
     if( port < 1 || addr < 1 ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "address out of range [%d-%d]", addr, port);
@@ -1183,15 +1186,16 @@ static struct ODINAMO* _inst( const iONode ini ,const iOTrace trc ) {
   /* Initialize data->xxx members... */
   data->ini = ini;
   data->iid = StrOp.dup( wDigInt.getiid( ini ) );
-  data->swtime = (wDigInt.getswtime( ini ) * 60) / 1000; /* units of 1/60 sec. */
+  data->swtime = wDigInt.getswtime( ini );
   data->dummyio = wDigInt.isdummyio( ini );
   data->blockMap = MapOp.inst();
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dinamo %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device [%s]", wDigInt.getdevice( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  IID     [%s]", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device  [%s]", wDigInt.getdevice( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  timeout [%d]", wDigInt.gettimeout( ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  dummy I/O %s", data->dummyio ? "true":"false" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  swtime  [%d]", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
 
