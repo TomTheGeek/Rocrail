@@ -2356,6 +2356,20 @@ static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
              "reseted block [%s] is reserved by [%s]", data->id, data->locId );
   }
+
+  if( wBlock.istd(data->props) ) {
+    iOControl control = AppOp.getControl();
+    iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+    wSysCmd.setcmd(cmd, wSysCmd.resetblock);
+    wSysCmd.setvalA(cmd, wBlock.getport( data->props ));
+    wSysCmd.setiid( cmd, wBlock.getiid( data->props ) );
+    wSysCmd.setid( cmd, wBlock.getid( data->props ) );
+    wSysCmd.setaddr( cmd, wBlock.getaddr( data->props ) );
+    wSysCmd.setport( cmd, wBlock.getport( data->props ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+             "reset trackdriver block [%s]", data->id );
+    ControlOp.cmd( control, cmd, NULL );
+  }
 }
 
 static void _acceptIdent( iIBlockBase inst, Boolean accept ) {
