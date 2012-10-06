@@ -152,6 +152,14 @@ static int __generateChecksum( byte* datagram ) {
   return checksum | 0x80;
 }
 
+static void __mapBlockID(iODINAMO dinamo, iONode node) {
+  iODINAMOData data = Data(dinamo);
+  char* sAddr = StrOp.fmt( "%d", wSysCmd.getport( node ) );
+  if( MapOp.get( data->blockMap, sAddr ) == NULL ) {
+    if( wSysCmd.getid( node ) != NULL && StrOp.len(wSysCmd.getid( node )) > 0 )
+      MapOp.put( data->blockMap, sAddr, (obj)StrOp.dup(wSysCmd.getid( node )) );
+  }
+}
 
 /** ------------------------------------------------------------
  * translate rocrail node into dinamo datagram
@@ -219,14 +227,10 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       *response = True;
     }
     else if( StrOp.equals( cmdstr, wSysCmd.link ) ) {
-      /* TODO: */
-      char* sAddr = StrOp.fmt( "%d", wSysCmd.getvalA( node ) );
+      wSysCmd.setport( node, wSysCmd.getvalA( node ) );
+      __mapBlockID(dinamo, node);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "link %d(%s) to %d",
           wSysCmd.getvalA( node ), wSysCmd.getid( node ), wSysCmd.getvalB( node ) );
-      if( MapOp.get( data->blockMap, sAddr ) == NULL ) {
-        MapOp.put( data->blockMap, sAddr, (obj)StrOp.dup(wSysCmd.getid( node )) );
-      }
-      StrOp.free(sAddr);
       datagram[0] = 4 | VER3_FLAG | data->header;
       datagram[1] = 0x3A | ((wSysCmd.getvalA( node ) / 128) & 0x01 );
       datagram[2] = wSysCmd.getvalA( node ) % 128;
@@ -236,7 +240,6 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       size = 6;
     }
     else if( StrOp.equals( cmdstr, wSysCmd.ulink ) ) {
-      /* TODO: */
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unlink %d", wSysCmd.getvalA( node ) );
       datagram[0] = 3 | VER3_FLAG | data->header;
       datagram[1] = 0x38 | ((wSysCmd.getvalA( node ) / 128) & 0x01 );
@@ -246,6 +249,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       size = 5;
     }
     else if( StrOp.equals( cmdstr, wSysCmd.dcc ) ) {
+      __mapBlockID(dinamo, node);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set trackport %d to dcc", wSysCmd.getport( node ) );
       datagram[0] = 3 | VER3_FLAG | data->header;
       datagram[1] = 0x3E | (wSysCmd.getport( node ) / 128) ;
@@ -255,6 +259,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       size = 5;
     }
     else if( StrOp.equals( cmdstr, wSysCmd.analog ) ) {
+      __mapBlockID(dinamo, node);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set trackport %d to analog", wSysCmd.getport( node ) );
       datagram[0] = 3 | VER3_FLAG | data->header;
       datagram[1] = 0x3E | (wSysCmd.getport( node ) / 128) ;
