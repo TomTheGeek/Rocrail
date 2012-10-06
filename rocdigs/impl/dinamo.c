@@ -246,28 +246,28 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       size = 5;
     }
     else if( StrOp.equals( cmdstr, wSysCmd.dcc ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set trackport %d to dcc", wSysCmd.getvalA( node ) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set trackport %d to dcc", wSysCmd.getport( node ) );
       datagram[0] = 3 | VER3_FLAG | data->header;
-      datagram[1] = 0x3E | (wSysCmd.getvalA( node ) / 128) ;
-      datagram[2] = wSysCmd.getvalA( node ) % 128;
+      datagram[1] = 0x3E | (wSysCmd.getport( node ) / 128) ;
+      datagram[2] = wSysCmd.getport( node ) % 128;
       datagram[3] = 0x33; // turn dcc block on
       datagram[4] = (byte)__generateChecksum( datagram );
       size = 5;
     }
     else if( StrOp.equals( cmdstr, wSysCmd.analog ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set trackport %d to analog", wSysCmd.getvalA( node ) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set trackport %d to analog", wSysCmd.getport( node ) );
       datagram[0] = 3 | VER3_FLAG | data->header;
-      datagram[1] = 0x3E | (wSysCmd.getvalA( node ) / 128) ;
-      datagram[2] = wSysCmd.getvalA( node ) % 128;
+      datagram[1] = 0x3E | (wSysCmd.getport( node ) / 128) ;
+      datagram[2] = wSysCmd.getport( node ) % 128;
       datagram[3] = 0x53; // turn analog block on
       datagram[4] = (byte)__generateChecksum( datagram );
       size = 5;
     }
     else if( StrOp.equals( cmdstr, wSysCmd.resetblock ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "resetblock %d", wSysCmd.getvalA( node ) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "resetblock %d", wSysCmd.getport( node ) );
       datagram[0] = 3 | VER3_FLAG | data->header;
-      datagram[1] = 0x3E | (wSysCmd.getvalA( node ) / 128) ;
-      datagram[2] = wSysCmd.getvalA( node ) % 128;
+      datagram[1] = 0x3E | (wSysCmd.getport( node ) / 128) ;
+      datagram[2] = wSysCmd.getport( node ) % 128;
       datagram[3] = 0x32; // turn block off, DCC clear all packet info
       datagram[4] = (byte)__generateChecksum( datagram );
       size = 5;
