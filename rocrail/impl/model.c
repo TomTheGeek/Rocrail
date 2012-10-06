@@ -396,7 +396,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
       /* check the basic addressing */
       if( StrOp.equals( wLoc.name(), NodeOp.getName(item) ) ) {
         if( wLoc.getaddr(item) == 0 && !StrOp.equals(wLoc.getprot(item), wLoc.prot_A) ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: loco %s has no address set", wItem.getid(item) );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s has no address set -> analog", wItem.getid(item) );
           healthy = False;
         }
       }
