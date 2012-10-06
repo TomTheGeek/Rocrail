@@ -600,6 +600,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, const char* 
           wSysCmd.setcmd(cmd, wSysCmd.resetblock);
           wSysCmd.setvalA(cmd, wBlock.getport( data->props ));
           wSysCmd.setiid( cmd, wBlock.getiid( data->props ) );
+          wSysCmd.setid( cmd, wBlock.getid( data->props ) );
           wSysCmd.setaddr( cmd, wBlock.getaddr( data->props ) );
           wSysCmd.setport( cmd, wBlock.getport( data->props ) );
           ControlOp.cmd( control, cmd, NULL );
@@ -796,6 +797,7 @@ static void _setAnalog( iIBlockBase inst, Boolean analog ) {
   iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
   wSysCmd.setcmd( cmd, analog?wSysCmd.analog:wSysCmd.dcc );
   wSysCmd.setiid( cmd, wBlock.getiid( data->props ) );
+  wSysCmd.setid( cmd, wBlock.getid( data->props ) );
   wSysCmd.setaddr( cmd, wBlock.getaddr( data->props ) );
   wSysCmd.setport( cmd, wBlock.getport( data->props ) );
   ControlOp.cmd( control, cmd, NULL );
@@ -1782,6 +1784,8 @@ static Boolean _unLink( iIBlockBase inst ) {
       iOControl control = AppOp.getControl();
       iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
       wSysCmd.setcmd( cmd, wSysCmd.ulink );
+      wSysCmd.setiid( cmd, wBlock.getiid( data->props ) );
+      wSysCmd.setid( cmd, wBlock.getid( data->props ) );
       wSysCmd.setvalA( cmd, BlockOp.getTDport( inst ) );
       if( ControlOp.cmd( control, cmd, NULL ) ) {
         data->linkto = NULL;
