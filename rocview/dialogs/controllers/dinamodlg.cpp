@@ -161,26 +161,26 @@ void DinamoCtrlDlg::CreateControls()
     itemDialog1->SetSizer(itemBoxSizer2);
 
     wxPanel* itemPanel3 = new wxPanel( itemDialog1, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    itemBoxSizer2->Add(itemPanel3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemBoxSizer2->Add(itemPanel3, 1, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxVERTICAL);
     itemPanel3->SetSizer(itemBoxSizer4);
 
     wxFlexGridSizer* itemFlexGridSizer5 = new wxFlexGridSizer(0, 2, 0, 0);
     itemFlexGridSizer5->AddGrowableCol(1);
-    itemBoxSizer4->Add(itemFlexGridSizer5, 0, wxGROW|wxALL, 5);
+    itemBoxSizer4->Add(itemFlexGridSizer5, 1, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( itemPanel3, ID_STATICTEXT_DINAMO_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_IID = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_DINAMO_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_IID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer5->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labDevice = new wxStaticText( itemPanel3, ID_STATICTEXT_DINAMO_DEV, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_DINAMO_DEV, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_Device, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_DINAMO_DEV, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
+    itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labSwTime = new wxStaticText( itemPanel3, ID_STATICTEXT_DINAMO_SWTIME, _("Switch time"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labSwTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
