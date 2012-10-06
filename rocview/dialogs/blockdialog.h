@@ -145,14 +145,13 @@ class wxSpinCtrl;
 #define ID_BUTTON1 10083
 #define ID_BUTTON2 10084
 #define ID_PANEL_BK_INTERFACE 10016
+#define ID_CHECKBOX_BKTD 10202
 #define wxID_STATIC_BK_IID 10037
 #define ID_TEXTCTRL_BK_IID 10038
 #define wxID_STATIC_BK_ADDRESS 10039
 #define ID_TEXTCTRL_BK_ADDRESS 10040
 #define wxID_STATIC_BK_PORT 10041
 #define ID_TEXTCTRL_BK_PORT 10042
-#define wxID_STATIC_BK_TD 10203
-#define ID_CHECKBOX_BKTD 10202
 #define ID__PANEL_BK_PERMISSIONS 10242
 #define ID_LISTBOX_INCLUDE 10337
 #define ID_LISTBOX_EXCLUDE 10338
@@ -415,14 +414,13 @@ public:
     wxButton* m_RouteProps;
     wxButton* m_RouteTest;
     wxPanel* m_Interface;
+    wxCheckBox* m_TD;
     wxStaticText* m_Labeliid;
     wxTextCtrl* m_iid;
     wxStaticText* m_LabelAddress;
     wxTextCtrl* m_Address;
     wxStaticText* m_LabelPort;
     wxTextCtrl* m_Port;
-    wxStaticText* m_labTD;
-    wxCheckBox* m_TD;
     wxPanel* m_PermissionsPanel;
     wxStaticText* m_labInclude;
     wxListBox* m_IncludeList;
