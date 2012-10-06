@@ -889,6 +889,7 @@
     <const name="clearshortids" vt="string" val="clearshortids"/>
     <const name="ebreak" vt="string" val="ebreak"/>
     <const name="sod" vt="string" val="sod"/>
+    <const name="resetblock" vt="string" val="resetblock" remark="Trackdriver port in valA."/>
     <var name="cmd" vt="string" defval="" range="*"/>
     <var name="informall" vt="bool" defval="false" remark="send command to all interfaces"/>
     <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>

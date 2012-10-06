@@ -593,6 +593,15 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, const char* 
           /* power off */
           AppOp.stop();
         }
+
+        if( wBlock.getport( data->props ) >= 0 ) {
+          iOControl control = AppOp.getControl();
+          iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+          wSysCmd.setcmd(cmd, wSysCmd.resetblock);
+          wSysCmd.setvalA(cmd, wBlock.getport( data->props ));
+          ControlOp.cmd( control, cmd, NULL );
+        }
+
         /* broadcast ghost state */
         {
           iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
