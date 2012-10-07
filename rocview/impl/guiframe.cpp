@@ -720,6 +720,9 @@ void RocGuiFrame::OnInitNotebook( wxCommandEvent& event ) {
   if( wxGetApp().isModView() && !wxGetApp().isOffline() ) {
     initModPanel( NULL );
   }
+  else {
+    m_ModPanel = NULL;
+  }
 
 
   zlevel = wPlan.getzlevel( wxGetApp().getModel() );
