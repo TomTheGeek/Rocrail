@@ -408,6 +408,8 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
     int   addr = wLoc.getaddr( node ); /* loc decoder address */
     int  block = wLoc.getport( node ); /* block number*/
     Boolean analog = StrOp.equals( wLoc.prot_A, wLoc.getprot( node ) );
+    int fnchanged = wFunCmd.getfnchanged(node);
+    int fngroup   = wFunCmd.getgroup(node);
 
     Boolean lights = wLoc.isfn(node);
     Boolean f1 = wFunCmd.isf1( node );
@@ -419,17 +421,34 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
         "function %s (%s %d) trackport=%d lights=%s f1=%s f2=%s f3=%s f4=%s",
         wFunCmd.getid(node), analog?"analog":"DCC", addr, block, lights?"on":"off", f1?"on":"off", f2?"on":"off", f3?"on":"off", f4?"on":"off" );
 
-    if( ! analog ) {
-      byte f0 = wLoc.isfn( node ) ? 0x10:0x00;
-      byte f1 = wFunCmd.isf1( node ) ? 0x01:0x00;
-      byte f2 = wFunCmd.isf2( node ) ? 0x02:0x00;
-      byte f3 = wFunCmd.isf3( node ) ? 0x04:0x00;
-      byte f4 = wFunCmd.isf4( node ) ? 0x08:0x00;
+    if( !analog ) {
+      byte f0  = wLoc.isfn( node ) ? 0x10:0x00;
+
+      byte f1  = wFunCmd.isf1 ( node ) ? 0x01:0x00;
+      byte f2  = wFunCmd.isf2 ( node ) ? 0x02:0x00;
+      byte f3  = wFunCmd.isf3 ( node ) ? 0x04:0x00;
+      byte f4  = wFunCmd.isf4 ( node ) ? 0x08:0x00;
+      byte f5  = wFunCmd.isf5 ( node ) ? 0x01:0x00;
+      byte f6  = wFunCmd.isf6 ( node ) ? 0x02:0x00;
+      byte f7  = wFunCmd.isf7 ( node ) ? 0x04:0x00;
+      byte f8  = wFunCmd.isf8 ( node ) ? 0x08:0x00;
+      byte f9  = wFunCmd.isf9 ( node ) ? 0x01:0x00;
+      byte f10 = wFunCmd.isf10( node ) ? 0x02:0x00;
+      byte f11 = wFunCmd.isf11( node ) ? 0x04:0x00;
+      byte f12 = wFunCmd.isf12( node ) ? 0x08:0x00;
 
       datagram[0] = 4 | VER3_FLAG | data->header;
       datagram[1] = 0x28 | (block / 128) ;
       datagram[2] = block % 128;
-      datagram[3] = f0 | f1 | f2 | f3 | f4;
+      if( fnchanged < 5 || fngroup == 1 ) {
+        datagram[3] = f0 | f1 | f2 | f3 | f4;
+      }
+      else if( fnchanged < 9 || fngroup == 2 ) {
+        datagram[3] = 0x30 | f5 | f6 | f7 | f8;
+      }
+      else if( fnchanged < 13 || fngroup == 3 ) {
+        datagram[3] = 0x20 | f9 | f10 | f11 | f12;
+      }
       datagram[4] = addr; /* base address */
       datagram[5] = (byte)__generateChecksum( datagram );
       size = 6;
