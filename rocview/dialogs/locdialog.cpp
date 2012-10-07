@@ -1660,13 +1660,13 @@ void LocDialog::CreateControls()
     m_labVcru = new wxStaticText( m_Interface_Panel, wxID_ANY, _("V_cru:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer89->Add(m_labVcru, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 2);
 
-    m_V_cru = new wxTextCtrl( m_Interface_Panel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_V_cru = new wxTextCtrl( m_Interface_Panel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer89->Add(m_V_cru, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 2);
 
     m_labVRcru = new wxStaticText( m_Interface_Panel, wxID_STATIC, _("V_Rcru:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer89->Add(m_labVRcru, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 5);
 
-    m_V_Rcru = new wxTextCtrl( m_Interface_Panel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_V_Rcru = new wxTextCtrl( m_Interface_Panel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer89->Add(m_V_Rcru, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_Label_V_max = new wxStaticText( m_Interface_Panel, wxID_STATIC_V_MAX, _("V_max:"), wxDefaultPosition, wxDefaultSize, 0 );
