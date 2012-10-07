@@ -325,7 +325,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
     int  speed = 0;
     Boolean analog = StrOp.equals( wLoc.prot_A, wLoc.getprot( node ) );
     int  range = analog ? 63:28;
-    Boolean longAddr = addr > 127;
+    Boolean longAddr = (addr > 127) | StrOp.equals( wLoc.prot_L, wLoc.getprot( node ) );
 
 
     if( wLoc.getV( node ) != -1 ) {
@@ -416,7 +416,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
     Boolean analog = StrOp.equals( wLoc.prot_A, wLoc.getprot( node ) );
     int fnchanged = wFunCmd.getfnchanged(node);
     int fngroup   = wFunCmd.getgroup(node);
-    Boolean longAddr = addr > 127;
+    Boolean longAddr = (addr > 127) | StrOp.equals( wLoc.prot_L, wLoc.getprot( node ) );
 
     Boolean lights = wLoc.isfn(node);
     Boolean f1 = wFunCmd.isf1( node );
