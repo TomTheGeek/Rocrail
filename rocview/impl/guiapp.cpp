@@ -1002,13 +1002,10 @@ static void rocrailCallback( obj me, iONode node ) {
     if( StrOp.equals( wSysCmd.shutdown, wSysCmd.getcmd(node) ) ) {
       if( wGui.isreconnectafterservershutdown(guiApp->getIni()) ) {
         TraceOp.trc( "app", TRCLEVEL_WARNING , __LINE__, 9999, "SHUTDOWN -> reconnect after shutdown...");
+        iOThread th = ThreadOp.inst( NULL, &reconThread, guiApp );
+        ThreadOp.start( th );
         wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_GoOffline );
         wxPostEvent( guiApp->getFrame(), event );
-
-        TraceOp.trc( "app", TRCLEVEL_INFO , __LINE__, 9999, "start reconnection connection...");
-        iOThread th = ThreadOp.inst( "reconthread", &reconThread, guiApp );
-        ThreadOp.start( th );
-
       }
       else {
         TraceOp.trc( "app", TRCLEVEL_EXCEPTION, __LINE__, 9999, "SHUTDOWN");
