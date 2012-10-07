@@ -154,6 +154,12 @@
     <fun name="isTTBlock" vt="Boolean">
       <param name="inst" vt="this"/>
     </fun>
+    <fun name="isTD" vt="Boolean">
+      <param name="inst" vt="this"/>
+    </fun>
+    <fun name="resetTD" vt="void">
+      <param name="inst" vt="this"/>
+    </fun>
     <fun name="isSuited" vt="int">
       <param name="inst" vt="this"/>
       <param name="loc" vt="iOLoc" remark="Loc instance"/>

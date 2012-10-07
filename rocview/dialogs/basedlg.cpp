@@ -32,6 +32,8 @@ static wxString __getAddrStr(iONode Item) {
     return wxString::Format(_T("%d-%d"), wSwitch.getaddr1(Item), wSwitch.getport1(Item));
   else if( StrOp.equals( wSignal.name(), NodeOp.getName(Item) ) )
     return wxString::Format(_T("%d-%d"), wSignal.getaddr(Item), wSignal.getport1(Item));
+  else if( StrOp.equals( wBlock.name(), NodeOp.getName(Item) ) )
+    return wxString::Format(_T("%d-%d"), wBlock.getaddr(Item), wBlock.getport(Item));
   else
     return wxString::Format(_T("%d"), wItem.getaddr(Item));
 }

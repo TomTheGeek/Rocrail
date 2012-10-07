@@ -128,7 +128,7 @@ static int __count(void) {
 }
 
 
-static void __resetTD(iIBlockBase inst) {
+static void _resetTD(iIBlockBase inst) {
   iOBlockData data   = Data(inst);
   if( wBlock.istd(data->props) ) {
     iOControl control = AppOp.getControl();
@@ -143,6 +143,11 @@ static void __resetTD(iIBlockBase inst) {
              "reset trackdriver block [%s]", data->id );
     ControlOp.cmd( control, cmd, NULL );
   }
+}
+
+static Boolean _isTD(iIBlockBase inst) {
+  iOBlockData data   = Data(inst);
+  return wBlock.istd(data->props);
 }
 
 static void __checkAction( iOBlock inst, const char* state ) {
@@ -611,7 +616,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, const char* 
           AppOp.stop();
         }
 
-        __resetTD(inst);
+        _resetTD(inst);
 
         /* broadcast ghost state */
         {
@@ -2063,7 +2068,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   }
 
   if( locid == NULL || StrOp.len(locid) == 0 ) {
-    __resetTD(inst);
+    _resetTD(inst);
   }
 
   if( state != NULL ) {
@@ -2368,7 +2373,7 @@ static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
              "reseted block [%s] is reserved by [%s]", data->id, data->locId );
   }
 
-  __resetTD(inst);
+  _resetTD(inst);
 
 }
 

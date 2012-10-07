@@ -971,7 +971,8 @@
     </fun>
     <fun name="initField" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
-    </fun>
+      <param name="full" vt="Boolean"/>
+      </fun>
     <fun name="printLocs" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="f" vt="FILE *" remark="Stream object"/>

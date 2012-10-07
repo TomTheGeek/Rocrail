@@ -2078,7 +2078,8 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s: %s", cmdName, cmdVal );
 
   if( StrOp.equals( wSysCmd.name(), cmdName ) && !StrOp.equals( wSysCmd.dcc, cmdVal ) &&
-      !StrOp.equals( wSysCmd.loccnfg, cmdVal ) && !StrOp.equals( wSysCmd.link, cmdVal ) )
+      !StrOp.equals( wSysCmd.loccnfg, cmdVal ) && !StrOp.equals( wSysCmd.link, cmdVal ) &&
+      !StrOp.equals( wSysCmd.resetblock, cmdVal ) )
   {
     if( StrOp.equals( wSysCmd.ebreak, cmdVal ) ) {
       if( wCtrl.isebreakforceunlock( wRocRail.getctrl( AppOp.getIni() ) ) ) {
@@ -2160,7 +2161,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
     ModelOp.save( inst, False );
   }
   else if( StrOp.equals( wModelCmd.initfield, cmdVal ) ) {
-    ModelOp.initField( inst );
+    ModelOp.initField( inst, True );
   }
   else if( StrOp.equals( wModelCmd.add, cmdVal ) ) {
     int childCnt = NodeOp.getChildCnt( cmd );
@@ -2961,6 +2962,21 @@ static void __clearMap( iOMap map ) {
   MapOp.clear( map );
 }
 
+
+static void __initTDBlocks(iOModel inst) {
+  iOModelData o = Data(inst);
+  int pause = wCtrl.getinitfieldpause( wRocRail.getctrl( AppOp.getIni(  ) ) );
+  iIBlockBase bk = (iIBlockBase)MapOp.first(o->blockMap);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init Track Driver blocks..." );
+  while( bk != NULL ) {
+    if( bk->isTD(bk) ) {
+      bk->resetTD(bk);
+      ThreadOp.sleep( pause );
+    }
+    bk = (iIBlockBase)MapOp.next( o->blockMap );
+  };
+}
+
 /** ----------------------------------------------------------------------
   * Init all the switches in the field.
   * ----------------------------------------------------------------------*/
@@ -2998,6 +3014,8 @@ static void __initFieldRunner( void* threadinst ) {
     wSysCmd.setinformall(cmd, True);
     ControlOp.cmd( cntrl, cmd, NULL );
   }
+
+  __initTDBlocks(model);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init [%d] switches", MapOp.size( o->switchMap ) );
 
@@ -3070,7 +3088,7 @@ static void __initFieldRunner( void* threadinst ) {
   ThreadOp.base.del( threadinst );
 }
 
-static void _initField( iOModel inst ) {
+static void _initField( iOModel inst, Boolean full ) {
   iOModelData data = Data(inst);
   if( __anyRunningLoco(inst) ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Init field canceled: one or more loco's are running." );
@@ -3079,9 +3097,14 @@ static void _initField( iOModel inst ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Init field canceled: pending operation." );
   }
   else {
-    iOThread t = ThreadOp.inst( "initField", &__initFieldRunner, inst );
-    data->pendinginitfield = True;
-    ThreadOp.start( t );
+    if( full ) {
+      iOThread t = ThreadOp.inst( "initField", &__initFieldRunner, inst );
+      data->pendinginitfield = True;
+      ThreadOp.start( t );
+    }
+    else {
+      __initTDBlocks(inst);
+    }
   }
 }
 
@@ -3237,7 +3260,7 @@ static void _init( iOModel inst ) {
 
   if( o->moduleplan != NULL ) {
     if( wModPlan.isinitfield(ModPlanOp.getModPlan(o->moduleplan)) )
-      ModelOp.initField(inst);
+      ModelOp.initField(inst, True);
   }
 
   if( wPlan.getmv( o->model ) != NULL ) {

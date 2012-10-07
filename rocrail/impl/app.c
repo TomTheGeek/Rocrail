@@ -544,7 +544,7 @@ static __checkConsole( iOAppData data ) {
   }
   else if( c == wConCmd.initfield ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Initfield requested." );
-    ModelOp.initField( data->model );
+    ModelOp.initField( data->model, True );
   }
   else if( c == wConCmd.threads ) {
     AppOp.listThreads();
@@ -911,8 +911,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   }
 
 
-  if( initfield )
-    ModelOp.initField( data->model );
+  ModelOp.initField( data->model, initfield );
 
   /* update the feedback arrays */
   ModelOp.updateFB( data->model );

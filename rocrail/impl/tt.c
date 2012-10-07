@@ -3003,6 +3003,14 @@ static Boolean _isTTBlock( iIBlockBase inst ) {
   return True;
 }
 
+static Boolean _isTD( iIBlockBase inst ) {
+  return False;
+}
+
+static void _resetTD( iIBlockBase inst ) {
+}
+
+
 /*
  * Check for a free track block in case of an activated manager.
  */
