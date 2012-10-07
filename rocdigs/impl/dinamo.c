@@ -325,6 +325,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
     int  speed = 0;
     Boolean analog = StrOp.equals( wLoc.prot_A, wLoc.getprot( node ) );
     int  range = analog ? 63:28;
+    Boolean longAddr = addr > 127;
 
 
     if( wLoc.getV( node ) != -1 ) {
@@ -348,12 +349,17 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       size = 6;
     }
     else {
-      datagram[0] = 4 | VER3_FLAG | data->header;
+      datagram[0] = (longAddr ? 4:5) | VER3_FLAG | data->header;
       datagram[1] = 0x28 | (block / 128) ;
       datagram[2] = block % 128;
       datagram[3] = 0x40 | (dir ? 0x20:0x00) | (speed & 0x1F);
-      datagram[4] = addr; /* base address */
-      datagram[5] = (byte)__generateChecksum( datagram );
+      datagram[4] = addr % 128; /* base address */
+      if( longAddr ) {
+        datagram[5] = addr / 128; /* base address */
+        datagram[6] = (byte)__generateChecksum( datagram );
+      }
+      else
+        datagram[5] = (byte)__generateChecksum( datagram );
       size = 6;
     }
   }
@@ -410,6 +416,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
     Boolean analog = StrOp.equals( wLoc.prot_A, wLoc.getprot( node ) );
     int fnchanged = wFunCmd.getfnchanged(node);
     int fngroup   = wFunCmd.getgroup(node);
+    Boolean longAddr = addr > 127;
 
     Boolean lights = wLoc.isfn(node);
     Boolean f1 = wFunCmd.isf1( node );
@@ -437,7 +444,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       byte f11 = wFunCmd.isf11( node ) ? 0x04:0x00;
       byte f12 = wFunCmd.isf12( node ) ? 0x08:0x00;
 
-      datagram[0] = 4 | VER3_FLAG | data->header;
+      datagram[0] = (longAddr ? 4:5) | VER3_FLAG | data->header;
       datagram[1] = 0x28 | (block / 128) ;
       datagram[2] = block % 128;
       if( fnchanged < 5 || fngroup == 1 ) {
@@ -449,8 +456,13 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       else if( fnchanged < 13 || fngroup == 3 ) {
         datagram[3] = 0x20 | f9 | f10 | f11 | f12;
       }
-      datagram[4] = addr; /* base address */
-      datagram[5] = (byte)__generateChecksum( datagram );
+      datagram[4] = addr % 128; /* base address */
+      if( longAddr ) {
+        datagram[5] = addr / 128; /* base address */
+        datagram[6] = (byte)__generateChecksum( datagram );
+      }
+      else
+        datagram[5] = (byte)__generateChecksum( datagram );
       size = 6;
     }
     else {
