@@ -954,11 +954,19 @@ void CV::doCV( int command, int index, int value ) {
   wProgram.setpom( cmd, m_bPOM );
   wProgram.setacc( cmd, m_bAcc );
   wProgram.setdirect( cmd, m_Direct->IsChecked()?True:False );
-  if( m_LocProps != NULL ) {
-    wProgram.setdecaddr( cmd, wLoc.getaddr( m_LocProps ) );
-    wProgram.setfilename( cmd, wLoc.getid( m_LocProps ) );
-    if( index == 1) {
-      wLoc.setaddr(m_LocProps, value);
+  if( command == wProgram.save ) {
+    if( m_LocProps != NULL ) {
+      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999,
+          "save CV for %s addr=%d cv=%d value=%d...", wLoc.getid( m_LocProps ), addr, index, value );
+      wProgram.setdecaddr( cmd, wLoc.getaddr( m_LocProps ) );
+      wProgram.setfilename( cmd, wLoc.getid( m_LocProps ) );
+
+      /* What about long addressing?
+      if( index == 1) {
+        wLoc.setaddr(m_LocProps, value);
+      }
+      */
+
       if( !wxGetApp().isStayOffline() ) {
         /* Notify RocRail. */
         wxGetApp().sendToRocrail( cmd );
@@ -966,18 +974,20 @@ void CV::doCV( int command, int index, int value ) {
       }
     }
   }
-  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999,
-      "sending program command for addr=%d cmd=%d index=%d value=%d...", addr, command, index, value );
-  wxGetApp().sendToRocrail( cmd );
-  cmd->base.del(cmd);
-  m_CVidx = index;
-  if( !m_bPOM && m_CVoperation > 0 ) {
-    m_TimerCount = 0;
-    bool rc = m_Timer->Start( 1000, wxTIMER_ONE_SHOT );
+  else {
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999,
+        "sending program command for addr=%d cmd=%d index=%d value=%d...", addr, command, index, value );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+    m_CVidx = index;
+    if( !m_bPOM && m_CVoperation > 0 ) {
+      m_TimerCount = 0;
+      bool rc = m_Timer->Start( 1000, wxTIMER_ONE_SHOT );
 
-    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Timeout timer %sstarted %dms...", rc?"":"NOT ", wCVconf.gettimeout(m_CVconf) * 1000 );
-    startProgress();
+      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "Timeout timer %sstarted %dms...", rc?"":"NOT ", wCVconf.gettimeout(m_CVconf) * 1000 );
+      startProgress();
 
+    }
   }
 }
 
