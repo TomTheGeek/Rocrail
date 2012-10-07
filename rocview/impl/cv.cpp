@@ -956,13 +956,11 @@ void CV::doCV( int command, int index, int value ) {
   wProgram.setdirect( cmd, m_Direct->IsChecked()?True:False );
   if( m_LocProps != NULL ) {
     wProgram.setdecaddr( cmd, wLoc.getaddr( m_LocProps ) );
+    wProgram.setfilename( cmd, wLoc.getid( m_LocProps ) );
     if( index == 1) {
       wLoc.setaddr(m_LocProps, value);
       if( !wxGetApp().isStayOffline() ) {
         /* Notify RocRail. */
-        iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-        wModelCmd.setcmd( cmd, wModelCmd.modify );
-        NodeOp.addChild( cmd, (iONode)m_LocProps->base.clone( m_LocProps ) );
         wxGetApp().sendToRocrail( cmd );
         cmd->base.del(cmd);
       }

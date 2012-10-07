@@ -909,7 +909,9 @@ static void __callback( obj inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wProgram.name(), nodeName ) ) {
     if( wProgram.getcmd(nodeA) == wProgram.save ) {
-      iOLoc loc = ModelOp.getLocByAddress( model, wProgram.getaddr(nodeA) );
+      iOLoc loc = ModelOp.getLoc( model, wProgram.getfilename(nodeA) );
+      if( loc == NULL )
+        loc = ModelOp.getLocByAddress( model, wProgram.getaddr(nodeA) );
       if( loc != NULL ) {
         LocOp.setCV( loc, wProgram.getcv(nodeA), wProgram.getvalue(nodeA) );
       }
