@@ -926,7 +926,7 @@ static void __checkFlags( iODINAMO dinamo, byte* rbuffer ) {
       data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
     }
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "state changed" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "state changed: fault=%d hold=%d", data->fault, data->hold );
     if( data->fault ) {
       /* inform listener: */
       iONode node = NodeOp.inst( wResponse.name(), NULL, ELEMENT_NODE );
@@ -996,7 +996,8 @@ static void __transactor( void* threadinst ) {
 
     /* get next node */
     if( gotrsp && lastdatagramsize == 0 ) {
-      post = ThreadOp.getPost( th );
+      if( !data->hold )
+        post = ThreadOp.getPost( th );
       if( post != NULL ) {
         iONode node = (iONode)post;
         Boolean responseExpected = False;
