@@ -186,8 +186,8 @@ static void ExceptionCallback( int level, char* msg ) {
 // the application class
 // ----------------------------------------------------------------------------
 
-iONode RocGui::getModel() {
-  if( m_Model == NULL ) {
+iONode RocGui::getModel(bool create) {
+  if( m_Model == NULL && create) {
     TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "Creating Model..." );
     m_Frame->setLocalPlan( _T("") );
   }
@@ -855,7 +855,7 @@ static void rocrailCallback( obj me, iONode node ) {
     wxGetApp().getFrame()->setEditMode(false);
 
     if( guiApp->getFrame()->getNotebook() != NULL ) {
-      if( !guiApp->isModelSet() || guiApp->isOffline() ) {
+      if( !guiApp->isModelSet() || guiApp->isOffline() || (guiApp->getModel(false) != NULL && NodeOp.getChildCnt(guiApp->getModel(false)) == 0) ) {
         TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999,
             "isModelSet=%d stayOffline=%d", guiApp->isModelSet(), guiApp->isStayOffline() );
         guiApp->setModel( node );

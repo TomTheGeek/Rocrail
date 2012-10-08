@@ -52,7 +52,7 @@ public:
   RocGuiFrame* getFrame() { return m_Frame; }
   void setHost( const char* hostname, int port) { m_Host = hostname; m_Port = port; }
   void setModel( iONode node );
-  iONode getModel();
+  iONode getModel(bool create=true);
   bool isModelSet();
   iONode getIni() { return m_Ini; }
   bool hasUndoItems() { return ListOp.size(m_UndoItems) > 0; }
