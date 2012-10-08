@@ -1037,10 +1037,14 @@ static void __transactor( void* threadinst ) {
         byte lbuffer[32]; /* make a local send buffer to preserve the datagram for checking */
         /* Send NULL datagram to signal Rocrail is still a live: */
         lsize = __translateNode2Datagram( dinamo, NULL, lbuffer, NULL );
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send null datagram size=%d", lsize );
+        if( (SystemOp.getTick() - timer) > 25 )
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "timeout on response: send null datagram size=%d", lsize );
+        else
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send null datagram size=%d", lsize );
         TraceOp.dump( "nullreq", TRCLEVEL_BYTE, (char*)lbuffer, lsize );
         SerialOp.write( data->serial, (char*)lbuffer, lsize );
         lastdatagramsize = 0;
+        timer = SystemOp.getTick();
         gotrsp = False;
       }
     }
