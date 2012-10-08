@@ -535,6 +535,11 @@ static void __handleIssue(obj inst, iONode node) {
     }
     StrOp.free(tmp);
 
+    /* Write occupancy from memory: */
+    tmp = StrOp.fmt("%s%c%s", issueDir, SystemOp.getFileSeparator(), "occ.xml" );
+    ModelOp.saveBlockOccupancy(AppOp.getModel(), tmp);
+    StrOp.free(tmp);
+
     StrOp.free(issueTxt);
     StrOp.free(issueDir);
 

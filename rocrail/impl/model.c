@@ -1933,7 +1933,7 @@ static void __reset( iOModel inst, Boolean saveCurBlock ) {
 
   /* save the cleaned occupancy */
   if( saveCurBlock )
-    ModelOp.saveBlockOccupancy(inst);
+    ModelOp.saveBlockOccupancy(inst, NULL);
 
 }
 
@@ -2462,7 +2462,7 @@ static void _save( iOModel inst, Boolean removeGen ) {
     StrOp.free( xml );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Plan Saved." );
   }
-  ModelOp.saveBlockOccupancy(inst);
+  ModelOp.saveBlockOccupancy(inst, NULL);
 }
 
 static void _saveAs( iOModel inst, const char* fileName ) {
@@ -4867,7 +4867,7 @@ static void _setBlockOccupancy( iOModel inst, const char* BlockId, const char* L
 }
 
 
-static void _saveBlockOccupancy( iOModel inst ) {
+static void _saveBlockOccupancy( iOModel inst, const char* occfilename ) {
   iOModelData data = Data(inst);
   iONode modocc = NodeOp.inst( wModOcc.name(), NULL, ELEMENT_NODE );
   iONode occ = NULL;
@@ -4889,7 +4889,8 @@ static void _saveBlockOccupancy( iOModel inst ) {
     iOFile f = NULL;
 
     /* file name */
-    const char* occFileName =  wRocRail.getoccupancy( AppOp.getIni() );
+
+    const char* occFileName =  (occfilename==NULL ? wRocRail.getoccupancy( AppOp.getIni() ):occfilename);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writing occupancy file [%s]", occFileName );
 
     f = FileOp.inst( occFileName, OPEN_WRITE );

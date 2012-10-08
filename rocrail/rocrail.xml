@@ -1065,6 +1065,7 @@
     </fun>
     <fun name="saveBlockOccupancy" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
+      <param name="occfilename" vt="const char*" remark="Optional filename"/>
     </fun>
     <fun name="loadBlockOccupancy" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
