@@ -807,6 +807,7 @@
     <const name="rc_error" vt="int" val="2" remork="see rs"/>
     <var name="rc" vt="int" defval="0" range="0-*" remark="return code"/>
     <var name="rs" vt="int" defval="0" range="0-*" remark="reason code"/>
+    <var name="eeprom" vt="bool" defval="true" remark="Write EEprom."/>
   </program>
 
   <exception remark="Exception wrapper" wrappername="Exception">

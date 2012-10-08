@@ -300,7 +300,7 @@ static void __loader( void* threadinst ) {
 
   if( MutexOp.trywait( data->loaderMux, 1000 ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loader started." );
-    loadHEXFile((obj)cbus, wProgram.getfilename(data->loaderNode), wProgram.getdecaddr(data->loaderNode) );
+    loadHEXFile((obj)cbus, wProgram.getfilename(data->loaderNode), wProgram.getdecaddr(data->loaderNode), wProgram.iseeprom(data->loaderNode) );
     NodeOp.base.del(data->loaderNode);
     MutexOp.post(data->loaderMux);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loader started." );

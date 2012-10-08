@@ -996,6 +996,7 @@ void CBusNodeDlg::onHEXFileSend( wxCommandEvent& event ) {
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_cbus);
   wProgram.setdecaddr( cmd, nn );
+  wProgram.seteeprom( cmd, m_WriteEEprom->IsChecked()?True:False );
   wProgram.setfilename( cmd,  m_HEXFileName->GetValue().mb_str(wxConvUTF8) );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
