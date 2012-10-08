@@ -2118,7 +2118,10 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
       *bridgepos = degr;
     }
     else {
-      pen = (wxPen*)wxGREY_PEN;
+      if( (wTurntable.getbridgepos(m_Props) +24) % 48 == wTTTrack.getnr(track) )  /* reb added, condition is true for track opposite of current track */
+        pen = (wxPen*)wxGREEN_PEN;  /* reb added the opposite track will be drawn with green*/
+      else  /* reb added others with grey*/
+        pen = (wxPen*)wxGREY_PEN;
       pen->SetWidth(5);
       dc.SetPen(*pen);
     }
