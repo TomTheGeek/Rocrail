@@ -49,6 +49,8 @@
 #include "rocdigs/impl/cbus/cbusdefs.h"
 #include "rocdigs/impl/cbus/rocrail.h"
 
+#include "rocview/res/icons.hpp"
+
 #define ME_GC2Timer 4711
 
 CBusNodeDlg::CBusNodeDlg( wxWindow* parent ):cbusnodedlggen( parent )
@@ -64,6 +66,8 @@ CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( paren
 }
 
 void CBusNodeDlg::initLabels() {
+  m_CBusLogo->SetBitmap(*_img_cbus);
+
   m_SOD = 0;
   m_SaveOutputState = false;
   m_ShortEvents = false;
