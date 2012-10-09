@@ -53,6 +53,10 @@
 #include "rocs/public/system.h"
 
 #include "rocprodlg.h"
+
+#include "rocview/dialogs/speedcurvedlg.h"
+#include "rocview/dialogs/decconfigdlg.h"
+
 #include "rocview/xpm/nopict.xpm"
 
 RocProDlg::RocProDlg( wxWindow* parent )
@@ -276,3 +280,21 @@ void RocProDlg::setCVVal(int val) {
   m_Bit7->SetValue(val&0x80?true:false);
 }
 
+
+void RocProDlg::onConfig( wxCommandEvent& event ) {
+  DecConfigDlg*  dlg = new DecConfigDlg(this, 0 );
+  int rc = dlg->ShowModal();
+  if( rc == wxID_OK ) {
+    int val = dlg->getConfig();
+  }
+  dlg->Destroy();
+}
+
+void RocProDlg::onVCurve( wxCommandEvent& event ) {
+  int m_Curve[28];
+  SpeedCurveDlg*  dlg = new SpeedCurveDlg(this, m_Curve );
+  if( wxID_OK == dlg->ShowModal() ) {
+    int* newCurve = dlg->getCurve();
+  }
+  dlg->Destroy();
+}
