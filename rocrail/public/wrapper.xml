@@ -1371,7 +1371,8 @@
         <!-- patterns -->
         <const name="use_patterns" vt="int" val="1"/>
         <const name="use_aspectnrs" vt="int" val="2"/>
-        <var name="usepatterns" vt="int" defval="0" remark="0=no, 1=patterns, 2=aspectnrs"/>
+        <const name="use_linear" vt="int" val="3"/>
+        <var name="usepatterns" vt="int" defval="0" remark="0=no, 1=patterns, 2=aspectnrs, 3=linear"/>
         <var name="green" vt="int" defval="0" range="0-3" remark="pattern for green"/>
         <var name="red" vt="int" defval="0" range="0-3" remark="pattern for red"/>
         <var name="yellow" vt="int" defval="0" range="0-3" remark="pattern for yellow"/>
@@ -2163,6 +2164,8 @@
           <var name="nr" vt="int" defval="0" range="0-255" remark="CV-Number"/>
           <var name="value" vt="int" defval="0" range="0-255" remark="CV-Value"/>
           <var name="desc" vt="string" defval="NULL" range="*" remark="CV-Description"/>
+          <var name="cat" vt="string" defval="generel" range="*" remark="Category"/>
+          <var name="info" vt="string" defval="" range="*" remark="Info"/>
         </cvbyte>
 
         <var name="consist_lightsoff" vt="bool" defval="False" remark="Keep lights turned off for all slave locos."/>

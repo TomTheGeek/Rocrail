@@ -18183,4 +18183,7 @@
   <Msg id="reconnectafterservershutdown">
     <en txt="Reconnect after server shutdown"/>
   </Msg>
+  <Msg id="linear">
+    <en txt="Linear"/>
+  </Msg>
 </Messages>
