@@ -36,6 +36,7 @@ rm -Rf *.deb
 mkdir -p debian/DEBIAN
 mkdir -p debian/opt/rocrail/default
 mkdir -p debian/opt/rocrail/stylesheets
+mkdir -p debian/opt/rocrail/decspecs
 mkdir -p debian/opt/rocrail/symbols
 mkdir -p debian/opt/rocrail/images
 mkdir -p debian/opt/rocrail/svg
@@ -65,6 +66,7 @@ cp -u ../rocrail/package/plan.xml debian/opt/rocrail/default
 
 cp -R ../rocrail/package/images/*.* debian/opt/rocrail/images
 cp -R ../stylesheets/*.* debian/opt/rocrail/stylesheets
+cp -R ../decspecs/*.* debian/opt/rocrail/decspecs
 cp -R ../rocview/svg/* debian/opt/rocrail/svg
 cp -R ../rocrail/symbols/*.* debian/opt/rocrail/symbols
 cp -R ../COPYING debian/opt/rocrail

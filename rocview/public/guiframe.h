@@ -48,6 +48,7 @@
 #include "rocview/dialogs/decoders/locoio.h"
 #include "rocview/dialogs/decoders/cbusnodedlg.h"
 #include "rocview/dialogs/decoders/bidibidentdlg.h"
+#include "rocview/dialogs/rocprodlg.h"
 #include "rocview/dialogs/decoders/mgvdlg.h"
 #include "rocview/dialogs/decoders/mgv141dlg.h"
 #include "rocview/dialogs/decoders/dtopswdlg.h"
@@ -278,6 +279,7 @@ public:
   void OnDTOpSw(wxCommandEvent& event);
   void OnCBusNode(wxCommandEvent& event);
   void OnBiDiB(wxCommandEvent& event);
+  void OnRocPro(wxCommandEvent& event);
 
   void OnButton(wxCommandEvent& event);
   void OnSlider(wxScrollEvent& event);
@@ -361,6 +363,7 @@ private:
   LocoIO* m_LocoIO;
   CBusNodeDlg* m_CBusNodeDlg;
   BidibIdentDlg* m_BidibIdentDlg;
+  RocProDlg* m_RocProDlg;
   DTOpSwDlg* m_DTOpSw;
   RocrailIniDialog* m_RocrailIniDlg;
   Uhl68610Dlg* m_Uhl68610;
@@ -565,6 +568,7 @@ enum
     ME_OpenDecoder,
     ME_CBusNode,
     ME_BiDiB,
+    ME_RocPro,
     ME_DTOpSw,
     ME_Uhlenbrock,
     ME_EditBoosters,

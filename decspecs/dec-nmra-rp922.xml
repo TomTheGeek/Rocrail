@@ -1,0 +1,17 @@
+<decoder manu="NMRA" type="RP-9.2.2" web="http://nmra.org/standards/DCC/standards_rps/rp922.html">
+  <cv nr="1" cat="address" desc="Primary Address"/>
+  <cv nr="2" cat="speed" desc="Vstart"/>
+  <cv nr="3" cat="speed" desc="Acceleration Rate"/>
+  <cv nr="4" cat="speed" desc="Deceleration Rate"/>
+  <cv nr="5" cat="speed" desc="Vhigh"/>
+  <cv nr="6" cat="speed" desc="Vmid"/>
+  <cv nr="7" cat="info" desc="Manufacturer Version No." readonly="true"/>
+  <cv nr="8" cat="info" desc="Manufactured ID" readonly="true"/>
+  <cv nr="9" cat="motor" desc="Total PWM Period"/>
+  <cv nr="10" cat="motor" desc="EMF Feedback Cutout"/>
+  <cv nr="17" cat="address" desc="Extended Address Low"/>
+  <cv nr="18" cat="address" desc="Extended Address High"/>
+  <cv nr="23" cat="speed" desc="Acceleration Adjustment"/>
+  <cv nr="24" cat="speed" desc="Deceleration Adjustment"/>
+</decoder>
+

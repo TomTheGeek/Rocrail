@@ -171,6 +171,7 @@ mkdir -p debian/usr/libexec/rocrail
 mkdir -p debian/usr/share/rocrail
 mkdir -p debian/usr/share/rocrail/default
 mkdir -p debian/usr/share/rocrail/stylesheets
+mkdir -p debian/usr/share/rocrail/decspecs
 mkdir -p debian/usr/share/rocrail/symbols
 mkdir -p debian/usr/share/rocrail/images
 mkdir -p debian/usr/share/pixmaps
@@ -246,6 +247,7 @@ cp -u ../rocrail/package/plan.xml debian/usr/share/rocrail/default
 cp ../rocrail/package/rocraild.png debian/usr/share/pixmaps
 cp ../rocrail/package/rocrail.xpm debian/usr/share/pixmaps
 cp -R ../stylesheets/*.* debian/usr/share/rocrail/stylesheets
+cp -R ../decspecs/*.* debian/usr/share/rocrail/decspecs
 cp -R ../rocview/svg/* debian/usr/share/rocrail/svg
 cp -R ../rocrail/symbols/*.* debian/usr/share/rocrail/symbols
 cp -R ../rocrail/package/images/*.* debian/usr/share/rocrail/images

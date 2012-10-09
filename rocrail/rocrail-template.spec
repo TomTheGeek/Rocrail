@@ -31,6 +31,7 @@ mkdir -p $RPM_BUILD_ROOT/opt/rocrail
 mkdir -p $RPM_BUILD_ROOT/opt/rocrail/default
 mkdir -p $RPM_BUILD_ROOT/opt/rocrail/svg
 mkdir -p $RPM_BUILD_ROOT/opt/rocrail/stylesheets
+mkdir -p $RPM_BUILD_ROOT/opt/rocrail/decspecs
 mkdir -p $RPM_BUILD_ROOT/opt/rocrail/symbols
 mkdir -p $RPM_BUILD_ROOT/usr/share/applications
 mkdir -p $RPM_BUILD_ROOT/usr/share/desktop-directories
@@ -50,6 +51,7 @@ install -g users -m 666 Rocrail/rocrail/package/rocrail.xpm $RPM_BUILD_ROOT/opt/
 install -g users -m 666 Rocrail/rocrail/package/plan.xml $RPM_BUILD_ROOT/opt/rocrail/default
 
 install -g users -m 666 Rocrail/stylesheets/*.* $RPM_BUILD_ROOT/opt/rocrail/stylesheets
+install -g users -m 666 Rocrail/decspecs/*.* $RPM_BUILD_ROOT/opt/rocrail/decspecs
 
 ### install does not handle directory (sub-)trees, so we have to do this manually
 # install -d -g users -m 666 Rocrail/rocview/svg/* $RPM_BUILD_ROOT/opt/rocrail/svg
@@ -77,6 +79,7 @@ install -g users -m 666 Rocrail/rocrail/symbols/*.* $RPM_BUILD_ROOT/opt/rocrail/
 /etc/init.d/rocraild
 /opt/rocrail/rocrail.xpm
 /opt/rocrail/stylesheets/*.*
+/opt/rocrail/decspecs/*.*
 /opt/rocrail/svg
 /opt/rocrail/symbols/*.*
 /usr/share/desktop-directories/Rocrail.directory
