@@ -1,17 +1,17 @@
 <decoder manu="NMRA" type="RP-9.2.2" web="http://nmra.org/standards/DCC/standards_rps/rp922.html">
-  <cv nr="1" cat="address" desc="Primary Address"/>
-  <cv nr="2" cat="speed" desc="Vstart"/>
-  <cv nr="3" cat="speed" desc="Acceleration Rate"/>
-  <cv nr="4" cat="speed" desc="Deceleration Rate"/>
-  <cv nr="5" cat="speed" desc="Vhigh"/>
-  <cv nr="6" cat="speed" desc="Vmid"/>
-  <cv nr="7" cat="info" desc="Manufacturer Version No." readonly="true"/>
-  <cv nr="8" cat="info" desc="Manufactured ID" readonly="true"/>
-  <cv nr="9" cat="motor" desc="Total PWM Period"/>
-  <cv nr="10" cat="motor" desc="EMF Feedback Cutout"/>
-  <cv nr="17" cat="address" desc="Extended Address Low"/>
-  <cv nr="18" cat="address" desc="Extended Address High"/>
-  <cv nr="23" cat="speed" desc="Acceleration Adjustment"/>
-  <cv nr="24" cat="speed" desc="Deceleration Adjustment"/>
+  <cvbyte nr="1" cat="address" desc="Primary Address" info="Base short address in range of 1-127."/>
+  <cvbyte nr="2" cat="speed" desc="Vstart"/>
+  <cvbyte nr="3" cat="speed" desc="Acceleration Rate"/>
+  <cvbyte nr="4" cat="speed" desc="Deceleration Rate"/>
+  <cvbyte nr="5" cat="speed" desc="Vhigh"/>
+  <cvbyte nr="6" cat="speed" desc="Vmid"/>
+  <cvbyte nr="7" cat="info" desc="Manufacturer Version No." readonly="true"/>
+  <cvbyte nr="8" cat="info" desc="Manufactured ID" readonly="true"/>
+  <cvbyte nr="9" cat="motor" desc="Total PWM Period"/>
+  <cvbyte nr="10" cat="motor" desc="EMF Feedback Cutout"/>
+  <cvbyte nr="17" cat="address" desc="Extended address high" info="High byte."/>
+  <cvbyte nr="18" cat="address" desc="Extended address low" info="Low byte."/>
+  <cvbyte nr="23" cat="speed" desc="Acceleration Adjustment"/>
+  <cvbyte nr="24" cat="speed" desc="Deceleration Adjustment"/>
 </decoder>
 

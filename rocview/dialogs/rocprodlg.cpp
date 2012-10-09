@@ -46,15 +46,24 @@
 
 #include "rocview/public/guiapp.h"
 #include "rocview/wrapper/public/Gui.h"
+#include "rocrail/wrapper/public/CVByte.h"
+#include "rocrail/wrapper/public/Plan.h"
+#include "rocrail/wrapper/public/Loc.h"
+
+#include "rocs/public/system.h"
 
 #include "rocprodlg.h"
+#include "rocview/xpm/nopict.xpm"
 
 RocProDlg::RocProDlg( wxWindow* parent )
 :
 RocProDlgGen( parent )
 {
   m_DecFilename = NULL;
+  m_LocoProps = NULL;
   m_CVMap = MapOp.inst();
+  m_LocoImage->SetBitmap( wxBitmap(nopict_xpm) );
+  initLocMap();
 }
 
 void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
@@ -63,11 +72,18 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
   const char* desc = itemText.mb_str(wxConvUTF8);
   iONode cv = (iONode)MapOp.get( m_CVMap, desc );
   if( cv != NULL ) {
-    m_Info->SetValue(wxString( NodeOp.getStr(cv, "desc", "?"), wxConvUTF8));
+    m_Info->SetValue(wxString( wCVByte.getinfo(cv), wxConvUTF8));
+    m_Nr->SetValue( wxString::Format(_T("%d"), wCVByte.getnr(cv)) );
+
+    iONode lococv = getLocoCV(wCVByte.getnr(cv));
+    if( lococv != NULL ) {
+      setCVVal(wCVByte.getvalue(lococv));
+    }
   }
   else {
     // catagory
     m_Info->SetValue(wxString( "", wxConvUTF8));
+    m_Nr->SetValue( wxString::Format(_T("%d"), 0) );
   }
 }
 
@@ -86,12 +102,14 @@ void RocProDlg::onOpen( wxCommandEvent& event )
     m_DecFile->SetValue(wxString(FileOp.ripPath(m_DecFilename),wxConvUTF8));
 
     if( parseDecFile() ) {
+      m_DecTree->DeleteAllItems();
+      MapOp.clear(m_CVMap);
       wxTreeItemId root  = m_DecTree->AddRoot(wxString( NodeOp.getStr(m_DecNode, "type", "?"), wxConvUTF8));
       iOMap catMap = MapOp.inst();
       int cnt = NodeOp.getChildCnt(m_DecNode);
       for( int i = 0; i < cnt; i++ ) {
         iONode cv = NodeOp.getChild(m_DecNode, i);
-        const char* catName = NodeOp.getStr(cv, "cat", "?");
+        const char* catName = wCVByte.getcat(cv);
         wxTreeItemId* pcat = (wxTreeItemId*)MapOp.get( catMap, catName );
         wxTreeItemId cat;
         if( pcat == NULL ) {
@@ -102,9 +120,10 @@ void RocProDlg::onOpen( wxCommandEvent& event )
         else {
           cat = *pcat;
         }
-        m_DecTree->AppendItem( cat, wxString( NodeOp.getStr(cv, "desc", "?"), wxConvUTF8));
-        MapOp.put( m_CVMap, NodeOp.getStr(cv, "desc", "?"), (obj)cv);
+        m_DecTree->AppendItem( cat, wxString( wCVByte.getdesc(cv), wxConvUTF8));
+        MapOp.put( m_CVMap, wCVByte.getdesc(cv), (obj)cv);
       }
+      m_DecTree->ExpandAll();
     }
   }
   fdlg->Destroy();
@@ -143,3 +162,117 @@ void RocProDlg::onClose( wxCloseEvent& event ) {
 void RocProDlg::event(iONode node) {
 
 }
+
+static int locComparator(obj* o1, obj* o2) {
+  if( *o1 == NULL || *o2 == NULL )
+    return 0;
+  return strcmp( wLoc.getid( (iONode)*o1 ), wLoc.getid( (iONode)*o2 ) );
+}
+
+void RocProDlg::initLocMap(const char* locid) {
+  iONode model = wxGetApp().getModel();
+  if( model != NULL ) {
+    iONode lclist = wPlan.getlclist( model );
+    if( lclist != NULL ) {
+      int i;
+      int cnt = NodeOp.getChildCnt( lclist );
+      iOList list = ListOp.inst();
+
+      for( i = 0; i < cnt; i++ ) {
+        iONode lc = NodeOp.getChild( lclist, i );
+        ListOp.add( list, (obj)lc );
+      }
+      // Sort the list:
+      ListOp.sort( list, locComparator );
+
+      for( i = 0; i < ListOp.size( list ); i++ ) {
+        iONode lc = (iONode)ListOp.get( list, i );
+        if( lc == NULL )
+          continue;
+        const char* id = wLoc.getid( lc );
+      }
+
+      for( i = 0; i < cnt; i++ ) {
+        iONode lc = (iONode)ListOp.get( list, i );
+        if( lc == NULL )
+          continue;
+        const char* id = wLoc.getid( lc );
+        if( id != NULL && wLoc.getaddr(lc) > 0 && wLoc.isshow(lc) ) {
+          m_LocoList->Append( wxString(id,wxConvUTF8), (void*)lc );
+        }
+      }
+      if( cnt > 0 ) {
+        if( locid == NULL )
+          m_LocoList->SetSelection(0);
+        else
+          m_LocoList->SetStringSelection(wxString(locid,wxConvUTF8));
+        wxCommandEvent event( 0, -1 );
+        onLocoList(event);
+      }
+
+      ListOp.base.del( list );
+    }
+  }
+}
+
+
+
+void RocProDlg::onLocoList(wxCommandEvent& event) {
+  if( m_LocoList->GetSelection() == wxNOT_FOUND )
+    return;
+
+  m_LocoProps = (iONode)m_LocoList->GetClientData(m_LocoList->GetSelection());
+
+  if( m_LocoProps != NULL && wLoc.getimage( m_LocoProps ) != NULL && StrOp.len(wLoc.getimage( m_LocoProps )) > 0 ) {
+    wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
+    if( StrOp.endsWithi( wLoc.getimage( m_LocoProps ), ".gif" ) )
+      bmptype = wxBITMAP_TYPE_GIF;
+    else if( StrOp.endsWithi( wLoc.getimage( m_LocoProps ), ".png" ) )
+      bmptype = wxBITMAP_TYPE_PNG;
+
+    const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
+    static char pixpath[256];
+    StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wLoc.getimage( m_LocoProps ) ) );
+
+    if( FileOp.exist(pixpath)) {
+      TraceOp.trc( "locdialog", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
+      m_LocoImage->SetBitmap( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
+    }
+    else {
+      TraceOp.trc( "locdialog", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
+      m_LocoImage->SetBitmap( wxBitmap(nopict_xpm) );
+    }
+    m_LocoImage->SetToolTip(wxString(wLoc.getdesc( m_LocoProps ),wxConvUTF8));
+  }
+  else {
+    m_LocoImage->SetBitmap( wxBitmap(nopict_xpm) );
+  }
+  m_LocoImage->Refresh();
+
+}
+
+iONode RocProDlg::getLocoCV(int nr) {
+  if( m_LocoProps != NULL ) {
+    iONode cv = wLoc.getcvbyte(m_LocoProps);
+    while( cv != NULL ) {
+      if( wCVByte.getnr(cv) == nr )
+        return cv;
+      cv = wLoc.nextcvbyte(m_LocoProps, cv);
+    }
+  }
+  return NULL;
+}
+
+void RocProDlg::setCVVal(int val) {
+  m_Value->SetValue(val);
+  m_ValueSlider->SetValue(val);
+  m_Bit0->SetValue(val&0x01?true:false);
+  m_Bit1->SetValue(val&0x02?true:false);
+  m_Bit2->SetValue(val&0x04?true:false);
+  m_Bit3->SetValue(val&0x08?true:false);
+  m_Bit4->SetValue(val&0x10?true:false);
+  m_Bit5->SetValue(val&0x20?true:false);
+  m_Bit6->SetValue(val&0x40?true:false);
+  m_Bit7->SetValue(val&0x80?true:false);
+}
+

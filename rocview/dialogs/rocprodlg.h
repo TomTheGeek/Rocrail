@@ -40,14 +40,19 @@ class RocProDlg : public RocProDlgGen
 {
   char* m_DecFilename;
   iONode m_DecNode;
+  iONode m_LocoProps;
   iOMap m_CVMap;
   bool parseDecFile();
+  void initLocMap(const char* locid=NULL);
+  iONode getLocoCV(int nr);
+  void setCVVal(int val);
 	protected:
 		// Handlers for RocProDlgGen events.
 		void onTreeSelChanged( wxTreeEvent& event );
 		void onOpen( wxCommandEvent& event );
 		void onOK( wxCommandEvent& event );
     void onClose( wxCloseEvent& event );
+    void onLocoList( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		RocProDlg( wxWindow* parent );
