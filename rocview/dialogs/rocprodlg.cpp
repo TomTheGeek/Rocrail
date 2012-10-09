@@ -267,17 +267,20 @@ iONode RocProDlg::getLocoCV(int nr) {
   return NULL;
 }
 
-void RocProDlg::setCVVal(int val) {
-  m_Value->SetValue(val);
-  m_ValueSlider->SetValue(val);
-  m_Bit0->SetValue(val&0x01?true:false);
-  m_Bit1->SetValue(val&0x02?true:false);
-  m_Bit2->SetValue(val&0x04?true:false);
-  m_Bit3->SetValue(val&0x08?true:false);
-  m_Bit4->SetValue(val&0x10?true:false);
-  m_Bit5->SetValue(val&0x20?true:false);
-  m_Bit6->SetValue(val&0x40?true:false);
-  m_Bit7->SetValue(val&0x80?true:false);
+void RocProDlg::setCVVal(int val, bool updateval) {
+  if( val >= 0 && val < 256 ) {
+    if(updateval)
+      m_Value->SetValue(val);
+    m_ValueSlider->SetValue(val);
+    m_Bit0->SetValue(val&0x01?true:false);
+    m_Bit1->SetValue(val&0x02?true:false);
+    m_Bit2->SetValue(val&0x04?true:false);
+    m_Bit3->SetValue(val&0x08?true:false);
+    m_Bit4->SetValue(val&0x10?true:false);
+    m_Bit5->SetValue(val&0x20?true:false);
+    m_Bit6->SetValue(val&0x40?true:false);
+    m_Bit7->SetValue(val&0x80?true:false);
+  }
 }
 
 
@@ -292,9 +295,31 @@ void RocProDlg::onConfig( wxCommandEvent& event ) {
 
 void RocProDlg::onVCurve( wxCommandEvent& event ) {
   int m_Curve[28];
+  MemOp.set(m_Curve, 0, sizeof(m_Curve));
   SpeedCurveDlg*  dlg = new SpeedCurveDlg(this, m_Curve );
   if( wxID_OK == dlg->ShowModal() ) {
     int* newCurve = dlg->getCurve();
   }
   dlg->Destroy();
+}
+
+void RocProDlg::onValueSlider( wxScrollEvent& event ) {
+  setCVVal(m_ValueSlider->GetValue());
+}
+void RocProDlg::onValue( wxSpinEvent& event ) {
+  setCVVal(m_Value->GetValue());
+}
+void RocProDlg::onValueText( wxCommandEvent& event ) {
+  setCVVal(m_Value->GetValue(), false);
+}
+void RocProDlg::onBit( wxCommandEvent& event ) {
+  int val = m_Bit0->IsChecked()?0x01:0;
+  val += m_Bit1->IsChecked()?0x02:0;
+  val += m_Bit2->IsChecked()?0x04:0;
+  val += m_Bit3->IsChecked()?0x08:0;
+  val += m_Bit4->IsChecked()?0x10:0;
+  val += m_Bit5->IsChecked()?0x20:0;
+  val += m_Bit6->IsChecked()?0x40:0;
+  val += m_Bit7->IsChecked()?0x80:0;
+  setCVVal(val);
 }
