@@ -3257,18 +3257,10 @@ void RocGuiFrame::OnBiDiB( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnRocPro( wxCommandEvent& event ) {
-  long expdays;
-  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, &expdays) ) {
-    // Hide it until it is usable.
-    wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_DonKey );
-    wxPostEvent( this, evt );
-  }
-  else {
-    m_RocProDlg = new RocProDlg(this);
-    m_RocProDlg->ShowModal();
-    m_RocProDlg->Destroy();
-    m_RocProDlg = NULL;
-  }
+  m_RocProDlg = new RocProDlg(this);
+  m_RocProDlg->ShowModal();
+  m_RocProDlg->Destroy();
+  m_RocProDlg = NULL;
 }
 
 void RocGuiFrame::setOnline( bool online ) {
