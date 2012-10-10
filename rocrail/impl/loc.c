@@ -2600,6 +2600,7 @@ static void _setCV( iOLoc loc, int nr, int value ) {
     NodeOp.addChild( data->props, cv );
     MapOp.put( data->cvMap, key, (obj)cv );
   }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s: set cv %d to %d", wLoc.getid(data->props), nr, value);
 
   StrOp.free( key );
 

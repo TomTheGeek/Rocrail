@@ -467,3 +467,21 @@ void RocProDlg::doCV(int command, int nr, int value) {
   cmd->base.del(cmd);
 }
 
+
+void RocProDlg::onMenu( wxCommandEvent& event ) {
+  int nr = event.GetId();
+  wxLaunchDefaultBrowser(wxString( NodeOp.getStr(m_DecNode, "web", ""), wxConvUTF8), wxBROWSER_NEW_WINDOW );
+}
+
+void RocProDlg::onTreeItemPopup( wxTreeEvent& event ) {
+  wxString itemText = m_DecTree->GetItemText(event.GetItem());
+  const char* desc = itemText.mb_str(wxConvUTF8);
+  iONode cv = (iONode)MapOp.get( m_CVMap, desc );
+  if( cv != NULL ) {
+    wxMenu menu( wxString::Format(_T("cv %d"), wCVByte.getnr(cv)) );
+    menu.Append( wCVByte.getnr(cv), wxGetApp().getMenu("info") );
+    menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( RocProDlg::onMenu ), NULL, this );
+    PopupMenu(&menu );
+  }
+}
+

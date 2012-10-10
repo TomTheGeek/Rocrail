@@ -168,7 +168,7 @@
                                         <event name="OnTreeItemGetTooltip"></event>
                                         <event name="OnTreeItemMenu"></event>
                                         <event name="OnTreeItemMiddleClick"></event>
-                                        <event name="OnTreeItemRightClick"></event>
+                                        <event name="OnTreeItemRightClick">onTreeItemPopup</event>
                                         <event name="OnTreeKeyDown"></event>
                                         <event name="OnTreeSelChanged">onTreeSelChanged</event>
                                         <event name="OnTreeSelChanging"></event>
