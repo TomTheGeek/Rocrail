@@ -47,6 +47,7 @@ class RocProDlg : public RocProDlgGen
   iONode getLocoCV(int nr);
   void setCVVal(int val, bool updateval=true);
   void importJMRI(iONode decoder);
+  void doCV(int command, int nr, int value);
 	protected:
 		// Handlers for RocProDlgGen events.
 		void onTreeSelChanged( wxTreeEvent& event );
@@ -61,6 +62,9 @@ class RocProDlg : public RocProDlgGen
     void onValueText( wxCommandEvent& event );
     void onBit( wxCommandEvent& event );
     void onSaveAs( wxCommandEvent& event );
+    void onRead( wxCommandEvent& event );
+    void onWrite( wxCommandEvent& event );
+    void onSaveCV( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		RocProDlg( wxWindow* parent );

@@ -51,6 +51,7 @@
 #include "rocrail/wrapper/public/CVByte.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Program.h"
 
 // JMRI
 #include "rocrail/wrapper/public/DecoderConfig.h"
@@ -78,6 +79,8 @@ RocProDlgGen( parent )
   m_CVMap = MapOp.inst();
   m_LocoImage->SetBitmap( wxBitmap(nopict_xpm) );
   initLocMap();
+  m_CV29->Enable(false);
+  m_VCurve->Enable(false);
 }
 
 void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
@@ -86,19 +89,22 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
   const char* desc = itemText.mb_str(wxConvUTF8);
   iONode cv = (iONode)MapOp.get( m_CVMap, desc );
   if( cv != NULL ) {
+    int nr = wCVByte.getnr(cv);
     m_Info->SetValue(wxString( wCVByte.getinfo(cv), wxConvUTF8));
-    m_Nr->SetValue( wxString::Format(_T("%d"), wCVByte.getnr(cv)) );
+    m_Nr->SetValue( wxString::Format(_T("%d"), nr) );
 
-    iONode lococv = getLocoCV(wCVByte.getnr(cv));
+    iONode lococv = getLocoCV(nr);
     if( lococv != NULL ) {
       setCVVal(wCVByte.getvalue(lococv));
     }
+    m_CV29->Enable(nr==29);
   }
   else {
     // catagory
     m_Info->SetValue(wxString( "", wxConvUTF8));
     m_Nr->SetValue( wxString::Format(_T("%d"), 0) );
   }
+
 }
 
 void RocProDlg::onOpen( wxCommandEvent& event )
@@ -230,7 +236,18 @@ void RocProDlg::onClose( wxCloseEvent& event ) {
 }
 
 void RocProDlg::event(iONode node) {
+  if( StrOp.equals(NodeOp.getName(node), wProgram.name() ) ) {
+    int cmd = wProgram.getcmd(node);
+    int cv  = wProgram.getcv (node);
+    int value = wProgram.getvalue(node);
 
+    if( cmd == wProgram.datarsp || cmd == wProgram.statusrsp ) {
+      if( cv > 0 )
+        m_Nr->SetValue( wxString::Format(_T("%d"), cv) );
+      setCVVal(value);
+    }
+
+  }
 }
 
 static int locComparator(obj* o1, obj* o2) {
@@ -351,10 +368,11 @@ void RocProDlg::setCVVal(int val, bool updateval) {
 
 
 void RocProDlg::onConfig( wxCommandEvent& event ) {
-  DecConfigDlg*  dlg = new DecConfigDlg(this, 0 );
+  DecConfigDlg*  dlg = new DecConfigDlg(this, m_Value->GetValue() );
   int rc = dlg->ShowModal();
   if( rc == wxID_OK ) {
     int val = dlg->getConfig();
+    m_Value->SetValue(val);
   }
   dlg->Destroy();
 }
@@ -392,7 +410,6 @@ void RocProDlg::onBit( wxCommandEvent& event ) {
 
 
 void RocProDlg::onSaveAs( wxCommandEvent& event ) {
-
   wxString ms_FileExt = wxGetApp().getMsg("planfiles"); // ToDo: "decfiles"
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
@@ -418,3 +435,35 @@ void RocProDlg::onSaveAs( wxCommandEvent& event ) {
   }
   fdlg->Destroy();
 }
+
+
+void RocProDlg::onRead( wxCommandEvent& event ) {
+  doCV( wProgram.get, atoi(m_Nr->GetValue().mb_str(wxConvUTF8)), 0 );
+}
+
+void RocProDlg::onWrite( wxCommandEvent& event ) {
+  doCV( wProgram.set, atoi(m_Nr->GetValue().mb_str(wxConvUTF8)), m_Value->GetValue() );
+}
+
+void RocProDlg::onSaveCV( wxCommandEvent& event ) {
+  doCV( wProgram.save, atoi(m_Nr->GetValue().mb_str(wxConvUTF8)), m_Value->GetValue() );
+}
+
+void RocProDlg::doCV(int command, int nr, int value) {
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, command );
+  if( m_LocoProps != NULL ) {
+    int addr = wLoc.getaddr(m_LocoProps);
+    wProgram.setaddr( cmd, addr );
+    wProgram.setlongaddr( cmd, (addr > 127) ? True:False );
+    wProgram.setdecaddr( cmd, addr );
+    wProgram.setfilename( cmd, wLoc.getid( m_LocoProps ) );
+  }
+  wProgram.setcv( cmd, nr );
+  wProgram.setvalue( cmd, value );
+  wProgram.setpom( cmd, m_POM->IsChecked()?True:False );
+  wProgram.setdirect( cmd, m_Direct->IsChecked()?True:False );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+

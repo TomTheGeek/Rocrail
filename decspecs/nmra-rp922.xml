@@ -13,5 +13,6 @@
   <cvbyte nr="18" cat="address" desc="Extended address low" info="Low byte."/>
   <cvbyte nr="23" cat="speed" desc="Acceleration Adjustment"/>
   <cvbyte nr="24" cat="speed" desc="Deceleration Adjustment"/>
+  <cvbyte nr="29" cat="general" desc="Configuration Data #1"/>
 </decoder>
 
