@@ -46,11 +46,21 @@
 
 #include "rocview/public/guiapp.h"
 #include "rocview/wrapper/public/Gui.h"
+#include "rocview/wrapper/public/CVconf.h"
+#include "rocview/wrapper/public/CVcat.h"
 #include "rocrail/wrapper/public/CVByte.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Loc.h"
 
+// JMRI
+#include "rocrail/wrapper/public/DecoderConfig.h"
+#include "rocrail/wrapper/public/Decoder.h"
+#include "rocrail/wrapper/public/DecFamily.h"
+#include "rocrail/wrapper/public/DecVariables.h"
+#include "rocrail/wrapper/public/DecVariable.h"
+
 #include "rocs/public/system.h"
+#include "rocs/public/strtok.h"
 
 #include "rocprodlg.h"
 
@@ -119,7 +129,7 @@ void RocProDlg::onOpen( wxCommandEvent& event )
         if( pcat == NULL ) {
           cat = m_DecTree->AppendItem( root, wxString( catName, wxConvUTF8));
           pcat = &cat;
-          MapOp.put(catMap, catName, (obj)new wxTreeItemId(cat.GetID()) );
+          MapOp.put(catMap, catName, (obj)new wxTreeItemId(cat.m_pItem) );
         }
         else {
           cat = *pcat;
@@ -133,6 +143,55 @@ void RocProDlg::onOpen( wxCommandEvent& event )
   fdlg->Destroy();
 }
 
+void RocProDlg::importJMRI(iONode decoder) {
+  iONode cvconf = wGui.getcvconf( wxGetApp().getIni() );
+  iOMap catMap = MapOp.inst();
+  if( cvconf != NULL ) {
+    iONode cat = wCVconf.getcvcat(cvconf);
+    while( cat != NULL ) {
+      iOStrTok tok = StrTokOp.inst(wCVcat.getnrs(cat), ',');
+      while( StrTokOp.hasMoreTokens(tok) ) {
+        const char* nr = StrTokOp.nextToken(tok);
+        MapOp.put(catMap, nr, (obj)wCVcat.getname(cat));
+      }
+      StrTokOp.base.del(tok);
+      cat = wCVconf.nextcvcat(cvconf, cat);
+    }
+  }
+
+  iONode l_DecNode = NodeOp.inst("decoder", NULL, ELEMENT_NODE);
+  iONode fam = NodeOp.findNode( decoder, wDecFamily.name());
+  if( fam != NULL ) {
+    NodeOp.setStr( l_DecNode, "type", wDecFamily.getname(fam));
+    NodeOp.setStr( l_DecNode, "manu", wDecFamily.getmfg(fam));
+  }
+  iONode vars = wDecoder.getvariables(decoder);
+  if( vars != NULL ) {
+    iONode var = wDecVariables.getvariable(vars);
+    while( var != NULL ) {
+      iONode cv = NodeOp.inst(wCVByte.name(), l_DecNode, ELEMENT_NODE);
+      const char* cat = (const char*)MapOp.get( catMap, NodeOp.getStr(var, "CV", "0"));
+      if( cat != NULL )
+        wCVByte.setcat(cv, cat);
+      else
+        wCVByte.setcat(cv, "General"); // JMRI does not provide categories.
+      wCVByte.setnr(cv, wDecVariable.getCV(var));
+      wCVByte.setdesc(cv, wDecVariable.getlabel(var));
+      wCVByte.setinfo(cv, wDecVariable.getitem(var));
+      if( StrOp.len(wDecVariable.getcomment(var)) > 0 )
+        wCVByte.setinfo(cv, wDecVariable.getcomment(var));
+      else if( StrOp.len(wDecVariable.gettooltip(var)) > 0 )
+        wCVByte.setinfo(cv, wDecVariable.gettooltip(var));
+      NodeOp.addChild( l_DecNode, cv );
+      var = wDecVariables.nextvariable(vars, var);
+    }
+  }
+  NodeOp.base.del(m_DecNode);
+  m_DecNode = l_DecNode;
+
+  MapOp.base.del(catMap);
+}
+
 
 bool RocProDlg::parseDecFile() {
   if( StrOp.len(m_DecFilename) > 0 && FileOp.exist(m_DecFilename) ) {
@@ -144,6 +203,13 @@ bool RocProDlg::parseDecFile() {
     if( doc != NULL ) {
       m_DecNode = DocOp.getRootNode( doc );
       DocOp.base.del( doc );
+
+      iONode decoder = NodeOp.findNode(m_DecNode, wDecoder.name());
+      if( decoder != NULL ) {
+        // JMRI definition; Translate.
+        importJMRI(decoder);
+      }
+
       return true;
     }
     else {
@@ -322,4 +388,33 @@ void RocProDlg::onBit( wxCommandEvent& event ) {
   val += m_Bit6->IsChecked()?0x40:0;
   val += m_Bit7->IsChecked()?0x80:0;
   setCVVal(val);
+}
+
+
+void RocProDlg::onSaveAs( wxCommandEvent& event ) {
+
+  wxString ms_FileExt = wxGetApp().getMsg("planfiles"); // ToDo: "decfiles"
+  const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("savedecfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_SAVE);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    wxString path = fdlg->GetPath();
+    if( FileOp.exist( path.mb_str(wxConvUTF8) ) ) {
+      int action = wxMessageDialog( wxGetApp().getFrame(), wxGetApp().getMsg("fileexistwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+      if( action == wxID_NO ) {
+        fdlg->Destroy();
+        return;
+      }
+    }
+    if( !path.Contains( _T(".xml") ) )
+      path.Append( _T(".xml") );
+
+    iOFile f = FileOp.inst( path.mb_str(wxConvUTF8), OPEN_WRITE );
+    if( f != NULL ) {
+      char* dec = NodeOp.base.toString(m_DecNode);
+      FileOp.writeStr( f, dec );
+      FileOp.base.del( f );
+    }
+  }
+  fdlg->Destroy();
 }

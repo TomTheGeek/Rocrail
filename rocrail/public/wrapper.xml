@@ -142,6 +142,26 @@
       <var name="revision" vt="int" defval="0" range="0-*"/>
     </logentry>
   </log>
+  
+  <!-- JMRI compatible decoder definition. -->
+  <decoderconfig wrappername="DecoderConfig">
+	  <decoder wrappername="Decoder" cardinality="1">
+	    <family wrappername="DecFamily" cardinality="1">
+        <var name="name" vt="string" defval="" range="*"/>
+        <var name="mfg" vt="string" defval="" range="*"/>
+	    </family>
+	    <variables wrappername="DecVariables" cardinality="1">
+	      <variable wrappername="DecVariable" cardinality="n">
+	        <var name="label" vt="string" defval="" range="*"/>
+	        <var name="item" vt="string" defval="" range="*"/>
+	        <var name="comment" vt="string" defval="" range="*"/>
+	        <var name="tooltip" vt="string" defval="" range="*"/>
+	        <var name="mask" vt="string" defval="" range="*"/>
+	        <var name="CV" vt="int" defval="0" range="0-255"/>
+	      </variable>
+	    </variables>
+	  </decoder>
+  </decoderconfig>
 
 	<acc wrappername="Accessory">
     <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
@@ -2469,6 +2489,7 @@
 
 
   </plan>
+
 
 
 </Wrappers>
