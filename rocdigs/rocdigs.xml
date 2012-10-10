@@ -215,6 +215,7 @@
       <var name="header" vt="Boolean"/>
       <var name="fault" vt="Boolean"/>
       <var name="hold" vt="Boolean"/>
+      <var name="psleep" vt="int"/>
       <var name="swtime" vt="int"/>
       <var name="dummyio" vt="Boolean"/>
       <var name="blockMap" vt="iOMap"/>

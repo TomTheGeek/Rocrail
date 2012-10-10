@@ -1132,7 +1132,7 @@ static void __transactor( void* threadinst ) {
 
 
     /* Give up timeslize: */
-    ThreadOp.sleep( data->dummyio?1000:10 );
+    ThreadOp.sleep( data->dummyio?1000:data->psleep );
   } while( data->run );
 
 
@@ -1231,12 +1231,18 @@ static struct ODINAMO* _inst( const iONode ini ,const iOTrace trc ) {
   data->swtime = wDigInt.getswtime( ini );
   data->dummyio = wDigInt.isdummyio( ini );
   data->blockMap = MapOp.inst();
+  data->psleep = wDigInt.getpsleep(ini);
+  if( data->psleep > 100 ) {
+    data->psleep = 50;
+    wDigInt.setpsleep(ini, 50);
+  }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dinamo %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  IID     [%s]", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device  [%s]", wDigInt.getdevice( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  timeout [%d]", wDigInt.gettimeout( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  psleep  [%d]", data->psleep );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  swtime  [%d]", data->swtime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 

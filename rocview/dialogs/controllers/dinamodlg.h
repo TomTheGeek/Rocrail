@@ -33,6 +33,7 @@
  */
 
 ////@begin includes
+#include "wx/spinctrl.h"
 ////@end includes
 #include "rocs/public/node.h"
 
@@ -42,6 +43,7 @@
  */
 
 ////@begin forward declarations
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -56,7 +58,6 @@
 #define ID_STATICTEXT_DINAMO_DEV 10011
 #define ID_TEXTCTRL_DINAMO_DEV 10012
 #define ID_STATICTEXT_DINAMO_SWTIME 10013
-#define ID_TEXTCTRL_DINAMO_SWTIME 10014
 #define SYMBOL_DINAMOCTRLDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_DINAMOCTRLDLG_TITLE _("Dinamo")
 #define SYMBOL_DINAMOCTRLDLG_IDNAME ID_DIALOG_DINAMO_SETTINGS
@@ -124,7 +125,9 @@ public:
     wxStaticText* m_labDevice;
     wxTextCtrl* m_Device;
     wxStaticText* m_labSwTime;
-    wxTextCtrl* m_SwTime;
+    wxSpinCtrl* m_SwTime;
+    wxStaticText* m_Sleep;
+    wxSpinCtrl* m_TxSleep;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end DinamoCtrlDlg member variables
