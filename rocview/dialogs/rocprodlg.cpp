@@ -81,6 +81,8 @@ RocProDlgGen( parent )
   initLocMap();
   m_CV29->Enable(false);
   m_VCurve->Enable(false);
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
 }
 
 void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
@@ -124,7 +126,7 @@ void RocProDlg::onOpen( wxCommandEvent& event )
     if( parseDecFile() ) {
       m_DecTree->DeleteAllItems();
       MapOp.clear(m_CVMap);
-      wxTreeItemId root  = m_DecTree->AddRoot(wxString( NodeOp.getStr(m_DecNode, "type", "?"), wxConvUTF8));
+      wxTreeItemId root  = m_DecTree->AddRoot(wxString( NodeOp.getStr(m_DecNode, "manu", "?"), wxConvUTF8)+wxT(" ")+wxString( NodeOp.getStr(m_DecNode, "type", "?"), wxConvUTF8));
       iOMap catMap = MapOp.inst();
       int cnt = NodeOp.getChildCnt(m_DecNode);
       for( int i = 0; i < cnt; i++ ) {
