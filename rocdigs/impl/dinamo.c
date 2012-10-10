@@ -998,6 +998,12 @@ static void __transactor( void* threadinst ) {
     if( gotrsp && lastdatagramsize == 0 ) {
       if( !data->hold )
         post = ThreadOp.getPost( th );
+
+      if( post == NULL && data->stress ) {
+        post = (obj)NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+        wSysCmd.setcmd( (iONode)post, wSysCmd.version );
+      }
+
       if( post != NULL ) {
         iONode node = (iONode)post;
         Boolean responseExpected = False;
@@ -1230,6 +1236,7 @@ static struct ODINAMO* _inst( const iONode ini ,const iOTrace trc ) {
   data->iid = StrOp.dup( wDigInt.getiid( ini ) );
   data->swtime = wDigInt.getswtime( ini );
   data->dummyio = wDigInt.isdummyio( ini );
+  data->stress = wDigInt.isstress(ini);
   data->blockMap = MapOp.inst();
   data->psleep = wDigInt.getpsleep(ini);
   if( data->psleep > 100 ) {

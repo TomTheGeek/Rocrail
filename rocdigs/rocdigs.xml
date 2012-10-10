@@ -219,6 +219,7 @@
       <var name="swtime" vt="int"/>
       <var name="dummyio" vt="Boolean"/>
       <var name="blockMap" vt="iOMap"/>
+      <var name="stress" vt="Boolean"/>
       </data>
   </object>
 
