@@ -208,9 +208,9 @@
       <var name="nrs" vt="string" defval="1,2,3,4,5,6,17,18,29" range="*" remark="predefined CV's for read,write and copy all"/>
       <var name="timeout" vt="int" defval="30" range="*" unit="s" remark="timeout on ack"/>
       <var name="lissy" vt="bool" defval="false" remark="program the lissy address and config simultaneously"/>
-      <cvcat wrappername="CVcat" cardinality="n">
-        <var name="name" vt="string" defval="" range="*"/>
-        <var name="nrs" vt="string" defval="" range="*"/>
+      <cvcat wrappername="CVcat" cardinality="n" remark="CV category definition">
+        <var name="name" vt="string" defval="" range="*" remark="category name"/>
+        <var name="nrs" vt="string" defval="" range="*" remark="csv list of CV numbers belonging to this category"/>
       </cvcat>
     </cvconf>
     <lcctrl wrappername="LcCtrl">
