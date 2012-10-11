@@ -5873,3 +5873,9 @@ msgstr ""
 msgid "Linear"
 msgstr ""
 
+#. 
+# id="restoreschedule"
+#, c-format
+msgid "Restore schedule"
+msgstr ""
+

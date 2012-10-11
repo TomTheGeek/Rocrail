@@ -18186,4 +18186,7 @@
   <Msg id="linear">
     <en txt="Linear"/>
   </Msg>
+  <Msg id="restoreschedule">
+    <en txt="Restore schedule"/>
+  </Msg>
 </Messages>

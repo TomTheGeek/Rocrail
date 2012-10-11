@@ -4972,9 +4972,11 @@ static void _loadBlockOccupancy( iOModel inst ) {
         wLoc.setresumeauto( props, automode );
 
         if( wLoc.isshow(props) ) {
+          Boolean restoreSc = wCtrl.isrestoreschedule( wRocRail.getctrl( AppOp.getIni(  ) ) );
+
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restore loco placing for [%s]", LocOp.getId(loco));
 
-          if( ScID != NULL && StrOp.len(ScID) > 0) {
+          if( restoreSc && ScID != NULL && StrOp.len(ScID) > 0) {
             LocOp.useSchedule(loco, ScID);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restore scheduleID [%s] for [%s]",
                 ScID, LocOp.getId(loco));
