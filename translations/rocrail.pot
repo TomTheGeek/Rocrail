@@ -5867,3 +5867,9 @@ msgstr ""
 msgid "Reconnect after server shutdown"
 msgstr ""
 
+#. 
+# id="linear"
+#, c-format
+msgid "Linear"
+msgstr ""
+
