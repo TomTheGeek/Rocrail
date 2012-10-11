@@ -1,18 +1,64 @@
 <decoder manu="NMRA" type="RP-9.2.2" web="http://nmra.org/standards/DCC/standards_rps/rp922.html">
-  <cvbyte nr="1" cat="address" desc="Primary Address" info="Base short address in range of 1-127."/>
-  <cvbyte nr="2" cat="speed" desc="Vstart"/>
-  <cvbyte nr="3" cat="speed" desc="Acceleration Rate"/>
-  <cvbyte nr="4" cat="speed" desc="Deceleration Rate"/>
-  <cvbyte nr="5" cat="speed" desc="Vhigh"/>
-  <cvbyte nr="6" cat="speed" desc="Vmid"/>
-  <cvbyte nr="7" cat="info" desc="Manufacturer Version No." readonly="true"/>
-  <cvbyte nr="8" cat="info" desc="Manufactured ID" readonly="true"/>
-  <cvbyte nr="9" cat="motor" desc="Total PWM Period"/>
-  <cvbyte nr="10" cat="motor" desc="EMF Feedback Cutout"/>
-  <cvbyte nr="17" cat="address" desc="Extended address high" info="High byte."/>
-  <cvbyte nr="18" cat="address" desc="Extended address low" info="Low byte."/>
-  <cvbyte nr="23" cat="speed" desc="Acceleration Adjustment"/>
-  <cvbyte nr="24" cat="speed" desc="Deceleration Adjustment"/>
-  <cvbyte nr="29" cat="general" desc="Configuration Data #1" info="Configuration for addressing, speed steps, RailCom and DC operation."/>
+  <cvbyte nr="1" cat="address" desc="Primary Address" info="Bits 0-6 contain an address with a value between 1 and 127.  Bit seven must have a value of 0."/>
+  <cvbyte nr="2" cat="speed" desc="Vstart" info="Vstart is used to define the voltage drive level used as the start voltage on the motor."/>
+  <cvbyte nr="3" cat="speed" desc="Acceleration Rate" info="Determines the decoder's acceleration rate."/>
+  <cvbyte nr="4" cat="speed" desc="Deceleration Rate" info="Determines a decoders braking rate."/>
+  <cvbyte nr="5" cat="speed" desc="Vhigh" info="Vhigh is used to specify the motor voltage drive levels at the maximum speed step."/>
+  <cvbyte nr="6" cat="speed" desc="Vmid" info="Vmid specifies the voltage drive level at the middle speed step.  Vmid is used to generate a performance curve in the decoder that translate speed step values into motor voltage drive levels and is specified as a fraction of available rectified supply voltage."/>
+  <cvbyte nr="7" cat="info" desc="Manufacturer Version No." readonly="true" info="This is reserved for the manufacturer to store information regarding the version of the decoder."/>
+  <cvbyte nr="8" cat="info" desc="Manufactured ID" readonly="true" info="CV8 shall contain the NMRA assigned id number of the manufacturer of this decoder."/>
+  <cvbyte nr="9" cat="motor" desc="Total PWM Period" info="The value of CV#9 sets the nominal PWM period at the decoder output and therefore the frequency is proportional to the reciprocal of the value."/>
+  <cvbyte nr="10" cat="motor" desc="EMF Feedback Cutout" info="Contains a value between 1 and 128 that indicates the speed step above which the back EMF motor control cuts off.  When 14 or 28 speed steps are used the LSB's of the value are truncated appropriately."/>
+  <cvbyte nr="11" desc="Packet Time-Out Value" info="Contains the maximum time period that the decoder will maintain its speed without receiving a valid packet addressed to it."/>
+  <cvbyte nr="12" desc="Power Source Conversion" info="Contains the identity of the alternate power source to be converted to should CV #1 contain all zeros."/>
+  <cvbyte nr="13" cat="functions" desc="Alternate Mode Function Status F1-F8" info="Indicates the status of each function (F1 through F8) when the unit is operating in alternate power mode, which cannot control the functions."/>
+  <cvbyte nr="14" cat="functions" desc="Alternate Mode Fnc. Status FL,F9-F12" info="Indicates the status of each function (F9 through F12 and FL) when the unit is operating in alternate power mode, which cannot control the functions."/>
+  <cvbyte nr="15" desc="Decoder Lock high" info="The decoder lock is used to change CV's in only one of several decoders with the same short address (CV1) or long address (CV17 and CV18) that are installed in the same locomotive."/>
+  <cvbyte nr="16" desc="Decoder Lock low" info="The decoder lock is used to change CV's in only one of several decoders with the same short address (CV1) or long address (CV17 and CV18) that are installed in the same locomotive."/>
+  <cvbyte nr="17" cat="address" desc="Extended address high" info="The Extended Address is the locomotives address when the decoder is set up for extended addressing (indicated by a value of 1 in bit location 5 of CV#29).  CV#17 contains the most significant bits of the two byte address and must have a value between 11000000 and 11100111, inclusive, in order for this two byte address to be valid. CV 18 contains the least significant bits of the address and may contain any value."/>
+  <cvbyte nr="18" cat="address" desc="Extended address low" info="The Extended Address is the locomotives address when the decoder is set up for extended addressing (indicated by a value of 1 in bit location 5 of CV#29).  CV#17 contains the most significant bits of the two byte address and must have a value between 11000000 and 11100111, inclusive, in order for this two byte address to be valid. CV 18 contains the least significant bits of the address and may contain any value."/>
+  <cvbyte nr="19" cat="consist" desc="Consist Address" info="Contains a seven bit address in bit positions 0-6. Bit 7 indicates the relative direction of this unit within a consist, with a value of 0 indicating normal direction, and a value of 1 indicating a direction opposite the unit's normal direction. If the seven bit address in bits 0-6 is 0000000 the unit is not in a consist."/>
+  <cvbyte nr="21" cat="consist" desc="Consist Addr Active for F1-F8" info="Defines for functions F1-F8 whether the function is controlled by the consist address."/>
+  <cvbyte nr="22" cat="consist" desc="Consist Addr Active for FL,F9-F12" info="Defines for function FL whether the function is controlled by the consist address."/>
+  <cvbyte nr="23" cat="speed" desc="Acceleration Adjustment" info="This Configuration Variable contains additional  acceleration rate information that is to be added to or subtracted from the base value contained in Configuration Variable #3 using the formula  (the contents of CV#23*.896)/(number of speed steps in use)."/>
+  <cvbyte nr="24" cat="speed" desc="Deceleration Adjustment" info="This Configuration Variable contains additional braking rate information that is to be added to or subtracted from the base value contained in Configuration Variable #4 using the formula (the contents of CV#24*.896)/(number of speed steps in use)."/>
+  <cvbyte nr="25" cat="speed" desc="Speed Table/Mid-range Cab Speed Step" info="A value between 2 and 127 shall be used to indicate 1 of 126 factory preset speed tables."/>
+  <cvbyte nr="27" cat="config" desc="Decoder Automatic Stopping Configuration" info="Used to configure which actions will cause the decoder to automatically stop."/>
+  <cvbyte nr="28" cat="config" desc="Bi-Directional Communication Configuration" info="Used to Configure decoder's Bi-Directional communication characteristics when CV29-Bit 3 is set."/>
+  <cvbyte nr="29" cat="config" desc="Configuration Data #1" info="Configuration for direction, addressing, speed steps, RailCom and DC operation."/>
+  <cvbyte nr="30" desc="Error Information" info="In the case where the decoder has an error condition this Configuration Variable shall contain the error condition as specified by the manufacturer. A value of 0 indicates that no error has occurred."/>
+  <cvbyte nr="31" desc="Index High Byte" info="Primary index for CV 257-51"/>
+  <cvbyte nr="32" desc="Index Low Byte" info="Secondary index for CV 257-51"/>
+  <cvbyte nr="65" cat="motor" desc="Kick Start" info="Specifies the amount of extra Kick that will supplied to the motor when transitioning between stop and the first speed step."/>
+  <cvbyte nr="66" cat="motor" desc="Forward Trim" info="Specifies a scale factor by which a voltage drive level should be multiplied, when the controller is driving the unit in the forward direction."/>
+  <cvbyte nr="67" cat="Speed Table" desc="Index 1"/>
+  <cvbyte nr="68" cat="Speed Table" desc="Index 2"/>
+  <cvbyte nr="69" cat="Speed Table" desc="Index 3"/>
+  <cvbyte nr="70" cat="Speed Table" desc="Index 4"/>
+  <cvbyte nr="71" cat="Speed Table" desc="Index 5"/>
+  <cvbyte nr="72" cat="Speed Table" desc="Index 6"/>
+  <cvbyte nr="73" cat="Speed Table" desc="Index 7"/>
+  <cvbyte nr="74" cat="Speed Table" desc="Index 8"/>
+  <cvbyte nr="75" cat="Speed Table" desc="Index 9"/>
+  <cvbyte nr="76" cat="Speed Table" desc="Index 10"/>
+  <cvbyte nr="77" cat="Speed Table" desc="Index 11"/>
+  <cvbyte nr="78" cat="Speed Table" desc="Index 12"/>
+  <cvbyte nr="79" cat="Speed Table" desc="Index 13"/>
+  <cvbyte nr="80" cat="Speed Table" desc="Index 14"/>
+  <cvbyte nr="81" cat="Speed Table" desc="Index 15"/>
+  <cvbyte nr="82" cat="Speed Table" desc="Index 16"/>
+  <cvbyte nr="83" cat="Speed Table" desc="Index 17"/>
+  <cvbyte nr="84" cat="Speed Table" desc="Index 18"/>
+  <cvbyte nr="85" cat="Speed Table" desc="Index 19"/>
+  <cvbyte nr="86" cat="Speed Table" desc="Index 20"/>
+  <cvbyte nr="87" cat="Speed Table" desc="Index 21"/>
+  <cvbyte nr="88" cat="Speed Table" desc="Index 22"/>
+  <cvbyte nr="89" cat="Speed Table" desc="Index 23"/>
+  <cvbyte nr="90" cat="Speed Table" desc="Index 24"/>
+  <cvbyte nr="91" cat="Speed Table" desc="Index 25"/>
+  <cvbyte nr="92" cat="Speed Table" desc="Index 26"/>
+  <cvbyte nr="93" cat="Speed Table" desc="Index 27"/>
+  <cvbyte nr="94" cat="Speed Table" desc="Index 28"/>
+  <cvbyte nr="95" cat="motor" desc="Reverse Trim" info="Specifies a scale factor by which a voltage drive level should be multiplied, when the controller is driving the unit in reverse."/>
 </decoder>
 
