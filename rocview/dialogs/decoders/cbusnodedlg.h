@@ -69,6 +69,7 @@ class CBusNodeDlg : public cbusnodedlggen
   int m_GC2IgnorePortTest;
   int m_CANID;
   iONode m_CBus;
+  int m_SortCol;
 
   void initLabels();
   void init(iONode event);
@@ -77,9 +78,6 @@ class CBusNodeDlg : public cbusnodedlggen
   void initEvtList(iONode node);
   void initType(int manu, int mtype, const char* ver);
   void selectPage4Type( int manu, int mtype );
-  const char* getType( int manu, int mtype );
-  const char* getTypeDesc( int manu, int mtype );
-  const char* getManu( int manu );
   iONode getNode(int nr, int mtype, int manu, const char* ver, int canid=0);
   iONode getNodeVar(int nn, int mtype, int nr, int val);
   iONode getNodeEvent(int nn, int mtype, int evnn, int evaddr, int evnr, int evval);
@@ -108,6 +106,8 @@ class CBusNodeDlg : public cbusnodedlggen
   void gc6UpdateServoEvent(int servo);
   void initGC8Var(int nr, int val);
   void initGC8Event(int idx, int nn, int addr);
+  void onIndexLeftClick( wxListEvent& event );
+  void sortOnColumn( int col );
 
   wxTimer* m_Timer;
   iOQueue m_Queue;
@@ -217,6 +217,9 @@ public:
   void event( iONode event );
   void onSetPage(wxCommandEvent& event);
   void OnTimer(wxTimerEvent& event);
+  static const char* getType( int manu, int mtype );
+  static const char* getTypeDesc( int manu, int mtype );
+  static const char* getManu( int manu );
 
 };
 

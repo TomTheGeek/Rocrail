@@ -1073,11 +1073,11 @@
                                 </object>
                             </object>
                         </object>
-                        <object class="notebookpage" expanded="0">
+                        <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Index</property>
                             <property name="select">0</property>
-                            <object class="wxPanel" expanded="0">
+                            <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
@@ -1124,7 +1124,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnUpdateUI"></event>
-                                <object class="wxBoxSizer" expanded="0">
+                                <object class="wxBoxSizer" expanded="1">
                                     <property name="minimum_size"></property>
                                     <property name="name">bSizer5</property>
                                     <property name="orient">wxVERTICAL</property>
@@ -1173,7 +1173,7 @@
                                             <event name="OnListBeginRDrag"></event>
                                             <event name="OnListCacheHint"></event>
                                             <event name="OnListColBeginDrag"></event>
-                                            <event name="OnListColClick"></event>
+                                            <event name="OnListColClick">onIndexLeftClick</event>
                                             <event name="OnListColDragging"></event>
                                             <event name="OnListColEndDrag"></event>
                                             <event name="OnListColRightClick"></event>

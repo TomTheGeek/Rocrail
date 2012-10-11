@@ -77,6 +77,21 @@ void CBusNodeDlg::initLabels() {
   m_CANID = 0;
   m_CBus = NodeOp.inst(wCBus.name(), NULL, ELEMENT_NODE);
 
+  /*TEST
+  iONode node = NodeOp.inst(wCBusNode.name(),m_CBus,ELEMENT_NODE);
+  wCBusNode.setnr(node,1);
+  wCBusNode.setcanid(node,178);
+  wCBusNode.setmanuid(node,MANU_ROCRAIL);
+  wCBusNode.setmtyp(node,MTYP_CANGC6);
+  NodeOp.addChild(m_CBus, node);
+  node = NodeOp.inst(wCBusNode.name(),m_CBus,ELEMENT_NODE);
+  wCBusNode.setnr(node,4);
+  wCBusNode.setcanid(node,173);
+  wCBusNode.setmanuid(node,MANU_ROCRAIL);
+  wCBusNode.setmtyp(node,MTYP_CANGC2);
+  NodeOp.addChild(m_CBus, node);
+  TEST*/
+
   m_bGC8GetAll = false;
   m_bGC8SetAll = false;
   m_bGCLNGetAll = false;
@@ -96,7 +111,7 @@ void CBusNodeDlg::initLabels() {
   m_GC4SetIndex = 0;
   m_GC1eSetIndex = 0;
   m_GCLNSetIndex = 0;
-
+  m_SortCol = 0;
 
   m_Timer = new wxTimer( this, ME_GC2Timer );
   Connect( wxEVT_TIMER, wxTimerEventHandler( CBusNodeDlg::OnTimer ), NULL, this );
@@ -214,12 +229,82 @@ void CBusNodeDlg::init( iONode event ) {
 }
 
 
+static int __sortNr(obj* _a, obj* _b) {
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    if (wCBusNode.getnr(a) == wCBusNode.getnr(b) )
+      return 0;
+    if (wCBusNode.getnr(a) > wCBusNode.getnr(b) )
+      return 1;
+    if (wCBusNode.getnr(a) < wCBusNode.getnr(b) )
+      return -1;
+}
+static int __sortID(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    if (wCBusNode.getcanid(a) == wCBusNode.getcanid(b) )
+      return 0;
+    if (wCBusNode.getcanid(a) > wCBusNode.getcanid(b) )
+      return 1;
+    if (wCBusNode.getcanid(a) < wCBusNode.getcanid(b) )
+      return -1;
+}
+static int __sortType(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = CBusNodeDlg::getType(wCBusNode.getmanuid(a), wCBusNode.getmtyp(a));
+    const char* idB = CBusNodeDlg::getType(wCBusNode.getmanuid(b), wCBusNode.getmtyp(b));
+    return strcmp( idA, idB );
+}
+static int __sortManu(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = CBusNodeDlg::getManu(wCBusNode.getmanuid(a));
+    const char* idB = CBusNodeDlg::getManu(wCBusNode.getmanuid(b));
+    return strcmp( idA, idB );
+}
+static int __sortDesc(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = CBusNodeDlg::getTypeDesc(wCBusNode.getmanuid(a), wCBusNode.getmtyp(a));
+    const char* idB = CBusNodeDlg::getTypeDesc(wCBusNode.getmanuid(b), wCBusNode.getmtyp(b));
+    return strcmp( idA, idB );
+}
+
+
 void CBusNodeDlg::initIndex() {
   m_IndexList2->DeleteAllItems();
   int index = 0;
   if( m_CBus != NULL ) {
+    iOList nodeList = ListOp.inst();
     iONode cbusnode = wCBus.getcbnode(m_CBus);
     while( cbusnode != NULL ) {
+      ListOp.add( nodeList, (obj)cbusnode );
+      cbusnode = wCBus.nextcbnode( m_CBus, cbusnode );
+    }
+
+    if( m_SortCol == 1 ) {
+      ListOp.sort(nodeList, &__sortID);
+    }
+    else if( m_SortCol == 2 ) {
+      ListOp.sort(nodeList, &__sortManu);
+    }
+    else if( m_SortCol == 3 || m_SortCol == 4 ) {
+      ListOp.sort(nodeList, &__sortType);
+    }
+    else if( m_SortCol == 5 ) {
+      ListOp.sort(nodeList, &__sortDesc);
+    }
+    else {
+      ListOp.sort(nodeList, &__sortNr);
+    }
+
+    for( int index = 0; index < ListOp.size(nodeList); index++) {
+      cbusnode = (iONode)ListOp.get(nodeList, index);
       m_IndexList2->InsertItem( index, wxString::Format(_T("%d"), wCBusNode.getnr(cbusnode)));
       m_IndexList2->SetItem( index, 1, wxString::Format(_T("%d"), wCBusNode.getcanid(cbusnode)));
       m_IndexList2->SetItem( index, 2, wxString(getManu(wCBusNode.getmanuid(cbusnode)),wxConvUTF8));
@@ -227,10 +312,8 @@ void CBusNodeDlg::initIndex() {
       m_IndexList2->SetItem( index, 4, wxString(getType(wCBusNode.getmanuid(cbusnode), wCBusNode.getmtyp(cbusnode)),wxConvUTF8) );
       m_IndexList2->SetItem( index, 5, wxString(getTypeDesc(wCBusNode.getmanuid(cbusnode), wCBusNode.getmtyp(cbusnode)),wxConvUTF8) );
       m_IndexList2->SetItemPtrData(index, (wxUIntPtr)cbusnode);
-      index++;
-
-      cbusnode = wCBus.nextcbnode( m_CBus, cbusnode );
     }
+    ListOp.base.del(nodeList);
   }
 }
 
@@ -2221,3 +2304,14 @@ void CBusNodeDlg::onGC8SetAll( wxCommandEvent& event ) {
   m_Timer->Start( 100, wxTIMER_ONE_SHOT );
 }
 
+
+
+void CBusNodeDlg::sortOnColumn( int col ) {
+  m_SortCol = col;
+  initIndex();
+}
+
+
+void CBusNodeDlg::onIndexLeftClick( wxListEvent& event ) {
+  sortOnColumn(event.GetColumn());
+}
