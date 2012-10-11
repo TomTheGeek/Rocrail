@@ -59,6 +59,7 @@ class wxSpinCtrl;
 #define ID_IMAGEPATH_BUTTON 10341
 #define ID_UPDATESPATH_BUTTON 10000
 #define ID_XSLPATH_BUTTON 10354
+#define ID_DECPATH_BUTTON 10415
 #define ID_TEXTCTRL_RG_TRACEFILE 10188
 #define ID_SVGPATH_BUTTON 10339
 #define ID_SVGPATH2_BUTTON 10001
@@ -119,6 +120,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_XSLPATH_BUTTON
     void OnXslpathButtonClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_DECPATH_BUTTON
+    void OnDecpathButtonClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SVGPATH_BUTTON
     void OnSvgPath1Click( wxCommandEvent& event );
@@ -183,6 +187,9 @@ public:
     wxStaticBox* m_labXSLPath;
     wxTextCtrl* m_XSLPath;
     wxButton* m_XSLPathDlg;
+    wxStaticBox* m_labDecPath;
+    wxTextCtrl* m_DecPath;
+    wxButton* m_DecPathDlg;
     wxStaticBox* m_labPanelSize;
     wxStaticText* m_labCX;
     wxSpinCtrl* m_CX;

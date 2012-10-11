@@ -2180,6 +2180,7 @@
         <const name="mode_auto" vt="string" val="auto"/>
         <var name="mode" vt="string" defval="" range="*" remark="Loc mode."/>
 
+        <var name="decfile" vt="string" defval="nmra-rp922.xml" range="*" remark="Decoder definition file."/>
         <cvbyte cardinality="n" wrappername="CVByte">
           <var name="nr" vt="int" defval="0" range="0-255" remark="CV-Number"/>
           <var name="value" vt="int" defval="0" range="0-255" remark="CV-Value"/>
