@@ -410,7 +410,9 @@ bool CarDlg::evaluate(){
   else
     wCar.settype( m_Props, wCar.cartype_passenger );
 
-  wCar.setsubtype( m_Props, (char*)((wxItemContainer*)m_SubType)->GetClientData( m_SubType->GetSelection()) );
+  if(m_SubType->GetSelection() != wxNOT_FOUND )
+    wCar.setsubtype( m_Props, (char*)((wxItemContainer*)m_SubType)->GetClientData( m_SubType->GetSelection()) );
+
   wCar.setlen( m_Props, m_Length->GetValue() );
   wCar.setmanuid( m_Props, m_ManuId->GetValue().mb_str(wxConvUTF8) );
   wCar.setremark( m_Props, m_Remark->GetValue().mb_str(wxConvUTF8) );
