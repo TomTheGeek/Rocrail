@@ -4840,12 +4840,16 @@ static void _setBlockOccupancy( iOModel inst, const char* BlockId, const char* L
     wOccupancy.setsecid( occ, SectionId );
   }
 
-  if( LocId != NULL ) {
+  if( LocId != NULL && StrOp.len(LocId) > 0 ) {
     iOLoc loc = ModelOp.getLoc( AppOp.getModel(), LocId );
     if( loc != NULL ) {
       wOccupancy.setauto( occ, LocOp.isResumeAutomode(loc) );
       wOccupancy.setscid( occ, LocOp.getSchedule(loc, NULL) );
     }
+  }
+  else {
+    wOccupancy.setauto( occ, False );
+    wOccupancy.setscid( occ, NULL );
   }
 
   if( placing > 0 ) {
