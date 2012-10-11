@@ -48,13 +48,15 @@ class CarDlg : public cardlggen, public BaseDialog
   void initValues();
   void initSubType();
   void initLocationCombo();
+  int findID( const char* ID );
+  void setSelection(const char* ID);
 
 public:
 	/** Constructor */
   CarDlg( wxWindow* parent, iONode p_Props, bool save=true );
 
   void onCarImage( wxCommandEvent& event );
-  void onCarList( wxCommandEvent& event );
+  void onCarList2( wxListEvent& event );
   void onNewCar( wxCommandEvent& event );
   void onDeleteCar( wxCommandEvent& event );
   void onTypeSelect( wxCommandEvent& event );
