@@ -153,9 +153,10 @@ void CarDlg::initLabels() {
 
   m_CarList2->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
   m_CarList2->InsertColumn(1, wxGetApp().getMsg( "roadname" ), wxLIST_FORMAT_LEFT );
-  m_CarList2->InsertColumn(2, wxGetApp().getMsg( "number" ), wxLIST_FORMAT_RIGHT );
+  m_CarList2->InsertColumn(2, wxGetApp().getMsg( "number" ), wxLIST_FORMAT_LEFT );
   m_CarList2->InsertColumn(3, wxGetApp().getMsg( "type" ), wxLIST_FORMAT_LEFT );
   m_CarList2->InsertColumn(4, wxGetApp().getMsg( "subtype" ), wxLIST_FORMAT_LEFT );
+  m_CarList2->InsertColumn(5, wxGetApp().getMsg( "length" ), wxLIST_FORMAT_LEFT );
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
@@ -235,14 +236,19 @@ void CarDlg::initIndex(){
         m_CarList2->SetItem( i, 2, wxString(wCar.getnumber( car ), wxConvUTF8) );
         m_CarList2->SetItem( i, 3, wxString(wCar.gettype( car ), wxConvUTF8) );
         m_CarList2->SetItem( i, 4, wxString(wCar.getsubtype( car ), wxConvUTF8) );
+        m_CarList2->SetItem( i, 5, wxString::Format(wxT("%d"), wCar.getlen( car )) );
         m_CarList2->SetItemPtrData(i, (wxUIntPtr)car);
 
       }
       // resize
-      m_CarList2->SetColumnWidth(0, wxLIST_AUTOSIZE);
-      m_CarList2->SetColumnWidth(1, wxLIST_AUTOSIZE);
-      m_CarList2->SetColumnWidth(2, wxLIST_AUTOSIZE);
-      m_CarList2->SetColumnWidth(3, wxLIST_AUTOSIZE);
+      for( int n = 0; n < 6; n++ ) {
+        m_CarList2->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+        int autoheadersize = m_CarList2->GetColumnWidth(n);
+        m_CarList2->SetColumnWidth(n, wxLIST_AUTOSIZE);
+        int autosize = m_CarList2->GetColumnWidth(n);
+        if(autoheadersize > autosize )
+          m_CarList2->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+      }
 
       /* clean up the temp. list */
       ListOp.base.del(list);
