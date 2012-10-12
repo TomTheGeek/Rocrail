@@ -981,6 +981,7 @@ static void __transactor( void* threadinst ) {
   int wsize = 0; /* request size  */
   int dsize = 0; /* data size     */
   int timer = 0;
+  int psleep = data->psleep;
 
   ThreadOp.setDescription( th, "Transactor for Dinamo 3.x" );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Transactor started: the datagram pump." );
@@ -1027,6 +1028,10 @@ static void __transactor( void* threadinst ) {
 
         /* Cleanup: endstation for all nodes. */
         node->base.del( node );
+        psleep = 10;
+      }
+      else {
+        psleep = data->psleep;
       }
     }
 
@@ -1138,7 +1143,7 @@ static void __transactor( void* threadinst ) {
 
 
     /* Give up timeslize: */
-    ThreadOp.sleep( data->dummyio?1000:data->psleep );
+    ThreadOp.sleep( data->dummyio?1000:psleep );
   } while( data->run );
 
 
