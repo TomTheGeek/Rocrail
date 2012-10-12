@@ -1073,27 +1073,39 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
 
   /* flip the signal for manual mode */
   if( StrOp.equals( wSignal.flip, state ) ) {
-    if( StrOp.equals( savedState, wSignal.green ) ) {
-      if( wSignal.getaspects( o->props ) == 4 ) {
-        state = wSignal.white;
-      }
-      else if( wSignal.getaspects( o->props ) == 3 ) {
-        state = wSignal.yellow;
-      }
-      else
-        state = wSignal.red;
-    }
-    else if( StrOp.equals( savedState, wSignal.yellow ) ) {
-      state = wSignal.red;
-    }
-    else if( StrOp.equals( savedState, wSignal.white ) ) {
-      state = wSignal.yellow;
-    }
-    else if( StrOp.equals( savedState, wSignal.blank ) ) {
-      state = wSignal.blank;
+    int nraspects = wSignal.getaspects(o->props);
+    if( nraspects > 4 ) {
+      int currentAspect = wSignal.getaspect( o->props ) + 1;
+      if( currentAspect > nraspects )
+        currentAspect = 0;
+      wSignal.setaspect( o->props, currentAspect );
+      chgState = True;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting multi[%d] aspect signal %s to aspect %d",
+                   nraspects, wSignal.getid( o->props ), currentAspect );
     }
     else {
-      state = wSignal.green;
+      if( StrOp.equals( savedState, wSignal.green ) ) {
+        if( wSignal.getaspects( o->props ) == 4 ) {
+          state = wSignal.white;
+        }
+        else if( wSignal.getaspects( o->props ) == 3 ) {
+          state = wSignal.yellow;
+        }
+        else
+          state = wSignal.red;
+      }
+      else if( StrOp.equals( savedState, wSignal.yellow ) ) {
+        state = wSignal.red;
+      }
+      else if( StrOp.equals( savedState, wSignal.white ) ) {
+        state = wSignal.yellow;
+      }
+      else if( StrOp.equals( savedState, wSignal.blank ) ) {
+        state = wSignal.blank;
+      }
+      else {
+        state = wSignal.green;
+      }
     }
   }
   else if( StrOp.equals( wSignal.aspect, state ) ) {
