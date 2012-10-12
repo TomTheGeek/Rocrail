@@ -2270,7 +2270,6 @@
         <const name="status_shipping" vt="string" val="shipping"/>
         <const name="status_delivered" vt="string" val="delivered"/>
         <var name="status" vt="string" defval="waiting" range="*" remark="Waybill status."/>
-        <var name="routing" vt="string" defval="" range="*"/>
       </waybill>
     </waybilllist>
     <txlist cardinality="1" remark="text symbols table" wrappername="TextList">
