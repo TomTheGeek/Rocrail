@@ -66,11 +66,11 @@ cp rocview/mac_default_rocview.ini $TMP/Rocrail/rocdata/rocview.ini
 
 # pimp the dmg
 cp doc/rocrail-logo-dmg.png $TMP/background.png
-setFile -a V $TMP/background.png
+SetFile -a V $TMP/background.png
 cp rocview/xpm/VolumeIcon.icns $TMP/.VolumeIcon.icns
 SetFile -c icnC $TMP/.VolumeIcon.icns
 cp rocview/_DS_Store $TMP/.DS_Store
-setFile -a V $TMP/.DS_Store
+SetFile -a V $TMP/.DS_Store
 
 # Create an initial disk image
 hdiutil create -srcfolder $TMP -volname Rocrail -format UDRW -ov raw-$DMG_FILE
