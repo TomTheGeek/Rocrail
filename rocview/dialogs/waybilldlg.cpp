@@ -282,6 +282,8 @@ void WaybillDlg::initValues() {
   else
     m_Status->SetSelection(2);
 
+  m_Routing->SetValue(wxString(wWaybill.getrouting( m_Props ),wxConvUTF8));
+
 }
 
 
@@ -307,7 +309,8 @@ bool WaybillDlg::evaluate(){
   wWaybill.setconsignee( m_Props, m_Consignee->GetValue().mb_str(wxConvUTF8) );
   wWaybill.setdestination( m_Props, m_Destination->GetStringSelection().mb_str(wxConvUTF8) );
   wWaybill.setcommodity( m_Props, m_Commodity->GetValue().mb_str(wxConvUTF8) );
-  wWaybill.setcartype( m_Props, (char*)((wxItemContainer*)m_Cartype)->GetClientData( m_Cartype->GetSelection()) );
+  if( m_Cartype->GetSelection() != wxNOT_FOUND )
+    wWaybill.setcartype( m_Props, (char*)((wxItemContainer*)m_Cartype)->GetClientData( m_Cartype->GetSelection()) );
 
 
   if( m_Status->GetSelection() == 0 )
@@ -316,6 +319,8 @@ bool WaybillDlg::evaluate(){
     wWaybill.setstatus( m_Props, wWaybill.status_shipping );
   else
     wWaybill.setstatus( m_Props, wWaybill.status_delivered );
+
+  wWaybill.setrouting( m_Props, m_Routing->GetValue().mb_str(wxConvUTF8));
 
   return true;
 }

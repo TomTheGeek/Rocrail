@@ -594,6 +594,7 @@ void OperatorDlg::onAddCar( wxCommandEvent& event ) {
     if( car != NULL ) {
       const char* id = wCar.getid( car );
       m_CarList->Append( wxString(id,wxConvUTF8) + wxString(_T(": ")) + wxString(wCar.getwaybills(car), wxConvUTF8), car );
+      evaluate();
     }
   }
   dlg->Destroy();
