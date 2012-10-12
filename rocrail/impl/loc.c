@@ -1921,7 +1921,9 @@ static void _reset( iOLoc inst, Boolean saveCurBlock ) {
 
   if( !saveCurBlock ) {
     wLoc.setblockid(data->props, "");
+    wLoc.setscidx(data->props, -1);
     data->curBlock = NULL;
+    data->driver->useschedule(data->driver, NULL);
   }
 
   data->destBlock = NULL;
