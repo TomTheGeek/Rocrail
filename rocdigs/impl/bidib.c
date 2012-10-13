@@ -61,7 +61,6 @@
 #include "rocdigs/impl/bidib/bidibutils.h"
 
 static int instCnt = 0;
-static Boolean TEST = False;
 
 
 static void __SoD( iOBiDiB inst );

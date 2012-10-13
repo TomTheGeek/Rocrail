@@ -1245,7 +1245,7 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
   }
 }
 
-static Boolean __ackHandler(iOZimoBin zimobin, byte* packet, int len) {
+static void __ackHandler(iOZimoBin zimobin, byte* packet, int len) {
   iOZimoBinData data    = Data(zimobin);
   obj omsg = NULL;
   byte out[256];
