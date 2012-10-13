@@ -1076,9 +1076,11 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
     int nraspects = wSignal.getaspects(o->props);
     if( nraspects > 4 ) {
       int currentAspect = wSignal.getaspect( o->props ) + 1;
-      if( currentAspect > nraspects )
+      if( currentAspect >= nraspects )
         currentAspect = 0;
       wSignal.setaspect( o->props, currentAspect );
+      state = wSignal.aspect;
+      aspectnr = currentAspect;
       chgState = True;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting multi[%d] aspect signal %s to aspect %d",
                    nraspects, wSignal.getid( o->props ), currentAspect );
@@ -1152,7 +1154,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
       wSignal.setstate( o->props, wSignal.white );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to %s",
-                 wSignal.getid( o->props ), wSignal.getstate( o->props ) );
+                 wSignal.getid( o->props ), state );
 
     /* invert only 2 aspect signals */
     if( inv && wSignal.getaspects( o->props ) == 2 ) {
