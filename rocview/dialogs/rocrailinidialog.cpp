@@ -96,6 +96,8 @@ BEGIN_EVENT_TABLE( RocrailIniDialog, wxDialog )
 
     EVT_BUTTON( ID_BUTTON_KEYPATH, RocrailIniDialog::OnButtonKeypathClick )
 
+    EVT_CHECKBOX( wxID_BLOCKSIDE, RocrailIniDialog::OnBlocksideClick )
+
     EVT_LISTBOX( ID_LISTBOX_RR_CONTROLLERS, RocrailIniDialog::OnListboxRrControllersSelected )
     EVT_LISTBOX_DCLICK( ID_LISTBOX_RR_CONTROLLERS, RocrailIniDialog::OnListboxRrControllersDoubleClicked )
 
@@ -1470,7 +1472,7 @@ void RocrailIniDialog::CreateControls()
     m_ZeroThrottleID->SetValue(false);
     itemFlexGridSizer145->Add(m_ZeroThrottleID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_UseBlockSide = new wxCheckBox( m_AtomatPanel, wxID_ANY, _("Use block side for routes"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_UseBlockSide = new wxCheckBox( m_AtomatPanel, wxID_BLOCKSIDE, _("Use block side for routes"), wxDefaultPosition, wxDefaultSize, 0 );
     m_UseBlockSide->SetValue(false);
     itemFlexGridSizer145->Add(m_UseBlockSide, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
@@ -1872,6 +1874,22 @@ void RocrailIniDialog::OnListboxRrControllersDoubleClicked( wxCommandEvent& even
   if( sel != wxNOT_FOUND ) {
     m_Controller = (iONode)m_Controllers->GetClientData( sel );
     OnButtonRrPropsClick(event);
+  }
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_BLOCKSIDE
+ */
+
+void RocrailIniDialog::OnBlocksideClick( wxCommandEvent& event )
+{
+  if( !m_UseBlockSide->IsChecked() ) {
+    int rc = wxMessageDialog( this, wxGetApp().getMsg("deprecatedrouting"),
+        wxGetApp().getMsg("useblockside"), wxOK | wxCANCEL | wxICON_QUESTION ).ShowModal();
+    if( rc == wxID_OK ) {
+      m_UseBlockSide->SetValue(true);
+    }
   }
 }
 

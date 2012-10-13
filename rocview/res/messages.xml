@@ -18189,4 +18189,7 @@
   <Msg id="restoreschedule">
     <en txt="Restore schedule"/>
   </Msg>
+  <Msg id="deprecatedrouting">
+    <en txt="Classic routing is deprecated; Please migrate to block side routing."/>
+  </Msg>
 </Messages>

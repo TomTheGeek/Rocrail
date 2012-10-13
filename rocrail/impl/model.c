@@ -375,6 +375,11 @@ static Boolean __checkPlanHealth(iOModelData data) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking plan health..." );
 
+  if( !wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block side routing is not enabled; The classic method is deprecated." );
+    healthy = False;
+  }
+
   /* checking ID's */
   for( i = 0; i < dbs; i++ ) {
     iOMap idMap = MapOp.inst();

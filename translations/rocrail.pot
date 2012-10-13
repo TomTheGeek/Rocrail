@@ -5879,3 +5879,9 @@ msgstr ""
 msgid "Restore schedule"
 msgstr ""
 
+#. 
+# id="deprecatedrouting"
+#, c-format
+msgid "Classic routing is deprecated; Please migrate to block side routing."
+msgstr ""
+
