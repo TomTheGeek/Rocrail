@@ -676,6 +676,12 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       else if( StrOp.equals( wSignal.red, wAction.getcmd( data->action ) ) ) {
         bl->red(bl, False, False);
       }
+      else if( StrOp.equals( wStage.compress, wAction.getcmd( data->action ) ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LRLRLR stageblock: actoion COMPRESS");
+        iONode cmd = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+        wStage.setcmd( cmd, wStage.compress );
+        bl->cmd(bl, cmd);
+      }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "stageblock: unsupported cmd: %s",
             wAction.getcmd( data->action ) );

@@ -921,6 +921,7 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wStage.closed, wxConvUTF8));
       m_Command->Append(wxString( wStage.exitopen, wxConvUTF8));
       m_Command->Append(wxString( wStage.exitclosed, wxConvUTF8));
+      m_Command->Append(wxString( wStage.compress, wxConvUTF8));
       break;
   }
 }
