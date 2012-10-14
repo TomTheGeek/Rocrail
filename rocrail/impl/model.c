@@ -5022,7 +5022,15 @@ static void _loadBlockOccupancy( iOModel inst ) {
              the block expects a const char*, but the parsed xml is freed up after setting the
              occupancy so all LocoID's are invalid.
           */
-          wBlock.setstate( props, closed?wBlock.closed:wBlock.open);
+          /* stageblock sections do not store real open/closed data for the state of the stageblock
+             set state only for "real" (stage-)block (Section is "")
+          */
+          if( Section != NULL && StrOp.len( Section ) > 0 ) {
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "skip state setting block [%s] section[%s]", BlockID, Section);
+          }
+          else {
+            wBlock.setstate( props, closed?wBlock.closed:wBlock.open);
+          }
 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block [%s]", BlockID );
 
