@@ -56,6 +56,7 @@
 #include "rocrail/wrapper/public/Schedule.h"
 #include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
+#include "rocrail/wrapper/public/Stage.h"
 
 static int instCnt = 0;
 
@@ -1832,12 +1833,16 @@ static Boolean _go( iOLoc inst ) {
   if( wLoc.isactive(data->props)) {
     if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
       iIBlockBase block = ModelOp.getBlock( model, data->curBlock );
-      if( block != NULL && block->isDepartureAllowed( block, wLoc.getid(data->props) ) ) {
-        data->go = True;
-        data->released = False;
-        data->gomanual = False;
-        if( data->driver != NULL )
-          data->driver->go( data->driver, data->gomanual );
+      if( block != NULL ) {
+        if( !StrOp.equals( wStage.name(), NodeOp.getName(block->base.properties(block)) ) ||
+            block->isDepartureAllowed( block, wLoc.getid(data->props) ) )
+        {
+          data->go = True;
+          data->released = False;
+          data->gomanual = False;
+          if( data->driver != NULL )
+            data->driver->go( data->driver, data->gomanual );
+        }
       }
     }
     else {

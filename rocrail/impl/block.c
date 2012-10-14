@@ -1000,6 +1000,8 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
 
     return False;
   }
+
+  return False;
 }
 
 
@@ -1649,6 +1651,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
 
     return ok;
   }
+  return False;
 }
 
 
@@ -1949,6 +1952,8 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
 
     return ok;
   }
+
+  return False;
 }
 
 
