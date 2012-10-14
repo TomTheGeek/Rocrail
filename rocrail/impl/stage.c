@@ -1014,7 +1014,7 @@ static Boolean _red( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
   Boolean semaphore = False;
   const char* sgId = NULL;
 
-  if( reverse || distant )
+  if( reverse )
     return False;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set red %s signal", distant?"enter":"exit" );
@@ -1064,6 +1064,11 @@ static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "section[%d] is not occupied", i );
     }
   }
+
+  /* enter and exit signal to red */
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset enter and exit signals [%s] [%s]", __name(), __id( inst ) );
+  StageOp.red( inst, True,  False );
+  StageOp.red( inst, False, False );
 
   /* Broadcast to clients. */
   AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
