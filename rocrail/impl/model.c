@@ -125,6 +125,7 @@
 #include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/TourList.h"
 #include "rocrail/wrapper/public/SystemActions.h"
+#include "rocrail/wrapper/public/FeedbackEvent.h"
 
 static int instCnt = 0;
 
@@ -217,8 +218,8 @@ static int __sortLocation(obj* _a, obj* _b)
       return 1;
     else if( xA < xB && yA == yB )
       return -1;
-    else if( xA == xB && yA == yB )
-      return 0;
+    /* xA == xB && yA == yB */
+    return 0;
 }
 
 
@@ -360,7 +361,7 @@ static Boolean _createEmptyPlan( iOModelData o ) {
     StrOp.free( planXml );
 
   }
-
+  return True;
 }
 
 
@@ -376,7 +377,7 @@ static Boolean __checkPlanHealth(iOModelData data) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking plan health..." );
 
   if( !wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block side routing is not enabled; The classic method is deprecated." );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: Block side routing is not enabled; The classic method is deprecated." );
     healthy = False;
   }
 
@@ -615,20 +616,15 @@ static Boolean __checkPlanHealth(iOModelData data) {
   /* check for very lonely objects */
   if( MapOp.size(xyzMap) > 0 ) {
     int items = MapOp.size(xyzMap);
-    int maxX = 0;
-    int maxY = 0;
+    int maxDist = 0;
     iONode lonelyItem = NULL;
     iONode item = (iONode)MapOp.first(xyzMap);
     while( item != NULL ) {
-      if( maxX < wItem.getx(item) ) {
-        maxX = wItem.getx(item);
+      if( maxDist < wItem.getx(item) + wItem.gety(item) ) {
+        /* use x + y coordinates as approach to sqrt( x^2 + y^2 ) */
+        maxDist = wItem.getx(item) + wItem.gety(item) ;
         lonelyItem = item;
       }
-      if( maxY < wItem.gety(item) ) {
-        maxY = wItem.gety(item);
-        lonelyItem = item;
-      }
-
       item = (iONode)MapOp.next(xyzMap);
     }
 
@@ -2705,6 +2701,15 @@ static iOList _getLevelItems( iOModel inst, int level, int* cx, int* cy, Boolean
       while( item != NULL ) {
         __addLevelItem( list, item, level, cx, cy );
         item =  wBlockList.nextbk( itemlist, item );
+      }
+    }
+
+    itemlist = wPlan.getsblist( data->model );
+    if( itemlist != NULL ) {
+      item = wStageList.getsb( itemlist );
+      while( item != NULL ) {
+        __addLevelItem( list, item, level, cx, cy );
+        item =  wStageList.nextsb( itemlist, item );
       }
     }
 
