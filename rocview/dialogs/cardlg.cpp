@@ -55,6 +55,7 @@ CarDlg::CarDlg( wxWindow* parent, iONode p_Props, bool save )
   m_TabAlign = wxGetApp().getTabAlign();
   m_Props    = p_Props;
   m_bSave    = save;
+  m_SortCol  = 0;
   initLabels();
   initIndex();
 
@@ -202,6 +203,48 @@ static int __sortID(obj* _a, obj* _b)
     const char* idB = wItem.getid( b );
     return strcmp( idA, idB );
 }
+static int __sortRoadName(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wCar.getroadname( a );
+    const char* idB = wCar.getroadname( b );
+    return strcmp( idA, idB );
+}
+static int __sortNumber(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wCar.getnumber( a );
+    const char* idB = wCar.getnumber( b );
+    return strcmp( idA, idB );
+}
+static int __sortType(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wCar.gettype( a );
+    const char* idB = wCar.gettype( b );
+    return strcmp( idA, idB );
+}
+static int __sortSubType(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wCar.getsubtype( a );
+    const char* idB = wCar.getsubtype( b );
+    return strcmp( idA, idB );
+}
+static int __sortLen(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    if( wCar.getlen(a) > wCar.getlen(b) )
+      return 1;
+    if( wCar.getlen(a) < wCar.getlen(b) )
+      return -1;
+    return 0;
+}
 
 
 void CarDlg::initIndex(){
@@ -226,7 +269,26 @@ void CarDlg::initIndex(){
         }
       }
 
-      ListOp.sort(list, &__sortID);
+      if( m_SortCol == 1 ) {
+        ListOp.sort(list, &__sortRoadName);
+      }
+      else if( m_SortCol == 2 ) {
+        ListOp.sort(list, &__sortNumber);
+      }
+      else if( m_SortCol == 3 ) {
+        ListOp.sort(list, &__sortType);
+      }
+      else if( m_SortCol == 4 ) {
+        ListOp.sort(list, &__sortSubType);
+      }
+      else if( m_SortCol == 5 ) {
+        ListOp.sort(list, &__sortLen);
+      }
+      else {
+        ListOp.sort(list, &__sortID);
+      }
+
+
       cnt = ListOp.size( list );
       for( int i = 0; i < cnt; i++ ) {
         iONode car = (iONode)ListOp.get( list, i );
@@ -687,3 +749,7 @@ void CarDlg::onDoc( wxCommandEvent& event )
   doDoc( event, "cars");
 }
 
+void CarDlg::onListColClick( wxListEvent& event ) {
+  m_SortCol = event.GetColumn();
+  initIndex();
+}

@@ -41,6 +41,7 @@ class CarDlg : public cardlggen, public BaseDialog
   bool   m_bSave;
   int    m_TabAlign;
   int    m_SetPage;
+  int    m_SortCol;
 
   void initLabels();
   bool evaluate();
@@ -68,6 +69,7 @@ public:
   iONode getSelectedCar();
   void OnCopy( wxCommandEvent& event );
   void onDoc( wxCommandEvent& event );
+  void onListColClick( wxListEvent& event );
 
 };
 

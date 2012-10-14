@@ -301,7 +301,7 @@
                                             <event name="OnListBeginRDrag"></event>
                                             <event name="OnListCacheHint"></event>
                                             <event name="OnListColBeginDrag"></event>
-                                            <event name="OnListColClick"></event>
+                                            <event name="OnListColClick">onListColClick</event>
                                             <event name="OnListColDragging"></event>
                                             <event name="OnListColEndDrag"></event>
                                             <event name="OnListColRightClick"></event>
