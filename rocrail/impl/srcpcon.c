@@ -994,39 +994,36 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
           wFunCmd.setid( fcmd, lcID);
           wFunCmd.setgroup(fcmd, group );
           wFunCmd.setfncnt ( fcmd, loFnCnt );
-          switch( loFnCnt ) {
-            case 28: wFunCmd.setf28(fcmd, (srcpFx & 0x08000000)?True:False);
-            case 27: wFunCmd.setf27(fcmd, (srcpFx & 0x04000000)?True:False);
-            case 26: wFunCmd.setf26(fcmd, (srcpFx & 0x02000000)?True:False);
-            case 25: wFunCmd.setf25(fcmd, (srcpFx & 0x01000000)?True:False);
-            case 24: wFunCmd.setf24(fcmd, (srcpFx & 0x00800000)?True:False);
-            case 23: wFunCmd.setf23(fcmd, (srcpFx & 0x00400000)?True:False);
-            case 22: wFunCmd.setf22(fcmd, (srcpFx & 0x00200000)?True:False);
-            case 21: wFunCmd.setf21(fcmd, (srcpFx & 0x00100000)?True:False);
-            case 20: wFunCmd.setf20(fcmd, (srcpFx & 0x00080000)?True:False);
-            case 19: wFunCmd.setf19(fcmd, (srcpFx & 0x00040000)?True:False);
-            case 18: wFunCmd.setf18(fcmd, (srcpFx & 0x00020000)?True:False);
-            case 17: wFunCmd.setf17(fcmd, (srcpFx & 0x00010000)?True:False);
-            case 16: wFunCmd.setf16(fcmd, (srcpFx & 0x00008000)?True:False);
-            case 15: wFunCmd.setf15(fcmd, (srcpFx & 0x00004000)?True:False);
-            case 14: wFunCmd.setf14(fcmd, (srcpFx & 0x00002000)?True:False);
-            case 13: wFunCmd.setf13(fcmd, (srcpFx & 0x00001000)?True:False);
-            case 12: wFunCmd.setf12(fcmd, (srcpFx & 0x00000800)?True:False);
-            case 11: wFunCmd.setf11(fcmd, (srcpFx & 0x00000400)?True:False);
-            case 10: wFunCmd.setf10(fcmd, (srcpFx & 0x00000200)?True:False);
-            case  9: wFunCmd.setf9( fcmd, (srcpFx & 0x00000100)?True:False);
-            case  8: wFunCmd.setf8( fcmd, (srcpFx & 0x00000080)?True:False);
-            case  7: wFunCmd.setf7( fcmd, (srcpFx & 0x00000040)?True:False);
-            case  6: wFunCmd.setf6( fcmd, (srcpFx & 0x00000020)?True:False);
-            case  5: wFunCmd.setf5( fcmd, (srcpFx & 0x00000010)?True:False);
-            case  4: wFunCmd.setf4( fcmd, (srcpFx & 0x00000008)?True:False);
-            case  3: wFunCmd.setf3( fcmd, (srcpFx & 0x00000004)?True:False);
-            case  2: wFunCmd.setf2( fcmd, (srcpFx & 0x00000002)?True:False);
-            case  1: wFunCmd.setf1( fcmd, (srcpFx & 0x00000001)?True:False);
-            case  0: wFunCmd.setf0( fcmd,  srcpF0);
-            data->callback( data->callbackObj, fcmd );
-          }
-
+          wFunCmd.setf28(fcmd, (srcpFx & 0x08000000)?True:False);
+          wFunCmd.setf27(fcmd, (srcpFx & 0x04000000)?True:False);
+          wFunCmd.setf26(fcmd, (srcpFx & 0x02000000)?True:False);
+          wFunCmd.setf25(fcmd, (srcpFx & 0x01000000)?True:False);
+          wFunCmd.setf24(fcmd, (srcpFx & 0x00800000)?True:False);
+          wFunCmd.setf23(fcmd, (srcpFx & 0x00400000)?True:False);
+          wFunCmd.setf22(fcmd, (srcpFx & 0x00200000)?True:False);
+          wFunCmd.setf21(fcmd, (srcpFx & 0x00100000)?True:False);
+          wFunCmd.setf20(fcmd, (srcpFx & 0x00080000)?True:False);
+          wFunCmd.setf19(fcmd, (srcpFx & 0x00040000)?True:False);
+          wFunCmd.setf18(fcmd, (srcpFx & 0x00020000)?True:False);
+          wFunCmd.setf17(fcmd, (srcpFx & 0x00010000)?True:False);
+          wFunCmd.setf16(fcmd, (srcpFx & 0x00008000)?True:False);
+          wFunCmd.setf15(fcmd, (srcpFx & 0x00004000)?True:False);
+          wFunCmd.setf14(fcmd, (srcpFx & 0x00002000)?True:False);
+          wFunCmd.setf13(fcmd, (srcpFx & 0x00001000)?True:False);
+          wFunCmd.setf12(fcmd, (srcpFx & 0x00000800)?True:False);
+          wFunCmd.setf11(fcmd, (srcpFx & 0x00000400)?True:False);
+          wFunCmd.setf10(fcmd, (srcpFx & 0x00000200)?True:False);
+          wFunCmd.setf9( fcmd, (srcpFx & 0x00000100)?True:False);
+          wFunCmd.setf8( fcmd, (srcpFx & 0x00000080)?True:False);
+          wFunCmd.setf7( fcmd, (srcpFx & 0x00000040)?True:False);
+          wFunCmd.setf6( fcmd, (srcpFx & 0x00000020)?True:False);
+          wFunCmd.setf5( fcmd, (srcpFx & 0x00000010)?True:False);
+          wFunCmd.setf4( fcmd, (srcpFx & 0x00000008)?True:False);
+          wFunCmd.setf3( fcmd, (srcpFx & 0x00000004)?True:False);
+          wFunCmd.setf2( fcmd, (srcpFx & 0x00000002)?True:False);
+          wFunCmd.setf1( fcmd, (srcpFx & 0x00000001)?True:False);
+          wFunCmd.setf0( fcmd,  srcpF0);
+          data->callback( data->callbackObj, fcmd );
         }
         /* send new loco basic settings after sending all functions */
         cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE );
@@ -1610,6 +1607,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
             default:
               TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Prot %s not srcp conform, set to P", prot);
               StrOp.copy( prot, "P");
+              break;
           }
           StrOp.fmtb(str, "%lu.%.3lu 101 INFO %d GA %d %s\n", time.tv_sec, time.tv_usec / 1000, srcpBus, srcpAddr, prot );
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Answer: %s", str);
@@ -2012,126 +2010,127 @@ static const char* srcpFmtMsg(int errorcode, char *msg, struct timeval time, int
     switch (errorcode) {
         case 100:
             sprintf(msg, "%lu.%.3lu %d INFO\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 101:
             sprintf(msg, "%lu.%.3lu %d INFO\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 102:
             sprintf(msg, "%lu.%.3lu %d INFO\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 110:
             sprintf(msg, "%lu.%.3lu %d INFO\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 200:
           if( id > 0 )
             sprintf(msg, "%lu.%.3lu %d OK GO %d\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode, id);
+                    time.tv_usec / 1000L, errorcode, id);
           else
             sprintf(msg, "%lu.%.3lu %d OK\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 202:
             sprintf(msg, "%lu.%.3lu %d OK CONNECTIONMODE\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 201:
             sprintf(msg, "%lu.%.3lu %d OK PROTOCOL SRCP\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 400:
             sprintf(msg, "%lu.%.3lu %d ERROR unsupported protocol\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         case 401:
             sprintf(msg,
                     "%lu.%.3lu %d ERROR unsupported connection mode\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         case 402:
             sprintf(msg, "%lu.%.3lu %d ERROR insufficient data\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         case 410:
             sprintf(msg, "%lu.%.3lu %d ERROR unknown command\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         case 411:
             sprintf(msg, "%lu.%.3lu %d ERROR unknown value\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 412:
             sprintf(msg, "%lu.%.3lu %d ERROR wrong value\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 413:
             sprintf(msg, "%lu.%.3lu %d ERROR temporarily prohibited\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         case 414:
             sprintf(msg, "%lu.%.3lu %d ERROR device locked\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 415:
             sprintf(msg, "%lu.%.3lu %d ERROR forbidden\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 416:
             sprintf(msg, "%lu.%.3lu %d ERROR no data\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 417:
             sprintf(msg, "%lu.%.3lu %d ERROR timeout\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 418:
             sprintf(msg, "%lu.%.3lu %d ERROR list too long\n", time.tv_sec,
-                    time.tv_usec / 1000, errorcode);
+                    time.tv_usec / 1000L, errorcode);
             break;
         case 419:
             sprintf(msg, "%lu.%.3lu %d ERROR list too short\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         case 420:
             sprintf(msg,
                     "%lu.%.3lu %d ERROR unsupported device protocol\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         case 421:
             sprintf(msg, "%lu.%.3lu %d ERROR unsupported device\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         case 422:
             sprintf(msg, "%lu.%.3lu %d ERROR unsupported device group\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         case 423:
             sprintf(msg, "%lu.%.3lu %d ERROR unsupported operation\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         case 424:
             sprintf(msg, "%lu.%.3lu %d ERROR device reinitialized\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         case 425:
             sprintf(msg, "%lu.%.3lu %d ERROR not supported\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         case 499:
             sprintf(msg, "%lu.%.3lu %d ERROR unspecified error\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         case 500:
             sprintf(msg, "%lu.%.3lu %d ERROR out of resources\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
             break;
         default:
             sprintf(msg, "%lu.%.3lu 600 ERROR internal error %d, "
                     "please report to srcpd-devel@srcpd.sorceforge.net\n",
-                    time.tv_sec, time.tv_usec / 1000, errorcode);
+                    time.tv_sec, time.tv_usec / 1000L, errorcode);
+            break;
     }
     return msg;
 }
@@ -2282,6 +2281,7 @@ static void sendSignalList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
         StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n",
                         time.tv_sec, time.tv_usec / 1000, 101, srcpBus, lastAddrSgProt, prot );
         SocketOp.fmt(o->clntSocket, str);
+        break;
       case 3:
         addr3 = AddrOp.toPADA( wSignal.getaddr3(sgProps), wSignal.getport3(sgProps) );
         gate3 = wSignal.getgate3(sgProps);
@@ -2291,6 +2291,7 @@ static void sendSignalList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
                           time.tv_sec, time.tv_usec / 1000, 101, srcpBus, lastAddrSgProt, prot );
           SocketOp.fmt(o->clntSocket, str);
         }
+        break;
       case 2:
         addr2 = AddrOp.toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
         gate2 = wSignal.getgate2(sgProps);
@@ -2300,6 +2301,7 @@ static void sendSignalList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
                           time.tv_sec, time.tv_usec / 1000, 101, srcpBus, lastAddrSgProt, prot );
           SocketOp.fmt(o->clntSocket, str);
         }
+        break;
       case 1:
         addr  = AddrOp.toPADA( wSignal.getaddr( sgProps), wSignal.getport1(sgProps) );
         gate1 = wSignal.getgate1(sgProps);
@@ -2309,6 +2311,7 @@ static void sendSignalList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
                           time.tv_sec, time.tv_usec / 1000, 101, srcpBus, lastAddrSgProt, prot );
           SocketOp.fmt(o->clntSocket, str);
         }
+        break;
     }
 
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendSignalList2InfoChannel: sg aspects %d, SGaddr1 %d, SGaddr2 %d, SGaddr3 %d, SGaddr4 %d, gate1 %d, gate2 %d, gate3 %d, gate4 %d, stateE %s, stateP %s", aspects, addr, addr2, addr3, addr4, gate1, gate2, gate3, gate4, wSignal.getstate(sgProps), wSignal.getstate(sgProps));
@@ -2339,6 +2342,7 @@ static void sendSignalList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
         break;
       default:
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED sgDevice aspects %d, SGaddr %d, SGaddr2 %d, stateE %s, stateP %s", aspects, addr, addr2, wSignal.getstate(sgProps), wSignal.getstate(sgProps));
+        break;
     }
 
     if( StrOp.len( str ) ){
