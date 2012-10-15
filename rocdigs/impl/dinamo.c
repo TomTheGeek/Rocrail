@@ -1249,13 +1249,19 @@ static struct ODINAMO* _inst( const iONode ini ,const iOTrace trc ) {
     wDigInt.setpsleep(ini, 50);
   }
 
+  if( wDigInt.getbps( ini ) != 19200 && wDigInt.getbps( ini ) != 38400 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate correction from %d to %d", wDigInt.getbps( ini ), 19200 );
+    wDigInt.setbps( ini, 19200 );
+  }
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dinamo %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  IID     [%s]", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device  [%s]", wDigInt.getdevice( ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  timeout [%d]", wDigInt.gettimeout( ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  psleep  [%d]", data->psleep );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  swtime  [%d]", data->swtime );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  IID      [%s]", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device   [%s]", wDigInt.getdevice( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  timeout  [%d]", wDigInt.gettimeout( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  psleep   [%d]", data->psleep );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  swtime   [%d]", data->swtime );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  baudrate [%d]", wDigInt.getbps( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
 
@@ -1263,7 +1269,7 @@ static struct ODINAMO* _inst( const iONode ini ,const iOTrace trc ) {
     data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );
 
     SerialOp.setFlow( data->serial, none );
-    SerialOp.setLine( data->serial, 19200, 8, 1, odd, wDigInt.isrtsdisabled( ini ) );
+    SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, odd, wDigInt.isrtsdisabled( ini ) );
     SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
   }
 

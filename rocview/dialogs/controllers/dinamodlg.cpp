@@ -103,6 +103,11 @@ void DinamoCtrlDlg::initValues() {
 
   m_SwTime->SetValue( wDigInt.getswtime( m_Props ) );
   m_TxSleep->SetValue( wDigInt.getpsleep( m_Props ) );
+
+  if( wDigInt.getbps( m_Props ) == 38400 )
+    m_Baudrate->SetSelection(1);
+  else
+    m_Baudrate->SetSelection(0);
 }
 
 
@@ -113,6 +118,11 @@ void DinamoCtrlDlg::evaluate() {
   wDigInt.setdevice( m_Props, m_Device->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setswtime( m_Props, m_SwTime->GetValue() );
   wDigInt.setpsleep( m_Props, m_TxSleep->GetValue() );
+
+  if( m_Baudrate->GetSelection() == 1 )
+    wDigInt.setbps( m_Props, 38400 );
+  else
+    wDigInt.setbps( m_Props, 19200 );
 }
 
 
@@ -132,6 +142,7 @@ bool DinamoCtrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& cap
     m_SwTime = NULL;
     m_Sleep = NULL;
     m_TxSleep = NULL;
+    m_Baudrate = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end DinamoCtrlDlg member initialisation
@@ -169,7 +180,6 @@ void DinamoCtrlDlg::CreateControls()
     itemPanel3->SetSizer(itemBoxSizer4);
 
     wxFlexGridSizer* itemFlexGridSizer5 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer5->AddGrowableCol(1);
     itemBoxSizer4->Add(itemFlexGridSizer5, 1, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( itemPanel3, ID_STATICTEXT_DINAMO_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -196,17 +206,26 @@ void DinamoCtrlDlg::CreateControls()
     m_TxSleep = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 10, 100, 10 );
     itemFlexGridSizer5->Add(m_TxSleep, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer14 = new wxStdDialogButtonSizer;
+    itemFlexGridSizer5->AddGrowableCol(1);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer14, 0, wxALIGN_RIGHT|wxALL, 5);
+    wxArrayString m_BaudrateStrings;
+    m_BaudrateStrings.Add(_("&19200"));
+    m_BaudrateStrings.Add(_("&38400"));
+    m_Baudrate = new wxRadioBox( itemPanel3, ID_BAUDRATE, _("Baudrate"), wxDefaultPosition, wxDefaultSize, m_BaudrateStrings, 1, wxRA_SPECIFY_ROWS );
+    m_Baudrate->SetSelection(0);
+    itemBoxSizer4->Add(m_Baudrate, 0, wxALIGN_LEFT|wxALL, 5);
+
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer15 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer15, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer14->AddButton(m_OK);
+    itemStdDialogButtonSizer15->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer14->AddButton(m_Cancel);
+    itemStdDialogButtonSizer15->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer14->Realize();
+    itemStdDialogButtonSizer15->Realize();
 
 ////@end DinamoCtrlDlg content construction
 }
