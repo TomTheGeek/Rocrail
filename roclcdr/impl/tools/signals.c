@@ -340,8 +340,16 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
   else if( data->next1Block != NULL )
   {
     if( __checkSignalPair(inst, data->next1Route, data->next1Block, data->next1RouteFromTo, &signalpair) ) {
-      data->next1Block->red( data->next1Block, True, signalpair );
-      data->next1Block->red( data->next1Block, False, signalpair );
+      if( data->model->getStage(data->model, data->next1Block->base.id(data->next1Block) ) == NULL ) {
+        /* only set signals to red on non staging (real) blocks */
+        data->next1Block->red( data->next1Block, True, signalpair );
+        data->next1Block->red( data->next1Block, False, signalpair );
+      }
+      else {
+        /* staging blocks handle setting to red internally */
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "setSignals[%s] blBaseName=%s name=%s SKIPPED", 
+            data->next1Block->base.id(data->next1Block), data->next1Block->base.name(), name );
+      }
     }
   }
 
@@ -369,9 +377,17 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
   }
   else if( data->next2Block != NULL )
   {
-    if( __checkSignalPair(inst, data->next2Route, data->next2Block, data->next2RouteFromTo, &signalpair) ) {
-      data->next2Block->red( data->next2Block, True, signalpair );
-      data->next2Block->red( data->next2Block, False, signalpair );
+    if( data->model->getStage(data->model, data->next2Block->base.id(data->next2Block) ) == NULL ) {
+      /* only set signals to red on non staging (real) blocks */
+      if( __checkSignalPair(inst, data->next2Route, data->next2Block, data->next2RouteFromTo, &signalpair) ) {
+        data->next2Block->red( data->next2Block, True, signalpair );
+        data->next2Block->red( data->next2Block, False, signalpair );
+      }
+      else {
+        /* staging blocks handle setting to red internally */
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "setSignals[%s] blBaseName=%s name=%s SKIPPED", 
+            data->next2Block->base.id(data->next2Block), data->next2Block->base.name(), name );
+      }
     }
   }
 
