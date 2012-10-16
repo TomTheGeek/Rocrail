@@ -401,9 +401,13 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     }
     else if(  wProgram.getcmd( node ) == wProgram.pton ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT ON");
+      rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setcmd( rsp, wProgram.statusrsp );
     }  // PT off, send: All ON"
     else if( wProgram.getcmd( node ) == wProgram.ptoff ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT OFF");
+      rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setcmd( rsp, wProgram.statusrsp );
     }
 
     else if( wProgram.getcmd( node ) == wProgram.lncvset ) {
