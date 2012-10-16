@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32"
+   height="32"
+   id="svg37571"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   sodipodi:docname="accessory-2-off.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   sodipodi:docbase="C:\Documents and Settings\epraneri\Documenti\Rocrail\svg\themes\SpDrS60">
+  <metadata
+     id="metadata37584">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs37582" />
+  <sodipodi:namedview
+     inkscape:window-height="579"
+     inkscape:window-width="795"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     inkscape:zoom="11.8125"
+     inkscape:cx="16"
+     inkscape:cy="16"
+     inkscape:window-x="110"
+     inkscape:window-y="110"
+     inkscape:current-layer="g37573" />
+  <g
+     id="g37573">
+<!-- Track -->    <path
+       d="M 0,12 L 31,12 L 31,19 L 0,19 z "
+       id="path11960"
+       stroke="rgb(0,0,0)"
+       fill="rgb(0,0,0)" />
+<!-- Ausleuchtung grau -->    <path
+       label="#sfondo"
+       d="M 10,10 L 21,10 L 21,21 L 10,21 L 10,10 z "
+       id="path24173"
+       stroke="rgb(0,0,0)"
+       fill="rgb(0,128,128)" />
+    <path
+       label="#sfondo"
+       d="M 13,13 L 18,13 L 18,18 L 13,18 L 13,13 z "
+       id="path29037"
+       stroke="rgb(255,255,0)"
+       fill="rgb(255,255,255)" />
+    <path
+       label="#sfondo"
+       d="M 11,11 L 11,11 L 11,20 L 11,20 L 11,11 z "
+       id="path31946"
+       stroke="rgb(255,255,255)"
+       fill="rgb(255,255,255)" />
+    <path
+       label="#sfondo"
+       d="M 11,11 L 20,11 L 20,11 L 11,11 L 11,11 z "
+       id="path32917"
+       stroke="rgb(255,255,255)"
+       fill="rgb(255,255,255)" />
+    <path
+       label="#sfondo"
+       d="M 12,12 L 14,12 L 14,14 L 12,14 L 12,12 z "
+       id="path29999"
+       stroke="(0,128,128)"
+       fill="rgb(0,128,128)" />
+    <path
+       label="#sfondo"
+       d="M 12,17 L 14,17 L 14,19 L 12,19 L 12,17 z "
+       id="path37586"
+       stroke="(0,128,128)"
+       fill="rgb(0,128,128)" />
+    <path
+       label="#sfondo"
+       d="M 19,12 L 19,12 L 19,14L 17,14 L 17,12 z "
+       id="path37624"
+       stroke="(0,128,128)"
+       fill="rgb(0,128,128)" />
+    <path
+       label="#sfondo"
+       d="M 19,17 L 19,17 L 19,19 L 17,19 L 17,17 z "
+       id="path37626"
+       stroke="(0,128,128)"
+       fill="rgb(0,128,128)" />
+  </g>
+</svg>

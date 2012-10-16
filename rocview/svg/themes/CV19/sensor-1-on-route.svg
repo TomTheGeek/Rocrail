@@ -1,0 +1,14 @@
+<svg width="32" height="32">
+  <g>
+    <!-- Sensor aussen -->
+    <path stroke="black" fill="rgb(200, 0, 0)" d="M 13,8 L 18,8 L 19,9 L 20,9 L 22,11 L 22,12 L 23,13 L 23,18 L 22,19 L 22,20 L 20,22 L 19,22 L 18,23 L 13,23 L 12,22 L 11,22 L 9,20 L 9,19 L 8,18 L 8,13 L 9,12 L 9,11 L 11,9 L 12,9 z " />
+    <!-- Sensor innen 1 -->
+    <path stroke="rgb(255,64,0)" fill="rgb(255,0,0)" d="M 13,11 L 18,11 L 20,13 L 20,18 L 18,20 L 13,20 L 11,18 L 11,13 z " /> 
+    <!-- Sensor innen 2 -->
+    <path stroke="rgb(255,128,0)" fill="rgb(255,128,0)" d="M 14,13 L 17,13 L 18,14 L 18,17 L 17,18 L 14,18 L 13,17 L 13,14 z " /> 
+    <!-- Sensor reflex gelb -->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 14,16 L 14,15 L 15,14 L 15,15 L 14,16 z " /> 
+    <!-- Sensor reflex weiss -->
+    <path stroke="rgb(255,255,255)" fill="rgb(255,255,255)" d="M 16,14 L 16,15 L 15,16 z " /> 
+  </g>
+</svg>
