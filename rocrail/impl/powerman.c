@@ -283,16 +283,22 @@ static Boolean _cmd(iOPowerMan inst, iONode cmd) {
   iOPowerManData data = Data(inst);
   iOModel model = AppOp.getModel();
   const char* boosterid = wPwrCmd.getid(cmd);
+
+  if( !StrOp.equals( wPwrCmd.name(), NodeOp.getName(cmd))) {
+    /* Ignore */
+    return False;
+  }
+
   TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "%s=%s", NodeOp.getName(cmd), wPwrCmd.getcmd(cmd));
 
   if( boosterid == NULL || StrOp.len( boosterid ) == 0 ) {
     iONode booster = (iONode)MapOp.first( data->boostermap );
     /* command for all */
-    TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Power command for all boosters.");
+    TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Power command [%s] for all boosters.", wPwrCmd.getcmd(cmd));
     while( booster != NULL ) {
       iOOutput output = ModelOp.getOutput( model, wBooster.getpowersw(booster) );
       boosterid = wBooster.getid(booster);
-      TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Power command for booster [%s].", boosterid);
+      TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Power command [%s] for booster [%s].", wPwrCmd.getcmd(cmd), boosterid);
       if( output != NULL ) {
         if( StrOp.equals( wPwrCmd.on, wPwrCmd.getcmd(cmd) ) ) {
           ThreadOp.sleep(50);
