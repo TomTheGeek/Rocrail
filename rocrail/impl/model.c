@@ -296,7 +296,7 @@ static void __backupSave( const char* fileName, const char* xml ) {
     if( FileOp.exist(wRocRail.getbackuppath(AppOp.getIni())) ) {
       char* stamp = StrOp.createStampNoDots();
       backupfile = StrOp.fmt( "%s%c%s-%s",
-          wRocRail.getbackuppath(AppOp.getIni()), SystemOp.getFileSeparator(), stamp, fileName );
+          wRocRail.getbackuppath(AppOp.getIni()), SystemOp.getFileSeparator(), stamp, FileOp.ripPath( fileName ) );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "backup %s to %s", fileName, backupfile);
       FileOp.cp(fileName,backupfile);
       StrOp.free(stamp);
