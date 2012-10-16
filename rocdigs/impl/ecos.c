@@ -849,9 +849,9 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
       /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, ecosCmd); */
 
     } else if ( oid == NULL ) {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "WARNING: NULL oid" );
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "no ecos oid found for [%s]", ecosid );
     } else if ( StrOp.len( oid ) <= 0 ) {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "WARNING: oid len [%d]", StrOp.len( oid ));
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "empty ecos oid found for [%s]", ecosid);
     }
 
     /*
@@ -1177,7 +1177,7 @@ static void __processLocList( iOECoS inst, iONode node ) {
         /* existing id's are overwritten */
 
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-                     "List Saving id [%s,%s,%s] in map @ [%d]", id, oid, StrOp.dup( oid ), data->locoNameToEcosOidMap );
+                     "mapping Rocrail id=[%s] with Ecos oid=[%s]", id, oid );
 
         MutexOp.wait( data->mapmux );
         oldVal = (char*)MapOp.get( data->locoNameToEcosOidMap, id );
