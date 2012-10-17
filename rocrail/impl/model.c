@@ -3951,6 +3951,8 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
     return NULL;
   }
 
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "schedule [%s] index %d", scheduleid, *scheduleIdx );
+
   /* https://bugs.launchpad.net/rocrail/+bug/706593
    * TODO: Evaluate the block enterside using ModelOp.findDest(...gotoBlock...) or
    *   ModelOp.calcRoute() within the __findScheduleEntry() function.
@@ -3967,12 +3969,14 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
     if( entry != NULL ) {
       /* save real index */
       entryIndex = *scheduleIdx;
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "schedule [%s] real index %d", scheduleid, *scheduleIdx );
     }
 
     while( entry != NULL && maxLoop < 2 ) {
       /* entry found, get the next destination... */
       entry = wSchedule.nextscentry( schedule, entry );
       *scheduleIdx += 1;
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "schedule [%s] index %d", scheduleid, *scheduleIdx );
       maxLoop++;
 
       if( entry != NULL ) {
@@ -4008,6 +4012,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
           }
           else {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route [%s] to block [%s] is not usable", RouteOp.getId(route), gotoBlock );
+            return NULL;
           }
 
 
