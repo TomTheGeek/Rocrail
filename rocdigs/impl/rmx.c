@@ -656,10 +656,10 @@ static Boolean __evaluateRsp( iORmxData data, byte* out, int outsize, byte* in, 
     __evaluateRMX(data, in);
     break;
   case OPC_LOCOV: /* 0x24 */
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco velocity" );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Loco velocity" );
     break;
   case OPC_LOCOF: /* 0x28 */
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco functions" );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Loco functions" );
     break;
   case OPC_PT: /* 0x28 */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT" );
