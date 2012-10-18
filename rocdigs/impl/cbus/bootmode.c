@@ -317,7 +317,7 @@ void loadHEXFile(obj inst, const char* filename, int nodenr, Boolean eeprom ) {
   Boolean ok = True;
   while( ok && FileOp.readStr( f, hexline ) ) {
     nr++;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsing line %d: %s ", nr, hexline );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "parsing line %d: %s ", nr, hexline );
     if( hexline[0] == ':' ) {
       ok = evaluateLine(hexline, bootData);
     }

@@ -50,5 +50,14 @@
 #define BOOTMSG_OK 1
 #define BOOTMSG_ACK 2 // Response to the test command.
 
+/* extended opcodes for LNCV */
+#define OPC_WLNID   0x87    // Set LocoNet Module ID
+#define OPC_QLNID   0x88    // Query LocoNet Module ID
+#define OPC_PLNID   0x89    // Report LocoNet Module ID
+#define OPC_WLNCV   0x8A    // Write LNCV
+#define OPC_QLNCV   0x8B    // Read LNCV
+#define OPC_PLNCV   0x8C    // Report LNCV
+
+
 
 #endif

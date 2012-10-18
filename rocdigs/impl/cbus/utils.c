@@ -51,6 +51,26 @@ int makeFrame(byte* frame, int prio, byte* cmd, int datalen, int cid, Boolean et
   return frame[0];
 }
 
+int makeExtFrame(byte* frame, int prio, byte* cmd, int datalen, int cid ) {
+  int i = 0;
+
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "makeExtFrame for OPC=0x%02X", cmd[0] );
+
+  StrOp.fmtb( frame+1, ":X%02X%02X%02X%02XN%02X;", 0x00, 0x08, prio, cid, cmd[0] );
+
+  if( datalen > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "datalen=%d", datalen );
+    for( i = 0; i < datalen; i++ ) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "makeExtFrame: %s", frame+1 );
+      StrOp.fmtb( frame+1+13+i*2, "%02X;", cmd[i+1] );
+    }
+  }
+
+  frame[0] = StrOp.len(frame+1);
+
+  return frame[0];
+}
+
 
 byte HEXA2Byte( const char* s ) {
   char val[3] = {0};

@@ -983,59 +983,115 @@ static void __reportState(iOCBUS cbus) {
 
 static iONode __evaluateXFrame(iOCBUS cbus, byte* frame) {
   iOCBUSData data = Data(cbus);
+
+  unsigned int canid = (HEXA2Byte(frame+6) * 256) + (HEXA2Byte(frame+8));
+  unsigned int prio  = (HEXA2Byte(frame+2) * 256) + (HEXA2Byte(frame+4));
   byte reqrsp  = HEXA2Byte(frame+2);
   byte cargo   = HEXA2Byte(frame+8);
   byte cmd     = HEXA2Byte(frame+21);
 
-  if( (reqrsp & 0x80) == 0 ) {
-    /* Commands:
-    :X00080004N000000000D000000; NOP
-    :X00080004N000000000D010000; Reset
-    :X00080004N000000000D020000; Init
-    :X00080004N000000000D030000; Check
-    :X00080004N000000000D040000; Test
-    :X00080005N0000000000000000; Data
-    */
-    if( cargo == 5 ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader data frame [%s]", frame+11 );
+  if( canid > 9 ) {
+    char sts = *(frame+10);
+    byte opc = HEXA2Byte(frame+11);
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "extframe canid %d [%s]", canid, frame+11 );
+
+    switch (opc) {
+      case OPC_PLNCV:
+      {
+        iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        int cv  = (HEXA2Byte(frame+13) * 256) + HEXA2Byte(frame+15);
+        int val = (HEXA2Byte(frame+17) * 256) + HEXA2Byte(frame+19);
+
+        wProgram.setlncv( node, True );
+        wProgram.setlntype( node, wProgram.lntype_cv );
+        wProgram.setvalue( node, val );
+        wProgram.setcmd( node, wProgram.datarsp );
+        wProgram.setcv( node, cv );
+        // wProgram.setaddr( node, addr );
+        // wProgram.setmodid( node, modid );
+        if( data->iid != NULL )
+          wProgram.setiid( node, data->iid );
+
+        if( data->listenerFun != NULL && data->listenerObj != NULL )
+          data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+        break;
+      }
+      case OPC_PLNID:
+      {
+        iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        int modid = (HEXA2Byte(frame+13) * 256) + HEXA2Byte(frame+15);
+        int addr  = (HEXA2Byte(frame+17) * 256) + HEXA2Byte(frame+19);
+
+        wProgram.setlncv( node, True );
+        wProgram.setlntype( node, wProgram.lntype_cv );
+        // wProgram.setvalue( node, val );
+        // wProgram.setcmd( node, wProgram.datarsp );
+        // wProgram.setcv( node, cv );
+        wProgram.setaddr( node, addr );
+        wProgram.setmodid( node, modid );
+        if( data->iid != NULL )
+          wProgram.setiid( node, data->iid );
+
+        if( data->listenerFun != NULL && data->listenerObj != NULL )
+          data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+        break;
+      }
     }
+
+  } else {
+    if( (reqrsp & 0x80) == 0 ) {
+      /* Commands:
+      :X00080004N000000000D000000; NOP
+      :X00080004N000000000D010000; Reset
+      :X00080004N000000000D020000; Init
+      :X00080004N000000000D030000; Check
+      :X00080004N000000000D040000; Test
+      :X00080005N0000000000000000; Data
+      */
+      if( cargo == 5 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader data frame [%s]", frame+11 );
+      }
+      else {
+        if( cmd == 0x00 )
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command NOP: 0x%02X", cmd );
+        else if( cmd == 0x01 )
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command RESET: 0x%02X", cmd );
+        else if( cmd == 0x02 )
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command INIT: 0x%02X", cmd );
+        else if( cmd == 0x03 )
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command CHECK: 0x%02X", cmd );
+        else if( cmd == 0x04 )
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command TEST: 0x%02X", cmd );
+        else
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown bootloader command: 0x%02X", cmd );
+      }
+    }
+
+    else if( reqrsp & 0x80 ) {
+      byte rc = HEXA2Byte(frame+11);
+      /* Responses:
+      :X80080004N00; Error, on response of a Check command.
+      :X80080004N01; OK, on response of a Check command.
+      :X80080004N02; Boot mode confirm, on response of a Test command.
+      */
+      /* ToDo: Generate program nodes. */
+      if(rc == 0) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "error response from bootloader" );
+      }
+      else if(rc == 1) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OK response from bootloader" );
+      }
+      else if(rc == 2) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "boot mode confirmed" );
+      }
+    }
+
     else {
-      if( cmd == 0x00 )
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command NOP: 0x%02X", cmd );
-      else if( cmd == 0x01 )
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command RESET: 0x%02X", cmd );
-      else if( cmd == 0x02 )
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command INIT: 0x%02X", cmd );
-      else if( cmd == 0x03 )
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command CHECK: 0x%02X", cmd );
-      else if( cmd == 0x04 )
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bootloader command TEST: 0x%02X", cmd );
-      else
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown bootloader command: 0x%02X", cmd );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown extended frame: %s", frame );
     }
-  }
-
-  else if( reqrsp & 0x80 ) {
-    byte rc = HEXA2Byte(frame+11);
-    /* Responses:
-    :X80080004N00; Error, on response of a Check command.
-    :X80080004N01; OK, on response of a Check command.
-    :X80080004N02; Boot mode confirm, on response of a Test command.
-    */
-    /* ToDo: Generate program nodes. */
-    if(rc == 0) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "error response from bootloader" );
-    }
-    else if(rc == 1) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OK response from bootloader" );
-    }
-    else if(rc == 2) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "boot mode confirmed" );
-    }
-  }
-
-  else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown extended frame: %s", frame );
   }
 
   return NULL;
@@ -2082,6 +2138,60 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       byte* frame = programFLiM((obj)cbus, node );
       if( frame != NULL ) {
         ThreadOp.post(data->writer, (obj)frame);
+      }
+    }
+    else if( wProgram.getlntype(node) == wProgram.lntype_cv ) {
+      int addr = wProgram.getaddr( node );
+      int cv   = wProgram.getcv( node );
+      int val  = wProgram.getvalue( node );
+      int mid  = wProgram.getmodid( node );
+      int lncvcmd = wProgram.getlncvcmd( node );
+      byte cmd[8];
+      byte* frame = allocMem(32);
+
+      cmd[0] = OPC_WLNID;                /* Set LN Module ID */
+      cmd[1] = mid / 256;
+      cmd[2] = mid % 256;
+      cmd[3] = addr / 256;
+      cmd[4] = addr % 256;
+      makeExtFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
+      ThreadOp.post(data->writer, (obj)frame);
+
+      if( wProgram.getcmd( node ) == wProgram.lncvget ) {
+        byte cmd[8];
+        byte* frame = allocMem(32);
+
+        if (lncvcmd) {
+          val = lncvcmd;
+          cv = 0;
+        } else if( val != 0xFFFF ) {
+          val = 0;
+        }
+
+        cmd[0] = OPC_QLNCV;                /* query lncv value */
+        cmd[1] = cv / 256;
+        cmd[2] = cv % 256;
+        cmd[3] = val / 256;
+        cmd[4] = val % 256;
+        makeExtFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
+        ThreadOp.post(data->writer, (obj)frame);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LNCV get: %d %d %d", mid, addr, cv );
+      }
+      else if( wProgram.getcmd( node ) == wProgram.lncvset ) {
+        byte cmd[8];
+        byte* frame = allocMem(32);
+
+        cmd[0] = OPC_WLNCV;                /* write lncv value */
+        cmd[1] = cv / 256;
+        cmd[2] = cv % 256;
+        cmd[3] = val / 256;
+        cmd[4] = val % 256;
+        makeExtFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
+        ThreadOp.post(data->writer, (obj)frame);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LNCV set: %d %d %d %d", mid, addr, cv, val );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LNCV unknown cmd %d %d %d", mid, addr, cv );
       }
     }
     else if( wProgram.getcmd( node ) == wProgram.get ) {
