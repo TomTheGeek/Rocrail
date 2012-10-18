@@ -76,7 +76,6 @@ class wxSpinCtrl;
 #define ID_RADIOBOX_BK_COMMUTER 10067
 #define wxID_ANY_BK_CONFIG 10066
 #define ID_CHECKBOX_BK_ELECTRIFIED 10068
-#define ID_CHECKBOX_BK_STATION 10069
 #define ID_CHECKBOX_BK_CLOSED 10071
 #define wxID_BLOCK_WAIT 10350
 #define ID_CHECKBOX_BK_GOMANUAL 10325
@@ -311,7 +310,6 @@ public:
     wxRadioBox* m_Commuter;
     wxStaticBoxSizer* m_Configuration;
     wxCheckBox* m_Electrified;
-    wxCheckBox* m_Station;
     wxCheckBox* m_Closed;
     wxCheckBox* m_WaitFlag;
     wxCheckBox* m_SmallSymbol;
