@@ -1146,7 +1146,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
       wProgram.setvalue( node, val );
       wProgram.setcmd( node, wProgram.datarsp );
       wProgram.setcv( node, cv );
-      wProgram.setdecaddr( node, addr );
+      wProgram.setaddr( node, addr );
       wProgram.setmodid( node, modid );
       if( data->iid != NULL )
         wProgram.setiid( node, data->iid );
@@ -1249,7 +1249,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
       wProgram.setvalue( node, val );
       wProgram.setcmd( node, wProgram.datarsp );
       wProgram.setcv( node, cv );
-      wProgram.setdecaddr( node, addr );
+      wProgram.setaddr( node, addr );
       wProgram.setmodid( node, modid );
       if( data->iid != NULL )
         wProgram.setiid( node, data->iid );
