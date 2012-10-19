@@ -532,6 +532,10 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
     if( delay == 0 )
       delay = data->swtime;
 
+    delay = delay / 16; /* units of 1/60 sec. */
+    if( !wSwitch.isactdelay( node ) )
+      delay = 0; /* use default of 200 ms */
+
     if( port < 1 || addr < 1 ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "address out of range [%d-%d]", addr, port);
       addr = 1;
