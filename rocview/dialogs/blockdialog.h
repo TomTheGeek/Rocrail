@@ -73,7 +73,6 @@ class wxSpinCtrl;
 #define wxID_STATIC_BK_LOCID 10017
 #define ID_TEXTCTRL_BK_LOCID 10018
 #define ID_BUTTON_BK_LOCPROPS 10019
-#define ID_RADIOBOX_BK_COMMUTER 10067
 #define wxID_ANY_BK_CONFIG 10066
 #define ID_CHECKBOX_BK_ELECTRIFIED 10068
 #define ID_CHECKBOX_BK_CLOSED 10071
@@ -154,6 +153,7 @@ class wxSpinCtrl;
 #define ID__PANEL_BK_PERMISSIONS 10242
 #define ID_LISTBOX_INCLUDE 10337
 #define ID_LISTBOX_EXCLUDE 10338
+#define ID_RADIOBOX_BK_COMMUTER 10067
 #define SYMBOL_BLOCKDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_BLOCKDIALOG_TITLE _("Blocks")
 #define SYMBOL_BLOCKDIALOG_IDNAME ID_DIALOG_BLOCKS
@@ -307,7 +307,6 @@ public:
     wxButton* m_LocProps;
     wxStaticText* m_labTurntableID;
     wxChoice* m_TurntableID;
-    wxRadioBox* m_Commuter;
     wxStaticBoxSizer* m_Configuration;
     wxCheckBox* m_Electrified;
     wxCheckBox* m_Closed;
@@ -424,6 +423,7 @@ public:
     wxListBox* m_IncludeList;
     wxStaticText* m_labExclude;
     wxListBox* m_ExcludeList;
+    wxRadioBox* m_Commuter;
     wxRadioBox* m_PermType;
     wxButton* m_Cancel;
     wxButton* m_Apply;
