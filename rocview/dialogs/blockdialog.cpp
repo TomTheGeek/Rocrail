@@ -542,11 +542,11 @@ void BlockDialog::initValues() {
   else
     m_TurntableID->SetSelection(0);
 
-  if( StrOp.equals( "no", wBlock.getcommuter( m_Props ) ) )
+  if( StrOp.equals( wBlock.commuter_no, wBlock.getcommuter( m_Props ) ) )
     m_Commuter->SetSelection(0);
-  else if( StrOp.equals( "yes", wBlock.getcommuter( m_Props ) ) )
+  else if( StrOp.equals( wBlock.commuter_yes, wBlock.getcommuter( m_Props ) ) )
     m_Commuter->SetSelection(1);
-  else if( StrOp.equals( "only", wBlock.getcommuter( m_Props ) ) )
+  else if( StrOp.equals( wBlock.commuter_only, wBlock.getcommuter( m_Props ) ) )
     m_Commuter->SetSelection(2);
   else
     m_Commuter->SetSelection(0);
@@ -835,11 +835,11 @@ bool BlockDialog::evaluate() {
   wBlock.setextstop( m_Props , m_ExtStop->GetValue() ? True:False);
 
   if( m_Commuter->GetSelection() == 0 )
-    wBlock.setcommuter( m_Props, "no" );
+    wBlock.setcommuter( m_Props, wBlock.commuter_no );
   else if( m_Commuter->GetSelection() == 1 )
-    wBlock.setcommuter( m_Props, "yes" );
+    wBlock.setcommuter( m_Props, wBlock.commuter_yes );
   else if( m_Commuter->GetSelection() == 2 )
-    wBlock.setcommuter( m_Props, "only" );
+    wBlock.setcommuter( m_Props, wBlock.commuter_only );
 
   // Location
   wBlock.setx( m_Props, atoi( m_x->GetValue().mb_str(wxConvUTF8) ) );

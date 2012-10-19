@@ -1373,14 +1373,14 @@ static int _isSuited( iIBlockBase inst, iOLoc loc, int* restlen, Boolean checkPr
     }
   }
 
-  if( StrOp.equals( "no", wBlock.getcommuter( data->props ) ) &&
+  if( StrOp.equals( wBlock.commuter_no, wBlock.getcommuter( data->props ) ) &&
       wLoc.iscommuter( loc->base.properties( loc ) ) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Block \"%s\" does not allow commuter train type for \"%s\".",
                    data->id, LocOp.getId( loc ) );
     return suits_not;
   }
-  else if( StrOp.equals( "only", wBlock.getcommuter( data->props ) ) &&
+  else if( StrOp.equals( wBlock.commuter_only, wBlock.getcommuter( data->props ) ) &&
       !wLoc.iscommuter( loc->base.properties( loc ) ) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Block \"%s\" only allows commuter train type for \"%s\".",

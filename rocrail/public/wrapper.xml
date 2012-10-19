@@ -1647,6 +1647,9 @@
         <const name="incline_none" vt="int" val="0"/>
         <const name="incline_down" vt="int" val="-1"/>
         <var name="incline" vt="int" defval="0" range="1,0,-1"/>
+        <const name="commuter_no" vt="string" val="no"/>
+        <const name="commuter_yes" vt="string" val="yes"/>
+        <const name="commuter_only" vt="string" val="only"/>
         <var name="commuter" vt="string" defval="no" range="no,yes,only" remark="Are commuter trains allowed?"/>
         <const name="loc" vt="string" val="loc"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
