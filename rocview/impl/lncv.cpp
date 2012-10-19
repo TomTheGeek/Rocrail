@@ -175,6 +175,9 @@ void LNCV::event( iONode event ) {
   int cv   = wProgram.getcv (event);
   int val  = wProgram.getvalue(event);
   bool datarsp = false;
+  char* str;
+
+  TraceOp.trc( "lncv", TRCLEVEL_INFO, __LINE__, 9999, "LNCV event: modid %d addr %d cv %d val %d", mod, addr, cv, val );
 
   if( cmd == wProgram.datarsp )
     datarsp = true;
@@ -184,11 +187,13 @@ void LNCV::event( iONode event ) {
   //m_ModuleKey->SetValue( wxString( str,wxConvUTF8) );
   //StrOp.free(str);
 
-  //str = StrOp.fmt( "%d", addr );
-  //m_Address->SetValue( wxString( str,wxConvUTF8) );
-  //StrOp.free(str);
+  if ( !datarsp ) {
+    str = StrOp.fmt( "%d", addr );
+    m_Address->SetValue( wxString( str,wxConvUTF8) );
+    StrOp.free(str);
+  }
 
-  char* str = StrOp.fmt( "%d", cv );
+  str = StrOp.fmt( "%d", cv );
   m_CVfrom->SetValue( wxString( str,wxConvUTF8) );
   StrOp.free(str);
 
