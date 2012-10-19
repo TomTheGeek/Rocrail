@@ -236,7 +236,7 @@ static iOSlot __getRmxSlot(iORmxData data, iONode node) {
     slot = allocMem( sizeof( struct slot) );
     slot->addr = addr;
     slot->index = rsp[5];
-    slot->protocol = cmd[4];
+    slot->protocol = rsp[4];
     slot->steps = rsp[7];
     slot->sx1 = rsp[6] < 7 ? True:False;
     slot->bus = wLoc.getbus(node);
@@ -656,10 +656,10 @@ static Boolean __evaluateRsp( iORmxData data, byte* out, int outsize, byte* in, 
     __evaluateRMX(data, in);
     break;
   case OPC_LOCOV: /* 0x24 */
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Loco velocity" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco velocity" );
     break;
   case OPC_LOCOF: /* 0x28 */
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Loco functions" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loco functions" );
     break;
   case OPC_PT: /* 0x28 */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT" );
