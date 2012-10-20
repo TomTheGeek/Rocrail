@@ -347,9 +347,9 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
     byte pin  = 0x01 << ( wSwitch.getport1( node ) - 1 );
     byte mask = ~pin;
 
-    out[0] = PCKT;
-    out[1] = 6;
-    out[2] = OPC_WRITESX;
+    out[0] = PCKT;          /* message header */
+    out[1] = 7;             /* message length including header and checksum byte */
+    out[2] = OPC_WRITESX;   /* meassage type */
     out[3] = bus;
     out[4] = addr;
     out[5] = 0x01 << ( wSwitch.getport1( node ) - 1 );
@@ -377,7 +377,7 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
     byte mask = ~pin;
 
     out[0] = PCKT;
-    out[1] = 6;
+    out[1] = 7;
     out[2] = OPC_WRITESX;
     out[3] = bus;
     out[4] = addr;
@@ -394,9 +394,6 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
         "switch addr %d, port %d, cmd %s", addr, wSwitch.getport1( node ), wSwitch.getcmd( node ) );
     return 7;
   }
-
-
-
 
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
@@ -453,11 +450,12 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
         wLoc.getid(node), wLoc.getaddr(node), speed, spcnt, fn?"on":"off", dir?"forwards":"reverse" );
 
     out[0] = PCKT;
-    out[1] = 0x07;
+    out[1] = 7;
     out[2] = OPC_LOCOV;
     out[3] = slot->index;
     out[4] = speed + (dir?0x00:0x80);
     out[5] = (dir?0x00:0x01);
+    *opcode = OPC_LOCOV;
     return 7;
 
   }
@@ -501,13 +499,14 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
     f0 = slot->lights;
 
     out[0] = PCKT;
-    out[1] = 0x08;
+    out[1] = 8;
     out[2] = OPC_LOCOF;
     out[3] = slot->index;
     out[4] = (f0 << 0 | f1 << 1 | f2 << 2 | f3 << 3 | f4 << 4 | f5 << 5 | f6 << 6 | f7 << 7);
     out[5] = (f8 << 0 | f9 << 1 | f10 << 2 | f11 << 3 | f12 << 4 | f13 << 5 | f14 << 6 | f15 << 7);
     out[6] = (f16 << 0 | f17 << 1 | f18 << 2 | f19 << 3 | f20 << 4 | f21 << 5 | f22 << 6 | f23 << 7);
-    return 7;
+    *opcode = OPC_LOCOF;
+    return 8;
 
   }
 
@@ -671,14 +670,16 @@ static Boolean __evaluateRsp( iORmxData data, byte* out, int outsize, byte* in, 
 
 static Boolean __readPacket( iORmxData data, byte* in ) {
   Boolean rc = data->dummyio;
-
+  /* byte 0 is message header, byte 1 is message length including header and checksum byte */
   if( !data->dummyio ) {
     rc = SerialOp.read( data->serial, in, 2 );
     if( rc && in[0] == 0x7D) {
       int insize = in[1];
       rc = SerialOp.read( data->serial, in+2, insize - 2 );
       if( rc ) {
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Message received" );
         TraceOp.dump( name, TRCLEVEL_BYTE, in, insize );
+        rc = __isChecksum(in);
       }
       else {
         /* error reading data */
@@ -688,6 +689,7 @@ static Boolean __readPacket( iORmxData data, byte* in ) {
     else {
       /* error reading header */
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error reading header" );
+      rc = False;
     }
   }
 
@@ -702,20 +704,19 @@ static Boolean __transact( iORmxData data, byte* out, byte* in, byte opcode ) {
     int outsize = out[1];
     int insize  = 0;
     __addChecksum(out);
-
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Message send" );
     TraceOp.dump( name, TRCLEVEL_BYTE, out, outsize );
     if( !data->dummyio ) {
       if( rc = SerialOp.write( data->serial, out, outsize ) ) {
         if( in != NULL ) {
-          if( __readPacket( data, in ) ) {
-            int retries = 0;
-            rc = False;
-            while( !rc && retries < 128 ) {
+          int retries = 0;
+          rc = False;
+          while( !rc && retries <128 ) {    /* keep reading until a message with the correct opcode answer is received, but max 128 times */
+            if( __readPacket( data, in ) ) {
               rc = __evaluateRsp(data, out, outsize, in, insize, opcode);
               if( !rc )
                 ThreadOp.sleep(10);
               retries++;
-
             }
           }
         }
