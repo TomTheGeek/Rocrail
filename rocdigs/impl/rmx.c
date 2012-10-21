@@ -232,7 +232,7 @@ static iOSlot __getRmxSlot(iORmxData data, iONode node) {
   cmd[3] = addr / 256;
   cmd[4] = addr % 256;
   if( __transact( data, cmd, rsp, OPC_RMXCHANEL ) ) {
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "got RMX Chanel %d for %s", rsp[5], wLoc.getid(node) );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "got RMX Channel %d for %s", rsp[5], wLoc.getid(node) );
     slot = allocMem( sizeof( struct slot) );
     slot->addr = addr;
     slot->index = rsp[5];
@@ -424,11 +424,7 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
     int  speed = 0;
     byte in = 0;
-    Boolean fn = wLoc.isfn( node );
     int    dir = wLoc.isdir( node );
-    int  spcnt = wLoc.getspcnt( node );
-
-    int index = 0;
 
     iOSlot slot = __getSlot(data, node );
 
@@ -437,7 +433,7 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
       return 0;
     }
 
-    spcnt = slot->steps;
+    int spcnt = slot->steps;
 
     if( wLoc.getV( node ) != -1 ) {
       if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
@@ -446,15 +442,15 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
         speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
     }
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc=%s addr=%d speed=%d steps=%d lights=%s dir=%s",
-        wLoc.getid(node), wLoc.getaddr(node), speed, spcnt, fn?"on":"off", dir?"forwards":"reverse" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc=%s addr=%d speed=%d steps=%d dir=%s",
+        wLoc.getid(node), wLoc.getaddr(node), speed, spcnt, dir?"forwards":"reverse" );
 
     out[0] = PCKT;
     out[1] = 7;
     out[2] = OPC_LOCOV;
     out[3] = slot->index;
-    out[4] = speed + (dir?0x00:0x80);
-    out[5] = (dir?0x00:0x01);
+    out[4] = speed;
+    out[5] = (dir?0x01:0x00);    /* 0x01 is forwards, 0x00 is reverse */
     *opcode = OPC_LOCOV;
     return 7;
 
@@ -462,7 +458,7 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
 
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
-    Boolean f0  = False;
+    Boolean f0  = wFunCmd.isf0 ( node );
     Boolean f1  = wFunCmd.isf1 ( node );
     Boolean f2  = wFunCmd.isf2 ( node );
     Boolean f3  = wFunCmd.isf3 ( node );
@@ -494,9 +490,7 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
       return 0;
     }
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "function command for %s", wLoc.getid(node) );
-
-    f0 = slot->lights;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "function command for %s, function %d", wLoc.getid(node), wFunCmd.getfnchanged(node) );
 
     out[0] = PCKT;
     out[1] = 8;
@@ -832,12 +826,12 @@ static void __rmxReader( void* threadinst ) {
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RMX connection is initialized." );
         { /* bus 0 */
-          byte out[] = { PCKT,0x06,OPC_MODE,0x00,0x20,0x00 };
+          byte out[] = { PCKT,0x06,OPC_MODE,0x00,0xA0,0x00 };
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Monitoring bus 0 request..." );
           __transact(data, out, buffer, OPC_STATUS );
         }
         { /* bus 1 */
-          byte out[] = { PCKT,0x06,OPC_MODE,0x01,0x20,0x00 };
+          byte out[] = { PCKT,0x06,OPC_MODE,0x01,0xA0,0x00 };
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Monitoring bus 1 request..." );
           __transact(data, out, buffer, OPC_STATUS );
         }
