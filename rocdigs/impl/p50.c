@@ -608,7 +608,7 @@ static iOP50 _inst( const iONode settings, const iOTrace trace ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate   = %d", data->bps );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bits       = %d", data->bits );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stop bits  = %d", data->stopBits );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow       = %s", data->flow );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow       = %s", flow );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout    = %d", data->timeout );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ctsretry   = %d", data->ctsretry );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "readfb     = %d", data->readfb );
