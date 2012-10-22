@@ -563,7 +563,7 @@ static void __handleSensor(iOBiDiB bidib, int bus, int addr, Boolean state, int 
   if( type == 1 ) sType = "accessory-addr";
   if( type == 3 ) sType = "ext-accessory";
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "sensor-addr=%d state=%s ident=%d type=%s", addr, state?"occ":"free", locoAddr, sType );
+      "sensor bus=%08X addr=%d state=%s ident=%d type=%s", bus, addr, state?"occ":"free", locoAddr, sType );
 
   if( type == -1 || type == 0 || type == 2 ) {
     /* occ event */
@@ -1456,7 +1456,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
 
   case MSG_BM_CONFIDENCE:
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_BM_CONFIDENCE: path=%s void=%d freeze=%d signal=%d", pathKey, pdata[0], pdata[1], pdata[2] );
     break;
 

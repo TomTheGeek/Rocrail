@@ -145,6 +145,7 @@ const char* bidibGetFeatureName(int feature) {
   if( feature == FEATURE_GEN_LOK_DB_SIZE ) return "DCC loco DB size";
   if( feature == FEATURE_GEN_LOK_DB_STRING ) return "DCC loco DB string";
   if( feature == FEATURE_GEN_SERVICE_MODES ) return "DCC service modes";
+  if( feature == FEATURE_GEN_DRIVE_BUS ) return "DCC bus driver";
 
   if( feature == FEATURE_FW_UPDATE_MODE ) return "firmware update mode";
   if( feature == FEATURE_EXTENSION ) return "reserved for future expansion";
