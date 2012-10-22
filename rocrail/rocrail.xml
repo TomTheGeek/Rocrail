@@ -1126,7 +1126,7 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="slaveID" vt="const char*"/>
     </fun>
-    <data include="mvtrack,modplan,$rocint/public/analyserint">
+    <data include="mvtrack,modplan">
       <var name="callback" vt="model_listener"/>
       <var name="cbCargo" vt="obj"/>
       <var name="healthy" vt="Boolean"/>
@@ -1177,7 +1177,6 @@
       <var name="pendinginitfield" vt="Boolean"/>
       <var name="pendingstartall" vt="Boolean"/>
       <var name="muxSysEvent" vt="iOMutex"/>
-      <var name="analyser" vt="iIAnalyserInt"/>
       <var name="timedoff" vt="iOThread"/>
     </data>
     <struct name="LevelList" typedef="*iOLevelList">
@@ -2213,6 +2212,25 @@
     </data>
   </object>
 
+  <object name="Analyse" use="trace,node,map" include="model" remark="Track plan analyser.">
+    <fun name="inst" vt="this">
+      <param name="cleanrun" vt="Boolean" remark="Clean"/>
+    </fun>
+    <fun name="analyse" vt="void">
+      <param name="inst" vt="this" remark="Analyse instance."/>
+    </fun>
+    <fun name="checkPlanHealth" vt="Boolean">
+      <param name="model" vt="iONode" remark="Model node"/>
+    </fun>
+    <data>
+      <var name="plan" vt="iONode"/>
+      <var name="objectmap" vt="iOMap"/>
+      <var name="prelist" vt="iOList"/>
+      <var name="bklist" vt="iOList"/>
+      <var name="bkoccitemlist" vt="iOList"/>
+      <var name="model" vt="iOModel"/>
+    </data>
+  </object>
 
 
 </Project>

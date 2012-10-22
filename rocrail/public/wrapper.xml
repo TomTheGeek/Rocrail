@@ -1315,6 +1315,11 @@
         <var name="ctcgateled2" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
         <var name="ctcasswitchled2" vt="bool" defval="false" remark="send a switch command"/>
 
+        <!-- Track Driver support (Dinamo)-->
+        <var name="tdiid" vt="string" defval="NULL" range="*" remark="TD interface id"/>
+        <var name="tdaddr" vt="int" defval="0" range="0-*" remark="TD address"/>
+        <var name="tdport" vt="int" defval="0" range="0-*" remark="TD output port"/>
+        <var name="td" vt="bool" defval="false" remark="trackdriver connected to this block"/>
 
         <actionctrl cardinality="n"/>
         <accessoryctrl wrappername="AccessoryCtrl">

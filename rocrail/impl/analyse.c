@@ -82,7 +82,7 @@ For the Analyzer to work the Plan has to fullfill:
 - only one item at one position
  */
 
-#include "analyser/impl/analyse_impl.h"
+#include "rocrail/impl/analyse_impl.h"
 
 #include "rocs/public/mem.h"
 #include "rocs/public/trace.h"
@@ -102,8 +102,17 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
+#include "rocrail/wrapper/public/Ctrl.h"
+#include "rocrail/wrapper/public/RocRail.h"
+#include "rocrail/wrapper/public/Action.h"
+#include "rocrail/wrapper/public/ActionCtrl.h"
+#include "rocrail/wrapper/public/Location.h"
+#include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Output.h"
 
 
+#include "rocrail/public/app.h"
+#include "rocrail/public/model.h"
 #include "rocrail/public/track.h"
 #include "rocrail/public/switch.h"
 #include "rocrail/public/signal.h"
@@ -247,7 +256,7 @@ static const int BlockCX = 4;
 #define oriSouth2 7
 
 static const Boolean analyserStrict = True;
-static Boolean cleanrun = False; // Will clean all autogenroutes and all route representation
+static Boolean cleanrun = False; /* Will clean all autogenroutes and all route representation*/
 
 static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel);
 static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList occ, int travel,
@@ -276,7 +285,6 @@ static char* __createKey( char* key, iONode node, int xoffset, int yoffset, int 
 
 static void __prepare(iOAnalyse inst, iOList list, int modx, int mody, Boolean modplan) {
   iOAnalyseData data = Data(inst);
-  //iOList bklist = ListOp.inst();
   char key[32] = {'\0'};
 
 
@@ -405,7 +413,7 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody, Boolean m
     else
       node = NULL;
   };
-  //return bklist;
+  /*return bklist;*/
 }
 
 
@@ -457,7 +465,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
     /* missing default values */
     if( itemori == NULL) {
       itemori = "west";
-      //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set default");
+      /*TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set default");*/
     }
 
     /* curve -> change dir */
@@ -610,42 +618,34 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
         /* coming from the frog -> straight line */
         else if( travel == 0 &&  StrOp.equals( itemori, "west" )
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
           *turnoutstate_out = 0;
           return travel;
         } else if( travel == 0 &&  StrOp.equals( itemori, "east" )
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
           *turnoutstate_out = 0;
           return travel;
         } else if( travel == 1 &&  StrOp.equals( itemori, "south" )
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
           *turnoutstate_out = 0;
           return travel;
         } else if( travel == 1 &&  StrOp.equals( itemori, "north" )
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
           *turnoutstate_out = 0;
           return travel;
         } else if( travel == 2 &&  StrOp.equals( itemori, "east" )
                && StrOp.equals( wItem.gettype(item), "right" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
           *turnoutstate_out = 0;
           return travel;
         } else if( travel == 2 &&  StrOp.equals( itemori, "west" )
                && StrOp.equals( wItem.gettype(item), "left" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
           *turnoutstate_out = 0;
           return travel;
         } else if( travel == 3 &&  StrOp.equals( itemori, "north" )
               && StrOp.equals( wItem.gettype(item), "right" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
           *turnoutstate_out = 0;
           return travel;
         } else if( travel == 3 &&  StrOp.equals( itemori, "south" )
               && StrOp.equals( wItem.gettype(item), "left" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming STRAIGHT" );
           *turnoutstate_out = 0;
           return travel;
         }
@@ -653,42 +653,34 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
         /* coming from the frog -> diverging line */
         else if( travel == 0 &&  StrOp.equals( itemori, "north" )
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
           *turnoutstate_out = 1;
           return oriSouth;
         } else if( travel == 0 &&  StrOp.equals( itemori, "north" )
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
           *turnoutstate_out = 1;
           return oriNorth;
         } else if( travel == 1 &&  StrOp.equals( itemori, "west" )
                 && StrOp.equals( wItem.gettype(item), "right" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
           *turnoutstate_out = 1;
           return oriWest;
         } else if( travel == 1 &&  StrOp.equals( itemori, "west" )
                 && StrOp.equals( wItem.gettype(item), "left" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
           *turnoutstate_out = 1;
           return oriEast;
         } else if( travel == 2 &&  StrOp.equals( itemori, "south" )
                && StrOp.equals( wItem.gettype(item), "right" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
           *turnoutstate_out = 1;
           return oriNorth;
         } else if( travel == 2 &&  StrOp.equals( itemori, "south" )
                && StrOp.equals( wItem.gettype(item), "left" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
           *turnoutstate_out = 1;
           return oriSouth;
         } else if( travel == 3 &&  StrOp.equals( itemori, "east" )
               && StrOp.equals( wItem.gettype(item), "right" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
           *turnoutstate_out = 1;
           return oriEast;
         } else if( travel == 3 &&  StrOp.equals( itemori, "east" )
               && StrOp.equals( wItem.gettype(item), "left" ) ) {
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " coming DIVERGE" );
           *turnoutstate_out = 1;
           return oriWest;
         }
@@ -703,7 +695,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
             return travel;
           }
 
-          if( !wSwitch.isdir(item)  ) { // left
+          if( !wSwitch.isdir(item)  ) { /* left */
             if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
               if( (travel == 1) || (travel == 2)) {
                 *x = 1;
@@ -718,7 +710,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
               }
               return travel;
             }
-          } else if( wSwitch.isdir(item) ) { // right
+          } else if( wSwitch.isdir(item) ) { /* right */
             if( StrOp.equals( itemori, "west" ) || StrOp.equals( itemori, "east" )) {
               if ( (travel == 3) || (travel == 2) ) {
                 *x = 1;
@@ -773,7 +765,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
           /*TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " +++++++%d+itemori:[%s]+++++++ dcrossing travel: %d turnoutstate: %d",
               wSwitch.isdir(item),itemori,travel, turnoutstate );*/
 
-          if( !wSwitch.isdir(item)  ) { // left
+          if( !wSwitch.isdir(item)  ) { /* left */
             if( StrOp.equals( itemori, "west" ) ) {
               if( (travel == 0) ) {
                 if ( turnoutstate == 0) {
@@ -836,7 +828,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                 }
               }
             }
-            else if( StrOp.equals( itemori, "north" )) { // left north
+            else if( StrOp.equals( itemori, "north" )) { /* left north */
               if( (travel == 0) ) {
                 if ( turnoutstate == 1) {
                   return travel+dcrossing;
@@ -898,7 +890,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                 }
               }
             }
-          } else if( wSwitch.isdir(item) ) { // right
+          } else if( wSwitch.isdir(item) ) { /* right */
             if( StrOp.equals( itemori, "west" )) {
               if( (travel == 0) ) {
                 if ( turnoutstate == 0) {
@@ -930,7 +922,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                 }
               }
             }
-              if( StrOp.equals( itemori, "east" )) { // right east
+              if( StrOp.equals( itemori, "east" )) { /* right east */
                if( (travel == 0) ) {
                  if ( turnoutstate == 0) {
                    return travel+dcrossing;
@@ -961,7 +953,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                  }
                }
             }
-              else if( StrOp.equals( itemori, "north" )) { // right north
+              else if( StrOp.equals( itemori, "north" )) { /* right north */
               if( (travel == 0) ) {
                 if ( turnoutstate == 1) {
                   *y = 1;
@@ -992,7 +984,7 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
                 }
               }
             }
-            else if( StrOp.equals( itemori, "south" )) { // right south
+            else if( StrOp.equals( itemori, "south" )) { /* right south */
               if( (travel == 0) ) {
                 if ( turnoutstate == 1) {
                   *y = 1;
@@ -1034,11 +1026,11 @@ static int __travel( iONode item, int travel, int turnoutstate, int * turnoutsta
 
           if( StrOp.equals( itemori, "west" )) {
             if( (travel == 0) ) {
-              if( turnoutstate == 0) { // center
+              if( turnoutstate == 0) { /* center */
                 return travel+threeWayTurnout;
-              } else if (turnoutstate == 1) { // left
+              } else if (turnoutstate == 1) { /* left */
                 return oriSouth+threeWayTurnout;
-              } else if (turnoutstate == 2) { // right
+              } else if (turnoutstate == 2) { /* right */
                 return oriNorth+threeWayTurnout;
               }
             }
@@ -1186,7 +1178,6 @@ static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList rout
         break;
      }
 
-     //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next key: %s", key);
      iONode nextitem = (iONode)MapOp.get( data->objectmap, key);
 
      if( nextitem != NULL ) {
@@ -1314,11 +1305,11 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found counterpart for: [%s] counterpart: [%s]",
             wItem.getid(item),   wTrack.getcounterpartid(item) );
 
-        iOTrack track = data->model->getTrack( data->model, wTrack.getcounterpartid(item) );
+        iOTrack track = ModelOp.getTrack( data->model, wTrack.getcounterpartid(item) );
 
         /* go on at the connector */
         if( track != NULL) {
-          iONode nextitem = track->base.properties(track);
+          iONode nextitem = TrackOp.base.properties(track);
 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "continue at counterpart: [%s]",
                       wItem.getid(nextitem) );
@@ -1404,7 +1395,6 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
        break;
     }
 
-    //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next key: %s", key);
     nextitem = (iONode)MapOp.get( data->objectmap, key);
 
     if( nextitem != NULL) {
@@ -1445,7 +1435,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
           }
         }
 
-      } // if sg
+      } /* if sg */
 
       int travelp = __travel(nextitem, travel, turnoutstate, &turnoutstate_out, &x, &y, "");
       if( (travelp == itemNotInDirection || travelp == -1) && travelp != dcrossingAhead) {
@@ -1549,8 +1539,8 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
 
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "dcrossing travel: %d travelp: %d", travel, travelp );
 
-          // rows: travel
-          // cols: itemori
+          /* rows: travel */
+          /* cols: itemori */
 
           const int left[16][2] = {{0,2},{1,2},{0,3},{1,3},
                                    {1,2},{0,3},{1,3},{0,2},
@@ -1565,10 +1555,10 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
           int state1 = 0;
           int state2 = 0;
 
-          if( !wSwitch.isdir(nextitem) ) {// left
+          if( !wSwitch.isdir(nextitem) ) {/* left */
             state1 = left[__getOri(nextitem)*4+travelp][0];
             state2 = left[__getOri(nextitem)*4+travelp][1];
-          } else if( wSwitch.isdir(nextitem) ) {// right
+          } else if( wSwitch.isdir(nextitem) ) {/* right */
             state1 = right[__getOri(nextitem)*4+travelp][0];
             state2 = right[__getOri(nextitem)*4+travelp][1];
           }
@@ -1583,7 +1573,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList o
           return True;
         }
 
-      } // if bk || sw
+      } /* if bk || sw */
 
       depth++;
       __analyseItem(inst, nextitem, route, occ, travel, turnoutstate, depth, searchingSignal, behindABlock);
@@ -1645,7 +1635,7 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel
 
 static void __analyseOccList(iOAnalyse inst) {
   iOAnalyseData data = Data(inst);
-  iONode model = data->model->getModel( data->model);
+  iONode model = ModelOp.getModel( data->model);
 
   iOList occlist = (iOList)ListOp.first( data->bkoccitemlist );
   while(occlist) {
@@ -1658,30 +1648,28 @@ static void __analyseOccList(iOAnalyse inst) {
 
       if( StrOp.equals( NodeOp.getName(item), "bk") ) {
 
-        iIBlockBase blockb = data->model->getBlock( data->model, wItem.getid(item) );
+        iIBlockBase blockb = ModelOp.getBlock( data->model, wItem.getid(item) );
         block = blockb->base.properties( blockb);
-
-        //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ");
 
         bk = wItem.getid(item);
       } else {
 
         iONode node = NULL;
         if( StrOp.equals( NodeOp.getName(item), "tk") ) {
-          iOTrack track = data->model->getTrack( data->model, wItem.getid(item) );
-          node = track->base.properties(track);
+          iOTrack track = ModelOp.getTrack( data->model, wItem.getid(item) );
+          node = TrackOp.base.properties(track);
         }
         if( StrOp.equals( NodeOp.getName(item), "fb") ) {
-          iOFBack track = data->model->getFBack( data->model, wItem.getid(item) );
-          node = track->base.properties(track);
+          iOFBack track = ModelOp.getFBack( data->model, wItem.getid(item) );
+          node = FBackOp.base.properties(track);
         }
         if( StrOp.equals( NodeOp.getName(item), "sg") ) {
-          iOSignal track = data->model->getSignal( data->model, wItem.getid(item) );
-          node = track->base.properties(track);
+          iOSignal track = ModelOp.getSignal( data->model, wItem.getid(item) );
+          node = SignalOp.base.properties(track);
         }
         if( StrOp.equals( NodeOp.getName(item), "sw") ) {
-          iOSwitch track = data->model->getSwitch( data->model, wItem.getid(item) );
-          node = track->base.properties(track);
+          iOSwitch track = ModelOp.getSwitch( data->model, wItem.getid(item) );
+          node = SwitchOp.base.properties(track);
 
           /*
           const char * prev = wBlock.getturnoutstolock(block);
@@ -1707,18 +1695,17 @@ static void __analyseOccList(iOAnalyse inst) {
 
           }*/
 
-        } // if sw
+        } /* if sw */
 
         if( node != NULL) {
           wItem.setblockid(node, bk);
         }
-      } // if bk
+      } /* if bk */
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, " OCCITEM: [%s] for: [%s] ", wItem.getid(item), bk);
       item = (iONode)ListOp.next( occlist );
     }
 
-    //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ");
     occlist = (iOList)ListOp.next( data->bkoccitemlist );
   }
 
@@ -1726,7 +1713,7 @@ static void __analyseOccList(iOAnalyse inst) {
 
 static void __analyseList(iOAnalyse inst) {
   iOAnalyseData data = Data(inst);
-  iONode model = data->model->getModel( data->model);
+  iONode model = ModelOp.getModel( data->model);
   iONode stlist = wPlan.getstlist(model);
 
 
@@ -1781,7 +1768,7 @@ static void __analyseList(iOAnalyse inst) {
     Boolean endsonasignal = False;
     Boolean signalreached = False;
 
-    // Feedback generation
+    /* Feedback generation */
     Boolean addFeedbacks = False;
 
     int count = 0;
@@ -1812,7 +1799,6 @@ static void __analyseList(iOAnalyse inst) {
     wRoute.setbkbside( newRoute, StrOp.equals( bkbside, "+" )?True:False );
 
     Boolean addToList = True;
-    //childcnt = NodeOp.getChildCnt( stlist);
     for( i = 0; i <NodeOp.getChildCnt( stlist); i++) {
       child = NodeOp.getChild( stlist, i);
 
@@ -1888,7 +1874,7 @@ static void __analyseList(iOAnalyse inst) {
           wFeedbackEvent.setaction( fbevent, "enter");
           wFeedbackEvent.setfrom( fbevent, wRoute.isbkaside( newRoute)?"all":"all-reverse");
 
-          iIBlockBase block = data->model->getBlock( data->model, wRoute.getbka( newRoute) );
+          iIBlockBase block = ModelOp.getBlock( data->model, wRoute.getbka( newRoute) );
           iONode blocknode = block->base.properties(block);
           NodeOp.addChild( blocknode, fbevent );
         }
@@ -1904,7 +1890,7 @@ static void __analyseList(iOAnalyse inst) {
           wFeedbackEvent.setaction( fbevent, "in");
           wFeedbackEvent.setfrom( fbevent, wRoute.isbkbside( newRoute)?"all":"all-reverse");
 
-          iIBlockBase block = data->model->getBlock( data->model, wRoute.getbkb( newRoute) );
+          iIBlockBase block = ModelOp.getBlock( data->model, wRoute.getbkb( newRoute) );
           iONode blocknode = block->base.properties(block);
           NodeOp.addChild( blocknode, fbevent );
         }
@@ -1920,18 +1906,18 @@ static void __analyseList(iOAnalyse inst) {
         iONode tracknode = NULL;
 
         if( StrOp.equals( NodeOp.getName(item), "tk") ) {
-          iOTrack track = data->model->getTrack( data->model, wItem.getid(item) );
-          tracknode = track->base.properties(track);
+          iOTrack track = ModelOp.getTrack( data->model, wItem.getid(item) );
+          tracknode = TrackOp.base.properties(track);
         }
 
         if( StrOp.equals( NodeOp.getName(item), "fb") ) {
-          iOFBack track = data->model->getFBack( data->model, wItem.getid(item) );
-          tracknode = track->base.properties(track);
+          iOFBack track = ModelOp.getFBack( data->model, wItem.getid(item) );
+          tracknode = FBackOp.base.properties(track);
         }
 
         if( StrOp.equals( NodeOp.getName(item), "sg") ) {
-          iOSignal track = data->model->getSignal( data->model, wItem.getid(item) );
-          tracknode = track->base.properties(track);
+          iOSignal track = ModelOp.getSignal( data->model, wItem.getid(item) );
+          tracknode = SignalOp.base.properties(track);
 
           if( StrOp.equals( wItem.getstate(item), "yes" ) && !reachedEndblock){
 
@@ -1946,7 +1932,7 @@ static void __analyseList(iOAnalyse inst) {
             signalreached = True;
 
             /* add signals to the block ... */
-            iIBlockBase block = data->model->getBlock( data->model, bka );
+            iIBlockBase block = ModelOp.getBlock( data->model, bka );
             iONode blocknode = block->base.properties(block);
 
             if( !StrOp.equals( bkaside, "+") ) {
@@ -1978,7 +1964,7 @@ static void __analyseList(iOAnalyse inst) {
           char * prevrouteids = StrOp.dup( wItem.getrouteids(tracknode) );
           if( prevrouteids != NULL ) {
             iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
-            // check if id is all ready in the list
+            /* check if id is all ready in the list */
             Boolean isInList = False;
             while ( StrTokOp.hasMoreTokens( tok )) {
               const char * token = StrTokOp.nextToken( tok );
@@ -1996,7 +1982,7 @@ static void __analyseList(iOAnalyse inst) {
             }
 
             StrTokOp.base.del(tok);
-            } else { // empty attribute
+            } else { /* empty attribute */
             wItem.setrouteids(tracknode, wRoute.getid( newRoute) );
           }
           StrOp.free(prevrouteids);
@@ -2011,7 +1997,7 @@ static void __analyseList(iOAnalyse inst) {
             iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
             while ( StrTokOp.hasMoreTokens( tok )) {
               const char * token = StrTokOp.nextToken( tok );
-              // check if id starts with autogen- 
+              /* check if id starts with autogen- */
               if( ( StrOp.len(token) > 0 ) && ( ! StrOp.startsWith( token, "autogen-") ) ) {
                 /* not "autogen-" so append to new list*/
                 if( StrOp.len(userrouteids)>0 ) {
@@ -2026,7 +2012,7 @@ static void __analyseList(iOAnalyse inst) {
           StrOp.free(userrouteids);
           StrOp.free(prevrouteids);
         }
-      } // tk || fb || sw
+      } /* tk || fb || sw */
 
       bkb = wRoute.getbkb( newRoute);
       item = (iONode)ListOp.next( routelist );
@@ -2093,8 +2079,7 @@ static int * _getConnection( iONode item, int * cons ) {
 }
 
 
-static void _analyse(iIAnalyserInt o) {
-  iOAnalyse inst = (iOAnalyse)o;
+static void _analyse(iOAnalyse inst) {
   iOAnalyseData data = Data(inst);
   iONode block = NULL;
   int cx, cy;
@@ -2105,15 +2090,15 @@ static void _analyse(iIAnalyserInt o) {
   ListOp.clear(data->bklist);
   ListOp.clear(data->bkoccitemlist);
 
-  iONode modplan = data->model->getModPlan( data->model);
+  iONode modplan = ModelOp.getModPlan( data->model);
   if( modplan == NULL) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "not a modplan" );
 
     int i;
-    for( i = 0; i < 100; i++) { // ???
+    for( i = 0; i < 100; i++) { /* ??? */
 
-    iOList list = data->model->getLevelItems( data->model, i, &cx, &cy, True);
+    iOList list = ModelOp.getLevelItems( data->model, i, &cx, &cy, True);
 
       if( ListOp.size(list) > 0) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -2126,7 +2111,7 @@ static void _analyse(iIAnalyserInt o) {
     iONode mod = wModPlan.getmodule( modplan );
     while( mod != NULL ) {
 
-      iOList list = data->model->getLevelItems( data->model, zlevel, &cx, &cy, True);
+      iOList list = ModelOp.getLevelItems( data->model, zlevel, &cx, &cy, True);
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
            "preparing module: %s", wModule.gettitle( mod) );
@@ -2149,11 +2134,11 @@ static void _analyse(iIAnalyserInt o) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "  ITEM: %s - %s", NodeOp.getName( object), wItem.getid( object));
 
-      // position
+      /* position */
       int x = wItem.getx( object);
       int y = wItem.gety( object);
 
-      // size
+      /* size */
       int cx = 1;
       int cy = 1;
 
@@ -2177,9 +2162,6 @@ static void _analyse(iIAnalyserInt o) {
             cy = tmp;
       }
 
-      //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-       //                 "x: %d y: %d  cx: %d cy: %d ", x, y, cx, cy);
-
       char key[32] = {'\0'};
 
       int tmp = 0;
@@ -2187,26 +2169,24 @@ static void _analyse(iIAnalyserInt o) {
 
       for (i = 0; i < 4; i++) {
 
-        // get the neighbor keys
+        /* get the neighbor keys */
         switch(i) {
           case 0:
-            StrOp.fmtb( key, "%d-%d-%d", x-1, y, wItem.getz( object) ); break; // west
+            StrOp.fmtb( key, "%d-%d-%d", x-1, y, wItem.getz( object) ); break; /* west */
           case 1:
-            StrOp.fmtb( key, "%d-%d-%d", x, y-1, wItem.getz( object) ); break; // north
+            StrOp.fmtb( key, "%d-%d-%d", x, y-1, wItem.getz( object) ); break; /* north */
           case 2:
-            StrOp.fmtb( key, "%d-%d-%d", x+cx, y, wItem.getz( object) ); break; // east
+            StrOp.fmtb( key, "%d-%d-%d", x+cx, y, wItem.getz( object) ); break; /* east */
           case 3:
-            StrOp.fmtb( key, "%d-%d-%d", x, y+cy, wItem.getz( object) ); break; // south
+            StrOp.fmtb( key, "%d-%d-%d", x, y+cy, wItem.getz( object) ); break; /* south */
         }
 
 
         iONode item = (iONode)MapOp.get( data->objectmap, key);
         if( item != NULL) {
 
-          // can we go there?
+          /* can we go there? */
           int travel = __travel( item, i, 0, &tmp, &tmp, &tmp, "");
-          //TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            //                "  - travel: %d", travel);
 
           if( travel == i ) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -2256,19 +2236,295 @@ static void _analyse(iIAnalyserInt o) {
 
 }
 
+static Boolean _checkPlanHealth(iONode model) {
+  char key[64] = {'\0'};
+  Boolean healthy = True;
+  iOMap xyzMap = MapOp.inst();
+  iOMap sensorMap = MapOp.inst();
+  iOMap switchMap = MapOp.inst();
+  int dbs = NodeOp.getChildCnt(model);
+  int i = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking plan health..." );
+
+  if( !wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: Block side routing is not enabled; The classic method is deprecated." );
+    healthy = False;
+  }
+
+  /* checking ID's */
+  for( i = 0; i < dbs; i++ ) {
+    iOMap idMap = MapOp.inst();
+    iONode db = NodeOp.getChild( model, i );
+    int items = NodeOp.getChildCnt(db);
+    int n = 0;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking list [%s]...", NodeOp.getName(db) );
+    for( n = 0; n < items; n++ ) {
+      iONode item = NodeOp.getChild( db, n );
+
+      if( StrOp.equals( wActionCtrl.name(), NodeOp.getName(item) ) ||
+          StrOp.equals( wAction.name(), NodeOp.getName(item) ) ||
+          StrOp.equals( wLocation.name(), NodeOp.getName(item) ))
+      {
+        /* Ignore */
+        continue;
+      }
+
+      /* check the basic addressing */
+      if( StrOp.equals( wLoc.name(), NodeOp.getName(item) ) ) {
+        if( wLoc.getaddr(item) == 0 && !StrOp.equals(wLoc.getprot(item), wLoc.prot_A) ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: loco %s has no address set", wItem.getid(item) );
+          healthy = False;
+        }
+      }
+
+      if( StrOp.equals( wFeedback.name(), NodeOp.getName(item) ) ) {
+        if( wFeedback.getaddr(item) == 0 ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: sensor %s has no address set", wItem.getid(item) );
+          healthy = False;
+        }
+        else {
+          char* key = FBackOp.createAddrKey( wFeedback.getbus(item), wFeedback.getaddr(item), wFeedback.getiid(item) );
+          if( MapOp.haskey(sensorMap, key ) ) {
+            iONode sensorItem = (iONode)MapOp.get( sensorMap, key );
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+                "ERROR: sensor %s has an already used address %d by %s (%s)",
+                wItem.getid(item), wFeedback.getaddr(item), wItem.getid(sensorItem), key );
+            healthy = False;
+          }
+          else {
+            MapOp.put( sensorMap, key, (obj)item );
+          }
+          StrOp.free( key );
+        }
+      }
+
+      if( StrOp.equals( wSwitch.name(), NodeOp.getName(item) ) ) {
+        if( wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
+          if( StrOp.equals( wSwitch.gettype(item), wSwitch.crossing ) || StrOp.equals( wSwitch.gettype(item), wSwitch.ccrossing ) ) {
+            /* crossing and centered crossing do not need an address */
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "INFO: crossing \"%s\" has no address.", wItem.getid(item) );
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: switch %s has no address set", wItem.getid(item) );
+            healthy = False;
+          }
+        }
+        else {
+          char key[32];
+          StrOp.fmtb( key, "%d-%d-%d-%s", wSwitch.getaddr1(item), wSwitch.getport1(item), wSwitch.getgate1(item), wItem.getiid(item) );
+          if( MapOp.haskey(switchMap, key ) ) {
+            iONode switchItem = (iONode)MapOp.get( switchMap, key );
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                "INFO: switch %s has an already used address %d-%d by %s (%s)",
+                wItem.getid(item), wSwitch.getaddr1(item), wSwitch.getport1(item), wItem.getid(switchItem), key );
+          }
+          else {
+            MapOp.put( switchMap, key, (obj)item );
+          }
+
+          if( ( StrOp.equals( wSwitch.gettype(item), wSwitch.dcrossing ) || StrOp.equals( wSwitch.gettype(item), wSwitch.threeway ) ) && ( wSwitch.getaddr2(item) > 0 || wSwitch.getport2(item) > 0 ) ) {
+            StrOp.fmtb( key, "%d-%d-%d-%s", wSwitch.getaddr2(item), wSwitch.getport2(item), wSwitch.getgate2(item), wItem.getiid(item) );
+            if( MapOp.haskey(switchMap, key ) ) {
+              iONode switchItem = (iONode)MapOp.get( switchMap, key );
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                  "INFO: switch %s has an already used second address %d-%d by %s (%s)",
+                  wItem.getid(item), wSwitch.getaddr2(item), wSwitch.getport2(item), wItem.getid(switchItem), key );
+            }
+            else {
+              MapOp.put( switchMap, key, (obj)item );
+            }
+          }
+        }
+      }
+
+      if( StrOp.equals( wOutput.name(), NodeOp.getName(item) ) ) {
+        if( wOutput.getaddr(item) > 0 || wOutput.getport(item) > 0 ) {
+          char key[32];
+          StrOp.fmtb( key, "%d-%d-%s", wOutput.getaddr(item), wOutput.getport(item), wItem.getiid(item) );
+          if( MapOp.haskey(switchMap, key ) ) {
+            iONode switchItem = (iONode)MapOp.get( switchMap, key );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "INFO: output %s has an already used address %d-%d by %s (%s)",
+                wItem.getid(item), wOutput.getaddr(item), wOutput.getport(item), wItem.getid(switchItem), key );
+          }
+          else {
+            MapOp.put( switchMap, key, (obj)item );
+          }
+        }
+      }
+
+      if( StrOp.equals( wSignal.name(), NodeOp.getName(item) ) ) {
+        if( wSignal.getaddr(item) == 0 && wSignal.getport1(item) == 0 ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: signal %s has no address set", wItem.getid(item) );
+          healthy = False;
+        }
+        else {
+          char key[32];
+          StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr(item), wSignal.getport1(item), wSignal.getgate1(item), wItem.getiid(item) );
+          if( MapOp.haskey(switchMap, key ) ) {
+            iONode switchItem = (iONode)MapOp.get( switchMap, key );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "INFO: signal %s has an already used first address %s by %s (%s)",
+                wItem.getid(item), key, wItem.getid(switchItem), key );
+          }
+          else {
+            MapOp.put( switchMap, key, (obj)item );
+          }
+        }
+
+        if( wSignal.getaddr2(item) > 0 || wSignal.getport2(item) > 0 ) {
+          char key[32];
+          StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr2(item), wSignal.getport2(item), wSignal.getgate2(item), wItem.getiid(item) );
+          if( MapOp.haskey(switchMap, key ) ) {
+            iONode switchItem = (iONode)MapOp.get( switchMap, key );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "INFO: signal %s has an already used second address %s by %s (%s)",
+                wItem.getid(item), key, wItem.getid(switchItem), key );
+          }
+          else {
+            MapOp.put( switchMap, key, (obj)item );
+          }
+        }
+
+        if( wSignal.getaspects(item) >= 3 && ( wSignal.getaddr3(item) > 0 || wSignal.getport3(item) > 0 ) ) {
+          char key[32];
+          StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr3(item), wSignal.getport3(item), wSignal.getgate3(item), wItem.getiid(item) );
+          if( MapOp.haskey(switchMap, key ) ) {
+            iONode switchItem = (iONode)MapOp.get( switchMap, key );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "INFO: signal %s has an already used third address %s by %s (%s)",
+                wItem.getid(item), key, wItem.getid(switchItem), key );
+          }
+          else {
+            MapOp.put( switchMap, key, (obj)item );
+          }
+        }
+
+        if( wSignal.getaspects(item) >= 4 && ( wSignal.getaddr4(item) > 0 || wSignal.getport4(item) > 0 ) ) {
+          char key[32];
+          StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr4(item), wSignal.getport4(item), wSignal.getgate4(item), wItem.getiid(item) );
+          if( MapOp.haskey(switchMap, key ) ) {
+            iONode switchItem = (iONode)MapOp.get( switchMap, key );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "INFO: signal %s has an already used fourth address %s by %s (%s)",
+                wItem.getid(item), key, wItem.getid(switchItem), key );
+          }
+          else {
+            MapOp.put( switchMap, key, (obj)item );
+          }
+        }
+      }
+
+
+
+      StrOp.fmtb( key, "%d-%d-%d", wItem.getx(item), wItem.gety(item), wItem.getz(item) );
+
+      if( MapOp.haskey(idMap, wItem.getid(item)) ) {
+        iONode firstItem = (iONode)MapOp.get(idMap, wItem.getid(item));
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "ERROR: object [%s] with id [%s] at [%d,%d,%d] already exist at [%d,%d,%d]",
+            NodeOp.getName(item), wItem.getid(item),
+            wItem.getx(item), wItem.gety(item), wItem.getz(item),
+            wItem.getx(firstItem), wItem.gety(firstItem), wItem.getz(firstItem));
+        healthy = False;
+      }
+      else {
+        MapOp.put(idMap, wItem.getid(item), (obj)item );
+      }
+
+      /* checking overlapping */
+      if( wItem.isshow(item) ) {
+        if( MapOp.haskey(xyzMap, key) ) {
+          iONode firstItem = (iONode)MapOp.get(xyzMap, key);
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+              "ERROR: object [%s] with id [%s] at [%d,%d,%d] overlaps object [%s] with id [%s]",
+              NodeOp.getName(item), wItem.getid(item),
+              wItem.getx(item), wItem.gety(item), wItem.getz(item),
+              NodeOp.getName(firstItem), wItem.getid(firstItem));
+          healthy = False;
+        }
+
+        if( wItem.getx(item) != -1 && wItem.gety(item) != -1 ) {
+          if( wItem.getx(item) < -1 || wItem.gety(item) < -1 ) {
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+                "ERROR: object [%s] with id [%s] has invalid coordinates [%d,%d,%d]",
+                NodeOp.getName(item), wItem.getid(item),
+                wItem.getx(item), wItem.gety(item), wItem.getz(item));
+            if( wItem.getx(item) < -1 )
+              wItem.setx(item, 0);
+            if( wItem.gety(item) < -1 )
+              wItem.sety(item, 0);
+            healthy = False;
+          }
+          else
+            MapOp.put(xyzMap, key, (obj)item );
+        }
+
+        if( wItem.getx(item) > 256 || wItem.gety(item) > 256 ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+              "ERROR: object [%s] with id [%s] has invalid coordinates [%d,%d,%d]",
+              NodeOp.getName(item), wItem.getid(item),
+              wItem.getx(item), wItem.gety(item), wItem.getz(item));
+          if( wItem.getx(item) > 256 )
+            wItem.setx(item, 0);
+          if( wItem.gety(item) > 256 )
+            wItem.sety(item, 0);
+          healthy = False;
+        }
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "INFO: invisible object [%s] with id [%s] and coordinates [%d,%d,%d]",
+            NodeOp.getName(item), wItem.getid(item),
+            wItem.getx(item), wItem.gety(item), wItem.getz(item));
+      }
+
+    }
+    MapOp.base.del(idMap);
+  }
+
+  /* check for very lonely objects */
+  if( MapOp.size(xyzMap) > 0 ) {
+    int items = MapOp.size(xyzMap);
+    int maxDist = 0;
+    iONode lonelyItem = NULL;
+    iONode item = (iONode)MapOp.first(xyzMap);
+    while( item != NULL ) {
+      if( maxDist < wItem.getx(item) + wItem.gety(item) ) {
+        /* use x + y coordinates as approach to sqrt( x^2 + y^2 ) */
+        maxDist = wItem.getx(item) + wItem.gety(item) ;
+        lonelyItem = item;
+      }
+      item = (iONode)MapOp.next(xyzMap);
+    }
+
+    if( lonelyItem != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "INFO: object [%s] with id [%s] at [%d,%d,%d] is the most far away object in the plan",
+          NodeOp.getName(lonelyItem), wItem.getid(lonelyItem),
+          wItem.getx(lonelyItem), wItem.gety(lonelyItem), wItem.getz(lonelyItem));
+    }
+  }
+
+  MapOp.base.del(xyzMap);
+  MapOp.base.del(sensorMap);
+  MapOp.base.del(switchMap);
+  return healthy;
+}
+
+
 
 /**  */
-static struct OAnalyse* _inst( iOModel model, iONode plan, Boolean CleanRun ,const iOTrace trc ) {
+static struct OAnalyse* _inst( Boolean CleanRun ) {
   iOAnalyse __Analyse = allocMem( sizeof( struct OAnalyse ) );
   iOAnalyseData data = allocMem( sizeof( struct OAnalyseData ) );
   MemOp.basecpy( __Analyse, &AnalyseOp, 0, sizeof( struct OAnalyse ), data );
 
-  TraceOp.set( trc );
-
   cleanrun = CleanRun;
   /* Initialize data->xxx members... */
-  data->model = model;
-  data->plan  = plan;
+  data->model = AppOp.getModel();
+  data->plan  = ModelOp.getModel(data->model);
   data->objectmap = MapOp.inst();
   data->prelist = ListOp.inst();
   data->bklist = ListOp.inst();
@@ -2277,14 +2533,7 @@ static struct OAnalyse* _inst( iOModel model, iONode plan, Boolean CleanRun ,con
   return __Analyse;
 }
 
-/* Support for dynamic Loading */
-iOAnalyse rocGetAnalyserInt( iOModel model, iONode plan, Boolean CleanRun ,const iOTrace trc )
-{
-  return (iOAnalyse)_inst( model, plan, CleanRun, trc );
-}
-
-
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
-#include "analyser/impl/analyse.fm"
+#include "rocrail/impl/analyse.fm"
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 
