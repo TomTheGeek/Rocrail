@@ -261,6 +261,7 @@ static Boolean cleanrun = False; /* Will clean all autogenroutes and all route r
 static void __analyseBlock(iOAnalyse inst, iONode block, const char * inittravel);
 static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, iOList occ, int travel,
     int turnoutstate, int depth, int searchingSignal, Boolean behindABlock);
+static Boolean _checkPlanHealth(iONode model);
 
 /* returns 0 for west, 1 for north, 2 for east and 3 for south */
 static int __getOri(iONode item ) {
@@ -270,6 +271,7 @@ static int __getOri(iONode item ) {
   if( StrOp.equals( wItem.north, ori ) ) return oriNorth;
   if( StrOp.equals( wItem.east , ori ) ) return oriEast;
   if( StrOp.equals( wItem.south, ori ) ) return oriSouth;
+  return oriWest;
 }
 
 static char* __createKey( char* key, iONode node, int xoffset, int yoffset, int zoffset) {
@@ -1206,7 +1208,7 @@ static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList rout
        }
      }
   }
-
+  return False;
 }
 
 
@@ -2245,10 +2247,10 @@ static Boolean _checkPlanHealth(iONode model) {
   int dbs = NodeOp.getChildCnt(model);
   int i = 0;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking plan health..." );
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checking plan health..." );
 
   if( !wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: Block side routing is not enabled; The classic method is deprecated." );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: Block side routing is not enabled; The classic method is deprecated." );
     healthy = False;
   }
 
@@ -2273,14 +2275,14 @@ static Boolean _checkPlanHealth(iONode model) {
       /* check the basic addressing */
       if( StrOp.equals( wLoc.name(), NodeOp.getName(item) ) ) {
         if( wLoc.getaddr(item) == 0 && !StrOp.equals(wLoc.getprot(item), wLoc.prot_A) ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: loco %s has no address set", wItem.getid(item) );
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: loco %s has no address set", wItem.getid(item) );
           healthy = False;
         }
       }
 
       if( StrOp.equals( wFeedback.name(), NodeOp.getName(item) ) ) {
         if( wFeedback.getaddr(item) == 0 ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: sensor %s has no address set", wItem.getid(item) );
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: sensor %s has no address set", wItem.getid(item) );
           healthy = False;
         }
         else {
@@ -2303,10 +2305,10 @@ static Boolean _checkPlanHealth(iONode model) {
         if( wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
           if( StrOp.equals( wSwitch.gettype(item), wSwitch.crossing ) || StrOp.equals( wSwitch.gettype(item), wSwitch.ccrossing ) ) {
             /* crossing and centered crossing do not need an address */
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "INFO: crossing \"%s\" has no address.", wItem.getid(item) );
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "INFO: crossing \"%s\" has no address.", wItem.getid(item) );
           }
           else {
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: switch %s has no address set", wItem.getid(item) );
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: switch %s has no address set", wItem.getid(item) );
             healthy = False;
           }
         }
@@ -2344,7 +2346,7 @@ static Boolean _checkPlanHealth(iONode model) {
           StrOp.fmtb( key, "%d-%d-%s", wOutput.getaddr(item), wOutput.getport(item), wItem.getiid(item) );
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                 "INFO: output %s has an already used address %d-%d by %s (%s)",
                 wItem.getid(item), wOutput.getaddr(item), wOutput.getport(item), wItem.getid(switchItem), key );
           }
@@ -2356,7 +2358,7 @@ static Boolean _checkPlanHealth(iONode model) {
 
       if( StrOp.equals( wSignal.name(), NodeOp.getName(item) ) ) {
         if( wSignal.getaddr(item) == 0 && wSignal.getport1(item) == 0 ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: signal %s has no address set", wItem.getid(item) );
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: signal %s has no address set", wItem.getid(item) );
           healthy = False;
         }
         else {
@@ -2364,7 +2366,7 @@ static Boolean _checkPlanHealth(iONode model) {
           StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr(item), wSignal.getport1(item), wSignal.getgate1(item), wItem.getiid(item) );
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                 "INFO: signal %s has an already used first address %s by %s (%s)",
                 wItem.getid(item), key, wItem.getid(switchItem), key );
           }
@@ -2378,7 +2380,7 @@ static Boolean _checkPlanHealth(iONode model) {
           StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr2(item), wSignal.getport2(item), wSignal.getgate2(item), wItem.getiid(item) );
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                 "INFO: signal %s has an already used second address %s by %s (%s)",
                 wItem.getid(item), key, wItem.getid(switchItem), key );
           }
@@ -2392,7 +2394,7 @@ static Boolean _checkPlanHealth(iONode model) {
           StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr3(item), wSignal.getport3(item), wSignal.getgate3(item), wItem.getiid(item) );
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                 "INFO: signal %s has an already used third address %s by %s (%s)",
                 wItem.getid(item), key, wItem.getid(switchItem), key );
           }
@@ -2406,7 +2408,7 @@ static Boolean _checkPlanHealth(iONode model) {
           StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr4(item), wSignal.getport4(item), wSignal.getgate4(item), wItem.getiid(item) );
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                 "INFO: signal %s has an already used fourth address %s by %s (%s)",
                 wItem.getid(item), key, wItem.getid(switchItem), key );
           }
@@ -2474,7 +2476,7 @@ static Boolean _checkPlanHealth(iONode model) {
         }
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
             "INFO: invisible object [%s] with id [%s] and coordinates [%d,%d,%d]",
             NodeOp.getName(item), wItem.getid(item),
             wItem.getx(item), wItem.gety(item), wItem.getz(item));
@@ -2500,7 +2502,7 @@ static Boolean _checkPlanHealth(iONode model) {
     }
 
     if( lonelyItem != NULL ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
           "INFO: object [%s] with id [%s] at [%d,%d,%d] is the most far away object in the plan",
           NodeOp.getName(lonelyItem), wItem.getid(lonelyItem),
           wItem.getx(lonelyItem), wItem.gety(lonelyItem), wItem.getz(lonelyItem));
@@ -2510,18 +2512,26 @@ static Boolean _checkPlanHealth(iONode model) {
   MapOp.base.del(xyzMap);
   MapOp.base.del(sensorMap);
   MapOp.base.del(switchMap);
+
+  if( healthy ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Plan is healthy" );
+  } else {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Plan is NOT healthty. See ERROR lines above." );
+  }
+
   return healthy;
 }
 
 
 
 /**  */
-static struct OAnalyse* _inst( Boolean CleanRun ) {
+static struct OAnalyse* _inst( an_mode Mode ) {
   iOAnalyse __Analyse = allocMem( sizeof( struct OAnalyse ) );
   iOAnalyseData data = allocMem( sizeof( struct OAnalyseData ) );
   MemOp.basecpy( __Analyse, &AnalyseOp, 0, sizeof( struct OAnalyse ), data );
 
-  cleanrun = CleanRun;
+  data->mode = Mode;
+  cleanrun = (Mode == AN_CLEAN) ;
   /* Initialize data->xxx members... */
   data->model = AppOp.getModel();
   data->plan  = ModelOp.getModel(data->model);

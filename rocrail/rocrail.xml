@@ -902,7 +902,7 @@
     </fun>
     <fun name="analyse" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
-      <param name="cleanrun" vt="Boolean" remark="Clean"/>
+      <param name="mode" vt="int" remark="analyse/clean/health check/extended Check"/>
     </fun>
     <fun name="addNetRoute" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
@@ -2213,8 +2213,9 @@
   </object>
 
   <object name="Analyse" use="trace,node,map" include="model" remark="Track plan analyser.">
+    <typedef def="enum {AN_JOB=0,AN_CLEAN,AN_HEALTH,AN_EXTCHK} an_mode"/>
     <fun name="inst" vt="this">
-      <param name="cleanrun" vt="Boolean" remark="Clean"/>
+      <param name="mode" vt="an_mode" remark="0=Analyse,1=CleanupAnalyse,2=CheckPlanHealth,3=ExtendedPlanCheck"/>
     </fun>
     <fun name="analyse" vt="void">
       <param name="inst" vt="this" remark="Analyse instance."/>
@@ -2229,7 +2230,8 @@
       <var name="bklist" vt="iOList"/>
       <var name="bkoccitemlist" vt="iOList"/>
       <var name="model" vt="iOModel"/>
-    </data>
+      <var name="mode" vt="an_mode"/>
+      </data>
   </object>
 
 

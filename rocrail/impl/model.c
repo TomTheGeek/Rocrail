@@ -3286,8 +3286,20 @@ static const char* _getTitle( iOModel inst ) {
   return o->title;
 }
 
-static void _analyse( iOModel inst, Boolean CleanRun ) {
+/* static void _analyse( iOModel inst, Boolean CleanRun ) {*/
+static void _analyse( iOModel inst, int mode ) {
   iOModelData data = Data(inst);
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_analyse (%d)", mode );
+  if( mode == AN_HEALTH ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_analyse checkPlanHealth");
+    data->healthy = AnalyseOp.checkPlanHealth(data->model);
+    return;
+  }
+  if( mode == AN_EXTCHK ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "(%d) extended checks not yet available", mode );
+    return;
+  }
 
   if( wCtrl.isenableanalyzer( wRocRail.getctrl( AppOp.getIni() ) )) {
 
@@ -3304,7 +3316,7 @@ static void _analyse( iOModel inst, Boolean CleanRun ) {
     }
 
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "init analyser..." );
-    analyser = AnalyseOp.inst( CleanRun );
+    analyser = AnalyseOp.inst( mode );
 
     if( analyser != NULL ) {
       iONode e = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );

@@ -230,6 +230,8 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( wxID_EXIT         , RocGuiFrame::OnQuit)
     EVT_MENU( ME_Analyze        , RocGuiFrame::OnAnalyze)
     EVT_MENU( ME_AnalyzeClean   , RocGuiFrame::OnAnalyze)
+    EVT_MENU( ME_AnalyzeHealth  , RocGuiFrame::OnAnalyze)
+    EVT_MENU( ME_AnalyzeExtChk  , RocGuiFrame::OnAnalyze)
     EVT_MENU( ME_Save           , RocGuiFrame::OnSave)
     EVT_MENU( ME_SaveAs         , RocGuiFrame::OnSaveAs)
     EVT_MENU( ME_Open           , RocGuiFrame::OnOpen)
@@ -1528,6 +1530,8 @@ void RocGuiFrame::initFrame() {
   wxMenu *menuAnalyze = new wxMenu();
   menuAnalyze->Append(ME_Analyze, wxGetApp().getMenu("analyze"), wxGetApp().getTip("analyze") );
   menuAnalyze->Append(ME_AnalyzeClean, wxGetApp().getMenu("clearall") + _T(" ") +  wxGetApp().getMenu("analyze"), wxGetApp().getTip("analyze") );
+  menuAnalyze->Append(ME_AnalyzeHealth, wxGetApp().getMenu("checkplanhealth"), wxGetApp().getTip("analyze") );
+  menuAnalyze->Append(ME_AnalyzeExtChk, wxGetApp().getMenu("extendedcheck"), wxGetApp().getTip("analyze") );
   menuFile->Append( -1, wxGetApp().getMenu("analyze"), menuAnalyze );
   menuFile->AppendSeparator();
 
@@ -2374,8 +2378,17 @@ void RocGuiFrame::OnAnalyze( wxCommandEvent& event ) {
   if( !wxGetApp().isOffline() ) {
     iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
     wSysCmd.setcmd( cmd, wSysCmd.analyze );
+    if( event.GetId() == ME_Analyze ) {
+      wSysCmd.setval( cmd, 0 );
+    }
     if( event.GetId() == ME_AnalyzeClean ) {
       wSysCmd.setval( cmd, 1 );
+    }
+    if( event.GetId() == ME_AnalyzeHealth ) {
+      wSysCmd.setval( cmd, 2 );
+    }
+    if( event.GetId() == ME_AnalyzeExtChk ) {
+      wSysCmd.setval( cmd, 3 );
     }
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
@@ -3328,7 +3341,13 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_Upload);
   if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_Analyze);
-  if( mi != NULL ) mi->Enable( !l_bOffline && !m_bAutoMode );
+  if( mi != NULL ) mi->Enable( !l_bOffline );
+  mi = menuBar->FindItem(ME_AnalyzeClean);
+  if( mi != NULL ) mi->Enable( !l_bOffline );
+  mi = menuBar->FindItem(ME_AnalyzeHealth);
+  if( mi != NULL ) mi->Enable( !l_bOffline );
+  mi = menuBar->FindItem(ME_AnalyzeExtChk);
+  if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_ShutdownRocRail);
   if( mi != NULL ) mi->Enable( (!l_bOffline && !wxGetApp().isConsoleMode()) );
   mi = menuBar->FindItem(ME_Quit);

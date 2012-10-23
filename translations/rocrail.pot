@@ -5885,3 +5885,15 @@ msgstr ""
 msgid "Classic routing is deprecated; Please migrate to block side routing."
 msgstr ""
 
+#. 
+# id="checkplanhealth"
+#, c-format
+msgid "Check plan health"
+msgstr ""
+
+#. 
+# id="extendedcheck"
+#, c-format
+msgid "extended plan check"
+msgstr ""
+

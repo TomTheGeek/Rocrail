@@ -18192,4 +18192,10 @@
   <Msg id="deprecatedrouting">
     <en txt="Classic routing is deprecated; Please migrate to block side routing."/>
   </Msg>
+  <Msg id="checkplanhealth">
+    <en txt="Check plan health"/>
+  </Msg>
+  <Msg id="extendedcheck">
+    <en txt="Extended plan check"/>
+  </Msg>
 </Messages>

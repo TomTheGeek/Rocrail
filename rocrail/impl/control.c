@@ -868,7 +868,7 @@ static void __callback( obj inst, iONode nodeA ) {
       return;
     }
     else if( StrOp.equals( wSysCmd.analyze, wSysCmd.getcmd( nodeA ) ) ) {
-      ModelOp.analyse( AppOp.getModel(), wSysCmd.getval( nodeA ) > 0 ? True:False );
+      ModelOp.analyse( AppOp.getModel(), wSysCmd.getval( nodeA ) );
       NodeOp.base.del( nodeA );
       return;
     }

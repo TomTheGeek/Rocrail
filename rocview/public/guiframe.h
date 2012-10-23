@@ -422,6 +422,8 @@ enum
     ME_Quit = 10000,
     ME_Analyze,
     ME_AnalyzeClean,
+    ME_AnalyzeHealth,
+    ME_AnalyzeExtChk,
     ME_Save,
     ME_SaveAs,
     ME_Upload,
