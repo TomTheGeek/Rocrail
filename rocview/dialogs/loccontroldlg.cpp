@@ -384,7 +384,7 @@ void LocControlDialog::modelEvent( iONode evt ) {
   wxString listid = m_LcList->GetStringSelection();
   if( StrOp.equals( id, listid.mb_str(wxConvUTF8) ) ) {
     if( StrOp.equals( wLoc.getmode( evt ), wLoc.mode_auto ) )
-      m_Speed->SetBackgroundColour( wxColour(255,255,192) );
+      m_Speed->SetBackgroundColour( Base::getAutoColor() );
     else if( StrOp.equals( wLoc.getmode( evt ), wLoc.mode_wait ) )
       m_Speed->SetBackgroundColour( Base::getBlue() );
     else

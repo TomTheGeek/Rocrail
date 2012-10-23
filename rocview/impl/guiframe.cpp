@@ -1208,13 +1208,13 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
 
         m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_MODE, m_ActiveLocs->GetCellBackgroundColour(i, LOC_COL_BLOCK));
         if( StrOp.equals( wLoc.mode_auto, wLoc.getmode( node ) ) ) {
-          m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_MODE, wxColour(255,255,160) );
+          m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_MODE, Base::getAutoColor() );
         }
         else if( StrOp.equals( wLoc.mode_wait, wLoc.getmode( node ) ) ) {
           m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_MODE, Base::getBlue());
         }
         else if(!wLoc.isactive(node))
-          m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_MODE, wxColour(240,200,200));
+          m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_MODE, Base::getNoneActiveColor());
 
         if( wLoc.getblockid( node ) != NULL ) {
           m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, (wLoc.isblockenterside(node)?_T(""):_T("-")) + wxString(wLoc.getblockid( node ),wxConvUTF8) );

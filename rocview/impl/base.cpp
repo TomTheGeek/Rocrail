@@ -56,3 +56,5 @@ wxColor Base::getRed   (){ return wxColor( 255, 200, 200 ); }
 wxColor Base::getYellow(){ return wxColor( 255, 255,   0 ); }
 wxColor Base::getGreen (){ return wxColor( 200, 255, 200 ); }
 wxColor Base::getBlue  (){ return wxColor( 200, 200, 255 ); }
+wxColor Base::getNoneActiveColor(){ return wxColor( 240, 200, 200 ); }
+wxColor Base::getAutoColor(){ return wxColor( 255, 255, 160 ); }
