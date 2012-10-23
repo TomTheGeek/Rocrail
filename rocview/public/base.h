@@ -37,7 +37,7 @@ public:
   static wxColor getGreen ();
   static wxColor getBlue  ();
   static wxColor getNoneActiveColor();
-  static wxColor getAutoColor();
+  static wxColor getResColor();
 };
 
 #endif
