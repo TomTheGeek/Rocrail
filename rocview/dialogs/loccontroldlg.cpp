@@ -174,7 +174,7 @@ void LocControlDialog::initLabels() {
   wxFont font = m_Speed->GetFont();
   wxFont font2( (font.GetPointSize() * 3)/2, font.GetFamily(), font.GetStyle(), wxFONTWEIGHT_BOLD );
   m_Speed->SetFont( font2 );
-  m_Speed->SetBackgroundColour( Base::getBlue() );
+  m_Speed->SetBackgroundColour( Base::getWhite() );
 
   for( int i = 0; i < 36; i++ ) {
     m_bFx[i] = false;;
@@ -382,6 +382,15 @@ void LocControlDialog::modelEvent( iONode evt ) {
   const char* et = NodeOp.getName( evt );
   const char* id = wLoc.getid( evt );
   wxString listid = m_LcList->GetStringSelection();
+  if( StrOp.equals( id, listid.mb_str(wxConvUTF8) ) ) {
+    if( StrOp.equals( wLoc.getmode( evt ), wLoc.mode_auto ) )
+      m_Speed->SetBackgroundColour( wxColour(255,255,192) );
+    else if( StrOp.equals( wLoc.getmode( evt ), wLoc.mode_wait ) )
+      m_Speed->SetBackgroundColour( Base::getBlue() );
+    else
+      m_Speed->SetBackgroundColour( wLoc.isactive( evt )?Base::getWhite():Base::getRed() );
+    m_Speed->Refresh();
+  }
   if( StrOp.equals( wLoc.name(), et ) && StrOp.equals( id, listid.mb_str(wxConvUTF8) ) ) {
     /* update speed */
     wxString value;
