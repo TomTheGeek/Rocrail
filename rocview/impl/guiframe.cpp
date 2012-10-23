@@ -162,7 +162,9 @@
 #include "rocrail/wrapper/public/Issue.h"
 
 #include "rocview/symbols/svg.h"
+#include "rocview/public/base.h"
 #include "rocview/res/icons.hpp"
+
 // ----------------------------------------------------------------------------
 // resources
 // ----------------------------------------------------------------------------
@@ -1202,8 +1204,15 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         else
           m_ActiveLocs->SetCellValue( i, LOC_COL_MODE, wxString(wLoc.isresumeauto( node ) ? "*":"",wxConvUTF8) + wxString(wLoc.getmode( node ),wxConvUTF8) );
 
-        m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_MODE,
-            wLoc.isactive(node)?m_ActiveLocs->GetCellBackgroundColour(i, LOC_COL_BLOCK):wxColour(240,200,200));
+        m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_MODE, m_ActiveLocs->GetCellBackgroundColour(i, LOC_COL_BLOCK));
+        if( StrOp.equals( wLoc.mode_auto, wLoc.getmode( node ) ) ) {
+          m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_MODE, Base::getRed());
+        }
+        else if( StrOp.equals( wLoc.mode_wait, wLoc.getmode( node ) ) ) {
+          m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_MODE, Base::getBlue());
+        }
+        else if(!wLoc.isactive(node))
+          m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_MODE, wxColour(240,200,200));
 
         if( wLoc.getblockid( node ) != NULL ) {
           m_ActiveLocs->SetCellValue( i, LOC_COL_BLOCK, (wLoc.isblockenterside(node)?_T(""):_T("-")) + wxString(wLoc.getblockid( node ),wxConvUTF8) );
