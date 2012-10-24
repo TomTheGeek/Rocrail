@@ -38,6 +38,7 @@ public:
   static wxColor getBlue  ();
   static wxColor getNoneActiveColor();
   static wxColor getResColor();
+  static wxColor getRes2Color();
 };
 
 #endif
