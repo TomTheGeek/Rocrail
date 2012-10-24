@@ -2002,10 +2002,12 @@ void RocGuiFrame::create() {
   int iWidth  = wWindow.getcx( wGui.getwindow( m_Ini ) );
   int iHeight = wWindow.getcy( wGui.getwindow( m_Ini ) );
 
-  m_Splitter = new wxSplitterWindow( this, 1,wxDefaultPosition, wxSize(iWidth, iHeight), wxSP_3DBORDER|wxSP_3DSASH|wxNO_BORDER );
+  m_Splitter = new wxSplitterWindow( this );
+  m_Splitter->SetSize(GetClientSize());
   m_Splitter->SetMinimumPaneSize(50);
 
-  m_PlanSplitter = new wxSplitterWindow( m_Splitter, 10, wxDefaultPosition, wxSize(iWidth, iHeight), wxSP_3DBORDER|wxSP_3DSASH|wxNO_BORDER );
+  //m_PlanSplitter = new wxSplitterWindow( m_Splitter, 10, wxDefaultPosition, wxSize(iWidth, iHeight), wxSP_3DBORDER|wxSP_3DSASH|wxNO_BORDER );
+  m_PlanSplitter = new wxSplitterWindow( m_Splitter );
   m_PlanSplitter->SetMinimumPaneSize(1);
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating PlanPanel..." );
@@ -2091,7 +2093,7 @@ void RocGuiFrame::create() {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating PlanNotebook..." );
   m_PlanNotebook = new wxNotebook( m_PlanSplitter, -1, wxDefaultPosition, wxDefaultSize, wxNB_TOP );
 
-  m_TraceSplitter = new wxSplitterWindow( m_Splitter, 2 );
+  m_TraceSplitter = new wxSplitterWindow( m_Splitter );
   m_TraceSplitter->SetMinimumPaneSize(20);
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating Serverpanel..." );
@@ -2129,8 +2131,8 @@ void RocGuiFrame::create() {
   pos = wSplitPanel.getplan( wGui.getsplitpanel( m_Ini) );
   m_PlanSplitter->SplitVertically( m_StatNotebook, m_PlanNotebook, pos );
 
-  m_ActiveLocsPanel->GetSizer()->Layout();
-  m_StatNotebook->Fit();
+  //m_ActiveLocsPanel->GetSizer()->Layout();
+  //m_StatNotebook->Fit();
   //GetSizer()->Fit(this);
   //GetSizer()->SetSizeHints(this);
 
