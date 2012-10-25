@@ -2305,7 +2305,7 @@ static Boolean _checkPlanHealth(iONode model) {
         if( wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
           if( StrOp.equals( wSwitch.gettype(item), wSwitch.crossing ) || StrOp.equals( wSwitch.gettype(item), wSwitch.ccrossing ) ) {
             /* crossing and centered crossing do not need an address */
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "INFO: crossing \"%s\" has no address.", wItem.getid(item) );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "INFO: crossing \"%s\" has no address.", wItem.getid(item) );
           }
           else {
             TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: switch %s has no address set", wItem.getid(item) );
@@ -2318,7 +2318,7 @@ static Boolean _checkPlanHealth(iONode model) {
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                "INFO: switch %s has an already used address %d-%d by %s (%s)",
+                "WARNING: switch %s has an already used address %d-%d by %s (%s)",
                 wItem.getid(item), wSwitch.getaddr1(item), wSwitch.getport1(item), wItem.getid(switchItem), key );
           }
           else {
@@ -2330,7 +2330,7 @@ static Boolean _checkPlanHealth(iONode model) {
             if( MapOp.haskey(switchMap, key ) ) {
               iONode switchItem = (iONode)MapOp.get( switchMap, key );
               TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                  "INFO: switch %s has an already used second address %d-%d by %s (%s)",
+                  "WARNING: switch %s has an already used second address %d-%d by %s (%s)",
                   wItem.getid(item), wSwitch.getaddr2(item), wSwitch.getport2(item), wItem.getid(switchItem), key );
             }
             else {
@@ -2347,7 +2347,7 @@ static Boolean _checkPlanHealth(iONode model) {
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                "INFO: output %s has an already used address %d-%d by %s (%s)",
+                "WARNING: output %s has an already used address %d-%d by %s (%s)",
                 wItem.getid(item), wOutput.getaddr(item), wOutput.getport(item), wItem.getid(switchItem), key );
           }
           else {
@@ -2367,7 +2367,7 @@ static Boolean _checkPlanHealth(iONode model) {
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                "INFO: signal %s has an already used first address %s by %s (%s)",
+                "WARNING: signal %s has an already used first address %s by %s (%s)",
                 wItem.getid(item), key, wItem.getid(switchItem), key );
           }
           else {
@@ -2381,7 +2381,7 @@ static Boolean _checkPlanHealth(iONode model) {
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                "INFO: signal %s has an already used second address %s by %s (%s)",
+                "WARNING: signal %s has an already used second address %s by %s (%s)",
                 wItem.getid(item), key, wItem.getid(switchItem), key );
           }
           else {
@@ -2395,7 +2395,7 @@ static Boolean _checkPlanHealth(iONode model) {
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                "INFO: signal %s has an already used third address %s by %s (%s)",
+                "WARNING: signal %s has an already used third address %s by %s (%s)",
                 wItem.getid(item), key, wItem.getid(switchItem), key );
           }
           else {
@@ -2409,7 +2409,7 @@ static Boolean _checkPlanHealth(iONode model) {
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                "INFO: signal %s has an already used fourth address %s by %s (%s)",
+                "WARNING: signal %s has an already used fourth address %s by %s (%s)",
                 wItem.getid(item), key, wItem.getid(switchItem), key );
           }
           else {
@@ -2476,7 +2476,7 @@ static Boolean _checkPlanHealth(iONode model) {
         }
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "INFO: invisible object [%s] with id [%s] and coordinates [%d,%d,%d]",
             NodeOp.getName(item), wItem.getid(item),
             wItem.getx(item), wItem.gety(item), wItem.getz(item));
@@ -2502,7 +2502,7 @@ static Boolean _checkPlanHealth(iONode model) {
     }
 
     if( lonelyItem != NULL ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "INFO: object [%s] with id [%s] at [%d,%d,%d] is the most far away object in the plan",
           NodeOp.getName(lonelyItem), wItem.getid(lonelyItem),
           wItem.getx(lonelyItem), wItem.gety(lonelyItem), wItem.getz(lonelyItem));
