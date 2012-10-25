@@ -802,6 +802,7 @@ static Boolean __getversion( iOP50x inst ) {
         break;
       default:
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "P50X getversion: sizeVersion=%d sizeSerno=%d idx=%d", sizeVersion, sizeSerno, idx );
+        break;
     }
   }
   return True;
@@ -1489,6 +1490,7 @@ static void __feedbackReader( void* threadinst ) {
       o->tok = True;
       state = __cts( o );
       if( state == P50_OK ) {
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, out, 2 );
         if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
           byte module = 0;
           state = P50_OK;
@@ -1496,11 +1498,13 @@ static void __feedbackReader( void* threadinst ) {
             /* TODO: modules > 31 are loconet */
             while( module > 0 && state == P50_OK ) {
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbModule = %d", module );
+              TraceOp.dump( NULL, TRCLEVEL_BYTE, &module, 1 );
 
               if( !SerialOp.read( o->serial, (char*)tmp, 2 ) ) {
                 state = P50_RCVERR;
                 break;
               }
+              TraceOp.dump( NULL, TRCLEVEL_BYTE, tmp, 2 );
 
               if( module < 32 ) {
                 /* s88 */
@@ -1558,6 +1562,7 @@ static void __feedbackReader( void* threadinst ) {
         o->tok = True;
         state = __cts( o );
         if( state == P50_OK ) {
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, out, 2 );
           if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
             byte module = 0;
             state = P50_OK;
