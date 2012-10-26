@@ -1311,6 +1311,9 @@
       <var name="load" vt="int"/>
       <var name="stat" vt="int"/>
       <var name="fwup" vt="Boolean"/>
+      <var name="conf_void" vt="int"/>
+      <var name="conf_freeze" vt="int"/>
+      <var name="conf_signal" vt="int"/>
       </struct>
     <data>
       <var name="ini" vt="iONode"/>

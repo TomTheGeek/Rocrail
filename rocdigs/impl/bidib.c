@@ -1249,7 +1249,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "node not found by local address [%s]", pathKey );
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999,
       "processing bidib message path=%s type=0x%02X uid=0x%08X", pathKey, Type, bidibnode!=NULL?bidibnode->uid:0 );
 
   switch( Type ) {
@@ -1456,8 +1456,17 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
 
   case MSG_BM_CONFIDENCE:
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "MSG_BM_CONFIDENCE: path=%s void=%d freeze=%d signal=%d", pathKey, pdata[0], pdata[1], pdata[2] );
+    if( bidibnode != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+          "MSG_BM_CONFIDENCE: uid=%08X path=%s void=%d freeze=%d signal=%d", bidibnode->uid, pathKey, pdata[0], pdata[1], pdata[2] );
+      if( bidibnode->conf_void != pdata[0] || bidibnode->conf_freeze != pdata[1] || bidibnode->conf_signal != pdata[2] ) {
+        bidibnode->conf_void   = pdata[0];
+        bidibnode->conf_freeze = pdata[1];
+        bidibnode->conf_signal = pdata[2];
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+            "MSG_BM_CONFIDENCE: uid=%08X path=%s void=%d freeze=%d signal=%d", bidibnode->uid, pathKey, pdata[0], pdata[1], pdata[2] );
+      }
+    }
     break;
 
   case MSG_FW_UPDATE_STAT:
