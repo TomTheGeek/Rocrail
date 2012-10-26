@@ -662,7 +662,7 @@ static Boolean __evaluateRsp( iORmxData data, byte* out, int outsize, byte* in, 
 }
 
 
-static Boolean __readPacket( iORmxData data, byte* in ) {
+static Boolean __readPacket( iORmxData data, byte* in, Boolean cmdResponse ) {
   Boolean rc = data->dummyio;
   /* byte 0 is message header, byte 1 is message length including header and checksum byte */
   if( !data->dummyio ) {
@@ -674,6 +674,13 @@ static Boolean __readPacket( iORmxData data, byte* in ) {
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Message received" );
         TraceOp.dump( name, TRCLEVEL_BYTE, in, insize );
         rc = __isChecksum(in);
+        if( !rc ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Checksum error in received data" );
+        }
+        /* unsollicited message from rmx, not a response on a command send, could be a changed SX address */
+        if( rc && !cmdResponse && in[2] == OPC_READSX ) {
+          __evaluateSX(data, in);
+        }
       }
       else {
         /* error reading data */
@@ -706,7 +713,7 @@ static Boolean __transact( iORmxData data, byte* out, byte* in, byte opcode ) {
           int retries = 0;
           rc = False;
           while( !rc && retries <128 ) {    /* keep reading until a message with the correct opcode answer is received, but max 128 times */
-            if( __readPacket( data, in ) ) {
+            if( __readPacket( data, in, True ) ) {
               rc = __evaluateRsp(data, out, outsize, in, insize, opcode);
               if( !rc )
                 ThreadOp.sleep(10);
@@ -841,7 +848,7 @@ static void __rmxReader( void* threadinst ) {
     if( MutexOp.wait( data->mux ) ) {
       /* checking for unsolicited packets */
       if( SerialOp.available(data->serial) ) {
-        if( __readPacket( data, buffer ) ) {
+        if( __readPacket( data, buffer, False ) ) {
         }
       }
       MutexOp.post( data->mux );
