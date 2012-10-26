@@ -236,7 +236,7 @@ static iOSlot __getRmxSlot(iORmxData data, iONode node) {
     slot = allocMem( sizeof( struct slot) );
     slot->addr = addr;
     slot->index = rsp[5];
-    slot->protocol = rsp[4];
+    slot->protocol = rsp[6];
     slot->steps = rsp[7];
     slot->sx1 = rsp[6] < 7 ? True:False;
     slot->bus = wLoc.getbus(node);
@@ -450,7 +450,7 @@ static int __translate( iORmxData data, iONode node, byte* out, byte* opcode ) {
     out[2] = OPC_LOCOV;
     out[3] = slot->index;
     out[4] = speed;
-    out[5] = (dir?0x01:0x00);    /* 0x01 is forwards, 0x00 is reverse */
+    out[5] = (dir?0x00:0x01);
     *opcode = OPC_LOCOV;
     return 7;
 
@@ -556,7 +556,7 @@ static void __evaluateFB( iORmxData data ) {
             port = n;
             state = (in & (0x01 << n)) ? 1:0;
             TraceOp.dump ( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_BYTE, (char*)&in, 1 );
-            TraceOp.trc( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "fb %d = %d", addr*8+port+1, state );
+            TraceOp.trc( name, data->dummyio ? TRCLEVEL_INFO:TRCLEVEL_MONITOR, __LINE__, 9999, "fb %d = %d", addr*8+port+1, state );
             {
               /* inform listener: Node3 */
               iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
@@ -826,12 +826,12 @@ static void __rmxReader( void* threadinst ) {
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RMX connection is initialized." );
         { /* bus 0 */
-          byte out[] = { PCKT,0x06,OPC_MODE,0x00,0xA0,0x00 };
+          byte out[] = { PCKT,0x06,OPC_MODE,0x00,0x20,0x00 };
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Monitoring bus 0 request..." );
           __transact(data, out, buffer, OPC_STATUS );
         }
         { /* bus 1 */
-          byte out[] = { PCKT,0x06,OPC_MODE,0x01,0xA0,0x00 };
+          byte out[] = { PCKT,0x06,OPC_MODE,0x01,0x20,0x00 };
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Monitoring bus 1 request..." );
           __transact(data, out, buffer, OPC_STATUS );
         }
