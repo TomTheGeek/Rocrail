@@ -1339,6 +1339,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
    */
   case MSG_BM_OCC:
   { // len = 4
+    bidibnode->occ[pdata[0]] = True;
     __handleSensor(bidib, bidibnode->uid, pdata[0], True, 0, -1);
     __seqAck(bidib, bidibnode, MSG_BM_MIRROR_OCC, pdata, datasize);
     break;
@@ -1346,6 +1347,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_BM_FREE:
   { // len = 4
+    bidibnode->occ[pdata[0]] = False;
     __handleSensor(bidib, bidibnode->uid, pdata[0], False, 0, -1);
     __seqAck(bidib, bidibnode, MSG_BM_MIRROR_FREE, pdata, datasize);
     break;
@@ -1371,7 +1373,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     // 06 00 0C A3 04    5E     13 C4
     int locoAddr = (msg[6]&0x3F) * 256 + msg[5];
     int type = msg[6] >> 6;
-    __handleSensor(bidib, bidibnode->uid, pdata[0], locoAddr > 0, locoAddr, type );
+    int port = msg[4];
+    __handleSensor(bidib, bidibnode->uid, pdata[0], bidibnode->occ[port], locoAddr, type );
     break;
   }
 

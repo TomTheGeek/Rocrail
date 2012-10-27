@@ -1314,6 +1314,7 @@
       <var name="conf_void" vt="int"/>
       <var name="conf_freeze" vt="int"/>
       <var name="conf_signal" vt="int"/>
+      <var name="occ[128]" vt="byte" remark=""/>
       </struct>
     <data>
       <var name="ini" vt="iONode"/>
