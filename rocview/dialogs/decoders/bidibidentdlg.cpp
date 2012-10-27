@@ -342,6 +342,7 @@ void BidibIdentDlg::initValues() {
   m_VendorName->SetValue( wxString( m_Vendor[wProgram.getmanu(node)&0xFF],wxConvUTF8) );
   m_Class->SetValue( wxString( classname, wxConvUTF8) );
   StrOp.free(classname);
+  m_Version->SetValue( wxString( wProgram.getstrval1(node), wxConvUTF8) );
 
   char key[32];
   StrOp.fmtb(key, "[%s] %08X", mnemonic, wProgram.getmodid(node) );

@@ -829,6 +829,9 @@
     <var name="rc" vt="int" defval="0" range="0-*" remark="return code"/>
     <var name="rs" vt="int" defval="0" range="0-*" remark="reason code"/>
     <var name="eeprom" vt="bool" defval="true" remark="Write EEprom."/>
+    <var name="strval1" vt="string" defval=""/>
+    <var name="strval2" vt="string" defval=""/>
+    <var name="strval3" vt="string" defval=""/>
   </program>
 
   <exception remark="Exception wrapper" wrappername="Exception">

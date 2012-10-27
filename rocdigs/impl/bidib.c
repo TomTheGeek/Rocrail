@@ -1108,6 +1108,7 @@ static void __handleIdentify(iOBiDiB bidib, iOBiDiBNode bidibnode, const char* p
   iOBiDiBData data = Data(bidib);
   /* Notify server. */
   if( bidibnode != NULL ) {
+    iONode child = __getIniNode(bidib, bidibnode->uid);
     iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcmd( node, wProgram.type );
     wProgram.setiid( node, data->iid );
@@ -1115,7 +1116,12 @@ static void __handleIdentify(iOBiDiB bidib, iOBiDiBNode bidibnode, const char* p
     wProgram.setmodid(node, bidibnode->uid);
     wProgram.setmanu(node, bidibnode->vendorid);
     wProgram.setprod(node, bidibnode->classid);
+    if( child != NULL ) {
+      wProgram.setstrval1(node, wBiDiBnode.getversion(child) );
+    }
     wProgram.setfilename(node, path);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"ident path=%s uid=%08X, vendor=%d class=0x%02X",
+        path, bidibnode->uid, bidibnode->vendorid, bidibnode->classid);
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }
 }
