@@ -283,6 +283,7 @@ void PowerManDlg::initValues() {
   m_ShortcutSensor->SetStringSelection( wxString(wBooster.getscfb( m_Props ),wxConvUTF8) );
   m_PowerSensor->SetStringSelection( wxString(wBooster.getpowerfb( m_Props ),wxConvUTF8) );
   m_PowerOutput->SetStringSelection( wxString(wBooster.getpowersw( m_Props ),wxConvUTF8) );
+  m_UIDs->SetValue( wxString(wBooster.getuids( m_Props ),wxConvUTF8) );
 
 
   m_ModuleList->Clear();
@@ -343,6 +344,9 @@ bool PowerManDlg::evaluate() {
     wBooster.setpowersw( m_Props, "" );
   else
     wBooster.setpowersw( m_Props, m_PowerOutput->GetStringSelection().mb_str(wxConvUTF8) );
+
+  wBooster.setuids( m_Props, m_UIDs->GetValue().mb_str(wxConvUTF8) );
+
 
   int cnt = m_ModuleList->GetCount();
   char* modids = NULL;

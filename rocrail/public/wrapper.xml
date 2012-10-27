@@ -1192,6 +1192,7 @@
         <var name="scfb" vt="string" defval="" range="*"/>
         <var name="powerfb" vt="string" defval="" range="*"/>
         <var name="powersw" vt="string" defval="" range="*"/>
+        <var name="uids" vt="string" defval="" range="*"/>
         <var name="power" vt="bool" defval="false" remark="Track power flag."/>
         <var name="shortcut" vt="bool" defval="false" remark="Shortcut flag."/>
         <var name="scopt_poweroffall" vt="bool" defval="false" remark="Power off all boosters at shortcut."/>
