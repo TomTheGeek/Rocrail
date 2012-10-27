@@ -596,6 +596,7 @@ static void __processCmd( struct OSelTab* inst ,iONode nodeA ) {
       /* signal new position will be set: */
       wSwitch.setaddr1( cmd, wSelTab.getaddr4(data->props) );
       wSwitch.setport1( cmd, wSelTab.getport4(data->props) );
+      wSwitch.setsinglegate( cmd, wSelTab.issinglegate( data->props ) );
       wOutput.setcmd( cmd, invnew ? wSwitch.straight:wSwitch.turnout );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );

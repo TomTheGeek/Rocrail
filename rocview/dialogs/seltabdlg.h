@@ -182,7 +182,6 @@ public:
     wxTextCtrl* m_IID;
     wxStaticText* m_LabelType;
     wxComboBox* m_Type;
-    wxCheckBox* m_Invert;
     wxStaticText* m_LabelAddress0;
     wxTextCtrl* m_Address0;
     wxStaticText* m_labPort0;
@@ -211,6 +210,8 @@ public:
     wxTextCtrl* m_Address7;
     wxStaticText* m_labPort7;
     wxTextCtrl* m_Port7;
+    wxCheckBox* m_Invert;
+    wxCheckBox* m_SingleGate;
     wxStaticText* m_labPosSen;
     wxComboBox* m_PosSen;
     wxStaticText* m_labb0Sen;
