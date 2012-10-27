@@ -298,11 +298,21 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     Boolean fn  = wLoc.isfn( node );
     Boolean dir = wLoc.isdir( node ); /* True == forwards */
 
+    /*
+     * Das MSB kodiert die Fahrtrichtung: 1 = vorwärts, 0 = rückwärts
+     * Die LSBs (Bit 6..0) kodieren die Geschwindigkeit, wobei 0 = Halt und 1 = Nothalt bedeutet.
+     * Werte von 2 ... 127 bezeichnen die Fahrstufe.
+     */
     if( wLoc.getV( node ) != -1 ) {
       if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
-        speed = (wLoc.getV( node ) * steps) / 100;
+        speed = (wLoc.getV( node ) * 126) / 100;
       else if( wLoc.getV_max( node ) > 0 )
-        speed = (wLoc.getV( node ) * steps) / wLoc.getV_max( node );
+        speed = (wLoc.getV( node ) * 126) / wLoc.getV_max( node );
+    }
+
+    if( speed >= 1 ) {
+      /* skip emergancy break */
+      speed++;
     }
 
     StrOp.fmtb( uidKey, "0x%08X", wLoc.getbus(node) );
@@ -313,9 +323,9 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     if( bidibnode != NULL ) {
       msgdata[0] = addr % 256;
       msgdata[1] = addr / 256;
-      msgdata[2] = (dir ? 0x00:0x80) + (steps==128?0x30:0x20); // 128 speed steps
+      msgdata[2] = (steps==128?0x30:0x20); // 128 speed steps
       msgdata[3] = 0x01; // speed only
-      msgdata[4] = speed;
+      msgdata[4] = (dir ? 0x00:0x80) + speed;
       msgdata[5] = (fn?0x10:0x00);
       msgdata[6] = 0;
       msgdata[7] = 0;
@@ -1463,8 +1473,6 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
         bidibnode->conf_void   = pdata[0];
         bidibnode->conf_freeze = pdata[1];
         bidibnode->conf_signal = pdata[2];
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-            "MSG_BM_CONFIDENCE: uid=%08X path=%s void=%d freeze=%d signal=%d", bidibnode->uid, pathKey, pdata[0], pdata[1], pdata[2] );
       }
     }
     break;
