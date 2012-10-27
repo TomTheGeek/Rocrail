@@ -870,7 +870,7 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
 }
 
 
-static void __reportState(iOBiDiB bidib) {
+static void __reportState(iOBiDiB bidib, int uid) {
   iOBiDiBData data = Data(bidib);
   iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
   if( data->iid != NULL )
@@ -880,6 +880,7 @@ static void __reportState(iOBiDiB bidib) {
   wState.setsensorbus( node, True );
   wState.setaccessorybus( node, True );
   wState.setload( node, data->load );
+  wState.setuid(node, uid);
   if( data->listenerFun != NULL && data->listenerObj != NULL )
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 }
@@ -906,7 +907,7 @@ static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
    */
 
   data->power = (pdata[0] == BIDIB_CS_STATE_OFF) ? False:True;
-  __reportState(bidib);
+  __reportState(bidib, 0);
 }
 
 
@@ -930,7 +931,7 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster state=0x%02X", pdata[0] );
   }
   data->power = (pdata[0] & 0x80) ? True:False;
-  __reportState(bidib);
+  __reportState(bidib, 0);
 }
 
 
@@ -962,7 +963,7 @@ static void __handleBoosterCurrent(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* p
   else {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster load=%d mA", data->load );
   }
-  __reportState(bidib);
+  __reportState(bidib, 0);
 }
 
 
@@ -1482,6 +1483,9 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
         bidibnode->conf_void   = pdata[0];
         bidibnode->conf_freeze = pdata[1];
         bidibnode->conf_signal = pdata[2];
+
+        data->power = (bidibnode->conf_signal == 0) ? True:False;
+        __reportState(bidib, bidibnode->uid);
       }
     }
     break;
