@@ -390,7 +390,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
           rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
           wProgram.setcv( rsp, cv );
           wProgram.setvalue( rsp, value );
-          wProgram.setcmd( rsp, wProgram.datarsp );
+          wProgram.setcmd( rsp, wProgram.statusrsp );
 
 
         }
