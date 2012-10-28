@@ -18198,4 +18198,7 @@
   <Msg id="extendedcheck">
     <en txt="Extended plan check"/>
   </Msg>
+  <Msg id="booster">
+    <en txt="Booster"/>
+  </Msg>
 </Messages>

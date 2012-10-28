@@ -1004,8 +1004,14 @@ static void __listener( obj inst, iONode nodeC, int level ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "State event from=%s: track power is %s",
         wState.getiid( nodeC )==NULL?"":wState.getiid( nodeC ), data->power?"ON":"OFF" );
+
+    if( wState.getuid(nodeC) > 0 ) {
+      PowerManOp.base.event( data->powerman, nodeC);
+    }
+
     AppOp.broadcastEvent( nodeC );
     __checkAction((iOControl)inst, data->power?wSysCmd.go:wSysCmd.stop, "event");
+
   }
   else
     ModelOp.event( model, nodeC );

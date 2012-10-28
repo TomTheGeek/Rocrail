@@ -114,6 +114,21 @@ static void __sysEvent( obj inst ,const char* cmd ) {
 }
 
 
+static void __stateEvent( obj inst, iONode event ) {
+  iOPowerManData data = Data(inst);
+  iONode booster = (iONode)MapOp.first( data->boostermap );
+  /* command for all */
+  TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "State event from %d", wState.getuid(event));
+  while( booster != NULL ) {
+    if( wBooster.getuid(booster) == wState.getuid(event) ) {
+      TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "booster %s power is %s",
+          wBooster.getid(booster), wState.ispower(event) ? "ON":"OFF" );
+    }
+    booster = (iONode)MapOp.next( data->boostermap );
+  }
+}
+
+
 static void __informClientOfShortcut(obj inst, iONode booster, Boolean cleared ) {
   iOPowerManData data = Data(inst);
   const char* blockids = wBooster.getblockids(booster);
@@ -218,6 +233,9 @@ static void* __event( void* inst, const void* evt ) {
   }
   else if( node != NULL && StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) ) {
     __sysEvent( inst ,wSysCmd.getcmd(node) );
+  }
+  else if( node != NULL && StrOp.equals( wState.name(), NodeOp.getName(node) ) ) {
+    __stateEvent( inst, node );
   }
 
   return NULL;
