@@ -5894,6 +5894,12 @@ msgstr ""
 #. 
 # id="extendedcheck"
 #, c-format
-msgid "extended plan check"
+msgid "Extended plan check"
+msgstr ""
+
+#. 
+# id="booster"
+#, c-format
+msgid "Booster"
 msgstr ""
 
