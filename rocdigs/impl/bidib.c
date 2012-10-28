@@ -1383,6 +1383,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     int locoAddr = (msg[6]&0x3F) * 256 + msg[5];
     int type = msg[6] >> 6;
     int port = msg[4];
+    if( locoAddr > 0 )
+      bidibnode->occ[port] = True;
     __handleSensor(bidib, bidibnode->uid, pdata[0], bidibnode->occ[port], locoAddr, type );
     break;
   }

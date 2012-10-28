@@ -1005,7 +1005,7 @@ static void __listener( obj inst, iONode nodeC, int level ) {
         "State event from=%s: track power is %s",
         wState.getiid( nodeC )==NULL?"":wState.getiid( nodeC ), data->power?"ON":"OFF" );
 
-    if( wState.getuid(nodeC) > 0 ) {
+    if( data->powerman != NULL && wState.getuid(nodeC) > 0 ) {
       PowerManOp.base.event( data->powerman, nodeC);
     }
 
