@@ -114,21 +114,6 @@ static void __sysEvent( obj inst ,const char* cmd ) {
 }
 
 
-static void __stateEvent( obj inst, iONode event ) {
-  iOPowerManData data = Data(inst);
-  iONode booster = (iONode)MapOp.first( data->boostermap );
-  /* command for all */
-  TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "State event from %d", wState.getuid(event));
-  while( booster != NULL ) {
-    if( wBooster.getuid(booster) == wState.getuid(event) ) {
-      TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "booster %s power is %s",
-          wBooster.getid(booster), wState.ispower(event) ? "ON":"OFF" );
-    }
-    booster = (iONode)MapOp.next( data->boostermap );
-  }
-}
-
-
 static void __informClientOfShortcut(obj inst, iONode booster, Boolean cleared ) {
   iOPowerManData data = Data(inst);
   const char* blockids = wBooster.getblockids(booster);
@@ -224,6 +209,44 @@ static void __processEvent( obj inst ,Boolean pulse ,const char* id ,const char*
   AppOp.broadcastEvent( pwrevent );
 
 }
+
+
+static void __stateEvent( obj inst, iONode event ) {
+  iOPowerManData data = Data(inst);
+  iONode booster = (iONode)MapOp.first( data->boostermap );
+  /* command for all */
+  TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "State event from %d", wState.getuid(event));
+  while( booster != NULL ) {
+    if( wBooster.getuid(booster) == wState.getuid(event) ) {
+      Boolean shortcut = wState.isshortcut(event);
+      wBooster.setpower(booster, wState.ispower(event));
+      TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "booster %s power is %s",
+          wBooster.getid(booster), wState.ispower(event) ? "ON":"OFF" );
+
+      if( shortcut != wBooster.isshortcut(booster) ) {
+        wBooster.setshortcut( booster, shortcut );
+        __informClientOfShortcut(inst, booster, !shortcut);
+
+        if( wBooster.isscopt_repoweron(booster) || shortcut ) {
+          iONode pwrcmd = NodeOp.inst( wPwrCmd.name(), NULL, ELEMENT_NODE );
+          wPwrCmd.setid( pwrcmd, wBooster.getid(booster) );
+          wPwrCmd.setcmd( pwrcmd, shortcut?wPwrCmd.off:wPwrCmd.on );
+          PowerManOp.cmd((iOPowerMan)inst, pwrcmd);
+        }
+
+        if( wBooster.isscopt_poweroffall(booster) && shortcut ) {
+          iONode pwrcmd = NodeOp.inst( wPwrCmd.name(), NULL, ELEMENT_NODE );
+          wPwrCmd.setcmd( pwrcmd, wPwrCmd.off );
+          PowerManOp.cmd((iOPowerMan)inst, pwrcmd);
+        }
+
+      }
+    }
+    booster = (iONode)MapOp.next( data->boostermap );
+  }
+}
+
+
 
 static void* __event( void* inst, const void* evt ) {
   iOPowerManData data = Data(inst);
