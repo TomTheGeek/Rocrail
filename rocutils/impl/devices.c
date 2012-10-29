@@ -101,7 +101,7 @@ static iOList _getDevices( void ) {
   wildcard = "tty.";
 #elif defined __linux__
   path = "/dev";
-  wildcard = "tty";
+  wildcard = "ttyUSB";
 #elif defined _WIN32
   {
     int i = 0;
@@ -129,6 +129,16 @@ static iOList _getDevices( void ) {
     }
     DirOp.base.del(dir);
   }
+
+#if defined __linux__
+  {
+    int i = 0;
+    for( i = 0; i < 4; i++ ) {
+      char* ttyS = StrOp.fmt( "/dev/ttyS%d", i );
+      ListOp.add(list, (obj)ttyS);
+    }
+  }
+#endif
 
   return list;
 }
