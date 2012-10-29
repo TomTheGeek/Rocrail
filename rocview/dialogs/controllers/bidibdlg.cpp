@@ -37,6 +37,7 @@
 #include "rocrail/wrapper/public/BiDiBnode.h"
 
 #include "rocutils/public/vendors.h"
+#include "rocutils/public/devices.h"
 
 BidibDlg::BidibDlg( wxWindow* parent, iONode props )
   :bidibdlggen( parent )
@@ -90,6 +91,14 @@ void BidibDlg::initValues() {
   // General
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
+
+  iOList list = DevicesOp.getDevices();
+  int cnt = ListOp.size(list);
+  for( int i = 0; i < cnt; i++ ) {
+    const char* dev = (const char*)ListOp.get(list, i);
+    m_Device->Append( wxString( dev, wxConvUTF8 ) );
+  }
+  DevicesOp.freeList(list);
 
   if( wDigInt.getbps( m_Props ) == 19200 )
     m_BPS->SetSelection(0);
