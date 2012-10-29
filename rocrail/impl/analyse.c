@@ -2380,9 +2380,11 @@ static Boolean _checkPlanHealth(iONode model) {
           StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr2(item), wSignal.getport2(item), wSignal.getgate2(item), wItem.getiid(item) );
           if( MapOp.haskey(switchMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( switchMap, key );
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                "WARNING: signal %s has an already used second address %s by %s (%s)",
-                wItem.getid(item), key, wItem.getid(switchItem), key );
+            if( !StrOp.equals( wItem.getid(item), wItem.getid(switchItem) ) || wSignal.getusepatterns(item) != 1 ) {
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                  "WARNING: signal %s has an already used second address %s by %s (%s)",
+                  wItem.getid(item), key, wItem.getid(switchItem), key );
+            }
           }
           else {
             MapOp.put( switchMap, key, (obj)item );
