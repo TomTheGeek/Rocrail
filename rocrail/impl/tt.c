@@ -826,11 +826,12 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
 
       /* set the protocol */
       wSwitch.setprot( cmd, wTurntable.getprot(data->props) );
+      wSwitch.setsinglegate( cmd, wTurntable.issinglegatepos(data->props) );
 
       /* signal new position will be set: */
       wSwitch.setaddr1( cmd, wTurntable.getaddr5(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport5(data->props) );
-      wOutput.setcmd( cmd, invnew ? wSwitch.straight:wSwitch.turnout );
+      wSwitch.setcmd( cmd, invnew ? wSwitch.straight:wSwitch.turnout );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
 
@@ -893,6 +894,7 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
       /* signal new position is set: */
       wSwitch.setaddr1( cmd, wTurntable.getaddr5(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport5(data->props) );
+      wSwitch.setsinglegate( cmd, wTurntable.issinglegatenew(data->props) );
       wOutput.setcmd( cmd, invnew ? wSwitch.turnout:wSwitch.straight );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );

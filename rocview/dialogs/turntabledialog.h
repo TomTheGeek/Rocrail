@@ -275,12 +275,14 @@ public:
     wxTextCtrl* m_Port6;
     wxRadioBox* m_Bit5Cmd;
     wxCheckBox* m_InvertPos;
+    wxCheckBox* m_SingleGatePos;
     wxStaticBox* m_NewPositionFlagBox;
     wxStaticText* m_labAddr5;
     wxTextCtrl* m_Addr5;
     wxStaticText* m_labPort5;
     wxTextCtrl* m_Port5;
     wxCheckBox* m_InvertNew;
+    wxCheckBox* m_SingleGateNew;
     wxStaticBox* m_ResetFlagBox;
     wxStaticText* m_labResetAddr;
     wxTextCtrl* m_ResetAddr;

@@ -1942,6 +1942,8 @@
         <var name="entering" vt="bool" defval="false"/>
         <var name="state" vt="string" defval="open" range="open,closed"/>
         <var name="traverser" vt="bool" defval="false"/>
+        <var name="singlegatepos" vt="bool" defval="false"/>
+        <var name="singlegatenew" vt="bool" defval="false"/>
 
 				<var name="symbolsize" vt="int" defval="5" range="2-5"/>
 				
