@@ -105,7 +105,7 @@ static iOList _getDevices( void ) {
 #elif defined _WIN32
   {
     int i = 0;
-    for( i = 0; i < 10; i++ ) {
+    for( i = 1; i < 10; i++ ) {
       char* com = StrOp.fmt( "COM%d", i );
       ListOp.add(list, (obj)com);
     }
