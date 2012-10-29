@@ -1904,7 +1904,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
 
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "single gate switch %d:%d",
-          wSwitch.getbus( node ), wSwitch.getaddr1( node ) );
+          wSwitch.getbus( node ), addr );
       ThreadOp.post(data->writer, (obj)frame);
     }
     else {
