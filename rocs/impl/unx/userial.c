@@ -462,6 +462,9 @@ Boolean rocs_serial_isDSR( iOSerial inst ) {
 
 Boolean rocs_serial_isRI( iOSerial inst ) {
 #ifdef __ROCS_SERIAL__
+#if defined __APPLE__ || defined __OpenBSD__
+    return True;
+#else
   iOSerialData o = Data(inst);
   int msr = 0;
   int result, arg;
@@ -471,6 +474,7 @@ Boolean rocs_serial_isRI( iOSerial inst ) {
   result = ioctl(o->sh, TIOCMGET, &arg);
   if ((result>=0)&&((!(arg&TIOCM_RI))||(msr&0x04)))
     return True;
+#endif
 #endif
 
   return False;
