@@ -46,6 +46,7 @@
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/DDX.h"
+#include "rocs/public/strtok.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -79,10 +80,11 @@ DDXCtrlDlg::DDXCtrlDlg( )
 {
 }
 
-DDXCtrlDlg::DDXCtrlDlg( wxWindow* parent, iONode props )
+DDXCtrlDlg::DDXCtrlDlg( wxWindow* parent, iONode props, const char* devices )
 {
   m_TabAlign = wxGetApp().getTabAlign();
   m_Props = props;
+  m_Devices = devices;
 
   // check if subnode ddl exist:
   m_SubProps = wDigInt.getddx( m_Props );
@@ -139,6 +141,14 @@ void DDXCtrlDlg::initValues() {
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
 
   m_Device->SetValue( wxString( wDDX.getport( m_SubProps ), wxConvUTF8 ) );
+  if( m_Devices != NULL ) {
+    iOStrTok tok = StrTokOp.inst(m_Devices, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_Device->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+  }
+
   m_PortBase->SetValue( wxString( wDDX.getportbase( m_SubProps ), wxConvUTF8 ) );
 
   m_Port->SetValue( wxString( wDDX.gets88port( m_SubProps ), wxConvUTF8 ) );
@@ -287,7 +297,8 @@ void DDXCtrlDlg::CreateControls()
     m_labDevice = new wxStaticText( m_GenerelPanel, ID_STATICTEXT_DDL_DEVICE, _("device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Device = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_DDL_DEVICE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    wxArrayString m_DeviceStrings;
+    m_Device = new wxComboBox( m_GenerelPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_DeviceStrings, wxCB_DROPDOWN );
     itemFlexGridSizer6->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labPortBase = new wxStaticText( m_GenerelPanel, wxID_ANY, _("portbase"), wxDefaultPosition, wxDefaultSize, 0 );

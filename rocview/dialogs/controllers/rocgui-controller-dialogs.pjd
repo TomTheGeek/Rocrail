@@ -140,7 +140,7 @@
         <long name="locked">0</long>
         <string name="template-name">""</string>
         <bool name="dirty">1</bool>
-        <long name="makefile-last-written">3961587581</long>
+        <long name="makefile-last-written">-333379715</long>
         <string name="Compiler name">""</string>
         <string name="Build mode">"Debug"</string>
         <string name="Unicode mode">"ANSI"</string>
@@ -160,7 +160,6 @@
         <string name="Use wxPropertyGrid">"Yes"</string>
         <string name="Use wxAUI">"Yes"</string>
         <string name="Use wxSTC">"Yes"</string>
-        <string name="Use wxRegEx">"builtin"</string>
         <string name="Use wxRibbonControl">"Yes"</string>
         <string name="Executable name">"%EXECUTABLE%"</string>
         <string name="Program arguments">""</string>
@@ -196,7 +195,6 @@
         <string name="Include path">"%AUTO%"</string>
         <string name="Resource flags">"%AUTO%"</string>
         <string name="Resource path">"%AUTO%"</string>
-        <string name="Extra dependencies">"%AUTO%"</string>
         <bool name="Suppress source rules">0</bool>
         <bool name="Enable makefile generation">1</bool>
       </document>
@@ -1652,28 +1650,27 @@
                         <string name="proxy-Custom ctor arguments">""</string>
                       </document>
                       <document>
-                        <string name="title">"wxTextCtrl: wxID_ANY"</string>
+                        <string name="title">"wxComboBox: wxID_ANY"</string>
                         <string name="type">"dialog-control-document"</string>
                         <string name="filename">""</string>
-                        <string name="icon-name">"textctrl"</string>
+                        <string name="icon-name">"combobox"</string>
                         <long name="is-transient">0</long>
                         <long name="owns-file">1</long>
                         <long name="title-mode">0</long>
                         <long name="locked">0</long>
-                        <string name="created">"13/2/2009"</string>
-                        <string name="proxy-type">"wbTextCtrlProxy"</string>
+                        <string name="proxy-type">"wbComboBoxProxy"</string>
                         <string name="proxy-Id name">"wxID_ANY"</string>
                         <long name="proxy-Id value">-1</long>
                         <string name="proxy-Name">""</string>
-                        <string name="proxy-Class">"wxTextCtrl"</string>
-                        <string name="proxy-Base class">"wxTextCtrl"</string>
+                        <string name="proxy-Class">"wxComboBox"</string>
+                        <string name="proxy-Base class">"wxComboBox"</string>
                         <bool name="proxy-External implementation">1</bool>
                         <bool name="proxy-Separate files">0</bool>
                         <string name="proxy-Implementation filename">""</string>
                         <string name="proxy-Header filename">""</string>
                         <string name="proxy-Member variable name">"m_Device"</string>
+                        <string name="proxy-Strings">""</string>
                         <string name="proxy-Initial value">""</string>
-                        <long name="proxy-Max length">0</long>
                         <string name="proxy-Help text">""</string>
                         <string name="proxy-Tooltip text">""</string>
                         <string name="proxy-Background colour">""</string>
@@ -1689,29 +1686,10 @@
                         <string name="proxy-Data class implementation filename">""</string>
                         <string name="proxy-Data class header filename">""</string>
                         <string name="proxy-Data class manager window">""</string>
-                        <bool name="proxy-wxTE_MULTILINE">0</bool>
-                        <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
-                        <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
-                        <bool name="proxy-wxTE_PASSWORD">0</bool>
-                        <bool name="proxy-wxTE_READONLY">0</bool>
-                        <bool name="proxy-wxTE_RICH">0</bool>
-                        <bool name="proxy-wxTE_RICH2">0</bool>
-                        <bool name="proxy-wxTE_AUTO_URL">0</bool>
-                        <bool name="proxy-wxTE_NOHIDESEL">0</bool>
-                        <bool name="proxy-wxTE_LEFT">0</bool>
-                        <bool name="proxy-wxTE_CENTRE">0</bool>
-                        <bool name="proxy-wxTE_RIGHT">0</bool>
-                        <bool name="proxy-wxHSCROLL">0</bool>
-                        <bool name="proxy-wxTE_CHARWRAP">0</bool>
-                        <bool name="proxy-wxTE_WORDWRAP">0</bool>
-                        <bool name="proxy-wxTE_CAPITALIZE">0</bool>
-                        <bool name="proxy-wxNO_BORDER">0</bool>
-                        <bool name="proxy-wxSIMPLE_BORDER">0</bool>
-                        <bool name="proxy-wxDOUBLE_BORDER">0</bool>
-                        <bool name="proxy-wxBORDER_THEME">0</bool>
-                        <bool name="proxy-wxSUNKEN_BORDER">0</bool>
-                        <bool name="proxy-wxRAISED_BORDER">0</bool>
-                        <bool name="proxy-wxSTATIC_BORDER">0</bool>
+                        <bool name="proxy-wxCB_SIMPLE">0</bool>
+                        <bool name="proxy-wxCB_DROPDOWN">1</bool>
+                        <bool name="proxy-wxCB_READONLY">0</bool>
+                        <bool name="proxy-wxCB_SORT">0</bool>
                         <bool name="proxy-wxWANTS_CHARS">0</bool>
                         <bool name="proxy-wxNO_FULL_REPAINT_ON_RESIZE">0</bool>
                         <bool name="proxy-wxFULL_REPAINT_ON_RESIZE">0</bool>
@@ -2346,7 +2324,6 @@
                       <string name="proxy-Font">""</string>
                       <bool name="proxy-Hidden">0</bool>
                       <bool name="proxy-Enabled">1</bool>
-                      <string name="proxy-Parenting">"Use wxWidgets version"</string>
                       <string name="proxy-Static box class">"wxStaticBox"</string>
                       <string name="proxy-Orientation">"Vertical"</string>
                       <string name="proxy-AlignH">"Centre"</string>
@@ -2361,6 +2338,7 @@
                       <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                       <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                       <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                      <string name="proxy-Parenting">"Use wxWidgets version"</string>
                       <document>
                         <string name="title">"wxCheckBox: wxID_ANY"</string>
                         <string name="type">"dialog-control-document"</string>
@@ -2508,7 +2486,6 @@
                       <string name="proxy-Font">""</string>
                       <bool name="proxy-Hidden">0</bool>
                       <bool name="proxy-Enabled">1</bool>
-                      <string name="proxy-Parenting">"Use wxWidgets version"</string>
                       <string name="proxy-Static box class">"wxStaticBox"</string>
                       <string name="proxy-Orientation">"Vertical"</string>
                       <string name="proxy-AlignH">"Centre"</string>
@@ -2523,6 +2500,7 @@
                       <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                       <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                       <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                      <string name="proxy-Parenting">"Use wxWidgets version"</string>
                       <document>
                         <string name="title">"wxCheckBox: wxID_ANY"</string>
                         <string name="type">"dialog-control-document"</string>
@@ -3061,7 +3039,6 @@
                     <string name="proxy-Font">""</string>
                     <bool name="proxy-Hidden">0</bool>
                     <bool name="proxy-Enabled">1</bool>
-                    <string name="proxy-Parenting">"Use wxWidgets version"</string>
                     <string name="proxy-Static box class">"wxStaticBox"</string>
                     <string name="proxy-Orientation">"Vertical"</string>
                     <string name="proxy-AlignH">"Expand"</string>
@@ -3076,6 +3053,7 @@
                     <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                     <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                     <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                    <string name="proxy-Parenting">"Use wxWidgets version"</string>
                     <document>
                       <string name="title">"wxListCtrl: ID_LISTCTRL_DECEXCEPTIONS"</string>
                       <string name="type">"dialog-control-document"</string>
@@ -3527,7 +3505,6 @@
                     <string name="proxy-Font">""</string>
                     <bool name="proxy-Hidden">0</bool>
                     <bool name="proxy-Enabled">1</bool>
-                    <string name="proxy-Parenting">"Use wxWidgets version"</string>
                     <string name="proxy-Static box class">"wxStaticBox"</string>
                     <string name="proxy-Orientation">"Vertical"</string>
                     <string name="proxy-AlignH">"Expand"</string>
@@ -3542,6 +3519,7 @@
                     <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                     <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                     <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                    <string name="proxy-Parenting">"Use wxWidgets version"</string>
                     <document>
                       <string name="title">"wxFlexGridSizer"</string>
                       <string name="type">"dialog-control-document"</string>
@@ -4156,7 +4134,6 @@
                     <string name="proxy-Font">""</string>
                     <bool name="proxy-Hidden">0</bool>
                     <bool name="proxy-Enabled">1</bool>
-                    <string name="proxy-Parenting">"Use wxWidgets version"</string>
                     <string name="proxy-Static box class">"wxStaticBox"</string>
                     <string name="proxy-Orientation">"Vertical"</string>
                     <string name="proxy-AlignH">"Expand"</string>
@@ -4171,6 +4148,7 @@
                     <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                     <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                     <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                    <string name="proxy-Parenting">"Use wxWidgets version"</string>
                     <document>
                       <string name="title">"wxCheckBox: wxID_ANY"</string>
                       <string name="type">"dialog-control-document"</string>
@@ -6911,27 +6889,27 @@
                       <string name="proxy-Custom ctor arguments">""</string>
                     </document>
                     <document>
-                      <string name="title">"wxTextCtrl: wxID_ANY"</string>
+                      <string name="title">"wxComboBox: wxID_ANY"</string>
                       <string name="type">"dialog-control-document"</string>
                       <string name="filename">""</string>
-                      <string name="icon-name">"textctrl"</string>
+                      <string name="icon-name">"combobox"</string>
                       <long name="is-transient">0</long>
                       <long name="owns-file">1</long>
                       <long name="title-mode">0</long>
                       <long name="locked">0</long>
-                      <string name="proxy-type">"wbTextCtrlProxy"</string>
+                      <string name="proxy-type">"wbComboBoxProxy"</string>
                       <string name="proxy-Id name">"wxID_ANY"</string>
                       <long name="proxy-Id value">-1</long>
                       <string name="proxy-Name">""</string>
-                      <string name="proxy-Class">"wxTextCtrl"</string>
-                      <string name="proxy-Base class">"wxTextCtrl"</string>
+                      <string name="proxy-Class">"wxComboBox"</string>
+                      <string name="proxy-Base class">"wxComboBox"</string>
                       <bool name="proxy-External implementation">1</bool>
                       <bool name="proxy-Separate files">0</bool>
                       <string name="proxy-Implementation filename">""</string>
                       <string name="proxy-Header filename">""</string>
                       <string name="proxy-Member variable name">"m_Device"</string>
+                      <string name="proxy-Strings">""</string>
                       <string name="proxy-Initial value">""</string>
-                      <long name="proxy-Max length">0</long>
                       <string name="proxy-Help text">""</string>
                       <string name="proxy-Tooltip text">""</string>
                       <string name="proxy-Background colour">""</string>
@@ -6947,36 +6925,17 @@
                       <string name="proxy-Data class implementation filename">""</string>
                       <string name="proxy-Data class header filename">""</string>
                       <string name="proxy-Data class manager window">""</string>
-                      <bool name="proxy-wxTE_MULTILINE">0</bool>
-                      <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
-                      <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
-                      <bool name="proxy-wxTE_PASSWORD">0</bool>
-                      <bool name="proxy-wxTE_READONLY">0</bool>
-                      <bool name="proxy-wxTE_RICH">0</bool>
-                      <bool name="proxy-wxTE_RICH2">0</bool>
-                      <bool name="proxy-wxTE_AUTO_URL">0</bool>
-                      <bool name="proxy-wxTE_NOHIDESEL">0</bool>
-                      <bool name="proxy-wxTE_LEFT">0</bool>
-                      <bool name="proxy-wxTE_CENTRE">0</bool>
-                      <bool name="proxy-wxTE_RIGHT">0</bool>
-                      <bool name="proxy-wxHSCROLL">0</bool>
-                      <bool name="proxy-wxTE_CHARWRAP">0</bool>
-                      <bool name="proxy-wxTE_WORDWRAP">0</bool>
-                      <bool name="proxy-wxTE_CAPITALIZE">0</bool>
-                      <bool name="proxy-wxNO_BORDER">0</bool>
-                      <bool name="proxy-wxSIMPLE_BORDER">0</bool>
-                      <bool name="proxy-wxDOUBLE_BORDER">0</bool>
-                      <bool name="proxy-wxBORDER_THEME">0</bool>
-                      <bool name="proxy-wxSUNKEN_BORDER">0</bool>
-                      <bool name="proxy-wxRAISED_BORDER">0</bool>
-                      <bool name="proxy-wxSTATIC_BORDER">0</bool>
+                      <bool name="proxy-wxCB_SIMPLE">0</bool>
+                      <bool name="proxy-wxCB_DROPDOWN">1</bool>
+                      <bool name="proxy-wxCB_READONLY">0</bool>
+                      <bool name="proxy-wxCB_SORT">0</bool>
                       <bool name="proxy-wxWANTS_CHARS">0</bool>
                       <bool name="proxy-wxNO_FULL_REPAINT_ON_RESIZE">0</bool>
                       <bool name="proxy-wxFULL_REPAINT_ON_RESIZE">0</bool>
                       <string name="proxy-Custom styles">""</string>
                       <long name="proxy-X">-1</long>
                       <long name="proxy-Y">-1</long>
-                      <long name="proxy-Width">200</long>
+                      <long name="proxy-Width">-1</long>
                       <long name="proxy-Height">-1</long>
                       <string name="proxy-AlignH">"Expand"</string>
                       <string name="proxy-AlignV">"Centre"</string>
@@ -7518,7 +7477,6 @@
                     <string name="proxy-Font">""</string>
                     <bool name="proxy-Hidden">0</bool>
                     <bool name="proxy-Enabled">1</bool>
-                    <string name="proxy-Parenting">"Use wxWidgets version"</string>
                     <string name="proxy-Static box class">"wxStaticBox"</string>
                     <string name="proxy-Orientation">"Vertical"</string>
                     <string name="proxy-AlignH">"Expand"</string>
@@ -7533,6 +7491,7 @@
                     <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                     <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                     <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                    <string name="proxy-Parenting">"Use wxWidgets version"</string>
                     <document>
                       <string name="title">"wxCheckBox: wxID_ANY"</string>
                       <string name="type">"dialog-control-document"</string>
@@ -8303,7 +8262,6 @@
         <long name="proxy-Height">300</long>
         <bool name="proxy-AUI manager">0</bool>
         <string name="proxy-Event sources">""</string>
-        <bool name="proxy-wxTHICK_FRAME">0</bool>
         <document>
           <string name="title">"wxBoxSizer V"</string>
           <string name="type">"dialog-control-document"</string>
@@ -8317,14 +8275,6 @@
           <string name="proxy-type">"wbBoxSizerProxy"</string>
           <string name="proxy-Orientation">"Vertical"</string>
           <string name="proxy-Member variable name">""</string>
-          <string name="proxy-AlignH">"Centre"</string>
-          <string name="proxy-AlignV">"Centre"</string>
-          <long name="proxy-Stretch factor">0</long>
-          <long name="proxy-Border">5</long>
-          <bool name="proxy-wxLEFT">1</bool>
-          <bool name="proxy-wxRIGHT">1</bool>
-          <bool name="proxy-wxTOP">1</bool>
-          <bool name="proxy-wxBOTTOM">1</bool>
           <bool name="proxy-wxSHAPED">0</bool>
           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -8762,28 +8712,27 @@
                     <string name="proxy-Custom ctor arguments">""</string>
                   </document>
                   <document>
-                    <string name="title">"wxTextCtrl: ID_TEXTCTRL_DDL_DEVICE"</string>
+                    <string name="title">"wxComboBox: wxID_ANY"</string>
                     <string name="type">"dialog-control-document"</string>
                     <string name="filename">""</string>
-                    <string name="icon-name">"textctrl"</string>
+                    <string name="icon-name">"combobox"</string>
                     <long name="is-transient">0</long>
                     <long name="owns-file">1</long>
                     <long name="title-mode">0</long>
                     <long name="locked">0</long>
-                    <string name="created">"17/11/2007"</string>
-                    <string name="proxy-type">"wbTextCtrlProxy"</string>
-                    <string name="proxy-Id name">"ID_TEXTCTRL_DDL_DEVICE"</string>
-                    <long name="proxy-Id value">10004</long>
+                    <string name="proxy-type">"wbComboBoxProxy"</string>
+                    <string name="proxy-Id name">"wxID_ANY"</string>
+                    <long name="proxy-Id value">-1</long>
                     <string name="proxy-Name">""</string>
-                    <string name="proxy-Class">"wxTextCtrl"</string>
-                    <string name="proxy-Base class">"wxTextCtrl"</string>
+                    <string name="proxy-Class">"wxComboBox"</string>
+                    <string name="proxy-Base class">"wxComboBox"</string>
                     <bool name="proxy-External implementation">1</bool>
                     <bool name="proxy-Separate files">0</bool>
                     <string name="proxy-Implementation filename">""</string>
                     <string name="proxy-Header filename">""</string>
                     <string name="proxy-Member variable name">"m_Device"</string>
+                    <string name="proxy-Strings">""</string>
                     <string name="proxy-Initial value">""</string>
-                    <long name="proxy-Max length">0</long>
                     <string name="proxy-Help text">""</string>
                     <string name="proxy-Tooltip text">""</string>
                     <string name="proxy-Background colour">""</string>
@@ -8799,29 +8748,10 @@
                     <string name="proxy-Data class implementation filename">""</string>
                     <string name="proxy-Data class header filename">""</string>
                     <string name="proxy-Data class manager window">""</string>
-                    <bool name="proxy-wxTE_MULTILINE">0</bool>
-                    <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
-                    <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
-                    <bool name="proxy-wxTE_PASSWORD">0</bool>
-                    <bool name="proxy-wxTE_READONLY">0</bool>
-                    <bool name="proxy-wxTE_RICH">0</bool>
-                    <bool name="proxy-wxTE_RICH2">0</bool>
-                    <bool name="proxy-wxTE_AUTO_URL">0</bool>
-                    <bool name="proxy-wxTE_NOHIDESEL">0</bool>
-                    <bool name="proxy-wxTE_LEFT">0</bool>
-                    <bool name="proxy-wxTE_CENTRE">0</bool>
-                    <bool name="proxy-wxTE_RIGHT">0</bool>
-                    <bool name="proxy-wxHSCROLL">0</bool>
-                    <bool name="proxy-wxTE_CHARWRAP">0</bool>
-                    <bool name="proxy-wxTE_WORDWRAP">0</bool>
-                    <bool name="proxy-wxTE_CAPITALIZE">0</bool>
-                    <bool name="proxy-wxNO_BORDER">0</bool>
-                    <bool name="proxy-wxSIMPLE_BORDER">0</bool>
-                    <bool name="proxy-wxDOUBLE_BORDER">0</bool>
-                    <bool name="proxy-wxBORDER_THEME">0</bool>
-                    <bool name="proxy-wxSUNKEN_BORDER">0</bool>
-                    <bool name="proxy-wxRAISED_BORDER">0</bool>
-                    <bool name="proxy-wxSTATIC_BORDER">0</bool>
+                    <bool name="proxy-wxCB_SIMPLE">0</bool>
+                    <bool name="proxy-wxCB_DROPDOWN">1</bool>
+                    <bool name="proxy-wxCB_READONLY">0</bool>
+                    <bool name="proxy-wxCB_SORT">0</bool>
                     <bool name="proxy-wxWANTS_CHARS">0</bool>
                     <bool name="proxy-wxNO_FULL_REPAINT_ON_RESIZE">0</bool>
                     <bool name="proxy-wxFULL_REPAINT_ON_RESIZE">0</bool>
@@ -10114,7 +10044,6 @@
                   <string name="proxy-Font">""</string>
                   <bool name="proxy-Hidden">0</bool>
                   <bool name="proxy-Enabled">1</bool>
-                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <string name="proxy-Static box class">"wxStaticBox"</string>
                   <string name="proxy-Orientation">"Vertical"</string>
                   <string name="proxy-AlignH">"Expand"</string>
@@ -10129,6 +10058,7 @@
                   <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                   <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                   <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -10463,7 +10393,6 @@
                   <string name="proxy-Font">""</string>
                   <bool name="proxy-Hidden">0</bool>
                   <bool name="proxy-Enabled">1</bool>
-                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <string name="proxy-Static box class">"wxStaticBox"</string>
                   <string name="proxy-Orientation">"Horizontal"</string>
                   <string name="proxy-AlignH">"Expand"</string>
@@ -10478,6 +10407,7 @@
                   <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                   <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                   <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <document>
                     <string name="title">"wxCheckBox: wxID_ANY"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -10627,7 +10557,6 @@
                   <string name="proxy-Font">""</string>
                   <bool name="proxy-Hidden">0</bool>
                   <bool name="proxy-Enabled">1</bool>
-                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <string name="proxy-Static box class">"wxStaticBox"</string>
                   <string name="proxy-Orientation">"Horizontal"</string>
                   <string name="proxy-AlignH">"Expand"</string>
@@ -10642,6 +10571,7 @@
                   <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                   <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                   <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <document>
                     <string name="title">"wxCheckBox: wxID_ANY"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -11547,27 +11477,27 @@
                     <string name="proxy-Custom ctor arguments">""</string>
                   </document>
                   <document>
-                    <string name="title">"wxTextCtrl: ID_TEXTCTRL1"</string>
+                    <string name="title">"wxComboBox: wxID_ANY"</string>
                     <string name="type">"dialog-control-document"</string>
                     <string name="filename">""</string>
-                    <string name="icon-name">"textctrl"</string>
+                    <string name="icon-name">"combobox"</string>
                     <long name="is-transient">0</long>
                     <long name="owns-file">1</long>
                     <long name="title-mode">0</long>
                     <long name="locked">0</long>
-                    <string name="proxy-type">"wbTextCtrlProxy"</string>
-                    <string name="proxy-Id name">"ID_TEXTCTRL1"</string>
-                    <long name="proxy-Id value">10004</long>
+                    <string name="proxy-type">"wbComboBoxProxy"</string>
+                    <string name="proxy-Id name">"wxID_ANY"</string>
+                    <long name="proxy-Id value">-1</long>
                     <string name="proxy-Name">""</string>
-                    <string name="proxy-Class">"wxTextCtrl"</string>
-                    <string name="proxy-Base class">"wxTextCtrl"</string>
+                    <string name="proxy-Class">"wxComboBox"</string>
+                    <string name="proxy-Base class">"wxComboBox"</string>
                     <bool name="proxy-External implementation">1</bool>
                     <bool name="proxy-Separate files">0</bool>
                     <string name="proxy-Implementation filename">""</string>
                     <string name="proxy-Header filename">""</string>
                     <string name="proxy-Member variable name">"m_Device"</string>
+                    <string name="proxy-Strings">""</string>
                     <string name="proxy-Initial value">""</string>
-                    <long name="proxy-Max length">0</long>
                     <string name="proxy-Help text">""</string>
                     <string name="proxy-Tooltip text">""</string>
                     <string name="proxy-Background colour">""</string>
@@ -11583,29 +11513,10 @@
                     <string name="proxy-Data class implementation filename">""</string>
                     <string name="proxy-Data class header filename">""</string>
                     <string name="proxy-Data class manager window">""</string>
-                    <bool name="proxy-wxTE_MULTILINE">0</bool>
-                    <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
-                    <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
-                    <bool name="proxy-wxTE_PASSWORD">0</bool>
-                    <bool name="proxy-wxTE_READONLY">0</bool>
-                    <bool name="proxy-wxTE_RICH">0</bool>
-                    <bool name="proxy-wxTE_RICH2">0</bool>
-                    <bool name="proxy-wxTE_AUTO_URL">0</bool>
-                    <bool name="proxy-wxTE_NOHIDESEL">0</bool>
-                    <bool name="proxy-wxTE_LEFT">0</bool>
-                    <bool name="proxy-wxTE_CENTRE">0</bool>
-                    <bool name="proxy-wxTE_RIGHT">0</bool>
-                    <bool name="proxy-wxHSCROLL">0</bool>
-                    <bool name="proxy-wxTE_CHARWRAP">0</bool>
-                    <bool name="proxy-wxTE_WORDWRAP">0</bool>
-                    <bool name="proxy-wxTE_CAPITALIZE">0</bool>
-                    <bool name="proxy-wxNO_BORDER">0</bool>
-                    <bool name="proxy-wxSIMPLE_BORDER">0</bool>
-                    <bool name="proxy-wxDOUBLE_BORDER">0</bool>
-                    <bool name="proxy-wxBORDER_THEME">0</bool>
-                    <bool name="proxy-wxSUNKEN_BORDER">0</bool>
-                    <bool name="proxy-wxRAISED_BORDER">0</bool>
-                    <bool name="proxy-wxSTATIC_BORDER">0</bool>
+                    <bool name="proxy-wxCB_SIMPLE">0</bool>
+                    <bool name="proxy-wxCB_DROPDOWN">1</bool>
+                    <bool name="proxy-wxCB_READONLY">0</bool>
+                    <bool name="proxy-wxCB_SORT">0</bool>
                     <bool name="proxy-wxWANTS_CHARS">0</bool>
                     <bool name="proxy-wxNO_FULL_REPAINT_ON_RESIZE">0</bool>
                     <bool name="proxy-wxFULL_REPAINT_ON_RESIZE">0</bool>
@@ -12270,7 +12181,6 @@
                   <string name="proxy-Font">""</string>
                   <bool name="proxy-Hidden">0</bool>
                   <bool name="proxy-Enabled">1</bool>
-                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <string name="proxy-Static box class">"wxStaticBox"</string>
                   <string name="proxy-Orientation">"Vertical"</string>
                   <string name="proxy-AlignH">"Expand"</string>
@@ -12285,6 +12195,7 @@
                   <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                   <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                   <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <document>
                     <string name="title">"wxFlexGridSizer"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -12878,7 +12789,6 @@
                   <string name="proxy-Font">""</string>
                   <bool name="proxy-Hidden">0</bool>
                   <bool name="proxy-Enabled">1</bool>
-                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <string name="proxy-Static box class">"wxStaticBox"</string>
                   <string name="proxy-Orientation">"Vertical"</string>
                   <string name="proxy-AlignH">"Expand"</string>
@@ -12893,6 +12803,7 @@
                   <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                   <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                   <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <document>
                     <string name="title">"wxCheckBox: wxID_ANY"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -13703,7 +13614,6 @@
         <long name="proxy-Height">300</long>
         <bool name="proxy-AUI manager">0</bool>
         <string name="proxy-Event sources">""</string>
-        <bool name="proxy-wxTHICK_FRAME">0</bool>
         <document>
           <string name="title">"wxBoxSizer V"</string>
           <string name="type">"dialog-control-document"</string>
@@ -16698,14 +16608,6 @@
           <string name="proxy-type">"wbBoxSizerProxy"</string>
           <string name="proxy-Orientation">"Vertical"</string>
           <string name="proxy-Member variable name">""</string>
-          <string name="proxy-AlignH">"Centre"</string>
-          <string name="proxy-AlignV">"Centre"</string>
-          <long name="proxy-Stretch factor">0</long>
-          <long name="proxy-Border">5</long>
-          <bool name="proxy-wxLEFT">1</bool>
-          <bool name="proxy-wxRIGHT">1</bool>
-          <bool name="proxy-wxTOP">1</bool>
-          <bool name="proxy-wxBOTTOM">1</bool>
           <bool name="proxy-wxSHAPED">0</bool>
           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -17230,7 +17132,6 @@
                 <string name="proxy-Font">""</string>
                 <bool name="proxy-Hidden">0</bool>
                 <bool name="proxy-Enabled">1</bool>
-                <string name="proxy-Parenting">"Use wxWidgets version"</string>
                 <string name="proxy-Static box class">"wxStaticBox"</string>
                 <string name="proxy-Orientation">"Vertical"</string>
                 <string name="proxy-AlignH">"Expand"</string>
@@ -17245,6 +17146,7 @@
                 <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                 <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                 <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                <string name="proxy-Parenting">"Use wxWidgets version"</string>
                 <document>
                   <string name="title">"wxFlexGridSizer"</string>
                   <string name="type">"dialog-control-document"</string>
@@ -17751,7 +17653,6 @@
                 <string name="proxy-Font">""</string>
                 <bool name="proxy-Hidden">0</bool>
                 <bool name="proxy-Enabled">1</bool>
-                <string name="proxy-Parenting">"Use wxWidgets version"</string>
                 <string name="proxy-Static box class">"wxStaticBox"</string>
                 <string name="proxy-Orientation">"Vertical"</string>
                 <string name="proxy-AlignH">"Expand"</string>
@@ -17766,6 +17667,7 @@
                 <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                 <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                 <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                <string name="proxy-Parenting">"Use wxWidgets version"</string>
                 <document>
                   <string name="title">"wxCheckBox: wxID_ANY"</string>
                   <string name="type">"dialog-control-document"</string>
@@ -18453,28 +18355,27 @@
                   <string name="proxy-Custom ctor arguments">""</string>
                 </document>
                 <document>
-                  <string name="title">"wxTextCtrl: ID_TEXTCTRL_DINAMO_DEV"</string>
+                  <string name="title">"wxComboBox: wxID_ANY"</string>
                   <string name="type">"dialog-control-document"</string>
                   <string name="filename">""</string>
-                  <string name="icon-name">"textctrl"</string>
+                  <string name="icon-name">"combobox"</string>
                   <long name="is-transient">0</long>
                   <long name="owns-file">1</long>
                   <long name="title-mode">0</long>
                   <long name="locked">0</long>
-                  <string name="created">"1/2/2007"</string>
-                  <string name="proxy-type">"wbTextCtrlProxy"</string>
-                  <string name="proxy-Id name">"ID_TEXTCTRL_DINAMO_DEV"</string>
-                  <long name="proxy-Id value">10012</long>
+                  <string name="proxy-type">"wbComboBoxProxy"</string>
+                  <string name="proxy-Id name">"wxID_ANY"</string>
+                  <long name="proxy-Id value">-1</long>
                   <string name="proxy-Name">""</string>
-                  <string name="proxy-Class">"wxTextCtrl"</string>
-                  <string name="proxy-Base class">"wxTextCtrl"</string>
+                  <string name="proxy-Class">"wxComboBox"</string>
+                  <string name="proxy-Base class">"wxComboBox"</string>
                   <bool name="proxy-External implementation">1</bool>
                   <bool name="proxy-Separate files">0</bool>
                   <string name="proxy-Implementation filename">""</string>
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_Device"</string>
+                  <string name="proxy-Strings">""</string>
                   <string name="proxy-Initial value">""</string>
-                  <long name="proxy-Max length">0</long>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
                   <string name="proxy-Background colour">""</string>
@@ -18490,36 +18391,17 @@
                   <string name="proxy-Data class implementation filename">""</string>
                   <string name="proxy-Data class header filename">""</string>
                   <string name="proxy-Data class manager window">""</string>
-                  <bool name="proxy-wxTE_MULTILINE">0</bool>
-                  <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
-                  <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
-                  <bool name="proxy-wxTE_PASSWORD">0</bool>
-                  <bool name="proxy-wxTE_READONLY">0</bool>
-                  <bool name="proxy-wxTE_RICH">0</bool>
-                  <bool name="proxy-wxTE_RICH2">0</bool>
-                  <bool name="proxy-wxTE_AUTO_URL">0</bool>
-                  <bool name="proxy-wxTE_NOHIDESEL">0</bool>
-                  <bool name="proxy-wxTE_LEFT">0</bool>
-                  <bool name="proxy-wxTE_CENTRE">0</bool>
-                  <bool name="proxy-wxTE_RIGHT">0</bool>
-                  <bool name="proxy-wxHSCROLL">0</bool>
-                  <bool name="proxy-wxTE_CHARWRAP">0</bool>
-                  <bool name="proxy-wxTE_WORDWRAP">0</bool>
-                  <bool name="proxy-wxTE_CAPITALIZE">0</bool>
-                  <bool name="proxy-wxNO_BORDER">0</bool>
-                  <bool name="proxy-wxSIMPLE_BORDER">0</bool>
-                  <bool name="proxy-wxDOUBLE_BORDER">0</bool>
-                  <bool name="proxy-wxBORDER_THEME">0</bool>
-                  <bool name="proxy-wxSUNKEN_BORDER">0</bool>
-                  <bool name="proxy-wxRAISED_BORDER">0</bool>
-                  <bool name="proxy-wxSTATIC_BORDER">0</bool>
+                  <bool name="proxy-wxCB_SIMPLE">0</bool>
+                  <bool name="proxy-wxCB_DROPDOWN">1</bool>
+                  <bool name="proxy-wxCB_READONLY">0</bool>
+                  <bool name="proxy-wxCB_SORT">0</bool>
                   <bool name="proxy-wxWANTS_CHARS">0</bool>
                   <bool name="proxy-wxNO_FULL_REPAINT_ON_RESIZE">0</bool>
                   <bool name="proxy-wxFULL_REPAINT_ON_RESIZE">0</bool>
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">200</long>
+                  <long name="proxy-Width">-1</long>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Expand"</string>
                   <string name="proxy-AlignV">"Centre"</string>
@@ -19587,28 +19469,27 @@
                     <string name="proxy-Custom ctor arguments">""</string>
                   </document>
                   <document>
-                    <string name="title">"wxTextCtrl: wxID_ANY"</string>
+                    <string name="title">"wxComboBox: wxID_ANY"</string>
                     <string name="type">"dialog-control-document"</string>
                     <string name="filename">""</string>
-                    <string name="icon-name">"textctrl"</string>
+                    <string name="icon-name">"combobox"</string>
                     <long name="is-transient">0</long>
                     <long name="owns-file">1</long>
                     <long name="title-mode">0</long>
                     <long name="locked">0</long>
-                    <string name="created">"5/6/2007"</string>
-                    <string name="proxy-type">"wbTextCtrlProxy"</string>
+                    <string name="proxy-type">"wbComboBoxProxy"</string>
                     <string name="proxy-Id name">"wxID_ANY"</string>
                     <long name="proxy-Id value">-1</long>
                     <string name="proxy-Name">""</string>
-                    <string name="proxy-Class">"wxTextCtrl"</string>
-                    <string name="proxy-Base class">"wxTextCtrl"</string>
+                    <string name="proxy-Class">"wxComboBox"</string>
+                    <string name="proxy-Base class">"wxComboBox"</string>
                     <bool name="proxy-External implementation">1</bool>
                     <bool name="proxy-Separate files">0</bool>
                     <string name="proxy-Implementation filename">""</string>
                     <string name="proxy-Header filename">""</string>
                     <string name="proxy-Member variable name">"m_Device"</string>
+                    <string name="proxy-Strings">""</string>
                     <string name="proxy-Initial value">""</string>
-                    <long name="proxy-Max length">0</long>
                     <string name="proxy-Help text">""</string>
                     <string name="proxy-Tooltip text">""</string>
                     <string name="proxy-Background colour">""</string>
@@ -19624,29 +19505,10 @@
                     <string name="proxy-Data class implementation filename">""</string>
                     <string name="proxy-Data class header filename">""</string>
                     <string name="proxy-Data class manager window">""</string>
-                    <bool name="proxy-wxTE_MULTILINE">0</bool>
-                    <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
-                    <bool name="proxy-wxTE_PROCESS_TAB">0</bool>
-                    <bool name="proxy-wxTE_PASSWORD">0</bool>
-                    <bool name="proxy-wxTE_READONLY">0</bool>
-                    <bool name="proxy-wxTE_RICH">0</bool>
-                    <bool name="proxy-wxTE_RICH2">0</bool>
-                    <bool name="proxy-wxTE_AUTO_URL">0</bool>
-                    <bool name="proxy-wxTE_NOHIDESEL">0</bool>
-                    <bool name="proxy-wxTE_LEFT">0</bool>
-                    <bool name="proxy-wxTE_CENTRE">0</bool>
-                    <bool name="proxy-wxTE_RIGHT">0</bool>
-                    <bool name="proxy-wxHSCROLL">0</bool>
-                    <bool name="proxy-wxTE_CHARWRAP">0</bool>
-                    <bool name="proxy-wxTE_WORDWRAP">0</bool>
-                    <bool name="proxy-wxTE_CAPITALIZE">0</bool>
-                    <bool name="proxy-wxNO_BORDER">0</bool>
-                    <bool name="proxy-wxSIMPLE_BORDER">0</bool>
-                    <bool name="proxy-wxDOUBLE_BORDER">0</bool>
-                    <bool name="proxy-wxBORDER_THEME">0</bool>
-                    <bool name="proxy-wxSUNKEN_BORDER">0</bool>
-                    <bool name="proxy-wxRAISED_BORDER">0</bool>
-                    <bool name="proxy-wxSTATIC_BORDER">0</bool>
+                    <bool name="proxy-wxCB_SIMPLE">0</bool>
+                    <bool name="proxy-wxCB_DROPDOWN">1</bool>
+                    <bool name="proxy-wxCB_READONLY">0</bool>
+                    <bool name="proxy-wxCB_SORT">0</bool>
                     <bool name="proxy-wxWANTS_CHARS">0</bool>
                     <bool name="proxy-wxNO_FULL_REPAINT_ON_RESIZE">0</bool>
                     <bool name="proxy-wxFULL_REPAINT_ON_RESIZE">0</bool>
@@ -19661,7 +19523,7 @@
                     <long name="proxy-Border">5</long>
                     <bool name="proxy-wxLEFT">1</bool>
                     <bool name="proxy-wxRIGHT">1</bool>
-                    <bool name="proxy-wxTOP">0</bool>
+                    <bool name="proxy-wxTOP">1</bool>
                     <bool name="proxy-wxBOTTOM">0</bool>
                     <bool name="proxy-wxSHAPED">0</bool>
                     <bool name="proxy-wxADJUST_MINSIZE">0</bool>
@@ -20560,7 +20422,6 @@
                   <bool name="proxy-wxCB_DROPDOWN">1</bool>
                   <bool name="proxy-wxCB_READONLY">0</bool>
                   <bool name="proxy-wxCB_SORT">0</bool>
-                  <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                   <bool name="proxy-wxWANTS_CHARS">0</bool>
                   <bool name="proxy-wxNO_FULL_REPAINT_ON_RESIZE">0</bool>
                   <bool name="proxy-wxFULL_REPAINT_ON_RESIZE">0</bool>
@@ -20582,6 +20443,7 @@
                   <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                   <string name="proxy-Custom arguments">""</string>
                   <string name="proxy-Custom ctor arguments">""</string>
+                  <bool name="proxy-wxTE_PROCESS_ENTER">0</bool>
                 </document>
                 <document>
                   <string name="title">"wxCheckListBox: wxID_ANY"</string>
@@ -21783,7 +21645,6 @@
                   <string name="proxy-Font">""</string>
                   <bool name="proxy-Hidden">0</bool>
                   <bool name="proxy-Enabled">1</bool>
-                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <string name="proxy-Static box class">"wxStaticBox"</string>
                   <string name="proxy-Orientation">"Vertical"</string>
                   <string name="proxy-AlignH">"Expand"</string>
@@ -21798,6 +21659,7 @@
                   <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                   <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                   <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <document>
                     <string name="title">"wxCheckBox: wxID_ANY"</string>
                     <string name="type">"dialog-control-document"</string>
@@ -21947,7 +21809,6 @@
                   <string name="proxy-Font">""</string>
                   <bool name="proxy-Hidden">0</bool>
                   <bool name="proxy-Enabled">1</bool>
-                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <string name="proxy-Static box class">"wxStaticBox"</string>
                   <string name="proxy-Orientation">"Vertical"</string>
                   <string name="proxy-AlignH">"Expand"</string>
@@ -21962,6 +21823,7 @@
                   <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                   <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                   <string name="proxy-Platform">"&lt;Any platform&gt;"</string>
+                  <string name="proxy-Parenting">"Use wxWidgets version"</string>
                   <document>
                     <string name="title">"wxCheckBox: wxID_ANY"</string>
                     <string name="type">"dialog-control-document"</string>

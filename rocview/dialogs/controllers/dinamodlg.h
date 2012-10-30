@@ -56,7 +56,6 @@ class wxSpinCtrl;
 #define ID_STATICTEXT_DINAMO_IID 10009
 #define ID_TEXTCTRL_DINAMO_IID 10010
 #define ID_STATICTEXT_DINAMO_DEV 10011
-#define ID_TEXTCTRL_DINAMO_DEV 10012
 #define ID_STATICTEXT_DINAMO_SWTIME 10013
 #define ID_BAUDRATE 10014
 #define SYMBOL_DINAMOCTRLDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -86,11 +85,12 @@ class DinamoCtrlDlg: public wxDialog
   void initValues();
   void evaluate();
   iONode m_Props;
+  const char* m_Devices;
 
 public:
     /// Constructors
     DinamoCtrlDlg( );
-    DinamoCtrlDlg( wxWindow* parent, iONode props );
+    DinamoCtrlDlg( wxWindow* parent, iONode props, const char* devices=NULL );
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_DINAMOCTRLDLG_IDNAME, const wxString& caption = SYMBOL_DINAMOCTRLDLG_TITLE, const wxPoint& pos = SYMBOL_DINAMOCTRLDLG_POSITION, const wxSize& size = SYMBOL_DINAMOCTRLDLG_SIZE, long style = SYMBOL_DINAMOCTRLDLG_STYLE );
@@ -124,7 +124,7 @@ public:
     wxStaticText* m_labIID;
     wxTextCtrl* m_IID;
     wxStaticText* m_labDevice;
-    wxTextCtrl* m_Device;
+    wxComboBox* m_Device;
     wxStaticText* m_labSwTime;
     wxSpinCtrl* m_SwTime;
     wxStaticText* m_Sleep;

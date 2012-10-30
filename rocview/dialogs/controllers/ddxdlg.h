@@ -59,7 +59,6 @@ class wxFlexGridSizer;
 #define ID_STATICTEXT_DDL_IID 10001
 #define ID_TEXTCTRL_DDL_IID 10002
 #define ID_STATICTEXT_DDL_DEVICE 10003
-#define ID_TEXTCTRL_DDL_DEVICE 10004
 #define ID_PANEL_DDL_S88 10046
 #define ID_STATICTEXT_DDL_PORT 10005
 #define ID_STATICTEXT_DDL_BUSSES 10007
@@ -100,13 +99,14 @@ class DDXCtrlDlg: public wxDialog
   void initValues();
   void evaluate();
   iONode m_Props;
+  const char* m_Devices;
   iONode m_SubProps;
   int m_TabAlign;
 
 public:
     /// Constructors
     DDXCtrlDlg( );
-    DDXCtrlDlg( wxWindow* parent, iONode props );
+    DDXCtrlDlg( wxWindow* parent, iONode props, const char* devices=NULL );
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_DDXCTRLDLG_IDNAME, const wxString& caption = SYMBOL_DDXCTRLDLG_TITLE, const wxPoint& pos = SYMBOL_DDXCTRLDLG_POSITION, const wxSize& size = SYMBOL_DDXCTRLDLG_SIZE, long style = SYMBOL_DDXCTRLDLG_STYLE );
@@ -142,7 +142,7 @@ public:
     wxStaticText* m_labIID;
     wxTextCtrl* m_IID;
     wxStaticText* m_labDevice;
-    wxTextCtrl* m_Device;
+    wxComboBox* m_Device;
     wxStaticText* m_labPortBase;
     wxTextCtrl* m_PortBase;
     wxPanel* m_S88Panel;

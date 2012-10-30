@@ -43,6 +43,7 @@
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocview/public/guiapp.h"
+#include "rocs/public/strtok.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -76,10 +77,11 @@ DinamoCtrlDlg::DinamoCtrlDlg( )
 {
 }
 
-DinamoCtrlDlg::DinamoCtrlDlg( wxWindow* parent, iONode props )
+DinamoCtrlDlg::DinamoCtrlDlg( wxWindow* parent, iONode props, const char* devices )
 {
   Create(parent, -1, wxGetApp().getMsg("dinamo"));
   m_Props = props;
+  m_Devices = devices;
   initLabels();
   initValues();
 
@@ -100,6 +102,14 @@ void DinamoCtrlDlg::initValues() {
     
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
+  if( m_Devices != NULL ) {
+    iOStrTok tok = StrTokOp.inst(m_Devices, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_Device->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+  }
+
 
   m_SwTime->SetValue( wDigInt.getswtime( m_Props ) );
   m_TxSleep->SetValue( wDigInt.getpsleep( m_Props ) );
@@ -180,6 +190,7 @@ void DinamoCtrlDlg::CreateControls()
     itemPanel3->SetSizer(itemBoxSizer4);
 
     wxFlexGridSizer* itemFlexGridSizer5 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer5->AddGrowableCol(1);
     itemBoxSizer4->Add(itemFlexGridSizer5, 1, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( itemPanel3, ID_STATICTEXT_DINAMO_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -191,7 +202,8 @@ void DinamoCtrlDlg::CreateControls()
     m_labDevice = new wxStaticText( itemPanel3, ID_STATICTEXT_DINAMO_DEV, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_DINAMO_DEV, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
+    wxArrayString m_DeviceStrings;
+    m_Device = new wxComboBox( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_DeviceStrings, wxCB_DROPDOWN );
     itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labSwTime = new wxStaticText( itemPanel3, ID_STATICTEXT_DINAMO_SWTIME, _("Switch time"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -205,8 +217,6 @@ void DinamoCtrlDlg::CreateControls()
 
     m_TxSleep = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 10, 100, 10 );
     itemFlexGridSizer5->Add(m_TxSleep, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    itemFlexGridSizer5->AddGrowableCol(1);
 
     wxArrayString m_BaudrateStrings;
     m_BaudrateStrings.Add(_("&19200"));

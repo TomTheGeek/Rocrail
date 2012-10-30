@@ -1736,11 +1736,11 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   }
 
   if( StrOp.equals( wDigInt.ddx, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new DDXCtrlDlg(this,m_Controller);
+    m_CSDialog = new DDXCtrlDlg(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.srcp, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new SRCPCtrlDlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.dinamo, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new DinamoCtrlDlg(this,m_Controller);
+    m_CSDialog = new DinamoCtrlDlg(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.hsi88, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new Hsi88CntrlDlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.barjut, wDigInt.getlib( m_Controller ) ) )
