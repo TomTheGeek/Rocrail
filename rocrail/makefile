@@ -94,7 +94,7 @@ CPP=$(TOOLPREFIX)gcc
 LNK=$(TOOLPREFIX)gcc
 INCL_PATH=$(MOUNTPOINT)
 CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) $(ANSI) -I$(INCL_PATH) -I$(GENDIR)
-RRLIBS=$(OUTDIR)$(FS)libwrapper.a $(OUTDIR)$(FS)librocs.a $(OUTDIR)$(FS)librocutils.a $(OUTDIR)$(FS)librocrail.a
+RRLIBS=$(OUTDIR)$(FS)libwrapper.a $(OUTDIR)$(FS)librocutils.a $(OUTDIR)$(FS)librocs.a $(OUTDIR)$(FS)librocrail.a
 
 OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
 WEBOBJS=$(patsubst impl/web/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/web/*.c))
