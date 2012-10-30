@@ -114,6 +114,7 @@ SignalDialog::SignalDialog( wxWindow* parent, iONode p_Props )
   m_GeneralPanel->GetSizer()->Layout();
   m_LocationPanel->GetSizer()->Layout();
   m_InterfacePanel->GetSizer()->Layout();
+  m_InterfacePanel->GetSizer()->Fit(m_Notebook);
   m_PropsPanel->GetSizer()->Layout();
   m_Notebook->Fit();
   GetSizer()->Fit(this);
@@ -794,13 +795,13 @@ void SignalDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer44 = new wxFlexGridSizer(0, 4, 0, 0);
     itemBoxSizer40->Add(itemFlexGridSizer44, 0, wxGROW|wxBOTTOM, 5);
     m_Label_Bus = new wxStaticText( m_InterfacePanel, wxID_STATIC_SG_BUS, _("Bus:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer44->Add(m_Label_Bus, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer44->Add(m_Label_Bus, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_Bus = new wxTextCtrl( m_InterfacePanel, ID_TEXTCTRL_SG_BUS, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer44->Add(m_Bus, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_LabelProt = new wxStaticText( m_InterfacePanel, wxID_STATIC_SG_PROT, _("Protocol"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer44->Add(m_LabelProt, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer44->Add(m_LabelProt, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxArrayString m_ProtStrings;
     m_ProtStrings.Add(_("Motorola"));
@@ -813,7 +814,7 @@ void SignalDialog::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer49 = new wxStaticBoxSizer(m_RedBox, wxHORIZONTAL);
     itemBoxSizer40->Add(itemStaticBoxSizer49, 0, wxGROW|wxLEFT|wxRIGHT, 5);
     wxFlexGridSizer* itemFlexGridSizer50 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemStaticBoxSizer49->Add(itemFlexGridSizer50, 0, wxGROW, 5);
+    itemStaticBoxSizer49->Add(itemFlexGridSizer50, 0, wxALIGN_CENTER_VERTICAL, 5);
     m_labAddress = new wxStaticText( m_InterfacePanel, wxID_ANY, _("address"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer50->Add(m_labAddress, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
@@ -899,7 +900,7 @@ void SignalDialog::CreateControls()
     itemFlexGridSizer68->Add(m_labCmdTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_CmdTime = new wxSpinCtrl( m_InterfacePanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
-    itemFlexGridSizer68->Add(m_CmdTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer68->Add(m_CmdTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxArrayString m_SignalControlStrings;
     m_SignalControlStrings.Add(_("&default"));
@@ -908,7 +909,7 @@ void SignalDialog::CreateControls()
     m_SignalControlStrings.Add(_("&linear"));
     m_SignalControl = new wxRadioBox( m_InterfacePanel, ID_SIGNALCONTROL, _("Signal control"), wxDefaultPosition, wxDefaultSize, m_SignalControlStrings, 1, wxRA_SPECIFY_ROWS );
     m_SignalControl->SetSelection(0);
-    itemBoxSizer40->Add(m_SignalControl, 0, wxALIGN_LEFT|wxALL, 5);
+    itemBoxSizer40->Add(m_SignalControl, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
     m_Notebook->AddPage(m_InterfacePanel, _("Interface"));
 
