@@ -692,6 +692,8 @@ static Boolean __processMultiAspectsCmd( iOSignal inst, const char* state, int n
   }
 
   NodeOp.base.del(cmd);
+
+  return True;
 }
 
 
@@ -1194,7 +1196,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
         ok = False;
       }
     }
-    else if( hasAddr && wSignal.getaspects(o->props) > 4 ){
+    else if( (hasAddr && wSignal.getusepatterns( o->props ) == wSignal.use_linear) || (hasAddr && wSignal.getaspects(o->props) > 4) ){
       /* invoke the command by calling the control */
       if( !__processMultiAspectsCmd( inst, state, aspectnr ) ) {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
