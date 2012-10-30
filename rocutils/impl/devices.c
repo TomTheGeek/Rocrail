@@ -28,6 +28,7 @@
 #include "rocs/public/system.h"
 #include "rocs/public/dir.h"
 #include "rocs/public/str.h"
+#include "rocs/public/serial.h"
 
 static int instCnt = 0;
 
@@ -105,6 +106,16 @@ static char* _getDevicesStr( void ) {
   return devlist;
 }
 
+static Boolean __isDeviceAvailable(const char* devname) {
+  Boolean available = False;
+  iOSerial serial = SerialOp.inst( devname );
+  if( SerialOp.open( serial ) ) {
+    available = True;
+  }
+  SerialOp.base.del(serial);
+
+  return available;
+}
 
 static iOList _getDevices( void ) {
   iODir dir = NULL;
@@ -123,7 +134,8 @@ static iOList _getDevices( void ) {
     int i = 0;
     for( i = 0; i < 2; i++ ) {
       char* ttyS = StrOp.fmt( "/dev/ttyS%d", i );
-      ListOp.add(list, (obj)ttyS);
+      if( __isDeviceAvailable(ttyS) )
+        ListOp.add(list, (obj)ttyS);
     }
   }
 #elif defined _WIN32
@@ -131,7 +143,8 @@ static iOList _getDevices( void ) {
     int i = 0;
     for( i = 1; i < 10; i++ ) {
       char* com = StrOp.fmt( "COM%d", i );
-      ListOp.add(list, (obj)com);
+      if( __isDeviceAvailable(com) )
+        ListOp.add(list, (obj)com);
     }
   }
 #endif
