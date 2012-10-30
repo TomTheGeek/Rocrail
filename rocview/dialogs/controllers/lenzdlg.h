@@ -61,7 +61,7 @@ class LenzDlg: public wxDialog
 public:
     /// Constructors
     LenzDlg();
-    LenzDlg( wxWindow* parent, iONode props );
+    LenzDlg( wxWindow* parent, iONode props, const char* devices=NULL );
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_LENZDLG_IDNAME, const wxString& caption = SYMBOL_LENZDLG_TITLE, const wxPoint& pos = SYMBOL_LENZDLG_POSITION, const wxSize& size = SYMBOL_LENZDLG_SIZE, long style = SYMBOL_LENZDLG_STYLE );
@@ -105,7 +105,7 @@ public:
     wxStaticText* m_labIID;
     wxTextCtrl* m_IID;
     wxStaticText* m_labDevice;
-    wxTextCtrl* m_Device;
+    wxComboBox* m_Device;
     wxStaticText* m_labHost;
     wxTextCtrl* m_Host;
     wxStaticText* m_labPort;
@@ -123,6 +123,7 @@ public:
     wxSpinCtrl* m_SwitchTime;
 ////@end LenzDlg member variables
     iONode m_Props;
+    const char* m_Devices;
 };
 
 #endif

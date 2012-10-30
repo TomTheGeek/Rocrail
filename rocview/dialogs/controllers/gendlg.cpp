@@ -47,6 +47,7 @@
 #include "rocview/public/guiapp.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocs/public/strtok.h"
 
 /*!
  * GenericCtrlDlg type definition
@@ -77,11 +78,12 @@ GenericCtrlDlg::GenericCtrlDlg( )
 {
 }
 
-GenericCtrlDlg::GenericCtrlDlg( wxWindow* parent, iONode props, const char* controllername, int bps, const char* hs )
+GenericCtrlDlg::GenericCtrlDlg( wxWindow* parent, iONode props, const char* controllername, int bps, const char* hs, const char* devices )
 {
   Create(parent, -1, wxString::From8BitData(controllername).Upper() );
   m_Props = props;
-  initLabels();
+  m_Devices = devices;
+ initLabels();
 
   if( bps > 0 ) {
     wDigInt.setbps( m_Props, bps );
@@ -127,6 +129,14 @@ void GenericCtrlDlg::initLabels() {
 void GenericCtrlDlg::initValues() {
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
+  if( m_Devices != NULL ) {
+    iOStrTok tok = StrTokOp.inst(m_Devices, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_Device->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+  }
+
   m_Lib->SetValue( wxString( wDigInt.getlib( m_Props ), wxConvUTF8 ) );
 
   m_Timeout->SetValue( wDigInt.gettimeout( m_Props ) );
@@ -318,6 +328,7 @@ void GenericCtrlDlg::CreateControls()
     itemBoxSizer4->Add(itemBoxSizer5, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( m_Panel, ID_STATICTEXT, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -329,7 +340,8 @@ void GenericCtrlDlg::CreateControls()
     m_labDevice = new wxStaticText( m_Panel, ID_STATICTEXT1, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_Device = new wxTextCtrl( m_Panel, ID_TEXTCTRL1, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    wxArrayString m_DeviceStrings;
+    m_Device = new wxComboBox( m_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_DeviceStrings, wxCB_DROPDOWN );
     itemFlexGridSizer6->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labLib = new wxStaticText( m_Panel, wxID_ANY, _("Library"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -338,8 +350,6 @@ void GenericCtrlDlg::CreateControls()
     m_Lib = new wxTextCtrl( m_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
     m_Lib->Enable(false);
     itemFlexGridSizer6->Add(m_Lib, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
-
-    itemFlexGridSizer6->AddGrowableCol(1);
 
     wxBoxSizer* itemBoxSizer13 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer5->Add(itemBoxSizer13, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);

@@ -29,6 +29,7 @@
 
 #include "rocview/public/guiapp.h"
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocs/public/strtok.h"
 
 /*!
  * LenzDlg type definition
@@ -64,12 +65,13 @@ LenzDlg::LenzDlg()
     Init();
 }
 
-LenzDlg::LenzDlg( wxWindow* parent, iONode props )
+LenzDlg::LenzDlg( wxWindow* parent, iONode props, const char* devices )
 {
     Init();
     Create(parent, -1, _T("XpressNet"));
 
     m_Props = props;
+    m_Devices = devices;
     initLabels();
     initValues();
 
@@ -98,6 +100,14 @@ void LenzDlg::initLabels() {
 void LenzDlg::initValues() {
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
+  if( m_Devices != NULL ) {
+    iOStrTok tok = StrTokOp.inst(m_Devices, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_Device->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+  }
+
   m_Host->SetValue( wxString( wDigInt.gethost( m_Props ), wxConvUTF8 ) );
   m_Port->SetValue( wDigInt.getport(m_Props));
 
@@ -303,7 +313,8 @@ void LenzDlg::CreateControls()
     m_labDevice = new wxStaticText( m_MainPanel, wxID_ANY, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_Device = new wxTextCtrl( m_MainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
+    wxArrayString m_DeviceStrings;
+    m_Device = new wxComboBox( m_MainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_DeviceStrings, wxCB_DROPDOWN );
     itemFlexGridSizer6->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labHost = new wxStaticText( m_MainPanel, wxID_ANY, _("Host"), wxDefaultPosition, wxDefaultSize, 0 );

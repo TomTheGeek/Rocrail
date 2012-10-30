@@ -46,10 +46,11 @@ protected:
   void initValues();
   void evaluate();
   iONode m_Props;
+  const char* m_Devices;
 
 public:
   /** Constructor */
-  CbusDlg( wxWindow* parent, iONode props );
+  CbusDlg( wxWindow* parent, iONode props, const char* devices=NULL );
 };
 
 #endif // __cbusdlg__

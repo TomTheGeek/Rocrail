@@ -1746,7 +1746,7 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   else if( StrOp.equals( wDigInt.barjut, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new BarJuTCntrlDlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.loconet, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new LocoNetCtrlDlg(this,m_Controller);
+    m_CSDialog = new LocoNetCtrlDlg(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.ecos, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new ECoSCtrlDialog(this,m_Controller);
   else if( StrOp.equals( wDigInt.opendcc, wDigInt.getlib( m_Controller ) ) )
@@ -1754,9 +1754,9 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   else if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new ECoSCtrlDialog(this,m_Controller);
   else if( StrOp.equals( wDigInt.lenz, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new LenzDlg(this,m_Controller);
+    m_CSDialog = new LenzDlg(this,m_Controller, devices);
   else if( StrOp.equals( wDigInt.xpressnet, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new LenzDlg(this,m_Controller);
+    m_CSDialog = new LenzDlg(this,m_Controller, devices);
   else if( StrOp.equals( wDigInt.roco, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ));
   else if( StrOp.equals( wDigInt.sprog, wDigInt.getlib( m_Controller ) ) )
@@ -1766,7 +1766,7 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   else if( StrOp.equals( wDigInt.bidib, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new BidibDlg(this,m_Controller, devices);
   else if( StrOp.equals( wDigInt.cbus, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new CbusDlg(this,m_Controller);
+    m_CSDialog = new CbusDlg(this,m_Controller, devices);
   else if( StrOp.equals( wDigInt.rocnet, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new RocNetDlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.massoth, wDigInt.getlib( m_Controller ) ) )
@@ -1774,7 +1774,7 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   else if( StrOp.equals( wDigInt.z21, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new ECoSCtrlDialog(this,m_Controller);
   else
-    m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ));
+    m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ), 0, NULL, devices);
 
   if( wxID_OK == m_CSDialog->ShowModal() ) {
     initControllerList();

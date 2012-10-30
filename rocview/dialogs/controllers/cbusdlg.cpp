@@ -33,9 +33,11 @@
 #include "rocview/public/guiapp.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/CBus.h"
+#include "rocs/public/strtok.h"
 
-CbusDlg::CbusDlg( wxWindow* parent, iONode props ):cbusdlggen( parent ) {
+CbusDlg::CbusDlg( wxWindow* parent, iONode props, const char* devices ):cbusdlggen( parent ) {
   m_Props = props;
+  m_Devices = devices;
 
   iONode cbusini = wDigInt.getcbus(m_Props);
 
@@ -88,7 +90,16 @@ void CbusDlg::initValues() {
   m_SwTime->SetValue( wDigInt.getswtime( m_Props ) );
   m_Purgetime->SetValue( wCBus.getpurgetime( cbusini ) );
   m_LoaderTime->SetValue( wCBus.getloadertime( cbusini ) );
+
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
+  if( m_Devices != NULL ) {
+    iOStrTok tok = StrTokOp.inst(m_Devices, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_Device->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+  }
+
   m_Host->SetValue( wxString( wDigInt.gethost( m_Props ), wxConvUTF8 ) );
   m_Port->SetValue( wDigInt.getport( m_Props ) );
 

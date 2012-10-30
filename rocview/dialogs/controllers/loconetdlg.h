@@ -90,7 +90,7 @@ class LocoNetCtrlDlg: public wxDialog
 public:
     /// Constructors
     LocoNetCtrlDlg();
-    LocoNetCtrlDlg( wxWindow* parent, iONode props );
+    LocoNetCtrlDlg( wxWindow* parent, iONode props, const char* devices=NULL );
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_LOCONETCTRLDLG_IDNAME, const wxString& caption = SYMBOL_LOCONETCTRLDLG_TITLE, const wxPoint& pos = SYMBOL_LOCONETCTRLDLG_POSITION, const wxSize& size = SYMBOL_LOCONETCTRLDLG_SIZE, long style = SYMBOL_LOCONETCTRLDLG_STYLE );
@@ -134,7 +134,7 @@ public:
     wxStaticText* m_labIID;
     wxTextCtrl* m_IID;
     wxStaticText* m_labDevice;
-    wxTextCtrl* m_Device;
+    wxComboBox* m_Device;
     wxStaticText* m_labHost;
     wxTextCtrl* m_Host;
     wxStaticText* m_labPort;
@@ -177,6 +177,8 @@ public:
 ////@end LocoNetCtrlDlg member variables
     iONode m_Props;
     int optidx[256];
+    const char* m_Devices;
+
 };
 
 #endif

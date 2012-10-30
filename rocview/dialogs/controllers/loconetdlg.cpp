@@ -53,6 +53,7 @@
 #include "rocrail/wrapper/public/LNSlotServer.h"
 
 #include "rocdigs/impl/loconet/lncmdstn.h"
+#include "rocs/public/strtok.h"
 
 /*!
  * LocoNetCtrlDlg type definition
@@ -88,11 +89,12 @@ LocoNetCtrlDlg::LocoNetCtrlDlg()
     Init();
 }
 
-LocoNetCtrlDlg::LocoNetCtrlDlg( wxWindow* parent, iONode props )
+LocoNetCtrlDlg::LocoNetCtrlDlg( wxWindow* parent, iONode props, const char* devices )
 {
   m_TabAlign = wxGetApp().getTabAlign();
   Create(parent, -1, _T("LocoNet"));
   m_Props = props;
+  m_Devices = devices;
   initLabels();
   initValues();
 
@@ -140,6 +142,14 @@ void LocoNetCtrlDlg::initLabels() {
 void LocoNetCtrlDlg::initValues() {
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
+  if( m_Devices != NULL ) {
+    iOStrTok tok = StrTokOp.inst(m_Devices, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_Device->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+  }
+
   m_Host->SetValue( wxString( wDigInt.gethost( m_Props ), wxConvUTF8 ) );
   char* val = StrOp.fmt( "%d", wDigInt.getport( m_Props ) );
   m_Port->SetValue( wxString( val, wxConvUTF8 ) ); StrOp.free( val );
@@ -444,8 +454,9 @@ void LocoNetCtrlDlg::CreateControls()
     m_labDevice = new wxStaticText( m_InterfacePanel, wxID_ANY, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Device = new wxTextCtrl( m_InterfacePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    wxArrayString m_DeviceStrings;
+    m_Device = new wxComboBox( m_InterfacePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_DeviceStrings, wxCB_DROPDOWN );
+    itemFlexGridSizer6->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_labHost = new wxStaticText( m_InterfacePanel, wxID_STATIC, _("Host"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
