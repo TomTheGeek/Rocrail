@@ -54,7 +54,6 @@
 #define ID_STATICTEXT_BARJUT_IID 10000
 #define ID_TEXTCTRL_BARJUT_IID 10001
 #define ID_STATICTEXT_BARJUT_DEVICE 10002
-#define ID_TEXTCTRL_BARJUT_DEVICE 10003
 #define ID_STATICTEXT_BARJUT_POLLING 10004
 #define ID_TEXTCTRL_BARJUT_POLLING 10006
 #define SYMBOL_BARJUTCNTRLDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -84,11 +83,12 @@ class BarJuTCntrlDlg: public wxDialog
   void initValues();
   void evaluate();
   iONode m_Props;
+  const char* m_Devices;
 
 public:
     /// Constructors
     BarJuTCntrlDlg( );
-    BarJuTCntrlDlg( wxWindow* parent, iONode props );
+    BarJuTCntrlDlg( wxWindow* parent, iONode props, const char* devices=NULL );
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_BARJUTCNTRLDLG_IDNAME, const wxString& caption = SYMBOL_BARJUTCNTRLDLG_TITLE, const wxPoint& pos = SYMBOL_BARJUTCNTRLDLG_POSITION, const wxSize& size = SYMBOL_BARJUTCNTRLDLG_SIZE, long style = SYMBOL_BARJUTCNTRLDLG_STYLE );
@@ -122,7 +122,7 @@ public:
     wxStaticText* m_labIID;
     wxTextCtrl* m_IID;
     wxStaticText* m_labDevice;
-    wxTextCtrl* m_Device;
+    wxComboBox* m_Device;
     wxStaticText* m_labPolling;
     wxTextCtrl* m_Polling;
 ////@end BarJuTCntrlDlg member variables

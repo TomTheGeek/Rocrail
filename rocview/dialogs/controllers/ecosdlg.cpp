@@ -26,6 +26,7 @@
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocview/public/guiapp.h"
+#include "rocs/public/strtok.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -62,10 +63,11 @@ ECoSCtrlDialog::ECoSCtrlDialog()
     Init();
 }
 
-ECoSCtrlDialog::ECoSCtrlDialog( wxWindow* parent, iONode props )
+ECoSCtrlDialog::ECoSCtrlDialog( wxWindow* parent, iONode props, const char* devices )
 {
   Create(parent, -1, wxGetApp().getMsg("ecos"));
   m_Props = props;
+  m_Devices = devices;
   initLabels();
   initValues();
 
@@ -100,6 +102,14 @@ void ECoSCtrlDialog::initValues() {
 
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
+  if( m_Devices != NULL ) {
+    iOStrTok tok = StrTokOp.inst(m_Devices, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_Device->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+  }
+
   m_Host->SetValue( wxString( wDigInt.gethost( m_Props ), wxConvUTF8 ) );
 
   char* val = StrOp.fmt( "%d", wDigInt.getport( m_Props ) );
@@ -208,6 +218,7 @@ void ECoSCtrlDialog::CreateControls()
     itemPanel3->SetSizer(itemBoxSizer4);
 
     wxFlexGridSizer* itemFlexGridSizer5 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer5->AddGrowableCol(1);
     itemBoxSizer4->Add(itemFlexGridSizer5, 0, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( itemPanel3, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -219,7 +230,8 @@ void ECoSCtrlDialog::CreateControls()
     m_labDevice = new wxStaticText( itemPanel3, wxID_ANY, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Device = new wxTextCtrl( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
+    wxArrayString m_DeviceStrings;
+    m_Device = new wxComboBox( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_DeviceStrings, wxCB_DROPDOWN );
     itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labHost = new wxStaticText( itemPanel3, wxID_ANY, _("Host"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -246,8 +258,6 @@ void ECoSCtrlDialog::CreateControls()
 
     m_Version = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 10, 0 );
     itemFlexGridSizer5->Add(m_Version, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    itemFlexGridSizer5->AddGrowableCol(1);
 
     wxArrayString m_SubLibStrings;
     m_SubLibStrings.Add(_("&Ethernet"));

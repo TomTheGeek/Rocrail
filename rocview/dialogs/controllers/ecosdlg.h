@@ -63,11 +63,12 @@ class ECoSCtrlDialog: public wxDialog
   void initValues();
   void evaluate();
   iONode m_Props;
+  const char* m_Devices;
 
 public:
     /// Constructors
     ECoSCtrlDialog();
-    ECoSCtrlDialog( wxWindow* parent, iONode props );
+    ECoSCtrlDialog( wxWindow* parent, iONode props, const char* devices=NULL );
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_ECOSCTRLDIALOG_IDNAME, const wxString& caption = SYMBOL_ECOSCTRLDIALOG_TITLE, const wxPoint& pos = SYMBOL_ECOSCTRLDIALOG_POSITION, const wxSize& size = SYMBOL_ECOSCTRLDIALOG_SIZE, long style = SYMBOL_ECOSCTRLDIALOG_STYLE );
@@ -110,7 +111,7 @@ public:
     wxStaticText* m_labIID;
     wxTextCtrl* m_IID;
     wxStaticText* m_labDevice;
-    wxTextCtrl* m_Device;
+    wxComboBox* m_Device;
     wxStaticText* m_labHost;
     wxTextCtrl* m_Host;
     wxStaticText* m_labPort;

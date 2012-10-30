@@ -43,6 +43,7 @@
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocview/public/guiapp.h"
+#include "rocs/public/strtok.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -76,12 +77,13 @@ BarJuTCntrlDlg::BarJuTCntrlDlg()
 {
 }
 
-BarJuTCntrlDlg::BarJuTCntrlDlg( wxWindow* parent, iONode props )
+BarJuTCntrlDlg::BarJuTCntrlDlg( wxWindow* parent, iONode props, const char* devices )
 {
   int isSPROGII = StrOp.equals( wDigInt.sprog, wDigInt.getlib(props) );
   int isDCC232  = StrOp.equals( wDigInt.dcc232, wDigInt.getlib(props) );
   Create(parent, -1, isSPROGII ? _T("SPROG II"):(isDCC232?_T("DCC232"):_T("BarJut")));
   m_Props = props;
+  m_Devices = devices;
   initLabels();
   initValues();
 
@@ -106,6 +108,13 @@ void BarJuTCntrlDlg::initValues() {
 
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
+  if( m_Devices != NULL ) {
+    iOStrTok tok = StrTokOp.inst(m_Devices, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_Device->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+  }
 
   char* val = StrOp.fmt( "%d", wDigInt.gettimeout( m_Props ) );
   m_Polling->SetValue( wxString( val, wxConvUTF8 ) );
@@ -182,8 +191,9 @@ void BarJuTCntrlDlg::CreateControls()
     m_labDevice = new wxStaticText( itemPanel3, ID_STATICTEXT_BARJUT_DEVICE, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Device = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_BARJUT_DEVICE, wxEmptyString, wxDefaultPosition, wxSize(120, -1), 0 );
-    itemFlexGridSizer5->Add(m_Device, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxArrayString m_DeviceStrings;
+    m_Device = new wxComboBox( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_DeviceStrings, wxCB_DROPDOWN );
+    itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labPolling = new wxStaticText( itemPanel3, ID_STATICTEXT_BARJUT_POLLING, _("Pollingrate"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labPolling, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);

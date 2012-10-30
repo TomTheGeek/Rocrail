@@ -1742,17 +1742,17 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   else if( StrOp.equals( wDigInt.dinamo, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new DinamoCtrlDlg(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.hsi88, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new Hsi88CntrlDlg(this,m_Controller);
+    m_CSDialog = new Hsi88CntrlDlg(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.barjut, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new BarJuTCntrlDlg(this,m_Controller);
+    m_CSDialog = new BarJuTCntrlDlg(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.loconet, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new LocoNetCtrlDlg(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.ecos, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new ECoSCtrlDialog(this,m_Controller);
+    m_CSDialog = new ECoSCtrlDialog(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.opendcc, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new OpenDCCCtrlDlg(this,m_Controller, devices);
   else if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new ECoSCtrlDialog(this,m_Controller);
+    m_CSDialog = new ECoSCtrlDialog(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.lenz, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new LenzDlg(this,m_Controller, devices);
   else if( StrOp.equals( wDigInt.xpressnet, wDigInt.getlib( m_Controller ) ) )
@@ -1772,7 +1772,7 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   else if( StrOp.equals( wDigInt.massoth, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ), 57600, wDigInt.cts);
   else if( StrOp.equals( wDigInt.z21, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new ECoSCtrlDialog(this,m_Controller);
+    m_CSDialog = new ECoSCtrlDialog(this,m_Controller,devices);
   else
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ), 0, NULL, devices);
 

@@ -44,6 +44,7 @@
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/HSI88.h"
 #include "rocview/public/guiapp.h"
+#include "rocs/public/strtok.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -77,10 +78,11 @@ Hsi88CntrlDlg::Hsi88CntrlDlg( )
 {
 }
 
-Hsi88CntrlDlg::Hsi88CntrlDlg( wxWindow* parent, iONode props )
+Hsi88CntrlDlg::Hsi88CntrlDlg( wxWindow* parent, iONode props, const char* devices )
 {
   Create(parent, -1, wxGetApp().getMsg("hsi88"));
   m_Props = props;
+  m_Devices = devices;
   initLabels();
   initValues();
 
@@ -112,6 +114,13 @@ void Hsi88CntrlDlg::initValues() {
 
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
+  if( m_Devices != NULL ) {
+    iOStrTok tok = StrTokOp.inst(m_Devices, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_Device->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+  }
 
   iONode hsi88ini = wDigInt.gethsi88(m_Props);
   if( hsi88ini == NULL ) {
@@ -215,6 +224,7 @@ void Hsi88CntrlDlg::CreateControls()
     m_Panel->SetSizer(itemBoxSizer4);
 
     wxFlexGridSizer* itemFlexGridSizer5 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer5->AddGrowableCol(1);
     itemBoxSizer4->Add(itemFlexGridSizer5, 0, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( m_Panel, ID_STATICTEXT_HSI_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -226,10 +236,9 @@ void Hsi88CntrlDlg::CreateControls()
     m_labDevice = new wxStaticText( m_Panel, ID_STATICTEXT_HSI_DEVICE, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Device = new wxTextCtrl( m_Panel, ID_TEXTCTRL_HSI_DEVICE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    wxArrayString m_DeviceStrings;
+    m_Device = new wxComboBox( m_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_DeviceStrings, wxCB_DROPDOWN );
     itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    itemFlexGridSizer5->AddGrowableCol(1);
 
     wxArrayString m_TypeStrings;
     m_TypeStrings.Add(_("&RS232"));
