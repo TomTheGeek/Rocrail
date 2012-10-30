@@ -32,11 +32,13 @@
 #include "rocview/public/guiapp.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/DCC232.h"
+#include "rocs/public/strtok.h"
 
-DCC232Dlg::DCC232Dlg( wxWindow* parent, iONode props )
+DCC232Dlg::DCC232Dlg( wxWindow* parent, iONode props, const char* devices )
   :dcc232gen( parent )
 {
   m_Props = props;
+  m_Devices = devices;
   initLabels();
   initValues();
 
@@ -78,6 +80,14 @@ void DCC232Dlg::initValues() {
   }
 
   m_Device->SetValue( wxString( wDCC232.getport( dcc232 ), wxConvUTF8 ) );
+  if( m_Devices != NULL ) {
+    iOStrTok tok = StrTokOp.inst(m_Devices, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_Device->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+  }
+
   m_AutoPurge->SetValue( wDCC232.ispurge( dcc232 ) ? true:false );
   m_PurgeTime->SetValue( wDCC232.getpurgetime( dcc232 ) );
   m_ShortcutDetection->SetValue( wDCC232.isshortcut( dcc232 ) ? true:false );

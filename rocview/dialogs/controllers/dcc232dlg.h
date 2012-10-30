@@ -42,10 +42,11 @@ class DCC232Dlg : public dcc232gen
   void onOK( wxCommandEvent& event );
   void onCancel( wxCommandEvent& event );
   iONode m_Props;
+  const char* m_Devices;
 
 public:
 	/** Constructor */
-	DCC232Dlg( wxWindow* parent, iONode props );
+	DCC232Dlg( wxWindow* parent, iONode props, const char* devices=NULL );
 };
 
 #endif // __dcc232dlg__
