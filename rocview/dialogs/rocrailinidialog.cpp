@@ -71,6 +71,7 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/R2RnetIni.h"
 #include "rocrail/wrapper/public/SnmpService.h"
+#include "rocrail/wrapper/public/Devices.h"
 
 #include "rocview/wrapper/public/Gui.h"
 
@@ -1729,6 +1730,11 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   if( m_Controller == NULL )
     return;
 
+  const char* devices = NULL;
+  if( wRocRail.getdevices(m_Props) != NULL ) {
+    devices = wDevices.getserial(wRocRail.getdevices(m_Props));
+  }
+
   if( StrOp.equals( wDigInt.ddx, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new DDXCtrlDlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.srcp, wDigInt.getlib( m_Controller ) ) )
@@ -1758,7 +1764,7 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   else if( StrOp.equals( wDigInt.dcc232, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new DCC232Dlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.bidib, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new BidibDlg(this,m_Controller);
+    m_CSDialog = new BidibDlg(this,m_Controller, devices);
   else if( StrOp.equals( wDigInt.cbus, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new CbusDlg(this,m_Controller);
   else if( StrOp.equals( wDigInt.rocnet, wDigInt.getlib( m_Controller ) ) )

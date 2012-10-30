@@ -316,6 +316,9 @@
       <var name="sname" vt="string" defval="" range="*" remark="Servicer name to use in NetReq and NetRsp."/>
       <var name="port" vt="int" defval="0" range="0-65535" remark="Port number for server socket."/>
     </service>
+    <devices wrappername="Devices" cardinality="1" remark="List of available server devices.">
+      <var name="serial" vt="string" defval="" range="*" remark="CSV list of serial devices."/>
+    </devices>
     <trace wrappername="Trace">
       <var name="rfile" vt="string" defval="rocrail"/>
       <var name="gfile" vt="string" defval="rocview"/>

@@ -48,11 +48,12 @@ protected:
   void initNodes();
   void evaluate();
   iONode m_Props;
+  const char* m_Devices;
 
 
 public:
 	/** Constructor */
-	BidibDlg( wxWindow* parent, iONode props );
+	BidibDlg( wxWindow* parent, iONode props, const char* devices=NULL );
 
 };
 

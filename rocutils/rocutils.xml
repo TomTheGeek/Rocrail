@@ -46,6 +46,7 @@
 
   <object name="Devices" use="list" remark="Serial device lister.">
     <fun name="getDevices" vt="iOList"/>
+    <fun name="getDevicesStr" vt="char*"/>
     <fun name="freeList" vt="void">
       <param name="list" vt="iOList"/>
     </fun>

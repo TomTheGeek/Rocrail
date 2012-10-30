@@ -78,6 +78,9 @@
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/SystemActions.h"
 #include "rocrail/wrapper/public/Issue.h"
+#include "rocrail/wrapper/public/Devices.h"
+
+#include "rocutils/public/devices.h"
 
 typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 /* proto types */
@@ -822,6 +825,15 @@ static void __callback( obj inst, iONode nodeA ) {
     }
     else if( StrOp.equals( wSysCmd.getini, wSysCmd.getcmd( nodeA ) ) ) {
       iONode ini = (iONode)NodeOp.base.clone( AppOp.getNewIni() );
+      char* devlist = DevicesOp.getDevicesStr();
+      iONode devices = wRocRail.getdevices(ini);
+      if( devices == NULL ) {
+        devices = NodeOp.inst( wDevices.name(), ini, ELEMENT_NODE );
+        NodeOp.addChild( ini, devices );
+      }
+      wDevices.setserial(devices, devlist);
+      StrOp.free(devlist);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "devices: \"%s\"", wDevices.getserial(devices) );
       ClntConOp.postEvent( AppOp.getClntCon(), ini, wCommand.getserver( nodeA ) );
       NodeOp.base.del( nodeA );
       return;

@@ -37,12 +37,14 @@
 #include "rocrail/wrapper/public/BiDiBnode.h"
 
 #include "rocutils/public/vendors.h"
-#include "rocutils/public/devices.h"
 
-BidibDlg::BidibDlg( wxWindow* parent, iONode props )
+#include "rocs/public/strtok.h"
+
+BidibDlg::BidibDlg( wxWindow* parent, iONode props, const char* devices )
   :bidibdlggen( parent )
 {
   m_Props = props;
+  m_Devices = devices;
   __initVendors();
   initLabels();
   initValues();
@@ -92,13 +94,13 @@ void BidibDlg::initValues() {
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
 
-  iOList list = DevicesOp.getDevices();
-  int cnt = ListOp.size(list);
-  for( int i = 0; i < cnt; i++ ) {
-    const char* dev = (const char*)ListOp.get(list, i);
-    m_Device->Append( wxString( dev, wxConvUTF8 ) );
+  if( m_Devices != NULL ) {
+    iOStrTok tok = StrTokOp.inst(m_Devices, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_Device->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
   }
-  DevicesOp.freeList(list);
 
   if( wDigInt.getbps( m_Props ) == 19200 )
     m_BPS->SetSelection(0);

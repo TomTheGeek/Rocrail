@@ -89,6 +89,23 @@ static void _freeList( iOList list ) {
 }
 
 
+static char* _getDevicesStr( void ) {
+  char* devlist = StrOp.dup("");
+  iOList list = DevicesOp.getDevices();
+  int cnt = ListOp.size(list);
+  int i = 0;
+  for( i = 0; i < cnt; i++ ) {
+    if( i > 0 )
+      devlist = StrOp.cat(devlist, ",");
+    devlist = StrOp.cat(devlist, (const char*)ListOp.get(list, i));
+  }
+
+  DevicesOp.freeList(list);
+
+  return devlist;
+}
+
+
 static iOList _getDevices( void ) {
   iODir dir = NULL;
   iOList list = ListOp.inst();
