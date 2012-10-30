@@ -32,6 +32,7 @@
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/OpenDCC.h"
+#include "rocs/public/strtok.h"
 
 
 
@@ -81,7 +82,7 @@ OpenDCCCtrlDlg::OpenDCCCtrlDlg( wxWindow* parent, wxWindowID id, const wxString&
     Create(parent, id, caption, pos, size, style);
 }
 
-OpenDCCCtrlDlg::OpenDCCCtrlDlg( wxWindow* parent, iONode props )
+OpenDCCCtrlDlg::OpenDCCCtrlDlg( wxWindow* parent, iONode props, const char* devices )
 {
   m_TabAlign = wxGetApp().getTabAlign();
   Init();
@@ -93,6 +94,7 @@ OpenDCCCtrlDlg::OpenDCCCtrlDlg( wxWindow* parent, iONode props )
   m_bLenz = false;
   m_OpenDCCmode = 0;
   m_Props = props;
+  m_Devices = devices;
   MemOp.set( m_soValue, 0, sizeof(m_soValue) );
   m_TimerMutex = MutexOp.inst( NULL, True );
 
@@ -330,6 +332,14 @@ void OpenDCCCtrlDlg::evaluate() {
 void OpenDCCCtrlDlg::initValues() {
   m_IID->SetValue( wxString(wDigInt.getiid(m_Props),wxConvUTF8) );
   m_Device->SetValue( wxString(wDigInt.getdevice(m_Props),wxConvUTF8) );
+  if( m_Devices != NULL ) {
+    iOStrTok tok = StrTokOp.inst(m_Devices, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_Device->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+  }
+
   switch(wDigInt.getbps(m_Props)) {
   case 2400:
     m_Baudrate->SetSelection(0);
@@ -897,7 +907,8 @@ void OpenDCCCtrlDlg::CreateControls()
     m_labDevice = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Device = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    wxArrayString m_DeviceStrings;
+    m_Device = new wxComboBox( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_DeviceStrings, wxCB_DROPDOWN );
     itemFlexGridSizer7->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxFlexGridSizer* itemFlexGridSizer12 = new wxFlexGridSizer(0, 3, 0, 0);

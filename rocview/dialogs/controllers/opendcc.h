@@ -127,7 +127,7 @@ class OpenDCCCtrlDlg: public wxDialog
 public:
     /// Constructors
     OpenDCCCtrlDlg();
-    OpenDCCCtrlDlg( wxWindow* parent, iONode props );
+    OpenDCCCtrlDlg( wxWindow* parent, iONode props, const char* devices=NULL );
     OpenDCCCtrlDlg( wxWindow* parent, wxWindowID id = SYMBOL_OPENDCCCTRLDLG_IDNAME, const wxString& caption = SYMBOL_OPENDCCCTRLDLG_TITLE, const wxPoint& pos = SYMBOL_OPENDCCCTRLDLG_POSITION, const wxSize& size = SYMBOL_OPENDCCCTRLDLG_SIZE, long style = SYMBOL_OPENDCCCTRLDLG_STYLE );
 
     /// Creation
@@ -179,7 +179,7 @@ public:
     wxStaticText* m_labIID;
     wxTextCtrl* m_IID;
     wxStaticText* m_labDevice;
-    wxTextCtrl* m_Device;
+    wxComboBox* m_Device;
     wxStaticText* m_labVersion;
     wxTextCtrl* m_Version;
     wxTextCtrl* m_Mode;
@@ -242,6 +242,7 @@ public:
     wxButton* m_Apply;
 ////@end OpenDCCCtrlDlg member variables
     iONode m_Props;
+    const char* m_Devices;
     int m_TabAlign;
     void OnPTEvent(wxCommandEvent& event);
 };
