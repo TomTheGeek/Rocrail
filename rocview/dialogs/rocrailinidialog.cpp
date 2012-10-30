@@ -1768,7 +1768,7 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   else if( StrOp.equals( wDigInt.cbus, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new CbusDlg(this,m_Controller, devices);
   else if( StrOp.equals( wDigInt.rocnet, wDigInt.getlib( m_Controller ) ) )
-    m_CSDialog = new RocNetDlg(this,m_Controller);
+    m_CSDialog = new RocNetDlg(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.massoth, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ), 57600, wDigInt.cts);
   else if( StrOp.equals( wDigInt.z21, wDigInt.getlib( m_Controller ) ) )

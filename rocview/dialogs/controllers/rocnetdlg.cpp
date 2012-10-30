@@ -33,10 +33,12 @@
 #include "rocview/public/guiapp.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/RocNet.h"
+#include "rocs/public/strtok.h"
 
-RocNetDlg::RocNetDlg( wxWindow* parent, iONode props ):rocnetdlggen( parent ) {
+RocNetDlg::RocNetDlg( wxWindow* parent, iONode props, const char* devices ):rocnetdlggen( parent ) {
 
   m_Props = props;
+  m_Devices = devices;
 
   iONode rnini = wDigInt.getrocnet(m_Props);
 
@@ -68,6 +70,13 @@ void RocNetDlg::initValues() {
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_RNID->SetValue( wRocNet.getid( rnini ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
+  if( m_Devices != NULL ) {
+    iOStrTok tok = StrTokOp.inst(m_Devices, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_Device->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+  }
 
   if( wDigInt.getbps( m_Props ) == 9600 )
     m_BPS->SetSelection(0);

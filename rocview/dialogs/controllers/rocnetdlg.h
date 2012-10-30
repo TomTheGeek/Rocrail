@@ -45,10 +45,11 @@ protected:
   void initValues();
   void evaluate();
   iONode m_Props;
+  const char* m_Devices;
 
 public:
 	/** Constructor */
-	RocNetDlg( wxWindow* parent, iONode props );
+	RocNetDlg( wxWindow* parent, iONode props, const char* devices=NULL );
 };
 
 #endif // __rocnetdlg__
