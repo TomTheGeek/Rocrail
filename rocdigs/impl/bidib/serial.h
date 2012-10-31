@@ -23,6 +23,7 @@
 #ifndef BIDIBSERIAL_H_
 #define BIDIBSERIAL_H_
 
+Boolean serialInit( obj inst );
 Boolean serialConnect( obj inst );
 void  serialDisconnect( obj inst );
 

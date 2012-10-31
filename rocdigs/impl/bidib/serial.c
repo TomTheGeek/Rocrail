@@ -164,21 +164,27 @@ static void __writer( void* threadinst ) {
   TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "BIDIB sub writer started." );
 
   do {
-    byte* post = (byte*)ThreadOp.getPost( th );
+    if( data->commOK ) {
+      byte* post = (byte*)ThreadOp.getPost( th );
 
-    if (post != NULL) {
-      int len = post[0];
-      MemOp.copy( msg, post+1, len);
-      freeMem( post);
-      TraceOp.dump ( "bidibWrite", TRCLEVEL_BYTE, (char*)msg, len );
-      if( SerialOp.write( data->serial, (char*)msg, len ) ) {
+      if (post != NULL) {
+        int len = post[0];
+        MemOp.copy( msg, post+1, len);
+        freeMem( post);
+        TraceOp.dump ( "bidibWrite", TRCLEVEL_BYTE, (char*)msg, len );
+        if( SerialOp.write( data->serial, (char*)msg, len ) ) {
+        }
+        else {
+          /* ToDo: Resend? */
+        }
       }
-      else {
-        /* ToDo: Resend? */
-      }
+      else
+        ThreadOp.sleep(10);
     }
-    else
-      ThreadOp.sleep(10);
+    else {
+      TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "waiting for connection..." );
+      ThreadOp.sleep(2500);
+    }
   } while( data->run );
 
   TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "BIDIB sub writer stopped." );
@@ -233,7 +239,7 @@ static void __reader( void* threadinst ) {
 }
 
 
-Boolean serialConnect( obj inst ) {
+Boolean serialInit( obj inst ) {
   iOBiDiBData data = Data(inst);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  = %s", wDigInt.getdevice( data->ini ) );
@@ -247,6 +253,15 @@ Boolean serialConnect( obj inst ) {
   SerialOp.setFlow( data->serial, cts );
   SerialOp.setLine( data->serial, wDigInt.getbps( data->ini ), 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
+
+  return True;
+}
+
+
+Boolean serialConnect( obj inst ) {
+  iOBiDiBData data = Data(inst);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "connecting to [%s]", wDigInt.getdevice( data->ini ) );
 
   if( SerialOp.open( data->serial ) ) {
     data->subReadQueue  = QueueOp.inst(1000);

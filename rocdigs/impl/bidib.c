@@ -1537,6 +1537,14 @@ static void __bidibReader( void* threadinst ) {
 
   ThreadOp.sleep(50); /* resume some time to get it all being setup */
 
+  /* ToDo: Move the connect into the front of the reader thread. */
+  data->commOK = data->subConnect((obj)bidib);
+
+  while( data->run && !data->commOK) {
+    ThreadOp.sleep(2500);
+    data->commOK = data->subConnect((obj)bidib);
+  }
+
   while( data->run ) {
 
     if( !data->magicOK && SystemOp.getTick() - data->lastMagicReq > 100 ) {
@@ -1623,6 +1631,7 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   /* choose interface: */
   if( StrOp.equals( wDigInt.sublib_default, wDigInt.getsublib( ini ) ) ) {
     /* serial */
+    data->subInit       = serialInit;
     data->subConnect    = serialConnect;
     data->subDisconnect = serialDisconnect;
     data->subRead       = serialRead;
@@ -1631,6 +1640,7 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   }
   else if( StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib( ini ) ) ) {
     /* serial */
+    data->subInit       = serialInit;
     data->subConnect    = serialConnect;
     data->subDisconnect = serialDisconnect;
     data->subRead       = serialRead;
@@ -1638,13 +1648,10 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
     data->subAvailable  = serialAvailable;
   }
 
+  data->subInit((obj)__BiDiB);
 
-  data->commOK = data->subConnect((obj)__BiDiB);
-
-  if( data->commOK ) {
-    data->reader = ThreadOp.inst( "bidibreader", &__bidibReader, __BiDiB );
-    ThreadOp.start( data->reader );
-  }
+  data->reader = ThreadOp.inst( "bidibreader", &__bidibReader, __BiDiB );
+  ThreadOp.start( data->reader );
 
   instCnt++;
   return __BiDiB;
