@@ -148,6 +148,16 @@ static void __inform( iOBiDiB inst ) {
   data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 }
 
+static void __resetSeq( iOBiDiB inst ) {
+  iOBiDiBData data = Data(inst);
+
+  iOBiDiBNode node = (iOBiDiBNode)MapOp.first(data->nodemap);
+  while(node != NULL) {
+    node->seq = 0;
+    node = (iOBiDiBNode)MapOp.next(data->nodemap);
+  }
+}
+
 
 static void __SoD( iOBiDiB inst ) {
   iOBiDiBData data = Data(inst);
@@ -1537,15 +1547,21 @@ static void __bidibReader( void* threadinst ) {
 
   ThreadOp.sleep(50); /* resume some time to get it all being setup */
 
-  /* ToDo: Move the connect into the front of the reader thread. */
   data->commOK = data->subConnect((obj)bidib);
 
-  while( data->run && !data->commOK) {
-    ThreadOp.sleep(2500);
-    data->commOK = data->subConnect((obj)bidib);
-  }
-
   while( data->run ) {
+
+    if( !data->commOK) {
+      data->magicOK = False;
+      magicreq = 0;
+      __resetSeq(bidib);
+      ThreadOp.sleep(2500);
+      data->commOK = data->subConnect((obj)bidib);
+    }
+
+    if(!data->commOK) {
+      continue;
+    }
 
     if( !data->magicOK && SystemOp.getTick() - data->lastMagicReq > 100 ) {
       /* no magic received; request again */

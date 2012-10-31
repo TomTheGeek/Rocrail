@@ -202,37 +202,42 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "BIDIB sub reader started." );
 
   do {
-    int available = SerialOp.available(data->serial);
-    if( available > 0 ) {
+    if( data->commOK ) {
+      int available = SerialOp.available(data->serial);
+      if( available > 0 ) {
 
-      if(SerialOp.read(data->serial, &c, 1) ) {
-        TraceOp.trc( "bidib", TRCLEVEL_DEBUG, __LINE__, 9999, "byte read: 0x%02X", c );
+        if(SerialOp.read(data->serial, &c, 1) ) {
+          TraceOp.trc( "bidib", TRCLEVEL_DEBUG, __LINE__, 9999, "byte read: 0x%02X", c );
 
-        if( c == BIDIB_PKT_MAGIC ) {
-          if( index > 0 ) {
-            byte* p = allocMem(index+1);
-            p[0] = index;
-            MemOp.copy( p+1, msg, index);
-            QueueOp.post( data->subReadQueue, (obj)p, normal);
+          if( c == BIDIB_PKT_MAGIC ) {
+            if( index > 0 ) {
+              byte* p = allocMem(index+1);
+              p[0] = index;
+              MemOp.copy( p+1, msg, index);
+              QueueOp.post( data->subReadQueue, (obj)p, normal);
+              TraceOp.dump ( "bidibserial", TRCLEVEL_DEBUG, (char*)msg, index );
+              index = 0;
+            }
+          }
+          else {
+            msg[index] = c;
+            index++;
             TraceOp.dump ( "bidibserial", TRCLEVEL_DEBUG, (char*)msg, index );
-            index = 0;
           }
         }
-        else {
-          msg[index] = c;
-          index++;
-          TraceOp.dump ( "bidibserial", TRCLEVEL_DEBUG, (char*)msg, index );
-        }
+
       }
-
+      else if( available == -1 ) {
+        /* device error */
+        data->commOK = False;
+        SerialOp.close(data->serial);
+        TraceOp.trc( "bidibserial", TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error" );
+      }
+      ThreadOp.sleep(10);
     }
-    else if( available == -1 ) {
-      /* device error */
-      data->run = False;
-      TraceOp.trc( "bidibserial", TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error" );
+    else {
+      ThreadOp.sleep(1000);
     }
-
-    ThreadOp.sleep(10);
   } while( data->run );
 
   TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "BIDIB sub reader stopped." );
@@ -264,12 +269,14 @@ Boolean serialConnect( obj inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "connecting to [%s]", wDigInt.getdevice( data->ini ) );
 
   if( SerialOp.open( data->serial ) ) {
-    data->subReadQueue  = QueueOp.inst(1000);
-    data->subWriteQueue = QueueOp.inst(1000);
-    data->subReader = ThreadOp.inst( "bidibsubreader", &__reader, inst );
-    ThreadOp.start( data->subReader );
-    data->subWriter = ThreadOp.inst( "bidibsubwriter", &__writer, inst );
-    ThreadOp.start( data->subWriter );
+    if( data->subReadQueue == NULL ) {
+      data->subReadQueue  = QueueOp.inst(1000);
+      data->subWriteQueue = QueueOp.inst(1000);
+      data->subReader = ThreadOp.inst( "bidibsubreader", &__reader, inst );
+      ThreadOp.start( data->subReader );
+      data->subWriter = ThreadOp.inst( "bidibsubwriter", &__writer, inst );
+      ThreadOp.start( data->subWriter );
+    }
     return True;
   }
 
