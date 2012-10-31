@@ -128,11 +128,11 @@ static void __sendCommand(iOEasyDCCData data, char* cmd) {
 
 
 static int __normalizeSteps(int insteps ) {
-  /* SPEEDSTEPS: vaild: 14, 28, 128 */
+  /* SPEEDSTEPS: vaild: 14, 28, 127 */
   if( insteps < 20 )
     return 14;
   if( insteps > 100 )
-    return 128;
+    return 127;
   return 28;
 }
 
@@ -304,16 +304,17 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco addr=%d speed=%d steps=%d lights=%s dir=%s",
         addr, speed, steps, fn?"on":"off", dir?"forwards":"reverse" );
 
-    if( steps == 128 )
+    if( steps == 127 )
       len = speedStep128Packet( retVal, addr, longAddr, speed, dir );
     else if( steps == 28 )
       len = speedStep28Packet( retVal, addr, longAddr, speed, dir );
     else
       len = speedStep14Packet( retVal, addr, longAddr, speed, dir, fn );
 
-    __makeMessage(buffer, "Q", retVal, len);
-
-    __sendCommand(data, buffer);
+    if( len > 0 ) {
+      __makeMessage(buffer, "Q", retVal, len);
+      __sendCommand(data, buffer);
+    }
 
   }
 
