@@ -18521,4 +18521,22 @@
     <de txt="Booster"/>
     <it txt="Booster"/>
   </Msg>
+  <Msg id="actionctrl">
+    <en txt="Action control"/>
+  </Msg>
+  <Msg id="carcard">
+    <en txt="Car card"/>
+  </Msg>
+  <Msg id="reserve">
+    <en txt="Reserve"/>
+  </Msg>
+  <Msg id="goto">
+    <en txt="Go to"/>
+  </Msg>
+  <Msg id="run">
+    <en txt="Run"/>
+  </Msg>
+  <Msg id="leave">
+    <en txt="Leave"/>
+  </Msg>
 </Messages>

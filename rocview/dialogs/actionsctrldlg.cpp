@@ -107,7 +107,7 @@ ActionsCtrlDlg::ActionsCtrlDlg()
 ActionsCtrlDlg::ActionsCtrlDlg( wxWindow* parent, iONode node )
 {
   Init();
-  Create(parent);
+  Create(parent, -1, wxGetApp().getMsg("actionctrl"));
 
   m_Props = node;
 

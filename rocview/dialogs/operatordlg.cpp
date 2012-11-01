@@ -233,7 +233,24 @@ void OperatorDlg::initLocationCombo() {
 
 
 void OperatorDlg::initLabels() {
-
+  SetTitle(wxGetApp().getMsg( "operatortable" ));
+  m_OperatorBook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
+  m_OperatorBook->SetPageText( 1, wxGetApp().getMsg( "control" ) );
+  m_OperatorBook->SetPageText( 2, wxGetApp().getMsg( "consist" ) );
+  m_NewOperator->SetLabel( wxGetApp().getMsg( "new" ) );
+  m_DelOperator->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_Copy->SetLabel( wxGetApp().getMsg( "copy" ) );
+  m_labOperator->SetLabel( wxGetApp().getMsg( "name" ) );
+  m_labLocoID->SetLabel( wxGetApp().getMsg( "locomotive" ) );
+  m_labLocation->GetStaticBox()->SetLabel( wxGetApp().getMsg( "location" ) );
+  m_Reserve->SetLabel( wxGetApp().getMsg( "reserve" ) );
+  m_labGoto->GetStaticBox()->SetLabel( wxGetApp().getMsg( "goto" ) );
+  m_Run->SetLabel( wxGetApp().getMsg( "run" ) );
+  m_GotoMan->SetLabel( wxGetApp().getMsg( "manually" ) );
+  m_AddCar->SetLabel( wxGetApp().getMsg( "add" ) );
+  m_LeaveCar->SetLabel( wxGetApp().getMsg( "leave" ) );
+  m_ShowCar->SetLabel( wxGetApp().getMsg( "carcard" ) );
+  m_ShowWaybill->SetLabel( wxGetApp().getMsg( "waybill" ) );
   initLocationCombo();
 }
 

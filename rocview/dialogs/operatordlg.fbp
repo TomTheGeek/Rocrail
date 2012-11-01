@@ -886,7 +886,7 @@
                                             <property name="minimum_size"></property>
                                             <property name="name">m_labLocation</property>
                                             <property name="orient">wxVERTICAL</property>
-                                            <property name="permission">none</property>
+                                            <property name="permission">protected</property>
                                             <event name="OnUpdateUI"></event>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
@@ -1034,7 +1034,7 @@
                                             <property name="minimum_size"></property>
                                             <property name="name">m_labGoto</property>
                                             <property name="orient">wxVERTICAL</property>
-                                            <property name="permission">none</property>
+                                            <property name="permission">protected</property>
                                             <event name="OnUpdateUI"></event>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>

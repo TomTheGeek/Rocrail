@@ -5903,3 +5903,39 @@ msgstr ""
 msgid "Booster"
 msgstr ""
 
+#. 
+# id="actionctrl"
+#, c-format
+msgid "Action control"
+msgstr ""
+
+#. 
+# id="carcard"
+#, c-format
+msgid "Car card"
+msgstr ""
+
+#. 
+# id="reserve"
+#, c-format
+msgid "Reserve"
+msgstr ""
+
+#. 
+# id="goto"
+#, c-format
+msgid "Go to"
+msgstr ""
+
+#. 
+# id="run"
+#, c-format
+msgid "Run"
+msgstr ""
+
+#. 
+# id="leave"
+#, c-format
+msgid "Leave"
+msgstr ""
+
