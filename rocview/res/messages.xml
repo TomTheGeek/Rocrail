@@ -18539,4 +18539,13 @@
   <Msg id="leave">
     <en txt="Leave"/>
   </Msg>
+  <Msg id="parameter">
+    <en txt="Parameter"/>
+  </Msg>
+  <Msg id="duration">
+    <en txt="Duration"/>
+  </Msg>
+  <Msg id="definition">
+    <en txt="Definition"/>
+  </Msg>
 </Messages>

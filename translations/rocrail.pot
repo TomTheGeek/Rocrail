@@ -5939,3 +5939,21 @@ msgstr ""
 msgid "Leave"
 msgstr ""
 
+#. 
+# id="parameter"
+#, c-format
+msgid "Parameter"
+msgstr ""
+
+#. 
+# id="duration"
+#, c-format
+msgid "Duration"
+msgstr ""
+
+#. 
+# id="definition"
+#, c-format
+msgid "Definition"
+msgstr ""
+

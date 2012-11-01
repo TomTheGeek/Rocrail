@@ -172,6 +172,7 @@ public:
     wxSpinCtrl* m_Timer;
     wxStaticText* m_labDescription;
     wxTextCtrl* m_Description;
+    wxStaticBox* m_ActivationTimeBox;
     wxCheckBox* m_Timed;
     wxCheckBox* m_Every;
     wxStaticText* m_labHour;

@@ -135,6 +135,11 @@ void TimedActions::initLabels() {
     m_labCommand->SetLabel( wxGetApp().getMsg( "command" ) );
     m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
     m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
+    m_labParam->SetLabel( wxGetApp().getMsg( "parameter" ) );
+    m_labDuration->SetLabel( wxGetApp().getMsg( "duration" ) );
+    m_labTimer->SetLabel( wxGetApp().getMsg( "timer" ) );
+    m_labDescription->SetLabel( wxGetApp().getMsg( "description" ) );
+    m_ActivationTimeBox->SetLabel( wxGetApp().getMsg( "activationtime" ) );
     m_labHour->SetLabel( wxGetApp().getMsg( "hour" ) );
     m_labMin->SetLabel( wxGetApp().getMsg( "minute" ) );
     m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -469,6 +474,7 @@ void TimedActions::Init()
     m_Timer = NULL;
     m_labDescription = NULL;
     m_Description = NULL;
+    m_ActivationTimeBox = NULL;
     m_Timed = NULL;
     m_Every = NULL;
     m_labHour = NULL;
@@ -580,8 +586,8 @@ void TimedActions::CreateControls()
     m_Description = new wxTextCtrl( m_DefinitionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer14->Add(m_Description, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStaticBox* itemStaticBoxSizer31Static = new wxStaticBox(m_DefinitionPanel, wxID_ANY, _("Activation time"));
-    wxStaticBoxSizer* itemStaticBoxSizer31 = new wxStaticBoxSizer(itemStaticBoxSizer31Static, wxHORIZONTAL);
+    m_ActivationTimeBox = new wxStaticBox(m_DefinitionPanel, wxID_ANY, _("Activation time"));
+    wxStaticBoxSizer* itemStaticBoxSizer31 = new wxStaticBoxSizer(m_ActivationTimeBox, wxHORIZONTAL);
     itemBoxSizer13->Add(itemStaticBoxSizer31, 0, wxGROW|wxALL, 5);
     m_Timed = new wxCheckBox( m_DefinitionPanel, wxID_ANY, _("Use"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Timed->SetValue(false);
