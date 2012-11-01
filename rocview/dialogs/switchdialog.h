@@ -72,6 +72,7 @@ class wxSpinCtrl;
 #define ID_TEXTCTRL_SW_LOCKED 10013
 #define wxID_STATIC_SW_STATE 10014
 #define ID_TEXTCTRL_SW_STATE 10015
+#define ID_SW_RESET_SWITCHED 10069
 #define wxID_STATIC_SW_TYPE 10016
 #define ID_COMBOBOX_SW_TYPE 10017
 #define wxID_STATIC_SW_DIR 10174
@@ -184,6 +185,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SW_DOC
     void OnButtonSwDocClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SW_RESET_SWITCHED
+    void OnSwResetSwitchedClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_COMBOBOX_SW_TYPE
     void OnComboboxSwTypeSelected( wxCommandEvent& event );
 
@@ -244,6 +248,7 @@ public:
     wxTextCtrl* m_State;
     wxStaticText* m_labSwitched;
     wxTextCtrl* m_Switched;
+    wxButton* m_ResetSwitched;
     wxStaticText* m_LabelType;
     wxComboBox* m_Type;
     wxStaticText* m_labAccNr;
