@@ -176,7 +176,7 @@
     <fr txt="marche"/>
     <tr txt="açık"/>
     <es txt="encendido"/>
-    <it txt="Acceso"/>
+    <it txt="on"/>
     <da txt="tænd"/>
     <bs txt="uključeno"/>
     <cs txt="zapnuto"/>
@@ -208,7 +208,7 @@
     <fr txt="arrêt"/>
     <tr txt="kapalı"/>
     <es txt="apagado"/>
-    <it txt="Spento"/>
+    <it txt="off"/>
     <da txt="sluk"/>
     <bs txt="isključeno"/>
     <cs txt="vypnuto"/>
@@ -272,7 +272,7 @@
     <fr txt="non"/>
     <tr txt="hayır"/>
     <es txt="no"/>
-    <it txt="No"/>
+    <it txt="no"/>
     <da txt="nej"/>
     <bs txt="ne"/>
     <cs txt="Ne"/>
@@ -304,7 +304,7 @@
     <fr txt="oui"/>
     <tr txt="evet"/>
     <es txt="si"/>
-    <it txt="Si"/>
+    <it txt="si"/>
     <da txt="ja"/>
     <bs txt="da"/>
     <cs txt="Ano"/>
@@ -2311,7 +2311,7 @@
     <fr txt="Itinéraires" tip="Routes"/>
     <tr txt="Rotalar" tip="Rotalar"/>
     <es txt="Rutas" tip="Rutas"/>
-    <it txt="Instradamenti" tip="Instradamenti"/>
+    <it txt="Itinerari" tip="Instradamenti"/>
     <da txt="Togvej" tip="Togvejtabel"/>
     <bg txt="Път таблица"/>
     <el txt="Διαδρομή πίνακα"/>
@@ -2337,7 +2337,7 @@
     <fr txt="Groupes de blocs" tip="Tableau des Groupes de blocs "/>
     <tr txt="Blok grupları" tip="Blok grup tablosu"/>
     <es txt="Grupo de Bloques" tip="Tabla de Grupos de bloques"/>
-    <it txt="Tabella gruppo blocchi" tip="Tabella blocchi"/>
+    <it txt="Gruppo blocchi" tip="Tabella blocchi"/>
     <da txt="Blok gruppe tabel" tip="Blokgruppetabel"/>
     <bg txt="Блок маса група"/>
     <ca txt="Taula de grup de blocs"/>
@@ -2538,7 +2538,7 @@
     <fr txt="Ajouter un panneau au circuit" tip="Ajouter un TCO"/>
     <tr txt="Ray Diyagramı Ekle" tip="Ray Diyagramı Ekle"/>
     <es txt="Añadir panel de carriles" tip=" Añadir diagrama de circuito"/>
-    <it txt="Aggiungi pannello binario" tip="Aggiungi un tracciato"/>
+    <it txt="Aggiungi pannello" tip="Aggiungi un tracciato"/>
     <da txt="Tilføj til sporplan" tip="Tilføj til sporplan"/>
     <bg txt="Добави песен план"/>
     <el txt="Προσθήκη κομματιών σχέδιο"/>
@@ -2565,7 +2565,7 @@
     <fr txt="Supprimer le plan de voies"/>
     <tr txt="Ray Diyagramı Sil"/>
     <es txt="Borrar panel de carriles"/>
-    <it txt="Elimina tracciato"/>
+    <it txt="Elimina pannello tracciato"/>
     <da txt="Slet sporplan"/>
     <bg txt="Изтриване на следите план"/>
     <el txt="Διαγραφή γραμμής σχέδιο"/>
@@ -2618,7 +2618,7 @@
     <fr txt="Schéma du plan" accel="0"/>
     <tr txt="Ray Diyagramı" accel="0"/>
     <es txt="Diagrama de circuito" accel="0"/>
-    <it txt="Tracciato"/>
+    <it txt="Pannello tracciato"/>
     <da txt="Sporplan" accel="0"/>
     <cs txt="Plán kolejiště"/>
     <bg txt="Track план"/>
@@ -2907,7 +2907,7 @@
     <fr txt="Nom du plan" accel="0" tip="Éditer le nom du TCO."/>
     <tr txt="Ray Diyagram Başlığı" accel="0" tip="Ray Diyagram Başlığını değiştir."/>
     <es txt="Nombre del diagrama de circuito" accel="0" tip="Cambiar Nombre del diagrama de circuito."/>
-    <it txt="Nome tracciato" tip="Cambia titolo al tracciato."/>
+    <it txt="Titolo pannello tracciato" tip="Cambia titolo al tracciato."/>
     <da txt="Sporplanstitel" accel="0" tip="Ændre navnet på sporplanen."/>
     <bg txt="Track план заглавие"/>
     <el txt="Μετατρόχιο σχέδιο τίτλο"/>
@@ -2933,7 +2933,7 @@
     <fr txt="Fichier du plan"/>
     <tr txt="Ray Diyagram Dosyası"/>
     <es txt="Fichero del diagrama de circuito"/>
-    <it txt="File tracciato"/>
+    <it txt="File pannello tracciato"/>
     <da txt="Sporplansfil"/>
     <bg txt="Track план файл"/>
     <el txt="Μετατρόχιο σχέδιο αρχείου"/>
@@ -2959,7 +2959,7 @@
     <fr txt="Fichiers des plans (*.xml)|*.xml"/>
     <tr txt="Ray Diyagram Dosyaları (*.xml)|*.xml"/>
     <es txt="Ficheros del diagrama de circuito (*.xml)|*.xml"/>
-    <it txt="File tracciato (*.xml)|*.xml"/>
+    <it txt="File pannelli tracciato (*.ml)|*.xml"/>
     <da txt="Sporplansfiler (*.xml)|*.xml"/>
     <bg txt="Track план файлове (*. XML) | *. XML"/>
     <el txt="Μετατρόχιο σχέδιο αρχεία (*. xml) | *. xml"/>
@@ -2985,7 +2985,7 @@
     <fr txt="Enregistrer le plan sous"/>
     <tr txt="Ray Dİyagramı Kaydet"/>
     <es txt="Salvar diagrama de circuito como"/>
-    <it txt="Salva tracciato come"/>
+    <it txt="Salva pannello tracciato con nome"/>
     <da txt="Gem sporplan som"/>
     <bg txt="Запази следите план като"/>
     <el txt="Εκτός γραμμής σχέδιο ως"/>
@@ -3011,7 +3011,7 @@
     <fr txt="Ouvrir un plan"/>
     <tr txt="Ray Diyagramı Aç"/>
     <es txt="Abrir diagrama de circuito"/>
-    <it txt="Apri tracciato"/>
+    <it txt="lApri pannello tracciato"/>
     <da txt="Åben sporplan"/>
     <bg txt="Отвори следите план"/>
     <el txt="Ανοίξτε δρόμο σχέδιο"/>
@@ -4135,7 +4135,7 @@
     <fr txt="Indicatif du pont tournant"/>
     <tr txt="Turntable ID"/>
     <es txt="Denominación Turntable"/>
-    <it txt="Identificativo piattaforma girevole"/>
+    <it txt="ID piattaforma girevole"/>
     <da txt="Drejeskive-ID"/>
     <bg txt="Обръщател ID"/>
     <el txt="Στρεφόμενη ID"/>
@@ -5179,7 +5179,7 @@
     <fr txt="Afficher"/>
     <tr txt="Göster"/>
     <es txt="Mostrar"/>
-    <it txt="Visualizza tra le attive"/>
+    <it txt="Mostra"/>
     <da txt="Vis"/>
     <bs txt="Prikaži"/>
     <cs txt="Zobrazit"/>
@@ -7675,7 +7675,7 @@
     <fr txt="Action sur le système"/>
     <tr txt="Sistem Hareketleri"/>
     <es txt="Activar Sistema"/>
-    <it txt="Aziona sistema"/>
+    <it txt="Azione di sistema"/>
     <da txt="system-hændelse"/>
     <bg txt="Система за действие"/>
     <el txt="Σύστημα δράσης"/>
@@ -11805,7 +11805,7 @@
     <fr txt="Couleur de fond du plan"/>
     <tr txt="Track plan color"/>
     <es txt="Track plan color"/>
-    <it txt="Colore tracciato"/>
+    <it txt="Colore pannello tracciato"/>
     <da txt="Sporplansfarve"/>
     <bg txt="Track план цветен"/>
     <el txt="Μετατρόχιο σχέδιο χρώμα"/>
@@ -12551,7 +12551,7 @@
     <fr txt="MVTrack" tip="Voie de calcul de vitesse"/>
     <tr txt="MVTrack" tip="Measure Velocity Track"/>
     <es txt="MVTrack" tip="Measure Velocity Track"/>
-    <it txt="Binario tachimentro" tip="Measure Velocity Track"/>
+    <it txt="Binario tachimetro" tip="Measure Velocity Track"/>
     <da txt="MVTrack" tip="Hastighedsmålingsspor"/>
     <cs txt="kolej pro měření rychlosti"/>
     <bg txt="MVTrack"/>
@@ -12574,7 +12574,7 @@
     <fr txt="Convertir en MPH"/>
     <tr txt="Convert to MPH"/>
     <es txt="Convert to MPH"/>
-    <it txt="Converti in MPH"/>
+    <it txt="Converti in km/h"/>
     <da txt="Omregn til MPH" tip=""/>
     <bg txt="Конвертиране на MPH"/>
     <el txt="Μετατροπή σε MPH"/>
@@ -12889,7 +12889,7 @@
     <fr txt="Documentation"/>
     <tr txt="Belgelendirme"/>
     <es txt="Documentación"/>
-    <it txt="Documentazione"/>
+    <it txt="Guida"/>
     <da txt="Dokumentation"/>
     <bg txt="Документация"/>
     <el txt="Τεκμηρίωση"/>
@@ -13789,7 +13789,7 @@
     <es txt="Follow-up"/>
     <hu txt="Követő"/>
     <tr txt="Follow-up"/>
-    <it txt="Seguito"/>
+    <it txt="Azione Successiva (Follow-up)"/>
     <pt txt="Seguir"/>
     <ru txt="Следовать далее"/>
     <en_AU txt="Follow-up"/>
@@ -14481,7 +14481,7 @@
     <fr txt="Acheminement"/>
     <nl txt="Traceren"/>
     <pt txt="Atribuir rotas"/>
-    <it txt="Instradamento"/>
+    <it txt="Itinerario"/>
     <ru txt="Маршрутизация"/>
     <da txt="Togvej"/>
     <es txt="Encaminando"/>
@@ -15867,7 +15867,7 @@
     <nl txt="Module weergave"/>
     <fr txt="Vue du module"/>
     <de txt="Modul-Ansicht"/>
-    <it txt="Visualizza tracciato modulo"/>
+    <it txt="Visualizza modulo"/>
     <cs txt="Zobrazení modulu"/>
     <ru txt="Отображение модуля"/>
     <da txt="Mondul visning"/>
@@ -16080,7 +16080,7 @@
     <nl txt="Modulenplan bewerken"/>
     <fr txt="Éditer le module"/>
     <de txt="Modulplan bearbeiten"/>
-    <it txt="Modifica il tracciato"/>
+    <it txt="Modifica modulo"/>
     <pt txt="Editar modulo do plano"/>
     <ru txt="Редактировать план модуля"/>
     <ca txt="Edita el planell del mòdul"/>
@@ -17078,7 +17078,7 @@
     <nb txt="Manuelt"/>
     <em_GB txt="Manually"/>
     <em_AU txt="Manually"/>
-    <it txt="Manualmente"/>
+    <it txt="In manuale"/>
     <pt txt="Manualmente"/>
     <ca txt="Manualment"/>
     <es txt="Manualmente"/>
@@ -17393,7 +17393,7 @@
     <ru txt="Анализировать"/>
     <en_AU txt="Analyze"/>
     <es txt="Analizar"/>
-    <it txt="Analizzare"/>
+    <it txt="Analyzer"/>
   </Msg>
   <Msg id="systeminfo">
     <en txt="System info" tip="Enable extra CS system info."/>
@@ -17741,7 +17741,7 @@
     <ru txt="Таймаут синхронизатора маршрута"/>
     <fr txt="Fin de temps de syncronisation d'itinéraire"/>
     <es txt="Desconexión del sincronizador de rutas"/>
-    <it txt="Timeout sincronizzazione itinerari"/>
+    <it txt="Sospendere sincronizzazione itinerari"/>
   </Msg>
   <Msg id="startupschedule">
     <en txt="Startup schedule"/>
@@ -18026,7 +18026,7 @@
     <fr txt="Mettre en service l'analyseur"/>
     <ru txt="Разрешить анализатор"/>
     <es txt="Activar analizador"/>
-    <it txt="Abilta l'analisi"/>
+    <it txt="Abilita l'Analyzer"/>
   </Msg>
   <Msg id="forceunlockatebreak">
     <en txt="Force unlock at EBreak"/>
@@ -18453,7 +18453,7 @@
   <Msg id="swack">
     <en txt="Check switch acknowledge"/>
     <nl txt="Controleer wissel bevestiging"/>
-    <de txt="Weicherückmeldung auswerten"/>
+    <de txt="Weichenquittierung auswerten"/>
     <es txt="Comprobar respuesta del accesorio"/>
     <it txt="Controllo riconoscimento interruttore"/>
   </Msg>
@@ -18499,7 +18499,7 @@
   <Msg id="deprecatedrouting">
     <en txt="Classic routing is deprecated; Please migrate to block side routing."/>
     <nl txt="Klassieke rijwegen worden niet meer ondersteund; Migreer naar de blok zijde methode."/>
-    <de txt="Bitte zum Blockseite Fahrstraßenmethode migrieren."/>
+    <de txt="Bitte zu Blockseitenfahrstraßen migrieren."/>
     <it txt="Intinerario classico sconsigliato; passare all'itinerario block side"/>
   </Msg>
   <Msg id="checkplanhealth">
@@ -18512,7 +18512,7 @@
   <Msg id="extendedcheck">
     <en txt="Extended plan check"/>
     <nl txt="Uitgebreide spoorplan test"/>
-    <de txt="Erweiterte Plankonsistenz prüfung"/>
+    <de txt="Erweiterte Plankonsistenzprüfung"/>
     <it txt="Controllo esteso del progetto"/>
   </Msg>
   <Msg id="booster">
@@ -18523,29 +18523,56 @@
   </Msg>
   <Msg id="actionctrl">
     <en txt="Action control"/>
+    <nl txt="Actie besturing"/>
+    <de txt="Aktionssteuerung"/>
+    <it txt="Azioni di sistema"/>
   </Msg>
   <Msg id="carcard">
     <en txt="Car card"/>
+    <nl txt="Wagon kaart"/>
+    <de txt="Wagenkarte"/>
+    <it txt="Scheda carro"/>
   </Msg>
   <Msg id="reserve">
     <en txt="Reserve"/>
+    <nl txt="Reserveer"/>
+    <de txt="Reservieren"/>
+    <it txt="Riservare"/>
   </Msg>
   <Msg id="goto">
     <en txt="Go to"/>
+    <nl txt="Ga naar"/>
+    <de txt="Gehe zu"/>
+    <it txt="Destinazione"/>
   </Msg>
   <Msg id="run">
     <en txt="Run"/>
+    <nl txt="Start"/>
+    <de txt="Starten"/>
+    <it txt="Avviare"/>
   </Msg>
   <Msg id="leave">
     <en txt="Leave"/>
+    <nl txt="Verlaten"/>
+    <de txt="Verlassen"/>
+    <it txt="Lasciare"/>
   </Msg>
   <Msg id="parameter">
     <en txt="Parameter"/>
+    <nl txt="Parameter"/>
+    <de txt="Parameter"/>
+    <it txt="Parametro"/>
   </Msg>
   <Msg id="duration">
     <en txt="Duration"/>
+    <nl txt="Tijdsduur"/>
+    <de txt="Laufzeit"/>
+    <it txt="Durata"/>
   </Msg>
   <Msg id="definition">
     <en txt="Definition"/>
+    <nl txt="Definitie"/>
+    <de txt="Definition"/>
+    <it txt="Definizione"/>
   </Msg>
 </Messages>
