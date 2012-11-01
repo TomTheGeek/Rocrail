@@ -168,6 +168,7 @@ void SwitchDialog::initLabels() {
   m_LabelState->SetLabel( wxGetApp().getMsg( "state" ) );
   m_LabelType->SetLabel( wxGetApp().getMsg( "type" ) );
   m_labAccNr->SetLabel( wxGetApp().getMsg( "accnr" ) );
+  m_labSwitched->SetLabel( wxGetApp().getMsg( "switched" ) );
   m_Dir->SetLabel( wxGetApp().getMsg( "dir" ) );
   m_Dir->SetString( 0, wxGetApp().getMsg( "left" ) );
   m_Dir->SetString( 1, wxGetApp().getMsg( "right" ) );

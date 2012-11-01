@@ -18575,4 +18575,7 @@
     <de txt="Definition"/>
     <it txt="Definizione"/>
   </Msg>
+  <Msg id="switched">
+    <en txt="Switched"/>
+  </Msg>
 </Messages>
