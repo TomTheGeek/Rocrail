@@ -352,11 +352,20 @@ Boolean rocs_serial_write( iOSerial inst, char* buffer, int size ) {
 int rocs_serial_avail( iOSerial inst ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
-  unsigned long etat;
+  unsigned short etat;
   struct _COMSTAT comstat;
   int rc = ClearCommError( o->handle, &etat, &comstat );
-  if( rc == 0 )
+  if( rc == 0 ) {
+    /*
+      CE_BREAK    0x0010 The hardware detected a break condition.
+      CE_FRAME    0x0008 The hardware detected a framing error.
+      CE_OVERRUN  0x0002 A character-buffer overrun has occurred. The next character is lost.
+      CE_RXOVER   0x0001 An input buffer overflow has occurred. There is either no room in the input buffer, or a character was received after the end-of-file (EOF) character.
+      CE_RXPARITY 0x0004 The hardware detected a parity error.
+     */
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Serial[%s] error=0x%04X", o->device, etat );
     return -1;
+  }
   else
     return comstat.cbInQue;
 #endif
