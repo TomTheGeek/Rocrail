@@ -717,7 +717,7 @@ static void _setCarCount( iIBlockBase inst, int count ) {
       FBackOp.setCarCount( fb, count );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "feedback[%s] does not exist", fbid );
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "block[%s]: feedback[%s] does not exist", data->id, fbid );
     }
     fbevt = wBlock.nextfbevent( data->props, fbevt );
   };
