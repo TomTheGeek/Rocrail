@@ -273,7 +273,7 @@ void CV::event( iONode event ) {
   TraceOp.trc( "cv", ivalue != -1 ? TRCLEVEL_INFO:TRCLEVEL_WARNING, __LINE__, 9999,
       "got program event...cmd=%d cv=%d value=%d %s", cmd, cv, ivalue, cmd == wProgram.datarsp ? "datarsp":"statusrsp" );
 
-  if( m_bSpeedCurve && ivalue != -1 && (cmd == wProgram.statusrsp) && m_CVidx >= 67 && m_CVidx <= 94 ) {
+  if( m_bSpeedCurve && ivalue != -1 && (m_CVoperation == CVSET) && (cmd == wProgram.statusrsp || cmd == wProgram.datarsp) && m_CVidx >= 67 && m_CVidx <= 94 ) {
     if(m_CVidx < 94 ) {
       m_CVoperation = CVSET;
       m_TimerCount = 0;
