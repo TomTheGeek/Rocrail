@@ -291,13 +291,17 @@ void RocProDlg::event(iONode node) {
           m_Curve[m_PendingCV-67] = value;
           if(m_PendingCV == 94) {
             m_bSpeedCurve = false;
+            m_VCurve->Enable(true);
             onVCurve();
+            return;
           }
         }
         m_PendingCV++;
 
-        if(m_PendingCV == 94 && m_CVoperation == wProgram.set)
+        if(m_PendingCV == 94 && m_CVoperation == wProgram.set) {
           m_bSpeedCurve = false;
+          m_VCurve->Enable(true);
+        }
 
         doCV( m_CVoperation?wProgram.set:wProgram.get, m_PendingCV, m_Curve[m_PendingCV-67] );
       }
@@ -471,17 +475,18 @@ void RocProDlg::onVCurve( wxCommandEvent& event ) {
     m_bSpeedCurve = true;
     m_CVoperation = wProgram.get;
     m_PendingCV = 67;
+    m_VCurve->Enable(false);
     doCV( m_CVoperation, m_PendingCV, 0 );
   }
 }
 
 void RocProDlg::onVCurve() {
-  MemOp.set(m_Curve, 0, sizeof(m_Curve));
   for( int i = 0; i < 28; i++ ) {
     iONode lococv = getLocoCV(i+67);
     if( lococv != NULL ) {
       m_Curve[i] = wCVByte.getvalue(lococv);
     }
+    TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "m_Curve[%d]=%d", i, m_Curve[i] );
   }
 
   SpeedCurveDlg*  dlg = new SpeedCurveDlg(this, m_Curve );
@@ -493,6 +498,7 @@ void RocProDlg::onVCurve() {
     m_bSpeedCurve = true;
     m_CVoperation = wProgram.set;
     m_PendingCV = 67;
+    m_VCurve->Enable(false);
     TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "m_PendingCV=%d", m_PendingCV );
     doCV( m_CVoperation, m_PendingCV, m_Curve[0] );
   }
