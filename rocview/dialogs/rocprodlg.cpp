@@ -78,6 +78,12 @@ RocProDlgGen( parent )
   m_DecFilename = NULL;
   m_LocoProps = NULL;
   m_CVConf = NULL;
+  m_bSpeedCurve = false;
+  m_CVoperation = 0;
+  m_PendingCV = 0;
+  for(int i = 0; i < 28; i++ ) {
+    m_Curve[i] = 0;
+  }
   m_CVMap = MapOp.inst();
   m_CatMap = MapOp.inst();
   m_LocoImage->SetBitmap( wxBitmap(nopict_xpm) );
@@ -86,7 +92,8 @@ RocProDlgGen( parent )
 
   initLocMap();
   m_CV29->Enable(false);
-  m_VCurve->Enable(false);
+  m_VCurve->Enable(true);
+
 }
 
 RocProDlg::~RocProDlg() {
@@ -271,15 +278,34 @@ void RocProDlg::onClose( wxCloseEvent& event ) {
 }
 
 void RocProDlg::event(iONode node) {
+  TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "m_PendingCV=%d", m_PendingCV );
   if( StrOp.equals(NodeOp.getName(node), wProgram.name() ) ) {
     int cmd = wProgram.getcmd(node);
     int cv  = wProgram.getcv (node);
     int value = wProgram.getvalue(node);
 
     if( cmd == wProgram.datarsp || cmd == wProgram.statusrsp ) {
-      if( cv > 0 )
-        m_Nr->SetValue( cv );
-      setCVVal(value);
+
+      if( m_bSpeedCurve && m_PendingCV >= 67 && m_PendingCV <= 94) {
+        if( m_CVoperation == wProgram.get ) {
+          m_Curve[m_PendingCV-67] = value;
+          if(m_PendingCV == 94) {
+            m_bSpeedCurve = false;
+            onVCurve();
+          }
+        }
+        m_PendingCV++;
+
+        if(m_PendingCV == 94 && m_CVoperation == wProgram.set)
+          m_bSpeedCurve = false;
+
+        doCV( m_CVoperation?wProgram.set:wProgram.get, m_PendingCV, m_Curve[m_PendingCV-67] );
+      }
+      else {
+        if( cv > 0 )
+          m_Nr->SetValue( cv );
+        setCVVal(value);
+      }
     }
 
   }
@@ -357,11 +383,11 @@ void RocProDlg::onLocoList(wxCommandEvent& event) {
     StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wLoc.getimage( m_LocoProps ) ) );
 
     if( FileOp.exist(pixpath)) {
-      TraceOp.trc( "locdialog", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
+      TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
       m_LocoImage->SetBitmap( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
     }
     else {
-      TraceOp.trc( "locdialog", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
+      TraceOp.trc( "rocpro", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
       m_LocoImage->SetBitmap( wxBitmap(nopict_xpm) );
     }
     m_LocoImage->SetToolTip(wxString(wLoc.getdesc( m_LocoProps ),wxConvUTF8));
@@ -434,11 +460,41 @@ void RocProDlg::onConfig( wxCommandEvent& event ) {
 }
 
 void RocProDlg::onVCurve( wxCommandEvent& event ) {
-  int m_Curve[28];
+  int action = wxMessageDialog( this, wxGetApp().getMsg("readspeedcurve"), _T("Rocrail"), wxYES_NO ).ShowModal();
+  if( action == wxID_NO ) {
+    for( int i = 0; i < 28; i++ ) {
+      m_Curve[i] = 0;
+    }
+    onVCurve();
+  }
+  else {
+    m_bSpeedCurve = true;
+    m_CVoperation = wProgram.get;
+    m_PendingCV = 67;
+    doCV( m_CVoperation, m_PendingCV, 0 );
+  }
+}
+
+void RocProDlg::onVCurve() {
   MemOp.set(m_Curve, 0, sizeof(m_Curve));
+  for( int i = 0; i < 28; i++ ) {
+    iONode lococv = getLocoCV(i+67);
+    if( lococv != NULL ) {
+      m_Curve[i] = wCVByte.getvalue(lococv);
+    }
+  }
+
   SpeedCurveDlg*  dlg = new SpeedCurveDlg(this, m_Curve );
   if( wxID_OK == dlg->ShowModal() ) {
     int* newCurve = dlg->getCurve();
+    for( int i = 0; i < 28; i++ ) {
+      m_Curve[i] = newCurve[i];
+    }
+    m_bSpeedCurve = true;
+    m_CVoperation = wProgram.set;
+    m_PendingCV = 67;
+    TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "m_PendingCV=%d", m_PendingCV );
+    doCV( m_CVoperation, m_PendingCV, m_Curve[0] );
   }
   dlg->Destroy();
 }
@@ -484,7 +540,7 @@ void RocProDlg::onNrText( wxCommandEvent& event ) {
 void RocProDlg::onSaveAs( wxCommandEvent& event ) {
   wxString ms_FileExt = wxGetApp().getMsg("planfiles"); // ToDo: "decfiles"
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
+  TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
   wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("savedecfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_SAVE);
   if( fdlg->ShowModal() == wxID_OK ) {
     wxString path = fdlg->GetPath();
@@ -522,6 +578,7 @@ void RocProDlg::onSaveCV( wxCommandEvent& event ) {
 }
 
 void RocProDlg::doCV(int command, int nr, int value) {
+  TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "m_PendingCV=%d", m_PendingCV );
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setcmd( cmd, command );
   if( m_LocoProps != NULL ) {
@@ -556,4 +613,5 @@ void RocProDlg::onTreeItemPopup( wxTreeEvent& event ) {
     PopupMenu(&menu );
   }
 }
+
 
