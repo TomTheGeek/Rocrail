@@ -1834,15 +1834,21 @@ static Boolean _go( iOLoc inst ) {
     if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
       iIBlockBase block = ModelOp.getBlock( model, data->curBlock );
       if( block != NULL ) {
-        if( !StrOp.equals( wStage.name(), NodeOp.getName(block->base.properties(block)) ) ||
-            block->isDepartureAllowed( block, wLoc.getid(data->props) ) )
+        if( StrOp.equals( wStage.name(), NodeOp.getName(block->base.properties(block)) ) &&
+            !block->isDepartureAllowed( block, wLoc.getid(data->props) ) )
         {
-          data->go = True;
-          data->released = False;
-          data->gomanual = False;
-          if( data->driver != NULL )
-            data->driver->go( data->driver, data->gomanual );
+          /* Staging block will manage this loco. */
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "not starting loco [%s] because it is managed by staging block %s.", LocOp.getId(inst), data->curBlock );
+          return False;
         }
+
+        data->go = True;
+        data->released = False;
+        data->gomanual = False;
+        if( data->driver != NULL )
+          data->driver->go( data->driver, data->gomanual );
+
       }
     }
     else {
