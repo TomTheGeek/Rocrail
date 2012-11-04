@@ -834,7 +834,6 @@ static void __callback( obj inst, iONode nodeA ) {
         NodeOp.addChild( ini, devices );
       }
       wDevices.setserial(devices, data->devlist);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "devices: \"%s\"", wDevices.getserial(devices) );
       ClntConOp.postEvent( AppOp.getClntCon(), ini, wCommand.getserver( nodeA ) );
       NodeOp.base.del( nodeA );
       return;
@@ -1440,6 +1439,7 @@ static iOControl _inst( Boolean nocom ) {
     data->diMap = MapOp.inst();
 
     data->devlist = DevicesOp.getDevicesStr();
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "devices: \"%s\"", data->devlist );
 
     if( !nocom ) {
       __initDigInts( control );
