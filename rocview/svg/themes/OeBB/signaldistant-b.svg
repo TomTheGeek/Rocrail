@@ -1,0 +1,19 @@
+<!-- Vorsignal dunkel -->
+<svg width="32" height="32">
+  <g>
+  <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+  <!-- Ausleuchtung grau -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+  <!-- Signal -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 1,1 L 15,1 L 15,5 L 28,5 L 28,2 L 30,2 L 30,9 L 28,9 L 28,6 L 15,6 L 15,10 L 1,10 L 1,5 z " />
+  <!-- Gelbe Lampe rechts -->
+    <path stroke="rgb(90,90,0)" fill="rgb(90,90,0)" d="M 3,2 L 5,2 L 5,4 L 3,4 z " />
+  <!-- Gelbe Lampe links -->
+    <path stroke="rgb(90,90,0)" fill="rgb(90,90,0)" d="M 3,7 L 5,7 L 5,9 L 3,9 z " />
+  <!-- Gruene Lampe rechts -->  
+    <path stroke="rgb(0,90,0)" fill="rgb(0,90,0)" d="M 8,2 L 10,2 L 10,4 L 8,4 z " />    
+  <!-- Gruene Lampe links -->  
+    <path stroke="rgb(0,90,0)" fill="rgb(0,90,0)" d="M 11,7 L 13,7 L 13,9 L 11,9 z " />    
+  </g>
+</svg>
