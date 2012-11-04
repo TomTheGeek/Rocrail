@@ -373,7 +373,8 @@
       <var name="checker" vt="iOThread"/>
       <var name="powerman" vt="iOPowerMan"/>
       <var name="r2rnet" vt="iOR2Rnet"/>
-    </data>
+      <var name="devlist" vt="char*"/>
+      </data>
   </object>
 
 
