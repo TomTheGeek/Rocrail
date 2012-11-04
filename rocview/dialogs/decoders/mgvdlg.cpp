@@ -94,6 +94,7 @@ void MGVDlg::SetBit(int addr, int port, bool on) {
   wSwitch.setiid(cmd, m_IID->GetValue().mb_str(wxConvUTF8));
   wSwitch.setaddr1( cmd, addr );
   wSwitch.setport1( cmd, port );
+  wSwitch.setsinglegate(cmd, m_SingleGate->IsChecked()?True:False);
   wSwitch.setcmd( cmd, on ? wSwitch.straight:wSwitch.turnout );
   wxGetApp().sendToRocrail( cmd );
   NodeOp.base.del(cmd);
