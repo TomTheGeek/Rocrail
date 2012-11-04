@@ -434,27 +434,31 @@ void ActionsCtrlDlg::evaluate() {
 
 
 void ActionsCtrlDlg::evaluateCond() {
-  int cursel = m_Conditions->GetSelection();
+  int curlistsel = m_CtrlList->GetSelection();
 
-  if( cursel != wxNOT_FOUND ) {
-    iONode node = (iONode)m_Conditions->GetClientData(cursel);
-    wActionCond.setid(node, m_CondID->GetStringSelection().mb_str(wxConvUTF8) );
-    wActionCond.setstate(node, m_CondState->GetValue().mb_str(wxConvUTF8) );
+  if( curlistsel != wxNOT_FOUND ) {
+    int cursel = m_Conditions->GetSelection();
 
-    int typenr = m_CondType->GetSelection();
-    const char* type = wSwitch.name();
-    switch( typenr ) {
-      case 0: type = wSwitch.name(); break;
-      case 1: type = wSignal.name(); break;
-      case 2: type = wOutput.name(); break;
-      case 3: type = wFeedback.name(); break;
-      case 4: type = wLoc.name(); break;
-      case 5: type = wBlock.name(); break;
-      case 6: type = wSysCmd.name(); break;
+    if( cursel != wxNOT_FOUND ) {
+      iONode node = (iONode)m_Conditions->GetClientData(cursel);
+      wActionCond.setid(node, m_CondID->GetStringSelection().mb_str(wxConvUTF8) );
+      wActionCond.setstate(node, m_CondState->GetValue().mb_str(wxConvUTF8) );
+
+      int typenr = m_CondType->GetSelection();
+      const char* type = wSwitch.name();
+      switch( typenr ) {
+        case 0: type = wSwitch.name(); break;
+        case 1: type = wSignal.name(); break;
+        case 2: type = wOutput.name(); break;
+        case 3: type = wFeedback.name(); break;
+        case 4: type = wLoc.name(); break;
+        case 5: type = wBlock.name(); break;
+        case 6: type = wSysCmd.name(); break;
+      }
+      wActionCond.settype(node, type);
+
+      m_Conditions->SetString(cursel, m_CondID->GetStringSelection() );
     }
-    wActionCond.settype(node, type);
-
-    m_Conditions->SetString(cursel, m_CondID->GetStringSelection() );
   }
 }
 
