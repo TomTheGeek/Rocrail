@@ -134,8 +134,8 @@ static iOList _getDevices( void ) {
     int i = 0;
     for( i = 0; i < 2; i++ ) {
       char* ttyS = StrOp.fmt( "/dev/ttyS%d", i );
-      if( __isDeviceAvailable(ttyS) )
-        ListOp.add(list, (obj)ttyS);
+      /*if( __isDeviceAvailable(ttyS) )*/
+      ListOp.add(list, (obj)ttyS);
     }
   }
 #elif defined _WIN32
