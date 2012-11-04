@@ -227,16 +227,14 @@ static int __sortID(obj* _a, obj* _b)
 
 bool OutputDialog::initIndex() {
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
-  iONode l_Props = m_Props;
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode colist = wPlan.getcolist( model );
     if( colist != NULL ) {
       fillIndex(colist);
 
-      if( l_Props != NULL ) {
-        setIDSelection(wItem.getid( l_Props ));
-        m_Props = l_Props;
+      if( m_Props != NULL ) {
+        setIDSelection(wItem.getid( m_Props ));
         return true;
       }
       else {

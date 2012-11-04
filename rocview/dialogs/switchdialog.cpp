@@ -313,17 +313,14 @@ static int __sortID(obj* _a, obj* _b)
 
 
 bool SwitchDialog::initIndex() {
-  TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
-  iONode l_Props = m_Props;
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode swlist = wPlan.getswlist( model );
     if( swlist != NULL ) {
       fillIndex(swlist);
 
-      if( l_Props != NULL ) {
-        setIDSelection(wItem.getid( l_Props ));
-        m_Props = l_Props;
+      if( m_Props != NULL ) {
+        setIDSelection(wItem.getid( m_Props ));
         return true;
       }
       else {
@@ -1566,6 +1563,7 @@ void SwitchDialog::OnApplyClick( wxCommandEvent& event )
     return;
   if( !evaluate() )
     return;
+  TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "OnApplyClick m_Props=%X", m_Props );
   if( !wxGetApp().isStayOffline() ) {
     /* Notify RocRail. */
     iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );

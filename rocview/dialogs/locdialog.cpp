@@ -418,7 +418,6 @@ static int __sortCV(obj* _a, obj* _b)
 
 bool LocDialog::InitIndex() {
   TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
-  iONode l_Props = m_Props;
 
   m_ConsistLocID->Clear();
 
@@ -447,9 +446,8 @@ bool LocDialog::InitIndex() {
       /* clean up the temp. list */
       ListOp.base.del(list);
 
-      if( l_Props != NULL ) {
-        setIDSelection(wLoc.getid( l_Props ));
-        m_Props = l_Props;
+      if( m_Props != NULL ) {
+        setIDSelection(wLoc.getid( m_Props ));
         return true;
       }
       else {

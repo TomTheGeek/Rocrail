@@ -203,8 +203,6 @@ static int __sortID(obj* _a, obj* _b)
 
 void WaybillDlg::initIndex(){
   TraceOp.trc( "waybilldlg", TRCLEVEL_INFO, __LINE__, 9999, "initIndex" );
-  iONode l_Props = m_Props;
-
   SetTitle(wxGetApp().getMsg( "waybilltable" ));
 
   m_WaybillList->Clear();
@@ -233,10 +231,9 @@ void WaybillDlg::initIndex(){
       /* clean up the temp. list */
       ListOp.base.del(list);
 
-      if( l_Props != NULL ) {
-        m_WaybillList->SetStringSelection( wxString(wWaybill.getid( l_Props ),wxConvUTF8) );
-        m_WaybillList->SetFirstItem( wxString(wWaybill.getid( l_Props ),wxConvUTF8) );
-        m_Props = l_Props;
+      if( m_Props != NULL ) {
+        m_WaybillList->SetStringSelection( wxString(wWaybill.getid( m_Props ),wxConvUTF8) );
+        m_WaybillList->SetFirstItem( wxString(wWaybill.getid( m_Props ),wxConvUTF8) );
         char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("waybill").mb_str(wxConvUTF8), wWaybill.getid( m_Props ) );
         SetTitle( wxString(title,wxConvUTF8) );
         StrOp.free( title );

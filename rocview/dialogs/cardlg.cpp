@@ -249,7 +249,6 @@ static int __sortLen(obj* _a, obj* _b)
 
 void CarDlg::initIndex(){
   TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "initIndex" );
-  iONode l_Props = m_Props;
 
   SetTitle(wxGetApp().getMsg( "cartable" ));
 
@@ -315,13 +314,12 @@ void CarDlg::initIndex(){
       /* clean up the temp. list */
       ListOp.base.del(list);
 
-      if( l_Props != NULL ) {
-        m_Props = l_Props;
+      if( m_Props != NULL ) {
         char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("car").mb_str(wxConvUTF8), wCar.getid( m_Props ) );
         SetTitle( wxString(title,wxConvUTF8) );
         StrOp.free( title );
 
-        setSelection(wCar.getid( l_Props ));
+        setSelection(wCar.getid( m_Props ));
 
       }
       else {

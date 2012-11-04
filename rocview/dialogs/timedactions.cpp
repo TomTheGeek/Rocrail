@@ -270,28 +270,23 @@ static int __sortID(obj* _a, obj* _b)
 bool TimedActions::initIndex() {
   TraceOp.trc( "scdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
 
-  iONode l_Props = m_Props;
-
   iONode model = wxGetApp().getModel();
   iOList list = ListOp.inst();
-
 
   if( model != NULL ) {
     iONode aclist = wPlan.getaclist( model );
     if( aclist != NULL ) {
       fillIndex(aclist);
 
-      if( l_Props != NULL ) {
-        setIDSelection(wItem.getid( l_Props ));
-        m_Props = l_Props;
+      if( m_Props != NULL ) {
+        setIDSelection(wItem.getid( m_Props ));
         return true;
       }
       else {
         m_Props = setSelection(0);
       }
 
-      if( l_Props != NULL ) {
-        m_Props = l_Props;
+      if( m_Props != NULL ) {
         initValues();
       }
     }

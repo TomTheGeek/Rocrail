@@ -206,7 +206,6 @@ void BlockGroupingDialog::initLabels() {
 
 void BlockGroupingDialog::initIndex() {
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
-  iONode l_Props = m_Props;
   m_List->Clear();
 
   iONode model = wxGetApp().getModel();
@@ -221,10 +220,9 @@ void BlockGroupingDialog::initIndex() {
           m_List->Append( wxString(id,wxConvUTF8) );
         }
       }
-      if( l_Props != NULL ) {
-        m_List->SetStringSelection( wxString(wLink.getid( l_Props ),wxConvUTF8) );
-        m_List->SetFirstItem( wxString(wLink.getid( l_Props ),wxConvUTF8) );
-        m_Props = l_Props;
+      if( m_Props != NULL ) {
+        m_List->SetStringSelection( wxString(wLink.getid( m_Props ),wxConvUTF8) );
+        m_List->SetFirstItem( wxString(wLink.getid( m_Props ),wxConvUTF8) );
       }
 
     }

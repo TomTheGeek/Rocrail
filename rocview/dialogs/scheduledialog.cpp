@@ -347,7 +347,6 @@ static int __sortID(obj* _a, obj* _b)
 void ScheduleDialog::initIndex() {
   TraceOp.trc( "scdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
 
-  iONode l_Props = m_Props;
   m_List->Clear();
 
   m_ScheduleAction->Clear();
@@ -430,10 +429,9 @@ void ScheduleDialog::initIndex() {
         //m_LocSchedule->Append( wxString(id,wxConvUTF8) );
       }
 
-      if( l_Props != NULL ) {
-        m_List->SetStringSelection( wxString(wSchedule.getid( l_Props ),wxConvUTF8) );
-        m_List->SetFirstItem( wxString(wSchedule.getid( l_Props ),wxConvUTF8) );
-        m_Props = l_Props;
+      if( m_Props != NULL ) {
+        m_List->SetStringSelection( wxString(wSchedule.getid( m_Props ),wxConvUTF8) );
+        m_List->SetFirstItem( wxString(wSchedule.getid( m_Props ),wxConvUTF8) );
       }
     }
   }

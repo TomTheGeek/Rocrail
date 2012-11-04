@@ -495,17 +495,14 @@ static int __sortID(obj* _a, obj* _b)
 
 bool BlockDialog::initIndex() {
   TraceOp.trc( "blockdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
-  iONode l_Props = m_Props;
-
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode bklist = wPlan.getbklist( model );
     if( bklist != NULL ) {
       fillIndex(bklist);
 
-      if( l_Props != NULL ) {
-        setIDSelection(wBlock.getid( l_Props ));
-        m_Props = l_Props;
+      if( m_Props != NULL ) {
+        setIDSelection(wBlock.getid( m_Props ));
         return true;
       }
       else {

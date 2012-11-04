@@ -456,17 +456,15 @@ void RouteDialog::initLocPermissionList() {
 
 bool RouteDialog::initIndex() {
   TraceOp.trc( "routedlg", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
-  iONode l_Props = m_Props;
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode stlist = wPlan.getstlist( model );
     if( stlist != NULL ) {
       fillIndex(stlist);
 
-      if( l_Props != NULL ) {
-        setIDSelection(wItem.getid( l_Props ));
-        m_Props = l_Props;
-        char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("route").mb_str(wxConvUTF8), wRoute.getid( l_Props ) );
+      if( m_Props != NULL ) {
+        setIDSelection(wItem.getid( m_Props ));
+        char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("route").mb_str(wxConvUTF8), wRoute.getid( m_Props ) );
         SetTitle( wxString(title,wxConvUTF8) );
         StrOp.free( title );
         return true;

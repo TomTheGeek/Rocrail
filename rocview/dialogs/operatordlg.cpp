@@ -302,7 +302,6 @@ void OperatorDlg::evaluate() {
 
 void OperatorDlg::initIndex() {
   TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "initIndex" );
-  iONode l_Props = m_Props;
 
   SetTitle(wxGetApp().getMsg( "operatortable" ));
 
@@ -332,10 +331,9 @@ void OperatorDlg::initIndex() {
       /* clean up the temp. list */
       ListOp.base.del(list);
 
-      if( l_Props != NULL ) {
-        m_OperatorList->SetStringSelection( wxString(wOperator.getid( l_Props ),wxConvUTF8) );
-        m_OperatorList->SetFirstItem( wxString(wOperator.getid( l_Props ),wxConvUTF8) );
-        m_Props = l_Props;
+      if( m_Props != NULL ) {
+        m_OperatorList->SetStringSelection( wxString(wOperator.getid( m_Props ),wxConvUTF8) );
+        m_OperatorList->SetFirstItem( wxString(wOperator.getid( m_Props ),wxConvUTF8) );
         char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("operator").mb_str(wxConvUTF8), wOperator.getid( m_Props ) );
         SetTitle( wxString(title,wxConvUTF8) );
         StrOp.free( title );
