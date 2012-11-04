@@ -502,8 +502,10 @@ void ActionsCtrlDlg::deleteSelected() {
     iONode node = (iONode)m_CtrlList->GetClientData(cursel);
     NodeOp.base.del(node);
     m_CtrlList->Delete(cursel);
-    m_CtrlList->SetSelection(0);
-    initValues();
+    if( m_CtrlList->GetCount() > 0 ) {
+      m_CtrlList->SetSelection(0);
+      initValues();
+    }
   }
 }
 
