@@ -52,6 +52,7 @@
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/ModelCmd.h"
 
 // JMRI
 #include "rocrail/wrapper/public/DecoderConfig.h"
@@ -81,6 +82,10 @@ RocProDlgGen( parent )
   m_bSpeedCurve = false;
   m_CVoperation = 0;
   m_PendingCV = 0;
+  m_bLongAddress = false;
+  m_CV17 = 0;
+  m_CV18 = 0;
+
   for(int i = 0; i < 28; i++ ) {
     m_Curve[i] = 0;
   }
@@ -304,6 +309,23 @@ void RocProDlg::event(iONode node) {
         }
 
         doCV( m_CVoperation?wProgram.set:wProgram.get, m_PendingCV, m_Curve[m_PendingCV-67] );
+      }
+      else if( m_bLongAddress && m_PendingCV == 17 ) {
+        m_CV17 = value;
+        int laddr = (m_CV17&0x3f) * 256 + m_CV18;
+        TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "part 1 of long address(%d) cv%d=%d",
+            laddr, m_PendingCV, value );
+        m_ExtAddr->SetValue( laddr );
+        m_PendingCV = 18;
+        doCV( wProgram.get, 18, 0 );
+      }
+      else if( m_bLongAddress && m_PendingCV == 18 ) {
+        m_CV18 = value;
+        int laddr = (m_CV17&0x3f) * 256 + m_CV18;
+        TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "part 2 of long address(%d) cv%d=%d",
+            laddr, m_PendingCV, value );
+        m_ExtAddr->SetValue( laddr );
+        m_bLongAddress = false;
       }
       else {
         if( cv > 0 )
@@ -620,4 +642,41 @@ void RocProDlg::onTreeItemPopup( wxTreeEvent& event ) {
   }
 }
 
+
+
+void RocProDlg::onExtAddrRead( wxCommandEvent& event ) {
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "get long address..." );
+  m_CVoperation = wProgram.get;
+  m_bLongAddress = true;
+  m_PendingCV = 17;
+  doCV( m_CVoperation, m_PendingCV, 0 );
+}
+
+
+void RocProDlg::onExtAddrWrite( wxCommandEvent& event ) {
+  int addr = m_ExtAddr->GetValue();
+  TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "set long address to %d...", addr );
+  m_CVoperation = wProgram.set;
+  doCV( m_CVoperation, 17, (addr / 256) + 192 );
+  doCV( m_CVoperation, 18, addr - 256 * (addr / 256) );
+  /*
+  if( wCVconf.islissy( m_CVconf ) ) {
+    m_CVoperation = CVSET;
+    doCV( wProgram.set, 117, (addr / 256) + 192 );
+    m_CVoperation = CVSET;
+    doCV( wProgram.set, 118, addr - 256 * (addr / 256) );
+  }
+  */
+  if( m_LocoProps != NULL ) {
+    wLoc.setaddr(m_LocoProps, addr);
+    if( !wxGetApp().isStayOffline() ) {
+      /* Notify RocRail. */
+      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+      wModelCmd.setcmd( cmd, wModelCmd.modify );
+      NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( m_LocoProps ) );
+      wxGetApp().sendToRocrail( cmd );
+      NodeOp.base.del(cmd);
+    }
+  }
+}
 

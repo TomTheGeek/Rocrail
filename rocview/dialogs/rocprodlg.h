@@ -48,6 +48,9 @@ class RocProDlg : public RocProDlgGen
   int m_CVoperation;
   int m_PendingCV;
   int m_Curve[28];
+  bool m_bLongAddress;
+  int m_CV17;
+  int m_CV18;
 
   bool parseDecFile();
   void initLocMap(const char* locid=NULL);
@@ -79,6 +82,8 @@ class RocProDlg : public RocProDlgGen
     void onFx( wxCommandEvent& event );
     void onNr( wxSpinEvent& event );
     void onNrText( wxCommandEvent& event );
+    void onExtAddrRead( wxCommandEvent& event );
+    void onExtAddrWrite( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		RocProDlg( wxWindow* parent );
