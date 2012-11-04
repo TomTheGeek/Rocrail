@@ -659,14 +659,12 @@ void RocProDlg::onExtAddrWrite( wxCommandEvent& event ) {
   m_CVoperation = wProgram.set;
   doCV( m_CVoperation, 17, (addr / 256) + 192 );
   doCV( m_CVoperation, 18, addr - 256 * (addr / 256) );
-  /*
-  if( wCVconf.islissy( m_CVconf ) ) {
-    m_CVoperation = CVSET;
-    doCV( wProgram.set, 117, (addr / 256) + 192 );
-    m_CVoperation = CVSET;
-    doCV( wProgram.set, 118, addr - 256 * (addr / 256) );
+
+  if( m_ExtAddrBidi->IsChecked() ) {
+    doCV( m_CVoperation, 117, (addr / 256) + 192 );
+    doCV( m_CVoperation, 118, addr - 256 * (addr / 256) );
   }
-  */
+
   if( m_LocoProps != NULL ) {
     wLoc.setaddr(m_LocoProps, addr);
     if( !wxGetApp().isStayOffline() ) {
