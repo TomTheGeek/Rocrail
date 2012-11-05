@@ -224,8 +224,15 @@ void FeedbackDialog::initLabels() {
   // Interface
   m_Labeliid->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
-  m_LabelAddress->SetLabel( wxGetApp().getMsg( "address" ) );
   m_ActiveLow->SetLabel( wxGetApp().getMsg( "activelow" ) );
+  m_AddressBox->SetLabel( wxGetApp().getMsg( "address" ) );
+  m_labBusNr->SetLabel( wxGetApp().getMsg( "bus" ) );
+  m_LabelAddress->SetLabel( wxGetApp().getMsg( "address" ) );
+  m_CutoutBox->SetLabel( wxGetApp().getMsg( "shortcut" ) );
+  m_labCutoutBus->SetLabel( wxGetApp().getMsg( "bus" ) );
+  m_labCutoutAddr->SetLabel( wxGetApp().getMsg( "address" ) );
+  m_OptionsBox->SetLabel( wxGetApp().getMsg( "options" ) );
+
 
   // Wiring
   m_labCTCIID->SetLabel( wxGetApp().getMsg( "iid" ) );

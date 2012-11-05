@@ -18587,4 +18587,25 @@
   <Msg id="snmp">
     <en txt="SNMP"/>
   </Msg>
+  <Msg id="usefieldevent">
+    <en txt="Use field events"/>
+  </Msg>
+  <Msg id="flip">
+    <en txt="Flip"/>
+  </Msg>
+  <Msg id="analog">
+    <en txt="Analog"/>
+  </Msg>
+  <Msg id="blank">
+    <en txt="blank"/>
+  </Msg>
+  <Msg id="powersensor">
+    <en txt="Power sensor"/>
+  </Msg>
+  <Msg id="poweroutput">
+    <en txt="Power output"/>
+  </Msg>
+  <Msg id="uid">
+    <en txt="UniqueID"/>
+  </Msg>
 </Messages>

@@ -5963,3 +5963,63 @@ msgstr ""
 msgid "Switched"
 msgstr ""
 
+#. 
+# id="decpath"
+#, c-format
+msgid "Decoder path"
+msgstr ""
+
+#. 
+# id="gamepadsupport"
+#, c-format
+msgid "Gamepad support"
+msgstr ""
+
+#. 
+# id="snmp"
+#, c-format
+msgid "SNMP"
+msgstr ""
+
+#. 
+# id="usefieldevent"
+#, c-format
+msgid "Use field events"
+msgstr ""
+
+#. 
+# id="flip"
+#, c-format
+msgid "Flip"
+msgstr ""
+
+#. 
+# id="analog"
+#, c-format
+msgid "Analog"
+msgstr ""
+
+#. 
+# id="blank"
+#, c-format
+msgid "blank"
+msgstr ""
+
+#. 
+# id="powersensor"
+#, c-format
+msgid "Power sensor"
+msgstr ""
+
+#. 
+# id="poweroutput"
+#, c-format
+msgid "Power output"
+msgstr ""
+
+#. 
+# id="uid"
+#, c-format
+msgid "UniqueID"
+msgstr ""
+

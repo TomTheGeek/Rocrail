@@ -260,7 +260,13 @@ void SwitchDialog::initLabels() {
   m_Prot->Append(_T("Dinamo DO"));
   m_Prot->Append(_T("Dinamo VO"));
 
-
+  m_PortType->SetLabel( wxGetApp().getMsg( "type" ) );
+  m_PortType->SetString( 0, wxGetApp().getMsg( "default" ) );
+  m_PortType->SetString( 1, wxGetApp().getMsg( "light" ) );
+  m_PortType->SetString( 2, wxGetApp().getMsg( "servo" ) );
+  m_PortType->SetString( 3, wxGetApp().getMsg( "sound" ) );
+  m_PortType->SetString( 4, wxGetApp().getMsg( "motor" ) );
+  m_PortType->SetString( 5, wxGetApp().getMsg( "analog" ) );
 
   // Wiring
   m_LabelFb1R->SetLabel( wxGetApp().getMsg( "sensor_red" ) );
@@ -273,11 +279,19 @@ void SwitchDialog::initLabels() {
   m_Fb2Ginvert->SetLabel( wxGetApp().getMsg( "invert" ) );
   m_labFbOcc->SetLabel( wxGetApp().getMsg( "occupancy" ) );
   m_FbSet->SetLabel(wxGetApp().getMsg( "overwritestatus" ));
+  m_FbUseField->SetLabel(wxGetApp().getMsg( "usefieldevent" ));
 
   m_labCTCMotor->SetLabel( wxGetApp().getMsg( "motor" ) );
   m_labCTCIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_labCTCAddress->SetLabel( wxGetApp().getMsg( "address" ) );
   m_labCTCCmdAtOn->SetLabel( wxGetApp().getMsg( "command" ) );
+
+  m_CTCOn1->SetString( 0, wxGetApp().getMsg( "straight" ) );
+  m_CTCOn1->SetString( 1, wxGetApp().getMsg( "turnout" ) );
+  m_CTCOn1->SetString( 2, wxGetApp().getMsg( "flip" ) );
+  m_CTCOn2->SetString( 0, wxGetApp().getMsg( "straight" ) );
+  m_CTCOn2->SetString( 1, wxGetApp().getMsg( "turnout" ) );
+  m_CTCOn2->SetString( 2, wxGetApp().getMsg( "flip" ) );
 
   m_labCTCLED->SetLabel( wxGetApp().getMsg( "led" ) );
   m_labCTCIIDLED->SetLabel( wxGetApp().getMsg( "iid" ) );

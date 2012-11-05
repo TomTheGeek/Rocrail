@@ -170,6 +170,15 @@ void OutputDialog::initLabels() {
   m_Invert->SetLabel( wxGetApp().getMsg( "invert" ) );
   m_AsSwitch->SetLabel( wxGetApp().getMsg( "turnout" ) );
 
+  m_PortType->SetLabel( wxGetApp().getMsg( "type" ) );
+  m_PortType->SetString( 0, wxGetApp().getMsg( "default" ) );
+  m_PortType->SetString( 1, wxGetApp().getMsg( "light" ) );
+  m_PortType->SetString( 2, wxGetApp().getMsg( "servo" ) );
+  m_PortType->SetString( 3, wxGetApp().getMsg( "sound" ) );
+  m_PortType->SetString( 4, wxGetApp().getMsg( "motor" ) );
+  m_PortType->SetString( 5, wxGetApp().getMsg( "analog" ) );
+
+
   // Location
   m_LabelX->SetLabel( wxGetApp().getMsg( "x" ) );
   m_LabelY->SetLabel( wxGetApp().getMsg( "y" ) );

@@ -182,6 +182,12 @@ void PowerManDlg::initLabels() {
   /* clean up the temp. list */
   ListOp.base.del(list);
 
+  m_labShortcutSensor->SetLabel( wxGetApp().getMsg( "shortcutsensor" ) );
+  m_labPowerSensor->SetLabel( wxGetApp().getMsg( "powersensor" ) );
+  m_labPowerOutput->SetLabel( wxGetApp().getMsg( "poweroutput" ) );
+  m_labUID->SetLabel( wxGetApp().getMsg( "uid" ) );
+
+  m_labModuleID->SetLabel( wxGetApp().getMsg( "modid" ) );
 
   // Options
   m_StopDistrictLocos->SetLabel( wxGetApp().getMsg( "scopt_stoplocos" ) );

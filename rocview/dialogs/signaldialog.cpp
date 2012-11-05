@@ -261,6 +261,13 @@ void SignalDialog::initLabels() {
   m_labPatternAddr2->SetLabel( wxGetApp().getMsg( "yellow" ).Upper() + _T(" ") + wxGetApp().getMsg( "address" ) + _T(":") );
   m_labAspectNr->SetLabel( wxGetApp().getMsg( "number" ) + _T(":") );
 
+  m_labSignalPatterns->SetLabel( wxGetApp().getMsg( "patterns" ) );
+  m_labGreen->SetLabel( wxGetApp().getMsg( "green" ) );
+  m_labRed->SetLabel( wxGetApp().getMsg( "red" ) );
+  m_labYellow->SetLabel( wxGetApp().getMsg( "yellow" ) );
+  m_labWhite->SetLabel( wxGetApp().getMsg( "white" ) );
+  m_labBlank->SetLabel( wxGetApp().getMsg( "blank" ) );
+
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
@@ -608,6 +615,7 @@ bool SignalDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capt
     m_labSymbolPrefix = NULL;
     m_SymbolPrefix = NULL;
     m_Dwarf = NULL;
+    m_labSignalPatterns = NULL;
     m_labAspect = NULL;
     m_labPatternAddr1 = NULL;
     m_labPatternAddr2 = NULL;
@@ -955,8 +963,8 @@ void SignalDialog::CreateControls()
     wxStaticLine* itemStaticLine86 = new wxStaticLine( m_PropsPanel, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
     itemBoxSizer76->Add(itemStaticLine86, 0, wxGROW|wxALL, 5);
 
-    wxStaticText* itemStaticText87 = new wxStaticText( m_PropsPanel, wxID_STATIC_SG_PATTERNS, _("Signal Patterns"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-    itemBoxSizer76->Add(itemStaticText87, 0, wxGROW|wxALL, 5);
+    m_labSignalPatterns = new wxStaticText( m_PropsPanel, wxID_STATIC_SG_PATTERNS, _("Signal Patterns"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+    itemBoxSizer76->Add(m_labSignalPatterns, 0, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer88 = new wxFlexGridSizer(0, 4, 0, 0);
     itemBoxSizer76->Add(itemFlexGridSizer88, 0, wxGROW|wxALL, 5);
