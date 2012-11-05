@@ -248,6 +248,11 @@ void RocrailIniDialog::initLabels() {
   m_SnmpServiceActive->SetLabel( wxGetApp().getMsg( "enable" ) );
   m_labSnmpTrapHost->SetLabel( wxGetApp().getMsg( "host" ) );
   m_labSnmpTrapPort->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labDevider->SetLabel( wxGetApp().getMsg( "divider" ) );
+  m_labHour->SetLabel( wxGetApp().getMsg( "hour" ) );
+  m_labMinute->SetLabel( wxGetApp().getMsg( "minute" ) );
+  m_SrcpService->SetLabel( wxGetApp().getMsg( "srcp" ) );
+  m_SNMPBox->SetLabel( wxGetApp().getMsg( "snmp" ) );
 
   // WebService
   m_WebServiceBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "webclient" ) );
@@ -854,6 +859,7 @@ bool RocrailIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     m_labSrcpPort = NULL;
     m_SrcpPort = NULL;
     m_SrcpServiceActive = NULL;
+    m_SNMPBox = NULL;
     m_labSnmpPort = NULL;
     m_SnmpPort = NULL;
     m_SnmpServiceActive = NULL;
@@ -1271,8 +1277,8 @@ void RocrailIniDialog::CreateControls()
     m_SrcpServiceActive->SetValue(false);
     itemFlexGridSizer92->Add(m_SrcpServiceActive, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStaticBox* itemStaticBoxSizer96Static = new wxStaticBox(m_ServicePanel, wxID_ANY, _("SNMP Service"));
-    wxStaticBoxSizer* itemStaticBoxSizer96 = new wxStaticBoxSizer(itemStaticBoxSizer96Static, wxVERTICAL);
+    m_SNMPBox = new wxStaticBox(m_ServicePanel, wxID_ANY, _("SNMP Service"));
+    wxStaticBoxSizer* itemStaticBoxSizer96 = new wxStaticBoxSizer(m_SNMPBox, wxVERTICAL);
     itemBoxSizer90->Add(itemStaticBoxSizer96, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer97 = new wxFlexGridSizer(0, 3, 0, 0);
     itemStaticBoxSizer96->Add(itemFlexGridSizer97, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);

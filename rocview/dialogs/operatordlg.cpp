@@ -251,6 +251,12 @@ void OperatorDlg::initLabels() {
   m_LeaveCar->SetLabel( wxGetApp().getMsg( "leave" ) );
   m_ShowCar->SetLabel( wxGetApp().getMsg( "carcard" ) );
   m_ShowWaybill->SetLabel( wxGetApp().getMsg( "waybill" ) );
+
+  // Buttons
+  m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
+  m_StdButtonCancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
+  m_StdButtonApply->SetLabel( wxGetApp().getMsg( "apply" ) );
+
   initLocationCombo();
 }
 

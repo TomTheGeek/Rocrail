@@ -287,6 +287,7 @@ public:
     wxStaticText* m_labSrcpPort;
     wxSpinCtrl* m_SrcpPort;
     wxCheckBox* m_SrcpServiceActive;
+    wxStaticBox* m_SNMPBox;
     wxStaticText* m_labSnmpPort;
     wxSpinCtrl* m_SnmpPort;
     wxCheckBox* m_SnmpServiceActive;

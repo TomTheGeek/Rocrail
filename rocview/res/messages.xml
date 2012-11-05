@@ -18578,4 +18578,13 @@
   <Msg id="switched">
     <en txt="Switched"/>
   </Msg>
+  <Msg id="decpath">
+    <en txt="Decoder path"/>
+  </Msg>
+  <Msg id="gamepadsupport">
+    <en txt="Gamepad support"/>
+  </Msg>
+  <Msg id="snmp">
+    <en txt="SNMP"/>
+  </Msg>
 </Messages>

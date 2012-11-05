@@ -135,6 +135,7 @@
       <var name="port3" vt="int" defval="0"/>
       <var name="addr4" vt="int" defval="0"/>
       <var name="port4" vt="int" defval="0"/>
+      <var name="singlegate" vt="bool" defval="false"/>
       <mgvservo cardinality="n" wrappername="MGVServo">
         <var name="addr" vt="int" defval="0"/>
         <var name="port" vt="int" defval="0"/>

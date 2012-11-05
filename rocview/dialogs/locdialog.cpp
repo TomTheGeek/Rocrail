@@ -231,6 +231,7 @@ void LocDialog::initLabels() {
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_Doc->SetLabel( wxGetApp().getMsg( "doc_report" ) );
   m_ImportLocos->SetLabel( wxGetApp().getMenu( "import" ) );
+  m_Copy->SetLabel( wxGetApp().getMsg( "copy" ) );
 
 
   // General

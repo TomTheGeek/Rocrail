@@ -147,6 +147,10 @@ void RocguiIniDialog::initLabels() {
   m_RestrictEdit4Auto->SetLabel( wxGetApp().getMsg( "restrictedit4auto" ) );
   m_JsSupport->SetLabel( wxGetApp().getMsg( "gamepad" ) + _T(" support") );
   m_DispatchMode->SetLabel( wxGetApp().getMsg( "dispatchmode" ) );
+  m_Check4Updates->SetLabel( wxGetApp().getMsg( "softwareupdates" ) );
+
+  m_labDecPath->SetLabel( wxGetApp().getMsg( "decpath" ) );
+  m_JsSupport->SetLabel( wxGetApp().getMsg( "gamepadsupport" ) );
 
   // MIC:
   m_labMICStep->SetLabel( wxGetApp().getMsg( "speedsteps" ) );

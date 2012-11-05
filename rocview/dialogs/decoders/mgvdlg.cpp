@@ -76,6 +76,7 @@ MGVDlg::MGVDlg( wxWindow* parent ):mgvdlggen( parent ) {
   m_Port2->SetValue(wMGV.getport2(mgv));
   m_Port3->SetValue(wMGV.getport3(mgv));
   m_Port4->SetValue(wMGV.getport4(mgv));
+  m_SingleGate->SetValue(wMGV.issinglegate(mgv)?true:false);
 
 
   iONode mgvservo = wMGV.getmgvservo(mgv);
@@ -377,6 +378,7 @@ void MGVDlg::OnOK( wxCommandEvent& event ){
   wMGV.setport2(mgv, m_Port2->GetValue());
   wMGV.setport3(mgv, m_Port3->GetValue());
   wMGV.setport4(mgv, m_Port4->GetValue());
+  wMGV.setsinglegate(mgv, m_SingleGate->IsChecked()?True:False);
 
   MapOp.base.del(m_MGVmap);
   EndModal( wxID_OK );
