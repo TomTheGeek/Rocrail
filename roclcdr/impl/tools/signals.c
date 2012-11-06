@@ -70,6 +70,10 @@ void setCrossingblockSignals(iOLcDriver inst, iORoute route, int aspect, Boolean
       iIBlockBase cblock = data->model->getBlock( data->model, bk );
       if( cblock != NULL ) {
 
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "red aspect for %s in opposite direction", bk );
+        cblock->red( cblock, True, !routefromto );
+        cblock->red( cblock, False, !routefromto );
+
         switch( aspect ) {
         case WHITE_ASPECT:
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "white aspect for %s", bk );
