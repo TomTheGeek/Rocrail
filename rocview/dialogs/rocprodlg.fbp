@@ -2215,7 +2215,7 @@
                                                 <property name="font"></property>
                                                 <property name="hidden">0</property>
                                                 <property name="id">wxID_ANY</property>
-                                                <property name="label"></property>
+                                                <property name="label">Mode</property>
                                                 <property name="majorDimension">1</property>
                                                 <property name="maximum_size"></property>
                                                 <property name="minimum_size"></property>
