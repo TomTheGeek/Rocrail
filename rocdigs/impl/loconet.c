@@ -209,7 +209,7 @@ static int __rwLNOPSW(iOLocoNet loconet, int addr, int type, int opsw, int val, 
 }
 
 
-static int __rwCV(iOLocoNet loconet, int cvnum, int val, byte* cmd, Boolean writeCV, Boolean pom, Boolean direct, int decaddr) {
+static int __rwCV(iOLocoNet loconet, int cvnum, int val, byte* cmd, Boolean writeCV, Boolean pom, int pmode, int decaddr) {
   iOLocoNetData data = Data(loconet);
   int addr  = cvnum-1; /* cvnum is in human readable form; addr is what's sent over loconet */
   int lopsa = decaddr & 0x007F;
@@ -228,8 +228,10 @@ static int __rwCV(iOLocoNet loconet, int cvnum, int val, byte* cmd, Boolean writ
     pcmd = 0x03; /* LPE imples 0x00, but 0x03 is observed */
   }
 
-  if( direct )
+  if( pmode == wProgram.mode_direct )
     pcmd = pcmd | 0x28; /* DIRECTBYTEMODE */
+  else if( pmode == wProgram.mode_register )
+    pcmd = pcmd | 0x30; /* REGISTERMODE */
   else
     pcmd = pcmd | 0x20; /* PAGEBYTEMODE */
 
@@ -2181,12 +2183,11 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       int decaddr = wProgram.getdecaddr( node );
       int addr = decaddr == 0 ? wProgram.getaddr( node ):decaddr;
       Boolean pom = wProgram.ispom( node );
-      Boolean direct = wProgram.getmode(node) == wProgram.mode_direct;
       int size = 0;
       if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn( data->loconet ) ) )
         size = makeIBComCVPacket( cv, 0, cmd, False);
       else
-        size = __rwCV(loconet_inst, cv, 0, cmd, False, pom, direct, addr);
+        size = __rwCV(loconet_inst, cv, 0, cmd, False, pom, wProgram.getmode(node), addr);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d of %d (ops=%d)...", cv, addr, pom );
       return size;
     }
@@ -2196,12 +2197,11 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       int decaddr = wProgram.getdecaddr( node );
       int addr = decaddr == 0 ? wProgram.getaddr( node ):decaddr;
       Boolean pom = wProgram.ispom( node );
-      Boolean direct = wProgram.getmode(node) == wProgram.mode_direct;
       int size = 0;
       if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn( data->loconet ) ) )
         size = makeIBComCVPacket( cv, value, cmd, True);
       else
-        size = __rwCV(loconet_inst, cv, value, cmd, True, pom, direct, addr);
+        size = __rwCV(loconet_inst, cv, value, cmd, True, pom, wProgram.getmode(node), addr);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d to %d of %d (ops=%d)...", cv, value, addr, pom );
       return size;
     }
