@@ -104,6 +104,9 @@ Source: "..\..\rocview\svg\themes\SBB-RHB\*.*"; DestDir: "{app}\svg\themes\SBB-R
 Source: "..\..\rocview\svg\themes\NMBS-SNCB\*.*"; DestDir: "{app}\svg\themes\NMBS-SNCB"; Tasks: themes;
 Source: "..\..\rocview\svg\themes\NL\*.*"; DestDir: "{app}\svg\themes\NL"; Tasks: themes;
 Source: "..\..\rocview\svg\themes\Roads\*.*"; DestDir: "{app}\svg\themes\Roads"; Tasks: themes;
+Source: "..\..\rocview\svg\themes\OeBB\*.*"; DestDir: "{app}\svg\themes\OeBB"; Tasks: themes;
+Source: "..\..\rocview\svg\themes\CV19\*.*"; DestDir: "{app}\svg\themes\CV19"; Tasks: themes;
+Source: "..\..\rocview\svg\themes\ILTIS\*.*"; DestDir: "{app}\svg\themes\ILTIS"; Tasks: themes;
 Source: "..\..\rocrail\symbols\*.*"; DestDir: "{app}\symbols"; Tasks: symbols; Flags: onlyifdoesntexist
 Source: "..\..\COPYING"; DestDir: "{app}"
 
