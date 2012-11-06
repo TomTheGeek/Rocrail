@@ -1732,6 +1732,7 @@
         <var name="speedpercent" vt="int" defval="10" unit="%" range="0-100" remark="Block arrive speed in percent."/>
         <var name="stopspeed" vt="string" defval="min" range="min,percent" remark="Block speed on arrive and stop."/>
         <var name="exitspeed" vt="string" defval="cruise" range="*" remark="Block speed on departure."/>
+        <var name="suitswell" vt="bool" defval="false" remark=""/>
         <const name="compress" vt="string" val="compress"/>
         <const name="open" vt="string" val="open" remark="In this state the block is chooseable for locs to enter."/>
         <const name="closed" vt="string" val="closed" remark="In this state the block is not chooseable for locs to enter."/>

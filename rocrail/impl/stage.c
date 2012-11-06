@@ -947,7 +947,11 @@ static Boolean _isReady( iIBlockBase inst ) {
 
 /**  */
 static int _isSuited( iIBlockBase inst ,iOLoc loc, int* restlen, Boolean checkprev ) {
-  return __willLocoFit(inst, LocOp.getId(loc), False) ? suits_ok:suits_not;
+  iOStageData data = Data(inst);
+  if( __willLocoFit(inst, LocOp.getId(loc), False) ) {
+    return wStage.issuitswell(data->props)?suits_well:suits_ok;
+  }
+  return suits_not;
 }
 
 

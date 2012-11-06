@@ -218,6 +218,7 @@ void StageDlg::initLabels() {
   m_labRandomMin->SetLabel( wxGetApp().getMsg( "randommin" ) );
   m_labRandomMax->SetLabel( wxGetApp().getMsg( "randommax" ) );
   m_labFixed->SetLabel( wxGetApp().getMsg( "fixed" ) );
+  m_SuitsWell->SetLabel( wxGetApp().getMsg( "bestchoice" ) );
 
   m_SpeedBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "speed" ) );
   m_ArriveSpeed->SetLabel( wxGetApp().getMsg( "arrive" ) );
@@ -283,6 +284,7 @@ bool StageDlg::evaluate() {
     wStage.setstopspeed( m_Props, wBlock.percent );
   }
   wStage.setspeedpercent( m_Props, m_ArriveSpeedPercent->GetValue() );
+  wStage.setsuitswell( m_Props, m_SuitsWell->IsChecked() ? True:False );
 
   return true;
 }
@@ -368,6 +370,7 @@ void StageDlg::initValues() {
   char* str = StrOp.fmt( "%d", wStage.getspeedpercent(m_Props) );
   m_ArriveSpeedPercent->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
 
+  m_SuitsWell->SetValue( wStage.issuitswell( m_Props ) ? true:false );
 
   initSections();
 

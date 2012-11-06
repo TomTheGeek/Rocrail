@@ -18608,4 +18608,7 @@
   <Msg id="uid">
     <en txt="UniqueID"/>
   </Msg>
+  <Msg id="bestchoice">
+    <en txt="Best choice"/>
+  </Msg>
 </Messages>
