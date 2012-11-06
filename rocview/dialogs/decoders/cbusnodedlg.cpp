@@ -195,11 +195,6 @@ void CBusNodeDlg::initLabels() {
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
-  if( !wGui.isfirmwaretab(wxGetApp().getIni()) ) {
-    m_FirmwarePanel->Enable(false);
-    m_NoteBook->RemovePage(4);
-  }
-
   m_GC1eCanID->Enable(false);
 }
 
@@ -548,10 +543,6 @@ const char* CBusNodeDlg::getTypeDesc( int manu, int mtype ) {
 
 void CBusNodeDlg::selectPage4Type( int manu, int mtype ) {
   int offset = 0;
-  if( !wGui.isfirmwaretab(wxGetApp().getIni()) ) {
-    offset = 1;
-  }
-
   if( manu == MANU_ROCRAIL ) {
     wxCommandEvent evt;
     switch( mtype ) {

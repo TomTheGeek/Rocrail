@@ -217,7 +217,6 @@ public:
     wxTextCtrl* m_Timeout;
     wxCheckBox* m_Lissy;
     wxCheckBox* m_SVtab;
-    wxCheckBox* m_ShowFirmwareTab;
     wxPanel* m_SVGpanel;
     wxStaticBox* m_SVGPathBox;
     wxTextCtrl* m_SVGPath;
