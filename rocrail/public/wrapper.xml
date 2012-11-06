@@ -802,12 +802,15 @@
     <var name="val8" vt="int" defval="0" range="0-255"/>
     <var name="pom" vt="bool" defval="false" remark="POM Program On the Main"/>
     <var name="acc" vt="bool" defval="false" remark="POM Program On the Main for accessory decoders"/>
-    <var name="direct" vt="bool" defval="false" remark="Direct mode programming; default is paged."/>
     <var name="decaddr" vt="int" defval="0" range="*" remark="decoder address in case of POM"/>
     <var name="modid" vt="int" defval="0" range="*" remark="module id for use with lncv"/>
     <var name="version" vt="int" defval="0" range="*" remark="firmware version"/>
     <var name="manu" vt="int" defval="0" range="*" remark="manufacturer ID"/>
     <var name="prod" vt="int" defval="0" range="*" remark="product ID"/>
+    <var name="mode" vt="int" defval="0" range="0-*" remark="Programming mode."/>
+    <const name="mode_page" vt="int" val="0"/>
+    <const name="mode_direct" vt="int" val="1"/>
+    <const name="mode_register" vt="int" val="2"/>
     <const name="lntype_none" vt="int" val="0"/>
     <const name="lntype_cv" vt="int" val="1" remark="Uhlenbrock LocoNet CV's"/>
     <const name="lntype_sv" vt="int" val="2" remark="LocoIO SV's"/>

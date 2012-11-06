@@ -460,15 +460,16 @@ static int __translate( iOSprog sprog, iONode node, char* outa, int* insize ) {
     Boolean pom = wProgram.ispom( node );
 
     if( !pom && !data->power ) {
+      Boolean direct = wProgram.getmode(node) == wProgram.mode_direct;
       if( wProgram.getcmd( node ) == wProgram.get ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d get", wProgram.getcv(node) );
-        StrOp.fmtb( outa, "%c %d\r", wProgram.isdirect(node)?'C':'V', wProgram.getcv(node) );
+        StrOp.fmtb( outa, "%c %d\r", direct?'C':'V', wProgram.getcv(node) );
         data->lastcmd = CV_READ;
         data->lastvalue = 0;
       }
       else if( wProgram.getcmd( node ) == wProgram.set ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d set %d", wProgram.getcv(node), wProgram.getvalue(node) );
-        StrOp.fmtb( outa, "%c %d %d\r", wProgram.isdirect(node)?'C':'V', wProgram.getcv(node), wProgram.getvalue(node) );
+        StrOp.fmtb( outa, "%c %d %d\r", direct?'C':'V', wProgram.getcv(node), wProgram.getvalue(node) );
         data->lastcmd = CV_WRITE;
         data->lastvalue = wProgram.getvalue(node);
       }

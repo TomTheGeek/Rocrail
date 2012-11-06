@@ -277,7 +277,7 @@ static iONode __translate( iOCTI inst, iONode node ) {
 
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
-    Boolean direct = wProgram.isdirect(node);
+    Boolean direct = wProgram.getmode(node) == wProgram.mode_direct;
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "program type %d...", wProgram.getlntype(node) );
 

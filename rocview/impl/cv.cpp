@@ -953,7 +953,7 @@ void CV::doCV( int command, int index, int value ) {
   wProgram.setvalue( cmd, value );
   wProgram.setpom( cmd, m_bPOM );
   wProgram.setacc( cmd, m_bAcc );
-  wProgram.setdirect( cmd, m_Direct->IsChecked()?True:False );
+  wProgram.setmode( cmd, m_Direct->IsChecked()?wProgram.mode_direct:wProgram.mode_page );
   if( command == wProgram.save ) {
     if( m_LocProps != NULL ) {
       TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999,

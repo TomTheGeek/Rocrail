@@ -619,7 +619,7 @@ void RocProDlg::doCV(int command, int nr, int value) {
   wProgram.setcv( cmd, nr );
   wProgram.setvalue( cmd, value );
   wProgram.setpom( cmd, m_POM->IsChecked()?True:False );
-  wProgram.setdirect( cmd, m_Direct->IsChecked()?True:False );
+  wProgram.setmode( cmd, m_Mode->GetSelection() );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }

@@ -355,7 +355,8 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
   }
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "program command: %d", wProgram.getcmd( node ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "program cmd=%d mode=%d", wProgram.getcmd( node ), wProgram.getmode( node ) );
 
     if( wProgram.getcmd( node ) == wProgram.get ) {
       int cv = wProgram.getcv( node );

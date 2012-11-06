@@ -396,7 +396,7 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
       return 1;
     }
     else if( wProgram.getcmd( node ) == wProgram.get ) {
-      Boolean direct = wProgram.isdirect( node );
+      Boolean direct = wProgram.getmode(node) == wProgram.mode_direct;
       int cv = wProgram.getcv( node );
       out[0] = direct ? 0xA9:0xA1;
       out[1] = cv / 256;
@@ -406,7 +406,7 @@ static int __translate( iONCEData data, iONode node, byte* out, int *insize ) {
       return 3;
     }
     else if( wProgram.getcmd( node ) == wProgram.set ) {
-      Boolean direct = wProgram.isdirect( node );
+      Boolean direct = wProgram.getmode(node) == wProgram.mode_direct;
       int cv = wProgram.getcv( node );
       int val = wProgram.getvalue( node );
       int decaddr = wProgram.getdecaddr( node );

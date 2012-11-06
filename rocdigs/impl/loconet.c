@@ -2181,7 +2181,7 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       int decaddr = wProgram.getdecaddr( node );
       int addr = decaddr == 0 ? wProgram.getaddr( node ):decaddr;
       Boolean pom = wProgram.ispom( node );
-      Boolean direct = wProgram.isdirect( node );
+      Boolean direct = wProgram.getmode(node) == wProgram.mode_direct;
       int size = 0;
       if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn( data->loconet ) ) )
         size = makeIBComCVPacket( cv, 0, cmd, False);
@@ -2196,7 +2196,7 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       int decaddr = wProgram.getdecaddr( node );
       int addr = decaddr == 0 ? wProgram.getaddr( node ):decaddr;
       Boolean pom = wProgram.ispom( node );
-      Boolean direct = wProgram.isdirect( node );
+      Boolean direct = wProgram.getmode(node) == wProgram.mode_direct;
       int size = 0;
       if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn( data->loconet ) ) )
         size = makeIBComCVPacket( cv, value, cmd, True);

@@ -766,13 +766,22 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set CV%d to %d...", cv, value );
 
-        byte* outa = allocMem(32);
-        outa[0] = 0x23;
-        outa[1] = 0x16;
-        outa[2] = cv & 0xFF;
-        outa[3] = value & 0xFF;
-        ThreadOp.post( data->transactor, (obj)outa );
-        /*ThreadOp.sleep(50);*/
+        if( wProgram.getmode(node) == wProgram.mode_register ) {
+          byte* outa = allocMem(32);
+          outa[0] = 0x23;
+          outa[1] = 0x12;
+          outa[2] = cv & 0x0F;
+          outa[3] = value & 0xFF;
+          ThreadOp.post( data->transactor, (obj)outa );
+        }
+        else {
+          byte* outa = allocMem(32);
+          outa[0] = 0x23;
+          outa[1] = 0x16;
+          outa[2] = cv & 0xFF;
+          outa[3] = value & 0xFF;
+          ThreadOp.post( data->transactor, (obj)outa );
+        }
 
         byte* outb = allocMem(32);
         outb[0] = 0x21;
