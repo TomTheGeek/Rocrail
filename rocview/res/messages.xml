@@ -1420,7 +1420,7 @@
     <fr txt="Contrôle" accel="0"/>
     <tr txt="Kontrol" accel="0"/>
     <es txt="Accionamiento" accel="0"/>
-    <it txt="Comandi"/>
+    <it txt="Controllo"/>
     <da txt="Kontrol" accel="0"/>
     <bs txt="Kontrola"/>
     <cs txt="Ovládání"/>
@@ -1840,7 +1840,7 @@
     <fr txt="Nombre de fonction"/>
     <tr txt="Fonksiyonların sayısı"/>
     <es txt="Nombre de Función"/>
-    <it txt="Numero della funzione"/>
+    <it txt="Numero di funzioni"/>
     <da txt="Antal funktion"/>
     <bg txt="Брой Длъжност"/>
     <ca txt="Nombre de funció"/>
@@ -4109,7 +4109,7 @@
     <fr txt="Indicatif de la locomotive"/>
     <tr txt="Loc ID"/>
     <es txt="Denominación Loc"/>
-    <it txt="Identificativo locomotiva"/>
+    <it txt="ID Loco"/>
     <da txt="Lokomotiv-ID"/>
     <cs txt="ID Lokomotivy"/>
     <bg txt="Loc ID"/>
@@ -5206,7 +5206,7 @@
     <fr txt="Identifiant de l'interface"/>
     <tr txt="Ara yüz ID"/>
     <es txt="Interface ID"/>
-    <it txt="Identificativo interfaccia"/>
+    <it txt="ID interfaccia"/>
     <da txt="Grænseflade-ID"/>
     <bg txt="Интерфейс ID"/>
     <el txt="Interface ID"/>
@@ -8825,7 +8825,7 @@
     <fr txt="Utiliser"/>
     <tr txt="Use"/>
     <es txt="Usar"/>
-    <it txt="Utilizzo"/>
+    <it txt="Usare"/>
     <da txt="Benyt"/>
     <cs txt="Pouzit"/>
     <bg txt="Използвам"/>
@@ -12889,7 +12889,7 @@
     <fr txt="Documentation"/>
     <tr txt="Belgelendirme"/>
     <es txt="Documentación"/>
-    <it txt="Guida"/>
+    <it txt="Rapporto"/>
     <da txt="Dokumentation"/>
     <bg txt="Документация"/>
     <el txt="Τεκμηρίωση"/>
@@ -14442,7 +14442,7 @@
     <el txt="Χρησιμοποίησε shortin περίπτωση"/>
     <fr txt="Utiliser l'événement \&quot;shortin\&quot;"/>
     <hu txt="A \&quot;shortin\&quot; esemény alkalmazása"/>
-    <it txt="Utilizza evento &amp;quote;Shortin&amp;quote;"/>
+    <it txt="Usa evento SHORTIN"/>
     <nl txt="Gebruik de shortin melder"/>
     <pt txt="Usar evento curto"/>
     <cs txt="Použijte ShortIn Událost"/>
@@ -14462,7 +14462,7 @@
     <hu txt="Megállítás a \&quot;pre2in\&quot; eseménynél"/>
     <nl txt="Stop bij een pre2in melder"/>
     <pt txt="Parar em evento pre2in"/>
-    <it txt="Arresta all'evento &amp;quote;Pre2in&amp;quote;"/>
+    <it txt="Arresta all'evento PRE2IN"/>
     <cs txt="Zastav před událostí pre2in"/>
     <da txt="Stop ved pre2in event"/>
     <ru txt="Остановиться по событию pre2in"/>
@@ -16198,7 +16198,7 @@
     <nl txt="Werkruimte openen"/>
     <fr txt="Ouvrir l'environnement de jeu"/>
     <de txt="Arbeitsbereich öffnen"/>
-    <it txt="Apri spazio di lavoro"/>
+    <it txt="Apri cartella di lavoro"/>
     <pt txt="Abrir espaço de trabalho"/>
     <ru txt="Открыть Workspace"/>
     <es txt="Abrir espacio de trabajo"/>
@@ -16233,7 +16233,7 @@
     <nl txt="Standaard werkruimte"/>
     <fr txt="Environnement de jeu par défaut"/>
     <de txt="Standard-Arbeitsbereich"/>
-    <it txt="Spazio di lavoro predefinito"/>
+    <it txt="Caretella di lavoro predefinita"/>
     <pt txt="Espaço de trabalho default"/>
     <ru txt="Workspace  по-умолчанию"/>
     <es txt="Espacio de trabajo por defecto"/>
@@ -16249,7 +16249,7 @@
     <nl txt="Gebruik werkruimte bij het opstarten"/>
     <fr txt="Utiliser l'environnement de jeu au démarrage"/>
     <de txt="Lade Arbeitsbereich beim Programmstart"/>
-    <it txt="Utilizza spazio di lavoro all'avvio"/>
+    <it txt="Utilizza cartella di lavoro all'avvio"/>
     <pt txt="Usar espaço de trabalho no arranque"/>
     <ru txt="Использовать Workspace при запуске"/>
     <es txt="Use espacio de trabajo al inicio"/>
@@ -16613,7 +16613,7 @@
     <da txt="Forhindre lokomotiv overtagelse"/>
     <nl txt="Verhinder overnemen loc bediening"/>
     <de txt="Lokübernahme unterbinden"/>
-    <it txt="Disabilita controllo locomotive \&quot;rubate\&quot;"/>
+    <it txt="Disabilita controllo locomotive rubate"/>
     <ru txt="Отключить управление захваченными локомотивами"/>
     <en_AU txt="Disable steal loco control"/>
     <en_CA txt="Disable steal loco control"/>
@@ -17046,7 +17046,7 @@
     <en_GB txt="Recent Workspaces"/>
     <em_GB txt="Recent Workspaces"/>
     <em_AU txt="Recent Workspaces"/>
-    <it txt="Spazi di lavoro recenti"/>
+    <it txt="Cartelle di lavoro recenti"/>
     <es txt="Areas de trabajo recientes"/>
   </Msg>
   <Msg id="ignorepowercmds">
@@ -17289,7 +17289,7 @@
     <pt txt="Voz para o Bloco"/>
     <es txt="Habla para bloque"/>
     <ru txt="Говорить на блоке"/>
-    <it txt="Speak per il blocco"/>
+    <it txt="Comando Speak per il blocco"/>
   </Msg>
   <Msg id="speakcmd">
     <en txt="Speak command"/>
@@ -17303,7 +17303,7 @@
     <pt txt="Comando de voz"/>
     <es txt="Comando de habla"/>
     <ru txt="Голосовая команда"/>
-    <it txt="Speak command"/>
+    <it txt="Comando Speak"/>
   </Msg>
   <Msg id="acceptident">
     <en txt="Accept BiDi Loco"/>
@@ -17883,7 +17883,7 @@
     <fr txt="Tout effacer"/>
     <ru txt="Очистить всё"/>
     <es txt="Borrar todo"/>
-    <it txt="Cancella tutto"/>
+    <it txt="Resetta"/>
   </Msg>
   <Msg id="learn">
     <en txt="Learn"/>
@@ -18455,7 +18455,7 @@
     <nl txt="Controleer wissel bevestiging"/>
     <de txt="Weichenquittierung auswerten"/>
     <es txt="Comprobar respuesta del accesorio"/>
-    <it txt="Controllo riconoscimento interruttore"/>
+    <it txt="Controllo riconoscimento deviatoio"/>
   </Msg>
   <Msg id="retries">
     <en txt="Retries"/>
@@ -18573,42 +18573,65 @@
     <en txt="Definition"/>
     <nl txt="Definitie"/>
     <de txt="Definition"/>
-    <it txt="Definizione"/>
+    <it txt="Generale"/>
   </Msg>
   <Msg id="switched">
     <en txt="Switched"/>
+    <nl txt="Geschakeld"/>
+    <it txt="Attivazioni"/>
   </Msg>
   <Msg id="decpath">
     <en txt="Decoder path"/>
+    <nl txt="Decoder pad"/>
+    <it txt="Percorso Decoder"/>
   </Msg>
   <Msg id="gamepadsupport">
     <en txt="Gamepad support"/>
+    <nl txt="Gamepad ondersteuning"/>
+    <it txt="Supporto Gamepad"/>
   </Msg>
   <Msg id="snmp">
     <en txt="SNMP"/>
+    <nl txt="SNMP"/>
+    <it txt="SNMP"/>
   </Msg>
   <Msg id="usefieldevent">
     <en txt="Use field events"/>
+    <nl txt="Gebruik veld meldingen"/>
+    <it txt="Usare campo eventi"/>
   </Msg>
   <Msg id="flip">
     <en txt="Flip"/>
+    <nl txt="Omdraaien"/>
+    <it txt="Inverti"/>
   </Msg>
   <Msg id="analog">
     <en txt="Analog"/>
+    <nl txt="Analoog"/>
+    <it txt="Analogico"/>
   </Msg>
   <Msg id="blank">
     <en txt="blank"/>
+    <nl txt="blanco"/>
+    <it txt="vuoto"/>
   </Msg>
   <Msg id="powersensor">
     <en txt="Power sensor"/>
+    <nl txt="Stroom melder"/>
+    <it txt="Sensore alimentazione"/>
   </Msg>
   <Msg id="poweroutput">
     <en txt="Power output"/>
+    <nl txt="Stroom uitgang"/>
+    <it txt="Uscita akimentazione"/>
   </Msg>
   <Msg id="uid">
     <en txt="UniqueID"/>
+    <nl txt="Uniek ID"/>
+    <it txt="IDunico"/>
   </Msg>
   <Msg id="bestchoice">
     <en txt="Best choice"/>
+    <nl txt="Beste keuze"/>
   </Msg>
 </Messages>
