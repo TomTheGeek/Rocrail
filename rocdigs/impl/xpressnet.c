@@ -712,13 +712,21 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
         }
       }
       else {
-        byte* outa = allocMem(32);
-        outa[0] = 0x22;
-        outa[1] = 0x15;
-        outa[2] = cv & 0xFF;
-        ThreadOp.post( data->transactor, (obj)outa );
-        /*ThreadOp.sleep(50);*/
-
+        if( wProgram.getmode(node) == wProgram.mode_register ) {
+          byte* outa = allocMem(32);
+          outa[0] = 0x22;
+          outa[1] = 0x11;
+          outa[2] = cv & 0x0F;
+          ThreadOp.post( data->transactor, (obj)outa );
+        }
+        else {
+          byte* outa = allocMem(32);
+          outa[0] = 0x22;
+          outa[1] = 0x15;
+          outa[2] = cv & 0xFF;
+          ThreadOp.post( data->transactor, (obj)outa );
+          /*ThreadOp.sleep(50);*/
+        }
         byte* outb = allocMem(32);
         outb[0] = 0x21;
         outb[1] = 0x10;
