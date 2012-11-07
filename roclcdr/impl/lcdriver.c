@@ -51,6 +51,7 @@
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/Link.h"
 #include "rocrail/wrapper/public/Ctrl.h"
+#include "rocrail/wrapper/public/Tour.h"
 
 static int instCnt = 0;
 
@@ -524,10 +525,28 @@ static void _usetour( iILcDriverInt inst, const char* tourid ) {
   iOLcDriverData data = Data(inst);
   data->tour = tourid;
   data->tourIdx = 0;
+
+  iONode tour = data->model->getTour(data->model, data->tour);
+  if( tour != NULL ) {
+    iOStrTok tok = StrTokOp.inst(wTour.getschedules(tour), ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      int scheduleIdx = 0;
+      iORoute route = NULL;
+      const char* scid = StrTokOp.nextToken(tok);
+      route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL, scid, &scheduleIdx,
+                                                    data->loc->getCurBlock( data->loc ), NULL, data->loc, False, False, &data->indelay );
+      if( route != NULL )
+        break;
+      data->tourIdx++;
+    }
+    StrTokOp.base.del(tok);
+    if( data->tourIdx > 0 ) {
+      data->scheduleended = True;
+    }
+  }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                 "use tour \"%s\" for \"%s\"...",
-                 tourid,
-                 data->loc->getId( data->loc ) );
+                 "use tour [%s][%d] for loco [%s]",
+                 tourid, data->tourIdx, data->loc->getId( data->loc ) );
 }
 
 static const char* _getschedule( iILcDriverInt inst ) {
