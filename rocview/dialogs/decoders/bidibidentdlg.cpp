@@ -117,13 +117,19 @@ void BidibIdentDlg::onCancel( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::onOK( wxCommandEvent& event ) {
-  wxClipboard* cb = new wxClipboard();
+  //wxClipboard* cb = new wxClipboard();
+  wxClipboard* cb = wxTheClipboard;
   if( cb != NULL ) {
+    //cb->UsePrimarySelection();
     if( cb->Open() ) {
-      cb->SetData( new wxTextDataObject(m_UID->GetValue()) );
+      wxString text( m_UID->GetValue() );
+      if( !text.IsEmpty() ) {
+        wxTextDataObject *data = new wxTextDataObject( text );
+        cb->SetData( data );
+      }
       cb->Close();
     }
-    delete cb;
+    //delete cb;
   }
 
   EndModal( wxID_OK );
@@ -321,7 +327,6 @@ void BidibIdentDlg::initLabels() {
 
 void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
   wxString itemText = m_Tree->GetItemText(event.GetItem());
-  wxLogMessage(itemText);
   char* uid = StrOp.dup(itemText.mb_str(wxConvUTF8));
   bidibnode = (iONode)MapOp.get( nodeMap, uid );
   if( bidibnode != NULL ) {
