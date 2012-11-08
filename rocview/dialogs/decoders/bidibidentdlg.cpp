@@ -319,7 +319,6 @@ void BidibIdentDlg::initLabels() {
     if( node == NULL ) {
       m_Tree->SelectItem(root, false);
       m_Tree->SelectItem(root, true);
-      node = rootnode;
     }
   }
 
