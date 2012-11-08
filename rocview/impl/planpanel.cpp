@@ -1250,10 +1250,7 @@ void PlanPanel::addItemAttr( iONode node ) {
     TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "copied item added, z=%d", wItem.getz(node) );
   }
 
-  if( wxGetApp().isOffline() ) {
-    addItemInList( node );
-  }
-
+  addItemInList( node ); // Allways add new Items locally to prevent two nodes after getting a server modify event!
 
   wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ADDITEM_EVENT );
   evt.SetClientData( node );
