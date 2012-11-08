@@ -332,7 +332,8 @@ static void __translate( iOMuet muet, iONode node ) {
     const char* onoff = "off";
     byte pin = 0x01 << ( wSwitch.getport1( node ) - 1 );
     byte mask = ~pin;
-    int bus = wSwitch.getbus( node ) & 0x1F;
+    int addr = wSwitch.getaddr1( node ) & 0x7F;
+    int bus = wSwitch.getbus( node ) & 0x01;
 
     iOPoint point = __getPoint(data, node);
     if( point != NULL ) {
@@ -342,20 +343,20 @@ static void __translate( iOMuet muet, iONode node ) {
     byte *cmd = allocMem(32);
     cmd[0] = bus;
     cmd[1] = 2;
-    cmd[2] = wSwitch.getaddr1( node ) & 0x7F;
-    cmd[3] = 0x01 << ( wSwitch.getport1( node ) - 1 );
+    cmd[2] = addr;
+    cmd[3] = pin;
     cmd[2] |= WRITE_FLAG;
 
     /* reset pin to 0: */
-    cmd[3] = data->swstate[bus][cmd[2]] & mask;
+    cmd[3] = data->swstate[bus][addr] & mask;
 
     if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ) {
       cmd[3] |= pin;
       onoff = "on";
     }
     /* save new state: */
-    data->swstate[bus][cmd[2]] = cmd[3];
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command: switch %d:%d %s", wSwitch.getaddr1( node ), wSwitch.getport1( node ), onoff );
+    data->swstate[bus][addr] = cmd[3];
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command: switch addr=%d port=0x%02X %s", addr, pin, onoff );
     ThreadOp.post(data->writer, (obj)cmd);
   }
 
@@ -369,7 +370,7 @@ static void __translate( iOMuet muet, iONode node ) {
     byte pin = 0x01 << ( port - 1 );
     byte mask = ~pin;
 
-    int bus = wOutput.getbus(node);
+    int bus = wOutput.getbus(node) & 0x01;
     byte *cmd = allocMem(32);
     cmd[0] = bus;
     cmd[1] = 2;
@@ -384,7 +385,7 @@ static void __translate( iOMuet muet, iONode node ) {
     }
     /* save new state: */
     data->swstate[bus][cmd[2]] = cmd[3];
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command: output %d:%d %s", wOutput.getaddr( node ), wOutput.getport( node ), onoff );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command: output addr=%d pin=0x%02X %s", addr, pin, onoff );
     ThreadOp.post(data->writer, (obj)cmd);
   }
 
@@ -791,6 +792,8 @@ static void __reader( void* threadinst ) {
                         if( data->iid != NULL )
                           wSwitch.setiid( nodeC, data->iid );
                         wSwitch.setid( nodeC, point->id );
+                        wSwitch.setaddr1( nodeC, addr );
+                        wSwitch.setport1( nodeC, i+1 );
                         wSwitch.setstate( nodeC, newval?"straight":"turnout" );
                         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "point update %s", point->id );
                         data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );

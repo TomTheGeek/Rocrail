@@ -3149,6 +3149,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     iONode ini    = AppOp.getIni();
     iONode digint = wRocRail.getdigint( ini );
     Boolean matched = False;
+    obj sw = NULL;
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Switch event: %d:%d:%d", bus, addr, port);
 
@@ -3157,11 +3158,20 @@ static void _event( iOModel inst, iONode nodeC ) {
     else
       defiid = "vcs-1";
 
+    if( wSwitch.getid(nodeC) != NULL && StrOp.len(wSwitch.getid(nodeC)) > 0 ) {
+      sw = (obj)ModelOp.getSwitch(inst, wSwitch.getid(nodeC) );
+      if( sw != NULL ) {
+        sw->event( sw, nodeC );
+        return;
+      }
+    }
+
+
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "trying to match %s event: %d:%d:%d",
         wAccessory.isaccevent(nodeC)?"accessory":"switch", bus, addr, port );
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "iterating switch list %d", ListOp.size(o->switchList) );
-    obj sw = ListOp.first(o->switchList);
+    sw = ListOp.first(o->switchList);
     while( sw != NULL ) {
       iONode props = sw->properties(sw);
 
