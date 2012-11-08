@@ -295,9 +295,9 @@ void BidibIdentDlg::initLabels() {
 
     for(int x=0; x<128; x++) {
       freeMem(r2[x]);
-      freeMem(r3[x]);
       for(int y=0; y<128; y++)
         freeMem(r3[x][y]);
+      freeMem(r3[x]);
     }
 
     freeMem(r1);
