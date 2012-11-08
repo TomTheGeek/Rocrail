@@ -118,11 +118,13 @@ void BidibIdentDlg::onCancel( wxCommandEvent& event ) {
 
 void BidibIdentDlg::onOK( wxCommandEvent& event ) {
   wxClipboard* cb = new wxClipboard();
-  if( cb->Open() ) {
-    cb->SetData( new wxTextDataObject(m_UID->GetValue()) );
-    cb->Close();
+  if( cb != NULL ) {
+    if( cb->Open() ) {
+      cb->SetData( new wxTextDataObject(m_UID->GetValue()) );
+      cb->Close();
+    }
+    delete cb;
   }
-  delete cb;
 
   EndModal( wxID_OK );
 }
@@ -270,6 +272,7 @@ void BidibIdentDlg::initLabels() {
 
 
     iONode bidibnode = (iONode)ListOp.get( nodeList, 0 );
+    iONode rootnode  = (iONode)ListOp.get( nodeList, 0 );
 
     char key[32];
     int level = 0;
@@ -310,6 +313,7 @@ void BidibIdentDlg::initLabels() {
     if( node == NULL ) {
       m_Tree->SelectItem(root, false);
       m_Tree->SelectItem(root, true);
+      node = rootnode;
     }
   }
 
@@ -317,39 +321,66 @@ void BidibIdentDlg::initLabels() {
 
 void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
   wxString itemText = m_Tree->GetItemText(event.GetItem());
-  const char* uid = itemText.mb_str(wxConvUTF8);
+  wxLogMessage(itemText);
+  char* uid = StrOp.dup(itemText.mb_str(wxConvUTF8));
   bidibnode = (iONode)MapOp.get( nodeMap, uid );
-  TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"tree selection: %s", wBiDiBnode.getpath(bidibnode) );
+  if( bidibnode != NULL ) {
+    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"tree selection: %s (%s)", wBiDiBnode.getpath(bidibnode), uid );
+    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"uid=%d", wBiDiBnode.getuid(bidibnode) );
 
-  m_Path->SetValue( wxString( wBiDiBnode.getpath(bidibnode), wxConvUTF8) );
-  //m_UID->SetValue( wxString( uid, wxConvUTF8 ) );
-  m_UID->SetValue( wxString::Format(_T("%d"), wBiDiBnode.getuid(bidibnode) ) );
-  m_UIDX->SetValue( wxString::Format(_T("0x%08X"), wBiDiBnode.getuid(bidibnode) ) );
-  m_VendorName->SetValue( wxString( m_Vendor[wBiDiBnode.getvendor(bidibnode)&0xFF],wxConvUTF8) );
-  m_Class->SetValue( wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
-  m_Version->SetValue( wxString( wBiDiBnode.getversion(bidibnode), wxConvUTF8) );
+    m_Path->SetValue( wxString( wBiDiBnode.getpath(bidibnode), wxConvUTF8) );
+    //m_UID->SetValue( wxString( uid, wxConvUTF8 ) );
+    m_UID->SetValue( wxString::Format(_T("%d"), wBiDiBnode.getuid(bidibnode) ) );
+    m_UIDX->SetValue( wxString::Format(_T("0x%08X"), wBiDiBnode.getuid(bidibnode) ) );
+    m_VendorName->SetValue( wxString( m_Vendor[wBiDiBnode.getvendor(bidibnode)&0xFF],wxConvUTF8) );
+    m_Class->SetValue( wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
+    m_Version->SetValue( wxString( wBiDiBnode.getversion(bidibnode), wxConvUTF8) );
 
-  SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(bidibnode) ) + wxT(" ") + wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
+    SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(bidibnode) ) + wxT(" ") + wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
+  }
+  else {
+    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"node not found: %s", uid );
+    TraceOp.dump ( "bidibident", TRCLEVEL_INFO, (char*)uid, StrOp.len(uid) );
+  }
+  StrOp.free(uid);
 }
 
 
 void BidibIdentDlg::initValues() {
-  char mnemonic[32];
-  char* classname = bidibGetClassName(wProgram.getprod(node), mnemonic);
-  m_Path->SetValue( wxString( wProgram.getfilename(node), wxConvUTF8) );
-  m_UID->SetValue( wxString::Format(_T("%d"), wProgram.getmodid(node) ) );
-  m_UIDX->SetValue( wxString::Format(_T("0x%08X"), wProgram.getmodid(node) ) );
-  m_VendorName->SetValue( wxString( m_Vendor[wProgram.getmanu(node)&0xFF],wxConvUTF8) );
-  m_Class->SetValue( wxString( classname, wxConvUTF8) );
-  StrOp.free(classname);
-  m_Version->SetValue( wxString( wProgram.getstrval1(node), wxConvUTF8) );
+  if( node != NULL && StrOp.equals(wProgram.name(), NodeOp.getName(node)) ) {
+    char mnemonic[32];
+    char* classname = bidibGetClassName(wProgram.getprod(node), mnemonic);
+    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999, "%s", classname );
 
-  char key[32];
-  StrOp.fmtb(key, "[%s] %08X", mnemonic, wProgram.getmodid(node) );
-  wxTreeItemId item = findTreeItem( m_Tree->GetRootItem(), wxString( key, wxConvUTF8));
-  if( item.IsOk() ) {
-    m_Tree->SelectItem(item);
-    m_Tree->ScrollTo(item);
+    m_Path->SetValue( wxString( wProgram.getfilename(node), wxConvUTF8) );
+    m_UID->SetValue( wxString::Format(_T("%d"), wProgram.getmodid(node) ) );
+    m_UIDX->SetValue( wxString::Format(_T("0x%08X"), wProgram.getmodid(node) ) );
+    m_VendorName->SetValue( wxString( m_Vendor[wProgram.getmanu(node)&0xFF],wxConvUTF8) );
+    m_Class->SetValue( wxString( classname, wxConvUTF8) );
+    StrOp.free(classname);
+    m_Version->SetValue( wxString( wProgram.getstrval1(node), wxConvUTF8) );
+
+    char key[32];
+    StrOp.fmtb(key, "[%s] %08X", mnemonic, wProgram.getmodid(node) );
+    wxTreeItemId item = findTreeItem( m_Tree->GetRootItem(), wxString( key, wxConvUTF8));
+    if( item.IsOk() ) {
+      m_Tree->SelectItem(item);
+      m_Tree->ScrollTo(item);
+    }
+  }
+  else if( node != NULL && StrOp.equals(wBiDiBnode.name(), NodeOp.getName(node)) ) {
+    m_Path->SetValue( wxString( wBiDiBnode.getpath(node), wxConvUTF8) );
+    //m_UID->SetValue( wxString( uid, wxConvUTF8 ) );
+    m_UID->SetValue( wxString::Format(_T("%d"), wBiDiBnode.getuid(node) ) );
+    m_UIDX->SetValue( wxString::Format(_T("0x%08X"), wBiDiBnode.getuid(node) ) );
+    m_VendorName->SetValue( wxString( m_Vendor[wBiDiBnode.getvendor(node)&0xFF],wxConvUTF8) );
+    m_Class->SetValue( wxString( wBiDiBnode.getclass(node), wxConvUTF8) );
+    m_Version->SetValue( wxString( wBiDiBnode.getversion(node), wxConvUTF8) );
+
+    SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(node) ) + wxT(" ") + wxString( wBiDiBnode.getclass(node), wxConvUTF8) );
+  }
+  else {
+    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999, "no node set" );
   }
 }
 
