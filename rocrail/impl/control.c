@@ -1298,6 +1298,7 @@ static void __clockticker( void* threadinst ) {
 
   data->time = time(NULL);
   data->devider = 1;
+  data->temp = 20;
 
   if( clockini == NULL ) {
     clockini = NodeOp.inst( wClock.name(), ini, ELEMENT_NODE );

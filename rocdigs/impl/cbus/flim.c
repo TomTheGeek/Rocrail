@@ -73,7 +73,7 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
     int l_sidh, l_sidl, canid;
     l_sidh = HEXA2Byte(frame + OFFSET_SIDH);
     l_sidl = HEXA2Byte(frame + OFFSET_SIDL);
-    canid = (l_sidl >> 5 ) + ((l_sidh&0x0F) << 3);
+    canid = (l_sidl >> 5 ) + ((l_sidh&0x1F) << 3);
 
     iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcmd( node, wProgram.type );
