@@ -3376,7 +3376,7 @@ static void _analyse( iOModel inst, int mode ) {
  * first caller should provide an empty list which will be filled with streets
  * needed to get to the destination.
  */
-static iORoute __lookup( iOModel inst, iOList stlist, const char* fromid, const char* destid,
+static iORoute __lookup( iOModel inst, iOLoc loc, iOList stlist, const char* fromid, const char* destid,
     int cnt, iOList searchlist, int* foundlevel, Boolean forceSameDir, Boolean swapPlacingInPrevRoute ) {
   iOModelData data = Data(inst);
 
@@ -3405,14 +3405,19 @@ static iORoute __lookup( iOModel inst, iOList stlist, const char* fromid, const 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "find a route from [%s] to [%s] level=%d", fromid, destid, cnt );
 
   for( i = 0; i < stcnt; i++ ) {
-    iORoute street = (iORoute)ListOp.get( searchlist, i );
-    const char* stFrom = RouteOp.getFromBlock( street );
-    const char* stTo = RouteOp.getToBlock( street );
-    Boolean dir = RouteOp.getDir( street );
+    iORoute route = (iORoute)ListOp.get( searchlist, i );
+    const char* stFrom = RouteOp.getFromBlock( route );
+    const char* stTo = RouteOp.getToBlock( route );
+    Boolean dir = RouteOp.getDir( route );
 
     if( !StrOp.equals( stFrom, fromid ) && !StrOp.equals( stTo, fromid ) ) {
       /* not useable; go on */
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route[%d]-[%s][%s] does not match: level=%d", i, stFrom, stTo, cnt );
+      continue;
+    }
+
+    if( !route->hasPermission( route, loc, fromid, False ) ) {
+      /* not useable; go on */
       continue;
     }
 
@@ -3427,11 +3432,11 @@ static iORoute __lookup( iOModel inst, iOList stlist, const char* fromid, const 
 
     if( StrOp.equals( stTo, destid ) ) {
       if( stlist != NULL )
-        ListOp.insert( stlist, 0, (obj)street );
+        ListOp.insert( stlist, 0, (obj)route );
       /* a hit: */
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route[%d]-[%s][%s] fits: level=%d", i, stFrom, stTo, cnt );
       *foundlevel = cnt;
-      return street;
+      return route;
     }
     /* do a recursion: */
     /*
@@ -3831,7 +3836,7 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
         if( stlist != NULL )
           ListOp.clear( stlist );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Try to find a route to block \"%s\".", id );
-        street = __lookup( inst, stlist, currBlockId, id, 0, NULL, NULL, forceSameDir, swapPlacingInPrevRoute );
+        street = __lookup( inst, loc, stlist, currBlockId, id, 0, NULL, NULL, forceSameDir, swapPlacingInPrevRoute );
         if( street == NULL || !RouteOp.isFree( street, LocOp.getId(loc) )) {
           continue;
         }
@@ -3847,7 +3852,7 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Try to find a route to block \"%s\".", toBlockId );
-      street = __lookup( inst, stlist, currBlockId, toBlockId, 0, NULL, NULL, forceSameDir, swapPlacingInPrevRoute );
+      street = __lookup( inst, loc, stlist, currBlockId, toBlockId, 0, NULL, NULL, forceSameDir, swapPlacingInPrevRoute );
     }
 
     /* check if the direction is the same if wanted to be */
