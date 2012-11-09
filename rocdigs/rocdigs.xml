@@ -1283,7 +1283,6 @@
       <var name="initOK" vt="Boolean"/>
       <var name="activebus" vt="int"/>
       <var name="sx1[2][128]" vt="byte"/>
-      <var name="swstate[2][256]" vt="byte"/>
       <var name="fbstate[2][256]" vt="byte"/>
       <var name="fbmodcnt[2]" vt="int"/>
       <var name="fbmods[2][256]" vt="byte"/>

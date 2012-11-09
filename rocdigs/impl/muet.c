@@ -348,15 +348,13 @@ static void __translate( iOMuet muet, iONode node ) {
     cmd[2] |= WRITE_FLAG;
 
     /* reset pin to 0: */
-    cmd[3] = data->swstate[bus][addr] & mask;
+    cmd[3] = data->sx1[bus][addr] & mask;
 
     if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ) {
       cmd[3] |= pin;
       onoff = "on";
     }
-    /* save new state: */
-    data->swstate[bus][addr] = cmd[3];
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command: switch addr=%d port=0x%02X %s", addr, pin, onoff );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command: switch addr=%d val=0x%02X port=0x%02X %s", addr, cmd[3], pin, onoff );
     ThreadOp.post(data->writer, (obj)cmd);
   }
 
@@ -377,15 +375,13 @@ static void __translate( iOMuet muet, iONode node ) {
     cmd[2] = addr & 0x7F;
     cmd[2] |= WRITE_FLAG;
     /* reset pin to 0: */
-    cmd[3] = data->swstate[bus][cmd[2]] & mask;
+    cmd[3] = data->sx1[bus][cmd[2]] & mask;
 
     if( action ) {
       cmd[3] |= pin;
       onoff = "on";
     }
-    /* save new state: */
-    data->swstate[bus][cmd[2]] = cmd[3];
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command: output addr=%d pin=0x%02X %s", addr, pin, onoff );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command: output addr=%d val=0x%02X pin=0x%02X %s", addr, cmd[3], pin, onoff );
     ThreadOp.post(data->writer, (obj)cmd);
   }
 
