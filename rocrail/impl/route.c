@@ -1387,6 +1387,9 @@ static Boolean _isSet( iORoute inst ) {
 
 static Boolean _isSetCrossingblockSignals( iORoute inst ) {
   iORouteData data = Data(inst);
+  if( wRoute.iscrossingblocksignals( data->props ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "automatically setting crossing block signals is obsolete; use route commands" );
+  }
   return wRoute.iscrossingblocksignals( data->props );
 }
 
