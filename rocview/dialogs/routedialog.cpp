@@ -197,7 +197,7 @@ void RouteDialog::OnSelectPage(wxCommandEvent& event) {
 void RouteDialog::initLabels() {
   m_Notebook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
   m_Notebook->SetPageText( 1, wxGetApp().getMsg( "general" ) );
-  m_Notebook->SetPageText( 2, wxGetApp().getMsg( "turnouttable" ) );
+  m_Notebook->SetPageText( 2, wxGetApp().getMsg( "commands" ) );
   m_Notebook->SetPageText( 3, wxGetApp().getMsg( "sensors" ) );
   m_Notebook->SetPageText( 4, wxGetApp().getMsg( "permissions" ) );
   m_Notebook->SetPageText( 5, wxGetApp().getMsg( "conditions" ) );
