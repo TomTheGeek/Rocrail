@@ -920,18 +920,17 @@ static void rocrailCallback( obj me, iONode node ) {
       guiApp->m_InitialRocrailIni = false;
       guiApp->getFrame()->setRocrailIni((iONode)node->base.clone( node ));
     }
+
+    if(guiApp->m_FireBiDiB4RocrailIni) {
+      wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_BiDiB );
+      guiApp->m_FireBiDiB4RocrailIni = false;
+      wxPostEvent( guiApp->getFrame(), event );
+    }
     else {
-      if(guiApp->m_FireBiDiB4RocrailIni) {
-        wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_BiDiB );
-        guiApp->m_FireBiDiB4RocrailIni = false;
-        wxPostEvent( guiApp->getFrame(), event );
-      }
-      else {
-        wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_RocrailIni );
-        // Make a copy of the node for using it out of this scope:
-        event.SetClientData( node->base.clone( node ) );
-        wxPostEvent( guiApp->getFrame(), event );
-      }
+      wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_RocrailIni );
+      // Make a copy of the node for using it out of this scope:
+      event.SetClientData( node->base.clone( node ) );
+      wxPostEvent( guiApp->getFrame(), event );
     }
   }
   else if( StrOp.equals( wPwrEvent.name(), NodeOp.getName( node ) ) ) {

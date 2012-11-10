@@ -3282,7 +3282,7 @@ void RocGuiFrame::OnBiDiB( wxCommandEvent& event ) {
     m_BidibIdentDlg = NULL;
   }
   else {
-    wxGetApp().m_InitialRocrailIni = false;
+    wxGetApp().m_InitialRocrailIni = true;
     wxGetApp().m_FireBiDiB4RocrailIni = true;
     iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
     wSysCmd.setcmd( cmd, wSysCmd.getini );
