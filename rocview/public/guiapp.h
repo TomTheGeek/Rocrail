@@ -93,6 +93,7 @@ public:
   bool          m_bOffline;
   bool          m_bConsoleMode;
   bool          m_InitialRocrailIni;
+  bool          m_FireBiDiB4RocrailIni;
   const char*   m_donkey;
   const char*   m_doneml;
 

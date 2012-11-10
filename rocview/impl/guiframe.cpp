@@ -3275,10 +3275,20 @@ void RocGuiFrame::OnCBusNode( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnBiDiB( wxCommandEvent& event ) {
-  m_BidibIdentDlg = new BidibIdentDlg(this);
-  m_BidibIdentDlg->ShowModal();
-  m_BidibIdentDlg->Destroy();
-  m_BidibIdentDlg = NULL;
+  if( m_RocrailIni != NULL ) {
+    m_BidibIdentDlg = new BidibIdentDlg(this);
+    m_BidibIdentDlg->ShowModal();
+    m_BidibIdentDlg->Destroy();
+    m_BidibIdentDlg = NULL;
+  }
+  else {
+    wxGetApp().m_InitialRocrailIni = false;
+    wxGetApp().m_FireBiDiB4RocrailIni = true;
+    iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+    wSysCmd.setcmd( cmd, wSysCmd.getini );
+    wxGetApp().sendToRocrail( cmd, false );
+    cmd->base.del(cmd);
+  }
 }
 
 void RocGuiFrame::OnRocPro( wxCommandEvent& event ) {

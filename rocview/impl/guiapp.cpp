@@ -569,6 +569,7 @@ bool RocGui::OnInit() {
   m_OldModel = NULL;
   m_UndoItems = ListOp.inst();
   m_InitialRocrailIni = false;
+  m_FireBiDiB4RocrailIni = false;
   m_donkey = "";
   m_doneml = "";
 
@@ -920,10 +921,17 @@ static void rocrailCallback( obj me, iONode node ) {
       guiApp->getFrame()->setRocrailIni((iONode)node->base.clone( node ));
     }
     else {
-      wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_RocrailIni );
-      // Make a copy of the node for using it out of this scope:
-      event.SetClientData( node->base.clone( node ) );
-      wxPostEvent( guiApp->getFrame(), event );
+      if(guiApp->m_FireBiDiB4RocrailIni) {
+        wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_BiDiB );
+        guiApp->m_FireBiDiB4RocrailIni = false;
+        wxPostEvent( guiApp->getFrame(), event );
+      }
+      else {
+        wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_RocrailIni );
+        // Make a copy of the node for using it out of this scope:
+        event.SetClientData( node->base.clone( node ) );
+        wxPostEvent( guiApp->getFrame(), event );
+      }
     }
   }
   else if( StrOp.equals( wPwrEvent.name(), NodeOp.getName( node ) ) ) {
