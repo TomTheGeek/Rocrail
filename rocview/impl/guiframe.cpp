@@ -1368,6 +1368,13 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       }
       freeMem(image);
 
+      if( wGui.islocowidgetstab(m_Ini) && wDataReq.getid(node) != NULL && StrOp.len(wDataReq.getid(node)) > 0 ) {
+        LocoWidget* l_LocoWidget = (LocoWidget*)m_LocoPanel->FindWindowByName(wxString(wDataReq.getid(node),wxConvUTF8));
+        if( l_LocoWidget != NULL ) {
+          l_LocoWidget->UpdateLocoImg();
+        }
+      }
+
       // get the active loco
       iONode lc = m_LC->getLocProps();
 
