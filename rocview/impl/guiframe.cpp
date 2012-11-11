@@ -928,6 +928,14 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
           w++;
         if( w > 0 )
           m_LocoGridSizer->SetCols(cols);
+
+        for( int i=0; i < ListOp.size(m_LocoPanelChilds); i++) {
+          LocoWidget* w = (LocoWidget*)ListOp.get(m_LocoPanelChilds, i);
+          m_LocoGridSizer->Detach(w);
+          delete w;
+        }
+        ListOp.clear(m_LocoPanelChilds);
+
       }
 
       for( i = 0; i < ListOp.size( list ); i++ ) {
@@ -938,6 +946,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         if( wGui.islocowidgetstab(m_Ini) ) {
           LocoWidget* l_LocoWidget = new LocoWidget(m_LocoPanel, lc);
           m_LocoGridSizer->Add(l_LocoWidget);
+          ListOp.add(m_LocoPanelChilds, (obj)l_LocoWidget);
         }
 
 
@@ -1461,6 +1470,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LC                 = NULL;
   m_CV                 = NULL;
   m_LNCV               = NULL; 
+  m_LocoPanelChilds    = ListOp.inst();
 }
 
 void RocGuiFrame::initFrame() {

@@ -33,6 +33,7 @@
 #include "rocs/public/wrpinf.h"
 #include "rocs/public/map.h"
 #include "rocs/public/mutex.h"
+#include "rocs/public/list.h"
 
 #include "rocrail/public/rcon.h"
 
@@ -347,6 +348,7 @@ private:
   CV*               m_CV;
   wxScrolledWindow* m_LNCVPanel;
   wxScrolledWindow* m_LocoPanel;
+  iOList            m_LocoPanelChilds;
   wxGridSizer*      m_LocoGridSizer;
   LNCV*             m_LNCV;
   wxSplitterWindow* m_Splitter;
