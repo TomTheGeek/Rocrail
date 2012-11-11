@@ -403,8 +403,10 @@ private:
   double m_Scale;
   double m_Bktext;
   iOMap m_SymbolMap;
+public:
   iOList m_LocCtrlList;
   iOMap m_LocDlgMap;
+private:
   JsSupport* m_JsSupport;
   bool m_bCheckedDonKey;
   iONode m_WorkSpace;

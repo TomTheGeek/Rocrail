@@ -1176,6 +1176,14 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         wLoc.getid( node ), (wLoc.getblockid( node ) != NULL ? wLoc.getblockid( node ):"-"),
         (wLoc.getdestblockid( node ) != NULL ? wLoc.getdestblockid( node ):"-") , wLoc.getthrottleid(node) );
 
+    if( wGui.islocowidgetstab(m_Ini) ) {
+      LocoWidget* l_LocoWidget = (LocoWidget*)m_LocoPanel->FindWindowByName(wxString(wLoc.getid( node ),wxConvUTF8));
+      if( l_LocoWidget != NULL ) {
+        l_LocoWidget->UpdateLoco(node);
+      }
+    }
+
+
     for( int i = 0; i < ListOp.size(m_LocCtrlList); i++ ) {
       LocControlDialog* dlg = (LocControlDialog*)ListOp.get(m_LocCtrlList, i);
       dlg->modelEvent(node);
