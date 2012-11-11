@@ -18634,4 +18634,7 @@
     <en txt="Best choice"/>
     <nl txt="Beste keuze"/>
   </Msg>
+  <Msg id="locowidgets">
+    <en txt="Loco Widgets"/>
+  </Msg>
 </Messages>

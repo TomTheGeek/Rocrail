@@ -93,6 +93,7 @@
 #include "rocview/dialogs/actionsctrldlg.h"
 #include "rocview/dialogs/gotodlg.h"
 #include "rocview/dialogs/issuedlg.h"
+#include "rocview/dialogs/locowidget.h"
 
 
 #include "rocview/dialogs/decoders/locoio.h"
@@ -319,6 +320,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Zoom75         , RocGuiFrame::OnZoom75)
     EVT_MENU( ME_Zoom100        , RocGuiFrame::OnZoom100)
     EVT_MENU( ME_LocoBook       , RocGuiFrame::OnLocoBook)
+    EVT_MENU( ME_LocoWidgets    , RocGuiFrame::OnLocoWidgets)
     EVT_MENU( ME_PlanBook       , RocGuiFrame::OnPlanBook)
     EVT_MENU( ME_TraceWindow    , RocGuiFrame::OnTraceWindow)
     EVT_MENU( ME_LocoSortByAddr , RocGuiFrame::OnLocoSortByAddr)
@@ -886,6 +888,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
       for( i = 0; i < cnt; i++ ) {
         iONode lc = NodeOp.getChild( lclist, i );
 
+
         if( wLoc.isshow(lc) ) {
           // list only loco's with the show flag set.
           if( m_LocoCategory == LOCO_VIEW_STEAM && StrOp.equals(wLoc.engine_steam, wLoc.getengine(lc)) &&
@@ -911,6 +914,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
           TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "loc [%s] is not shown", wLoc.getid(lc) );
         }
       }
+
       // Sort the list:
       ListOp.sort( list, m_LocoSortByAddress ? locAddrComparator:locComparator );
 
@@ -918,6 +922,13 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         iONode lc = (iONode)ListOp.get( list, i );
         if( lc == NULL )
           continue;
+
+        if( wGui.islocowidgetstab(m_Ini) ) {
+          LocoWidget* l_LocoWidget = new LocoWidget(m_LocoPanel, lc);
+          m_LocoGridSizer->Add(l_LocoWidget);
+        }
+
+
         const char* id = wLoc.getid( lc );
 
         if( !firstset && m_LC != NULL && id != NULL ) {
@@ -998,6 +1009,16 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_DESTBLOCK, wxALIGN_LEFT, wxALIGN_CENTRE );
       }
       ListOp.base.del( list );
+
+      if( wGui.islocowidgetstab(m_Ini) ) {
+        m_LocoGridSizer->Layout();
+        m_LocoPanel->Fit();
+        m_LocoPanel->GetSizer()->Fit(m_LocoPanel);
+        m_LocoPanel->GetSizer()->SetSizeHints(m_LocoPanel);
+      }
+
+
+
     }
     m_ActiveLocs->SetCellBackgroundColour( hiddenlocos ? wxColour(255,255,200):wxColour(255,255,255));
 
@@ -1693,6 +1714,7 @@ void RocGuiFrame::initFrame() {
   menuView->AppendSeparator();
 
   menuView->AppendCheckItem( ME_LocoBook, wxGetApp().getMenu("locobook"), wxGetApp().getTip("locobook") );
+  //menuView->AppendCheckItem( ME_LocoWidgets, wxGetApp().getMenu("locowidgets"), wxGetApp().getTip("locowidgets") );
   menuView->AppendCheckItem( ME_PlanBook, wxGetApp().getMenu("panel"), wxGetApp().getTip("panel") );
   menuView->AppendCheckItem( ME_TraceWindow, wxGetApp().getMenu("trace"), wxGetApp().getTip("trace") );
   menuView->AppendCheckItem( ME_LocoSortByAddr, wxGetApp().getMenu("locosortbyaddr"), wxGetApp().getTip("locosortbyaddr") );
@@ -2088,6 +2110,35 @@ void RocGuiFrame::create() {
 
   if( wGui.islncvtab(m_Ini) ) {
     m_StatNotebook->AddPage(m_LNCVPanel, wxGetApp().getMsg("lncvprogramming") );
+  }
+
+  if( wGui.islocowidgetstab(m_Ini) ) {
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating Loco Panel..." );
+    //m_LocoPanel = new wxPanel( m_StatNotebook );
+    m_LocoPanel = new wxScrolledWindow( m_StatNotebook, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER||wxHSCROLL|wxVSCROLL );
+    m_LocoPanel->SetScrollbars(1, 1, 0, 0);
+    wxBoxSizer* l_LocoTopSizer = new wxBoxSizer( wxVERTICAL );
+    m_LocoGridSizer = new wxGridSizer(0,4,3,3);
+    l_LocoTopSizer->Add(m_LocoGridSizer);
+    m_LocoPanel->SetSizer(l_LocoTopSizer);
+    m_StatNotebook->AddPage(m_LocoPanel, wxGetApp().getMsg("locowidgets") );
+
+    // Size is zero at this point...
+    int w,h;
+    m_LocoPanel->GetSize(&w, &h);
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loco Panel w=%d h=%d", w, h );
+    //l_LocoSizer->SetCols(w/260);
+    /*
+    for( int l = 0; l < 6; l++) {
+      iONode props = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+      char id[256];
+      StrOp.fmtb(id, "Loco%d", l);
+      wLoc.setid(props, id);
+      LocoWidget* l_LocoWidget = new LocoWidget(m_LocoPanel, props);
+      m_LocoGridSizer->Add(l_LocoWidget);
+    }
+    */
+    m_LocoGridSizer->Layout();
   }
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating PlanNotebook..." );
@@ -2943,6 +2994,11 @@ void RocGuiFrame::OnLocoBook( wxCommandEvent& event ) {
   else {
     m_PlanSplitter->Unsplit( m_StatNotebook );
   }
+}
+
+void RocGuiFrame::OnLocoWidgets( wxCommandEvent& event ) {
+  wxMenuItem* mi = menuBar->FindItem(ME_LocoWidgets);
+  wGui.setlocowidgetstab(m_Ini, mi->IsChecked()?True:False);
 }
 
 void RocGuiFrame::OnPlanBook( wxCommandEvent& event ) {

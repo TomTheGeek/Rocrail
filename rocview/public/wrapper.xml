@@ -100,7 +100,7 @@
     <var name="monitoring" vt="bool" defval="true"/>
     <var name="id" vt="string" defval="rocview" range="*" remark="rocview ID"/>
     <var name="lncvtab" vt="bool" defval="false"/>
-    <var name="firmwaretab" vt="bool" defval="false"/>
+    <var name="locowidgetstab" vt="bool" defval="false"/>
     <var name="jssupport" vt="bool" defval="true"/>
     <var name="dispatchmode" vt="bool" defval="false"/>
     <var name="defaultworkspace" vt="string" defval="" remark="Open workspace at startup."/>

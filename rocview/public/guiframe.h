@@ -255,6 +255,7 @@ public:
   void OnZoom100(wxCommandEvent& event);
 
   void OnLocoBook(wxCommandEvent& event);
+  void OnLocoWidgets(wxCommandEvent& event);
   void OnPlanBook(wxCommandEvent& event);
   void OnTraceWindow(wxCommandEvent& event);
   void OnLocoSortByAddr(wxCommandEvent& event);
@@ -345,6 +346,8 @@ private:
   wxScrolledWindow* m_CVPanel;
   CV*               m_CV;
   wxScrolledWindow* m_LNCVPanel;
+  wxScrolledWindow* m_LocoPanel;
+  wxGridSizer*      m_LocoGridSizer;
   LNCV*             m_LNCV;
   wxSplitterWindow* m_Splitter;
   wxSplitterWindow* m_PlanSplitter;
@@ -539,6 +542,7 @@ enum
     ME_Zoom75,
     ME_Zoom100,
     ME_LocoBook,
+    ME_LocoWidgets,
     ME_PlanBook,
     ME_TraceWindow,
     ME_LocoViewAll,

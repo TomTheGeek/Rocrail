@@ -7,6 +7,17 @@
 #ifndef BASEPANEL_H_
 #define BASEPANEL_H_
 
+// ----------------------------------------------------------------------------
+// headers
+// ----------------------------------------------------------------------------
+// For compilers that support precompilation, includes "wx/wx.h".
+#include "wx/wxprec.h"
+
+#ifndef WX_PRECOMP
+#include "wx/wx.h"
+#include "wx/event.h"
+#endif
+
 
 #include "rocs/public/node.h"
 #include "wx/colour.h"
