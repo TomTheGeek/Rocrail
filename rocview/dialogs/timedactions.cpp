@@ -620,7 +620,7 @@ void TimedActions::CreateControls()
 
     m_ActionBook->AddPage(m_UsePanel, _("Use"));
 
-    itemBoxSizer2->Add(m_ActionBook, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemBoxSizer2->Add(m_ActionBook, 1, wxGROW|wxALL, 5);
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer42 = new wxStdDialogButtonSizer;
 
