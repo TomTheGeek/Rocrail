@@ -918,6 +918,18 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
       // Sort the list:
       ListOp.sort( list, m_LocoSortByAddress ? locAddrComparator:locComparator );
 
+
+      if( wGui.islocowidgetstab(m_Ini) ) {
+        int w,h;
+        m_LocoPanel->GetSize(&w, &h);
+        TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loco Panel w=%d h=%d", w, h );
+        int cols = w / 260;
+        if( w % 260 > 240 )
+          w++;
+        if( w > 0 )
+          m_LocoGridSizer->SetCols(cols);
+      }
+
       for( i = 0; i < ListOp.size( list ); i++ ) {
         iONode lc = (iONode)ListOp.get( list, i );
         if( lc == NULL )
@@ -1012,9 +1024,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
 
       if( wGui.islocowidgetstab(m_Ini) ) {
         m_LocoGridSizer->Layout();
-        m_LocoPanel->Fit();
-        m_LocoPanel->GetSizer()->Fit(m_LocoPanel);
-        m_LocoPanel->GetSizer()->SetSizeHints(m_LocoPanel);
+        m_LocoPanel->FitInside();
       }
 
 
@@ -2129,31 +2139,13 @@ void RocGuiFrame::create() {
 
   if( wGui.islocowidgetstab(m_Ini) ) {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating Loco Panel..." );
-    //m_LocoPanel = new wxPanel( m_StatNotebook );
     m_LocoPanel = new wxScrolledWindow( m_StatNotebook, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER||wxHSCROLL|wxVSCROLL );
-    m_LocoPanel->SetScrollbars(1, 1, 0, 0);
+    m_LocoPanel->SetScrollbars(1, 10, 0, 0);
     wxBoxSizer* l_LocoTopSizer = new wxBoxSizer( wxVERTICAL );
     m_LocoGridSizer = new wxGridSizer(0,4,3,3);
     l_LocoTopSizer->Add(m_LocoGridSizer);
     m_LocoPanel->SetSizer(l_LocoTopSizer);
     m_StatNotebook->AddPage(m_LocoPanel, wxGetApp().getMsg("locowidgets") );
-
-    // Size is zero at this point...
-    int w,h;
-    m_LocoPanel->GetSize(&w, &h);
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loco Panel w=%d h=%d", w, h );
-    //l_LocoSizer->SetCols(w/260);
-    /*
-    for( int l = 0; l < 6; l++) {
-      iONode props = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
-      char id[256];
-      StrOp.fmtb(id, "Loco%d", l);
-      wLoc.setid(props, id);
-      LocoWidget* l_LocoWidget = new LocoWidget(m_LocoPanel, props);
-      m_LocoGridSizer->Add(l_LocoWidget);
-    }
-    */
-    m_LocoGridSizer->Layout();
   }
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating PlanNotebook..." );
