@@ -76,6 +76,7 @@ public:
   int getTabAlign();
   int getSvn() { return m_Svn; }
   int getTabSel() { return m_TabSel; }
+  int getLocoTabSel() { return m_LocoTabSel; }
   bool isModView() { return m_bModView; }
   void setModView(bool modview) { m_bForceTabView ?  m_bModView = false:m_bModView = modview; }
   bool isInit() { return m_bInit; }
@@ -109,6 +110,7 @@ private:
   iOList        m_UndoItems;
   iONode        m_OldModel;
   int           m_TabSel;
+  int           m_LocoTabSel;
   bool          m_bOnExit;
   bool          m_bStayOffline;
   bool          m_LocalModelModified;

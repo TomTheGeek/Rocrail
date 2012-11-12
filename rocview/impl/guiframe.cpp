@@ -759,6 +759,11 @@ void RocGuiFrame::OnInitNotebook( wxCommandEvent& event ) {
     p->refresh();
   }
 
+  if( wxGetApp().getLocoTabSel() != -1 ) {
+    int tabsel = wxGetApp().getLocoTabSel();
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Set tab selection to [%d]", tabsel );
+    m_StatNotebook->ChangeSelection(tabsel);
+  }
 
   iONode model = wxGetApp().getModel();
   setPlanTitle( wPlan.gettitle(model) );

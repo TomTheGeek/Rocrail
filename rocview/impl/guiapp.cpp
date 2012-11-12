@@ -614,6 +614,7 @@ bool RocGui::OnInit() {
 
   // check for tab selection:
   m_TabSel = CmdLnOp.getIntDef( m_CmdLn, wCmdline.tabsel, -1 );
+  m_LocoTabSel = CmdLnOp.getIntDef( m_CmdLn, wCmdline.locotabsel, -1 );
 
   // process inifile:
   iOFile iniFile = FileOp.inst( m_IniFileName, True );
