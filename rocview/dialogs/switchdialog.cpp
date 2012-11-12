@@ -262,7 +262,7 @@ void SwitchDialog::initLabels() {
 
   m_PortType->SetLabel( wxGetApp().getMsg( "type" ) );
   m_PortType->SetString( 0, wxGetApp().getMsg( "default" ) );
-  m_PortType->SetString( 1, wxGetApp().getMsg( "light" ) );
+  m_PortType->SetString( 1, wxGetApp().getMsg( "lights" ) );
   m_PortType->SetString( 2, wxGetApp().getMsg( "servo" ) );
   m_PortType->SetString( 3, wxGetApp().getMsg( "sound" ) );
   m_PortType->SetString( 4, wxGetApp().getMsg( "motor" ) );
