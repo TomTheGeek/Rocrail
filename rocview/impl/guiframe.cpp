@@ -1754,7 +1754,7 @@ void RocGuiFrame::initFrame() {
   menuView->AppendSeparator();
 
   menuView->AppendCheckItem( ME_LocoBook, wxGetApp().getMenu("locobook"), wxGetApp().getTip("locobook") );
-  //menuView->AppendCheckItem( ME_LocoWidgets, wxGetApp().getMenu("locowidgets"), wxGetApp().getTip("locowidgets") );
+  menuView->AppendCheckItem( ME_LocoWidgets, wxGetApp().getMenu("locowidgets"), wxGetApp().getTip("locowidgets") );
   menuView->AppendCheckItem( ME_PlanBook, wxGetApp().getMenu("panel"), wxGetApp().getTip("panel") );
   menuView->AppendCheckItem( ME_TraceWindow, wxGetApp().getMenu("trace"), wxGetApp().getTip("trace") );
   menuView->AppendCheckItem( ME_LocoSortByAddr, wxGetApp().getMenu("locosortbyaddr"), wxGetApp().getTip("locosortbyaddr") );
@@ -2152,6 +2152,9 @@ void RocGuiFrame::create() {
     m_StatNotebook->AddPage(m_LNCVPanel, wxGetApp().getMsg("lncvprogramming") );
   }
 
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL) ) {
+    wGui.setlocowidgetstab(m_Ini, False);
+  }
   if( wGui.islocowidgetstab(m_Ini) ) {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating Loco Panel..." );
     m_LocoPanel = new wxScrolledWindow( m_StatNotebook, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER||wxHSCROLL|wxVSCROLL );
@@ -3677,6 +3680,17 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   wxMenuItem* mi_locobook  = menuBar->FindItem(ME_LocoBook);
   mi_locobook->Check( m_bLocoBook );
+  wxMenuItem* mi_locowidgets  = menuBar->FindItem(ME_LocoWidgets);
+  mi_locowidgets->Check( wGui.islocowidgetstab(m_Ini) );
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL) ) {
+    mi_locowidgets->Enable( false );
+  }
+
+  wxMenuItem* mi_rocpro  = menuBar->FindItem(ME_RocPro);
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL) ) {
+    mi_rocpro->Enable( false );
+  }
+
   wxMenuItem* mi_planbook  = menuBar->FindItem(ME_PlanBook);
   mi_planbook->Check( m_bPlanBook );
   wxMenuItem* mi_tracewindow  = menuBar->FindItem(ME_TraceWindow);
