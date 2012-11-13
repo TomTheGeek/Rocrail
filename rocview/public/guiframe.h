@@ -57,6 +57,7 @@
 #include "rocview/dialogs/decoders/uhl68610dlg.h"
 #include "rocview/dialogs/decoders/uhl633x0dlg.h"
 #include "rocview/dialogs/powerctrldlg.h"
+#include "rocview/dialogs/widgetspanel.h"
 
 #include <wx/splitter.h>
 #include <wx/textctrl.h>
@@ -347,8 +348,7 @@ private:
   wxScrolledWindow* m_CVPanel;
   CV*               m_CV;
   wxScrolledWindow* m_LNCVPanel;
-  wxScrolledWindow* m_LocoPanel;
-  iOList            m_LocoPanelChilds;
+  WidgetsPanel*     m_LocoPanel;
   wxGridSizer*      m_LocoGridSizer;
   LNCV*             m_LNCV;
   wxSplitterWindow* m_Splitter;

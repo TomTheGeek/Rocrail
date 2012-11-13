@@ -94,6 +94,7 @@
 #include "rocview/dialogs/gotodlg.h"
 #include "rocview/dialogs/issuedlg.h"
 #include "rocview/dialogs/locowidget.h"
+#include "rocview/dialogs/widgetspanel.h"
 
 
 #include "rocview/dialogs/decoders/locoio.h"
@@ -925,35 +926,13 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
 
 
       if( wGui.islocowidgetstab(m_Ini) ) {
-        int w,h;
-        m_LocoPanel->GetSize(&w, &h);
-        TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loco Panel w=%d h=%d", w, h );
-        int cols = w / 260;
-        if( w % 260 > 240 )
-          w++;
-        if( w > 0 )
-          m_LocoGridSizer->SetCols(cols);
-
-        for( int i=0; i < ListOp.size(m_LocoPanelChilds); i++) {
-          LocoWidget* w = (LocoWidget*)ListOp.get(m_LocoPanelChilds, i);
-          m_LocoGridSizer->Detach(w);
-          delete w;
-        }
-        ListOp.clear(m_LocoPanelChilds);
-
+        m_LocoPanel->initView(list);
       }
 
       for( i = 0; i < ListOp.size( list ); i++ ) {
         iONode lc = (iONode)ListOp.get( list, i );
         if( lc == NULL )
           continue;
-
-        if( wGui.islocowidgetstab(m_Ini) ) {
-          LocoWidget* l_LocoWidget = new LocoWidget(m_LocoPanel, lc);
-          m_LocoGridSizer->Add(l_LocoWidget);
-          ListOp.add(m_LocoPanelChilds, (obj)l_LocoWidget);
-        }
-
 
         const char* id = wLoc.getid( lc );
 
@@ -1035,13 +1014,6 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_DESTBLOCK, wxALIGN_LEFT, wxALIGN_CENTRE );
       }
       ListOp.base.del( list );
-
-      if( wGui.islocowidgetstab(m_Ini) ) {
-        m_LocoGridSizer->Layout();
-        m_LocoPanel->FitInside();
-      }
-
-
 
     }
     m_ActiveLocs->SetCellBackgroundColour( hiddenlocos ? wxColour(255,255,200):wxColour(255,255,255));
@@ -1201,10 +1173,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         (wLoc.getdestblockid( node ) != NULL ? wLoc.getdestblockid( node ):"-") , wLoc.getthrottleid(node) );
 
     if( wGui.islocowidgetstab(m_Ini) ) {
-      LocoWidget* l_LocoWidget = (LocoWidget*)m_LocoPanel->FindWindowByName(wxString(wLoc.getid( node ),wxConvUTF8));
-      if( l_LocoWidget != NULL ) {
-        l_LocoWidget->UpdateLoco(node);
-      }
+      m_LocoPanel->updateLoco(node);
     }
 
 
@@ -1393,10 +1362,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       freeMem(image);
 
       if( wGui.islocowidgetstab(m_Ini) && wDataReq.getid(node) != NULL && StrOp.len(wDataReq.getid(node)) > 0 ) {
-        LocoWidget* l_LocoWidget = (LocoWidget*)m_LocoPanel->FindWindowByName(wxString(wDataReq.getid(node),wxConvUTF8));
-        if( l_LocoWidget != NULL ) {
-          l_LocoWidget->UpdateLocoImg();
-        }
+        m_LocoPanel->updateLocoImg(node);
       }
 
       // get the active loco
@@ -1475,7 +1441,6 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LC                 = NULL;
   m_CV                 = NULL;
   m_LNCV               = NULL; 
-  m_LocoPanelChilds    = ListOp.inst();
 }
 
 void RocGuiFrame::initFrame() {
@@ -2157,12 +2122,7 @@ void RocGuiFrame::create() {
   }
   if( wGui.islocowidgetstab(m_Ini) ) {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating Loco Panel..." );
-    m_LocoPanel = new wxScrolledWindow( m_StatNotebook, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER||wxHSCROLL|wxVSCROLL );
-    m_LocoPanel->SetScrollbars(1, 10, 0, 0);
-    wxBoxSizer* l_LocoTopSizer = new wxBoxSizer( wxVERTICAL );
-    m_LocoGridSizer = new wxGridSizer(0,4,3,3);
-    l_LocoTopSizer->Add(m_LocoGridSizer);
-    m_LocoPanel->SetSizer(l_LocoTopSizer);
+    m_LocoPanel = new WidgetsPanel( m_StatNotebook );
     m_StatNotebook->AddPage(m_LocoPanel, wxGetApp().getMsg("locowidgets") );
   }
 
