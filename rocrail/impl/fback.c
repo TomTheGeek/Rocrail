@@ -695,6 +695,9 @@ static void _doTimedOff( iOFBack inst ) {
         data->listenerFun( data->listenerObj, data->state, FBackOp.getId( inst ), 0, 0, 0 );
       }
 
+      __ctcAction( inst );
+      __checkAction( inst );
+
       /* Broadcast to clients. Node4 */
       wFeedback.setid( nodeD, FBackOp.getId( inst ) );
       wFeedback.setcounter( data->props, data->counter );
