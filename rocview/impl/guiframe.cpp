@@ -95,6 +95,7 @@
 #include "rocview/dialogs/issuedlg.h"
 #include "rocview/dialogs/locowidget.h"
 #include "rocview/dialogs/widgetspanel.h"
+#include "rocview/dialogs/guestloco.h"
 
 
 #include "rocview/dialogs/decoders/locoio.h"
@@ -265,6 +266,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Issue          , RocGuiFrame::OnIssue)
     EVT_MENU( ME_MIC            , RocGuiFrame::OnMIC)
     EVT_MENU( ME_LcDlg          , RocGuiFrame::OnLcDlg)
+    EVT_MENU( ME_GuestLoco      , RocGuiFrame::OnGuestLocoDlg)
     EVT_MENU( ME_OperatorDlg    , RocGuiFrame::OnOperatorDlg)
     EVT_MENU( ME_SwDlg          , RocGuiFrame::OnSwDlg)
     EVT_MENU( ME_RouteDlg       , RocGuiFrame::OnRouteDlg)
@@ -1630,6 +1632,7 @@ void RocGuiFrame::initFrame() {
 
   menuControl->AppendSeparator();
   menuControl->Append(ME_TxShortIDs, wxGetApp().getMenu("txshortids"), wxGetApp().getTip("txshortids") );
+  menuControl->Append(ME_GuestLoco, wxGetApp().getMenu("guestloco"), wxGetApp().getTip("guestloco") );
   menuControl->AppendSeparator();
 
   wxMenuItem *opctrl_menuControl = new wxMenuItem(menuControl, ME_OperatorDlg, wxGetApp().getMenu("operator"), wxGetApp().getTip("operator") );
@@ -3872,6 +3875,14 @@ void RocGuiFrame::OnOperatorDlg(wxCommandEvent& event){
   //dlg->ShowModal();
   dlg->Show(TRUE);
 }
+
+
+void RocGuiFrame::OnGuestLocoDlg(wxCommandEvent& event){
+  GuestLoco* dlg = new GuestLoco(this);
+  dlg->ShowModal();
+  dlg->Destroy();
+}
+
 
 void RocGuiFrame::OnLcDlg(wxCommandEvent& event){
   LocControlDialog* dlg = new LocControlDialog(this, m_LocCtrlList, m_LocDlgMap, m_LocID);

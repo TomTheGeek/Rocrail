@@ -116,6 +116,7 @@ public:
   void OnFeature(wxCommandEvent& event);
   void OnService(wxCommandEvent& event);
   void OnLcDlg(wxCommandEvent& event);
+  void OnGuestLocoDlg(wxCommandEvent& event);
   void OnOperatorDlg(wxCommandEvent& event);
   void OnMIC(wxCommandEvent& event);
   void OnSwDlg(wxCommandEvent& event);
@@ -471,6 +472,7 @@ enum
     ME_EditModPlan,
     ME_CtrlMode,
     ME_EditLocs,
+    ME_GuestLoco,
     ME_EditCars,
     ME_EditOperators,
     ME_EditWaybills,

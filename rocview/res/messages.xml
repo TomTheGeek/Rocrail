@@ -18637,4 +18637,7 @@
   <Msg id="locowidgets">
     <en txt="Loco Widgets"/>
   </Msg>
+  <Msg id="guestloco" dialog="true">
+    <en txt="Guest Loco"/>
+  </Msg>
 </Messages>
