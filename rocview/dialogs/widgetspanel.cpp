@@ -28,7 +28,8 @@
 
 #include "rocs/public/trace.h"
 
-#define WIDGETWIDTH 260
+#include "rocview/public/guiapp.h"
+#include "rocview/wrapper/public/Gui.h"
 
 WidgetsPanel::WidgetsPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
  : wxScrolledWindow( parent, id, pos, size, style )
@@ -42,6 +43,8 @@ WidgetsPanel::WidgetsPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos,
   l_LocoTopSizer->Add(m_LocoGridSizer);
   m_LocoPanel->SetSizer(l_LocoTopSizer);
   */
+
+  m_WidgetWidth = wGui.getlocowidgetwidth(wxGetApp().getIni());
 
   SetScrollbars(1, 10, 0, 0);
 
@@ -69,11 +72,15 @@ void WidgetsPanel::OnPanelSize( wxSizeEvent& event )
 {
   int w,h;
   GetSize(&w, &h);
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loco Panel w=%d h=%d", w, h );
-  int cols = w / WIDGETWIDTH;
+  if( w == 0 )
+    return;
 
-  if( w % WIDGETWIDTH > (WIDGETWIDTH - 10) )
-    w++;
+  int cols = w / m_WidgetWidth;
+
+  if( w % m_WidgetWidth > (m_WidgetWidth - 10) )
+    cols++;
+
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loco Panel w=%d h=%d columns=%d", w, h, cols );
 
   if( w > 0 && w != m_GridSizer->GetCols() ) {
     m_GridSizer->SetCols(cols);
@@ -94,7 +101,7 @@ void WidgetsPanel::initView(iOList list) {
   for( int i = 0; i < ListOp.size( list ); i++ ) {
     iONode lc = (iONode)ListOp.get( list, i );
     if( lc != NULL ) {
-      LocoWidget* l_LocoWidget = new LocoWidget(this, lc);
+      LocoWidget* l_LocoWidget = new LocoWidget(this, lc, m_WidgetWidth);
       m_GridSizer->Add(l_LocoWidget);
       ListOp.add(m_Widgets, (obj)l_LocoWidget);
     }

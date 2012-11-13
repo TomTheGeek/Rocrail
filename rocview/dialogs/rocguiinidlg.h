@@ -178,6 +178,8 @@ public:
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;
     wxCheckBox* m_StartDefaultWorkspace;
+    wxStaticText* m_labWidgetWidth;
+    wxSpinCtrl* m_WidgetWidth;
     wxStaticBox* m_labImagePath;
     wxTextCtrl* m_ImagePath;
     wxButton* m_ImagePathDlg;
