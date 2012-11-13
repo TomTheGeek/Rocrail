@@ -6029,3 +6029,15 @@ msgstr ""
 msgid "Best choice"
 msgstr ""
 
+#. 
+# id="locowidgets"
+#, c-format
+msgid "Loco Widgets"
+msgstr ""
+
+#. 
+# id="guestloco"
+#, c-format
+msgid "Guest Loco"
+msgstr ""
+
