@@ -1030,8 +1030,8 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
 
       /* goto position */
       if( manager ) {
-        /*
         data->reverse = reverse;
+        /*
         iONode nodeCmd = NodeOp.inst( wSelTab.name(), NULL, ELEMENT_NODE );
         wSelTab.setid( nodeCmd, inst->base.id( inst ) );
         NodeOp.setInt(nodeCmd, "cmd", pos );

@@ -606,6 +606,9 @@ void SelTabDialog::initSensors() {
     if( StrOp.equals( wFeedbackEvent.from_all, m_Routes->GetStringSelection().mb_str(wxConvUTF8) ) ) {
       routeID = wFeedbackEvent.from_all;
     }
+    else if( StrOp.equals( wFeedbackEvent.from_all_reverse, m_Routes->GetStringSelection().mb_str(wxConvUTF8) ) ) {
+      routeID = wFeedbackEvent.from_all_reverse;
+    }
     else if( st == NULL ) {
       TraceOp.trc( "blockdlg", TRCLEVEL_WARNING, __LINE__, 9999,
           "route [%s] has no properties...", (const char*)m_Routes->GetStringSelection().mb_str(wxConvUTF8) );
@@ -619,8 +622,13 @@ void SelTabDialog::initSensors() {
   TraceOp.trc( "seltabdlg", TRCLEVEL_INFO, __LINE__, 9999, "route [%s]", routeID );
 
   if( st == NULL ) {
-    /* all */
-    m_FromBlockID = wFeedbackEvent.from_all;
+    /* if available use selection from above , otherwise default is "all" */
+    if( routeID != NULL ) {
+      m_FromBlockID = routeID;
+    }
+    else {
+      m_FromBlockID = wFeedbackEvent.from_all;
+    }
   }
   else if( StrOp.equals( wSelTab.getid( m_Props ), wRoute.getbkb( st ) ) ) {
     m_FromBlockID = wRoute.getbka( st );
