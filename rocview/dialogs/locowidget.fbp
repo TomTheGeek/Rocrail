@@ -645,7 +645,7 @@
                                 <event name="OnLeaveWindow"></event>
                                 <event name="OnLeftDClick"></event>
                                 <event name="OnLeftDown"></event>
-                                <event name="OnLeftUp">onDestination</event>
+                                <event name="OnLeftUp"></event>
                                 <event name="OnMiddleDClick"></event>
                                 <event name="OnMiddleDown"></event>
                                 <event name="OnMiddleUp"></event>
@@ -655,7 +655,7 @@
                                 <event name="OnPaint"></event>
                                 <event name="OnRightDClick"></event>
                                 <event name="OnRightDown"></event>
-                                <event name="OnRightUp"></event>
+                                <event name="OnRightUp">onDestination</event>
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnUpdateUI"></event>
