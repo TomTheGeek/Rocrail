@@ -388,7 +388,7 @@ static iONode __translate( iOEasyDCCData data, iONode node ) {
       int len = 0;
       byte retVal[BUFFERSIZE];
       len = opsCvWriteByte(retVal, wProgram.getaddr(node), wProgram.islongaddr(node), wProgram.getcv(node), wProgram.getvalue(node) );
-      __makeMessage(buffer, "S 01", retVal, len);
+      __makeMessage(buffer, "S 05", retVal, len);
       __sendCommand(data, buffer);
     }
   }
