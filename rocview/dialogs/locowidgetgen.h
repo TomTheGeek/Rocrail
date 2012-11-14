@@ -48,11 +48,15 @@ class LocoWidgetGen : public wxPanel
 		// Virtual event handlers, overide them in your derived class
 		virtual void onMouseWheel( wxMouseEvent& event ) { event.Skip(); }
 		virtual void onStop( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onDirection( wxMouseEvent& event ) { event.Skip(); }
 		virtual void onImageLeftDown( wxMouseEvent& event ) { event.Skip(); }
 		virtual void onThrottle( wxMouseEvent& event ) { event.Skip(); }
 		virtual void onPopUp( wxMouseEvent& event ) { event.Skip(); }
 		virtual void onSpeedUp( wxMouseEvent& event ) { event.Skip(); }
 		virtual void onSpeedDown( wxMouseEvent& event ) { event.Skip(); }
+		virtual void onModeStart( wxMouseEvent& event ) { event.Skip(); }
+		virtual void onModeStop( wxMouseEvent& event ) { event.Skip(); }
+		virtual void onDestination( wxMouseEvent& event ) { event.Skip(); }
 		
 	
 	public:
