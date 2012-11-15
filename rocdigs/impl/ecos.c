@@ -561,6 +561,15 @@ static void __requestViews( iOECoS inst ) {
   StrOp.fmtb( ecosCmd, "request(%d, view)\n", OID_SNIFFER );
   __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
 */
+
+
+  StrOp.fmtb( ecosCmd, "get(%d, state)\n", OID_S88MANAGER );
+  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
+  StrOp.fmtb( ecosCmd, "get(%d, state)\n", OID_S88_ALL_MODULES );
+  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
+  StrOp.fmtb( ecosCmd, "get(%d, state)\n", OID_ECoSDetectors );
+  __transact( inst, ecosCmd, StrOp.len( ecosCmd ));
+
 }
 
 
