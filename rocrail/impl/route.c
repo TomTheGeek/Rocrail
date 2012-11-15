@@ -799,13 +799,29 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
         StrOp.free(o->routeLockId);
         o->routeLockId = StrOp.fmt( "%s%s%s", wRoute.routelock, wRoute.getid(o->props), locId );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"lock FY for route [%s]", o->routeLockId );
+        Boolean useBlockSide = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) );
+        Boolean reverse = False;
+        if( useBlockSide ) {
+          reverse = ! wRoute.isbkbside( o->props );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"lock FY using blockside" );
+        }
+        else {
+          /* old behaviour */
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"lock FY not using blockside" );
+          if( wRoute.isswappost( o->props ) )
+            reverse = !o->reverse;
+          else
+            reverse = o->reverse;
+        }
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"lock FY for route [%s] with reverse[%s]", o->routeLockId, reverse?"True":"False" );
+        /* useBlockSide?!wRoute.isbkbside( o->props ):wRoute.isswappost( o->props ) ? !o->reverse : o->reverse */
         if( !SelTabOp.lock( (iIBlockBase)iseltab,
                 locId,
                 SelTabOp.isManager( iseltab)?o->routeLockId:locId,
                 wRoute.getid(o->props),
                 False,
                 False,
-                wRoute.isswappost( o->props ) ? !o->reverse : o->reverse, 0 ) ) {
+                reverse, 0) ) {
           /* Rewind. */
           __unlockSwitches( inst, locId, False );
           return False;
