@@ -207,11 +207,15 @@ Boolean rocs_system_accessDev( const char* device, Boolean readonly ) {
 }
 
 void rocs_system_writePort( int port, byte val ) {
+#ifndef _WIN64
   _outp(port, val);
+#endif
 }
 
 byte rocs_system_readPort( int port ) {
+#ifndef _WIN64
   return _inp(port);
+#endif
 }
 
 
