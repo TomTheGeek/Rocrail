@@ -7,6 +7,9 @@
 #ifndef __ROCS_H
 #define __ROCS_H
 
+#if defined _WIN64
+  #pragma message("--- [WIN64] ---")
+#endif
 #if defined _WIN32
   #pragma message("--- [WIN32] ---")
 #elif defined _AIX
