@@ -66,7 +66,7 @@ ifeq ($(PLATFORM),WIN32)
 	BINSUFFIX=.exe
 else ifeq ($(PLATFORM),WIN64)
 	DIRPREFIX=win
-	LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32
+	LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32 -lwinmm
 	BINSUFFIX=.exe
 	CC_EXTRA_FLAGS=
 else ifeq ($(PLATFORM),OPENBSD)

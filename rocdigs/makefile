@@ -62,7 +62,7 @@ ifeq ($(PLATFORM),WIN32)
 	SHAREDSUFFIX=.dll
 else ifeq ($(PLATFORM),WIN64)
 	DIRPREFIX=win
-	LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32
+	LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32 -lwinmm
 	LNK=$(TOOLPREFIX)dllwrap
 	LNK_FLAGS=--def rocdigs.def
 	SHAREDSUFFIX=.dll
