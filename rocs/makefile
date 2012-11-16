@@ -22,9 +22,13 @@
 # commandline:
 #   make -f logon.mak AR=... PLATFORM=... DEBUG=... MOUNTPOINT=... OUTDIR=...
 #
-# commandline for mingw cross compiling:
+# commandline for i586-mingw32 cross compiling:
 #   make PLATFORM=WIN32 clean
 #   make TOOLPREFIX=i386-mingw32- PLATFORM=WIN32 all
+#
+# commandline for amd64-mingw32 cross compiling:
+#   make PLATFORM=WIN64 clean
+#   make all PLATFORM=WIN64 TOOLPREFIX=amd64-mingw32msvc- LIBSUFFIX=-amd64-mingw32msvc MINGWINSTALL=/usr/amd64-mingw32msv
 #
 # commandline for mingw native compiling:
 #   make PLATFORM=WIN32 NATIVE=WIN32 clean
