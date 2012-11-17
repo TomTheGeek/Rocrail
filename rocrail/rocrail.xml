@@ -739,7 +739,7 @@
     <fun name="inst" vt="this">
       <param name="planfile" vt="const char*" remark="PLan filename"/>
     </fun>
-    <fun name="init" vt="void">
+    <fun name="init" vt="Boolean">
       <param name="inst" vt="this" remark="Model instance"/>
     </fun>
     <fun name="addListener" vt="void">

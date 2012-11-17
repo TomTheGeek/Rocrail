@@ -864,7 +864,10 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   /* planDoc */
   pf = pf?pf:wRocRail.getplanfile(data->ini);
   data->model = ModelOp.inst( pf );
-  ModelOp.init( data->model );
+  if( !ModelOp.init( data->model ) ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "unable to create model: EXIT" );
+    return 0;
+  }
 
   MemOp.setDebug( False );
 

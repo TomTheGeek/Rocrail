@@ -359,8 +359,9 @@ static Boolean _createEmptyPlan( iOModelData o ) {
     FileOp.base.del( o->planFile );
     StrOp.free( planXml );
 
+    return True;
   }
-  return True;
+  return False;
 }
 
 
@@ -2893,11 +2894,14 @@ static void __initMasterLocMap(iOModel inst) {
 }
 
 
-static void _init( iOModel inst ) {
+static Boolean _init( iOModel inst ) {
   iOModelData o = Data(inst);
 
-  if( !_parsePlan( o ) )
-    _createEmptyPlan(o);
+  if( !_parsePlan( o ) ) {
+    if( !_createEmptyPlan(o) ) {
+      return False;
+    }
+  }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init clearingMaps..." );
   __clearMap( o->blockMap );
@@ -3007,6 +3011,8 @@ static void _init( iOModel inst ) {
 
   /* Reset FxSp flag. */
   wRocRail.setresetspfx(AppOp.getIni(), False);
+
+  return True;
 }
 
 static void _event( iOModel inst, iONode nodeC ) {
