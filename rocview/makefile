@@ -77,7 +77,18 @@ else
 endif
 
 
-ifeq ($(PLATFORM),WIN32)
+ifeq ($(PLATFORM),WIN64)
+  MINGWINSTALL=$(FS)usr$(FS)x86_64-w64-mingw32
+	LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32
+	LNK_FLAGS=`$(FS)usr$(FS)x86_64-w64-mingw32$(FS)bin$(FS)wx-config --libs`
+	WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
+	DIRPREFIX=win
+	CC_EXTRA_FLAGS=
+	BINSUFFIX=.exe
+	LIBSUFFIX=-x86_64-w64-mingw32
+	WINRESOURCE=$(TMPOUTDIR)$(FS)rocview_rc.o
+	WX_INCL=-I$(MINGWINSTALL)$(FS)include$(WXSUBINCL)
+else ifeq ($(PLATFORM),WIN32)
 	LIBS=-lgdiplus -liphlpapi -lmpr
 	ifeq ($(TOOLPREFIX),i686-w64-mingw32-)
 	  LNK_FLAGS=`$(FS)usr$(FS)i686-w64-mingw32$(FS)bin$(FS)wx-config --libs` -mthreads
@@ -97,16 +108,6 @@ ifeq ($(PLATFORM),WIN32)
 	else
 	  LIBSUFFIX=-i586-mingw32msvc
 	endif
-	WINRESOURCE=$(TMPOUTDIR)$(FS)rocview_rc.o
-	WX_INCL=-I$(MINGWINSTALL)$(FS)include$(WXSUBINCL)
-else ifeq ($(PLATFORM),WIN64)
-	LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32
-	LNK_FLAGS=`$(FS)usr$(FS)amd64-mingw32msvc$(FS)bin$(FS)wx-config --libs`
-	WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
-	DIRPREFIX=win
-	CC_EXTRA_FLAGS=
-	BINSUFFIX=.exe
-	LIBSUFFIX=-amd64-mingw32msvc
 	WINRESOURCE=$(TMPOUTDIR)$(FS)rocview_rc.o
 	WX_INCL=-I$(MINGWINSTALL)$(FS)include$(WXSUBINCL)
 else ifeq ($(PLATFORM),OPENBSD)
