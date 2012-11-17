@@ -80,8 +80,8 @@ endif
 ifeq ($(PLATFORM),WIN64)
   MINGWINSTALL=$(FS)usr$(FS)x86_64-w64-mingw32
 	LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32
-	LNK_FLAGS=`$(FS)usr$(FS)x86_64-w64-mingw32$(FS)bin$(FS)wx-config --libs`
-	WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
+	LNK_FLAGS=`$(FS)usr$(FS)x86_64-w64-mingw32$(FS)bin$(FS)wx-config --libs core,base`
+	WX_FLAGS=`$(FS)usr$(FS)x86_64-w64-mingw32$(FS)bin$(FS)wx-config --cflags`
 	DIRPREFIX=win
 	CC_EXTRA_FLAGS=
 	BINSUFFIX=.exe

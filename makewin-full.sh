@@ -38,7 +38,7 @@ echo ""
 
 echo "Making All"
 
-make all PLATFORM=WIN32 TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc MINGWINSTALL=/usr/i586-mingw32msvc
+#make all PLATFORM=WIN32 TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc MINGWINSTALL=/usr/i586-mingw32msvc
 #make all PLATFORM=WIN64 TOOLPREFIX=x86_64-w64-mingw32- LIBSUFFIX=-x86_64-w64-mingw32 MINGWINSTALL=/usr/x86_64-w64-mingw32
 echo "    Done"
 echo ""
@@ -49,7 +49,9 @@ echo "Stripping Windows Binaries"
 
 cd winbin
 i586-mingw32msvc-strip *.dll
+#x86_64-w64-mingw32-strip *.dll
 i586-mingw32msvc-strip *.exe
+#x86_64-w64-mingw32-strip *.exe
 
 echo "    Done"
 echo ""
