@@ -265,6 +265,10 @@ static int _getEventCode( iOBlock inst, const char* evtname ) {
       data->trig_enter2in = trig;
       return enter2in_event;
     }
+    else if( !data->trig_enter2shortin && StrOp.equals( evtname, wFeedbackEvent.enter2shortin_event ) ) {
+      data->trig_enter2shortin = trig;
+      return enter2shortin_event;
+    }
     else if( !data->trig_enter2pre && StrOp.equals( evtname, wFeedbackEvent.enter2pre_event ) ) {
       data->trig_enter2pre = trig;
       return enter2pre_event;
@@ -297,6 +301,8 @@ static int _getEventCode( iOBlock inst, const char* evtname ) {
     return enter_event;
   else if( StrOp.equals( evtname, wFeedbackEvent.enter2in_event ) )
     return enter2in_event;
+  else if( StrOp.equals( evtname, wFeedbackEvent.enter2shortin_event ) )
+    return enter2shortin_event;
   else if( StrOp.equals( evtname, wFeedbackEvent.enter2pre_event ) )
     return enter2pre_event;
   else if( StrOp.equals( evtname, wFeedbackEvent.in_event ) )
@@ -561,6 +567,14 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, const char* 
       else
         LocOp.event( loc, manager, in_event, timing > 0 ? timing:1, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
     }
+    if( evt == enter2shortin_event ) {
+      int timing = wFeedbackEvent.isuse_timer2( fbevt ) ? data->timer2:data->timer;
+      LocOp.event( loc, manager, enter_event, 0, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
+      if( data->indelay > 0 )
+        LocOp.event( loc, manager, shortin_event, data->indelay, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
+      else
+        LocOp.event( loc, manager, shortin_event, timing > 0 ? timing:1, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
+    }
     else if(evt == enter2pre_event ) {
       int timing = wFeedbackEvent.isuse_timer2( fbevt ) ? data->timer2:data->timer;
       LocOp.event( loc, manager, enter_event, 0, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
@@ -593,7 +607,7 @@ static void _event( iIBlockBase inst, Boolean puls, const char* id, const char* 
     else
       LocOp.event( loc, manager, evt, 0, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
 
-    if( evt == enter2in_event || evt == in_event ) {
+    if( evt == enter2shortin_event || evt == enter2in_event || evt == in_event ) {
       /* TODO: check if the shortin_event does not ruin the auto mode */
       data->fromBlockId = data->id;
     }
@@ -1752,14 +1766,15 @@ static void _setGroup( iIBlockBase inst, const char* group ) {
 
 static void _resetTrigs( iIBlockBase inst ) {
   iOBlockData data = Data(inst);
-  data->trig_enter     = False;
-  data->trig_enter2in  = False;
-  data->trig_enter2pre = False;
-  data->trig_pre2in    = False;
-  data->trig_shortin   = False;
-  data->trig_in        = False;
-  data->trig_exit      = False;
-  data->trig_out       = False;
+  data->trig_enter         = False;
+  data->trig_enter2in      = False;
+  data->trig_enter2shortin = False;
+  data->trig_enter2pre     = False;
+  data->trig_pre2in        = False;
+  data->trig_shortin       = False;
+  data->trig_in            = False;
+  data->trig_exit          = False;
+  data->trig_out           = False;
 
   data->trig_enter_mid  = False;
   data->trig_exit_mid   = False;

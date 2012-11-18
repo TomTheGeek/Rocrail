@@ -551,6 +551,7 @@ void SelTabDialog::initSensorCombos() {
     acts[i]->Append( wxString(wFeedbackEvent.enter_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.enter2route_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.enter2in_event,wxConvUTF8) );
+    acts[i]->Append( wxString(wFeedbackEvent.enter2shortin_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.in_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.exit_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.pre2in_event,wxConvUTF8) );

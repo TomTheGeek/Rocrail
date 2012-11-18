@@ -1681,11 +1681,12 @@
         <!-- New feedback handling: -->
         <fbevent cardinality="n" wrappername="FeedbackEvent">
           <var name="id" vt="string" defval="" range="*" required="true" remark="feedback ID"/>
-          <var name="action" vt="string" defval="" range="enter,enter2route,enter2pre,enter2in,shortin,in,exit,occupied,V_min,V_mid,V_max,V_cruise"/>
+          <var name="action" vt="string" defval="" range="enter,enter2route,enter2pre,enter2in,enter2shortin,shortin,in,exit,occupied,V_min,V_mid,V_max,V_cruise"/>
           <const name="ident_event" vt="string" val="ident"/>
           <const name="enter_event" vt="string" val="enter"/>
           <const name="enter2route_event" vt="string" val="enter2route"/>
           <const name="enter2in_event" vt="string" val="enter2in"/>
+          <const name="enter2shortin_event" vt="string" val="enter2shortin"/>
           <const name="enter2pre_event" vt="string" val="enter2pre"/>
           <const name="in_event" vt="string" val="in"/>
           <const name="shortin_event" vt="string" val="shortin"/>
