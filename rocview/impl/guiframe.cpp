@@ -927,7 +927,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
       ListOp.sort( list, m_LocoSortByAddress ? locAddrComparator:locComparator );
 
 
-      if( wGui.islocowidgetstab(m_Ini) ) {
+      if( wGui.islocowidgetstab(m_Ini) && m_LocoPanel != NULL) {
         m_LocoPanel->initView(list);
       }
 
@@ -1174,7 +1174,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         wLoc.getid( node ), (wLoc.getblockid( node ) != NULL ? wLoc.getblockid( node ):"-"),
         (wLoc.getdestblockid( node ) != NULL ? wLoc.getdestblockid( node ):"-") , wLoc.getthrottleid(node) );
 
-    if( wGui.islocowidgetstab(m_Ini) ) {
+    if( wGui.islocowidgetstab(m_Ini) && m_LocoPanel != NULL ) {
       m_LocoPanel->updateLoco(node);
     }
 
@@ -1364,7 +1364,8 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       freeMem(image);
 
       if( wGui.islocowidgetstab(m_Ini) && wDataReq.getid(node) != NULL && StrOp.len(wDataReq.getid(node)) > 0 ) {
-        m_LocoPanel->updateLocoImg(node);
+        if( m_LocoPanel != NULL)
+          m_LocoPanel->updateLocoImg(node);
       }
 
       // get the active loco
@@ -1443,6 +1444,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LC                 = NULL;
   m_CV                 = NULL;
   m_LNCV               = NULL; 
+  m_LocoPanel          = NULL;
 }
 
 void RocGuiFrame::initFrame() {
@@ -2987,6 +2989,21 @@ void RocGuiFrame::OnLocoBook( wxCommandEvent& event ) {
 void RocGuiFrame::OnLocoWidgets( wxCommandEvent& event ) {
   wxMenuItem* mi = menuBar->FindItem(ME_LocoWidgets);
   wGui.setlocowidgetstab(m_Ini, mi->IsChecked()?True:False);
+
+  if( wGui.islocowidgetstab(m_Ini) && m_LocoPanel == NULL ) {
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating Loco Panel..." );
+    m_LocoPanel = new WidgetsPanel( m_StatNotebook );
+    m_StatNotebook->AddPage(m_LocoPanel, wxGetApp().getMsg("locowidgets") );
+    event.SetClientData(NULL);
+    InitActiveLocs(event);
+  }
+  else if( !wGui.islocowidgetstab(m_Ini) && m_LocoPanel != NULL ) {
+    int pageNr = m_StatNotebook->GetPageCount()-1;
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "deleting Loco Panel %d...", pageNr );
+    m_StatNotebook->RemovePage(pageNr);
+    delete m_LocoPanel;
+    m_LocoPanel = NULL;
+  }
 }
 
 void RocGuiFrame::OnPlanBook( wxCommandEvent& event ) {

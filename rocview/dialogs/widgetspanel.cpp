@@ -65,6 +65,14 @@ WidgetsPanel::~WidgetsPanel()
 {
   // Disconnect Events
   this->Disconnect( wxEVT_SIZE, wxSizeEventHandler( WidgetsPanel::OnPanelSize ) );
+
+  for( int i = 0; i < ListOp.size(m_Widgets); i++) {
+    LocoWidget* w = (LocoWidget*)ListOp.get(m_Widgets, i);
+    m_GridSizer->Detach(w);
+    delete w;
+  }
+
+  ListOp.base.del(m_Widgets);
 }
 
 
