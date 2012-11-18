@@ -38,7 +38,7 @@ echo ""
 
 echo "Making All"
 
-#make all PLATFORM=WIN32 TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc MINGWINSTALL=/usr/i586-mingw32msvc
+make all PLATFORM=WIN32 TOOLPREFIX=i586-mingw32msvc- LIBSUFFIX=-i586-mingw32msvc MINGWINSTALL=/usr/i586-mingw32msvc
 #make all PLATFORM=WIN64 TOOLPREFIX=x86_64-w64-mingw32- LIBSUFFIX=-x86_64-w64-mingw32 MINGWINSTALL=/usr/x86_64-w64-mingw32
 echo "    Done"
 echo ""
