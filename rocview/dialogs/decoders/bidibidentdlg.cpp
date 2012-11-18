@@ -209,7 +209,7 @@ void BidibIdentDlg::initLabels() {
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
     iONode digint = wRocRail.getdigint(l_RocrailIni);
-    if( digint != NULL ) {
+    while( digint != NULL ) {
       iONode bidib = wDigInt.getbidib(digint);
       if( bidib != NULL ) {
         m_IID->SetValue( wxString( wDigInt.getiid(digint), wxConvUTF8) );
@@ -218,7 +218,9 @@ void BidibIdentDlg::initLabels() {
           ListOp.add(nodeList, (obj)bidibnode);
           bidibnode = wBiDiB.nextbidibnode( bidib, bidibnode );
         }
+        break;
       }
+      digint = wRocRail.nextdigint(l_RocrailIni, digint);
     }
   }
 
