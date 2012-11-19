@@ -222,6 +222,10 @@ static void __reader( void* threadinst ) {
           else {
             msg[index] = c;
             index++;
+            if( index > 127 ) {
+              TraceOp.trc( "bidib", TRCLEVEL_WARNING, __LINE__, 9999, "reset index %d !", index );
+              index = 0;
+            }
             TraceOp.dump ( "bidibserial", TRCLEVEL_DEBUG, (char*)msg, index );
           }
         }
