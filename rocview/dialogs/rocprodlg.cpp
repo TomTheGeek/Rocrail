@@ -678,3 +678,18 @@ void RocProDlg::onExtAddrWrite( wxCommandEvent& event ) {
   }
 }
 
+
+void RocProDlg::onPTON( wxCommandEvent& event ) {
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.pton );
+  wxGetApp().sendToRocrail( cmd );
+  NodeOp.base.del(cmd);
+}
+
+
+void RocProDlg::onPTOFF( wxCommandEvent& event ) {
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.ptoff );
+  wxGetApp().sendToRocrail( cmd );
+  NodeOp.base.del(cmd);
+}

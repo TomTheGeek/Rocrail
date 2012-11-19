@@ -84,6 +84,8 @@ class RocProDlg : public RocProDlgGen
     void onNrText( wxCommandEvent& event );
     void onExtAddrRead( wxCommandEvent& event );
     void onExtAddrWrite( wxCommandEvent& event );
+    void onPTON( wxCommandEvent& event );
+    void onPTOFF( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		RocProDlg( wxWindow* parent );
