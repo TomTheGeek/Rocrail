@@ -53,6 +53,7 @@
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
+#include "rocrail/wrapper/public/DataReq.h"
 
 // JMRI
 #include "rocrail/wrapper/public/DecoderConfig.h"
@@ -179,6 +180,28 @@ void RocProDlg::onOpen( wxCommandEvent& event )
   }
   fdlg->Destroy();
 }
+
+
+void RocProDlg::onImgOpen( wxCommandEvent& event ) {
+  const char* imagepath = wGui.getimagepath( wxGetApp().getIni() );
+  TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "imagepath = [%s]", imagepath );
+  wxFileDialog* fdlg = new wxFileDialog(this, _T("Search decoder image"),
+      wxString(imagepath,wxConvUTF8), _T(""),
+      _T("PNG files (*.png)|*.png|GIF files (*.gif)|*.gif|XPM files (*.xpm)|*.xpm"), wxFD_OPEN);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    wLoc.setdecimage( m_LocoProps, FileOp.ripPath(fdlg->GetPath().mb_str(wxConvUTF8)) );
+    wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
+    if( StrOp.endsWithi( fdlg->GetPath().mb_str(wxConvUTF8), ".gif" ) )
+      bmptype = wxBITMAP_TYPE_GIF;
+    else if( StrOp.endsWithi( fdlg->GetPath().mb_str(wxConvUTF8), ".png" ) )
+      bmptype = wxBITMAP_TYPE_PNG;
+    m_DecoderImage->SetBitmap( wxBitmap( fdlg->GetPath(), bmptype ) );
+    m_DecoderImage->Refresh();
+    m_Image->SetValue(wxString(wLoc.getdecimage(m_LocoProps),wxConvUTF8));
+  }
+  fdlg->Destroy();
+}
+
 
 void RocProDlg::importJMRI(iONode decoder) {
   if( m_CVConf == NULL ) {
@@ -403,6 +426,8 @@ void RocProDlg::onLocoList(wxCommandEvent& event) {
       bmptype = wxBITMAP_TYPE_GIF;
     else if( StrOp.endsWithi( wLoc.getimage( m_LocoProps ), ".png" ) )
       bmptype = wxBITMAP_TYPE_PNG;
+    else if( StrOp.endsWithi( wLoc.getimage( m_LocoProps ), ".jpg" ) )
+      bmptype = wxBITMAP_TYPE_JPEG;
 
     const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
     static char pixpath[256];
@@ -423,6 +448,40 @@ void RocProDlg::onLocoList(wxCommandEvent& event) {
   }
   m_LocoImage->Refresh();
 
+  if( m_LocoProps != NULL && wLoc.getdecimage( m_LocoProps ) != NULL && StrOp.len(wLoc.getdecimage( m_LocoProps )) > 0 ) {
+    wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
+    if( StrOp.endsWithi( wLoc.getimage( m_LocoProps ), ".gif" ) )
+      bmptype = wxBITMAP_TYPE_GIF;
+    else if( StrOp.endsWithi( wLoc.getimage( m_LocoProps ), ".png" ) )
+      bmptype = wxBITMAP_TYPE_PNG;
+    else if( StrOp.endsWithi( wLoc.getimage( m_LocoProps ), ".jpg" ) )
+      bmptype = wxBITMAP_TYPE_JPEG;
+
+    const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
+    static char pixpath[256];
+    StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wLoc.getdecimage( m_LocoProps ) ) );
+
+    if( FileOp.exist(pixpath)) {
+      TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
+      m_DecoderImage->SetBitmap( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
+    }
+    else {
+      TraceOp.trc( "rocpro", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
+      iONode node = NodeOp.inst( wDataReq.name(), NULL, ELEMENT_NODE );
+      wDataReq.setid( node, wLoc.getid(m_LocoProps) );
+      wDataReq.setcmd( node, wDataReq.get );
+      wDataReq.settype( node, wDataReq.image );
+      wDataReq.setfilename( node, wLoc.getdecimage(m_LocoProps) );
+      wxGetApp().sendToRocrail( node );
+      NodeOp.base.del(node);
+    }
+    //m_DecoderImage->SetToolTip(wxString(wLoc.getdesc( m_LocoProps ),wxConvUTF8));
+  }
+  else {
+    m_DecoderImage->SetBitmap( wxBitmap() );
+  }
+  m_DecoderImage->Refresh();
+
   if( m_LocoProps != NULL && StrOp.len(wLoc.getdecfile(m_LocoProps)) > 0 ) {
     char* decfile = StrOp.fmt("%s%c%s", wGui.getdecpath( wxGetApp().getIni() ), SystemOp.getFileSeparator(), wLoc.getdecfile(m_LocoProps) );
     if( FileOp.exist(decfile) ) {
@@ -433,6 +492,13 @@ void RocProDlg::onLocoList(wxCommandEvent& event) {
       loadDecFile();
     }
     StrOp.free(decfile);
+  }
+
+  if( m_LocoProps != NULL && wLoc.getdecimage(m_LocoProps) != NULL && StrOp.len(wLoc.getdecimage(m_LocoProps)) > 0 ) {
+    m_Image->SetValue(wxString(wLoc.getdecimage(m_LocoProps),wxConvUTF8));
+  }
+  else {
+    m_Image->SetValue(_T(""));
   }
 }
 

@@ -86,6 +86,7 @@ class RocProDlg : public RocProDlgGen
     void onExtAddrWrite( wxCommandEvent& event );
     void onPTON( wxCommandEvent& event );
     void onPTOFF( wxCommandEvent& event );
+    void onImgOpen( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		RocProDlg( wxWindow* parent );
