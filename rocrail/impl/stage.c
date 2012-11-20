@@ -478,7 +478,8 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stop loco %s because its not in the end section", data->locId );
             LocOp.stop(loc, False);
           }
-          else {
+
+          if( inst->hasExtStop(inst) ) {
             iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero", data->locId );
             wLoc.setcmd(cmd, wLoc.velocity);
@@ -498,7 +499,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
 
         }
         else {
-          if( !LocOp.isAutomode(loc) ) {
+          if( !LocOp.isAutomode(loc) || inst->hasExtStop(inst) ) {
             iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero", LocOp.getId(loc) );
             LocOp.setCurBlock(loc, data->id);
@@ -541,9 +542,11 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
         int sectionlen = __getLength2Section((iOStage)inst, wStageSection.getid(section));
         if( sectionlen >= LocOp.getLen(loc) ) {
           /* ToDo: Test.
+           * The in_event will set the loco speed to zero in another thread...
+           */
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing loco %s of IN event", data->locId );
           LocOp.event( loc, (obj)inst, in_event, 0, True, NULL );
-          */
+
         }
       }
     }
@@ -735,7 +738,7 @@ static Boolean _hasEnter2Route( iIBlockBase inst ,const char* fromBlockId ) {
 /**  */
 static Boolean _hasExtStop( iIBlockBase inst ) {
   iOStageData data = Data(inst);
-  return False;
+  return True;
 }
 
 
