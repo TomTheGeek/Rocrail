@@ -266,6 +266,7 @@ public:
   void OnLocoViewSteam(wxCommandEvent& event);
   void OnLocoViewDiesel(wxCommandEvent& event);
   void OnLocoViewElectric(wxCommandEvent& event);
+  void OnLocoViewAutomobile(wxCommandEvent& event);
   void OnLocoViewCommuter(wxCommandEvent& event);
   void OnLocoViewSpecial(wxCommandEvent& event);
   void OnShowID(wxCommandEvent& event);
@@ -555,6 +556,7 @@ enum
     ME_LocoViewSteam,
     ME_LocoViewDiesel,
     ME_LocoViewElectric,
+    ME_LocoViewAutomobile,
     ME_LocoViewCommuter,
     ME_LocoViewSpecial,
     ME_LocoSortByAddr,
@@ -640,6 +642,7 @@ enum {
 #define LOCO_VIEW_ELECTRIC 3
 #define LOCO_VIEW_COMMUTER 4
 #define LOCO_VIEW_SPECIAL 5
+#define LOCO_VIEW_AUTOMOBILE 6
 
 
 #endif

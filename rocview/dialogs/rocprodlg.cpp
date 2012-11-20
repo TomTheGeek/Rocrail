@@ -198,6 +198,15 @@ void RocProDlg::onImgOpen( wxCommandEvent& event ) {
     m_DecoderImage->SetBitmap( wxBitmap( fdlg->GetPath(), bmptype ) );
     m_DecoderImage->Refresh();
     m_Image->SetValue(wxString(wLoc.getdecimage(m_LocoProps),wxConvUTF8));
+
+    if( !wxGetApp().isStayOffline() ) {
+      /* Notify RocRail. */
+      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+      wModelCmd.setcmd( cmd, wModelCmd.modify );
+      NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( m_LocoProps ) );
+      wxGetApp().sendToRocrail( cmd );
+      NodeOp.base.del(cmd);
+    }
   }
   fdlg->Destroy();
 }
@@ -478,7 +487,7 @@ void RocProDlg::onLocoList(wxCommandEvent& event) {
     //m_DecoderImage->SetToolTip(wxString(wLoc.getdesc( m_LocoProps ),wxConvUTF8));
   }
   else {
-    m_DecoderImage->SetBitmap( wxBitmap() );
+    m_DecoderImage->SetBitmap( wxBitmap(0,0) );
   }
   m_DecoderImage->Refresh();
 

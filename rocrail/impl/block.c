@@ -1353,8 +1353,18 @@ static int _isSuited( iIBlockBase inst, iOLoc loc, int* restlen, Boolean checkPr
     const char* permtype = wBlock.gettypeperm(data->props);
     if( permtype != NULL && StrOp.len(permtype) > 0 && !StrOp.equals( permtype, wLoc.cargo_all) ) {
       iONode lc = LocOp.base.properties(loc);
-      const char* cargo    = wLoc.getcargo(lc);
-      if( !StrOp.equals( permtype, cargo)) {
+      const char* cargo = wLoc.getcargo(lc);
+      Boolean hasCargoType = False;
+      iOStrTok tok = StrTokOp.inst( permtype, ',' );
+      while( StrTokOp.hasMoreTokens(tok) ) {
+        const char* permsubtype = StrTokOp.nextToken( tok );
+        if( StrOp.equals( permsubtype, cargo)) {
+          hasCargoType = True;
+          break;
+        }
+      }
+      StrTokOp.base.del(tok);
+      if( !hasCargoType ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                        "Loc [%s] has no permission to enter block [%s]; cargo does not fit. (%s!=%s)",
                        id, data->id, permtype, cargo);

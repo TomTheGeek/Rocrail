@@ -2150,7 +2150,8 @@
         <const name="engine_diesel" vt="string" val="diesel"/>
         <const name="engine_electric" vt="string" val="electric"/>
         <const name="engine_steam" vt="string" val="steam"/>
-        <var name="engine" vt="string" defval="diesel" range="diesel,electric,steam"/>
+        <const name="engine_automobile" vt="string" val="automobile"/>
+        <var name="engine" vt="string" defval="diesel" range="diesel,electric,steam,automobile"/>
         <var name="sw" vt="bool" deprecated="true" defval="false" remark="Change direction in P50 protocol.(Use dir=true/false)"/>
         <const name="go" vt="string" val="go" remark="Start loc in automatic mode."/>
         <const name="gomanual" vt="string" val="gomanual" remark="Start loc in half-automatic mode."/>

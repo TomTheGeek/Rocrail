@@ -118,6 +118,7 @@ static Boolean __occSection(iIBlockBase inst, const char* secid, const char* lci
 static Boolean __moveStageLocos(iIBlockBase inst);
 static Boolean __dumpSections( iOStage inst );
 static Boolean __freeSections(iIBlockBase inst, const char* locid);
+static Boolean __getLength2Section( iOStage inst, const char* sectionid );
 
 
 /** ----- OBase ----- */
@@ -531,6 +532,19 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
           __moveStageLocos(inst);
         }
 
+      }
+    }
+    else if(puls) {
+      iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId);
+      if( loc != NULL ) {
+        /* Check if train length does already fit inside for generating the **in** event:  */
+        int sectionlen = __getLength2Section((iOStage)inst, wStageSection.getid(section));
+        if( sectionlen >= LocOp.getLen(loc) ) {
+          /* ToDo: Test.
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing loco %s of IN event", data->locId );
+          LocOp.event( loc, (obj)inst, in_event, 0, True, NULL );
+          */
+        }
       }
     }
     else if(!puls) {
@@ -1529,6 +1543,26 @@ static Boolean __dumpSections( iOStage inst ) {
     section = wStage.nextsection( data->props, section );
   }
   return eOcc;
+}
+
+static Boolean __getLength2Section( iOStage inst, const char* sectionid ) {
+  iOStageData data = Data(inst);
+  int len = 0;
+  iONode section = wStage.getsection( data->props );
+  while( section != NULL ) {
+    const char* lcid = wStageSection.getlcid( section );
+
+    if( wStageSection.getlen(section) == 0 )
+      len += wStage.getslen(data->props);
+    else
+      len += wStageSection.getlen(section);
+
+    if( StrOp.equals(wStageSection.getid( section ), sectionid) ) {
+      break;
+    }
+    section = wStage.nextsection( data->props, section );
+  }
+  return len;
 }
 
 /**

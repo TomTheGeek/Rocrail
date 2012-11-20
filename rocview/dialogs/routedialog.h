@@ -297,7 +297,17 @@ public:
     wxListBox* m_IncludeList;
     wxStaticText* m_labExclude;
     wxListBox* m_ExcludeList;
-    wxRadioBox* m_PermType;
+    wxStaticBox* m_PermType;
+    wxCheckBox* m_PermTypeGoods;
+    wxCheckBox* m_PermTypeMixed;
+    wxCheckBox* m_PermTypeICE;
+    wxCheckBox* m_PermTypePerson;
+    wxCheckBox* m_PermTypeLightGoods;
+    wxCheckBox* m_PermTypeNone;
+    wxCheckBox* m_PermTypeLocal;
+    wxCheckBox* m_PermTypeCleaning;
+    wxCheckBox* m_PermTypePost;
+    wxCheckBox* m_PermTypeLight;
     wxStaticText* m_labMaxLen;
     wxSpinCtrl* m_MaxLen;
     wxCheckBox* m_Commuter;

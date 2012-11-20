@@ -331,6 +331,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_LocoViewSteam  , RocGuiFrame::OnLocoViewSteam)
     EVT_MENU( ME_LocoViewDiesel , RocGuiFrame::OnLocoViewDiesel)
     EVT_MENU( ME_LocoViewElectric, RocGuiFrame::OnLocoViewElectric)
+    EVT_MENU( ME_LocoViewAutomobile, RocGuiFrame::OnLocoViewAutomobile)
     EVT_MENU( ME_LocoViewCommuter, RocGuiFrame::OnLocoViewCommuter)
     EVT_MENU( ME_LocoViewSpecial, RocGuiFrame::OnLocoViewSpecial)
     EVT_MENU( ME_ShowID         , RocGuiFrame::OnShowID)
@@ -911,6 +912,8 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
           else if( m_LocoCategory == LOCO_VIEW_COMMUTER && wLoc.iscommuter(lc) && !StrOp.equals(wLoc.cargo_cleaning, wLoc.getcargo(lc)) )
             ListOp.add( list, (obj)lc );
           else if( m_LocoCategory == LOCO_VIEW_SPECIAL && !wLoc.iscommuter(lc) && StrOp.equals(wLoc.cargo_cleaning, wLoc.getcargo(lc)) )
+            ListOp.add( list, (obj)lc );
+          else if( m_LocoCategory == LOCO_VIEW_AUTOMOBILE && StrOp.equals(wLoc.engine_automobile, wLoc.getengine(lc)) )
             ListOp.add( list, (obj)lc );
           else if( m_LocoCategory == LOCO_VIEW_ALL )
             ListOp.add( list, (obj)lc );
@@ -1735,6 +1738,7 @@ void RocGuiFrame::initFrame() {
   menuLocoView->AppendCheckItem( ME_LocoViewElectric, wxGetApp().getMenu("locoviewelectric"), wxGetApp().getTip("locoviewelectric") );
   menuLocoView->AppendCheckItem( ME_LocoViewCommuter, wxGetApp().getMenu("locoviewcommuter"), wxGetApp().getTip("locoviewcommuter") );
   menuLocoView->AppendCheckItem( ME_LocoViewSpecial, wxGetApp().getMenu("locoviewspecial"), wxGetApp().getTip("locoviewspecial") );
+  menuLocoView->AppendCheckItem( ME_LocoViewAutomobile, wxGetApp().getMenu("locoviewautomobile"), wxGetApp().getTip("locoviewautomobile") );
   menuView->Append( -1, wxGetApp().getMenu("locofilter"), menuLocoView );
 
   menuView->AppendSeparator();
@@ -2933,6 +2937,12 @@ void RocGuiFrame::OnLocoViewSteam( wxCommandEvent& event ) {
   InitActiveLocs(event);
 }
 
+void RocGuiFrame::OnLocoViewAutomobile( wxCommandEvent& event ) {
+  m_LocoCategory = LOCO_VIEW_AUTOMOBILE;
+  event.SetClientData(NULL);
+  InitActiveLocs(event);
+}
+
 void RocGuiFrame::OnLocoViewDiesel( wxCommandEvent& event ) {
   m_LocoCategory = LOCO_VIEW_DIESEL;
   event.SetClientData(NULL);
@@ -3523,6 +3533,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   if( mi != NULL ) mi->Check( m_LocoCategory == LOCO_VIEW_COMMUTER );
   mi = menuBar->FindItem(ME_LocoViewSpecial);
   if( mi != NULL ) mi->Check( m_LocoCategory == LOCO_VIEW_SPECIAL );
+  mi = menuBar->FindItem(ME_LocoViewAutomobile);
+  if( mi != NULL ) mi->Check( m_LocoCategory == LOCO_VIEW_AUTOMOBILE );
 
   mi = menuBar->FindItem(ME_LangEnglish);
   if( mi != NULL )

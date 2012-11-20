@@ -313,6 +313,7 @@ void LocDialog::initLabels() {
   m_EngineBox->SetString( 0, wxGetApp().getMsg( "diesel" ) );
   m_EngineBox->SetString( 1, wxGetApp().getMsg( "steam" ) );
   m_EngineBox->SetString( 2, wxGetApp().getMsg( "electric" ) );
+  m_EngineBox->SetString( 3, wxGetApp().getMsg( "automobile" ) );
   m_CargoBox->SetLabel( wxGetApp().getMsg( "cargo" ) );
   m_CargoBox->SetString( 0, wxGetApp().getMsg( "none" ) );
   m_CargoBox->SetString( 1, wxGetApp().getMsg( "goods" ) );
@@ -727,6 +728,8 @@ void LocDialog::InitValues() {
     engine = 1;
   else if( StrOp.equals( wLoc.engine_electric, wLoc.getengine( m_Props ) ) )
     engine = 2;
+  else if( StrOp.equals( wLoc.engine_automobile, wLoc.getengine( m_Props ) ) )
+    engine = 3;
   m_EngineBox->SetSelection( engine );
   int cargo = 0;
   if( StrOp.equals( wLoc.cargo_none, wLoc.getcargo( m_Props ) ) )
@@ -1049,6 +1052,8 @@ bool LocDialog::Evaluate() {
     wLoc.setengine( m_Props, wLoc.engine_steam );
   else if( engine == 2 )
     wLoc.setengine( m_Props, wLoc.engine_electric );
+  else if( engine == 3 )
+    wLoc.setengine( m_Props, wLoc.engine_automobile );
 
   int cargo = m_CargoBox->GetSelection();
   if( cargo == 0 )
@@ -1837,6 +1842,7 @@ void LocDialog::CreateControls()
     m_EngineBoxStrings.Add(_("&Diesel"));
     m_EngineBoxStrings.Add(_("&Steam"));
     m_EngineBoxStrings.Add(_("&Electric"));
+    m_EngineBoxStrings.Add(_("&Automobile"));
     m_EngineBox = new wxRadioBox( m_DetailsPanel, ID_RADIOBOX_ENGINE, _("Engine"), wxDefaultPosition, wxDefaultSize, m_EngineBoxStrings, 1, wxRA_SPECIFY_ROWS );
     m_EngineBox->SetSelection(0);
     itemBoxSizer123->Add(m_EngineBox, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);

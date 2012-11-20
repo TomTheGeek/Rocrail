@@ -18112,6 +18112,9 @@
     <es txt="Especiales"/>
     <it txt="Speciali"/>
   </Msg>
+  <Msg id="locoviewautomobile">
+    <en txt="Automobiles and trucks"/>
+  </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
     <nl txt="Sorteer locs naar adres"/>
@@ -18639,5 +18642,8 @@
   </Msg>
   <Msg id="guestloco" dialog="true">
     <en txt="Guest Loco"/>
+  </Msg>
+  <Msg id="automobile">
+    <en txt="Automobile or truck"/>
   </Msg>
 </Messages>
