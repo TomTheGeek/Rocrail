@@ -2350,7 +2350,7 @@ static iOLoc _getLocByIdent( iOModel inst, const char* ident ) {
     StrOp.fmtb(locoAddrStr, "%d", LocOp.getAddress(loc) );
     if( StrOp.equals(LocOp.getIdent(loc), ident) )
       return loc;
-    else if( StrOp.equals(locoAddrStr, ident) )
+    else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident) )
       locAddr = loc;
     loc = (iOLoc)MapOp.next( o->locMap );
   };
