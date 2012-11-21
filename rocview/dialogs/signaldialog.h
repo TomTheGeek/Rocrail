@@ -90,8 +90,8 @@ class wxSpinCtrl;
 #define ID_TEXTCTRL_SG_BUS 10257
 #define wxID_STATIC_SG_PROT 10184
 #define ID_CHOICE_SG_PROT 10183
-#define ID_CHECKBOX_SG_PAIRGATES 10418
 #define ID_SIGNALCONTROL 10393
+#define ID_CHECKBOX_SG_PAIRGATES 10418
 #define ID_PANEL_SG_PROPS 10208
 #define ID_RADIOBOX_SG_TYPE 10215
 #define ID_RADIOBOX_SG_SGTYPE 10216
@@ -170,11 +170,11 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SIGNAL_ACTIONS
     void OnSignalActionsClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SG_PAIRGATES
-    void OnCheckboxSgPairgatesClick( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_SIGNALCONTROL
     void OnSignalcontrolSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SG_PAIRGATES
+    void OnCheckboxSgPairgatesClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
@@ -244,24 +244,25 @@ public:
     wxTextCtrl* m_Address;
     wxTextCtrl* m_Port;
     wxRadioBox* m_Gate1;
-    wxStaticBox* m_YellowBox;
-    wxTextCtrl* m_Address2;
-    wxTextCtrl* m_Port2;
-    wxRadioBox* m_Gate2;
     wxStaticBox* m_GreenBox;
     wxTextCtrl* m_Address3;
     wxTextCtrl* m_Port3;
     wxRadioBox* m_Gate3;
+    wxStaticBox* m_YellowBox;
+    wxTextCtrl* m_Address2;
+    wxTextCtrl* m_Port2;
+    wxRadioBox* m_Gate2;
     wxStaticBox* m_WhiteBox;
     wxTextCtrl* m_Address4;
     wxTextCtrl* m_Port4;
     wxRadioBox* m_Gate4;
+    wxRadioBox* m_SignalControl;
+    wxRadioBox* m_PortType;
     wxCheckBox* m_Invert;
     wxCheckBox* m_PairGates;
     wxCheckBox* m_AsSwitch;
     wxStaticText* m_labCmdTime;
     wxSpinCtrl* m_CmdTime;
-    wxRadioBox* m_SignalControl;
     wxPanel* m_PropsPanel;
     wxRadioBox* m_Type;
     wxRadioBox* m_Signal;
