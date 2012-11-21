@@ -18646,4 +18646,7 @@
   <Msg id="automobile">
     <en txt="Automobile or truck"/>
   </Msg>
+  <Msg id="inatlen">
+    <en txt="In event at train length"/>
+  </Msg>
 </Messages>

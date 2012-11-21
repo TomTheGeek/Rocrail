@@ -5556,6 +5556,12 @@ msgid "Specials"
 msgstr ""
 
 #. 
+# id="locoviewautomobile"
+#, c-format
+msgid "Automobiles and trucks"
+msgstr ""
+
+#. 
 # id="locosortbyaddr"
 #, c-format
 msgid "Sort locos by address"
@@ -6039,5 +6045,17 @@ msgstr ""
 # id="guestloco"
 #, c-format
 msgid "Guest Loco"
+msgstr ""
+
+#. 
+# id="automobile"
+#, c-format
+msgid "Automobile or truck"
+msgstr ""
+
+#. 
+# id="inatlen"
+#, c-format
+msgid "In event at train length"
 msgstr ""
 
