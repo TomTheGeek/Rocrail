@@ -107,7 +107,7 @@ const char* bidibGetFeatureName(int feature) {
   if( feature == FEATURE_BM_ADDR_DETECT_ON ) return "address detection enabled";
   if( feature == FEATURE_BM_ADDR_AND_DIR ) return "direction available";
   if( feature == FEATURE_BM_ISTSPEED_AVAILABLE ) return "dcc-speed available";
-  if( feature == FEATURE_BM_ISTSPEED_ON ) return "dcc-speed enabled";
+  if( feature == FEATURE_BM_ISTSPEED_INTERVAL ) return "dcc-speed enabled";
   if( feature == FEATURE_BM_CV_AVAILABLE ) return "cv-messages available";
   if( feature == FEATURE_BM_CV_ON ) return "cv-messages enabled";
 

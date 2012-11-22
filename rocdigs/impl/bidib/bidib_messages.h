@@ -9,7 +9,7 @@
 // file:      bidib_messages.h
 // author:    Wolfgang Kufer
 // contact:   kufer@gmx.de
-// webpage:   http://www.opendcc.de
+// webpage:   http://www.bidib.org
 // history:   2010-12-01 V0.00 kw  start
 //            2010-12-07 V0.01 kw  added BIDIB_PKT_MAGIC, MSB_BM_ACCESSORY, ...
 //            2011-02-22       kw  added feature-codes for booster class
@@ -33,6 +33,8 @@
 //            2012-07-30       kw  added BIDIB_MACRO_RESTORE, MSG_SYS_CLOCK
 //            2012-09-14 V0.07 kw  added MSG_BM_CONFIDENCE, MSG_BM_GET_CONFIDENCE
 //            2012-09-25 V0.07 kw  added MSG_LC_WAIT
+//            2012-10-12 V0.08 kw  added MSG_ACCESSORY_*, CLASS bit accessory (update)
+//                                       FEATURE_BM_ISTSPEED_INTERVAL instead _ON
 // 
 //===============================================================================
 //
@@ -57,7 +59,10 @@
 // known problems: messages for programming are not yet defined
 //
 //===============================================================================
-
+// 
+// Generell rules for BiDiB
+// a) BiDiB is based on bytes. Whenever longer objects are referred (int, long)
+//    LSByte is transmitted first. 
 
 #ifndef __BIDIB_MESSAGES_H__
 #define __BIDIB_MESSAGES_H__
@@ -69,7 +74,7 @@
 //===============================================================================
 
 //                              Mainversion   Subversion
-#define BIDIB_VERSION           (0 * 256 +    4)
+#define BIDIB_VERSION           (0 * 256 +    5)
 
 #define BIDIB_SYS_MAGIC         0xAFFE
 
@@ -89,7 +94,7 @@
 #define MSG_SYS_DISABLE         (MSG_DSYS + 0x04)       // -
 #define MSG_SYS_GET_UNIQUE_ID   (MSG_DSYS + 0x05)       // -
 #define MSG_SYS_GET_SW_VERSION  (MSG_DSYS + 0x06)       // -
-#define MSG_SYS_PING            (MSG_DSYS + 0x07)       // -
+#define MSG_SYS_PING            (MSG_DSYS + 0x07)       // 1:dat
 #define MSG_SYS_IDENTIFY        (MSG_DSYS + 0x08)       // 1:id_state
 #define MSG_SYS_RESET           (MSG_DSYS + 0x09)       // -
 #define MSG_GET_PKT_CAPACITY    (MSG_DSYS + 0x0a)       // -
@@ -105,11 +110,11 @@
 #define MSG_FEATURE_GETNEXT     (MSG_DFC + 0x01)        // -
 #define MSG_FEATURE_GET         (MSG_DFC + 0x02)        // 1:feature_num
 #define MSG_FEATURE_SET         (MSG_DFC + 0x03)        // 1:feature_num, 2:feature_val
-#define MSG_VENDOR_ENABLE       (MSG_DFC + 0x04)
-#define MSG_VENDOR_DISABLE      (MSG_DFC + 0x05)
-#define MSG_VENDOR_SET          (MSG_DFC + 0x06)
-#define MSG_VENDOR_GET          (MSG_DFC + 0x07)
-#define MSG_SYS_CLOCK           (MSG_DFC + 0x08)
+#define MSG_VENDOR_ENABLE       (MSG_DFC + 0x04)        // 1-7: unique-id of node
+#define MSG_VENDOR_DISABLE      (MSG_DFC + 0x05)        // -
+#define MSG_VENDOR_SET          (MSG_DFC + 0x06)        // V_NAME,V_VALUE
+#define MSG_VENDOR_GET          (MSG_DFC + 0x07)        // V_NAME
+#define MSG_SYS_CLOCK           (MSG_DFC + 0x08)        // 1:TCODE0, 2:TCODE1, 3:TCODE2, 4:TCODE3
 
 //-- occupancy messages
 #define MSG_DBM                 (MSG_DSTRM + 0x20)
@@ -125,7 +130,14 @@
 #define MSG_BOOST_OFF           (MSG_DBST + 0x00)       // -
 #define MSG_BOOST_ON            (MSG_DBST + 0x01)       // -
 
-//-- switch/light control messages
+//-- accessory control messages
+#define MSG_DACC                (MSG_DSTRM + 0x38)
+#define MSG_ACCESSORY_SET       (MSG_DACC + 0x00)       // 1:anum, 2:aspect
+#define MSG_ACCESSORY_GET       (MSG_DACC + 0x01)       // 1:anum
+#define MSG_ACCESSORY_PARA_SET  (MSG_DACC + 0x02)       // 1:anum, 2:para_num, 3..n: data 
+#define MSG_ACCESSORY_PARA_GET  (MSG_DACC + 0x03)       // 1:anum, 2:para_num
+
+//-- switch/light/servo control messages
 #define MSG_DLC                 (MSG_DSTRM + 0x40)
 #define MSG_LC_OUTPUT           (MSG_DLC + 0x00)        // 1:type, 2:port, 3:state
 #define MSG_LC_CONFIG_SET       (MSG_DLC + 0x01)        // 1:type, 2:port, 3:off_val, 4:on_val, 5:dimm_off, 6:dimm_on
@@ -146,7 +158,7 @@
 #define  MSG_CS_CONNECT         (MSG_DGEN + 0x01)
 #define  MSG_CS_SET_STATE       (MSG_DGEN + 0x02)
 #define  MSG_CS_GET_STATE       (MSG_DGEN + 0x03)       // could be obsolete
-#define  MSG_CS_DRIVE           (MSG_DGEN + 0x04)
+#define  MSG_CS_DRIVE           (MSG_DGEN + 0x04)       // 1:addrl, 2:addrh, 3:format, 4:active, 5:speed, 6:1-4, 7:5-12, 8:13-20, 9:21-28
 #define  MSG_CS_ACCESSORY       (MSG_DGEN + 0x05)
 #define  MSG_PRG_CV_WRITE       (MSG_DGEN + 0x07)       // 1:method, 2:CV_ADDR_L, 3:CV_ADDR_H, 4:CV_DAT
 #define  MSG_PRG_CV_BLOCKWRITE  (MSG_DGEN + 0x08)
@@ -170,22 +182,19 @@
 //-- system messages
 #define MSG_USYS                (MSG_USTRM +  0x00)
 #define MSG_SYS_MAGIC           (MSG_USYS + 0x01)       // 1:0xFE 2:0xAF
-#define MSG_SYS_PONG            (MSG_USYS + 0x02)       // -
+#define MSG_SYS_PONG            (MSG_USYS + 0x02)       // 1:mirrored dat
 #define MSG_SYS_P_VERSION       (MSG_USYS + 0x03)       // 1:proto-ver_l, 2:proto-ver_h
 #define MSG_SYS_UNIQUE_ID       (MSG_USYS + 0x04)       // 1:class, 2:classx, 3:vid, 4..7:pid+uid    
 #define MSG_SYS_SW_VERSION      (MSG_USYS + 0x05)       // 1:sw-ver_l, 2:sw_-ver_h, 3:sw-ver_u
 #define MSG_SYS_ERROR           (MSG_USYS + 0x06)       // 1:err_code, 2:msg
 #define MSG_SYS_IDENTIFY_STATE  (MSG_USYS + 0x07)       // 1:state
 #define MSG_NODETAB_COUNT       (MSG_USYS + 0x08)       // 1:length
-#define MSG_NODETAB_OLD         (MSG_USYS + 0x09)       // this is only old version, to be removed!
-                                                        // 1:version, 2:length, 3:start, 4..n:nodes
-                                                        //      node: local num, unique
 #define MSG_NODETAB             (MSG_USYS + 0x09)       // 1:version, 2:local num, 3..9: unique
 #define MSG_PKT_CAPACITY        (MSG_USYS + 0x0a)       // 1:capacity
 #define MSG_NODE_NA             (MSG_USYS + 0x0b)       // 1:node
 #define MSG_NODE_LOST           (MSG_USYS + 0x0c)       // 1:node
 #define MSG_NODE_NEW            (MSG_USYS + 0x0d)       // 1:version, 2:local num, 3..9: unique
-#define MSG_STALL               (MSG_USYS + 0x0e)       // 1:msg
+#define MSG_STALL               (MSG_USYS + 0x0e)       // 1:state
 #define MSG_FW_UPDATE_STAT      (MSG_USYS + 0x0f)       // 1:stat, 2:timeout
 
 //-- feature and user config messages
@@ -203,9 +212,9 @@
 #define MSG_BM_MULTIPLE         (MSG_UBM + 0x02)        // 1:base, 2:size; 3..n:data
 #define MSG_BM_ADDRESS          (MSG_UBM + 0x03)        // 1:mnum, [2,3:addr_l, addr_h]
 #define MSG_BM_ACCESSORY        (MSG_UBM + 0x04)        //
-#define MSG_BM_CV               (MSG_UBM + 0x05)        //
-#define MSG_BM_SPEED            (MSG_UBM + 0x06)        //
-#define MSG_BM_CURRENT          (MSG_UBM + 0x07)        // 1:current
+#define MSG_BM_CV               (MSG_UBM + 0x05)        // 1:addr_l, 2:addr_h, 3:cv_addr_l, 4:cv_addr_h, 5:cv_dat
+#define MSG_BM_SPEED            (MSG_UBM + 0x06)        // 1:addr_l, 2:addr_h, 3:speed_l, 4:speed_h
+#define MSG_BM_CURRENT          (MSG_UBM + 0x07)        // 1:mnum, 2:current
 #define MSG_BM_BLOCK_CV         (MSG_UBM + 0x08)        //
 #define MSG_BM_CONFIDENCE       (MSG_UBM + 0x09)        // 1:void, 2:freeze, 3:signal
 
@@ -216,6 +225,11 @@
 #define MSG_NEW_DECODER         (MSG_UBST + 0x02)       // 1:mnum, 2: dec_vid, 3,4,5,6:dec_uid    
 #define MSG_ID_SEARCH_ACK       (MSG_UBST + 0x03)       // 1:mnum, 2: s_vid, 3,4,5,6:s_uid,  7: dec_vid, 8,9,10,11:dec_uid  
 #define MSG_ADDR_CHANGE_ACK     (MSG_UBST + 0x04)       // 1:mnum, 2: dec_vid, 3,4,5,6:dec_uid, 7:addr_l, 8:addr_h
+
+//-- accessory control messages
+#define MSG_UACC                (MSG_USTRM + 0x38)
+#define MSG_ACCESSORY_STATE     (MSG_UACC + 0x00)       // 1:port, 2:aspect, 3:total, 4:execute, 5:wait
+#define MSG_ACCESSORY_PARA      (MSG_UACC + 0x01)       // 1:anum, 2:para_num, 3..n: data
 
 //-- switch/light control messages
 #define MSG_ULC                 (MSG_USTRM +  0x40)
@@ -233,7 +247,7 @@
 
 //-- dcc control messages
 #define MSG_UGEN                (MSG_USTRM +  0x60)
-#define MSG_CS_ALLOC_ACK        (MSG_UGEN + 0x00)    // noch genauer zu klaeren
+#define MSG_CS_ALLOC_ACK        (MSG_UGEN + 0x00)       // noch genauer zu klaeren
 #define MSG_CS_STATE            (MSG_UGEN + 0x01)
 #define MSG_CS_DRIVE_ACK        (MSG_UGEN + 0x02)
 #define MSG_CS_ACCESSORY_ACK    (MSG_UGEN + 0x03)
@@ -258,9 +272,9 @@ typedef struct
           {
             unsigned char class_switch: 1;
             unsigned char class_booster: 1;
-            unsigned char class_prog: 1;
-            unsigned char class_dcc_acc: 1;
-            unsigned char class_dcc_lok: 1;
+            unsigned char class_accessory: 1;
+            unsigned char class_dcc_prog: 1;
+            unsigned char class_dcc_main: 1;
             unsigned char class_ui: 1;
             unsigned char class_occupancy: 1;
             unsigned char class_bridge: 1;
@@ -331,7 +345,7 @@ typedef struct
 #define FEATURE_BM_ADDR_DETECT_ON           9
 #define FEATURE_BM_ADDR_AND_DIR            10
 #define FEATURE_BM_ISTSPEED_AVAILABLE      11
-#define FEATURE_BM_ISTSPEED_ON             12
+#define FEATURE_BM_ISTSPEED_INTERVAL       12
 #define FEATURE_BM_CV_AVAILABLE            13
 #define FEATURE_BM_CV_ON                   14
 //-- booster
@@ -343,6 +357,12 @@ typedef struct
 #define FEATURE_BST_INRUSH_TURNOFF_TIME    20
 #define FEATURE_BST_AMPERE_ADJUSTABLE      21
 #define FEATURE_BST_AMPERE                 22
+
+//-- accessory
+#define FEATURE_ACCESSORY_COUNT            40   // number of objects
+#define FEATURE_ACCESSORY_SURVEILLED       41   // 1: annouce if operated outside bidib
+#define FEATURE_ACCESSORY_MACROMAPPED      42   // 1: accessory aspects are mapped to macros
+
 //-- control
 #define FEATURE_CTRL_INPUT_COUNT           50
 #define FEATURE_CTRL_INPUT_NOTIFY          51   // 1: report to host
@@ -458,11 +478,26 @@ typedef struct
 #define BIDIB_CS_STATE_PROGBUSY     0x81
 #define BIDIB_CS_STATE_BUSY         0xF0
 
+#define BIDIB_CS_DRIVE_FORMAT_DCC14      0 
+#define BIDIB_CS_DRIVE_FORMAT_DCC28      2 
+#define BIDIB_CS_DRIVE_FORMAT_DCC128     3 
+
+#define BIDIB_CS_DRIVE_SPEED_BIT    (1<<0)
+#define BIDIB_CS_DRIVE_F1F4_BIT     (1<<1)
+#define BIDIB_CS_DRIVE_F5F8_BIT     (1<<2)
+#define BIDIB_CS_DRIVE_F9F12_BIT    (1<<3)
+#define BIDIB_CS_DRIVE_F13F20_BIT   (1<<4)
+#define BIDIB_CS_DRIVE_F21F28_BIT   (1<<5)
+
 //===============================================================================
 //
 // 9. IO-Control and Macro (useful defines)
 //
 //===============================================================================
+
+// Accessory
+#define BIDIB_ACCESSORY_PARA_MACROMAP  253   // following data defines a mapping
+#define BIDIB_ACCESSORY_SWITCH_TIME    254   // 
 
 // Macro / Switch Pointparameters
 // type codes
