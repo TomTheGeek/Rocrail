@@ -691,7 +691,7 @@ static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse, int* oppwait 
   if( StrOp.equals( wLoc.cargo_cleaning, wLoc.getcargo( (iONode)loc->base.properties( loc ) ) ) ||
       StrOp.equals( wBlock.wait_none, wBlock.getwaitmode( data->props ) ) )
   {
-    return 0;
+    return 1;
   }
   else if( StrOp.equals( wBlock.wait_random, wBlock.getwaitmode( data->props ) ) ) {
     /* Random between 1 and 30. */
@@ -699,6 +699,14 @@ static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse, int* oppwait 
     int max = wStage.getmaxwaittime( data->props );
     float fmax = max;
     int rwait = 0;
+
+    if( min == 0 )
+      min = 1;
+    if( max == 0 ) {
+      max = 1;
+      fmax = max;
+    }
+
     if( max < min ) {
       fmax = min;
       min = max;
@@ -706,16 +714,16 @@ static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse, int* oppwait 
     rwait = min + (int) (fmax*rand()/(RAND_MAX+1.0));
     return rwait;
   }
-  else if( StrOp.equals( wBlock.wait_loc, wStage.getwaitmode( data->props ) ) ) {
+  else if( StrOp.equals( wBlock.wait_loc, wStage.getwaitmode( data->props ) ) && wLoc.getblockwaittime( (iONode)loc->base.properties( loc ) ) > 0) {
     return wLoc.getblockwaittime( (iONode)loc->base.properties( loc ) );
   }
-  else if( wLoc.isuseownwaittime( (iONode)loc->base.properties( loc ) ) ) {
+  else if( wLoc.isuseownwaittime( (iONode)loc->base.properties( loc ) ) && wLoc.getblockwaittime( (iONode)loc->base.properties( loc ) ) > 0) {
     return wLoc.getblockwaittime( (iONode)loc->base.properties( loc ) );
   }
-  else if( StrOp.equals( wBlock.wait_fixed, wStage.getwaitmode( data->props ) ) ) {
+  else if( StrOp.equals( wBlock.wait_fixed, wStage.getwaitmode( data->props ) ) && wStage.getwaittime( data->props ) > 0 ) {
     return wStage.getwaittime( data->props ) ;
   }
-  return 0;
+  return 1;
 }
 
 
@@ -1441,6 +1449,7 @@ static Boolean _unLockForGroup( iIBlockBase inst ,const char* locid ) {
 /**  */
 static Boolean _wait( iIBlockBase inst ,iOLoc loc ,Boolean reverse, Boolean* oppwait ) {
   iOStageData data = Data(inst);
+  *oppwait = True;
   return True;
 }
 

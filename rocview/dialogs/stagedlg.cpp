@@ -214,7 +214,6 @@ void StageDlg::initLabels() {
   m_WaitType->SetString( 0, wxGetApp().getMsg( "random" ) );
   m_WaitType->SetString( 1, wxGetApp().getMsg( "fixed" ) );
   m_WaitType->SetString( 2, wxGetApp().getMsg( "locomotive" ) );
-  m_WaitType->SetString( 3, wxGetApp().getMsg( "none" ) );
   m_labRandomMin->SetLabel( wxGetApp().getMsg( "randommin" ) );
   m_labRandomMax->SetLabel( wxGetApp().getMsg( "randommax" ) );
   m_labFixed->SetLabel( wxGetApp().getMsg( "fixed" ) );
@@ -261,10 +260,8 @@ bool StageDlg::evaluate() {
     wStage.setwaitmode( m_Props, wBlock.wait_random );
   else if( m_WaitType->GetSelection() == 1 )
     wStage.setwaitmode( m_Props, wBlock.wait_fixed );
-  else if( m_WaitType->GetSelection() == 2 )
-    wStage.setwaitmode( m_Props, wBlock.wait_loc );
   else
-    wStage.setwaitmode( m_Props, wBlock.wait_none );
+    wStage.setwaitmode( m_Props, wBlock.wait_loc );
 
   wStage.setminwaittime( m_Props, m_RandomMin->GetValue() );
   wStage.setmaxwaittime( m_Props, m_RandomMax->GetValue() );
@@ -338,7 +335,7 @@ void StageDlg::initValues() {
   // Details
   m_DepartDelay->SetValue( wStage.getdepartdelay( m_Props ) );
 
-  int wait = 3;
+  int wait = 0;
   if( StrOp.equals( wBlock.wait_random, wStage.getwaitmode( m_Props ) ) )
     wait = 0;
   else if( StrOp.equals( wBlock.wait_fixed, wStage.getwaitmode( m_Props ) ) )
