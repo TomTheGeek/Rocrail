@@ -833,7 +833,7 @@ void SignalDialog::CreateControls()
     wxBoxSizer* itemBoxSizer49 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer40->Add(itemBoxSizer49, 0, wxGROW|wxALL, 5);
     wxBoxSizer* itemBoxSizer50 = new wxBoxSizer(wxVERTICAL);
-    itemBoxSizer49->Add(itemBoxSizer50, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer49->Add(itemBoxSizer50, 0, wxALIGN_TOP|wxALL, 5);
     m_RedBox = new wxStaticBox(m_InterfacePanel, wxID_ANY, _("Red"));
     wxStaticBoxSizer* itemStaticBoxSizer51 = new wxStaticBoxSizer(m_RedBox, wxHORIZONTAL);
     itemBoxSizer50->Add(itemStaticBoxSizer51, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
@@ -907,7 +907,7 @@ void SignalDialog::CreateControls()
     itemStaticBoxSizer66->Add(m_Gate4, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer70 = new wxBoxSizer(wxVERTICAL);
-    itemBoxSizer49->Add(itemBoxSizer70, 0, wxGROW|wxALL, 5);
+    itemBoxSizer49->Add(itemBoxSizer70, 0, wxALIGN_TOP|wxALL, 5);
     wxArrayString m_SignalControlStrings;
     m_SignalControlStrings.Add(_("&default"));
     m_SignalControlStrings.Add(_("&patterns"));
