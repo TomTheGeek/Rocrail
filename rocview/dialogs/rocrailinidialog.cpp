@@ -948,6 +948,7 @@ bool RocrailIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     m_R2RnetRoutes = NULL;
     m_R2RnetRoutesDlg = NULL;
     m_R2RnetEnable = NULL;
+    m_AnalyserPanel = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
     m_Apply = NULL;
@@ -1627,24 +1628,30 @@ void RocrailIniDialog::CreateControls()
 
     m_RRNotebook->AddPage(m_R2RnetPanel, _("R2Rnet"));
 
+    m_AnalyserPanel = new wxPanel( m_RRNotebook, ID_PANEL_ANALYSER, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    wxBoxSizer* itemBoxSizer202 = new wxBoxSizer(wxVERTICAL);
+    m_AnalyserPanel->SetSizer(itemBoxSizer202);
+
+    m_RRNotebook->AddPage(m_AnalyserPanel, _("Analyser"));
+
     itemBoxSizer2->Add(m_RRNotebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer201 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer203 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer201, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer203, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer201->AddButton(m_OK);
+    itemStdDialogButtonSizer203->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer201->AddButton(m_Cancel);
+    itemStdDialogButtonSizer203->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     if (RocrailIniDialog::ShowToolTips())
         m_Apply->SetToolTip(_("Apply Controller settings locally."));
-    itemStdDialogButtonSizer201->AddButton(m_Apply);
+    itemStdDialogButtonSizer203->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer201->Realize();
+    itemStdDialogButtonSizer203->Realize();
 
 ////@end RocrailIniDialog content construction
 }

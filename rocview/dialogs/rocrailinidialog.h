@@ -105,6 +105,7 @@ class wxSpinCtrl;
 #define ID_BUTTON_RR_ADD 10000
 #define ID_PANEL_R2RNET 10281
 #define ID_BUTTON_R2RNET_ROUTES 10327
+#define ID_PANEL_ANALYSER 10416
 #define SYMBOL_ROCRAILINIDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_ROCRAILINIDIALOG_TITLE _("Rocrail Properties")
 #define SYMBOL_ROCRAILINIDIALOG_IDNAME ID_DIALOG_RR_INI
@@ -376,6 +377,7 @@ public:
     wxTextCtrl* m_R2RnetRoutes;
     wxButton* m_R2RnetRoutesDlg;
     wxCheckBox* m_R2RnetEnable;
+    wxPanel* m_AnalyserPanel;
     wxButton* m_OK;
     wxButton* m_Cancel;
     wxButton* m_Apply;

@@ -896,6 +896,7 @@ static void __callback( obj inst, iONode nodeA ) {
     else if( StrOp.equals( wSysCmd.analyze, wSysCmd.getcmd( nodeA ) ) ) {
       ModelOp.analyse( AppOp.getModel(), wSysCmd.getval( nodeA ) );
       NodeOp.base.del( nodeA );
+      AppOp.broadcastEvent( ControlOp.getState((iOControl)inst) );
       return;
     }
     else if( StrOp.equals( wSysCmd.txshortids, wSysCmd.getcmd(nodeA) ) ) {
@@ -1014,6 +1015,7 @@ static void __listener( obj inst, iONode nodeC, int level ) {
   else if( StrOp.equals( wState.name(), NodeOp.getName( nodeC ) ) ) {
     /* Broadcast to clients. Node3 */
     wState.setconsolemode( nodeC, AppOp.isConsoleMode() );
+    wState.sethealthy( nodeC, ModelOp.isHealthy(model) );
     if( data->power && !wState.ispower( nodeC ) ) {
       /* freeze clock */
       control_callback cb = ControlOp.getCallback((iOControl)inst);
@@ -1046,12 +1048,14 @@ static void __listener( obj inst, iONode nodeC, int level ) {
 
 static iONode _getState( iOControl inst ) {
   iOControlData data = Data(inst);
+  iOModel model = AppOp.getModel();
   iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
   wState.setpower( node, data->power );
   wState.setprogramming( node, data->programming );
   wState.settrackbus( node, data->trackbus );
   wState.setsensorbus( node, data->sensorbus );
   wState.setaccessorybus( node, data->accessorybus );
+  wState.sethealthy( node, ModelOp.isHealthy(model) );
   return node;
 }
 

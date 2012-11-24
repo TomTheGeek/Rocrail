@@ -853,6 +853,7 @@
     <var name="sensorbus" vt="bool" defval="false"/>
     <var name="accessorybus" vt="bool" defval="false"/>
     <var name="consolemode" vt="bool" defval="false"/>
+    <var name="healthy" vt="bool" defval="false"/>
     <var name="load" vt="int" defval="0" remark="Load of CS in mA."/>
     <var name="uid" vt="int" defval="0" remark="Unique-ID of reporter."/>
     <var name="shortcut" vt="bool" defval="false"/>

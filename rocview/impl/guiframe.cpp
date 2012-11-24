@@ -3979,6 +3979,7 @@ void RocGuiFrame::OnStateEvent( wxCommandEvent& event ) {
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "new state 0x%04X %s", state, console?"(consolemode)":"" );
   m_StatusBar->Update( state );
+  m_StatusBar->Health(wState.ishealthy(node));
   SetStatusText( wxString::Format( _T("%d"), wState.getload( node )) + _T("mA"), status_load );
 
   // Cleanup node:
