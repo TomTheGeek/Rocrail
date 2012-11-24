@@ -113,7 +113,8 @@ RocProDlg::~RocProDlg() {
 void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
 {
   wxString itemText = m_DecTree->GetItemText(event.GetItem());
-  const char* desc = itemText.mb_str(wxConvUTF8);
+  char* desc = StrOp.dup(itemText.mb_str(wxConvUTF8));
+  TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "tree sel=%s", desc );
   iONode cv = (iONode)MapOp.get( m_CVMap, desc );
   if( cv != NULL ) {
     int nr = wCVByte.getnr(cv);
@@ -131,7 +132,7 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
     m_Info->SetValue(wxString( "", wxConvUTF8));
     m_Nr->SetValue( 0 );
   }
-
+  StrOp.free(desc);
 }
 
 
@@ -167,7 +168,7 @@ void RocProDlg::onOpen( wxCommandEvent& event )
 {
   wxString ms_FileExt = wxGetApp().getMsg("planfiles"); // ToDo: "decfiles"
   const char* l_openpath = wGui.getdecpath( wxGetApp().getIni() );
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
+  TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "openpath=%s", l_openpath );
   wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("opendecfile"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_OPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     if( m_DecFilename != NULL )
