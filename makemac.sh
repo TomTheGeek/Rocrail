@@ -59,6 +59,8 @@ mkdir -p $TMP/Rocrail/rocdata/
 mkdir -p $TMP/Rocrail/rocdata/trace/
 
 cp -r rocrail/package/images $TMP/Rocrail/rocdata/
+cp -r decspecs $TMP/Rocrail/rocdata/
+cp -r stylesheets $TMP/Rocrail/rocdata/
 cp -r unxbin/Rocrail.app $TMP/Rocrail
 cp rocrail/package/plan.xml $TMP/Rocrail/rocdata/
 cp -r rocview/svg/themes $TMP/Rocrail/rocdata/
