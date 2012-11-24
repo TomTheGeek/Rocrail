@@ -189,6 +189,8 @@ install_all:
 	-cp -Rp$(CPUPDATE) symbols $(DESTDIR)
 	-cp -Rp$(CPUPDATE) ..$(FS)stylesheets $(DESTDIR)
 	-cp -Rp$(CPUPDATE) package$(FS)images $(DESTDIR)
+	-cp -Rp$(CPUPDATE) decspecs $(DESTDIR)
+	-cp -Rp$(CPUPDATE) stylesheets $(DESTDIR)
 	-cp -p$(CPUPDATE) package$(FS)plan.xml $(DESTDIR)$(FS)default
 	-cp -p package$(FS)rocrail.sh $(DESTDIR)
 	-cp -p package$(FS)rocview.sh $(DESTDIR)

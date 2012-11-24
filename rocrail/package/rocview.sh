@@ -15,6 +15,14 @@ if [ ! -e ~/rocrail/images ] ; then
 	cp -r /opt/rocrail/images ~/rocrail/images
 fi
 
+if [ ! -e ~/rocrail/decspecs ] ; then
+  cp -r /opt/rocrail/decspecs ~/rocrail/decspecs
+fi
+
+if [ ! -e ~/rocrail/stylesheets ] ; then
+  cp -r /opt/rocrail/stylesheets ~/rocrail/stylesheets
+fi
+
 cd ~/rocrail
 
 /opt/rocrail/rocview -sp /opt/rocrail $*
