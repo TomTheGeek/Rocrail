@@ -2433,9 +2433,11 @@ void RocGuiFrame::OnAnalyze( wxCommandEvent& event ) {
     }
     if( event.GetId() == ME_AnalyzeHealth ) {
       wSysCmd.setval( cmd, 2 );
+      m_StatusBar->Health(false);
     }
     if( event.GetId() == ME_AnalyzeExtChk ) {
       wSysCmd.setval( cmd, 3 );
+      m_StatusBar->Health(false);
     }
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
