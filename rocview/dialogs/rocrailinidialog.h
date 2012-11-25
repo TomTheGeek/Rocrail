@@ -186,9 +186,6 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_APPLY
-    void OnApplyClick( wxCommandEvent& event );
-
 ////@end RocrailIniDialog event handler declarations
 
 ////@begin RocrailIniDialog member function declarations
@@ -380,7 +377,6 @@ public:
     wxPanel* m_AnalyserPanel;
     wxButton* m_OK;
     wxButton* m_Cancel;
-    wxButton* m_Apply;
     iONode m_Props;
     iONode m_Controller;
 ////@end RocrailIniDialog member variables

@@ -18649,4 +18649,7 @@
   <Msg id="inatlen">
     <en txt="In event at train length"/>
   </Msg>
+  <Msg id="analyser">
+    <en txt="Analyser"/>
+  </Msg>
 </Messages>

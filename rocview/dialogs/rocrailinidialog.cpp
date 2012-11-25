@@ -114,8 +114,6 @@ BEGIN_EVENT_TABLE( RocrailIniDialog, wxDialog )
 
     EVT_BUTTON( wxID_CANCEL, RocrailIniDialog::OnCancelClick )
 
-    EVT_BUTTON( wxID_APPLY, RocrailIniDialog::OnApplyClick )
-
 ////@end RocrailIniDialog event table entries
 
 END_EVENT_TABLE()
@@ -136,7 +134,6 @@ RocrailIniDialog::RocrailIniDialog( wxWindow* parent, iONode props )
   m_CSDialog = NULL;
   initLabels();
   initValues();
-  m_Apply->Enable( false );
   m_Debug->Enable( false );
 
 
@@ -145,6 +142,7 @@ RocrailIniDialog::RocrailIniDialog( wxWindow* parent, iONode props )
   m_ServicePanel->GetSizer()->Layout();
   m_AtomatPanel->GetSizer()->Layout();
   m_ControllersPanel->GetSizer()->Layout();
+  m_AnalyserPanel->GetSizer()->Layout();
 
   m_PlanType->Fit();
 
@@ -168,6 +166,8 @@ void RocrailIniDialog::initLabels() {
   m_RRNotebook->SetPageText( 2, wxGetApp().getMsg( "service" ) );
   m_RRNotebook->SetPageText( 3, wxGetApp().getMsg( "auto" ) );
   m_RRNotebook->SetPageText( 4, wxGetApp().getMsg( "controller" ) );
+  // 5 is R2RNet
+  m_RRNotebook->SetPageText( 6, wxGetApp().getMsg( "analyser" ) );
 
   // General
   m_LabelPlanfile->SetLabel( wxGetApp().getMsg( "planfile" ) );
@@ -328,7 +328,6 @@ void RocrailIniDialog::initLabels() {
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
-  m_Apply->SetLabel( wxGetApp().getMsg( "apply" ) );
 }
 
 
@@ -951,7 +950,6 @@ bool RocrailIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     m_AnalyserPanel = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
-    m_Apply = NULL;
 ////@end RocrailIniDialog member initialisation
 
 ////@begin RocrailIniDialog creation
@@ -1646,11 +1644,6 @@ void RocrailIniDialog::CreateControls()
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer203->AddButton(m_Cancel);
 
-    m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    if (RocrailIniDialog::ShowToolTips())
-        m_Apply->SetToolTip(_("Apply Controller settings locally."));
-    itemStdDialogButtonSizer203->AddButton(m_Apply);
-
     itemStdDialogButtonSizer203->Realize();
 
 ////@end RocrailIniDialog content construction
@@ -1832,12 +1825,6 @@ void RocrailIniDialog::OnCancelClick( wxCommandEvent& event )
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_APPLY
  */
-
-void RocrailIniDialog::OnApplyClick( wxCommandEvent& event )
-{
-  evaluate();
-}
-
 
 /*!
  * wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED event handler for ID_NOTEBOOK_RR

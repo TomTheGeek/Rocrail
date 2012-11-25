@@ -6059,3 +6059,9 @@ msgstr ""
 msgid "In event at train length"
 msgstr ""
 
+#. 
+# id="analyser"
+#, c-format
+msgid "Analyser"
+msgstr ""
+
