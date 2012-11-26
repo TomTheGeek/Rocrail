@@ -72,6 +72,7 @@
 #include "rocrail/wrapper/public/R2RnetIni.h"
 #include "rocrail/wrapper/public/SnmpService.h"
 #include "rocrail/wrapper/public/Devices.h"
+#include "rocrail/wrapper/public/AnaOpt.h"
 
 #include "rocview/wrapper/public/Gui.h"
 
@@ -324,6 +325,22 @@ void RocrailIniDialog::initLabels() {
   m_labR2RnetPort->SetLabel( wxGetApp().getMsg( "port" ) );
   m_labR2RnetRoutes->SetLabel( wxGetApp().getMsg( "netroutes" ) );
   m_R2RnetEnable->SetLabel( wxGetApp().getMsg( "enable" ) );
+
+  // Analyser
+  m_SetRouteId->SetLabel( wxGetApp().getMsg( "ana_setRouteId" ) );
+  m_CleanRouteId->SetLabel( wxGetApp().getMsg( "ana_cleanRouteId" ) );
+  m_SetBlockId->SetLabel( wxGetApp().getMsg( "ana_setBlockId" ) );
+  m_ResetBlockId->SetLabel( wxGetApp().getMsg( "ana_resetBlockId" ) );
+  m_AddSignalBlockAssignment->SetLabel( wxGetApp().getMsg( "ana_addSignalBlockAssignment" ) );
+  m_ResetSignalBlockAssignment->SetLabel( wxGetApp().getMsg( "ana_resetSignalBlockAssignment" ) );
+  m_AddFeedbackBlockAssignment->SetLabel( wxGetApp().getMsg( "ana_addFeedbackBlockAssignment" ) );
+  m_ResetFeedbackBlockAssignment->SetLabel( wxGetApp().getMsg( "ana_resetFeedbackBlockAssignment" ) );
+  m_BlockFeedbackActionCheck->SetLabel( wxGetApp().getMsg( "ana_blockFeedbackActionCheck" ) );
+  m_BlockFeedbackActionCheckClean->SetLabel( wxGetApp().getMsg( "ana_blockFeedbackActionCheckClean" ) );
+  m_BlockRouteFbValidation->SetLabel( wxGetApp().getMsg( "ana_blockRouteFbValidation" ) );
+  m_BlockRouteFbValidationClean->SetLabel( wxGetApp().getMsg( "ana_blockRouteFbValidationClean" ) );
+  m_SeltabRouteFbValidation->SetLabel( wxGetApp().getMsg( "ana_seltabRouteFbValidation" ) );
+  m_SeltabRouteFbValidationClean->SetLabel( wxGetApp().getMsg( "ana_seltabRouteFbValidationClean" ) );
 
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -590,6 +607,29 @@ void RocrailIniDialog::initValues() {
   m_R2RnetPort->SetValue( wR2RnetIni.getport(r2rnet) );
   m_R2RnetRoutes->SetValue( wxString( wR2RnetIni.getroutes(r2rnet),wxConvUTF8) );
   m_R2RnetEnable->SetValue( wR2RnetIni.isenable(r2rnet) ? true:false );
+
+
+  // Analyser
+  iONode anaopt = wRocRail.getanaopt( m_Props );
+  if( anaopt == NULL ) {
+    anaopt = NodeOp.inst( wAnaOpt.name(), m_Props, ELEMENT_NODE );
+    NodeOp.addChild( m_Props, anaopt );
+  }
+  m_SetRouteId->SetValue( wAnaOpt.issetRouteId(anaopt)?true:false );
+  m_CleanRouteId->SetValue( wAnaOpt.iscleanRouteId(anaopt)?true:false );
+  m_SetBlockId->SetValue( wAnaOpt.issetBlockId(anaopt)?true:false );
+  m_ResetBlockId->SetValue( wAnaOpt.isresetBlockId(anaopt)?true:false );
+  m_AddSignalBlockAssignment->SetValue( wAnaOpt.isaddSignalBlockAssignment(anaopt)?true:false );
+  m_ResetSignalBlockAssignment->SetValue( wAnaOpt.isresetSignalBlockAssignment(anaopt)?true:false );
+  m_AddFeedbackBlockAssignment->SetValue( wAnaOpt.isaddFeedbackBlockAssignment(anaopt)?true:false );
+  m_ResetFeedbackBlockAssignment->SetValue( wAnaOpt.isresetFeedbackBlockAssignment(anaopt)?true:false );
+  m_BlockFeedbackActionCheck->SetValue( wAnaOpt.isblockFeedbackActionCheck(anaopt)?true:false );
+  m_BlockFeedbackActionCheckClean->SetValue( wAnaOpt.isblockFeedbackActionCheckClean(anaopt)?true:false );
+  m_BlockRouteFbValidation->SetValue( wAnaOpt.isblockRouteFbValidation(anaopt)?true:false );
+  m_BlockRouteFbValidationClean->SetValue( wAnaOpt.isblockRouteFbValidationClean(anaopt)?true:false );
+  m_SeltabRouteFbValidation->SetValue( wAnaOpt.isseltabRouteFbValidation(anaopt)?true:false );
+  m_SeltabRouteFbValidationClean->SetValue( wAnaOpt.isseltabRouteFbValidationClean(anaopt)?true:false );
+
 }
 
 void RocrailIniDialog::initControllerList() {
@@ -768,6 +808,23 @@ void RocrailIniDialog::evaluate() {
   wR2RnetIni.setport( r2rnet, m_R2RnetPort->GetValue() );
   wR2RnetIni.setroutes( r2rnet, m_R2RnetRoutes->GetValue().mb_str(wxConvUTF8) );
   wR2RnetIni.setenable( r2rnet, m_R2RnetEnable->IsChecked() ? True:False );
+
+  // Analyser
+  iONode anaopt = wRocRail.getanaopt(m_Props);
+  wAnaOpt.setsetRouteId(anaopt, m_SetRouteId->IsChecked()?True:False );
+  wAnaOpt.setcleanRouteId(anaopt, m_CleanRouteId->IsChecked()?True:False );
+  wAnaOpt.setsetBlockId(anaopt, m_SetBlockId->IsChecked()?True:False );
+  wAnaOpt.setresetBlockId(anaopt, m_ResetBlockId->IsChecked()?True:False );
+  wAnaOpt.setaddSignalBlockAssignment(anaopt, m_AddSignalBlockAssignment->IsChecked()?True:False );
+  wAnaOpt.setresetSignalBlockAssignment(anaopt, m_ResetSignalBlockAssignment->IsChecked()?True:False );
+  wAnaOpt.setaddFeedbackBlockAssignment(anaopt, m_AddFeedbackBlockAssignment->IsChecked()?True:False );
+  wAnaOpt.setresetFeedbackBlockAssignment(anaopt, m_ResetFeedbackBlockAssignment->IsChecked()?True:False );
+  wAnaOpt.setblockFeedbackActionCheck(anaopt, m_BlockFeedbackActionCheck->IsChecked()?True:False );
+  wAnaOpt.setblockFeedbackActionCheckClean(anaopt, m_BlockFeedbackActionCheckClean->IsChecked()?True:False );
+  wAnaOpt.setblockRouteFbValidation(anaopt, m_BlockRouteFbValidation->IsChecked()?True:False );
+  wAnaOpt.setblockRouteFbValidationClean(anaopt, m_BlockRouteFbValidationClean->IsChecked()?True:False );
+  wAnaOpt.setseltabRouteFbValidation(anaopt, m_SeltabRouteFbValidation->IsChecked()?True:False );
+  wAnaOpt.setseltabRouteFbValidationClean(anaopt, m_SeltabRouteFbValidationClean->IsChecked()?True:False );
 }
 
 
@@ -948,6 +1005,24 @@ bool RocrailIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     m_R2RnetRoutesDlg = NULL;
     m_R2RnetEnable = NULL;
     m_AnalyserPanel = NULL;
+    m_AnaGenerate = NULL;
+    m_SetRouteId = NULL;
+    m_SetBlockId = NULL;
+    m_AddSignalBlockAssignment = NULL;
+    m_AddFeedbackBlockAssignment = NULL;
+    m_AnaClean = NULL;
+    m_CleanRouteId = NULL;
+    m_BlockFeedbackActionCheckClean = NULL;
+    m_BlockRouteFbValidationClean = NULL;
+    m_SeltabRouteFbValidationClean = NULL;
+    m_AnaCheck = NULL;
+    m_BlockFeedbackActionCheck = NULL;
+    m_BlockRouteFbValidation = NULL;
+    m_SeltabRouteFbValidation = NULL;
+    m_AnaReset = NULL;
+    m_ResetBlockId = NULL;
+    m_ResetSignalBlockAssignment = NULL;
+    m_ResetFeedbackBlockAssignment = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end RocrailIniDialog member initialisation
@@ -1630,21 +1705,89 @@ void RocrailIniDialog::CreateControls()
     wxBoxSizer* itemBoxSizer202 = new wxBoxSizer(wxVERTICAL);
     m_AnalyserPanel->SetSizer(itemBoxSizer202);
 
+    m_AnaGenerate = new wxStaticBox(m_AnalyserPanel, wxID_ANY, _("Generate"));
+    wxStaticBoxSizer* itemStaticBoxSizer203 = new wxStaticBoxSizer(m_AnaGenerate, wxVERTICAL);
+    itemBoxSizer202->Add(itemStaticBoxSizer203, 0, wxGROW|wxALL, 5);
+    m_SetRouteId = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Set routeid for all automatic detected routes"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_SetRouteId->SetValue(false);
+    itemStaticBoxSizer203->Add(m_SetRouteId, 0, wxALIGN_LEFT|wxALL, 5);
+
+    m_SetBlockId = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Set blockid for all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_SetBlockId->SetValue(false);
+    itemStaticBoxSizer203->Add(m_SetBlockId, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_AddSignalBlockAssignment = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Assign signals to blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_AddSignalBlockAssignment->SetValue(false);
+    itemStaticBoxSizer203->Add(m_AddSignalBlockAssignment, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_AddFeedbackBlockAssignment = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Assign feedbacks to blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_AddFeedbackBlockAssignment->SetValue(false);
+    itemStaticBoxSizer203->Add(m_AddFeedbackBlockAssignment, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_AnaClean = new wxStaticBox(m_AnalyserPanel, wxID_ANY, _("Clean"));
+    wxStaticBoxSizer* itemStaticBoxSizer208 = new wxStaticBoxSizer(m_AnaClean, wxVERTICAL);
+    itemBoxSizer202->Add(itemStaticBoxSizer208, 0, wxGROW|wxALL, 5);
+    m_CleanRouteId = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Clean routeid of all automatic detected routes"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_CleanRouteId->SetValue(false);
+    itemStaticBoxSizer208->Add(m_CleanRouteId, 0, wxALIGN_LEFT|wxALL, 5);
+
+    m_BlockFeedbackActionCheckClean = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Clean incomplete action assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_BlockFeedbackActionCheckClean->SetValue(false);
+    itemStaticBoxSizer208->Add(m_BlockFeedbackActionCheckClean, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_BlockRouteFbValidationClean = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Clean invalid route/fb assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_BlockRouteFbValidationClean->SetValue(false);
+    itemStaticBoxSizer208->Add(m_BlockRouteFbValidationClean, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_SeltabRouteFbValidationClean = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Clean invalid route/fb assignments in selection tables"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_SeltabRouteFbValidationClean->SetValue(false);
+    itemStaticBoxSizer208->Add(m_SeltabRouteFbValidationClean, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_AnaCheck = new wxStaticBox(m_AnalyserPanel, wxID_ANY, _("Check"));
+    wxStaticBoxSizer* itemStaticBoxSizer213 = new wxStaticBoxSizer(m_AnaCheck, wxVERTICAL);
+    itemBoxSizer202->Add(itemStaticBoxSizer213, 0, wxGROW|wxALL, 5);
+    m_BlockFeedbackActionCheck = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Check feedback action assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_BlockFeedbackActionCheck->SetValue(false);
+    itemStaticBoxSizer213->Add(m_BlockFeedbackActionCheck, 0, wxALIGN_LEFT|wxALL, 5);
+
+    m_BlockRouteFbValidation = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Check dest routes and fb assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_BlockRouteFbValidation->SetValue(false);
+    itemStaticBoxSizer213->Add(m_BlockRouteFbValidation, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_SeltabRouteFbValidation = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Check dest routes and fb assignments in selection tables"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_SeltabRouteFbValidation->SetValue(false);
+    itemStaticBoxSizer213->Add(m_SeltabRouteFbValidation, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_AnaReset = new wxStaticBox(m_AnalyserPanel, wxID_ANY, _("Reset"));
+    wxStaticBoxSizer* itemStaticBoxSizer217 = new wxStaticBoxSizer(m_AnaReset, wxVERTICAL);
+    itemBoxSizer202->Add(itemStaticBoxSizer217, 0, wxGROW|wxALL, 5);
+    m_ResetBlockId = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Reset blockid in whole plan"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_ResetBlockId->SetValue(false);
+    itemStaticBoxSizer217->Add(m_ResetBlockId, 0, wxALIGN_LEFT|wxALL, 5);
+
+    m_ResetSignalBlockAssignment = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Reset signal assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_ResetSignalBlockAssignment->SetValue(false);
+    itemStaticBoxSizer217->Add(m_ResetSignalBlockAssignment, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_ResetFeedbackBlockAssignment = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Reset feedback assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_ResetFeedbackBlockAssignment->SetValue(false);
+    itemStaticBoxSizer217->Add(m_ResetFeedbackBlockAssignment, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
     m_RRNotebook->AddPage(m_AnalyserPanel, _("Analyser"));
 
     itemBoxSizer2->Add(m_RRNotebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer203 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer221 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer203, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer221, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer203->AddButton(m_OK);
+    itemStdDialogButtonSizer221->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer203->AddButton(m_Cancel);
+    itemStdDialogButtonSizer221->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer203->Realize();
+    itemStdDialogButtonSizer221->Realize();
 
 ////@end RocrailIniDialog content construction
 }
