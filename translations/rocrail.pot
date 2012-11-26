@@ -6065,3 +6065,93 @@ msgstr ""
 msgid "Analyser"
 msgstr ""
 
+#. 
+# id="extendedclean"
+#, c-format
+msgid "Extended plan clean"
+msgstr ""
+
+#. 
+# id="ana_setRouteId"
+#, c-format
+msgid "Set routeid for all automatic detected routes"
+msgstr ""
+
+#. 
+# id="ana_cleanRouteId"
+#, c-format
+msgid "Clean routeid of all automatic detected routes"
+msgstr ""
+
+#. 
+# id="ana_setBlockId"
+#, c-format
+msgid "Set blockid for all blocks"
+msgstr ""
+
+#. 
+# id="ana_resetBlockId"
+#, c-format
+msgid "Reset blockid in whole plan"
+msgstr ""
+
+#. 
+# id="ana_addSignalBlockAssignment"
+#, c-format
+msgid "Assign signals to blocks"
+msgstr ""
+
+#. 
+# id="ana_resetSignalBlockAssignment"
+#, c-format
+msgid "Reset signal assignments in all blocks"
+msgstr ""
+
+#. 
+# id="ana_addFeedbackBlockAssignment"
+#, c-format
+msgid "assign feedbacks to blocks"
+msgstr ""
+
+#. 
+# id="ana_resetFeedbackBlockAssignment"
+#, c-format
+msgid "Reset feedback assignments in all blocks"
+msgstr ""
+
+#. 
+# id="ana_blockFeedbackActionCheck"
+#, c-format
+msgid "Check feedback action assignments in all blocks"
+msgstr ""
+
+#. 
+# id="ana_blockFeedbackActionCheckClean"
+#, c-format
+msgid "Clean incomplete action assignments in all blocks"
+msgstr ""
+
+#. 
+# id="ana_blockRouteFbValidation"
+#, c-format
+msgid "Check dest routes and fb assignments in all blocks"
+msgstr ""
+
+#. 
+# id="ana_blockRouteFbValidationClean"
+#, c-format
+msgid "clean invalid route/fb assignments in all blocks"
+msgstr ""
+
+#. 
+# id="ana_seltabRouteFbValidation"
+#, c-format
+msgid "check dest routes and fb assignments in Fiddle Yards"
+msgstr ""
+
+#. 
+# id="ana_seltabRouteFbValidationClean"
+#, c-format
+msgid "Clean invalid route/fb assignments in Fiddle Yards"
+msgstr ""
+

@@ -18652,4 +18652,49 @@
   <Msg id="analyser">
     <en txt="Analyser"/>
   </Msg>
+  <Msg id="extendedclean">
+    <en txt="Extended plan clean"/>
+  </Msg>
+  <Msg id="ana_setRouteId">
+    <en txt="Set routeid for all automatic detected routes"/>
+  </Msg>
+  <Msg id="ana_cleanRouteId">
+    <en txt="Clean routeid of all automatic detected routes"/>
+  </Msg>
+  <Msg id="ana_setBlockId">
+    <en txt="Set blockid for all blocks"/>
+  </Msg>
+  <Msg id="ana_resetBlockId">
+    <en txt="Reset blockid in whole plan"/>
+  </Msg>
+  <Msg id="ana_addSignalBlockAssignment">
+    <en txt="Assign signals to blocks"/>
+  </Msg>
+  <Msg id="ana_resetSignalBlockAssignment">
+    <en txt="Reset signal assignments in all blocks"/>
+  </Msg>
+  <Msg id="ana_addFeedbackBlockAssignment">
+    <en txt="assign feedbacks to blocks"/>
+  </Msg>
+  <Msg id="ana_resetFeedbackBlockAssignment">
+    <en txt="Reset feedback assignments in all blocks"/>
+  </Msg>
+  <Msg id="ana_blockFeedbackActionCheck">
+    <en txt="Check feedback action assignments in all blocks"/>
+  </Msg>
+  <Msg id="ana_blockFeedbackActionCheckClean">
+    <en txt="Clean incomplete action assignments in all blocks"/>
+  </Msg>
+  <Msg id="ana_blockRouteFbValidation">
+    <en txt="Check dest routes and fb assignments in all blocks"/>
+  </Msg>
+  <Msg id="ana_blockRouteFbValidationClean">
+    <en txt="clean invalid route/fb assignments in all blocks"/>
+  </Msg>
+  <Msg id="ana_seltabRouteFbValidation">
+    <en txt="check dest routes and fb assignments in Fiddle Yards"/>
+  </Msg>
+  <Msg id="ana_seltabRouteFbValidationClean">
+    <en txt="Clean invalid route/fb assignments in Fiddle Yards"/>
+  </Msg>
 </Messages>

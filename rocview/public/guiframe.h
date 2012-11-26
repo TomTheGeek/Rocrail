@@ -433,6 +433,7 @@ enum
     ME_AnalyzeClean,
     ME_AnalyzeHealth,
     ME_AnalyzeExtChk,
+    ME_AnalyzeExtClean,
     ME_Save,
     ME_SaveAs,
     ME_Upload,

@@ -403,7 +403,11 @@ static Boolean _parsePlan( iOModelData o ) {
           }
 
           /* check for multiple xyz positions and ID's */
-          o->healthy = AnalyseOp.checkPlanHealth(o->model);
+          iOAnalyse analyser = AnalyseOp.inst();
+          if( analyser ) {
+            o->healthy = AnalyseOp.checkPlanHealth( analyser ); 
+            AnalyseOp.base.del(analyser);
+          }
 
           if( !o->healthy ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "------------------------------------------------------------" );
@@ -3302,37 +3306,104 @@ static const char* _getTitle( iOModel inst ) {
   return o->title;
 }
 
-/* static void _analyse( iOModel inst, Boolean CleanRun ) {*/
 static void _analyse( iOModel inst, int mode ) {
   iOModelData data = Data(inst);
+  int modified = 0;
+  Boolean requirements = True; /* modfying plan allowed ? */
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_analyse (%d)", mode );
-  if( mode == AN_HEALTH ) {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_analyse checkPlanHealth");
-    data->healthy = AnalyseOp.checkPlanHealth(data->model);
-    return;
+
+  Boolean analyzerEnabled  = wCtrl.isenableanalyzer( wRocRail.getctrl( AppOp.getIni() ));
+  Boolean blocksideEnabled = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ));
+  Boolean planIsHealthy    = ModelOp.isHealthy(inst);
+  Boolean automode         = ModelOp.isAuto(inst);
+  Boolean isPowerOn        = wState.ispower(ControlOp.getState(AppOp.getControl()));
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "pw %d auto %d health %d bs %d anaE %d",
+      isPowerOn, automode, planIsHealthy, blocksideEnabled, analyzerEnabled);
+
+  if( ( mode == AN_HEALTH ) || ( mode == AN_JOB ) ) {
+    /* health check is allowed all the time and also a requirement for the analyser job */
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "call AnalyseOp.checkPlanHealth");
+    iOAnalyse analyser = AnalyseOp.inst();
+    if( analyser ) {
+      data->healthy = AnalyseOp.checkPlanHealth( analyser );
+      AnalyseOp.base.del(analyser);
+
+      /* set variables according to result */
+      planIsHealthy = ModelOp.isHealthy(inst);
+      wPlan.sethealthy( data->model, planIsHealthy );
+    }
+    if( mode == AN_HEALTH ) {
+      /* health check only -> return */
+      return;
+    }
   }
   if( mode == AN_EXTCHK ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "(%d) extended checks not yet available", mode );
+    /* extended check is allowed all the time (but not if repair option is set...) */
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "call AnalyseOp.checkExtended" );
+    iOAnalyse analyser = AnalyseOp.inst();
+    if( analyser ) {
+      AnalyseOp.checkExtended( analyser );
+      AnalyseOp.base.del(analyser);
+    }
     return;
   }
 
-  if( wCtrl.isenableanalyzer( wRocRail.getctrl( AppOp.getIni() ) )) {
+  /* check requirements for analyzer or other plan modifing calls (clean/repair) */
 
+  if( ! analyzerEnabled ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Analyzer is disabled.");
+    requirements = False;
+  }
+  
+  if( ! blocksideEnabled ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Use block side routes is not set.");
+    requirements = False;
+  }
+
+  if( ! planIsHealthy ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "This plan is not healthy.");
+    requirements = False;
+  }
+
+  if( automode ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Automode is on. Switch off to use analyzer.");
+    requirements = False;
+  }
+
+  if( isPowerOn ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Track power is on. Switch off to use analyzer.");
+    requirements = False;
+  }
+
+
+  if( requirements ) {
     char* stampfile = StrOp.fmt("%s.anabak", data->fileName);
     const char* filename = data->fileName;
     iOAnalyse analyser = NULL;
     ModelOp.saveAs(inst, stampfile);
     data->fileName = filename;
 
-    /* Make sure the route list is available before analyzing the track plan. */
+    /* Make sure the route list is available before analyzing or cleaning the track plan. */
     if( wPlan.getstlist(data->model) == NULL ) {
       iONode stlist = NodeOp.inst( wRouteList.name(), data->model, ELEMENT_NODE);
       NodeOp.addChild( data->model, stlist );
     }
 
+
+    if( mode == AN_EXTCLEAN ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "starting extended cleanup...");
+      iOAnalyse analyser = AnalyseOp.inst();
+      if( analyser ) {
+        AnalyseOp.cleanExtended( analyser );
+        AnalyseOp.base.del(analyser);
+      }
+      return;
+    }
+
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "init analyser..." );
-    analyser = AnalyseOp.inst( mode );
+    analyser = AnalyseOp.inst();
 
     if( analyser != NULL ) {
       iONode e = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );
@@ -3354,25 +3425,47 @@ static void _analyse( iOModel inst, int mode ) {
       }
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "starting analyzer...");
-      AnalyseOp.analyse(analyser);
+      if( mode == AN_JOB ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "starting analyzer...");
+        modified = AnalyseOp.analyse( analyser );
+      }
+      if( mode == AN_CLEAN ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "starting analyzer cleanup...");
+        modified = AnalyseOp.cleanup( analyser );
+      }
 
       /* re-initialize routes */
       ThreadOp.sleep(100);
       __reinitRoutes(inst);
       nrRoutesAfter = ListOp.size(data->routeList);
+
       /* Broadcast to clients. */
-      msg = StrOp.fmt("the analyzer created %d new routes", nrRoutesAfter-nrRoutesBefore);
+      switch( mode ) {
+        case AN_JOB:
+          msg = StrOp.fmt("route generator created %d new routes (%d -> %d)", nrRoutesAfter-nrRoutesBefore, nrRoutesBefore, nrRoutesAfter);
+          break;
+        case AN_CLEAN:
+          msg = StrOp.fmt("route generator cleanup removed %d routes (%d -> %d)", nrRoutesBefore-nrRoutesAfter, nrRoutesBefore, nrRoutesAfter);
+          break;
+      }
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", msg );
       wException.settext( e, msg );
       wException.setlevel( e, TRCLEVEL_CALC );
       AppOp.broadcastEvent( e );
 
-      /* clean up*/
-      AnalyseOp.base.del(analyser);
-    }
+      if( modified > 0 ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
+        /* force disconnect/reconnect ?*/
+        /* AppOp.shutdown(); -> sometimes crashes */
+        /* ==> need AppOpp.reinit(); */
+      }
 
+      /* clean up*/
+      AnalyseOp.base.del( analyser );
+    }
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "the analyzer is disabled");
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "analyzer skipped see lines above.");
   }
 }
 

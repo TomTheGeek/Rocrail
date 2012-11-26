@@ -2215,26 +2215,49 @@
   </object>
 
   <object name="Analyse" use="trace,node,map" include="model" remark="Track plan analyser.">
-    <typedef def="enum {AN_JOB=0,AN_CLEAN,AN_HEALTH,AN_EXTCHK} an_mode"/>
+    <const name="MINIMAL_MAX_CONNECTOR_DISTANCE" vt="int" val="10" remark="default and minimum for distance between 2 connectors"/>
+    <typedef def="enum {AN_JOB=0,AN_CLEAN,AN_HEALTH,AN_EXTCHK,AN_EXTCLEAN} an_mode"/>
     <fun name="inst" vt="this">
-      <param name="mode" vt="an_mode" remark="0=Analyse,1=CleanupAnalyse,2=CheckPlanHealth,3=ExtendedPlanCheck"/>
     </fun>
-    <fun name="analyse" vt="void">
-      <param name="inst" vt="this" remark="Analyse instance."/>
+    <fun name="analyse" vt="int">
+      <param name="inst" vt="this" remark="Analyse plan."/>
+    </fun>
+    <fun name="cleanup" vt="int">
+      <param name="inst" vt="this" remark="Cleanup analyse plan."/>
     </fun>
     <fun name="checkPlanHealth" vt="Boolean">
-      <param name="model" vt="iONode" remark="Model node"/>
+      <param name="inst" vt="this" remark="Basic health check"/>
+    </fun>
+    <fun name="checkExtended" vt="Boolean">
+      <param name="inst" vt="this" remark="Check for more complex problems"/>
+    </fun>
+    <fun name="cleanExtended" vt="Boolean">
+      <param name="inst" vt="this" remark="Clean some complex problems"/>
     </fun>
     <data>
+      <var name="model" vt="iOModel"/>
       <var name="plan" vt="iONode"/>
       <var name="objectmap" vt="iOMap"/>
-      <var name="prelist" vt="iOList"/>
+      <var name="maxZlevel" vt="int" remark="maximum level number in plan"/>
+      <var name="maxConnectorDistance" vt="int" remark="distance to search between 2 connectors"/>
       <var name="bklist" vt="iOList"/>
-      <var name="bkoccitemlist" vt="iOList"/>
-      <var name="model" vt="iOModel"/>
-      <var name="mode" vt="an_mode"/>
-      </data>
+      <var name="preRTlist" vt="iOList"/>
+      <var name="notRTlist" vt="iOList"/>
+      <var name="setRouteId"                    vt="Boolean" remark="set for all automatic detected routes"/>
+      <var name="setBlockId"                    vt="Boolean" remark="set for all blocks"/>
+      <var name="addSignalBlockAssignment"      vt="Boolean" remark="assign signals to blocks"/>
+      <var name="addFeedbackBlockAssignment"    vt="Boolean" remark="assign feedbacks to blocks"/>
+      <var name="cleanRouteId"                  vt="Boolean" remark="clean routeids of all automatic detected routes"/>
+      <var name="resetBlockId"                  vt="Boolean" remark="reset blockids in whole plan"/>
+      <var name="resetSignalBlockAssignment"    vt="Boolean" remark="reset sg assignments in all blocks"/>
+      <var name="resetFeedbackBlockAssignment"  vt="Boolean" remark="reset fb assignments in all blocks"/>
+      <var name="blockFeedbackActionCheck"      vt="Boolean" remark="check feedback action  assignments in all blocks"/>
+      <var name="blockFeedbackActionCheckClean" vt="Boolean" remark="ckean incomplete action assignments in all blocks"/>
+      <var name="blockRouteFbValidation"        vt="Boolean" remark="check dest routes and fb assignments in blocks"/>
+      <var name="blockRouteFbValidationClean"   vt="Boolean" remark="clean invalid route/fb assignments in blocks"/>
+      <var name="seltabRouteFbValidation"       vt="Boolean" remark="check dest routes and fb assignments in selection tables"/>
+      <var name="seltabRouteFbValidationClean"  vt="Boolean" remark="clean invalid route/fb assignments in selection tables"/>
+   </data>
   </object>
-
 
 </Project>
