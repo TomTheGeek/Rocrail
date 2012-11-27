@@ -328,7 +328,7 @@ void RocrailIniDialog::initLabels() {
 
   // Analyser
   m_AnaGenerate->SetLabel( wxGetApp().getMsg( "analyze" ) );
-  m_AnaClean->SetLabel( wxGetApp().getMsg( "ana_clean" ) );
+  m_AnaClean->SetLabel( wxGetApp().getMsg( "extendedclean" ) );
   m_AnaCheck->SetLabel( wxGetApp().getMsg( "extendedcheck" ) );
   m_AnaReset->SetLabel( wxGetApp().getMsg( "ana_reset" ) );
 
@@ -1017,17 +1017,17 @@ bool RocrailIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     m_AddFeedbackBlockAssignment = NULL;
     m_AnaClean = NULL;
     m_CleanRouteId = NULL;
-    m_BlockFeedbackActionCheckClean = NULL;
-    m_BlockRouteFbValidationClean = NULL;
-    m_SeltabRouteFbValidationClean = NULL;
+    m_ResetBlockId = NULL;
+    m_ResetSignalBlockAssignment = NULL;
+    m_ResetFeedbackBlockAssignment = NULL;
     m_AnaCheck = NULL;
     m_BlockFeedbackActionCheck = NULL;
     m_BlockRouteFbValidation = NULL;
     m_SeltabRouteFbValidation = NULL;
     m_AnaReset = NULL;
-    m_ResetBlockId = NULL;
-    m_ResetSignalBlockAssignment = NULL;
-    m_ResetFeedbackBlockAssignment = NULL;
+    m_BlockFeedbackActionCheckClean = NULL;
+    m_BlockRouteFbValidationClean = NULL;
+    m_SeltabRouteFbValidationClean = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end RocrailIniDialog member initialisation
@@ -1736,17 +1736,17 @@ void RocrailIniDialog::CreateControls()
     m_CleanRouteId->SetValue(false);
     itemStaticBoxSizer208->Add(m_CleanRouteId, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_BlockFeedbackActionCheckClean = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Clean incomplete action assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_BlockFeedbackActionCheckClean->SetValue(false);
-    itemStaticBoxSizer208->Add(m_BlockFeedbackActionCheckClean, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_ResetBlockId = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Reset blockid in whole plan"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_ResetBlockId->SetValue(false);
+    itemStaticBoxSizer208->Add(m_ResetBlockId, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_BlockRouteFbValidationClean = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Clean invalid route/fb assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_BlockRouteFbValidationClean->SetValue(false);
-    itemStaticBoxSizer208->Add(m_BlockRouteFbValidationClean, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_ResetSignalBlockAssignment = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Reset signal assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_ResetSignalBlockAssignment->SetValue(false);
+    itemStaticBoxSizer208->Add(m_ResetSignalBlockAssignment, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_SeltabRouteFbValidationClean = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Clean invalid route/fb assignments in selection tables"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_SeltabRouteFbValidationClean->SetValue(false);
-    itemStaticBoxSizer208->Add(m_SeltabRouteFbValidationClean, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_ResetFeedbackBlockAssignment = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Reset feedback assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_ResetFeedbackBlockAssignment->SetValue(false);
+    itemStaticBoxSizer208->Add(m_ResetFeedbackBlockAssignment, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_AnaCheck = new wxStaticBox(m_AnalyserPanel, wxID_ANY, _("Extended plan check"));
     wxStaticBoxSizer* itemStaticBoxSizer213 = new wxStaticBoxSizer(m_AnaCheck, wxVERTICAL);
@@ -1766,17 +1766,17 @@ void RocrailIniDialog::CreateControls()
     m_AnaReset = new wxStaticBox(m_AnalyserPanel, wxID_ANY, _("Extended plan clean"));
     wxStaticBoxSizer* itemStaticBoxSizer217 = new wxStaticBoxSizer(m_AnaReset, wxVERTICAL);
     itemBoxSizer202->Add(itemStaticBoxSizer217, 0, wxGROW|wxALL, 5);
-    m_ResetBlockId = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Reset blockid in whole plan"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_ResetBlockId->SetValue(false);
-    itemStaticBoxSizer217->Add(m_ResetBlockId, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_BlockFeedbackActionCheckClean = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Clean incomplete action assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_BlockFeedbackActionCheckClean->SetValue(false);
+    itemStaticBoxSizer217->Add(m_BlockFeedbackActionCheckClean, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_ResetSignalBlockAssignment = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Reset signal assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_ResetSignalBlockAssignment->SetValue(false);
-    itemStaticBoxSizer217->Add(m_ResetSignalBlockAssignment, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_BlockRouteFbValidationClean = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Clean invalid route/fb assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_BlockRouteFbValidationClean->SetValue(false);
+    itemStaticBoxSizer217->Add(m_BlockRouteFbValidationClean, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_ResetFeedbackBlockAssignment = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Reset feedback assignments in all blocks"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_ResetFeedbackBlockAssignment->SetValue(false);
-    itemStaticBoxSizer217->Add(m_ResetFeedbackBlockAssignment, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_SeltabRouteFbValidationClean = new wxCheckBox( m_AnalyserPanel, wxID_ANY, _("Clean invalid route/fb assignments in selection tables"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_SeltabRouteFbValidationClean->SetValue(false);
+    itemStaticBoxSizer217->Add(m_SeltabRouteFbValidationClean, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_RRNotebook->AddPage(m_AnalyserPanel, _("Analyser"));
 

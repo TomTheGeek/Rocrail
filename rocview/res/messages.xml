@@ -18700,7 +18700,4 @@
   <Msg id="ana_clean">
     <en txt="Clean all analyze"/>
   </Msg>
-  <Msg id="ana_reset">
-    <en txt="Extrended plan clean"/>
-  </Msg>
 </Messages>

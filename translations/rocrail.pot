@@ -6161,9 +6161,3 @@ msgstr ""
 msgid "Clean all analyze"
 msgstr ""
 
-#. 
-# id="ana_reset"
-#, c-format
-msgid "Extrended plan clean"
-msgstr ""
-
