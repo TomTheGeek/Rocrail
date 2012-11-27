@@ -1923,7 +1923,7 @@
                                             <property name="cols">4</property>
                                             <property name="flexible_direction">wxBOTH</property>
                                             <property name="growablecols"></property>
-                                            <property name="growablerows"></property>
+                                            <property name="growablerows">1</property>
                                             <property name="hgap">0</property>
                                             <property name="minimum_size"></property>
                                             <property name="name">fgSizer4</property>
