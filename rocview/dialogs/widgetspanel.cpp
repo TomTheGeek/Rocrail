@@ -90,7 +90,7 @@ void WidgetsPanel::OnPanelSize( wxSizeEvent& event )
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loco Panel w=%d h=%d columns=%d", w, h, cols );
 
-  if( w > 0 && w != m_GridSizer->GetCols() ) {
+  if( cols > 0 && cols != m_GridSizer->GetCols() ) {
     m_GridSizer->SetCols(cols);
     m_GridSizer->Layout();
     FitInside();
