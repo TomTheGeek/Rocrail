@@ -6155,3 +6155,15 @@ msgstr ""
 msgid "Clean invalid route/fb assignments in Fiddle Yards"
 msgstr ""
 
+#. 
+# id="ana_clean"
+#, c-format
+msgid "Clean all analyze"
+msgstr ""
+
+#. 
+# id="ana_reset"
+#, c-format
+msgid "Extrended plan clean"
+msgstr ""
+

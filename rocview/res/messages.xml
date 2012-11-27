@@ -18697,4 +18697,10 @@
   <Msg id="ana_seltabRouteFbValidationClean">
     <en txt="Clean invalid route/fb assignments in Fiddle Yards"/>
   </Msg>
+  <Msg id="ana_clean">
+    <en txt="Clean all analyze"/>
+  </Msg>
+  <Msg id="ana_reset">
+    <en txt="Extrended plan clean"/>
+  </Msg>
 </Messages>
