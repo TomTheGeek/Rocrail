@@ -328,9 +328,9 @@ void RocrailIniDialog::initLabels() {
 
   // Analyser
   m_AnaGenerate->SetLabel( wxGetApp().getMsg( "analyze" ) );
-  m_AnaClean->SetLabel( wxGetApp().getMsg( "extendedclean" ) );
+  m_AnaClean->SetLabel( wxGetApp().getMsg( "ana_clean" ) );
   m_AnaCheck->SetLabel( wxGetApp().getMsg( "extendedcheck" ) );
-  m_AnaReset->SetLabel( wxGetApp().getMsg( "ana_reset" ) );
+  m_AnaReset->SetLabel( wxGetApp().getMsg( "extendedclean" ) );
 
   m_SetRouteId->SetLabel( wxGetApp().getMsg( "ana_setRouteId" ) );
   m_CleanRouteId->SetLabel( wxGetApp().getMsg( "ana_cleanRouteId" ) );
