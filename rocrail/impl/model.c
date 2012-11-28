@@ -3322,8 +3322,8 @@ static void _analyse( iOModel inst, int mode ) {
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "pw %d auto %d health %d bs %d anaE %d",
       isPowerOn, automode, planIsHealthy, blocksideEnabled, analyzerEnabled);
 
-  if( ( mode == AN_HEALTH ) || ( mode == AN_JOB ) ) {
-    /* health check is allowed all the time and also a requirement for the analyser job */
+  if( mode == AN_HEALTH ) {
+    /* health check is allowed all the time */
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "call AnalyseOp.checkPlanHealth");
     iOAnalyse analyser = AnalyseOp.inst();
     if( analyser ) {
@@ -3334,10 +3334,7 @@ static void _analyse( iOModel inst, int mode ) {
       planIsHealthy = ModelOp.isHealthy(inst);
       wPlan.sethealthy( data->model, planIsHealthy );
     }
-    if( mode == AN_HEALTH ) {
-      /* health check only -> return */
-      return;
-    }
+    return;
   }
   if( mode == AN_EXTCHK ) {
     /* extended check is allowed all the time (but not if repair option is set...) */
@@ -3406,6 +3403,21 @@ static void _analyse( iOModel inst, int mode ) {
     analyser = AnalyseOp.inst();
 
     if( analyser != NULL ) {
+      if( mode == AN_JOB ) {
+        /* first check plan health (as a side effect some variables of the current analyser instance are set) */
+        data->healthy = AnalyseOp.checkPlanHealth( analyser );
+
+        /* set variables according to result */
+        planIsHealthy = ModelOp.isHealthy(inst);
+        wPlan.sethealthy( data->model, planIsHealthy );
+
+        if( ! planIsHealthy ) {
+          AnalyseOp.base.del( analyser );
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "This plan is not healthy.");
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "analyzer skipped see lines above.");
+        }
+      }
+
       iONode e = NodeOp.inst( wException.name(), NULL, ELEMENT_NODE );
       int nrRoutesBefore = ListOp.size(data->routeList);
       int nrRoutesAfter = 0;
