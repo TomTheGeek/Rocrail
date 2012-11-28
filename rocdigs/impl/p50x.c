@@ -24,6 +24,7 @@
 #define MIN_IB_VERSION_FOR_EXTENDED_FUNCTIONS          0x2000L /* 2.000 */
 #define MIN_OPENDCC_VERSION_FOR_EXTENDED_FUNCTIONS     0x1708L /* 23.08 */
 #define MIN_TAMS_VERSION_FOR_EXTENDED_FUNCTIONS    0x01040666L /* 1.4.6f */
+#define MAX_FB 1024
 
 
 #include <stdlib.h>
@@ -906,7 +907,7 @@ static Boolean _supportPT( obj inst ) {
 
 static void __evaluateState( iOP50xData o, unsigned char* fb1, unsigned char* fb2, int size ) {
   int i = 0;
-  for( i = 0; i < size; i++ ) {
+  for( i = 0; i < size && size < MAX_FB; i++ ) {
     if( fb1[i] != fb2[i] ) {
       int n = 0;
       int addr = 0;
@@ -1462,16 +1463,16 @@ static void __feedbackReader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOP50x p50 = (iOP50x)ThreadOp.getParm( th );
   iOP50xData o = Data(p50);
-  unsigned char* fb = allocMem(256);
+  byte* fb     = allocMem(MAX_FB);
+  byte* s88_in = allocMem(MAX_FB);
   byte out[256];
-  byte s88_in [512];
   byte tmp [8];
   p50state state = P50_OK;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback p50x reader started." );
   /* set byte arrays to a defined state: */
   MemOp.set( out, 0, 256 );
-  MemOp.set( s88_in, 0, 512 );
+  MemOp.set( s88_in, 0, MAX_FB );
 
   out[0] = 'x';
   out[1] = 0x99;
