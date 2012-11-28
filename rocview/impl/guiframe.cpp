@@ -2128,6 +2128,9 @@ void RocGuiFrame::create() {
     m_StatNotebook->AddPage(m_LNCVPanel, wxGetApp().getMsg("lncvprogramming") );
   }
 
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL) ) {
+    wGui.setlocowidgetstab(m_Ini, False);
+  }
   if( wGui.islocowidgetstab(m_Ini) ) {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating Loco Panel..." );
     m_LocoPanel = new WidgetsPanel( m_StatNotebook );
@@ -3410,6 +3413,7 @@ void RocGuiFrame::OnDonKeyInfo( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   bool l_bOffline = wxGetApp().isOffline();
+  Boolean l_Expired = SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL);
 
   wxMenuItem* mi = menuBar->FindItem(ME_New);
   if( mi != NULL ) mi->Enable( l_bOffline );
@@ -3679,8 +3683,14 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi_locobook->Check( m_bLocoBook );
   wxMenuItem* mi_locowidgets  = menuBar->FindItem(ME_LocoWidgets);
   mi_locowidgets->Check( wGui.islocowidgetstab(m_Ini) );
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL) ) {
+    mi_locowidgets->Enable( false );
+  }
 
   wxMenuItem* mi_rocpro  = menuBar->FindItem(ME_RocPro);
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL) ) {
+    mi_rocpro->Enable( false );
+  }
 
   wxMenuItem* mi_planbook  = menuBar->FindItem(ME_PlanBook);
   mi_planbook->Check( m_bPlanBook );
