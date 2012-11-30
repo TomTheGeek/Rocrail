@@ -317,7 +317,7 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
       if( iid == NULL || StrOp.len(iid) == 0 ) {
         const char* lciid = wRocRail.getlciid( AppOp.getIni() );
         const char* dpiid = wRocRail.getdpiid( AppOp.getIni() );
-        if( StrOp.equals( wLoc.getcmd(node), wLoc.dispatch ) && dpiid != NULL ) {
+        if( StrOp.equals( wLoc.getcmd(node), wLoc.dispatch ) && dpiid != NULL && StrOp.len(dpiid) > 0 ) {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
                        "setting iid=[%s] for dispatch locomotive %s", dpiid, wLoc.getid(node) );
           wLoc.setiid( node, dpiid );
