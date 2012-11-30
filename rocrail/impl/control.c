@@ -1364,12 +1364,13 @@ static void __clockticker( void* threadinst ) {
       continue;
     }
 
-    seconds = 0;
-
     if( data->devider > 1 || timeset )
       data->time += 60;
     else
       data->time = time(NULL);
+
+    /* sync clock event and seconds to full minute */
+    seconds = data->time % 60;
 
     updateticker++;
 
