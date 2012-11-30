@@ -190,6 +190,7 @@ public:
     wxStaticBox* m_labSpecials;
     wxCheckBox* m_Clock;
     wxCheckBox* m_Bidi;
+    wxCheckBox* m_PowerAtStartup;
     wxStaticBox* m_BiDiBox;
     wxCheckBox* m_BiDiCutOut;
     wxCheckBox* m_BiDiIdNotify;

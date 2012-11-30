@@ -793,8 +793,9 @@ static struct OOpenDCC* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "opendcc %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "http://www.opendcc.de/" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid    = %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib = %s", data->sublibname );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib   = %s", data->sublibname );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "power on = %s", wDigInt.ispoweratstartup(data->ini)?"yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   /* load sub library */
@@ -834,6 +835,11 @@ static struct OOpenDCC* _inst( const iONode ini ,const iOTrace trc ) {
   data->swdelay = ThreadOp.inst( "swdelay", &__swdelayThread, __OpenDCC );
   ThreadOp.start( data->swdelay );
 
+  if( wDigInt.ispoweratstartup(data->ini) ) {
+    iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+    wSysCmd.setcmd(cmd, wSysCmd.go);
+    data->sublib->cmd((obj)data->sublib, cmd);
+  }
 
   instCnt++;
   return __OpenDCC;
