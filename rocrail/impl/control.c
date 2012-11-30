@@ -314,33 +314,21 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
 
     /* check for locomotive commands which must be send to other than the default */
     if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) || StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
-      /* dispatch cmd use always dpiid if set */
-      const char* dpiid = wRocRail.getdpiid( AppOp.getIni() );
-      if( StrOp.equals( wLoc.getcmd(node), wLoc.dispatch ) && dpiid != NULL && StrOp.len( dpiid ) > 0 ) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
-                     "setting iid=[%s] for dispatch locomotive %s", dpiid, wLoc.getid(node) );
-        wLoc.setiid( node, dpiid );
-        iid = dpiid;
-      }
       if( iid == NULL || StrOp.len(iid) == 0 ) {
         const char* lciid = wRocRail.getlciid( AppOp.getIni() );
-        if( lciid != NULL && StrOp.len( lciid ) > 0 ) {
+        const char* dpiid = wRocRail.getdpiid( AppOp.getIni() );
+        if( StrOp.equals( wLoc.getcmd(node), wLoc.dispatch ) && dpiid != NULL ) {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+                       "setting iid=[%s] for dispatch locomotive %s", dpiid, wLoc.getid(node) );
+          wLoc.setiid( node, dpiid );
+          iid = dpiid;
+        }
+        else if( lciid != NULL && StrOp.len( lciid ) > 0 ) {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
                        "setting iid=[%s] for locomotive %s", lciid, wLoc.getid(node) );
           wLoc.setiid( node, lciid );
           iid = lciid;
         }
-      }
-      /*
-         inform for loco and fun also dispatch iid 
-         keep fregs here up to date
-      */
-      if( dpiid != NULL && StrOp.len( dpiid ) > 0 && !StrOp.equals( iid, dpiid ) ) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
-                     "inform dpiid=[%s] for locomotive %s", dpiid, wLoc.getid(node) );
-
-        pDi = (iIDigInt)MapOp.get( data->diMap, dpiid );
-        rc = __informDigInt(inst, pDi, (iONode)NodeOp.base.clone(node), error);
       }
     }
 
