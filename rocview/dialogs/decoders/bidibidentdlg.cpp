@@ -45,6 +45,7 @@
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/BiDiB.h"
 #include "rocrail/wrapper/public/BiDiBnode.h"
 #include "rocdigs/impl/bidib/bidibutils.h"
@@ -589,12 +590,11 @@ void BidibIdentDlg::onServoPort( wxSpinEvent& event ) {
 
 void BidibIdentDlg::onServoLeftTest( wxCommandEvent& event ) {
   if( bidibnode != NULL ) {
-    iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    wSwitch.setbus( cmd, wBiDiBnode.getuid(bidibnode) );
-    wSwitch.setaddr1( cmd, m_ServoPort->GetValue()+1 );
-    wSwitch.setporttype(cmd, m_PortType->GetSelection());
-    wSwitch.setsinglegate(cmd, True);
-    wSwitch.setcmd( cmd, wSwitch.turnout );
+    iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+    wOutput.setbus( cmd, wBiDiBnode.getuid(bidibnode) );
+    wOutput.setaddr( cmd, m_ServoPort->GetValue()+1 );
+    wOutput.setporttype(cmd, m_PortType->GetSelection());
+    wOutput.setcmd( cmd, wOutput.on );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }
@@ -602,12 +602,11 @@ void BidibIdentDlg::onServoLeftTest( wxCommandEvent& event ) {
 
 void BidibIdentDlg::onServoRightTest( wxCommandEvent& event ) {
   if( bidibnode != NULL ) {
-    iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    wSwitch.setbus( cmd, wBiDiBnode.getuid(bidibnode) );
-    wSwitch.setaddr1( cmd, m_ServoPort->GetValue()+1 );
-    wSwitch.setporttype(cmd, m_PortType->GetSelection());
-    wSwitch.setsinglegate(cmd, True);
-    wSwitch.setcmd( cmd, wSwitch.straight );
+    iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+    wOutput.setbus( cmd, wBiDiBnode.getuid(bidibnode) );
+    wOutput.setaddr( cmd, m_ServoPort->GetValue()+1 );
+    wOutput.setporttype(cmd, m_PortType->GetSelection());
+    wOutput.setcmd( cmd, wOutput.off );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }
