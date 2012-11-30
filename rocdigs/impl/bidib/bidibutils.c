@@ -150,5 +150,10 @@ const char* bidibGetFeatureName(int feature) {
   if( feature == FEATURE_FW_UPDATE_MODE ) return "firmware update mode";
   if( feature == FEATURE_EXTENSION ) return "reserved for future expansion";
 
+  /* accessory */
+  if( feature == FEATURE_ACCESSORY_COUNT ) return "number of objects";
+  if( feature == FEATURE_ACCESSORY_SURVEILLED ) return "annouce if operated outside bidib";
+  if( feature == FEATURE_ACCESSORY_MACROMAPPED ) return "accessory aspects are mapped to macros";
+
   return "*** unknown feature ***";
 }
