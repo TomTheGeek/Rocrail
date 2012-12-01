@@ -1507,7 +1507,7 @@ static void __feedbackReader( void* threadinst ) {
               }
               TraceOp.dump( NULL, TRCLEVEL_BYTE, tmp, 2 );
 
-              if( o->swversion >= MIN_OPENDCC_VERSION_FOR_EXTENDED_FUNCTIONS && module < 32 ) {
+              if( o->swversion >= MIN_OPENDCC_VERSION_FOR_EXTENDED_FUNCTIONS || module < 32 ) {
                 /* s88 */
                 s88_in[(module-1)*2] = tmp[0];
                 s88_in[((module-1)*2)+1] = tmp[1];
