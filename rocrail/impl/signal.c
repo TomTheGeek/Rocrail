@@ -634,6 +634,7 @@ static Boolean __processMultiAspectsCmd( iOSignal inst, const char* state, int n
 
   wOutput.setbus( cmd, wSignal.getbus( o->props ) );
   wOutput.setprot( cmd, wSignal.getprot( o->props ) );
+  wOutput.setporttype( cmd, wSignal.getporttype( o->props ) );
 
   if( wSignal.getusepatterns( o->props ) == wSignal.use_linear ) {
     wOutput.setcmd( cmd, wOutput.on );
@@ -718,6 +719,7 @@ static Boolean __process4AspectsCmd( iOSignal inst, const char* state ) {
   wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
   wOutput.setport( cmd, wSignal.getport1( o->props ) );
   wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
+  wOutput.setporttype( cmd, wSignal.getporttype( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
 	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
@@ -815,6 +817,7 @@ static Boolean __process3AspectsCmd( iOSignal inst, const char* state ) {
   wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
   wOutput.setport( cmd, wSignal.getport1( o->props ) );
   wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
+  wOutput.setporttype( cmd, wSignal.getporttype( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
 	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
@@ -894,6 +897,7 @@ static Boolean __process2AspectsCmd( iOSignal inst, const char* state ) {
   wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
   wOutput.setport( cmd, wSignal.getport1( o->props ) );
   wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
+  wOutput.setporttype( cmd, wSignal.getporttype( o->props ) );
   ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
 	ThreadOp.sleep(wSignal.getcmdtime( o->props ));
 
@@ -1235,6 +1239,10 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
             "Signal [%s] could not be set!", wSignal.getid( o->props ) );
         ok = False;
       }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+          "Signal [%s] has no address", wSignal.getid( o->props ) );
     }
 
     if( ok )

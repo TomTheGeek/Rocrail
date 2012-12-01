@@ -442,7 +442,12 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   if( StrOp.equals( "bus", dropcmd ) ) {
     TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: set bus to %s", dropid );
 
-    if( NodeOp.findAttr(m_Props, "addr") || NodeOp.findAttr(m_Props, "addr1") ) {
+    if( NodeOp.findAttr(m_Props, "addr") || NodeOp.findAttr(m_Props, "addr1") ||
+        StrOp.equals(wSignal.name(), NodeOp.getName(m_Props) ) || StrOp.equals(wSwitch.name(), NodeOp.getName(m_Props) ) ||
+        StrOp.equals(wTurntable.name(), NodeOp.getName(m_Props) ) || StrOp.equals(wSelTab.name(), NodeOp.getName(m_Props) ) ||
+        StrOp.equals(wOutput.name(), NodeOp.getName(m_Props) ) || StrOp.equals(wFeedback.name(), NodeOp.getName(m_Props) )
+        )
+    {
       wItem.setbus(m_Props, atoi(dropid));
 
       if( !wxGetApp().isStayOffline() ) {
