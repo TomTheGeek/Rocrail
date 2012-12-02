@@ -292,6 +292,14 @@ public:
     wxCheckBox* m_ActDelay;
     wxTextCtrl* m_Delay;
     wxRadioBox* m_PortType;
+    wxStaticBox* m_TrackDriverBox;
+    wxStaticText* m_labTrackDriverIID;
+    wxTextCtrl* m_TrackDriverIID;
+    wxStaticText* m_labTrackDriverAddr;
+    wxTextCtrl* m_TrackDriverAddr;
+    wxStaticText* m_labTrackDriverPort;
+    wxTextCtrl* m_TrackDriverPort;
+    wxCheckBox* m_TrackDriverEnable;
     wxPanel* m_WireringPanel;
     wxStaticBox* m_WiringBox;
     wxStaticText* m_LabelFb1R;
