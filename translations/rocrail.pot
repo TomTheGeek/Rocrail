@@ -4736,13 +4736,13 @@ msgstr ""
 #. 
 # id="donatenow"
 #, c-format
-msgid "Donate now"
+msgid "Support now"
 msgstr ""
 
 #. 
 # id="donkey"
 #, c-format
-msgid "Donate"
+msgid "Support"
 msgstr ""
 
 #. 
@@ -4754,13 +4754,13 @@ msgstr ""
 #. 
 # id="donatekey"
 #, c-format
-msgid "Rocrail runs entirely on volunteer labor. However, Rocrail also needs contributions of money. Your continued support is vital for keeping Rocrail available. If you already did donate you can ask a key to disable this on startup dialog: donate@rocrail.net"
+msgid "Rocrail runs entirely on volunteer labor. However, Rocrail also needs contributions of money. Your continued support is vital for keeping Rocrail available. If you already did support you can ask a key to disable this on startup dialog: donate@rocrail.net"
 msgstr ""
 
 #. 
 # id="donatethanks"
 #, c-format
-msgid "Thanks for donating! Enjoy using Rocrail."
+msgid "Thanks for your support! Enjoy using Rocrail."
 msgstr ""
 
 #. 

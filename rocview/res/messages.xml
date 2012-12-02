@@ -16414,7 +16414,7 @@
     <nb txt="Utløpsdato"/>
   </Msg>
   <Msg id="donatenow">
-    <en txt="Donate now"/>
+    <en txt="Support now"/>
     <de txt="jetzt spenden"/>
     <nl txt="Nu doneren"/>
     <ca txt="Dóna ara"/>
@@ -16430,7 +16430,7 @@
     <en_GB txt="Donate now"/>
   </Msg>
   <Msg id="donkey" dialog="true">
-    <en txt="Donate"/>
+    <en txt="Support"/>
     <de txt="spenden"/>
     <nl txt="Doneer"/>
     <ca txt="Contribuïu amb una donació"/>
@@ -16464,7 +16464,7 @@
     <en_GB txt="Load key"/>
   </Msg>
   <Msg id="donatekey">
-    <en txt="Rocrail runs entirely on volunteer labor. However, Rocrail also needs contributions of money. Your continued support is vital for keeping Rocrail available. If you already did donate you can ask a key to disable this on startup dialog: donate@rocrail.net"/>
+    <en txt="Rocrail runs entirely on volunteer labor. However, Rocrail also needs contributions of money. Your continued support is vital for keeping Rocrail available. If you already did support you can ask a key to disable this on startup dialog: donate@rocrail.net"/>
     <de txt="Rocrail wird vollständig auf freiwilliger Basis betrieben. Trotzdem benötigt Rocrail Geld. Ihre fortwährende Unterstützung ist notwendig um Rocrail verfügbar zu halten. Falls Sie bereits gespendet haben, können Sie einen Schlüssel beantragen, um diesen Dialog zu unterdrücken: donate@rocrail.net"/>
     <nl txt="Rocrail wordt uitsluitend door vrijwilligers ontwikkeld. Om Rocrail “in de lucht te houden” en steeds weer aan te kunnen passen aan nieuwe modelspoor hardware is er jaarlijks een bescheiden financieel budget nodig. Vrijwillige bijdragen zijn daarvoor noodzakelijk. Als je al een donatie gegeven hebt kun je op donate@rocrail.net een sleutel aanvragen om dit venster te onderdrukken."/>
     <ca txt="El Rocrail es construeix amb un treball voluntari. No obstant això, es necessiten contribucions de diners. El seu suport és vital per al manteniment Rocrail . Si ja va fer una donació pot demanar una clau per desactivar aquesta caixa de diàleg d'inici: donate@rocrail.net"/>
@@ -16480,7 +16480,7 @@
     <en_GB txt="Rocrail relies on volunteers. However, Rocrail also needs donations. Your continued support is vital for keeping Rocrail available. If you have donated you can ask for a key to disable this message: donate@rocrail.net"/>
   </Msg>
   <Msg id="donatethanks">
-    <en txt="Thanks for donating! Enjoy using Rocrail."/>
+    <en txt="Thanks for your support! Enjoy using Rocrail."/>
     <de txt="Danke für Ihre Spende! Viel Spaß mit Rocrail."/>
     <nl txt="Bedankt voor de donatie! Veel plezier met Rocrail."/>
     <ca txt="Gràcies per haver fet una donació! Gaudeixi utilitzant el Rocrail."/>
