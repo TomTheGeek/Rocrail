@@ -92,6 +92,9 @@ void statusInitDest( iILcDriverInt inst ) {
       if( !data->next1Block->isLinked( data->next1Block ) ) {
         data->next1Block->link( data->next1Block, data->curBlock );
       }
+      if( data->next1Route != NULL ) {
+        data->next1Route->link(data->next1Route, data->curBlock->getTDport(data->curBlock));
+      }
 
       if( data->secondnextblock || data->loc->trySecondNextBlock(data->loc) ) {
         reserveSecondNextBlock( (iOLcDriver)inst, data->gotoBlock, data->next1Block, data->next1Route,

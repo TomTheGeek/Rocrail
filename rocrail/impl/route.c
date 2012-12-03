@@ -1243,6 +1243,45 @@ static Boolean _unLock( iORoute inst, const char* lcid, const char** resblocks, 
   return False;
 }
 
+
+static Boolean _link( iORoute inst, int linkto ) {
+  if( inst != NULL ) {
+    iORouteData data = Data(inst);
+    iOModel model = AppOp.getModel(  );
+    iONode sw = wRoute.getswcmd( data->props );
+
+    while( sw != NULL ) {
+      const char* swId = wSwitchCmd.getid( sw );
+      iOSwitch isw = ModelOp.getSwitch( model, swId );
+      if( isw != NULL ) {
+        SwitchOp.link(isw, linkto);
+      }
+      sw = wRoute.nextswcmd( data->props, sw );
+    }
+  }
+  return True;
+}
+
+
+static Boolean _unLink( iORoute inst ) {
+  if( inst != NULL ) {
+    iORouteData data = Data(inst);
+    iOModel model = AppOp.getModel(  );
+    iONode sw = wRoute.getswcmd( data->props );
+
+    while( sw != NULL ) {
+      const char* swId = wSwitchCmd.getid( sw );
+      iOSwitch isw = ModelOp.getSwitch( model, swId );
+      if( isw != NULL ) {
+        SwitchOp.unLink(isw);
+      }
+      sw = wRoute.nextswcmd( data->props, sw );
+    }
+  }
+  return True;
+}
+
+
 /**
  * Checks for property changes.
  * todo: Range checking?

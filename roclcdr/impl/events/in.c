@@ -129,6 +129,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
 
       /* unlink-up after inblock event */
       data->next1Block->unLink( data->next1Block );
+      data->next1Route->unLink(data->next1Route);
 
       if( data->next2Block == NULL || (data->next2Block != NULL && data->next2Block != data->curBlock) ) {
         data->curBlock->unLock( data->curBlock, data->loc->getId( data->loc ) );

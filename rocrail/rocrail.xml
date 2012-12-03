@@ -1307,6 +1307,13 @@
     <fun name="isSetCrossingblockSignals" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
     </fun>
+    <fun name="link" vt="Boolean">
+      <param name="inst" vt="this" remark="Route instance"/>
+      <param name="linkto" vt="int" remark="link to port"/>
+    </fun>
+    <fun name="unLink" vt="Boolean">
+      <param name="inst" vt="this" remark="Route instance"/>
+    </fun>
     <data>
       <var name="lockedId" vt="const char*"/>
       <var name="props" vt="iONode"/>
@@ -1403,6 +1410,13 @@
     <fun name="removeListener" vt="Boolean">
       <param name="inst" vt="this"/>
       <param name="listener" vt="obj"/>
+    </fun>
+    <fun name="link" vt="Boolean">
+      <param name="inst" vt="this" remark="Switch instance"/>
+      <param name="linkto" vt="int" remark="link to port"/>
+    </fun>
+    <fun name="unLink" vt="Boolean">
+      <param name="inst" vt="this" remark="Switch instance"/>
     </fun>
     <data include="fback">
       <var name="id" vt="const char*"/>

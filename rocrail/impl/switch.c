@@ -559,6 +559,50 @@ static void* _getProperties( void* inst ) {
   return data->props;
 }
 
+
+static Boolean _link( iOSwitch inst, int linkto ) {
+  if( inst != NULL ) {
+    iOSwitchData data = Data(inst);
+
+    if( wSwitch.istd( data->props ) ) {
+      iOControl control = AppOp.getControl();
+      iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+      wSysCmd.setcmd( cmd, wSysCmd.link );
+      wSysCmd.setid( cmd, wSwitch.getid(data->props));
+      wSysCmd.setiid( cmd, wSwitch.gettdiid(data->props));
+      wSysCmd.setvalA( cmd, wSwitch.gettdport(data->props) );
+      wSysCmd.setvalB( cmd, linkto );
+      if( ControlOp.cmd( control, cmd, NULL ) ) {
+        return True;
+      }
+    }
+  }
+  return False;
+}
+
+
+static Boolean _unLink( iOSwitch inst ) {
+  if( inst != NULL ) {
+    iOSwitchData data = Data(inst);
+
+    if( wSwitch.istd( data->props ) ) {
+      iOControl control = AppOp.getControl();
+      iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+      wSysCmd.setcmd( cmd, wSysCmd.ulink );
+      wSysCmd.setiid( cmd, wSwitch.gettdiid( data->props ) );
+      wSysCmd.setid( cmd, wSwitch.getid( data->props ) );
+      wSysCmd.setvalA( cmd, wSwitch.gettdport(data->props) );
+      if( ControlOp.cmd( control, cmd, NULL ) ) {
+        return True;
+      }
+    }
+  }
+  return False;
+}
+
+
+
+
 static Boolean _lock( iOSwitch inst, const char* id, iORoute route ) {
   iOSwitchData data = Data(inst);
   Boolean ok = False;

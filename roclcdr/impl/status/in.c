@@ -83,6 +83,7 @@ void statusIn( iILcDriverInt inst ) {
     data->next2Block = data->next3Block;
     data->next3Block = NULL;
     data->next1Block->link( data->next1Block, data->curBlock );
+    data->next1Route->link(data->next1Route, data->curBlock->getTDport(data->curBlock));
     data->next1RouteFromTo = data->next2RouteFromTo;
     data->next2RouteFromTo = data->next3RouteFromTo;
 
@@ -117,6 +118,7 @@ void statusIn( iILcDriverInt inst ) {
     data->next2Block = data->next3Block;
     data->next3Block = NULL;
     data->next1Block->link( data->next1Block, data->curBlock );
+    data->next1Route->link(data->next1Route, data->curBlock->getTDport(data->curBlock));
     data->next1RouteFromTo = data->next2RouteFromTo;
     data->next2RouteFromTo = data->next3RouteFromTo;
 

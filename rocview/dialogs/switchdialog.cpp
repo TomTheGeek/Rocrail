@@ -485,7 +485,7 @@ void SwitchDialog::initValues() {
   m_TrackDriverAddr->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
   str = StrOp.fmt( "%d", wSwitch.gettdport(m_Props) );
   m_TrackDriverPort->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
-  m_TrackDriverEnable->SetValue( wSwitch.istd(m_Props));
+  m_TrackDriverEnable->SetValue( wSwitch.istd(m_Props)?true:false);
 
   // Wirerings
   iONode model = wxGetApp().getModel();
@@ -721,7 +721,6 @@ bool SwitchDialog::evaluate() {
 
   wSwitch.setporttype(m_Props, m_PortType->GetSelection());
 
-  m_TrackDriverEnable->SetValue( wSwitch.istd(m_Props));
   wSwitch.settdiid( m_Props, m_TrackDriverIID->GetValue().mb_str(wxConvUTF8) );
   wSwitch.settdaddr( m_Props, atoi( m_TrackDriverAddr->GetValue().mb_str(wxConvUTF8) ) );
   wSwitch.settdport( m_Props, atoi( m_TrackDriverPort->GetValue().mb_str(wxConvUTF8) ) );
