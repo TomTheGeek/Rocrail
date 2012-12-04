@@ -2109,7 +2109,7 @@ void RocGuiFrame::create() {
 
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating PT Panel..." );
-  m_CVPanel = new wxScrolledWindow( m_StatNotebook, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER||wxHSCROLL|wxVSCROLL );
+  m_CVPanel = new wxScrolledWindow( m_StatNotebook, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
   m_CVPanel->SetScrollbars(1, 1, 0, 0);
   m_CV = NULL;
   m_CV = new CV( m_CVPanel, wGui.getcvconf( m_Ini ), this );

@@ -1156,7 +1156,7 @@ void CV::CreateControls() {
   m_Parent->SetSizer(m_MainBox);
 
   m_ItemPanel = new wxPanel( m_Parent, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-  m_MainBox->Add(m_ItemPanel, 1, wxALIGN_CENTER_HORIZONTAL|wxALL|wxADJUST_MINSIZE, 2);
+  m_MainBox->Add(m_ItemPanel, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
   m_PanelMainBox = new wxBoxSizer(wxVERTICAL);
   m_ItemPanel->SetSizer(m_PanelMainBox);
 
@@ -1192,7 +1192,8 @@ void CV::CreateControls() {
   m_Direct->SetToolTip(_T("Direct programming mode") );
   m_OptionBox->Add(m_Direct, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
 
-  m_TableBox = new wxBoxSizer(wxHORIZONTAL);
+  m_TableBox = new wxFlexGridSizer(0, 2, 0, 0);
+  m_TableBox->AddGrowableCol(1);
   m_PanelMainBox->Add(m_TableBox, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
   m_FlexGrid = new wxFlexGridSizer(0, 4, 0, 0);
@@ -1343,7 +1344,7 @@ void CV::CreateControls() {
   m_CVTable->AutoSizeColumns();
   m_CVTable->AutoSizeRows();
 
-  m_TableBox->Add(m_CVTable, 0, wxALL|wxADJUST_MINSIZE, 2);
+  m_TableBox->Add(m_CVTable, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
 
   TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "Create CV Controls..." );

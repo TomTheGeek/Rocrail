@@ -172,7 +172,7 @@ private:
     wxBoxSizer* m_PanelMainBox;
     wxBoxSizer* m_LocBox;
     wxBoxSizer* m_OptionBox;
-    wxBoxSizer* m_TableBox;
+    wxFlexGridSizer* m_TableBox;
     wxFlexGridSizer* m_FlexGrid;
 
     wxStaticText* m_labelCVaddress;
