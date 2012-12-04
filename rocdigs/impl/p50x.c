@@ -1758,6 +1758,9 @@ static iOP50x _inst( const iONode settings, const iOTrace trace ) {
   else if( StrOp.equals( wDigInt.xon, flow ) )
     data->flow = xon;
 
+  if( data->fbmod * 2 > MAX_FB)
+    data->fbmod = MAX_FB / 2;
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
