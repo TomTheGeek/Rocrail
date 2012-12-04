@@ -432,8 +432,12 @@ static void __handleIssue(obj inst, iONode node) {
     f = FileOp.inst(issueTxt, OPEN_WRITE );
     if( f != NULL ) {
       /* Write statistics: */
+      unsigned char* donkey = StrOp.strToByte(AppOp.getdonkey());
+      char* decodedKey = SystemOp.decode(donkey, StrOp.len(AppOp.getdonkey())/2, AppOp.getdoneml());
+      char* expdate = NULL;
+      Boolean expired = SystemOp.isExpired(decodedKey, &expdate, NULL);
       char* stamp = StrOp.createStamp();
-      tmp = StrOp.fmt( "Date: %s\n%s %d.%d.%d-%d %s (%s)\n\n",
+      tmp = StrOp.fmt( "Date: %s\n%s: %d.%d.%d-%d %s\nOS: %s\nKey: %s expdate=%s\n\n",
           stamp,
           wGlobal.productname,
           wGlobal.vmajor,
@@ -441,9 +445,10 @@ static void __handleIssue(obj inst, iONode node) {
           wGlobal.patch,
           AppOp.getrevno(),
           wGlobal.releasename,
-          TraceOp.getOS() );
+          TraceOp.getOS(), expired?"expired":"valid", expdate==NULL?"-":expdate );
 
       StrOp.free(stamp);
+      StrOp.free(expdate);
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writing issue text: %s", issueTxt );
 
