@@ -1660,12 +1660,12 @@ static void __feedbackP50Reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOP50x p50x = (iOP50x)ThreadOp.getParm( th );
   iOP50xData data = Data(p50x);
-  unsigned char* fb = allocMem(256);
+  unsigned char* fb = allocMem(MAX_FB);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback p50 reader started." );
   do {
     unsigned char out[256];
-    unsigned char in [512];
+    unsigned char in [MAX_FB];
 
     ThreadOp.sleep( data->psleep );
     if( data->stopio || data->fbmod == 0 )
@@ -1758,8 +1758,8 @@ static iOP50x _inst( const iONode settings, const iOTrace trace ) {
   else if( StrOp.equals( wDigInt.xon, flow ) )
     data->flow = xon;
 
-  if( data->fbmod * 2 > MAX_FB)
-    data->fbmod = MAX_FB / 2;
+  if( data->fbmod > 127 )
+    data->fbmod = 127;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x %d.%d.%d", vmajor, vminor, patch );
