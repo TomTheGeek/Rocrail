@@ -1165,8 +1165,6 @@ void CV::CreateControls() {
   m_LocBox = new wxBoxSizer(wxHORIZONTAL);
   m_PanelMainBox->Add(m_LocBox, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
-  m_labLoc = new wxStaticText( m_ItemPanel, -1, _("Loc"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_LocBox->Add(m_labLoc, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
   wxString* m_LcListStrings = NULL;
   m_LcList = new wxComboBox( m_ItemPanel, ID_COMBOBOX_LOCLIST, _T(""), wxDefaultPosition, wxSize(90, 25), 0, m_LcListStrings, wxCB_READONLY );
   m_LocBox->Add(m_LcList, 3, wxGROW|wxALL, 1);
@@ -1179,6 +1177,10 @@ void CV::CreateControls() {
 
   m_OptionBox = new wxBoxSizer(wxHORIZONTAL);
   m_PanelMainBox->Add(m_OptionBox, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
+
+  m_PTonoff = new wxToggleButton( m_ItemPanel, -1, _("PT"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_PTonoff->SetValue(false);
+  m_OptionBox->Add(m_PTonoff, 0, wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
   m_POM = new wxCheckBox( m_ItemPanel, -1, _T("PoM"), wxDefaultPosition, wxDefaultSize, 0 );
   m_POM->SetToolTip(_T("Program On the Main") );
@@ -1352,7 +1354,7 @@ void CV::CreateControls() {
   // CV:
   wxStaticBox* itemStaticBoxSizer20Static = new wxStaticBox(m_ItemPanel, -1, _("CV-Box"));
   m_CVbox = new wxStaticBoxSizer(itemStaticBoxSizer20Static, wxHORIZONTAL);
-  m_PanelMainBox->Add(m_CVbox, 0, wxALL, 3);
+  m_PanelMainBox->Add(m_CVbox, 0, wxALL, 2);
 
   m_MainBox = new wxBoxSizer(wxVERTICAL);
   m_CVbox->Add(m_MainBox, 0, wxALIGN_CENTER_VERTICAL|wxALL, 0);
@@ -1398,30 +1400,26 @@ void CV::CreateControls() {
   m_CVSubBox2->Add(m_bit0, 0, wxALIGN_CENTER_VERTICAL, 0);
 
 
-  wxBoxSizer* buttonSizer1 = new wxBoxSizer(wxHORIZONTAL);
-  m_PanelMainBox->Add(buttonSizer1, 0, wxALL|wxADJUST_MINSIZE, 2);
+  wxFlexGridSizer* buttonSizer1 = new wxFlexGridSizer(0,3,0,0);
+  m_PanelMainBox->Add(buttonSizer1, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
-  m_saveCVs = new wxButton( m_ItemPanel, -1, _("Copy"), wxDefaultPosition, wxSize(60, 26), 0 );
+  m_saveCVs = new wxButton( m_ItemPanel, -1, _("Copy"), wxDefaultPosition, wxDefaultSize, 0 );
   buttonSizer1->Add(m_saveCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
-  m_loadCVs = new wxButton( m_ItemPanel, -1, _("Load"), wxDefaultPosition, wxSize(60, 26), 0 );
+  m_loadCVs = new wxButton( m_ItemPanel, -1, _("Load"), wxDefaultPosition, wxDefaultSize, 0 );
   buttonSizer1->Add(m_loadCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
-  m_saveAllCVs = new wxButton( m_ItemPanel, -1, _("SaveAll"), wxDefaultPosition, wxSize(60, 26), 0 );
+  m_saveAllCVs = new wxButton( m_ItemPanel, -1, _("SaveAll"), wxDefaultPosition, wxDefaultSize, 0 );
   buttonSizer1->Add(m_saveAllCVs, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
-  m_SpeedCurve = new wxButton( m_ItemPanel, -1, _("V curve"), wxDefaultPosition, wxSize(60, 26), 0 );
+  m_SpeedCurve = new wxButton( m_ItemPanel, -1, _("V curve"), wxDefaultPosition, wxDefaultSize, 0 );
   buttonSizer1->Add(m_SpeedCurve, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
-  m_Config = new wxButton( m_ItemPanel, -1, _("Config"), wxDefaultPosition, wxSize(60, 26), 0 );
+  m_Config = new wxButton( m_ItemPanel, -1, _("Config"), wxDefaultPosition, wxDefaultSize, 0 );
   buttonSizer1->Add(m_Config, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
-  wxBoxSizer* buttonSizer2 = new wxBoxSizer(wxHORIZONTAL);
-  m_PanelMainBox->Add(buttonSizer2, 0, wxALL|wxADJUST_MINSIZE, 2);
+  wxFlexGridSizer* buttonSizer2 = new wxFlexGridSizer(0,3,0,0);
+  m_PanelMainBox->Add(buttonSizer2, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
-  m_PTonoff = new wxToggleButton( m_ItemPanel, -1, _("PT"), wxDefaultPosition, wxSize(75, 26), 0 );
-  m_PTonoff->SetValue(false);
-  buttonSizer2->Add(m_PTonoff, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
-
-  m_WriteAll = new wxButton( m_ItemPanel, -1, _("Write all"), wxDefaultPosition, wxSize(75, 26), 0 );
-  m_ReadAll  = new wxButton( m_ItemPanel, -1, _("Read all"), wxDefaultPosition, wxSize(75, 26), 0 );
-  m_CopyFrom  = new wxButton( m_ItemPanel, -1, _("Copy from..."), wxDefaultPosition, wxSize(75, 26), 0 );
+  m_WriteAll = new wxButton( m_ItemPanel, -1, _("Write all"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_ReadAll  = new wxButton( m_ItemPanel, -1, _("Read all"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_CopyFrom  = new wxButton( m_ItemPanel, -1, _("Copy from..."), wxDefaultPosition, wxDefaultSize, 0 );
 
   buttonSizer2->Add(m_ReadAll, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
   buttonSizer2->Add(m_WriteAll, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
