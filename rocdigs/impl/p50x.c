@@ -24,7 +24,7 @@
 #define MIN_IB_VERSION_FOR_EXTENDED_FUNCTIONS          0x2000L /* 2.000 */
 #define MIN_OPENDCC_VERSION_FOR_EXTENDED_FUNCTIONS     0x1708L /* 23.08 */
 #define MIN_TAMS_VERSION_FOR_EXTENDED_FUNCTIONS    0x01040666L /* 1.4.6f */
-#define MAX_FB 256
+#define MAX_FB 128
 
 
 #include <stdlib.h>
@@ -1496,8 +1496,8 @@ static void __feedbackReader( void* threadinst ) {
           byte module = 0;
           state = P50_OK;
           if( SerialOp.read( o->serial, (char*)&module, 1 ) ) {
-            /* TODO: modules > 31 are loconet */
-            while( module > 0 && state == P50_OK ) {
+            /* modules > 31 are loconet */
+            while( module > 0 && module < MAX_FB && state == P50_OK ) {
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbModule = %d", module );
               TraceOp.dump( NULL, TRCLEVEL_BYTE, &module, 1 );
 
@@ -1543,10 +1543,10 @@ static void __feedbackReader( void* threadinst ) {
 
       /* only compare if communication was OK: */
       if( state == P50_OK ) {
-        if( memcmp( fb, s88_in, o->fbmod * 2 ) != 0 ) {
+        if( memcmp( fb, s88_in, o->fbmod ) != 0 ) {
           /* inform listener */
-          __evaluateState( o, fb, s88_in, o->fbmod * 2);
-          memcpy( fb, s88_in, o->fbmod * 2 );
+          __evaluateState( o, fb, s88_in, o->fbmod);
+          memcpy( fb, s88_in, o->fbmod );
         }
       }
 
@@ -1672,11 +1672,11 @@ static void __feedbackP50Reader( void* threadinst ) {
       continue;
 
     out[0] = (unsigned char)(128 + data->fbmod);
-    if( __transact( data, (char*)out, 1, (char*)in, data->fbmod * 2, -1, data->timeout ) ) {
-      if( memcmp( fb, in, data->fbmod * 2 ) != 0 ) {
+    if( __transact( data, (char*)out, 1, (char*)in, data->fbmod, -1, data->timeout ) ) {
+      if( memcmp( fb, in, data->fbmod ) != 0 ) {
         /* inform listener */
-        __evaluateState( data, fb, in, data->fbmod * 2);
-        memcpy( fb, in, data->fbmod * 2 );
+        __evaluateState( data, fb, in, data->fbmod);
+        memcpy( fb, in, data->fbmod );
       }
     }
   } while( data->run );
@@ -1758,8 +1758,8 @@ static iOP50x _inst( const iONode settings, const iOTrace trace ) {
   else if( StrOp.equals( wDigInt.xon, flow ) )
     data->flow = xon;
 
-  if( data->fbmod > (MAX_FB/2) )
-    data->fbmod = (MAX_FB/2);
+  if( data->fbmod > MAX_FB )
+    data->fbmod = MAX_FB;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x %d.%d.%d", vmajor, vminor, patch );
