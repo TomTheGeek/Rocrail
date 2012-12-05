@@ -324,6 +324,9 @@ void OpenDCCCtrlDlg::evaluate() {
     wDigInt.setfbmod( m_Props, m_S88Bus1->GetValue() + m_S88Bus2->GetValue() + m_S88Bus3->GetValue() );
   }
 
+  if( wDigInt.getfbmod( m_Props) > 128 )
+    wDigInt.setfbmod( m_Props, 128 );
+
   iONode opendccini = wDigInt.getopendcc(m_Props);
   wOpenDCC.setlib(opendccini, m_SubLib->GetSelection() == 0 ? wDigInt.p50x:wDigInt.xpressnet);
   wOpenDCC.setbidi(opendccini, m_Bidi->IsChecked() ? True:False);
@@ -1043,19 +1046,19 @@ void OpenDCCCtrlDlg::CreateControls()
     m_labS88Bus1 = new wxStaticText( m_S88Panel, wxID_ANY, _("Bus 1"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer45->Add(m_labS88Bus1, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_S88Bus1 = new wxSpinCtrl( m_S88Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
+    m_S88Bus1 = new wxSpinCtrl( m_S88Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 128, 0 );
     itemFlexGridSizer45->Add(m_S88Bus1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labS88Bus2 = new wxStaticText( m_S88Panel, wxID_ANY, _("Bus 2"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer45->Add(m_labS88Bus2, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_S88Bus2 = new wxSpinCtrl( m_S88Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
+    m_S88Bus2 = new wxSpinCtrl( m_S88Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 128, 0 );
     itemFlexGridSizer45->Add(m_S88Bus2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labS88Bus3 = new wxStaticText( m_S88Panel, wxID_ANY, _("Bus 3"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer45->Add(m_labS88Bus3, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_S88Bus3 = new wxSpinCtrl( m_S88Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
+    m_S88Bus3 = new wxSpinCtrl( m_S88Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 128, 0 );
     itemFlexGridSizer45->Add(m_S88Bus3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labXpressNetSensors = new wxStaticText( m_S88Panel, wxID_ANY, _("XpressNet"), wxDefaultPosition, wxDefaultSize, 0 );
