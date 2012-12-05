@@ -318,10 +318,10 @@ void OpenDCCCtrlDlg::evaluate() {
     wDigInt.setbps( m_Props, 115200 );
 
   if (m_XpressNetSensors->GetValue() != 0 ) {
-    wDigInt.setfbmod( m_Props, m_XpressNetSensors->GetValue()*2 );
+    wDigInt.setfbmod( m_Props, m_XpressNetSensors->GetValue() );
   }
   else {
-    wDigInt.setfbmod( m_Props, m_S88Bus1->GetValue()*2 + m_S88Bus2->GetValue()*2 + m_S88Bus3->GetValue()*2 );
+    wDigInt.setfbmod( m_Props, m_S88Bus1->GetValue() + m_S88Bus2->GetValue() + m_S88Bus3->GetValue() );
   }
 
   iONode opendccini = wDigInt.getopendcc(m_Props);
