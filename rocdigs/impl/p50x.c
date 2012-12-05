@@ -24,7 +24,7 @@
 #define MIN_IB_VERSION_FOR_EXTENDED_FUNCTIONS          0x2000L /* 2.000 */
 #define MIN_OPENDCC_VERSION_FOR_EXTENDED_FUNCTIONS     0x1708L /* 23.08 */
 #define MIN_TAMS_VERSION_FOR_EXTENDED_FUNCTIONS    0x01040666L /* 1.4.6f */
-#define MAX_FB 1024
+#define MAX_FB 256
 
 
 #include <stdlib.h>
@@ -907,7 +907,7 @@ static Boolean _supportPT( obj inst ) {
 
 static void __evaluateState( iOP50xData o, unsigned char* fb1, unsigned char* fb2, int size ) {
   int i = 0;
-  for( i = 0; i < size && size < MAX_FB; i++ ) {
+  for( i = 0; i < size && i < MAX_FB; i++ ) {
     if( fb1[i] != fb2[i] ) {
       int n = 0;
       int addr = 0;
@@ -1758,8 +1758,8 @@ static iOP50x _inst( const iONode settings, const iOTrace trace ) {
   else if( StrOp.equals( wDigInt.xon, flow ) )
     data->flow = xon;
 
-  if( data->fbmod > 127 )
-    data->fbmod = 127;
+  if( data->fbmod > (MAX_FB/2) )
+    data->fbmod = (MAX_FB/2);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50x %d.%d.%d", vmajor, vminor, patch );
