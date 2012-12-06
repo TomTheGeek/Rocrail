@@ -1533,6 +1533,11 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
         "MSG_LC_WAIT path=%s type=%d port=%d time=%d", pathKey, pdata[0], pdata[1], pdata[2] );
     break;
 
+  case MSG_LC_MACRO_STATE:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_LC_MACRO_STATE path=%s macro=%d state=%d", pathKey, pdata[0], pdata[1] );
+    break;
+
   default:
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
         "UNSUPPORTED: msg=0x%02X, path=%s", Type, pathKey );
