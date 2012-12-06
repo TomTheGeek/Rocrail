@@ -2302,28 +2302,29 @@ static Boolean __isSignalAddres(int addr, int port, int sgaddr, int sgport) {
   return False;
 }
 
-static iOSignal _getSgByAddress( iOModel inst, int addr, int port ) {
+static iOSignal _getSgByAddress( iOModel inst, int addr, int port, int type ) {
   iOModelData o = Data(inst);
   iOSignal sg = (iOSignal)MapOp.first( o->signalMap );
   while( sg != NULL ) {
     int sgaddr = wSignal.getaddr( SignalOp.base.properties(sg));
     int sgport = wSignal.getport1( SignalOp.base.properties(sg));
-    if( __isSignalAddres( addr, port, sgaddr, sgport ) )
+    int sgtype = wSignal.getporttype( SignalOp.base.properties(sg));
+    if( sgtype == type && __isSignalAddres( addr, port, sgaddr, sgport ) )
       return sg;
 
     sgaddr = wSignal.getaddr2( SignalOp.base.properties(sg));
     sgport = wSignal.getport2( SignalOp.base.properties(sg));
-    if( __isSignalAddres( addr, port, sgaddr, sgport ) )
+    if( sgtype == type && __isSignalAddres( addr, port, sgaddr, sgport ) )
       return sg;
 
     sgaddr = wSignal.getaddr3( SignalOp.base.properties(sg));
     sgport = wSignal.getport3( SignalOp.base.properties(sg));
-    if( __isSignalAddres( addr, port, sgaddr, sgport ) )
+    if( sgtype == type && __isSignalAddres( addr, port, sgaddr, sgport ) )
       return sg;
 
     sgaddr = wSignal.getaddr4( SignalOp.base.properties(sg));
     sgport = wSignal.getport4( SignalOp.base.properties(sg));
-    if( __isSignalAddres( addr, port, sgaddr, sgport ) )
+    if( sgtype == type && __isSignalAddres( addr, port, sgaddr, sgport ) )
       return sg;
 
     sg = (iOSignal)MapOp.next( o->signalMap );
@@ -3148,8 +3149,10 @@ static void _event( iOModel inst, iONode nodeC ) {
     int bus = wSwitch.getbus( nodeC );
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
+    int type = wSwitch.getporttype( nodeC );
     int matchaddr1;
     int matchport1;
+    int matchtype;
     int matchaddr2;
     int matchport2;
     int fada;
@@ -3189,6 +3192,8 @@ static void _event( iOModel inst, iONode nodeC ) {
 
       matchaddr1 = wSwitch.getaddr1(props);
       matchport1 = wSwitch.getport1(props);
+      matchtype = wSwitch.getporttype(props);
+
       if( matchaddr1 > 0 && matchport1 == 0 && addr > 0 && port == 0 ) {
         /* flat */
       }
@@ -3219,8 +3224,8 @@ static void _event( iOModel inst, iONode nodeC ) {
         matchport2 = (pada - 1) % 4 + 1;
       }
 
-      if( wSwitch.getbus(props) == bus && matchaddr1 == addr && matchport1 == port ||
-          wSwitch.getbus(props) == bus && matchaddr2 == addr && matchport2 == port )
+      if( wSwitch.getbus(props) == bus && matchaddr1 == addr && matchport1 == port && matchtype == type ||
+          wSwitch.getbus(props) == bus && matchaddr2 == addr && matchport2 == port && matchtype == type )
       {
         matched = True;
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -3250,8 +3255,9 @@ static void _event( iOModel inst, iONode nodeC ) {
     int bus = wSwitch.getbus( nodeC );
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
+    int type = wSwitch.getporttype( nodeC );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Signal event: %d:%d:%d", bus, addr, port);
-    iOSignal sg = ModelOp.getSgByAddress(inst, addr, port);
+    iOSignal sg = ModelOp.getSgByAddress(inst, addr, port, type);
     if( sg != NULL && wCtrl.issgevents( wRocRail.getctrl( AppOp.getIni() ) ) ) {
       SignalOp.event( sg, (iONode)NodeOp.base.clone(nodeC) );
       NodeOp.base.del(nodeC);

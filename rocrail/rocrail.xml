@@ -810,7 +810,8 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="addr" vt="int" remark="Decoder address to search for"/>
       <param name="port" vt="int" remark="Decoder port to search for"/>
-    </fun>
+      <param name="type" vt="int" remark="Port type to search for"/>
+      </fun>
     <fun name="getLocByAddress" vt="iOLoc">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="decaddr" vt="int" remark="Loc decoder address to search for"/>
