@@ -338,7 +338,7 @@ static void __normalizeAddr( int* addr, int* port ) {
 }
 
 
-static char* _createAddrKey( int bus, int addr, int port, const char* iid ) {
+static char* _createAddrKey( int bus, int addr, int port, int type, const char* iid ) {
   iONode node = AppOp.getIniNode( wDigInt.name() );
   const char* def_iid = wDigInt.getiid( node );
 
@@ -352,7 +352,7 @@ static char* _createAddrKey( int bus, int addr, int port, const char* iid ) {
 
   __normalizeAddr(&l_addr, &l_port);
 
-  return StrOp.fmt( "%d_%d_%d_%s", bus, l_addr, l_port, (iid != NULL && StrOp.len( iid ) > 0) ? iid:def_iid );
+  return StrOp.fmt( "%d_%d_%d_%d_%s", bus, l_addr, l_port, type, (iid != NULL && StrOp.len( iid ) > 0) ? iid:def_iid );
 }
 
 static const char* __checkFbState( iOSwitch inst ) {
@@ -491,6 +491,7 @@ static Boolean __unregisterCallback( iOSwitch inst ) {
   if( fb2G != NULL ) {
     FBackOp.setListener( fb2G, (obj)NULL, NULL );
   }
+  return True;
 }
 
 
@@ -1155,6 +1156,7 @@ static void _modify( iOSwitch inst, iONode props ) {
       wSwitch.getbus( o->props ),
       wSwitch.getaddr1( o->props ),
       wSwitch.getport1( o->props ),
+      wSwitch.getporttype( o->props ),
       wSwitch.getiid( o->props )
       );
     if( o->addrKey != NULL )
@@ -1168,6 +1170,7 @@ static void _modify( iOSwitch inst, iONode props ) {
         wSwitch.getbus( o->props ),
         wSwitch.getaddr2( o->props ),
         wSwitch.getport2( o->props ),
+        wSwitch.getporttype( o->props ),
         wSwitch.getiid( o->props )
         );
       if( o->addrKey2 != NULL )
@@ -1574,6 +1577,7 @@ static iOSwitch _inst( iONode props ) {
     wSwitch.getbus( props ),
     wSwitch.getaddr1( props ),
     wSwitch.getport1( props ),
+    wSwitch.getporttype( props ),
     wSwitch.getiid( props )
     );
 
@@ -1581,6 +1585,7 @@ static iOSwitch _inst( iONode props ) {
     wSwitch.getbus( props ),
     wSwitch.getaddr2( props ),
     wSwitch.getport2( props ),
+    wSwitch.getporttype( props ),
     wSwitch.getiid( props )
     );
 

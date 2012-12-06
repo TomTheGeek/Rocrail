@@ -3267,6 +3267,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     int bus  = wSwitch.getbus( nodeC );
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
+    int type = wSwitch.getporttype( nodeC );
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Output event: %d:%d:%d", bus, addr, port);
 
@@ -3276,7 +3277,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       port = wOutput.getport(nodeC);
 
     const char* iid = wOutput.getiid( nodeC );
-    char* key = OutputOp.createAddrKey( bus, addr, port, iid );
+    char* key = OutputOp.createAddrKey( bus, addr, port, type, iid );
     iOOutput co = (iOOutput)MapOp.get( o->coAddrMap, key );
     StrOp.free( key );
 

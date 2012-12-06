@@ -132,10 +132,10 @@ static const char* _getAddrKey( iOOutput inst ) {
 }
 
 /**  */
-static char* _createAddrKey( int bus, int addr, int port, const char* iid ) {
+static char* _createAddrKey( int bus, int addr, int port, int type, const char* iid ) {
   iONode node = AppOp.getIniNode( wDigInt.name() );
   const char* def_iid = wDigInt.getiid( node );
-  return StrOp.fmt( "%d_%d_%d_%s", bus, addr, port, (iid != NULL && StrOp.len( iid ) > 0) ? iid:def_iid );
+  return StrOp.fmt( "%d_%d_%d_%d_%s", bus, addr, port, type, (iid != NULL && StrOp.len( iid ) > 0) ? iid:def_iid );
 }
 
 /**
@@ -314,6 +314,7 @@ static struct OOutput* _inst( iONode props ) {
     wOutput.getbus( props ),
     wOutput.getaddr( props ),
     wOutput.getport( props ),
+    wOutput.getporttype( props ),
     wOutput.getiid( props )
     );
 
@@ -352,6 +353,7 @@ static void _modify( struct OOutput* inst ,iONode props ) {
       wOutput.getbus( o->props ),
       wOutput.getaddr( o->props ),
       wOutput.getport( o->props ),
+      wOutput.getporttype( o->props ),
       wOutput.getiid( o->props )
       );
     ModelOp.addCoKey( model, o->addrKey, inst );

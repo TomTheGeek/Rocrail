@@ -1131,6 +1131,7 @@ static void __handleStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
 
     wSwitch.setstate( nodeC, pdata[2]?"straight":"turnout" );
     wSwitch.setgatevalue(nodeC, pdata[2]);
+    wSwitch.setporttype(nodeC, pdata[0]);
 
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }

@@ -1381,6 +1381,7 @@
       <param name="bus" vt="int" remark="Decoder bus"/>
       <param name="addr" vt="int" remark="Decoder addres"/>
       <param name="port" vt="int" remark="Port number"/>
+      <param name="type" vt="int" remark="Port type"/>
       <param name="iid" vt="const char*" remark="Interface ID"/>
     </fun>
     <fun name="event" vt="void">
@@ -1535,6 +1536,7 @@
       <param name="bus" vt="int" remark="Decoder bus"/>
       <param name="addr" vt="int" remark="Decoder addres"/>
       <param name="port" vt="int" remark="Port number"/>
+      <param name="type" vt="int" remark="Port type"/>
       <param name="iid" vt="const char*" remark="Interface ID"/>
     </fun>
     <fun name="event" vt="void">
