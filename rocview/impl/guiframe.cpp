@@ -3087,6 +3087,7 @@ void RocGuiFrame::OnTooltip( wxCommandEvent& event ) {
     BasePanel* p = (BasePanel*)m_PlanNotebook->GetPage(i);
     p->showTooltip( m_bTooltip );
   }
+  m_LC->showTooltip(m_bTooltip);
 }
 
 void RocGuiFrame::OnEditLocs( wxCommandEvent& event ) {

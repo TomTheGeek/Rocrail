@@ -53,6 +53,7 @@ public:
     void SyncClock( iONode node );
     void stopTimer();
     iONode getLocProps();
+    void showTooltip(bool p_bTooltip);
 
 private:
     /// Creation

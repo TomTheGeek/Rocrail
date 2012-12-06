@@ -278,6 +278,8 @@ bool LC::setFX( iONode l_LocProps, iONode node ) {
       (NodeOp.getBool(node, "f28",  fx&0x08000000?True:False)?0x08000000:0x00)
 
       );
+
+  return true;
 }
 
 
@@ -785,7 +787,8 @@ bool LC::Create()
   m_F4->SetBackgroundColour( Base::getGreen() );
 
   //m_Stop->SetBackgroundColour( Base::getRed() );
-  m_Stop->SetLabel( wxGetApp().getMsg( "stop" ) );
+  if( wxGetApp().getFrame()->isTooltip())
+    m_Stop->SetLabel( wxGetApp().getMsg( "stop" ) );
   if( wxGetApp().getFrame()->isTooltip())
     m_F0->SetToolTip( wxGetApp().getMsg( "lights" ) );
   if( wxGetApp().getFrame()->isTooltip())
@@ -914,3 +917,26 @@ void LC::CreateControls() {
 
 }
 
+void LC::showTooltip(bool p_bTooltip) {
+  if( !p_bTooltip ) {
+    m_F0->SetToolTip( wxString("",wxConvUTF8) );
+    m_F1->SetToolTip( wxString("",wxConvUTF8) );
+    m_F2->SetToolTip( wxString("",wxConvUTF8) );
+    m_F3->SetToolTip( wxString("",wxConvUTF8) );
+    m_F4->SetToolTip( wxString("",wxConvUTF8) );
+    m_Dir->SetToolTip( wxString("",wxConvUTF8) );
+    m_FG->SetToolTip( wxString("",wxConvUTF8) );
+    m_Stop->SetToolTip( wxString("",wxConvUTF8) );
+    m_Vslider->SetToolTip( wxString("",wxConvUTF8) );
+    m_V->SetToolTip( wxString("",wxConvUTF8) );
+  }
+  else {
+    setFLabels();
+    m_Stop->SetLabel( wxGetApp().getMsg( "stop" ) );
+    m_Dir->SetToolTip( wxGetApp().getMsg( "forwards" ) );
+    m_Stop->SetToolTip( wxGetApp().getTip( "stop" ) );
+    m_V->SetToolTip( wxGetApp().getMsg( "speed" ) );
+    m_Vslider->SetToolTip( wxGetApp().getMsg( "speedcontroller" ) );
+    m_FG->SetToolTip( wxGetApp().getMsg( "functiongroup" ) );
+  }
+}
