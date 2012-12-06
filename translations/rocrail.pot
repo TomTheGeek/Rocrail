@@ -6161,3 +6161,9 @@ msgstr ""
 msgid "Clean all analyze"
 msgstr ""
 
+#. 
+# id="macro"
+#, c-format
+msgid "Macro"
+msgstr ""
+

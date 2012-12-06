@@ -516,6 +516,11 @@ static Boolean _isExpired(const char* s, char** expdate, long* expdays) {
   char mon[3] = {0,0,0};
   char year[5] = {0,0,0,0,0};
 
+  if( s == NULL || StrOp.len(s) == 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no key" );
+    return True;
+  }
+
   if( !StrOp.startsWith( s, SystemOp.getEyecatcher() ) ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "invalid key" );
     return True;

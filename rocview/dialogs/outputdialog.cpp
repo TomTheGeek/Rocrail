@@ -177,6 +177,7 @@ void OutputDialog::initLabels() {
   m_PortType->SetString( 3, wxGetApp().getMsg( "sound" ) );
   m_PortType->SetString( 4, wxGetApp().getMsg( "motor" ) );
   m_PortType->SetString( 5, wxGetApp().getMsg( "analog" ) );
+  m_PortType->SetString( 6, wxGetApp().getMsg( "macro" ) );
 
 
   // Location
@@ -620,6 +621,7 @@ void OutputDialog::CreateControls()
     m_PortTypeStrings.Add(_("&Sound"));
     m_PortTypeStrings.Add(_("&Motor"));
     m_PortTypeStrings.Add(_("&Analog"));
+    m_PortTypeStrings.Add(_("&Macro"));
     m_PortType = new wxRadioBox( m_InterfacePanel, ID_CO_PORT_TYPE, _("Type"), wxDefaultPosition, wxDefaultSize, m_PortTypeStrings, 2, wxRA_SPECIFY_ROWS );
     m_PortType->SetSelection(0);
     itemBoxSizer28->Add(m_PortType, 0, wxALIGN_LEFT|wxALL, 5);

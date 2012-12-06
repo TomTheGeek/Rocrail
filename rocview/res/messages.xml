@@ -18700,4 +18700,7 @@
   <Msg id="ana_clean">
     <en txt="Clean all analyze"/>
   </Msg>
+  <Msg id="macro">
+    <en txt="Macro"/>
+  </Msg>
 </Messages>

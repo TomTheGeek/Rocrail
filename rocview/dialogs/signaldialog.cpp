@@ -249,6 +249,7 @@ void SignalDialog::initLabels() {
   m_PortType->SetString( 3, wxGetApp().getMsg( "sound" ) );
   m_PortType->SetString( 4, wxGetApp().getMsg( "motor" ) );
   m_PortType->SetString( 5, wxGetApp().getMsg( "analog" ) );
+  m_PortType->SetString( 6, wxGetApp().getMsg( "macro" ) );
 
 
   // propeties
@@ -924,6 +925,7 @@ void SignalDialog::CreateControls()
     m_PortTypeStrings.Add(_("&Sound"));
     m_PortTypeStrings.Add(_("&Motor"));
     m_PortTypeStrings.Add(_("&Analog"));
+    m_PortTypeStrings.Add(_("&Macro"));
     m_PortType = new wxRadioBox( m_InterfacePanel, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, m_PortTypeStrings, 1, wxRA_SPECIFY_COLS );
     m_PortType->SetSelection(0);
     itemBoxSizer70->Add(m_PortType, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
