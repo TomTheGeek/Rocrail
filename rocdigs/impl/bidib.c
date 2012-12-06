@@ -1536,6 +1536,13 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_LC_MACRO_STATE:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_LC_MACRO_STATE path=%s macro=%d state=%d", pathKey, pdata[0], pdata[1] );
+    if( pdata[1] == BIDIB_MACRO_OFF || pdata[1] == BIDIB_MACRO_START ) {
+      /* modify pdata to match MSG_LC_STAT */
+      pdata[2] = pdata[1]; /* state */
+      pdata[1] = pdata[0]; /* address */
+      pdata[0] = wProgram.porttype_macro; /* type */
+      __handleStat(bidib, bidibnode, pdata);
+    }
     break;
 
   default:
