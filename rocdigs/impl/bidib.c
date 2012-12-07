@@ -545,7 +545,14 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       int mday  = lTime->tm_mday;
       int mon   = lTime->tm_mon;
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set clock" );
+      /* correction for day of week */
+      if( wday > 0 )
+        wday--;
+      else
+        wday = 6;
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+         "set clock to %d:%02d wday=%d divider=%d", hours, mins, wday, div );
       msgdata[0] = mins;
       msgdata[1] = hours;
       msgdata[2] = wday;
