@@ -219,8 +219,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       bidibnode = data->defaultbooster;
 
     if( bidibnode == NULL ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no command station available for command=%s", cmd );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no command station available for command=%s; broadcast it to 0.0.0.0", cmd );
+      bidibnode = (iOBiDiBNode)MapOp.get( data->localmap, "0.0.0.0" );
     }
+
 
     if( bidibnode != NULL && StrOp.equals( cmd, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
