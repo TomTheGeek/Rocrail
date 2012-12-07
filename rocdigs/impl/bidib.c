@@ -1601,6 +1601,16 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     }
     break;
 
+  case MSG_LC_KEY:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_LC_KEY path=%s port=%d state=%d", pathKey, pdata[0], pdata[1] );
+    /* modify pdata to match MSG_LC_STAT */
+    pdata[2] = pdata[1]; /* state */
+    pdata[1] = pdata[0]; /* address */
+    pdata[0] = wProgram.porttype_port; /* type */
+    __handleStat(bidib, bidibnode, pdata);
+    break;
+
   default:
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
         "UNSUPPORTED: msg=0x%02X, path=%s", Type, pathKey );
