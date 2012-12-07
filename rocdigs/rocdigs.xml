@@ -1362,6 +1362,7 @@
       <var name="hexline" vt="int"/>
       <var name="hexstate" vt="int"/>
       <var name="hexfh" vt="iOFile"/>
+      <var name="fcsync" vt="Boolean"/>
       </data>
   </object>
 

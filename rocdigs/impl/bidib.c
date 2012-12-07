@@ -55,10 +55,13 @@
 #include "rocrail/wrapper/public/FbMods.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/Clock.h"
 
 #include "rocdigs/impl/bidib/bidib_messages.h"
 #include "rocdigs/impl/bidib/serial.h"
 #include "rocdigs/impl/bidib/bidibutils.h"
+
+#include <time.h>
 
 static int instCnt = 0;
 
@@ -505,6 +508,50 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       }
     }
   }
+
+
+  /* Clock command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
+    /* Fast Clock */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "clock: %s", wClock.getcmd( node ) );
+
+    if(  StrOp.equals( wClock.getcmd( node ), wClock.freeze ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "freeze clock" );
+      wClock.setcmd( node, wClock.set );
+      wClock.setdivider( node, 0 );
+    }
+    else if(  StrOp.equals( wClock.getcmd( node ), wClock.go ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "go clock" );
+      wClock.setcmd( node, wClock.set );
+    }
+    else if(  StrOp.equals( wClock.getcmd( node ), wClock.sync ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sync clock" );
+      if( !data->fcsync ) {
+        wClock.setcmd( node, wClock.set );
+        data->fcsync = True;
+      }
+    }
+
+    if(  StrOp.equals( wClock.getcmd( node ), wClock.set ) || StrOp.equals( wClock.getcmd( node ), wClock.sync ) ) {
+      int div   = wClock.getdivider(node);
+      long l_time = wClock.gettime(node);
+      struct tm* lTime = localtime( &l_time );
+
+      int mins  = lTime->tm_min;
+      int hours = lTime->tm_hour;
+      int wday  = lTime->tm_wday;
+      int mday  = lTime->tm_mday;
+      int mon   = lTime->tm_mon;
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set clock" );
+      msgdata[0] = mins;
+      msgdata[1] = hours;
+      msgdata[2] = wday;
+      msgdata[3] = div;
+      data->subWrite((obj)inst, path, MSG_SYS_CLOCK, msgdata, 4, 0);
+    }
+  }
+
 
   return rsp;
 }
