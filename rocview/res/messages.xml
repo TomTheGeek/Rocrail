@@ -18703,4 +18703,10 @@
   <Msg id="macro">
     <en txt="Macro"/>
   </Msg>
+  <Msg id="features">
+    <en txt="Features"/>
+  </Msg>
+  <Msg id="portsetup">
+    <en txt="Port setup"/>
+  </Msg>
 </Messages>

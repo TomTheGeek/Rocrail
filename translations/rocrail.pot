@@ -6167,3 +6167,15 @@ msgstr ""
 msgid "Macro"
 msgstr ""
 
+#. 
+# id="features"
+#, c-format
+msgid "Features"
+msgstr ""
+
+#. 
+# id="portsetup"
+#, c-format
+msgid "Port setup"
+msgstr ""
+

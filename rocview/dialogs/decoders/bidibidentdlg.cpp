@@ -199,6 +199,11 @@ wxTreeItemId BidibIdentDlg::addTreeChild( const wxTreeItemId& root, iONode bidib
 
 
 void BidibIdentDlg::initLabels() {
+  m_Notebook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
+  m_Notebook->SetPageText( 1, wxGetApp().getMsg( "features" ) );
+  m_Notebook->SetPageText( 2, wxGetApp().getMsg( "portsetup" ) );
+  m_Notebook->SetPageText( 3, wxGetApp().getMsg( "macro" ) );
+  m_Notebook->SetPageText( 4, wxGetApp().getMsg( "firmware" ) );
 
   m_BiDiBlogo->SetBitmap(*_img_bidib);
 
