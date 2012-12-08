@@ -200,6 +200,66 @@ static void __SoD( iOBiDiB inst ) {
 }
 
 
+static Boolean __macroCommand(iOBiDiB inst, iONode node) {
+  iOBiDiBData data = Data(inst);
+  byte msgdata[32];
+  char uidKey[32];
+  int cmd = wProgram.getcmd(node);
+  iOBiDiBNode bidibnode = NULL;
+  StrOp.fmtb( uidKey, "0x%08X", wProgram.getmodid(node) );
+  bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "macro command %d for node %s", cmd, uidKey );
+
+  if( bidibnode != NULL ) {
+      if( cmd == wProgram.macro_restore ) {
+        /* MSG_LC_MACRO_HANDLE (index, BIDIB_MACRO_RESTORE) */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "restore macro %d", wProgram.getval1(node) );
+      }
+
+      else if( cmd == wProgram.macro_save ) {
+        /* MSG_LC_MACRO_HANDLE (index, BIDIB_MACRO_SAVE) */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "save macro %d", wProgram.getval1(node) );
+      }
+
+      else if( cmd == wProgram.macro_delete ) {
+        /* MSG_LC_MACRO_HANDLE (index, BIDIB_MACRO_DELETE) */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "delete macro %d", wProgram.getval1(node) );
+      }
+
+      else if( cmd == wProgram.macro_set ) {
+        /* MSG_LC_MACRO_SET (index, line, delay, ptype, portnum, portstat ) */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set macro %d: line=%d, delay=%d, type=%d, port=%d, stat=%d",
+            wProgram.getval1(node), wProgram.getval2(node), wProgram.getval3(node),
+            wProgram.getval4(node), wProgram.getval5(node), wProgram.getval6(node) );
+      }
+
+      else if( cmd == wProgram.macro_get ) {
+        /* MSG_LC_MACRO_GET (index, line ) */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get macro %d: line=%d",
+            wProgram.getval1(node), wProgram.getval2(node) );
+      }
+
+      else if( cmd == wProgram.macro_setparams ) {
+      /* MSG_LC_MACRO_PARA_SET (index, parameter, valLSB, valM1, valM2, valMSB ) */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set macro %d parameter %d: valLSB=%d, valM1=%d, valM2=%d, valMSB=%d",
+          wProgram.getval1(node), wProgram.getval2(node), wProgram.getval3(node),
+          wProgram.getval4(node), wProgram.getval5(node), wProgram.getval6(node) );
+      }
+
+      else if( cmd == wProgram.macro_getparams ) {
+        /* MSG_LC_MACRO_PARA_GET (index, parameter ) */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get macro %d paramter %d",
+            wProgram.getval1(node), wProgram.getval2(node) );
+      }
+
+      return True;
+    }
+
+    return False;
+  }
+
+
+
 static iONode __translate( iOBiDiB inst, iONode node ) {
   iOBiDiBData data = Data(inst);
   iOBiDiBNode bidibnode = NULL;
@@ -486,6 +546,9 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
             "programming: unknown uid=%s.", uidKey );
       }
+    }
+    else if( wProgram.getcmd( node ) >= wProgram.macro_restore && wProgram.getcmd( node ) <= wProgram.macro_getparams ) {
+      __macroCommand(inst, node);
     }
     else {
       if( wProgram.getcmd( node ) == wProgram.get ) {
