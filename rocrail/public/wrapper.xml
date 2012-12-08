@@ -801,6 +801,13 @@
     <const name="reset" vt="int" val="24" remark="Reset decoder mode."/>
     <const name="query" vt="int" val="25" remark="Query node numbers."/>
     <const name="type" vt="int" val="26" remark="Query node numbers."/>
+    <const name="macro_restore" vt="int" val="30"/>
+    <const name="macro_save" vt="int" val="31"/>
+    <const name="macro_delete" vt="int" val="32"/>
+    <const name="macro_set" vt="int" val="33"/>
+    <const name="macro_get" vt="int" val="34"/>
+    <const name="macro_setparams" vt="int" val="35"/>
+    <const name="macro_getparams" vt="int" val="36"/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>
