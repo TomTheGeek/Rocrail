@@ -1764,25 +1764,37 @@ void PlanPanel::modelEvent( iONode node ) {
 }
 
 
+
 bool PlanPanel::isBlockOccupied( const char* id ) {
-  char key[256];
-  itemKey( wBlock.name(), id, key );
-  Symbol* item = (Symbol*)m_ChildTable->Get( wxString(key,wxConvUTF8) );
-  if( item != NULL ) {
-    const char* locid = wBlock.getlocid( item->getProperties() );
-    if( locid != NULL && StrOp.len( locid ) > 0 )
-      return true;
+  iONode model = wxGetApp().getModel();
+  iONode list = wPlan.getbklist( model );
+  if( list != NULL ) {
+    int cnt = NodeOp.getChildCnt( list );
+    for( int i = 0; i < cnt; i++ ) {
+      iONode node = NodeOp.getChild( list, i );
+      if( id != NULL && StrOp.equals( id, wItem.getid(node) ) ) {
+        const char* locid = wBlock.getlocid( node );
+        if( locid != NULL && StrOp.len( locid ) > 0 )
+          return true;
+        else
+          return false;
+      }
+    }
   }
 
-  itemKey( wFeedback.name(), id, key );
-  item = (Symbol*)m_ChildTable->Get( wxString(key,wxConvUTF8) );
-  if( item != NULL ) {
-    if( StrOp.equals(wFeedback.name(), NodeOp.getName(item->getProperties())) && wFeedback.isstate(item->getProperties()) )
-      return true;
+  list = wPlan.getfblist( model );
+  if( list != NULL ) {
+    int cnt = NodeOp.getChildCnt( list );
+    for( int i = 0; i < cnt; i++ ) {
+      iONode node = NodeOp.getChild( list, i );
+      if( id != NULL && StrOp.equals( id, wItem.getid(node) ) ) {
+        return wFeedback.isstate(node);
+      }
+    }
   }
-
   return false;
 }
+
 
 bool PlanPanel::isBlockReserved( const char* id ) {
   char key[256];
