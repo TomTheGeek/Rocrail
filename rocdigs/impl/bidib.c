@@ -214,16 +214,25 @@ static Boolean __macroCommand(iOBiDiB inst, iONode node) {
       if( cmd == wProgram.macro_restore ) {
         /* MSG_LC_MACRO_HANDLE (index, BIDIB_MACRO_RESTORE) */
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "restore macro %d", wProgram.getval1(node) );
+        msgdata[0] = wProgram.getval1(node);
+        msgdata[1] = BIDIB_MACRO_RESTORE;
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode->seq++);
       }
 
       else if( cmd == wProgram.macro_save ) {
         /* MSG_LC_MACRO_HANDLE (index, BIDIB_MACRO_SAVE) */
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "save macro %d", wProgram.getval1(node) );
+        msgdata[0] = wProgram.getval1(node);
+        msgdata[1] = BIDIB_MACRO_SAVE;
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode->seq++);
       }
 
       else if( cmd == wProgram.macro_delete ) {
         /* MSG_LC_MACRO_HANDLE (index, BIDIB_MACRO_DELETE) */
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "delete macro %d", wProgram.getval1(node) );
+        msgdata[0] = wProgram.getval1(node);
+        msgdata[1] = BIDIB_MACRO_DELETE;
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode->seq++);
       }
 
       else if( cmd == wProgram.macro_set ) {
@@ -231,25 +240,45 @@ static Boolean __macroCommand(iOBiDiB inst, iONode node) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set macro %d: line=%d, delay=%d, type=%d, port=%d, stat=%d",
             wProgram.getval1(node), wProgram.getval2(node), wProgram.getval3(node),
             wProgram.getval4(node), wProgram.getval5(node), wProgram.getval6(node) );
+        msgdata[0] = wProgram.getval1(node);
+        msgdata[1] = wProgram.getval2(node);
+        msgdata[2] = wProgram.getval3(node);
+        msgdata[3] = wProgram.getval4(node);
+        msgdata[4] = wProgram.getval5(node);
+        msgdata[5] = wProgram.getval6(node);
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_SET, msgdata, 6, bidibnode->seq++);
       }
 
       else if( cmd == wProgram.macro_get ) {
         /* MSG_LC_MACRO_GET (index, line ) */
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get macro %d: line=%d",
             wProgram.getval1(node), wProgram.getval2(node) );
+        msgdata[0] = wProgram.getval1(node);
+        msgdata[1] = wProgram.getval2(node);
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_GET, msgdata, 2, bidibnode->seq++);
       }
 
       else if( cmd == wProgram.macro_setparams ) {
-      /* MSG_LC_MACRO_PARA_SET (index, parameter, valLSB, valM1, valM2, valMSB ) */
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set macro %d parameter %d: valLSB=%d, valM1=%d, valM2=%d, valMSB=%d",
-          wProgram.getval1(node), wProgram.getval2(node), wProgram.getval3(node),
-          wProgram.getval4(node), wProgram.getval5(node), wProgram.getval6(node) );
+        /* MSG_LC_MACRO_PARA_SET (index, parameter, valLSB, valM1, valM2, valMSB ) */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set macro %d parameter %d: valLSB=%d, valM1=%d, valM2=%d, valMSB=%d",
+            wProgram.getval1(node), wProgram.getval2(node), wProgram.getval3(node),
+            wProgram.getval4(node), wProgram.getval5(node), wProgram.getval6(node) );
+        msgdata[0] = wProgram.getval1(node);
+        msgdata[1] = wProgram.getval2(node);
+        msgdata[2] = wProgram.getval3(node);
+        msgdata[3] = wProgram.getval4(node);
+        msgdata[4] = wProgram.getval5(node);
+        msgdata[5] = wProgram.getval6(node);
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_PARA_SET, msgdata, 6, bidibnode->seq++);
       }
 
       else if( cmd == wProgram.macro_getparams ) {
         /* MSG_LC_MACRO_PARA_GET (index, parameter ) */
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get macro %d paramter %d",
             wProgram.getval1(node), wProgram.getval2(node) );
+        msgdata[0] = wProgram.getval1(node);
+        msgdata[1] = wProgram.getval2(node);
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_PARA_GET, msgdata, 2, bidibnode->seq++);
       }
 
       return True;
@@ -782,6 +811,76 @@ static void __handleCV(iOBiDiB bidib, int addr, int cv, int val) {
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 
 }
+
+
+static void __handleMacroGet(iOBiDiB bidib, int uid, byte* pdata ) {
+  iOBiDiBData data = Data(bidib);
+  iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( node, wProgram.macro_get );
+  wProgram.setlntype(node, wProgram.lntype_bidib);
+  wProgram.setmodid( node, uid );
+  wProgram.setval1( node, pdata[0] );
+  wProgram.setval2( node, pdata[1] );
+  wProgram.setval3( node, pdata[2] );
+  wProgram.setval4( node, pdata[3] );
+  wProgram.setval5( node, pdata[4] );
+  wProgram.setval6( node, pdata[5] );
+  if( data->iid != NULL )
+    wProgram.setiid( node, data->iid );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "MSG_LC_MACRO macro %d: line=%d, delay=%d, type=%d, port=%d, stat=%d",
+      pdata[0], pdata[1], pdata[2], pdata[3], pdata[4], pdata[5] );
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+}
+
+
+static void __handleMacroParaGet(iOBiDiB bidib, int uid, byte* pdata ) {
+  iOBiDiBData data = Data(bidib);
+  iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( node, wProgram.macro_getparams );
+  wProgram.setlntype(node, wProgram.lntype_bidib);
+  wProgram.setmodid( node, uid );
+  wProgram.setval1( node, pdata[0] );
+  wProgram.setval2( node, pdata[1] );
+  wProgram.setval3( node, pdata[2] );
+  wProgram.setval4( node, pdata[3] );
+  wProgram.setval5( node, pdata[4] );
+  wProgram.setval6( node, pdata[5] );
+  if( data->iid != NULL )
+    wProgram.setiid( node, data->iid );
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+}
+
+
+static void __handleMacroStat(iOBiDiB bidib, int uid, byte* pdata ) {
+  iOBiDiBData data = Data(bidib);
+  iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  if( pdata[1] == BIDIB_MACRO_RESTORE )
+    wProgram.setcmd( node, wProgram.macro_restore );
+  else if( pdata[1] == BIDIB_MACRO_SAVE )
+    wProgram.setcmd( node, wProgram.macro_save );
+  else if( pdata[1] == BIDIB_MACRO_DELETE )
+    wProgram.setcmd( node, wProgram.macro_delete );
+  else {
+    NodeOp.base.del(node);
+    return;
+  }
+  wProgram.setlntype(node, wProgram.lntype_bidib);
+  wProgram.setmodid( node, uid );
+  wProgram.setval1( node, pdata[0] );
+  wProgram.setval2( node, pdata[1] );
+  if( data->iid != NULL )
+    wProgram.setiid( node, data->iid );
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+}
+
 
 static void __handlePT(iOBiDiB bidib, int state, int val) {
   iOBiDiBData data = Data(bidib);
@@ -1662,6 +1761,24 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
       pdata[0] = wProgram.porttype_macro; /* type */
       __handleStat(bidib, bidibnode, pdata);
     }
+    else {
+      /* macro modification confirmation:
+       * BIDIB_MACRO_RESTORE
+       * BIDIB_MACRO_SAVE
+       * BIDIB_MACRO_DELETE
+       * */
+      __handleMacroStat(bidib, bidibnode->uid, pdata );
+    }
+    break;
+
+  case MSG_LC_MACRO:
+    /* macro get response */
+    __handleMacroGet(bidib, bidibnode->uid, pdata );
+    break;
+
+  case MSG_LC_MACRO_PARA:
+    /* macro get response */
+    __handleMacroParaGet(bidib, bidibnode->uid, pdata );
     break;
 
   case MSG_LC_KEY:
