@@ -570,14 +570,14 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           msgdata[1] = wProgram.getcv(node);
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_CONFIG_GET, msgdata, 2, bidibnode->seq++);
         }
+        else if( wProgram.getcmd( node ) >= wProgram.macro_restore && wProgram.getcmd( node ) <= wProgram.macro_getparams ) {
+          __macroCommand(inst, node);
+        }
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
             "programming: unknown uid=%s.", uidKey );
       }
-    }
-    else if( wProgram.getcmd( node ) >= wProgram.macro_restore && wProgram.getcmd( node ) <= wProgram.macro_getparams ) {
-      __macroCommand(inst, node);
     }
     else {
       if( wProgram.getcmd( node ) == wProgram.get ) {

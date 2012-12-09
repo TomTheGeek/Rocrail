@@ -49,6 +49,7 @@
 #include "rocrail/wrapper/public/BiDiB.h"
 #include "rocrail/wrapper/public/BiDiBnode.h"
 #include "rocdigs/impl/bidib/bidibutils.h"
+#include "rocdigs/impl/bidib/bidib_messages.h"
 
 #include "rocview/res/icons.hpp"
 
@@ -158,7 +159,11 @@ void BidibIdentDlg::event(iONode node) {
     m_UpdateStart->Enable(true);
     m_UpdateStart->SetLabel( wxGetApp().getMsg( "start" ) );
   }
-  else {
+  else if( wProgram.getcmd( node ) == wProgram.macro_get || wProgram.getcmd( node ) == wProgram.macro_getparams ) {
+    handleMacro(node);
+    NodeOp.base.del(node);
+  }
+  else if( !StrOp.equals( wProgram.name(), NodeOp.getName(node) ) ) {
     if( this->node != NULL )
       NodeOp.base.del(this->node);
     this->node = node;
@@ -211,6 +216,11 @@ void BidibIdentDlg::initLabels() {
   nodePathMap  = MapOp.inst();
   nodeList = ListOp.inst();
   bidibnode = NULL;
+  macro = 0;
+  macroline = 0;
+  macrosize = 0;
+  macrolevel = 0;
+  macroparam = 0;
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -329,6 +339,19 @@ void BidibIdentDlg::initLabels() {
       m_Tree->SelectItem(root, true);
     }
   }
+
+  m_MacroLines->SetColLabelValue(0, wxGetApp().getMsg("delay") );
+  m_MacroLines->SetColLabelValue(1, wxGetApp().getMsg("type") );
+  m_MacroLines->SetColLabelValue(2, wxGetApp().getMsg("port") );
+  m_MacroLines->SetColLabelValue(3, wxGetApp().getMsg("value") );
+  m_MacroLines->AutoSizeColumns(false);
+
+  m_MacroType->Append( wxGetApp().getMsg( "default" ) );
+  m_MacroType->Append( wxGetApp().getMsg( "lights" ) );
+  m_MacroType->Append( wxGetApp().getMsg( "servo" ) );
+  m_MacroType->Append( wxGetApp().getMsg( "sound" ) );
+  m_MacroType->Append( wxGetApp().getMsg( "motor" ) );
+  m_MacroType->Append( wxGetApp().getMsg( "analog" ) );
 
 }
 
@@ -530,6 +553,23 @@ void BidibIdentDlg::handleFeature(iONode node) {
     int value   = wProgram.getvalue(node);
     const char* featureName = bidibGetFeatureName(feature);
     m_FeatureList->Append( wxString(featureName,wxConvUTF8), program);
+
+    if( feature == FEATURE_CTRL_MAC_COUNT ) {
+      m_MacroList->Clear();
+      for( int i = 0; i < value; i++ ) {
+        m_MacroList->Append( wxString::Format(_T("macro %d"), i+1));
+      }
+      if( value > 0 ) {
+        m_MacroList->Select(0);
+        m_MacroList->SetFirstItem(0);
+      }
+    }
+    else if( feature == FEATURE_CTRL_MAC_SIZE ) {
+      macrosize = value;
+    }
+    else if( feature == FEATURE_CTRL_MAC_LEVEL ) {
+      macrolevel = value;
+    }
   }
   else {
     TraceOp.trc( "bidibident", TRCLEVEL_WARNING, __LINE__, 9999,"bidib node \"%s\" not found", uidKey );
@@ -710,4 +750,87 @@ void BidibIdentDlg::onUpdateStart( wxCommandEvent& event ) {
   }
 }
 
+
+void BidibIdentDlg::onMacroList( wxCommandEvent& event ) {
+
+}
+
+
+void BidibIdentDlg::onMacroLineSelected( wxGridEvent& event ) {
+  m_MacroLines->SelectRow(event.GetRow());
+  m_MacroLines->MakeCellVisible( event.GetRow(), 0 );
+  int val1 = atoi( m_MacroLines->GetCellValue( event.GetRow(), 0 ).mb_str(wxConvUTF8) );
+  int val2 = atoi( m_MacroLines->GetCellValue( event.GetRow(), 1 ).mb_str(wxConvUTF8) );
+  int val3 = atoi( m_MacroLines->GetCellValue( event.GetRow(), 2 ).mb_str(wxConvUTF8) );
+  int val4 = atoi( m_MacroLines->GetCellValue( event.GetRow(), 3 ).mb_str(wxConvUTF8) );
+
+  m_MacroDelay->SetValue(val1);
+  if( val2 < 6 )
+    m_MacroType->SetSelection(val2);
+  else
+    m_MacroType->SetSelection(0);
+  m_MacroPort->SetValue(val3);
+  m_MacroValue->SetValue(val4);
+}
+
+
+void BidibIdentDlg::onMacroApply( wxCommandEvent& event ) {
+
+}
+
+
+void BidibIdentDlg::onMacroReload( wxCommandEvent& event ) {
+  macro = m_MacroList->GetSelection();
+  macroline = 0;
+
+  m_MacroLines->ClearGrid();
+  if( m_MacroLines->GetNumberRows() > 0 )
+    m_MacroLines->DeleteRows( 0, m_MacroLines->GetNumberRows() );
+
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.macro_get );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wProgram.setval1( cmd, macro );
+    wProgram.setval2( cmd, macroline );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+}
+
+
+void BidibIdentDlg::onMacroSave( wxCommandEvent& event ) {
+
+}
+
+
+void BidibIdentDlg::handleMacro(iONode node) {
+  if( wProgram.getcmd(node) == wProgram.macro_get ) {
+    int index = wProgram.getval1(node);
+    int line = wProgram.getval2(node);
+
+    m_MacroLines->AppendRows();
+    m_MacroLines->SetCellValue(m_MacroLines->GetNumberRows()-1, 0, wxString::Format(_T("%d"), wProgram.getval3(node)) );
+    m_MacroLines->SetCellValue(m_MacroLines->GetNumberRows()-1, 1, wxString::Format(_T("%d"), wProgram.getval4(node)) );
+    m_MacroLines->SetCellValue(m_MacroLines->GetNumberRows()-1, 2, wxString::Format(_T("%d"), wProgram.getval5(node)) );
+    m_MacroLines->SetCellValue(m_MacroLines->GetNumberRows()-1, 3, wxString::Format(_T("%d"), wProgram.getval6(node)) );
+    m_MacroLines->AutoSizeColumns(false);
+
+
+    if( line < macrosize && macroline < macrosize) {
+      macroline++;
+      iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+      wProgram.setcmd( cmd, wProgram.macro_get );
+      wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+      wProgram.setlntype(cmd, wProgram.lntype_bidib);
+      wProgram.setval1( cmd, macro );
+      wProgram.setval2( cmd, macroline );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
+  }
+}
 

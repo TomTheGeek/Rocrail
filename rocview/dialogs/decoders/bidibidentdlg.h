@@ -45,11 +45,17 @@ class BidibIdentDlg : public BidibIdentDlgGen
   iOList nodeList;
   iOMap nodeMap;
   iOMap nodePathMap;
+  int macro;
+  int macroline;
+  int macrosize;
+  int macrolevel;
+  int macroparam;
   wxTreeItemId findTreeItem( const wxTreeItemId& root, const wxString& text);
   int getLevel(const char* path );
   wxTreeItemId addTreeChild( const wxTreeItemId& root, iONode bidibnode);
   void handleFeature(iONode node);
   void clearFeatureList();
+  void handleMacro(iONode node);
 
 
   protected:
@@ -85,6 +91,13 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onUpdateStart( wxCommandEvent& event );
 
     void onServoSet();
+
+    void onMacroList( wxCommandEvent& event );
+    void onMacroLineSelected( wxGridEvent& event );
+    void onMacroApply( wxCommandEvent& event );
+    void onMacroReload( wxCommandEvent& event );
+    void onMacroSave( wxCommandEvent& event );
+
 
 	public:
 		/** Constructor */
