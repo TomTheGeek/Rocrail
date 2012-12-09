@@ -1919,9 +1919,11 @@
         <const name="dirall" vt="string" val="dirall"/>
         <const name="tracknr" vt="string" val="tracknr"/>
         <const name="connector" vt="string" val="connector"/>
+        <const name="concurveright" vt="string" val="concurveright"/>
+        <const name="concurveleft" vt="string" val="concurveleft"/>
         <const name="curve90" vt="string" val="curve90"/>
         <const name="dcurve" vt="string" val="dcurve"/>
-        <var name="type" vt="string" defval="straight" range="straight,curve,dir,dirall,buffer,connector,curve90"/>
+        <var name="type" vt="string" defval="straight" range="straight,curve,dir,dirall,buffer,connector,curve90,concurveright,concurveleft"/>
         <var name="tknr" vt="int" defval="1" range="0-*" required="false" remark="Track number."/>
         <var name="counterpartid" vt="string" defval="NULL" range="*"/>
       </tk>

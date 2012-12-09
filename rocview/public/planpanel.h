@@ -52,6 +52,8 @@ public:
   void addTrackDirAll(wxCommandEvent& event);
   void addTrackBuffer(wxCommandEvent& event);
   void addTrackConnector(wxCommandEvent& event);
+  void addTrackConnectorCurveRight(wxCommandEvent& event);
+  void addTrackConnectorCurveLeft(wxCommandEvent& event);
   void addSwitchLeft(wxCommandEvent& event);
   void addSwitchRight(wxCommandEvent& event);
   void addSwitchCrossing(wxCommandEvent& event);
@@ -165,6 +167,8 @@ enum {
   ME_AddTrackDirAll,
   ME_AddTrackBuffer,
   ME_AddTrackConnector,
+  ME_AddTrackConnectorCurveRight,
+  ME_AddTrackConnectorCurveLeft,
   ME_AddSwitchLeft,
   ME_AddSwitchRight,
   ME_AddSwitchCrossing,

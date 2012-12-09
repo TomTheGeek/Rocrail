@@ -175,6 +175,22 @@ void SymbolRenderer::initSym() {
         m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::connector_route );
       }
     }
+    else if( StrOp.equals( wTrack.concurveright, wTrack.gettype( m_Props ) ) ) {
+      m_iSymSubType = tracktype::i_connector;
+      if( m_SymMap != NULL ) {
+        m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::connector_curve_right );
+        m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::connector_curve_right_occ );
+        m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::connector_curve_right_route );
+      }
+    }
+    else if( StrOp.equals( wTrack.concurveleft, wTrack.gettype( m_Props ) ) ) {
+      m_iSymSubType = tracktype::i_connector;
+      if( m_SymMap != NULL ) {
+        m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::connector_curve_left );
+        m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::connector_curve_left_occ );
+        m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, tracktype::connector_curve_left_route );
+      }
+    }
     else if( StrOp.equals( wTrack.dir, wTrack.gettype( m_Props ) ) ) {
       m_iSymSubType = tracktype::i_dir;
       if( m_SymMap != NULL ) {

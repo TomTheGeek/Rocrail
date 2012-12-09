@@ -130,6 +130,8 @@ BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
   EVT_MENU( ME_AddTrackDirAll   , PlanPanel::addTrackDirAll )
   EVT_MENU( ME_AddTrackBuffer   , PlanPanel::addTrackBuffer )
   EVT_MENU( ME_AddTrackConnector, PlanPanel::addTrackConnector )
+  EVT_MENU( ME_AddTrackConnectorCurveRight, PlanPanel::addTrackConnectorCurveRight )
+  EVT_MENU( ME_AddTrackConnectorCurveLeft, PlanPanel::addTrackConnectorCurveLeft )
 
   EVT_MENU( ME_AddSwitchLeft     , PlanPanel::addSwitchLeft)
   EVT_MENU( ME_AddSwitchRight    , PlanPanel::addSwitchRight)
@@ -973,6 +975,8 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       menuTrack->Append( ME_AddTrackDirAll   , wxGetApp().getMenu("dirall") );
       menuTrack->Append( ME_AddTrackBuffer   , wxGetApp().getMenu("buffer") );
       menuTrack->Append( ME_AddTrackConnector, wxGetApp().getMenu("zconnector") );
+      menuTrack->Append( ME_AddTrackConnectorCurveRight, wxGetApp().getMenu("concurveright") );
+      menuTrack->Append( ME_AddTrackConnectorCurveLeft, wxGetApp().getMenu("concurveleft") );
 
       wxMenu* menuTurnout = new wxMenu();
       menuTurnout->Append( ME_AddSwitchRight    , wxGetApp().getMenu("rightturnout") );
@@ -1305,6 +1309,18 @@ void PlanPanel::addTrackBuffer(wxCommandEvent& event) {
 void PlanPanel::addTrackConnector(wxCommandEvent& event) {
   iONode node = NodeOp.inst( wTrack.name(), NULL, ELEMENT_NODE );
   wTrack.settype( node, wTrack.connector );
+  addItemAttr( node );
+}
+
+void PlanPanel::addTrackConnectorCurveRight(wxCommandEvent& event) {
+  iONode node = NodeOp.inst( wTrack.name(), NULL, ELEMENT_NODE );
+  wTrack.settype( node, wTrack.concurveright );
+  addItemAttr( node );
+}
+
+void PlanPanel::addTrackConnectorCurveLeft(wxCommandEvent& event) {
+  iONode node = NodeOp.inst( wTrack.name(), NULL, ELEMENT_NODE );
+  wTrack.settype( node, wTrack.concurveleft );
   addItemAttr( node );
 }
 

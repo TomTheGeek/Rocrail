@@ -18709,4 +18709,10 @@
   <Msg id="portsetup">
     <en txt="Port setup"/>
   </Msg>
+  <Msg id="concurveright">
+    <en txt="Connector curve right"/>
+  </Msg>
+  <Msg id="concurveleft">
+    <en txt="Connector curve left"/>
+  </Msg>
 </Messages>

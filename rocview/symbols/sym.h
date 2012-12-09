@@ -59,6 +59,12 @@ namespace tracktype {
   static const char* connector       = "connector.svg";
   static const char* connector_occ   = "connector-occ.svg";
   static const char* connector_route = "connector-route.svg";
+  static const char* connector_curve_right       = "connector-curve-right.svg";
+  static const char* connector_curve_right_occ   = "connector-curve-right-occ.svg";
+  static const char* connector_curve_right_route = "connector-curve-right-route.svg";
+  static const char* connector_curve_left        = "connector-curve-left.svg";
+  static const char* connector_curve_left_occ    = "connector-curve-left-occ.svg";
+  static const char* connector_curve_left_route  = "connector-curve-left-route.svg";
 
   static const char* road_straight      = "road-straight.svg";
   static const char* road_straight_occ  = "road-straight-occ.svg";

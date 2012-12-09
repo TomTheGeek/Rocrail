@@ -6179,3 +6179,15 @@ msgstr ""
 msgid "Port setup"
 msgstr ""
 
+#. 
+# id="concurveright"
+#, c-format
+msgid "Connector curve right"
+msgstr ""
+
+#. 
+# id="concurveleft"
+#, c-format
+msgid "Connector curve left"
+msgstr ""
+
