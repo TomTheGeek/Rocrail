@@ -210,6 +210,8 @@ void BidibIdentDlg::initLabels() {
   m_Notebook->SetPageText( 3, wxGetApp().getMsg( "macro" ) );
   m_Notebook->SetPageText( 4, wxGetApp().getMsg( "firmware" ) );
 
+  m_MacroPanel->Enable(false);
+
   m_BiDiBlogo->SetBitmap(*_img_bidib);
 
   nodeMap  = MapOp.inst();
@@ -562,6 +564,10 @@ void BidibIdentDlg::handleFeature(iONode node) {
       if( value > 0 ) {
         m_MacroList->Select(0);
         m_MacroList->SetFirstItem(0);
+        m_MacroPanel->Enable(true);
+      }
+      else {
+        m_MacroPanel->Enable(false);
       }
     }
     else if( feature == FEATURE_CTRL_MAC_SIZE ) {
