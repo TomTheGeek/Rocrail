@@ -788,6 +788,7 @@ void BidibIdentDlg::onMacroApply( wxCommandEvent& event ) {
 void BidibIdentDlg::onMacroReload( wxCommandEvent& event ) {
   macro = m_MacroList->GetSelection();
   macroline = 0;
+  macroparam = 0;
 
   m_MacroLines->ClearGrid();
   if( m_MacroLines->GetNumberRows() > 0 )
@@ -837,6 +838,67 @@ void BidibIdentDlg::handleMacro(iONode node) {
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }
+    else if( macrolevel == 2 && macroparam == 0 ) {
+      macroparam = BIDIB_MACRO_PARA_SLOWDOWN;
+      iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+      wProgram.setcmd( cmd, wProgram.macro_getparams );
+      wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+      wProgram.setlntype(cmd, wProgram.lntype_bidib);
+      wProgram.setval1( cmd, macro );
+      wProgram.setval2( cmd, macroparam );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
+  }
+  else if( wProgram.getcmd(node) == wProgram.macro_getparams ) {
+    int index = wProgram.getval1(node);
+    int param = wProgram.getval2(node);
+    int valLSB = wProgram.getval3(node);
+    int valM1 = wProgram.getval4(node);
+    int valM2 = wProgram.getval5(node);
+    int valMSB = wProgram.getval6(node);
+    int val = valLSB + (valM1 << 8) + (valM2 << 16)  + (valMSB << 24);
+
+    if( param == BIDIB_MACRO_PARA_SLOWDOWN ) {
+      m_MacroSlowdown->SetValue(val);
+    }
+    else if( param == BIDIB_MACRO_PARA_REPEAT ) {
+      m_MacroCycles->SetValue(val);
+    }
+    else if( param == BIDIB_MACRO_PARA_START_CLK ) {
+      m_MacroStartCondition->SetSelection(0);
+      if( valLSB == 60 )
+        m_MacroStartCondition->SetSelection(3);
+      if( valM1 == 24 )
+        m_MacroStartCondition->SetSelection(2);
+      if( valLSB < 60 && valM1 < 24 && valM2 < 7 )
+        m_MacroStartCondition->SetSelection(1);
+
+      if( valLSB == 255 )
+        valLSB = 0;
+      m_MacroHours->SetValue(valLSB);
+      if( valM1 == 255 )
+        valM1 = 0;
+      m_MacroMinutes->SetValue(valM1);
+      if( valM2 == 255 )
+        valM2 = 0;
+      m_MacroWDay->SetValue(valM2);
+    }
+
+    if( macroparam < BIDIB_MACRO_PARA_START_CLK ) {
+      macroparam++;
+      iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+      wProgram.setcmd( cmd, wProgram.macro_getparams );
+      wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+      wProgram.setlntype(cmd, wProgram.lntype_bidib);
+      wProgram.setval1( cmd, macro );
+      wProgram.setval2( cmd, macroparam );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
+
   }
 }
 

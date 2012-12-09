@@ -854,6 +854,10 @@ static void __handleMacroParaGet(iOBiDiB bidib, int uid, byte* pdata ) {
   if( data->iid != NULL )
     wProgram.setiid( node, data->iid );
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "MSG_LC_MACRO_PARA macro %d: parameter=%d, valLSB=%d, valM1=%d, valM2=%d, valMSB=%d",
+      pdata[0], pdata[1], pdata[2], pdata[3], pdata[4], pdata[5] );
+
   if( data->listenerFun != NULL && data->listenerObj != NULL )
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 }
