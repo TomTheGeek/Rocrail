@@ -128,6 +128,8 @@ For the Analyzer to work the Plan has to fullfill:
 
 static int instCnt = 0;
 
+#define MIN_CONNECTOR_COUNTERPART_NR 10
+
 /* some forward declaration */
 static Boolean _checkPlanHealth(iOAnalyse inst);
 static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
@@ -412,7 +414,7 @@ static Boolean isFeedbackOfBlock( iOModel model, iONode bl, const char* id ) {
     while( fbevt != NULL ) {
       const char* fbid = wFeedbackEvent.getid( fbevt );
       if( ( StrOp.len(fbid) > 0 ) && StrOp.equals( fbid, id ) ) {
-        /* fb is already used in a block */
+        /* fb is used in given block */
         return True ;
       }
       fbevt = wBlock.nextfbevent( bkNode, fbevt );
@@ -436,11 +438,11 @@ static Boolean isFeedbackOfBlock( iOModel model, iONode bl, const char* id ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isFeedbackOfBlock: sb %s sec %s fb %s fbocc %s idx %d nr %d",
           wStage.getid( bl ), wStageSection.getid( section ), fbid, fbidocc, idx, nr );
       if( ( fbid != NULL ) && StrOp.equals( fbid, id ) ) {
-        /* fb is already used in a stagingblock */
+        /* fb is used in given stagingblock */
         return True;
       }
       if( ( fbidocc != NULL ) && StrOp.equals( fbid, id ) ) {
-        /* fb is already used in a stagingblock as occ fb */
+        /* fb is used in given stagingblock as occ fb */
         return True;
       }
       section = wStage.nextsection( bl, section );
@@ -1923,7 +1925,10 @@ static iONode __findConnectorCounterpart(iOAnalyse inst, iONode item ) {
       tracknode = NodeOp.getChild(tracklist, i);
       if( tracknode && 
           StrOp.equals(NodeOp.getName(tracknode), wTrack.name() ) &&
-          StrOp.equals(wItem.gettype(tracknode),  wTrack.connector ) &&
+          ( StrOp.equals(wItem.gettype(tracknode),  wTrack.connector ) || 
+            StrOp.equals(wItem.gettype(tracknode),  wTrack.concurveleft ) || 
+            StrOp.equals(wItem.gettype(tracknode),  wTrack.concurveright )
+          ) &&
           ! StrOp.equals(wItem.getid(tracknode),  wItem.getid(item) ) &&
           ( wTrack.gettknr(tracknode) == tknr )
         ) {
@@ -1946,16 +1951,22 @@ static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList rout
   int yoffset = 0;
   char key[32] = {'\0'};
 
-  if( StrOp.equals(NodeOp.getName(item), wTrack.name() ) && StrOp.equals(wItem.gettype(item), wTrack.connector )) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "__aBC: [%s][%s] [%s] is a connector. cpid[%s] tknr[%d]",
-        NodeOp.getName(item), wItem.gettype(item), wItem.getid(item), wTrack.getcounterpartid(item), wTrack.gettknr(item));
+  if( StrOp.equals(NodeOp.getName(item), wTrack.name() ) && 
+      ( StrOp.equals(wItem.gettype(item), wTrack.connector ) ||
+        StrOp.equals(wItem.gettype(item), wTrack.concurveleft ) ||
+        StrOp.equals(wItem.gettype(item), wTrack.concurveright )
+      )
+    ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "__aBC: [%s][%s] [%s] is a connector. cpid[%s] tknr[%d] travel[%d]",
+        NodeOp.getName(item), wItem.gettype(item), wItem.getid(item), wTrack.getcounterpartid(item), wTrack.gettknr(item), travel);
   } else {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "__aBC: [%s][%s] [%s] not a connector",
         NodeOp.getName(item), wItem.gettype(item), wItem.getid(item));
+    return False;
   }
 
-  if( wTrack.gettknr(item) >= 50 ) {
-    /* trknr [50..99] */
+  if( wTrack.gettknr(item) >= MIN_CONNECTOR_COUNTERPART_NR ) {
+    /* trknr [10..99] */
     Boolean found = False;
 
     /* search for counterpart somewhere else (may be on same level but not necessarly in same direction) !
@@ -1966,7 +1977,12 @@ static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList rout
 
     if( nextitem ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found counterpart: [%s]", wItem.getid(nextitem));
-      if( StrOp.equals(NodeOp.getName(nextitem), wTrack.name() ) && StrOp.equals(wItem.gettype(nextitem), wTrack.connector )) {
+      if( StrOp.equals(NodeOp.getName(nextitem), wTrack.name() ) && 
+          ( StrOp.equals(wItem.gettype(nextitem), wTrack.connector ) ||
+            StrOp.equals(wItem.gettype(nextitem), wTrack.concurveleft ) ||
+            StrOp.equals(wItem.gettype(nextitem), wTrack.concurveright )
+          )
+        ) {
         const char* nextitemori = wItem.getori( nextitem );
         if( nextitemori == NULL )
           nextitemori = wItem.west;
@@ -1985,7 +2001,7 @@ static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList rout
       }
       else {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "__aBC: nextItem [%s][%s] [%s] not a connector",
-            NodeOp.getName(item), wItem.gettype(item), wItem.getid(item));
+            NodeOp.getName(nextitem), wItem.gettype(nextitem), wItem.getid(nextitem));
       }
     }
     return False;
@@ -1994,34 +2010,45 @@ static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList rout
   int i = 0;
   for ( i = 0; i <= data->maxConnectorDistance; i++) {
     /* search a maximum distance of maxConnectorDistance items for the counterpart (on same level) */
-    switch(travel) {
-      case oriWest:
-        xoffset--;
-        __createKey( key, item, xoffset, yoffset, 0);
-        break;
-      case oriNorth:
-        yoffset--;
-        __createKey( key, item, xoffset, yoffset, 0);
-        break;
-      case oriEast:
-        xoffset++;
-        __createKey( key, item, xoffset, yoffset, 0);
-        break;
-      case oriSouth:
-        yoffset++;
-        __createKey( key, item, xoffset, yoffset, 0);
-        break;
+    if( StrOp.equals(wItem.gettype(item), wTrack.connector ) ||
+        StrOp.equals(wItem.gettype(item), wTrack.concurveleft ) ||
+        StrOp.equals(wItem.gettype(item), wTrack.concurveright )
+      ) {
+      switch(travel) {
+        case oriWest:
+          xoffset--;
+          __createKey( key, item, xoffset, yoffset, 0);
+          break;
+        case oriNorth:
+          yoffset--;
+          __createKey( key, item, xoffset, yoffset, 0);
+          break;
+        case oriEast:
+          xoffset++;
+          __createKey( key, item, xoffset, yoffset, 0);
+          break;
+        case oriSouth:
+          yoffset++;
+          __createKey( key, item, xoffset, yoffset, 0);
+          break;
+      }
     }
 
     /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next key: %s", key); */
     iONode nextitem = (iONode)MapOp.get( data->objectmap, key);
 
     if( nextitem != NULL ) {
-      if( StrOp.equals(NodeOp.getName(nextitem), wTrack.name() ) && StrOp.equals(wItem.gettype(nextitem), wTrack.connector )) {
-        const char* nextitemori = wItem.getori( nextitem);
+      Boolean found = False;
+
+      if( StrOp.equals(NodeOp.getName(nextitem), wTrack.name() ) &&
+          StrOp.equals(wItem.gettype(nextitem), wTrack.connector ) &&
+          ( wTrack.gettknr(nextitem) < MIN_CONNECTOR_COUNTERPART_NR )
+        ) {
+
+        const char* nextitemori = wItem.getori( nextitem );
         if( nextitemori == NULL )
           nextitemori = wItem.west;
-        Boolean found = False;
+
         if( StrOp.equals( nextitemori, wItem.west ) && travel == 0){
           found = True;
         } else if( StrOp.equals( nextitemori, wItem.north ) && travel == 3){
@@ -2031,13 +2058,60 @@ static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList rout
         } else if( StrOp.equals( nextitemori, wItem.south ) && travel == 1){
           found = True;
         }
+      }
 
-        if( found ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found counterpart: [%s]", wItem.getid(nextitem));
+      if( StrOp.equals(NodeOp.getName(nextitem), wTrack.name() ) &&
+          StrOp.equals(wItem.gettype(nextitem), wTrack.concurveleft ) &&
+          ( wTrack.gettknr(nextitem) < MIN_CONNECTOR_COUNTERPART_NR )
+        ) {
 
-          __analyseItem(inst, nextitem, route, travel, 0, depth, toPreRTlist);
+        const char* nextitemori = wItem.getori( nextitem );
+        if( nextitemori == NULL )
+          nextitemori = wItem.west;
+
+        if( StrOp.equals( nextitemori, wItem.west ) && travel == 3){
+          travel = 0;
+          found = True;
+        } else if( StrOp.equals( nextitemori, wItem.north ) && travel == 2){
+          travel = 3;
+          found = True;
+        } else if( StrOp.equals( nextitemori, wItem.east ) && travel == 1){
+          travel = 2;
+          found = True;
+        } else if( StrOp.equals( nextitemori, wItem.south ) && travel == 0){
+          travel = 1;
+          found = True;
         }
-        return found;
+      }
+
+      if( StrOp.equals(NodeOp.getName(nextitem), wTrack.name() ) &&
+          StrOp.equals(wItem.gettype(nextitem), wTrack.concurveright ) &&
+          ( wTrack.gettknr(nextitem) < MIN_CONNECTOR_COUNTERPART_NR )
+        ) {
+
+        const char* nextitemori = wItem.getori( nextitem );
+        if( nextitemori == NULL )
+          nextitemori = wItem.west;
+
+        if( StrOp.equals( nextitemori, wItem.west ) && travel == 1){
+          travel = 0;
+          found = True;
+        } else if( StrOp.equals( nextitemori, wItem.north ) && travel == 0){
+          travel = 3;
+          found = True;
+        } else if( StrOp.equals( nextitemori, wItem.east ) && travel == 3){
+          travel = 2;
+          found = True;
+        } else if( StrOp.equals( nextitemori, wItem.south ) && travel == 2){
+          travel = 1;
+          found = True;
+        }
+      }
+
+      if( found ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found counterpart: [%s]", wItem.getid(nextitem));
+        __analyseItem(inst, nextitem, route, travel, 0, depth, toPreRTlist);
+        return True;
       }
     }
   }
@@ -2164,18 +2238,57 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
     ListOp.add( route, (obj)itemA );
   }
 
-  if( StrOp.equals(NodeOp.getName(item), wTrack.name() )
-      && StrOp.equals(wItem.gettype(item), wTrack.connector )) {
+  if( StrOp.equals(NodeOp.getName(item), wTrack.name() ) &&
+      ( StrOp.equals(wItem.gettype(item), wTrack.connector ) ||
+        StrOp.equals(wItem.gettype(item), wTrack.concurveleft ) ||
+        StrOp.equals(wItem.gettype(item), wTrack.concurveright )
+      )
+    ) {
 
     Boolean found = False;
-    if( StrOp.equals( itemori, wItem.west ) && travel == 2){
-      found = True;
-    } else if( StrOp.equals( itemori, wItem.north ) && travel == 1){
-      found = True;
-    } else if( StrOp.equals( itemori, wItem.east ) && travel == 0){
-      found = True;
-    } else if( StrOp.equals( itemori, wItem.south ) && travel == 3){
-      found = True;
+
+    if( StrOp.equals(wItem.gettype(item), wTrack.connector ) ) {
+      if( StrOp.equals( itemori, wItem.west ) && travel == 2){
+        found = True;
+      } else if( StrOp.equals( itemori, wItem.north ) && travel == 1){
+        found = True;
+      } else if( StrOp.equals( itemori, wItem.east ) && travel == 0){
+        found = True;
+      } else if( StrOp.equals( itemori, wItem.south ) && travel == 3){
+        found = True;
+      }
+    }
+
+    if( StrOp.equals(wItem.gettype(item), wTrack.concurveleft ) ) {
+      if( StrOp.equals( itemori, wItem.west ) && travel == 2){
+        travel = 1;
+        found = True;
+      } else if( StrOp.equals( itemori, wItem.north ) && travel == 1){
+        travel = 0;
+        found = True;
+      } else if( StrOp.equals( itemori, wItem.east ) && travel == 0){
+        travel = 3;
+        found = True;
+      } else if( StrOp.equals( itemori, wItem.south ) && travel == 3){
+        travel = 2;
+        found = True;
+      }
+    }
+
+    if( StrOp.equals(wItem.gettype(item), wTrack.concurveright ) ) {
+      if( StrOp.equals( itemori, wItem.west ) && travel == 2){
+        travel = 3;
+        found = True;
+      } else if( StrOp.equals( itemori, wItem.north ) && travel == 1){
+        travel = 2;
+        found = True;
+      } else if( StrOp.equals( itemori, wItem.east ) && travel == 0){
+        travel = 1;
+        found = True;
+      } else if( StrOp.equals( itemori, wItem.south ) && travel == 3){
+        travel = 0;
+        found = True;
+      }
     }
 
     if( found ) {
