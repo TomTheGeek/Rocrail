@@ -905,3 +905,12 @@ void BidibIdentDlg::onMacroEveryMinute( wxCommandEvent& event ) {
 
 }
 
+
+void BidibIdentDlg::onMacroExport( wxCommandEvent& event ) {
+
+}
+
+
+void BidibIdentDlg::onMacroImport( wxCommandEvent& event ) {
+
+}
