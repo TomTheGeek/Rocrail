@@ -97,6 +97,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onMacroApply( wxCommandEvent& event );
     void onMacroReload( wxCommandEvent& event );
     void onMacroSave( wxCommandEvent& event );
+    void onMacroEveryMinute( wxCommandEvent& event );
 
 
 	public:

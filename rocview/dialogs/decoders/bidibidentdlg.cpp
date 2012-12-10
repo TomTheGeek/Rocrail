@@ -867,21 +867,19 @@ void BidibIdentDlg::handleMacro(iONode node) {
       m_MacroCycles->SetValue(val);
     }
     else if( param == BIDIB_MACRO_PARA_START_CLK ) {
-      m_MacroStartCondition->SetSelection(0);
-      if( valLSB == 60 )
-        m_MacroStartCondition->SetSelection(3);
-      if( valM1 == 24 )
-        m_MacroStartCondition->SetSelection(2);
-      if( valLSB < 60 && valM1 < 24 && valM2 < 7 )
-        m_MacroStartCondition->SetSelection(1);
+      m_MacroStart1->SetValue(valLSB == 60);
+      m_MacroStart30->SetValue(valLSB == 61);
+      m_MacroStart15->SetValue(valLSB == 62);
+      m_MacroStartHourly->SetValue(valM1 == 24);
+      m_MacroStartDaily->SetValue(valM2 == 7);
 
-      if( valLSB == 255 )
+      if( valLSB > 23 )
         valLSB = 0;
       m_MacroHours->SetValue(valLSB);
-      if( valM1 == 255 )
+      if( valM1 > 59 )
         valM1 = 0;
       m_MacroMinutes->SetValue(valM1);
-      if( valM2 == 255 )
+      if( valM2 > 6 )
         valM2 = 0;
       m_MacroWDay->SetValue(valM2);
     }
@@ -900,5 +898,10 @@ void BidibIdentDlg::handleMacro(iONode node) {
     }
 
   }
+}
+
+
+void BidibIdentDlg::onMacroEveryMinute( wxCommandEvent& event ) {
+
 }
 
