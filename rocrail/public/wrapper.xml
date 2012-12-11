@@ -96,6 +96,24 @@
     <var name="currenttrc" vt="bool" defval="false" remark="Current trace only."/>
   </issue>
 
+  <macro wrappername="Macro" remark="Macro definition for accessories.">
+    <var name="uid" vt="int" defval="0" remark="The unique ID in case of an export."/>
+    <var name="class" vt="int" defval="0" remark="Module class in case of an export."/>
+    <var name="nr" vt="int" defval="0" remark="Macro number in case of export."/>
+    <var name="slowdown" vt="int" defval="0"/>
+    <var name="repeat" vt="int" defval="0"/>
+    <var name="minutes" vt="int" defval="0"/>
+    <var name="hours" vt="int" defval="0"/>
+    <var name="wday" vt="int" defval="0"/>
+    <macroline wrappername="MacroLine" cardinality="n">
+      <var name="nr" vt="int" defval="0"/>
+      <var name="delay" vt="int" defval="0"/>
+      <var name="porttype" vt="int" defval="0"/>
+      <var name="port" vt="int" defval="0"/>
+      <var name="status" vt="int" defval="0"/>
+    </macroline>
+  </macro>
+
   <netreq wrappername="NetReq">
     <var name="localid" vt="string" defval="" remark="Local server name."/>
     <var name="remoteid" vt="string" defval="*" remark="Remote server name."/>

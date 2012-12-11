@@ -48,6 +48,8 @@
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/BiDiB.h"
 #include "rocrail/wrapper/public/BiDiBnode.h"
+#include "rocrail/wrapper/public/Macro.h"
+#include "rocrail/wrapper/public/MacroLine.h"
 #include "rocdigs/impl/bidib/bidibutils.h"
 #include "rocdigs/impl/bidib/bidib_messages.h"
 
@@ -163,6 +165,10 @@ void BidibIdentDlg::event(iONode node) {
     handleMacro(node);
     NodeOp.base.del(node);
   }
+  else if( wProgram.getcmd( node ) == wProgram.macro_set || wProgram.getcmd( node ) == wProgram.macro_setparams ) {
+    handleMacro(node);
+    NodeOp.base.del(node);
+  }
   else if( !StrOp.equals( wProgram.name(), NodeOp.getName(node) ) ) {
     if( this->node != NULL )
       NodeOp.base.del(this->node);
@@ -223,6 +229,7 @@ void BidibIdentDlg::initLabels() {
   macrosize = 0;
   macrolevel = 0;
   macroparam = 0;
+  macrosave = false;
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -763,6 +770,7 @@ void BidibIdentDlg::onMacroList( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::onMacroLineSelected( wxGridEvent& event ) {
+  macroline = event.GetRow();
   m_MacroLines->SelectRow(event.GetRow());
   m_MacroLines->MakeCellVisible( event.GetRow(), 0 );
   int val1 = atoi( m_MacroLines->GetCellValue( event.GetRow(), 0 ).mb_str(wxConvUTF8) );
@@ -781,7 +789,23 @@ void BidibIdentDlg::onMacroLineSelected( wxGridEvent& event ) {
 
 
 void BidibIdentDlg::onMacroApply( wxCommandEvent& event ) {
+  macro = m_MacroList->GetSelection();
 
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.macro_set );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wProgram.setval1( cmd, macro );
+    wProgram.setval2( cmd, macroline );
+    wProgram.setval3( cmd, m_MacroDelay->GetValue() );
+    wProgram.setval4( cmd, m_MacroType->GetSelection() );
+    wProgram.setval5( cmd, m_MacroPort->GetValue() );
+    wProgram.setval6( cmd, m_MacroValue->GetValue() );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
 
 
@@ -809,12 +833,39 @@ void BidibIdentDlg::onMacroReload( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::onMacroSave( wxCommandEvent& event ) {
+  macro = m_MacroList->GetSelection();
+
+  if( bidibnode != NULL && m_MacroLines->GetNumberRows() > 0 ) {
+    macrosave = true;
+    macroline = 0;
+    macroparam = BIDIB_MACRO_PARA_START_CLK; // avoid reading the parameters
+
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.macro_set );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wProgram.setval1( cmd, macro );
+    wProgram.setval2( cmd, macroline );
+
+    int val1 = atoi( m_MacroLines->GetCellValue( macroline, 0 ).mb_str(wxConvUTF8) );
+    int val2 = atoi( m_MacroLines->GetCellValue( macroline, 1 ).mb_str(wxConvUTF8) );
+    int val3 = atoi( m_MacroLines->GetCellValue( macroline, 2 ).mb_str(wxConvUTF8) );
+    int val4 = atoi( m_MacroLines->GetCellValue( macroline, 3 ).mb_str(wxConvUTF8) );
+    wProgram.setval3( cmd, val1 );
+    wProgram.setval4( cmd, val2 );
+    wProgram.setval5( cmd, val3 );
+    wProgram.setval6( cmd, val4 );
+
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 
 }
 
 
 void BidibIdentDlg::handleMacro(iONode node) {
-  if( wProgram.getcmd(node) == wProgram.macro_get ) {
+  if( wProgram.getcmd(node) == wProgram.macro_get && !macrosave ) {
     int index = wProgram.getval1(node);
     int line = wProgram.getval2(node);
 
@@ -898,19 +949,199 @@ void BidibIdentDlg::handleMacro(iONode node) {
     }
 
   }
+
+  else if( wProgram.getcmd(node) == wProgram.macro_get && macrosave ) {
+    int index = wProgram.getval1(node);
+    int line = wProgram.getval2(node);
+    macroline++;
+    if( m_MacroLines->GetNumberRows() > macroline ) {
+      iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+      wProgram.setcmd( cmd, wProgram.macro_set );
+      wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+      wProgram.setlntype(cmd, wProgram.lntype_bidib);
+      wProgram.setval1( cmd, macro );
+      wProgram.setval2( cmd, macroline );
+
+      int val1 = atoi( m_MacroLines->GetCellValue( macroline, 0 ).mb_str(wxConvUTF8) );
+      int val2 = atoi( m_MacroLines->GetCellValue( macroline, 1 ).mb_str(wxConvUTF8) );
+      int val3 = atoi( m_MacroLines->GetCellValue( macroline, 2 ).mb_str(wxConvUTF8) );
+      int val4 = atoi( m_MacroLines->GetCellValue( macroline, 3 ).mb_str(wxConvUTF8) );
+      wProgram.setval3( cmd, val1 );
+      wProgram.setval4( cmd, val2 );
+      wProgram.setval5( cmd, val3 );
+      wProgram.setval6( cmd, val4 );
+
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
+    else {
+      macrosave = false;
+      iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+      wProgram.setcmd( cmd, wProgram.macro_setparams );
+      wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+      wProgram.setlntype(cmd, wProgram.lntype_bidib);
+      wProgram.setval1(node, macro );
+      wProgram.setval2(node, BIDIB_MACRO_PARA_SLOWDOWN );
+      wProgram.setval3(node, m_MacroSlowdown->GetValue() );
+      wProgram.setval4(node, 0 );
+      wProgram.setval5(node, 0 );
+      wProgram.setval6(node, 0 );
+      wxGetApp().sendToRocrail( cmd );
+
+      wProgram.setval2(node, BIDIB_MACRO_PARA_REPEAT );
+      wProgram.setval3(node, m_MacroCycles->GetValue() );
+      wProgram.setval4(node, 0 );
+      wProgram.setval5(node, 0 );
+      wProgram.setval6(node, 0 );
+      wxGetApp().sendToRocrail( cmd );
+
+      wProgram.setval2(node, BIDIB_MACRO_PARA_START_CLK );
+      wProgram.setval3(node, m_MacroStartHourly->IsChecked()?24:m_MacroHours->GetValue() );
+      if( m_MacroStart1->IsChecked() )
+        wProgram.setval4(node, 60 );
+      if( m_MacroStart30->IsChecked() )
+        wProgram.setval4(node, 61 );
+      if( m_MacroStart15->IsChecked() )
+        wProgram.setval4(node, 62 );
+      else
+        wProgram.setval4(node, m_MacroMinutes->GetValue() );
+      wProgram.setval5(node, m_MacroStartDaily->IsChecked()?7:m_MacroWDay->GetValue() );
+      wProgram.setval6(node, 0 );
+      wxGetApp().sendToRocrail( cmd );
+
+      cmd->base.del(cmd);
+    }
+  }
+
 }
 
 
 void BidibIdentDlg::onMacroEveryMinute( wxCommandEvent& event ) {
-
+  if( event.GetEventObject() == m_MacroStart1 && m_MacroStart1->IsChecked() ) {
+    m_MacroStart30->SetValue(false);
+    m_MacroStart15->SetValue(false);
+  }
+  else if( event.GetEventObject() == m_MacroStart15 && m_MacroStart15->IsChecked() ) {
+    m_MacroStart1->SetValue(false);
+    m_MacroStart30->SetValue(false);
+  }
+  else if( event.GetEventObject() == m_MacroStart30 && m_MacroStart30->IsChecked() ) {
+    m_MacroStart1->SetValue(false);
+    m_MacroStart15->SetValue(false);
+  }
 }
 
 
 void BidibIdentDlg::onMacroExport( wxCommandEvent& event ) {
+  const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  wxString ms_FileExt = _T("Macro (*.xml)");
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("export"), wxString(l_openpath,wxConvUTF8),
+                       wxString::Format( _T("%s-%d.xml"), m_UID->GetValue(), m_MacroList->GetSelection()), ms_FileExt, wxFD_SAVE);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    iONode model = wxGetApp().getModel();
+    // Check for existence.
+    wxString path = fdlg->GetPath();
+    if( FileOp.exist( path.mb_str(wxConvUTF8) ) ) {
+      int action = wxMessageDialog( this, wxGetApp().getMsg("fileexistwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+      if( action == wxID_NO ) {
+        fdlg->Destroy();
+        return;
+      }
+    }
+    if( !path.Contains( _T(".xml") ) )
+      path.Append( _T(".xml") );
 
+    iOFile f = FileOp.inst( path.mb_str(wxConvUTF8), OPEN_WRITE );
+    if( f != NULL ) {
+      iONode macro = NodeOp.inst( wMacro.name(), NULL, ELEMENT_NODE );
+      wMacro.setuid(macro, atoi(m_UID->GetValue().mb_str(wxConvUTF8)) );
+      wMacro.setnr(macro, m_MacroList->GetSelection());
+      // Set level 2 parameters.
+      wMacro.sethours(macro, m_MacroHours->GetValue());
+      wMacro.setminutes(macro, m_MacroMinutes->GetValue());
+      wMacro.setwday(macro, m_MacroWDay->GetValue());
+
+      for( int i = 0; i < m_MacroLines->GetNumberRows(); i++ ) {
+        iONode macroline = NodeOp.inst( wMacroLine.name(), macro, ELEMENT_NODE );
+        NodeOp.addChild(macro, macroline);
+        wMacroLine.setnr(macroline, i);
+        // ToDo: Set line values.
+        int val1 = atoi( m_MacroLines->GetCellValue( i, 0 ).mb_str(wxConvUTF8) );
+        int val2 = atoi( m_MacroLines->GetCellValue( i, 1 ).mb_str(wxConvUTF8) );
+        int val3 = atoi( m_MacroLines->GetCellValue( i, 2 ).mb_str(wxConvUTF8) );
+        int val4 = atoi( m_MacroLines->GetCellValue( i, 3 ).mb_str(wxConvUTF8) );
+        wMacroLine.setdelay( macroline, val1 );
+        wMacroLine.setporttype( macroline, val2 );
+        wMacroLine.setport( macroline, val3 );
+        wMacroLine.setstatus( macroline, val4 );
+      }
+
+      char* s = NodeOp.base.toString(macro);
+      FileOp.writeStr(f, s);
+      StrOp.free(s);
+      NodeOp.base.del(macro);
+      FileOp.base.del( f );
+    }
+
+  }
+
+  fdlg->Destroy();
 }
 
 
 void BidibIdentDlg::onMacroImport( wxCommandEvent& event ) {
+  wxString ms_FileExt = _T("Macro (*.xml)");
+  const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("import"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_OPEN);
+  if( fdlg->ShowModal() == wxID_OK ) {
 
+    wGui.setopenpath( wxGetApp().getIni(), fdlg->GetPath().mb_str(wxConvUTF8) );
+    // strip filename:
+    wGui.setopenpath( wxGetApp().getIni(), FileOp.getPath(wGui.getopenpath( wxGetApp().getIni() ) ) );
+
+    TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "reading [%s]...", (const char*)fdlg->GetPath().mb_str(wxConvUTF8));
+    iOFile f = FileOp.inst( fdlg->GetPath().mb_str(wxConvUTF8), OPEN_READONLY );
+    if( f != NULL ) {
+      TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "file opened...");
+      char* macroXml = (char*)allocMem( FileOp.size( f ) + 1 );
+      FileOp.read( f, macroXml, FileOp.size( f ) );
+      FileOp.close( f );
+      FileOp.base.del(f );
+
+      iODoc macroDoc = DocOp.parse( macroXml );
+      freeMem( macroXml );
+      if( macroDoc != NULL ) {
+        iONode macro = DocOp.getRootNode( macroDoc );
+        if( macro != NULL ) {
+          // Set level 2 parameters.
+          m_MacroHours->SetValue( wMacro.gethours(macro) );
+          m_MacroMinutes->SetValue( wMacro.getminutes(macro) );
+          m_MacroWDay->SetValue( wMacro.getwday(macro) );
+
+          m_MacroLines->ClearGrid();
+          if( m_MacroLines->GetNumberRows() > 0 )
+            m_MacroLines->DeleteRows( 0, m_MacroLines->GetNumberRows() );
+
+          iONode macroline = wMacro.getmacroline(macro);
+          while( macroline != NULL ) {
+            m_MacroLines->AppendRows();
+            m_MacroLines->SetCellValue(m_MacroLines->GetNumberRows()-1, 0, wxString::Format(_T("%d"), wMacroLine.getdelay(macroline)) );
+            m_MacroLines->SetCellValue(m_MacroLines->GetNumberRows()-1, 1, wxString::Format(_T("%d"), wMacroLine.getporttype(macroline)) );
+            m_MacroLines->SetCellValue(m_MacroLines->GetNumberRows()-1, 2, wxString::Format(_T("%d"), wMacroLine.getport(macroline)) );
+            m_MacroLines->SetCellValue(m_MacroLines->GetNumberRows()-1, 3, wxString::Format(_T("%d"), wMacroLine.getstatus(macroline)) );
+            m_MacroLines->AutoSizeColumns(false);
+
+            macroline = wMacro.nextmacroline(macro, macroline);
+          }
+
+          NodeOp.base.del(macro);
+        }
+        DocOp.base.del(macroDoc);
+      }
+    }
+  }
+
+  fdlg->Destroy();
 }
