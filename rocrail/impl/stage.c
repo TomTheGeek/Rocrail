@@ -458,7 +458,10 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
       if( loc != NULL ) {
         Boolean execMove = False;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing loco %s of IN event (endsection=%d)", data->locId, endSection );
-        LocOp.event( loc, (obj)inst, in_event, 0, True, NULL );
+        if( !data->early2in )
+          LocOp.event( loc, (obj)inst, in_event, 0, True, NULL );
+        else
+          data->early2in = False;
 
         if( inst->hasExtStop(inst) ) {
           iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
@@ -552,7 +555,7 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
     }
     else if(puls) {
       iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId);
-      if( loc != NULL && wStage.isinatlen(data->props) ) {
+      if( loc != NULL && wStage.isinatlen(data->props) && !data->early2in ) {
         /* Check if train length does already fit inside for generating the **in** event:  */
         int sectionlen = __getLength2Section((iOStage)inst, wStageSection.getid(section));
         if( sectionlen >= LocOp.getLen(loc) ) {
@@ -560,9 +563,9 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
            * The in_event will set the loco speed to zero in another thread...
            */
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing loco %s of IN event", data->locId );
+          data->early2in = True;
           LocOp.stop(loc, False);
           LocOp.event( loc, (obj)inst, in_event, 0, True, NULL );
-
         }
       }
     }
@@ -954,6 +957,11 @@ static Boolean _isFree( iIBlockBase inst ,const char* locid ) {
     return False;
   }
 
+  if( data->early2in ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stagingblock %s has a pending IN event", data->id );
+    return False;
+  }
+
   locoFit = __willLocoFit(inst, locid, False);
   if( !locoFit ) {
     __moveStageLocos(inst);
@@ -1019,6 +1027,11 @@ static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,
 
   if( !data->pendingFree ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is pending", data->locId!=NULL?data->locId:"?" );
+    return False;
+  }
+
+  if( data->early2in ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stagingblock %s has a pending IN event", data->id );
     return False;
   }
 
