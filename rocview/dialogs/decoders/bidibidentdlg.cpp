@@ -230,6 +230,7 @@ void BidibIdentDlg::initLabels() {
   macrolevel = 0;
   macroparam = 0;
   macrosave = false;
+  macroapply = false;
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -790,6 +791,8 @@ void BidibIdentDlg::onMacroLineSelected( wxGridEvent& event ) {
 
 void BidibIdentDlg::onMacroApply( wxCommandEvent& event ) {
   macro = m_MacroList->GetSelection();
+  macrosave = false;
+  macroapply = true;
 
   if( bidibnode != NULL ) {
     iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
@@ -865,7 +868,16 @@ void BidibIdentDlg::onMacroSave( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::handleMacro(iONode node) {
-  if( wProgram.getcmd(node) == wProgram.macro_get && !macrosave ) {
+  if( macroapply ) {
+    macroapply = false;
+    int index = wProgram.getval1(node);
+    int line = wProgram.getval2(node);
+    m_MacroLines->SetCellValue(line, 0, wxString::Format(_T("%d"), wProgram.getval3(node)) );
+    m_MacroLines->SetCellValue(line, 1, wxString::Format(_T("%d"), wProgram.getval4(node)) );
+    m_MacroLines->SetCellValue(line, 2, wxString::Format(_T("%d"), wProgram.getval5(node)) );
+    m_MacroLines->SetCellValue(line, 3, wxString::Format(_T("%d"), wProgram.getval6(node)) );
+  }
+  else if( wProgram.getcmd(node) == wProgram.macro_get && !macrosave ) {
     int index = wProgram.getval1(node);
     int line = wProgram.getval2(node);
 
@@ -1036,9 +1048,9 @@ void BidibIdentDlg::onMacroEveryMinute( wxCommandEvent& event ) {
 
 void BidibIdentDlg::onMacroExport( wxCommandEvent& event ) {
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
-  wxString ms_FileExt = _T("Macro (*.xml)");
+  wxString ms_FileExt = _T("Macro (*.xml)|*.xml");
   wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("export"), wxString(l_openpath,wxConvUTF8),
-                       wxString::Format( _T("%s-%d.xml"), m_UID->GetValue(), m_MacroList->GetSelection()), ms_FileExt, wxFD_SAVE);
+                       wxString::Format( _T("bidib-macro-%s-%d.xml"), m_UID->GetValue(), m_MacroList->GetSelection()), ms_FileExt, wxFD_SAVE);
   if( fdlg->ShowModal() == wxID_OK ) {
     iONode model = wxGetApp().getModel();
     // Check for existence.
@@ -1092,7 +1104,7 @@ void BidibIdentDlg::onMacroExport( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::onMacroImport( wxCommandEvent& event ) {
-  wxString ms_FileExt = _T("Macro (*.xml)");
+  wxString ms_FileExt = _T("Macro (*.xml)|*.xml");
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
   wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("import"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_OPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
