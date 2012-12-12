@@ -1157,3 +1157,47 @@ void BidibIdentDlg::onMacroImport( wxCommandEvent& event ) {
 
   fdlg->Destroy();
 }
+
+
+void BidibIdentDlg::onMacroSaveMacro( wxCommandEvent& event ) {
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+  wProgram.setcmd( cmd, wProgram.macro_save );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_bidib);
+  wProgram.setval1( cmd, macro );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+
+void BidibIdentDlg::onMacroDeleteMacro( wxCommandEvent& event ) {
+  m_MacroLines->ClearGrid();
+  if( m_MacroLines->GetNumberRows() > 0 )
+    m_MacroLines->DeleteRows( 0, m_MacroLines->GetNumberRows() );
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+  wProgram.setcmd( cmd, wProgram.macro_delete );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_bidib);
+  wProgram.setval1( cmd, macro );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+
+void BidibIdentDlg::onMacroRestoreMacro( wxCommandEvent& event ) {
+  m_MacroLines->ClearGrid();
+  if( m_MacroLines->GetNumberRows() > 0 )
+    m_MacroLines->DeleteRows( 0, m_MacroLines->GetNumberRows() );
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+  wProgram.setcmd( cmd, wProgram.macro_restore );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_bidib);
+  wProgram.setval1( cmd, macro );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
