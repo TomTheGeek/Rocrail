@@ -136,6 +136,13 @@ static iOList _getDevices( void ) {
       char* ttyS = StrOp.fmt( "/dev/ttyS%d", i );
       if( __isDeviceAvailable(ttyS) )
         ListOp.add(list, (obj)ttyS);
+      else
+        StrOp.free(ttyS);
+      ttyS = StrOp.fmt( "/dev/ttyACM%d", i );
+      if( __isDeviceAvailable(ttyS) )
+        ListOp.add(list, (obj)ttyS);
+      else
+        StrOp.free(ttyS);
     }
   }
 #elif defined _WIN32
@@ -145,6 +152,8 @@ static iOList _getDevices( void ) {
       char* com = StrOp.fmt( "COM%d", i );
       if( __isDeviceAvailable(com) )
         ListOp.add(list, (obj)com);
+      else
+        StrOp.free(com);
     }
   }
 #endif
