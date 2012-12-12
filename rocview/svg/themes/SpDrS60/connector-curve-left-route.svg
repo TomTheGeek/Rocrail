@@ -1,9 +1,9 @@
 <svg width="32" height="32">
   <g>
   <!-- Track -->
-    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 0,20 L 15,5 L 7,5 z " />
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,11 L 0,19 L 14,5 L 6,5 z " />
   <!-- Ausleuchtung gelb -->
-    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 5,9 L 7,11 L 13,5 L 9,5 z " />
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 2,11 L 4,13 L 11,6 L 7,6 z " />
 
     <path stroke="rgb(0,0,0)" fill="none" d="M 4,5 L 28,5 z " />
     <path stroke="rgb(0,0,0)" fill="none" d="M 4,2 L 28,2 z " /> 
