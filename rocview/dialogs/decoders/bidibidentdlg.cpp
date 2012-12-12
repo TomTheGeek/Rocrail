@@ -766,7 +766,7 @@ void BidibIdentDlg::onUpdateStart( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::onMacroList( wxCommandEvent& event ) {
-
+  macro = m_MacroList->GetSelection();
 }
 
 
@@ -1200,4 +1200,18 @@ void BidibIdentDlg::onMacroRestoreMacro( wxCommandEvent& event ) {
   wProgram.setval1( cmd, macro );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+}
+
+
+void BidibIdentDlg::onMacroTest( wxCommandEvent& event ) {
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+    wOutput.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wOutput.setbus( cmd, wBiDiBnode.getuid(bidibnode) );
+    wOutput.setaddr( cmd, macro+1 );
+    wOutput.setporttype(cmd, wProgram.porttype_macro);
+    wOutput.setcmd( cmd, wOutput.on );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
