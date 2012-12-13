@@ -1050,7 +1050,7 @@ void BidibIdentDlg::onMacroExport( wxCommandEvent& event ) {
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
   wxString ms_FileExt = _T("Macro (*.xml)|*.xml");
   wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("export"), wxString(l_openpath,wxConvUTF8),
-                       wxString::Format( _T("bidib-macro-%s-%d.xml"), m_UID->GetValue(), m_MacroList->GetSelection()), ms_FileExt, wxFD_SAVE);
+                       wxString::Format( _T("bidib-macro-%d.xml"), m_MacroList->GetSelection()), ms_FileExt, wxFD_SAVE);
   if( fdlg->ShowModal() == wxID_OK ) {
     iONode model = wxGetApp().getModel();
     // Check for existence.
