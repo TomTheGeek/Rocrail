@@ -1989,8 +1989,8 @@ static void _depart(iIBlockBase inst) {
 
 static Boolean _unLockForGroup( iIBlockBase inst, const char* id ) {
   Boolean ok = False;
-  if( inst != NULL && id != NULL ) {
-    iOBlockData data = Data(inst);
+  iOBlockData data = Data(inst);
+  if( data->locIdGroup != NULL && id != NULL ) {
 
     /* wait only 10ms for getting the mutex: */
     if( !MutexOp.trywait( data->muxLock, 10 ) ) {
