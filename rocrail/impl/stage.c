@@ -577,7 +577,9 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
 
   else {
     if( puls ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unexpected sensor [%s] event for stage [%s]: Ignore", id, data->id );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+          "unexpected sensor [%s] event for stage [%s]: wait4enter=%s section=%s",
+          id, data->id, data->wait4enter?"true":"false", section!=NULL?wStageSection.getid(section):"?" );
     }
   }
 
