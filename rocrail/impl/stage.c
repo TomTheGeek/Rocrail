@@ -1025,7 +1025,8 @@ static Boolean _link( iIBlockBase inst ,iIBlockBase linkto ) {
 /**  */
 static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,const char* routeid ,Boolean crossing ,Boolean reset ,Boolean reverse ,int indelay ) {
   iOStageData data = Data(inst);
-  if( !__willLocoFit(inst, locid, True) ) {
+
+  if( !StageOp.isFree(inst, locid) ) {
     return False;
   }
 
@@ -1036,6 +1037,10 @@ static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,
 
   if( data->early2in ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stagingblock %s has a pending IN event", data->id );
+    return False;
+  }
+
+  if( !__willLocoFit(inst, locid, True) ) {
     return False;
   }
 
