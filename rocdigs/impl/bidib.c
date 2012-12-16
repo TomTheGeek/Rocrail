@@ -1360,7 +1360,7 @@ static void __handleStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
     if( pdata[0] == BIDIB_OUTTYPE_SERVO )
       wSwitch.setsinglegate(nodeC, True);
 
-    wSwitch.setstate( nodeC, pdata[2]?"straight":"turnout" );
+    wSwitch.setstate( nodeC, pdata[2]?wSwitch.turnout:wSwitch.straight );
     wSwitch.setgatevalue(nodeC, pdata[2]);
     wSwitch.setporttype(nodeC, pdata[0]);
 
