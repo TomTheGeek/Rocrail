@@ -337,7 +337,7 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
     int freeupsection = targetSection;
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "move loco=%s to target section %d", data->locId, targetSection );
+        "move loco=%s to target section %d(of %d)", data->locId, targetSection, sections );
 
     for( i = targetSection; i >= 0 ; i-- ) {
       iONode section = (iONode)ListOp.get( data->sectionList, i);
@@ -370,8 +370,8 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
         "moving %d sections of loco %s to section head %d", nrSections, data->locId, targetSection );
 
     if( nrSections >  0 ) {
-      for( i = targetSection ; i >= (sections-nrSections); i-- ) {
-        iONode section = (iONode)ListOp.get( data->sectionList, i);
+      for( i = 0; i < nrSections; i++ ) {
+        iONode section = (iONode)ListOp.get( data->sectionList, targetSection - i);
         wStageSection.setlcid(section, locId );
       }
 
