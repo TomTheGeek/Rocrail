@@ -1244,9 +1244,16 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
   iONode firstOccupiedSection = NULL;
   iONode lastSection = NULL;
 
+  /* wait only 100ms for getting the mutex: */
+  if( !MutexOp.trywait( data->moveMux, 100 ) ) {
+    return False;
+  }
+
+
   if( (data->locId != NULL && StrOp.len(data->locId) > 0) || !data->pendingFree || data->pendingMove ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "can not move a loco because %s is pending(%d)", data->locId!=NULL?data->locId:"-", data->pendingFree);
+    MutexOp.post( data->moveMux );
     return locoMoved;
   }
 
@@ -1364,6 +1371,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
     }
   }
 
+  MutexOp.post( data->moveMux );
   return locoMoved;
 }
 
@@ -1728,6 +1736,7 @@ static struct OStage* _inst( iONode props ) {
   data->trainGap       = wStage.getgap(props);
   data->pendingFree    = True;
   data->pendingSection = -1;
+  data->moveMux        = MutexOp.inst( NULL, True );
 
   wStage.setlocid(data->props, NULL);
 

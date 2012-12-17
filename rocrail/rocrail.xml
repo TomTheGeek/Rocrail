@@ -224,6 +224,7 @@
       <var name="mapMux" vt="iOMutex"/>
       <var name="wait4enter" vt="Boolean"/>
       <var name="early2in" vt="Boolean"/>
+      <var name="moveMux" vt="iOMutex"/>
       </data>
   </object>
 
