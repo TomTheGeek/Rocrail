@@ -1244,7 +1244,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
   iONode firstOccupiedSection = NULL;
   iONode lastSection = NULL;
 
-  if( (data->locId != NULL && StrOp.len(data->locId) > 0) || !data->pendingFree ) {
+  if( (data->locId != NULL && StrOp.len(data->locId) > 0) || !data->pendingFree || data->pendingMove ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "can not move a loco because %s is pending(%d)", data->locId!=NULL?data->locId:"-", data->pendingFree);
     return locoMoved;
