@@ -1295,12 +1295,10 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
 
     if( nextFreeSection != NULL && firstOccupiedSection == NULL && (wStageSection.getlcid(section) != NULL && StrOp.len(wStageSection.getlcid(section)) > 0) ) {
       /* Last occpupied section in the list */
-      if( __isSectionElectricallyFree(inst, section ) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "section [%d] is free (%s)",
-            wStageSection.getidx(nextFreeSection), wStageSection.getlcid(nextFreeSection) == NULL ? "-":wStageSection.getlcid(nextFreeSection) );
-        firstOccupiedSection = section;
-        break;
-      }
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "section [%d] is occupied by %s",
+          wStageSection.getidx(nextFreeSection), wStageSection.getlcid(nextFreeSection) );
+      firstOccupiedSection = section;
+      break;
     }
   }
 
