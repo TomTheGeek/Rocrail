@@ -509,8 +509,10 @@ static void _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* 
           if( !data->pendingFree && data->pendingSection != -1 ) {
             iONode s = (iONode)ListOp.get(data->sectionList, data->pendingSection );
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "pendingFree for section [%d]", data->pendingSection );
+            /*
             if( s != NULL )
               wStageSection.setlcid(s, NULL);
+            */
             data->pendingFree = True;
             data->pendingSection = -1;
           }
@@ -1231,6 +1233,22 @@ static Boolean _unLink( iIBlockBase inst ) {
 }
 
 
+static Boolean __isSectionElectricallyFree(iIBlockBase inst, iONode section) {
+  iOStageData data = Data(inst);
+
+  iOFBack fb    = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbid(section) );
+  iOFBack fbocc = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbidocc(section) );
+
+  Boolean occ = False;
+  if( fbocc != NULL )
+    occ = FBackOp.isState(fbocc, "true");
+
+  if( fb != NULL && FBackOp.isState(fb, "false") && !occ ) {
+    return True;
+  }
+
+  return False;
+}
 
 /**
  * move all locos to fill up the space freed up
@@ -1263,13 +1281,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
     iONode section = (iONode)ListOp.get(data->sectionList, i);
 
     if( nextFreeSection == NULL && (wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0) ) {
-      iOFBack fb    = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbid(section) );
-      iOFBack fbocc = ModelOp.getFBack( AppOp.getModel(), wStageSection.getfbidocc(section) );
-      Boolean occ = False;
-      if( fbocc != NULL )
-        occ = FBackOp.isState(fbocc, "true");
-
-      if( fb != NULL && FBackOp.isState(fb, "false") && !occ ) {
+      if( __isSectionElectricallyFree(inst, section ) ) {
         /* Last free section in the list */
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "section %d [%d] is free (%s)",
             i, wStageSection.getidx(section), wStageSection.getlcid(section) == NULL ? "-":wStageSection.getlcid(section) );
@@ -1283,10 +1295,12 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
 
     if( nextFreeSection != NULL && firstOccupiedSection == NULL && (wStageSection.getlcid(section) != NULL && StrOp.len(wStageSection.getlcid(section)) > 0) ) {
       /* Last occpupied section in the list */
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "section [%d] is free (%s)",
-          wStageSection.getidx(nextFreeSection), wStageSection.getlcid(nextFreeSection) == NULL ? "-":wStageSection.getlcid(nextFreeSection) );
-      firstOccupiedSection = section;
-      break;
+      if( __isSectionElectricallyFree(inst, section ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "section [%d] is free (%s)",
+            wStageSection.getidx(nextFreeSection), wStageSection.getlcid(nextFreeSection) == NULL ? "-":wStageSection.getlcid(nextFreeSection) );
+        firstOccupiedSection = section;
+        break;
+      }
     }
   }
 
