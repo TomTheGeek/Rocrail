@@ -182,7 +182,7 @@
       </data>
   </object>
 
-  <object name="Stage" interface="$../rocint/rocint.xml:BlockBase" use="list,map,node,mutex" include="loc,htmlint,$rocint/public/blockbase" remark="Block object">
+  <object name="Stage" interface="$../rocint/rocint.xml:BlockBase" use="list,map,node,mutex,thread" include="loc,htmlint,$rocint/public/blockbase" remark="Block object">
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Stage node"/>
     </fun>
@@ -225,6 +225,8 @@
       <var name="wait4enter" vt="Boolean"/>
       <var name="early2in" vt="Boolean"/>
       <var name="moveMux" vt="iOMutex"/>
+      <var name="watchdog" vt="iOThread"/>
+      <var name="run" vt="Boolean"/>
       </data>
   </object>
 

@@ -1270,7 +1270,8 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
 
   if( (data->locId != NULL && StrOp.len(data->locId) > 0) || !data->pendingFree || data->pendingMove ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "can not move a loco because %s is pending(%d)", data->locId!=NULL?data->locId:"-", data->pendingFree);
+        "can not move a loco because %s is pending(free=%d, move=%d)",
+        data->locId!=NULL?data->locId:"-", data->pendingFree, data->pendingMove);
     MutexOp.post( data->moveMux );
     return locoMoved;
   }
@@ -1733,6 +1734,43 @@ static void _setSectionOcc(iOStage inst, const char* sectionid, const char* loco
 }
 
 
+static void __watchdog( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOStage stage = (iOStage)ThreadOp.getParm( th );
+  iOStageData data = Data(stage);
+
+  ThreadOp.sleep(2000);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Watchdog thread for staging block \"%s\" started.", data->id );
+
+  do {
+    ThreadOp.sleep(1000);
+
+    if( ModelOp.isAuto( AppOp.getModel() ) && data->pendingFree && !data->pendingMove ) {
+
+      int cnt = ListOp.size(data->sectionList);
+      if( cnt > 0  ) {
+        iONode section = (iONode)ListOp.get(data->sectionList, cnt - 1);
+        if( wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0 ) {
+          int i = 0;
+          for( i = 0; i < cnt - 1; i++ ) {
+            section = (iONode)ListOp.get(data->sectionList, i);
+            if( wStageSection.getlcid(section) != NULL && StrOp.len(wStageSection.getlcid(section)) > 0 ) {
+              __moveStageLocos((iIBlockBase)stage);
+              break;
+            }
+          }
+        }
+      }
+
+    }
+
+  } while(data->run);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Watchdog thread for staging block \"%s\" ended.", data->id );
+}
+
+
 /**  */
 static struct OStage* _inst( iONode props ) {
   iOStage __Stage = allocMem( sizeof( struct OStage ) );
@@ -1749,6 +1787,10 @@ static struct OStage* _inst( iONode props ) {
   data->pendingFree    = True;
   data->pendingSection = -1;
   data->moveMux        = MutexOp.inst( NULL, True );
+  data->run            = True;
+  data->watchdog       = ThreadOp.inst( data->id, &__watchdog, __Stage );
+
+  ThreadOp.start( data->watchdog );
 
   wStage.setlocid(data->props, NULL);
 
