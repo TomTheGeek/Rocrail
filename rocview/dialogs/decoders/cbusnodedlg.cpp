@@ -227,23 +227,23 @@ void CBusNodeDlg::init( iONode event ) {
 static int __sortNr(obj* _a, obj* _b) {
     iONode a = (iONode)*_a;
     iONode b = (iONode)*_b;
-    if (wCBusNode.getnr(a) == wCBusNode.getnr(b) )
-      return 0;
     if (wCBusNode.getnr(a) > wCBusNode.getnr(b) )
       return 1;
     if (wCBusNode.getnr(a) < wCBusNode.getnr(b) )
       return -1;
+    else
+      return 0;
 }
 static int __sortID(obj* _a, obj* _b)
 {
     iONode a = (iONode)*_a;
     iONode b = (iONode)*_b;
-    if (wCBusNode.getcanid(a) == wCBusNode.getcanid(b) )
-      return 0;
     if (wCBusNode.getcanid(a) > wCBusNode.getcanid(b) )
       return 1;
     if (wCBusNode.getcanid(a) < wCBusNode.getcanid(b) )
       return -1;
+    else
+      return 0;
 }
 static int __sortType(obj* _a, obj* _b)
 {

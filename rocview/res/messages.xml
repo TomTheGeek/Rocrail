@@ -18715,4 +18715,7 @@
   <Msg id="concurveleft">
     <en txt="Connector curve left"/>
   </Msg>
+  <Msg id="watchdog">
+    <en txt="Watchdog"/>
+  </Msg>
 </Messages>

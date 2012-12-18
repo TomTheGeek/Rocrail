@@ -1787,10 +1787,12 @@ static struct OStage* _inst( iONode props ) {
   data->pendingFree    = True;
   data->pendingSection = -1;
   data->moveMux        = MutexOp.inst( NULL, True );
-  data->run            = True;
-  data->watchdog       = ThreadOp.inst( data->id, &__watchdog, __Stage );
 
-  ThreadOp.start( data->watchdog );
+  if( wStage.isusewd(props) ) {
+    data->run            = True;
+    data->watchdog       = ThreadOp.inst( data->id, &__watchdog, __Stage );
+    ThreadOp.start( data->watchdog );
+  }
 
   wStage.setlocid(data->props, NULL);
 

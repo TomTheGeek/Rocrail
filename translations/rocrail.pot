@@ -6191,3 +6191,9 @@ msgstr ""
 msgid "Connector curve left"
 msgstr ""
 
+#. 
+# id="watchdog"
+#, c-format
+msgid "Watchdog"
+msgstr ""
+

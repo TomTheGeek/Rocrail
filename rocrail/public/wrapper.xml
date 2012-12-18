@@ -1781,11 +1781,14 @@
         <var name="exitspeed" vt="string" defval="cruise" range="*" remark="Block speed on departure."/>
         <var name="suitswell" vt="bool" defval="false" remark=""/>
         <var name="inatlen" vt="bool" defval="false" remark="In event if train length fits in the current sections."/>
+        <var name="usewd" vt="bool" defval="true" remark="Use a watchdog for compressing when needed."/>
         <const name="compress" vt="string" val="compress"/>
         <const name="open" vt="string" val="open" remark="In this state the block is chooseable for locs to enter."/>
         <const name="closed" vt="string" val="closed" remark="In this state the block is not chooseable for locs to enter."/>
         <const name="exitopen" vt="string" val="exitopen" remark="In this state the block is chooseable for locs to depart."/>
         <const name="exitclosed" vt="string" val="exitclosed" remark="In this state the block is not chooseable for locs to depart."/>
+        <const name="startwd" vt="string" val="startwd"/>
+        <const name="stopwd" vt="string" val="stopwd"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <var name="secid" vt="string" defval="NULL" range="*"/>
         <section cardinality="n" wrappername="StageSection">
