@@ -18718,4 +18718,7 @@
   <Msg id="watchdog">
     <en txt="Watchdog"/>
   </Msg>
+  <Msg id="overrulethrottle">
+    <en txt="Overrule throttle"/>
+  </Msg>
 </Messages>

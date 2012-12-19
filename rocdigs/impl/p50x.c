@@ -410,7 +410,7 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
     p50[5] = 0; /* reset */
     p50[5] |= fn?0x10:0x00;
     p50[5] |= dir?0x20:0x00;
-    p50[5] |= 0x40; /* Force */
+    p50[5] |= (o->force?0x40:0x00); /* Force */
     *insize = 1; /* Return code from P50x. */
     return 6;
   }
@@ -1723,6 +1723,8 @@ static iOP50x _inst( const iONode settings, const iOTrace trace ) {
   /* Evaluate attributes. */
   data->device   = StrOp.dup( wDigInt.getdevice( settings ) );
   data->iid      = StrOp.dup( wDigInt.getiid( settings ) );
+  data->ini      = settings;
+  data->force    = wDigInt.isoverrule(settings);
 
   data->bps      = wDigInt.getbps( settings );
   data->bits     = wDigInt.getbits( settings );

@@ -103,6 +103,8 @@
       <var name="useextfunc" vt="Boolean"/>
       <var name="swversion" vt="unsigned long"/>
       <var name="bidi" vt="Boolean"/>
+      <var name="ini" vt="iONode"/>
+      <var name="force" vt="Boolean"/>
     </data>
   </object>
 
