@@ -347,7 +347,7 @@ void StageDlg::initValues() {
   m_WaitType->SetSelection( wait );
 
   m_RandomMin->SetValue( wStage.getminwaittime( m_Props ) );
-  m_RandomMax->SetValue( wStage.getwaittime( m_Props ) );
+  m_RandomMax->SetValue( wStage.getmaxwaittime( m_Props ) );
   m_Fixed->SetValue( wStage.getwaittime( m_Props ) );
 
   int speed = 0;
