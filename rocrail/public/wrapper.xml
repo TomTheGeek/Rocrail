@@ -467,6 +467,7 @@
       <var name="protver" vt="int" defval="0" remark="Protocol version. Default implementation is 0."/>
       <var name="locolist" vt="bool" defval="false" remark="Initial send the digint the list of locos."/>
       <var name="switchlist" vt="bool" defval="false" remark="Initial send the digint the list of switches."/>
+      <var name="overrule" vt="bool" defval="true" remark="Overrule throttle commands."/>
 
 
       <!-- HSI88 -->
