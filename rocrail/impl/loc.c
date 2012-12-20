@@ -753,6 +753,7 @@ static int _getFnNrByDesc( iOLoc inst, const char* desc) {
   iONode fundef = wLoc.getfundef( data->props );
   while( fundef != NULL ) {
     if( wFunDef.gettext(fundef) != NULL && StrOp.equals(wFunDef.gettext(fundef), desc) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function number for [%s] = %d", desc, wFunDef.getfn(fundef) );
       return wFunDef.getfn(fundef);
     }
     fundef = wLoc.nextfundef( data->props, fundef );
