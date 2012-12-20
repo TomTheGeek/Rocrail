@@ -657,6 +657,10 @@
     <fun name="depart" vt="void">
       <param name="inst" vt="this" remark="Loco instance"/>
     </fun>
+    <fun name="getFnNrByDesc" vt="int">
+      <param name="inst" vt="this" remark="Loco instance"/>
+      <param name="desc" vt="const char*" remark="Function description"/>
+    </fun>
     <data include="$rocint/public/lcdriverint">
       <var name="props" vt="iONode"/>
       <var name="cvMap" vt="iOMap"/>

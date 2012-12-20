@@ -837,8 +837,11 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     }
     if( lc != NULL ) {
       iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-      int fnaction = atoi(wAction.getparam(data->action));
       Boolean fon = StrOp.equals( "on", wAction.getcmd( data->action ) );
+      int fnaction = LocOp.getFnNrByDesc(lc, wAction.getparam(data->action));
+
+      if( fnaction == -1 )
+        fnaction = atoi(wAction.getparam(data->action));
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function [%d] activated", fnaction );
       wFunCmd.setid( cmd, wAction.getid( data->action ) );

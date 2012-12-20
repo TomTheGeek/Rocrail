@@ -747,6 +747,19 @@ int _compareVhint(iOLoc inst, const char* V_hint) {
 }
 
 
+static int _getFnNrByDesc( iOLoc inst, const char* desc) {
+  iOLocData    data = Data(inst);
+
+  iONode fundef = wLoc.getfundef( data->props );
+  while( fundef != NULL ) {
+    if( wFunDef.gettext(fundef) != NULL && StrOp.equals(wFunDef.gettext(fundef), desc) ) {
+      return wFunDef.getfn(fundef);
+    }
+    fundef = wLoc.nextfundef( data->props, fundef );
+  };
+  return -1;
+}
+
 static int __getFnTimer( iOLoc inst, int function) {
   iOLocData    data = Data(inst);
 
