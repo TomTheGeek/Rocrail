@@ -733,7 +733,7 @@ static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse, int* oppwait 
   }
 
   *oppwait = blockwait;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "wait for %d seconds", blockwait );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "wait for %d seconds", blockwait );
   return blockwait;
 }
 
