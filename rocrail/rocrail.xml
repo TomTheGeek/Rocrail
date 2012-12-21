@@ -2282,6 +2282,12 @@
       <var name="blockRouteFbValidationClean"   vt="Boolean" remark="clean invalid route/fb assignments in blocks"/>
       <var name="seltabRouteFbValidation"       vt="Boolean" remark="check dest routes and fb assignments in selection tables"/>
       <var name="seltabRouteFbValidationClean"  vt="Boolean" remark="clean invalid route/fb assignments in selection tables"/>
+      <var name="blockCheck"                    vt="Boolean" remark="check fbevents in blocks for valid fb id and valid from/byroute"/>
+      <var name="blockCheckClean"               vt="Boolean" remark="clean invalid fbevents in blocks"/>
+      <var name="routeCheck"                    vt="Boolean" remark="check routes for valid commands"/>
+      <var name="routeCheckClean"               vt="Boolean" remark="clean invalid commands in routes"/>
+      <var name="zlevelCheck"                   vt="Boolean" remark="check zlevel definitions and all items on zlevel"/>
+      <var name="zlevelCheckClean"              vt="Boolean" remark="clean invalid zlevel definitions and items on invalid levels"/>
    </data>
   </object>
 

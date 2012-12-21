@@ -3366,11 +3366,6 @@ static void _analyse( iOModel inst, int mode ) {
     requirements = False;
   }
 
-  if( ! planIsHealthy ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "This plan is not healthy.");
-    requirements = False;
-  }
-
   if( automode ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Automode is on. Switch off to use analyzer.");
     requirements = False;
@@ -3381,7 +3376,6 @@ static void _analyse( iOModel inst, int mode ) {
     requirements = False;
   }
 
-
   if( requirements ) {
     char* stampfile = StrOp.fmt("%s.anabak", data->fileName);
     const char* filename = data->fileName;
@@ -3389,12 +3383,11 @@ static void _analyse( iOModel inst, int mode ) {
     ModelOp.saveAs(inst, stampfile);
     data->fileName = filename;
 
-    /* Make sure the route list is available before analyzing or cleaning the track plan. */
+    /* Make sure at least an empty route list is available before analyzing or cleaning the plan */
     if( wPlan.getstlist(data->model) == NULL ) {
       iONode stlist = NodeOp.inst( wRouteList.name(), data->model, ELEMENT_NODE);
       NodeOp.addChild( data->model, stlist );
     }
-
 
     if( mode == AN_EXTCLEAN ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "starting extended cleanup...");
@@ -3406,12 +3399,13 @@ static void _analyse( iOModel inst, int mode ) {
       return;
     }
 
+    /* now we handle AN_JOB and AN_CLEAN */
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "init analyser..." );
     analyser = AnalyseOp.inst();
 
     if( analyser != NULL ) {
       if( mode == AN_JOB ) {
-        /* first check plan health (as a side effect some variables of the current analyser instance are set) */
+        /* now check plan health (as a side effect some variables of the current analyser instance are initialized) */
         data->healthy = AnalyseOp.checkPlanHealth( analyser );
 
         /* set variables according to result */
@@ -3422,6 +3416,7 @@ static void _analyse( iOModel inst, int mode ) {
           AnalyseOp.base.del( analyser );
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "This plan is not healthy.");
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "analyzer skipped see lines above.");
+          return;
         }
       }
 

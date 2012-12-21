@@ -750,6 +750,12 @@
       <var name="blockRouteFbValidationClean"   vt="bool" defval="false" remark="clean invalid route/fb assignments in all blocks"/>
       <var name="seltabRouteFbValidation"       vt="bool" defval="true"  remark="check dest routes and fb assignments in selection tables"/>
       <var name="seltabRouteFbValidationClean"  vt="bool" defval="false" remark="clean invalid route/fb assignments in selection tables"/>
+      <var name="blockCheck"                    vt="bool" defval="true"  remark="check fbevents in blocks for valid fb id and valid from/byroute"/>
+      <var name="blockCheckClean"               vt="bool" defval="false" remark="clean invalid fbevents in blocks"/>
+      <var name="routeCheck"                    vt="bool" defval="true"  remark="check routes for valid commands"/>
+      <var name="routeCheckClean"               vt="bool" defval="false" remark="clean invalid commands in routes"/>
+      <var name="zlevelCheck"                   vt="bool" defval="true"  remark="check zlevel definitions and all items on zlevel"/>
+      <var name="zlevelCheckClean"              vt="bool" defval="false" remark="clean invalid zlevel definitions and items on invalid levels"/>
     </anaopt>
   </rocrail>
 

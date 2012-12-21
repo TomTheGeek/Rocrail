@@ -116,6 +116,21 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/Exception.h"
 #include "rocrail/wrapper/public/AnaOpt.h"
 #include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/Turntable.h"
+#include "rocrail/wrapper/public/TTTrack.h"
+#include "rocrail/wrapper/public/ZLevel.h"
+#include "rocrail/wrapper/public/Schedule.h"
+#include "rocrail/wrapper/public/Car.h"
+#include "rocrail/wrapper/public/Waybill.h"
+#include "rocrail/wrapper/public/Operator.h"
+#include "rocrail/wrapper/public/Tour.h"
+#include "rocrail/wrapper/public/Link.h"
+#include "rocrail/wrapper/public/Booster.h"
+#include "rocrail/wrapper/public/MVTrack.h"
+#include "rocrail/wrapper/public/Text.h"
+#include "rocrail/wrapper/public/ModelCmd.h"
+#include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/SwitchCmd.h"
 
 #include "rocrail/public/app.h"
 #include "rocrail/public/model.h"
@@ -134,6 +149,10 @@ static int instCnt = 0;
 static Boolean _checkPlanHealth(iOAnalyse inst);
 static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
     int turnoutstate, int depth, Boolean toPreRTlist);
+static Boolean connectorCheck( iOAnalyse inst, Boolean repair );
+static Boolean blockCheck( iOAnalyse inst, Boolean repair );
+static Boolean routeCheck( iOAnalyse inst, Boolean repair );
+static Boolean isValidInterfaceID( iOAnalyse inst, const char *iid );
 
 /** ----- OBase ----- */
 static const char* __id( void* inst ) {
@@ -711,6 +730,282 @@ static Boolean blockFeedbackActionCheck( iOAnalyse inst, Boolean repair ) {
     return False;
   }
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block feedback action check: %d problematic enries", numProblems );
+  return True;
+}
+
+
+/* do all fbevents of blocks have a valid fb id and valid from/byroute */
+static Boolean blockCheck( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode bklist = wPlan.getbklist(data->plan);
+  int numProblems = 0;
+
+  if( bklist != NULL ) {
+    iONode bk = wBlockList.getbk( bklist );
+    while( bk != NULL ) {
+      Boolean hasAtLeastOneFbevent = False;
+      const char* bkid = wItem.getid(bk);
+      iIBlockBase block = ModelOp.getBlock( data->model, bkid );
+      iONode bkNode = BlockOp.base.properties( block );
+      iOList delList = ListOp.inst();
+
+      iONode fbevt = wBlock.getfbevent( bkNode );
+      while( fbevt != NULL ) {
+        int numProblemsPre = numProblems ;
+        const char* from    = wFeedbackEvent.getfrom( fbevt );
+        const char* byroute = wFeedbackEvent.getbyroute( fbevt );
+        const char* fbid    = wFeedbackEvent.getid( fbevt );
+        const char* action  = wFeedbackEvent.getaction( fbevt );
+
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block check: bl[%s] from[%s](%d) byroute[%s](%d) fbid[%s](%d) action[%s]",
+            bkid, from, StrOp.len(from), byroute, StrOp.len(byroute), fbid, StrOp.len(fbid), action );
+
+        /* try to find fbid in plan */
+        if( StrOp.len( fbid ) > 0 ) {
+          iOFBack fb = ModelOp.getFBack( data->model, fbid );
+          if( fb == NULL ) {
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: block/fbevent:  %s[%s] unknown feedback [%s]",
+                 NodeOp.getName(bkNode), wItem.getid(bkNode), fbid );
+            if( repair && ! ismemberoflist( delList, (obj)fbevt ) ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block check: add fbevt to delList" );
+              ListOp.add( delList, (obj)fbevt );
+            }
+            numProblems++;
+          }
+        }
+
+        /* try to find "from" as block */
+        if( ( StrOp.len( from ) > 0 ) &&
+            ! StrOp.equals( from, wFeedbackEvent.from_all ) &&
+            ! StrOp.equals( from, wFeedbackEvent.from_all_reverse )
+          ) {
+          iIBlockBase bl = ModelOp.getBlock( data->model, from );
+          if( bl == NULL ) {
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: block/fbevent:  %s[%s] unknown block [%s]",
+                 NodeOp.getName(bkNode), wItem.getid(bkNode), from );
+            if( repair && ! ismemberoflist( delList, (obj)fbevt ) ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block check: add fbevt to delList" );
+              ListOp.add( delList, (obj)fbevt );
+            }
+            numProblems++;
+          }
+        }
+
+        /* try to find "byroute" as route in plan */
+        if( ( StrOp.len( byroute ) > 0 ) &&
+            ! StrOp.equals( byroute, wFeedbackEvent.from_all ) &&
+            ! StrOp.equals( byroute, wFeedbackEvent.from_all_reverse )
+          ) {
+          iORoute rt = ModelOp.getRoute( data->model, byroute );
+          if( rt == NULL ) {
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: block/fbevent:  %s[%s] unknown route [%s]",
+                 NodeOp.getName(bkNode), wItem.getid(bkNode), byroute );
+            if( repair && ! ismemberoflist( delList, (obj)fbevt ) ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block check: add fbevt to delList" );
+              ListOp.add( delList, (obj)fbevt );
+            }
+            numProblems++;
+          }
+        }
+
+        if( numProblems == numProblemsPre ) {
+          /* no problems with this fbevent detected */
+          hasAtLeastOneFbevent = True ;
+        }
+
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block check: next" );
+        fbevt = wBlock.nextfbevent( bkNode, fbevt );
+      }
+
+      if( ! hasAtLeastOneFbevent ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: block/fbevent:  %s[%s] has no fbevents",
+            NodeOp.getName(bkNode), wItem.getid(bkNode));
+        numProblems++;
+      }
+
+      if( repair ) {
+        /* remove all marked fbevt */
+        iONode fbevt ;
+        if( ListOp.size(delList) > 0 ) {
+          fbevt = (iONode)ListOp.first( delList );
+          while( fbevt != NULL ) {
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "block check: bl[%s] Deleting from %s fbid %s action %s", 
+                bkid, wFeedbackEvent.getfrom(fbevt), wFeedbackEvent.getid(fbevt), wFeedbackEvent.getaction(fbevt) );
+            NodeOp.removeChild( bkNode, fbevt );
+            NodeOp.base.del(fbevt);
+            fbevt = (iONode)ListOp.next( delList );
+          }
+        }
+      }
+      ListOp.base.del(delList);
+
+      bk =  wBlockList.nextbk( bklist, bk );
+    }
+  }
+
+  if( numProblems ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block check: %d problematic entries", numProblems );
+    return False;
+  }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block check: %d problematic enries", numProblems );
+  return True;
+}
+
+
+/* is the given z level valid inside our plan (no special handling for zlevel 0 !) */
+static Boolean isValidZlevel( iOAnalyse inst, int z ) {
+  iOAnalyseData data = Data(inst);
+  iONode zlevel = wPlan.getzlevel( data->plan );
+  while( zlevel != NULL ) {
+    if( z == wZLevel.getz( zlevel ) )
+      return True;
+    zlevel = wPlan.nextzlevel( data->plan, zlevel );
+  }
+  return False;
+}
+
+/* check zlevels and all items on zlevels */
+static Boolean zlevelCheck( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode zlevel = wPlan.getzlevel( data->plan );
+  iOList delList = ListOp.inst();
+  int numProblems = 0;
+  int i = 0;
+
+  /* cascaded loop over zlevel title definitions */
+  while( zlevel != NULL ) {
+    int level = wZLevel.getz( zlevel );
+    const char* title = wZLevel.gettitle( zlevel );
+    Boolean active = wZLevel.isactive( zlevel );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "zlevel check: level[%d] title[%s] active[%d] name[%s]",
+        level, title, active, NodeOp.getName(zlevel) );
+
+    iONode zlevelFollower = wPlan.nextzlevel( data->plan, zlevel );
+    while( zlevelFollower != NULL ) {
+      int levelFollower = wZLevel.getz( zlevelFollower );
+      const char* titleFollower = wZLevel.gettitle( zlevelFollower );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "zlevel cross checking: level[%d] title[%s] <-> level[%d] title[%s]", 
+          level, title, levelFollower, titleFollower );
+      if( level == levelFollower ) {
+        numProblems++;
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "zlevel check: definition of level[%d] title[%s] is following level[%d] title[%s] (first definition is valid)",
+            levelFollower, titleFollower, level, title );
+        if( repair && ! ismemberoflist( delList, (obj)zlevelFollower ) ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "zlevel check: add zlevel to delList" );
+          ListOp.add( delList, (obj)zlevelFollower );
+        }
+      }
+      
+      zlevelFollower = wPlan.nextzlevel( data->plan, zlevelFollower );
+    }
+    zlevel = wPlan.nextzlevel( data->plan, zlevel );
+  }
+
+  if( repair ) {
+    /* remove all marked zlevel */
+    if( ListOp.size(delList) > 0 ) {
+      iONode node = (iONode)ListOp.first( delList );
+      while( node != NULL ) {
+        int level = wZLevel.getz( node );
+        const char* title = wZLevel.gettitle( node );
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "zlevel check: DELETING level[%d] title[%s]", 
+            level, title );
+        NodeOp.removeChild( data->plan, node );
+
+        node = (iONode)ListOp.next( delList );
+      }
+    }
+    delList = ListOp.inst();
+  }
+
+
+  /* checking items */
+  int dbs = NodeOp.getChildCnt(data->plan);
+  int numItemsTotal = 0;
+  for( i = 0; i < dbs; i++ ) {
+    iOMap idMap = MapOp.inst();
+    iONode db = NodeOp.getChild( data->plan, i );
+    int items = NodeOp.getChildCnt(db);
+    int n = 0;
+    int numItems = 0 ;
+
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checking list [%s](%d)...", NodeOp.getName(db), items );
+    for( n = 0; n < items; n++ ) {
+      iONode item = NodeOp.getChild( db, n );
+      const char* itemName = NodeOp.getName(item) ;
+      Boolean show = False;
+      Boolean valPlan = False;
+      int z = -2;
+      numItems++;
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "item[%s]", wItem.getid(item) );
+
+      /* known types without z-levels ... */
+      if( StrOp.equals( itemName, wLoc.name() ) ||
+          StrOp.equals( itemName, wRoute.name() ) ||
+          StrOp.equals( itemName, wAction.name() ) ||
+          StrOp.equals( itemName, wActionCtrl.name() ) ||
+          StrOp.equals( itemName, wLocation.name() ) ||
+          StrOp.equals( itemName, wSchedule.name() ) ||
+          StrOp.equals( itemName, wCar.name() ) ||
+          StrOp.equals( itemName, wWaybill.name() ) ||
+          StrOp.equals( itemName, wOperator.name() ) ||
+          StrOp.equals( itemName, wTour.name() ) ||
+          StrOp.equals( itemName, wLink.name() ) ||
+          StrOp.equals( itemName, wBooster.name() ) ||
+          StrOp.equals( itemName, wMVTrack.name() )
+        ) {
+        /* Ignore */
+        continue;
+      }
+
+      /* known types with z-levels ... */
+      if( StrOp.equals( itemName, wTrack.name()  ) ||
+          StrOp.equals( itemName, wFeedback.name() ) ||
+          StrOp.equals( itemName, wSwitch.name() ) ||
+          StrOp.equals( itemName, wSignal.name() ) ||
+          StrOp.equals( itemName, wOutput.name() ) ||
+          StrOp.equals( itemName, wBlock.name() ) ||
+          StrOp.equals( itemName, wStage.name() ) ||
+          StrOp.equals( itemName, wTurntable.name() ) ||
+          StrOp.equals( itemName, wSelTab.name() ) ||
+          StrOp.equals( itemName, wText.name() )
+        ) {
+        z = wItem.getz(item) ;
+        show = wItem.isshow(item);
+        valPlan = isValidZlevel( inst, z );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "zlevelCheck: name[%s] item[%s] z[%d] show[%d] valPlan[%d]", itemName, wItem.getid(item), z, show, valPlan );
+        if( ! valPlan ) {
+          if( show ) {
+            numProblems++;
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: visible item[%s] id[%s] on invalid z level [%d]", itemName, wItem.getid(item), z );
+            if( repair ) {
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "DELETING: visible item[%s] id[%s] on invalid z level [%d]", itemName, wItem.getid(item), z );
+              /* remove node from current list */
+              NodeOp.removeChild( db, item ) ;
+              /* adjust positional parameters */
+              items--;
+              n--;
+            }
+          }else {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: invisible item[%s] id[%s] on invalid z level [%d] (show[%d])", itemName, wItem.getid(item), z, show );
+          }
+        }
+      }else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "zlevelCheck: unsupported name[%s] -> skipped", itemName );
+      }
+    }
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "zlevel check: %d items in [%s]", numItems, NodeOp.getName(db) );
+    numItemsTotal += numItems;
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "zlevel check: %d items", numItemsTotal );
+
+  ListOp.base.del(delList);
+
+  if( numProblems ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zlevel check: %d problematic entries", numProblems );
+    return False;
+  }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "zlevel check: %d problematic enries", numProblems );
   return True;
 }
 
@@ -2298,7 +2593,6 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
       if( wTrack.getcounterpartid(item) != NULL && !StrOp.equals( wTrack.getcounterpartid(item), "") ){
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found counterpart for: [%s] counterpart: [%s]",
             wItem.getid(item), wTrack.getcounterpartid(item) );
-
         iOTrack track = ModelOp.getTrack( data->model, wTrack.getcounterpartid(item) );
 
         /* go on at the connector */
@@ -2337,6 +2631,8 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
 
   int turnoutstate_out;
 
+
+    
   /* get next item */
   travel = __travel( inst, item, travel, turnoutstate, &turnoutstate_out, &x, &y, "");
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "TRAVEL NEXT travel[%d] tos[%d] tos_o[%d] x[%d] y[%d]", travel,  turnoutstate, turnoutstate_out, x, y );
@@ -3276,7 +3572,7 @@ static int __analyseAllLists(iOAnalyse inst) {
     /* skip first item in this loop analyse */
     iONode item = (iONode)ListOp.next( routeFrag );
     while( rt_setBl && item ) { /* loop1 */
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop1: checkitem  [%s] for [%s][%s] state=%s", bka, NodeOp.getName(item), wItem.getid(item), bka, wItem.getstate(item) );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop1: checkitem  [%s] for [%s][%s] state=%s", bka, NodeOp.getName(item), wItem.getid(item), bka, wItem.getstate(item) );
 
       if( StrOp.equals( NodeOp.getName(item), wBlock.name()) ||
           StrOp.equals( NodeOp.getName(item), wStage.name()) ||
@@ -3621,7 +3917,7 @@ static int __generateRoutes(iOAnalyse inst) {
       if( StrOp.equals( NodeOp.getName(item), wSelTab.name()) ) {
         iONode swcmd = NodeOp.inst( wSwitchCmd.name(), NULL, ELEMENT_NODE );
         wItem.setid( swcmd, wItem.getid(item));
-        wSwitch.setcmd( swcmd, "track");
+        wSwitch.setcmd( swcmd, wSwitchCmd.cmd_track);
         NodeOp.addChild( newRoute, swcmd );
       }
 
@@ -3752,6 +4048,23 @@ static int _analyse(iOAnalyse inst) {
   int cx, cy;
   int zlevel = 0;
   int modifications = 0;
+  Boolean res = True;
+  Boolean resCT;
+
+  /* do some extended tests on current layout */
+
+  /* check if connectors and counterparts are ok */
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Connector test: in progress..." );
+  resCT = connectorCheck( inst, False );
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Connector test: %s errors detected", resCT?"no":"some" );
+  res &= resCT;
+
+  if( ! res ) {
+    /* errors in one of the tests above */
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Analyser skipped because plan has ERRORs" );
+    return modifications;
+  }
+
 
   MapOp.clear(data->objectmap);
   ListOp.clear(data->preRTlist);
@@ -3877,6 +4190,11 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: loco %s has no address set", wItem.getid(item) );
           healthy = False;
         }
+        if( ! isValidInterfaceID( inst, wLoc.getiid(item) ) ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: loco %s configured for non existent interface id [%s]",
+              wItem.getid(item), wLoc.getiid(item) );
+          healthy = False;
+        }
       }
 
       if( StrOp.equals( wFeedback.name(), NodeOp.getName(item) ) ) {
@@ -3896,6 +4214,11 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
             MapOp.put( sensorMap, key, (obj)item );
           }
           StrOp.free( key );
+        }
+        if( ! isValidInterfaceID( inst, wFeedback.getiid(item) ) ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: sensor %s configured for non existent interface id [%s]",
+              wItem.getid(item), wFeedback.getiid(item) );
+          healthy = False;
         }
       }
 
@@ -3934,6 +4257,11 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
             }
           }
         }
+        if( ! isValidInterfaceID( inst, wSwitch.getiid(item) ) ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: switch %s configured for non existent interface id [%s]",
+              wItem.getid(item), wSwitch.getiid(item) );
+          healthy = False;
+        }
       }
 
       if( StrOp.equals( wOutput.name(), NodeOp.getName(item) ) ) {
@@ -3948,6 +4276,11 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
           else {
             MapOp.put( switchMap, key, (obj)item );
           }
+        }
+        if( ! isValidInterfaceID( inst, wOutput.getiid(item) ) ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: output %s configured for non existent interface id [%s]",
+              wItem.getid(item), wOutput.getiid(item) );
+          healthy = False;
         }
       }
 
@@ -4006,6 +4339,11 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
           else {
             MapOp.put( switchMap, key, (obj)item );
           }
+        }
+        if( ! isValidInterfaceID( inst, wSignal.getiid(item) ) ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: signal %s configured for non existent interface id [%s]",
+              wItem.getid(item), wSignal.getiid(item) );
+          healthy = False;
         }
       }
 
@@ -4069,6 +4407,12 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
     MapOp.base.del(idMap);
   }
 
+  /* check zlevels and all items on zlevels */
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "INFO: Starting zlevel check" );
+  if( ! zlevelCheck( inst, False ) ) {
+    healthy = False;
+  }
+
   /* check for very lonely objects */
   if( MapOp.size(xyzMap) > 0 ) {
     int items = MapOp.size(xyzMap);
@@ -4107,6 +4451,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
   MapOp.base.del(sensorMap);
   MapOp.base.del(switchMap);
 
+
   if( healthy ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Plan is healthy" );
   } else {
@@ -4114,6 +4459,203 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
   }
 
   return healthy;
+}
+
+/* check if every connector with a tknr of 10 and above has a counterpart */
+static Boolean connectorCheck( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode tklist = wPlan.gettklist(data->plan);
+  Boolean retVal = True;
+
+  if( tklist != NULL ) {
+    int i ;
+    int cnt = NodeOp.getChildCnt( tklist );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "connectorCheck: #of %s=[%d]", wTrack.name(), cnt );
+    for( i = 0; i < cnt; i++ ) {
+      iONode tk = NodeOp.getChild( tklist, i );
+      const char* tkid = wItem.getid( tk );
+      const char* type = wTrack.gettype( tk );
+      if( tk && 
+          StrOp.equals(NodeOp.getName(tk), wTrack.name() ) &&
+          ( StrOp.equals(wItem.gettype(tk), wTrack.connector ) ||
+            StrOp.equals(wItem.gettype(tk), wTrack.concurveleft ) ||
+            StrOp.equals(wItem.gettype(tk), wTrack.concurveright )
+          )
+        ) {
+        int tknr = wTrack.gettknr(tk);
+
+        if( tknr >= MIN_CONNECTOR_COUNTERPART_NR ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "connectorCheck: tknr[%d] [%s]",
+              wTrack.gettknr(tk), wItem.getid(tk) );
+          int j ;
+          int numConnectors = 0 ;
+          for( j = 0; j < cnt; j++ ) {
+            iONode tkJ = NodeOp.getChild( tklist, j );
+            if( tkJ &&
+                StrOp.equals(NodeOp.getName(tk), wTrack.name() ) &&
+                ( StrOp.equals(wItem.gettype(tk),  wTrack.connector )  ||
+                  StrOp.equals(wItem.gettype(tk), wTrack.concurveleft ) ||
+                  StrOp.equals(wItem.gettype(tk), wTrack.concurveright )
+                ) &&
+                ( wTrack.gettknr(tkJ) == tknr )
+              ) {
+              numConnectors++ ;
+            }
+          }
+          if( numConnectors == 0 ) {
+            /* should never happen !!! */
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "connectorCheck: tknr[%d] [%s] : NONE found.",
+                wTrack.gettknr(tk), wItem.getid(tk) );
+          } else if( numConnectors == 1 ) {
+            /* only one... */
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: connector [%s] with tknr[%d] : no counterpart found.",
+                tkid, wTrack.gettknr(tk) );
+          } else if( numConnectors == 2 ) {
+            /* everything OK */
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "connectorCheck: tknr[%d] [%s] : 2 found.",
+                wTrack.gettknr(tk), wItem.getid(tk) );
+          } else if( numConnectors > 2 ) {
+            /* Ooops, too many connectors */
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: connector [%s] tknr[%d] : Too many counterparts (total %d)",
+                tkid, wTrack.gettknr(tk), numConnectors );
+            retVal = False;
+          }
+        }
+      }
+    }
+  }
+  return retVal;
+}
+
+
+/* check if all routes have usage "from-to" and direction "forward" (-> are compatble to block sides) 
+   and if all swcmd use a valid id for sw/sg/co */
+static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode stlist = wPlan.getstlist(data->plan);
+  Boolean retVal = True;
+  int numProblems = 0;
+
+  if( stlist != NULL ) {
+    int stSize = NodeOp.getChildCnt( stlist );
+    if( stSize > 0 ) {
+      int i = 0;
+      iONode stNode ;
+
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "routeCheck: Checking %d stRoutes", stSize );
+      for( i = 0 ; i < stSize ; i++ ) {
+        stNode = NodeOp.getChild(stlist, i);
+        if( stNode ) {
+          Boolean dir = wRoute.isdir(stNode);
+          Boolean lcdir = wRoute.islcdir(stNode);
+
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "routeCheck: st[%d] [%s] dir[%d] lcdir[%d]",
+              i, wRoute.getid(stNode), dir, lcdir );
+
+          iOList delList = ListOp.inst();
+          iONode swCmd = wRoute.getswcmd( stNode );
+          while( swCmd != NULL ) {
+            const char* swid = wSwitchCmd.getid( swCmd );
+            const char* swcmd = wSwitchCmd.getcmd( swCmd );
+            Boolean swlock = wSwitchCmd.islock( swCmd );
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "routeCheck: st[%d] [%s] swid[%s] swcmd[%s] swlock[%d]",
+                i, wRoute.getid(stNode), swid, swcmd, swlock );
+            /* validate swid */
+            iOSwitch sw = ModelOp.getSwitch( data->model, swid );
+            iOSignal sg = ModelOp.getSignal( data->model, swid );
+            iOOutput co = ModelOp.getOutput( data->model, swid );
+            iOSelTab st = ModelOp.getSelectiontable( data->model, swid );
+            iOTT     tt = ModelOp.getTurntable( data->model, swid );
+            if( sw == NULL && sg == NULL && co == NULL && st == NULL && tt == NULL ) {
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: routeCheck: route[%d] [%s] id[%s] in command does not exist",
+                  i, wRoute.getid(stNode), swid );
+              numProblems++;
+              retVal = False;
+              if( repair && ! ismemberoflist( delList, (obj)swCmd ) ) {
+                ListOp.add( delList, (obj)swCmd );
+              }
+            }
+
+            swCmd = wRoute.nextswcmd( stNode, swCmd );
+          }
+
+          if( repair ) {
+            /* remove all marked swcmd */
+            iONode swcmd ;
+            if( ListOp.size(delList) > 0 ) {
+              swcmd = (iONode)ListOp.first( delList );
+              while( swcmd != NULL ) {
+                TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "route check: route[%s]: Deleting swcmd id[%s] cmd[%s] lock[%d]", 
+                    wRoute.getid(stNode), wSwitchCmd.getid( swcmd ), wSwitchCmd.getcmd( swcmd ), wSwitchCmd.islock( swcmd ) );
+                NodeOp.removeChild( stNode, swcmd );
+                NodeOp.base.del(swcmd);
+                swcmd = (iONode)ListOp.next( delList );
+              }
+            }
+          }
+          ListOp.base.del(delList);
+
+          if( ! repair ) {
+            /* checks that don't have a repair part are skipped in repair mode */
+            if( ! dir ) {
+              retVal = False;
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: route [%s] uses incompatible Usage: both directions",
+                wRoute.getid(stNode) );
+             numProblems++;
+            }
+            if( ! lcdir ) {
+              retVal = False;
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: route [%s] uses incompatible Run direction: reverse",
+                wRoute.getid(stNode) );
+              numProblems++;
+            }
+          }
+
+        } else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stNode[%d] not found", i );
+        }
+      }
+    }
+  }
+
+  if( numProblems ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "route check: %d problematic entries", numProblems );
+    return False;
+  }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route check: %d problematic enries", numProblems );
+  return retVal;
+}
+
+/* is the given iid a valid iid of a command station */
+static Boolean isValidInterfaceID( iOAnalyse inst, const char *iid )
+{
+  /* empty interface id is always OK -> first CS */
+  if( iid == NULL || StrOp.len( iid ) == 0 )
+    return True;
+
+  iOAnalyseData data = Data(inst);
+  iONode ini    = AppOp.getIni();
+  iONode plan   = ModelOp.getModel( data->model );
+  iONode modeldigint = plan?wPlan.getdigint( plan ):NULL;
+  iONode digint = wRocRail.getdigint( ini );
+  Boolean bModelDigints = modeldigint == NULL ? False:True;
+
+  while( digint != NULL ) {
+    const char* digintIid = wDigInt.getiid( digint );
+    /*
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "digint iid=\"%s\" bModelDigints[%d]",
+        digintIid!=NULL ? digintIid:"?", bModelDigints );
+    */
+    if( StrOp.equals( digintIid, iid ) ) {
+      return True;
+    }
+
+    if( bModelDigints )
+      digint = wPlan.nextdigint( ModelOp.getModel( data->model ), digint );
+    else
+      digint = wRocRail.nextdigint( ini, digint );
+  }
+  return False;
 }
 
 
@@ -4125,14 +4667,27 @@ static Boolean _checkExtended(iOAnalyse inst) {
   }
   iOAnalyseData data = Data(inst);
   Boolean res;
-    
+
   TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. BEGIN" );
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ExtChk: bFAC[%d]c[%d] bFV[%d]c[%d] sFV[%d]c[%d]",
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ExtChk: bFAC[%d]c[%d] bFV[%d]c[%d] sFV[%d]c[%d] rtC[%d]c[%d] blC[%d]c[%d] zLC[%d]c[%d]",
       data->blockFeedbackActionCheck, data->blockFeedbackActionCheckClean,
       data->blockRouteFbValidation,   data->blockRouteFbValidationClean,
-      data->seltabRouteFbValidation,  data->seltabRouteFbValidationClean );
+      data->seltabRouteFbValidation,  data->seltabRouteFbValidationClean,
+      data->routeCheck,               data->routeCheckClean,
+      data->blockCheck,               data->blockCheckClean,
+      data->zlevelCheck,              data->zlevelCheckClean );
 
   /* checks that don't change anything are always allowed */
+
+  /* basic checks that are not choosable by user */
+
+  /* check if every connector with a tknr of 10 and above has a counterpart */
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Connector test: in progress..." );
+  res = connectorCheck( inst, False );
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Connector test: %s problems detected", res?"no":"some" );
+
+  /* checks choosable by user (default is on) */
+
   if( data->blockFeedbackActionCheck ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block feedback action check: in progress..." );
     res = blockFeedbackActionCheck( inst, False );
@@ -4153,6 +4708,27 @@ static Boolean _checkExtended(iOAnalyse inst) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Selection table route feedback validation: %s problems detected", res?"no":"some" );
   }
 
+  /* do all fbevents of blocks have a valid fb id and valid from/byroute */
+  if( data->blockCheck ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block test: in progress..." );
+    res = blockCheck( inst, False );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block test: %s problems detected", res?"no":"some" );
+  }
+
+  if( data->routeCheck ) {
+    /* check if all routes have usage "from-to" and direction "forward" (-> are compatble to block sides) 
+       and if all swcmd use a valid id for sw/sg/co */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route test: in progress..." );
+    res = routeCheck( inst, False );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route test: %s problems detected", res?"no":"some" );
+  }
+
+  /* check zlevels and all items on zlevels */
+  if( data->zlevelCheck ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zlevel test: in progress..." );
+    res = zlevelCheck( inst, False );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zlevel test: %s problems detected", res?"no":"some" );
+  }
 
   TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. END" );
   return False;
@@ -4173,15 +4749,21 @@ static Boolean _cleanExtended(iOAnalyse inst) {
   Boolean isPowerOn = wState.ispower(ControlOp.getState(AppOp.getControl()));
     
   TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. BEGIN" );
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ExtChk: bFAC[%d]c[%d] bFV[%d]c[%d] sFV[%d]c[%d]",
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ExtChk: bFAC[%d]c[%d] bFV[%d]c[%d] sFV[%d]c[%d] blC[%d]c[%d] rtC[%d]c[%d] zLC[%d]c[%d]",
       data->blockFeedbackActionCheck, data->blockFeedbackActionCheckClean,
       data->blockRouteFbValidation,   data->blockRouteFbValidationClean,
-      data->seltabRouteFbValidation,  data->seltabRouteFbValidationClean );
+      data->seltabRouteFbValidation,  data->seltabRouteFbValidationClean,
+      data->blockCheck,               data->blockCheckClean,
+      data->routeCheck,               data->routeCheckClean,
+      data->zlevelCheck,              data->zlevelCheckClean );
 
   /* any clean/repair options set ? */
   if( data->blockFeedbackActionCheckClean ||
       data->blockRouteFbValidationClean   ||
-      data->seltabRouteFbValidationClean
+      data->seltabRouteFbValidationClean  ||
+      data->blockCheckClean               ||
+      data->routeCheckClean               ||
+      data->zlevelCheckClean
     ) {
     /* clean/repair are only allowed if power _and_ auto mode are off */
     /* requirements should be checked by calling function, but to be sure... */
@@ -4225,6 +4807,42 @@ static Boolean _cleanExtended(iOAnalyse inst) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Selection table route feedback validation: Clean/repair in progress..." );
         res = seltabRouteFbValidation( inst, True );
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Selection table route feedback validation: %s problems cleaned", res?"no":"some" );
+        if( res == False )
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
+      }
+
+      if( data->blockCheckClean ) {
+        /* clean/repair are "once" options, reset option */
+        wAnaOpt.setblockCheckClean( anaOpt, False ) ;
+      
+        /* check blocks */
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block: Clean/repair in progress..." );
+        res = blockCheck( inst, True );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block: %s problems cleaned", res?"no":"some" );
+        if( res == False )
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
+      }
+
+      if( data->routeCheckClean ) {
+        /* clean/repair are "once" options, reset option */
+        wAnaOpt.setrouteCheckClean( anaOpt, False ) ;
+
+        /* clean swcmd in routes where switch is is invalid */
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route test: Clean/repair in progress..." );
+        res = routeCheck( inst, True );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route test: %s problems cleaned", res?"no":"some" );
+        if( res == False )
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
+      }
+
+      if( data->zlevelCheckClean ) {
+        /* clean/repair are "once" options, reset option */
+        wAnaOpt.setzlevelCheckClean( anaOpt, False ) ;
+      
+        /* check zlevels and all items on zlevels */
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zlevel: Clean/repair in progress..." );
+        res = zlevelCheck( inst, True );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zlevel: %s problems cleaned", res?"no":"some" );
         if( res == False )
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
       }
@@ -4762,36 +5380,53 @@ static struct OAnalyse* _inst() {
   iONode anaOpt = wRocRail.getanaopt( aoIni ) ;
   if( ! anaOpt ) {
     /* no analyzer options in ini -> create a node */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "_inst: ceate node %s", wAnaOpt.name() );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "_inst: create node %s", wAnaOpt.name() );
     iONode anaOpt = NodeOp.inst( wAnaOpt.name(), aoIni, ELEMENT_NODE );
     if( ! anaOpt ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "_inst: create node %s failed.", wAnaOpt.name() );
+
+      /* cleanup memory */
+      MapOp.base.del(data->objectmap);
+      ListOp.base.del(data->bklist);
+      ListOp.base.del(data->preRTlist);
+      ListOp.base.del(data->notRTlist);
+      freeMem( data );
+      freeMem( __Analyse );
+
+      return NULL;
     }
     else {
       NodeOp.addChild( aoIni, anaOpt );
-
-      /* initialize with default options */
-      wAnaOpt.setsetRouteId( anaOpt, wAnaOpt.issetRouteId( anaOpt ) ) ;
-      wAnaOpt.setsetBlockId( anaOpt, wAnaOpt.issetBlockId( anaOpt ) ) ;
-      wAnaOpt.setaddSignalBlockAssignment( anaOpt, wAnaOpt.isaddSignalBlockAssignment( anaOpt ) ) ;
-      wAnaOpt.setaddFeedbackBlockAssignment( anaOpt, wAnaOpt.isaddFeedbackBlockAssignment( anaOpt ) ) ;
-
-      wAnaOpt.setcleanRouteId( anaOpt, wAnaOpt.iscleanRouteId( anaOpt ) ) ;
-      wAnaOpt.setresetBlockId( anaOpt, wAnaOpt.isresetBlockId( anaOpt ) ) ;
-      wAnaOpt.setresetSignalBlockAssignment( anaOpt, wAnaOpt.isresetSignalBlockAssignment( anaOpt ) ) ;
-      wAnaOpt.setresetFeedbackBlockAssignment( anaOpt, wAnaOpt.isresetFeedbackBlockAssignment( anaOpt ) ) ;
-
-      /* extended checks */
-      wAnaOpt.setblockFeedbackActionCheck(      anaOpt, wAnaOpt.isblockFeedbackActionCheck(      anaOpt ) ) ;
-      wAnaOpt.setblockFeedbackActionCheckClean( anaOpt, wAnaOpt.isblockFeedbackActionCheckClean( anaOpt ) ) ;
-      wAnaOpt.setblockRouteFbValidation(        anaOpt, wAnaOpt.isblockRouteFbValidation(        anaOpt ) ) ;
-      wAnaOpt.setblockRouteFbValidationClean(   anaOpt, wAnaOpt.isblockRouteFbValidationClean(   anaOpt ) ) ;
-      wAnaOpt.setseltabRouteFbValidation(       anaOpt, wAnaOpt.isseltabRouteFbValidation(       anaOpt ) ) ;
-      wAnaOpt.setseltabRouteFbValidationClean(  anaOpt, wAnaOpt.isseltabRouteFbValidationClean(  anaOpt ) ) ;
     }
   }
 
-  /* get values for analyzer options from ini */
+  /* set options to current value or initialize with default (creates non existant entries in rocrail.ini) */
+  /* basic analyzer jobs */
+  wAnaOpt.setsetRouteId( anaOpt, wAnaOpt.issetRouteId( anaOpt ) ) ;
+  wAnaOpt.setsetBlockId( anaOpt, wAnaOpt.issetBlockId( anaOpt ) ) ;
+  wAnaOpt.setaddSignalBlockAssignment( anaOpt, wAnaOpt.isaddSignalBlockAssignment( anaOpt ) ) ;
+  wAnaOpt.setaddFeedbackBlockAssignment( anaOpt, wAnaOpt.isaddFeedbackBlockAssignment( anaOpt ) ) ;
+
+  wAnaOpt.setcleanRouteId( anaOpt, wAnaOpt.iscleanRouteId( anaOpt ) ) ;
+  wAnaOpt.setresetBlockId( anaOpt, wAnaOpt.isresetBlockId( anaOpt ) ) ;
+  wAnaOpt.setresetSignalBlockAssignment( anaOpt, wAnaOpt.isresetSignalBlockAssignment( anaOpt ) ) ;
+  wAnaOpt.setresetFeedbackBlockAssignment( anaOpt, wAnaOpt.isresetFeedbackBlockAssignment( anaOpt ) ) ;
+
+  /* extended checks */
+  wAnaOpt.setblockFeedbackActionCheck(      anaOpt, wAnaOpt.isblockFeedbackActionCheck(      anaOpt ) ) ;
+  wAnaOpt.setblockFeedbackActionCheckClean( anaOpt, wAnaOpt.isblockFeedbackActionCheckClean( anaOpt ) ) ;
+  wAnaOpt.setblockRouteFbValidation(        anaOpt, wAnaOpt.isblockRouteFbValidation(        anaOpt ) ) ;
+  wAnaOpt.setblockRouteFbValidationClean(   anaOpt, wAnaOpt.isblockRouteFbValidationClean(   anaOpt ) ) ;
+  wAnaOpt.setseltabRouteFbValidation(       anaOpt, wAnaOpt.isseltabRouteFbValidation(       anaOpt ) ) ;
+  wAnaOpt.setseltabRouteFbValidationClean(  anaOpt, wAnaOpt.isseltabRouteFbValidationClean(  anaOpt ) ) ;
+  wAnaOpt.setblockCheck(                    anaOpt, wAnaOpt.isblockCheck(                    anaOpt ) ) ;
+  wAnaOpt.setblockCheckClean(               anaOpt, wAnaOpt.isblockCheckClean(               anaOpt ) ) ;
+  wAnaOpt.setrouteCheck(                    anaOpt, wAnaOpt.isrouteCheck(                    anaOpt ) ) ;
+  wAnaOpt.setrouteCheckClean(               anaOpt, wAnaOpt.isrouteCheckClean(               anaOpt ) ) ;
+  wAnaOpt.setzlevelCheck(                   anaOpt, wAnaOpt.iszlevelCheck(                   anaOpt ) ) ;
+  wAnaOpt.setzlevelCheckClean(              anaOpt, wAnaOpt.iszlevelCheckClean(              anaOpt ) ) ;
+
+  /* store option values in local instance */
   data->setRouteId                    = wAnaOpt.issetRouteId(                    anaOpt ) ;
   data->setBlockId                    = wAnaOpt.issetBlockId(                    anaOpt ) ;
   data->addSignalBlockAssignment      = wAnaOpt.isaddSignalBlockAssignment(      anaOpt ) ;
@@ -4802,17 +5437,28 @@ static struct OAnalyse* _inst() {
   data->resetSignalBlockAssignment    = wAnaOpt.isresetSignalBlockAssignment(    anaOpt ) ;
   data->resetFeedbackBlockAssignment  = wAnaOpt.isresetFeedbackBlockAssignment(  anaOpt ) ;
 
-  /* extended check ooptions */
+  /* extended check options */
   data->blockFeedbackActionCheck      = wAnaOpt.isblockFeedbackActionCheck(      anaOpt ) ;
   data->blockFeedbackActionCheckClean = wAnaOpt.isblockFeedbackActionCheckClean( anaOpt ) ;
   data->blockRouteFbValidation        = wAnaOpt.isblockRouteFbValidation(        anaOpt ) ;
   data->blockRouteFbValidationClean   = wAnaOpt.isblockRouteFbValidationClean(   anaOpt ) ;
   data->seltabRouteFbValidation       = wAnaOpt.isseltabRouteFbValidation(       anaOpt ) ;
   data->seltabRouteFbValidationClean  = wAnaOpt.isseltabRouteFbValidationClean(  anaOpt ) ;
+  data->blockCheck                    = wAnaOpt.isblockCheck(                    anaOpt ) ;
+  data->blockCheckClean               = wAnaOpt.isblockCheckClean(               anaOpt ) ;
+  data->routeCheck                    = wAnaOpt.isrouteCheck(                    anaOpt ) ;
+  data->routeCheckClean               = wAnaOpt.isrouteCheckClean(               anaOpt ) ;
+  data->zlevelCheck                   = wAnaOpt.iszlevelCheck(                   anaOpt ) ;
+  data->zlevelCheckClean              = wAnaOpt.iszlevelCheckClean(              anaOpt ) ;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Analyse Options: sRtId[%d] sBlId[%d] aSgBl[%d] aFbBl[%d] clRtId[%d] reBlId[%d] reSgBl[%d] reFbBl[%d]",
-      data->setRouteId, data->setBlockId, data->addSignalBlockAssignment, data->addFeedbackBlockAssignment, 
-      data->cleanRouteId, data->resetBlockId, data->resetSignalBlockAssignment, data->resetFeedbackBlockAssignment );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ExtChk: bFAC[%d]c[%d] bFV[%d]c[%d] sFV[%d]c[%d] blC[%d]c[%d] rtC[%d]c[%d] zLC[%d]c[%d]",
+      data->blockFeedbackActionCheck, data->blockFeedbackActionCheckClean,
+      data->blockRouteFbValidation,   data->blockRouteFbValidationClean,
+      data->seltabRouteFbValidation,  data->seltabRouteFbValidationClean,
+      data->blockCheck,               data->blockCheckClean,
+      data->routeCheck,               data->routeCheckClean,
+      data->zlevelCheck,              data->zlevelCheckClean );
+
 
   instCnt++;
   return __Analyse;
