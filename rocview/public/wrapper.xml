@@ -81,6 +81,7 @@
     <const name="lang_chinesesimplified" vt="string" val="zh_CH"/>
     <const name="lang_portuguesebr" vt="string" val="pt_BR"/>
     <const name="lang_korean" vt="string" val="ko"/>
+    <const name="lang_serbianlatin" vt="string" val="sr_latin"/>
     <const name="clock_default" vt="string" val="default"/>
     <const name="clock_ampm" vt="string" val="ampm"/>
     <const name="clock_24h" vt="string" val="24h"/>
