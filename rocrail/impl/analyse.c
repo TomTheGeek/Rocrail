@@ -3995,8 +3995,8 @@ static int __generateRoutes(iOAnalyse inst) {
             StrTokOp.base.del(tok);
           }
           else { /* empty attribute */
-          wItem.setrouteids(tracknode, wRoute.getid( newRoute) );
-          modifications++;
+            wItem.setrouteids(tracknode, wRoute.getid( newRoute) );
+            modifications++;
           }
           StrOp.free(prevrouteids);
         }
@@ -4546,11 +4546,13 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
       for( i = 0 ; i < stSize ; i++ ) {
         stNode = NodeOp.getChild(stlist, i);
         if( stNode ) {
+          const char* bka = wRoute.getbka( stNode );
+          const char* bkb = wRoute.getbkb( stNode );
           Boolean dir = wRoute.isdir(stNode);
           Boolean lcdir = wRoute.islcdir(stNode);
 
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "routeCheck: st[%d] [%s] dir[%d] lcdir[%d]",
-              i, wRoute.getid(stNode), dir, lcdir );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "routeCheck: st[%d] [%s] bka[%s] bkb[%s] dir[%d] lcdir[%d]",
+              i, wRoute.getid(stNode), bka, bkb, dir, lcdir );
 
           iOList delList = ListOp.inst();
           iONode swCmd = wRoute.getswcmd( stNode );
@@ -4597,11 +4599,52 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
 
           if( ! repair ) {
             /* checks that don't have a repair part are skipped in repair mode */
+
+            iIBlockBase blockA = ModelOp.getBlock( data->model, bka );
+            iIBlockBase blockB = ModelOp.getBlock( data->model, bkb );
+
+            if( blockA == NULL ) {
+              if( StrOp.len( bka ) == 0 ) {
+                TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: routeCheck: [%s] start block not defined",
+                    wRoute.getid(stNode) );
+              }else {
+                TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: routeCheck: [%s] start block [%s] not found in plan",
+                    wRoute.getid(stNode), bka );
+              }
+              numProblems++;
+            }
+
+            if( blockB == NULL ) {
+              if( StrOp.len( bkb ) == 0 ) {
+                TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: routeCheck: [%s] destination block not defined",
+                    wRoute.getid(stNode) );
+              }else {
+                TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: routeCheck: [%s] destination block [%s] not found in plan",
+                    wRoute.getid(stNode), bkb );
+              }
+              numProblems++;
+            }
+
+            /* "dir" is "from-to" or "both directions" */
             if( ! dir ) {
-              retVal = False;
-              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: route [%s] uses incompatible Usage: both directions",
-                wRoute.getid(stNode) );
-             numProblems++;
+              /* routes with a turntable block as destination may use "both directions" in block side mode! */
+              /* bkb is the destination block */
+              /* find destination blocks in model/plan */
+              /* check if it is a turntable block */
+              Boolean isTTBlock = False;
+              if( blockB != NULL ) {
+                isTTBlock = BlockOp.isTTBlock( blockB );
+              }
+
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route check: route [%s]: bkb[%s] isTTBlock[%d]",
+                wRoute.getid(stNode), bkb, isTTBlock );
+
+              if( ! isTTBlock ) {
+                retVal = False;
+                TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: route [%s] uses incompatible Usage: both directions",
+                  wRoute.getid(stNode) );
+                numProblems++;
+              }
             }
             if( ! lcdir ) {
               retVal = False;
@@ -4612,7 +4655,7 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
           }
 
         } else {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stNode[%d] not found", i );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route check: stNode[%d] not found", i );
         }
       }
     }
