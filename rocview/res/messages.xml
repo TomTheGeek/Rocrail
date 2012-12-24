@@ -280,7 +280,7 @@
     <fr txt="non"/>
     <tr txt="hayır"/>
     <es txt="no"/>
-    <it txt="no"/>
+    <it txt="Nessuna"/>
     <da txt="nej"/>
     <bs txt="ne"/>
     <cs txt="Ne"/>
@@ -5176,7 +5176,7 @@
     <fr txt="Pause"/>
     <tr txt="Bekle"/>
     <es txt="Esperar"/>
-    <it txt="Attendere"/>
+    <it txt="Attesa"/>
     <da txt="Vent"/>
     <bs txt="Čekaj"/>
     <cs txt="Čekejte"/>
@@ -5233,7 +5233,7 @@
     <fr txt="Constant"/>
     <tr txt="Sabit"/>
     <es txt="Constante"/>
-    <it txt="Fisso"/>
+    <it txt="Fissa"/>
     <da txt="Fast"/>
     <bs txt="Fiksno"/>
     <cs txt="Pevné"/>
@@ -5260,7 +5260,7 @@
     <fr txt="Locomotive"/>
     <tr txt="Lok"/>
     <es txt="Loc"/>
-    <it txt="Locomotiva"/>
+    <it txt="Loco"/>
     <da txt="Lokomotiv"/>
     <cs txt="Lokomotiva"/>
     <bg txt="Loc"/>
@@ -5288,7 +5288,7 @@
     <fr txt="Détails sur la pause"/>
     <tr txt="Bekleme detayları"/>
     <es txt="Detalles de la Parada"/>
-    <it txt="Attesa dettagli"/>
+    <it txt="Dettagli attesa"/>
     <da txt="Vente detaljer"/>
     <bg txt="Чакай информация"/>
     <el txt="Περιμένετε λεπτομέρειες"/>
@@ -11857,7 +11857,7 @@
     <fr txt="Attendre la voie de programmation"/>
     <tr txt="Wait for PT"/>
     <es txt="Esperando por PT"/>
-    <it txt="Attendi per PT"/>
+    <it txt="Attendere PT"/>
     <da txt="Vent på PT"/>
     <bg txt="Изчакайте PT"/>
     <el txt="Περιμένετε για την PT"/>
@@ -11903,7 +11903,7 @@
     <fr txt="Attendre pour CS"/>
     <tr txt="Wait for CS"/>
     <es txt="Esperando por CS"/>
-    <it txt="Attendi per CS"/>
+    <it txt="Attendere CD"/>
     <da txt="Vent på CS"/>
     <bg txt="Изчакайте CS"/>
     <el txt="Περιμένετε CS"/>
