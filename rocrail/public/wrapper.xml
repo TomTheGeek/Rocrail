@@ -869,7 +869,7 @@
     <const name="lntype_cbus" vt="int" val="6" remark="CBUS"/>
     <const name="lntype_bidib" vt="int" val="7" remark="BiDiB"/>
     <var name="lntype" vt="int" defval="0" remark="LNCV programming type"/>
-    <const name="porttype_port" vt="int" val="0"/>
+    <const name="porttype_switch" vt="int" val="0"/>
     <const name="porttype_light" vt="int" val="1"/>
     <const name="porttype_servo" vt="int" val="2"/>
     <const name="porttype_sound" vt="int" val="3"/>

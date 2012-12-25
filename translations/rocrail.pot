@@ -6203,9 +6203,3 @@ msgstr ""
 msgid "Overrule throttle"
 msgstr ""
 
-#. 
-# id="switch"
-#, c-format
-msgid "Switch"
-msgstr ""
-
