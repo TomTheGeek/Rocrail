@@ -20458,4 +20458,7 @@
   <Msg id="overrulethrottle">
     <en txt="Overrule throttle"/>
   </Msg>
+  <Msg id="switch">
+    <en txt="Switch"/>
+  </Msg>
 </Messages>

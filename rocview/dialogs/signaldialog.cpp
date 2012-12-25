@@ -246,7 +246,7 @@ void SignalDialog::initLabels() {
   m_labCmdTime->SetLabel( wxGetApp().getMsg( "cmdtime" ) );
 
   m_PortType->SetLabel( wxGetApp().getMsg( "type" ) );
-  m_PortType->SetString( 0, wxGetApp().getMsg( "default" ) );
+  m_PortType->SetString( 0, wxGetApp().getMsg( "switch" ) );
   m_PortType->SetString( 1, wxGetApp().getMsg( "lights" ) );
   m_PortType->SetString( 2, wxGetApp().getMsg( "servo" ) );
   m_PortType->SetString( 3, wxGetApp().getMsg( "sound" ) );

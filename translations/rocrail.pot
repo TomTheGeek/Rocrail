@@ -6197,3 +6197,15 @@ msgstr ""
 msgid "Watchdog"
 msgstr ""
 
+#. 
+# id="overrulethrottle"
+#, c-format
+msgid "Overrule throttle"
+msgstr ""
+
+#. 
+# id="switch"
+#, c-format
+msgid "Switch"
+msgstr ""
+
