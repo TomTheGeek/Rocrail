@@ -200,6 +200,9 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SW_DELAY
     void OnCheckboxSwDelayClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_ANY
+    void onAccessory( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
 
@@ -291,6 +294,7 @@ public:
     wxCheckBox* m_Invert2;
     wxCheckBox* m_ActDelay;
     wxTextCtrl* m_Delay;
+    wxCheckBox* m_Accessory;
     wxRadioBox* m_PortType;
     wxStaticBox* m_TrackDriverBox;
     wxStaticText* m_labTrackDriverIID;

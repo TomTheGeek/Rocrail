@@ -947,6 +947,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     wSwitch.setdelay( nodeA, wSwitch.getdelay( o->props ) );
     wSwitch.setactdelay( nodeA, wSwitch.isactdelay( o->props ) );
     wSwitch.setsinglegate( nodeA, wSwitch.issinglegate( o->props ) );
+    wSwitch.setaccessory( nodeA, wSwitch.isaccessory(o->props) );
     wSwitch.setporttype( nodeA, wSwitch.getporttype( o->props ) );
     if( !ControlOp.cmd( control, nodeA, error ) ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Switch \"%s\" could not be switched!",
@@ -961,6 +962,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     wSwitch.setdelay( nodeA2, wSwitch.getdelay( o->props ) );
     wSwitch.setactdelay( nodeA2, wSwitch.isactdelay( o->props ) );
     wSwitch.setsinglegate( nodeA2, wSwitch.issinglegate( o->props ) );
+    wSwitch.setaccessory( nodeA2, wSwitch.isaccessory(o->props) );
     wSwitch.setporttype( nodeA2, wSwitch.getporttype( o->props ) );
     if( !ControlOp.cmd( control, nodeA2, error ) ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Switch \"%s\" could not be switched!",
@@ -1003,6 +1005,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       wSwitch.setdelay( nodeA, wSwitch.getdelay( o->props ) );
       wSwitch.setactdelay( nodeA, wSwitch.isactdelay( o->props ) );
       wSwitch.setsinglegate( nodeA, wSwitch.issinglegate( o->props ) );
+      wSwitch.setaccessory( nodeA, wSwitch.isaccessory(o->props) );
       wSwitch.setporttype( nodeA, wSwitch.getporttype( o->props ) );
       wSwitch.setcmd( nodeA, state1 );
       if( !ControlOp.cmd( control, nodeA, error ) ) {
@@ -1020,6 +1023,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       wSwitch.setdelay( nodeA2, wSwitch.getdelay( o->props ) );
       wSwitch.setactdelay( nodeA2, wSwitch.isactdelay( o->props ) );
       wSwitch.setsinglegate( nodeA2, wSwitch.issinglegate( o->props ) );
+      wSwitch.setaccessory( nodeA2, wSwitch.isaccessory(o->props) );
       wSwitch.setporttype( nodeA2, wSwitch.getporttype( o->props ) );
       wSwitch.setcmd( nodeA2, state2 );
       if( !ControlOp.cmd( control, nodeA2, error ) ) {
@@ -1054,6 +1058,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     wSwitch.setdelay( nodeA, wSwitch.getdelay( o->props ) );
     wSwitch.setactdelay( nodeA, wSwitch.isactdelay( o->props ) );
     wSwitch.setsinglegate( nodeA, wSwitch.issinglegate( o->props ) );
+    wSwitch.setaccessory( nodeA, wSwitch.isaccessory(o->props) );
     wSwitch.setporttype( nodeA, wSwitch.getporttype( o->props ) );
     wSwitch.setcmd( nodeA, state );
     if( !ControlOp.cmd( control, nodeA, error ) ) {

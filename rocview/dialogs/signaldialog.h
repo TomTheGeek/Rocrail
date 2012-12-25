@@ -173,6 +173,9 @@ public:
     /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_SIGNALCONTROL
     void OnSignalcontrolSelected( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_ANY
+    void onAccessory( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SG_PAIRGATES
     void OnCheckboxSgPairgatesClick( wxCommandEvent& event );
 
@@ -257,6 +260,7 @@ public:
     wxTextCtrl* m_Port4;
     wxRadioBox* m_Gate4;
     wxRadioBox* m_SignalControl;
+    wxCheckBox* m_Accessory;
     wxRadioBox* m_PortType;
     wxCheckBox* m_Invert;
     wxCheckBox* m_PairGates;

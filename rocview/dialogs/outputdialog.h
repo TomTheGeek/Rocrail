@@ -155,6 +155,9 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_OUTPUT_SWITCH
     void OnOutputSwitchClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_ANY
+    void onAccessory( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
 
@@ -218,6 +221,7 @@ public:
     wxStaticBox* m_OptionsBox;
     wxCheckBox* m_AsSwitch;
     wxCheckBox* m_Invert;
+    wxCheckBox* m_Accessory;
     wxRadioBox* m_PortType;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;
