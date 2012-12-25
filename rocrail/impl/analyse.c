@@ -869,6 +869,7 @@ static Boolean zlevelCheck( iOAnalyse inst, Boolean repair ) {
   iOAnalyseData data = Data(inst);
   iONode zlevel = wPlan.getzlevel( data->plan );
   iOList delList = ListOp.inst();
+  int numWarnings = 0;
   int numProblems = 0;
   int i = 0;
 
@@ -887,8 +888,8 @@ static Boolean zlevelCheck( iOAnalyse inst, Boolean repair ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "zlevel cross checking: level[%d] title[%s] <-> level[%d] title[%s]", 
           level, title, levelFollower, titleFollower );
       if( level == levelFollower ) {
-        numProblems++;
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "zlevel check: definition of level[%d] title[%s] is following level[%d] title[%s] (first definition is valid)",
+        numWarnings++;
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: definition of level[%d] title[%s] is following level[%d] title[%s] (first definition is valid)",
             levelFollower, titleFollower, level, title );
         if( repair && ! ismemberoflist( delList, (obj)zlevelFollower ) ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "zlevel check: add zlevel to delList" );
@@ -908,7 +909,7 @@ static Boolean zlevelCheck( iOAnalyse inst, Boolean repair ) {
       while( node != NULL ) {
         int level = wZLevel.getz( node );
         const char* title = wZLevel.gettitle( node );
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "zlevel check: DELETING level[%d] title[%s]", 
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "DELETING duplicate definition of level[%d] title[%s]", 
             level, title );
         NodeOp.removeChild( data->plan, node );
 
@@ -987,6 +988,7 @@ static Boolean zlevelCheck( iOAnalyse inst, Boolean repair ) {
               n--;
             }
           }else {
+            numWarnings++;
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: invisible item[%s] id[%s] on invalid z level [%d] (show[%d])", itemName, wItem.getid(item), z, show );
           }
         }
@@ -1001,12 +1003,14 @@ static Boolean zlevelCheck( iOAnalyse inst, Boolean repair ) {
 
   ListOp.base.del(delList);
 
-  if( numProblems ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zlevel check: %d problematic entries", numProblems );
-    return False;
+  if( numWarnings ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zlevel check: %d warnings", numWarnings );
   }
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "zlevel check: %d problematic enries", numProblems );
-  return True;
+  if( numProblems ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zlevel check: %d problems", numProblems );
+  }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "zlevel check: %d problematic and %d warning entries", numProblems, numWarnings );
+  return( numProblems == 0 );
 }
 
 
