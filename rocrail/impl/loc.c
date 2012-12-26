@@ -1210,6 +1210,8 @@ static void __engine( iOLoc inst, iONode cmd ) {
       /* Release loco? */
       cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       wLoc.setaddr(cmd, wLoc.getaddr(data->props));
+      wLoc.setfn( cmd, wLoc.isfn(data->props));
+      wLoc.setdir(cmd, wLoc.isdir(data->props));
       wLoc.setid(cmd, wLoc.getid(data->props));
       wLoc.setcmd(cmd, wLoc.release );
       ControlOp.cmd( control, cmd, NULL );
