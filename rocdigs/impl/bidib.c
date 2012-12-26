@@ -348,8 +348,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     if( bidibnode == NULL )
       bidibnode = data->defaultswitch;
     if( bidibnode != NULL ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch %d:%d",
-          wSwitch.getbus( node ), wSwitch.getaddr1( node ) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch %d:%d %s",
+          wSwitch.getbus( node ), wSwitch.getaddr1( node ), wSwitch.getcmd(node) );
 
       if( wSwitch.isaccessory(node) ) {
         if( wSwitch.issinglegate(node) ) {
@@ -357,9 +357,11 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           msgdata[1] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 1:0;
         }
         else {
-          msgdata[0] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? addr-1:addr;
+          msgdata[0] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? addr:addr-1;
           msgdata[1] = 1;
         }
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "accessory %d:%d set to %d",
+            wSwitch.getbus( node ), msgdata[0], msgdata[1] );
         data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_SET, msgdata, 2, bidibnode->seq++);
       }
       else {
@@ -372,6 +374,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
             msgdata[0] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? addr-1:addr;
             msgdata[1] = BIDIB_MACRO_START;
           }
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "macro %d:%d set to %d",
+              wSwitch.getbus( node ), msgdata[0], msgdata[1] );
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode->seq++);
         }
         else {
@@ -384,6 +388,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
             msgdata[1] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? addr-1:addr;
             msgdata[2] = 1; // ToDo: Switch off other coil.
           }
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc %d:%d type %d set to %d",
+              wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2] );
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode->seq++);
         }
       }
@@ -412,18 +418,24 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       if( wOutput.isaccessory(node) ) {
         msgdata[0] = addr-1; // Null offset.
         msgdata[1] = on ? 1:0;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "accessory %d:%d set to %d",
+            wSwitch.getbus( node ), msgdata[0], msgdata[1] );
         data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_SET, msgdata, 2, bidibnode->seq++);
       }
       else {
         if( wOutput.getporttype(node) == wProgram.porttype_macro ) {
           msgdata[0] = addr-1; // Null offset.
           msgdata[1] = on ? BIDIB_MACRO_START:BIDIB_MACRO_OFF;
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "macro %d:%d set to %d",
+              wSwitch.getbus( node ), msgdata[0], msgdata[1] );
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode->seq++);
         }
         else {
           msgdata[0] = wOutput.getporttype(node);
           msgdata[1] = addr-1;
           msgdata[2] = on ? 1:0;
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc %d:%d type %d set to %d",
+              wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2] );
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode->seq++);
         }
       }
