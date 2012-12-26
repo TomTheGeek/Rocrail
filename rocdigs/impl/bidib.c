@@ -56,6 +56,7 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Clock.h"
+#include "rocrail/wrapper/public/Accessory.h"
 
 #include "rocdigs/impl/bidib/bidib_messages.h"
 #include "rocdigs/impl/bidib/serial.h"
@@ -930,6 +931,25 @@ static void __handleMacroStat(iOBiDiB bidib, int uid, byte* pdata ) {
 
   if( data->listenerFun != NULL && data->listenerObj != NULL )
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+}
+
+static void __handleAccessory(iOBiDiB bidib, int uid, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  iONode nodeC = NodeOp.inst( wAccessory.name(), NULL, ELEMENT_NODE );
+
+  wAccessory.setnodenr( nodeC, uid );
+  wAccessory.setdevid( nodeC, pdata[0]+1 );
+  wAccessory.setval1( nodeC, pdata[1] );
+  wAccessory.setval2( nodeC, pdata[2] );
+  wAccessory.setval3( nodeC, pdata[3] );
+  wAccessory.setval4( nodeC, pdata[4] );
+
+  wAccessory.setaccevent( nodeC, True );
+  if( data->iid != NULL )
+    wAccessory.setiid( nodeC, data->iid );
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 }
 
 
@@ -1841,6 +1861,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_ACCESSORY_STATE:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_ACCESSORY_STATE path=%s port=%d aspect=%d", pathKey, pdata[0], pdata[1] );
+    __handleAccessory(bidib, bidibnode->uid, pdata);
     break;
 
   default:
