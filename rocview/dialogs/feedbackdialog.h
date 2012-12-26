@@ -231,6 +231,7 @@ public:
     wxRadioBox* m_Type;
     wxStaticBox* m_OptionsBox;
     wxCheckBox* m_ActiveLow;
+    wxCheckBox* m_ResetWC;
     wxPanel* m_Wiring;
     wxStaticBox* m_CTCBox;
     wxStaticText* m_labCTCIID;

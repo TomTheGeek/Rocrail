@@ -1578,6 +1578,7 @@
         <var name="curve" vt="bool" defval="false" remark="Curved feedback track."/>
         <var name="shortcut" vt="bool" defval="false" remark="Shortcut reported by the cutout sensor; Red background in Rocview."/>
         <var name="blockid" vt="string" defval="NULL" range="*"/>
+        <var name="resetwc" vt="bool" defval="true" remark="Send a reset commando in case of a wheel counter type."/>
         <actionctrl cardinality="n"/>
       </fb>
     </fblist>

@@ -270,7 +270,7 @@ static void _resetCounter( iOFBack inst ) {
   iOFBackData data = Data(inst);
   data->counter = 0;
   data->wheelcount = 0;
-  if( wFeedback.getfbtype(data->props) == wFeedback.fbtype_wheelcounter ) {
+  if( wFeedback.getfbtype(data->props) == wFeedback.fbtype_wheelcounter && wFeedback.isresetwc(data->props) ) {
     /* TODO: send switch command */
     iONode node = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE);
     wSwitch.setport1( node, wFeedback.getaddr( data->props ) );
