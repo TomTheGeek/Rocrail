@@ -566,7 +566,8 @@ void PlanPanel::routeidSelection(iONode sel) {
       const char* oldroutes = wItem.getrouteids(props );
       const char* newroutes = NodeOp.getStr(sel, "routeids", "" );
       if( merge && oldroutes != NULL && StrOp.len(oldroutes) > 0 ) {
-        char* s = StrOp.fmt("%s,%s", oldroutes, newroutes );
+        char* s = (char*)allocMem(StrOp.len(oldroutes) + StrOp.len(newroutes) + 1);
+        StrOp.fmtb(s, "%s,%s", oldroutes, newroutes );
         wItem.setrouteids(props, s );
         StrOp.free(s);
       }
