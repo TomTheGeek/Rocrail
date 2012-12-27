@@ -569,7 +569,7 @@ void PlanPanel::routeidSelection(iONode sel) {
         char* s = (char*)allocMem(StrOp.len(oldroutes) + StrOp.len(newroutes) + 1);
         StrOp.fmtb(s, "%s,%s", oldroutes, newroutes );
         wItem.setrouteids(props, s );
-        StrOp.free(s);
+        freeMem(s);
       }
       else
         wItem.setrouteids(props, newroutes );
