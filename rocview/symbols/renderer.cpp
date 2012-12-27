@@ -578,13 +578,13 @@ void SymbolRenderer::initSym() {
               m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_y_occ:signaltype::signalmain_y_occ );
               m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_g_occ:signaltype::signalmain_g_occ );
               m_SvgSym8 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_w_occ:signaltype::signalmain_w_occ );
-              m_SvgSym9  = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_r_occ:signaltype::signalmain_r_route );
-              m_SvgSym10 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_y_occ:signaltype::signalmain_y_route );
-              m_SvgSym11 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_g_occ:signaltype::signalmain_g_route );
-              m_SvgSym12 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_w_occ:signaltype::signalmain_w_route );
+              m_SvgSym9  = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_r_route:signaltype::signalmain_r_route );
+              m_SvgSym10 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_y_route:signaltype::signalmain_y_route );
+              m_SvgSym11 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_g_route:signaltype::signalmain_g_route );
+              m_SvgSym12 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_w_route:signaltype::signalmain_w_route );
               m_SvgSym13 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_w:signaltype::signalmain_b );
               m_SvgSym14 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_w_occ:signaltype::signalmain_b_occ );
-              m_SvgSym15 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_w_occ:signaltype::signalmain_b_route );
+              m_SvgSym15 = (svgSymbol*)MapOp.get( m_SymMap, dwarf?signaltype::signalmain_dwarf_w_route:signaltype::signalmain_b_route );
             }
           }
         }
