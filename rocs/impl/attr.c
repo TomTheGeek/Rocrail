@@ -58,7 +58,11 @@ static unsigned char* __serialize(void* inst, long* size) {
   iOAttrData data = Data(inst);
   Boolean utf8 = ( DocOp.isUTF8Encoding() && DocOp.isUTF2Latin() );
   char* val = utf8 ? SystemOp.latin2utf(data->val):StrOp.dup( data->val );
-  char* s = StrOp.fmt( "%s=\"%s\"", data->name, val );
+  char* s = NULL;
+  s = StrOp.cat( s, data->name);
+  s = StrOp.cat( s, "=\"");
+  s = StrOp.cat( s, val);
+  s = StrOp.cat( s, "\"");
   *size = StrOp.len( s );
   StrOp.free( val );
   return (unsigned char*)s;
