@@ -66,7 +66,9 @@ void statusFindDest( iILcDriverInt inst ) {
     /* evaluate departure time */
     else if( wLoc.isusescheduletime( data->loc->base.properties( data->loc ) ) &&
         !checkScheduleTime( inst, data->schedule, data->prewaitScheduleIdx == -1 ? data->scheduleIdx:data->prewaitScheduleIdx ) ){
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"Waiting for schedule[%d]", data->prewaitScheduleIdx == -1 ? data->scheduleIdx:data->prewaitScheduleIdx);
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "Waiting for schedule index[%d] (preWaitIdx=%d)",
+          data->prewaitScheduleIdx == -1 ? data->scheduleIdx:data->prewaitScheduleIdx, data->prewaitScheduleIdx);
       wait = True;
     }
 
@@ -80,6 +82,7 @@ void statusFindDest( iILcDriverInt inst ) {
       }
       data->next1Route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL, data->schedule, &data->scheduleIdx,
                                                       data->loc->getCurBlock( data->loc ), NULL, data->loc, False, False, &data->indelay );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reported schedule index=%d", data->scheduleIdx );
     }
 
     if( !wait && data->next1Route != NULL ) {

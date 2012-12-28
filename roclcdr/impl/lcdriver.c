@@ -515,10 +515,13 @@ static void _useschedule( iILcDriverInt inst, const char* scheduleid ) {
   data->scheduleIdx = 0;
   data->scheduleCycle = 0;
   data->prewaitScheduleIdx = -1;
+
+  /* init schedule index in case the train is not placed in the first entry: */
+  data->scheduleIdx = data->model->getScheduleIndex( data->model, data->schedule, data->loc->getCurBlock( data->loc ), data->loc );
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                 "use schedule \"%s\" for \"%s\"...",
-                 scheduleid,
-                 data->loc->getId( data->loc ) );
+                 "use schedule [%s] for [%s] with index=%d...",
+                 scheduleid, data->loc->getId( data->loc ), data->scheduleIdx );
 }
 
 static void _usetour( iILcDriverInt inst, const char* tourid ) {
