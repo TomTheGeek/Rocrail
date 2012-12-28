@@ -1216,3 +1216,33 @@ void BidibIdentDlg::onMacroTest( wxCommandEvent& event ) {
     cmd->base.del(cmd);
   }
 }
+
+
+void BidibIdentDlg::onAccessoryOnTest( wxCommandEvent& event ) {
+
+}
+
+
+void BidibIdentDlg::onAccessoryOffTest( wxCommandEvent& event ) {
+
+}
+
+
+void BidibIdentDlg::onAccessoryReadOptions( wxCommandEvent& event ) {
+
+}
+
+
+void BidibIdentDlg::onAccessoryWriteOptions( wxCommandEvent& event ) {
+
+}
+
+
+void BidibIdentDlg::onAccessoryReadMacroMap( wxCommandEvent& event ) {
+
+}
+
+
+void BidibIdentDlg::onAccessoryWriteMacroMap( wxCommandEvent& event ) {
+
+}

@@ -107,6 +107,13 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onMacroRestoreMacro( wxCommandEvent& event );
     void onMacroTest( wxCommandEvent& event );
 
+    void onAccessoryOnTest( wxCommandEvent& event );
+    void onAccessoryOffTest( wxCommandEvent& event );
+    void onAccessoryReadOptions( wxCommandEvent& event );
+    void onAccessoryWriteOptions( wxCommandEvent& event );
+    void onAccessoryReadMacroMap( wxCommandEvent& event );
+    void onAccessoryWriteMacroMap( wxCommandEvent& event );
+
 
 	public:
 		/** Constructor */
