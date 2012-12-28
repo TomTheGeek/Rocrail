@@ -643,6 +643,13 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     rsp = (iONode)NodeOp.base.clone( node );
   }
 
+  /* Loc release command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals( wLoc.release, wLoc.getcmd(node) ) ) {
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco: addr=%d released", wLoc.getaddr( node ));
+
+  }
+
   /* Loc and Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) || StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int addr = wLoc.getaddr( node );
