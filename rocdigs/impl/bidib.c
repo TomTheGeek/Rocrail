@@ -988,6 +988,14 @@ static void __handleAccessoryParaGet(iOBiDiB bidib, int uid, byte* pdata ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "MSG_ACCESSORY_PARA accessory %d: parameter=%d",  pdata[0], pdata[1] );
 
+  if( pdata[1] == BIDIB_ACCESSORY_PARA_MACROMAP ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "macromap for accessory[%d] = %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",
+        pdata[0],
+        pdata[2],pdata[3],pdata[4],pdata[5],pdata[6],pdata[7],pdata[8],pdata[9],
+        pdata[10],pdata[11],pdata[12],pdata[13],pdata[14],pdata[15],pdata[16],pdata[17]);
+  }
+
   if( data->listenerFun != NULL && data->listenerObj != NULL )
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 }
@@ -1962,6 +1970,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_ACCESSORY_PARA:
     /* accessory get response */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_ACCESSORY_PARA path=%s port=%d param=%d datasize=%d", pathKey, pdata[0], pdata[1], size );
     __handleAccessoryParaGet(bidib, bidibnode->uid, pdata );
     break;
 
