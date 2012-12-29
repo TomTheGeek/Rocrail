@@ -833,6 +833,8 @@
     <const name="macro_get" vt="int" val="34"/>
     <const name="macro_setparams" vt="int" val="35"/>
     <const name="macro_getparams" vt="int" val="36"/>
+    <const name="acc_setparam" vt="int" val="37"/>
+    <const name="acc_getparam" vt="int" val="38"/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>
@@ -849,6 +851,14 @@
     <var name="val6" vt="int" defval="0" range="0-255"/>
     <var name="val7" vt="int" defval="0" range="0-255"/>
     <var name="val8" vt="int" defval="0" range="0-255"/>
+    <var name="val9" vt="int" defval="0" range="0-255"/>
+    <var name="val10" vt="int" defval="0" range="0-255"/>
+    <var name="val11" vt="int" defval="0" range="0-255"/>
+    <var name="val12" vt="int" defval="0" range="0-255"/>
+    <var name="val13" vt="int" defval="0" range="0-255"/>
+    <var name="val14" vt="int" defval="0" range="0-255"/>
+    <var name="val15" vt="int" defval="0" range="0-255"/>
+    <var name="val16" vt="int" defval="0" range="0-255"/>
     <var name="pom" vt="bool" defval="false" remark="POM Program On the Main"/>
     <var name="acc" vt="bool" defval="false" remark="POM Program On the Main for accessory decoders"/>
     <var name="decaddr" vt="int" defval="0" range="*" remark="decoder address in case of POM"/>

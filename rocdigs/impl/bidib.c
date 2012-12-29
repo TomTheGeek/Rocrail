@@ -201,6 +201,60 @@ static void __SoD( iOBiDiB inst ) {
 }
 
 
+static Boolean __accessoryCommand(iOBiDiB inst, iONode node) {
+  iOBiDiBData data = Data(inst);
+  byte msgdata[32];
+  char uidKey[32];
+  int cmd = wProgram.getcmd(node);
+  iOBiDiBNode bidibnode = NULL;
+  StrOp.fmtb( uidKey, "0x%08X", wProgram.getmodid(node) );
+  bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "accessory command %d for node %s", cmd, uidKey );
+
+  if( bidibnode != NULL ) {
+    if( cmd == wProgram.acc_setparam ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set accessory param %d", wProgram.getcv(node) );
+      if( wProgram.getcv(node) == BIDIB_ACCESSORY_SWITCH_TIME ) {
+        msgdata[0] = wProgram.getaddr(node);
+        msgdata[1] = BIDIB_ACCESSORY_SWITCH_TIME;
+        msgdata[2] = wProgram.getval1(node);
+        data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_PARA_SET, msgdata, 3, bidibnode->seq++);
+      }
+      else if( wProgram.getcv(node) == BIDIB_ACCESSORY_PARA_MACROMAP ) {
+        msgdata[ 0] = wProgram.getaddr(node);
+        msgdata[ 1] = BIDIB_ACCESSORY_PARA_MACROMAP;
+        msgdata[ 2] = wProgram.getval1(node);
+        msgdata[ 3] = wProgram.getval2(node);
+        msgdata[ 4] = wProgram.getval3(node);
+        msgdata[ 5] = wProgram.getval4(node);
+        msgdata[ 6] = wProgram.getval5(node);
+        msgdata[ 7] = wProgram.getval6(node);
+        msgdata[ 8] = wProgram.getval7(node);
+        msgdata[ 9] = wProgram.getval8(node);
+        msgdata[10] = wProgram.getval9(node);
+        msgdata[11] = wProgram.getval10(node);
+        msgdata[12] = wProgram.getval11(node);
+        msgdata[13] = wProgram.getval12(node);
+        msgdata[14] = wProgram.getval13(node);
+        msgdata[15] = wProgram.getval14(node);
+        msgdata[16] = wProgram.getval15(node);
+        msgdata[17] = wProgram.getval16(node);
+        data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_PARA_SET, msgdata, 18, bidibnode->seq++);
+      }
+    }
+    else if( cmd == wProgram.acc_getparam ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get accessory param %d", wProgram.getcv(node) );
+      msgdata[0] = wProgram.getaddr(node);
+      msgdata[1] = wProgram.getcv(node);
+      data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_PARA_GET, msgdata, 2, bidibnode->seq++);
+    }
+    return True;
+  }
+
+  return False;
+}
+
+
 static Boolean __macroCommand(iOBiDiB inst, iONode node) {
   iOBiDiBData data = Data(inst);
   byte msgdata[32];
@@ -631,6 +685,9 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         else if( wProgram.getcmd( node ) >= wProgram.macro_restore && wProgram.getcmd( node ) <= wProgram.macro_getparams ) {
           __macroCommand(inst, node);
         }
+        else if( wProgram.getcmd( node ) == wProgram.acc_setparam || wProgram.getcmd( node ) == wProgram.acc_getparam ) {
+          __accessoryCommand(inst, node);
+        }
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
@@ -891,6 +948,45 @@ static void __handleMacroGet(iOBiDiB bidib, int uid, byte* pdata ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "MSG_LC_MACRO macro %d: line=%d, delay=%d, type=%d, port=%d, stat=%d",
       pdata[0], pdata[1], pdata[2], pdata[3], pdata[4], pdata[5] );
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+}
+
+
+static void __handleAccessoryParaGet(iOBiDiB bidib, int uid, byte* pdata ) {
+  iOBiDiBData data = Data(bidib);
+  iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( node, wProgram.acc_getparam );
+  wProgram.setlntype(node, wProgram.lntype_bidib);
+  wProgram.setmodid( node, uid );
+  wProgram.setaddr( node, pdata[0] );
+  wProgram.setcv( node, pdata[1] );
+  wProgram.setval1( node, pdata[2] );
+
+  if( pdata[1] == BIDIB_ACCESSORY_PARA_MACROMAP ) {
+    wProgram.setval2( node, pdata[3] );
+    wProgram.setval3( node, pdata[4] );
+    wProgram.setval4( node, pdata[5] );
+    wProgram.setval5( node, pdata[6] );
+    wProgram.setval6( node, pdata[7] );
+    wProgram.setval7( node, pdata[8] );
+    wProgram.setval8( node, pdata[9] );
+    wProgram.setval9( node, pdata[10] );
+    wProgram.setval10( node, pdata[11] );
+    wProgram.setval11( node, pdata[12] );
+    wProgram.setval12( node, pdata[13] );
+    wProgram.setval13( node, pdata[14] );
+    wProgram.setval14( node, pdata[15] );
+    wProgram.setval15( node, pdata[16] );
+    wProgram.setval16( node, pdata[17] );
+  }
+
+  if( data->iid != NULL )
+    wProgram.setiid( node, data->iid );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "MSG_ACCESSORY_PARA accessory %d: parameter=%d",  pdata[0], pdata[1] );
 
   if( data->listenerFun != NULL && data->listenerObj != NULL )
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
@@ -1862,6 +1958,11 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_LC_MACRO_PARA:
     /* macro get response */
     __handleMacroParaGet(bidib, bidibnode->uid, pdata );
+    break;
+
+  case MSG_ACCESSORY_PARA:
+    /* accessory get response */
+    __handleAccessoryParaGet(bidib, bidibnode->uid, pdata );
     break;
 
   case MSG_LC_KEY:
