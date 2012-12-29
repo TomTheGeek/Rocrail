@@ -399,6 +399,10 @@ static void _event( iOFBack inst, iONode nodeC ) {
   data->state = state;
 
   if( wFeedback.getfbtype(data->props) == wFeedback.fbtype_wheelcounter ) {
+    if(wFeedback.getwheelcount(nodeC) == 0 && state) {
+      /* using a HAL sensor for 'wheel'(Magnet) counting */
+      data->wheelcount++;
+    }
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] COUNTING WHEELS: countedwheels=%d",
         FBackOp.getId(inst), wFeedback.getwheelcount(nodeC) + data->wheelcount );
     /* the plus data->wheelcount is for simulation */
