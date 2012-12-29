@@ -58,6 +58,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
   void handleFeature(iONode node);
   void clearFeatureList();
   void handleMacro(iONode node);
+  void handleAccessory(iONode node);
 
 
   protected:

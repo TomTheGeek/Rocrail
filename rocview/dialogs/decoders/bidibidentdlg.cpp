@@ -169,6 +169,10 @@ void BidibIdentDlg::event(iONode node) {
     handleMacro(node);
     NodeOp.base.del(node);
   }
+  else if( wProgram.getcmd( node ) == wProgram.acc_getparam || wProgram.getcmd( node ) == wProgram.acc_setparam ) {
+    handleAccessory(node);
+    NodeOp.base.del(node);
+  }
   else if( !StrOp.equals( wProgram.name(), NodeOp.getName(node) ) ) {
     if( this->node != NULL )
       NodeOp.base.del(this->node);
@@ -870,6 +874,34 @@ void BidibIdentDlg::onMacroSave( wxCommandEvent& event ) {
 }
 
 
+void BidibIdentDlg::handleAccessory(iONode node) {
+  int cv = wProgram.getcv(node);
+  if( cv == BIDIB_ACCESSORY_SWITCH_TIME ) {
+    int swtime = wProgram.getval1(node);
+    m_AccessorySwitchTime->SetValue(swtime & 0x7F);
+    m_AccessorySwitchTimeSeconds->SetValue((swtime & 0x80)?true:false);
+  }
+  else if( cv == BIDIB_ACCESSORY_PARA_MACROMAP ) {
+    m_AccessoryMacro1->SetValue(wProgram.getval1(node));
+    m_AccessoryMacro2->SetValue(wProgram.getval2(node));
+    m_AccessoryMacro3->SetValue(wProgram.getval3(node));
+    m_AccessoryMacro4->SetValue(wProgram.getval4(node));
+    m_AccessoryMacro5->SetValue(wProgram.getval5(node));
+    m_AccessoryMacro6->SetValue(wProgram.getval6(node));
+    m_AccessoryMacro7->SetValue(wProgram.getval7(node));
+    m_AccessoryMacro8->SetValue(wProgram.getval8(node));
+    m_AccessoryMacro9->SetValue(wProgram.getval9(node));
+    m_AccessoryMacro10->SetValue(wProgram.getval10(node));
+    m_AccessoryMacro11->SetValue(wProgram.getval11(node));
+    m_AccessoryMacro12->SetValue(wProgram.getval12(node));
+    m_AccessoryMacro13->SetValue(wProgram.getval13(node));
+    m_AccessoryMacro14->SetValue(wProgram.getval14(node));
+    m_AccessoryMacro15->SetValue(wProgram.getval15(node));
+    m_AccessoryMacro16->SetValue(wProgram.getval16(node));
+  }
+}
+
+
 void BidibIdentDlg::handleMacro(iONode node) {
   if( macroapply ) {
     macroapply = false;
@@ -1249,20 +1281,78 @@ void BidibIdentDlg::onAccessoryOffTest( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::onAccessoryReadOptions( wxCommandEvent& event ) {
-
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.acc_getparam );
+    wProgram.setaddr( cmd, m_AccessoryPort->GetValue() );
+    wProgram.setcv( cmd, BIDIB_ACCESSORY_SWITCH_TIME );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
 
 
 void BidibIdentDlg::onAccessoryWriteOptions( wxCommandEvent& event ) {
-
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.acc_setparam );
+    wProgram.setaddr( cmd, m_AccessoryPort->GetValue() );
+    wProgram.setcv( cmd, BIDIB_ACCESSORY_SWITCH_TIME );
+    wProgram.setval1( cmd, m_AccessorySwitchTime->GetValue() + (m_AccessorySwitchTimeSeconds->IsChecked()?0x80:0x00) );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
 
 
 void BidibIdentDlg::onAccessoryReadMacroMap( wxCommandEvent& event ) {
-
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.acc_getparam );
+    wProgram.setaddr( cmd, m_AccessoryPort->GetValue() );
+    wProgram.setcv( cmd, BIDIB_ACCESSORY_PARA_MACROMAP );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
 
 
 void BidibIdentDlg::onAccessoryWriteMacroMap( wxCommandEvent& event ) {
-
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.acc_setparam );
+    wProgram.setaddr( cmd, m_AccessoryPort->GetValue() );
+    wProgram.setcv( cmd, BIDIB_ACCESSORY_PARA_MACROMAP );
+    wProgram.setval1( cmd, m_AccessoryMacro1->GetValue() );
+    wProgram.setval2( cmd, m_AccessoryMacro2->GetValue() );
+    wProgram.setval3( cmd, m_AccessoryMacro3->GetValue() );
+    wProgram.setval4( cmd, m_AccessoryMacro4->GetValue() );
+    wProgram.setval5( cmd, m_AccessoryMacro5->GetValue() );
+    wProgram.setval6( cmd, m_AccessoryMacro6->GetValue() );
+    wProgram.setval7( cmd, m_AccessoryMacro7->GetValue() );
+    wProgram.setval8( cmd, m_AccessoryMacro8->GetValue() );
+    wProgram.setval9( cmd, m_AccessoryMacro9->GetValue() );
+    wProgram.setval10( cmd, m_AccessoryMacro10->GetValue() );
+    wProgram.setval11( cmd, m_AccessoryMacro11->GetValue() );
+    wProgram.setval12( cmd, m_AccessoryMacro12->GetValue() );
+    wProgram.setval13( cmd, m_AccessoryMacro13->GetValue() );
+    wProgram.setval14( cmd, m_AccessoryMacro14->GetValue() );
+    wProgram.setval15( cmd, m_AccessoryMacro15->GetValue() );
+    wProgram.setval16( cmd, m_AccessoryMacro16->GetValue() );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
+
