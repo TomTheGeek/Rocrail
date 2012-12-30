@@ -436,7 +436,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           msgdata[0] = wSwitch.getporttype(node);
           if( wSwitch.issinglegate(node) ) {
             msgdata[1] = addr-1; // Null offset.
-            msgdata[2] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 255:0;
+            if( msgdata[0] == BIDIB_OUTTYPE_SERVO )
+              msgdata[2] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 255:0;
+            else
+              msgdata[2] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? BIDIB_PORT_TURN_ON:BIDIB_PORT_TURN_OFF;
           }
           else {
             msgdata[1] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? addr-1:addr;
@@ -487,7 +490,11 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         else {
           msgdata[0] = wOutput.getporttype(node);
           msgdata[1] = addr-1;
-          msgdata[2] = on ? 1:0;
+          if( msgdata[0] == BIDIB_OUTTYPE_SERVO )
+            msgdata[2] = on ? 255:0;
+          else
+            msgdata[2] = on ? BIDIB_PORT_TURN_ON:BIDIB_PORT_TURN_OFF;
+
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc %d:%d type %d set to %d",
               wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2] );
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode->seq++);
