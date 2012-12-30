@@ -328,7 +328,7 @@
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="locid" vt="const char*" remark="Unlocking loc"/>
     </fun>
-    <fun name="event" vt="void">
+    <fun name="event" vt="Boolean">
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="puls" vt="Boolean" remark="event value"/>
       <param name="id" vt="const char*" remark="event(fb) ID"/>

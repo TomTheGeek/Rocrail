@@ -1259,12 +1259,14 @@ static const char* _getInLoc( iIBlockBase inst ) {
   return block != NULL ? block->getInLoc( block ) : "";
 }
 
-static void _event( iIBlockBase inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, iONode fbevt ) {
+static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, iONode fbevt ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "event");
   /* dispatch to active tracke block */
-  if( block != NULL && !data->pending )
-    block->event( block, puls, id, ident, val, 0, fbevt );
+  if( block != NULL && !data->pending ) {
+    return block->event( block, puls, id, ident, val, 0, fbevt );
+  }
+  return False;
 }
 
 
