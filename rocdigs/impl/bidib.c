@@ -767,10 +767,16 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
          "set clock to %d:%02d wday=%d divider=%d", hours, mins, wday, div );
+      /*
+      TCODE0  00mmmmmm  mmmmmm = Angabe der Minute, Wertebereich 0...59.
+      TCODE1  100HHHHH  HHHHH = Angabe der Stunde, Wertebereich 0...23.
+      TCODE2  01000www  www = Wochentag, 0=Montag, 1=Dienstag, ... 6=Sonntag.
+      TCODE3  110fffff  fffff = Uhrbeschleunigungsfaktor, fffff=0 heißt Uhr angehalten.
+      */
       msgdata[0] = mins;
-      msgdata[1] = hours;
-      msgdata[2] = wday;
-      msgdata[3] = div;
+      msgdata[1] = hours + 0x80;
+      msgdata[2] = wday  + 0x40;
+      msgdata[3] = div   + 0xC0;
       data->subWrite((obj)inst, path, MSG_SYS_CLOCK, msgdata, 4, 0);
     }
   }
