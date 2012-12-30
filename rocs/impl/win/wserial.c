@@ -70,13 +70,13 @@ Boolean rocs_serial_open( iOSerial inst ) {
   rocs_serial_close( inst );
 
   if( o->portbase == 0 ) {
-    if( StrOp.equals( "com1", o->device ) )
+    if( StrOp.equalsi( "com1", o->device ) )
       o->portbase = 0x3F8;
-    else if( StrOp.equals( "com2", o->device ) )
+    else if( StrOp.equalsi( "com2", o->device ) )
       o->portbase = 0x2F8;
-    else if( StrOp.equals( "com3", o->device ) )
+    else if( StrOp.equalsi( "com3", o->device ) )
       o->portbase = 0x3E8;
-    else if( StrOp.equals( "com4", o->device ) )
+    else if( StrOp.equalsi( "com4", o->device ) )
       o->portbase = 0x2E8;
   }
 
