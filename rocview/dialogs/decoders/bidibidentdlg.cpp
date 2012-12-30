@@ -1029,33 +1029,33 @@ void BidibIdentDlg::handleMacro(iONode node) {
       wProgram.setcmd( cmd, wProgram.macro_setparams );
       wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
       wProgram.setlntype(cmd, wProgram.lntype_bidib);
-      wProgram.setval1(node, macro );
-      wProgram.setval2(node, BIDIB_MACRO_PARA_SLOWDOWN );
-      wProgram.setval3(node, m_MacroSlowdown->GetValue() );
-      wProgram.setval4(node, 0 );
-      wProgram.setval5(node, 0 );
-      wProgram.setval6(node, 0 );
+      wProgram.setval1(cmd, macro );
+      wProgram.setval2(cmd, BIDIB_MACRO_PARA_SLOWDOWN );
+      wProgram.setval3(cmd, m_MacroSlowdown->GetValue() );
+      wProgram.setval4(cmd, 0 );
+      wProgram.setval5(cmd, 0 );
+      wProgram.setval6(cmd, 0 );
       wxGetApp().sendToRocrail( cmd );
 
-      wProgram.setval2(node, BIDIB_MACRO_PARA_REPEAT );
-      wProgram.setval3(node, m_MacroCycles->GetValue() );
-      wProgram.setval4(node, 0 );
-      wProgram.setval5(node, 0 );
-      wProgram.setval6(node, 0 );
+      wProgram.setval2(cmd, BIDIB_MACRO_PARA_REPEAT );
+      wProgram.setval3(cmd, m_MacroCycles->GetValue() );
+      wProgram.setval4(cmd, 0 );
+      wProgram.setval5(cmd, 0 );
+      wProgram.setval6(cmd, 0 );
       wxGetApp().sendToRocrail( cmd );
 
-      wProgram.setval2(node, BIDIB_MACRO_PARA_START_CLK );
-      wProgram.setval3(node, m_MacroStartHourly->IsChecked()?24:m_MacroHours->GetValue() );
+      wProgram.setval2(cmd, BIDIB_MACRO_PARA_START_CLK );
+      wProgram.setval3(cmd, m_MacroStartHourly->IsChecked()?24:m_MacroHours->GetValue() );
       if( m_MacroStart1->IsChecked() )
-        wProgram.setval4(node, 60 );
+        wProgram.setval4(cmd, 60 );
       if( m_MacroStart30->IsChecked() )
-        wProgram.setval4(node, 61 );
+        wProgram.setval4(cmd, 61 );
       if( m_MacroStart15->IsChecked() )
-        wProgram.setval4(node, 62 );
+        wProgram.setval4(cmd, 62 );
       else
-        wProgram.setval4(node, m_MacroMinutes->GetValue() );
-      wProgram.setval5(node, m_MacroStartDaily->IsChecked()?7:m_MacroWDay->GetValue() );
-      wProgram.setval6(node, 0 );
+        wProgram.setval4(cmd, m_MacroMinutes->GetValue() );
+      wProgram.setval5(cmd, m_MacroStartDaily->IsChecked()?7:m_MacroWDay->GetValue() );
+      wProgram.setval6(cmd, 0 );
       wxGetApp().sendToRocrail( cmd );
 
       cmd->base.del(cmd);
