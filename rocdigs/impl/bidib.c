@@ -1139,27 +1139,31 @@ static void __handleError(iOBiDiB bidib, byte* pdata) {
 }
 
 
-static void __delNode(iOBiDiB bidib, byte* pdata) {
+static Boolean __delNode(iOBiDiB bidib, byte* pdata) {
   iOBiDiBData data = Data(bidib);
-  char uidKey[32];
-  int uid = pdata[5] + (pdata[6] << 8) + (pdata[7] << 16) + (pdata[8] << 24);
-  StrOp.fmtb( uidKey, "0x%08X", uid );
-  iOBiDiBNode bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
+  if( pdata != NULL ) {
+    char uidKey[32];
+    int uid = pdata[5] + (pdata[6] << 8) + (pdata[7] << 16) + (pdata[8] << 24);
+    StrOp.fmtb( uidKey, "0x%08X", uid );
+    iOBiDiBNode bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
 
-  if( bidibnode != NULL ) {
-    iONode node = __getIniNode(bidib, bidibnode->uid);
-    char localKey[32];
+    if( bidibnode != NULL ) {
+      iONode node = __getIniNode(bidib, bidibnode->uid);
+      char localKey[32];
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "removing node %s", uidKey);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "removing node %s", uidKey);
 
 
-    MapOp.remove( data->nodemap, uidKey );
+      MapOp.remove( data->nodemap, uidKey );
 
-    StrOp.fmtb( localKey, "%d.%d.%d.%d", bidibnode->path[0], bidibnode->path[1], bidibnode->path[2], bidibnode->path[3] );
-    MapOp.remove( data->localmap, localKey);
+      StrOp.fmtb( localKey, "%d.%d.%d.%d", bidibnode->path[0], bidibnode->path[1], bidibnode->path[2], bidibnode->path[3] );
+      MapOp.remove( data->localmap, localKey);
 
-    NodeOp.removeChild( data->bidibini, node );
+      NodeOp.removeChild( data->bidibini, node );
+    }
+    return True;
   }
+  return False;
 }
 
 
@@ -1499,22 +1503,25 @@ static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, int Type, const cha
 
 static void __handleNewNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, int size) {
   iOBiDiBData data = Data(bidib);
-  data->tabver = pdata[0];
-  __addNode(bidib, pdata);
-  data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode->seq++);
+  if( bidibnode != NULL && pdata != NULL ) {
+    data->tabver = pdata[0];
+    __addNode(bidib, pdata);
+    data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode->seq++);
+  }
 }
 
 
 static void __handleLostNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, int size) {
   iOBiDiBData data = Data(bidib);
   TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "MSG_NODE_LOST" );
-  __delNode(bidib, pdata);
-  data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode->seq++);
-  {
-    iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
-    wSysCmd.setcmd(cmd, wSysCmd.stop);
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "power off on lost node..." );
-    BiDiBOp.cmd((obj)bidib, cmd);
+  if( __delNode(bidib, pdata) && bidibnode != NULL) {
+    data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode->seq++);
+    {
+      iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
+      wSysCmd.setcmd(cmd, wSysCmd.stop);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "power off on lost node..." );
+      BiDiBOp.cmd((obj)bidib, cmd);
+    }
   }
 }
 
