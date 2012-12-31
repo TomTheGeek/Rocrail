@@ -59,6 +59,7 @@
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/Turntable.h"
+#include "rocrail/wrapper/public/Stage.h"
 
 #include "rocs/public/strtok.h"
 
@@ -216,6 +217,16 @@ void ScheduleDialog::initBlockCombo() {
         if( id != NULL && wTurntable.isembeddedblock(tt) ) {
           ListOp.add(list, (obj)id);
         }
+      }
+    }
+
+    iONode sblist = wPlan.getsblist( model );
+    if( sblist != NULL ) {
+      int cnt = NodeOp.getChildCnt( sblist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode sb = NodeOp.getChild( sblist, i );
+        const char* id = wStage.getid( sb );
+        ListOp.add(list, (obj)id);
       }
     }
 
