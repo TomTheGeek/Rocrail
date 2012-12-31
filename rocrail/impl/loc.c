@@ -1323,6 +1323,8 @@ static void __runner( void* threadinst ) {
     int   fx    = 0;
     obj   udata = NULL;
 
+    data->nrruns++;
+
     if( msg != NULL ) {
       emitter = MsgOp.getSender( msg );
       event   = MsgOp.getEvent( msg );
@@ -1330,6 +1332,7 @@ static void __runner( void* threadinst ) {
       type    = MsgOp.getUsrDataType( msg );
       udata   = MsgOp.getUsrData(msg);
       msg->base.del( msg );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "new message %d rruns=%d", event, data->nrruns );
     }
 
     if( data->driver != NULL ) {
@@ -1340,8 +1343,9 @@ static void __runner( void* threadinst ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap event %d ms", timer );
 
         /* The swap timer. */
-        if( timer > 0 )
+        if( timer > 0 ) {
           ThreadOp.sleep( timer );
+        }
 
         /* The swap: */
         wLoc.setplacing( data->props, swap );
@@ -1374,6 +1378,9 @@ static void __runner( void* threadinst ) {
           }
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "timed event[%d] %d ms", event, timer );
           ThreadOp.sleep( timer );
+        }
+        if( event != -1 ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "inform the driver of event %d", event );
         }
         data->driver->drive( data->driver, emitter, event );
       }
@@ -1590,7 +1597,8 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
     iOMsg msg = MsgOp.inst( emitter, evt );
     iIBlockBase block = (iIBlockBase)MsgOp.getSender(msg);
     const char* blockid = block->base.id( block );
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event %d from [%s], timer=%d", evt, blockid, timer );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "event %d from [%s], timer=%d, forcewait=%d nrruns=%d", evt, blockid, timer, forcewait, data->nrruns );
     MsgOp.setTimer( msg, timer );
     MsgOp.setUsrData( msg, NULL, forcewait ? 1000:0 );
     ThreadOp.post( data->runner, (obj)msg );

@@ -739,7 +739,8 @@
       <var name="usemanualroutes" vt="Boolean"/>
       <var name="infocheck" vt="int"/>
       <var name="released" vt="Boolean"/>
-    </data>
+      <var name="nrruns" vt="int"/>
+      </data>
   </object>
 
 
