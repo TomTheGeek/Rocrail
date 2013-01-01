@@ -359,7 +359,7 @@ Boolean serialWrite( obj inst, unsigned char *path, unsigned char code, unsigned
 
     TraceOp.dump ( "preWrite", TRCLEVEL_BYTE, (char*)msg, size );
     size = __makeMessage(msg, size);
-    post = allocMem(size);
+    post = allocMem(size + 1);
 
     post[0] = (size & 0xFF);
     MemOp.copy(post+1, msg, size );
