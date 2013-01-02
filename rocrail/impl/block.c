@@ -399,6 +399,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
   iOLoc        loc = NULL;
   obj      manager = (obj)(data->manager == NULL ? inst:data->manager);
   Boolean blockSide = False;
+  Boolean countwheels = True;
   /* The use blockside option works only with one way type, so both directions will fail. */
   Boolean useBlockSide = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) );
   char    key[256] = {'\0'};
@@ -603,6 +604,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
           FBackOp.resetCounter(fb);
         }
       }
+      countwheels = False;
     }
     else
       LocOp.event( loc, manager, evt, 0, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
@@ -689,7 +691,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
     /* undefined event! */
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sensor %s in block %s is undefined! ident=%s fromBlockId=%s",
                    key, data->id, ident, data->fromBlockId );
-    return False;
+    countwheels = False;
   }
   else {
     /* unhandled event! */
@@ -697,9 +699,9 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
                    key, data->id, puls, ident, data->ghost,
                    (loc == NULL ? "NULL":LocOp.getId(loc)),
                    (data->fromBlockId == NULL ? "NULL":data->fromBlockId) );
-    return False;
+    countwheels = False;
   }
-  return True;
+  return countwheels;
 }
 
 static void _fbEvent( obj inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount ) {
