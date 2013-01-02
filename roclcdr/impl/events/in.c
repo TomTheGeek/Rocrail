@@ -111,16 +111,19 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "wheel count does not match %s[%d] != %s[%d] ",
             data->curBlock->base.id( data->curBlock ), data->curBlock->getWheelCount(data->curBlock),
             data->next1Block->base.id( data->next1Block ), data->next1Block->getWheelCount(data->next1Block) );
-        data->state = LC_IDLE;
-        data->run = False;
+
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                       "Setting state for \"%s\" to LC_IDLE and stop running auto mode.",
-                       data->loc->getId( data->loc ) );
-        data->loc->setMode(data->loc, wLoc.mode_idle);
+                       "stop auto mode for loco [%s] and close block [%s]",
+                       data->loc->getId( data->loc ), data->next1Block->base.id(data->next1Block) );
+
+        iONode bkcmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+        wBlock.setstate( bkcmd, wBlock.closed );
+        data->next1Block->cmd( data->next1Block, bkcmd );
+
         iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-        wLoc.setV( cmd, 0 );
-        wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+        wLoc.setcmd( cmd, wLoc.stop );
         data->loc->cmd( data->loc, cmd );
+
       }
     }
 
