@@ -114,11 +114,11 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
 
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                        "stop auto mode for loco [%s] and close block [%s]",
-                       data->loc->getId( data->loc ), data->next1Block->base.id(data->next1Block) );
+                       data->loc->getId( data->loc ), data->curBlock->base.id(data->curBlock) );
 
         iONode bkcmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
         wBlock.setstate( bkcmd, wBlock.closed );
-        data->next1Block->cmd( data->next1Block, bkcmd );
+        data->curBlock->cmd( data->curBlock, bkcmd );
 
         iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
         wLoc.setcmd( cmd, wLoc.stop );
