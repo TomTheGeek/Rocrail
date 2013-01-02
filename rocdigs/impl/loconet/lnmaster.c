@@ -80,7 +80,7 @@ static int __locospeed  (iOLocoNet loconet, byte* msg, struct __lnslot* slot);
 static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot);
 static iONode __sysCmd(iOLocoNet loconet, const char* cmd);
 static iONode __locCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot, Boolean toLoco);
-static iONode __funCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot);
+static iONode __funCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot, int fgroup);
 static iONode __swCmd(iOLocoNet loconet, byte* req );
 
 
@@ -281,13 +281,14 @@ static iONode __locCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot, Boo
 }
 
 
-static iONode __funCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot) {
+static iONode __funCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot, int fgroup) {
   iOLocoNetData data = Data(loconet);
   iONode nodeCmd = NodeOp.inst( wCommand.name(), NULL, ELEMENT_NODE );
   iONode nodeFun = NodeOp.inst( wFunCmd.name(), nodeCmd, ELEMENT_NODE );
 
   NodeOp.addChild( nodeCmd, nodeFun );
   wFunCmd.setaddr( nodeFun, slot[slotnr].addr );
+  wFunCmd.setgroup(nodeFun, fgroup);
   wFunCmd.setf0( nodeFun, slot[slotnr].f0 );
   wFunCmd.setf1( nodeFun, slot[slotnr].f1 );
   wFunCmd.setf2( nodeFun, slot[slotnr].f2 );
@@ -597,7 +598,7 @@ static int __locodirf(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "set slot# %d dirf; dir=%s fn=%s", slotnr, slot[slotnr].dir?"fwd":"rev", slot[slotnr].f0?"on":"off" );
   data->listenerFun( data->listenerObj, __locCmd( loconet, slotnr, slot, False), TRCLEVEL_INFO );
-  data->listenerFun( data->listenerObj, __funCmd( loconet, slotnr, slot), TRCLEVEL_INFO );
+  data->listenerFun( data->listenerObj, __funCmd( loconet, slotnr, slot, 1), TRCLEVEL_INFO );
   return slotnr;
 }
 
@@ -615,7 +616,7 @@ static int __locosound(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   slot[slotnr].f8  = (msg[2] & SND_F8) ? True:False;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set slot# %d snd", slotnr );
-  data->listenerFun( data->listenerObj, __funCmd( loconet, slotnr, slot), TRCLEVEL_INFO );
+  data->listenerFun( data->listenerObj, __funCmd( loconet, slotnr, slot, 2), TRCLEVEL_INFO );
   return slotnr;
 }
 
@@ -688,7 +689,7 @@ static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
     slot[slotnr].idh   = msg[12];
 
     data->listenerFun( data->listenerObj, __locCmd( loconet, slotnr, slot, __setstat1byte( slot, slotnr, msg[3])), TRCLEVEL_INFO );
-    data->listenerFun( data->listenerObj, __funCmd( loconet, slotnr, slot), TRCLEVEL_INFO );
+    data->listenerFun( data->listenerObj, __funCmd( loconet, slotnr, slot, 1), TRCLEVEL_INFO );
   }
   __longAck( loconet, OPC_WR_SL_DATA, -1 );
 
