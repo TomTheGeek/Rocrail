@@ -1191,11 +1191,11 @@ void Symbol::OnPopup(wxMouseEvent& event)
     //SetBackgroundColour( Base::getYellow() );
 
     if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
-      const char* locId = wBlock.getlocid( m_Props );
-      const char* state = wBlock.getstate( m_Props );
-      Boolean hasLoc = StrOp.len( locId ) > 0 ? True:False;
-      if( hasLoc ) {
-        iONode lc = wxGetApp().getFrame()->findLoc(locId);
+      const char* locoId = wBlock.getlocid( m_Props );
+      const char* state  = wBlock.getstate( m_Props );
+
+      if( locoId != NULL && StrOp.len( locoId ) > 0 ) {
+        iONode lc = wxGetApp().getFrame()->findLoc(locoId);
         Boolean active = wLoc.isactive(lc);
         menu.Append( ME_UnLoc, wxGetApp().getMenu("resetlocid") );
         menu.AppendSeparator();
@@ -2596,15 +2596,25 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
   else if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
     char* l_locidStr = NULL;
     Boolean updateEnterside = wBlock.isupdateenterside(node);
-    const char* state = wBlock.getstate( node );
-    const char* locid = wBlock.getlocid( node );
+    const char* state  = wBlock.getstate( node );
+    const char* locoid = wBlock.getlocid( node );
     int occupied = 0;
     Boolean showID = True;
+
+    if( locoid == NULL ) {
+      locoid = "";
+    }
 
     if( updateEnterside ) {
       // reset update flag
       wBlock.setupdateenterside(node, False);
     }
+    else {
+      wBlock.setlocid( m_Props, locoid );
+    }
+
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "Block=%s locoID=%s State=%s updateEnterside=%d",
+        wBlock.getid( node ), wBlock.getlocid( m_Props ), state, updateEnterside );
 
 
     iONode planpanelIni = wGui.getplanpanel(wxGetApp().getIni());
@@ -2617,99 +2627,106 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
         "blockid=[%s] %sAccepting Ident", wBlock.getid( node ), isAcceptIdent?"":"not ");
 
     wBlock.setstate( m_Props, state );
+
+    // Open block
     if( StrOp.equals( wBlock.open, state ) ) {
       Boolean isReserved    = wBlock.isreserved( node );
       Boolean isEntering    = wBlock.isentering( node );
 
       wBlock.setreserved( m_Props, isReserved );
-      wBlock.setlocid( m_Props, locid );
 
-      if(showID) {
-        if( wBlock.issmallsymbol(m_Props) && locid!=NULL && StrOp.len(locid)>0)
-          l_locidStr = StrOp.fmt( "%s", locid );
-        else
-          l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locid==NULL?"":locid );
-      }
-      else {
-        if ( locid!=NULL && StrOp.len(locid) > 0 )
-          l_locidStr = StrOp.fmt( "%s", locid );
-        else if( !wBlock.issmallsymbol(m_Props) )
-          l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
-      }
+      if( wBlock.issmallsymbol(m_Props) )
+        l_locidStr = StrOp.fmt( "%s", locoid );
+      else
+        l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locoid );
 
-      if( locid != NULL && StrOp.len( locid ) > 0 ) {
-        char* tip = StrOp.fmt( wxGetApp().getMsg("clickblock").mb_str(wxConvUTF8), locid );
+      // compose the ToolTip and update occupied state
+      if( StrOp.len( locoid ) > 0 ) {
+        char* tip = StrOp.fmt( wxGetApp().getMsg("clickblock").mb_str(wxConvUTF8), locoid );
         StrOp.free(m_Tip);
         m_Tip = StrOp.fmt("%s: %s", wBlock.getid( node ), tip);
         StrOp.free(tip);
         showTooltip(wxGetApp().getFrame()->isTooltip());
 
-         occupied = isReserved ? 2:1;
-         occupied = isEntering ? 3:occupied;
-         occupied = StrOp.equals(wBlock.closed,wBlock.getstate( node ))?4:occupied;
-       }
-       else {
-         occupied = isAcceptIdent ? 7:occupied;
-         StrOp.free(m_Tip);
-         m_Tip = StrOp.dup(wBlock.getid( node ));
-         showTooltip(wxGetApp().getFrame()->isTooltip());
-       }
+        occupied = isReserved ? 2:1;
+        occupied = isEntering ? 3:occupied;
+        occupied = StrOp.equals(wBlock.closed,wBlock.getstate( node ))?4:occupied;
+      }
+      else {
+        occupied = isAcceptIdent ? 7:occupied;
+        StrOp.free(m_Tip);
+        m_Tip = StrOp.dup(wBlock.getid( node ));
+        showTooltip(wxGetApp().getFrame()->isTooltip());
+      }
 
-      if (locid!=NULL && StrOp.len(locid)>0) {
-        iONode loc = wxGetApp().getFrame()->findLoc( locid);
-        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "locid=[%s][%s] blockid=[%s]",
-            locid, wBlock.getlocid( m_Props ), wLoc.getblockid(loc) );
+      // Check block enterside
+      if( updateEnterside && StrOp.len(locoid) > 0 ) {
+        iONode loc = wxGetApp().getFrame()->findLoc( locoid );
+        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "locoid=[%s][%s] blockid=[%s]",
+            locoid, wBlock.getlocid( m_Props ), wLoc.getblockid(loc) );
         if( StrOp.equals( wBlock.getid( m_Props ), wLoc.getblockid(loc) ) || StrOp.equals( wBlock.getid( m_Props ), wLoc.getdestblockid(loc) ) ) {
           if( (occupied == 1 || occupied == 3) ) {
-            if( NodeOp.findAttr(loc, "blockenterside") != NULL ) {
-              // only update if the attribute is set
-              m_RotateSym = wLoc.isblockenterside( loc);
-            }
-            TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "locid=[%s] enterside=[%d]", locid, m_RotateSym );
+            // only update if the attribute is set
+            m_RotateSym = wLoc.isblockenterside( loc);
+            TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "locoid=[%s] enterside=[%d]", locoid, m_RotateSym );
           }
         }
       }
 
-
     }
+
+    // All other block states
     else {
-      wBlock.setlocid( m_Props, locid );
+      // Accept
       if(isAcceptIdent) {
         l_locidStr = StrOp.fmt( "%s Accepting", wBlock.getid( node ) );
         occupied = isAcceptIdent ? 7:occupied;
       }
+      // Closed
       else if( StrOp.equals( wBlock.closed, state ) ) {
         if( !wBlock.issmallsymbol(m_Props) ) {
           l_locidStr = StrOp.fmt( "%s CLOSED", wBlock.getid( node ) );
-        } else {
+        }
+        else {
           l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
-          /*alternatively: */
-          /*l_locidStr = StrOp.fmt( "CLOSED" );*/
         }
         occupied = 4;
       }
+      // Ghost
       else if( StrOp.equals( wBlock.ghost, state ) ) {
         l_locidStr = StrOp.fmt( "%s GHOST", wBlock.getid( node ) );
         occupied = 5;
       }
+      // Shortcut
       else if( StrOp.equals( wBlock.shortcut, state ) ) {
         if(showID)
-          l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locid==NULL?"":locid );
+          l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locoid );
         else
-          l_locidStr = StrOp.fmt( "%s", locid==NULL?wBlock.getid( node ):locid );
+          l_locidStr = StrOp.fmt( "%s", StrOp.len(locoid) > 0 ? wBlock.getid( node ):locoid );
         occupied = 6;
       }
-      else
-        l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
-
+      // Other
+      else {
+        if( wBlock.issmallsymbol(m_Props) && StrOp.len(locoid) > 0 )
+          l_locidStr = StrOp.fmt( "%s", locoid );
+        else if( wBlock.issmallsymbol(m_Props) )
+          l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
+        else {
+          if(showID)
+            l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locoid );
+          else
+            l_locidStr = StrOp.fmt( "%s", StrOp.len(locoid) > 0 ? wBlock.getid( node ):locoid );
+        }
+      }
+      // Tooltip for other state
       StrOp.free(m_Tip);
       m_Tip = StrOp.dup(l_locidStr);
       showTooltip(wxGetApp().getFrame()->isTooltip());
 
     }
 
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "id=[%s] occupied=[%d] rotate=[%d] state=[%s] locid=[%s]",
-        id, occupied, m_RotateSym, state, locid!=NULL?locid:"-" );
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "id=[%s] occupied=[%d] rotate=[%d] state=[%s] locoid=[%s]",
+        id, occupied, m_RotateSym, state, locoid );
 
 
     if( updateEnterside ) {
@@ -2730,11 +2747,11 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     m_PlanPanel->blockEvent( wBlock.getid( m_Props ) );
 
   }
-  // In case of 2 or more panels we must refresh always because the state could be set already.
-  //if( refresh )
-    Refresh();
+
+  Refresh();
 
 }
+
 
 double Symbol::getSize() {
   double itemSize = m_ItemSize;
