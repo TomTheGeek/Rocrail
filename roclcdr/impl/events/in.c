@@ -103,9 +103,10 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
         data->curBlock->base.id( data->curBlock ), data->curBlock->getWheelCount(data->curBlock),
         data->next1Block->base.id( data->next1Block ), data->next1Block->getWheelCount(data->next1Block) );
     if( data->curBlock->getWheelCount(data->curBlock) > 0 && data->next1Block->getWheelCount(data->next1Block) > 0  ) {
-      if( data->curBlock->getWheelCount(data->curBlock) == data->next1Block->getWheelCount(data->next1Block) ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "wheel count match %s=%s [%d]",
-            data->curBlock->base.id( data->curBlock ), data->next1Block->base.id( data->next1Block ), data->curBlock->getWheelCount(data->curBlock) );
+      if( data->curBlock->getWheelCount(data->curBlock) <= data->next1Block->getWheelCount(data->next1Block) ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "wheel count match or is more %s<=%s [%d<=%d]",
+            data->curBlock->base.id( data->curBlock ), data->next1Block->base.id( data->next1Block ),
+            data->curBlock->getWheelCount(data->curBlock), data->next1Block->getWheelCount(data->next1Block) );
       }
       else {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "wheel count does not match %s[%d] != %s[%d] ",

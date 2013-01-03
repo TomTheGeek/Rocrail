@@ -6203,3 +6203,9 @@ msgstr ""
 msgid "Overrule throttle"
 msgstr ""
 
+#. 
+# id="resetwc"
+#, c-format
+msgid "Reset wheel counter"
+msgstr ""
+

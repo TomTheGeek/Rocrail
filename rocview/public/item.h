@@ -108,6 +108,8 @@ public:
   void OnTTTrack(wxCommandEvent& event);
   void OnTTCalibrate(wxCommandEvent& event);
 
+  void OnResetWC(wxCommandEvent& event);
+
   void showTooltip(bool show);
   void modelEvent( iONode node, bool oncreate=false );
   const char* getId();

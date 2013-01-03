@@ -2077,6 +2077,11 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   /* Cmds: lcid="" state="" */
   const char* locid = wBlock.getlocid( nodeA );
   const char* state = wBlock.getstate( nodeA );
+  const char* cmd   = wBlock.getcmd( nodeA );
+
+  if( cmd != NULL && StrOp.equals(cmd, wBlock.resetwc) ) {
+    data->wheelcount = 0;
+  }
 
   if( NodeOp.findAttr(nodeA, wAction.block_acceptident) != NULL ) {
     if( data->acceptident && wBlock.isacceptident(nodeA) )
