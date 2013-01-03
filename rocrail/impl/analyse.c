@@ -149,10 +149,12 @@ static int instCnt = 0;
 static Boolean _checkPlanHealth(iOAnalyse inst);
 static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
     int turnoutstate, int depth, Boolean toPreRTlist);
+static int _cleanupAutogenRouteids( iONode tracklist );
 static Boolean connectorCheck( iOAnalyse inst, Boolean repair );
 static Boolean blockCheck( iOAnalyse inst, Boolean repair );
 static Boolean routeCheck( iOAnalyse inst, Boolean repair );
 static Boolean isValidInterfaceID( iOAnalyse inst, const char *iid );
+static int invalidRouteidsCheck( iONode tracklist, iONode stlist, Boolean repair );
 
 /** ----- OBase ----- */
 static const char* __id( void* inst ) {
@@ -1294,9 +1296,9 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
 
       /* put keys for all covered fields */
       if( StrOp.equals( NodeOp.getName(node), wSwitch.name() ) ) {
-        if( StrOp.equals( wItem.gettype(node), wSwitch.crossing ) ||
-            StrOp.equals( wItem.gettype(node), wSwitch.dcrossing ) ||
-            StrOp.equals( wItem.gettype(node), wSwitch.ccrossing )) {
+        if( StrOp.equals( type, wSwitch.crossing ) ||
+            StrOp.equals( type, wSwitch.dcrossing ) ||
+            StrOp.equals( type, wSwitch.ccrossing )) {
 
           if( StrOp.equals( ori, wItem.east ) || StrOp.equals( ori, wItem.west ) ) {
             __createKey( key, node, 1, 0, 0);
@@ -1307,6 +1309,25 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
           }
           if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
             __createKey( key, node, 0, 1, 0);
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+                key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
+
+            MapOp.put( data->objectmap, key, (obj)node);
+          }
+        }
+        if( StrOp.equals( type, wSwitch.accessory ) &&
+            wSwitch.getaccnr(node) == 1 
+          ) {
+
+          if( StrOp.equals( ori, wItem.east ) || StrOp.equals( ori, wItem.west ) ) {
+            __createKey( key, node, 0, 1, 0);
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+                key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
+
+            MapOp.put( data->objectmap, key, (obj)node);
+          }
+          if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
+            __createKey( key, node, 1, 0, 0);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
 
@@ -1564,47 +1585,54 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
     else if( __getType(item) == typeSwitch && StrOp.equals( subtype, wSwitch.decoupler)) {
       return travel;
     }
+    /* accessory 1 (double railroad crossing) */
+    else if( __getType(item) == typeSwitch &&
+             StrOp.equals( subtype, wSwitch.accessory) &&
+             wSwitch.getaccnr(item) == 1
+           ) {
+      return travel;
+    }
     /* switch */
     else if( __getType(item) == typeSwitch) {
 
       /* coming from the points */
       if(        travel == 0 &&  StrOp.equals( itemori, wItem.east )
-              && StrOp.equals( wItem.gettype(item), wSwitch.right ) ) {
+              && StrOp.equals( subtype, wSwitch.right ) ) {
         if(turnoutstate == 1)
           return oriNorth+twoWayTurnout;
         return travel+twoWayTurnout;
       } else if( travel == 0 &&  StrOp.equals( itemori, wItem.west )
-              && StrOp.equals( wItem.gettype(item), wSwitch.left ) ) {
+              && StrOp.equals( subtype, wSwitch.left ) ) {
         if(turnoutstate == 1)
           return oriSouth+twoWayTurnout;
         return travel+twoWayTurnout;
       } else if( travel == 1 &&  StrOp.equals( itemori, wItem.north )
-              && StrOp.equals( wItem.gettype(item), wSwitch.right ) ) {
+              && StrOp.equals( subtype, wSwitch.right ) ) {
         if(turnoutstate == 1)
           return oriEast+twoWayTurnout;
         return travel+twoWayTurnout;
       } else if( travel == 1 &&  StrOp.equals( itemori, wItem.south )
-              && StrOp.equals( wItem.gettype(item), wSwitch.left ) ) {
+              && StrOp.equals( subtype, wSwitch.left ) ) {
         if(turnoutstate == 1)
           return oriWest+twoWayTurnout;
         return travel+twoWayTurnout;
       } else if( travel == 2 &&  StrOp.equals( itemori, wItem.west )
-              && StrOp.equals( wItem.gettype(item), wSwitch.right ) ) {
+              && StrOp.equals( subtype, wSwitch.right ) ) {
         if(turnoutstate == 1)
           return oriSouth+twoWayTurnout;
         return travel+twoWayTurnout;
       } else if( travel == 2 &&  StrOp.equals( itemori, wItem.east )
-              && StrOp.equals( wItem.gettype(item), wSwitch.left ) ) {
+              && StrOp.equals( subtype, wSwitch.left ) ) {
         if(turnoutstate == 1)
           return oriNorth+twoWayTurnout;
         return travel+twoWayTurnout;
       } else if( travel == 3 &&  StrOp.equals( itemori, wItem.south )
-              && StrOp.equals( wItem.gettype(item), wSwitch.right ) ) {
+              && StrOp.equals( subtype, wSwitch.right ) ) {
         if(turnoutstate == 1)
           return oriWest+twoWayTurnout;
         return travel+twoWayTurnout;
       } else if( travel == 3 &&  StrOp.equals( itemori, wItem.north )
-              && StrOp.equals( wItem.gettype(item), wSwitch.left ) ) {
+              && StrOp.equals( subtype, wSwitch.left ) ) {
         if(turnoutstate == 1)
           return oriEast+twoWayTurnout;
         return travel+twoWayTurnout;
@@ -1612,76 +1640,76 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
 
       /* coming from the frog -> straight line */
       else if( travel == 0 &&  StrOp.equals( itemori, wItem.west )
-              && StrOp.equals( wItem.gettype(item), wSwitch.right ) ) {
+              && StrOp.equals( subtype, wSwitch.right ) ) {
         *turnoutstate_out = 0;
         return travel;
       } else if( travel == 0 &&  StrOp.equals( itemori, wItem.east )
-              && StrOp.equals( wItem.gettype(item), wSwitch.left ) ) {
+              && StrOp.equals( subtype, wSwitch.left ) ) {
         *turnoutstate_out = 0;
         return travel;
       } else if( travel == 1 &&  StrOp.equals( itemori, wItem.south )
-              && StrOp.equals( wItem.gettype(item), wSwitch.right ) ) {
+              && StrOp.equals( subtype, wSwitch.right ) ) {
         *turnoutstate_out = 0;
         return travel;
       } else if( travel == 1 &&  StrOp.equals( itemori, wItem.north )
-              && StrOp.equals( wItem.gettype(item), wSwitch.left ) ) {
+              && StrOp.equals( subtype, wSwitch.left ) ) {
         *turnoutstate_out = 0;
         return travel;
       } else if( travel == 2 &&  StrOp.equals( itemori, wItem.east )
-             && StrOp.equals( wItem.gettype(item), wSwitch.right ) ) {
+             && StrOp.equals( subtype, wSwitch.right ) ) {
         *turnoutstate_out = 0;
         return travel;
       } else if( travel == 2 &&  StrOp.equals( itemori, wItem.west )
-             && StrOp.equals( wItem.gettype(item), wSwitch.left ) ) {
+             && StrOp.equals( subtype, wSwitch.left ) ) {
         *turnoutstate_out = 0;
         return travel;
       } else if( travel == 3 &&  StrOp.equals( itemori, wItem.north )
-            && StrOp.equals( wItem.gettype(item), wSwitch.right ) ) {
+            && StrOp.equals( subtype, wSwitch.right ) ) {
         *turnoutstate_out = 0;
         return travel;
       } else if( travel == 3 &&  StrOp.equals( itemori, wItem.south )
-            && StrOp.equals( wItem.gettype(item), wSwitch.left ) ) {
+            && StrOp.equals( subtype, wSwitch.left ) ) {
         *turnoutstate_out = 0;
         return travel;
       }
 
       /* coming from the frog -> diverging line */
       else if( travel == 0 &&  StrOp.equals( itemori, wItem.north )
-              && StrOp.equals( wItem.gettype(item), wSwitch.right ) ) {
+              && StrOp.equals( subtype, wSwitch.right ) ) {
         *turnoutstate_out = 1;
         return oriSouth;
       } else if( travel == 0 &&  StrOp.equals( itemori, wItem.north )
-              && StrOp.equals( wItem.gettype(item), wSwitch.left ) ) {
+              && StrOp.equals( subtype, wSwitch.left ) ) {
         *turnoutstate_out = 1;
         return oriNorth;
       } else if( travel == 1 &&  StrOp.equals( itemori, wItem.west )
-              && StrOp.equals( wItem.gettype(item), wSwitch.right ) ) {
+              && StrOp.equals( subtype, wSwitch.right ) ) {
         *turnoutstate_out = 1;
         return oriWest;
       } else if( travel == 1 &&  StrOp.equals( itemori, wItem.west )
-              && StrOp.equals( wItem.gettype(item), wSwitch.left ) ) {
+              && StrOp.equals( subtype, wSwitch.left ) ) {
         *turnoutstate_out = 1;
         return oriEast;
       } else if( travel == 2 &&  StrOp.equals( itemori, wItem.south )
-             && StrOp.equals( wItem.gettype(item), wSwitch.right ) ) {
+             && StrOp.equals( subtype, wSwitch.right ) ) {
         *turnoutstate_out = 1;
         return oriNorth;
       } else if( travel == 2 &&  StrOp.equals( itemori, wItem.south )
-             && StrOp.equals( wItem.gettype(item), wSwitch.left ) ) {
+             && StrOp.equals( subtype, wSwitch.left ) ) {
         *turnoutstate_out = 1;
         return oriSouth;
       } else if( travel == 3 &&  StrOp.equals( itemori, wItem.east )
-            && StrOp.equals( wItem.gettype(item), wSwitch.right ) ) {
+            && StrOp.equals( subtype, wSwitch.right ) ) {
         *turnoutstate_out = 1;
         return oriEast;
       } else if( travel == 3 &&  StrOp.equals( itemori, wItem.east )
-            && StrOp.equals( wItem.gettype(item), wSwitch.left ) ) {
+            && StrOp.equals( subtype, wSwitch.left ) ) {
         *turnoutstate_out = 1;
         return oriWest;
       }
 
       /* crossing */
-      else if( StrOp.equals( wItem.gettype(item), wSwitch.crossing ) && wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
+      else if( StrOp.equals( subtype, wSwitch.crossing ) && wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " crossing %d travel: %d", wSwitch.isdir(item), travel );
 
         /* rectcrossing */
@@ -1724,7 +1752,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
         return itemNotInDirection;
       }
       /* ccrossing */
-      else if( StrOp.equals( wItem.gettype(item), wSwitch.ccrossing ) ) {
+      else if( StrOp.equals( subtype, wSwitch.ccrossing ) ) {
         /* something was wrong with ccrossing :) */
         char mkey[32] = {'\0'};
         __createKey( mkey, item, 0, 0, 0);
@@ -1733,7 +1761,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
         iONode itemB = (iONode)MapOp.get( data->objectmap, mkey);
 
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__travel: ccross switch[%s] type: [%s] key[%s] mkey[%s] %08.8X %08.8X, travel[%d]",
-            wItem.getid(item), wItem.gettype(item), key, mkey, itemA, itemB, travel);
+            wItem.getid(item), subtype, key, mkey, itemA, itemB, travel);
 
         if( StrOp.equals( itemori, wItem.west )  || StrOp.equals( itemori, wItem.east ) ) {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__travel: ccross WE ori[%s] travel[%d] tos[%d] tos_o[%d]", itemori, travel, turnoutstate, *turnoutstate_out );
@@ -1765,8 +1793,8 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
         }
       }
       /* dcrossing */
-      else if( StrOp.equals( wItem.gettype(item), wSwitch.dcrossing ) ||
-               StrOp.equals( wItem.gettype(item), wSwitch.crossing ) && (wSwitch.getaddr1(item) != 0 || wSwitch.getport1(item) != 0 ) )
+      else if( StrOp.equals( subtype, wSwitch.dcrossing ) ||
+               StrOp.equals( subtype, wSwitch.crossing ) && (wSwitch.getaddr1(item) != 0 || wSwitch.getport1(item) != 0 ) )
       {
         if( !wSwitch.isdir(item)  ) { /* left */
           if( StrOp.equals( itemori, wItem.west ) ) { /* left west */
@@ -2027,7 +2055,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
       }
 
       /* threeway */
-      else if( StrOp.equals( wItem.gettype(item), wSwitch.threeway ) ) {
+      else if( StrOp.equals( subtype, wSwitch.threeway ) ) {
 
         if( StrOp.equals( itemori, wItem.west )) {
           if( (travel == 0) ) {
@@ -2124,7 +2152,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
       }
 
       /* twoway */
-      else if( StrOp.equals( wItem.gettype(item), wSwitch.twoway ) ) {
+      else if( StrOp.equals( subtype, wSwitch.twoway ) ) {
 
         /* coming from the points */
         if( travel == 0 &&  StrOp.equals( itemori, wItem.west ) ) {
@@ -2256,7 +2284,7 @@ static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList rout
         StrOp.equals(wItem.gettype(item), wTrack.concurveright )
       )
     ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "__aBC: [%s][%s] [%s] is a connector. cpid[%s] tknr[%d] travel[%d]",
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "__aBC: [%s][%s] [%s] is a connector. cpid[%s] tknr[%d] travel[%d]",
         NodeOp.getName(item), wItem.gettype(item), wItem.getid(item), wTrack.getcounterpartid(item), wTrack.gettknr(item), travel);
   } else {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "__aBC: [%s][%s] [%s] not a connector",
@@ -2275,7 +2303,7 @@ static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList rout
     iONode nextitem = __findConnectorCounterpart( inst, item );
 
     if( nextitem ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found counterpart: [%s]", wItem.getid(nextitem));
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "found counterpart: [%s]", wItem.getid(nextitem));
       if( StrOp.equals(NodeOp.getName(nextitem), wTrack.name() ) && 
           ( StrOp.equals(wItem.gettype(nextitem), wTrack.connector ) ||
             StrOp.equals(wItem.gettype(nextitem), wTrack.concurveleft ) ||
@@ -2408,13 +2436,75 @@ static Boolean __analyseBehindConnector(iOAnalyse inst, iONode item, iOList rout
       }
 
       if( found ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found counterpart: [%s]", wItem.getid(nextitem));
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "found counterpart: [%s]", wItem.getid(nextitem));
         __analyseItem(inst, nextitem, route, travel, 0, depth, toPreRTlist);
         return True;
       }
     }
   }
   return False;
+}
+
+/* */
+static Boolean finalizeRouteWithItemAsDestinationblock( iOAnalyse inst, iOList route, iONode item, int travel, Boolean toPreRTlist ) {
+  iOAnalyseData data = Data(inst);
+  const char* ori = wItem.getori(item);
+
+  if( ori == NULL)
+    ori = wItem.west;
+
+  /* determine block enter side */
+  const char* state = "-";
+  if( StrOp.equals( ori, wItem.west ) && travel == 2) {
+    state = "+";
+  }else if( StrOp.equals( ori, wItem.north ) && travel == 1) {
+    state = "+";
+  }else if( StrOp.equals( ori, wItem.east  ) && travel == 0) {
+    state = "+";
+  }else if( StrOp.equals( ori, wItem.south ) && travel == 3) {
+    state = "+";
+  }
+
+  /* add item to route */
+  iONode itemA = (iONode)NodeOp.base.clone( item );
+  wItem.setstate( itemA, state );
+  ListOp.add( route, (obj)itemA );
+
+  /* do we have a preRoute or a notRoute */
+  iONode startBlock = (iONode)ListOp.first( route );
+  if( StrOp.equals( NodeOp.getName(startBlock), wStage.name() ) && StrOp.equals( wItem.getstate(startBlock), "+" ) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Route Source [sb] %s%s -> notRTlist", wItem.getid(startBlock), wItem.getstate(startBlock) );
+    /* route starting at enter side of staging block */
+    ListOp.add( data->notRTlist, (obj)route);
+  }
+  else if( StrOp.equals(NodeOp.getName(item), wStage.name() ) && StrOp.equals( state, "-" ) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Route Destination [sb] %s%s -> notRTlist", wItem.getid(item), state );
+    /* route ending at exit side of staging block */
+    ListOp.add( data->notRTlist, (obj)route);
+  }
+  else if( StrOp.equals( wItem.getid(startBlock), wItem.getid(item) ) ) {
+    /* route ending at start -> loop route detected */
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loop route (Source == Destination) %s%s to %s%s -> notRTlist", wItem.getid(startBlock), wItem.getstate(startBlock), wItem.getid(item), state );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loop route (Source == Destination) %s%s to %s%s. Check your plan.", wItem.getid(startBlock), wItem.getstate(startBlock), wItem.getid(item), state );
+    ListOp.add( data->notRTlist, (obj)route);
+  }
+  else {
+    /* if end of route is a selection table that is not in manager mode or not in sharedfb mode then do not create a valid route to it */
+    if( StrOp.equals( NodeOp.getName(item), wSelTab.name() ) && ( ! wSelTab.ismanager(item) || ! wSelTab.issharedfb(item) ) ) {
+      toPreRTlist = False;
+    }
+    if( toPreRTlist ) {
+      /* add route to routelist */
+      ListOp.add( data->preRTlist, (obj)route);
+    }
+    else {
+      /* add route fragment to notRTlist (for analyse) */
+      ListOp.add( data->notRTlist, (obj)route);
+    }
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "");
+
+  return True;
 }
 
 static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel, int turnoutstate, int depth, Boolean toPreRTlist) {
@@ -2518,7 +2608,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%-20s] travel: [%d] name=%s type=%s",
-        wItem.getid(item), travel, NodeOp.getName(item), wItem.gettype(item) );
+      wItem.getid(item), travel, NodeOp.getName(item), wItem.gettype(item) );
 
   if( ( ! StrOp.equals(NodeOp.getName(item), wBlock.name() ) && 
         ! StrOp.equals(NodeOp.getName(item), wStage.name() ) && 
@@ -2591,18 +2681,18 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
     }
 
     if( found ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found connector: [%s] travel: [%d] ori: [%s]",
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "found connector: [%s] travel: [%d] ori: [%s]",
               wItem.getid(item), travel, itemori);
 
       if( wTrack.getcounterpartid(item) != NULL && !StrOp.equals( wTrack.getcounterpartid(item), "") ){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found counterpart for: [%s] counterpart: [%s]",
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "found counterpart for: [%s] counterpart: [%s]",
             wItem.getid(item), wTrack.getcounterpartid(item) );
         iOTrack track = ModelOp.getTrack( data->model, wTrack.getcounterpartid(item) );
 
         /* go on at the connector */
         if( track != NULL ) {
           iONode nextitem = TrackOp.base.properties(track);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "continue at counterpart: [%s]", wItem.getid(nextitem) );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "continue at counterpart: [%s]", wItem.getid(nextitem) );
           depth++;
           __analyseItem(inst, nextitem, route, travel, turnoutstate, depth, toPreRTlist);
         }
@@ -2635,15 +2725,9 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
 
   int turnoutstate_out;
 
-
-    
   /* get next item */
   travel = __travel( inst, item, travel, turnoutstate, &turnoutstate_out, &x, &y, "");
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "TRAVEL NEXT travel[%d] tos[%d] tos_o[%d] x[%d] y[%d]", travel,  turnoutstate, turnoutstate_out, x, y );
-
-  if( StrOp.equals( NodeOp.getName(item), wTrack.name() ) && StrOp.equals( wItem.gettype(item), wTrack.dir ) ) {
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "wTrack.dir=%s travel=%d", wItem.getid(item), travel );
-  }
 
   if( travel >= 200 && travel < 300) {
     travel -= twoWayTurnout;
@@ -2681,7 +2765,6 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
   nextitem = (iONode)MapOp.get( data->objectmap, key);
 
   if( nextitem != NULL) {
-
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "next item: %s tos: [%d]",
         NodeOp.getName(nextitem), turnoutstate_out );
 
@@ -2691,7 +2774,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
 
     if( (travelp == itemNotInDirection || travelp == -1) && travelp != dcrossingAhead) {
       if( StrOp.equals(NodeOp.getName(nextitem), wTrack.name() ) && StrOp.equals( wItem.gettype(nextitem), wTrack.dir ) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end   analyzing item [%-20s] travel: [%d] name=%s type=%s",
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%-20s] travel: [%d] name=%s type=%s",
             wItem.getid(nextitem), travel, NodeOp.getName(nextitem), wItem.gettype(nextitem) );
 
         /* continue at dir against direction... to get some info for feedbacks, signal, blockid etc. */
@@ -2705,7 +2788,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
                 ( ( travel == oriSouth ) && ( __getOri( nextitem ) == oriSouth ) ) 
               )
           ) {
-          /* DIR is not exactly in opposite direction -> add route fragmnet to notRTlist and leave */
+          /* DIR is not exactly in opposite direction -> add route fragment to notRTlist and leave */
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> stop: next item %s %s not in direction. travel %d travelp %d turnoutstate %d", 
               NodeOp.getName(nextitem), wItem.getid(nextitem), travel, travelp, turnoutstate );
           ListOp.add( data->notRTlist, (obj)route);
@@ -2747,7 +2830,10 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
               /* nextNextItem is also not fitting -> give up -> save route fragment in notRTlist and end this search */
               TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, " -> stop: nextNext [%s][%s] not fitting -> end tr[%d] trp[%d] trp2[%d] oI[%d] oNI[%d] oNI2[%d]",
                   NodeOp.getName(nextNextItem), wItem.getid(nextNextItem), travel, travelp, travelp2, __getOri( item ), __getOri( nextitem ), __getOri( nextNextItem ) );
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, " -> stop: nextNext [%s][%s] not fitting -> end of search",
+
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end   analyzing item [%-20s] travel: [%d] name=%s type=%s",
+                  wItem.getid(nextNextItem), travel, NodeOp.getName(nextNextItem), wItem.gettype(nextNextItem) );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " -> stop: [%s][%s] 2nd consecutive dir against direction -> end of search",
                   NodeOp.getName(nextNextItem), wItem.getid(nextNextItem) );
               ListOp.add( data->notRTlist, (obj)route);
               return False;
@@ -2756,7 +2842,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
                /* continue at nextNextItem */
               __analyseItem(inst, nextNextItem, route, travel, turnoutstate, depth, toPreRTlist);
               return False;
-           }
+            }
           }
         }
         return False;
@@ -2777,6 +2863,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
 
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, " buffer detected add route to notRTlist list" );
       /* add buffer to route, then route to notRTlist list */
+      depth++;
       iONode itemA = (iONode)NodeOp.base.clone( nextitem);
       wItem.setstate(itemA, state);
       ListOp.add( route, (obj)itemA );
@@ -2788,67 +2875,20 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
         StrOp.equals( NodeOp.getName(nextitem), wStage.name() ) ||
         StrOp.equals( NodeOp.getName(nextitem), wSelTab.name() )) {
       /* we reached the end block (bkb) */
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end   analyzing item [%-20s] travel: [%d] name=%s type=%s",
+          wItem.getid(nextitem), travel, NodeOp.getName(nextitem), wItem.gettype(nextitem) );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " next is a block: [%s]", wItem.getid(nextitem));
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  -> LIST: block [%s] travel: [%d] depth: [%d] tos: [%d]",
-                wItem.getid(nextitem), travel, depth, turnoutstate);
+          wItem.getid(nextitem), travel, depth, turnoutstate);
 
-      const char* nextitemori = wItem.getori(nextitem);
-      if( nextitemori == NULL) {
-        nextitemori = wItem.west;
-      }
-      const char* state = "-";
-      if( StrOp.equals( nextitemori, wItem.west ) && travel == 2){
-        state = "+";
-      } else if( StrOp.equals( nextitemori, wItem.north ) && travel == 1){
-        state = "+";
-      } else if( StrOp.equals( nextitemori, wItem.east ) && travel == 0){
-        state = "+";
-      } else if( StrOp.equals( nextitemori, wItem.south ) && travel == 3){
-        state = "+";
-      }
-
-      /* add nextitem to route */
-      iONode itemA = (iONode)NodeOp.base.clone( nextitem);
-      wItem.setstate(itemA, state);
-      ListOp.add( route, (obj)itemA );
-
-      /* do we have a preRoute or a notRoute */
-      iONode firstitem = (iONode)ListOp.first( route );
-      if( StrOp.equals(NodeOp.getName(firstitem), wStage.name() ) && StrOp.equals( wItem.getstate(firstitem), "+" ) ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Route Source [sb] %s%s -> notRTlist", wItem.getid(firstitem), wItem.getstate(firstitem) );
-        /* route starting at enter side of staging block */
-        ListOp.add( data->notRTlist, (obj)route);
-      }
-      else if( StrOp.equals(NodeOp.getName(nextitem), wStage.name() ) && StrOp.equals( state, "-" ) ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Route Destination [sb] %s%s -> notRTlist", wItem.getid(nextitem), state );
-        /* route ending at exit side of staging block */
-        ListOp.add( data->notRTlist, (obj)route);
-      }
-      else if( StrOp.equals( wItem.getid(firstitem), wItem.getid(nextitem) ) ) {
-        /* route ending at start -> loop route detected */
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loop route (Source == Destination) %s%s to %s%s -> notRTlist", wItem.getid(firstitem), wItem.getstate(firstitem), wItem.getid(nextitem), state );
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loop route (Source == Destination) %s%s to %s%s. Check your plan.", wItem.getid(firstitem), wItem.getstate(firstitem), wItem.getid(nextitem), state );
-        ListOp.add( data->notRTlist, (obj)route);
-      }
-      else {
-        /* if end of route is a selection table that is not in manager mode or not in sharedfb mode then do not create a valid route to it */
-        if( StrOp.equals( NodeOp.getName(nextitem), wSelTab.name() ) && ( ! wSelTab.ismanager(nextitem) || ! wSelTab.issharedfb(nextitem) ) ) {
-          toPreRTlist = False;
-        }
-        if( toPreRTlist ) {
-          /* add route to routelist */
-          ListOp.add( data->preRTlist, (obj)route);
-        }
-        else {
-          /* add route fragment to notRTlist (for analyse) */
-          ListOp.add( data->notRTlist, (obj)route);
-        }
-      }
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "");
+      finalizeRouteWithItemAsDestinationblock( inst, route, nextitem, travel, toPreRTlist );
 
       return True;
-    } else if ( StrOp.equals(NodeOp.getName(nextitem), wSwitch.name() ) ) {
-
+    }
+    else if( StrOp.equals(NodeOp.getName(nextitem), wSwitch.name() ) &&
+             ! StrOp.equals( wItem.gettype(nextitem), wSwitch.decoupler ) && 
+             ! StrOp.equals( wItem.gettype(nextitem), wSwitch.accessory )
+           ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "[%s] next is a switch: [%s] turnoutstate_out: [%d] travelp: [%d]",
           wItem.getid(item), wItem.getid(nextitem), turnoutstate_out, travelp);
 
@@ -2934,7 +2974,101 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "unhandled after curritem[%s] next is a sw[%s] type[%s] tostate[%d] travelp[%d]",
             wItem.getid(item), wItem.getid(nextitem), wItem.gettype(nextitem), turnoutstate, travelp);
       }
-    } /* if bk || sw */
+    }
+    else if( StrOp.equals( NodeOp.getName(nextitem), wSwitch.name() ) &&
+             StrOp.equals( wItem.gettype(nextitem), wSwitch.accessory ) &&
+             wSwitch.getaccnr(nextitem) == 1
+           ) {
+      /* double railroad crossing */
+      int baseX = 0;
+      int baseY = 0;
+      int nextitemOri = __getOri( nextitem );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "railroad crossing: [%s](%d-%d-%d) travel[%d] , rrx[%s](%d-%d-%d) travelp[%d] ori[%d]",
+          wItem.getid(item), wItem.getx(item), wItem.gety(item), wItem.getz(item), travel,
+          wItem.getid(nextitem), wItem.getx(nextitem), wItem.gety(nextitem), wItem.getz(nextitem), travelp, nextitemOri );
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%-20s] travel: [%d] name=%s type=%s",
+          wItem.getid(nextitem), travel, NodeOp.getName(nextitem), wItem.gettype(nextitem) );
+
+      /* add nextitem to route fragment */
+      depth++;
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "depth: [%d]", depth );
+      iONode itemA = (iONode)NodeOp.base.clone( nextitem);
+      wItem.setstate(itemA, state);
+      ListOp.add( route, (obj)itemA );
+
+      if( nextitemOri == oriWest || nextitemOri == oriEast ) {
+        baseX = wItem.getx(nextitem) ;
+        baseY = wItem.gety(item) ;
+      }else if( nextitemOri == oriNorth || nextitemOri == oriSouth ) {
+        baseX = wItem.getx(item) ;
+        baseY = wItem.gety(nextitem) ;
+      }
+
+      /* rows: travel  */
+      /* cols: itemori */
+      /*                        itemori W  N  E  S     travel */
+      const int xoffsetArray[4][4] = {{-1, 0,-1, 0}, /* west  */
+                                      { 0, 0, 0, 0}, /* north */
+                                      { 1, 0, 1, 0}, /* east  */
+                                      { 0, 0, 0, 0}};/* south */
+
+      const int yoffsetArray[4][4] = {{ 0, 0, 0, 0}, /* west  */
+                                      { 0,-1, 0,-1}, /* north */
+                                      { 0, 0, 0, 0}, /* east  */
+                                      { 0, 1, 0, 1}};/* south */
+
+      xoffset = xoffsetArray[travel][nextitemOri] ;
+      yoffset = yoffsetArray[travel][nextitemOri] ;
+      StrOp.fmtb( key, "%d-%d-%d", baseX+xoffset, baseY+yoffset, wItem.getz(nextitem) );
+
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "railroad crossing: baseX %d baseY %d xoffset %d yoffset %d nextNext key: %s", baseX, baseY, xoffset, yoffset, key);
+
+      /* get item after nextitem. name it nextNextItem */
+      iONode nextNextItem = (iONode)MapOp.get( data->objectmap, key);
+
+      if( nextNextItem != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "railroad crossing: [%s](%d-%d-%d) travel[%d] , rrx[%s](%d-%d-%d) travelp[%d] , [%s](%d-%d-%d)",
+            wItem.getid(item), wItem.getx(item), wItem.gety(item), wItem.getz(item), travel,
+            wItem.getid(nextitem), wItem.getx(nextitem), wItem.gety(nextitem), wItem.getz(nextitem), travelp,
+            wItem.getid(nextNextItem), wItem.getx(nextNextItem), wItem.gety(nextNextItem), wItem.getz(nextNextItem) );
+
+        /* check if direction of nextNextItem suits */
+        int travelp2 = __travel( inst, nextNextItem, travel, 0, &turnoutstate_out, &x, &y, key);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "TRAVEL NEXTNEXT travelp2[%d] x[%d] y[%d]", travelp2, x, y );
+        if( (travelp2 == itemNotInDirection || travelp2 == -1) && travelp2 != dcrossingAhead) {
+          /* nextNextItem is also not fitting -> give up -> save route fragment in notRTlist and end this search */
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, " -> stop: nextNext [%s][%s] not fitting -> end tr[%d] trp[%d] trp2[%d] oI[%d] oNI[%d] oNI2[%d]",
+              NodeOp.getName(nextNextItem), wItem.getid(nextNextItem), travel, travelp, travelp2, __getOri( item ), __getOri( nextitem ), __getOri( nextNextItem ) );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, " -> stop: nextNext [%s][%s] not fitting -> end of search",
+              NodeOp.getName(nextNextItem), wItem.getid(nextNextItem) );
+          ListOp.add( data->notRTlist, (obj)route);
+          return False;
+        }
+        else {
+          if( StrOp.equals(NodeOp.getName(nextNextItem), wBlock.name() ) ||
+              StrOp.equals(NodeOp.getName(nextNextItem), wStage.name() ) ||
+              StrOp.equals(NodeOp.getName(nextNextItem), wSelTab.name() ) ) {
+            /* nextNext is a block -> save route and end search */
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end   analyzing item [%-20s] travel: [%d] name=%s type=%s",
+                wItem.getid(nextNextItem), travel, NodeOp.getName(nextNextItem), wItem.gettype(nextNextItem) );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " next is a block: [%s]", wItem.getid(nextNextItem));
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  -> LIST: block [%s] travel: [%d] depth: [%d] tos: [%d]",
+                wItem.getid(nextNextItem), travel, depth, turnoutstate);
+
+            finalizeRouteWithItemAsDestinationblock( inst, route, nextNextItem, travel, toPreRTlist );
+
+            return True;
+          }else {
+            depth++;
+            /* continue at nextNextItem */
+            __analyseItem(inst, nextNextItem, route, travel, turnoutstate, depth, toPreRTlist);
+            return False;
+          }
+        }
+      }
+      return False;
+    }/* if bk || sw */
 
     depth++;
     __analyseItem(inst, nextitem, route, travel, turnoutstate, depth, toPreRTlist);
@@ -3079,7 +3213,10 @@ static int setBlockidForListItems( iOAnalyse inst, iOList routeFrag, int first, 
     else if( StrOp.equals( typ, wSelTab.name() ) ) {
       /* selection tables have no blockid */
     }
-    else if( StrOp.equals( typ, wSwitch.name() ) ) {
+    else if( StrOp.equals( typ, wSwitch.name() ) && 
+             ! StrOp.equals( wItem.gettype(item), wSwitch.decoupler ) &&
+             ! StrOp.equals( wItem.gettype(item), wSwitch.accessory )
+           ) {
       /* switch has a blockid, but we do not set it */
     }
     else if( StrOp.equals( typ, wOutput.name() ) ) {
@@ -3131,6 +3268,15 @@ static int setBlockIDinsideSBsections( iOAnalyse inst, iOList routeFrag ) {
         /* reached an end block while searching feedbacks of staging block */
         rt_setBl = False;
       } /* bk || sb || seltab */
+      else if( StrOp.equals( NodeOp.getName(item), wSwitch.name()) && 
+               ( StrOp.equals( wItem.gettype(item), wSwitch.decoupler ) || 
+                 ( StrOp.equals( wItem.gettype(item), wSwitch.accessory ) &&
+                   wSwitch.getaccnr(item) == 1
+                 )
+               )
+             ) {
+        /* inside staging block no special handling of decoupler / railroad crossing  */
+      } /* sw */
       else if( StrOp.equals( NodeOp.getName(item), wSwitch.name()) ) {
         /* reached a switch while searching feedbacks of staging block */
         rt_setBl = False;
@@ -3361,6 +3507,10 @@ static int __analyseAllLists(iOAnalyse inst) {
             ( StrOp.equals( wSwitch.gettype(item), wSwitch.crossing ) || 
               StrOp.equals( wSwitch.gettype(item), wSwitch.ccrossing ) ) ) {
           /* crossing and centered crossing are not relevant for SG/FB */
+        } else if( StrOp.equals( wItem.gettype(item), wSwitch.decoupler ) ) {
+          /* decoupler is not relevant for SG/FB */
+        } else if( StrOp.equals( wItem.gettype(item), wSwitch.accessory ) && wSwitch.getaccnr(item) == 1 ) {
+          /* railroad crossing is not relevant for SG/FB */
         } else {
           /* a regular switch is always the end of assignments to the starting block */
           rt_addSg = False;
@@ -3647,6 +3797,10 @@ static int __analyseAllLists(iOAnalyse inst) {
             ( StrOp.equals( wSwitch.gettype(item), wSwitch.crossing ) || 
               StrOp.equals( wSwitch.gettype(item), wSwitch.ccrossing ) ) ) {
           /* crossing and centered crossing without address are not relevant for end of blockID setting */
+        } else if( StrOp.equals( wItem.gettype(item), wSwitch.decoupler ) ) {
+          /* decoupler is not relevant for end of blockID setting */
+        } else if( StrOp.equals( wItem.gettype(item), wSwitch.accessory ) && wSwitch.getaccnr(item) == 1 ) {
+          /* railroad crossing is not relevant for end of blockID setting */
         } else {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop1: [%s] [%s] SWITCH DETECTED ( %s )", NodeOp.getName(item), wItem.getid(item), bka );
 
@@ -3718,7 +3872,7 @@ static int __analyseAllLists(iOAnalyse inst) {
       }
       else if( StrOp.equals( typ, wSignal.name() ) ) {
         iOSignal signal = ModelOp.getSignal( data->model, wItem.getid(item) );
-        node = FBackOp.base.properties(signal);
+        node = SignalOp.base.properties(signal);
         const char* blockid = wItem.getblockid(node);
         /* only set blockid if not already set */
         if( ( blockid == NULL ) || ( StrOp.len( blockid ) == 0 ) ) {
@@ -3732,6 +3886,29 @@ static int __analyseAllLists(iOAnalyse inst) {
           if( ! StrOp.equals( bka, blockid ) ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "setblockid: [%s] for [%s][%s] skipped. It is not equal to current entry %s",
                 bka, NodeOp.getName(item), wItem.getid(item), blockid );
+          }
+        }
+      }
+      else if( StrOp.equals( typ, wSwitch.name() ) && 
+               StrOp.equals( wItem.gettype(item), wSwitch.decoupler )
+             ) {
+        /* decouplers have a blockid */
+        iOSwitch decoupler = ModelOp.getSwitch( data->model, wItem.getid(item) );
+        node = SwitchOp.base.properties(decoupler);
+        const char* blockid = wItem.getblockid(node);
+        /* only set blockid if not already set */
+        if( ( blockid == NULL ) || ( StrOp.len( blockid ) == 0 ) ) {
+          wSwitch.setblockid(node, bka);
+          modifications++;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s][%s]",
+              bka, NodeOp.getName(item), wItem.gettype(item), wItem.getid(item) );
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s][%s] skipped because already %s",
+              bka, NodeOp.getName(item), wItem.gettype(item), wItem.getid(item), blockid );
+          if( ! StrOp.equals( bka, blockid ) ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "setblockid: [%s] for [%s][%s][%s] skipped. It is not equal to current entry %s",
+                bka, NodeOp.getName(item), wItem.gettype(item), wItem.getid(item), blockid );
           }
         }
       }
@@ -3790,20 +3967,38 @@ static int __generateRoutes(iOAnalyse inst) {
   iOList delList = ListOp.inst();
   int i;
   int childcnt = NodeOp.getChildCnt( stlist);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Searching %d old routes for autogen routes", childcnt );  
   for( i = 0; i <childcnt; i++) {
     child = NodeOp.getChild( stlist, i);
 
     if( StrOp.startsWith( wItem.getid( child), "autogen-" )) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "removed autogen route: [%s]", wItem.getid( child));
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "remove autogen route: [%s]", wItem.getid( child));
       ListOp.add( delList, (obj)child );
     }
   }
 
   childcnt = ListOp.size(delList);
+  if( childcnt > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Removing %d autogen routes", childcnt );  
+  }
   for( i = 0; i < childcnt; i++) {
     NodeOp.removeChild( stlist, (iONode)ListOp.get(delList, i) );
   }
   ListOp.base.del(delList);
+
+
+  /* if option to set "autogen-"routeids is active then 
+       we cleanup the old entries before starting reassigning new routeids */
+  if( data->setRouteId ) {
+    int removedIDs = 0;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Cleaning autogen-routeids in plan");
+    removedIDs += _cleanupAutogenRouteids( wPlan.gettklist(data->plan) );
+    removedIDs += _cleanupAutogenRouteids( wPlan.getswlist(data->plan) );
+    removedIDs += _cleanupAutogenRouteids( wPlan.getsglist(data->plan) );
+    removedIDs += _cleanupAutogenRouteids( wPlan.getfblist(data->plan) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Removed %d autogen-routeids in plan", removedIDs );
+  }
+
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ");
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "the analyzer found the routes:");
@@ -3816,11 +4011,8 @@ static int __generateRoutes(iOAnalyse inst) {
     Boolean addToList = True;
     Boolean addRtId = True;
 
-    /* create new route element and set some defaults */
+    /* create new route element */
     iONode newRoute = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
-    wRoute.setshow( newRoute, False );
-    wRoute.setx( newRoute, 0 );
-    wRoute.sety( newRoute, 0 );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route:");
 
@@ -3934,7 +4126,10 @@ static int __generateRoutes(iOAnalyse inst) {
         reachedEndblock = True;
       }
 
-      if( StrOp.equals( NodeOp.getName(item), wSwitch.name()) ) {
+      if( StrOp.equals( NodeOp.getName(item), wSwitch.name()) &&
+          ! StrOp.equals( wItem.gettype(item), wSwitch.decoupler ) &&
+          ! StrOp.equals( wItem.gettype(item), wSwitch.accessory )
+        ) {
         iONode swcmd = NodeOp.inst( wSwitchCmd.name(), NULL, ELEMENT_NODE );
         wItem.setid( swcmd, wItem.getid(item));
         wSwitch.setcmd( swcmd, wItem.getstate(item));
@@ -3974,7 +4169,7 @@ static int __generateRoutes(iOAnalyse inst) {
         }
 
         /* set routeids for tk|fb|sg */
-        if( data->setRouteId ) {
+        if( addToList && data->setRouteId ) {
           char* prevrouteids = StrOp.dup( wItem.getrouteids(tracknode) );
           if( prevrouteids != NULL ) {
             iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
@@ -4013,6 +4208,11 @@ static int __generateRoutes(iOAnalyse inst) {
     if( addToList) {
 
       if ( !(StrOp.equals( wRoute.getbka(newRoute), wRoute.getbkb(newRoute))) ) {
+        /* set some useful defaults... */
+        wRoute.setshow( newRoute, False );
+        wRoute.setx( newRoute, 0 );
+        wRoute.sety( newRoute, 0 );
+        /* ...then add to the list */
         NodeOp.addChild( stlist, newRoute );
         modifications++;
       } else {
@@ -4069,7 +4269,6 @@ static int _analyse(iOAnalyse inst) {
     return modifications;
   }
 
-
   MapOp.clear(data->objectmap);
   ListOp.clear(data->preRTlist);
   ListOp.clear(data->bklist);
@@ -4106,7 +4305,7 @@ static int _analyse(iOAnalyse inst) {
     }
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  it contains %d blocks", ListOp.size(data->bklist) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " plan contains %d blocks", ListOp.size(data->bklist) );
 
   block = (iONode)ListOp.first(data->bklist);
   while(block) {
@@ -4465,6 +4664,77 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
   return healthy;
 }
 
+/* check if all text elements have valid settings */
+static Boolean textCheck( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode txlist = wPlan.gettxlist(data->plan);
+  Boolean retVal = True;
+  int numProblems = 0;
+
+  if( txlist != NULL ) {
+    int txSize = NodeOp.getChildCnt( txlist );
+    if( txSize > 0 ) {
+      int i = 0;
+      iONode tx ;
+
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "textCheck: Checking %d tx nodes", txSize );
+      for( i = 0 ; i < txSize ; i++ ) {
+        tx = NodeOp.getChild(txlist, i);
+        if( tx ) {
+          /*
+          text id x y z cx cy pointsize 
+          */
+          const char* txId = wText.getid( tx ) ;
+          const char* txText = wText.gettext( tx ) ;
+          int txX = wText.getx( tx ) ;
+          int txY = wText.gety( tx ) ;
+          int txZ = wText.getz( tx ) ;
+          int txCX = wText.getcx( tx ) ;
+          int txCY = wText.getcy( tx ) ;
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "textCheck: text[%s][%s]: xyz[%d-%d-%d] cx[%d] cy[%d]",
+              txId, txText, txX, txY, txZ, txCX, txCY );
+          if( txCX <= 0 ||
+              txCY <= 0 ||
+              ! isValidZlevel( inst, txZ )
+            ) {
+            if( ! isValidZlevel( inst, txZ ) )
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: object [tx] with id[%s] text[%s] at [%d,%d,%d]: level[%d] is invalid",
+                  txId, txText, txX, txY, txZ, txZ );
+            if( txCX <= 0 )
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: object [tx] with id[%s] text[%s] at [%d,%d,%d]: width cx[%d] is invalid -> element invisible",
+                  txId, txText, txX, txY, txZ, txCX );
+            if( txCY <= 0 )
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: object [tx] with id[%s] text[%s] at [%d,%d,%d]: height cy[%d] is invalid -> element is invisible",
+                  txId, txText, txX, txY, txZ, txCY );
+            numProblems++;
+            retVal = False;
+          
+            if( repair ) {
+              /* remove text */
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "DELETING: object [tx] with id[%s] text[%s] at [%d,%d,%d]",
+                  txId, txText, txX, txY, txZ );
+              /* -- -- */
+              NodeOp.removeChild( txlist, tx ) ;
+              txSize--;
+              i--;
+            }
+          }
+        } else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "text check: tx[%d] not found", i );
+        }
+      }
+    }
+  }
+
+  if( numProblems ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "text check: %d problematic entries", numProblems );
+    return False;
+  }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "text check: %d problematic enries", numProblems );
+  return retVal;
+}
+
+
 /* check if every connector with a tknr of 10 and above has a counterpart */
 static Boolean connectorCheck( iOAnalyse inst, Boolean repair ) {
   iOAnalyseData data = Data(inst);
@@ -4552,11 +4822,12 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
         if( stNode ) {
           const char* bka = wRoute.getbka( stNode );
           const char* bkb = wRoute.getbkb( stNode );
+          const char* bkc = wRoute.getbkc( stNode );
           Boolean dir = wRoute.isdir(stNode);
           Boolean lcdir = wRoute.islcdir(stNode);
 
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "routeCheck: st[%d] [%s] bka[%s] bkb[%s] dir[%d] lcdir[%d]",
-              i, wRoute.getid(stNode), bka, bkb, dir, lcdir );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "routeCheck: st[%d] [%s] bka[%s] bkb[%s] bkc[%s] dir[%d] lcdir[%d]",
+              i, wRoute.getid(stNode), bka, bkb, bkc, dir, lcdir );
 
           iOList delList = ListOp.inst();
           iONode swCmd = wRoute.getswcmd( stNode );
@@ -4607,6 +4878,7 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
             iIBlockBase blockA = ModelOp.getBlock( data->model, bka );
             iIBlockBase blockB = ModelOp.getBlock( data->model, bkb );
 
+            /* check starting block */
             if( blockA == NULL ) {
               if( StrOp.len( bka ) == 0 ) {
                 TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: routeCheck: [%s] start block not defined",
@@ -4618,6 +4890,7 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
               numProblems++;
             }
 
+            /* check destination block */
             if( blockB == NULL ) {
               if( StrOp.len( bkb ) == 0 ) {
                 TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: routeCheck: [%s] destination block not defined",
@@ -4627,6 +4900,24 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
                     wRoute.getid(stNode), bkb );
               }
               numProblems++;
+            }
+
+            /* check crossing blocks */
+            if( bkc != NULL && StrOp.len( bkc ) > 0 ) {
+              iOStrTok tok = StrTokOp.inst( bkc, ',' );
+              while( StrTokOp.hasMoreTokens(tok) ) {
+                const char* bk = StrTokOp.nextToken( tok );
+                iIBlockBase blockC = ModelOp.getBlock( data->model, bk );
+                if( blockC != NULL ) {
+                    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "routeCheck: [%s] crossing block [%s]",
+                        wRoute.getid(stNode), bk );
+                }else {
+                  TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: routeCheck: [%s] crossing blocks[%s] invalid/non existant block [%s]",
+                      wRoute.getid(stNode), bkc, bk);
+                  numProblems++;
+                }
+              }
+              StrTokOp.base.del(tok);
             }
 
             /* "dir" is "from-to" or "both directions" */
@@ -4726,12 +5017,34 @@ static Boolean _checkExtended(iOAnalyse inst) {
 
   /* checks that don't change anything are always allowed */
 
-  /* basic checks that are not choosable by user */
+
+  /* basic checks that are not choosable by user (always on) */
 
   /* check if every connector with a tknr of 10 and above has a counterpart */
   TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Connector test: in progress..." );
   res = connectorCheck( inst, False );
   TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Connector test: %s problems detected", res?"no":"some" );
+
+  {
+    /* check if every track element uses only valid routeids */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid test: in progress..." );
+    int modifications =0;
+
+    modifications += invalidRouteidsCheck( wPlan.gettklist(data->plan), wPlan.getstlist(data->plan), False );
+    modifications += invalidRouteidsCheck( wPlan.getswlist(data->plan), wPlan.getstlist(data->plan), False );
+    modifications += invalidRouteidsCheck( wPlan.getsglist(data->plan), wPlan.getstlist(data->plan), False );
+    modifications += invalidRouteidsCheck( wPlan.getfblist(data->plan), wPlan.getstlist(data->plan), False );
+
+    if( modifications > 0 )
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid test: %d invalid entries detected", modifications );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid test: %s problems detected", (modifications == 0)?"no":"some" );
+  }
+
+  /* check if all text elements have valid settings */
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Text test: in progress..." );
+  res = textCheck( inst, False );
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Text test: %s problems detected", res?"no":"some" );
+
 
   /* checks choosable by user (default is on) */
 
@@ -4803,6 +5116,51 @@ static Boolean _cleanExtended(iOAnalyse inst) {
       data->blockCheck,               data->blockCheckClean,
       data->routeCheck,               data->routeCheckClean,
       data->zlevelCheck,              data->zlevelCheckClean );
+
+  /* 1. cleanup jobs without the requirement of an option variable */
+
+  if( automode || isPowerOn ) {
+    requirements = False;
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Cleaning/repairing skipped because...");
+    /* explain why */
+    if( automode )
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "... automode is on. Switch off to use cleaning/repairing.");
+    if( isPowerOn )
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "... track power is on. Switch off to use cleaning/repairing.");
+  }
+  else {
+
+    /* clean invalid routeids */
+    /* ...only if we do NOT have a modular layout (not yet supported) */
+    iONode modplan = ModelOp.getModPlan( data->model );
+    if( modplan == NULL ) {
+      /* no module plan */
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid clean: in progress..." );
+      int modifications =0;
+
+      modifications += invalidRouteidsCheck( wPlan.gettklist(data->plan), wPlan.getstlist(data->plan), True );
+      modifications += invalidRouteidsCheck( wPlan.getswlist(data->plan), wPlan.getstlist(data->plan), True );
+      modifications += invalidRouteidsCheck( wPlan.getsglist(data->plan), wPlan.getstlist(data->plan), True );
+      modifications += invalidRouteidsCheck( wPlan.getfblist(data->plan), wPlan.getstlist(data->plan), True );
+
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid clean: %d invalid entries cleaned", modifications );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid clean: %s entries modified", (modifications == 0)?"no":"some" );
+      if( modifications > 0 )
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid clean: skipped for modular layouts" );
+    }
+
+    /* delete all text elements with invalid settings */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Text clean: in progress..." );
+    res = textCheck( inst, True );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Text clean: %s items deleted", res?"no":"some" );
+    if( res )
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
+
+  }
+
 
   /* any clean/repair options set ? */
   if( data->blockFeedbackActionCheckClean ||
@@ -4897,7 +5255,7 @@ static Boolean _cleanExtended(iOAnalyse inst) {
     }
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "No clean/repair options enabled." );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "No optional clean/repair options selected." );
   }
 
   TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. END" );
@@ -4943,13 +5301,33 @@ static int _cleanupRoutes(iOAnalyse inst) {
   return( modifications );
 }
 
-/* remove autogen- routeids in tk|sw|sg|fb-list */
-static int _cleanupRouteids( iONode tracklist ) {
+/* check if "id" is member of stlist */
+static Boolean isValidRoute( iONode stlist, const char* id ) {
+  if( stlist == NULL || id == NULL || StrOp.len( id ) == 0 )
+    return False;
+  int childcnt = NodeOp.getChildCnt( stlist );
+  int i;
+
+  for( i = 0 ; i < childcnt ; i++ ) {
+    iONode child = NodeOp.getChild( stlist, i );
+
+    if( StrOp.equals( wItem.getid( child ), id )) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidRoute route [%s] found", id );
+      return True;
+    }
+  }
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidRoute route [%s] NOT found", id );
+  return False;
+}
+
+/* check for invalid routeids in tk|sw|sg|fb-list */
+static int invalidRouteidsCheck( iONode tracklist, iONode stlist, Boolean repair ) {
   int modifications = 0;
   int numModifiedTracks = 0;
   int trackListSize = 0;
+  int checkedTotal = 0;
 
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__fCC: Checking [%08.8X]", tracklist );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "invalidRouteidsCheck: Checking [%08.8X]", tracklist );
   if( tracklist != NULL ) {
     trackListSize = NodeOp.getChildCnt( tracklist );
   }
@@ -4960,7 +5338,77 @@ static int _cleanupRouteids( iONode tracklist ) {
     int i = 0;
     Boolean thisTrackChanged ;
 
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupRouteids: Checking %d %s nodes", trackListSize, listType );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "invalidRouteidsCheck: Checking %d %s nodes", trackListSize, listType );
+    for( i = trackListSize - 1 ; i >= 0 ; i-- ) {
+      tracknode = NodeOp.getChild(tracklist, i);
+      if( tracknode ) {
+        thisTrackChanged = False;
+        char* prevrouteids = StrOp.dup(wItem.getrouteids(tracknode));
+        char* userrouteids = StrOp.dup("");
+
+        if( StrOp.len(prevrouteids) > 0 ) {
+          iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
+          while( StrTokOp.hasMoreTokens( tok ) ) {
+            const char* token = StrTokOp.nextToken( tok );
+            if( StrOp.len(token) > 0 ) {
+              checkedTotal++;
+              /* check if it is valid */
+              if( isValidRoute( stlist, token ) ) {
+                if( repair ) {
+                  /* valid route so append to new list */
+                  if( StrOp.len(userrouteids) > 0 ) {
+                    userrouteids = StrOp.cat( userrouteids, ",");
+                  }
+                  userrouteids = StrOp.cat( userrouteids, token );
+                }
+              }else {
+                /* invalid routeid skipped */
+                thisTrackChanged = True;
+                modifications++;
+              }
+            }
+          }
+          StrTokOp.base.del(tok);
+
+          if( repair && thisTrackChanged ) {
+            /* only set routeIDs if they are really different */
+            if( ! StrOp.equals( prevrouteids, userrouteids ) )
+              wItem.setrouteids( tracknode, userrouteids );
+          }
+        }
+        StrOp.free(userrouteids);
+        StrOp.free(prevrouteids);
+        if( thisTrackChanged ) {
+          numModifiedTracks++;
+        }
+      }
+    }
+    if( ( modifications > 0 ) || repair ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid routeids in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedTracks, trackListSize );
+    }
+  }
+  return(modifications);
+}
+
+/* remove autogen- routeids in tk|sw|sg|fb-list */
+static int _cleanupAutogenRouteids( iONode tracklist ) {
+  int modifications = 0;
+  int numModifiedTracks = 0;
+  int trackListSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupAutogenRouteids: Checking [%08.8X]", tracklist );
+  if( tracklist != NULL ) {
+    trackListSize = NodeOp.getChildCnt( tracklist );
+  }
+
+  if( trackListSize > 0 ) {
+    iONode tracknode;
+    const char* listType = NodeOp.getName( NodeOp.getChild(tracklist, 0));
+    int i = 0;
+    Boolean thisTrackChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupAutogenRouteids: Checking %d %s nodes", trackListSize, listType );
     for( i = trackListSize - 1 ; i >= 0 ; i-- ) {
       tracknode = NodeOp.getChild(tracklist, i);
       if( tracknode ) {
@@ -5241,7 +5689,11 @@ static int _cleanupSelTabsFbEvtBasic( iONode seltablist ) {
 static int _cleanupBlocksFbEvtAutogen( iONode blocklist ) {
   int modifications = 0;
   int numModifiedBlocks = 0;
-  int blockListSize = NodeOp.getChildCnt( blocklist );
+  int blockListSize = 0;
+
+  if( blocklist != NULL ) {
+    blockListSize = NodeOp.getChildCnt( blocklist );
+  }
 
   if( blockListSize > 0 ) {
     iONode blocknode;
@@ -5301,7 +5753,11 @@ static int _cleanupBlocksFbEvtAutogen( iONode blocklist ) {
 static int _cleanupBlocksSignal( iONode blocklist ) {
   int modifications = 0;
   int numModifiedBlocks = 0;
-  int blockListSize = NodeOp.getChildCnt( blocklist );
+  int blockListSize = 0;
+
+  if( blocklist != NULL ) {
+    blockListSize = NodeOp.getChildCnt( blocklist );
+  }
 
   if( blockListSize > 0 ) {
     iONode blocknode;
@@ -5367,10 +5823,10 @@ static int _cleanup(iOAnalyse inst) {
   modifications += _cleanupBlocksFbEvtAutogen( wPlan.getbklist(data->plan) );
 
   if( data->cleanRouteId ) {
-    modifications += _cleanupRouteids( wPlan.gettklist(data->plan) );
-    modifications += _cleanupRouteids( wPlan.getswlist(data->plan) );
-    modifications += _cleanupRouteids( wPlan.getsglist(data->plan) );
-    modifications += _cleanupRouteids( wPlan.getfblist(data->plan) );
+    modifications += _cleanupAutogenRouteids( wPlan.gettklist(data->plan) );
+    modifications += _cleanupAutogenRouteids( wPlan.getswlist(data->plan) );
+    modifications += _cleanupAutogenRouteids( wPlan.getsglist(data->plan) );
+    modifications += _cleanupAutogenRouteids( wPlan.getfblist(data->plan) );
   }
 
   if( data->resetBlockId ) {
