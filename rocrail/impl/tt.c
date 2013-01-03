@@ -2182,6 +2182,7 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident
     if( iid != NULL )
       wTurntable.setiid( cmd, iid );
 
+    wLoc.setprot( cmd, wTurntable.getprot( data->props ) );
     wLoc.setaddr( cmd, wTurntable.getaddr( data->props ) );
 
     /* Using the Loc wrapper for the other parameters: */
