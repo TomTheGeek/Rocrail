@@ -82,12 +82,14 @@ void statusCheckRoute( iILcDriverInt inst ) {
       }
 
       if(semaphore) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "give the semaphore some time to get in position..." );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+            "give the semaphore %dms time to get in position...", data->semaphoreWait );
         /* give the semaphore some time to get in position... */
         ThreadOp.sleep(data->semaphoreWait);
       }
       else if(data->signalWait > 0){
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "give the signal some time to set another aspect..." );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+            "give the signal %dms time to set another aspect...", data->signalWait );
         ThreadOp.sleep(data->signalWait);
       }
 

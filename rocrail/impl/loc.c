@@ -1380,7 +1380,7 @@ static void __runner( void* threadinst ) {
           ThreadOp.sleep( timer );
         }
         if( event != -1 ) {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "inform the driver of event %d", event );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "inform the driver of event=%d nrruns=%d", event, data->nrruns );
         }
         data->driver->drive( data->driver, emitter, event );
       }
@@ -1602,7 +1602,9 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
     MsgOp.setTimer( msg, timer );
     MsgOp.setUsrData( msg, NULL, forcewait ? 1000:0 );
     ThreadOp.post( data->runner, (obj)msg );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event posted");
     __funEvent(inst, blockid, evt, timer);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fun events checked");
   }
 }
 
