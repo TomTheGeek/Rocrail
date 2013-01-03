@@ -2080,7 +2080,10 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   const char* cmd   = wBlock.getcmd( nodeA );
 
   if( cmd != NULL && StrOp.equals(cmd, wBlock.resetwc) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset wheel count in [%s] from %d to 0", data->id, data->wheelcount);
     data->wheelcount = 0;
+    NodeOp.base.del(nodeA);
+    return True;
   }
 
   if( NodeOp.findAttr(nodeA, wAction.block_acceptident) != NULL ) {
@@ -2139,6 +2142,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   /* Broadcast to clients. */
   wBlock.setid(nodeA, data->id );
   wBlock.setacceptident(nodeA, data->acceptident );
+  wBlock.setstate( nodeA, wBlock.getstate( data->props ) );
   AppOp.broadcastEvent( nodeA );
 
   return True;
