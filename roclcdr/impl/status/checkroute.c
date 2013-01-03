@@ -81,24 +81,27 @@ void statusCheckRoute( iILcDriverInt inst ) {
           wLoc.setV_hint( cmd, wLoc.mid );
       }
 
-      if(semaphore) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-            "give the semaphore %dms time to get in position...", data->semaphoreWait );
-        /* give the semaphore some time to get in position... */
-        ThreadOp.sleep(data->semaphoreWait);
-      }
-      else if(data->signalWait > 0){
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-            "give the signal %dms time to set another aspect...", data->signalWait );
-        ThreadOp.sleep(data->signalWait);
-      }
+      if( data->loc->getV( data->loc ) == 0 ) {
+        /* delay only if the loc is not running */
+        if(semaphore) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "give the semaphore %dms time to get in position...", data->semaphoreWait );
+          /* give the semaphore some time to get in position... */
+          ThreadOp.sleep(data->semaphoreWait);
+        }
+        else if(data->signalWait > 0){
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "give the signal %dms time to set another aspect...", data->signalWait );
+          ThreadOp.sleep(data->signalWait);
+        }
 
-      /* wait for departdelay if set for the current block*/
-      departdelay = data->curBlock->getDepartDelay( data->curBlock ) ; 
-      if( departdelay > 0 ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "delay departure for departdelay [%d] sec of block [%s].",
-                       departdelay, data->loc->getCurBlock( data->loc) );
-        ThreadOp.sleep(departdelay * 1000);
+        /* wait for departdelay if set for the current block*/
+        departdelay = data->curBlock->getDepartDelay( data->curBlock ) ;
+        if( departdelay > 0 ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "delay departure for departdelay [%d] sec of block [%s].",
+                         departdelay, data->loc->getCurBlock( data->loc) );
+          ThreadOp.sleep(departdelay * 1000);
+        }
       }
 
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
