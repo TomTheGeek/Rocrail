@@ -2608,13 +2608,14 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if( updateEnterside ) {
       // reset update flag
       wBlock.setupdateenterside(node, False);
+      locoid = wBlock.getlocid( m_Props );
     }
     else {
       wBlock.setlocid( m_Props, locoid );
     }
 
     TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "Block=%s locoID=%s State=%s updateEnterside=%d",
-        wBlock.getid( node ), wBlock.getlocid( m_Props ), state, updateEnterside );
+        wBlock.getid( node ), locoid, state, updateEnterside );
 
 
     iONode planpanelIni = wGui.getplanpanel(wxGetApp().getIni());
