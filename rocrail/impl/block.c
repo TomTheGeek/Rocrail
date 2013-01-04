@@ -2452,8 +2452,18 @@ static iOBlock _inst( iONode props ) {
   data->locId = NodeOp.getStr( props, "locid", NULL );
   data->minbklc = wCtrl.getminbklc( AppOp.getIniNode( wCtrl.name() ) );
   data->fbEvents = MapOp.inst();
-  data->timer = wBlock.getevttimer( props );
-  data->timer2 = wBlock.getevttimer2( data->props );
+
+  data->timer  = wBlock.getevttimer( props );
+  if( data->timer > 2500 ) {
+    data->timer = 2500;
+    wBlock.setevttimer( props, 2500 );
+  }
+  data->timer2 = wBlock.getevttimer2( props );
+  if( data->timer2 > 2500 ) {
+    data->timer2 = 2500;
+    wBlock.setevttimer2( props, 2500 );
+  }
+
   data->forceblocktimer = wBlock.isforceblocktimer( props );
   data->id = wBlock.getid( props );
 
