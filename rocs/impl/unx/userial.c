@@ -145,13 +145,13 @@ Boolean rocs_serial_open( iOSerial inst ) {
   int r,w;
 
   /* open read/write, no controlling terminal */
-  if( StrOp.equals( "com1", o->device ) )
+  if( StrOp.equalsi( "com1", o->device ) )
     device = "/dev/ttyS0";
-  else if( StrOp.equals( "com2", o->device ) )
+  else if( StrOp.equalsi( "com2", o->device ) )
     device = "/dev/ttyS1";
-  else if( StrOp.equals( "com3", o->device ) )
+  else if( StrOp.equalsi( "com3", o->device ) )
     device = "/dev/ttyS2";
-  else if( StrOp.equals( "com4", o->device ) )
+  else if( StrOp.equalsi( "com4", o->device ) )
     device = "/dev/ttyS3";
 
   /*
