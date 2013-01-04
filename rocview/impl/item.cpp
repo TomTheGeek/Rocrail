@@ -2663,16 +2663,21 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       }
 
       // Check block enterside
-      if( updateEnterside && StrOp.len(locoid) > 0 ) {
-        iONode loc = wxGetApp().getFrame()->findLoc( locoid );
-        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "locoid=[%s][%s] blockid=[%s]",
-            locoid, wBlock.getlocid( m_Props ), wLoc.getblockid(loc) );
-        if( StrOp.equals( wBlock.getid( m_Props ), wLoc.getblockid(loc) ) || StrOp.equals( wBlock.getid( m_Props ), wLoc.getdestblockid(loc) ) ) {
-          if( (occupied == 1 || occupied == 3) ) {
-            // only update if the attribute is set
-            m_RotateSym = wLoc.isblockenterside( loc);
-            TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "locoid=[%s] enterside=[%d]", locoid, m_RotateSym );
+      if( updateEnterside || oncreate ) {
+        if( StrOp.len(locoid) > 0 ) {
+          iONode loc = wxGetApp().getFrame()->findLoc( locoid );
+          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "locoid=[%s][%s] blockid=[%s]",
+              locoid, wBlock.getlocid( m_Props ), wLoc.getblockid(loc) );
+          if( StrOp.equals( wBlock.getid( m_Props ), wLoc.getblockid(loc) ) || StrOp.equals( wBlock.getid( m_Props ), wLoc.getdestblockid(loc) ) ) {
+            if( (occupied == 1 || occupied == 3) ) {
+              // only update if the attribute is set
+              m_RotateSym = wLoc.isblockenterside( loc);
+              TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "locoid=[%s] enterside=[%d]", locoid, m_RotateSym );
+            }
           }
+        }
+        else {
+          TraceOp.trc( "item", TRCLEVEL_WARNING, __LINE__, 9999, "not possible to process enterside; locoid not set" );
         }
       }
 
