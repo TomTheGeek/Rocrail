@@ -2636,8 +2636,10 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
       wBlock.setreserved( m_Props, isReserved );
 
-      if( wBlock.issmallsymbol(m_Props) )
+      if( wBlock.issmallsymbol(m_Props) && StrOp.len(locoid) > 0 )
         l_locidStr = StrOp.fmt( "%s", locoid );
+      else if( wBlock.issmallsymbol(m_Props) )
+        l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
       else
         l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locoid );
 
