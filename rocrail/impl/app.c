@@ -620,6 +620,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   Boolean   version   = CmdLnOp.hasKey( arg, wCmdline.version );
   Boolean   service   = CmdLnOp.hasKey( arg, wCmdline.service );
   Boolean       lcd   = CmdLnOp.hasKey( arg, wCmdline.lcd );
+  Boolean nodevcheck  = CmdLnOp.hasKey( arg, wCmdline.nodevcheck );
 
 
   Boolean automode    = CmdLnOp.hasKey( arg, wCmdline.automode );
@@ -707,6 +708,10 @@ static int _Main( iOApp inst, int argc, char** argv ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Invalid ini file! [%s]", nf?nf:wRocRail.getfile(NULL) );
       return -1;
     }
+  }
+
+  if( nodevcheck ) {
+    wRocRail.setnodevcheck(data->ini, nodevcheck );
   }
 
   if( FileOp.exist(wRocRail.getkeypath(data->ini)) ) {

@@ -20464,4 +20464,7 @@
   <Msg id="restrictedeventtimers">
     <en txt="Restricted event timers"/>
   </Msg>
+  <Msg id="nodevcheck">
+    <en txt="No device check at startup"/>
+  </Msg>
 </Messages>

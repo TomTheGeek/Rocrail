@@ -833,7 +833,8 @@ static void __callback( obj inst, iONode nodeA ) {
     else if( StrOp.equals( wSysCmd.getini, wSysCmd.getcmd( nodeA ) ) ) {
       iONode ini = (iONode)NodeOp.base.clone( AppOp.getNewIni() );
       if( data->devlist == NULL ) {
-        data->devlist = DevicesOp.getDevicesStr();
+        if( !wRocRail.isnodevcheck(ini) )
+          data->devlist = DevicesOp.getDevicesStr();
       }
       iONode devices = wRocRail.getdevices(ini);
       if( devices == NULL ) {
@@ -1452,7 +1453,9 @@ static iOControl _inst( Boolean nocom ) {
 
     data->diMap = MapOp.inst();
 
-    data->devlist = DevicesOp.getDevicesStr();
+    if( !wRocRail.isnodevcheck(ini) )
+      data->devlist = DevicesOp.getDevicesStr();
+
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "devices: \"%s\"", data->devlist );
 
     if( !nocom ) {

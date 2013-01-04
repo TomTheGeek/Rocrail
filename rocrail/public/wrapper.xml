@@ -50,6 +50,7 @@
     <const name="run" vt="string" val="-run" defval="false" remark="Run all locos."/>
     <const name="resume" vt="string" val="-resume" defval="false" remark="Run all prev. locos."/>
     <const name="automode" vt="string" val="-auto" defval="flase" remark="Power and automode on."/>
+    <const name="nodevcheck" vt="string" val="-nodevcheck" defval="flase" remark="Do not check availability of serial devices."/>
   </Cmdline>
 
   <ConCmd title="Console commands:" createwrapper="true" remark="Commands are listed in column --Default--.">
@@ -217,6 +218,7 @@
     <var name="donkey" vt="string" defval=""/>
     <var name="doneml" vt="string" defval=""/>
     <var name="resetspfx" vt="bool" defval="false" remark="Reset all loco functions and speed at startup."/>
+    <var name="nodevcheck" vt="bool" defval="false" remark="Do not check availability of serial devices."/>
 
     <r2rnet wrappername="R2RnetIni" cardinality="1" remark="Setup for the R2RNet.">
       <var name="enable" vt="bool" defval="false" remark="Enable R2Rnet."/>
