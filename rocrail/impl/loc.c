@@ -2882,6 +2882,9 @@ static iOLoc _inst( iONode props ) {
 
   ModelOp.addSysEventListener( AppOp.getModel(), (obj)loc );
 
+  if( wLoc.getpriority( data->props ) < 1 )
+    wLoc.setpriority( data->props, 1 );
+
   /*data->driver = (iILcDriverInt)LcDriverOp.inst( loc );*/
   if( wLoc.isshow(data->props) && __loadDriver( loc ) ) {
     data->runner = ThreadOp.inst( _getId(loc), &__runner, loc );
