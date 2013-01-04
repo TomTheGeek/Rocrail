@@ -6209,3 +6209,9 @@ msgstr ""
 msgid "Reset wheel counter"
 msgstr ""
 
+#. 
+# id="restrictedeventtimers"
+#, c-format
+msgid "Restricted event timers"
+msgstr ""
+

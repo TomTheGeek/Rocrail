@@ -734,6 +734,7 @@
       <var name="closenoevents" vt="bool" defval="false" remark="Close block if no event is defined."/>
       <var name="selectshortestblock" vt="bool" defval="false" remark="Select shortest block in case block and train length are set."/>
       <var name="restoreschedule" vt="bool" defval="true"/>
+      <var name="restrictedeventtimers" vt="bool" defval="true"/>
     </ctrl>
     <anaopt remark="Analyser options." wrappername="AnaOpt">
       <var name="setRouteId"   vt="bool" defval="true" remark="set routeid for all automatic detected routes"/>

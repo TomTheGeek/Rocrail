@@ -1377,7 +1377,7 @@ static void __runner( void* threadinst ) {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms", timer );
           }
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "timed event[%d] %d ms", event, timer );
-          if( timer > 2500 ) {
+          if( timer > 2500  && wCtrl.isrestrictedeventtimers( AppOp.getIniNode( wCtrl.name() ) ) ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "reset timer of %d to %dms", timer, 2500 );
             timer = 2500;
           }

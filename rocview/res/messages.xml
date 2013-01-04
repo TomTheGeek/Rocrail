@@ -20461,4 +20461,7 @@
   <Msg id="resetwc">
     <en txt="Reset wheel counter"/>
   </Msg>
+  <Msg id="restrictedeventtimers">
+    <en txt="Restricted event timers"/>
+  </Msg>
 </Messages>
