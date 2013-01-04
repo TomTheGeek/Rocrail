@@ -141,8 +141,12 @@ void statusInitDest( iILcDriverInt inst ) {
         data->pause = data->curBlock->getWait(data->curBlock, data->loc, False, &ioppwait );
         if( data->pause != -1 )
           data->pause = data->pause * wLoc.getpriority( data->loc->base.properties( data->loc ) );
-      } else
+      }
+      else
         data->pause = wLoc.getpriority( data->loc->base.properties( data->loc ) );
+
+      if( data->pause < 1 )
+        data->pause = 1;
 
       if( data->schedule != NULL ) {
         data->scheduleIdx--;
