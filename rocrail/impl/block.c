@@ -2456,12 +2456,10 @@ static iOBlock _inst( iONode props ) {
   data->timer  = wBlock.getevttimer( props );
   if( data->timer > 2500 && wCtrl.isrestrictedeventtimers( AppOp.getIniNode( wCtrl.name() ) ) ) {
     data->timer = 2500;
-    wBlock.setevttimer( props, 2500 );
   }
   data->timer2 = wBlock.getevttimer2( props );
   if( data->timer2 > 2500 && wCtrl.isrestrictedeventtimers( AppOp.getIniNode( wCtrl.name() ) ) ) {
     data->timer2 = 2500;
-    wBlock.setevttimer2( props, 2500 );
   }
 
   data->forceblocktimer = wBlock.isforceblocktimer( props );
