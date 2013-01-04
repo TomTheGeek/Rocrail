@@ -4369,6 +4369,10 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
     healthy = False;
   }
 
+  if( !wCtrl.isrestrictedeventtimers( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: Restricted event timers not enabled." );
+  }
+
   /* checking ID's */
   for( i = 0; i < dbs; i++ ) {
     iOMap idMap = MapOp.inst();
