@@ -4365,8 +4365,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
   TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checking plan health..." );
 
   if( !wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: Block side routing is not enabled; The classic method is deprecated." );
-    healthy = False;
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: Block side routing is not enabled; The classic method is deprecated." );
   }
 
   if( !wCtrl.isrestrictedeventtimers( wRocRail.getctrl( AppOp.getIni() ) ) ) {
