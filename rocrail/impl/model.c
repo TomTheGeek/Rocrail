@@ -3609,13 +3609,23 @@ static Boolean __isInLocation( iOModel inst, const char* entryLocation, const ch
 
 static iOLocation _getBlockLocation(iOModel inst, const char* blockid) {
   iOModelData data = Data(inst);
-  iOLocation location = (iOLocation)MapOp.first(data->locationMap);
+  iOLocation location = NULL;
+
+  /* Lock the semaphore: */
+  MutexOp.wait( data->locationMux );
+
+  location = (iOLocation)MapOp.first(data->locationMap);
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "try to find location for block [%s]", blockid);
   while(location != NULL) {
-    if( LocationOp.hasBlock(location, blockid) )
+    if( LocationOp.hasBlock(location, blockid) ) {
+      MutexOp.post( data->locationMux );
       return location;
+    }
     location = (iOLocation)MapOp.next(data->locationMap);
   }
+
+  MutexOp.post( data->locationMux );
+
   return NULL;
 }
 
@@ -5021,6 +5031,7 @@ static iOModel _inst( const char* fileName ) {
   /* occupancy map */
   data->occMap      = MapOp.inst();
   data->occMux      = MutexOp.inst( NULL, True );
+  data->locationMux = MutexOp.inst( NULL, True );
 
   data->check2in   = wCtrl.ischeck2in( wRocRail.getctrl( AppOp.getIni(  ) ) );
   data->enableswfb = wCtrl.isenableswfb( wRocRail.getctrl( AppOp.getIni(  ) ) );

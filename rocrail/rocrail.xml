@@ -1189,7 +1189,8 @@
       <var name="pendingstartall" vt="Boolean"/>
       <var name="muxSysEvent" vt="iOMutex"/>
       <var name="timedoff" vt="iOThread"/>
-    </data>
+      <var name="locationMux" vt="iOMutex"/>
+      </data>
     <struct name="LevelList" typedef="*iOLevelList">
       <var name="list" vt="iOList"/>
       <var name="level" vt="int"/>
