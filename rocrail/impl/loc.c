@@ -1288,6 +1288,8 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
 }
 
 
+#define RUNNERTICK 100
+
 static iOMsg __getQueueMsg( iOLocData data, iOList list, iOMsg msg) {
   iOMsg qmsg = NULL;
   int size = 0;
@@ -1323,7 +1325,7 @@ static iOMsg __getQueueMsg( iOLocData data, iOList list, iOMsg msg) {
 
       MsgOp.setTimer( msg, timer );
 
-      if( timer < 100 ) {
+      if( timer < RUNNERTICK ) {
         /* blind for less then 100 ms */
         ThreadOp.sleep(timer);
         return msg;
@@ -1346,7 +1348,7 @@ static iOMsg __getQueueMsg( iOLocData data, iOList list, iOMsg msg) {
   size = ListOp.size(list);
   for( i = 0; i < size; i++ ) {
     iOMsg m = (iOMsg)ListOp.get(list, i);
-    MsgOp.setTimer( m, MsgOp.getTimer( m ) - 100 );
+    MsgOp.setTimer( m, MsgOp.getTimer( m ) - RUNNERTICK );
   }
 
   return qmsg;
@@ -1521,7 +1523,7 @@ static void __runner( void* threadinst ) {
     }
 
 
-    ThreadOp.sleep( 100 );
+    ThreadOp.sleep( RUNNERTICK );
     tick++;
   } while( data->run && !ThreadOp.isQuit(th) );
 
