@@ -1838,11 +1838,13 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
     if( StrOp.equals( wAutoCmd.on, cmdVal ) || StrOp.equals( wAutoCmd.off, cmdVal ) ) {
       Boolean autoMode = StrOp.equals( wAutoCmd.on, cmdVal );
 
+      /*
       if( autoMode && !ModelOp.isHealthy(inst) ) {
         autoMode = False;
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "plan is not healthy: auto mode not possible" );
-        wAutoCmd.setcmd( cmd, wAutoCmd.off );
+        wAutoCmd.setcmd( cmd, autoMode?wAutoCmd.on:wAutoCmd.off );
       }
+      */
 
       if( !autoMode && data->autoMode ) {
         __stopAllLocs( inst );

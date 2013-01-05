@@ -145,8 +145,8 @@ void statusInitDest( iILcDriverInt inst ) {
       else
         data->pause = wLoc.getpriority( data->loc->base.properties( data->loc ) );
 
-      if( data->pause < 1 )
-        data->pause = 1;
+      if( data->pause < 100 )
+        data->pause = 100;
 
       if( data->schedule != NULL ) {
         data->scheduleIdx--;
