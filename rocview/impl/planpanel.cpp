@@ -1231,7 +1231,14 @@ void PlanPanel::addItemAttr( iONode node ) {
         wItem.setid( node, dlg->GetValue().mb_str(wxConvUTF8) );
         char key[256];
         itemKey( node, key, NULL );
-        item = (Symbol*)m_ChildTable->Get( wxString(key,wxConvUTF8) );
+
+        int pagecnt = wxGetApp().getFrame()->getNotebook()->GetPageCount();
+        for( int i = 0; i < pagecnt; i++ ) {
+          PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
+          item = (Symbol*)p->m_ChildTable->Get( wxString(key,wxConvUTF8) );
+          if( item != NULL )
+            break;
+        }
       }
       else {
         // TODO: cleanup node!
