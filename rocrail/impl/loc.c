@@ -1287,10 +1287,76 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
   return fncmd;
 }
 
+
+static iOMsg __getQueueMsg( iOLocData data, iOList list, iOMsg msg) {
+  iOMsg qmsg = NULL;
+  int size = 0;
+  int i = 0;
+
+  if( msg != NULL ) {
+    if( MsgOp.getTimer( msg ) == 0 )
+      return msg;
+    else {
+      int event = MsgOp.getEvent( msg );
+      int type  = MsgOp.getUsrDataType( msg );
+      int timer = MsgOp.getTimer( msg );
+
+      if( type == 0 && wLoc.getevttimer(data->props) > 0 ) {
+        timer = wLoc.getevttimer(data->props);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms", timer );
+      }
+      else if( event == in_event ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms * %d %%", timer, wLoc.getent2incorr(data->props) );
+        timer = timer * wLoc.getent2incorr(data->props) / 100;
+        if( timer < 1 )
+          timer = 1;
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms", timer );
+      }
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "timed event[%d] %d ms", event, timer );
+
+      if( timer > 2500  && wCtrl.isrestrictedeventtimers( AppOp.getIniNode( wCtrl.name() ) ) ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "reset timer of %d to %dms", timer, 2500 );
+        timer = 2500;
+      }
+
+      MsgOp.setTimer( msg, timer );
+
+      if( timer < 100 ) {
+        /* blind for less then 100 ms */
+        ThreadOp.sleep(timer);
+        return msg;
+      }
+
+      ListOp.add(list, (obj)msg);
+    }
+  }
+
+  size = ListOp.size(list);
+  for( i = 0; i < size; i++ ) {
+    iOMsg m = (iOMsg)ListOp.get(list, i);
+    if( MsgOp.getTimer( m ) <= 0 ) {
+      ListOp.remove( list, i);
+      qmsg = m;
+      break;
+    }
+  }
+
+  size = ListOp.size(list);
+  for( i = 0; i < size; i++ ) {
+    iOMsg m = (iOMsg)ListOp.get(list, i);
+    MsgOp.setTimer( m, MsgOp.getTimer( m ) - 100 );
+  }
+
+  return qmsg;
+}
+
 static void __runner( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOLoc loc = (iOLoc)ThreadOp.getParm( th );
   iOLocData data = Data(loc);
+  iOList queueList = ListOp.inst();
   int   tick = 0;
   Boolean cnfgsend = False;
   Boolean loccnfg = wCtrl.isloccnfg( AppOp.getIniNode( wCtrl.name() ) );
@@ -1311,7 +1377,7 @@ static void __runner( void* threadinst ) {
   }
 
   do {
-    iOMsg msg = (iOMsg)ThreadOp.getPost( th );
+    iOMsg msg = __getQueueMsg(data, queueList, (iOMsg)ThreadOp.getPost( th ) );
     obj    emitter = NULL;
     iONode fncmd   = NULL;
     iONode broadcast = NULL;
@@ -1328,7 +1394,6 @@ static void __runner( void* threadinst ) {
     if( msg != NULL ) {
       emitter = MsgOp.getSender( msg );
       event   = MsgOp.getEvent( msg );
-      timer   = MsgOp.getTimer( msg );
       type    = MsgOp.getUsrDataType( msg );
       udata   = MsgOp.getUsrData(msg);
       msg->base.del( msg );
@@ -1340,12 +1405,7 @@ static void __runner( void* threadinst ) {
         iONode  cmd     = (iONode)udata;
         Boolean swap    = (type & 0x01 ? True:False);
         Boolean consist = (type & 0x02 ? True:False);
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap event %d ms", timer );
-
-        /* The swap timer. */
-        if( timer > 0 ) {
-          ThreadOp.sleep( timer );
-        }
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap event" );
 
         /* The swap: */
         wLoc.setplacing( data->props, swap );
@@ -1362,27 +1422,6 @@ static void __runner( void* threadinst ) {
         }
       }
       else {
-        if( timer > 0 ) {
-          if( type == 0 && wLoc.getevttimer(data->props) > 0 ) {
-            timer = wLoc.getevttimer(data->props);
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms", timer );
-          }
-          else if( event == in_event ) {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms * %d %%", timer, wLoc.getent2incorr(data->props) );
-            timer = timer * wLoc.getent2incorr(data->props) / 100;
-            if( timer < 1 )
-              timer = 1;
-          }
-          else {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loc evttimer %d ms", timer );
-          }
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "timed event[%d] %d ms", event, timer );
-          if( timer > 2500  && wCtrl.isrestrictedeventtimers( AppOp.getIniNode( wCtrl.name() ) ) ) {
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "reset timer of %d to %dms", timer, 2500 );
-            timer = 2500;
-          }
-          ThreadOp.sleep( timer );
-        }
         if( event != -1 ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "inform the driver of event=%d nrruns=%d", event, data->nrruns );
         }
