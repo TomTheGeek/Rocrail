@@ -1295,6 +1295,14 @@ static iOMsg __getQueueMsg( iOLocData data, iOList list, iOMsg msg) {
   int size = 0;
   int i = 0;
 
+  /* count down timers */
+  size = ListOp.size(list);
+  for( i = 0; i < size; i++ ) {
+    iOMsg m = (iOMsg)ListOp.get(list, i);
+    MsgOp.setTimer( m, MsgOp.getTimer( m ) - RUNNERTICK );
+  }
+
+  /* process the new message */
   if( msg != NULL ) {
     if( MsgOp.getTimer( msg ) == 0 )
       return msg;
@@ -1335,6 +1343,7 @@ static iOMsg __getQueueMsg( iOLocData data, iOList list, iOMsg msg) {
     }
   }
 
+  /* check timers */
   size = ListOp.size(list);
   for( i = 0; i < size; i++ ) {
     iOMsg m = (iOMsg)ListOp.get(list, i);
@@ -1343,12 +1352,6 @@ static iOMsg __getQueueMsg( iOLocData data, iOList list, iOMsg msg) {
       qmsg = m;
       break;
     }
-  }
-
-  size = ListOp.size(list);
-  for( i = 0; i < size; i++ ) {
-    iOMsg m = (iOMsg)ListOp.get(list, i);
-    MsgOp.setTimer( m, MsgOp.getTimer( m ) - RUNNERTICK );
   }
 
   return qmsg;
