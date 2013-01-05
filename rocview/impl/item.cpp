@@ -2676,7 +2676,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
             }
           }
         }
-        else {
+        else if(!oncreate) {
           TraceOp.trc( "item", TRCLEVEL_WARNING, __LINE__, 9999, "not possible to process enterside; locoid not set" );
         }
       }
