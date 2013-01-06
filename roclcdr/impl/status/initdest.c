@@ -143,7 +143,7 @@ void statusInitDest( iILcDriverInt inst ) {
           data->pause = data->pause * wLoc.getpriority( data->loc->base.properties( data->loc ) );
       }
       else
-        data->pause = 100 * wLoc.getpriority( data->loc->base.properties( data->loc ) );
+        data->pause = 10 * wLoc.getpriority( data->loc->base.properties( data->loc ) );
 
       if( data->pause != -1 && data->pause < 100 )
         data->pause = 100;
