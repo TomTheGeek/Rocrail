@@ -2614,8 +2614,9 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       wBlock.setlocid( m_Props, locoid );
     }
 
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "Block=%s locoID=%s State=%s updateEnterside=%d",
-        wBlock.getid( node ), locoid, state, updateEnterside );
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999,
+        "Block=%s locoID=%s State=%s updateEnterside=%d reserved=%d",
+        wBlock.getid( node ), locoid, state, updateEnterside, wBlock.isreserved( node ) );
 
 
     iONode planpanelIni = wGui.getplanpanel(wxGetApp().getIni());

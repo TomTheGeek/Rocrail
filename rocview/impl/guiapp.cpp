@@ -841,7 +841,7 @@ static void rocrailCallback( obj me, iONode node ) {
 
   if( (TraceOp.getLevel(NULL) & TRCLEVEL_DEBUG) == TRCLEVEL_DEBUG ) {
     if( !StrOp.equals( NodeOp.getName(node), wPlan.name()) ) {
-      char* xmlStr = NodeOp.toEscString(node);
+      char* xmlStr = NodeOp.base.toString(node);
       TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback %.240s", xmlStr );
       StrOp.free(xmlStr);
     }
@@ -1089,7 +1089,7 @@ static void rocrailCallback( obj me, iONode node ) {
   /* default */
   else if(wxGetApp().getFrame() != NULL && guiApp->isInit() && guiApp->isModelSet() ){
     const char* nodeName = NodeOp.getName( node );
-    TraceOp.trc( "app", TRCLEVEL_DEBUG, __LINE__, 9999, "rocrailCallback node=%s", nodeName );
+    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback node=%s", nodeName );
 
     iONode model = wxGetApp().getModel();
     bool planItems = true;

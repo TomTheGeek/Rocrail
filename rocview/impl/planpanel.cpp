@@ -1488,7 +1488,7 @@ void PlanPanel::updateItemCmd(wxCommandEvent& event) {
   // Get the copied node from the event object:
   iONode node = (iONode)event.GetClientData();
 
-  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "update ITEM" );
+  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "update ITEM %s", NodeOp.getName(node) );
 
   char key[256];
   char prevkey[256];

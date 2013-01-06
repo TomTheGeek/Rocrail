@@ -1157,6 +1157,7 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
 void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
   // Get copied node:
   iONode node = (iONode)event.GetClientData();
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "update active locos %s", NodeOp.getName(node));
 
   if( StrOp.equals( wFunCmd.name(), NodeOp.getName( node ) ) )
   {
