@@ -349,11 +349,11 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "send short IDs to the throttle" );
     }
     else if( StrOp.equals( cmd, wSysCmd.link ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "link %s TD port %d to %d",
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "link %s TD port %d to %d",
           wSysCmd.getid(node),  wSysCmd.getvalA(node),  wSysCmd.getvalB(node) );
     }
     else if( StrOp.equals( cmd, wSysCmd.ulink ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unlink %s TD port %d",
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "unlink %s TD port %d",
         wSysCmd.getid(node),  wSysCmd.getvalA(node),  wSysCmd.getvalB(node) );
     }
     else {
