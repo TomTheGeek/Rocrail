@@ -1769,7 +1769,7 @@ void LocDialog::CreateControls()
     m_labPriority = new wxStaticText( m_DetailsPanel, wxID_ANY, _("Priority"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer125->Add(m_labPriority, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_Priority = new wxSpinCtrl( m_DetailsPanel, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 1, 100, 1 );
+    m_Priority = new wxSpinCtrl( m_DetailsPanel, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 100, 10 );
     itemFlexGridSizer125->Add(m_Priority, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labSwapTimer = new wxStaticText( m_DetailsPanel, wxID_ANY, _("Swap timer"), wxDefaultPosition, wxDefaultSize, 0 );
