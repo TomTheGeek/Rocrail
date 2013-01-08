@@ -644,7 +644,6 @@ void Symbol::OnPaint(wxPaintEvent& event)
 
       while( routeid != NULL ) {
         if( m_PlanPanel->isRouteLocked(routeid ) ) {
-          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "actroute for %s...", wItem.getid(m_Props));
           actroute = true;
           break;
         }
@@ -659,11 +658,11 @@ void Symbol::OnPaint(wxPaintEvent& event)
       occupied = m_PlanPanel->isBlockOccupied( wItem.getblockid( m_Props ) );
       bool isReserved = m_PlanPanel->isBlockReserved( wItem.getblockid( m_Props ) );
       if( occupied && !isReserved )
-        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s is %s occupied by %s",
-          wItem.getid( m_Props ), occupied? "":"not", wItem.getblockid( m_Props ));
+        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s-%s is %soccupied by block %s",
+          NodeOp.getName(m_Props), wItem.getid( m_Props ), occupied? "":"not ", wItem.getblockid( m_Props ));
       else if( isReserved ) {
-        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s is reserved by %s",
-          wItem.getid( m_Props ), wItem.getblockid( m_Props ));
+        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s-%s is reserved by block %s",
+            NodeOp.getName(m_Props), wItem.getid( m_Props ), wItem.getblockid( m_Props ));
         occupied = false;
       }
     }
@@ -2608,16 +2607,14 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if( updateEnterside ) {
       // reset update flag
       wBlock.setupdateenterside(node, False);
+      // preserve flags
       locoid = wBlock.getlocid( m_Props );
+      wBlock.setreserved( node, wBlock.isreserved( m_Props ) );
+      wBlock.setentering( node, wBlock.isentering( m_Props ) );
     }
     else {
       wBlock.setlocid( m_Props, locoid );
     }
-
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999,
-        "Block=%s locoID=%s State=%s updateEnterside=%d reserved=%d",
-        wBlock.getid( node ), locoid, state, updateEnterside, wBlock.isreserved( node ) );
-
 
     iONode planpanelIni = wGui.getplanpanel(wxGetApp().getIni());
     if( planpanelIni != NULL ) {
@@ -2626,7 +2623,8 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
     Boolean isAcceptIdent = wBlock.isacceptident( node );
     TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999,
-        "blockid=[%s] %sAccepting Ident", wBlock.getid( node ), isAcceptIdent?"":"not ");
+        "Block=%s locoID=%s State=%s updateEnterside=%d reserved=%d AcceptIdent=%d desc=%s",
+        wBlock.getid( node ), locoid, state, updateEnterside, wBlock.isreserved( node ), isAcceptIdent, wBlock.getdesc(node) );
 
     wBlock.setstate( m_Props, state );
 
@@ -2667,7 +2665,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       if( updateEnterside || oncreate ) {
         if( StrOp.len(locoid) > 0 ) {
           iONode loc = wxGetApp().getFrame()->findLoc( locoid );
-          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "locoid=[%s][%s] blockid=[%s]",
+          TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "locoid=[%s][%s] blockid=[%s]",
               locoid, wBlock.getlocid( m_Props ), wLoc.getblockid(loc) );
           if( StrOp.equals( wBlock.getid( m_Props ), wLoc.getblockid(loc) ) || StrOp.equals( wBlock.getid( m_Props ), wLoc.getdestblockid(loc) ) ) {
             if( (occupied == 1 || occupied == 3) ) {
@@ -2678,7 +2676,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
           }
         }
         else if(!oncreate) {
-          TraceOp.trc( "item", TRCLEVEL_USER1, __LINE__, 9999, "not possible to process enterside; locoid not set" );
+          TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "not possible to process enterside; locoid not set" );
         }
       }
 

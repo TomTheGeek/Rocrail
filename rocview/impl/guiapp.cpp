@@ -1079,6 +1079,8 @@ static void rocrailCallback( obj me, iONode node ) {
       for( int i = 0; i < pagecnt; i++ ) {
         PlanPanel* p = (PlanPanel*)guiApp->getFrame()->getNotebook()->GetPage(i);
         wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATEITEM_EVENT );
+        if( StrOp.equals(wBlock.name(), NodeOp.getName(node)))
+          wBlock.setdesc(node, "guiapp");
         event.SetClientData( node->base.clone( node ) );
         wxPostEvent( p, event );
 

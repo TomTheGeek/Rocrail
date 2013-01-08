@@ -1507,6 +1507,7 @@ static void _inBlock( iIBlockBase inst, const char* id ) {
     iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
     wBlock.setid( nodeD, data->id );
     wBlock.setreserved( nodeD, False );
+    wBlock.setreserved( data->props, False );
     wBlock.setlocid( nodeD, id );
     wBlock.setacceptident(nodeD, data->acceptident);
     AppOp.broadcastEvent( nodeD );
@@ -1626,6 +1627,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       data->locId = id;
       data->crossing = crossing;
       ok = True;
+      wBlock.setlocid(data->props, id);
       ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, data->locId, False, 0, 0, NULL );
     }
     else if( StrOp.equals( id, data->locId ) ) {
@@ -1649,6 +1651,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
       wBlock.setid( nodeD, data->id );
       wBlock.setreserved( nodeD, True );
+      wBlock.setreserved( data->props, True );
       wBlock.setlocid( nodeD, id );
       wBlock.setacceptident(nodeD, data->acceptident);
       AppOp.broadcastEvent( nodeD );

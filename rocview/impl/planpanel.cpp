@@ -1488,7 +1488,7 @@ void PlanPanel::updateItemCmd(wxCommandEvent& event) {
   // Get the copied node from the event object:
   iONode node = (iONode)event.GetClientData();
 
-  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "update ITEM %s", NodeOp.getName(node) );
+  TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "update ITEM %s_%s", NodeOp.getName(node), wItem.getid(node) );
 
   char key[256];
   char prevkey[256];
@@ -1741,10 +1741,14 @@ void PlanPanel::modelEvent( iONode node ) {
       for( int i = 0; i < cnt; i++ ) {
         iONode child = NodeOp.getChild( node, i );
         id = wItem.getid( child );
-        TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "Item with id=%s will be informed", id );
+        TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "Item with id=%s will be informed", id );
         // check for loc or street nodes:
         // TODO: check for existence -> modify or add...
         wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATEITEM_EVENT );
+
+        if(StrOp.equals(wBlock.name(), NodeOp.getName(node)))
+          wBlock.setdesc(node, "planpanel model modify");
+
         event.SetClientData( node->base.clone( child ) );
         wxPostEvent( this, event );
       }
@@ -1826,11 +1830,16 @@ bool PlanPanel::isBlockOccupied( const char* id ) {
 
 
 bool PlanPanel::isBlockReserved( const char* id ) {
-  char key[256];
-  itemKey( wBlock.name(), id, key );
-  Symbol* item = (Symbol*)m_ChildTable->Get( wxString(key,wxConvUTF8) );
-  if( item != NULL ) {
-    return wBlock.isreserved( item->getProperties() )?true:false;
+  iONode model = wxGetApp().getModel();
+  iONode list = wPlan.getbklist( model );
+  if( list != NULL ) {
+    int cnt = NodeOp.getChildCnt( list );
+    for( int i = 0; i < cnt; i++ ) {
+      iONode node = NodeOp.getChild( list, i );
+      if( id != NULL && StrOp.equals( id, wItem.getid(node) ) ) {
+        return wBlock.isreserved( node );
+      }
+    }
   }
   return false;
 }
