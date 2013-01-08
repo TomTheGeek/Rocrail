@@ -1250,7 +1250,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "Signal [%s] has no address", wSignal.getid( o->props ) );
     }
 

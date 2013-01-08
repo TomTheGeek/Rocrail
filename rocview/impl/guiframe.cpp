@@ -2248,7 +2248,7 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
   iONode node = (iONode)event.GetClientData();
   const char* text = wException.gettext( node );
   int        level = wException.getlevel( node );
-  long      maxlen = 16 * 1024;
+  long      maxlen = 4 * 1024;
   int          len = StrOp.len(text);
 
   TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "Got an info message: %s", text );

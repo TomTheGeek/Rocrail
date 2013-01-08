@@ -681,7 +681,7 @@ static Boolean _isLocked( iOSwitch inst, const char* id, Boolean manual ) {
   if( !manual && blockid != NULL && StrOp.len(blockid) > 0 ) {
     iIBlockBase bk = ModelOp.getBlock( AppOp.getModel(), blockid);
     if( bk != NULL && !bk->isFree(bk, id) ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block [%s] is not free which occupies switch [%s].",
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] is not free which occupies switch [%s].",
                      blockid, SwitchOp.getId( inst ) );
       return True;
     }
