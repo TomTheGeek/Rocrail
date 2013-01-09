@@ -20467,4 +20467,7 @@
   <Msg id="nodevcheck">
     <en txt="No device check at startup"/>
   </Msg>
+  <Msg id="monitorsize">
+    <en txt="Monitor size (kB)"/>
+  </Msg>
 </Messages>

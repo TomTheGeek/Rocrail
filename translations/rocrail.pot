@@ -6221,3 +6221,9 @@ msgstr ""
 msgid "No device check at startup"
 msgstr ""
 
+#. 
+# id="monitorsize"
+#, c-format
+msgid "Monitor size (kB)"
+msgstr ""
+
