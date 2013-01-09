@@ -699,7 +699,6 @@
       <var name="loccnfg" vt="bool" defval="false" remark="send loco config commands to the CS"/>
       <var name="seed" vt="int" defval="4711" range="0-65535" remark="random seed for block selection"/>
       <var name="savepostime" vt="int" defval="10" range="0-100" unit="s" remark="save positio timer"/>
-      <var name="check2in" vt="bool" defval="false" remark="Check for a free new destination between the enter and in event."/>
       <var name="secondnextblock" vt="bool" defval="false" remark="Try to reserve a second next block."/>
       <var name="enableswfb" vt="bool" defval="true" remark="Enable switch position feedbacks."/>
       <var name="eventtimeout" vt="int" defval="0" range="0-*" unit="s" remark="Time to wait for a next event. Disabled when set to zero."/>
@@ -2094,6 +2093,7 @@
         <var name="id" vt="string" defval="" range="*" required="true"/>
         <var name="shortid" vt="string" defval="" range="*" remark="Short IDs are used for throttle displays."/>
         <var name="useshortid" vt="bool" defval="false" remark="Use short ID to send to throttle."/>
+        <var name="check2in" vt="bool" defval="false" remark="Check for a free new destination between the enter and in event."/>
         <var name="roadname" vt="string" defval="" range="*"/>
         <var name="number" vt="string" defval="" range="*"/>
         <var name="docu" vt="string" defval="" range="*"/>

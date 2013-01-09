@@ -48,7 +48,7 @@ void statusWait4Event( iILcDriverInt inst ) {
 
   if( data->next1Block != NULL ) {
     if( data->next2Block == NULL ) {
-      if( data->model->isCheck2In( data->model ) &&
+      if( data->loc->isCheck2In( data->loc ) &&
           !data->next1Block->wait( data->next1Block, data->loc, !data->next1RouteFromTo, &oppwait ) &&
           data->run && !data->reqstop )
       {

@@ -2882,6 +2882,11 @@ static Boolean _trySecondNextBlock( iOLoc inst ) {
   return data->secondnextblock;
 }
 
+static Boolean _isCheck2In( iOLoc inst ) {
+  iOLocData data = Data(inst);
+  return data->check2in;
+}
+
 
 static iOLoc _inst( iONode props ) {
   iOLoc     loc  = allocMem( sizeof( struct OLoc ) );
@@ -2893,6 +2898,7 @@ static iOLoc _inst( iONode props ) {
   data->props = props;
   data->cvMap = MapOp.inst();
   data->secondnextblock = wLoc.issecondnextblock( data->props );
+  data->check2in = wLoc.ischeck2in( data->props );
   data->timedfn = -1; /* function 0 is also used */
   data->released = True;
 

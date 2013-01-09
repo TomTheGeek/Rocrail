@@ -1676,11 +1676,6 @@ static Boolean _isHealthy( iOModel inst ) {
   return data->healthy;
 }
 
-static Boolean _isCheck2In( iOModel inst ) {
-  iOModelData data = Data(inst);
-  return data->check2in;
-}
-
 static Boolean _isEnableSwFb( iOModel inst ) {
   iOModelData data = Data(inst);
   return data->enableswfb;
@@ -5033,7 +5028,6 @@ static iOModel _inst( const char* fileName ) {
   data->occMux      = MutexOp.inst( NULL, True );
   data->locationMux = MutexOp.inst( NULL, True );
 
-  data->check2in   = wCtrl.ischeck2in( wRocRail.getctrl( AppOp.getIni(  ) ) );
   data->enableswfb = wCtrl.isenableswfb( wRocRail.getctrl( AppOp.getIni(  ) ) );
 
   /* Initialize random seed. */

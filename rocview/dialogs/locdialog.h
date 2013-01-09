@@ -431,6 +431,7 @@ public:
     wxCheckBox* m_InAtPre2In;
     wxCheckBox* m_UseManualRoutes;
     wxCheckBox* m_UseOwnWaittime;
+    wxCheckBox* m_Check2In;
     wxRadioBox* m_EngineBox;
     wxRadioBox* m_CargoBox;
     wxPanel* m_FunctionPanel;
