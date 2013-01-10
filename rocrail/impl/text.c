@@ -135,9 +135,17 @@ static void __evaluateSchedule(iONode schedule, int scidx, iOMap map, char* hour
     iONode preventry = NULL;
     while( entry != NULL ) {
       if( idx == scidx ) {
-        MapOp.put(map, "lcscbk", (obj)wScheduleEntry.getblock( entry ));
-        if( ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )) != NULL )
-          MapOp.put(map, "lcscbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )));
+        const char* block = wScheduleEntry.getblock( entry );
+        const char* location = wScheduleEntry.getlocation( entry );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "entry!= NULL location[%s] block[%s] idx[%d]", location, block, idx );
+        if( StrOp.len( block ) > 0 ) {
+          MapOp.put(map, "lcscbk", (obj)block );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "lcscbk [%s]", block );
+        }
+        if( StrOp.len( location ) > 0 ) {
+          MapOp.put(map, "lcscbkloc", (obj)location );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "lcscbkloc [%s]", location );
+        }
 
         StrOp.fmtb(hour, "%d", wScheduleEntry.gethour( entry ));
         MapOp.put(map, "lcschour", (obj)hour);
@@ -146,15 +154,31 @@ static void __evaluateSchedule(iONode schedule, int scidx, iOMap map, char* hour
 
         entry = wSchedule.nextscentry( schedule, entry );
         if( entry!= NULL ) {
-          MapOp.put(map, "lcscnextbk", (obj)wScheduleEntry.getblock( entry ));
-          if( ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )) != NULL )
-            MapOp.put(map, "lcscnextbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( entry )));
+          const char* block = wScheduleEntry.getblock( entry );
+          const char* location = wScheduleEntry.getlocation( entry );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "(next)entry!= NULL location[%s] block[%s]", location, block );
+          if( StrOp.len( block ) > 0 ) {
+            MapOp.put(map, "lcscnextbk", (obj)block );
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "lcscnextbk [%s]", block );
+          }
+          if( StrOp.len( location ) > 0 ) {
+            MapOp.put(map, "lcscnextbkloc", (obj)location );
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "lcscnextbkloc [%s]", location );
+          }
         }
 
         if( preventry != NULL ) {
-          MapOp.put(map, "lcscprevbk", (obj)wScheduleEntry.getblock( preventry ));
-          if(ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( preventry )) != NULL)
-            MapOp.put(map, "lcscprevbkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(),wScheduleEntry.getblock( preventry )));
+          const char* block = wScheduleEntry.getblock( preventry );
+          const char* location = wScheduleEntry.getlocation( preventry );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "preventry!= NULL location[%s] block[%s]", location, block );
+          if( StrOp.len( block ) > 0 ) {
+            MapOp.put(map, "lcscprevbk", (obj)block );
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "lcscprevbk [%s]", block );
+          }
+          if( StrOp.len( location ) > 0 ) {
+            MapOp.put(map, "lcscprevbkloc", (obj)location );
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "lcscprevbkloc [%s]", location );
+          }
         }
 
         break;
