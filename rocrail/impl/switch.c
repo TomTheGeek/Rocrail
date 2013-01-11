@@ -878,6 +878,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     else if( StrOp.equals( wSwitch.gettype( o->props ), wSwitch.dcrossing ) && wSwitch.getaddr2( o->props ) == 0 && wSwitch.getport2( o->props ) == 0 ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Double crossing with one motor \"%s\" is not supported!",
                          SwitchOp.getId( inst ) );
+      MutexOp.post( o->muxCmd );
       return False;
     }
     else {
@@ -1051,6 +1052,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     } else {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Double crossing with one motor \"%s\" is not supported!",
                      SwitchOp.getId( inst ) );
+      MutexOp.post( o->muxCmd );
       return False;
     }
 
