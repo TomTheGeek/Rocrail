@@ -1406,24 +1406,26 @@ static void __handleBoosterCurrent(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* p
     0xFF  kein exakter Verbrauch bekannt.
   */
   int load = pdata[0];
+  int newLoad = 0;
   if( load <= 100 )
-    data->load = load;
+    newLoad = load;
   else if( load <= 200 )
-    data->load = (load-100) * 10;
+    newLoad = (load-100) * 10;
   else if( load <= 250 )
-    data->load = (load-200) * 100;
-  else
-    data->load = 0;
+    newLoad = (load-200) * 100;
 
-  if( bidibnode != NULL ) {
+  if( bidibnode != NULL && bidibnode->load != newLoad) {
     uid = bidibnode->uid;
-    bidibnode->load = load;
+    bidibnode->load = newLoad;
+    data->load = newLoad;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster %08X load=%d mA", bidibnode->uid, data->load );
+    __reportState(bidib, uid, False);
   }
-  else {
+  else if( data->load != newLoad ) {
+    data->load = newLoad;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster load=%d mA", data->load );
+    __reportState(bidib, uid, False);
   }
-  __reportState(bidib, uid, False);
 }
 
 
