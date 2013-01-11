@@ -233,14 +233,15 @@ void CV::setLocProps( iONode props ) {
     iONode cv = wLoc.getcvbyte( m_LocProps );
     while( cv != NULL ) {
       int cvnr = wCVByte.getnr( cv );
-      str = StrOp.fmt( "%d", wCVByte.getvalue( cv ) );
-      char* rowstr = StrOp.fmt( "%d", cvnr );
-      m_CVTable->SetCellValue(cvnr-1, 0, wxString(str,wxConvUTF8) );
-      m_CVTable->SetRowLabelValue( cvnr-1, wxString(rowstr,wxConvUTF8) );
-      initPresets( cvnr, str );
-      StrOp.free( rowstr );
-      StrOp.free( str );
-
+      if( cvnr > 0 ) {
+        str = StrOp.fmt( "%d", wCVByte.getvalue( cv ) );
+        char* rowstr = StrOp.fmt( "%d", cvnr );
+        m_CVTable->SetCellValue(cvnr-1, 0, wxString(str,wxConvUTF8) );
+        m_CVTable->SetRowLabelValue( cvnr-1, wxString(rowstr,wxConvUTF8) );
+        initPresets( cvnr, str );
+        StrOp.free( rowstr );
+        StrOp.free( str );
+      }
       cv = wLoc.nextcvbyte( m_LocProps, cv );
     };
   }
