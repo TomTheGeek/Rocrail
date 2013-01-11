@@ -1441,7 +1441,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
       const char* subtype = wSwitch.getsubtype( m_Props );
       if( !StrOp.equals( wSwitch.decoupler, type ) ) {
 
-        if( !StrOp.equals( wSwitch.threeway, type ) )
+        if( !StrOp.equals( wSwitch.threeway, type ) && StrOp.equals( "default", subtype ))
           menuSwCmd->Append( ME_CmdTurnout, wxGetApp().getMenu("thrown") );
 
         if( StrOp.equals( wSwitch.dcrossing, type ) || StrOp.equals( wSwitch.threeway, type ) ) {
