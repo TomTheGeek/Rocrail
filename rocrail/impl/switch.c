@@ -847,18 +847,20 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     }
     else if( StrOp.equals( wSwitch.gettype( o->props ), wSwitch.dcrossing ) && ( wSwitch.getaddr2( o->props ) > 0 || wSwitch.getport2( o->props ) > 0 ) ) {
       if( StrOp.equals( wSwitch.getsubtype(o->props), wSwitch.subleft) ) {
-        /* both motors must be operated concurrently */
-        if( StrOp.equals( wSwitch.left, savedState ) )
-          state = wSwitch.straight;
-        else
+        if( StrOp.equals( wSwitch.straight, savedState ) )
           state = wSwitch.left;
+        else if( StrOp.equals( wSwitch.left, savedState ) )
+          state = wSwitch.turnout;
+        else
+          state = wSwitch.straight;
       }
       else if( StrOp.equals( wSwitch.getsubtype(o->props), wSwitch.subright) ) {
-        /* both motors must be operated concurrently */
-        if( StrOp.equals( wSwitch.right, savedState ) )
-          state = wSwitch.straight;
-        else
+        if( StrOp.equals( wSwitch.straight, savedState ) )
           state = wSwitch.right;
+        else if( StrOp.equals( wSwitch.right, savedState ) )
+          state = wSwitch.turnout;
+        else
+          state = wSwitch.straight;
       }
       else {
         if( StrOp.equals( wSwitch.left, savedState ) )
