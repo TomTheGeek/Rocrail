@@ -177,6 +177,8 @@ void RocProDlg::onOpen( wxCommandEvent& event )
     wGui.setdecpath( wxGetApp().getIni(), m_DecFilename );
     wGui.setdecpath( wxGetApp().getIni(), FileOp.getPath(wGui.getdecpath( wxGetApp().getIni() ) ) );
     m_DecFile->SetValue(wxString(FileOp.ripPath(m_DecFilename),wxConvUTF8));
+    if( m_LocoProps != NULL )
+      wLoc.setdecfile(m_LocoProps, m_DecFile->GetValue().mb_str(wxConvUTF8));
     loadDecFile();
   }
   fdlg->Destroy();
