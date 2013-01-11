@@ -1438,14 +1438,17 @@ void Symbol::OnPopup(wxMouseEvent& event)
       menuSwCmd->Append( ME_CmdStraight, wxGetApp().getMenu("straight") );
 
       const char* type = wSwitch.gettype( m_Props );
+      const char* subtype = wSwitch.getsubtype( m_Props );
       if( !StrOp.equals( wSwitch.decoupler, type ) ) {
 
-        if( !StrOp.equals( wSwitch.threeway, type ) )
+        if( !StrOp.equals( wSwitch.threeway, type ) && StrOp.equals( "default", subtype ))
           menuSwCmd->Append( ME_CmdTurnout, wxGetApp().getMenu("thrown") );
 
         if( StrOp.equals( wSwitch.dcrossing, type ) || StrOp.equals( wSwitch.threeway, type ) ) {
-          menuSwCmd->Append( ME_CmdLeft, wxGetApp().getMenu("left") );
-          menuSwCmd->Append( ME_CmdRight, wxGetApp().getMenu("right") );
+          if( StrOp.equals( "default", subtype ) || StrOp.equals( wSwitch.subleft, subtype ) )
+            menuSwCmd->Append( ME_CmdLeft, wxGetApp().getMenu("left") );
+          if( StrOp.equals( "default", subtype ) || StrOp.equals( wSwitch.subright, subtype ) )
+            menuSwCmd->Append( ME_CmdRight, wxGetApp().getMenu("right") );
         }
       }
       menu.Append( -1, wxGetApp().getMenu("command"), menuSwCmd );

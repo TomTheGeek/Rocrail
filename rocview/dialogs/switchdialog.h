@@ -254,6 +254,8 @@ public:
     wxButton* m_ResetSwitched;
     wxStaticText* m_LabelType;
     wxComboBox* m_Type;
+    wxStaticText* m_labSubType;
+    wxRadioBox* m_SubType;
     wxStaticText* m_labAccNr;
     wxSpinCtrl* m_AccNr;
     wxStaticText* m_LabelDir;
