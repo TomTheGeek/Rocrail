@@ -678,7 +678,8 @@ void RocProDlg::onWrite( wxCommandEvent& event ) {
 }
 
 void RocProDlg::onSaveCV( wxCommandEvent& event ) {
-  doCV( wProgram.save, m_Nr->GetValue(), m_Value->GetValue() );
+  if( m_Nr->GetValue() > 0 )
+    doCV( wProgram.save, m_Nr->GetValue(), m_Value->GetValue() );
 }
 
 void RocProDlg::doCV(int command, int nr, int value) {
