@@ -1331,6 +1331,13 @@ static void __reportState(iOBiDiB bidib, int uid, Boolean shortcut) {
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 }
 
+static void __handleCSDriveAck(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  int addr = pdata[0] + pdata[1] * 256;
+  int ack = pdata[2];
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d ack=%d", addr, ack );
+}
+
 
 static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
   iOBiDiBData data = Data(bidib);
@@ -1932,6 +1939,10 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_CS_STATE:
     __handleCSStat(bidib, bidibnode, pdata);
+    break;
+
+  case MSG_CS_DRIVE_ACK:
+    __handleCSDriveAck(bidib, bidibnode, pdata);
     break;
 
   case MSG_BM_CONFIDENCE:
