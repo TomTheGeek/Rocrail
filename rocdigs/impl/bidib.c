@@ -662,11 +662,13 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         }
         else if( wProgram.getcmd( node ) == wProgram.get ) {
           msgdata[0] = wProgram.getcv(node);
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get feature %d", msgdata[0]);
           data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_SET, msgdata, 1, bidibnode->seq++);
         }
         else if( wProgram.getcmd( node ) == wProgram.set ) {
           msgdata[0] = wProgram.getcv(node);
           msgdata[1] = wProgram.getvalue(node);
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set feature %d to %d", msgdata[0], msgdata[1]);
           data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_SET, msgdata, 2, bidibnode->seq++);
         }
         else if( wProgram.getcmd( node ) == wProgram.evgetall ) {

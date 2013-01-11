@@ -357,6 +357,7 @@ typedef struct
 #define FEATURE_BST_INRUSH_TURNOFF_TIME    20
 #define FEATURE_BST_AMPERE_ADJUSTABLE      21
 #define FEATURE_BST_AMPERE                 22
+#define FEATURE_BST_CURMEAS_INTERVAL       23
 
 //-- accessory
 #define FEATURE_ACCESSORY_COUNT            40   // number of objects

@@ -120,6 +120,8 @@ const char* bidibGetFeatureName(int feature) {
   if( feature == FEATURE_BST_INRUSH_TURNOFF_TIME ) return "inrush turnoff time";
   if( feature == FEATURE_BST_AMPERE_ADJUSTABLE ) return "ampere adjustable";
   if( feature == FEATURE_BST_AMPERE ) return "ampere";
+  if( feature == FEATURE_BST_CURMEAS_INTERVAL ) return "current measurement interval";
+
 
   /* Control */
   if( feature == FEATURE_CTRL_INPUT_COUNT ) return "input count";
