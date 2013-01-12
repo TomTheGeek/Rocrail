@@ -1864,7 +1864,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     // 08 00 0D A6 5E     13     02
     int locoAddr = (pdata[1]&0x3F) * 256 + pdata[0];
     int speed    = pdata[2];
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999,
         "MSG_BM_SPEED, path=%s seq=%d loco-addr=%d dcc-speed=%d", pathKey, Seq, locoAddr, speed );
     break;
   }
