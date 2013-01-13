@@ -249,7 +249,7 @@ static void __PerIRReader( void* threadinst ) {
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detecoder [%d.%d][%d] reported loco address [%d]",
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detecoder [%d.%d][%d] reported loco address [%s]",
         decoder, port, wFeedback.getaddr(evt), wFeedback.getidentifier(evt) );
 
     data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
@@ -297,7 +297,7 @@ static void __PerIRReader( void* threadinst ) {
             if( data->iid != NULL )
               wFeedback.setiid( evt, data->iid );
 
-            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detecoder [%d.%d][%d] reported loco address [%d]",
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detecoder [%d.%d][%d] reported loco address [%s]",
                 decoder, port, wFeedback.getaddr(evt), wFeedback.getidentifier(evt) );
 
             data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
@@ -401,7 +401,7 @@ static struct OPerIR* _inst( const iONode ini ,const iOTrace trc ) {
     ThreadOp.start( data->ticker );
   }
   else
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init rclink port!" );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init PerIR port!" );
 
   instCnt++;
   return __PerIR;
