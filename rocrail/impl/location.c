@@ -103,7 +103,7 @@ static struct OLocation* _inst( iONode ini ) {
   data->minocc = wLocation.getminocc(ini);
   data->fifo   = wLocation.isfifo(ini);
   data->arriveList = ListOp.inst();
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "location %s: MinOcc=%d Fifo=%d", wLocation.getid(ini), data->minocc, data->fifo );
 
   instCnt++;
@@ -145,6 +145,11 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
         }
       }
     }
+
+    /* loco is not in the list; seems a cold start */
+    ListOp.add( data->arriveList, (obj)LocoId );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cold start; add [%s] to the arrived list" );
+    return LocationOp.isDepartureAllowed( inst, LocoId );
   }
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "location [%s] has no flow management [%d,%d]",
       wLocation.getid(data->props), data->minocc, data->fifo );
@@ -185,10 +190,11 @@ static void _locoDidDepart( struct OLocation* inst ,const char* LocoId ) {
 /**  */
 static void _modify( struct OLocation* inst ,iONode mod ) {
   iOLocationData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "modify location %s", wLocation.getid(data->props) );
   data->minocc = wLocation.getminocc(mod);
   data->fifo   = wLocation.isfifo(mod);
   NodeOp.mergeNode( data->props, mod, True, True, True );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+      "modify location %s, minocc=%d fifo=%d", wLocation.getid(data->props), data->minocc, data->fifo );
 }
 
 

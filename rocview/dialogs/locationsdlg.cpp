@@ -429,7 +429,10 @@ wxIcon LocationsDialog::GetIconResource( const wxString& name )
 
 void LocationsDialog::OnButtonLocationsNewClick( wxCommandEvent& event )
 {
-  int i = m_LocationList->FindString( _T("NEW") );
+  int i = wxNOT_FOUND;
+  if( !m_LocationList->IsEmpty() )
+    i = m_LocationList->FindString( _T("NEW") );
+
   if( i == wxNOT_FOUND ) {
     m_LocationList->Append( _T("NEW") );
     iONode model = wxGetApp().getModel();
