@@ -146,7 +146,7 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
   else if( data->run && data->reqstop && data->curBlock != NULL ) {
     if( !data->curBlock->isDepartureAllowed(data->curBlock, data->loc->getId(data->loc)) ) {
       data->state = LC_WAITBLOCK;
-      data->prevState = LC_IDLE;
+      data->prevState = LC_FINDDEST; /* to force a minimal wait of 10 cycles depending of the priority */
       data->loc->setMode(data->loc, wLoc.mode_wait);
     }
     if( data->reqstop ) {
@@ -160,12 +160,8 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
   }
   else {
     /* DEBUG */
-    /*
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-        "idle: run=%d block=%s",
-        data->run,
-        data->loc->getCurBlock( data->loc )==NULL?"":data->loc->getCurBlock( data->loc ));
-    ThreadOp.sleep(1000);
-    */
+    data->state = LC_WAITBLOCK;
+    data->prevState = LC_FINDDEST; /* to force a minimal wait of 10 cycles depending of the priority */
+    data->loc->setMode(data->loc, wLoc.mode_wait);
   }
 }
