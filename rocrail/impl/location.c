@@ -111,6 +111,24 @@ static struct OLocation* _inst( iONode ini ) {
 }
 
 
+
+static void __initArriveList( iOLocation inst ) {
+  iOLocationData data = Data(inst);
+  /* iterrate location: */
+  iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( data->props ), ',' );
+
+  while( StrTokOp.hasMoreTokens( blocks ) ) {
+    const char* locationBlock = StrTokOp.nextToken( blocks );
+    iIBlockBase block = ModelOp.getBlock( AppOp.getModel(), locationBlock );
+    if( block != NULL && block->getLoc(block) != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cold start; add [%s] to the arrived list", block->getLoc(block) );
+      ListOp.add( data->arriveList, (obj)block->getLoc(block) );
+    }
+  }
+  StrTokOp.base.del( blocks );
+}
+
+
 /**  */
 static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId ) {
   iOLocationData data = Data(inst);
@@ -147,9 +165,9 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
     }
 
     /* loco is not in the list; seems a cold start */
-    ListOp.add( data->arriveList, (obj)LocoId );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cold start; add [%s] to the arrived list" );
+    __initArriveList(inst);
     return LocationOp.isDepartureAllowed( inst, LocoId );
+
   }
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "location [%s] has no flow management [%d,%d]",
       wLocation.getid(data->props), data->minocc, data->fifo );
