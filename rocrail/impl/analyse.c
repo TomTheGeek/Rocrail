@@ -5880,6 +5880,11 @@ static struct OAnalyse* _inst() {
 
   iONode aoIni = AppOp.getIni() ;
   iONode anaOpt = wRocRail.getanaopt( aoIni ) ;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Rocrail Analyser by Jean-Michel Fischer" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+
   if( ! anaOpt ) {
     /* no analyzer options in ini -> create a node */
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "_inst: create node %s", wAnaOpt.name() );
