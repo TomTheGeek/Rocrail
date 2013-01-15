@@ -62,7 +62,7 @@ void statusWait( iILcDriverInt inst, Boolean reverse ) {
     if( wait ) {
       Boolean ice = StrOp.equals( wLoc.cargo_ice, wLoc.getcargo( data->loc->base.properties( data->loc ) ) );
       if( ice && data->prevState == LC_FINDDEST )
-        data->timer = 1; /* just wait 100ms */
+        data->timer = 1 * wLoc.getpriority( data->loc->base.properties( data->loc ) ); /* just wait 100ms multiplied by prio */
       else {
         data->timer = data->curBlock->getWait( data->curBlock, data->loc, reverse, &ioppwait );
 
@@ -77,9 +77,9 @@ void statusWait( iILcDriverInt inst, Boolean reverse ) {
     else {
       Boolean ice = StrOp.equals( wLoc.cargo_ice, wLoc.getcargo( data->loc->base.properties( data->loc ) ) );
       if( ice && data->prevState == LC_FINDDEST )
-        data->timer = 1; /* just wait 100ms */
+        data->timer = 1 * wLoc.getpriority( data->loc->base.properties( data->loc ) ); /* just wait 100ms multiplied by prio */
       else
-        data->timer = wLoc.getpriority( data->loc->base.properties( data->loc ) ); /* just wait 1 second, 10 x 100ms */
+        data->timer = 5 * wLoc.getpriority( data->loc->base.properties( data->loc ) ); /* just wait 1 second, 10 x 100ms */
     }
 
 
