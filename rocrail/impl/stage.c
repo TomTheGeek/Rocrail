@@ -1381,18 +1381,20 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
       iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(lastSection) );
       if( lc != NULL && !LocOp.isAutomode(lc) ) {
         iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero", data->locId );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero", LocOp.getId(lc) );
         wLoc.setcmd(cmd, wLoc.velocity);
         wLoc.setV(cmd, 0);
         LocOp.cmd(lc, cmd);
 
         LocOp.setCurBlock(lc, data->id);
 
-        if( !StrOp.equals( wStage.getexitstate(data->props), wBlock.closed ) ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"start loco %s in the last section %s", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
-          cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-          wLoc.setcmd(cmd, wLoc.go);
-          LocOp.cmd(lc, cmd);
+        if( !StrOp.equals( wStage.getexitstate(data->props), wBlock.closed )  ) {
+          if( ModelOp.isAuto( AppOp.getModel() ) ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"start loco %s in the last section %s", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
+            cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+            wLoc.setcmd(cmd, wLoc.go);
+            LocOp.cmd(lc, cmd);
+          }
         }
         else {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"exit of stage %s is closed", data->id );
