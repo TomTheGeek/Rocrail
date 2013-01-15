@@ -583,7 +583,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
            */
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing loco %s of IN event", data->locId );
           data->early2in = True;
-          /*LocOp.stop(loc, False);*/
+          LocOp.stop(loc, False);
           LocOp.event( loc, (obj)inst, in_event, 0, True, NULL );
         }
       }
@@ -747,6 +747,9 @@ static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse, int* oppwait 
   }
   else if( StrOp.equals( wBlock.wait_fixed, wStage.getwaitmode( data->props ) ) && wStage.getwaittime( data->props ) > 0 ) {
     blockwait = wStage.getwaittime( data->props );
+  }
+  else if( StrOp.equals( wBlock.wait_none, wStage.getwaitmode( data->props ) ) ) {
+    blockwait = 0;
   }
 
   *oppwait = blockwait;

@@ -1798,7 +1798,7 @@
         <var name="entersignal" vt="string" defval="NULL" range="*"/>
         <var name="exitsignal" vt="string" defval="NULL" range="*"/>
         <var name="departdelay" vt="int" defval="0" range="0-*" unit="s" remark="delay time to wait before loco starts when depart is raised"/>
-        <var name="waitmode" vt="string" defval="random" range="random,fixed,loc"/>
+        <var name="waitmode" vt="string" defval="random" range="random,fixed,loc,none"/>
         <var name="waittime" vt="int" defval="1" unit="s" range="0-*" remark="Wait time in case of wait_fixed."/>
         <var name="minwaittime" vt="int" defval="1" unit="s" range="0-*" remark="Min. wait time in case of wait_random."/>
         <var name="maxwaittime" vt="int" defval="30" unit="s" range="0-*" remark="Max. wait time in case of wait_random."/>
