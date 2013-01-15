@@ -57,6 +57,7 @@ void statusWait4Event( iILcDriverInt inst ) {
             "Setting state for [%s] from LC_WAIT4EVENT to LC_RE_ENTERBLOCK. (check for free block)",
             data->loc->getId( data->loc ) );
         data->state = LC_RE_ENTERBLOCK;
+        data->reentertimer = wLoc.getpriority( data->loc->base.properties( data->loc ) );
       }
     }
     else {

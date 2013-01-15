@@ -95,6 +95,7 @@
       <var name="stopnonecommuter" vt="Boolean"/>
       <var name="useblockside" vt="Boolean"/>
       <var name="opponly" vt="Boolean"/>
+      <var name="reentertimer" vt="int"/>
       </data>
   </object>
 
