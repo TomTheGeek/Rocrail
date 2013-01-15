@@ -217,7 +217,7 @@ stagedlggen::stagedlggen( wxWindow* parent, wxWindowID id, const wxString& title
 	wxString m_WaitTypeChoices[] = { wxT("Random"), wxT("Fixed"), wxT("Loco") };
 	int m_WaitTypeNChoices = sizeof( m_WaitTypeChoices ) / sizeof( wxString );
 	m_WaitType = new wxRadioBox( m_Details, wxID_ANY, wxT("Type"), wxDefaultPosition, wxDefaultSize, m_WaitTypeNChoices, m_WaitTypeChoices, 1, wxRA_SPECIFY_COLS );
-	m_WaitType->SetSelection( 3 );
+	m_WaitType->SetSelection( 0 );
 	bSizer61->Add( m_WaitType, 0, wxALL, 5 );
 	
 	wxFlexGridSizer* fgSizer7;

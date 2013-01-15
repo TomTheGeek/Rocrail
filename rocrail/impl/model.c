@@ -2269,6 +2269,19 @@ static iOCar _getCar( iOModel inst, const char* id ) {
   return (iOCar)MapOp.get( o->carMap, id );
 }
 
+static iOCar _getCarByIdent( iOModel inst, const char* ident ) {
+  iOModelData o = Data(inst);
+  iOCar carAddr = NULL;
+  iOCar car = (iOCar)MapOp.first( o->carMap );
+  while( car != NULL ) {
+    if( StrOp.equals(CarOp.getIdent(car), ident) )
+      return car;
+    car = (iOCar)MapOp.next( o->locMap );
+  };
+
+  return NULL;
+}
+
 static iOOperator _getOperator( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
   return (iOOperator)MapOp.get( o->operatorMap, id );

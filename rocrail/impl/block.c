@@ -515,6 +515,16 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
 
           /*}*/
         }
+
+
+        /* check for a car */
+        if( identLoc == NULL ) {
+          iOCar identCar = ModelOp.getCarByIdent(model, ident);
+          if( identCar != NULL ) {
+            CarOp.setLocality( identCar, data->id );
+          }
+        }
+
       }
       else {
         iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );

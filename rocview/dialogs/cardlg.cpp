@@ -158,6 +158,7 @@ void CarDlg::initLabels() {
   m_CarList2->InsertColumn(3, wxGetApp().getMsg( "type" ), wxLIST_FORMAT_LEFT );
   m_CarList2->InsertColumn(4, wxGetApp().getMsg( "subtype" ), wxLIST_FORMAT_LEFT );
   m_CarList2->InsertColumn(5, wxGetApp().getMsg( "length" ), wxLIST_FORMAT_LEFT );
+  m_CarList2->InsertColumn(6, wxGetApp().getMsg( "locality" ), wxLIST_FORMAT_LEFT );
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
@@ -298,6 +299,7 @@ void CarDlg::initIndex(){
         m_CarList2->SetItem( i, 3, wxString(wCar.gettype( car ), wxConvUTF8) );
         m_CarList2->SetItem( i, 4, wxString(wCar.getsubtype( car ), wxConvUTF8) );
         m_CarList2->SetItem( i, 5, wxString::Format(wxT("%d"), wCar.getlen( car )) );
+        m_CarList2->SetItem( i, 6, wxString(wCar.getlocation( car ), wxConvUTF8) );
         m_CarList2->SetItemPtrData(i, (wxUIntPtr)car);
 
       }

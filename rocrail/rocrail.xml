@@ -833,6 +833,10 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="ident" vt="const char*" remark="Loc identifier to search for"/>
     </fun>
+    <fun name="getCarByIdent" vt="iOCar">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="ident" vt="const char*" remark="Identifier to search for"/>
+    </fun>
     <fun name="getLocIDs" vt="iOList">
       <param name="inst" vt="this" remark="Model instance"/>
     </fun>
@@ -1980,6 +1984,13 @@
     <fun name="addWaybill" vt="void">
       <param name="inst" vt="this" remark="Car instance"/>
       <param name="waybill" vt="iONode" remark="Waybill node"/>
+    </fun>
+    <fun name="getIdent" vt="const char*">
+      <param name="inst" vt="this" remark="Car instance"/>
+    </fun>
+    <fun name="setLocality" vt="void">
+      <param name="inst" vt="this" remark="Car instance"/>
+      <param name="id" vt="const char*" remark="Locality ID"/>
     </fun>
     <data>
       <var name="props" vt="iONode"/>

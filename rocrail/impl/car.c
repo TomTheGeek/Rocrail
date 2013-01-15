@@ -78,7 +78,8 @@ static void* __properties( void* inst ) {
 }
 
 static const char* __id( void* inst ) {
-  return NULL;
+  iOCarData data = Data((iOCar)inst);
+  return wCar.getid(data->props);
 }
 
 static void* __event( void* inst, const void* evt ) {
@@ -129,6 +130,21 @@ static struct OCar* _inst( iONode ini ) {
 /**  */
 static void _addWaybill( struct OCar* inst ,iONode waybill ) {
   iOCarData data = Data(inst);
+}
+
+
+/**  */
+static const char* _getIdent( struct OCar* inst ) {
+  iOCarData data = Data(inst);
+  return wCar.getident(data->props);
+}
+
+
+/**  */
+static void _setLocality( struct OCar* inst, const char* id ) {
+  iOCarData data = Data(inst);
+  wCar.setlocation(data->props, id);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "car [%s] arrived in block [%s]", CarOp.base.id(inst), id );
 }
 
 

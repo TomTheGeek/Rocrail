@@ -1862,6 +1862,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_BM_SPEED:
   { //             ADDRL, ADDRH, DAT
     // 08 00 0D A6 5E     13     02
+    // Unusable decoder speed information in KM/H; Just ignore it.
     int locoAddr = (pdata[1]&0x3F) * 256 + pdata[0];
     int speed    = pdata[2];
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999,
