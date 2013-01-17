@@ -6227,3 +6227,9 @@ msgstr ""
 msgid "Monitor size (kB)"
 msgstr ""
 
+#. 
+# id="startuptour"
+#, c-format
+msgid "Startup tour"
+msgstr ""
+

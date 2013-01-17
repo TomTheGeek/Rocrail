@@ -1371,7 +1371,11 @@ static void __runner( void* threadinst ) {
 
   data->runtime = wLoc.getruntime( data->props );
 
-  if( wLoc.getstartupscid(data->props) != NULL && StrOp.len(wLoc.getstartupscid(data->props)) > 0 ) {
+  if( wLoc.getstartuptourid(data->props) != NULL && StrOp.len(wLoc.getstartuptourid(data->props)) > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "startup tour: %s", wLoc.getstartuptourid(data->props) );
+    LocOp.useTour( loc, wLoc.getstartuptourid(data->props) );
+  }
+  else if( wLoc.getstartupscid(data->props) != NULL && StrOp.len(wLoc.getstartupscid(data->props)) > 0 ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "startup schedule: %s", wLoc.getstartupscid(data->props) );
     LocOp.useSchedule( loc, wLoc.getstartupscid(data->props) );
   }

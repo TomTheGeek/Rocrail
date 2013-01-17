@@ -20470,4 +20470,7 @@
   <Msg id="monitorsize">
     <en txt="Monitor size (kB)"/>
   </Msg>
+  <Msg id="startuptour">
+    <en txt="Startup tour"/>
+  </Msg>
 </Messages>

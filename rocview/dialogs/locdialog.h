@@ -419,6 +419,8 @@ public:
     wxSpinCtrl* m_Priority;
     wxStaticText* m_labSwapTimer;
     wxSpinCtrl* m_SwapTimer;
+    wxStaticText* m_labStartupTour;
+    wxComboBox* m_StartupTour;
     wxStaticText* m_labStartupSchedule;
     wxComboBox* m_StartupSchedule;
     wxCheckBox* m_Commuter;
