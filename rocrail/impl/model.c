@@ -4321,17 +4321,23 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
 
               /* Check for wanted block: */
               if( gotoBlockId != NULL && StrOp.equals( gotoBlockId, blockId ) ) {
-                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                               "found the GOTO block [%s] for [%s]", gotoBlockId, LocOp.getId( loc ) );
-                blockBest = block;
-                routeBest = route;
-                /* ignore all other found fitting blocks */
-                ListOp.clear(fitBlocks);
-                ListOp.clear(fitRoutes);
-                /* add the goto block as the one and only */
-                ListOp.add( fitBlocks, (obj)block );
-                ListOp.add( fitRoutes, (obj)route );
-                break;
+                if( forceSameDir && !samedir ) {
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                                 "found the GOTO block [%s] for [%s] but its in the wrong direction", gotoBlockId, LocOp.getId( loc ) );
+                }
+                else {
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                                 "found the GOTO block [%s] for [%s]", gotoBlockId, LocOp.getId( loc ) );
+                  blockBest = block;
+                  routeBest = route;
+                  /* ignore all other found fitting blocks */
+                  ListOp.clear(fitBlocks);
+                  ListOp.clear(fitRoutes);
+                  /* add the goto block as the one and only */
+                  ListOp.add( fitBlocks, (obj)block );
+                  ListOp.add( fitRoutes, (obj)route );
+                  break;
+                }
               }
 
               suits = block->isSuited( block, loc, &restlen, !selectShortest );
