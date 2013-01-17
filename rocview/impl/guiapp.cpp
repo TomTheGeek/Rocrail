@@ -199,9 +199,11 @@ bool RocGui::isModelSet() {
 }
 
 void RocGui::disConnect() {
-  RConOp.close( m_RCon );
-  RConOp.base.del( m_RCon );
-  m_RCon = NULL;
+  if( m_RCon != NULL ) {
+    RConOp.close( m_RCon );
+    RConOp.base.del( m_RCon );
+    m_RCon = NULL;
+  }
   m_bStayOffline = true;
   m_bOffline = true;
 }
