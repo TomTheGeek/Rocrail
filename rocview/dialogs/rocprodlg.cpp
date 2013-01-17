@@ -177,8 +177,21 @@ void RocProDlg::onOpen( wxCommandEvent& event )
     wGui.setdecpath( wxGetApp().getIni(), m_DecFilename );
     wGui.setdecpath( wxGetApp().getIni(), FileOp.getPath(wGui.getdecpath( wxGetApp().getIni() ) ) );
     m_DecFile->SetValue(wxString(FileOp.ripPath(m_DecFilename),wxConvUTF8));
-    if( m_LocoProps != NULL )
+    if( m_LocoProps != NULL ) {
       wLoc.setdecfile(m_LocoProps, m_DecFile->GetValue().mb_str(wxConvUTF8));
+
+      if( !wxGetApp().isStayOffline() ) {
+        /* Notify RocRail. */
+        iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+        wModelCmd.setcmd( cmd, wModelCmd.modify );
+        NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( m_LocoProps ) );
+        wxGetApp().sendToRocrail( cmd );
+        NodeOp.base.del(cmd);
+      }
+      else {
+        wxGetApp().setLocalModelModified(true);
+      }
+    }
     loadDecFile();
   }
   fdlg->Destroy();
