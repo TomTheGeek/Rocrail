@@ -255,7 +255,7 @@ static Boolean _hasFreeBlock( iOLocation inst, const char* locoId ) {
     iIBlockBase block = ModelOp.getBlock( AppOp.getModel(), locationBlock );
 
     if( block != NULL && block->isFree(block, locoId) ) {
-      iOLoc loc = ModelOp.getLoc( AppOp.getModel(), locoId );
+      iOLoc loc = ModelOp.getLoc( AppOp.getModel(), locoId, NULL );
       if( loc != NULL && block->isSuited(block, loc, NULL, True ) != suits_not ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "location[%s] has a free block[%s]", wLocation.getid(data->props), block->base.id(block));
         StrTokOp.base.del( blocks );

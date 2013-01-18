@@ -624,7 +624,7 @@ static char* __rr2srcp(iOSrcpCon srcpcon, iONode evt, char* str) {
     /* 100 INFO <bus> GL <addr>  <drivemode> <V>  <V_max> <f1> . . <fn> */
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "[%s] wLoc or wFunCmd detected", NodeOp.getName(evt) ); 
 
-    iOLoc lo = ModelOp.getLoc(model, wLoc.getid(evt));
+    iOLoc lo = ModelOp.getLoc(model, wLoc.getid(evt), NULL);
     if( lo != NULL ) {
       iONode loProps = LocOp.base.properties(lo);
 
@@ -927,7 +927,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       StrTokOp.base.del(tok);
 
       if( lcID != NULL ) {
-        iONode loProps = LocOp.base.properties(ModelOp.getLoc(model, lcID));
+        iONode loProps = LocOp.base.properties(ModelOp.getLoc(model, lcID, NULL));
 
         int loAddr    = wLoc.getaddr(loProps);
         int loV       = wLoc.getV(loProps);

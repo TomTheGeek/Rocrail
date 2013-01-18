@@ -194,7 +194,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
         }
         else if( StrOp.equals( wFeedback.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
-          iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl));
+          iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL);
           iOFBack fb = ModelOp.getFBack( model, id );
           const char* state = "";
           const char* direction = NULL;
@@ -238,7 +238,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
         else if( StrOp.equals( wLoc.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
           const char* state = wActionCond.getstate(actionCond);
-          iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl));
+          iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL);
           rc = False;
 
           if( lc != NULL && state[0] == '#' ) {
@@ -315,7 +315,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "check if loco id [%s] equals [%s]", id, wActionCtrl.getlcid(actionctrl) );
             if( StrOp.equals("*", id ) || StrOp.equals( wActionCtrl.getlcid(actionctrl), id ) ) {
-              iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl));
+              iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL);
               if( lc != NULL ) {
                 Boolean dir = LocOp.getDir(lc);
                 Boolean enterside = LocOp.getBlockEnterSide(lc);
@@ -607,7 +607,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         bl->acceptIdent(bl, True);
       }
       else if( StrOp.equals( wAction.block_setloc, wAction.getcmd( data->action ) ) ) {
-        iOLoc lc = ModelOp.getLoc( model, wAction.getparam( data->action ));
+        iOLoc lc = ModelOp.getLoc( model, wAction.getparam( data->action ), NULL);
         if( lc != NULL ) {
           iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
           wBlock.setlocid(cmd, "");
@@ -623,7 +623,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action: loco_go %s ",
             bl->getLoc(bl));
 
-        iOLoc lc = ModelOp.getLoc( model, bl->getLoc(bl));
+        iOLoc lc = ModelOp.getLoc( model, bl->getLoc(bl), NULL);
         if( lc != NULL ) {
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
           wLoc.setid( cmd, bl->getLoc(bl) );
@@ -763,9 +763,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
 
   /* check for a locomotive action */
   else if( StrOp.equals( wLoc.name(), wAction.gettype( data->action ) ) ) {
-    iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ));
+    iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ), NULL);
     if( lc == NULL && wActionCtrl.getlcid(actionctrl) != NULL) {
-      lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl) );
+      lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL );
     }
     if( lc != NULL ) {
       if( StrOp.equals(wLoc.go, wAction.getcmd(data->action) ) ) {
@@ -831,9 +831,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
 
   /* check for a function command */
   else if( StrOp.equals( wFunCmd.name(), wAction.gettype( data->action ) ) ) {
-    iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ));
+    iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ), NULL);
     if( lc == NULL && wActionCtrl.getlcid(actionctrl) != NULL) {
-      lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl) );
+      lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL );
     }
     if( lc != NULL ) {
       iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );

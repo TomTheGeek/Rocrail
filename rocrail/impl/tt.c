@@ -1649,7 +1649,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     if( locid != NULL ) {
       if( StrOp.len(locid) == 0 && data->lockedId != NULL && StrOp.len(data->lockedId) > 0 ) {
         /* inform loc */
-        iOLoc loc = ModelOp.getLoc( model, data->lockedId );
+        iOLoc loc = ModelOp.getLoc( model, data->lockedId, NULL );
         if( loc != NULL ) {
           LocOp.setCurBlock( loc, NULL );
         }
@@ -1941,7 +1941,7 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, const cha
       /* check if the loco is on the bridge and let it roll to the selected block. */
       if( data->locoOnBridge ) {
         iOModel model = AppOp.getModel();
-        iOLoc loc = ModelOp.getLoc( model, data->lockedId );
+        iOLoc loc = ModelOp.getLoc( model, data->lockedId, NULL );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s in on the bridge of managed TT %s", data->lockedId, TTOp.base.id(inst) );
       }
     }
@@ -2026,7 +2026,7 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, const char*
   if(wTurntable.isembeddedblock(data->props)) {
     if( data->lockedId != NULL && StrOp.len( data->lockedId ) > 0 ) {
       iOModel model = AppOp.getModel();
-      iOLoc loc = ModelOp.getLoc( model, data->lockedId );
+      iOLoc loc = ModelOp.getLoc( model, data->lockedId, NULL );
       if( loc != NULL ) {
         LocOp.event( loc, inst, BlockOp.getEventCode(NULL, event), 0, False, NULL );
       }
@@ -2955,7 +2955,7 @@ static void _init( iIBlockBase inst ) {
     data->lockedId = wTurntable.getlocid( data->props );
 
     if( data->lockedId != NULL && StrOp.len( data->lockedId ) > 0 ) {
-      iOLoc loc = ModelOp.getLoc( model, data->lockedId );
+      iOLoc loc = ModelOp.getLoc( model, data->lockedId, NULL );
       if( loc != NULL ) {
         LocOp.setCurBlock( loc, wTurntable.getid(data->props) );
         /* overwrite data->locId with the static id from the loc object: */

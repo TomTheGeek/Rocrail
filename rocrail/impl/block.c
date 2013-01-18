@@ -336,7 +336,7 @@ static void __TurntableEvent( obj inst, const char* event, const char* id ) {
 
   if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
     iOModel model = AppOp.getModel();
-    loc = ModelOp.getLoc( model, data->locId );
+    loc = ModelOp.getLoc( model, data->locId, NULL );
     if( loc != NULL )
       LocOp.event( loc, inst, evt, data->forceblocktimer?data->timer:0, data->forceblocktimer, NULL );
   }
@@ -465,7 +465,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
 
   if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
     iOModel model = AppOp.getModel(  );
-    loc = ModelOp.getLoc( model, data->locId );
+    loc = ModelOp.getLoc( model, data->locId, NULL );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s found", data->locId, loc==NULL?"NOT ":"" );
   }
   else {
@@ -978,7 +978,7 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   if( wBlock.isremote(data->props) ) {
     iOR2Rnet r2rnet = ControlOp.getR2Rnet(AppOp.getControl());
     if( r2rnet != NULL ) {
-      iOLoc lc = ModelOp.getLoc( AppOp.getModel(), locId );
+      iOLoc lc = ModelOp.getLoc( AppOp.getModel(), locId, NULL );
       return R2RnetOp.reserveBlock(r2rnet, wBlock.getrrid(data->props), wBlock.getid(data->props), NULL, lc->base.properties(lc), NULL, True );
     }
   }
@@ -1552,7 +1552,7 @@ static int _getOccTime( iIBlockBase inst ) {
   iOModel     model = AppOp.getModel();
   /* check if the loco is in auto mode */
   if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
-    iOLoc loc = ModelOp.getLoc( model, data->locId );
+    iOLoc loc = ModelOp.getLoc( model, data->locId, NULL );
     if( loc != NULL && LocOp.isAutomode(loc)) {
       return data->occtime;
     }
@@ -1606,7 +1606,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
   if( wBlock.isremote(data->props) ) {
     iOR2Rnet r2rnet = ControlOp.getR2Rnet(AppOp.getControl());
     if( r2rnet != NULL ) {
-      iOLoc lc = ModelOp.getLoc( AppOp.getModel(), id );
+      iOLoc lc = ModelOp.getLoc( AppOp.getModel(), id, NULL );
       iIBlockBase curblock = ModelOp.getBlock( AppOp.getModel(), blockid );
       return R2RnetOp.reserveBlock(r2rnet, wBlock.getrrid(data->props),
               wBlock.getid(data->props), routeid, lc->base.properties(lc), curblock->base.properties(curblock), False );
@@ -1863,7 +1863,7 @@ static Boolean _setLocSchedule( iIBlockBase inst, const char* scid ) {
 
     if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
       iOModel model = AppOp.getModel();
-      iOLoc loc = ModelOp.getLoc( model, data->locId );
+      iOLoc loc = ModelOp.getLoc( model, data->locId, NULL );
       if( loc != NULL ) {
         LocOp.useSchedule( loc, scid );
         LocOp.go(loc);
@@ -1881,7 +1881,7 @@ static Boolean _setLocTour( iIBlockBase inst, const char* tourid ) {
 
     if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
       iOModel model = AppOp.getModel();
-      iOLoc loc = ModelOp.getLoc( model, data->locId );
+      iOLoc loc = ModelOp.getLoc( model, data->locId, NULL );
       if( loc != NULL ) {
         LocOp.useTour( loc, tourid );
         LocOp.go(loc);
@@ -2060,7 +2060,7 @@ static void _init( iIBlockBase inst ) {
   data->ghost = False;
 
   if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
-    iOLoc loc = ModelOp.getLoc( model, data->locId );
+    iOLoc loc = ModelOp.getLoc( model, data->locId, NULL );
     if( loc != NULL ) {
       LocOp.setCurBlock( loc, data->id );
       /* overwrite data->locId with the static id from the loc object: */
@@ -2108,7 +2108,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   else if( locid != NULL ) {
     if( StrOp.len(locid) == 0 && data->locId != NULL && StrOp.len(data->locId) > 0 ) {
       /* inform loc */
-      iOLoc loc = ModelOp.getLoc( model, data->locId );
+      iOLoc loc = ModelOp.getLoc( model, data->locId, NULL );
       if( loc != NULL ) {
         LocOp.setCurBlock( loc, NULL );
         data->occtime = SystemOp.getTick();

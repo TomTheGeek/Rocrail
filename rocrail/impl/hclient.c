@@ -692,7 +692,7 @@ static void __getLoc( iOHClient inst, const char* str ) {
   iOHClientData data = Data(inst);
   char* nid = __getID( str );
   {
-    iOLoc loc = ModelOp.getLoc( AppOp.getModel(), nid );
+    iOLoc loc = ModelOp.getLoc( AppOp.getModel(), nid, NULL );
     if( loc != NULL ) {
       iIHtmlInt html = (iIHtmlInt)loc;
       char* form = html->getForm( loc );
@@ -713,7 +713,7 @@ static void __getLoc( iOHClient inst, const char* str ) {
 
 static void __postLoc( iOHClient inst, const char* postid, const char* postdata ) {
   iOHClientData data = Data(inst);
-  iOLoc loc = ModelOp.getLoc( AppOp.getModel(), postid );
+  iOLoc loc = ModelOp.getLoc( AppOp.getModel(), postid, NULL );
   if( loc != NULL ) {
     iIHtmlInt html = (iIHtmlInt)loc;
     char* reply = html->postForm( loc, postdata );

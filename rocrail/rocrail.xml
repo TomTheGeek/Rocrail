@@ -805,7 +805,8 @@
     <fun name="getLoc" vt="iOLoc">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="LocID to search for"/>
-    </fun>
+      <param name="props" vt="iONode" remark="Optional loco properties"/>
+      </fun>
     <fun name="getCar" vt="iOCar">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="CarID to search for"/>

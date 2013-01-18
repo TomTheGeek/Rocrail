@@ -195,7 +195,7 @@ static void* __event( void* inst, const void* evt ) {
   iOTextData data = Data(inst);
   iONode node = (iONode)evt;
   if( node != NULL && StrOp.equals( wText.name(), NodeOp.getName(node))) {
-    iOLoc       lc = ModelOp.getLoc(AppOp.getModel(), wText.getreflcid(node));
+    iOLoc       lc = ModelOp.getLoc(AppOp.getModel(), wText.getreflcid(node), NULL);
     iIBlockBase bk = ModelOp.getBlock(AppOp.getModel(), wText.getrefbkid(node));
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "text event [%s-%s][%s]",
