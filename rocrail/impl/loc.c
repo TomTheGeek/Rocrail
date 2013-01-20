@@ -1466,28 +1466,28 @@ static void __runner( void* threadinst ) {
         data->runtime++;
         wLoc.setruntime( data->props, data->runtime );
       }
-
-
-      fx = wLoc.getfx( data->props );
-      for( i = 0; i < 28; i++ ) {
-        if( i == 0 && data->fn0 && data->fxtimer[i] > 0 || i > 0 && (fx & (1 << (i-1))) && data->fxtimer[i] > 0 ) {
-          data->fxtimer[i]--;
-          if( data->fxtimer[i] == 0 ) {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset timed function %d", i);
-            fncmd = __resetTimedFunction(loc, NULL, i);
-            break;
-          }
-        }
-      }
-
-      if( fncmd == NULL && data->timedfn >= 0 && data->fntimer >= 0 ) {
-        data->fntimer--;
-        if( data->fntimer == 0 ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset timed function %d", data->timedfn);
-          fncmd = __resetTimedFunction(loc, NULL, -1);
-        }
-      }
       tick = 0;
+    }
+
+
+    fx = wLoc.getfx( data->props );
+    for( i = 0; i < 28; i++ ) {
+      if( i == 0 && data->fn0 && data->fxtimer[i] > 0 || i > 0 && (fx & (1 << (i-1))) && data->fxtimer[i] > 0 ) {
+        data->fxtimer[i]--;
+        if( data->fxtimer[i] == 0 ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset timed function %d", i);
+          fncmd = __resetTimedFunction(loc, NULL, i);
+          break;
+        }
+      }
+    }
+
+    if( fncmd == NULL && data->timedfn >= 0 && data->fntimer >= 0 ) {
+      data->fntimer--;
+      if( data->fntimer == 0 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset timed function %d", data->timedfn);
+        fncmd = __resetTimedFunction(loc, NULL, -1);
+      }
     }
 
 
