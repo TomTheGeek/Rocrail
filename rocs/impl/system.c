@@ -502,12 +502,17 @@ static char* _utf2latin( const char* utfstr ) {
 
 
 static const char* eyecatcher = "_rocs_";
+static const char* eyecatcherunlim = "_rocsunlim_";
 
 static const char* _getEyecatcher(void) {
   return eyecatcher;
 }
 
-static Boolean _isExpired(const char* s, char** expdate, long* expdays) {
+static const char* _getUnlimEyecatcher(void) {
+  return eyecatcherunlim;
+}
+
+static Boolean _isExpired(const char* s, char** expdate, long* expdays, int vmajor, int vminor) {
   Boolean expired = False;
   char licdate[11] = {0,0,0,0,0,0,0,0,0,0,0};
   time_t     tt = time(NULL);
@@ -515,10 +520,19 @@ static Boolean _isExpired(const char* s, char** expdate, long* expdays) {
   char day[3] = {0,0,0};
   char mon[3] = {0,0,0};
   char year[5] = {0,0,0,0,0};
+  char unlimkey[64] = {'\0'};
 
   if( s == NULL || StrOp.len(s) == 0 ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no key" );
     return True;
+  }
+
+  StrOp.fmtb(unlimkey, "%s%d.%d", eyecatcherunlim, vmajor, vminor);
+  if( StrOp.startsWith( s, unlimkey ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlimited key for version %d.%d", vmajor, vminor );
+    if( expdays != NULL )
+      *expdays = -1;
+    return False;
   }
 
   if( !StrOp.startsWith( s, SystemOp.getEyecatcher() ) ) {

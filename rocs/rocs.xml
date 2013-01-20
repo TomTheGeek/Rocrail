@@ -1564,13 +1564,17 @@
       <param name="s" vt="const char*"/>
       <param name="expdate" vt="char**"/>
       <param name="expdays" vt="long*"/>
-    </fun>
+      <param name="vmajor" vt="int"/>
+      <param name="vminor" vt="int"/>
+      </fun>
     <fun name="decode" vt="char*">
       <param name="b" vt="const byte*"/>
       <param name="len" vt="int"/>
       <param name="k" vt="const char*"/>
     </fun>
     <fun name="getEyecatcher" vt="const char*">
+    </fun>
+    <fun name="getUnlimEyecatcher" vt="const char*">
     </fun>
     <data include="thread">
       <var name="WSName[64]" vt="char" remark=""/>

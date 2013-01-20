@@ -435,7 +435,7 @@ static void __handleIssue(obj inst, iONode node) {
       unsigned char* donkey = StrOp.strToByte(AppOp.getdonkey());
       char* decodedKey = SystemOp.decode(donkey, StrOp.len(AppOp.getdonkey())/2, AppOp.getdoneml());
       char* expdate = NULL;
-      Boolean expired = SystemOp.isExpired(decodedKey, &expdate, NULL);
+      Boolean expired = SystemOp.isExpired(decodedKey, &expdate, NULL, wGlobal.vmajor, wGlobal.vminor);
       char* stamp = StrOp.createStamp();
       tmp = StrOp.fmt( "Date: %s\n%s: %d.%d.%d-%d %s\nOS: %s\nKey: %s expdate=%s\n\n",
           stamp,

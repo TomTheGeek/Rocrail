@@ -126,6 +126,7 @@
 #include "rocview/wrapper/public/WorkSpaces.h"
 #include "rocview/wrapper/public/WorkSpace.h"
 
+#include "rocrail/wrapper/public/Global.h"
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/JsEvent.h"
 #include "rocrail/wrapper/public/JsMap.h"
@@ -2129,7 +2130,8 @@ void RocGuiFrame::create() {
     m_StatNotebook->AddPage(m_LNCVPanel, wxGetApp().getMsg("lncvprogramming") );
   }
 
-  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL) ) {
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
+      StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL, wGlobal.vmajor, wGlobal.vminor) ) {
     wGui.setlocowidgetstab(m_Ini, False);
   }
   if( wGui.islocowidgetstab(m_Ini) ) {
@@ -3392,7 +3394,8 @@ void RocGuiFrame::OnDonKey( wxCommandEvent& event ) {
   if( m_SymbolMap == NULL || MapOp.size(m_SymbolMap) == 0 ) {
     wxMessageDialog( this, wxGetApp().getMsg("setupsvgtheme"), _T("Rocrail"), wxOK | wxICON_EXCLAMATION ).ShowModal();
   }
-  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, &expdays) ) {
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
+      StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, &expdays, wGlobal.vmajor, wGlobal.vminor) ) {
     DonKey* dlg = new DonKey(this, m_Ini );
     if( wxID_OK == dlg->ShowModal() ) {
     }
@@ -3415,7 +3418,8 @@ void RocGuiFrame::OnDonKeyInfo( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   bool l_bOffline = wxGetApp().isOffline();
-  Boolean l_Expired = SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL);
+  Boolean l_Expired = SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
+      StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL, wGlobal.vmajor, wGlobal.vminor);
 
   wxMenuItem* mi = menuBar->FindItem(ME_New);
   if( mi != NULL ) mi->Enable( l_bOffline );
@@ -3688,12 +3692,14 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi_locobook->Check( m_bLocoBook );
   wxMenuItem* mi_locowidgets  = menuBar->FindItem(ME_LocoWidgets);
   mi_locowidgets->Check( wGui.islocowidgetstab(m_Ini) );
-  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL) ) {
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
+      StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL, wGlobal.vmajor, wGlobal.vminor) ) {
     mi_locowidgets->Enable( false );
   }
 
   wxMenuItem* mi_rocpro  = menuBar->FindItem(ME_RocPro);
-  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL) ) {
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
+      StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL, wGlobal.vmajor, wGlobal.vminor) ) {
     mi_rocpro->Enable( false );
   }
 

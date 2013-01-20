@@ -60,8 +60,12 @@ int main( int argc, const char* argv[] ) {
   const char* keyfile = NULL;
   const char* email = NULL;
   const char* expdate = NULL;
+  int vmajor = 0;
+  int vminor = 0;
   Boolean enc = False;
   Boolean dec = False;
+  Boolean unlim = False;
+  char version[32] = {'\0'};
 
   iOTrace trc = TraceOp.inst( TRCLEVEL_INFO, NULL, True );
   TraceOp.setAppID( trc, "k" );
@@ -85,9 +89,12 @@ int main( int argc, const char* argv[] ) {
 
   enc     = CmdLnOp.hasKey( arg, "-enc" );
   dec     = CmdLnOp.hasKey( arg, "-dec" );
+  unlim   = CmdLnOp.hasKey( arg, "-unlim" );
   keyfile = CmdLnOp.getStrDef( arg, "-file", NULL );
   email   = CmdLnOp.getStrDef( arg, "-email", NULL );
   expdate = CmdLnOp.getStrDef( arg, "-date", NULL );
+  vmajor  = CmdLnOp.getIntDef( arg, "-vmajor", -1 );
+  vminor  = CmdLnOp.getIntDef( arg, "-vminor", -1 );
 
   if( !enc && !dec )
     enc = True;
@@ -105,8 +112,17 @@ int main( int argc, const char* argv[] ) {
     TraceOp.println( "-date <DD-MM-YYYY> is missing" );
   }
 
+  if( unlim && (vmajor == -1 || vminor == -1) ) {
+    rc = -1;
+    TraceOp.println( "-vmajor <x> or -vminor <x> is missing" );
+  }
+
+  if( unlim ) {
+    StrOp.fmtb(version, "%d.%d", vmajor, vminor );
+  }
+
   if( rc == 0 && enc ) {
-    char*  s = StrOp.fmt("%s%s%s", SystemOp.getEyecatcher(), expdate, email );
+    char*  s = StrOp.fmt("%s%s%s%s", (unlim?SystemOp.getUnlimEyecatcher():SystemOp.getEyecatcher()), (unlim?version:""), expdate, email );
     byte*  b = encode(s, email);
     iOFile f = FileOp.inst( keyfile, OPEN_WRITE );
     char* bs = StrOp.byteToStr(b, StrOp.len(s));
@@ -139,7 +155,7 @@ int main( int argc, const char* argv[] ) {
     }
 
     if( rc == 0 ) {
-      Boolean expired = SystemOp.isExpired(s, NULL, NULL);
+      Boolean expired = SystemOp.isExpired(s, NULL, NULL, vmajor, vminor);
       TraceOp.println( "license of %s is %s ", email, expired ? "expired":"valid" );
     }
 

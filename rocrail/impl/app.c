@@ -261,7 +261,7 @@ static Boolean _isKeyValid( void ) {
     iOAppData data = Data(__appinst);
     unsigned char* donkey = StrOp.strToByte(data->donkey);
     char* decodedKey = SystemOp.decode(donkey, StrOp.len(data->donkey)/2, data->doneml);
-    Boolean isExpired = SystemOp.isExpired(decodedKey, NULL, NULL);
+    Boolean isExpired = SystemOp.isExpired(decodedKey, NULL, NULL, wGlobal.vmajor, wGlobal.vminor);
 
     freeMem(decodedKey);
     freeMem(donkey);
@@ -399,7 +399,7 @@ static int __logo( void ) {
   /*TraceOp.printHeader();*/
 
   if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(data->donkey),
-      StrOp.len(data->donkey)/2, data->doneml), NULL, &expdays) ) {
+      StrOp.len(data->donkey)/2, data->doneml), NULL, &expdays, wGlobal.vmajor, wGlobal.vminor) ) {
     TraceOp.println( "*******************************************************************" );
     TraceOp.println( "* Rocrail runs entirely on volunteer labor.                       *");
     TraceOp.println( "* However, Rocrail also needs contributions of money.             *");

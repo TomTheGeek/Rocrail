@@ -39,6 +39,7 @@
 #include "rocs/public/system.h"
 #include "rocs/public/str.h"
 #include "rocs/public/strtok.h"
+#include "rocrail/wrapper/public/Global.h"
 
 
 DonKey::DonKey( wxWindow* parent, iONode ini )
@@ -81,7 +82,8 @@ void DonKey::OnLoadKey( wxCommandEvent& event )
       }
 
 
-    if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL) )
+    if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
+        StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL, wGlobal.vmajor, wGlobal.vminor) )
       wxMessageDialog( this, wxGetApp().getMsg("expireddonkey"), _T("Rocrail"), wxOK ).ShowModal();
     }
     initValues();
@@ -111,7 +113,8 @@ void DonKey::initLabels() {
 void DonKey::initValues() {
   char* expdate = NULL;
   long expdays = 0;
-  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey), StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), &expdate, &expdays) ) {
+  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
+      StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), &expdate, &expdays, wGlobal.vmajor, wGlobal.vminor) ) {
     m_DonateText->SetValue( wxGetApp().getMsg( "donatekey" ) );
   }
   else {
@@ -119,7 +122,7 @@ void DonKey::initValues() {
     //m_Donate->Enable(false);
     m_DonateText->SetValue( wxGetApp().getMsg( "donatethanks" ) );
     m_stdButtonOK->SetDefault();
-    if( expdays < 8 && expdays >= 0 ) {
+    if( expdate != NULL && expdays < 8 && expdays >= 0 ) {
       m_ExpDate->SetBackgroundColour(*wxRED);
     }
   }

@@ -1934,7 +1934,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
     unsigned char* donkey = StrOp.strToByte(AppOp.getdonkey());
     char* decodedKey = SystemOp.decode(donkey, StrOp.len(AppOp.getdonkey())/2, AppOp.getdoneml());
 
-    if( !SystemOp.isExpired(decodedKey, NULL, NULL) ) {
+    if( !SystemOp.isExpired(decodedKey, NULL, NULL, wGlobal.vmajor, wGlobal.vminor) ) {
       wPlan.setdonkey(data->model, True);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "valid donation key: %s", wRocRail.getdoneml(AppOp.getIni()) );
     }
