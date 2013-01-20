@@ -1070,6 +1070,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
       __funEvent(inst, NULL, stall_event, 0);
       __checkAction(inst, "stall");
     }
+    wLoc.setV(data->props, data->drvSpeed);
   }
 
 
