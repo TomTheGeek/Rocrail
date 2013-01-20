@@ -549,8 +549,8 @@ void ActionsCtrlDlg::addActionCtrl() {
   m_CtrlList->Append( wxString( wActionCtrl.getid(node),wxConvUTF8 ), node );
   m_CtrlList->SetStringSelection( m_ID->GetStringSelection() );
   m_CtrlList->SetFirstItem( m_ID->GetStringSelection() );
-  initValues();
   evaluate();
+  initValues();
 }
 
 
