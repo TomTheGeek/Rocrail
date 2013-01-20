@@ -305,6 +305,25 @@ void RouteDialog::initLabels() {
         m_SensorCombo->Append( wxString(id,wxConvUTF8) );
       }
     }
+
+    ListOp.clear(list);
+    iONode colist = wPlan.getcolist( model );
+    if( colist != NULL ) {
+      int cnt = NodeOp.getChildCnt( colist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode co = NodeOp.getChild( colist, i );
+        const char* id = wOutput.getid( co );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)id);
+        }
+      }
+      ListOp.sort(list, &__sortStr);
+      cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        const char* id = (const char*)ListOp.get( list, i );
+        m_SensorCombo->Append( wxString(id,wxConvUTF8) );
+      }
+    }
   }
   /* clean up the temp. list */
   ListOp.base.del(list);

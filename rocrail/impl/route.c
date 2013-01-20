@@ -900,11 +900,20 @@ static Boolean __checkSensors( iORoute inst ) {
     iOFBack fb = ModelOp.getFBack( AppOp.getModel(), wFeedbackEvent.getid(fbevt));
     if( fb != NULL && FBackOp.getState(fb) ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                     "Route [%s] is electrically occupied!",
-                     RouteOp.getId( inst ) );
+                     "Route [%s] is electrically occupied by sensor [%s]!",
+                     RouteOp.getId( inst ), wFeedbackEvent.getid(fbevt) );
 
       return False;
+    }
+    else if( fb == NULL ) {
+      iOOutput co = ModelOp.getOutput(AppOp.getModel(), wFeedbackEvent.getid(fbevt));
+      if( co != NULL && OutputOp.isState(co, wOutput.on ) ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+                       "Route [%s] is electrically occupied by output [%s]!",
+                       RouteOp.getId( inst ), wFeedbackEvent.getid(fbevt) );
 
+        return False;
+      }
     }
     fbevt = wRoute.nextfbevent( data->props, fbevt );
   };
