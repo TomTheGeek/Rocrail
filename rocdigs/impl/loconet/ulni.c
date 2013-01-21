@@ -167,6 +167,10 @@ static void __reader( void* threadinst ) {
           msglen = 6;
           index = 1;
           break;
+      case 0xd0:
+          msglen = 6;
+          index = 1;
+          break;
       case 0xe0:
           SerialOp.read(data->serial, &c, 1);
           msg[1] = c & 0x7F;
