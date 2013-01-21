@@ -420,8 +420,8 @@ void SelTabDialog::initValues() {
         const char* id = wRoute.getid( st );
         const char* bka = wRoute.getbka( st );
         const char* bkb = wRoute.getbkb( st );
-        if( bkb != NULL && StrOp.equals( bkb, wSelTab.getid( m_Props ) ) ||
-            bka != NULL && StrOp.equals( bka, wSelTab.getid( m_Props ) ) && !wRoute.isdir(st) ) {
+        if( (bkb != NULL && StrOp.equals( bkb, wSelTab.getid( m_Props ) )) ||
+            (bka != NULL && StrOp.equals( bka, wSelTab.getid( m_Props ) ) && !wRoute.isdir(st) ) ) {
           char* str = StrOp.fmt( "%s = from \"%s\" to \"%s\"", id, bka, bkb );
           m_Routes->Append( wxString(str,wxConvUTF8), st );
           StrOp.free( str );

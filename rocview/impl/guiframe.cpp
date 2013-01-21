@@ -125,6 +125,7 @@
 #include "rocview/wrapper/public/Shortcut.h"
 #include "rocview/wrapper/public/WorkSpaces.h"
 #include "rocview/wrapper/public/WorkSpace.h"
+#include "rocview/wrapper/public/Tab.h"
 
 #include "rocrail/wrapper/public/Global.h"
 #include "rocrail/wrapper/public/Item.h"
@@ -576,13 +577,29 @@ BasePanel* RocGuiFrame::initModPanel( iONode zlevel  ) {
 
   p->SetPosition( wxPoint( xpos, ypos) );
 
-  p->SetBackgroundColor((byte)wPlanPanel.getred( ini), (byte)wPlanPanel.getgreen( ini), (byte)wPlanPanel.getblue( ini), true);
+  iONode tab = getTabColor(wZLevel.getz(zlevel));
+  if( tab != NULL ) {
+    p->SetBackgroundColor((byte)wTab.getred(tab), (byte)wTab.getgreen(tab), (byte)wTab.getblue(tab), true);
+  }
+  else {
+    p->SetBackgroundColor((byte)wPlanPanel.getred( ini), (byte)wPlanPanel.getgreen( ini), (byte)wPlanPanel.getblue( ini), true);
+  }
   p->SetScBackgroundColor((byte)wPlanPanel.getscred( ini), (byte)wPlanPanel.getscgreen( ini), (byte)wPlanPanel.getscblue( ini), wPlanPanel.isshowsc( ini)?true:false);
   p->clean();
   p->init(true);
   return p;
 }
 
+iONode RocGuiFrame::getTabColor(int z) {
+  iONode tab = wGui.gettab(m_Ini);
+  while( tab != NULL ) {
+    if( z == wTab.getnr(tab) ) {
+      return tab;
+    }
+    tab = wGui.nexttab(m_Ini, tab);
+  }
+  return NULL;
+}
 
 BasePanel* RocGuiFrame::InitNotebookPage( iONode zlevel  ) {
 
@@ -611,8 +628,16 @@ BasePanel* RocGuiFrame::InitNotebookPage( iONode zlevel  ) {
   int itemsize = wxGetApp().getItemSize();
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "scroll cx=%d cy=%d", wPlanPanel.getcx(ini), wPlanPanel.getcy(ini) );
   p->SetScrollbars( (int)(itemsize*m_Scale), (int)(itemsize*m_Scale), wPlanPanel.getcx(ini), wPlanPanel.getcy(ini) );
-  wxColor color((byte)wPlanPanel.getred( ini), (byte)wPlanPanel.getgreen( ini), (byte)wPlanPanel.getblue( ini));
-  p->SetBackgroundColour(color);
+
+  iONode tab = getTabColor(wZLevel.getz(zlevel));
+  if( tab != NULL ) {
+    p->SetBackgroundColor((byte)wTab.getred(tab), (byte)wTab.getgreen(tab), (byte)wTab.getblue(tab), true);
+  }
+  else {
+    wxColor color((byte)wPlanPanel.getred( ini), (byte)wPlanPanel.getgreen( ini), (byte)wPlanPanel.getblue( ini));
+    p->SetBackgroundColour(color);
+  }
+
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Adding level %s (%d,%d)",
       wZLevel.gettitle( zlevel ), wZLevel.getmodviewcx( zlevel ), wZLevel.getmodviewcy( zlevel ) );
   m_PlanNotebook->AddPage(p, wxString(wZLevel.gettitle( zlevel ),wxConvUTF8), wZLevel.isactive( zlevel )?true:false);

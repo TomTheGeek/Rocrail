@@ -222,12 +222,11 @@ static int __sortLen(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     int lenA = wItem.getlen( a );
     int lenB = wItem.getlen( b );
-    if( lenA == lenB )
-      return 0;
     if( lenA > lenB )
       return order?-1:1;
     if( lenA < lenB )
       return order?1:-1;
+    return 0;
 }
 static int __sortPos(obj* _a, obj* _b)
 {
@@ -253,6 +252,7 @@ static int __sortPos(obj* _a, obj* _b)
       return order?-1:1;
     if( zA < zB )
       return order?1:-1;
+    return 0;
 }
 static int __sortDesc(obj* _a, obj* _b)
 {
@@ -439,7 +439,7 @@ iONode BaseDialog::selectNext() {
       break;
     }
   }
-
+  return NULL;
 }
 
 iONode BaseDialog::selectPrev() {
@@ -460,7 +460,7 @@ iONode BaseDialog::selectPrev() {
       break;
     }
   }
-
+  return NULL;
 }
 
 iONode BaseDialog::getSelection(int index) {
@@ -479,6 +479,7 @@ iONode BaseDialog::getSelection(int index) {
     }
     break;
   }
+  return NULL;
 }
 
 int BaseDialog::findID( const char* ID ) {

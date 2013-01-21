@@ -178,6 +178,7 @@ public:
   void OnDonKey(wxCommandEvent& event);
   void OnDonKeyInfo(wxCommandEvent& event);
 
+  iONode getTabColor(int z);
   void setLocalPlan( wxString plan );
   void CleanNotebook();
   void OnInitNotebook(wxCommandEvent& event);

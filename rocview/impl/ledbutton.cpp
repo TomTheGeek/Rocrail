@@ -225,6 +225,7 @@ void LEDButton::SetValue(const wxString& value) {
 }
 
 bool LEDButton::SetBackgroundColour(const wxColour& colour) {
+  return true;
 }
 
 

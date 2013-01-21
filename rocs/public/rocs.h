@@ -25,7 +25,7 @@
 #elif defined __linux__
   #pragma message("--- [LINUX] ---")
 #elif defined __APPLE__
-  #pragma message("--- [APPLE] ---")
+  /*#pragma message("--- [APPLE] ---")*/
   #define __apple__
   #define __linux__
   #define __unix__

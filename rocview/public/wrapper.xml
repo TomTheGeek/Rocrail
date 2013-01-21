@@ -194,6 +194,12 @@
       <var name="cx" vt="int" defval="64"/>
       <var name="cy" vt="int" defval="48"/>
     </planpanel>
+    <tab wrappername="Tab"cardinality="n">
+      <var name="nr" vt="int" defval="0"/>
+      <var name="red" vt="int" defval="255"/>
+      <var name="green" vt="int" defval="255"/>
+      <var name="blue" vt="int" defval="255"/>
+    </tab>
     <splitpanel wrappername="SplitPanel">
       <var name="main" vt="int" defval="455" remark="vertical plan/message split position"/>
       <var name="msg" vt="int" defval="400" remark="horizontal message/exception split position"/>

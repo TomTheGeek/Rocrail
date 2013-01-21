@@ -41,6 +41,8 @@
     #include "wx/wx.h"
 #endif
 
+#include <wx/colordlg.h>
+
 
 #include "rocs/public/node.h"
 #include "rocs/public/thread.h"
@@ -56,6 +58,7 @@
 
 #include "rocview/wrapper/public/Gui.h"
 #include "rocview/wrapper/public/PlanPanel.h"
+#include "rocview/wrapper/public/Tab.h"
 
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
@@ -166,6 +169,7 @@ BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
   EVT_MENU( ME_AddRoadFBack    , PlanPanel::addFBack )
 
   EVT_MENU( ME_PlanProps , PlanPanel::OnPanelProps )
+  EVT_MENU( ME_PlanColor , PlanPanel::OnBackColor )
   EVT_MENU( ME_ModProps , PlanPanel::OnModProps )
   EVT_MENU( ME_AddPlan   , PlanPanel::OnAddPanel )
   EVT_MENU( ME_PanelSelect    , PlanPanel::OnSelect )
@@ -1041,10 +1045,48 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
         menu.Append( ME_ModProps, wxGetApp().getMenu("modproperties") );
         menu.AppendSeparator();
       }
+      menu.Append( ME_PlanColor, wxGetApp().getMenu("panelcolor") );
       menu.Append( ME_PlanProps, wxGetApp().getMenu("properties") );
       PopupMenu(&menu, event.GetX(), event.GetY() );
     }
 }
+
+
+void PlanPanel::OnBackColor( wxCommandEvent& event ) {
+  wxColourDialog* dlg = new wxColourDialog(this);
+  if( wxID_OK == dlg->ShowModal() ) {
+    wxColour &color = dlg->GetColourData().GetColour();
+    iONode ini = wxGetApp().getIni();
+
+    iONode tab = wGui.gettab(ini);
+    bool tabBackground = false;
+    while( tab != NULL ) {
+      if( m_Z == wTab.getnr(tab) ) {
+        tabBackground = true;
+        wTab.setred( tab, (int)color.Red() );
+        wTab.setgreen( tab, (int)color.Green() );
+        wTab.setblue( tab, (int)color.Blue() );
+        SetBackgroundColor((byte)wTab.getred(tab), (byte)wTab.getgreen(tab), (byte)wTab.getblue(tab), true);
+        break;
+      }
+      tab = wGui.nexttab(ini, tab);
+    }
+
+    if( !tabBackground ) {
+      iONode tab = NodeOp.inst( wTab.name(), ini, ELEMENT_NODE);
+      NodeOp.addChild( ini, tab);
+      wTab.setnr(tab, m_Z);
+      wTab.setred( tab, (int)color.Red() );
+      wTab.setgreen( tab, (int)color.Green() );
+      wTab.setblue( tab, (int)color.Blue() );
+      SetBackgroundColor((byte)wTab.getred(tab), (byte)wTab.getgreen(tab), (byte)wTab.getblue(tab), true);
+    }
+
+    reScale( m_Scale );
+  }
+  dlg->Destroy();
+}
+
 
 void PlanPanel::removeItemFromList( iONode item ) {
   iONode model = wxGetApp().getModel();

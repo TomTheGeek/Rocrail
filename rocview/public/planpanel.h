@@ -72,6 +72,7 @@ public:
   void addSelTab(wxCommandEvent& event);
   void addText(wxCommandEvent& event);
 
+  void OnBackColor( wxCommandEvent& event );
   void addItemAttr( iONode node );
   void modelEvent( iONode node );
   void reScale( double scale );
@@ -204,6 +205,7 @@ enum {
   ME_ModuleEast,
   ME_ModuleSouth,
   ME_ModuleWest,
+  ME_PlanColor
 };
 
 
