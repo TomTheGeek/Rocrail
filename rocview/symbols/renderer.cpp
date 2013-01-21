@@ -2089,6 +2089,8 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   
   // Traverser
   if( wTurntable.istraverser( m_Props ) ) {
+    m_bRotateable = false;
+    wItem.setori(m_Props, wItem.west );
     if( m_SvgSym1 != NULL && m_SvgSym2 != NULL && m_SvgSym3 != NULL && m_SvgSym5 != NULL ) {
       drawSvgSym(dc, m_SvgSym1, ori);
       int pos  = wTurntable.getbridgepos( m_Props );
