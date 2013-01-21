@@ -1029,7 +1029,7 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       PopupMenu(&menu, event.GetX(), event.GetY() );
     }
     else {
-      wxMenu menu( wxGetApp().getMenu("panel") );
+      wxMenu menu( wxGetApp().getMenu("panel") + wxT(" \"") + wxString( wZLevel.gettitle(m_zLevel),wxConvUTF8) + wxT("\"") );
       if( this->m_bModView ) {
         wxMenu* menuOrientation = new wxMenu();
         menuOrientation->Append( ME_ModuleRotate, wxGetApp().getMenu("rotate") );
