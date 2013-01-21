@@ -2089,23 +2089,40 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   
   // Traverser
   if( wTurntable.istraverser( m_Props ) ) {
-    m_bRotateable = false;
-    wItem.setori(m_Props, wItem.west );
+    m_bRotateable = true;
+
     if( m_SvgSym1 != NULL && m_SvgSym2 != NULL && m_SvgSym3 != NULL && m_SvgSym5 != NULL ) {
+      // traverser body
       drawSvgSym(dc, m_SvgSym1, ori);
+
+      // bridge
       int pos  = wTurntable.getbridgepos( m_Props );
       int yoff = pos % 24;
+      int xoff = 0;
+
+      if( StrOp.equals( wItem.east, ori )) {
+        yoff = yoff - 7;
+      }
+      else if( StrOp.equals( wItem.north, ori )) {
+        xoff = yoff;
+        yoff = 0;
+      }
+      else if( StrOp.equals( wItem.south, ori )) {
+        xoff = yoff - 7;
+        yoff = 0;
+      }
+
 
       Boolean sensor1 = wTurntable.isstate1( m_Props );
       Boolean sensor2 = wTurntable.isstate2( m_Props );
       TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999,
           "traverser with bridge pos=%d, yOffset=%d sen1=%d sen2=%d", pos, yoff, sensor1, sensor2 );
       if( sensor1 && sensor2 )
-        drawSvgSym(dc, m_SvgSym3, ori, 0, yoff);
+        drawSvgSym(dc, m_SvgSym3, ori, xoff, yoff);
       else if( sensor1 || sensor2 )
-        drawSvgSym(dc, m_SvgSym5, ori, 0, yoff);
+        drawSvgSym(dc, m_SvgSym5, ori, xoff, yoff);
       else
-        drawSvgSym(dc, m_SvgSym2, ori, 0, yoff);
+        drawSvgSym(dc, m_SvgSym2, ori, xoff, yoff);
     }
     return;
   }
