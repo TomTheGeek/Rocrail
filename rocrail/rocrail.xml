@@ -179,6 +179,7 @@
       <var name="wheelcounterId" vt="const char*"/>
       <var name="forceblocktimer" vt="Boolean"/>
       <var name="pendingFree" vt="Boolean"/>
+      <var name="tempwait" vt="Boolean"/>
       </data>
   </object>
 

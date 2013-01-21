@@ -3068,6 +3068,11 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
   return True;
 }
 
+static void _setTempWait(iIBlockBase inst, Boolean wait) {
+}
+
+
+
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 #include "rocrail/impl/tt.fm"
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/

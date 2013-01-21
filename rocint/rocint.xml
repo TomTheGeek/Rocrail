@@ -368,6 +368,10 @@
     <fun name="getWheelCount" vt="int">
       <param name="inst" vt="this" remark="Block instance"/>
     </fun>
-  </interface>
+    <fun name="setTempWait" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="wait" vt="Boolean"/>
+      </fun>
+    </interface>
 
 </Project>

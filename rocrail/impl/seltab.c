@@ -1507,7 +1507,8 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
   return True;
 }
 
-
+static void _setTempWait(iIBlockBase inst, Boolean wait) {
+}
 
 static void _init( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);

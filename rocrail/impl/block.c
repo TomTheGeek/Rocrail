@@ -1127,7 +1127,7 @@ static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse, int* oppwait 
   }
 
   if( StrOp.equals( wLoc.cargo_cleaning, wLoc.getcargo( (iONode)loc->base.properties( loc ) ) ) ){
-    return 0;
+    return (data->tempwait?1:0);
   }
   else if( wLoc.isuseownwaittime( (iONode)loc->base.properties( loc ) ) ) {
     return wLoc.getblockwaittime( (iONode)loc->base.properties( loc ) );
@@ -1146,9 +1146,13 @@ static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse, int* oppwait 
     return rwait;
   }
   else if( StrOp.equals( wBlock.wait_loc, wBlock.getwaitmode( data->props ) ) ) {
+    if( data->tempwait && wLoc.getblockwaittime( (iONode)loc->base.properties( loc ) ) == 0 )
+      return 1;
     return wLoc.getblockwaittime( (iONode)loc->base.properties( loc ) );
   }
   else {
+    if( data->tempwait && wBlock.getwaittime( data->props ) == 0 )
+      return 1;
     return wBlock.getwaittime( data->props ) ;
   }
 }
@@ -1162,12 +1166,18 @@ static Boolean _isTTBlock( iIBlockBase inst ) {
 }
 
 
+static void _setTempWait(iIBlockBase inst, Boolean wait) {
+  iOBlockData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "set tempwait=%d in block [%s]", wait, data->id );
+  data->tempwait = wait;
+}
+
 /* cross checking block and train types */
 static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait, Boolean checkPrev) {
   iOBlockData data = Data(block);
   const char* traintype = wLoc.getcargo( LocOp.base.properties(loc) );
   const char* blocktype = wBlock.gettype( BlockOp.base.properties(block) );
-  Boolean     blockwait = wBlock.iswait(BlockOp.base.properties(block) );
+  Boolean     blockwait = (wBlock.iswait(BlockOp.base.properties(block) ) | data->tempwait);
   Boolean     ttwait    = False;
   const char* ttId = wBlock.getttid( BlockOp.base.properties(block) );
 
@@ -1465,7 +1475,7 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse, Boolean* opp
   }
   else if( oppsignal != NULL ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has a NONE oppwait red manual signal", inst->base.id(inst) );
-    *oppwait = False;
+    *oppwait = data->tempwait;
   }
 
   if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
@@ -1474,16 +1484,17 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse, Boolean* opp
   }
   else if( signal != NULL ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has a NONE red manual signal", inst->base.id(inst) );
-    return False;
+    return data->tempwait;
   }
 
 
   if( StrOp.equals( wLoc.cargo_cleaning, wLoc.getcargo( (iONode)loc->base.properties( loc ) ) ) ){
-    return False;
+    return data->tempwait;
   }
   __crossCheckType( (iOBlock)inst, loc, &wait, True);
-  *oppwait = wait;
-  return wait;
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "tempwait=%d in block [%s]", data->tempwait, data->id );
+  *oppwait = (wait | data->tempwait);
+  return (wait | data->tempwait);
 }
 
 static void _enterBlock( iIBlockBase inst, const char* id ) {
@@ -1932,6 +1943,8 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
         BlockOp.resetTrigs( inst );
         wBlock.setlocid(data->props, "");
         data->crossing = False;
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset tempwait in block [%s]", data->id );
+        data->tempwait = False;
 
         if( location != NULL && id != NULL ) {
           LocationOp.locoDidDepart(location, id);

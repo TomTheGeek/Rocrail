@@ -4152,6 +4152,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
 
   Boolean destdir = False;
   Boolean samedir = False;
+  Boolean gotoinwrongdir = False;
 
   iIBlockBase fromBlock = ModelOp.getBlock( inst, fromBlockId );
 
@@ -4331,6 +4332,8 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
               /* Check for wanted block: */
               if( gotoBlockId != NULL && StrOp.equals( gotoBlockId, blockId ) ) {
                 if( forceSameDir && !samedir ) {
+                  gotoinwrongdir = True;
+                  fromBlock->setTempWait(fromBlock, True);
                   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                                  "found the GOTO block [%s] for [%s] but its in the wrong direction", gotoBlockId, LocOp.getId( loc ) );
                 }
@@ -4591,7 +4594,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   MutexOp.post( o->muxFindDest );
 
   /* TODO: return the iIBlockBase interface; could be a FY */
-  return blockBest;
+  return gotoinwrongdir?NULL:blockBest;
 }
 
 static void __printObjects2Stream( iOMap map, const char* title, FILE* f ) {

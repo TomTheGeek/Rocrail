@@ -1795,6 +1795,10 @@ static void __watchdog( void* threadinst ) {
 }
 
 
+static void _setTempWait(iIBlockBase inst, Boolean wait) {
+}
+
+
 /**  */
 static struct OStage* _inst( iONode props ) {
   iOStage __Stage = allocMem( sizeof( struct OStage ) );
