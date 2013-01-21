@@ -1492,7 +1492,6 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse, Boolean* opp
     return data->tempwait;
   }
   __crossCheckType( (iOBlock)inst, loc, &wait, True);
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "tempwait=%d in block [%s]", data->tempwait, data->id );
   *oppwait = (wait | data->tempwait);
   return (wait | data->tempwait);
 }
