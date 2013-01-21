@@ -227,6 +227,8 @@ namespace switchtype {
   static const char* accessory_off = "accessory-%d-off.svg";
   static const char* accessory_on_occ  = "accessory-%d-on-occ.svg";
   static const char* accessory_off_occ = "accessory-%d-off-occ.svg";
+  static const char* accessory_on_route  = "accessory-%d-on-route.svg";
+  static const char* accessory_off_route = "accessory-%d-off-route.svg";
 
   static const int i_crossing       = 1;
   static const int i_dcrossingleft  = 2;

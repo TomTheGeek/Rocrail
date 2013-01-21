@@ -405,6 +405,10 @@ void SymbolRenderer::initSym() {
         m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, key );
         StrOp.fmtb( key, switchtype::accessory_off_occ, wSwitch.getaccnr( m_Props ) );
         m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, key );
+        StrOp.fmtb( key, switchtype::accessory_on_route, wSwitch.getaccnr( m_Props ) );
+        m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, key );
+        StrOp.fmtb( key, switchtype::accessory_off_route, wSwitch.getaccnr( m_Props ) );
+        m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, key );
       }
     }
     else if( StrOp.equals( wSwitch.left, wSwitch.gettype( m_Props ) ) ) {
@@ -1256,22 +1260,28 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, const char* ori
 /**
  * Accessory Switch object
  */
-void SymbolRenderer::drawAccessory( wxPaintDC& dc, bool occupied, const char* ori ) {
+void SymbolRenderer::drawAccessory( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
+  const wxBrush& b = dc.GetBrush();
   const char* state = wSwitch.getstate( m_Props );
 
   // SVG Symbol:
-  if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
-    if( occupied && m_SvgSym4!=NULL)
+  if( StrOp.equals( state, wSwitch.turnout ) ) { // off
+    if( occupied && m_SvgSym4!=NULL )
       drawSvgSym(dc, m_SvgSym4, ori);
-    else
+    else if( actroute && m_SvgSym6!=NULL )
+      drawSvgSym(dc, m_SvgSym6, ori);
+    else if( m_SvgSym2!=NULL )
       drawSvgSym(dc, m_SvgSym2, ori);
   }
-  else if( m_SvgSym1!=NULL ) {
+  else { // on
     if( occupied && m_SvgSym3!=NULL)
       drawSvgSym(dc, m_SvgSym3, ori);
-    else
+    else if( actroute && m_SvgSym5!=NULL )
+      drawSvgSym(dc, m_SvgSym5, ori);
+    else if( m_SvgSym1!=NULL )
       drawSvgSym(dc, m_SvgSym1, ori);
   }
+  dc.SetBrush( b );
 }
 
 
@@ -1370,7 +1380,7 @@ void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, co
       break;
 
     case switchtype::i_accessory:
-      drawAccessory( dc, occupied, ori );
+      drawAccessory( dc, occupied, actroute, ori );
       break;
 
     case switchtype::i_turnoutleft:
@@ -1686,16 +1696,16 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
   }
 
   // SVG Symbol:
-  if( svgSym[1]!=NULL && m_iOccupied == 0 ||
-      svgSym[1]!=NULL && svgSym[5]==NULL && m_iOccupied == 4 ||
-      svgSym[1]!=NULL && svgSym[6]==NULL && m_iOccupied == 5  )
+  if( (svgSym[1]!=NULL && m_iOccupied == 0) ||
+      (svgSym[1]!=NULL && svgSym[5]==NULL && m_iOccupied == 4) ||
+      (svgSym[1]!=NULL && svgSym[6]==NULL && m_iOccupied == 5)  )
   {
     drawSvgSym(dc, svgSym[1], ori);
   }
   else if( svgSym[2]!=NULL && m_iOccupied == 1 ) {
     drawSvgSym(dc, svgSym[2], ori);
   }
-  else if( svgSym[3]!=NULL && m_iOccupied == 2 || svgSym[3]!=NULL && svgSym[4]==NULL && m_iOccupied == 3 ) {
+  else if( (svgSym[3]!=NULL && m_iOccupied == 2) || (svgSym[3]!=NULL && svgSym[4]==NULL && m_iOccupied == 3) ) {
     /* reserved state */
     drawSvgSym(dc, svgSym[3], ori);
   }
@@ -1958,7 +1968,7 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
     StrOp.copy( s, m_Label);
     char* p = s;
     char* ps = p;
-    while( p = StrOp.find(p, "|") ) {
+    while( (p = StrOp.find(p, "|")) ) {
       p[0] = '\0';
       p++;
       //TraceOp.trc( "renderer", TRCLEVEL_INFO, __LINE__, 9999, "text %d,%d [%s] %s", xoff, yoff,  ps, ori );

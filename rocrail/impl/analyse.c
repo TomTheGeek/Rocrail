@@ -323,6 +323,29 @@ static void deleteSingleRoute( iOList route ) {
   return;
 }
 
+static Boolean isSingleTrackRRCrossing( iONode node ) {
+  if( StrOp.equals( NodeOp.getName(node), wSwitch.name() ) &&
+      StrOp.equals( wItem.gettype(node), wSwitch.accessory ) &&
+      ( wSwitch.getaccnr(node) == 10 || /* 1 track, no gate */
+        wSwitch.getaccnr(node) == 11 || /* 1 track, 1 gate  */
+        wSwitch.getaccnr(node) == 12    /* 1 track, 2 gates */
+      )
+    ) {
+    return( True );
+  }
+  return( False );
+}
+
+static Boolean isDoubleTrackRRCrossing( iONode node ) {
+  if( StrOp.equals( NodeOp.getName(node), wSwitch.name() ) &&
+      StrOp.equals( wItem.gettype(node), wSwitch.accessory ) &&
+      wSwitch.getaccnr(node) == 1 
+    ) {
+    return( True );
+  }
+  return( False );
+}
+
 
 static Boolean isStageBlockById( iOModel model, const char* blockid  ) {
   return( NULL != ModelOp.getStage(model, blockid ));
@@ -1315,10 +1338,7 @@ static void __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
             MapOp.put( data->objectmap, key, (obj)node);
           }
         }
-        if( StrOp.equals( type, wSwitch.accessory ) &&
-            wSwitch.getaccnr(node) == 1 
-          ) {
-
+        if( isDoubleTrackRRCrossing( node ) ) {
           if( StrOp.equals( ori, wItem.east ) || StrOp.equals( ori, wItem.west ) ) {
             __createKey( key, node, 0, 1, 0);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
@@ -1586,10 +1606,11 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
       return travel;
     }
     /* accessory 1 (double railroad crossing) */
-    else if( __getType(item) == typeSwitch &&
-             StrOp.equals( subtype, wSwitch.accessory) &&
-             wSwitch.getaccnr(item) == 1
-           ) {
+    else if( isDoubleTrackRRCrossing( item ) ) {
+      return travel;
+    }
+    /* accessory 10/11/12 (single railroad crossing) */
+    else if( isSingleTrackRRCrossing( item ) ) {
       return travel;
     }
     /* switch */
@@ -2889,6 +2910,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
              ! StrOp.equals( wItem.gettype(nextitem), wSwitch.decoupler ) && 
              ! StrOp.equals( wItem.gettype(nextitem), wSwitch.accessory )
            ) {
+      /* real switch */
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "[%s] next is a switch: [%s] turnoutstate_out: [%d] travelp: [%d]",
           wItem.getid(item), wItem.getid(nextitem), turnoutstate_out, travelp);
 
@@ -2975,10 +2997,7 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
             wItem.getid(item), wItem.getid(nextitem), wItem.gettype(nextitem), turnoutstate, travelp);
       }
     }
-    else if( StrOp.equals( NodeOp.getName(nextitem), wSwitch.name() ) &&
-             StrOp.equals( wItem.gettype(nextitem), wSwitch.accessory ) &&
-             wSwitch.getaccnr(nextitem) == 1
-           ) {
+    else if( isDoubleTrackRRCrossing( nextitem ) ) {
       /* double railroad crossing */
       int baseX = 0;
       int baseY = 0;
@@ -3215,7 +3234,7 @@ static int setBlockidForListItems( iOAnalyse inst, iOList routeFrag, int first, 
     }
     else if( StrOp.equals( typ, wSwitch.name() ) && 
              ! StrOp.equals( wItem.gettype(item), wSwitch.decoupler ) &&
-             ! StrOp.equals( wItem.gettype(item), wSwitch.accessory )
+             ! isSingleTrackRRCrossing( item ) 
            ) {
       /* switch has a blockid, but we do not set it */
     }
@@ -3269,13 +3288,12 @@ static int setBlockIDinsideSBsections( iOAnalyse inst, iOList routeFrag ) {
         rt_setBl = False;
       } /* bk || sb || seltab */
       else if( StrOp.equals( NodeOp.getName(item), wSwitch.name()) && 
-               ( StrOp.equals( wItem.gettype(item), wSwitch.decoupler ) || 
-                 ( StrOp.equals( wItem.gettype(item), wSwitch.accessory ) &&
-                   wSwitch.getaccnr(item) == 1
-                 )
+               ( StrOp.equals( wItem.gettype(item), wSwitch.decoupler ) ||
+                 isSingleTrackRRCrossing(item) ||
+                 isDoubleTrackRRCrossing(item)
                )
              ) {
-        /* inside staging block no special handling of decoupler / railroad crossing  */
+        /* inside staging block no special handling of decoupler and railroad crossings */
       } /* sw */
       else if( StrOp.equals( NodeOp.getName(item), wSwitch.name()) ) {
         /* reached a switch while searching feedbacks of staging block */
@@ -3509,7 +3527,7 @@ static int __analyseAllLists(iOAnalyse inst) {
           /* crossing and centered crossing are not relevant for SG/FB */
         } else if( StrOp.equals( wItem.gettype(item), wSwitch.decoupler ) ) {
           /* decoupler is not relevant for SG/FB */
-        } else if( StrOp.equals( wItem.gettype(item), wSwitch.accessory ) && wSwitch.getaccnr(item) == 1 ) {
+        } else if( isSingleTrackRRCrossing(item) || isDoubleTrackRRCrossing(item) ) {
           /* railroad crossing is not relevant for SG/FB */
         } else {
           /* a regular switch is always the end of assignments to the starting block */
@@ -3799,7 +3817,7 @@ static int __analyseAllLists(iOAnalyse inst) {
           /* crossing and centered crossing without address are not relevant for end of blockID setting */
         } else if( StrOp.equals( wItem.gettype(item), wSwitch.decoupler ) ) {
           /* decoupler is not relevant for end of blockID setting */
-        } else if( StrOp.equals( wItem.gettype(item), wSwitch.accessory ) && wSwitch.getaccnr(item) == 1 ) {
+        } else if( isSingleTrackRRCrossing(item) || isDoubleTrackRRCrossing(item) ) {
           /* railroad crossing is not relevant for end of blockID setting */
         } else {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop1: [%s] [%s] SWITCH DETECTED ( %s )", NodeOp.getName(item), wItem.getid(item), bka );
@@ -3895,6 +3913,27 @@ static int __analyseAllLists(iOAnalyse inst) {
         /* decouplers have a blockid */
         iOSwitch decoupler = ModelOp.getSwitch( data->model, wItem.getid(item) );
         node = SwitchOp.base.properties(decoupler);
+        const char* blockid = wItem.getblockid(node);
+        /* only set blockid if not already set */
+        if( ( blockid == NULL ) || ( StrOp.len( blockid ) == 0 ) ) {
+          wSwitch.setblockid(node, bka);
+          modifications++;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s][%s]",
+              bka, NodeOp.getName(item), wItem.gettype(item), wItem.getid(item) );
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s][%s] skipped because already %s",
+              bka, NodeOp.getName(item), wItem.gettype(item), wItem.getid(item), blockid );
+          if( ! StrOp.equals( bka, blockid ) ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "setblockid: [%s] for [%s][%s][%s] skipped. It is not equal to current entry %s",
+                bka, NodeOp.getName(item), wItem.gettype(item), wItem.getid(item), blockid );
+          }
+        }
+      }
+      else if( isSingleTrackRRCrossing(item) ) {
+        /* single railroad crossings have a blockid */
+        iOSwitch rrCrossS = ModelOp.getSwitch( data->model, wItem.getid(item) );
+        node = SwitchOp.base.properties(rrCrossS);
         const char* blockid = wItem.getblockid(node);
         /* only set blockid if not already set */
         if( ( blockid == NULL ) || ( StrOp.len( blockid ) == 0 ) ) {
@@ -4138,7 +4177,9 @@ static int __generateRoutes(iOAnalyse inst) {
 
       if( StrOp.equals( NodeOp.getName(item), wTrack.name()) ||
           StrOp.equals( NodeOp.getName(item), wFeedback.name()) ||
-          StrOp.equals( NodeOp.getName(item), wSignal.name()) ) {
+          StrOp.equals( NodeOp.getName(item), wSignal.name()) ||
+          isSingleTrackRRCrossing(item)
+        ) {
 
         iONode tracknode = NULL;
 
@@ -4166,6 +4207,11 @@ static int __generateRoutes(iOAnalyse inst) {
         if( StrOp.equals( NodeOp.getName(item), wSignal.name()) ) {
           iOSignal track = ModelOp.getSignal( data->model, wItem.getid(item) );
           tracknode = SignalOp.base.properties(track);
+        }
+
+        if( isSingleTrackRRCrossing(item) ) {
+          iOSwitch track = ModelOp.getSwitch( data->model, wItem.getid(item) );
+          tracknode = SwitchOp.base.properties(track);
         }
 
         /* set routeids for tk|fb|sg */
