@@ -6233,3 +6233,9 @@ msgstr ""
 msgid "Startup tour"
 msgstr ""
 
+#. 
+# id="resetrouteidswarning"
+#, c-format
+msgid "Reset all route IDs."
+msgstr ""
+

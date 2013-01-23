@@ -114,6 +114,8 @@ public:
   iONode m_zLevel;
   int m_Z;
   const char* m_Ori;
+  bool m_OK2Clear;
+
 
 private:
   void ChangeItemKey( const char* key, const char* prev_key);

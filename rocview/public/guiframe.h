@@ -187,6 +187,9 @@ public:
   BasePanel* initModPanel( iONode zlevel );
   void RemoveNotebookPage( iONode zlevel );
   iONode findLoc(const char* locid);
+  iONode findRoute( const char* routeid );
+  iONode findBlock( const char* blockid );
+  iONode findSensor( const char* sensorid );
   iONode findCar(const char* carid);
   iONode findWaybill(const char* carid);
   iONode findBlock4Loc(const char* locid, const char* blockid);

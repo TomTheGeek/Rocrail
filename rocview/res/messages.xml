@@ -20473,4 +20473,7 @@
   <Msg id="startuptour">
     <en txt="Startup tour"/>
   </Msg>
+  <Msg id="resetrouteidswarning">
+    <en txt="Reset all route IDs."/>
+  </Msg>
 </Messages>

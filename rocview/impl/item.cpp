@@ -41,6 +41,9 @@
     #include "wx/wx.h"
 #endif
 
+#include <wx/clipbrd.h>
+#include <wx/dataobj.h>
+
 
 #include "rocs/public/node.h"
 #include "rocs/public/str.h"
@@ -884,6 +887,9 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
     return;
   }
 
+  TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "left up: editmode=%d alt=%d ", wxGetApp().getFrame()->isEditMode(), event.AltDown());
+
+
   if( m_isDragged ) {
     m_isDragged = false;
     ReleaseMouse();
@@ -914,6 +920,65 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
     else {
       // Restore position
       setPosition();
+    }
+  }
+  else if( wxGetApp().getFrame()->isEditMode() && event.ShiftDown() ) {
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "check clipboard...");
+    // Read some text
+    bool resetrouteids = false;
+    wxClipboard* cb = wxTheClipboard;
+    if( cb != NULL ) {
+      if( cb->Open() ) {
+        if( cb->IsSupported( wxDF_TEXT )) {
+          wxTextDataObject data;
+          cb->GetData( data );
+          char* id = StrOp.dup(data.GetText().mb_str(wxConvUTF8) );
+          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "add id [%s] to %s", id, wItem.getid(m_Props) );
+          if( id != NULL && StrOp.len(id) > 0 ) {
+            if( wxGetApp().getFrame()->findRoute(id) != NULL ) {
+              // route ID
+              const char* oldroutes = wItem.getrouteids(m_Props );
+              const char* newroutes = id;
+              if( oldroutes != NULL && StrOp.len(oldroutes) > 0 ) {
+                char* s = (char*)allocMem(StrOp.len(oldroutes) + StrOp.len(newroutes) + 10);
+                StrOp.fmtb(s, "%s,%s", oldroutes, newroutes );
+                wItem.setrouteids(m_Props, s );
+                freeMem(s);
+              }
+              else
+                wItem.setrouteids(m_Props, newroutes );
+            }
+            else {
+              if( wxGetApp().getFrame()->findBlock(id) != NULL || wxGetApp().getFrame()->findSensor(id) != NULL ) {
+                wItem.setblockid(m_Props, id );
+              }
+            }
+            m_PlanPanel->m_OK2Clear = false;
+          }
+          else {
+            resetrouteids = true;
+          }
+          StrOp.free(id);
+        }
+        else {
+          resetrouteids = true;
+        }
+        cb->Close();
+
+        if( resetrouteids ) {
+          int action = wxID_YES;
+          if( !m_PlanPanel->m_OK2Clear ) {
+            action = wxMessageDialog( this, wxGetApp().getMsg("resetrouteidswarning"), _T("Rocrail"), wxYES_NO | wxICON_QUESTION ).ShowModal();
+          }
+          if( action == wxID_YES ) {
+            m_PlanPanel->m_OK2Clear = true;
+            TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "reset route IDs on item %s", wItem.getid(m_Props) );
+            wItem.setrouteids(m_Props, "" );
+          }
+        }
+
+
+      }
     }
   }
   else {

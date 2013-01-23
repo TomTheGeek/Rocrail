@@ -49,6 +49,8 @@
 #include <wx/cshelp.h>
 #include <wx/colordlg.h>
 #include <wx/dnd.h>
+#include <wx/clipbrd.h>
+#include <wx/dataobj.h>
 
 #include "rocs/public/str.h"
 #include "rocs/public/file.h"
@@ -165,6 +167,7 @@
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/StageSection.h"
 #include "rocrail/wrapper/public/Issue.h"
+#include "rocrail/wrapper/public/Route.h"
 
 #include "rocview/symbols/svg.h"
 #include "rocview/public/base.h"
@@ -469,6 +472,56 @@ iONode RocGuiFrame::findCar( const char* carid ) {
   }
   return NULL;
 }
+
+
+iONode RocGuiFrame::findRoute( const char* routeid ) {
+  iONode model = wxGetApp().getModel();
+  iONode stlist = wPlan.getstlist( model );
+  if( stlist != NULL ) {
+    int cnt = NodeOp.getChildCnt( stlist );
+    for( int i = 0; i < cnt; i++ ) {
+      iONode st = NodeOp.getChild( stlist, i );
+      const char* id = wRoute.getid( st );
+
+      if( id != NULL && StrOp.equals( routeid, id ) ) {
+        return st;
+      }
+    }
+  }
+  return NULL;
+}
+
+iONode RocGuiFrame::findBlock( const char* id ) {
+  iONode model = wxGetApp().getModel();
+  iONode list = wPlan.getbklist( model );
+  if( list != NULL ) {
+    int cnt = NodeOp.getChildCnt( list );
+    for( int i = 0; i < cnt; i++ ) {
+      iONode node = NodeOp.getChild( list, i );
+      if( id != NULL && StrOp.equals( id, wItem.getid(node) ) ) {
+        return node;
+      }
+    }
+  }
+  return NULL;
+}
+
+iONode RocGuiFrame::findSensor( const char* id ) {
+  iONode model = wxGetApp().getModel();
+  iONode list = wPlan.getfblist( model );
+  if( list != NULL ) {
+    int cnt = NodeOp.getChildCnt( list );
+    for( int i = 0; i < cnt; i++ ) {
+      iONode node = NodeOp.getChild( list, i );
+      if( id != NULL && StrOp.equals( id, wItem.getid(node) ) ) {
+        return node;
+      }
+    }
+  }
+  return NULL;
+}
+
+
 
 
 iONode RocGuiFrame::findWaybill( const char* billid ) {
@@ -1475,6 +1528,15 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_CV                 = NULL;
   m_LNCV               = NULL; 
   m_LocoPanel          = NULL;
+
+  if( wxTheClipboard != NULL ) {
+    if( wxTheClipboard->Open() ) {
+      wxTheClipboard->Clear();
+      wxTextDataObject *data = new wxTextDataObject( wxT("") );
+      wxTheClipboard->SetData( data );
+      wxTheClipboard->Close();
+    }
+  }
 }
 
 void RocGuiFrame::initFrame() {
