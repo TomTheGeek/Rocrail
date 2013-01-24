@@ -50,6 +50,7 @@
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
+#include "rocrail/wrapper/public/Stage.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -118,6 +119,18 @@ LocationsDialog::LocationsDialog( wxWindow* parent, iONode p_Props )
   GetSizer()->Layout();
 }
 
+
+/* comparator for sorting by id: */
+static int __sortID(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wItem.getid( a );
+    const char* idB = wItem.getid( b );
+    return strcmp( idA, idB );
+}
+
+
 void LocationsDialog::initLabels() {
 
   // Labels
@@ -138,7 +151,8 @@ void LocationsDialog::initLabels() {
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
   m_Apply->SetLabel( wxGetApp().getMsg( "apply" ) );
 
-  m_BlockCombo->Clear();
+  iOList list = ListOp.inst();
+
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode bklist = wPlan.getbklist( model );
@@ -146,10 +160,22 @@ void LocationsDialog::initLabels() {
       int cnt = NodeOp.getChildCnt( bklist );
       for( int i = 0; i < cnt; i++ ) {
         iONode bk = NodeOp.getChild( bklist, i );
-        m_BlockCombo->Append( wxString(wBlock.getid( bk ),wxConvUTF8), bk );
+        ListOp.add(list, (obj)bk);
       }
     }
   }
+
+  ListOp.sort(list, &__sortID);
+  m_BlockCombo->Clear();
+
+  int cnt = ListOp.size( list );
+  for( int i = 0; i < cnt; i++ ) {
+    iONode bk = (iONode)ListOp.get( list, i );
+    m_BlockCombo->Append( wxString(wItem.getid( bk ),wxConvUTF8), bk );
+  }
+
+  /* clean up the temp. list */
+  ListOp.base.del(list);
 
 
 }
@@ -171,7 +197,7 @@ void LocationsDialog::initIndex() {
     }
   }
 
-  if( selected != wxNOT_FOUND ) {
+  if( selected != wxNOT_FOUND && m_LocationList->GetCount() >  0 ) {
     m_LocationList->SetSelection( selected );
     m_Props = (iONode)m_LocationList->GetClientData( selected );
   }

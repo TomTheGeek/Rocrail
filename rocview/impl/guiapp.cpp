@@ -877,6 +877,7 @@ static void rocrailCallback( obj me, iONode node ) {
       guiApp->getFrame()->getPlanPanel()->init();
     }
 
+    ThreadOp.sleep(100); // give up some time slices to start the init plan process.
     if( !guiApp->isStayOffline() ) {
       // Get the rocrail setup.
       TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999,"get the rocrail.ini...");
