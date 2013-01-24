@@ -34,6 +34,9 @@
 
 static int instCnt = 0;
 
+static void __initArriveList( iOLocation inst );
+
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -106,6 +109,10 @@ static struct OLocation* _inst( iONode ini ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "location %s: MinOcc=%d Fifo=%d", wLocation.getid(ini), data->minocc, data->fifo );
 
+  data->listmux = MutexOp.inst( NULL, True );
+
+  __initArriveList(__Location);
+
   instCnt++;
   return __Location;
 }
@@ -115,62 +122,84 @@ static struct OLocation* _inst( iONode ini ) {
 static void __initArriveList( iOLocation inst ) {
   iOLocationData data = Data(inst);
   /* iterrate location: */
-  iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( data->props ), ',' );
 
-  while( StrTokOp.hasMoreTokens( blocks ) ) {
-    const char* locationBlock = StrTokOp.nextToken( blocks );
-    iIBlockBase block = ModelOp.getBlock( AppOp.getModel(), locationBlock );
-    if( block != NULL && block->getLoc(block) != NULL ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cold start; add [%s] to the arrived list", block->getLoc(block) );
-      ListOp.add( data->arriveList, (obj)block->getLoc(block) );
+  if( MutexOp.trywait( data->listmux, 10 ) ) {
+    iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( data->props ), ',' );
+
+    while( StrTokOp.hasMoreTokens( blocks ) ) {
+      const char* locationBlock = StrTokOp.nextToken( blocks );
+      iIBlockBase block = ModelOp.getBlock( AppOp.getModel(), locationBlock );
+      if( block != NULL && block->getLoc(block) != NULL && StrOp.len(block->getLoc(block)) > 0 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cold start; add [%s] to the arrived list", block->getLoc(block) );
+        ListOp.add( data->arriveList, (obj)StrOp.dup(block->getLoc(block)) );
+      }
     }
+    StrTokOp.base.del( blocks );
+    MutexOp.post( data->listmux );
   }
-  StrTokOp.base.del( blocks );
 }
 
 
 /**  */
 static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId ) {
-  iOLocationData data = Data(inst);
+  iOLocationData data = (inst == NULL ? NULL:Data(inst));
   int i = 0;
+  if( inst == NULL || LocoId == NULL ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "NULL parameter" );
+    return False;
+  }
+  if( !MutexOp.trywait( data->listmux, 10 ) ) {
+    return False;
+  }
   if( data->minocc > 0 ) {
-    for( i = 0; i < ListOp.size(data->arriveList); i++ ) {
+    int size = ListOp.size(data->arriveList);
+    for( i = 0; i < size; i++ ) {
       const char* arrLoco = (const char*)ListOp.get( data->arriveList, i );
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list", arrLoco, i );
-      if( StrOp.equals( LocoId, arrLoco ) ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list", LocoId, i );
+      if( arrLoco != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list %d", arrLoco, i, size );
+        if( StrOp.equals( LocoId, arrLoco ) ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list %d", LocoId, i, size );
 
-        if( ListOp.size(data->arriveList) >= data->minocc ) {
-          if( data->fifo && i == 0 ) {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is first in the list for FiFo, departure is allowed", LocoId );
-            ListOp.remove( data->arriveList, i);
-            return True;
-          }
-          else if( data->fifo && i > 0 ) {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is not first in the list for FiFo", LocoId );
-            return False;
+          if( ListOp.size(data->arriveList) >= data->minocc ) {
+            if( data->fifo && i == 0 ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is first in the list for FiFo, departure is allowed", LocoId );
+              char* locoid = (char*)ListOp.remove( data->arriveList, i);
+              if( locoid != NULL )
+                StrOp.free(locoid);
+              MutexOp.post( data->listmux );
+              return True;
+            }
+            else if( data->fifo && i > 0 ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is not first in the list for FiFo", LocoId );
+              MutexOp.post( data->listmux );
+              return False;
+            }
+            else {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s may depart", LocoId );
+              char* locoid = (char*)ListOp.remove( data->arriveList, i);
+              if( locoid != NULL )
+                StrOp.free(locoid);
+              MutexOp.post( data->listmux );
+              return True;
+            }
           }
           else {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s may depart", LocoId );
-            ListOp.remove( data->arriveList, i);
-            return True;
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "loco %s must wait: MinOcc=%d Occ=%d", LocoId, data->minocc, ListOp.size(data->arriveList) );
+            MutexOp.post( data->listmux );
+            return False;
           }
-        }
-        else {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-              "loco %s must wait: MinOcc=%d Occ=%d", LocoId, data->minocc, ListOp.size(data->arriveList) );
-          return False;
         }
       }
     }
 
-    /* loco is not in the list; seems a cold start */
-    __initArriveList(inst);
-    return LocationOp.isDepartureAllowed( inst, LocoId );
+    MutexOp.post( data->listmux );
+    return False;
 
   }
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "location [%s] has no flow management [%d,%d]",
       wLocation.getid(data->props), data->minocc, data->fifo );
+  MutexOp.post( data->listmux );
   return True;
 }
 
@@ -179,15 +208,19 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
 static void _locoDidArrive( struct OLocation* inst ,const char* LocoId ) {
   iOLocationData data = Data(inst);
   int i = 0;
-  for( i = 0; i < ListOp.size(data->arriveList); i++ ) {
-    if( StrOp.equals( LocoId, (const char*)ListOp.get( data->arriveList, i ) ) ) {
-      /* already in the list */
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "arriving loco %s is already in the list", LocoId );
-      return;
+  if( MutexOp.trywait( data->listmux, 10 ) ) {
+    for( i = 0; i < ListOp.size(data->arriveList); i++ ) {
+      if( StrOp.equals( LocoId, (const char*)ListOp.get( data->arriveList, i ) ) ) {
+        /* already in the list */
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "arriving loco %s is already in the list", LocoId );
+        MutexOp.post( data->listmux );
+        return;
+      }
     }
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "arriving loco %s is added in the list[%d]", LocoId, ListOp.size( data->arriveList) );
+    ListOp.add( data->arriveList, (obj)StrOp.dup(LocoId));
+    MutexOp.post( data->listmux );
   }
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "arriving loco %s is added in the list[%d]", LocoId, ListOp.size( data->arriveList) );
-  ListOp.add( data->arriveList, (obj)LocoId);
 }
 
 
@@ -195,12 +228,18 @@ static void _locoDidArrive( struct OLocation* inst ,const char* LocoId ) {
 static void _locoDidDepart( struct OLocation* inst ,const char* LocoId ) {
   iOLocationData data = Data(inst);
   int i = 0;
-  for( i = 0; i < ListOp.size(data->arriveList); i++ ) {
-    if( StrOp.equals( LocoId, (const char*)ListOp.get( data->arriveList, i ) ) ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "departing loco %s is removed from the list", LocoId );
-      ListOp.remove( data->arriveList, i);
-      return;
+  if( MutexOp.trywait( data->listmux, 10 ) ) {
+    for( i = 0; i < ListOp.size(data->arriveList); i++ ) {
+      if( StrOp.equals( LocoId, (const char*)ListOp.get( data->arriveList, i ) ) ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "departing loco %s is removed from the list", LocoId );
+        char* locoid = (char*)ListOp.remove( data->arriveList, i);
+        if( locoid != NULL )
+          StrOp.free(locoid);
+        MutexOp.post( data->listmux );
+        return;
+      }
     }
+    MutexOp.post( data->listmux );
   }
 }
 

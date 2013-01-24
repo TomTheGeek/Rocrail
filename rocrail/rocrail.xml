@@ -2134,7 +2134,7 @@
 
 
 
-  <object name="Location" use="node,map,list" remark="Location object">
+  <object name="Location" use="node,map,list,mutex" remark="Location object">
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Location definition"/>
     </fun>
@@ -2170,6 +2170,7 @@
       <var name="minocc" vt="int"/>
       <var name="fifo" vt="Boolean"/>
       <var name="arriveList" vt="iOList"/>
+      <var name="listmux" vt="iOMutex"/>
     </data>
   </object>
 
