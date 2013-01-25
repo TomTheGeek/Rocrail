@@ -72,7 +72,7 @@ static struct OBase* __clone( void* inst ) {
   for( i = 0; i < ListOp.size(inst); i++) {
     ListOp.add(list, ListOp.get(inst, i));
   }
-   return list;
+   return (obj)list;
 }
 
 static Boolean __equals( void* inst1, void* inst2 ) {
