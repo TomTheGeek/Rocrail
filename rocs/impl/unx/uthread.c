@@ -41,9 +41,10 @@
 static void* rocs_thread_wrapper( void* inst ) {
 #ifdef __ROCS_THREAD__
   iOThreadData o = Data(inst);
-  o->id = pthread_self();
+  o->id = (long)pthread_self();
   o->run( inst );
 #endif
+  return NULL;
 }
 
 Boolean rocs_thread_start( iOThread inst ) {
@@ -93,7 +94,7 @@ void rocs_thread_sleep( const int ms ) {
 
 unsigned long rocs_thread_id(void) {
 #ifdef __ROCS_THREAD__
-  return pthread_self();
+  return (long)pthread_self();
 #else
   return 0;
 #endif
@@ -103,7 +104,7 @@ void rocs_thread_kill( iOThread inst ) {
 #ifdef __ROCS_THREAD__
   iOThreadData o = Data(inst);
   /*pthread_kill( o->handle, SIGABRT );*/
-  pthread_cancel( o->handle );
+  pthread_cancel( (void*)o->handle );
 #endif
 }
 
@@ -147,7 +148,7 @@ Boolean rocs_thread_join( iOThread inst ) {
   iOThreadData o = Data(inst);
   int rc = 0;
   if( o != NULL && o->handle != 0 )
-    rc = pthread_join( o->handle, NULL );
+    rc = pthread_join( (void*)o->handle, NULL );
   if( rc == ESRCH )
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "pthread_join rc=%d", rc );
   else if( rc != 0 )
