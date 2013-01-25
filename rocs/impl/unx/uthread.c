@@ -104,7 +104,7 @@ void rocs_thread_kill( iOThread inst ) {
 #ifdef __ROCS_THREAD__
   iOThreadData o = Data(inst);
   /*pthread_kill( o->handle, SIGABRT );*/
-  pthread_cancel( (void*)o->handle );
+  pthread_cancel( (pthread_t)o->handle );
 #endif
 }
 
@@ -148,7 +148,7 @@ Boolean rocs_thread_join( iOThread inst ) {
   iOThreadData o = Data(inst);
   int rc = 0;
   if( o != NULL && o->handle != 0 )
-    rc = pthread_join( (void*)o->handle, NULL );
+    rc = pthread_join( (pthread_t)o->handle, NULL );
   if( rc == ESRCH )
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "pthread_join rc=%d", rc );
   else if( rc != 0 )
