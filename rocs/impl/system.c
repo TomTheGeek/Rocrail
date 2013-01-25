@@ -585,7 +585,7 @@ static Boolean _isExpired(const char* s, char** expdate, long* expdays, int vmaj
 }
 
 
-static char* _decode(byte* b, int len, const char* key) {
+static char* _decode(const byte* b, int len, const char* key) {
   int keyLength = StrOp.len(key);
   char* result = allocMem(len+1);
 
