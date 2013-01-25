@@ -69,7 +69,7 @@ ifeq ($(PLATFORM),WIN32)
 else
 	COREDIR=unx
 	BINSUFFIX=
-	CC_EXTRA_FLAGS=-fPIC
+	CC_EXTRA_FLAGS=-fPIC -Wno-format
 endif
 ifeq ($(PLATFORM),WIN64)
     LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32
