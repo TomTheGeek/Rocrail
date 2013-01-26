@@ -935,7 +935,7 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
           char* id = StrOp.dup(data.GetText().mb_str(wxConvUTF8) );
           TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "add id [%s] to %s", id, wItem.getid(m_Props) );
           if( id != NULL && StrOp.len(id) > 0 ) {
-            if( wxGetApp().getFrame()->findRoute(id) != NULL ) {
+            if( wxGetApp().getFrame()->findRoute(id) != NULL && StrOp.find(wItem.getrouteids(m_Props ), id) == NULL ) {
               // route ID
               const char* oldroutes = wItem.getrouteids(m_Props );
               const char* newroutes = id;
