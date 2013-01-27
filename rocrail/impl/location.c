@@ -35,6 +35,7 @@
 static int instCnt = 0;
 
 static void __initArriveList( iOLocation inst );
+static void __dumpOcc(iOLocation inst);
 
 
 /** ----- OBase ----- */
@@ -123,7 +124,7 @@ static void __initArriveList( iOLocation inst ) {
   iOLocationData data = Data(inst);
   /* iterrate location: */
 
-  if( MutexOp.trywait( data->listmux, 10 ) ) {
+  if( MutexOp.trywait( data->listmux, 100 ) ) {
     iOStrTok blocks = StrTokOp.inst( wLocation.getblocks( data->props ), ',' );
 
     while( StrTokOp.hasMoreTokens( blocks ) ) {
@@ -137,8 +138,20 @@ static void __initArriveList( iOLocation inst ) {
     StrTokOp.base.del( blocks );
     MutexOp.post( data->listmux );
   }
+  __dumpOcc(inst);
 }
 
+
+static void __dumpOcc(iOLocation inst) {
+  iOLocationData data = Data(inst);
+  int i = 0;
+  int size = ListOp.size(data->arriveList);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "----- dump occ list -----" );
+  for( i = 0; i < size; i++ ) {
+    const char* arrLoco = (const char*)ListOp.get( data->arriveList, i );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list %d", arrLoco, i, size );
+  }
+}
 
 /**  */
 static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId ) {
@@ -148,11 +161,12 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "NULL parameter" );
     return False;
   }
-  if( !MutexOp.trywait( data->listmux, 10 ) ) {
+  if( !MutexOp.trywait( data->listmux, 100 ) ) {
     return False;
   }
   if( data->minocc > 0 ) {
     int size = ListOp.size(data->arriveList);
+    __dumpOcc(inst);
     for( i = 0; i < size; i++ ) {
       const char* arrLoco = (const char*)ListOp.get( data->arriveList, i );
       if( arrLoco != NULL ) {
@@ -163,9 +177,6 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
           if( ListOp.size(data->arriveList) >= data->minocc ) {
             if( data->fifo && i == 0 ) {
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is first in the list for FiFo, departure is allowed", LocoId );
-              char* locoid = (char*)ListOp.remove( data->arriveList, i);
-              if( locoid != NULL )
-                StrOp.free(locoid);
               MutexOp.post( data->listmux );
               return True;
             }
@@ -176,9 +187,6 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
             }
             else {
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s may depart", LocoId );
-              char* locoid = (char*)ListOp.remove( data->arriveList, i);
-              if( locoid != NULL )
-                StrOp.free(locoid);
               MutexOp.post( data->listmux );
               return True;
             }
@@ -208,7 +216,7 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
 static void _locoDidArrive( struct OLocation* inst ,const char* LocoId ) {
   iOLocationData data = Data(inst);
   int i = 0;
-  if( MutexOp.trywait( data->listmux, 10 ) ) {
+  if( MutexOp.trywait( data->listmux, 100 ) ) {
     for( i = 0; i < ListOp.size(data->arriveList); i++ ) {
       if( StrOp.equals( LocoId, (const char*)ListOp.get( data->arriveList, i ) ) ) {
         /* already in the list */
@@ -228,7 +236,7 @@ static void _locoDidArrive( struct OLocation* inst ,const char* LocoId ) {
 static void _locoDidDepart( struct OLocation* inst ,const char* LocoId ) {
   iOLocationData data = Data(inst);
   int i = 0;
-  if( MutexOp.trywait( data->listmux, 10 ) ) {
+  if( MutexOp.trywait( data->listmux, 100 ) ) {
     for( i = 0; i < ListOp.size(data->arriveList); i++ ) {
       if( StrOp.equals( LocoId, (const char*)ListOp.get( data->arriveList, i ) ) ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "departing loco %s is removed from the list", LocoId );
@@ -258,6 +266,7 @@ static void _modify( struct OLocation* inst ,iONode mod ) {
 /**  */
 static void _reset( struct OLocation* inst ) {
   iOLocationData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset location %d", wLocation.getid(data->props));
   ListOp.clear(data->arriveList);
   return;
 }
