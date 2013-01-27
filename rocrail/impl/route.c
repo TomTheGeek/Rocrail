@@ -1110,6 +1110,17 @@ static Boolean _isManual( iORoute inst, Boolean* isset ) {
   return wRoute.ismanual(data->props);
 }
 
+
+static Boolean _isLocked( iORoute inst ) {
+  iORouteData data = Data(inst);
+
+  if( data->lockedId != NULL && StrOp.len(data->lockedId) > 0 ) {
+    return True;
+  }
+  return False;
+}
+
+
 static Boolean _isFree( iORoute inst, const char* id ) {
   iORouteData data = Data(inst);
   Boolean isset = False;

@@ -192,6 +192,23 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           else
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "object not found [%s]", id );
         }
+
+        /* Route */
+        else if( StrOp.equals( wRoute.name(), wActionCond.gettype(actionCond) ) ) {
+          const char* id = wActionCond.getid( actionCond );
+          iORoute st = ModelOp.getRoute( model, id );
+          if( st != NULL ) {
+            const char* state = wActionCond.getstate(actionCond);
+            if( !RouteOp.isLocked(st) && StrOp.equals(state, "unlocked") ) {
+              rc = False;
+            }
+            else if( RouteOp.isLocked(st) && StrOp.equals(state, "locked") ) {
+              rc = False;
+            }
+          }
+        }
+
+        /* Sensor */
         else if( StrOp.equals( wFeedback.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
           iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL);

@@ -1330,6 +1330,9 @@
     <fun name="unLink" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
     </fun>
+    <fun name="isLocked" vt="Boolean">
+      <param name="inst" vt="this" remark="Route instance"/>
+    </fun>
     <data>
       <var name="lockedId" vt="const char*"/>
       <var name="props" vt="iONode"/>

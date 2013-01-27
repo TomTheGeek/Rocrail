@@ -42,6 +42,7 @@
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/ActionCond.h"
+#include "rocrail/wrapper/public/Route.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -177,6 +178,7 @@ void ActionsCtrlDlg::initLabels() {
   m_CondType->Append(wxGetApp().getMsg( "loc" ));
   m_CondType->Append(wxGetApp().getMsg( "block" ));
   m_CondType->Append(wxGetApp().getMsg( "system" ));
+  m_CondType->Append(wxGetApp().getMsg( "route" ));
 
 
   // Std buttons
@@ -343,6 +345,8 @@ void ActionsCtrlDlg::initCondValues() {
       m_CondType->SetSelection(5);
     else if( StrOp.equals( wSysCmd.name(), type ) )
       m_CondType->SetSelection(6);
+    else if( StrOp.equals( wRoute.name(), type ) )
+      m_CondType->SetSelection(7);
     initCondIDs();
     m_CondID->SetStringSelection( m_Conditions->GetStringSelection() );
     m_CondState->SetValue( wxString(wActionCond.getstate(actioncond),wxConvUTF8) );
@@ -377,6 +381,7 @@ void ActionsCtrlDlg::initCondIDs() {
       case 4: colist = wPlan.getlclist( model ); break;
       case 5: colist = wPlan.getbklist( model ); break;
       case 6: colist = NULL; break;
+      case 7: colist = wPlan.getstlist( model ); break;
     }
 
 
@@ -454,6 +459,7 @@ void ActionsCtrlDlg::evaluateCond() {
         case 4: type = wLoc.name(); break;
         case 5: type = wBlock.name(); break;
         case 6: type = wSysCmd.name(); break;
+        case 7: type = wRoute.name(); break;
       }
       wActionCond.settype(node, type);
 
