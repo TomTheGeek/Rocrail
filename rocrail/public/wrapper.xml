@@ -2048,6 +2048,7 @@
         <const name="lightoff" vt="string" val="lightoff" remark="Turn lights off."/>
         <const name="calibrate" vt="string" val="calibrate" remark="Calibrate the turntable."/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
+        <var name="fun" vt="int" defval="0" range="0-*"/>
         <const name="locdec" vt="string" val="locdec" remark="Modified analog turntable."/>
         <const name="accdec" vt="string" val="accdec" remark="Controlling a modified turntable with switch commands."/>
         <const name="digitalbahn" vt="string" val="digitalbahn" remark="www.digital-bahn.de turntable decoder"/>

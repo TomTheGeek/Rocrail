@@ -745,6 +745,14 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       iONode cmd = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
       if( StrOp.equals( wAction.tt_goto, wAction.getcmd( data->action ) ) )
         wTurntable.setcmd( cmd, wAction.getparam(data->action) );
+      else if( StrOp.equals( wAction.fun_on, wAction.getcmd( data->action ) ) ) {
+        wTurntable.setcmd( cmd, wAction.fun_on );
+        wTurntable.setfun( cmd, wAction.getparam(data->action) );
+      }
+      else if( StrOp.equals( wAction.fun_off, wAction.getcmd( data->action ) ) ) {
+        wTurntable.setcmd( cmd, wAction.fun_off );
+        wTurntable.setfun( cmd, wAction.getparam(data->action) );
+      }
       else
         wTurntable.setcmd( cmd, wAction.getcmd( data->action ) );
       TTOp.cmd( (iIBlockBase)tt, cmd );

@@ -1640,6 +1640,7 @@ static Boolean _setListener( iOTT inst, obj listenerObj, const tt_listener liste
 static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   iOTTData data = Data(inst);
   iOModel model = AppOp.getModel();
+  iOControl control = AppOp.getControl();
 
   const char* locid = wTurntable.getlocid( nodeA );
   const char* state = wTurntable.getstate( nodeA );
@@ -1678,7 +1679,21 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     return False;
   }
 
-  if( atoi(wTurntable.getcmd( nodeA )) > 0 || StrOp.equals( wTurntable.getcmd(nodeA), "0" ) ) {
+  if( StrOp.equals( wTurntable.getcmd(nodeA), wAction.fun_on ) || StrOp.equals( wTurntable.getcmd(nodeA), wAction.fun_off )) {
+    if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.locdec ) ) {
+      int f = wTurntable.getfun(nodeA);
+      iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      if( wTurntable.getiid(data->props) != NULL )
+        wTurntable.setiid( fcmd, wTurntable.getiid(data->props) );
+      wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
+      wFunCmd.setfnchanged( fcmd, f);
+      __setLocDecFn( fcmd, f, StrOp.equals( wTurntable.getcmd(nodeA), wAction.fun_on ) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "turn function %d %s", f, StrOp.equals( wTurntable.getcmd(nodeA), wAction.fun_on )?"on":"off" );
+      ControlOp.cmd( control, fcmd, NULL );
+    }
+  }
+  else if( atoi(wTurntable.getcmd( nodeA )) > 0 || StrOp.equals( wTurntable.getcmd(nodeA), "0" ) ) {
     if( atoi(wTurntable.getcmd( nodeA )) == 180 ) {
       wTurntable.setcmd( nodeA, wTurntable.turn180 );
       __checkAction( (iOTT)inst, wTurntable.turn180);

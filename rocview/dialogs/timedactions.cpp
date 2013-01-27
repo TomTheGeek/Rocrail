@@ -900,6 +900,8 @@ void TimedActions::initCommands()
     case 9: // turntable
       m_Command->Append(wxString( wAction.tt_goto, wxConvUTF8));
       m_Command->Append(wxString( wAction.tt_turn180, wxConvUTF8));
+      m_Command->Append(wxString( wAction.fun_on, wxConvUTF8));
+      m_Command->Append(wxString( wAction.fun_off, wxConvUTF8));
       break;
     case 10: // fiddle yard
       m_Command->Append(wxString( wAction.tt_goto, wxConvUTF8));
