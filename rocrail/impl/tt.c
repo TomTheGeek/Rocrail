@@ -1875,6 +1875,7 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, const cha
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "bridge at position pos=%d ", data->tablepos );
     wTurntable.setbridgepos( data->props, data->tablepos );
+    __checkAction( (iOTT)inst, "atposition");
 
     if( wTurntable.getdelay( data->props) > 0 ) {
       data->delaytick = SystemOp.getTick();
