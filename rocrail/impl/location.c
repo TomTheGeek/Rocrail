@@ -166,7 +166,6 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
   }
   if( data->minocc > 0 ) {
     int size = ListOp.size(data->arriveList);
-    __dumpOcc(inst);
     for( i = 0; i < size; i++ ) {
       const char* arrLoco = (const char*)ListOp.get( data->arriveList, i );
       if( arrLoco != NULL ) {
@@ -182,6 +181,7 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
             }
             else if( data->fifo && i > 0 ) {
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is not first in the list for FiFo", LocoId );
+              __dumpOcc(inst);
               MutexOp.post( data->listmux );
               return False;
             }
@@ -194,6 +194,7 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
           else {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "loco %s must wait: MinOcc=%d Occ=%d", LocoId, data->minocc, ListOp.size(data->arriveList) );
+            __dumpOcc(inst);
             MutexOp.post( data->listmux );
             return False;
           }
