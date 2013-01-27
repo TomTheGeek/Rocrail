@@ -1684,8 +1684,10 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
       __checkAction( (iOTT)inst, wTurntable.turn180);
     }
     else {
+      char l_cmd[64] = {'\0'};
       __checkAction( (iOTT)inst, "goto");
-      __checkAction( (iOTT)inst, StrOp.fmt( "goto %s", wTurntable.getcmd( nodeA ) ) );
+      StrOp.fmtb( l_cmd, "goto %s", wTurntable.getcmd( nodeA ) );
+      __checkAction( (iOTT)inst, l_cmd);
     }
   }
   else {
@@ -1843,6 +1845,7 @@ static int __getPrevTrack( iOTT inst, int tracknr ) {
 static void __fbPositionEvent( obj inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount ) {
   iOTTData data = Data(inst);
   iOControl control = AppOp.getControl();
+  char l_cmd[64] = {'\0'};
   /* TODO: evaluate position event */
 
   if( puls ) {
@@ -1875,7 +1878,10 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, const cha
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "bridge at position pos=%d ", data->tablepos );
     wTurntable.setbridgepos( data->props, data->tablepos );
+
     __checkAction( (iOTT)inst, "atposition");
+    StrOp.fmtb( l_cmd, "atposition %d", data->tablepos );
+    __checkAction( (iOTT)inst, l_cmd);
 
     if( wTurntable.getdelay( data->props) > 0 ) {
       data->delaytick = SystemOp.getTick();
