@@ -199,10 +199,10 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           iORoute st = ModelOp.getRoute( model, id );
           if( st != NULL ) {
             const char* state = wActionCond.getstate(actionCond);
-            if( !RouteOp.isLocked(st) && StrOp.equals(state, "unlocked") ) {
+            if( RouteOp.isLocked(st) && StrOp.equals(state, "unlocked") ) {
               rc = False;
             }
-            else if( RouteOp.isLocked(st) && StrOp.equals(state, "locked") ) {
+            else if( !RouteOp.isLocked(st) && StrOp.equals(state, "locked") ) {
               rc = False;
             }
           }
@@ -747,11 +747,11 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         wTurntable.setcmd( cmd, wAction.getparam(data->action) );
       else if( StrOp.equals( wAction.fun_on, wAction.getcmd( data->action ) ) ) {
         wTurntable.setcmd( cmd, wAction.fun_on );
-        wTurntable.setfun( cmd, wAction.getparam(data->action) );
+        wTurntable.setfun( cmd, atoi(wAction.getparam(data->action)) );
       }
       else if( StrOp.equals( wAction.fun_off, wAction.getcmd( data->action ) ) ) {
         wTurntable.setcmd( cmd, wAction.fun_off );
-        wTurntable.setfun( cmd, wAction.getparam(data->action) );
+        wTurntable.setfun( cmd, atoi(wAction.getparam(data->action)) );
       }
       else
         wTurntable.setcmd( cmd, wAction.getcmd( data->action ) );
