@@ -68,9 +68,12 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
                            "GotoBlock %s found for \"%s\"",
                            data->gotoBlock, data->loc->getId( data->loc ) );
 
-            /* stop after reaching the gotoBlock */
-            data->gotoBlock = NULL;
-            data->run = False;
+            data->gotoBlock = data->loc->getNextGotoBlock( data->loc, data->gotoBlock );
+            if( data->gotoBlock == NULL) {
+              /* stop after reaching the last gotoBlock */
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stop after reaching the last gotoBlock");
+              data->run = False;
+            }
           }
 
           if( street->isSwap( street ) ) {

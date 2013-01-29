@@ -491,16 +491,36 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
 
     }
   }
+  else if( StrOp.equals( "blocktrip", dropcmd ) ) {
+    if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ||
+          (StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) && wTurntable.isembeddedblock(m_Props)) )
+    {
+      iONode cmd = NULL;
+      /* flash the block */
+      const char* blockloc = wBlock.getlocid(m_Props);
+
+      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: go from %s to %s (blocktrip)", fromid, wBlock.getid(m_Props) );
+
+      /* add block to trip */
+      cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setid( cmd, dropid );
+      wLoc.setcmd( cmd, wLoc.addblock2trip );
+      wLoc.setblockid( cmd, wBlock.getid( m_Props ) );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+
+      ok = true;
+    }
+  }
   else if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ||
         (StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) && wTurntable.isembeddedblock(m_Props)) )
   {
-    iONode cmd = NULL;
-
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: go from %s to %s", fromid, wBlock.getid(m_Props) );
-
     if( wxGetApp().getFrame()->isAutoMode() ) {
+      iONode cmd = NULL;
       /* flash the block */
       const char* blockloc = wBlock.getlocid(m_Props);
+
+      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: go from %s to %s", fromid, wBlock.getid(m_Props) );
 
       /* go to block */
       cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
@@ -1074,8 +1094,14 @@ void Symbol::OnLeftDown(wxMouseEvent& event) {
   StrOp.free( text );
 
   if( !wxGetApp().getFrame()->isEditMode() && StrOp.equals( wBlock.name(), NodeOp.getName(m_Props)) && wBlock.getlocid(m_Props) != NULL && StrOp.len(wBlock.getlocid(m_Props)) > 0 ) {
-    if( event.ControlDown() || event.CmdDown() ) {
+    if( (event.ControlDown() || event.CmdDown()) && !event.AltDown() ) {
       wxTextDataObject my_data(_T("moveto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8)+_T("::") );
+      wxDropSource dragSource( this );
+      dragSource.SetData( my_data );
+      wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+    }
+    else if( (event.ControlDown() || event.CmdDown()) && event.AltDown() ) {
+      wxTextDataObject my_data(_T("blocktrip:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8)+_T("::") );
       wxDropSource dragSource( this );
       dragSource.SetData( my_data );
       wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);

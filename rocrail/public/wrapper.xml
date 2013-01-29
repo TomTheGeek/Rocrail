@@ -2239,6 +2239,7 @@
         <const name="activate" vt="string" val="activate" remark="Allow loco being started in auto mode."/>
         <const name="block" vt="string" val="block" remark="Set loc in the supplied block."/>
         <const name="gotoblock" vt="string" val="gotoblock" remark="Set wanted block."/>
+        <const name="addblock2trip" vt="string" val="addblock2trip" remark="Add a block to the trip."/>
         <const name="useschedule" vt="string" val="useschedule" remark="Set schedule to use."/>
         <const name="usetour" vt="string" val="usetour" remark="Set tour to use."/>
         <const name="dispatch" vt="string" val="dispatch" remark="Dispatch loco for throttle."/>

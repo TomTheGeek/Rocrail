@@ -1802,13 +1802,57 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
 
 static void _gotoBlock( iOLoc inst, const char* id ) {
   iOLocData data = Data(inst);
-  iIBlockBase block = ModelOp.getBlock( AppOp.getModel(), id );
+  iIBlockBase block = block = ModelOp.getBlock( AppOp.getModel(), id );
   if( block != NULL ) {
     data->gotoBlock = block->base.id(block);
     if( data->driver != NULL )
       data->driver->gotoblock( data->driver, data->gotoBlock );
   }
 }
+
+
+static const char* _getNextGotoBlock( iOLoc inst, const char* prevblockid ) {
+  iOLocData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next goto block; prev=[%s]", prevblockid==NULL?"":prevblockid );
+  if( data->blocktrip != NULL ) {
+    iIBlockBase block = NULL;
+    iOStrTok tok = StrTokOp.inst( data->blocktrip, ',' );
+    while( StrTokOp.hasMoreTokens( tok ) ) {
+      const char* bkid = StrTokOp.nextToken( tok );
+
+      if( prevblockid == NULL ) {
+        block = ModelOp.getBlock( AppOp.getModel(), bkid );
+        if( block != NULL ) {
+          data->gotoBlock = block->base.id(block);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "first goto block [%s]", data->gotoBlock );
+          return data->gotoBlock;
+        }
+        break;
+      }
+      else if( StrOp.equals(bkid, prevblockid) && StrTokOp.hasMoreTokens( tok ) ) {
+        bkid = StrTokOp.nextToken( tok );
+        block = ModelOp.getBlock( AppOp.getModel(), bkid );
+        if( block != NULL ) {
+          data->gotoBlock = block->base.id(block);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "next goto block [%s] prev=[%s]", data->gotoBlock, prevblockid );
+          return data->gotoBlock;
+        }
+        break;
+      }
+    }
+
+    /* end of block trip */
+    if( !StrTokOp.hasMoreTokens( tok ) ) {
+      StrOp.free(data->blocktrip);
+      data->blocktrip = NULL;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end of block trip" );
+    }
+
+    StrTokOp.base.del(tok);
+  }
+  return NULL;
+}
+
 
 static void _useSchedule( iOLoc inst, const char* id ) {
   iOLocData data = Data(inst);
@@ -2010,6 +2054,11 @@ static void _reset( iOLoc inst, Boolean saveCurBlock ) {
     data->curBlock = NULL;
     if( data->driver != NULL )
       data->driver->useschedule(data->driver, NULL);
+  }
+
+  if( data->blocktrip != NULL ) {
+    StrOp.free(data->blocktrip);
+    data->blocktrip = NULL;
   }
 
   data->destBlock = NULL;
@@ -2258,7 +2307,27 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     }
     else if( StrOp.equals( wLoc.gotoblock, cmd ) ) {
       const char* blockid = wLoc.getblockid( nodeA );
-      LocOp.gotoBlock( inst, blockid );
+
+      if( data->blocktrip != NULL ) {
+        /* end of block trip */
+        data->blocktrip = StrOp.cat(data->blocktrip, ",");
+        data->blocktrip = StrOp.cat(data->blocktrip, blockid);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block trip end = [%s]", data->blocktrip);
+        LocOp.gotoBlock( inst, LocOp.getNextGotoBlock(inst, NULL) );
+      }
+      else {
+        LocOp.gotoBlock( inst, blockid );
+      }
+    }
+    else if( StrOp.equals( wLoc.addblock2trip, cmd ) ) {
+      const char* blockid = wLoc.getblockid( nodeA );
+      if( data->blocktrip == NULL )
+        data->blocktrip = StrOp.dup(blockid);
+      else {
+        data->blocktrip = StrOp.cat(data->blocktrip, ",");
+        data->blocktrip = StrOp.cat(data->blocktrip, blockid);
+      }
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block trip = [%s]", data->blocktrip);
     }
     else if( StrOp.equals( wLoc.useschedule, cmd ) ) {
       const char* scheduleid = wLoc.getscheduleid( nodeA );
