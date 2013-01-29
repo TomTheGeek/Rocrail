@@ -1759,7 +1759,7 @@ void Symbol::OnUnLoc(wxCommandEvent& event) {
 }
 
 void Symbol::OnLocGoTo(wxCommandEvent& event) {
-  GotoDlg* gotoDlg = new GotoDlg( this );
+  GotoDlg* gotoDlg = new GotoDlg( this, wBlock.getlocid( m_Props ) );
   if( wxID_OK == gotoDlg->ShowModal() ) {
     iONode selection = gotoDlg->getSelected();
     if( selection != NULL ) {

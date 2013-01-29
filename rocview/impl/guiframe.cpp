@@ -4505,7 +4505,7 @@ void RocGuiFrame::OnSlider(wxScrollEvent& event)
 }
 
 void RocGuiFrame::OnLocGoTo(wxCommandEvent& event) {
-  GotoDlg* gotoDlg = new GotoDlg( this );
+  GotoDlg* gotoDlg = new GotoDlg( this, m_LocID );
   if( wxID_OK == gotoDlg->ShowModal() ) {
     iONode selection = gotoDlg->getSelected();
     if( selection != NULL ) {

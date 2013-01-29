@@ -36,6 +36,14 @@ gotodlggen::gotodlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	bSizer7->Add( bSizer8, 0, 0, 5 );
 	
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_AddBlock = new wxButton( this, wxID_ANY, wxT("Add to trip"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( m_AddBlock, 0, wxALL, 5 );
+	
+	bSizer7->Add( bSizer3, 1, wxEXPAND, 5 );
+	
 	m_stdButtons = new wxStdDialogButtonSizer();
 	m_stdButtonsOK = new wxButton( this, wxID_OK );
 	m_stdButtons->AddButton( m_stdButtonsOK );
@@ -57,6 +65,7 @@ gotodlggen::gotodlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_Stages->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( gotodlggen::onStages ), NULL, this );
 	m_FiddleYards->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( gotodlggen::onFYs ), NULL, this );
 	m_Turntables->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( gotodlggen::onTTs ), NULL, this );
+	m_AddBlock->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gotodlggen::onAdd2Trip ), NULL, this );
 	m_stdButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gotodlggen::onCancel ), NULL, this );
 	m_stdButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gotodlggen::onOK ), NULL, this );
 }
@@ -70,6 +79,7 @@ gotodlggen::~gotodlggen()
 	m_Stages->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( gotodlggen::onStages ), NULL, this );
 	m_FiddleYards->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( gotodlggen::onFYs ), NULL, this );
 	m_Turntables->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( gotodlggen::onTTs ), NULL, this );
+	m_AddBlock->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gotodlggen::onAdd2Trip ), NULL, this );
 	m_stdButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gotodlggen::onCancel ), NULL, this );
 	m_stdButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gotodlggen::onOK ), NULL, this );
 	

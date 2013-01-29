@@ -35,6 +35,7 @@ class gotodlggen : public wxDialog
 		wxCheckBox* m_Stages;
 		wxCheckBox* m_FiddleYards;
 		wxCheckBox* m_Turntables;
+		wxButton* m_AddBlock;
 		wxStdDialogButtonSizer* m_stdButtons;
 		wxButton* m_stdButtonsOK;
 		wxButton* m_stdButtonsCancel;
@@ -46,6 +47,7 @@ class gotodlggen : public wxDialog
 		virtual void onStages( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onFYs( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onTTs( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onAdd2Trip( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onCancel( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ) { event.Skip(); }
 		

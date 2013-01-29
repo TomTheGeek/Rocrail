@@ -35,13 +35,15 @@
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/Turntable.h"
+#include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Item.h"
 
 #include "rocview/public/guiapp.h"
 #include "rocs/public/strtok.h"
 
 
 
-GotoDlg::GotoDlg( wxWindow* parent ):gotodlggen( parent )
+GotoDlg::GotoDlg( wxWindow* parent, const char* lcid ):gotodlggen( parent )
 {
   SetTitle(wxGetApp().getMsg( "gotoblock" ));
 
@@ -53,7 +55,7 @@ GotoDlg::GotoDlg( wxWindow* parent ):gotodlggen( parent )
   m_FiddleYards->SetLabel( wxGetApp().getMsg( "seltab" ) );
   m_Turntables->SetLabel( wxGetApp().getMsg( "turntable" ) );
 
-
+  m_LocoID = lcid;
   m_Props = NULL;
   initList(m_List, this, false, false, true);
   m_Blocks->SetValue(true);
@@ -139,5 +141,18 @@ void GotoDlg::onCancel( wxCommandEvent& event )
 void GotoDlg::onOK( wxCommandEvent& event )
 {
   EndModal( wxID_OK );
+}
+
+
+void GotoDlg::onAdd2Trip( wxCommandEvent& event ) {
+  if( m_Props != NULL && m_LocoID != NULL) {
+    /* add block to trip */
+    iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    wLoc.setid( cmd, m_LocoID );
+    wLoc.setcmd( cmd, wLoc.addblock2trip );
+    wLoc.setblockid( cmd, wItem.getid( m_Props ) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
 

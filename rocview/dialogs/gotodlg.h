@@ -41,6 +41,7 @@ class GotoDlg : public gotodlggen, public BaseDialog
 {
   void initIndex();
   iONode m_Props;
+  const char* m_LocoID;
 
 	protected:
 		// Handlers for gotodlggen events.
@@ -52,9 +53,10 @@ class GotoDlg : public gotodlggen, public BaseDialog
 		void onTTs( wxCommandEvent& event );
 		void onCancel( wxCommandEvent& event );
 		void onOK( wxCommandEvent& event );
+    void onAdd2Trip( wxCommandEvent& event );
 	public:
 		/** Constructor */
-		GotoDlg( wxWindow* parent );
+    GotoDlg( wxWindow* parent, const char* lcid );
 	//// end generated class members
 		iONode getSelected() {return m_Props;}
 	
