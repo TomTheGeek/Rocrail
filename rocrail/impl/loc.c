@@ -1802,7 +1802,7 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
 
 static void _gotoBlock( iOLoc inst, const char* id ) {
   iOLocData data = Data(inst);
-  iIBlockBase block = block = ModelOp.getBlock( AppOp.getModel(), id );
+  iIBlockBase block = ModelOp.getBlock( AppOp.getModel(), id );
   if( block != NULL ) {
     data->gotoBlock = block->base.id(block);
     if( data->driver != NULL )
