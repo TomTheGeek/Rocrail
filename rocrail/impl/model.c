@@ -2066,6 +2066,23 @@ static Boolean __removeLoco(iOModelData o, iONode item ) {
 }
 
 
+static Boolean __removeRoute(iOModelData o, iONode item ) {
+  iORoute st = (iORoute)MapOp.get( o->routeMap, wRoute.getid( item ) );
+  if( st != NULL ) {
+    iONode props = RouteOp.base.properties( st );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "removing route %s", wRoute.getid( item ) );
+    MapOp.remove( o->routeMap, wRoute.getid( item ) );
+    ListOp.removeObj(o->routeList, (obj)st);
+    /* Remove item from list: */
+    __removeItemFromList( o, wRouteList.name(), props );
+    st->base.del( st );
+    props->base.del( props );
+    return True;
+  }
+  return False;
+}
+
+
 static void _removeGenerated( iOModelData o, const char* dbKey, const char* itemKey ) {
   iONode db = NodeOp.findNode( o->model, dbKey );
   if( db != NULL ) {
@@ -2074,9 +2091,12 @@ static void _removeGenerated( iOModelData o, const char* dbKey, const char* item
     while( item != NULL ) {
       iONode nextitem = NodeOp.findNextNode( db, item );
       if( wItem.isgenerated(item) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "removing: %s", wItem.getid(item) );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "removing: %s %s", NodeOp.getName(item), wItem.getid(item) );
         if(StrOp.equals( wLoc.name(), NodeOp.getName(item) ) ) {
           __removeLoco(o, item);
+        }
+        else if(StrOp.equals( wRoute.name(), NodeOp.getName(item) ) ) {
+          __removeRoute(o, item);
         }
         else {
           /* TODO: if used for other objects than locos */
