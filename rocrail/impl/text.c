@@ -217,6 +217,8 @@ static void* __event( void* inst, const void* evt ) {
       char hour[8];
       char min[8];
 
+      iOLocation location = NULL;
+
       __evaluateSchedule(sc, scidx, map, hour, min);
 
       MapOp.put(map, "counter", (obj)NodeOp.getStr(node, "counter", "0") );
@@ -243,10 +245,16 @@ static void* __event( void* inst, const void* evt ) {
         MapOp.put(map, "frombkdesc", (obj)wBlock.getdesc(frombkprops));
       }
 
-      if( ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)) != NULL )
-        MapOp.put(map, "bkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk)));
-      if( ModelOp.getBlockLocation(AppOp.getModel(), bk->getFromBlockId(bk)) != NULL )
-        MapOp.put(map, "frombkloc", (obj)ModelOp.getBlockLocation(AppOp.getModel(), bk->getFromBlockId(bk)));
+      location = ModelOp.getBlockLocation(AppOp.getModel(), bk->base.id(bk));
+      if( location != NULL ) {
+        const char* bkloc = LocationOp.base.id(location);
+        MapOp.put(map, "bkloc", (obj)bkloc);
+      }
+      location = ModelOp.getBlockLocation(AppOp.getModel(), bk->getFromBlockId(bk));
+      if( location != NULL ) {
+        const char* frombkloc = LocationOp.base.id(location);
+        MapOp.put(map, "bkloc", (obj)frombkloc);
+      }
 
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
       wText.settext(data->props, msg );
