@@ -336,7 +336,7 @@ void LocationsDialog::CreateControls()
     itemBoxSizer4->Add(m_LabLocations, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxArrayString m_LocationListStrings;
-    m_LocationList = new wxListBox( itemDialog1, ID_LISTBOX_LOCATIONS_LOCATIONS, wxDefaultPosition, wxSize(200, -1), m_LocationListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
+    m_LocationList = new wxListBox( itemDialog1, ID_LISTBOX_LOCATIONS_LOCATIONS, wxDefaultPosition, wxSize(200, -1), m_LocationListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
     itemBoxSizer4->Add(m_LocationList, 1, wxGROW|wxALL, 5);
 
     m_LabName = new wxStaticText( itemDialog1, wxID_STATIC_LOCATIONS_NAME, _("Name"), wxDefaultPosition, wxDefaultSize, 0 );
