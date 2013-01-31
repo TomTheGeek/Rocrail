@@ -1024,30 +1024,42 @@ void SymbolRenderer::drawTrack( wxPaintDC& dc, bool occupied, bool actroute, con
   if( actroute && occupied && m_SvgSym4!=NULL ) {
     drawSvgSym(dc, m_SvgSym4, ori);
     dc.SetBrush( b );
-    return;
   }
-
-  if( occupied && m_SvgSym2!=NULL ) {
+  else if( occupied && m_SvgSym2!=NULL ) {
     drawSvgSym(dc, m_SvgSym2, ori);
     dc.SetBrush( b );
-    return;
   }
   else if( actroute && m_SvgSym3!=NULL ) {
     drawSvgSym(dc, m_SvgSym3, ori);
     dc.SetBrush( b );
-    return;
   }
   else if( actroute && m_SvgSym2!=NULL ) {
     drawSvgSym(dc, m_SvgSym2, ori);
     dc.SetBrush( b );
-    return;
   }
   else if( m_SvgSym1!=NULL ) {
     drawSvgSym(dc, m_SvgSym1, ori);
     dc.SetBrush( b );
-    return;
   }
 
+  if( m_bShowID && StrOp.equals( wTrack.connector, wTrack.gettype( m_Props ) ) ) {
+    wxFont* font = new wxFont( dc.GetFont() );
+    font->SetPointSize( m_iItemIDps );
+    dc.SetFont(*font);
+
+    TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "connector %d", wTrack.gettknr(m_Props));
+
+    if( StrOp.equals( ori, wItem.north ) )
+      dc.DrawRotatedText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 10, 10, 270.0 );
+    else if( StrOp.equals( ori, wItem.south ) )
+      dc.DrawRotatedText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 20, 20, 90.0 );
+    else if( StrOp.equals( ori, wItem.east ) )
+      dc.DrawRotatedText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 10, 20, 0.0 );
+    else
+      dc.DrawRotatedText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 1, 1, 0.0 );
+
+    delete font;
+  }
 }
 
 
