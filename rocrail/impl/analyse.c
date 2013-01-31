@@ -4010,7 +4010,7 @@ static int __generateRoutes(iOAnalyse inst) {
   for( i = 0; i <childcnt; i++) {
     child = NodeOp.getChild( stlist, i);
 
-    if( StrOp.startsWith( wItem.getid( child), "autogen-" )) {
+    if( StrOp.startsWith( wItem.getid( child), "autogen-" ) && ! wItem.isgenerated(child) ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "remove autogen route: [%s]", wItem.getid( child));
       ListOp.add( delList, (obj)child );
     }
@@ -5326,7 +5326,7 @@ static int _cleanupRoutes(iOAnalyse inst) {
         stNode = NodeOp.getChild(stlist, i);
         if( stNode ) {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupRoutes: stNode[%d] = %s : %s", i, NodeOp.getName( stNode ), wRoute.getid( stNode) ) ;
-          if( StrOp.startsWith( wRoute.getid(stNode), "autogen-" )) {
+          if( StrOp.startsWith( wRoute.getid(stNode), "autogen-" ) && ! wItem.isgenerated(stNode) ) {
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupRoutes: remove stRoute %s", wRoute.getid(stNode) );
             NodeOp.removeChild( stlist, stNode );
             modifications++ ;
@@ -5436,6 +5436,23 @@ static int invalidRouteidsCheck( iONode tracklist, iONode stlist, Boolean repair
   return(modifications);
 }
 
+static Boolean isgeneratedRoute( const char* routeId ) {
+  Boolean isGenerated = False;
+
+  if( routeId == NULL || StrOp.len( routeId ) == 0 ) {
+    return False;
+  }else {
+    iORoute route = ModelOp.getRoute( AppOp.getModel(), routeId );
+    if( route != NULL ) {
+      iONode stNode = RouteOp.base.properties( route );
+      if( stNode != NULL ) {
+        isGenerated = wItem.isgenerated( stNode );
+      }
+    }
+  }
+  return isGenerated ; 
+}
+
 /* remove autogen- routeids in tk|sw|sg|fb-list */
 static int _cleanupAutogenRouteids( iONode tracklist ) {
   int modifications = 0;
@@ -5466,9 +5483,9 @@ static int _cleanupAutogenRouteids( iONode tracklist ) {
           iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
           while ( StrTokOp.hasMoreTokens( tok )) {
             const char* token = StrTokOp.nextToken( tok );
-            /* check if id starts with autogen- */
-            if( ( StrOp.len(token) > 0 ) && ( ! StrOp.startsWith( token, "autogen-") ) ) {
-              /* not "autogen-" so append to new list*/
+            /* check if routeid does not start with autogen- except it is a generated route */
+            if( ( StrOp.len(token) > 0 ) && ( isgeneratedRoute( token ) || ( ! StrOp.startsWith( token, "autogen-") ) ) ) {
+              /* generated or not "autogen-" so append to new list*/
               if( StrOp.len(userrouteids)>0 ) {
                 userrouteids = StrOp.cat( userrouteids, ",");
               }

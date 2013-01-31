@@ -3473,12 +3473,25 @@ static void _analyse( iOModel inst, int mode ) {
 
       if(ListOp.size( data->routeList) > 0 ) {
         int i = 0;
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast delete %d routes", ListOp.size( data->routeList) );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast cleanup regular routes (%d)", ListOp.size( data->routeList) );
         iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
         wModelCmd.setcmd( cmd, wModelCmd.remove );
         for( i = 0; i < ListOp.size( data->routeList); i++ ) {
+          Boolean isGenerated = False;
+          iONode route = NULL;
           iORoute item = (iORoute)ListOp.get( data->routeList, i);
-          NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( RouteOp.base.properties(item) ) );
+          if( item != NULL ) {
+            route = RouteOp.base.properties(item) ;
+            if( route != NULL ) {
+              isGenerated = wItem.isgenerated( route );
+            }
+          }
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_analyse test route rtList[%d]=item@[%08.8X] rtid[%s] rtDescription[%s] isGenerated[%d]",
+              i, item, route?wRoute.getid(route):NULL, route?wRoute.getdesc(route):NULL, isGenerated );
+
+          /* only broadcast removal of routes where attribute generated is not set (-> keep TT-routes in client lists) */
+          if( ! isGenerated )
+            NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( RouteOp.base.properties(item) ) );
         }
         AppOp.broadcastEvent( cmd );
         ThreadOp.sleep(10);
