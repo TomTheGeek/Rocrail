@@ -900,9 +900,9 @@ void LC::CreateControls() {
   m_SliderSizer->Add(m_Vslider, 1, wxGROW|wxALL, 1);
 
 #ifdef USENEWLOOK
-  m_Stop = new LEDButton( m_Parent, _(">>"), 154, 25, false );
+  m_Stop = new LEDButton( m_Parent, wxGetApp().getMsg( "stop" ), 154, 25, false );
 #else
-  m_Stop = new wxButton( m_Parent, -1, _("Stop"), wxDefaultPosition, wxSize(130, -1), 0 );
+  m_Stop = new wxButton( m_Parent, -1, wxGetApp().getMsg( "stop" ), wxDefaultPosition, wxSize(130, -1), 0 );
 #endif
   m_ButtonSizer->Add(m_Stop, 0, wxGROW|wxALL, 1);
 
