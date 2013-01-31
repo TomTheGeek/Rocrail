@@ -2191,7 +2191,7 @@ static void _save( iOModel inst, Boolean removeGen ) {
   iOModelData o = Data(inst);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Saving plan [%s]...", o->fileName );
 
-  if( o->model != NULL ) {
+  if( removeGen && o->model != NULL ) {
     _removeGenerated(o, wLocList.name(), wLoc.name());
     _removeGenerated(o, wRouteList.name(), wRoute.name());
   }
