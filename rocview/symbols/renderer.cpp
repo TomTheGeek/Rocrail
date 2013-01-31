@@ -1042,23 +1042,37 @@ void SymbolRenderer::drawTrack( wxPaintDC& dc, bool occupied, bool actroute, con
     dc.SetBrush( b );
   }
 
-  if( m_bShowID && StrOp.equals( wTrack.connector, wTrack.gettype( m_Props ) ) ) {
-    wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( m_iItemIDps );
-    dc.SetFont(*font);
+  if( m_bShowID ) {
+    if( StrOp.equals( wTrack.connector, wTrack.gettype( m_Props ) ) ) {
+      wxFont* font = new wxFont( dc.GetFont() );
+      font->SetPointSize( m_iItemIDps );
+      dc.SetFont(*font);
 
-    TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "connector %d", wTrack.gettknr(m_Props));
+      TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "connector %d", wTrack.gettknr(m_Props));
 
-    if( StrOp.equals( ori, wItem.north ) )
-      dc.DrawRotatedText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 10, 10, 270.0 );
-    else if( StrOp.equals( ori, wItem.south ) )
-      dc.DrawRotatedText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 20, 20, 90.0 );
-    else if( StrOp.equals( ori, wItem.east ) )
-      dc.DrawRotatedText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 10, 20, 0.0 );
-    else
-      dc.DrawRotatedText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 1, 1, 0.0 );
+      if( StrOp.equals( ori, wItem.north ) )
+        dc.DrawRotatedText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 10, 10, 270.0 );
+      else if( StrOp.equals( ori, wItem.south ) )
+        dc.DrawRotatedText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 20, 20, 90.0 );
+      else if( StrOp.equals( ori, wItem.east ) )
+        dc.DrawRotatedText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 10, 20, 0.0 );
+      else
+        dc.DrawRotatedText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 1, 1, 0.0 );
 
-    delete font;
+      delete font;
+    }
+
+    else if( StrOp.equals( wTrack.concurveright, wTrack.gettype( m_Props ) ) || StrOp.equals( wTrack.concurveleft,  wTrack.gettype( m_Props ) ) ) {
+      wxFont* font = new wxFont( dc.GetFont() );
+      font->SetPointSize( m_iItemIDps );
+      dc.SetFont(*font);
+
+      TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "connector %d", wTrack.gettknr(m_Props));
+
+      dc.DrawRotatedText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 10, 10, 0.0 );
+
+      delete font;
+    }
   }
 }
 
