@@ -892,7 +892,7 @@ void PlanPanel::OnLeftUp(wxMouseEvent& event) {
     m_X = (int)(m_mouseX / (m_ItemSize*m_Scale));
     m_Y = (int)(m_mouseY / (m_ItemSize*m_Scale));
 
-    if( m_lastAddedItem != NULL && wxGetApp().getFrame()->isEditMode() ) {
+    if( !m_Selecting && m_lastAddedItem != NULL && wxGetApp().getFrame()->isEditMode() ) {
       wItem.setori(m_lastAddedItem, m_Ori);
       addItemAttr(m_lastAddedItem);
     }
