@@ -3487,7 +3487,7 @@ static void _analyse( iOModel inst, int mode ) {
             }
           }
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_analyse test route rtList[%d]=item@[%08.8X] rtid[%s] rtDescription[%s] isGenerated[%d]",
-              i, item, route?wRoute.getid(route):NULL, route?wRoute.getdesc(route):NULL, isGenerated );
+              i, item, route?wRoute.getid(route):"", route?wRoute.getdesc(route):"", isGenerated );
 
           /* only broadcast removal of routes where attribute generated is not set (-> keep TT-routes in client lists) */
           if( ! isGenerated )
