@@ -366,6 +366,14 @@ void SymbolRenderer::initSym() {
             m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_threeway_tr );
           }
         }
+        else if( raster ) {
+          m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_r );
+          m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_r_tl );
+          m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_r_tr );
+          m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_r_occ );
+          m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_r_tl_occ );
+          m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_r_tr_occ );
+        }
         else {
           m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway );
           m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tl );
