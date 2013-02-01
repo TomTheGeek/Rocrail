@@ -73,6 +73,7 @@ RouteCtrlDlg::RouteCtrlDlg(wxWindow *parent)
   wxBoxSizer *sizer1 = new wxBoxSizer(wxHORIZONTAL);
 
   m_Test = new wxButton( this, -1, wxGetApp().getMsg("test") );
+  m_Force = new wxButton( this, -1, wxGetApp().getMsg("force") );
   m_Quit = new wxButton( this, -1, wxGetApp().getMsg("cancel") );
 
   m_Grid = new wxGrid( this, -1, wxDefaultPosition, wxSize(-1,400) ) ;
@@ -96,6 +97,7 @@ RouteCtrlDlg::RouteCtrlDlg(wxWindow *parent)
 
   sizer1->Add( m_Quit, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 5 );
   sizer1->Add( m_Test, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 5 );
+  sizer1->Add( m_Force, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 5 );
 
   sizer2->Add( sizer1 , 0, wxALIGN_CENTER | wxEXPAND | wxALL, 0 );
 
@@ -121,6 +123,17 @@ void RouteCtrlDlg::OnButton(wxCommandEvent& event)
     {
       iONode cmd = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
       wRoute.setcmd( cmd, wRoute.test );
+      wRoute.setid( cmd, str.mb_str(wxConvUTF8) );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
+  }
+  else if( event.GetEventObject() == m_Force ) {
+    wxString str = m_Grid->GetCellValue( m_Grid->GetCursorRow(), 0 );
+    TraceOp.trace( NULL, TRCLEVEL_INFO, 0, "Forcing %s", (const char*)str.mb_str(wxConvUTF8) );
+    {
+      iONode cmd = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
+      wRoute.setcmd( cmd, wRoute.go );
       wRoute.setid( cmd, str.mb_str(wxConvUTF8) );
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
@@ -180,8 +193,10 @@ void RouteCtrlDlg::init() {
     if( streetdb != NULL )
       fillTable( streetdb );
   }
-  else
+  else {
     m_Test->Enable( false );
+    m_Force->Enable( false );
+  }
 }
 
 
