@@ -2046,6 +2046,8 @@
         <const name="turn180" vt="string" val="180" remark="Go to previous track."/>
         <const name="lighton" vt="string" val="lighton" remark="Turn lights on."/>
         <const name="lightoff" vt="string" val="lightoff" remark="Turn lights off."/>
+        <const name="fon" vt="string" val="on" remark="Turn function on."/>
+        <const name="foff" vt="string" val="off" remark="Turn function off."/>
         <const name="calibrate" vt="string" val="calibrate" remark="Calibrate the turntable."/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <var name="fun" vt="int" defval="0" range="0-*"/>
@@ -2059,6 +2061,7 @@
         <const name="ttdec" vt="string" val="ttdec" remark="LDT TT-DEC"/>
         <const name="d15" vt="string" val="d15" remark="Draai15"/>
         <var name="type" vt="string" defval="locdec" range="*"/>
+        <var name="lightsfn" vt="int" defval="1" range="0-28"/>
         <var name="actfn" vt="int" defval="0" range="0-28" required="false" remark="Activation function for locdec type turntable drives."/>
         <var name="bridgepos" vt="int" defval="0" range="0-47" required="false"/>
         <var name="swaprotation" vt="bool" defval="false" remark="swap bridge rotation direction"/>

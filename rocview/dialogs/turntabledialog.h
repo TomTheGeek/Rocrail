@@ -219,6 +219,8 @@ public:
     wxTextCtrl* m_PolAddr;
     wxStaticText* m_labActFn;
     wxSpinCtrl* m_ActFn;
+    wxStaticText* m_labLightsFn;
+    wxSpinCtrl* m_LightsFn;
     wxStaticText* m_labMotorOffDelay;
     wxSpinCtrl* m_MotorOffDelay;
     wxStaticText* m_LabelType;

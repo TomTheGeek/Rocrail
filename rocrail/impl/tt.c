@@ -318,6 +318,8 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
   }
+  else if( StrOp.equals(wTurntable.fon, cmdStr ) || StrOp.equals( wTurntable.foff, cmdStr )) {
+  }
   else {
     /* Tracknumber */
     int tracknr = atoi( cmdStr );
@@ -548,6 +550,8 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
   }
+  else if( StrOp.equals(wTurntable.fon, cmdStr ) || StrOp.equals( wTurntable.foff, cmdStr )) {
+  }
   else {
     /* Tracknumber */
     int tracknr = atoi( cmdStr );
@@ -769,6 +773,8 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
   }
+  else if( StrOp.equals(wTurntable.fon, cmdStr ) || StrOp.equals( wTurntable.foff, cmdStr )) {
+  }
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
@@ -963,6 +969,8 @@ static Boolean __cmd_f6915( iOTT inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
   }
+  else if( StrOp.equals(wTurntable.fon, cmdStr ) || StrOp.equals( wTurntable.foff, cmdStr )) {
+  }
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
@@ -1102,6 +1110,8 @@ static Boolean __cmd_muet( iOTT inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
   }
+  else if( StrOp.equals(wTurntable.fon, cmdStr ) || StrOp.equals( wTurntable.foff, cmdStr )) {
+  }
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
@@ -1221,6 +1231,8 @@ static Boolean __cmd_slx815( iOTT inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
   }
+  else if( StrOp.equals(wTurntable.fon, cmdStr ) || StrOp.equals( wTurntable.foff, cmdStr )) {
+  }
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
@@ -1311,6 +1323,8 @@ static Boolean __cmd_accdec( iOTT inst, iONode nodeA ) {
   else if( StrOp.equals( wTurntable.lighton, cmdStr ) ) {
   }
   else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
+  }
+  else if( StrOp.equals(wTurntable.fon, cmdStr ) || StrOp.equals( wTurntable.foff, cmdStr )) {
   }
   else {
     /* Tracknumber */
@@ -1414,6 +1428,8 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
   else if( StrOp.equals( wTurntable.lighton, cmdStr ) ) {
   }
   else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
+  }
+  else if( StrOp.equals(wTurntable.fon, cmdStr ) || StrOp.equals( wTurntable.foff, cmdStr )) {
   }
   else {
     /* Tracknumber */
@@ -1556,8 +1572,44 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
   else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
   }
   else if( StrOp.equals( wTurntable.lighton, cmdStr ) ) {
+    int f = wTurntable.getlightsfn( data->props );
+    iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+    if( wTurntable.getiid(data->props) != NULL )
+      wTurntable.setiid( fcmd, wTurntable.getiid(data->props) );
+    wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
+    wFunCmd.setfnchanged( fcmd, f);
+    data->f[f] = True;
+    __cpFn2Node( (iOTT)inst, fcmd );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "turn lights on");
+    ControlOp.cmd( control, fcmd, NULL );
+    return ok;
   }
   else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
+    int f = wTurntable.getlightsfn( data->props );
+    iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+    if( wTurntable.getiid(data->props) != NULL )
+      wTurntable.setiid( fcmd, wTurntable.getiid(data->props) );
+    wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
+    wFunCmd.setfnchanged( fcmd, f);
+    data->f[f] = False;
+    __cpFn2Node( (iOTT)inst, fcmd );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "turn lights off");
+    ControlOp.cmd( control, fcmd, NULL );
+    return ok;
+  }
+  else if( StrOp.equals(wTurntable.fon, cmdStr ) || StrOp.equals( wTurntable.foff, cmdStr )) {
+    int f = wTurntable.getfun(nodeA);
+    iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+    if( wTurntable.getiid(data->props) != NULL )
+      wTurntable.setiid( fcmd, wTurntable.getiid(data->props) );
+    wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
+    wFunCmd.setfnchanged( fcmd, f);
+    data->f[f] = StrOp.equals( wTurntable.getcmd(nodeA), wTurntable.fon );
+    __cpFn2Node( (iOTT)inst, fcmd );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "turn function %d %s", f, StrOp.equals( wTurntable.getcmd(nodeA), wAction.fun_on )?"on":"off" );
+    ControlOp.cmd( control, fcmd, NULL );
+    return ok;
   }
   else {
     /* Tracknumber */
@@ -1689,22 +1741,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     return False;
   }
 
-  if( StrOp.equals( wTurntable.getcmd(nodeA), wAction.fun_on ) || StrOp.equals( wTurntable.getcmd(nodeA), wAction.fun_off )) {
-    if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.locdec ) ) {
-      int f = wTurntable.getfun(nodeA);
-      iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-      if( wTurntable.getiid(data->props) != NULL )
-        wTurntable.setiid( fcmd, wTurntable.getiid(data->props) );
-      wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
-      wFunCmd.setfnchanged( fcmd, f);
-      data->f[f] = StrOp.equals( wTurntable.getcmd(nodeA), wAction.fun_on );
-      __cpFn2Node( (iOTT)inst, fcmd );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "turn function %d %s", f, StrOp.equals( wTurntable.getcmd(nodeA), wAction.fun_on )?"on":"off" );
-      ControlOp.cmd( control, fcmd, NULL );
-    }
-  }
-  else if( atoi(wTurntable.getcmd( nodeA )) > 0 || StrOp.equals( wTurntable.getcmd(nodeA), "0" ) ) {
+  if( atoi(wTurntable.getcmd( nodeA )) > 0 || StrOp.equals( wTurntable.getcmd(nodeA), "0" ) ) {
     if( atoi(wTurntable.getcmd( nodeA )) == 180 ) {
       wTurntable.setcmd( nodeA, wTurntable.turn180 );
       __checkAction( (iOTT)inst, wTurntable.turn180);
