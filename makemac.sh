@@ -31,8 +31,6 @@ else
   echo ""
 fi
 
-cd rocview; make macapp; cd ..;
-
 echo "Getting Bazaar revision number..."
 if which bzr > /dev/null
 then
@@ -47,6 +45,14 @@ fi
 
 echo "Building rocrail-$BAZAARREV-osx-$DIST.dmg"
 echo ""
+
+cd rocview
+pwd
+sed s/\<BZR\>/$BAZAARREV/ < Info.plist.template > Info.plist
+cd ..
+
+cd rocview; make macapp; cd ..;
+
 
 TMP=tmp 
 DMG_FILE=rocrail.dmg

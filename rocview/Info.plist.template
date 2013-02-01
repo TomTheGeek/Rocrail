@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Run</string>
 	<key>CFBundleGetInfoString</key>
-	<string>rocview version 2.0, (c) 2002-2012 rocrail.net</string>
+	<string>rocview version 2.0.<BZR>, (c) 2002-2013 rocrail.net</string>
 	<key>CFBundleIconFile</key>
 	<string>rocrail.icns</string>
 	<key>CFBundleIdentifier</key>
@@ -15,22 +15,22 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
-	<string>2.0, (c) 2002-2012 rocrail.net</string>
+	<string>2.0.<BZR>, (c) 2002-2013 rocrail.net</string>
 	<key>CFBundleName</key>
 	<string>Rocview</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.3.0</string>
+	<string>2.0.<BZR></string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.3.0</string>
+	<string>2.0.<BZR></string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 	<key>LSRequiresCarbon</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright 2002-2012 rocrail.net</string>
+	<string>Copyright 2002-2013 rocrail.net</string>
 </dict>
 </plist>
