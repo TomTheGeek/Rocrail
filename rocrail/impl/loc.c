@@ -2494,8 +2494,10 @@ static void _modify( iOLoc inst, iONode props ) {
       wLoc.setcargo( data->props, wLoc.getcargo(props) );
     if(NodeOp.findAttr(props, "engine"))
       wLoc.setengine( data->props, wLoc.getengine(props) );
-    if(NodeOp.findAttr(props, "consist"))
+    if(NodeOp.findAttr(props, "consist")) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "modify: %s consist=\"%s\"", LocOp.getId(inst), wLoc.getconsist(props));
       wLoc.setconsist( data->props, wLoc.getconsist(props) );
+    }
   }
   else {
     int cnt = NodeOp.getAttrCnt( props );
@@ -2517,8 +2519,12 @@ static void _modify( iOLoc inst, iONode props ) {
       if( StrOp.equals( "destblockid", attname ) )
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "modify: %s destblockid=\"%s\"", LocOp.getId(inst), value );
 
+      if( StrOp.equals( "consist", attname ) )
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "modify: %s consist=\"%s\"", LocOp.getId(inst), wLoc.getconsist(props));
+
       if( !StrOp.equals( "runtime", attname ) )
         NodeOp.setStr( data->props, attname, value );
+
     }
 
     /* Leave the childs if no new are comming */
@@ -2542,6 +2548,7 @@ static void _modify( iOLoc inst, iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)props->base.clone( props );
+    wLoc.setid(clone, wLoc.getid( data->props ) );
     wLoc.setcmd(clone, wModelCmd.modify );
     AppOp.broadcastEvent( clone );
   }

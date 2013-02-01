@@ -793,7 +793,12 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL );
     }
     if( lc != NULL ) {
-      if( StrOp.equals(wLoc.go, wAction.getcmd(data->action) ) ) {
+      if( StrOp.equals(wLoc.consist, wAction.getcmd(data->action) ) ) {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+        wLoc.setconsist(cmd, wAction.getparam(data->action));
+        LocOp.modify(lc, cmd);
+      }
+      else if( StrOp.equals(wLoc.go, wAction.getcmd(data->action) ) ) {
         if( wAction.getparam(data->action) != NULL && StrOp.len( wAction.getparam(data->action) ) > 0 ) {
           iONode scedule = ModelOp.getSchedule(model, wAction.getparam(data->action));
           iIBlockBase block = ModelOp.getBlock(model, wAction.getparam(data->action));

@@ -122,18 +122,21 @@ void WidgetsPanel::initView(iOList list) {
 
 
 void WidgetsPanel::updateLoco(iONode node) {
-  LocoWidget* l_LocoWidget = (LocoWidget*)FindWindowByName(wxString(wLoc.getid( node ),wxConvUTF8));
-  if( l_LocoWidget != NULL ) {
-    l_LocoWidget->UpdateLoco(node);
+  if( wLoc.getid( node ) != NULL && StrOp.len(wLoc.getid( node )) > 0 ) {
+    LocoWidget* l_LocoWidget = (LocoWidget*)FindWindowByName(wxString(wLoc.getid( node ),wxConvUTF8));
+    if( l_LocoWidget != NULL ) {
+      l_LocoWidget->UpdateLoco(node);
+    }
   }
-
 }
 
 
 void WidgetsPanel::updateLocoImg(iONode node) {
-  LocoWidget* l_LocoWidget = (LocoWidget*)FindWindowByName(wxString(wLoc.getid( node ),wxConvUTF8));
-  if( l_LocoWidget != NULL ) {
-    l_LocoWidget->UpdateLocoImg();
+  if( wLoc.getid( node ) != NULL && StrOp.len(wLoc.getid( node )) > 0 ) {
+    LocoWidget* l_LocoWidget = (LocoWidget*)FindWindowByName(wxString(wLoc.getid( node ),wxConvUTF8));
+    if( l_LocoWidget != NULL ) {
+      l_LocoWidget->UpdateLocoImg();
+    }
   }
 }
 
