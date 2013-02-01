@@ -1606,7 +1606,8 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
         wTurntable.setiid( fcmd, iid );
       wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
       wFunCmd.setfnchanged( fcmd, wTurntable.getactfn( data->props ));
-      __setLocDecFn( fcmd, wTurntable.getactfn( data->props ), True );
+      data->f[wTurntable.getactfn( data->props )] = True;
+      __cpFn2Node( inst, fcmd );
 
       wLoc.setV_mode( fcmd, wLoc.V_mode_percent );
       wLoc.setV( fcmd, wTurntable.getV( data->props ) );
@@ -1636,6 +1637,15 @@ static Boolean _setListener( iOTT inst, obj listenerObj, const tt_listener liste
     listenerObj->toString(listenerObj) );
   return True;
 }
+
+__cpFn2Node( iOTT inst, iONode fcmd ) {
+  iOTTData data = Data(inst);
+  int i = 0;
+  for( i = 0; i < 28; i++ ) {
+    __setLocDecFn( fcmd, i, data->f[i] );
+  }
+}
+
 
 static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   iOTTData data = Data(inst);
@@ -1687,7 +1697,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
         wTurntable.setiid( fcmd, wTurntable.getiid(data->props) );
       wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
       wFunCmd.setfnchanged( fcmd, f);
-      __setLocDecFn( fcmd, f, StrOp.equals( wTurntable.getcmd(nodeA), wAction.fun_on ) );
+      data->f[f] = StrOp.equals( wTurntable.getcmd(nodeA), wAction.fun_on );
+      __cpFn2Node( (iOTT)inst, fcmd );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "turn function %d %s", f, StrOp.equals( wTurntable.getcmd(nodeA), wAction.fun_on )?"on":"off" );
       ControlOp.cmd( control, fcmd, NULL );
@@ -1927,7 +1938,8 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, const cha
           wTurntable.setiid( fcmd, iid );
         wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
         wFunCmd.setfnchanged( fcmd, wTurntable.getactfn( data->props ));
-        __setLocDecFn( fcmd, wTurntable.getactfn( data->props ), False );
+        data->f[wTurntable.getactfn( data->props )] = False;
+        __cpFn2Node( (iOTT)inst, fcmd );
 
         wLoc.setV_mode( fcmd, wLoc.V_mode_percent );
         wLoc.setV( fcmd, wTurntable.getV( data->props ) );
@@ -2219,7 +2231,8 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident
         wTurntable.setiid( fcmd, iid );
       wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
       wFunCmd.setfnchanged( fcmd, wTurntable.getactfn( data->props ));
-      __setLocDecFn( fcmd, wTurntable.getactfn( data->props ), False );
+      data->f[wTurntable.getactfn( data->props )] = False;
+      __cpFn2Node( (iOTT)inst, fcmd );
 
       wLoc.setV_mode( fcmd, wLoc.V_mode_percent );
       wLoc.setV( fcmd, wTurntable.getV( data->props ) );

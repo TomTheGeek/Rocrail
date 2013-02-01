@@ -1673,7 +1673,8 @@
       <var name="locIdGroup" vt="const char*"/>
       <var name="selectedTrack" vt="iONode"/>
       <var name="locoOnBridge" vt="Boolean"/>
-    </data>
+      <var name="f[32]" vt="Boolean"/>
+      </data>
   </object>
 
   <object name="Http" use="node,thread,socket,map,mutex" remark="HttpMonitor.">
