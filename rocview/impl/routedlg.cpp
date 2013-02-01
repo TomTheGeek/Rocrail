@@ -133,7 +133,7 @@ void RouteCtrlDlg::OnButton(wxCommandEvent& event)
     TraceOp.trace( NULL, TRCLEVEL_INFO, 0, "Forcing %s", (const char*)str.mb_str(wxConvUTF8) );
     {
       iONode cmd = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
-      wRoute.setcmd( cmd, wRoute.go );
+      wRoute.setcmd( cmd, wRoute.force );
       wRoute.setid( cmd, str.mb_str(wxConvUTF8) );
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);

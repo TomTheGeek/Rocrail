@@ -1911,6 +1911,7 @@
           <var name="lock" vt="bool" defval="true" remark="lock the switch for exclusive use"/>
         </swcmd>
         <const name="go" vt="string" val="go" remark="Switch all switches for this street."/>
+        <const name="force" vt="string" val="force" remark="Switch all switches for this street. (Manually)"/>
         <const name="test" vt="string" val="test" remark="Switch all switches for this street without sending the clients updates."/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <const name="V_none" vt="string" val="none" remark="No V_hint defined."/>

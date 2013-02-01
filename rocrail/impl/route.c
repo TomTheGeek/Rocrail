@@ -490,6 +490,11 @@ static Boolean _cmd( iORoute inst, iONode nodeA ) {
   if( StrOp.equals( wRoute.go, cmdStr ) ) {
     ok = _go( inst );
   }
+  else if( StrOp.equals( wRoute.force, cmdStr ) ) {
+    if( !RouteOp.isFree(inst, "__manualcommand__") )
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route %s is locked and will be switched forced by hand.", RouteOp.getId(inst) );
+    ok = _go( inst );
+  }
   else if( StrOp.equals( wRoute.test, cmdStr ) ) {
     if( RouteOp.isFree(inst, "__manualcommand__") )
       ok = _go( inst );
