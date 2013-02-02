@@ -45,6 +45,7 @@
     <fun name="shutdown" vt="Boolean"/>
     <fun name="saveIni" vt="void"/>
     <fun name="stop" vt="void"/>
+    <fun name="ebreak" vt="void"/>
     <fun name="go" vt="void"/>
     <fun name="getStartTime" vt="long" remark=""/>
     <fun name="getBackTrace" vt="const char**" remark="Get the the last 10 exceptions."/>

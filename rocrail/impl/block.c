@@ -641,6 +641,10 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
           /* power off */
           AppOp.stop();
         }
+        if( wCtrl.isebreakatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
+          /* power off */
+          AppOp.ebreak();
+        }
 
         _resetTD(inst);
 

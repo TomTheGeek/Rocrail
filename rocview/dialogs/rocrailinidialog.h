@@ -335,6 +335,7 @@ public:
     wxCheckBox* m_UseBiCom;
     wxCheckBox* m_StopAtIdentMisMatch;
     wxCheckBox* m_PowerOffAtGhost;
+    wxCheckBox* m_EBreakAtGhost;
     wxCheckBox* m_KeepGhost;
     wxCheckBox* m_DisableSteal;
     wxCheckBox* m_PowerOffAtReset;

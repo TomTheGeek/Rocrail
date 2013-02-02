@@ -1134,6 +1134,18 @@ static void _stop( void ) {
   }
 }
 
+static void _ebreak( void ) {
+  if( __appinst != NULL ) {
+    iOAppData data = Data(__appinst);
+    iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE);
+    wSysCmd.setcmd( cmd, wSysCmd.ebreak );
+    wSysCmd.setinformall( cmd, True );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EBREAK" );
+    if( data->control != NULL )
+      ControlOp.cmd( data->control, (iONode)NodeOp.base.clone(cmd), NULL );
+  }
+}
+
 static void _go( void ) {
   if( __appinst != NULL ) {
     iOAppData data = Data(__appinst);

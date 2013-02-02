@@ -20479,4 +20479,7 @@
   <Msg id="force">
     <en txt="Force"/>
   </Msg>
+  <Msg id="ebreakatghost">
+    <en txt="EBreak at ghost train"/>
+  </Msg>
 </Messages>

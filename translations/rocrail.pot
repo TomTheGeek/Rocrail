@@ -6245,3 +6245,9 @@ msgstr ""
 msgid "Force"
 msgstr ""
 
+#. 
+# id="ebreakatghost"
+#, c-format
+msgid "EBreak at ghost train"
+msgstr ""
+
