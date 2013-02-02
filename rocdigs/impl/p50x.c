@@ -466,11 +466,18 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
-    if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       p50[0] = (byte)'x';
       p50[1] = 0xa6;
       *insize = 1; /* Return code from P50x. */
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+      return 2;
+    }
+    else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      p50[0] = (byte)'x';
+      p50[1] = 0xa5;
+      *insize = 1; /* Return code from P50x. */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Halt" );
       return 2;
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
