@@ -1126,26 +1126,41 @@ static void __seqAck(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type, byte* pdat
 
 static void __handleError(iOBiDiB bidib, byte* pdata) {
   iOBiDiBData data = Data(bidib);
+  char txt[256] = {'\0'};
 
   switch( pdata[0] ) {
   case BIDIB_ERR_TXT: // Txt
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error message" );
+    MemOp.set( txt, 0, 256 );
+    MemOp.copy( txt, pdata+2, pdata[1]);
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "error message: [%s]", txt );
     break;
   case BIDIB_ERR_CRC: // CRC
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "CRC error" );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "CRC error in message number %d", pdata[1] );
     break;
   case BIDIB_ERR_SIZE: // Size
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Size error" );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Size error in message number %d", pdata[1] );
     break;
   case BIDIB_ERR_SEQUENCE: // Sequence
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Sequence error; reset to zero" );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Sequence error in message number %d; reset to zero", pdata[1] );
     __resetSeq(bidib);
     break;
   case BIDIB_ERR_PARAMETER: // Parameter
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Parameter error" );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Parameter error in message number %d", pdata[1] );
     break;
   case BIDIB_ERR_BUS: // Bus fault
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Bus fault: %d", pdata[1] );
+    break;
+  case BIDIB_ERR_ADDRSTACK:
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Address stack overflow: %02X%02X%02X%02X", pdata[1], pdata[2], pdata[3], pdata[4] );
+    break;
+  case BIDIB_ERR_IDDOUBLE:
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Double ID detected" );
+    break;
+  case BIDIB_ERR_SUBCRC:
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Sub node %d CRC error", pdata[1] );
+    break;
+  case BIDIB_ERR_SUBTIME:
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Sub node %d time out", pdata[1] );
     break;
   case BIDIB_ERR_HW: // Hardware error
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Hardware error: %d", pdata[1] );
