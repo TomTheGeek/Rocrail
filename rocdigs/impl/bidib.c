@@ -1139,7 +1139,7 @@ static void __handleError(iOBiDiB bidib, byte* pdata) {
     break;
   case BIDIB_ERR_SEQUENCE: // Sequence
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Sequence error; reset to zero" );
-    data->downSeq = 0;
+    __resetSeq(bidib);
     break;
   case BIDIB_ERR_PARAMETER: // Parameter
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Parameter error" );
@@ -2021,6 +2021,13 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_ACCESSORY_STATE path=%s port=%d aspect=%d", pathKey, pdata[0], pdata[1] );
     __handleAccessory(bidib, bidibnode->uid, pdata);
+    break;
+
+  case MSG_SYS_GET_MAGIC:
+    if( data->magicOK ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "MSG_SYS_GET_MAGIC path=%s; already got the magic", pathKey );
+    }
     break;
 
   default:
