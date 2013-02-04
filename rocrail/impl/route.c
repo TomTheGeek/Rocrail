@@ -674,7 +674,8 @@ static Boolean __checkCrossingBlocks( iORoute inst, const char* id ) {
       iIBlockBase block = ModelOp.getBlock( model, bk );
       if( block != NULL ) {
         if( !block->isFree( block, id ) ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "crossing block [%s] is not free or closed.", bk );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "route %s: crossing block [%s] is not free or closed.", wRoute.getid(o->props), bk );
           StrTokOp.base.del(tok);
           return False;
         }
