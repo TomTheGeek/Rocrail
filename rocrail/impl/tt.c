@@ -137,6 +137,9 @@ static void __checkAction( iOTT inst, const char* cmd ) {
 
         if( wAction.getoid( ttaction) == NULL || StrOp.len(wAction.getoid( ttaction)) == 0 )
           wActionCtrl.setlcid( ttaction, data->lockedId );
+
+        wActionCtrl.setbkid(ttaction, wTurntable.getid( data->props ));
+
         ActionOp.exec(action, ttaction);
       }
     }
@@ -2232,10 +2235,15 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident
     stop = True;
 
   if( stop ) {
+    char l_cmd[64] = {'\0'};
     /* bridge is in position */
     data->pending = False;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "bridge at position pos=%d ", pos );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bridge at position pos=%d ", pos );
+
+    __checkAction( (iOTT)inst, "atposition");
+    StrOp.fmtb( l_cmd, "atposition %d", data->tablepos );
+    __checkAction( (iOTT)inst, l_cmd);
+
     wTurntable.setbridgepos( data->props, pos );
 
     if( wTurntable.getdelay( data->props) > 0 ) {
