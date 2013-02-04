@@ -1606,20 +1606,6 @@ void SymbolRenderer::drawOutput( wxPaintDC& dc, bool occupied, bool actroute, co
     return;
   }
 
-  dc.DrawCircle( 16, 16, 12 );
-
-  if( StrOp.equals( state, wOutput.on ) ) {
-    const wxBrush& b = dc.GetBrush();
-    dc.SetBrush( *wxRED_BRUSH );
-    dc.DrawCircle( 16, 16, 10 );
-    dc.SetBrush( b );
-  }
-  else {
-    const wxBrush& b = dc.GetBrush();
-    dc.SetBrush( *wxGREEN_BRUSH );
-    dc.DrawCircle( 16, 16, 10 );
-    dc.SetBrush( b );
-  }
 }
 
 /**
