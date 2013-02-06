@@ -141,7 +141,6 @@ void FunctionDialog::InitValues() {
     }
   }
 
-  m_BlockOn->SetSelection(wxNOT_FOUND);
   iOStrTok  onblocks = StrTokOp.inst( wFunDef.getonblockid ( m_FunDef ), ',' );
   while( StrTokOp.hasMoreTokens( onblocks ) ) {
     const char* tok = StrTokOp.nextToken( onblocks );
@@ -150,7 +149,6 @@ void FunctionDialog::InitValues() {
   };
   StrTokOp.base.del( onblocks );
 
-  m_BlockOff->SetSelection(wxNOT_FOUND);
   iOStrTok offblocks = StrTokOp.inst( wFunDef.getoffblockid( m_FunDef ), ',' );
   while( StrTokOp.hasMoreTokens( offblocks ) ) {
     const char* tok = StrTokOp.nextToken( offblocks );
