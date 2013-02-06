@@ -1400,7 +1400,7 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
   if( bidibnode != NULL ) {
     uid = bidibnode->uid;
     bidibnode->stat = pdata[0];
-    TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:TRCLEVEL_MONITOR, __LINE__, 9999, "booster %08X state=0x%02X", pdata[0] );
+    TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:TRCLEVEL_MONITOR, __LINE__, 9999, "booster %08X state=0x%02X", uid, pdata[0] );
   }
   else {
     TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:TRCLEVEL_MONITOR, __LINE__, 9999, "booster state=0x%02X", pdata[0] );
