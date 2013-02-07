@@ -33,6 +33,22 @@
 #include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/Command.h"
+#include "rocrail/wrapper/public/FunCmd.h"
+#include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Signal.h"
+#include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Response.h"
+#include "rocrail/wrapper/public/FbInfo.h"
+#include "rocrail/wrapper/public/FbMods.h"
+#include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/Accessory.h"
+#include "rocrail/wrapper/public/Clock.h"
+#include "rocrail/wrapper/public/Text.h"
 
 static int instCnt = 0;
 
@@ -92,12 +108,62 @@ static void* __event( void* inst, const void* evt ) {
 /** ----- OZ21 ----- */
 
 
+static iONode __translate(iOZ21 inst, iONode node) {
+  iOZ21Data data = Data(inst);
+  iONode rsp = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cmd=%s", NodeOp.getName( node ) );
+
+  if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
+  }
+
+  /* System command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+    const char* cmdstr = wSysCmd.getcmd( node );
+    if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
+      /* CS off */
+      byte* packet = allocMem(32);
+      packet[0] = 0x07;
+      packet[1] = 0x00;
+      packet[2] = 0x40;
+      packet[3] = 0x00;
+      packet[4] = 0x21;
+      packet[5] = 0x80;
+      packet[6] = 0xA1;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_SET_TRACK_POWER_OFF" );
+      ThreadOp.post(data->writer, (obj)packet);
+    }
+
+    else if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
+      /* CS on */
+      byte* packet = allocMem(32);
+      packet[0] = 0x07;
+      packet[1] = 0x00;
+      packet[2] = 0x40;
+      packet[3] = 0x00;
+      packet[4] = 0x21;
+      packet[5] = 0x81;
+      packet[6] = 0xA0;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_SET_TRACK_POWER_ON" );
+      ThreadOp.post(data->writer, (obj)packet);
+    }
+
+  }
+
+
+  return rsp;
+}
+
+
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
+  iOZ21Data data = Data(inst);
+  iONode rsp = NULL;
   if( cmd != NULL ) {
+    rsp = __translate( (iOZ21)inst, cmd );
     NodeOp.base.del(cmd);
   }
-  return NULL;
+  return rsp;
 }
 
 
@@ -157,13 +223,47 @@ static int _version( obj inst ) {
 }
 
 
+static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
+  iOZ21Data data = Data(inst);
+
+  if( packet[0] == 0x08 && packet[2] == 0x10 ) {
+    int sn = packet[4] + (packet[5] << 8) + (packet[6] << 16) + (packet[6] << 24);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 serialnumber = %d", sn );
+  }
+}
+
+
 static void __reader( void* threadinst ) {
   iOThread  th   = (iOThread)threadinst;
   iOZ21     z21  = (iOZ21)ThreadOp.getParm( th );
   iOZ21Data data = Data(z21);
+  byte* packet = NULL;
 
-
+  ThreadOp.sleep(500);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 UDP reader started." );
+
+  packet = allocMem(32);
+  packet[0] = 0x04;
+  packet[1] = 0x00;
+  packet[2] = 0x10;
+  packet[3] = 0x00;
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_GET_SERIAL_NUMBER" );
+  ThreadOp.post(data->writer, (obj)packet);
+  ThreadOp.sleep(100);
+
+  packet = allocMem(32);
+  packet[0] = 0x08;
+  packet[1] = 0x00;
+  packet[2] = 0x50;
+  packet[3] = 0x00;
+  packet[4] = 0x07;
+  packet[5] = 0x01;
+  packet[6] = 0x00;
+  packet[7] = 0x00;
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_SET_BROADCASTFLAGS" );
+  ThreadOp.post(data->writer, (obj)packet);
+
+
 
   do {
     byte packet[256];
@@ -173,7 +273,7 @@ static void __reader( void* threadinst ) {
 
     if( packetSize > 0 && packetSize < 256 ) {
       TraceOp.dump ( name, TRCLEVEL_INFO, (char*)packet, packetSize );
-      //Boolean rc = SocketOp.sendto( data->writeUDP, packet, packetSize, NULL, 0 );
+      __evaluatePacket(z21, packet, packetSize);
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unexpected packet size %d received", packetSize );
@@ -184,6 +284,40 @@ static void __reader( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 UDP reader stopped." );
 }
+
+
+static void __writer( void* threadinst ) {
+  iOThread  th   = (iOThread)threadinst;
+  iOZ21     z21  = (iOZ21)ThreadOp.getParm( th );
+  iOZ21Data data = Data(z21);
+
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 UDP writer started." );
+
+  do {
+    byte packet[256];
+    byte * post = NULL;
+    int len = 0;
+
+    post = (byte*)ThreadOp.getPost( th );
+
+    if (post != NULL) {
+      /* first byte is the message length */
+      len = post[0];
+      MemOp.copy( packet, post, len);
+      freeMem( post);
+      TraceOp.dump ( name, TRCLEVEL_INFO, (char*)packet, len );
+      SocketOp.sendto( data->writeUDP, packet, len, NULL, 0 );
+    }
+
+    ThreadOp.sleep(10);
+
+  } while( data->run );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 UDP writer stopped." );
+}
+
+
 
 
 /**  */
@@ -197,18 +331,26 @@ static struct OZ21* _inst( const iONode ini ,const iOTrace trc ) {
   data->ini = ini;
   data->run = True;
 
+  if( wDigInt.getport( data->ini ) == 0 ) {
+    wDigInt.setport( data->ini, 21105 );
+  }
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "z21 %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "multicast address [%s]", wDigInt.gethost( data->ini )  );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "multicast port    [%d]", wDigInt.getport( data->ini )  );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 IP address [%s]", wDigInt.gethost( data->ini )  );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 UDP port [%d]", wDigInt.getport( data->ini )  );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, False );
   SocketOp.bind(data->readUDP);
+
   data->writeUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, False );
 
   data->reader = ThreadOp.inst( "z21reader", &__reader, __Z21 );
   ThreadOp.start( data->reader );
+
+  data->writer = ThreadOp.inst( "z21writer", &__writer, __Z21 );
+  ThreadOp.start( data->writer );
 
   instCnt++;
   return __Z21;
