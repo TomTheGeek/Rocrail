@@ -1700,6 +1700,8 @@
       <var name="writeUDP" vt="iOSocket"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
+      <var name="power" vt="Boolean"/>
+      <var name="sensor[256]" vt="byte"/>
       </data>
   </object>
 

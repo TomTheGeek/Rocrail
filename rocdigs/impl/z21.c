@@ -107,6 +107,42 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OZ21 ----- */
 
+Boolean __getFState(iONode fcmd, int fn) {
+  switch( fn ) {
+    case 0 : return (wFunCmd.isf0 (fcmd) | wLoc.isfn(fcmd));
+    case 1 : return wFunCmd.isf1 (fcmd);
+    case 2 : return wFunCmd.isf2 (fcmd);
+    case 3 : return wFunCmd.isf3 (fcmd);
+    case 4 : return wFunCmd.isf4 (fcmd);
+    case 5 : return wFunCmd.isf5 (fcmd);
+    case 6 : return wFunCmd.isf6 (fcmd);
+    case 7 : return wFunCmd.isf7 (fcmd);
+    case 8 : return wFunCmd.isf8 (fcmd);
+    case 9 : return wFunCmd.isf9 (fcmd);
+    case 10: return wFunCmd.isf10(fcmd);
+    case 11: return wFunCmd.isf11(fcmd);
+    case 12: return wFunCmd.isf12(fcmd);
+    case 13: return wFunCmd.isf13(fcmd);
+    case 14: return wFunCmd.isf14(fcmd);
+    case 15: return wFunCmd.isf15(fcmd);
+    case 16: return wFunCmd.isf16(fcmd);
+    case 17: return wFunCmd.isf17(fcmd);
+    case 18: return wFunCmd.isf18(fcmd);
+    case 19: return wFunCmd.isf19(fcmd);
+    case 20: return wFunCmd.isf20(fcmd);
+    case 21: return wFunCmd.isf21(fcmd);
+    case 22: return wFunCmd.isf22(fcmd);
+    case 23: return wFunCmd.isf23(fcmd);
+    case 24: return wFunCmd.isf24(fcmd);
+    case 25: return wFunCmd.isf25(fcmd);
+    case 26: return wFunCmd.isf26(fcmd);
+    case 27: return wFunCmd.isf27(fcmd);
+    case 28: return wFunCmd.isf28(fcmd);
+  }
+  return False;
+}
+
+
 
 static iONode __translate(iOZ21 inst, iONode node) {
   iOZ21Data data = Data(inst);
@@ -147,9 +183,101 @@ static iONode __translate(iOZ21 inst, iONode node) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_SET_TRACK_POWER_ON" );
       ThreadOp.post(data->writer, (obj)packet);
     }
-
   }
 
+  /* Switch command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    int addr = wSwitch.getaddr1( node );
+    Boolean turnout = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node));
+    Boolean active = True;
+    byte* packet = allocMem(32);
+    packet[0] = 0x09;
+    packet[1] = 0x00;
+    packet[2] = 0x40;
+    packet[3] = 0x00;
+    packet[4] = 0x53;
+    packet[5] = addr / 256; /*MSB*/
+    packet[6] = addr % 256; /*LSB*/
+    packet[7] = 0x88 + (active?0x08:0x00) + (turnout?0x01:0x00); /*1000A00P*/
+    packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dual gate switch %d: %s", addr, wSwitch.getcmd(node) );
+    ThreadOp.post(data->writer, (obj)packet);
+  }
+
+  /* Output command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    int addr = wOutput.getaddr( node );
+    int gate = wOutput.getgate( node );
+    Boolean active = StrOp.equals( wOutput.getcmd( node ), wOutput.on );
+    byte* packet = allocMem(32);
+    packet[0] = 0x09;
+    packet[1] = 0x00;
+    packet[2] = 0x40;
+    packet[3] = 0x00;
+    packet[4] = 0x53;
+    packet[5] = addr / 256; /*MSB*/
+    packet[6] = addr % 256; /*LSB*/
+    packet[7] = 0x88 + (active?0x08:0x00) + gate; /*1000A00P*/
+    packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d.%d: %s", addr, gate, wSwitch.getcmd(node) );
+    ThreadOp.post(data->writer, (obj)packet);
+  }
+
+  /* Sensor command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFeedback.name() ) ) {
+    int addr = wFeedback.getaddr( node );
+    Boolean state = wFeedback.isstate( node );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
+    rsp = (iONode)NodeOp.base.clone( node );
+  }
+
+  /* Loc command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    int addr = wLoc.getaddr( node );
+    int speed = 0;
+    byte* packet = allocMem(32);
+
+    if( wLoc.getV( node ) != -1 ) {
+      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+        speed = (wLoc.getV( node ) * 127) / 100;
+      else if( wLoc.getV_max( node ) > 0 )
+        speed = (wLoc.getV( node ) * 127) / wLoc.getV_max( node );
+    }
+
+    packet[0] = 0x0A;
+    packet[1] = 0x00;
+    packet[2] = 0x40;
+    packet[3] = 0x00;
+    packet[4] = 0xE4;
+    packet[5] = 0x13; /*128 speed steps*/
+    packet[6] = addr / 256; /*MSB*/
+    packet[7] = addr % 256; /*LSB*/
+    packet[8] = (wLoc.isdir( node )?0x10:0x00) + speed;
+    packet[9] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8]; /*xor*/
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d step=%d", addr, speed );
+    ThreadOp.post(data->writer, (obj)packet);
+  }
+
+  /* Function command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    int addr      = wFunCmd.getaddr( node );
+    int fnchanged = wFunCmd.getfnchanged(node);
+    Boolean fnstate = __getFState(node, fnchanged);
+    byte* packet = allocMem(32);
+    packet[0] = 0x0A;
+    packet[1] = 0x00;
+    packet[2] = 0x40;
+    packet[3] = 0x00;
+    packet[4] = 0xE4;
+    packet[5] = 0xF8;
+    packet[6] = addr / 256; /*MSB*/
+    packet[7] = addr % 256; /*LSB*/
+    packet[8] = (fnstate?0x40:0x00) + fnchanged;
+    packet[9] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8]; /*xor*/
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d function %d %s", addr, fnchanged, fnstate?"on":"off" );
+    ThreadOp.post(data->writer, (obj)packet);
+  }
 
   return rsp;
 }
@@ -176,6 +304,14 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
   iOZ21Data data = Data(inst);
+  byte* packet = allocMem(32);
+  packet[0] = 0x04;
+  packet[1] = 0x00;
+  packet[2] = 0x30;
+  packet[3] = 0x00;
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_LOGOFF" );
+  ThreadOp.post(data->writer, (obj)packet);
+  ThreadOp.sleep(200);
   data->run = False;
 }
 
@@ -223,12 +359,100 @@ static int _version( obj inst ) {
 }
 
 
-static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
+static void __reportState(iOZ21 inst) {
   iOZ21Data data = Data(inst);
 
-  if( packet[0] == 0x08 && packet[2] == 0x10 ) {
-    int sn = packet[4] + (packet[5] << 8) + (packet[6] << 16) + (packet[6] << 24);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 serialnumber = %d", sn );
+  if( data->listenerFun != NULL && data->listenerObj != NULL ) {
+    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+
+    if( data->iid != NULL )
+      wState.setiid( node, data->iid );
+    wState.setpower( node, data->power );
+
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+}
+
+
+static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
+  iOZ21Data data = Data(inst);
+  int packetIdx = 0;
+
+  while( packetIdx < packetSize ) {
+
+    if( packet[packetIdx] == 0x08 && packet[packetIdx+2] == 0x10 ) {
+      int sn = packet[packetIdx+4] + (packet[packetIdx+5] << 8) + (packet[packetIdx+6] << 16) + (packet[packetIdx+6] << 24);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Z21 serialnumber = %d", sn );
+    }
+
+    else if( packet[packetIdx] == 0x07 && packet[packetIdx+2] == 0x40 ) {
+      if( packet[packetIdx+4] == 0x61 && packet[packetIdx+5] == 0x00 ) {
+        data->power = False;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_BC_TRACK_POWER_OFF" );
+        __reportState(inst);
+      }
+      else if( packet[packetIdx+4] == 0x61 && packet[packetIdx+5] == 0x01 ) {
+        data->power = True;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_BC_TRACK_POWER_ON" );
+        __reportState(inst);
+      }
+      else if( packet[packetIdx+4] == 0x61 && packet[packetIdx+5] == 0x08 ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_BC_TRACK_SHORT_CIRCUIT" );
+      }
+      else if( packet[packetIdx+4] == 0x81 && packet[packetIdx+5] == 0x00 ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_BC_STOPPED" );
+      }
+    }
+
+    else if( packet[packetIdx] == 0x09 && packet[packetIdx+2] == 0x40 ) {
+      if( packet[packetIdx+4] == 0x43 ) {
+        int addr = (packet[packetIdx+5] << 8) + packet[packetIdx+6];
+        int zz = packet[packetIdx+7];
+        /*
+        ZZ=01 P=0, see LAN_X_SET_TURNOUT
+        ZZ=10 P=1, see LAN_X_SET_TURNOUT
+         */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_TURNOUT_INFO: addr=%d zz=%02X", addr, zz );
+        if( zz == 0x01 || zz == 0x02 ) {
+          iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+          wSwitch.setaddr1( nodeC, addr );
+          if( data->iid != NULL )
+            wSwitch.setiid( nodeC, data->iid );
+          wSwitch.setstate( nodeC, zz==0x01?"straight":"turnout" );
+          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+        }
+      }
+    }
+
+    else if( packet[packetIdx] == 0x0F && packet[packetIdx+2] == 0x80 ) {
+      int grp = packet[packetIdx+4];
+      int i = 0;
+      int n = 0;
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "evaluate sensor group %d", grp);
+      for( i = 0; i < 10; i++ ) {
+        int idx  = grp * 10 + i;
+        byte status = packet[packetIdx+5+i];
+        for( n = 0; i < 8; i++ ) {
+          int addr = grp * 10 + i * 8 + n;
+          byte mask = (1 << n);
+          if( status & mask != data->sensor[idx] & mask ) {
+            iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+            wFeedback.setaddr( nodeC, addr );
+            wFeedback.setstate( nodeC, (status & mask) ? True:False );
+            if( data->iid != NULL )
+              wFeedback.setiid( nodeC, data->iid );
+            if( data->listenerFun != NULL && data->listenerObj != NULL )
+              data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Sensor %d=%s", addr, (status & mask)?"on":"off");
+          }
+        }
+        data->sensor[idx] = status;
+      }
+    }
+
+    packetIdx += packet[packetIdx];
   }
 }
 
@@ -261,6 +485,28 @@ static void __reader( void* threadinst ) {
   packet[6] = 0x00;
   packet[7] = 0x00;
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_SET_BROADCASTFLAGS" );
+  ThreadOp.post(data->writer, (obj)packet);
+  ThreadOp.sleep(100);
+
+  // SoD Group 0
+  packet = allocMem(32);
+  packet[0] = 0x05;
+  packet[1] = 0x00;
+  packet[2] = 0x81;
+  packet[3] = 0x00;
+  packet[4] = 0x00; // group 0
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_RMBUS_GETDATA" );
+  ThreadOp.post(data->writer, (obj)packet);
+  ThreadOp.sleep(100);
+
+  // SoD Group 1
+  packet = allocMem(32);
+  packet[0] = 0x05;
+  packet[1] = 0x00;
+  packet[2] = 0x81;
+  packet[3] = 0x00;
+  packet[4] = 0x01; // group 1
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_RMBUS_GETDATA" );
   ThreadOp.post(data->writer, (obj)packet);
 
 
