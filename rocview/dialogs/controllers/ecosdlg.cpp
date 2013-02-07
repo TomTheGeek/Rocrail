@@ -65,7 +65,7 @@ ECoSCtrlDialog::ECoSCtrlDialog()
 
 ECoSCtrlDialog::ECoSCtrlDialog( wxWindow* parent, iONode props, const char* devices )
 {
-  Create(parent, -1, wxGetApp().getMsg("ecos"));
+  Create(parent, -1, wxString::From8BitData(wDigInt.getlib(props)).Upper());
   m_Props = props;
   m_Devices = devices;
   initLabels();
