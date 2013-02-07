@@ -279,6 +279,70 @@ static iONode __translate(iOZ21 inst, iONode node) {
     ThreadOp.post(data->writer, (obj)packet);
   }
 
+  /* Program command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    Boolean direct = wProgram.getmode(node) == wProgram.mode_direct;
+    int cv = wProgram.getcv( node );
+    int value = wProgram.getvalue( node );
+    int addr = wProgram.getaddr( node );
+
+    if( wProgram.getcmd( node ) == wProgram.get ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d on %s...", cv, wProgram.ispom(node)?"POM":"PT" );
+
+      if( wProgram.ispom(node) ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV get by POM is not supported" );
+      }
+      else {
+        byte* packet = allocMem(32);
+        packet[0] = 0x09;
+        packet[1] = 0x00;
+        packet[2] = 0x40;
+        packet[3] = 0x00;
+        packet[4] = 0x23;
+        packet[5] = 0x11;
+        packet[6] = cv / 256;
+        packet[7] = cv % 256;
+        packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
+        ThreadOp.post(data->writer, (obj)packet);
+
+      }
+    }
+    else if( wProgram.getcmd( node ) == wProgram.set ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set CV%d=%d %s...", cv, value, wProgram.ispom(node)?"POM":"PT" );
+
+      if( wProgram.ispom(node) ) {
+        byte* packet = allocMem(32);
+        packet[0] = 0x0C;
+        packet[1] = 0x00;
+        packet[2] = 0x40;
+        packet[3] = 0x00;
+        packet[4] = 0xE6;
+        packet[5] = 0x30;
+        packet[6] = addr / 256;
+        packet[7] = addr % 256;
+        packet[8] = 0xEC + cv / 256;
+        packet[9] = cv % 256;
+        packet[10] = value;
+        packet[11] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8] ^ packet[9] ^ packet[10]; /*xor*/
+        ThreadOp.post(data->writer, (obj)packet);
+      }
+      else {
+        byte* packet = allocMem(32);
+        packet[0] = 0x0A;
+        packet[1] = 0x00;
+        packet[2] = 0x40;
+        packet[3] = 0x00;
+        packet[4] = 0x24;
+        packet[5] = 0x12;
+        packet[6] = cv / 256;
+        packet[7] = cv % 256;
+        packet[8] = value;
+        packet[9] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8]; /*xor*/
+        ThreadOp.post(data->writer, (obj)packet);
+      }
+    }
+  }
+
   return rsp;
 }
 
@@ -452,6 +516,28 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       }
     }
 
+    /* PT */
+    else if( packet[packetIdx] == 0x0A && packet[packetIdx+2] == 0x40 ) {
+      if( packet[packetIdx+4] == 0x64 && packet[packetIdx+5] == 0x14 ) {
+        int cv = packet[packetIdx+6] * 256 + packet[packetIdx+7];
+        int value = packet[packetIdx+8];
+        iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        wProgram.setcv( node, cv );
+        wProgram.setvalue( node, value );
+        wProgram.setcmd( node, wProgram.datarsp );
+        if( data->iid != NULL )
+          wProgram.setiid( node, data->iid );
+
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV %d=%d", cv, value);
+        if( data->listenerFun != NULL && data->listenerObj != NULL )
+          data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+      }
+    }
+
+    /* RailCom */
+    else if( packet[packetIdx+2] == 0x88 ) {
+    }
+
     packetIdx += packet[packetIdx];
   }
 }
@@ -507,6 +593,16 @@ static void __reader( void* threadinst ) {
   packet[3] = 0x00;
   packet[4] = 0x01; // group 1
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_RMBUS_GETDATA" );
+  ThreadOp.post(data->writer, (obj)packet);
+  ThreadOp.sleep(100);
+
+  // SoD RailCom
+  packet = allocMem(32);
+  packet[0] = 0x04;
+  packet[1] = 0x00;
+  packet[2] = 0x89;
+  packet[3] = 0x00;
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_RAILCOM_GETDATA" );
   ThreadOp.post(data->writer, (obj)packet);
 
 
