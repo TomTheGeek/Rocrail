@@ -677,6 +677,10 @@ static struct OZ21* _inst( const iONode ini ,const iOTrace trc ) {
     wDigInt.setport( data->ini, 21105 );
   }
 
+  if( StrOp.len(wDigInt.gethost( data->ini )) == 0 ) {
+    wDigInt.sethost( data->ini, "192.168.0.111");
+  }
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 IP address [%s]", wDigInt.gethost( data->ini )  );
