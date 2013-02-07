@@ -2293,26 +2293,26 @@
       <var name="bklist" vt="iOList"/>
       <var name="preRTlist" vt="iOList"/>
       <var name="notRTlist" vt="iOList"/>
-      <var name="setRouteId"                    vt="Boolean" remark="set for all automatic detected routes"/>
-      <var name="setBlockId"                    vt="Boolean" remark="set for all blocks"/>
-      <var name="addSignalBlockAssignment"      vt="Boolean" remark="assign signals to blocks"/>
-      <var name="addFeedbackBlockAssignment"    vt="Boolean" remark="assign feedbacks to blocks"/>
-      <var name="cleanRouteId"                  vt="Boolean" remark="clean routeids of all automatic detected routes"/>
-      <var name="resetBlockId"                  vt="Boolean" remark="reset blockids in whole plan"/>
-      <var name="resetSignalBlockAssignment"    vt="Boolean" remark="reset sg assignments in all blocks"/>
-      <var name="resetFeedbackBlockAssignment"  vt="Boolean" remark="reset fb assignments in all blocks"/>
-      <var name="blockFeedbackActionCheck"      vt="Boolean" remark="check feedback action  assignments in all blocks"/>
-      <var name="blockFeedbackActionCheckClean" vt="Boolean" remark="ckean incomplete action assignments in all blocks"/>
-      <var name="blockRouteFbValidation"        vt="Boolean" remark="check dest routes and fb assignments in blocks"/>
-      <var name="blockRouteFbValidationClean"   vt="Boolean" remark="clean invalid route/fb assignments in blocks"/>
-      <var name="seltabRouteFbValidation"       vt="Boolean" remark="check dest routes and fb assignments in selection tables"/>
-      <var name="seltabRouteFbValidationClean"  vt="Boolean" remark="clean invalid route/fb assignments in selection tables"/>
-      <var name="blockCheck"                    vt="Boolean" remark="check fbevents in blocks for valid fb id and valid from/byroute"/>
-      <var name="blockCheckClean"               vt="Boolean" remark="clean invalid fbevents in blocks"/>
-      <var name="routeCheck"                    vt="Boolean" remark="check routes for valid commands"/>
-      <var name="routeCheckClean"               vt="Boolean" remark="clean invalid commands in routes"/>
-      <var name="zlevelCheck"                   vt="Boolean" remark="check zlevel definitions and all items on zlevel"/>
-      <var name="zlevelCheckClean"              vt="Boolean" remark="clean invalid zlevel definitions and items on invalid levels"/>
+      <!-- analyze -->
+      <var name="setRouteId"                    vt="Boolean" remark="Set for all automatic detected routes"/>
+      <var name="setBlockId"                    vt="Boolean" remark="Set for all blocks"/>
+      <var name="addSignalBlockAssignment"      vt="Boolean" remark="Assign signals to blocks"/>
+      <var name="addFeedbackBlockAssignment"    vt="Boolean" remark="Assign feedbacks to blocks"/>
+      <!-- clear all analyze -->
+      <var name="cleanRouteId"                  vt="Boolean" remark="Clean routeids of all automatic detected routes"/>
+      <var name="resetBlockId"                  vt="Boolean" remark="Reset blockids in whole plan"/>
+      <var name="resetSignalBlockAssignment"    vt="Boolean" remark="Reset sg assignments in all blocks"/>
+      <var name="resetFeedbackBlockAssignment"  vt="Boolean" remark="Reset fb assignments in all blocks"/>
+      <!-- extended plan check -->
+      <var name="basicCheck"                    vt="Boolean" remark="Basic checks on all items"/>
+      <var name="blockCheck"                    vt="Boolean" remark="Checks concerning blocks"/>
+      <var name="routeCheck"                    vt="Boolean" remark="Checks concerning routes"/>
+      <var name="actionCheck"                   vt="Boolean" remark="Check actions and conditions"/>
+      <!-- extended plan clean -->
+      <var name="basicClean"                    vt="Boolean" remark="Clean basic problems on all items"/>
+      <var name="blockClean"                    vt="Boolean" remark="Clean block problems"/>
+      <var name="routeClean"                    vt="Boolean" remark="Clean route problems"/>
+      <var name="actionClean"                   vt="Boolean" remark="Clean action and condition problems"/>
    </data>
   </object>
 

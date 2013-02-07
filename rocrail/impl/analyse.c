@@ -108,6 +108,7 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
+#include "rocrail/wrapper/public/ActionCond.h"
 #include "rocrail/wrapper/public/Location.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Output.h"
@@ -120,6 +121,7 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/TTTrack.h"
 #include "rocrail/wrapper/public/ZLevel.h"
 #include "rocrail/wrapper/public/Schedule.h"
+#include "rocrail/wrapper/public/ScheduleEntry.h"
 #include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/Waybill.h"
 #include "rocrail/wrapper/public/Operator.h"
@@ -131,6 +133,9 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SwitchCmd.h"
+#include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/SystemActions.h"
+#include "rocrail/wrapper/public/ActionList.h"
 
 #include "rocrail/public/app.h"
 #include "rocrail/public/model.h"
@@ -154,7 +159,8 @@ static Boolean connectorCheck( iOAnalyse inst, Boolean repair );
 static Boolean blockCheck( iOAnalyse inst, Boolean repair );
 static Boolean routeCheck( iOAnalyse inst, Boolean repair );
 static Boolean isValidInterfaceID( iOAnalyse inst, const char *iid );
-static int invalidRouteidsCheck( iONode tracklist, iONode stlist, Boolean repair );
+static int invalidBlockidCheck(  iOAnalyse inst, iONode tracklist, Boolean repair );
+static int invalidRouteidsCheck( iOAnalyse inst, iONode tracklist, Boolean repair );
 
 /** ----- OBase ----- */
 static const char* __id( void* inst ) {
@@ -349,6 +355,1245 @@ static Boolean isDoubleTrackRRCrossing( iONode node ) {
 
 static Boolean isStageBlockById( iOModel model, const char* blockid  ) {
   return( NULL != ModelOp.getStage(model, blockid ));
+}
+
+
+/* check if state is a valid loco identifier */
+static Boolean isLocoIdentifier( iOAnalyse inst, const char* state ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getlclist(data->plan);
+  int listSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isLocoIdentifier: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isLocoIdentifier: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        thisNodeChanged = False;
+        int               addr = wLoc.getaddr( node );
+        const char* identifier = wLoc.getidentifier( node );
+        const char*         id = wLoc.getid( node);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkLcAction: lclist[%d], id[%s] addr[%d], identifier[%s]", i, id, addr, identifier );
+        if( StrOp.equals( state, identifier ) || ( atoi(state) == addr ) ) {
+          return True;
+        }
+      }
+    }
+  }
+  return False;
+}
+
+/* condState(switch) == [straight, turnout, left, right] */
+static Boolean checkActionCondSwitch( const char* state ) {
+  if( StrOp.equals( state, wSwitch.straight ) ||
+      StrOp.equals( state, wSwitch.turnout  ) ||
+      StrOp.equals( state, wSwitch.left     ) ||
+      StrOp.equals( state, wSwitch.right    )
+    )
+    return True;
+
+  return False;
+}
+
+/* condState(signal) == [red, yellow, green, white] multiple(CSV) */
+static Boolean checkActionCondSignal( const char* state ) {
+  if( StrOp.len( state ) == 0 )
+    return False;
+
+  Boolean rc = True;
+
+  iOStrTok tok = StrTokOp.inst( state, ',');
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    const char* token = StrTokOp.nextToken( tok );
+    if( ! StrOp.equals( token, wSignal.red    ) &&
+        ! StrOp.equals( token, wSignal.yellow ) &&
+        ! StrOp.equals( token, wSignal.green  ) &&
+        ! StrOp.equals( token, wSignal.white  )
+      ) {
+      rc = False;
+    }
+  }
+  StrTokOp.base.del(tok);
+
+  return rc;
+}
+
+/* condState(output) == [on, off, active] */
+static Boolean checkActionCondOutput( const char* state ) {
+  if( StrOp.equals( state, wOutput.on     ) ||
+      StrOp.equals( state, wOutput.off    ) ||
+      StrOp.equals( state, wOutput.active )
+    )
+    return True;
+
+  return False;
+}
+
+/* condState(feedback) == [true, false, Lok-Kennung|*[forwards, reverse]] */
+static Boolean checkActionCondFeedback( iOAnalyse inst, const char* state ) {
+  const char* stateOnly = NULL;
+  const char* direction = NULL;
+  Boolean rc = True;
+
+  iOStrTok tok = StrTokOp.inst( state, ',');
+  if(StrTokOp.hasMoreTokens(tok))
+    stateOnly = StrTokOp.nextToken(tok);
+  if(StrTokOp.hasMoreTokens(tok))   
+    direction = StrTokOp.nextToken(tok);
+  if(StrTokOp.hasMoreTokens(tok)) {
+    /* Uuups 3rd token not allowed */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondFeedback: too many parameters in state [%s]", state );
+    rc = False;
+  }
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkActionCondFeedback: 1st[%s] 2nd[%s]", stateOnly, direction);
+
+  if( stateOnly ) {
+    if( StrOp.equals( stateOnly, "true"  ) ||
+        StrOp.equals( stateOnly, "false" )
+    ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkActionCondFeedback: state[%s] is valid", stateOnly );
+    } else if( StrOp.len( stateOnly ) > 0 ) {
+      /* check if state is a valid loco identifier */
+      if( ! isLocoIdentifier( inst, stateOnly ) ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondFeedback: 1st param not true/false or loco identifier[%s] not found", stateOnly );
+        rc = False;
+      } else {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkActionCondFeedback: loco identifier[%s] found", stateOnly );
+      }
+    } else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondFeedback: no state[%s] found", stateOnly );
+      rc = False;
+    }
+  } else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondFeedback: no state found" );
+    rc = False;
+  }
+
+  if( direction ) {
+    if( ! StrOp.equals( direction, "forwards" ) &&
+        ! StrOp.equals( direction, "reverse"  )
+      ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondFeedback: direction[%s] invalid", direction );
+      rc = False;
+    }
+  }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkActionCondFeedback: 1st[%s] 2nd[%s] rc[%d]", stateOnly, direction, rc );
+
+  StrTokOp.base.del(tok);
+
+  return rc;
+}
+
+/* single addr > 0 _OR_ (range) addr > 0 && addr <= hAddr )*/
+static Boolean locoRangeChecks( const char* state ) {
+  if( state == NULL )
+    return False;
+
+  if( ! StrOp.startsWith( state, "#" ) &&
+      ! StrOp.startsWith( state, "x" )
+    )
+    return False;
+
+  Boolean rc = True;
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "locoRangeChecks: is address/range [%s] valid", state );
+
+  iOStrTok tok = StrTokOp.inst(state, ',');
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    const char* sAddr = StrTokOp.nextToken(tok);
+    char* sHAddr = StrOp.find( sAddr, "-" );
+    if( sHAddr != NULL ) {
+      int addr = 0;
+      int hAddr = atoi(sHAddr+1);
+      *sHAddr = '\0';
+      addr = atoi(sAddr+1);
+      if( addr <= 0 || addr > hAddr ) {
+        rc = False;
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "locoRangeChecks: address range [%d-%d] is invalid", addr, hAddr );
+      } else {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "locoRangeChecks: address range [%d-%d] is valid", addr, hAddr );
+      }
+    }
+    else {
+      int addr = atoi(sAddr+1);
+      if( addr <= 0 ) {
+        rc = False;
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "locoRangeChecks: address [%d] is invalid", addr );
+      } else {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "locoRangeChecks: address [%d] is valid", addr );
+      }
+    }
+  };
+  StrTokOp.base.del(tok);
+
+  return rc ;
+}
+
+/* [fon|foff],[0-28] */
+static Boolean locoFnChecks( const char* state ) {
+  if( state == NULL )
+    return False;
+
+  const char* fcmd = NULL;
+  const char* fidx = NULL;
+  Boolean rc = True;
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "locoFnChecks: [%s]", state );
+
+  iOStrTok tok = StrTokOp.inst( state, ',');
+  if(StrTokOp.hasMoreTokens(tok))
+    fcmd = StrTokOp.nextToken(tok);
+  if(StrTokOp.hasMoreTokens(tok))   
+    fidx = StrTokOp.nextToken(tok);
+  if(StrTokOp.hasMoreTokens(tok)) {
+    /* Uuups 3rd token not allowed */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "locoFnChecks: too many parameters in state [%s]", state );
+    rc = False;
+  }
+
+  if( fcmd ) {
+    if( ! StrOp.equals( fcmd, "fon"  ) &&
+        ! StrOp.equals( fcmd, "foff" )
+      ) {
+      rc = False;
+    }
+  }else {
+    /* empty string */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "locoFnChecks: fcmd empty [%s]", state );
+    rc = False;
+  }
+
+  if( fidx ) {
+    /* fidx [0..28] (0 is light/F0) */
+    int idx = atoi(fidx);
+    if( idx < 0 || idx > 28 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "locoFnChecks: function number [%d] out of range in [%s] ", idx, state );
+      rc = False;
+    } else {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "locoFnChecks: function number [%d] is OK", idx );
+    }
+  }else {
+    /* fon/foff without number */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "locoFnChecks: function number missing in [%s] ", state );
+    rc = False;
+  }
+
+  StrTokOp.base.del(tok);
+
+  return rc ;
+}
+
+/* conID == loco condState(loco) [min, mid, cruise, max, consist]  ??? [+|-] */
+static Boolean checkActionCondLoco( const char* lcid, const char* state ) {
+  if( state == NULL || StrOp.len( state ) == 0 )
+    return True;
+
+  if( StrOp.startsWith( state, "#" ) ||
+      StrOp.startsWith( state, "x" )
+    )
+    return locoRangeChecks( state );
+
+  if( StrOp.startsWith( state, "fon"  ) ||
+      StrOp.startsWith( state, "foff" )
+    )
+    return locoFnChecks( state );
+
+  Boolean rc = True;
+
+  iOStrTok tok = StrTokOp.inst( state, ',');
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    const char* token = StrTokOp.nextToken( tok );
+    if( ! StrOp.equals( token, wLoc.min     ) &&
+        ! StrOp.equals( token, wLoc.mid     ) &&
+        ! StrOp.equals( token, wLoc.cruise  ) &&
+        ! StrOp.equals( token, wLoc.max     ) &&
+        ! StrOp.equals( token, "+"          ) &&
+        ! StrOp.equals( token, "-"          )
+      ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondLoco: lc[%s] unsupported state[%s] will always be treated as valid. You should use empty state.",
+          lcid, token );
+      rc = False;
+    }
+  }
+
+  StrTokOp.base.del(tok);
+
+  return rc;
+}
+
+/* conID == "*"  condState(loco_wildcard) == [diesel, steam, electric][+|-][#addr[,#addr]][#addr-addr] */
+static Boolean checkActionCondLocoWc( iOAnalyse inst, const char* acLcid, const char* state ) {
+  if( state == NULL || StrOp.len( state ) == 0 )
+    return False;
+
+  if( StrOp.startsWith( state, "#" ) ||
+      StrOp.startsWith( state, "x" )
+    )
+    return locoRangeChecks( state );
+
+  if( StrOp.startsWith( state, "fon"  ) ||
+      StrOp.startsWith( state, "foff" )
+    )
+    return locoFnChecks( state );
+
+  iOAnalyseData data = Data(inst);
+  iOLoc lc = ModelOp.getLoc( data->model, acLcid, NULL);
+  Boolean rc = True;
+
+  iOStrTok tok = StrTokOp.inst( state, ',');
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    const char* token = StrTokOp.nextToken( tok );
+    if( ! StrOp.equals( token, "diesel"   ) &&
+        ! StrOp.equals( token, "steam"    ) &&
+        ! StrOp.equals( token, "electric" ) &&
+        ! StrOp.equals( token, "+"        ) &&
+        ! StrOp.equals( token, "-"        )
+      ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondLocoWc: lc[%s] unsupported state[%s] will always be treated as valid. You should use empty state.",
+          acLcid, token );
+      rc = False;
+    }
+  }
+
+  StrTokOp.base.del(tok);
+
+  return rc;
+}
+
+/* condState(block) == [free, !free, occupied, open, closed] */
+static Boolean checkActionCondBlock( const char* state ) {
+  if( StrOp.equals( state, "free"        ) ||
+      StrOp.equals( state, "!free"       ) ||
+      StrOp.equals( state, "occupied"    ) ||
+      StrOp.equals( state, wBlock.open   ) ||
+      StrOp.equals( state, wBlock.closed )
+    )
+    return True;
+
+  return False;
+}
+
+/* condState(syscmd) == [go, stop] */
+static Boolean checkActionCondSysCmd( const char* state ) {
+  if( StrOp.equals( state, wSysCmd.go   ) ||
+      StrOp.equals( state, wSysCmd.stop )
+    )
+    return True;
+
+  return False;
+}
+
+/* condState(route) == [locked, unlocked] */
+static Boolean checkActionCondRoute( const char* state ) {
+  if( StrOp.equals( state, "unlocked" ) ||
+      StrOp.equals( state, "locked"   )
+    )
+    return True;
+
+  return False;
+}
+
+/* check actions existance and conditions */
+static int checkAction( iOAnalyse inst, int acIdx, iONode action, Boolean repair, int* checkedTotal ) {
+  if( action == NULL )
+    return 0;
+  iOAnalyseData data = Data(inst);
+  int modifications = 0;
+  int numModifiedActions = 0;
+
+  (*checkedTotal)++;
+
+  const char* acId    = wActionCtrl.getid(    action );
+  const char* acState = wActionCtrl.getstate( action );
+  const char* acLcid  = wActionCtrl.getlcid(  action );
+  Boolean isReset     = wActionCtrl.isreset(  action );
+  Boolean isAuto      = wActionCtrl.isauto(   action );
+  Boolean isManual    = wActionCtrl.ismanual( action );
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkAction: action id[%s] state[%s] loco[%s] reset[%d] auto[%d] manual[%d]",
+      acId, acState, acLcid, isReset, isAuto, isManual);
+  iOAction iOAc = ModelOp.getAction( data->model, acId );
+  if( iOAc == NULL ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: action[%s] not found in plan", acId );
+    modifications++;
+    numModifiedActions++;
+  }
+
+  /* loop over all conditions of action) */
+  iONode actioncond = wActionCtrl.getactioncond( action );
+  int condIdx = 0;
+  while( actioncond != NULL ) {
+    condIdx++;
+    (*checkedTotal)++;
+    const char* condId    = wActionCond.getid(    actioncond );
+    const char* condState = wActionCond.getstate( actioncond );
+    const char* condType  = wActionCond.gettype(  actioncond );
+    char*       ptr       = NULL;
+    Boolean condUnsuportedType = False;
+    Boolean condOK = False;
+
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkAction: actioncond[%d] type[%s] id[%s] state[%s]",
+        condIdx, condType, condId, condState );
+    if( StrOp.equals( condType, wSwitch.name() ) ) {
+      ptr = (char *) ModelOp.getSwitch( data->model, condId );
+      if( ptr && checkActionCondSwitch( condState ) )
+        condOK = True;
+    }else if ( StrOp.equals( condType, wSignal.name() ) ) {
+      ptr = (char *) ModelOp.getSignal( data->model, condId );
+      if( ptr && checkActionCondSignal( condState ) )
+        condOK = True;
+    }else if ( StrOp.equals( condType, wOutput.name() ) ) {
+      ptr = (char *) ModelOp.getOutput( data->model, condId );
+      if( ptr && checkActionCondOutput( condState ) )
+        condOK = True;
+    }else if ( StrOp.equals( condType, wFeedback.name() ) ) {
+      ptr = (char *) ModelOp.getFBack( data->model, condId );
+      if( ptr && checkActionCondFeedback( inst, condState ) )
+        condOK = True;
+    }else if ( StrOp.equals( condType, wLoc.name() ) ) {
+      ptr = (char *) ModelOp.getLoc( data->model, condId, NULL );
+      if( ptr && checkActionCondLoco( condId, condState ) ) {
+        condOK = True;
+      }else if( StrOp.equals( condId, "*" ) )
+        /* "*" is always a valid loco */
+        ptr = (char *) ~0 ;
+        if( checkActionCondLocoWc( inst, acLcid, condState ) ) {
+          condOK = True;
+        }
+    }else if ( StrOp.equals( condType, wBlock.name() ) ) {
+      ptr = (char *) ModelOp.getBlock( data->model, condId );
+      if( ptr && checkActionCondBlock( condState ) ) {
+        condOK = True;
+      }
+    }else if ( StrOp.equals( condType, wSysCmd.name() ) ) {
+      /* sys is always valid -> set pointer to something != NULL */
+      ptr = (char *) ~0 ;
+      if( ptr && checkActionCondSysCmd( condState ) )
+        condOK = True;
+    }else if ( StrOp.equals( condType, wRoute.name() ) ) {
+      ptr = (char *) ModelOp.getRoute( data->model, condId );
+      if( ptr && checkActionCondRoute( condState ) )
+        condOK = True;
+    }else {
+      condUnsuportedType = True;
+    }
+    if( condOK ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkAction: action[%d][%s] condition[%d] valid id[%s][%s] @0x[%08.8X] state[%s]",
+          acIdx, acId, condIdx, condId, condType, ptr, condState );
+    }else {
+      if( condUnsuportedType && StrOp.len( condType ) == 0 ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: action[%d][%s] condition[%d] missing type for ID[%s] (state[%s])",
+            acIdx, acId, condIdx, condId, condState );
+        modifications++;
+      }else if( condUnsuportedType ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: action[%d][%s] condition[%d] unsupported condition type[%s] (condId[%s], state[%s])",
+            acIdx, acId, condIdx, condType, condId, condState );
+        modifications++;
+      }else if( ptr == NULL ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: action[%d][%s] condition[%d][%s](type[%s]) not found in plan (state[%s] unchecked)",
+            acIdx, acId, condIdx, condId, condType, condState );
+        modifications++;
+      }else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: action[%d][%s] condition[%d][%s](type[%s]): verify of state[%s] failed",
+            acIdx, acId, condIdx, condId, condType, condState );
+        modifications++;
+      }
+    }
+    actioncond = wActionCtrl.nextactioncond( action, actioncond );
+  }
+
+  return modifications;
+}
+
+/* check action list */
+static int checkAcList( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode aclist = wPlan.getaclist(data->plan);
+  int checkedTotal = 0;
+  int modifications = 0;
+  int numModifiedItems = 0;
+  int listSize = 0;
+
+  if( aclist != NULL ) {
+    listSize = NodeOp.getChildCnt( aclist );
+  }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkAcList: Checking [%08.8X] size[%d] repair[%d]",
+      aclist, listSize, repair );
+
+  if( listSize > 0 ) {
+    iONode action;
+    const char* listType = NodeOp.getName( NodeOp.getChild(aclist, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkAcList: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      action = NodeOp.getChild(aclist, i);
+      if( action ) {
+        thisNodeChanged = False;
+        const char* id    = wAction.getid( action );
+        const char* type  = wAction.gettype( action );
+        const char* oid   = wAction.getoid( action );
+        const char* cmd   = wAction.getcmd( action );
+        const char* param = wAction.getparam( action );
+        const char* desc  = wAction.getdesc( action );
+        const char* state = wSwitch.getstate( action );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkAcList: action[%08.8X] id[%s] type[%s] oid[%s] cmd[%s] param[%s] desc[%s] state[%s]",
+            action, id, type, oid, cmd, param, desc, state );
+        /* TODO/MISSING: check action */
+        if( thisNodeChanged == True ) {
+          numModifiedItems++ ;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in actions of switch[%s] (see previous lines)",
+              id );
+        }
+      }
+    }
+    /* statistics */
+    if( modifications > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }
+  }
+  return modifications;
+}
+
+static int checkSwAction( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getswlist(data->plan);
+  int checkedTotal = 0;
+  int modifications = 0;
+  int numModifiedItems = 0;
+  int listSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkSwAction: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkSwAction: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        thisNodeChanged = False;
+        int acIdx = 0;
+        iONode action = wSwitch.getactionctrl( node );
+        const char* id = wSwitch.getid( node);
+        const char* state = wSwitch.getstate( node );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkSwAction: id[%s] state[%s]",
+            id, state );
+
+        /* loop over all actions */
+        while( action != NULL ) {
+          acIdx++;
+          int changes = checkAction( inst, acIdx, action, repair, &checkedTotal );
+          if( changes > 0 ) {
+            modifications += changes;
+            thisNodeChanged = True;
+          }
+          action = wSwitch.nextactionctrl( node, action );
+        }
+        if( thisNodeChanged == True ) {
+          numModifiedItems++ ;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in actions of switch[%s] (see previous lines)",
+              id );
+        }
+      }
+    }
+    /* statistics */
+    if( modifications > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }
+  }
+  return modifications;
+}
+
+static int checkSgAction( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getsglist(data->plan);
+  int checkedTotal = 0;
+  int modifications = 0;
+  int numModifiedItems = 0;
+  int listSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkSgAction: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkSgAction: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        thisNodeChanged = False;
+        int acIdx = 0;
+        iONode action = wSignal.getactionctrl( node );
+        const char* id = wSignal.getid( node);
+        const char* state = wSignal.getstate( node );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkSgAction: id[%s] state[%s]",
+            id, state );
+
+        /* loop over all actions */
+        while( action != NULL ) {
+          acIdx++;
+          int changes = checkAction( inst, acIdx, action, repair, &checkedTotal );
+          if( changes > 0 ) {
+            modifications += changes;
+            thisNodeChanged = True;
+          }
+          action = wSignal.nextactionctrl( node, action );
+        }
+        if( thisNodeChanged == True ) {
+          numModifiedItems++ ;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in actions of signal[%s] (see previous lines)",
+              id );
+        }
+      }
+    }
+    /* statistics */
+    if( modifications > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }
+  }
+  return modifications;
+}
+
+static int checkCoAction( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getcolist(data->plan);
+  int checkedTotal = 0;
+  int modifications = 0;
+  int numModifiedItems = 0;
+  int listSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkCoAction: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode conode;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkCoAction: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      conode = NodeOp.getChild(list, i);
+      if( conode ) {
+        thisNodeChanged = False;
+        int acIdx = 0;
+        iONode action = wOutput.getactionctrl( conode );
+        const char* id = wOutput.getid( conode);
+        const char* state = wOutput.getstate( conode );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkCoAction: id[%s] state[%s]",
+            id, state );
+
+        /* loop over all actions */
+        while( action != NULL ) {
+          acIdx++;
+          int changes = checkAction( inst, acIdx, action, repair, &checkedTotal );
+          if( changes > 0 ) {
+            modifications += changes;
+            thisNodeChanged = True;
+          }
+          action = wOutput.nextactionctrl( conode, action );
+        }
+        if( thisNodeChanged == True ) {
+          numModifiedItems++ ;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in actions of output[%s] (see previous lines)",
+              id );
+        }
+      }
+    }
+    /* statistics */
+    if( modifications > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }
+  }
+  return modifications;
+}
+
+static int checkFbAction( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getfblist(data->plan);
+  int checkedTotal = 0;
+  int modifications = 0;
+  int numModifiedItems = 0;
+  int listSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkFbAction: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkFbAction: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        thisNodeChanged = False;
+        int acIdx = 0;
+        iONode action = wFeedback.getactionctrl( node );
+        const char* id = wFeedback.getid( node);
+        Boolean state = wFeedback.isstate( node );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkFbAction: id[%s] state[%d][%s]",
+            id, state, state?"on/true":"off/false" );
+
+        /* loop over all actions */
+        while( action != NULL ) {
+          acIdx++;
+          int changes = checkAction( inst, acIdx, action, repair, &checkedTotal );
+          if( changes > 0 ) {
+            modifications += changes;
+            thisNodeChanged = True;
+          }
+          action = wFeedback.nextactionctrl( node, action );
+        }
+        if( thisNodeChanged == True ) {
+          numModifiedItems++ ;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in actions of feedback[%s] (see previous lines)",
+              id );
+        }
+      }
+    }
+    /* statistics */
+    if( modifications > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }
+  }
+  return modifications;
+}
+
+
+static int checkBkAction( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getbklist(data->plan);
+  int checkedTotal = 0;
+  int modifications = 0;
+  int numModifiedItems = 0;
+  int listSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkBkAction: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkBkAction: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        thisNodeChanged = False;
+        int acIdx = 0;
+        iONode action = wBlock.getactionctrl( node );
+        const char* id = wBlock.getid( node);
+        const char* state = wBlock.getstate( node );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkBkAction: id[%s] state[%s]",
+            id, state );
+
+        /* loop over all actions */
+        while( action != NULL ) {
+          acIdx++;
+          int changes = checkAction( inst, acIdx, action, repair, &checkedTotal );
+          if( changes > 0 ) {
+            modifications += changes;
+            thisNodeChanged = True;
+          }
+          action = wBlock.nextactionctrl( node, action );
+        }
+        if( thisNodeChanged == True ) {
+          numModifiedItems++ ;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in actions of block[%s] (see previous lines)",
+              id );
+        }
+      }
+    }
+    /* statistics */
+    if( modifications > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }
+  }
+  return modifications;
+}
+
+static int checkSbAction( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getsblist(data->plan);
+  int checkedTotal = 0;
+  int modifications = 0;
+  int numModifiedItems = 0;
+  int listSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkSbAction: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkSbAction: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        thisNodeChanged = False;
+        int acIdx = 0;
+        iONode action = wStage.getactionctrl( node );
+        const char* id = wStage.getid( node);
+        const char* state = wStage.getstate( node );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkSbAction: id[%s] state[%s]",
+            id, state );
+
+        /* loop over all actions */
+        while( action != NULL ) {
+          acIdx++;
+          int changes = checkAction( inst, acIdx, action, repair, &checkedTotal );
+          if( changes > 0 ) {
+            modifications += changes;
+            thisNodeChanged = True;
+          }
+          action = wStage.nextactionctrl( node, action );
+        }
+        if( thisNodeChanged == True ) {
+          numModifiedItems++ ;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in actions of stageblock[%s] (see previous lines)",
+              id );
+        }
+      }
+    }
+    /* statistics */
+    if( modifications > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }
+  }
+  return modifications;
+}
+
+static int checkTtAction( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getttlist(data->plan);
+  int checkedTotal = 0;
+  int modifications = 0;
+  int numModifiedItems = 0;
+  int listSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkTtAction: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkTtAction: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        thisNodeChanged = False;
+        int acIdx = 0;
+        iONode action = wTurntable.getactionctrl( node );
+        const char* id = wTurntable.getid( node);
+        const char* state = wTurntable.getstate( node );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkTtAction: id[%s] state[%s]",
+            id, state );
+
+        /* loop over all actions */
+        while( action != NULL ) {
+          acIdx++;
+          int changes = checkAction( inst, acIdx, action, repair, &checkedTotal );
+          if( changes > 0 ) {
+            modifications += changes;
+            thisNodeChanged = True;
+          }
+          action = wTurntable.nextactionctrl( node, action );
+        }
+        if( thisNodeChanged == True ) {
+          numModifiedItems++ ;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in actions of turntable[%s] (see previous lines)",
+              id );
+        }
+      }
+    }
+    /* statistics */
+    if( modifications > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }
+  }
+  return modifications;
+}
+
+static int checkStAction( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getstlist(data->plan);
+  int checkedTotal = 0;
+  int modifications = 0;
+  int numModifiedItems = 0;
+  int listSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkStAction: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkStAction: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        thisNodeChanged = False;
+        int acIdx = 0;
+        iONode action = wRoute.getactionctrl( node );
+        const char* id = wRoute.getid( node);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkStAction: id[%s]",
+            id );
+
+        /* loop over all actions */
+        while( action != NULL ) {
+          acIdx++;
+          int changes = checkAction( inst, acIdx, action, repair, &checkedTotal );
+          if( changes > 0 ) {
+            modifications += changes;
+            thisNodeChanged = True;
+          }
+          action = wRoute.nextactionctrl( node, action );
+        }
+        if( thisNodeChanged == True ) {
+          numModifiedItems++ ;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in actions of route[%s] (see previous lines)",
+              id );
+        }
+      }
+    }
+    /* statistics */
+    if( modifications > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }
+  }
+  return modifications;
+}
+
+static int checkScAction( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getsclist(data->plan);
+  int checkedTotal = 0;
+  int modifications = 0;
+  int numModifiedItems = 0;
+  int listSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkScAction: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkScAction: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        thisNodeChanged = False;
+        int acIdx = 0;
+        iONode action = wSchedule.getactionctrl( node );
+        const char* id = wSchedule.getid( node);
+        int scEntries = NodeOp.getChildCnt(node);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkScAction: id[%s] #entries[%d]",
+            id, scEntries );
+
+        /* loop over all actions */
+        while( action != NULL ) {
+          acIdx++;
+          int changes = checkAction( inst, acIdx, action, repair, &checkedTotal );
+          if( changes > 0 ) {
+            modifications += changes;
+            thisNodeChanged = True;
+          }
+          action = wSchedule.nextactionctrl( node, action );
+        }
+        int j;
+        for( j = 0 ; j < scEntries ; j++ ) {
+          acIdx = 0;
+          iONode entry = NodeOp.getChild( node, j );
+          if( entry != NULL ) {
+            iONode entryAction = wScheduleEntry.getactionctrl( entry );
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkScAction:  entry[%d] entryId[%s]",
+                j, wItem.getid( entry ) );
+            while( entryAction != NULL ) {
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkScAction:   entryAction[%s] state[%s]",
+                  wActionCtrl.getid( entryAction ), wActionCtrl.getstate( entryAction ) );
+              acIdx++;
+              int changes = checkAction( inst, acIdx, entryAction, repair, &checkedTotal );
+              if( changes > 0 ) {
+                modifications += changes;
+                thisNodeChanged = True;
+              }
+
+              entryAction = wSchedule.nextactionctrl( node, entryAction);
+            }
+          }
+        }
+
+        if( thisNodeChanged == True ) {
+          numModifiedItems++ ;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in actions of schedule[%s] (see previous lines)",
+              id );
+        }
+      }
+    }
+    /* statistics */
+    if( modifications > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }
+  }
+  return modifications;
+}
+
+static int checkLcAction( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getlclist(data->plan);
+  int checkedTotal = 0;
+  int modifications = 0;
+  int numModifiedItems = 0;
+  int listSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkLcAction: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkLcAction: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        thisNodeChanged = False;
+        int acIdx = 0;
+        iONode action = wLoc.getactionctrl( node );
+        const char* id = wLoc.getid( node);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkLcAction: id[%s]",
+            id );
+
+        /* loop over all actions */
+        while( action != NULL ) {
+          acIdx++;
+          int changes = checkAction( inst, acIdx, action, repair, &checkedTotal );
+          if( changes > 0 ) {
+            modifications += changes;
+            thisNodeChanged = True;
+          }
+          action = wLoc.nextactionctrl( node, action );
+        }
+        if( thisNodeChanged == True ) {
+          numModifiedItems++ ;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in actions of loco[%s] (see previous lines)",
+              id );
+        }
+      }
+    }
+    /* statistics */
+    if( modifications > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }
+  }
+  return modifications;
+}
+
+static int checkTxAction( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.gettxlist(data->plan);
+  int checkedTotal = 0;
+  int modifications = 0;
+  int numModifiedItems = 0;
+  int listSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkTxAction: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkTxAction: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        thisNodeChanged = False;
+        int acIdx = 0;
+        iONode action = wText.getactionctrl( node );
+        const char* id = wText.getid( node);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkTxAction: id[%s]",
+            id );
+
+        /* loop over all actions */
+        while( action != NULL ) {
+          acIdx++;
+          int changes = checkAction( inst, acIdx, action, repair, &checkedTotal );
+          if( changes > 0 ) {
+            modifications += changes;
+            thisNodeChanged = True;
+          }
+          action = wText.nextactionctrl( node, action );
+        }
+        if( thisNodeChanged == True ) {
+          numModifiedItems++ ;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in actions of text[%s] (see previous lines)",
+              id );
+        }
+      }
+    }
+    /* statistics */
+    if( modifications > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }
+  }
+  return modifications;
+}
+
+static int checkSyAction( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+
+  int checkedTotal = 0;
+  int modifications = 0;
+  int numModifiedItems = 0;
+  int listSize = 0;
+  const char* listType = "sy";
+
+
+  iONode system = wPlan.getsystem(data->plan);
+  if( system != NULL ) {
+    int acIdx = 0;
+    iONode action = wSystemActions.getactionctrl(system);
+    /* loop over all actions */
+    while( action != NULL ) {
+      acIdx++;
+      Boolean thisNodeChanged ;
+      listSize++;
+      const char* state = wActionCtrl.getstate(action);
+      int changes = checkAction( inst, acIdx, action, repair, &checkedTotal );
+      if( changes > 0 ) {
+        modifications += changes;
+        thisNodeChanged = True;
+      }
+      if( thisNodeChanged == True ) {
+        numModifiedItems++ ;
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in system actions (see previous lines)" );
+      }
+      action = wSystemActions.nextactionctrl( system, action );
+    }
+
+    /* statistics */
+    if( modifications > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s %slist [%5d/%5d] invalid action/condition items in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedItems, listSize );
+    }
+  }
+  return modifications;
 }
 
 
@@ -698,14 +1943,24 @@ static Boolean blockFeedbackActionCheck( iOAnalyse inst, Boolean repair ) {
         }
 
         if( foundEnterMulti ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] found multiple usage of (%s %s %s %s)",
-              bkid, from, byroute, wFeedbackEvent.enter_event, wFeedbackEvent.enter2pre_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.enter2in_event );
-          numProblems++;
+          if( repair ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] found multiple usage of (%s %s %s %s): not repaired",
+                bkid, from, byroute, wFeedbackEvent.enter_event, wFeedbackEvent.enter2pre_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.enter2in_event );
+          } else {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] found multiple usage of (%s %s %s %s)",
+                bkid, from, byroute, wFeedbackEvent.enter_event, wFeedbackEvent.enter2pre_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.enter2in_event );
+            numProblems++;
+          }
         }
         if( foundInMulti ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] found multiple usage of (%s %s)",
+          if( repair ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] found multiple usage of (%s %s): not repaired",
               bkid, from, byroute, wFeedbackEvent.in_event, wFeedbackEvent.enter2in_event );
-          numProblems++;
+          } else {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] found multiple usage of (%s %s)",
+                bkid, from, byroute, wFeedbackEvent.in_event, wFeedbackEvent.enter2in_event );
+            numProblems++;
+          }
         }
         if( ! foundEnter && foundIn ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] found (%s) but no (%s %s %s)",
@@ -845,7 +2100,8 @@ static Boolean blockCheck( iOAnalyse inst, Boolean repair ) {
       if( ! hasAtLeastOneFbevent ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: block/fbevent:  %s[%s] has no fbevents",
             NodeOp.getName(bkNode), wItem.getid(bkNode));
-        numProblems++;
+        if( ! repair )
+          numProblems++;
       }
 
       if( repair ) {
@@ -5049,95 +6305,131 @@ static Boolean _checkExtended(iOAnalyse inst) {
     return False;
   }
   iOAnalyseData data = Data(inst);
+  int modifications = 0;
   Boolean res;
 
   TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. BEGIN" );
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ExtChk: bFAC[%d]c[%d] bFV[%d]c[%d] sFV[%d]c[%d] rtC[%d]c[%d] blC[%d]c[%d] zLC[%d]c[%d]",
-      data->blockFeedbackActionCheck, data->blockFeedbackActionCheckClean,
-      data->blockRouteFbValidation,   data->blockRouteFbValidationClean,
-      data->seltabRouteFbValidation,  data->seltabRouteFbValidationClean,
-      data->routeCheck,               data->routeCheckClean,
-      data->blockCheck,               data->blockCheckClean,
-      data->zlevelCheck,              data->zlevelCheckClean );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ExtChk: basic[%d]c[%d] block[%d]c[%d] route[%d]c[%d] action[%d]c[%d]",
+      data->basicCheck,  data->basicClean,
+      data->blockCheck,  data->blockClean,
+      data->routeCheck,  data->routeClean,
+      data->actionCheck, data->actionClean );
 
   /* checks that don't change anything are always allowed */
 
+  /* BASIC ELEMENT CHECKS */
+  if( data->basicCheck ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Basic checks starting..." );
 
-  /* basic checks that are not choosable by user (always on) */
+    /* check zlevels and all items on zlevels */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " zlevel test: in progress..." );
+    res = zlevelCheck( inst, False );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " zlevel test: %s problems detected", res?"no":"some" );
 
-  /* check if every connector with a tknr of 10 and above has a counterpart */
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Connector test: in progress..." );
-  res = connectorCheck( inst, False );
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Connector test: %s problems detected", res?"no":"some" );
+    /* check if all text elements have valid settings */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Text test: in progress..." );
+    res = textCheck( inst, False );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Text test: %s problems detected", res?"no":"some" );
 
-  {
-    /* check if every track element uses only valid routeids */
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid test: in progress..." );
-    int modifications =0;
+    /* check if every connector with a tknr of 10 and above has a counterpart */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Connector test: in progress..." );
+    res = connectorCheck( inst, False );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Connector test: %s problems detected", res?"no":"some" );
 
-    modifications += invalidRouteidsCheck( wPlan.gettklist(data->plan), wPlan.getstlist(data->plan), False );
-    modifications += invalidRouteidsCheck( wPlan.getswlist(data->plan), wPlan.getstlist(data->plan), False );
-    modifications += invalidRouteidsCheck( wPlan.getsglist(data->plan), wPlan.getstlist(data->plan), False );
-    modifications += invalidRouteidsCheck( wPlan.getfblist(data->plan), wPlan.getstlist(data->plan), False );
-
+    /* check if every track element uses only valid blockid */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid blockid test: in progress..." );
+    modifications  = 0;
+    modifications += invalidBlockidCheck( inst, wPlan.gettklist(data->plan), False );
+    modifications += invalidBlockidCheck( inst, wPlan.getswlist(data->plan), False );
+    modifications += invalidBlockidCheck( inst, wPlan.getsglist(data->plan), False );
+    modifications += invalidBlockidCheck( inst, wPlan.getfblist(data->plan), False );
     if( modifications > 0 )
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid test: %d invalid entries detected", modifications );
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid test: %s problems detected", (modifications == 0)?"no":"some" );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid blockid test: %d invalid entries detected", modifications );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid blockid test: %s problems detected", (modifications == 0)?"no":"some" );
+
+    /* check if every track element uses only valid routeids */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid routeid test: in progress..." );
+    modifications  = 0;
+    modifications += invalidRouteidsCheck( inst, wPlan.gettklist(data->plan), False );
+    modifications += invalidRouteidsCheck( inst, wPlan.getswlist(data->plan), False );
+    modifications += invalidRouteidsCheck( inst, wPlan.getsglist(data->plan), False );
+    modifications += invalidRouteidsCheck( inst, wPlan.getfblist(data->plan), False );
+    if( modifications > 0 )
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid routeid test: %d invalid entries detected", modifications );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid routeid test: %s problems detected", (modifications == 0)?"no":"some" );
+
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Basic checks finished" );
   }
 
-  /* check if all text elements have valid settings */
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Text test: in progress..." );
-  res = textCheck( inst, False );
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Text test: %s problems detected", res?"no":"some" );
 
-
-  /* checks choosable by user (default is on) */
-
-  if( data->blockFeedbackActionCheck ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block feedback action check: in progress..." );
-    res = blockFeedbackActionCheck( inst, False );
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block feedback action check: %s problems detected", res?"no":"some" );
-  }
-
-  /* check for fbevent entries of deleted routes */
-  if( data->blockRouteFbValidation ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block route feedback validation: in progress..." );
-    res = blockRouteFbValidation( inst, False );
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block route feedback validation: %s problems detected", res?"no":"some" );
-  }
-
-  /* check for fbevent entries of deleted routes */
-  if( data->seltabRouteFbValidation ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Selection table route feedback validation: in progress..." );
-    res = seltabRouteFbValidation( inst, False );
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Selection table route feedback validation: %s problems detected", res?"no":"some" );
-  }
-
-  /* do all fbevents of blocks have a valid fb id and valid from/byroute */
+  /* BLOCK CHECKS */
   if( data->blockCheck ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block test: in progress..." );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block checks starting..." );
+
+    /* do all fbevents of blocks have a valid fb id and valid from/byroute */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block test: in progress..." );
     res = blockCheck( inst, False );
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block test: %s problems detected", res?"no":"some" );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block test: %s problems detected", res?"no":"some" );
+
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block feedback/action check: in progress..." );
+    res = blockFeedbackActionCheck( inst, False );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block feedback/action check: %s problems detected", res?"no":"some" );
+
+    /* check for fbevent entries of deleted routes */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block route/feedback validation: in progress..." );
+    res = blockRouteFbValidation( inst, False );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block route/feedback validation: %s problems detected", res?"no":"some" );
+
+    /* check for fbevent entries of deleted routes */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Selection table route/feedback validation: in progress..." );
+    res = seltabRouteFbValidation( inst, False );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Selection table route/feedback validation: %s problems detected", res?"no":"some" );
+
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block checks finished" );
   }
 
+  /* ROUTE CHECKS */
   if( data->routeCheck ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route checks starting..." );
     /* check if all routes have usage "from-to" and direction "forward" (-> are compatble to block sides) 
        and if all swcmd use a valid id for sw/sg/co */
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route test: in progress..." );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Route test: in progress..." );
     res = routeCheck( inst, False );
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route test: %s problems detected", res?"no":"some" );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Route test: %s problems detected", res?"no":"some" );
+
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route checks finished" );
   }
 
-  /* check zlevels and all items on zlevels */
-  if( data->zlevelCheck ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zlevel test: in progress..." );
-    res = zlevelCheck( inst, False );
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zlevel test: %s problems detected", res?"no":"some" );
+
+  if( data->actionCheck ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Action checks starting..." ); 
+    /* check actions in all elements that may use actions */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Action test: in progress..." );
+    modifications  = 0;
+    modifications += checkAcList( inst, False );
+    modifications += checkSwAction( inst, False );
+    modifications += checkSgAction( inst, False );
+    modifications += checkCoAction( inst, False );
+    modifications += checkFbAction( inst, False );
+    modifications += checkBkAction( inst, False );
+    modifications += checkSbAction( inst, False );
+    modifications += checkTtAction( inst, False );
+    modifications += checkStAction( inst, False );
+    modifications += checkScAction( inst, False );
+    modifications += checkLcAction( inst, False );
+    modifications += checkTxAction( inst, False );
+    modifications += checkSyAction( inst, False );
+    if( modifications > 0 )
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Action test: %d invalid entries detected", modifications );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Action test: %s problems detected", (modifications == 0)?"no":"some" );
+
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Action checks finished" );
   }
 
   TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. END" );
   return False;
 }
+
 
 /* clean problems according to variables */
 static Boolean _cleanExtended(iOAnalyse inst) {
@@ -5149,21 +6441,21 @@ static Boolean _cleanExtended(iOAnalyse inst) {
   iONode aoIni = AppOp.getIni() ;
   iONode anaOpt = wRocRail.getanaopt( aoIni ) ;
   Boolean requirements = True; /* modfying plan allowed ? */
+  Boolean planChanged = False;
   Boolean res;
+  int modifications = 0;
   Boolean automode  = ModelOp.isAuto(data->model);
   Boolean isPowerOn = wState.ispower(ControlOp.getState(AppOp.getControl()));
-    
-  TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. BEGIN" );
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ExtChk: bFAC[%d]c[%d] bFV[%d]c[%d] sFV[%d]c[%d] blC[%d]c[%d] rtC[%d]c[%d] zLC[%d]c[%d]",
-      data->blockFeedbackActionCheck, data->blockFeedbackActionCheckClean,
-      data->blockRouteFbValidation,   data->blockRouteFbValidationClean,
-      data->seltabRouteFbValidation,  data->seltabRouteFbValidationClean,
-      data->blockCheck,               data->blockCheckClean,
-      data->routeCheck,               data->routeCheckClean,
-      data->zlevelCheck,              data->zlevelCheckClean );
+  iONode modplan    = ModelOp.getModPlan( data->model );
 
-  /* 1. cleanup jobs without the requirement of an option variable */
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ExtChk: basic[%d]c[%d] block[%d]c[%d] route[%d]c[%d] action[%d]c[%d]",
+      data->basicCheck,  data->basicClean,
+      data->blockCheck,  data->blockClean,
+      data->routeCheck,  data->routeClean,
+      data->actionCheck, data->actionClean );
 
+  /* clean/repair are only allowed if power _and_ auto mode are off */
+  /* requirements should be checked by calling function, but to be sure... */
   if( automode || isPowerOn ) {
     requirements = False;
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Cleaning/repairing skipped because...");
@@ -5174,136 +6466,125 @@ static Boolean _cleanExtended(iOAnalyse inst) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "... track power is on. Switch off to use cleaning/repairing.");
   }
   else {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. BEGIN" );
 
-    /* clean invalid routeids */
-    /* ...only if we do NOT have a modular layout (not yet supported) */
-    iONode modplan = ModelOp.getModPlan( data->model );
-    if( modplan == NULL ) {
-      /* no module plan */
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid clean: in progress..." );
-      int modifications =0;
 
-      modifications += invalidRouteidsCheck( wPlan.gettklist(data->plan), wPlan.getstlist(data->plan), True );
-      modifications += invalidRouteidsCheck( wPlan.getswlist(data->plan), wPlan.getstlist(data->plan), True );
-      modifications += invalidRouteidsCheck( wPlan.getsglist(data->plan), wPlan.getstlist(data->plan), True );
-      modifications += invalidRouteidsCheck( wPlan.getfblist(data->plan), wPlan.getstlist(data->plan), True );
+    if( data->basicClean ) {
+      /* clean/repair are "once" options, reset option */
+      wAnaOpt.setbasicClean( anaOpt, False ) ;
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Basic cleanup starting..." );
 
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid clean: %d invalid entries cleaned", modifications );
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid clean: %s entries modified", (modifications == 0)?"no":"some" );
-      if( modifications > 0 )
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
+      /* check zlevels and all items on zlevels */
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " zlevel: Clean/repair in progress..." );
+      res = zlevelCheck( inst, True );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " zlevel: %s problems cleaned", res?"no":"some" );
+      if( res == False )
+        planChanged = True;
+
+      /* delete all text elements with invalid settings */
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Text clean: in progress..." );
+      res = textCheck( inst, True );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Text clean: %s items deleted", res?"no":"some" );
+      if( res == False )
+        planChanged = True;
+
+      /* clean invalid blockid/routeids */
+      /* ...only if we do NOT have a modular layout (not yet supported) */
+      if( modplan != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid blockid/routeids clean: skipped for modular layouts" );
+      }
+      else {
+        /* no module plan */
+
+        /* clean invalid blockids */
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid blockid clean: in progress..." );
+        modifications  = 0;
+        modifications += invalidBlockidCheck( inst, wPlan.gettklist(data->plan), True );
+        modifications += invalidBlockidCheck( inst, wPlan.getswlist(data->plan), True );
+        modifications += invalidBlockidCheck( inst, wPlan.getsglist(data->plan), True );
+        modifications += invalidBlockidCheck( inst, wPlan.getfblist(data->plan), True );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid blockid clean: %d invalid entries cleaned", modifications );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid blockid clean: %s entries modified", (modifications == 0)?"no":"some" );
+
+        /* clean invalid routeids */
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid routeid clean: in progress..." );
+        modifications  = 0;
+        modifications += invalidRouteidsCheck( inst, wPlan.gettklist(data->plan), True );
+        modifications += invalidRouteidsCheck( inst, wPlan.getswlist(data->plan), True );
+        modifications += invalidRouteidsCheck( inst, wPlan.getsglist(data->plan), True );
+        modifications += invalidRouteidsCheck( inst, wPlan.getfblist(data->plan), True );
+
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid routeid clean: %d invalid entries cleaned", modifications );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid routeid clean: %s entries modified", (modifications == 0)?"no":"some" );
+
+        if( modifications > 0 )
+          planChanged = True;
+      }
+
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Basic cleanup finished" );
     }
-    else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid routeid clean: skipped for modular layouts" );
+
+
+    if( data->blockClean ) {
+      /* clean/repair are "once" options, reset option */
+      wAnaOpt.setblockClean( anaOpt, False ) ;
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block cleanup starting..." );
+
+      /* check blocks */
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block clean/repair in progress..." );
+      res = blockCheck( inst, True );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block %s problems cleaned", res?"no":"some" );
+      if( res == False )
+        planChanged = True;
+
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block feedback action check: Clean/repair in progress..." );
+      res = blockFeedbackActionCheck( inst, True );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block feedback action check: %s Problems cleaned", res?"no":"some" );
+      if( res == False )
+        planChanged = True;
+
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block route feedback validation: Clean/repair in progress..." );
+      res = blockRouteFbValidation( inst, True );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block route feedback validation: %s problems cleaned", res?"no":"some" );
+      if( res == False )
+        planChanged = True;
+
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Selection table route feedback validation: Clean/repair in progress..." );
+      res = seltabRouteFbValidation( inst, True );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Selection table route feedback validation: %s problems cleaned", res?"no":"some" );
+      if( res == False )
+        planChanged = True;
+
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block cleanup finished" );
     }
 
-    /* delete all text elements with invalid settings */
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Text clean: in progress..." );
-    res = textCheck( inst, True );
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Text clean: %s items deleted", res?"no":"some" );
-    if( res )
+    if( data->routeClean ) {
+      /* clean/repair are "once" options, reset option */
+      wAnaOpt.setrouteClean( anaOpt, False ) ;
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route cleanup starting..." );
+
+      /* clean swcmd in routes where switch is is invalid */
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Route clean/repair in progress..." );
+      res = routeCheck( inst, True );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Route %s problems cleaned", res?"no":"some" );
+      if( res == False )
+        planChanged = True;
+
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route cleanup finished" );
+    }
+
+    if( data->actionClean ) {
+      /* clean/repair are "once" options, reset option */
+      wAnaOpt.setactionClean( anaOpt, False ) ;
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Action cleanup not yet implemented/available" );
+    }
+
+    if( planChanged )
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
 
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. END" );
   }
 
-
-  /* any clean/repair options set ? */
-  if( data->blockFeedbackActionCheckClean ||
-      data->blockRouteFbValidationClean   ||
-      data->seltabRouteFbValidationClean  ||
-      data->blockCheckClean               ||
-      data->routeCheckClean               ||
-      data->zlevelCheckClean
-    ) {
-    /* clean/repair are only allowed if power _and_ auto mode are off */
-    /* requirements should be checked by calling function, but to be sure... */
-    if( automode || isPowerOn ) {
-      requirements = False;
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Cleaning/repairing skipped because...");
-      /* explain why */
-      if( automode )
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "... automode is on. Switch off to use cleaning/repairing.");
-      if( isPowerOn )
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "... track power is on. Switch off to use cleaning/repairing.");
-    }
-    else {
-
-      if( data->blockFeedbackActionCheckClean ) {
-        /* clean/repair are "once" options, reset option */
-        wAnaOpt.setblockFeedbackActionCheckClean( anaOpt, False ) ;
-
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block feedback action check: Clean/repair in progress..." );
-        res = blockFeedbackActionCheck( inst, True );
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block feedback action check: %s Problems cleaned", res?"no":"some" );
-        if( res == False )
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
-      }
-
-      if( data->blockRouteFbValidationClean ) {
-        /* clean/repair are "once" options, reset option */
-        wAnaOpt.setblockRouteFbValidationClean( anaOpt, False ) ;
-
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block route feedback validation: Clean/repair in progress..." );
-        res = blockRouteFbValidation( inst, True );
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block route feedback validation: %s problems cleaned", res?"no":"some" );
-        if( res == False )
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
-      }
-
-      if( data->seltabRouteFbValidationClean ) {
-        /* clean/repair are "once" options, reset option */
-        wAnaOpt.setseltabRouteFbValidationClean( anaOpt, False ) ;
-
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Selection table route feedback validation: Clean/repair in progress..." );
-        res = seltabRouteFbValidation( inst, True );
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Selection table route feedback validation: %s problems cleaned", res?"no":"some" );
-        if( res == False )
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
-      }
-
-      if( data->blockCheckClean ) {
-        /* clean/repair are "once" options, reset option */
-        wAnaOpt.setblockCheckClean( anaOpt, False ) ;
-      
-        /* check blocks */
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block: Clean/repair in progress..." );
-        res = blockCheck( inst, True );
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block: %s problems cleaned", res?"no":"some" );
-        if( res == False )
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
-      }
-
-      if( data->routeCheckClean ) {
-        /* clean/repair are "once" options, reset option */
-        wAnaOpt.setrouteCheckClean( anaOpt, False ) ;
-
-        /* clean swcmd in routes where switch is is invalid */
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route test: Clean/repair in progress..." );
-        res = routeCheck( inst, True );
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route test: %s problems cleaned", res?"no":"some" );
-        if( res == False )
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
-      }
-
-      if( data->zlevelCheckClean ) {
-        /* clean/repair are "once" options, reset option */
-        wAnaOpt.setzlevelCheckClean( anaOpt, False ) ;
-      
-        /* check zlevels and all items on zlevels */
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zlevel: Clean/repair in progress..." );
-        res = zlevelCheck( inst, True );
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "zlevel: %s problems cleaned", res?"no":"some" );
-        if( res == False )
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
-      }
-
-    }
-  }
-  else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "No optional clean/repair options selected." );
-  }
-
-  TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. END" );
   return False;
 }
 
@@ -5346,6 +6627,41 @@ static int _cleanupRoutes(iOAnalyse inst) {
   return( modifications );
 }
 
+/* check if "id" is member of stlist or fblist */
+static Boolean isValidBlockOrFeedbackId( iONode bklist, iONode fblist, const char* id ) {
+  if( id == NULL || StrOp.len( id ) == 0 ) {
+    /* emtpy blockid is valid */
+    return True;
+  }
+  if( ( bklist == NULL && fblist == NULL ) ) {
+    /* no lists */
+    return False;
+  }
+
+  int i;
+  int childcnt = NodeOp.getChildCnt( bklist );
+  for( i = 0 ; i < childcnt ; i++ ) {
+    iONode child = NodeOp.getChild( bklist, i );
+
+    if( StrOp.equals( wItem.getid( child ), id )) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidBlockOrFeedbackId: [%s] found block", id );
+      return True;
+    }
+  }
+
+  childcnt = NodeOp.getChildCnt( fblist );
+  for( i = 0 ; i < childcnt ; i++ ) {
+    iONode child = NodeOp.getChild( fblist, i );
+
+    if( StrOp.equals( wItem.getid( child ), id )) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidBlockOrFeedbackId: [%s] found feedback", id );
+      return True;
+    }
+  }
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidBlockOrFeedbackId: [%s] NO match", id );
+  return False;
+}
+
 /* check if "id" is member of stlist */
 static Boolean isValidRoute( iONode stlist, const char* id ) {
   if( stlist == NULL || id == NULL || StrOp.len( id ) == 0 )
@@ -5365,8 +6681,86 @@ static Boolean isValidRoute( iONode stlist, const char* id ) {
   return False;
 }
 
+/* check if id is in idlist */
+Boolean isInList( char *idlist, const char *id ) {
+  if( idlist != NULL ) {
+    iOStrTok tok = StrTokOp.inst( idlist, ',' );
+    /* check if id is already in the list */
+    while( StrTokOp.hasMoreTokens( tok )) {
+      const char* token = StrTokOp.nextToken( tok );
+      if( StrOp.equals( token, id ) ) {
+        StrTokOp.base.del(tok);
+        return True;
+      }
+    }
+    StrTokOp.base.del(tok);
+  }
+  return False;
+}
+
+
+/* check for invalid blockids in tk|sw|sg|fb-list */
+static int invalidBlockidCheck( iOAnalyse inst, iONode tracklist, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode bklist = wPlan.getbklist( data->plan );
+  iONode fblist = wPlan.getfblist( data->plan );
+  int modifications = 0;
+  int numModifiedTracks = 0;
+  int trackListSize = 0;
+  int checkedTotal = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "invalidBlockidCheck: Checking [%08.8X]", tracklist );
+  if( tracklist != NULL ) {
+    trackListSize = NodeOp.getChildCnt( tracklist );
+  }
+
+  if( trackListSize > 0 ) {
+    iONode tracknode;
+    const char* listType = NodeOp.getName( NodeOp.getChild(tracklist, 0));
+    int i = 0;
+    Boolean thisTrackChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "invalidBlockidCheck: Checking %d %s nodes", trackListSize, listType );
+    for( i = trackListSize - 1 ; i >= 0 ; i-- ) {
+      tracknode = NodeOp.getChild(tracklist, i);
+      if( tracknode ) {
+        checkedTotal++;
+        thisTrackChanged = False;
+        char* blockid = StrOp.dup(wItem.getblockid(tracknode));
+        if( ( blockid == NULL ) || ( StrOp.len( blockid ) == 0 ) ) {
+          /* no blockid */
+        } else {
+          if( isValidBlockOrFeedbackId( bklist, fblist, blockid ) ) {
+            /* OK */
+          } else {
+            modifications++;
+            numModifiedTracks++;
+            thisTrackChanged = True;
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node[%s][%s] has invalid blockid[%s]",
+                wItem.getid(tracknode), listType, blockid );
+            if( repair ) {
+              wItem.setblockid( tracknode, "" );
+            }
+          }
+        }
+      }
+    }
+    if( ( modifications > 0 ) || repair ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "  %s %slist [%5d/%5d] invalid blockids in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedTracks, trackListSize );
+    } else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  %s %slist [%5d/%5d] invalid blockids in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedTracks, trackListSize );
+    }
+  }
+  return modifications;
+}
+
+
 /* check for invalid routeids in tk|sw|sg|fb-list */
-static int invalidRouteidsCheck( iONode tracklist, iONode stlist, Boolean repair ) {
+static int invalidRouteidsCheck( iOAnalyse inst, iONode tracklist, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode stlist = wPlan.getstlist( data->plan );
   int modifications = 0;
   int numModifiedTracks = 0;
   int trackListSize = 0;
@@ -5399,7 +6793,13 @@ static int invalidRouteidsCheck( iONode tracklist, iONode stlist, Boolean repair
               checkedTotal++;
               /* check if it is valid */
               if( isValidRoute( stlist, token ) ) {
-                if( repair ) {
+                if( isInList( userrouteids, token ) ) {
+                  /* already in list -> duplicate entry -> skip */
+                  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "invalidRouteidsCheck: [%s][%s] duplicate entry[%s] in routeids[%s]",
+                      wItem.getid( tracknode ), listType, token, prevrouteids );
+                  thisTrackChanged = True;
+                  modifications++;
+                } else {
                   /* valid route so append to new list */
                   if( StrOp.len(userrouteids) > 0 ) {
                     userrouteids = StrOp.cat( userrouteids, ",");
@@ -5408,6 +6808,8 @@ static int invalidRouteidsCheck( iONode tracklist, iONode stlist, Boolean repair
                 }
               }else {
                 /* invalid routeid skipped */
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "invalidRouteidsCheck: [%s][%s] invalid entry[%s] in routeids[%s]",
+                    wItem.getid( tracknode ), listType, token, prevrouteids );
                 thisTrackChanged = True;
                 modifications++;
               }
@@ -5429,7 +6831,10 @@ static int invalidRouteidsCheck( iONode tracklist, iONode stlist, Boolean repair
       }
     }
     if( ( modifications > 0 ) || repair ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] invalid routeids in [%4d/%4d] nodes", 
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "  %s %slist [%5d/%5d] invalid/duplicate routeids in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedTracks, trackListSize );
+    } else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  %s %slist [%5d/%5d] invalid/duplicate routeids in [%4d/%4d] nodes", 
           repair?"cleaned":"checked", listType, modifications, checkedTotal, numModifiedTracks, trackListSize );
     }
   }
@@ -5983,18 +7388,14 @@ static struct OAnalyse* _inst() {
   wAnaOpt.setresetFeedbackBlockAssignment( anaOpt, wAnaOpt.isresetFeedbackBlockAssignment( anaOpt ) ) ;
 
   /* extended checks */
-  wAnaOpt.setblockFeedbackActionCheck(      anaOpt, wAnaOpt.isblockFeedbackActionCheck(      anaOpt ) ) ;
-  wAnaOpt.setblockFeedbackActionCheckClean( anaOpt, wAnaOpt.isblockFeedbackActionCheckClean( anaOpt ) ) ;
-  wAnaOpt.setblockRouteFbValidation(        anaOpt, wAnaOpt.isblockRouteFbValidation(        anaOpt ) ) ;
-  wAnaOpt.setblockRouteFbValidationClean(   anaOpt, wAnaOpt.isblockRouteFbValidationClean(   anaOpt ) ) ;
-  wAnaOpt.setseltabRouteFbValidation(       anaOpt, wAnaOpt.isseltabRouteFbValidation(       anaOpt ) ) ;
-  wAnaOpt.setseltabRouteFbValidationClean(  anaOpt, wAnaOpt.isseltabRouteFbValidationClean(  anaOpt ) ) ;
-  wAnaOpt.setblockCheck(                    anaOpt, wAnaOpt.isblockCheck(                    anaOpt ) ) ;
-  wAnaOpt.setblockCheckClean(               anaOpt, wAnaOpt.isblockCheckClean(               anaOpt ) ) ;
-  wAnaOpt.setrouteCheck(                    anaOpt, wAnaOpt.isrouteCheck(                    anaOpt ) ) ;
-  wAnaOpt.setrouteCheckClean(               anaOpt, wAnaOpt.isrouteCheckClean(               anaOpt ) ) ;
-  wAnaOpt.setzlevelCheck(                   anaOpt, wAnaOpt.iszlevelCheck(                   anaOpt ) ) ;
-  wAnaOpt.setzlevelCheckClean(              anaOpt, wAnaOpt.iszlevelCheckClean(              anaOpt ) ) ;
+  wAnaOpt.setbasicCheck(  anaOpt, wAnaOpt.isbasicCheck(  anaOpt ) ) ;
+  wAnaOpt.setbasicClean(  anaOpt, wAnaOpt.isbasicClean(  anaOpt ) ) ;
+  wAnaOpt.setblockCheck(  anaOpt, wAnaOpt.isblockCheck(  anaOpt ) ) ;
+  wAnaOpt.setblockClean(  anaOpt, wAnaOpt.isblockClean(  anaOpt ) ) ;
+  wAnaOpt.setrouteCheck(  anaOpt, wAnaOpt.isrouteCheck(  anaOpt ) ) ;
+  wAnaOpt.setrouteClean(  anaOpt, wAnaOpt.isrouteClean(  anaOpt ) ) ;
+  wAnaOpt.setactionCheck( anaOpt, wAnaOpt.isactionCheck( anaOpt ) ) ;
+  wAnaOpt.setactionClean( anaOpt, wAnaOpt.isactionClean( anaOpt ) ) ;
 
   /* store option values in local instance */
   data->setRouteId                    = wAnaOpt.issetRouteId(                    anaOpt ) ;
@@ -6008,27 +7409,20 @@ static struct OAnalyse* _inst() {
   data->resetFeedbackBlockAssignment  = wAnaOpt.isresetFeedbackBlockAssignment(  anaOpt ) ;
 
   /* extended check options */
-  data->blockFeedbackActionCheck      = wAnaOpt.isblockFeedbackActionCheck(      anaOpt ) ;
-  data->blockFeedbackActionCheckClean = wAnaOpt.isblockFeedbackActionCheckClean( anaOpt ) ;
-  data->blockRouteFbValidation        = wAnaOpt.isblockRouteFbValidation(        anaOpt ) ;
-  data->blockRouteFbValidationClean   = wAnaOpt.isblockRouteFbValidationClean(   anaOpt ) ;
-  data->seltabRouteFbValidation       = wAnaOpt.isseltabRouteFbValidation(       anaOpt ) ;
-  data->seltabRouteFbValidationClean  = wAnaOpt.isseltabRouteFbValidationClean(  anaOpt ) ;
-  data->blockCheck                    = wAnaOpt.isblockCheck(                    anaOpt ) ;
-  data->blockCheckClean               = wAnaOpt.isblockCheckClean(               anaOpt ) ;
-  data->routeCheck                    = wAnaOpt.isrouteCheck(                    anaOpt ) ;
-  data->routeCheckClean               = wAnaOpt.isrouteCheckClean(               anaOpt ) ;
-  data->zlevelCheck                   = wAnaOpt.iszlevelCheck(                   anaOpt ) ;
-  data->zlevelCheckClean              = wAnaOpt.iszlevelCheckClean(              anaOpt ) ;
+  data->basicCheck  = wAnaOpt.isbasicCheck(  anaOpt ) ;
+  data->basicClean  = wAnaOpt.isbasicClean(  anaOpt ) ;
+  data->blockCheck  = wAnaOpt.isblockCheck(  anaOpt ) ;
+  data->blockClean  = wAnaOpt.isblockClean(  anaOpt ) ;
+  data->routeCheck  = wAnaOpt.isrouteCheck(  anaOpt ) ;
+  data->routeClean  = wAnaOpt.isrouteClean(  anaOpt ) ;
+  data->actionCheck = wAnaOpt.isactionCheck( anaOpt ) ;
+  data->actionClean = wAnaOpt.isactionClean( anaOpt ) ;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ExtChk: bFAC[%d]c[%d] bFV[%d]c[%d] sFV[%d]c[%d] blC[%d]c[%d] rtC[%d]c[%d] zLC[%d]c[%d]",
-      data->blockFeedbackActionCheck, data->blockFeedbackActionCheckClean,
-      data->blockRouteFbValidation,   data->blockRouteFbValidationClean,
-      data->seltabRouteFbValidation,  data->seltabRouteFbValidationClean,
-      data->blockCheck,               data->blockCheckClean,
-      data->routeCheck,               data->routeCheckClean,
-      data->zlevelCheck,              data->zlevelCheckClean );
-
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ExtChk: basic[%d]c[%d] block[%d]c[%d] route[%d]c[%d] action[%d]c[%d]",
+      data->basicCheck,  data->basicClean,
+      data->blockCheck,  data->blockClean,
+      data->routeCheck,  data->routeClean,
+      data->actionCheck, data->actionClean );
 
   instCnt++;
   return __Analyse;

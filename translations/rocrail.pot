@@ -6120,39 +6120,51 @@ msgid "Reset feedback assignments in all blocks"
 msgstr ""
 
 #. 
-# id="ana_blockFeedbackActionCheck"
+# id="ana_basicCheck"
 #, c-format
-msgid "Check feedback action assignments in all blocks"
+msgid "Basic checks on all items"
 msgstr ""
 
 #. 
-# id="ana_blockFeedbackActionCheckClean"
+# id="ana_blockCheck"
 #, c-format
-msgid "Clean incomplete action assignments in all blocks"
+msgid "Checks concerning blocks"
 msgstr ""
 
 #. 
-# id="ana_blockRouteFbValidation"
+# id="ana_routeCheck"
 #, c-format
-msgid "Check dest routes and fb assignments in all blocks"
+msgid "Checks concerning routes"
 msgstr ""
 
 #. 
-# id="ana_blockRouteFbValidationClean"
+# id="ana_actionCheck"
 #, c-format
-msgid "clean invalid route/fb assignments in all blocks"
+msgid "Check actions and conditions"
 msgstr ""
 
 #. 
-# id="ana_seltabRouteFbValidation"
+# id="ana_basicClean"
 #, c-format
-msgid "check dest routes and fb assignments in Fiddle Yards"
+msgid "Clean basic problems on all items"
 msgstr ""
 
 #. 
-# id="ana_seltabRouteFbValidationClean"
+# id="ana_blockClean"
 #, c-format
-msgid "Clean invalid route/fb assignments in Fiddle Yards"
+msgid "Clean block problems"
+msgstr ""
+
+#. 
+# id="ana_routeClean"
+#, c-format
+msgid "Clean route problems"
+msgstr ""
+
+#. 
+# id="ana_actionClean"
+#, c-format
+msgid "Clean action and condition problems"
 msgstr ""
 
 #. 

@@ -20375,45 +20375,37 @@
     <es txt="Reasignar realimentaciones a los bloques"/>
     <de txt="Rückmelderzuordnung in allen Blöcken löschen"/>
   </Msg>
-  <Msg id="ana_blockFeedbackActionCheck">
-    <en txt="Check feedback action assignments in all blocks"/>
-    <nl txt="Controleer alle melder acties in de blokken"/>
-    <it txt="Controllare assegnazioni azioni feedback in tutti i blocchi"/>
-    <es txt="Comprobar la acción de retroalimentación asignada a los bloques"/>
-    <de txt="Prüfe Rückmelderzuordnung in allen Blöcken"/>
+  <Msg id="ana_basicCheck">
+    <en txt="Basic checks on all items"/>
+    <de txt="Allgemeine Prüfung aller Elemente"/>
   </Msg>
-  <Msg id="ana_blockFeedbackActionCheckClean">
-    <en txt="Clean incomplete action assignments in all blocks"/>
-    <nl txt="Verwijder incomplete acties verwijzingen uit de blokken"/>
-    <it txt="Pulire assegnazione delle azioni incomplete in tutti i blocchi"/>
-    <es txt="Borrar las acciones incompletas asignadas a los bloques"/>
-    <de txt="Lösche unvollständige Rückmelderzuordnung in allen Blöcken"/>
+  <Msg id="ana_blockCheck">
+    <en txt="Checks concerning blocks"/>
+    <de txt="Prüfung von Blöcken"/>
   </Msg>
-  <Msg id="ana_blockRouteFbValidation">
-    <en txt="Check dest routes and fb assignments in all blocks"/>
-    <nl txt="Controleer bestemmingen en melders in alle blokken"/>
-    <it txt="Controllare itinerari di destinazione e assegnazione feedback in tutti i blocchi"/>
-    <es txt="Comprobar rutas de destino y retroalimentación asignada a los bloques"/>
-    <de txt="Prüfe Routen- und Rückmelderzuordnung in allen Blöcken"/>
+  <Msg id="ana_routeCheck">
+    <en txt="Checks concerning routes"/>
+    <de txt="Prüfung von Fahrstraßen"/>
   </Msg>
-  <Msg id="ana_blockRouteFbValidationClean">
-    <en txt="clean invalid route/fb assignments in all blocks"/>
-    <nl txt="Verwijder ongeldige bestemmingen en melders uit de blokken"/>
-    <it txt="Pulisci assegnazioni itinerari/feedback invalidi in tutti i blocchi"/>
-    <es txt="borrar rutas y retroalimentaciones erróneas de los bloques"/>
-    <de txt="Lösche ungültige Routen- und Rückmelderzuordnung in allen Blöcken"/>
+  <Msg id="ana_actionCheck">
+    <en txt="Check actions and conditions"/>
+    <de txt="Aktionen und Bedingungen prüfen"/>
   </Msg>
-  <Msg id="ana_seltabRouteFbValidation">
-    <en txt="check dest routes and fb assignments in Fiddle Yards"/>
-    <nl txt="Controleer bestemmingen en melders in Fiddle Yards"/>
-    <it txt="Controllare itinerari di destinazione e assegnazione feedback nelle stazioni nascoste"/>
-    <de txt="Prüfe Routen- und Rückmelderzuordnung in Fiddle Yards"/>
+  <Msg id="ana_basicClean">
+    <en txt="Clean basic problems on all items"/>
+    <de txt="Bereinigung allgemeiner Probleme/Inkonsistenzen"/>
   </Msg>
-  <Msg id="ana_seltabRouteFbValidationClean">
-    <en txt="Clean invalid route/fb assignments in Fiddle Yards"/>
-    <nl txt="Verwijder ongeldige bestemmingen en melders uit Fiddle Yards"/>
-    <it txt="Pulisci assegnazioni itinerari/feedback invalidi nelle stazioni nascoste"/>
-    <de txt="Lösche ungültige Routen- und Rückmelderzuordnung in Fiddle Yards"/>
+  <Msg id="ana_blockClean">
+    <en txt="Clean block problems"/>
+    <de txt="Bereinigung inkonsistenter Einträge bei Blöcken"/>
+  </Msg>
+  <Msg id="ana_routeClean">
+    <en txt="Clean route problems"/>
+    <de txt="Bereinigung inkonsistenter Einträge bei Fahrstraßen"/>
+  </Msg>
+  <Msg id="ana_actionClean">
+    <en txt="Clean action and condition problems"/>
+    <de txt="Bereinigung inkonsistenter Einträge bei Aktionen und Bedingungen"/>
   </Msg>
   <Msg id="ana_clean">
     <en txt="Clean all analyze"/>
