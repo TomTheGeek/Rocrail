@@ -1702,6 +1702,8 @@
       <var name="power" vt="Boolean"/>
       <var name="sensor[256]" vt="byte"/>
       <var name="load" vt="int"/>
+      <var name="ptload" vt="int"/>
+      <var name="temp" vt="int"/>
       </data>
   </object>
 

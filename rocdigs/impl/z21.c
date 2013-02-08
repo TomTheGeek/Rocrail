@@ -52,6 +52,11 @@
 
 static int instCnt = 0;
 
+#define csEmergencyStop 0x01
+#define csTrackVoltageOff 0x02
+#define csShortCircuit 0x04
+#define csProgrammingModeActive 0x20
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -543,8 +548,14 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
 
     /* System state */
     else if( packet[packetIdx] == 0x14 && packet[packetIdx+2] == 0x84 ) {
+      byte stat1 = packet[packetIdx+16];
       data->load = packet[packetIdx+5] * 256 + packet[packetIdx+4];
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System state changed: %dmA", data->load);
+      data->ptload = packet[packetIdx+7] * 256 + packet[packetIdx+6];
+      data->temp = packet[packetIdx+11] * 256 + packet[packetIdx+10];
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+          "System state changed: main=%dmA pt=%dmA temp=%dC", data->load, data->ptload, data->temp);
+      data->power = (stat1 & csTrackVoltageOff) ? False:True;
       __reportState(inst);
     }
 
