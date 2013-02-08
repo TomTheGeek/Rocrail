@@ -294,6 +294,8 @@ static iONode __translate(iOZ21 inst, iONode node) {
       }
       else {
         byte* packet = allocMem(32);
+        if( cv > 0 )
+          cv--;
         packet[0] = 0x09;
         packet[1] = 0x00;
         packet[2] = 0x40;
@@ -312,6 +314,8 @@ static iONode __translate(iOZ21 inst, iONode node) {
 
       if( wProgram.ispom(node) ) {
         byte* packet = allocMem(32);
+        if( cv > 0 )
+          cv--;
         packet[0] = 0x0C;
         packet[1] = 0x00;
         packet[2] = 0x40;
@@ -328,6 +332,8 @@ static iONode __translate(iOZ21 inst, iONode node) {
       }
       else {
         byte* packet = allocMem(32);
+        if( cv > 0 )
+          cv--;
         packet[0] = 0x0A;
         packet[1] = 0x00;
         packet[2] = 0x40;
@@ -520,7 +526,7 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
     /* PT */
     else if( packet[packetIdx] == 0x0A && packet[packetIdx+2] == 0x40 ) {
       if( packet[packetIdx+4] == 0x64 && packet[packetIdx+5] == 0x14 ) {
-        int cv = packet[packetIdx+6] * 256 + packet[packetIdx+7];
+        int cv = packet[packetIdx+6] * 256 + packet[packetIdx+7] + 1;
         int value = packet[packetIdx+8];
         iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
         wProgram.setcv( node, cv );
