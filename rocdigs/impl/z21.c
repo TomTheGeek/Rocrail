@@ -529,7 +529,14 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
     }
 
     else if( packet[packetIdx] == 0x09 && packet[packetIdx+2] == 0x40 ) {
-      if( packet[packetIdx+4] == 0x43 ) {
+      if(packet[packetIdx+4] == 0xF3 && packet[packetIdx+5] == 0x0A ) {
+        int mv = packet[packetIdx+6];
+        int lv = packet[packetIdx+7];
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+            "Z21 firmware version = %d.%d%d", mv & 0x0F, (lv & 0xF0) >> 4, lv & 0x0F );
+      }
+
+      else if( packet[packetIdx+4] == 0x43 ) {
         int addr = (packet[packetIdx+5] << 8) + packet[packetIdx+6];
         int zz = packet[packetIdx+7];
         /*
@@ -706,6 +713,18 @@ static void __reader( void* threadinst ) {
   packet[2] = 0x10;
   packet[3] = 0x00;
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_GET_SERIAL_NUMBER" );
+  ThreadOp.post(data->writer, (obj)packet);
+  ThreadOp.sleep(100);
+
+  packet = allocMem(32);
+  packet[0] = 0x07;
+  packet[1] = 0x00;
+  packet[2] = 0x40;
+  packet[3] = 0x00;
+  packet[3] = 0xF1;
+  packet[3] = 0x0A;
+  packet[3] = 0xFB;
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_GET_FIRMWARE_VERSION" );
   ThreadOp.post(data->writer, (obj)packet);
   ThreadOp.sleep(100);
 
