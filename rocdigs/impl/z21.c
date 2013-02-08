@@ -207,7 +207,8 @@ static iONode __translate(iOZ21 inst, iONode node) {
 
   /* Switch command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
-    int addr = wSwitch.getaddr1( node );
+    int addr  = wSwitch.getaddr1( node );
+    int delay = wSwitch.getdelay(node) > 0 ? wSwitch.getdelay(node):data->swtime;
     Boolean turnout = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node));
     Boolean active = True;
     byte* packet = allocMem(32);
@@ -222,6 +223,23 @@ static iONode __translate(iOZ21 inst, iONode node) {
     packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dual gate switch %d: %s", addr, wSwitch.getcmd(node) );
     ThreadOp.post(data->writer, (obj)packet);
+
+    if( wSwitch.isactdelay(node) ) {
+      iQCmd cmd = allocMem(sizeof(struct QCmd));
+      cmd->time   = SystemOp.getTick();
+      cmd->delay  = delay / 10;
+      active = False;
+      cmd->out[0] = 0x09;
+      cmd->out[1] = 0x00;
+      cmd->out[2] = 0x40;
+      cmd->out[3] = 0x00;
+      cmd->out[4] = 0x53;
+      cmd->out[5] = addr / 256; /*MSB*/
+      cmd->out[6] = addr % 256; /*LSB*/
+      cmd->out[7] = 0x80 + (active?0x08:0x00) + (turnout?0x01:0x00); /*1000A00P*/
+      cmd->out[8] = cmd->out[4] ^ cmd->out[5] ^ cmd->out[6] ^ cmd->out[7]; /*xor*/
+      ThreadOp.post(data->timedqueue, (obj)cmd);
+    }
   }
 
   /* Output command. */
@@ -708,6 +726,45 @@ static void __writer( void* threadinst ) {
 }
 
 
+static void __timedqueue( void* threadinst ) {
+  iOThread  th   = (iOThread)threadinst;
+  iOZ21     z21  = (iOZ21)ThreadOp.getParm(th);
+  iOZ21Data data = Data(z21);
+
+  iOList list = ListOp.inst();
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed queue started" );
+
+  while( data->run ) {
+    iQCmd cmd = (iQCmd)ThreadOp.getPost( th );
+    if (cmd != NULL) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+          "new timed command time=%d delay=%d tick=%d frame=%s",
+          cmd->time, cmd->delay, SystemOp.getTick(), cmd->out+1 );
+      ListOp.add(list, (obj)cmd);
+    }
+
+    int i = 0;
+    for( i = 0; i < ListOp.size(list); i++ ) {
+      iQCmd cmd = (iQCmd)ListOp.get(list, i);
+      if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
+        byte* outa = allocMem(32);
+        MemOp.copy( outa, cmd->out, 32 );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
+        ThreadOp.post( data->writer, (obj)outa );
+        ListOp.removeObj(list, (obj)cmd);
+        freeMem(cmd);
+        break;
+      }
+    }
+
+    ThreadOp.sleep(10);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed queue ended" );
+}
+
+
+
 
 
 /**  */
@@ -718,8 +775,11 @@ static struct OZ21* _inst( const iONode ini ,const iOTrace trc ) {
 
   /* Initialize data->xxx members... */
   TraceOp.set( trc );
+  SystemOp.inst();
+
   data->ini = ini;
   data->run = True;
+  data->swtime = wDigInt.getswtime( ini );
 
   if( wDigInt.getport( data->ini ) == 0 ) {
     wDigInt.setport( data->ini, 21105 );
@@ -743,6 +803,9 @@ static struct OZ21* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->writer = ThreadOp.inst( "z21writer", &__writer, __Z21 );
   ThreadOp.start( data->writer );
+
+  data->timedqueue = ThreadOp.inst( "z21timedq", &__timedqueue, __Z21 );
+  ThreadOp.start( data->timedqueue );
 
   instCnt++;
   return __Z21;

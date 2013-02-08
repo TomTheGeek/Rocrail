@@ -1689,6 +1689,11 @@
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
     </fun>
+    <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
+      <var name="out[32]" vt="byte"/>
+      <var name="time" vt="unsigned long"/>
+      <var name="delay" vt="unsigned long"/>
+    </struct>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
@@ -1696,6 +1701,7 @@
       <var name="serialOK" vt="Boolean"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
+      <var name="timedqueue" vt="iOThread"/>
       <var name="rwUDP" vt="iOSocket"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
@@ -1704,6 +1710,7 @@
       <var name="load" vt="int"/>
       <var name="ptload" vt="int"/>
       <var name="temp" vt="int"/>
+      <var name="swtime" vt="int"/>
       </data>
   </object>
 
