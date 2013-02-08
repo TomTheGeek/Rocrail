@@ -203,6 +203,19 @@ static iONode __translate(iOZ21 inst, iONode node) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_SET_TRACK_POWER_ON" );
       ThreadOp.post(data->writer, (obj)packet);
     }
+
+    else if( StrOp.equals( cmdstr, wSysCmd.ebreak ) ) {
+      /* emergency break */
+      byte* packet = allocMem(32);
+      packet[0] = 0x06;
+      packet[1] = 0x00;
+      packet[2] = 0x40;
+      packet[3] = 0x00;
+      packet[4] = 0x80;
+      packet[5] = 0x80;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_SET_STOP" );
+      ThreadOp.post(data->writer, (obj)packet);
+    }
   }
 
   /* Switch command. */
