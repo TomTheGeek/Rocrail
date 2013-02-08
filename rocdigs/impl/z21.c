@@ -253,9 +253,9 @@ static iONode __translate(iOZ21 inst, iONode node) {
     packet[5] = 0x13; /*128 speed steps*/
     packet[6] = addr / 256; /*MSB*/
     packet[7] = addr % 256; /*LSB*/
-    packet[8] = (wLoc.isdir( node )?0x10:0x00) + speed;
+    packet[8] = (wLoc.isdir( node )?0x80:0x00) + speed;
     packet[9] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8]; /*xor*/
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d step=%d", addr, speed );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d step=%d (0x%02X)", addr, speed, packet[8] );
     ThreadOp.post(data->writer, (obj)packet);
   }
 
@@ -432,6 +432,7 @@ static void __reportState(iOZ21 inst) {
     if( data->iid != NULL )
       wState.setiid( node, data->iid );
     wState.setpower( node, data->power );
+    wState.setload( node, data->load );
 
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }
@@ -536,8 +537,9 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
 
     /* System state */
     else if( packet[packetIdx] == 0x14 && packet[packetIdx+2] == 0x84 ) {
-      int maincurrent = packet[packetIdx+4] * 256 + packet[packetIdx+5];
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System state changed: %dmA", maincurrent);
+      data->load = packet[packetIdx+5] * 256 + packet[packetIdx+4];
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System state changed: %dmA", data->load);
+      __reportState(inst);
     }
 
     /* RailCom */
