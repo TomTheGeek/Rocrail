@@ -147,6 +147,21 @@ Boolean __getFState(iONode fcmd, int fn) {
   return False;
 }
 
+static int __normalizeSteps(int insteps, byte* conf ) {
+  /* SPEEDSTEPS: vaild: 14, 28, 128 */
+  if( insteps < 20 ) {
+    *conf = 1;
+    return 14;
+  }
+  if( insteps > 100 ) {
+    *conf = 3;
+    return 127;
+  }
+  *conf = 2;
+  return 28;
+}
+
+
 
 
 static iONode __translate(iOZ21 inst, iONode node) {
@@ -203,7 +218,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
     packet[4] = 0x53;
     packet[5] = addr / 256; /*MSB*/
     packet[6] = addr % 256; /*LSB*/
-    packet[7] = 0x88 + (active?0x08:0x00) + (turnout?0x01:0x00); /*1000A00P*/
+    packet[7] = 0x80 + (active?0x08:0x00) + (turnout?0x01:0x00); /*1000A00P*/
     packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dual gate switch %d: %s", addr, wSwitch.getcmd(node) );
     ThreadOp.post(data->writer, (obj)packet);
@@ -222,7 +237,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
     packet[4] = 0x53;
     packet[5] = addr / 256; /*MSB*/
     packet[6] = addr % 256; /*LSB*/
-    packet[7] = 0x88 + (active?0x08:0x00) + gate; /*1000A00P*/
+    packet[7] = 0x80 + (active?0x08:0x00) + gate; /*1000A00P*/
     packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d.%d: %s", addr, gate, wSwitch.getcmd(node) );
     ThreadOp.post(data->writer, (obj)packet);
@@ -239,15 +254,17 @@ static iONode __translate(iOZ21 inst, iONode node) {
 
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
-    int addr = wLoc.getaddr( node );
+    int addr  = wLoc.getaddr( node );
+    byte conf  = 0;
+    int spcnt = __normalizeSteps(wLoc.getspcnt( node ), &conf);
     int speed = 0;
     byte* packet = allocMem(32);
 
     if( wLoc.getV( node ) != -1 ) {
       if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
-        speed = (wLoc.getV( node ) * 127) / 100;
+        speed = (wLoc.getV( node ) * spcnt) / 100;
       else if( wLoc.getV_max( node ) > 0 )
-        speed = (wLoc.getV( node ) * 127) / wLoc.getV_max( node );
+        speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
     }
 
     packet[0] = 0x0A;
@@ -255,7 +272,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
     packet[2] = 0x40;
     packet[3] = 0x00;
     packet[4] = 0xE4;
-    packet[5] = 0x13; /*128 speed steps*/
+    packet[5] = 0x10+conf; /* speed steps*/
     packet[6] = addr / 256; /*MSB*/
     packet[7] = addr % 256; /*LSB*/
     packet[8] = (wLoc.isdir( node )?0x80:0x00) + speed;
@@ -553,7 +570,7 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       data->ptload = packet[packetIdx+7] * 256 + packet[packetIdx+6];
       data->temp = packet[packetIdx+11] * 256 + packet[packetIdx+10];
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
           "System state changed: main=%dmA pt=%dmA temp=%dC", data->load, data->ptload, data->temp);
       data->power = (stat1 & csTrackVoltageOff) ? False:True;
       __reportState(inst);
