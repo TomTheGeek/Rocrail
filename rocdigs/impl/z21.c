@@ -599,6 +599,33 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RailCom event...");
     }
 
+    /* Loco info */
+    else if( packet[packetIdx+2] == 0x40 && packet[packetIdx+4] == 0xEF ) {
+      iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      int addr  = (packet[packetIdx+5] & 0x3F) * 256 + packet[packetIdx+6];
+      int steps = packet[packetIdx+7] & 0x07; /*0=14, 2=28, 4=128*/
+      int speed = packet[packetIdx+8] & 0x7F;
+      Boolean dir = (packet[packetIdx+8] & 0x80) ? True:False;
+      Boolean fn = (packet[packetIdx+9] & 0x10) ? True:False;
+
+      if( steps == 0 ) steps = 14;
+      else if( steps == 2 ) steps = 28;
+      else if( steps == 4 ) steps = 127;
+
+      if( data->iid != NULL )
+        wLoc.setiid( nodeC, data->iid );
+      wLoc.setaddr( nodeC, addr );
+      wLoc.setdir( nodeC, dir );
+      wLoc.setfn( nodeC, fn );
+      wLoc.setV_raw( nodeC, speed );
+      wLoc.setV_rawMax( nodeC, steps );
+      wLoc.setthrottleid( nodeC, "x-bus" );
+      wLoc.setcmd( nodeC, wLoc.velocity );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+          "Loco %d:%d V_raw=%d dir=%s lights=%s", addr, steps, speed, dir?"fwd":"rev", fn?"on":"off");
+      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+    }
+
     else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unhandled packet...");
       TraceOp.dump ( name, TRCLEVEL_INFO, (char*)packet, packetSize );
