@@ -492,6 +492,8 @@ static void __reportState(iOZ21 inst) {
       wState.setiid( node, data->iid );
     wState.setpower( node, data->power );
     wState.setload( node, data->load );
+    wState.setptload( node, data->ptload );
+    wState.settemp( node, data->temp );
 
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }

@@ -917,6 +917,8 @@
     <var name="consolemode" vt="bool" defval="false"/>
     <var name="healthy" vt="bool" defval="false"/>
     <var name="load" vt="int" defval="0" remark="Load of CS in mA."/>
+    <var name="ptload" vt="int" defval="0" remark="Load of PT in mA."/>
+    <var name="temp" vt="int" defval="0" remark="Temp of CS in C."/>
     <var name="uid" vt="int" defval="0" remark="Unique-ID of reporter."/>
     <var name="shortcut" vt="bool" defval="false"/>
   </state>
