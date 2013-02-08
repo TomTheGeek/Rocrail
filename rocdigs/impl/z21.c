@@ -721,9 +721,9 @@ static void __reader( void* threadinst ) {
   packet[1] = 0x00;
   packet[2] = 0x40;
   packet[3] = 0x00;
-  packet[3] = 0xF1;
-  packet[3] = 0x0A;
-  packet[3] = 0xFB;
+  packet[4] = 0xF1;
+  packet[5] = 0x0A;
+  packet[6] = 0xFB;
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_GET_FIRMWARE_VERSION" );
   ThreadOp.post(data->writer, (obj)packet);
   ThreadOp.sleep(100);
