@@ -178,8 +178,6 @@ static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, lon
 
 static iONode __translate( iOMCS2 inst, iONode node ) {
   iOMCS2Data data = Data(inst);
-  byte*  out   = allocMem(32);
-  byte*  out2  = allocMem(32);
   iONode rsp   = NULL;
 
   /* System command. */
@@ -187,18 +185,21 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     const char* cmd = wSysCmd.getcmd( node );
 
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+      byte* out = allocMem(32);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System STOP" );
       __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_STOP, 0, 0, 0);
       ThreadOp.post( data->writer, (obj)out );
       return rsp;
     }
     else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      byte* out = allocMem(32);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System HALT" );
       __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_HALT, 0, 0, 0);
       ThreadOp.post( data->writer, (obj)out );
       return rsp;
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
+      byte* out = allocMem(32);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System GO" );
       __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_GO, 0, 0, 0);
       ThreadOp.post( data->writer, (obj)out );
@@ -208,6 +209,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
 
   /* Switch command */
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    byte* out = allocMem(32);
     int module = wSwitch.getaddr1( node );
     if ( module == 0 )
       /* pada used, port will be actual cs2 lineair address */
@@ -251,6 +253,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
 
   /* Output command */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    byte* out = allocMem(32);
     int module = wOutput.getaddr( node );
     if ( module == 0 )
       module = 1;
@@ -278,8 +281,12 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
 
   /* Loco command */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    byte* out = allocMem(32);
+    byte* out2 = allocMem(32);
+    byte* out3 = allocMem(32);
     Boolean sw     = wLoc.issw( node );
     int addr       = wLoc.getaddr( node );
+    int fn         = wLoc.isfn( node );
     int addroffset = 0;
     int dir        = 2 - wLoc.isdir( node );
     /* for cs2 1 is forwards, 2 is backwards, from server 1 = forwards, 0 is backwards */
@@ -327,11 +334,14 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     /* send direction first, speed as second, because of CS2 setting speed to 0 on dir change */
     ThreadOp.post( data->writer, (obj)out );
     ThreadOp.post( data->writer, (obj)out2 );
+    __setSysMsg(out3, 0, CMD_LOCO_FUNCTION , False, 6, address, 0, fn, 0, 0);
+    ThreadOp.post( data->writer, (obj)out3 );
     return rsp;
   }
 
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    byte* out = allocMem(32);
     int fnchanged  = wFunCmd.getfnchanged(node);
     int addr       = wFunCmd.getaddr( node );
     int addroffset = 0;
@@ -362,9 +372,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     }
   }
 
-  freeMem(out);
-  freeMem(out2);
-  return NULL;
+  return rsp;
 }
 
 
@@ -441,8 +449,6 @@ static void __feedbackMCS2Reader( void* threadinst ) {
       __setSysMsg(out, 0, 0x10, False, 5, dummy, mod, 0, 0, 0);
       /* unofficial command 0x10 request status of feedback module mod, one module has 16 inputs */
       ThreadOp.post( data->writer, (obj)out );
-      out = NULL;
-      freeMem( out );
     }
 
     if( wDigInt.getprotver( data->ini ) == 2 ) {
@@ -677,12 +683,11 @@ static void __writer( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
   iOMCS2Data data = Data(mcs2);
-  byte* cmd = allocMem( 32 );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 writer started." );
 
   do {
-    cmd = (byte*)ThreadOp.getPost( th );
+    byte* cmd = (byte*)ThreadOp.getPost( th );
     if (cmd != NULL) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, cmd, 13 );
       if( data->udp )
