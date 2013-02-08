@@ -602,6 +602,8 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
     /* Loco info */
     else if( packet[packetIdx+2] == 0x40 && packet[packetIdx+4] == 0xEF ) {
       iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      iONode nodeD = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+
       int addr  = (packet[packetIdx+5] & 0x3F) * 256 + packet[packetIdx+6];
       int steps = packet[packetIdx+7] & 0x07; /*0=14, 2=28, 4=128*/
       int speed = packet[packetIdx+8] & 0x7F;
@@ -624,6 +626,45 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
           "Loco %d:%d V_raw=%d dir=%s lights=%s", addr, steps, speed, dir?"fwd":"rev", fn?"on":"off");
       data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+      wFunCmd.setaddr(nodeD, addr);
+      wFunCmd.setf0(nodeD, fn);
+      wFunCmd.setf1(nodeD, (packet[packetIdx+9] & 0x01) ? True:False);
+      wFunCmd.setf2(nodeD, (packet[packetIdx+9] & 0x02) ? True:False);
+      wFunCmd.setf3(nodeD, (packet[packetIdx+9] & 0x04) ? True:False);
+      wFunCmd.setf4(nodeD, (packet[packetIdx+9] & 0x08) ? True:False);
+
+      wFunCmd.setf5 (nodeD, (packet[packetIdx+10] & 0x01) ? True:False);
+      wFunCmd.setf6 (nodeD, (packet[packetIdx+10] & 0x02) ? True:False);
+      wFunCmd.setf7 (nodeD, (packet[packetIdx+10] & 0x04) ? True:False);
+      wFunCmd.setf8 (nodeD, (packet[packetIdx+10] & 0x08) ? True:False);
+      wFunCmd.setf9 (nodeD, (packet[packetIdx+10] & 0x10) ? True:False);
+      wFunCmd.setf10(nodeD, (packet[packetIdx+10] & 0x20) ? True:False);
+      wFunCmd.setf11(nodeD, (packet[packetIdx+10] & 0x40) ? True:False);
+      wFunCmd.setf12(nodeD, (packet[packetIdx+10] & 0x80) ? True:False);
+
+      wFunCmd.setf13(nodeD, (packet[packetIdx+11] & 0x01) ? True:False);
+      wFunCmd.setf14(nodeD, (packet[packetIdx+11] & 0x02) ? True:False);
+      wFunCmd.setf15(nodeD, (packet[packetIdx+11] & 0x04) ? True:False);
+      wFunCmd.setf16(nodeD, (packet[packetIdx+11] & 0x08) ? True:False);
+      wFunCmd.setf17(nodeD, (packet[packetIdx+11] & 0x10) ? True:False);
+      wFunCmd.setf18(nodeD, (packet[packetIdx+11] & 0x20) ? True:False);
+      wFunCmd.setf19(nodeD, (packet[packetIdx+11] & 0x40) ? True:False);
+      wFunCmd.setf20(nodeD, (packet[packetIdx+11] & 0x80) ? True:False);
+
+      wFunCmd.setf21(nodeD, (packet[packetIdx+12] & 0x01) ? True:False);
+      wFunCmd.setf22(nodeD, (packet[packetIdx+12] & 0x02) ? True:False);
+      wFunCmd.setf23(nodeD, (packet[packetIdx+12] & 0x04) ? True:False);
+      wFunCmd.setf24(nodeD, (packet[packetIdx+12] & 0x08) ? True:False);
+      wFunCmd.setf25(nodeD, (packet[packetIdx+12] & 0x10) ? True:False);
+      wFunCmd.setf26(nodeD, (packet[packetIdx+12] & 0x20) ? True:False);
+      wFunCmd.setf27(nodeD, (packet[packetIdx+12] & 0x40) ? True:False);
+      wFunCmd.setf28(nodeD, (packet[packetIdx+12] & 0x80) ? True:False);
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+          "Loco %d functions update...", addr);
+      data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+
     }
 
     else {
