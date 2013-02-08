@@ -445,7 +445,7 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
   while( packetIdx < packetSize ) {
 
     if( packet[packetIdx] == 0x08 && packet[packetIdx+2] == 0x10 ) {
-      int sn = packet[packetIdx+4] + (packet[packetIdx+5] << 8) + (packet[packetIdx+6] << 16) + (packet[packetIdx+6] << 24);
+      int sn = packet[packetIdx+4] + (packet[packetIdx+5] << 8) + (packet[packetIdx+6] << 16) + (packet[packetIdx+7] << 24);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Z21 serialnumber = %d", sn );
     }
 
@@ -534,8 +534,20 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       }
     }
 
+    /* System state */
+    else if( packet[packetIdx] == 0x14 && packet[packetIdx+2] == 0x84 ) {
+      int maincurrent = packet[packetIdx+4] * 256 + packet[packetIdx+5];
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System state changed: %dmA", maincurrent);
+    }
+
     /* RailCom */
     else if( packet[packetIdx+2] == 0x88 ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RailCom event...");
+    }
+
+    else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unhandled packet...");
+      TraceOp.dump ( name, TRCLEVEL_INFO, (char*)packet, packetSize );
     }
 
     packetIdx += packet[packetIdx];
@@ -611,10 +623,10 @@ static void __reader( void* threadinst ) {
     byte packet[256];
     MemOp.set( packet, 0, 256);
 
-    int packetSize = SocketOp.recvfrom( data->readUDP, packet, 256, NULL, NULL );
+    int packetSize = SocketOp.recvfrom( data->rwUDP, packet, 256, NULL, NULL );
 
     if( packetSize > 0 && packetSize < 256 ) {
-      TraceOp.dump ( name, TRCLEVEL_INFO, (char*)packet, packetSize );
+      TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)packet, packetSize );
       __evaluatePacket(z21, packet, packetSize);
     }
     else {
@@ -648,8 +660,8 @@ static void __writer( void* threadinst ) {
       len = post[0];
       MemOp.copy( packet, post, len);
       freeMem( post);
-      TraceOp.dump ( name, TRCLEVEL_INFO, (char*)packet, len );
-      SocketOp.sendto( data->writeUDP, packet, len, NULL, 0 );
+      TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)packet, len );
+      SocketOp.sendto( data->rwUDP, packet, len, NULL, 0 );
     }
 
     ThreadOp.sleep(10);
@@ -687,10 +699,8 @@ static struct OZ21* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 UDP port [%d]", wDigInt.getport( data->ini )  );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, False );
-  SocketOp.bind(data->readUDP);
-
-  data->writeUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, False );
+  data->rwUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, False );
+  SocketOp.bind(data->rwUDP);
 
   data->reader = ThreadOp.inst( "z21reader", &__reader, __Z21 );
   ThreadOp.start( data->reader );

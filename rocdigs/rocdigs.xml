@@ -1696,8 +1696,7 @@
       <var name="serialOK" vt="Boolean"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
-      <var name="readUDP" vt="iOSocket"/>
-      <var name="writeUDP" vt="iOSocket"/>
+      <var name="rwUDP" vt="iOSocket"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="power" vt="Boolean"/>
