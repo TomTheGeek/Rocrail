@@ -166,7 +166,11 @@ static void __checkDecMode( iOZ21 inst, iONode node ) {
   iOZ21Data data = Data(inst);
 
   if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) || StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    char key[32];
     int addr = wLoc.getaddr(node);
+
+    StrOp.fmtb( key, "%d", addr );
+
     if( addr < 256 ) {
       int mode = StrOp.equals(wLoc.prot_M, wLoc.getprot(node) ) ? DECMODE_MM:DECMODE_DCC;
       if( data->lcmode[addr] != mode ) {
@@ -182,22 +186,27 @@ static void __checkDecMode( iOZ21 inst, iONode node ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set loco %d mode to [%s]", addr, (mode == DECMODE_MM)?"MM":"DCC"  );
         ThreadOp.post(data->writer, (obj)packet);
         ThreadOp.sleep(100);
-
-        packet = allocMem(32);
-        packet[0] = 0x09;
-        packet[1] = 0x00;
-        packet[2] = 0x40;
-        packet[3] = 0x00;
-        packet[4] = 0xE3;
-        packet[5] = 0xF0;
-        packet[6] = addr / 256;
-        packet[7] = addr % 256;
-        packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7];
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get loco %d info", addr );
-        ThreadOp.post(data->writer, (obj)packet);
-        ThreadOp.sleep(100);
       }
     }
+
+    if( !MapOp.haskey(data->lcmap, key) ) {
+      byte* packet = allocMem(32);
+      packet[0] = 0x09;
+      packet[1] = 0x00;
+      packet[2] = 0x40;
+      packet[3] = 0x00;
+      packet[4] = 0xE3;
+      packet[5] = 0xF0;
+      packet[6] = addr / 256;
+      packet[7] = addr % 256;
+      packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7];
+      /* put a dummy object */
+      MapOp.put(data->lcmap, key, (obj)inst );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get loco %d info", addr );
+      ThreadOp.post(data->writer, (obj)packet);
+      ThreadOp.sleep(100);
+    }
+
   }
   else {
     int addr = 0;
@@ -998,6 +1007,7 @@ static struct OZ21* _inst( const iONode ini ,const iOTrace trc ) {
   data->ini = ini;
   data->run = True;
   data->swtime = wDigInt.getswtime( ini );
+  data->lcmap = MapOp.inst();
 
   if( wDigInt.getport( data->ini ) == 0 ) {
     wDigInt.setport( data->ini, 21105 );

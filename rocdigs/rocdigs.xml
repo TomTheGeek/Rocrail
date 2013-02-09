@@ -1684,7 +1684,7 @@
       </data>
   </object>
 
-  <object name="Z21" interface="$../rocint/rocint.xml:DigInt" use="node,socket,trace,thread,event" include="$rocint/public/digint">
+  <object name="Z21" interface="$../rocint/rocint.xml:DigInt" use="node,socket,trace,thread,event,map" include="$rocint/public/digint">
     <typedef def="enum {DECMODE_DEF=0, DECMODE_DCC, DECMODE_MM} decmode"/>
       <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
@@ -1717,6 +1717,7 @@
       <var name="lastcmd" vt="long"/>
       <var name="lcmode[256]" vt="byte"/>
       <var name="swmode[256]" vt="byte"/>
+      <var name="lcmap" vt="iOMap"/>
       </data>
   </object>
 
