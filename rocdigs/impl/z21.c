@@ -181,7 +181,9 @@ static void __checkDecMode( iOZ21 inst, iONode node ) {
         packet[6] = (mode >> 1);
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set loco %d mode to [%s]", addr, (mode == DECMODE_MM)?"MM":"DCC"  );
         ThreadOp.post(data->writer, (obj)packet);
+        ThreadOp.sleep(100);
 
+        packet = allocMem(32);
         packet[0] = 0x09;
         packet[1] = 0x00;
         packet[2] = 0x40;
@@ -193,7 +195,7 @@ static void __checkDecMode( iOZ21 inst, iONode node ) {
         packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7];
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get loco %d info", addr );
         ThreadOp.post(data->writer, (obj)packet);
-
+        ThreadOp.sleep(100);
       }
     }
   }
