@@ -94,6 +94,7 @@ void ECoSCtrlDialog::initLabels() {
   m_labFBMod->SetLabel( wxGetApp().getMsg( "sensors" ) );
   m_labVersion->SetLabel( wxGetApp().getMsg( "version" ) );
   m_SubLib->SetLabel( wxGetApp().getMsg( "type" ) );
+  m_SystemInfo->SetLabel( wxGetApp().getMsg( "systeminfo" ) );
 }
 
 void ECoSCtrlDialog::initValues() {
@@ -121,6 +122,7 @@ void ECoSCtrlDialog::initValues() {
   if( StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib(m_Props) )) {
     m_SubLib->SetSelection(1);
   }
+  m_SystemInfo->SetValue( wDigInt.issysteminfo( m_Props ) );
 
   SublibSelected();
 
@@ -140,6 +142,7 @@ void ECoSCtrlDialog::evaluate() {
     wDigInt.setsublib(m_Props, wDigInt.sublib_serial );
   else
     wDigInt.setsublib(m_Props, wDigInt.sublib_default );
+  wDigInt.setsysteminfo( m_Props, m_SystemInfo->IsChecked()?True:False );
 
 }
 
@@ -194,6 +197,7 @@ void ECoSCtrlDialog::Init()
     m_labVersion = NULL;
     m_Version = NULL;
     m_SubLib = NULL;
+    m_SystemInfo = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end ECoSCtrlDialog member initialisation
@@ -254,10 +258,10 @@ void ECoSCtrlDialog::CreateControls()
     itemFlexGridSizer5->Add(m_FBMod, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labVersion = new wxStaticText( itemPanel3, wxID_ANY, _("Version"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labVersion, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer5->Add(m_labVersion, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_Version = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 10, 0 );
-    itemFlexGridSizer5->Add(m_Version, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer5->Add(m_Version, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxArrayString m_SubLibStrings;
     m_SubLibStrings.Add(_("&Ethernet"));
@@ -266,17 +270,21 @@ void ECoSCtrlDialog::CreateControls()
     m_SubLib->SetSelection(0);
     itemBoxSizer4->Add(m_SubLib, 0, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer19 = new wxStdDialogButtonSizer;
+    m_SystemInfo = new wxCheckBox( itemPanel3, wxID_ANY, _("System info"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_SystemInfo->SetValue(false);
+    itemBoxSizer4->Add(m_SystemInfo, 0, wxALIGN_LEFT|wxALL, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer19, 0, wxALIGN_RIGHT|wxALL, 5);
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer20 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer20, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer19->AddButton(m_OK);
+    itemStdDialogButtonSizer20->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer19->AddButton(m_Cancel);
+    itemStdDialogButtonSizer20->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer19->Realize();
+    itemStdDialogButtonSizer20->Realize();
 
 ////@end ECoSCtrlDialog content construction
 }
