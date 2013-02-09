@@ -494,6 +494,9 @@ static void __reportState(iOZ21 inst) {
     wState.setload( node, data->load );
     wState.setptload( node, data->ptload );
     wState.settemp( node, data->temp );
+    wState.settrackbus( node, True );
+    wState.setsensorbus( node, True );
+    wState.setaccessorybus( node, True );
 
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }
