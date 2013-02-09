@@ -2471,6 +2471,7 @@
         <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>
         <var name="type" vt="string" defval="co" range="co,sw,st,sys,ext,sg,bk,lc,fn,tt,seltab,tx" required="true" remark="type [ext] is an external program or script to be executed"/>
         <var name="activate" vt="bool" defval="true" remark="action activation at state ON or OFF: default is ON(true)"/>
+        <var name="doublequote" vt="bool" defval="true" remark="Double quote under Windows."/>
         <var name="hour" vt="int" defval="0" range="0-23" remark="action hour"/>
         <var name="min" vt="int" defval="0" range="0-59" remark="action minute"/>
         <var name="random" vt="bool" defval="false" remark="Use time for random activation."/>

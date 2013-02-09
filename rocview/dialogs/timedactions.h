@@ -164,6 +164,7 @@ public:
     wxStaticText* m_labCommand;
     wxComboBox* m_Command;
     wxButton* m_ExecCmd;
+    wxCheckBox* m_DoubleQuote;
     wxStaticText* m_labParam;
     wxTextCtrl* m_Parameter;
     wxStaticText* m_labDuration;

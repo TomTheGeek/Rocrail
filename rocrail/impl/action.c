@@ -522,7 +522,12 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     /* check for a external action */
     const char* extaction = wAction.getcmd( data->action );
     const char* extparam  = wAction.getparam( data->action );
-    const char* quote = SystemOp.isWindows() ? "\"":"";
+    const char* quote = "";
+
+    if(wAction.isdoublequote(data->action) && SystemOp.isWindows()) {
+      quote = "\"";
+    }
+
     if( extaction != NULL && StrOp.len(extaction) > 0 ) {
       if( wActionCtrl.getparam(actionctrl) != NULL && StrOp.len(wActionCtrl.getparam(actionctrl)) > 0 ) {
         char* s = NULL;

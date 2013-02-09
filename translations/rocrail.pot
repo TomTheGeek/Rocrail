@@ -6263,3 +6263,9 @@ msgstr ""
 msgid "EBreak at ghost train"
 msgstr ""
 
+#. 
+# id="doublequote"
+#, c-format
+msgid "Double quote"
+msgstr ""
+

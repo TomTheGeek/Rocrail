@@ -20474,4 +20474,7 @@
   <Msg id="ebreakatghost">
     <en txt="EBreak at ghost train"/>
   </Msg>
+  <Msg id="doublequote">
+    <en txt="Double quote"/>
+  </Msg>
 </Messages>
