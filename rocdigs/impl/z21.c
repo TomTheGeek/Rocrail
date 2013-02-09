@@ -494,7 +494,8 @@ static void __reportState(iOZ21 inst) {
     wState.setload( node, data->load );
     wState.setptload( node, data->ptload );
     wState.settemp( node, data->temp );
-    wState.settrackbus( node, True );
+    wState.setvolt( node, data->volt );
+    wState.settrackbus( node, data->serialOK );
     wState.setsensorbus( node, True );
     wState.setaccessorybus( node, True );
 
@@ -612,6 +613,8 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       data->load = packet[packetIdx+5] * 256 + packet[packetIdx+4];
       data->ptload = packet[packetIdx+7] * 256 + packet[packetIdx+6];
       data->temp = packet[packetIdx+11] * 256 + packet[packetIdx+10];
+      data->volt = packet[packetIdx+15] * 256 + packet[packetIdx+14];
+      data->volt /= 1000;
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
           "System state changed: main=%dmA pt=%dmA temp=%dC", data->load, data->ptload, data->temp);
@@ -821,7 +824,7 @@ static void __writer( void* threadinst ) {
       MemOp.copy( packet, post, len);
       freeMem( post);
       TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)packet, len );
-      SocketOp.sendto( data->rwUDP, packet, len, NULL, 0 );
+      data->serialOK = SocketOp.sendto( data->rwUDP, packet, len, NULL, 0 );
     }
 
     ThreadOp.sleep(10);

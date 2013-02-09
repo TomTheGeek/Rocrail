@@ -1710,6 +1710,7 @@
       <var name="load" vt="int"/>
       <var name="ptload" vt="int"/>
       <var name="temp" vt="int"/>
+      <var name="volt" vt="int"/>
       <var name="swtime" vt="int"/>
       </data>
   </object>

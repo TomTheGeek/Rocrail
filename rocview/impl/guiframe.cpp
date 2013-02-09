@@ -4088,9 +4088,11 @@ void RocGuiFrame::OnStateEvent( wxCommandEvent& event ) {
   m_StatusBar->Update( state );
   m_StatusBar->Health(wState.ishealthy(node));
   if( wState.gettemp( node ) > 0 )
-     SetStatusText( wxString::Format( _T("%dmA %dC"), wState.getload( node ), wState.gettemp( node )), status_load );
+     SetStatusText( wxString::Format( _T("%dV %dmA %dC"),
+         wState.getvolt( node ), wState.getload( node ), wState.gettemp( node )), status_load );
   else
-    SetStatusText( wxString::Format( _T("%d"), wState.getload( node )) + _T("mA"), status_load );
+    SetStatusText( wxString::Format( _T("%dV %dmA"),
+        wState.getvolt( node ), wState.getload( node )), status_load );
 
   // Cleanup node:
   node->base.del( node );
