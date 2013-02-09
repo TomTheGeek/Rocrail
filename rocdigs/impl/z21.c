@@ -825,6 +825,9 @@ static void __writer( void* threadinst ) {
       freeMem( post);
       TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)packet, len );
       data->serialOK = SocketOp.sendto( data->rwUDP, packet, len, NULL, 0 );
+      if(data->serialOK) {
+        data->lastcmd = time(NULL);
+      }
     }
 
     ThreadOp.sleep(10);
@@ -873,7 +876,29 @@ static void __timedqueue( void* threadinst ) {
 }
 
 
+static void __watchdog( void* threadinst ) {
+  iOThread  th   = (iOThread)threadinst;
+  iOZ21     z21  = (iOZ21)ThreadOp.getParm(th);
+  iOZ21Data data = Data(z21);
 
+  ThreadOp.sleep(1000);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 UDP watchdog started." );
+
+  while( data->run ) {
+    long t = time(NULL);
+    if( t - data->lastcmd >= 30 ) {
+      byte* outa = allocMem(32);
+      outa[0] = 0x04;
+      outa[1] = 0x00;
+      outa[2] = 0x10;
+      outa[3] = 0x00;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting a keep alive packet" );
+      ThreadOp.post( data->writer, (obj)outa );
+    }
+    ThreadOp.sleep(1000);
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 UDP watchdog stopped." );
+}
 
 
 /**  */
@@ -915,6 +940,9 @@ static struct OZ21* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->timedqueue = ThreadOp.inst( "z21timedq", &__timedqueue, __Z21 );
   ThreadOp.start( data->timedqueue );
+
+  data->watchdog = ThreadOp.inst( "z21watchdog", &__watchdog, __Z21 );
+  ThreadOp.start( data->watchdog );
 
   instCnt++;
   return __Z21;

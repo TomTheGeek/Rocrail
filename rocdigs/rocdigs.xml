@@ -1702,6 +1702,7 @@
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
       <var name="timedqueue" vt="iOThread"/>
+      <var name="watchdog" vt="iOThread"/>
       <var name="rwUDP" vt="iOSocket"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
@@ -1712,6 +1713,7 @@
       <var name="temp" vt="int"/>
       <var name="volt" vt="int"/>
       <var name="swtime" vt="int"/>
+      <var name="lastcmd" vt="long"/>
       </data>
   </object>
 
