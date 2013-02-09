@@ -179,14 +179,35 @@ static void __checkDecMode( iOZ21 inst, iONode node ) {
         packet[4] = addr / 256;
         packet[5] = addr % 256;
         packet[6] = (mode >> 1);
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set loco mode to [%s]", (mode == DECMODE_MM)?"MM":"DCC"  );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set loco %d mode to [%s]", addr, (mode == DECMODE_MM)?"MM":"DCC"  );
         ThreadOp.post(data->writer, (obj)packet);
       }
     }
   }
-  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
-  }
-  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+  else {
+    int addr = 0;
+    if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+      addr = wSwitch.getaddr1(node);
+    }
+    else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+      addr = wOutput.getaddr(node);
+    }
+    if( addr < 256 ) {
+      int mode = StrOp.equals(wLoc.prot_M, wSwitch.getprot(node) ) ? DECMODE_MM:DECMODE_DCC;
+      if( data->swmode[addr] != mode ) {
+        byte* packet = allocMem(32);
+        data->swmode[addr] = mode;
+        packet[0] = 0x07;
+        packet[1] = 0x00;
+        packet[2] = 0x71;
+        packet[3] = 0x00;
+        packet[4] = addr / 256;
+        packet[5] = addr % 256;
+        packet[6] = (mode >> 1);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set switch %d mode to [%s]", addr, (mode == DECMODE_MM)?"MM":"DCC"  );
+        ThreadOp.post(data->writer, (obj)packet);
+      }
+    }
   }
 }
 
@@ -252,6 +273,9 @@ static iONode __translate(iOZ21 inst, iONode node) {
     Boolean turnout = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node));
     Boolean active = True;
     byte* packet = allocMem(32);
+
+    __checkDecMode( inst, node );
+
     packet[0] = 0x09;
     packet[1] = 0x00;
     packet[2] = 0x40;
@@ -288,6 +312,9 @@ static iONode __translate(iOZ21 inst, iONode node) {
     int gate = wOutput.getgate( node );
     Boolean active = StrOp.equals( wOutput.getcmd( node ), wOutput.on );
     byte* packet = allocMem(32);
+
+    __checkDecMode( inst, node );
+
     packet[0] = 0x09;
     packet[1] = 0x00;
     packet[2] = 0x40;
