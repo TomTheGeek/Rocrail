@@ -614,10 +614,9 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       data->ptload = packet[packetIdx+7] * 256 + packet[packetIdx+6];
       data->temp = packet[packetIdx+11] * 256 + packet[packetIdx+10];
       data->volt = packet[packetIdx+15] * 256 + packet[packetIdx+14];
-      data->volt /= 1000;
 
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
-          "System state changed: main=%dmA pt=%dmA temp=%dC", data->load, data->ptload, data->temp);
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999,
+          "System state changed: main=%dmV %dmA pt=%dmA temp=%dC", data->volt, data->load, data->ptload, data->temp);
       data->power = (stat1 & csTrackVoltageOff) ? False:True;
       __reportState(inst);
     }
