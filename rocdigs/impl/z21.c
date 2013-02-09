@@ -486,7 +486,16 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
   iOZ21Data data = Data(inst);
-  byte* packet = allocMem(32);
+  byte* packet = NULL;
+
+  if( poweroff ) {
+    iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
+    wSysCmd.setcmd(cmd, wSysCmd.stop);
+    Z21Op.cmd(inst, cmd);
+    ThreadOp.sleep(100);
+  }
+
+  packet = allocMem(32);
   packet[0] = 0x04;
   packet[1] = 0x00;
   packet[2] = 0x30;
@@ -586,9 +595,11 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
         __reportState(inst);
       }
       else if( packet[packetIdx+4] == 0x61 && packet[packetIdx+5] == 0x08 ) {
+        /* Shortcut */
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_BC_TRACK_SHORT_CIRCUIT" );
       }
       else if( packet[packetIdx+4] == 0x81 && packet[packetIdx+5] == 0x00 ) {
+        /* Emergency break */
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_BC_STOPPED" );
       }
     }
@@ -800,7 +811,7 @@ static void __reader( void* threadinst ) {
   packet[2] = 0x50;
   packet[3] = 0x00;
   packet[4] = 0x07;
-  packet[5] = 0x01;
+  packet[5] = wDigInt.issysteminfo(data->ini)?0x01:0x00;
   packet[6] = 0x00;
   packet[7] = 0x00;
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_SET_BROADCASTFLAGS" );
