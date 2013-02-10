@@ -358,6 +358,10 @@ typedef struct
 #define FEATURE_BST_AMPERE_ADJUSTABLE      21
 #define FEATURE_BST_AMPERE                 22
 #define FEATURE_BST_CURMEAS_INTERVAL       23
+#define FEATURE_BST_CV_AVAILABLE           24
+#define FEATURE_BST_CV_ON                  25
+#define FEATURE_BST_INHIBIT_AUTOSTART      26
+#define FEATURE_BST_INHIBIT_LOCAL_ONOFF    27
 
 //-- accessory
 #define FEATURE_ACCESSORY_COUNT            40   // number of objects
@@ -389,7 +393,8 @@ typedef struct
 #define FEATURE_GEN_LOK_DB_STRING          105  // 
 #define FEATURE_GEN_SERVICE_MODES          106  // 
 #define FEATURE_GEN_DRIVE_BUS              107  // 1: this node drive the dcc bus. 
-
+#define FEATURE_GEN_LOK_LOST_DETECT        108
+#define FEATURE_GEN_NOTIFY_DRIVE_MANUAL    109
 
 #define FEATURE_FW_UPDATE_MODE             254  // 0: no fw-update, 1: intel hex
 #define FEATURE_EXTENSION                  255  // 1: reserved for future expansion
