@@ -94,7 +94,9 @@ void ECoSCtrlDialog::initLabels() {
   m_labFBMod->SetLabel( wxGetApp().getMsg( "sensors" ) );
   m_labVersion->SetLabel( wxGetApp().getMsg( "version" ) );
   m_SubLib->SetLabel( wxGetApp().getMsg( "type" ) );
+  m_OptionsBox->SetLabel( wxGetApp().getMsg( "options" ) );
   m_SystemInfo->SetLabel( wxGetApp().getMsg( "systeminfo" ) );
+  m_LocoList->SetLabel( wxGetApp().getMsg( "loctable" ) );
 }
 
 void ECoSCtrlDialog::initValues() {
@@ -123,6 +125,7 @@ void ECoSCtrlDialog::initValues() {
     m_SubLib->SetSelection(1);
   }
   m_SystemInfo->SetValue( wDigInt.issysteminfo( m_Props ) );
+  m_LocoList->SetValue( wDigInt.islocolist( m_Props ) );
 
   SublibSelected();
 
@@ -143,6 +146,7 @@ void ECoSCtrlDialog::evaluate() {
   else
     wDigInt.setsublib(m_Props, wDigInt.sublib_default );
   wDigInt.setsysteminfo( m_Props, m_SystemInfo->IsChecked()?True:False );
+  wDigInt.setlocolist( m_Props, m_LocoList->IsChecked()?True:False );
 
 }
 
@@ -197,7 +201,9 @@ void ECoSCtrlDialog::Init()
     m_labVersion = NULL;
     m_Version = NULL;
     m_SubLib = NULL;
+    m_OptionsBox = NULL;
     m_SystemInfo = NULL;
+    m_LocoList = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end ECoSCtrlDialog member initialisation
@@ -268,23 +274,31 @@ void ECoSCtrlDialog::CreateControls()
     m_SubLibStrings.Add(_("&Serial"));
     m_SubLib = new wxRadioBox( itemPanel3, ID_SUBLIB, _("SubType"), wxDefaultPosition, wxDefaultSize, m_SubLibStrings, 1, wxRA_SPECIFY_ROWS );
     m_SubLib->SetSelection(0);
-    itemBoxSizer4->Add(m_SubLib, 0, wxGROW|wxALL, 5);
+    itemBoxSizer4->Add(m_SubLib, 0, wxALIGN_LEFT|wxALL, 5);
+
+    m_OptionsBox = new wxStaticBox(itemPanel3, wxID_ANY, _("Options"));
+    wxStaticBoxSizer* itemStaticBoxSizer19 = new wxStaticBoxSizer(m_OptionsBox, wxVERTICAL);
+    itemBoxSizer4->Add(itemStaticBoxSizer19, 0, wxGROW|wxALL, 5);
 
     m_SystemInfo = new wxCheckBox( itemPanel3, wxID_ANY, _("System info"), wxDefaultPosition, wxDefaultSize, 0 );
     m_SystemInfo->SetValue(false);
-    itemBoxSizer4->Add(m_SystemInfo, 0, wxALIGN_LEFT|wxALL, 5);
+    itemStaticBoxSizer19->Add(m_SystemInfo, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer20 = new wxStdDialogButtonSizer;
+    m_LocoList = new wxCheckBox( itemPanel3, wxID_ANY, _("Loco list"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_LocoList->SetValue(false);
+    itemStaticBoxSizer19->Add(m_LocoList, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer20, 0, wxALIGN_RIGHT|wxALL, 5);
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer22 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer22, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer20->AddButton(m_OK);
+    itemStdDialogButtonSizer22->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer20->AddButton(m_Cancel);
+    itemStdDialogButtonSizer22->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer20->Realize();
+    itemStdDialogButtonSizer22->Realize();
 
 ////@end ECoSCtrlDialog content construction
 }

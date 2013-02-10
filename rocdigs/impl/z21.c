@@ -37,6 +37,7 @@
 #include "rocrail/wrapper/public/Command.h"
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/LocList.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Output.h"
@@ -162,14 +163,35 @@ static int __normalizeSteps(int insteps, byte* conf ) {
 }
 
 
+static void __subscribeLoco( iOZ21 inst, int addr ) {
+  iOZ21Data data = Data(inst);
+  char key[32];
+  StrOp.fmtb( key, "%d", addr );
+
+  if( !MapOp.haskey(data->lcmap, key) ) {
+    byte* packet = allocMem(32);
+    packet[0] = 0x09;
+    packet[1] = 0x00;
+    packet[2] = 0x40;
+    packet[3] = 0x00;
+    packet[4] = 0xE3;
+    packet[5] = 0xF0;
+    packet[6] = addr / 256;
+    packet[7] = addr % 256;
+    packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7];
+    /* put a dummy object */
+    MapOp.put(data->lcmap, key, (obj)inst );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "subscribe loco %d info", addr );
+    ThreadOp.post(data->writer, (obj)packet);
+    ThreadOp.sleep(100);
+  }
+}
+
 static void __checkDecMode( iOZ21 inst, iONode node ) {
   iOZ21Data data = Data(inst);
 
   if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) || StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
-    char key[32];
     int addr = wLoc.getaddr(node);
-
-    StrOp.fmtb( key, "%d", addr );
 
     if( addr < 256 ) {
       int mode = StrOp.equals(wLoc.prot_M, wLoc.getprot(node) ) ? DECMODE_MM:DECMODE_DCC;
@@ -188,25 +210,6 @@ static void __checkDecMode( iOZ21 inst, iONode node ) {
         ThreadOp.sleep(100);
       }
     }
-
-    if( !MapOp.haskey(data->lcmap, key) ) {
-      byte* packet = allocMem(32);
-      packet[0] = 0x09;
-      packet[1] = 0x00;
-      packet[2] = 0x40;
-      packet[3] = 0x00;
-      packet[4] = 0xE3;
-      packet[5] = 0xF0;
-      packet[6] = addr / 256;
-      packet[7] = addr % 256;
-      packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7];
-      /* put a dummy object */
-      MapOp.put(data->lcmap, key, (obj)inst );
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get loco %d info", addr );
-      ThreadOp.post(data->writer, (obj)packet);
-      ThreadOp.sleep(100);
-    }
-
   }
   else {
     int addr = 0;
@@ -390,6 +393,8 @@ static iONode __translate(iOZ21 inst, iONode node) {
     packet[9] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8]; /*xor*/
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d step=%d (0x%02X)", addr, speed, packet[8] );
     ThreadOp.post(data->writer, (obj)packet);
+
+    __subscribeLoco(inst, addr);
   }
 
   /* Function command. */
@@ -413,6 +418,8 @@ static iONode __translate(iOZ21 inst, iONode node) {
     packet[9] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8]; /*xor*/
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d function %d %s", addr, fnchanged, fnstate?"on":"off" );
     ThreadOp.post(data->writer, (obj)packet);
+
+    __subscribeLoco(inst, addr);
   }
 
   /* Program command. */
@@ -494,8 +501,13 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
   iOZ21Data data = Data(inst);
   iONode rsp = NULL;
   if( cmd != NULL ) {
-    rsp = __translate( (iOZ21)inst, cmd );
-    NodeOp.base.del(cmd);
+    if( StrOp.equals( NodeOp.getName( cmd ), wLocList.name() ) ) {
+      data->locolist = cmd;
+    }
+    else {
+      rsp = __translate( (iOZ21)inst, cmd );
+      NodeOp.base.del(cmd);
+    }
   }
   return rsp;
 }
@@ -973,6 +985,7 @@ static void __watchdog( void* threadinst ) {
   iOThread  th   = (iOThread)threadinst;
   iOZ21     z21  = (iOZ21)ThreadOp.getParm(th);
   iOZ21Data data = Data(z21);
+  Boolean subscribed = False;
 
   ThreadOp.sleep(1000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 UDP watchdog started." );
@@ -988,6 +1001,18 @@ static void __watchdog( void* threadinst ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting a keep alive packet" );
       ThreadOp.post( data->writer, (obj)outa );
     }
+
+    if( !subscribed && data->locolist != NULL ) {
+      iONode lc = wLocList.getlc( data->locolist );
+
+      while ( lc != NULL ) {
+        int addr  = wLoc.getaddr(lc);
+        __subscribeLoco(z21, addr);
+        lc = wLocList.nextlc(data->locolist, lc);
+      }
+
+    }
+
     ThreadOp.sleep(1000);
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 UDP watchdog stopped." );

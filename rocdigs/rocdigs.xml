@@ -1718,6 +1718,8 @@
       <var name="lcmode[256]" vt="byte"/>
       <var name="swmode[256]" vt="byte"/>
       <var name="lcmap" vt="iOMap"/>
+      <var name="locolist" vt="iONode"/>
+      <var name="switchlist" vt="iONode"/>
       </data>
   </object>
 

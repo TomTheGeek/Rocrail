@@ -121,7 +121,9 @@ public:
     wxStaticText* m_labVersion;
     wxSpinCtrl* m_Version;
     wxRadioBox* m_SubLib;
+    wxStaticBox* m_OptionsBox;
     wxCheckBox* m_SystemInfo;
+    wxCheckBox* m_LocoList;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end ECoSCtrlDialog member variables
