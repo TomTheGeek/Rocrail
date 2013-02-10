@@ -163,29 +163,76 @@ static int __normalizeSteps(int insteps, byte* conf ) {
 }
 
 
-static void __subscribeLoco( iOZ21 inst, int addr ) {
-  iOZ21Data data = Data(inst);
-  char key[32];
-  StrOp.fmtb( key, "%d", addr );
-
-  if( !MapOp.haskey(data->lcmap, key) ) {
-    byte* packet = allocMem(32);
-    packet[0] = 0x09;
-    packet[1] = 0x00;
-    packet[2] = 0x40;
-    packet[3] = 0x00;
-    packet[4] = 0xE3;
-    packet[5] = 0xF0;
-    packet[6] = addr / 256;
-    packet[7] = addr % 256;
-    packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7];
-    /* put a dummy object */
-    MapOp.put(data->lcmap, key, (obj)inst );
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "subscribe loco %d info", addr );
-    ThreadOp.post(data->writer, (obj)packet);
-    ThreadOp.sleep(100);
+static void __fx2fn(iOSlot slot, int fx) {
+  int i = 0;
+  for( i = 0; i < 28; i++ ) {
+    slot->f[i] = (fx & (1 << i)) ? True:False;
   }
 }
+
+
+static iOSlot __getSlotByAddr(iOZ21 inst, int lcaddr) {
+  iOZ21Data data = Data(inst);
+  iOSlot slot = NULL;
+  if( MutexOp.wait( data->lcmux ) ) {
+    slot = (iOSlot)MapOp.first( data->lcmap);
+    while( slot != NULL ) {
+      if( slot->addr == lcaddr ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot found for %s by address %d", slot->id, lcaddr );
+        break;
+      }
+      slot = (iOSlot)MapOp.next( data->lcmap);
+    };
+    MutexOp.post(data->lcmux);
+  }
+  return slot;
+}
+
+
+static iOSlot __getSlot(iOZ21 inst, iONode node) {
+  iOZ21Data data = Data(inst);
+  int    addr  = wLoc.getaddr(node);
+  iOSlot slot  = NULL;
+  byte* packet = NULL;
+
+  slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+  if( slot != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot exist for %s", wLoc.getid(node) );
+    return slot;
+  }
+
+  slot = allocMem( sizeof( struct slot) );
+  slot->addr    = addr;
+  slot->id      = StrOp.dup(wLoc.getid(node));
+  slot->lights  = wLoc.isfn(node);
+  slot->dir     = wLoc.isdir(node);
+
+  __fx2fn(slot, wLoc.getfx(node));
+
+
+  if( MutexOp.wait( data->lcmux ) ) {
+    MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+    MutexOp.post(data->lcmux);
+  }
+
+  packet = allocMem(32);
+  packet[0] = 0x09;
+  packet[1] = 0x00;
+  packet[2] = 0x40;
+  packet[3] = 0x00;
+  packet[4] = 0xE3;
+  packet[5] = 0xF0;
+  packet[6] = addr / 256;
+  packet[7] = addr % 256;
+  packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7];
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "subscribe loco %d info", addr );
+  ThreadOp.post(data->writer, (obj)packet);
+
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+  return slot;
+}
+
 
 static void __checkDecMode( iOZ21 inst, iONode node ) {
   iOZ21Data data = Data(inst);
@@ -368,8 +415,10 @@ static iONode __translate(iOZ21 inst, iONode node) {
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
     int addr  = wLoc.getaddr( node );
     byte conf  = 0;
+    iOSlot slot = __getSlot(inst, node);
     int spcnt = __normalizeSteps(wLoc.getspcnt( node ), &conf);
     int speed = 0;
+    Boolean fnstate = wLoc.isfn(node);
     byte* packet = allocMem(32);
 
     if( wLoc.getV( node ) != -1 ) {
@@ -381,20 +430,22 @@ static iONode __translate(iOZ21 inst, iONode node) {
 
     __checkDecMode(inst, node);
 
-    packet[0] = 0x0A;
-    packet[1] = 0x00;
-    packet[2] = 0x40;
-    packet[3] = 0x00;
-    packet[4] = 0xE4;
-    packet[5] = 0x10+conf; /* speed steps*/
-    packet[6] = addr / 256; /*MSB*/
-    packet[7] = addr % 256; /*LSB*/
-    packet[8] = (wLoc.isdir( node )?0x80:0x00) + speed;
-    packet[9] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8]; /*xor*/
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d step=%d (0x%02X)", addr, speed, packet[8] );
-    ThreadOp.post(data->writer, (obj)packet);
+    if( slot->Vraw != speed ) {
+      slot->Vraw = speed;
+      packet[0] = 0x0A;
+      packet[1] = 0x00;
+      packet[2] = 0x40;
+      packet[3] = 0x00;
+      packet[4] = 0xE4;
+      packet[5] = 0x10+conf; /* speed steps*/
+      packet[6] = addr / 256; /*MSB*/
+      packet[7] = addr % 256; /*LSB*/
+      packet[8] = (wLoc.isdir( node )?0x80:0x00) + speed;
+      packet[9] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8]; /*xor*/
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d step=%d (0x%02X)", addr, speed, packet[8] );
+      ThreadOp.post(data->writer, (obj)packet);
+    }
 
-    __subscribeLoco(inst, addr);
   }
 
   /* Function command. */
@@ -402,6 +453,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
     int addr      = wFunCmd.getaddr( node );
     int fnchanged = wFunCmd.getfnchanged(node);
     Boolean fnstate = __getFState(node, fnchanged);
+    iOSlot slot = __getSlot(inst, node);
     byte* packet = allocMem(32);
 
     __checkDecMode(inst, node);
@@ -419,7 +471,6 @@ static iONode __translate(iOZ21 inst, iONode node) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d function %d %s", addr, fnchanged, fnstate?"on":"off" );
     ThreadOp.post(data->writer, (obj)packet);
 
-    __subscribeLoco(inst, addr);
   }
 
   /* Program command. */
@@ -743,10 +794,18 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       int speed = packet[packetIdx+8] & 0x7F;
       Boolean dir = (packet[packetIdx+8] & 0x80) ? True:False;
       Boolean fn = (packet[packetIdx+9] & 0x10) ? True:False;
+      iOSlot slot = __getSlotByAddr(inst, addr);
 
       if( steps == 0 ) steps = 14;
       else if( steps == 2 ) steps = 28;
       else if( steps == 4 ) steps = 127;
+
+      if( slot != NULL ) {
+        slot->Vraw = speed;
+        slot->steps = steps;
+        slot->dir = dir;
+        slot->lights = fn;
+      }
 
       if( data->iid != NULL )
         wLoc.setiid( nodeC, data->iid );
@@ -1004,10 +1063,8 @@ static void __watchdog( void* threadinst ) {
 
     if( !subscribed && data->locolist != NULL ) {
       iONode lc = wLocList.getlc( data->locolist );
-
       while ( lc != NULL ) {
-        int addr  = wLoc.getaddr(lc);
-        __subscribeLoco(z21, addr);
+        __getSlot(z21, lc);
         lc = wLocList.nextlc(data->locolist, lc);
       }
 
@@ -1029,10 +1086,11 @@ static struct OZ21* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.set( trc );
   SystemOp.inst();
 
-  data->ini = ini;
-  data->run = True;
+  data->ini    = ini;
+  data->run    = True;
   data->swtime = wDigInt.getswtime( ini );
-  data->lcmap = MapOp.inst();
+  data->lcmap  = MapOp.inst();
+  data->lcmux  = MutexOp.inst( NULL, True );
 
   if( wDigInt.getport( data->ini ) == 0 ) {
     wDigInt.setport( data->ini, 21105 );

@@ -1690,7 +1690,17 @@
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
     </fun>
-    <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
+    <struct name="slot" typedef="*iOSlot" remark="Loco slot">
+      <var name="id" vt="char*"/>
+      <var name="addr" vt="int"/>
+      <var name="V" vt="int"/>
+      <var name="Vraw" vt="int"/>
+      <var name="steps" vt="int"/>
+      <var name="dir" vt="Boolean"/>
+      <var name="lights" vt="Boolean"/>
+      <var name="f[32]" vt="Boolean"/>
+    </struct>
+      <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
       <var name="out[32]" vt="byte"/>
       <var name="time" vt="unsigned long"/>
       <var name="delay" vt="unsigned long"/>
@@ -1717,6 +1727,7 @@
       <var name="lastcmd" vt="long"/>
       <var name="lcmode[256]" vt="byte"/>
       <var name="swmode[256]" vt="byte"/>
+      <var name="lcmux" vt="iOMutex"/>
       <var name="lcmap" vt="iOMap"/>
       <var name="locolist" vt="iONode"/>
       <var name="switchlist" vt="iONode"/>
