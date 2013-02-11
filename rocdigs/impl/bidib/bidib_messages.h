@@ -35,7 +35,14 @@
 //            2012-09-25 V0.07 kw  added MSG_LC_WAIT
 //            2012-10-12 V0.08 kw  added MSG_ACCESSORY_*, CLASS bit accessory (update)
 //                                       FEATURE_BM_ISTSPEED_INTERVAL instead _ON
-// 
+//            2012-12-03 V0.09 kw  added FEATURE_BST_CURMEAS_INTERVAL
+//                             kw  added t_bidib_cs_accessory
+//            2012-12-21       kw  added MSG_BOOST_QUERY, MSG_CS_BIN_STATES
+//                                 removed MSG_CS_CONNECT, MSG_CS_GET_STATE
+//            2013-01-15       kw  added MSG_CS_POM and MSG_CS_POM_ACK, MSG_PRG_CV_STAT moved 
+//            2013-01-21           added FEATURE_GEN_NOTIFY_DRIVE_MANUAL
+//            2013-02-10 V0.09 kw  added addtional BST_STATE values
+//
 //===============================================================================
 //
 // purpose:   common header for bidib protocol
@@ -51,7 +58,7 @@
 //            5. Error Codes
 //            6. FW Update (useful defines)
 //            7. System Messages, Serial Link, BiDiBus
-//            8. Command Station Handling (useful defines)
+//            8. Booster and Command Station Handling (useful defines)
 //            9. IO-Control and Macro (useful defines)
 //
 //===============================================================================
@@ -127,8 +134,9 @@
 
 //-- booster messages
 #define MSG_DBST                (MSG_DSTRM + 0x30)
-#define MSG_BOOST_OFF           (MSG_DBST + 0x00)       // -
-#define MSG_BOOST_ON            (MSG_DBST + 0x01)       // -
+#define MSG_BOOST_OFF           (MSG_DBST + 0x00)       // 1:bc/node
+#define MSG_BOOST_ON            (MSG_DBST + 0x01)       // 1:bc/node
+#define MSG_BOOST_QUERY         (MSG_DBST + 0x02)       // -
 
 //-- accessory control messages
 #define MSG_DACC                (MSG_DSTRM + 0x38)
@@ -155,15 +163,16 @@
 //-- dcc gen messages
 #define MSG_DGEN                (MSG_DSTRM + 0x60)
 #define  MSG_CS_ALLOCATE        (MSG_DGEN + 0x00)
-#define  MSG_CS_CONNECT         (MSG_DGEN + 0x01)
 #define  MSG_CS_SET_STATE       (MSG_DGEN + 0x02)
-#define  MSG_CS_GET_STATE       (MSG_DGEN + 0x03)       // could be obsolete
 #define  MSG_CS_DRIVE           (MSG_DGEN + 0x04)       // 1:addrl, 2:addrh, 3:format, 4:active, 5:speed, 6:1-4, 7:5-12, 8:13-20, 9:21-28
 #define  MSG_CS_ACCESSORY       (MSG_DGEN + 0x05)
-#define  MSG_PRG_CV_WRITE       (MSG_DGEN + 0x07)       // 1:method, 2:CV_ADDR_L, 3:CV_ADDR_H, 4:CV_DAT
-#define  MSG_PRG_CV_BLOCKWRITE  (MSG_DGEN + 0x08)
-#define  MSG_PRG_CV_READ        (MSG_DGEN + 0x09)       // 1:method, 2:CV_ADDR_L, 3:CV_ADDR_H
-#define  MSG_PRG_CV_BLOCKREAD   (MSG_DGEN + 0x0A)
+#define  MSG_CS_BIN_STATE       (MSG_DGEN + 0x06)       // 1:addrl, 2:addrh, 3:bin_statl, 4:bin_stath
+#define  MSG_CS_POM             (MSG_DGEN + 0x07)       // 1..4:addr, 5:MID, 6:opcode, 7:cv_l, 8:cv_h, 9:cv_x, 10..13: data
+                                                        // 1:did[0], 2:did[1], 3:did[2], 4:did[4] 
+#define  MSG_PRG_CV_WRITE       (MSG_DGEN + 0x0C)       // 1:method, 2:CV_ADDR_L, 3:CV_ADDR_H, 4:CV_DAT
+#define  MSG_PRG_CV_BLOCKWRITE  (MSG_DGEN + 0x0D)
+#define  MSG_PRG_CV_READ        (MSG_DGEN + 0x0E)       // 1:method, 2:CV_ADDR_L, 3:CV_ADDR_H
+#define  MSG_PRG_CV_BLOCKREAD   (MSG_DGEN + 0x0F)
 
 
 //-- local message
@@ -220,10 +229,10 @@
 
 //-- booster messages
 #define MSG_UBST                (MSG_USTRM +  0x30)
-#define MSG_BOOST_STAT          (MSG_UBST + 0x00)       // 1:state
+#define MSG_BOOST_STAT          (MSG_UBST + 0x00)       // 1:state (see defines below)
 #define MSG_BOOST_CURRENT       (MSG_UBST + 0x01)       // 1:current
 #define MSG_NEW_DECODER         (MSG_UBST + 0x02)       // 1:mnum, 2: dec_vid, 3,4,5,6:dec_uid    
-#define MSG_ID_SEARCH_ACK       (MSG_UBST + 0x03)       // 1:mnum, 2: s_vid, 3,4,5,6:s_uid,  7: dec_vid, 8,9,10,11:dec_uid  
+#define MSG_ID_SEARCH_ACK       (MSG_UBST + 0x03)       // 1:mnum, 2: s_vid, 3,4,5,6:s_uid[0..3],  7: dec_vid, 8,9,10,11:dec_uid  
 #define MSG_ADDR_CHANGE_ACK     (MSG_UBST + 0x04)       // 1:mnum, 2: dec_vid, 3,4,5,6:dec_uid, 7:addr_l, 8:addr_h
 
 //-- accessory control messages
@@ -251,7 +260,10 @@
 #define MSG_CS_STATE            (MSG_UGEN + 0x01)
 #define MSG_CS_DRIVE_ACK        (MSG_UGEN + 0x02)
 #define MSG_CS_ACCESSORY_ACK    (MSG_UGEN + 0x03)
-#define MSG_PRG_CV_STAT         (MSG_UGEN + 0x04)       // 1: PRG_STATE, 2:PRG_DATA 
+#define MSG_CS_POM_ACK          (MSG_UGEN + 0x04)
+#define MSG_CS_DRIVE_MANUAL     (MSG_UGEN + 0x05)       // 1:addrl, 2:addrh, 3:format, 4:active, 5:speed, 6:1-4, 7:5-12, 8:13-20, 9:21-28
+#define MSG_CS_DRIVE_EVENT      (MSG_UGEN + 0x06)       // 1:addrl, 2:addrh, 3:eventtype, Parameters
+#define MSG_PRG_CV_STAT         (MSG_UGEN + 0x0C)       // 1: PRG_STATE, 2:PRG_DATA 
 
 //-- local message
 #define MSG_ULOCAL              (MSG_USTRM +  0x70)     // only locally used
@@ -261,6 +273,7 @@
 //===============================================================================
 //
 // 3. Type Defines
+//    (useful defines for access to data structures in BiDiB)
 //
 //===============================================================================
 
@@ -327,6 +340,148 @@ typedef struct
     unsigned char reserved0;
   } t_bidib_servo_cfg;
 
+typedef struct                              //  t_bidib_cs_accessory
+  {
+    union
+      {
+        struct
+          {
+            unsigned char addrl;            // low byte of addr
+            unsigned char addrh;            // high byte of addr
+          };
+        unsigned int  addr;                 // true dcc address (start with 0)
+      };
+    union
+      {
+        struct
+          {
+            unsigned char aspect: 5;        // the desired aspect
+            unsigned char activate: 1;      // output (coil) state (only if control_mode == 0)
+            unsigned char control_mode: 1;  // 0: direct coil control; 1:aspect mode
+            unsigned char ext_accessory: 1; // 0: classic dcc; 1:extended accessory control
+          };
+        unsigned char  control;
+      };
+    unsigned char  time;
+  } t_bidib_cs_accessory;
+
+typedef struct                              //  t_bidib_bin_states
+  {
+    union
+      {
+        struct
+          {
+            unsigned char addrl;            // low byte of addr
+            unsigned char addrh;            // high byte of addr
+          };
+        unsigned int  addr;                 // true dcc address (start with 0)
+      };
+    union
+      {
+        struct
+          {
+            unsigned char bin_numl;         // low byte of state  (this is little endian, DCC is big endian)
+            unsigned char bin_numh;         // high byte of state
+          };
+        unsigned int  bin_num;
+      };
+    unsigned char data; 
+  } t_bidib_bin_state;
+
+typedef struct                              // t_bidib_cs_drive
+  {
+    union
+      {
+        struct
+          {
+            unsigned char addrl;            // low byte of addr
+            unsigned char addrh;            // high byte of addr
+          };
+        unsigned int  addr;                 // true dcc address (start with 0)
+      };
+    unsigned char format;                   // BIDIB_CS_DRIVE_FORMAT_DCC14, _DCC28, _DCC128
+    unsigned char active;                   // BIDIB_CS_DRIVE_SPEED_BIT, 
+                                            // BIDIB_CS_DRIVE_F1F4_BIT     (1<<1)
+                                            // BIDIB_CS_DRIVE_F5F8_BIT     (1<<2)
+                                            // BIDIB_CS_DRIVE_F9F12_BIT    (1<<3)
+                                            // BIDIB_CS_DRIVE_F13F20_BIT   (1<<4)
+                                            // BIDIB_CS_DRIVE_F21F28_BIT   (1<<5) 
+    unsigned char speed;                    // like DCC, MSB=1:forward, MSB=0:revers, speed=1: ESTOP
+    union
+      {
+        struct
+          {
+            unsigned char f4_f1: 4;         // functions f4..f1
+            unsigned char light: 1;         // f0
+          };
+        unsigned char  f4_f0;
+      };
+    union
+      {
+        struct
+          {
+            unsigned char f8_f5: 4;         // functions f8..f5
+            unsigned char f12_f9: 4;        // functions f12..f9
+          };
+        unsigned char  f12_f5;
+      };
+    union
+      {
+        struct
+          {
+            unsigned char f16_f13: 4;       // functions f16..f13
+            unsigned char f20_f17: 4;       // functions f20..f17
+          };
+        unsigned char  f20_f13;
+      };
+    union
+      {
+        struct
+          {
+            unsigned char f24_f21: 4;       // functions f24..f21
+            unsigned char f28_f25: 4;       // functions f28..f25
+          };
+        unsigned char  f28_f21;
+      };
+  } t_bidib_cs_drive;
+
+typedef struct                              // t_bidib_cs_pom
+  {
+    union
+      {
+        struct
+          {
+            union
+              {
+                struct
+                  {
+                    unsigned char addrl;    // low byte of addr
+                    unsigned char addrh;    // high byte of addr
+                  };
+                unsigned int  addr;         // true dcc address (start with 0)
+              };
+            unsigned char addrxl;           // 0 for normal POM
+            unsigned char addrxh;           // 0 for normal POM
+            unsigned char mid;              // manufactorer ID: 0 for normal POM, else VendorID like DCC
+          };
+        unsigned char did[5];                 // true dcc address (start with 0)
+      };
+    unsigned char opcode;                   // 0=RdBlock, 1=RdByte, 2=WrBit, 3=WrByte
+                                            // 80=XRdBlock, 81=XRdByte, 82=XWrBit, 83=XWrByte
+                                            // see below: BIDIB_CS_POM_RD_BLOCK ...
+    union
+      {
+        struct
+          {
+            unsigned char cv_addrl;         // low byte of cv addr
+            unsigned char cv_addrh;         // high byte of cv addr
+          };
+        unsigned int  cv_addr;              // true cv address (start with 0)
+      };
+    unsigned char cv_addrx;                 //
+    unsigned char data;
+  } t_bidib_cs_pom;
+
 //===============================================================================
 //
 // 4. Feature Codes
@@ -360,13 +515,13 @@ typedef struct
 #define FEATURE_BST_CURMEAS_INTERVAL       23
 #define FEATURE_BST_CV_AVAILABLE           24
 #define FEATURE_BST_CV_ON                  25
-#define FEATURE_BST_INHIBIT_AUTOSTART      26
-#define FEATURE_BST_INHIBIT_LOCAL_ONOFF    27
+#define FEATURE_BST_INHIBIT_AUTOSTART      26  // 1: Booster does no automatic BOOST_ON when DCC at input wakes up.
+#define FEATURE_BST_INHIBIT_LOCAL_ONOFF    27  // 1: Booster annouces local STOP/GO key stroke only, no local action
 
 //-- accessory
 #define FEATURE_ACCESSORY_COUNT            40   // number of objects
 #define FEATURE_ACCESSORY_SURVEILLED       41   // 1: annouce if operated outside bidib
-#define FEATURE_ACCESSORY_MACROMAPPED      42   // 1: accessory aspects are mapped to macros
+#define FEATURE_ACCESSORY_MACROMAPPED      42   // 1..n: no of accessory aspects are mapped to macros
 
 //-- control
 #define FEATURE_CTRL_INPUT_COUNT           50
@@ -393,8 +548,9 @@ typedef struct
 #define FEATURE_GEN_LOK_DB_STRING          105  // 
 #define FEATURE_GEN_SERVICE_MODES          106  // 
 #define FEATURE_GEN_DRIVE_BUS              107  // 1: this node drive the dcc bus. 
-#define FEATURE_GEN_LOK_LOST_DETECT        108
-#define FEATURE_GEN_NOTIFY_DRIVE_MANUAL    109
+#define FEATURE_GEN_LOK_LOST_DETECT        108  // 1: command station annouces lost loco
+#define FEATURE_GEN_NOTIFY_DRIVE_MANUAL    109  // 1: dcc gen reports manual operation
+
 
 #define FEATURE_FW_UPDATE_MODE             254  // 0: no fw-update, 1: intel hex
 #define FEATURE_EXTENSION                  255  // 1: reserved for future expansion
@@ -471,29 +627,53 @@ typedef struct
 
 //===============================================================================
 //
-// 8. Command Station Handling (useful defines)
+// 8. Booster and Command Station Handling (useful defines)
 //
 //===============================================================================
 
-#define BIDIB_CS_STATE_OFF          0x00
-#define BIDIB_CS_STATE_STOP         0x01
-#define BIDIB_CS_STATE_SOFTSTOP     0x02
-#define BIDIB_CS_STATE_SHORT        0x03
-#define BIDIB_CS_STATE_GO           0x10
-#define BIDIB_CS_STATE_PROG         0x80
-#define BIDIB_CS_STATE_PROGBUSY     0x81
-#define BIDIB_CS_STATE_BUSY         0xF0
+#define BIDIB_BST_STATE_OFF         0x00    // Booster turned off
+#define BIDIB_BST_STATE_OFF_SHORT   0x01    // Booster is off, output shortend
+#define BIDIB_BST_STATE_OFF_HOT     0x02    // Booster off and too hot
+#define BIDIB_BST_STATE_OFF_NOPOWER 0x03    // Booster has no mains
+#define BIDIB_BST_STATE_OFF_GO_REQ  0x04    // Booster off and local go request is present
+#define BIDIB_BST_STATE_OFF_HERE    0x05    // Booster off (was turned off by a local key)
+#define BIDIB_BST_STATE_OFF_NO_DCC  0x06    // Booster is off (no DCC input)
+#define BIDIB_BST_STATE_ON          0x80    // Booster on
+#define BIDIB_BST_STATE_ON_LIMIT    0x81    // Booster on and critical current flows
+#define BIDIB_BST_STATE_ON_HOT      0x82    // Booster on and is getting hot
+#define BIDIB_BST_STATE_ON_STOP_REQ 0x83    // Booster on and a local stop request is present
+#define BIDIB_BST_STATE_ON_HERE     0x84    // Booster on (was turned on by a local key)
+
+
+#define BIDIB_CS_STATE_OFF          0x00    // no DCC, DCC-line is static, not toggling
+#define BIDIB_CS_STATE_STOP         0x01    // DCC, all speed setting = 0
+#define BIDIB_CS_STATE_SOFTSTOP     0x02    // DCC, soft stop is progress
+#define BIDIB_CS_STATE_GO           0x03    // DCC
+#define BIDIB_CS_STATE_PROG         0x08    // in Programming Mode (ready for commands)
+#define BIDIB_CS_STATE_PROGBUSY     0x09    // in Programming Mode (busy)
+#define BIDIB_CS_STATE_BUSY         0x0D    // busy
+#define BIDIB_CS_STATE_QUERY        0xFF
+
 
 #define BIDIB_CS_DRIVE_FORMAT_DCC14      0 
 #define BIDIB_CS_DRIVE_FORMAT_DCC28      2 
 #define BIDIB_CS_DRIVE_FORMAT_DCC128     3 
 
 #define BIDIB_CS_DRIVE_SPEED_BIT    (1<<0)
-#define BIDIB_CS_DRIVE_F1F4_BIT     (1<<1)
+#define BIDIB_CS_DRIVE_F1F4_BIT     (1<<1)  // also FL
 #define BIDIB_CS_DRIVE_F5F8_BIT     (1<<2)
 #define BIDIB_CS_DRIVE_F9F12_BIT    (1<<3)
 #define BIDIB_CS_DRIVE_F13F20_BIT   (1<<4)
 #define BIDIB_CS_DRIVE_F21F28_BIT   (1<<5)
+
+#define BIDIB_CS_POM_RD_BLOCK             0
+#define BIDIB_CS_POM_RD_BYTE              1
+#define BIDIB_CS_POM_WR_BIT               2
+#define BIDIB_CS_POM_WR_BYTE              3
+#define BIDIB_CS_xPOM_RD_BLOCK         0x80
+#define BIDIB_CS_xPOM_RD_BYTE          0x81
+#define BIDIB_CS_xPOM_WR_BIT           0x82
+#define BIDIB_CS_xPOM_WR_BYTE          0x83
 
 //===============================================================================
 //
@@ -501,7 +681,7 @@ typedef struct
 //
 //===============================================================================
 
-// Accessory
+// Accessory parameter
 #define BIDIB_ACCESSORY_PARA_MACROMAP  253   // following data defines a mapping
 #define BIDIB_ACCESSORY_SWITCH_TIME    254   // 
 
