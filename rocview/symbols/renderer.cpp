@@ -1581,7 +1581,6 @@ void SymbolRenderer::drawOutput( wxPaintDC& dc, bool occupied, bool actroute, co
       drawSvgSym(dc, m_SvgSym6, ori);
     else
       drawSvgSym(dc, m_SvgSym3, ori);
-    return;
   }
   else if( m_SvgSym2!=NULL && StrOp.equals( state, wOutput.on ) ) {
     if(occupied && m_SvgSym5!= NULL)
@@ -1592,7 +1591,6 @@ void SymbolRenderer::drawOutput( wxPaintDC& dc, bool occupied, bool actroute, co
       drawSvgSym(dc, m_SvgSym5, ori);
     else
       drawSvgSym(dc, m_SvgSym2, ori);
-    return;
   }
   else if( m_SvgSym1!=NULL ) {
     if(occupied && m_SvgSym4!= NULL)
@@ -1603,9 +1601,15 @@ void SymbolRenderer::drawOutput( wxPaintDC& dc, bool occupied, bool actroute, co
       drawSvgSym(dc, m_SvgSym4, ori);
     else
       drawSvgSym(dc, m_SvgSym1, ori);
-    return;
   }
 
+  if( m_bShowID ) {
+    wxFont* font = new wxFont( dc.GetFont() );
+    font->SetPointSize( m_iItemIDps );
+    dc.SetFont(*font);
+    dc.DrawRotatedText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 0, 0.0 );
+    delete font;
+  }
 }
 
 /**
