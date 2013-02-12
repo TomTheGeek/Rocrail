@@ -878,7 +878,7 @@ void FeedbackDialog::OnButtonFbDeleteClick( wxCommandEvent& event )
     iONode fblist = wPlan.getfblist( model );
     if( fblist != NULL ) {
       NodeOp.removeChild( fblist, m_Props );
-      m_Props = NULL;
+      m_Props = selectPrev();
     }
   }
 

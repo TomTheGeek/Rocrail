@@ -966,7 +966,7 @@ void ScheduleDialog::OnButtonScheduleDeleteClick( wxCommandEvent& event )
     iONode sclist = wPlan.getsclist( model );
     if( sclist != NULL ) {
       NodeOp.removeChild( sclist, m_Props );
-      m_Props = NULL;
+      m_Props = selectPrev();
     }
   }
 

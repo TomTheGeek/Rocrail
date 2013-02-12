@@ -1244,7 +1244,7 @@ void SignalDialog::OnButtonSgDeleteClick( wxCommandEvent& event )
     iONode sglist = wPlan.getsglist( model );
     if( sglist != NULL ) {
       NodeOp.removeChild( sglist, m_Props );
-      m_Props = NULL;
+      m_Props = selectPrev();
     }
   }
 

@@ -404,6 +404,7 @@ void BaseDialog::setIDSelection( const char* ID ) {
     iONode node = (iONode)m_ItemList->GetItemData(index);
     if( StrOp.equals( ID, wItem.getid(node) ) ) {
       m_ItemList->SetItemState(index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      m_ItemList->EnsureVisible(index);
       m_SelectedID = wItem.getid(node);
       break;
     }

@@ -1664,7 +1664,7 @@ void SwitchDialog::OnButtonSwDeleteClick( wxCommandEvent& event )
     iONode swlist = wPlan.getswlist( model );
     if( swlist != NULL ) {
       NodeOp.removeChild( swlist, m_Props );
-      m_Props = NULL;
+      m_Props = selectPrev();
     }
   }
 

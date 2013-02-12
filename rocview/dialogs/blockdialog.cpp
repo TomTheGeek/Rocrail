@@ -2040,7 +2040,7 @@ void BlockDialog::OnButtonBlockDeleteClick( wxCommandEvent& event )
       iONode bklist = wPlan.getbklist( model );
       if( bklist != NULL ) {
         NodeOp.removeChild( bklist, m_Props );
-        m_Props = NULL;
+        m_Props = selectPrev();
       }
     }
 

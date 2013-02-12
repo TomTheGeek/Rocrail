@@ -812,7 +812,7 @@ void TimedActions::OnBtDelClick( wxCommandEvent& event )
     iONode aclist = wPlan.getaclist( model );
     if( aclist != NULL ) {
       NodeOp.removeChild( aclist, m_Props );
-      m_Props = NULL;
+      m_Props = selectPrev();
     }
   }
 

@@ -513,7 +513,8 @@ void ActionsCtrlDlg::deleteSelected() {
     NodeOp.base.del(node);
     m_CtrlList->Delete(cursel);
     if( m_CtrlList->GetCount() > 0 ) {
-      m_CtrlList->SetSelection(0);
+      m_CtrlList->SetSelection(cursel>0 ? cursel-1 : 0);
+//      m_CtrlList->SetSelection(0);
       initValues();
     }
   }

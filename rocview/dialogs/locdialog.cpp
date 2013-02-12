@@ -2555,7 +2555,7 @@ void LocDialog::OnButtonDeleteClick( wxCommandEvent& event )
     iONode lclist = wPlan.getlclist( model );
     if( lclist != NULL ) {
       NodeOp.removeChild( lclist, m_Props );
-      m_Props = NULL;
+      m_Props = selectPrev();
     }
   }
 

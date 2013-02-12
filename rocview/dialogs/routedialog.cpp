@@ -2130,7 +2130,7 @@ void RouteDialog::OnButtonStDeleteRouteClick( wxCommandEvent& event )
     iONode stlist = wPlan.getstlist( model );
     if( stlist != NULL ) {
       NodeOp.removeChild( stlist, m_Props );
-      m_Props = NULL;
+      m_Props = selectPrev();
     }
   }
 
