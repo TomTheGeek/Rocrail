@@ -1858,7 +1858,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     // 06 00 0C A3 04    5E     13 C4
     int locoAddr = (msg[6]&0x3F) * 256 + msg[5];
     int type = msg[6] >> 6;
-    int port = msg[4];
+    int port = msg[4] & 0xFF;
     if( locoAddr > 0 )
       bidibnode->occ[port] = True;
     __handleSensor(bidib, bidibnode->uid, pdata[0], bidibnode->occ[port], locoAddr, type );
