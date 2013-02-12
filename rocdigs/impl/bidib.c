@@ -559,13 +559,14 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     if( bidibnode != NULL ) {
       msgdata[0] = addr % 256;
       msgdata[1] = addr / 256;
-      msgdata[2] = (steps==128?0x30:0x20); // 128 speed steps
+      msgdata[2] = (steps==128?0x03:0x02); // 128 speed steps
       msgdata[3] = 0x01; // speed only
       msgdata[4] = (dir ? 0x00:0x80) + speed;
       msgdata[5] = (fn?0x10:0x00);
       msgdata[6] = 0;
       msgdata[7] = 0;
       msgdata[8] = 0;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d V=%d dir=%d steps=%d", addr, speed, dir, steps);
       data->subWrite((obj)inst, bidibnode->path, MSG_CS_DRIVE, msgdata, 9, bidibnode->seq++);
     }
 
@@ -1435,7 +1436,7 @@ static void __handleBoosterCurrent(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* p
     uid = bidibnode->uid;
     bidibnode->load = newLoad;
     data->load = newLoad;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster %08X load=%d mA", bidibnode->uid, data->load );
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%d mA", bidibnode->uid, data->load );
     __reportState(bidib, uid, False);
   }
   else if( data->load != newLoad ) {
