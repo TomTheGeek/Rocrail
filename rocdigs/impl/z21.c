@@ -890,6 +890,7 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
       wFunCmd.setaddr(nodeD, addr);
+      wLoc.setthrottleid( nodeD, "x-bus" );
       wFunCmd.setf0(nodeD, fn);
       wFunCmd.setf1(nodeD, (packet[packetIdx+9] & 0x01) ? True:False);
       wFunCmd.setf2(nodeD, (packet[packetIdx+9] & 0x02) ? True:False);
