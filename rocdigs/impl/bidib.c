@@ -1859,9 +1859,16 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     int locoAddr = (msg[6]&0x3F) * 256 + msg[5];
     int type = msg[6] >> 6;
     int port = msg[4] & 0xFF;
-    if( locoAddr > 0 )
-      bidibnode->occ[port] = True;
-    __handleSensor(bidib, bidibnode->uid, pdata[0], bidibnode->occ[port], locoAddr, type );
+
+    if( port > 127 ) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,"BM port out of range: %d", port);
+    }
+    else {
+      if( locoAddr > 0 ) {
+        bidibnode->occ[port] = True;
+      }
+      __handleSensor(bidib, bidibnode->uid, pdata[0], bidibnode->occ[port], locoAddr, type );
+    }
     break;
   }
 
