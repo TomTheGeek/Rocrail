@@ -237,7 +237,9 @@ static void __reader( void* threadinst ) {
         SerialOp.close(data->serial);
         TraceOp.trc( "bidibserial", TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error" );
       }
-      ThreadOp.sleep(10);
+      else {
+        ThreadOp.sleep(10);
+      }
     }
     else {
       ThreadOp.sleep(1000);
