@@ -189,6 +189,51 @@ static iOSlot __getSlotByAddr(iOZ21 inst, int lcaddr) {
 }
 
 
+static iOPoint __getPointByAddr(iOZ21 inst, int swaddr) {
+  iOZ21Data data = Data(inst);
+  iOPoint point = NULL;
+  if( MutexOp.wait( data->swmux ) ) {
+    point = (iOPoint)MapOp.first( data->swmap);
+    while( point != NULL ) {
+      if( point->addr == swaddr ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "point found for %s by address %d", point->id, swaddr );
+        break;
+      }
+      point = (iOPoint)MapOp.next( data->swmap);
+    };
+    MutexOp.post(data->swmux);
+  }
+  return point;
+}
+
+
+static iOPoint __getPoint(iOZ21 inst, iONode node) {
+  iOZ21Data data = Data(inst);
+  int     addr  = wSwitch.getaddr1(node);
+  char    key[256] = {'\0'};
+  iOPoint point = NULL;
+
+  StrOp.fmtb(key, "%s-%d", wSwitch.getid(node), addr );
+
+  point = (iOPoint)MapOp.get( data->swmap, key );
+  if( point != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "point exist for %s", key );
+    return point;
+  }
+  point = allocMem( sizeof( struct point) );
+  point->addr = addr;
+  point->id  = StrOp.dup(wSwitch.getid(node));
+
+  if( MutexOp.wait( data->swmux ) ) {
+    MapOp.put( data->swmap, key, (obj)point);
+    MutexOp.post(data->swmux);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "point created for %s", key );
+  return point;
+}
+
+
 static iOSlot __getSlot(iOZ21 inst, iONode node) {
   iOZ21Data data = Data(inst);
   int    addr  = wLoc.getaddr(node);
@@ -346,37 +391,44 @@ static iONode __translate(iOZ21 inst, iONode node) {
     int delay = wSwitch.getdelay(node) > 0 ? wSwitch.getdelay(node):data->swtime;
     Boolean turnout = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node));
     Boolean active = True;
-    byte* packet = allocMem(32);
+    iOPoint point = __getPoint(inst, node);
+    if( !point->timerpending ) {
+      byte* packet = allocMem(32);
 
-    __checkDecMode( inst, node );
+      __checkDecMode( inst, node );
 
-    packet[0] = 0x09;
-    packet[1] = 0x00;
-    packet[2] = 0x40;
-    packet[3] = 0x00;
-    packet[4] = 0x53;
-    packet[5] = addr / 256; /*MSB*/
-    packet[6] = addr % 256; /*LSB*/
-    packet[7] = 0x80 + (active?0x08:0x00) + (turnout?0x00:0x01); /*1000A00P*/
-    packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dual gate switch %d: %s", addr, wSwitch.getcmd(node) );
-    ThreadOp.post(data->writer, (obj)packet);
+      packet[0] = 0x09;
+      packet[1] = 0x00;
+      packet[2] = 0x40;
+      packet[3] = 0x00;
+      packet[4] = 0x53;
+      packet[5] = addr / 256; /*MSB*/
+      packet[6] = addr % 256; /*LSB*/
+      packet[7] = 0x80 + (active?0x08:0x00) + (turnout?0x00:0x01); /*1000A00P*/
+      packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dual gate switch %d: %s", addr, wSwitch.getcmd(node) );
+      ThreadOp.post(data->writer, (obj)packet);
 
-    if( wSwitch.isactdelay(node) ) {
-      iQCmd cmd = allocMem(sizeof(struct QCmd));
-      cmd->time   = SystemOp.getTick();
-      cmd->delay  = delay / 10;
-      active = False;
-      cmd->out[0] = 0x09;
-      cmd->out[1] = 0x00;
-      cmd->out[2] = 0x40;
-      cmd->out[3] = 0x00;
-      cmd->out[4] = 0x53;
-      cmd->out[5] = addr / 256; /*MSB*/
-      cmd->out[6] = addr % 256; /*LSB*/
-      cmd->out[7] = 0x80 + (active?0x08:0x00) + (turnout?0x00:0x01); /*1000A00P*/
-      cmd->out[8] = cmd->out[4] ^ cmd->out[5] ^ cmd->out[6] ^ cmd->out[7]; /*xor*/
-      ThreadOp.post(data->timedqueue, (obj)cmd);
+      if( wSwitch.isactdelay(node) ) {
+        iQCmd cmd = allocMem(sizeof(struct QCmd));
+        point->timerpending = True;
+        cmd->time   = SystemOp.getTick();
+        cmd->delay  = delay / 10;
+        active = False;
+        cmd->out[0] = 0x09;
+        cmd->out[1] = 0x00;
+        cmd->out[2] = 0x40;
+        cmd->out[3] = 0x00;
+        cmd->out[4] = 0x53;
+        cmd->out[5] = addr / 256; /*MSB*/
+        cmd->out[6] = addr % 256; /*LSB*/
+        cmd->out[7] = 0x80 + (active?0x08:0x00) + (turnout?0x00:0x01); /*1000A00P*/
+        cmd->out[8] = cmd->out[4] ^ cmd->out[5] ^ cmd->out[6] ^ cmd->out[7]; /*xor*/
+        ThreadOp.post(data->timedqueue, (obj)cmd);
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reject switch %s command: timed off is pending", wSwitch.getid(node) );
     }
   }
 
@@ -688,6 +740,23 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       else if( packet[packetIdx+4] == 0x81 && packet[packetIdx+5] == 0x00 ) {
         /* Emergency break */
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_BC_STOPPED" );
+      }
+      else if( packet[packetIdx+4] == 0x61 && packet[packetIdx+5] == 0x12 ) {
+        /* PT short cut */
+        iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
+        wSysCmd.setcmd(cmd, wSysCmd.go);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_CV_NACK_SC" );
+        Z21Op.cmd((obj)inst, cmd);
+      }
+      else if( packet[packetIdx+4] == 0x61 && packet[packetIdx+5] == 0x13 ) {
+        /* PT no ack */
+        iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
+        wSysCmd.setcmd(cmd, wSysCmd.go);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_CV_NACK" );
+        Z21Op.cmd((obj)inst, cmd);
+      }
+      else if( packet[packetIdx+4] == 0x61 && packet[packetIdx+5] == 0x02 ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_BC_PROGRAMMING_MODE" );
       }
     }
 
@@ -1024,6 +1093,15 @@ static void __timedqueue( void* threadinst ) {
       iQCmd cmd = (iQCmd)ListOp.get(list, i);
       if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
         byte* outa = allocMem(32);
+
+        if( cmd->out[0] == 0x09 && cmd->out[2] == 0x40 && cmd->out[4] == 0x53 ) {
+          int addr = cmd->out[5] = addr * 256 + cmd->out[6];
+          iOPoint point = __getPointByAddr(z21, addr);
+          if( point != NULL ) {
+            point->timerpending = False;
+          }
+        }
+
         MemOp.copy( outa, cmd->out, 32 );
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
         ThreadOp.post( data->writer, (obj)outa );
@@ -1091,6 +1169,8 @@ static struct OZ21* _inst( const iONode ini ,const iOTrace trc ) {
   data->swtime = wDigInt.getswtime( ini );
   data->lcmap  = MapOp.inst();
   data->lcmux  = MutexOp.inst( NULL, True );
+  data->swmap  = MapOp.inst();
+  data->swmux  = MutexOp.inst( NULL, True );
 
   if( wDigInt.getport( data->ini ) == 0 ) {
     wDigInt.setport( data->ini, 21105 );

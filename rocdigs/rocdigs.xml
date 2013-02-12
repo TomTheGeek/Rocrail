@@ -1700,7 +1700,12 @@
       <var name="lights" vt="Boolean"/>
       <var name="f[32]" vt="Boolean"/>
     </struct>
-      <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
+    <struct name="point" typedef="*iOPoint">
+      <var name="id" vt="char*"/>
+      <var name="addr" vt="int"/>
+      <var name="timerpending" vt="Boolean"/>
+      </struct>
+    <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
       <var name="out[32]" vt="byte"/>
       <var name="time" vt="unsigned long"/>
       <var name="delay" vt="unsigned long"/>
@@ -1729,6 +1734,8 @@
       <var name="swmode[256]" vt="byte"/>
       <var name="lcmux" vt="iOMutex"/>
       <var name="lcmap" vt="iOMap"/>
+      <var name="swmux" vt="iOMutex"/>
+      <var name="swmap" vt="iOMap"/>
       <var name="locolist" vt="iONode"/>
       <var name="switchlist" vt="iONode"/>
       </data>
