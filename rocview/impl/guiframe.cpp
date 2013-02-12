@@ -958,6 +958,12 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
   bool firstset = false;
   const char* firstid = NULL;
   iONode selectedLoc = NULL;
+  char* prevSelected = NULL;
+
+  if( m_LocID != NULL ) {
+    prevSelected = StrOp.dup(m_LocID);
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] was selected", m_LocID );
+  }
 
   m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
   m_LocImage->Refresh();
@@ -1022,14 +1028,26 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
 
         const char* id = wLoc.getid( lc );
 
-        if( !firstset && m_LC != NULL && id != NULL ) {
-          selectedLoc = lc;
-          firstset = true;
-          firstid = id;
-          TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Set first active loc to %s", id );
+        if( m_LC != NULL && id != NULL ) {
+          if(  prevSelected != NULL && StrOp.equals(prevSelected, id) ) {
+            selectedLoc = lc;
+            firstset = true;
+            firstid = id;
+            m_iLcRowSelection = i;
+            TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Set previous selected active loco to %s", id );
+            StrOp.free(prevSelected);
+          }
+          if( !firstset ) {
+            selectedLoc = lc;
+            firstset = true;
+            firstid = id;
+            TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Set first active loco to %s prev=%s",
+                id, prevSelected==NULL?prevSelected:"-" );
+          }
         }
 
-        TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Adding active loc %s", id );
+
+        TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Adding active loco %s", id );
         m_ActiveLocs->AppendRows();
         m_ActiveLocs->SetCellValue(m_ActiveLocs->GetNumberRows()-1, LOC_COL_ID, wxString(id,wxConvUTF8) );
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ID, true );
@@ -1108,6 +1126,8 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
 
   m_ActiveLocs->Show( true );
   if( firstset && firstid!=NULL && selectedLoc != NULL ) {
+    if( m_LocID != NULL )
+      StrOp.free(m_LocID);
     m_LocID = StrOp.dup(firstid);
     m_LC->setLocProps(selectedLoc);
     m_CV->setLocProps(selectedLoc);
