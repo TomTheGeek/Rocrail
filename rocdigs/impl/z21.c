@@ -861,8 +861,8 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       int addr  = (packet[packetIdx+5] & 0x3F) * 256 + packet[packetIdx+6];
       int steps = packet[packetIdx+7] & 0x07; /*0=14, 2=28, 4=128*/
       int speed = packet[packetIdx+8] & 0x7F;
-      Boolean dir = (packet[packetIdx+8] & 0x80) ? True:False;
-      Boolean fn = (packet[packetIdx+9] & 0x10) ? True:False;
+      Boolean dir = ((packet[packetIdx+8] & 0x80) ? True:False);
+      Boolean fn = ((packet[packetIdx+9] & 0x10) ? True:False);
       iOSlot slot = __getSlotByAddr(inst, addr);
 
       if( steps == 0 ) steps = 14;
@@ -879,6 +879,7 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       if( data->iid != NULL )
         wLoc.setiid( nodeC, data->iid );
       wLoc.setaddr( nodeC, addr );
+      wLoc.setcmd( nodeC, wLoc.dirfun);
       wLoc.setdir( nodeC, dir );
       wLoc.setfn( nodeC, fn );
       wLoc.setV_raw( nodeC, speed );
