@@ -72,6 +72,6 @@ cp -R ../rocrail/symbols/*.* debian/opt/rocrail/symbols
 cp -R ../COPYING debian/opt/rocrail
 
 fakeroot dpkg-deb --build debian
-mv debian.deb rocrail-setup-rev$BAZAARREV-$DIST-$ARCH.deb
+mv debian.deb rocrail-$BAZAARREV-$DIST-$ARCH.deb
 rm -Rf debian
 cd ../rocrail
