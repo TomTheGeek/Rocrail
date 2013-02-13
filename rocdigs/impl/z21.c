@@ -793,13 +793,16 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       int n = 0;
 
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "evaluate sensor group %d", grp);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X",
+          packet[packetIdx+5+0], packet[packetIdx+5+1], packet[packetIdx+5+2], packet[packetIdx+5+3], packet[packetIdx+5+4],
+          packet[packetIdx+5+5], packet[packetIdx+5+6], packet[packetIdx+5+7], packet[packetIdx+5+8], packet[packetIdx+5+9] );
       for( i = 0; i < 10; i++ ) {
         int idx  = grp * 10 + i;
         byte status = packet[packetIdx+5+i];
-        for( n = 0; i < 8; i++ ) {
-          int addr = grp * 10 + i * 8 + n;
+        for( n = 0; n < 8; n++ ) {
+          int addr = 1 + grp * 10 + i * 8 + n;
           byte mask = (1 << n);
-          if( status & mask != data->sensor[idx] & mask ) {
+          if( (status & mask) != (data->sensor[idx] & mask) ) {
             iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
             wFeedback.setaddr( nodeC, addr );
             wFeedback.setstate( nodeC, (status & mask) ? True:False );
@@ -808,7 +811,7 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
             if( data->listenerFun != NULL && data->listenerObj != NULL )
               data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
-            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Sensor %d=%s", addr, (status & mask)?"on":"off");
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Sensor[%d] %d=%s", idx, addr, (status & mask)?"on":"off");
           }
         }
         data->sensor[idx] = status;
