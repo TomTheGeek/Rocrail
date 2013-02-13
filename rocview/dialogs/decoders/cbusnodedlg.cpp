@@ -301,7 +301,7 @@ void CBusNodeDlg::initIndex() {
     for( int index = 0; index < ListOp.size(nodeList); index++) {
       cbusnode = (iONode)ListOp.get(nodeList, index);
       m_IndexList2->InsertItem( index, wxString::Format(_T("%d"), wCBusNode.getnr(cbusnode)));
-      m_IndexList2->SetItem( index, 1, wxString::Format(_T("%d"), wCBusNode.getcanid(cbusnode)));
+      m_IndexList2->SetItem( index, 1, wxString::Format(_T("%d"), wCBusNode.getcanid(cbusnode)&0x7F)); // Filterout the prio
       m_IndexList2->SetItem( index, 2, wxString(getManu(wCBusNode.getmanuid(cbusnode)),wxConvUTF8));
       m_IndexList2->SetItem( index, 3, wxString::Format(_T("%d:%d"), wCBusNode.getmanuid(cbusnode), wCBusNode.getmtyp(cbusnode)));
       m_IndexList2->SetItem( index, 4, wxString(getType(wCBusNode.getmanuid(cbusnode), wCBusNode.getmtyp(cbusnode)),wxConvUTF8) );
