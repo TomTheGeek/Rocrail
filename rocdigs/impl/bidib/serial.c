@@ -328,7 +328,7 @@ int serialRead ( obj inst, unsigned char *msg ) {
 Boolean serialWrite( obj inst, unsigned char *path, unsigned char code, unsigned char* pdata, int datalen, int seq ) {
   iOBiDiBData data = Data(inst);
   int   size = 0;
-  byte  msg[127];
+  byte  msg[256];
   byte* post = NULL;
 
   if( MutexOp.wait( data->mux ) ) {
