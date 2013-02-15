@@ -56,6 +56,7 @@ public:
   bool m_sortOri;
   bool m_sortLen;
   bool m_sortType;
+  bool m_longaddr;
 };
 
 
