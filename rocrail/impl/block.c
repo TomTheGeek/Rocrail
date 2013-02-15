@@ -1687,6 +1687,9 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
     }
 
     if( ok ) {
+      /* in case of a managed block of a fiddle yard the manager ID is needed */
+      blockid = ModelOp.getManagedID( AppOp.getModel(), blockid );
+
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "block %s locked for [%s][%s][%s] in [%s] direction, indelay=%d",
           data->id, id, data->locId, blockid, reverse?"reverse":"normal", indelay );
