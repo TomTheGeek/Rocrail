@@ -7363,6 +7363,7 @@ static int _cleanup(iOAnalyse inst) {
 
 
 /**  */
+static Boolean didShowCredits = False;
 static struct OAnalyse* _inst() {
   iOAnalyse __Analyse = allocMem( sizeof( struct OAnalyse ) );
   iOAnalyseData data = allocMem( sizeof( struct OAnalyseData ) );
@@ -7382,9 +7383,12 @@ static struct OAnalyse* _inst() {
   iONode aoIni = AppOp.getIni() ;
   iONode anaOpt = wRocRail.getanaopt( aoIni ) ;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Rocrail Analyser by Jean-Michel Fischer" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  if( !didShowCredits ) {
+    didShowCredits = True;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Rocrail Analyser by Jean-Michel Fischer" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  }
 
   if( ! anaOpt ) {
     /* no analyzer options in ini -> create a node */
