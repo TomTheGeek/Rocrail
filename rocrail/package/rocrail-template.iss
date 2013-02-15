@@ -13,7 +13,7 @@ OutputDir=..\..\package
 AppCopyright=GNU
 AppPublisher=rocrail.net
 AppPublisherURL=http://www.rocrail.net/
-OutputBaseFilename=rocrail-setup-rev<BZR>
+OutputBaseFilename=rocrail-<BZR>-win32
 
 [Tasks]
 ;Name: service; Description: "Register Rocrail as Service"; GroupDescription: "Service"; Flags: unchecked
