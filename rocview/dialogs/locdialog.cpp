@@ -813,15 +813,17 @@ void LocDialog::InitValues() {
   StrTokOp.base.del( consist );
 
   // CV's
+  TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "CV list...");
   iOList list = ListOp.inst();
   iONode cv = wLoc.getcvbyte( m_Props );
   while( cv != NULL ) {
-    if( wCVByte.getnr( cv ) < 1 || wCVByte.getnr( cv ) > 1024 )
-      continue;
-    ListOp.add(list, (obj)cv);
+    if( wCVByte.getnr( cv ) > 0 && wCVByte.getnr( cv ) <= 1024 ) {
+      ListOp.add(list, (obj)cv);
+    }
     cv = wLoc.nextcvbyte( m_Props, cv );
   };
 
+  TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "CVs...");
   if( m_CVList->GetNumberRows() > 0 )
     m_CVList->DeleteRows( 0, m_CVList->GetNumberRows() );
   ListOp.sort(list, &__sortCV);
