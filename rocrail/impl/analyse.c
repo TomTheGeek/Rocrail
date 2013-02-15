@@ -5111,9 +5111,16 @@ static int __analyseAllLists(iOAnalyse inst) {
           const char* blockid = wItem.getblockid(node);
           /* only set blockid if not already set */
           if( ( blockid == NULL ) || ( StrOp.len( blockid ) == 0 ) ) {
-            wTrack.setblockid(node, bka);
-            modifications++;
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s]", bka, NodeOp.getName(item), wItem.getid(item) );
+            if( bkaIsAsb ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s] skipped because bkaIsAsb",
+                  bka, NodeOp.getName(item), wItem.getid(item) );
+            }
+            else {
+              wTrack.setblockid(node, bka);
+              modifications++;
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s]",
+                  bka, NodeOp.getName(item), wItem.getid(item) );
+            }
           }
           else {
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s] skipped because already %s",
@@ -5131,9 +5138,16 @@ static int __analyseAllLists(iOAnalyse inst) {
         const char* blockid = wItem.getblockid(node);
         /* only set blockid if not already set */
         if( ( blockid == NULL ) || ( StrOp.len( blockid ) == 0 ) ) {
-          wFeedback.setblockid(node, bka);
-          modifications++;
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s]", bka, NodeOp.getName(item), wItem.getid(item) );
+          if( bkaIsAsb ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s] skipped because bkaIsAsb",
+                bka, NodeOp.getName(item), wItem.getid(item) );
+          }
+          else {
+            wFeedback.setblockid(node, bka);
+            modifications++;
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s]",
+                bka, NodeOp.getName(item), wItem.getid(item) );
+          }
         }
         else {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s] skipped because already %s",
@@ -5150,9 +5164,16 @@ static int __analyseAllLists(iOAnalyse inst) {
         const char* blockid = wItem.getblockid(node);
         /* only set blockid if not already set */
         if( ( blockid == NULL ) || ( StrOp.len( blockid ) == 0 ) ) {
-          wSignal.setblockid(node, bka);
-          modifications++;
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s]", bka, NodeOp.getName(item), wItem.getid(item) );
+          if( bkaIsAsb ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s] skipped because bkaIsAsb",
+                bka, NodeOp.getName(item), wItem.getid(item) );
+          }
+          else {
+            wSignal.setblockid(node, bka);
+            modifications++;
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s]",
+                bka, NodeOp.getName(item), wItem.getid(item) );
+          }
         }
         else {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s] skipped because already %s",
@@ -5172,10 +5193,16 @@ static int __analyseAllLists(iOAnalyse inst) {
         const char* blockid = wItem.getblockid(node);
         /* only set blockid if not already set */
         if( ( blockid == NULL ) || ( StrOp.len( blockid ) == 0 ) ) {
-          wSwitch.setblockid(node, bka);
-          modifications++;
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s][%s]",
-              bka, NodeOp.getName(item), wItem.gettype(item), wItem.getid(item) );
+          if( bkaIsAsb ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s][%s] skipped because bkaIsAsb",
+                bka, NodeOp.getName(item), wItem.gettype(item), wItem.getid(item) );
+          }
+          else {
+            wSwitch.setblockid(node, bka);
+            modifications++;
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s][%s]",
+                bka, NodeOp.getName(item), wItem.gettype(item), wItem.getid(item) );
+          }
         }
         else {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s][%s] skipped because already %s",
@@ -5193,10 +5220,16 @@ static int __analyseAllLists(iOAnalyse inst) {
         const char* blockid = wItem.getblockid(node);
         /* only set blockid if not already set */
         if( ( blockid == NULL ) || ( StrOp.len( blockid ) == 0 ) ) {
-          wSwitch.setblockid(node, bka);
-          modifications++;
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s][%s]",
-              bka, NodeOp.getName(item), wItem.gettype(item), wItem.getid(item) );
+          if( bkaIsAsb ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s][%s] skipped because bkaIsAsb",
+                bka, NodeOp.getName(item), wItem.gettype(item), wItem.getid(item) );
+          }
+          else {
+            wSwitch.setblockid(node, bka);
+            modifications++;
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s][%s]",
+                bka, NodeOp.getName(item), wItem.gettype(item), wItem.getid(item) );
+          }
         }
         else {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s][%s] skipped because already %s",
