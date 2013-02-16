@@ -272,7 +272,6 @@ bool FeedbackDialog::initIndex() {
 
       if( m_Props != NULL ) {
         setIDSelection(wItem.getid( m_Props ));
-        m_Props = m_Props;
         return true;
       }
       else {
