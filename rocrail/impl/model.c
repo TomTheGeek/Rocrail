@@ -2670,6 +2670,18 @@ static iORoute _getRoute( iOModel inst, const char* id ) {
   return route;
 }
 
+static const char* _getResolvedRouteID( iOModel inst, const char* id ) {
+  iOModelData o = Data(inst);
+  iORoute route = (iORoute)MapOp.get( o->routeMap, id );
+  if( route == NULL && o->moduleplan != NULL ) {
+    const char* routeID = ModPlanOp.getResolvedRouteID( o->moduleplan, id );
+    if( routeID != NULL ) {
+      return routeID;
+    }
+  }
+  return id;
+}
+
 static void _addNetRoute(iOModel inst, iONode netroute) {
   iOModelData data = Data(inst);
   iORoute route = RouteOp.inst(netroute);

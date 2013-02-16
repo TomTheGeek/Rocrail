@@ -720,20 +720,20 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         RouteOp.go( st );
       }
       else if( StrOp.equals( wAction.route_lockset, wAction.getcmd( data->action ) ) ) {
-        const char* lockid = wAction.getparam(data->action);
+        const char* lockid = ModelOp.getResolvedRouteID(model, wAction.getparam(data->action) );
         if( lockid == NULL || StrOp.len( lockid ) == 0 )
           lockid = wAction.getid( data->action );
         if( RouteOp.lock(st, lockid, False, True) )
           RouteOp.go( st );
       }
       else if( StrOp.equals( wAction.route_lock, wAction.getcmd( data->action ) ) ) {
-        const char* lockid = wAction.getparam(data->action);
+        const char* lockid = ModelOp.getResolvedRouteID(model, wAction.getparam(data->action) );
         if( lockid == NULL || StrOp.len( lockid ) == 0 )
           lockid = wAction.getid( data->action );
         RouteOp.lock(st, lockid, False, True);
       }
       else if( StrOp.equals( wAction.route_unlock, wAction.getcmd( data->action ) ) ) {
-        const char* lockid = wAction.getparam(data->action);
+        const char* lockid = ModelOp.getResolvedRouteID(model, wAction.getparam(data->action) );
         if( lockid == NULL || StrOp.len( lockid ) == 0 )
           lockid = wAction.getid( data->action );
         RouteOp.unLock(st, lockid, NULL, True, False);
