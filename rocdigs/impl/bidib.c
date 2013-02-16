@@ -351,6 +351,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
   char uidKey[32];
   byte path[4] = {0,0,0,0};
   byte msgdata[127];
+  iOBiDiBNode broadcastnode = (iOBiDiBNode)MapOp.get( data->localmap, "0.0.0.0");
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "cmd=%s", NodeOp.getName( node ) );
 
@@ -780,7 +781,11 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       msgdata[1] = hours + 0x80;
       msgdata[2] = wday  + 0x40;
       msgdata[3] = div   + 0xC0;
-      data->subWrite((obj)inst, path, MSG_SYS_CLOCK, msgdata, 4, 0);
+
+      if( broadcastnode != NULL )
+        data->subWrite((obj)inst, broadcastnode->path, MSG_SYS_CLOCK, msgdata, 4, broadcastnode->seq++);
+      else
+        data->subWrite((obj)inst, path, MSG_SYS_CLOCK, msgdata, 4, 0);
     }
   }
 
