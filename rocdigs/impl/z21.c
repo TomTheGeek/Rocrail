@@ -471,6 +471,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
     int spcnt = __normalizeSteps(wLoc.getspcnt( node ), &conf);
     int speed = 0;
     Boolean fnstate = wLoc.isfn(node);
+    Boolean dir = wLoc.isdir( node );
     byte* packet = allocMem(32);
 
     if( wLoc.getV( node ) != -1 ) {
@@ -482,8 +483,9 @@ static iONode __translate(iOZ21 inst, iONode node) {
 
     __checkDecMode(inst, node);
 
-    if( slot->Vraw != speed ) {
+    if( slot->Vraw != speed || slot->dir != dir) {
       slot->Vraw = speed;
+      slot->dir = dir;
       packet[0] = 0x0A;
       packet[1] = 0x00;
       packet[2] = 0x40;
@@ -492,9 +494,9 @@ static iONode __translate(iOZ21 inst, iONode node) {
       packet[5] = 0x10+conf; /* speed steps*/
       packet[6] = addr / 256; /*MSB*/
       packet[7] = addr % 256; /*LSB*/
-      packet[8] = (wLoc.isdir( node )?0x80:0x00) + speed;
+      packet[8] = (dir?0x80:0x00) + speed;
       packet[9] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8]; /*xor*/
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d step=%d (0x%02X)", addr, speed, packet[8] );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d step=%d dir=%s (0x%02X)", addr, speed, dir?"fwd":"rev", packet[8] );
       ThreadOp.post(data->writer, (obj)packet);
     }
 
