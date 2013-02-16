@@ -2109,14 +2109,12 @@ static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent ) {
     return;
   }
 
-  /* remove commando to be of use for the consist members */
-  wLoc.setcmd(nodeA, "");
-
   /* check consist and send a copy of the nodeA */
   if( nodeA != NULL && StrOp.len( wLoc.getconsist(data->props) ) > 0 ) {
     iOStrTok  consist = StrTokOp.inst( wLoc.getconsist ( data->props ), ',' );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending command to the consist member [%s]",
                    wLoc.getconsist(data->props) );
+
     while( StrTokOp.hasMoreTokens( consist ) ) {
       const char* tok = StrTokOp.nextToken( consist );
       iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL );
