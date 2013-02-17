@@ -1603,6 +1603,7 @@ void LocoIO::OnButtonPortGetClick( wxCommandEvent& event )
 
 void LocoIO::OnCancelClick( wxCommandEvent& event )
 {
+  delete m_Timer;
   EndModal( 0 );
 }
 

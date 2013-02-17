@@ -568,6 +568,7 @@ void CBusNodeDlg::onOK( wxCommandEvent& event )
   if( m_CBus != NULL ) {
     NodeOp.base.del(m_CBus);
   }
+  delete m_Timer;
   EndModal( wxID_OK );
 }
 

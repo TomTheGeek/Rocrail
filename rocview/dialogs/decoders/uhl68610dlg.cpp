@@ -258,10 +258,12 @@ void Uhl68610Dlg::onWrite( wxCommandEvent& event ) {
 }
 
 void Uhl68610Dlg::onCancel( wxCommandEvent& event ) {
+  delete m_Timer;
   EndModal( 0 );
 }
 
 void Uhl68610Dlg::onOK( wxCommandEvent& event ) {
+  delete m_Timer;
   EndModal( wxID_OK );
 }
 

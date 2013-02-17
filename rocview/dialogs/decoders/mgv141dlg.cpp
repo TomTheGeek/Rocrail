@@ -165,7 +165,7 @@ void MGV141Dlg::onReadAll( wxCommandEvent& event )
 
 void MGV141Dlg::onOK( wxCommandEvent& event )
 {
-  m_Timer->Stop();
+  delete m_Timer;
   EndModal( wxID_OK );
 }
 

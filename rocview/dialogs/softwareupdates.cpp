@@ -539,6 +539,7 @@ void Softwareupdates::OnOkClick( wxCommandEvent& event )
   }
   
   NodeOp.base.del( m_ReleaseNode );
+  delete m_Timer;
   EndModal(wxID_OK);
 }
 
@@ -550,6 +551,7 @@ void Softwareupdates::OnOkClick( wxCommandEvent& event )
 void Softwareupdates::OnCancelClick( wxCommandEvent& event )
 {
   NodeOp.base.del( m_ReleaseNode );
+  delete m_Timer;
   EndModal(0);
 }
 
