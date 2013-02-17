@@ -227,7 +227,7 @@ void LocDialog::initLabels() {
   m_Notebook->SetPageText( 5, wxGetApp().getMsg( "multipleunit" ) );
 
   // Index
-  initList(m_List2, this, false, true, true);
+  initList(m_List2, this, false, true, true, true, false, true);
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_Doc->SetLabel( wxGetApp().getMsg( "doc_report" ) );

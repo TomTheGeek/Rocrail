@@ -17,7 +17,8 @@ class BaseDialog
 public:
   void doDoc( wxCommandEvent& event, const char* xslName );
   bool existID( wxWindow* dlg, iONode list, iONode props, wxString id );
-  void initList(wxListCtrl* list, wxWindow* parent, bool showPos=true, bool showAddr=true, bool showLen=false, bool showShow=true, bool showType=false);
+  void initList(wxListCtrl* list, wxWindow* parent, bool showPos=true, bool showAddr=true, bool showLen=false,
+      bool showShow=true, bool showType=false, bool showTime=false);
   void fillIndex( iONode Items, bool sort=false);
   void setIDSelection( const char* ID );
   iONode setSelection( int index );
@@ -37,6 +38,7 @@ public:
   bool m_ShowLen;
   bool m_ShowType;
   bool m_ShowShow;
+  bool m_ShowTime;
   const char* m_SelectedID;
   int m_colID;
   int m_colIID;
@@ -47,6 +49,8 @@ public:
   int m_colOri;
   int m_colLen;
   int m_colType;
+  int m_colRTime;
+  int m_colMTime;
   bool m_sortID;
   bool m_sortIID;
   bool m_sortAddr;
@@ -56,6 +60,8 @@ public:
   bool m_sortOri;
   bool m_sortLen;
   bool m_sortType;
+  bool m_sortRTime;
+  bool m_sortMTime;
   bool m_longaddr;
 };
 
