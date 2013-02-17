@@ -320,9 +320,11 @@ static int __sortRTime(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     long timeA = wLoc.getruntime( a );
     long timeB = wLoc.getruntime( b );
-    if( timeB == timeA )
-      return 0;
-    return order?timeB > timeA:timeA > timeB;
+    if( timeA > timeB )
+      return order?-1:1;
+    if( timeA < timeB )
+      return order?1:-1;
+    return 0;
 }
 static int __sortMTime(obj* _a, obj* _b)
 {
@@ -330,9 +332,11 @@ static int __sortMTime(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     long timeA = wLoc.getmtime( a );
     long timeB = wLoc.getmtime( b );
-    if( timeB == timeA )
-      return 0;
-    return order?timeB > timeA:timeA > timeB;
+    if( timeA > timeB )
+      return order?-1:1;
+    if( timeA < timeB )
+      return order?1:-1;
+    return 0;
 }
 
 
