@@ -903,16 +903,20 @@ static void __reader( void* threadinst ) {
     }
 
     /* normal reading processing */
-    if( MutexOp.wait( data->mux ) ) {
+    if( data->run && data->serial != NULL ) {
 
-      if( data->run && data->serial != NULL && SerialOp.available( data->serial ) ) {
+      if( MutexOp.wait( data->mux ) ) {
+        Boolean evaluate = False;
         byte in[256];
-        if( __readPacket(data, in) ) {
-          __evaluatePacket(data, in);
-        }
-      }
 
-      MutexOp.post( data->mux );
+        if( SerialOp.available( data->serial ) ) {
+          evaluate = __readPacket(data, in);
+        }
+
+        MutexOp.post( data->mux );
+        if( evaluate )
+          __evaluatePacket(data, in);
+      }
     }
 
     ThreadOp.sleep( 10 );
