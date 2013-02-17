@@ -846,6 +846,12 @@ static void __engine( iOLoc inst, iONode cmd ) {
     V_hint   = wLoc.getV_hint( cmd );
     V_maxkmh = wLoc.getV_maxkmh( cmd );
 
+    if( wLoc.isconsistcmd( cmd ) ) {
+      /* overwrite id and address */
+      wLoc.setid(cmd, wLoc.getid(data->props) );
+      wLoc.setaddr(cmd, wLoc.getaddr(data->props) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s cmd=\"%s\"", LocOp.getId(inst), wLoc.getcmd(cmd)==NULL?"-":wLoc.getcmd(cmd));
+    }
 
     /* Workarounds for the P50 interface. */
     if( NodeOp.findAttr(cmd,"dir") && wLoc.isdir(cmd) != wLoc.isdir( data->props ) ) {
@@ -2192,6 +2198,9 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   const char* nodename = NodeOp.getName( nodeA );
   const char* cmd  = wLoc.getcmd( nodeA );
 
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%scommand %s:%s for loco %s",
+      wLoc.isconsistcmd(nodeA)?"consist ":"", nodename, (cmd==NULL?"-":cmd), wLoc.getid( data->props ) );
+
   if( !wLoc.isconsistcmd( nodeA ) ) {
     iOLoc master = ModelOp.getMasterLoc(model, wLoc.getid( data->props ));
 
@@ -2241,8 +2250,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
 
   if( cmd != NULL && !StrOp.equals( wLoc.direction, cmd )  && !StrOp.equals( wLoc.velocity, cmd ) && !StrOp.equals( wLoc.dirfun, cmd ) ) {
     Boolean broadcast = False;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cmd \"%s\" for %s.",
-                   cmd, LocOp.getId( inst ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing cmd=\"%s\" for [%s]",  cmd, LocOp.getId( inst ) );
 
     if( ModelOp.isAuto( AppOp.getModel() ) ) {
       if( StrOp.equals( wLoc.go, cmd ) ) {
@@ -2408,6 +2416,9 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     nodeA->base.del(nodeA);
 
     return True;
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "processing cmd=\"%s\" for [%s]",  cmd==NULL?"-":cmd, LocOp.getId( inst ) );
   }
 
   nodeF = (iONode)NodeOp.base.clone( nodeA );
