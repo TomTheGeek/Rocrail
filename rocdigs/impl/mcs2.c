@@ -585,6 +585,31 @@ static void __evaluateMCS2Function( iOMCS2Data mcs2, byte* in ) {
     mcs2->listenerFun( mcs2->listenerObj, nodeC, TRCLEVEL_INFO );
   }
 }
+static void __evaluateMCS2System( iOMCS2Data data, byte* in ) {
+  int cmd = in[9];
+  int addr4 = in[8];
+  int addr3 = in[7];
+  int addr2 = in[6];
+  int addr1 = in[5];
+
+  if ( (addr1 == 0) && (addr2 == 0) && (addr3 == 0) && (addr4 == 0) ) {
+    if (cmd == 0) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CS2 STOP" );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CS2 GO" );
+    }
+    if( data->listenerFun != NULL && data->listenerObj != NULL ) {
+      iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+
+      if( data->iid != NULL )
+        wState.setiid( node, data->iid );
+      wState.setpower( node, cmd );
+
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+   }
+  } 
+}
 
 static void __evaluateMCS2Switch( iOMCS2Data mcs2, byte* in ) {
   int addr1 = in[7] & 0x0F;
@@ -646,7 +671,11 @@ static void __reader( void* threadinst ) {
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
        is broadcasted. When a command is issued from the CS2 user interface, both the command and the reply is broadcasted.
        This means that when a command (even) is received, Rocrail did not send that command. */
-    if( in[1] == 0x21 ) {
+    if( in[1] == 0x00 ) {
+      /*System command */
+      __evaluateMCS2System( data, in );
+    }
+    else if( in[1] == 0x21 ) {
       /* unoffcial reply to unofficial polling command, don't care if the poll was from Rocrail or not, always good to have the S88 state. */
       __evaluateMCS2S88( data, in, store );
     }
