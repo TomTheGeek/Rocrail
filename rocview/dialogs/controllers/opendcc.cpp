@@ -1251,6 +1251,7 @@ wxIcon OpenDCCCtrlDlg::GetIconResource( const wxString& name )
 
 void OpenDCCCtrlDlg::OnCancelClick( wxCommandEvent& event )
 {
+  delete m_Timer;
   EndModal( 0 );
 }
 
@@ -1273,6 +1274,7 @@ void OpenDCCCtrlDlg::OnApplyClick( wxCommandEvent& event )
 void OpenDCCCtrlDlg::OnOkClick( wxCommandEvent& event )
 {
   OnApplyClick(event);
+  delete m_Timer;
   EndModal( wxID_OK );
 }
 
