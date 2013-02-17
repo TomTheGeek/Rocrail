@@ -945,7 +945,7 @@ void OpenDCCCtrlDlg::CreateControls()
     m_SubLibStrings.Add(_("&XpressNet"));
     m_SubLib = new wxRadioBox( m_GeneralPanel, ID_OPENDCCSUBLIB, _("Protocol"), wxDefaultPosition, wxDefaultSize, m_SubLibStrings, 1, wxRA_SPECIFY_ROWS );
     m_SubLib->SetSelection(0);
-    itemBoxSizer6->Add(m_SubLib, 0, wxGROW|wxLEFT|wxRIGHT, 5);
+    itemBoxSizer6->Add(m_SubLib, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer20 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer5->Add(itemBoxSizer20, 0, wxGROW|wxALL, 5);
