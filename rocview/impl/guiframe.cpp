@@ -1145,6 +1145,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
   m_ActiveLocsPanel->GetSizer()->Layout();
   */
   m_ActiveLocs->SelectRow(m_iLcRowSelection);
+  m_ActiveLocs->MakeCellVisible(m_iLcRowSelection, m_ActiveLocs->XToCol(0) );
 
   if( wGui.isrestorelcctrl(m_Ini) ) {
     initLocCtrlDialogs();
