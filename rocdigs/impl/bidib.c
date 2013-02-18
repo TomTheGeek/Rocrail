@@ -125,6 +125,96 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OBiDiB ----- */
 
+static void __fx2fn(iOSlot slot, int fx) {
+  int i = 0;
+  for( i = 0; i < 28; i++ ) {
+    slot->f[i] = (fx & (1 << i)) ? True:False;
+  }
+}
+
+Boolean __getFState(iONode fcmd, int fn) {
+  switch( fn ) {
+    case 0 : return (wFunCmd.isf0 (fcmd) | wLoc.isfn(fcmd));
+    case 1 : return wFunCmd.isf1 (fcmd);
+    case 2 : return wFunCmd.isf2 (fcmd);
+    case 3 : return wFunCmd.isf3 (fcmd);
+    case 4 : return wFunCmd.isf4 (fcmd);
+    case 5 : return wFunCmd.isf5 (fcmd);
+    case 6 : return wFunCmd.isf6 (fcmd);
+    case 7 : return wFunCmd.isf7 (fcmd);
+    case 8 : return wFunCmd.isf8 (fcmd);
+    case 9 : return wFunCmd.isf9 (fcmd);
+    case 10: return wFunCmd.isf10(fcmd);
+    case 11: return wFunCmd.isf11(fcmd);
+    case 12: return wFunCmd.isf12(fcmd);
+    case 13: return wFunCmd.isf13(fcmd);
+    case 14: return wFunCmd.isf14(fcmd);
+    case 15: return wFunCmd.isf15(fcmd);
+    case 16: return wFunCmd.isf16(fcmd);
+    case 17: return wFunCmd.isf17(fcmd);
+    case 18: return wFunCmd.isf18(fcmd);
+    case 19: return wFunCmd.isf19(fcmd);
+    case 20: return wFunCmd.isf20(fcmd);
+    case 21: return wFunCmd.isf21(fcmd);
+    case 22: return wFunCmd.isf22(fcmd);
+    case 23: return wFunCmd.isf23(fcmd);
+    case 24: return wFunCmd.isf24(fcmd);
+    case 25: return wFunCmd.isf25(fcmd);
+    case 26: return wFunCmd.isf26(fcmd);
+    case 27: return wFunCmd.isf27(fcmd);
+    case 28: return wFunCmd.isf28(fcmd);
+  }
+  return False;
+}
+
+static iOSlot __getSlot(iOBiDiB inst, iONode node) {
+  iOBiDiBData data = Data(inst);
+  int    addr  = wLoc.getaddr(node);
+  iOSlot slot  = NULL;
+  byte* packet = NULL;
+
+  slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+  if( slot != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot exist for %s", wLoc.getid(node) );
+    return slot;
+  }
+
+  slot = allocMem( sizeof( struct slot) );
+  slot->addr    = addr;
+  slot->id      = StrOp.dup(wLoc.getid(node));
+  slot->f[0]    = wLoc.isfn(node);
+  slot->dir     = wLoc.isdir(node);
+
+  __fx2fn(slot, wLoc.getfx(node));
+
+
+  if( MutexOp.wait( data->lcmux ) ) {
+    MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+    MutexOp.post(data->lcmux);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+  return slot;
+}
+
+static iOSlot __getSlotByAddr(iOBiDiB inst, int lcaddr) {
+  iOBiDiBData data = Data(inst);
+  iOSlot slot = NULL;
+  if( MutexOp.wait( data->lcmux ) ) {
+    slot = (iOSlot)MapOp.first( data->lcmap);
+    while( slot != NULL ) {
+      if( slot->addr == lcaddr ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot found for %s by address %d", slot->id, lcaddr );
+        break;
+      }
+      slot = (iOSlot)MapOp.next( data->lcmap);
+    };
+    MutexOp.post(data->lcmux);
+  }
+  return slot;
+}
+
+
 static void __uid2Array(int uid, byte* b) {
   b[0] = (uid & 0x000000FF);
   b[1] = (uid & 0x0000FF00) >> 8;
@@ -534,6 +624,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     int  speed = 0;
     Boolean fn  = wLoc.isfn( node );
     Boolean dir = wLoc.isdir( node ); /* True == forwards */
+    iOSlot slot = __getSlot(inst, node);
 
     /*
      * Das MSB kodiert die Fahrtrichtung: 1 = vorwärts, 0 = rückwärts
@@ -552,23 +643,31 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       speed++;
     }
 
+    slot->f[0] = fn;
+    slot->V    = speed;
+    slot->dir  = dir;
+
     StrOp.fmtb( uidKey, "0x%08X", wLoc.getbus(node) );
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
     if( bidibnode == NULL )
       bidibnode = data->defaultbooster;
 
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d V=%d dir=%s lights=%s steps=%d",
+        addr, speed, dir?"fwd":"rev", fn?"on":"off", steps);
     if( bidibnode != NULL ) {
       msgdata[0] = addr % 256;
       msgdata[1] = addr / 256;
       msgdata[2] = (steps==128?0x03:0x02); // 128 speed steps
-      msgdata[3] = 0x01; // speed only
+      msgdata[3] = 0x03; // speed and function group 1
       msgdata[4] = (dir ? 0x00:0x80) + speed;
-      msgdata[5] = (fn?0x10:0x00);
+      msgdata[5] = (fn?0x10:0x00) + (slot->f[1]?0x01:0x00) + (slot->f[2]?0x02:0x00) + (slot->f[3]?0x04:0x00) + (slot->f[4]?0x08:0x00);
       msgdata[6] = 0;
       msgdata[7] = 0;
       msgdata[8] = 0;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d V=%d dir=%d steps=%d", addr, speed, dir, steps);
       data->subWrite((obj)inst, bidibnode->path, MSG_CS_DRIVE, msgdata, 9, bidibnode->seq++);
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no booster available");
     }
 
   }
@@ -577,11 +676,18 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int     addr = wFunCmd.getaddr( node );
     Boolean fn   = wFunCmd.isf0( node );
+    iOSlot slot = __getSlot(inst, node);
+
+    int fnchanged = wFunCmd.getfnchanged(node);
+    Boolean fnstate = __getFState(node, fnchanged);
+
+    slot->f[fnchanged] = fnstate;
 
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
     if( bidibnode == NULL )
       bidibnode = data->defaultbooster;
 
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d f[%d]=%s", addr, fnchanged, fnstate?"on":"off");
     if( bidibnode != NULL ) {
       msgdata[0] = addr % 256;
       msgdata[1] = addr / 256;
@@ -596,6 +702,9 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       msgdata[8] = (wFunCmd.isf21(node)?0x01:0x00) + (wFunCmd.isf22(node)?0x02:0x00) + (wFunCmd.isf23(node)?0x04:0x00) + (wFunCmd.isf24(node)?0x08:0x00);
       msgdata[8]+= (wFunCmd.isf25(node)?0x10:0x00) + (wFunCmd.isf26(node)?0x20:0x00) + (wFunCmd.isf27(node)?0x40:0x00) + (wFunCmd.isf28(node)?0x80:0x00);
       data->subWrite((obj)inst, bidibnode->path, MSG_CS_DRIVE, msgdata, 9, bidibnode->seq++);
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no booster available");
     }
   }
 
@@ -2167,6 +2276,8 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   data->nodemap  = MapOp.inst();
   data->localmap = MapOp.inst();
   data->swtime   = wDigInt.getswtime( ini );
+  data->lcmap    = MapOp.inst();
+  data->lcmux    = MutexOp.inst( NULL, True );
 
   data->nodepath[0] = 0;
 
