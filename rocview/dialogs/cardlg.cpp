@@ -576,7 +576,7 @@ void CarDlg::onDeleteCar( wxCommandEvent& event ){
     iONode carlist = wPlan.getcarlist( model );
     if( carlist != NULL ) {
       NodeOp.removeChild( carlist, m_Props );
-      m_Props = selectPrev();
+      m_Props = NULL;
     }
   }
 
