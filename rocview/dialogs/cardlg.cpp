@@ -324,7 +324,7 @@ void CarDlg::initIndex(){
         setSelection(wCar.getid( m_Props ));
 
       }
-      else {
+      else if(m_CarList2->GetItemCount() > 0 ) {
         TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection" );
         m_CarList2->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
         m_Props = (iONode)m_CarList2->GetItemData(0);

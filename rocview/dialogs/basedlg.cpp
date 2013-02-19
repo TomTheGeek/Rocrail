@@ -44,7 +44,19 @@ static wxString __getAddrStr(iONode Item, bool* longaddr) {
     return wxString::Format(_T("%d"), wItem.getaddr(Item));
 }
 
+
+BaseDialog::BaseDialog() {
+  m_ItemList = NULL;
+  m_Parent = NULL;
+  m_SortCol = 0;
+  m_SelectedID = NULL;
+}
+
+
 void BaseDialog::sortOnColumn( int col ) {
+  if(m_ItemList == NULL)
+    return;
+
   TraceOp.trc( "basedlg", TRCLEVEL_INFO, __LINE__, 9999,"sort on column %d", col);
   if( col != -1 ) {
     m_SortCol = col;
@@ -341,6 +353,9 @@ static int __sortMTime(obj* _a, obj* _b)
 
 
 void BaseDialog::fillIndex( iONode Items, bool sort) {
+  if(m_ItemList == NULL)
+    return;
+
   m_Items = Items;
   m_ItemList->DeleteAllItems();
   iOList sortlist = ListOp.inst();
@@ -421,6 +436,9 @@ void BaseDialog::fillIndex( iONode Items, bool sort) {
 }
 
 void BaseDialog::appendItem( iONode Item) {
+  if(m_ItemList == NULL)
+    return;
+
   int index = m_ItemList->GetItemCount();
   m_ItemList->InsertItem( index, wxString( wItem.getid(Item), wxConvUTF8));
   if( m_ShowAddr ) {
@@ -466,6 +484,9 @@ void BaseDialog::appendItem( iONode Item) {
 
 
 void BaseDialog::setIDSelection( const char* ID ) {
+  if(m_ItemList == NULL)
+    return;
+
   int size = m_ItemList->GetItemCount();
   for( int index = 0; index < size; index++ ) {
     iONode node = (iONode)m_ItemList->GetItemData(index);
@@ -479,6 +500,9 @@ void BaseDialog::setIDSelection( const char* ID ) {
 }
 
 iONode BaseDialog::setSelection( int index ) {
+  if(m_ItemList == NULL)
+    return NULL;
+
   int size = m_ItemList->GetItemCount();
   if( index < size ) {
     m_ItemList->SetItemState(index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
@@ -490,6 +514,9 @@ iONode BaseDialog::setSelection( int index ) {
 }
 
 iONode BaseDialog::selectNext() {
+  if(m_ItemList == NULL)
+    return NULL;
+
   int size = m_ItemList->GetItemCount();
   for( int index = 0; index < size; index++ ) {
     if( wxLIST_STATE_SELECTED == m_ItemList->GetItemState(index, wxLIST_STATE_SELECTED) ) {
@@ -511,6 +538,9 @@ iONode BaseDialog::selectNext() {
 }
 
 iONode BaseDialog::selectPrev() {
+  if(m_ItemList == NULL)
+    return NULL;
+
   int size = m_ItemList->GetItemCount();
   for( int index = 0; index < size; index++ ) {
     if( wxLIST_STATE_SELECTED == m_ItemList->GetItemState(index, wxLIST_STATE_SELECTED) ) {
@@ -532,6 +562,9 @@ iONode BaseDialog::selectPrev() {
 }
 
 iONode BaseDialog::getSelection(int index) {
+  if(m_ItemList == NULL)
+    return NULL;
+
   if( index != -1 ) {
     iONode node = (iONode)m_ItemList->GetItemData(index);
     m_SelectedID = wItem.getid(node);
@@ -551,6 +584,9 @@ iONode BaseDialog::getSelection(int index) {
 }
 
 int BaseDialog::findID( const char* ID ) {
+  if(m_ItemList == NULL)
+    return wxNOT_FOUND;
+
   int size = m_ItemList->GetItemCount();
   for( int index = 0; index < size; index++ ) {
     iONode node = (iONode)m_ItemList->GetItemData(index);
