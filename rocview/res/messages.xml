@@ -20583,4 +20583,10 @@
     <sr_latin txt="Dvostruko"/>
     <nl txt="Dubbel aanhalingsteken"/>
   </Msg>
+  <Msg id="assignconsist">
+    <en txt="Assign consist"/>
+  </Msg>
+  <Msg id="releaseconsist">
+    <en txt="Release consist"/>
+  </Msg>
 </Messages>

@@ -58,13 +58,13 @@
 #include "rocview/xpm/nopict.xpm"
 
 
-OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props )
+OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props, bool save )
   :operatordlggen( parent )
 {
   TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "cardlg" );
   m_TabAlign = wxGetApp().getTabAlign();
   m_Props    = p_Props;
-  m_bSave    = true;
+  m_bSave    = save;
   initLabels();
   initIndex();
 
@@ -85,6 +85,8 @@ OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props )
   m_ControlPanel->Enable(false);
   m_ConsistPanel->Enable(false);
 
+  m_StdButtonApply->Enable(m_bSave);
+
   if( m_Props != NULL ) {
     initValues();
     m_SetPage = 1;
@@ -93,6 +95,12 @@ OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props )
   wxPostEvent( m_OperatorBook, event );
 
 }
+
+
+iONode OperatorDlg::getSelected() {
+  return m_Props;
+}
+
 
 
 /* comparator for sorting by id: */
@@ -685,7 +693,7 @@ void OperatorDlg::onWayBill( wxCommandEvent& event ) {
 
 
 void OperatorDlg::onApply( wxCommandEvent& event ) {
-  if( m_Props == NULL )
+  if( m_Props == NULL || !m_bSave )
     return;
 
   evaluate();
@@ -711,9 +719,12 @@ void OperatorDlg::onCancel( wxCommandEvent& event ) {
 
 
 void OperatorDlg::onOK( wxCommandEvent& event ) {
-  if( m_bSave )
+  if( m_bSave ) {
     onApply(event);
-  //EndModal( wxID_OK );
-  Destroy();
+    Destroy();
+  }
+  else {
+    EndModal( wxID_OK );
+  }
 }
 

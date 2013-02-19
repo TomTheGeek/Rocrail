@@ -168,6 +168,8 @@
 #include "rocrail/wrapper/public/StageSection.h"
 #include "rocrail/wrapper/public/Issue.h"
 #include "rocrail/wrapper/public/Route.h"
+#include "rocrail/wrapper/public/Operator.h"
+
 
 #include "rocview/symbols/svg.h"
 #include "rocview/public/base.h"
@@ -401,6 +403,8 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU     (ME_GridLocShortID , RocGuiFrame::OnLocShortID)
     EVT_MENU     (ME_GridLocActivate, RocGuiFrame::OnLocActivate)
     EVT_MENU     (ME_GridLocDeActivate, RocGuiFrame::OnLocDeActivate)
+    EVT_MENU     (ME_GridLocAssignConsist , RocGuiFrame::OnLocAssignConsist  )
+    EVT_MENU     (ME_GridLocReleaseConsist, RocGuiFrame::OnLocReleaseConsist  )
 
     EVT_MENU( ME_F1 , RocGuiFrame::OnButton)
     EVT_MENU( ME_F2 , RocGuiFrame::OnButton)
@@ -4346,6 +4350,9 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
     else
       mi = menu.Append( ME_GridLocDeActivate, wxGetApp().getMsg("deactivate") );
     //PopupMenu(&menu, event.GetPosition().x, event.GetPosition().y );
+    menu.AppendSeparator();
+    menu.Append( ME_GridLocAssignConsist, wxGetApp().getMenu("assignconsist"), wxGetApp().getTip("assignconsist") );
+    menu.Append( ME_GridLocReleaseConsist, wxGetApp().getMenu("releaseconsist"), wxGetApp().getTip("releaseconsist") );
     PopupMenu(&menu );
   }
   else {
@@ -4394,6 +4401,33 @@ void RocGuiFrame::OnLocDeActivate(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   wLoc.setid( cmd, m_LocID );
   wLoc.setcmd( cmd, wLoc.deactivate );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+
+void RocGuiFrame::OnLocAssignConsist(wxCommandEvent& event) {
+  OperatorDlg* dlg = new OperatorDlg(this, NULL, false);
+  if( dlg->ShowModal() == wxID_OK ) {
+    iONode props = dlg->getSelected();
+    if( props != NULL ) {
+      /* Inform RocRail... */
+      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setid( cmd, m_LocID );
+      wLoc.setcmd( cmd, wLoc.assigntrain );
+      wLoc.settrain( cmd, wOperator.getid(props) );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
+  }
+}
+
+
+void RocGuiFrame::OnLocReleaseConsist(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, m_LocID );
+  wLoc.setcmd( cmd, wLoc.releasetrain );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }

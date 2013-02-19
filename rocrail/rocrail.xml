@@ -2004,6 +2004,9 @@
     <fun name="getIdent" vt="const char*">
       <param name="inst" vt="this" remark="Car instance"/>
     </fun>
+    <fun name="getLen" vt="int">
+      <param name="inst" vt="this" remark="Car instance"/>
+    </fun>
     <fun name="setLocality" vt="void">
       <param name="inst" vt="this" remark="Car instance"/>
       <param name="id" vt="const char*" remark="Locality ID"/>
@@ -2021,6 +2024,9 @@
     <fun name="modify" vt="void">
       <param name="inst" vt="this" remark="Operator instance"/>
       <param name="mod" vt="iONode" remark="Modify node"/>
+    </fun>
+    <fun name="getLen" vt="int">
+      <param name="inst" vt="this" remark="Operator instance"/>
     </fun>
     <data>
       <var name="props" vt="iONode"/>

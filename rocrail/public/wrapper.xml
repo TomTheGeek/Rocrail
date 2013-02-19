@@ -2263,6 +2263,8 @@
         <const name="shortid" vt="string" val="shortid" remark="Send the short ID to the command station."/>
         <const name="info" vt="string" val="info" remark="Ask the command station for loco info."/>
         <const name="consist" vt="string" val="consist" remark="Consist member update."/>
+        <const name="assigntrain" vt="string" val="assigntrain" remark="Assign train"/>
+        <const name="releasetrain" vt="string" val="releasetrain" remark="Release train"/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Loc command."/>
         <var name="tourid" vt="string" defval="NULL" range="*" remark="Current tour ID."/>
         <var name="scheduleid" vt="string" defval="NULL" range="*" remark="Current schedule ID."/>
@@ -2309,7 +2311,8 @@
         <var name="consist" vt="string" defval="" range="*" remark="Slave locomotives"/>
         <var name="consistcmd" vt="bool" defval="False" remark="Consist context command; Flag for preventing loops."/>
 
-        <var name="cars" vt="string" defval="" range="*" remark="Car IDs"/>
+        <var name="train" vt="string" defval="" range="*" remark="Operator consist ID"/>
+        <var name="trainlen" vt="int" defval="0" range="0-*" remark="Total train length"/>
 
         <actionctrl cardinality="n"/>
       </lc>

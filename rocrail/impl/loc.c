@@ -30,6 +30,7 @@
 #include "rocrail/public/model.h"
 #include "rocrail/public/control.h"
 #include "rocrail/public/http.h"
+#include "rocrail/public/operator.h"
 
 #include "rocint/public/lcdriverint.h"
 
@@ -1676,8 +1677,25 @@ static const char* _getEngine( iOLoc inst ) {
   return wLoc.getengine( data->props );
 }
 
+
+static void __calcTrainLen(iOLoc inst) {
+  iOLocData data = Data(inst);
+  if( wLoc.gettrain( data->props) != NULL && StrOp.len(wLoc.gettrain( data->props)) > 0 ) {
+    /* ToDo: Calculate train length. */
+    iOOperator train = ModelOp.getOperator(AppOp.getModel(), wLoc.gettrain( data->props) );
+    if( train != NULL ) {
+      wLoc.settrainlen( data->props, OperatorOp.getLen(train) + wLoc.getlen(data->props));
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] train length=%d", wLoc.getid(data->props), wLoc.gettrainlen(data->props) );
+    }
+  }
+}
+
+
 static int _getLen( iOLoc inst ) {
   iOLocData data = Data(inst);
+  __calcTrainLen(inst);
+  if( wLoc.gettrainlen( data->props ) > 0 )
+    return wLoc.gettrainlen( data->props );
   return wLoc.getlen( data->props );
 }
 
@@ -2188,6 +2206,7 @@ static void __swapConsist( iOLoc inst, iONode cmd ) {
 
 }
 
+
 static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   iOLocData data = Data(inst);
   iOControl control = AppOp.getControl(  );
@@ -2387,6 +2406,18 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       }
     }
 
+    else if( StrOp.equals( wLoc.assigntrain, cmd ) ) {
+      wLoc.settrain(data->props, wLoc.gettrain(nodeA));
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "consist [%s] assigned to loco [%s]", wLoc.gettrain(data->props), wLoc.getid( data->props ) );
+      /* Update train length. */
+      __calcTrainLen(inst);
+    }
+
+    else if( StrOp.equals( wLoc.releasetrain, cmd ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "consist [%s] released from loco [%s]", wLoc.gettrain(data->props), wLoc.getid( data->props ) );
+      wLoc.settrain(data->props, "");
+      wLoc.settrainlen(data->props, 0);
+    }
 
     if(broadcast) {
       nodeF = (iONode)NodeOp.base.clone( nodeA );
@@ -2410,6 +2441,8 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       wLoc.setmint( nodeF, wLoc.getmint(data->props) );
       wLoc.setthrottleid( nodeF, wLoc.getthrottleid(data->props) );
       wLoc.setactive( nodeF, wLoc.isactive(data->props) );
+      wLoc.settrain( nodeF, wLoc.gettrain(data->props) );
+      wLoc.settrainlen( nodeF, wLoc.gettrainlen(data->props) );
       AppOp.broadcastEvent( nodeF );
     }
 

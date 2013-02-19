@@ -25,8 +25,13 @@
 #include "rocrail/impl/operator_impl.h"
 
 #include "rocrail/public/app.h"
+#include "rocrail/public/car.h"
+#include "rocrail/public/model.h"
 
 #include "rocs/public/mem.h"
+#include "rocs/public/strtok.h"
+
+#include "rocrail/wrapper/public/Operator.h"
 
 static int instCnt = 0;
 
@@ -143,6 +148,21 @@ static void _modify( struct OOperator* inst ,iONode props ) {
     AppOp.broadcastEvent( clone );
   }
   props->base.del(props);
+}
+
+static int _getLen( struct OOperator* inst ) {
+  iOOperatorData data = Data(inst);
+  /* ToDo: Calculate consist length. */
+  int len = 0;
+  iOStrTok tok = StrTokOp.inst(wOperator.getcarids(data->props), ',');
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    iOCar car = ModelOp.getCar(AppOp.getModel(), StrTokOp.nextToken(tok) );
+    if( car != NULL ) {
+      len += CarOp.getLen(car);
+    }
+  }
+  StrTokOp.base.del(tok);
+  return len;
 }
 
 

@@ -51,7 +51,7 @@ class OperatorDlg : public operatordlggen
 
 public:
 	/** Constructor */
-	OperatorDlg( wxWindow* parent, iONode p_Props );
+	OperatorDlg( wxWindow* parent, iONode p_Props, bool save=true );
 
 	void onNewOperator( wxCommandEvent& event );
     void onDelOperator( wxCommandEvent& event );
@@ -72,6 +72,7 @@ public:
     void onOperatorList( wxCommandEvent& event );
     void onCarList( wxCommandEvent& event );
     void OnCopy( wxCommandEvent& event );
+    iONode getSelected();
 
 };
 
