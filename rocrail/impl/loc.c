@@ -573,6 +573,8 @@ static void* __event( void* inst, const void* evt ) {
         wLoc.setscheduleid(node, LocOp.getSchedule(inst, NULL));
       }
 
+      wLoc.settrain( node, wLoc.gettrain(data->props) );
+      wLoc.settrainlen( node, wLoc.gettrainlen(data->props) );
       AppOp.broadcastEvent( node );
     }
 
@@ -1525,6 +1527,8 @@ static void __runner( void* threadinst ) {
         wLoc.setscidx( broadcast, data->driver->getScheduleIdx( data->driver ) );
         wLoc.setscheduleid(broadcast, LocOp.getSchedule(loc, NULL));
       }
+      wLoc.settrain( broadcast, wLoc.gettrain(data->props) );
+      wLoc.settrainlen( broadcast, wLoc.gettrainlen(data->props) );
       AppOp.broadcastEvent( broadcast );
     }
     else {
@@ -1787,6 +1791,8 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
       wLoc.setscheduleid(node, LocOp.getSchedule(inst, NULL));
     }
 
+    wLoc.settrain( node, wLoc.gettrain(data->props) );
+    wLoc.settrainlen( node, wLoc.gettrainlen(data->props) );
     AppOp.broadcastEvent( node );
   }
 }
@@ -1821,6 +1827,8 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
     wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
     wLoc.setscheduleid(node, LocOp.getSchedule(inst, NULL));
   }
+  wLoc.settrain( node, wLoc.gettrain(data->props) );
+  wLoc.settrainlen( node, wLoc.gettrainlen(data->props) );
   AppOp.broadcastEvent( node );
 }
 
@@ -1944,7 +1952,8 @@ static void _setMode( iOLoc inst, const char* mode ) {
       wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
       wLoc.setscheduleid(node, LocOp.getSchedule(inst, NULL));
     }
-
+    wLoc.settrain( node, wLoc.gettrain(data->props) );
+    wLoc.settrainlen( node, wLoc.gettrainlen(data->props) );
     AppOp.broadcastEvent( node );
   }
 }
@@ -2484,6 +2493,8 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     wLoc.setscidx( nodeF, data->driver->getScheduleIdx( data->driver ) );
     wLoc.setscheduleid(nodeF, LocOp.getSchedule(inst, NULL));
   }
+  wLoc.settrain( nodeF, wLoc.gettrain(data->props) );
+  wLoc.settrainlen( nodeF, wLoc.gettrainlen(data->props) );
   AppOp.broadcastEvent( nodeF );
 
   return True;
@@ -2989,7 +3000,8 @@ static void _setBlockEnterSide( iOLoc loc, Boolean enterside, const char* blockI
       wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
       wLoc.setscheduleid(node, LocOp.getSchedule(loc, NULL));
     }
-
+    wLoc.settrain( node, wLoc.gettrain(data->props) );
+    wLoc.settrainlen( node, wLoc.gettrainlen(data->props) );
     AppOp.broadcastEvent( node );
   }
 }

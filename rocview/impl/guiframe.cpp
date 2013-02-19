@@ -1057,6 +1057,13 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ID, true );
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ID, wxALIGN_LEFT, wxALIGN_CENTRE );
 
+        if( wLoc.gettrain(lc) != NULL && StrOp.len(wLoc.gettrain(lc)) > 0 )
+          m_ActiveLocs->SetCellValue( i, LOC_COL_CONSIST, wxString(wLoc.gettrain( lc ),wxConvUTF8) );
+        else {
+          m_ActiveLocs->SetCellValue( i, LOC_COL_CONSIST, wxT("") );
+        }
+        m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_CONSIST, wxALIGN_LEFT, wxALIGN_CENTRE );
+
         char* val = StrOp.fmt( "%d", wLoc.getaddr( lc ) );
         m_ActiveLocs->SetCellValue(m_ActiveLocs->GetNumberRows()-1, LOC_COL_ADDR, wxString(val,wxConvUTF8) );
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ADDR, true );
@@ -1402,6 +1409,14 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
             StrOp.free( val );
           }
         }
+
+        if( wLoc.gettrain(node) != NULL && StrOp.len(wLoc.gettrain(node)) > 0 )
+          m_ActiveLocs->SetCellValue( i, LOC_COL_CONSIST, wxString(wLoc.gettrain( node ),wxConvUTF8) );
+        else {
+          m_ActiveLocs->SetCellValue( i, LOC_COL_CONSIST, wxT("") );
+        }
+
+
         StrOp.free( locid );
         break;
       }
@@ -2192,7 +2207,7 @@ void RocGuiFrame::create() {
 
   m_ActiveLocs = new wxGrid( m_ActiveLocsPanel, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
   m_ActiveLocs->SetRowLabelSize(0);
-  m_ActiveLocs->CreateGrid(1, 6, wxGrid::wxGridSelectRows);
+  m_ActiveLocs->CreateGrid(1, 7, wxGrid::wxGridSelectRows);
   //wxFont* font = new wxFont( m_ActiveLocs->GetDefaultCellFont() );
   //font->SetPointSize( (int)(font->GetPointSize() - 1 ) );
   m_ActiveLocs->SetSelectionMode(wxGrid::wxGridSelectRows);
@@ -2205,6 +2220,7 @@ void RocGuiFrame::create() {
   m_ActiveLocs->SetColLabelValue(LOC_COL_V, _("V___") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_MODE, wxGetApp().getMsg("mode") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_DESTBLOCK, wxGetApp().getMsg("destination") );
+  m_ActiveLocs->SetColLabelValue(LOC_COL_CONSIST, wxGetApp().getMsg("consist") );
   m_ActiveLocs->AutoSizeColumns();
   m_ActiveLocs->AutoSizeRows();
 
