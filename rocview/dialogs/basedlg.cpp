@@ -551,9 +551,8 @@ iONode BaseDialog::selectPrev() {
         return node;
       }
       else {
-        iONode node = (iONode)m_ItemList->GetItemData(index);
-        m_SelectedID = wItem.getid(node);
-        return node;
+        m_SelectedID = NULL;
+        return NULL;
       }
       break;
     }
