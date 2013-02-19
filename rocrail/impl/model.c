@@ -129,7 +129,7 @@
 static int instCnt = 0;
 
 
-static Boolean __removeLoco(iOModelData o, iONode item );
+static Boolean __removeLoco(iOModel data, iONode item );
 static void __initMasterLocMap(iOModel inst);
 
 
@@ -1409,7 +1409,7 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
     }
   }
   else if( StrOp.equals( wLoc.name(), name ) ) {
-    removed = __removeLoco(o, item);
+    removed = __removeLoco(inst, item);
   }
   else if( StrOp.equals( wCar.name(), name ) ) {
     iOCar car = (iOCar)MapOp.get( o->carMap, wCar.getid( item ) );
@@ -2050,16 +2050,18 @@ static void _createMap( iOModelData o, iOMap map, const char* dbKey, const char*
 
 
 
-static Boolean __removeLoco(iOModelData o, iONode item ) {
-  iOLoc lc = (iOLoc)MapOp.get( o->locMap, wLoc.getid( item ) );
+static Boolean __removeLoco(iOModel inst, iONode item ) {
+  iOModelData data = Data(inst);
+  iOLoc lc = (iOLoc)MapOp.get( data->locMap, wLoc.getid( item ) );
   if( lc != NULL ) {
     iONode props = LocOp.base.properties( lc );
     ModelOp.removeSysEventListener( AppOp.getModel(), (obj)lc );
-    MapOp.remove( o->locMap, wLoc.getid( item ) );
+    MapOp.remove( data->locMap, wLoc.getid( item ) );
     /* Remove item from list: */
-    __removeItemFromList( o, wLocList.name(), props );
+    __removeItemFromList( data, wLocList.name(), props );
     lc->base.del( lc );
     props->base.del( props );
+    __initMasterLocMap(inst);
     return True;
   }
   return False;
@@ -2093,7 +2095,7 @@ static void _removeGenerated( iOModelData o, const char* dbKey, const char* item
       if( wItem.isgenerated(item) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "removing: %s %s", NodeOp.getName(item), wItem.getid(item) );
         if(StrOp.equals( wLoc.name(), NodeOp.getName(item) ) ) {
-          __removeLoco(o, item);
+          __removeLoco(AppOp.getModel(), item);
         }
         else if(StrOp.equals( wRoute.name(), NodeOp.getName(item) ) ) {
           __removeRoute(o, item);

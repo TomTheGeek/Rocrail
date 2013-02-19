@@ -1541,6 +1541,7 @@ static void __runner( void* threadinst ) {
     tick++;
   } while( data->run && !ThreadOp.isQuit(th) );
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Runner for \"%s\" ended.", LocOp.getId( loc ) );
   data->running = False;
 }
 
