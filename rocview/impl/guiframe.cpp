@@ -2226,7 +2226,7 @@ void RocGuiFrame::create() {
   m_ActiveLocs->SetColLabelValue(LOC_COL_V, _("V___") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_MODE, wxGetApp().getMsg("mode") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_DESTBLOCK, wxGetApp().getMsg("destination") );
-  m_ActiveLocs->SetColLabelValue(LOC_COL_CONSIST, wxGetApp().getMsg("consist") );
+  m_ActiveLocs->SetColLabelValue(LOC_COL_CONSIST, wxGetApp().getMsg("train") );
   m_ActiveLocs->AutoSizeColumns();
   m_ActiveLocs->AutoSizeRows();
 
@@ -4373,8 +4373,8 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
       mi = menu.Append( ME_GridLocDeActivate, wxGetApp().getMsg("deactivate") );
     //PopupMenu(&menu, event.GetPosition().x, event.GetPosition().y );
     menu.AppendSeparator();
-    menu.Append( ME_GridLocAssignConsist, wxGetApp().getMenu("assignconsist"), wxGetApp().getTip("assignconsist") );
-    menu.Append( ME_GridLocReleaseConsist, wxGetApp().getMenu("releaseconsist"), wxGetApp().getTip("releaseconsist") );
+    menu.Append( ME_GridLocAssignConsist, wxGetApp().getMenu("assigntrain"), wxGetApp().getTip("assigntrain") );
+    menu.Append( ME_GridLocReleaseConsist, wxGetApp().getMenu("releasetrain"), wxGetApp().getTip("releasetrain") );
     PopupMenu(&menu );
   }
   else {
