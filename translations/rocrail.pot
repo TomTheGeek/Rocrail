@@ -6269,3 +6269,15 @@ msgstr ""
 msgid "Double quote"
 msgstr ""
 
+#. 
+# id="assigntrain"
+#, c-format
+msgid "Assign train"
+msgstr ""
+
+#. 
+# id="releasetrain"
+#, c-format
+msgid "Release train"
+msgstr ""
+
