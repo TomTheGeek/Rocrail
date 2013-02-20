@@ -2439,12 +2439,14 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "consist [%s] assigned to loco [%s]", wLoc.gettrain(data->props), wLoc.getid( data->props ) );
       /* Update train length. */
       __calcTrainLen(inst);
+      broadcast = True;
     }
 
     else if( StrOp.equals( wLoc.releasetrain, cmd ) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "consist [%s] released from loco [%s]", wLoc.gettrain(data->props), wLoc.getid( data->props ) );
       wLoc.settrain(data->props, "");
       wLoc.settrainlen(data->props, 0);
+      broadcast = True;
     }
 
     if(broadcast) {
