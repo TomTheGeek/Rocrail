@@ -1685,14 +1685,32 @@ static const char* _getEngine( iOLoc inst ) {
 
 static void __calcTrainLen(iOLoc inst) {
   iOLocData data = Data(inst);
+  Boolean report = False;
+
+  /* calculate train length */
   if( wLoc.gettrain( data->props) != NULL && StrOp.len(wLoc.gettrain( data->props)) > 0 ) {
-    /* ToDo: Calculate train length. */
     iOOperator train = ModelOp.getOperator(AppOp.getModel(), wLoc.gettrain( data->props) );
     if( train != NULL ) {
       wLoc.settrainlen( data->props, OperatorOp.getLen(train) + wLoc.getlen(data->props));
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] train length=%d", wLoc.getid(data->props), wLoc.gettrainlen(data->props) );
+      report = True;
     }
   }
+
+  /* add consist locos */
+  if( wLoc.getconsist(data->props) != NULL && StrOp.len(wLoc.getconsist(data->props)) > 0) {
+    iOStrTok  consist = StrTokOp.inst( wLoc.getconsist ( data->props ), ',' );
+    while( StrTokOp.hasMoreTokens( consist ) ) {
+      const char* tok = StrTokOp.nextToken( consist );
+      iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL );
+      if( consistloc != NULL ) {
+        wLoc.settrainlen( data->props, wLoc.gettrainlen(data->props) + LocOp.getLen(consistloc));
+        report = True;
+      }
+    }
+    StrTokOp.base.del( consist );
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] train length=%d", wLoc.getid(data->props), wLoc.gettrainlen(data->props) );
 }
 
 
