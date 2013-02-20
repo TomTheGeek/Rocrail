@@ -1057,8 +1057,11 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ID, true );
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ID, wxALIGN_LEFT, wxALIGN_CENTRE );
 
-        if( wLoc.gettrain(lc) != NULL && StrOp.len(wLoc.gettrain(lc)) > 0 )
-          m_ActiveLocs->SetCellValue( i, LOC_COL_CONSIST, wxString(wLoc.gettrain( lc ),wxConvUTF8) );
+        if( wLoc.gettrain(lc) != NULL && StrOp.len(wLoc.gettrain(lc)) > 0 ) {
+          char* val = StrOp.fmt( "%s(%d)", wLoc.gettrain( lc ), wLoc.gettrainlen( lc ) );
+          m_ActiveLocs->SetCellValue( i, LOC_COL_CONSIST, wxString(val,wxConvUTF8) );
+          StrOp.free( val );
+        }
         else {
           m_ActiveLocs->SetCellValue( i, LOC_COL_CONSIST, wxT("") );
         }
@@ -1410,8 +1413,11 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
           }
         }
 
-        if( wLoc.gettrain(node) != NULL && StrOp.len(wLoc.gettrain(node)) > 0 )
-          m_ActiveLocs->SetCellValue( i, LOC_COL_CONSIST, wxString(wLoc.gettrain( node ),wxConvUTF8) );
+        if( wLoc.gettrain(node) != NULL && StrOp.len(wLoc.gettrain(node)) > 0 ) {
+          val = StrOp.fmt( "%s(%d)", wLoc.gettrain( node ), wLoc.gettrainlen( node ) );
+          m_ActiveLocs->SetCellValue( i, LOC_COL_CONSIST, wxString(val,wxConvUTF8) );
+          StrOp.free( val );
+        }
         else {
           m_ActiveLocs->SetCellValue( i, LOC_COL_CONSIST, wxT("") );
         }
