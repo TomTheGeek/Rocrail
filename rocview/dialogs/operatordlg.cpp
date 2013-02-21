@@ -522,6 +522,7 @@ void OperatorDlg::onLocoImage( wxCommandEvent& event ) {
         /* Notify Notebook. */
       }
       dlg->Destroy();
+      Raise();
     }
   }
 }
@@ -622,12 +623,13 @@ void OperatorDlg::onAddCar( wxCommandEvent& event ) {
     iONode car = dlg->getSelectedCar();
     if( car != NULL ) {
       const char* id = wCar.getid( car );
+      TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "adding car [%s]", id );
       m_CarList->Append( wxString(id,wxConvUTF8) + wxString(_T(": ")) + wxString(wCar.getwaybills(car), wxConvUTF8), car );
       evaluate();
     }
   }
   dlg->Destroy();
-
+  Raise();
 }
 
 
@@ -654,6 +656,7 @@ void OperatorDlg::onCarCard( wxCommandEvent& event ) {
         /* Notify Notebook. */
       }
       dlg->Destroy();
+      Raise();
     }
   }
 }
@@ -686,6 +689,7 @@ void OperatorDlg::onWayBill( wxCommandEvent& event ) {
         }
       }
       dlg->Destroy();
+      Raise();
     }
   }
 
