@@ -140,6 +140,8 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
 
   if( wCar.getaddr(data->props) > 0 ) {
     if( StrOp.equals(wFunCmd.name(), nodename) ) {
+      if( wCar.getiid(data->props) != NULL )
+        wCar.setiid( nodeA, wCar.getiid(data->props) );
       wCar.setaddr( nodeA, wCar.getaddr(data->props) );
       wCar.setprot( nodeA, wCar.getprot( data->props ) );
       wCar.setprotver( nodeA, wCar.getprotver( data->props ) );
