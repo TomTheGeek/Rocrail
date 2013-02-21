@@ -169,9 +169,9 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
     for( i = 0; i < size; i++ ) {
       const char* arrLoco = (const char*)ListOp.get( data->arriveList, i );
       if( arrLoco != NULL ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list %d", arrLoco, i, size );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list of %d", arrLoco, i, size );
         if( StrOp.equals( LocoId, arrLoco ) ) {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list %d", LocoId, i, size );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list of %d", LocoId, i, size );
 
           if( ListOp.size(data->arriveList) >= data->minocc ) {
             if( data->fifo && i == 0 ) {
