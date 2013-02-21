@@ -51,6 +51,7 @@
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/Car.h"
+#include "rocrail/wrapper/public/Operator.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -368,6 +369,7 @@ void TimedActions::initOutputList() {
   if( model != NULL ) {
     iONode colist = wPlan.getcolist( model );
     iONode carlist = NULL;
+    iONode operatorlist = NULL;
 
     // "co,ext,sw,st,sys,sg,bk,lc,fn"
     int typenr = m_Type->GetSelection();
@@ -383,6 +385,7 @@ void TimedActions::initOutputList() {
       case 8:
         colist = wPlan.getlclist( model );
         carlist = wPlan.getcarlist( model );
+        operatorlist = wPlan.getoperatorlist( model );
         break;
       case 9: colist = wPlan.getttlist( model ); break;
       case 10: colist = wPlan.getseltablist( model ); break;
@@ -408,6 +411,17 @@ void TimedActions::initOutputList() {
         for( int i = 0; i < cnt; i++ ) {
           iONode car = NodeOp.getChild( carlist, i );
           const char* id = wCar.getid( car );
+          if( id != NULL ) {
+            ListOp.add(list, (obj)id);
+          }
+        }
+      }
+
+      if( operatorlist != NULL ) {
+        int cnt = NodeOp.getChildCnt( operatorlist );
+        for( int i = 0; i < cnt; i++ ) {
+          iONode opr = NodeOp.getChild( operatorlist, i );
+          const char* id = wOperator.getid( opr );
           if( id != NULL ) {
             ListOp.add(list, (obj)id);
           }

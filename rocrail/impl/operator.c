@@ -82,7 +82,8 @@ static void* __properties( void* inst ) {
 }
 
 static const char* __id( void* inst ) {
-  return NULL;
+  iOOperatorData data = Data((iOOperator)inst);
+  return wOperator.getid(data->props);
 }
 
 static void* __event( void* inst, const void* evt ) {
@@ -127,6 +128,29 @@ static struct OOperator* _inst( iONode ini ) {
 
   instCnt++;
   return __Operator;
+}
+
+
+static Boolean _cmd( iOOperator inst, iONode nodeA ) {
+  iOOperatorData data = Data(inst);
+  iOStrTok tok = StrTokOp.inst(wOperator.getcarids(data->props), ',');
+
+  const char* nodename = NodeOp.getName( nodeA );
+  const char* cmd      = wOperator.getcmd( nodeA );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command %s:%s for operator %s",
+      nodename, (cmd==NULL?"-":cmd), wOperator.getid(data->props) );
+
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    iOCar car = ModelOp.getCar(AppOp.getModel(), StrTokOp.nextToken(tok) );
+    if( car != NULL ) {
+      CarOp.cmd(car, (iONode)NodeOp.base.clone(nodeA));
+    }
+  }
+  StrTokOp.base.del(tok);
+
+  nodeA->base.del(nodeA);
+  return True;
 }
 
 

@@ -2323,6 +2323,7 @@
         <var name="id" vt="string" defval="" range="*" required="true"/>
         <var name="lcid" vt="string" defval="" range="*" required="true"/>
         <var name="carids" vt="string" defval="" range="*" remark="Comma separated car IDs"/>
+        <var name="cmd" vt="string" defval="NULL" range="*" remark="Operator command."/>
       </operator>
     </operatorlist>
 

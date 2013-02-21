@@ -63,6 +63,7 @@
 static int instCnt = 0;
 static void __doFunction(iOActionData data, iOLoc lc, Boolean fon, int fnaction);
 static void __doCarFunction(iOActionData data, iOCar car, Boolean fon, int fnaction);
+static void __setFunctionCmd(iOActionData data, iONode cmd, Boolean fon, int fnaction);
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -905,6 +906,18 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         Boolean fon = StrOp.equals( "on", wAction.getcmd( data->action ) );
         int fnaction = atoi(wAction.getparam(data->action));
         __doCarFunction(data, car, fon, fnaction);
+      }
+      else {
+        iOOperator opr = ModelOp.getOperator( model, wAction.getoid( data->action ));
+        if( opr != NULL ) {
+          Boolean fon = StrOp.equals( "on", wAction.getcmd( data->action ) );
+          int fnaction = atoi(wAction.getparam(data->action));
+          iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operator function [%d] activated", fnaction );
+          wFunCmd.setid( cmd, wAction.getid( data->action ) );
+          __setFunctionCmd(data, cmd, fon, fnaction);
+          OperatorOp.cmd( opr, cmd);
+        }
       }
     }
   }
