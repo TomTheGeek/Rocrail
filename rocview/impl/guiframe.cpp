@@ -1456,6 +1456,8 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       }
 
       if(block != NULL ) {
+        if( wBlock.getcmd(node) != NULL )
+          wBlock.setcmd(block, wBlock.getcmd(node));
         if( m_ModPanel != NULL) {
           m_ModPanel->modelEvent( block );
         }

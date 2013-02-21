@@ -2771,13 +2771,19 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
             // adjust destination block enterside on update
             if( (occupied == 1 || occupied == 3) && StrOp.equals( wBlock.getid( m_Props ), wLoc.getdestblockid(loc) ) ) {
               m_RotateSym = wLoc.isblockenterside( loc);
-              TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "locoid=[%s] enterside=[%d]", locoid, m_RotateSym );
+              TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "(update) locoid=[%s] enterside=[%c]", locoid, m_RotateSym?'+':'-' );
+            }
+
+            // loco is set manually in this block
+            if( wBlock.getcmd(node) != NULL && StrOp.equals(wBlock.loc, wBlock.getcmd(node) ) ) {
+              m_RotateSym = wLoc.isblockenterside( loc);
+              TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "(set) locoid=[%s] enterside=[%c]", locoid, m_RotateSym?'+':'-' );
             }
 
             // adjust source block enterside onreate
             if( oncreate && StrOp.equals( wBlock.getid( m_Props ), wLoc.getblockid(loc) ) ) {
               m_RotateSym = wLoc.isblockenterside( loc);
-              TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "locoid=[%s] enterside=[%d]", locoid, m_RotateSym );
+              TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "(oncreate) locoid=[%s] enterside=[%c]", locoid, m_RotateSym?'+':'-' );
             }
           }
         }

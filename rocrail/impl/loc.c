@@ -3087,12 +3087,13 @@ static iOLoc _inst( iONode props ) {
 
   /*data->driver = (iILcDriverInt)LcDriverOp.inst( loc );*/
   if( wLoc.isshow(data->props) && __loadDriver( loc ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] enterside=[%c]", wLoc.getid(props), wLoc.isblockenterside(props)?'+':'-');
     data->runner = ThreadOp.inst( _getId(loc), &__runner, loc );
     data->run = True;
     ThreadOp.start( data->runner );
   }
   else if(!wLoc.isshow(data->props)) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] is invisible; no runner started", wLoc.getid(props));
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s][%d] is invisible; no runner started", wLoc.getid(props), wLoc.isblockenterside(props));
   }
 
   instCnt++;

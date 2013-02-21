@@ -2105,6 +2105,7 @@ static void _init( iIBlockBase inst ) {
 static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   iOBlockData data = Data(inst);
   iOModel model = AppOp.getModel(  );
+  Boolean occUpdate = False;
 
   /* Cmds: lcid="" state="" */
   const char* locid = wBlock.getlocid( nodeA );
@@ -2140,8 +2141,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     data->acceptident = False;
 
     ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, locid, False, 0, 0, NULL );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "%s locid=%s", NodeOp.getStr( data->props, "id", "" ), locid );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"block %s set locid=%s", wBlock.getid(data->props), locid );
+    occUpdate = True;
   }
 
   if( locid == NULL || StrOp.len(locid) == 0 ) {
@@ -2175,6 +2176,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   wBlock.setid(nodeA, data->id );
   wBlock.setacceptident(nodeA, data->acceptident );
   wBlock.setstate( nodeA, wBlock.getstate( data->props ) );
+  if( occUpdate )
+    wBlock.setcmd(nodeA, wBlock.loc);
   AppOp.broadcastEvent( nodeA );
 
   return True;
