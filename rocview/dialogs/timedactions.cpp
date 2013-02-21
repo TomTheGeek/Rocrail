@@ -50,6 +50,7 @@
 #include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/Car.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -366,6 +367,7 @@ void TimedActions::initOutputList() {
 
   if( model != NULL ) {
     iONode colist = wPlan.getcolist( model );
+    iONode carlist = NULL;
 
     // "co,ext,sw,st,sys,sg,bk,lc,fn"
     int typenr = m_Type->GetSelection();
@@ -378,7 +380,10 @@ void TimedActions::initOutputList() {
       case 5: colist = wPlan.getsglist( model ); break;
       case 6: colist = wPlan.getbklist( model ); break;
       case 7: colist = wPlan.getlclist( model ); break;
-      case 8: colist = wPlan.getlclist( model ); break;
+      case 8:
+        colist = wPlan.getlclist( model );
+        carlist = wPlan.getcarlist( model );
+        break;
       case 9: colist = wPlan.getttlist( model ); break;
       case 10: colist = wPlan.getseltablist( model ); break;
       case 11: colist = wPlan.gettxlist( model ); break;
@@ -397,6 +402,18 @@ void TimedActions::initOutputList() {
           ListOp.add(list, (obj)id);
         }
       }
+
+      if( carlist != NULL ) {
+        int cnt = NodeOp.getChildCnt( carlist );
+        for( int i = 0; i < cnt; i++ ) {
+          iONode car = NodeOp.getChild( carlist, i );
+          const char* id = wCar.getid( car );
+          if( id != NULL ) {
+            ListOp.add(list, (obj)id);
+          }
+        }
+      }
+
       ListOp.sort(list, &__sortStr);
       cnt = ListOp.size( list );
       for( int i = 0; i < cnt; i++ ) {

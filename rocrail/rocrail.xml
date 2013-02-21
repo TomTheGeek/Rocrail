@@ -1993,6 +1993,10 @@
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Car node"/>
     </fun>
+    <fun name="cmd" vt="Boolean">
+      <param name="inst" vt="this" remark="Car instance"/>
+      <param name="cmd" vt="iONode" remark="Command node"/>
+    </fun>
     <fun name="modify" vt="void">
       <param name="inst" vt="this" remark="Car instance"/>
       <param name="mod" vt="iONode" remark="Modify node"/>

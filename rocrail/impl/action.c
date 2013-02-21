@@ -31,6 +31,7 @@
 #include "rocrail/public/text.h"
 #include "rocrail/public/loc.h"
 #include "rocrail/public/fback.h"
+#include "rocrail/public/car.h"
 
 #include "rocs/public/system.h"
 #include "rocs/public/mem.h"
@@ -61,6 +62,7 @@
 
 static int instCnt = 0;
 static void __doFunction(iOActionData data, iOLoc lc, Boolean fon, int fnaction);
+static void __doCarFunction(iOActionData data, iOCar car, Boolean fon, int fnaction);
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -897,17 +899,20 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       }
 
     }
+    else {
+      iOCar car = ModelOp.getCar( model, wAction.getoid( data->action ));
+      if( car != NULL ) {
+        Boolean fon = StrOp.equals( "on", wAction.getcmd( data->action ) );
+        int fnaction = atoi(wAction.getparam(data->action));
+        __doCarFunction(data, car, fon, fnaction);
+      }
+    }
   }
 
 }
 
 
-static void __doFunction(iOActionData data, iOLoc lc, Boolean fon, int fnaction) {
-  iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function [%d] activated", fnaction );
-  wFunCmd.setid( cmd, wAction.getid( data->action ) );
-  LocOp.getFunctionStatus(lc, cmd);
-
+static void __setFunctionCmd(iOActionData data, iONode cmd, Boolean fon, int fnaction) {
   if( StrOp.equals( wOutput.flip, wAction.getcmd( data->action ) ) ) {
     wFunCmd.setf0 ( cmd, fnaction== 0?!wFunCmd.isf0 ( cmd ):wFunCmd.isf0 ( cmd ) );
     wFunCmd.setf1 ( cmd, fnaction== 1?!wFunCmd.isf1 ( cmd ):wFunCmd.isf1 ( cmd ) );
@@ -973,10 +978,31 @@ static void __doFunction(iOActionData data, iOLoc lc, Boolean fon, int fnaction)
   wFunCmd.setfnchanged( cmd, fnaction );
   wFunCmd.settimedfn( cmd, fon?fnaction:-1 );
   wFunCmd.setgroup( cmd, fnaction/4 + ((fnaction%4 > 0) ? 1:0) );
-  wLoc.setfn( cmd, wFunCmd.isf0 ( cmd) );
-
   if( fon )
     wFunCmd.settimer( cmd, wAction.getactiontime(data->action) );
+}
+
+
+static void __doCarFunction(iOActionData data, iOCar car, Boolean fon, int fnaction) {
+  iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "car function [%d] activated", fnaction );
+  wFunCmd.setid( cmd, wAction.getid( data->action ) );
+
+  __setFunctionCmd(data, cmd, fon, fnaction);
+
+  CarOp.cmd( car, cmd);
+}
+
+
+static void __doFunction(iOActionData data, iOLoc lc, Boolean fon, int fnaction) {
+  iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function [%d] activated", fnaction );
+  wFunCmd.setid( cmd, wAction.getid( data->action ) );
+  LocOp.getFunctionStatus(lc, cmd);
+
+  __setFunctionCmd(data, cmd, fon, fnaction);
+
+  wLoc.setfn( cmd, wFunCmd.isf0 ( cmd) );
   LocOp.cmd( lc, cmd);
 
 }

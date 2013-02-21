@@ -32,6 +32,7 @@
 #include "rocview/public/guiapp.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Plan.h"
+#include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/CarList.h"
@@ -187,6 +188,14 @@ void CarDlg::initLabels() {
   m_labLength->SetLabel( wxGetApp().getMsg( "length" ) );
   m_labManuId->SetLabel( wxGetApp().getMsg( "manufactured_ID" ) );
   m_labRemark->SetLabel( wxGetApp().getMsg( "remark" ) );
+
+  // Interface
+  m_labBus->SetLabel( wxGetApp().getMsg( "bus" ) );
+  m_labAddr->SetLabel( wxGetApp().getMsg( "address" ) );
+  m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
+  m_labProtocol->SetLabel( wxGetApp().getMsg( "protocol" ) );
+  m_labProtVersion->SetLabel( wxGetApp().getMsg( "protocol_version" ) );
+
 
   // Buttons
   m_stdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -431,6 +440,23 @@ void CarDlg::initValues() {
   m_ManuId->SetValue( wxString(wCar.getmanuid( m_Props ),wxConvUTF8) );
   m_Remark->SetValue( wxString(wCar.getremark( m_Props ),wxConvUTF8) );
 
+  // Init Interface
+  char* str = StrOp.fmt( "%d", wCar.getbus( m_Props ) );
+  m_Bus->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
+  m_Addr->SetValue( wCar.getaddr( m_Props ) );
+  m_IID->SetValue( wxString(wCar.getiid( m_Props ),wxConvUTF8) );
+
+  if( StrOp.equals( wLoc.prot_P, wCar.getprot( m_Props ) ) )
+    m_Protocol->SetSelection( 0 );
+  else if( StrOp.equals( wLoc.prot_M, wCar.getprot( m_Props ) ) )
+    m_Protocol->SetSelection( 1 );
+  else if( StrOp.equals( wLoc.prot_N, wCar.getprot( m_Props ) ) )
+    m_Protocol->SetSelection( 2 );
+  else if( StrOp.equals( wLoc.prot_L, wCar.getprot( m_Props ) ) )
+    m_Protocol->SetSelection( 3 );
+
+  str = StrOp.fmt( "%d", wCar.getprotver( m_Props ) );
+  m_ProtVersion->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
 }
 
 
@@ -478,6 +504,24 @@ bool CarDlg::evaluate(){
   wCar.setlen( m_Props, m_Length->GetValue() );
   wCar.setmanuid( m_Props, m_ManuId->GetValue().mb_str(wxConvUTF8) );
   wCar.setremark( m_Props, m_Remark->GetValue().mb_str(wxConvUTF8) );
+
+  // evaluate Interface
+  int val = atoi( m_Bus->GetValue().mb_str(wxConvUTF8) );
+  wCar.setbus( m_Props, val );
+  wCar.setaddr( m_Props, m_Addr->GetValue() );
+  wCar.setiid( m_Props, m_IID->GetValue().mb_str(wxConvUTF8) );
+
+  if( m_Protocol->GetSelection() == 0 )
+    wCar.setprot( m_Props, wLoc.prot_P );
+  else if( m_Protocol->GetSelection() == 1 )
+    wCar.setprot( m_Props, wLoc.prot_M );
+  else if( m_Protocol->GetSelection() == 2 )
+    wCar.setprot( m_Props, wLoc.prot_N );
+  else if( m_Protocol->GetSelection() == 3 )
+    wCar.setprot( m_Props, wLoc.prot_L );
+
+  val = atoi( m_ProtVersion->GetValue().mb_str(wxConvUTF8) );
+  wCar.setprotver( m_Props, val );
 
   return true;
 }

@@ -2370,6 +2370,12 @@
         <const name="status_loaded" vt="string" val="loaded"/>
         <const name="status_maintenance" vt="string" val="maintenance"/>
         <var name="status" vt="string" defval="" range="*" remark="Car status."/>
+        <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID."/>
+        <var name="bus" vt="int" defval="0" range="0-*" required="false"/>
+        <var name="addr" vt="int" defval="0" range="0-*" required="false" remark="Digital address."/>
+        <var name="prot" vt="string" defval="P" range="P,M,N,A,C"/>
+        <var name="protver" vt="int" defval="1" range="*" remark="Protocol version"/>
+        <var name="cmd" vt="string" defval="NULL" range="*" remark="Car command."/>
       </car>
     </carlist>
     <waybilllist cardinality="1" remark="Waybill table" wrappername="WaybillList">

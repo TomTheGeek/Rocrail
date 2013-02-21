@@ -28,6 +28,7 @@
 #include "rocs/public/mem.h"
 
 #include "rocrail/wrapper/public/Car.h"
+#include "rocrail/wrapper/public/FunCmd.h"
 
 static int instCnt = 0;
 
@@ -124,6 +125,29 @@ static struct OCar* _inst( iONode ini ) {
 
   instCnt++;
   return __Car;
+}
+
+
+static Boolean _cmd( iOCar inst, iONode nodeA ) {
+  iOCarData data = Data(inst);
+  iOControl control = AppOp.getControl();
+
+  const char* nodename = NodeOp.getName( nodeA );
+  const char* cmd      = wCar.getcmd( nodeA );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command %s:%s for car %s",
+      nodename, (cmd==NULL?"-":cmd), wCar.getid( data->props ) );
+
+  if( wCar.getaddr(data->props) > 0 ) {
+    if( StrOp.equals(wFunCmd.name(), nodename) ) {
+      wCar.setaddr( nodeA, wCar.getaddr(data->props) );
+      wCar.setprot( nodeA, wCar.getprot( data->props ) );
+      wCar.setprotver( nodeA, wCar.getprotver( data->props ) );
+      ControlOp.cmd( control, nodeA, NULL );
+    }
+  }
+
+  return True;
 }
 
 
