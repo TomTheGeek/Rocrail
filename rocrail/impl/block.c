@@ -2145,7 +2145,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     else if(StrOp.len(locid) > 0) {
       /* arrive in location */
       if( location != NULL ) {
-        LocationOp.locoDidArrive(location, data->locId);
+        LocationOp.locoDidArrive(location, locid);
       }
     }
 
