@@ -2161,6 +2161,18 @@ static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent ) {
     return;
   }
 
+  /* check train and send a copy of the nodeA */
+  if( nodeA != NULL && StrOp.len( wLoc.gettrain(data->props) ) > 0 ) {
+    iOOperator opr = ModelOp.getOperator( AppOp.getModel(), wLoc.gettrain(data->props) );
+    if( opr != NULL ) {
+      if( StrOp.equals(wLoc.name(), NodeOp.getName(nodeA) ) ) {
+        iONode consistcmd = (iONode)NodeOp.base.clone( nodeA );
+        wLoc.setconsistcmd( consistcmd, True );
+        OperatorOp.cmd(opr, (iONode)NodeOp.base.clone( consistcmd ));
+      }
+    }
+  }
+
   /* check consist and send a copy of the nodeA */
   if( nodeA != NULL && StrOp.len( wLoc.getconsist(data->props) ) > 0 ) {
     iOStrTok  consist = StrTokOp.inst( wLoc.getconsist ( data->props ), ',' );

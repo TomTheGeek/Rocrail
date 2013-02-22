@@ -30,6 +30,7 @@
 #include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/FunDef.h"
+#include "rocrail/wrapper/public/Loc.h"
 
 static int instCnt = 0;
 
@@ -172,7 +173,42 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
       nodename, (cmd==NULL?"-":cmd), wCar.getid( data->props ) );
 
   if( wCar.getaddr(data->props) > 0 ) {
-    if( StrOp.equals(wFunCmd.name(), nodename) ) {
+    if( StrOp.equals(wLoc.name(), nodename ) ) {
+      Boolean dir = wCar.isinvdir(data->props) ? !wLoc.isdir(nodeA):wLoc.isdir(nodeA);
+      Boolean lights = wLoc.isfn(nodeA);
+
+      if( wCar.isusedir(data->props) ) {
+        wLoc.setdir( nodeA, dir );
+        if( wCar.getiid(data->props) != NULL )
+          wCar.setiid( nodeA, wCar.getiid(data->props) );
+        wCar.setaddr( nodeA, wCar.getaddr(data->props) );
+        wCar.setprot( nodeA, wCar.getprot( data->props ) );
+        wCar.setprotver( nodeA, wCar.getprotver( data->props ) );
+        ControlOp.cmd( control, (iONode)NodeOp.base.clone(nodeA), NULL );
+      }
+
+      if( wCar.isuselights(data->props) ) {
+        char fattr[32] = {'\0'};
+        StrOp.fmtb(fattr, "f%d", wCar.getfnlights(data->props));
+        NodeOp.setName(nodeA, wFunCmd.name());
+
+        /* use mapped function */
+        wFunCmd.setfnchanged(nodeA, wCar.getfnlights(data->props));
+        NodeOp.setBool(nodeA, fattr, lights);
+
+        wFunCmd.setf0(nodeA, lights); /**/
+        wLoc.setdir( nodeA, dir );
+        if( wCar.getiid(data->props) != NULL )
+          wCar.setiid( nodeA, wCar.getiid(data->props) );
+        wCar.setaddr( nodeA, wCar.getaddr(data->props) );
+        wCar.setprot( nodeA, wCar.getprot( data->props ) );
+        wCar.setprotver( nodeA, wCar.getprotver( data->props ) );
+        ControlOp.cmd( control, (iONode)NodeOp.base.clone(nodeA), NULL );
+      }
+
+      NodeOp.base.del(nodeA);
+    }
+    else if( StrOp.equals(wFunCmd.name(), nodename) ) {
       int mappedfn = 0;
       int decaddr = __getFnAddr(inst, wFunCmd.getfnchanged(nodeA), &mappedfn );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -195,6 +231,9 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
       wCar.setprot( nodeA, wCar.getprot( data->props ) );
       wCar.setprotver( nodeA, wCar.getprotver( data->props ) );
       ControlOp.cmd( control, nodeA, NULL );
+    }
+    else {
+      NodeOp.base.del(nodeA);
     }
   }
 
