@@ -2378,6 +2378,10 @@
         <var name="addr" vt="int" defval="0" range="0-*" required="false" remark="Digital address."/>
         <var name="prot" vt="string" defval="P" range="P,M,N,A,C"/>
         <var name="protver" vt="int" defval="1" range="*" remark="Protocol version"/>
+        <var name="usedir" vt="bool" defval="False" remark="Decoder can process direction command."/>
+        <var name="invdir" vt="bool" defval="False" remark="Invert direction command."/>
+        <var name="uselights" vt="bool" defval="False" remark="Decoder can process direction command."/>
+        <var name="fnlights" vt="int" defval="0" range="0-*" remark="Lights function number."/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Car command."/>
         <fundef cardinality="n"/>
       </car>

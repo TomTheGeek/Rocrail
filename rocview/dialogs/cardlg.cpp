@@ -199,6 +199,10 @@ void CarDlg::initLabels() {
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_labProtocol->SetLabel( wxGetApp().getMsg( "protocol" ) );
   m_labProtVersion->SetLabel( wxGetApp().getMsg( "protocol_version" ) );
+  m_IntOptions->GetStaticBox()->SetLabel( wxGetApp().getMsg( "options" ) );
+  m_UseDir->SetLabel( wxGetApp().getMsg( "direction" ) );
+  m_InvDir->SetLabel( wxGetApp().getMsg( "invert" ) );
+  m_UseLights->SetLabel( wxGetApp().getMsg( "lights" ) );
 
   // Functions
   m_labFDesc->SetLabel( wxGetApp().getMsg( "description" ) );
@@ -468,6 +472,11 @@ void CarDlg::initValues() {
   str = StrOp.fmt( "%d", wCar.getprotver( m_Props ) );
   m_ProtVersion->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
 
+  m_UseDir->SetValue( wCar.isusedir(m_Props)?true:false );
+  m_InvDir->SetValue( wCar.isinvdir(m_Props)?true:false );
+  m_UseLights->SetValue( wCar.isuselights(m_Props)?true:false );
+  m_FnLights->SetValue( wCar.getfnlights(m_Props) );
+
   initFunctions();
 }
 
@@ -534,6 +543,11 @@ bool CarDlg::evaluate(){
 
   val = atoi( m_ProtVersion->GetValue().mb_str(wxConvUTF8) );
   wCar.setprotver( m_Props, val );
+
+  wCar.setusedir(m_Props, m_UseDir->IsChecked()?True:False );
+  wCar.setinvdir(m_Props, m_InvDir->IsChecked()?True:False );
+  wCar.setuselights(m_Props, m_UseLights->IsChecked()?True:False );
+  wCar.setfnlights(m_Props, m_FnLights->GetValue() );
 
   evaluateFunctions();
 
