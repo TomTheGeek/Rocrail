@@ -1231,6 +1231,26 @@
     </actioncond>
   </actionctrl>
 
+  <fundef wrappername="FunDef">
+    <var name="fn" vt="int" defval="1" range="1-*" remark="function number"/>
+    <var name="timer" vt="int" defval="0" range="0-99" unit="s" remark="function timer"/>
+    <var name="text" vt="string" defval="function" range="*" remark="function label"/>
+    <var name="sound" vt="string" defval="" range="*" remark="sound file"/>
+    <var name="icon" vt="string" defval="" range="*" remark="icon file"/>
+    <var name="on" vt="bool" defval="false" remark="activation"/>
+    <var name="onevent" vt="string" defval="enter_block" range="enter_block,exit_block,in_block,out_block" remark="Activation event."/>
+    <var name="onblockid" vt="string" defval="NULL" range="*" remark="BlockID."/>
+    <var name="offevent" vt="string" defval="in_block" range="enter_block,exit_block,in_block,out_block" remark="Deactivation event."/>
+    <var name="offblockid" vt="string" defval="NULL" range="*" remark="BlockID."/>
+    <var name="addr" vt="int" defval="0" range="0-*" remark="Function decoder address."/>
+    <var name="mappedfn" vt="int" defval="0" range="0-*" remark="Mapped function number in case of other address then main decodcer."/>
+    <const name="enter_block" vt="string" val="enter_block"/>
+    <const name="in_block" vt="string" val="in_block"/>
+    <const name="exit_block" vt="string" val="exit_block"/>
+    <const name="run" vt="string" val="run"/>
+    <const name="stall" vt="string" val="stall"/>
+  </fundef>
+
   <plan structname="RRP" wrappername="Plan" remark="Root node of the planfile.">
     <var name="title" vt="string" defval="New Plan" range="*" remark="Title of plan."/>
     <var name="name" vt="string" defval="plan.xml" range="*" remark="Filename of plan."/>
@@ -2199,25 +2219,7 @@
         <var name="restorespeed" vt="bool" defval="false" remark="Restore speed from previouse session."/>
 
         <var name="fncnt" vt="int" defval="4" range="0-*" remark="number of decoder funktions"/>
-        <fundef cardinality="n" wrappername="FunDef">
-          <var name="fn" vt="int" defval="1" range="1-*" remark="function number"/>
-          <var name="timer" vt="int" defval="0" range="0-99" unit="s" remark="function timer"/>
-          <var name="text" vt="string" defval="function" range="*" remark="function label"/>
-          <var name="sound" vt="string" defval="" range="*" remark="sound file"/>
-          <var name="icon" vt="string" defval="" range="*" remark="icon file"/>
-          <var name="on" vt="bool" defval="false" remark="activation"/>
-          <var name="onevent" vt="string" defval="enter_block" range="enter_block,exit_block,in_block,out_block" remark="Activation event."/>
-          <var name="onblockid" vt="string" defval="NULL" range="*" remark="BlockID."/>
-          <var name="offevent" vt="string" defval="in_block" range="enter_block,exit_block,in_block,out_block" remark="Deactivation event."/>
-          <var name="offblockid" vt="string" defval="NULL" range="*" remark="BlockID."/>
-          <var name="addr" vt="int" defval="0" range="0-*" remark="Function decoder address."/>
-          <var name="mappedfn" vt="int" defval="0" range="0-*" remark="Mapped function number in case of other address then main decodcer."/>
-          <const name="enter_block" vt="string" val="enter_block"/>
-          <const name="in_block" vt="string" val="in_block"/>
-          <const name="exit_block" vt="string" val="exit_block"/>
-          <const name="run" vt="string" val="run"/>
-          <const name="stall" vt="string" val="stall"/>
-        </fundef>
+        <fundef cardinality="n"/>
 
         <const name="cargo_all" vt="string" val="all"/>
         <const name="cargo_lightgoods" vt="string" val="lightgoods"/>
@@ -2377,6 +2379,7 @@
         <var name="prot" vt="string" defval="P" range="P,M,N,A,C"/>
         <var name="protver" vt="int" defval="1" range="*" remark="Protocol version"/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Car command."/>
+        <fundef cardinality="n"/>
       </car>
     </carlist>
     <waybilllist cardinality="1" remark="Waybill table" wrappername="WaybillList">

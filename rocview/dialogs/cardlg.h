@@ -42,6 +42,7 @@ class CarDlg : public cardlggen, public BaseDialog
   int    m_TabAlign;
   int    m_SetPage;
   int    m_SortCol;
+  int    m_FGroup;
 
   void initLabels();
   bool evaluate();
@@ -51,6 +52,8 @@ class CarDlg : public cardlggen, public BaseDialog
   void initLocationCombo();
   int findID( const char* ID );
   void setSelection(const char* ID);
+  void initFunctions();
+  void evaluateFunctions();
 
 public:
 	/** Constructor */
@@ -70,6 +73,7 @@ public:
   void OnCopy( wxCommandEvent& event );
   void onDoc( wxCommandEvent& event );
   void onListColClick( wxListEvent& event );
+  void onFG( wxCommandEvent& event );
 
 };
 

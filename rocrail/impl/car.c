@@ -29,6 +29,7 @@
 
 #include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/FunCmd.h"
+#include "rocrail/wrapper/public/FunDef.h"
 
 static int instCnt = 0;
 
@@ -127,6 +128,38 @@ static struct OCar* _inst( iONode ini ) {
   return __Car;
 }
 
+static int __getFnAddr( iOCar inst, int function, int* mappedfn) {
+  iOCarData    data = Data(inst);
+
+  iONode fundef = wCar.getfundef( data->props );
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "looking up function %d...", function );
+
+
+  while( fundef != NULL ) {
+    if( wFunDef.getfn(fundef) == function ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "function address for %d = %d:%d", function, wFunDef.getaddr(fundef), wFunDef.getmappedfn(fundef) );
+      if( mappedfn != NULL ) {
+        if( wFunDef.getmappedfn(fundef) > 0 ) {
+          *mappedfn = wFunDef.getmappedfn(fundef);
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "mapped function is %d", *mappedfn );
+        }
+        else
+          *mappedfn = function;
+      }
+
+      return wFunDef.getaddr(fundef);
+    }
+    fundef = wCar.nextfundef( data->props, fundef );
+  };
+  if( mappedfn != NULL ) {
+    *mappedfn = function;
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function %d not defined", *mappedfn );
+  }
+  return 0;
+}
+
 
 static Boolean _cmd( iOCar inst, iONode nodeA ) {
   iOCarData data = Data(inst);
@@ -140,6 +173,22 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
 
   if( wCar.getaddr(data->props) > 0 ) {
     if( StrOp.equals(wFunCmd.name(), nodename) ) {
+      int mappedfn = 0;
+      int decaddr = __getFnAddr(inst, wFunCmd.getfnchanged(nodeA), &mappedfn );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "function %d address=%d:%d", wFunCmd.getfnchanged(nodeA), decaddr, mappedfn );
+
+      if(mappedfn != wFunCmd.getfnchanged(nodeA)) {
+        char fattr[32] = {'\0'};
+        Boolean fon = False;
+        StrOp.fmtb(fattr, "f%d", wFunCmd.getfnchanged(nodeA));
+        fon = NodeOp.getBool(nodeA, fattr, False);
+        NodeOp.setBool(nodeA, fattr, False);
+        StrOp.fmtb(fattr, "f%d", mappedfn);
+        NodeOp.setBool(nodeA, fattr, fon);
+        wFunCmd.setfnchanged( nodeA, mappedfn );
+      }
+
       if( wCar.getiid(data->props) != NULL )
         wCar.setiid( nodeA, wCar.getiid(data->props) );
       wCar.setaddr( nodeA, wCar.getaddr(data->props) );
@@ -196,6 +245,22 @@ static void _modify( struct OCar* inst ,iONode props ) {
 
     NodeOp.setStr( data->props, name, value );
   }
+
+  /* Leave the childs if no new are comming */
+  if( NodeOp.getChildCnt( props ) > 0 ) {
+    cnt = NodeOp.getChildCnt( data->props );
+    while( cnt > 0 ) {
+      iONode child = NodeOp.getChild( data->props, 0 );
+      NodeOp.removeChild( data->props, child );
+      cnt = NodeOp.getChildCnt( data->props );
+    }
+    cnt = NodeOp.getChildCnt( props );
+    for( i = 0; i < cnt; i++ ) {
+      iONode child = NodeOp.getChild( props, i );
+      NodeOp.addChild( data->props, (iONode)NodeOp.base.clone(child) );
+    }
+  }
+
 
   /* Broadcast to clients. */
   {

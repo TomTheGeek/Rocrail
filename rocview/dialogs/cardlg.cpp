@@ -40,6 +40,7 @@
 #include "rocrail/wrapper/public/LocationList.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/DataReq.h"
+#include "rocrail/wrapper/public/FunDef.h"
 
 #include "rocview/wrapper/public/Gui.h"
 
@@ -57,6 +58,7 @@ CarDlg::CarDlg( wxWindow* parent, iONode p_Props, bool save )
   m_Props    = p_Props;
   m_bSave    = save;
   m_SortCol  = 0;
+  m_FGroup   = 0;
   initLabels();
   initIndex();
 
@@ -195,6 +197,10 @@ void CarDlg::initLabels() {
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_labProtocol->SetLabel( wxGetApp().getMsg( "protocol" ) );
   m_labProtVersion->SetLabel( wxGetApp().getMsg( "protocol_version" ) );
+
+  // Functions
+  m_labFDesc->SetLabel( wxGetApp().getMsg( "description" ) );
+  m_labFTimer->SetLabel( wxGetApp().getMsg( "timer" ) );
 
 
   // Buttons
@@ -364,6 +370,8 @@ void CarDlg::initValues() {
     return;
   }
 
+  m_FGroup   = 0;
+
   char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("car").mb_str(wxConvUTF8), wCar.getid( m_Props ) );
   SetTitle( wxString(title,wxConvUTF8) );
   StrOp.free( title );
@@ -457,6 +465,8 @@ void CarDlg::initValues() {
 
   str = StrOp.fmt( "%d", wCar.getprotver( m_Props ) );
   m_ProtVersion->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
+
+  initFunctions();
 }
 
 
@@ -522,6 +532,8 @@ bool CarDlg::evaluate(){
 
   val = atoi( m_ProtVersion->GetValue().mb_str(wxConvUTF8) );
   wCar.setprotver( m_Props, val );
+
+  evaluateFunctions();
 
   return true;
 }
@@ -797,3 +809,91 @@ void CarDlg::onListColClick( wxListEvent& event ) {
   m_SortCol = event.GetColumn();
   initIndex();
 }
+
+
+void CarDlg::evaluateFunctions() {
+  wxTextCtrl* l_desc[] = {m_F1Desc,m_F2Desc,m_F3Desc,m_F4Desc};
+  wxSpinCtrl* l_timer[] = {m_F1Timer,m_F2Timer,m_F3Timer,m_F4Timer};
+  wxSpinCtrl* l_fx[] = {m_F1x,m_F2x,m_F3x,m_F4x};
+  int function[] = {0,0,0,0};
+
+  for( int i = 0; i < 4; i++ ) {
+    if( l_desc[i]->GetValue().Length() > 0 )
+      function[i] = 1;
+  }
+
+
+  TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "evaluate function group %d", m_FGroup + 1);
+
+  iONode fundef = wCar.getfundef( m_Props );
+  while( fundef != NULL ) {
+    int fnr = wFunDef.getfn( fundef );
+    if( fnr >= 1 + m_FGroup*4 && fnr <= 4 + m_FGroup*4 ) {
+      TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "modify function  %d", fnr );
+
+      wFunDef.settext( fundef, l_desc[(fnr-1) - m_FGroup*4]->GetValue().mb_str(wxConvUTF8)  );
+      wFunDef.settimer( fundef, l_timer[(fnr-1) - m_FGroup*4]->GetValue() );
+      wFunDef.setmappedfn( fundef, l_fx[(fnr-1) - m_FGroup*4]->GetValue() );
+
+      function[(fnr-1) - m_FGroup*4] = 0;
+    }
+    fundef = wCar.nextfundef( m_Props, fundef );
+  }
+
+  for( int i = 0; i < 4; i++ ) {
+    if( function[i] == 1 ) {
+      int f = i +1 + m_FGroup*4;
+      TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "adding function  %d", f );
+      fundef = NodeOp.inst( wFunDef.name(), m_Props, ELEMENT_NODE );
+      NodeOp.addChild( m_Props, fundef );
+      wFunDef.setfn( fundef, f );
+      wFunDef.settext( fundef, l_desc[i]->GetValue().mb_str(wxConvUTF8)  );
+      wFunDef.settimer( fundef, l_timer[i]->GetValue() );
+      wFunDef.setmappedfn( fundef, l_fx[i]->GetValue() );
+    }
+  }
+
+}
+
+
+void CarDlg::initFunctions() {
+  wxStaticText* l_fn[] = {m_F1,m_F2,m_F3,m_F4};
+  wxTextCtrl* l_desc[] = {m_F1Desc,m_F2Desc,m_F3Desc,m_F4Desc};
+  wxSpinCtrl* l_timer[] = {m_F1Timer,m_F2Timer,m_F3Timer,m_F4Timer};
+  wxSpinCtrl* l_fx[] = {m_F1x,m_F2x,m_F3x,m_F4x};
+
+  for( int i = 0; i < 4; i++ ) {
+    l_fn[i]->SetLabel( wxString::Format(_T("F%d"), i+1+m_FGroup*4 ) );
+    l_desc[i]->SetValue( _T("") );
+    l_timer[i]->SetValue(0);
+    l_fx[i]->SetValue(0);
+  }
+
+  iONode fundef = wCar.getfundef( m_Props );
+  while( fundef != NULL ) {
+
+    wxString fntxt( wFunDef.gettext( fundef ),wxConvUTF8 );
+    int funnr = wFunDef.getfn( fundef );
+    TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999,
+        "function[%d] name[%s]", funnr, wFunDef.gettext( fundef ) );
+
+    if( funnr >= m_FGroup * 4 + 1 && funnr <= m_FGroup * 4 + 4) {
+      l_desc[(funnr - 1) - m_FGroup * 4]->SetValue( fntxt );
+      l_timer[(funnr - 1) - m_FGroup * 4]->SetValue( wFunDef.gettimer(fundef) );
+      l_fx[(funnr - 1) - m_FGroup * 4]->SetValue( wFunDef.getmappedfn(fundef) );
+    }
+
+    fundef = wCar.nextfundef( m_Props, fundef );
+  }
+
+}
+
+void CarDlg::onFG( wxCommandEvent& event )
+{
+  evaluateFunctions();
+  m_FGroup++;
+  if( m_FGroup > 6 )
+    m_FGroup = 0;
+  initFunctions();
+}
+
