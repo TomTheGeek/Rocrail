@@ -1052,7 +1052,7 @@
     <de txt="Gleisplan-Eigenschaften" accel="0" tip="Dialog zum abfragen und ändern der Gleisbild Eigenschaften."/>
     <en txt="Track panel properties" accel="0" tip="Dialog to view and set Track panel properties."/>
     <nl txt="Spoorplan eigenschappen" accel="0" tip="Window om de Spoorplan eigenschappen te bekijken en te muteren."/>
-    <sv txt="Egenskaper för spårplan" accel="0" tip="Öppna spårplansegenskaper."/>
+    <sv txt="Spårplansegenskaper." accel="0" tip="Öppna spårplansegenskaper."/>
     <fr txt="Propriétés du plan de voies" accel="0" tip="Paramètres, affichage du TCO."/>
     <tr txt="Ray Diyagram Özellikleri" accel="0" tip="Ray Diyagramlarını görüntülemek ve yerleştirmek için diyalog."/>
     <es txt="Propiedades del panel de carriles" accel="0" tip="Ventana de propiedades del diagrama del circuito."/>
@@ -2163,7 +2163,7 @@
     <de txt="Weichen Befehle"/>
     <en txt="Switch commands"/>
     <nl txt="Wissel commando's"/>
-    <sv txt="Växelkommandon"/>
+    <sv txt="Växelkommando"/>
     <fr txt="Commandes d'aiguillage"/>
     <tr txt="Makas komutları"/>
     <es txt="Cambiar órdenes"/>
@@ -2249,7 +2249,7 @@
     <de txt="Doppelklick zum Starten/Stoppen %s."/>
     <en txt="Double click to Start/Stop %s."/>
     <nl txt="Dubbel klikken om %s te Starten/Stoppen."/>
-    <sv txt="Vänsterklicka för att starta/stoppa %s."/>
+    <sv txt="Dubbelklicka för att Starta/Stoppa %s."/>
     <fr txt="Double-cliquez pour démarrer/arrêter %s."/>
     <tr txt="Çalıştırmak/durdurmak için çift tıkla %s."/>
     <es txt="Doble click para Iniciar/Parar %s"/>
@@ -2524,7 +2524,7 @@
     <de txt="Weichen" tip="Weichen"/>
     <en txt="Switch table" alttxt="Switches" tip="Switch table"/>
     <nl txt="Wissels" tip="Wissels"/>
-    <sv txt="Växlar" tip="Växeltabell"/>
+    <sv txt="Växeltabell" tip="Växeltabell"/>
     <fr txt="Aiguillages" tip="Tableau d'aiguillages"/>
     <tr txt="Makaslar" tip="Makaslar"/>
     <es txt="Cambiar tabla" tip="Desvíos"/>
@@ -4950,7 +4950,7 @@
     <de txt="Vorort"/>
     <en txt="Suburban"/>
     <nl txt="Stoptrein"/>
-    <sv txt="Lokaltåg"/>
+    <sv txt="Förort"/>
     <fr txt="Souterrain"/>
     <tr txt="Yerel"/>
     <es txt="Suburbano"/>
@@ -15334,6 +15334,7 @@
     <en_GB txt="Read current speed curve from decoder?"/>
     <ca txt="Llegir corba de velocitat del decóder?"/>
     <sr_latin txt="Pročitaj tekuću krivu brzine iz dekodera?"/>
+    <sv txt="Läs nuvarande hastighetskurva från dekoder?"/>
   </Msg>
   <Msg id="sync">
     <en txt="Synchronize"/>
@@ -15381,6 +15382,7 @@
     <en_GB txt="Mobile only"/>
     <ro txt="Doar mobil"/>
     <sr_latin txt="Samo mobilno"/>
+    <sv txt="Endast mobil."/>
   </Msg>
   <Msg id="purgeslots">
     <en txt="Purge slots"/>
@@ -16203,6 +16205,7 @@
     <en_GB txt="Lock"/>
     <nb txt="Lås"/>
     <sr_latin txt="Zaključaj"/>
+    <sv txt="Låsa."/>
   </Msg>
   <Msg id="invalidid">
     <en txt="The ID must be at least one character!"/>
@@ -16220,6 +16223,7 @@
     <en_CA txt="The ID must be at least one character!"/>
     <en_GB txt="The ID must be at least one character!"/>
     <sr_latin txt="ID mora biti barem jedno slovo"/>
+    <sv txt="ID:t måste innehålla minst ett tecken!"/>
   </Msg>
   <Msg id="minocc">
     <en txt="Minimal occupied"/>
@@ -16274,6 +16278,7 @@
     <en_GB txt="Absolute"/>
     <ca txt="Absolut"/>
     <sr_latin txt="Apsolutno"/>
+    <sv txt="Absolut."/>
   </Msg>
   <Msg id="relative">
     <en txt="Relative"/>
@@ -16293,6 +16298,7 @@
     <en_GB txt="Relative"/>
     <ca txt="Relatiu"/>
     <sr_latin txt="Relativno"/>
+    <sv txt="Relativ."/>
   </Msg>
   <Msg id="hourly">
     <en txt="Hourly"/>
@@ -16313,6 +16319,7 @@
     <en_GB txt="Hourly"/>
     <nb txt="Hver time"/>
     <sr_latin txt="Na sat"/>
+    <sv txt="Varje timme."/>
   </Msg>
   <Msg id="fullscreen">
     <en txt="Full screen"/>
@@ -16355,6 +16362,7 @@
     <en_GB txt="Time frame"/>
     <ca txt="Marc de temps"/>
     <sr_latin txt="Vremenski okvir"/>
+    <sv txt="Tidsfönster."/>
   </Msg>
   <Msg id="usebicom">
     <en txt="Use Bi-Directional Communication"/>
@@ -16469,6 +16477,7 @@
     <nb txt="Posisjon"/>
     <sr_latin txt="Položaj"/>
     <ja txt="位置"/>
+    <sv txt="Position."/>
   </Msg>
   <Msg id="motoroffdelay">
     <en txt="Motor off delay"/>
@@ -16521,6 +16530,7 @@
     <en_GB txt="Manual operated"/>
     <sr_latin txt="Ručno upravljanje"/>
     <ja txt="手動運転"/>
+    <sv txt="Manuell manöverering."/>
   </Msg>
   <Msg id="autooperated">
     <en txt="Automatically operated"/>
@@ -16540,6 +16550,7 @@
     <en_GB txt="Automatically operated"/>
     <sr_latin txt="Automatsko upravljanje"/>
     <ja txt="自動運転"/>
+    <sv txt="Automatisk manöverering."/>
   </Msg>
   <Msg id="import" dialog="true">
     <en txt="Import"/>
@@ -16559,6 +16570,7 @@
     <en_GB txt="Import"/>
     <sr_latin txt="Uvoz"/>
     <ja txt="インポート"/>
+    <sv txt="Importera."/>
   </Msg>
   <Msg id="chain">
     <en txt="Chain"/>
@@ -16619,6 +16631,7 @@
     <en_GB txt="Shortcut sensor"/>
     <sr_latin txt="Prečica senzora"/>
     <ja txt="センサのショートカット"/>
+    <sv txt="Kortslutningssensor."/>
   </Msg>
   <Msg id="shortcut">
     <de txt="Kurzschluss"/>
@@ -16640,6 +16653,7 @@
     <nb txt="Snarvei"/>
     <sr_latin txt="Prečica"/>
     <ja txt="ショートカット"/>
+    <sv txt="Kortslutning."/>
   </Msg>
   <Msg id="boostertable" dialog="true">
     <en txt="Boosters" tip="Booster setup for power manager."/>
@@ -16853,6 +16867,7 @@
     <en_CA txt="Repower on after the shortcut is cleared."/>
     <en_GB txt="Repower on after the shortcut is cleared."/>
     <sr_latin txt="Uključi napon pošto je kratak spoj otklonjen."/>
+    <sv txt="Återställ strömmen när kortslutningen är borta."/>
   </Msg>
   <Msg id="multiport">
     <en txt="Multiport"/>
@@ -16947,6 +16962,7 @@
     <en_CA txt="Small symbol"/>
     <en_GB txt="Small symbol"/>
     <sr_latin txt="Mali simbol"/>
+    <sv txt="Liten symbol."/>
   </Msg>
   <Msg id="modview">
     <en txt="Module view"/>
@@ -17003,6 +17019,7 @@
     <en_GB txt="All"/>
     <nb txt="Alle"/>
     <sr_latin txt="Svi"/>
+    <sv txt="Alla."/>
   </Msg>
   <Msg id="netroutes">
     <en txt="NetRoutes"/>
@@ -17117,6 +17134,7 @@
     <en_CA txt="Routes to lock"/>
     <en_GB txt="Routes to lock"/>
     <sr_latin txt="Rute za zatvaranje"/>
+    <sv txt="Tågvägar att låsa."/>
   </Msg>
   <Msg id="seconds">
     <en txt="sec."/>
@@ -17224,6 +17242,7 @@
     <en_CA txt="Power off at ghost train"/>
     <en_GB txt="Power off at ghost train"/>
     <sr_latin txt="Isključi napajanje za voz-duh"/>
+    <sv txt="Gör strömlöst vid spöktåg."/>
   </Msg>
   <Msg id="timer">
     <en txt="Timer"/>
@@ -17262,6 +17281,7 @@
     <en_GB txt="System"/>
     <nb txt="System"/>
     <sr_latin txt="Sistem"/>
+    <sv txt="System."/>
   </Msg>
   <Msg id="locomotive">
     <en txt="Locomotive"/>
@@ -17282,6 +17302,7 @@
     <en_GB txt="Locomotive"/>
     <sr_latin txt="Lokomotiva"/>
     <ja txt="機関車"/>
+    <sv txt="Lokomotiv."/>
   </Msg>
   <Msg id="modules">
     <en txt="Modules"/>
@@ -17301,6 +17322,7 @@
     <en_CA txt="Modules"/>
     <en_GB txt="Modules"/>
     <sr_latin txt="Moduli"/>
+    <sv txt="Moduler."/>
   </Msg>
   <Msg id="openworkspace" dialog="true" key="Ctrl-W">
     <en txt="Open Workspace" tip="Open a Workspace to play."/>
@@ -17519,6 +17541,7 @@
     <nb txt="Epost"/>
     <sr_latin txt="Email"/>
     <ja txt="電子メール"/>
+    <sv txt="E-post."/>
   </Msg>
   <Msg id="expdate">
     <en txt="Expiration date"/>
@@ -17538,6 +17561,7 @@
     <nb txt="Utløpsdato"/>
     <sr_latin txt="Datum isteka"/>
     <ja txt="期限"/>
+    <sv txt="Utgångsdatum."/>
   </Msg>
   <Msg id="donatenow">
     <en txt="Support now"/>
@@ -17592,6 +17616,7 @@
     <en_GB txt="Load key"/>
     <sr_latin txt="Učitaj ključ"/>
     <ja txt="動作キー"/>
+    <sv txt="Ladda nyckel."/>
   </Msg>
   <Msg id="donatekey">
     <en txt="Rocrail runs entirely on volunteer labor. However, Rocrail also needs contributions of money. Your continued support is vital for keeping Rocrail available. If you already did support you can ask a key to disable this on startup dialog: donate@rocrail.net"/>
@@ -17693,6 +17718,7 @@
     <en_CA txt="Push button"/>
     <en_GB txt="Push button"/>
     <sr_latin txt="Taster"/>
+    <sv txt="Tryckknapp."/>
   </Msg>
   <Msg id="ctc">
     <en txt="CTC" tip="Centralized Traffic Control"/>
@@ -17729,6 +17755,7 @@
     <nb txt="Motor"/>
     <ca txt="Motor"/>
     <sr_latin txt="Motor"/>
+    <sv txt="Motor."/>
   </Msg>
   <Msg id="usemanualroutes">
     <en txt="Use manual routes"/>
@@ -17805,7 +17832,7 @@
     <da txt="Fra signal par"/>
     <nl txt="Van sein paar"/>
     <de txt="vom Signalpaar"/>
-    <it txt="Dal segnale pari"/>
+    <it txt="FROM - dalla coppia segnali"/>
     <ru txt="От сигнальной пары"/>
     <en_AU txt="From signal pair"/>
     <en_CA txt="From signal pair"/>
@@ -17823,7 +17850,7 @@
     <da txt="Til signal par"/>
     <nl txt="Naar sein paar"/>
     <de txt="zum Signalpaar"/>
-    <it txt="Verso segnale pari"/>
+    <it txt="To - verso coppia segnali"/>
     <ru txt="К сигнальной паре"/>
     <en_AU txt="To signal pair"/>
     <en_CA txt="To signal pair"/>
@@ -17856,6 +17883,7 @@
     <pt txt="Botão"/>
     <sr_latin txt="Dugme"/>
     <ja txt="ボタン"/>
+    <sv txt="Knapp."/>
   </Msg>
   <Msg id="light">
     <en txt="Light"/>
@@ -17878,6 +17906,7 @@
     <pt txt="Luz"/>
     <sr_latin txt="Svetlo"/>
     <ja txt="照明"/>
+    <sv txt="Ljus."/>
   </Msg>
   <Msg id="lightgoods">
     <en txt="Light freight"/>
@@ -17941,6 +17970,7 @@
     <pt txt="Tamanho"/>
     <sr_latin txt="veličina"/>
     <ja txt="サイズ"/>
+    <sv txt="storlek."/>
   </Msg>
   <Msg id="restore">
     <en txt="Restore"/>
@@ -17962,6 +17992,7 @@
     <em_AU txt="Restore"/>
     <pt txt="Restaurar"/>
     <sr_latin txt="Vratiti"/>
+    <sv txt="Återställ."/>
   </Msg>
   <Msg id="recycle">
     <en txt="Recycle"/>
@@ -17980,6 +18011,7 @@
     <em_GB txt="Recycle"/>
     <em_AU txt="Recycle"/>
     <sr_latin txt="Povratni"/>
+    <sv txt="Återanvänd."/>
   </Msg>
   <Msg id="middle">
     <en txt="Middle"/>
@@ -18186,6 +18218,7 @@
     <it txt="Imposta"/>
     <sr_latin txt="Postaviti"/>
     <ja txt="設定"/>
+    <sv txt="Inställningar."/>
   </Msg>
   <Msg id="reset">
     <en txt="Reset"/>
@@ -18332,6 +18365,7 @@
     <pt txt="Número de série"/>
     <sr_latin txt="Serijski broj"/>
     <ja txt="シリアル番号"/>
+    <sv txt="Serienummer."/>
   </Msg>
   <Msg id="xpnfbmapping">
     <en txt="XpressNet feedback mapping" tip="Read OpenDCC documentation"/>
@@ -18426,6 +18460,7 @@
     <it txt="Controllare"/>
     <sr_latin txt="Nadzor"/>
     <cs txt="Monitorování"/>
+    <sv txt="Övervakning."/>
   </Msg>
   <Msg id="notfromblock">
     <en txt="Not from block"/>
@@ -18475,6 +18510,7 @@
     <it txt="Non"/>
     <sr_latin txt="Nije"/>
     <cs txt="Ne"/>
+    <sv txt="Inte."/>
   </Msg>
   <Msg id="speak4block">
     <en txt="Speak for block"/>
@@ -18593,6 +18629,7 @@
     <sr_latin txt="Vrsta dekodera"/>
     <ja txt="デコーダの種類"/>
     <cs txt="Typ dekodéru"/>
+    <sv txt="Dekodertyp."/>
   </Msg>
   <Msg id="analyze">
     <en txt="Analyze" tip="Analyze track plan for generating routes."/>
@@ -18609,6 +18646,7 @@
     <sr_latin txt="Analiziranje"/>
     <ja txt="解析"/>
     <cs txt="Analyzovat"/>
+    <sv txt="Analysera."/>
   </Msg>
   <Msg id="systeminfo">
     <en txt="System info" tip="Enable extra CS system info."/>
@@ -18627,6 +18665,7 @@
     <sr_latin txt="Sistemske informacije"/>
     <ja txt="システム情報"/>
     <cs txt="Systémové informace"/>
+    <sv txt="Systeminformation."/>
   </Msg>
   <Msg id="showonlystartschedules">
     <en txt="Show only start schedules"/>
@@ -18674,6 +18713,7 @@
     <sr_latin txt="Prepiši sve postavke"/>
     <ja txt="全設定を上書きします。よろしいですか？"/>
     <cs txt="Přepsat všechna nastavení?"/>
+    <sv txt="Skriva över alla inställningar?"/>
   </Msg>
   <Msg id="free2go">
     <en txt="Free before start"/>
@@ -18860,7 +18900,7 @@
   </Msg>
   <Msg id="train">
     <en txt="Train"/>
-    <nl txt="Trein"/>
+    <nl txt="Treinstel"/>
     <de txt="Zug"/>
     <en_AU txt="Train"/>
     <pt txt="Comboio"/>
@@ -20135,7 +20175,7 @@
     <en txt="Leave"/>
     <nl txt="Verlaten"/>
     <de txt="Verlassen"/>
-    <it txt="Lasciare"/>
+    <it txt="Rimuovi"/>
     <sr_latin txt="Napusti"/>
     <ja txt="離れる"/>
     <cs txt="Opustit"/>
@@ -20582,11 +20622,16 @@
     <it txt="Virgolette"/>
     <sr_latin txt="Dvostruko"/>
     <nl txt="Dubbel aanhalingsteken"/>
+    <de txt="Doppelte Anführungszeichen"/>
   </Msg>
   <Msg id="assigntrain">
     <en txt="Assign train"/>
+    <nl txt="Treinstel toewijzen"/>
+    <it txt="Assegnare treno"/>
   </Msg>
   <Msg id="releasetrain">
     <en txt="Release train"/>
+    <nl txt="Treinstel vrijgeven"/>
+    <it txt="Rilasciare treno"/>
   </Msg>
 </Messages>
