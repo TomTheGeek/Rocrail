@@ -1660,6 +1660,15 @@ static void __reset( iOModel inst, Boolean saveCurBlock ) {
     }
   }
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset locations..." );
+  {
+    iOLocation location = (iOLocation)MapOp.first( data->locationMap );
+    while( location != NULL ) {
+      LocationOp.reset( location );
+      location = (iOLocation)MapOp.next( data->locationMap );
+    }
+  }
+
   /* save the cleaned occupancy */
   if( saveCurBlock )
     ModelOp.saveBlockOccupancy(inst, NULL);

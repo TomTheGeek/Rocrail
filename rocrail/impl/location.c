@@ -269,6 +269,7 @@ static void _reset( struct OLocation* inst ) {
   iOLocationData data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset location %d", wLocation.getid(data->props));
   ListOp.clear(data->arriveList);
+  __initArriveList(inst);
   return;
 }
 
