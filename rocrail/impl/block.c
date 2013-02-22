@@ -2126,12 +2126,20 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
       inst->acceptIdent(inst, wBlock.isacceptident(nodeA));
   }
   else if( locid != NULL ) {
+    iOLocation location = ModelOp.getBlockLocation( AppOp.getModel(), data->id);
+
     if( StrOp.len(locid) == 0 && data->locId != NULL && StrOp.len(data->locId) > 0 ) {
       /* inform loc */
       iOLoc loc = ModelOp.getLoc( model, data->locId, NULL );
       if( loc != NULL ) {
         LocOp.setCurBlock( loc, NULL );
         data->occtime = SystemOp.getTick();
+
+        /* depart from location */
+        if( location != NULL ) {
+          LocationOp.locoDidDepart(location, data->locId);
+        }
+
       }
     }
     wBlock.setlocid( data->props, locid );
