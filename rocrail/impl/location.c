@@ -216,19 +216,21 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
 /**  */
 static void _locoDidArrive( struct OLocation* inst ,const char* LocoId ) {
   iOLocationData data = Data(inst);
-  int i = 0;
-  if( MutexOp.trywait( data->listmux, 100 ) ) {
-    for( i = 0; i < ListOp.size(data->arriveList); i++ ) {
-      if( StrOp.equals( LocoId, (const char*)ListOp.get( data->arriveList, i ) ) ) {
-        /* already in the list */
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "arriving loco %s is already in the list", LocoId );
-        MutexOp.post( data->listmux );
-        return;
+  if( LocoId != NULL && StrOp.len(LocoId) > 0 ) {
+    int i = 0;
+    if( MutexOp.trywait( data->listmux, 100 ) ) {
+      for( i = 0; i < ListOp.size(data->arriveList); i++ ) {
+        if( StrOp.equals( LocoId, (const char*)ListOp.get( data->arriveList, i ) ) ) {
+          /* already in the list */
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "arriving loco %s is already in the list", LocoId );
+          MutexOp.post( data->listmux );
+          return;
+        }
       }
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "arriving loco %s is added in the list[%d]", LocoId, ListOp.size( data->arriveList) );
+      ListOp.add( data->arriveList, (obj)StrOp.dup(LocoId));
+      MutexOp.post( data->listmux );
     }
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "arriving loco %s is added in the list[%d]", LocoId, ListOp.size( data->arriveList) );
-    ListOp.add( data->arriveList, (obj)StrOp.dup(LocoId));
-    MutexOp.post( data->listmux );
   }
 }
 
