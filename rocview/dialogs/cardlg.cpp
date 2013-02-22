@@ -148,6 +148,8 @@ void CarDlg::initLabels() {
   m_CarBook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
   m_CarBook->SetPageText( 1, wxGetApp().getMsg( "general" ) );
   m_CarBook->SetPageText( 2, wxGetApp().getMsg( "details" ) );
+  m_CarBook->SetPageText( 3, wxGetApp().getMsg( "interface" ) );
+  m_CarBook->SetPageText( 4, wxGetApp().getMsg( "functions" ) );
 
   // Index
   m_NewCar->SetLabel( wxGetApp().getMsg( "new" ) );
@@ -161,7 +163,7 @@ void CarDlg::initLabels() {
   m_CarList2->InsertColumn(3, wxGetApp().getMsg( "type" ), wxLIST_FORMAT_LEFT );
   m_CarList2->InsertColumn(4, wxGetApp().getMsg( "subtype" ), wxLIST_FORMAT_LEFT );
   m_CarList2->InsertColumn(5, wxGetApp().getMsg( "length" ), wxLIST_FORMAT_LEFT );
-  m_CarList2->InsertColumn(6, wxGetApp().getMsg( "locality" ), wxLIST_FORMAT_LEFT );
+  m_CarList2->InsertColumn(6, wxGetApp().getMsg( "location" ), wxLIST_FORMAT_LEFT );
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
