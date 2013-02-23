@@ -200,7 +200,7 @@ void CarDlg::initLabels() {
   m_labProtocol->SetLabel( wxGetApp().getMsg( "protocol" ) );
   m_labProtVersion->SetLabel( wxGetApp().getMsg( "protocol_version" ) );
   m_IntOptions->GetStaticBox()->SetLabel( wxGetApp().getMsg( "options" ) );
-  m_UseDir->SetLabel( wxGetApp().getMsg( "direction" ) );
+  m_UseDir->SetLabel( wxGetApp().getMsg( "dir" ) );
   m_InvDir->SetLabel( wxGetApp().getMsg( "invert" ) );
   m_UseLights->SetLabel( wxGetApp().getMsg( "lights" ) );
 
@@ -317,8 +317,8 @@ void CarDlg::initIndex(){
         m_CarList2->InsertItem( i, wxString(id,wxConvUTF8) );
         m_CarList2->SetItem( i, 1, wxString(wCar.getroadname( car ), wxConvUTF8) );
         m_CarList2->SetItem( i, 2, wxString(wCar.getnumber( car ), wxConvUTF8) );
-        m_CarList2->SetItem( i, 3, wxString(wCar.gettype( car ), wxConvUTF8) );
-        m_CarList2->SetItem( i, 4, wxString(wCar.getsubtype( car ), wxConvUTF8) );
+        m_CarList2->SetItem( i, 3, wxGetApp().getMsg( wCar.gettype( car ) ) );
+        m_CarList2->SetItem( i, 4, wxGetApp().getMsg(wCar.getsubtype( car )) );
         m_CarList2->SetItem( i, 5, wxString::Format(wxT("%d"), wCar.getlen( car )) );
         m_CarList2->SetItem( i, 6, wxString(wCar.getlocation( car ), wxConvUTF8) );
         m_CarList2->SetItemPtrData(i, (wxUIntPtr)car);
