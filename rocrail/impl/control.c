@@ -705,6 +705,13 @@ static void __callback( obj inst, iONode nodeA ) {
       LocOp.cmd( loc, nodeA );
       return;
     }
+    else {
+      iOCar car = ModelOp.getCar( model, wLoc.getid( nodeA ) );
+      if( car != NULL ) {
+        CarOp.cmd( car, nodeA );
+        return;
+      }
+    }
   }
   else if( StrOp.equals( wDataReq.name(), nodeName ) ) {
     if( wDataReq.getcmd(nodeA) == wDataReq.get ) {
@@ -767,6 +774,13 @@ static void __callback( obj inst, iONode nodeA ) {
     if( loc != NULL ) {
       LocOp.cmd( loc, nodeA );
       return;
+    }
+    else {
+      iOCar car = ModelOp.getCar( model, wFunCmd.getid( nodeA ) );
+      if( car != NULL ) {
+        CarOp.cmd( car, nodeA );
+        return;
+      }
     }
   }
   else if( StrOp.equals( wBlock.name(), nodeName ) ) {

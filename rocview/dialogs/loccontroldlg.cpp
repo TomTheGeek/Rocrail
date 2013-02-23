@@ -50,6 +50,7 @@
 
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/FunDef.h"
@@ -567,6 +568,7 @@ void LocControlDialog::initLocMap(const char* locid) {
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode lclist = wPlan.getlclist( model );
+    iONode carlist = wPlan.getcarlist( model );
     if( lclist != NULL ) {
       int i;
       int cnt = NodeOp.getChildCnt( lclist );
@@ -575,6 +577,15 @@ void LocControlDialog::initLocMap(const char* locid) {
       for( i = 0; i < cnt; i++ ) {
         iONode lc = NodeOp.getChild( lclist, i );
         ListOp.add( list, (obj)lc );
+      }
+      if( carlist != NULL ) {
+        cnt = NodeOp.getChildCnt( carlist );
+        for( i = 0; i < cnt; i++ ) {
+          iONode car = NodeOp.getChild( carlist, i );
+          if( wCar.getaddr(car) > 0 ) {
+            ListOp.add( list, (obj)car );
+          }
+        }
       }
       // Sort the list:
       ListOp.sort( list, locComparator );

@@ -2168,6 +2168,7 @@ static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent ) {
       if( StrOp.equals(wLoc.name(), NodeOp.getName(nodeA) ) ) {
         iONode consistcmd = (iONode)NodeOp.base.clone( nodeA );
         wLoc.setconsistcmd( consistcmd, True );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "send command to the operator" );
         OperatorOp.cmd(opr, (iONode)NodeOp.base.clone( consistcmd ));
       }
     }
