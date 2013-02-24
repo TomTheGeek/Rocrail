@@ -589,6 +589,7 @@ void LocControlDialog::initLocMap(const char* locid) {
       }
       // Sort the list:
       ListOp.sort( list, locComparator );
+      cnt = ListOp.size( list );
 
       for( i = 0; i < ListOp.size( list ); i++ ) {
         iONode lc = (iONode)ListOp.get( list, i );
@@ -597,7 +598,7 @@ void LocControlDialog::initLocMap(const char* locid) {
         const char* id = wLoc.getid( lc );
       }
 
-      for( i = 0; i < cnt; i++ ) {
+      for( i = 0; i < ListOp.size( list ); i++ ) {
         iONode lc = (iONode)ListOp.get( list, i );
         if( lc == NULL )
           continue;
