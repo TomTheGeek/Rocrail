@@ -1293,7 +1293,7 @@
   </object>
 
 
-  <object name="BiDiB" interface="$../rocint/rocint.xml:DigInt" use="node,map,trace,serial,thread,mutex,file" include="$rocint/public/digint" remark="bidib.org">
+  <object name="BiDiB" interface="$../rocint/rocint.xml:DigInt" use="node,map,trace,serial,thread,mutex,file,socket" include="$rocint/public/digint" remark="bidib.org">
     <typedef def="Boolean(*sublib_init)(obj)"/>
       <typedef def="Boolean(*sublib_connect)(obj)"/>
     <typedef def="void(*sublib_disconnect)(obj)"/>
@@ -1311,6 +1311,8 @@
       <var name="vendorid" vt="int"/>
       <var name="seq" vt="int"/>
       <var name="load" vt="int"/>
+      <var name="volt" vt="int"/>
+      <var name="temp" vt="int"/>
       <var name="stat" vt="int"/>
       <var name="fwup" vt="Boolean"/>
       <var name="conf_void" vt="int"/>
@@ -1332,10 +1334,13 @@
       <var name="bidibini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="device" vt="const char*"/>
+      <var name="rwUDP" vt="iOSocket"/>
       <var name="swtime" vt="int"/>
       <var name="run" vt="Boolean"/>
       <var name="power" vt="Boolean"/>
       <var name="load" vt="int"/>
+      <var name="volt" vt="int"/>
+      <var name="temp" vt="int"/>
       <var name="tabver" vt="int"/>
       <var name="nodemap" vt="iOMap"/>
       <var name="localmap" vt="iOMap"/>

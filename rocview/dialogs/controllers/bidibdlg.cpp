@@ -69,7 +69,9 @@ void BidibDlg::initLabels() {
 
   // General
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
-  m_labDevice->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labDevice->SetLabel( wxGetApp().getMsg( "device" ) );
+  m_labHost->SetLabel( wxGetApp().getMsg( "host" ) );
+  m_labPort->SetLabel( wxGetApp().getMsg( "port" ) );
   m_BPS->SetLabel(wxGetApp().getMsg( "bps" ));
   m_SubLib->SetLabel(wxGetApp().getMsg( "sublib" ));
 
@@ -93,6 +95,8 @@ void BidibDlg::initValues() {
   // General
   m_IID->SetValue( wxString( wDigInt.getiid( m_Props ), wxConvUTF8 ) );
   m_Device->SetValue( wxString( wDigInt.getdevice( m_Props ), wxConvUTF8 ) );
+  m_Host->SetValue( wxString( wDigInt.gethost( m_Props ), wxConvUTF8 ) );
+  m_Port->SetValue( wDigInt.getport( m_Props ) );
 
   if( m_Devices != NULL ) {
     iOStrTok tok = StrTokOp.inst(m_Devices, ',');
@@ -109,7 +113,10 @@ void BidibDlg::initValues() {
   else
     m_BPS->SetSelection(1);
 
-  m_SubLib->SetSelection(0);
+  if( StrOp.equals( wDigInt.sublib_udp, wDigInt.getsublib( m_Props ) ) )
+    m_SubLib->SetSelection(1);
+  else
+    m_SubLib->SetSelection(0);
 
   // Options
   iONode bidib = wDigInt.getbidib(m_Props);
@@ -122,6 +129,7 @@ void BidibDlg::initValues() {
 
   // Nodes
   initNodes();
+  subLib();
 }
 
 
@@ -152,6 +160,8 @@ void BidibDlg::evaluate() {
   // General
   wDigInt.setiid( m_Props, m_IID->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setdevice( m_Props, m_Device->GetValue().mb_str(wxConvUTF8) );
+  wDigInt.sethost( m_Props, m_Host->GetValue().mb_str(wxConvUTF8) );
+  wDigInt.setport( m_Props, m_Port->GetValue() );
 
   if( m_BPS->GetSelection() == 0 )
     wDigInt.setbps( m_Props, 19200 );
@@ -160,7 +170,10 @@ void BidibDlg::evaluate() {
   else
     wDigInt.setbps( m_Props, 1000000 );
 
-  wDigInt.setsublib( m_Props, wDigInt.sublib_serial);
+  if( m_SubLib->GetSelection() == 1 )
+    wDigInt.setsublib( m_Props, wDigInt.sublib_udp);
+  else
+    wDigInt.setsublib( m_Props, wDigInt.sublib_serial);
 
   // Options
   iONode bidib = wDigInt.getbidib(m_Props);
@@ -199,5 +212,25 @@ void BidibDlg::OnOK( wxCommandEvent& event ) {
 void BidibDlg::onConfigureNodes( wxCommandEvent& event ) {
   wxCommandEvent menuevent( wxEVT_COMMAND_MENU_SELECTED, ME_BiDiB );
   wxPostEvent( wxGetApp().getFrame(), menuevent );
+}
+
+void BidibDlg::subLib() {
+  if( m_SubLib->GetSelection() == 1 ) {
+    m_Host->Enable(true);
+    m_Port->Enable(true);
+    m_Device->Enable(false);
+    m_BPS->Enable(false);
+  }
+  else {
+    m_Host->Enable(false);
+    m_Port->Enable(false);
+    m_Device->Enable(true);
+    m_BPS->Enable(true);
+  }
+}
+
+
+void BidibDlg::onSubLib( wxCommandEvent& event ) {
+  subLib();
 }
 

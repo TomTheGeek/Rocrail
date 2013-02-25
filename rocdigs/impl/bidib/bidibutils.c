@@ -25,6 +25,123 @@
 #include "rocrail/wrapper/public/BiDiBnode.h"
 #include "rocdigs/impl/bidib/bidib_messages.h"
 
+int bidibDeEscapeMessage(byte* msg, int inLen) {
+  int outLen = 0;
+  int i = 0;
+  byte buffer[256];
+  Boolean escape = False;
+
+  for( i = 0; i < inLen; i++ ) {
+    if( msg[i] == BIDIB_PKT_ESCAPE ) {
+      escape = True;
+    }
+    else {
+      buffer[outLen] = (escape ? msg[i]^0x20:msg[i]);
+      outLen++;
+      escape = False;
+    }
+  }
+
+  MemOp.copy( msg, buffer, outLen );
+  TraceOp.trc( "bidib", TRCLEVEL_DEBUG, __LINE__, 9999, "message de-escaped" );
+  TraceOp.dump ( "bidib", TRCLEVEL_DEBUG, (char*)msg, outLen );
+  return outLen;
+}
+/* Update 8-bit CRC value
+   using polynomial X^8 + X^5 + X^4 + 1 */
+#define POLYVAL 0x8C
+void bidibUpdateCRC(byte newb, byte* crc)
+{
+  int i;
+  byte c = *crc;
+  for (i = 0; i < 8; i++) {
+    if ((c ^ newb) & 1)
+      c = (c >> 1 ) ^ POLYVAL;
+    else
+      c >>= 1;
+    newb >>= 1;
+  }
+  *crc = c;
+}
+
+/*
+CRC-8-Dallas/Maxim
+x8 + x5 + x4 + 1 (1-Wire bus)
+
+Representations: normal / **reversed** / reverse of reciprocal
+0x31 / 0x8C / 0x98
+
+Initialized with 0x00
+
+ */
+byte bidibCheckSum(byte* packet, int len) {
+  byte checksum = 0x00;
+  int i = 0;
+  for( i = 0; i < len; i++ ) {
+    bidibUpdateCRC(packet[i], &checksum);
+  }
+
+  return checksum;
+}
+
+
+/*
+Ein serielles Paket ist prinzipiell wie folgt aufgebaut:
+  PAKET ::= MAGIC MESSAGE_SEQ CRC [MAGIC]
+  MESSAGE_SEQ ::= MESSAGE MESSAGE_SEQ
+
+Ein serielles PAKET beginnt immer mit speziellen Zeichen ([MAGIC]=0xFE) und kann eine oder mehrere Nachrichten (MESSAGE) enthalten.
+Das ganze Paket ist mit einer CRC (Cyclic Redundancy Check) abgesichert, um Datenfehler bei der Übertragung erkennen zu können.
+MAGIC-Zeichen, welche innerhalb von Nachrichten auftauchen, werden 'Escaped'. Hierzu wird ein ESCAPE Zeichen (=0xFD) eingefügt und
+das nachfolgende Zeichen mit 0x20 xor-verknüpft. Auch das ESCAPE-Zeichen selbst wird innerhalb der Nachricht Escaped.
+Das heißt: Anstelle des MAGIC wird ein ESCAPE-Zeichen (=0xFD), gefolgt von MAGIC ^ 0x20 = 0xDE gesendet.
+Anstelle des ESCAPE-Zeichen wird 0xFD + 0xDD gesendet. Das Escapen erfolgt auf dem fertig kodierten PAKET inkl.
+*/
+void bidibEscapeMessage(byte* msg, int* newLen, int inLen) {
+  int outLen = 0;
+  int i = 0;
+  byte buffer[256];
+
+  for( i = 0; i < inLen; i++ ) {
+    if( (msg[i] == BIDIB_PKT_MAGIC) || (msg[i] == BIDIB_PKT_ESCAPE) )
+    {
+      buffer[outLen] = BIDIB_PKT_ESCAPE;        // escape this char
+      outLen++;
+      buffer[outLen] = msg[i] ^ 0x20;           // 'veraendern'
+      outLen++;
+    }
+    else {
+      buffer[outLen] = msg[i];
+      outLen++;
+    }
+  }
+
+  *newLen = outLen;
+  MemOp.copy( msg, buffer, outLen );
+  TraceOp.dump ( "bidib", TRCLEVEL_DEBUG, (char*)msg, outLen );
+}
+
+
+
+int bidibMakeMessage(byte* msg, int inLen) {
+  int outLen = 0;
+  byte buffer[256];
+  buffer[outLen] = BIDIB_PKT_MAGIC;
+  outLen++;
+  MemOp.copy( buffer + 1, msg, inLen );
+  outLen += inLen;
+  buffer[outLen] = bidibCheckSum(buffer+1, outLen-1 );
+  outLen++;
+  bidibEscapeMessage(buffer+1, &outLen, outLen-1);
+  outLen++;
+  buffer[outLen] = BIDIB_PKT_MAGIC;
+  outLen++;
+  MemOp.copy(msg, buffer, outLen);
+  return outLen;
+}
+
+
+
 
 char* bidibGetClassName(int classid, char* mnemonic ) {
   char* classname = NULL;

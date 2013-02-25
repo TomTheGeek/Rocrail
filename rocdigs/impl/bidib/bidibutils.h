@@ -31,6 +31,11 @@
 
 char* bidibGetClassName(int classid, char* mnemonic );
 const char* bidibGetFeatureName(int feature);
+int bidibDeEscapeMessage(byte* msg, int inLen);
+void bidibUpdateCRC(byte newb, byte* crc);
+byte bidibCheckSum(byte* packet, int len);
+void bidibEscapeMessage(byte* msg, int* newLen, int inLen);
+int bidibMakeMessage(byte* msg, int inLen);
 
 /* C++ */
 #ifdef __cplusplus

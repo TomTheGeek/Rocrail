@@ -60,6 +60,7 @@
 
 #include "rocdigs/impl/bidib/bidib_messages.h"
 #include "rocdigs/impl/bidib/serial.h"
+#include "rocdigs/impl/bidib/udp.h"
 #include "rocdigs/impl/bidib/bidibutils.h"
 
 #include <time.h>
@@ -1457,6 +1458,8 @@ static void __reportState(iOBiDiB bidib, int uid, Boolean shortcut) {
   wState.setsensorbus( node, True );
   wState.setaccessorybus( node, True );
   wState.setload( node, data->load );
+  wState.setvolt( node, data->volt );
+  wState.settemp( node, data->temp );
   wState.setuid(node, uid);
   wState.setshortcut(node, shortcut);
   if( data->listenerFun != NULL && data->listenerObj != NULL )
@@ -1522,6 +1525,55 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
   }
   data->power = (pdata[0] & 0x80) ? True:False;
   __reportState(bidib, uid, shortcut);
+}
+
+
+static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  int uid     = 0;
+  int current = pdata[0];
+  int volt    = pdata[1] * 100; /* mV */
+  int temp    = pdata[2];
+  /*
+    0 No current consumption, track is free.
+    1..15 Current consumption, in mA. Possible range: 1..15mA
+    16..63  Current consumption, the value is (date - 12) * 4mA. Possible range: 16..204mA
+    64..127 Current consumption, the value is (date - 51) * 16mA. Possible range: 208..1216mA
+    128..191  Current consumption, the value is (date - 108) * 64mA. Possible range: 1280..5312mA
+    192..250  Current consumption, the value is (date - 171) * 256mA. Possible range: 5376..20224mA
+    251..253  Reserved.
+    254 Overcurrent occured.
+    0xFF  No exact consumption value known.
+   */
+  if( current > 15 && current < 64 )
+    current = (current - 12) * 4;
+  else if( current > 63 && current < 128 )
+    current = (current - 51) * 16;
+  else if( current > 127 && current < 192 )
+    current = (current - 108) * 64;
+  else if( current > 191 && current < 251 )
+    current = (current - 171) * 256;
+  else if( current > 250 )
+    current = 0;
+
+  if( bidibnode != NULL && (bidibnode->load != current || bidibnode->volt != volt || bidibnode->temp != temp) ) {
+    uid = bidibnode->uid;
+    bidibnode->load = current;
+    bidibnode->volt = volt;
+    bidibnode->temp = temp;
+    data->load = current;
+    data->volt = volt;
+    data->temp = temp;
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%dmA %dmV %d°C", bidibnode->uid, current, volt, temp );
+    __reportState(bidib, uid, False);
+  }
+  else if( data->load != current ) {
+    data->load = current;
+    data->volt = volt;
+    data->temp = temp;
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster load=%dmA %dmV %d°C", bidibnode->uid, current, volt, temp );
+    __reportState(bidib, uid, False);
+  }
 }
 
 
@@ -2084,6 +2136,10 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     __handleBoosterCurrent(bidib, bidibnode, pdata);
     break;
 
+  case MSG_BOOST_DIAGNOSTIC:
+    __handleBoosterDiagnostic(bidib, bidibnode, pdata);
+    break;
+
   case MSG_CS_STATE:
     __handleCSStat(bidib, bidibnode, pdata);
     break;
@@ -2300,7 +2356,9 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   /* choose interface: */
-  if( StrOp.equals( wDigInt.sublib_default, wDigInt.getsublib( ini ) ) ) {
+  if( StrOp.equals( wDigInt.sublib_default, wDigInt.getsublib( ini ) ) ||
+      StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib( ini ) ) )
+  {
     /* serial */
     data->subInit       = serialInit;
     data->subConnect    = serialConnect;
@@ -2309,14 +2367,14 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
     data->subWrite      = serialWrite;
     data->subAvailable  = serialAvailable;
   }
-  else if( StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib( ini ) ) ) {
+  else if( StrOp.equals( wDigInt.sublib_udp, wDigInt.getsublib( ini ) ) ) {
     /* serial */
-    data->subInit       = serialInit;
-    data->subConnect    = serialConnect;
-    data->subDisconnect = serialDisconnect;
-    data->subRead       = serialRead;
-    data->subWrite      = serialWrite;
-    data->subAvailable  = serialAvailable;
+    data->subInit       = udpInit;
+    data->subConnect    = udpConnect;
+    data->subDisconnect = udpDisconnect;
+    data->subRead       = udpRead;
+    data->subWrite      = udpWrite;
+    data->subAvailable  = udpAvailable;
   }
 
   data->subInit((obj)__BiDiB);

@@ -42,6 +42,7 @@
 //            2013-01-15       kw  added MSG_CS_POM and MSG_CS_POM_ACK, MSG_PRG_CV_STAT moved 
 //            2013-01-21           added FEATURE_GEN_NOTIFY_DRIVE_MANUAL
 //            2013-02-10 V0.09 kw  added addtional BST_STATE values
+//            2013-02-21 V0.10 kw  added MSG_BOOST_DIAGNOSTIC, BIDIB_ERR_SUBPAKET
 //
 //===============================================================================
 //
@@ -165,7 +166,7 @@
 #define  MSG_CS_ALLOCATE        (MSG_DGEN + 0x00)
 #define  MSG_CS_SET_STATE       (MSG_DGEN + 0x02)
 #define  MSG_CS_DRIVE           (MSG_DGEN + 0x04)       // 1:addrl, 2:addrh, 3:format, 4:active, 5:speed, 6:1-4, 7:5-12, 8:13-20, 9:21-28
-#define  MSG_CS_ACCESSORY       (MSG_DGEN + 0x05)
+#define  MSG_CS_ACCESSORY       (MSG_DGEN + 0x05)       // 1:addrl, 2:addrh, 3:data(aspect), 4:time_l, 5:time_h
 #define  MSG_CS_BIN_STATE       (MSG_DGEN + 0x06)       // 1:addrl, 2:addrh, 3:bin_statl, 4:bin_stath
 #define  MSG_CS_POM             (MSG_DGEN + 0x07)       // 1..4:addr, 5:MID, 6:opcode, 7:cv_l, 8:cv_h, 9:cv_x, 10..13: data
                                                         // 1:did[0], 2:did[1], 3:did[2], 4:did[4] 
@@ -231,9 +232,10 @@
 #define MSG_UBST                (MSG_USTRM +  0x30)
 #define MSG_BOOST_STAT          (MSG_UBST + 0x00)       // 1:state (see defines below)
 #define MSG_BOOST_CURRENT       (MSG_UBST + 0x01)       // 1:current
-#define MSG_NEW_DECODER         (MSG_UBST + 0x02)       // 1:mnum, 2: dec_vid, 3,4,5,6:dec_uid    
-#define MSG_ID_SEARCH_ACK       (MSG_UBST + 0x03)       // 1:mnum, 2: s_vid, 3,4,5,6:s_uid[0..3],  7: dec_vid, 8,9,10,11:dec_uid  
-#define MSG_ADDR_CHANGE_ACK     (MSG_UBST + 0x04)       // 1:mnum, 2: dec_vid, 3,4,5,6:dec_uid, 7:addr_l, 8:addr_h
+#define MSG_BOOST_DIAGNOSTIC    (MSG_UBST + 0x02)       // [1:enum, 2:value],[3:enum, 4:value] ...
+#define MSG_NEW_DECODER         (MSG_UBST + 0x03)       // 1:mnum, 2: dec_vid, 3,4,5,6:dec_uid    
+#define MSG_ID_SEARCH_ACK       (MSG_UBST + 0x04)       // 1:mnum, 2: s_vid, 3,4,5,6:s_uid[0..3],  7: dec_vid, 8,9,10,11:dec_uid  
+#define MSG_ADDR_CHANGE_ACK     (MSG_UBST + 0x05)       // 1:mnum, 2: dec_vid, 3,4,5,6:dec_uid, 7:addr_l, 8:addr_h
 
 //-- accessory control messages
 #define MSG_UACC                (MSG_USTRM + 0x38)
@@ -572,6 +574,7 @@ typedef struct                              // t_bidib_cs_pom
 #define BIDIB_ERR_IDDOUBLE                0x12  // Double ID, 7 bytes follow 
 #define BIDIB_ERR_SUBCRC                  0x13  // Message in Subsystem had crc error, 1 byte with node addr follow 
 #define BIDIB_ERR_SUBTIME                 0x14  // Message in Subsystem timed out
+#define BIDIB_ERR_SUBPAKET                0x15  // Message in Subsystem Paket Size Error
 #define BIDIB_ERR_HW                      0x20  // self test failed
 
 //===============================================================================
@@ -644,6 +647,9 @@ typedef struct                              // t_bidib_cs_pom
 #define BIDIB_BST_STATE_ON_STOP_REQ 0x83    // Booster on and a local stop request is present
 #define BIDIB_BST_STATE_ON_HERE     0x84    // Booster on (was turned on by a local key)
 
+#define BIDIB_BST_DIAG_I            0x00    // Current
+#define BIDIB_BST_DIAG_V            0x01    // Voltage
+#define BIDIB_BST_DIAG_T            0x02    // Temperatur
 
 #define BIDIB_CS_STATE_OFF          0x00    // no DCC, DCC-line is static, not toggling
 #define BIDIB_CS_STATE_STOP         0x01    // DCC, all speed setting = 0
@@ -661,6 +667,7 @@ typedef struct                              // t_bidib_cs_pom
 
 #define BIDIB_CS_DRIVE_SPEED_BIT    (1<<0)
 #define BIDIB_CS_DRIVE_F1F4_BIT     (1<<1)  // also FL
+#define BIDIB_CS_DRIVE_F0F4_BIT     (1<<1)  // additional define, it is the same bit
 #define BIDIB_CS_DRIVE_F5F8_BIT     (1<<2)
 #define BIDIB_CS_DRIVE_F9F12_BIT    (1<<3)
 #define BIDIB_CS_DRIVE_F13F20_BIT   (1<<4)

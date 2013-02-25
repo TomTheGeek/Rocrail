@@ -624,7 +624,16 @@ int rocs_socket_recvfrom( iOSocket inst, char* buf, int size, char* client, int*
   SOCKADDR_IN remoteAddr;
   int     remoteAddrLen;
   remoteAddrLen=sizeof(SOCKADDR_IN);
-  rc = recvfrom( o->sh, buf, size, 0, (SOCKADDR*)&remoteAddr, &remoteAddrLen );
+
+  int rc = 0;
+  if( buf == NULL ) {
+    char l_buf[256];
+    size = 256;
+    rc = recvfrom( o->sh, l_buf, size, MSG_PEEK, (SOCKADDR*)&remoteAddr, &remoteAddrLen );
+  }
+  else
+    rc = recvfrom( o->sh, buf, size, 0, (SOCKADDR*)&remoteAddr, &remoteAddrLen );
+
   if(rc==SOCKET_ERROR)
   {
     o->rc = WSAGetLastError();

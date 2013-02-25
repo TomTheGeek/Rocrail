@@ -733,7 +733,14 @@ int rocs_socket_recvfrom( iOSocket inst, char* buf, int size, char* client, int*
   iOSocketData o = Data(inst);
   struct sockaddr_in sin;
   int sin_len = sizeof(sin);
-  int rc = recvfrom ( o->sh, buf, size, 0, (struct sockaddr *) &sin, &sin_len);
+  int rc = 0;
+  if( buf == NULL ) {
+    char l_buf[256];
+    size = 256;
+    rc = recvfrom ( o->sh, l_buf, size, MSG_PEEK, (struct sockaddr *) &sin, &sin_len);
+  }
+  else
+    rc = recvfrom ( o->sh, buf, size, 0, (struct sockaddr *) &sin, &sin_len);
   o->rc = errno;
   if( rc < 0 ) {
     TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, o->rc, "recvfrom() failed" );
