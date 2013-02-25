@@ -1528,12 +1528,7 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
 }
 
 
-static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
-  iOBiDiBData data = Data(bidib);
-  int uid     = 0;
-  int current = pdata[0];
-  int volt    = pdata[1] * 100; /* mV */
-  int temp    = pdata[2];
+static int __calcCurrent(int current) {
   /*
     0 No current consumption, track is free.
     1..15 Current consumption, in mA. Possible range: 1..15mA
@@ -1555,6 +1550,18 @@ static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte
     current = (current - 171) * 256;
   else if( current > 250 )
     current = 0;
+
+  return current;
+}
+
+static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  int uid     = 0;
+  int current = pdata[BIDIB_BST_DIAG_I];
+  int volt    = pdata[BIDIB_BST_DIAG_V] * 100; /* mV */
+  int temp    = pdata[BIDIB_BST_DIAG_T];
+
+  current = __calcCurrent(current);
 
   if( bidibnode != NULL && (bidibnode->load != current || bidibnode->volt != volt || bidibnode->temp != temp) ) {
     uid = bidibnode->uid;
@@ -1579,34 +1586,20 @@ static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte
 
 static void __handleBoosterCurrent(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
   iOBiDiBData data = Data(bidib);
+  int current = pdata[0];
   int uid = 0;
-  /*
-    0 kein Stromverbrauch, Gleis ist frei.
-    1..100  Stromverbrauch, in mA. Möglicher Bereich: 1..100mA
-    101..200  Stromverbrauch, Wert ist Datum - 100 * 10mA. Möglicher Bereich: 10..1000mA
-    201..250  Stromverbrauch, Wert ist Datum - 200 * 100mA. Möglicher Bereich: 100..5000mA
-    251..253  reserviert.
-    254 Overcurrent aufgetreten.
-    0xFF  kein exakter Verbrauch bekannt.
-  */
-  int load = pdata[0];
-  int newLoad = 0;
-  if( load <= 100 )
-    newLoad = load;
-  else if( load <= 200 )
-    newLoad = (load-100) * 10;
-  else if( load <= 250 )
-    newLoad = (load-200) * 100;
 
-  if( bidibnode != NULL && bidibnode->load != newLoad) {
+  current = __calcCurrent(current);
+
+  if( bidibnode != NULL && bidibnode->load != current) {
     uid = bidibnode->uid;
-    bidibnode->load = newLoad;
-    data->load = newLoad;
+    bidibnode->load = current;
+    data->load = current;
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%d mA", bidibnode->uid, data->load );
     __reportState(bidib, uid, False);
   }
-  else if( data->load != newLoad ) {
-    data->load = newLoad;
+  else if( data->load != current ) {
+    data->load = current;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster load=%d mA", data->load );
     __reportState(bidib, uid, False);
   }
