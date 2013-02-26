@@ -56,6 +56,7 @@ class CarDlg : public cardlggen, public BaseDialog
   void evaluateFunctions();
 
 public:
+  static const char* findTrain(const char* carid);
 	/** Constructor */
   CarDlg( wxWindow* parent, iONode p_Props, bool save=true );
 

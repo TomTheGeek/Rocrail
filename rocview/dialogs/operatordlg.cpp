@@ -386,7 +386,7 @@ void OperatorDlg::initValues() {
 void OperatorDlg::onCarList( wxCommandEvent& event ){
   if( m_CarList->GetSelection() != wxNOT_FOUND ) {
     iONode car = (iONode)m_CarList->GetClientData(m_CarList->GetSelection());
-    if( car != NULL && wCar.getimage( car ) != NULL ) {
+    if( car != NULL && wCar.getimage( car ) != NULL && StrOp.len(wCar.getimage(car)) > 0 ) {
       wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
       if( StrOp.endsWithi( wCar.getimage( car ), ".gif" ) )
         bmptype = wxBITMAP_TYPE_GIF;

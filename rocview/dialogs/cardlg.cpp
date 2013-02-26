@@ -41,6 +41,7 @@
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/DataReq.h"
 #include "rocrail/wrapper/public/FunDef.h"
+#include "rocrail/wrapper/public/Operator.h"
 
 #include "rocview/wrapper/public/Gui.h"
 
@@ -164,6 +165,7 @@ void CarDlg::initLabels() {
   m_CarList2->InsertColumn(4, wxGetApp().getMsg( "subtype" ), wxLIST_FORMAT_LEFT );
   m_CarList2->InsertColumn(5, wxGetApp().getMsg( "length" ), wxLIST_FORMAT_LEFT );
   m_CarList2->InsertColumn(6, wxGetApp().getMsg( "location" ), wxLIST_FORMAT_LEFT );
+  m_CarList2->InsertColumn(7, wxGetApp().getMsg( "train" ), wxLIST_FORMAT_LEFT );
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
@@ -267,7 +269,41 @@ static int __sortLen(obj* _a, obj* _b)
       return -1;
     return 0;
 }
+static int __sortLocation(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wCar.getlocation( a );
+    const char* idB = wCar.getlocation( b );
+    return strcmp( idA, idB );
+}
+static int __sortTrain(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = CarDlg::findTrain(wCar.getid( a ));
+    const char* idB = CarDlg::findTrain(wCar.getid( b ));
+    return strcmp( idA, idB );
+}
 
+
+const char* CarDlg::findTrain(const char* carid) {
+  iONode model = wxGetApp().getModel();
+  if( model != NULL ) {
+    iONode oplist = wPlan.getoperatorlist( model );
+    if( oplist != NULL ) {
+      int cnt = NodeOp.getChildCnt( oplist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode opr = NodeOp.getChild( oplist, i );
+        const char* id = wOperator.getid( opr );
+        if( StrOp.find( wOperator.getcarids( opr ), carid) ) {
+          return id;
+        }
+      }
+    }
+  }
+  return "";
+}
 
 void CarDlg::initIndex(){
   TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "initIndex" );
@@ -305,6 +341,12 @@ void CarDlg::initIndex(){
       else if( m_SortCol == 5 ) {
         ListOp.sort(list, &__sortLen);
       }
+      else if( m_SortCol == 6 ) {
+        ListOp.sort(list, &__sortLocation);
+      }
+      else if( m_SortCol == 7 ) {
+        ListOp.sort(list, &__sortTrain);
+      }
       else {
         ListOp.sort(list, &__sortID);
       }
@@ -321,6 +363,7 @@ void CarDlg::initIndex(){
         m_CarList2->SetItem( i, 4, wxGetApp().getMsg(wCar.getsubtype( car )) );
         m_CarList2->SetItem( i, 5, wxString::Format(wxT("%d"), wCar.getlen( car )) );
         m_CarList2->SetItem( i, 6, wxString(wCar.getlocation( car ), wxConvUTF8) );
+        m_CarList2->SetItem( i, 7, wxString(findTrain(id), wxConvUTF8) );
         m_CarList2->SetItemPtrData(i, (wxUIntPtr)car);
 
       }
@@ -384,7 +427,7 @@ void CarDlg::initValues() {
 
   TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "initValues for car [%s]", wCar.getid( m_Props ) );
   // Init General
-  if( wCar.getimage( m_Props ) != NULL ) {
+  if( wCar.getimage( m_Props ) != NULL && StrOp.len(wCar.getimage( m_Props )) > 0 ) {
     wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
     if( StrOp.endsWithi( wCar.getimage( m_Props ), ".gif" ) )
       bmptype = wxBITMAP_TYPE_GIF;
