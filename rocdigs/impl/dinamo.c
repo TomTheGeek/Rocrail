@@ -645,8 +645,16 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
     int   addr = wOutput.getaddr( node );
     int   port = wOutput.getport( node );
 
+    if( port < 1 || addr < 1 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "address out of range [%d-%d]", addr, port);
+      addr = 1;
+      port = 1;
+    }
+    addr--;
+    port--;
+
     if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_OM32 ) ) {
-      /* OM32 output */
+      /* OM32 output (0011MMM) (mmuuuuu) (commando) (parameter) */
       byte param = StrOp.equals( wOutput.on, wOutput.getcmd( node ) ) ? 10:0;
       datagram[0] = 4 | VER3_FLAG | data->header;
       datagram[1] = 0x18 | (addr >> 2);
@@ -655,6 +663,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       datagram[4] = param;
       datagram[5] = (byte)__generateChecksum( datagram );
       size = 6;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 linear %s [%d-%d]", wOutput.getcmd( node ), addr+1, port+1 );
     }
     else if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_DO ) ) {
       /* digital output */
@@ -664,6 +673,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       datagram[2] = addr & 0x7F;
       datagram[3] = (byte)__generateChecksum( datagram );
       size = 4;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 digital %s [%d]", wOutput.getcmd( node ), addr+1 );
     }
     else if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_VO ) ) {
       /* virtual output */
@@ -673,6 +683,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       datagram[2] = addr & 0x7F;
       datagram[3] = (byte)__generateChecksum( datagram );
       size = 4;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 virtual %s [%d]", wOutput.getcmd( node ), addr+1 );
     }
   }
 
