@@ -625,7 +625,6 @@ int rocs_socket_recvfrom( iOSocket inst, char* buf, int size, char* client, int*
   int     remoteAddrLen;
   remoteAddrLen=sizeof(SOCKADDR_IN);
 
-  int rc = 0;
   if( buf == NULL ) {
     char l_buf[256];
     size = 256;
