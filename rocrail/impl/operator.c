@@ -27,11 +27,13 @@
 #include "rocrail/public/app.h"
 #include "rocrail/public/car.h"
 #include "rocrail/public/model.h"
+#include "rocrail/public/loc.h"
 
 #include "rocs/public/mem.h"
 #include "rocs/public/strtok.h"
 
 #include "rocrail/wrapper/public/Operator.h"
+#include "rocrail/wrapper/public/Loc.h"
 
 static int instCnt = 0;
 
@@ -165,6 +167,22 @@ static void _modify( struct OOperator* inst ,iONode props ) {
     const char* value = AttrOp.getVal( attr );
     NodeOp.setStr( data->props, name, value );
   }
+
+  /* Inform locos */
+  {
+    iOMap lcMap = ModelOp.getLocoMap(AppOp.getModel());
+    iOLoc lc = (iOLoc)MapOp.first( lcMap );
+
+    while( lc != NULL ) {
+      iONode props = LocOp.base.properties(lc);
+      if( StrOp.equals(wOperator.getid(data->props), wLoc.gettrain(props) )) {
+        LocOp.getLen(lc);
+        AppOp.broadcastEvent( (iONode)props->base.clone( props ) );
+      }
+      lc = (iOLoc)MapOp.next( lcMap );
+    };
+  }
+
 
   /* Broadcast to clients. */
   {
