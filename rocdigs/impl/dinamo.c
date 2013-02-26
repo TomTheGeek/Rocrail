@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -644,6 +644,15 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
     int   addr = wOutput.getaddr( node );
     int   port = wOutput.getport( node );
+    int   gain = wOutput.getgain( node );
+
+    if( port < 1 || addr < 1 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "address out of range [%d-%d]", addr, port);
+      addr = 1;
+      port = 1;
+    }
+    addr--;
+    port--;
 
     if( port < 1 || addr < 1 ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "address out of range [%d-%d]", addr, port);
@@ -655,15 +664,15 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
 
     if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_OM32 ) ) {
       /* OM32 output (0011MMM) (mmuuuuu) (commando) (parameter) */
-      byte param = StrOp.equals( wOutput.on, wOutput.getcmd( node ) ) ? 10:0;
+      byte param = StrOp.equals( wOutput.on, wOutput.getcmd( node ) ) ? gain:0;
       datagram[0] = 4 | VER3_FLAG | data->header;
       datagram[1] = 0x18 | (addr >> 2);
-      datagram[2] = port & 0x1F | ((addr&0x03) << 5);
+      datagram[2] = (port & 0x1F) | ((addr&0x03) << 5);
       datagram[3] = 5; /* linear */
       datagram[4] = param;
       datagram[5] = (byte)__generateChecksum( datagram );
       size = 6;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 linear %s [%d-%d]", wOutput.getcmd( node ), addr+1, port+1 );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 linear %s [%d-%d] gain=%d", wOutput.getcmd( node ), addr+1, port+1, gain );
     }
     else if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_DO ) ) {
       /* digital output */
@@ -815,7 +824,7 @@ static Boolean __checkResponse( iODINAMO dinamo, byte* rbuffer ) {
     if( cnt > 0 ) {
       byte commandoR = rbuffer[1];
 
-      if( commandoR & SYS_CMD == SYS_CMD && cnt > 1 ) {
+      if( (commandoR & SYS_CMD) == SYS_CMD && cnt > 1 ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System response 0x%02X", rbuffer[2] );
 
         if( (rbuffer[2] & 0x60) == 0 ) {

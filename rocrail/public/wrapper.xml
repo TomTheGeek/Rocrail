@@ -1,7 +1,7 @@
 <!--
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.  
@@ -1529,8 +1529,9 @@
         <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
         <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
         <var name="addr" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
-        <var name="port" deprecated="true" vt="int" defval="0" range="0-4" required="true" remark="port of decoder module: 0 = not used."/>
-        <var name="gate" deprecated="true" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
+        <var name="port" vt="int" defval="0" range="0-4" required="true" remark="port of decoder module: 0 = not used."/>
+        <var name="gate" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
+        <var name="gain" vt="int" defval="10" range="0-*" required="true" remark="output gain"/>
         <var name="type" vt="string" defval="output" range="output,switch,button"/>
         <var name="inv" vt="bool" defval="false" remark="Output as switch inverted. (Software wiring correction)"/>
         <var name="asswitch" vt="bool" defval="false" remark="send a switch command"/>

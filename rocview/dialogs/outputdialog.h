@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -218,6 +218,8 @@ public:
     wxTextCtrl* m_Port;
     wxStaticText* m_labGate;
     wxRadioBox* m_Gate;
+    wxStaticText* m_labGain;
+    wxSpinCtrl* m_Gain;
     wxStaticBox* m_OptionsBox;
     wxCheckBox* m_AsSwitch;
     wxCheckBox* m_Invert;
