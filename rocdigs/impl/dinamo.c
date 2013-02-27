@@ -538,97 +538,98 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
 
     if( port < 1 || addr < 1 ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "address out of range [%d-%d]", addr, port);
-      addr = 1;
-      port = 1;
+      size = 0;
     }
-    addr--;
-    port--;
-    nr = addr * 4 + port;
+    else {
+      addr--;
+      port--;
+      nr = addr * 4 + port;
 
-    /* OM32 output */
-    if( StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_OM32 ) ) {
-      byte command = 0;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 %s [%d-%d] %s",
-          wSwitch.getcmd( node ), addr+1, port+1, wSwitch.issinglegate( node )?" (single gate)":"" );
+      /* OM32 output */
+      if( StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_OM32 ) ) {
+        byte command = 0;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 %s [%d-%d] %s",
+            wSwitch.getcmd( node ), addr+1, port+1, wSwitch.issinglegate( node )?" (single gate)":"" );
 
-      if( wSwitch.issinglegate( node ) ) {
-        command = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 9:8;
-        delay = 0;
+        if( wSwitch.issinglegate( node ) ) {
+          command = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 9:8;
+          delay = 0;
+        }
+        else {
+          command = 9; /* ON */
+          if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
+            port++;
+        }
+
+        datagram[0] = 4 | VER3_FLAG | data->header;
+        datagram[1] = 0x18 | ((addr & 0x1C) >> 2 );
+        datagram[2] = ((addr & 0x03) << 5) | (port & 0x1F);
+        datagram[3] = command; /* ON command */
+        datagram[4] = delay;
+        datagram[5] = (byte)__generateChecksum( datagram );
+        size = 6;
       }
-      else {
-        command = 9; /* ON */
-        if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
-          port++;
+
+      /* digital output */
+      else if( StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_DO ) ) {
+        byte command = 0;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DO %s [%d-%d]",
+            wSwitch.getcmd( node ), addr+1, port+1 );
+
+        if( wSwitch.issinglegate( node ) ) {
+          command = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 10:0;
+
+          datagram[0] = 2 | VER3_FLAG | data->header;
+          datagram[1] = 0x08 | command;
+          datagram[2] = addr & 0x7F;
+          datagram[3] = (byte)__generateChecksum( datagram );
+          size = 4;
+        }
+        else {
+          command = 9; /* ON */
+          if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
+            addr++;
+
+          datagram[0] = 3 | VER3_FLAG | data->header;
+          datagram[1] = 0x08 | command;
+          datagram[2] = addr & 0x7F;
+          datagram[3] = delay;
+          datagram[4] = (byte)__generateChecksum( datagram );
+          size = 5;
+        }
+
       }
 
-      datagram[0] = 4 | VER3_FLAG | data->header;
-      datagram[1] = 0x18 | ((addr & 0x1C) >> 2 );
-      datagram[2] = ((addr & 0x03) << 5) | (port & 0x1F);
-      datagram[3] = command; /* ON command */
-      datagram[4] = delay;
-      datagram[5] = (byte)__generateChecksum( datagram );
-      size = 6;
-    }
+      /* virtual output */
+      else if( StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_VO ) ) {
+        byte command = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 1:0;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "VO %s [%d-%d]",
+            wSwitch.getcmd( node ), addr+1, port+1 );
 
-    /* digital output */
-    else if( StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_DO ) ) {
-      byte command = 0;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DO %s [%d-%d]",
-          wSwitch.getcmd( node ), addr+1, port+1 );
-
-      if( wSwitch.issinglegate( node ) ) {
-        command = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 10:0;
-
+        if( !wSwitch.issinglegate( node ) ) {
+          command = 1;
+          addr++;
+        }
         datagram[0] = 2 | VER3_FLAG | data->header;
-        datagram[1] = 0x08 | command;
+        datagram[1] = 0x0C | (command << 1) | ((addr & 0xFF) >> 7);
         datagram[2] = addr & 0x7F;
         datagram[3] = (byte)__generateChecksum( datagram );
         size = 4;
       }
+
+      /* MDD output (default) */
       else {
-        command = 9; /* ON */
-        if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
-          addr++;
+        byte turnout = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x01:0x00;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "MDD %s [%d-%d]",
+            wSwitch.getcmd( node ), addr+1, port+1 );
 
         datagram[0] = 3 | VER3_FLAG | data->header;
-        datagram[1] = 0x08 | command;
-        datagram[2] = addr & 0x7F;
+        datagram[1] = 0x10 | (turnout << 2) | (nr / 128) ;
+        datagram[2] = nr % 128;
         datagram[3] = delay;
         datagram[4] = (byte)__generateChecksum( datagram );
         size = 5;
       }
-
-    }
-
-    /* virtual output */
-    else if( StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_VO ) ) {
-      byte command = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 1:0;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "VO %s [%d-%d]",
-          wSwitch.getcmd( node ), addr+1, port+1 );
-
-      if( !wSwitch.issinglegate( node ) ) {
-        command = 1;
-        addr++;
-      }
-      datagram[0] = 2 | VER3_FLAG | data->header;
-      datagram[1] = 0x0C | (command << 1) | ((addr & 0xFF) >> 7);
-      datagram[2] = addr & 0x7F;
-      datagram[3] = (byte)__generateChecksum( datagram );
-      size = 4;
-    }
-
-    /* MDD output (default) */
-    else {
-      byte turnout = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x01:0x00;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "MDD %s [%d-%d]",
-          wSwitch.getcmd( node ), addr+1, port+1 );
-
-      datagram[0] = 3 | VER3_FLAG | data->header;
-      datagram[1] = 0x10 | (turnout << 2) | (nr / 128) ;
-      datagram[2] = nr % 128;
-      datagram[3] = delay;
-      datagram[4] = (byte)__generateChecksum( datagram );
-      size = 5;
     }
   }
 
@@ -648,51 +649,44 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
 
     if( port < 1 || addr < 1 ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "address out of range [%d-%d]", addr, port);
-      addr = 1;
-      port = 1;
+      size = 0;
     }
-    addr--;
-    port--;
+    else {
+      addr--;
+      port--;
 
-    if( port < 1 || addr < 1 ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "address out of range [%d-%d]", addr, port);
-      addr = 1;
-      port = 1;
-    }
-    addr--;
-    port--;
-
-    if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_OM32 ) ) {
-      /* OM32 output (0011MMM) (mmuuuuu) (commando) (parameter) */
-      byte param = StrOp.equals( wOutput.on, wOutput.getcmd( node ) ) ? gain:0;
-      datagram[0] = 4 | VER3_FLAG | data->header;
-      datagram[1] = 0x18 | (addr >> 2);
-      datagram[2] = (port & 0x1F) | ((addr&0x03) << 5);
-      datagram[3] = 5; /* linear */
-      datagram[4] = param;
-      datagram[5] = (byte)__generateChecksum( datagram );
-      size = 6;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 linear %s [%d-%d] gain=%d", wOutput.getcmd( node ), addr+1, port+1, gain );
-    }
-    else if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_DO ) ) {
-      /* digital output */
-      byte command = StrOp.equals( wOutput.on, wOutput.getcmd( node ) ) ? 10:0;
-      datagram[0] = 2 | VER3_FLAG | data->header;
-      datagram[1] = 0x08 | command;
-      datagram[2] = addr & 0x7F;
-      datagram[3] = (byte)__generateChecksum( datagram );
-      size = 4;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 digital %s [%d]", wOutput.getcmd( node ), addr+1 );
-    }
-    else if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_VO ) ) {
-      /* virtual output */
-      byte command = StrOp.equals( wOutput.on, wOutput.getcmd( node ) ) ? 1:0;
-      datagram[0] = 2 | VER3_FLAG | data->header;
-      datagram[1] = 0x0C | (command << 1) | ((addr & 0xFF) >> 7);
-      datagram[2] = addr & 0x7F;
-      datagram[3] = (byte)__generateChecksum( datagram );
-      size = 4;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 virtual %s [%d]", wOutput.getcmd( node ), addr+1 );
+      if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_OM32 ) ) {
+        /* OM32 output (0011MMM) (mmuuuuu) (commando) (parameter) */
+        byte param = StrOp.equals( wOutput.on, wOutput.getcmd( node ) ) ? gain:0;
+        datagram[0] = 4 | VER3_FLAG | data->header;
+        datagram[1] = 0x18 | (addr >> 2);
+        datagram[2] = (port & 0x1F) | ((addr&0x03) << 5);
+        datagram[3] = 5; /* linear */
+        datagram[4] = param;
+        datagram[5] = (byte)__generateChecksum( datagram );
+        size = 6;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 linear %s [%d-%d] gain=%d", wOutput.getcmd( node ), addr+1, port+1, gain );
+      }
+      else if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_DO ) ) {
+        /* digital output */
+        byte command = StrOp.equals( wOutput.on, wOutput.getcmd( node ) ) ? 10:0;
+        datagram[0] = 2 | VER3_FLAG | data->header;
+        datagram[1] = 0x08 | command;
+        datagram[2] = addr & 0x7F;
+        datagram[3] = (byte)__generateChecksum( datagram );
+        size = 4;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 digital %s [%d]", wOutput.getcmd( node ), addr+1 );
+      }
+      else if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_VO ) ) {
+        /* virtual output */
+        byte command = StrOp.equals( wOutput.on, wOutput.getcmd( node ) ) ? 1:0;
+        datagram[0] = 2 | VER3_FLAG | data->header;
+        datagram[1] = 0x0C | (command << 1) | ((addr & 0xFF) >> 7);
+        datagram[2] = addr & 0x7F;
+        datagram[3] = (byte)__generateChecksum( datagram );
+        size = 4;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 virtual %s [%d]", wOutput.getcmd( node ), addr+1 );
+      }
     }
   }
 
