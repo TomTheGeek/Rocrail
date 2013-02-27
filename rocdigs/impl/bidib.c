@@ -974,7 +974,7 @@ static Boolean _supportPT( obj inst ) {
  * 01  Accessory-Adresse
  * 11  Extended Accessory
  */
-static void __handleSensor(iOBiDiB bidib, int bus, int addr, Boolean state, int locoAddr, int type ) {
+static void __handleSensor(iOBiDiB bidib, int bus, int addr, Boolean state, int locoAddr, int type, int load ) {
   iOBiDiBData data = Data(bidib);
   char ident[32];
 
@@ -1001,6 +1001,7 @@ static void __handleSensor(iOBiDiB bidib, int bus, int addr, Boolean state, int 
 
     wFeedback.setbus( nodeC, bus );
     wFeedback.setaddr( nodeC, addr );
+    wFeedback.setload( nodeC, load );
     wFeedback.setfbtype( nodeC, wFeedback.fbtype_sensor );
 
     if( data->iid != NULL )
@@ -1034,7 +1035,7 @@ static void __handleMultipleSensors(iOBiDiB bidib, int bus, const byte* msg, int
     int addr = baseAddr + (i / 2);
     int bit = 0;
     for( bit = 0; bit < 8; bit++ ) {
-      __handleSensor(bidib, bus, bit+((i%2)*8), msg[6+i] & (0x01 << bit), 0, -1);
+      __handleSensor(bidib, bus, bit+((i%2)*8), msg[6+i] & (0x01 << bit), 0, -1, 0);
     }
   }
 
@@ -2001,7 +2002,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,"BM port %d occupied", pdata[0]);
     if(!bidibnode->occ[pdata[0]]) {
       bidibnode->occ[pdata[0]] = True;
-      __handleSensor(bidib, bidibnode->uid, pdata[0], True, 0, -1);
+      __handleSensor(bidib, bidibnode->uid, pdata[0], True, 0, -1, bidibnode->bmload[pdata[0]]);
     }
     __seqAck(bidib, bidibnode, MSG_BM_MIRROR_OCC, pdata, datasize);
     break;
@@ -2011,7 +2012,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // len = 4
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"BM port %d free", pdata[0]);
     bidibnode->occ[pdata[0]] = False;
-    __handleSensor(bidib, bidibnode->uid, pdata[0], False, 0, -1);
+    __handleSensor(bidib, bidibnode->uid, pdata[0], False, 0, -1, bidibnode->bmload[pdata[0]]);
     __seqAck(bidib, bidibnode, MSG_BM_MIRROR_FREE, pdata, datasize);
     break;
   }
@@ -2045,7 +2046,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
       if( locoAddr > 0 ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"BM port %d reports loco %d", port, locoAddr);
         bidibnode->occ[port] = True;
-        __handleSensor(bidib, bidibnode->uid, pdata[0], bidibnode->occ[port], locoAddr, type );
+        __handleSensor(bidib, bidibnode->uid, pdata[0], bidibnode->occ[port], locoAddr, type, bidibnode->bmload[port] );
       }
     }
     break;
@@ -2076,8 +2077,14 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_BM_CURRENT:
   { //             MNUM, DAT
     // 08 00 0D A7 00    00
+    int port = pdata[0];
+    int current = __calcCurrent(pdata[1]);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "MSG_BM_CURRENT, path=%s seq=%d current=%d", pathKey, Seq, pdata[1] );
+        "MSG_BM_CURRENT, path=%s seq=%d port=%d current=%dmA", pathKey, Seq, port, current );
+    if( bidibnode != NULL && port < 128) {
+      bidibnode->bmload[port] = current;
+      __handleSensor(bidib, bidibnode->uid, port, bidibnode->occ[port], 0, -1, bidibnode->bmload[port]);
+    }
     break;
   }
 
@@ -2220,7 +2227,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_LC_KEY:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_LC_KEY path=%s port=%d state=%d", pathKey, pdata[0], pdata[1] );
-    __handleSensor(bidib, bidibnode->uid, pdata[0], pdata[1] > 0 ? True:False, 0, -1);
+    __handleSensor(bidib, bidibnode->uid, pdata[0], pdata[1] > 0 ? True:False, 0, -1, 0);
     break;
 
   case MSG_ACCESSORY_STATE:

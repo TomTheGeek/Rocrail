@@ -1599,6 +1599,7 @@
         <var name="countedcars" vt="int" defval="0" remark="number of cars to count before firing the event. (only for client info)"/>
         <var name="zone" vt="string" defval="" remark="transponder zone"/>
         <var name="wheelcount" vt="int" defval="0" remark="counted wheels; sofar"/>
+        <var name="load" vt="int" defval="0" units="mA" remark="current"/>
         <const name="reset" vt="string" val="reset"/>
         <const name="resetstatus" vt="string" val="resetstatus"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>

@@ -2451,12 +2451,13 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     int carcount = wFeedback.getcarcount( node );
     int countedcars = wFeedback.getcountedcars( node );
     int val = wFeedback.getval( node );
+    int load = wFeedback.getload( node );
     int addr = wFeedback.getaddr( m_Props );
     const char* info = wFeedback.getinfo( node );
 
     StrOp.free(m_Tip);
-    m_Tip = StrOp.fmt( "%s addr=%d ident=%s val=%d count=%d info=%s cars=%d/%d wheelcount=%d",
-                           wFeedback.getid( node ), addr, ident, val, counter, info, countedcars, carcount, wheelcount );
+    m_Tip = StrOp.fmt( "%s addr=%d ident=%s val=%d count=%d info=%s cars=%d/%d wheelcount=%d load=%d",
+                           wFeedback.getid( node ), addr, ident, val, counter, info, countedcars, carcount, wheelcount, load );
 
     showTooltip(wxGetApp().getFrame()->isTooltip());
 

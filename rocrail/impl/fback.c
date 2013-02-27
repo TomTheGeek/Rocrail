@@ -291,6 +291,7 @@ static void _resetCounter( iOFBack inst ) {
     wFeedback.setcarcount( nodeD, data->carcount );
     wFeedback.setcountedcars( nodeD, data->countedcars );
     wFeedback.setwheelcount( nodeD, data->wheelcount );
+    wFeedback.setload( nodeD, wFeedback.getload(data->props) );
     AppOp.broadcastEvent( nodeD );
   }
 }
@@ -322,6 +323,7 @@ static void _setState( iOFBack inst, Boolean state ) {
     wFeedback.setcarcount( nodeD, data->carcount );
     wFeedback.setcountedcars( nodeD, data->countedcars );
     wFeedback.setwheelcount( nodeD, data->wheelcount );
+    wFeedback.setload( nodeD, wFeedback.getload(data->props) );
     AppOp.broadcastEvent( nodeD );
   }
 }
@@ -440,6 +442,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
       wFeedback.setfbtype( nodeD, wFeedback.getfbtype( data->props ) );
       wFeedback.setidentifier( nodeD, wFeedback.getidentifier( nodeC ) );
       wFeedback.setwheelcount( nodeD, wFeedback.getwheelcount( nodeC ) + data->wheelcount );
+      wFeedback.setload( nodeD, wFeedback.getload(data->props) );
       AppOp.broadcastEvent( nodeD );
     }
     nodeC->base.del(nodeC);
@@ -454,6 +457,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
   wFeedback.setstate( data->props, data->state );
   wFeedback.setcounter( data->props, data->counter );
   wFeedback.setidentifier( data->props, wFeedback.getidentifier( nodeC ) );
+  wFeedback.setload( data->props, wFeedback.getload( nodeC ) );
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fb[%s] state=%s ident=%d val=%d count=%d",
                FBackOp.getId(inst), data->state?"ON":"OFF", wFeedback.getidentifier( nodeC ),
@@ -501,7 +505,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
     wFeedback.setcarcount( nodeD, data->carcount );
     wFeedback.setcountedcars( nodeD, data->countedcars );
     wFeedback.setwheelcount( nodeD, wFeedback.getwheelcount( nodeC ) + data->wheelcount );
-
+    wFeedback.setload( nodeD, wFeedback.getload(data->props) );
     AppOp.broadcastEvent( nodeD );
   }
 
@@ -711,6 +715,7 @@ static void _doTimedOff( iOFBack inst ) {
       wFeedback.setaddr( nodeD, wFeedback.getaddr( data->props ) );
       wFeedback.setbus( nodeD, wFeedback.getbus( data->props ) );
       wFeedback.setfbtype( nodeD, wFeedback.getfbtype( data->props ) );
+      wFeedback.setload( nodeD, wFeedback.getload(data->props) );
       AppOp.broadcastEvent( nodeD );
 
       {
