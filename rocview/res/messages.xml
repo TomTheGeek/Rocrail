@@ -20634,4 +20634,7 @@
     <nl txt="Treinstel vrijgeven"/>
     <it txt="Rilasciare treno"/>
   </Msg>
+  <Msg id="gain">
+    <en txt="Gain"/>
+  </Msg>
 </Messages>

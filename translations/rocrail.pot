@@ -6281,3 +6281,9 @@ msgstr ""
 msgid "Release train"
 msgstr ""
 
+#. 
+# id="gain"
+#, c-format
+msgid "Gain"
+msgstr ""
+
