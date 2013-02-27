@@ -1554,7 +1554,7 @@ msgid "Train type"
 msgstr ""
 
 #. 
-# id="passengers"
+# id="passenger"
 #, c-format
 msgid "Passenger"
 msgstr ""

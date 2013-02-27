@@ -2343,7 +2343,7 @@
         <var name="owner" vt="string" defval="" range="*"/>
         <var name="color" vt="string" defval="" range="*"/>
         <var name="location" vt="string" defval="" range="*"/>
-        <const name="cartype_freight" vt="string" val="freight"/>
+        <const name="cartype_freight" vt="string" val="goods"/>
         <const name="cartype_passenger" vt="string" val="passenger"/>
         <var name="type" vt="string" defval="freight" range="freight,passenger" remark="Car main type."/>
         <const name="freight_boxcar" vt="string" val="boxcar"/>

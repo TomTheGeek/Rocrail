@@ -189,7 +189,7 @@ void CarDlg::initLabels() {
   // Details
   m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
   m_Type->SetString( 0, wxGetApp().getMsg( "goods" ) );
-  m_Type->SetString( 1, wxGetApp().getMsg( "passengers" ) );
+  m_Type->SetString( 1, wxGetApp().getMsg( "passenger" ) );
   m_labSubtype->SetLabel( wxGetApp().getMsg( "subtype" ) );
   m_labLength->SetLabel( wxGetApp().getMsg( "length" ) );
   m_labManuId->SetLabel( wxGetApp().getMsg( "manufactured_ID" ) );

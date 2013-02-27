@@ -124,6 +124,10 @@ static struct OCar* _inst( iONode ini ) {
 
   /* Initialize data->xxx members... */
   data->props = ini;
+  if( StrOp.equals("freight", wCar.gettype(data->props)) ) {
+    /* type value changed from freight to goods */
+    wCar.settype(data->props, wCar.cartype_freight);
+  }
 
   instCnt++;
   return __Car;
