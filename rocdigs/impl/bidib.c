@@ -1554,12 +1554,27 @@ static int __calcCurrent(int current) {
   return current;
 }
 
-static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
+static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, int datasize) {
   iOBiDiBData data = Data(bidib);
   int uid     = 0;
-  int current = pdata[BIDIB_BST_DIAG_I];
-  int volt    = pdata[BIDIB_BST_DIAG_V] * 100; /* mV */
-  int temp    = pdata[BIDIB_BST_DIAG_T];
+  int current = 0;
+  int volt    = 0;
+  int temp    = 0;
+  int i       = 0;
+
+  for( i = 0; i < datasize; i+=2 ) {
+    switch( pdata[i] ) {
+    case BIDIB_BST_DIAG_I:
+      current = pdata[i+1];
+      break;
+    case BIDIB_BST_DIAG_V:
+      volt = pdata[i+1] * 100; /* units=100mV */
+      break;
+    case BIDIB_BST_DIAG_T:
+      temp = pdata[i+1];
+      break;
+    }
+  }
 
   current = __calcCurrent(current);
 
@@ -2130,7 +2145,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
 
   case MSG_BOOST_DIAGNOSTIC:
-    __handleBoosterDiagnostic(bidib, bidibnode, pdata);
+    __handleBoosterDiagnostic(bidib, bidibnode, pdata, datasize);
     break;
 
   case MSG_CS_STATE:
