@@ -1135,6 +1135,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
     if( booster == NULL && wBooster.getid( item ) != NULL && StrOp.len( wBooster.getid( item ) ) > 0 ) {
       _addItem( inst, item );
     }
+    ControlOp.setBoosters(AppOp.getControl(), wPlan.getboosterlist( data->model ));
   }
   else if( StrOp.equals( wLocation.name(), name ) ) {
     /* modify location... */

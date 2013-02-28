@@ -1452,10 +1452,10 @@ static iOR2Rnet _getR2Rnet(iOControl control) {
 
 static void _setBoosters(iOControl control, iONode ini) {
   iOControlData data = Data(control);
-  if( ini != NULL ) {
+  if( data->powerman == NULL )
     data->powerman = PowerManOp.inst(ini);
-  }
-
+  else
+    PowerManOp.modify(data->powerman, ini);
 }
 
 
@@ -1483,8 +1483,13 @@ static iOControl _inst( Boolean nocom ) {
       iOModel model = AppOp.getModel();
       if( model != NULL) {
         iONode plan = ModelOp.getModel( model );
-        if( plan != NULL && wPlan.getboosterlist(plan) != NULL)
+        if( plan != NULL) {
+          if( wPlan.getboosterlist(plan) == NULL ) {
+            iONode boosterlist = NodeOp.inst( wBoosterList.name(), NULL, ELEMENT_NODE);
+            NodeOp.addChild(plan, boosterlist);
+          }
           ControlOp.setBoosters(control, wPlan.getboosterlist(plan));
+        }
       }
     }
 

@@ -343,6 +343,8 @@ static void __initBoosters( iOPowerMan inst ) {
   iOModel model = AppOp.getModel();
 
   iONode booster = wBoosterList.getbooster(data->props);
+  MapOp.clear(data->boostermap);
+
   while( booster != NULL ) {
     iOFBack scfb = ModelOp.getFBack( model, wBooster.getscfb( booster ) );
     iOFBack pwfb = ModelOp.getFBack( model, wBooster.getpowerfb( booster ) );
@@ -352,19 +354,17 @@ static void __initBoosters( iOPowerMan inst ) {
     wBooster.settemp( booster, 0 );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "Init sensors for booster [%s]...", wBooster.getid(booster) );
+        "adding booster [%s]...", wBooster.getid(booster) );
 
     MapOp.put( data->boostermap, wBooster.getid(booster), (obj)booster );
 
     if( scfb != NULL && pwfb != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "Init sensors for booster [%s]...", wBooster.getid(booster) );
       FBackOp.addListener( scfb, (obj)inst );
       FBackOp.addListener( pwfb, (obj)inst );
       MapOp.put( data->scmap, wBooster.getscfb( booster ), (obj)booster );
       MapOp.put( data->pwmap, wBooster.getpowerfb( booster ), (obj)booster );
-    }
-    else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-          "Sensors for booster %s could not be initialized.", wBooster.getid(booster) );
     }
 
     booster = wBoosterList.nextbooster(data->props, booster);
@@ -465,7 +465,7 @@ static struct OPowerMan* _inst( iONode ini ) {
 
 /**  */
 static void _modify( struct OPowerMan* inst ,iONode mod ) {
-  return;
+  __initBoosters(inst);
 }
 
 
