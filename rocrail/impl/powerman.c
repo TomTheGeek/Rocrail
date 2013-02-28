@@ -36,6 +36,8 @@
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Module.h"
+#include "rocrail/wrapper/public/Action.h"
+#include "rocrail/wrapper/public/ActionCtrl.h"
 
 #include "rocs/public/trace.h"
 #include "rocs/public/node.h"
@@ -95,6 +97,33 @@ static void* __properties( void* inst ) {
 
 static const char* __id( void* inst ) {
   return NULL;
+}
+
+static void __checkAction( iOPowerMan inst, iONode props, const char* state ) {
+  iOPowerManData data   = Data(inst);
+  iOModel     model  = AppOp.getModel();
+  iONode      action = wBooster.getactionctrl( props );
+
+  /* loop over all actions */
+  while( action != NULL ) {
+    int counter = atoi(wActionCtrl.getstate( action ));
+
+    if( StrOp.len(wActionCtrl.getstate( action )) == 0 ||
+        StrOp.equals(state, wActionCtrl.getstate( action )) )
+    {
+
+      iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
+      if( Action != NULL ) {
+        ActionOp.exec(Action, action);
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
+          wActionCtrl.getstate( action ), state );
+    }
+
+    action = wBooster.nextactionctrl( props, action );
+  }
 }
 
 
@@ -248,6 +277,12 @@ static void __stateEvent( obj inst, iONode event ) {
         }
 
       }
+
+      if( wBooster.isshortcut(booster) )
+        __checkAction((iOPowerMan)inst, booster, "shortcut");
+      else
+        __checkAction((iOPowerMan)inst, booster, "load");
+
 
       AppOp.broadcastEvent( (iONode)NodeOp.base.clone(booster) );
 
