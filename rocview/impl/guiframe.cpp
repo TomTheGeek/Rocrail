@@ -4116,32 +4116,44 @@ void RocGuiFrame::OnStateEvent( wxCommandEvent& event ) {
   // Get copied node:
   iONode node = (iONode)event.GetClientData();
 
-  Boolean power = wState.ispower( node );
-  Boolean console = wState.isconsolemode( node );
-  m_bServerConsoleMode = console;
+  if( StrOp.equals( wBooster.name(), NodeOp.getName(node))) {
+    iONode booster = node;
+    TraceOp.trc("frame", TRCLEVEL_INFO, __LINE__, 9999, "booster %s(%08X) power is %s, diagnostics: %dmA %dmV %C",
+        wBooster.getid(booster), wBooster.getuid(booster), wBooster.ispower(booster) ? "ON":"OFF",
+            wBooster.getload(booster), wBooster.getvolt(booster), wBooster.gettemp(booster) );
 
-  GetToolBar()->ToggleTool(ME_Go, power);
+    if( m_PowerCtrl != NULL ) {
+      m_PowerCtrl->powerEvent(node);
+    }
+  }
+  else {
+    Boolean power = wState.ispower( node );
+    Boolean console = wState.isconsolemode( node );
+    m_bServerConsoleMode = console;
 
-  wxMenuItem* mi = menuBar->FindItem(ME_ShutdownRocRail);
-  if( mi != NULL ) mi->Enable(!console);
+    GetToolBar()->ToggleTool(ME_Go, power);
 
-  mi = menuBar->FindItem(ME_Go);
-  if( mi != NULL ) mi->Check(power);
+    wxMenuItem* mi = menuBar->FindItem(ME_ShutdownRocRail);
+    if( mi != NULL ) mi->Enable(!console);
 
-  int state = (wState.ispower( node )?0x01:0x00) |
-              (wState.istrackbus( node )?0x02:0x00) |
-              (wState.issensorbus( node )?0x04:0x00) |
-              (wState.isaccessorybus( node )?0x08:0x00);
+    mi = menuBar->FindItem(ME_Go);
+    if( mi != NULL ) mi->Check(power);
 
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "new state 0x%04X %s", state, console?"(consolemode)":"" );
-  m_StatusBar->Update( state );
-  m_StatusBar->Health(wState.ishealthy(node));
-  if( wState.gettemp( node ) > 0 )
-     SetStatusText( wxString::Format( _T("%dV%d %dmA %d°C"),
-         wState.getvolt( node )/1000, (wState.getvolt( node )%1000)/100, wState.getload( node ), wState.gettemp( node )), status_load );
-  else
-    SetStatusText( wxString::Format( _T("%dV%d %dmA"),
-        wState.getvolt( node )/1000, (wState.getvolt( node )%1000)/100, wState.getload( node )), status_load );
+    int state = (wState.ispower( node )?0x01:0x00) |
+                (wState.istrackbus( node )?0x02:0x00) |
+                (wState.issensorbus( node )?0x04:0x00) |
+                (wState.isaccessorybus( node )?0x08:0x00);
+
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "new state 0x%04X %s", state, console?"(consolemode)":"" );
+    m_StatusBar->Update( state );
+    m_StatusBar->Health(wState.ishealthy(node));
+    if( wState.gettemp( node ) > 0 )
+       SetStatusText( wxString::Format( _T("%dV%d %dmA %d°C"),
+           wState.getvolt( node )/1000, (wState.getvolt( node )%1000)/100, wState.getload( node ), wState.gettemp( node )), status_load );
+    else
+      SetStatusText( wxString::Format( _T("%dV%d %dmA"),
+          wState.getvolt( node )/1000, (wState.getvolt( node )%1000)/100, wState.getload( node )), status_load );
+  }
 
   // Cleanup node:
   node->base.del( node );

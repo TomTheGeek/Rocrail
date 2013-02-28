@@ -127,6 +127,7 @@
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/Turntable.h"
+#include "rocrail/wrapper/public/Booster.h"
 
 #include "rocview/res/icons.hpp"
 
@@ -902,6 +903,13 @@ static void rocrailCallback( obj me, iONode node ) {
       event.SetClientData( node->base.clone( node ) );
       wxPostEvent( guiApp->getFrame(), event );
     }
+  }
+  /* Booster */
+  else if( StrOp.equals( wBooster.name(), NodeOp.getName( node ) ) && guiApp->isInit() ) {
+    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, STATE_EVENT );
+    // Make a copy of the node for using it out of this scope:
+    event.SetClientData( node->base.clone( node ) );
+    wxPostEvent( guiApp->getFrame(), event );
   }
   /* Auto */
   else if( StrOp.equals( wAutoCmd.name(), NodeOp.getName( node ) ) && guiApp->isInit() ) {

@@ -220,8 +220,15 @@ static void __stateEvent( obj inst, iONode event ) {
     if( wBooster.getuid(booster) == wState.getuid(event) ) {
       Boolean shortcut = wState.isshortcut(event);
       wBooster.setpower(booster, wState.ispower(event));
-      TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "booster %s power is %s",
-          wBooster.getid(booster), wState.ispower(event) ? "ON":"OFF" );
+
+      wBooster.setload( booster, wBooster.getload(event) );
+      wBooster.setvolt( booster, wBooster.getvolt(event) );
+      wBooster.settemp( booster, wBooster.gettemp(event) );
+
+      TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "booster %s(%08X) power is %s, diagnostics: %dmA %dmV %C",
+          wBooster.getid(booster), wBooster.getuid(booster), wState.ispower(event) ? "ON":"OFF",
+              wBooster.getload(booster), wBooster.getvolt(booster), wBooster.gettemp(booster) );
+
 
       if( shortcut != wBooster.isshortcut(booster) ) {
         wBooster.setshortcut( booster, shortcut );
@@ -241,6 +248,9 @@ static void __stateEvent( obj inst, iONode event ) {
         }
 
       }
+
+      AppOp.broadcastEvent( (iONode)NodeOp.base.clone(booster) );
+
     }
     booster = (iONode)MapOp.next( data->boostermap );
   }
@@ -298,6 +308,10 @@ static void __initBoosters( iOPowerMan inst ) {
   while( booster != NULL ) {
     iOFBack scfb = ModelOp.getFBack( model, wBooster.getscfb( booster ) );
     iOFBack pwfb = ModelOp.getFBack( model, wBooster.getpowerfb( booster ) );
+
+    wBooster.setload( booster, 0 );
+    wBooster.setvolt( booster, 0 );
+    wBooster.settemp( booster, 0 );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Init sensors for booster [%s]...", wBooster.getid(booster) );

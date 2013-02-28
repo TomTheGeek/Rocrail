@@ -1285,11 +1285,15 @@
         <var name="powerfb" vt="string" defval="" range="*"/>
         <var name="powersw" vt="string" defval="" range="*"/>
         <var name="uid" vt="int" defval="0" range="0-*"/>
+        <var name="load" vt="int" defval="0" units="mA" range="0-*"/>
+        <var name="volt" vt="int" defval="0" units="mV" range="0-*"/>
+        <var name="temp" vt="int" defval="0" units="C" range="0-*"/>
         <var name="power" vt="bool" defval="false" remark="Track power flag."/>
         <var name="shortcut" vt="bool" defval="false" remark="Shortcut flag."/>
         <var name="scopt_poweroffall" vt="bool" defval="false" remark="Power off all boosters at shortcut."/>
         <var name="scopt_stoplocos" vt="bool" defval="false" remark="Stop all locos in the district at shortcut."/>
         <var name="scopt_repoweron" vt="bool" defval="false" remark="Repower on incase the shortcut is cleared."/>
+        <actionctrl cardinality="n"/>
       </booster>
     </boosterlist>
     <mv cardinality="1" remark="Measurement Velocity Track" wrappername="MVTrack">

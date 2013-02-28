@@ -46,7 +46,7 @@ PowerCtrlDlg::PowerCtrlDlg( wxWindow* parent ):powerctrlgen( parent )
   m_SelBooster = NULL;
   m_BoosterMap = MapOp.inst();
   initLabels();
-  initValues();
+  initValues(NULL);
 
   GetSizer()->Layout();
   GetSizer()->Fit(this);
@@ -76,10 +76,13 @@ void PowerCtrlDlg::initLabels() {
   m_Boosters->SetColLabelValue(1, wxGetApp().getMsg("shortcut") );
   m_Boosters->SetColLabelValue(2, wxGetApp().getMsg("trackpower") );
   m_Boosters->SetColLabelValue(3, wxGetApp().getMsg("powerdistrict") );
+  m_Boosters->SetColLabelValue(4, wxT("mA") );
+  m_Boosters->SetColLabelValue(5, wxT("V") );
+  m_Boosters->SetColLabelValue(6, wxT("°C") );
 }
 
 
-void PowerCtrlDlg::initValues() {
+void PowerCtrlDlg::initValues(iONode event) {
   m_Boosters->DeleteRows(0,m_Boosters->GetNumberRows());
   MapOp.clear(m_BoosterMap);
 
@@ -89,16 +92,30 @@ void PowerCtrlDlg::initValues() {
     if( boosterlist != NULL ) {
       iONode booster = wBoosterList.getbooster( boosterlist );
       while( booster != NULL ) {
+        if( event != NULL && StrOp.equals( wBooster.name(), NodeOp.getName(event))) {
+          if( wBooster.getuid(booster) > 0 && wBooster.getuid(event) > 0 && wBooster.getuid(booster) == wBooster.getuid(event) ) {
+            wBooster.setload(booster, wBooster.getload(event));
+            wBooster.setvolt(booster, wBooster.getvolt(event));
+            wBooster.settemp(booster, wBooster.gettemp(event));
+          }
+        }
+
         MapOp.put(m_BoosterMap, wBooster.getid( booster ), (obj)booster );
         m_Boosters->AppendRows();
         m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 0, wxString(wBooster.getid( booster ),wxConvUTF8) );
         m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 1, wBooster.isshortcut(booster)?wxGetApp().getMsg("yes"):wxGetApp().getMsg("no") );
         m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 2, wBooster.ispower(booster)?wxGetApp().getMsg("on"):wxGetApp().getMsg("off") );
         m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 3, wxString(wBooster.getdistrict( booster ),wxConvUTF8) );
+        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 4, wxString::Format("%d", wBooster.getload(booster)) );
+        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 5, wxString::Format("%d.%d", wBooster.getvolt(booster)/1000, (wBooster.getvolt(booster)%1000)/100)  );
+        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 6, wxString::Format("%d", wBooster.gettemp(booster)) );
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 0, true );
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 1, true );
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 2, true );
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 3, true );
+        m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 4, true );
+        m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 5, true );
+        m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 6, true );
 
         booster = wBoosterList.nextbooster( boosterlist, booster );
       };
@@ -128,7 +145,7 @@ void PowerCtrlDlg::onCellRightClick( wxGridEvent& event ) {
 
 
 void PowerCtrlDlg::powerEvent(iONode event) {
-  initValues();
+  initValues(event);
 }
 
 
