@@ -60,6 +60,7 @@ protected:
   void onBoosterSelect( wxCommandEvent& event );
   void onBlockSelect( wxCommandEvent& event );
   void onModuleSelect( wxCommandEvent& event );
+  void onActions( wxCommandEvent& event );
 
 public:
 	/** Constructor */

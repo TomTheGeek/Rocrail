@@ -23,6 +23,7 @@
 
 
 #include "powermandlg.h"
+#include "actionsctrldlg.h"
 
 #include "wx/wxprec.h"
 
@@ -194,6 +195,7 @@ void PowerManDlg::initLabels() {
   m_PowerOffAll->SetLabel( wxGetApp().getMsg( "scopt_poweroffall" ) );
   m_RetryPowerOn->SetLabel( wxGetApp().getMsg( "scopt_repoweron" ) );
 
+  m_Actions->SetLabel( wxGetApp().getMsg( "actions" )+_T("...") );
 
 }
 
@@ -501,4 +503,19 @@ void PowerManDlg::OnOK( wxCommandEvent& event )
 {
   OnApply(event);
   EndModal( wxID_OK );
+}
+
+
+void PowerManDlg::onActions( wxCommandEvent& event )
+{
+  if( m_Props == NULL )
+    return;
+
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props );
+
+  if( wxID_OK == dlg->ShowModal() ) {
+    // TODO: inform
+  }
+
+  dlg->Destroy();
 }
