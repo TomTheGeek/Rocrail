@@ -117,6 +117,7 @@ void PowerManDlg::initLabels() {
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
+  m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_labDistrict->SetLabel( wxGetApp().getMsg( "powerdistrict" ) );
 
   iONode model = wxGetApp().getModel();
@@ -286,6 +287,7 @@ void PowerManDlg::initValues() {
 
   // init General
   m_ID->SetValue( wxString(wBooster.getid( m_Props ),wxConvUTF8) );
+  m_IID->SetValue( wxString(wBooster.getiid( m_Props ),wxConvUTF8) );
   m_District->SetValue( wxString(wBooster.getdistrict( m_Props ),wxConvUTF8) );
 
   m_ShortcutSensor->SetStringSelection( wxString(wBooster.getscfb( m_Props ),wxConvUTF8) );
@@ -336,6 +338,7 @@ bool PowerManDlg::evaluate() {
   // evaluate General
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wBooster.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
+  wBooster.setiid( m_Props, m_IID->GetValue().mb_str(wxConvUTF8) );
   wBooster.setdistrict( m_Props, m_District->GetValue().mb_str(wxConvUTF8) );
 
   if( StrOp.equals( "-", m_ShortcutSensor->GetStringSelection().mb_str(wxConvUTF8) ) )

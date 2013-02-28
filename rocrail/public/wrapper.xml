@@ -945,6 +945,7 @@
 
   <powercmd remark="Power Manager command." wrappername="PwrCmd">
     <var name="id" vt="string" defval="NULL" range="*" remark="Booster ID; command for all not set."/>
+    <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
     <var name="cmd" vt="string" defval="" range="*"/>
     <const name="on" vt="string" val="on"/>
     <const name="off" vt="string" val="off"/>

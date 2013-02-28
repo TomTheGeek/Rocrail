@@ -421,6 +421,7 @@ static Boolean _cmd(iOPowerMan inst, iONode cmd) {
         /* */
         iONode nodeA = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
         wSysCmd.setbus(nodeA, uid);
+        wSysCmd.setiid(nodeA, wBooster.getiid(booster));
         if( StrOp.equals( wPwrCmd.on, wPwrCmd.getcmd(cmd) ) )
           wSysCmd.setcmd(nodeA, wSysCmd.go);
         else
