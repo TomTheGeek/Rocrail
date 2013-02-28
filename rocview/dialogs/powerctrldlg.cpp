@@ -45,6 +45,7 @@ PowerCtrlDlg::PowerCtrlDlg( wxWindow* parent ):powerctrlgen( parent )
 {
   m_SelBooster = NULL;
   m_BoosterMap = MapOp.inst();
+  m_SelectedRow = -1;
   initLabels();
   initValues(NULL);
 
@@ -97,6 +98,7 @@ void PowerCtrlDlg::initValues(iONode event) {
             wBooster.setload(booster, wBooster.getload(event));
             wBooster.setvolt(booster, wBooster.getvolt(event));
             wBooster.settemp(booster, wBooster.gettemp(event));
+            wBooster.setpower(booster, wBooster.ispower(event));
           }
         }
 
@@ -122,12 +124,18 @@ void PowerCtrlDlg::initValues(iONode event) {
     }
   }
 
-  m_On->Enable( false );
-  m_Off->Enable( false );
+  if( m_SelectedRow != -1 ) {
+    m_Boosters->SelectRow(m_SelectedRow);
+  }
+  else {
+    m_On->Enable( false );
+    m_Off->Enable( false );
+  }
 }
 
 
 void PowerCtrlDlg::onCellLeftClick( wxGridEvent& event ) {
+  m_SelectedRow = event.GetRow();
   m_Boosters->SelectRow(event.GetRow());
   m_On->Enable( true );
   m_Off->Enable( true );

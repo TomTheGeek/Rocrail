@@ -41,6 +41,7 @@ class PowerCtrlDlg : public powerctrlgen
   void initValues(iONode event);
   iONode m_SelBooster;
   iOMap m_BoosterMap;
+  int m_SelectedRow;
 
 protected:
 	// Handlers for powerctrlgen events.

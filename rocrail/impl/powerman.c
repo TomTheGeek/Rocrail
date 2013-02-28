@@ -257,7 +257,7 @@ static void __stateEvent( obj inst, iONode event ) {
       wBooster.setvolt( booster, wBooster.getvolt(event) );
       wBooster.settemp( booster, wBooster.gettemp(event) );
 
-      TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "booster %s(%08X) power is %s, diagnostics: %dmA %dmV %dC",
+      TraceOp.trc(name, TRCLEVEL_DEBUG, __LINE__, 9999, "booster %s(%08X) power is %s, diagnostics: %dmA %dmV %dC",
           wBooster.getid(booster), wBooster.getuid(booster), wState.ispower(event) ? "ON":"OFF",
               wBooster.getload(booster), wBooster.getvolt(booster), wBooster.gettemp(booster) );
 
@@ -375,6 +375,7 @@ static void __initBoosters( iOPowerMan inst ) {
 static Boolean _cmd(iOPowerMan inst, iONode cmd) {
   iOPowerManData data = Data(inst);
   iOModel model = AppOp.getModel();
+  iOControl control = AppOp.getControl();
   const char* boosterid = wPwrCmd.getid(cmd);
 
   if( !StrOp.equals( wPwrCmd.name(), NodeOp.getName(cmd))) {
@@ -407,6 +408,7 @@ static Boolean _cmd(iOPowerMan inst, iONode cmd) {
     iONode booster = (iONode)MapOp.get( data->boostermap, boosterid );
     if( booster != NULL ) {
       iOOutput output = ModelOp.getOutput( model, wBooster.getpowersw(booster) );
+      int uid = wBooster.getuid(booster);
       /* single booster command */
       TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Power command for booster [%s].", boosterid);
       if( output != NULL ) {
@@ -414,6 +416,16 @@ static Boolean _cmd(iOPowerMan inst, iONode cmd) {
           OutputOp.on(output);
         else
           OutputOp.off(output);
+      }
+      else if( uid > 0 ) {
+        /* */
+        iONode nodeA = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+        wSysCmd.setbus(nodeA, uid);
+        if( StrOp.equals( wPwrCmd.on, wPwrCmd.getcmd(cmd) ) )
+          wSysCmd.setcmd(nodeA, wSysCmd.go);
+        else
+          wSysCmd.setcmd(nodeA, wSysCmd.stop);
+        ControlOp.cmd( control, nodeA, NULL );
       }
     }
     else {
