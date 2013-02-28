@@ -106,9 +106,9 @@ void PowerCtrlDlg::initValues(iONode event) {
         m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 1, wBooster.isshortcut(booster)?wxGetApp().getMsg("yes"):wxGetApp().getMsg("no") );
         m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 2, wBooster.ispower(booster)?wxGetApp().getMsg("on"):wxGetApp().getMsg("off") );
         m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 3, wxString(wBooster.getdistrict( booster ),wxConvUTF8) );
-        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 4, wxString::Format("%d", wBooster.getload(booster)) );
-        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 5, wxString::Format("%d.%d", wBooster.getvolt(booster)/1000, (wBooster.getvolt(booster)%1000)/100)  );
-        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 6, wxString::Format("%d", wBooster.gettemp(booster)) );
+        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 4, wxString::Format(_T("%d"), wBooster.getload(booster)) );
+        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 5, wxString::Format(_T("%d.%d"), wBooster.getvolt(booster)/1000, (wBooster.getvolt(booster)%1000)/100)  );
+        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 6, wxString::Format(_T("%d"), wBooster.gettemp(booster)) );
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 0, true );
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 1, true );
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 2, true );
