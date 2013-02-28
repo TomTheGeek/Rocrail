@@ -257,7 +257,7 @@ static void __stateEvent( obj inst, iONode event ) {
       wBooster.setvolt( booster, wBooster.getvolt(event) );
       wBooster.settemp( booster, wBooster.gettemp(event) );
 
-      TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "booster %s(%08X) power is %s, diagnostics: %dmA %dmV %C",
+      TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "booster %s(%08X) power is %s, diagnostics: %dmA %dmV %dC",
           wBooster.getid(booster), wBooster.getuid(booster), wState.ispower(event) ? "ON":"OFF",
               wBooster.getload(booster), wBooster.getvolt(booster), wBooster.gettemp(booster) );
 
