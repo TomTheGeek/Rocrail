@@ -309,6 +309,9 @@ static void* __event( void* inst, const void* evt ) {
       MapOp.put(map, "carcount", (obj)NodeOp.getStr(node, "carcount", "0") );
       MapOp.put(map, "countedcars", (obj)NodeOp.getStr(node, "countedcars", "0") );
       MapOp.put(map, "wheelcount", (obj)NodeOp.getStr(node, "wheelcount", "0") );
+      MapOp.put(map, "load", (obj)NodeOp.getStr(node, "load", "0") );
+      MapOp.put(map, "volt", (obj)NodeOp.getStr(node, "volt", "0") );
+      MapOp.put(map, "temp", (obj)NodeOp.getStr(node, "temp", "0") );
 
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
       MapOp.base.del(map);

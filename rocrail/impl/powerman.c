@@ -114,6 +114,9 @@ static void __checkAction( iOPowerMan inst, iONode props, const char* state ) {
 
       iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
       if( Action != NULL ) {
+        wActionCtrl.setload(action, wBooster.getload(props));
+        wActionCtrl.setvolt(action, wBooster.getvolt(props));
+        wActionCtrl.settemp(action, wBooster.gettemp(props));
         ActionOp.exec(Action, action);
       }
     }
