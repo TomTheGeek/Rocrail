@@ -1290,7 +1290,7 @@ static Boolean __delNode(iOBiDiB bidib, byte* pdata) {
   iOBiDiBData data = Data(bidib);
   if( pdata != NULL ) {
     char uidKey[32];
-    int uid = pdata[5] + (pdata[6] << 8) + (pdata[7] << 16) + (pdata[8] << 24);
+    int uid = pdata[8] + (pdata[7] << 8) + (pdata[6] << 16) + (pdata[5] << 24);
     StrOp.fmtb( uidKey, "0x%08X", uid );
     iOBiDiBNode bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
 
@@ -1337,7 +1337,7 @@ static void __addNode(iOBiDiB bidib, byte* pdata) {
   char localKey[32];
   char uidKey[32];
 
-  int uid = pdata[5] + (pdata[6] << 8) + (pdata[7] << 16) + (pdata[8] << 24);
+  int uid = pdata[8] + (pdata[7] << 8) + (pdata[6] << 16) + (pdata[5] << 24);
   int classid = pdata[2];
   int vid = pdata[4];
   int localaddr = pdata[1];
