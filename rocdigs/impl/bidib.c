@@ -1594,8 +1594,8 @@ static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte
     data->load = current;
     data->volt = volt;
     data->temp = temp;
-    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster load=%dmA %dmV %d°C", bidibnode->uid, current, volt, temp );
-    __reportState(bidib, uid, False);
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster load=%dmA %dmV %d°C", current, volt, temp );
+    __reportState(bidib, 0, False);
   }
 }
 
