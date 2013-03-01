@@ -273,6 +273,21 @@ static void _setLocality( struct OCar* inst, const char* id ) {
 }
 
 
+static int _getFnNrByDesc( iOCar inst, const char* desc) {
+  iOCarData    data = Data(inst);
+
+  iONode fundef = wCar.getfundef( data->props );
+  while( fundef != NULL ) {
+    if( wFunDef.gettext(fundef) != NULL && StrOp.equals(wFunDef.gettext(fundef), desc) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function number for [%s] = %d", desc, wFunDef.getfn(fundef) );
+      return wFunDef.getfn(fundef);
+    }
+    fundef = wCar.nextfundef( data->props, fundef );
+  };
+  return atoi(desc);
+}
+
+
 /**  */
 static void _modify( struct OCar* inst ,iONode props ) {
   iOCarData data = Data(inst);

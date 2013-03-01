@@ -761,7 +761,7 @@ static int _getFnNrByDesc( iOLoc inst, const char* desc) {
     }
     fundef = wLoc.nextfundef( data->props, fundef );
   };
-  return -1;
+  return atoi(desc);
 }
 
 static int __getFnTimer( iOLoc inst, int function) {

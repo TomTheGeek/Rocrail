@@ -63,6 +63,7 @@
 static int instCnt = 0;
 static void __doFunction(iOActionData data, iOLoc lc, Boolean fon, int fnaction);
 static void __doCarFunction(iOActionData data, iOCar car, Boolean fon, int fnaction);
+static void __doOperatorFunction(iOActionData data, iOOperator opr, Boolean fon, int fnaction);
 static void __setFunctionCmd(iOActionData data, iONode cmd, Boolean fon, int fnaction);
 
 /** ----- OBase ----- */
@@ -874,55 +875,38 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   /* check for a function command */
   else if( StrOp.equals( wFunCmd.name(), wAction.gettype( data->action ) ) ) {
     iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ), NULL);
+    iOStrTok tok = StrTokOp.inst(wAction.getparam(data->action), ',');
+    Boolean fon = StrOp.equals( "on", wAction.getcmd( data->action ) );
+
     if( lc == NULL && wActionCtrl.getlcid(actionctrl) != NULL) {
       lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL );
     }
-    if( lc != NULL ) {
-      Boolean fon = StrOp.equals( "on", wAction.getcmd( data->action ) );
-      int fnaction = LocOp.getFnNrByDesc(lc, wAction.getparam(data->action));
 
-      if( fnaction == -1 ) {
-        if( StrOp.findc(wAction.getparam(data->action), ',') ) {
-          /* function list */
-          iOStrTok tok = StrTokOp.inst(wAction.getparam(data->action), ',');
-          while( StrTokOp.hasMoreTokens(tok) ) {
-            fnaction = atoi(StrTokOp.nextToken(tok));
-            __doFunction(data, lc, fon, fnaction);
-          }
-          StrTokOp.base.del(tok);
-        }
-        else {
-          /* single function */
-          fnaction = atoi(wAction.getparam(data->action));
-          __doFunction(data, lc, fon, fnaction);
-        }
-      }
-      else {
-        /* function number by description */
+    if( lc != NULL ) {
+      while( StrTokOp.hasMoreTokens(tok) ) {
+        int fnaction = LocOp.getFnNrByDesc(lc, StrTokOp.nextToken(tok));
         __doFunction(data, lc, fon, fnaction);
       }
-
     }
     else {
       iOCar car = ModelOp.getCar( model, wAction.getoid( data->action ));
       if( car != NULL ) {
-        Boolean fon = StrOp.equals( "on", wAction.getcmd( data->action ) );
-        int fnaction = atoi(wAction.getparam(data->action));
-        __doCarFunction(data, car, fon, fnaction);
+        while( StrTokOp.hasMoreTokens(tok) ) {
+          int fnaction = CarOp.getFnNrByDesc(car, StrTokOp.nextToken(tok));
+          __doCarFunction(data, car, fon, fnaction);
+        }
       }
       else {
         iOOperator opr = ModelOp.getOperator( model, wAction.getoid( data->action ));
         if( opr != NULL ) {
-          Boolean fon = StrOp.equals( "on", wAction.getcmd( data->action ) );
-          int fnaction = atoi(wAction.getparam(data->action));
-          iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operator function [%d] activated", fnaction );
-          wFunCmd.setid( cmd, wAction.getid( data->action ) );
-          __setFunctionCmd(data, cmd, fon, fnaction);
-          OperatorOp.cmd( opr, cmd);
+          while( StrTokOp.hasMoreTokens(tok) ) {
+            int fnaction = atoi(StrTokOp.nextToken(tok));
+            __doOperatorFunction(data, opr, fon, fnaction);
+          }
         }
       }
     }
+    StrTokOp.base.del(tok);
   }
 
 }
@@ -999,9 +983,17 @@ static void __setFunctionCmd(iOActionData data, iONode cmd, Boolean fon, int fna
 }
 
 
+static void __doOperatorFunction(iOActionData data, iOOperator opr, Boolean fon, int fnaction) {
+  iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operator function [%d] %s", fnaction, fon?"ON":"OFF" );
+  wFunCmd.setid( cmd, wAction.getid( data->action ) );
+  __setFunctionCmd(data, cmd, fon, fnaction);
+  OperatorOp.cmd( opr, cmd);
+}
+
 static void __doCarFunction(iOActionData data, iOCar car, Boolean fon, int fnaction) {
   iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "car function [%d] activated", fnaction );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "car function [%d] %s", fnaction, fon?"ON":"OFF" );
   wFunCmd.setid( cmd, wAction.getid( data->action ) );
 
   __setFunctionCmd(data, cmd, fon, fnaction);
@@ -1012,7 +1004,7 @@ static void __doCarFunction(iOActionData data, iOCar car, Boolean fon, int fnact
 
 static void __doFunction(iOActionData data, iOLoc lc, Boolean fon, int fnaction) {
   iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function [%d] activated", fnaction );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco function [%d] %s", fnaction, fon?"ON":"OFF" );
   wFunCmd.setid( cmd, wAction.getid( data->action ) );
   LocOp.getFunctionStatus(lc, cmd);
 
