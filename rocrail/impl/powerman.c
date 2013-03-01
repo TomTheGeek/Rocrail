@@ -383,7 +383,8 @@ static Boolean _cmd(iOPowerMan inst, iONode cmd) {
     return False;
   }
 
-  TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "%s=%s", NodeOp.getName(cmd), wPwrCmd.getcmd(cmd));
+  TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "%s=%s booster=%s",
+      NodeOp.getName(cmd), wPwrCmd.getcmd(cmd), boosterid==NULL?"-":boosterid);
 
   if( boosterid == NULL || StrOp.len( boosterid ) == 0 ) {
     iONode booster = (iONode)MapOp.first( data->boostermap );
@@ -454,7 +455,7 @@ static struct OPowerMan* _inst( iONode ini ) {
 
   __initBoosters(__PowerMan);
 
-  ModelOp.addSysEventListener( AppOp.getModel(), (obj)__PowerMan );
+  /*ModelOp.addSysEventListener( AppOp.getModel(), (obj)__PowerMan );*/
 
   TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Power Manager instantiated.");
 

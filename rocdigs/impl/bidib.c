@@ -1504,18 +1504,23 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
   iOBiDiBData data = Data(bidib);
   int uid = 0;
   Boolean shortcut = False;
-  if( pdata[0] == 0x01 || pdata[0] == 0x02 )
+  if( pdata[0] == BIDIB_BST_STATE_OFF_SHORT || pdata[0] == BIDIB_BST_STATE_OFF_HOT)
     shortcut = True;
   /*
-    0x00  Booster ist abgeschaltet (auf Grund Host-Befehl).
-    0x01  Booster ist abgeschaltet (wegen Kurzschluß).
-    0x02  Booster ist abgeschaltet (wegen Übertemperatur).
-    0x03  Booster ist abgeschaltet (wegen fehlender Netzspannung).
-    0x7F  Booster ist abgeschaltet (unbekannte Ursache).
-    0x80  Booster ist eingeschaltet.
-    0x81  Booster ist eingeschaltet und läuft in der Strombegrenzung.
-    0x82  Booster ist eingeschaltet und ist im kritischen Temperaturbereich.
-   */
+      Wert  Alias Bedeutung
+      0x00  BIDIB_BST_STATE_OFF Booster ist abgeschaltet (allgemein, z.B. auf Grund Host-Befehl).
+      0x01  BIDIB_BST_STATE_OFF_SHORT Booster ist abgeschaltet (wegen Kurzschluß).
+      0x02  BIDIB_BST_STATE_OFF_HOT Booster ist abgeschaltet (wegen Übertemperatur).
+      0x03  BIDIB_BST_STATE_OFF_NOPOWER Booster ist abgeschaltet (wegen fehlender Netzspannung).
+      0x04  BIDIB_BST_STATE_OFF_GO_REQ  Booster ist abgeschaltet und es liegt eine Einschalt-Anforderung vor.
+      0x05  BIDIB_BST_STATE_OFF_HERE  Booster ist abgeschaltet (auf Grund lokalem Tastendruck).
+      0x06  BIDIB_BST_STATE_OFF_NO_DCC  Booster ist abgeschaltet (wegen fehlendem Eingangssignal).
+      0x80  BIDIB_BST_STATE_ON  Booster ist eingeschaltet.
+      0x81  BIDIB_BST_STATE_ON_LIMIT  Booster ist eingeschaltet und läuft in der Strombegrenzung.
+      0x82  BIDIB_BST_STATE_ON_HOT  Booster ist eingeschaltet und ist im kritischen Temperaturbereich.
+      0x83  BIDIB_BST_STATE_ON_STOP_REQ Booster ist eingeschaltet und es liegt eine Stop-Anforderung vor.
+      0x84  BIDIB_BST_STATE_ON_HERE Booster ist eingeschaltet (auf Grund lokalem Tastendruck).
+  */
   if( bidibnode != NULL ) {
     uid = bidibnode->uid;
     bidibnode->stat = pdata[0];

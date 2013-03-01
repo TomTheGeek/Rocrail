@@ -340,7 +340,7 @@ public:
   void initFrame();
   bool Connect( const char* host, int port, bool wait4rr=false, bool showpopup=true );
   void putChild( void* item, int z  );
-
+  void resetPowerCtrlRef() {m_PowerCtrl=NULL;}
 
 private:
   void Save();

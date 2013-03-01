@@ -3358,12 +3358,10 @@ void RocGuiFrame::OnEditBoosters( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnCtrlBoosters( wxCommandEvent& event ) {
-  m_PowerCtrl = new PowerCtrlDlg(this );
-  if( wxID_OK == m_PowerCtrl->ShowModal() ) {
-    /* Notify RocRail. */
+  if( m_PowerCtrl == NULL ) {
+    m_PowerCtrl = new PowerCtrlDlg(this );
+    m_PowerCtrl->Show(true);
   }
-  m_PowerCtrl->Destroy();
-  m_PowerCtrl = NULL;
 }
 
 void RocGuiFrame::OnEditSensors( wxCommandEvent& event ) {

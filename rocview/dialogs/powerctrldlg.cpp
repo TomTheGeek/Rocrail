@@ -181,5 +181,7 @@ void PowerCtrlDlg::OnOff( wxCommandEvent& event )
 
 void PowerCtrlDlg::OnOK( wxCommandEvent& event )
 {
-  EndModal( wxID_OK );
+  //EndModal( wxID_OK );
+  wxGetApp().getFrame()->resetPowerCtrlRef();
+  Destroy();
 }
