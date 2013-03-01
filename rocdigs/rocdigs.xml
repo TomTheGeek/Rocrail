@@ -296,6 +296,7 @@
       <var name="power" vt="int"/>
       <var name="halt" vt="int"/>
       <var name="ues" vt="int"/>
+      <var name="volt" vt="int"/>
       <var name="pt" vt="int"/>
       <var name="comm" vt="int"/>
       <var name="locolist" vt="iONode"/>
@@ -1534,6 +1535,7 @@
       <var name="commandAck" vt="Boolean"/>
       <var name="wait4Ack" vt="Boolean"/>
       <var name="lastSendOPC" vt="byte"/>
+      <var name="time" vt="long"/>
       </data>
   </object>
 

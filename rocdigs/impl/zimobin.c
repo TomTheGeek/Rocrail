@@ -1181,6 +1181,7 @@ static void __handleLocoFeedback(iOZimoBin zimobin, byte* locop) {
         break;
       default:
         sstep = 0;
+        break;
     }
 
     /* inform listener */
@@ -1477,6 +1478,7 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
                 wState.setsensorbus( node, True );
                 wState.setaccessorybus( node, True );
                 wState.setload( node, data->ues );
+                wState.setvolt( node, data->volt );
 
                 data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
               }
@@ -1523,6 +1525,7 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
 
             int ues = (i1 + i2) * 10;
 
+            data->volt = u1 * 100;
             if ( ues != data->ues ) {
               data->ues = ues;
 
@@ -1536,6 +1539,7 @@ static Boolean __evaluatePacket(iOZimoBin zimobin, byte* packet, int len) {
                 wState.setsensorbus( node, True );
                 wState.setaccessorybus( node, True );
                 wState.setload( node, data->ues );
+                wState.setvolt( node, data->volt );
 
                 data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
               }
