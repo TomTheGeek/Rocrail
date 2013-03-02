@@ -31,6 +31,10 @@
 #endif
 
 #include "rocview/public/guiapp.h"
+
+#include "rocview/wrapper/public/Gui.h"
+#include "rocview/wrapper/public/PowerCtrl.h"
+
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/PwrCmd.h"
@@ -66,6 +70,16 @@ PowerCtrlDlg::PowerCtrlDlg( wxWindow* parent ):powerctrlgen( parent )
   m_Boosters->UpdateDimensions();
   GetSizer()->Layout();
 
+  iONode ini = wxGetApp().getIni();
+  iONode powerctrl = wGui.getpowerctrl(ini);
+  if( powerctrl != NULL ) {
+    if( wPowerCtrl.getcx(powerctrl) > 0 && wPowerCtrl.getcy(powerctrl) > 0 ) {
+      SetSize(wPowerCtrl.getx(powerctrl), wPowerCtrl.gety(powerctrl), wPowerCtrl.getcx(powerctrl), wPowerCtrl.getcy(powerctrl));
+    }
+    else
+      SetSize(wPowerCtrl.getx(powerctrl), wPowerCtrl.gety(powerctrl));
+  }
+
 }
 
 
@@ -86,6 +100,10 @@ void PowerCtrlDlg::initLabels() {
 void PowerCtrlDlg::initValues(iONode event) {
   m_Boosters->DeleteRows(0,m_Boosters->GetNumberRows());
   MapOp.clear(m_BoosterMap);
+
+  if( event != NULL ) {
+    TraceOp.trc( "pwrctrl", TRCLEVEL_INFO, __LINE__, 9999, "event from booster %08X", wBooster.getuid(event) );
+  }
 
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
@@ -182,6 +200,30 @@ void PowerCtrlDlg::OnOff( wxCommandEvent& event )
 void PowerCtrlDlg::OnOK( wxCommandEvent& event )
 {
   //EndModal( wxID_OK );
+  int x,y;
+  GetPosition(&x,&y);
+  int cx,cy;
+  GetSize(&cx,&cy);
+
+  iONode ini = wxGetApp().getIni();
+  iONode powerctrl = wGui.getpowerctrl(ini);
+  if( powerctrl == NULL ) {
+    powerctrl = NodeOp.inst(wPowerCtrl.name(), ini, ELEMENT_NODE);
+    NodeOp.addChild(ini, powerctrl);
+  }
+  wPowerCtrl.setx(powerctrl,x);
+  wPowerCtrl.sety(powerctrl,y);
+  wPowerCtrl.setcx(powerctrl,cx);
+  wPowerCtrl.setcy(powerctrl,cy);
+
   wxGetApp().getFrame()->resetPowerCtrlRef();
   Destroy();
+}
+
+void PowerCtrlDlg::onClose( wxCloseEvent& event ) {
+}
+
+
+void PowerCtrlDlg::onSize( wxSizeEvent& event ) {
+  powerctrlgen::OnSize( event );
 }

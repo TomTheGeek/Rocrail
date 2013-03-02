@@ -50,6 +50,9 @@ protected:
 	void OnOK( wxCommandEvent& event );
   void onCellLeftClick( wxGridEvent& event );
   void onCellRightClick( wxGridEvent& event );
+  void onSize( wxSizeEvent& event );
+  void onClose( wxCloseEvent& event );
+
 
 public:
 	/** Constructor */

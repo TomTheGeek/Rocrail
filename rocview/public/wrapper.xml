@@ -230,6 +230,12 @@
       <var name="x" vt="int" defval="0" range="*" remark="X position of LocControlDialog"/>
       <var name="y" vt="int" defval="0" range="*" remark="Y position of LocControlDialog"/>
     </lcctrl>
+    <powerctrl wrappername="PowerCtrl">
+      <var name="x" vt="int" defval="0" range="*" remark="X position of PowerControlDialog"/>
+      <var name="y" vt="int" defval="0" range="*" remark="Y position of PowerControlDialog"/>
+      <var name="cx" vt="int" defval="420" range="*" remark="Width of PowerControlDialog"/>
+      <var name="cy" vt="int" defval="120" range="*" remark="Height of PowerControlDialog"/>
+    </powerctrl>
   </gui>
 
   <release wrappername="Release">
