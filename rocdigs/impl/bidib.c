@@ -451,8 +451,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     const char* cmd = wSysCmd.getcmd( node );
     StrOp.fmtb( uidKey, "0x%08X", wSysCmd.getbus(node) );
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
-    if( bidibnode == NULL )
+    if( bidibnode == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using default booster..." );
       bidibnode = data->defaultbooster;
+    }
 
     if( bidibnode == NULL ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no command station available for command=%s; broadcast it to 0.0.0.0", cmd );
@@ -1450,19 +1452,28 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
 }
 
 
-static void __reportState(iOBiDiB bidib, int uid, Boolean shortcut) {
+static void __reportState(iOBiDiB bidib, iOBiDiBNode bidibnode, Boolean shortcut) {
   iOBiDiBData data = Data(bidib);
   iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
   if( data->iid != NULL )
     wState.setiid( node, data->iid );
-  wState.setpower( node, data->power );
+
+  if( bidibnode != NULL ) {
+    wState.setpower( node, (bidibnode->stat & BIDIB_BST_STATE_ON) ? True:False);
+    wState.setload( node, bidibnode->load );
+    wState.setvolt( node, bidibnode->volt );
+    wState.settemp( node, bidibnode->temp );
+    wState.setuid( node, bidibnode->uid);
+  }
+  else {
+    wState.setpower( node, data->power );
+    wState.setload( node, data->load );
+    wState.setvolt( node, data->volt );
+    wState.settemp( node, data->temp );
+  }
   wState.settrackbus( node, data->power );
   wState.setsensorbus( node, True );
   wState.setaccessorybus( node, True );
-  wState.setload( node, data->load );
-  wState.setvolt( node, data->volt );
-  wState.settemp( node, data->temp );
-  wState.setuid(node, uid);
   wState.setshortcut(node, shortcut);
   if( data->listenerFun != NULL && data->listenerObj != NULL )
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
@@ -1531,7 +1542,7 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
     TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:TRCLEVEL_MONITOR, __LINE__, 9999, "booster state=0x%02X", pdata[0] );
   }
   data->power = (pdata[0] & 0x80) ? True:False;
-  __reportState(bidib, uid, shortcut);
+  __reportState(bidib, bidibnode, shortcut);
 }
 
 
@@ -1594,14 +1605,14 @@ static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte
     data->volt = volt;
     data->temp = temp;
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%dmA %dmV %d°C", bidibnode->uid, current, volt, temp );
-    __reportState(bidib, uid, False);
+    __reportState(bidib, bidibnode, False);
   }
   else if( data->load != current ) {
     data->load = current;
     data->volt = volt;
     data->temp = temp;
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster load=%dmA %dmV %d°C", current, volt, temp );
-    __reportState(bidib, 0, False);
+    __reportState(bidib, NULL, False);
   }
 }
 
@@ -1619,13 +1630,13 @@ static void __handleBoosterCurrent(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* p
       bidibnode->load = current;
       data->load = current;
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%d mA", bidibnode->uid, data->load );
-      __reportState(bidib, uid, False);
+      __reportState(bidib, bidibnode, False);
     }
   }
   else if( data->load != current ) {
     data->load = current;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster load=%d mA", data->load );
-    __reportState(bidib, uid, False);
+    __reportState(bidib, NULL, False);
   }
 }
 
@@ -2181,7 +2192,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
         bidibnode->conf_signal = pdata[2];
 
         data->power = (bidibnode->conf_signal == 0) ? True:False;
-        __reportState(bidib, bidibnode->uid, False);
+        __reportState(bidib, bidibnode, False);
       }
     }
     break;
