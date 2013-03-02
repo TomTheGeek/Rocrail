@@ -217,10 +217,10 @@ static iOSlot __getSlotByAddr(iOBiDiB inst, int lcaddr) {
 
 
 static void __uid2Array(int uid, byte* b) {
-  b[0] = (uid & 0x000000FF);
-  b[1] = (uid & 0x0000FF00) >> 8;
-  b[2] = (uid & 0x00FF0000) >> 16;
-  b[3] = (uid & 0xFF000000) >> 24;
+  b[3] = (uid & 0x000000FF);
+  b[2] = (uid & 0x0000FF00) >> 8;
+  b[1] = (uid & 0x00FF0000) >> 16;
+  b[0] = (uid & 0xFF000000) >> 24;
 }
 
 static iONode __getIniNode(iOBiDiB bidib, int uid) {
@@ -750,6 +750,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
               msgdata[2] = 0;
               msgdata[3] = bidibnode->vendorid;
               __uid2Array(bidibnode->uid, msgdata+4 );
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"MSG_FW_UPDATE_OP -> %08X", bidibnode->uid);
               data->subWrite((obj)inst, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 8, bidibnode->seq++);
             }
             else {
@@ -1612,12 +1613,14 @@ static void __handleBoosterCurrent(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* p
 
   current = __calcCurrent(current);
 
-  if( bidibnode != NULL && bidibnode->load != current) {
-    uid = bidibnode->uid;
-    bidibnode->load = current;
-    data->load = current;
-    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%d mA", bidibnode->uid, data->load );
-    __reportState(bidib, uid, False);
+  if( bidibnode != NULL) {
+    if(bidibnode->load != current) {
+      uid = bidibnode->uid;
+      bidibnode->load = current;
+      data->load = current;
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%d mA", bidibnode->uid, data->load );
+      __reportState(bidib, uid, False);
+    }
   }
   else if( data->load != current ) {
     data->load = current;
@@ -1863,7 +1866,7 @@ static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
     }
     else if(pdata[0] == BIDIB_MSG_FW_UPDATE_STAT_EXIT) {
       iONode rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"BIDIB_MSG_FW_UPDATE_STAT_EXIT");
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"BIDIB_MSG_FW_UPDATE_STAT_EXIT from node %08X", bidibnode->uid);
       wProgram.setcmd( rsp, wProgram.writehex );
       wProgram.setlntype(rsp, wProgram.lntype_bidib);
       wProgram.setrc( rsp, wProgram.rc_ok );
