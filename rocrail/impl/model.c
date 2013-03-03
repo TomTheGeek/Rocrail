@@ -1972,7 +1972,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
   }
   else if( StrOp.equals( wModelCmd.lcprops, cmdVal ) ) {
     const char* lcID = wModelCmd.getval(cmd);
-    iOLoc lc = ModelOp.getLoc( inst, lcID, NULL );
+    iOLoc lc = ModelOp.getLoc( inst, lcID, NULL, False );
     if( lc != NULL ) {
       iONode props = LocOp.base.properties(lc);
       ClntConOp.postEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(props), wCommand.getserver( cmd ) );
@@ -2266,7 +2266,7 @@ static iIBlockBase _addNetBlock(iOModel inst, iONode bkprops) {
 }
 
 
-static iOLoc _getLoc( iOModel inst, const char* id, iONode props ) {
+static iOLoc _getLoc( iOModel inst, const char* id, iONode props, Boolean generate ) {
   iOModelData o = Data(inst);
   iOLoc loc = (iOLoc)MapOp.get( o->locMap, id );
   if( loc == NULL && id != NULL && StrOp.len(id) > 0 ) {
@@ -2276,7 +2276,7 @@ static iOLoc _getLoc( iOModel inst, const char* id, iONode props ) {
       loc = ModelOp.getLocByAddress(inst, addr);
       if( loc != NULL )
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco by addres [%d] is [%s]", addr, LocOp.getId(loc) );
-      else {
+      else if( generate ) {
         iONode lc = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "generating a loco for addres [%d]", addr );
         wLoc.setid( lc, id );
@@ -3199,7 +3199,7 @@ static void _event( iOModel inst, iONode nodeC ) {
 
     /* check if the loco ID ist set if not found by address */
     if( lc == NULL && id != NULL && StrOp.len(id) > 0 ) {
-      lc = ModelOp.getLoc(inst, id, NULL);
+      lc = ModelOp.getLoc(inst, id, NULL, False);
     }
 
     if( lc != NULL ) {
@@ -4797,7 +4797,7 @@ static void _setBlockOccupancy( iOModel inst, const char* BlockId, const char* L
   }
 
   if( LocId != NULL && StrOp.len(LocId) > 0 ) {
-    iOLoc loc = ModelOp.getLoc( AppOp.getModel(), LocId, NULL );
+    iOLoc loc = ModelOp.getLoc( AppOp.getModel(), LocId, NULL, False );
     if( loc != NULL ) {
       wOccupancy.setauto( occ, LocOp.isResumeAutomode(loc) );
       wOccupancy.setscid( occ, LocOp.getSchedule(loc, NULL) );
@@ -4919,7 +4919,7 @@ static void _loadBlockOccupancy( iOModel inst ) {
       char        key[256] = {'\0'};
 
       if( LocoID != NULL && StrOp.len(LocoID) > 0 ) {
-        loco = ModelOp.getLoc( inst, LocoID, NULL );
+        loco = ModelOp.getLoc( inst, LocoID, NULL, False );
       }
 
       StrOp.fmtb( key, "%s%s", BlockID, Section!=NULL ? Section:"");

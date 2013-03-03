@@ -1701,7 +1701,7 @@ static void __calcTrainLen(iOLoc inst) {
     iOStrTok  consist = StrTokOp.inst( wLoc.getconsist ( data->props ), ',' );
     while( StrTokOp.hasMoreTokens( consist ) ) {
       const char* tok = StrTokOp.nextToken( consist );
-      iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL );
+      iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL, False );
       if( consistloc != NULL ) {
         wLoc.settrainlen( data->props, wLoc.gettrainlen(data->props) + LocOp.getLen(consistloc));
         report = True;
@@ -2182,7 +2182,7 @@ static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent ) {
 
     while( StrTokOp.hasMoreTokens( consist ) ) {
       const char* tok = StrTokOp.nextToken( consist );
-      iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL );
+      iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL, False );
       if( consistloc != NULL ) {
         iONode consistcmd = (iONode)NodeOp.base.clone( nodeA );
 
@@ -2234,7 +2234,7 @@ static void __swapConsist( iOLoc inst, iONode cmd ) {
 
     while( StrTokOp.hasMoreTokens( consist ) ) {
       const char* tok = StrTokOp.nextToken( consist );
-      iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL );
+      iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL, False );
       if( consistloc != NULL ) {
         LocOp.swapPlacing( consistloc, cmd, True );
       }
@@ -2962,7 +2962,7 @@ static Boolean _matchIdent( iOLoc loc, const char* ident ) {
     iOStrTok  consist = StrTokOp.inst( wLoc.getconsist ( data->props ), ',' );
     while( StrTokOp.hasMoreTokens( consist ) ) {
       const char* tok = StrTokOp.nextToken( consist );
-      iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL );
+      iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL, False );
       if( consistloc != NULL ) {
         if( ident == LocOp.getIdent(consistloc) ) {
           match = True;

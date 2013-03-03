@@ -648,7 +648,7 @@ static Boolean checkActionCondLocoWc( iOAnalyse inst, const char* acLcid, const 
     return locoFnChecks( state );
 
   iOAnalyseData data = Data(inst);
-  iOLoc lc = ModelOp.getLoc( data->model, acLcid, NULL);
+  iOLoc lc = ModelOp.getLoc( data->model, acLcid, NULL, False);
   Boolean rc = True;
 
   iOStrTok tok = StrTokOp.inst( state, ',');
@@ -762,7 +762,7 @@ static int checkAction( iOAnalyse inst, int acIdx, iONode action, Boolean repair
       if( ptr && checkActionCondFeedback( inst, condState ) )
         condOK = True;
     }else if ( StrOp.equals( condType, wLoc.name() ) ) {
-      ptr = (char *) ModelOp.getLoc( data->model, condId, NULL );
+      ptr = (char *) ModelOp.getLoc( data->model, condId, NULL, False );
       if( ptr && checkActionCondLoco( condId, condState ) ) {
         condOK = True;
       }else if( StrOp.equals( condId, "*" ) )

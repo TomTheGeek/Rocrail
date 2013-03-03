@@ -181,7 +181,7 @@ static Boolean _lock( struct OBlockGroup* inst ,const char* BlockId ,const char*
             const char* id = StrTokOp.nextToken( tok );
             iIBlockBase block = ModelOp.getBlock( model, id );
             if( block != NULL && block->isFree(block, LocoId) ) {
-              iOLoc loc = ModelOp.getLoc( model, LocoId, NULL );
+              iOLoc loc = ModelOp.getLoc( model, LocoId, NULL, False );
               block_suits  suits = block->isSuited( block, loc, &restlen, !selectShortest );
               if( suits != suits_not ) {
                 freeBlock = True;

@@ -81,7 +81,7 @@ static char* _replaceAllSubstitutions( const char* str, iOMap map ) {
       /* hit */
       tmpStr[endV-tmpStr] = '\0';
       resolvedStr = StrOp.cat( resolvedStr, tmpStr );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to resolve [%s]", startV+1);
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "try to resolve [%s]", startV+1);
       if( map != NULL && MapOp.haskey(map, startV+1) )
         resolvedStr = StrOp.cat( resolvedStr, (const char*)MapOp.get(map, startV+1) );
       else if( SystemOp.getProperty(startV+1) != NULL )
@@ -195,7 +195,7 @@ static void* __event( void* inst, const void* evt ) {
   iOTextData data = Data(inst);
   iONode node = (iONode)evt;
   if( node != NULL && StrOp.equals( wText.name(), NodeOp.getName(node))) {
-    iOLoc       lc = ModelOp.getLoc(AppOp.getModel(), wText.getreflcid(node), NULL);
+    iOLoc       lc = ModelOp.getLoc(AppOp.getModel(), wText.getreflcid(node), NULL, False);
     iIBlockBase bk = ModelOp.getBlock(AppOp.getModel(), wText.getrefbkid(node));
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "text event [%s-%s][%s]",

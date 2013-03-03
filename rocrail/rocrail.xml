@@ -813,6 +813,7 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="LocID to search for"/>
       <param name="props" vt="iONode" remark="Optional loco properties"/>
+      <param name="generate" vt="Boolean" remark="Generate Loco if not found by ID or address."/>
       </fun>
     <fun name="getCar" vt="iOCar">
       <param name="inst" vt="this" remark="Model instance"/>

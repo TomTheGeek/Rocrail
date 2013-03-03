@@ -216,7 +216,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
         /* Sensor */
         else if( StrOp.equals( wFeedback.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
-          iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL);
+          iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL, False);
           iOFBack fb = ModelOp.getFBack( model, id );
           const char* state = "";
           const char* direction = NULL;
@@ -260,7 +260,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
         else if( StrOp.equals( wLoc.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
           const char* state = wActionCond.getstate(actionCond);
-          iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL);
+          iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL, False);
           rc = False;
 
           if( lc != NULL && state[0] == '#' ) {
@@ -337,7 +337,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "check if loco id [%s] equals [%s]", id, wActionCtrl.getlcid(actionctrl) );
             if( StrOp.equals("*", id ) || StrOp.equals( wActionCtrl.getlcid(actionctrl), id ) ) {
-              iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL);
+              iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL, False);
               if( lc != NULL ) {
                 Boolean dir = LocOp.getDir(lc);
                 Boolean enterside = LocOp.getBlockEnterSide(lc);
@@ -637,7 +637,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         bl->acceptIdent(bl, True);
       }
       else if( StrOp.equals( wAction.block_setloc, wAction.getcmd( data->action ) ) ) {
-        iOLoc lc = ModelOp.getLoc( model, wAction.getparam( data->action ), NULL);
+        iOLoc lc = ModelOp.getLoc( model, wAction.getparam( data->action ), NULL, False);
         if( lc != NULL ) {
           iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
           wBlock.setlocid(cmd, "");
@@ -653,7 +653,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action: loco_go %s ",
             bl->getLoc(bl));
 
-        iOLoc lc = ModelOp.getLoc( model, bl->getLoc(bl), NULL);
+        iOLoc lc = ModelOp.getLoc( model, bl->getLoc(bl), NULL, False);
         if( lc != NULL ) {
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
           wLoc.setid( cmd, bl->getLoc(bl) );
@@ -801,9 +801,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
 
   /* check for a locomotive action */
   else if( StrOp.equals( wLoc.name(), wAction.gettype( data->action ) ) ) {
-    iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ), NULL);
+    iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ), NULL, False);
     if( lc == NULL && wActionCtrl.getlcid(actionctrl) != NULL) {
-      lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL );
+      lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL, False );
     }
     if( lc != NULL ) {
       if( StrOp.equals(wLoc.consist, wAction.getcmd(data->action) ) ) {
@@ -874,12 +874,12 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
 
   /* check for a function command */
   else if( StrOp.equals( wFunCmd.name(), wAction.gettype( data->action ) ) ) {
-    iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ), NULL);
+    iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ), NULL, False);
     iOStrTok tok = StrTokOp.inst(wAction.getparam(data->action), ',');
     Boolean fon = StrOp.equals( "on", wAction.getcmd( data->action ) );
 
     if( lc == NULL && wActionCtrl.getlcid(actionctrl) != NULL) {
-      lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL );
+      lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL, False );
     }
 
     if( lc != NULL ) {

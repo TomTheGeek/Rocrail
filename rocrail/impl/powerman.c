@@ -247,7 +247,7 @@ static void __stateEvent( obj inst, iONode event ) {
   iOPowerManData data = Data(inst);
   iONode booster = (iONode)MapOp.first( data->boostermap );
   /* command for all */
-  TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "State event from %d", wState.getuid(event));
+  TraceOp.trc(name, TRCLEVEL_DEBUG, __LINE__, 9999, "State event from %d", wState.getuid(event));
   while( booster != NULL ) {
     if( wBooster.getuid(booster) == wState.getuid(event) ) {
       Boolean shortcut = wState.isshortcut(event);

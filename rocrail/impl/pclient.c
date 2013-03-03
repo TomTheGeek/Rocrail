@@ -323,7 +323,7 @@ static int __createItemTD( iOPClient inst, iONode item, int level, const char* s
       extraItem->skip = False;
 
       if( locid != NULL && StrOp.len(locid) > 0 ) {
-        iOLoc loc = ModelOp.getLoc( AppOp.getModel(), locid, NULL );
+        iOLoc loc = ModelOp.getLoc( AppOp.getModel(), locid, NULL, False );
         /*char* normID = LocOp.normalizeID(locid);*/
         char* normID = StrOp.encode4URL(locid);
         if( loc != NULL )
@@ -352,7 +352,7 @@ static int __createItemTD( iOPClient inst, iONode item, int level, const char* s
       colspan = 4;
       if(ok) ok=SocketOp.fmt( data->socket, "  <td><img height=\"16\" width=\"16\" border=\"0\" alt=\"===\" src=\"%s/block-l-1.%s\"/></td>\n", symbolpath, symboltype );
       if( locid != NULL && StrOp.len(locid) > 0 ) {
-        iOLoc loc = ModelOp.getLoc( AppOp.getModel(), locid, NULL );
+        iOLoc loc = ModelOp.getLoc( AppOp.getModel(), locid, NULL, False );
         char* normID = LocOp.normalizeID(locid);
         if( loc != NULL )
           addr = wLoc.getaddr( LocOp.base.properties(loc) );
@@ -508,7 +508,7 @@ static Boolean __getHome( iOPClient inst, int level, const char* selected, Boole
     const char* V_mode = "";
 
     if( selected != NULL && StrOp.len(selected) > 0 ) {
-      iOLoc loc = ModelOp.getLoc( AppOp.getModel(), selected, NULL );
+      iOLoc loc = ModelOp.getLoc( AppOp.getModel(), selected, NULL, False );
       if( loc != NULL ) {
         iONode lc = LocOp.base.properties(loc);
         light = wLoc.isfn(lc)?"on":"off";
@@ -742,7 +742,7 @@ static void __doSW( iOPClient inst, const char* req ) {
 
 static void __doStopGo( iOPClient inst, const char* req ) {
   char* id = __getID( "stopgo=", req );
-  iOLoc loc = ModelOp.getLoc( AppOp.getModel(), id, NULL );
+  iOLoc loc = ModelOp.getLoc( AppOp.getModel(), id, NULL, False );
   if( loc != NULL ) {
     iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     wLoc.setid( cmd, id );
@@ -863,7 +863,7 @@ static void __doSpeed( iOLoc loc, const char* req, Boolean direction ) {
 static void __doLC( iOPClient inst, const char* req, const char* selected, Boolean direction ) {
   iOPClientData data = Data(inst);
   if( selected != NULL ) {
-    iOLoc loc = ModelOp.getLoc( AppOp.getModel(), selected, NULL );
+    iOLoc loc = ModelOp.getLoc( AppOp.getModel(), selected, NULL, False );
     if( loc != NULL ) {
       __doFunction( loc, req );
       __doSpeed( loc, req, direction );

@@ -329,7 +329,7 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
   int sections = ListOp.size( data->sectionList );
   int i = 0;
   int nrSections = 0;
-  iOLoc loco = ModelOp.getLoc( model, locId, NULL );
+  iOLoc loco = ModelOp.getLoc( model, locId, NULL, False );
 
   if( loco != NULL ) {
     int lclen = LocOp.getLen(loco);
@@ -396,7 +396,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
       if( puls ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "expecting loco %s: ENTER", data->locId );
         if( data->locId != NULL ) {
-          iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId, NULL);
+          iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId, NULL, False);
           iONode nodeD = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
           wStage.setid( nodeD, data->id );
           wStage.setentering( nodeD, True );
@@ -463,7 +463,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
 
 
     if( puls && wStageSection.getidx(section) == data->targetSection ) {
-      iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId, NULL);
+      iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId, NULL, False);
       iONode nodeD = (iONode)NodeOp.base.clone(data->props);
       wStage.setid( nodeD, data->id );
       wStage.setlocid( nodeD, "" );
@@ -573,7 +573,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
       }
     }
     else if(puls) {
-      iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId, NULL);
+      iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId, NULL, False);
       if( loc != NULL && StageOp.hasExtStop(inst) && !data->early2in ) {
         /* Check if train length does already fit inside for generating the **in** event:  */
         int sectionlen = __getLength2Section((iOStage)inst, wStageSection.getid(section));
@@ -842,7 +842,7 @@ static void _init( iIBlockBase inst ) {
   for( i = 0; i < sections; i++ ) {
     iONode section = (iONode)ListOp.get( data->sectionList, i);
     if( wStageSection.getlcid(section) != NULL && StrOp.len( wStageSection.getlcid(section) ) > 0 ) {
-      iOLoc loc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(section), NULL );
+      iOLoc loc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(section), NULL, False );
       if( loc != NULL ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "set current block for loco %s to %s", wStageSection.getlcid(section), data->id );
@@ -860,7 +860,7 @@ static void _init( iIBlockBase inst ) {
 static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) {
   iOStageData data = Data(inst);
   iOModel model = AppOp.getModel();
-  iOLoc loco = ModelOp.getLoc( model, locid, NULL );
+  iOLoc loco = ModelOp.getLoc( model, locid, NULL, False );
   Boolean fit = False;
 
   int sections = ListOp.size( data->sectionList );
@@ -1331,7 +1331,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
   if( nextFreeSection != NULL && firstOccupiedSection != NULL ) {
     if( wStageSection.getidx(nextFreeSection) > wStageSection.getidx(firstOccupiedSection) )
     {
-    iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(firstOccupiedSection), NULL );
+    iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(firstOccupiedSection), NULL, False );
     Boolean eOcc = __dumpSections((iOStage)inst);
 
       if( lc != NULL && !eOcc ) {
@@ -1378,7 +1378,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
     cnt = ListOp.size(data->sectionList);
     lastSection = (iONode)ListOp.get(data->sectionList, cnt - 1);
     if( lastSection != NULL ) {
-      iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(lastSection), NULL );
+      iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(lastSection), NULL, False );
       if( lc != NULL && !LocOp.isAutomode(lc) ) {
         iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero", LocOp.getId(lc) );

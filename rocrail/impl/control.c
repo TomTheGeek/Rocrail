@@ -250,7 +250,7 @@ static void __txshortids( void* threadinst ) {
     int i = 0;
     for( i = 0; i < ListOp.size(list); i++ ) {
       const char* id = (const char*)ListOp.get(list, i);
-      iOLoc loc = ModelOp.getLoc( AppOp.getModel(), id, NULL );
+      iOLoc loc = ModelOp.getLoc( AppOp.getModel(), id, NULL, False );
       if( loc != NULL ) {
         iONode lccmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
         wLoc.setcmd( lccmd, wLoc.shortid );
@@ -700,7 +700,7 @@ static void __callback( obj inst, iONode nodeA ) {
     }
   }
   else if( StrOp.equals( wLoc.name(), nodeName ) ) {
-    iOLoc loc = ModelOp.getLoc( model, wLoc.getid( nodeA ), nodeA );
+    iOLoc loc = ModelOp.getLoc( model, wLoc.getid( nodeA ), nodeA, True );
     if( loc != NULL ) {
       LocOp.cmd( loc, nodeA );
       return;
@@ -770,7 +770,7 @@ static void __callback( obj inst, iONode nodeA ) {
     }
   }
   else if( StrOp.equals( wFunCmd.name(), nodeName ) ) {
-    iOLoc loc = ModelOp.getLoc( model, wFunCmd.getid( nodeA ), NULL );
+    iOLoc loc = ModelOp.getLoc( model, wFunCmd.getid( nodeA ), NULL, False );
     if( loc != NULL ) {
       LocOp.cmd( loc, nodeA );
       return;
@@ -949,7 +949,7 @@ static void __callback( obj inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wProgram.name(), nodeName ) ) {
     if( wProgram.getcmd(nodeA) == wProgram.save ) {
-      iOLoc loc = ModelOp.getLoc( model, wProgram.getfilename(nodeA), NULL );
+      iOLoc loc = ModelOp.getLoc( model, wProgram.getfilename(nodeA), NULL, False );
       if( loc == NULL )
         loc = ModelOp.getLocByAddress( model, wProgram.getaddr(nodeA) );
       if( loc != NULL ) {

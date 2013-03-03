@@ -1201,7 +1201,7 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean loc
 
     if( reverse && StrOp.equals( wRoute.reverse, wRoute.getcountcars(o->props) ) ) {
       iIBlockBase bk = ModelOp.getBlock( model, wRoute.getbkb( o->props ) );
-      lc = ModelOp.getLoc(model, o->lockedId, NULL );
+      lc = ModelOp.getLoc(model, o->lockedId, NULL, False );
       if( bk != NULL && lc != NULL ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reverse CAR COUNT = %d", LocOp.getCarCount(lc) );
         bk->setCarCount( bk, LocOp.getCarCount(lc) );
@@ -1212,7 +1212,7 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean loc
     }
     else if( !reverse && StrOp.equals( wRoute.forwards, wRoute.getcountcars(o->props) ) ) {
       iIBlockBase bk = ModelOp.getBlock( model, wRoute.getbkb( o->props ) );
-      lc = ModelOp.getLoc(model, o->lockedId, NULL );
+      lc = ModelOp.getLoc(model, o->lockedId, NULL, False );
       if( bk != NULL && lc != NULL ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "forwards CAR COUNT = %d", LocOp.getCarCount(lc) );
         bk->setCarCount( bk, LocOp.getCarCount(lc) );

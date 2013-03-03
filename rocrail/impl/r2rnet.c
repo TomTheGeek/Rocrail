@@ -280,7 +280,7 @@ static void __handleNetReq(iOR2Rnet inst, iONode req) {
         lcid = wNetReq.getlcid(req);
       }
 
-      loc = ModelOp.getLoc(AppOp.getModel(), lcid, NULL);
+      loc = ModelOp.getLoc(AppOp.getModel(), lcid, NULL, False);
 
       if( unlocked && loc != NULL) {
         iONode rsp = NodeOp.inst( wNetRsp.name(), NULL, ELEMENT_NODE );
@@ -306,10 +306,10 @@ static void __handleNetReq(iOR2Rnet inst, iONode req) {
   else if( StrOp.equals( wNetReq.req_locoisin, wNetReq.getreq(req) ) &&
     StrOp.equals( wNetReq.getremoteid(req), wR2RnetIni.getid(data->props) ) )
   {
-    iOLoc loco = ModelOp.getLoc( AppOp.getModel(), wNetReq.getlcid(req), NULL );
+    iOLoc loco = ModelOp.getLoc( AppOp.getModel(), wNetReq.getlcid(req), NULL, False );
     if( loco == NULL && StrOp.find(wNetReq.getlcid(req), "::") != NULL ) {
       char* s = StrOp.find(wNetReq.getlcid(req), "::");
-      loco = ModelOp.getLoc( AppOp.getModel(), s + 2, NULL );
+      loco = ModelOp.getLoc( AppOp.getModel(), s + 2, NULL, False );
     }
     if( loco == NULL ) {
       LocOp.stop(loco, False);
