@@ -972,6 +972,11 @@ bool LocDialog::Evaluate() {
     return false;
   }
 
+  if( wItem.isgenerated(m_Props) ) {
+    // Modifying a guest loco; Remove generated flag to prevent removing it at shutdown.
+    wItem.setgenerated(m_Props, False);
+  }
+
   // evaluate General
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wLoc.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
