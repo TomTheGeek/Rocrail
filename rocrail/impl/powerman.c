@@ -245,7 +245,11 @@ static void __processEvent( obj inst ,Boolean pulse ,const char* id ,const char*
 
 static void __stateEvent( obj inst, iONode event ) {
   iOPowerManData data = Data(inst);
-  iONode booster = (iONode)MapOp.first( data->boostermap );
+  iONode booster = NULL;
+
+  MutexOp.wait(data->boostermapmux);
+
+  booster = (iONode)MapOp.first( data->boostermap );
   /* command for all */
   TraceOp.trc(name, TRCLEVEL_DEBUG, __LINE__, 9999, "State event from %d", wState.getuid(event));
   while( booster != NULL ) {
@@ -292,6 +296,8 @@ static void __stateEvent( obj inst, iONode event ) {
     }
     booster = (iONode)MapOp.next( data->boostermap );
   }
+
+  MutexOp.post(data->boostermapmux);
 }
 
 
@@ -342,6 +348,8 @@ static void __initBoosters( iOPowerMan inst ) {
   iOPowerManData data = Data(inst);
   iOModel model = AppOp.getModel();
 
+  MutexOp.wait(data->boostermapmux);
+
   iONode booster = wBoosterList.getbooster(data->props);
   MapOp.clear(data->boostermap);
 
@@ -370,6 +378,7 @@ static void __initBoosters( iOPowerMan inst ) {
     booster = wBoosterList.nextbooster(data->props, booster);
   }
 
+  MutexOp.post(data->boostermapmux);
 }
 
 static Boolean _cmd(iOPowerMan inst, iONode cmd) {
@@ -450,6 +459,8 @@ static struct OPowerMan* _inst( iONode ini ) {
   /* Initialize data->xxx members... */
   data->props = ini;
   data->boostermap = MapOp.inst();
+  data->boostermapmux = MutexOp.inst(NULL, True);
+
   data->scmap = MapOp.inst();
   data->pwmap = MapOp.inst();
 

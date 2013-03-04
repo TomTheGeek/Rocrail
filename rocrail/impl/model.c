@@ -755,6 +755,7 @@ static Boolean _addItem( iOModel inst, iONode item ) {
       NodeOp.addChild( data->model, boosterlist );
     }
     NodeOp.addChild( boosterlist, clone );
+    ControlOp.setBoosters(AppOp.getControl(), wPlan.getboosterlist( data->model ));
     added = True;
   }
   else if( StrOp.equals( wLocation.name(), itemName ) ) {
@@ -1592,6 +1593,7 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
         node = wBoosterList.nextbooster( boosterlist, node );
       };
     }
+    ControlOp.setBoosters(AppOp.getControl(), wPlan.getboosterlist( o->model ));
   }
   return removed;
 }
