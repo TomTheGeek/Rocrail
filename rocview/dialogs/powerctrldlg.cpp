@@ -143,11 +143,21 @@ void PowerCtrlDlg::initValues(iONode event) {
         m_Boosters->SetCellBackgroundColour( row, 2,
             wBooster.ispower(booster)?wxColour(200,240,200):wxColour(240,200,200));
 
+        m_Boosters->SetCellBackgroundColour( row, 6, wxColour(200,240,200));
+        int temp = wBooster.gettemp(booster);
+        if( temp >= 60 ) {
+          if(temp > 127 )
+            temp = 127;
+          m_Boosters->SetCellBackgroundColour( row, 6, wxColour(255,255-temp*2,127));
+        }
+
 
         booster = wBoosterList.nextbooster( boosterlist, booster );
       };
     }
   }
+
+  m_Boosters->AutoSizeColumns();
 
   if( m_SelectedRow != -1 ) {
     m_Boosters->SelectRow(m_SelectedRow);

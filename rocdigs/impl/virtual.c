@@ -106,6 +106,9 @@ static void __inform( iOVirtual inst, int uid ) {
   wState.setpower( node, data->power );
   wState.settrackbus( node, True );
   wState.setuid( node, uid);
+  wState.setload( node, 3000 );
+  wState.setvolt( node, 14000 );
+  wState.settemp( node, data->power?120:60 );
   data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 }
 
