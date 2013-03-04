@@ -1204,6 +1204,14 @@ static void __handleAccessory(iOBiDiB bidib, int uid, byte* pdata) {
 }
 
 
+static void __handleAccessoryAck(iOBiDiB bidib, int uid, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  int addr = pdata[0] + pdata[1]*256;
+  int ack  = pdata[2];
+  /* ToDo: How to handle? */
+}
+
+
 static void __handlePT(iOBiDiB bidib, int state, int val) {
   iOBiDiBData data = Data(bidib);
 
@@ -2260,6 +2268,12 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "MSG_SYS_GET_MAGIC path=%s; already got the magic", pathKey );
     }
+    break;
+
+  case MSG_CS_ACCESSORY_ACK:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_CS_ACCESSORY_ACK path=%s addr=%d ack=%d", pathKey, pdata[0] + pdata[1]*256, pdata[2] );
+    __handleAccessoryAck(bidib, bidibnode->uid, pdata);
     break;
 
   default:
