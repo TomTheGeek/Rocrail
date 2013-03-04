@@ -590,7 +590,17 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d:%d %s",
           wOutput.getbus( node ), wOutput.getaddr( node ), on?"ON":"OFF" );
 
-      if( wOutput.isaccessory(node) ) {
+      if( wOutput.isaccessory(node) && StrOp.equals( wOutput.getprot( node ), wSwitch.prot_N ) ) {
+        if(StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)))
+          addr++;
+        msgdata[0] = (addr-1) % 256;
+        msgdata[1] = (addr-1) / 256;
+        msgdata[2] = on ? 0x20:0x00;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d %s",
+            wSwitch.getbus( node ), addr, on ? "ON":"OFF" );
+        data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 3, bidibnode->seq++);
+      }
+      else if( wOutput.isaccessory(node) ) {
         msgdata[0] = addr-1; // Null offset.
         msgdata[1] = on ? 1:0;
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "accessory %d:%d set to %d",
