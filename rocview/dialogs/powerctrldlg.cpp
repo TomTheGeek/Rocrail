@@ -137,6 +137,13 @@ void PowerCtrlDlg::initValues(iONode event) {
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 5, true );
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 6, true );
 
+        int row = m_Boosters->GetNumberRows()-1;
+        m_Boosters->SetCellBackgroundColour( row, 1,
+            wBooster.isshortcut(booster)?wxColour(240,200,200):wxColour(200,240,200));
+        m_Boosters->SetCellBackgroundColour( row, 2,
+            wBooster.ispower(booster)?wxColour(200,240,200):wxColour(240,200,200));
+
+
         booster = wBoosterList.nextbooster( boosterlist, booster );
       };
     }
