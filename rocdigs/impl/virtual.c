@@ -99,12 +99,13 @@ static void* __properties( void* inst ) {
 
 /** ----- OVirtual ----- */
 
-static void __inform( iOVirtual inst ) {
+static void __inform( iOVirtual inst, int uid ) {
   iOVirtualData data = Data(inst);
   iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
   wState.setiid( node, wDigInt.getiid( data->ini ) );
   wState.setpower( node, data->power );
   wState.settrackbus( node, True );
+  wState.setuid( node, uid);
   data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 }
 
@@ -347,14 +348,14 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     const char* cmd = wSysCmd.getcmd( node );
 
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF for booster [%d]", wSysCmd.getbus(node) );
       data->power = False;
-      __inform(virtual);
+      __inform(virtual, wSysCmd.getbus(node));
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON for booster [%d]", wSysCmd.getbus(node) );
       data->power = True;
-      __inform(virtual);
+      __inform(virtual, wSysCmd.getbus(node));
     }
     else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
