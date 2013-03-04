@@ -107,21 +107,21 @@ class wxGrid;
 #define ID_TEXTCTRL_V_MAX 10015
 #define wxID_STATIC_LOC_V_STEP 10033
 #define ID_TEXTCTRL_LOC_ACCEL 10034
-#define wxID_STATIC_LOC_V_MODE 10116
-#define ID_CHECKBOX_LOC_CONTROLLED 10117
 #define wxID_STATIC_MASS 10028
 #define ID_TEXTCTRL_MASS 10029
 #define wxID_STATIC_LOC_PLACING 10118
 #define ID_CHECKBOX_LOC_PLACING 10119
+#define wxID_STATIC_LOC_V_MODE 10116
+#define ID_CHECKBOX_LOC_CONTROLLED 10117
 #define ID_LOC_REGULATED 10375
 #define ID_PANEL_DETAILS 10030
 #define wxID_STATIC_BLOCKWAIT 10031
 #define ID_TEXTCTRL_BLOCKWAIT 10032
+#define ID_RADIOBOX_CARGO 10003
 #define ID_CHECKBOX_COMMUTER 10114
 #define ID_CHECKBOX_LC_SAMEDIR 10162
 #define ID_CHECKBOX_LC_FORCESAMEDIR 10163
 #define ID_RADIOBOX_ENGINE 10002
-#define ID_RADIOBOX_CARGO 10003
 #define ID_PANEL_FUNCTIONS 10035
 #define ID_BUTTON_F0 10061
 #define ID_LOC_FN_GROUP_PREV 10054
@@ -398,16 +398,16 @@ public:
     wxTextCtrl* m_V_Rmax;
     wxStaticText* m_LabelV_step;
     wxTextCtrl* m_Accel;
-    wxStaticText* m_LabelV_mode;
-    wxCheckBox* m_V_mode_percent;
     wxStaticText* m_Label_Mass;
     wxTextCtrl* m_Mass;
-    wxStaticText* m_LabelPlacing;
-    wxCheckBox* m_Placing;
     wxStaticText* m_labDirPause;
     wxTextCtrl* m_DirPause;
-    wxCheckBox* m_Regulated;
+    wxStaticText* m_LabelPlacing;
+    wxCheckBox* m_Placing;
+    wxStaticText* m_LabelV_mode;
+    wxCheckBox* m_V_mode_percent;
     wxCheckBox* m_Info4Throttle;
+    wxCheckBox* m_Regulated;
     wxPanel* m_DetailsPanel;
     wxStaticText* m_Label_Blockwait;
     wxTextCtrl* m_Blockwait;
@@ -423,6 +423,7 @@ public:
     wxComboBox* m_StartupTour;
     wxStaticText* m_labStartupSchedule;
     wxComboBox* m_StartupSchedule;
+    wxRadioBox* m_CargoBox;
     wxCheckBox* m_Commuter;
     wxCheckBox* m_SameDir;
     wxCheckBox* m_OppositeDir;
@@ -436,7 +437,6 @@ public:
     wxCheckBox* m_Check2In;
     wxCheckBox* m_UseDepartDelay;
     wxRadioBox* m_EngineBox;
-    wxRadioBox* m_CargoBox;
     wxPanel* m_FunctionPanel;
     wxStaticText* m_labF0Nr;
     wxStaticText* m_labF0Desc;
