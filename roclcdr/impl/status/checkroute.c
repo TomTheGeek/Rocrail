@@ -44,6 +44,7 @@
 
 void statusCheckRoute( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
+  iONode lcprops = (iONode)data->loc->base.properties( data->loc );
 
   if( data->next1Route == NULL ) {
     ThreadOp.sleep(10);
@@ -97,7 +98,7 @@ void statusCheckRoute( iILcDriverInt inst ) {
 
         /* wait for departdelay if set for the current block*/
         departdelay = data->curBlock->getDepartDelay( data->curBlock ) ;
-        if( departdelay > 0 ) {
+        if( wLoc.isusedepartdelay(lcprops) && departdelay > 0 ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "delay departure for departdelay [%d] sec of block [%s].",
                          departdelay, data->loc->getCurBlock( data->loc) );
           ThreadOp.sleep(departdelay * 1000);

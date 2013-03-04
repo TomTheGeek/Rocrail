@@ -2156,6 +2156,7 @@
         <var name="resumeauto" vt="bool" defval="false" remark="Resume auto mode from previous session."/>
         <var name="shortin" vt="bool" defval="false" remark="Use shortin event to stop in blocks."/>
         <var name="inatpre2in" vt="bool" defval="false" remark="Use pre2in event to stop in blocks."/>
+        <var name="usedepartdelay" vt="bool" defval="true" remark="Use the depart delay defined in the current block."/>
 
         <const name="min" vt="string" val="min" remark="Set speed to minimal."/>
         <const name="mid" vt="string" val="mid" remark="Set speed to middle."/>
@@ -2447,9 +2448,9 @@
         <var name="countedcars" vt="int" defval="0" range="0-*"/>
         <var name="carcount" vt="int" defval="0" range="0-*"/>
         <var name="wheelcount" vt="int" defval="0" range="0-*"/>
-		    <var name="load" vt="int" defval="0" range="0-*"/>
-		    <var name="volt" vt="int" defval="0" range="0-*"/>
-		    <var name="temp" vt="int" defval="0" range="0-*"/>
+        <var name="load" vt="int" defval="0" range="0-*"/>
+        <var name="volt" vt="int" defval="0" range="0-*"/>
+        <var name="temp" vt="int" defval="0" range="0-*"/>
         <var name="iid" vt="string" defval="" range="*" required="false"/>
         <var name="addr" vt="int" defval="0" range="0-*"/>
         <var name="display" vt="int" defval="0" range="0-*"/>

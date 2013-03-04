@@ -20703,4 +20703,7 @@
     <nl txt="Versterking"/>
     <it txt="Guadagno"/>
   </Msg>
+  <Msg id="usedepartdelay">
+    <en txt="Use depart delay"/>
+  </Msg>
 </Messages>
