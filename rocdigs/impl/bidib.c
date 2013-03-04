@@ -500,9 +500,9 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           wSwitch.getbus( node ), wSwitch.getaddr1( node ), wSwitch.getcmd(node) );
 
       if( wSwitch.isaccessory(node) && StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_N ) ) {
-        int  delay = wSwitch.getdelay( node );
         if(StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)))
           addr++;
+
         msgdata[0] = (addr-1) % 256;
         msgdata[1] = (addr-1) / 256;
         msgdata[2] = 0x40 + 0x20;
