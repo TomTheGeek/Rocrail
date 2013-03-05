@@ -571,7 +571,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           }
           else {
             msgdata[1] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? addr-1:addr;
-            msgdata[2] = 1; // ToDo: Switch off other coil.
+            msgdata[2] = BIDIB_PORT_TURN_ON; // ToDo: Switch off other coil.
           }
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc %d:%d type %d set to %d",
               wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2] );
@@ -624,6 +624,20 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "macro %d:%d set to %d",
               wSwitch.getbus( node ), msgdata[0], msgdata[1] );
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode->seq++);
+        }
+        else if( wOutput.getporttype(node) == wProgram.porttype_light ) {
+          Boolean blink = wOutput.isblink( node );
+          int blinkcmd = wOutput.getgain( node );
+          if( blinkcmd == 0 || blinkcmd > 9 )
+            blinkcmd = BIDIB_PORT_BLINK_A;
+
+          msgdata[0] = wOutput.getporttype(node);
+          msgdata[1] = addr-1;
+          msgdata[2] = on ? (blink?blinkcmd:BIDIB_PORT_TURN_ON):BIDIB_PORT_TURN_OFF;
+
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc %d:%d type %d set to %d%s",
+              wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2], blink?" blink":"" );
+          data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode->seq++);
         }
         else {
           msgdata[0] = wOutput.getporttype(node);
