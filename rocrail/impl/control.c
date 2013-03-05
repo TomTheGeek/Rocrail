@@ -1247,7 +1247,7 @@ static long _getTime( iOControl inst ) {
   return data->time;
 }
 
-
+/* Model seconds */
 static void __checkActions( iOControl control ) {
   iOModel model = AppOp.getModel();
   iOControlData data = Data(control);
@@ -1359,6 +1359,8 @@ static void __clockticker( void* threadinst ) {
     /* 1=1000, 2=500, 4=250, 5=200, 10=100, 20=50, 25=40, 40=25, 50=20*/
     ThreadOp.sleep( 1000 / data->devider );
 
+    __checkActions( control );
+
     if( data->timeset ) {
       wClock.setdivider( clockini, data->devider );
       timeset = True;
@@ -1403,8 +1405,6 @@ static void __clockticker( void* threadinst ) {
 
     if( firstsync )
       firstsync = False;
-
-    __checkActions( control );
 
   };
 

@@ -131,7 +131,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
 
   if( actionctrl != NULL ) {
     iONode actionCond = wActionCtrl.getactioncond(actionctrl);
-    if( automode && wActionCtrl.isauto(actionctrl) || !automode && wActionCtrl.ismanual(actionctrl)) {
+    if( automode && wActionCtrl.isauto(actionctrl) || !automode && wActionCtrl.ismanual(actionctrl) ) {
       while( actionCond != NULL && rc ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Action condition: [%s-%s:%s] ",
             wActionCond.gettype(actionCond),
@@ -1092,7 +1092,7 @@ static void _tick( iOAction inst ) {
   long l_time = ControlOp.getTime(control);
   struct tm* lTime = localtime( &l_time );
 
-  data->ticker++; /* scale minutes */
+  data->ticker++; /* scale seconds */
 
   if( wAction.istimed(data->action) ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
@@ -1100,35 +1100,35 @@ static void _tick( iOAction inst ) {
         wAction.getid(data->action), wAction.israndom(data->action), wAction.isevery(data->action), data->enabled);
 
     if( wAction.israndom(data->action) ) {
-      if( data->randommins == data->ticker ) {
+      if( data->randomsecs == data->ticker ) {
         _exec( inst, NULL );
 
         int mins = wAction.gethour(data->action) * 60 + wAction.getmin(data->action);
         if( mins < 1 ) mins = 1;
-        data->randommins = rand() % mins;
-        if( data->randommins < 1 )
-          data->randommins = 1;
+        data->randomsecs = rand() % mins;
+        if( data->randomsecs < 1 )
+          data->randomsecs = 1;
         data->ticker = 0;
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action timer [%s] random scale minutes=%d.",
-            wAction.getid(data->action), data->randommins );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action timer [%s] random scale seconds=%d.",
+            wAction.getid(data->action), data->randomsecs );
       }
     }
 
     else if( wAction.isevery(data->action) && data->enabled ) {
-      int actmins = wAction.gethour(data->action) * 60 + wAction.getmin(data->action);
-      int mins = lTime->tm_hour * 60 + lTime->tm_min;
-      if( mins < data->lastactmin ) {
-        data->lastactmin = 1440 - data->lastactmin;
+      int actsecs = wAction.gethour(data->action) * 60 * 60 + wAction.getmin(data->action) * 60 + wAction.getsec(data->action);
+      int secs = lTime->tm_hour * 60 * 60 + lTime->tm_min * 60 + lTime->tm_sec;
+      if( secs < data->lastactsec ) {
+        data->lastactsec = 86400 - data->lastactsec;
       }
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action every timer [%s] actionmins=%d scale minutes=%d lastactmin=%d.",
-          wAction.getid(data->action), actmins, mins, data->lastactmin);
-      if( (mins - data->lastactmin) >= actmins ) {
-        data->lastactmin = mins;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action every timer [%s] actionsecs=%d scale seconds=%d lastactsec=%d.",
+          wAction.getid(data->action), actsecs, secs, data->lastactsec);
+      if( (secs - data->lastactsec) >= actsecs ) {
+        data->lastactsec = secs;
         _exec( inst, NULL );
       }
     }
 
-    else if( lTime->tm_hour == wAction.gethour(data->action) && lTime->tm_min == wAction.getmin(data->action) ) {
+    else if( lTime->tm_hour == wAction.gethour(data->action) && lTime->tm_min == wAction.getmin(data->action) && lTime->tm_sec == wAction.getsec(data->action) ) {
       _exec( inst, NULL );
     }
   }
@@ -1153,18 +1153,18 @@ static struct OAction* _inst( iONode ini ) {
   data->action = ini;
 
   if( wAction.israndom(data->action) ) {
-    int mins = wAction.gethour(data->action) * 60 + wAction.getmin(data->action);
-    if( mins < 1 ) mins = 1;
-    data->randommins = rand() % mins;
-    if( data->randommins < 1 )
-      data->randommins = 1;
+    int secs = wAction.gethour(data->action) * 60 * 60 + wAction.getmin(data->action) * 60 + wAction.getsec(data->action);
+    if( secs < 1 ) secs = 1;
+    data->randomsecs = rand() % secs;
+    if( data->randomsecs < 1 )
+      data->randomsecs = 1;
     data->ticker = 0;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action timer [%s] random scale minutes=%d.",
-        wAction.getid(data->action), data->randommins );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action timer [%s] random scale seconds=%d.",
+        wAction.getid(data->action), data->randomsecs );
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action timer [%s] %02d:%02d.",
-        wAction.getid(data->action), wAction.gethour(data->action), wAction.getmin(data->action) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action timer [%s] %02d:%02d.%02d",
+        wAction.getid(data->action), wAction.gethour(data->action), wAction.getmin(data->action), wAction.getsec(data->action) );
   }
 
   instCnt++;

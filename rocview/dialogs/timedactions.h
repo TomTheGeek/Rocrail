@@ -176,11 +176,13 @@ public:
     wxStaticBox* m_ActivationTimeBox;
     wxCheckBox* m_Timed;
     wxCheckBox* m_Every;
+    wxCheckBox* m_Random;
     wxStaticText* m_labHour;
     wxSpinCtrl* m_Hour;
     wxStaticText* m_labMin;
     wxSpinCtrl* m_Min;
-    wxCheckBox* m_Random;
+    wxStaticText* m_labSec;
+    wxSpinCtrl* m_Sec;
     wxPanel* m_UsePanel;
     wxListBox* m_UseList;
     wxButton* m_OK;
