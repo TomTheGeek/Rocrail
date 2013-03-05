@@ -500,28 +500,38 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           wSwitch.getbus( node ), wSwitch.getaddr1( node ), wSwitch.getcmd(node) );
 
       if( wSwitch.isaccessory(node) && StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_N ) ) {
-        if(StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)))
-          addr++;
+        if( wSwitch.issinglegate(node) ) {
+          msgdata[0] = (addr-1) % 256;
+          msgdata[1] = (addr-1) / 256;
+          msgdata[2] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 0x20:0x00;
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d single gate %s",
+              wSwitch.getbus( node ), addr, StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? "ON":"OFF" );
+          data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 4, bidibnode->seq++);
+        }
+        else {
+          if(StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)))
+            addr++;
 
-        msgdata[0] = (addr-1) % 256;
-        msgdata[1] = (addr-1) / 256;
-        msgdata[2] = 0x40 + 0x20;
-        /* Schaltzeit
-            Wert  Bedeutung
-            1..63     Schaltzeit = Wert * 10ms
-            64..127:  Schaltzeit = (Wert-32) * 20ms (>640)
-            128..254: Schaltzeit = (Wert-80) * 40ms (>1920)
-        */
-        if( delay >= 1920 )
-          delay = (delay / 40) + 80;
-        else if( delay >= 640 )
-          delay = (delay / 20) + 32;
-        else
-          delay /= 10;
-        msgdata[3] = delay;
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d set",
-            wSwitch.getbus( node ), addr );
-        data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 4, bidibnode->seq++);
+          msgdata[0] = (addr-1) % 256;
+          msgdata[1] = (addr-1) / 256;
+          msgdata[2] = 0x40 + 0x20;
+          /* Schaltzeit
+              Wert  Bedeutung
+              1..63     Schaltzeit = Wert * 10ms
+              64..127:  Schaltzeit = (Wert-32) * 20ms (>640)
+              128..254: Schaltzeit = (Wert-80) * 40ms (>1920)
+          */
+          if( delay >= 1920 )
+            delay = (delay / 40) + 80;
+          else if( delay >= 640 )
+            delay = (delay / 20) + 32;
+          else
+            delay /= 10;
+          msgdata[3] = delay;
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d set",
+              wSwitch.getbus( node ), addr );
+          data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 4, bidibnode->seq++);
+        }
       }
       else if( wSwitch.isaccessory(node) ) {
         if( wSwitch.issinglegate(node) ) {
