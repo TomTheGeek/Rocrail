@@ -284,7 +284,11 @@ static int _getFnNrByDesc( iOCar inst, const char* desc) {
     }
     fundef = wCar.nextfundef( data->props, fundef );
   };
-  return atoi(desc);
+
+  if( StrOp.len(desc) > 0 && isdigit(desc[0]) )
+    return atoi(desc);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "car function [%s] not defined", desc );
+  return -1;
 }
 
 

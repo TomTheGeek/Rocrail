@@ -885,6 +885,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     if( lc != NULL ) {
       while( StrTokOp.hasMoreTokens(tok) ) {
         int fnaction = LocOp.getFnNrByDesc(lc, StrTokOp.nextToken(tok));
+        if( fnaction != -1 )
         __doFunction(data, lc, fon, fnaction);
       }
     }
@@ -893,7 +894,8 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       if( car != NULL ) {
         while( StrTokOp.hasMoreTokens(tok) ) {
           int fnaction = CarOp.getFnNrByDesc(car, StrTokOp.nextToken(tok));
-          __doCarFunction(data, car, fon, fnaction);
+          if( fnaction != -1 )
+            __doCarFunction(data, car, fon, fnaction);
         }
       }
       else {

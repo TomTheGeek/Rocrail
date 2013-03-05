@@ -761,7 +761,11 @@ static int _getFnNrByDesc( iOLoc inst, const char* desc) {
     }
     fundef = wLoc.nextfundef( data->props, fundef );
   };
-  return atoi(desc);
+
+  if( StrOp.len(desc) > 0 && isdigit(desc[0]) )
+    return atoi(desc);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco function [%s] not defined", desc );
+  return -1;
 }
 
 static int __getFnTimer( iOLoc inst, int function) {
