@@ -148,7 +148,7 @@ void PowerCtrlDlg::initValues(iONode event) {
         if( temp >= 60 ) {
           if(temp > 127 )
             temp = 127;
-          m_Boosters->SetCellBackgroundColour( row, 6, wxColour(255,255-temp*2,127));
+          m_Boosters->SetCellBackgroundColour( row, 6, wxColour(255,255-temp*2,127-temp));
         }
 
 
@@ -200,6 +200,7 @@ void PowerCtrlDlg::OnOn( wxCommandEvent& event )
     wPwrCmd.setcmd(pwrcmd, wPwrCmd.on);
     TraceOp.trc( "pwrctrl", TRCLEVEL_INFO, __LINE__, 9999, "sending on cmd for booster %s", wBooster.getid(m_SelBooster) );
     wxGetApp().sendToRocrail( pwrcmd );
+    m_SelectedRow = -1;
 	}
 }
 
@@ -211,6 +212,7 @@ void PowerCtrlDlg::OnOff( wxCommandEvent& event )
     wPwrCmd.setcmd(pwrcmd, wPwrCmd.off);
     TraceOp.trc( "pwrctrl", TRCLEVEL_INFO, __LINE__, 9999, "sending off cmd for booster %s", wBooster.getid(m_SelBooster) );
     wxGetApp().sendToRocrail( pwrcmd );
+    m_SelectedRow = -1;
   }
 }
 
@@ -238,6 +240,8 @@ void PowerCtrlDlg::OnOK( wxCommandEvent& event )
 }
 
 void PowerCtrlDlg::onClose( wxCloseEvent& event ) {
+  wxCommandEvent e;
+  OnOK(e);
 }
 
 
