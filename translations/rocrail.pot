@@ -6287,3 +6287,9 @@ msgstr ""
 msgid "Gain"
 msgstr ""
 
+#. 
+# id="usedepartdelay"
+#, c-format
+msgid "Use depart delay"
+msgstr ""
+
