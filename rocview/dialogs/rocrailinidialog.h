@@ -352,6 +352,7 @@ public:
     wxCheckBox* m_CloseNoEvents;
     wxCheckBox* m_SelectShortestBlock;
     wxCheckBox* m_RestoreSchedule;
+    wxCheckBox* m_ActionTimer60;
     wxCheckBox* m_GreenAspect;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;

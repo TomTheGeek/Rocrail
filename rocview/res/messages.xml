@@ -20709,4 +20709,7 @@
   <Msg id="blink">
     <en txt="Blink"/>
   </Msg>
+  <Msg id="actiontimer60">
+    <en txt="Action timer 60 sec."/>
+  </Msg>
 </Messages>

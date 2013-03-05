@@ -1968,7 +1968,8 @@
     </fun>
     <fun name="tick" vt="void">
       <param name="inst" vt="this"/>
-    </fun>
+      <param name="seconds" vt="int"/>
+      </fun>
     <fun name="modify" vt="void">
       <param name="inst" vt="this" remark="Action instance"/>
       <param name="modification" vt="iONode" remark="Modification node"/>

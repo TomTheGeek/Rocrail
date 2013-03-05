@@ -1086,13 +1086,13 @@ static void _exec( struct OAction* inst, iONode actionctrl ) {
   }
 }
 
-static void _tick( iOAction inst ) {
+static void _tick( iOAction inst, int seconds ) {
   iOActionData data = Data(inst);
   iOControl control = AppOp.getControl();
   long l_time = ControlOp.getTime(control);
   struct tm* lTime = localtime( &l_time );
 
-  data->ticker++; /* scale seconds */
+  data->ticker += seconds; /* scale seconds */
 
   if( wAction.istimed(data->action) ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
@@ -1103,9 +1103,9 @@ static void _tick( iOAction inst ) {
       if( data->randomsecs == data->ticker ) {
         _exec( inst, NULL );
 
-        int mins = wAction.gethour(data->action) * 60 + wAction.getmin(data->action);
-        if( mins < 1 ) mins = 1;
-        data->randomsecs = rand() % mins;
+        int secs = wAction.gethour(data->action) * 60 * 60 + wAction.getmin(data->action) * 60 + wAction.getsec(data->action);
+        if( secs < 1 ) secs = 1;
+        data->randomsecs = rand() % secs;
         if( data->randomsecs < 1 )
           data->randomsecs = 1;
         data->ticker = 0;
@@ -1128,8 +1128,14 @@ static void _tick( iOAction inst ) {
       }
     }
 
-    else if( lTime->tm_hour == wAction.gethour(data->action) && lTime->tm_min == wAction.getmin(data->action) && lTime->tm_sec == wAction.getsec(data->action) ) {
-      _exec( inst, NULL );
+    else if( lTime->tm_hour == wAction.gethour(data->action) && lTime->tm_min == wAction.getmin(data->action) ) {
+      if( seconds > 1 ) {
+        /* ignore the seconds */
+        _exec( inst, NULL );
+      }
+      else if(  lTime->tm_sec == wAction.getsec(data->action) ) {
+        _exec( inst, NULL );
+      }
     }
   }
 

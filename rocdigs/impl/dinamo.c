@@ -645,7 +645,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
     int   addr = wOutput.getaddr( node );
     int   port = wOutput.getport( node );
-    int   gain = wOutput.getgain( node );
+    int   gain = wOutput.getparam( node );
     Boolean on = StrOp.equals( wOutput.on, wOutput.getcmd( node ) );
 
     if( port < 1 || addr < 1 ) {
@@ -655,6 +655,9 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
     else {
       addr--;
       port--;
+
+      if( gain == 0 )
+        gain = 10;
 
       if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_OM32 ) ) {
         Boolean blink = wOutput.isblink( node );

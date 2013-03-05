@@ -627,7 +627,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         }
         else if( wOutput.getporttype(node) == wProgram.porttype_light ) {
           Boolean blink = wOutput.isblink( node );
-          int blinkcmd = wOutput.getgain( node );
+          int blinkcmd = wOutput.getparam( node );
           if( blinkcmd == 0 || blinkcmd > 9 )
             blinkcmd = BIDIB_PORT_BLINK_A;
 

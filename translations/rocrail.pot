@@ -6293,3 +6293,15 @@ msgstr ""
 msgid "Use depart delay"
 msgstr ""
 
+#. 
+# id="blink"
+#, c-format
+msgid "Blink"
+msgstr ""
+
+#. 
+# id="actiontimer60"
+#, c-format
+msgid "Action timer 60 sec."
+msgstr ""
+

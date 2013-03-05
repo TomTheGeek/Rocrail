@@ -157,7 +157,7 @@ void OutputDialog::initLabels() {
   m_labGate->SetLabel( wxGetApp().getMsg( "gate" ) );
   m_Gate->SetString( 0, wxGetApp().getMsg( "red" ) );
   m_Gate->SetString( 1, wxGetApp().getMsg( "green" ) );
-  m_labGain->SetLabel( wxGetApp().getMsg( "gain" ) );
+  m_labGain->SetLabel( wxGetApp().getMsg( "parameter" ) );
   m_LabelProt->SetLabel( wxGetApp().getMsg( "protocol" ) );
   m_Prot->Clear();
   m_Prot->Append(_T("Default"));
@@ -285,7 +285,7 @@ void OutputDialog::initValues() {
   str = StrOp.fmt( "%d", wOutput.getport(m_Props) );
   m_Port->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
   m_Gate->SetSelection( wOutput.getgate(m_Props) );
-  m_Gain->SetValue( wOutput.getgain(m_Props) );
+  m_Gain->SetValue( wOutput.getparam(m_Props) );
 
   if( StrOp.equals( wOutput.prot_M, wOutput.getprot( m_Props ) ) )
     m_Prot->SetSelection( 1 );
@@ -359,7 +359,7 @@ bool OutputDialog::evaluate() {
   wOutput.setaddr( m_Props, atoi( m_Address->GetValue().mb_str(wxConvUTF8) ) );
   wOutput.setport( m_Props, atoi( m_Port->GetValue().mb_str(wxConvUTF8) ) );
   wOutput.setgate( m_Props, m_Gate->GetSelection() );
-  wOutput.setgain( m_Props, m_Gain->GetValue() );
+  wOutput.setparam( m_Props, m_Gain->GetValue() );
 
   if( m_Prot->GetSelection() == 1 )
     wOutput.setprot( m_Props, wOutput.prot_M );

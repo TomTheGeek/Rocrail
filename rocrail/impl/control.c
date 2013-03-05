@@ -46,6 +46,7 @@
 
 #include "rocrail/wrapper/public/Global.h"
 #include "rocrail/wrapper/public/RocRail.h"
+#include "rocrail/wrapper/public/Ctrl.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/Clock.h"
 #include "rocrail/wrapper/public/Switch.h"
@@ -1248,7 +1249,7 @@ static long _getTime( iOControl inst ) {
 }
 
 /* Model seconds */
-static void __checkActions( iOControl control ) {
+static void __checkActions( iOControl control, int seconds ) {
   iOModel model = AppOp.getModel();
   iOControlData data = Data(control);
 
@@ -1261,7 +1262,7 @@ static void __checkActions( iOControl control ) {
         while( action != NULL ) {
           iOAction act = ModelOp.getAction(model, wAction.getid(action));
           if( act != NULL )
-            ActionOp.tick(act);
+            ActionOp.tick(act, seconds);
           action = wActionList.nextac( aclist, action );
         };
       }
@@ -1359,7 +1360,8 @@ static void __clockticker( void* threadinst ) {
     /* 1=1000, 2=500, 4=250, 5=200, 10=100, 20=50, 25=40, 40=25, 50=20*/
     ThreadOp.sleep( 1000 / data->devider );
 
-    __checkActions( control );
+    if( !wCtrl.isactiontimer60( wRocRail.getctrl( AppOp.getIni() ) ) )
+      __checkActions( control, 1 );
 
     if( data->timeset ) {
       wClock.setdivider( clockini, data->devider );
@@ -1387,6 +1389,9 @@ static void __clockticker( void* threadinst ) {
     data->time += seconds;
 
     updateticker++;
+
+    if( wCtrl.isactiontimer60( wRocRail.getctrl( AppOp.getIni() ) ) )
+      __checkActions( control, 60 );
 
     if( firstsync || updateticker >= update ) {
       struct tm* ltm = localtime( &data->time );
