@@ -1540,9 +1540,10 @@
         <var name="addr" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
         <var name="port" vt="int" defval="0" range="0-4" required="true" remark="port of decoder module: 0 = not used."/>
         <var name="gate" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
-        <var name="gain" vt="int" defval="10" range="0-*" required="true" remark="output gain"/>
+        <var name="gain" vt="int" defval="10" range="0-*" remark="output gain"/>
         <var name="type" vt="string" defval="output" range="output,switch,button"/>
         <var name="inv" vt="bool" defval="false" remark="Output as switch inverted. (Software wiring correction)"/>
+        <var name="blink" vt="bool" defval="false" remark="Blink output."/>
         <var name="asswitch" vt="bool" defval="false" remark="send a switch command"/>
 
         <var name="tristate" vt="bool" defval="false" remark="Tri-state flag."/>

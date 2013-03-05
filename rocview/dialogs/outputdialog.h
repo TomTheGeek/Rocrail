@@ -223,6 +223,7 @@ public:
     wxStaticBox* m_OptionsBox;
     wxCheckBox* m_AsSwitch;
     wxCheckBox* m_Invert;
+    wxCheckBox* m_Blink;
     wxCheckBox* m_Accessory;
     wxRadioBox* m_PortType;
     wxPanel* m_LocationPanel;

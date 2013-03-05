@@ -20706,4 +20706,7 @@
   <Msg id="usedepartdelay">
     <en txt="Use depart delay"/>
   </Msg>
+  <Msg id="blink">
+    <en txt="Blink"/>
+  </Msg>
 </Messages>
