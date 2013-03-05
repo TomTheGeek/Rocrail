@@ -143,12 +143,15 @@ Boolean serialInit( obj inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  = %s", wDigInt.getdevice( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps     = %d", wDigInt.getbps( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "line    = 8N1 (fix)" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow    = CTS (fix)" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow    = %s", wDigInt.getflow( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout = %d", wDigInt.gettimeout( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
-  SerialOp.setFlow( data->serial, cts );
+
+  if( StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) )
+    SerialOp.setFlow( data->serial, cts );
+
   SerialOp.setLine( data->serial, wDigInt.getbps( data->ini ), 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 

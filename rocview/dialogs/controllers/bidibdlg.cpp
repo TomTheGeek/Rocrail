@@ -113,6 +113,11 @@ void BidibDlg::initValues() {
   else
     m_BPS->SetSelection(1);
 
+  if( StrOp.equals( wDigInt.cts, wDigInt.getflow( m_Props ) ) )
+    m_CTS->SetValue(true);
+  else
+    m_CTS->SetValue(false);
+
   if( StrOp.equals( wDigInt.sublib_udp, wDigInt.getsublib( m_Props ) ) )
     m_SubLib->SetSelection(1);
   else
@@ -169,6 +174,8 @@ void BidibDlg::evaluate() {
     wDigInt.setbps( m_Props, 115200 );
   else
     wDigInt.setbps( m_Props, 1000000 );
+
+  wDigInt.setflow(m_Props, m_CTS->IsChecked()?wDigInt.cts:wDigInt.no);
 
   if( m_SubLib->GetSelection() == 1 )
     wDigInt.setsublib( m_Props, wDigInt.sublib_udp);
