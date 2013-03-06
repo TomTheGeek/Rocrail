@@ -53,8 +53,14 @@ BidibDlg::BidibDlg( wxWindow* parent, iONode props, const char* devices )
   m_Options->GetSizer()->Layout();
   m_Nodes->GetSizer()->Layout();
 
+  m_General->Fit();
+  m_Options->Fit();
+  m_Nodes->Fit();
+
+  m_Notebook->Layout();
   m_Notebook->Fit();
 
+  GetSizer()->Layout();
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
