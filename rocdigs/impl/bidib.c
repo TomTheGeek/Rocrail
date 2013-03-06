@@ -1083,12 +1083,12 @@ static void __handleSensor(iOBiDiB bidib, int bus, int addr, Boolean state, int 
 }
 
 
-static void __handleMultipleSensors(iOBiDiB bidib, int bus, const byte* msg, int size) {
+static void __handleMultipleSensors(iOBiDiB bidib, int bus, const byte* pdata, int size) {
   iOBiDiBData data = Data(bidib);
 
   // 06 00 02 A2 00 08 01 8B
-  int baseAddr = msg[4];
-  int cnt = msg[5] / 8;
+  int baseAddr = pdata[0];
+  int cnt = pdata[1] / 8;
   int i = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor-base=%d cnt=%d", baseAddr, cnt );
@@ -1096,7 +1096,7 @@ static void __handleMultipleSensors(iOBiDiB bidib, int bus, const byte* msg, int
     int addr = baseAddr + (i / 2);
     int bit = 0;
     for( bit = 0; bit < 8; bit++ ) {
-      __handleSensor(bidib, bus, bit+((i%2)*8), msg[6+i] & (0x01 << bit), 0, -1, 0);
+      __handleSensor(bidib, bus, bit+((i%2)*8), pdata[2+i] & (0x01 << bit), 0, -1, 0);
     }
   }
 
@@ -2104,7 +2104,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_BM_MULTIPLE:
   {
-    __handleMultipleSensors(bidib, bidibnode->uid, msg, size);
+    __handleMultipleSensors(bidib, bidibnode->uid, pdata, size);
     __seqAck(bidib, bidibnode, MSG_BM_MIRROR_MULTIPLE, pdata, datasize);
     break;
   }
@@ -2120,9 +2120,9 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_BM_ADDRESS:
   { //             MNUM, ADDRL, ADDRH
     // 06 00 0C A3 04    5E     13 C4
-    int locoAddr = (msg[6]&0x3F) * 256 + msg[5];
-    int type = msg[6] >> 6;
-    int port = msg[4] & 0xFF;
+    int locoAddr = (pdata[2]&0x3F) * 256 + pdata[1];
+    int type = (pdata[2] >> 6);
+    int port = pdata[0] & 0xFF;
 
     if( port > 127 ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,"BM port out of range: %d", port);
