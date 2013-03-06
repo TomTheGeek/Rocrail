@@ -202,6 +202,7 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
 
   wOutput.setprot( nodeA, wOutput.getprot( o->props ) );
   wOutput.setblink( nodeA, wOutput.isblink( o->props ) );
+  wOutput.setparam( nodeA, wOutput.getparam( o->props ) );
 
   if( wOutput.getaddr( o->props ) > 0 || wOutput.getport( o->props ) > 0 ){
     if( wOutput.isasswitch(o->props) ) {
