@@ -142,6 +142,7 @@ public:
     wxSpinCtrl* m_PollSleep;
     wxCheckBox* m_FbPoll;
     wxCheckBox* m_FbReset;
+    wxCheckBox* m_Bidi;
     wxStaticBox* m_OptionsBox;
     wxCheckBox* m_PTSupport;
     wxCheckBox* m_SystemInfo;
