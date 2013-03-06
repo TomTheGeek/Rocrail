@@ -1040,7 +1040,7 @@ static void __listener( obj inst, iONode nodeC, int level ) {
     data->accessorybus = wState.isaccessorybus( nodeC );
     if( data->power != wState.ispower( nodeC )) {
       data->power = wState.ispower( nodeC );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
           "State event from=%s: track power is %s",
           wState.getiid( nodeC )==NULL?"":wState.getiid( nodeC ), data->power?"ON":"OFF" );
     }
