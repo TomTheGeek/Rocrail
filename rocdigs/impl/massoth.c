@@ -284,6 +284,27 @@ static iOSlot __configureVehicle(iOMassothData data, iONode node) {
 
 }
 
+
+static void __releaseSlot(iOMassothData data, iOSlot slot) {
+  byte cmd[32] = {0};
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "release slot for %s", slot->id );
+
+  if( MutexOp.wait( data->lcmux ) ) {
+    MapOp.remove(data->lcmap, slot->id);
+    MutexOp.post(data->lcmux);
+  }
+
+  cmd[0] = 0x64;
+  cmd[1] = 0; /*xor*/
+  cmd[2] = slot->addr >> 8;
+  cmd[3] = slot->addr & 0x00FF;
+  cmd[4] = 0x00;
+
+  __transact( data, cmd, NULL, 0, NULL );
+}
+
+
 static iOSlot __getSlot(iOMassothData data, iONode node) {
   int steps = wLoc.getspcnt(node);
   int addr  = wLoc.getaddr(node);
@@ -470,6 +491,14 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
     return True;
   }
 
+
+  /* Loc release command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals(wLoc.release, wLoc.getcmd(node)) ) {
+    iOSlot slot = __getSlot(data, node );
+    if( slot != NULL ) {
+      __releaseSlot(data, slot );
+    }
+  }
 
   /* Loc command.*/
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
