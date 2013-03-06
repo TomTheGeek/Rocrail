@@ -1360,8 +1360,13 @@ static void __clockticker( void* threadinst ) {
     /* 1=1000, 2=500, 4=250, 5=200, 10=100, 20=50, 25=40, 40=25, 50=20*/
     ThreadOp.sleep( 1000 / data->devider );
 
-    if( !wCtrl.isactiontimer60( wRocRail.getctrl( AppOp.getIni() ) ) )
+    if( !wCtrl.isactiontimer60( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+      if( data->devider > 1 )
+        data->time += 1;
+      else
+        data->time = time(NULL);
       __checkActions( control, 1 );
+    }
 
     if( data->timeset ) {
       wClock.setdivider( clockini, data->devider );
@@ -1379,10 +1384,12 @@ static void __clockticker( void* threadinst ) {
       continue;
     }
 
-    if( data->devider > 1 || timeset )
-      data->time += 60;
-    else
-      data->time = time(NULL);
+    if( wCtrl.isactiontimer60( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+      if( data->devider > 1 || timeset )
+        data->time += 60;
+      else
+        data->time = time(NULL);
+    }
 
     /* sync clock event and seconds to full minute */
     seconds = data->time % 60;

@@ -1096,8 +1096,10 @@ static void _tick( iOAction inst, int seconds ) {
 
   if( wAction.istimed(data->action) ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
-        "action [%s] random=%d every=%d enabled=%d",
-        wAction.getid(data->action), wAction.israndom(data->action), wAction.isevery(data->action), data->enabled);
+        "action [%s] random=%d every=%d enabled=%d action=%d:%02d.%02d local=%d:%02d.%02d",
+        wAction.getid(data->action), wAction.israndom(data->action), wAction.isevery(data->action), data->enabled,
+        wAction.gethour(data->action), wAction.getmin(data->action), wAction.getsec(data->action),
+        lTime->tm_hour, lTime->tm_min, lTime->tm_sec);
 
     if( wAction.israndom(data->action) ) {
       if( data->randomsecs == data->ticker ) {
@@ -1131,9 +1133,13 @@ static void _tick( iOAction inst, int seconds ) {
     else if( lTime->tm_hour == wAction.gethour(data->action) && lTime->tm_min == wAction.getmin(data->action) ) {
       if( seconds > 1 ) {
         /* ignore the seconds */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action timer [%s] %d:%02d",
+            wAction.getid(data->action), wAction.gethour(data->action), wAction.getmin(data->action) );
         _exec( inst, NULL );
       }
       else if(  lTime->tm_sec == wAction.getsec(data->action) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action timer [%s] %d:%02d.%02d",
+            wAction.getid(data->action), wAction.gethour(data->action), wAction.getmin(data->action), wAction.getsec(data->action) );
         _exec( inst, NULL );
       }
     }
