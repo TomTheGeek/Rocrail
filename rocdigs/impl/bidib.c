@@ -514,7 +514,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
           msgdata[0] = (addr-1) % 256;
           msgdata[1] = (addr-1) / 256;
-          msgdata[2] = 0x40 + 0x20;
+          msgdata[2] = 0x60 + (StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 0x20:0x00);
           /* Schaltzeit
               Wert  Bedeutung
               1..63     Schaltzeit = Wert * 10ms
