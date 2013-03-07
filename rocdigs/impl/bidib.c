@@ -2016,7 +2016,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   switch( Type ) {
   case MSG_SYS_MAGIC:
   { // len = 5
-    int Magic = (msg[5]<<8)+msg[4];
+    int Magic = (pdata[1]<<8)+pdata[0];
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "MSG_SYS_MAGIC, path=%s seq=%d magic=0x%04X", pathKey, Seq, Magic );
     data->upSeq   = Seq;
@@ -2192,13 +2192,13 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_SYS_P_VERSION:
   {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MSG_SYS_P_VERSION %d.%d", msg[2], msg[1] );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MSG_SYS_P_VERSION %d.%d", pdata[1], pdata[0] );
     break;
   }
 
   case MSG_PRG_CV_STAT:
   {
-    __handlePT(bidib, msg[1], msg[2]);
+    __handlePT(bidib, pdata[0], pdata[1]);
     break;
   }
 
