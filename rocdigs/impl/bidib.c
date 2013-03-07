@@ -493,8 +493,12 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
     StrOp.fmtb( uidKey, "0x%08X", wSwitch.getbus(node) );
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
-    if( bidibnode == NULL )
-      bidibnode = data->defaultswitch;
+    if( bidibnode == NULL ) {
+      if( wSwitch.isaccessory(node) && StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_N ) )
+        bidibnode = data->defaultmain;
+      else
+        bidibnode = data->defaultswitch;
+    }
     if( bidibnode != NULL ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch %d:%d %s",
           wSwitch.getbus( node ), wSwitch.getaddr1( node ), wSwitch.getcmd(node) );
@@ -595,8 +599,12 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
     StrOp.fmtb( uidKey, "0x%08X", wOutput.getbus(node) );
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
-    if( bidibnode == NULL )
-      bidibnode = data->defaultswitch;
+    if( bidibnode == NULL ) {
+      if( wOutput.isaccessory(node) && StrOp.equals( wOutput.getprot( node ), wSwitch.prot_N ) )
+        bidibnode = data->defaultmain;
+      else
+        bidibnode = data->defaultswitch;
+    }
     if( bidibnode != NULL ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d:%d %s",
           wOutput.getbus( node ), wOutput.getaddr( node ), on?"ON":"OFF" );
@@ -712,7 +720,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     StrOp.fmtb( uidKey, "0x%08X", wLoc.getbus(node) );
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
     if( bidibnode == NULL )
-      bidibnode = data->defaultbooster;
+      bidibnode = data->defaultmain;
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d V=%d dir=%s lights=%s steps=%d",
         addr, speed, dir?"fwd":"rev", fn?"on":"off", steps);
@@ -747,7 +755,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
     if( bidibnode == NULL )
-      bidibnode = data->defaultbooster;
+      bidibnode = data->defaultmain;
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d f[%d]=%s", addr, fnchanged, fnstate?"on":"off");
     if( bidibnode != NULL ) {
@@ -1454,11 +1462,15 @@ static void __addNode(iOBiDiB bidib, byte* pdata) {
     wBiDiBnode.setvendor(child, node->vendorid);
     NodeOp.addChild(data->bidibini, child);
  
+    if( data->defaultmain == NULL && StrOp.find(classname, wBiDiBnode.class_dcc_main) != NULL ) {
+      data->defaultmain = node;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, classname);
+    }
     if( data->defaultbooster == NULL && StrOp.find(classname, wBiDiBnode.class_booster) != NULL ) {
       data->defaultbooster = node;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, classname);
     }
-    if( data->defaultprog == NULL && StrOp.find(classname, wBiDiBnode.class_prog) != NULL ) {
+    if( data->defaultprog == NULL && StrOp.find(classname, wBiDiBnode.class_dcc_prog) != NULL ) {
       data->defaultprog = node;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, classname);
     }

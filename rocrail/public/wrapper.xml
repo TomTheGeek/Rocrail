@@ -512,9 +512,9 @@
           <const name="class_bridge" vt="string" val="bridge"/>
           <const name="class_sensor" vt="string" val="sensor"/>
           <const name="class_ui" vt="string" val="ui"/>
-          <const name="class_dcc_loco" vt="string" val="dcc_loco"/>
-          <const name="class_dcc_acc" vt="string" val="dcc_acc"/>
-          <const name="class_prog" vt="string" val="prog"/>
+          <const name="class_dcc_main" vt="string" val="dcc_main"/>
+          <const name="class_dcc_prog" vt="string" val="dcc_prog"/>
+          <const name="class_accessory" vt="string" val="accessory"/>
           <const name="class_booster" vt="string" val="booster"/>
           <const name="class_switch" vt="string" val="switch"/>
           <var name="uid" vt="int" defval="0" remark="Vendor product/serialnumber ID."/>

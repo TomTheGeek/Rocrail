@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -142,7 +142,6 @@ int bidibMakeMessage(byte* msg, int inLen) {
 
 
 
-
 char* bidibGetClassName(int classid, char* mnemonic ) {
   char* classname = NULL;
   int idx = 0;
@@ -170,21 +169,21 @@ char* bidibGetClassName(int classid, char* mnemonic ) {
   }
   if( classid & 0x10 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
-    classname = StrOp.cat( classname, wBiDiBnode.class_dcc_loco);
+    classname = StrOp.cat( classname, wBiDiBnode.class_dcc_main);
     mnemonic[idx] = 'T';
     idx++;
     mnemonic[idx] = '\0';
   }
   if( classid & 0x08 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
-    classname = StrOp.cat( classname, wBiDiBnode.class_dcc_acc);
+    classname = StrOp.cat( classname, wBiDiBnode.class_dcc_prog);
     mnemonic[idx] = 'A';
     idx++;
     mnemonic[idx] = '\0';
   }
   if( classid & 0x04 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
-    classname = StrOp.cat( classname, wBiDiBnode.class_prog);
+    classname = StrOp.cat( classname, wBiDiBnode.class_accessory);
     mnemonic[idx] = 'P';
     idx++;
     mnemonic[idx] = '\0';
