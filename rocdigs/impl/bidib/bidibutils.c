@@ -170,21 +170,21 @@ char* bidibGetClassName(int classid, char* mnemonic ) {
   if( classid & 0x10 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
     classname = StrOp.cat( classname, wBiDiBnode.class_dcc_main);
-    mnemonic[idx] = 'T';
+    mnemonic[idx] = 'M';
     idx++;
     mnemonic[idx] = '\0';
   }
   if( classid & 0x08 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
     classname = StrOp.cat( classname, wBiDiBnode.class_dcc_prog);
-    mnemonic[idx] = 'A';
+    mnemonic[idx] = 'P';
     idx++;
     mnemonic[idx] = '\0';
   }
   if( classid & 0x04 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
     classname = StrOp.cat( classname, wBiDiBnode.class_accessory);
-    mnemonic[idx] = 'P';
+    mnemonic[idx] = 'A';
     idx++;
     mnemonic[idx] = '\0';
   }
