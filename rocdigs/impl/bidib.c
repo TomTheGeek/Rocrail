@@ -528,9 +528,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           else
             delay /= 10;
           msgdata[3] = delay;
+          msgdata[4] = 0;
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d set",
               wSwitch.getbus( node ), addr );
-          data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 4, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 5, bidibnode->seq++);
         }
       }
       else if( wSwitch.isaccessory(node) ) {
