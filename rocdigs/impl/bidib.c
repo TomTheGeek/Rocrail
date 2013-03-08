@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -886,24 +886,73 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       }
     }
     else {
-      if( wProgram.getcmd( node ) == wProgram.get ) {
-        data->cv = wProgram.getcv( node );
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d...", data->cv );
-        if( data->defaultprog != NULL ) {
-          msgdata[0] = data->cv % 256;
-          msgdata[1] = data->cv / 256;
-          data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_READ, msgdata, 2, 0);
+      if( data->defaultprog == NULL ) {
+        data->defaultprog = data->defaultmain;
+      }
+
+      if( wProgram.ispom(node)) {
+        if( wProgram.getcmd( node ) == wProgram.get ) {
+          int addr = wProgram.getaddr(node);
+          data->cv = wProgram.getcv( node );
+
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+              "%08X get POM Addr=%d CV%d...", data->defaultprog->uid, addr, data->cv );
+          if( data->defaultprog != NULL ) {
+            msgdata[0] = addr % 256;
+            msgdata[1] = addr / 256;
+            msgdata[2] = 0;
+            msgdata[3] = 0;
+            msgdata[4] = 0;
+            msgdata[5] = BIDIB_CS_POM_RD_BYTE;
+            msgdata[6] = data->cv % 256;
+            msgdata[7] = data->cv / 256;
+            msgdata[8] = 0;
+            msgdata[9] = 0;
+            data->subWrite((obj)inst, data->defaultprog->path, MSG_CS_POM, msgdata, 10, data->defaultprog->seq++);
+          }
+        }
+        else if( wProgram.getcmd( node ) == wProgram.set ) {
+          int addr = wProgram.getaddr(node);
+          data->cv = wProgram.getcv( node );
+          data->value = wProgram.getvalue( node );
+
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+              "%08X get POM Addr=%d CV%d...", data->defaultprog->uid, addr, data->cv );
+          if( data->defaultprog != NULL ) {
+            msgdata[0] = addr % 256;
+            msgdata[1] = addr / 256;
+            msgdata[2] = 0;
+            msgdata[3] = 0;
+            msgdata[4] = 0;
+            msgdata[5] = BIDIB_CS_POM_WR_BYTE;
+            msgdata[6] = data->cv % 256;
+            msgdata[7] = data->cv / 256;
+            msgdata[8] = 0;
+            msgdata[9] = data->value;
+            data->subWrite((obj)inst, data->defaultprog->path, MSG_CS_POM, msgdata, 10, data->defaultprog->seq++);
+          }
         }
       }
-      else if( wProgram.getcmd( node ) == wProgram.set ) {
-        data->cv = wProgram.getcv( node );
-        data->value = wProgram.getvalue( node );
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set CV%d to %d...", data->cv, data->value );
-        if( data->defaultprog != NULL ) {
-          msgdata[0] = data->cv % 256;
-          msgdata[1] = data->cv / 256;
-          msgdata[2] = data->value;
-          data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_WRITE, msgdata, 3, 0);
+      else {
+        if( wProgram.getcmd( node ) == wProgram.get ) {
+          data->cv = wProgram.getcv( node );
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%08X get CV%d...", data->defaultprog->uid, data->cv );
+          if( data->defaultprog != NULL ) {
+            msgdata[0] = data->cv % 256;
+            msgdata[1] = data->cv / 256;
+            data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_READ, msgdata, 2, data->defaultprog->seq++);
+          }
+        }
+        else if( wProgram.getcmd( node ) == wProgram.set ) {
+          data->cv = wProgram.getcv( node );
+          data->value = wProgram.getvalue( node );
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%08X set CV%d to %d...", data->defaultprog->uid, data->cv, data->value );
+          if( data->defaultprog != NULL ) {
+            msgdata[0] = data->cv % 256;
+            msgdata[1] = data->cv / 256;
+            msgdata[2] = data->value;
+            data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_WRITE, msgdata, 3, data->defaultprog->seq++);
+          }
         }
       }
     }
@@ -2345,6 +2394,11 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_CS_ACCESSORY_ACK path=%s addr=%d ack=%d", pathKey, pdata[0] + pdata[1]*256, pdata[2] );
     __handleAccessoryAck(bidib, bidibnode->uid, pdata);
+    break;
+
+  case MSG_CS_POM_ACK:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_CS_POM_ACK path=%s addr=%d ack=%d", pathKey, pdata[0] + pdata[1]*256, pdata[5] );
     break;
 
   default:
