@@ -904,8 +904,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
             msgdata[3] = 0;
             msgdata[4] = 0;
             msgdata[5] = BIDIB_CS_POM_RD_BYTE;
-            msgdata[6] = data->cv % 256;
-            msgdata[7] = data->cv / 256;
+            msgdata[6] = (data->cv-1) % 256;
+            msgdata[7] = (data->cv-1) / 256;
             msgdata[8] = 0;
             msgdata[9] = 0;
             data->subWrite((obj)inst, data->defaultprog->path, MSG_CS_POM, msgdata, 10, data->defaultprog->seq++);
@@ -925,8 +925,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
             msgdata[3] = 0;
             msgdata[4] = 0;
             msgdata[5] = BIDIB_CS_POM_WR_BYTE;
-            msgdata[6] = data->cv % 256;
-            msgdata[7] = data->cv / 256;
+            msgdata[6] = (data->cv-1) % 256;
+            msgdata[7] = (data->cv-1) / 256;
             msgdata[8] = 0;
             msgdata[9] = data->value;
             data->subWrite((obj)inst, data->defaultprog->path, MSG_CS_POM, msgdata, 10, data->defaultprog->seq++);
