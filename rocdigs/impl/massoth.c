@@ -327,7 +327,7 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
   cmd[1] = 0; /*xor*/
   cmd[2] = addr >> 8;
   cmd[3] = addr & 0x00FF;
-  cmd[4] = 0x90 + (wDigInt.isoverrule(data->ini)?0x40:0x00);
+  cmd[4] = 0x10 + (wDigInt.isoverrule(data->ini)?0x40:0x00); /* fix as proposed by massoth: use 0x10 instead of 0x90 */
 
   if( __transact( data, cmd, rsp, 0x40, &gotid ) ) {
     if( gotid ) {
