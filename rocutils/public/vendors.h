@@ -17,7 +17,7 @@ static void __initVendors() {
   m_Vendor[  2]  = "Train Technology";
   m_Vendor[ 11] = "NCE Corporation";
   m_Vendor[ 12] = "Wangrow";
-  m_Vendor[ 13] = "Public Domain & Do-It-Yourself Decoders";
+  m_Vendor[ 13] = "Public Domain & DIY Decoders";
   m_Vendor[ 14] = "PSI - Dynatrol";
   m_Vendor[ 15] = "Ramfixx Technologies (Wangrow)";
   m_Vendor[ 17] = "Advanced IC Engineering, Inc.";
@@ -51,6 +51,7 @@ static void __initVendors() {
   m_Vendor[ 62] = "Tams Elektronik GmbH";
   m_Vendor[ 66] = "Railnet Solutions, LLC";
   m_Vendor[ 68] = "MAWE Elektronik";
+  m_Vendor[ 70] = "Rocrail";
   m_Vendor[ 71] = "New York Byano Limited";
   m_Vendor[ 73] = "The Electric Railroad Company";
   m_Vendor[ 85] = "Uhlenbrock Elektronik GmbH";
