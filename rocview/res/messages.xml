@@ -16007,7 +16007,7 @@
     <en txt="Coach"/>
     <cs txt="Osobní vůz"/>
     <hu txt="Személykocsi"/>
-    <de txt="Schlafwagen"/>
+    <de txt="Reisezugwagen"/>
     <bg txt="Треньор"/>
     <el txt="Προπονητής"/>
     <fr txt="Voiture"/>
@@ -17580,7 +17580,7 @@
     <ca txt="Dóna ara"/>
     <cs txt="Darovat teď"/>
     <da txt="Yd tilskud nu"/>
-    <fr txt="Faites un don"/>
+    <fr txt="Contribuer maintenant"/>
     <it txt="Supportateci ora"/>
     <pt txt="Doar já"/>
     <ru txt="Сделать пожертвование"/>
@@ -17597,7 +17597,7 @@
     <ca txt="Contribuïu amb una donació"/>
     <cs txt="Podpora"/>
     <da txt="Yd tilskud"/>
-    <fr txt="Faire un don"/>
+    <fr txt="Assistance"/>
     <it txt="Supporta"/>
     <pt txt="Doar"/>
     <ru txt="Пожертвование"/>
@@ -17639,7 +17639,7 @@
     <pt txt="Rocrail funciona enteiramente em trabalho voluntário. Contudo, Rocrail também precisa de contribuições monetárias. O seu suporte contínuo é vital em manter Rocrail disponível. Se já doou, você pode pedir uma chave para desactivar isto na janela de arranque: donate@rocrail.net"/>
     <ru txt="Rocrail создаётся исключительно на добровольнох началах. Тем не менее, Rocrail  нуждается  в финансовой помощи. Ваша постоянная поддержка является жизненно важным для поддержания жизнедеятельности проекта Rocrail. Если вы уже сделали пожертвование, Вы можете попросить ключ, чтобы отключить этот диалог при запуске: donate@rocrail.net"/>
     <es txt="Rocrail solo funciona gracias al trabajo de voluntarios, pero necesita también dinero. Su continua ayuda es vital para que este proyecto continúe. Si usted ya ayudó económicamente puede solicitar una clave que eliminará este mensaje en: donate@rocrail.net"/>
-    <fr txt="Rocrail fonctionne entièrement sur le bénévolat. Pour ceci, Rocrail a besoin d'une contribution monétaire. Votre support continu est vital pour le développement de Rorcail. Si vous effectuez une donation en achetant une clé produit, ce message sera désactivé. Vous pouvez faire une donation par e-mail: donate@rocrail.net"/>
+    <fr txt="Rocrail vie uniquement grâce au volontariat. Cependant, Rocrail nécessite aussi des contributions monétaires. Votre support continue est vital pour garder Rocrail en vie.\r\nSi vous avez déjà contribué au support de Rocrail vous pouvez demander une clef pour désactiver cette fenêtre de démarrage à : donate@rocrail.net"/>
     <en_AU txt="Rocrail relies on volunteers. However, Rocrail also needs donations. Your continued support is vital for keeping Rocrail available. If you have donated you can ask for a key to disable this message: donate@rocrail.net"/>
     <en_CA txt="Rocrail relies on volunteers. However, Rocrail also needs donations. Your continued support is vital for keeping Rocrail available. If you have donated you can ask for a key to disable this message: donate@rocrail.net"/>
     <en_GB txt="Rocrail relies on volunteers. However, Rocrail also needs donations. Your continued support is vital for keeping Rocrail available. If you have donated you can ask for a key to disable this message: donate@rocrail.net"/>
@@ -17660,7 +17660,7 @@
     <en_AU txt="Thanks for donating! Enjoy using Rocrail."/>
     <en_CA txt="Thanks for donating! Enjoy using Rocrail."/>
     <en_GB txt="Thanks for donating! Enjoy using Rocrail."/>
-    <fr txt="Merci pour votre don , amusez vous bien avec Rocrail !"/>
+    <fr txt="Merci pour votre contribution! Bon train avec Rocrail."/>
     <sr_latin txt="Zahvaljujemo na podršci! Uživajte koristeći Rocrail."/>
     <sv txt="Tack för ditt stöd! Ha så trevligt med Rocrail."/>
   </Msg>
@@ -19662,6 +19662,7 @@
     <ja txt="温度"/>
     <cs txt="teplota"/>
     <sv txt="Temperatur."/>
+    <fr txt="température"/>
   </Msg>
   <Msg id="info4throttle">
     <en txt="Poll info"/>
@@ -20705,11 +20706,20 @@
   </Msg>
   <Msg id="usedepartdelay">
     <en txt="Use depart delay"/>
+    <de txt="Abfahrt-Verzögerung verwenden"/>
+    <nl txt="Gebruik vertrek vertraging"/>
+    <it txt="Usare partenza ritardata"/>
   </Msg>
   <Msg id="blink">
     <en txt="Blink"/>
+    <de txt="Blinken"/>
+    <nl txt="Knipperen"/>
+    <it txt="Lampeggio"/>
   </Msg>
   <Msg id="actiontimer60">
     <en txt="Action timer 60 sec."/>
+    <de txt="Aktion Zeiteinheit 60 Sek."/>
+    <nl txt="Actie tijdseenheid 60 sec."/>
+    <it txt="Timer azione 60 sec"/>
   </Msg>
 </Messages>
