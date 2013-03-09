@@ -694,6 +694,7 @@ static Boolean __getversion( iOP50x inst ) {
      * OpenDCC 1 answer           2 Bytes (BYTE) (since V0.15, version+serno combined)
      * OpenDCC 2 answers first is 2 Bytes (BYTE) (since V0.23.8release)
      * Tams    2 answers first is 3 Bytes (BCD) or 4 Bytes (3*BCD + ASCII)
+     * MoPi    2 answer           3 Bytes (BYTE) (stores version: major, minor, build)
      */
 
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__getversion sizeVersion %d sizeSerno %d idx %d", sizeVersion, sizeSerno, idx );
@@ -701,6 +702,16 @@ static Boolean __getversion( iOP50x inst ) {
     TraceOp.dump( NULL, TRCLEVEL_BYTE, inSerno, sizeSerno );
 
     switch (sizeVersion) {
+      case 0:
+        if (sizeSerno == 3)
+        {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MoPi connector --- %d.%d.%d ---",
+                                                 (unsigned int) (inSerno[0]),
+                                                 (unsigned int) (inSerno[1]),
+                                                 (unsigned int) (inSerno[2]));
+        }
+        break;
+
       case 1:
         if( idx == 0 ) {
           /* OpenDCC until V0.14, only version (1 byte) */
