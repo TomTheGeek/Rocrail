@@ -51,6 +51,8 @@
 #include "rocrail/wrapper/public/Clock.h"
 #include "rocrail/wrapper/public/Text.h"
 
+#include "rocdigs/impl/z21/z21.h"
+
 static int instCnt = 0;
 
 #define csEmergencyStop 0x01
@@ -950,6 +952,7 @@ static void __reader( void* threadinst ) {
   iOThread  th   = (iOThread)threadinst;
   iOZ21     z21  = (iOZ21)ThreadOp.getParm( th );
   iOZ21Data data = Data(z21);
+  int flags = 0;
   byte* packet = NULL;
 
   ThreadOp.sleep(500);
@@ -976,15 +979,19 @@ static void __reader( void* threadinst ) {
   ThreadOp.post(data->writer, (obj)packet);
   ThreadOp.sleep(100);
 
+  flags = bcAll + bcRBus + bcRailcom + bcXPressNetAll + bcLocoNet + bcLocoNetLocos + bcLocoNetSwitches;
+  if( wDigInt.issysteminfo(data->ini) )
+    flags += bcSystemInfo;
+
   packet = allocMem(32);
   packet[0] = 0x08;
   packet[1] = 0x00;
   packet[2] = 0x50;
   packet[3] = 0x00;
-  packet[4] = 0x07;
-  packet[5] = wDigInt.issysteminfo(data->ini)?0x01:0x00;
-  packet[6] = 0x00;
-  packet[7] = 0x00;
+  packet[4] = (flags & 0x000000FF); /* lsb */
+  packet[5] = ((flags & 0x0000FF00) >> 8);
+  packet[6] = ((flags & 0x00FF0000) >> 16);
+  packet[7] = ((flags & 0xFF000000) >> 24); /* msb */
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_SET_BROADCASTFLAGS" );
   ThreadOp.post(data->writer, (obj)packet);
   ThreadOp.sleep(100);
