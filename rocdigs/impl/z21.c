@@ -771,6 +771,9 @@ static void __handleLocoNet(iOZ21 inst, byte* packet) {
   case OPC_GPOFF:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loconet: Global power off" );
     break;
+  case OPC_LONG_ACK:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loconet: Acknowledged OPC=0x%02X ACK=0x%02X", packet[5]+0x80, packet[6] );
+    break;
   default:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loconet: OPC=0x%02X", packet[4] & 0xFF );
     break;
