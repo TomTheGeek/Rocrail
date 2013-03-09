@@ -52,6 +52,7 @@
 #include "rocrail/wrapper/public/Text.h"
 
 #include "rocdigs/impl/z21/z21.h"
+#include "rocdigs/impl/loconet/lnconst.h"
 
 static int instCnt = 0;
 
@@ -399,15 +400,31 @@ static iONode __translate(iOZ21 inst, iONode node) {
 
       __checkDecMode( inst, node );
 
-      packet[0] = 0x09;
-      packet[1] = 0x00;
-      packet[2] = 0x40;
-      packet[3] = 0x00;
-      packet[4] = 0x53;
-      packet[5] = addr / 256; /*MSB*/
-      packet[6] = addr % 256; /*LSB*/
-      packet[7] = 0x80 + (active?0x08:0x00) + (turnout?0x00:0x01); /*1000A00P*/
-      packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
+      if( wSwitch.getbus(node) == 1 ) {
+        /* Loconet command */
+        packet[0] = 0x08;
+        packet[1] = 0x00;
+        packet[2] = LAN_LOCONET_FROM_LAN;
+        packet[3] = 0x00;
+
+        packet[4] = OPC_SW_REQ;
+        packet[5]  = (unsigned short int) (addr & 0x007f);
+        packet[6]  = (unsigned short int) (( addr >> 7) & 0x000f);
+        packet[6] |= (unsigned short int) ( (turnout & 0x0001) << 5);
+        packet[6] |= (unsigned short int) ( (active & 0x0001) << 4);
+        packet[7] = packet[4] ^ packet[5] ^ packet[6]; /*xor*/
+      }
+      else {
+        packet[0] = 0x09;
+        packet[1] = 0x00;
+        packet[2] = 0x40;
+        packet[3] = 0x00;
+        packet[4] = 0x53;
+        packet[5] = addr / 256; /*MSB*/
+        packet[6] = addr % 256; /*LSB*/
+        packet[7] = 0x80 + (active?0x08:0x00) + (turnout?0x00:0x01); /*1000A00P*/
+        packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
+      }
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dual gate switch %d: %s", addr, wSwitch.getcmd(node) );
       ThreadOp.post(data->writer, (obj)packet);
 
@@ -715,13 +732,30 @@ static void __reportState(iOZ21 inst) {
 }
 
 
+static void __handleLocoNet(iOZ21 inst, byte* packet) {
+  iOZ21Data data = Data(inst);
+
+  switch( packet[4]) {
+  case OPC_GPOFF:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loconet: Global power off" );
+    break;
+  default:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loconet: OPC=0x%02X", packet[4] & 0xFF );
+    break;
+  }
+}
+
 static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
   iOZ21Data data = Data(inst);
   int packetIdx = 0;
 
   while( packetIdx < packetSize ) {
 
-    if( packet[packetIdx] == 0x08 && packet[packetIdx+2] == 0x10 ) {
+    if( packet[packetIdx+2] == LAN_LOCONET_Z21_TX || packet[packetIdx+2] == LAN_LOCONET_Z21_RX ) {
+      __handleLocoNet(inst, packet+packetIdx);
+    }
+
+    else if( packet[packetIdx] == 0x08 && packet[packetIdx+2] == 0x10 ) {
       int sn = packet[packetIdx+4] + (packet[packetIdx+5] << 8) + (packet[packetIdx+6] << 16) + (packet[packetIdx+7] << 24);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Z21 serialnumber = %d", sn );
     }
@@ -939,7 +973,7 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
     }
 
     else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unhandled packet...");
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unhandled packet at index %d", packetIdx);
       TraceOp.dump ( name, TRCLEVEL_INFO, (char*)packet, packetSize );
     }
 
