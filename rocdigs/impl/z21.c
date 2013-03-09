@@ -434,15 +434,31 @@ static iONode __translate(iOZ21 inst, iONode node) {
         cmd->time   = SystemOp.getTick();
         cmd->delay  = delay / 10;
         active = False;
-        cmd->out[0] = 0x09;
-        cmd->out[1] = 0x00;
-        cmd->out[2] = 0x40;
-        cmd->out[3] = 0x00;
-        cmd->out[4] = 0x53;
-        cmd->out[5] = addr / 256; /*MSB*/
-        cmd->out[6] = addr % 256; /*LSB*/
-        cmd->out[7] = 0x80 + (active?0x08:0x00) + (turnout?0x00:0x01); /*1000A00P*/
-        cmd->out[8] = cmd->out[4] ^ cmd->out[5] ^ cmd->out[6] ^ cmd->out[7]; /*xor*/
+        if( wSwitch.getbus(node) == 1 ) {
+          /* Loconet command */
+          cmd->out[0] = 0x08;
+          cmd->out[1] = 0x00;
+          cmd->out[2] = LAN_LOCONET_FROM_LAN;
+          cmd->out[3] = 0x00;
+
+          cmd->out[4] = OPC_SW_REQ;
+          cmd->out[5]  = (unsigned short int) (addr & 0x007f);
+          cmd->out[6]  = (unsigned short int) (( addr >> 7) & 0x000f);
+          cmd->out[6] |= (unsigned short int) ( (turnout & 0x0001) << 5);
+          cmd->out[6] |= (unsigned short int) ( (active & 0x0001) << 4);
+          cmd->out[7] = packet[4] ^ packet[5] ^ packet[6]; /*xor*/
+        }
+        else {
+          cmd->out[0] = 0x09;
+          cmd->out[1] = 0x00;
+          cmd->out[2] = 0x40;
+          cmd->out[3] = 0x00;
+          cmd->out[4] = 0x53;
+          cmd->out[5] = addr / 256; /*MSB*/
+          cmd->out[6] = addr % 256; /*LSB*/
+          cmd->out[7] = 0x80 + (active?0x08:0x00) + (turnout?0x00:0x01); /*1000A00P*/
+          cmd->out[8] = cmd->out[4] ^ cmd->out[5] ^ cmd->out[6] ^ cmd->out[7]; /*xor*/
+        }
         ThreadOp.post(data->timedqueue, (obj)cmd);
       }
     }
@@ -460,15 +476,31 @@ static iONode __translate(iOZ21 inst, iONode node) {
 
     __checkDecMode( inst, node );
 
-    packet[0] = 0x09;
-    packet[1] = 0x00;
-    packet[2] = 0x40;
-    packet[3] = 0x00;
-    packet[4] = 0x53;
-    packet[5] = addr / 256; /*MSB*/
-    packet[6] = addr % 256; /*LSB*/
-    packet[7] = 0x80 + (active?0x08:0x00) + gate; /*1000A00P*/
-    packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
+    if( wSwitch.getbus(node) == 1 ) {
+      /* Loconet command */
+      packet[0] = 0x08;
+      packet[1] = 0x00;
+      packet[2] = LAN_LOCONET_FROM_LAN;
+      packet[3] = 0x00;
+
+      packet[4] = OPC_SW_REQ;
+      packet[5]  = (unsigned short int) (addr & 0x007f);
+      packet[6]  = (unsigned short int) (( addr >> 7) & 0x000f);
+      packet[6] |= (unsigned short int) ( (gate & 0x0001) << 5);
+      packet[6] |= (unsigned short int) ( (active & 0x0001) << 4);
+      packet[7] = packet[4] ^ packet[5] ^ packet[6]; /*xor*/
+    }
+    else {
+      packet[0] = 0x09;
+      packet[1] = 0x00;
+      packet[2] = 0x40;
+      packet[3] = 0x00;
+      packet[4] = 0x53;
+      packet[5] = addr / 256; /*MSB*/
+      packet[6] = addr % 256; /*LSB*/
+      packet[7] = 0x80 + (active?0x08:0x00) + gate; /*1000A00P*/
+      packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
+    }
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d.%d: %s", addr, gate, wSwitch.getcmd(node) );
     ThreadOp.post(data->writer, (obj)packet);
   }
