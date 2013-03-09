@@ -449,7 +449,6 @@ void CV::update4POM(void) {
   m_setlongAddress->Enable(!m_bPOM);
   m_setAddress->Enable(!m_bPOM);
 
-  m_ReadAll->Enable(!m_bPOM);
   m_PTonoff->Enable(!m_bPOM);
 }
 
