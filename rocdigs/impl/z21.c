@@ -763,6 +763,30 @@ static void __reportState(iOZ21 inst) {
   }
 }
 
+static void __handleLocoNetInput(iOZ21 inst, byte* packet) {
+  iOZ21Data data = Data(inst);
+  int value = (packet[6] & 0x10) >> 4;
+  int addr = ((unsigned int) packet[5] & 0x007f) | (((unsigned int) packet[6] & 0x000f) << 7);
+  addr = 1 + addr * 2 + ((((unsigned int) packet[6] & 0x0020) >> 5));
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loconet sensor=%d value=%d", addr, value );
+  {
+    /* inform listener: Node3 */
+    iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+    wFeedback.setbus( nodeC, 1 );
+    wFeedback.setaddr( nodeC, addr );
+    wFeedback.setfbtype( nodeC, wFeedback.fbtype_sensor );
+
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+
+    wFeedback.setstate( nodeC, value?True:False );
+
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+}
+
 
 static void __handleLocoNet(iOZ21 inst, byte* packet) {
   iOZ21Data data = Data(inst);
@@ -773,6 +797,9 @@ static void __handleLocoNet(iOZ21 inst, byte* packet) {
     break;
   case OPC_LONG_ACK:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loconet: Acknowledged OPC=0x%02X ACK=0x%02X", packet[5]+0x80, packet[6] );
+    break;
+  case OPC_INPUT_REP:
+    __handleLocoNetInput(inst, packet);
     break;
   default:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loconet: OPC=0x%02X", packet[4] & 0xFF );
