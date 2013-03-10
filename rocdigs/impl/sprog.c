@@ -415,6 +415,45 @@ static int __translate( iOSprog sprog, iONode node, char* outa, int* insize ) {
     *insize = 3;
     repeat = 2;
   }
+
+  else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {
+    int addr = wSignal.getaddr(node);
+    int port = wSignal.getport1(node);
+    int gate = wSignal.getgate1(node);
+    int aspect = wSignal.getaspect(node);
+    int fada = 0;
+    int pada = 0;
+    int cmdsize = 0;
+    byte dcc[12];
+    char cmd[32] = {0};
+
+    if( port == 0 ) {
+      fada = addr;
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
+    }
+    else if( addr == 0 && port > 0 ) {
+      pada = port;
+      AddrOp.fromPADA( port, &addr, &port );
+    }
+
+    if( fada == 0 )
+      fada = AddrOp.toFADA( addr, port, gate );
+    if( pada == 0 )
+      pada = AddrOp.toPADA( addr, port );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "signal %04d %d %d fada=%04d pada=%04d aspect=%d",
+        addr, port, gate, fada, pada, aspect );
+
+
+    cmdsize = accSignalDecoderPkt(dcc, addr, aspect);
+    /*cmdsize = accDecoderPkt(dcc, fada, action);*/
+    __byteToStr( cmd, dcc, cmdsize );
+    StrOp.fmtb( outa, "O %s\r", cmd );
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "DCC out: %s", outa );
+    *insize = 3;
+    repeat = 2;
+  }
+
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
 
