@@ -317,13 +317,13 @@ static iONode _cmd( obj inst ,const iONode cmd )
 /**  */
 static void _halt( obj inst, Boolean poweroff ) {
   iOHSI88Data data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
   data->run = False;
+  ThreadOp.sleep(100);
   if( data->usb && data->usbh != NULL )
     FileOp.close( data->usbh );
   else if( !data->usb && data->serial != NULL )
     SerialOp.close( data->serial );
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down <%s>...", data->iid );
   return;
 }
 
