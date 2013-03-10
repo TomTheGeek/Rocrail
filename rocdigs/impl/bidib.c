@@ -590,6 +590,29 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     }
   }
 
+  /* Output command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {
+    byte cmd[5];
+    int addr = wSignal.getaddr(node);
+    int aspect = wSignal.getaspect(node);
+
+    StrOp.fmtb( uidKey, "0x%08X", wSignal.getbus(node) );
+    bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
+    if( bidibnode == NULL ) {
+        bidibnode = data->defaultmain;
+    }
+    if( bidibnode != NULL ) {
+      if( wSignal.isaccessory(node) && StrOp.equals( wSignal.getprot( node ), wSwitch.prot_N ) ) {
+        msgdata[0] = (addr-1) % 256;
+        msgdata[1] = (addr-1) / 256;
+        msgdata[2] = 0x80 + 0x20 + aspect;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d aspect=%d",
+            wSwitch.getbus( node ), addr, aspect );
+        data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 3, bidibnode->seq++);
+      }
+    }
+  }
+
 
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
