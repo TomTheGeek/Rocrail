@@ -513,9 +513,6 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 4, bidibnode->seq++);
         }
         else {
-          if(StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)))
-            addr++;
-
           msgdata[0] = (addr-1) % 256;
           msgdata[1] = (addr-1) / 256;
           msgdata[2] = 0x60 + (StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 0x60:0x61);
@@ -533,8 +530,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
             delay /= 10;
           msgdata[3] = delay;
           msgdata[4] = 0;
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d set",
-              wSwitch.getbus( node ), addr );
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d set to %s",
+              wSwitch.getbus( node ), addr, wSwitch.getcmd(node) );
           data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 5, bidibnode->seq++);
         }
       }
