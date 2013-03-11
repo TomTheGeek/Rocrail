@@ -505,11 +505,12 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
       if( wSwitch.isaccessory(node) && StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_N ) ) {
         if( wSwitch.issinglegate(node) ) {
+          int gate = wSwitch.getgate1(node);
           msgdata[0] = (addr-1) % 256;
           msgdata[1] = (addr-1) / 256;
-          msgdata[2] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 0x20:0x00;
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d single gate %s",
-              wSwitch.getbus( node ), addr, StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? "ON":"OFF" );
+          msgdata[2] = (StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 0x20:0x00) + gate;
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d.%d single gate %s",
+              wSwitch.getbus( node ), addr, gate, StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? "ON":"OFF" );
           data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 4, bidibnode->seq++);
         }
         else {
