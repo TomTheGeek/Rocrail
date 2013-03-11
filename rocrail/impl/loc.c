@@ -2169,12 +2169,10 @@ static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent ) {
   if( nodeA != NULL && StrOp.len( wLoc.gettrain(data->props) ) > 0 ) {
     iOOperator opr = ModelOp.getOperator( AppOp.getModel(), wLoc.gettrain(data->props) );
     if( opr != NULL ) {
-      if( StrOp.equals(wLoc.name(), NodeOp.getName(nodeA) ) ) {
-        iONode consistcmd = (iONode)NodeOp.base.clone( nodeA );
-        wLoc.setconsistcmd( consistcmd, True );
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "send command to the operator" );
-        OperatorOp.cmd(opr, (iONode)NodeOp.base.clone( consistcmd ));
-      }
+      iONode consistcmd = (iONode)NodeOp.base.clone( nodeA );
+      wLoc.setconsistcmd( consistcmd, True );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "send command to the operator" );
+      OperatorOp.cmd(opr, (iONode)NodeOp.base.clone( consistcmd ));
     }
   }
 
