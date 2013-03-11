@@ -5697,7 +5697,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
   int dbs = NodeOp.getChildCnt(data->plan);
   int i = 0;
 
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checking plan health..." );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking plan health..." );
 
   if( !wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: Block side routing is not enabled; The classic method is deprecated." );
@@ -5945,7 +5945,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
   }
 
   /* check zlevels and all items on zlevels */
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "INFO: Starting zlevel check" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Starting zlevel check" );
   if( ! zlevelCheck( inst, False ) ) {
     healthy = False;
   }
@@ -5990,7 +5990,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
 
 
   if( healthy ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Plan is healthy" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Plan is healthy" );
   } else {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Plan is NOT healthty. See ERROR lines above." );
   }

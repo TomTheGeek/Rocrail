@@ -416,9 +416,6 @@ static Boolean _parsePlan( iOModelData o ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Check the trace and correct the exceptions before using it." );
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "------------------------------------------------------------" );
           }
-          else {
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "plan is healthy." );
-          }
 
         }
         else {
@@ -2054,10 +2051,10 @@ static void _createMap( iOModelData o, iOMap map, const char* dbKey, const char*
       }
       item = NodeOp.findNextNode( db, item );
     }
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "createMap() %s,%d.", dbKey, MapOp.size(map) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "map created for %s; size=%d.", dbKey, MapOp.size(map) );
   }
   else
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "createMap: %s NOT found.", dbKey );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s NOT found.", dbKey );
 }
 
 
