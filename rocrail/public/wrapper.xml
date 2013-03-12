@@ -2395,6 +2395,7 @@
         <var name="usedir" vt="bool" defval="False" remark="Decoder can process direction command."/>
         <var name="invdir" vt="bool" defval="False" remark="Invert direction command."/>
         <var name="uselights" vt="bool" defval="False" remark="Decoder can process direction command."/>
+        <var name="f0vcmd" vt="bool" defval="False" remark="Use a speed command for F0."/>
         <var name="fnlights" vt="int" defval="0" range="0-*" remark="Lights function number."/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Car command."/>
         <fundef cardinality="n"/>

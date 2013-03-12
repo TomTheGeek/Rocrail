@@ -234,6 +234,12 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
       wCar.setaddr( nodeA, wCar.getaddr(data->props) );
       wCar.setprot( nodeA, wCar.getprot( data->props ) );
       wCar.setprotver( nodeA, wCar.getprotver( data->props ) );
+
+      if( wFunCmd.getfnchanged(nodeA) == 0 && wCar.isf0vcmd(data->props) ) {
+        NodeOp.setName( nodeA, wLoc.name() );
+        wLoc.setfn(nodeA, wFunCmd.isf0(nodeA) );
+      }
+
       ControlOp.cmd( control, nodeA, NULL );
     }
     else {
