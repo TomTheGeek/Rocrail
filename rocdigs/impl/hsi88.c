@@ -483,13 +483,13 @@ static Boolean __flushHSI88( iOHSI88 inst, Boolean forcetrace ) {
 static Boolean __preinitHSI88( iOHSI88 inst ) {
   iOHSI88 pHSI88 = inst;
   iOHSI88Data o = Data(pHSI88);
-  static char* hello = "\r\r\r\r\r\r\r\r\r\r";
+  static char* wakeup = "\r\r\r\r\r\r\r\r\r\r";
   char b;
   int i;
   Boolean ok = True;
 
   /* Say "hello": */
-  if( __sendHSI88( inst, hello, StrOp.len( hello ) ) ) {
+  if( __sendHSI88( inst, wakeup, StrOp.len( wakeup ) ) ) {
 
     /* After ten times it should detect at least 1 cr: */
     ok = __readBytes( o, &b, 1 );
@@ -572,11 +572,14 @@ static void __HSI88feedbackReader( void* threadinst ) {
 
   memset(fb,0,256);
 
+  ThreadOp.sleep(1000);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "HSI88 Reader started");
+  __preinitHSI88(pHSI88);
+  ThreadOp.sleep(100);
 
   while( o->run ) {
 
     if( !o->dummyio && !o->initOK ) {
-      /*__preinitHSI88(pHSI88);*/
       __getVersion(pHSI88);
       o->initOK = __initHSI88(pHSI88);
       if( !o->initOK ) {
