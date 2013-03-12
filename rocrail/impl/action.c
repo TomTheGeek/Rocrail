@@ -1151,7 +1151,7 @@ static void _tick( iOAction inst, int seconds ) {
 
 static void _modify( iOAction inst, iONode props ) {
   iOActionData data = Data(inst);
-  NodeOp.mergeNode( data->action, props, True, True, True );
+  NodeOp.mergeNode( data->action, props, True, True, False );
 }
 
 
