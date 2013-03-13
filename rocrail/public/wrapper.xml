@@ -1946,6 +1946,7 @@
           <var name="track" vt="int" defval="0" range="0-*" remark="turntable track"/>
           <const name="cmd_track" vt="string" val="track" remark="track of turntable or selectiontable: avoid using same id's for both types!"/>
           <var name="lock" vt="bool" defval="true" remark="lock the switch for exclusive use"/>
+          <var name="reduceV" vt="bool" defval="true" remark="reduce speed by thrown status"/>
         </swcmd>
         <const name="go" vt="string" val="go" remark="Switch all switches for this street."/>
         <const name="force" vt="string" val="force" remark="Switch all switches for this street. (Manually)"/>

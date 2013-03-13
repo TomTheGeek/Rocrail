@@ -595,7 +595,8 @@ static Boolean _hasThrownSwitch( iORoute inst ) {
 
   if( wRoute.isreduceV(o->props) ) {
     while( sw != NULL ) {
-      if( !StrOp.equals( wSwitch.straight, wSwitchCmd.getcmd(sw) ) ) {
+      iOSwitch isw = ModelOp.getSwitch( model, wSwitchCmd.getid(sw) );
+      if( isw != NULL && wSwitchCmd.isreduceV(sw) && !StrOp.equals( wSwitch.straight, wSwitchCmd.getcmd(sw) ) ) {
         return True;
       }
       sw = wRoute.nextswcmd( o->props, sw );
