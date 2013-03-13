@@ -376,7 +376,6 @@
       <const name="dinamo" vt="string" val="dinamo"/>
       <const name="om32" vt="string" val="om32"/>
       <const name="slx" vt="string" val="slx"/>
-      <const name="inter10" vt="string" val="inter10"/>
       <const name="ecos" vt="string" val="ecos"/>
       <const name="loconet" vt="string" val="loconet"/>
       <const name="ddx" vt="string" val="ddx" remark="Digital Direct X"/>
@@ -402,7 +401,6 @@
       <const name="bidib" vt="string" val="bidib"/>
       <const name="zs2" vt="string" val="zs2"/>
       <const name="cbus" vt="string" val="cbus"/>
-      <const name="openlcb" vt="string" val="openlcb"/>
       <const name="perir" vt="string" val="perir"/>
       <const name="editspro" vt="string" val="editspro"/>
       <const name="infracar" vt="string" val="infracar"/>
