@@ -94,7 +94,7 @@ DDXCtrlDlg::DDXCtrlDlg( wxWindow* parent, iONode props, const char* devices )
     NodeOp.addChild( m_Props, m_SubProps );
   }
 
-  Create(parent, -1, wxGetApp().getMsg( NodeOp.getName(m_SubProps) ));
+  Create(parent, -1, wxString::From8BitData(NodeOp.getName(m_SubProps)).Upper() );
 
   initLabels();
   initValues();

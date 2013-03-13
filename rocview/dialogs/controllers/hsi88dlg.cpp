@@ -80,7 +80,7 @@ Hsi88CntrlDlg::Hsi88CntrlDlg( )
 
 Hsi88CntrlDlg::Hsi88CntrlDlg( wxWindow* parent, iONode props, const char* devices )
 {
-  Create(parent, -1, wxGetApp().getMsg("hsi88"));
+  Create(parent, -1, wxT("HSI88"));
   m_Props = props;
   m_Devices = devices;
   initLabels();

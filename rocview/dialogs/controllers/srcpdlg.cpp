@@ -81,7 +81,7 @@ SRCPCtrlDlg::SRCPCtrlDlg( )
 SRCPCtrlDlg::SRCPCtrlDlg( wxWindow* parent, iONode props )
 {
   m_TabAlign = wxGetApp().getTabAlign();
-  Create(parent, -1, wxGetApp().getMsg("srcp"));
+  Create(parent, -1, wxT("SRCP"));
   m_Props = props;
   initLabels();
   initValues();
