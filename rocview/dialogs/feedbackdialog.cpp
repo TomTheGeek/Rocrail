@@ -327,7 +327,8 @@ void FeedbackDialog::initValues() {
   m_Type->SetSelection( wFeedback.getfbtype(m_Props) );
 
   m_Address->SetValue( wFeedback.getaddr(m_Props) );
-  m_BusNr->SetValue( wFeedback.getbus(m_Props) );
+  m_BusNr->SetValue( wxString::Format( wxT("%d"), wFeedback.getbus(m_Props)) );
+
   m_CutoutAddr->SetValue( wFeedback.getcutoutaddr(m_Props) );
   m_CutoutBus->SetValue( wFeedback.getcutoutbus(m_Props) );
   m_ActiveLow->SetValue( wFeedback.isactivelow( m_Props ) ? true:false);
@@ -386,7 +387,7 @@ bool FeedbackDialog::evaluate() {
 
   // Interface
   wFeedback.setiid( m_Props, m_iid->GetValue().mb_str(wxConvUTF8) );
-  wFeedback.setbus( m_Props, m_BusNr->GetValue() );
+  wFeedback.setbus( m_Props, atoi( m_BusNr->GetValue().mb_str(wxConvUTF8) ) );
   wFeedback.setaddr( m_Props, m_Address->GetValue() );
   wFeedback.setcutoutbus( m_Props, m_CutoutBus->GetValue() );
   wFeedback.setcutoutaddr( m_Props, m_CutoutAddr->GetValue() );
@@ -532,7 +533,6 @@ void FeedbackDialog::CreateControls()
     m_General->SetSizer(itemBoxSizer12);
 
     wxFlexGridSizer* itemFlexGridSizer13 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer13->AddGrowableCol(1);
     itemBoxSizer12->Add(itemFlexGridSizer13, 0, wxGROW|wxALL, 5);
     m_LabelId = new wxStaticText( m_General, wxID_STATIC_FB_ID, _("id"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_LabelId, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -570,6 +570,8 @@ void FeedbackDialog::CreateControls()
 
     m_Timer = new wxSpinCtrl( m_General, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
     itemFlexGridSizer13->Add(m_Timer, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer13->AddGrowableCol(1);
 
     wxFlexGridSizer* itemFlexGridSizer26 = new wxFlexGridSizer(0, 4, 0, 0);
     itemBoxSizer12->Add(itemFlexGridSizer26, 0, wxGROW|wxALL, 5);
@@ -635,7 +637,6 @@ void FeedbackDialog::CreateControls()
     m_Interface->SetSizer(itemBoxSizer43);
 
     wxFlexGridSizer* itemFlexGridSizer44 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer44->AddGrowableCol(1);
     itemBoxSizer43->Add(itemFlexGridSizer44, 0, wxGROW|wxALL, 5);
     m_Labeliid = new wxStaticText( m_Interface, wxID_STATIC_FB_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer44->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -643,17 +644,17 @@ void FeedbackDialog::CreateControls()
     m_iid = new wxTextCtrl( m_Interface, ID_TEXTCTRL_FB_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer44->Add(m_iid, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    itemFlexGridSizer44->AddGrowableCol(1);
+
     m_AddressBox = new wxStaticBox(m_Interface, wxID_ANY, _("Address"));
     wxStaticBoxSizer* itemStaticBoxSizer47 = new wxStaticBoxSizer(m_AddressBox, wxVERTICAL);
     itemBoxSizer43->Add(itemStaticBoxSizer47, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer48 = new wxFlexGridSizer(0, 4, 0, 0);
-    itemFlexGridSizer48->AddGrowableCol(1);
-    itemFlexGridSizer48->AddGrowableCol(3);
     itemStaticBoxSizer47->Add(itemFlexGridSizer48, 0, wxALIGN_LEFT, 5);
     m_labBusNr = new wxStaticText( m_Interface, wxID_ANY, _("Bus"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer48->Add(m_labBusNr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_BusNr = new wxSpinCtrl( m_Interface, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 2147483647, 0 );
+    m_BusNr = new wxTextCtrl( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(120, -1), 0 );
     itemFlexGridSizer48->Add(m_BusNr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelAddress = new wxStaticText( m_Interface, wxID_STATIC_FB_ADDRESS1, _("Address"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -661,6 +662,9 @@ void FeedbackDialog::CreateControls()
 
     m_Address = new wxSpinCtrl( m_Interface, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
     itemFlexGridSizer48->Add(m_Address, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer48->AddGrowableCol(1);
+    itemFlexGridSizer48->AddGrowableCol(3);
 
     m_CutoutBox = new wxStaticBox(m_Interface, wxID_ANY, _("Cutout"));
     wxStaticBoxSizer* itemStaticBoxSizer53 = new wxStaticBoxSizer(m_CutoutBox, wxVERTICAL);

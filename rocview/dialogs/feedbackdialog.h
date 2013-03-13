@@ -220,7 +220,7 @@ public:
     wxTextCtrl* m_iid;
     wxStaticBox* m_AddressBox;
     wxStaticText* m_labBusNr;
-    wxSpinCtrl* m_BusNr;
+    wxTextCtrl* m_BusNr;
     wxStaticText* m_LabelAddress;
     wxSpinCtrl* m_Address;
     wxStaticBox* m_CutoutBox;

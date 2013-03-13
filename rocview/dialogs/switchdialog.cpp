@@ -1020,7 +1020,6 @@ void SwitchDialog::CreateControls()
     wxBoxSizer* itemBoxSizer13 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer12->Add(itemBoxSizer13, 0, wxALIGN_TOP|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer14 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer14->AddGrowableCol(1);
     itemBoxSizer13->Add(itemFlexGridSizer14, 0, wxGROW|wxALL, 5);
     m_LabelID = new wxStaticText( m_GeneralPanel, wxID_STATIC_SW_ID, _("id"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer14->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1107,6 +1106,8 @@ void SwitchDialog::CreateControls()
     m_Dir->SetSelection(0);
     itemFlexGridSizer14->Add(m_Dir, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
+    itemFlexGridSizer14->AddGrowableCol(1);
+
     wxStaticLine* itemStaticLine39 = new wxStaticLine( m_GeneralPanel, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
     itemBoxSizer12->Add(itemStaticLine39, 0, wxGROW|wxALL, 5);
 
@@ -1185,7 +1186,6 @@ void SwitchDialog::CreateControls()
     m_InterfacePanel->SetSizer(itemBoxSizer59);
 
     wxFlexGridSizer* itemFlexGridSizer60 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer60->AddGrowableCol(1);
     itemBoxSizer59->Add(itemFlexGridSizer60, 0, wxGROW|wxALL, 5);
     m_Labeliid = new wxStaticText( m_InterfacePanel, wxID_STATIC_SW_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer60->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
@@ -1196,7 +1196,7 @@ void SwitchDialog::CreateControls()
     m_Label_Bus = new wxStaticText( m_InterfacePanel, wxID_STATIC_SW_BUS, _("Bus:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer60->Add(m_Label_Bus, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Bus = new wxTextCtrl( m_InterfacePanel, ID_TEXTCTRL_SW_BUS, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+    m_Bus = new wxTextCtrl( m_InterfacePanel, ID_TEXTCTRL_SW_BUS, _("0"), wxDefaultPosition, wxSize(120, -1), wxTE_CENTRE );
     itemFlexGridSizer60->Add(m_Bus, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelProt = new wxStaticText( m_InterfacePanel, wxID_STATIC_SW_PROT, _("Protocol"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1265,6 +1265,8 @@ void SwitchDialog::CreateControls()
     m_Delay = new wxTextCtrl( m_InterfacePanel, ID_TEXTCTRL_SW_DELAY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer60->Add(m_Delay, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
+    itemFlexGridSizer60->AddGrowableCol(1);
+
     m_Accessory = new wxCheckBox( m_InterfacePanel, wxID_ANY, _("Accessory"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Accessory->SetValue(false);
     itemBoxSizer59->Add(m_Accessory, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
@@ -1287,7 +1289,6 @@ void SwitchDialog::CreateControls()
     wxBoxSizer* itemBoxSizer86 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer85->Add(itemBoxSizer86, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer87 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer87->AddGrowableCol(1);
     itemBoxSizer86->Add(itemFlexGridSizer87, 1, wxALIGN_CENTER_VERTICAL, 5);
     m_labTrackDriverIID = new wxStaticText( m_InterfacePanel, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer87->Add(m_labTrackDriverIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
@@ -1307,6 +1308,8 @@ void SwitchDialog::CreateControls()
     m_TrackDriverPort = new wxTextCtrl( m_InterfacePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer87->Add(m_TrackDriverPort, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
+    itemFlexGridSizer87->AddGrowableCol(1);
+
     m_TrackDriverEnable = new wxCheckBox( m_InterfacePanel, wxID_ANY, _("Enable"), wxDefaultPosition, wxDefaultSize, 0 );
     m_TrackDriverEnable->SetValue(false);
     itemBoxSizer86->Add(m_TrackDriverEnable, 0, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM, 5);
@@ -1321,7 +1324,6 @@ void SwitchDialog::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer97 = new wxStaticBoxSizer(m_WiringBox, wxVERTICAL);
     itemBoxSizer96->Add(itemStaticBoxSizer97, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer98 = new wxFlexGridSizer(0, 3, 0, 0);
-    itemFlexGridSizer98->AddGrowableCol(1);
     itemStaticBoxSizer97->Add(itemFlexGridSizer98, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);
     m_LabelFb1R = new wxStaticText( m_WireringPanel, wxID_STATIC_SW_FB1R, _("sensor1R"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer98->Add(m_LabelFb1R, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1373,6 +1375,8 @@ void SwitchDialog::CreateControls()
     wxArrayString m_FbOccStrings;
     m_FbOcc = new wxComboBox( m_WireringPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_FbOccStrings, wxCB_DROPDOWN );
     itemFlexGridSizer98->Add(m_FbOcc, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    itemFlexGridSizer98->AddGrowableCol(1);
 
     wxFlexGridSizer* itemFlexGridSizer113 = new wxFlexGridSizer(0, 2, 0, 0);
     itemStaticBoxSizer97->Add(itemFlexGridSizer113, 0, wxGROW, 5);
@@ -1504,7 +1508,6 @@ void SwitchDialog::CreateControls()
     itemBoxSizer150->Add(m_ActivateCtrl, 0, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer152 = new wxFlexGridSizer(0, 3, 0, 0);
-    itemFlexGridSizer152->AddGrowableCol(1);
     itemBoxSizer150->Add(itemFlexGridSizer152, 0, wxALIGN_LEFT|wxALL, 5);
     m_labCtrlInterval = new wxStaticText( m_ControlPanel, wxID_ANY, _("Interval"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer152->Add(m_labCtrlInterval, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1524,14 +1527,17 @@ void SwitchDialog::CreateControls()
     m_labCtrlDelaySec = new wxStaticText( m_ControlPanel, wxID_ANY, _("sec."), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer152->Add(m_labCtrlDelaySec, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    itemFlexGridSizer152->AddGrowableCol(1);
+
     wxFlexGridSizer* itemFlexGridSizer159 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer159->AddGrowableCol(1);
     itemBoxSizer150->Add(itemFlexGridSizer159, 0, wxGROW|wxALL, 5);
     m_labCtrlRoutes = new wxStaticText( m_ControlPanel, wxID_ANY, _("Routes to lock"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer159->Add(m_labCtrlRoutes, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_CtrlRoutes = new wxTextCtrl( m_ControlPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer159->Add(m_CtrlRoutes, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer159->AddGrowableCol(1);
 
     m_Notebook->AddPage(m_ControlPanel, _("Control"));
 
