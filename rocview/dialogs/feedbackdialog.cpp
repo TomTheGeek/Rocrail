@@ -330,7 +330,7 @@ void FeedbackDialog::initValues() {
   m_BusNr->SetValue( wxString::Format( wxT("%d"), wFeedback.getbus(m_Props)) );
 
   m_CutoutAddr->SetValue( wFeedback.getcutoutaddr(m_Props) );
-  m_CutoutBus->SetValue( wFeedback.getcutoutbus(m_Props) );
+  m_CutoutBus->SetValue( wxString::Format( wxT("%d"), wFeedback.getcutoutbus(m_Props)) );
   m_ActiveLow->SetValue( wFeedback.isactivelow( m_Props ) ? true:false);
   m_ResetWC->SetValue( wFeedback.isresetwc( m_Props ) ? true:false);
 
@@ -389,7 +389,7 @@ bool FeedbackDialog::evaluate() {
   wFeedback.setiid( m_Props, m_iid->GetValue().mb_str(wxConvUTF8) );
   wFeedback.setbus( m_Props, atoi( m_BusNr->GetValue().mb_str(wxConvUTF8) ) );
   wFeedback.setaddr( m_Props, m_Address->GetValue() );
-  wFeedback.setcutoutbus( m_Props, m_CutoutBus->GetValue() );
+  wFeedback.setcutoutbus( m_Props, atoi( m_CutoutBus->GetValue().mb_str(wxConvUTF8) ) );
   wFeedback.setcutoutaddr( m_Props, m_CutoutAddr->GetValue() );
 
   wFeedback.setfbtype( m_Props, m_Type->GetSelection() );
@@ -674,7 +674,7 @@ void FeedbackDialog::CreateControls()
     m_labCutoutBus = new wxStaticText( m_Interface, wxID_ANY, _("Bus"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer54->Add(m_labCutoutBus, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_CutoutBus = new wxSpinCtrl( m_Interface, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
+    m_CutoutBus = new wxTextCtrl( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(120, -1), 0 );
     itemFlexGridSizer54->Add(m_CutoutBus, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labCutoutAddr = new wxStaticText( m_Interface, wxID_ANY, _("Address"), wxDefaultPosition, wxDefaultSize, 0 );

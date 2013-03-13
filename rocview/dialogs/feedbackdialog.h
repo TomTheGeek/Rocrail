@@ -225,7 +225,7 @@ public:
     wxSpinCtrl* m_Address;
     wxStaticBox* m_CutoutBox;
     wxStaticText* m_labCutoutBus;
-    wxSpinCtrl* m_CutoutBus;
+    wxTextCtrl* m_CutoutBus;
     wxStaticText* m_labCutoutAddr;
     wxSpinCtrl* m_CutoutAddr;
     wxRadioBox* m_Type;
