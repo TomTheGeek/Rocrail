@@ -388,7 +388,6 @@
       <const name="sprog" vt="string" val="sprog"/>
       <const name="dcc232" vt="string" val="dcc232"/>
       <const name="nce" vt="string" val="nce"/>
-      <const name="io8255" vt="string" val="io8255"/>
       <const name="zimobin" vt="string" val="zimobin"/>
       <const name="rfid12" vt="string" val="rfid12"/>
       <const name="rclink" vt="string" val="rclink"/>
