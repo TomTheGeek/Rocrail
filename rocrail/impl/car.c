@@ -182,7 +182,7 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
       Boolean lights = wLoc.isfn(nodeA);
 
       if( wCar.isusedir(data->props) ) {
-        wLoc.setdir( nodeA, dir );
+        wLoc.setdir( nodeA, wCar.isplacing(data->props)?dir:!dir );
         if( wCar.getiid(data->props) != NULL )
           wCar.setiid( nodeA, wCar.getiid(data->props) );
         wCar.setaddr( nodeA, wCar.getaddr(data->props) );
@@ -201,7 +201,7 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
         NodeOp.setBool(nodeA, fattr, lights);
 
         wFunCmd.setf0(nodeA, lights); /**/
-        wLoc.setdir( nodeA, dir );
+        wLoc.setdir( nodeA, wCar.isplacing(data->props)?dir:!dir );
         if( wCar.getiid(data->props) != NULL )
           wCar.setiid( nodeA, wCar.getiid(data->props) );
         wCar.setaddr( nodeA, wCar.getaddr(data->props) );
@@ -337,6 +337,18 @@ static void _modify( struct OCar* inst ,iONode props ) {
   }
   props->base.del(props);
 }
+
+
+static void _swapPlacing( iOCar car, iONode cmd ) {
+  iOCarData data = Data(car);
+  if( cmd != NULL )
+    wCar.setplacing(data->props, wLoc.isplacing(cmd));
+  else
+    wCar.setplacing(data->props, !wCar.isplacing(data->props));
+}
+
+
+
 
 
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/

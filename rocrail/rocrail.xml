@@ -2022,6 +2022,10 @@
       <param name="inst" vt="this" remark="Car instance"/>
       <param name="desc" vt="const char*" remark="Function description"/>
     </fun>
+    <fun name="swapPlacing" vt="void">
+      <param name="inst" vt="this" remark="Car instance"/>
+      <param name="cmd" vt="iONode" remark="Optional cmd node with placing information."/>
+    </fun>
     <data>
       <var name="props" vt="iONode"/>
     </data>
@@ -2042,6 +2046,10 @@
     </fun>
     <fun name="getLen" vt="int">
       <param name="inst" vt="this" remark="Operator instance"/>
+    </fun>
+    <fun name="swapPlacing" vt="void">
+      <param name="inst" vt="this" remark="Operator instance"/>
+      <param name="cmd" vt="iONode" remark="Optional cmd node with placing information."/>
     </fun>
     <data>
       <var name="props" vt="iONode"/>

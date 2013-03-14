@@ -2247,6 +2247,17 @@ static void __swapConsist( iOLoc inst, iONode cmd ) {
     StrTokOp.base.del( consist );
   }
 
+  /* check train and send a copy of the nodeA */
+  if( StrOp.len( wLoc.gettrain(data->props) ) > 0 ) {
+    iOOperator opr = ModelOp.getOperator( AppOp.getModel(), wLoc.gettrain(data->props) );
+    if( opr != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "send swap command to the operator" );
+      OperatorOp.swapPlacing( opr, cmd );
+    }
+  }
+
+
+
 }
 
 

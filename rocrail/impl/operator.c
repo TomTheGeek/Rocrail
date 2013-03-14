@@ -155,6 +155,23 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
   return True;
 }
 
+static void _swapPlacing( iOOperator inst, iONode cmd ) {
+  iOOperatorData data = Data(inst);
+  iOStrTok tok = StrTokOp.inst(wOperator.getcarids(data->props), ',');
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "swap for operator %s", wOperator.getid(data->props) );
+
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    iOCar car = ModelOp.getCar(AppOp.getModel(), StrTokOp.nextToken(tok) );
+    if( car != NULL ) {
+      CarOp.swapPlacing(car, cmd);
+    }
+  }
+  StrTokOp.base.del(tok);
+}
+
+
+
 
 /**  */
 static void _modify( struct OOperator* inst ,iONode props ) {

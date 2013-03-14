@@ -2396,6 +2396,7 @@
         <var name="f0vcmd" vt="bool" defval="False" remark="Use a speed command for F0."/>
         <var name="fnlights" vt="int" defval="0" range="0-*" remark="Lights function number."/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Car command."/>
+        <var name="placing" vt="bool" defval="True"/>
         <fundef cardinality="n"/>
       </car>
     </carlist>
