@@ -2236,8 +2236,12 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     // Unusable decoder speed information in KM/H; Just ignore it.
     int locoAddr = (pdata[1]&0x3F) * 256 + pdata[0];
     int speed    = pdata[2];
-    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999,
-        "MSG_BM_SPEED, path=%s seq=%d loco-addr=%d speed=%dkm/h", pathKey, Seq, locoAddr, speed );
+    iOSlot slot = __getSlotByAddr(bidib, locoAddr);
+    if( slot != NULL && slot->kmh != speed ) {
+      slot->kmh = speed;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+          "MSG_BM_SPEED, path=%s seq=%d loco=%s addr=%d speed=%dkm/h", pathKey, Seq, slot->id, locoAddr, speed );
+    }
     break;
   }
 

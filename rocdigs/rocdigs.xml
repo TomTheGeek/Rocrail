@@ -1277,7 +1277,8 @@
       <var name="steps" vt="int"/>
       <var name="dir" vt="Boolean"/>
       <var name="f[32]" vt="Boolean"/>
-    </struct>
+      <var name="kmh" vt="int"/>
+      </struct>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="bidibini" vt="iONode"/>
