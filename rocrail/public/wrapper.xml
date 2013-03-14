@@ -374,7 +374,6 @@
       <const name="roco" vt="string" val="roco"/>
       <const name="zimo" vt="string" val="zimo"/>
       <const name="dinamo" vt="string" val="dinamo"/>
-      <const name="om32" vt="string" val="om32"/>
       <const name="slx" vt="string" val="slx"/>
       <const name="ecos" vt="string" val="ecos"/>
       <const name="loconet" vt="string" val="loconet"/>

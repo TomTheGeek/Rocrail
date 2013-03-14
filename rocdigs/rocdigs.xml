@@ -226,22 +226,6 @@
   </object>
 
 
-  <object name="OM32" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint" remark="OM32 object">
-    <fun name="inst" vt="this">
-      <param name="ini" vt="const iONode" remark="Ini node"/>
-      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
-    </fun>
-    <typedef def="enum {DATA_FLAG=0x80, RETRANSMIT_FLAG=0x40, FIXED_FLAG=0x03, ADDR_MASK=0x1C} __om32header"/>
-    <data>
-      <var name="ini" vt="iONode"/>
-      <var name="iid" vt="const char*"/>
-      <var name="serial" vt="iOSerial"/>
-      <var name="listenerObj" vt="obj"/>
-      <var name="listenerFun" vt="digint_listener"/>
-    </data>
-  </object>
-
-
   <object name="Zimo" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint">
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
