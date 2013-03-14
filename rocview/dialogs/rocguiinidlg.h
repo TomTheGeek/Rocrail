@@ -208,6 +208,9 @@ public:
     wxTextCtrl* m_Speak4Block;
     wxStaticText* m_labSpeakCmd;
     wxTextCtrl* m_SpeakCmd;
+    wxStaticText* m_labDirImage;
+    wxTextCtrl* m_DirImageFwd;
+    wxTextCtrl* m_DirImageRev;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Debug;

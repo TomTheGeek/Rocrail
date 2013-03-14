@@ -124,7 +124,11 @@ void LC::setLocProps( iONode props ) {
     value.Printf( _T("%d"), m_iSpeed );
     m_V->SetValue( value );
     m_bDir = wLoc.isdir(m_LocProps)?true:false;
+
     m_Dir->SetLabel( m_bDir?_T(">>"):_T("<<") );
+    if( StrOp.len( wGui.getdirimagefwd(wxGetApp().getIni()) ) > 0 && StrOp.len( wGui.getdirimagerev(wxGetApp().getIni()) )) {
+      m_Dir->SetIcon( m_bDir ? getIcon(wGui.getdirimagefwd(wxGetApp().getIni())):getIcon(wGui.getdirimagerev(wxGetApp().getIni())) );
+    }
 
     if( wxGetApp().getFrame()->isTooltip()) {
       m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
@@ -316,6 +320,9 @@ bool LC::updateLoc( iONode node ) {
         m_bDir = wLoc.isdir( node )?true:false;
         wLoc.setdir( m_LocProps, m_bDir?True:False );
         m_Dir->SetLabel( m_bDir?_T(">>"):_T("<<") );
+        if( StrOp.len( wGui.getdirimagefwd(wxGetApp().getIni()) ) > 0 && StrOp.len( wGui.getdirimagerev(wxGetApp().getIni()) )) {
+          m_Dir->SetIcon( m_bDir ? getIcon(wGui.getdirimagefwd(wxGetApp().getIni())):getIcon(wGui.getdirimagerev(wxGetApp().getIni())) );
+        }
         if( wxGetApp().getFrame()->isTooltip()) {
           m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
         }
@@ -543,7 +550,12 @@ void LC::OnButton(wxCommandEvent& event)
   }
   else if ( event.GetEventObject() == m_Dir ) {
     m_bDir = ! m_bDir;
+
     m_Dir->SetLabel( m_bDir?_T(">>"):_T("<<") );
+    if( StrOp.len( wGui.getdirimagefwd(wxGetApp().getIni()) ) > 0 && StrOp.len( wGui.getdirimagerev(wxGetApp().getIni()) )) {
+      m_Dir->SetIcon( m_bDir ? getIcon(wGui.getdirimagefwd(wxGetApp().getIni())):getIcon(wGui.getdirimagerev(wxGetApp().getIni())) );
+    }
+
     if( wxGetApp().getFrame()->isTooltip())
       m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
     speedCmd(true);
@@ -884,6 +896,9 @@ void LC::CreateControls() {
 
 #ifdef USENEWLOOK
   m_Dir = new LEDButton( m_Parent, _(">>"), 50, 25, false );
+  if( StrOp.len( wGui.getdirimagefwd(wxGetApp().getIni()) ) > 0 ) {
+    m_Dir->SetIcon(getIcon(wGui.getdirimagefwd(wxGetApp().getIni())));
+  }
 #else
   m_Dir = new wxButton( m_Parent, -1, _(">>"), wxDefaultPosition, wxSize(50, -1), wxBU_EXACTFIT );
 #endif

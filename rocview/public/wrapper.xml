@@ -93,6 +93,8 @@
     <var name="xslpath" vt="string" defval="stylesheets" remark="reference stylsheets to this path"/>
     <var name="decpath" vt="string" defval="decspecs" remark="reference decoder specifications to this path"/>
     <var name="imagepath" vt="string" defval="images" remark="load loco pictures from this path"/>
+    <var name="dirimagefwd" vt="string" defval="" remark="image to use for the direction button"/>
+    <var name="dirimagerev" vt="string" defval="" remark="image to use for the direction button"/>
     <var name="updatespath" vt="string" defval="updates" remark="download updates in this path"/>
     <var name="updatesserver" vt="string" defval="rocrail.net" remark="location of updates"/>
     <var name="updatestimestamp" vt="long" defval="0" remark="timestamp of last viewed updates xml for the update notifier; this number increases after adding items on the server"/>

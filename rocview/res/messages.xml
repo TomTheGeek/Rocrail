@@ -20420,4 +20420,7 @@
     <nl txt="Actie tijdseenheid 60 sec."/>
     <it txt="Timer azione 60 sec"/>
   </Msg>
+  <Msg id="dirimage">
+    <en txt="Direction image"/>
+  </Msg>
 </Messages>
