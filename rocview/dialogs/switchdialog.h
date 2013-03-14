@@ -261,6 +261,7 @@ public:
     wxStaticText* m_LabelDir;
     wxRadioBox* m_Dir;
     wxRadioBox* m_SavePosBox;
+    wxStaticBox* m_OptionsBox;
     wxCheckBox* m_Raster;
     wxCheckBox* m_Road;
     wxCheckBox* m_Show;
