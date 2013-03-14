@@ -205,7 +205,7 @@ static iOSlot __getSlotByAddr(iOBiDiB inst, int lcaddr) {
     slot = (iOSlot)MapOp.first( data->lcmap);
     while( slot != NULL ) {
       if( slot->addr == lcaddr ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot found for %s by address %d", slot->id, lcaddr );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot found for %s by address %d", slot->id, lcaddr );
         break;
       }
       slot = (iOSlot)MapOp.next( data->lcmap);
@@ -2239,8 +2239,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     iOSlot slot = __getSlotByAddr(bidib, locoAddr);
     if( slot != NULL && slot->kmh != speed ) {
       slot->kmh = speed;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-          "MSG_BM_SPEED, path=%s seq=%d loco=%s addr=%d speed=%dkm/h", pathKey, Seq, slot->id, locoAddr, speed );
+      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999,
+          "loco=%s addr=%d speed=%dkm/h", slot->id, locoAddr, speed );
     }
     break;
   }
