@@ -6227,3 +6227,9 @@ msgstr ""
 msgid "Action timer 60 sec."
 msgstr ""
 
+#. 
+# id="dirimage"
+#, c-format
+msgid "Direction image"
+msgstr ""
+
