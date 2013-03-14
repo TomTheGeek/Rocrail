@@ -206,6 +206,7 @@ void CarDlg::initLabels() {
   m_InvDir->SetLabel( wxGetApp().getMsg( "invert" ) );
   m_UseLights->SetLabel( wxGetApp().getMsg( "lights" ) );
   m_F0VCmd->SetLabel( wxGetApp().getMsg( "speed" ) + wxT(" ") + wxGetApp().getMsg( "command" ));
+  m_Placing->SetLabel( wxGetApp().getMsg( "placing" ) );
 
   // Functions
   m_labFDesc->SetLabel( wxGetApp().getMsg( "description" ) );
@@ -518,6 +519,7 @@ void CarDlg::initValues() {
 
   m_UseDir->SetValue( wCar.isusedir(m_Props)?true:false );
   m_InvDir->SetValue( wCar.isinvdir(m_Props)?true:false );
+  m_Placing->SetValue( wCar.isplacing(m_Props)?true:false );
   m_UseLights->SetValue( wCar.isuselights(m_Props)?true:false );
   m_FnLights->SetValue( wCar.getfnlights(m_Props) );
   m_F0VCmd->SetValue( wCar.isf0vcmd(m_Props)?true:false );
@@ -591,6 +593,7 @@ bool CarDlg::evaluate(){
 
   wCar.setusedir(m_Props, m_UseDir->IsChecked()?True:False );
   wCar.setinvdir(m_Props, m_InvDir->IsChecked()?True:False );
+  wCar.setplacing(m_Props, m_Placing->IsChecked()?True:False );
   wCar.setuselights(m_Props, m_UseLights->IsChecked()?True:False );
   wCar.setfnlights(m_Props, m_FnLights->GetValue() );
   wCar.setf0vcmd(m_Props, m_F0VCmd->IsChecked()?True:False );
