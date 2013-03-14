@@ -650,7 +650,7 @@ static void __evaluateCCSwitch( iOMCS2Data mcs2, byte* in ) {
 
   if( state == 0xFF) {
     /* error */
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Switch %d.%d report: ERROR", addr, port );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "CC Switch %d.%d report: ERROR", addr, port );
   }
   else {
     iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
@@ -659,6 +659,7 @@ static void __evaluateCCSwitch( iOMCS2Data mcs2, byte* in ) {
     wSwitch.setaddr1( nodeC, ( addr ) );
     wSwitch.setport1( nodeC, ( port ) );
     wSwitch.setstate( nodeC, (state == 0xFE)?"straight":"turnout" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CC Switch %d.%d report: 0x%02X", addr, port, state );
     mcs2->listenerFun( mcs2->listenerObj, nodeC, TRCLEVEL_INFO );
   }
 }
