@@ -20423,4 +20423,7 @@
   <Msg id="dirimage">
     <en txt="Direction image"/>
   </Msg>
+  <Msg id="newposflag">
+    <en txt="New Position Flag"/>
+  </Msg>
 </Messages>

@@ -6233,3 +6233,9 @@ msgstr ""
 msgid "Direction image"
 msgstr ""
 
+#. 
+# id="newposflag"
+#, c-format
+msgid "New Position Flag"
+msgstr ""
+

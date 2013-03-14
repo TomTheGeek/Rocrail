@@ -225,6 +225,15 @@ void SelTabDialog::initLabels() {
   m_Invert->SetLabel( wxGetApp().getMsg( "invert" ) );
   m_InvertNew->SetLabel( wxGetApp().getMsg( "invert" ) );
   m_SingleGate->SetLabel( wxGetApp().getMsg( "singlegate" ) );
+  m_labPosSen->SetLabel( wxGetApp().getMsg( "posfb" ) );
+  m_NewPosBox->SetLabel( wxGetApp().getMsg( "New Position Flag" ) );
+  m_labb0Sen->SetLabel( wxT("b0 ") + wxGetApp().getMsg( "sensor" ) );
+  m_labb1Sen->SetLabel( wxT("b1 ") + wxGetApp().getMsg( "sensor" ) );
+  m_labb2Sen->SetLabel( wxT("b2 ") + wxGetApp().getMsg( "sensor" ) );
+  m_labb3Sen->SetLabel( wxT("b3 ") + wxGetApp().getMsg( "sensor" ) );
+  m_labb4Sen->SetLabel( wxT("b4 ") + wxGetApp().getMsg( "sensor" ) );
+  m_labb5Sen->SetLabel( wxT("b5 ") + wxGetApp().getMsg( "sensor" ) );
+  m_labb6Sen->SetLabel( wxT("b6 ") + wxGetApp().getMsg( "sensor" ) );
 
   // Buttons
   m_DelTrack->SetLabel( wxGetApp().getMsg( "delete" ) );
