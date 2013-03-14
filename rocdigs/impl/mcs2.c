@@ -634,6 +634,35 @@ static void __evaluateMCS2Switch( iOMCS2Data mcs2, byte* in ) {
   mcs2->listenerFun( mcs2->listenerObj, nodeC, TRCLEVEL_INFO );
 }
 
+static void __evaluateCCSwitch( iOMCS2Data mcs2, byte* in ) {
+  int addr1 = in[7] & 0x0F;
+  /* mask left nibble of high byte, this is not part of the actual address (always 0x3 for accessory) */
+  int addr2 = in[8];
+  int state = in[9];
+  int port  = 0;
+  int addr  = 0;
+
+  if( addr1 > 7 )
+    addr1 = addr1 - 8;
+    /* address range start 0x3000 for MM, range start for DCC is 0x3800, so MM 0x3000 or DCC 0x3800 is Rocrail address 1, port 1 */
+  addr2 = addr2 + (addr1 << 8) + 1;
+  AddrOp.fromPADA( addr2, &addr, &port );
+
+  if( state == 0xFF) {
+    /* error */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Switch %d.%d report: ERROR", addr, port );
+  }
+  else {
+    iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    if( mcs2->iid != NULL )
+      wSwitch.setiid( nodeC, mcs2->iid );
+    wSwitch.setaddr1( nodeC, ( addr ) );
+    wSwitch.setport1( nodeC, ( port ) );
+    wSwitch.setstate( nodeC, (state == 0xFE)?"straight":"turnout" );
+    mcs2->listenerFun( mcs2->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+}
+
 static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
@@ -671,7 +700,7 @@ static void __reader( void* threadinst ) {
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
        is broadcasted. When a command is issued from the CS2 user interface, both the command and the reply is broadcasted.
        This means that when a command (even) is received, Rocrail did not send that command. */
-    if( in[1] == 0x00 ) {
+    if( in[1] == ID_SYSTEM ) {
       /*System command */
       __evaluateMCS2System( data, in );
     }
@@ -685,17 +714,21 @@ static void __reader( void* threadinst ) {
     else if( in[1] == 0x23 ) {
       __evaluateSensorEvent( data, in );
     }
-    else if( in[1] == 0x0A | in[1] == 0x08 ) {
+    else if( in[1] == ID_LOCO_DIRECTION | in[1] == 0x08 ) {
       /* loc speed or direction comamnd, not from Rocrail. */
       __evaluateMCS2Loc( data, in );
     }
-    else if( in[1] == 0x0C ) {
+    else if( in[1] == ID_LOCO_FUNCTION ) {
       /* locfunction command, not from Rocrail. */
       __evaluateMCS2Function( data, in );
     }
-    else if( in[1] == 0x16 && in[10] == 0x01 ) {
+    else if( in[1] == ID_ACC_SWITCH && in[10] == 0x01 ) {
       /* switch command gate activated, second command with gate deactivated again is ignored, not from Rocrail. */
       __evaluateMCS2Switch( data, in );
+    }
+    else if( in[1] == ID_ACC_SWITCH && (in[9] & 0x80) ) {
+      /* CC-Schnitte */
+      __evaluateCCSwitch( data, in );
     }
     else {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Unhandled packet:" );
