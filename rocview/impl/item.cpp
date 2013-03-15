@@ -2488,6 +2488,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     const char* state = wSwitch.getstate( node );
     const char* locid = wSwitch.getlocid( node );
     Boolean isSet = wSwitch.isset(node);
+    Boolean isLocked = (wSwitch.getlocid( node )==NULL?False:True);
     int port  = wSwitch.getport1( m_Props );
     int addr  = wSwitch.getaddr1( m_Props );
     int gate  = wSwitch.getgate1( m_Props );
@@ -2505,7 +2506,9 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
     wSwitch.setswitched( m_Props, wSwitch.getswitched(node) );
 
-    SetBackgroundColour( isSet? m_PlanPanel->GetBackgroundColour():*wxRED );
+    if( wSwitch.getlocid( node )!=NULL && StrOp.equals( wSwitch.unlocked, wSwitch.getlocid( node )) )
+      isLocked = False;
+    SetBackgroundColour( isSet? (isLocked? Base::getRed():m_PlanPanel->GetBackgroundColour()):*wxRED );
 
     if( addr > 0 && port > 0 ) {
       pada = (addr-1) * 4 + port;
