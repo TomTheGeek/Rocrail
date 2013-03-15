@@ -2132,17 +2132,17 @@ static void __handleDriveManual(iOBiDiB bidib, int uid, byte* pdata) {
     }
 
     if( change & 0x08 ) {
-      int fg3 = pdata[7];
-      wFunCmd.setf9 ( nodeD, (fg3 & 0x01) ? True:False );
-      wFunCmd.setf10( nodeD, (fg3 & 0x02) ? True:False );
-      wFunCmd.setf11( nodeD, (fg3 & 0x04) ? True:False );
-      wFunCmd.setf12( nodeD, (fg3 & 0x08) ? True:False );
+      int fg3 = pdata[6];
+      wFunCmd.setf9 ( nodeD, (fg3 & 0x10) ? True:False );
+      wFunCmd.setf10( nodeD, (fg3 & 0x20) ? True:False );
+      wFunCmd.setf11( nodeD, (fg3 & 0x40) ? True:False );
+      wFunCmd.setf12( nodeD, (fg3 & 0x80) ? True:False );
       wFunCmd.setgroup( nodeD, 3 );
       data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
     }
 
     if( change & 0x10 ) {
-      int fg = pdata[8];
+      int fg = pdata[7];
       wFunCmd.setf13( nodeD, (fg & 0x01) ? True:False );
       wFunCmd.setf14( nodeD, (fg & 0x02) ? True:False );
       wFunCmd.setf15( nodeD, (fg & 0x04) ? True:False );
@@ -2158,7 +2158,7 @@ static void __handleDriveManual(iOBiDiB bidib, int uid, byte* pdata) {
     }
 
     if( change & 0x20 ) {
-      int fg = pdata[9];
+      int fg = pdata[8];
       wFunCmd.setf21( nodeD, (fg & 0x01) ? True:False );
       wFunCmd.setf22( nodeD, (fg & 0x02) ? True:False );
       wFunCmd.setf23( nodeD, (fg & 0x04) ? True:False );
