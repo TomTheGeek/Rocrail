@@ -1630,10 +1630,13 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
 
     /* wait only 10ms for getting the mutex: */
     if( !MutexOp.trywait( data->muxLock, 10 ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "timeout in locking [%s]", data->id );
       return False;
     }
 
     if( !BlockOp.isFree( inst, id ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "block [%s] is not free for [%s], already locked by [%s]", data->id, id, data->locId );
       MutexOp.post( data->muxLock );
       return False;
     }
