@@ -103,11 +103,11 @@ void StageDlg::initLabels() {
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
   m_labDescription->SetLabel( wxGetApp().getMsg( "description" ) );
-  m_labSectionLength->SetLabel( wxGetApp().getMsg( "section" ) + _T(" ") + wxGetApp().getMsg( "length" ) );
-  m_labTrainGap->SetLabel( wxGetApp().getMsg( "train" ) + _T(" ") + wxGetApp().getMsg( "gap" ) );
-  m_labEnterSensor->SetLabel( _T("Enter ") + wxGetApp().getMsg( "sensor" ) );
-  m_labEnterSignal->SetLabel( _T("Enter ") + wxGetApp().getMsg( "signal" ) );
-  m_labExitSignal->SetLabel( _T("Exit ") + wxGetApp().getMsg( "signal" ) );
+  m_labSectionLength->SetLabel( wxGetApp().getMsg( "sectionlength" ) );
+  m_labTrainGap->SetLabel( wxGetApp().getMsg( "traingap" ) );
+  m_labEnterSensor->SetLabel( wxGetApp().getMsg("entersensor") );
+  m_labEnterSignal->SetLabel( wxGetApp().getMsg("entersignal") );
+  m_labExitSignal->SetLabel( wxGetApp().getMsg("exitsignal") );
 
   // Sections
   m_labSectionID->SetLabel( wxGetApp().getMsg( "id" ) );

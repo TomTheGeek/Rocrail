@@ -20426,4 +20426,19 @@
   <Msg id="newposflag">
     <en txt="New Position Flag"/>
   </Msg>
+  <Msg id="sectionlength">
+    <en txt="Section length"/>
+  </Msg>
+  <Msg id="traingap">
+    <en txt="Train gap"/>
+  </Msg>
+  <Msg id="entersensor">
+    <en txt="Enter sensor"/>
+  </Msg>
+  <Msg id="entersignal">
+    <en txt="Enter signal"/>
+  </Msg>
+  <Msg id="exitsignal">
+    <en txt="Exit signal"/>
+  </Msg>
 </Messages>

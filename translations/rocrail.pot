@@ -6239,3 +6239,33 @@ msgstr ""
 msgid "New Position Flag"
 msgstr ""
 
+#. 
+# id="sectionlength"
+#, c-format
+msgid "Section length"
+msgstr ""
+
+#. 
+# id="traingap"
+#, c-format
+msgid "Train gap"
+msgstr ""
+
+#. 
+# id="entersensor"
+#, c-format
+msgid "Enter sensor"
+msgstr ""
+
+#. 
+# id="entersignal"
+#, c-format
+msgid "Enter signal"
+msgstr ""
+
+#. 
+# id="exitsignal"
+#, c-format
+msgid "Exit signal"
+msgstr ""
+
