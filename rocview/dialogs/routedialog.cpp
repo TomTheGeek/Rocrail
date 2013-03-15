@@ -2034,6 +2034,8 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
         m_SwitchCmd->Enable( 4, true );
         m_Lock->Enable(false);
         m_Lock->SetValue(false);
+        m_SwReduceV->Enable(false);
+        m_SwReduceV->SetValue(false);
       }
       else if( StrOp.equals( wSignal.name(), NodeOp.getName( sw ) ) ) {
         m_SwitchCmd->Enable( 5, true );
@@ -2043,12 +2045,16 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
         m_SwitchCmd->Enable( 11, true );
         m_Lock->Enable(false);
         m_Lock->SetValue(false);
+        m_SwReduceV->Enable(false);
+        m_SwReduceV->SetValue(false);
       }
       else if( StrOp.equals( wOutput.name(), NodeOp.getName( sw ) ) ) {
         m_SwitchCmd->Enable( 9, true );
         m_SwitchCmd->Enable( 10, true );
         m_Lock->Enable(false);
         m_Lock->SetValue(false);
+        m_SwReduceV->Enable(false);
+        m_SwReduceV->SetValue(false);
       }
       else {
         m_SwitchCmd->Enable( 0, true );
