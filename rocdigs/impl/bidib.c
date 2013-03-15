@@ -2559,6 +2559,12 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     __handleDriveManual(bidib, bidibnode->uid, pdata);
     break;
 
+  case MSG_CS_DRIVE_EVENT:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_CS_DRIVE_EVENT path=%s addr=%d event=0x%02X %s",
+        pathKey, pdata[0] + pdata[1]*256, pdata[2], (pdata[2]&0x01)?"***LOST***":"" );
+    break;
+
   default:
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
         "UNSUPPORTED: msg=0x%02X, path=%s", Type, pathKey );
