@@ -1999,8 +1999,8 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
 
     m_Lock->Enable(true);
     m_Lock->SetValue(wSwitchCmd.islock( swcmd )?true:false);
-    m_ReduceV->Enable(true);
-    m_ReduceV->SetValue(wSwitchCmd.isreduceV( swcmd )?true:false);
+    m_SwReduceV->Enable(true);
+    m_SwReduceV->SetValue(wSwitchCmd.isreduceV( swcmd )?true:false);
 
     m_SwitchCmd->Enable( 0, false );
     m_SwitchCmd->Enable( 1, false );
