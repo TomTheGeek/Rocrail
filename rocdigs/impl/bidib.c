@@ -2241,6 +2241,15 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
       slot->kmh = speed;
       TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999,
           "loco=%s addr=%d speed=%dkm/h", slot->id, locoAddr, speed );
+
+      iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      if( data->iid != NULL )
+        wLoc.setiid( nodeC, data->iid );
+      wLoc.setid( nodeC, slot->id );
+      wLoc.setaddr( nodeC, locoAddr );
+      wLoc.setV_realkmh( nodeC, speed );
+      wLoc.setcmd( nodeC, wLoc.bidikmh );
+      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
     }
     break;
   }

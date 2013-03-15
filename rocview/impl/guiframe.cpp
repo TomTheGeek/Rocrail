@@ -1314,6 +1314,12 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         Boolean dir = wLoc.isdir(node);
         Boolean placing = wLoc.isplacing(node);
         char* val = StrOp.fmt( "%s%s%d%s", dir?"":"<", placing?"":"-", wLoc.getV( node )==-1?0:wLoc.getV( node ), dir?">":"" );
+
+        if( StrOp.equals( wLoc.bidikmh, wLoc.getcmd(node) ) ) {
+          StrOp.free( val );
+          val = StrOp.fmt( "%s%s%d%s (%d)", dir?"":"<", placing?"":"-", wLoc.getV( node )==-1?0:wLoc.getV( node ), dir?">":"", wLoc.getV_realkmh( node ) );
+        }
+
         m_ActiveLocs->SetCellValue( i, LOC_COL_V, wxString(val,wxConvUTF8) );
         StrOp.free( val );
         m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_V,
