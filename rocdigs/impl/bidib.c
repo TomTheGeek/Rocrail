@@ -2060,6 +2060,124 @@ static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
 }
 
 
+static void __handleDriveManual(iOBiDiB bidib, int uid, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  /*
+    ADDR_L  Adresse, untere 8 Bits
+    ADDR_H  Adresse, obere 8 Bits
+    data[0] Bitfeld, Format
+    data[1] Bitfeld Ausgabe Aktiv
+    data[2] Geschwindigkeit
+    data[3] 3*reserved, FL (Licht), F4, F3, F2, F1
+    data[4] F12 - F5
+    data[5] F20 - F13
+    data[6] F28 - F21
+  */
+  int change = pdata[3];
+  int addr = pdata[0] + pdata[1] * 256;
+  int speed = pdata[4] & 0x7F;
+  Boolean dir = (pdata[4] & 0x80) ? True:False;
+  iOSlot slot = __getSlotByAddr(bidib, addr);
+
+  if( change & 0x01 ) {
+    /* speed */
+    iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    if( data->iid != NULL )
+      wLoc.setiid( nodeC, data->iid );
+    if( slot != NULL )
+      wLoc.setid( nodeC, slot->id );
+
+    wLoc.setaddr( nodeC, addr );
+    wLoc.setV_raw( nodeC, speed );
+    wLoc.setdir( nodeC, dir );
+    wLoc.setcmd( nodeC, wLoc.velocity );
+    wLoc.setthrottleid( nodeC, "bidib" );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "loco=%s addr=%d speed=%d dir=%s", slot!=NULL?slot->id:"-", addr, speed, dir?"fwd":"rev" );
+
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+
+  if( change & 0x3E ) {
+    /* function group */
+    iONode nodeD = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+    if( data->iid != NULL )
+      wLoc.setiid( nodeD, data->iid );
+    if( slot != NULL )
+      wFunCmd.setid( nodeD, slot->id );
+    wFunCmd.setaddr( nodeD, addr );
+    wLoc.setthrottleid( nodeD, "bidib" );
+
+    if( change & 0x02 ) {
+      int fg1 = pdata[5];
+      wLoc.setfn( nodeD, (fg1 & 0x10) ? True:False );
+      wFunCmd.setf0( nodeD, (fg1 & 0x10) ? True:False );
+      wFunCmd.setf1( nodeD, (fg1 & 0x01) ? True:False );
+      wFunCmd.setf2( nodeD, (fg1 & 0x02) ? True:False );
+      wFunCmd.setf3( nodeD, (fg1 & 0x04) ? True:False );
+      wFunCmd.setf4( nodeD, (fg1 & 0x08) ? True:False );
+      wFunCmd.setgroup( nodeD, 1 );
+      data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+    }
+
+    if( change & 0x04 ) {
+      int fg2 = pdata[6];
+      wFunCmd.setf5( nodeD, (fg2 & 0x01) ? True:False );
+      wFunCmd.setf6( nodeD, (fg2 & 0x02) ? True:False );
+      wFunCmd.setf7( nodeD, (fg2 & 0x04) ? True:False );
+      wFunCmd.setf8( nodeD, (fg2 & 0x08) ? True:False );
+      wFunCmd.setgroup( nodeD, 2 );
+      data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+    }
+
+    if( change & 0x08 ) {
+      int fg3 = pdata[7];
+      wFunCmd.setf9 ( nodeD, (fg3 & 0x01) ? True:False );
+      wFunCmd.setf10( nodeD, (fg3 & 0x02) ? True:False );
+      wFunCmd.setf11( nodeD, (fg3 & 0x04) ? True:False );
+      wFunCmd.setf12( nodeD, (fg3 & 0x08) ? True:False );
+      wFunCmd.setgroup( nodeD, 3 );
+      data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+    }
+
+    if( change & 0x10 ) {
+      int fg = pdata[8];
+      wFunCmd.setf13( nodeD, (fg & 0x01) ? True:False );
+      wFunCmd.setf14( nodeD, (fg & 0x02) ? True:False );
+      wFunCmd.setf15( nodeD, (fg & 0x04) ? True:False );
+      wFunCmd.setf16( nodeD, (fg & 0x08) ? True:False );
+      wFunCmd.setf17( nodeD, (fg & 0x10) ? True:False );
+      wFunCmd.setf18( nodeD, (fg & 0x20) ? True:False );
+      wFunCmd.setf19( nodeD, (fg & 0x40) ? True:False );
+      wFunCmd.setf20( nodeD, (fg & 0x80) ? True:False );
+      wFunCmd.setgroup( nodeD, 4 );
+      data->listenerFun( data->listenerObj, (iONode)NodeOp.base.clone(nodeD), TRCLEVEL_INFO );
+      wFunCmd.setgroup( nodeD, 5 );
+      data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+    }
+
+    if( change & 0x20 ) {
+      int fg = pdata[9];
+      wFunCmd.setf21( nodeD, (fg & 0x01) ? True:False );
+      wFunCmd.setf22( nodeD, (fg & 0x02) ? True:False );
+      wFunCmd.setf23( nodeD, (fg & 0x04) ? True:False );
+      wFunCmd.setf24( nodeD, (fg & 0x08) ? True:False );
+      wFunCmd.setf25( nodeD, (fg & 0x10) ? True:False );
+      wFunCmd.setf26( nodeD, (fg & 0x20) ? True:False );
+      wFunCmd.setf27( nodeD, (fg & 0x40) ? True:False );
+      wFunCmd.setf28( nodeD, (fg & 0x80) ? True:False );
+      wFunCmd.setgroup( nodeD, 6 );
+      data->listenerFun( data->listenerObj, (iONode)NodeOp.base.clone(nodeD), TRCLEVEL_INFO );
+      wFunCmd.setgroup( nodeD, 7 );
+      data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+    }
+
+  }
+}
+
+
+
 /**
  * len addr seq type data  crc
  * 05  00   00  81   FE AF 89
@@ -2433,6 +2551,12 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_CS_POM_ACK:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_CS_POM_ACK path=%s addr=%d ack=%d", pathKey, pdata[0] + pdata[1]*256, pdata[5] );
+    break;
+
+  case MSG_CS_DRIVE_MANUAL:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_CS_DRIVE_MANUAL path=%s addr=%d", pathKey, pdata[0] + pdata[1]*256 );
+    __handleDriveManual(bidib, bidibnode->uid, pdata);
     break;
 
   default:
