@@ -15949,7 +15949,7 @@
     <fr txt="Temps de travail"/>
     <hu txt="Idő feldolgozás"/>
     <pt txt="Tempo de processamento"/>
-    <it txt="Tempo di processamento"/>
+    <it txt="Tempo di elaborazione"/>
     <cs txt="Doba zpracování"/>
     <da txt="Time behandling"/>
     <ru txt="Время обработки"/>
@@ -16008,7 +16008,7 @@
     <hu txt="Óránként"/>
     <fr txt="Toutes les heures"/>
     <pt txt="De hora em hora"/>
-    <it txt="Ogni ora"/>
+    <it txt="Oraria"/>
     <bs txt="Satno"/>
     <ru txt="Каждый час"/>
     <ca txt="Cada hora"/>
@@ -18579,7 +18579,7 @@
     <en_AU txt="Staging block"/>
     <fr txt="Bloc en coulisse"/>
     <es txt="Bloque de montaje"/>
-    <it txt="Blocco per stazione nascosta"/>
+    <it txt="Blocco di stazionamento"/>
     <sr_latin txt="Etapni blok"/>
     <cs txt="Stupeň Blok"/>
   </Msg>
@@ -19096,6 +19096,7 @@
     <sr_latin txt="Obnovi brzinu"/>
     <ja txt="速度を戻す"/>
     <cs txt="Obnoit rychlost"/>
+    <sv txt="Återställ hastighet."/>
   </Msg>
   <Msg id="calibrate">
     <en txt="Calibrate"/>
@@ -19278,6 +19279,7 @@
   </Msg>
   <Msg id="locoviewtrain">
     <en txt="Trains"/>
+    <nl txt="Treinen"/>
   </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
@@ -19825,6 +19827,7 @@
     <cs txt="Obnovit plán"/>
     <es txt="Restablecer horario"/>
     <pl txt="Przywróć dziennik"/>
+    <sv txt="Återställ tidtabell."/>
   </Msg>
   <Msg id="deprecatedrouting">
     <en txt="Classic routing is deprecated; Please migrate to block side routing."/>
@@ -19885,6 +19888,7 @@
     <sr_latin txt="Karta vozila"/>
     <ja txt="車両データ"/>
     <es txt="Tarjeta de vagón"/>
+    <sv txt="Vagnskort"/>
   </Msg>
   <Msg id="reserve">
     <en txt="Reserve"/>
@@ -19941,6 +19945,7 @@
     <cs txt="Parametr"/>
     <es txt="Parámetro"/>
     <pl txt="Parametr"/>
+    <sv txt="Parameter"/>
   </Msg>
   <Msg id="duration">
     <en txt="Duration"/>
@@ -19952,6 +19957,7 @@
     <cs txt="Trvání"/>
     <es txt="Duración"/>
     <pl txt="Czas trwania"/>
+    <sv txt="Varaktighet"/>
   </Msg>
   <Msg id="definition">
     <en txt="Definition"/>
@@ -20172,6 +20178,7 @@
     <es txt="Reiniciar ID de los bloques en todo el plan"/>
     <de txt="Zurücksetzen der Block-Kennungen im gesamten Gleisplan"/>
     <sr_latin txt="Poništavanje  ID-bloka za ceo plan"/>
+    <sv txt="Återställ blockID i hela planen."/>
   </Msg>
   <Msg id="ana_addSignalBlockAssignment">
     <en txt="Assign signals to blocks"/>
@@ -20181,6 +20188,7 @@
     <es txt="Asignar señales a los bloques"/>
     <de txt="SIgnale zu Blöcken zuordnen"/>
     <sr_latin txt="Dodela signala blokovima"/>
+    <sv txt="Knut signaler till block."/>
   </Msg>
   <Msg id="ana_resetSignalBlockAssignment">
     <en txt="Reset signal assignments in all blocks"/>
@@ -20292,6 +20300,7 @@
     <it txt="Impostare porta"/>
     <sr_latin txt="Postavka porta"/>
     <de txt="Port-Einstellung"/>
+    <sv txt="Portinställningar."/>
   </Msg>
   <Msg id="concurveright">
     <en txt="Connector curve right"/>
@@ -20299,6 +20308,7 @@
     <it txt="Connettore curvo destro"/>
     <sr_latin txt="Vezna krivina desno"/>
     <de txt="Verbinder Rechtskurve"/>
+    <sv txt="Anslutningskurva Höger."/>
   </Msg>
   <Msg id="concurveleft">
     <en txt="Connector curve left"/>
@@ -20306,6 +20316,7 @@
     <it txt="Connettore curvo sinistro"/>
     <sr_latin txt="Vezna krivina levo"/>
     <de txt="Verbinder Linkskurve"/>
+    <sv txt="Anslutningskurva Vänster."/>
   </Msg>
   <Msg id="watchdog">
     <en txt="Watchdog"/>
@@ -20313,6 +20324,7 @@
     <it txt="Forza sensori e comandi"/>
     <sr_latin txt="Watchdog"/>
     <de txt="Überwachung"/>
+    <sv txt="Övervakning"/>
   </Msg>
   <Msg id="overrulethrottle">
     <en txt="Overrule throttle"/>
@@ -20362,6 +20374,7 @@
     <sr_latin txt="Poništi sve ID putanja"/>
     <de txt="Alle Fahrstraßenkennungen zurücksetzen"/>
     <nl txt="Reset alle rijwegen ID's"/>
+    <sv txt="Återställ alla tågvägsID"/>
   </Msg>
   <Msg id="force">
     <en txt="Force"/>
@@ -20416,6 +20429,7 @@
     <de txt="Blinken"/>
     <nl txt="Knipperen"/>
     <it txt="Lampeggio"/>
+    <sv txt="Blinka"/>
   </Msg>
   <Msg id="actiontimer60">
     <en txt="Action timer 60 sec."/>
@@ -20425,23 +20439,41 @@
   </Msg>
   <Msg id="dirimage">
     <en txt="Direction image"/>
+    <it txt="Immagine direzione"/>
+    <nl txt="Rijrichting afbeelding"/>
   </Msg>
   <Msg id="newposflag">
     <en txt="New Position Flag"/>
+    <it txt="Segnale nuova posizione"/>
+    <nl txt="Nieuwe positie vlag"/>
   </Msg>
   <Msg id="sectionlength">
     <en txt="Section length"/>
+    <it txt="Lunghezza sezione"/>
+    <nl txt="Sectie lengte"/>
+    <sv txt="Sektionslängd"/>
   </Msg>
   <Msg id="traingap">
     <en txt="Train gap"/>
+    <it txt="Spazio treno"/>
+    <nl txt="Trein tussenruimte"/>
   </Msg>
   <Msg id="entersensor">
     <en txt="Enter sensor"/>
+    <it txt="Sensore ingresso"/>
+    <nl txt="Ingang melder"/>
+    <sv txt="Insensor"/>
   </Msg>
   <Msg id="entersignal">
     <en txt="Enter signal"/>
+    <it txt="Segnale ingresso"/>
+    <nl txt="Ingang signaal"/>
+    <sv txt="Insignal"/>
   </Msg>
   <Msg id="exitsignal">
     <en txt="Exit signal"/>
+    <it txt="Segnale uscita"/>
+    <nl txt="Uitgang signaal"/>
+    <sv txt="Utsignal"/>
   </Msg>
 </Messages>
