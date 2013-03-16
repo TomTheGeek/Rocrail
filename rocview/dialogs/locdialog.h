@@ -324,6 +324,8 @@ public:
     wxCheckBox* m_RestoreFx;
     wxCheckBox* m_RestoreSpeed;
     wxCheckBox* m_Show;
+    wxStaticText* m_labTrain;
+    wxTextCtrl* m_Train;
     wxPanel* m_General_Panel;
     wxBoxSizer* m_GeneralSizer;
     wxStaticText* m_label_ID;
