@@ -19276,6 +19276,9 @@
     <sr_latin txt="Automobili i kamioni"/>
     <sv txt="Bilar och lastbilar."/>
   </Msg>
+  <Msg id="locoviewtrain">
+    <en txt="Trains"/>
+  </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
     <nl txt="Sorteer locs naar adres"/>

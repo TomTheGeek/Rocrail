@@ -276,6 +276,7 @@ public:
   void OnLocoViewAutomobile(wxCommandEvent& event);
   void OnLocoViewCommuter(wxCommandEvent& event);
   void OnLocoViewSpecial(wxCommandEvent& event);
+  void OnLocoViewTrain(wxCommandEvent& event);
   void OnShowID(wxCommandEvent& event);
   void OnRaster(wxCommandEvent& event);
   void OnTooltip(wxCommandEvent& event);
@@ -570,6 +571,7 @@ enum
     ME_LocoViewAutomobile,
     ME_LocoViewCommuter,
     ME_LocoViewSpecial,
+    ME_LocoViewTrain,
     ME_LocoSortByAddr,
     ME_ShowID,
     ME_FullScreen,
@@ -648,13 +650,14 @@ enum {
 
 };
 
-#define LOCO_VIEW_ALL 0
-#define LOCO_VIEW_STEAM 1
-#define LOCO_VIEW_DIESEL 2
-#define LOCO_VIEW_ELECTRIC 3
-#define LOCO_VIEW_COMMUTER 4
-#define LOCO_VIEW_SPECIAL 5
-#define LOCO_VIEW_AUTOMOBILE 6
+#define LOCO_VIEW_ALL 0xFF
+#define LOCO_VIEW_STEAM 0x01
+#define LOCO_VIEW_DIESEL 0x02
+#define LOCO_VIEW_ELECTRIC 0x04
+#define LOCO_VIEW_COMMUTER 0x08
+#define LOCO_VIEW_SPECIAL 0x10
+#define LOCO_VIEW_AUTOMOBILE 0x20
+#define LOCO_VIEW_TRAIN 0x40
 
 
 #endif

@@ -5484,6 +5484,12 @@ msgid "Automobiles and trucks"
 msgstr ""
 
 #. 
+# id="locoviewtrain"
+#, c-format
+msgid "Trains"
+msgstr ""
+
+#. 
 # id="locosortbyaddr"
 #, c-format
 msgid "Sort locos by address"
