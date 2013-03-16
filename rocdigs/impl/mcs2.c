@@ -658,7 +658,7 @@ static void __evaluateCCSwitch( iOMCS2Data mcs2, byte* in ) {
       wSwitch.setiid( nodeC, mcs2->iid );
     wSwitch.setaddr1( nodeC, ( addr ) );
     wSwitch.setport1( nodeC, ( port ) );
-    wSwitch.setstate( nodeC, (state == 0xFE)?"straight":"turnout" );
+    wSwitch.setstate( nodeC, (state == 0xFE)?"turnout":"straight" );
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CC Switch %d.%d report: 0x%02X", addr, port, state );
     mcs2->listenerFun( mcs2->listenerObj, nodeC, TRCLEVEL_INFO );
   }
