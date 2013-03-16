@@ -1,7 +1,9 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis <r.j.versluis@rocrail.net>, Jean-Michel Fischer <jmf@polygonpunkt.de>
+ Copyright (C) 2002-2013 Rob Versluis <r.j.versluis@rocrail.net>,
+                         Jean-Michel Fischer <jmf@polygonpunkt.de>,
+                         Lothar Roth <lothar.roth@lothar-roth.de>
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -5766,8 +5768,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "INFO: crossing \"%s\" has no address -> cross", wItem.getid(item) );
           }
           else {
-            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: switch %s has no address set", wItem.getid(item) );
-            healthy = False;
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: switch %s has no address set", wItem.getid(item) );
           }
         }
         else {
@@ -7385,9 +7386,6 @@ static struct OAnalyse* _inst() {
 
   if( !didShowCredits ) {
     didShowCredits = True;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Rocrail Analyser by Jean-Michel Fischer" );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   }
 
   if( ! anaOpt ) {
