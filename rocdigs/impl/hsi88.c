@@ -574,8 +574,10 @@ static void __HSI88feedbackReader( void* threadinst ) {
 
   ThreadOp.sleep(1000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "HSI88 Reader started");
-  __preinitHSI88(pHSI88);
-  ThreadOp.sleep(100);
+  if( !o->usb ) {
+    __preinitHSI88(pHSI88);
+    ThreadOp.sleep(100);
+  }
 
   while( o->run ) {
 
