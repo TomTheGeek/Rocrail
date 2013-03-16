@@ -727,7 +727,7 @@ static void __reader( void* threadinst ) {
       /* switch command gate activated, second command with gate deactivated again is ignored, not from Rocrail. */
       __evaluateMCS2Switch( data, in );
     }
-    else if( in[1] == ID_ACC_SWITCH && (in[9] & 0x80) ) {
+    else if( in[1] == ID_ACC_SWITCH_RSP && (in[9] & 0x80) ) {
       /* CC-Schnitte */
       __evaluateCCSwitch( data, in );
     }
