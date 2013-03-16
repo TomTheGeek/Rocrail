@@ -84,34 +84,22 @@ InfoDialog::InfoDialog( wxWindow* parent, wxWindowID id, const wxString& caption
   m_Splash->SetBitmapLabel( *_img_rocrail_logo );
   m_Splash->Refresh();
 
-  char* str = StrOp.fmt("%d.%d", wGui.vmajor, wGui.vminor );
-  m_Version->SetLabel( wxString(str,wxConvUTF8) );
-  StrOp.free( str );
-
-  str = StrOp.fmt("\'%s\'",
-              wGui.releasename );
-  m_Name->SetLabel( wxString(str,wxConvUTF8) );
-  StrOp.free( str );
-
-  str = StrOp.fmt("%s revision %d", wGui.buildDate, wxGetApp().getSvn());
+  char* str = StrOp.fmt("%s revision %d", wGui.buildDate, wxGetApp().getSvn());
   m_Build->SetLabel( wxString(str,wxConvUTF8) );
   StrOp.free( str );
 
   m_Home->SetLabel( _T("http://www.rocrail.net") );
-  m_Support->SetLabel( _T("TM and Copyright 2002-2011 Rob Versluis.") );
-  m_labLic->SetLabel( _T("All Rights Reserved. License: GNU GPL") );
+  m_Support->SetLabel( _T("TM and Copyright 2002-2013 Rob Versluis.") );
+  m_labLic->SetLabel( _T("All Rights Reserved. License: GNU GPL V3") );
   //m_ThanksLine->SetLabel( wxGetApp().getMsg( "license" ) );
   m_ThanksLine->SetLabel( _T("") );
 
-  m_Thanks->AppendText( _T("The name Rocrail and the associated logo is our trademark and is officially registered in Germany with number 302008050592.") );
+  m_Thanks->AppendText( _T("The name Rocrail and the associated logo is our trademark and is officially registered in Germany under number 302008050592 and in the Benelux under number 928454.") );
   m_Thanks->AppendText( _T("\n\n") );
-
-  m_Thanks->AppendText( _T("Without an official permission commercial use is not permitted.\n\n" ));
-
 
   m_Thanks->AppendText( _T("This program is free software; you can redistribute it and/or ") );
   m_Thanks->AppendText( _T("modify it under the terms of the GNU General Public License ") );
-  m_Thanks->AppendText( _T("as published by the Free Software Foundation; either version 2 ") );
+  m_Thanks->AppendText( _T("as published by the Free Software Foundation; either version 3 ") );
   m_Thanks->AppendText( _T("of the License, or (at your option) any later version.\n\n") );
 
   m_Thanks->AppendText( _T("This program is distributed in the hope that it will be useful, ") );
@@ -139,8 +127,6 @@ bool InfoDialog::Create( wxWindow* parent, wxWindowID id, const wxString& captio
 {
 ////@begin InfoDialog member initialisation
     m_Splash = NULL;
-    m_Version = NULL;
-    m_Name = NULL;
     m_Build = NULL;
     m_Home = NULL;
     m_Support = NULL;
@@ -182,12 +168,6 @@ void InfoDialog::CreateControls()
 
     m_Splash = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_INFO_SPLASH, wxNullBitmap, wxDefaultPosition, wxSize(360, 115), wxBU_AUTODRAW );
     itemFlexGridSizer3->Add(m_Splash, 1, wxGROW|wxGROW|wxALL, 5);
-
-    m_Version = new wxStaticText( itemDialog1, wxID_STATIC_INFO_VERSION, _("version"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-    itemFlexGridSizer3->Add(m_Version, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
-
-    m_Name = new wxStaticText( itemDialog1, wxID_STATIC_INFO_NAME, _("name"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-    itemFlexGridSizer3->Add(m_Name, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_Build = new wxStaticText( itemDialog1, wxID_STATIC_INFO_BUILD, _("build"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
     itemFlexGridSizer3->Add(m_Build, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);

@@ -361,18 +361,13 @@ static int __logo( void ) {
   TraceOp.println( " All Rights Reserved."                              );
   TraceOp.println( "   r.j.versluis@rocrail.net"                        );
   TraceOp.println( "   http://www.rocrail.net"                          );
-  TraceOp.println( " License: GNU GPL 2"                                );
-  TraceOp.println( "   http://www.gnu.org/licenses/gpl.txt"             );
-  TraceOp.println( " Without an official permission commercial use is not permitted." );
+  TraceOp.println( " License: GNU GPL V3"                               );
+  TraceOp.println( "   http://www.gnu.org/licenses/gpl-3.0-standalone.html" );
   TraceOp.println( "--------------------------------------------------" );
-  TraceOp.println( " %s %d.%d \"%s\"",
-                   wGlobal.productname,
-                   wGlobal.vmajor,
-                   wGlobal.vminor,
-                   wGlobal.releasename );
+  TraceOp.println( " %s %d", wGlobal.productname, bzr );
 
   if( bzr > 0 ){
-    TraceOp.println( " Revision: %d", bzr );
+    /*TraceOp.println( " Revision: %d", bzr );*/
     svn = bzr;
   }
   else {

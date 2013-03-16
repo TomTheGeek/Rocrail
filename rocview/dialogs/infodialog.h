@@ -48,8 +48,6 @@
 ////@begin control identifiers
 #define ID_DIALOG 10115
 #define ID_BITMAPBUTTON_INFO_SPLASH 10172
-#define wxID_STATIC_INFO_VERSION 10001
-#define wxID_STATIC_INFO_NAME 10244
 #define wxID_STATIC_INFO_BUILD 10002
 #define wxID_STATIC_INFO_HOME 10003
 #define wxID_STATIC_INFO_SUPPORT 10004
@@ -111,8 +109,6 @@ public:
 
 ////@begin InfoDialog member variables
     wxBitmapButton* m_Splash;
-    wxStaticText* m_Version;
-    wxStaticText* m_Name;
     wxStaticText* m_Build;
     wxStaticText* m_Home;
     wxStaticText* m_Support;

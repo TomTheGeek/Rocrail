@@ -737,25 +737,19 @@ bool RocGui::OnInit() {
   TraceOp.println( " Copyright (c) Rob Versluis"                        );
   TraceOp.println( "   r.j.versluis@rocrail.net"                        );
   TraceOp.println( "   http://www.rocrail.net"                          );
-  TraceOp.println( " License: GNU GPL 2"                                );
-  TraceOp.println( "   http://www.gnu.org/licenses/gpl.txt"             );
-  TraceOp.println( " Without an official permission commercial use is not permitted." );
+  TraceOp.println( " License: GNU GPL 3"                                );
+  TraceOp.println( "   http://www.gnu.org/licenses/gpl-3.0-standalone.html" );
   TraceOp.println( "--------------------------------------------------" );
 
   // trace version
-  TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, " %s %d.%d.%d \"%s\" %s",
-      wGui.productname,
-      wGui.vmajor,
-      wGui.vminor,
-      wGui.patch,
-      wGui.releasename, wGui.releasesuffix );
+  TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, " %s %d", wGui.productname, bzr );
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, " build %s %s",
       wGui.buildDate,
       wGui.buildTime );
 
   if( bzr > 0 ) {
     m_Svn = bzr;
-    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," bzr %d", m_Svn );
+    /*TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," bzr %d", m_Svn );*/
   }
   else {
     iODoc doc = DocOp.parse(svnLog);
