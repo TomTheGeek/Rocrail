@@ -1881,7 +1881,7 @@ void RocGuiFrame::initFrame() {
   menuView->AppendCheckItem( ME_TraceWindow, wxGetApp().getMenu("trace"), wxGetApp().getTip("trace") );
   menuView->AppendCheckItem( ME_LocoSortByAddr, wxGetApp().getMenu("locosortbyaddr"), wxGetApp().getTip("locosortbyaddr") );
   wxMenu *menuLocoView = new wxMenu();
-  menuLocoView->Append( ME_LocoViewAll, wxGetApp().getMenu("locoviewall"), wxGetApp().getTip("locoviewall") );
+  menuLocoView->AppendCheckItem( ME_LocoViewAll, wxGetApp().getMenu("locoviewall"), wxGetApp().getTip("locoviewall") );
   menuLocoView->AppendCheckItem( ME_LocoViewSteam, wxGetApp().getMenu("locoviewsteam"), wxGetApp().getTip("locoviewsteam") );
   menuLocoView->AppendCheckItem( ME_LocoViewDiesel, wxGetApp().getMenu("locoviewdiesel"), wxGetApp().getTip("locoviewdiesel") );
   menuLocoView->AppendCheckItem( ME_LocoViewElectric, wxGetApp().getMenu("locoviewelectric"), wxGetApp().getTip("locoviewelectric") );
@@ -3083,49 +3083,72 @@ void RocGuiFrame::OnFullScreen( wxCommandEvent& event ) {
 
 
 void RocGuiFrame::OnLocoViewAll( wxCommandEvent& event ) {
-  m_LocoCategory = LOCO_VIEW_ALL;
+  m_LocoCategory ^= LOCO_VIEW_ALLSEL;
+  if( m_LocoCategory & LOCO_VIEW_ALLSEL )
+    m_LocoCategory = LOCO_VIEW_ALL;
   event.SetClientData(NULL);
   InitActiveLocs(event);
 }
 
 void RocGuiFrame::OnLocoViewSteam( wxCommandEvent& event ) {
-  m_LocoCategory ^= LOCO_VIEW_STEAM;
+  if( m_LocoCategory & LOCO_VIEW_ALLSEL )
+    m_LocoCategory ^= LOCO_VIEW_STEAM;
+  else
+    m_LocoCategory = LOCO_VIEW_STEAM;
   event.SetClientData(NULL);
   InitActiveLocs(event);
 }
 
 void RocGuiFrame::OnLocoViewAutomobile( wxCommandEvent& event ) {
-  m_LocoCategory ^= LOCO_VIEW_AUTOMOBILE;
+  if( m_LocoCategory & LOCO_VIEW_ALLSEL )
+    m_LocoCategory ^= LOCO_VIEW_AUTOMOBILE;
+  else
+    m_LocoCategory = LOCO_VIEW_AUTOMOBILE;
   event.SetClientData(NULL);
   InitActiveLocs(event);
 }
 
 void RocGuiFrame::OnLocoViewTrain( wxCommandEvent& event ) {
-  m_LocoCategory ^= LOCO_VIEW_TRAIN;
+  if( m_LocoCategory & LOCO_VIEW_ALLSEL )
+    m_LocoCategory ^= LOCO_VIEW_TRAIN;
+  else
+    m_LocoCategory = LOCO_VIEW_TRAIN;
   event.SetClientData(NULL);
   InitActiveLocs(event);
 }
 
 void RocGuiFrame::OnLocoViewDiesel( wxCommandEvent& event ) {
-  m_LocoCategory ^= LOCO_VIEW_DIESEL;
+  if( m_LocoCategory & LOCO_VIEW_ALLSEL )
+    m_LocoCategory ^= LOCO_VIEW_DIESEL;
+  else
+    m_LocoCategory = LOCO_VIEW_DIESEL;
   event.SetClientData(NULL);
   InitActiveLocs(event);
 }
 
 void RocGuiFrame::OnLocoViewElectric( wxCommandEvent& event ) {
-  m_LocoCategory ^= LOCO_VIEW_ELECTRIC;
+  if( m_LocoCategory & LOCO_VIEW_ALLSEL )
+    m_LocoCategory ^= LOCO_VIEW_ELECTRIC;
+  else
+    m_LocoCategory = LOCO_VIEW_ELECTRIC;
   event.SetClientData(NULL);
   InitActiveLocs(event);
 }
 
 void RocGuiFrame::OnLocoViewCommuter( wxCommandEvent& event ) {
-  m_LocoCategory ^= LOCO_VIEW_COMMUTER;
+  if( m_LocoCategory & LOCO_VIEW_ALLSEL )
+    m_LocoCategory ^= LOCO_VIEW_COMMUTER;
+  else
+    m_LocoCategory = LOCO_VIEW_COMMUTER;
   event.SetClientData(NULL);
   InitActiveLocs(event);
 }
 
 void RocGuiFrame::OnLocoViewSpecial( wxCommandEvent& event ) {
-  m_LocoCategory ^= LOCO_VIEW_SPECIAL;
+  if( m_LocoCategory & LOCO_VIEW_ALLSEL )
+    m_LocoCategory ^= LOCO_VIEW_SPECIAL;
+  else
+    m_LocoCategory = LOCO_VIEW_SPECIAL;
   event.SetClientData(NULL);
   InitActiveLocs(event);
 }
@@ -3687,6 +3710,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
     if( mi != NULL ) mi->Enable( !m_bAutoMode );
   }
 
+  mi = menuBar->FindItem(ME_LocoViewAll);
+  if( mi != NULL ) mi->Check( m_LocoCategory & LOCO_VIEW_ALLSEL );
   mi = menuBar->FindItem(ME_LocoViewSteam);
   if( mi != NULL ) mi->Check( m_LocoCategory & LOCO_VIEW_STEAM );
   mi = menuBar->FindItem(ME_LocoViewDiesel);

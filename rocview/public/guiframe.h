@@ -658,6 +658,7 @@ enum {
 #define LOCO_VIEW_SPECIAL 0x10
 #define LOCO_VIEW_AUTOMOBILE 0x20
 #define LOCO_VIEW_TRAIN 0x40
+#define LOCO_VIEW_ALLSEL 0x80
 
 
 #endif
