@@ -122,6 +122,7 @@ class wxSpinCtrl;
 #define ID_SW_WIRING_USEFIELD 10413
 #define ID_SPINCTRL 10333
 #define ID_PANEL_SWITCH_CONTROL 10370
+#define ID_PANEL_SWITCH_FROG 10244
 #define SYMBOL_SWITCHDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_SWITCHDIALOG_TITLE _("Turnouts")
 #define SYMBOL_SWITCHDIALOG_IDNAME ID_DIALOG_SW
@@ -366,6 +367,31 @@ public:
     wxStaticText* m_labCtrlDelaySec;
     wxStaticText* m_labCtrlRoutes;
     wxTextCtrl* m_CtrlRoutes;
+    wxPanel* m_FrogPanel;
+    wxStaticText* m_labBusPol;
+    wxTextCtrl* m_BusPol;
+    wxStaticBox* m_Frog1Box;
+    wxStaticText* m_labAddr0Pol1;
+    wxSpinCtrl* m_Addr0Pol1;
+    wxStaticText* m_labPort0Pol1;
+    wxSpinCtrl* m_Port0Pol1;
+    wxRadioBox* m_Gate0Pol1;
+    wxStaticText* m_labAddr0Pol2;
+    wxSpinCtrl* m_Addr0Pol2;
+    wxStaticText* m_labPort0Pol2;
+    wxSpinCtrl* m_Port0Pol2;
+    wxRadioBox* m_Gate0Pol2;
+    wxStaticBox* m_Frog2Box;
+    wxStaticText* m_labAddr1Pol1;
+    wxSpinCtrl* m_Addr1Pol1;
+    wxStaticText* m_labPort1Pol1;
+    wxSpinCtrl* m_Port1Pol1;
+    wxRadioBox* m_Gate1Pol1;
+    wxStaticText* m_labAddr1Pol2;
+    wxSpinCtrl* m_Addr1Pol2;
+    wxStaticText* m_labPort1Pol2;
+    wxSpinCtrl* m_Port1Pol2;
+    wxRadioBox* m_Gate1Pol2;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;

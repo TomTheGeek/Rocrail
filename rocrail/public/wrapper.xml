@@ -1326,12 +1326,19 @@
         <var name="gate2" vt="int" defval="0" range="0-*" required="false" remark="Only in case of type 3way."/>
         
         <!-- If the frog polarisation needs to be switched separately.  -->
-        <var name="addrpol1" vt="int" defval="0" range="0-*" required="false" remark="decoder address of the polarisation"/>
-        <var name="portpol1" vt="int" defval="0" range="0-*" required="false" remark="port of decoder unit."/>
-        <var name="gatepol1" vt="int" defval="0" range="0-1" required="false" remark="gate of port."/>
-        <var name="addrpol2" vt="int" defval="0" range="0-*" required="false" remark="decoder address of the polarisation"/>
-        <var name="portpol2" vt="int" defval="0" range="0-*" required="false" remark="port of decoder unit."/>
-        <var name="gatepol2" vt="int" defval="0" range="0-1" required="false" remark="gate of port."/>
+        <var name="buspol" vt="int" defval="0" range="0-*" required="false"/>
+        <var name="addr0pol1" vt="int" defval="0" range="0-*" required="false" remark="decoder address of the polarisation"/>
+        <var name="port0pol1" vt="int" defval="0" range="0-*" required="false" remark="port of decoder unit."/>
+        <var name="gate0pol1" vt="int" defval="0" range="0-1" required="false" remark="gate of port."/>
+        <var name="addr0pol2" vt="int" defval="0" range="0-*" required="false" remark="decoder address of the polarisation"/>
+        <var name="port0pol2" vt="int" defval="0" range="0-*" required="false" remark="port of decoder unit."/>
+        <var name="gate0pol2" vt="int" defval="0" range="0-1" required="false" remark="gate of port."/>
+        <var name="addr1pol1" vt="int" defval="0" range="0-*" required="false" remark="decoder address of the polarisation"/>
+        <var name="port1pol1" vt="int" defval="0" range="0-*" required="false" remark="port of decoder unit."/>
+        <var name="gate1pol1" vt="int" defval="0" range="0-1" required="false" remark="gate of port."/>
+        <var name="addr1pol2" vt="int" defval="0" range="0-*" required="false" remark="decoder address of the polarisation"/>
+        <var name="port1pol2" vt="int" defval="0" range="0-*" required="false" remark="port of decoder unit."/>
+        <var name="gate1pol2" vt="int" defval="0" range="0-1" required="false" remark="gate of port."/>
 
         <var name="singlegate" vt="bool" defval="false"/>
         <var name="gatevalue" vt="int" defval="-1" range="0-1" required="false"/>

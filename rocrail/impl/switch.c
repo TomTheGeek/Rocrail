@@ -58,6 +58,7 @@
 static int instCnt = 0;
 
 static Boolean __unregisterCallback( iOSwitch inst );
+static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean relays2);
 
 
 /*
@@ -457,6 +458,11 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident
   const char* strState = __checkFbState( (iOSwitch)inst );
   Boolean isSet = __isSet(inst, strState);
 
+  if( isSet ) {
+    __polariseFrog((iOSwitch)inst, 0, StrOp.equals(wSwitch.straight, strState), StrOp.equals(wSwitch.turnout, strState));
+    __polariseFrog((iOSwitch)inst, 0, StrOp.equals(wSwitch.left, strState), StrOp.equals(wSwitch.right, strState));
+  }
+
   {
     iONode nodeF = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setid( nodeF, SwitchOp.getId( (iOSwitch)inst ) );
@@ -773,6 +779,58 @@ static void __flipThread( void* threadinst ) {
 }
 
 
+static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean relays2) {
+  iOSwitchData data = Data(inst);
+  iOControl control = AppOp.getControl();
+  int error = 0;
+  int addrpol1 = 0;
+  int portpol1 = 0;
+  int gatepol1 = 0;
+  int addrpol2 = 0;
+  int portpol2 = 0;
+  int gatepol2 = 0;
+
+  if( frog == 0 ) {
+    addrpol1 = wSwitch.getaddr0pol1(data->props);
+    portpol1 = wSwitch.getport0pol1(data->props);
+    gatepol1 = wSwitch.getgate0pol1(data->props);
+    addrpol2 = wSwitch.getaddr0pol2(data->props);
+    portpol2 = wSwitch.getport0pol2(data->props);
+    gatepol2 = wSwitch.getgate0pol2(data->props);
+  }
+  else if( frog == 1 ) {
+    addrpol1 = wSwitch.getaddr1pol1(data->props);
+    portpol1 = wSwitch.getport1pol1(data->props);
+    gatepol1 = wSwitch.getgate1pol1(data->props);
+    addrpol2 = wSwitch.getaddr1pol2(data->props);
+    portpol2 = wSwitch.getport1pol2(data->props);
+    gatepol2 = wSwitch.getgate1pol2(data->props);
+  }
+
+  if( addrpol1 > 0 || portpol1 > 0 ) {
+    iONode cmd = NodeOp.inst(  wOutput.name(), NULL, ELEMENT_NODE );
+    wOutput.setiid( cmd, wSwitch.getiid( data->props ) );
+    wOutput.setbus( cmd, wSwitch.getbuspol(data->props));
+    wOutput.setaddr( cmd, addrpol1);
+    wOutput.setport( cmd, portpol1);
+    wOutput.setgate( cmd, gatepol1);
+    wOutput.setcmd( cmd, relays1?wOutput.on:wOutput.off);
+    ControlOp.cmd( control, cmd, &error );
+  }
+
+  if( addrpol2 > 0 || portpol2 > 0 ) {
+    iONode cmd = NodeOp.inst(  wOutput.name(), NULL, ELEMENT_NODE );
+    wOutput.setiid( cmd, wSwitch.getiid( data->props ) );
+    wOutput.setbus( cmd, wSwitch.getbuspol(data->props));
+    wOutput.setaddr( cmd, addrpol2);
+    wOutput.setport( cmd, portpol2);
+    wOutput.setgate( cmd, gatepol2);
+    wOutput.setcmd( cmd, relays2?wOutput.on:wOutput.off);
+    ControlOp.cmd( control, cmd, &error );
+  }
+}
+
+
 static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int* error, const char* lcid ) {
   iOSwitchData o = Data(inst);
   iOControl control = AppOp.getControl(  );
@@ -828,6 +886,9 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     NodeOp.base.del(nodeA);
     return False;
   }
+
+  __polariseFrog(inst, 0, False, False);
+  __polariseFrog(inst, 1, False, False);
 
   /* flip */
   if( StrOp.equals( wSwitch.flip, wSwitch.getcmd( nodeA ) ) ) {
@@ -1412,7 +1473,14 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       }
 
       if( wSwitch.isfbusefield(data->props ) ) {
-        wSwitch.setset( nodeD, __isSet((obj)inst, wSwitch.getstate( data->props)) );
+        const char* strState = wSwitch.getstate( data->props);
+        Boolean isSet = __isSet((obj)inst, strState);
+        wSwitch.setset( nodeD, isSet );
+
+        if( isSet ) {
+          __polariseFrog(inst, 0, StrOp.equals(wSwitch.straight, strState), StrOp.equals(wSwitch.turnout, strState));
+          __polariseFrog(inst, 0, StrOp.equals(wSwitch.left, strState), StrOp.equals(wSwitch.right, strState));
+        }
       }
 
       if( data->lockedId != NULL )
