@@ -460,7 +460,7 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident
 
   if( isSet ) {
     __polariseFrog((iOSwitch)inst, 0, StrOp.equals(wSwitch.straight, strState), StrOp.equals(wSwitch.turnout, strState));
-    __polariseFrog((iOSwitch)inst, 0, StrOp.equals(wSwitch.left, strState), StrOp.equals(wSwitch.right, strState));
+    __polariseFrog((iOSwitch)inst, 1, StrOp.equals(wSwitch.left, strState), StrOp.equals(wSwitch.right, strState));
   }
 
   {
@@ -1479,7 +1479,7 @@ static void _event( iOSwitch inst, iONode nodeC ) {
 
         if( isSet ) {
           __polariseFrog(inst, 0, StrOp.equals(wSwitch.straight, strState), StrOp.equals(wSwitch.turnout, strState));
-          __polariseFrog(inst, 0, StrOp.equals(wSwitch.left, strState), StrOp.equals(wSwitch.right, strState));
+          __polariseFrog(inst, 1, StrOp.equals(wSwitch.left, strState), StrOp.equals(wSwitch.right, strState));
         }
       }
 
