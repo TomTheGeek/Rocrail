@@ -154,6 +154,8 @@ void SwitchDialog::initLabels() {
   m_Notebook->SetPageText( 2, wxGetApp().getMsg( "position" ) );
   m_Notebook->SetPageText( 3, wxGetApp().getMsg( "interface" ) );
   m_Notebook->SetPageText( 4, wxGetApp().getMsg( "wiring" ) );
+  m_Notebook->SetPageText( 5, wxGetApp().getMsg( "control" ) );
+  m_Notebook->SetPageText( 6, wxGetApp().getMsg( "frog" ) );
 
   // Index
   initList(m_List2, this, true, true, false, true);
@@ -323,6 +325,27 @@ void SwitchDialog::initLabels() {
   m_labCtrlIntervalSec->SetLabel( wxGetApp().getMsg( "seconds" ) );
   m_labCtrlDelaySec->SetLabel( wxGetApp().getMsg( "seconds" ) );
   m_labCtrlRoutes->SetLabel( wxGetApp().getMsg( "routestolock" ) );
+
+
+  // Frog
+  m_labBusPol->SetLabel( wxGetApp().getMsg( "bus" ) );
+  m_Frog1Box->SetLabel( wxGetApp().getMsg( "frog" ) + wxT(" 1") );
+  m_labAddr0Pol1->SetLabel( wxGetApp().getMsg( "address" ) );
+  m_labAddr0Pol2->SetLabel( wxGetApp().getMsg( "address" ) );
+  m_labPort0Pol1->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labPort0Pol2->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_Gate0Pol1->SetLabel( wxGetApp().getMsg( "gate" ) );
+  m_Gate0Pol2->SetLabel( wxGetApp().getMsg( "gate" ) );
+
+  m_Frog2Box->SetLabel( wxGetApp().getMsg( "frog" ) + wxT(" 2") );
+  m_labAddr1Pol1->SetLabel( wxGetApp().getMsg( "address" ) );
+  m_labAddr1Pol2->SetLabel( wxGetApp().getMsg( "address" ) );
+  m_labPort1Pol1->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labPort1Pol2->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_Gate1Pol1->SetLabel( wxGetApp().getMsg( "gate" ) );
+  m_Gate1Pol2->SetLabel( wxGetApp().getMsg( "gate" ) );
+
+
 
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -607,7 +630,21 @@ void SwitchDialog::initValues() {
   m_CtrlDelay->SetValue( wAccessoryCtrl.getdelay(accctrl) );
   m_CtrlRoutes->SetValue(wxString(wAccessoryCtrl.getlockroutes(accctrl),wxConvUTF8)  );
   
+  // Frog
+  m_BusPol->SetValue( wxString::Format("%d", wSwitch.getbuspol(m_Props)) );
+  m_Addr0Pol1->SetValue(wSwitch.getaddr0pol1(m_Props));
+  m_Addr0Pol2->SetValue(wSwitch.getaddr0pol2(m_Props));
+  m_Port0Pol1->SetValue(wSwitch.getport0pol1(m_Props));
+  m_Port0Pol2->SetValue(wSwitch.getport0pol2(m_Props));
+  m_Gate0Pol1->SetSelection( wSwitch.getgate0pol1(m_Props) );
+  m_Gate0Pol2->SetSelection( wSwitch.getgate0pol2(m_Props) );
 
+  m_Addr1Pol1->SetValue(wSwitch.getaddr1pol1(m_Props));
+  m_Addr1Pol2->SetValue(wSwitch.getaddr1pol2(m_Props));
+  m_Port1Pol1->SetValue(wSwitch.getport1pol1(m_Props));
+  m_Port1Pol2->SetValue(wSwitch.getport1pol2(m_Props));
+  m_Gate1Pol1->SetSelection( wSwitch.getgate1pol1(m_Props) );
+  m_Gate1Pol2->SetSelection( wSwitch.getgate1pol2(m_Props) );
 }
 
 
@@ -815,6 +852,21 @@ bool SwitchDialog::evaluate() {
   wAccessoryCtrl.setdelay(accctrl, m_CtrlDelay->GetValue() );
   wAccessoryCtrl.setlockroutes(accctrl, m_CtrlRoutes->GetValue().mb_str(wxConvUTF8) );
   
+  // Frog
+  wSwitch.setbuspol( m_Props, atoi( m_BusPol->GetValue().mb_str(wxConvUTF8) ) );
+  wSwitch.setaddr0pol1( m_Props, m_Addr0Pol1->GetValue() );
+  wSwitch.setport0pol1( m_Props, m_Port0Pol1->GetValue() );
+  wSwitch.setgate0pol1( m_Props, m_Gate0Pol1->GetSelection() );
+  wSwitch.setaddr0pol2( m_Props, m_Addr0Pol2->GetValue() );
+  wSwitch.setport0pol2( m_Props, m_Port0Pol2->GetValue() );
+  wSwitch.setgate0pol2( m_Props, m_Gate0Pol2->GetSelection() );
+  wSwitch.setaddr1pol1( m_Props, m_Addr1Pol1->GetValue() );
+  wSwitch.setport1pol1( m_Props, m_Port1Pol1->GetValue() );
+  wSwitch.setgate1pol1( m_Props, m_Gate1Pol1->GetSelection() );
+  wSwitch.setaddr1pol2( m_Props, m_Addr1Pol2->GetValue() );
+  wSwitch.setport1pol2( m_Props, m_Port1Pol2->GetValue() );
+  wSwitch.setgate1pol2( m_Props, m_Gate1Pol2->GetSelection() );
+
   return true;
 }
 

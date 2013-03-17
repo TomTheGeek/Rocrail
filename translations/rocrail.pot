@@ -6275,3 +6275,9 @@ msgstr ""
 msgid "Exit signal"
 msgstr ""
 
+#. 
+# id="frog"
+#, c-format
+msgid "Frog"
+msgstr ""
+

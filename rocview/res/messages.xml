@@ -20476,4 +20476,7 @@
     <nl txt="Uitgang signaal"/>
     <sv txt="Utsignal"/>
   </Msg>
+  <Msg id="frog">
+    <en txt="Frog"/>
+  </Msg>
 </Messages>
