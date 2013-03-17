@@ -333,13 +333,13 @@ void SwitchDialog::initLabels() {
   m_labRelayFrog1->SetLabel( wxGetApp().getMsg( "relay" ) );
   m_labAddressFrog1->SetLabel( wxGetApp().getMsg( "address" ) );
   m_labPortFrog1->SetLabel( wxGetApp().getMsg( "port" ) );
-  m_labGateFrog1->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labGateFrog1->SetLabel( wxGetApp().getMsg( "gate" ) );
 
   m_Frog2Box->SetLabel( wxGetApp().getMsg( "frog" ) + wxT(" 2") );
   m_labRelayFrog2->SetLabel( wxGetApp().getMsg( "relay" ) );
   m_labAddressFrog2->SetLabel( wxGetApp().getMsg( "address" ) );
   m_labPortFrog2->SetLabel( wxGetApp().getMsg( "port" ) );
-  m_labGateFrog2->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labGateFrog2->SetLabel( wxGetApp().getMsg( "gate" ) );
 
 
 
