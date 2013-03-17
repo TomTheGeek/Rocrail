@@ -810,7 +810,10 @@ static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean rel
   if( addrpol1 > 0 || portpol1 > 0 ) {
     iONode cmd = NodeOp.inst(  wOutput.name(), NULL, ELEMENT_NODE );
     wOutput.setiid( cmd, wSwitch.getiid( data->props ) );
-    wOutput.setbus( cmd, wSwitch.getbuspol(data->props));
+    if( wSwitch.getbuspol(data->props) > 0 )
+      wOutput.setbus( cmd, wSwitch.getbuspol(data->props));
+    else
+      wOutput.setbus( cmd, wSwitch.getbus(data->props));
     wOutput.setaddr( cmd, addrpol1);
     wOutput.setport( cmd, portpol1);
     wOutput.setgate( cmd, gatepol1);
