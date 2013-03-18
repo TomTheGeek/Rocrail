@@ -627,7 +627,7 @@ void SwitchDialog::initValues() {
   m_CtrlRoutes->SetValue(wxString(wAccessoryCtrl.getlockroutes(accctrl),wxConvUTF8)  );
   
   // Frog
-  m_BusPol->SetValue( wxString::Format("%d", wSwitch.getbuspol(m_Props)) );
+  m_BusPol->SetValue( wxString::Format(wxT("%d"), wSwitch.getbuspol(m_Props)) );
   m_Addr0Pol1->SetValue(wSwitch.getaddr0pol1(m_Props));
   m_Addr0Pol2->SetValue(wSwitch.getaddr0pol2(m_Props));
   m_Port0Pol1->SetValue(wSwitch.getport0pol1(m_Props));
