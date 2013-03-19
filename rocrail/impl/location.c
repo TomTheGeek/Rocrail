@@ -260,7 +260,7 @@ static void _modify( struct OLocation* inst ,iONode mod ) {
   iOLocationData data = Data(inst);
   data->minocc = wLocation.getminocc(mod);
   data->fifo   = wLocation.isfifo(mod);
-  NodeOp.mergeNode( data->props, mod, True, True, True );
+  NodeOp.mergeNode( data->props, mod, True, True, False );
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
       "modify location %s, minocc=%d fifo=%d", wLocation.getid(data->props), data->minocc, data->fifo );
 }
