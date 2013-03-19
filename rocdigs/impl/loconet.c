@@ -588,6 +588,8 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
   else
     locoaddr=msg[3]*128+msg[4];
 
+  locoaddr &= 0x3FFF; /* Filter only the 14 bit address */
+
   switch (type) {
   case OPC_MULTI_SENSE_POWER:
     __powerMultiSenseMessage(loconet, msg);
