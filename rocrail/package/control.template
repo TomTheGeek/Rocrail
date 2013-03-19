@@ -1,10 +1,10 @@
 Package: rocrail
-Version: 2.0.0
+Version: <BZR>
 Section: other
 Priority: optional
-Architecture: amd64
+Architecture: <ARCH>
 Depends: libwxgtk2.8-0
-Installed-Size: 1000
+Installed-Size: 34000
 Maintainer: Rob Versluis <support@rocrail.net>
 Description: Rocrail - Model Railroad Control System.    
 

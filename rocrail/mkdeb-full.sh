@@ -88,6 +88,11 @@ if [ ! $4 ] || [ "$4" = "auto" ]; then
   fi
 fi
 
+sed s/\<BZR\>/$BAZAARREV/ < ../rocrail/package/control.template > ../rocrail/package/control.tmp
+sed s/\<ARCH\>/$ARCH/ < ../rocrail/package/control.tmp > ../rocrail/package/control
+rm ../rocrail/package/control.tmp
+
+
 # Check and/or set distribution
 
 echo "Setting distribution..."
@@ -187,7 +192,7 @@ echo ""
 
 echo "Copying objects and libraries..."
 
-cp ../rocrail/package/control-$ARCH debian/DEBIAN/control
+cp ../rocrail/package/control debian/DEBIAN/control
 
 cp ../unxbin/rocrail debian/usr/libexec/rocrail
 cp ../unxbin/rocview debian/usr/libexec/rocrail

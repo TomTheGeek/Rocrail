@@ -26,6 +26,9 @@ else
   echo ""
 fi
 
+sed s/\<BZR\>/$BAZAARREV/ < ../rocrail/package/control.template > ../rocrail/package/control.tmp
+sed s/\<ARCH\>/$ARCH/ < ../rocrail/package/control.tmp > ../rocrail/package/control
+rm ../rocrail/package/control.tmp
 
 
 if [ ! -e ../package ] ; then
@@ -44,7 +47,7 @@ mkdir -p debian/usr/share/applications
 mkdir -p debian/usr/share/desktop-directories
 mkdir -p debian/etc/init.d
 
-cp ../rocrail/package/control-$ARCH debian/DEBIAN/control
+cp ../rocrail/package/control debian/DEBIAN/control
 
 cp ../unxbin/rocrail debian/opt/rocrail
 cp ../unxbin/rocview debian/opt/rocrail
