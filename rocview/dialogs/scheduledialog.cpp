@@ -517,6 +517,7 @@ void ScheduleDialog::initSchedule() {
 
   if( m_SelectedRow != -1 ) {
     m_Entries->SelectRow(m_SelectedRow);
+    initEntry(m_SelectedRow);
   }
   else {
     m_RemoveDestination->Enable( false );
