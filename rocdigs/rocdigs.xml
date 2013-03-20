@@ -91,7 +91,6 @@
       <var name="state" vt="p50state"/>
       <var name="iid" vt="const char*"/>
       <var name="readfb" vt="Boolean"/>
-      <var name="tok" vt="Boolean"/>
       <var name="run" vt="Boolean"/>
       <var name="serialOK" vt="Boolean"/>
       <var name="initOK" vt="Boolean"/>
