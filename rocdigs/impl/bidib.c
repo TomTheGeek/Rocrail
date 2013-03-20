@@ -608,6 +608,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
             wSwitch.getbus( node ), addr, aspect );
         data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 3, bidibnode->seq++);
       }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+            "extended DCC accessory commands are not available for protocol [%s]", wSignal.getprot( node ));
+      }
     }
   }
 
