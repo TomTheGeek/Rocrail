@@ -254,6 +254,11 @@ void SignalDialog::initLabels() {
   m_PortType->SetString( 5, wxGetApp().getMsg( "analog" ) );
   m_PortType->SetString( 6, wxGetApp().getMsg( "macro" ) );
 
+  m_Prot->Clear();
+  m_Prot->Append(_T("Default"));
+  m_Prot->Append(_T("Motorola"));
+  m_Prot->Append(_T("NMRA-DCC"));
+
 
   // propeties
   m_Type->SetLabel( wxGetApp().getMsg( "signal_type" ) );
@@ -383,10 +388,12 @@ void SignalDialog::initValues() {
   m_Gate3->SetSelection( wSignal.getgate3(m_Props) );
   m_Gate4->SetSelection( wSignal.getgate4(m_Props) );
 
-  if( StrOp.equals( wSignal.prot_M, wSignal.getprot( m_Props ) ) )
+  if( StrOp.equals( wSignal.prot_DEF, wSignal.getprot( m_Props ) ) )
     m_Prot->SetSelection( 0 );
-  else if( StrOp.equals( wSignal.prot_N, wSignal.getprot( m_Props ) ) )
+  else if( StrOp.equals( wSignal.prot_M, wSignal.getprot( m_Props ) ) )
     m_Prot->SetSelection( 1 );
+  else if( StrOp.equals( wSignal.prot_N, wSignal.getprot( m_Props ) ) )
+    m_Prot->SetSelection( 2 );
 
   m_CmdTime->SetValue( wSignal.getcmdtime(m_Props) );
 
@@ -507,8 +514,10 @@ bool SignalDialog::evaluate() {
   wSignal.setgate4( m_Props, m_Gate4->GetSelection() );
 
   if( m_Prot->GetSelection() == 0 )
-    wSignal.setprot( m_Props, wSignal.prot_M );
+    wSignal.setprot( m_Props, wSignal.prot_DEF );
   else if( m_Prot->GetSelection() == 1 )
+    wSignal.setprot( m_Props, wSignal.prot_M );
+  else if( m_Prot->GetSelection() == 2 )
     wSignal.setprot( m_Props, wSignal.prot_N );
 
   int type = m_Type->GetSelection();
