@@ -609,8 +609,12 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 3, bidibnode->seq++);
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-            "extended DCC accessory commands are not available for protocol [%s]", wSignal.getprot( node ));
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "signal %d:%d aspect %d",
+            wSignal.getbus( node ), wSignal.getaddr( node ), aspect );
+
+        msgdata[0] = addr-1; // Null offset.
+        msgdata[1] = aspect;
+        data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_SET, msgdata, 2, bidibnode->seq++);
       }
     }
   }
@@ -689,26 +693,6 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     }
     else {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "accessory node %s is unknown (%s)", uidKey, wOutput.getid(node) );
-    }
-  }
-
-  /* Signal command. */
-  else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {
-    byte cmd[5];
-    int aspect = wSignal.getaspect(node);
-    int addr   = wSignal.getaddr(node);
-    StrOp.fmtb( uidKey, "0x%08X", wSignal.getbus(node) );
-    bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
-    if( bidibnode != NULL ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "signal %d:%d aspect %d",
-          wSignal.getbus( node ), wSignal.getaddr( node ), aspect );
-
-      msgdata[0] = addr-1; // Null offset.
-      msgdata[1] = aspect;
-      data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_SET, msgdata, 2, bidibnode->seq++);
-    }
-    else {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "accessory node %s is unknown (%s)", uidKey, wSignal.getid(node) );
     }
   }
 
