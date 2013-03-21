@@ -3309,9 +3309,12 @@ static void _event( iOModel inst, iONode nodeC ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "IID does not match" );
 
         NodeOp.base.del(nodeC);
-        return;
       }
       sw = ListOp.next(o->switchList);
+    }
+
+    if( matched ) {
+      return;
     }
 
     /* Try a signal object... */
