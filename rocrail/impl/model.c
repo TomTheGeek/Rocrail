@@ -3149,6 +3149,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       wSwitch.setport1( nodeC, 0 );
       wSwitch.setstate( nodeC, val?"straight":"turnout" );
       wSwitch.setgatevalue(nodeC, val);
+      wSwitch.setaccessory(nodeC, True);
     }
 
   }
@@ -3233,7 +3234,8 @@ static void _event( iOModel inst, iONode nodeC ) {
     Boolean matched = False;
     obj sw = NULL;
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Switch event: %d:%d:%d", bus, addr, port);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "Switch %sevent: %d:%d:%d %d", wSwitch.isaccessory(nodeC)?"accessory ":"", bus, addr, port, type);
 
     if( digint != NULL)
       defiid = wDigInt.getiid( digint );
@@ -3262,6 +3264,11 @@ static void _event( iOModel inst, iONode nodeC ) {
       matchaddr1 = wSwitch.getaddr1(props);
       matchport1 = wSwitch.getport1(props);
       matchtype = wSwitch.getporttype(props);
+
+      if( wSwitch.isaccessory(nodeC) && wSwitch.isaccessory(props) ) {
+        /* accessory match; disregard port type */
+        matchtype = type;
+      }
 
       if( matchaddr1 > 0 && matchport1 == 0 && addr > 0 && port == 0 ) {
         /* flat */
