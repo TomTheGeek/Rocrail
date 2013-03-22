@@ -3315,7 +3315,6 @@ static void _event( iOModel inst, iONode nodeC ) {
           flat && wSwitch.getbus(props) == bus && matchaddr1+1 == addr && matchtype == type ||
           flat && wSwitch.getbus(props) == bus && matchaddr2+1 == addr && matchtype == type )
       {
-        matched = True;
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
             "matching sw=%s iid=%s (iid=%s defiid=%s)",
             sw->id(sw), wSwitch.getiid(props)!=NULL?wSwitch.getiid(props):"?", iid, defiid );
@@ -3330,17 +3329,18 @@ static void _event( iOModel inst, iONode nodeC ) {
             else
               wSwitch.setstate(clone, wSwitch.straight);
           }
+          matched = True;
           sw->event( sw, clone );
         }
         else
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "IID does not match" );
 
-        NodeOp.base.del(nodeC);
       }
       sw = ListOp.next(o->switchList);
     }
 
     if( matched ) {
+      NodeOp.base.del(nodeC);
       return;
     }
 
