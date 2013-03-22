@@ -6190,7 +6190,7 @@
                                             <property name="permission">none</property>
                                             <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxEXPAND</property>
+                                                <property name="flag"></property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxFlexGridSizer" expanded="0">
                                                     <property name="cols">6</property>
@@ -6718,7 +6718,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">2</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -7067,7 +7067,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -7416,7 +7416,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -7765,7 +7765,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -8114,7 +8114,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -8463,7 +8463,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -8812,7 +8812,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -9390,7 +9390,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxEXPAND</property>
+                                                <property name="flag"></property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxFlexGridSizer" expanded="1">
                                                     <property name="cols">6</property>
@@ -9918,7 +9918,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -10267,7 +10267,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -10616,7 +10616,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -10965,7 +10965,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -11314,7 +11314,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -11663,7 +11663,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -12012,7 +12012,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -12361,7 +12361,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>

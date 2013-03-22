@@ -1400,6 +1400,8 @@ static Boolean _modify( iOModPlan inst, iONode item ) {
       module = wModPlan.nextmodule(data->modplan, module);
     };
   }
+
+  return True;
 }
 
 

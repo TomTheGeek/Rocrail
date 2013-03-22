@@ -3235,7 +3235,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     obj sw = NULL;
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-        "Switch %sevent: %d:%d:%d %d", wSwitch.isaccessory(nodeC)?"accessory ":"", bus, addr, port, type);
+        "Switch %sevent: %d:%d:%d type=%d", wSwitch.isaccessory(nodeC)?"accessory ":"", bus, addr, port, type);
 
     if( digint != NULL)
       defiid = wDigInt.getiid( digint );
