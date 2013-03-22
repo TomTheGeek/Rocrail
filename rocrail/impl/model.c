@@ -3220,6 +3220,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
     int type = wSwitch.getporttype( nodeC );
+    Boolean invertstate = False;
     int matchaddr1;
     int matchport1;
     int matchtype;
@@ -3274,6 +3275,9 @@ static void _event( iOModel inst, iONode nodeC ) {
       if( matchaddr1 > 0 && matchport1 == 0 && addr > 0 && port == 0 ) {
         /* flat */
         flat = True;
+        if( matchaddr2 +1 == addr) {
+          invertstate = True;
+        }
       }
       else if( matchport1 == 0 && matchaddr1 > 0 ) {
         fada = matchaddr1;
@@ -3290,6 +3294,10 @@ static void _event( iOModel inst, iONode nodeC ) {
       matchport2 = wSwitch.getport2(props);
       if( matchaddr2 > 0 && matchport2 == 0 && addr > 0 && port == 0 ) {
         /* flat */
+        flat = True;
+        if( matchaddr2 +1 == addr) {
+          invertstate = True;
+        }
       }
       else if( matchport2 == 0 && matchaddr2 > 0 ) {
         fada = matchaddr2;
@@ -3312,10 +3320,18 @@ static void _event( iOModel inst, iONode nodeC ) {
             "matching sw=%s iid=%s (iid=%s defiid=%s)",
             sw->id(sw), wSwitch.getiid(props)!=NULL?wSwitch.getiid(props):"?", iid, defiid );
 
-        if( StrOp.len( wSwitch.getiid(props) ) > 0 && StrOp.equals(iid, wSwitch.getiid(props)) )
-          sw->event( sw, (iONode)NodeOp.base.clone(nodeC) );
-        else if( iid == NULL || StrOp.equals( iid, defiid ) || StrOp.len(iid) == 0 )
-          sw->event( sw, (iONode)NodeOp.base.clone(nodeC) );
+        if( StrOp.len( wSwitch.getiid(props) ) > 0 && StrOp.equals(iid, wSwitch.getiid(props)) ||
+            ( iid == NULL || StrOp.equals( iid, defiid ) || StrOp.len(iid) == 0 ) )
+        {
+          iONode clone = (iONode)NodeOp.base.clone(nodeC);
+          if( invertstate ) {
+            if( StrOp.equals(wSwitch.straight, wSwitch.getstate(clone)) )
+              wSwitch.setstate(clone, wSwitch.turnout);
+            else
+              wSwitch.setstate(clone, wSwitch.straight);
+          }
+          sw->event( sw, clone );
+        }
         else
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "IID does not match" );
 
