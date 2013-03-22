@@ -3320,7 +3320,8 @@ static void _event( iOModel inst, iONode nodeC ) {
             sw->id(sw), wSwitch.getiid(props)!=NULL?wSwitch.getiid(props):"?", iid, defiid );
 
         if( StrOp.len( wSwitch.getiid(props) ) > 0 && StrOp.equals(iid, wSwitch.getiid(props)) ||
-            ( iid == NULL || StrOp.equals( iid, defiid ) || StrOp.len(iid) == 0 ) )
+            ( ( StrOp.len( wSwitch.getiid(props) ) == 0 ) &&
+                (iid == NULL || StrOp.equals( iid, defiid ) || StrOp.len(iid) == 0 ) ) )
         {
           iONode clone = (iONode)NodeOp.base.clone(nodeC);
           if( invertstate ) {
