@@ -425,6 +425,8 @@ void SignalDialog::initValues() {
   m_AsSwitch->SetValue( wSignal.isasswitch( m_Props )?true:false );
   m_Accessory->SetValue( wSignal.isaccessory( m_Props )?true:false );
   m_PortType->Enable(!m_Accessory->IsChecked());
+  if(wSignal.isaccessory(m_Props))
+    wSignal.setporttype(m_Props, 0);
 
   if( wSignal.ispair( m_Props ) ) {
     m_Gate1->Enable(false);
@@ -1422,6 +1424,7 @@ void SignalDialog::OnListctrlindexSgColLeftClick( wxListEvent& event )
 
 void SignalDialog::onAccessory( wxCommandEvent& event )
 {
+  m_PortType->SetSelection(0);
   m_PortType->Enable(!m_Accessory->IsChecked());
 }
 

@@ -479,6 +479,8 @@ void SwitchDialog::initValues() {
   m_Gate->Enable(m_SingleGate->IsChecked());
 
   m_PortType->Enable(!m_Accessory->IsChecked());
+  if(wSwitch.isaccessory(m_Props))
+    wSwitch.setporttype(m_Props, 0);
 
   str = StrOp.fmt( "%d", wSwitch.getaddr2(m_Props) );
   m_Address2->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
@@ -1996,6 +1998,7 @@ void SwitchDialog::OnSwResetSwitchedClick( wxCommandEvent& event )
 
 void SwitchDialog::onAccessory( wxCommandEvent& event )
 {
+  m_PortType->SetSelection(0);
   m_PortType->Enable(!m_Accessory->IsChecked());
 }
 

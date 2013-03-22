@@ -309,6 +309,9 @@ void OutputDialog::initValues() {
   m_Gate->Enable(!m_AsSwitch->GetValue());
   m_PortType->Enable(!m_Accessory->IsChecked());
 
+  if(wOutput.isaccessory(m_Props))
+    wOutput.setporttype(m_Props, 0);
+
   m_PortType->SetSelection(wOutput.getporttype(m_Props));
 
 
@@ -928,6 +931,7 @@ void OutputDialog::OnListctrlindexCoColLeftClick( wxListEvent& event )
 
 void OutputDialog::onAccessory( wxCommandEvent& event )
 {
+  m_PortType->SetSelection(0);
   m_PortType->Enable(!m_Accessory->IsChecked());
 }
 
