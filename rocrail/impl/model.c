@@ -3257,6 +3257,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "iterating switch list %d", ListOp.size(o->switchList) );
     sw = ListOp.first(o->switchList);
     while( sw != NULL ) {
+      Boolean flat = False;
       iONode props = sw->properties(sw);
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "testing: %d:%d:%d", bus, wSwitch.getaddr1(props), wSwitch.getport1(props) );
@@ -3272,6 +3273,7 @@ static void _event( iOModel inst, iONode nodeC ) {
 
       if( matchaddr1 > 0 && matchport1 == 0 && addr > 0 && port == 0 ) {
         /* flat */
+        flat = True;
       }
       else if( matchport1 == 0 && matchaddr1 > 0 ) {
         fada = matchaddr1;
@@ -3301,7 +3303,9 @@ static void _event( iOModel inst, iONode nodeC ) {
       }
 
       if( wSwitch.getbus(props) == bus && matchaddr1 == addr && matchport1 == port && matchtype == type ||
-          wSwitch.getbus(props) == bus && matchaddr2 == addr && matchport2 == port && matchtype == type )
+          wSwitch.getbus(props) == bus && matchaddr2 == addr && matchport2 == port && matchtype == type ||
+          flat && wSwitch.getbus(props) == bus && matchaddr1+1 == addr && matchtype == type ||
+          flat && wSwitch.getbus(props) == bus && matchaddr2+1 == addr && matchtype == type )
       {
         matched = True;
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
