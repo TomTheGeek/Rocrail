@@ -1463,7 +1463,6 @@ void LocoIO::event( iONode event ) {
       TraceOp.trc( "locoio", TRCLEVEL_INFO, __LINE__, 9999, "reply matches the sended request");
       NodeOp.base.del(m_SendedCmd);
       m_SendedCmd = NULL;
-      ThreadOp.sleep(100);
       sendPacket();
     }
   }
