@@ -6542,7 +6542,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -6598,7 +6598,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -6658,7 +6658,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -6777,7 +6777,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -6834,7 +6834,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -6891,7 +6891,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -6947,7 +6947,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -7007,7 +7007,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -7126,7 +7126,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -7183,7 +7183,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -7240,7 +7240,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -7296,7 +7296,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -7356,7 +7356,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -7475,7 +7475,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -7532,7 +7532,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -7589,7 +7589,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -7645,7 +7645,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -7705,7 +7705,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -7824,7 +7824,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -7881,7 +7881,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -7938,7 +7938,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -7994,7 +7994,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -8054,7 +8054,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -8173,7 +8173,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -8230,7 +8230,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -8287,7 +8287,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -8343,7 +8343,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -8403,7 +8403,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -8522,7 +8522,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -8579,7 +8579,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -8636,7 +8636,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -8692,7 +8692,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -8752,7 +8752,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -8871,7 +8871,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -8928,7 +8928,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -8985,7 +8985,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -9041,7 +9041,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -9101,7 +9101,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -9161,7 +9161,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">5</property>
-                                                        <property name="flag"></property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
@@ -9220,7 +9220,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -9277,7 +9277,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -9742,7 +9742,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -9798,7 +9798,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -9858,7 +9858,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -9977,7 +9977,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -10034,7 +10034,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -10091,7 +10091,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -10147,7 +10147,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -10207,7 +10207,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -10326,7 +10326,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -10383,7 +10383,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -10440,7 +10440,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -10496,7 +10496,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -10556,7 +10556,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -10675,7 +10675,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -10732,7 +10732,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -10789,7 +10789,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -10845,7 +10845,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -10905,7 +10905,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -11024,7 +11024,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -11081,7 +11081,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -11138,7 +11138,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -11194,7 +11194,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -11254,7 +11254,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -11373,7 +11373,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -11430,7 +11430,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -11487,7 +11487,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -11543,7 +11543,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -11603,7 +11603,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -11722,7 +11722,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -11779,7 +11779,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -11836,7 +11836,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -11892,7 +11892,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -11952,7 +11952,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -12071,7 +12071,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -12128,7 +12128,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
@@ -12185,7 +12185,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxTOP|wxLEFT</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="bg"></property>
@@ -12241,7 +12241,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -12301,7 +12301,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxSpinCtrl" expanded="0">
                                                             <property name="bg"></property>
@@ -12420,7 +12420,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxCheckBox" expanded="0">
                                                             <property name="bg"></property>
@@ -12477,7 +12477,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxLEFT</property>
+                                                        <property name="flag">wxLEFT|wxALIGN_CENTER_VERTICAL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxButton" expanded="0">
                                                             <property name="bg"></property>
