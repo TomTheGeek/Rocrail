@@ -545,8 +545,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           msgdata[0] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? addr:addr-1;
           msgdata[1] = 1;
         }
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "accessory %d:%d set to %d",
-            wSwitch.getbus( node ), msgdata[0], msgdata[1] );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "accessory %d:%d set to %d (%s)",
+            wSwitch.getbus( node ), msgdata[0], msgdata[1], wSwitch.getcmd(node) );
         data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_SET, msgdata, 2, bidibnode->seq++);
       }
       else {

@@ -3275,7 +3275,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       if( matchaddr1 > 0 && matchport1 == 0 && addr > 0 && port == 0 ) {
         /* flat */
         flat = True;
-        if( matchaddr2 +1 == addr) {
+        if( matchaddr1 +1 == addr) {
           invertstate = True;
         }
       }
@@ -3325,6 +3325,7 @@ static void _event( iOModel inst, iONode nodeC ) {
         {
           iONode clone = (iONode)NodeOp.base.clone(nodeC);
           if( invertstate ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"inver state from %s", wSwitch.getstate(clone) );
             if( StrOp.equals(wSwitch.straight, wSwitch.getstate(clone)) )
               wSwitch.setstate(clone, wSwitch.turnout);
             else
