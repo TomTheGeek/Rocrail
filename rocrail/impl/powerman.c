@@ -154,6 +154,8 @@ static void __informClientOfShortcut(obj inst, iONode booster, Boolean cleared )
   if( blockids != NULL && StrOp.len( blockids ) > 0 ) {
     iOStrTok tok = StrTokOp.inst( blockids, ',' );
 
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing blocks [%s] of shortcut", blockids);
+
     /* iterate all blockid's */
     while( StrTokOp.hasMoreTokens(tok) ) {
       const char* blockid = StrTokOp.nextToken( tok );
@@ -172,6 +174,8 @@ static void __informClientOfShortcut(obj inst, iONode booster, Boolean cleared )
 
   if( modids != NULL && StrOp.len( modids ) > 0 ) {
     iOStrTok tok = StrTokOp.inst( modids, ',' );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing modules [%s] of shortcut", modids);
 
     /* iterate all modid's */
     while( StrTokOp.hasMoreTokens(tok) ) {
@@ -261,9 +265,10 @@ static void __stateEvent( obj inst, iONode event ) {
       wBooster.setvolt( booster, wBooster.getvolt(event) );
       wBooster.settemp( booster, wBooster.gettemp(event) );
 
-      TraceOp.trc(name, TRCLEVEL_DEBUG, __LINE__, 9999, "booster %s(%08X) power is %s, diagnostics: %dmA %dmV %dC",
+      TraceOp.trc(name, shortcut?TRCLEVEL_EXCEPTION:TRCLEVEL_DEBUG, __LINE__, 9999,
+          "booster %s(%08X) power is %s, diagnostics: %dmA %dmV %dC %s",
           wBooster.getid(booster), wBooster.getuid(booster), wState.ispower(event) ? "ON":"OFF",
-              wBooster.getload(booster), wBooster.getvolt(booster), wBooster.gettemp(booster) );
+              wBooster.getload(booster), wBooster.getvolt(booster), wBooster.gettemp(booster), shortcut?"SHORTCOUT":"" );
 
 
       if( shortcut != wBooster.isshortcut(booster) ) {
