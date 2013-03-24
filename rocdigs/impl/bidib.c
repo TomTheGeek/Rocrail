@@ -462,22 +462,27 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     }
 
 
-    if( bidibnode != NULL && StrOp.equals( cmd, wSysCmd.stop ) ) {
+    if( data->defaultmain != NULL && StrOp.equals( cmd, wSysCmd.stop ) ) {
+      bidibnode = data->defaultmain;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
-      iONode node = (iONode)MapOp.get( data->nodemap, uidKey );
-      data->subWrite((obj)inst, bidibnode->path, MSG_BOOST_OFF, NULL, 0, bidibnode->seq++);
+      msgdata[0] = BIDIB_CS_STATE_OFF;
+      data->subWrite((obj)inst, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode->seq++);
       data->power = False;
       __inform(inst);
     }
-    else if( bidibnode != NULL && StrOp.equals( cmd, wSysCmd.go ) ) {
+    else if( data->defaultmain != NULL && StrOp.equals( cmd, wSysCmd.go ) ) {
+      bidibnode = data->defaultmain;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
-      data->subWrite((obj)inst, bidibnode->path, MSG_BOOST_ON, NULL, 0, bidibnode->seq++);
+      msgdata[0] = BIDIB_CS_STATE_GO;
+      data->subWrite((obj)inst, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode->seq++);
       data->power = True;
       __inform(inst);
     }
-    else if( bidibnode != NULL && StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+    else if( data->defaultmain != NULL && StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      bidibnode = data->defaultmain;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
-      data->subWrite((obj)inst, bidibnode->path, MSG_BOOST_ON, NULL, 0, bidibnode->seq++);
+      msgdata[0] = BIDIB_CS_STATE_STOP;
+      data->subWrite((obj)inst, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode->seq++);
       data->power = False;
       __inform(inst);
     }
@@ -1050,6 +1055,13 @@ static void _halt( obj inst ,Boolean poweroff ) {
   iOBiDiBData data = Data(inst);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "halt BiDiB..." );
+
+  if( data->defaultmain != NULL && poweroff ) {
+    byte msgdata[4] = {BIDIB_CS_STATE_OFF};
+    data->subWrite((obj)inst, data->defaultmain->path, MSG_CS_SET_STATE, msgdata, 1, data->defaultmain->seq++);
+    data->power = False;
+  }
+  ThreadOp.sleep(250);
   data->run = False;
   ThreadOp.sleep(500);
   data->subDisconnect(inst);
