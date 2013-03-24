@@ -555,7 +555,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
         TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "ident matched: block=%s loc(MU)=%d ident=%s",
             data->id, locident, ident );
       }
-      else if (StrOp.len(ident) == 1 && ident[0] != '0') {
+      else if (StrOp.len(ident) > 0 && atoi(ident) > 0) {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Loc identifier does not match! block=%s locident=%s ident=%s",
             data->id, locident, ident );
         /* Power off? */
