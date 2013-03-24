@@ -1636,6 +1636,26 @@ static void __handleCSDriveAck(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
 }
 
 
+static const char* __csstate2str(int state) {
+  switch( state ) {
+  case BIDIB_CS_STATE_OFF:
+    return "track power is off";
+  case BIDIB_CS_STATE_STOP:
+    return "emergency break";
+  case BIDIB_CS_STATE_SOFTSTOP:
+    return "soft break";
+  case BIDIB_CS_STATE_GO:
+    return "track power is on";
+  case BIDIB_CS_STATE_PROG:
+    return "programming mode";
+  case BIDIB_CS_STATE_PROGBUSY:
+    return "programming pending";
+  case BIDIB_CS_STATE_BUSY:
+    return "busy";
+  }
+  return "";
+}
+
 static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
   iOBiDiBData data = Data(bidib);
   /*
@@ -1656,6 +1676,7 @@ static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
           Ausgabe-Fifos voll sind. (nur bei Abfrage oder beim Senden einer MSG_CS_DRIVE )
    */
 
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CS state=0x%02X [%s]", pdata[0], __csstate2str(pdata[0]) );
   data->power = (pdata[0] == BIDIB_CS_STATE_OFF) ? False:True;
   __reportState(bidib, 0, False);
 }
