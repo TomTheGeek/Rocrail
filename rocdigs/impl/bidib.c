@@ -1691,7 +1691,7 @@ static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
 }
 
 
-static const char* __boosterState2Str(int state, int* level) {
+static const char* __boosterState2Str(int state, int* level, Boolean* shortcut) {
   *level = TRCLEVEL_MONITOR;
   switch( state ) {
   case BIDIB_BST_STATE_OFF:
@@ -1699,6 +1699,7 @@ static const char* __boosterState2Str(int state, int* level) {
   case BIDIB_BST_STATE_OFF_SHORT:
   {
     *level = TRCLEVEL_EXCEPTION;
+    *shortcut = True;
     return "shortcut";
   }
   case BIDIB_BST_STATE_OFF_HOT:
@@ -1739,10 +1740,8 @@ static const char* __boosterState2Str(int state, int* level) {
 
 static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
   iOBiDiBData data = Data(bidib);
-  int uid = 0;
+  int level = TRCLEVEL_MONITOR;
   Boolean shortcut = False;
-  if( pdata[0] == BIDIB_BST_STATE_OFF_SHORT || pdata[0] == BIDIB_BST_STATE_OFF_HOT)
-    shortcut = True;
   /*
       Wert  Alias Bedeutung
       0x00  BIDIB_BST_STATE_OFF Booster ist abgeschaltet (allgemein, z.B. auf Grund Host-Befehl).
@@ -1759,16 +1758,13 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
       0x84  BIDIB_BST_STATE_ON_HERE Booster ist eingeschaltet (auf Grund lokalem Tastendruck).
   */
   if( bidibnode != NULL ) {
-    int level = TRCLEVEL_MONITOR;
-    uid = bidibnode->uid;
     bidibnode->stat = pdata[0];
-    TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:level, __LINE__, 9999,
-        "booster %08X state=0x%02X [%s]", uid, pdata[0], __boosterState2Str(pdata[0], &level) );
+    TraceOp.trc( name, level, __LINE__, 9999,
+        "booster %08X state=0x%02X [%s]", bidibnode->uid, pdata[0], __boosterState2Str(pdata[0], &level, &shortcut) );
   }
   else {
-    int level = TRCLEVEL_MONITOR;
-    TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:level, __LINE__, 9999,
-        "booster state=0x%02X [%s]", pdata[0], __boosterState2Str(pdata[0], &level) );
+    TraceOp.trc( name, level, __LINE__, 9999,
+        "booster state=0x%02X [%s]", pdata[0], __boosterState2Str(pdata[0], &level, &shortcut) );
   }
   data->power = (pdata[0] & 0x80) ? True:False;
   __reportState(bidib, bidibnode, shortcut);
