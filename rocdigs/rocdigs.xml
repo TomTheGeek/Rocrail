@@ -1261,6 +1261,7 @@
       <var name="volt" vt="int"/>
       <var name="temp" vt="int"/>
       <var name="stat" vt="int"/>
+      <var name="shortcut" vt="Boolean"/>
       <var name="fwup" vt="Boolean"/>
       <var name="conf_void" vt="int"/>
       <var name="conf_freeze" vt="int"/>

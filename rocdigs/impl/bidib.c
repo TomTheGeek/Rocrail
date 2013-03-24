@@ -1642,10 +1642,8 @@ static const char* __csstate2str(int state, int* level) {
   case BIDIB_CS_STATE_OFF:
     return "track power is off";
   case BIDIB_CS_STATE_STOP:
-  {
     *level = TRCLEVEL_WARNING;
     return "emergency break";
-  }
   case BIDIB_CS_STATE_SOFTSTOP:
     return "soft break";
   case BIDIB_CS_STATE_GO:
@@ -1655,10 +1653,8 @@ static const char* __csstate2str(int state, int* level) {
   case BIDIB_CS_STATE_PROGBUSY:
     return "programming pending";
   case BIDIB_CS_STATE_BUSY:
-  {
     *level = TRCLEVEL_WARNING;
     return "busy";
-  }
   }
   return "";
 }
@@ -1697,21 +1693,15 @@ static const char* __boosterState2Str(int state, int* level, Boolean* shortcut) 
   case BIDIB_BST_STATE_OFF:
     return "power off";
   case BIDIB_BST_STATE_OFF_SHORT:
-  {
     *level = TRCLEVEL_EXCEPTION;
     *shortcut = True;
     return "shortcut";
-  }
   case BIDIB_BST_STATE_OFF_HOT:
-  {
     *level = TRCLEVEL_EXCEPTION;
     return "over temperature";
-  }
   case BIDIB_BST_STATE_OFF_NOPOWER:
-  {
     *level = TRCLEVEL_WARNING;
     return "no power supply";
-  }
   case BIDIB_BST_STATE_OFF_GO_REQ:
     return "pending power on";
   case BIDIB_BST_STATE_OFF_HERE:
@@ -1719,17 +1709,14 @@ static const char* __boosterState2Str(int state, int* level, Boolean* shortcut) 
   case BIDIB_BST_STATE_OFF_NO_DCC:
     return "DCC missing";
   case BIDIB_BST_STATE_ON:
+    *shortcut = False;
     return "power on";
   case BIDIB_BST_STATE_ON_LIMIT:
-  {
     *level = TRCLEVEL_WARNING;
     return "reducing current!";
-  }
   case BIDIB_BST_STATE_ON_HOT:
-  {
     *level = TRCLEVEL_WARNING;
     return "running hot!";
-  }
   case BIDIB_BST_STATE_ON_STOP_REQ:
     return "pending power off";
   case BIDIB_BST_STATE_ON_HERE:
@@ -1758,9 +1745,11 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
       0x84  BIDIB_BST_STATE_ON_HERE Booster ist eingeschaltet (auf Grund lokalem Tastendruck).
   */
   if( bidibnode != NULL ) {
+    const char* msg = __boosterState2Str(pdata[0], &level, &bidibnode->shortcut);
     bidibnode->stat = pdata[0];
     TraceOp.trc( name, level, __LINE__, 9999,
-        "booster %08X state=0x%02X [%s]", bidibnode->uid, pdata[0], __boosterState2Str(pdata[0], &level, &shortcut) );
+        "booster %08X state=0x%02X [%s] %s", bidibnode->uid, pdata[0], msg, bidibnode->shortcut?"(shortcut)":"" );
+    shortcut = bidibnode->shortcut;
   }
   else {
     TraceOp.trc( name, level, __LINE__, 9999,
