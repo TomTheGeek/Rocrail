@@ -1636,12 +1636,16 @@ static void __handleCSDriveAck(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
 }
 
 
-static const char* __csstate2str(int state) {
+static const char* __csstate2str(int state, int* level) {
+  *level = TRCLEVEL_MONITOR;
   switch( state ) {
   case BIDIB_CS_STATE_OFF:
     return "track power is off";
   case BIDIB_CS_STATE_STOP:
+  {
+    *level = TRCLEVEL_WARNING;
     return "emergency break";
+  }
   case BIDIB_CS_STATE_SOFTSTOP:
     return "soft break";
   case BIDIB_CS_STATE_GO:
@@ -1651,13 +1655,18 @@ static const char* __csstate2str(int state) {
   case BIDIB_CS_STATE_PROGBUSY:
     return "programming pending";
   case BIDIB_CS_STATE_BUSY:
+  {
+    *level = TRCLEVEL_WARNING;
     return "busy";
+  }
   }
   return "";
 }
 
 static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
   iOBiDiBData data = Data(bidib);
+  int level = TRCLEVEL_MONITOR;
+
   /*
     0x00  BIDIB_CS_STATE_OFF  Die Gleisausgabe wird abgeschaltet.
     0x01  BIDIB_CS_STATE_STOP Alle Loks werden mittels Nothalt angehalten, jedoch Weichen können nach wie vor geschaltet werden.
@@ -1676,22 +1685,32 @@ static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
           Ausgabe-Fifos voll sind. (nur bei Abfrage oder beim Senden einer MSG_CS_DRIVE )
    */
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CS state=0x%02X [%s]", pdata[0], __csstate2str(pdata[0]) );
+  TraceOp.trc( name, level, __LINE__, 9999, "CS state=0x%02X [%s]", pdata[0], __csstate2str(pdata[0], &level) );
   data->power = (pdata[0] == BIDIB_CS_STATE_OFF) ? False:True;
   __reportState(bidib, 0, False);
 }
 
 
-static const char* __boosterState2Str(int state) {
+static const char* __boosterState2Str(int state, int* level) {
+  *level = TRCLEVEL_MONITOR;
   switch( state ) {
   case BIDIB_BST_STATE_OFF:
     return "power off";
   case BIDIB_BST_STATE_OFF_SHORT:
+  {
+    *level = TRCLEVEL_EXCEPTION;
     return "shortcut";
+  }
   case BIDIB_BST_STATE_OFF_HOT:
+  {
+    *level = TRCLEVEL_EXCEPTION;
     return "over temperature";
+  }
   case BIDIB_BST_STATE_OFF_NOPOWER:
+  {
+    *level = TRCLEVEL_WARNING;
     return "no power supply";
+  }
   case BIDIB_BST_STATE_OFF_GO_REQ:
     return "pending power on";
   case BIDIB_BST_STATE_OFF_HERE:
@@ -1701,9 +1720,15 @@ static const char* __boosterState2Str(int state) {
   case BIDIB_BST_STATE_ON:
     return "power on";
   case BIDIB_BST_STATE_ON_LIMIT:
+  {
+    *level = TRCLEVEL_WARNING;
     return "reducing current!";
+  }
   case BIDIB_BST_STATE_ON_HOT:
+  {
+    *level = TRCLEVEL_WARNING;
     return "running hot!";
+  }
   case BIDIB_BST_STATE_ON_STOP_REQ:
     return "pending power off";
   case BIDIB_BST_STATE_ON_HERE:
@@ -1734,14 +1759,16 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
       0x84  BIDIB_BST_STATE_ON_HERE Booster ist eingeschaltet (auf Grund lokalem Tastendruck).
   */
   if( bidibnode != NULL ) {
+    int level = TRCLEVEL_MONITOR;
     uid = bidibnode->uid;
     bidibnode->stat = pdata[0];
-    TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:TRCLEVEL_MONITOR, __LINE__, 9999,
-        "booster %08X state=0x%02X [%s]", uid, pdata[0], __boosterState2Str(pdata[0]) );
+    TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:level, __LINE__, 9999,
+        "booster %08X state=0x%02X [%s]", uid, pdata[0], __boosterState2Str(pdata[0], &level) );
   }
   else {
-    TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:TRCLEVEL_MONITOR, __LINE__, 9999,
-        "booster state=0x%02X [%s]", pdata[0], __boosterState2Str(pdata[0]) );
+    int level = TRCLEVEL_MONITOR;
+    TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:level, __LINE__, 9999,
+        "booster state=0x%02X [%s]", pdata[0], __boosterState2Str(pdata[0], &level) );
   }
   data->power = (pdata[0] & 0x80) ? True:False;
   __reportState(bidib, bidibnode, shortcut);
