@@ -2350,7 +2350,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
    */
   case MSG_BM_OCC:
   { // len = 4
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,"BM port %d occupied", pdata[0]);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"BM port %d occupied", pdata[0]);
     if(!bidibnode->occ[pdata[0]]) {
       bidibnode->occ[pdata[0]] = True;
       __handleSensor(bidib, bidibnode->uid, pdata[0], True, 0, -1, bidibnode->bmload[pdata[0]]);
