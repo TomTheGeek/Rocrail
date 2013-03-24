@@ -1682,6 +1682,36 @@ static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
 }
 
 
+static const char* __boosterState2Str(int state) {
+  switch( state ) {
+  case BIDIB_BST_STATE_OFF:
+    return "power off";
+  case BIDIB_BST_STATE_OFF_SHORT:
+    return "shortcut";
+  case BIDIB_BST_STATE_OFF_HOT:
+    return "over temperature";
+  case BIDIB_BST_STATE_OFF_NOPOWER:
+    return "no power supply";
+  case BIDIB_BST_STATE_OFF_GO_REQ:
+    return "pending power on";
+  case BIDIB_BST_STATE_OFF_HERE:
+    return "manual power off";
+  case BIDIB_BST_STATE_OFF_NO_DCC:
+    return "DCC missing";
+  case BIDIB_BST_STATE_ON:
+    return "power on";
+  case BIDIB_BST_STATE_ON_LIMIT:
+    return "reducing current!";
+  case BIDIB_BST_STATE_ON_HOT:
+    return "running hot!";
+  case BIDIB_BST_STATE_ON_STOP_REQ:
+    return "pending power off";
+  case BIDIB_BST_STATE_ON_HERE:
+    return "manual power on";
+  }
+  return "";
+}
+
 static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
   iOBiDiBData data = Data(bidib);
   int uid = 0;
@@ -1706,10 +1736,12 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
   if( bidibnode != NULL ) {
     uid = bidibnode->uid;
     bidibnode->stat = pdata[0];
-    TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:TRCLEVEL_MONITOR, __LINE__, 9999, "booster %08X state=0x%02X", uid, pdata[0] );
+    TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:TRCLEVEL_MONITOR, __LINE__, 9999,
+        "booster %08X state=0x%02X [%s]", uid, pdata[0], __boosterState2Str(pdata[0]) );
   }
   else {
-    TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:TRCLEVEL_MONITOR, __LINE__, 9999, "booster state=0x%02X", pdata[0] );
+    TraceOp.trc( name, shortcut?TRCLEVEL_EXCEPTION:TRCLEVEL_MONITOR, __LINE__, 9999,
+        "booster state=0x%02X [%s]", pdata[0], __boosterState2Str(pdata[0]) );
   }
   data->power = (pdata[0] & 0x80) ? True:False;
   __reportState(bidib, bidibnode, shortcut);
