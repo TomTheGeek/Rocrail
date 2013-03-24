@@ -3252,8 +3252,8 @@ static void _event( iOModel inst, iONode nodeC ) {
     }
 
 
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "trying to match %s event: %d:%d:%d",
-        wAccessory.isaccevent(nodeC)?"accessory":"switch", bus, addr, port );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying to match %s event: %d:%d:%d type=%d",
+        wAccessory.isaccevent(nodeC)?"accessory":"switch", bus, addr, port, type );
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "iterating switch list %d", ListOp.size(o->switchList) );
     sw = ListOp.first(o->switchList);
@@ -3261,7 +3261,8 @@ static void _event( iOModel inst, iONode nodeC ) {
       Boolean flat = False;
       iONode props = sw->properties(sw);
 
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "testing: %d:%d:%d", bus, wSwitch.getaddr1(props), wSwitch.getport1(props) );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "testing: %d:%d:%d type=%d",
+          wSwitch.getbus(props), wSwitch.getaddr1(props), wSwitch.getport1(props), wSwitch.getporttype(props) );
 
       matchaddr1 = wSwitch.getaddr1(props);
       matchport1 = wSwitch.getport1(props);
