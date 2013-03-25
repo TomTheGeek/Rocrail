@@ -87,7 +87,9 @@ BEGIN_EVENT_TABLE( SwitchDialog, wxDialog )
 
     EVT_CHECKBOX( ID_CHECKBOX_SW_DELAY, SwitchDialog::OnCheckboxSwDelayClick )
 
-    EVT_CHECKBOX( wxID_ANY, SwitchDialog::onAccessory )
+    EVT_CHECKBOX( ID_ACCESSORY, SwitchDialog::onAccessory )
+
+    EVT_CHECKBOX( ID_FROG_ACCESSORY, SwitchDialog::onFrogAccessory )
 
     EVT_BUTTON( wxID_CANCEL, SwitchDialog::OnCancelClick )
 
@@ -1370,7 +1372,7 @@ void SwitchDialog::CreateControls()
     m_Delay = new wxTextCtrl( m_InterfacePanel, ID_TEXTCTRL_SW_DELAY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer61->Add(m_Delay, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_Accessory = new wxCheckBox( m_InterfacePanel, wxID_ANY, _("Accessory"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Accessory = new wxCheckBox( m_InterfacePanel, ID_ACCESSORY, _("Accessory"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Accessory->SetValue(false);
     itemBoxSizer60->Add(m_Accessory, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
@@ -1750,7 +1752,7 @@ void SwitchDialog::CreateControls()
     m_Gate0Pol2->SetSelection(0);
     itemFlexGridSizer183->Add(m_Gate0Pol2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_FrogAccessory = new wxCheckBox( m_FrogPanel, wxID_ANY, _("Accessory"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_FrogAccessory = new wxCheckBox( m_FrogPanel, ID_FROG_ACCESSORY, _("Accessory"), wxDefaultPosition, wxDefaultSize, 0 );
     m_FrogAccessory->SetValue(false);
     itemBoxSizer164->Add(m_FrogAccessory, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
@@ -2037,5 +2039,16 @@ void SwitchDialog::onAccessory( wxCommandEvent& event )
 {
   m_PortType->SetSelection(0);
   m_PortType->Enable(!m_Accessory->IsChecked());
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_ANY
+ */
+
+void SwitchDialog::onFrogAccessory( wxCommandEvent& event )
+{
+  m_FrogPortType->SetSelection(0);
+  m_FrogPortType->Enable(!m_FrogAccessory->IsChecked());
 }
 

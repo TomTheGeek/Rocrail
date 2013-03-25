@@ -109,6 +109,7 @@ class wxSpinCtrl;
 #define ID_CHECKBOX_SW_INVERT2 10035
 #define ID_CHECKBOX_SW_DELAY 10236
 #define ID_TEXTCTRL_SW_DELAY 10275
+#define ID_ACCESSORY 10417
 #define ID_SW_PORT_TYPE 10414
 #define ID_PANEL_SW_WIRERING 10036
 #define wxID_STATIC_SW_FB1R 10037
@@ -123,6 +124,7 @@ class wxSpinCtrl;
 #define ID_SPINCTRL 10333
 #define ID_PANEL_SWITCH_CONTROL 10370
 #define ID_PANEL_SWITCH_FROG 10244
+#define ID_FROG_ACCESSORY 10049
 #define SYMBOL_SWITCHDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_SWITCHDIALOG_TITLE _("Turnouts")
 #define SYMBOL_SWITCHDIALOG_IDNAME ID_DIALOG_SW
@@ -201,8 +203,11 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SW_DELAY
     void OnCheckboxSwDelayClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_ANY
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_ACCESSORY
     void onAccessory( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_FROG_ACCESSORY
+    void onFrogAccessory( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
