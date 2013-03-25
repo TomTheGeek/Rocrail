@@ -538,18 +538,18 @@ void LocoIO::CreateControls()
     itemFlexGridSizer42->Add(m_labEasyAddress, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxGridSizer* itemGridSizer45 = new wxGridSizer(0, 4, 0, 0);
-    itemFlexGridSizer42->Add(itemGridSizer45, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-    wxStaticText* itemStaticText46 = new wxStaticText( m_EasyPanel, wxID_ANY, _("IN"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer45->Add(itemStaticText46, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer42->Add(itemGridSizer45, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5);
+    wxStaticText* itemStaticText46 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Input"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemGridSizer45->Add(itemStaticText46, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
-    wxStaticText* itemStaticText47 = new wxStaticText( m_EasyPanel, wxID_ANY, _("BK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer45->Add(itemStaticText47, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxStaticText* itemStaticText47 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Block"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemGridSizer45->Add(itemStaticText47, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
-    wxStaticText* itemStaticText48 = new wxStaticText( m_EasyPanel, wxID_ANY, _("SW"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer45->Add(itemStaticText48, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxStaticText* itemStaticText48 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Switch"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemGridSizer45->Add(itemStaticText48, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
-    wxStaticText* itemStaticText49 = new wxStaticText( m_EasyPanel, wxID_ANY, _("PU"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer45->Add(itemStaticText49, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxStaticText* itemStaticText49 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Pulse"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemGridSizer45->Add(itemStaticText49, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
     wxStaticText* itemStaticText50 = new wxStaticText( m_EasyPanel, wxID_ANY, _("C2"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer42->Add(itemStaticText50, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
@@ -567,7 +567,7 @@ void LocoIO::CreateControls()
     m_EasyType1Strings.Add(_(" "));
     m_EasyType1 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType1Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType1->SetSelection(0);
-    itemFlexGridSizer42->Add(m_EasyType1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer42->Add(m_EasyType1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact1 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact1->SetValue(false);
@@ -586,7 +586,7 @@ void LocoIO::CreateControls()
     m_EasyType2Strings.Add(_(" "));
     m_EasyType2 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType2Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType2->SetSelection(0);
-    itemFlexGridSizer42->Add(m_EasyType2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer42->Add(m_EasyType2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact2 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact2->SetValue(false);
@@ -605,7 +605,7 @@ void LocoIO::CreateControls()
     m_EasyType3Strings.Add(_(" "));
     m_EasyType3 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType3Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType3->SetSelection(0);
-    itemFlexGridSizer42->Add(m_EasyType3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer42->Add(m_EasyType3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact3 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact3->SetValue(false);
@@ -624,7 +624,7 @@ void LocoIO::CreateControls()
     m_EasyType4Strings.Add(_(" "));
     m_EasyType4 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType4Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType4->SetSelection(0);
-    itemFlexGridSizer42->Add(m_EasyType4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer42->Add(m_EasyType4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact4 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact4->SetValue(false);
@@ -643,7 +643,7 @@ void LocoIO::CreateControls()
     m_EasyType5Strings.Add(_(" "));
     m_EasyType5 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType5Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType5->SetSelection(0);
-    itemFlexGridSizer42->Add(m_EasyType5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer42->Add(m_EasyType5, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact5 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact5->SetValue(false);
@@ -662,7 +662,7 @@ void LocoIO::CreateControls()
     m_EasyType6Strings.Add(_(" "));
     m_EasyType6 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType6Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType6->SetSelection(0);
-    itemFlexGridSizer42->Add(m_EasyType6, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer42->Add(m_EasyType6, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact6 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact6->SetValue(false);
@@ -681,7 +681,7 @@ void LocoIO::CreateControls()
     m_EasyType7Strings.Add(_(" "));
     m_EasyType7 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType7Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType7->SetSelection(0);
-    itemFlexGridSizer42->Add(m_EasyType7, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer42->Add(m_EasyType7, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact7 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact7->SetValue(false);
@@ -700,7 +700,7 @@ void LocoIO::CreateControls()
     m_EasyType8Strings.Add(_(" "));
     m_EasyType8 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType8Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType8->SetSelection(0);
-    itemFlexGridSizer42->Add(m_EasyType8, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer42->Add(m_EasyType8, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact8 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact8->SetValue(false);
@@ -718,18 +718,18 @@ void LocoIO::CreateControls()
     itemFlexGridSizer84->Add(m_labEasyAddress2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxGridSizer* itemGridSizer87 = new wxGridSizer(0, 4, 0, 0);
-    itemFlexGridSizer84->Add(itemGridSizer87, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-    wxStaticText* itemStaticText88 = new wxStaticText( m_EasyPanel, wxID_ANY, _("IN"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer87->Add(itemStaticText88, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer84->Add(itemGridSizer87, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5);
+    wxStaticText* itemStaticText88 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Input"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemGridSizer87->Add(itemStaticText88, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
-    wxStaticText* itemStaticText89 = new wxStaticText( m_EasyPanel, wxID_ANY, _("BK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer87->Add(itemStaticText89, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxStaticText* itemStaticText89 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Block"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemGridSizer87->Add(itemStaticText89, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
-    wxStaticText* itemStaticText90 = new wxStaticText( m_EasyPanel, wxID_ANY, _("SW"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer87->Add(itemStaticText90, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxStaticText* itemStaticText90 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Switch"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemGridSizer87->Add(itemStaticText90, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
-    wxStaticText* itemStaticText91 = new wxStaticText( m_EasyPanel, wxID_ANY, _("PU"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer87->Add(itemStaticText91, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxStaticText* itemStaticText91 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Pulse"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemGridSizer87->Add(itemStaticText91, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
     wxStaticText* itemStaticText92 = new wxStaticText( m_EasyPanel, wxID_ANY, _("C2"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer84->Add(itemStaticText92, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
@@ -747,7 +747,7 @@ void LocoIO::CreateControls()
     m_EasyType9Strings.Add(_(" "));
     m_EasyType9 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType9Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType9->SetSelection(0);
-    itemFlexGridSizer84->Add(m_EasyType9, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer84->Add(m_EasyType9, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact9 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact9->SetValue(false);
@@ -766,7 +766,7 @@ void LocoIO::CreateControls()
     m_EasyType10Strings.Add(_(" "));
     m_EasyType10 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType10Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType10->SetSelection(0);
-    itemFlexGridSizer84->Add(m_EasyType10, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer84->Add(m_EasyType10, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact10 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact10->SetValue(false);
@@ -785,7 +785,7 @@ void LocoIO::CreateControls()
     m_EasyType11Strings.Add(_(" "));
     m_EasyType11 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType11Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType11->SetSelection(0);
-    itemFlexGridSizer84->Add(m_EasyType11, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer84->Add(m_EasyType11, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact11 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact11->SetValue(false);
@@ -804,7 +804,7 @@ void LocoIO::CreateControls()
     m_EasyType12Strings.Add(_(" "));
     m_EasyType12 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType12Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType12->SetSelection(0);
-    itemFlexGridSizer84->Add(m_EasyType12, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer84->Add(m_EasyType12, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact12 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact12->SetValue(false);
@@ -823,7 +823,7 @@ void LocoIO::CreateControls()
     m_EasyType13Strings.Add(_(" "));
     m_EasyType13 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType13Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType13->SetSelection(0);
-    itemFlexGridSizer84->Add(m_EasyType13, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer84->Add(m_EasyType13, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact13 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact13->SetValue(false);
@@ -842,7 +842,7 @@ void LocoIO::CreateControls()
     m_EasyType14Strings.Add(_(" "));
     m_EasyType14 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType14Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType14->SetSelection(0);
-    itemFlexGridSizer84->Add(m_EasyType14, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer84->Add(m_EasyType14, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact14 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact14->SetValue(false);
@@ -861,7 +861,7 @@ void LocoIO::CreateControls()
     m_EasyType15Strings.Add(_(" "));
     m_EasyType15 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType15Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType15->SetSelection(0);
-    itemFlexGridSizer84->Add(m_EasyType15, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer84->Add(m_EasyType15, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact15 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact15->SetValue(false);
@@ -880,7 +880,7 @@ void LocoIO::CreateControls()
     m_EasyType16Strings.Add(_(" "));
     m_EasyType16 = new wxRadioBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EasyType16Strings, 1, wxRA_SPECIFY_ROWS );
     m_EasyType16->SetSelection(0);
-    itemFlexGridSizer84->Add(m_EasyType16, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    itemFlexGridSizer84->Add(m_EasyType16, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 
     m_EasyContact16 = new wxCheckBox( m_EasyPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_EasyContact16->SetValue(false);
