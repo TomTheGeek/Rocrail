@@ -1338,6 +1338,8 @@
         <var name="addr1pol2" vt="int" defval="0" range="0-*" required="false" remark="decoder address of the polarisation"/>
         <var name="port1pol2" vt="int" defval="0" range="0-*" required="false" remark="port of decoder unit."/>
         <var name="gate1pol2" vt="int" defval="0" range="0-1" required="false" remark="gate of port."/>
+        <var name="frogaccessory" vt="bool" defval="true"/>
+        <var name="frogporttype" vt="int" defval="0" range="0-*" required="false" remark=""/>
 
         <var name="singlegate" vt="bool" defval="false"/>
         <var name="gatevalue" vt="int" defval="-1" range="0-1" required="false"/>

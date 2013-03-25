@@ -817,6 +817,8 @@ static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean rel
     wOutput.setaddr( cmd, addrpol1);
     wOutput.setport( cmd, portpol1);
     wOutput.setgate( cmd, gatepol1);
+    wOutput.setporttype( cmd, wSwitch.getfrogporttype(data->props));
+    wOutput.setaccessory( cmd, wSwitch.isfrogaccessory(data->props));
     wOutput.setcmd( cmd, relays1?wOutput.on:wOutput.off);
     ControlOp.cmd( control, cmd, &error );
   }
@@ -828,6 +830,8 @@ static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean rel
     wOutput.setaddr( cmd, addrpol2);
     wOutput.setport( cmd, portpol2);
     wOutput.setgate( cmd, gatepol2);
+    wOutput.setporttype( cmd, wSwitch.getfrogporttype(data->props));
+    wOutput.setaccessory( cmd, wSwitch.isfrogaccessory(data->props));
     wOutput.setcmd( cmd, relays2?wOutput.on:wOutput.off);
     ControlOp.cmd( control, cmd, &error );
   }
@@ -1476,13 +1480,13 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       }
 
       if( wSwitch.isfbusefield(data->props ) ) {
-        const char* strState = wSwitch.getstate( data->props);
-        Boolean isSet = __isSet((obj)inst, strState);
+        /*const char* strState = wSwitch.getstate( data->props);*/
+        Boolean isSet = __isSet((obj)inst, state);
         wSwitch.setset( nodeD, isSet );
 
         if( isSet ) {
-          __polariseFrog(inst, 0, StrOp.equals(wSwitch.straight, strState), StrOp.equals(wSwitch.turnout, strState));
-          __polariseFrog(inst, 1, StrOp.equals(wSwitch.left, strState), StrOp.equals(wSwitch.right, strState));
+          __polariseFrog(inst, 0, StrOp.equals(wSwitch.straight, state), StrOp.equals(wSwitch.turnout, state));
+          __polariseFrog(inst, 1, StrOp.equals(wSwitch.left, state), StrOp.equals(wSwitch.right, state));
         }
       }
 
