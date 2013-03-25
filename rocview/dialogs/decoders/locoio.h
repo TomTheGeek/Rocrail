@@ -48,6 +48,22 @@ class wxSpinCtrl;
 #define ID_LN_ADDRESSLIST 10007
 #define ID_QUEURY_ADDRESSES 10008
 #define ID_LOCOIO_REPORT 10013
+#define ID_EASYTEST1 10014
+#define ID_EASYTEST2 10015
+#define ID_EASYTEST3 10023
+#define ID_EASYTEST4 10024
+#define ID_EASYTEST5 10025
+#define ID_EASYTEST6 10026
+#define ID_EASYTEST7 10029
+#define ID_EASYTEST8 10030
+#define ID_EASYTEST9 10031
+#define ID_EASYTEST10 10032
+#define ID_EASYTEST11 10033
+#define ID_EASYTEST12 10034
+#define ID_EASYTEST13 10035
+#define ID_EASYTEST14 10036
+#define ID_EASYTEST15 10037
+#define ID_EASYTEST16 10038
 #define ID_EASYGETALL 10004
 #define ID_EASYSETALL 10005
 #define ID_BUTTON_EASY_SAVE 10009
@@ -83,6 +99,7 @@ class LocoIO: public wxDialog
     void sendPacket();
     void OnTimer(wxTimerEvent& event);
     void easyGetPort( int port, int* conf, int* val1, int* val2 );
+    void OnEasyTypeSelected();
 
     int m_iLowAddress;
     int m_iSubAddress;
@@ -94,6 +111,7 @@ class LocoIO: public wxDialog
     wxTimer* m_Timer;
     int m_TabAlign;
     int m_SV[256];
+    bool m_EasyFlip[17];
 
 public:
     /// Constructors
@@ -137,6 +155,12 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_LOCOIO_REPORT
     void OnLocoIOReport( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for wxID_ANY
+    void OnEasyTypeSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_EASYTEST1
+    void OnEasytestClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_EASYGETALL
     void OnEasygetallClick( wxCommandEvent& event );
@@ -236,56 +260,74 @@ public:
     wxPanel* m_EasyPanel;
     wxStaticText* m_labEasyPort;
     wxStaticText* m_labEasyAddress;
+    wxStaticText* m_labEasyTestL;
     wxSpinCtrl* m_EasyAddr1;
     wxRadioBox* m_EasyType1;
     wxCheckBox* m_EasyContact1;
+    wxButton* m_EasyTest1;
     wxSpinCtrl* m_EasyAddr2;
     wxRadioBox* m_EasyType2;
     wxCheckBox* m_EasyContact2;
+    wxButton* m_EasyTest2;
     wxSpinCtrl* m_EasyAddr3;
     wxRadioBox* m_EasyType3;
     wxCheckBox* m_EasyContact3;
+    wxButton* m_EasyTest3;
     wxSpinCtrl* m_EasyAddr4;
     wxRadioBox* m_EasyType4;
     wxCheckBox* m_EasyContact4;
+    wxButton* m_EasyTest4;
     wxSpinCtrl* m_EasyAddr5;
     wxRadioBox* m_EasyType5;
     wxCheckBox* m_EasyContact5;
+    wxButton* m_EasyTest5;
     wxSpinCtrl* m_EasyAddr6;
     wxRadioBox* m_EasyType6;
     wxCheckBox* m_EasyContact6;
+    wxButton* m_EasyTest6;
     wxSpinCtrl* m_EasyAddr7;
     wxRadioBox* m_EasyType7;
     wxCheckBox* m_EasyContact7;
+    wxButton* m_EasyTest7;
     wxSpinCtrl* m_EasyAddr8;
     wxRadioBox* m_EasyType8;
     wxCheckBox* m_EasyContact8;
+    wxButton* m_EasyTest8;
     wxStaticText* m_labEasyPort2;
     wxStaticText* m_labEasyAddress2;
+    wxStaticText* m_labEasyTestR;
     wxSpinCtrl* m_EasyAddr9;
     wxRadioBox* m_EasyType9;
     wxCheckBox* m_EasyContact9;
+    wxButton* m_EasyTest9;
     wxSpinCtrl* m_EasyAddr10;
     wxRadioBox* m_EasyType10;
     wxCheckBox* m_EasyContact10;
+    wxButton* m_EasyTest10;
     wxSpinCtrl* m_EasyAddr11;
     wxRadioBox* m_EasyType11;
     wxCheckBox* m_EasyContact11;
+    wxButton* m_EasyTest11;
     wxSpinCtrl* m_EasyAddr12;
     wxRadioBox* m_EasyType12;
     wxCheckBox* m_EasyContact12;
+    wxButton* m_EasyTest12;
     wxSpinCtrl* m_EasyAddr13;
     wxRadioBox* m_EasyType13;
     wxCheckBox* m_EasyContact13;
+    wxButton* m_EasyTest13;
     wxSpinCtrl* m_EasyAddr14;
     wxRadioBox* m_EasyType14;
     wxCheckBox* m_EasyContact14;
+    wxButton* m_EasyTest14;
     wxSpinCtrl* m_EasyAddr15;
     wxRadioBox* m_EasyType15;
     wxCheckBox* m_EasyContact15;
+    wxButton* m_EasyTest15;
     wxSpinCtrl* m_EasyAddr16;
     wxRadioBox* m_EasyType16;
     wxCheckBox* m_EasyContact16;
+    wxButton* m_EasyTest16;
     wxButton* m_EasyGetAll;
     wxButton* m_EasySetAll;
     wxButton* m_EasySaveAll;
