@@ -10282,7 +10282,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="1">
                                                         <property name="border">2</property>
-                                                        <property name="flag">wxALIGN_CENTER_VERTICAL</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxLEFT</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxRadioBox" expanded="1">
                                                             <property name="bg"></property>
