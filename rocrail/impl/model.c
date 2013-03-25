@@ -3221,13 +3221,13 @@ static void _event( iOModel inst, iONode nodeC ) {
     int port = wSwitch.getport1( nodeC );
     int type = wSwitch.getporttype( nodeC );
     Boolean invertstate = False;
-    int matchaddr1;
-    int matchport1;
-    int matchtype;
-    int matchaddr2;
-    int matchport2;
-    int fada;
-    int pada;
+    int matchaddr1 = -1;
+    int matchport1 = -1;
+    int matchtype = 0;
+    int matchaddr2 = -1;
+    int matchport2 = -1;
+    int fada = 0;
+    int pada = 0;
     const char* iid = wSwitch.getiid( nodeC );
     const char* defiid;
     iONode ini    = AppOp.getIni();
@@ -3290,6 +3290,10 @@ static void _event( iOModel inst, iONode nodeC ) {
         matchaddr1 = (pada - 1) / 4 + 1;
         matchport1 = (pada - 1) % 4 + 1;
       }
+      else {
+        matchaddr1 = -1;
+        matchport1 = -1;
+      }
 
       matchaddr2 = wSwitch.getaddr2(props);
       matchport2 = wSwitch.getport2(props);
@@ -3310,15 +3314,21 @@ static void _event( iOModel inst, iONode nodeC ) {
         matchaddr2 = (pada - 1) / 4 + 1;
         matchport2 = (pada - 1) % 4 + 1;
       }
+      else {
+        matchaddr2 = -1;
+        matchport2 = -1;
+      }
+
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"bus %d=%d, addr1 %d=%d, addr2 %d=%d, port1 %d=%d, port2 %d=%d, type %d=%d %s",
+          wSwitch.getbus(props), bus, matchaddr1, addr, matchaddr2, addr, matchport1, port, matchport2, port, matchtype, type, flat?"(flat)":"");
 
       if( wSwitch.getbus(props) == bus && matchaddr1 == addr && matchport1 == port && matchtype == type ||
-          wSwitch.getbus(props) == bus && matchaddr2 == addr && matchport2 == port && matchtype == type ||
-          flat && wSwitch.getbus(props) == bus && matchaddr1+1 == addr && matchtype == type ||
-          flat && wSwitch.getbus(props) == bus && matchaddr2+1 == addr && matchtype == type )
+          wSwitch.getbus(props) == bus && matchaddr2 == addr && matchport2 == port && matchtype == type )
       {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-            "matching sw=%s iid=%s (iid=%s defiid=%s)",
-            sw->id(sw), wSwitch.getiid(props)!=NULL?wSwitch.getiid(props):"?", iid, defiid );
+            "matching sw=%s iid=[%s] (iid=%s defiid=%s) bus=%d addr=%d port=%d %s",
+            sw->id(sw), wSwitch.getiid(props)!=NULL?wSwitch.getiid(props):"?", iid, defiid,
+                wSwitch.getbus(props), matchaddr1+1, matchport1, flat?"(flat)":"");
 
         if( StrOp.len( wSwitch.getiid(props) ) > 0 && StrOp.equals(iid, wSwitch.getiid(props)) ||
             ( ( StrOp.len( wSwitch.getiid(props) ) == 0 ) &&
