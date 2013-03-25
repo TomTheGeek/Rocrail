@@ -43,6 +43,7 @@
 //            2013-01-21           added FEATURE_GEN_NOTIFY_DRIVE_MANUAL
 //            2013-02-10 V0.09 kw  added addtional BST_STATE values
 //            2013-02-21 V0.10 kw  added MSG_BOOST_DIAGNOSTIC, BIDIB_ERR_SUBPAKET
+//            2013-03-25 V0.11 kw  added MSG_LOGON_REJECTED
 //
 //===============================================================================
 //
@@ -91,20 +92,21 @@
 // 1. Defines for Downstream Messages
 //
 //===============================================================================
-
+//*// = broadcast messages, a interface must forward this to subnodes
+//      a node must not answer these messages, if not connected
 #define MSG_DSTRM  0x00
 
 //-- system messages                                    // Parameters
 #define MSG_DSYS                (MSG_DSTRM + 0x00)
 #define MSG_SYS_GET_MAGIC       (MSG_DSYS + 0x01)       // - // these must stay here
 #define MSG_SYS_GET_P_VERSION   (MSG_DSYS + 0x02)       // - // these must stay here
-#define MSG_SYS_ENABLE          (MSG_DSYS + 0x03)       // -
-#define MSG_SYS_DISABLE         (MSG_DSYS + 0x04)       // -
+#define MSG_SYS_ENABLE          (MSG_DSYS + 0x03)    //*// -
+#define MSG_SYS_DISABLE         (MSG_DSYS + 0x04)    //*// -
 #define MSG_SYS_GET_UNIQUE_ID   (MSG_DSYS + 0x05)       // -
 #define MSG_SYS_GET_SW_VERSION  (MSG_DSYS + 0x06)       // -
 #define MSG_SYS_PING            (MSG_DSYS + 0x07)       // 1:dat
 #define MSG_SYS_IDENTIFY        (MSG_DSYS + 0x08)       // 1:id_state
-#define MSG_SYS_RESET           (MSG_DSYS + 0x09)       // -
+#define MSG_SYS_RESET           (MSG_DSYS + 0x09)    //*// -
 #define MSG_GET_PKT_CAPACITY    (MSG_DSYS + 0x0a)       // -
 #define MSG_NODETAB_GETALL      (MSG_DSYS + 0x0b)       // -
 #define MSG_NODETAB_GETNEXT     (MSG_DSYS + 0x0c)       // -
@@ -122,7 +124,7 @@
 #define MSG_VENDOR_DISABLE      (MSG_DFC + 0x05)        // -
 #define MSG_VENDOR_SET          (MSG_DFC + 0x06)        // V_NAME,V_VALUE
 #define MSG_VENDOR_GET          (MSG_DFC + 0x07)        // V_NAME
-#define MSG_SYS_CLOCK           (MSG_DFC + 0x08)        // 1:TCODE0, 2:TCODE1, 3:TCODE2, 4:TCODE3
+#define MSG_SYS_CLOCK           (MSG_DFC + 0x08)     //*// 1:TCODE0, 2:TCODE1, 3:TCODE2, 4:TCODE3
 
 //-- occupancy messages
 #define MSG_DBM                 (MSG_DSTRM + 0x20)
@@ -135,8 +137,8 @@
 
 //-- booster messages
 #define MSG_DBST                (MSG_DSTRM + 0x30)
-#define MSG_BOOST_OFF           (MSG_DBST + 0x00)       // 1:bc/node
-#define MSG_BOOST_ON            (MSG_DBST + 0x01)       // 1:bc/node
+#define MSG_BOOST_OFF           (MSG_DBST + 0x00)    //*// 1:bc or node
+#define MSG_BOOST_ON            (MSG_DBST + 0x01)    //*// 1:bc or node
 #define MSG_BOOST_QUERY         (MSG_DBST + 0x02)       // -
 
 //-- accessory control messages
@@ -177,9 +179,10 @@
 
 
 //-- local message
-#define MSG_DLOCAL              (MSG_DSTRM + 0x70)                           // only locally used
-#define MSG_LOGON_ACK           (MSG_DSTRM + MSG_DLOCAL + 0x00) 
-#define MSG_LOCAL_PING          (MSG_DSTRM + MSG_DLOCAL + 0x01)
+#define MSG_DLOCAL              (MSG_DSTRM + 0x70)      // only locally used
+#define MSG_LOGON_ACK           (MSG_DLOCAL + 0x00)     // 1:node_addr, 2..8:unique_id
+#define MSG_LOCAL_PING          (MSG_DLOCAL + 0x01)
+#define MSG_LOGON_REJECTED      (MSG_DLOCAL + 0x02)     // 1..7:unique_id  
 
 //===============================================================================
 //
