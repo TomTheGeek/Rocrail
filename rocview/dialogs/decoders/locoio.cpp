@@ -540,16 +540,16 @@ void LocoIO::CreateControls()
     wxGridSizer* itemGridSizer45 = new wxGridSizer(0, 4, 0, 0);
     itemFlexGridSizer42->Add(itemGridSizer45, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5);
     wxStaticText* itemStaticText46 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Input"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer45->Add(itemStaticText46, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
+    itemGridSizer45->Add(itemStaticText46, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP, 5);
 
     wxStaticText* itemStaticText47 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Block"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer45->Add(itemStaticText47, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
+    itemGridSizer45->Add(itemStaticText47, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP, 5);
 
     wxStaticText* itemStaticText48 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Switch"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer45->Add(itemStaticText48, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
+    itemGridSizer45->Add(itemStaticText48, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP, 5);
 
     wxStaticText* itemStaticText49 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Pulse"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer45->Add(itemStaticText49, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
+    itemGridSizer45->Add(itemStaticText49, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP, 5);
 
     wxStaticText* itemStaticText50 = new wxStaticText( m_EasyPanel, wxID_ANY, _("C2"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer42->Add(itemStaticText50, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
@@ -720,16 +720,16 @@ void LocoIO::CreateControls()
     wxGridSizer* itemGridSizer87 = new wxGridSizer(0, 4, 0, 0);
     itemFlexGridSizer84->Add(itemGridSizer87, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5);
     wxStaticText* itemStaticText88 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Input"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer87->Add(itemStaticText88, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
+    itemGridSizer87->Add(itemStaticText88, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP, 5);
 
     wxStaticText* itemStaticText89 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Block"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer87->Add(itemStaticText89, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
+    itemGridSizer87->Add(itemStaticText89, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP, 5);
 
     wxStaticText* itemStaticText90 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Switch"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer87->Add(itemStaticText90, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
+    itemGridSizer87->Add(itemStaticText90, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP, 5);
 
     wxStaticText* itemStaticText91 = new wxStaticText( m_EasyPanel, wxID_ANY, _("Pulse"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer87->Add(itemStaticText91, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
+    itemGridSizer87->Add(itemStaticText91, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP, 5);
 
     wxStaticText* itemStaticText92 = new wxStaticText( m_EasyPanel, wxID_ANY, _("C2"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer84->Add(itemStaticText92, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);

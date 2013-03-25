@@ -2788,7 +2788,7 @@
                           <bool name="proxy-wxLEFT">0</bool>
                           <bool name="proxy-wxRIGHT">0</bool>
                           <bool name="proxy-wxTOP">1</bool>
-                          <bool name="proxy-wxBOTTOM">1</bool>
+                          <bool name="proxy-wxBOTTOM">0</bool>
                           <bool name="proxy-wxSHAPED">0</bool>
                           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -2858,7 +2858,7 @@
                           <bool name="proxy-wxLEFT">0</bool>
                           <bool name="proxy-wxRIGHT">0</bool>
                           <bool name="proxy-wxTOP">1</bool>
-                          <bool name="proxy-wxBOTTOM">1</bool>
+                          <bool name="proxy-wxBOTTOM">0</bool>
                           <bool name="proxy-wxSHAPED">0</bool>
                           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -2928,7 +2928,7 @@
                           <bool name="proxy-wxLEFT">0</bool>
                           <bool name="proxy-wxRIGHT">0</bool>
                           <bool name="proxy-wxTOP">1</bool>
-                          <bool name="proxy-wxBOTTOM">1</bool>
+                          <bool name="proxy-wxBOTTOM">0</bool>
                           <bool name="proxy-wxSHAPED">0</bool>
                           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -2998,7 +2998,7 @@
                           <bool name="proxy-wxLEFT">0</bool>
                           <bool name="proxy-wxRIGHT">0</bool>
                           <bool name="proxy-wxTOP">1</bool>
-                          <bool name="proxy-wxBOTTOM">1</bool>
+                          <bool name="proxy-wxBOTTOM">0</bool>
                           <bool name="proxy-wxSHAPED">0</bool>
                           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -5511,7 +5511,7 @@
                           <bool name="proxy-wxLEFT">0</bool>
                           <bool name="proxy-wxRIGHT">0</bool>
                           <bool name="proxy-wxTOP">1</bool>
-                          <bool name="proxy-wxBOTTOM">1</bool>
+                          <bool name="proxy-wxBOTTOM">0</bool>
                           <bool name="proxy-wxSHAPED">0</bool>
                           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -5581,7 +5581,7 @@
                           <bool name="proxy-wxLEFT">0</bool>
                           <bool name="proxy-wxRIGHT">0</bool>
                           <bool name="proxy-wxTOP">1</bool>
-                          <bool name="proxy-wxBOTTOM">1</bool>
+                          <bool name="proxy-wxBOTTOM">0</bool>
                           <bool name="proxy-wxSHAPED">0</bool>
                           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -5651,7 +5651,7 @@
                           <bool name="proxy-wxLEFT">0</bool>
                           <bool name="proxy-wxRIGHT">0</bool>
                           <bool name="proxy-wxTOP">1</bool>
-                          <bool name="proxy-wxBOTTOM">1</bool>
+                          <bool name="proxy-wxBOTTOM">0</bool>
                           <bool name="proxy-wxSHAPED">0</bool>
                           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -5721,7 +5721,7 @@
                           <bool name="proxy-wxLEFT">0</bool>
                           <bool name="proxy-wxRIGHT">0</bool>
                           <bool name="proxy-wxTOP">1</bool>
-                          <bool name="proxy-wxBOTTOM">1</bool>
+                          <bool name="proxy-wxBOTTOM">0</bool>
                           <bool name="proxy-wxSHAPED">0</bool>
                           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
                           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
