@@ -180,7 +180,7 @@ LocoIO::LocoIO( wxWindow* parent, wxWindowID id, const wxString& caption, const 
     }
 
 
-    OnEasyTypeSelected();
+    updateTypeSelected();
 }
 
 
@@ -1654,7 +1654,7 @@ void LocoIO::evaluateEvent( int type, int low, int sub, int sv, int val, int ver
     // config port
     TraceOp.trc( "locoio", TRCLEVEL_INFO, __LINE__, 9999, "config port[%d][%d]", sv / 3, (sv-3) % 3 );
     evaluatePort( sv, val );
-    OnEasyTypeSelected();
+    updateTypeSelected();
   }
   else if( sv >= 51 && sv <= 98 ) {
     // config OPC
@@ -2114,7 +2114,7 @@ void LocoIO::easyGetPort( int port, int* conf, int* val1, int* val2 )
   *val1 = value1;
   *val2 = value2;
 
-  OnEasyTypeSelected();
+  updateTypeSelected();
 }
 
 
@@ -2660,7 +2660,7 @@ void LocoIO::OnEasyTypeSelected( wxCommandEvent& event )
   }
 }
 
-void LocoIO::OnEasyTypeSelected()
+void LocoIO::updateTypeSelected()
 {
   wxRadioBox* easyType[] = {NULL,m_EasyType1,m_EasyType2,m_EasyType3,m_EasyType4,m_EasyType5,
                                  m_EasyType6,m_EasyType7,m_EasyType8,m_EasyType9,m_EasyType10,

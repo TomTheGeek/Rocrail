@@ -99,7 +99,7 @@ class LocoIO: public wxDialog
     void sendPacket();
     void OnTimer(wxTimerEvent& event);
     void easyGetPort( int port, int* conf, int* val1, int* val2 );
-    void OnEasyTypeSelected();
+    void updateTypeSelected();
 
     int m_iLowAddress;
     int m_iSubAddress;
