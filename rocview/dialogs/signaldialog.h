@@ -248,13 +248,13 @@ public:
     wxTextCtrl* m_Port;
     wxRadioBox* m_Gate1;
     wxStaticBox* m_GreenBox;
-    wxTextCtrl* m_Address3;
-    wxTextCtrl* m_Port3;
-    wxRadioBox* m_Gate3;
-    wxStaticBox* m_YellowBox;
     wxTextCtrl* m_Address2;
     wxTextCtrl* m_Port2;
     wxRadioBox* m_Gate2;
+    wxStaticBox* m_YellowBox;
+    wxTextCtrl* m_Address3;
+    wxTextCtrl* m_Port3;
+    wxRadioBox* m_Gate3;
     wxStaticBox* m_WhiteBox;
     wxTextCtrl* m_Address4;
     wxTextCtrl* m_Port4;
