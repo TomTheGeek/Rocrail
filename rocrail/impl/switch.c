@@ -438,15 +438,16 @@ static Boolean __isSet(obj inst, const char* strState) {
   iOSwitchData data = Data(inst);
   Boolean isSet = True;
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+    "Switch[%s] current state [%s], reported state [%s]",
+    SwitchOp.getId( (iOSwitch)inst ), wSwitch.getstate( data->props), strState );
+
   if( !StrOp.equals( strState, wSwitch.getstate( data->props) ) ) {
     if( wSwitch.isfbset(data->props) ) {
       wSwitch.setstate( data->props, strState);
     }
     else {
       isSet = False;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "Switch[%s] current state [%s], reported state [%s]",
-        SwitchOp.getId( (iOSwitch)inst ), wSwitch.getstate( data->props), strState );
     }
   }
   return isSet;
@@ -746,11 +747,9 @@ static Boolean _isSet( iOSwitch inst ) {
         isSet = False;
     }
     else {
-      isSet = __isSet((obj)inst, wSwitch.getstate( data->props));
+      /* check fieldstate */
+      isSet = StrOp.equals(wSwitch.getstate(data->props), wSwitch.getfieldstate(data->props));
     }
-    __checkFbState( inst );
-    if( stateCmd != data->fbstate )
-      isSet = False;
   }
 
   return isSet;
@@ -1464,6 +1463,8 @@ static void _event( iOSwitch inst, iONode nodeC ) {
           wSwitch.setstate( data->props, wSwitch.turnout );
       }
     }
+
+    wSwitch.setfieldstate( data->props, wSwitch.getstate(data->props) );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] field state=%s", SwitchOp.getId(inst), wSwitch.getstate( data->props) );
 
