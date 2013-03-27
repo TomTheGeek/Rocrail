@@ -93,6 +93,7 @@ void DTOpSwDlg::onReadAll( wxCommandEvent& event ) {
         "get", DT_idxOpSw[selectedBoard][idx], addr );
 
     iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
     wProgram.setlntype( cmd, wProgram.lntype_opsw );
     wProgram.setcmd( cmd, wProgram.lncvget );
     wProgram.setaddr( cmd, addr-1 );
@@ -126,6 +127,7 @@ void DTOpSwDlg::onWriteAll( wxCommandEvent& event ) {
         "set", DT_idxOpSw[selectedBoard][idx], addr );
 
     iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
     wProgram.setlntype( cmd, wProgram.lntype_opsw );
     wProgram.setcmd( cmd, wProgram.lncvset );
     wProgram.setaddr( cmd, addr-1 );
