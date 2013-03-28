@@ -577,6 +577,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         SwitchOp.cmd( sw, cmd, True, 0, &error, NULL );
       } else {
         wSwitch.setcmd( cmd, wAction.getcmd( data->action ) );
+        wSwitch.setforcecmd( cmd,  StrOp.equals( wAction.getparam( data->action ), "force" ));
         SwitchOp.cmd( sw, cmd, True, 0, &error, NULL );
       }
     }

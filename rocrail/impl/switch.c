@@ -863,8 +863,14 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     if( lcid == NULL || !StrOp.equals( lcid, o->lockedId ) || StrOp.len(lcid) == 0 ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch [%s] is locked by [%s]: reject any commands from others",
                    SwitchOp.getId( inst ), o->lockedId );
-      NodeOp.base.del(nodeA);
-      return False;
+      if( wSwitch.isforcecmd( nodeA ) ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "switch [%s] command [%s] is forced",
+                     SwitchOp.getId( inst ), wSwitch.getcmd(nodeA) );
+      }
+      else {
+        NodeOp.base.del(nodeA);
+        return False;
+      }
     }
   }
 
