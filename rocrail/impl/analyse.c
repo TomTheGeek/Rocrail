@@ -5789,6 +5789,10 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
         continue;
       }
 
+      /* set maxZlevel */
+      if( data->maxZlevel < wItem.getz(item) )
+        data->maxZlevel = wItem.getz(item);
+
       /* check the basic addressing */
       if( StrOp.equals( wLoc.name(), NodeOp.getName(item) ) ) {
         if( wLoc.getaddr(item) == 0 && !StrOp.equals(wLoc.getprot(item), wLoc.prot_A) ) {
@@ -6077,8 +6081,6 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
         maxDist = wItem.getx(item) + wItem.gety(item) ;
         lonelyItem = item;
       }
-      if( data->maxZlevel < wItem.getz(item) )
-        data->maxZlevel = wItem.getz(item);
       item = (iONode)MapOp.next(data->objectmap);
     }
 
@@ -6097,6 +6099,9 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "INFO: analyzer: max connector distance is %d (def/min=%d)", data->maxConnectorDistance, AnalyseOp.MINIMAL_MAX_CONNECTOR_DISTANCE );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "INFO: analyzer: max z-level is %d", data->maxZlevel );
     }
+  }
+  else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "objectmap is empty" );
   }
 
   MapOp.clear(data->objectmap);
