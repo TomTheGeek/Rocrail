@@ -2604,6 +2604,7 @@ void RocGuiFrame::OnGoOffline( wxCommandEvent& event ) {
   if( !wxGetApp().isOffline() ) {
     wxGetApp().disConnect();
     setOnline(false);
+    m_bActiveWorkspace = false;
     iONode plan = NodeOp.inst( wPlan.name(), NULL, ELEMENT_NODE);
     wxGetApp().Callback( (obj)&wxGetApp(), plan );
     NodeOp.base.del(plan);
