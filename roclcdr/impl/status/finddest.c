@@ -85,18 +85,19 @@ void statusFindDest( iILcDriverInt inst ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reported schedule index=%d", data->scheduleIdx );
     }
 
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkScheduleEntryActions for entry %d...", scheduleIdx );
+    if( checkScheduleEntryActions(inst, scheduleIdx) ) {
+      /* wait in block if we have to swap placing... */
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "the schedule entry wants a swap placing" );
+      data->loc->swapPlacing( data->loc, NULL, False );
+    }
+
     if( !wait && data->next1Route != NULL ) {
       /* evaluate direction */
       if( StrOp.equals( data->next1Route->getToBlock( data->next1Route ), data->loc->getCurBlock( data->loc ) ) )
         data->next1Block = data->model->getBlock( data->model, data->next1Route->getFromBlock( data->next1Route ) );
       else
         data->next1Block = data->model->getBlock( data->model, data->next1Route->getToBlock( data->next1Route ) );
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkScheduleEntryActions..." );
-      if( checkScheduleEntryActions(inst, scheduleIdx) ) {
-        /* wait in block if we have to swap placing... */
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "the schedule entry wants a swap placing" );
-        data->loc->swapPlacing( data->loc, NULL, False );
-      }
     }
     else if( wait ) {
       data->next1Block = NULL;
