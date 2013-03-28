@@ -761,6 +761,7 @@ void Symbol::OnCmdStraight(wxCommandEvent& event) {
   wSwitch.setid( cmd, wSwitch.getid( m_Props ) );
   wSwitch.setcmd( cmd, wSwitch.straight );
   wSwitch.setmanualcmd( cmd, True );
+  wSwitch.setforcecmd( cmd, wxGetKeyState(WXK_CONTROL)?True:False);
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -769,6 +770,7 @@ void Symbol::OnCmdTurnout(wxCommandEvent& event) {
   wSwitch.setid( cmd, wSwitch.getid( m_Props ) );
   wSwitch.setcmd( cmd, wSwitch.turnout );
   wSwitch.setmanualcmd( cmd, True );
+  wSwitch.setforcecmd( cmd, wxGetKeyState(WXK_CONTROL)?True:False);
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -777,6 +779,7 @@ void Symbol::OnCmdLeft(wxCommandEvent& event) {
   wSwitch.setid( cmd, wSwitch.getid( m_Props ) );
   wSwitch.setcmd( cmd, wSwitch.left );
   wSwitch.setmanualcmd( cmd, True );
+  wSwitch.setforcecmd( cmd, wxGetKeyState(WXK_CONTROL)?True:False);
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -785,6 +788,7 @@ void Symbol::OnCmdRight(wxCommandEvent& event) {
   wSwitch.setid( cmd, wSwitch.getid( m_Props ) );
   wSwitch.setcmd( cmd, wSwitch.right );
   wSwitch.setmanualcmd( cmd, True );
+  wSwitch.setforcecmd( cmd, wxGetKeyState(WXK_CONTROL)?True:False);
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
