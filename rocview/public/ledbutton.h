@@ -25,6 +25,7 @@
 #define LEDBUTTON_H_
 
 #include <wx/graphics.h>
+#include <wx/panel.h>
 
 class LEDButton : public wxPanel
 {

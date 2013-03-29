@@ -98,6 +98,8 @@
 #include "rocview/dialogs/locowidget.h"
 #include "rocview/dialogs/widgetspanel.h"
 #include "rocview/dialogs/guestloco.h"
+#include "rocview/dialogs/throttledlg.h"
+
 
 
 #include "rocview/dialogs/decoders/locoio.h"
@@ -4111,7 +4113,12 @@ void RocGuiFrame::OnGuestLocoDlg(wxCommandEvent& event){
 
 
 void RocGuiFrame::OnLcDlg(wxCommandEvent& event){
-  LocControlDialog* dlg = new LocControlDialog(this, m_LocCtrlList, m_LocDlgMap, m_LocID);
+  wxDialog* dlg = NULL;
+  if( wxGetKeyState(WXK_ALT) )
+    dlg = new ThrottleDlg(this);
+  else
+    dlg = new LocControlDialog(this, m_LocCtrlList, m_LocDlgMap, m_LocID);
+
   dlg->Show(TRUE);
 
   if( m_LocID != NULL && StrOp.len(m_LocID) > 0 ) {

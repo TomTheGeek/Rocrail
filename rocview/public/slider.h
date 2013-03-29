@@ -24,6 +24,8 @@
 #ifndef SLIDER_H_
 #define SLIDER_H_
 
+#include <wx/panel.h>
+
 class Slider : public wxPanel
 {
     wxWindow* Parent;
