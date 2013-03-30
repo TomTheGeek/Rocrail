@@ -175,6 +175,7 @@
       <var name="fill" vt="bool" defval="false"/>
       <var name="showborder" vt="bool" defval="true"/>
       <var name="showid" vt="bool" defval="false"/>
+      <var name="showlocked" vt="bool" defval="false"/>
       <var name="raster" vt="bool" defval="false"/>
       <var name="tooltip" vt="bool" defval="true"/>
       <var name="svgpath" vt="string" defval="svg/themes/SpDrS60" remark="scan this path for svg symbols"/>

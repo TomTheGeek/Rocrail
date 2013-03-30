@@ -6281,3 +6281,15 @@ msgstr ""
 msgid "Frog"
 msgstr ""
 
+#. 
+# id="showlocked"
+#, c-format
+msgid "Show locked switches"
+msgstr ""
+
+#. 
+# id="showlocked"
+#, c-format
+msgid "Show locked switches with a different color."
+msgstr ""
+

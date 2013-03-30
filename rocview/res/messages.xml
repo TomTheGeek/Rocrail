@@ -20479,4 +20479,7 @@
   <Msg id="frog">
     <en txt="Frog"/>
   </Msg>
+  <Msg id="showlocked">
+    <en txt="Show locked switches" tip="Show locked switches with a different color."/>
+  </Msg>
 </Messages>

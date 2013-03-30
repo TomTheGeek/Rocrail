@@ -2512,6 +2512,10 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
     if( wSwitch.getlocid( node )!=NULL && StrOp.equals( wSwitch.unlocked, wSwitch.getlocid( node )) )
       isLocked = False;
+
+    if( !wxGetApp().getFrame()->isShowLocked() )
+      isLocked = False;
+
     SetBackgroundColour( isSet? (isLocked? Base::getRed():m_PlanPanel->GetBackgroundColour()):*wxRED );
 
     if( addr > 0 && port > 0 ) {

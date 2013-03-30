@@ -346,6 +346,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_LocoViewSpecial, RocGuiFrame::OnLocoViewSpecial)
     EVT_MENU( ME_LocoViewTrain  , RocGuiFrame::OnLocoViewTrain)
     EVT_MENU( ME_ShowID         , RocGuiFrame::OnShowID)
+    EVT_MENU( ME_ShowLocked     , RocGuiFrame::OnShowLocked)
     EVT_MENU( ME_FullScreen     , RocGuiFrame::OnFullScreen)
     EVT_MENU( ME_Raster         , RocGuiFrame::OnRaster)
     EVT_MENU( ME_Tooltip        , RocGuiFrame::OnTooltip)
@@ -1895,6 +1896,7 @@ void RocGuiFrame::initFrame() {
 
   menuView->AppendSeparator();
   menuView->AppendCheckItem( ME_ShowID, wxGetApp().getMenu("showid"), wxGetApp().getTip("showid") );
+  menuView->AppendCheckItem( ME_ShowLocked, wxGetApp().getMenu("showlocked"), wxGetApp().getTip("showlocked") );
   menuView->AppendCheckItem( ME_Raster, wxGetApp().getMenu("raster"), wxGetApp().getTip("raster") );
   menuView->AppendCheckItem( ME_Tooltip, wxGetApp().getMenu("tooltip"), wxGetApp().getTip("tooltip") );
   menuView->AppendCheckItem( ME_FullScreen, wxGetApp().getMenu("fullscreen"), wxGetApp().getTip("fullscreen") );
@@ -2202,6 +2204,7 @@ void RocGuiFrame::create() {
   m_Scale = wPlanPanel.getscale( wGui.getplanpanel( m_Ini ) );
   m_Bktext = wPlanPanel.getbktext( wGui.getplanpanel( m_Ini ) );
   m_bShowID = (wPlanPanel.isshowid( wGui.getplanpanel( m_Ini ) ) ? true:false);
+  m_bShowLocked = (wPlanPanel.isshowlocked( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bRaster = (wPlanPanel.israster( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bTooltip = (wPlanPanel.istooltip( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bLocoBook = (wPlanPanel.islocobook( wGui.getplanpanel( m_Ini ) ) ? true:false);
@@ -3071,6 +3074,18 @@ void RocGuiFrame::OnShowID( wxCommandEvent& event ) {
 }
 
 
+void RocGuiFrame::OnShowLocked( wxCommandEvent& event ) {
+  wxMenuItem* mi_showlocked = menuBar->FindItem(ME_ShowLocked);
+  m_bShowLocked = mi_showlocked->IsChecked();
+
+  int pages = m_PlanNotebook->GetPageCount();
+  for( int i = 0; i < pages; i++ ) {
+    BasePanel* p = (BasePanel*)m_PlanNotebook->GetPage(i);
+    p->reScale( m_Scale );
+  }
+}
+
+
 void RocGuiFrame::OnFullScreen( wxCommandEvent& event ) {
   wxMenuItem* mi_fullscreen = menuBar->FindItem(ME_FullScreen);
 
@@ -3888,6 +3903,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi_tracewindow->Check( m_bTraceWindow );
   wxMenuItem* mi_showid  = menuBar->FindItem(ME_ShowID);
   mi_showid->Check( m_bShowID );
+  wxMenuItem* mi_showlocked  = menuBar->FindItem(ME_ShowLocked);
+  mi_showlocked->Check( m_bShowLocked );
   wxMenuItem* mi_raster  = menuBar->FindItem(ME_Raster);
   mi_raster->Check( m_bRaster );
   wxMenuItem* mi_tooltip  = menuBar->FindItem(ME_Tooltip);

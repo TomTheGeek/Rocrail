@@ -278,6 +278,7 @@ public:
   void OnLocoViewSpecial(wxCommandEvent& event);
   void OnLocoViewTrain(wxCommandEvent& event);
   void OnShowID(wxCommandEvent& event);
+  void OnShowLocked(wxCommandEvent& event);
   void OnRaster(wxCommandEvent& event);
   void OnTooltip(wxCommandEvent& event);
   void OnBackColor(wxCommandEvent& event);
@@ -310,6 +311,7 @@ public:
   bool isPlanBook() { return m_bPlanBook; }
   bool isTraceWindow() { return m_bTraceWindow; }
   bool isShowID() { return m_bShowID; }
+  bool isShowLocked() { return m_bShowLocked; }
   bool isRaster() { return m_bRaster; }
   bool isTooltip() { return m_bTooltip; }
   bool isInitialized() { return m_bInitialized; }
@@ -399,6 +401,7 @@ private:
   bool  m_LocoSortByAddress;
   int   m_LocoCategory; // 0=all 1=steam 2=diesel 3=electric 4=commuter 5=special
   bool  m_bShowID;
+  bool  m_bShowLocked;
   bool  m_bRaster;
   bool  m_bTooltip;
   bool  m_bServerConsoleMode;
@@ -574,6 +577,7 @@ enum
     ME_LocoViewTrain,
     ME_LocoSortByAddr,
     ME_ShowID,
+    ME_ShowLocked,
     ME_FullScreen,
     ME_Raster,
     ME_Tooltip,
