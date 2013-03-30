@@ -103,7 +103,7 @@
                         <property name="hover"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="label">LocoImage</property>
-                        <property name="maximum_size"></property>
+                        <property name="maximum_size">-1,70</property>
                         <property name="minimum_size"></property>
                         <property name="name">m_LocoImage</property>
                         <property name="permission">protected</property>
@@ -178,7 +178,7 @@
                                     <object class="CustomControl" expanded="1">
                                         <property name="bg"></property>
                                         <property name="class">LEDButton</property>
-                                        <property name="construction">m_Speed = new LEDButton(this, &quot;0&quot;, 60, 25, false, true);</property>
+                                        <property name="construction">m_Speed = new LEDButton(this, wxT(&quot;0&quot;), 60, 25, false, true);</property>
                                         <property name="context_help"></property>
                                         <property name="context_menu">1</property>
                                         <property name="declaration">LEDButton* m_Speed;</property>
@@ -352,11 +352,11 @@
                                 <property name="name">bSizer24</property>
                                 <property name="orient">wxVERTICAL</property>
                                 <property name="permission">none</property>
-                                <object class="sizeritem" expanded="0">
+                                <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
                                     <property name="proportion">0</property>
-                                    <object class="wxFlexGridSizer" expanded="0">
+                                    <object class="wxFlexGridSizer" expanded="1">
                                         <property name="cols">3</property>
                                         <property name="flexible_direction">wxBOTH</property>
                                         <property name="growablecols"></property>
@@ -375,7 +375,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F1 = new LEDButton(this, &quot;F1&quot;, 50, 25);</property>
+                                                <property name="construction">m_F1 = new LEDButton(this, wxT(&quot;F1&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F1;</property>
@@ -433,7 +433,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F2 = new LEDButton(this, &quot;F2&quot;, 50, 25);</property>
+                                                <property name="construction">m_F2 = new LEDButton(this, wxT(&quot;F2&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F2;</property>
@@ -491,7 +491,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F3 = new LEDButton(this, &quot;F3&quot;, 50, 25);</property>
+                                                <property name="construction">m_F3 = new LEDButton(this, wxT(&quot;F3&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F3;</property>
@@ -549,7 +549,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F4 = new LEDButton(this, &quot;F4&quot;, 50, 25);</property>
+                                                <property name="construction">m_F4 = new LEDButton(this, wxT(&quot;F4&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F4;</property>
@@ -607,7 +607,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F5 = new LEDButton(this, &quot;F5&quot;, 50, 25);</property>
+                                                <property name="construction">m_F5 = new LEDButton(this, wxT(&quot;F5&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F5;</property>
@@ -665,7 +665,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F6 = new LEDButton(this, &quot;F6&quot;, 50, 25);</property>
+                                                <property name="construction">m_F6 = new LEDButton(this, wxT(&quot;F6&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F6;</property>
@@ -723,7 +723,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F7 = new LEDButton(this, &quot;F7&quot;, 50, 25);</property>
+                                                <property name="construction">m_F7 = new LEDButton(this, wxT(&quot;F7&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F7;</property>
@@ -781,7 +781,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F8 = new LEDButton(this, &quot;F8&quot;, 50, 25);</property>
+                                                <property name="construction">m_F8 = new LEDButton(this, wxT(&quot;F8&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F8;</property>
@@ -839,7 +839,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F9 = new LEDButton(this, &quot;F9&quot;, 50, 25);</property>
+                                                <property name="construction">m_F9 = new LEDButton(this, wxT(&quot;F9&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F9;</property>
@@ -897,7 +897,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F10 = new LEDButton(this, &quot;F10&quot;, 50, 25);</property>
+                                                <property name="construction">m_F10 = new LEDButton(this, wxT(&quot;F10&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F10;</property>
@@ -955,7 +955,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F11 = new LEDButton(this, &quot;F11&quot;, 50, 25);</property>
+                                                <property name="construction">m_F11 = new LEDButton(this, wxT(&quot;F11&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F11;</property>
@@ -1013,7 +1013,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F12 = new LEDButton(this, &quot;F12&quot;, 50, 25);</property>
+                                                <property name="construction">m_F12 = new LEDButton(this, wxT(&quot;F12&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F12;</property>
@@ -1071,7 +1071,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F13 = new LEDButton(this, &quot;F13&quot;, 50, 25);</property>
+                                                <property name="construction">m_F13 = new LEDButton(this, wxT(&quot;F13&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F13;</property>
@@ -1129,7 +1129,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F14 = new LEDButton(this, &quot;F14&quot;, 50, 25);</property>
+                                                <property name="construction">m_F14 = new LEDButton(this, wxT(&quot;F14&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F14;</property>
@@ -1187,7 +1187,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_F0 = new LEDButton(this, &quot;Lights&quot;, 50, 25);</property>
+                                                <property name="construction">m_F0 = new LEDButton(this, wxT(&quot;Lights&quot;), 50, 25);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_F0;</property>
@@ -1240,11 +1240,11 @@
                                         </object>
                                     </object>
                                 </object>
-                                <object class="sizeritem" expanded="0">
+                                <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
                                     <property name="proportion">1</property>
-                                    <object class="wxFlexGridSizer" expanded="0">
+                                    <object class="wxFlexGridSizer" expanded="1">
                                         <property name="cols">2</property>
                                         <property name="flexible_direction">wxBOTH</property>
                                         <property name="growablecols"></property>
@@ -1256,11 +1256,11 @@
                                         <property name="permission">none</property>
                                         <property name="rows">0</property>
                                         <property name="vgap">0</property>
-                                        <object class="sizeritem" expanded="0">
+                                        <object class="sizeritem" expanded="1">
                                             <property name="border">5</property>
                                             <property name="flag">wxEXPAND</property>
                                             <property name="proportion">1</property>
-                                            <object class="wxBoxSizer" expanded="0">
+                                            <object class="wxBoxSizer" expanded="1">
                                                 <property name="minimum_size"></property>
                                                 <property name="name">bSizer25</property>
                                                 <property name="orient">wxVERTICAL</property>
@@ -1272,7 +1272,7 @@
                                                     <object class="CustomControl" expanded="0">
                                                         <property name="bg"></property>
                                                         <property name="class">LEDButton</property>
-                                                        <property name="construction">m_FG = new LEDButton(this, &quot;FG&quot;, 82, 25, false);</property>
+                                                        <property name="construction">m_FG = new LEDButton(this, wxT(&quot;FG&quot;), 82, 25, false);</property>
                                                         <property name="context_help"></property>
                                                         <property name="context_menu">1</property>
                                                         <property name="declaration">LEDButton* m_FG;</property>
@@ -1330,7 +1330,7 @@
                                                     <object class="CustomControl" expanded="0">
                                                         <property name="bg"></property>
                                                         <property name="class">LEDButton</property>
-                                                        <property name="construction">m_Stop = new LEDButton(this, &quot;STOP&quot;, 82, 25, false);</property>
+                                                        <property name="construction">m_Stop = new LEDButton(this, wxT(&quot;STOP&quot;), 82, 25, false);</property>
                                                         <property name="context_help"></property>
                                                         <property name="context_menu">1</property>
                                                         <property name="declaration">LEDButton* m_Stop;</property>
@@ -1390,7 +1390,7 @@
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
                                                 <property name="class">LEDButton</property>
-                                                <property name="construction">m_Dir = new LEDButton(this, &quot;&gt;&gt;&quot;, 70, 52, false);</property>
+                                                <property name="construction">m_Dir = new LEDButton(this, wxT(&quot;&gt;&gt;&quot;), 70, 52, false);</property>
                                                 <property name="context_help"></property>
                                                 <property name="context_menu">1</property>
                                                 <property name="declaration">LEDButton* m_Dir;</property>
@@ -1450,7 +1450,7 @@
                                     <object class="CustomControl" expanded="0">
                                         <property name="bg"></property>
                                         <property name="class">LEDButton</property>
-                                        <property name="construction">m_Break = new LEDButton(this, &quot;BREAK&quot;, 154, 25, false);</property>
+                                        <property name="construction">m_Break = new LEDButton(this, wxT(&quot;BREAK&quot;), 154, 25, false);</property>
                                         <property name="context_help"></property>
                                         <property name="context_menu">1</property>
                                         <property name="declaration">LEDButton* m_Break;</property>
