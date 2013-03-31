@@ -420,7 +420,9 @@ private:
   iOMap m_SymbolMap;
 public:
   iOList m_LocCtrlList;
+  iOList m_ThrottleList;
   iOMap m_LocDlgMap;
+  iOMap m_ThrottleMap;
 private:
   JsSupport* m_JsSupport;
   bool m_bCheckedDonKey;

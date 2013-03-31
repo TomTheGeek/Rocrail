@@ -1288,6 +1288,10 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       LocControlDialog* dlg = (LocControlDialog*)ListOp.get(m_LocCtrlList, i);
       dlg->modelEvent(node);
     }
+    for( int i = 0; i < ListOp.size(m_ThrottleList); i++ ) {
+      ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_LocCtrlList, i);
+      dlg->modelEvent(node);
+    }
     if( !m_LC->updateLoc( node ) ) {
       // Update loco not selected in the loco panel.
       iONode loco = findLoc(wFunCmd.getid(node));
@@ -1308,6 +1312,10 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
 
     for( int i = 0; i < ListOp.size(m_LocCtrlList); i++ ) {
       LocControlDialog* dlg = (LocControlDialog*)ListOp.get(m_LocCtrlList, i);
+      dlg->modelEvent(node);
+    }
+    for( int i = 0; i < ListOp.size(m_ThrottleList); i++ ) {
+      ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_LocCtrlList, i);
       dlg->modelEvent(node);
     }
 
@@ -1573,6 +1581,8 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_ModPanel           = NULL;
   m_LocCtrlList        = ListOp.inst();
   m_LocDlgMap          = MapOp.inst();
+  m_ThrottleList       = ListOp.inst();
+  m_ThrottleMap        = MapOp.inst();
   m_bAutoMode          = false;
   m_ThemePath          = theme;
   m_ServerPath         = sp;
@@ -4028,6 +4038,10 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "inform loc control dialog to save position..." );
     dlg->Close();
   }
+  for( int i = 0; i < ListOp.size(m_ThrottleList); i++ ) {
+    ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_LocCtrlList, i);
+    dlg->Close();
+  }
 
   /*
   wxMenuItem* mi = menuBar->FindItem(ME_LocoBook);
@@ -4132,7 +4146,7 @@ void RocGuiFrame::OnGuestLocoDlg(wxCommandEvent& event){
 void RocGuiFrame::OnLcDlg(wxCommandEvent& event){
   wxDialog* dlg = NULL;
   if( wxGetKeyState(WXK_ALT) )
-    dlg = new ThrottleDlg(this);
+    dlg = new ThrottleDlg(this, m_ThrottleList, m_ThrottleMap, m_LocID);
   else
     dlg = new LocControlDialog(this, m_LocCtrlList, m_LocDlgMap, m_LocID);
 
