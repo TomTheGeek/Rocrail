@@ -1289,7 +1289,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       dlg->modelEvent(node);
     }
     for( int i = 0; i < ListOp.size(m_ThrottleList); i++ ) {
-      ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_LocCtrlList, i);
+      ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_ThrottleList, i);
       dlg->modelEvent(node);
     }
     if( !m_LC->updateLoc( node ) ) {
@@ -1315,7 +1315,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       dlg->modelEvent(node);
     }
     for( int i = 0; i < ListOp.size(m_ThrottleList); i++ ) {
-      ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_LocCtrlList, i);
+      ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_ThrottleList, i);
       dlg->modelEvent(node);
     }
 
@@ -1582,7 +1582,6 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LocCtrlList        = ListOp.inst();
   m_LocDlgMap          = MapOp.inst();
   m_ThrottleList       = ListOp.inst();
-  m_ThrottleMap        = MapOp.inst();
   m_bAutoMode          = false;
   m_ThemePath          = theme;
   m_ServerPath         = sp;
@@ -4039,7 +4038,7 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
     dlg->Close();
   }
   for( int i = 0; i < ListOp.size(m_ThrottleList); i++ ) {
-    ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_LocCtrlList, i);
+    ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_ThrottleList, i);
     dlg->Close();
   }
 
@@ -4146,7 +4145,7 @@ void RocGuiFrame::OnGuestLocoDlg(wxCommandEvent& event){
 void RocGuiFrame::OnLcDlg(wxCommandEvent& event){
   wxDialog* dlg = NULL;
   if( wxGetKeyState(WXK_ALT) )
-    dlg = new ThrottleDlg(this, m_ThrottleList, m_ThrottleMap, m_LocID);
+    dlg = new ThrottleDlg(this, m_ThrottleList, m_LocDlgMap, m_LocID);
   else
     dlg = new LocControlDialog(this, m_LocCtrlList, m_LocDlgMap, m_LocID);
 
