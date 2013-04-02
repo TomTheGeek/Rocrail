@@ -6293,3 +6293,9 @@ msgstr ""
 msgid "Show locked switches with a different color."
 msgstr ""
 
+#. 
+# id="altthrottle"
+#, c-format
+msgid "Alternative throttle"
+msgstr ""
+

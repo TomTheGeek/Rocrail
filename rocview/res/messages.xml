@@ -20482,4 +20482,7 @@
   <Msg id="showlocked">
     <en txt="Show locked switches" tip="Show locked switches with a different color."/>
   </Msg>
+  <Msg id="altthrottle">
+    <en txt="Alternative throttle"/>
+  </Msg>
 </Messages>

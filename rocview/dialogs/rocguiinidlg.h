@@ -169,6 +169,7 @@ public:
     wxCheckBox* m_JsSupport;
     wxCheckBox* m_DispatchMode;
     wxCheckBox* m_RestoreLcCtrl;
+    wxCheckBox* m_AltThrottle;
     wxCheckBox* m_Monitoring;
     wxCheckBox* m_ShowOnlyStartSchedules;
     wxCheckBox* m_ShowBlockID;
