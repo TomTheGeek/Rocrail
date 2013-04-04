@@ -164,6 +164,9 @@ static int __getRC(iOHSI88Data o) {
 /* Check if CTS is set. Retry configured times */
 static Boolean CheckCTS( iOHSI88Data o ) {
   int wait4cts = 0;
+  if( o->flow == none ) {
+    return True;
+  }
   if( o->usb ) {
     return True;
   }
@@ -745,9 +748,12 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
   data->stopBits = 1;
   data->timeout  = wDigInt.gettimeout( ini );
   data->parity   = none;
-  data->flow     = cts;
+  data->flow     = none;
   data->ctsretry = wDigInt.getctsretry( ini );
   data->dummyio  = wDigInt.isdummyio( ini );
+
+  if( StrOp.equals( wDigInt.cts, wDigInt.getflow(ini) ) )
+    data->flow = cts;
 
   hsi88ini = wDigInt.gethsi88(ini);
   if( hsi88ini == NULL ) {
@@ -766,14 +772,15 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "hsi88 %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid     =%s", wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"");
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  =%s", data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "type    =%s", data->usb ? "USB":"RS232" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbleft  =%d", data->fbleft );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbmiddle=%d", data->fbmiddle );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbright =%d", data->fbright );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout =%d", data->timeout );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dummyio =%s", data->dummyio?"true":"false" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      =%s", wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"");
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   =%s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "type     =%s", data->usb ? "USB":"RS232" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "handshake=%s", wDigInt.getflow(ini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbleft   =%d", data->fbleft );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbmiddle =%d", data->fbmiddle );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbright  =%d", data->fbright );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout  =%d", data->timeout );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dummyio  =%s", data->dummyio?"true":"false" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   if( data->usb ) {

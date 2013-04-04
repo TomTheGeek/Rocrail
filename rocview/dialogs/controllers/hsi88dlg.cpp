@@ -140,6 +140,7 @@ void Hsi88CntrlDlg::initValues() {
   m_Right->SetValue( wxString( val, wxConvUTF8 ) );
   StrOp.free( val );
   m_Smooth->SetValue( wHSI88.issmooth( hsi88ini )?true:false );
+  m_CTS->SetValue( StrOp.equals( wDigInt.cts, wDigInt.getflow( m_Props ))?true:false );
 }
 
 
@@ -161,6 +162,7 @@ void Hsi88CntrlDlg::evaluate() {
   wHSI88.setfbmiddle( hsi88ini, atoi( m_Mid->GetValue().mb_str(wxConvUTF8) ) );
   wHSI88.setfbright( hsi88ini, atoi( m_Right->GetValue().mb_str(wxConvUTF8) ) );
   wHSI88.setsmooth( hsi88ini, m_Smooth->IsChecked()?True:False );
+  wDigInt.setflow( m_Props, m_CTS->IsChecked() ? wDigInt.cts:wDigInt.none );
 }
 
 
@@ -187,6 +189,7 @@ bool Hsi88CntrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& cap
     m_Right = NULL;
     m_OptionsBox = NULL;
     m_Smooth = NULL;
+    m_CTS = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end Hsi88CntrlDlg member initialisation
@@ -283,17 +286,21 @@ void Hsi88CntrlDlg::CreateControls()
     m_Smooth->SetValue(false);
     itemStaticBoxSizer19->Add(m_Smooth, 0, wxALIGN_LEFT|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer21 = new wxStdDialogButtonSizer;
+    m_CTS = new wxCheckBox( m_Panel, wxID_ANY, _("CTS"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_CTS->SetValue(false);
+    itemStaticBoxSizer19->Add(m_CTS, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer21, 0, wxALIGN_RIGHT|wxALL, 5);
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer22 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer22, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer21->AddButton(m_OK);
+    itemStdDialogButtonSizer22->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer21->AddButton(m_Cancel);
+    itemStdDialogButtonSizer22->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer21->Realize();
+    itemStdDialogButtonSizer22->Realize();
 
 ////@end Hsi88CntrlDlg content construction
 }

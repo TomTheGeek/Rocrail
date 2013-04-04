@@ -138,6 +138,7 @@ public:
     wxTextCtrl* m_Right;
     wxStaticBox* m_OptionsBox;
     wxCheckBox* m_Smooth;
+    wxCheckBox* m_CTS;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end Hsi88CntrlDlg member variables
