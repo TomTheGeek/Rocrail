@@ -1448,7 +1448,7 @@ static void __feedbackReader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback p50x reader initialized." );
 
   do {
-
+    state = P50_OK;
     ThreadOp.sleep( o->psleep );
     out[0] = (byte)'x';
     out[1] = 0xCB; /*XEvtSen*/
