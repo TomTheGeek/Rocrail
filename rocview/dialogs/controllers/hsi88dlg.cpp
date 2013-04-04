@@ -245,10 +245,10 @@ void Hsi88CntrlDlg::CreateControls()
 
     wxArrayString m_TypeStrings;
     m_TypeStrings.Add(_("&RS232"));
-    m_TypeStrings.Add(_("&USB"));
+    m_TypeStrings.Add(_("&LDT-USB"));
     m_Type = new wxRadioBox( m_Panel, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 1, wxRA_SPECIFY_ROWS );
     m_Type->SetSelection(0);
-    itemBoxSizer4->Add(m_Type, 0, wxGROW|wxALL, 5);
+    itemBoxSizer4->Add(m_Type, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_ChainBox = new wxStaticBox(m_Panel, wxID_ANY, _("Chains"));
     wxStaticBoxSizer* itemStaticBoxSizer11 = new wxStaticBoxSizer(m_ChainBox, wxVERTICAL);
