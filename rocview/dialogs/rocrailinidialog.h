@@ -213,6 +213,8 @@ public:
     wxTextCtrl* m_PlanFile;
     wxStaticText* m_labOccFile;
     wxTextCtrl* m_OccFile;
+    wxStaticText* m_labLocoFile;
+    wxTextCtrl* m_LocoFile;
     wxStaticText* m_labPlanType;
     wxRadioBox* m_PlanType;
     wxCheckBox* m_Backup;

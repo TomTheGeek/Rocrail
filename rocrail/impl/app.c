@@ -605,6 +605,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   const char* wd      = CmdLnOp.getStr( arg, wCmdline.workdir );
   const char* tf      = CmdLnOp.getStr( arg, wCmdline.trcfile );
   const char* pf      = CmdLnOp.getStr( arg, wCmdline.planfile );
+  const char* lf      = CmdLnOp.getStr( arg, wCmdline.locofile );
   const char* port    = CmdLnOp.getStr( arg, wCmdline.port );
   const char* nf      = CmdLnOp.getStr( arg, wCmdline.inifile );
 
@@ -864,7 +865,8 @@ static int _Main( iOApp inst, int argc, char** argv ) {
 
   /* planDoc */
   pf = pf?pf:wRocRail.getplanfile(data->ini);
-  data->model = ModelOp.inst( pf );
+  lf = lf?lf:wRocRail.getlocs(data->ini);
+  data->model = ModelOp.inst( pf, lf );
   if( !ModelOp.init( data->model ) ) {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "unable to create model: EXIT" );
     return 0;

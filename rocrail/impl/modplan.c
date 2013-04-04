@@ -601,7 +601,7 @@ static void __resolveRoutes( iOModPlanData data, iONode model, iONode module, iO
 
 
 
-static void __mergeList( const char* listname, iONode model, iONode module, int level, int r, int cx, int cy, Boolean broadcast ) {
+static void _mergeList( const char* listname, iONode model, iONode module, int level, int r, int cx, int cy, Boolean broadcast ) {
   iONode modellist = NodeOp.findNode( model, listname );
   iONode list = NodeOp.findNode( module, listname );
 
@@ -715,19 +715,19 @@ static iONode __mergeModule( iOModPlanData data, iONode model, iONode module, in
       }
     }
 
-    __mergeList(wTrackList.name()    , model, moduleRoot, level, r, cx, cy, informClients);
-    __mergeList(wBlockList.name()    , model, moduleRoot, level, r, cx, cy, informClients);
-    __mergeList(wStageList.name()    , model, moduleRoot, level, r, cx, cy, informClients);
-    __mergeList(wSwitchList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
-    __mergeList(wSignalList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
-    __mergeList(wOutputList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
-    __mergeList(wFeedbackList.name() , model, moduleRoot, level, r, cx, cy, informClients);
-    __mergeList(wTextList.name()     , model, moduleRoot, level, r, cx, cy, informClients);
-    __mergeList(wTurntableList.name(), model, moduleRoot, level, r, cx, cy, informClients);
-    __mergeList(wSelTabList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
-    __mergeList(wActionList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
-    __mergeList(wLocationList.name() , model, moduleRoot, level, r, cx, cy, informClients);
-    __mergeList(wBoosterList.name()  , model, moduleRoot, level, r, cx, cy, informClients);
+    _mergeList(wTrackList.name()    , model, moduleRoot, level, r, cx, cy, informClients);
+    _mergeList(wBlockList.name()    , model, moduleRoot, level, r, cx, cy, informClients);
+    _mergeList(wStageList.name()    , model, moduleRoot, level, r, cx, cy, informClients);
+    _mergeList(wSwitchList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
+    _mergeList(wSignalList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
+    _mergeList(wOutputList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
+    _mergeList(wFeedbackList.name() , model, moduleRoot, level, r, cx, cy, informClients);
+    _mergeList(wTextList.name()     , model, moduleRoot, level, r, cx, cy, informClients);
+    _mergeList(wTurntableList.name(), model, moduleRoot, level, r, cx, cy, informClients);
+    _mergeList(wSelTabList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
+    _mergeList(wActionList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
+    _mergeList(wLocationList.name() , model, moduleRoot, level, r, cx, cy, informClients);
+    _mergeList(wBoosterList.name()  , model, moduleRoot, level, r, cx, cy, informClients);
 
     __resolveRoutes( data, model, module, moduleRoot, level );
 
@@ -755,12 +755,12 @@ static Boolean __mergeRoutes( iOModPlanData data, iONode model, const char* fnam
   iONode root = ModPlanOp.parsePlan( fname );
   if( root != NULL ) {
 
-    __mergeList(wRouteList.name()   , model, root, -1, 0,0,0, False);
-    __mergeList(wLinkList.name()    , model, root, -1, 0,0,0, False);
-    __mergeList(wLocationList.name(), model, root, -1, 0,0,0, False);
-    __mergeList(wScheduleList.name(), model, root, -1, 0,0,0, False);
-    __mergeList(wWaybillList.name() , model, root, -1, 0,0,0, False);
-    __mergeList(wTourList.name()    , model, root, -1, 0,0,0, False);
+    _mergeList(wRouteList.name()   , model, root, -1, 0,0,0, False);
+    _mergeList(wLinkList.name()    , model, root, -1, 0,0,0, False);
+    _mergeList(wLocationList.name(), model, root, -1, 0,0,0, False);
+    _mergeList(wScheduleList.name(), model, root, -1, 0,0,0, False);
+    _mergeList(wWaybillList.name() , model, root, -1, 0,0,0, False);
+    _mergeList(wTourList.name()    , model, root, -1, 0,0,0, False);
 
     NodeOp.base.del( root );
 
@@ -783,19 +783,18 @@ static Boolean __mergeRoutes( iOModPlanData data, iONode model, const char* fnam
   all locomotives
   lists: lclist
 */
-static Boolean __mergeLocs( iONode model, const char* fname ) {
+static void _mergeLocs( iONode model, const char* fname ) {
   iONode root = ModPlanOp.parsePlan( fname );
   if( root != NULL ) {
 
-    __mergeList(wLocList.name()  , model, root, -1, 0,0,0, False);
-    __mergeList(wCarList.name()  , model, root, -1, 0,0,0, False);
-    __mergeList(wOperatorList.name()  , model, root, -1, 0,0,0, False);
+    _mergeList(wLocList.name()  , model, root, -1, 0,0,0, False);
+    _mergeList(wCarList.name()  , model, root, -1, 0,0,0, False);
+    _mergeList(wOperatorList.name()  , model, root, -1, 0,0,0, False);
 
     NodeOp.base.del( root );
 
   }
 
-  return True;
 }
 
 
@@ -861,7 +860,7 @@ static iONode __parseModPlan( iOModPlan inst ) {
   };
 
   __mergeRoutes( data, model, routes, data->modplan );
-  __mergeLocs  ( model, locs );
+  _mergeLocs  ( model, locs );
 
   return model;
 }
@@ -1153,17 +1152,16 @@ static void __backupSave( const char* fileName, const char* xml ) {
 
 
 /* save locs for modules */
-static void __saveLocs( iOModPlan inst, const char* filename ) {
+static void _saveLocs( iONode modplan, const char* filename ) {
   /* locs must not be a part of an other file! */
-  iOModPlanData data = Data(inst);
   iONode model = NodeOp.inst( wPlan.name(), NULL, ELEMENT_NODE );
   char* xml = NULL;
-  if( wPlan.getlclist(data->model) != NULL )
-    NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getlclist(data->model) ) );
-  if( wPlan.getcarlist(data->model) != NULL )
-    NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getcarlist(data->model) ) );
-  if( wPlan.getoperatorlist(data->model) != NULL )
-    NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getoperatorlist(data->model) ) );
+  if( wPlan.getlclist(modplan) != NULL )
+    NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getlclist(modplan) ) );
+  if( wPlan.getcarlist(modplan) != NULL )
+    NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getcarlist(modplan) ) );
+  if( wPlan.getoperatorlist(modplan) != NULL )
+    NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getoperatorlist(modplan) ) );
 
   /* Serialize plan. */
   xml = model->base.toString( model );
@@ -1324,7 +1322,7 @@ static void _save( iOModPlan inst, const char* filename ) {
       __saveModule( inst, module, i );
     }
   }
-    __saveLocs( inst, wModPlan.getlocs(o->modplan) );
+    _saveLocs( o->modplan, wModPlan.getlocs(o->modplan) );
     __saveRoutes( inst, wModPlan.getroutes(o->modplan) );
     __saveModPlan( inst, filename );
   }

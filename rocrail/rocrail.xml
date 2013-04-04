@@ -758,8 +758,9 @@
   <object name="Model" use="node,list,map,doc,mutex,file" include="#stdio,block,loc,car,operator,route,fback,switch,track,signal,tt,output,text,seltab,stage,action,location,$rocint/public/blockbase" remark="The plan model">
     <typedef def="void (*model_listener)(obj,iONode)"/>
     <fun name="inst" vt="this">
-      <param name="planfile" vt="const char*" remark="PLan filename"/>
-    </fun>
+      <param name="planfile" vt="const char*" remark="Plan filename"/>
+      <param name="locofile" vt="const char*" remark="Loco filename"/>
+      </fun>
     <fun name="init" vt="Boolean">
       <param name="inst" vt="this" remark="Model instance"/>
     </fun>
@@ -1161,6 +1162,7 @@
       <var name="healthy" vt="Boolean"/>
       <var name="autoMode" vt="Boolean"/>
       <var name="fileName" vt="const char*"/>
+      <var name="locoFileName" vt="const char*"/>
       <var name="title" vt="const char*"/>
       <var name="planFile" vt="iOFile"/>
       <var name="planDoc" vt="iODoc"/>
@@ -1905,6 +1907,24 @@
     <fun name="getResolvedRouteID" vt="const char*">
       <param name="inst" vt="this" remark="instance"/>
       <param name="routeid" vt="const char*"/>
+    </fun>
+    <fun name="mergeList" vt="void">
+      <param name="listname" vt="const char*"/>
+      <param name="model" vt="iONode"/>
+      <param name="module" vt="iONode"/>
+      <param name="level" vt="int"/>
+      <param name="r" vt="int"/>
+      <param name="cx" vt="int"/>
+      <param name="cy" vt="int"/>
+      <param name="broadcast" vt="Boolean"/>
+    </fun>
+    <fun name="mergeLocs" vt="void">
+      <param name="model" vt="iONode"/>
+      <param name="fname" vt="const char*"/>
+    </fun>
+    <fun name="saveLocs" vt="void">
+      <param name="model" vt="iONode"/>
+      <param name="fname" vt="const char*"/>
     </fun>
     <data>
       <var name="model" vt="iONode"/>

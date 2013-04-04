@@ -27,6 +27,7 @@
     <const name="inifile" vt="string" val="-i" defval="rocrail.ini" range="*" remark="Specifies which Inifile to use: -i [file]"/>
     <const name="trcfile" vt="string" val="-t" defval="rocrail" range="*" remark="Specifies trace filename: -t [file] (Use relative only if using http service.)"/>
     <const name="planfile" vt="string" val="-x" defval="" range="*" remark="Specifies plan filename"/>
+    <const name="locofile" vt="string" val="-lf" defval="" range="*" remark="Specifies loco list filename"/>
     <const name="libpath" vt="string" val="-l" defval="" range="*" remark="Location of the rocrail libraries: -l [path]"/>
     <const name="imgpath" vt="string" val="-img" defval="" range="*" remark="Location of images: -img [path]"/>
     <const name="debug" vt="string" val="-debug" defval="false" remark="Activates debug tracelevel."/>
@@ -196,6 +197,7 @@
   <rocrail structname="RRI" wrappername="RocRail">
     <var name="file" vt="string" defval="rocrail.ini" remark="RocRail ini-file."/>
     <var name="planfile" vt="string" defval="plan.xml" remark="RocRail plan-file."/>
+    <var name="locs" vt="string" defval="NULL" range="*" remark="File name of locomotive definitions."/>
     <var name="occupancy" vt="string" defval="occ.xml" range="*" remark="File name of block occupancy."/>
     <var name="createmodplan" vt="bool" defval="false" remark="Create a modplan if the planfile does not jet exist."/>
     <var name="backup" vt="bool" defval="true" remark="Activate backup for plan files."/>

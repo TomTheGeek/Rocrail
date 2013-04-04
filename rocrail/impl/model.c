@@ -367,6 +367,7 @@ static Boolean _createEmptyPlan( iOModelData o ) {
 
 
 static Boolean _parsePlan( iOModelData o ) {
+  Boolean ok = False;
   if( o->planFile != NULL ) {
     FileOp.close( o->planFile );
     o->planFile->base.del(o->planFile);
@@ -402,6 +403,9 @@ static Boolean _parsePlan( iOModelData o ) {
             return False;
           }
 
+          if( o->locoFileName != NULL && StrOp.len( o->locoFileName ) > 0  ) {
+            ModPlanOp.mergeLocs( o->model, o->locoFileName );
+          }
           /* check for multiple xyz positions and ID's */
           iOAnalyse analyser = AnalyseOp.inst();
           if( analyser ) {
@@ -437,10 +441,10 @@ static Boolean _parsePlan( iOModelData o ) {
       }
     }
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsePlan title: %s", o->title );
-    return True;
+    ok = True;
   }
 
-  return False;
+  return ok;
 }
 
 
@@ -2207,10 +2211,10 @@ static void _save( iOModel inst, Boolean removeGen ) {
     _removeGenerated(o, wRouteList.name(), wRoute.name());
   }
 
-
   if( o->model != NULL && o->moduleplan != NULL ) {
     ModPlanOp.save( o->moduleplan, o->fileName );
   }
+
   if( o->model != NULL && o->moduleplan == NULL ){
     /* save regular plan */
     char* xml = NULL;
@@ -2218,7 +2222,20 @@ static void _save( iOModel inst, Boolean removeGen ) {
     wPlan.setrocrailversion( o->model, version );
     StrOp.free(version);
     /* Serialize plan. */
-    xml = o->model->base.toString( o->model );
+    if( o->locoFileName != NULL && StrOp.len( o->locoFileName ) > 0  ) {
+      iONode clone = (iONode)NodeOp.base.clone(o->model);
+      iONode loclist = wPlan.getlclist(clone);
+      if( loclist != NULL ) {
+        /* Save the loco list into its file. */
+        ModPlanOp.saveLocs(clone, o->locoFileName);
+        NodeOp.removeChild(clone, loclist);
+      }
+      xml = NodeOp.base.toString( clone );
+      NodeOp.base.del(clone);
+    }
+    else {
+      xml = o->model->base.toString( o->model );
+    }
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Serialized Plan=%d", StrOp.len( xml ) );
     if( StrOp.len( xml ) > 0 ) {
       __backupSave( o->fileName, xml );
@@ -5105,7 +5122,7 @@ static void _forceUnlock(iOModel inst) {
 }
 
 
-static iOModel _inst( const char* fileName ) {
+static iOModel _inst( const char* fileName, const char* locoFileName ) {
   iOModel     model = allocMem( sizeof( struct OModel ) );
   iOModelData data  = allocMem( sizeof( struct OModelData ) );
 
@@ -5116,6 +5133,7 @@ static iOModel _inst( const char* fileName ) {
   MemOp.set( data->fbAddresses, 0, 256 );
 
   data->fileName = fileName;
+  data->locoFileName = locoFileName;
 
   data->locMap      = MapOp.inst();
   data->masterLocMap = MapOp.inst();
