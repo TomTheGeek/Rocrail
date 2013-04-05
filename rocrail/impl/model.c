@@ -409,7 +409,7 @@ static Boolean _parsePlan( iOModelData o ) {
           /* check for multiple xyz positions and ID's */
           iOAnalyse analyser = AnalyseOp.inst();
           if( analyser ) {
-            o->healthy = AnalyseOp.checkPlanHealth( analyser ); 
+            o->healthy = AnalyseOp.checkPlanHealth( analyser );
             AnalyseOp.base.del(analyser);
           }
 
@@ -2225,10 +2225,16 @@ static void _save( iOModel inst, Boolean removeGen ) {
     if( o->locoFileName != NULL && StrOp.len( o->locoFileName ) > 0  ) {
       iONode clone = (iONode)NodeOp.base.clone(o->model);
       iONode loclist = wPlan.getlclist(clone);
+      iONode carlist = wPlan.getcarlist(clone);
+      iONode oprlist = wPlan.getoperatorlist(clone);
       if( loclist != NULL ) {
         /* Save the loco list into its file. */
         ModPlanOp.saveLocs(clone, o->locoFileName);
         NodeOp.removeChild(clone, loclist);
+        if( carlist != NULL )
+          NodeOp.removeChild(clone, carlist);
+        if( oprlist != NULL )
+          NodeOp.removeChild(clone, oprlist);
       }
       xml = NodeOp.base.toString( clone );
       NodeOp.base.del(clone);

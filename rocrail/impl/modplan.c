@@ -609,6 +609,7 @@ static void _mergeList( const char* listname, iONode model, iONode module, int l
     modellist = NodeOp.inst( listname, NULL, ELEMENT_NODE );
     NodeOp.addChild(model, modellist);
   }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "merge list %s...", listname);
 
   if( list != NULL ) {
     int i = 0;
@@ -632,6 +633,7 @@ static void _mergeList( const char* listname, iONode model, iONode module, int l
       else if( r == 270 && cx > 0 && cy > 0 )
         ModuleOp.rotate270( child, cx,cy );
 
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "add child %s...", wItem.getid(child));
       NodeOp.addChild( modellist, (iONode)NodeOp.base.clone(child) );
 
       if( broadcast ) {

@@ -1390,7 +1390,6 @@ static void __clockticker( void* threadinst ) {
       else
         data->time = time(NULL);
     }
-
     /* sync clock event and seconds to full minute */
     seconds = data->time % 60;
     data->time += seconds;
