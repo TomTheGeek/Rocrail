@@ -2916,6 +2916,7 @@ void LocDialog::OnButtonImportlocosClick( wxCommandEvent& event )
 
   }
   fdlg->Destroy();
+  m_GuestImport->SetValue(false);
 }
 
 
