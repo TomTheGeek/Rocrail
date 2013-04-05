@@ -1392,7 +1392,12 @@ static void __clockticker( void* threadinst ) {
     }
     /* sync clock event and seconds to full minute */
     seconds = data->time % 60;
-    data->time += seconds;
+    if( seconds > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "time correction %d", seconds );
+      data->time -= seconds;
+    }
+
+    seconds = 0;
 
     updateticker++;
 
