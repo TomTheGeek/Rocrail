@@ -301,6 +301,36 @@ void SwitchDialog::initLabels() {
   m_FbSet->SetLabel(wxGetApp().getMsg( "overwritestatus" ));
   m_FbUseField->SetLabel(wxGetApp().getMsg( "usefieldevent" ));
 
+  m_Fb1R->Append( _T("-") );
+  m_Fb1G->Append( _T("-") );
+  m_Fb2R->Append( _T("-") );
+  m_Fb2G->Append( _T("-") );
+  m_FbOcc->Append( _T("-") );
+  if( model != NULL ) {
+    iOList list = ListOp.inst();
+    iONode fblist = wPlan.getfblist( model );
+    if( fblist != NULL ) {
+      int cnt = NodeOp.getChildCnt( fblist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode fb = NodeOp.getChild( fblist, i );
+        ListOp.add(list, (obj)wFeedback.getid( fb ));
+      }
+    }
+    ListOp.sort(list, &__sortStr);
+    int cnt = ListOp.size( list );
+    for( int i = 0; i < cnt; i++ ) {
+      const char* id = (const char*)ListOp.get( list, i );
+      m_Fb1R->Append( wxString(id,wxConvUTF8) );
+      m_Fb1G->Append( wxString(id,wxConvUTF8) );
+      m_Fb2R->Append( wxString(id,wxConvUTF8) );
+      m_Fb2G->Append( wxString(id,wxConvUTF8) );
+      m_FbOcc->Append( wxString(id,wxConvUTF8) );
+    }
+
+    ListOp.base.del(list);
+
+  }
+
   m_labCTCMotor->SetLabel( wxGetApp().getMsg( "motor" ) );
   m_labCTCIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_labCTCAddress->SetLabel( wxGetApp().getMsg( "address" ) );
@@ -542,36 +572,6 @@ void SwitchDialog::initValues() {
   m_TrackDriverEnable->SetValue( wSwitch.istd(m_Props)?true:false);
 
   // Wirerings
-  iONode model = wxGetApp().getModel();
-  m_Fb1R->Append( _T("-") );
-  m_Fb1G->Append( _T("-") );
-  m_Fb2R->Append( _T("-") );
-  m_Fb2G->Append( _T("-") );
-  m_FbOcc->Append( _T("-") );
-  if( model != NULL ) {
-    iOList list = ListOp.inst();
-    iONode fblist = wPlan.getfblist( model );
-    if( fblist != NULL ) {
-      int cnt = NodeOp.getChildCnt( fblist );
-      for( int i = 0; i < cnt; i++ ) {
-        iONode fb = NodeOp.getChild( fblist, i );
-        ListOp.add(list, (obj)wFeedback.getid( fb ));
-      }
-    }
-    ListOp.sort(list, &__sortStr);
-    int cnt = ListOp.size( list );
-    for( int i = 0; i < cnt; i++ ) {
-      const char* id = (const char*)ListOp.get( list, i );
-      m_Fb1R->Append( wxString(id,wxConvUTF8) );
-      m_Fb1G->Append( wxString(id,wxConvUTF8) );
-      m_Fb2R->Append( wxString(id,wxConvUTF8) );
-      m_Fb2G->Append( wxString(id,wxConvUTF8) );
-      m_FbOcc->Append( wxString(id,wxConvUTF8) );
-    }
-
-    ListOp.base.del(list);
-
-  }
 
   if( wSwitch.getfbR (m_Props)==NULL || StrOp.len(wSwitch.getfbR (m_Props)) == 0 )
     m_Fb1R->SetStringSelection( _T("-") );
