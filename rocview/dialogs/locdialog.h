@@ -321,6 +321,7 @@ public:
     wxButton* m_Doc;
     wxButton* m_Copy;
     wxButton* m_ImportLocos;
+    wxCheckBox* m_GuestImport;
     wxCheckBox* m_RestoreFx;
     wxCheckBox* m_RestoreSpeed;
     wxCheckBox* m_Show;

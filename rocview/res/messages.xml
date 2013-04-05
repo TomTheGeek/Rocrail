@@ -20491,4 +20491,7 @@
   <Msg id="openoccfile" dialog="true">
     <en txt="Open occupancy file"/>
   </Msg>
+  <Msg id="guestimport" dialog="true">
+    <en txt="Guest import"/>
+  </Msg>
 </Messages>

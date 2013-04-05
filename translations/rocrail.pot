@@ -6311,3 +6311,9 @@ msgstr ""
 msgid "Open occupancy file"
 msgstr ""
 
+#. 
+# id="guestimport"
+#, c-format
+msgid "Guest import"
+msgstr ""
+
