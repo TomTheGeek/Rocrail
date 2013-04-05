@@ -58,6 +58,8 @@ class wxSpinCtrl;
 #define ID_PANEL_RR_INI 10092
 #define wxID_STATIC_RR_PLANFILE 10093
 #define ID_TEXTCTRL_RR_PLANFILE 10094
+#define ID_BUTTON_PLANFILE 10002
+#define ID_BUTTON_LOCOFILE 10419
 #define ID_BUTTON_KEYPATH 10411
 #define wxID_STATIC_RR_LIBPATH 10095
 #define ID_TEXTCTRL_RR_LIBPATH 10096
@@ -156,6 +158,12 @@ public:
     /// wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED event handler for ID_NOTEBOOK_RR
     void OnNotebookRrPageChanged( wxNotebookEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_PLANFILE
+    void OnButtonPlanfileClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCOFILE
+    void OnButtonLocofileClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_KEYPATH
     void OnButtonKeypathClick( wxCommandEvent& event );
 
@@ -211,10 +219,12 @@ public:
     wxPanel* m_GeneralPanel;
     wxStaticText* m_LabelPlanfile;
     wxTextCtrl* m_PlanFile;
+    wxButton* m_PlanFileDlg;
     wxStaticText* m_labOccFile;
     wxTextCtrl* m_OccFile;
     wxStaticText* m_labLocoFile;
     wxTextCtrl* m_LocoFile;
+    wxButton* m_LocoFileDlg;
     wxStaticText* m_labPlanType;
     wxRadioBox* m_PlanType;
     wxCheckBox* m_Backup;

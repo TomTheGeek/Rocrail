@@ -20485,4 +20485,7 @@
   <Msg id="altthrottle">
     <en txt="Alternative throttle"/>
   </Msg>
+  <Msg id="openlocofile" dialog="true">
+    <en txt="Open locomotive file"/>
+  </Msg>
 </Messages>
