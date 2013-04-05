@@ -59,6 +59,7 @@ class wxSpinCtrl;
 #define wxID_STATIC_RR_PLANFILE 10093
 #define ID_TEXTCTRL_RR_PLANFILE 10094
 #define ID_BUTTON_PLANFILE 10002
+#define ID_BUTTON_OCCFILE 10420
 #define ID_BUTTON_LOCOFILE 10419
 #define ID_BUTTON_KEYPATH 10411
 #define wxID_STATIC_RR_LIBPATH 10095
@@ -161,6 +162,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_PLANFILE
     void OnButtonPlanfileClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_OCCFILE
+    void OnButtonOccfileClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCOFILE
     void OnButtonLocofileClick( wxCommandEvent& event );
 
@@ -222,6 +226,7 @@ public:
     wxButton* m_PlanFileDlg;
     wxStaticText* m_labOccFile;
     wxTextCtrl* m_OccFile;
+    wxButton* m_OpenOccFile;
     wxStaticText* m_labLocoFile;
     wxTextCtrl* m_LocoFile;
     wxButton* m_LocoFileDlg;

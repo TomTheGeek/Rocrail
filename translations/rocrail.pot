@@ -6299,3 +6299,15 @@ msgstr ""
 msgid "Alternative throttle"
 msgstr ""
 
+#. 
+# id="openlocofile"
+#, c-format
+msgid "Open locomotive file"
+msgstr ""
+
+#. 
+# id="openoccfile"
+#, c-format
+msgid "Open occupancy file"
+msgstr ""
+

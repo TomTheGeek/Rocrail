@@ -20488,4 +20488,7 @@
   <Msg id="openlocofile" dialog="true">
     <en txt="Open locomotive file"/>
   </Msg>
+  <Msg id="openoccfile" dialog="true">
+    <en txt="Open occupancy file"/>
+  </Msg>
 </Messages>
