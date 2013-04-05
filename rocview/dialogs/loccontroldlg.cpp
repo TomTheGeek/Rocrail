@@ -991,6 +991,10 @@ void LocControlDialog::OnBitmapbuttonLocctrlDirClick( wxCommandEvent& event )
   m_Dir->SetBitmapLabel( m_bDir?wxBitmap(rocrail_forwards_xpm):wxBitmap(rocrail_reverse_xpm) );
   m_Dir->SetToolTip( m_bDir? wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
   m_Dir->Refresh();
+  if( wGui.isresetspeeddir(wxGetApp().getIni()) ) {
+    m_iSpeed = 0;
+    m_SpeedCtrl->SetValue( m_iSpeed );
+  }
   speedCmd(true);
 }
 
