@@ -6317,3 +6317,9 @@ msgstr ""
 msgid "Guest import"
 msgstr ""
 
+#. 
+# id="resetspeeddir"
+#, c-format
+msgid "Reset speed at direction change"
+msgstr ""
+

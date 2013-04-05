@@ -20494,4 +20494,7 @@
   <Msg id="guestimport" dialog="true">
     <en txt="Guest import"/>
   </Msg>
+  <Msg id="resetspeeddir">
+    <en txt="Reset speed at direction change"/>
+  </Msg>
 </Messages>

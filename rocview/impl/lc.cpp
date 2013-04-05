@@ -558,6 +558,11 @@ void LC::OnButton(wxCommandEvent& event)
 
     if( wxGetApp().getFrame()->isTooltip())
       m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
+
+    if( wGui.isresetspeeddir(wxGetApp().getIni()) ) {
+      m_iSpeed = 0;
+      m_Vslider->SetValue( m_iSpeed, true );
+    }
     speedCmd(true);
   }
   else if ( event.GetId() == ME_F1 ) {

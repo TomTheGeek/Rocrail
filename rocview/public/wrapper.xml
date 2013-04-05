@@ -116,6 +116,7 @@
     <var name="speakcmd" vt="string" defval=""/>
     <var name="showonlystartschedules" vt="bool" defval="false"/>
     <var name="reconnectafterservershutdown" vt="bool" defval="false"/>
+    <var name="resetspeeddir" vt="bool" defval="false"/>
     <trace extern="true"/>
     <var name="restorelcctrl" vt="bool" defval="true"/>
     <var name="locosortbyaddress" vt="bool" defval="false"/>
