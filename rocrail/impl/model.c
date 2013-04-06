@@ -4151,7 +4151,8 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
   MutexOp.post( data->muxFindDest );
 
   if( street != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "The found way has %d routes.", stlist==NULL ? 1:ListOp.size( stlist ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "The found way has %d routes. (%s)", stlist==NULL ? 1:ListOp.size( stlist ), RouteOp.base.id(street) );
   }
   return street;
 }
@@ -4451,8 +4452,13 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
               block_suits suits;
               int restlen = 0;
 
+              suits = block->isSuited( block, loc, &restlen, !selectShortest );
+              if( !route->hasPermission( route, loc, fromBlockId, !samedir ) ) {
+                suits = suits_not;
+              }
+
               /* Check for wanted block: */
-              if( gotoBlockId != NULL && StrOp.equals( gotoBlockId, blockId ) ) {
+              if( suits != suits_not && gotoBlockId != NULL && StrOp.equals( gotoBlockId, blockId ) ) {
                 if( forceSameDir && !samedir ) {
                   gotoinwrongdir = True;
                   fromBlock->setTempWait(fromBlock, True);
@@ -4472,11 +4478,6 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                   ListOp.add( fitRoutes, (obj)route );
                   break;
                 }
-              }
-
-              suits = block->isSuited( block, loc, &restlen, !selectShortest );
-              if( !route->hasPermission( route, loc, fromBlockId, !samedir ) ) {
-                suits = suits_not;
               }
 
               /*
