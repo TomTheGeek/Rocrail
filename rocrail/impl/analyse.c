@@ -2593,7 +2593,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
 
       /* put keys for all covered fields */
       if( StrOp.equals( NodeOp.getName(node), wSwitch.name() ) ) {
-        if( StrOp.equals( type, wSwitch.crossing ) ||
+        if( ( StrOp.equals( type, wSwitch.crossing ) && ! ( wSwitch.getaddr1(node) == 0 && wSwitch.getport1(node) == 0 && wSwitch.isrectcrossing(node) ) ) ||
             StrOp.equals( type, wSwitch.dcrossing ) ||
             StrOp.equals( type, wSwitch.ccrossing )) {
 
