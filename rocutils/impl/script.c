@@ -133,21 +133,35 @@ static iONode _nextLine(iOScript inst) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsing command: %s", cmd);
 
     if( StrOp.equalsi(wSysCmd.name(), cmd) && parm1 != NULL) {
-      /* power command */
+      /* sys,go */
       node = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
-      if( StrOp.equalsi(wSysCmd.go, parm1) )
-        wSysCmd.setcmd( node, wSysCmd.go);
-      else
-        wSysCmd.setcmd( node, wSysCmd.stop);
+      wSysCmd.setcmd( node, parm1);
     }
 
-    else if( StrOp.equalsi( wFeedback.name(), cmd ) && parm1 != NULL ) {
+    else if( StrOp.equalsi( wFeedback.name(), cmd ) && parm1 != NULL && parm2 != NULL ) {
+      /* fb,<id>,true,<ident> */
       node = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
       wFeedback.setid( node, parm1 );
-      wFeedback.setstate( node, StrOp.equalsi("on", parm2) );
+      wFeedback.setstate( node, StrOp.equalsi("true", parm2) );
       if( parm3 != NULL )
         wFeedback.setidentifier(node, parm3);
     }
+
+    else if( StrOp.equalsi( wLoc.name(), cmd ) && parm1 != NULL && parm2 != NULL ) {
+      /* lc,<id>,go */
+      node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setid( node, parm1 );
+      wLoc.setcmd( node, parm2 );
+      if( parm3 != NULL ) {
+        /* lc,<id>,gotoblock,<bkid> */
+        if( StrOp.equalsi(wLoc.gotoblock, parm2) )
+          wLoc.setblockid(node, parm3);
+        /* lc,<id>,useschedule,<scid> */
+        if( StrOp.equalsi(wLoc.useschedule, parm2) )
+          wLoc.setscheduleid(node, parm3);
+      }
+    }
+
 
 
     /* prepare next line pointer */
