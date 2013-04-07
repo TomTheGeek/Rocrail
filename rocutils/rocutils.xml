@@ -73,11 +73,21 @@
     <fun name="convertNode" vt="char*">
       <param name="node" vt="iONode"/>
     </fun>
+    <fun name="setRecording" vt="void">
+      <param name="inst" vt="this"/>
+      <param name="recording" vt="Boolean"/>
+    </fun>
+    <fun name="recordNode" vt="void">
+      <param name="inst" vt="this"/>
+      <param name="node" vt="iONode"/>
+    </fun>
     <data>
       <var name="linenr" vt="int"/>
       <var name="pline" vt="const char*"/>
       <var name="nrlines" vt="int"/>
       <var name="script" vt="const char*"/>
+      <var name="record" vt="char*"/>
+      <var name="recording" vt="Boolean"/>
       </data>
   </object>
   

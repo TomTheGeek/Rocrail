@@ -233,6 +233,29 @@ static void _setScript(iOScript inst, const char* script) {
 
 
 /**  */
+static void _recordNode( struct OScript* inst ,iONode node ) {
+  iOScriptData data = Data(inst);
+  char* scriptline = ScriptOp.convertNode(node);
+  if( scriptline != NULL ) {
+    data->record = StrOp.cat( data->record, scriptline );
+    StrOp.free(scriptline);
+    data->pline  = data->record;
+  }
+}
+
+
+/**  */
+static void _setRecording( struct OScript* inst ,Boolean recording ) {
+  iOScriptData data = Data(inst);
+  if( !data->recording && recording && data->record != NULL ) {
+    StrOp.free( data->record );
+    data->record = NULL;
+  }
+  data->recording = recording;
+}
+
+
+/**  */
 static struct OScript* _inst( const char* script ) {
   iOScript __Script = allocMem( sizeof( struct OScript ) );
   iOScriptData data = allocMem( sizeof( struct OScriptData ) );
