@@ -103,21 +103,41 @@ static iONode _getLine( iOScript inst, int linenr ) {
 }
 
 
-/**  */
-static iONode _nextLine(iOScript inst) {
-  iOScriptData data = Data(inst);
+/* Used for recording a node. */
+static char* _convertNode(iONode node) {
+  char* scriptline = NULL;
+
+  if( node != NULL ) {
+    scriptline = StrOp.fmt( "%s,%s", NodeOp.getName(node), NodeOp.getStr(node, "id", "?") );
+    if( NodeOp.getStr(node, "cmd", NULL) != NULL ) {
+      scriptline = StrOp.cat( scriptline, ",");
+      scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "cmd", NULL));
+    }
+    else if( NodeOp.getStr(node, "state", NULL) != NULL ) {
+      scriptline = StrOp.cat( scriptline, ",");
+      scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "state", NULL));
+    }
+    scriptline = StrOp.cat( scriptline, "\n");
+  }
+
+  return scriptline;
+}
+
+
+/* Create a node from a script line.  */
+static iONode _parseLine(const char* scriptline) {
   iONode node = NULL;
 
-  if( data->pline != NULL ) {
-    const char* cmd   = NULL;
-    const char* parm1 = NULL;
-    const char* parm2 = NULL;
-    const char* parm3 = NULL;
+  if( scriptline != NULL ) {
+    const char* nodename = NULL;
+    const char* parm1    = NULL; /* id */
+    const char* parm2    = NULL; /* cmd */
+    const char* parm3    = NULL;
 
-    iOStrTok tok = StrTokOp.inst( data->pline, ',' );
+    iOStrTok tok = StrTokOp.inst( scriptline, ',' );
 
     if( StrTokOp.hasMoreTokens( tok ) )  {
-      cmd = StrTokOp.nextToken( tok );
+      nodename = StrTokOp.nextToken( tok );
     }
     if( StrTokOp.hasMoreTokens( tok ) )  {
       parm1 = StrTokOp.nextToken( tok );
@@ -130,16 +150,10 @@ static iONode _nextLine(iOScript inst) {
     }
     StrTokOp.base.del(tok);
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsing command: %s", cmd);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsing command: %s", nodename);
 
-    if( StrOp.equalsi(wSysCmd.name(), cmd) && parm1 != NULL) {
-      /* sys,go */
-      node = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
-      wSysCmd.setcmd( node, parm1);
-    }
-
-    else if( StrOp.equalsi( wFeedback.name(), cmd ) && parm1 != NULL && parm2 != NULL ) {
-      /* fb,<id>,true,<ident> */
+    if( StrOp.equalsi( wFeedback.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+      /* fb,<id>,<true>,<ident> */
       node = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
       wFeedback.setid( node, parm1 );
       wFeedback.setstate( node, StrOp.equalsi("true", parm2) );
@@ -147,7 +161,7 @@ static iONode _nextLine(iOScript inst) {
         wFeedback.setidentifier(node, parm3);
     }
 
-    else if( StrOp.equalsi( wLoc.name(), cmd ) && parm1 != NULL && parm2 != NULL ) {
+    else if( StrOp.equalsi( wLoc.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
       /* lc,<id>,go */
       node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       wLoc.setid( node, parm1 );
@@ -162,7 +176,19 @@ static iONode _nextLine(iOScript inst) {
       }
     }
 
+  }
+  return node;
+}
 
+
+
+/**  */
+static iONode _nextLine(iOScript inst) {
+  iOScriptData data = Data(inst);
+  iONode node = NULL;
+
+  if( data->pline != NULL ) {
+    node = ScriptOp.parseLine(data->pline);
 
     /* prepare next line pointer */
     data->pline = StrOp.findc(data->pline, '\n');

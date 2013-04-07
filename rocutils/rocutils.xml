@@ -67,6 +67,12 @@
     <fun name="nextLine" vt="iONode">
       <param name="inst" vt="this"/>
     </fun>
+    <fun name="parseLine" vt="iONode">
+      <param name="scriptline" vt="const char*"/>
+    </fun>
+    <fun name="convertNode" vt="char*">
+      <param name="node" vt="iONode"/>
+    </fun>
     <data>
       <var name="linenr" vt="int"/>
       <var name="pline" vt="const char*"/>
