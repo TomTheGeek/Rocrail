@@ -50,8 +50,31 @@
     <fun name="freeList" vt="void">
       <param name="list" vt="iOList"/>
     </fun>
-    </object>
-    
+  </object>
+  
+  <object name="Script" use="list,node" remark="Script interpreter.">
+    <fun name="inst" vt="this" remark="">
+      <param name="script" vt="const char*" remark="Optional script."/>
+    </fun>
+    <fun name="setScript" vt="void">
+      <param name="inst" vt="this"/>
+      <param name="script" vt="const char*"/>
+    </fun>
+    <fun name="getLine" vt="iONode">
+      <param name="inst" vt="this"/>
+      <param name="linenr" vt="int"/>
+    </fun>
+    <fun name="nextLine" vt="iONode">
+      <param name="inst" vt="this"/>
+    </fun>
+    <data>
+      <var name="linenr" vt="int"/>
+      <var name="pline" vt="const char*"/>
+      <var name="nrlines" vt="int"/>
+      <var name="script" vt="const char*"/>
+      </data>
+  </object>
+  
 </Project>
 
 
