@@ -743,7 +743,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       msgdata[1] = addr / 256;
       msgdata[2] = (steps==128?0x03:0x02); // 128 speed steps
       msgdata[3] = 0x03; // speed and function group 1
-      msgdata[4] = (dir ? 0x00:0x80) + speed;
+      msgdata[4] = (dir ? 0x80:0x00) + speed;
       msgdata[5] = (fn?0x10:0x00) + (slot->f[1]?0x01:0x00) + (slot->f[2]?0x02:0x00) + (slot->f[3]?0x04:0x00) + (slot->f[4]?0x08:0x00);
       msgdata[6] = 0;
       msgdata[7] = 0;
