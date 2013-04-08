@@ -489,10 +489,11 @@ static char* __getThreadName( void ) {
   char* nameStr;
   unsigned long ti     = ThreadOp.id();
   iOThread      thread = ThreadOp.findById( ti );
-  const char*   tname  = ThreadOp.getName( thread );
 
-  if( thread != NULL )
+  if( thread != NULL ) {
+    const char* tname = ThreadOp.getName( thread );
     nameStr = StrOp.fmtID( RocsTraceID, "%s", tname );
+  }
   else if( ti == mainThreadId )
     nameStr = StrOp.fmtID( RocsTraceID, "%s", "main" );
   else
