@@ -61,6 +61,7 @@
 #include "rocrail/wrapper/public/Stage.h"
 
 static int instCnt = 0;
+static int levelCnt = 0;
 static void __doFunction(iOActionData data, iOLoc lc, Boolean fon, int fnaction);
 static void __doCarFunction(iOActionData data, iOCar car, Boolean fon, int fnaction);
 static void __doOperatorFunction(iOActionData data, iOOperator opr, Boolean fon, int fnaction);
@@ -1060,7 +1061,15 @@ static void _exec( struct OAction* inst, iONode actionctrl ) {
       wAction.getoid(data->action),
       wAction.getcmd(data->action) );
 
+  if( levelCnt > 9 ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "nested action level 10 detected" );
+    return;
+  }
+
+  levelCnt++;
+
   if( !__checkConditions(inst, actionctrl) ) {
+    levelCnt--;
     return;
   }
 
@@ -1068,6 +1077,7 @@ static void _exec( struct OAction* inst, iONode actionctrl ) {
     data->enabled = StrOp.equals( wOutput.on, wActionCtrl.getstate(actionctrl) );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "%s the timed every action %s", data->enabled?"enable":"disable", wAction.getid(data->action) );
+    levelCnt--;
     return;
   }
 
@@ -1085,6 +1095,7 @@ static void _exec( struct OAction* inst, iONode actionctrl ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "action timer for [%s] is already active.", wAction.getid(data->action) );
     }
   }
+  levelCnt--;
 }
 
 static void _tick( iOAction inst, int seconds ) {
