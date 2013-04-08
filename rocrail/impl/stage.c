@@ -868,6 +868,11 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
   int lenSections   = 0;
   int len[256];
 
+  if( loco == NULL ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "loco [%s] not found", loco );
+    return False;
+  }
+
   /* check the sections */
   data->freeSections = 0;
   for( i = 0; i < sections; i++ ) {
