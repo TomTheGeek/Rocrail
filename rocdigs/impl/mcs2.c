@@ -682,8 +682,13 @@ static void __reader( void* threadinst ) {
     MemOp.set(in, 0, 16);
     if( data->udp ) {
       if( SocketOp.recvfrom( data->readUDP, in, 13, NULL, NULL ) <= 0 ) {
+        SocketOp.base.del(data->readUDP);
         ThreadOp.sleep(1000);
-        if( data->run ) continue;
+        if( data->run ) {
+          data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15730, False, True, False );
+          SocketOp.bind(data->readUDP);
+          continue;
+        }
         else break;
       }
     }
