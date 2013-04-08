@@ -72,6 +72,13 @@ void statusFindDest( iILcDriverInt inst ) {
       wait = True;
     }
 
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkScheduleEntryActions for entry %d...", scheduleIdx );
+    if( checkScheduleEntryActions(inst, scheduleIdx) ) {
+      /* wait in block if we have to swap placing... */
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "the schedule entry wants a swap placing" );
+      data->loc->swapPlacing( data->loc, NULL, False, True );
+    }
+
     if( !wait ) {
       /* find destination using schedule */
       if( data->prewaitScheduleIdx != -1 ) {
@@ -83,13 +90,6 @@ void statusFindDest( iILcDriverInt inst ) {
       data->next1Route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL, data->schedule, &data->scheduleIdx,
                                                       data->loc->getCurBlock( data->loc ), NULL, data->loc, False, False, &data->indelay );
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reported schedule index=%d", data->scheduleIdx );
-    }
-
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkScheduleEntryActions for entry %d...", scheduleIdx );
-    if( checkScheduleEntryActions(inst, scheduleIdx) ) {
-      /* wait in block if we have to swap placing... */
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "the schedule entry wants a swap placing" );
-      data->loc->swapPlacing( data->loc, NULL, False );
     }
 
     if( !wait && data->next1Route != NULL ) {
@@ -108,7 +108,7 @@ void statusFindDest( iILcDriverInt inst ) {
         if( checkScheduleEntryActions(inst, scheduleIdx) ) {
           /* wait in block if we have to swap placing... */
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "the schedule entry wants a swap placing" );
-          data->loc->swapPlacing( data->loc, NULL, False );
+          data->loc->swapPlacing( data->loc, NULL, False, True );
         }
         checkScheduleActions(inst, LC_FINDDEST);
       }

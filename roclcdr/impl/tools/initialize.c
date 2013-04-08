@@ -188,7 +188,7 @@ Boolean initializeSwap( iOLcDriver inst, iORoute route ) {
   if( !data->useblockside && route->isSwap( route ) ) {
     /* swap only now for a next block, not for a second next block! */
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap placing for route %s", route->getId(route));
-    data->loc->swapPlacing( data->loc, NULL, False );
+    data->loc->swapPlacing( data->loc, NULL, False, False );
   }
 
   data->slowdown4route = False;

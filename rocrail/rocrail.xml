@@ -607,6 +607,7 @@
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="cmd" vt="iONode" remark="Optional cmd node with placing information."/>
       <param name="consist" vt="Boolean" remark="Swap in context of a multiple unit."/>
+      <param name="direct" vt="Boolean"/>
     </fun>
     <fun name="swapBlockEnterSide" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>

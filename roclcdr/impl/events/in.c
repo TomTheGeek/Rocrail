@@ -180,7 +180,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
       if ( data->next1Route->isSwapPost( data->next1Route ) ) {
         /* swap post route */
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap placing post route %s", data->next1Route->getId( data->next1Route ));
-        data->loc->swapPlacing( data->loc, NULL, False );
+        data->loc->swapPlacing( data->loc, NULL, False, False );
         if( !data->useblockside ) {
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
           wLoc.setdir( cmd, !data->loc->getDir( data->loc) );
@@ -197,7 +197,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
       /* swap the loc placing to run backwards in the default direction (to use in terminal stations)*/
       if( data->curBlock->isTerminalStation( data->curBlock ) ) {
         /* only swap after the IN block event! */
-        data->loc->swapPlacing( data->loc, NULL, False );
+        data->loc->swapPlacing( data->loc, NULL, False, False );
 
          if( data->stopnonecommuter &&
              !wLoc.iscommuter( data->loc->base.properties(data->loc)) ) {

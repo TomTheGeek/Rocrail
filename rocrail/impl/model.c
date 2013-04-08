@@ -4650,7 +4650,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Loco [%s] must swap for this route.",
                      LocOp.getId( loc ) );
-      LocOp.swapPlacing(loc, NULL, False);
+      LocOp.swapPlacing(loc, NULL, False, False);
     }
   }
   else if( ListOp.size( altBlocks ) > 0 ) {
@@ -4699,7 +4699,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Loco [%s] must swap for this route.",
                      LocOp.getId( loc ) );
-      LocOp.swapPlacing(loc, NULL, False);
+      LocOp.swapPlacing(loc, NULL, False, False);
     }
 
   } else {

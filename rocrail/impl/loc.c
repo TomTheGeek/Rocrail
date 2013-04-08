@@ -1381,6 +1381,25 @@ static iOMsg __getQueueMsg( iOLocData data, iOList list, iOMsg msg) {
   return qmsg;
 }
 
+
+static void __theSwap(iOLoc loc, Boolean swap, Boolean consist, iONode cmd) {
+  iOLocData data = Data(loc);
+  /* The swap: */
+  wLoc.setplacing( data->props, swap );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "placing for [%s] set to [%s]", wLoc.getid(data->props), wLoc.isplacing( data->props )?"FWD":"REV" );
+  /* inform model to keep this setting in the occupancy file */
+  ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2, NULL );
+
+  /* swap the block enter side flag to be able to use other direction routes */
+  LocOp.swapBlockEnterSide(loc, NULL);
+
+  if( !consist ) {
+    /* only swap if this command did not come from a multiple unit loop */
+    __swapConsist(loc, cmd);
+  }
+
+}
+
 static void __runner( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOLoc loc = (iOLoc)ThreadOp.getParm( th );
@@ -1439,20 +1458,7 @@ static void __runner( void* threadinst ) {
         Boolean swap    = (type & 0x01 ? True:False);
         Boolean consist = (type & 0x02 ? True:False);
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap event" );
-
-        /* The swap: */
-        wLoc.setplacing( data->props, swap );
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "placing for [%s] set to [%s]", wLoc.getid(data->props), wLoc.isplacing( data->props )?"FWD":"REV" );
-        /* inform model to keep this setting in the occupancy file */
-        ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2, NULL );
-
-        /* swap the block enter side flag to be able to use other direction routes */
-        LocOp.swapBlockEnterSide(loc, NULL);
-
-        if( !consist ) {
-          /* only swap if this command did not come from a multiple unit loop */
-          __swapConsist(loc, cmd);
-        }
+        __theSwap(loc, swap, consist, cmd);
       }
       else {
         if( event != -1 ) {
@@ -2253,7 +2259,7 @@ static void __swapConsist( iOLoc inst, iONode cmd ) {
       const char* tok = StrTokOp.nextToken( consist );
       iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL, False );
       if( consistloc != NULL ) {
-        LocOp.swapPlacing( consistloc, cmd, True );
+        LocOp.swapPlacing( consistloc, cmd, True, False );
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "consist loco [%s] not found", tok );
@@ -2384,7 +2390,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       broadcast = True;
     }
     else if( StrOp.equals( wLoc.swap, cmd ) ) {
-      LocOp.swapPlacing(inst, nodeA, False);
+      LocOp.swapPlacing(inst, nodeA, False, False);
       broadcast = True;
     }
     else if( StrOp.equals( wLoc.blockside, cmd ) ) {
@@ -2896,17 +2902,21 @@ static void _setCV( iOLoc loc, int nr, int value ) {
 /**
  * swap placing to run in defaults routes after reaching an terminal station
  */
-static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist ) {
+static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist, Boolean direct ) {
   iOLocData data = Data(loc);
 
   Boolean swap = wLoc.isplacing( cmd );
 
-  if( data->runner != NULL ) {
+  if( cmd == NULL || !NodeOp.findAttr(cmd, "placing"))
+    swap = !wLoc.isplacing( data->props );
+
+  if( direct ) {
+    __theSwap(loc, swap, consist, cmd);
+  }
+  else if( data->runner != NULL ) {
     iOMsg msg = MsgOp.inst( NULL, swap_event );
     MsgOp.setTimer( msg, wLoc.getswaptimer(data->props) );
     MsgOp.setEvent( msg, swap_event );
-    if( cmd == NULL || !NodeOp.findAttr(cmd, "placing"))
-      swap = !wLoc.isplacing( data->props );
     if( cmd == NULL )
       MsgOp.setUsrData(msg, NULL, (swap ? 0x01:0x00) | (consist ? 0x02:0x00) );
     else
