@@ -81,6 +81,9 @@
       <param name="inst" vt="this"/>
       <param name="node" vt="iONode"/>
     </fun>
+    <fun name="isRecording" vt="Boolean">
+      <param name="inst" vt="this"/>
+    </fun>
     <data>
       <var name="linenr" vt="int"/>
       <var name="pline" vt="const char*"/>

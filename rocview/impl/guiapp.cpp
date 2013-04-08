@@ -575,6 +575,7 @@ bool RocGui::OnInit() {
   m_FireBiDiB4RocrailIni = false;
   m_donkey = "";
   m_doneml = "";
+  m_Script = ScriptOp.inst(NULL);
 
   // we could need some of these:
   wxInitAllImageHandlers();
@@ -1388,6 +1389,8 @@ void RocGui::sendToRocrail( iONode cmd, bool disconnect ) {
   char* strCmd = NodeOp.base.toString( cmd );
   sendToRocrail( strCmd, false, disconnect );
   StrOp.free( strCmd );
+
+  ScriptOp.recordNode(m_Script, cmd);
 
   if( m_bOffline ) {
     if( StrOp.equals( wProgram.name(), NodeOp.getName( cmd ) ) ) {

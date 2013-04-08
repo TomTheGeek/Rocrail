@@ -38,6 +38,9 @@
 #include "rocview/public/guiframe.h"
 #include "rocview/public/planpanel.h"
 
+#include "rocutils/public/script.h"
+
+
 enum {
   PT_EVENT = 20001,
 };
@@ -84,6 +87,7 @@ public:
   bool isForceTabView() { return m_bForceTabView; }
   bool isTabViewRotated() { return m_bTabViewRotated; }
   const char* findID(bool output, int addr);
+  iOScript getScript(){return m_Script;}
 
   iORCon        m_RCon;
   const char*   m_Host;
@@ -97,6 +101,7 @@ public:
   bool          m_FireBiDiB4RocrailIni;
   const char*   m_donkey;
   const char*   m_doneml;
+  iOScript       m_Script;
 
 private:
   void saveSizePos();

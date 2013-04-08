@@ -66,7 +66,8 @@ static void __deserialize( void* inst,unsigned char* bytestream ) {
 }
 
 static char* __toString( void* inst ) {
-  return NULL;
+  iOScriptData data = Data(inst);
+  return data->record;
 }
 
 static int __count( void ) {
@@ -119,6 +120,8 @@ static char* _convertNode(iONode node) {
     }
     scriptline = StrOp.cat( scriptline, "\n");
   }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node converted: [%s]", scriptline);
 
   return scriptline;
 }
@@ -235,11 +238,13 @@ static void _setScript(iOScript inst, const char* script) {
 /**  */
 static void _recordNode( struct OScript* inst ,iONode node ) {
   iOScriptData data = Data(inst);
-  char* scriptline = ScriptOp.convertNode(node);
-  if( scriptline != NULL ) {
-    data->record = StrOp.cat( data->record, scriptline );
-    StrOp.free(scriptline);
-    data->pline  = data->record;
+  if( data->recording ) {
+    char* scriptline = ScriptOp.convertNode(node);
+    if( scriptline != NULL ) {
+      data->record = StrOp.cat( data->record, scriptline );
+      StrOp.free(scriptline);
+      data->pline  = data->record;
+    }
   }
 }
 
@@ -252,6 +257,13 @@ static void _setRecording( struct OScript* inst ,Boolean recording ) {
     data->record = NULL;
   }
   data->recording = recording;
+}
+
+
+/**  */
+static Boolean _isRecording( struct OScript* inst ) {
+  iOScriptData data = Data(inst);
+  return data->recording;
 }
 
 
