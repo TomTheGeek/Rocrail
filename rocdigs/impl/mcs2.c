@@ -679,18 +679,24 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 reader started." );
 
   do {
-    if( data->udp )
-      SocketOp.recvfrom( data->readUDP, in, 13, NULL, NULL );
+    MemOp.set(in, 0, 16);
+    if( data->udp ) {
+      if( SocketOp.recvfrom( data->readUDP, in, 13, NULL, NULL ) <= 0 ) {
+        ThreadOp.sleep(1000);
+        if( data->run ) continue;
+        else break;
+      }
+    }
     else {
       if( data->conOK && SerialOp.available(data->serial) ) {
         if( !SerialOp.read( data->serial, in, 13 ) ) {
-          ThreadOp.sleep(10);
+          ThreadOp.sleep(100);
           if( data->run ) continue;
           else break;
         }
       }
       else {
-        ThreadOp.sleep(10);
+        ThreadOp.sleep(100);
         if( data->run ) continue;
         else break;
       }
