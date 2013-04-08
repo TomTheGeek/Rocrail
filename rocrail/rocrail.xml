@@ -2371,4 +2371,46 @@
    </data>
   </object>
 
+  <object name="Script" use="list,node" remark="Script interpreter.">
+    <fun name="inst" vt="this" remark="">
+      <param name="script" vt="const char*" remark="Optional script."/>
+    </fun>
+    <fun name="setScript" vt="void">
+      <param name="inst" vt="this"/>
+      <param name="script" vt="const char*"/>
+    </fun>
+    <fun name="getLine" vt="iONode">
+      <param name="inst" vt="this"/>
+      <param name="linenr" vt="int"/>
+    </fun>
+    <fun name="nextLine" vt="iONode">
+      <param name="inst" vt="this"/>
+    </fun>
+    <fun name="parseLine" vt="iONode">
+      <param name="scriptline" vt="const char*"/>
+    </fun>
+    <fun name="convertNode" vt="char*">
+      <param name="node" vt="iONode"/>
+    </fun>
+    <fun name="setRecording" vt="void">
+      <param name="inst" vt="this"/>
+      <param name="recording" vt="Boolean"/>
+    </fun>
+    <fun name="recordNode" vt="void">
+      <param name="inst" vt="this"/>
+      <param name="node" vt="iONode"/>
+    </fun>
+    <fun name="isRecording" vt="Boolean">
+      <param name="inst" vt="this"/>
+    </fun>
+    <data>
+      <var name="linenr" vt="int"/>
+      <var name="pline" vt="const char*"/>
+      <var name="nrlines" vt="int"/>
+      <var name="script" vt="const char*"/>
+      <var name="record" vt="char*"/>
+      <var name="recording" vt="Boolean"/>
+      </data>
+  </object>
+  
 </Project>

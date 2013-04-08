@@ -100,7 +100,7 @@ OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
 WEBOBJS=$(patsubst impl/web/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/web/*.c))
 WOBJS=$(patsubst $(GENDIR)/rocrail/wrapper/impl/%.c,$(GENDIR)/rocrail/wrapper/bin/%.o,$(wildcard $(GENDIR)/rocrail/wrapper/impl/*.c))
 
-LIBOBJS=$(TMPOUTDIR)$(FS)rcon.o
+LIBOBJS=$(TMPOUTDIR)$(FS)rcon.o $(TMPOUTDIR)$(FS)script.o
 
 TARGET=$(OUTDIR)$(FS)rocrail$(BINSUFFIX)
 
