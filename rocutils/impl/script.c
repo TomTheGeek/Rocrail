@@ -29,15 +29,6 @@
 #include "rocs/public/trace.h"
 #include "rocs/public/strtok.h"
 
-#include "rocrail/wrapper/public/SysCmd.h"
-#include "rocrail/wrapper/public/Command.h"
-#include "rocrail/wrapper/public/FunCmd.h"
-#include "rocrail/wrapper/public/Loc.h"
-#include "rocrail/wrapper/public/Switch.h"
-#include "rocrail/wrapper/public/Signal.h"
-#include "rocrail/wrapper/public/Output.h"
-#include "rocrail/wrapper/public/Feedback.h"
-
 static int instCnt = 0;
 
 /** ----- OBase ----- */
@@ -155,27 +146,27 @@ static iONode _parseLine(const char* scriptline) {
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsing command: %s", nodename);
 
-    if( StrOp.equalsi( wFeedback.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+    if( StrOp.equalsi( "fb", nodename ) && parm1 != NULL && parm2 != NULL ) {
       /* fb,<id>,<true>,<ident> */
-      node = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-      wFeedback.setid( node, parm1 );
-      wFeedback.setstate( node, StrOp.equalsi("true", parm2) );
+      node = NodeOp.inst( "fb", NULL, ELEMENT_NODE );
+      NodeOp.setStr( node, "id", parm1 );
+      NodeOp.setBool( node, "state", StrOp.equalsi("true", parm2) );
       if( parm3 != NULL )
-        wFeedback.setidentifier(node, parm3);
+        NodeOp.setStr(node, "identifier", parm3);
     }
 
-    else if( StrOp.equalsi( wLoc.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+    else if( StrOp.equalsi( "lc", nodename ) && parm1 != NULL && parm2 != NULL ) {
       /* lc,<id>,go */
-      node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-      wLoc.setid( node, parm1 );
-      wLoc.setcmd( node, parm2 );
+      node = NodeOp.inst( "lc", NULL, ELEMENT_NODE );
+      NodeOp.setStr( node, "id", parm1 );
+      NodeOp.setStr( node, "cmd", parm2 );
       if( parm3 != NULL ) {
         /* lc,<id>,gotoblock,<bkid> */
-        if( StrOp.equalsi(wLoc.gotoblock, parm2) )
-          wLoc.setblockid(node, parm3);
+        if( StrOp.equalsi("gotoblock", parm2) )
+          NodeOp.setStr( node, "id", parm3);
         /* lc,<id>,useschedule,<scid> */
-        if( StrOp.equalsi(wLoc.useschedule, parm2) )
-          wLoc.setscheduleid(node, parm3);
+        if( StrOp.equalsi("useschedule", parm2) )
+          NodeOp.setStr( node, "scheduleid", parm3);
       }
     }
 
