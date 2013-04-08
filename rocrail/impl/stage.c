@@ -869,7 +869,7 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
   int len[256];
 
   if( loco == NULL ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "loco [%s] not found", loco );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "loco [%s] not found", locid );
     return False;
   }
 
