@@ -73,10 +73,10 @@ void statusFindDest( iILcDriverInt inst ) {
     }
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkScheduleEntryActions for entry %d...", scheduleIdx );
-    if( checkScheduleEntryActions(inst, scheduleIdx) ) {
-      /* wait in block if we have to swap placing... */
+    if( checkScheduleEntryActions(inst, scheduleIdx) || data->pendingSwap ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "the schedule entry wants a swap placing" );
       data->loc->swapPlacing( data->loc, NULL, False, True );
+      data->pendingSwap = False;
     }
 
     if( !wait ) {

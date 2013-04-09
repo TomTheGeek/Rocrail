@@ -128,6 +128,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Wait in block because the schedule entry wants a swap placing..." );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block" );
         resetNext2( (iOLcDriver)inst, True );
+        data->pendingSwap = True;
         wait = True;
       }
 
