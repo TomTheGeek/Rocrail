@@ -4002,7 +4002,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "curblockid [%s], gotoBlock [%s]", curblockid, gotoBlock );
 
           iIBlockBase destBlock = ModelOp.findDest( inst, curblockid, currouteid, loc, &routeref, gotoBlock,
-                                    False, False, forceSameDir, swapPlacingInPrevRoute, False);
+                                    False, False, forceSameDir, swapPlacingInPrevRoute, False, True);
 
           if( destBlock != NULL && StrOp.equals( gotoBlock, destBlock->base.id(destBlock) ) ) {
             return routeref;
@@ -4246,7 +4246,7 @@ static const char* _getManagedID(iOModel inst, const char* fromBlockId) {
 static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char* fromRouteId, iOLoc loc,
                           iORoute* routeref, const char* gotoBlockId,
                           Boolean trysamedir, Boolean tryoppositedir, Boolean forceSameDir,
-                          Boolean swapPlacingInPrevRoute, Boolean forceOppDir) {
+                          Boolean swapPlacingInPrevRoute, Boolean forceOppDir, Boolean schedule) {
   iOModelData o = Data(inst);
 
   int size = ListOp.size( o->routeList );
@@ -4458,7 +4458,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
               }
 
               /* Check for wanted block: */
-              if( suits != suits_not && gotoBlockId != NULL && StrOp.equals( gotoBlockId, blockId ) ) {
+              if( !schedule && gotoBlockId != NULL && StrOp.equals( gotoBlockId, blockId ) ) {
                 if( forceSameDir && !samedir ) {
                   gotoinwrongdir = True;
                   fromBlock->setTempWait(fromBlock, True);
