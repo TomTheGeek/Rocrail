@@ -1322,7 +1322,7 @@ static void _save( iOModPlan inst, const char* filename ) {
       __saveModule( inst, module, i );
     }
   }
-    _saveLocs( o->modplan, wModPlan.getlocs(o->modplan) );
+    _saveLocs( o->model, wModPlan.getlocs(o->modplan) );
     __saveRoutes( inst, wModPlan.getroutes(o->modplan) );
     __saveModPlan( inst, filename );
   }
