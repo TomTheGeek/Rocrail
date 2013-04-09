@@ -516,29 +516,26 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           msgdata[2] = (StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 0x20:0x00) + gate;
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d.%d single gate %s",
               wSwitch.getbus( node ), addr, gate, StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? "ON":"OFF" );
-          data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 4, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 3, bidibnode->seq++);
         }
         else {
           msgdata[0] = (addr-1) % 256;
           msgdata[1] = (addr-1) / 256;
           msgdata[2] = 0x60 + (StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 0x00:0x01);
           /* Schaltzeit
-              Wert  Bedeutung
-              1..63     Schaltzeit = Wert * 10ms
-              64..127:  Schaltzeit = (Wert-32) * 20ms (>640)
-              128..254: Schaltzeit = (Wert-80) * 40ms (>1920)
+              Bit Bedeutung
+              7 Grundeinheit:
+              0: 100ms (d.h. Wertebereich 0...12,7s)
+              1: 1s (d.h. Wertebereich 0...127s)
+              6...0 Schaltzeit, Wertebereich 0..127
           */
-          if( delay >= 1920 )
-            delay = (delay / 40) + 80;
-          else if( delay >= 640 )
-            delay = (delay / 20) + 32;
-          else
-            delay /= 10;
+          delay /= 100;
+          if( delay > 127 )
+            delay = 0x80 + (delay/10);
           msgdata[3] = delay;
-          msgdata[4] = 0;
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d set to %s",
               wSwitch.getbus( node ), addr, wSwitch.getcmd(node) );
-          data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 5, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 4, bidibnode->seq++);
         }
       }
       else if( wSwitch.isaccessory(node) ) {
