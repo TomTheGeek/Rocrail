@@ -501,12 +501,14 @@ int rocs_serial_avail( iOSerial inst ) {
   iOSerialData o = Data(inst);
   int rc = 0;
   int nbytes = 0;
+  o->rc = 0;
 #ifdef FIONREAD
 
   rc = ioctl( o->sh, FIONREAD, &nbytes );
   if( rc<0 ) {
     TraceOp.terrno( name, TRCLEVEL_WARNING, __LINE__, 9999, errno, "ioctl FIONREAD error" );
-    /*if(errno == ENXIO || errno == EIO)*/
+    if(errno == ENXIO || errno == EIO)
+      o->rc = errno;
     if(errno == ENXIO)
       return -1;
   }

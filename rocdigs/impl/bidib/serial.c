@@ -118,7 +118,7 @@ static void __reader( void* threadinst ) {
         }
 
       }
-      else if( available == -1 ) {
+      else if( available == -1 || SerialOp.getRc(data->serial) > 0 ) {
         /* device error */
         data->commOK = False;
         SerialOp.close(data->serial);
