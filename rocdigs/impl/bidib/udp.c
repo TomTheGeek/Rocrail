@@ -116,7 +116,7 @@ Boolean udpWrite( obj inst, unsigned char *path, unsigned char code, unsigned ch
   }
 
   size = msgidx+dataidx;
-  msg[0] = size;
+  msg[0] = size-1;
 
   TraceOp.dump ( "preWrite", TRCLEVEL_BYTE, (char*)msg, size );
   size = bidibMakeMessage(msg, size);

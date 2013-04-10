@@ -246,8 +246,8 @@ Boolean serialWrite( obj inst, unsigned char *path, unsigned char code, unsigned
         msg[msgidx+dataidx] = pdata[dataidx]; // address
     }
 
-    size = msgidx+dataidx;
-    msg[0] = size;
+    size = msgidx+datalen;
+    msg[0] = size-1;
 
     TraceOp.dump ( "preWrite", TRCLEVEL_BYTE, (char*)msg, size );
     size = bidibMakeMessage(msg, size);
