@@ -326,6 +326,9 @@ iONode RocGui::getWrpInf( const char* wrpname ) {
 wxString RocGui::getMsg( const char* key ) {
   return wxString(ResOp.getMsg( m_Res, key ),wxConvUTF8);
 }
+const char* RocGui::getCMsg( const char* key ) {
+  return ResOp.getMsg( m_Res, key );
+}
 wxString RocGui::getMenu( const char* key ) {
   wxString s = wxString(ResOp.getMenu( m_Res, key, False ),wxConvUTF8);
   //return s.Capitalize(); // wxWidgets 2.9+

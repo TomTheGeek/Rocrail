@@ -500,8 +500,9 @@ void ScheduleDialog::initSchedule() {
 
     bool hasActions = wScheduleEntry.getactionctrl(scentry) != NULL ? true:false;
     bool swap = wScheduleEntry.isswap(scentry) ? true:false;
-    m_Entries->SetCellValue(m_Entries->GetNumberRows()-1, 3,
-        wxString::Format(wxT("%s%s"), hasActions ? _T("X "):_T(""), swap ? wxGetApp().getMsg("swapplacing"):wxT("") ) );
+    char* action = StrOp.fmt( "%s%s", hasActions ? "X ":"", swap ? wxGetApp().getCMsg("swapplacing"):"");
+    m_Entries->SetCellValue(m_Entries->GetNumberRows()-1, 3, wxString(action,wxConvUTF8 ) );
+    StrOp.free(action);
     m_Entries->SetCellValue(m_Entries->GetNumberRows()-1, 4, wScheduleEntry.isfree2go(scentry) ? wxGetApp().getMsg( "free" ):_T("") );
 
     m_Entries->SetReadOnly(m_Entries->GetNumberRows()-1, 0, true );

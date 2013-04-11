@@ -69,6 +69,7 @@ public:
   void setStayOffline( bool stay ) { m_bStayOffline = stay; }
   void disConnect();
   wxString getMsg( const char* key );
+  const char* getCMsg( const char* key );
   wxString getTip( const char* key );
   wxString getMenu( const char* key );
   iONode getWrpInf( const char* wrpname );
