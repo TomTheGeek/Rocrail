@@ -236,6 +236,14 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     }
   }
   else {
+    if( data->schedule != NULL && StrOp.len( data->schedule ) > 1 ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkScheduleEntryActions for entry %d...", data->scheduleIdx );
+      if( checkScheduleEntryActions(inst, data->scheduleIdx) ) {
+        /* wait in block if we have to swap placing... */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "the schedule entry wants a swap placing..." );
+        data->pendingSwap = True;
+      }
+    }
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block" );
     resetNext2( (iOLcDriver)inst, True );
   }
