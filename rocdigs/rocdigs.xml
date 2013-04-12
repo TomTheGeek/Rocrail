@@ -1260,6 +1260,9 @@
       <var name="load" vt="int"/>
       <var name="volt" vt="int"/>
       <var name="temp" vt="int"/>
+      <var name="loadmax" vt="int"/>
+      <var name="voltmin" vt="int"/>
+      <var name="tempmax" vt="int"/>
       <var name="stat" vt="int"/>
       <var name="shortcut" vt="Boolean"/>
       <var name="fwup" vt="Boolean"/>

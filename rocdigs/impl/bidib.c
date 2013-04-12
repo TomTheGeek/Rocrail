@@ -1609,6 +1609,9 @@ static void __reportState(iOBiDiB bidib, iOBiDiBNode bidibnode, Boolean shortcut
     wState.setload( node, bidibnode->load );
     wState.setvolt( node, bidibnode->volt );
     wState.settemp( node, bidibnode->temp );
+    wState.setloadmax( node, bidibnode->loadmax );
+    wState.setvoltmin( node, bidibnode->voltmin );
+    wState.settempmax( node, bidibnode->tempmax );
     wState.setuid( node, bidibnode->uid);
   }
   else {
@@ -1810,8 +1813,14 @@ static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte
   if( bidibnode != NULL && (bidibnode->load != current || bidibnode->volt != volt || bidibnode->temp != temp) ) {
     uid = bidibnode->uid;
     bidibnode->load = current;
+    if( current > bidibnode->loadmax )
+      bidibnode->loadmax = current;
     bidibnode->volt = volt;
+    if( bidibnode->voltmin > volt || bidibnode->voltmin == 0)
+      bidibnode->voltmin = volt;
     bidibnode->temp = temp;
+    if( temp > bidibnode->tempmax )
+      bidibnode->tempmax = temp;
     data->load = current;
     data->volt = volt;
     data->temp = temp;
@@ -1839,6 +1848,8 @@ static void __handleBoosterCurrent(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* p
     if(bidibnode->load != current) {
       uid = bidibnode->uid;
       bidibnode->load = current;
+      if( bidibnode->loadmax < current )
+        bidibnode->loadmax = current;
       data->load = current;
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%d mA", bidibnode->uid, data->load );
       __reportState(bidib, bidibnode, False);

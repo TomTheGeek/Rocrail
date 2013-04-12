@@ -264,6 +264,9 @@ static void __stateEvent( obj inst, iONode event ) {
       wBooster.setload( booster, wBooster.getload(event) );
       wBooster.setvolt( booster, wBooster.getvolt(event) );
       wBooster.settemp( booster, wBooster.gettemp(event) );
+      wBooster.setloadmax( booster, wBooster.getloadmax(event) );
+      wBooster.setvoltmin( booster, wBooster.getvoltmin(event) );
+      wBooster.settempmax( booster, wBooster.gettempmax(event) );
 
       TraceOp.trc(name, shortcut?TRCLEVEL_EXCEPTION:TRCLEVEL_DEBUG, __LINE__, 9999,
           "booster %s(%08X) power is %s, diagnostics: %dmA %dmV %dC %s",

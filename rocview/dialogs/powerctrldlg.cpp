@@ -92,8 +92,11 @@ void PowerCtrlDlg::initLabels() {
   m_Boosters->SetColLabelValue(2, wxGetApp().getMsg("trackpower") );
   m_Boosters->SetColLabelValue(3, wxGetApp().getMsg("powerdistrict") );
   m_Boosters->SetColLabelValue(4, wxT("mA") );
-  m_Boosters->SetColLabelValue(5, wxT("V") );
-  m_Boosters->SetColLabelValue(6, wxT("°C") );
+  m_Boosters->SetColLabelValue(5, wxT("max") );
+  m_Boosters->SetColLabelValue(6, wxT("V") );
+  m_Boosters->SetColLabelValue(7, wxT("min") );
+  m_Boosters->SetColLabelValue(8, wxT("°C") );
+  m_Boosters->SetColLabelValue(9, wxT("max") );
 }
 
 
@@ -116,6 +119,9 @@ void PowerCtrlDlg::initValues(iONode event) {
             wBooster.setload(booster, wBooster.getload(event));
             wBooster.setvolt(booster, wBooster.getvolt(event));
             wBooster.settemp(booster, wBooster.gettemp(event));
+            wBooster.setloadmax(booster, wBooster.getloadmax(event));
+            wBooster.setvoltmin(booster, wBooster.getvoltmin(event));
+            wBooster.settempmax(booster, wBooster.gettempmax(event));
             wBooster.setpower(booster, wBooster.ispower(event));
           }
         }
@@ -127,8 +133,11 @@ void PowerCtrlDlg::initValues(iONode event) {
         m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 2, wBooster.ispower(booster)?wxGetApp().getMsg("on"):wxGetApp().getMsg("off") );
         m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 3, wxString(wBooster.getdistrict( booster ),wxConvUTF8) );
         m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 4, wxString::Format(_T("%d"), wBooster.getload(booster)) );
-        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 5, wxString::Format(_T("%d.%d"), wBooster.getvolt(booster)/1000, (wBooster.getvolt(booster)%1000)/100)  );
-        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 6, wxString::Format(_T("%d"), wBooster.gettemp(booster)) );
+        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 5, wxString::Format(_T("%d"), wBooster.getloadmax(booster)) );
+        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 6, wxString::Format(_T("%d.%d"), wBooster.getvolt(booster)/1000, (wBooster.getvolt(booster)%1000)/100)  );
+        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 7, wxString::Format(_T("%d.%d"), wBooster.getvoltmin(booster)/1000, (wBooster.getvoltmin(booster)%1000)/100)  );
+        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 8, wxString::Format(_T("%d"), wBooster.gettemp(booster)) );
+        m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 9, wxString::Format(_T("%d"), wBooster.gettempmax(booster)) );
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 0, true );
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 1, true );
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 2, true );
@@ -136,6 +145,9 @@ void PowerCtrlDlg::initValues(iONode event) {
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 4, true );
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 5, true );
         m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 6, true );
+        m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 7, true );
+        m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 8, true );
+        m_Boosters->SetReadOnly( m_Boosters->GetNumberRows()-1, 9, true );
 
         int row = m_Boosters->GetNumberRows()-1;
         m_Boosters->SetCellBackgroundColour( row, 1,
@@ -143,12 +155,12 @@ void PowerCtrlDlg::initValues(iONode event) {
         m_Boosters->SetCellBackgroundColour( row, 2,
             wBooster.ispower(booster)?wxColour(200,240,200):wxColour(240,200,200));
 
-        m_Boosters->SetCellBackgroundColour( row, 6, wxColour(200,240,200));
+        m_Boosters->SetCellBackgroundColour( row, 8, wxColour(200,240,200));
         int temp = wBooster.gettemp(booster);
         if( temp >= 60 ) {
           if(temp > 127 )
             temp = 127;
-          m_Boosters->SetCellBackgroundColour( row, 6, wxColour(255,255-temp*2,127-temp));
+          m_Boosters->SetCellBackgroundColour( row, 8, wxColour(255,255-temp*2,127-temp));
         }
 
 
