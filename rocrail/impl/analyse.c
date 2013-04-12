@@ -3142,6 +3142,19 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
       else if( StrOp.equals( subtype, wSwitch.dcrossing ) ||
                StrOp.equals( subtype, wSwitch.crossing ) && (wSwitch.getaddr1(item) != 0 || wSwitch.getport1(item) != 0 ) )
       {
+        /* if dcrossing has subtype left or right then skip search in wrong direction */
+        if( StrOp.equals( subtype, wSwitch.dcrossing ) )
+        {
+          if( StrOp.equals( wSwitch.getsubtype(item), wSwitch.subleft) && ( turnoutstate == 3 ) ) {
+            /* subleft has no "right" position */
+            return itemNotInDirection;
+          }
+          if( StrOp.equals( wSwitch.getsubtype(item), wSwitch.subright) && ( turnoutstate == 2 ) ) {
+            /* subright has no "left" position */
+            return itemNotInDirection;
+          }
+        }
+
         if( !wSwitch.isdir(item)  ) { /* left */
           if( StrOp.equals( itemori, wItem.west ) ) { /* left west */
             if( (travel == 0) ) {
