@@ -489,8 +489,12 @@ static void __feedbackReader( void * threadinst )
       if( exception ) {
         exception = False;
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Try to reconnect..." );
+
         SocketOp.disConnect( o->fbackSocket );
+        SocketOp.base.del(o->fbackSocket);
+        o->fbackSocket = NULL;
         ThreadOp.sleep( 1000 );
+        o->fbackSocket = SocketOp.inst( o->ddlHost, o->fbackPort, False, False, False );
         SocketOp.connect( o->fbackSocket );
       }
       else
