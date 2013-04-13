@@ -1303,6 +1303,12 @@
         <var name="scopt_stoplocos" vt="bool" defval="false" remark="Stop all locos in the district at shortcut."/>
         <var name="scopt_repoweron" vt="bool" defval="false" remark="Repower on incase the shortcut is cleared."/>
         <actionctrl cardinality="n"/>
+        <boosterevent cardinality="n" wrappername="BoosterEvent">
+          <var name="timestamp" vt="long" defval="0"/>
+	        <var name="load" vt="int" defval="0" units="mA" range="0-*"/>
+	        <var name="volt" vt="int" defval="0" units="mV" range="0-*"/>
+	        <var name="temp" vt="int" defval="0" units="C" range="0-*"/>
+        </boosterevent>
       </booster>
     </boosterlist>
     <mv cardinality="1" remark="Measurement Velocity Track" wrappername="MVTrack">

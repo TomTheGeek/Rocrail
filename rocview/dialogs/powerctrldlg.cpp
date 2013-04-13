@@ -40,6 +40,7 @@
 #include "rocrail/wrapper/public/PwrCmd.h"
 #include "rocrail/wrapper/public/Booster.h"
 #include "rocrail/wrapper/public/BoosterList.h"
+#include "rocrail/wrapper/public/BoosterEvent.h"
 
 #include "rocs/public/trace.h"
 
@@ -123,8 +124,29 @@ void PowerCtrlDlg::initValues(iONode event) {
             wBooster.setvoltmin(booster, wBooster.getvoltmin(event));
             wBooster.settempmax(booster, wBooster.gettempmax(event));
             wBooster.setpower(booster, wBooster.ispower(event));
+
+            iONode boosterevent = NodeOp.inst(wBoosterEvent.name(), booster, ELEMENT_NODE);
+            NodeOp.addChild( booster, boosterevent);
+            long t = time(NULL);
+            wBoosterEvent.settimestamp( boosterevent, t);
+            wBoosterEvent.setload(boosterevent, wBooster.getload(event));
+            wBoosterEvent.setvolt(boosterevent, wBooster.getvolt(event));
+            wBoosterEvent.settemp(boosterevent, wBooster.gettemp(event));
+
+            boosterevent = wBooster.getboosterevent(booster);
+            while( boosterevent != NULL ) {
+              if( wBoosterEvent.gettimestamp(boosterevent)+300 < t ) {
+                // older then 5 minutes
+                NodeOp.removeChild( booster, boosterevent);
+                NodeOp.base.del(boosterevent);
+                boosterevent = wBooster.getboosterevent(booster);
+                continue;
+              }
+              boosterevent = wBooster.nextboosterevent( booster, boosterevent );
+            }
           }
         }
+
 
         MapOp.put(m_BoosterMap, wBooster.getid( booster ), (obj)booster );
         m_Boosters->AppendRows();
@@ -189,8 +211,10 @@ void PowerCtrlDlg::onCellLeftClick( wxGridEvent& event ) {
 
   wxString str = m_Boosters->GetCellValue( event.GetRow(), 0 );
   m_SelBooster = (iONode)MapOp.get(m_BoosterMap, (const char*)str.mb_str(wxConvUTF8) );
-  if( m_SelBooster != NULL )
+  if( m_SelBooster != NULL ) {
     TraceOp.trc( "pwrctrl", TRCLEVEL_INFO, __LINE__, 9999, "booster %s selected", wBooster.getid(m_SelBooster) );
+    m_HistoryPanel->setBooster(m_SelBooster);
+  }
 }
 
 
@@ -201,6 +225,19 @@ void PowerCtrlDlg::onCellRightClick( wxGridEvent& event ) {
 
 void PowerCtrlDlg::powerEvent(iONode event) {
   initValues(event);
+  paintHistory();
+}
+
+void PowerCtrlDlg::paintHistory() {
+  if( m_SelBooster != NULL ) {
+    const char* id = wBooster.getid(m_SelBooster);
+    m_HistoryPanel->Refresh();
+    /*
+    wxPaintDC dc(m_HistoryPanel);
+    dc.SetBackground(*wxWHITE_BRUSH);
+    dc.Clear();
+    */
+  }
 }
 
 

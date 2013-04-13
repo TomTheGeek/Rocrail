@@ -43,6 +43,8 @@ class PowerCtrlDlg : public powerctrlgen
   iOMap m_BoosterMap;
   int m_SelectedRow;
 
+  void paintHistory();
+
 protected:
 	// Handlers for powerctrlgen events.
 	void OnOn( wxCommandEvent& event );
