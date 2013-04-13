@@ -1683,6 +1683,10 @@ static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
 
   TraceOp.trc( name, level, __LINE__, 9999, "CS state=0x%02X [%s][%08X]", pdata[0], __csstate2str(pdata[0], &level), bidibnode!=NULL?bidibnode->uid:0 );
   data->power = (pdata[0] == BIDIB_CS_STATE_OFF) ? False:True;
+  if( bidibnode != NULL ) {
+    bidibnode->stat &= ~BIDIB_BST_STATE_ON;
+    bidibnode->stat |= data->power?BIDIB_BST_STATE_ON:0;
+  }
   __reportState(bidib, bidibnode, False, data->power);
 }
 

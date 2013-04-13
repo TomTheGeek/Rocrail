@@ -56,17 +56,22 @@ void HistoryPanel::setBooster(iONode booster) {
 void HistoryPanel::OnPaint(wxPaintEvent& event)
 {
   wxPaintDC dc(this);
-  dc.SetBackground(*wxWHITE_BRUSH);
+  dc.SetBackground(*wxBLACK_BRUSH);
   dc.Clear();
-
-  dc.SetPen( *wxBLACK_PEN );
-  wxPen pen = dc.GetPen();
-  pen.SetWidth(1);
-  dc.SetPen(pen);
 
   int w = 0;
   int h = 0;
   GetSize(&w, &h);
+
+  dc.SetPen( *wxLIGHT_GREY_PEN );
+  wxPen pen = dc.GetPen();
+  pen.SetWidth(1);
+  pen.SetStyle(wxDOT);
+  dc.SetPen(pen);
+  float h10 = (float)h / 10.0;
+  for( int i = 1; i < 10; i++) {
+    dc.DrawLine( 0, i*h10, w, i*h10 );
+  }
 
   TraceOp.trc( "histopanel", TRCLEVEL_INFO, __LINE__, 9999, "width=%d height=%d", w, h );
 
@@ -114,7 +119,7 @@ void HistoryPanel::OnPaint(wxPaintEvent& event)
           first = false;
         }
 
-        dc.SetPen( *wxBLACK_PEN );
+        dc.SetPen( *wxWHITE_PEN );
         wxPen pen = dc.GetPen();
         pen.SetWidth(1);
         dc.SetPen(pen);
