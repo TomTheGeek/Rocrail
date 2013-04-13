@@ -121,7 +121,7 @@ void HistoryPanel::OnPaint(wxPaintEvent& event)
         dc.DrawLine( x, y, x+1, (h-1)-mA );
         y = (h-1)-mA;
 
-        dc.SetPen( *wxBLUE_PEN );
+        dc.SetPen( *wxCYAN_PEN );
         pen = dc.GetPen();
         pen.SetWidth(1);
         dc.SetPen(pen);
