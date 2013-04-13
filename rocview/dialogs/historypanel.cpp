@@ -72,14 +72,30 @@ void HistoryPanel::OnPaint(wxPaintEvent& event)
 
   if( m_Booster != NULL ) {
     int x = 0;
-    int y = h;
+    int y = h-1;
+    int max = 0;
+    float scale = 1.0;
+
     iONode boosterevent = wBooster.getboosterevent(m_Booster);
     while( boosterevent != NULL ) {
       int mA = wBoosterEvent.getload(boosterevent);
-      TraceOp.trc( "histopanel", TRCLEVEL_INFO, __LINE__, 9999, "line %d,%d %d,%d", x, y, x+1, h-mA );
+      if( mA > max && max < 4000 )
+        max = mA;
+      boosterevent = wBooster.nextboosterevent( m_Booster, boosterevent );
+    }
+
+    if( max > h )
+      scale = (float)h / (float)(max+5);
+
+    TraceOp.trc( "histopanel", TRCLEVEL_INFO, __LINE__, 9999, "max=%d scale=%f", max, scale );
+
+    boosterevent = wBooster.getboosterevent(m_Booster);
+    while( boosterevent != NULL ) {
+      int mA = wBoosterEvent.getload(boosterevent) * scale;
+      TraceOp.trc( "histopanel", TRCLEVEL_DEBUG, __LINE__, 9999, "line %d,%d %d,%d", x, y, x+1, (h-1)-mA );
       dc.DrawLine( x, y, x+1, h-mA );
       x+=1;
-      y = h-mA;
+      y = (h-1)-mA;
       boosterevent = wBooster.nextboosterevent( m_Booster, boosterevent );
     }
 

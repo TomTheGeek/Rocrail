@@ -4200,7 +4200,7 @@ void RocGuiFrame::OnStateEvent( wxCommandEvent& event ) {
 
   if( StrOp.equals( wBooster.name(), NodeOp.getName(node))) {
     iONode booster = node;
-    TraceOp.trc("frame", TRCLEVEL_INFO, __LINE__, 9999, "booster %s(%08X) power is %s, diagnostics: %dmA %dmV %C",
+    TraceOp.trc("frame", TRCLEVEL_INFO, __LINE__, 9999, "booster %s(%08X) power is %s, diagnostics: %dmA %dmV %dC",
         wBooster.getid(booster), wBooster.getuid(booster), wBooster.ispower(booster) ? "ON":"OFF",
             wBooster.getload(booster), wBooster.getvolt(booster), wBooster.gettemp(booster) );
 
