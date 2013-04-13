@@ -1683,7 +1683,7 @@ static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
 
   TraceOp.trc( name, level, __LINE__, 9999, "CS state=0x%02X [%s]", pdata[0], __csstate2str(pdata[0], &level) );
   data->power = (pdata[0] == BIDIB_CS_STATE_OFF) ? False:True;
-  __reportState(bidib, 0, False);
+  __reportState(bidib, bidibnode, False);
 }
 
 
@@ -1809,6 +1809,11 @@ static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte
   }
 
   current = __calcCurrent(current);
+  if( current > 5000 ) {
+    /* reject value... */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unexpected booster load=%dmA", current );
+    current = bidibnode->load;
+  }
 
   if( bidibnode != NULL && (bidibnode->load != current || bidibnode->volt != volt || bidibnode->temp != temp) ) {
     uid = bidibnode->uid;

@@ -71,6 +71,7 @@ void HistoryPanel::OnPaint(wxPaintEvent& event)
   TraceOp.trc( "histopanel", TRCLEVEL_INFO, __LINE__, 9999, "width=%d height=%d", w, h );
 
   if( m_Booster != NULL ) {
+    int count = 0;
     int x = 0;
     int y = h-1;
     int max = 0;
@@ -81,6 +82,7 @@ void HistoryPanel::OnPaint(wxPaintEvent& event)
       int mA = wBoosterEvent.getload(boosterevent);
       if( mA > max && max < 4000 )
         max = mA;
+      count++;
       boosterevent = wBooster.nextboosterevent( m_Booster, boosterevent );
     }
 
@@ -90,12 +92,26 @@ void HistoryPanel::OnPaint(wxPaintEvent& event)
     TraceOp.trc( "histopanel", TRCLEVEL_INFO, __LINE__, 9999, "max=%d scale=%f", max, scale );
 
     boosterevent = wBooster.getboosterevent(m_Booster);
+    int skip = 0;
+    if( count > w ) {
+      skip = count - w;
+    }
+    bool first = true;
     while( boosterevent != NULL ) {
-      int mA = wBoosterEvent.getload(boosterevent) * scale;
-      TraceOp.trc( "histopanel", TRCLEVEL_DEBUG, __LINE__, 9999, "line %d,%d %d,%d", x, y, x+1, (h-1)-mA );
-      dc.DrawLine( x, y, x+1, h-mA );
-      x+=1;
-      y = (h-1)-mA;
+      if( skip == 0 ) {
+        int mA = wBoosterEvent.getload(boosterevent) * scale;
+        TraceOp.trc( "histopanel", TRCLEVEL_DEBUG, __LINE__, 9999, "line %d,%d %d,%d", x, y, x+1, (h-1)-mA );
+        if( first ) {
+          y = (h-1)-mA;
+          first = false;
+        }
+        dc.DrawLine( x, y, x+1, (h-1)-mA );
+        x+=1;
+        y = (h-1)-mA;
+      }
+      else {
+        skip--;
+      }
       boosterevent = wBooster.nextboosterevent( m_Booster, boosterevent );
     }
 
