@@ -1598,14 +1598,14 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
 }
 
 
-static void __reportState(iOBiDiB bidib, iOBiDiBNode bidibnode, Boolean shortcut) {
+static void __reportState(iOBiDiB bidib, iOBiDiBNode bidibnode, Boolean shortcut, Boolean power) {
   iOBiDiBData data = Data(bidib);
   iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
   if( data->iid != NULL )
     wState.setiid( node, data->iid );
 
   if( bidibnode != NULL ) {
-    wState.setpower( node, (bidibnode->stat & BIDIB_BST_STATE_ON) ? True:False);
+    wState.setpower( node, ((bidibnode->stat & BIDIB_BST_STATE_ON)|power) ? True:False);
     wState.setload( node, bidibnode->load );
     wState.setvolt( node, bidibnode->volt );
     wState.settemp( node, bidibnode->temp );
@@ -1681,9 +1681,9 @@ static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
           Ausgabe-Fifos voll sind. (nur bei Abfrage oder beim Senden einer MSG_CS_DRIVE )
    */
 
-  TraceOp.trc( name, level, __LINE__, 9999, "CS state=0x%02X [%s]", pdata[0], __csstate2str(pdata[0], &level) );
+  TraceOp.trc( name, level, __LINE__, 9999, "CS state=0x%02X [%s][%08X]", pdata[0], __csstate2str(pdata[0], &level), bidibnode!=NULL?bidibnode->uid:0 );
   data->power = (pdata[0] == BIDIB_CS_STATE_OFF) ? False:True;
-  __reportState(bidib, bidibnode, False);
+  __reportState(bidib, bidibnode, False, data->power);
 }
 
 
@@ -1756,7 +1756,7 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
         "booster state=0x%02X [%s]", pdata[0], __boosterState2Str(pdata[0], &level, &shortcut) );
   }
   data->power = (pdata[0] & 0x80) ? True:False;
-  __reportState(bidib, bidibnode, shortcut);
+  __reportState(bidib, bidibnode, shortcut, data->power);
 }
 
 
@@ -1830,14 +1830,14 @@ static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte
     data->volt = volt;
     data->temp = temp;
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%dmA %dmV %d°C", bidibnode->uid, current, volt, temp );
-    __reportState(bidib, bidibnode, False);
+    __reportState(bidib, bidibnode, False, False);
   }
   else if( data->load != current ) {
     data->load = current;
     data->volt = volt;
     data->temp = temp;
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster load=%dmA %dmV %d°C", current, volt, temp );
-    __reportState(bidib, NULL, False);
+    __reportState(bidib, NULL, False, False);
   }
 }
 
@@ -1857,13 +1857,13 @@ static void __handleBoosterCurrent(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* p
         bidibnode->loadmax = current;
       data->load = current;
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%d mA", bidibnode->uid, data->load );
-      __reportState(bidib, bidibnode, False);
+      __reportState(bidib, bidibnode, False, False);
     }
   }
   else if( data->load != current ) {
     data->load = current;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster load=%d mA", data->load );
-    __reportState(bidib, NULL, False);
+    __reportState(bidib, NULL, False, False);
   }
 }
 
@@ -2550,7 +2550,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
         bidibnode->conf_signal = pdata[2];
 
         data->power = (bidibnode->conf_signal == 0) ? True:False;
-        __reportState(bidib, bidibnode, False);
+        __reportState(bidib, bidibnode, False, False);
       }
     }
     break;
