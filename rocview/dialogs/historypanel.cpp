@@ -76,6 +76,10 @@ void HistoryPanel::OnPaint(wxPaintEvent& event)
     int y = h-1;
     int max = 0;
     float scale = 1.0;
+    int vy = h-1;
+    float voltstep = (float)h / 20.0;
+    int ty = h-1;
+    float tempstep = (float)h / 100.0;
 
     iONode boosterevent = wBooster.getboosterevent(m_Booster);
     while( boosterevent != NULL ) {
@@ -89,7 +93,7 @@ void HistoryPanel::OnPaint(wxPaintEvent& event)
     if( max > h )
       scale = (float)h / (float)(max+5);
 
-    TraceOp.trc( "histopanel", TRCLEVEL_INFO, __LINE__, 9999, "max=%d scale=%f", max, scale );
+    TraceOp.trc( "histopanel", TRCLEVEL_INFO, __LINE__, 9999, "max=%d scale=%f tempstep=%f", max, scale, tempstep );
 
     boosterevent = wBooster.getboosterevent(m_Booster);
     int skip = 0;
@@ -99,15 +103,39 @@ void HistoryPanel::OnPaint(wxPaintEvent& event)
     bool first = true;
     while( boosterevent != NULL ) {
       if( skip == 0 ) {
+        int volt = (wBoosterEvent.getvolt(boosterevent) * voltstep) / 1000;
+        int temp = ((float)wBoosterEvent.gettemp(boosterevent) * tempstep);
         int mA = wBoosterEvent.getload(boosterevent) * scale;
         TraceOp.trc( "histopanel", TRCLEVEL_DEBUG, __LINE__, 9999, "line %d,%d %d,%d", x, y, x+1, (h-1)-mA );
         if( first ) {
-          y = (h-1)-mA;
+          y  = (h-1)-mA;
+          vy = (h-1)-volt;
+          ty = (h-1)-temp;
           first = false;
         }
+
+        dc.SetPen( *wxBLACK_PEN );
+        wxPen pen = dc.GetPen();
+        pen.SetWidth(1);
+        dc.SetPen(pen);
         dc.DrawLine( x, y, x+1, (h-1)-mA );
-        x+=1;
         y = (h-1)-mA;
+
+        dc.SetPen( *wxBLUE_PEN );
+        pen = dc.GetPen();
+        pen.SetWidth(1);
+        dc.SetPen(pen);
+        dc.DrawLine( x, vy, x+1, (h-1)-volt );
+        vy = (h-1)-volt;
+
+        dc.SetPen( *wxRED_PEN );
+        pen = dc.GetPen();
+        pen.SetWidth(1);
+        dc.SetPen(pen);
+        dc.DrawLine( x, ty, x+1, (h-1)-temp );
+        ty = (h-1)-temp;
+
+        x+=1;
       }
       else {
         skip--;

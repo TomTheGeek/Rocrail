@@ -137,6 +137,7 @@ void PowerCtrlDlg::initValues(iONode event) {
             while( boosterevent != NULL ) {
               if( wBoosterEvent.gettimestamp(boosterevent)+300 < t ) {
                 // older then 5 minutes
+                TraceOp.trc( "pwrctrl", TRCLEVEL_INFO, __LINE__, 9999, "remove booster event of %s", wBooster.getid(m_SelBooster) );
                 NodeOp.removeChild( booster, boosterevent);
                 NodeOp.base.del(boosterevent);
                 boosterevent = wBooster.getboosterevent(booster);
@@ -232,11 +233,6 @@ void PowerCtrlDlg::paintHistory() {
   if( m_SelBooster != NULL ) {
     const char* id = wBooster.getid(m_SelBooster);
     m_HistoryPanel->Refresh();
-    /*
-    wxPaintDC dc(m_HistoryPanel);
-    dc.SetBackground(*wxWHITE_BRUSH);
-    dc.Clear();
-    */
   }
 }
 
