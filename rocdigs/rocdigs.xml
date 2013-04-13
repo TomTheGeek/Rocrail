@@ -133,7 +133,10 @@
       <var name="srcpversion" vt="__srcpversion"/>
       <var name="srcpx" vt="obj"/>
       <var name="run" vt="Boolean"/>
-    </data>
+      <var name="srcp08" vt="Boolean"/>
+      <var name="evalfirst" vt="Boolean"/>
+      <var name="handshakeerror" vt="Boolean"/>
+      </data>
   </object>
 
 

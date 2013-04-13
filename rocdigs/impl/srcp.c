@@ -175,89 +175,90 @@ static Boolean _supportPT( obj inst ) {
 }
 
 
+static void __initfbConnection(iOSRCPData o) {
+  char inbuf[1024] = { 0 };
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "FB Connected" );
+
+  if ( SocketOp.readln( o->fbackSocket, inbuf ) ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, inbuf );
+    if( StrOp.findi( inbuf, "SRCP 0.8" ) ) {
+      const char* protStr = "SET PROTOCOL SRCP 0.8\n";
+      const char* connStr = "SET CONNECTIONMODE SRCP INFO\n";
+      const char* goStr = "GO\n";
+      o->srcp08 = True;
+
+      if( !o->handshakeerror ) {
+        SocketOp.write( o->fbackSocket, protStr, StrOp.len(protStr) );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",protStr);
+
+        /*"OK PROTOCOL SRCP"*/
+        SocketOp.readln( o->fbackSocket, inbuf );
+        if( !StrOp.find( inbuf, "201" ) ) {
+          /* error */
+          o->handshakeerror = True;
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: expecting 201, received [%s]",inbuf);
+        }
+      }
+
+      if( !o->handshakeerror ) {
+        SocketOp.write( o->fbackSocket, connStr, StrOp.len(connStr) );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",connStr);
+
+        /*"OK CONNECTION MODE"*/
+        SocketOp.readln( o->fbackSocket, inbuf );
+        if( !StrOp.find( inbuf, "202" ) ) {
+          /* error */
+          o->handshakeerror = True;
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: expecting 202, received [%s]",inbuf);
+        }
+      }
+
+      if( !o->handshakeerror ) {
+        SocketOp.write( o->fbackSocket, goStr, StrOp.len(goStr) );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",goStr);
+
+        /*"OK GO"*/
+        SocketOp.readln( o->fbackSocket, inbuf );
+        if( !StrOp.find( inbuf, "200" ) ) {
+          /* error */
+          o->handshakeerror = True;
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: expecting 200, received [%s]",inbuf);
+        }
+      }
+
+
+    }
+    else {
+      /* it's the first INFO message */
+      o->evalfirst = True;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SRCP 0.7 FB Connection" );
+    }
+  }
+
+}
 
 static void __feedbackReader( void * threadinst )
 {
   iOThread th = ( iOThread )threadinst;
   iOSRCP07 srcp = ( iOSRCP07 )ThreadOp.getParm( th );
   iOSRCPData o = Data( srcp );
-  Boolean handshakeerror = False;
   Boolean exception = False;
-  Boolean srcp08 = False;
-  Boolean evalfirst = False;
+  char inbuf[1024] = { 0 };
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Connecting FB port %s:%d...",
                o->ddlHost, o->fbackPort );
   o->fbackSocket = SocketOp.inst( o->ddlHost, o->fbackPort, False, False, False );
 
-  if ( SocketOp.connect( o->fbackSocket ) )
-  {
-    char inbuf[1024] = { 0 };
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "FB Connected" );
+  if ( SocketOp.connect( o->fbackSocket ) ) {
+    __initfbConnection(o);
 
-    if ( SocketOp.readln( o->fbackSocket, inbuf ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, inbuf );
-      if( StrOp.findi( inbuf, "SRCP 0.8" ) ) {
-        const char* protStr = "SET PROTOCOL SRCP 0.8\n";
-        const char* connStr = "SET CONNECTIONMODE SRCP INFO\n";
-        const char* goStr = "GO\n";
-        srcp08 = True;
-
-        if( !handshakeerror ) {
-          SocketOp.write( o->fbackSocket, protStr, StrOp.len(protStr) );
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",protStr);
-
-          /*"OK PROTOCOL SRCP"*/
-          SocketOp.readln( o->fbackSocket, inbuf );
-          if( !StrOp.find( inbuf, "201" ) ) {
-            /* error */
-            handshakeerror = True;
-            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: expecting 201, received [%s]",inbuf);
-          }
-        }
-
-        if( !handshakeerror ) {
-          SocketOp.write( o->fbackSocket, connStr, StrOp.len(connStr) );
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",connStr);
-
-          /*"OK CONNECTION MODE"*/
-          SocketOp.readln( o->fbackSocket, inbuf );
-          if( !StrOp.find( inbuf, "202" ) ) {
-            /* error */
-            handshakeerror = True;
-            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: expecting 202, received [%s]",inbuf);
-          }
-        }
-
-        if( !handshakeerror ) {
-          SocketOp.write( o->fbackSocket, goStr, StrOp.len(goStr) );
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",goStr);
-
-          /*"OK GO"*/
-          SocketOp.readln( o->fbackSocket, inbuf );
-          if( !StrOp.find( inbuf, "200" ) ) {
-            /* error */
-            handshakeerror = True;
-            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: expecting 200, received [%s]",inbuf);
-          }
-        }
-
-
-      }
-      else {
-        /* it's the first INFO message */
-        evalfirst = True;
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SRCP 0.7 FB Connection" );
-      }
-    }
-
-    while( o->run && !handshakeerror )
+    while( o->run && !o->handshakeerror )
     {
       Boolean readok = False;
 
-      if( evalfirst ) {
-        readok = evalfirst;
-        evalfirst = False;
+      if( o->evalfirst ) {
+        readok = o->evalfirst;
+        o->evalfirst = False;
       }
       else if( SocketOp.readln( o->fbackSocket, inbuf ) != NULL )
         readok =  True;
@@ -289,7 +290,7 @@ static void __feedbackReader( void * threadinst )
             infotypeStr = "locomotive";
           }
 
-          if( srcp08 ) {
+          if( o->srcp08 ) {
             tok = StrTokOp.inst( inbuf, ' ' );
             if( StrTokOp.hasMoreTokens( tok ) ) {
               /* timestamp */
@@ -495,7 +496,9 @@ static void __feedbackReader( void * threadinst )
         o->fbackSocket = NULL;
         ThreadOp.sleep( 1000 );
         o->fbackSocket = SocketOp.inst( o->ddlHost, o->fbackPort, False, False, False );
-        SocketOp.connect( o->fbackSocket );
+        if( SocketOp.connect( o->fbackSocket ) ) {
+          __initfbConnection(o);
+        }
       }
       else
         ThreadOp.sleep( 10 );
