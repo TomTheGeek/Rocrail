@@ -82,17 +82,23 @@ void HistoryPanel::OnPaint(wxPaintEvent& event)
     int max = 0;
     float scale = 1.0;
     int vy = h-1;
-    float voltstep = (float)h / 20.0;
+    float voltstep = (float)h / 24.0;
     int ty = h-1;
     float tempstep = (float)h / 100.0;
 
     iONode boosterevent = wBooster.getboosterevent(m_Booster);
     while( boosterevent != NULL ) {
       int mA = wBoosterEvent.getload(boosterevent);
-      if( mA > max && max < 4000 )
+      if( mA > max && max < 5000 )
         max = mA;
       count++;
       boosterevent = wBooster.nextboosterevent( m_Booster, boosterevent );
+    }
+
+    if( count == 0) {
+      dc.SetTextBackground(*wxBLACK);
+      dc.SetTextForeground(*wxWHITE);
+      dc.DrawText(wxT("No data available..."), 10, h/2);
     }
 
     if( max > h )
@@ -148,6 +154,12 @@ void HistoryPanel::OnPaint(wxPaintEvent& event)
       boosterevent = wBooster.nextboosterevent( m_Booster, boosterevent );
     }
 
+  }
+  else {
+    TraceOp.trc( "histopanel", TRCLEVEL_INFO, __LINE__, 9999, "No booster selected..." );
+    dc.SetTextBackground(*wxBLACK);
+    dc.SetTextForeground(*wxWHITE);
+    dc.DrawText(wxT("No booster selected..."), 10, h/2);
   }
 }
 
