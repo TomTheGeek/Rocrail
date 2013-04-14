@@ -490,6 +490,8 @@ static Boolean __srcpConnect ( iOSRCP08Data o )
   {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: %s",data);
     SocketOp.disConnect(o->cmdSocket);
+    SocketOp.base.del(o->cmdSocket);
+    o->cmdSocket = NULL;
     return False;
   }
   if (SRCP_ERROR( __srcpSendCommand(o,False,"SET CONNECTIONMODE SRCP COMMAND\n",data)))

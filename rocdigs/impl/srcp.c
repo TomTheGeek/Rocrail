@@ -141,6 +141,10 @@ static iONode _cmd( obj inst, const iONode nodeA )
 {
   iOSRCPData o = Data( inst );
 
+  if( o->cmdSocket == NULL ) {
+    __srcpConnect(o);
+  }
+
   if ( o->srcpversion == SRCP_07 )
   {
     return SRCP07Op.cmd( o->srcpx, nodeA );
