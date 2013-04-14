@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -117,6 +117,7 @@ public:
   void OnService(wxCommandEvent& event);
   void OnLcDlg(wxCommandEvent& event);
   void OnGuestLocoDlg(wxCommandEvent& event);
+  void OnCmdRecorderDlg(wxCommandEvent& event);
   void OnOperatorDlg(wxCommandEvent& event);
   void OnMIC(wxCommandEvent& event);
   void OnSwDlg(wxCommandEvent& event);
@@ -487,6 +488,7 @@ enum
     ME_CtrlMode,
     ME_EditLocs,
     ME_GuestLoco,
+    ME_CmdRecorder,
     ME_EditCars,
     ME_EditOperators,
     ME_EditWaybills,

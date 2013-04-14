@@ -6323,3 +6323,9 @@ msgstr ""
 msgid "Reset speed at direction change"
 msgstr ""
 
+#. 
+# id="cmdrecorder"
+#, c-format
+msgid "Command recorder"
+msgstr ""
+

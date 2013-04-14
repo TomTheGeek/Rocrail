@@ -20497,4 +20497,7 @@
   <Msg id="resetspeeddir">
     <en txt="Reset speed at direction change"/>
   </Msg>
+  <Msg id="cmdrecorder" dialog="true">
+    <en txt="Command recorder"/>
+  </Msg>
 </Messages>
