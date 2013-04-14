@@ -2372,7 +2372,7 @@
    </data>
   </object>
 
-  <object name="Script" use="list,node" remark="Script interpreter.">
+  <object name="Script" use="list,node,thread" remark="Script interpreter.">
     <fun name="inst" vt="this" remark="">
       <param name="script" vt="const char*" remark="Optional script."/>
     </fun>
@@ -2404,6 +2404,18 @@
     <fun name="isRecording" vt="Boolean">
       <param name="inst" vt="this"/>
     </fun>
+    <fun name="isPlaying" vt="Boolean">
+      <param name="inst" vt="this"/>
+    </fun>
+    <fun name="Play" vt="void">
+      <param name="inst" vt="this"/>
+    </fun>
+    <fun name="Stop" vt="void">
+      <param name="inst" vt="this"/>
+    </fun>
+    <fun name="Pause" vt="void">
+      <param name="inst" vt="this"/>
+    </fun>
     <data>
       <var name="linenr" vt="int"/>
       <var name="pline" vt="const char*"/>
@@ -2411,6 +2423,10 @@
       <var name="script" vt="const char*"/>
       <var name="record" vt="char*"/>
       <var name="recording" vt="Boolean"/>
+      <var name="playing" vt="Boolean"/>
+      <var name="pause" vt="Boolean"/>
+      <var name="player" vt="iOThread"/>
+      <var name="run" vt="Boolean"/>
       </data>
   </object>
   

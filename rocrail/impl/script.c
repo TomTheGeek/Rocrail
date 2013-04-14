@@ -268,6 +268,49 @@ static Boolean _isRecording( struct OScript* inst ) {
 
 
 /**  */
+static Boolean _isPlaying( struct OScript* inst ) {
+  iOScriptData data = Data(inst);
+  return data->playing;
+}
+
+
+/**  */
+static void _Play( struct OScript* inst ) {
+  iOScriptData data = Data(inst);
+  data->playing = True;
+}
+
+
+/**  */
+static void _Pause( struct OScript* inst ) {
+  iOScriptData data = Data(inst);
+  data->pause = True;
+}
+
+
+/**  */
+static void _Stop( struct OScript* inst ) {
+  iOScriptData data = Data(inst);
+  data->playing = False;
+  data->pause = False;
+}
+
+static void __player( void* threadinst ) {
+  iOThread     th     = (iOThread)threadinst;
+  iOScript     script = (iOScript)ThreadOp.getParm(th);
+  iOScriptData data   = Data(script);
+
+  ThreadOp.sleep(1000);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Script player started." );
+
+  while(data->run) {
+    ThreadOp.sleep(1000);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Script player ended." );
+}
+
+/**  */
 static struct OScript* _inst( const char* script ) {
   iOScript __Script = allocMem( sizeof( struct OScript ) );
   iOScriptData data = allocMem( sizeof( struct OScriptData ) );
@@ -275,6 +318,10 @@ static struct OScript* _inst( const char* script ) {
 
   /* Initialize data->xxx members... */
   ScriptOp.setScript(__Script, script);
+
+  data->run = True;
+  data->player = ThreadOp.inst( "scriptplayer", __player, __Script );
+  ThreadOp.start( data->player );
 
   instCnt++;
   return __Script;
