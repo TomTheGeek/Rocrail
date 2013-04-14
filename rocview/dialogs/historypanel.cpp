@@ -108,8 +108,8 @@ void HistoryPanel::OnPaint(wxPaintEvent& event)
 
     boosterevent = wBooster.getboosterevent(m_Booster);
     int skip = 0;
-    if( count > w ) {
-      skip = count - w;
+    if( count >= w ) {
+      skip = count - (w+1);
     }
     bool first = true;
     while( boosterevent != NULL ) {
