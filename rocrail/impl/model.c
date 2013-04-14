@@ -3313,7 +3313,7 @@ static void _event( iOModel inst, iONode nodeC ) {
         matchaddr1 = (pada - 1) / 4 + 1;
         matchport1 = (pada - 1) % 4 + 1;
       }
-      else {
+      else if( matchaddr1 == 0 && matchport1 == 0 ) {
         matchaddr1 = -1;
         matchport1 = -1;
       }
@@ -3337,7 +3337,7 @@ static void _event( iOModel inst, iONode nodeC ) {
         matchaddr2 = (pada - 1) / 4 + 1;
         matchport2 = (pada - 1) % 4 + 1;
       }
-      else {
+      else if( matchaddr2 == 0 && matchport2 == 0 ) {
         matchaddr2 = -1;
         matchport2 = -1;
       }
