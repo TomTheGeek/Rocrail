@@ -4151,8 +4151,7 @@ void RocGuiFrame::OnGuestLocoDlg(wxCommandEvent& event){
 
 void RocGuiFrame::OnCmdRecorderDlg(wxCommandEvent& event){
   CmdRecorder* dlg = new CmdRecorder(this);
-  dlg->ShowModal();
-  dlg->Destroy();
+  dlg->Show(TRUE);
 }
 
 
