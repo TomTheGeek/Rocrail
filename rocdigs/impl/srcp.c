@@ -140,20 +140,31 @@ static byte* _cmdRaw( obj inst, const byte* cmd ) {
 static iONode _cmd( obj inst, const iONode nodeA )
 {
   iOSRCPData o = Data( inst );
+  iONode rsp = NULL;
 
   if( o->cmdSocket == NULL ) {
-    __srcpConnect(o);
+    if( !__srcpConnect(o) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnect at next command...");
+      return rsp;
+    }
   }
 
   if ( o->srcpversion == SRCP_07 )
   {
-    return SRCP07Op.cmd( o->srcpx, nodeA );
+    rsp = SRCP07Op.cmd( o->srcpx, nodeA );
   }
   else if ( o->srcpversion == SRCP_08 )
   {
-    return SRCP08Op.cmd( o->srcpx, nodeA );
+    rsp = SRCP08Op.cmd( o->srcpx, nodeA );
   }
-  return NULL;
+
+  if( o->cmdSocket == NULL ) {
+    if( !__srcpConnect(o) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnect at next command...");
+    }
+  }
+
+  return rsp;
 }
 
 static void _halt( obj inst, Boolean poweroff )
