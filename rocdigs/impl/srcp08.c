@@ -440,6 +440,10 @@ static int __srcpSendCommand( iOSRCP08Data o, Boolean recycle, const char* szCom
         return __srcpSendCommand(o, False, szCommand, szRetVal);
     }
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "not connected in SendCommand");
+    if(o->cmdSocket != NULL) {
+      SocketOp.base.del(o->cmdSocket);
+      o->cmdSocket = NULL;
+    }
     return -1;
   }
 
