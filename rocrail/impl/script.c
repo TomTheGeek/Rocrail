@@ -231,20 +231,20 @@ static iONode _nextLine(iOScript inst) {
 }
 
 
-static int __analyseScript(iOScript inst) {
+static int __analyseScript(iOScript inst, const char* script) {
   iOScriptData data = Data(inst);
   int len = 0;
   int idx = 0;
 
-  if( data->script == NULL ) {
+  if( script == NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no script available");
     return 0;
   }
 
   data->nrlines = 0;
-  len = StrOp.len(data->script);
+  len = StrOp.len(script);
   while( idx < len ) {
-    if( data->script[idx] == '\n' ) {
+    if( script[idx] == '\n' ) {
       data->nrlines++;
     }
     idx++;
@@ -257,10 +257,13 @@ static int __analyseScript(iOScript inst) {
 
 static void _setScript(iOScript inst, const char* script) {
   iOScriptData data = Data(inst);
-  data->script = script;
+  if( data->record != NULL ) {
+    StrOp.free(data->record);
+  }
+  data->record = StrOp.dup(script);
   data->linenr = 0;
-  data->pline  = script;
-  __analyseScript(inst);
+  data->pline  = data->record;
+  __analyseScript(inst, data->record);
 }
 
 
