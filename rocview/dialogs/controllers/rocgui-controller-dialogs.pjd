@@ -13808,14 +13808,6 @@
           <string name="proxy-type">"wbBoxSizerProxy"</string>
           <string name="proxy-Orientation">"Vertical"</string>
           <string name="proxy-Member variable name">""</string>
-          <string name="proxy-AlignH">"Centre"</string>
-          <string name="proxy-AlignV">"Centre"</string>
-          <long name="proxy-Stretch factor">0</long>
-          <long name="proxy-Border">5</long>
-          <bool name="proxy-wxLEFT">1</bool>
-          <bool name="proxy-wxRIGHT">1</bool>
-          <bool name="proxy-wxTOP">1</bool>
-          <bool name="proxy-wxBOTTOM">1</bool>
           <bool name="proxy-wxSHAPED">0</bool>
           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
@@ -14180,7 +14172,6 @@
                     <bool name="proxy-wxFIXED_MINSIZE">0</bool>
                     <string name="proxy-Custom arguments">""</string>
                     <string name="proxy-Custom ctor arguments">""</string>
-                    <bool name="proxy-wxTE_LINEWRAP">0</bool>
                   </document>
                   <document>
                     <string name="title">"wxStaticText: ID_STATICTEXT_SRCP_HOST"</string>
@@ -15066,7 +15057,7 @@
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_BusServer"</string>
                   <long name="proxy-Minimum value">0</long>
-                  <long name="proxy-Maximum value">10</long>
+                  <long name="proxy-Maximum value">16</long>
                   <long name="proxy-Initial value">0</long>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
@@ -15098,7 +15089,7 @@
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">50</long>
+                  <long name="proxy-Width">80</long>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Left"</string>
                   <string name="proxy-AlignV">"Centre"</string>
@@ -15207,7 +15198,7 @@
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_GLm"</string>
                   <long name="proxy-Minimum value">0</long>
-                  <long name="proxy-Maximum value">10</long>
+                  <long name="proxy-Maximum value">16</long>
                   <long name="proxy-Initial value">1</long>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
@@ -15239,7 +15230,7 @@
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">50</long>
+                  <long name="proxy-Width">80</long>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Left"</string>
                   <string name="proxy-AlignV">"Centre"</string>
@@ -15348,7 +15339,7 @@
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_GLDCCs"</string>
                   <long name="proxy-Minimum value">0</long>
-                  <long name="proxy-Maximum value">10</long>
+                  <long name="proxy-Maximum value">16</long>
                   <long name="proxy-Initial value">2</long>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
@@ -15380,7 +15371,7 @@
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">50</long>
+                  <long name="proxy-Width">80</long>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Left"</string>
                   <string name="proxy-AlignV">"Centre"</string>
@@ -15489,7 +15480,7 @@
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_GLDCCl"</string>
                   <long name="proxy-Minimum value">0</long>
-                  <long name="proxy-Maximum value">10</long>
+                  <long name="proxy-Maximum value">16</long>
                   <long name="proxy-Initial value">3</long>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
@@ -15521,7 +15512,7 @@
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">50</long>
+                  <long name="proxy-Width">80</long>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Left"</string>
                   <string name="proxy-AlignV">"Centre"</string>
@@ -15630,7 +15621,7 @@
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_GLPS"</string>
                   <long name="proxy-Minimum value">0</long>
-                  <long name="proxy-Maximum value">10</long>
+                  <long name="proxy-Maximum value">16</long>
                   <long name="proxy-Initial value">4</long>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
@@ -15662,7 +15653,7 @@
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">50</long>
+                  <long name="proxy-Width">80</long>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Left"</string>
                   <string name="proxy-AlignV">"Centre"</string>
@@ -15771,7 +15762,7 @@
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_GAm"</string>
                   <long name="proxy-Minimum value">0</long>
-                  <long name="proxy-Maximum value">10</long>
+                  <long name="proxy-Maximum value">16</long>
                   <long name="proxy-Initial value">5</long>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
@@ -15803,7 +15794,7 @@
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">50</long>
+                  <long name="proxy-Width">80</long>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Left"</string>
                   <string name="proxy-AlignV">"Centre"</string>
@@ -15912,7 +15903,7 @@
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_GAd"</string>
                   <long name="proxy-Minimum value">0</long>
-                  <long name="proxy-Maximum value">10</long>
+                  <long name="proxy-Maximum value">16</long>
                   <long name="proxy-Initial value">6</long>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
@@ -15944,7 +15935,7 @@
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">50</long>
+                  <long name="proxy-Width">80</long>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Left"</string>
                   <string name="proxy-AlignV">"Centre"</string>
@@ -16053,7 +16044,7 @@
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_GAPS"</string>
                   <long name="proxy-Minimum value">0</long>
-                  <long name="proxy-Maximum value">10</long>
+                  <long name="proxy-Maximum value">16</long>
                   <long name="proxy-Initial value">7</long>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
@@ -16085,7 +16076,7 @@
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">50</long>
+                  <long name="proxy-Width">80</long>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Left"</string>
                   <string name="proxy-AlignV">"Centre"</string>
@@ -16194,7 +16185,7 @@
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_FBs88"</string>
                   <long name="proxy-Minimum value">0</long>
-                  <long name="proxy-Maximum value">10</long>
+                  <long name="proxy-Maximum value">16</long>
                   <long name="proxy-Initial value">8</long>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
@@ -16226,7 +16217,7 @@
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">50</long>
+                  <long name="proxy-Width">80</long>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Left"</string>
                   <string name="proxy-AlignV">"Centre"</string>
@@ -16335,7 +16326,7 @@
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_FBm6051"</string>
                   <long name="proxy-Minimum value">0</long>
-                  <long name="proxy-Maximum value">10</long>
+                  <long name="proxy-Maximum value">16</long>
                   <long name="proxy-Initial value">9</long>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
@@ -16367,7 +16358,7 @@
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">50</long>
+                  <long name="proxy-Width">80</long>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Left"</string>
                   <string name="proxy-AlignV">"Centre"</string>
@@ -16476,7 +16467,7 @@
                   <string name="proxy-Header filename">""</string>
                   <string name="proxy-Member variable name">"m_FBi8255"</string>
                   <long name="proxy-Minimum value">0</long>
-                  <long name="proxy-Maximum value">10</long>
+                  <long name="proxy-Maximum value">16</long>
                   <long name="proxy-Initial value">10</long>
                   <string name="proxy-Help text">""</string>
                   <string name="proxy-Tooltip text">""</string>
@@ -16508,7 +16499,7 @@
                   <string name="proxy-Custom styles">""</string>
                   <long name="proxy-X">-1</long>
                   <long name="proxy-Y">-1</long>
-                  <long name="proxy-Width">50</long>
+                  <long name="proxy-Width">80</long>
                   <long name="proxy-Height">-1</long>
                   <string name="proxy-AlignH">"Left"</string>
                   <string name="proxy-AlignV">"Centre"</string>
@@ -16789,6 +16780,14 @@
           <string name="proxy-type">"wbBoxSizerProxy"</string>
           <string name="proxy-Orientation">"Vertical"</string>
           <string name="proxy-Member variable name">""</string>
+          <string name="proxy-AlignH">"Centre"</string>
+          <string name="proxy-AlignV">"Centre"</string>
+          <long name="proxy-Stretch factor">0</long>
+          <long name="proxy-Border">5</long>
+          <bool name="proxy-wxLEFT">1</bool>
+          <bool name="proxy-wxRIGHT">1</bool>
+          <bool name="proxy-wxTOP">1</bool>
+          <bool name="proxy-wxBOTTOM">1</bool>
           <bool name="proxy-wxSHAPED">0</bool>
           <bool name="proxy-wxADJUST_MINSIZE">0</bool>
           <bool name="proxy-wxFIXED_MINSIZE">0</bool>
