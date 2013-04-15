@@ -142,13 +142,6 @@ static iONode _cmd( obj inst, const iONode nodeA )
   iOSRCPData o = Data( inst );
   iONode rsp = NULL;
 
-  if( o->cmdSocket == NULL ) {
-    if( !__srcpConnect(o) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnect at next command...");
-      return rsp;
-    }
-  }
-
   if ( o->srcpversion == SRCP_07 )
   {
     rsp = SRCP07Op.cmd( o->srcpx, nodeA );
@@ -156,11 +149,15 @@ static iONode _cmd( obj inst, const iONode nodeA )
   else if ( o->srcpversion == SRCP_08 )
   {
     rsp = SRCP08Op.cmd( o->srcpx, nodeA );
-  }
 
-  if( o->cmdSocket == NULL ) {
-    if( !__srcpConnect(o) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnect at next command...");
+    if( !SRCP08Op.isConnected((iOSRCP08)o->srcpx) ) {
+      o->cmdSocket = NULL;
+      if( !__srcpConnect(o) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnect at next command...");
+      }
+      else {
+        SRCP08Op.setConnection((iOSRCP08)o->srcpx, o->cmdSocket);
+      }
     }
   }
 

@@ -443,6 +443,13 @@
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
       <param name="cmdsocket" vt="const iOSocket" remark="Command socket"/>
     </fun>
+    <fun name="isConnected" vt="Boolean">
+      <param name="inst" vt="this"/>
+    </fun>
+    <fun name="setConnection" vt="void">
+      <param name="inst" vt="this"/>
+      <param name="cmdSocket" vt="iOSocket"/>
+    </fun>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="srcpini" vt="iONode"/>

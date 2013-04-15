@@ -439,7 +439,7 @@ static int __srcpSendCommand( iOSRCP08Data o, Boolean recycle, const char* szCom
       if (__srcpConnect(o))
         return __srcpSendCommand(o, False, szCommand, szRetVal);
     }
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "not connected in SendCommand");
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "not connected in SendCommand (recycle=%d socket=0x%08X)", recycle, o->cmdSocket);
     if(o->cmdSocket != NULL) {
       SocketOp.base.del(o->cmdSocket);
       o->cmdSocket = NULL;
@@ -542,6 +542,16 @@ static void _shortcut(obj inst) {
   iOSRCP08Data data = Data( inst );
 }
 
+
+static Boolean _isConnected(obj inst) {
+  iOSRCP08Data data = Data( inst );
+  return data->cmdSocket != NULL;
+}
+
+static void _setConnection(obj inst, iOSocket socket) {
+  iOSRCP08Data data = Data( inst );
+  data->cmdSocket = socket;
+}
 
 /* VERSION: */
 static int vmajor = 2;
