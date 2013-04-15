@@ -451,6 +451,23 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     const char* cmd = wSysCmd.getcmd( node );
     StrOp.fmtb( uidKey, "0x%08X", wSysCmd.getbus(node) );
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
+
+    if( bidibnode != NULL ) {
+      /* Direct Booster command */
+      if( StrOp.equals( cmd, wSysCmd.go ) ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Booster Power ON" );
+        msgdata[0] = 1;
+        data->subWrite((obj)inst, bidibnode->path, MSG_BOOST_ON, msgdata, 1, bidibnode->seq++);
+        return rsp;
+      }
+      if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Booster Power OFF" );
+        msgdata[0] = 1;
+        data->subWrite((obj)inst, bidibnode->path, MSG_BOOST_OFF, msgdata, 1, bidibnode->seq++);
+        return rsp;
+      }
+    }
+
     if( bidibnode == NULL ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using default booster..." );
       bidibnode = data->defaultbooster;
@@ -460,7 +477,6 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no command station available for command=%s; broadcast it to 0.0.0.0", cmd );
       bidibnode = (iOBiDiBNode)MapOp.get( data->localmap, "0.0.0.0" );
     }
-
 
     if( data->defaultmain != NULL && StrOp.equals( cmd, wSysCmd.stop ) ) {
       bidibnode = data->defaultmain;
@@ -1754,6 +1770,11 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
     TraceOp.trc( name, level, __LINE__, 9999,
         "booster %08X state=0x%02X [%s] %s", bidibnode->uid, pdata[0], msg, bidibnode->shortcut?"(shortcut)":"" );
     shortcut = bidibnode->shortcut;
+    if( (pdata[0] & 0x80) == 0x00) {
+      bidibnode->loadmax = 0;
+      bidibnode->tempmax = 0;
+      bidibnode->voltmin = 0;
+    }
   }
   else {
     TraceOp.trc( name, level, __LINE__, 9999,
