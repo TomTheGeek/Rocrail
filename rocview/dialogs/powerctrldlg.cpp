@@ -38,6 +38,7 @@
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/PwrCmd.h"
+#include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Booster.h"
 #include "rocrail/wrapper/public/BoosterList.h"
 #include "rocrail/wrapper/public/BoosterEvent.h"
@@ -98,6 +99,11 @@ void PowerCtrlDlg::initLabels() {
   m_Boosters->SetColLabelValue(7, wxT("min") );
   m_Boosters->SetColLabelValue(8, wxT("°C") );
   m_Boosters->SetColLabelValue(9, wxT("max") );
+
+  m_On->SetLabel( wxGetApp().getMsg("on") );
+  m_Off->SetLabel(wxGetApp().getMsg("off") );
+  m_ResetStat->SetLabel(wxGetApp().getMsg("reset") );
+
 }
 
 
@@ -200,6 +206,7 @@ void PowerCtrlDlg::initValues(iONode event) {
   else {
     m_On->Enable( false );
     m_Off->Enable( false );
+    m_ResetStat->Enable( false );
   }
 }
 
@@ -209,6 +216,7 @@ void PowerCtrlDlg::onCellLeftClick( wxGridEvent& event ) {
   m_Boosters->SelectRow(event.GetRow());
   m_On->Enable( true );
   m_Off->Enable( true );
+  m_ResetStat->Enable( true );
 
   wxString str = m_Boosters->GetCellValue( event.GetRow(), 0 );
   m_SelBooster = (iONode)MapOp.get(m_BoosterMap, (const char*)str.mb_str(wxConvUTF8) );
@@ -293,3 +301,17 @@ void PowerCtrlDlg::onClose( wxCloseEvent& event ) {
 void PowerCtrlDlg::onSize( wxSizeEvent& event ) {
   powerctrlgen::OnSize( event );
 }
+
+
+void PowerCtrlDlg::onResetStat( wxCommandEvent& event ) {
+  if( m_SelBooster != NULL ) {
+    iONode pwrcmd = NodeOp.inst( wPwrCmd.name(), NULL, ELEMENT_NODE );
+    wPwrCmd.setid(pwrcmd, wBooster.getid(m_SelBooster));
+    wPwrCmd.setcmd(pwrcmd, wSysCmd.resetstat);
+    TraceOp.trc( "pwrctrl", TRCLEVEL_INFO, __LINE__, 9999, "sending on cmd for booster %s", wBooster.getid(m_SelBooster) );
+    wxGetApp().sendToRocrail( pwrcmd );
+    m_SelectedRow = -1;
+  }
+}
+
+

@@ -466,6 +466,13 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         data->subWrite((obj)inst, bidibnode->path, MSG_BOOST_OFF, msgdata, 1, bidibnode->seq++);
         return rsp;
       }
+      if( StrOp.equals( cmd, wSysCmd.resetstat ) ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Booster reset statistics" );
+        bidibnode->loadmax = 0;
+        bidibnode->tempmax = 0;
+        bidibnode->voltmin = 0;
+        return rsp;
+      }
     }
 
     if( bidibnode == NULL ) {
@@ -1770,11 +1777,6 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
     TraceOp.trc( name, level, __LINE__, 9999,
         "booster %08X state=0x%02X [%s] %s", bidibnode->uid, pdata[0], msg, bidibnode->shortcut?"(shortcut)":"" );
     shortcut = bidibnode->shortcut;
-    if( (pdata[0] & 0x80) == 0x00) {
-      bidibnode->loadmax = 0;
-      bidibnode->tempmax = 0;
-      bidibnode->voltmin = 0;
-    }
   }
   else {
     TraceOp.trc( name, level, __LINE__, 9999,

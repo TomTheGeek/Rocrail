@@ -54,6 +54,7 @@ protected:
   void onCellRightClick( wxGridEvent& event );
   void onSize( wxSizeEvent& event );
   void onClose( wxCloseEvent& event );
+  void onResetStat( wxCommandEvent& event );
 
 
 public:

@@ -442,8 +442,10 @@ static Boolean _cmd(iOPowerMan inst, iONode cmd) {
         wSysCmd.setiid(nodeA, wBooster.getiid(booster));
         if( StrOp.equals( wPwrCmd.on, wPwrCmd.getcmd(cmd) ) )
           wSysCmd.setcmd(nodeA, wSysCmd.go);
-        else
+        else if( StrOp.equals( wPwrCmd.off, wPwrCmd.getcmd(cmd) ) )
           wSysCmd.setcmd(nodeA, wSysCmd.stop);
+        else
+          wSysCmd.setcmd(nodeA, wPwrCmd.getcmd(cmd));
         ControlOp.cmd( control, nodeA, NULL );
       }
     }
