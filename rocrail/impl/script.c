@@ -127,6 +127,15 @@ static char* _convertNode(iONode node) {
 }
 
 
+static void __stripNewline(char* str) {
+  int i = 0;
+  int len = StrOp.len(str);
+  for( i=0; i < len; i++ ) {
+    if( str[i] == '\n' )
+      str[i] = '\0';
+  }
+}
+
 /* Create a node from a script line.  */
 static iONode _parseLine(const char* scriptline) {
   iONode node = NULL;
@@ -141,17 +150,20 @@ static iONode _parseLine(const char* scriptline) {
 
     if( StrTokOp.hasMoreTokens( tok ) )  {
       nodename = StrTokOp.nextToken( tok );
+      __stripNewline(nodename);
     }
     if( StrTokOp.hasMoreTokens( tok ) )  {
       parm1 = StrTokOp.nextToken( tok );
+      __stripNewline(parm1);
     }
     if( StrTokOp.hasMoreTokens( tok ) )  {
       parm2 = StrTokOp.nextToken( tok );
+      __stripNewline(parm2);
     }
     if( StrTokOp.hasMoreTokens( tok ) )  {
       parm3 = StrTokOp.nextToken( tok );
+      __stripNewline(parm3);
     }
-    StrTokOp.base.del(tok);
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsing command: %s", nodename);
 
@@ -162,6 +174,12 @@ static iONode _parseLine(const char* scriptline) {
       wFeedback.setstate( node, StrOp.equalsi("true", parm2) );
       if( parm3 != NULL )
         wFeedback.setidentifier(node, parm3);
+    }
+
+    else if( StrOp.equalsi( "pause", nodename ) && parm1 != NULL ) {
+      int seconds = atoi(parm1);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "play: pause %d", seconds );
+      ThreadOp.sleep(1000*seconds);
     }
 
     else if( StrOp.equalsi( wLoc.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
@@ -179,6 +197,14 @@ static iONode _parseLine(const char* scriptline) {
       }
     }
 
+    else if( StrOp.equalsi( wSwitch.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+      /* sw,<id>,straight */
+      node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setid( node, parm1 );
+      wSwitch.setcmd( node, parm2 );
+    }
+
+    StrTokOp.base.del(tok);
   }
   return node;
 }
@@ -197,6 +223,9 @@ static iONode _nextLine(iOScript inst) {
     data->pline = StrOp.findc(data->pline, '\n');
     if( data->pline != NULL )
       data->pline++;
+    else {
+      data->playing = False;
+    }
   }
   return node;
 }
@@ -241,9 +270,17 @@ static void _recordNode( struct OScript* inst ,iONode node ) {
   if( data->recording ) {
     char* scriptline = ScriptOp.convertNode(node);
     if( scriptline != NULL ) {
+      if( data->prevtime > 0 ) {
+        long diff = time(NULL) - data->prevtime;
+        char pauseStr[64];
+        StrOp.fmtb(pauseStr, "pause,%ld\n", diff);
+        data->record = StrOp.cat( data->record, pauseStr );
+        data->pline  = data->record;
+      }
       data->record = StrOp.cat( data->record, scriptline );
       StrOp.free(scriptline);
       data->pline  = data->record;
+      data->prevtime = time(NULL);
     }
   }
 }
@@ -255,6 +292,7 @@ static void _setRecording( struct OScript* inst ,Boolean recording ) {
   if( !data->recording && recording && data->record != NULL ) {
     StrOp.free( data->record );
     data->record = NULL;
+    data->prevtime = 0;
   }
   data->recording = recording;
 }
@@ -277,7 +315,11 @@ static Boolean _isPlaying( struct OScript* inst ) {
 /**  */
 static void _Play( struct OScript* inst ) {
   iOScriptData data = Data(inst);
-  data->playing = True;
+  if( !data->playing ) {
+    data->pline   = data->record;
+    data->playing = True;
+    data->pause   = False;
+  }
 }
 
 
@@ -304,10 +346,30 @@ static void __player( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Script player started." );
 
   while(data->run) {
-    ThreadOp.sleep(1000);
+    ThreadOp.sleep(10);
+    if( data->playing ) {
+      iONode node = ScriptOp.nextLine(script);
+      if( node != NULL ) {
+        if( data->rcon != NULL ) {
+          char* strCmd = NodeOp.base.toString( node );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "play: %s", strCmd );
+          RConOp.write( data->rcon, strCmd );
+          StrOp.free( strCmd );
+          NodeOp.base.del(node);
+        }
+      }
+    }
+    else {
+      ThreadOp.sleep(1000);
+    }
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Script player ended." );
+}
+
+static void _setCallback(iOScript inst, iORCon rcon) {
+  iOScriptData data   = Data(inst);
+  data->rcon = rcon;
 }
 
 /**  */

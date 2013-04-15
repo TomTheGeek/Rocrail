@@ -2372,7 +2372,7 @@
    </data>
   </object>
 
-  <object name="Script" use="list,node,thread" remark="Script interpreter.">
+  <object name="Script" use="list,node,thread" include="rcon" remark="Script interpreter.">
     <fun name="inst" vt="this" remark="">
       <param name="script" vt="const char*" remark="Optional script."/>
     </fun>
@@ -2416,6 +2416,10 @@
     <fun name="Pause" vt="void">
       <param name="inst" vt="this"/>
     </fun>
+    <fun name="setCallback" vt="void">
+      <param name="inst" vt="this"/>
+      <param name="rcon" vt="iORCon"/>
+    </fun>
     <data>
       <var name="linenr" vt="int"/>
       <var name="pline" vt="const char*"/>
@@ -2427,6 +2431,8 @@
       <var name="pause" vt="Boolean"/>
       <var name="player" vt="iOThread"/>
       <var name="run" vt="Boolean"/>
+      <var name="prevtime" vt="long"/>
+      <var name="rcon" vt="iORCon"/>
       </data>
   </object>
   
