@@ -55,7 +55,7 @@ static int instCnt = 0;
 #define SRCP_OK(x) ( x < 400 )
 #define SRCP_ERROR(x) ( x >= 400 )
 
-static Boolean __srcpConnect( iOSRCPData o );
+static Boolean __srcpConnect( iOSRCPData o, Boolean reconnect );
 
 /* ***** OBase functions. */
 static const char* __id( void* inst ) {
@@ -152,7 +152,7 @@ static iONode _cmd( obj inst, const iONode nodeA )
 
     if( !SRCP08Op.isConnected((iOSRCP08)o->srcpx) ) {
       o->cmdSocket = NULL;
-      if( !__srcpConnect(o) ) {
+      if( !__srcpConnect(o, True) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnect at next command...");
       }
       else {
@@ -576,7 +576,7 @@ static void __infoReader( void * threadinst )
 }
 
 
-static Boolean __srcpConnect( iOSRCPData o )
+static Boolean __srcpConnect( iOSRCPData o, Boolean reconnect )
 {
   char inbuf[1024];
   /* Will be enough. spec says, no line longer than 1000 chars. */
@@ -623,27 +623,29 @@ static Boolean __srcpConnect( iOSRCPData o )
    * SRCP <version>
    */
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Response from server: %s", inbuf );
-  if ( StrOp.findi( inbuf, "SRCP 0.7." ) != NULL )
-  {
-    o->srcpversion = SRCP_07;
-    o->srcpx = ( obj )SRCP07Op.inst( o->ini, o->trace, o->cmdSocket );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server response for protocol 0.7 ok." );
-  }
-  else if ( StrOp.findi( inbuf, "SRCP 0.8." ) != NULL )
-  {
-    o->srcpversion = SRCP_08;
-    o->srcpx = ( obj )SRCP08Op.inst( o->ini, o->trace, o->cmdSocket );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server response for protocol 0.8 ok." );
-  }
-  else
-  {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking. No supported protocol found!" );
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, inbuf );
-    SocketOp.disConnect( o->cmdSocket );
-    return False;
+  if( !reconnect ) {
+    if ( StrOp.findi( inbuf, "SRCP 0.7." ) != NULL )
+    {
+      o->srcpversion = SRCP_07;
+      o->srcpx = ( obj )SRCP07Op.inst( o->ini, o->trace, o->cmdSocket );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server response for protocol 0.7 ok." );
+    }
+    else if ( StrOp.findi( inbuf, "SRCP 0.8." ) != NULL )
+    {
+      o->srcpversion = SRCP_08;
+      o->srcpx = ( obj )SRCP08Op.inst( o->ini, o->trace, o->cmdSocket );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server response for protocol 0.8 ok." );
+    }
+    else
+    {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking. No supported protocol found!" );
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, inbuf );
+      SocketOp.disConnect( o->cmdSocket );
+      return False;
+    }
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Handshake completed." );
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Handshake completed." );
   return True;
 }
 
@@ -708,7 +710,7 @@ static iOSRCP _inst( const iONode settings, const iOTrace trace )
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  connection: %s", wSRCP.isudp( data->srcpini )?"UDP":"TCP/IP" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  if( __srcpConnect( data ) ) {
+  if( __srcpConnect( data, False ) ) {
     if ( data->fbackPort > 0 )
     {
       char * fbname = StrOp.fmt( "ddlfb%08X", srcp );

@@ -543,14 +543,15 @@ static void _shortcut(obj inst) {
 }
 
 
-static Boolean _isConnected(obj inst) {
+static Boolean _isConnected(iOSRCP08 inst) {
   iOSRCP08Data data = Data( inst );
   return data->cmdSocket != NULL;
 }
 
-static void _setConnection(obj inst, iOSocket socket) {
+static void _setConnection(iOSRCP08 inst, iOSocket socket) {
   iOSRCP08Data data = Data( inst );
   data->cmdSocket = socket;
+  __srcpConnect(data);
 }
 
 /* VERSION: */
