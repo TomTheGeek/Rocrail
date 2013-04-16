@@ -42,6 +42,7 @@ class CmdRecorderGen : public wxDialog
 		wxTextCtrl* m_Cmd;
 		wxButton* m_Modify;
 		wxButton* m_Delete;
+		wxButton* m_Insert;
 		wxButton* m_Export;
 		wxButton* m_Import;
 		wxStdDialogButtonSizer* m_StdButtons;
@@ -56,6 +57,7 @@ class CmdRecorderGen : public wxDialog
 		virtual void onCmdSelected( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onModify( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onInsert( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onExport( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onImport( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ) { event.Skip(); }

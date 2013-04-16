@@ -34,6 +34,8 @@ CmdRecorderGen::CmdRecorderGen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer1->Add( bSizer2, 0, wxEXPAND, 5 );
 	
 	m_CmdList = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	m_CmdList->SetMinSize( wxSize( -1,100 ) );
+	
 	bSizer1->Add( m_CmdList, 1, wxALL|wxEXPAND, 5 );
 	
 	m_Cmd = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -48,13 +50,21 @@ CmdRecorderGen::CmdRecorderGen( wxWindow* parent, wxWindowID id, const wxString&
 	m_Delete = new wxButton( this, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer3->Add( m_Delete, 0, wxALL, 5 );
 	
-	m_Export = new wxButton( this, wxID_ANY, wxT("Export..."), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer3->Add( m_Export, 0, wxALL, 5 );
-	
-	m_Import = new wxButton( this, wxID_ANY, wxT("Import..."), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer3->Add( m_Import, 0, wxALL, 5 );
+	m_Insert = new wxButton( this, wxID_ANY, wxT("Insert"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( m_Insert, 0, wxALL, 5 );
 	
 	bSizer1->Add( bSizer3, 0, 0, 5 );
+	
+	wxBoxSizer* bSizer4;
+	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_Export = new wxButton( this, wxID_ANY, wxT("Export..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer4->Add( m_Export, 0, wxALL, 5 );
+	
+	m_Import = new wxButton( this, wxID_ANY, wxT("Import..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer4->Add( m_Import, 0, wxALL, 5 );
+	
+	bSizer1->Add( bSizer4, 0, 0, 5 );
 	
 	m_StdButtons = new wxStdDialogButtonSizer();
 	m_StdButtonsOK = new wxButton( this, wxID_OK );
@@ -77,6 +87,7 @@ CmdRecorderGen::CmdRecorderGen( wxWindow* parent, wxWindowID id, const wxString&
 	m_CmdList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( CmdRecorderGen::onCmdSelected ), NULL, this );
 	m_Modify->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CmdRecorderGen::onModify ), NULL, this );
 	m_Delete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CmdRecorderGen::onDelete ), NULL, this );
+	m_Insert->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CmdRecorderGen::onInsert ), NULL, this );
 	m_Export->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CmdRecorderGen::onExport ), NULL, this );
 	m_Import->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CmdRecorderGen::onImport ), NULL, this );
 	m_StdButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CmdRecorderGen::onOK ), NULL, this );
@@ -93,6 +104,7 @@ CmdRecorderGen::~CmdRecorderGen()
 	m_CmdList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( CmdRecorderGen::onCmdSelected ), NULL, this );
 	m_Modify->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CmdRecorderGen::onModify ), NULL, this );
 	m_Delete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CmdRecorderGen::onDelete ), NULL, this );
+	m_Insert->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CmdRecorderGen::onInsert ), NULL, this );
 	m_Export->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CmdRecorderGen::onExport ), NULL, this );
 	m_Import->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CmdRecorderGen::onImport ), NULL, this );
 	m_StdButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CmdRecorderGen::onOK ), NULL, this );
