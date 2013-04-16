@@ -226,14 +226,13 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
 
       data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
     }
-
-
-
-
   }
+
+
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
 
+    int bus  = wOutput.getbus( node );
     int addr = wOutput.getaddr( node );
     int port = wOutput.getport( node );
     int gate = wOutput.getgate( node );
@@ -256,7 +255,29 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d %d %d %s fada=%d pada=%d",
         addr, port, gate, wOutput.getcmd(node)!=NULL?wOutput.getcmd(node):"-", fada, pada );
+
+    {
+      iONode nodeC = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+
+      if( port == 0 && addr > 0 )
+        AddrOp.fromFADA( addr, &addr, &port, &gate );
+      else if( addr == 0 && port > 0 )
+        AddrOp.fromPADA( port, &addr, &port );
+      wOutput.setbus( nodeC, bus );
+      wOutput.setaddr( nodeC, addr );
+      wOutput.setport( nodeC, port );
+      wOutput.setgate( nodeC, gate );
+
+      if( wOutput.getiid(node) != NULL )
+        wOutput.setiid( nodeC, wOutput.getiid(node) );
+
+      wOutput.setstate( nodeC, wOutput.getcmd( node ) );
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reporting output %d:%d:%d.%d", bus, addr, port, gate );
+      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+    }
   }
+
   /* Signal command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {
     if( StrOp.equals( wSignal.aspect, wSignal.getcmd(node) ) ) {

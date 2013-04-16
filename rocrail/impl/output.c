@@ -257,9 +257,9 @@ static void _event( iOOutput inst, iONode nodeC ) {
 
   const char* state = wOutput.getstate( nodeC );
 
-  if( StrOp.equals( state, wOutput.off ) )
+  if( StrOp.equals( state, wOutput.on ) )
     wOutput.setstate( data->props, wOutput.on );
-  else if( StrOp.equals( state, wOutput.on ) )
+  else if( StrOp.equals( state, wOutput.off ) )
     wOutput.setstate( data->props, wOutput.off );
 
   /* Broadcast to clients. Node4 */

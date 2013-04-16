@@ -2409,7 +2409,7 @@ static iOSignal _getSgByAddress( iOModel inst, int addr, int port, int type ) {
 
     sg = (iOSignal)MapOp.next( o->signalMap );
   };
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "no signal found by address [%d,%d]", addr, port );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "no signal found by address [%d,%d] type=%d", addr, port, type );
   return NULL;
 }
 
@@ -3410,12 +3410,14 @@ static void _event( iOModel inst, iONode nodeC ) {
     int port = wSwitch.getport1( nodeC );
     int type = wSwitch.getporttype( nodeC );
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Output event: %d:%d:%d", bus, addr, port);
+    if( addr == 0 && port == 0 ) {
+      bus  = wOutput.getbus( nodeC );
+      addr = wOutput.getaddr( nodeC );
+      port = wOutput.getport( nodeC );
+      type = wOutput.getporttype( nodeC );
+    }
 
-    if( addr == 0 && wOutput.getaddr(nodeC) > 0 )
-      addr = wOutput.getaddr(nodeC);
-    if( port == 0 && wOutput.getport(nodeC) > 0 )
-      port = wOutput.getport(nodeC);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Output event: %d:%d:%d", bus, addr, port);
 
     const char* iid = wOutput.getiid( nodeC );
     char* key = OutputOp.createAddrKey( bus, addr, port, type, iid );
@@ -3426,6 +3428,15 @@ static void _event( iOModel inst, iONode nodeC ) {
       OutputOp.event( co, nodeC );
       return;
     }
+
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying Signal event: %d:%d:%d type=%d", bus, addr, port, type);
+
+    iOSignal sg = ModelOp.getSgByAddress(inst, addr, port, type);
+    if( sg != NULL && wCtrl.issgevents( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+      SignalOp.event( sg, nodeC );
+      return;
+    }
+
   }
 
 
