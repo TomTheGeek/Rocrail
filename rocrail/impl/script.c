@@ -37,6 +37,8 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/Item.h"
 
 static int instCnt = 0;
 
@@ -202,6 +204,33 @@ static iONode _parseLine(const char* scriptline) {
       node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setid( node, parm1 );
       wSwitch.setcmd( node, parm2 );
+    }
+
+    else if( StrOp.equalsi( wOutput.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+      /* co,<id>,on */
+      node = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+      wOutput.setid( node, parm1 );
+      wOutput.setcmd( node, parm2 );
+    }
+
+    else if( StrOp.equalsi( wSignal.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+      /* sg,<id>,green */
+      node = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+      wSignal.setid( node, parm1 );
+      wSignal.setcmd( node, parm2 );
+    }
+
+    else if( StrOp.equalsi( wBlock.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+      /* bk,<id>,open */
+      node = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+      wBlock.setid( node, parm1 );
+      wBlock.setcmd( node, parm2 );
+    }
+
+    else if( parm1 != NULL && parm2 != NULL ) {
+      node = NodeOp.inst( nodename, NULL, ELEMENT_NODE );
+      wItem.setid( node, parm1 );
+      NodeOp.setStr( node, "cmd", parm2);
     }
 
     StrTokOp.base.del(tok);
