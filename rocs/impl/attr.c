@@ -746,6 +746,10 @@ static const char* __escapeStr( iOAttr inst, const char* str ) {
           idx++;
           data->escaped = True;
         }
+        else {
+          buffer[idx] = str[i];
+          idx++;
+        }
       }
       else if( str[i] == '&' ) {
         char esc;
