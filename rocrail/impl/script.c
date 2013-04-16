@@ -250,8 +250,10 @@ static iONode _nextLine(iOScript inst) {
 
     /* prepare next line pointer */
     data->pline = StrOp.findc(data->pline, '\n');
-    if( data->pline != NULL )
+    if( data->pline != NULL ) {
       data->pline++;
+      data->linenr++;
+    }
     else {
       data->playing = False;
     }
@@ -325,6 +327,8 @@ static void _setRecording( struct OScript* inst ,Boolean recording ) {
     StrOp.free( data->record );
     data->record = NULL;
     data->prevtime = 0;
+    data->linenr  = 0;
+
   }
   data->recording = recording;
 }
@@ -338,8 +342,11 @@ static Boolean _isRecording( struct OScript* inst ) {
 
 
 /**  */
-static Boolean _isPlaying( struct OScript* inst ) {
+static Boolean _isPlaying( struct OScript* inst, int* linenr ) {
   iOScriptData data = Data(inst);
+  if( linenr != NULL ) {
+    *linenr = data->linenr;
+  }
   return data->playing;
 }
 
@@ -349,8 +356,12 @@ static void _Play( struct OScript* inst ) {
   iOScriptData data = Data(inst);
   if( !data->playing ) {
     data->pline   = data->record;
+    data->linenr  = 0;
     data->playing = True;
     data->pause   = False;
+  }
+  else {
+    data->pause = False;
   }
 }
 
@@ -358,7 +369,8 @@ static void _Play( struct OScript* inst ) {
 /**  */
 static void _Pause( struct OScript* inst ) {
   iOScriptData data = Data(inst);
-  data->pause = True;
+  if( data->playing )
+    data->pause = !data->pause;
 }
 
 
@@ -379,7 +391,7 @@ static void __player( void* threadinst ) {
 
   while(data->run) {
     ThreadOp.sleep(10);
-    if( data->playing ) {
+    if( !data->pause && data->playing ) {
       iONode node = ScriptOp.nextLine(script);
       if( node != NULL ) {
         if( data->rcon != NULL ) {

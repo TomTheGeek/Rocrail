@@ -2406,6 +2406,7 @@
     </fun>
     <fun name="isPlaying" vt="Boolean">
       <param name="inst" vt="this"/>
+      <param name="linenr" vt="int*"/>
     </fun>
     <fun name="Play" vt="void">
       <param name="inst" vt="this"/>
