@@ -395,6 +395,10 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "unlink %s TD port %d",
         wSysCmd.getid(node),  wSysCmd.getvalA(node),  wSysCmd.getvalB(node) );
     }
+    else if( StrOp.equals( cmd, wSysCmd.resetstat ) ) {
+      data->boosteruid = wSysCmd.getbus(node);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reset statistics for booster [%d]", wSysCmd.getbus(node) );
+    }
     else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "syscmd=%s", cmd );
     }
@@ -480,11 +484,40 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
 }
 
 
+static void __reportState(iOVirtual vcs, int uid) {
+  iOVirtualData data = Data(vcs);
+  int randNumber = 0;
+
+  iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+  if( data->iid != NULL )
+    wState.setiid( node, data->iid );
+
+  wState.setpower( node, data->power );
+  randNumber = rand();
+  wState.setload( node, randNumber % 5000 );
+  wState.setloadmax( node, 5000 );
+  randNumber = rand();
+  wState.setvolt( node, randNumber % 24000 );
+  randNumber = rand();
+  wState.settemp( node, randNumber % 100 );
+  wState.setuid( node, uid);
+
+  wState.settrackbus( node, data->power );
+  wState.setsensorbus( node, True );
+  wState.setaccessorybus( node, True );
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+}
+
+
+
 static void __transactor( void* threadinst ) {
   iOThread      th   = (iOThread)threadinst;
   iOVirtual     vcs  = (iOVirtual)ThreadOp.getParm(th);
   iOVirtualData data = Data(vcs);
   iOList list = ListOp.inst();
+  int onesec = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Transactor is started.");
 
@@ -520,6 +553,14 @@ static void __transactor( void* threadinst ) {
         break;
       }
     }
+
+    if( onesec > 100 ) {
+      if( data->boosteruid > 0 ) {
+        __reportState(vcs, data->boosteruid);
+      }
+      onesec = 0;
+    }
+    onesec++;
 
     // Give up timeslize:
     ThreadOp.sleep( 10 );

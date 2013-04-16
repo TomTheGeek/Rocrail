@@ -418,6 +418,7 @@
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="cvval[1024]" vt="byte"/>
+      <var name="boosteruid" vt="int"/>
     </data>
   </object>
 
