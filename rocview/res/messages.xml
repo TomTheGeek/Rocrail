@@ -889,6 +889,7 @@
     <zh_CN txt="开启"/>
     <sr_latin txt="Uključeno"/>
     <ja txt="電源オン"/>
+    <pt_BR txt="Ligado"/>
   </Msg>
   <Msg id="poweroff">
     <de txt="Fahrstrom aus" accel="5" tip="Fahrstrom ausschalten."/>
@@ -952,6 +953,7 @@
     <ko txt="초기 상태"/>
     <sr_latin txt="Inicijalno"/>
     <ja txt="フィールドの初期化"/>
+    <pt_BR txt="Campo inicial"/>
   </Msg>
   <Msg id="locctrl" dialog="true" key="Ctrl-L">
     <de txt="Fahrregler" accel="0" tip="Dialog um Züge zu bedienen."/>
@@ -1078,6 +1080,7 @@
     <em_AU txt="Track panel properties" accel="0" tip="Dialog to view and set Track panel properties."/>
     <ko txt="선로도 특성"/>
     <sr_latin txt="Svojstva pružnog panela"/>
+    <pt_BR txt="Propriedades do painel"/>
   </Msg>
   <Msg id="startall">
     <de txt="Alle Loks starten" tip="Versetzt alle Züge in den Automatikbetrieb."/>
@@ -1267,6 +1270,7 @@
     <zh_CN txt="软复位"/>
     <sr_latin txt="Poništi delimično"/>
     <ja txt="ソフトリセット"/>
+    <pt_BR txt="Reiniciar o software"/>
   </Msg>
   <Msg id="level">
     <de txt="Ebene"/>
@@ -1327,6 +1331,7 @@
     <ko txt="레벨 상승"/>
     <sr_latin txt="Viši nivo"/>
     <ja txt="レベルを上げる"/>
+    <pt_BR txt="Subir nível"/>
   </Msg>
   <Msg id="leveldown">
     <de txt="tiefere Ebene" tip="Zeigt die vorherige Gleisbild Ebene an."/>
@@ -1356,6 +1361,7 @@
     <ko txt="레벨 하강"/>
     <sr_latin txt="Niži nivo"/>
     <ja txt="レベルを下げる"/>
+    <pt_BR txt="Descer nível"/>
   </Msg>
   <Msg id="properties" dialog="true">
     <de txt="Eigenschaften" accel="0" tip="Dialog zum anzeigen und ändern von Eigenschaften."/>
@@ -3370,7 +3376,7 @@
     <fr txt="À gauche"/>
     <tr txt="Sol"/>
     <es txt="Izquierda"/>
-    <it txt="A sinistra"/>
+    <it txt="Sinistro"/>
     <da txt="Venstre"/>
     <bs txt="Lijevo"/>
     <cs txt="Vlevo"/>
@@ -7561,7 +7567,7 @@
     <fr txt="Entrer l'identifiant"/>
     <tr txt="ID Girişi"/>
     <es txt="Introducir Denominación"/>
-    <it txt="Immettere identificativo"/>
+    <it txt="Inserire ID"/>
     <da txt="Indtast ID"/>
     <cs txt="Zadej ID"/>
     <bg txt="Въведи ID"/>
@@ -8068,7 +8074,7 @@
     <fr txt="Identifiant du fabricant"/>
     <tr txt="Yapımcı ID"/>
     <es txt="Denominación del Fabricante"/>
-    <it txt="Identificativo produttore"/>
+    <it txt="ID produttore"/>
     <da txt="Fabrikant ID"/>
     <bg txt="Производител ID"/>
     <el txt="Κατασκευαστής ID"/>
@@ -10947,7 +10953,7 @@
     <ja txt="メンバ"/>
   </Msg>
   <Msg id="zconnector">
-    <de txt="Ebenenverbinder"/>
+    <de txt="Verbinder"/>
     <en txt="Level connector"/>
     <nl txt="Nivo verbinding"/>
     <sv txt="Nivåförbindning"/>
@@ -14570,7 +14576,7 @@
     <bg txt="Посока промяна пауза"/>
     <el txt="Σκηνοθεσία αλλαγή διακόψετε"/>
     <hu txt="Irányváltási szünet"/>
-    <it txt="Pausa al cambio di direzione"/>
+    <it txt="Pausa cambio direzione"/>
     <pt txt="Pausa na mudança de direcção"/>
     <ru txt="Пауза изменения направления"/>
     <cs txt="Pauza změny směru"/>
@@ -19280,6 +19286,8 @@
   <Msg id="locoviewtrain">
     <en txt="Trains"/>
     <nl txt="Treinen"/>
+    <de txt="Züge"/>
+    <it txt="Treni"/>
   </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
@@ -19557,7 +19565,7 @@
     <de txt="Serververbindung trennen"/>
     <nl txt="Ga offline"/>
     <es txt="Desconectarse"/>
-    <it txt="Disconetti"/>
+    <it txt="Disconnetti"/>
     <sr_latin txt="Idi na offline."/>
     <ja txt="オフラインにする"/>
     <cs txt="režim offline"/>
@@ -20441,63 +20449,93 @@
     <en txt="Direction image"/>
     <it txt="Immagine direzione"/>
     <nl txt="Rijrichting afbeelding"/>
+    <de txt="Richtungsbild"/>
   </Msg>
   <Msg id="newposflag">
     <en txt="New Position Flag"/>
     <it txt="Segnale nuova posizione"/>
     <nl txt="Nieuwe positie vlag"/>
+    <de txt="Position erreicht"/>
   </Msg>
   <Msg id="sectionlength">
     <en txt="Section length"/>
     <it txt="Lunghezza sezione"/>
     <nl txt="Sectie lengte"/>
     <sv txt="Sektionslängd"/>
+    <de txt="Abschnittslänge"/>
   </Msg>
   <Msg id="traingap">
     <en txt="Train gap"/>
     <it txt="Spazio treno"/>
     <nl txt="Trein tussenruimte"/>
+    <de txt="Zugabstand"/>
   </Msg>
   <Msg id="entersensor">
     <en txt="Enter sensor"/>
     <it txt="Sensore ingresso"/>
     <nl txt="Ingang melder"/>
     <sv txt="Insensor"/>
+    <de txt="Einfahrtsmelder"/>
   </Msg>
   <Msg id="entersignal">
     <en txt="Enter signal"/>
     <it txt="Segnale ingresso"/>
     <nl txt="Ingang signaal"/>
     <sv txt="Insignal"/>
+    <de txt="Einfahrsignal"/>
   </Msg>
   <Msg id="exitsignal">
     <en txt="Exit signal"/>
     <it txt="Segnale uscita"/>
     <nl txt="Uitgang signaal"/>
     <sv txt="Utsignal"/>
+    <de txt="Ausfahrsignal"/>
   </Msg>
   <Msg id="frog">
     <en txt="Frog"/>
+    <de txt="Herzstück"/>
+    <nl txt="Puntstuk"/>
+    <it txt="Cuore"/>
   </Msg>
   <Msg id="showlocked">
     <en txt="Show locked switches" tip="Show locked switches with a different color."/>
+    <de txt="Zeige gesperrte Weichen"/>
+    <nl txt="Laat gereserveerde wissels zien"/>
+    <it txt="Mostrare deviatoi bloccati"/>
   </Msg>
   <Msg id="altthrottle">
     <en txt="Alternative throttle"/>
+    <de txt="Alternativer Fahrregler"/>
+    <nl txt="Alternatieve regelaar"/>
+    <it txt="Controller alternativo"/>
   </Msg>
   <Msg id="openlocofile" dialog="true">
     <en txt="Open locomotive file"/>
+    <de txt="Öffne Lokomotiv-Datei"/>
+    <nl txt="Open locomotieven bestand"/>
+    <it txt="Apri file locomotiva"/>
   </Msg>
   <Msg id="openoccfile" dialog="true">
     <en txt="Open occupancy file"/>
+    <de txt="Öffne Belegungs-Datei"/>
+    <nl txt="Open bezetting bestand"/>
+    <it txt="Apri file occupazione"/>
   </Msg>
   <Msg id="guestimport" dialog="true">
     <en txt="Guest import"/>
+    <de txt="Gast import"/>
+    <nl txt="Gast import"/>
+    <it txt="Importa ospite"/>
   </Msg>
   <Msg id="resetspeeddir">
     <en txt="Reset speed at direction change"/>
+    <de txt="Geschwindigkeit bei Richtungswechsel zurücksetzen"/>
+    <nl txt="Snelheid terug zetten na rij richting verandering"/>
+    <it txt="Azzerare velocità al cambio direzione"/>
   </Msg>
   <Msg id="cmdrecorder" dialog="true">
     <en txt="Command recorder"/>
+    <nl txt="Commando recorder"/>
+    <it txt="Registratore comandi"/>
   </Msg>
 </Messages>
