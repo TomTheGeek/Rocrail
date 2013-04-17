@@ -25,6 +25,7 @@
 #include "ecosdlg.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/Program.h"
 #include "rocview/public/guiapp.h"
 #include "rocs/public/strtok.h"
 
@@ -45,6 +46,8 @@ BEGIN_EVENT_TABLE( ECoSCtrlDialog, wxDialog )
 
 ////@begin ECoSCtrlDialog event table entries
     EVT_RADIOBOX( ID_SUBLIB, ECoSCtrlDialog::OnSublibSelected )
+
+    EVT_BUTTON( ID_BUTTON_SET_FBADDR, ECoSCtrlDialog::OnButtonSetFbaddrClick )
 
     EVT_BUTTON( wxID_OK, ECoSCtrlDialog::OnOkClick )
 
@@ -204,6 +207,8 @@ void ECoSCtrlDialog::Init()
     m_OptionsBox = NULL;
     m_SystemInfo = NULL;
     m_LocoList = NULL;
+    m_SertFbAddr = NULL;
+    m_FbAddr = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end ECoSCtrlDialog member initialisation
@@ -228,7 +233,6 @@ void ECoSCtrlDialog::CreateControls()
     itemPanel3->SetSizer(itemBoxSizer4);
 
     wxFlexGridSizer* itemFlexGridSizer5 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer5->AddGrowableCol(1);
     itemBoxSizer4->Add(itemFlexGridSizer5, 0, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( itemPanel3, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -269,6 +273,8 @@ void ECoSCtrlDialog::CreateControls()
     m_Version = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 10, 0 );
     itemFlexGridSizer5->Add(m_Version, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
+    itemFlexGridSizer5->AddGrowableCol(1);
+
     wxArrayString m_SubLibStrings;
     m_SubLibStrings.Add(_("&Ethernet"));
     m_SubLibStrings.Add(_("&Serial"));
@@ -288,17 +294,26 @@ void ECoSCtrlDialog::CreateControls()
     m_LocoList->SetValue(false);
     itemStaticBoxSizer19->Add(m_LocoList, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer22 = new wxStdDialogButtonSizer;
+    wxFlexGridSizer* itemFlexGridSizer22 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemStaticBoxSizer19->Add(itemFlexGridSizer22, 0, wxALIGN_LEFT, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer22, 0, wxALIGN_RIGHT|wxALL, 5);
+    m_SertFbAddr = new wxButton( itemPanel3, ID_BUTTON_SET_FBADDR, _("Program FB"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer22->Add(m_SertFbAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_FbAddr = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 255, 0 );
+    itemFlexGridSizer22->Add(m_FbAddr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer25 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer25, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer22->AddButton(m_OK);
+    itemStdDialogButtonSizer25->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer22->AddButton(m_Cancel);
+    itemStdDialogButtonSizer25->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer22->Realize();
+    itemStdDialogButtonSizer25->Realize();
 
 ////@end ECoSCtrlDialog content construction
 }
@@ -380,3 +395,19 @@ void ECoSCtrlDialog::SublibSelected()
     m_Device->Enable(false);
   }
 }
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SET_FBADDR
+ */
+
+void ECoSCtrlDialog::OnButtonSetFbaddrClick( wxCommandEvent& event )
+{
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.fb_setaddr );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setdecaddr( cmd, m_FbAddr->GetValue() );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+

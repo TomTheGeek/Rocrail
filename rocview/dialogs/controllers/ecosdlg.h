@@ -36,6 +36,7 @@ class wxSpinCtrl;
 #define ID_DIALOG_ECOS_CTRL 10043
 #define ID_PANEL 10000
 #define ID_SUBLIB 10052
+#define ID_BUTTON_SET_FBADDR 10012
 #define SYMBOL_ECOSCTRLDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_ECOSCTRLDIALOG_TITLE _("ECoS")
 #define SYMBOL_ECOSCTRLDIALOG_IDNAME ID_DIALOG_ECOS_CTRL
@@ -87,6 +88,9 @@ public:
     /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_SUBLIB
     void OnSublibSelected( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SET_FBADDR
+    void OnButtonSetFbaddrClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
 
@@ -124,6 +128,8 @@ public:
     wxStaticBox* m_OptionsBox;
     wxCheckBox* m_SystemInfo;
     wxCheckBox* m_LocoList;
+    wxButton* m_SertFbAddr;
+    wxSpinCtrl* m_FbAddr;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end ECoSCtrlDialog member variables
