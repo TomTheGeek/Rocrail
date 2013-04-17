@@ -58,7 +58,7 @@ END_EVENT_TABLE()
 
 
 LEDButton::LEDButton(wxWindow* parent, wxString text, int width, int height, bool useLED, bool textOnly)
-  :wxPanel(parent, -1,  wxPoint(0, 0), wxSize(width,height), wxBORDER_NONE|wxWANTS_CHARS)
+  :wxPanel(parent, -1,  wxDefaultPosition, wxSize(width,height), wxBORDER_NONE|wxWANTS_CHARS|wxGROW)
 {
   buttonWidth = width;
   buttonHeight = height;
@@ -71,6 +71,7 @@ LEDButton::LEDButton(wxWindow* parent, wxString text, int width, int height, boo
   this->textOnly = textOnly;
   this->icon = NULL;
 }
+
 
 /*
  * Called by the system of by wxWidgets when the panel needs
@@ -90,6 +91,11 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
 
   if( gc == NULL )
     return;
+
+  int w,h;
+  GetSize(&w,&h);
+  buttonWidth  = w;
+  buttonHeight = h;
 
 #ifdef wxANTIALIAS_DEFAULT
   gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
@@ -140,6 +146,22 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
       double descent;
       double externalLeading;
       gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+      int border = (w*10)/100;
+      if( width > (w-border) ) {
+        wxFont font(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+        gc->SetFont(font,*wxBLACK);
+        gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+        if( width > (w-border) ) {
+          wxFont font(7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+          gc->SetFont(font,*wxBLACK);
+          gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+          if( width > (w-border) ) {
+            wxFont font(6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+            gc->SetFont(font,*wxBLACK);
+            gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+          }
+        }
+      }
       gc->DrawText( text, (buttonWidth-width)/2, (buttonHeight-height)/2 );
     }
   }
