@@ -160,6 +160,11 @@ static Boolean __initGL( iOSRCP08Data o, iONode node, int* bus ) {
 
   *bus = gl_bus;
 
+  if( wLoc.getaddr(node) > 16383) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "loco address out of range: %d", wLoc.getaddr(node));
+    return False;
+  }
+
   if (! o->locInited[wLoc.getaddr(node)] )
   {
 
@@ -244,6 +249,11 @@ static iONode __translate( iOSRCP08Data o, iONode node, char* srcp )
 
     addr = (mod-1)*4+pin;
 
+    if( addr > 1023 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "switch address out of range: %d:%d", mod, pin);
+      return NULL;
+    }
+
     if (! o->knownSwitches[ addr ] )
     {
       o->knownSwitches[ addr ] = __initGA(o, node, ga_bus, addr);
@@ -270,6 +280,11 @@ static iONode __translate( iOSRCP08Data o, iONode node, char* srcp )
       ga_bus = wSRCP.getsrcpbusGA_n( o->srcpini );
 
     addr = (mod-1)*4+pin;
+
+    if( addr > 1023 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "output address out of range: %d:%d", mod, pin);
+      return NULL;
+    }
 
     if (! o->knownSwitches[ addr ] )
     {
@@ -583,14 +598,14 @@ static iOSRCP08 _inst( const iONode settings, const iOTrace trace, const iOSocke
 
   data->cmdSocket = cmdsocket;
 
-  data->knownSwitches = allocMem( 256 * sizeof(Boolean) );
-  MemOp.set(data->knownSwitches,0,256*sizeof(Boolean));
+  data->knownSwitches = allocMem( 1024 * sizeof(Boolean) );
+  MemOp.set(data->knownSwitches,0,1024*sizeof(Boolean));
 
-  data->knownLocos = allocMem( 256 * sizeof(Boolean));
-  MemOp.set( data->knownLocos, 0, 256*sizeof(Boolean));
+  data->knownLocos = allocMem( 1024 * sizeof(Boolean));
+  MemOp.set( data->knownLocos, 0, 1024*sizeof(Boolean));
 
-  data->locInited = allocMem( 256 * sizeof(Boolean));
-  MemOp.set( data->locInited, 0, 256*sizeof(Boolean));
+  data->locInited = allocMem( 16384 * sizeof(Boolean));
+  MemOp.set( data->locInited, 0, 16384*sizeof(Boolean));
 
   /* Evaluate attributes. */
   data->iid       = StrOp.dup( wDigInt.getiid( settings ) );
