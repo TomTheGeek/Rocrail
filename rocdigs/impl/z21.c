@@ -585,7 +585,16 @@ static iONode __translate(iOZ21 inst, iONode node) {
     int value = wProgram.getvalue( node );
     int addr = wProgram.getaddr( node );
 
-    if( wProgram.getcmd( node ) == wProgram.get ) {
+    if( wProgram.getcmd( node ) == wProgram.fb_setaddr ) {
+      byte* packet = allocMem(32);
+      packet[0] = 0x05;
+      packet[1] = 0x00;
+      packet[2] = 0x82;
+      packet[3] = 0x00;
+      packet[4] = wProgram.getdecaddr(node);
+      ThreadOp.post(data->writer, (obj)packet);
+    }
+    else if( wProgram.getcmd( node ) == wProgram.get ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d on %s...", cv, wProgram.ispom(node)?"POM":"PT" );
 
       if( wProgram.ispom(node) ) {

@@ -409,7 +409,10 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "program cmd=%d mode=%d", wProgram.getcmd( node ), wProgram.getmode( node ) );
 
-    if( wProgram.getcmd( node ) == wProgram.get ) {
+    if( wProgram.getcmd( node ) == wProgram.fb_setaddr ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "program sensor module to address %d", wProgram.getdecaddr(node) );
+    }
+    else if( wProgram.getcmd( node ) == wProgram.get ) {
       int cv = wProgram.getcv( node );
       if( cv < 1024 ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d...", cv );

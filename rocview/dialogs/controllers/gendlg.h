@@ -59,6 +59,7 @@ class wxSpinCtrl;
 #define ID_STATICTEXT1 10003
 #define ID_RADIOBOX 10011
 #define ID_RADIOBOX1 10019
+#define ID_BUTTON_SET_FBADDR 10012
 #define SYMBOL_GENERICCTRLDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_GENERICCTRLDLG_TITLE _("P50/P50x")
 #define SYMBOL_GENERICCTRLDLG_IDNAME ID_DIALOG_GEN_SETTINGS
@@ -100,6 +101,9 @@ public:
 
 ////@begin GenericCtrlDlg event handler declarations
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SET_FBADDR
+    void OnButtonSetFbaddrClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
 
@@ -140,6 +144,8 @@ public:
     wxSpinCtrl* m_FbOffset;
     wxStaticText* m_labPollSleep;
     wxSpinCtrl* m_PollSleep;
+    wxButton* m_SertFbAddr;
+    wxSpinCtrl* m_FbAddr;
     wxCheckBox* m_FbPoll;
     wxCheckBox* m_FbReset;
     wxCheckBox* m_Bidi;

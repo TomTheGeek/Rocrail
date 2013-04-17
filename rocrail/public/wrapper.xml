@@ -835,6 +835,7 @@
     <const name="macro_getparams" vt="int" val="36"/>
     <const name="acc_setparam" vt="int" val="37"/>
     <const name="acc_getparam" vt="int" val="38"/>
+    <const name="fb_setaddr" vt="int" val="39"/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>
