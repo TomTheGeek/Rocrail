@@ -592,6 +592,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
       packet[2] = 0x82;
       packet[3] = 0x00;
       packet[4] = wProgram.getdecaddr(node);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "program RM module to address %d", wProgram.getdecaddr(node) );
       ThreadOp.post(data->writer, (obj)packet);
     }
     else if( wProgram.getcmd( node ) == wProgram.get ) {
