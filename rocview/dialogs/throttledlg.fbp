@@ -37,8 +37,8 @@
             <property name="minimum_size"></property>
             <property name="name">ThrottleDlgGen</property>
             <property name="pos"></property>
-            <property name="size"></property>
-            <property name="style">wxDEFAULT_DIALOG_STYLE</property>
+            <property name="size">-1,-1</property>
+            <property name="style">wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</property>
             <property name="subclass"></property>
             <property name="title">Throttle</property>
             <property name="tooltip"></property>
@@ -87,7 +87,7 @@
                 <object class="sizeritem" expanded="1">
                     <property name="border">2</property>
                     <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND</property>
-                    <property name="proportion">0</property>
+                    <property name="proportion">1</property>
                     <object class="wxBitmapButton" expanded="1">
                         <property name="bg"></property>
                         <property name="bitmap"></property>
@@ -148,7 +148,7 @@
                 </object>
                 <object class="sizeritem" expanded="1">
                     <property name="border">3</property>
-                    <property name="flag">wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT</property>
+                    <property name="flag">wxBOTTOM|wxRIGHT|wxLEFT|wxEXPAND</property>
                     <property name="proportion">0</property>
                     <object class="wxFlexGridSizer" expanded="1">
                         <property name="cols">3</property>
@@ -165,7 +165,7 @@
                         <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxEXPAND</property>
-                            <property name="proportion">1</property>
+                            <property name="proportion">0</property>
                             <object class="wxBoxSizer" expanded="1">
                                 <property name="minimum_size"></property>
                                 <property name="name">bSizer23</property>
@@ -346,7 +346,7 @@
                         <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxEXPAND</property>
-                            <property name="proportion">1</property>
+                            <property name="proportion">0</property>
                             <object class="wxBoxSizer" expanded="1">
                                 <property name="minimum_size"></property>
                                 <property name="name">bSizer24</property>
@@ -359,18 +359,18 @@
                                     <object class="wxFlexGridSizer" expanded="1">
                                         <property name="cols">3</property>
                                         <property name="flexible_direction">wxBOTH</property>
-                                        <property name="growablecols"></property>
+                                        <property name="growablecols">0,1,2</property>
                                         <property name="growablerows"></property>
                                         <property name="hgap">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="name">fgSizer17</property>
-                                        <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
+                                        <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_ALL</property>
                                         <property name="permission">none</property>
                                         <property name="rows">0</property>
                                         <property name="vgap">0</property>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -391,7 +391,7 @@
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
                                                 <property name="settings"></property>
-                                                <property name="size">50,25</property>
+                                                <property name="size">-1,25</property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
                                                 <property name="validator_data_type"></property>
@@ -428,7 +428,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -449,7 +449,7 @@
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
                                                 <property name="settings"></property>
-                                                <property name="size">50,25</property>
+                                                <property name="size">-1,25</property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
                                                 <property name="validator_data_type"></property>
@@ -486,7 +486,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -507,7 +507,7 @@
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
                                                 <property name="settings"></property>
-                                                <property name="size">50,25</property>
+                                                <property name="size">-1,25</property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
                                                 <property name="validator_data_type"></property>
@@ -544,7 +544,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -602,7 +602,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -660,7 +660,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -718,7 +718,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -776,7 +776,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -834,7 +834,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -892,7 +892,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -950,7 +950,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -1008,7 +1008,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -1066,7 +1066,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -1124,7 +1124,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -1182,7 +1182,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -1243,11 +1243,11 @@
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxEXPAND</property>
-                                    <property name="proportion">1</property>
+                                    <property name="proportion">0</property>
                                     <object class="wxFlexGridSizer" expanded="1">
                                         <property name="cols">2</property>
                                         <property name="flexible_direction">wxBOTH</property>
-                                        <property name="growablecols"></property>
+                                        <property name="growablecols">1</property>
                                         <property name="growablerows"></property>
                                         <property name="hgap">0</property>
                                         <property name="minimum_size"></property>
@@ -1259,7 +1259,7 @@
                                         <object class="sizeritem" expanded="1">
                                             <property name="border">5</property>
                                             <property name="flag">wxEXPAND</property>
-                                            <property name="proportion">1</property>
+                                            <property name="proportion">0</property>
                                             <object class="wxBoxSizer" expanded="1">
                                                 <property name="minimum_size"></property>
                                                 <property name="name">bSizer25</property>
@@ -1267,7 +1267,7 @@
                                                 <property name="permission">none</property>
                                                 <object class="sizeritem" expanded="0">
                                                     <property name="border">1</property>
-                                                    <property name="flag">wxALL</property>
+                                                    <property name="flag">wxALL|wxEXPAND</property>
                                                     <property name="proportion">0</property>
                                                     <object class="CustomControl" expanded="0">
                                                         <property name="bg"></property>
@@ -1325,7 +1325,7 @@
                                                 </object>
                                                 <object class="sizeritem" expanded="0">
                                                     <property name="border">1</property>
-                                                    <property name="flag">wxALL</property>
+                                                    <property name="flag">wxALL|wxEXPAND</property>
                                                     <property name="proportion">0</property>
                                                     <object class="CustomControl" expanded="0">
                                                         <property name="bg"></property>
@@ -1385,7 +1385,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="0">
                                             <property name="border">1</property>
-                                            <property name="flag">wxALL</property>
+                                            <property name="flag">wxALL|wxEXPAND</property>
                                             <property name="proportion">0</property>
                                             <object class="CustomControl" expanded="0">
                                                 <property name="bg"></property>
@@ -1406,7 +1406,7 @@
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
                                                 <property name="settings"></property>
-                                                <property name="size">70,52</property>
+                                                <property name="size">-1,52</property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
                                                 <property name="validator_data_type"></property>
@@ -1445,7 +1445,7 @@
                                 </object>
                                 <object class="sizeritem" expanded="0">
                                     <property name="border">1</property>
-                                    <property name="flag">wxALL</property>
+                                    <property name="flag">wxALL|wxEXPAND</property>
                                     <property name="proportion">0</property>
                                     <object class="CustomControl" expanded="0">
                                         <property name="bg"></property>
@@ -1466,7 +1466,7 @@
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="settings"></property>
-                                        <property name="size">154,25</property>
+                                        <property name="size">-1,25</property>
                                         <property name="subclass"></property>
                                         <property name="tooltip"></property>
                                         <property name="validator_data_type"></property>
