@@ -1340,6 +1340,7 @@ static void __clockticker( void* threadinst ) {
     struct tm* ltm = localtime( &data->time );
     ltm->tm_hour = wClock.gethour( clockini );
     ltm->tm_min  = wClock.getminute( clockini );
+    ltm->tm_sec  = 0;
     data->time = mktime(ltm);
   }
 
@@ -1353,18 +1354,24 @@ static void __clockticker( void* threadinst ) {
     update = 1;
   }
 
+  struct tm lTime = *localtime( &data->time );
+  seconds = lTime.tm_sec;
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ClockTicker started." );
 
   while( !ThreadOp.isQuit(th) ) {
 
-    /* 1=1000, 2=500, 4=250, 5=200, 10=100, 20=50, 25=40, 40=25, 50=20*/
+    /* 1=1000, 2=500, 4=250, 5=200, 10=100, 20=50, 25=40, 40=25, 50=20 100=10 */
     ThreadOp.sleep( 1000 / data->devider );
 
-    if( !wCtrl.isactiontimer60( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+    if( data->clockrun ) {
       if( data->devider > 1 )
         data->time += 1;
       else
         data->time = time(NULL);
+    }
+
+    if( !wCtrl.isactiontimer60( wRocRail.getctrl( AppOp.getIni() ) ) ) {
       __checkActions( control, 1 );
     }
 
@@ -1373,6 +1380,7 @@ static void __clockticker( void* threadinst ) {
       timeset = True;
       data->timeset = False;
       firstsync = True;
+      seconds = 1;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ClockTicker time set." );
     }
     else if( data->clockrun ) {
@@ -1384,20 +1392,10 @@ static void __clockticker( void* threadinst ) {
       continue;
     }
 
-    if( wCtrl.isactiontimer60( wRocRail.getctrl( AppOp.getIni() ) ) ) {
-      if( data->devider > 1 || timeset )
-        data->time += 60;
-      else
-        data->time = time(NULL);
-    }
-    /* sync clock event and seconds to full minute */
-    seconds = data->time % 60;
-    if( seconds > 0 ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "time correction %d", seconds );
-      data->time -= seconds;
-    }
+    /* reached every 60 ticks only (or firstsync or data->timeset) */
 
-    seconds = 0;
+    if( !firstsync )
+      seconds = 0;
 
     updateticker++;
 
