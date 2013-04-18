@@ -2121,6 +2121,7 @@
         <const name="slx815" vt="string" val="slx815" remark="Rautenhaus controller."/>
         <const name="ttdec" vt="string" val="ttdec" remark="LDT TT-DEC"/>
         <const name="d15" vt="string" val="d15" remark="Draai15"/>
+        <const name="dsm" vt="string" val="d15" remark="Staerz DSM"/>
         <var name="type" vt="string" defval="locdec" range="*"/>
         <var name="lightsfn" vt="int" defval="1" range="0-28"/>
         <var name="actfn" vt="int" defval="0" range="0-28" required="false" remark="Activation function for locdec type turntable drives."/>

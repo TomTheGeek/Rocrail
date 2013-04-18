@@ -489,6 +489,100 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
 }
 
 
+static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
+  iOTTData data = Data(inst);
+  Boolean ok = True;
+  iOControl control = AppOp.getControl();
+  const char* cmdStr = wTurntable.getcmd( nodeA );
+  Boolean ttdir = True;
+  Boolean doDirCmd = False;
+  int port = 0;
+  int tracknr = 0;
+  iONode cmd = NULL;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TT command = [%s]", cmdStr );
+
+
+  if( StrOp.equals( wTurntable.next, cmdStr ) ) {
+    port = 1;
+  }
+  else if( StrOp.equals( wTurntable.prev, cmdStr ) ) {
+    port = 2;
+  }
+  else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
+    port = ttdir?3:4;
+  }
+  else {
+    /* Tracknumber */
+    tracknr = atoi( cmdStr );
+  }
+
+  if( port > 0 ) {
+    cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+    wOutput.setaddr( cmd, wTurntable.getaddr( data->props ) );
+    wOutput.setport( cmd, ttdir?3:4 );
+    wOutput.setcmd( cmd, wOutput.on );
+
+    const char* iid = wTurntable.getiid( data->props );
+    if( iid != NULL )
+      wOutput.setiid( cmd, iid );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dsm (%s): sending output command [%d,%d,%s]",
+        cmdStr, wOutput.getaddr(cmd), wOutput.getport(cmd), wOutput.getcmd(cmd) );
+
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+    ThreadOp.sleep( 100 );
+    wOutput.setcmd( cmd, wOutput.off );
+    ControlOp.cmd( control, cmd, NULL );
+  }
+  else if( tracknr > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dsm: goto track %d", tracknr );
+    tracknr--; /* zero based */
+    data->gotopos = tracknr;
+    data->pending = True;
+
+    cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+    wOutput.setaddr( cmd, wTurntable.getaddr( data->props ) );
+    const char* iid = wTurntable.getiid( data->props );
+    if( iid != NULL )
+      wOutput.setiid( cmd, iid );
+
+    wOutput.setport( cmd, 8 );
+    wOutput.setcmd( cmd, wOutput.off );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+    wOutput.setport( cmd, 7 );
+    wOutput.setcmd( cmd, wOutput.on );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+
+    wOutput.setport( cmd, 1 );
+    wOutput.setcmd( cmd, (tracknr&0x01) ? wOutput.on:wOutput.off );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+    wOutput.setport( cmd, 2 );
+    wOutput.setcmd( cmd, (tracknr&0x02) ? wOutput.on:wOutput.off );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+    wOutput.setport( cmd, 3 );
+    wOutput.setcmd( cmd, (tracknr&0x04) ? wOutput.on:wOutput.off );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+    wOutput.setport( cmd, 4 );
+    wOutput.setcmd( cmd, (tracknr&0x08) ? wOutput.on:wOutput.off );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+    wOutput.setport( cmd, 5 );
+    wOutput.setcmd( cmd, (tracknr&0x10) ? wOutput.on:wOutput.off );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+    wOutput.setport( cmd, 6 );
+    wOutput.setcmd( cmd, (tracknr&0x20) ? wOutput.on:wOutput.off );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+
+    wOutput.setport( cmd, 8 );
+    wOutput.setcmd( cmd, wOutput.on );
+    ControlOp.cmd( control, cmd, NULL );
+  }
+
+  /* Cleanup Node1 */
+  nodeA->base.del(nodeA);
+  return ok;
+}
+
+
 
 /** TTDEC
  * function offset  red      green
@@ -1782,6 +1876,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     return __cmd_ttdec( (iOTT)inst, nodeA );
   else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.d15 ) )
     return __cmd_d15( (iOTT)inst, nodeA );
+  else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.dsm ) )
+    return __cmd_dsm( (iOTT)inst, nodeA );
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                  "Unknown turntable type [%s] for [%s]",
