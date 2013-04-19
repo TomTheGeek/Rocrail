@@ -25,6 +25,25 @@
 
 #include "rocs/public/mem.h"
 
+#include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/Command.h"
+#include "rocrail/wrapper/public/FunCmd.h"
+#include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/LocList.h"
+#include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Signal.h"
+#include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Response.h"
+#include "rocrail/wrapper/public/FbInfo.h"
+#include "rocrail/wrapper/public/FbMods.h"
+#include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/Accessory.h"
+#include "rocrail/wrapper/public/Clock.h"
+#include "rocrail/wrapper/public/Text.h"
+
 #include "rocdigs/impl/raspi/io.h"
 
 static int instCnt = 0;
@@ -71,11 +90,13 @@ static Boolean __equals( void* inst1, void* inst2 ) {
 }
 
 static void* __properties( void* inst ) {
-  return NULL;
+  iORasPiData data = Data(inst);
+  return data->ini;
 }
 
 static const char* __id( void* inst ) {
-  return NULL;
+  iORasPiData data = Data(inst);
+  return data->iid;
 }
 
 static void* __event( void* inst, const void* evt ) {
@@ -84,10 +105,54 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- ORasPi ----- */
 
+static void __reportState(iORasPi inst) {
+  iORasPiData data = Data(inst);
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL ) {
+    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+
+    if( data->iid != NULL )
+      wState.setiid( node, data->iid );
+    wState.setpower( node, data->power );
+    wState.setsensorbus( node, True );
+    wState.setaccessorybus( node, True );
+
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+}
+
+static iONode __translate(iORasPi inst, iONode node) {
+  iORasPiData data = Data(inst);
+  iONode rsp = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cmd=%s", NodeOp.getName( node ) );
+
+  /* System command. */
+  if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+    const char* cmdstr = wSysCmd.getcmd( node );
+
+    if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
+      data->power = False;
+      __reportState(inst);
+    }
+    else if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
+      data->power = True;
+      __reportState(inst);
+    }
+  }
+
+  return rsp;
+}
 
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
-  return 0;
+  iORasPiData data = Data(inst);
+  iONode rsp = NULL;
+  if( cmd != NULL ) {
+    rsp = __translate( (iORasPi)inst, cmd );
+    NodeOp.base.del(cmd);
+  }
+  return rsp;
 }
 
 
@@ -99,7 +164,8 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
-  return;
+  iORasPiData data = Data(inst);
+  data->run = False;
 }
 
 
