@@ -26,6 +26,7 @@
 #include "rocs/public/mem.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/RasPi.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Command.h"
 #include "rocrail/wrapper/public/FunCmd.h"
@@ -236,6 +237,12 @@ static struct ORasPi* _inst( const iONode ini ,const iOTrace trc ) {
   MemOp.basecpy( __RasPi, &RasPiOp, 0, sizeof( struct ORasPi ), data );
 
   /* Initialize data->xxx members... */
+  data->ini = ini;
+  if( wDigInt.getraspi(ini) == NULL ) {
+    iONode raspiIni = NodeOp.inst( wRasPi.name(), ini, ELEMENT_NODE );
+    NodeOp.addChild(ini, raspiIni);
+  }
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi %d.%d.%d", vmajor, vminor, patch );
 #ifdef __arm__

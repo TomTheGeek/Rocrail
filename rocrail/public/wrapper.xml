@@ -576,6 +576,10 @@
         <var name="fbdevid" vt="int" defval="0" range="0-*" remark="Sensor device ID"/>
       </mcs2>
       
+      <raspi remark="RasPi" wrappername="RasPi">
+        <var name="shutdownport" vt="int" defval="-1" remark="Shutdown port; -1 = not used."/>
+      </raspi>
+      
       <cbus remark="CBUS options" wrappername="CBus">
         <var name="cid" vt="int" defval="1" range="0-*" remark="CANID"/>
         <var name="sodaddr" vt="int" defval="0" range="0-*" remark="Start of Day input address."/>
