@@ -24,10 +24,6 @@
 #ifndef RASPI_IO_H_
 #define RASPI_IO_H_
 
-#ifdef __arm__
-
-#endif
-
-
+int raspiSetupIO(obj inst);
 
 #endif /* RASPI_IO_H_ */
