@@ -254,13 +254,14 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
 /* **/
 static void _event( iOOutput inst, iONode nodeC ) {
   iOOutputData data = Data(inst);
+  Boolean inv = wOutput.isinv(data->props);
 
   const char* state = wOutput.getstate( nodeC );
 
   if( StrOp.equals( state, wOutput.on ) )
-    wOutput.setstate( data->props, wOutput.on );
+    wOutput.setstate( data->props, inv?wOutput.off:wOutput.on );
   else if( StrOp.equals( state, wOutput.off ) )
-    wOutput.setstate( data->props, wOutput.off );
+    wOutput.setstate( data->props, inv?wOutput.on:wOutput.off );
 
   /* Broadcast to clients. Node4 */
   {
