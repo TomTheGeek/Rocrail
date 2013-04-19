@@ -538,7 +538,6 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dsm: goto track %d", tracknr );
     tracknr--; /* zero based */
     data->gotopos = tracknr;
-    data->pending = True;
 
     cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
     wOutput.setaddr( cmd, wTurntable.getaddr( data->props ) );
@@ -553,6 +552,7 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
     wOutput.setcmd( cmd, wOutput.on );
     ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
 
+    ThreadOp.sleep( 100 );
     wOutput.setport( cmd, 1 );
     wOutput.setcmd( cmd, (tracknr&0x01) ? wOutput.on:wOutput.off );
     ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
@@ -572,6 +572,8 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
     wOutput.setcmd( cmd, (tracknr&0x20) ? wOutput.on:wOutput.off );
     ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
 
+    ThreadOp.sleep( 100 );
+    data->pending = True;
     wOutput.setport( cmd, 8 );
     wOutput.setcmd( cmd, wOutput.on );
     ControlOp.cmd( control, cmd, NULL );
