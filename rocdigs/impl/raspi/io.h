@@ -25,5 +25,7 @@
 #define RASPI_IO_H_
 
 int raspiSetupIO(obj inst);
+int raspiRead(obj inst, int port);
+void raspiWrite(obj inst, int port, int val);
 
 #endif /* RASPI_IO_H_ */

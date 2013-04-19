@@ -62,7 +62,7 @@ volatile unsigned *gpio;
 
 #define GPIO_SET *(gpio+7)  // sets   bits which are 1 ignores bits which are 0
 #define GPIO_CLR *(gpio+10) // clears bits which are 1 ignores bits which are 0
-
+#define GPIO_READ(g) *(gpio + 13) &= (1<<(g))
 
 //
 // Set up a memory regions to access GPIO
@@ -100,28 +100,26 @@ int raspiSetupIO(obj inst)
    // Always use volatile pointer!
    gpio = (volatile unsigned *)gpio_map;
 
-   // Set GPIO pins 7-11 to output
-   for (g=7; g<=11; g++)
-   {
-     INP_GPIO(g); // must use INP_GPIO before we can use OUT_GPIO
-     OUT_GPIO(g);
-   }
+   // I/O 25 as input -> Shutdown
+   INP_GPIO(25);
 
-   for (rep=0; rep<10; rep++)
-   {
-      for (g=7; g<=11; g++)
-      {
-        GPIO_SET = 1<<g;
-        sleep(1);
-      }
-      for (g=7; g<=11; g++)
-      {
-        GPIO_CLR = 1<<g;
-        sleep(1);
-      }
-   }
    return 0;
 } // setup_io
+
+
+int raspiRead(obj inst, int port) {
+  iORasPiData data = Data(inst);
+  return GPIO_READ(port);
+}
+
+void raspiWrite(obj inst, int port, int val) {
+  iORasPiData data = Data(inst);
+  if(val)
+    GPIO_SET(port);
+  else
+    GPIO_CLR(port);
+}
+
 
 #else
 
@@ -131,6 +129,14 @@ int raspiSetupIO(obj inst) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setup I/O [%s]", wDigInt.getiid( data->ini ) );
   return 0;
 }
+
+int raspiRead(obj inst, int port) {
+  return 0;
+}
+void raspiWrite(obj inst, int port, int val) {
+
+}
+
 
 #endif
 
