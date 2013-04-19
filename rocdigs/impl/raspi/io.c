@@ -115,9 +115,9 @@ int raspiRead(obj inst, int port) {
 void raspiWrite(obj inst, int port, int val) {
   iORasPiData data = Data(inst);
   if(val)
-    GPIO_SET(port);
+    GPIO_SET = 1 << port;
   else
-    GPIO_CLR(port);
+    GPIO_CLR = 1 << port;
 }
 
 
