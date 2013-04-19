@@ -3351,7 +3351,7 @@ static void _event( iOModel inst, iONode nodeC ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
             "matching sw=%s iid=[%s] (iid=%s defiid=%s) bus=%d addr=%d port=%d %s",
             sw->id(sw), wSwitch.getiid(props)!=NULL?wSwitch.getiid(props):"?", iid, defiid,
-                wSwitch.getbus(props), matchaddr1+1, matchport1, flat?"(flat)":"");
+                wSwitch.getbus(props), matchaddr1, matchport1, flat?"(flat)":"");
 
         if( StrOp.len( wSwitch.getiid(props) ) > 0 && StrOp.equals(iid, wSwitch.getiid(props)) ||
             ( ( StrOp.len( wSwitch.getiid(props) ) == 0 ) &&
