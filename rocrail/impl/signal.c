@@ -197,7 +197,8 @@ static void _event( iOSignal inst, iONode nodeC ) {
   Boolean acc = wAccessory.isaccevent(nodeC);
   int val = wAccessory.getval1( nodeC );
   const char* state = wSwitch.getstate(nodeC);
-  const char* id = wSignal.getid( data->props );
+  const char* id  = wSignal.getid( data->props );
+  Boolean     inv = wSignal.isinv( data->props );
 
   if( wSwitch.getgatevalue(nodeC) == 0 ) {
     /* Ignore off events */
@@ -313,6 +314,15 @@ static void _event( iOSignal inst, iONode nodeC ) {
 
 
   }
+
+  /* invert only 2 aspect signals */
+  if( inv && wSignal.getaspects( data->props ) == 2 ) {
+    if( inv && StrOp.equals( wSignal.red, wSignal.getstate(data->props) ) )
+      wSignal.setstate( data->props, wSignal.green);
+    else if( inv && StrOp.equals( wSignal.green, wSignal.getstate(data->props) ) )
+      wSignal.setstate( data->props, wSignal.red);
+  }
+
 
   /* Broadcast to clients. */
   if( update ) {
