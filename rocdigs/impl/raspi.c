@@ -166,6 +166,7 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 static void _halt( obj inst ,Boolean poweroff ) {
   iORasPiData data = Data(inst);
   data->run = False;
+  ThreadOp.sleep(50);
 }
 
 
@@ -212,6 +213,22 @@ static int _version( obj inst ) {
 }
 
 
+static void __worker( void* threadinst ) {
+  iOThread  th    = (iOThread)threadinst;
+  iORasPi   raspi = (iORasPi)ThreadOp.getParm( th );
+  iORasPiData data = Data(raspi);
+
+  ThreadOp.sleep(500);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi worker started." );
+
+  do {
+    ThreadOp.sleep(10);
+  } while( data->run );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi worker stopped." );
+}
+
+
 /**  */
 static struct ORasPi* _inst( const iONode ini ,const iOTrace trc ) {
   iORasPi __RasPi = allocMem( sizeof( struct ORasPi ) );
@@ -229,6 +246,11 @@ static struct ORasPi* _inst( const iONode ini ,const iOTrace trc ) {
 #endif
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+
+  data->run = True;
+  data->worker = ThreadOp.inst( "raspiworker", &__worker, __RasPi );
+  ThreadOp.start( data->worker );
+
 
   instCnt++;
   return __RasPi;
