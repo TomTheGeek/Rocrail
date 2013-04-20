@@ -247,7 +247,7 @@ static struct ORasPi* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi %d.%d.%d", vmajor, vminor, patch );
 #ifdef __arm__
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "YES!" );
-  //raspiSetupIO(__RasPi);
+  raspiSetupIO(__RasPi);
 #else
   TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Not running on a Raspberry Pi" );
 #endif

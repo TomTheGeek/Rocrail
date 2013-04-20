@@ -23,6 +23,9 @@
 #include "rocdigs/impl/raspi_impl.h"
 #include "rocdigs/impl/raspi/io.h"
 
+#include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/RasPi.h"
+
 #include "rocs/public/trace.h"
 #include "rocs/public/str.h"
 #include "rocs/public/thread.h"
@@ -100,8 +103,10 @@ int raspiSetupIO(obj inst)
    // Always use volatile pointer!
    gpio = (volatile unsigned *)gpio_map;
 
-   // I/O 25 as input -> Shutdown
-   INP_GPIO(25);
+   if( wRasPi.getshutdownport(wDigInt.getraspi(data->ini)) != -1 ) {
+     // I/O 25 as input -> Shutdown
+     INP_GPIO(wRasPi.getshutdownport(wDigInt.getraspi(data->ini)));
+   }
 
    return 0;
 } // setup_io
