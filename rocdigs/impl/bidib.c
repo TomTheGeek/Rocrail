@@ -1151,7 +1151,7 @@ static void __handleSensor(iOBiDiB bidib, int bus, int addr, Boolean state, int 
   if( type == 3 ) sType = "ext-accessory";
 
   addr++; /* increase address with one */
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
       "sensor bus=%08X addr=%d state=%s ident=%d type=%s", bus, addr, state?"occ":"free", locoAddr, sType );
 
   if( type == -1 || type == 0 || type == 2 ) {
