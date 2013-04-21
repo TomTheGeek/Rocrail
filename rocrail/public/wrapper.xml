@@ -682,6 +682,7 @@
       <var name="maxcon" vt="int" defval="10" range="1-100" remark="Max. concurrent connected clients."/>
       <var name="onlyfirstmaster" vt="bool" defval="false" remark="Only the first client is master."/>
       <var name="controlcode" vt="string" defval="" range="*"/>
+      <var name="slavecode" vt="string" defval="" range="*"/>
     </tcp>
     <srcpcon remark="SRCP client service port." wrappername="SrcpCon">
       <var name="active" vt="bool" defval="false" remark="Activate srcp service."/>

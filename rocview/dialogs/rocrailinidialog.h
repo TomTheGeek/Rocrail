@@ -297,6 +297,8 @@ public:
     wxTextCtrl* m_MaxCon;
     wxStaticText* m_labControlCode;
     wxTextCtrl* m_ControlCode;
+    wxStaticText* m_labSlaveCode;
+    wxTextCtrl* m_SlaveCode;
     wxCheckBox* m_OnlyFirstMaster;
     wxStaticBox* m_SrcpService;
     wxStaticText* m_labSrcpPort;

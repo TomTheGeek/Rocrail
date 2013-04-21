@@ -37,6 +37,7 @@
 
 #include "rocrail/wrapper/public/Command.h"
 #include "rocrail/wrapper/public/AutoCmd.h"
+#include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Tcp.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
@@ -93,6 +94,7 @@ struct __OClntService {
   iOClntCon     ClntCon;
   iOSocket      clntSocket;
   Boolean       readonly;
+  Boolean       slave;
   Boolean       quit;
   Boolean       disablemonitor;
 };
@@ -272,11 +274,17 @@ static void __cmdReader( void* threadinst ) {
               if( StrOp.len( wTcp.getcontrolcode(data->ini) ) > 0 ) {
                 if( StrOp.equals( wTcp.getcontrolcode(data->ini), wModelCmd.getcontrolcode(nodeA) ) ) {
                   o->readonly = False;
+                  o->slave = False;
+                }
+                else if( StrOp.equals( wTcp.getslavecode(data->ini), wModelCmd.getcontrolcode(nodeA) ) ) {
+                  o->readonly = False;
+                  o->slave = True;
                 }
                 else {
                   o->readonly = True;
                 }
-                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "client has %scontrol access", o->readonly?"no ":"" );
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "client has %scontrol access%s",
+                    o->readonly?"no ":"", o->slave?" (slave)":"" );
               }
 
             }
@@ -287,7 +295,23 @@ static void __cmdReader( void* threadinst ) {
                 (StrOp.equals( wModelCmd.name(), NodeOp.getName(nodeA) ) && StrOp.equals( wModelCmd.fstat, wCommand.getcmd( nodeA ) ) )
             )
             {
-              Data(o->ClntCon)->callback( Data(o->ClntCon)->callbackObj, nodeA );
+              if( o->slave ) {
+                if( StrOp.equals( wSysCmd.name(), NodeOp.getName(nodeA) ) ) {
+                  const char* cmd = wSysCmd.getcmd(nodeA);
+                  if( StrOp.equals( wSysCmd.shutdown, cmd ) || StrOp.equals( wSysCmd.ebreak, cmd ) ) {
+                    /* ignore */
+                    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore [%s] from slave client", cmd);
+                  }
+                  else {
+                    Data(o->ClntCon)->callback( Data(o->ClntCon)->callbackObj, nodeA );
+                  }
+                }
+                else
+                  Data(o->ClntCon)->callback( Data(o->ClntCon)->callbackObj, nodeA );
+              }
+              else {
+                Data(o->ClntCon)->callback( Data(o->ClntCon)->callbackObj, nodeA );
+              }
             }
             else {
               TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,

@@ -6329,3 +6329,9 @@ msgstr ""
 msgid "Command recorder"
 msgstr ""
 
+#. 
+# id="slavecode"
+#, c-format
+msgid "Slave code"
+msgstr ""
+

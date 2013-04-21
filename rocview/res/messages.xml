@@ -20538,4 +20538,7 @@
     <nl txt="Commando recorder"/>
     <it txt="Registratore comandi"/>
   </Msg>
+  <Msg id="slavecode">
+    <en txt="Slave code"/>
+  </Msg>
 </Messages>
