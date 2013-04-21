@@ -104,8 +104,16 @@ int raspiSetupIO(obj inst)
    gpio = (volatile unsigned *)gpio_map;
 
    if( wRasPi.getshutdownport(wDigInt.getraspi(data->ini)) != -1 ) {
-     // I/O 25 as input -> Shutdown
      INP_GPIO(wRasPi.getshutdownport(wDigInt.getraspi(data->ini)));
+   }
+   if( wRasPi.getebreakport(wDigInt.getraspi(data->ini)) != -1 ) {
+     INP_GPIO(wRasPi.getebreakport(wDigInt.getraspi(data->ini)));
+   }
+   if( wRasPi.getpoweroffport(wDigInt.getraspi(data->ini)) != -1 ) {
+     INP_GPIO(wRasPi.getpoweroffport(wDigInt.getraspi(data->ini)));
+   }
+   if( wRasPi.getpoweronport(wDigInt.getraspi(data->ini)) != -1 ) {
+     INP_GPIO(wRasPi.getpoweronport(wDigInt.getraspi(data->ini)));
    }
 
    return 0;

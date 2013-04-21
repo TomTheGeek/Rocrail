@@ -218,12 +218,74 @@ static void __worker( void* threadinst ) {
   iOThread  th    = (iOThread)threadinst;
   iORasPi   raspi = (iORasPi)ThreadOp.getParm( th );
   iORasPiData data = Data(raspi);
+  int shutdownport = wRasPi.getshutdownport(wDigInt.getraspi(data->ini));
+  int ebreakport   = wRasPi.getebreakport(wDigInt.getraspi(data->ini));
+  int poweroffport = wRasPi.getpoweroffport(wDigInt.getraspi(data->ini));
+  int poweronport  = wRasPi.getpoweronport(wDigInt.getraspi(data->ini));
+  int shutdownval  = 1;
+  int ebreakval    = 1;
+  int poweroffval  = 1;
+  int poweronval   = 1;
 
   ThreadOp.sleep(500);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi worker started." );
 
   do {
-    ThreadOp.sleep(10);
+    ThreadOp.sleep(100);
+
+    if( shutdownport != -1 ) {
+      int val = raspiRead((obj)raspi, shutdownport);
+      if( shutdownval != val ) {
+        shutdownval = val;
+        if( shutdownval == 0 ) {
+          iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+          wSysCmd.setcmd(cmd, wSysCmd.shutdown);
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Shut down..." );
+          data->listenerFun( data->listenerObj, cmd, TRCLEVEL_INFO );
+          break;
+        }
+      }
+    }
+
+    if( ebreakport != -1 ) {
+      int val = raspiRead((obj)raspi, ebreakport);
+      if( ebreakval != val ) {
+        ebreakval = val;
+        if( ebreakval == 0 ) {
+          iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+          wSysCmd.setcmd(cmd, wSysCmd.ebreak);
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
+          data->listenerFun( data->listenerObj, cmd, TRCLEVEL_INFO );
+        }
+      }
+    }
+
+    if( poweroffport != -1 ) {
+      int val = raspiRead((obj)raspi, poweroffport);
+      if( poweroffval != val ) {
+        poweroffval = val;
+        if( poweroffval == 0 ) {
+          iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+          wSysCmd.setcmd(cmd, wSysCmd.stop);
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+          data->listenerFun( data->listenerObj, cmd, TRCLEVEL_INFO );
+        }
+      }
+    }
+
+    if( poweronport != -1 ) {
+      int val = raspiRead((obj)raspi, poweronport);
+      if( poweronval != val ) {
+        poweronval = val;
+        if( poweronval ) {
+          iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+          wSysCmd.setcmd(cmd, wSysCmd.go);
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
+          data->listenerFun( data->listenerObj, cmd, TRCLEVEL_INFO );
+        }
+      }
+    }
+
   } while( data->run );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi worker stopped." );

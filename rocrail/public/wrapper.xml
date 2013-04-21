@@ -578,6 +578,9 @@
       
       <raspi remark="RasPi" wrappername="RasPi">
         <var name="shutdownport" vt="int" defval="-1" remark="Shutdown port; -1 = not used."/>
+        <var name="ebreakport" vt="int" defval="-1" remark="Emergency break port; -1 = not used."/>
+        <var name="poweroffport" vt="int" defval="-1" remark="Power off port; -1 = not used."/>
+        <var name="poweronport" vt="int" defval="-1" remark="Power on port; -1 = not used."/>
       </raspi>
       
       <cbus remark="CBUS options" wrappername="CBus">
