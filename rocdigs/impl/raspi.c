@@ -46,6 +46,7 @@
 #include "rocrail/wrapper/public/Text.h"
 
 #include "rocdigs/impl/raspi/io.h"
+#include "rocdigs/impl/raspi/cs.h"
 
 static int instCnt = 0;
 
@@ -106,43 +107,9 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- ORasPi ----- */
 
-static void __reportState(iORasPi inst) {
-  iORasPiData data = Data(inst);
-
-  if( data->listenerFun != NULL && data->listenerObj != NULL ) {
-    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
-
-    if( data->iid != NULL )
-      wState.setiid( node, data->iid );
-    wState.setpower( node, data->power );
-    wState.setsensorbus( node, True );
-    wState.setaccessorybus( node, True );
-
-    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
-  }
-}
-
 static iONode __translate(iORasPi inst, iONode node) {
   iORasPiData data = Data(inst);
-  iONode rsp = NULL;
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cmd=%s", NodeOp.getName( node ) );
-
-  /* System command. */
-  if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
-    const char* cmdstr = wSysCmd.getcmd( node );
-
-    if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
-      data->power = False;
-      __reportState(inst);
-    }
-    else if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
-      data->power = True;
-      __reportState(inst);
-    }
-  }
-
-  return rsp;
+  return raspiTranslate((obj)inst, node);
 }
 
 /**  */

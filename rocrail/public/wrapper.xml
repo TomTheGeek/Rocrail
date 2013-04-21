@@ -581,6 +581,8 @@
         <var name="ebreakport" vt="int" defval="-1" remark="Emergency break port; -1 = not used."/>
         <var name="poweroffport" vt="int" defval="-1" remark="Power off port; -1 = not used."/>
         <var name="poweronport" vt="int" defval="-1" remark="Power on port; -1 = not used."/>
+        <var name="dccport1" vt="int" defval="-1" remark="DCC port 1; -1 = not used."/>
+        <var name="dccport2" vt="int" defval="-1" remark="DCC port 2; -1 = not used."/>
       </raspi>
       
       <cbus remark="CBUS options" wrappername="CBus">
