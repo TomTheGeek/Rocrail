@@ -1497,6 +1497,9 @@
     <fun name="uBusyWait" implname="rocs_system_uBusyWait" vt="Boolean" static="true" remark="">
       <param name="us" vt="int" remark="Wait time in us"/>
     </fun>
+    <fun name="usWait" implname="rocs_system_usWait" vt="Boolean" static="true" remark="">
+      <param name="us" vt="int" remark="Wait time in us"/>
+    </fun>
     <fun name="getFileSeparator" vt="char" static="true" remark=""/>
     <fun name="getPathSeparator" vt="char" static="true" remark=""/>
     <fun name="getErrStr" vt="const char*" remark="Translates an error code into a string.">

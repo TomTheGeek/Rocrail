@@ -48,6 +48,7 @@ const char* rocs_system_getWSName( iOSystemData o );
 const char* rocs_system_getUserName( iOSystemData o );
 int rocs_system_getMillis( void );
 Boolean rocs_system_uBusyWait( int us );
+Boolean rocs_system_usWait( int us );
 char* rocs_system_getURL( const char* filepath );
 Boolean rocs_system_setadmin( void );
 int rocs_system_getTime( int* hours, int* minutes, int* seconds );

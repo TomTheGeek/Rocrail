@@ -114,6 +114,12 @@ Boolean rocs_system_uBusyWait( int us) {
 #endif
 }
 
+Boolean rocs_system_usWait( int us) {
+  return rocs_system_uBusyWait(us);
+}
+
+
+
 int rocs_system_getTime( int* hours, int* minutes, int* seconds ) {
 #ifdef __ROCS_SYSTEM__
   SYSTEMTIME st;
