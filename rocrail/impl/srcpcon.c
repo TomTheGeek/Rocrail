@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -60,6 +60,8 @@
 #include "rocrail/wrapper/public/Clock.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/RocRail.h"
+#include "rocrail/wrapper/public/Route.h"
 
 extern const int bzr;
 
@@ -73,11 +75,21 @@ struct __OSrcpService {
   Boolean       quit;
   Boolean       disablemonitor;
   int           id;
-  Boolean	infomode;
+  Boolean       infomode;
+  Boolean       handshake;
 };
 typedef struct __OSrcpService* __iOSrcpService;
 
 static const char* SRCPVERSION="Rocrail 2.0r%d; SRCP 0.8.4; SRCPOTHER 0.8.3";
+
+static volatile Boolean srcpPwCmdInProgress = False;
+static char* srcpPwFreetext = NULL;
+static int divider = -1 ;
+static Boolean clockRunning = True;
+
+#define JULIAN_DAY_1970_01_01 2440588L /* julian day of 1/1/1970  ( 32bit unix time 00 00 00 00 ) */
+#define JULIAN_DAY_2038_01_19 2465443L /* julian day of 1/19/2038 ( 32bit unix time 7F FF FF FF ) */
+#define JULIAN_DAY_2106_02_07 2490298L /* julian day of 2/7/2106  ( 32bit unix time FF FF FF FF ) */
 
 /*
 200 OK <ID>
@@ -85,7 +97,7 @@ static const char* SRCPVERSION="Rocrail 2.0r%d; SRCP 0.8.4; SRCPOTHER 0.8.3";
 202 OK CONNECTIONMODEOK
 400 ERROR unsupported protocol
 401 ERROR unsupported connection mode
-402 ERROR unsufficient data
+402 ERROR insufficient data
 500 ERROR out of ressources
 
 100 INFO <more data>
@@ -115,8 +127,8 @@ static const char* SRCPVERSION="Rocrail 2.0r%d; SRCP 0.8.4; SRCPOTHER 0.8.3";
 static void __del( void* inst ) {
   if( inst != NULL ) {
     iOSrcpConData data = Data(inst);
-    /* Cleanup data->xxx members...*/
-    
+    /* Cleanup data->xxx members... */
+
     freeMem( data );
     freeMem( inst );
     instCnt--;
@@ -166,6 +178,71 @@ static void* __event( void* inst, const void* evt ) {
 
 
 /** helper functions **/
+
+/* convert model time into SRCP time notation */
+static char* convModelTimeToSRCP(time_t modeltime) {
+  static char srcpTimeStr[128] ;
+
+  /* calc timezone offset in seconds */
+  struct tm lcl = *localtime(&modeltime);
+  struct tm gmt = *gmtime(&modeltime);
+  int tzOffset = ((24 + lcl.tm_hour - gmt.tm_hour)%24) * 3600 + ((60 + lcl.tm_min - gmt.tm_min)%60) * 60 ;
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "convModelTimeToSRCP: tzOffset=%d", tzOffset) ;
+
+  long julDay = (long)( (modeltime+tzOffset) / 86400L) + JULIAN_DAY_1970_01_01 ;
+
+  StrOp.fmtb(srcpTimeStr, "%ld %d %d %d", julDay, lcl.tm_hour, lcl.tm_min, lcl.tm_sec );
+
+  return srcpTimeStr;
+}
+
+/* convert SRCP time into model time */
+static time_t convSRCP2ModelTime( long julDay, int hour, int min, int sec ) {
+  /* initialize with a reasonable value */
+  time_t modeltime = ControlOp.getTime( AppOp.getControl() );
+
+  /* calc timezone offset in seconds */
+  struct tm lcl = *localtime(&modeltime);
+  struct tm gmt = *gmtime(&modeltime);
+  int tzOffset = ((24 + lcl.tm_hour - gmt.tm_hour)%24) * 3600 + ((60 + lcl.tm_min - gmt.tm_min)%60) * 60 ;
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "convSRCP2ModelTime: tzOffset=%d", tzOffset ) ;
+
+
+  modeltime = (julDay - JULIAN_DAY_1970_01_01) * 86400L + hour * 3600L + min * 60L + sec - tzOffset ;
+
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "convSRCP2ModelTime: (julDay[%ld] - JULIAN_DAY_1970_01_01[%ld]) * 86400L + hour[%d] * 3600L + min[%d] * 60L + sec[%d] - tzOffset[%d] = modeltime[%ld]",
+      julDay, JULIAN_DAY_1970_01_01, hour, min, sec, tzOffset, modeltime ) ;
+
+  return modeltime;
+}
+
+
+static char *__setSrcpPwFreetext( const char *newText ) {
+
+  if( srcpPwFreetext == NULL ) {
+    srcpPwFreetext = StrOp.cat( NULL, newText );
+  }else if( StrOp.equals( srcpPwFreetext, newText ) ) {
+    /* new is like current -> nothing to do */
+  }else {
+    StrOp.free( srcpPwFreetext );
+    srcpPwFreetext = StrOp.cat( NULL, newText );
+  }
+
+  return( srcpPwFreetext );
+}
+
+static char *__getSrcpPwFreetext() {
+  return( srcpPwFreetext );
+}
+
+static Boolean __setClockRunning( Boolean value ) {
+  clockRunning = value;
+  return( clockRunning  );
+}
+
+static Boolean __isClockRunning() {
+  return( clockRunning );
+}
 
 static const char *getDefaultIid() {
   return( wDigInt.getiid(AppOp.getIniNode( wDigInt.name() ) ) );
@@ -331,54 +408,154 @@ static iOLoc SRCPgetLocByAddressAndIid( iOModel model, int addr, const char *iid
 }
 
 /* get feedback-object by iid and address */
-static iOFBack getFeedbackBySrcpbusAndSrcpaddr( char *srcpBusIid, int addr) {
+static iOFBack getFeedbackByIidAndAddr( char *iid, int addr) {
   iOModel model = AppOp.getModel();
-  char str[1025] = {'\0'};
 
   iOMap fbackMap = ModelOp.getFeedbackMap( model );
   iOFBack fb = (iOFBack)MapOp.first( fbackMap );
 
   while( fb != NULL ) {
     iONode fbProps = FBackOp.base.properties(fb);
-    int fbAddr = wFeedback.getaddr(fbProps) ;
-    const char *fbIid  = wFeedback.getiid(fbProps) ;
+    int fbAddr = wFeedback.getaddr(fbProps);
+    const char *fbIid = wFeedback.getiid(fbProps);
     
-    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "getFeedbackBySrcpbusAndSrcpaddr: srcpBusIid %s addr %d ; fbAddr = %d fbIid=%s", srcpBusIid, addr, fbAddr, fbIid );
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "getFeedbackByIidAndAddr: iid %s addr %d ; fbIid=%s fbAddr = %d",
+                 iid, addr, fbIid, fbAddr );
     if( StrOp.equals( "", fbIid ) ) {
-      fbIid = getDefaultIid() ;
-      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "getFeedbackBySrcpbusAndSrcpaddr: srcpBusIid %s addr %d ; fbAddr = %d fbIid=%s", srcpBusIid, addr, fbAddr, fbIid );
+      fbIid = getDefaultIid();
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "getFeedbackByIidAndAddr: iid %s addr %d ; fbIid=%s fbAddr = %d",
+                   iid, addr, fbIid, fbAddr );
     }
 
-    if( addr == wFeedback.getaddr(fbProps) ) {
-      if( StrOp.equals( srcpBusIid, fbIid) ) {
-        return fb ;
-      }
-    }
+    if( ( addr == fbAddr ) && StrOp.equals( iid, fbIid) )
+      return fb;
+
     fb = (iOFBack)MapOp.next( fbackMap );
   };
-  return NULL ;
+  return NULL;
 }
 
-/* Send powerState to all srcp info connections */
-static void sendPWstate2InfoChannels( struct timeval time, int busId, char* state ) {
+
+/* is the given iid a virtual command station */
+static Boolean isDigintVirtual( const char *iid )
+{
+  if( iid == NULL || StrOp.len( iid ) == 0 ) {
+    /* this should never happen */
+    return True;
+  }
+
+  iONode  ini           = AppOp.getIni();
+  iONode  digint        = wRocRail.getdigint( ini );
+  iONode  plan          = ModelOp.getModel(AppOp.getModel());
+  iONode  modeldigint   = plan?wPlan.getdigint( plan ):NULL;
+  Boolean bModelDigints = modeldigint == NULL ? False:True;
+
+  while( digint != NULL ) {
+    const char* digintIid = wDigInt.getiid( digint );
+    const char* digintLib = wDigInt.getlib( digint );
+
+    if( StrOp.equals( digintIid, iid ) ) {
+      /* command station detected */
+      return( StrOp.equals( digintLib, wDigInt.vcs ) );
+    }
+
+    if( bModelDigints )
+      digint = wPlan.nextdigint( plan, digint );
+    else
+      digint = wRocRail.nextdigint( ini, digint );
+  }
+  return True;
+}
+
+
+/* check if the given srcoBus is a valid bus number */
+static Boolean isValidSrcpBus( iOSrcpConData data, int srcpBus ) {
+  char srcpBusIid[1024];
+
+  if( srcpBus == 0 ) {
+    /* system nus number is always valid */
+    return True;
+  }
+
+  if( srcpBus > 0 ) {
+    /* command sation bus: check by translating into iid and back to number */
+    getSrcpIid( data, srcpBus, srcpBusIid);
+    int checkSrcpBus = getSrcpBus( data, srcpBusIid );
+    /* if bus number changed (to default and it was not before) during translations it is inavlid */
+    return( srcpBus == checkSrcpBus );
+  }
+
+  return False;
+}
+
+/* create SRCP answer with powerState of all bus-ids */
+static char *creaRspBusDescr(char *str, struct timeval *time, int srcpBus ) {
+
+  if( srcpBus == 0 ) {
+    /* server capabilities */
+    StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d DESCRIPTION SESSION SERVER TIME\n",
+        (*time).tv_sec, (*time).tv_usec / 1000L, 0);
+  }else if( srcpBus > 0 ){
+    /* announce "normal" capabilities for all command station *
+    /* SM and LOCK currently not supported through srcp server */
+    StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d DESCRIPTION GA GL FB POWER DESCRIPTION\n",
+        (*time).tv_sec, (*time).tv_usec / 1000L, srcpBus );
+  }else
+    return NULL;
+  return str;
+}
+
+/* create SRCP answer with powerState of all bus-ids */
+static char *creaRspAllPwSts(iOSrcpConData data ) {
+  struct timeval time;
+  gettimeofday(&time, NULL);
+
+  char str[1025] = {'\0'};
+  char *infoStr = NULL;
+
+  /* current overall system state (ON/OFF) */
+  Boolean isPower = wState.ispower(ControlOp.getState(AppOp.getControl()));
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "creaRspAllPwSts: isPower[%d]", isPower );
+
+  /* generate strings for all srcp busses */
+  iONode  ini           = AppOp.getIni();
+  iONode  digint        = wRocRail.getdigint( ini );
+  iONode  plan          = ModelOp.getModel(AppOp.getModel());
+  iONode  modeldigint   = plan?wPlan.getdigint( plan ):NULL;
+  Boolean bModelDigints = modeldigint == NULL ? False:True;
+
+  while( digint != NULL ) {
+    const char* digintIid = wDigInt.getiid( digint );
+    int srcpBus = getSrcpBus( data, digintIid );
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "creaRspAllPwSts: srcpBus[%d] srcpIid[%s]", srcpBus, digintIid );
+
+    StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s%s\n",
+        time.tv_sec, time.tv_usec / 1000L, srcpBus, isPower?"ON":"OFF", __getSrcpPwFreetext() );
+    infoStr = StrOp.cat( infoStr, str );
+
+    if( bModelDigints )
+      digint = wPlan.nextdigint( plan, digint );
+    else
+      digint = wRocRail.nextdigint( ini, digint );
+  }
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "creaRspAllPwSts: infoStr[\n%s]", infoStr );
+
+  return infoStr;
+}
+
+
+/* send infoStr to all srcp info connections */
+static int sendRsp2AllInfoChannels(iOSrcpConData data, const char* infoStr) {
   iOList thList = ThreadOp.getAll();
   int cnt = ListOp.size( thList );
-  char str[1025] = {'\0'};
   int j;
-
-  if( busId == 0 ){
-    StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s\n%lu.%.3lu 100 INFO %d POWER %s\n",
-      time.tv_sec, time.tv_usec / 1000L, busId, state, 
-      time.tv_sec, time.tv_usec / 1000L, 1, state );
-  }
-  else{
-    StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s\n",
-      time.tv_sec, time.tv_usec / 1000L, busId, state );
-  }
+  int num = 0;
 
   /* go through all threads, search the SRCP server connections ("cmdrSRCP") and send the data to the info channel */
 
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%d active threads.", cnt );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendRsp2AllInfoChannels: %d active threads.", cnt );
 
   for( j = 0; j < cnt; j++ ) {
     iOThread th = (iOThread)ListOp.get( thList, j );
@@ -390,14 +567,27 @@ static void sendPWstate2InfoChannels( struct timeval time, int busId, char* stat
 
     if( StrOp.startsWithi( tname, "cmdrSRCP" ) ) {
       if ( oI->infomode ) {
-        SocketOp.fmt(oI->clntSocket, str);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND: %p [%p] %d : %s", oI, oI->clntSocket, oI->id, str ) ;
+        SocketOp.fmt(oI->clntSocket, infoStr);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendRsp2AllInfoChannels: SRCP SEND: %p [%p] %d : %s", oI, oI->clntSocket, oI->id, infoStr ) ;
+        num++;
         ThreadOp.sleep( 10 );
       }
     }
   }
+  return num;
 }
 
+/* Send powerState of all bus-ids to all srcp info connections */
+static void sendAllPWstates2AllInfoChannels(iOSrcpConData data) {
+  char* rsp = NULL;
+  int num = 0;
+  rsp = creaRspAllPwSts( data );
+  if( rsp )
+    num = sendRsp2AllInfoChannels( data, rsp );
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendAllPWstates2AllInfoChannels: text[\n%s] sent [%d] times", rsp, num );
+
+}
 
 /* Send sessionState to all srcp info connections */
 static void sendSessionstate2InfoChannels( int busId, int sessId, int srcpCode, Boolean mode ) {
@@ -452,7 +642,7 @@ static void sendSessionstate2InfoChannels( int busId, int sessId, int srcpCode, 
 
 /** ----- OSrcpCon ----- */
 
-static char* __rr2srcp(iOSrcpCon srcpcon, iONode evt, char* str) {
+static char* __rr2srcp(iOSrcpCon srcpcon, __iOSrcpService o, iONode evt, char* str ) {
   iOSrcpConData data = Data(srcpcon);
   struct timeval time;
   gettimeofday(&time, NULL);
@@ -472,7 +662,8 @@ static char* __rr2srcp(iOSrcpCon srcpcon, iONode evt, char* str) {
        || StrOp.equals( wSwitch.gettype(swProps), wSwitch.right)
        || StrOp.equals( wSwitch.gettype(swProps), wSwitch.twoway)
        || StrOp.equals( wSwitch.gettype(swProps), wSwitch.crossing) 
-       || StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)) {
+       || StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)
+       || StrOp.equals( wSwitch.gettype(swProps), wSwitch.accessory) ) {
         /*100 INFO <bus> GA <addr> <port> <value>*/
         StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
             time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr, StrOp.equals(wSwitch.getstate(evt), wSwitch.straight)? 1:0,
@@ -582,28 +773,77 @@ static char* __rr2srcp(iOSrcpCon srcpcon, iONode evt, char* str) {
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "StateName %s EvtName %s srcpBus %d PW %s", wState.name(), NodeOp.getName(evt), srcpBus, wState.ispower(evt)?"ON":"OFF" );
 
-      sendPWstate2InfoChannels( time, srcpBus, wState.ispower(evt)?"ON":"OFF" );
+      if( ! srcpPwCmdInProgress )
+        __setSrcpPwFreetext( " by Rocrail" );
 
-      /*100 INFO <bus> POWER ON/OFF <freetext>*/
-      StrOp.fmtb(str, "%lu.%.3lu %d INFO %d POWER %s\n",
+      /* 100 INFO <bus> POWER ON/OFF <freetext> */
+      StrOp.fmtb(str, "%lu.%.3lu %d INFO %d POWER %s%s\n",
             time.tv_sec, time.tv_usec / 1000L, 100, 
-            srcpBus, wState.ispower(evt)?"ON":"OFF" );
+            srcpBus, wState.ispower(evt)?"ON":"OFF", __getSrcpPwFreetext() );
     }
   }
 
   else if( StrOp.equals( wClock.name(), NodeOp.getName(evt)) ) {
-    long l_time = wClock.gettime(evt);
-    struct tm* lTime = localtime( &l_time );
+    if( StrOp.equals( wClock.getcmd(evt), wClock.go ) ) {
+      /* GO */
+      __setClockRunning( True );
+      /* 101 INFO 0 TIME fx fy */
+       StrOp.fmtb(str, "%lu.%.3lu 101 INFO 0 TIME %d %d\n", time.tv_sec, time.tv_usec / 1000L, divider, 1 );
+       SocketOp.fmt(o->clntSocket, str);
 
-    int mins    = lTime->tm_min;
-    int hours   = lTime->tm_hour;
-    int day    = lTime->tm_mday;
-
-    /*100 INFO 0 TIME <JulDay> <Hour> <Minute> <Second>*/
-    StrOp.fmtb(str, "%lu.%.3lu %d INFO %d TIME %d %d %d %d\n",
-        time.tv_sec, time.tv_usec / 1000L,
-        100, 0, day, hours, mins, 0 );
-  }
+      /* 100 INFO 0 TIME <JulDay> <Hour> <Minute> <Second> */
+      time_t evt_time = wClock.gettime(evt);
+      StrOp.fmtb(str, "%lu.%.3lu 100 INFO 0 TIME %s\n",
+          time.tv_sec, time.tv_usec / 1000L, convModelTimeToSRCP(evt_time) );
+    }
+    else if( StrOp.equals( wClock.getcmd(evt), wClock.freeze ) ) {
+      /* FREEZE */
+      __setClockRunning( False );
+      /* 102 INFO 0 TIME */
+      StrOp.fmtb(str, "%lu.%.3lu 102 INFO 0 TIME\n", time.tv_sec, time.tv_usec / 1000L );
+    }
+    else if( StrOp.equals( wClock.getcmd(evt), wClock.set ) ) {
+      /* SET */
+      /* divider changed -> 101 INFO 0 TIME fx fy */
+      int mt_divider = wClock.getdivider(evt);
+      if( divider != mt_divider ) {
+        /* time divider changed -> first send current time divider */
+        divider = mt_divider;
+        if( __isClockRunning() ) {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__rr2srcp: new time divider[%d]", divider );
+          StrOp.fmtb(str, "%lu.%.3lu 101 INFO 0 TIME %d %d\n", time.tv_sec, time.tv_usec / 1000L, divider, 1 );
+          SocketOp.fmt(o->clntSocket, str);
+        }
+      }
+      if( __isClockRunning() ) {
+        /* 100 INFO 0 TIME <JulDay> <Hour> <Minute> <Second> */
+        time_t evt_time = wClock.gettime(evt);
+        StrOp.fmtb(str, "%lu.%.3lu 100 INFO 0 TIME %s\n",
+            time.tv_sec, time.tv_usec / 1000L, convModelTimeToSRCP(evt_time) );
+      }
+    }
+    else if( StrOp.equals( wClock.getcmd(evt), wClock.sync ) ) {
+      /* SYNC */
+      int mt_divider = wClock.getdivider(evt);
+      if( divider != mt_divider ) {
+        /* time divider changed -> first send current time divider */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "__rr2srcp: SYNC divider change detected old[%d] new[%s]", divider, mt_divider );
+        divider = mt_divider;
+        if( __isClockRunning() ) {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__rr2srcp: new time divider[%d]", divider );
+          StrOp.fmtb(str, "%lu.%.3lu 101 INFO 0 TIME %d %d\n", time.tv_sec, time.tv_usec / 1000L, divider, 1 );
+          SocketOp.fmt(o->clntSocket, str);
+        }
+      }
+      /* 100 INFO 0 TIME <JulDay> <Hour> <Minute> <Second> */
+      time_t evt_time = wClock.gettime(evt);
+      StrOp.fmtb(str, "%lu.%.3lu 100 INFO 0 TIME %s\n",
+          time.tv_sec, time.tv_usec / 1000L, convModelTimeToSRCP(evt_time) );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown/unsupported clock command", wClock.getcmd(evt) );
+    }
+  } /* CLOCK / TIME */
 
   else if( StrOp.equals( wFeedback.name(), NodeOp.getName(evt))) {
     iOFBack fb = ModelOp.getFBack(model, wFeedback.getid(evt));
@@ -615,9 +855,9 @@ static char* __rr2srcp(iOSrcpCon srcpcon, iONode evt, char* str) {
       StrOp.fmtb(str, "%lu.%.3lu %d INFO %d FB %d %d\n",
           time.tv_sec, time.tv_usec / 1000L,
           100, srcpBus, wFeedback.getaddr(evt), wFeedback.isstate(evt));
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FBcmd [%s]", str );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "FBcmd [%s]", str );
     }
-  }
+  } /* FB */
 
   else if( StrOp.equals( wLoc.name(), NodeOp.getName(evt)) 
         || StrOp.equals( wFunCmd.name(), NodeOp.getName(evt))) {
@@ -689,16 +929,38 @@ static char* __rr2srcp(iOSrcpCon srcpcon, iONode evt, char* str) {
 
   else if( StrOp.equals( wBlock.name(), NodeOp.getName(evt))){
     const char*   cmd = wBlock.getcmd( evt );
+    const char*    id = wBlock.getid( evt );
     int          addr = wBlock.getaddr( evt );
     const char* locId = wBlock.getlocid( evt );
     int	         port = wBlock.getport( evt );
     Boolean       pow = wBlock.ispower( evt );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rr2srcp %s addr %d cmd [%s] locId [%s] port %d power %s", NodeOp.getName(evt), addr, cmd, locId, port, pow?"yes":"no" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rr2srcp %s id[%s] addr %d cmd [%s] locId [%s] port %d power %s",
+        NodeOp.getName(evt), id, addr, cmd, locId, port, pow?"yes":"no" );
+  }
+
+  else if( StrOp.equals( wRoute.name(), NodeOp.getName(evt))){
+    const char*    id = wRoute.getid( evt );
+    iORoute route = ModelOp.getRoute( model, id );
+    const char* fb  = RouteOp.getFromBlock(route);
+    const char* fbs = RouteOp.getFromBlockSide(route)?"-":"+";
+    const char* tb  = RouteOp.getToBlock(route);
+    const char* tbs = RouteOp.getToBlockSide(route)?"-":"+";
+    Boolean locked = RouteOp.isLocked(route);
+    
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rr2srcp %s id[%s] from [%s%s] to [%s%s] locked[%s]",
+        NodeOp.getName(evt), id, fb, fbs, tb, tbs, locked?"yes":"no" );
+  }
+
+  else if( StrOp.equals( wAutoCmd.name(), NodeOp.getName(evt))){
+    Boolean autoMode = StrOp.equals( wAutoCmd.on, wAutoCmd.getcmd(evt) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rr2srcp type[%s] autoMode[%d][%s]",
+        NodeOp.getName(evt), autoMode, wAutoCmd.getcmd(evt) );
   }
 
   else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rr2srcp unhandled event [%s] returns [%s]", NodeOp.getName(evt), str );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rr2srcp unhandled event [%s] returns [%s]",
+        NodeOp.getName(evt), str );
   }
 
   return str;
@@ -720,88 +982,254 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
    * INIT <bus> GL <addr>  <protocol> <optional further parameters>
    * INIT <bus> SM <protocol>
    * INIT <bus> POWER
+   * INIT 0 TIME <fx> <fy> 
    */
   if( StrOp.startsWithi( req, "INIT " ) ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "INIT req: %s", req );
+
     int idx = 0;
     int srcpBus = 0;
+    char srcpBusIid[1025] = {'\0'};
     char busType[1025] = {'\0'};
-    char optionString[1025] = {'\0'};
-    int addrGA = 0 ;
-    int addrGL = 0 ;
-    char protoGA[1025] = {'\0'};
+    char sPar3[1025] = {'\0'};
+    char sPar4[1025] = {'\0'};
+    char sPar5[1025] = {'\0'};
     iOStrTok tok = StrTokOp.inst(req, ' ');
 
     while( StrTokOp.hasMoreTokens(tok)) {
       const char* s = StrTokOp.nextToken(tok);
       switch(idx) {
-      case 1:
-        srcpBus = atoi(s) ;
-        break;
-      case 2:
-        StrOp.copy( busType, s ) ;
-        break;
-      case 3:
-        if( StrOp.equals( busType, "GA" ))
-          addrGA = atoi( s );
-        if( StrOp.equals( busType, "GL" ))
-          addrGL = atoi( s );
-        StrOp.copy( optionString, s ) ;
-        break;
-      case 4:
-        if( StrOp.equals( busType, "GA" ))
-          StrOp.copy( protoGA, s);
-        break;
-      case 5:
-        if( StrOp.equals( busType, "GA" ))
-          StrOp.copy( optionString, s ) ;
-        break;
+      case 1: srcpBus = atoi(s) ; break;
+      case 2: StrOp.copy( busType, s ) ; break;
+      case 3: StrOp.copy( sPar3, s); break;
+      case 4: StrOp.copy( sPar4, s); break;
+      case 5: StrOp.copy( sPar5, s); break;
       }
       idx++;
     };
     StrTokOp.base.del(tok);
-    /*
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Parts INIT %d %s %s", srcpBus, busType, optionString );
-    */
-    if( StrOp.equals( busType, "POWER" )) {
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Parts INIT bus[%d] type[%s] par3[%s] par4[%s] par5[%s]",
+          srcpBus, busType, sPar3, sPar4, sPar5 );
+
+    getSrcpIid( data, srcpBus, srcpBusIid);
+
+    if( StrOp.equalsi( busType, "POWER" )) {
       /* INIT <bus> POWER */
-      /* Answer for init Power is "200 OK", generated automatically in calling function */
-      *reqRespCode = (int) 200 ;
-    }else if( StrOp.equals( busType, "GA" )) {
+      if( idx < 3 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 3 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
+      if( srcpBus == 0 ) {
+        /* server itself has no power state */
+        /* 422 ERROR unsupported device group */
+        *reqRespCode = (int) 422;
+        return cmd;
+      }
+      if( ! isValidSrcpBus( data, srcpBus ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 412 ERROR wrong value", req);
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412 ;
+        return cmd;
+      }
+
+      /* answer for successful init is "200 OK", generated automatically in calling function */
+    } /* POWER */
+
+    else if( StrOp.equalsi( busType, "GA" )) {
       /* INIT <bus> GA <addr>  <protocol> <optional further parameters> */
-      char srcpBusIid[1025];
+      if( idx < 5 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+
+      if( srcpBus == 0 ) {
+        /* server itself has no accessory bus */
+        /* 422 ERROR unsupported device group */
+        *reqRespCode = (int) 422;
+        return cmd;
+      }
+
+      if( ! isValidSrcpBus( data, srcpBus ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 412 ERROR wrong value", req);
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412 ;
+        return cmd;
+      }
+
+      int addrGA = -1;
+      char protoGA[1025] = {'\0'};
       int addr;
       int port;
       iOSwitch sw;
       iOSignal sg;
 
-      AddrOp.fromPADA( addrGA, &addr, &port );
-      sw = SRCPgetSwByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
-      sg = SRCPgetSgByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
+      addrGA = atoi( sPar3 );
+      StrOp.copy( protoGA, sPar4 ); /* TODO: verify reasonable value ? */
 
-      if( sw || sg ) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Valid GA at %d", addrGA );
-        /* 200 OK */
-        *reqRespCode = (int) 200;
-      }else{
+      AddrOp.fromPADA( addrGA, &addr, &port );
+
+      sw = SRCPgetSwByAddressAndIid(model, addr, port, srcpBusIid );
+      sg = SRCPgetSgByAddressAndIid(model, addr, port, srcpBusIid );
+
+      if( (sw == 0) && (sg == 0) ) {
+        /* no suitable switch or signal found */
         /* 412 ERROR wrong value */
         *reqRespCode = (int) 412;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Invalid GA at %d, reqRespCode %d", addrGA, *reqRespCode );
-      }
-    }else if( StrOp.equals( busType, "GL" )) {
-      char srcpBusIid[1025];
-      iOLoc loco = SRCPgetLocByAddressAndIid(model, addrGL, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ));
-      if( loco != NULL ) {
-        /* 200 OK */
-        *reqRespCode = (int) 200;
       }else{
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Valid GA at %d", addrGA );
+      }
+
+      /* answer for successful init is "200 OK", generated automatically in calling function */
+    } /* GA */
+
+    else if( StrOp.equalsi( busType, "GL" )) {
+      /* INIT <bus> GL <addr>  <protocol> <optional further parameters> */
+      if( idx < 5 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+
+      if( srcpBus == 0 ) {
+        /* server itself has no loco bus */
+        /* 422 ERROR unsupported device group */
+        *reqRespCode = (int) 422;
+        return cmd;
+      }
+
+      if( ! isValidSrcpBus( data, srcpBus ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 412 ERROR wrong value", req);
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412 ;
+        return cmd;
+      }
+
+      int addrGL = atoi( sPar3 );
+      iOLoc loco = SRCPgetLocByAddressAndIid(model, addrGL, srcpBusIid );
+
+      if( loco == NULL ) {
         /* 412 ERROR wrong value */
         *reqRespCode = (int) 412;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Invalid GL at %d, reqRespCode %d", addrGL, *reqRespCode );
       }
-    }
-  }
 
-  else if( StrOp.startsWithi( req, "SET" ) ) {
+      /* answer for successful init is "200 OK", generated automatically in calling function */
+    } /* GL */
+
+    else if( StrOp.equalsi( busType, "FB" )) {
+      /* INIT <bus> FB <optional parameters for initialization> */
+      if( idx < 3 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+
+      if( srcpBus == 0 ) {
+        /* server itself has no feedback bus */
+        /* 422 ERROR unsupported device group */
+        *reqRespCode = (int) 422;
+        return cmd;
+      }
+
+      if( ! isValidSrcpBus( data, srcpBus ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 412 ERROR wrong value", req);
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412 ;
+        return cmd;
+      }
+
+      /* answer for successful init is "200 OK", generated automatically in calling function */
+    } /* FB */
+
+    else if( StrOp.equalsi( busType, "SM" )) {
+      /* INIT <bus> SM <protocol> */
+      /* 422 ERROR unsupported device group */
+      *reqRespCode = (int) 422;
+      return cmd;
+    } /* SM */
+
+    else if( StrOp.equalsi( busType, "TIME" )) {
+      /* INIT 0 TIME <fx> <fy>  */
+      if( idx < 5 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 5 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
+      if( srcpBus != 0 ) {
+        /* only server has a time device */
+        /* 422 ERROR unsupported device group */
+        *reqRespCode = (int) 422;
+        return cmd;
+      }
+
+      int tFx = atoi( sPar3 );
+      int tFy = atoi( sPar4 );
+
+      if( (tFx <= 0) || (tFx > 100) || (tFy != 1) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 412 ERROR wrong value", req);
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412 ;
+        return cmd;
+      }
+
+      iONode clockini = wRocRail.getclock( AppOp.getIni() );
+      if( clockini == NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s : RocrailClock not available -> 416 ERROR no data", req);
+        /* 416 ERROR no data */
+        *reqRespCode = (int) 416 ;
+        return cmd;
+      }
+
+      int ini_divider = wClock.getdivider(clockini);
+      /* use current rocrail time */
+      long modeltime = ControlOp.getTime( AppOp.getControl() );
+
+      if( tFx != ini_divider ) {
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__srcp2rr: ini_divider_ini[%d] new_divider[%d]", ini_divider, tFx );
+
+        iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+        wClock.setcmd( tick, wClock.set );
+        wClock.settime( tick, modeltime );
+        wClock.setdivider( tick, tFx );
+        data->callback( data->callbackObj, tick );
+        divider = tFx;
+      }
+
+      if( ! __isClockRunning() ) {
+        iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+        wClock.setcmd( tick, wClock.go );
+        data->callback( data->callbackObj, tick );
+
+        __setClockRunning( True );
+      }
+
+      /* answer for successful init is "200 OK", generated automatically in calling function */
+    } /* TIME */
+
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unhandled INIT REQ %s", req );
+      /* 422 ERROR unsupported device group */
+      *reqRespCode = (int) 422 ;
+    }
+  } /* INIT */
+
+  else if( StrOp.startsWithi( req, "SET " ) ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET req: %s", req );
+
     if( StrOp.findi( req, "POWER" ) ) {
       /* SET <bus> POWER [ON|OFF] [freetext] */
       int idx = 0;
@@ -809,71 +1237,106 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       int srcpBus = 0;
       char busType[1025] = {'\0'};
       char optionString[1025] = {'\0'};
-      char freeText[1025] = {'\0'};
+      char *freeText = NULL;
       iOStrTok tok = StrTokOp.inst(req, ' ');
 
       while( StrTokOp.hasMoreTokens(tok)) {
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
-        case 1:
-          srcpBus = atoi(s) ;
-          break;
-        case 2:
-          StrOp.copy( busType, s) ;
-          break;
-        case 3:
-          StrOp.copy( optionString, s ) ;
-          break;
-        case 4:
-          StrOp.copy( freeText, s);
+        case 0: break;
+        case 1: srcpBus = atoi(s); break;
+        case 2: StrOp.copy( busType, s); break;
+        case 3: StrOp.copy( optionString, s ); break;
+        default:
+          if( StrOp.len( s ) > 0 ) {
+            freeText = StrOp.cat( freeText, " ");
+            freeText = StrOp.cat( freeText, s);
+          }
           break;
         }
         idx++;
       };
       StrTokOp.base.del(tok);
 
-      if( StrOp.equals( busType, "POWER" ) && StrOp.equals( optionString, "OFF" ) ) {
+      if( idx < 4 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+
+      if( srcpBus == 0 ) {
+        /* server itself has no power state */
+        /* 422 ERROR unsupported device group */
+        *reqRespCode = (int) 422;
+        return cmd;
+      }
+
+      if( ! StrOp.equalsi( busType, "POWER" ) ) {
+        /* 410 ERROR unknown command */
+        *reqRespCode = (int) 410;
+        return cmd;
+      }
+      if( ! isValidSrcpBus( data, srcpBus ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 412 ERROR wrong value", req);
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412 ;
+        return cmd;
+      }
+
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__srcp2rr: SET %d POWER %s freeText[%s] (srcpPwFreetext[%s])",
+          srcpBus, optionString, freeText, __getSrcpPwFreetext() );
+
+      if( StrOp.len( freeText ) > 0 && ! StrOp.equals( freeText, __getSrcpPwFreetext() ))
+        __setSrcpPwFreetext( freeText );
+      else
+        __setSrcpPwFreetext( "" );
+
+      if( freeText != NULL )
+        StrOp.free( freeText );
+
+      /* current overall system state (ON/OFF) */
+      Boolean isPower = wState.ispower(ControlOp.getState(AppOp.getControl()));
+
+      if( StrOp.equalsi( optionString, "OFF" ) ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__srcp2rr: SET %d POWER %s %s", srcpBus, optionString, freeText);
-        if( 1 == srcpBus ) { /* We use only the srcpBus number 1 (the bus with the master command station) to turn on/off power of the rcorail system */
+        if( isPower ) { /* execute only if different from current state */
+          srcpPwCmdInProgress = True;
           iONode localCmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE );
           wSysCmd.setcmd( localCmd, wSysCmd.stop );
           data->callback( data->callbackObj, localCmd );
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP sent wSysCmd.stop" );
+          ThreadOp.sleep( 250 );
 
-          sendPWstate2InfoChannels( time, srcpBus, optionString );
+          sendAllPWstates2AllInfoChannels( data );
+          srcpPwCmdInProgress = False;
         }
-
-        StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER OFF %s\n", time.tv_sec, time.tv_usec / 1000L, srcpBus, freeText );
-        SocketOp.fmt(o->clntSocket, str);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND to session %d [%s]: %s", o->id, o->infomode?"INFO":"COMMAND", str );
-        *reqRespCode = (int) 0;
-        ThreadOp.sleep( 10 );
       }
-      else if( StrOp.equals( busType, "POWER" ) && StrOp.equals( optionString, "ON" ) ) {
-        /* SET <bus> POWER ON <freetext> */
+      else if( StrOp.equalsi( optionString, "ON" ) ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__srcp2rr: SET %d POWER %s %s", srcpBus, optionString, freeText);
-        if( 1 == srcpBus ) { /* We use only the srcpBus number 1 (the bus with the master command station) to turn on/off power of the rcorail system */
+        if( ! isPower ) { /* execute only if different from current state */
+          srcpPwCmdInProgress = True;
           iONode localCmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE );
           wSysCmd.setcmd( localCmd, wSysCmd.go );
           data->callback( data->callbackObj, localCmd );
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP sent wSysCmd.go" );
+          ThreadOp.sleep( 250 );
 
-          sendPWstate2InfoChannels( time, srcpBus, optionString );
+          sendAllPWstates2AllInfoChannels( data );
+          srcpPwCmdInProgress = False;
         }
-
-        StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER ON %s\n", time.tv_sec, time.tv_usec / 1000L, srcpBus, freeText );
-        SocketOp.fmt(o->clntSocket, str);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP SEND to session %d [%s]: %s", o->id, o->infomode?"INFO":"COMMAND", str );
-        *reqRespCode = (int) 0;
-        ThreadOp.sleep( 10 );
       }
+
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown/unhandled POWER option in req %s", req );
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412;
       }
-    }
 
-    /* SET <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn> */
+      /* answer for successful SET is "200 OK", generated automatically in calling function */
+    } /* POWER */
+
     else if( StrOp.findi( req, "GL" ) ) {
+      /* SET <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn> */
       int idx = 0;
       const char* lcID = NULL;
       int srcpBus = 0;
@@ -892,11 +1355,12 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         switch(idx) {
         case 1:
           srcpBus = atoi(s);
+          getSrcpIid( data, srcpBus, srcpBusIid );
           break;
         case 3: {
           iOLoc loco = NULL;
           srcpLoco = atoi(s);
-          loco = SRCPgetLocByAddressAndIid(model, srcpLoco, getSrcpIid( Data(srcpcon), srcpBus, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) ) );
+          loco = SRCPgetLocByAddressAndIid(model, srcpLoco, srcpBusIid );
           if( loco != NULL ) {
             lcID = LocOp.getId(loco);
           }
@@ -1033,18 +1497,16 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         wLoc.setV(cmd, newSpeed);
         data->callback( data->callbackObj, cmd );
         cmd = NULL ;
-
-        *reqRespCode = (int) 200 ;
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "No loco with addr %d found", srcpLoco ) ;
         /* 412 ERROR wrong value */
         *reqRespCode = (int) 412 ;
       }
-    }
+    } /* GL */
 
-    /* SET <bus> GA <addr> <port> <value> <delay> */
     else if( StrOp.findi( req, "GA" ) ) {
+      /* SET <bus> GA <addr> <port> <value> <delay> */
       int idx = 0;
       const char* swID = NULL;
       int  srcpBus  = 0;
@@ -1072,11 +1534,39 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       };
       StrTokOp.base.del(tok);
 
+      if( idx < 7 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 7 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
+
       /* Find switch */
       AddrOp.fromPADA( srcpAddr, &addr, &port );
+      getSrcpIid( data, srcpBus, srcpBusIid);
 
-      sw = SRCPgetSwByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET GA: srcpBus %d srcpAddr %d [%d-%d] gate %d value %d delay %d ",
+                   srcpBus, srcpAddr, addr, port, gate, value, delay );
 
+      if( delay == 0 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 412 ERROR wrong value (0 not allowed)", req);
+        *reqRespCode = (int) 412 ;
+        return cmd;
+      }
+
+      sw = SRCPgetSwByAddressAndIid(model, addr, port, srcpBusIid );
+
+      if( (sw != NULL) && SwitchOp.isLocked( sw, NULL, True ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Switch \"%s\" is locked", SwitchOp.getId( sw ) );
+        /* 414 ERROR device locked */
+        *reqRespCode = (int) 414 ;
+        return cmd;
+      }
+ 
       if( sw != NULL ) {
         iONode swProps = SwitchOp.base.properties(sw);
         const char *swIid = StrOp.equals( wSwitch.getiid(swProps), "") ? getDefaultIid() : wSwitch.getiid(swProps);
@@ -1091,7 +1581,8 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
           || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.right))
           || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.twoway))
           || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.crossing))
-          || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)) ) {
+          || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing))
+          || ( StrOp.equals( wSwitch.gettype(swProps), wSwitch.accessory)) ) {
           cmd = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
           wSwitch.setiid( cmd, srcpBusIid );
           wSwitch.setid(  cmd, SwitchOp.getId(sw) );
@@ -1250,12 +1741,12 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
               swM = (iOSwitch)MapOp.next( swMap );
             }
           }
-        }else{
+        }else {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unknown GA-type %s with address %d", wSwitch.gettype(swProps),srcpAddr );
         }
       }
       
-      sg = SRCPgetSgByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
+      sg = SRCPgetSgByAddressAndIid(model, addr, port, srcpBusIid );
 
       if( sg != NULL ) {
         iONode sgProps = SignalOp.base.properties(sg);
@@ -1302,20 +1793,182 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       if( ( sw == NULL ) && ( sg == NULL ) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no switch or signal found for found iid %s aGA %d a %d p %d gate %d : REQ %s", 
                      srcpBusIid, srcpAddr, addr, port, gate, req );
+        /* 416 ERROR no data */
+        *reqRespCode = (int) 416 ;
+      }
+
+      /* answer for successful SET is "200 OK", generated automatically in calling function */
+    } /* GA */
+
+    else if( StrOp.findi( req, "FB" ) ) {
+      /* SET <bus> FB <addr> <value> */
+      int idx = 0;
+      const char* fbID = NULL;
+      int  srcpBus  = 0;
+      char srcpBusIid[1024];
+      int  srcpAddr = 0;
+      int  value    = -1;
+      iOFBack fb;
+      iOStrTok tok = StrTokOp.inst(req, ' ');
+
+      while( StrTokOp.hasMoreTokens(tok)) {
+        const char* s = StrTokOp.nextToken(tok);
+        switch(idx) {
+        case 1: srcpBus  = atoi(s); break;
+        case 3: srcpAddr = atoi(s); break;
+        case 4: value    = atoi(s); break;
+        case 5: break;
+        }
+        idx++;
+      };
+      StrTokOp.base.del(tok);
+
+      if( idx < 5 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 5 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
+      getSrcpIid( data, srcpBus, srcpBusIid);
+
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET FB srcpBus[%d]=[%s] srcpAddr[%d] value[%d]",
+                   srcpBus, srcpAddr, value, srcpBusIid );
+
+      /* find feedback */
+      fb = getFeedbackByIidAndAddr( srcpBusIid, srcpAddr );
+
+      if( fb != NULL ) {
+        if( (value == 0) || (value == 1) ) {
+          if( ! isDigintVirtual( srcpBusIid ) ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor simulation on none vcs: bus[%d]=[%s] : REQ %s", 
+                         srcpBus, srcpBusIid, req );
+          }
+          fbID = FBackOp.getId( fb );
+          iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+          wFeedback.setid( cmd, fbID );
+          wFeedback.setstate( cmd, value?True:False);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate sensor[%s] addr[%s][%d] state[%s]",
+                       fbID, srcpBusIid, srcpAddr, value?"true":"false" );
+          FBackOp.event( fb, cmd );
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "feedback value invalid iid %s aFB %d val %d : REQ %s", 
+                       srcpBusIid, srcpAddr, value, req );
+          /* 412 ERROR wrong value */
+          *reqRespCode = (int) 412 ;
+        }
+      }
+
+      if( fb == NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no feedback found for found iid %s aFB %d val %d : REQ %s", 
+                     srcpBusIid, srcpAddr, value, req );
         /* 412 ERROR wrong value */
         *reqRespCode = (int) 412 ;
       }
-    }
+
+      /* answer for successful SET is "200 OK", generated automatically in calling function */
+    } /* FB */
+
+    else if( StrOp.startsWithi( req, "SET 0 TIME" ) ) {
+      /* SET 0 TIME <JulDay> <Hour> <Minute> <Second> */
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET 0 TIME ..." );
+
+      int idx = 0;
+      long julDay = -1;
+      int hour = -1;
+      int min  = -1;
+      int sec  = -1;
+      iOStrTok tok = StrTokOp.inst(req, ' ');
+
+      while( StrTokOp.hasMoreTokens(tok)) {
+        const char* s = StrTokOp.nextToken(tok);
+        switch(idx) {
+        case 3: julDay = atol(s); break;
+        case 4: hour = atoi(s); break;
+        case 5: min  = atoi(s); break;
+        case 6: sec  = atoi(s); break;
+        }
+        idx++;
+      };
+      StrTokOp.base.del(tok);
+
+      if( idx < 7 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 7 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "__srcp2rr: SET 0 TIME %ld %d %d %d",
+                   julDay, hour, min, sec );
+
+      if( (julDay < JULIAN_DAY_1970_01_01 ) || (hour < 0) || (hour >=24) || (min < 0) || (min >= 60) || (sec < 0 ) || ( sec >= 60 ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "invalid value in date detected: %s", 
+            req );
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412 ;
+      }
+
+      iONode clockini = wRocRail.getclock( AppOp.getIni() );
+      int ini_divider = wClock.getdivider(clockini);
+      if( ini_divider == 1 ) {
+        /* rocrail running with realtime -> time setting not allowed */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "running with realtime -> 415 ERROR forbidden");
+        /* 415 ERROR forbidden */
+        *reqRespCode = (int) 415 ;
+        return cmd;
+      }
+
+      time_t new_time = convSRCP2ModelTime( julDay, hour, min, sec );
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> new model time[%d] == SRCP time[%s] ",
+          req, (int) new_time, convModelTimeToSRCP(new_time) );
+
+      /* send new_time to RR */
+      iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+      wClock.setcmd( tick, wClock.set );
+      wClock.setdivider( tick, ini_divider );
+      wClock.settime( tick, new_time );
+      data->callback( data->callbackObj, tick );
+      /* answer for successful SET is "200 OK", generated automatically in calling function */
+
+    } /* SET 0 TIME ... */
 
     else if( StrOp.findi( req, "SM" ) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET <bus> SM not supported" );
-      /* 425 ERROR not supported */
-      *reqRespCode = (int) 425 ;
+      /* 422 ERROR unsupported device group */
+      *reqRespCode = (int) 422 ;
+    } /* SM */
+
+    else if( StrOp.findi( req, "GM" ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET <bus> GM not supported" );
+      /* 422 ERROR unsupported device group */
+      *reqRespCode = (int) 422 ;
+    } /* GM */
+
+    else if( StrOp.findi( req, "LOCK" ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SET <bus> LOCK not supported" );
+      /* 422 ERROR unsupported device group */
+      *reqRespCode = (int) 422 ;
+    } /* LOCK */
+
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unhandled SET REQ %s", req );
+      /* 410 ERROR unknown command */
+      *reqRespCode = (int) 410 ;
     }
   } /* SET */
 
-  else if( StrOp.startsWithi( req, "GET" ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET req: %s", req );
+  else if( StrOp.startsWithi( req, "GET " ) ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "GET req: %s", req );
 
     if( StrOp.findi( req, "POWER" ) ) {
       /* GET <bus> POWER */
@@ -1328,38 +1981,61 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       while( StrTokOp.hasMoreTokens(tok)) {
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
-        case 1:
-          srcpBus = atoi(s) ;
-          break;
-        case 2:
-          StrOp.copy( busType, s) ;
-          break;
+        case 1: srcpBus = atoi(s); break;
+        case 2: StrOp.copy( busType, s); break;
         }
         idx++;
       };
       StrTokOp.base.del(tok);
 
-      if( StrOp.equals( busType, "POWER" ) ) {
+      if( idx < 3 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 3 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
+      if( ! isValidSrcpBus( data, srcpBus ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 412 ERROR wrong value", req);
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412 ;
+        return cmd;
+      }
+
+      if( StrOp.equalsi( busType, "POWER" ) ) {
         /* GET <bus> POWER */
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "POWER[%d]", srcpBus );
+
+        if( srcpBus == 0 ) {
+          /* server itself has no power state */
+          /* 422 ERROR unsupported device group */
+          *reqRespCode = (int) 422;
+          return cmd;
+        }
 
         /* current overall system state (ON/OFF) */
         Boolean isPower = wState.ispower(ControlOp.getState(AppOp.getControl()));
 
-        /* Send powerState to all srcp info connections */
-        sendPWstate2InfoChannels( time, srcpBus, isPower?"ON":"OFF" );
-
-        StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s\n",
-            time.tv_sec, time.tv_usec / 1000L, srcpBus, isPower?"ON":"OFF" );
+        /* create response */
+        StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s%s\n",
+            time.tv_sec, time.tv_usec / 1000L, srcpBus, isPower?"ON":"OFF", __getSrcpPwFreetext() );
 
         /* send INFO <bus> POWER answer back to requesting command channel */
         SocketOp.fmt(o->clntSocket, str);
 
         *reqRespCode = (int) 0;
       }
+      else {
+        /* 422 ERROR unsupported device group */
+        *reqRespCode = (int) 422;
+      }
     } /* GET <bus> POWER */
-    /* GET <bus> DESCRIPTION GL <addr> */
+
     else if( StrOp.findi( req, " DESCRIPTION GL " ) ) {
+      /* GET <bus> DESCRIPTION GL <addr> */
       /* 101 INFO 1 DESCRIPTION GL 3 N 1 128 5 */
       /* 101 INFO 1     GL 3      N       1         14           5 */
       /* 101 INFO <bus> GL <addr> <proto> <protver> <speedsteps> <num functions> */
@@ -1375,22 +2051,24 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       while( StrTokOp.hasMoreTokens(tok)) {
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
-          case 1:
-            srcpBus = atoi(s) ;
-            break;
-          case 4: 
-            addrGL = atoi(s);
-            break;
-          case 5:
-            /* too many arguments ; 418 ERROR list too long */
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> 418 ERROR list too long", req);
-            *reqRespCode = (int) 418;
-            break;
+          case 1: srcpBus = atoi(s) ; break;
+          case 4: addrGL = atoi(s); break;
+          case 5: break;
         }
         idx++;
       }
       StrTokOp.base.del(tok);
 
+      if( idx < 5 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 5 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
       getSrcpIid( data, srcpBus, srcpBusIid);
 
       if( addrGL > 0 ) {
@@ -1441,9 +2119,10 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         /* 412 ERROR wrong value */
         *reqRespCode = (int) 412;
       }
-    }
-    /* GET <bus> GL <addr> */
+    } /* DESCRIPTION GL */
+
     else if( StrOp.findi( req, "GL" ) ) {
+      /* GET <bus> GL <addr> */
       /* "100 INFO <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn>" */
       int idx = 0;
       const char* lcID = NULL;
@@ -1458,21 +2137,24 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       while( StrTokOp.hasMoreTokens(tok)) {
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
-          case 1:
-            srcpBus = atoi(s) ;
-            break;
-          case 3: 
-            addrGL = atoi(s);
-            break;
-          case 4:
-            /* too many arguments ; 418 ERROR list too long */
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> 418 ERROR list too long", req);
-            *reqRespCode = 418 ;
-            break;
+          case 1: srcpBus = atoi(s) ; break;
+          case 3: addrGL = atoi(s); break;
+          case 4: break;
         }
         idx++;
       }
       StrTokOp.base.del(tok);
+
+      if( idx < 4 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 4 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
 
       getSrcpIid( data, srcpBus, srcpBusIid);
 
@@ -1528,9 +2210,10 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         /* 412 ERROR wrong value */
         *reqRespCode = (int) 412;
       }
-    }/* GET GL */
-    /* GET <bus> DESCRIPTION GA <addr> */
+    } /* GET GL */
+
     else if( StrOp.findi( req, " DESCRIPTION GA " ) ) {
+      /* GET <bus> DESCRIPTION GA <addr> */
       /* 101 INFO <bus> GA <addr> <device protocol> */
       char str[1025] = {'\0'};
       int idx = 0;
@@ -1545,15 +2228,22 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         switch(idx) {
         case 1: srcpBus = atoi(s); break;
         case 4: srcpAddr = atoi(s); break;
-        case 5:
-          /* too many arguments ; 418 ERROR list too long */
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> 418 ERROR list too long", req);
-          *reqRespCode = 418 ;
-          break;
+        case 5: break;
         }
         idx++;
       };
       StrTokOp.base.del(tok);
+
+      if( idx < 5 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 5 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
 
       getSrcpIid( data, srcpBus, srcpBusIid);
 
@@ -1566,8 +2256,8 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         char prot[1025] = {'\0'};
 
         AddrOp.fromPADA( srcpAddr, &addr, &port );
-        sw = SRCPgetSwByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
-        sg = SRCPgetSgByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
+        sw = SRCPgetSwByAddressAndIid(model, addr, port, srcpBusIid );
+        sg = SRCPgetSgByAddressAndIid(model, addr, port, srcpBusIid );
 
         /*
           SRCP GA protocols
@@ -1624,9 +2314,10 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         /* 412 ERROR wrong value */
         *reqRespCode = (int) 412;
       }
-    }
-    /* GET <bus> GA <addr> <port> */
+    } /* DESCRIPTION GA */
+
     else if( StrOp.findi( req, "GA" ) ) {
+      /* GET <bus> GA <addr> <port> */
       /* "100 INFO <bus> GA <addr> <port> <value>" */
       char str[1025] = {'\0'};
       int idx = 0;
@@ -1643,20 +2334,26 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         case 1: srcpBus = atoi(s); break;
         case 3: srcpAddr = atoi(s); break;
         case 4: srcpPort = atoi(s); break;
-        case 5:
-          /* too many arguments ; 418 ERROR list too long */
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> 418 ERROR list too long", req);
-          *reqRespCode = 418 ;
-          break;
+        case 5: break;
         }
         idx++;
       };
       StrTokOp.base.del(tok);
 
+      if( idx < 5 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 5 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
+
       getSrcpIid( data, srcpBus, srcpBusIid);
 
       if( srcpAddr > 0 ) {
-        char srcpBusIid[1025];
         int addr;
         int port;
         int value;
@@ -1666,8 +2363,8 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         Boolean twoMotors = False;
 
         AddrOp.fromPADA( srcpAddr, &addr, &port );
-        sw = SRCPgetSwByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
-        sg = SRCPgetSgByAddressAndIid(model, addr, port, getSrcpIid( Data(srcpcon), srcpBus, srcpBusIid ) );
+        sw = SRCPgetSwByAddressAndIid(model, addr, port, srcpBusIid );
+        sg = SRCPgetSgByAddressAndIid(model, addr, port, srcpBusIid );
 
         /* Q: "GET <bus> GA <addr> <port>" */
         /* A: "100 INFO <bus> GA <addr> <port> <value>" */
@@ -1690,24 +2387,92 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
             TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SW %d at controller %s : twoMotors %d value %s", 
                         srcpAddr, srcpBusIid, twoMotors, valStr );
 
-            /* TODO: do we have to check if addr/port is really used */
-            StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d 0\n",
-                  time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort );
-            SocketOp.fmt(o->clntSocket, str);
-            *reqRespCode = (int) 0 ;
+            if(  StrOp.equals( type, wSwitch.left )
+              || StrOp.equals( type, wSwitch.right )
+              || StrOp.equals( type, wSwitch.twoway )
+              || StrOp.equals( type, wSwitch.crossing ) 
+              || StrOp.equals( type, wSwitch.ccrossing )
+              || StrOp.equals( type, wSwitch.accessory )
+              || StrOp.equals( type, wSwitch.decoupler )
+              ) {
+              /* 100 INFO <bus> GA <addr> <port> <value> */
+              StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d 0\n",
+                  time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr,
+                  StrOp.equals(wSwitch.getstate(swProps), wSwitch.straight)? 1:0 );
+              SocketOp.fmt(o->clntSocket, str);
+              *reqRespCode = (int) 0 ;
+            }else if(  StrOp.equals( type, wSwitch.threeway )
+                    || StrOp.equals( type, wSwitch.dcrossing )
+                    ) {
+              int addr  = AddrOp.toPADA( wSwitch.getaddr1(swProps), wSwitch.getport1(swProps) );
+              int addr2 = AddrOp.toPADA( wSwitch.getaddr2(swProps), wSwitch.getport2(swProps) );
+              if( srcpAddr == addr ) {
+                StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d 0\n",
+                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, 
+                    (StrOp.equals(wSwitch.getstate(swProps), wSwitch.left)||StrOp.equals(wSwitch.getstate(swProps), wSwitch.turnout))? 1:0 );
+                SocketOp.fmt(o->clntSocket, str);
+                *reqRespCode = (int) 0 ;
+              }
+              if( srcpAddr == addr2 ) {
+                StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d 0\n",
+                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, 
+                    (StrOp.equals(wSwitch.getstate(swProps), wSwitch.right)||StrOp.equals(wSwitch.getstate(swProps), wSwitch.turnout))? 1:0 );
+                SocketOp.fmt(o->clntSocket, str);
+                *reqRespCode = (int) 0 ;
+              }
+            }else {
+              /* no well known switch type */
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "SRCP RESPONSE: unsupported switchtype[%s]", type ) ;
+            }
           }else {
             iONode sgProps = SignalOp.base.properties(sg);
             int aspects = wSignal.getaspects( sgProps );
+            const char* state = wSignal.getstate(sgProps);
 
             StrOp.copy( valStr, wSignal.getstate(sgProps) );
             TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG %d at controller %s : aspects %d value %s", 
                   srcpAddr, srcpBusIid, aspects, valStr );
 
-            /* TODO: check if addr/port is really used (... only for 3 aspect signals ?) */
-            StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d 0\n", 
-                  time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort );
-            SocketOp.fmt(o->clntSocket, str);
-            *reqRespCode = (int) 0 ;
+            int addr1 = AddrOp.toPADA( wSignal.getaddr (sgProps), wSignal.getport1(sgProps) );
+            int addr2 = AddrOp.toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
+            int addr3 = AddrOp.toPADA( wSignal.getaddr3(sgProps), wSignal.getport3(sgProps) );
+            int addr4 = AddrOp.toPADA( wSignal.getaddr4(sgProps), wSignal.getport4(sgProps) );
+            int gate1 = wSignal.getgate1(sgProps);
+            int gate2 = wSignal.getgate2(sgProps);
+            int gate3 = wSignal.getgate3(sgProps);
+            int gate4 = wSignal.getgate4(sgProps);
+
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "GET for SG aGA %d a %d p %d : aspects %d a1 %d a2 %d a3 %d a4 %d g1 %d g2 %d g3 %d g4 %d REQ %s", 
+                srcpAddr, addr, port, aspects, addr1, addr2, addr3, addr4, gate1, gate2, gate3, gate4, req );
+
+            if( aspects >= 1 && srcpAddr == addr1 && srcpPort == gate1 ) {
+              StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d %d\n", 
+                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, StrOp.equals( state, wSignal.red ) );
+              TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG answer aspect 1: %s", str);
+              SocketOp.fmt(o->clntSocket, str);
+              *reqRespCode = (int) 0 ;
+            }
+            if( aspects >= 2 && srcpAddr == addr2 && srcpPort == gate2 ) {
+              StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d %d\n", 
+                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, StrOp.equals( state, wSignal.green ) );
+              TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG answer aspect 2: %s", str);
+              SocketOp.fmt(o->clntSocket, str);
+              *reqRespCode = (int) 0 ;
+            }
+            if( aspects >= 3 && srcpAddr == addr3 && srcpPort == gate3 ) {
+              StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d %d\n", 
+                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, StrOp.equals( state, wSignal.yellow ) );
+              TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG answer aspect 3: %s", str);
+              SocketOp.fmt(o->clntSocket, str);
+              *reqRespCode = (int) 0 ;
+            }
+            if( aspects >= 4 && srcpAddr == addr4 && srcpPort == gate4 ) {
+              StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d %d\n", 
+                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, StrOp.equals( state, wSignal.white ) );
+              TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG answer aspect 4: %s", str);
+              SocketOp.fmt(o->clntSocket, str);
+              *reqRespCode = (int) 0 ;
+            }
           }
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Answer: %s", str);
         }
@@ -1721,8 +2486,10 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         /* 412 ERROR wrong value */
         *reqRespCode = (int) 412;
       }
-    }
+    } /* GA */
+
     else if( StrOp.findi( req, "FB" ) ) {
+      /* GET <bus> FB <addr> */
       /* "100 INFO <bus> FB <addr> <value>" */
       char str[1025] = {'\0'};
       int idx = 0;
@@ -1737,15 +2504,22 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         switch(idx) {
         case 1: srcpBus = atoi(s); break;
         case 3: srcpAddr = atoi(s); break;
-        case 4:
-          /* too many arguments ; 418 ERROR list too long */
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> 418 ERROR list too long", req);
-          *reqRespCode = 418 ;
-          break;
+        case 4: break;
         }
         idx++;
       };
       StrTokOp.base.del(tok);
+
+      if( idx < 4 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 4 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
 
       getSrcpIid( data, srcpBus, srcpBusIid);
 
@@ -1758,7 +2532,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
          * A: "412 wrong value"
          */
 
-        fb = getFeedbackBySrcpbusAndSrcpaddr( srcpBusIid, srcpAddr);
+        fb = getFeedbackByIidAndAddr( srcpBusIid, srcpAddr);
         if( fb != NULL) {
           iONode fbProps = FBackOp.base.properties(fb);
           int value = wFeedback.isstate(fbProps);
@@ -1770,22 +2544,135 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
           *reqRespCode = (int) 0 ;
         }
         else {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "GET REQ for undefined Feedback: bus %d, addr %d", srcpBus, srcpAddr );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ for undefined Feedback: bus %d, addr %d", srcpBus, srcpAddr );
           /* 412 wrong value */
           *reqRespCode = (int) 412 ;
         }
       }
+    } /* FB */
+
+    else if( StrOp.equalsi( req, "GET 0 SERVER" ) ) {
+      char str[1025] = {'\0'};
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET 0 SERVER" );
+      StrOp.fmtb(str, "%lu.%.3lu 100 INFO 0 SERVER RUNNING\n",
+          time.tv_sec, time.tv_usec / 1000L );
+      /* send back to requesting command channel */
+      SocketOp.fmt(o->clntSocket, str);
+      *reqRespCode = (int) 0;
+    } /* SERVER */
+
+    else if( StrOp.startsWithi( req, "GET 0 SESSION" ) ) {
+      /* GET 0 SESSION <SESSIONID> */
+      /* 100 INFO 0 SESSION <SESSIONID> [further optional parameters] */
+      char str[1025] = {'\0'};
+      if( StrOp.len( req ) > 14 ) {
+        int reqSessId = atoi( &req[14] );
+
+        if( reqSessId == o->id ) {
+          iOSocket clientSocket = o->clntSocket ;
+          StrOp.fmtb(str, "%lu.%.3lu 100 INFO 0 SESSION %d peer[%s]\n",
+              time.tv_sec, time.tv_usec / 1000L, o->id, SocketOp.getPeername( clientSocket ) );
+          /* send back to requesting command channel */
+          SocketOp.fmt(o->clntSocket, str);
+          *reqRespCode = (int) 0;
+          return cmd;
+        }else {
+          /* 416 ERROR no data */
+          *reqRespCode = (int) 416 ;
+          return cmd;
+        }
+      }
+      /* 419 ERROR list too short */
+      *reqRespCode = (int) 419 ;
+      return cmd;
+    } /* SESSION */
+
+    else if( StrOp.equalsi( req, "GET 0 TIME" ) ) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "GET 0 TIME" );
+      char str[1025] = {'\0'};
+
+      if( ! __isClockRunning() ) {
+        /* 425 ERROR not supported */
+        *reqRespCode = (int) 425 ;
+        return cmd;
+      }
+
+      /* 100 INFO 0 TIME <JulDay> <Hour> <Minute> <Second> */
+      time_t rr_time = ControlOp.getTime( AppOp.getControl() );
+      StrOp.fmtb(str, "%lu.%.3lu 100 INFO 0 TIME %s\n",
+          time.tv_sec, time.tv_usec / 1000L, convModelTimeToSRCP(rr_time) );
+      SocketOp.fmt(o->clntSocket, str);
+
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Answer: %s", str);
+      *reqRespCode = (int) 0 ;
+    } /* TIME */
+
+    /* GET <bus> DESCRIPTION */
+    else if( StrOp.findi( req, "DESCRIPTION" ) ) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "GET <bus> DESCRIPTION" );
+      char str[1025] = {'\0'};
+      int idx = 0;
+      int  srcpBus  = -1;
+      char srcpBusIid[1024];
+      iOStrTok tok = StrTokOp.inst(req, ' ');
+
+      while( StrTokOp.hasMoreTokens(tok)) {
+        const char* s = StrTokOp.nextToken(tok);
+        switch(idx) {
+        case 1: srcpBus = atoi(s); break;
+        case 2: if( ! StrOp.equalsi( s, "DESCRIPTION" ) ) {
+                  /* 422 ERROR unsupported device group */
+                  *reqRespCode = (int) 422 ;
+                  return cmd;
+                }
+                break;
+        }
+        idx++;
+      };
+      StrTokOp.base.del(tok);
+
+      if( idx < 3 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 3 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
+      if( ! isValidSrcpBus( data, srcpBus ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 412 ERROR wrong value", req);
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412 ;
+        return cmd;
+      }
+
+      creaRspBusDescr( str, &time, srcpBus );
+      /* send back to requesting command channel */
+      SocketOp.fmt(o->clntSocket, str);
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Answer: %s", str);
+          *reqRespCode = (int) 0 ;
     }
+
+    else if( StrOp.findi( req, "SM" ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET <bus> SM not supported" );
+      /* 422 ERROR unsupported device group */
+      *reqRespCode = (int) 422 ;
+    }
+
     else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Unhandled GET REQ %s", req );
-      /* 416 ERROR no data */
-      *reqRespCode = (int) 416 ;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unhandled GET REQ %s", req );
+      /* 410 ERROR unknown command */
+      *reqRespCode = (int) 410 ;
     }
   } /* GET */
 
   else if( StrOp.startsWithi( req, "TERM " ) ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "TERM req: %s", req );
+
     if( StrOp.startsWithi( req, "TERM 0 SESSION" ) ) {
-      /* TERM <bus> SESSION <id> */
+      /* TERM 0 SESSION [<id>] */
       int idx = 0;
       char str[1025] = {'\0'};
       int srcpBus = 0;
@@ -1796,16 +2683,23 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       while( StrTokOp.hasMoreTokens(tok)) {
         const char* s = StrTokOp.nextToken(tok);
         switch(idx) {
-        case 1:
-          srcpBus = atoi(s) ;
-          break;
-        case 3:
-          sessId = atoi(s) ;
-          break;
+        case 1: srcpBus = atoi(s) ; break;
+        case 3: sessId = atoi(s) ; break;
         }
         idx++;
       };
       StrTokOp.base.del(tok);
+
+      if( idx < 3 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 4 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
 
       /* check for optional parameter <SESSIONID> */
       if( sessId == 0 ){
@@ -1815,8 +2709,8 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
 
       if( sessId != o->id ){
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TERM request for Id %d but session Id is %d", sessId, o->id );
-        /* 412 ERROR wrong value */
-        *reqRespCode = (int) 412 ;
+        /* 415 ERROR forbidden */
+        *reqRespCode = (int) 415 ;
       } else if( srcpBus == 0 ){
         /* terminate session */
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Terminating session %d", sessId );
@@ -1827,7 +2721,14 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
               time.tv_sec, time.tv_usec / 1000L, srcpBus, sessId );
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s [%p]", str, o->clntSocket);
         SocketOp.fmt(o->clntSocket, str);
-        /* TODO: close IP socket */
+        /* give some time to send response */
+        ThreadOp.sleep( 100 );
+        /* close IP socket */
+        SocketOp.disConnect( o->clntSocket );
+        ThreadOp.sleep( 100 );
+        /* terminate loop in service thread */
+        o->quit = True;
+        ThreadOp.sleep( 100 );
         /* inform all info sessions about closing a session */
         /* -> this will be automatically invoked for all sessions when closing the socket ! */
         /* sendSessionstate2InfoChannels( 0, sessId, 102, o->infomode ); */
@@ -1837,97 +2738,243 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         /* 412 ERROR wrong value */
         *reqRespCode = (int) 412 ;
       }
-    }
+    } /* TERM 0 SESSION [<id>] */
+
+    else if( StrOp.equalsi( req, "TERM 0 TIME" ) ) {
+      /* TERM 0 TIME */
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "__srcp2rr: wClock.freeze" );
+      iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+      wClock.setcmd( tick, wClock.freeze );
+      data->callback( data->callbackObj, tick );
+
+      /* answer for successful SET is "200 OK", generated automatically in calling function */
+    } /* TERM 0 TIME */
+
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED TERM req %s from session %d [%s]", req, o->id, o->infomode?"INFO":"COMMAND" );
+      /* 410 ERROR unknown command */
       *reqRespCode = (int) 410 ;
     }
   } /* TERM */
 
   else if( StrOp.startsWithi( req, "WAIT " ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "WAIT req: %s", req );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "WAIT req: %s", req );
 
-    if( StrOp.findi( req, "FB" ) ) {
-    /*
-     * Q: "WAIT <bus> FB <addr> <value> <timeout>"
-     * <addr> out of range:
-     *   A: "412 wrong value"
-     * <value> reached within <timeout>:
-     *   A: "100 INFO <bus> FB <addr> <value>"
-     * <value> not reached within <timeout>
-     *   A: "417 ERROR timeout"
-     */
-      char str[1025] = {'\0'};
-      int idx = 0;
-      int srcpBus = 0;
-      int srcpAddr = 0;
-      int srcpValue = 0;
-      int srcpTimeout = 0;
-      int addr = 0;
-      char srcpBusIid[1024];
+    int idx = 0;
+    char str[1025] = {'\0'};
+    int srcpBus = 0;
+    char srcpBusIid[1025] = {'\0'};
+    char busType[1025] = {'\0'};
+    char sPar3[1025] = {'\0'};
+    char sPar4[1025] = {'\0'};
+    char sPar5[1025] = {'\0'};
+    char sPar6[1025] = {'\0'};
 
-      iOStrTok tok = StrTokOp.inst(req, ' ');
-      while( StrTokOp.hasMoreTokens(tok)) {
-        const char* s = StrTokOp.nextToken(tok);
-        switch(idx) {
-        case 1: srcpBus = atoi(s); break;
-        case 3: srcpAddr = atoi(s); break;
-        case 4: srcpValue = atoi(s); break;
-        case 5: srcpTimeout = atoi(s); break;
-        case 6:
-          /* too many arguments ; 418 ERROR list too long */
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ %s -> 418 ERROR list too long", req);
-          *reqRespCode = 418 ;
-          break;
-        }
-        idx++;
-      };
-      StrTokOp.base.del(tok);
+    iOStrTok tok = StrTokOp.inst(req, ' ');
 
-      getSrcpIid( data, srcpBus, srcpBusIid);
-
-      if( srcpAddr > 0 ) {
-        iOFBack fb;
-        fb = getFeedbackBySrcpbusAndSrcpaddr( srcpBusIid, srcpAddr);
-        if( fb != NULL) {
-          iONode fbProps = FBackOp.base.properties(fb);
-          int value = wFeedback.isstate(fbProps);
-          int timeout_reached = 0;
-          unsigned long endTime;
-          struct timeval currTime;
-
-          gettimeofday(&currTime, NULL);
-          endTime = currTime.tv_sec + (unsigned long) srcpTimeout;
-
-          while ( currTime.tv_sec <= endTime ) {
-            if( srcpValue == wFeedback.isstate(fbProps) ) {
-              StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d FB %d %d\n",
-                    currTime.tv_sec, currTime.tv_usec / 1000L, srcpBus, srcpAddr, srcpValue );
-              SocketOp.fmt(o->clntSocket, str);
-              TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Answer: %s", str);
-              *reqRespCode = (int) 0 ;
-              return cmd;
-            }
-            else {
-              /* wait 100 ms and let others do their jobs */
-              ThreadOp.sleep( 100 );
-              gettimeofday(&currTime, NULL);
-            }
-          }
-          /* 417 timeout */
-          *reqRespCode = (int) 417 ;
-        }
-        else {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "GET REQ for undefined Feedback: bus %d, addr %d", srcpBus, srcpAddr );
-          /* 412 wrong value */
-          *reqRespCode = (int) 412 ;
-        }
+    while( StrTokOp.hasMoreTokens(tok)) {
+      const char* s = StrTokOp.nextToken(tok);
+      switch(idx) {
+      case 1: srcpBus = atoi(s) ; break;
+      case 2: StrOp.copy( busType, s ) ; break;
+      case 3: StrOp.copy( sPar3, s); break;
+      case 4: StrOp.copy( sPar4, s); break;
+      case 5: StrOp.copy( sPar5, s); break;
+      case 6: StrOp.copy( sPar6, s); break;
       }
+      idx++;
+    };
+    StrTokOp.base.del(tok);
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "WAIT bus[%d] type[%s] par3[%s] par4[%s] par5[%s] par6[%s]",
+          srcpBus, busType, sPar3, sPar4, sPar5, sPar6 );
+
+    getSrcpIid( data, srcpBus, srcpBusIid);
+
+    if( StrOp.equalsi( busType, "FB" )) {
+      /* WAIT <bus> FB  */
+      /*
+       * Q: "WAIT <bus> FB <addr> <value> <timeout>"
+       * <addr> out of range:
+       *   A: "412 wrong value"
+       * <value> reached within <timeout>:
+       *   A: "100 INFO <bus> FB <addr> <value>"
+       * <value> not reached within <timeout>
+       *   A: "417 ERROR timeout"
+       */
+      if( idx < 6 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 6 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
+      if( srcpBus == 0 ) {
+        /* server itself has no feedback */
+        /* 422 ERROR unsupported device group */
+        *reqRespCode = (int) 422;
+        return cmd;
+      }
+      if( ! isValidSrcpBus( data, srcpBus ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 412 ERROR wrong value", req);
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412 ;
+        return cmd;
+      }
+
+      int srcpAddr = atoi( sPar3 );
+      int srcpValue = atoi( sPar4 );
+      int srcpTimeout = atoi( sPar5 );
+
+      iOFBack fb = getFeedbackByIidAndAddr( srcpBusIid, srcpAddr);
+      if( fb != NULL) {
+        iONode fbProps = FBackOp.base.properties(fb);
+        int value = wFeedback.isstate(fbProps);
+        int timeout_reached = 0;
+        unsigned long endTime;
+        struct timeval currTime;
+
+        gettimeofday(&currTime, NULL);
+        endTime = currTime.tv_sec + (unsigned long) srcpTimeout;
+
+        while( currTime.tv_sec <= endTime ) {
+          if( srcpValue == wFeedback.isstate(fbProps) ) {
+            StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d FB %d %d\n",
+                  currTime.tv_sec, currTime.tv_usec / 1000L, srcpBus, srcpAddr, srcpValue );
+            SocketOp.fmt(o->clntSocket, str);
+            TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Answer: %s", str);
+            *reqRespCode = (int) 0 ;
+            return cmd;
+          }
+          else {
+            /* wait 100 ms and let others do their jobs */
+            ThreadOp.sleep( 100 );
+            gettimeofday(&currTime, NULL);
+          }
+        }
+        /* 417 timeout */
+        *reqRespCode = (int) 417 ;
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GET REQ for undefined Feedback: bus %d, addr %d", srcpBus, srcpAddr );
+        /* 412 wrong value */
+        *reqRespCode = (int) 412 ;
+      }
+
+    } /* WAIT <bus> FB */
+    else if( StrOp.equalsi( busType, "TIME" )) {
+      /* WAIT 0 TIME <JulDay> <Hour> <Minute> <Second> */
+      /*
+       It waits until the model time reaches or outruns the given point and reports an INFO string with the then active model time.
+
+       If the timer is not running the error message " 416 ERROR no data " is generated.
+       If the current model time is later than the given time already the condition is fulfilled without further waiting time.
+       Obviously wrong time data are reported to the calling client by " 412 ERROR wrong value " or ignored.
+       The WAIT MUST always evaluate the currently valid model time that can be changed by SET if applicable.
+      */
+
+      if( idx < 7 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 419 ERROR list too short", req);
+        *reqRespCode = (int) 419 ;
+        return cmd;
+      }
+      if( idx > 7 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s -> 418 ERROR list too long", req);
+        *reqRespCode = (int) 418 ;
+        return cmd;
+      }
+      if( srcpBus != 0 ) {
+        /* TIME device only on server itself */
+        /* 422 ERROR unsupported device group */
+        *reqRespCode = (int) 422;
+        return cmd;
+      }
+      if( ! __isClockRunning() ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s : RocrailClock not running -> 416 ERROR no data", req);
+        /* 416 ERROR no data */
+        *reqRespCode = (int) 416 ;
+        return cmd;
+      }
+
+      long julDay = atol( sPar3 );
+      int  hour   = atoi( sPar4 );
+      int  min    = atoi( sPar5 );
+      int  sec    = atoi( sPar6 );
+
+      if( (julDay < JULIAN_DAY_1970_01_01 ) || (hour < 0) || (hour >=24) || (min < 0) || (min >= 60) || (sec < 0 ) || ( sec >= 60 ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "invalid value in date detected: %s", 
+            req );
+        /* 412 ERROR wrong value */
+        *reqRespCode = (int) 412 ;
+        return cmd;
+      }
+
+      /* 
+       * transform WAIT-time into seconds (model time format)
+       * compare transfomed time with model time
+       */
+      time_t wait_time  = convSRCP2ModelTime( julDay, hour, min, sec );
+      time_t model_time = ControlOp.getTime( AppOp.getControl() );
+
+      char str_wait_time[128] ;
+      StrOp.copy( str_wait_time, convModelTimeToSRCP(wait_time) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "wait_time[%d] model_time[%d] wait[%s] model[%s]",
+          wait_time, model_time, str_wait_time, convModelTimeToSRCP(model_time) );
+      /* wait until model_time reaches or outruns wait_time */
+      while( model_time < wait_time && ! o->quit ) {
+        if( divider > 1 ) {
+          /* use divider for sleep => sleep one model second */
+          ThreadOp.sleep( 1000 / divider );
+        }else {
+          /* sleep a real second */
+          ThreadOp.sleep( 1000 );
+        }
+
+        if( ! __isClockRunning() ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s : RocrailClock stopped during WAIT -> 417 ERROR timeout", req);
+          /* 417 ERROR timeout */
+          *reqRespCode = (int) 417 ;
+          return cmd;
+        }
+
+        model_time = ControlOp.getTime( AppOp.getControl() );
+
+        /* check if socket is still alive */
+        SocketOp.peek( o->clntSocket, str, 1 );
+        if( SocketOp.isBroken( o->clntSocket ) ) {
+          o->quit = True;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s : socket broke while waiting (isBroken[%d] errno[%d])",
+              req, SocketOp.isBroken( o->clntSocket ), SocketOp.getRc( o->clntSocket ) );
+          *reqRespCode = (int) 0 ;
+          return cmd;
+        }
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "wait_time[%d] model_time[%d] wait[%s] model[%s] id[%d], clntSocket[%p] divider[%d]",
+            wait_time, model_time, str_wait_time, convModelTimeToSRCP(model_time), o->id, o->clntSocket, divider );
+      }
+      if( model_time >= wait_time ) {
+        StrOp.fmtb(str, "%lu.%.3lu 100 INFO 0 TIME %s\n",
+            time.tv_sec, time.tv_usec / 1000L, convModelTimeToSRCP(model_time) );
+        SocketOp.fmt(o->clntSocket, str);
+
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Answer: %s", str);
+      }
+      *reqRespCode = (int) 0 ;
+    } /* WAIT 0 TIME */
+    else {
+      /* WAIT for unsupported device group */
+      /* 422 ERROR unsupported device group */
+      *reqRespCode = (int) 422;
+      return cmd;
     }
+    
   } /* WAIT */
 
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED req/unkown command %s from session %d [%s]", req, o->id, o->infomode?"INFO":"COMMAND" );
+    /* 410 ERROR unknown command */
     *reqRespCode = (int) 410 ;
   }
 
@@ -2135,6 +3182,47 @@ static const char* srcpFmtMsg(int errorcode, char *msg, struct timeval time, int
     return msg;
 }
 
+
+/* create SRCP answer with description of all bus-ids */
+static void sendBusList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
+  iOSrcpConData data = Data(srcpcon);
+  struct timeval time;
+  gettimeofday(&time, NULL);
+
+  char str[1025] = {'\0'};
+  char *infoStr = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendBusList2InfoChannel: sendBusList2InfoChannel" );
+
+  /* generate strings for all srcp busses */
+  iONode  ini           = AppOp.getIni();
+  iONode  digint        = wRocRail.getdigint( ini );
+  iONode  plan          = ModelOp.getModel(AppOp.getModel());
+  iONode  modeldigint   = plan?wPlan.getdigint( plan ):NULL;
+  Boolean bModelDigints = modeldigint == NULL ? False:True;
+
+  while( digint != NULL ) {
+    const char* digintIid = wDigInt.getiid( digint );
+    int srcpBus = getSrcpBus( data, digintIid );
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendBusList2InfoChannel: srcpBus[%d] srcpIid[%s]", srcpBus, digintIid );
+
+    /* announce "normal" capabilities for all command station *
+    /* SM and LOCK currently not supported through srcp server */
+    StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d DESCRIPTION GA GL FB POWER DESCRIPTION\n",
+        time.tv_sec, time.tv_usec / 1000L, srcpBus );
+    infoStr = StrOp.cat( infoStr, str );
+
+    if( bModelDigints )
+      digint = wPlan.nextdigint( plan, digint );
+    else
+      digint = wRocRail.nextdigint( ini, digint );
+  }
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "creaRspAllPwSts: infoStr[\n%s]", infoStr );
+  SocketOp.fmt(o->clntSocket, infoStr );
+  ThreadOp.sleep( 10 );
+}
+
 static void sendFeedbackList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
   struct timeval time;
   gettimeofday(&time, NULL);
@@ -2198,17 +3286,18 @@ static void sendSwitchList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendSwitchList2InfoChannel: skipping cross\n" );
     }
     else if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.left)
-     || StrOp.equals( wSwitch.gettype(swProps), wSwitch.right)
-     || StrOp.equals( wSwitch.gettype(swProps), wSwitch.twoway)
-     || StrOp.equals( wSwitch.gettype(swProps), wSwitch.crossing) 
-     || StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)) {
+          || StrOp.equals( wSwitch.gettype(swProps), wSwitch.right)
+          || StrOp.equals( wSwitch.gettype(swProps), wSwitch.twoway)
+          || StrOp.equals( wSwitch.gettype(swProps), wSwitch.crossing) 
+          || StrOp.equals( wSwitch.gettype(swProps), wSwitch.ccrossing)
+          || StrOp.equals( wSwitch.gettype(swProps), wSwitch.accessory) ) {
       StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
           time.tv_sec, time.tv_usec / 1000L, 101, srcpBus, addr, prot,
           time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr, 0,
           time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr, 1);
     }
     else if( StrOp.equals( wSwitch.gettype(swProps), wSwitch.threeway) 
-          || StrOp.equals( wSwitch.gettype(swProps), wSwitch.dcrossing)) {
+          || StrOp.equals( wSwitch.gettype(swProps), wSwitch.dcrossing) ) {
       StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %s\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
           time.tv_sec, time.tv_usec / 1000L, 101, srcpBus, addr, prot,
           time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr, 0,
@@ -2452,28 +3541,9 @@ static void sendLocoList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
 }
 
 static void sendPowerstate2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
-  struct timeval time;
-  gettimeofday(&time, NULL);
-  char str[1025] = {'\0'};
-  int defaultSrcpBus;
-
-  /* current overall system state (ON/OFF) */
-  Boolean isPower = wState.ispower(ControlOp.getState(AppOp.getControl()));
-
-  /* first/master command station */
-  defaultSrcpBus = getSrcpBus( Data(srcpcon), getDefaultIid() );
-
-  /* 100 INFO <bus> POWER [ON|OFF] <freetext> */
-  /* the system itself has bus 0 */
-  StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s\n", 
-              time.tv_sec, time.tv_usec / 1000L, 0, isPower?"ON":"OFF");
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", str);
-  SocketOp.fmt(o->clntSocket, str);
-
-  StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d POWER %s\n", 
-              time.tv_sec, time.tv_usec / 1000L, defaultSrcpBus, isPower?"ON":"OFF");
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", str);
-  SocketOp.fmt(o->clntSocket, str);
+  iOSrcpConData data = Data(srcpcon);
+  char *rsp = creaRspAllPwSts( data );
+  SocketOp.fmt(o->clntSocket, rsp);
 }
 
 
@@ -2482,95 +3552,132 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
   struct timeval time;
   gettimeofday(&time, NULL);
 
-  if( StrOp.startsWithi( req, "SET CONNECTIONMODE" ) ) {
-    if( StrOp.startsWithi( req, "SET CONNECTIONMODE SRCP INFO" ) ) {
-      o->infomode = True;
-    }else {
-      o->infomode = False;
+  if( o->handshake ) {
+    if( StrOp.startsWithi( req, "SET PROTOCOL SRCP" ) ) {
+      if( StrOp.equalsi( req, "SET PROTOCOL SRCP 0.8.4" ) || StrOp.equalsi( req, "SET PROTOCOL SRCP 0.8.3" ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d PROTOCOL accepted", o->id ) ;
+        SocketOp.fmt(o->clntSocket, srcpFmtMsg(201, rsp, time, 0));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "req %s on socket %p: response %s", req, o->clntSocket, rsp ) ;
+      }else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d PROTOCOL denied", o->id ) ;
+        SocketOp.fmt(o->clntSocket, srcpFmtMsg(400, rsp, time, 0));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "req %s on socket %p: response %s", req, o->clntSocket, rsp ) ;
+      }
     }
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d set to %s", o->id, o->infomode?"INFO":"COMMAND" ) ;
-    SocketOp.fmt(o->clntSocket, srcpFmtMsg(202, rsp, time, 0));
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "req %s on socket %p: response %s", req, o->clntSocket, rsp ) ;
-  }
-  else if( StrOp.startsWithi( req, "GO" ) ) {
-    SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, o->id));
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
+    else if( StrOp.startsWithi( req, "SET CONNECTIONMODE" ) ) {
+      if( StrOp.equalsi( req, "SET CONNECTIONMODE SRCP INFO" ) ) {
+        o->infomode = True;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d set to %s", o->id, o->infomode?"INFO":"COMMAND" ) ;
+        SocketOp.fmt(o->clntSocket, srcpFmtMsg(202, rsp, time, 0));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "req %s on socket %p: response %s", req, o->clntSocket, rsp ) ;
+      }
+      else if( StrOp.equalsi( req, "SET CONNECTIONMODE SRCP COMMAND" ) ) {
+        o->infomode = False;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d set to %s", o->id, o->infomode?"INFO":"COMMAND" ) ;
+        SocketOp.fmt(o->clntSocket, srcpFmtMsg(202, rsp, time, 0));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "req %s on socket %p: response %s", req, o->clntSocket, rsp ) ;
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d set to %s", o->id, o->infomode?"INFO":"COMMAND" ) ;
+        SocketOp.fmt(o->clntSocket, srcpFmtMsg(401, rsp, time, 0));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "req %s on socket %p: response %s", req, o->clntSocket, rsp ) ;
+      }
+    }
+    else if( StrOp.equalsi( req, "GO" ) ) {
+      o->handshake = False;
+      SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, o->id));
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
 
-    /* if we started an info channel send all information about server to that channel */
-    if( o->infomode ) {
-      char rspInfo[1025] = {'\0'};
-      int defaultSrcpBus = getSrcpBus( Data(srcpcon), getDefaultIid() );
-      /*
-      100 INFO 0 DESCRIPTION SESSION SERVER TIME GM
-      101 INFO 0 TIME 0 0
-      100 INFO 1 DESCRIPTION GA GL SM POWER LOCK DESCRIPTION
-      */
-      /* announce basic system capabilities (server) */
-      /* the system itself has bus 0 */
-      StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO 0 DESCRIPTION SESSION SERVER TIME GM\n", time.tv_sec, time.tv_usec / 1000L);
-      SocketOp.fmt(o->clntSocket, rspInfo);
-      StrOp.fmtb(rspInfo, "%lu.%.3lu 101 INFO 0 TIME 0 0\n", time.tv_sec, time.tv_usec / 1000L);
-      SocketOp.fmt(o->clntSocket, rspInfo);
-      /* TODO: loop over all cmd stations, calc srcp bus id(s) and announce capabilities
-       * get first (master) command station and report capabilities (including those of Rocrail -> Locking?)
-       * usually we have: accessories, locos, service mode (programming locos), power (on/off), locking (from Rocrail)
-       * perhaps we need an array of command stations with a list of capabilities (or put them directly into the command station struct !)
-       */
-      /* hard coded examples
-      StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO 1 DESCRIPTION GA GL FB SM POWER LOCK\n", time.tv_sec, time.tv_usec / 1000L);
-      SocketOp.fmt(o->clntSocket, rspInfo);
-      StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO 2 DESCRIPTION FB POWER\n", time.tv_sec, time.tv_usec / 1000L);
-      SocketOp.fmt(o->clntSocket, rspInfo);
-      StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO 3 DESCRIPTION FB\n", time.tv_sec, time.tv_usec / 1000L);
-      SocketOp.fmt(o->clntSocket, rspInfo);
-      */
-      /* announce 2normal" capabilities for first command stattion *
-      /* SM and LOCK currently not supported through srcp server */
-      StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO %d DESCRIPTION GA GL FB POWER DESCRIPTION\n", time.tv_sec, time.tv_usec / 1000L, defaultSrcpBus);
-      SocketOp.fmt(o->clntSocket, rspInfo);
+      /* if we started an info channel send all information about server to that channel */
+      if( o->infomode ) {
+        char rspInfo[1025] = {'\0'};
+        int defaultSrcpBus = getSrcpBus( Data(srcpcon), getDefaultIid() );
+        /*
+        100 INFO 0 DESCRIPTION SESSION SERVER TIME GM
+        101 INFO 0 TIME 0 0
+        100 INFO 1 DESCRIPTION GA GL SM POWER LOCK DESCRIPTION
+        */
+        /* announce basic system capabilities (server) */
+        /* the system itself is always bus 0 */
+        StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO 0 DESCRIPTION SESSION SERVER TIME\n", time.tv_sec, time.tv_usec / 1000L);
+        SocketOp.fmt(o->clntSocket, rspInfo);
 
-      sendFeedbackList2InfoChannel( o, srcpcon);
-      sendSwitchList2InfoChannel( o, srcpcon);
-      sendSignalList2InfoChannel( o, srcpcon);
-      sendLocoList2InfoChannel( o, srcpcon);
-      sendPowerstate2InfoChannel( o, srcpcon);
-      /* TODO:
-      sendTime2InfoChannel( o, time);
-      */
-      /* TODO:
-      sendLock2InfoChannel( o, time);
-      */
+        /* time data */
+        iONode clockini = wRocRail.getclock( AppOp.getIni() );
+        if( clockini != NULL ) {
+          if( wClock.getdivider(clockini) > 0 ) {
+            divider = wClock.getdivider( clockini );
+          }
+        }
+
+        if( divider > 0 && __isClockRunning() ) {
+          /* send current time divider */
+          StrOp.fmtb(rspInfo, "%lu.%.3lu 101 INFO 0 TIME %d %d\n", time.tv_sec, time.tv_usec / 1000L, divider, 1 );
+          SocketOp.fmt(o->clntSocket, rspInfo);
+
+          /* send current rocrail time */
+          time_t rr_time = ModelOp.getTime( AppOp.getModel() );
+          StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO 0 TIME %s\n",
+              time.tv_sec, time.tv_usec / 1000L, convModelTimeToSRCP(rr_time) );
+          SocketOp.fmt(o->clntSocket, rspInfo);
+        }else {
+          StrOp.fmtb(rspInfo, "%lu.%.3lu 101 INFO 0 TIME 0 0\n", time.tv_sec, time.tv_usec / 1000L );
+          SocketOp.fmt(o->clntSocket, rspInfo);
+        }
+
+        sendBusList2InfoChannel( o, srcpcon); /* list of command stations */
+        sendFeedbackList2InfoChannel( o, srcpcon);
+        sendSwitchList2InfoChannel( o, srcpcon);
+        sendSignalList2InfoChannel( o, srcpcon);
+        sendLocoList2InfoChannel( o, srcpcon);
+        sendPowerstate2InfoChannel( o, srcpcon);
+        /* TODO: if Rocrail lock is similar to SRCP lock...
+        sendLock2InfoChannel( o, time);
+        */
+      }
+      /* inform all info sessions about a new session */
+      sendSessionstate2InfoChannels( 0, o->id, 101, o->infomode );
     }
-    /* inform all info sessions about a new session */
-    sendSessionstate2InfoChannels( 0, o->id, 101, o->infomode );
-  }
-  else if( StrOp.startsWithi( req, "INIT 1 SM NMRA") ) {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP REQUEST: %s", req ) ;
-    /* 425 ERROR not supported */
-    SocketOp.fmt(o->clntSocket, srcpFmtMsg(425, rsp, time, 0));
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
-  }
-  else if( StrOp.startsWithi( req, "TERM 0 SERVER" ) 
-        || StrOp.startsWithi( req, "RESET 0 SERVER" )
-        || StrOp.startsWithi( req, "TERM 1 SM" ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP REQUEST: %s", req ) ;
-    /* 415 ERROR forbidden */
-    SocketOp.fmt(o->clntSocket, srcpFmtMsg(415, rsp, time, 0));
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
-  }
-  else {
-    int reqRespCode = 200 ;
-    iONode cmd = __srcp2rr(srcpcon, o, req, &reqRespCode);
-    if( cmd != NULL ){
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__evalRequest __srcp2rr() returned with %s [%d]", cmd, o->clntSocket );
-      Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
-    }
-    else{
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__srcp2rr( REQ ) returned with CMD == NULL, reqRespCode == %d", reqRespCode );
-    }
-    if( reqRespCode > 0 ){
-      SocketOp.fmt(o->clntSocket, srcpFmtMsg(reqRespCode, rsp, time, 0));
+    else {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP REQUEST: %s", req ) ;
+      /* 410 ERROR unknown command */
+      SocketOp.fmt(o->clntSocket, srcpFmtMsg(410, rsp, time, 0));
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
+    }
+  } /* handshake in progress */
+  else { /* handshake ok */
+    if( StrOp.startsWithi( req, "SET PROTOCOL" )
+      || StrOp.startsWithi( req, "SET CONNECTIONMODE" )
+      || StrOp.startsWithi( req, "GO" )
+      ) { 
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP REQUEST: %s", req ) ;
+      /* 422 ERROR unsupported device group */
+      SocketOp.fmt(o->clntSocket, srcpFmtMsg(422, rsp, time, 0));
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
+    }
+    else if( StrOp.startsWithi( req, "TERM 0 SERVER" ) 
+          || StrOp.startsWithi( req, "RESET 0 SERVER" ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP REQUEST: %s", req ) ;
+      /* 415 ERROR forbidden */
+      SocketOp.fmt(o->clntSocket, srcpFmtMsg(415, rsp, time, 0));
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
+    }
+    else {
+      int reqRespCode = 200 ;
+      iONode cmd = __srcp2rr(srcpcon, o, req, &reqRespCode);
+      if( cmd != NULL ){
+        const char* nodeName = NodeOp.getName(cmd);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__evalRequest __srcp2rr() returned with cmd for RRtype[%s] srcp session[%d] socket[%p]",
+            nodeName, o->id, o->clntSocket );
+        Data(srcpcon)->callback( Data(srcpcon)->callbackObj, cmd );
+      }
+      else{
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__srcp2rr( REQ ) returned with CMD == NULL, reqRespCode == %d", reqRespCode );
+      }
+      if( reqRespCode > 0 ){
+        SocketOp.fmt(o->clntSocket, srcpFmtMsg(reqRespCode, rsp, time, 0));
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
+      }
     }
   }
 }
@@ -2612,7 +3719,7 @@ static void __SrcpService( void* threadinst ) {
       iONode node = (iONode)post;
       if( node != NULL ) {
         if( o->infomode ) {
-          __rr2srcp(srcpcon, node, str);
+          __rr2srcp(srcpcon, o, node, str);
           SocketOp.write( o->clntSocket, str, StrOp.len(str) );
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__SrcpService __rr2srcp() returned with %s %p [%p] ID: %d", str, o, o->clntSocket, o->id );
         }
@@ -2703,13 +3810,15 @@ static void __manager( void* threadinst ) {
       cargo->quit       = False;
       cargo->id         = idCnt;
       cargo->infomode	= False;
+      cargo->handshake  = True;	/* new connection -> initial handshake in progress */
       idCnt++;
 
       /* we need non blocking ports but at least one OS uses blocking as default */
       SocketOp.setBlocking( cargo->clntSocket, False );
 
-      servername        = StrOp.fmt( "cmdrSRCP%08X", client );
-      SrcpService         = ThreadOp.inst( servername, __SrcpService, cargo );
+      servername  = StrOp.fmt( "cmdrSRCP%08X", client );
+      SrcpService = ThreadOp.inst( servername, __SrcpService, cargo );
+      divider     = wClock.getdivider(wRocRail.getclock(AppOp.getIni()));
       ThreadOp.setDescription( SrcpService, SocketOp.getPeername(client) );
 
       ThreadOp.start( SrcpService );
@@ -2749,6 +3858,13 @@ static struct OSrcpCon* _inst( iONode ini, srcpcon_callback callbackfun, obj cal
     iONode bus = NodeOp.inst( wSrcpBus.name(), ini, ELEMENT_NODE );
     wSrcpBus.setbus(bus, 1);
     NodeOp.addChild(ini, bus);
+  }
+
+  if( wRocRail.ispoweroffonexit(AppOp.getIni()) ) {
+    /* initialize with " AUTO POWER OFF" (leading blank!) */
+    __setSrcpPwFreetext( " AUTO POWER OFF by Rocrail" );
+  }else {
+    __setSrcpPwFreetext( " by Rocrail" ); /* Default */
   }
 
   data->manager = ThreadOp.inst( "srcpmngr", __manager, __SrcpCon );
