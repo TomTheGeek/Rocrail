@@ -865,7 +865,7 @@ void TurntableDialog::CreateControls()
     m_labSize = new wxStaticText( m_LocationPanel, wxID_ANY, _("Size"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer18->Add(m_labSize, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Size = new wxSpinCtrl( m_LocationPanel, wxID_ANY, _T("5"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 2, 5, 5 );
+    m_Size = new wxSpinCtrl( m_LocationPanel, wxID_ANY, _T("5"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 2, 10, 5 );
     itemFlexGridSizer18->Add(m_Size, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Notebook->AddPage(m_LocationPanel, _("Location"));
