@@ -52,6 +52,10 @@ class BidibIdentDlg : public BidibIdentDlgGen
   int macroparam;
   bool macrosave;
   bool macroapply;
+  int configL;
+  int configR;
+  int configV;
+  int configS;
   wxTreeItemId findTreeItem( const wxTreeItemId& root, const wxString& text);
   int getLevel(const char* path );
   wxTreeItemId addTreeChild( const wxTreeItemId& root, iONode bidibnode);

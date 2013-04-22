@@ -236,6 +236,10 @@ void BidibIdentDlg::initLabels() {
   macroparam = 0;
   macrosave = false;
   macroapply = false;
+  configL = 0;
+  configR = 0;
+  configV = 0;
+  configS = 0;
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -618,6 +622,8 @@ void BidibIdentDlg::onServoGet( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::onServoSet() {
+  TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"servo set L=%d R=%d S=%d",
+      m_ServoLeft->GetValue(), m_ServoRight->GetValue(), m_ServoSpeed->GetValue() );
   if( bidibnode != NULL ) {
     iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
@@ -706,15 +712,31 @@ void BidibIdentDlg::onConfigS( wxSpinEvent& event ) {
 
 void BidibIdentDlg::onConfigLtxt( wxCommandEvent& event ) {
   m_ServoLeft->SetValue(m_ConfigL->GetValue());
+  if( configL != m_ConfigL->GetValue() ) {
+    configL = m_ConfigL->GetValue();
+    onServoSet();
+  }
 }
 void BidibIdentDlg::onConfigRtxt( wxCommandEvent& event ) {
   m_ServoRight->SetValue(m_ConfigR->GetValue());
+  if( configR != m_ConfigR->GetValue() ) {
+    configR = m_ConfigR->GetValue();
+    onServoSet();
+  }
 }
 void BidibIdentDlg::onConfigVtxt( wxCommandEvent& event ) {
   m_ServoSpeed->SetValue(m_ConfigV->GetValue());
+  if( configV != m_ConfigV->GetValue() ) {
+    configV = m_ConfigV->GetValue();
+    onServoSet();
+  }
 }
 void BidibIdentDlg::onConfigStxt( wxCommandEvent& event ) {
   m_ServoReserved->SetValue(m_ConfigS->GetValue());
+  if( configS != m_ConfigS->GetValue() ) {
+    configS = m_ConfigS->GetValue();
+    onServoSet();
+  }
 }
 
 
