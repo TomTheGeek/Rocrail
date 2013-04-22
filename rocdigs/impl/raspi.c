@@ -346,14 +346,16 @@ static struct ORasPi* _inst( const iONode ini ,const iOTrace trc ) {
   data->worker = ThreadOp.inst( "raspiworker", &__worker, __RasPi );
   ThreadOp.start( data->worker );
 
-  data->interrupter = ThreadOp.inst( "raspi-int", &__interrupter, __RasPi );
-  ThreadOp.start( data->interrupter );
+  if( wRasPi.getloconettxport(wDigInt.getraspi(data->ini)) != -1 && wRasPi.getloconetrxport(wDigInt.getraspi(data->ini)) != -1  ) {
+    data->interrupter = ThreadOp.inst( "raspi-int", &__interrupter, __RasPi );
+    ThreadOp.start( data->interrupter );
 
-  data->loconet = ThreadOp.inst( "raspi-ln", &__loconet, __RasPi );
-  ThreadOp.start( data->loconet );
+    data->loconet = ThreadOp.inst( "raspi-ln", &__loconet, __RasPi );
+    ThreadOp.start( data->loconet );
 
-  data->railsync = ThreadOp.inst( "raspi-dcc", &__railsync, __RasPi );
-  ThreadOp.start( data->railsync );
+    data->railsync = ThreadOp.inst( "raspi-dcc", &__railsync, __RasPi );
+    ThreadOp.start( data->railsync );
+  }
 
   instCnt++;
   return __RasPi;
