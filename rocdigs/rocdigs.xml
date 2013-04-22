@@ -1691,6 +1691,7 @@
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="power" vt="Boolean"/>
+      <var name="event60us" vt="iOEvent"/>
       </data>
   </object>
 

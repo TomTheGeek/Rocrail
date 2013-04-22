@@ -82,8 +82,7 @@ return True;
 
 Boolean rocs_system_usWait( int us) {
 #ifdef __ROCS_SYSTEM__
-  struct timespec rqtp = { 0, us * 1000 };
-  return nanosleep(&rqtp, NULL)==-1 ? False:True;
+  return usleep(us)==-1 ? False:True;
 #endif
 }
 

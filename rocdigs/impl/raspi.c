@@ -24,6 +24,7 @@
 #include "rocdigs/impl/raspi_impl.h"
 
 #include "rocs/public/mem.h"
+#include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/RasPi.h"
@@ -191,9 +192,12 @@ static void __interrupter( void* threadinst ) {
   ThreadOp.sleep(100);
   ThreadOp.setHigh(th);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi interrupter started." );
+
   while( data->run ) {
-    ThreadOp.sleep(10);
+    SystemOp.usWait(60);
+    EventOp.set(data->event60us);
   }
+  EventOp.set(data->event60us);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi interrupter stopped." );
 }
 
@@ -202,11 +206,18 @@ static void __loconet( void* threadinst ) {
   iOThread  th    = (iOThread)threadinst;
   iORasPi   raspi = (iORasPi)ThreadOp.getParm( th );
   iORasPiData data = Data(raspi);
+  int counter = 0;
   ThreadOp.sleep(200);
   ThreadOp.setHigh(th);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi loconet started." );
   while( data->run ) {
-    ThreadOp.sleep(10);
+    EventOp.wait(data->event60us);
+    EventOp.reset(data->event60us);
+    counter++;
+    if(counter == 1000) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "1000 * 60us" );
+      counter = 0;
+    }
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi loconet stopped." );
 }
@@ -328,6 +339,7 @@ static struct ORasPi* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
+  data->event60us = EventOp.inst(NULL, True);
   data->run = True;
   data->worker = ThreadOp.inst( "raspiworker", &__worker, __RasPi );
   ThreadOp.start( data->worker );
