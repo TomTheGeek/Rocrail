@@ -194,10 +194,10 @@ static void __interrupter( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi interrupter started." );
 
   while( data->run ) {
-    SystemOp.usWait(60);
-    EventOp.set(data->event60us);
+    SystemOp.usWait(47);
+    data->event60us = True;
   }
-  EventOp.set(data->event60us);
+  data->event60us = True;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi interrupter stopped." );
 }
 
@@ -211,11 +211,14 @@ static void __loconet( void* threadinst ) {
   ThreadOp.setHigh(th);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi loconet started." );
   while( data->run ) {
-    EventOp.wait(data->event60us);
-    EventOp.reset(data->event60us);
+    if( !data->event60us ) {
+      SystemOp.usWait(1);
+      continue;
+    }
+    data->event60us = False;
     counter++;
-    if(counter == 1000) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "1000 * 60us" );
+    if(counter == 100000) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "100000 * 60us" );
       counter = 0;
     }
   }
@@ -339,7 +342,6 @@ static struct ORasPi* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->event60us = EventOp.inst(NULL, True);
   data->run = True;
   data->worker = ThreadOp.inst( "raspiworker", &__worker, __RasPi );
   ThreadOp.start( data->worker );
