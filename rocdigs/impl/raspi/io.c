@@ -128,6 +128,14 @@ int raspiSetupIO(obj inst)
      INP_GPIO(wRasPi.getdccport2(wDigInt.getraspi(data->ini)));
      OUT_GPIO(wRasPi.getdccport2(wDigInt.getraspi(data->ini)));
    }
+   if( wRasPi.getloconettxport(wDigInt.getraspi(data->ini)) != -1 && wRasPi.getloconetrxport(wDigInt.getraspi(data->ini)) != -1  ) {
+     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LN tx=%d rx=%d",
+         wRasPi.getloconettxport(wDigInt.getraspi(data->ini)), wRasPi.getloconetrxport(wDigInt.getraspi(data->ini)) );
+     INP_GPIO(wRasPi.getloconettxport(wDigInt.getraspi(data->ini)));
+     OUT_GPIO(wRasPi.getloconettxport(wDigInt.getraspi(data->ini)));
+
+     INP_GPIO(wRasPi.getloconetrxport(wDigInt.getraspi(data->ini)));
+   }
 
    return 0;
 } // setup_io

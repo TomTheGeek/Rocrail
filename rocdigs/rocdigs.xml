@@ -1685,6 +1685,9 @@
       <var name="iid" vt="const char*"/>
       <var name="run" vt="Boolean"/>
       <var name="worker" vt="iOThread"/>
+      <var name="interrupter" vt="iOThread"/>
+      <var name="loconet" vt="iOThread"/>
+      <var name="railsync" vt="iOThread"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="power" vt="Boolean"/>
