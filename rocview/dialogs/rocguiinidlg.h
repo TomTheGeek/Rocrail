@@ -213,6 +213,8 @@ public:
     wxStaticText* m_labDirImage;
     wxTextCtrl* m_DirImageFwd;
     wxTextCtrl* m_DirImageRev;
+    wxStaticText* m_labBoosterUID;
+    wxTextCtrl* m_BoosterUID;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Debug;

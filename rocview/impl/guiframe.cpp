@@ -4238,12 +4238,15 @@ void RocGuiFrame::OnStateEvent( wxCommandEvent& event ) {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "new state 0x%04X %s", state, console?"(consolemode)":"" );
     m_StatusBar->Update( state );
     m_StatusBar->Health(wState.ishealthy(node));
-    if( wState.gettemp( node ) > 0 )
-       SetStatusText( wxString::Format( _T("%dV%d %dmA %d°C"),
-           wState.getvolt( node )/1000, (wState.getvolt( node )%1000)/100, wState.getload( node ), wState.gettemp( node )), status_load );
-    else
-      SetStatusText( wxString::Format( _T("%dV%d %dmA"),
-          wState.getvolt( node )/1000, (wState.getvolt( node )%1000)/100, wState.getload( node )), status_load );
+
+    if( wGui.getstatusboosteruid(m_Ini) == 0 || wGui.getstatusboosteruid(m_Ini) == wState.getuid(node) ) {
+      if( wState.gettemp( node ) > 0 )
+         SetStatusText( wxString::Format( _T("%dV%d %dmA %d°C"),
+             wState.getvolt( node )/1000, (wState.getvolt( node )%1000)/100, wState.getload( node ), wState.gettemp( node )), status_load );
+      else
+        SetStatusText( wxString::Format( _T("%dV%d %dmA"),
+            wState.getvolt( node )/1000, (wState.getvolt( node )%1000)/100, wState.getload( node )), status_load );
+    }
   }
 
   // Cleanup node:
