@@ -1004,8 +1004,8 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
       for( int s = 1; s < svgpoly->cnt; s++ )
         path.AddLineToPoint(p[s].x+xOffset, p[s].y+yOffset);
       path.AddLineToPoint(p[0].x+xOffset, p[0].y+yOffset);
-      m_GC->StrokePath(path);
       m_GC->FillPath(path);
+      m_GC->StrokePath(path);
     }
     delete pen;
     delete brush;

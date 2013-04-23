@@ -652,7 +652,6 @@ void Symbol::OnPaint(wxPaintEvent& event)
       Show(wOutput.isshow(m_Props));
     }
 
-    dc.SetPen( *wxLIGHT_GREY_PEN );
     int cx = m_Renderer->getcx();
     int cy = m_Renderer->getcy();
     bool occupied = false;
@@ -697,17 +696,29 @@ void Symbol::OnPaint(wxPaintEvent& event)
       status = wRoute.getstatus(m_Props);
     }
 
-    dc.SetUserScale( m_Scale, m_Scale );
+    wxGraphicsContext* gc = wxGraphicsContext::Create(this);
+    wxGraphicsMatrix matrix = gc->CreateMatrix();
+    matrix.Scale(m_Scale, m_Scale);
+    gc->SetTransform(matrix);
+
+    //dc.SetPen( *wxLIGHT_GREY_PEN );
+    gc->SetPen( *wxLIGHT_GREY_PEN );
+
+    //dc.SetUserScale( m_Scale, m_Scale );
     if( wxGetApp().getFrame()->isRaster() ) {
-      dc.DrawLine( 0, 0, (int)(m_ItemSize*cx), 0 );
-      dc.DrawLine( 0, 0, 0, (int)(m_ItemSize*cy) );
+      //dc.DrawLine( 0, 0, (int)(m_ItemSize*cx), 0 );
+      //dc.DrawLine( 0, 0, 0, (int)(m_ItemSize*cy) );
+
+      wxGraphicsPath path = gc->CreatePath();
+      path.MoveToPoint(0, 0);
+      path.AddLineToPoint((int)(m_ItemSize*cx), 0);
+      gc->StrokePath(path);
+
+      path = gc->CreatePath();
+      path.MoveToPoint(0, 0);
+      path.AddLineToPoint(0, (int)(m_ItemSize*cy));
+      gc->StrokePath(path);
     }
-/*
-*/
-    dc.SetPen( *wxBLACK_PEN );
-    wxPen pen = dc.GetPen();
-    pen.SetWidth(1);
-    dc.SetPen(pen);
 
     const char* mod_ori = wItem.getori(m_Props);
     const char* ori     = NodeOp.getStr(m_Props, "prev_ori", mod_ori);
@@ -715,10 +726,6 @@ void Symbol::OnPaint(wxPaintEvent& event)
       ori = mod_ori;
     }
 
-    wxGraphicsContext* gc = wxGraphicsContext::Create(this);
-    wxGraphicsMatrix matrix = gc->CreateMatrix();
-    matrix.Scale(m_Scale, m_Scale);
-    gc->SetTransform(matrix);
     m_Renderer->drawShape( (wxPaintDC&)dc, gc, occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), ori, status );
     delete gc;
   }
