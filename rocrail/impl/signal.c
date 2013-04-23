@@ -1081,7 +1081,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
 
 
   if( control == NULL ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
         "control is not initialized" );
     return False;
   }

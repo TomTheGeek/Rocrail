@@ -2055,7 +2055,7 @@ static void _createMap( iOModelData o, iOMap map, const char* dbKey, const char*
       }
       item = NodeOp.findNextNode( db, item );
     }
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "map created for %s; size=%d.", dbKey, MapOp.size(map) );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "map created for %s; size=%d.", dbKey, MapOp.size(map) );
   }
   else
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s NOT found.", dbKey );
@@ -2145,7 +2145,7 @@ static void _addFbKey(iOModel inst, const char* key, obj fb) {
     multiple = True;
   }
   ListOp.add( list, fb );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "addFbKey %s%s: size=%d.", key, multiple?"(**multiple**)":"", MapOp.size(data->fbAddrMap) );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "addFbKey %s%s: size=%d.", key, multiple?"(**multiple**)":"", MapOp.size(data->fbAddrMap) );
 }
 
 static void _createFbAddrMap( iOModel inst ) {
@@ -5006,7 +5006,7 @@ static void _loadBlockOccupancy( iOModel inst ) {
       }
 
       StrOp.fmtb( key, "%s%s", BlockID, Section!=NULL ? Section:"");
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "occupancy key [%s]", key );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "occupancy key [%s]", key );
       MapOp.put( data->occMap, key, NodeOp.base.clone( occ ) );
 
       /* inform loco of placing flag */

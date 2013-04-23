@@ -2564,7 +2564,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
       if( StrOp.equals( NodeOp.getName(node), wBlock.name()  ) ||
           StrOp.equals( NodeOp.getName(node), wStage.name()  ) ||
           StrOp.equals( NodeOp.getName(node), wSelTab.name() ) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " ------>  block %s with key (old) %s",
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, " ------>  block %s with key (old) %s",
             wBlock.getid(node), __createKey( key, node, 0+modx, 0+mody, 0) );
 
         ListOp.add( data->bklist, (obj)node );
@@ -2579,7 +2579,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
       }
 
       __createKey( key, node, 0+modx, 0+mody, 0);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
           key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
       if( MapOp.haskey( data->objectmap, key) ) {
         healthy = False;
@@ -2659,7 +2659,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
         for (i=1;i<fields;i++) {
           if( StrOp.equals( ori, wItem.east ) || StrOp.equals( ori, wItem.west ) ) {
             __createKey( key, node, i, 0, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
             if( MapOp.haskey( data->objectmap, key) ) {
@@ -5790,7 +5790,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
     iONode db = NodeOp.getChild( data->plan, i );
     int items = NodeOp.getChildCnt(db);
     int n = 0;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking list [%s]...", NodeOp.getName(db) );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checking list [%s]...", NodeOp.getName(db) );
     for( n = 0; n < items; n++ ) {
       iONode item = NodeOp.getChild( db, n );
 
@@ -6009,7 +6009,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
         }
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "INFO: invisible object [%s] with id [%s] and coordinates [%d,%d,%d]",
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "INFO: invisible object [%s] with id [%s] and coordinates [%d,%d,%d]",
             NodeOp.getName(item), wItem.getid(item), wItem.getx(item), wItem.gety(item), wItem.getz(item));
       }
 
