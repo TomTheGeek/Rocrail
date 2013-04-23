@@ -1000,10 +1000,10 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
       //dc.DrawPolygon( svgpoly->cnt, rotateShape( svgpoly->poly, svgpoly->cnt, ori ), xOffset, yOffset );
       wxPoint* p = rotateShape( svgpoly->poly, svgpoly->cnt, ori );
       wxGraphicsPath path = m_GC->CreatePath();
-      path.MoveToPoint(p[0].x, p[0].y);
+      path.MoveToPoint(p[0].x+xOffset, p[0].y+yOffset);
       for( int s = 1; s < svgpoly->cnt; s++ )
-        path.AddLineToPoint(p[s].x, p[s].y);
-      path.AddLineToPoint(p[0].x, p[0].y);
+        path.AddLineToPoint(p[s].x+xOffset, p[s].y+yOffset);
+      path.AddLineToPoint(p[0].x+xOffset, p[0].y+yOffset);
       m_GC->StrokePath(path);
       m_GC->FillPath(path);
     }
