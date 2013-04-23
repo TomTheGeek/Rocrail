@@ -988,14 +988,24 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
     wxPen* pen = getPen(svgpoly->stroke);
     pen->SetWidth(1);
     dc.SetPen(*pen);
+    m_GC->SetPen(*pen);
     wxBrush* brush = getBrush(svgpoly->fill, dc );
     dc.SetBrush( *brush );
+    m_GC->SetBrush( *brush );
     if( svgpoly->arc ) {
       wxPoint* points = rotateShape( svgpoly->poly, svgpoly->cnt, ori );
       dc.DrawArc( points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y );
     }
     else {
-      dc.DrawPolygon( svgpoly->cnt, rotateShape( svgpoly->poly, svgpoly->cnt, ori ), xOffset, yOffset );
+      //dc.DrawPolygon( svgpoly->cnt, rotateShape( svgpoly->poly, svgpoly->cnt, ori ), xOffset, yOffset );
+      wxPoint* p = rotateShape( svgpoly->poly, svgpoly->cnt, ori );
+      wxGraphicsPath path = m_GC->CreatePath();
+      path.MoveToPoint(p[0].x, p[0].y);
+      for( int s = 1; s < svgpoly->cnt; s++ )
+        path.AddLineToPoint(p[s].x, p[s].y);
+      path.AddLineToPoint(p[0].x, p[0].y);
+      m_GC->StrokePath(path);
+      m_GC->FillPath(path);
     }
     delete pen;
     delete brush;
@@ -1007,18 +1017,22 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
       svgCircle* svgcircle = (svgCircle*)ListOp.get(svgsym->circleList, i);
       wxPen* pen = getPen(svgcircle->stroke);
       pen->SetWidth(1);
-      dc.SetPen(*pen);
+      //dc.SetPen(*pen);
+      m_GC->SetPen(*pen);
       wxBrush* brush = getBrush(svgcircle->fill, dc );
-      dc.SetBrush( *brush );
+      //dc.SetBrush( *brush );
+      m_GC->SetBrush( *brush );
       wxPoint point = wxPoint(svgcircle->cx, svgcircle->cy);
       wxPoint* points = rotateShape( &point, 1, ori );
-      dc.DrawCircle( points[0].x, points[0].y, svgcircle->r );
+      //dc.DrawCircle( points[0].x, points[0].y, svgcircle->r );
+      m_GC->DrawEllipse(points[0].x-svgcircle->r, points[0].y-svgcircle->r, svgcircle->r*2, svgcircle->r*2);
       delete pen;
       delete brush;
     }
   }
 
   dc.SetBrush( b );
+  m_GC->SetBrush( b );
 }
 
 
