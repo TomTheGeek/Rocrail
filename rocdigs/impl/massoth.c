@@ -814,6 +814,25 @@ static void __handleSystem(iOMassothData data, byte* in) {
   }
 }
 
+
+static void __handleSwitch(iOMassothData data, byte* in) {
+  iONode nodeC = NULL;
+  Boolean straight = (in[3] & 0x01) ? True:False;
+  int addr = in[2] << 6;
+  addr += in[3] >> 2;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch report: addr=%d state=%s", addr, straight?"straight":"turnout" );
+  nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+  wSwitch.setaddr1( nodeC, addr );
+  wSwitch.setcmd( nodeC, straight ? wSwitch.straight:wSwitch.turnout);
+  if( data->iid != NULL )
+    wSwitch.setiid( nodeC, data->iid );
+
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+}
+
+
 /*
   feedback data :
   Header     Xor       Data1     Data2
@@ -871,6 +890,9 @@ static void __evaluatePacket(iOMassothData data, byte* in) {
   case 0x20:
     /* error */
     __handleError(data, in);
+    break;
+  case 0x4A:
+    __handleSwitch(data, in);
     break;
   case 0x40:
   case 0x60:
