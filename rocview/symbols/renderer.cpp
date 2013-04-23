@@ -1795,26 +1795,46 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
       blue = wPlanPanel.getbktext_blue(planpanelIni);
     }
 
-    dc.SetTextForeground(wxColour(red,green,blue));
+    //dc.SetTextForeground(wxColour(red,green,blue));
+
+    #ifdef wxANTIALIAS_DEFAULT
+    m_GC->SetAntialiasMode(wxANTIALIAS_DEFAULT);
+    #endif
+
+    m_GC->SetFont(*font,wxColour(red,green,blue));
 
     /* center the blocktext */
-    wxCoord width;
-    wxCoord height;
-    dc.GetTextExtent(wxString(m_Label,wxConvUTF8).Trim(), &width, &height, 0,0, font);
+    //wxCoord width;
+    //wxCoord height;
+    double width;
+    double height;
+    double descent;
+    double externalLeading;
+    //dc.GetTextExtent(wxString(m_Label,wxConvUTF8).Trim(), &width, &height, 0,0, font);
+    m_GC->GetTextExtent( wxString(m_Label,wxConvUTF8).Trim(),(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+    double PI= 3.14159265358979;
 
-    if( StrOp.equals( textOri, wItem.south ) )
-      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0 );
-    else if( StrOp.equals( textOri, wItem.north ) )
-      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 7, (32 * blocklen)-3, 90.0 );
+    if( StrOp.equals( textOri, wItem.south ) ) {
+      //dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0 );
+      double radians = (270.0 / 360) * (2.0 * PI);
+      m_GC->DrawText( wxString(m_Label,wxConvUTF8), 32-5, 3, radians );
+    }
+    else if( StrOp.equals( textOri, wItem.north ) ) {
+      //dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 7, (32 * blocklen)-3, 90.0 );
+      double radians = (90.0 / 360) * (2.0 * PI);
+      m_GC->DrawText( wxString(m_Label,wxConvUTF8), 7, (32 * blocklen)-3, radians );
+    }
     else {
 #ifdef __WIN32__
-      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8).Trim(), 9, 8, 0.0 );
+      //dc.DrawRotatedText( wxString(m_Label,wxConvUTF8).Trim(), 9, 8, 0.0 );
+      m_GC->DrawText( wxString(m_Label,wxConvUTF8).Trim(), 9, 8 );
 #else
-      dc.DrawRotatedText( wxString(m_Label,wxConvUTF8).Trim(), ((32*blocklen-width)/2), (32-height)/2, 0.0 );
+      //dc.DrawRotatedText( wxString(m_Label,wxConvUTF8).Trim(), ((32*blocklen-width)/2), (32-height)/2, 0.0 );
+      m_GC->DrawText( wxString(m_Label,wxConvUTF8).Trim(), ((32*blocklen-width)/2), (32-height)/2 );
 #endif
     }
     // restore previous color
-    dc.SetTextForeground(tfc);
+    //dc.SetTextForeground(tfc);
   }
 
   delete font;
