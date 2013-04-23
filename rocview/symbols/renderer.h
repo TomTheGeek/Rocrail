@@ -87,11 +87,12 @@ class SymbolRenderer {
   int m_iSymSubType;
   iOMap m_SymMap;
   wxBitmap* m_Bitmap;
+  wxGraphicsContext* m_GC;
 
 public:
   void initSym();
   SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, int itemidps );
-  void drawShape( wxPaintDC& dc, bool occupied, bool actroute, double* bridgepos, bool showID, const char* ori, int status=0 );
+  void drawShape( wxPaintDC& dc, wxGraphicsContext* gc, bool occupied, bool actroute, double* bridgepos, bool showID, const char* ori, int status=0 );
   void sizeToScale( double size, double scale, double bktext, int* cx, int* cy, const char* ori );
   void setLabel( const char* label, int occupied );
   void setLabel( const char* label, int occupied, bool rotate );

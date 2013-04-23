@@ -2168,7 +2168,11 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
 
   double delta = (32 * ttdiam)/2;  /* 79.0; for the original one */
 
-  dc.DrawCircle( delta, delta, delta );
+  //dc.DrawCircle( delta, delta, delta );
+
+  m_GC->SetPen( *pen );
+  m_GC->DrawEllipse(0, 0, 32 * ttdiam, 32 * ttdiam);
+
   pen->SetStyle(wxSOLID);
 
   iONode track = wTurntable.gettrack( m_Props );
@@ -2183,7 +2187,8 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
     if( wTTTrack.isstate( track ) || wTurntable.getbridgepos(m_Props) == wTTTrack.getnr(track) ) {
       pen = (wxPen*)wxRED_PEN;
       pen->SetWidth(5);
-      dc.SetPen(*pen);
+      //dc.SetPen(*pen);
+      m_GC->SetPen( *pen );
       *bridgepos = degr;
     }
     else {
@@ -2192,23 +2197,46 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
       else  /* reb added others with grey*/
         pen = (wxPen*)wxGREY_PEN;
       pen->SetWidth(5);
-      dc.SetPen(*pen);
+      //dc.SetPen(*pen);
+      m_GC->SetPen( *pen );
     }
 
-    if( wTTTrack.isshow( track ) )
-      dc.DrawLine( delta, delta, x, y );
+    if( wTTTrack.isshow( track ) ) {
+      //dc.DrawLine( delta, delta, x, y );
+      wxGraphicsPath path = m_GC->CreatePath();
+      path.MoveToPoint(delta, delta);
+      path.AddLineToPoint(x, y);
+      m_GC->StrokePath(path);
+    }
+
 
     track = wTurntable.nexttrack( m_Props, track );
   }
 
   pen = (wxPen*)wxBLACK_PEN;
   pen->SetWidth(2);
-  dc.SetPen(*pen);
+  //dc.SetPen(*pen);
+  m_GC->SetPen( *pen );
 
-  dc.DrawCircle( delta, delta, 0.45*delta);
-  dc.DrawCircle( delta, delta, 0.40*delta);
-  dc.DrawPolygon( 5, rotateBridge( *bridgepos, delta ) );
+  //dc.DrawCircle( delta, delta, 0.45*delta);
+  //dc.DrawCircle( delta, delta, 0.40*delta);
+  m_GC->SetBrush(*wxWHITE_BRUSH);
+  m_GC->DrawEllipse(delta - 0.45*delta, delta - 0.45*delta, 0.45*(32*ttdiam), 0.45*(32*ttdiam));
+  m_GC->DrawEllipse(delta - 0.40*delta, delta - 0.40*delta, 0.40*(32*ttdiam), 0.40*(32*ttdiam));
+
+
+  //dc.DrawPolygon( 5, rotateBridge( *bridgepos, delta ) );
   //dc.DrawPolygon( 5, rotateBridgeNose( *bridgepos ) );
+
+  wxPoint* p = rotateBridge( *bridgepos, delta );
+  wxGraphicsPath path = m_GC->CreatePath();
+  path.MoveToPoint(p[0].x, p[0].y);
+  path.AddLineToPoint(p[1].x, p[1].y);
+  path.AddLineToPoint(p[2].x, p[2].y);
+  path.AddLineToPoint(p[3].x, p[3].y);
+  path.AddLineToPoint(p[4].x, p[4].y);
+  m_GC->StrokePath(path);
+
 
   const wxBrush& b = dc.GetBrush();
   Boolean sensor1 = wTurntable.isstate1( m_Props );
@@ -2216,16 +2244,31 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
 
   wxBrush* yellow = NULL;
 
-  if( sensor1 && sensor2 )
-    dc.SetBrush( *wxRED_BRUSH );
+  if( sensor1 && sensor2 ) {
+    //dc.SetBrush( *wxRED_BRUSH );
+    m_GC->SetBrush( *wxRED_BRUSH );
+  }
   else if( sensor1 || sensor2 ) {
     yellow = new wxBrush( _T("yellow"), wxSOLID );
-    dc.SetBrush( *yellow );
+    //dc.SetBrush( *yellow );
+    m_GC->SetBrush( *yellow );
   }
-  else
-    dc.SetBrush( *wxGREEN_BRUSH );
+  else {
+    //dc.SetBrush( *wxGREEN_BRUSH );
+    m_GC->SetBrush( *wxGREEN_BRUSH );
+  }
 
-  dc.DrawPolygon( 5, rotateBridgeSensors( *bridgepos, delta ) );
+  //dc.DrawPolygon( 5, rotateBridgeSensors( *bridgepos, delta ) );
+  p = rotateBridgeSensors( *bridgepos, delta );
+  path = m_GC->CreatePath();
+  path.MoveToPoint(p[0].x, p[0].y);
+  path.AddLineToPoint(p[1].x, p[1].y);
+  path.AddLineToPoint(p[2].x, p[2].y);
+  path.AddLineToPoint(p[3].x, p[3].y);
+  path.AddLineToPoint(p[4].x, p[4].y);
+  m_GC->FillPath(path);
+
+
   dc.SetBrush( b );
   if( yellow != NULL )
     delete yellow;
@@ -2256,9 +2299,10 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
 /**
  * Draw dispatcher
  */
-void SymbolRenderer::drawShape( wxPaintDC& dc, bool occupied, bool actroute, double* bridgepos, bool showID, const char* ori, int status ) {
+void SymbolRenderer::drawShape( wxPaintDC& dc, wxGraphicsContext* gc, bool occupied, bool actroute, double* bridgepos, bool showID, const char* ori, int status ) {
   m_bShowID = showID;
   const char* nodeName = NodeOp.getName( m_Props );
+  m_GC = gc;
 
   if( ori == NULL || StrOp.len( ori ) == 0 )
     ori = wItem.west;

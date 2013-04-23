@@ -715,8 +715,12 @@ void Symbol::OnPaint(wxPaintEvent& event)
       ori = mod_ori;
     }
 
-
-    m_Renderer->drawShape( (wxPaintDC&)dc, occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), ori, status );
+    wxGraphicsContext* gc = wxGraphicsContext::Create(this);
+    wxGraphicsMatrix matrix = gc->CreateMatrix();
+    matrix.Scale(m_Scale, m_Scale);
+    gc->SetTransform(matrix);
+    m_Renderer->drawShape( (wxPaintDC&)dc, gc, occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), ori, status );
+    delete gc;
   }
   else {
     Show( false );
