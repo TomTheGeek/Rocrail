@@ -167,7 +167,7 @@ Boolean checkScheduleEntryActions( iILcDriverInt inst, int index ) {
 
   if( data->schedule != NULL ) {
     iONode sc = data->model->getSchedule( data->model, data->schedule );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
         "check schedule entry actions [%s:%d]",
         data->schedule, scheduleIdx );
 
