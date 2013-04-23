@@ -824,7 +824,7 @@ static void __handleSwitch(iOMassothData data, byte* in) {
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch report: addr=%d state=%s", addr, straight?"straight":"turnout" );
   nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setaddr1( nodeC, addr );
-  wSwitch.setcmd( nodeC, straight ? wSwitch.straight:wSwitch.turnout);
+  wSwitch.setstate( nodeC, straight ? wSwitch.straight:wSwitch.turnout);
   if( data->iid != NULL )
     wSwitch.setiid( nodeC, data->iid );
 
