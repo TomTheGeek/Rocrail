@@ -298,7 +298,8 @@ static void __cmdReader( void* threadinst ) {
               if( o->slave ) {
                 if( StrOp.equals( wSysCmd.name(), NodeOp.getName(nodeA) ) ) {
                   const char* cmd = wSysCmd.getcmd(nodeA);
-                  if( StrOp.equals( wSysCmd.shutdown, cmd ) || StrOp.equals( wSysCmd.ebreak, cmd ) ) {
+                  if( StrOp.equals( wSysCmd.shutdown, cmd ) || StrOp.equals( wSysCmd.go, cmd ) )
+                  {
                     /* ignore */
                     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore [%s] from slave client", cmd);
                   }
