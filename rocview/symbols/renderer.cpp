@@ -1973,6 +1973,9 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
     // TODO: Replace with GC functions.
     dc.SetTextBackground(color);
     dc.SetBackgroundMode(wxSOLID);
+    dc.SetBrush(color);
+    dc.SetBackground(wxBrush(color));
+    dc.Clear();
   }
 
   wxSize size = dc.GetTextExtent(wxString(m_Label,wxConvUTF8));
