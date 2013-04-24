@@ -57,9 +57,8 @@
 
 static double PI25DT = 3.141592653589793238462643;
 
-#define DEFPOINTSIZE 10
 
-SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, int itemidps ) {
+SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, int itemidps, int textps ) {
   m_Props = props;
   m_Parent = parent;
   m_SymMap = symmap;
@@ -72,6 +71,7 @@ SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, in
   initSym();
   m_Label = StrOp.dup("...");
   m_iItemIDps = itemidps;
+  m_iTextps = textps;
 }
 
 
@@ -1655,11 +1655,7 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
   }
 
   wxFont* font = new wxFont( dc.GetFont() );
-#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-  font->SetPointSize( (int)(DEFPOINTSIZE) );
-#else
-  font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-#endif
+  font->SetPointSize( m_iTextps );
 
   if( StrOp.len(m_Label) > 0 ) {
     wxColour tfc = dc.GetTextForeground();
@@ -1772,11 +1768,7 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
    }
 
   wxFont* font = new wxFont( dc.GetFont() );
-#ifdef __WIN32__
-  font->SetPointSize( (int)(DEFPOINTSIZE) );
-#else
-  font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-#endif
+  font->SetPointSize( m_iTextps );
 
   if( StrOp.len(m_Label) > 0 ) {
     int red = 0;
@@ -1861,11 +1853,7 @@ void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool occupied, const char* ori )
 
 
   wxFont* font = new wxFont( dc.GetFont() );
-#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-  font->SetPointSize( (int)(DEFPOINTSIZE) );
-#else
-  font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-#endif
+  font->SetPointSize( m_iTextps );
   m_GC->SetFont(*font, *wxBLACK);
 
   if( StrOp.equals( ori, wItem.south ) )
@@ -1934,7 +1922,7 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
 
   int pointsize = wText.getpointsize(m_Props);
   if( pointsize == 0 )
-    pointsize = DEFPOINTSIZE;
+    pointsize = m_iTextps;
 
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
   wxFont* font = new wxFont( dc.GetFont() );
@@ -2270,20 +2258,13 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
 
   if( m_bShowID ) {
     wxFont* font = new wxFont( dc.GetFont() );
-    #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-      font->SetPointSize( (int)(DEFPOINTSIZE) );
-    #else
-      font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-    #endif
-      m_GC->SetFont(*font, *wxBLACK);
+    font->SetPointSize( m_iTextps );
+    m_GC->SetFont(*font, *wxBLACK);
 
-      if (ttdiam >= 5)
-        m_GC->DrawText( wxString(m_Label,wxConvUTF8), 5, 5 );
+    if (ttdiam >= 5)
+      m_GC->DrawText( wxString(m_Label,wxConvUTF8), 5, 5 );
 
-    #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-    #else
-      delete font;
-    #endif
+    delete font;
   }
 }
 

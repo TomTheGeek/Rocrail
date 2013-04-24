@@ -6335,3 +6335,9 @@ msgstr ""
 msgid "Slave code"
 msgstr ""
 
+#. 
+# id="textps"
+#, c-format
+msgid "Text pointsize"
+msgstr ""
+

@@ -20541,4 +20541,7 @@
   <Msg id="slavecode">
     <en txt="Slave code"/>
   </Msg>
+  <Msg id="textps">
+    <en txt="Text pointsize"/>
+  </Msg>
 </Messages>

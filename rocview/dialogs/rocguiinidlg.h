@@ -246,6 +246,8 @@ public:
     wxButton* m_SvgPath5Dlg;
     wxStaticText* m_labItemIDpointsize;
     wxSpinCtrl* m_ItemIDpointsize;
+    wxStaticText* m_labTextPS;
+    wxSpinCtrl* m_TextPS;
     wxPanel* m_RICpanel;
     wxStaticBoxSizer* m_labVelocity;
     wxStaticText* m_labY;

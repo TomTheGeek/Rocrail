@@ -353,12 +353,14 @@ Symbol::Symbol( PlanPanel *parent, iONode props, int itemsize, int z, double sca
   SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
   int itemidps = 7;
+  int textps = 10;
   iONode planpanelIni = wGui.getplanpanel(wxGetApp().getIni());
   if( planpanelIni != NULL ) {
     itemidps = wPlanPanel.getitemidps(planpanelIni);
+    textps = wPlanPanel.gettextps(planpanelIni);
   }
 
-  m_Renderer = new SymbolRenderer( props, this, wxGetApp().getFrame()->getSymMap(), itemidps );
+  m_Renderer = new SymbolRenderer( props, this, wxGetApp().getFrame()->getSymMap(), itemidps, textps );
   modelEvent(m_Props, true);
 
   if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
