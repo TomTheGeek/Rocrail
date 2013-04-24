@@ -987,17 +987,15 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
     svgPoly* svgpoly = (svgPoly*)ListOp.get(svgsym->polyList, i);
     wxPen* pen = getPen(svgpoly->stroke);
     pen->SetWidth(1);
-    dc.SetPen(*pen);
     m_GC->SetPen(*pen);
     wxBrush* brush = getBrush(svgpoly->fill, dc );
-    dc.SetBrush( *brush );
     m_GC->SetBrush( *brush );
     if( svgpoly->arc ) {
       wxPoint* points = rotateShape( svgpoly->poly, svgpoly->cnt, ori );
-      dc.DrawArc( points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y );
+      // TODO: Find a way to draw arcs in GC.
+      //dc.DrawArc( points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y );
     }
     else {
-      //dc.DrawPolygon( svgpoly->cnt, rotateShape( svgpoly->poly, svgpoly->cnt, ori ), xOffset, yOffset );
       wxPoint* p = rotateShape( svgpoly->poly, svgpoly->cnt, ori );
       wxGraphicsPath path = m_GC->CreatePath();
       path.MoveToPoint(p[0].x+xOffset, p[0].y+yOffset);
@@ -1017,21 +1015,17 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
       svgCircle* svgcircle = (svgCircle*)ListOp.get(svgsym->circleList, i);
       wxPen* pen = getPen(svgcircle->stroke);
       pen->SetWidth(1);
-      //dc.SetPen(*pen);
       m_GC->SetPen(*pen);
       wxBrush* brush = getBrush(svgcircle->fill, dc );
-      //dc.SetBrush( *brush );
       m_GC->SetBrush( *brush );
       wxPoint point = wxPoint(svgcircle->cx, svgcircle->cy);
       wxPoint* points = rotateShape( &point, 1, ori );
-      //dc.DrawCircle( points[0].x, points[0].y, svgcircle->r );
       m_GC->DrawEllipse(points[0].x-svgcircle->r, points[0].y-svgcircle->r, svgcircle->r*2, svgcircle->r*2);
       delete pen;
       delete brush;
     }
   }
 
-  dc.SetBrush( b );
   m_GC->SetBrush( b );
 }
 
@@ -1040,28 +1034,28 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
  * Track object
  */
 void SymbolRenderer::drawTrack( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
-  const wxBrush& b = dc.GetBrush();
+  const wxBrush& b = dc.GetBrush(); // TODO: How to get the brusch from GC?
 
   // SVG Symbol:
   if( actroute && occupied && m_SvgSym4!=NULL ) {
     drawSvgSym(dc, m_SvgSym4, ori);
-    dc.SetBrush( b );
+    m_GC->SetBrush( b );
   }
   else if( occupied && m_SvgSym2!=NULL ) {
     drawSvgSym(dc, m_SvgSym2, ori);
-    dc.SetBrush( b );
+    m_GC->SetBrush( b );
   }
   else if( actroute && m_SvgSym3!=NULL ) {
     drawSvgSym(dc, m_SvgSym3, ori);
-    dc.SetBrush( b );
+    m_GC->SetBrush( b );
   }
   else if( actroute && m_SvgSym2!=NULL ) {
     drawSvgSym(dc, m_SvgSym2, ori);
-    dc.SetBrush( b );
+    m_GC->SetBrush( b );
   }
   else if( m_SvgSym1!=NULL ) {
     drawSvgSym(dc, m_SvgSym1, ori);
-    dc.SetBrush( b );
+    m_GC->SetBrush( b );
   }
 
   if( m_bShowID ) {
@@ -1661,7 +1655,6 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
   //wxFont* font = new wxFont( dc.GetFont() );
   //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-  //dc.SetFont(*font);
 #else
   wxFont* font = new wxFont( dc.GetFont() );
   font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
@@ -1682,7 +1675,6 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
       blue = wPlanPanel.getbktext_blue(planpanelIni);
     }
 
-    //dc.SetTextForeground(wxColour(red,green,blue));
     m_GC->SetFont(*font,wxColour(red,green,blue));
 
     if( StrOp.equals( ori, wItem.south ) )
@@ -1692,8 +1684,6 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
     else
       m_GC->DrawText( wxString(m_Label,wxConvUTF8), 3, 5 );
 
-    // restore previous color
-    //dc.SetTextForeground(tfc);
   }
 
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
@@ -1783,15 +1773,11 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
   wxFont* font = new wxFont( dc.GetFont() );
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
   //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-  //dc.SetFont(*font);
 #else
   font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-  dc.SetFont(*font);
 #endif
 
   if( StrOp.len(m_Label) > 0 ) {
-    wxColour tfc = dc.GetTextForeground();
-
     int red = 0;
     int green = 0;
     int blue = 0;
@@ -1804,8 +1790,6 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
       blue = wPlanPanel.getbktext_blue(planpanelIni);
     }
 
-    //dc.SetTextForeground(wxColour(red,green,blue));
-
     m_GC->SetFont(*font,wxColour(red,green,blue));
 
     /* center the blocktext */
@@ -1815,28 +1799,21 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
     double height;
     double descent;
     double externalLeading;
-    //dc.GetTextExtent(wxString(m_Label,wxConvUTF8).Trim(), &width, &height, 0,0, font);
     m_GC->GetTextExtent( wxString(m_Label,wxConvUTF8).Trim(),(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
 
     if( StrOp.equals( textOri, wItem.south ) ) {
-      //dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0 );
       m_GC->DrawText( wxString(m_Label,wxConvUTF8), 32-5, 3, getRadians(270.0) );
     }
     else if( StrOp.equals( textOri, wItem.north ) ) {
-      //dc.DrawRotatedText( wxString(m_Label,wxConvUTF8), 7, (32 * blocklen)-3, 90.0 );
       m_GC->DrawText( wxString(m_Label,wxConvUTF8), 7, (32 * blocklen)-3, getRadians(90.0) );
     }
     else {
 #ifdef __WIN32__
-      //dc.DrawRotatedText( wxString(m_Label,wxConvUTF8).Trim(), 9, 8, 0.0 );
       m_GC->DrawText( wxString(m_Label,wxConvUTF8).Trim(), 9, 8 );
 #else
-      //dc.DrawRotatedText( wxString(m_Label,wxConvUTF8).Trim(), ((32*blocklen-width)/2), (32-height)/2, 0.0 );
       m_GC->DrawText( wxString(m_Label,wxConvUTF8).Trim(), ((32*blocklen-width)/2), (32-height)/2 );
 #endif
     }
-    // restore previous color
-    //dc.SetTextForeground(tfc);
   }
 
   delete font;
@@ -1884,12 +1861,11 @@ void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool occupied, const char* ori )
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
   //wxFont* font = new wxFont( dc.GetFont() );
   //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-  //dc.SetFont(*font);
 #else
   wxFont* font = new wxFont( dc.GetFont() );
   font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-  m_GC->SetFont(*font, *wxBLACK);
 #endif
+  m_GC->SetFont(*font, *wxBLACK);
 
   if( StrOp.equals( ori, wItem.south ) )
     m_GC->DrawText( wxString(m_Label,wxConvUTF8), 32-5, 3, getRadians(270.0) );
@@ -1950,7 +1926,7 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
     m_Ori = ori;
 
     if( m_Bitmap != NULL ) {
-      dc.DrawBitmap(*m_Bitmap, 0, 0, true);
+      m_GC->DrawBitmap(*m_Bitmap, 0, 0, m_Bitmap->GetWidth(), m_Bitmap->GetHeight());
       return;
     }
   }
@@ -1970,7 +1946,6 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
 
     font->SetUnderlined( wText.isunderlined(m_Props) ? true:false);
 
-    //dc.SetFont(*font);
   }
 #else
   wxFont* font = new wxFont( dc.GetFont() );
@@ -1985,13 +1960,11 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
     font->SetStyle(wxFONTSTYLE_ITALIC);
   font->SetUnderlined( wText.isunderlined(m_Props) ? true:false);
 
-  //dc.SetFont(*font);
 #endif
 
 
   wxColour color( wText.getred(m_Props), wText.getgreen(m_Props), wText.getblue(m_Props) );
 
-  //dc.SetTextForeground(color);
   m_GC->SetFont(*font, color);
 
   if( !wText.istransparent(m_Props) && wText.getbackred(m_Props) != -1 && wText.getbackgreen(m_Props) != -1 && wText.getbackblue(m_Props) != -1 ){
@@ -2194,8 +2167,6 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   pen->SetStyle(wxSHORT_DASH);
   pen->SetWidth(1);
 
-  dc.SetPen( *pen );
-
   int ttdiam = wTurntable.getsymbolsize( m_Props );
 
   if (ttdiam < 1)
@@ -2205,8 +2176,6 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
     ttdiam = 10;
 
   double delta = (32 * ttdiam)/2;  /* 79.0; for the original one */
-
-  //dc.DrawCircle( delta, delta, delta );
 
   m_GC->SetPen( *pen );
   m_GC->DrawEllipse(0, 0, 32 * ttdiam, 32 * ttdiam);
@@ -2225,7 +2194,6 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
     if( wTTTrack.isstate( track ) || wTurntable.getbridgepos(m_Props) == wTTTrack.getnr(track) ) {
       pen = (wxPen*)wxRED_PEN;
       pen->SetWidth(5);
-      //dc.SetPen(*pen);
       m_GC->SetPen( *pen );
       *bridgepos = degr;
     }
@@ -2235,12 +2203,10 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
       else  /* reb added others with grey*/
         pen = (wxPen*)wxGREY_PEN;
       pen->SetWidth(5);
-      //dc.SetPen(*pen);
       m_GC->SetPen( *pen );
     }
 
     if( wTTTrack.isshow( track ) ) {
-      //dc.DrawLine( delta, delta, x, y );
       wxGraphicsPath path = m_GC->CreatePath();
       path.MoveToPoint(delta, delta);
       path.AddLineToPoint(x, y);
@@ -2253,18 +2219,12 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
 
   pen = (wxPen*)wxBLACK_PEN;
   pen->SetWidth(2);
-  //dc.SetPen(*pen);
   m_GC->SetPen( *pen );
 
-  //dc.DrawCircle( delta, delta, 0.45*delta);
-  //dc.DrawCircle( delta, delta, 0.40*delta);
   m_GC->SetBrush(*wxWHITE_BRUSH);
   m_GC->DrawEllipse(delta - 0.45*delta, delta - 0.45*delta, 0.45*(32*ttdiam), 0.45*(32*ttdiam));
   m_GC->DrawEllipse(delta - 0.40*delta, delta - 0.40*delta, 0.40*(32*ttdiam), 0.40*(32*ttdiam));
 
-
-  //dc.DrawPolygon( 5, rotateBridge( *bridgepos, delta ) );
-  //dc.DrawPolygon( 5, rotateBridgeNose( *bridgepos ) );
 
   wxPoint* p = rotateBridge( *bridgepos, delta );
   wxGraphicsPath path = m_GC->CreatePath();
@@ -2283,20 +2243,16 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   wxBrush* yellow = NULL;
 
   if( sensor1 && sensor2 ) {
-    //dc.SetBrush( *wxRED_BRUSH );
     m_GC->SetBrush( *wxRED_BRUSH );
   }
   else if( sensor1 || sensor2 ) {
     yellow = new wxBrush( _T("yellow"), wxSOLID );
-    //dc.SetBrush( *yellow );
     m_GC->SetBrush( *yellow );
   }
   else {
-    //dc.SetBrush( *wxGREEN_BRUSH );
     m_GC->SetBrush( *wxGREEN_BRUSH );
   }
 
-  //dc.DrawPolygon( 5, rotateBridgeSensors( *bridgepos, delta ) );
   p = rotateBridgeSensors( *bridgepos, delta );
   path = m_GC->CreatePath();
   path.MoveToPoint(p[0].x, p[0].y);
@@ -2307,7 +2263,6 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   m_GC->FillPath(path);
 
 
-  dc.SetBrush( b );
   if( yellow != NULL )
     delete yellow;
 
@@ -2316,12 +2271,11 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
     #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
       //wxFont* font = new wxFont( dc.GetFont() );
       //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-      //dc.SetFont(*font);
     #else
       wxFont* font = new wxFont( dc.GetFont() );
       font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-      m_GC->SetFont(*font, *wxBLACK);
     #endif
+      m_GC->SetFont(*font, *wxBLACK);
 
       if (ttdiam >= 5)
         m_GC->DrawText( wxString(m_Label,wxConvUTF8), 5, 5 );
