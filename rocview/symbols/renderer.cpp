@@ -57,6 +57,7 @@
 
 static double PI25DT = 3.141592653589793238462643;
 
+#define DEFPOINTSIZE 10
 
 SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, int itemidps ) {
   m_Props = props;
@@ -1655,7 +1656,7 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
 
   wxFont* font = new wxFont( dc.GetFont() );
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-  font->SetPointSize( (int)(11) );
+  font->SetPointSize( (int)(DEFPOINTSIZE) );
 #else
   font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
 #endif
@@ -1772,7 +1773,7 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
 
   wxFont* font = new wxFont( dc.GetFont() );
 #ifdef __WIN32__
-  font->SetPointSize( (int)(11) );
+  font->SetPointSize( (int)(DEFPOINTSIZE) );
 #else
   font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
 #endif
@@ -1861,7 +1862,7 @@ void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool occupied, const char* ori )
 
   wxFont* font = new wxFont( dc.GetFont() );
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-  font->SetPointSize( (int)(11) );
+  font->SetPointSize( (int)(DEFPOINTSIZE) );
 #else
   font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
 #endif
@@ -1933,7 +1934,7 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
 
   int pointsize = wText.getpointsize(m_Props);
   if( pointsize == 0 )
-    pointsize = 11;
+    pointsize = DEFPOINTSIZE;
 
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
   wxFont* font = new wxFont( dc.GetFont() );
@@ -2270,7 +2271,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   if( m_bShowID ) {
     wxFont* font = new wxFont( dc.GetFont() );
     #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-      font->SetPointSize( (int)(11) );
+      font->SetPointSize( (int)(DEFPOINTSIZE) );
     #else
       font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
     #endif
