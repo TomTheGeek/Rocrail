@@ -1834,6 +1834,9 @@ void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool occupied, const char* ori )
   else if( m_iOccupied == 2 ) {
     m_GC->SetBrush( wxColour(255,255,200) );
   }
+  else {
+    m_GC->SetBrush( *wxWHITE );
+  }
 
   m_GC->SetPen( wxPen( wxColour(0,0,0), 2));
 
