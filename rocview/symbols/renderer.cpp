@@ -1654,7 +1654,7 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
 
   wxFont* font = new wxFont( dc.GetFont() );
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-  //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
+  font->SetPointSize( (int)(11) );
 #else
   font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
 #endif
@@ -1770,8 +1770,8 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
    }
   // TODO: Blocktext scaling!!!
   wxFont* font = new wxFont( dc.GetFont() );
-#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-  //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
+#ifdef __WIN32__
+  font->SetPointSize( (int)(11) );
 #else
   font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
 #endif
@@ -1792,8 +1792,6 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
     m_GC->SetFont(*font,wxColour(red,green,blue));
 
     /* center the blocktext */
-    //wxCoord width;
-    //wxCoord height;
     double width;
     double height;
     double descent;
@@ -1808,9 +1806,9 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
     }
     else {
 #ifdef __WIN32__
-      m_GC->DrawText( wxString(m_Label,wxConvUTF8).Trim(), 9, 8 );
+      m_GC->DrawText( wxString(m_Label,wxConvUTF8), 9, 8 );
 #else
-      m_GC->DrawText( wxString(m_Label,wxConvUTF8).Trim(), ((32*blocklen-width)/2), (32-height)/2 );
+      m_GC->DrawText( wxString(m_Label,wxConvUTF8), ((32*blocklen-width)/2), (32-height)/2 );
 #endif
     }
   }
@@ -1859,7 +1857,7 @@ void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool occupied, const char* ori )
   // TODO: Blocktext scaling!!!
   wxFont* font = new wxFont( dc.GetFont() );
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-  //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
+  font->SetPointSize( (int)(11) );
 #else
   font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
 #endif
@@ -1930,6 +1928,8 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
   }
 
   int pointsize = wText.getpointsize(m_Props);
+  if( pointsize == 0 )
+    pointsize = 11;
 
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
   wxFont* font = new wxFont( dc.GetFont() );
@@ -2268,7 +2268,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
       // TODO: Blocktext scaling!!!
     wxFont* font = new wxFont( dc.GetFont() );
     #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-      //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
+      font->SetPointSize( (int)(11) );
     #else
       font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
     #endif
