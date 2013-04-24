@@ -1652,11 +1652,10 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
     drawSvgSym(dc, m_SvgSym5, ori);
   }
 
+  wxFont* font = new wxFont( dc.GetFont() );
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-  //wxFont* font = new wxFont( dc.GetFont() );
   //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
 #else
-  wxFont* font = new wxFont( dc.GetFont() );
   font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
 #endif
 
@@ -1858,11 +1857,10 @@ void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool occupied, const char* ori )
   m_GC->SetBrush( b );
 
   // TODO: Blocktext scaling!!!
+  wxFont* font = new wxFont( dc.GetFont() );
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-  //wxFont* font = new wxFont( dc.GetFont() );
   //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
 #else
-  wxFont* font = new wxFont( dc.GetFont() );
   font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
 #endif
   m_GC->SetFont(*font, *wxBLACK);
@@ -2268,11 +2266,10 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
 
   if( m_bShowID ) {
       // TODO: Blocktext scaling!!!
+    wxFont* font = new wxFont( dc.GetFont() );
     #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-      //wxFont* font = new wxFont( dc.GetFont() );
       //font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
     #else
-      wxFont* font = new wxFont( dc.GetFont() );
       font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
     #endif
       m_GC->SetFont(*font, *wxBLACK);
