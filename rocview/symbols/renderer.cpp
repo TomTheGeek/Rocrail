@@ -993,6 +993,7 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
     if( svgpoly->arc ) {
       wxPoint* points = rotateShape( svgpoly->poly, svgpoly->cnt, ori );
       // TODO: Find a way to draw arcs in GC.
+      TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "TODO: Find a way to draw arcs in GC." );
       //dc.DrawArc( points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y );
     }
     else {
@@ -1768,7 +1769,7 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
   else if( svgSym[1]!=NULL ) {
      drawSvgSym(dc, svgSym[1], ori);
    }
-  // TODO: Blocktext scaling!!!
+
   wxFont* font = new wxFont( dc.GetFont() );
 #ifdef __WIN32__
   font->SetPointSize( (int)(11) );
@@ -1857,7 +1858,7 @@ void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool occupied, const char* ori )
 
   m_GC->SetBrush( b );
 
-  // TODO: Blocktext scaling!!!
+
   wxFont* font = new wxFont( dc.GetFont() );
 #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
   font->SetPointSize( (int)(11) );
@@ -1970,10 +1971,6 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
 
   if( !wText.istransparent(m_Props) && wText.getbackred(m_Props) != -1 && wText.getbackgreen(m_Props) != -1 && wText.getbackblue(m_Props) != -1 ){
     wxColour color( wText.getbackred(m_Props), wText.getbackgreen(m_Props), wText.getbackblue(m_Props) );
-    // TODO: Replace with GC functions.
-    dc.SetTextBackground(color);
-    dc.SetBackgroundMode(wxSOLID);
-    dc.SetBrush(color);
     dc.SetBackground(wxBrush(color));
     dc.Clear();
   }
@@ -2271,7 +2268,6 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
     delete yellow;
 
   if( m_bShowID ) {
-      // TODO: Blocktext scaling!!!
     wxFont* font = new wxFont( dc.GetFont() );
     #ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
       font->SetPointSize( (int)(11) );

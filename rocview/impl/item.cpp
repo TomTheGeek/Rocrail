@@ -697,30 +697,16 @@ void Symbol::OnPaint(wxPaintEvent& event)
     }
 
     wxGraphicsContext* gc = wxGraphicsContext::Create(this);
-    wxGraphicsMatrix matrix = gc->CreateMatrix();
-    matrix.Scale(m_Scale, m_Scale);
-    gc->SetTransform(matrix);
+    gc->Scale(m_Scale, m_Scale);
+
 #ifdef wxANTIALIAS_DEFAULT
     gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
 #endif
 
-    //dc.SetPen( *wxLIGHT_GREY_PEN );
-    gc->SetPen( *wxLIGHT_GREY_PEN );
-
-    //dc.SetUserScale( m_Scale, m_Scale );
     if( wxGetApp().getFrame()->isRaster() ) {
-      //dc.DrawLine( 0, 0, (int)(m_ItemSize*cx), 0 );
-      //dc.DrawLine( 0, 0, 0, (int)(m_ItemSize*cy) );
-
-      wxGraphicsPath path = gc->CreatePath();
-      path.MoveToPoint(0, 0);
-      path.AddLineToPoint((int)(m_ItemSize*cx), 0);
-      gc->StrokePath(path);
-
-      path = gc->CreatePath();
-      path.MoveToPoint(0, 0);
-      path.AddLineToPoint(0, (int)(m_ItemSize*cy));
-      gc->StrokePath(path);
+      gc->SetPen( *wxLIGHT_GREY_PEN );
+      gc->StrokeLine( 0, 0, (int)(m_ItemSize*cx), 0 );
+      gc->StrokeLine( 0, 0, 0, (int)(m_ItemSize*cy) );
     }
 
     const char* mod_ori = wItem.getori(m_Props);
