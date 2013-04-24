@@ -122,6 +122,7 @@ public:
   void drawText( wxPaintDC& dc, bool occupied, const char* ori );
   void drawTurntable( wxPaintDC& dc, bool occupied, double* bridgepos, const char* ori );
   void drawAccessory( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
+  double getRadians(double degrees);
 
 };
 

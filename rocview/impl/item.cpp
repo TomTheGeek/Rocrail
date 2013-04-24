@@ -700,6 +700,9 @@ void Symbol::OnPaint(wxPaintEvent& event)
     wxGraphicsMatrix matrix = gc->CreateMatrix();
     matrix.Scale(m_Scale, m_Scale);
     gc->SetTransform(matrix);
+#ifdef wxANTIALIAS_DEFAULT
+    gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
+#endif
 
     //dc.SetPen( *wxLIGHT_GREY_PEN );
     gc->SetPen( *wxLIGHT_GREY_PEN );
