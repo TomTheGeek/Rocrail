@@ -116,7 +116,7 @@
                                         <property name="hidden">0</property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="maximum_size"></property>
-                                        <property name="minimum_size"></property>
+                                        <property name="minimum_size">200,-1</property>
                                         <property name="name">m_DecTree</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
@@ -352,7 +352,7 @@
                         <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxEXPAND</property>
-                            <property name="proportion">1</property>
+                            <property name="proportion">0</property>
                             <object class="wxBoxSizer" expanded="1">
                                 <property name="minimum_size"></property>
                                 <property name="name">bSizer9</property>
@@ -2832,7 +2832,7 @@
                                         <object class="sizeritem" expanded="1">
                                             <property name="border">5</property>
                                             <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxEXPAND</property>
-                                            <property name="proportion">1</property>
+                                            <property name="proportion">0</property>
                                             <object class="wxBoxSizer" expanded="0">
                                                 <property name="minimum_size"></property>
                                                 <property name="name">bSizer6</property>
