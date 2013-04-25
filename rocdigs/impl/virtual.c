@@ -418,7 +418,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get CV%d...", cv );
         rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
         wProgram.setcv( rsp, cv );
-        wProgram.setvalue( rsp, data->cvval[cv] );
+        wProgram.setvalue( rsp, rand() % 256 );
         wProgram.setcmd( rsp, wProgram.datarsp );
       }
       else {
