@@ -151,6 +151,9 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
     if( lococv != NULL ) {
       setCVVal(wCVByte.getvalue(lococv));
     }
+    else
+      setCVVal(0);
+
     m_CV29->Enable(nr==29);
   }
   else {
