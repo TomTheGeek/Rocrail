@@ -51,6 +51,11 @@ class RocProDlg : public RocProDlgGen
   bool m_bLongAddress;
   int m_CV17;
   int m_CV18;
+  iONode m_CVconf;
+  int m_CVidx;
+  int m_CVall[1024];
+  int m_CVcountAll;
+  int m_CVidxAll;
 
   bool parseDecFile();
   void initLocMap(const char* locid=NULL);
@@ -87,6 +92,7 @@ class RocProDlg : public RocProDlgGen
     void onPTON( wxCommandEvent& event );
     void onPTOFF( wxCommandEvent& event );
     void onImgOpen( wxCommandEvent& event );
+    void onReadAllCV( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		RocProDlg( wxWindow* parent );

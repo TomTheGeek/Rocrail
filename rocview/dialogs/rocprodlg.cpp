@@ -87,6 +87,32 @@ RocProDlgGen( parent )
   m_CV17 = 0;
   m_CV18 = 0;
 
+  m_CVidx = 0;
+  m_CVidxAll = 0;
+  m_CVoperation = 0;
+
+  m_CVconf = wGui.getcvconf( wxGetApp().getIni() );
+  if( m_CVconf == NULL ) {
+    m_CVconf = NodeOp.inst( wCVconf.name(), wxGetApp().getIni(), ELEMENT_NODE );
+    NodeOp.addChild(wxGetApp().getIni(), m_CVconf);
+  }
+
+  const char* nrs = wCVconf.getnrs( m_CVconf );
+  iOStrTok tok = StrTokOp.inst( nrs, ',' );
+  int nridx = 0;
+  const char* nr = StrTokOp.nextToken(tok);
+
+  while( nr != NULL ) {
+    int cvnr = atoi(nr);
+    m_CVall[nridx] = cvnr;
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "m_CVall[%d]=%d", nridx, cvnr );
+    nridx++;
+    nr = StrTokOp.nextToken(tok);
+  };
+  StrTokOp.base.del( tok );
+  m_CVcountAll = nridx;
+
+
   for(int i = 0; i < 28; i++ ) {
     m_Curve[i] = 0;
   }
@@ -376,6 +402,15 @@ void RocProDlg::event(iONode node) {
         m_bLongAddress = false;
       }
       else {
+        if( m_CVoperation == CVGETALL ) {
+          m_CVidxAll = m_CVidxAll+1;
+          if( m_CVidxAll >= m_CVcountAll ) {
+            m_CVoperation = 0;
+          }
+          else {
+            doCV( wProgram.get, m_CVall[m_CVidxAll], 0 );
+          }
+        }
         if( cv > 0 )
           m_Nr->SetValue( cv );
         setCVVal(value);
@@ -785,3 +820,13 @@ void RocProDlg::onPTOFF( wxCommandEvent& event ) {
   wxGetApp().sendToRocrail( cmd );
   NodeOp.base.del(cmd);
 }
+
+
+void RocProDlg::onReadAllCV( wxCommandEvent& event ) {
+  m_CVidx = 0;
+  m_CVidxAll = 0;
+  m_CVoperation = CVGETALL;
+  TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "reading m_CVall[%d]=%d", m_CVidxAll, m_CVall[m_CVidxAll] );
+  doCV( wProgram.get, m_CVall[m_CVidxAll], 0 );
+}
+
