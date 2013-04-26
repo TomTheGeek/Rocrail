@@ -6341,3 +6341,9 @@ msgstr ""
 msgid "Text pointsize"
 msgstr ""
 
+#. 
+# id="rendergc"
+#, c-format
+msgid "Render smooth"
+msgstr ""
+

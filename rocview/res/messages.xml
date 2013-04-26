@@ -20544,4 +20544,7 @@
   <Msg id="textps">
     <en txt="Text pointsize"/>
   </Msg>
+  <Msg id="rendergc">
+    <en txt="Render smooth"/>
+  </Msg>
 </Messages>

@@ -698,17 +698,28 @@ void Symbol::OnPaint(wxPaintEvent& event)
       status = wRoute.getstatus(m_Props);
     }
 
-    wxGraphicsContext* gc = wxGraphicsContext::Create(this);
-    gc->Scale(m_Scale, m_Scale);
+    wxGraphicsContext* gc = NULL;
+    if( wGui.isrendergc(wxGetApp().getIni())) {
+      wxGraphicsContext* gc = wxGraphicsContext::Create(this);
+      gc->Scale(m_Scale, m_Scale);
 
-#ifdef wxANTIALIAS_DEFAULT
-    gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
-#endif
+  #ifdef wxANTIALIAS_DEFAULT
+      gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
+  #endif
 
-    if( wxGetApp().getFrame()->isRaster() ) {
-      gc->SetPen( *wxLIGHT_GREY_PEN );
-      gc->StrokeLine( 0, 0, (int)(m_ItemSize*cx), 0 );
-      gc->StrokeLine( 0, 0, 0, (int)(m_ItemSize*cy) );
+      if( wxGetApp().getFrame()->isRaster() ) {
+        gc->SetPen( *wxLIGHT_GREY_PEN );
+        gc->StrokeLine( 0, 0, (int)(m_ItemSize*cx), 0 );
+        gc->StrokeLine( 0, 0, 0, (int)(m_ItemSize*cy) );
+      }
+    }
+    else {
+      dc.SetUserScale( m_Scale, m_Scale );
+      if( wxGetApp().getFrame()->isRaster() ) {
+        dc.SetPen( *wxLIGHT_GREY_PEN );
+        dc.DrawLine( 0, 0, (int)(m_ItemSize*cx), 0 );
+        dc.DrawLine( 0, 0, 0, (int)(m_ItemSize*cy) );
+      }
     }
 
     const char* mod_ori = wItem.getori(m_Props);

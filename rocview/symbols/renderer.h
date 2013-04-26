@@ -89,6 +89,8 @@ class SymbolRenderer {
   iOMap m_SymMap;
   wxBitmap* m_Bitmap;
   wxGraphicsContext* m_GC;
+  bool m_UseGC;
+  wxPaintDC* m_DC;
 
 public:
   void initSym();
@@ -100,6 +102,11 @@ public:
   int getcx() {return m_cx;}
   int getcy() {return m_cy;}
   bool isRotateable() { return m_bRotateable; }
+  void drawString(const wxString& text, int x, int y, double degrees, bool setfont=true);
+  void setPen(const wxPen& pen);
+  void setBrush(const wxBrush& brush);
+  void drawLine(int x, int y, int cx, int cy);
+  wxFont* setFont(int pointsize=0, int red=0, int green=0, int blue=0, bool bold=false, bool italic=false, bool underlined=false);
 
   void drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* ori, int xoff=0, int yoff=0 );
   wxPen* getPen( const char* stroke );

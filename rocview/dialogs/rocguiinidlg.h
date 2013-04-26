@@ -176,6 +176,7 @@ public:
     wxCheckBox* m_ShowSecondhand;
     wxCheckBox* m_ReconnectAfterServerShutdown;
     wxCheckBox* m_ResetSpeedDir;
+    wxCheckBox* m_RenderGC;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;

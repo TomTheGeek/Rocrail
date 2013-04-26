@@ -72,6 +72,7 @@ SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, in
   m_Label = StrOp.dup("...");
   m_iItemIDps = itemidps;
   m_iTextps = textps;
+  m_DC = NULL;
 }
 
 
@@ -988,24 +989,32 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
     svgPoly* svgpoly = (svgPoly*)ListOp.get(svgsym->polyList, i);
     wxPen* pen = getPen(svgpoly->stroke);
     pen->SetWidth(1);
-    m_GC->SetPen(*pen);
     wxBrush* brush = getBrush(svgpoly->fill, dc );
-    m_GC->SetBrush( *brush );
+    setPen( *pen );
+    setBrush( *brush );
     if( svgpoly->arc ) {
       wxPoint* points = rotateShape( svgpoly->poly, svgpoly->cnt, ori );
-      // TODO: Find a way to draw arcs in GC.
-      TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "TODO: Find a way to draw arcs in GC." );
-      //dc.DrawArc( points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y );
+      if( m_UseGC ) {
+        TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "TODO: Find a way to draw arcs in GC." );
+      }
+      else {
+        dc.DrawArc( points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y );
+      }
     }
     else {
       wxPoint* p = rotateShape( svgpoly->poly, svgpoly->cnt, ori );
-      wxGraphicsPath path = m_GC->CreatePath();
-      path.MoveToPoint(p[0].x+xOffset, p[0].y+yOffset);
-      for( int s = 1; s < svgpoly->cnt; s++ )
-        path.AddLineToPoint(p[s].x+xOffset, p[s].y+yOffset);
-      path.AddLineToPoint(p[0].x+xOffset, p[0].y+yOffset);
-      m_GC->FillPath(path);
-      m_GC->StrokePath(path);
+      if( m_UseGC ) {
+        wxGraphicsPath path = m_GC->CreatePath();
+        path.MoveToPoint(p[0].x+xOffset, p[0].y+yOffset);
+        for( int s = 1; s < svgpoly->cnt; s++ )
+          path.AddLineToPoint(p[s].x+xOffset, p[s].y+yOffset);
+        path.AddLineToPoint(p[0].x+xOffset, p[0].y+yOffset);
+        m_GC->FillPath(path);
+        m_GC->StrokePath(path);
+      }
+      else {
+        dc.DrawPolygon( svgpoly->cnt, p, xOffset, yOffset );
+      }
     }
     delete pen;
     delete brush;
@@ -1017,79 +1026,114 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
       svgCircle* svgcircle = (svgCircle*)ListOp.get(svgsym->circleList, i);
       wxPen* pen = getPen(svgcircle->stroke);
       pen->SetWidth(1);
-      m_GC->SetPen(*pen);
       wxBrush* brush = getBrush(svgcircle->fill, dc );
-      m_GC->SetBrush( *brush );
       wxPoint point = wxPoint(svgcircle->cx, svgcircle->cy);
       wxPoint* points = rotateShape( &point, 1, ori );
-      m_GC->DrawEllipse(points[0].x-svgcircle->r, points[0].y-svgcircle->r, svgcircle->r*2, svgcircle->r*2);
+      setPen( *pen );
+      setBrush( *brush );
+      if( m_UseGC ) {
+        m_GC->DrawEllipse(points[0].x-svgcircle->r, points[0].y-svgcircle->r, svgcircle->r*2, svgcircle->r*2);
+      }
+      else {
+        dc.DrawCircle( points[0].x, points[0].y, svgcircle->r );
+      }
       delete pen;
       delete brush;
     }
   }
 
-  m_GC->SetBrush( b );
 }
 
+
+wxFont* SymbolRenderer::setFont(int pointsize, int red, int green, int blue, bool bold, bool italic, bool underlined)
+{
+  wxFont* font = new wxFont( m_DC->GetFont() );
+  font->SetPointSize( pointsize > 0 ? pointsize:m_iItemIDps );
+
+  if( bold )
+    font->SetWeight(wxFONTWEIGHT_BOLD);
+  if( italic )
+    font->SetStyle(wxFONTSTYLE_ITALIC);
+
+  font->SetUnderlined( underlined ? true:false);
+
+  if( m_UseGC ) {
+    m_GC->SetFont(*font, wxColour(red,green,blue));
+  }
+  else {
+    m_DC->SetTextForeground(wxColour(red,green,blue));
+    m_DC->SetFont(*font);
+  }
+  return font;
+}
+
+void SymbolRenderer::drawString(const wxString& text, int x, int y, double degrees, bool setfont)
+{
+  wxFont* font = NULL;
+  if( setfont )
+    font = setFont();
+
+  if( m_UseGC ) {
+    m_GC->DrawText( text, x, y, getRadians(degrees) );
+  }
+  else {
+    m_DC->DrawRotatedText( text, x, y, degrees );
+  }
+
+  if( font != NULL )
+    delete font;
+}
 
 /**
  * Track object
  */
 void SymbolRenderer::drawTrack( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
-  const wxBrush& b = dc.GetBrush(); // TODO: How to get the brusch from GC?
-
   // SVG Symbol:
   if( actroute && occupied && m_SvgSym4!=NULL ) {
     drawSvgSym(dc, m_SvgSym4, ori);
-    m_GC->SetBrush( b );
   }
   else if( occupied && m_SvgSym2!=NULL ) {
     drawSvgSym(dc, m_SvgSym2, ori);
-    m_GC->SetBrush( b );
   }
   else if( actroute && m_SvgSym3!=NULL ) {
     drawSvgSym(dc, m_SvgSym3, ori);
-    m_GC->SetBrush( b );
   }
   else if( actroute && m_SvgSym2!=NULL ) {
     drawSvgSym(dc, m_SvgSym2, ori);
-    m_GC->SetBrush( b );
   }
   else if( m_SvgSym1!=NULL ) {
     drawSvgSym(dc, m_SvgSym1, ori);
-    m_GC->SetBrush( b );
   }
 
   if( m_bShowID ) {
     if( StrOp.equals( wTrack.connector, wTrack.gettype( m_Props ) ) ) {
-      wxFont* font = new wxFont( dc.GetFont() );
-      font->SetPointSize( m_iItemIDps );
-      m_GC->SetFont(*font, *wxBLACK);
-
       TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "connector %d", wTrack.gettknr(m_Props));
 
-      if( StrOp.equals( ori, wItem.north ) )
-        m_GC->DrawText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 10, 10, getRadians(270.0) );
-      else if( StrOp.equals( ori, wItem.south ) )
-        m_GC->DrawText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 20, 20, getRadians(90.0) );
-      else if( StrOp.equals( ori, wItem.east ) )
-        m_GC->DrawText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 10, 20 );
-      else
-        m_GC->DrawText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 1, 1 );
+      double degrees = 0.0;
+      int x = 1;
+      int y = 1;
+      if( StrOp.equals( ori, wItem.north ) ) {
+        degrees = 270.0;
+        x = 10;
+        y = 10;
+      }
+      else if( StrOp.equals( ori, wItem.south ) ) {
+        degrees = 90.0;
+        x = 20;
+        y = 20;
+      }
+      else if( StrOp.equals( ori, wItem.east ) ) {
+        degrees = 0.0;
+        x = 10;
+        y = 20;
+      }
 
-      delete font;
+      drawString(wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), x, y, degrees);
+
     }
 
     else if( StrOp.equals( wTrack.concurveright, wTrack.gettype( m_Props ) ) || StrOp.equals( wTrack.concurveleft,  wTrack.gettype( m_Props ) ) ) {
-      wxFont* font = new wxFont( dc.GetFont() );
-      font->SetPointSize( m_iItemIDps );
-      m_GC->SetFont(*font, *wxBLACK);
-
-      TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "connector %d", wTrack.gettknr(m_Props));
-
-      m_GC->DrawText( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 10, 10 );
-
-      delete font;
+      drawString( wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 10, 10, 0.0 );
     }
   }
 }
@@ -1139,31 +1183,31 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, bool actroute, 
 
 
   if( m_bShowID ) {
-    wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( m_iItemIDps );
-    m_GC->SetFont(*font, *wxBLACK);
+    double degrees = 0.0;
+    int x = 0;
+    int y = 0;
 
     if( m_iSymSubType == switchtype::i_crossingright ) {
-      if( StrOp.equals( ori, wItem.south ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 63, getRadians(90.0) );
-      else if( StrOp.equals( ori, wItem.north ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 63, getRadians(90.0) );
-      else if( StrOp.equals( ori, wItem.east ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 0 );
-      else
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 0 );
+      if( StrOp.equals( ori, wItem.south ) || StrOp.equals( ori, wItem.north ) ) {
+        x = 0;
+        y = 63;
+        degrees = 90.0;
+      }
     }
     else {
-      if( StrOp.equals( ori, wItem.south ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 20, 63, getRadians(90.0) );
-      else if( StrOp.equals( ori, wItem.north ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 20, 63, getRadians(90.0) );
-      else if( StrOp.equals( ori, wItem.east ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 21 );
-      else
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 21 );
+      if( StrOp.equals( ori, wItem.south ) || StrOp.equals( ori, wItem.north ) ) {
+        x = 20;
+        y = 63;
+        degrees = 90.0;
+      }
+      else {
+        x = 0;
+        y = 21;
+        degrees = 0.0;
+      }
     }
-    delete font;
+
+    drawString(wxString(wItem.getid(m_Props),wxConvUTF8), x, y, degrees);
   }
 
 }
@@ -1220,31 +1264,45 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, const char* or
 
 
   if( m_bShowID ) {
-    wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( m_iItemIDps );
-    m_GC->SetFont(*font, *wxBLACK);
+    double degrees = 0.0;
+    int x = 0;
+    int y = 0;
 
     if( m_iSymSubType == switchtype::i_dcrossingright ) {
-      if( StrOp.equals( ori, wItem.south ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, getRadians(270.0) );
-      else if( StrOp.equals( ori, wItem.north ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 63, getRadians(90.0) );
-      else if( StrOp.equals( ori, wItem.east ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1 );
-      else
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1 );
+      if( StrOp.equals( ori, wItem.south ) ) {
+        degrees = 270.0;
+        x = 32;
+        y = 1;
+      }
+      else if( StrOp.equals( ori, wItem.north ) ) {
+        degrees = 90.0;
+        x = 1;
+        y = 63;
+      }
+      else {
+        degrees = 0.0;
+        x = 0;
+        y = 1;
+      }
     }
     else {
-      if( StrOp.equals( ori, wItem.south ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 32, getRadians(270.0) );
-      else if( StrOp.equals( ori, wItem.north ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, getRadians(90.0) );
-      else if( StrOp.equals( ori, wItem.east ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 20 );
-      else
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 20 );
+      if( StrOp.equals( ori, wItem.south ) ) {
+        degrees = 270.0;
+        x = 32;
+        y = 32;
+      }
+      else if( StrOp.equals( ori, wItem.north ) ) {
+        degrees = 90.0;
+        x = 1;
+        y = 32;
+      }
+      else {
+        degrees = 0.0;
+        x = 0;
+        y = 20;
+      }
     }
-    delete font;
+    drawString(wxString(wItem.getid(m_Props),wxConvUTF8), x, y, degrees);
   }
 
 
@@ -1278,26 +1336,42 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, const char* ori
   }
 
   if( m_bShowID ) {
-    wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( m_iItemIDps );
-    m_GC->SetFont(*font, *wxBLACK);
+    double degrees = 0.0;
+    int x = 0;
+    int y = 0;
 
     double width;
     double height;
     double descent;
     double externalLeading;
-    m_GC->GetTextExtent( wxString(wItem.getid(m_Props),wxConvUTF8).Trim(),(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
-
-    if( StrOp.equals( ori, wItem.south ) )
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, width, getRadians(90.0) );
-    else if( StrOp.equals( ori, wItem.north ) )
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 31, getRadians(90.0) );
-    else if( StrOp.equals( ori, wItem.east ) )
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 32 - width, 1 );
+    if( m_UseGC )
+      m_GC->GetTextExtent( wxString(wItem.getid(m_Props),wxConvUTF8).Trim(),(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
     else
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1 );
+      width = dc.GetTextExtent( wxString(wItem.getid(m_Props),wxConvUTF8) ).GetWidth();
 
-    delete font;
+
+    if( StrOp.equals( ori, wItem.south ) ) {
+      degrees = 90.0;
+      x = 1;
+      y = width;
+    }
+    else if( StrOp.equals( ori, wItem.north ) ) {
+      degrees = 90.0;
+      x = 1;
+      y = 32;
+    }
+    else if( StrOp.equals( ori, wItem.east ) ) {
+      degrees = 0.0;
+      x = 32 - width;
+      y = 1;
+    }
+    else {
+      degrees = 0.0;
+      x = 0;
+      y = 1;
+    }
+
+    drawString( wxString(wItem.getid(m_Props),wxConvUTF8), x, y, degrees );
   }
 
 
@@ -1309,7 +1383,6 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, const char* ori
  * Accessory Switch object
  */
 void SymbolRenderer::drawAccessory( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
-  const wxBrush& b = dc.GetBrush();
   const char* state = wSwitch.getstate( m_Props );
 
   // SVG Symbol:
@@ -1329,7 +1402,6 @@ void SymbolRenderer::drawAccessory( wxPaintDC& dc, bool occupied, bool actroute,
     else if( m_SvgSym1!=NULL )
       drawSvgSym(dc, m_SvgSym1, ori);
   }
-  dc.SetBrush( b );
 }
 
 
@@ -1355,31 +1427,31 @@ void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool occupied, const char* ori 
   }
 
   if( m_bShowID ) {
-    wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( m_iItemIDps );
-    m_GC->SetFont(*font, *wxBLACK);
+    double degrees = 0.0;
+    int x = 0;
+    int y = 0;
 
-    if( m_iSymSubType == switchtype::i_turnoutleft ) {
-      if( StrOp.equals( ori, wItem.south ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, getRadians(270.0) );
-      else if( StrOp.equals( ori, wItem.north ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, getRadians(90.0) );
-      else if( StrOp.equals( ori, wItem.east ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 20 );
-      else
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1 );
+    if( StrOp.equals( ori, wItem.south ) ) {
+      degrees = 270.0;
+      x = 32;
+      y = 1;
+    }
+    else if( StrOp.equals( ori, wItem.north ) ) {
+      degrees = 90.0;
+      x = 1;
+      y = 32;
+    }
+    else if( StrOp.equals( ori, wItem.east ) ) {
+      degrees = 0.0;
+      x = 0;
+      y = 20;
     }
     else {
-      if( StrOp.equals( ori, wItem.south ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, getRadians(270.0) );
-      else if( StrOp.equals( ori, wItem.north ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, getRadians(90.0) );
-      else if( StrOp.equals( ori, wItem.east ) )
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 20 );
-      else
-        m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1 );
+      degrees = 0.0;
+      x = 0;
+      y = 1;
     }
-    delete font;
+    drawString( wxString(wItem.getid(m_Props),wxConvUTF8), x, y, degrees );
   }
 
 }
@@ -1390,19 +1462,8 @@ void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool occupied, const char* ori 
 void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
 
-  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "Switch %s state=%s", wSwitch.getid( m_Props ), state );
+  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "Switch %s state=%s subtype=%d", wSwitch.getid( m_Props ), state, m_iSymSubType );
 
-  /*
-        m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler );
-        m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_occ );
-        m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_on );
-        m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_on_occ );
-        m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_route );
-        m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_on_route );
-        m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_on_occ_route );
-        m_SvgSym8 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::decoupler_occ_route );
-
-   */
   switch( m_iSymSubType ) {
     case switchtype::i_decoupler:
       drawDecoupler( dc, occupied, actroute, ori );
@@ -1471,18 +1532,22 @@ void SymbolRenderer::drawDecoupler( wxPaintDC& dc, bool occupied, bool actroute,
   }
 
   if( m_bShowID ) {
-    wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( m_iItemIDps );
-    m_GC->SetFont(*font, *wxBLACK);
+    double degrees = 0.0;
+    int x = 0;
+    int y = 1;
 
-    if( StrOp.equals( ori, wItem.south ) )
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, getRadians(270.0) );
-    else if( StrOp.equals( ori, wItem.north ) )
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, getRadians(90.0) );
-    else
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1 );
+    if( StrOp.equals( ori, wItem.south ) ) {
+      degrees = 270.0;
+      x = 32;
+      y = 1;
+    }
+    else if( StrOp.equals( ori, wItem.north ) ) {
+      degrees = 90.0;
+      x = 1;
+      y = 32;
+    }
 
-    delete font;
+    drawString( wxString(wItem.getid(m_Props),wxConvUTF8), x, y, degrees );
   }
 }
 
@@ -1560,20 +1625,15 @@ void SymbolRenderer::drawSignal( wxPaintDC& dc, bool occupied, bool actroute, co
   }
 
   if( m_bShowID ) {
-    wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( m_iItemIDps );
-    m_GC->SetFont(*font, *wxBLACK);
-
     if( StrOp.equals( ori, wItem.north ) )
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, getRadians(270.0) );
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
     else if( StrOp.equals( ori, wItem.south ) )
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, getRadians(90.0) );
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
     else if( StrOp.equals( ori, wItem.east ) )
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1 );
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
     else
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 20 );
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 20, 0.0 );
 
-    delete font;
   }
 }
 
@@ -1618,11 +1678,7 @@ void SymbolRenderer::drawOutput( wxPaintDC& dc, bool occupied, bool actroute, co
   }
 
   if( m_bShowID ) {
-    wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( m_iItemIDps );
-    m_GC->SetFont(*font, *wxBLACK);
-    m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 0 );
-    delete font;
+    drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 0, 0.0 );
   }
 }
 
@@ -1654,12 +1710,7 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
     drawSvgSym(dc, m_SvgSym5, ori);
   }
 
-  wxFont* font = new wxFont( dc.GetFont() );
-  font->SetPointSize( m_iTextps );
-
   if( StrOp.len(m_Label) > 0 ) {
-    wxColour tfc = dc.GetTextForeground();
-
     int red = 0;
     int green = 0;
     int blue = 0;
@@ -1667,26 +1718,36 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
 
     iONode planpanelIni = wGui.getplanpanel(wxGetApp().getIni());
     if( planpanelIni != NULL ) {
-      red = wPlanPanel.getbktext_red(planpanelIni);
+      red   = wPlanPanel.getbktext_red(planpanelIni);
       green = wPlanPanel.getbktext_green(planpanelIni);
-      blue = wPlanPanel.getbktext_blue(planpanelIni);
+      blue  = wPlanPanel.getbktext_blue(planpanelIni);
     }
 
-    m_GC->SetFont(*font,wxColour(red,green,blue));
+    double degrees = 0.0;
+    int x = 0;
+    int y = 0;
 
-    if( StrOp.equals( ori, wItem.south ) )
-      m_GC->DrawText( wxString(m_Label,wxConvUTF8), 32-5, 3, getRadians(270.0) );
-    else if( StrOp.equals( ori, wItem.north ) )
-      m_GC->DrawText( wxString(m_Label,wxConvUTF8), 7, (32 * len)-3, getRadians(90.0) );
-    else
-      m_GC->DrawText( wxString(m_Label,wxConvUTF8), 3, 5 );
+    if( StrOp.equals( ori, wItem.south ) ) {
+      degrees = 270.0;
+      x = 32-5;
+      y = 3;
+    }
+    else if( StrOp.equals( ori, wItem.north ) ) {
+      degrees = 90.0;
+      x = 7;
+      y = (32 * len)-3;
+    }
+    else {
+      degrees = 0.0;
+      x = 3;
+      y = 5;
+    }
 
+    wxFont* font = setFont(m_iTextps, red, green, blue);
+    drawString( wxString(m_Label,wxConvUTF8), x, y, degrees, false );
+    delete font;
   }
 
-#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-#else
-  delete font;
-#endif
 }
 
 
@@ -1714,9 +1775,6 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
   svgSym[6] = (m_bSmall && m_SvgSym12 != NULL)?m_SvgSym12:m_SvgSym6;
   svgSym[7] = (m_bSmall && m_SvgSym14 != NULL)?m_SvgSym14:m_SvgSym13;
   svgSym[8] = (m_bSmall && m_SvgSym16 != NULL)?m_SvgSym16:m_SvgSym15;
-
-  //if( StrOp.equals( ori, wItem.east ) )
-    //ori = wItem.west;
 
   if( m_rotate && m_iOccupied != 0 && m_iOccupied != 2 ) {
     if( StrOp.equals(ori, wItem.west))
@@ -1767,9 +1825,6 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
      drawSvgSym(dc, svgSym[1], ori);
    }
 
-  wxFont* font = new wxFont( dc.GetFont() );
-  font->SetPointSize( m_iTextps );
-
   if( StrOp.len(m_Label) > 0 ) {
     int red = 0;
     int green = 0;
@@ -1783,31 +1838,57 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
       blue = wPlanPanel.getbktext_blue(planpanelIni);
     }
 
-    m_GC->SetFont(*font,wxColour(red,green,blue));
+    TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "block: setfont" );
 
+    wxFont* font = setFont(m_iTextps, red, green, blue);
     /* center the blocktext */
-    double width;
-    double height;
-    double descent;
-    double externalLeading;
-    m_GC->GetTextExtent( wxString(m_Label,wxConvUTF8).Trim(),(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+    double width = 0;
+    double height = 0;
+    double descent = 0;
+    double externalLeading = 0;
+    if( m_UseGC )
+      m_GC->GetTextExtent( wxString(m_Label,wxConvUTF8).Trim(),(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+    else {
+      wxCoord w;
+      wxCoord h;
+      dc.GetTextExtent(wxString(m_Label,wxConvUTF8).Trim(), &w, &h, 0,0, font);
+      width  = w;
+      height = h;
+    }
+
+    double degrees = 0.0;
+    int x = 0;
+    int y = 0;
 
     if( StrOp.equals( textOri, wItem.south ) ) {
-      m_GC->DrawText( wxString(m_Label,wxConvUTF8), 32-5, 3, getRadians(270.0) );
+      degrees = 270.0;
+      x = 32-5;
+      y = 3;
     }
     else if( StrOp.equals( textOri, wItem.north ) ) {
-      m_GC->DrawText( wxString(m_Label,wxConvUTF8), 7, (32 * blocklen)-3, getRadians(90.0) );
+      degrees = 90.0;
+      x = 7;
+      y = (32 * blocklen)-3;
     }
     else {
 #ifdef __WIN32__
-      m_GC->DrawText( wxString(m_Label,wxConvUTF8), 9, 8 );
+      degrees = 0.0;
+      x = 9;
+      y = 8;
 #else
-      m_GC->DrawText( wxString(m_Label,wxConvUTF8), ((32*blocklen-width)/2), (32-height)/2 );
+      degrees = 0.0;
+      x = ((32*blocklen-width)/2);
+      y = (32-height)/2;
 #endif
     }
+
+    TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "block: drawstring" );
+    drawString( wxString(m_Label,wxConvUTF8), x, y, degrees, false );
+    TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "block: delete font" );
+    delete font;
+
   }
 
-  delete font;
 }
 
 
@@ -1823,50 +1904,51 @@ void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool occupied, const char* ori )
 
   const wxBrush& b = dc.GetBrush();
   if( m_iOccupied == 1 ) {
-    m_GC->SetBrush( wxColour(255,200,200) );
+    setBrush( wxColour(255,200,200) );
   }
   else if( m_iOccupied == 2 ) {
-    m_GC->SetBrush( wxColour(255,255,200) );
+    setBrush( wxColour(255,255,200) );
   }
   else {
-    m_GC->SetBrush( *wxWHITE );
+    setBrush( *wxWHITE );
   }
 
-  m_GC->SetPen( wxPen( wxColour(0,0,0), 2));
+  setPen( wxPen( wxColour(0,0,0), 2));
 
-  wxPoint seltab[4];
-  seltab[0].x = 1;
-  seltab[0].y = 3;
-  seltab[1].x = (32 * nrtracks) - 1;
-  seltab[1].y = 3;
-  seltab[2].x = (32 * nrtracks) - 1;
-  seltab[2].y = 28;
-  seltab[3].x = 1;
-  seltab[3].y = 28;
-  //dc.DrawPolygon( 4, rotateShape( seltab, 4, ori ) );
-  if( StrOp.equals( wItem.west, ori ) || StrOp.equals( wItem.east, ori ) )
-    m_GC->DrawRoundedRectangle( 1, 3, (32 * nrtracks) - 1, 28, 10 );
-  else
-    m_GC->DrawRoundedRectangle( 3, 1, 28, (32 * nrtracks) - 1, 10 );
+  if( StrOp.equals( wItem.west, ori ) || StrOp.equals( wItem.east, ori ) ) {
+    if( m_UseGC )
+      m_GC->DrawRoundedRectangle( 1, 3, (32 * nrtracks) - 1, 28, 10 );
+    else
+      dc.DrawRoundedRectangle( 1, 3, (32 * nrtracks) - 1, 28, 10 );
+  }
+  else {
+    if( m_UseGC )
+      m_GC->DrawRoundedRectangle( 3, 1, 28, (32 * nrtracks) - 1, 10 );
+    else
+      dc.DrawRoundedRectangle( 3, 1, 28, (32 * nrtracks) - 1, 10 );
+  }
 
-  m_GC->SetBrush( b );
+  setBrush( b );
 
 
-  wxFont* font = new wxFont( dc.GetFont() );
-  font->SetPointSize( m_iTextps );
-  m_GC->SetFont(*font, *wxBLACK);
+  double degrees = 0.0;
+  int x = 5;
+  int y = 5;
 
-  if( StrOp.equals( ori, wItem.south ) )
-    m_GC->DrawText( wxString(m_Label,wxConvUTF8), 32-5, 3, getRadians(270.0) );
-  else if( StrOp.equals( ori, wItem.north ) )
-    m_GC->DrawText( wxString(m_Label,wxConvUTF8), 5, (32 * nrtracks)-3, getRadians(90.0) );
-  else
-    m_GC->DrawText( wxString(m_Label,wxConvUTF8), 5, 5 );
+  if( StrOp.equals( ori, wItem.south ) ) {
+    degrees = 270.0;
+    x = 32-5;
+    y = 3;
+  }
+  else if( StrOp.equals( ori, wItem.north ) ) {
+    degrees = 90.0;
+    x = 5;
+    y = (32 * nrtracks)-3;
+  }
 
-#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-#else
+  wxFont* font = setFont(m_iTextps);
+  drawString( wxString(m_Label,wxConvUTF8), x, y, degrees, false );
   delete font;
-#endif
 }
 
 
@@ -1915,7 +1997,10 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
     m_Ori = ori;
 
     if( m_Bitmap != NULL ) {
-      m_GC->DrawBitmap(*m_Bitmap, 0, 0, m_Bitmap->GetWidth(), m_Bitmap->GetHeight());
+      if( m_UseGC )
+        m_GC->DrawBitmap(*m_Bitmap, 0, 0, m_Bitmap->GetWidth(), m_Bitmap->GetHeight());
+      else
+        dc.DrawBitmap(*m_Bitmap, 0, 0, true);
       return;
     }
   }
@@ -1924,39 +2009,6 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
   if( pointsize == 0 )
     pointsize = m_iTextps;
 
-#ifdef __WIN32__ // no scaling is done when exchanging the font in wx 2.6.3
-  wxFont* font = new wxFont( dc.GetFont() );
-  if( pointsize > 0 ) {
-    font->SetPointSize( pointsize );
-
-    if( wText.isbold(m_Props))
-      font->SetWeight(wxFONTWEIGHT_BOLD);
-
-    if( wText.isitalic(m_Props))
-      font->SetStyle(wxFONTSTYLE_ITALIC);
-
-    font->SetUnderlined( wText.isunderlined(m_Props) ? true:false);
-
-  }
-#else
-  wxFont* font = new wxFont( dc.GetFont() );
-  if( pointsize > 0 )
-    font->SetPointSize( pointsize );
-  else
-    font->SetPointSize( (int)(font->GetPointSize() * m_fText ) );
-
-  if( wText.isbold(m_Props))
-    font->SetWeight(wxFONTWEIGHT_BOLD);
-  if( wText.isitalic(m_Props))
-    font->SetStyle(wxFONTSTYLE_ITALIC);
-  font->SetUnderlined( wText.isunderlined(m_Props) ? true:false);
-
-#endif
-
-
-  wxColour color( wText.getred(m_Props), wText.getgreen(m_Props), wText.getblue(m_Props) );
-
-  m_GC->SetFont(*font, color);
 
   if( !wText.istransparent(m_Props) && wText.getbackred(m_Props) != -1 && wText.getbackgreen(m_Props) != -1 && wText.getbackblue(m_Props) != -1 ){
     wxColour color( wText.getbackred(m_Props), wText.getbackgreen(m_Props), wText.getbackblue(m_Props) );
@@ -1987,6 +2039,9 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
     rotation = 90.0;
   }
 
+  wxFont* font = setFont(pointsize,
+      wText.getred(m_Props), wText.getgreen(m_Props), wText.getblue(m_Props),
+      wText.isbold(m_Props), wText.isitalic(m_Props), wText.isunderlined(m_Props));
 
   if( StrOp.find(m_Label, "|") ) {
     char s[256] = {'\0'};
@@ -1997,19 +2052,20 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
       p[0] = '\0';
       p++;
       //TraceOp.trc( "renderer", TRCLEVEL_INFO, __LINE__, 9999, "text %d,%d [%s] %s", xoff, yoff,  ps, ori );
-      m_GC->DrawText(  wxString(ps,wxConvUTF8), xoff, yoff, getRadians(rotation) );
+      drawString(  wxString(ps,wxConvUTF8), xoff, yoff, rotation, false );
       yoff += yinc;
       xoff += xinc;
       ps = p;
     }
     //TraceOp.trc( "renderer", TRCLEVEL_INFO, __LINE__, 9999, "text %d,%d [%s] %s", xoff, yoff,  ps, ori );
-    m_GC->DrawText(  wxString(ps,wxConvUTF8), xoff, yoff, getRadians(rotation) );
+    drawString(  wxString(ps,wxConvUTF8), xoff, yoff, rotation, false );
   }
   else {
-    m_GC->DrawText( wxString(m_Label,wxConvUTF8), xoff, yoff, getRadians(rotation) );
+    drawString(  wxString(m_Label,wxConvUTF8), xoff, yoff, rotation, false );
   }
 
   delete font;
+
 }
 
 
@@ -2051,20 +2107,30 @@ void SymbolRenderer::drawSensor( wxPaintDC& dc, bool occupied, bool actroute, co
   }
 
   if( m_bShowID ) {
-    wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( m_iItemIDps );
-    m_GC->SetFont(*font, *wxBLACK);
+    double degrees = 0.0;
+    int x = 0;
+    int y = 0;
 
-    if( StrOp.equals( ori, wItem.south ) )
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, getRadians(270.0) );
-    else if( StrOp.equals( ori, wItem.north ) )
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, getRadians(90.0) );
-    else if(StrOp.equals( ori, wItem.east ) && wFeedback.iscurve( m_Props ))
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 22 );
-    else
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1 );
+    if( StrOp.equals( ori, wItem.south ) ) {
+      degrees = 270.0;
+      x = 32;
+      y = 1;
+    }
+    else if( StrOp.equals( ori, wItem.north ) ) {
+      degrees = 90.0;
+      x = 1;
+      y = 32;
+    }
+    else if(StrOp.equals( ori, wItem.east ) && wFeedback.iscurve( m_Props )) {
+      x = 0;
+      y = 22;
+    }
+    else {
+      x = 0;
+      y = 1;
+    }
 
-    delete font;
+    drawString( wxString(wItem.getid(m_Props),wxConvUTF8), x, y, degrees );
   }
 
 }
@@ -2088,18 +2154,37 @@ void SymbolRenderer::drawRoute( wxPaintDC& dc, bool occupied, const char* ori, i
   }
 
   if( m_bShowID ) {
-    wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( m_iItemIDps );
-    m_GC->SetFont(*font, *wxBLACK);
-
     if( StrOp.equals( ori, wItem.south ) )
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, getRadians(270.0) );
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
     else if( StrOp.equals( ori, wItem.north ) )
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, getRadians(90.0) );
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
     else
-      m_GC->DrawText( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1 );
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
+  }
 
-    delete font;
+}
+
+
+void SymbolRenderer::setPen( const wxPen& pen ) {
+  if( m_UseGC )
+    m_GC->SetPen( pen );
+  else
+    m_DC->SetPen( pen );
+}
+
+void SymbolRenderer::setBrush( const wxBrush& brush ) {
+  if( m_UseGC )
+    m_GC->SetBrush( brush );
+  else
+    m_DC->SetBrush( brush );
+}
+
+void SymbolRenderer::drawLine(int x, int y, int cx, int cy) {
+  if( m_UseGC ) {
+    m_GC->StrokeLine( x, y, cx, cy );
+  }
+  else {
+    m_DC->DrawLine( x, y, cx, cy );
   }
 
 }
@@ -2167,8 +2252,14 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
 
   double delta = (32 * ttdiam)/2;  /* 79.0; for the original one */
 
-  m_GC->SetPen( *pen );
-  m_GC->DrawEllipse(0, 0, 32 * ttdiam, 32 * ttdiam);
+  if( m_UseGC ) {
+    setPen( *pen );
+    m_GC->DrawEllipse(0, 0, 32 * ttdiam, 32 * ttdiam);
+  }
+  else {
+    setPen( *pen );
+    dc.DrawCircle( delta, delta, delta );
+  }
 
   pen->SetStyle(wxSOLID);
 
@@ -2184,7 +2275,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
     if( wTTTrack.isstate( track ) || wTurntable.getbridgepos(m_Props) == wTTTrack.getnr(track) ) {
       pen = (wxPen*)wxRED_PEN;
       pen->SetWidth(5);
-      m_GC->SetPen( *pen );
+      setPen( *pen );
       *bridgepos = degr;
     }
     else {
@@ -2193,14 +2284,11 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
       else  /* reb added others with grey*/
         pen = (wxPen*)wxGREY_PEN;
       pen->SetWidth(5);
-      m_GC->SetPen( *pen );
+      setPen( *pen );
     }
 
     if( wTTTrack.isshow( track ) ) {
-      wxGraphicsPath path = m_GC->CreatePath();
-      path.MoveToPoint(delta, delta);
-      path.AddLineToPoint(x, y);
-      m_GC->StrokePath(path);
+      drawLine( delta, delta, x, y );
     }
 
 
@@ -2209,22 +2297,26 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
 
   pen = (wxPen*)wxBLACK_PEN;
   pen->SetWidth(2);
-  m_GC->SetPen( *pen );
+  setPen( *pen );
 
-  m_GC->SetBrush(*wxWHITE_BRUSH);
-  m_GC->DrawEllipse(delta - 0.45*delta, delta - 0.45*delta, 0.45*(32*ttdiam), 0.45*(32*ttdiam));
-  m_GC->DrawEllipse(delta - 0.40*delta, delta - 0.40*delta, 0.40*(32*ttdiam), 0.40*(32*ttdiam));
-
-
-  wxPoint* p = rotateBridge( *bridgepos, delta );
-  wxGraphicsPath path = m_GC->CreatePath();
-  path.MoveToPoint(p[0].x, p[0].y);
-  path.AddLineToPoint(p[1].x, p[1].y);
-  path.AddLineToPoint(p[2].x, p[2].y);
-  path.AddLineToPoint(p[3].x, p[3].y);
-  path.AddLineToPoint(p[4].x, p[4].y);
-  m_GC->StrokePath(path);
-
+  setBrush(*wxWHITE_BRUSH);
+  if( m_UseGC ) {
+    m_GC->DrawEllipse(delta - 0.45*delta, delta - 0.45*delta, 0.45*(32*ttdiam), 0.45*(32*ttdiam));
+    m_GC->DrawEllipse(delta - 0.40*delta, delta - 0.40*delta, 0.40*(32*ttdiam), 0.40*(32*ttdiam));
+    wxPoint* p = rotateBridge( *bridgepos, delta );
+    wxGraphicsPath path = m_GC->CreatePath();
+    path.MoveToPoint(p[0].x, p[0].y);
+    path.AddLineToPoint(p[1].x, p[1].y);
+    path.AddLineToPoint(p[2].x, p[2].y);
+    path.AddLineToPoint(p[3].x, p[3].y);
+    path.AddLineToPoint(p[4].x, p[4].y);
+    m_GC->StrokePath(path);
+  }
+  else {
+    dc.DrawCircle( delta, delta, 0.45*delta);
+    dc.DrawCircle( delta, delta, 0.40*delta);
+    dc.DrawPolygon( 5, rotateBridge( *bridgepos, delta ) );
+  }
 
   const wxBrush& b = dc.GetBrush();
   Boolean sensor1 = wTurntable.isstate1( m_Props );
@@ -2233,38 +2325,40 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   wxBrush* yellow = NULL;
 
   if( sensor1 && sensor2 ) {
-    m_GC->SetBrush( *wxRED_BRUSH );
+    setBrush( *wxRED_BRUSH );
   }
   else if( sensor1 || sensor2 ) {
     yellow = new wxBrush( _T("yellow"), wxSOLID );
-    m_GC->SetBrush( *yellow );
+    setBrush( *yellow );
   }
   else {
-    m_GC->SetBrush( *wxGREEN_BRUSH );
+    setBrush( *wxGREEN_BRUSH );
   }
 
-  p = rotateBridgeSensors( *bridgepos, delta );
-  path = m_GC->CreatePath();
-  path.MoveToPoint(p[0].x, p[0].y);
-  path.AddLineToPoint(p[1].x, p[1].y);
-  path.AddLineToPoint(p[2].x, p[2].y);
-  path.AddLineToPoint(p[3].x, p[3].y);
-  path.AddLineToPoint(p[4].x, p[4].y);
-  m_GC->FillPath(path);
-
+  if( m_UseGC ) {
+    wxPoint* p = rotateBridgeSensors( *bridgepos, delta );
+    wxGraphicsPath path = m_GC->CreatePath();
+    path.MoveToPoint(p[0].x, p[0].y);
+    path.AddLineToPoint(p[1].x, p[1].y);
+    path.AddLineToPoint(p[2].x, p[2].y);
+    path.AddLineToPoint(p[3].x, p[3].y);
+    path.AddLineToPoint(p[4].x, p[4].y);
+    m_GC->FillPath(path);
+  }
+  else {
+    dc.DrawPolygon( 5, rotateBridgeSensors( *bridgepos, delta ) );
+    dc.SetBrush( b );
+  }
 
   if( yellow != NULL )
     delete yellow;
 
   if( m_bShowID ) {
-    wxFont* font = new wxFont( dc.GetFont() );
-    font->SetPointSize( m_iTextps );
-    m_GC->SetFont(*font, *wxBLACK);
-
-    if (ttdiam >= 5)
-      m_GC->DrawText( wxString(m_Label,wxConvUTF8), 5, 5 );
-
-    delete font;
+    if (ttdiam >= 5) {
+      wxFont* font = setFont(m_iTextps);
+      drawString( wxString(m_Label,wxConvUTF8), 5, 5, 0.0, false );
+      delete font;
+    }
   }
 }
 
@@ -2274,13 +2368,17 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
  */
 void SymbolRenderer::drawShape( wxPaintDC& dc, wxGraphicsContext* gc, bool occupied, bool actroute, double* bridgepos, bool showID, const char* ori, int status ) {
   m_bShowID = showID;
+  m_DC = &dc;
   const char* nodeName = NodeOp.getName( m_Props );
+  m_UseGC = false;
   m_GC = gc;
+  if( m_GC != NULL )
+    m_UseGC = true;
 
   if( ori == NULL || StrOp.len( ori ) == 0 )
     ori = wItem.west;
 
-  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "nodename=%s", nodeName );
+  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "nodename=%s", nodeName );
 
   switch( m_iSymType ) {
     case symtype::i_track:
