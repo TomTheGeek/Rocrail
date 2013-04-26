@@ -1110,28 +1110,18 @@ void SymbolRenderer::drawTrack( wxPaintDC& dc, bool occupied, bool actroute, con
 
   if( m_bShowID ) {
     if( StrOp.equals( wTrack.connector, wTrack.gettype( m_Props ) ) ) {
-      TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "connector %d", wTrack.gettknr(m_Props));
 
-      double degrees = 0.0;
-      int x = 1;
-      int y = 1;
       if( StrOp.equals( ori, wItem.north ) ) {
-        degrees = 270.0;
-        x = 10;
-        y = 10;
+        drawString(wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 10, 10, 270.0);
       }
       else if( StrOp.equals( ori, wItem.south ) ) {
-        degrees = 90.0;
-        x = 20;
-        y = 20;
+        drawString(wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 20, 20, 90.0);
       }
       else if( StrOp.equals( ori, wItem.east ) ) {
-        degrees = 0.0;
-        x = 10;
-        y = 20;
+        drawString(wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 10, 20, 0.0);
       }
-
-      drawString(wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), x, y, degrees);
+      else
+        drawString(wxString::Format(_T("%d"),wTrack.gettknr(m_Props)), 1, 1, 0.0);
 
     }
 
@@ -1186,31 +1176,19 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, bool actroute, 
 
 
   if( m_bShowID ) {
-    double degrees = 0.0;
-    int x = 0;
-    int y = 0;
-
     if( m_iSymSubType == switchtype::i_crossingright ) {
       if( StrOp.equals( ori, wItem.south ) || StrOp.equals( ori, wItem.north ) ) {
-        x = 0;
-        y = 63;
-        degrees = 90.0;
+        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 0, 63, 90.0);
       }
     }
     else {
       if( StrOp.equals( ori, wItem.south ) || StrOp.equals( ori, wItem.north ) ) {
-        x = 20;
-        y = 63;
-        degrees = 90.0;
+        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 20, 63, 90.0);
       }
       else {
-        x = 0;
-        y = 21;
-        degrees = 0.0;
+        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 0, 21, 0.0);
       }
     }
-
-    drawString(wxString(wItem.getid(m_Props),wxConvUTF8), x, y, degrees);
   }
 
 }
@@ -1269,45 +1247,28 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, const char* or
 
 
   if( m_bShowID ) {
-    double degrees = 0.0;
-    int x = 0;
-    int y = 0;
-
     if( m_iSymSubType == switchtype::i_dcrossingright ) {
       if( StrOp.equals( ori, wItem.south ) ) {
-        degrees = 270.0;
-        x = 32;
-        y = 1;
+        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0);
       }
       else if( StrOp.equals( ori, wItem.north ) ) {
-        degrees = 90.0;
-        x = 1;
-        y = 63;
+        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 1, 63, 90.0);
       }
       else {
-        degrees = 0.0;
-        x = 0;
-        y = 1;
+        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0);
       }
     }
     else {
       if( StrOp.equals( ori, wItem.south ) ) {
-        degrees = 270.0;
-        x = 32;
-        y = 32;
+        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 32, 32, 270.0);
       }
       else if( StrOp.equals( ori, wItem.north ) ) {
-        degrees = 90.0;
-        x = 1;
-        y = 32;
+        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0);
       }
       else {
-        degrees = 0.0;
-        x = 0;
-        y = 20;
+        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 0, 20, 0.0);
       }
     }
-    drawString(wxString(wItem.getid(m_Props),wxConvUTF8), x, y, degrees);
   }
 
 
@@ -1341,10 +1302,6 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, const char* ori
   }
 
   if( m_bShowID ) {
-    double degrees = 0.0;
-    int x = 0;
-    int y = 0;
-
     double width;
     double height;
     double descent;
@@ -1356,27 +1313,18 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, const char* ori
 
 
     if( StrOp.equals( ori, wItem.south ) ) {
-      degrees = 90.0;
-      x = 1;
-      y = width;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, width, 90.0 );
     }
     else if( StrOp.equals( ori, wItem.north ) ) {
-      degrees = 90.0;
-      x = 1;
-      y = 32;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
     }
     else if( StrOp.equals( ori, wItem.east ) ) {
-      degrees = 0.0;
-      x = 32 - width;
-      y = 1;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 32 - width, 1, 0.0 );
     }
     else {
-      degrees = 0.0;
-      x = 0;
-      y = 1;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
     }
 
-    drawString( wxString(wItem.getid(m_Props),wxConvUTF8), x, y, degrees );
   }
 
 
@@ -1432,31 +1380,18 @@ void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool occupied, const char* ori 
   }
 
   if( m_bShowID ) {
-    double degrees = 0.0;
-    int x = 0;
-    int y = 0;
-
     if( StrOp.equals( ori, wItem.south ) ) {
-      degrees = 270.0;
-      x = 32;
-      y = 1;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
     }
     else if( StrOp.equals( ori, wItem.north ) ) {
-      degrees = 90.0;
-      x = 1;
-      y = 32;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
     }
     else if( StrOp.equals( ori, wItem.east ) ) {
-      degrees = 0.0;
-      x = 0;
-      y = 20;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 20, 0.0 );
     }
     else {
-      degrees = 0.0;
-      x = 0;
-      y = 1;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
     }
-    drawString( wxString(wItem.getid(m_Props),wxConvUTF8), x, y, degrees );
   }
 
 }
@@ -1538,22 +1473,14 @@ void SymbolRenderer::drawDecoupler( wxPaintDC& dc, bool occupied, bool actroute,
   }
 
   if( m_bShowID ) {
-    double degrees = 0.0;
-    int x = 0;
-    int y = 1;
-
     if( StrOp.equals( ori, wItem.south ) ) {
-      degrees = 270.0;
-      x = 32;
-      y = 1;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
     }
     else if( StrOp.equals( ori, wItem.north ) ) {
-      degrees = 90.0;
-      x = 1;
-      y = 32;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
     }
-
-    drawString( wxString(wItem.getid(m_Props),wxConvUTF8), x, y, degrees );
+    else
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
   }
 }
 
@@ -1729,28 +1656,18 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
       blue  = wPlanPanel.getbktext_blue(planpanelIni);
     }
 
-    double degrees = 0.0;
-    int x = 0;
-    int y = 0;
+    wxFont* font = setFont(m_iTextps, red, green, blue);
 
     if( StrOp.equals( ori, wItem.south ) ) {
-      degrees = 270.0;
-      x = 32-5;
-      y = 3;
+      drawString( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0, false );
     }
     else if( StrOp.equals( ori, wItem.north ) ) {
-      degrees = 90.0;
-      x = 7;
-      y = (32 * len)-3;
+      drawString( wxString(m_Label,wxConvUTF8), 7, (32 * len)-3, 90.0, false );
     }
     else {
-      degrees = 0.0;
-      x = 3;
-      y = 5;
+      drawString( wxString(m_Label,wxConvUTF8), 3, 5, 0.0, false );
     }
 
-    wxFont* font = setFont(m_iTextps, red, green, blue);
-    drawString( wxString(m_Label,wxConvUTF8), x, y, degrees, false );
     delete font;
   }
 
@@ -1862,35 +1779,20 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
       height = h;
     }
 
-    double degrees = 0.0;
-    int x = 0;
-    int y = 0;
-
     if( StrOp.equals( textOri, wItem.south ) ) {
-      degrees = 270.0;
-      x = 32-5;
-      y = 3;
+      drawString( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0, false );
     }
     else if( StrOp.equals( textOri, wItem.north ) ) {
-      degrees = 90.0;
-      x = 7;
-      y = (32 * blocklen)-3;
+      drawString( wxString(m_Label,wxConvUTF8), 7, (32 * blocklen)-3, 90.0, false );
     }
     else {
 #ifdef __WIN32__
-      degrees = 0.0;
-      x = 9;
-      y = 8;
+      drawString( wxString(m_Label,wxConvUTF8), 9, 8, 0.0, false );
 #else
-      degrees = 0.0;
-      x = ((32*blocklen-width)/2);
-      y = (32-height)/2;
+      drawString( wxString(m_Label,wxConvUTF8), ((32*blocklen-width)/2), (32-height)/2, 0.0, false );
 #endif
     }
 
-    TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "block: drawstring" );
-    drawString( wxString(m_Label,wxConvUTF8), x, y, degrees, false );
-    TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "block: delete font" );
     delete font;
 
   }
@@ -1937,23 +1839,15 @@ void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool occupied, const char* ori )
   setBrush( b );
 
 
-  double degrees = 0.0;
-  int x = 5;
-  int y = 5;
+  wxFont* font = setFont(m_iTextps);
 
   if( StrOp.equals( ori, wItem.south ) ) {
-    degrees = 270.0;
-    x = 32-5;
-    y = 3;
+    drawString( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0, false );
   }
   else if( StrOp.equals( ori, wItem.north ) ) {
-    degrees = 90.0;
-    x = 5;
-    y = (32 * nrtracks)-3;
+    drawString( wxString(m_Label,wxConvUTF8), 5, (32 * nrtracks)-3, 90.0, false );
   }
 
-  wxFont* font = setFont(m_iTextps);
-  drawString( wxString(m_Label,wxConvUTF8), x, y, degrees, false );
   delete font;
 }
 
@@ -2114,29 +2008,18 @@ void SymbolRenderer::drawSensor( wxPaintDC& dc, bool occupied, bool actroute, co
 
   if( m_bShowID ) {
     double degrees = 0.0;
-    int x = 0;
-    int y = 0;
-
     if( StrOp.equals( ori, wItem.south ) ) {
-      degrees = 270.0;
-      x = 32;
-      y = 1;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
     }
     else if( StrOp.equals( ori, wItem.north ) ) {
-      degrees = 90.0;
-      x = 1;
-      y = 32;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
     }
     else if(StrOp.equals( ori, wItem.east ) && wFeedback.iscurve( m_Props )) {
-      x = 0;
-      y = 22;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 22, 0.0 );
     }
     else {
-      x = 0;
-      y = 1;
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
     }
-
-    drawString( wxString(wItem.getid(m_Props),wxConvUTF8), x, y, degrees );
   }
 
 }
