@@ -700,7 +700,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
 
     wxGraphicsContext* gc = NULL;
     if( wGui.isrendergc(wxGetApp().getIni())) {
-      wxGraphicsContext* gc = wxGraphicsContext::Create(this);
+      gc = wxGraphicsContext::Create(this);
       wxGraphicsMatrix matrix = gc->CreateMatrix();
       matrix.Scale(m_Scale, m_Scale);
       gc->SetTransform(matrix);
