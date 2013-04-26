@@ -701,7 +701,9 @@ void Symbol::OnPaint(wxPaintEvent& event)
     wxGraphicsContext* gc = NULL;
     if( wGui.isrendergc(wxGetApp().getIni())) {
       wxGraphicsContext* gc = wxGraphicsContext::Create(this);
-      gc->Scale(m_Scale, m_Scale);
+      wxGraphicsMatrix matrix = gc->CreateMatrix();
+      matrix.Scale(m_Scale, m_Scale);
+      gc->SetTransform(matrix);
 
   #ifdef wxANTIALIAS_DEFAULT
       gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
@@ -729,7 +731,8 @@ void Symbol::OnPaint(wxPaintEvent& event)
     }
 
     m_Renderer->drawShape( (wxPaintDC&)dc, gc, occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), ori, status );
-    delete gc;
+    if( gc != NULL)
+      delete gc;
   }
   else {
     Show( false );

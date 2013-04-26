@@ -1074,13 +1074,16 @@ void SymbolRenderer::drawString(const wxString& text, int x, int y, double degre
     font = setFont();
 
   if( m_UseGC ) {
-    m_GC->DrawText( text, x, y, getRadians(degrees) );
+    if( degrees > 0.0 )
+      m_GC->DrawText( text, x, y, getRadians(degrees) );
+    else
+      m_GC->DrawText( text, x, y );
   }
   else {
     m_DC->DrawRotatedText( text, x, y, degrees );
   }
 
-  if( font != NULL )
+  if( setfont )
     delete font;
 }
 
@@ -1219,6 +1222,8 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, bool actroute, 
 void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
   Boolean has2Units = ( wSwitch.getaddr2( m_Props ) > 0 || wSwitch.getport2( m_Props ) > 0 )  ? True:False;
+
+  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "drawDCrossing %s state=%s", wSwitch.getid( m_Props ), state );
 
   // SVG Symbol:
   if( has2Units ) {
@@ -1462,7 +1467,8 @@ void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool occupied, const char* ori 
 void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
 
-  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "Switch %s state=%s subtype=%d", wSwitch.getid( m_Props ), state, m_iSymSubType );
+  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "Switch %s state=%s subtype=%d ori=%s",
+      wSwitch.getid( m_Props ), state, m_iSymSubType, ori );
 
   switch( m_iSymSubType ) {
     case switchtype::i_decoupler:
@@ -1882,9 +1888,9 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
 #endif
     }
 
-    TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "block: drawstring" );
+    TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "block: drawstring" );
     drawString( wxString(m_Label,wxConvUTF8), x, y, degrees, false );
-    TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "block: delete font" );
+    TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "block: delete font" );
     delete font;
 
   }
