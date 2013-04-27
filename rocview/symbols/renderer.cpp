@@ -1302,29 +1302,35 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, const char* ori
   }
 
   if( m_bShowID ) {
-    double width;
-    double height;
-    double descent;
-    double externalLeading;
+    wxFont* font = setFont();
+    double width = 0;
+    double height = 0;
+    double descent = 0;
+    double externalLeading = 0;
     if( m_UseGC )
-      m_GC->GetTextExtent( wxString(wItem.getid(m_Props),wxConvUTF8).Trim(),(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
-    else
-      width = dc.GetTextExtent( wxString(wItem.getid(m_Props),wxConvUTF8) ).GetWidth();
+      m_GC->GetTextExtent( wxString(wItem.getid(m_Props),wxConvUTF8).Trim(), (wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+    else {
+      wxCoord w;
+      wxCoord h;
+      dc.GetTextExtent(wxString(wItem.getid(m_Props),wxConvUTF8).Trim(), &w, &h, 0,0, font);
+      width  = w;
+      height = h;
+    }
 
 
     if( StrOp.equals( ori, wItem.south ) ) {
-      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, width, 90.0 );
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, width, 90.0, false );
     }
     else if( StrOp.equals( ori, wItem.north ) ) {
-      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0, false );
     }
     else if( StrOp.equals( ori, wItem.east ) ) {
-      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 32 - width, 1, 0.0 );
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 32 - width, 1, 0.0, false );
     }
     else {
-      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
+      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0, false );
     }
-
+    delete font;
   }
 
 
@@ -1916,8 +1922,25 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
     dc.Clear();
   }
 
-  wxSize size = dc.GetTextExtent(wxString(m_Label,wxConvUTF8));
-  int height = size.GetHeight();
+  wxFont* font = setFont(pointsize,
+      wText.getred(m_Props), wText.getgreen(m_Props), wText.getblue(m_Props),
+      wText.isbold(m_Props), wText.isitalic(m_Props), wText.isunderlined(m_Props));
+  /* center the blocktext */
+  double width = 0;
+  double height = 0;
+  double descent = 0;
+  double externalLeading = 0;
+  if( m_UseGC )
+    m_GC->GetTextExtent( wxString(m_Label,wxConvUTF8).Trim(),(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+  else {
+    wxCoord w;
+    wxCoord h;
+    dc.GetTextExtent(wxString(m_Label,wxConvUTF8).Trim(), &w, &h, 0,0, font);
+    width  = w;
+    height = h;
+  }
+
+
   double rotation = 0.0;
   int xoff = 3;
   int yoff = 5;
@@ -1938,10 +1961,6 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
     yinc = 0;
     rotation = 90.0;
   }
-
-  wxFont* font = setFont(pointsize,
-      wText.getred(m_Props), wText.getgreen(m_Props), wText.getblue(m_Props),
-      wText.isbold(m_Props), wText.isitalic(m_Props), wText.isunderlined(m_Props));
 
   if( StrOp.find(m_Label, "|") ) {
     char s[256] = {'\0'};
