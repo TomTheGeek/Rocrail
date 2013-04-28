@@ -192,48 +192,57 @@ static void __initfbConnection(iOSRCPData o) {
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "FB Connected" );
 
   if ( SocketOp.readln( o->fbackSocket, inbuf ) ) {
+    StrOp.replaceAll( inbuf, '\n', ' ' );
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, inbuf );
     if( StrOp.findi( inbuf, "SRCP 0.8" ) ) {
-      const char* protStr = "SET PROTOCOL SRCP 0.8\n";
-      const char* connStr = "SET CONNECTIONMODE SRCP INFO\n";
-      const char* goStr = "GO\n";
+      char cmd[256];
+
       o->srcp08 = True;
 
       if( !o->handshakeerror ) {
-        SocketOp.write( o->fbackSocket, protStr, StrOp.len(protStr) );
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",protStr);
+        StrOp.fmtb(cmd, "%s\n", "SET PROTOCOL SRCP 0.8");
+        SocketOp.write( o->fbackSocket, cmd, StrOp.len(cmd) );
+        StrOp.replaceAll( cmd, '\n', ' ' );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",cmd);
 
         /*"OK PROTOCOL SRCP"*/
         SocketOp.readln( o->fbackSocket, inbuf );
         if( !StrOp.find( inbuf, "201" ) ) {
           /* error */
           o->handshakeerror = True;
+          StrOp.replaceAll( inbuf, '\n', ' ' );
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: expecting 201, received [%s]",inbuf);
         }
       }
 
       if( !o->handshakeerror ) {
-        SocketOp.write( o->fbackSocket, connStr, StrOp.len(connStr) );
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",connStr);
+        StrOp.fmtb(cmd, "%s\n", "SET CONNECTIONMODE SRCP INFO");
+        SocketOp.write( o->fbackSocket, cmd, StrOp.len(cmd) );
+        StrOp.replaceAll( cmd, '\n', ' ' );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",cmd);
 
         /*"OK CONNECTION MODE"*/
         SocketOp.readln( o->fbackSocket, inbuf );
         if( !StrOp.find( inbuf, "202" ) ) {
           /* error */
           o->handshakeerror = True;
+          StrOp.replaceAll( inbuf, '\n', ' ' );
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: expecting 202, received [%s]",inbuf);
         }
       }
 
       if( !o->handshakeerror ) {
-        SocketOp.write( o->fbackSocket, goStr, StrOp.len(goStr) );
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",goStr);
+        StrOp.fmtb(cmd, "%s\n", "GO");
+        SocketOp.write( o->fbackSocket, cmd, StrOp.len(cmd) );
+        StrOp.replaceAll( cmd, '\n', ' ' );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",cmd);
 
         /*"OK GO"*/
         SocketOp.readln( o->fbackSocket, inbuf );
         if( !StrOp.find( inbuf, "200" ) ) {
           /* error */
           o->handshakeerror = True;
+          StrOp.replaceAll( inbuf, '\n', ' ' );
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: expecting 200, received [%s]",inbuf);
         }
       }
