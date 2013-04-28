@@ -823,6 +823,7 @@ static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean rel
     wOutput.setaccessory( cmd, wSwitch.isfrogaccessory(data->props));
     wOutput.setcmd( cmd, relays1?wOutput.on:wOutput.off);
     ControlOp.cmd( control, cmd, &error );
+    ThreadOp.sleep(50);
   }
 
   if( addrpol2 > 0 || portpol2 > 0 ) {
@@ -839,6 +840,7 @@ static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean rel
     wOutput.setaccessory( cmd, wSwitch.isfrogaccessory(data->props));
     wOutput.setcmd( cmd, relays2?wOutput.on:wOutput.off);
     ControlOp.cmd( control, cmd, &error );
+    ThreadOp.sleep(50);
   }
 }
 
