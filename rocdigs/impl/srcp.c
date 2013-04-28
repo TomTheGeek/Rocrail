@@ -285,17 +285,15 @@ static void __feedbackReader( void * threadinst )
         readok =  True;
 
       if ( readok ) {
-        char* fbAddrStr       = NULL;
-        iOStrTok tok            = NULL;
-        int infotype            = 0; /* 0=FB, 1=GA , 2=GL*/
-        Boolean ignoreRest     = False;
-        char  tracestr[ 1024 ]  = { 0 };
-        char* infotypeStr = "";
-        int msgnr = 0;
+        char*    fbAddrStr   = NULL;
+        iOStrTok tok         = NULL;
+        int      infotype    = 0; /* 0=FB, 1=GA , 2=GL*/
+        Boolean  ignoreRest  = False;
+        char*    infotypeStr = "";
+        int      msgnr       = 0;
 
-        strncpy( tracestr, inbuf, ( strlen( inbuf ) - 1 ));
-        tracestr[ strlen( inbuf ) ] = '0';
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbAddrStr = [%s]", tracestr );
+        StrOp.replaceAll(inbuf, '\n', ' ');
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "info: [%s]", inbuf );
 
         if( StrOp.find( inbuf, "INFO ") ) {
           if( StrOp.find( inbuf, "FB ") ) {
