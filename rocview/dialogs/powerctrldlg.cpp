@@ -156,6 +156,12 @@ void PowerCtrlDlg::initValues(iONode event) {
 
 
         MapOp.put(m_BoosterMap, wBooster.getid( booster ), (obj)booster );
+        if(m_SelBooster == NULL) {
+          m_SelBooster = booster;
+          m_HistoryPanel->setBooster(m_SelBooster);
+          m_labHistory->SetLabel(wxString(wBooster.getid(m_SelBooster), wxConvUTF8 ));
+        }
+
         m_Boosters->AppendRows();
         m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 0, wxString(wBooster.getid( booster ),wxConvUTF8) );
         m_Boosters->SetCellValue(m_Boosters->GetNumberRows()-1, 1, wBooster.isshortcut(booster)?wxGetApp().getMsg("yes"):wxGetApp().getMsg("no") );
@@ -223,6 +229,8 @@ void PowerCtrlDlg::onCellLeftClick( wxGridEvent& event ) {
   if( m_SelBooster != NULL ) {
     TraceOp.trc( "pwrctrl", TRCLEVEL_INFO, __LINE__, 9999, "booster %s selected", wBooster.getid(m_SelBooster) );
     m_HistoryPanel->setBooster(m_SelBooster);
+    //SetTitle( wxString(wBooster.getid(m_SelBooster), wxConvUTF8 ));
+    m_labHistory->SetLabel(wxString(wBooster.getid(m_SelBooster), wxConvUTF8 ));
   }
 }
 
