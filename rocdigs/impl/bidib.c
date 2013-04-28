@@ -1722,7 +1722,7 @@ static const char* __boosterState2Str(int state, int* level, Boolean* shortcut) 
   case BIDIB_BST_STATE_OFF_SHORT:
     *level = TRCLEVEL_EXCEPTION;
     *shortcut = True;
-    return "shortcut";
+    return "overload";
   case BIDIB_BST_STATE_OFF_HOT:
     *level = TRCLEVEL_EXCEPTION;
     return "over temperature";
@@ -1775,7 +1775,7 @@ static void __handleBoosterStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdat
     const char* msg = __boosterState2Str(pdata[0], &level, &bidibnode->shortcut);
     bidibnode->stat = pdata[0];
     TraceOp.trc( name, level, __LINE__, 9999,
-        "booster %08X state=0x%02X [%s] %s", bidibnode->uid, pdata[0], msg, bidibnode->shortcut?"(shortcut)":"" );
+        "booster %08X state=0x%02X [%s]", bidibnode->uid, pdata[0], msg );
     shortcut = bidibnode->shortcut;
   }
   else {

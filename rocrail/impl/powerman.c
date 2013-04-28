@@ -271,7 +271,7 @@ static void __stateEvent( obj inst, iONode event ) {
       TraceOp.trc(name, shortcut?TRCLEVEL_EXCEPTION:TRCLEVEL_DEBUG, __LINE__, 9999,
           "booster %s(%08X) power is %s, diagnostics: %dmA %dmV %dC %s",
           wBooster.getid(booster), wBooster.getuid(booster), wState.ispower(event) ? "ON":"OFF",
-              wBooster.getload(booster), wBooster.getvolt(booster), wBooster.gettemp(booster), shortcut?"SHORTCUT":"" );
+              wBooster.getload(booster), wBooster.getvolt(booster), wBooster.gettemp(booster), shortcut?"OVERLOAD":"" );
 
 
       if( shortcut != wBooster.isshortcut(booster) ) {

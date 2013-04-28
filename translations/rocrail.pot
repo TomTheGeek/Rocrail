@@ -6347,3 +6347,9 @@ msgstr ""
 msgid "Render smooth"
 msgstr ""
 
+#. 
+# id="overload"
+#, c-format
+msgid "Overload"
+msgstr ""
+

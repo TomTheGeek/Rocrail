@@ -20547,4 +20547,7 @@
   <Msg id="rendergc">
     <en txt="Render smooth"/>
   </Msg>
+  <Msg id="overload">
+    <en txt="Overload"/>
+  </Msg>
 </Messages>

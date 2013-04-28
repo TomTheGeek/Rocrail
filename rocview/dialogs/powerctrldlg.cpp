@@ -90,7 +90,7 @@ void PowerCtrlDlg::initLabels() {
   m_Boosters->AutoSizeRows();
 
   m_Boosters->SetColLabelValue(0, wxGetApp().getMsg("boosterid") );
-  m_Boosters->SetColLabelValue(1, wxGetApp().getMsg("shortcut") );
+  m_Boosters->SetColLabelValue(1, wxGetApp().getMsg("overload") );
   m_Boosters->SetColLabelValue(2, wxGetApp().getMsg("trackpower") );
   m_Boosters->SetColLabelValue(3, wxGetApp().getMsg("powerdistrict") );
   m_Boosters->SetColLabelValue(4, wxT("mA") );
