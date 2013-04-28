@@ -171,7 +171,6 @@ static Boolean __initGL( iOSRCP08Data o, iONode node, int* bus ) {
     sprintf(tmpCommand,"GET %d GL %d\n", gl_bus, wLoc.getaddr(node) );
     if( __srcpSendCommand(o, True, tmpCommand,NULL) != 100 ) {
 
-      /* 14 Speedsteps and 4 Funs hardcoded for now. DDW ignores this values */
       sprintf(tmpCommand,"INIT %d GL %d %s %d %d %d\n", gl_bus,
               wLoc.getaddr(node), prot, wLoc.getprotver( node ),
               wLoc.getspcnt( node ), wLoc.getfncnt( node ) + 1 );
