@@ -195,6 +195,8 @@
 	</acc>
 
   <rocrail structname="RRI" wrappername="RocRail">
+    <var name="fsutf8" vt="bool" defval="true"/>
+    <var name="uniesc" vt="bool" defval="false"/>
     <var name="file" vt="string" defval="rocrail.ini" remark="RocRail ini-file."/>
     <var name="planfile" vt="string" defval="plan.xml" remark="RocRail plan-file."/>
     <var name="locs" vt="string" defval="NULL" range="*" remark="File name of locomotive definitions."/>

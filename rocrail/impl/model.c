@@ -3446,7 +3446,11 @@ static void _event( iOModel inst, iONode nodeC ) {
     int bus = wSwitch.getbus( nodeC );
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered event: %d:%d:%d", bus, addr, port );
+    if( addr == 0 && port == 0 ) {
+      addr = wOutput.getaddr( nodeC );
+      port = wOutput.getport( nodeC );
+    }
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered event: %s %d:%d:%d", NodeOp.getName(nodeC), bus, addr, port );
     /* Cleanup Node3 */
     nodeC->base.del(nodeC);
     return;
