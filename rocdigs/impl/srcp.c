@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -370,11 +370,8 @@ static void __feedbackReader( void * threadinst )
             int steps = 0;
             int dir   = 0;
             int f0    = 0;
-            int f1    = 0;
-            int f2    = 0;
-            int f3    = 0;
-            int f4    = 0;
-            int fun   = 0;
+            int idxFn = 0;
+            int srcpFx= 0;
 
             if( infotype == 1 ) {
               /* GA */
@@ -418,22 +415,17 @@ static void __feedbackReader( void * threadinst )
                   if( StrTokOp.hasMoreTokens( tok ) ) {
                     valStr = StrTokOp.nextToken( tok );
                     f0 = atoi( valStr );
-                    if( StrTokOp.hasMoreTokens( tok ) ) {
+
+                    /* put max 28 function states in a bitmap (integer, 32bit) */
+                    while( idxFn < 28 && StrTokOp.hasMoreTokens( tok ) ) {
                       valStr = StrTokOp.nextToken( tok );
-                      f1 = atoi( valStr );
-                      if( StrTokOp.hasMoreTokens( tok ) ) {
-                        valStr = StrTokOp.nextToken( tok );
-                        f2 = atoi( valStr );
-                        if( StrTokOp.hasMoreTokens( tok ) ) {
-                          valStr = StrTokOp.nextToken( tok );
-                          f3 = atoi( valStr );
-                          if( StrTokOp.hasMoreTokens( tok ) ) {
-                            valStr = StrTokOp.nextToken( tok );
-                            f4 = atoi( valStr );
-                          }
-                        }
+                      if( valStr[0] == '1') {
+                        srcpFx |= 1 << idxFn;
+                        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__feedbackReader: F%d[1] srcpFx[0x%08.8X]", (idxFn+1), srcpFx );
                       }
+                      idxFn++;
                     }
+
                   }
                 }
               }
@@ -442,7 +434,8 @@ static void __feedbackReader( void * threadinst )
                 break;
               }
               ignoreRest = True;
-              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d V=%d dir=%d steps=%d fn=%d f1=%d f2=%d f3=%d f4=%d", addr, V, dir, steps, f0, f1, f2, f3, f4 );
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d V=%d dir=%d steps=%d fn=%d idxFn[%d] srcpFx[0x%08.8X]",
+                  addr, V, dir, steps, f0, idxFn, srcpFx );
             }
             else {
               /* FB */
@@ -461,6 +454,7 @@ static void __feedbackReader( void * threadinst )
             }
             else if( infotype == 2 ) {
               nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+              wLoc.setcmd( nodeC, wLoc.dirfun );
               wLoc.setaddr( nodeC, addr );
               wLoc.setspcnt( nodeC, steps );
               wLoc.setV( nodeC, V );
@@ -469,13 +463,38 @@ static void __feedbackReader( void * threadinst )
               wLoc.setdir( nodeC, dir );
               if ( o->iid != NULL )
                 wLoc.setiid( nodeC, o->iid );
+
               nodeFn = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
               wFunCmd.setaddr( nodeFn, addr );
-              wFunCmd.setf0( nodeFn, f0 );
-              wFunCmd.setf1( nodeFn, f1 );
-              wFunCmd.setf2( nodeFn, f2 );
-              wFunCmd.setf3( nodeFn, f3 );
-              wFunCmd.setf4( nodeFn, f4 );
+              wFunCmd.setf28( nodeFn,(srcpFx & 0x08000000)?True:False);
+              wFunCmd.setf27( nodeFn,(srcpFx & 0x04000000)?True:False);
+              wFunCmd.setf26( nodeFn,(srcpFx & 0x02000000)?True:False);
+              wFunCmd.setf25( nodeFn,(srcpFx & 0x01000000)?True:False);
+              wFunCmd.setf24( nodeFn,(srcpFx & 0x00800000)?True:False);
+              wFunCmd.setf23( nodeFn,(srcpFx & 0x00400000)?True:False);
+              wFunCmd.setf22( nodeFn,(srcpFx & 0x00200000)?True:False);
+              wFunCmd.setf21( nodeFn,(srcpFx & 0x00100000)?True:False);
+              wFunCmd.setf20( nodeFn,(srcpFx & 0x00080000)?True:False);
+              wFunCmd.setf19( nodeFn,(srcpFx & 0x00040000)?True:False);
+              wFunCmd.setf18( nodeFn,(srcpFx & 0x00020000)?True:False);
+              wFunCmd.setf17( nodeFn,(srcpFx & 0x00010000)?True:False);
+              wFunCmd.setf16( nodeFn,(srcpFx & 0x00008000)?True:False);
+              wFunCmd.setf15( nodeFn,(srcpFx & 0x00004000)?True:False);
+              wFunCmd.setf14( nodeFn,(srcpFx & 0x00002000)?True:False);
+              wFunCmd.setf13( nodeFn,(srcpFx & 0x00001000)?True:False);
+              wFunCmd.setf12( nodeFn,(srcpFx & 0x00000800)?True:False);
+              wFunCmd.setf11( nodeFn,(srcpFx & 0x00000400)?True:False);
+              wFunCmd.setf10( nodeFn,(srcpFx & 0x00000200)?True:False);
+              wFunCmd.setf9(  nodeFn,(srcpFx & 0x00000100)?True:False);
+              wFunCmd.setf8(  nodeFn,(srcpFx & 0x00000080)?True:False);
+              wFunCmd.setf7(  nodeFn,(srcpFx & 0x00000040)?True:False);
+              wFunCmd.setf6(  nodeFn,(srcpFx & 0x00000020)?True:False);
+              wFunCmd.setf5(  nodeFn,(srcpFx & 0x00000010)?True:False);
+              wFunCmd.setf4(  nodeFn,(srcpFx & 0x00000008)?True:False);
+              wFunCmd.setf3(  nodeFn,(srcpFx & 0x00000004)?True:False);
+              wFunCmd.setf2(  nodeFn,(srcpFx & 0x00000002)?True:False);
+              wFunCmd.setf1(  nodeFn,(srcpFx & 0x00000001)?True:False);
+              wFunCmd.setf0(  nodeFn, f0 );
             }
             else {
               nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );

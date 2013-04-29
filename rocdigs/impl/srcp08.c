@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -211,6 +211,32 @@ static int ACKok(iOSocket sckt) {
    return ack;
 }
 
+
+/**
+ * create a bitmap (int, max 31) of used srcp buses
+ */
+static int __getSRCPbusList( iOSRCP08Data o ) {
+  int busList = 0;
+  
+  if( 0 != wSRCP.getsrcpbus_server( o->srcpini ) ) {
+    /* Ouch, server must use value 0 */
+  }
+  busList |= ( 1 << wSRCP.getsrcpbusGL_m( o->srcpini ) ) ;
+  busList |= ( 1 << wSRCP.getsrcpbusGL_ns( o->srcpini ) ) ;
+  busList |= ( 1 << wSRCP.getsrcpbusGL_nl( o->srcpini ) ) ;
+  busList |= ( 1 << wSRCP.getsrcpbusGL_ps( o->srcpini ) ) ;
+  busList |= ( 1 << wSRCP.getsrcpbusGA_m( o->srcpini ) ) ;
+  busList |= ( 1 << wSRCP.getsrcpbusGA_n( o->srcpini ) ) ;
+  busList |= ( 1 << wSRCP.getsrcpbusGA_ps( o->srcpini ) ) ;
+  busList |= ( 1 << wSRCP.getsrcpbusFB_s88( o->srcpini ) ) ;
+  busList |= ( 1 << wSRCP.getsrcpbusFB_m6051( o->srcpini ) ) ;
+  busList |= ( 1 << wSRCP.getsrcpbusFB_i8255( o->srcpini ) ) ;
+  /* clean bit for server bus 0 (in case some buses are not used and were still on default 0) */
+  busList &= ~1 ;
+
+  return busList;
+}
+
 /**
  *
  */
@@ -314,25 +340,62 @@ static iONode __translate( iOSRCP08Data o, iONode node, char* srcp )
     if( !__initGL( o, node, &bus ) )
       return NULL;
 
-    StrOp.fmtb( srcp, "SET %d GL %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+    int loSpcnt = wLoc.getspcnt(node);
+    int currStep = (speed * loSpcnt) / V_max;    
+    int loFnCnt = wLoc.getfncnt(node);
+    int loFx = 0;
+
+    if( wFunCmd.isf1( node) ) loFx |= 0x00000001;
+    if( wFunCmd.isf2( node) ) loFx |= 0x00000002;
+    if( wFunCmd.isf3( node) ) loFx |= 0x00000004;
+    if( wFunCmd.isf4( node) ) loFx |= 0x00000008;
+    if( wFunCmd.isf5( node) ) loFx |= 0x00000010;
+    if( wFunCmd.isf6( node) ) loFx |= 0x00000020;
+    if( wFunCmd.isf7( node) ) loFx |= 0x00000040;
+    if( wFunCmd.isf8( node) ) loFx |= 0x00000080;
+    if( wFunCmd.isf9( node) ) loFx |= 0x00000100;
+    if( wFunCmd.isf10(node) ) loFx |= 0x00000200;
+    if( wFunCmd.isf11(node) ) loFx |= 0x00000400;
+    if( wFunCmd.isf12(node) ) loFx |= 0x00000800;
+    if( wFunCmd.isf13(node) ) loFx |= 0x00001000;
+    if( wFunCmd.isf14(node) ) loFx |= 0x00002000;
+    if( wFunCmd.isf15(node) ) loFx |= 0x00004000;
+    if( wFunCmd.isf16(node) ) loFx |= 0x00008000;
+    if( wFunCmd.isf17(node) ) loFx |= 0x00010000;
+    if( wFunCmd.isf18(node) ) loFx |= 0x00020000;
+    if( wFunCmd.isf19(node) ) loFx |= 0x00040000;
+    if( wFunCmd.isf20(node) ) loFx |= 0x00080000;
+    if( wFunCmd.isf21(node) ) loFx |= 0x00100000;
+    if( wFunCmd.isf22(node) ) loFx |= 0x00200000;
+    if( wFunCmd.isf23(node) ) loFx |= 0x00400000;
+    if( wFunCmd.isf24(node) ) loFx |= 0x00800000;
+    if( wFunCmd.isf25(node) ) loFx |= 0x01000000;
+    if( wFunCmd.isf26(node) ) loFx |= 0x02000000;
+    if( wFunCmd.isf27(node) ) loFx |= 0x04000000;
+    if( wFunCmd.isf28(node) ) loFx |= 0x08000000;
+
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__translate: lc/fn loFnCnt[%d] loFx[0x%08.8X] (manual)",
+        loFnCnt, loFx );
+
+    char funcString[1023] = {'\0'};
+    int i, mask;
+    for( i=0 ; i < loFnCnt ; i++ ) {
+      mask = 1 << i ;
+      funcString[2*i] = ' ';
+      funcString[2*i+1] = loFx&mask?'1':'0';
+    }
+    funcString[2*loFnCnt] = '\0';
+
+    StrOp.fmtb( srcp, "SET %d GL %d %d %d %d %d%s\n",
         bus,
         wLoc.getaddr( node ),
         wLoc.isdir( node ),
-        speed,
-        V_max,
-        wLoc.isfn(node),
-        wFunCmd.isf1(node),
-        wFunCmd.isf2(node),
-        wFunCmd.isf3(node),
-        wFunCmd.isf4(node),
-        wFunCmd.isf5(node),
-        wFunCmd.isf6(node),
-        wFunCmd.isf7(node),
-        wFunCmd.isf8(node),
-        wFunCmd.isf9(node),
-        wFunCmd.isf10(node),
-        wFunCmd.isf11(node),
-        wFunCmd.isf12(node) );
+        currStep,
+        wLoc.getspcnt(node),
+        wLoc.isfn(node)?1:0,
+        funcString );
+
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__translate: lc/fn [%s]", srcp );
 
     return NULL;
   }
@@ -343,13 +406,29 @@ static iONode __translate( iOSRCP08Data o, iONode node, char* srcp )
     const char* cmd = wSysCmd.getcmd( node );
     if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) )
     {
-      StrOp.fmtb(tmpCommand,"SET 1 POWER OFF\n");
-      __srcpSendCommand(o,False,tmpCommand,NULL);
+      int busList = __getSRCPbusList( o );
+      int intBits = sizeof( int ) * 8 ;
+      int i;
+
+      for( i = 0 ; i < intBits ; i++ ) {
+        if( busList & ( 1 << i ) ) {
+          StrOp.fmtb(tmpCommand,"SET %d POWER OFF\n", i );
+          __srcpSendCommand(o,False,tmpCommand,NULL);
+        }
+      }
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) )
     {
-      StrOp.fmtb(tmpCommand,"SET 1 POWER ON\n");
-      __srcpSendCommand(o,False,tmpCommand,NULL);
+      int busList = __getSRCPbusList( o );
+      int intBits = sizeof( int ) * 8 ;
+      int i;
+
+      for( i = 0 ; i < intBits ; i++ ) {
+        if( busList & ( 1 << i ) ) {
+          StrOp.fmtb(tmpCommand,"SET %d POWER ON\n", i );
+          __srcpSendCommand(o,False,tmpCommand,NULL);
+        }
+      }
     }
     return NULL;
   }
