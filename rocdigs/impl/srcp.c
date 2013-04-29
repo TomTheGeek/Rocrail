@@ -56,6 +56,7 @@ static int instCnt = 0;
 
 static Boolean __srcpConnect( iOSRCPData o, Boolean reconnect );
 static int __srcpSendCommand( iOSRCPData o, Boolean recycle, const char* szCommand, char *szRetVal);
+static int __srcpInitServer( iOSRCPData o);
 
 /* ***** OBase functions. */
 static const char* __id( void* inst ) {
@@ -1036,6 +1037,17 @@ static void __infoReader( void * threadinst )
   }
 }
 
+
+static int __srcpInitServer( iOSRCPData o) {
+  char tmpCommand[1024];
+
+  StrOp.fmtb(tmpCommand,"GET 1 POWER\n");
+  if( __srcpSendCommand(o,False,tmpCommand,NULL) != 100 ) {
+    StrOp.fmtb(tmpCommand,"INIT 1 POWER\n");
+    __srcpSendCommand(o,False,tmpCommand,NULL);
+  }
+  return 0;
+}
 
 static Boolean __srcpConnect( iOSRCPData o, Boolean reconnect )
 {
