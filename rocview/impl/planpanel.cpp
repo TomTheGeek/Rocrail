@@ -1820,17 +1820,20 @@ void PlanPanel::modelEvent( iONode node ) {
     if( StrOp.equals( wFeedback.name(), name ) ) {
       // could be invisible feedback for a turntable...
       TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "feedback event item=[%s]", key );
-      wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATETT_EVENT );
-      // Make a copy of the node for using it out of this scope:
-      event.SetClientData( node->base.clone( node ) );
-      wxPostEvent( this, event );
+      iONode ini = wGui.getplanpanel(wxGetApp().getIni());
+      if( wPlanPanel.isprocessblockevents(ini) ) {
+        wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATETT_EVENT );
+        // Make a copy of the node for using it out of this scope:
+        event.SetClientData( node->base.clone( node ) );
+        wxPostEvent( this, event );
+      }
     }
     else if( StrOp.equals( wRoute.name(), name ) ) {
       // could be invisible feedback for a turntable...
       TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "route event item=[%s]", key );
 
       iONode ini = wGui.getplanpanel(wxGetApp().getIni());
-      if( wPlanPanel.isprocessblockevents(ini) ) {
+      if( wPlanPanel.isprocessrouteevents(ini) ) {
         wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATE4ROUTE_EVENT );
         // Make a copy of the node for using it out of this scope:
         event.SetClientData( node->base.clone( node ) );

@@ -282,8 +282,8 @@ void RocguiIniDialog::initValues() {
   m_CX->SetValue( wPlanPanel.getcx(planpanel) );
   m_CY->SetValue( wPlanPanel.getcy(planpanel) );
 
-  m_ProcessRouteEvents->SetValue( wPlanPanel.isprocessrouteevents( m_Ini ) ? true:false );
-  m_ProcessBlockEvents->SetValue( wPlanPanel.isprocessblockevents( m_Ini ) ? true:false );
+  m_ProcessRouteEvents->SetValue( wPlanPanel.isprocessrouteevents( planpanel ) ? true:false );
+  m_ProcessBlockEvents->SetValue( wPlanPanel.isprocessblockevents( planpanel ) ? true:false );
 
   iONode modpanel = wGui.getmodpanel( m_Ini );
   if( modpanel == NULL ) {
