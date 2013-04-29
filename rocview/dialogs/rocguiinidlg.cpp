@@ -168,6 +168,8 @@ void RocguiIniDialog::initLabels() {
   m_SVGPath5Box->SetLabel( wxGetApp().getMsg( "theme" ) + _T(" 5") );
   m_labItemIDpointsize->SetLabel( wxGetApp().getMsg( "itemidps" ) );
   m_labTextPS->SetLabel( wxGetApp().getMsg( "textps" ) );
+  m_ProcessRouteEvents->SetLabel( wxGetApp().getMsg( "processrouteevents" ) );
+  m_ProcessBlockEvents->SetLabel( wxGetApp().getMsg( "processblockevents" ) );
 
   // RIC:
   m_labVelocity->GetStaticBox()->SetLabel( wxGetApp().getMsg( "speed" ) );
