@@ -660,34 +660,38 @@ void Symbol::OnPaint(wxPaintEvent& event)
     bool actroute = false;
     int status = 0;
 
-    TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "check actroute for %s...", wItem.getid(m_Props));
-    if( StrOp.len( wItem.getrouteids( m_Props ) ) > 0 ) {
-      iOStrTok tok = StrTokOp.inst( wItem.getrouteids( m_Props ), ',' );
+    iONode ini = wGui.getplanpanel(wxGetApp().getIni());
+    if( wPlanPanel.isprocessrouteevents(ini) ) {
+      TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "check actroute for %s...", wItem.getid(m_Props));
+      if( StrOp.len( wItem.getrouteids( m_Props ) ) > 0 ) {
+        iOStrTok tok = StrTokOp.inst( wItem.getrouteids( m_Props ), ',' );
 
-      const char* routeid = StrTokOp.nextToken(tok);
+        const char* routeid = StrTokOp.nextToken(tok);
 
-      while( routeid != NULL ) {
-        if( m_PlanPanel->isRouteLocked(routeid ) ) {
-          actroute = true;
-          break;
-        }
-        routeid = StrTokOp.nextToken(tok);
-      };
+        while( routeid != NULL ) {
+          if( m_PlanPanel->isRouteLocked(routeid ) ) {
+            actroute = true;
+            break;
+          }
+          routeid = StrTokOp.nextToken(tok);
+        };
 
-      StrTokOp.base.del( tok );
+        StrTokOp.base.del( tok );
+      }
     }
 
-
-    if( StrOp.len( wItem.getblockid( m_Props )) > 0 ) {
-      occupied = m_PlanPanel->isBlockOccupied( wItem.getblockid( m_Props ) );
-      bool isReserved = m_PlanPanel->isBlockReserved( wItem.getblockid( m_Props ) );
-      if( occupied && !isReserved )
-        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s-%s is %soccupied by block %s",
-          NodeOp.getName(m_Props), wItem.getid( m_Props ), occupied? "":"not ", wItem.getblockid( m_Props ));
-      else if( isReserved ) {
-        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s-%s is reserved by block %s",
-            NodeOp.getName(m_Props), wItem.getid( m_Props ), wItem.getblockid( m_Props ));
-        occupied = false;
+    if( wPlanPanel.isprocessblockevents(ini) ) {
+      if( StrOp.len( wItem.getblockid( m_Props )) > 0 ) {
+        occupied = m_PlanPanel->isBlockOccupied( wItem.getblockid( m_Props ) );
+        bool isReserved = m_PlanPanel->isBlockReserved( wItem.getblockid( m_Props ) );
+        if( occupied && !isReserved )
+          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s-%s is %soccupied by block %s",
+            NodeOp.getName(m_Props), wItem.getid( m_Props ), occupied? "":"not ", wItem.getblockid( m_Props ));
+        else if( isReserved ) {
+          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s-%s is reserved by block %s",
+              NodeOp.getName(m_Props), wItem.getid( m_Props ), wItem.getblockid( m_Props ));
+          occupied = false;
+        }
       }
     }
 
