@@ -89,6 +89,8 @@
     <var name="showsecondhand" vt="bool" defval="true"/>
     <var name="lang" vt="string" defval="en" range="en,de,nl,sv,fr,tr" remark=""/>
     <var name="host" vt="string" defval="localhost" remark="last used rrcon"/>
+    <var name="fsutf8" vt="bool" defval="true"/>
+    <var name="uniesc" vt="bool" defval="false"/>
     <var name="openpath" vt="string" defval="." remark="use this path for init the file open dialog"/>
     <var name="xslpath" vt="string" defval="stylesheets" remark="reference stylsheets to this path"/>
     <var name="decpath" vt="string" defval="decspecs" remark="reference decoder specifications to this path"/>
@@ -182,6 +184,8 @@
       <var name="showlocked" vt="bool" defval="false"/>
       <var name="raster" vt="bool" defval="false"/>
       <var name="tooltip" vt="bool" defval="true"/>
+      <var name="processrouteevents" vt="bool" defval="true"/>
+      <var name="processblockevents" vt="bool" defval="true"/>
       <var name="svgpath" vt="string" defval="svg/themes/SpDrS60" remark="scan this path for svg symbols"/>
       <var name="svgpath2" vt="string" defval="." remark="scan this path for svg symbols"/>
       <var name="svgpath3" vt="string" defval="." remark="scan this path for svg symbols"/>

@@ -249,6 +249,8 @@ public:
     wxSpinCtrl* m_ItemIDpointsize;
     wxStaticText* m_labTextPS;
     wxSpinCtrl* m_TextPS;
+    wxCheckBox* m_ProcessRouteEvents;
+    wxCheckBox* m_ProcessBlockEvents;
     wxPanel* m_RICpanel;
     wxStaticBoxSizer* m_labVelocity;
     wxStaticText* m_labY;
