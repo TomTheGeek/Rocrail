@@ -543,6 +543,7 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
     tracknr = __getMappedTrack( inst, tracknr );
 
     cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+    wOutput.setbus( cmd, wTurntable.getbus( data->props ) );
     wOutput.setaddr( cmd, wTurntable.getaddr( data->props ) );
     const char* iid = wTurntable.getiid( data->props );
     if( iid != NULL )
