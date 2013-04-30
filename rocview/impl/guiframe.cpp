@@ -2783,6 +2783,14 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
     if( FileOp.exist( rr ) ) {
 #if defined _WIN32
       char* rrcall = StrOp.fmt( "\"\" \"%s%crocrail%s\" -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, workspace );
+      if( wGui.iscp850(m_Ini) ) {
+        char* tmp = rrcall;
+        rrcall = SystemOp.utf2latin(rrcall);
+        StrOp.free(tmp);
+        tmp = rrcall;
+        rrcall = SystemOp.latin2cp850(rrcall);
+        StrOp.free(tmp);
+      }
 #else
       char* rrcall = StrOp.fmt( "%s%crocrail%s -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, workspace );
 #endif
