@@ -273,7 +273,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
 
       wOutput.setstate( nodeC, wOutput.getcmd( node ) );
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reporting output %d:%d:%d.%d", bus, addr, port, gate );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reporting output %d:%d:%d.%d %s", bus, addr, port, gate, wOutput.getstate(nodeC) );
       data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
     }
   }

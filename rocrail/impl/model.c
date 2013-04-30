@@ -3425,7 +3425,10 @@ static void _event( iOModel inst, iONode nodeC ) {
     StrOp.free( key );
 
     if( co != NULL ) {
-      wOutput.setstate( nodeC, StrOp.equals( wSwitch.turnout, wSwitch.getstate(nodeC))?wOutput.on:wOutput.off);
+      if( StrOp.equals( wSwitch.turnout, wSwitch.getstate(nodeC)) || StrOp.equals( wSwitch.straight, wSwitch.getstate(nodeC)) )
+        wOutput.setstate( nodeC, StrOp.equals( wSwitch.turnout, wSwitch.getstate(nodeC))?wOutput.off:wOutput.on);
+      else
+        wOutput.setstate( nodeC, wOutput.getstate(nodeC) );
       OutputOp.event( co, nodeC );
       return;
     }
