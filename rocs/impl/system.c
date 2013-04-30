@@ -392,6 +392,35 @@ static const char* _getBuild(void) {
 }
 
 
+static char* _latin2cp850( const char* latinstr ) {
+  int len = StrOp.len( latinstr );
+  char* cp850str = allocIDMem( len + 1, RocsStrID );
+  int i = 0;
+  for( i = 0; i < len; i++ ) {
+    if( (unsigned char)latinstr[i] < 0x80 ) {
+      cp850str[i] = latinstr[i];
+    }
+    else {
+      switch((unsigned char)latinstr[i]) {
+      case 0xC4: cp850str[i] = 0x8E; break; /* &Auml;  */
+      case 0xCB: cp850str[i] = 0xD3; break; /* &Euml;  */
+      case 0xCF: cp850str[i] = 0xD8; break; /* &Iuml;  */
+      case 0xD6: cp850str[i] = 0x99; break; /* &Ouml;  */
+      case 0xDC: cp850str[i] = 0x9A; break; /* &Uuml;  */
+      case 0xDF: cp850str[i] = 0xE1; break; /* &szlig; */
+      case 0xE4: cp850str[i] = 0x84; break; /* &auml;  */
+      case 0xEB: cp850str[i] = 0x89; break; /* &euml;  */
+      case 0xEF: cp850str[i] = 0x8B; break; /* &iuml;  */
+      case 0xF6: cp850str[i] = 0x94; break; /* &ouml;  */
+      case 0xFC: cp850str[i] = 0x81; break; /* &uuml;  */
+      default: cp850str[i] = latinstr[i]; break;
+      }
+    }
+  }
+  return cp850str;
+}
+
+
 static char* _latin2utf( const char* latinstr ) {
   int len = StrOp.len( latinstr );
   char* utfstr = allocMem( len * 3 + 1 ); /* One Euro sign needs 3 chars in UTF-8 */

@@ -1534,6 +1534,9 @@
     <fun name="latin2utf" vt="char*" remark="Translates Latin 15 into UTF-8.">
       <param name="latinstr" vt="const char*" remark="Latin 15 encoded string."/>
     </fun>
+    <fun name="latin2cp850" vt="char*" remark="Translates Latin 15 into CP850.">
+      <param name="latinstr" vt="const char*"/>
+    </fun>
     <fun name="getTick" vt="unsigned long" remark="System tick in 10ms."/>
     <fun name="cp1252toISO885915" vt="char*" remark="Translates Windows CP1252 into Latin 15.">
       <param name="str" vt="const char*" remark="CP1252 encoded string."/>
