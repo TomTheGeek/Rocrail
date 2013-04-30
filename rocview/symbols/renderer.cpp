@@ -1201,7 +1201,7 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, const char* or
   const char* state = wSwitch.getstate( m_Props );
   Boolean has2Units = ( wSwitch.getaddr2( m_Props ) > 0 || wSwitch.getport2( m_Props ) > 0 )  ? True:False;
 
-  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "drawDCrossing %s state=%s", wSwitch.getid( m_Props ), state );
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "drawDCrossing %s state=%s", wSwitch.getid( m_Props ), state );
 
   // SVG Symbol:
   if( has2Units ) {
@@ -1582,7 +1582,7 @@ void SymbolRenderer::drawSignal( wxPaintDC& dc, bool occupied, bool actroute, co
  */
 void SymbolRenderer::drawOutput( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wOutput.getstate( m_Props );
-  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "setting output %s to %s", wSignal.getid( m_Props ), state );
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "setting output %s to %s", wSignal.getid( m_Props ), state );
 
   // SVG Symbol:
   if( m_SvgSym3!=NULL && StrOp.equals( state, wOutput.active ) ) {
@@ -1767,8 +1767,6 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
       blue = wPlanPanel.getbktext_blue(planpanelIni);
     }
 
-    TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "block: setfont" );
-
     wxFont* font = setFont(m_iTextps, red, green, blue);
     /* center the blocktext */
     double width = 0;
@@ -1876,7 +1874,7 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
       StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( m_Label ) );
 
       if( FileOp.exist(pixpath)) {
-        TraceOp.trc( "renderer", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
+        TraceOp.trc( "renderer", TRCLEVEL_DEBUG, __LINE__, 9999, "picture [%s]", pixpath );
         m_Bitmap = new wxBitmap(wxString(pixpath,wxConvUTF8), wxBITMAP_TYPE_PNG);
 
         if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) || StrOp.equals( ori, wItem.east ) ) {
@@ -2103,7 +2101,7 @@ void SymbolRenderer::drawLine(int x, int y, int cx, int cy) {
  */
 void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridgepos, const char* ori ) {
 
-  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "turntable with bridge pos=%f", *bridgepos );
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "turntable with bridge pos=%f", *bridgepos );
   
   // Traverser
   if( wTurntable.istraverser( m_Props ) ) {
@@ -2368,7 +2366,7 @@ wxPoint* SymbolRenderer::rotateShape( wxPoint* poly, int cnt, const char* oriStr
 
 
 wxPoint* SymbolRenderer::rotateBridge( double ori, double delta ) {
-  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "rotate bridge pos=%f", ori );
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "rotate bridge pos=%f", ori );
   static wxPoint p[5];
   double bp[4] = { 10.0, 170.0, 190.0, 350.0 };
 
@@ -2392,7 +2390,7 @@ wxPoint* SymbolRenderer::rotateBridge( double ori, double delta ) {
 
 
 wxPoint* SymbolRenderer::rotateBridgeSensors( double ori, double delta ) {
-  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "rotate bridge pos=%f", ori );
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "rotate bridge pos=%f", ori );
   static wxPoint p[5];
   double bp[4] = { 10.0, 170.0, 190.0, 350.0 };
 
@@ -2416,7 +2414,7 @@ wxPoint* SymbolRenderer::rotateBridgeSensors( double ori, double delta ) {
 
 
 wxPoint* SymbolRenderer::rotateBridgeNose( double hoek ) {
-  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "rotate bridge nose ori=%f", hoek );
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "rotate bridge nose ori=%f", hoek );
   static wxPoint p[5];
 
   double xa;

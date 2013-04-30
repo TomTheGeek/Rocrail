@@ -685,10 +685,10 @@ void Symbol::OnPaint(wxPaintEvent& event)
         occupied = m_PlanPanel->isBlockOccupied( wItem.getblockid( m_Props ) );
         bool isReserved = m_PlanPanel->isBlockReserved( wItem.getblockid( m_Props ) );
         if( occupied && !isReserved )
-          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s-%s is %soccupied by block %s",
+          TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "%s-%s is %soccupied by block %s",
             NodeOp.getName(m_Props), wItem.getid( m_Props ), occupied? "":"not ", wItem.getblockid( m_Props ));
         else if( isReserved ) {
-          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s-%s is reserved by block %s",
+          TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "%s-%s is reserved by block %s",
               NodeOp.getName(m_Props), wItem.getid( m_Props ), wItem.getblockid( m_Props ));
           occupied = false;
         }
@@ -930,9 +930,6 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
     m_locoIsDropped = false;
     return;
   }
-
-  TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "left up: editmode=%d alt=%d ", wxGetApp().getFrame()->isEditMode(), event.AltDown());
-
 
   if( m_isDragged ) {
     m_isDragged = false;
@@ -2644,7 +2641,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     StrOp.free( m_locidStr );
     m_locidStr = l_locidStr;
 
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "id=[%s] pending=[%s] state=[%s] %s",
+    TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "id=[%s] pending=[%s] state=[%s] %s",
         id, pending?"true":"false", state, m_locidStr );
 
   }
@@ -2652,7 +2649,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if( wText.gettext(node) != NULL ) {
       wText.settext(m_Props, wText.gettext(node) );
       m_Renderer->setLabel(wText.gettext(node), 0);
-      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "new text %s", wText.gettext(node) );
+      TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "new text %s", wText.gettext(node) );
       refresh = true;
       checkSpeakAction(node);
     }
@@ -2756,7 +2753,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     }
 
     Boolean isAcceptIdent = wBlock.isacceptident( node );
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999,
+    TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999,
         "Block=%s locoID=%s State=%s updateEnterside=%d reserved=%d AcceptIdent=%d desc=%s",
         wBlock.getid( node ), locoid, state, updateEnterside, wBlock.isreserved( node ), isAcceptIdent, wBlock.getdesc(node) );
 
@@ -2803,19 +2800,19 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
             // adjust destination block enterside on update
             if( (occupied == 1 || occupied == 3) && StrOp.equals( wBlock.getid( m_Props ), wLoc.getdestblockid(loc) ) ) {
               m_RotateSym = wLoc.isblockenterside( loc);
-              TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "(update) locoid=[%s] enterside=[%c]", locoid, m_RotateSym?'+':'-' );
+              TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "(update) locoid=[%s] enterside=[%c]", locoid, m_RotateSym?'+':'-' );
             }
 
             // loco is set manually in this block
             if( wBlock.getcmd(node) != NULL && StrOp.equals(wBlock.loc, wBlock.getcmd(node) ) ) {
               m_RotateSym = wLoc.isblockenterside( loc);
-              TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "(set) locoid=[%s] enterside=[%c]", locoid, m_RotateSym?'+':'-' );
+              TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "(set) locoid=[%s] enterside=[%c]", locoid, m_RotateSym?'+':'-' );
             }
 
             // adjust source block enterside onreate
             if( oncreate && StrOp.equals( wBlock.getid( m_Props ), wLoc.getblockid(loc) ) ) {
               m_RotateSym = wLoc.isblockenterside( loc);
-              TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "(oncreate) locoid=[%s] enterside=[%c]", locoid, m_RotateSym?'+':'-' );
+              TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "(oncreate) locoid=[%s] enterside=[%c]", locoid, m_RotateSym?'+':'-' );
             }
           }
         }
@@ -2873,7 +2870,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
     }
 
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "id=[%s] occupied=[%d] rotate=[%d] state=[%s] locoid=[%s]",
+    TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "id=[%s] occupied=[%d] rotate=[%d] state=[%s] locoid=[%s]",
         id, occupied, m_RotateSym, state, locoid );
 
 

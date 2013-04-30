@@ -1097,7 +1097,7 @@ static void rocrailCallback( obj me, iONode node ) {
   /* default */
   else if(wxGetApp().getFrame() != NULL && guiApp->isInit() && guiApp->isModelSet() ){
     const char* nodeName = NodeOp.getName( node );
-    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback node=%s", nodeName );
+    TraceOp.trc( "app", TRCLEVEL_DEBUG, __LINE__, 9999, "rocrailCallback node=%s", nodeName );
 
     iONode model = wxGetApp().getModel();
     bool planItems = true;
@@ -1477,7 +1477,7 @@ bool RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect, bool sho
     }
   }
   if( szCmd != NULL ) {
-    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "sendToRocrail( %.1024s )", szCmd );
+    TraceOp.trc( "app", TRCLEVEL_DEBUG, __LINE__, 9999, "sendToRocrail( %.1024s )", szCmd );
     if( m_RCon != NULL ) {
       RConOp.write( m_RCon, szCmd );
       if( disconnect ) {
