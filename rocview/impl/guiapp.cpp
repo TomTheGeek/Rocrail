@@ -847,9 +847,6 @@ static void rocrailCallback( obj me, iONode node ) {
       StrOp.free(xmlStr);
     }
   }
-  else {
-    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback %s", NodeOp.getName(node) );
-  }
 
   /* Plan */
   if( StrOp.equals( wPlan.name(), NodeOp.getName( node ) ) ) {

@@ -362,7 +362,10 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "iid=%s", iid );
       /* inform a specific one */
       pDi = (iIDigInt)MapOp.get( data->diMap, iid );
-      rc = __informDigInt(inst, pDi, node, error);
+      if( pDi != NULL )
+        rc = __informDigInt(inst, pDi, node, error);
+      else
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "iid=%s not found", iid );
     }
     else {
       /* inform the default */

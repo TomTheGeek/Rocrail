@@ -1713,7 +1713,6 @@ void PlanPanel::addMultipleItem(wxCommandEvent& event) {
 void PlanPanel::modelEvent( iONode node ) {
   const char* name = NodeOp.getName( node );
   const char* id   = wItem.getid( node );
-  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "PlanPanel::modelEvent() name=%s", name );
 
   if( StrOp.equals( wModelCmd.name(), name ) ){
     const char* cmd = wModelCmd.getcmd( node );
@@ -1811,7 +1810,7 @@ void PlanPanel::modelEvent( iONode node ) {
     	item = (Symbol*)m_ChildTable->Get( wxString(key,wxConvUTF8) );
 		}
     if( item != NULL ) {
-      TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "update item=[%s]", key );
+      TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "update item=[%s]", key );
       wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATEITEM_EVENT );
       // Make a copy of the node for using it out of this scope:
       event.SetClientData( node->base.clone( node ) );

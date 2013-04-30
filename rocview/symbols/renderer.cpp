@@ -1408,7 +1408,7 @@ void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool occupied, const char* ori 
 void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
 
-  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "Switch %s state=%s subtype=%d ori=%s",
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "Switch %s state=%s subtype=%d ori=%s",
       wSwitch.getid( m_Props ), state, m_iSymSubType, ori );
 
   switch( m_iSymSubType ) {
@@ -1500,7 +1500,7 @@ void SymbolRenderer::drawSignal( wxPaintDC& dc, bool occupied, bool actroute, co
   const char* state = wSignal.getstate( m_Props );
   int aspects = wSignal.getaspects( m_Props );
   int nr = wSignal.getaspect(m_Props);
-  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "setting %d aspect signal %s to %s (nr=%d)", aspects, wSignal.getid( m_Props ), state, nr );
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "setting %d aspect signal %s to %s (nr=%d)", aspects, wSignal.getid( m_Props ), state, nr );
 
   if( nr == -1 )
     nr = 0;
@@ -2286,7 +2286,7 @@ void SymbolRenderer::drawShape( wxPaintDC& dc, wxGraphicsContext* gc, bool occup
   if( ori == NULL || StrOp.len( ori ) == 0 )
     ori = wItem.west;
 
-  TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "nodename=%s", nodeName );
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "nodename=%s", nodeName );
 
   switch( m_iSymType ) {
     case symtype::i_track:

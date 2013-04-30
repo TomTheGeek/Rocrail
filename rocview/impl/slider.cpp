@@ -197,7 +197,7 @@ int Slider::GetValue() {
   if( v - (double)Value >= 0.5 )
     Value++;
 
-  TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "GET Value=%d Step=%f ThumbPos=%d ThumbRange=%d", Value, Step, ThumbPos, ThumbRange );
+  TraceOp.trc( "slider", TRCLEVEL_DEBUG, __LINE__, 9999, "GET Value=%d Step=%f ThumbPos=%d ThumbRange=%d", Value, Step, ThumbPos, ThumbRange );
   return Value;
 }
 
