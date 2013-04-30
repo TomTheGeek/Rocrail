@@ -1185,6 +1185,7 @@ static iOSRCP _inst( const iONode settings, const iOTrace trace )
   MemOp.set( data->locInited, 0, 16384*sizeof(Boolean));
 
   if( __srcpConnect( data, False ) ) {
+    __srcpInitConnect(data);
     if ( data->fbackPort > 0 )
     {
       char * fbname = StrOp.fmt( "ddlfb%08X", srcp );
