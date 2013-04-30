@@ -1260,7 +1260,7 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
     /* New BiDiB dialog for selecting the UID of the identified node. */
     if( m_BidibIdentDlg != NULL )
       m_BidibIdentDlg->event( node );
-    else {
+    else if( wProgram.getcmd(node) == wProgram.type ) {
       m_BidibIdentDlg = new BidibIdentDlg(this, node);
       if( wxID_OK == m_BidibIdentDlg->ShowModal() ) {
         /* Copy UID on the clipboard? */
