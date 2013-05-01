@@ -237,7 +237,11 @@ static Boolean _rmDir( const char* dirname ) {
 
 static Boolean _cd( const char* dirname ) {
   _convertPath2OSType( dirname );
+#if defined _WIN32
+  return _chdir( dirname ) == 0 ? True:False;
+#else
   return chdir( dirname ) == 0 ? True:False;
+#endif
 }
 
 static Boolean _cp( const char* src, const char* dst ) {
