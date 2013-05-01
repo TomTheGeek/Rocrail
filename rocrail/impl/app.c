@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 
 #include "rocs/public/rocs.h"
 #include "rocs/public/objbase.h"
@@ -641,6 +642,11 @@ static int _Main( iOApp inst, int argc, char** argv ) {
     char* pwd = FileOp.pwd();
     TraceOp.trc( name, cd?TRCLEVEL_CALC:TRCLEVEL_EXCEPTION, __LINE__, 9999, "workdir [%s] pwd [%s]", wd, pwd );
     StrOp.free(pwd);
+    if( !cd ) {
+      cd = FileOp.cd( wd );
+      if( !cd )
+        TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, errno, "Error changing workdir" );
+    }
   }
 
 
