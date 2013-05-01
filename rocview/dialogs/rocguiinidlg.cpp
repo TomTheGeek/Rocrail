@@ -786,6 +786,7 @@ void RocguiIniDialog::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer23 = new wxStaticBoxSizer(m_labWorkspace, wxHORIZONTAL);
     itemBoxSizer6->Add(itemStaticBoxSizer23, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer24 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer24->AddGrowableCol(0);
     itemStaticBoxSizer23->Add(itemFlexGridSizer24, 1, wxALIGN_CENTER_VERTICAL, 5);
     m_Workspace = new wxTextCtrl( m_GeneralTab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer24->Add(m_Workspace, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
@@ -797,11 +798,9 @@ void RocguiIniDialog::CreateControls()
     m_StartDefaultWorkspace->SetValue(false);
     itemFlexGridSizer24->Add(m_StartDefaultWorkspace, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_CP850 = new wxCheckBox( m_GeneralTab, wxID_ANY, _("CP850"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_CP850 = new wxCheckBox( m_GeneralTab, wxID_ANY, _("CP1250"), wxDefaultPosition, wxDefaultSize, 0 );
     m_CP850->SetValue(false);
     itemFlexGridSizer24->Add(m_CP850, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
-
-    itemFlexGridSizer24->AddGrowableCol(0);
 
     wxFlexGridSizer* itemFlexGridSizer29 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer6->Add(itemFlexGridSizer29, 0, wxALIGN_LEFT, 5);
@@ -892,6 +891,7 @@ void RocguiIniDialog::CreateControls()
     itemFlexGridSizer55->Add(m_CYMod, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxFlexGridSizer* itemFlexGridSizer60 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer60->AddGrowableCol(1);
     itemBoxSizer34->Add(itemFlexGridSizer60, 0, wxGROW, 5);
     m_labSpeak4Block = new wxStaticText( m_GeneralTab, wxID_ANY, _("Speak for block"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer60->Add(m_labSpeak4Block, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
@@ -921,8 +921,6 @@ void RocguiIniDialog::CreateControls()
 
     m_BoosterUID = new wxTextCtrl( m_GeneralTab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer60->Add(m_BoosterUID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
-
-    itemFlexGridSizer60->AddGrowableCol(1);
 
     m_Notebook->AddPage(m_GeneralTab, _("General"));
 
@@ -954,6 +952,7 @@ void RocguiIniDialog::CreateControls()
     m_PTpanel->SetSizer(itemBoxSizer79);
 
     wxFlexGridSizer* itemFlexGridSizer80 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer80->AddGrowableCol(1);
     itemBoxSizer79->Add(itemFlexGridSizer80, 0, wxGROW|wxALL, 5);
     m_labCVnrs = new wxStaticText( m_PTpanel, wxID_ANY, _("CV nrs"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer80->Add(m_labCVnrs, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -966,8 +965,6 @@ void RocguiIniDialog::CreateControls()
 
     m_Timeout = new wxTextCtrl( m_PTpanel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer80->Add(m_Timeout, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    itemFlexGridSizer80->AddGrowableCol(1);
 
     m_Lissy = new wxCheckBox( m_PTpanel, wxID_ANY, _("Lissy addressing"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Lissy->SetValue(false);
