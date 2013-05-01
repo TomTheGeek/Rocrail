@@ -593,6 +593,7 @@ static Boolean bShutdown = False;
 static int _Main( iOApp inst, int argc, char** argv ) {
   iOAppData data = Data(inst);
   iOTrace trc = NULL;
+  Boolean cd = False;
 
   /* check commandline arguments */
   iOCmdLn     arg     = CmdLnOp.inst( argc, (const char**)argv );
@@ -630,11 +631,18 @@ static int _Main( iOApp inst, int argc, char** argv ) {
 
   /* change the programs working directory */
   if( wd != NULL ) {
-    FileOp.cd( wd );
+    cd = FileOp.cd( wd );
   }
 
   trc = TraceOp.inst( debug | dump | monitor | parse | info | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
   TraceOp.setAppID( trc, "r" );
+
+  if( wd != NULL ) {
+    char* pwd = FileOp.pwd();
+    TraceOp.trc( name, cd?TRCLEVEL_CALC:TRCLEVEL_EXCEPTION, __LINE__, 9999, "workdir [%s] pwd [%s]", wd, pwd );
+    StrOp.free(pwd);
+  }
+
 
   data->consoleMode = console;
 
