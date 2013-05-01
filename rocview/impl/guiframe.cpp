@@ -2783,14 +2783,14 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
     if( FileOp.exist( rr ) ) {
 #if defined _WIN32
       char* rrcall = StrOp.fmt( "\"\" \"%s%crocrail%s\" -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, workspace );
+#else
+      char* rrcall = StrOp.fmt( "%s%crocrail%s -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, workspace );
+#endif
       if( wGui.iscp850(m_Ini) ) {
         char* tmp = rrcall;
         rrcall = SystemOp.utf2latin(rrcall);
         StrOp.free(tmp);
       }
-#else
-      char* rrcall = StrOp.fmt( "%s%crocrail%s -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, workspace );
-#endif
       TraceOp.trc( "frame", TRCLEVEL_WARNING, __LINE__, 9999, "open workspace=\"%s\"", rrcall );
 
       CleanNotebook();

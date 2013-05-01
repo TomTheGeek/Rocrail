@@ -798,7 +798,7 @@ void RocguiIniDialog::CreateControls()
     m_StartDefaultWorkspace->SetValue(false);
     itemFlexGridSizer24->Add(m_StartDefaultWorkspace, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_CP850 = new wxCheckBox( m_GeneralTab, wxID_ANY, _("CP1250"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_CP850 = new wxCheckBox( m_GeneralTab, wxID_ANY, _("ISO"), wxDefaultPosition, wxDefaultSize, 0 );
     m_CP850->SetValue(false);
     itemFlexGridSizer24->Add(m_CP850, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
