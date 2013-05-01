@@ -55,7 +55,7 @@ static int instCnt = 0;
 #define SRCP_ERROR(x) ( x >= 400 )
 
 static Boolean __srcpConnect( iOSRCPData o, Boolean reconnect );
-static int __srcpSendCommand( iOSRCPData o, Boolean recycle, const char* szCommand, char *szRetVal);
+static int __srcpSendCommand( iOSRCPData o, const char* szCommand, char *szRetVal);
 static int __srcpInitServer( iOSRCPData o);
 
 /* ***** OBase functions. */
@@ -143,7 +143,7 @@ static Boolean __srcpInitConnect ( iOSRCPData o ) {
   char data[1024];
 
   StrOp.fmtb(cmd, "SET PROTOCOL SRCP 0.8\n" );
-  if (SRCP_ERROR( __srcpSendCommand( o, False, cmd, data ) ) )
+  if (SRCP_ERROR( __srcpSendCommand( o, cmd, data ) ) )
   {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: %s",data);
     SocketOp.disConnect(o->cmdSocket);
@@ -151,7 +151,7 @@ static Boolean __srcpInitConnect ( iOSRCPData o ) {
   }
 
   StrOp.fmtb(cmd, "SET CONNECTIONMODE SRCP COMMAND\n" );
-  if (SRCP_ERROR( __srcpSendCommand( o, False, cmd, data ) ) )
+  if (SRCP_ERROR( __srcpSendCommand( o, cmd, data ) ) )
   {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: %s",data);
     SocketOp.disConnect(o->cmdSocket);
@@ -159,7 +159,7 @@ static Boolean __srcpInitConnect ( iOSRCPData o ) {
   }
 
   StrOp.fmtb(cmd, "GO\n" );
-  if (SRCP_ERROR( __srcpSendCommand( o, False, cmd, data ) ) )
+  if (SRCP_ERROR( __srcpSendCommand( o, cmd, data ) ) )
   {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking: %s",data);
     SocketOp.disConnect(o->cmdSocket);
@@ -172,22 +172,19 @@ static Boolean __srcpInitConnect ( iOSRCPData o ) {
   return True;
 }
 
-static int __srcpSendCommand( iOSRCPData o, Boolean recycle, const char* szCommand, char *szRetVal)
+static int __srcpSendCommand( iOSRCPData o, const char* szCommand, char *szRetVal)
 {
   char inbuf[1024] = { 0 };
   char szResponse[1024];
   int  retstate = 0;
 
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "write command: %s", szCommand );
+
   if (szRetVal)
     szRetVal[0]= '\0';
   if ((o->cmdSocket == NULL) || (!SocketOp.isConnected( o->cmdSocket )))
   {
-    if (recycle)
-    {
-      if (__srcpInitConnect(o))
-        return __srcpSendCommand(o, False, szCommand, szRetVal);
-    }
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "not connected in SendCommand (recycle=%d socket=0x%08X)", recycle, o->cmdSocket);
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "not connected in SendCommand (socket=0x%08X)", o->cmdSocket);
     if(o->cmdSocket != NULL) {
       SocketOp.base.del(o->cmdSocket);
       o->cmdSocket = NULL;
@@ -197,12 +194,12 @@ static int __srcpSendCommand( iOSRCPData o, Boolean recycle, const char* szComma
 
   if (!SocketOp.write( o->cmdSocket, szCommand, (int)strlen(szCommand)))
   {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not send: %s", szCommand );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not write: %s", szCommand );
     return -1;
   }
   else {
     StrOp.replaceAll((char*)szCommand, '\n', ' ');
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sent: %s",szCommand);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command written: %s",szCommand);
   }
 
   /* Read server response: */
@@ -240,15 +237,15 @@ static int __srcpSendCommand( iOSRCPData o, Boolean recycle, const char* szComma
 static Boolean __initGA( iOSRCPData o, iONode node, int ga_bus, int addr ) {
   char tmpCommand[1024];
   StrOp.fmtb(tmpCommand, "GET %d GA %d 0\n", ga_bus, addr );
-  if (__srcpSendCommand(o, True, tmpCommand,NULL) != 100 ) {
+  if (__srcpSendCommand(o, tmpCommand,NULL) != 100 ) {
     StrOp.fmtb(tmpCommand,"INIT %d GA %d %s\n", ga_bus, addr, wSwitch.getprot( node ) );
-    if (!__srcpSendCommand(o, True, tmpCommand,NULL))
+    if (!__srcpSendCommand(o, tmpCommand,NULL))
     {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Problem initializing GA %d", addr );
       return False;
     }
     StrOp.fmtb(tmpCommand,"GET %d GA %d 0\n", ga_bus, addr );
-    if (!__srcpSendCommand(o, True, tmpCommand,NULL))
+    if (!__srcpSendCommand(o, tmpCommand,NULL))
     {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Problem initializing GA %d", addr);
       return False;
@@ -285,13 +282,14 @@ static Boolean __initGL( iOSRCPData o, iONode node, int* bus ) {
   {
 
     StrOp.fmtb(tmpCommand,"GET %d GL %d\n", gl_bus, wLoc.getaddr(node) );
-    if( __srcpSendCommand(o, True, tmpCommand,NULL) != 100 ) {
+    if( __srcpSendCommand(o, tmpCommand,NULL) != 100 ) {
 
       StrOp.fmtb(tmpCommand,"INIT %d GL %d %s %d %d %d\n", gl_bus,
               wLoc.getaddr(node), prot, wLoc.getprotver( node ),
               wLoc.getspcnt( node ), wLoc.getfncnt( node ) + 1 );
 
-      if (!__srcpSendCommand(o, True, tmpCommand,NULL))
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", tmpCommand);
+      if (!__srcpSendCommand(o, tmpCommand,NULL))
       {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Problem initializing GL %d", wLoc.getaddr(node));
         return False;
@@ -303,11 +301,13 @@ static Boolean __initGL( iOSRCPData o, iONode node, int* bus ) {
 
     o->locInited[wLoc.getaddr(node)] = True;
 
-    if (!__srcpSendCommand(o, True, tmpCommand,NULL))
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", tmpCommand);
+    if (!__srcpSendCommand(o, tmpCommand,NULL))
     {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Problem getting GL %d", wLoc.getaddr(node));
       return False;
     }
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "successfully got GL %d", wLoc.getaddr(node));
   }
   return True;
 }
@@ -530,7 +530,7 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp )
       for( i = 0 ; i < intBits ; i++ ) {
         if( busList & ( 1 << i ) ) {
           StrOp.fmtb(tmpCommand,"SET %d POWER OFF\n", i );
-          __srcpSendCommand(o,False,tmpCommand,NULL);
+          __srcpSendCommand(o,tmpCommand,NULL);
         }
       }
     }
@@ -543,7 +543,7 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp )
       for( i = 0 ; i < intBits ; i++ ) {
         if( busList & ( 1 << i ) ) {
           StrOp.fmtb(tmpCommand,"SET %d POWER ON\n", i );
-          __srcpSendCommand(o,False,tmpCommand,NULL);
+          __srcpSendCommand(o,tmpCommand,NULL);
         }
       }
     }
@@ -560,7 +560,7 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp )
 
     if( !wProgram.ispom( node ) ) {
       StrOp.fmtb(tmpCommand,"SET 1 POWER OFF\n");
-      __srcpSendCommand(o,False,tmpCommand,NULL);
+      __srcpSendCommand(o,tmpCommand,NULL);
     }
 
     if( wProgram.getcmd( node ) == wProgram.set ) {
@@ -569,7 +569,7 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp )
       int value = wProgram.getvalue( node );
       int ack = 0;
       StrOp.fmtb (tmpCommand, "SET %d SM %d CV %d %d\n", wSRCP.getsrcpbusGL_ns( o->srcpini ), addr, cv-1, value );
-      __srcpSendCommand(o,False,tmpCommand,NULL);
+      __srcpSendCommand(o,tmpCommand,NULL);
       ack = ACKok(o->cmdSocket);
       if( ack == 1 ) {
         wProgram.setvalue( rsp, value );
@@ -585,7 +585,7 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp )
       int ack = 0;
       for( value = 0; value < 256 && !ack; value++ ) {
         StrOp.fmtb (tmpCommand, "GET %d SM %d CV %d %d\n", wSRCP.getsrcpbusGL_ns( o->srcpini ), addr, cv-1, value );
-        __srcpSendCommand(o,False,tmpCommand,NULL);
+        __srcpSendCommand(o,tmpCommand,NULL);
         ack = ACKok(o->cmdSocket);
       }
       if( ack == 1 ) {
@@ -606,10 +606,13 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
   char srcp[1024] = {0};
   iONode rsp = NULL;
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node=%s cmd=%s", NodeOp.getName(nodeA), wLoc.getcmd(nodeA)!=NULL?wLoc.getcmd(nodeA):"-" );
   rsp = __translate( data, nodeA, srcp );
 
-  if( StrOp.len( srcp ) > 0 )
-    __srcpSendCommand(data, True, srcp, NULL);
+  if( StrOp.len( srcp ) > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "translation = %s...", srcp);
+    __srcpSendCommand(data, srcp, NULL);
+  }
 
   if( data->cmdSocket == NULL ) {
     if( !__srcpConnect(data, True) ) {
@@ -890,6 +893,7 @@ static void __feedbackReader( void * threadinst )
             }
             else if( infotype == 2 ) {
               nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+              wLoc.setthrottleid( nodeC, "srcp" );
               wLoc.setcmd( nodeC, wLoc.dirfun );
               wLoc.setaddr( nodeC, addr );
               wLoc.setspcnt( nodeC, steps );
@@ -901,6 +905,8 @@ static void __feedbackReader( void * threadinst )
                 wLoc.setiid( nodeC, o->iid );
 
               nodeFn = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+              wLoc.setthrottleid( nodeFn, "srcp" );
+
               wFunCmd.setaddr( nodeFn, addr );
               wFunCmd.setf28( nodeFn,(srcpFx & 0x08000000)?True:False);
               wFunCmd.setf27( nodeFn,(srcpFx & 0x04000000)?True:False);
@@ -939,11 +945,12 @@ static void __feedbackReader( void * threadinst )
               if ( o->iid != NULL )
                 wFeedback.setiid( nodeC, o->iid );
             }
-
+            /*
             if ( nodeC != NULL && o->listenerFun != NULL && o->listenerObj != NULL )
               o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );
             if ( nodeFn != NULL && o->listenerFun != NULL && o->listenerObj != NULL )
               o->listenerFun( o->listenerObj, nodeFn, TRCLEVEL_INFO );
+              */
           }
           else {
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "not an INFO line:" );
@@ -1042,9 +1049,9 @@ static int __srcpInitServer( iOSRCPData o) {
   char tmpCommand[1024];
 
   StrOp.fmtb(tmpCommand,"GET 1 POWER\n");
-  if( __srcpSendCommand(o,False,tmpCommand,NULL) != 100 ) {
+  if( __srcpSendCommand(o,tmpCommand,NULL) != 100 ) {
     StrOp.fmtb(tmpCommand,"INIT 1 POWER\n");
-    __srcpSendCommand(o,False,tmpCommand,NULL);
+    __srcpSendCommand(o,tmpCommand,NULL);
   }
   return 0;
 }
@@ -1188,14 +1195,14 @@ static iOSRCP _inst( const iONode settings, const iOTrace trace )
     __srcpInitConnect(data);
     if ( data->fbackPort > 0 )
     {
-      char * fbname = StrOp.fmt( "ddlfb%08X", srcp );
+      char * fbname = StrOp.fmt( "fbreader%08X", srcp );
       data->fbackReader = ThreadOp.inst( fbname, & __feedbackReader, srcp );
       ThreadOp.start( data->fbackReader );
     }
 
     if ( data->infoPort > 0 )
     {
-      char * infoname = StrOp.fmt( "ddlif%08X", srcp );
+      char * infoname = StrOp.fmt( "inforeader%08X", srcp );
       data->infoReader = ThreadOp.inst( infoname, & __infoReader, srcp );
       ThreadOp.start( data->infoReader );
     }
