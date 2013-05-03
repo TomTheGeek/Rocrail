@@ -247,7 +247,7 @@ void SRCPCtrlDlg::CreateControls()
     itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
     m_labIID = new wxStaticText( m_GenerelPanel, ID_STATICTEXT_SRCP_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_IID = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_SRCP_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_IID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -259,7 +259,7 @@ void SRCPCtrlDlg::CreateControls()
     itemFlexGridSizer6->Add(m_Host, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labCmdPort = new wxStaticText( m_GenerelPanel, wxID_STATIC_SRCP_CMDPORT, _("Port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labCmdPort, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer6->Add(m_labCmdPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_CmdPort = new wxTextCtrl( m_GenerelPanel, ID_TEXTCTRL_SRCP_CmdPort, _("4303"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_CmdPort->SetMaxLength(5);
