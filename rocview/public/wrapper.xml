@@ -90,8 +90,6 @@
     <var name="lang" vt="string" defval="en" range="en,de,nl,sv,fr,tr" remark=""/>
     <var name="host" vt="string" defval="localhost" remark="last used rrcon"/>
     <var name="fsutf8" vt="bool" defval="true"/>
-    <var name="uniesc" vt="bool" defval="false"/>
-    <var name="cp850" vt="bool" defval="false"/>
     <var name="openpath" vt="string" defval="." remark="use this path for init the file open dialog"/>
     <var name="xslpath" vt="string" defval="stylesheets" remark="reference stylsheets to this path"/>
     <var name="decpath" vt="string" defval="decspecs" remark="reference decoder specifications to this path"/>

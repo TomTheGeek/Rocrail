@@ -262,6 +262,7 @@ public:
     wxComboBox* m_ScSensor;
     wxStaticText* m_labScIID;
     wxTextCtrl* m_ScIID;
+    wxCheckBox* m_FSUTF8;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Auto;

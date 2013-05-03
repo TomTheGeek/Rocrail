@@ -2786,7 +2786,7 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
 #else
       char* rrcall = StrOp.fmt( "%s%crocrail%s -l \"%s\" -w \"%s\"", m_ServerPath, SystemOp.getFileSeparator(), SystemOp.getPrgExt(), m_ServerPath, workspace );
 #endif
-      if( wGui.iscp850(m_Ini) ) {
+      if( !wGui.isfsutf8(m_Ini) ) {
         char* tmp = rrcall;
         rrcall = SystemOp.utf2latin(rrcall);
         StrOp.free(tmp);

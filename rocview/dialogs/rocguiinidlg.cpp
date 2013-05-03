@@ -242,7 +242,7 @@ void RocguiIniDialog::initValues() {
   m_JsSupport->SetValue( wGui.isjssupport( m_Ini ) ? true:false );
   m_DispatchMode->SetValue( wGui.isdispatchmode( m_Ini ) ? true:false );
   m_StartDefaultWorkspace->SetValue( wGui.isstartdefaultworkspace( m_Ini ) ? true:false );
-  m_CP850->SetValue( wGui.iscp850( m_Ini ) ? true:false );
+  m_FSUTF8->SetValue( wGui.isfsutf8( m_Ini ) ? true:false );
   m_RestoreLcCtrl->SetValue( wGui.isrestorelcctrl( m_Ini ) ? true:false );
   m_AltThrottle->SetValue( wGui.isaltthrottle( m_Ini ) ? true:false );
   m_Monitoring->SetValue( wGui.ismonitoring( m_Ini ) ? true:false );
@@ -414,7 +414,7 @@ void RocguiIniDialog::evaluate() {
   wGui.setjssupport( m_Ini, m_JsSupport->GetValue() ? True:False );
   wGui.setdispatchmode( m_Ini, m_DispatchMode->GetValue() ? True:False );
   wGui.setstartdefaultworkspace( m_Ini, m_StartDefaultWorkspace->GetValue() ? True:False );
-  wGui.setcp850( m_Ini, m_CP850->GetValue() ? True:False );
+  wGui.setfsutf8( m_Ini, m_FSUTF8->GetValue() ? True:False );
   wGui.setrestorelcctrl( m_Ini, m_RestoreLcCtrl->GetValue() ? True:False );
   wGui.setaltthrottle( m_Ini, m_AltThrottle->GetValue() ? True:False );
   wGui.setmonitoring( m_Ini, m_Monitoring->GetValue() ? True:False );
@@ -551,11 +551,11 @@ bool RocguiIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& c
     m_ReconnectAfterServerShutdown = NULL;
     m_ResetSpeedDir = NULL;
     m_RenderGC = NULL;
+    m_FSUTF8 = NULL;
     m_labWorkspace = NULL;
     m_Workspace = NULL;
     m_WorkspaceDlg = NULL;
     m_StartDefaultWorkspace = NULL;
-    m_CP850 = NULL;
     m_labWidgetWidth = NULL;
     m_WidgetWidth = NULL;
     m_labMonitorSize = NULL;
@@ -782,25 +782,25 @@ void RocguiIniDialog::CreateControls()
     m_RenderGC->SetValue(false);
     itemBoxSizer6->Add(m_RenderGC, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
+    m_FSUTF8 = new wxCheckBox( m_GeneralTab, wxID_ANY, _("UTF-8"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_FSUTF8->SetValue(false);
+    itemBoxSizer6->Add(m_FSUTF8, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+
     m_labWorkspace = new wxStaticBox(m_GeneralTab, wxID_ANY, _("Default Workspace"));
-    wxStaticBoxSizer* itemStaticBoxSizer23 = new wxStaticBoxSizer(m_labWorkspace, wxHORIZONTAL);
-    itemBoxSizer6->Add(itemStaticBoxSizer23, 0, wxGROW|wxALL, 5);
-    wxFlexGridSizer* itemFlexGridSizer24 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer24->AddGrowableCol(0);
-    itemStaticBoxSizer23->Add(itemFlexGridSizer24, 1, wxALIGN_CENTER_VERTICAL, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer24 = new wxStaticBoxSizer(m_labWorkspace, wxHORIZONTAL);
+    itemBoxSizer6->Add(itemStaticBoxSizer24, 0, wxGROW|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer25 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer25->AddGrowableCol(0);
+    itemStaticBoxSizer24->Add(itemFlexGridSizer25, 1, wxALIGN_CENTER_VERTICAL, 5);
     m_Workspace = new wxTextCtrl( m_GeneralTab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer24->Add(m_Workspace, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer25->Add(m_Workspace, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_WorkspaceDlg = new wxButton( m_GeneralTab, ID_WORKSPACE, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
-    itemFlexGridSizer24->Add(m_WorkspaceDlg, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxRIGHT, 5);
+    itemFlexGridSizer25->Add(m_WorkspaceDlg, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxRIGHT, 5);
 
     m_StartDefaultWorkspace = new wxCheckBox( m_GeneralTab, wxID_ANY, _("Use at startup"), wxDefaultPosition, wxDefaultSize, 0 );
     m_StartDefaultWorkspace->SetValue(false);
-    itemFlexGridSizer24->Add(m_StartDefaultWorkspace, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
-
-    m_CP850 = new wxCheckBox( m_GeneralTab, wxID_ANY, _("ISO"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_CP850->SetValue(false);
-    itemFlexGridSizer24->Add(m_CP850, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer25->Add(m_StartDefaultWorkspace, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxFlexGridSizer* itemFlexGridSizer29 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer6->Add(itemFlexGridSizer29, 0, wxALIGN_LEFT, 5);

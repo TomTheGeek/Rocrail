@@ -728,6 +728,19 @@ static void __callback( obj inst, iONode nodeA ) {
         char* sfilename = StrOp.fmt( "%s%csmall%c%s", AppOp.getImgPath(),
             SystemOp.getFileSeparator(), SystemOp.getFileSeparator(), FileOp.ripPath(wDataReq.getfilename(nodeA)) );
 
+        if( !wRocRail.isfsutf8(AppOp.getIni()) ) {
+          if( smallimage && FileOp.exist( sfilename ) ) {
+            char* tmp = sfilename;
+            sfilename = SystemOp.utf2latin(sfilename);
+            StrOp.free(tmp);
+          }
+          else {
+            char* tmp = filename;
+            filename = SystemOp.utf2latin(filename);
+            StrOp.free(tmp);
+          }
+        }
+
         if( smallimage && FileOp.exist( sfilename ) )
           f = FileOp.inst( sfilename, OPEN_READONLY);
         else if(FileOp.exist( filename ))

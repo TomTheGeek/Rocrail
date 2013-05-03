@@ -177,11 +177,11 @@ public:
     wxCheckBox* m_ReconnectAfterServerShutdown;
     wxCheckBox* m_ResetSpeedDir;
     wxCheckBox* m_RenderGC;
+    wxCheckBox* m_FSUTF8;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;
     wxCheckBox* m_StartDefaultWorkspace;
-    wxCheckBox* m_CP850;
     wxStaticText* m_labWidgetWidth;
     wxSpinCtrl* m_WidgetWidth;
     wxStaticText* m_labMonitorSize;
