@@ -291,16 +291,17 @@ static char *getSrcpIid( iOSrcpConData data, const int bus, char* srcpIid) {
 
 /* "extended" version of ModelOp.getSwByAddress */
 static iOSwitch SRCPgetSwByAddressAndIid( iOModel model, int addr, int port, char *iid ) {
+  int pAddr = AddrOp.toPADA( addr, port );
   iOMap switchMap = ModelOp.getSwitchMap( model );
 
   iOSwitch sw = (iOSwitch)MapOp.first( switchMap );
 
   while( sw != NULL ) {
     iONode swProps = SwitchOp.base.properties(sw);
+    int swPaddr1 = AddrOp.toPADA( wSwitch.getaddr1( swProps ), wSwitch.getport1( swProps ) );
+    int swPaddr2 = AddrOp.toPADA( wSwitch.getaddr2( swProps ), wSwitch.getport2( swProps ) );
 
-    if( wSwitch.getaddr1( swProps ) == addr && wSwitch.getport1( swProps ) == port && StrOp.equals( wSwitch.getiid(swProps), iid ) )
-      break;
-    if( wSwitch.getaddr2( swProps ) == addr && wSwitch.getport2( swProps ) == port && StrOp.equals( wSwitch.getiid(swProps), iid ) )
+    if( ( ( pAddr == swPaddr1 ) || ( pAddr == swPaddr2 ) ) && StrOp.equals( wSwitch.getiid(swProps), iid ) )
       break;
     sw = (iOSwitch)MapOp.next( switchMap );
   };
@@ -315,9 +316,10 @@ static iOSwitch SRCPgetSwByAddressAndIid( iOModel model, int addr, int port, cha
 
       while( sw != NULL ) {
         iONode swProps = SwitchOp.base.properties(sw);
-        if( wSwitch.getaddr1( swProps ) == addr && wSwitch.getport1( swProps ) == port && StrOp.equals( wSwitch.getiid(swProps), "" ) )
-          break;
-        if( wSwitch.getaddr2( swProps ) == addr && wSwitch.getport2( swProps ) == port && StrOp.equals( wSwitch.getiid(swProps), "" ) )
+        int swPaddr1 = AddrOp.toPADA( wSwitch.getaddr1( swProps ), wSwitch.getport1( swProps ) );
+        int swPaddr2 = AddrOp.toPADA( wSwitch.getaddr2( swProps ), wSwitch.getport2( swProps ) );
+
+        if( ( ( pAddr == swPaddr1 ) || ( pAddr == swPaddr2 ) ) && StrOp.equals( wSwitch.getiid(swProps), "" ) )
           break;
         sw = (iOSwitch)MapOp.next( switchMap );
       };
@@ -334,6 +336,7 @@ static iOSwitch SRCPgetSwByAddressAndIid( iOModel model, int addr, int port, cha
 
 /* "extended" version of ModelOp.getSgByAddress */
 static iOSignal SRCPgetSgByAddressAndIid( iOModel model, int addr, int port, char *iid ) {
+  int pAddr = AddrOp.toPADA( addr, port );
   iOMap signalMap = ModelOp.getSignalMap( model );
 
   iOSignal sg = (iOSignal)MapOp.first( signalMap );
@@ -342,13 +345,13 @@ static iOSignal SRCPgetSgByAddressAndIid( iOModel model, int addr, int port, cha
     iONode sgProps = SignalOp.base.properties(sg);
     int aspects = wSignal.getaspects( sgProps );
 
-    if( wSignal.getaddr(  sgProps ) == addr && wSignal.getport1( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), iid ) )
+    if( ( pAddr == AddrOp.toPADA( wSignal.getaddr( sgProps ), wSignal.getport1( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), iid ) )
       break;
-    if( wSignal.getaddr2( sgProps ) == addr && wSignal.getport2( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), iid ) )
+    if( ( pAddr == AddrOp.toPADA( wSignal.getaddr2( sgProps ), wSignal.getport2( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), iid ) )
       break;
-    if( (aspects > 2) && wSignal.getaddr3( sgProps ) == addr && wSignal.getport3( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), iid ) )
+    if( (aspects > 2) && ( pAddr == AddrOp.toPADA( wSignal.getaddr3( sgProps ), wSignal.getport3( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), iid ) )
       break;
-    if( (aspects > 3) && wSignal.getaddr4( sgProps ) == addr && wSignal.getport4( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), iid ) )
+    if( (aspects > 3) && ( pAddr == AddrOp.toPADA( wSignal.getaddr4( sgProps ), wSignal.getport4( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), iid ) )
       break;
     sg = (iOSignal)MapOp.next( signalMap );
   };
@@ -365,13 +368,13 @@ static iOSignal SRCPgetSgByAddressAndIid( iOModel model, int addr, int port, cha
         iONode sgProps = SignalOp.base.properties(sg);
         int aspects = wSignal.getaspects( sgProps );
 
-        if( wSignal.getaddr(  sgProps ) == addr && wSignal.getport1( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), "" ) )
+        if( ( pAddr == AddrOp.toPADA( wSignal.getaddr( sgProps ), wSignal.getport1( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), "" ) )
           break;
-        if( wSignal.getaddr2( sgProps ) == addr && wSignal.getport2( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), "" ) )
+        if( ( pAddr == AddrOp.toPADA( wSignal.getaddr2( sgProps ), wSignal.getport2( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), "" ) )
           break;
-        if( (aspects > 2) && wSignal.getaddr3( sgProps ) == addr && wSignal.getport3( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), "" ) )
+        if( (aspects > 2) && ( pAddr == AddrOp.toPADA( wSignal.getaddr3( sgProps ), wSignal.getport3( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), "" ) )
           break;
-        if( (aspects > 3) && wSignal.getaddr4( sgProps ) == addr && wSignal.getport4( sgProps ) == port && StrOp.equals( wSignal.getiid(sgProps), "" ) )
+        if( (aspects > 3) && ( pAddr == AddrOp.toPADA( wSignal.getaddr4( sgProps ), wSignal.getport4( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), "" ) )
           break;
         sg = (iOSignal)MapOp.next( signalMap );
       };
