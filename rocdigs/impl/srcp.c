@@ -964,6 +964,14 @@ static void __infoReader( void * threadinst ) {
         SocketOp.disConnect( o->infoSocket );
         SocketOp.base.del(o->infoSocket);
         o->infoSocket = NULL;
+
+        if( o->cmdSocket != NULL ) {
+          iOSocket socket = o->cmdSocket;
+          o->cmdSocket = NULL;
+          SocketOp.disConnect( socket );
+          SocketOp.base.del(socket);
+        }
+
         ThreadOp.sleep( 1000 );
         o->infoSocket = SocketOp.inst( o->ddlHost, o->cmdPort, False, False, False );
         if( SocketOp.connect( o->infoSocket ) ) {
@@ -1001,7 +1009,6 @@ static int __srcpInitServer( iOSRCPData o) {
 static Boolean __srcpConnect( iOSRCPData o ) {
   char inbuf[1024];
   /* Will be enough. spec says, no line longer than 1000 chars. */
-  char * token;
   char id[1024], data[1024];
   /* Boolean found = False; */
 
@@ -1012,8 +1019,10 @@ static Boolean __srcpConnect( iOSRCPData o ) {
   }
 
   /* Disconnect if connected */
-  if ( SocketOp.isConnected( o->cmdSocket ) )
+  if ( SocketOp.isConnected( o->cmdSocket ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "disconnecting from SRCP server %s:%d", o->ddlHost, o->cmdPort );
     SocketOp.disConnect( o->cmdSocket );
+  }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connecting to SRCP server %s:%d", o->ddlHost, o->cmdPort );
 
@@ -1035,7 +1044,7 @@ static Boolean __srcpConnect( iOSRCPData o ) {
    * The following keys MUST be determined during normal welcome:
    * SRCP <version>
    */
-  StrOp.replaceAll((char*)inbuf, '\n', ' ');
+  StrOp.replaceAll(inbuf, '\n', ' ');
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Response from server: %s", inbuf );
   if ( StrOp.findi( inbuf, "SRCP 0.8." ) != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server response for protocol 0.8 ok." );
