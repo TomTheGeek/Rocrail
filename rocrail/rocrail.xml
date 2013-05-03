@@ -2346,6 +2346,7 @@
       <var name="objectmap" vt="iOMap"/>
       <var name="maxZlevel" vt="int" remark="maximum level number in plan"/>
       <var name="maxConnectorDistance" vt="int" remark="distance to search between 2 connectors"/>
+      <var name="maxRecursionDepth" vt="int" remark="maximum recursion depth"/>
       <var name="bklist" vt="iOList"/>
       <var name="preRTlist" vt="iOList"/>
       <var name="notRTlist" vt="iOList"/>

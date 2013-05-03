@@ -747,6 +747,8 @@
       <var name="actiontimer60" vt="bool" defval="true"/>
     </ctrl>
     <anaopt remark="Analyser options." wrappername="AnaOpt">
+      <!-- option -->
+      <var name="maxRecursionDepth" vt="int" defval="100" remark="maximum recursion depth"/>
       <!-- analyze -->
       <var name="setRouteId"   vt="bool" defval="true" remark="Set routeid for all automatic detected routes"/>
       <var name="setBlockId"   vt="bool" defval="true" remark="Set blockid for all blocks"/>

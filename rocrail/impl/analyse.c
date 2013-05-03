@@ -138,6 +138,8 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/SystemActions.h"
 #include "rocrail/wrapper/public/ActionList.h"
+#include "rocrail/wrapper/public/TurntableList.h"
+#include "rocrail/wrapper/public/TextList.h"
 
 #include "rocrail/public/app.h"
 #include "rocrail/public/model.h"
@@ -2274,6 +2276,16 @@ static Boolean zlevelCheck( iOAnalyse inst, Boolean repair ) {
             numWarnings++;
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: invisible item[%s] id[%s] on invalid z level [%d] (show[%d])", itemName, wItem.getid(item), z, show );
           }
+        }else{
+          const char* type = wItem.gettype(item);
+          if( StrOp.equals( itemName, wTrack.name() )
+            && (  StrOp.equals( type, wTrack.curve90 ) || StrOp.equals( type, wTrack.dcurve  ) )
+            && ( ! wItem.isroad( item ) )
+            ) {
+            /* curve90 or dcurve without attribute "road" -> may be a wrong type of track */
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: item[%s] type[%s] at[%d-%d-%d] may be wrong (HINT: change type to curve or set the road attribute)",
+                wItem.getid(item), type==NULL?"":type, wItem.getx(item), wItem.gety(item), wItem.getz(item) );
+          }
         }
       }else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "zlevelCheck: unsupported name[%s] -> skipped", itemName );
@@ -2555,7 +2567,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
 
     if( ! wItem.isshow(node) ) {
       /* invisible item */
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "prepare: not adding key(s) for INVISBLE object [%s] type[%s] id[%s] at [%d,%d,%d]",
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "prepare: not adding key(s) for INVISBLE object [%s] type[%s] id[%s] at [%d,%d,%d]",
           NodeOp.getName(node), type==NULL?"":type, wItem.getid(node), wItem.getx(node), wItem.gety(node), wItem.getz(node) );
     }
     else {
@@ -2581,6 +2593,15 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
       __createKey( key, node, 0+modx, 0+mody, 0);
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
           key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
+      if( StrOp.equals( NodeOp.getName(node), wTrack.name() )
+        && (  StrOp.equals( type, wTrack.curve90 ) || StrOp.equals( type, wTrack.dcurve  ) )
+        && ( ! wItem.isroad( node ) )
+        ) {
+        /* curve90 or dcurve without attribute "road" -> may be a wrong type of track */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "   item[%s] type[%s] at[%d-%d-%d] may be wrong (HINT: change type to curve or set the road attribute)",
+            wItem.getid(node), type==NULL?"":type, wItem.getx(node), wItem.gety(node), wItem.getz(node) );
+      }
+
       if( MapOp.haskey( data->objectmap, key) ) {
         healthy = False;
         __notifyOverlapError( node, data->objectmap, key );
@@ -2599,7 +2620,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
 
           if( StrOp.equals( ori, wItem.east ) || StrOp.equals( ori, wItem.west ) ) {
             __createKey( key, node, 1, 0, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
 
             if( MapOp.haskey( data->objectmap, key) ) {
@@ -2611,7 +2632,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
           }
           if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
             __createKey( key, node, 0, 1, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
 
             if( MapOp.haskey( data->objectmap, key) ) {
@@ -2625,7 +2646,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
         if( isDoubleTrackRRCrossing( node ) ) {
           if( StrOp.equals( ori, wItem.east ) || StrOp.equals( ori, wItem.west ) ) {
             __createKey( key, node, 0, 1, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
 
             if( MapOp.haskey( data->objectmap, key) ) {
@@ -2637,7 +2658,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
           }
           if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
             __createKey( key, node, 1, 0, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
 
             if( MapOp.haskey( data->objectmap, key) ) {
@@ -2671,7 +2692,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
           }
           if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
             __createKey( key, node, 0, i, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
             if( MapOp.haskey( data->objectmap, key) ) {
@@ -2691,7 +2712,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
 
           if( StrOp.equals( ori, wItem.east ) || StrOp.equals( ori, wItem.west ) ) {
             __createKey( key, node, i, 0, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
             if( MapOp.haskey( data->objectmap, key) ) {
@@ -2703,7 +2724,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
           }
           if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
             __createKey( key, node, 0, i, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
             if( MapOp.haskey( data->objectmap, key) ) {
@@ -2719,14 +2740,14 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
 
         int fields = wSelTab.getnrtracks( node);
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  SELTAB %d", fields);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, " ------> seltab[%s] fields/tracks[%d]", NodeOp.getName(node), fields);
 
         int i;
         for (i=1;i<fields;i++) {
 
           if( StrOp.equals( ori, wItem.east ) || StrOp.equals( ori, wItem.west ) ) {
             __createKey( key, node, i, 0, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
             if( MapOp.haskey( data->objectmap, key) ) {
@@ -2738,7 +2759,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
           }
           if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
             __createKey( key, node, 0, i, 0);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
             if( MapOp.haskey( data->objectmap, key) ) {
@@ -2750,6 +2771,101 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
           }
         }
       } /* seltab */
+      else if( StrOp.equals( NodeOp.getName(node), wTurntable.name() ) ) {
+        int sizeX = -1;
+        int sizeY = -1;
+        const char* type = wItem.gettype(node);
+        const char* ori = wItem.getori(node);
+        if( ori == NULL ) {
+          ori = wItem.west;
+        }
+        Boolean traverser = wTurntable.istraverser(node);
+
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__prepare: Checking node %s", wItem.getid(node) );
+
+        if( traverser ) {
+          if( StrOp.equals( ori, wItem.west ) || StrOp.equals( ori, wItem.east ) ) {
+            sizeX = 4;
+            sizeY = 8;
+          }else {
+            sizeX = 8;
+            sizeY = 4;
+          }
+        }else {
+          int size = wTurntable.getsymbolsize( node );
+          sizeX = size;
+          sizeY = size;
+        }
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, " ------> %s[%s] (ori[%s] sizeX[%d] sizeY[%d]):", traverser?"traverser":"turntable", wItem.getid(node), ori, sizeX, sizeY);
+
+        int i,j;
+        for (i=0;i<sizeX;i++) {
+          for (j=0;j<sizeY;j++) {
+            if( i == 0 && j == 0 )
+              continue;
+            __createKey( key, node, i, j, 0);
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+                key, NodeOp.getName(node), traverser?"traverser":"turntable", ori, wItem.getid(node) );
+
+            if( MapOp.haskey( data->objectmap, key) ) {
+              healthy = False;
+              __notifyOverlapError( node, data->objectmap, key );
+            }
+            else
+              MapOp.put( data->objectmap, key, (obj)node);
+          }
+        }
+      } /* turntable */
+      else if( StrOp.equals( NodeOp.getName(node), wText.name() ) ) {
+        int sizeX = -1;
+        int sizeY = -1;
+
+        /*
+        text id x y z cx cy pointsize 
+        */
+        const char* txId = wText.getid(node) ;
+        const char* txText = wText.gettext(node) ;
+        const char* type = wItem.gettype(node);
+        const char* ori = wItem.getori(node);
+        if( ori == NULL ) {
+          ori = wItem.west;
+        }
+        int txX = wText.getx(node) ;
+        int txY = wText.gety(node) ;
+        int txZ = wText.getz(node) ;
+        int txCX = wText.getcx(node) ;
+        int txCY = wText.getcy(node) ;
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__prepare: text[%s][%s]: xyz[%d-%d-%d] cx[%d] cy[%d]",
+            txId, txText, txX, txY, txZ, txCX, txCY );
+
+        if( (txX >= 0) && (txY >= 0) && isValidZlevel( inst, txZ ) && (txCX > 0) && (txCY > 0) ) {
+          if( StrOp.equals( ori, wItem.west ) || StrOp.equals( ori, wItem.east ) ) {
+            sizeX = txCX;
+            sizeY = txCY;
+          }else {
+            sizeX = txCY;
+            sizeY = txCX;
+          }
+
+          int i,j;
+          for (i=0;i<sizeX;i++) {
+            for (j=0;j<sizeY;j++) {
+              if( i == 0 && j == 0 )
+                continue;
+              __createKey( key, node, i, j, 0);
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s [%s]",
+                  key, NodeOp.getName(node), type?type:"", ori, txId, txText );
+
+              if( MapOp.haskey( data->objectmap, key) ) {
+                healthy = False;
+                __notifyOverlapError( node, data->objectmap, key );
+              }
+              else
+                MapOp.put( data->objectmap, key, (obj)node);
+            }
+          }
+        }
+      } /* text */
 
     } /* visible item */
     iONode nextnode = (iONode)ListOp.next( list );
@@ -4071,8 +4187,9 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
   }
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "depth: [%d]", depth );
   
-  if( depth > 100 ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ANALYSER: max. recursion depth (%d > 100) reached", depth);
+  if( depth > data->maxRecursionDepth ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ANALYSER: max. recursion depth (%d > %d) reached",
+        depth, data->maxRecursionDepth );
     return False;
   }
 
@@ -4700,6 +4817,9 @@ static int __analyseAllLists(iOAnalyse inst) {
    *   addFeedbackBlockAssignment
    */
   int modifications = 0;
+  int size_currlist = 0;
+  int maxDepthPreRt = 0;
+  int maxDepthNotRt = 0;
 
   /* merge all members of preRTlist and notRTlist to allRTlist -> just 1 list to work on */
   iOList allRTlist = ListOp.inst();
@@ -4711,6 +4831,9 @@ static int __analyseAllLists(iOAnalyse inst) {
 
   iOList currlist = (iOList)ListOp.first( data->preRTlist );
   while( currlist ) {
+    size_currlist = ListOp.size( currlist );
+    if( size_currlist > maxDepthPreRt )
+      maxDepthPreRt = size_currlist ;
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll NEW LIST(pre):" );
 
     iONode item = (iONode)ListOp.first( currlist );
@@ -4727,6 +4850,9 @@ static int __analyseAllLists(iOAnalyse inst) {
 
   currlist = (iOList)ListOp.first( data->notRTlist );
   while( currlist ) {
+    size_currlist = ListOp.size( currlist );
+    if( size_currlist > maxDepthNotRt )
+      maxDepthNotRt = size_currlist ;
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll NEW LIST(not):" );
     
     iONode item = (iONode)ListOp.first( currlist );
@@ -4742,7 +4868,8 @@ static int __analyseAllLists(iOAnalyse inst) {
   }
 
   int size_allRTlist = ListOp.size( allRTlist );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "anaAll preRTlist(%d)+notRTlist(%d)=allRTlist(%d)", size_preRTlist, size_notRTlist, size_allRTlist);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "anaAll preRTlist[%d]+notRTlist[%d]=allRTlist[%d] (maxDepthPreRt[%d] maxDepthNotRt[%d])",
+      size_preRTlist, size_notRTlist, size_allRTlist, maxDepthPreRt, maxDepthNotRt );
 
   /* now we can start our jobs...
    * first:
@@ -5765,6 +5892,62 @@ static int _analyse(iOAnalyse inst) {
   return modifications ;
 }
 
+
+static void __ANAaddLevelItem( iOList list, iONode item, int level, int* cx, int* cy ) {
+  if( wItem.getz( item ) == level ) {
+    int x = wItem.getx( item );
+    int y = wItem.gety( item );
+    if( x < 0 || y < 0 )
+      return;
+    ListOp.add( list, (obj)item );
+    if( x > *cx ) *cx = x;
+    if( y > *cy ) *cy = y;
+  }
+}
+
+
+static iOList __addMissingLevelItems( iOAnalyse inst, int level, int *cx, int *cy, iOList list ) {
+  iOAnalyseData data = Data(inst);
+  Boolean isModplan = ( NULL != ModelOp.getModPlan( data->model ) );
+
+  iONode itemlist, item;
+
+  itemlist = wPlan.getttlist(data->plan);
+  if( itemlist != NULL ) {
+    item = wTurntableList.gettt( itemlist );
+    while( item != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__addMissingLevelItems: adding node[%s] xyz[%d-%d-%d] lvl[%d]",
+          wItem.getid(item), wItem.getx(item), wItem.gety(item), wItem.getz(item), level );
+      __ANAaddLevelItem( list, item, level, cx, cy );
+      item =  wTurntableList.nexttt( itemlist, item );
+    }
+  }
+
+  itemlist = wPlan.getstlist(data->plan);
+  if( itemlist != NULL ) {
+    item = wRouteList.getst( itemlist );
+    while( item != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__addMissingLevelItems: adding node[%s] xyz[%d-%d-%d] lvl[%d]",
+          wItem.getid(item), wItem.getx(item), wItem.gety(item), wItem.getz(item), level );
+      __ANAaddLevelItem( list, item, level, cx, cy );
+      item = wRouteList.nextst( itemlist, item );
+    }
+  }
+
+  itemlist = wPlan.gettxlist( data->plan );
+  if( itemlist != NULL ) {
+    item = wTextList.gettx( itemlist );
+    while( item != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__addMissingLevelItems: adding node[%s] xyz[%d-%d-%d] lvl[%d]",
+          wItem.getid(item), wItem.getx(item), wItem.gety(item), wItem.getz(item), level );
+      __ANAaddLevelItem( list, item, level, cx, cy );
+      item =  wTextList.nexttx( itemlist, item );
+    }
+  }
+
+  return list;
+}
+
 static Boolean _checkPlanHealth(iOAnalyse inst) {
   if( inst == NULL ) {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "AnalyseOp.checkPlanHealth() called without a valid instance" );
@@ -6027,6 +6210,8 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
     int i;
     for( i = 0; i <= data->maxZlevel ; i++) {
       iOList list = ModelOp.getLevelItems( data->model, i, &cx, &cy, True);
+      /* add tt st tx (suiting level) ... to list ??? */
+      __addMissingLevelItems( inst, i, &cx, &cy, list );
       if( ListOp.size(list) > 0) {
         if( ! __prepare(inst, list, 0,0) )
           healthy = False;
@@ -6037,44 +6222,14 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
     iONode mod = wModPlan.getmodule( modplan );
     while( mod != NULL ) {
       iOList list = ModelOp.getLevelItems( data->model, zlevel, &cx, &cy, True);
+      /* add tt st tx ... to list ??? */
+      __addMissingLevelItems( inst, zlevel, &cx, &cy, list );
       if( ! __prepare(inst, list, wModule.getx(mod), wModule.gety(mod)) )
         healthy = False;
       zlevel++;
       mod = wModPlan.nextmodule( modplan, mod );
     }
   }
-  /* 
-   * visible routes/streets are not tested within __prepare, 
-   * so check them here against the objectmap created by __prepare
-   */
-  iONode stList = wPlan.getstlist(data->plan);
-  int stListSize = 0;
-  if( stList != NULL ) {
-    stListSize = NodeOp.getChildCnt( stList );
-
-    if( stListSize > 0 ) {
-      iONode node;
-      const char* stListType = NodeOp.getName( NodeOp.getChild(stList, 0));
-      int i = 0;
-      Boolean thisNodeChanged ;
-
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_checkPlanHealth: Checking %d %s nodes", stListSize, stListType );
-      for( i = 0 ; i < stListSize ; i++ ) {
-        node = NodeOp.getChild(stList, i);
-        if( node && wItem.isshow(node) && ( wItem.getx(node) > -1 ) && ( wItem.gety(node) > -1 ) ) {
-          __createKey( key, node, 0, 0, 0);
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_checkPlanHealth: Checking node %s", wItem.getid(node) );
-          if( MapOp.haskey( data->objectmap, key) ) {
-            healthy = False;
-            __notifyOverlapError( node, data->objectmap, key );
-          }
-          else
-            MapOp.put( data->objectmap, key, (obj)node);
-        }
-      }
-    }
-  }
-
 
   /* check zlevels and all items on zlevels */
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Starting zlevel check" );
@@ -7543,6 +7698,9 @@ static struct OAnalyse* _inst() {
     }
   }
 
+  /* set option value */
+  data->maxRecursionDepth = wAnaOpt.getmaxRecursionDepth( anaOpt ) ;
+
   /* set options to current value or initialize with default (creates non existant entries in rocrail.ini) */
   /* basic analyzer jobs */
   wAnaOpt.setsetRouteId( anaOpt, wAnaOpt.issetRouteId( anaOpt ) ) ;
@@ -7586,7 +7744,8 @@ static struct OAnalyse* _inst() {
   data->actionCheck = wAnaOpt.isactionCheck( anaOpt ) ;
   data->actionClean = wAnaOpt.isactionClean( anaOpt ) ;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ExtChk: basic[%d]c[%d] block[%d]c[%d] route[%d]c[%d] action[%d]c[%d]",
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MRD[%d] ExtChk: basic[%d]c[%d] block[%d]c[%d] route[%d]c[%d] action[%d]c[%d]",
+      data->maxRecursionDepth,
       data->basicCheck,  data->basicClean,
       data->blockCheck,  data->blockClean,
       data->routeCheck,  data->routeClean,
