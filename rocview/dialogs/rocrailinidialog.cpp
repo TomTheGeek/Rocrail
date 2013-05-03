@@ -1147,7 +1147,7 @@ void RocrailIniDialog::CreateControls()
     m_PlanTypeStrings.Add(_("&Modules"));
     m_PlanType = new wxRadioBox( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_PlanTypeStrings, 1, wxRA_SPECIFY_ROWS );
     m_PlanType->SetSelection(0);
-    itemFlexGridSizer6->Add(m_PlanType, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer6->Add(m_PlanType, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_Backup = new wxCheckBox( m_GeneralPanel, wxID_ANY, _("Backup"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Backup->SetValue(false);
@@ -1256,7 +1256,7 @@ void RocrailIniDialog::CreateControls()
 
     m_FSUTF8 = new wxCheckBox( m_GeneralPanel, wxID_ANY, _("UTF-8"), wxDefaultPosition, wxDefaultSize, 0 );
     m_FSUTF8->SetValue(false);
-    itemBoxSizer5->Add(m_FSUTF8, 0, wxALIGN_LEFT|wxALL, 5);
+    itemBoxSizer5->Add(m_FSUTF8, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
     m_RRNotebook->AddPage(m_GeneralPanel, _("General"));
 
