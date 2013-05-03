@@ -54,7 +54,7 @@ static int instCnt = 0;
 #define SRCP_OK(x) ( x < 400 )
 #define SRCP_ERROR(x) ( x >= 400 )
 
-static Boolean __srcpConnect( iOSRCPData o, Boolean reconnect );
+static Boolean __srcpConnect( iOSRCPData o );
 static int __srcpSendCommand( iOSRCPData o, const char* szCommand, char *szRetVal);
 static int __srcpInitServer( iOSRCPData o);
 
@@ -501,7 +501,9 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
       for( i = 0 ; i < intBits ; i++ ) {
         if( busList & ( 1 << i ) ) {
           StrOp.fmtb(tmpCommand,"SET %d POWER OFF\n", i );
-          __srcpSendCommand(o,tmpCommand,NULL);
+          if( __srcpSendCommand(o,tmpCommand,NULL) == -1) {
+            break;
+          }
         }
       }
     }
@@ -513,7 +515,9 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
       for( i = 0 ; i < intBits ; i++ ) {
         if( busList & ( 1 << i ) ) {
           StrOp.fmtb(tmpCommand,"SET %d POWER ON\n", i );
-          __srcpSendCommand(o,tmpCommand,NULL);
+          if( __srcpSendCommand(o,tmpCommand,NULL) == -1) {
+            break;
+          }
         }
       }
     }
@@ -576,6 +580,13 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
   char srcp[1024] = {0};
   iONode rsp = NULL;
 
+  if( data->cmdSocket == NULL ) {
+    if( __srcpConnect(data) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnected");
+      __srcpInitConnect(data);
+    }
+  }
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node=%s cmd=%s", NodeOp.getName(nodeA), wLoc.getcmd(nodeA)!=NULL?wLoc.getcmd(nodeA):"-" );
   rsp = __translate( data, nodeA, srcp );
 
@@ -585,8 +596,13 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
   }
 
   if( data->cmdSocket == NULL ) {
-    if( !__srcpConnect(data, True) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying to reconnect...");
+    if( !__srcpConnect(data) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnect at next command...");
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnected");
+      __srcpInitConnect(data);
     }
   }
 
@@ -1014,7 +1030,7 @@ static int __srcpInitServer( iOSRCPData o) {
 }
 
 
-static Boolean __srcpConnect( iOSRCPData o, Boolean reconnect ) {
+static Boolean __srcpConnect( iOSRCPData o ) {
   char inbuf[1024];
   /* Will be enough. spec says, no line longer than 1000 chars. */
   char * token;
@@ -1023,6 +1039,8 @@ static Boolean __srcpConnect( iOSRCPData o, Boolean reconnect ) {
 
   if ( o->cmdSocket == NULL )
     o->cmdSocket = SocketOp.inst( o->ddlHost, o->cmdPort, False, False, False );
+  SocketOp.setSndTimeout( o->cmdSocket, wDigInt.gettimeout(o->ini));
+  SocketOp.setRcvTimeout( o->cmdSocket, wDigInt.gettimeout(o->ini));
 
   /* Disconnect if connected */
   if ( SocketOp.isConnected( o->cmdSocket ) )
@@ -1058,18 +1076,16 @@ static Boolean __srcpConnect( iOSRCPData o, Boolean reconnect ) {
    * SRCP <version>
    */
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Response from server: %s", inbuf );
-  if( !reconnect ) {
-    if ( StrOp.findi( inbuf, "SRCP 0.8." ) != NULL ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server response for protocol 0.8 ok." );
-    }
-    else {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking. No supported protocol found!" );
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, inbuf );
-      SocketOp.disConnect( o->cmdSocket );
-      return False;
-    }
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Handshake completed." );
+  if ( StrOp.findi( inbuf, "SRCP 0.8." ) != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server response for protocol 0.8 ok." );
   }
+  else {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking. No supported protocol found!" );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, inbuf );
+    SocketOp.disConnect( o->cmdSocket );
+    return False;
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Handshake completed." );
 
   return True;
 }
@@ -1145,7 +1161,7 @@ static iOSRCP _inst( const iONode settings, const iOTrace trace ) {
   data->locInited = allocMem( 16384 * sizeof(Boolean));
   MemOp.set( data->locInited, 0, 16384*sizeof(Boolean));
 
-  if( __srcpConnect( data, False ) ) {
+  if( __srcpConnect( data ) ) {
     __srcpInitConnect(data);
     if ( data->fbackPort > 0 ) {
       char * fbname = StrOp.fmt( "fbreader%08X", srcp );
