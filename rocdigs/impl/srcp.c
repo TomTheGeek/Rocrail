@@ -194,13 +194,13 @@ static int __srcpSendCommand( iOSRCPData o, const char* szCommand, char *szRetVa
     return -1;
   }
 
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "in: %s",inbuf);
+  StrOp.replaceAll(inbuf, '\n', ' ');
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "srcp response: %s",inbuf);
 
   /* Scan for SM return? */
   MemOp.set(szResponse,0,900);
   sscanf(inbuf,"%*s %d %900c",&retstate,szResponse);
 
-  StrOp.replaceAll(szResponse, '\n', ' ');
   if (!SRCP_OK(retstate))
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "SRCP Response: %s",szResponse);
   else
@@ -577,7 +577,7 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
 
 static iONode _cmd( obj inst, const iONode nodeA ) {
   iOSRCPData data = Data( inst );
-  char srcp[1024] = {0};
+  char cmd[1024] = {0};
   iONode rsp = NULL;
 
   if( data->cmdSocket == NULL ) {
@@ -588,11 +588,11 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node=%s cmd=%s", NodeOp.getName(nodeA), wLoc.getcmd(nodeA)!=NULL?wLoc.getcmd(nodeA):"-" );
-  rsp = __translate( data, nodeA, srcp );
+  rsp = __translate( data, nodeA, cmd );
 
-  if( StrOp.len( srcp ) > 0 ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "translation = %s...", srcp);
-    __srcpSendCommand(data, srcp, NULL);
+  if( StrOp.len( cmd ) > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "translation = %s...", cmd);
+    __srcpSendCommand(data, cmd, NULL);
   }
 
   if( data->cmdSocket == NULL ) {
@@ -602,7 +602,16 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnected");
-      __srcpInitConnect(data);
+      if( __srcpInitConnect(data) ) {
+        rsp = __translate( data, nodeA, cmd );
+        if( StrOp.len( cmd ) > 0 ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "retransmit = %s...", cmd);
+          __srcpSendCommand(data, cmd, NULL);
+        }
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not initialize the connection");
+      }
     }
   }
 
@@ -622,11 +631,11 @@ static Boolean _supportPT( obj inst ) {
 }
 
 
-static void __initfbConnection(iOSRCPData o) {
+static void __initInfoConnection(iOSRCPData o) {
   char inbuf[1024] = { 0 };
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "FB Connected" );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Info Connected" );
 
-  if ( SocketOp.readln( o->fbackSocket, inbuf ) ) {
+  if ( SocketOp.readln( o->infoSocket, inbuf ) ) {
     StrOp.replaceAll( inbuf, '\n', ' ' );
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, inbuf );
     if( StrOp.findi( inbuf, "SRCP 0.8" ) ) {
@@ -634,12 +643,12 @@ static void __initfbConnection(iOSRCPData o) {
 
       if( !o->handshakeerror ) {
         StrOp.fmtb(cmd, "%s\n", "SET PROTOCOL SRCP 0.8");
-        SocketOp.write( o->fbackSocket, cmd, StrOp.len(cmd) );
+        SocketOp.write( o->infoSocket, cmd, StrOp.len(cmd) );
         StrOp.replaceAll( cmd, '\n', ' ' );
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",cmd);
 
         /*"OK PROTOCOL SRCP"*/
-        SocketOp.readln( o->fbackSocket, inbuf );
+        SocketOp.readln( o->infoSocket, inbuf );
         if( !StrOp.find( inbuf, "201" ) ) {
           /* error */
           o->handshakeerror = True;
@@ -650,12 +659,12 @@ static void __initfbConnection(iOSRCPData o) {
 
       if( !o->handshakeerror ) {
         StrOp.fmtb(cmd, "%s\n", "SET CONNECTIONMODE SRCP INFO");
-        SocketOp.write( o->fbackSocket, cmd, StrOp.len(cmd) );
+        SocketOp.write( o->infoSocket, cmd, StrOp.len(cmd) );
         StrOp.replaceAll( cmd, '\n', ' ' );
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",cmd);
 
         /*"OK CONNECTION MODE"*/
-        SocketOp.readln( o->fbackSocket, inbuf );
+        SocketOp.readln( o->infoSocket, inbuf );
         if( !StrOp.find( inbuf, "202" ) ) {
           /* error */
           o->handshakeerror = True;
@@ -666,12 +675,12 @@ static void __initfbConnection(iOSRCPData o) {
 
       if( !o->handshakeerror ) {
         StrOp.fmtb(cmd, "%s\n", "GO");
-        SocketOp.write( o->fbackSocket, cmd, StrOp.len(cmd) );
+        SocketOp.write( o->infoSocket, cmd, StrOp.len(cmd) );
         StrOp.replaceAll( cmd, '\n', ' ' );
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",cmd);
 
         /*"OK GO"*/
-        SocketOp.readln( o->fbackSocket, inbuf );
+        SocketOp.readln( o->infoSocket, inbuf );
         if( !StrOp.find( inbuf, "200" ) ) {
           /* error */
           o->handshakeerror = True;
@@ -689,19 +698,18 @@ static void __initfbConnection(iOSRCPData o) {
 
 }
 
-static void __feedbackReader( void * threadinst ) {
+static void __infoReader( void * threadinst ) {
   iOThread th = ( iOThread )threadinst;
   iOSRCP srcp = ( iOSRCP )ThreadOp.getParm( th );
   iOSRCPData o = Data( srcp );
   Boolean exception = False;
   char inbuf[1024] = { 0 };
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Connecting FB port %s:%d...",
-               o->ddlHost, o->fbackPort );
-  o->fbackSocket = SocketOp.inst( o->ddlHost, o->fbackPort, False, False, False );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Connecting info port %s:%d...", o->ddlHost, o->cmdPort );
+  o->infoSocket = SocketOp.inst( o->ddlHost, o->cmdPort, False, False, False );
 
-  if ( SocketOp.connect( o->fbackSocket ) ) {
-    __initfbConnection(o);
+  if ( SocketOp.connect( o->infoSocket ) ) {
+    __initInfoConnection(o);
 
     while( o->run && !o->handshakeerror ) {
       Boolean readok = False;
@@ -710,7 +718,7 @@ static void __feedbackReader( void * threadinst ) {
         readok = o->evalfirst;
         o->evalfirst = False;
       }
-      else if( SocketOp.readln( o->fbackSocket, inbuf ) != NULL )
+      else if( SocketOp.readln( o->infoSocket, inbuf ) != NULL )
         readok =  True;
 
       if ( readok ) {
@@ -841,7 +849,7 @@ static void __feedbackReader( void * threadinst ) {
                       valStr = StrTokOp.nextToken( tok );
                       if( valStr[0] == '1') {
                         srcpFx |= 1 << idxFn;
-                        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__feedbackReader: F%d[1] srcpFx[0x%08.8X]", (idxFn+1), srcpFx );
+                        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "info: F%d[1] srcpFx[0x%08.8X]", (idxFn+1), srcpFx );
                       }
                       idxFn++;
                     }
@@ -953,13 +961,13 @@ static void __feedbackReader( void * threadinst ) {
         exception = False;
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Try to reconnect..." );
 
-        SocketOp.disConnect( o->fbackSocket );
-        SocketOp.base.del(o->fbackSocket);
-        o->fbackSocket = NULL;
+        SocketOp.disConnect( o->infoSocket );
+        SocketOp.base.del(o->infoSocket);
+        o->infoSocket = NULL;
         ThreadOp.sleep( 1000 );
-        o->fbackSocket = SocketOp.inst( o->ddlHost, o->fbackPort, False, False, False );
-        if( SocketOp.connect( o->fbackSocket ) ) {
-          __initfbConnection(o);
+        o->infoSocket = SocketOp.inst( o->ddlHost, o->cmdPort, False, False, False );
+        if( SocketOp.connect( o->infoSocket ) ) {
+          __initInfoConnection(o);
         }
       }
       else
@@ -968,59 +976,19 @@ static void __feedbackReader( void * threadinst ) {
 
   }
   else  {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR connecting to FB port %s:%d rc=%d",
-        o->ddlHost, o->fbackPort, SocketOp.getRc( o->fbackSocket ) );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR connecting to info port %s:%d rc=%d",
+        o->ddlHost, o->cmdPort, SocketOp.getRc( o->infoSocket ) );
   }
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "FB reader ended" );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Info reader ended" );
 
-}
-
-
-static void __infoReader( void * threadinst ) {
-  iOThread th = ( iOThread )threadinst;
-  iOSRCP srcp = ( iOSRCP )ThreadOp.getParm( th );
-  iOSRCPData o = Data( srcp );
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connecting INFO port %s:%d...",
-               o->ddlHost, o->infoPort );
-  o->infoSocket = SocketOp.inst( o->ddlHost, o->infoPort, False, False, False );
-  if ( SocketOp.connect( o->infoSocket ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connected" );
-    do {
-      char inbuf[ 1024 ]    = { 0 };
-      char tracestr[ 1024 ] = { 0 };
-
-      if ( SocketOp.readln( o->infoSocket, inbuf ) && !SocketOp.isBroken( o->infoSocket )) {
-        /* Call callback: */
-        if ( StrOp.len( inbuf ) > 0 ) {
-          strncpy( tracestr, inbuf, ( strlen( inbuf ) - 1 ));
-          tracestr[ strlen( inbuf ) ] = '0';
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "infoReader: %s", tracestr );
-
-        }
-        else {
-          ThreadOp.sleep( 1000 );
-        }
-      }
-      else {
-        SocketOp.disConnect( o->infoSocket );
-        ThreadOp.sleep( 1000 );
-        SocketOp.connect( o->infoSocket );
-      }
-      ThreadOp.sleep( 100 );
-    } while( o->run );
-  }
-  else {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR connecting to INFO port %s:%d",
-                 o->ddlHost, o->infoPort );
-  }
 }
 
 
 static int __srcpInitServer( iOSRCPData o) {
   char tmpCommand[1024];
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init server..." );
   StrOp.fmtb(tmpCommand,"GET 1 POWER\n");
   if( __srcpSendCommand(o,tmpCommand,NULL) != 100 ) {
     StrOp.fmtb(tmpCommand,"INIT 1 POWER\n");
@@ -1037,37 +1005,29 @@ static Boolean __srcpConnect( iOSRCPData o ) {
   char id[1024], data[1024];
   /* Boolean found = False; */
 
-  if ( o->cmdSocket == NULL )
+  if ( o->cmdSocket == NULL ) {
     o->cmdSocket = SocketOp.inst( o->ddlHost, o->cmdPort, False, False, False );
-  SocketOp.setSndTimeout( o->cmdSocket, wDigInt.gettimeout(o->ini));
-  SocketOp.setRcvTimeout( o->cmdSocket, wDigInt.gettimeout(o->ini));
+    SocketOp.setSndTimeout( o->cmdSocket, wDigInt.gettimeout(o->ini));
+    SocketOp.setRcvTimeout( o->cmdSocket, wDigInt.gettimeout(o->ini));
+  }
 
   /* Disconnect if connected */
   if ( SocketOp.isConnected( o->cmdSocket ) )
     SocketOp.disConnect( o->cmdSocket );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connecting to SRCP server %s:%d",
-               o->ddlHost, o->cmdPort );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connecting to SRCP server %s:%d", o->ddlHost, o->cmdPort );
 
   if ( !SocketOp.connect( o->cmdSocket ) ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR connecting to SRCP server %s:%d",
-                 o->ddlHost, o->cmdPort );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR connecting to SRCP server %s:%d", o->ddlHost, o->cmdPort );
     return False;
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Handshaking" );
 
   if ( !SocketOp.readln( o->cmdSocket, inbuf ) ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking with SRCP server %s:%d",
-                 o->ddlHost, o->cmdPort );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking with SRCP server %s:%d", o->ddlHost, o->cmdPort );
     SocketOp.disConnect( o->cmdSocket );
     return False;
-  }
-
-  {
-    int len = StrOp.len( inbuf );
-    if ( inbuf[len - 1] == '\n' )
-      inbuf[len - 1] = '\0';
   }
 
   /*
@@ -1075,6 +1035,7 @@ static Boolean __srcpConnect( iOSRCPData o ) {
    * The following keys MUST be determined during normal welcome:
    * SRCP <version>
    */
+  StrOp.replaceAll((char*)inbuf, '\n', ' ');
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Response from server: %s", inbuf );
   if ( StrOp.findi( inbuf, "SRCP 0.8." ) != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server response for protocol 0.8 ok." );
@@ -1140,8 +1101,6 @@ static iOSRCP _inst( const iONode settings, const iOTrace trace ) {
 
   data->ddlHost   = wDigInt.gethost( settings );
   data->cmdPort   = wSRCP.getcmdport( data->srcpini );
-  data->infoPort  = wSRCP.getinfoport( data->srcpini );
-  data->fbackPort = wSRCP.getfbackport( data->srcpini );
   data->run       = True;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
@@ -1149,7 +1108,6 @@ static iOSRCP _inst( const iONode settings, const iOTrace trace ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  IID       : %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  host      : %s", data->ddlHost );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  port      : %d", data->cmdPort );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  connection: %s", wSRCP.isudp( data->srcpini )?"UDP":"TCP/IP" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->knownSwitches = allocMem( 1024 * sizeof(Boolean) );
@@ -1163,17 +1121,9 @@ static iOSRCP _inst( const iONode settings, const iOTrace trace ) {
 
   if( __srcpConnect( data ) ) {
     __srcpInitConnect(data);
-    if ( data->fbackPort > 0 ) {
-      char * fbname = StrOp.fmt( "fbreader%08X", srcp );
-      data->fbackReader = ThreadOp.inst( fbname, & __feedbackReader, srcp );
-      ThreadOp.start( data->fbackReader );
-    }
-
-    if ( data->infoPort > 0 ) {
-      char * infoname = StrOp.fmt( "inforeader%08X", srcp );
-      data->infoReader = ThreadOp.inst( infoname, & __infoReader, srcp );
-      ThreadOp.start( data->infoReader );
-    }
+    char * infoname = StrOp.fmt( "info%08X", srcp );
+    data->infoReader = ThreadOp.inst( infoname, & __infoReader, srcp );
+    ThreadOp.start( data->infoReader );
   }
 
   instCnt++;

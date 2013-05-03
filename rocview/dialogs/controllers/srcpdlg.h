@@ -62,10 +62,6 @@ class wxSpinCtrl;
 #define ID_TEXTCTRL_SRCP_HOST 10024
 #define wxID_STATIC_SRCP_CMDPORT 10030
 #define ID_TEXTCTRL_SRCP_CmdPort 10035
-#define wxID_STATIC_SRCP_SENSPORT 10031
-#define ID_TEXTCTRL_SRCP_SENSPORT 10036
-#define wxID_STATIC_SRCP_INFPORT 10032
-#define ID_TEXTCTRL_SRCP_INFPORT 10037
 #define ID_PANEL_SRCP_BUSSES 10045
 #define SYMBOL_SRCPCTRLDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_SRCPCTRLDLG_TITLE _("SRCP")
@@ -138,11 +134,6 @@ public:
     wxTextCtrl* m_Host;
     wxStaticText* m_labCmdPort;
     wxTextCtrl* m_CmdPort;
-    wxStaticText* m_labSensPort;
-    wxTextCtrl* m_SensPort;
-    wxStaticText* m_labInfPort;
-    wxTextCtrl* m_InfPort;
-    wxCheckBox* m_UDP;
     wxPanel* m_BussesPanel;
     wxStaticText* m_labBusServer;
     wxSpinCtrl* m_BusServer;

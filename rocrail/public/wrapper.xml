@@ -527,10 +527,7 @@
       </bidib>
 
       <srcp remark="SRCP init" wrappername="SRCP">
-        <var name="udp" vt="bool" defval="false" remark="Use UDP"/>
         <var name="cmdport" vt="int" defval="4303" remark="SRCP command port."/>
-        <var name="infoport" vt="int" defval="0" remark="SRCP infoport."/>
-        <var name="fbackport" vt="int" defval="4303" remark="SRCP feedbackport."/>
         <var name="srcpbus_server" vt="int" defval="0" remark="server bus"/>
         <var name="srcpbusGL_m" vt="int" defval="1" remark="maerklin generic loco bus"/>
         <var name="srcpbusGL_ns" vt="int" defval="2" remark="nmra dcc generic loco with short addr bus"/>

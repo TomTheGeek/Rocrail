@@ -122,14 +122,10 @@
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="cmdSocket" vt="iOSocket"/>
-      <var name="fbackSocket" vt="iOSocket"/>
       <var name="infoSocket" vt="iOSocket"/>
-      <var name="fbackReader" vt="iOThread"/>
       <var name="infoReader" vt="iOThread"/>
       <var name="ddlHost" vt="const char*"/>
       <var name="cmdPort" vt="int"/>
-      <var name="infoPort" vt="int"/>
-      <var name="fbackPort" vt="int"/>
       <var name="run" vt="Boolean"/>
       <var name="evalfirst" vt="Boolean"/>
       <var name="handshakeerror" vt="Boolean"/>
