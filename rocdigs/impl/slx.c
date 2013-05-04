@@ -452,7 +452,7 @@ static Boolean __updateSlot(iOSLXData data, iOSlot slot, Boolean* vdfChanged, Bo
 
 
 
-static Boolean __updateSlots(iOSLX slx) {
+static void __updateSlots(iOSLX slx) {
   iOSLXData data = Data(slx);
   if( MutexOp.wait( data->lcmux ) ) {
     iOSlot slot = (iOSlot)MapOp.first( data->lcmap );

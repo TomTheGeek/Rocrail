@@ -405,7 +405,7 @@ static void __sends88Eventgroup( iOECoS inst, int news88, int olds88, int s88mod
  * __reader function.
  *
  */
-static int __transact( iOECoS inst, const char* ecosCmd, int len ) {
+static void __transact( iOECoS inst, const char* ecosCmd, int len ) {
   iOECoSData data = Data(inst);
 
   if ( SocketOp.isConnected( data->socket )) {

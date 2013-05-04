@@ -1414,7 +1414,7 @@ static void _getSlot(iOLocoNet loconet, int slot, byte wait4opc) {
 }
 
 
-static int __getSlots(iOLocoNet loconet) {
+static void __getSlots(iOLocoNet loconet) {
   iOLocoNetData data = Data(loconet);
   byte cmd[8];
   byte rsp[128];
@@ -1428,7 +1428,7 @@ static int __getSlots(iOLocoNet loconet) {
 }
 
 
-static int __getConfig(iOLocoNet loconet) {
+static void __getConfig(iOLocoNet loconet) {
   iOLocoNetData data = Data(loconet);
   byte cmd[8];
   int i = 0;

@@ -371,6 +371,7 @@ void traceLocoNet(byte* msg) {
         } else {                                            /* general move */
             TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Move data in slot %d to slot %d", src, dest );
         }
+        break;
     }
 
         /********************************************************************************
