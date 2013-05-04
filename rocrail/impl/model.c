@@ -285,6 +285,7 @@ static Boolean _modify( iOModel inst, iONode model ) {
 
 
 static void __backupSave( const char* fileName, const char* xml ) {
+  char* filename = StrOp.dup(fileName);
   char* backupfile;
   iOFile planFile;
 
@@ -304,6 +305,11 @@ static void __backupSave( const char* fileName, const char* xml ) {
   }
 
   backupfile = StrOp.fmt( "%s.bak",fileName );
+  if( !wRocRail.isfsutf8(AppOp.getIni()) ) {
+    char* tmp = backupfile;
+    backupfile = SystemOp.utf2latin(backupfile);
+    StrOp.free(tmp);
+  }
   /* Make Backup copy! Somtimes rocrail loses the plan and writes an empty plan! */
   if( FileOp.exist(backupfile) )
     FileOp.remove(backupfile);
@@ -312,7 +318,13 @@ static void __backupSave( const char* fileName, const char* xml ) {
   StrOp.free(backupfile);
 
 
-  planFile = FileOp.inst( fileName, False );
+  if( !wRocRail.isfsutf8(AppOp.getIni()) ) {
+    char* tmp = filename;
+    filename = SystemOp.utf2latin(filename);
+    StrOp.free(tmp);
+  }
+  planFile = FileOp.inst( filename, False );
+  StrOp.free(filename);
   if( planFile != NULL ) {
     FileOp.write( planFile, xml, StrOp.len( xml ) );
     FileOp.close( planFile );
@@ -324,14 +336,25 @@ static void __backupSave( const char* fileName, const char* xml ) {
 }
 
 static Boolean _createEmptyPlan( iOModelData o ) {
+  char* filename = StrOp.dup(o->fileName);
+
   if( o->planFile != NULL ) {
     FileOp.close( o->planFile );
     o->planFile->base.del(o->planFile);
     o->planFile = NULL;
   }
 
+  if( !wRocRail.isfsutf8(AppOp.getIni()) ) {
+    char* tmp = filename;
+    filename = SystemOp.utf2latin(filename);
+    StrOp.free(tmp);
+  }
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Creating Plan file: %s", o->fileName );
-  o->planFile = FileOp.inst( o->fileName, OPEN_WRITE );
+  o->planFile = FileOp.inst( filename, OPEN_WRITE );
+  StrOp.free(filename);
+
+
   if( o->planFile != NULL ) {
     Boolean createmodplan = AppOp.isCreateModplan();
     char* planXml = NULL;
@@ -361,6 +384,7 @@ static Boolean _createEmptyPlan( iOModelData o ) {
 
     return True;
   }
+
   return False;
 }
 
@@ -368,12 +392,22 @@ static Boolean _createEmptyPlan( iOModelData o ) {
 
 static Boolean _parsePlan( iOModelData o ) {
   Boolean ok = False;
+  char* filename = StrOp.dup(o->fileName);
+
   if( o->planFile != NULL ) {
     FileOp.close( o->planFile );
     o->planFile->base.del(o->planFile);
     o->planFile = NULL;
   }
-  o->planFile = FileOp.inst( o->fileName, True );
+
+  if( !wRocRail.isfsutf8(AppOp.getIni()) ) {
+    char* tmp = filename;
+    filename = SystemOp.utf2latin(filename);
+    StrOp.free(tmp);
+  }
+
+  o->planFile = FileOp.inst( filename, True );
+  StrOp.free(filename);
 
   if( o->planFile != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsePlan file: %s", o->fileName );

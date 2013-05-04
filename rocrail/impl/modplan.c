@@ -12,9 +12,11 @@
 
 #include "rocs/public/mem.h"
 #include "rocs/public/doc.h"
+#include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/Global.h"
 #include "rocrail/wrapper/public/Plan.h"
+#include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/Module.h"
 #include "rocrail/wrapper/public/ModuleConnection.h"
 #include "rocrail/wrapper/public/ModPlan.h"
@@ -118,18 +120,28 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OModPlan ----- */
-static iONode _parsePlan( const char* filename ) {
+static iONode _parsePlan( const char* fileName ) {
+  char* filename = StrOp.dup(fileName);
+  iOFile moduleFile = NULL;
 
-  iOFile moduleFile = FileOp.inst( filename, True );
+  if( !wRocRail.isfsutf8(AppOp.getIni()) ) {
+    char* tmp = filename;
+    filename = SystemOp.utf2latin(filename);
+    StrOp.free(tmp);
+  }
+
+  moduleFile = FileOp.inst( filename, True );
 
   if(moduleFile == NULL) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "file [%s] not found, try to open it in the working directory...", filename );
+        "file [%s] not found, try to open it in the working directory...", fileName );
     moduleFile = FileOp.inst( FileOp.ripPath(filename), True );
   }
 
+  StrOp.free(filename);
+
   if( moduleFile != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parse file: %s", filename );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parse file: %s", fileName );
     {
       iODoc planDoc = NULL;
       char* planXml = allocMem( FileOp.size( moduleFile ) + 1 );
@@ -149,7 +161,7 @@ static iONode _parsePlan( const char* filename ) {
     }
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to open file: %s", filename );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to open file: %s", fileName );
   }
 
   return NULL;
@@ -1127,9 +1139,15 @@ static void __updateZLevel( iOModPlan inst, iONode module, int level ) {
 
 static void __backupSave( const char* fileName, const char* xml ) {
   char* backupfile;
+  char* filename = StrOp.dup(fileName);
   iOFile planFile;
 
   backupfile = StrOp.fmt( "%s.bak",fileName );
+  if( !wRocRail.isfsutf8(AppOp.getIni()) ) {
+    char* tmp = backupfile;
+    backupfile = SystemOp.utf2latin(backupfile);
+    StrOp.free(tmp);
+  }
   /* Make Backup copy! Somtimes rocrail loses the plan and writes an empty plan! */
   if( FileOp.exist(backupfile) )
     FileOp.remove(backupfile);
@@ -1138,7 +1156,13 @@ static void __backupSave( const char* fileName, const char* xml ) {
   StrOp.free(backupfile);
 
 
-  planFile = FileOp.inst( fileName, False );
+  if( !wRocRail.isfsutf8(AppOp.getIni()) ) {
+    char* tmp = filename;
+    filename = SystemOp.utf2latin(filename);
+    StrOp.free(tmp);
+  }
+  planFile = FileOp.inst( filename, False );
+  StrOp.free(filename);
   if( planFile != NULL ) {
     FileOp.write( planFile, xml, StrOp.len( xml ) );
     FileOp.close( planFile );
