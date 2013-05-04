@@ -67,10 +67,10 @@ Boolean rocs_event_close( iOEventData o ) {
 #ifdef __ROCS_EVENT__
   if( __eventMap != NULL ) {
     MapOp.remove( __eventMap, o->name );
+    return True;
   }
-#else
-  return False;
 #endif
+  return False;
 }
 
 Boolean rocs_event_open( iOEventData o ) {
