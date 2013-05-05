@@ -58,6 +58,7 @@
 #include "rocview/dialogs/decoders/uhl633x0dlg.h"
 #include "rocview/dialogs/powerctrldlg.h"
 #include "rocview/dialogs/widgetspanel.h"
+#include "rocview/dialogs/cmdrecorder.h"
 
 #include <wx/splitter.h>
 #include <wx/textctrl.h>
@@ -83,6 +84,7 @@ class RocGuiFrame : public wxFrame
 public:
   iONode m_Ini;
   const char* m_ControlCode;
+  CmdRecorder* m_CmdRecorder;
 
   RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize& size, iONode ini, const char* theme, const char* sp, const char* tp);
   void create();

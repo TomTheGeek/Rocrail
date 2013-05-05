@@ -1604,6 +1604,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_CV                 = NULL;
   m_LNCV               = NULL; 
   m_LocoPanel          = NULL;
+  m_CmdRecorder        = NULL;
 
   if( wxTheClipboard != NULL ) {
     if( wxTheClipboard->Open() ) {
@@ -4155,8 +4156,14 @@ void RocGuiFrame::OnGuestLocoDlg(wxCommandEvent& event){
 
 
 void RocGuiFrame::OnCmdRecorderDlg(wxCommandEvent& event){
-  CmdRecorder* dlg = new CmdRecorder(this);
-  dlg->Show(TRUE);
+  if( m_CmdRecorder == NULL ) {
+    m_CmdRecorder = new CmdRecorder(this);
+    m_CmdRecorder->SetMe(&m_CmdRecorder);
+    m_CmdRecorder->Show(TRUE);
+  }
+  else {
+    m_CmdRecorder->Raise();
+  }
 }
 
 

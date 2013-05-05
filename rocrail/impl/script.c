@@ -109,6 +109,7 @@ static iONode _getLine( iOScript inst, int linenr ) {
 /* Used for recording a node. */
 static char* _convertNode(iONode node) {
   char* scriptline = NULL;
+  char* stamp = StrOp.createStamp();
 
   if( node != NULL ) {
     scriptline = StrOp.fmt( "%s,%s", NodeOp.getName(node), NodeOp.getStr(node, "id", "?") );
@@ -120,8 +121,11 @@ static char* _convertNode(iONode node) {
       scriptline = StrOp.cat( scriptline, ",");
       scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "state", NULL));
     }
+    scriptline = StrOp.cat( scriptline, ",");
+    scriptline = StrOp.cat( scriptline, stamp);
     scriptline = StrOp.cat( scriptline, "\n");
   }
+  StrOp.free(stamp);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node converted: [%s]", scriptline);
 
@@ -143,27 +147,27 @@ static iONode _parseLine(const char* scriptline) {
   iONode node = NULL;
 
   if( scriptline != NULL ) {
-    const char* nodename = NULL;
-    const char* parm1    = NULL; /* id */
-    const char* parm2    = NULL; /* cmd */
-    const char* parm3    = NULL;
+    char* nodename = NULL;
+    char* parm1    = NULL; /* id */
+    char* parm2    = NULL; /* cmd */
+    char* parm3    = NULL;
 
     iOStrTok tok = StrTokOp.inst( scriptline, ',' );
 
     if( StrTokOp.hasMoreTokens( tok ) )  {
-      nodename = StrTokOp.nextToken( tok );
+      nodename = (char*)StrTokOp.nextToken( tok );
       __stripNewline(nodename);
     }
     if( StrTokOp.hasMoreTokens( tok ) )  {
-      parm1 = StrTokOp.nextToken( tok );
+      parm1 = (char*)StrTokOp.nextToken( tok );
       __stripNewline(parm1);
     }
     if( StrTokOp.hasMoreTokens( tok ) )  {
-      parm2 = StrTokOp.nextToken( tok );
+      parm2 = (char*)StrTokOp.nextToken( tok );
       __stripNewline(parm2);
     }
     if( StrTokOp.hasMoreTokens( tok ) )  {
-      parm3 = StrTokOp.nextToken( tok );
+      parm3 = (char*)StrTokOp.nextToken( tok );
       __stripNewline(parm3);
     }
 
