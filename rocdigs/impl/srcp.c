@@ -156,6 +156,42 @@ static Boolean __srcpInitConnect ( iOSRCPData o ) {
 }
 
 
+static void __handleSM(iOSRCPData o, const char* sm) {
+  /*1367776426.478 100 INFO 1 SM 0 CV 1 0 */
+  int addr  = 0;
+  int cv    = 0;
+  int value = 0;
+  iONode rsp = NULL;
+  iOStrTok tok = StrTokOp.inst( sm, ' ');
+  if( StrTokOp.hasMoreTokens( tok ) ) {
+    /* address */
+    addr = atoi(StrTokOp.nextToken( tok ));
+    if( StrTokOp.hasMoreTokens( tok ) ) {
+      /* CV */
+      StrTokOp.nextToken( tok );
+      if( StrTokOp.hasMoreTokens( tok ) ) {
+        /* nr */
+        cv = atoi(StrTokOp.nextToken( tok ));
+        if( StrTokOp.hasMoreTokens( tok ) ) {
+          /* value */
+          value = atoi(StrTokOp.nextToken( tok ));
+        }
+      }
+    }
+  }
+  StrTokOp.base.del(tok);
+
+  rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setdecaddr( rsp, addr );
+  wProgram.setcv( rsp, cv );
+  wProgram.setvalue( rsp, value );
+  wProgram.setcmd( rsp, wProgram.datarsp );
+  if ( o->listenerFun != NULL && o->listenerObj != NULL )
+    o->listenerFun( o->listenerObj, rsp, TRCLEVEL_INFO );
+
+}
+
+
 static int __srcpSendCommand( iOSRCPData o, const char* szCommand, char *szRetVal)
 {
   char inbuf[1024] = { 0 };
@@ -203,8 +239,13 @@ static int __srcpSendCommand( iOSRCPData o, const char* szCommand, char *szRetVa
 
   if (!SRCP_OK(retstate))
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "SRCP Response: %s",szResponse);
-  else
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP Response: %s",szResponse);
+  else {
+    char* sm = StrOp.findi(szResponse, "SM" );
+    if( sm != NULL ) {
+      __handleSM(o, sm);
+    }
+
+  }
 
 
   o->state = (SRCP_OK(retstate)?SRCP_STATE_OK:SRCP_STATE_ERROR);
