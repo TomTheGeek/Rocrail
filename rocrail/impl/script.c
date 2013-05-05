@@ -243,6 +243,8 @@ static iONode _parseLine(const char* scriptline) {
       node = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
       wBlock.setid( node, parm1 );
       wBlock.setcmd( node, parm2 );
+      if( StrOp.equalsi(wBlock.loc, parm2) )
+        wBlock.setlocid(node, parm3);
     }
 
     else if( parm1 != NULL && parm2 != NULL ) {
