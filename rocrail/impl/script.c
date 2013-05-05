@@ -125,6 +125,10 @@ static char* _convertNode(iONode node) {
       scriptline = StrOp.cat( scriptline, ",");
       scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "blockid", NULL));
     }
+    if( NodeOp.getStr(node, "locid", NULL) != NULL ) {
+      scriptline = StrOp.cat( scriptline, ",");
+      scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "locid", NULL));
+    }
 
     scriptline = StrOp.cat( scriptline, ",");
     scriptline = StrOp.cat( scriptline, stamp);
