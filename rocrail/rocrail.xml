@@ -2393,15 +2393,17 @@
     </fun>
     <fun name="convertNode" vt="char*">
       <param name="node" vt="iONode"/>
-    </fun>
+      <param name="addStamp" vt="Boolean"/>
+      </fun>
     <fun name="setRecording" vt="void">
       <param name="inst" vt="this"/>
       <param name="recording" vt="Boolean"/>
-    </fun>
+      <param name="addStamp" vt="Boolean"/>
+      </fun>
     <fun name="recordNode" vt="void">
       <param name="inst" vt="this"/>
       <param name="node" vt="iONode"/>
-    </fun>
+      </fun>
     <fun name="isRecording" vt="Boolean">
       <param name="inst" vt="this"/>
     </fun>
@@ -2435,6 +2437,7 @@
       <var name="run" vt="Boolean"/>
       <var name="prevtime" vt="long"/>
       <var name="rcon" vt="iORCon"/>
+      <var name="stamp" vt="Boolean"/>
       </data>
   </object>
   

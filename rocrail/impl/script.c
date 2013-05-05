@@ -107,9 +107,8 @@ static iONode _getLine( iOScript inst, int linenr ) {
 
 
 /* Used for recording a node. */
-static char* _convertNode(iONode node) {
+static char* _convertNode(iONode node, Boolean addstamp) {
   char* scriptline = NULL;
-  char* stamp = StrOp.createStamp();
 
   if( node != NULL ) {
     scriptline = StrOp.fmt( "%s,%s", NodeOp.getName(node), NodeOp.getStr(node, "id", "?") );
@@ -130,11 +129,14 @@ static char* _convertNode(iONode node) {
       scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "locid", NULL));
     }
 
-    scriptline = StrOp.cat( scriptline, ",");
-    scriptline = StrOp.cat( scriptline, stamp);
+    if( addstamp ) {
+      char* stamp = StrOp.createStamp();
+      scriptline = StrOp.cat( scriptline, ",");
+      scriptline = StrOp.cat( scriptline, stamp);
+      StrOp.free(stamp);
+    }
     scriptline = StrOp.cat( scriptline, "\n");
   }
-  StrOp.free(stamp);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node converted: [%s]", scriptline);
 
@@ -322,7 +324,7 @@ static void _setScript(iOScript inst, const char* script) {
 static void _recordNode( struct OScript* inst ,iONode node ) {
   iOScriptData data = Data(inst);
   if( data->recording ) {
-    char* scriptline = ScriptOp.convertNode(node);
+    char* scriptline = ScriptOp.convertNode(node, data->stamp);
     if( scriptline != NULL ) {
       if( data->prevtime > 0 ) {
         long diff = time(NULL) - data->prevtime;
@@ -341,7 +343,7 @@ static void _recordNode( struct OScript* inst ,iONode node ) {
 
 
 /**  */
-static void _setRecording( struct OScript* inst ,Boolean recording ) {
+static void _setRecording( struct OScript* inst ,Boolean recording, Boolean addstamp ) {
   iOScriptData data = Data(inst);
   if( !data->recording && recording && data->record != NULL ) {
     StrOp.free( data->record );
@@ -351,6 +353,7 @@ static void _setRecording( struct OScript* inst ,Boolean recording ) {
 
   }
   data->recording = recording;
+  data->stamp = addstamp;
 }
 
 
