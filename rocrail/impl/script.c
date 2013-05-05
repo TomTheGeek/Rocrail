@@ -117,10 +117,15 @@ static char* _convertNode(iONode node) {
       scriptline = StrOp.cat( scriptline, ",");
       scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "cmd", NULL));
     }
-    else if( NodeOp.getStr(node, "state", NULL) != NULL ) {
+    if( NodeOp.getStr(node, "state", NULL) != NULL ) {
       scriptline = StrOp.cat( scriptline, ",");
       scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "state", NULL));
     }
+    if( NodeOp.getStr(node, "blockid", NULL) != NULL ) {
+      scriptline = StrOp.cat( scriptline, ",");
+      scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "blockid", NULL));
+    }
+
     scriptline = StrOp.cat( scriptline, ",");
     scriptline = StrOp.cat( scriptline, stamp);
     scriptline = StrOp.cat( scriptline, "\n");
@@ -151,6 +156,7 @@ static iONode _parseLine(const char* scriptline) {
     char* parm1    = NULL; /* id */
     char* parm2    = NULL; /* cmd */
     char* parm3    = NULL;
+    char* parm4    = NULL;
 
     iOStrTok tok = StrTokOp.inst( scriptline, ',' );
 
@@ -169,6 +175,10 @@ static iONode _parseLine(const char* scriptline) {
     if( StrTokOp.hasMoreTokens( tok ) )  {
       parm3 = (char*)StrTokOp.nextToken( tok );
       __stripNewline(parm3);
+    }
+    if( StrTokOp.hasMoreTokens( tok ) )  {
+      parm4 = (char*)StrTokOp.nextToken( tok );
+      __stripNewline(parm4);
     }
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsing command: %s", nodename);
