@@ -181,65 +181,6 @@ static int _version( obj inst ) {
   return vmajor*10000 + vminor*100 + patch;
 }
 
-/**
- * This thread will generate events for the loconet and railsync bit rate
- *
- */
-static void __interrupter( void* threadinst ) {
-  iOThread  th    = (iOThread)threadinst;
-  iORasPi   raspi = (iORasPi)ThreadOp.getParm( th );
-  iORasPiData data = Data(raspi);
-  ThreadOp.sleep(100);
-  ThreadOp.setHigh(th);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi interrupter started." );
-
-  while( data->run ) {
-    SystemOp.usWait(47);
-    data->event60us = True;
-  }
-  data->event60us = True;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi interrupter stopped." );
-}
-
-
-static void __loconet( void* threadinst ) {
-  iOThread  th    = (iOThread)threadinst;
-  iORasPi   raspi = (iORasPi)ThreadOp.getParm( th );
-  iORasPiData data = Data(raspi);
-  int counter = 0;
-  ThreadOp.sleep(200);
-  ThreadOp.setHigh(th);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi loconet started." );
-  while( data->run ) {
-    if( !data->event60us ) {
-      SystemOp.usWait(1);
-      continue;
-    }
-    data->event60us = False;
-    counter++;
-    if(counter == 100000) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "100000 * 60us" );
-      counter = 0;
-    }
-  }
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi loconet stopped." );
-}
-
-
-static void __railsync( void* threadinst ) {
-  iOThread  th    = (iOThread)threadinst;
-  iORasPi   raspi = (iORasPi)ThreadOp.getParm( th );
-  iORasPiData data = Data(raspi);
-  ThreadOp.sleep(200);
-  ThreadOp.setHigh(th);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi railsync started." );
-  while( data->run ) {
-    ThreadOp.sleep(10);
-  }
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi railsync stopped." );
-}
-
-
 static void __worker( void* threadinst ) {
   iOThread  th    = (iOThread)threadinst;
   iORasPi   raspi = (iORasPi)ThreadOp.getParm( th );
@@ -345,17 +286,6 @@ static struct ORasPi* _inst( const iONode ini ,const iOTrace trc ) {
   data->run = True;
   data->worker = ThreadOp.inst( "raspiworker", &__worker, __RasPi );
   ThreadOp.start( data->worker );
-
-  if( wRasPi.getloconettxport(wDigInt.getraspi(data->ini)) != -1 && wRasPi.getloconetrxport(wDigInt.getraspi(data->ini)) != -1  ) {
-    data->interrupter = ThreadOp.inst( "raspi-int", &__interrupter, __RasPi );
-    ThreadOp.start( data->interrupter );
-
-    data->loconet = ThreadOp.inst( "raspi-ln", &__loconet, __RasPi );
-    ThreadOp.start( data->loconet );
-
-    data->railsync = ThreadOp.inst( "raspi-dcc", &__railsync, __RasPi );
-    ThreadOp.start( data->railsync );
-  }
 
   instCnt++;
   return __RasPi;
