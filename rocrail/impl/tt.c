@@ -496,7 +496,7 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
   const char* cmdStr = wTurntable.getcmd( nodeA );
   Boolean ttdir = True;
   Boolean doDirCmd = False;
-  int port = 0;
+  int port = -1;
   int tracknr = -1;
   iONode cmd = NULL;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TT command = [%s]", cmdStr );
