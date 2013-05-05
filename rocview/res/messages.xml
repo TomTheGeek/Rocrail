@@ -20556,4 +20556,13 @@
   <Msg id="processrouteevents">
     <en txt="Process route events"/>
   </Msg>
+  <Msg id="stamp">
+    <en txt="Stamp"/>
+  </Msg>
+  <Msg id="export">
+    <en txt="Export"/>
+  </Msg>
+  <Msg id="insert">
+    <en txt="Insert"/>
+  </Msg>
 </Messages>

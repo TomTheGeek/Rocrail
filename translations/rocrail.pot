@@ -6365,3 +6365,21 @@ msgstr ""
 msgid "Process route events"
 msgstr ""
 
+#. 
+# id="stamp"
+#, c-format
+msgid "Stamp"
+msgstr ""
+
+#. 
+# id="export"
+#, c-format
+msgid "Export"
+msgstr ""
+
+#. 
+# id="insert"
+#, c-format
+msgid "Insert"
+msgstr ""
+
