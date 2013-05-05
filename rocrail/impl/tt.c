@@ -497,7 +497,7 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
   Boolean ttdir = True;
   Boolean doDirCmd = False;
   int port = 0;
-  int tracknr = 0;
+  int tracknr = -1;
   iONode cmd = NULL;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TT command = [%s]", cmdStr );
 
@@ -509,17 +509,17 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
     tracknr = __getPrevTrack(inst, wTurntable.getbridgepos( data->props));
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
-    port = ttdir?3:4;
+    port = ttdir?2:3;
   }
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
   }
 
-  if( port > 0 ) {
+  if( port != -1 ) {
     cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
     wOutput.setaddr( cmd, wTurntable.getaddr( data->props ) );
-    wOutput.setport( cmd, ttdir?3:4 );
+    wOutput.setport( cmd, port );
     wOutput.setcmd( cmd, wOutput.on );
 
     const char* iid = wTurntable.getiid( data->props );
@@ -535,11 +535,10 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
     ControlOp.cmd( control, cmd, NULL );
   }
 
-  if( tracknr > 0 ) {
+  else if( tracknr != -1 ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dsm: goto track %d", tracknr );
     data->gotopos = tracknr;
 
-    tracknr--; /* zero based */
     tracknr = __getMappedTrack( inst, tracknr );
 
     cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
