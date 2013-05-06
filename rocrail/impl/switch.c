@@ -806,11 +806,10 @@ static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean rel
     gatepol2 = wSwitch.getgate1pol2(data->props);
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "polarise: frog=%d addr1=%d addr2=%d relays1=%d relays2=%d", frog, addrpol1, addrpol2, relays1, relays2 );
-
   if( addrpol1 > 0 || portpol1 > 0 ) {
     iONode cmd = NodeOp.inst(  wOutput.name(), NULL, ELEMENT_NODE );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "polarise: frog=%d addr1=%d addr2=%d relays1=%d relays2=%d", frog, addrpol1, addrpol2, relays1, relays2 );
     wOutput.setiid( cmd, wSwitch.getiid( data->props ) );
     if( wSwitch.getbuspol(data->props) > 0 )
       wOutput.setbus( cmd, wSwitch.getbuspol(data->props));
