@@ -119,23 +119,6 @@ int raspiSetupIO(obj inst)
      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "init power on port %d", wRasPi.getpoweronport(wDigInt.getraspi(data->ini)) );
      INP_GPIO(wRasPi.getpoweronport(wDigInt.getraspi(data->ini)));
    }
-   if( wRasPi.getdccport1(wDigInt.getraspi(data->ini)) != -1 && wRasPi.getdccport2(wDigInt.getraspi(data->ini)) != -1  ) {
-     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC ports %d,%d",
-         wRasPi.getdccport1(wDigInt.getraspi(data->ini)), wRasPi.getdccport2(wDigInt.getraspi(data->ini)) );
-     INP_GPIO(wRasPi.getdccport1(wDigInt.getraspi(data->ini)));
-     OUT_GPIO(wRasPi.getdccport1(wDigInt.getraspi(data->ini)));
-
-     INP_GPIO(wRasPi.getdccport2(wDigInt.getraspi(data->ini)));
-     OUT_GPIO(wRasPi.getdccport2(wDigInt.getraspi(data->ini)));
-   }
-   if( wRasPi.getloconettxport(wDigInt.getraspi(data->ini)) != -1 && wRasPi.getloconetrxport(wDigInt.getraspi(data->ini)) != -1  ) {
-     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LN tx=%d rx=%d",
-         wRasPi.getloconettxport(wDigInt.getraspi(data->ini)), wRasPi.getloconetrxport(wDigInt.getraspi(data->ini)) );
-     INP_GPIO(wRasPi.getloconettxport(wDigInt.getraspi(data->ini)));
-     OUT_GPIO(wRasPi.getloconettxport(wDigInt.getraspi(data->ini)));
-
-     INP_GPIO(wRasPi.getloconetrxport(wDigInt.getraspi(data->ini)));
-   }
 
    return 0;
 } // setup_io
