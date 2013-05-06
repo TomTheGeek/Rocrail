@@ -213,20 +213,34 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
       NodeOp.base.del(nodeA);
     }
     else if( StrOp.equals(wFunCmd.name(), nodename) ) {
-      int mappedfn = 0;
-      int decaddr = __getFnAddr(inst, wFunCmd.getfnchanged(nodeA), &mappedfn );
+      int mappedfn  = 0;
+      int i         = 0;
+      int fnchanged = wFunCmd.getfnchanged(nodeA);
+      int decaddr   = __getFnAddr(inst, wFunCmd.getfnchanged(nodeA), &mappedfn );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "function %d address=%d:%d", wFunCmd.getfnchanged(nodeA), decaddr, mappedfn );
+          "function %d address=%d:%d", fnchanged, decaddr, mappedfn );
+
+      for( i = 1; i < 29; i++ ) {
+        char fattr[32] = {'\0'};
+        StrOp.fmtb(fattr, "f%d", fnchanged);
+        NodeOp.setBool(nodeA, fattr, data->fx[i]);
+      }
 
       if(mappedfn != wFunCmd.getfnchanged(nodeA)) {
         char fattr[32] = {'\0'};
         Boolean fon = False;
-        StrOp.fmtb(fattr, "f%d", wFunCmd.getfnchanged(nodeA));
+        StrOp.fmtb(fattr, "f%d", fnchanged);
         fon = NodeOp.getBool(nodeA, fattr, False);
         NodeOp.setBool(nodeA, fattr, False);
         StrOp.fmtb(fattr, "f%d", mappedfn);
         NodeOp.setBool(nodeA, fattr, fon);
         wFunCmd.setfnchanged( nodeA, mappedfn );
+        data->fx[fnchanged] = fon;
+      }
+      else {
+        char fattr[32] = {'\0'};
+        StrOp.fmtb(fattr, "f%d", fnchanged);
+        data->fx[fnchanged] = NodeOp.getBool(nodeA, fattr, False);
       }
 
       if( wCar.getiid(data->props) != NULL )
@@ -235,9 +249,10 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
       wCar.setprot( nodeA, wCar.getprot( data->props ) );
       wCar.setprotver( nodeA, wCar.getprotver( data->props ) );
 
-      if( wFunCmd.getfnchanged(nodeA) == 0 && wCar.isf0vcmd(data->props) ) {
+      if( fnchanged == 0 && wCar.isf0vcmd(data->props) ) {
         NodeOp.setName( nodeA, wLoc.name() );
         wLoc.setfn(nodeA, wFunCmd.isf0(nodeA) );
+        data->fx[0] = wFunCmd.isf0(nodeA);
       }
 
       ControlOp.cmd( control, nodeA, NULL );

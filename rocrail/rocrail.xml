@@ -2050,6 +2050,7 @@
     </fun>
     <data>
       <var name="props" vt="iONode"/>
+      <var name="fx[32]" vt="Boolean"/>
     </data>
   </object>
 
