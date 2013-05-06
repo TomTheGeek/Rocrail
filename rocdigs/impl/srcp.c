@@ -159,31 +159,38 @@ static Boolean __srcpInitConnect ( iOSRCPData o ) {
 static void __handleSM(iOSRCPData o, const char* sm) {
   /*1367776426.478 100 INFO 1 SM 0 CV 1 0 */
   int addr  = 0;
-  int cv    = 0;
+  const char* CV = "-";
+  int nr    = 0;
   int value = 0;
   iONode rsp = NULL;
   iOStrTok tok = StrTokOp.inst( sm, ' ');
   if( StrTokOp.hasMoreTokens( tok ) ) {
-    /* address */
-    addr = atoi(StrTokOp.nextToken( tok ));
+    /* SM */
+    StrTokOp.nextToken( tok );
     if( StrTokOp.hasMoreTokens( tok ) ) {
-      /* CV */
-      StrTokOp.nextToken( tok );
+      /* address */
+      addr = atoi(StrTokOp.nextToken( tok ));
       if( StrTokOp.hasMoreTokens( tok ) ) {
-        /* nr */
-        cv = atoi(StrTokOp.nextToken( tok ));
+        /* CV */
+        CV = StrTokOp.nextToken( tok );
         if( StrTokOp.hasMoreTokens( tok ) ) {
-          /* value */
-          value = atoi(StrTokOp.nextToken( tok ));
+          /* nr */
+          nr = atoi(StrTokOp.nextToken( tok ));
+          if( StrTokOp.hasMoreTokens( tok ) ) {
+            /* value */
+            value = atoi(StrTokOp.nextToken( tok ));
+          }
         }
       }
     }
   }
   StrTokOp.base.del(tok);
 
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "addr=%d CV=%s nr=%d value=%d", addr, CV, nr, value );
+
   rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setdecaddr( rsp, addr );
-  wProgram.setcv( rsp, cv );
+  wProgram.setcv( rsp, nr );
   wProgram.setvalue( rsp, value );
   wProgram.setcmd( rsp, wProgram.datarsp );
   if ( o->listenerFun != NULL && o->listenerObj != NULL )
@@ -243,6 +250,7 @@ static int __srcpSendCommand( iOSRCPData o, const char* szCommand, char *szRetVa
     char* sm = StrOp.findi(szResponse, "SM" );
     if( sm != NULL ) {
       __handleSM(o, sm);
+      retstate = 0;
     }
 
   }
@@ -354,22 +362,6 @@ static int __getSRCPbusList( iOSRCPData o ) {
   busList &= ~1 ;
 
   return busList;
-}
-
-
-static int ACKok(iOSocket sckt) {
-   char buf[20];
-   int  ack;
-
-   MemOp.set( buf, 0, 20 );
-   SocketOp.read( sckt, buf, 13 );
-
-   if( StrOp.startsWithi( buf, "INFO -1" ) )
-     return 2;
-
-   ack = atoi( buf+11 );
-
-   return ack;
 }
 
 
@@ -566,9 +558,17 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
   }
 
   /* Program command. */
-  /* ToDo: after sending a set cmd, an OK should be come as reply... */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    int addr = wProgram.getdecaddr( node );
+    int cv = wProgram.getcv( node );
+    int value = wProgram.getvalue( node );
+
     rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+
+    wProgram.setdecaddr( rsp, addr );
+    wProgram.setcv( rsp, cv );
+    wProgram.setcmd( rsp, wProgram.datarsp );
+
     if( o->iid != NULL )
       wProgram.setiid( rsp, o->iid );
     wProgram.setcmd( rsp, wProgram.getcmd( node ) );
@@ -579,32 +579,34 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
     }
 
     if( wProgram.getcmd( node ) == wProgram.set ) {
-      int addr = wProgram.getaddr( node );
-      int cv = wProgram.getcv( node );
-      int value = wProgram.getvalue( node );
       int ack = 0;
       StrOp.fmtb (tmpCommand, "SET %d SM %d CV %d %d\n", wSRCP.getsrcpbusGL_ns( o->srcpini ), addr, cv-1, value );
-      __srcpSendCommand(o,tmpCommand,NULL);
-      ack = ACKok(o->cmdSocket);
-      if( ack == 1 ) {
+      ack = __srcpSendCommand(o,tmpCommand,NULL);
+      if( ack == 200 ) {
         wProgram.setvalue( rsp, value );
+      }
+      else if( ack == 0 ) {
+        NodeOp.base.del(rsp);
+        rsp = NULL;
       }
       else {
         wProgram.setvalue( rsp, -1 );
       }
+
     }
     else if( wProgram.getcmd( node ) == wProgram.get ) {
       int addr = wProgram.getaddr( node );
       int cv = wProgram.getcv( node );
       int value = 0;
       int ack = 0;
-      for( value = 0; value < 256 && !ack; value++ ) {
-        StrOp.fmtb (tmpCommand, "GET %d SM %d CV %d %d\n", wSRCP.getsrcpbusGL_ns( o->srcpini ), addr, cv-1, value );
-        __srcpSendCommand(o,tmpCommand,NULL);
-        ack = ACKok(o->cmdSocket);
-      }
-      if( ack == 1 ) {
+      StrOp.fmtb (tmpCommand, "GET %d SM %d CV %d\n", wSRCP.getsrcpbusGL_ns( o->srcpini ), addr, cv-1 );
+      ack = __srcpSendCommand(o,tmpCommand,NULL);
+      if( ack == 200 ) {
         wProgram.setvalue( rsp, value-1 );
+      }
+      else if( ack == 0 ) {
+        NodeOp.base.del(rsp);
+        rsp = NULL;
       }
       else {
         wProgram.setvalue( rsp, -1 );
