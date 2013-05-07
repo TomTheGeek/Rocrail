@@ -1723,6 +1723,9 @@ static void __calcTrainLen(iOLoc inst) {
       wLoc.settrainlen(data->props, 0);
     }
   }
+  else {
+    wLoc.settrainlen(data->props, 0);
+  }
 
   /* add consist locos */
   if( wLoc.getconsist(data->props) != NULL && StrOp.len(wLoc.getconsist(data->props)) > 0) {
