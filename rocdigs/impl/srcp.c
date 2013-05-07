@@ -559,13 +559,13 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
 
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
-    int addr = wProgram.getdecaddr( node );
+    int addr = wProgram.getaddr( node );
     int cv = wProgram.getcv( node );
     int value = wProgram.getvalue( node );
 
     rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
 
-    wProgram.setdecaddr( rsp, addr );
+    wProgram.setaddr( rsp, addr );
     wProgram.setcv( rsp, cv );
     wProgram.setcmd( rsp, wProgram.datarsp );
 
@@ -938,6 +938,8 @@ static void __infoReader( void * threadinst ) {
 
               nodeFn = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
               wLoc.setthrottleid( nodeFn, "srcp" );
+              if ( o->iid != NULL )
+                wLoc.setiid( nodeFn, o->iid );
 
               wFunCmd.setaddr( nodeFn, addr );
               wFunCmd.setf28( nodeFn,(srcpFx & 0x08000000)?True:False);
