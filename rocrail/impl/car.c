@@ -216,20 +216,14 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
       int mappedfn  = 0;
       int i         = 0;
       int fnchanged = wFunCmd.getfnchanged(nodeA);
+      char fattr[32] = {'\0'};
       int decaddr   = __getFnAddr(inst, wFunCmd.getfnchanged(nodeA), &mappedfn );
+      StrOp.fmtb(fattr, "f%d", fnchanged);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "function %d address=%d:%d", fnchanged, decaddr, mappedfn );
+          "function %d:%s address=%d:%d", fnchanged, NodeOp.getBool(nodeA, fattr, False)?"ON":"OFF", decaddr, mappedfn );
 
-      for( i = 1; i < 29; i++ ) {
-        char fattr[32] = {'\0'};
-        StrOp.fmtb(fattr, "f%d", fnchanged);
-        NodeOp.setBool(nodeA, fattr, data->fx[i]);
-      }
-
-      if(mappedfn != wFunCmd.getfnchanged(nodeA)) {
-        char fattr[32] = {'\0'};
+      if(mappedfn != fnchanged) {
         Boolean fon = False;
-        StrOp.fmtb(fattr, "f%d", fnchanged);
         fon = NodeOp.getBool(nodeA, fattr, False);
         NodeOp.setBool(nodeA, fattr, False);
         StrOp.fmtb(fattr, "f%d", mappedfn);
@@ -238,8 +232,6 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
         data->fx[fnchanged] = fon;
       }
       else {
-        char fattr[32] = {'\0'};
-        StrOp.fmtb(fattr, "f%d", fnchanged);
         data->fx[fnchanged] = NodeOp.getBool(nodeA, fattr, False);
       }
 
@@ -253,6 +245,12 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
         NodeOp.setName( nodeA, wLoc.name() );
         wLoc.setfn(nodeA, wFunCmd.isf0(nodeA) );
         data->fx[0] = wFunCmd.isf0(nodeA);
+      }
+
+      for( i = 1; i < 29; i++ ) {
+        char fattr[32] = {'\0'};
+        StrOp.fmtb(fattr, "f%d", i);
+        NodeOp.setBool(nodeA, fattr, data->fx[i]);
       }
 
       ControlOp.cmd( control, nodeA, NULL );
