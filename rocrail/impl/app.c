@@ -1228,6 +1228,18 @@ static void _link( int count, Boolean up ) {
 }
 
 
+static void _play( const char* record ) {
+  if( __appinst != NULL ) {
+    iOAppData data = Data(__appinst);
+    if( data->script == NULL ) {
+      data->script = ScriptOp.inst(NULL);
+      ScriptOp.setCallback(data->script, data->control);
+    }
+    ScriptOp.setScript(data->script, record);
+    ScriptOp.Play(data->script);
+  }
+}
+
 
 static iOApp _inst(void) {
   if( __appinst == NULL ) {

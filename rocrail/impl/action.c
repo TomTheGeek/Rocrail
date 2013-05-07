@@ -538,7 +538,25 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     }
 
     if( extaction != NULL && StrOp.len(extaction) > 0 ) {
-      if( wActionCtrl.getparam(actionctrl) != NULL && StrOp.len(wActionCtrl.getparam(actionctrl)) > 0 ) {
+      if( StrOp.endsWithi(extaction, ".txt") ) {
+        /* cmd recording */
+        if( FileOp.exist(extaction) ) {
+          int size = FileOp.fileSize(extaction);
+          char* record = allocMem( size + 1);
+          iOFile f = FileOp.inst( extaction, OPEN_READONLY);
+          if( f != NULL ) {
+            FileOp.read( f, record, size);
+            FileOp.base.del(f);
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "play record file [%s], size=%d", extaction, size );
+            AppOp.play( record );
+            freeMem(record);
+          }
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "record file [%s] not found", extaction );
+        }
+      }
+      else if( wActionCtrl.getparam(actionctrl) != NULL && StrOp.len(wActionCtrl.getparam(actionctrl)) > 0 ) {
         char* s = NULL;
         if( extparam != NULL && StrOp.len(extparam) > 0 ) {
           s = StrOp.fmt("%s\"%s\" %s %s%s", quote, extaction, extparam, wActionCtrl.getparam(actionctrl), quote );

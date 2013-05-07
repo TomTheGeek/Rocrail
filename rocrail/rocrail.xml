@@ -22,7 +22,7 @@
 -->
 <Project name="RocRail" title="RocRail API" docname="rocrailapi" source="$Source: /cvsroot/rojav/rocrail/rocrail.xml,v $" revision="$Revision: 1.56 $">
 
-  <object name="App" use="node" include="clntcon,srcpcon,control,model,http,display,snmp" remark="RocRail application">
+  <object name="App" use="node" include="clntcon,srcpcon,control,model,http,display,snmp,script" remark="RocRail application">
     <fun name="inst" vt="this">
     </fun>
     <fun name="Main" vt="int">
@@ -68,6 +68,9 @@
     <fun name="getdonkey" vt="const char*"/>
     <fun name="getdoneml" vt="const char*"/>
     <fun name="isKeyValid" vt="Boolean"/>
+    <fun name="play" vt="void">
+      <param name="record" vt="const char*"/>
+    </fun>
     <data>
       <var name="ini" vt="iONode" remark="RocRail ini"/>
       <var name="newini" vt="iONode" remark="RocRail ini"/>
@@ -89,6 +92,7 @@
       <var name="run" vt="Boolean"/>
       <var name="donkey" vt="const char*"/>
       <var name="doneml" vt="const char*"/>
+      <var name="script" vt="iOScript"/>
     </data>
   </object>
 

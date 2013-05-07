@@ -422,7 +422,6 @@ static void __player( void* threadinst ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "play: %s", strCmd );
           data->callback->event( data->callback, node );
           StrOp.free( strCmd );
-          NodeOp.base.del(node);
         }
       }
     }

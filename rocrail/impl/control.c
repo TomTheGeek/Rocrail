@@ -122,8 +122,15 @@ static void* __event( void* inst, const void* evt ) {
       else {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "booster reports normal operation" );
       }
+      NodeOp.base.del(node);
+      return NULL;
     }
   }
+
+  if( node != NULL ) {
+    ControlOp.cmd(inst, node, NULL);
+  }
+
   return NULL;
 }
 
