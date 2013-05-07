@@ -1719,6 +1719,9 @@ static void __calcTrainLen(iOLoc inst) {
       wLoc.settrainlen( data->props, OperatorOp.getLen(train) + wLoc.getlen(data->props));
       report = True;
     }
+    else {
+      wLoc.settrainlen(data->props, 0);
+    }
   }
 
   /* add consist locos */
