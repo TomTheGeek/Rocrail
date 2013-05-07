@@ -91,10 +91,12 @@
     <table border="0" rules="all" cellpadding="4" cellspacing="0" width="100%">
       <THEAD>
 	  <TR>
-	     <TH width="25%" height="30" bgcolor="white">Block</TH>
-	     <TH width="25%" height="30" bgcolor="white">Stunde</TH>
-	     <TH width="25%" height="30" bgcolor="white">Minute</TH>
- 	     <TH width="25%" bgcolor="white">Platzierung &#228;ndern</TH>
+	     <TH width="20%" height="30" bgcolor="white">Ortschaft</TH>
+		 <TH width="20%" height="30" bgcolor="white">Block</TH>
+	     <TH width="15%" height="30" bgcolor="white">Stunde</TH>
+	     <TH width="15%" height="30" bgcolor="white">Minute</TH>
+		 <TH width="20%" height="30" bgcolor="white">frei vor Start</TH>
+ 	     <TH width="10%" bgcolor="white">Platzierung &#228;ndern</TH>
 	  </TR>
       </THEAD> 
       <TBODY>
@@ -110,6 +112,18 @@
 <xsl:template match="scentry">  
 
       <TR>
+	  
+	  <xsl:variable name="location" select="@location" />
+	   <TD align="center">
+	   <xsl:choose>
+         <xsl:when test="$location = ''">
+         <xsl:text>-</xsl:text>
+       </xsl:when>
+       <xsl:otherwise>
+         <xsl:value-of select="@location" />
+       </xsl:otherwise>
+       </xsl:choose>
+	   </TD>
 	  
 	   <xsl:variable name="block" select="@block" />
 	   <TD align="center">
@@ -147,6 +161,18 @@
        </xsl:choose>
 	   </TD>
 
+	   <xsl:variable name="frei" select="@free2go" />
+	   <TD align="center">
+	   <xsl:choose>
+         <xsl:when test="$frei = ''">
+         <xsl:text>-</xsl:text>
+       </xsl:when>
+       <xsl:otherwise>
+         <xsl:value-of select="@free2go" />
+       </xsl:otherwise>
+       </xsl:choose>
+	   </TD>
+	   
 	   <xsl:variable name="swap" select="@swap" />
 	   <TD align="center">
 	   <xsl:choose>
