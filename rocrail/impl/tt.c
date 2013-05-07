@@ -581,6 +581,10 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
     wOutput.setport( cmd, 8 );
     wOutput.setcmd( cmd, wOutput.on );
     ControlOp.cmd( control, cmd, NULL );
+
+    /* ToDo: Get reported position. */
+    wTurntable.setbridgepos( data->props, tracknr );
+
   }
 
   /* Cleanup Node1 */
