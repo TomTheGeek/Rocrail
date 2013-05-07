@@ -45,6 +45,11 @@ static const char* __id( void* inst ) {
 }
 
 static void* __event( void* inst, const void* evt ) {
+  iORConData data = Data(inst);
+  iONode node = (iONode)evt;
+  char* strCmd = NodeOp.base.toString( node );
+  RConOp.write( inst, strCmd );
+  StrOp.free( strCmd );
   return NULL;
 }
 

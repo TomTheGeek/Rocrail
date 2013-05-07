@@ -1391,7 +1391,7 @@ void RocGui::sendToRocrail( iONode cmd, bool disconnect ) {
   StrOp.free( strCmd );
 
   if( m_RCon != NULL ) {
-    ScriptOp.setCallback(m_Script, m_RCon);
+    ScriptOp.setCallback(m_Script, (obj)m_RCon);
   }
   ScriptOp.recordNode(m_Script, cmd);
 

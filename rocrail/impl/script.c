@@ -417,10 +417,10 @@ static void __player( void* threadinst ) {
     if( !data->pause && data->playing ) {
       iONode node = ScriptOp.nextLine(script);
       if( node != NULL ) {
-        if( data->rcon != NULL ) {
+        if( data->callback != NULL ) {
           char* strCmd = NodeOp.base.toString( node );
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "play: %s", strCmd );
-          RConOp.write( data->rcon, strCmd );
+          data->callback->event( data->callback, node );
           StrOp.free( strCmd );
           NodeOp.base.del(node);
         }
@@ -434,9 +434,9 @@ static void __player( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Script player ended." );
 }
 
-static void _setCallback(iOScript inst, iORCon rcon) {
+static void _setCallback(iOScript inst, obj callback) {
   iOScriptData data   = Data(inst);
-  data->rcon = rcon;
+  data->callback = callback;
 }
 
 /**  */
