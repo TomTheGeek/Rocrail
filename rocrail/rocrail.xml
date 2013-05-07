@@ -839,6 +839,7 @@
     <fun name="getLocByAddress" vt="iOLoc">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="decaddr" vt="int" remark="Loc decoder address to search for"/>
+      <param name="iid" vt="const char*" remark="Optional IID"/>
     </fun>
     <fun name="getLocByIdent" vt="iOLoc">
       <param name="inst" vt="this" remark="Model instance"/>

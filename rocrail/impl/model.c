@@ -2329,7 +2329,7 @@ static iOLoc _getLoc( iOModel inst, const char* id, iONode props, Boolean genera
     int addr = atoi(id);
     if( addr > 0 ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to find loco by addres [%d]", addr );
-      loc = ModelOp.getLocByAddress(inst, addr);
+      loc = ModelOp.getLocByAddress(inst, addr, NULL);
       if( loc != NULL )
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco by addres [%d] is [%s]", addr, LocOp.getId(loc) );
       else if( generate ) {
@@ -2448,12 +2448,22 @@ static iOSignal _getSgByAddress( iOModel inst, int addr, int port, int type ) {
 }
 
 
-static iOLoc _getLocByAddress( iOModel inst, int addr ) {
+static iOLoc _getLocByAddress( iOModel inst, int addr, const char* iid ) {
   iOModelData o = Data(inst);
   iOLoc loc = (iOLoc)MapOp.first( o->locMap );
   while( loc != NULL ) {
-    if( LocOp.getAddress(loc) == addr )
+    if( LocOp.getAddress(loc) == addr ) {
+      if( iid != NULL && StrOp.len(iid) > 0 ) {
+        const char* lciid = wLoc.getiid(LocOp.base.properties(loc));
+        if( lciid != NULL && StrOp.len(lciid) > 0 ) {
+          if( !StrOp.equals(iid, lciid) ) {
+            loc = (iOLoc)MapOp.next( o->locMap );
+            continue;
+          }
+        }
+      }
       return loc;
+    }
     loc = (iOLoc)MapOp.next( o->locMap );
   };
 
@@ -3252,7 +3262,7 @@ static void _event( iOModel inst, iONode nodeC ) {
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco event: %d", addr);
 
-    iOLoc lc = ModelOp.getLocByAddress(inst, addr);
+    iOLoc lc = ModelOp.getLocByAddress(inst, addr, iid);
 
     /* check if the loco ID ist set if not found by address */
     if( lc == NULL && id != NULL && StrOp.len(id) > 0 ) {
@@ -5201,7 +5211,7 @@ static iOModel _inst( const char* fileName, const char* locoFileName ) {
   data->locoFileName = locoFileName;
 
   data->locMap      = MapOp.inst();
-  data->masterLocMap = MapOp.inst();
+  data->masterLocMap= MapOp.inst();
   data->carMap      = MapOp.inst();
   data->waybillMap  = MapOp.inst();
   data->operatorMap = MapOp.inst();
