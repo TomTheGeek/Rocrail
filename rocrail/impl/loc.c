@@ -2917,7 +2917,11 @@ static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist, Boolean direct
   }
   else if( data->runner != NULL ) {
     iOMsg msg = MsgOp.inst( NULL, swap_event );
-    MsgOp.setTimer( msg, wLoc.getswaptimer(data->props) );
+    if( wLoc.getswaptimer(data->props) > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s: sync swap sleep %d", wLoc.getid(data->props), wLoc.getswaptimer(data->props));
+      ThreadOp.sleep(wLoc.getswaptimer(data->props));
+    }
+    MsgOp.setTimer( msg, 0 );
     MsgOp.setEvent( msg, swap_event );
     if( cmd == NULL )
       MsgOp.setUsrData(msg, NULL, (swap ? 0x01:0x00) | (consist ? 0x02:0x00) );
