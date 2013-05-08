@@ -88,6 +88,7 @@ typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 static void __informDigInts( iOControl inst );
 static void __listener( obj inst, iONode nodeC, int level );
 static void __checkAction( iOControl inst, const char* state, const char* by );
+static void __callback( obj inst, iONode nodeA );
 
 static int instCnt = 0;
 
@@ -128,7 +129,7 @@ static void* __event( void* inst, const void* evt ) {
   }
 
   if( node != NULL ) {
-    ControlOp.cmd(inst, node, NULL);
+    __callback(inst, node);
   }
 
   return NULL;
