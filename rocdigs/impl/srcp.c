@@ -571,7 +571,7 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
 
     if( o->iid != NULL )
       wProgram.setiid( rsp, o->iid );
-    wProgram.setcmd( rsp, wProgram.getcmd( node ) );
+    wProgram.setcmd( rsp, wProgram.statusrsp );
 
     if( !wProgram.ispom( node ) ) {
       StrOp.fmtb(tmpCommand,"SET 1 POWER OFF\n");
