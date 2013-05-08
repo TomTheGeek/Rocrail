@@ -1712,6 +1712,8 @@ static void __calcTrainLen(iOLoc inst) {
   iOLocData data = Data(inst);
   Boolean report = False;
 
+  wLoc.settrainlen( data->props, wLoc.getlen(data->props));
+
   /* calculate train length */
   if( wLoc.gettrain( data->props) != NULL && StrOp.len(wLoc.gettrain( data->props)) > 0 ) {
     iOOperator train = ModelOp.getOperator(AppOp.getModel(), wLoc.gettrain( data->props) );
@@ -1719,12 +1721,6 @@ static void __calcTrainLen(iOLoc inst) {
       wLoc.settrainlen( data->props, OperatorOp.getLen(train) + wLoc.getlen(data->props));
       report = True;
     }
-    else {
-      wLoc.settrainlen(data->props, 0);
-    }
-  }
-  else {
-    wLoc.settrainlen(data->props, 0);
   }
 
   /* add consist locos */
