@@ -220,26 +220,29 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
       int decaddr   = __getFnAddr(inst, wFunCmd.getfnchanged(nodeA), &mappedfn );
       StrOp.fmtb(fattr, "f%d", fnchanged);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "function %d:%s address=%d:%d", fnchanged, NodeOp.getBool(nodeA, fattr, False)?"ON":"OFF", decaddr, mappedfn );
-
-      if(mappedfn != fnchanged) {
-        Boolean fon = False;
-        fon = NodeOp.getBool(nodeA, fattr, False);
-        NodeOp.setBool(nodeA, fattr, False);
-        StrOp.fmtb(fattr, "f%d", mappedfn);
-        NodeOp.setBool(nodeA, fattr, fon);
-        wFunCmd.setfnchanged( nodeA, mappedfn );
-        data->fx[fnchanged] = fon;
-      }
-      else {
-        data->fx[fnchanged] = NodeOp.getBool(nodeA, fattr, False);
-      }
+          "car %s (%d) function %d:%s address=%d:%d", wCar.getid(data->props), wCar.getaddr(data->props), fnchanged,
+          NodeOp.getBool(nodeA, fattr, False)?"ON":"OFF", decaddr, mappedfn );
 
       if( wCar.getiid(data->props) != NULL )
         wCar.setiid( nodeA, wCar.getiid(data->props) );
       wCar.setaddr( nodeA, wCar.getaddr(data->props) );
       wCar.setprot( nodeA, wCar.getprot( data->props ) );
       wCar.setprotver( nodeA, wCar.getprotver( data->props ) );
+
+      if(fnchanged != -1) {
+        if(mappedfn != fnchanged) {
+          Boolean fon = False;
+          fon = NodeOp.getBool(nodeA, fattr, False);
+          NodeOp.setBool(nodeA, fattr, False);
+          StrOp.fmtb(fattr, "f%d", mappedfn);
+          NodeOp.setBool(nodeA, fattr, fon);
+          wFunCmd.setfnchanged( nodeA, mappedfn );
+          data->fx[fnchanged] = fon;
+        }
+        else {
+          data->fx[fnchanged] = NodeOp.getBool(nodeA, fattr, False);
+        }
+      }
 
       if( fnchanged == 0 && wCar.isf0vcmd(data->props) ) {
         NodeOp.setName( nodeA, wLoc.name() );
