@@ -216,11 +216,12 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
       int mappedfn  = 0;
       int i         = 0;
       int fnchanged = wFunCmd.getfnchanged(nodeA);
+      int fngrp     = wFunCmd.getgroup(nodeA);
       char fattr[32] = {'\0'};
       int decaddr   = __getFnAddr(inst, wFunCmd.getfnchanged(nodeA), &mappedfn );
       StrOp.fmtb(fattr, "f%d", fnchanged);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "car %s (%d) function %d:%s address=%d:%d", wCar.getid(data->props), wCar.getaddr(data->props), fnchanged,
+          "car %s (%d) function group=%d %d:%s address=%d:%d", wCar.getid(data->props), wCar.getaddr(data->props), fngrp, fnchanged,
           NodeOp.getBool(nodeA, fattr, False)?"ON":"OFF", decaddr, mappedfn );
 
       if( wCar.getiid(data->props) != NULL )
@@ -243,6 +244,40 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
           data->fx[fnchanged] = NodeOp.getBool(nodeA, fattr, False);
         }
       }
+      else if( fngrp >= 0 ) {
+        int i = 0;
+        int from = 0;
+        int to = 0;
+        if( fngrp == 0 ) {
+          from = 1; to = 28;
+        }
+        else if( fngrp == 1 ) {
+          from = 1; to = 4;
+        }
+        else if( fngrp == 2 ) {
+          from = 5; to = 8;
+        }
+        else if( fngrp == 3 ) {
+          from = 9; to = 12;
+        }
+        else if( fngrp == 4 ) {
+          from = 13; to = 16;
+        }
+        else if( fngrp == 5 ) {
+          from = 17; to = 20;
+        }
+        else if( fngrp == 6 ) {
+          from = 21; to = 24;
+        }
+        else if( fngrp == 7 ) {
+          from = 25; to = 28;
+        }
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "copy function range %d-%d", from, to);
+        for( i = from; i <= to; i++ ) {
+          StrOp.fmtb(fattr, "f%d", i);
+          data->fx[i] = NodeOp.getBool(nodeA, fattr, data->fx[i]);
+        }
+      }
 
       if( fnchanged == 0 && wCar.isf0vcmd(data->props) ) {
         NodeOp.setName( nodeA, wLoc.name() );
@@ -251,7 +286,6 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
       }
 
       for( i = 1; i < 29; i++ ) {
-        char fattr[32] = {'\0'};
         StrOp.fmtb(fattr, "f%d", i);
         NodeOp.setBool(nodeA, fattr, data->fx[i]);
       }
