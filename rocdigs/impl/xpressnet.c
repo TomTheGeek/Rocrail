@@ -1253,6 +1253,7 @@ static void __transactor( void* threadinst ) {
     if (rspReceived) {
       if( reSend ) {
         reSend = False;
+        ThreadOp.sleep(500);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "resend request" );
         if( data->subWrite( (obj)xpressnet, out, &rspExpected ) ) {
           rspReceived = !rspExpected;
