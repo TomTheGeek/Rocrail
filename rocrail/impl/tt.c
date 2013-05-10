@@ -509,7 +509,7 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
     tracknr = __getPrevTrack(inst, wTurntable.getbridgepos( data->props));
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
-    port = ttdir?2:3;
+    port = ttdir?3:4;
   }
   else {
     /* Tracknumber */
