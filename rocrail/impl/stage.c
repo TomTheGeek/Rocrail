@@ -471,9 +471,10 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
 
       if( loc != NULL ) {
         Boolean execMove = False;
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing loco %s of IN event (endsection=%d)", data->locId, endSection );
-        if( !data->early2in )
+        if( !data->early2in ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing loco %s of IN event (endsection=%d)", data->locId, endSection );
           LocOp.event( loc, (obj)inst, in_event, 0, True, NULL );
+        }
         else
           data->early2in = False;
 
@@ -488,6 +489,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
           else
             wLoc.setV_hint(cmd, wStage.getstopspeed(data->props));
 
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ExtStop loco %s (endsection=%d)", data->locId, endSection );
           LocOp.cmd(loc, cmd);
         }
 
@@ -533,8 +535,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
         else {
           if( !LocOp.isAutomode(loc) || StageOp.hasExtStop(inst) ) {
             iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero", LocOp.getId(loc) );
-            LocOp.setCurBlock(loc, data->id);
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero, set in block %s", LocOp.getId(loc), data->id );
             wLoc.setcmd(cmd, wLoc.velocity);
             wLoc.setV(cmd, 0);
             LocOp.cmd(loc, cmd);
@@ -1384,7 +1385,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
       iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(lastSection), NULL, False );
       if( lc != NULL && !LocOp.isAutomode(lc) ) {
         iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero", LocOp.getId(lc) );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero, set in block %s", LocOp.getId(lc), data->id );
         wLoc.setcmd(cmd, wLoc.velocity);
         wLoc.setV(cmd, 0);
         LocOp.cmd(lc, cmd);
