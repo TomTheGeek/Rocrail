@@ -503,10 +503,10 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
 
 
   if( StrOp.equals( wTurntable.next, cmdStr ) ) {
-    tracknr = __getNextTrack(inst, wTurntable.getbridgepos( data->props));
+    port = 1;
   }
   else if( StrOp.equals( wTurntable.prev, cmdStr ) ) {
-    tracknr = __getPrevTrack(inst, wTurntable.getbridgepos( data->props));
+    port = 2;
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
     port = ttdir?3:4;
@@ -531,7 +531,7 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
         cmdStr, wOutput.getaddr(cmd), wOutput.getport(cmd), wOutput.getcmd(cmd) );
 
     ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
-    ThreadOp.sleep( 100 );
+    ThreadOp.sleep( 500 );
     wOutput.setcmd( cmd, wOutput.off );
     ControlOp.cmd( control, cmd, NULL );
   }
