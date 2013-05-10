@@ -1170,15 +1170,15 @@ static void __handleLoco(iOP50x p50x, byte* status) {
       out[3] = (addr >> 8) & 0x07;
 
       /* ask for F9 to F16 */
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "check for XFuncXSts F9-F16 of %d", addr );
-      TraceOp.dump( name, TRCLEVEL_DEBUG, out, 4 );
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "check for XFuncXSts F9-F16 of %d", addr );
+      TraceOp.dump( name, TRCLEVEL_BYTE, out, 4 );
       if( SerialOp.write( data->serial, (char*)out, 4 ) ) {
         Boolean read = SerialOp.read( data->serial, (char*)&in[0], 1 ) ;
         if( read ) {
           TraceOp.dump( name, TRCLEVEL_DEBUG, in, 1 );
           if (in[0] == 0x00 ) {
             if( SerialOp.read( data->serial, (char*)in+1, 1 ) ) {
-              TraceOp.dump( name, TRCLEVEL_DEBUG, in, 2 );
+              TraceOp.dump( name, TRCLEVEL_BYTE, in, 2 );
 
               wFunCmd.setf9(  nodeC, (in[1] & 0x01) ? True:False );
               wFunCmd.setf10( nodeC, (in[1] & 0x02) ? True:False );
@@ -1213,15 +1213,15 @@ static void __handleLoco(iOP50x p50x, byte* status) {
       out[3] = (addr >> 8) & 0x07;
 
       /* ask for F17 to F28 */
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "check for XFunc34Sts F17-F28 of %d", addr );
-      TraceOp.dump( name, TRCLEVEL_DEBUG, out, 4 );
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "check for XFunc34Sts F17-F28 of %d", addr );
+      TraceOp.dump( name, TRCLEVEL_BYTE, out, 4 );
       if( SerialOp.write( data->serial, (char*)out, 4 ) ) {
         Boolean read = SerialOp.read( data->serial, (char*)&in[0], 1 ) ;
         if( read ) {
           TraceOp.dump( name, TRCLEVEL_DEBUG, in, 1 );
           if (in[0] == 0x00 ) {
             if( SerialOp.read( data->serial, (char*)in+1, 2 ) ) {
-              TraceOp.dump( name, TRCLEVEL_DEBUG, in, 3 );
+              TraceOp.dump( name, TRCLEVEL_BYTE, in, 3 );
 
               wFunCmd.setf17( nodeC, (in[1] & 0x01) ? True:False );
               wFunCmd.setf18( nodeC, (in[1] & 0x02) ? True:False );
