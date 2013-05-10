@@ -648,7 +648,12 @@ static Boolean __processMultiAspectsCmd( iOSignal inst, const char* state, int n
     }
     else if( wSignal.getaddr( o->props ) > 0 && wSignal.getport1( o->props ) == 0 ) {
       /* FLAT */
-      wOutput.setaddr( cmd, wSignal.getaddr( o->props ) + nr );
+      if( wSignal.isasswitch(o->props) ) {
+        wOutput.setaddr( cmd, wSignal.getaddr( o->props ) + (nr / 2) );
+        wOutput.setcmd( cmd, (nr%2) == 0 ? wOutput.on:wOutput.off );
+      }
+      else
+        wOutput.setaddr( cmd, wSignal.getaddr( o->props ) + nr );
       wOutput.setport( cmd, 0 );
     }
     else {
