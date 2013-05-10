@@ -88,7 +88,7 @@
   <Msg id="lang_zh_TW">
     <all txt="汉语" tip="Chinese"/>
   </Msg>
-  <Msg id="lang_zh_CH_TW">
+  <Msg id="lang_zh_CH">
     <all txt="普通话" tip="Chinese simplified"/>
   </Msg>
   <Msg id="lang_en_AU">
