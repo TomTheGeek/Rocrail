@@ -535,7 +535,8 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
         else {
           if( !LocOp.isAutomode(loc) || StageOp.hasExtStop(inst) ) {
             iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero, set in block %s", LocOp.getId(loc), data->id );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero", LocOp.getId(loc) );
+            /* former setcurblock */
             wLoc.setcmd(cmd, wLoc.velocity);
             wLoc.setV(cmd, 0);
             LocOp.cmd(loc, cmd);
