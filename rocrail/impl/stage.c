@@ -508,17 +508,15 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
 
         if( !endSection ) {
           /* stop loco */
+          iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
           if( LocOp.isAutomode(loc) ) {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stop loco %s because its not in the end section", data->locId );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stop automatic mode for loco %s because its not in the end section", data->locId );
             LocOp.stop(loc, False);
           }
-          else {
-            iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero", data->locId );
-            wLoc.setcmd(cmd, wLoc.velocity);
-            wLoc.setV(cmd, 0);
-            LocOp.cmd(loc, cmd);
-          }
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero", data->locId );
+          wLoc.setcmd(cmd, wLoc.velocity);
+          wLoc.setV(cmd, 0);
+          LocOp.cmd(loc, cmd);
 
           if( !data->pendingFree && data->pendingSection != -1 ) {
             iONode s = (iONode)ListOp.get(data->sectionList, data->pendingSection );
