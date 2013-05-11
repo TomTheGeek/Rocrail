@@ -89,7 +89,7 @@ soh soh seq ack pri seq crc8 eot
 
 static int instCnt = 0;
 
-static void __initComm( iOZimoBin zimobin );
+static Boolean __initComm( iOZimoBin zimobin );
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -1685,17 +1685,21 @@ static void __packethandler( void* threadinst ) {
   } while ( data->run );
 }
 
-static void __initComm( iOZimoBin zimobin ) {
+static Boolean __initComm( iOZimoBin zimobin ) {
   iOZimoBinData data    = Data(zimobin);
+  int retry = 0;
 
   if ( !data->comm ) {
     while ( !SerialOp.open( data->serial ) && !data->dummyio ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init ZimoBin port %s!", wDigInt.getdevice( data->ini ) );
-
+      retry++;
+      if( retry > 10 ) {
+        return False;
+      }
       ThreadOp.sleep(2500); /* wait some time for usb-devices */
     }
 
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Init ZimoBin port %s!", wDigInt.getdevice( data->ini ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ZimoBin port %s initialized", wDigInt.getdevice( data->ini ) );
 
   }
 
@@ -1859,6 +1863,7 @@ static void __initComm( iOZimoBin zimobin ) {
       loProps = wLocList.nextlc(data->locolist, loProps);
     }
   }
+  return True;
 }
 
 static void __transactor( void* threadinst ) {
@@ -1882,7 +1887,7 @@ static void __transactor( void* threadinst ) {
 
   __initComm( zimobin );
 
-  do {
+  while( data->comm && data->run ) {
 
     int dataAvailable = SerialOp.available(data->serial);
     int inIdx = 0;
@@ -2040,7 +2045,7 @@ static void __transactor( void* threadinst ) {
     /* Give up timeslice:*/
     ThreadOp.sleep( 10 );
 
-  } while( data->run );
+  };
 }
 
 
