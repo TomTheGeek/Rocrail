@@ -246,7 +246,7 @@ public:
   void OnLangPolish(wxCommandEvent& event);
   void OnLangNorwegian(wxCommandEvent& event);
   void OnLangChinese(wxCommandEvent& event);
-  void OnLangChineseCH(wxCommandEvent& event);
+  void OnLangChineseCN(wxCommandEvent& event);
   void OnLangEnglishAU(wxCommandEvent& event);
   void OnLangEnglishGB(wxCommandEvent& event);
   void OnLangEnglishCA(wxCommandEvent& event);
@@ -558,7 +558,7 @@ enum
     ME_LangJapanese,
     ME_LangRomanian,
     ME_LangKorean,
-    ME_LangChineseCH,
+    ME_LangChineseCN,
     ME_LangPortugueseBR,
     ME_LangSerbianLatin,
     ME_RocrailIni,

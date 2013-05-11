@@ -78,7 +78,7 @@
     <const name="lang_indonesian" vt="string" val="id"/>
     <const name="lang_japanese" vt="string" val="ja"/>
     <const name="lang_romanian" vt="string" val="ro"/>
-    <const name="lang_chinesesimplified" vt="string" val="zh_CH"/>
+    <const name="lang_chinesesimplified" vt="string" val="zh_CN"/>
     <const name="lang_portuguesebr" vt="string" val="pt_BR"/>
     <const name="lang_korean" vt="string" val="ko"/>
     <const name="lang_serbianlatin" vt="string" val="sr_latin"/>

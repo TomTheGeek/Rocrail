@@ -385,7 +385,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_LangPolish      , RocGuiFrame::OnLangPolish)
     EVT_MENU( ME_LangNorwegian   , RocGuiFrame::OnLangNorwegian)
     EVT_MENU( ME_LangChinese     , RocGuiFrame::OnLangChinese)
-    EVT_MENU( ME_LangChineseCH   , RocGuiFrame::OnLangChineseCH)
+    EVT_MENU( ME_LangChineseCN   , RocGuiFrame::OnLangChineseCN)
     EVT_MENU( ME_LangIndonesian  , RocGuiFrame::OnLangIndonesian)
     EVT_MENU( ME_LangJapanese    , RocGuiFrame::OnLangJapanese)
     EVT_MENU( ME_LangKorean      , RocGuiFrame::OnLangKorean)
@@ -1849,7 +1849,7 @@ void RocGuiFrame::initFrame() {
   menuLang->AppendCheckItem( ME_LangBulgarian, wxGetApp().getMenu("lang_bg"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangCatalan  , wxGetApp().getMenu("lang_ca"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangChinese  , wxGetApp().getMenu("lang_zh_TW"), wxGetApp().getMsg("changelang") );
-  menuLang->AppendCheckItem( ME_LangChineseCH, wxGetApp().getMenu("lang_zh_CH"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangChineseCN, wxGetApp().getMenu("lang_zh_CN"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangCzech    , wxGetApp().getMenu("lang_cs"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangDanish   , wxGetApp().getMenu("lang_da"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangDutch    , wxGetApp().getMenu("lang_nl"), wxGetApp().getMsg("changelang") );
@@ -3848,7 +3848,7 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_LangJapanese);
   if( mi != NULL )
     mi->Check( StrOp.equals( wGui.lang_japanese, wGui.getlang( wxGetApp().getIni() ) ) );
-  mi = menuBar->FindItem(ME_LangChineseCH);
+  mi = menuBar->FindItem(ME_LangChineseCN);
   if( mi != NULL )
     mi->Check( StrOp.equals( wGui.lang_chinesesimplified, wGui.getlang( wxGetApp().getIni() ) ) );
   mi = menuBar->FindItem(ME_LangKorean);
@@ -4966,7 +4966,7 @@ void RocGuiFrame::OnLangChinese(wxCommandEvent& event) {
   wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
 }
 
-void RocGuiFrame::OnLangChineseCH(wxCommandEvent& event) {
+void RocGuiFrame::OnLangChineseCN(wxCommandEvent& event) {
   wGui.setlang( wxGetApp().getIni(), wGui.lang_chinesesimplified );
   wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
 }
