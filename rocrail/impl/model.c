@@ -2929,9 +2929,13 @@ static void __initFieldRunner( void* threadinst ) {
     if(sg->base.properties != NULL) {
       iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
       iONode sgProps = SignalOp.base.properties(sg);
+      char* sgstate = NULL;
       state = SignalOp.getState(sg);
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sg [%s]", SignalOp.getId( sg ) );
+      if( state != NULL  && StrOp.len(state) > 0 )
+        sgstate = StrOp.dup(state);
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sg [%s] state=%s", SignalOp.getId( sg ), sgstate!=NULL?sgstate:"not set: using red" );
 
       if( StrOp.equals( wSignal.semaphore, wSignal.gettype(sgProps) ) ) {
         iONode semcmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
@@ -2942,11 +2946,14 @@ static void __initFieldRunner( void* threadinst ) {
       }
 
       /* Set the signal to its last known state. */
-      if( state != NULL && StrOp.len(state) > 0 ) {
-        wSignal.setcmd( cmd, state );
+      if( sgstate != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set sg [%s] to %s", SignalOp.getId( sg ), sgstate!=NULL?sgstate:"not set: using red" );
+        wSignal.setcmd( cmd, sgstate );
+        StrOp.free(sgstate);
       }
-      else
+      else {
         wSignal.setcmd( cmd, wSignal.red );
+      }
 
       NodeOp.setBool( cmd, "force", True );
       SignalOp.cmd( sg, cmd, True );
