@@ -39,6 +39,7 @@
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Item.h"
+#include "rocrail/wrapper/public/Stage.h"
 
 static int instCnt = 0;
 
@@ -127,6 +128,10 @@ static char* _convertNode(iONode node, Boolean addstamp) {
     if( NodeOp.getStr(node, "locid", NULL) != NULL ) {
       scriptline = StrOp.cat( scriptline, ",");
       scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "locid", NULL));
+    }
+    if( NodeOp.getStr(node, "exitstate", NULL) != NULL ) {
+      scriptline = StrOp.cat( scriptline, ",");
+      scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "exitstate", NULL));
     }
 
     if( addstamp ) {
@@ -247,6 +252,18 @@ static iONode _parseLine(const char* scriptline) {
       wBlock.setcmd( node, parm2 );
       if( StrOp.equalsi(wBlock.loc, parm2) )
         wBlock.setlocid(node, parm3);
+    }
+
+    else if( StrOp.equalsi( wStage.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+      /* sb,<id>,open */
+      node = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+      wStage.setid( node, parm1 );
+      if( StrOp.equals( wBlock.closed, parm2 ) || StrOp.equals( wBlock.open, parm2 ) ) {
+        wStage.setexitstate( node, parm2 );
+      }
+      else {
+        wStage.setcmd( node, parm2 );
+      }
     }
 
     else if( parm1 != NULL && parm2 != NULL ) {
