@@ -275,7 +275,14 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "copy function range %d-%d", from, to);
         for( i = from; i <= to; i++ ) {
           StrOp.fmtb(fattr, "f%d", i);
+          if( data->fx[i] != NodeOp.getBool(nodeA, fattr, data->fx[i]) ) {
+            fnchanged = i;
+          }
           data->fx[i] = NodeOp.getBool(nodeA, fattr, data->fx[i]);
+        }
+        if(fnchanged != -1 && fnchanged > 0 && fnchanged < 29 ) {
+          wFunCmd.setfnchanged(nodeA, fnchanged);
+          wFunCmd.setgroup(nodeA, (fnchanged / 4) + 1);
         }
       }
 
