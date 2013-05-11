@@ -334,14 +334,16 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
           addr, speed, wLoc.getV( node ), wLoc.isdir( node )?"fwd":"rev", fn?"on":"off", wLoc.getthrottleid(node) );
     }
 
-    rsp = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-    if( data->iid != NULL )
-      wLoc.setiid( rsp, data->iid );
-    wLoc.setaddr( rsp, addr );
-    wLoc.setV_raw( rsp, speed );
-    wLoc.setV_rawMax( rsp, spcnt );
-    wLoc.setthrottleid( rsp, "vthrottle" );
-    wLoc.setcmd( rsp, wLoc.velocity );
+    if( wDigInt.isoverrule(data->ini) ) {
+      rsp = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+      if( data->iid != NULL )
+        wLoc.setiid( rsp, data->iid );
+      wLoc.setaddr( rsp, addr );
+      wLoc.setV_raw( rsp, speed );
+      wLoc.setV_rawMax( rsp, spcnt );
+      wLoc.setthrottleid( rsp, "vthrottle" );
+      wLoc.setcmd( rsp, wLoc.velocity );
+    }
   }
 
   /* Function command. */
@@ -374,18 +376,20 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
             f5?"on":"off", f6?"on":"off", f7?"on":"off", f8?"on":"off",
             f9?"on":"off", f10?"on":"off", f11?"on":"off", f12?"on":"off", f13?"on":"off", f14?"on":"off" );
 
-    rsp = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-    if( data->iid != NULL )
-      wLoc.setiid( rsp, data->iid );
-    wFunCmd.setaddr( rsp, addr );
-    wLoc.setfn( rsp, f0 );
-    wFunCmd.setf0( rsp, f0 );
-    wFunCmd.setf1( rsp, f1 );
-    wFunCmd.setf2( rsp, f2 );
-    wFunCmd.setf3( rsp, f3 );
-    wFunCmd.setf4( rsp, f4 );
-    wLoc.setthrottleid( rsp, "vthrottle" );
-    wFunCmd.setgroup( rsp, 1 );
+    if( wDigInt.isoverrule(data->ini) ) {
+      rsp = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      if( data->iid != NULL )
+        wLoc.setiid( rsp, data->iid );
+      wFunCmd.setaddr( rsp, addr );
+      wLoc.setfn( rsp, f0 );
+      wFunCmd.setf0( rsp, f0 );
+      wFunCmd.setf1( rsp, f1 );
+      wFunCmd.setf2( rsp, f2 );
+      wFunCmd.setf3( rsp, f3 );
+      wFunCmd.setf4( rsp, f4 );
+      wLoc.setthrottleid( rsp, "vthrottle" );
+      wFunCmd.setgroup( rsp, 1 );
+    }
   }
 
   /* System command. */
