@@ -520,6 +520,16 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
     cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
     wOutput.setbus( cmd, wTurntable.getbus( data->props ) );
     wOutput.setaddr( cmd, wTurntable.getaddr( data->props ) );
+
+    wOutput.setport( cmd, 8 );
+    wOutput.setcmd( cmd, wOutput.off );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+    wOutput.setport( cmd, 7 );
+    wOutput.setcmd( cmd, wOutput.off );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+    ThreadOp.sleep( 100 );
+
+
     wOutput.setport( cmd, port );
     wOutput.setcmd( cmd, wOutput.on );
 
