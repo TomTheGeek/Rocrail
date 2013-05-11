@@ -50,7 +50,6 @@ static void* __event( void* inst, const void* evt ) {
   char* strCmd = NodeOp.base.toString( node );
   RConOp.write( inst, strCmd );
   StrOp.free( strCmd );
-  NodeOp.base.del(node);
   return NULL;
 }
 

@@ -435,11 +435,10 @@ static void __player( void* threadinst ) {
       iONode node = ScriptOp.nextLine(script);
       if( node != NULL ) {
         if( data->callback != NULL ) {
-          char* strCmd = NodeOp.base.toString( node );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "play: %s", strCmd );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "play: %s", NodeOp.getName(node) );
           data->callback->event( data->callback, node );
-          StrOp.free( strCmd );
         }
+        NodeOp.base.del(node);
       }
     }
     else {
