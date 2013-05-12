@@ -1971,6 +1971,7 @@
         <const name="status_locked" vt="int" val="1"/>
         <const name="status_selected" vt="int" val="2"/>
         <const name="status_deselected" vt="int" val="3"/>
+        <const name="status_closed" vt="int" val="4"/>
         <swcmd cardinality="n" wrappername="SwitchCmd">
           <var name="id" vt="string" defval="" range="*" required="true" remark="Switch ID."/>
           <var name="cmd" vt="string" defval="straight" range="straight,turnout,left,right,green,red,yellow,white,track"/>

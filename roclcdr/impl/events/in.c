@@ -125,6 +125,8 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
         wLoc.setcmd( cmd, wLoc.stop );
         data->loc->cmd( data->loc, cmd );
 
+        data->next1Route->setClosed( data->next1Route );
+
       }
     }
 

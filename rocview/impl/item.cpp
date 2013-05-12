@@ -1684,6 +1684,12 @@ void Symbol::OnPopup(wxMouseEvent& event)
       }
     }
 
+    else if( StrOp.equals( wRoute.name(), NodeOp.getName( m_Props ) ) ) {
+      //if( !wxGetApp().getFrame()->isAutoMode() ) {
+        menu.Append( ME_UnLoc, wxGetApp().getMenu("reset") );
+      //}
+    }
+
     //menu.AppendSeparator();
     wxMenuItem* mi = menu.Append( ME_Props , wxGetApp().getMenu("properties") );
     if( !StrOp.equals( wStage.name(), NodeOp.getName(m_Props) ))
@@ -1774,6 +1780,13 @@ void Symbol::OnUnLoc(wxCommandEvent& event) {
     iONode cmd = NodeOp.inst( wSelTab.name(), NULL, ELEMENT_NODE );
     wSelTab.setid( cmd, wSelTab.getid( m_Props ) );
     wSelTab.setcmd( cmd, wSwitch.unlock );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+  else if( StrOp.equals( wRoute.name(), NodeOp.getName( m_Props ) ) ) {
+    iONode cmd = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
+    wRoute.setid( cmd, wRoute.getid( m_Props ) );
+    wRoute.setcmd( cmd, wSwitch.unlock );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }

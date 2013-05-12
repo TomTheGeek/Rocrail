@@ -490,6 +490,10 @@ static Boolean _cmd( iORoute inst, iONode nodeA ) {
   if( StrOp.equals( wRoute.go, cmdStr ) ) {
     ok = _go( inst );
   }
+  else if( StrOp.equals( wSwitch.unlock, cmdStr ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route %s is reset.", RouteOp.getId(inst) );
+    RouteOp.reset(inst);
+  }
   else if( StrOp.equals( wRoute.force, cmdStr ) ) {
     if( !RouteOp.isFree(inst, "__manualcommand__") )
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route %s is locked and will be switched forced by hand.", RouteOp.getId(inst) );
@@ -1131,6 +1135,11 @@ static Boolean _isFree( iORoute inst, const char* id ) {
   iORouteData data = Data(inst);
   Boolean isset = False;
 
+  if( wRoute.getstatus(data->props) == wRoute.status_closed ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route %s is closed; Wheel count did not match?", wRoute.getid(data->props) );
+    return False;
+  }
+
   if( data->lockedId != NULL && StrOp.equals(data->lockedId, id ) ) {
     /* it is free for itself */
     return True;
@@ -1399,12 +1408,19 @@ static char* _postForm( void* inst, const char* postdata ) {
 
 
 static void _reset( iORoute inst ) {
-  iORouteData o = Data(inst);
-  if( o->lockedId != NULL ) {
+  iORouteData data = Data(inst);
+  if( data->lockedId != NULL ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                "reset route [%s]", RouteOp.getId( inst ) );
-    RouteOp.unLock( inst, o->lockedId, NULL, True, False );
+    RouteOp.unLock( inst, data->lockedId, NULL, True, False );
+    wRoute.setstatus(data->props, wRoute.status_free );
   }
+}
+
+
+static void _setClosed( iORoute inst ) {
+  iORouteData data = Data(inst);
+  wRoute.setstatus(data->props, wRoute.status_closed );
 }
 
 
@@ -1494,6 +1510,8 @@ static iORoute _inst( iONode props ) {
 
   data->props = props;
   data->routeLockId = StrOp.fmt( "%s%s", wRoute.routelock, wRoute.getid(props) );
+
+  wRoute.setstatus(data->props, wRoute.status_free );
 
   __initCTC(route, False);
 
