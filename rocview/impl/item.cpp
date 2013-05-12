@@ -1096,12 +1096,18 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
       cmd->base.del(cmd);
     }
     else if( StrOp.equals( wFeedback.name(), nodeName ) ) {
-      iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-      wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
-      // simulate the invert state:
-      wFeedback.setstate( cmd, wFeedback.isstate(m_Props) ? False:True);
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
+      if(event.ShiftDown()) {
+        wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_Identifier );
+        OnIdentifier(evt);
+      }
+      else {
+        iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
+        // simulate the invert state:
+        wFeedback.setstate( cmd, wFeedback.isstate(m_Props) ? False:True);
+        wxGetApp().sendToRocrail( cmd );
+        cmd->base.del(cmd);
+      }
     }
 
   }
