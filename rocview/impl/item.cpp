@@ -2388,10 +2388,10 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
       // Could be a turntable (invisible) feedback...
       iONode track = wTurntable.gettrack( m_Props );
-      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "sensor [%s] event for turntable", id );
+      TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "sensor [%s] event for turntable", id );
       while( track != NULL ) {
         if( StrOp.equals( id, wTTTrack.getposfb( track ) ) ) {
-          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "posfb \"%s\" for nr %d = %s",
+          TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "posfb \"%s\" for nr %d = %s",
                        id, wTTTrack.getnr( track ),
                        wFeedback.isstate( node ) ? "ON":"OFF" );
           wTTTrack.setstate( track, wFeedback.isstate( node ) );
