@@ -5059,6 +5059,12 @@ static void _loadBlockOccupancy( iOModel inst ) {
       iOLoc       loco     = NULL;
       char        key[256] = {'\0'};
 
+      if( BlockID == NULL || StrOp.len(BlockID) == 0 ) {
+        /* skip */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Skip occupancy line %d; Block ID not set.", i );
+        continue;
+      }
+
       if( LocoID != NULL && StrOp.len(LocoID) > 0 ) {
         loco = ModelOp.getLoc( inst, LocoID, NULL, False );
       }
