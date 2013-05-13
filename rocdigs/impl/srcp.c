@@ -186,11 +186,11 @@ static void __handleSM(iOSRCPData o, const char* sm) {
   }
   StrTokOp.base.del(tok);
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "addr=%d CV=%s nr=%d value=%d", addr, CV, nr, value );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "addr=%d CV=%s nr=%d value=%d", addr, CV, nr+1, value );
 
   rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setdecaddr( rsp, addr );
-  wProgram.setcv( rsp, nr );
+  wProgram.setcv( rsp, nr+1 );
   wProgram.setvalue( rsp, value );
   wProgram.setcmd( rsp, wProgram.datarsp );
   if ( o->listenerFun != NULL && o->listenerObj != NULL )
