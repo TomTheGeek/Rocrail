@@ -780,7 +780,7 @@ void BidibIdentDlg::onSelectUpdateFile( wxCommandEvent& event ) {
 
       m_HEXFileText->ShowPosition(0);
 
-      char* preview = StrOp.fmt("Preview 50 lines of %d", lines);
+      char* preview = StrOp.fmt("Preview %d lines of %d", lines > 50 ? 50:lines, lines);
       m_labUpdateFilePreview->SetLabel(wxString(preview,wxConvUTF8));
       StrOp.free(preview);
 
