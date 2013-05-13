@@ -2164,11 +2164,20 @@ static void __stopgo( iOLoc inst ) {
 
 static void __gomanual( iOLoc inst ) {
   iOLocData data = Data(inst);
-  data->go = True;
-  data->gomanual = True;
-  data->released = False;
-  if( data->driver != NULL )
-    data->driver->go( data->driver, data->gomanual );
+  iOModel model = AppOp.getModel();
+  if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
+    iIBlockBase block = ModelOp.getBlock( model, data->curBlock );
+    if( block != NULL ) {
+      data->go = True;
+      data->gomanual = True;
+      data->released = False;
+      if( data->driver != NULL )
+        data->driver->go( data->driver, data->gomanual );
+    }
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] cannot be started because it is not in a block.", LocOp.getId(inst) );
+  }
 }
 
 
