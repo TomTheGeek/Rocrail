@@ -573,11 +573,6 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
       wProgram.setiid( rsp, o->iid );
     wProgram.setcmd( rsp, wProgram.statusrsp );
 
-    if( !wProgram.ispom( node ) ) {
-      StrOp.fmtb(tmpCommand,"SET 1 POWER OFF\n");
-      __srcpSendCommand(o,tmpCommand,NULL);
-    }
-
     if( wProgram.getcmd( node ) == wProgram.set ) {
       int ack = 0;
       StrOp.fmtb (tmpCommand, "SET %d SM %d CV %d %d\n", wSRCP.getsrcpbusGL_ns( o->srcpini ), addr, cv-1, value );
