@@ -768,15 +768,21 @@ void BidibIdentDlg::onSelectUpdateFile( wxCommandEvent& event ) {
       /* until end of stream or error: */
       m_HEXFileText->Clear();
       int lines = 0;
-      while( !ferror(fs) && !feof(fs) && lines < 50 ) {
+      while( !ferror(fs) && !feof(fs) ) {
         StrOp.replaceAll(str, '\r', ' ');
-        TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "line=[%s]", str);
-        m_HEXFileText->AppendText(wxString(str,wxConvUTF8));
+        TraceOp.trc( "bidib", TRCLEVEL_DEBUG, __LINE__, 9999, "line=[%s]", str);
+        if( lines < 50 ) {
+          m_HEXFileText->AppendText(wxString(str,wxConvUTF8));
+        }
         fgets( str, 256, fs );
         lines++;
       };
 
       m_HEXFileText->ShowPosition(0);
+
+      char* preview = StrOp.fmt("Preview 50 lines of %d", lines);
+      m_labUpdateFilePreview->SetLabel(wxString(preview,wxConvUTF8));
+      StrOp.free(preview);
 
       FileOp.base.del( f );
     }
