@@ -832,7 +832,7 @@ void Symbol::OnResetSensor(wxCommandEvent& event) {
 }
 
 void Symbol::OnIdentifier(wxCommandEvent& event) {
-  wxTextEntryDialog* dlg = new wxTextEntryDialog(m_Parent, wxGetApp().getMenu("identifier") );
+  wxTextEntryDialog* dlg = new wxTextEntryDialog(m_PlanPanel, wxGetApp().getMenu("identifier") );
   if( wxID_OK == dlg->ShowModal() ) {
     iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
     wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
