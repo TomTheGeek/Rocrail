@@ -511,6 +511,14 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
     port = ttdir?3:4;
   }
+  else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lighton, cmdStr ) ) {
+  }
+  else if( StrOp.equals( wTurntable.lightoff, cmdStr ) ) {
+  }
+  else if( StrOp.equals(wTurntable.fon, cmdStr ) || StrOp.equals( wTurntable.foff, cmdStr )) {
+  }
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
