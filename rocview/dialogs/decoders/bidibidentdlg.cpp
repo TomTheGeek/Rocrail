@@ -232,6 +232,7 @@ void BidibIdentDlg::initLabels() {
   m_MacroPanel->Enable(false);
 
   m_BiDiBlogo->SetBitmap(*_img_bidib);
+  m_FbLogo->SetBitmap(*_img_fb);
 
   nodeMap  = MapOp.inst();
   nodePathMap  = MapOp.inst();
@@ -800,19 +801,18 @@ void BidibIdentDlg::onSelectUpdateFile( wxCommandEvent& event ) {
 }
 
 void BidibIdentDlg::onUpdateStart( wxCommandEvent& event ) {
-  //if( bidibnode != NULL ) {
+  if( bidibnode != NULL ) {
     iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcmd( cmd, wProgram.writehex );
     wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
     wProgram.setlntype(cmd, wProgram.lntype_bidib);
-    if( bidibnode != NULL )
-      wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
     wProgram.setfilename( cmd,  m_UpdateFile->GetValue().mb_str(wxConvUTF8) );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
     m_UpdateStart->Enable(false);
     m_UpdateStart->SetLabel( wxGetApp().getMsg( "wait" )+wxT("...") );
-  //}
+  }
 }
 
 
@@ -1398,5 +1398,12 @@ void BidibIdentDlg::onAccessoryWriteMacroMap( wxCommandEvent& event ) {
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }
+}
+
+void BidibIdentDlg::onLeftLogo( wxMouseEvent& event ) {
+  wxLaunchDefaultBrowser(wxT("http://www.bidib.org"), wxBROWSER_NEW_WINDOW );
+}
+void BidibIdentDlg::onFbLogo( wxMouseEvent& event ) {
+  wxLaunchDefaultBrowser(wxT("http://www.fichtelbahn.de/shop/"), wxBROWSER_NEW_WINDOW );
 }
 

@@ -19,9 +19,9 @@
 #include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/statbmp.h>
+#include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-#include <wx/sizer.h>
 #include <wx/panel.h>
 #include <wx/listbox.h>
 #include <wx/spinctrl.h>
@@ -52,6 +52,7 @@ class BidibIdentDlgGen : public wxDialog
 		wxTreeCtrl* m_Tree;
 		wxStaticLine* m_staticline1;
 		wxStaticBitmap* m_BiDiBlogo;
+		wxStaticBitmap* m_FbLogo;
 		wxStaticText* m_labPath;
 		wxTextCtrl* m_Path;
 		wxStaticText* m_labVendor;
@@ -194,6 +195,8 @@ class BidibIdentDlgGen : public wxDialog
 		virtual void onItemActivated( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onItemRightClick( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onTreeSelChanged( wxTreeEvent& event ) { event.Skip(); }
+		virtual void onLeftLogo( wxMouseEvent& event ) { event.Skip(); }
+		virtual void onFbLogo( wxMouseEvent& event ) { event.Skip(); }
 		virtual void onFeatureSelect( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onFeaturesGet( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onFeatureSet( wxCommandEvent& event ) { event.Skip(); }

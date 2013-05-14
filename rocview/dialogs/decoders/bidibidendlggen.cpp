@@ -30,8 +30,16 @@ BidibIdentDlgGen::BidibIdentDlgGen( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
+	wxBoxSizer* bSizer21;
+	bSizer21 = new wxBoxSizer( wxHORIZONTAL );
+	
 	m_BiDiBlogo = new wxStaticBitmap( m_IndexPanel, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer4->Add( m_BiDiBlogo, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+	bSizer21->Add( m_BiDiBlogo, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+	
+	m_FbLogo = new wxStaticBitmap( m_IndexPanel, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer21->Add( m_FbLogo, 0, wxALL, 5 );
+	
+	bSizer4->Add( bSizer21, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	wxFlexGridSizer* fgSizer8;
 	fgSizer8 = new wxFlexGridSizer( 0, 2, 0, 0 );
@@ -105,7 +113,7 @@ BidibIdentDlgGen::BidibIdentDlgGen( wxWindow* parent, wxWindowID id, const wxStr
 	m_IndexPanel->SetSizer( bSizer2 );
 	m_IndexPanel->Layout();
 	bSizer2->Fit( m_IndexPanel );
-	m_Notebook->AddPage( m_IndexPanel, wxT("Index"), false );
+	m_Notebook->AddPage( m_IndexPanel, wxT("Index"), true );
 	m_FeaturesPanel = new wxPanel( m_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
@@ -738,7 +746,7 @@ BidibIdentDlgGen::BidibIdentDlgGen( wxWindow* parent, wxWindowID id, const wxStr
 	m_UpdatePanel->SetSizer( bSizer111 );
 	m_UpdatePanel->Layout();
 	bSizer111->Fit( m_UpdatePanel );
-	m_Notebook->AddPage( m_UpdatePanel, wxT("Update"), true );
+	m_Notebook->AddPage( m_UpdatePanel, wxT("Update"), false );
 	
 	bSizer7->Add( m_Notebook, 1, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
@@ -761,6 +769,8 @@ BidibIdentDlgGen::BidibIdentDlgGen( wxWindow* parent, wxWindowID id, const wxStr
 	m_Tree->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( BidibIdentDlgGen::onItemActivated ), NULL, this );
 	m_Tree->Connect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( BidibIdentDlgGen::onItemRightClick ), NULL, this );
 	m_Tree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BidibIdentDlgGen::onTreeSelChanged ), NULL, this );
+	m_BiDiBlogo->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( BidibIdentDlgGen::onLeftLogo ), NULL, this );
+	m_FbLogo->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( BidibIdentDlgGen::onFbLogo ), NULL, this );
 	m_FeatureList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( BidibIdentDlgGen::onFeatureSelect ), NULL, this );
 	m_FeaturesGet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onFeaturesGet ), NULL, this );
 	m_FeatureSet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onFeatureSet ), NULL, this );
@@ -814,6 +824,8 @@ BidibIdentDlgGen::~BidibIdentDlgGen()
 	m_Tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( BidibIdentDlgGen::onItemActivated ), NULL, this );
 	m_Tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( BidibIdentDlgGen::onItemRightClick ), NULL, this );
 	m_Tree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BidibIdentDlgGen::onTreeSelChanged ), NULL, this );
+	m_BiDiBlogo->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( BidibIdentDlgGen::onLeftLogo ), NULL, this );
+	m_FbLogo->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( BidibIdentDlgGen::onFbLogo ), NULL, this );
 	m_FeatureList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( BidibIdentDlgGen::onFeatureSelect ), NULL, this );
 	m_FeaturesGet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onFeaturesGet ), NULL, this );
 	m_FeatureSet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onFeatureSet ), NULL, this );

@@ -118,7 +118,8 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onAccessoryWriteOptions( wxCommandEvent& event );
     void onAccessoryReadMacroMap( wxCommandEvent& event );
     void onAccessoryWriteMacroMap( wxCommandEvent& event );
-
+    void onLeftLogo( wxMouseEvent& event );
+    void onFbLogo( wxMouseEvent& event );
 
 	public:
 		/** Constructor */
