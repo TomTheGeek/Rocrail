@@ -2116,6 +2116,18 @@ static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
 
           msgdata[0] = BIDIB_MSG_FW_UPDATE_OP_DATA;
           data->subWrite((obj)bidib, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 1 + StrOp.len(msgdata+1), 0);
+          if( data->hexline % 10 == 0 ) {
+            iONode rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+            if( data->iid != NULL )
+              wProgram.setiid( rsp, data->iid );
+            wProgram.setcmd( rsp, wProgram.writehex );
+            wProgram.setrc( rsp, wProgram.rc_ok );
+            wProgram.setrs( rsp, data->hexline );
+            wProgram.setmodid( rsp, bidibnode->uid );
+            wProgram.setlntype(rsp, wProgram.lntype_bidib);
+            if( data->listenerFun != NULL && data->listenerObj != NULL )
+              data->listenerFun( data->listenerObj, rsp, TRCLEVEL_INFO );
+          }
         }
         else {
           // Last line processed? BIDIB_MSG_FW_UPDATE_OP_DONE

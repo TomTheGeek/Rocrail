@@ -32,6 +32,7 @@
 #include <wx/radiobox.h>
 #include <wx/grid.h>
 #include <wx/combobox.h>
+#include <wx/gauge.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
 
@@ -182,6 +183,7 @@ class BidibIdentDlgGen : public wxDialog
 		wxButton* m_OpenUpdateFile;
 		wxStaticText* m_labUpdateFilePreview;
 		wxTextCtrl* m_HEXFileText;
+		wxGauge* m_UpdateProgress;
 		wxButton* m_UpdateStart;
 		wxStdDialogButtonSizer* m_stdButtons;
 		wxButton* m_stdButtonsOK;

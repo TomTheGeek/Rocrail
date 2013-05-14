@@ -724,6 +724,9 @@ BidibIdentDlgGen::BidibIdentDlgGen( wxWindow* parent, wxWindowID id, const wxStr
 	
 	bSizer111->Add( m_HEXFileText, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
 	
+	m_UpdateProgress = new wxGauge( m_UpdatePanel, wxID_ANY, 100, wxDefaultPosition, wxDefaultSize, wxGA_HORIZONTAL );
+	bSizer111->Add( m_UpdateProgress, 0, wxALL|wxEXPAND, 5 );
+	
 	wxBoxSizer* bSizer121;
 	bSizer121 = new wxBoxSizer( wxHORIZONTAL );
 	

@@ -506,6 +506,27 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lncvget addr=%d cv=%d", addr, cv);
     }
 
+    else if( wProgram.getcmd( node ) == wProgram.writehex ) {
+      int i = 0;
+      const char* hexfile = wProgram.getfilename(node);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "writehex file=%s", hexfile);
+      for( i = 1; i <= 100; i++ ) {
+        rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        wProgram.setcmd( rsp, wProgram.writehex );
+        wProgram.setrc( rsp, wProgram.rc_ok ); // Ready
+        wProgram.setrs( rsp, i );
+        wProgram.setlntype(rsp, wProgram.getlntype(node));
+        if( data->listenerFun != NULL && data->listenerObj != NULL )
+          data->listenerFun( data->listenerObj, rsp, TRCLEVEL_INFO );
+        rsp = NULL;
+        ThreadOp.sleep(50);
+      }
+      rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setcmd( rsp, wProgram.writehex );
+      wProgram.setrc( rsp, wProgram.rc_ok ); // Ready
+      wProgram.setrs( rsp, 0 );
+      wProgram.setlntype(rsp, wProgram.getlntype(node));
+    }
 
   }
   return rsp;

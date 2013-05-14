@@ -158,8 +158,14 @@ void BidibIdentDlg::event(iONode node) {
     NodeOp.base.del(node);
   }
   else if(  wProgram.getcmd( node ) == wProgram.writehex ) {
-    m_UpdateStart->Enable(true);
-    m_UpdateStart->SetLabel( wxGetApp().getMsg( "start" ) );
+    int rc = wProgram.getrc( node );
+    int rs = wProgram.getrs( node );
+    if( rc == 0 && rs == 0 ) {
+      m_UpdateStart->Enable(true);
+      m_UpdateStart->SetLabel( wxGetApp().getMsg( "start" ) );
+    }
+    if( rs <= m_UpdateProgress->GetRange() )
+      m_UpdateProgress->SetValue(rs);
   }
   else if( wProgram.getcmd( node ) == wProgram.macro_get || wProgram.getcmd( node ) == wProgram.macro_getparams ) {
     handleMacro(node);
@@ -785,6 +791,7 @@ void BidibIdentDlg::onSelectUpdateFile( wxCommandEvent& event ) {
       StrOp.free(preview);
 
       FileOp.base.del( f );
+      m_UpdateProgress->SetRange(lines);
     }
   }
   fdlg->Destroy();
