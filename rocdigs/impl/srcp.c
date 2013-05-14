@@ -186,11 +186,11 @@ static void __handleSM(iOSRCPData o, const char* sm) {
   }
   StrTokOp.base.del(tok);
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "addr=%d CV=%s nr=%d value=%d", addr, CV, nr+1, value );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "addr=%d CV=%s nr=%d value=%d", addr, CV, nr, value );
 
   rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setdecaddr( rsp, addr );
-  wProgram.setcv( rsp, nr+1 );
+  wProgram.setcv( rsp, nr );
   wProgram.setvalue( rsp, value );
   wProgram.setcmd( rsp, wProgram.datarsp );
   if ( o->listenerFun != NULL && o->listenerObj != NULL )
@@ -575,7 +575,7 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
 
     if( wProgram.getcmd( node ) == wProgram.set ) {
       int ack = 0;
-      StrOp.fmtb (tmpCommand, "SET %d SM %d CV %d %d\n", wSRCP.getsrcpbusGL_ns( o->srcpini ), addr, cv-1, value );
+      StrOp.fmtb (tmpCommand, "SET %d SM %d CV %d %d\n", wSRCP.getsrcpbusGL_ns( o->srcpini ), addr, cv, value );
       ack = __srcpSendCommand(o,tmpCommand,NULL);
       if( ack == 200 ) {
         wProgram.setvalue( rsp, value );
