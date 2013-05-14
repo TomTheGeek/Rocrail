@@ -166,8 +166,21 @@ void BidibIdentDlg::event(iONode node) {
       m_UpdateStart->Enable(true);
       m_UpdateStart->SetLabel( wxGetApp().getMsg( "start" ) );
     }
-    if( rs <= m_UpdateProgress->GetRange() )
+    else if( rc == 0 && rs <= m_UpdateProgress->GetRange() ) {
       m_UpdateProgress->SetValue(rs);
+    }
+    else {
+      m_UpdateStart->Enable(true);
+      m_UpdateStart->SetLabel( wxGetApp().getMsg( "start" ) );
+      if( rc == wProgram.rc_notfwup) {
+        // no firmware update flag
+        wxMessageDialog( this, wxT("No firmware update feature read."), _T("Rocrail"), wxOK | wxICON_EXCLAMATION ).ShowModal();
+      }
+      else if( rc == wProgram.rc_error) {
+        // firmware update error in rs
+        wxMessageDialog( this, wxT("Firmware update error:") + wxString::Format(wxT(" %d"), rs), _T("Rocrail"), wxOK | wxICON_EXCLAMATION ).ShowModal();
+      }
+    }
   }
   else if( wProgram.getcmd( node ) == wProgram.macro_get || wProgram.getcmd( node ) == wProgram.macro_getparams ) {
     handleMacro(node);
