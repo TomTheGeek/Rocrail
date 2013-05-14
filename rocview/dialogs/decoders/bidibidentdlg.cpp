@@ -95,6 +95,7 @@ BidibIdentDlg::BidibIdentDlg( wxWindow* parent ):BidibIdentDlgGen( parent )
   this->node = NULL;
   __initVendors();
   initLabels();
+  m_Notebook->SetSelection( 0 );
 }
 
 BidibIdentDlg::BidibIdentDlg( wxWindow* parent, iONode node ):BidibIdentDlgGen( parent )
@@ -103,6 +104,7 @@ BidibIdentDlg::BidibIdentDlg( wxWindow* parent, iONode node ):BidibIdentDlgGen( 
   __initVendors();
   initLabels();
   initValues();
+  m_Notebook->SetSelection( 0 );
 }
 
 BidibIdentDlg::~BidibIdentDlg() {
@@ -798,18 +800,19 @@ void BidibIdentDlg::onSelectUpdateFile( wxCommandEvent& event ) {
 }
 
 void BidibIdentDlg::onUpdateStart( wxCommandEvent& event ) {
-  if( bidibnode != NULL ) {
+  //if( bidibnode != NULL ) {
     iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcmd( cmd, wProgram.writehex );
     wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
     wProgram.setlntype(cmd, wProgram.lntype_bidib);
-    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    if( bidibnode != NULL )
+      wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
     wProgram.setfilename( cmd,  m_UpdateFile->GetValue().mb_str(wxConvUTF8) );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
     m_UpdateStart->Enable(false);
     m_UpdateStart->SetLabel( wxGetApp().getMsg( "wait" )+wxT("...") );
-  }
+  //}
 }
 
 

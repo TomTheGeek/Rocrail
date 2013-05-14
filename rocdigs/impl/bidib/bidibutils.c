@@ -204,7 +204,7 @@ char* bidibGetClassName(int classid, char* mnemonic ) {
   }
 
   if( classname == NULL )
-    classname = StrOp.dup("");
+    classname = StrOp.dup("unknwon class (bootloader only?)");
   return classname;
 }
 

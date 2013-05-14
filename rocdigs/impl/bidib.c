@@ -2366,6 +2366,9 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
         char ver[32];
         StrOp.fmtb( ver, "%d.%d.%d", pdata[2], pdata[1], pdata[0] );
         wBiDiBnode.setversion(child, ver);
+        if( pdata[2]==0 && pdata[1]==0 && pdata[0]==0 ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"uid=%d bootloader only; No application loaded.", bidibnode->uid);
+        }
       }
       else {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"no ini node found for uid=%d", bidibnode->uid);
