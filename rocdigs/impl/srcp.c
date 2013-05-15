@@ -594,7 +594,7 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
       int cv = wProgram.getcv( node );
       int value = 0;
       int ack = 0;
-      StrOp.fmtb (tmpCommand, "GET %d SM %d CV %d\n", wSRCP.getsrcpbusGL_ns( o->srcpini ), addr, cv-1 );
+      StrOp.fmtb (tmpCommand, "GET %d SM %d CV %d\n", wSRCP.getsrcpbusGL_ns( o->srcpini ), addr, cv );
       ack = __srcpSendCommand(o,tmpCommand,NULL);
       if( ack == 200 ) {
         wProgram.setvalue( rsp, value-1 );
