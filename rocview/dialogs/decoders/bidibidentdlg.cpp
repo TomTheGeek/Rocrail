@@ -394,6 +394,19 @@ void BidibIdentDlg::initLabels() {
   m_MacroType->Append( wxGetApp().getMsg( "motor" ) );
   m_MacroType->Append( wxGetApp().getMsg( "analog" ) );
 
+  // Resize
+  m_IndexPanel->GetSizer()->Layout();
+  m_FeaturesPanel->GetSizer()->Layout();
+  m_AccessoryPanel->GetSizer()->Layout();
+  m_ServoPanel->GetSizer()->Layout();
+  m_MacroPanel->GetSizer()->Layout();
+  m_UpdatePanel->GetSizer()->Layout();
+
+  m_Notebook->Fit();
+
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
+
 }
 
 void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
