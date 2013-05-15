@@ -208,7 +208,7 @@ protected:
   void onGCLNSetAll( wxCommandEvent& event );
   void onGC8GetAll( wxCommandEvent& event );
   void onGC8SetAll( wxCommandEvent& event );
-
+  void onLogo( wxMouseEvent& event );
 
 public:
 	/** Constructor */

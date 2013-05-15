@@ -67,6 +67,7 @@ CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( paren
 
 void CBusNodeDlg::initLabels() {
   m_CBusLogo->SetBitmap(*_img_cbus);
+  m_CBusLogo->SetToolTip(wxT("http://www.phgiling.net"));
 
   m_SOD = 0;
   m_SaveOutputState = false;
@@ -2283,3 +2284,8 @@ void CBusNodeDlg::sortOnColumn( int col ) {
 void CBusNodeDlg::onIndexLeftClick( wxListEvent& event ) {
   sortOnColumn(event.GetColumn());
 }
+
+void CBusNodeDlg::onLogo( wxMouseEvent& event ) {
+  wxLaunchDefaultBrowser(wxT("http://www.phgiling.net"), wxBROWSER_NEW_WINDOW );
+}
+

@@ -246,6 +246,8 @@ void BidibIdentDlg::initLabels() {
 
   m_BiDiBlogo->SetBitmap(*_img_bidib);
   m_FbLogo->SetBitmap(*_img_fb);
+  m_BiDiBlogo->SetToolTip(wxT("http://www.bidib.org"));
+  m_FbLogo->SetToolTip(wxT("http://www.fichtelbahn.de/shop"));
 
   nodeMap  = MapOp.inst();
   nodePathMap  = MapOp.inst();
