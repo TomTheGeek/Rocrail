@@ -91,8 +91,8 @@ Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist unin
 Source: "rocrail.mib"; DestDir: "{userdocs}\Rocrail";
 Source: "rocraild.ico"; DestDir: "{app}"
 Source: "images\*.*"; DestDir: "{userdocs}\Rocrail\images"; Tasks: images; Flags: onlyifdoesntexist uninsneveruninstall
-Source: "..\..\stylesheets\*.*"; DestDir: "{app}\stylesheets"
-Source: "..\..\decspecs\*.*"; DestDir: "{app}\decspecs"
+Source: "..\..\stylesheets\*.*"; DestDir: "{userdocs}\Rocrail\stylesheets"
+Source: "..\..\decspecs\*.*"; DestDir: "{userdocs}\Rocrail\decspecs"
 Source: "..\..\rocview\svg\themes\Accessories\*.*"; DestDir: "{app}\svg\themes\Accessories"; Tasks: themes;
 Source: "..\..\rocview\svg\themes\Basic\*.*"; DestDir: "{app}\svg\themes\Basic"; Tasks: themes;
 Source: "..\..\rocview\svg\themes\DB\*.*"; DestDir: "{app}\svg\themes\DB"; Tasks: themes;
