@@ -75,6 +75,24 @@ BidibIdentDlgGen::BidibIdentDlgGen( wxWindow* parent, wxWindowID id, const wxStr
 	
 	fgSizer8->Add( fgSizer16, 1, wxEXPAND, 5 );
 	
+	m_labProduct = new wxStaticText( m_IndexPanel, wxID_ANY, wxT("Product"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labProduct->Wrap( -1 );
+	fgSizer8->Add( m_labProduct, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxFlexGridSizer* fgSizer17;
+	fgSizer17 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer17->AddGrowableCol( 1 );
+	fgSizer17->SetFlexibleDirection( wxBOTH );
+	fgSizer17->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_ProductID = new wxTextCtrl( m_IndexPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_READONLY );
+	fgSizer17->Add( m_ProductID, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_ProductName = new wxTextCtrl( m_IndexPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	fgSizer17->Add( m_ProductName, 0, wxALL|wxEXPAND, 5 );
+	
+	fgSizer8->Add( fgSizer17, 0, wxEXPAND, 5 );
+	
 	m_labUID = new wxStaticText( m_IndexPanel, wxID_ANY, wxT("Unique-ID"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labUID->Wrap( -1 );
 	fgSizer8->Add( m_labUID, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );

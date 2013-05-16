@@ -208,6 +208,17 @@ char* bidibGetClassName(int classid, char* mnemonic ) {
   return classname;
 }
 
+const char* bidibGetProductName(int vid, int pid) {
+  if( vid == 13 ) {
+    if( pid == 0x65 ) return "Stand alone Interface";
+    if( pid == 0x68 ) return "GBMBoost Master";
+    if( pid == 0x67 ) return "GBMBoost Node";
+    if( pid == 0x6B ) return "LightControl";
+  }
+  return "Unknown product.";
+}
+
+
 const char* bidibGetFeatureName(int feature) {
 
   /* Occupancy detector */

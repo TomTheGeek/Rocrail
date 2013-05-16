@@ -59,6 +59,9 @@ class BidibIdentDlgGen : public wxDialog
 		wxTextCtrl* m_VID;
 		wxTextCtrl* m_VIDD;
 		wxTextCtrl* m_VendorName;
+		wxStaticText* m_labProduct;
+		wxTextCtrl* m_ProductID;
+		wxTextCtrl* m_ProductName;
 		wxStaticText* m_labUID;
 		wxTextCtrl* m_UIDX;
 		wxTextCtrl* m_UID;

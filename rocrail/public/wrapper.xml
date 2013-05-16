@@ -2163,6 +2163,23 @@
         <actionctrl cardinality="n"/>
       </tt>
     </ttlist>
+    <declist cardinality="1" remark="Decoder table" wrappername="DecList">
+      <dec cardinality="n" wrappername="Dec" remark="DCC Decoder definition.">
+        <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID."/>
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="prev_id" vt="string" defval="" range="*" remark="in case of an id change this should help to find the original in the loc table"/>
+        <var name="docu" vt="string" defval="" range="*"/>
+        <var name="bus" vt="int" defval="0" range="0-*" required="false"/>
+        <var name="addr" vt="int" defval="0" range="0-255" required="true"/>
+        <var name="prot" vt="string" defval="P" range="*"/>
+        <var name="protver" vt="int" defval="1" range="*" remark="Protocol version"/>
+        <var name="desc" vt="string" defval="" range="*" remark="Description of loc."/>
+        <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>
+        <var name="catnr" vt="string" defval="" range="*" remark="Catalog number."/>
+        <var name="decimage" vt="string" defval="NULL" range="*" remark="decoder image file"/>
+        <var name="dectype" vt="string" defval="" range="*" remark="Decoder type."/>
+      </dec>
+    </declist>
     <lclist cardinality="1" remark="Loc table" wrappername="LocList">
       <lc cardinality="n" wrappername="Loc" remark="Loc definition.">
         <var name="show" vt="bool" defval="true" remark="Show in loco table."/>

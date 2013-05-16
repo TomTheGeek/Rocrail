@@ -121,6 +121,8 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onLeftLogo( wxMouseEvent& event );
     void onFbLogo( wxMouseEvent& event );
 
+    int getProductID(int uid);
+
 	public:
 		/** Constructor */
 		BidibIdentDlg( wxWindow* parent );
