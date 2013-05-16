@@ -214,6 +214,7 @@ const char* bidibGetProductName(int vid, int pid) {
     if( pid == 0x68 ) return "GBMBoost Master";
     if( pid == 0x67 ) return "GBMBoost Node";
     if( pid == 0x6B ) return "LightControl";
+    if( pid == 0x6C ) return "MoBaLiSt";
   }
   return "Unknown product.";
 }
