@@ -36,6 +36,7 @@
 #include <wx/filedlg.h>
 
 #include "rocs/public/trace.h"
+#include "rocs/public/system.h"
 
 #include "rocview/public/guiapp.h"
 #include "rocview/wrapper/public/Gui.h"
@@ -50,6 +51,7 @@
 #include "rocrail/wrapper/public/BiDiBnode.h"
 #include "rocrail/wrapper/public/Macro.h"
 #include "rocrail/wrapper/public/MacroLine.h"
+#include "rocrail/wrapper/public/DataReq.h"
 #include "rocdigs/impl/bidib/bidibutils.h"
 #include "rocdigs/impl/bidib/bidib_messages.h"
 
@@ -447,6 +449,33 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
     m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
 
     SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(bidibnode) ) + wxT(" ") + wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
+
+    const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
+    static char pixfile[256];
+    static char pixpath[256];
+    StrOp.fmtb( pixfile, "bidib-%d-%d.png", wBiDiBnode.getvendor(bidibnode)&0xFF, pid);
+    StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), pixfile );
+
+    if( FileOp.exist(pixpath)) {
+      TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
+      m_Pict->SetBitmap( wxBitmap(wxString(pixpath,wxConvUTF8), wxBITMAP_TYPE_PNG) );
+    }
+    else {
+      TraceOp.trc( "bidibident", TRCLEVEL_DEBUG, __LINE__, 9999, "picture [%s] not found", pixpath );
+      iONode node = NodeOp.inst( wDataReq.name(), NULL, ELEMENT_NODE );
+      wDataReq.setcmd( node, wDataReq.get );
+      wDataReq.settype( node, wDataReq.image );
+      wDataReq.setfilename( node, pixfile );
+      wxGetApp().sendToRocrail( node );
+      NodeOp.base.del(node);
+      m_Pict->SetBitmap( wxBitmap(0,0) );
+    }
+    m_Pict->Refresh();
+    m_IndexPanel->GetSizer()->Layout();
+    m_Notebook->Fit();
+    GetSizer()->Fit(this);
+    GetSizer()->SetSizeHints(this);
+
   }
   else {
     TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"node not found: %s", uid );
