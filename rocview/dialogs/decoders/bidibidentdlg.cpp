@@ -438,7 +438,8 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
     m_Version->SetValue( wxString( wBiDiBnode.getversion(bidibnode), wxConvUTF8) );
 
     int pid = getProductID(wBiDiBnode.getuid(bidibnode));
-    m_ProductID->SetValue( wxString::Format(_T("%d"), pid ) );
+    m_PID->SetValue( wxString::Format(_T("%02X"), pid ) );
+    m_PIDD->SetValue( wxString::Format(_T("%d"), pid ) );
     m_ProductName->SetValue( wxString( bidibGetProductName(wBiDiBnode.getvendor(bidibnode)&0xFF, pid), wxConvUTF8) );
 
     SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(bidibnode) ) + wxT(" ") + wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
@@ -468,7 +469,8 @@ void BidibIdentDlg::initValues() {
     m_Version->SetValue( wxString( wProgram.getstrval1(node), wxConvUTF8) );
 
     int pid = getProductID(wProgram.getmodid(node));
-    m_ProductID->SetValue( wxString::Format(_T("%d"), pid ) );
+    m_PID->SetValue( wxString::Format(_T("%02X"), pid ) );
+    m_PIDD->SetValue( wxString::Format(_T("%d"), pid ) );
     m_ProductName->SetValue( wxString( bidibGetProductName(wProgram.getmanu(node)&0xFF, pid), wxConvUTF8) );
 
     char key[32];
@@ -490,7 +492,8 @@ void BidibIdentDlg::initValues() {
     m_Class->SetValue( wxString( wBiDiBnode.getclass(node), wxConvUTF8) );
     m_Version->SetValue( wxString( wBiDiBnode.getversion(node), wxConvUTF8) );
     int pid = getProductID(wBiDiBnode.getuid(node));
-    m_ProductID->SetValue( wxString::Format(_T("%d"), pid ) );
+    m_PID->SetValue( wxString::Format(_T("%02X"), pid ) );
+    m_PIDD->SetValue( wxString::Format(_T("%d"), pid ) );
     m_ProductName->SetValue( wxString( bidibGetProductName(wBiDiBnode.getvendor(node)&0xFF, pid), wxConvUTF8) );
 
     SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(node) ) + wxT(" ") + wxString( wBiDiBnode.getclass(node), wxConvUTF8) );
