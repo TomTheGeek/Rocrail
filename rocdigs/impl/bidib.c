@@ -1995,6 +1995,9 @@ static void __handleNewNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, i
     data->tabver = pdata[0];
     __addNode(bidib, pdata);
     data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode->seq++);
+    ThreadOp.sleep(50);
+    data->subWrite((obj)bidib, bidibnode->path, MSG_SYS_ENABLE, NULL, 0, bidibnode->seq++);
+
   }
 }
 
