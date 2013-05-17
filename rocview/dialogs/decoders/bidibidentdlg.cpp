@@ -708,22 +708,34 @@ void BidibIdentDlg::onServoSet() {
 
 void BidibIdentDlg::onServoLeft( wxScrollEvent& event ) {
   m_ConfigL->SetValue(m_ServoLeft->GetValue());
-  onServoSet();
+  if( configL != m_ConfigL->GetValue() ) {
+    configL = m_ConfigL->GetValue();
+    onServoSet();
+  }
 }
 
 void BidibIdentDlg::onServoRight( wxScrollEvent& event ) {
   m_ConfigR->SetValue(m_ServoRight->GetValue());
-  onServoSet();
+  if( configR != m_ConfigR->GetValue() ) {
+    configR = m_ConfigR->GetValue();
+    onServoSet();
+  }
 }
 
 void BidibIdentDlg::onServoSpeed( wxScrollEvent& event ) {
   m_ConfigV->SetValue(m_ServoSpeed->GetValue());
-  onServoSet();
+  if( configV != m_ConfigV->GetValue() ) {
+    configV = m_ConfigV->GetValue();
+    onServoSet();
+  }
 }
 
 void BidibIdentDlg::onServoReserved( wxScrollEvent& event ) {
   m_ConfigS->SetValue(m_ServoReserved->GetValue());
-  onServoSet();
+  if( configS != m_ConfigS->GetValue() ) {
+    configS = m_ConfigS->GetValue();
+    onServoSet();
+  }
 }
 
 void BidibIdentDlg::onServoPort( wxSpinEvent& event ) {
