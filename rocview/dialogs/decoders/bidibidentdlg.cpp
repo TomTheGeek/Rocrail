@@ -264,6 +264,7 @@ void BidibIdentDlg::initLabels() {
   configR = 0;
   configV = 0;
   configS = 0;
+  www = NULL;
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -440,7 +441,8 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
     int pid = getProductID(wBiDiBnode.getuid(bidibnode));
     m_PID->SetValue( wxString::Format(_T("%02X"), pid ) );
     m_PIDD->SetValue( wxString::Format(_T("%d"), pid ) );
-    m_ProductName->SetValue( wxString( bidibGetProductName(wBiDiBnode.getvendor(bidibnode)&0xFF, pid), wxConvUTF8) );
+    m_ProductName->SetValue( wxString( bidibGetProductName(wBiDiBnode.getvendor(bidibnode)&0xFF, pid, &www), wxConvUTF8) );
+    m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
 
     SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(bidibnode) ) + wxT(" ") + wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
   }
@@ -471,7 +473,8 @@ void BidibIdentDlg::initValues() {
     int pid = getProductID(wProgram.getmodid(node));
     m_PID->SetValue( wxString::Format(_T("%02X"), pid ) );
     m_PIDD->SetValue( wxString::Format(_T("%d"), pid ) );
-    m_ProductName->SetValue( wxString( bidibGetProductName(wProgram.getmanu(node)&0xFF, pid), wxConvUTF8) );
+    m_ProductName->SetValue( wxString( bidibGetProductName(wProgram.getmanu(node)&0xFF, pid, &www), wxConvUTF8) );
+    m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
 
     char key[32];
     StrOp.fmtb(key, "[%s] %08X", mnemonic, wProgram.getmodid(node) );
@@ -494,7 +497,8 @@ void BidibIdentDlg::initValues() {
     int pid = getProductID(wBiDiBnode.getuid(node));
     m_PID->SetValue( wxString::Format(_T("%02X"), pid ) );
     m_PIDD->SetValue( wxString::Format(_T("%d"), pid ) );
-    m_ProductName->SetValue( wxString( bidibGetProductName(wBiDiBnode.getvendor(node)&0xFF, pid), wxConvUTF8) );
+    m_ProductName->SetValue( wxString( bidibGetProductName(wBiDiBnode.getvendor(node)&0xFF, pid, &www), wxConvUTF8) );
+    m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
 
     SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(node) ) + wxT(" ") + wxString( wBiDiBnode.getclass(node), wxConvUTF8) );
   }
@@ -1455,5 +1459,10 @@ void BidibIdentDlg::onLeftLogo( wxMouseEvent& event ) {
 }
 void BidibIdentDlg::onFbLogo( wxMouseEvent& event ) {
   wxLaunchDefaultBrowser(wxT("http://www.fichtelbahn.de/shop/"), wxBROWSER_NEW_WINDOW );
+}
+
+void BidibIdentDlg::onProductName( wxMouseEvent& event ) {
+  if( www != NULL )
+    wxLaunchDefaultBrowser(wxString(www, wxConvUTF8), wxBROWSER_NEW_WINDOW );
 }
 

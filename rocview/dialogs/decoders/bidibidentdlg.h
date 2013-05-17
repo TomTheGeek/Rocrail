@@ -56,6 +56,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
   int configR;
   int configV;
   int configS;
+  char* www;
   wxTreeItemId findTreeItem( const wxTreeItemId& root, const wxString& text);
   int getLevel(const char* path );
   wxTreeItemId addTreeChild( const wxTreeItemId& root, iONode bidibnode);
@@ -120,7 +121,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onAccessoryWriteMacroMap( wxCommandEvent& event );
     void onLeftLogo( wxMouseEvent& event );
     void onFbLogo( wxMouseEvent& event );
-
+    void onProductName( wxMouseEvent& event );
     int getProductID(int uid);
 
 	public:
