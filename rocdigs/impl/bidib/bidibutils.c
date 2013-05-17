@@ -208,27 +208,24 @@ char* bidibGetClassName(int classid, char* mnemonic ) {
   return classname;
 }
 
-/*
-13  101 M GBM16TC, 16-64facher Railcom-Melder. (Evaluierungsmodul, Stand-Alone)
-13  102 IM  GBM16TC, 16-64facher Railcom-Melder mit Interface.
-13  103 MB  GBMBoost, 16-48facher Railcom-Melder, integrierter Booster
-13  104 IMB GBMBoost, 16-48facher Railcom-Melder, integrierter Booster, Interface
-13  105 M BiDiB-S88-Brigde
-13  106 S OpenDecoder 2.8 (Lichtsteuerung mit 4 LEDs, 2 Servos)
-13  107 S LightControl 1 (Lichtsteuerung mit 32 LEDs, 16 Universalausgänge, 4 Servos)
-13  108 S MoBaList (Lichtsteuerung mit 24 Ausgängen)
- */
 
+/*
+http://www.bidib.org/support/product_id.html
+ */
 const char* bidibGetProductName(int vid, int pid) {
   if( vid == 13 ) {
-    if( pid == 101 ) return "GBM16TC Evaluating";
-    if( pid == 102 ) return "GBM16TC and Interface";
+    if( pid == 101 ) return "GBM16TC Stand-Alone";
+    if( pid == 102 ) return "GBM16TC Interface";
     if( pid == 103 ) return "GBMBoost Node";
     if( pid == 104 ) return "GBMBoost Master";
-    if( pid == 105 ) return "S88 Bridge";
-    if( pid == 106 ) return "OpendDecoder";
+    if( pid == 105 ) return "BiDiB-S88-Bridge";
+    if( pid == 106 ) return "BiDiB-IO16";
     if( pid == 107 ) return "LightControl";
     if( pid == 108 ) return "MoBaLiSt";
+    if( pid == 110 ) return "Bootloader LightControl";
+    if( pid == 111 ) return "Bootloader GBMBoost";
+    if( pid == 220 ) return "Switch-64";
+    if( pid == 220 ) return "LED-Optics";
   }
   return "Unknown product.";
 }
