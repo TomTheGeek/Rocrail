@@ -193,6 +193,7 @@ static void __worker( void* threadinst ) {
   int ebreakval    = 1;
   int poweroffval  = 1;
   int poweronval   = 1;
+  int i = 0;
 
   ThreadOp.sleep(500);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RasPi worker started." );
@@ -252,6 +253,23 @@ static void __worker( void* threadinst ) {
         }
       }
     }
+
+    for( i = 0; i < 16; i++ ) {
+      /* 1=system 2=sensor 3=output */
+      if( data->portuse[i] == 2 ) {
+        int val = raspiRead((obj)raspi, i);
+        if( data->portstate[i] != val ) {
+          iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+          wFeedback.setiid(cmd, data->iid);
+          wFeedback.setaddr(cmd, i+1);
+          wFeedback.setstate(cmd, val);
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Sensor %d=%d", i, val );
+          data->listenerFun( data->listenerObj, cmd, TRCLEVEL_INFO );
+          data->portstate[i] = val;
+        }
+      }
+    }
+
 
   } while( data->run );
 

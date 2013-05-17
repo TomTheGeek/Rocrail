@@ -73,7 +73,7 @@ volatile unsigned *gpio;
 int raspiSetupIO(obj inst)
 {
   iORasPiData data = Data(inst);
-  int g,rep;
+  int g, rep, port, i;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setup I/O [%s]", wDigInt.getiid( data->ini ) );
 
@@ -103,21 +103,39 @@ int raspiSetupIO(obj inst)
    // Always use volatile pointer!
    gpio = (volatile unsigned *)gpio_map;
 
-   if( wRasPi.getshutdownport(wDigInt.getraspi(data->ini)) != -1 ) {
-     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "init shutdown port %d", wRasPi.getshutdownport(wDigInt.getraspi(data->ini)) );
-     INP_GPIO(wRasPi.getshutdownport(wDigInt.getraspi(data->ini)));
+   port = wRasPi.getshutdownport(wDigInt.getraspi(data->ini));
+   if( port != -1 && port < 16 ) {
+     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "init shutdown port %d", port );
+     INP_GPIO(port);
+     data->portuse[port] = 1;
    }
-   if( wRasPi.getebreakport(wDigInt.getraspi(data->ini)) != -1 ) {
-     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "init ebreak port %d", wRasPi.getebreakport(wDigInt.getraspi(data->ini)) );
-     INP_GPIO(wRasPi.getebreakport(wDigInt.getraspi(data->ini)));
+
+   port = wRasPi.getebreakport(wDigInt.getraspi(data->ini));
+   if( port != -1 && port < 16 ) {
+     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "init ebreak port %d", port );
+     INP_GPIO(port);
+     data->portuse[port] = 1;
    }
-   if( wRasPi.getpoweroffport(wDigInt.getraspi(data->ini)) != -1 ) {
-     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "init power off port %d", wRasPi.getpoweroffport(wDigInt.getraspi(data->ini)) );
-     INP_GPIO(wRasPi.getpoweroffport(wDigInt.getraspi(data->ini)));
+
+   port = wRasPi.getpoweroffport(wDigInt.getraspi(data->ini));
+   if( port != -1 && port < 16 ) {
+     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "init power off port %d", port );
+     INP_GPIO(port);
+     data->portuse[port] = 1;
    }
-   if( wRasPi.getpoweronport(wDigInt.getraspi(data->ini)) != -1 ) {
-     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "init power on port %d", wRasPi.getpoweronport(wDigInt.getraspi(data->ini)) );
-     INP_GPIO(wRasPi.getpoweronport(wDigInt.getraspi(data->ini)));
+
+   port = wRasPi.getpoweronport(wDigInt.getraspi(data->ini));
+   if( port != -1 && port < 16 ) {
+     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "init power on port %d", port );
+     INP_GPIO(port);
+     data->portuse[port] = 1;
+   }
+
+   for( i = 0; i < 16; i++ ) {
+     if( data->portuse[i] == 0 ) {
+       INP_GPIO(i);
+       data->portuse[i] = 2; /* 1=system 2=sensor 3=output */
+     }
    }
 
    return 0;

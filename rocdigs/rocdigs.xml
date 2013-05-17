@@ -1644,6 +1644,8 @@
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="power" vt="Boolean"/>
+      <var name="portuse[16]" vt="int"/>
+      <var name="portstate[16]" vt="int"/>
       </data>
   </object>
 
