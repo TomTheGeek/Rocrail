@@ -165,6 +165,7 @@ void BidibIdentDlg::event(iONode node) {
     if( rc == 0 && rs == 0 ) {
       m_UpdateStart->Enable(true);
       m_UpdateStart->SetLabel( wxGetApp().getMsg( "start" ) );
+      m_UpdateProgress->SetValue(0);
     }
     else if( rc == 0 && rs <= m_UpdateProgress->GetRange() ) {
       m_UpdateProgress->SetValue(rs);
@@ -172,6 +173,7 @@ void BidibIdentDlg::event(iONode node) {
     else {
       m_UpdateStart->Enable(true);
       m_UpdateStart->SetLabel( wxGetApp().getMsg( "start" ) );
+      m_UpdateProgress->SetValue(0);
       if( rc == wProgram.rc_notfwup) {
         // no firmware update flag
         wxMessageDialog( this, wxT("No firmware update feature read."), _T("Rocrail"), wxOK | wxICON_EXCLAMATION ).ShowModal();
