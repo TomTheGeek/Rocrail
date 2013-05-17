@@ -36,7 +36,7 @@ void bidibUpdateCRC(byte newb, byte* crc);
 byte bidibCheckSum(byte* packet, int len);
 void bidibEscapeMessage(byte* msg, int* newLen, int inLen);
 int bidibMakeMessage(byte* msg, int inLen);
-const char* bidibGetProductName(int vid, int pid);
+const char* bidibGetProductName(int vid, int pid, char** www);
 
 /* C++ */
 #ifdef __cplusplus

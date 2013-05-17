@@ -212,21 +212,22 @@ char* bidibGetClassName(int classid, char* mnemonic ) {
 /*
 http://www.bidib.org/support/product_id.html
  */
-const char* bidibGetProductName(int vid, int pid) {
+const char* bidibGetProductName(int vid, int pid, char** www) {
   if( vid == 13 ) {
-    if( pid == 101 ) return "GBM16TC Stand-Alone";
-    if( pid == 102 ) return "GBM16TC Interface";
-    if( pid == 103 ) return "GBMBoost Node";
-    if( pid == 104 ) return "GBMBoost Master";
-    if( pid == 105 ) return "BiDiB-S88-Bridge";
-    if( pid == 106 ) return "BiDiB-IO16";
-    if( pid == 107 ) return "LightControl";
-    if( pid == 108 ) return "MoBaLiSt";
-    if( pid == 110 ) return "Bootloader LightControl";
-    if( pid == 111 ) return "Bootloader GBMBoost";
-    if( pid == 220 ) return "Switch-64";
-    if( pid == 220 ) return "LED-Optics";
+    if( pid == 101 ) {if(www!=NULL) *www="http://opendcc.de/s88/gbm_bidi/gbm_bidi.html"; return "GBM16TC Stand-Alone";}
+    if( pid == 102 ) {if(www!=NULL) *www="http://opendcc.de/s88/gbm_bidi/gbm_bidi.html"; return "GBM16TC Interface";}
+    if( pid == 103 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/gbmboost/gbmboost.html"; return "GBMBoost Node";}
+    if( pid == 104 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/gbmboost/gbmboost.html"; return "GBMBoost Master";}
+    if( pid == 105 ) {if(www!=NULL) *www="http://opendcc.de/s88/s88_bidib/s88_bidib.html"; return "BiDiB-S88-Bridge";}
+    if( pid == 106 ) {if(www!=NULL) *www="http://opendcc.de/bidib/overview/in_entwicklung.html"; return "BiDiB-IO16";}
+    if( pid == 107 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/lightcontrol1/lightcontrol.html"; return "LightControl";}
+    if( pid == 108 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/lightcontrol1/mobalist.html"; return "MoBaLiSt";}
+    if( pid == 110 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/lightcontrol1/lightcontrol.html"; return "Bootloader LightControl";}
+    if( pid == 111 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/gbmboost/gbmboost_download.html"; return "Bootloader GBMBoost";}
+    if( pid == 220 ) {if(www!=NULL) *www="http://www.bidib.org/support/product_id.html"; return "Switch-64";}
+    if( pid == 220 ) {if(www!=NULL) *www="http://www.bidib.org/support/product_id.html"; return "LED-Optics";}
   }
+  *www="http://www.bidib.org/support/product_id.html";
   return "Unknown product.";
 }
 
