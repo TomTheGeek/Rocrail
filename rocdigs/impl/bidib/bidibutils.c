@@ -224,8 +224,9 @@ const char* bidibGetProductName(int vid, int pid, char** www) {
     if( pid == 108 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/lightcontrol1/mobalist.html"; return "MoBaLiSt";}
     if( pid == 110 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/lightcontrol1/lightcontrol.html"; return "Bootloader LightControl";}
     if( pid == 111 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/gbmboost/gbmboost_download.html"; return "Bootloader GBMBoost";}
+    if( pid == 219 ) {if(www!=NULL) *www="http://www.bidib.org/support/product_id.html"; return "OneOC";}
     if( pid == 220 ) {if(www!=NULL) *www="http://www.bidib.org/support/product_id.html"; return "Switch-64";}
-    if( pid == 220 ) {if(www!=NULL) *www="http://www.bidib.org/support/product_id.html"; return "LED-Optics";}
+    if( pid == 221 ) {if(www!=NULL) *www="http://www.bidib.org/support/product_id.html"; return "LED-Optics";}
   }
   *www="http://www.bidib.org/support/product_id.html";
   return "Unknown product.";
