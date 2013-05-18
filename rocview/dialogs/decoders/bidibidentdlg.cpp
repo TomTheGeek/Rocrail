@@ -475,6 +475,7 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
     m_Notebook->Fit();
     GetSizer()->Fit(this);
     GetSizer()->SetSizeHints(this);
+    Refresh();
 
   }
   else {
