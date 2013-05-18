@@ -415,7 +415,7 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
     int pin = wOutput.getport( node );
     int addr = 0;
     int port = wOutput.getgate( node );
-    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 1:0;
+    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.off ) ? 1:0;
     int activationTime = -1;
 
     int ga_bus = wSRCP.getsrcpbusGA_ps( o->srcpini );
@@ -914,7 +914,10 @@ static void __infoReader( void * threadinst ) {
               nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
               wSwitch.setaddr1( nodeC, (addr-1)/4 + 1 );
               wSwitch.setport1( nodeC, (addr-1)%4 + 1 );
-              wSwitch.setstate( nodeC, port ? wSwitch.straight : wSwitch.turnout );
+              if( val == 1 )
+                wSwitch.setstate( nodeC, port ? wSwitch.straight : wSwitch.turnout );
+              else
+                wSwitch.setstate( nodeC, wSwitch.straight );
               if ( o->iid != NULL )
                 wSwitch.setiid( nodeC, o->iid );
             }
