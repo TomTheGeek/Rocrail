@@ -289,9 +289,8 @@ static char *getSrcpIid( iOSrcpConData data, const int bus, char* srcpIid) {
   return srcpIid ;
 }
 
-/* "extended" version of ModelOp.getSwByAddress */
-static iOSwitch SRCPgetSwByAddressAndIid( iOModel model, int addr, int port, char *iid ) {
-  int pAddr = AddrOp.toPADA( addr, port );
+/* "adapted" version of ModelOp.getSwByAddress */
+static iOSwitch SRCPgetSwByAddressAndIid( iOModel model, int pAddr, char *iid ) {
   iOMap switchMap = ModelOp.getSwitchMap( model );
 
   iOSwitch sw = (iOSwitch)MapOp.first( switchMap );
@@ -334,9 +333,8 @@ static iOSwitch SRCPgetSwByAddressAndIid( iOModel model, int addr, int port, cha
   return NULL;
 }
 
-/* "extended" version of ModelOp.getSgByAddress */
-static iOSignal SRCPgetSgByAddressAndIid( iOModel model, int addr, int port, char *iid ) {
-  int pAddr = AddrOp.toPADA( addr, port );
+/* "adapted" version of ModelOp.getSgByAddress */
+static iOSignal SRCPgetSgByAddressAndIid( iOModel model, int pAddr, char *iid ) {
   iOMap signalMap = ModelOp.getSignalMap( model );
 
   iOSignal sg = (iOSignal)MapOp.first( signalMap );
@@ -357,32 +355,49 @@ static iOSignal SRCPgetSgByAddressAndIid( iOModel model, int addr, int port, cha
   };
   if( sg != NULL ) {
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SRCPgetSgByAddressAndIid sw != NULL iid %s , sgIid %s", iid, wSignal.getiid(SignalOp.base.properties(sg)) );
-    return sg;
-  }else {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCPgetSgByAddressAndIid: defaultIid %s", getDefaultIid() );
-
-    if( StrOp.equals( iid, getDefaultIid() ) ) {
-      sg = (iOSignal)MapOp.first( signalMap );
-
-      while( sg != NULL ) {
-        iONode sgProps = SignalOp.base.properties(sg);
-        int aspects = wSignal.getaspects( sgProps );
-
-        if( ( pAddr == AddrOp.toPADA( wSignal.getaddr( sgProps ), wSignal.getport1( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), "" ) )
-          break;
-        if( ( pAddr == AddrOp.toPADA( wSignal.getaddr2( sgProps ), wSignal.getport2( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), "" ) )
-          break;
-        if( (aspects > 2) && ( pAddr == AddrOp.toPADA( wSignal.getaddr3( sgProps ), wSignal.getport3( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), "" ) )
-          break;
-        if( (aspects > 3) && ( pAddr == AddrOp.toPADA( wSignal.getaddr4( sgProps ), wSignal.getport4( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), "" ) )
-          break;
-        sg = (iOSignal)MapOp.next( signalMap );
-      };
+    iONode sgProps = SignalOp.base.properties(sg);
+    int patternMode = wSignal.getusepatterns(sgProps);
+    int aspects = wSignal.getaspects( sgProps );
+    if( (patternMode == 0) && (aspects <= 4) ) {
+      /* signal in standard mode with maximum of 4 aspects */
+      return sg;
+    }else {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCPgetSgByAddressAndIid signal[%s] not suitable", wSignal.getid(sgProps) );
     }
   }
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCPgetSgByAddressAndIid: defaultIid %s", getDefaultIid() );
+  sg = NULL;
+  if( StrOp.equals( iid, getDefaultIid() ) ) {
+    sg = (iOSignal)MapOp.first( signalMap );
+
+    while( sg != NULL ) {
+      iONode sgProps = SignalOp.base.properties(sg);
+      int aspects = wSignal.getaspects( sgProps );
+
+      if( ( pAddr == AddrOp.toPADA( wSignal.getaddr( sgProps ), wSignal.getport1( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), "" ) )
+        break;
+      if( ( pAddr == AddrOp.toPADA( wSignal.getaddr2( sgProps ), wSignal.getport2( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), "" ) )
+        break;
+      if( (aspects > 2) && ( pAddr == AddrOp.toPADA( wSignal.getaddr3( sgProps ), wSignal.getport3( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), "" ) )
+        break;
+      if( (aspects > 3) && ( pAddr == AddrOp.toPADA( wSignal.getaddr4( sgProps ), wSignal.getport4( sgProps ) ) ) && StrOp.equals( wSignal.getiid(sgProps), "" ) )
+        break;
+      sg = (iOSignal)MapOp.next( signalMap );
+    };
+  }
+
   if( sg != NULL ) {
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SRCPgetSgByAddressAndIid sg != NULL iid %s , sgIid %s", iid, wSignal.getiid(SignalOp.base.properties(sg)) );
-    return sg;
+    iONode sgProps = SignalOp.base.properties(sg);
+    int patternMode = wSignal.getusepatterns(sgProps);
+    int aspects = wSignal.getaspects( sgProps );
+    if( (patternMode == 0) && (aspects <= 4) ) {
+      /* signal in standard mode with maximum of 4 aspects */
+      return sg;
+    }else {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCPgetSgByAddressAndIid signal[%s] not suitable", wSignal.getid(sgProps) );
+    }
   }else {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCPgetSgByAddressAndIid sg == NULL iid %s", iid );
   }
@@ -721,49 +736,55 @@ static char* __rr2srcp(iOSrcpCon srcpcon, __iOSrcpService o, iONode evt, char* s
     iOSignal sg = ModelOp.getSignal(model, wSignal.getid(evt));
     if( sg != NULL ) {
       iONode sgProps = SignalOp.base.properties(sg);
-      int addr = AddrOp.toPADA( wSignal.getaddr(sgProps), wSignal.getport1(sgProps) );
-      int srcpBus = getSrcpBus( data, wSignal.getiid(sgProps));
+      int patternMode = wSignal.getusepatterns(sgProps);
       int aspects = wSignal.getaspects( sgProps );
+      int addr1 = AddrOp.toPADA( wSignal.getaddr (sgProps), wSignal.getport1(sgProps) );
+      int gate1 = wSignal.getgate1(sgProps);
+      int addr2 = AddrOp.toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
+      int gate2 = wSignal.getgate2(sgProps);
+      int addr3 = AddrOp.toPADA( wSignal.getaddr3(sgProps), wSignal.getport3(sgProps) );
+      int gate3 = wSignal.getgate3(sgProps);
+      int addr4 = AddrOp.toPADA( wSignal.getaddr4(sgProps), wSignal.getport4(sgProps) );
+      int gate4 = wSignal.getgate4(sgProps);
 
-      /*100 INFO <bus> GA <addr> <port> <value>*/
-      if( aspects == 2 ) {
-        StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
-            time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr, StrOp.equals(wSignal.getstate(evt), wSignal.red)? 0:1,
-            time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr, StrOp.equals(wSignal.getstate(evt), wSignal.red)? 0:1);
-      }else if( aspects > 2 ) {
-        int addr2 = AddrOp.toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
-        int addr3 = AddrOp.toPADA( wSignal.getaddr3(sgProps), wSignal.getport3(sgProps) );
-        int addr4 = AddrOp.toPADA( wSignal.getaddr4(sgProps), wSignal.getport4(sgProps) );
+      if( (patternMode == 0) && (aspects <= 4) ) {
+        /* signal in standard mode with maximum of 4 aspects */
+        int srcpBus = getSrcpBus( data, wSignal.getiid(sgProps));
 
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sgEvent typeP %s, SGaddr1 %d, SGaddr2 %d, SGaddr3 %d, SGaddr4 %d, stateE %s, stateP %s", wSignal.gettype(sgProps) , addr, addr2, addr3, addr4, wSignal.getstate(evt), wSignal.getstate(sgProps));
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sgEvent typeP[%s] signal[%s] aspects[%d] a1[%d] g1[%d] a2[%d] g2[%d] a3[%d] g3[%d] a4[%d] g4[%d], stateE %s, stateP %s",
+            wSignal.gettype(sgProps), wSignal.getid(sgProps), aspects, addr1, gate1, addr2, gate2, addr3, gate3, addr4, gate4, wSignal.getstate(evt), wSignal.getstate(sgProps));
 
+        /* 100 INFO <bus> GA <addr> <port> <value> */
         if( StrOp.equals( wSignal.getstate(evt), wSignal.red)) {
         StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
-            time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr, 0,
-            time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr, 0);
+            time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr1, gate1,
+            time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr1, gate1);
         }
         else if( StrOp.equals( wSignal.getstate(evt), wSignal.green)) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
-              time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr2, 1,
-              time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr2, 1);
+              time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr2, gate2,
+              time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr2, gate2);
         }
         else if( StrOp.equals( wSignal.getstate(evt), wSignal.yellow)) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
-              time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr3, 0,
-              time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr3, 0);
+              time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr3, gate3,
+              time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr3, gate3);
         }
         else if( StrOp.equals( wSignal.getstate(evt), wSignal.white)) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
-              time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr4, 1,
-              time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr4, 1);
+              time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr4, gate4,
+              time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr4, gate4);
         }
         else {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED sgEvent typeP %s, SWaddr1 %d, SWaddr2 %d, stateE %s, stateP %s", wSignal.gettype(sgProps) , addr, addr2, wSignal.getstate(evt), wSignal.getstate(sgProps));
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED sgEvent unknown state[%s] signal[%s] aspects[%d] a1[%d] g1[%d] a2[%d] g2[%d] a3[%d] g3[%d] a4[%d] g4[%d]",
+              wSignal.getid(sgProps), wSignal.getstate(evt), aspects, addr1, gate1, addr2, gate2, addr3, gate3, addr4, gate4 );
         }
-      }else {
-        int addr2 = AddrOp.toPADA( wSignal.getaddr2(sgProps), wSignal.getport2(sgProps) );
-
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED sgEvent typeP %s, SWaddr1 %d, SWaddr2 %d, stateE %s, stateP %s", wSignal.gettype(sgProps) , addr, addr2, wSignal.getstate(evt), wSignal.getstate(sgProps));
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "IGNORED sgEvent: signal[%s] not in standard mode[%d] or too many aspects[%d]",
+            wSignal.getid(sgProps), patternMode, aspects );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "IGNORED sgEvent: signal[%s] not in standard mode[%d] or too many aspects[%d] a1[%d] g1[%d] a2[%d] g2[%d] a3[%d] g3[%d] a4[%d] g4[%d] stateE[%s] stateP[%s]",
+            wSignal.getid(sgProps), patternMode, aspects, addr1, gate1, addr2, gate2, addr3, gate3, addr4, gate4, wSignal.getstate(evt), wSignal.getstate(sgProps) );
       }
     }
   }
@@ -1067,20 +1088,14 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         return cmd;
       }
 
-      int addrGA = -1;
       char protoGA[1025] = {'\0'};
-      int addr;
-      int port;
       iOSwitch sw;
       iOSignal sg;
-
-      addrGA = atoi( sPar3 );
+      int addrGA = atoi( sPar3 );
       StrOp.copy( protoGA, sPar4 ); /* TODO: verify reasonable value ? */
 
-      AddrOp.fromPADA( addrGA, &addr, &port );
-
-      sw = SRCPgetSwByAddressAndIid(model, addr, port, srcpBusIid );
-      sg = SRCPgetSgByAddressAndIid(model, addr, port, srcpBusIid );
+      sw = SRCPgetSwByAddressAndIid( model, addrGA, srcpBusIid );
+      sg = SRCPgetSgByAddressAndIid( model, addrGA, srcpBusIid );
 
       if( (sw == 0) && (sg == 0) ) {
         /* no suitable switch or signal found */
@@ -1548,10 +1563,6 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         return cmd;
       }
 
-      /* Find switch */
-      AddrOp.fromPADA( srcpAddr, &addr, &port );
-      getSrcpIid( data, srcpBus, srcpBusIid);
-
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET GA: srcpBus %d srcpAddr %d [%d-%d] gate %d value %d delay %d ",
                    srcpBus, srcpAddr, addr, port, gate, value, delay );
 
@@ -1561,7 +1572,10 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         return cmd;
       }
 
-      sw = SRCPgetSwByAddressAndIid(model, addr, port, srcpBusIid );
+      getSrcpIid( data, srcpBus, srcpBusIid);
+
+      /* Find switch */
+      sw = SRCPgetSwByAddressAndIid( model, srcpAddr, srcpBusIid );
 
       if( (sw != NULL) && SwitchOp.isLocked( sw, NULL, True ) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Switch \"%s\" is locked", SwitchOp.getId( sw ) );
@@ -1749,7 +1763,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         }
       }
       
-      sg = SRCPgetSgByAddressAndIid(model, addr, port, srcpBusIid );
+      sg = SRCPgetSgByAddressAndIid( model, srcpAddr, srcpBusIid );
 
       if( sg != NULL ) {
         iONode sgProps = SignalOp.base.properties(sg);
@@ -2252,15 +2266,12 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
 
       if( srcpAddr > 0 ) {
         char srcpBusIid[1025];
-        int addr;
-        int port;
         iOSwitch sw;
         iOSignal sg;
         char prot[1025] = {'\0'};
 
-        AddrOp.fromPADA( srcpAddr, &addr, &port );
-        sw = SRCPgetSwByAddressAndIid(model, addr, port, srcpBusIid );
-        sg = SRCPgetSgByAddressAndIid(model, addr, port, srcpBusIid );
+        sw = SRCPgetSwByAddressAndIid( model, srcpAddr, srcpBusIid );
+        sg = SRCPgetSgByAddressAndIid( model, srcpAddr, srcpBusIid );
 
         /*
           SRCP GA protocols
@@ -2357,17 +2368,14 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       getSrcpIid( data, srcpBus, srcpBusIid);
 
       if( srcpAddr > 0 ) {
-        int addr;
-        int port;
         int value;
         iOSwitch sw;
         iOSignal sg;
         char valStr[1025] = {'\0'};
         Boolean twoMotors = False;
 
-        AddrOp.fromPADA( srcpAddr, &addr, &port );
-        sw = SRCPgetSwByAddressAndIid(model, addr, port, srcpBusIid );
-        sg = SRCPgetSgByAddressAndIid(model, addr, port, srcpBusIid );
+        sw = SRCPgetSwByAddressAndIid( model, srcpAddr, srcpBusIid );
+        sg = SRCPgetSgByAddressAndIid( model, srcpAddr, srcpBusIid );
 
         /* Q: "GET <bus> GA <addr> <port>" */
         /* A: "100 INFO <bus> GA <addr> <port> <value>" */
@@ -2445,33 +2453,33 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
             int gate3 = wSignal.getgate3(sgProps);
             int gate4 = wSignal.getgate4(sgProps);
 
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "GET for SG aGA %d a %d p %d : aspects %d a1 %d a2 %d a3 %d a4 %d g1 %d g2 %d g3 %d g4 %d REQ %s", 
-                srcpAddr, addr, port, aspects, addr1, addr2, addr3, addr4, gate1, gate2, gate3, gate4, req );
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "GET for SG aGA %d : aspects %d a1 %d a2 %d a3 %d a4 %d g1 %d g2 %d g3 %d g4 %d REQ %s", 
+                srcpAddr, aspects, addr1, addr2, addr3, addr4, gate1, gate2, gate3, gate4, req );
 
             if( aspects >= 1 && srcpAddr == addr1 && srcpPort == gate1 ) {
               StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d %d\n", 
-                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, StrOp.equals( state, wSignal.red ) );
+                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, 0 );
               TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG answer aspect 1: %s", str);
               SocketOp.fmt(o->clntSocket, str);
               *reqRespCode = (int) 0 ;
             }
             if( aspects >= 2 && srcpAddr == addr2 && srcpPort == gate2 ) {
               StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d %d\n", 
-                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, StrOp.equals( state, wSignal.green ) );
+                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, 0 );
               TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG answer aspect 2: %s", str);
               SocketOp.fmt(o->clntSocket, str);
               *reqRespCode = (int) 0 ;
             }
             if( aspects >= 3 && srcpAddr == addr3 && srcpPort == gate3 ) {
               StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d %d\n", 
-                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, StrOp.equals( state, wSignal.yellow ) );
+                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, 0 );
               TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG answer aspect 3: %s", str);
               SocketOp.fmt(o->clntSocket, str);
               *reqRespCode = (int) 0 ;
             }
             if( aspects >= 4 && srcpAddr == addr4 && srcpPort == gate4 ) {
               StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d %d\n", 
-                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, StrOp.equals( state, wSignal.white ) );
+                    time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, 0 );
               TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG answer aspect 4: %s", str);
               SocketOp.fmt(o->clntSocket, str);
               *reqRespCode = (int) 0 ;
