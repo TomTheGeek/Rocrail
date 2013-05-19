@@ -67,7 +67,9 @@ CBusNodeDlg::CBusNodeDlg( wxWindow* parent, iONode event ):cbusnodedlggen( paren
 
 void CBusNodeDlg::initLabels() {
   m_CBusLogo->SetBitmap(*_img_cbus);
-  m_CBusLogo->SetToolTip(wxT("http://www.phgiling.net"));
+  m_CBusLogo->SetToolTip(wxT("http://www.merg.org.uk/merg_resources/cbus.php"));
+  m_GCALogo->SetBitmap(*_img_gca);
+  m_GCALogo->SetToolTip(wxT("http://www.phgiling.net"));
 
   m_SOD = 0;
   m_SaveOutputState = false;
@@ -136,7 +138,7 @@ void CBusNodeDlg::initLabels() {
   m_QueryNN->SetLabel( wxGetApp().getMsg( "query" ) );
 
   m_IndexList2->InsertColumn(0, wxGetApp().getMsg( "nodenumber" ), wxLIST_FORMAT_RIGHT );
-  m_IndexList2->InsertColumn(1, wxGetApp().getMsg( "CANID" ), wxLIST_FORMAT_RIGHT );
+  m_IndexList2->InsertColumn(1, wxT( "CANID" ), wxLIST_FORMAT_RIGHT );
   m_IndexList2->InsertColumn(2, wxGetApp().getMsg( "manufactured_ID" ), wxLIST_FORMAT_LEFT );
   m_IndexList2->InsertColumn(3, wxGetApp().getMsg( "type" ), wxLIST_FORMAT_RIGHT );
   m_IndexList2->InsertColumn(4, wxGetApp().getMsg( "name" ), wxLIST_FORMAT_LEFT, 150 );
@@ -2286,6 +2288,10 @@ void CBusNodeDlg::onIndexLeftClick( wxListEvent& event ) {
 }
 
 void CBusNodeDlg::onLogo( wxMouseEvent& event ) {
+  wxLaunchDefaultBrowser(wxT("http://www.merg.org.uk/merg_resources/cbus.php"), wxBROWSER_NEW_WINDOW );
+}
+
+void CBusNodeDlg::onGCA( wxMouseEvent& event ) {
   wxLaunchDefaultBrowser(wxT("http://www.phgiling.net"), wxBROWSER_NEW_WINDOW );
 }
 
