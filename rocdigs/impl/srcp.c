@@ -287,7 +287,7 @@ static Boolean __initGA( iOSRCPData o, iONode node, int ga_bus, int addr ) {
 
 static Boolean __initGL( iOSRCPData o, iONode node, int* bus ) {
   char tmpCommand[1024];
-
+  char key[64] = {'\0'};
   int gl_bus = 0;
   const char* prot = wLoc.getprot( node );
 
@@ -303,12 +303,9 @@ static Boolean __initGL( iOSRCPData o, iONode node, int* bus ) {
 
   *bus = gl_bus;
 
-  if( wLoc.getaddr(node) > 16383) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "loco address out of range: %d", wLoc.getaddr(node));
-    return False;
-  }
+  StrOp.fmtb(key, "lc_%d", wLoc.getaddr(node));
 
-  if (! o->locInited[wLoc.getaddr(node)] ) {
+  if (! MapOp.haskey(o->knownObjects, key) ) {
     StrOp.fmtb(tmpCommand,"GET %d GL %d\n", gl_bus, wLoc.getaddr(node) );
     if( __srcpSendCommand(o, tmpCommand,NULL) != 100 ) {
       StrOp.fmtb(tmpCommand,"INIT %d GL %d %s %d %d %d\n", gl_bus,
@@ -321,11 +318,9 @@ static Boolean __initGL( iOSRCPData o, iONode node, int* bus ) {
         return False;
       }
     }
-    o->locInited[wLoc.getaddr(node)] = True;
+    MapOp.put(o->knownObjects, key, (obj)StrOp.dup(key));
 
     StrOp.fmtb(tmpCommand,"GET %d GL %d\n", gl_bus, wLoc.getaddr(node) );
-
-    o->locInited[wLoc.getaddr(node)] = True;
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", tmpCommand);
     if (!__srcpSendCommand(o, tmpCommand,NULL)) {
@@ -334,6 +329,7 @@ static Boolean __initGL( iOSRCPData o, iONode node, int* bus ) {
     }
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "successfully got GL %d", wLoc.getaddr(node));
   }
+
   return True;
 }
 
@@ -375,6 +371,7 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Translating command.");
   /* Switch command. */
   if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    char key[64] = {'\0'};
     int mod = wSwitch.getaddr1( node );
     int pin  = wSwitch.getport1( node );
     int addr = 0;
@@ -395,22 +392,24 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
 
     addr = (mod-1)*4+pin;
 
-    if( addr > 1023 ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "switch address out of range: %d:%d", mod, pin);
-      return NULL;
+    StrOp.fmtb(key, "sw_%d_%d", wSwitch.getaddr1( node ), wSwitch.getport1( node ));
+    if (! MapOp.haskey(o->knownObjects, key) ) {
+      if( __initGA(o, node, ga_bus, addr) ) {
+        MapOp.put( o->knownObjects, key, (obj)StrOp.dup(key));
+      }
+      else {
+        return NULL;
+      }
     }
 
-    if (! o->knownSwitches[ addr ] ) {
-      o->knownSwitches[ addr ] = __initGA(o, node, ga_bus, addr);
-    }
+    StrOp.fmtb( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, activationTime );
 
-    if ( o->knownSwitches[ addr ] )
-      StrOp.fmtb( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, activationTime );
     return NULL;
   }
 
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    char key[64] = {'\0'};
     int mod = wOutput.getaddr( node );
     int pin = wOutput.getport( node );
     int addr = 0;
@@ -426,18 +425,17 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
 
     addr = (mod-1)*4+pin;
 
-    if( addr > 1023 ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "output address out of range: %d:%d", mod, pin);
-      return NULL;
+    StrOp.fmtb(key, "sw_%d_%d", wOutput.getaddr( node ), wOutput.getport( node ));
+    if (! MapOp.haskey(o->knownObjects, key) ) {
+      if( __initGA(o, node, ga_bus, addr) ) {
+        MapOp.put( o->knownObjects, key, (obj)StrOp.dup(key));
+      }
+      else {
+        return NULL;
+      }
     }
 
-    if (! o->knownSwitches[ addr ] ) {
-      o->knownSwitches[ addr ] = __initGA(o, node, ga_bus, addr);
-    }
-
-    /* send the output command... */
-    if ( o->knownSwitches[ addr ] )
-      StrOp.fmtb( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, activationTime );
+    StrOp.fmtb( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, activationTime );
 
     return NULL;
   }
@@ -743,8 +741,8 @@ static void __infoReader( void * threadinst ) {
   Boolean exception = False;
   char inbuf[1024] = { 0 };
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Connecting info port %s:%d...", o->ddlHost, o->cmdPort );
-  o->infoSocket = SocketOp.inst( o->ddlHost, o->cmdPort, False, False, False );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Connecting info port %s:%d...", o->host, o->port );
+  o->infoSocket = SocketOp.inst( o->host, o->port, False, False, False );
 
   if ( SocketOp.connect( o->infoSocket ) ) {
     __initInfoConnection(o);
@@ -1016,7 +1014,7 @@ static void __infoReader( void * threadinst ) {
         }
 
         ThreadOp.sleep( 1000 );
-        o->infoSocket = SocketOp.inst( o->ddlHost, o->cmdPort, False, False, False );
+        o->infoSocket = SocketOp.inst( o->host, o->port, False, False, False );
         if( SocketOp.connect( o->infoSocket ) ) {
           __initInfoConnection(o);
         }
@@ -1028,7 +1026,7 @@ static void __infoReader( void * threadinst ) {
   }
   else  {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR connecting to info port %s:%d rc=%d",
-        o->ddlHost, o->cmdPort, SocketOp.getRc( o->infoSocket ) );
+        o->host, o->port, SocketOp.getRc( o->infoSocket ) );
   }
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Info reader ended" );
@@ -1056,28 +1054,28 @@ static Boolean __srcpConnect( iOSRCPData o ) {
   /* Boolean found = False; */
 
   if ( o->cmdSocket == NULL ) {
-    o->cmdSocket = SocketOp.inst( o->ddlHost, o->cmdPort, False, False, False );
+    o->cmdSocket = SocketOp.inst( o->host, o->port, False, False, False );
     SocketOp.setSndTimeout( o->cmdSocket, wDigInt.gettimeout(o->ini));
     SocketOp.setRcvTimeout( o->cmdSocket, wDigInt.gettimeout(o->ini));
   }
 
   /* Disconnect if connected */
   if ( SocketOp.isConnected( o->cmdSocket ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "disconnecting from SRCP server %s:%d", o->ddlHost, o->cmdPort );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "disconnecting from SRCP server %s:%d", o->host, o->port );
     SocketOp.disConnect( o->cmdSocket );
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connecting to SRCP server %s:%d", o->ddlHost, o->cmdPort );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connecting to SRCP server %s:%d", o->host, o->port );
 
   if ( !SocketOp.connect( o->cmdSocket ) ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR connecting to SRCP server %s:%d", o->ddlHost, o->cmdPort );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR connecting to SRCP server %s:%d", o->host, o->port );
     return False;
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Handshaking" );
 
   if ( !SocketOp.readln( o->cmdSocket, inbuf ) ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking with SRCP server %s:%d", o->ddlHost, o->cmdPort );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking with SRCP server %s:%d", o->host, o->port );
     SocketOp.disConnect( o->cmdSocket );
     return False;
   }
@@ -1151,25 +1149,18 @@ static iOSRCP _inst( const iONode settings, const iOTrace trace ) {
   /* Evaluate attributes. */
   data->iid = StrOp.dup( wDigInt.getiid( settings ) );
 
-  data->ddlHost   = wDigInt.gethost( settings );
-  data->cmdPort   = wSRCP.getcmdport( data->srcpini );
-  data->run       = True;
+  data->host   = wDigInt.gethost( settings );
+  data->port   = wSRCP.getcmdport( data->srcpini );
+  data->run    = True;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "srcp %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  IID       : %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  host      : %s", data->ddlHost );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  port      : %d", data->cmdPort );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  host      : %s", data->host );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  port      : %d", data->port );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->knownSwitches = allocMem( 1024 * sizeof(Boolean) );
-  MemOp.set(data->knownSwitches,0,1024*sizeof(Boolean));
-
-  data->knownLocos = allocMem( 1024 * sizeof(Boolean));
-  MemOp.set( data->knownLocos, 0, 1024*sizeof(Boolean));
-
-  data->locInited = allocMem( 16384 * sizeof(Boolean));
-  MemOp.set( data->locInited, 0, 16384*sizeof(Boolean));
+  data->knownObjects = MapOp.inst();
 
   if( __srcpConnect( data ) ) {
     __srcpInitConnect(data);

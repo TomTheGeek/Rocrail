@@ -108,7 +108,7 @@
   </object>
 
 
-  <object name="SRCP" interface="$../rocint/rocint.xml:DigInt" use="node,trace,socket,thread" include="$rocint/public/digint" remark="SRCP object">
+  <object name="SRCP" interface="$../rocint/rocint.xml:DigInt" use="node,trace,socket,thread,map" include="$rocint/public/digint" remark="SRCP object">
     <typedef def="enum {SRCP_STATE_OK=1, SRCP_STATE_ERROR} srcpstate"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
@@ -124,15 +124,13 @@
       <var name="cmdSocket" vt="iOSocket"/>
       <var name="infoSocket" vt="iOSocket"/>
       <var name="infoReader" vt="iOThread"/>
-      <var name="ddlHost" vt="const char*"/>
-      <var name="cmdPort" vt="int"/>
+      <var name="host" vt="const char*"/>
+      <var name="port" vt="int"/>
       <var name="run" vt="Boolean"/>
       <var name="evalfirst" vt="Boolean"/>
       <var name="handshakeerror" vt="Boolean"/>
       <var name="state" vt="srcpstate"/>
-      <var name="knownSwitches" vt="Boolean *" />
-      <var name="knownLocos" vt="Boolean *" />
-      <var name="locInited" vt="Boolean *"/>
+      <var name="knownObjects" vt="iOMap" />
       </data>
   </object>
 
