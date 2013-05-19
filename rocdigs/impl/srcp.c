@@ -402,7 +402,13 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
       }
     }
 
-    StrOp.fmtb( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, activationTime );
+    if( wSwitch.issinglegate(node) ) {
+      action = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 1:0;
+      StrOp.fmtb( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, wSwitch.getgate1(node), action, -1 );
+    }
+    else {
+      StrOp.fmtb( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, activationTime );
+    }
 
     return NULL;
   }
