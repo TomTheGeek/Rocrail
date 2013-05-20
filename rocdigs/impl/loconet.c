@@ -368,13 +368,23 @@ static void __loconetSensorQuery( void* threadinst ) {
   iOLocoNet loconet = (iOLocoNet)ThreadOp.getParm( th );
   iOLocoNetData data = Data(loconet);
   int reportaddr = wLocoNet.getreportaddr(data->loconet);
-  int dir = 1;
-  int action = 1;
   byte cmd[32];
   int k = 0;
 
   if( reportaddr > 0 ) {
+    int dir    = 0;
+    int action = 1;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LocoNet Sensor Query started with address %d.", reportaddr );
+    cmd[0] = OPC_SW_REQ;
+    cmd[1]  = (unsigned short int) (reportaddr & 0x007f);
+    cmd[2]  = (unsigned short int) (( reportaddr >> 7) & 0x000f);
+    cmd[2] |= (unsigned short int) ( (dir & 0x0001) << 5);
+    cmd[2] |= (unsigned short int) ( (action & 0x0001) << 4);
+    cmd[3] = LocoNetOp.checksum( cmd, 3 );
+    LocoNetOp.transact( loconet, cmd, 4, NULL, NULL, 0, 0, False );
+
+    ThreadOp.sleep(100);
+    action = 0;
     cmd[0] = OPC_SW_REQ;
     cmd[1]  = (unsigned short int) (reportaddr & 0x007f);
     cmd[2]  = (unsigned short int) (( reportaddr >> 7) & 0x000f);
