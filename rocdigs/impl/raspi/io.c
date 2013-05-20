@@ -104,37 +104,43 @@ int raspiSetupIO(obj inst)
    gpio = (volatile unsigned *)gpio_map;
 
    port = wRasPi.getshutdownport(wDigInt.getraspi(data->ini));
-   if( port != -1 && port < 16 ) {
+   if( port > 0 && port <= 16 ) {
+     port--;
      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "init shutdown port %d", port );
      INP_GPIO(port);
      data->portuse[port] = 1;
    }
 
    port = wRasPi.getebreakport(wDigInt.getraspi(data->ini));
-   if( port != -1 && port < 16 ) {
+   if( port > 0 && port <= 16 ) {
+     port--;
      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "init ebreak port %d", port );
      INP_GPIO(port);
      data->portuse[port] = 1;
    }
 
    port = wRasPi.getpoweroffport(wDigInt.getraspi(data->ini));
-   if( port != -1 && port < 16 ) {
+   if( port > 0 && port <= 16 ) {
+     port--;
      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "init power off port %d", port );
      INP_GPIO(port);
      data->portuse[port] = 1;
    }
 
    port = wRasPi.getpoweronport(wDigInt.getraspi(data->ini));
-   if( port != -1 && port < 16 ) {
+   if( port > 0 && port <= 16 ) {
+     port--;
      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "init power on port %d", port );
      INP_GPIO(port);
      data->portuse[port] = 1;
    }
 
-   for( i = 0; i < 16; i++ ) {
-     if( data->portuse[i] == 0 ) {
-       INP_GPIO(i);
-       data->portuse[i] = 2; /* 1=system 2=sensor 3=output */
+   if( wRasPi.isusesensors(wDigInt.getraspi(data->ini)) ) {
+     for( i = 0; i < 16; i++ ) {
+       if( data->portuse[i] == 0 ) {
+         INP_GPIO(i);
+         data->portuse[i] = 2; /* 0=notused 1=system 2=sensor 3=output */
+       }
      }
    }
 

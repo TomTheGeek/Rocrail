@@ -54,6 +54,7 @@
 #include "rocview/dialogs/controllers/bidibdlg.h"
 #include "rocview/dialogs/controllers/rocnetdlg.h"
 #include "rocview/dialogs/controllers/cbusdlg.h"
+#include "rocview/dialogs/controllers/raspidlg.h"
 
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/Plan.h"
@@ -2013,6 +2014,8 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ), 57600, wDigInt.cts);
   else if( StrOp.equals( wDigInt.z21, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new ECoSCtrlDialog(this,m_Controller,devices);
+  else if( StrOp.equals( wDigInt.raspi, wDigInt.getlib( m_Controller ) ) )
+    m_CSDialog = new RaspiDlg(this,m_Controller);
   else
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ), 0, NULL, devices);
 

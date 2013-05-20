@@ -21484,4 +21484,10 @@
     <it txt="Inserisci"/>
     <zh_CN txt="插入"/>
   </Msg>
+  <Msg id="ebreak">
+    <en txt="Emergency break"/>
+  </Msg>
+  <Msg id="shutdownserver">
+    <en txt="Shutdown"/>
+  </Msg>
 </Messages>

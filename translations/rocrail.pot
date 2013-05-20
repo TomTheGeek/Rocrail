@@ -6383,3 +6383,15 @@ msgstr ""
 msgid "Insert"
 msgstr ""
 
+#. 
+# id="ebreak"
+#, c-format
+msgid "Emergency break"
+msgstr ""
+
+#. 
+# id="shutdownserver"
+#, c-format
+msgid "Shutdown"
+msgstr ""
+
