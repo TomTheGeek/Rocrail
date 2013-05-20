@@ -1073,14 +1073,22 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
   iOBiDiBData data = Data(inst);
+  byte msgdata[4] = {0,0,0,0};
+  iOBiDiBNode broadcastnode = (iOBiDiBNode)MapOp.get( data->localmap, "0.0.0.0");
+
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "halt BiDiB..." );
 
   if( data->defaultmain != NULL && poweroff ) {
-    byte msgdata[4] = {BIDIB_CS_STATE_OFF};
+    msgdata[0] = BIDIB_CS_STATE_OFF;
     data->subWrite((obj)inst, data->defaultmain->path, MSG_CS_SET_STATE, msgdata, 1, data->defaultmain->seq++);
     data->power = False;
   }
+  if( broadcastnode != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "disable the BiDiBus" );
+    data->subWrite((obj)inst, broadcastnode->path, MSG_SYS_DISABLE, NULL, 0, broadcastnode->seq++);
+  }
+
   ThreadOp.sleep(250);
   data->run = False;
   ThreadOp.sleep(500);
@@ -2353,6 +2361,9 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     // start getting the node table from the PC interface
     data->nodepath[0] = 0;
     path[0] = 0; // address
+
+    //data->subWrite((obj)bidib, path, MSG_SYS_RESET, NULL, 0, 0);
+    //ThreadOp.sleep(1000);
     data->subWrite((obj)bidib, path, MSG_NODETAB_GETALL, NULL, 0, 0);
 
     break;
