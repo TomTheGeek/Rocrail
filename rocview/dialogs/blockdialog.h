@@ -319,6 +319,7 @@ public:
     wxCheckBox* m_Road;
     wxCheckBox* m_AllowChgDir;
     wxCheckBox* m_ExtStop;
+    wxCheckBox* m_AcceptIdent;
     wxButton* m_BlockActions;
     wxPanel* m_LocationPanel;
     wxStaticBox* m_Location;

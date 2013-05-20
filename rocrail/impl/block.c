@@ -492,7 +492,6 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
               inst->cmd(inst, cmd);
             }
 
-            data->acceptident = False;
             /* broadcast end of acceptident */
             if( data->acceptident != wBlock.isacceptident(data->props) ) {
               iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
@@ -2155,8 +2154,6 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     wBlock.setlocid( data->props, locid );
     /* reset ghost flag */
     data->ghost = False;
-    /* reset acceptident flag */
-    data->acceptident = False;
 
     ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, locid, False, 0, 0, NULL );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"block %s set locid=%s", wBlock.getid(data->props), locid );
@@ -2510,6 +2507,7 @@ static iOBlock _inst( iONode props ) {
   data->timer2 = wBlock.getevttimer2( props );
 
   data->forceblocktimer = wBlock.isforceblocktimer( props );
+  data->acceptident = wBlock.isacceptident( props );
   data->id = wBlock.getid( props );
 
   wBlock.setacceptident( data->props, False );
