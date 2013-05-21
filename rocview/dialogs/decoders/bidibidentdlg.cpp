@@ -717,22 +717,31 @@ void BidibIdentDlg::onServoGet( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::onServoSet() {
-  TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"servo set L=%d R=%d S=%d",
-      m_ServoLeft->GetValue(), m_ServoRight->GetValue(), m_ServoSpeed->GetValue() );
-  if( bidibnode != NULL ) {
-    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
-    wProgram.setcmd( cmd, wProgram.nvset );
-    wProgram.setcv( cmd, m_ServoPort->GetValue() );
-    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
-    wProgram.setlntype(cmd, wProgram.lntype_bidib);
-    wProgram.setporttype(cmd, m_PortType->GetSelection());
-    wProgram.setval1(cmd, m_ServoLeft->GetValue());
-    wProgram.setval2(cmd, m_ServoRight->GetValue());
-    wProgram.setval3(cmd, m_ServoSpeed->GetValue());
-    wProgram.setval4(cmd, 0);
-    wxGetApp().sendToRocrail( cmd );
-    cmd->base.del(cmd);
+  if( m_ServoLeft->GetValue() != configL || m_ServoRight->GetValue() != configR ||
+      m_ServoSpeed->GetValue() != configS || m_ServoReserved->GetValue() != configV )
+  {
+    configL = m_ServoLeft->GetValue();
+    configR = m_ServoRight->GetValue();
+    configS = m_ServoSpeed->GetValue();
+    configV = m_ServoReserved->GetValue();
+
+    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"servo set L=%d R=%d S=%d",
+        m_ServoLeft->GetValue(), m_ServoRight->GetValue(), m_ServoSpeed->GetValue() );
+    if( bidibnode != NULL ) {
+      iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+      wProgram.setcmd( cmd, wProgram.nvset );
+      wProgram.setcv( cmd, m_ServoPort->GetValue() );
+      wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+      wProgram.setlntype(cmd, wProgram.lntype_bidib);
+      wProgram.setporttype(cmd, m_PortType->GetSelection());
+      wProgram.setval1(cmd, m_ServoLeft->GetValue());
+      wProgram.setval2(cmd, m_ServoRight->GetValue());
+      wProgram.setval3(cmd, m_ServoSpeed->GetValue());
+      wProgram.setval4(cmd, 0);
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
   }
 }
 
