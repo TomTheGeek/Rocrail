@@ -150,6 +150,7 @@ void BidibIdentDlg::event(iONode node) {
     NodeOp.base.del(node);
   }
   else if(  wProgram.getcmd( node ) == wProgram.nvget ) {
+    eventUpdate = true;
     m_PortType->SetSelection(wProgram.getporttype(node));
     m_ServoLeft->SetValue( wProgram.getval1(node));
     m_ServoRight->SetValue( wProgram.getval2(node));
@@ -159,6 +160,7 @@ void BidibIdentDlg::event(iONode node) {
     m_ConfigR->SetValue( wProgram.getval2(node));
     m_ConfigV->SetValue( wProgram.getval3(node));
     m_ConfigS->SetValue( wProgram.getval4(node));
+    eventUpdate = false;
     NodeOp.base.del(node);
   }
   else if(  wProgram.getcmd( node ) == wProgram.writehex ) {
@@ -270,6 +272,8 @@ void BidibIdentDlg::initLabels() {
   configS = 0;
   www = NULL;
   uid = 0;
+  eventUpdate = false;
+  servoSetMutex = MutexOp.inst(NULL, True);
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -718,16 +722,22 @@ void BidibIdentDlg::onServoGet( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::onServoSet() {
-  if( m_ServoLeft->GetValue() != configL || m_ServoRight->GetValue() != configR ||
-      m_ServoSpeed->GetValue() != configS || m_ServoReserved->GetValue() != configV )
+  if( eventUpdate ) {
+    return;
+  }
+  if( !MutexOp.trywait(servoSetMutex, 100) ) {
+    return;
+  }
+  if( m_ConfigL->GetValue() != configL || m_ConfigR->GetValue() != configR ||
+      m_ConfigS->GetValue() != configS || m_ConfigV->GetValue() != configV )
   {
-    configL = m_ServoLeft->GetValue();
-    configR = m_ServoRight->GetValue();
-    configS = m_ServoSpeed->GetValue();
-    configV = m_ServoReserved->GetValue();
+    configL = m_ConfigL->GetValue();
+    configR = m_ConfigR->GetValue();
+    configS = m_ConfigS->GetValue();
+    configV = m_ConfigV->GetValue();
 
-    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"servo set L=%d R=%d S=%d",
-        m_ServoLeft->GetValue(), m_ServoRight->GetValue(), m_ServoSpeed->GetValue() );
+    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"servo set L=%d R=%d V=%d S=%d",
+        configL, configR, configV, configS );
     if( bidibnode != NULL ) {
       iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
@@ -736,20 +746,20 @@ void BidibIdentDlg::onServoSet() {
       wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
       wProgram.setlntype(cmd, wProgram.lntype_bidib);
       wProgram.setporttype(cmd, m_PortType->GetSelection());
-      wProgram.setval1(cmd, m_ServoLeft->GetValue());
-      wProgram.setval2(cmd, m_ServoRight->GetValue());
-      wProgram.setval3(cmd, m_ServoSpeed->GetValue());
+      wProgram.setval1(cmd, configL);
+      wProgram.setval2(cmd, configR);
+      wProgram.setval3(cmd, configV);
       wProgram.setval4(cmd, 0);
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }
   }
+  MutexOp.post(servoSetMutex);
 }
 
 void BidibIdentDlg::onServoLeft( wxScrollEvent& event ) {
   m_ConfigL->SetValue(m_ServoLeft->GetValue());
   if( configL != m_ConfigL->GetValue() ) {
-    configL = m_ConfigL->GetValue();
     onServoSet();
   }
 }
@@ -757,7 +767,6 @@ void BidibIdentDlg::onServoLeft( wxScrollEvent& event ) {
 void BidibIdentDlg::onServoRight( wxScrollEvent& event ) {
   m_ConfigR->SetValue(m_ServoRight->GetValue());
   if( configR != m_ConfigR->GetValue() ) {
-    configR = m_ConfigR->GetValue();
     onServoSet();
   }
 }
@@ -765,7 +774,6 @@ void BidibIdentDlg::onServoRight( wxScrollEvent& event ) {
 void BidibIdentDlg::onServoSpeed( wxScrollEvent& event ) {
   m_ConfigV->SetValue(m_ServoSpeed->GetValue());
   if( configV != m_ConfigV->GetValue() ) {
-    configV = m_ConfigV->GetValue();
     onServoSet();
   }
 }
@@ -773,7 +781,6 @@ void BidibIdentDlg::onServoSpeed( wxScrollEvent& event ) {
 void BidibIdentDlg::onServoReserved( wxScrollEvent& event ) {
   m_ConfigS->SetValue(m_ServoReserved->GetValue());
   if( configS != m_ConfigS->GetValue() ) {
-    configS = m_ConfigS->GetValue();
     onServoSet();
   }
 }
@@ -830,28 +837,24 @@ void BidibIdentDlg::onConfigS( wxSpinEvent& event ) {
 void BidibIdentDlg::onConfigLtxt( wxCommandEvent& event ) {
   m_ServoLeft->SetValue(m_ConfigL->GetValue());
   if( configL != m_ConfigL->GetValue() ) {
-    configL = m_ConfigL->GetValue();
     onServoSet();
   }
 }
 void BidibIdentDlg::onConfigRtxt( wxCommandEvent& event ) {
   m_ServoRight->SetValue(m_ConfigR->GetValue());
   if( configR != m_ConfigR->GetValue() ) {
-    configR = m_ConfigR->GetValue();
     onServoSet();
   }
 }
 void BidibIdentDlg::onConfigVtxt( wxCommandEvent& event ) {
   m_ServoSpeed->SetValue(m_ConfigV->GetValue());
   if( configV != m_ConfigV->GetValue() ) {
-    configV = m_ConfigV->GetValue();
     onServoSet();
   }
 }
 void BidibIdentDlg::onConfigStxt( wxCommandEvent& event ) {
   m_ServoReserved->SetValue(m_ConfigS->GetValue());
   if( configS != m_ConfigS->GetValue() ) {
-    configS = m_ConfigS->GetValue();
     onServoSet();
   }
 }
