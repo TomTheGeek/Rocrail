@@ -185,7 +185,6 @@ void serialDisconnect( obj inst ) {
 
   if( data->serial != NULL ) {
     data->commOK = False;
-    SerialOp.close( data->serial );
     SerialOp.base.del( data->serial );
     data->serial = NULL;
   }

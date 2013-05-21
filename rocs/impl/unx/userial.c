@@ -66,9 +66,14 @@
 Boolean rocs_serial_close( iOSerial inst ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
-  int rc = close( o->sh );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocs_serial_close rc=%d", errno );
-  return rc ? False:True;
+  int rc = 0;
+  if( o->sh > 0 ) {
+    rc = close( o->sh );
+    o->sh = 0;
+    if( rc == -1 )
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "rocs_serial_close rc=%d", errno );
+  }
+  return rc == 0 ? True:False;
 #else
 
   return False;

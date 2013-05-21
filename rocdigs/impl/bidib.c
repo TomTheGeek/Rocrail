@@ -1944,6 +1944,7 @@ static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, int Type, const cha
     if( pdata[0] == 0 ) {
       // bus is in reset modus...
       ThreadOp.sleep(100);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "retry get node table...");
       data->subWrite((obj)bidib, node==NULL?path:node->path, MSG_NODETAB_GETALL, NULL, 0, 0);
     }
     else {
@@ -2369,8 +2370,11 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     data->nodepath[0] = 0;
     path[0] = 0; // address
 
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reset bus...");
     data->subWrite((obj)bidib, path, MSG_SYS_RESET, NULL, 0, 0);
     ThreadOp.sleep(1000);
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get node table...");
     data->subWrite((obj)bidib, path, MSG_NODETAB_GETALL, NULL, 0, 0);
 
     break;
