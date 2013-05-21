@@ -1549,3 +1549,7 @@ void BidibIdentDlg::onPageChanged( wxNotebookEvent& event ) {
 }
 
 
+void BidibIdentDlg::onPortSet( wxCommandEvent& event ) {
+  onServoSet();
+}
+
