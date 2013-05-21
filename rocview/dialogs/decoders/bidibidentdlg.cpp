@@ -721,14 +721,14 @@ void BidibIdentDlg::onServoGet( wxCommandEvent& event ) {
 }
 
 
-void BidibIdentDlg::onServoSet() {
+void BidibIdentDlg::onServoSet(bool overwrite) {
   if( eventUpdate ) {
     return;
   }
   if( !MutexOp.trywait(servoSetMutex, 100) ) {
     return;
   }
-  if( m_ConfigL->GetValue() != configL || m_ConfigR->GetValue() != configR ||
+  if( overwrite || m_ConfigL->GetValue() != configL || m_ConfigR->GetValue() != configR ||
       m_ConfigS->GetValue() != configS || m_ConfigV->GetValue() != configV )
   {
     configL = m_ConfigL->GetValue();
@@ -1550,6 +1550,6 @@ void BidibIdentDlg::onPageChanged( wxNotebookEvent& event ) {
 
 
 void BidibIdentDlg::onPortSet( wxCommandEvent& event ) {
-  onServoSet();
+  onServoSet(true);
 }
 

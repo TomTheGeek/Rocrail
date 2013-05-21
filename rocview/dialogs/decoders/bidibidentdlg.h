@@ -103,7 +103,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onSelectUpdateFile( wxCommandEvent& event );
     void onUpdateStart( wxCommandEvent& event );
 
-    void onServoSet();
+    void onServoSet(bool overwrite=false);
     void onPageChanged( wxNotebookEvent& event );
     void onMacroList( wxCommandEvent& event );
     void onMacroLineSelected( wxGridEvent& event );
