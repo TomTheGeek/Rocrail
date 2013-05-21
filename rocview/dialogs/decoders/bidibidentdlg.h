@@ -56,6 +56,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
   int configR;
   int configV;
   int configS;
+  int uid;
   char* www;
   wxTreeItemId findTreeItem( const wxTreeItemId& root, const wxString& text);
   int getLevel(const char* path );

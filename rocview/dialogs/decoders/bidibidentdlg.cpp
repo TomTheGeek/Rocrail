@@ -269,6 +269,7 @@ void BidibIdentDlg::initLabels() {
   configV = 0;
   configS = 0;
   www = NULL;
+  uid = 0;
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -1527,7 +1528,10 @@ void BidibIdentDlg::onPageChanged( wxNotebookEvent& event ) {
   case 0: // index
     break;
   case 1: // features
-    onFeaturesGet(event);
+    if( bidibnode != NULL && uid != wBiDiBnode.getuid(bidibnode) ) {
+      uid = wBiDiBnode.getuid(bidibnode);
+      onFeaturesGet(event);
+    }
     break;
   case 2: // accessory
     break;
