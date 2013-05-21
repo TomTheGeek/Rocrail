@@ -1519,3 +1519,26 @@ void BidibIdentDlg::onProductName( wxMouseEvent& event ) {
     wxLaunchDefaultBrowser(wxString(www, wxConvUTF8), wxBROWSER_NEW_WINDOW );
 }
 
+void BidibIdentDlg::onPageChanged( wxNotebookEvent& event ) {
+  if( event.GetSelection() != -1 )
+    m_Notebook->ChangeSelection(event.GetSelection());
+
+  switch( event.GetSelection() ) {
+  case 0: // index
+    break;
+  case 1: // features
+    onFeaturesGet(event);
+    break;
+  case 2: // accessory
+    break;
+  case 3: // portsetup
+    break;
+  case 4: // macro
+    break;
+  case 5: // firmware
+    break;
+  }
+
+}
+
+
