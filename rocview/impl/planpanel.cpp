@@ -101,6 +101,8 @@
 #include "rocrail/wrapper/public/TourList.h"
 #include "rocrail/wrapper/public/Link.h"
 #include "rocrail/wrapper/public/LinkList.h"
+#include "rocrail/wrapper/public/Dec.h"
+#include "rocrail/wrapper/public/DecList.h"
 
 #include <wx/dcbuffer.h>
 
@@ -1217,6 +1219,9 @@ iONode PlanPanel::addItemInList( iONode item ) {
   }
   else if( StrOp.equals( wLink.name(), name ) ) {
     dbkey = wLinkList.name();
+  }
+  else if( StrOp.equals( wDec.name(), name ) ) {
+    dbkey = wDecList.name();
   }
 
   const char* id = wItem.getid(item);

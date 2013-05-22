@@ -1656,6 +1656,21 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
     }
     ControlOp.setBoosters(AppOp.getControl(), wPlan.getboosterlist( o->model ));
   }
+  else if( StrOp.equals( wDec.name(), name ) ) {
+    iONode declist = wPlan.getdeclist( o->model );
+    if( declist != NULL ) {
+      iONode node = wDecList.getdec( declist );
+      while( node != NULL ) {
+        if( StrOp.equals( wDec.getid( item ), wDec.getid( node ) ) ) {
+          NodeOp.removeChild( declist, node );
+          node->base.del( node );
+          removed = True;
+          break;
+        }
+        node = wDecList.nextdec( declist, node );
+      };
+    }
+  }
   return removed;
 }
 

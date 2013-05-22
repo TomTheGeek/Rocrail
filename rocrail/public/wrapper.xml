@@ -98,6 +98,14 @@
     <var name="currenttrc" vt="bool" defval="false" remark="Current trace only."/>
   </issue>
 
+  <cvbyte wrappername="CVByte">
+    <var name="nr" vt="int" defval="0" range="0-255" remark="CV-Number"/>
+    <var name="value" vt="int" defval="0" range="0-255" remark="CV-Value"/>
+    <var name="desc" vt="string" defval="NULL" range="*" remark="CV-Description"/>
+    <var name="cat" vt="string" defval="generel" range="*" remark="Category"/>
+    <var name="info" vt="string" defval="" range="*" remark="Info"/>
+  </cvbyte>
+
   <macro wrappername="Macro" remark="Macro definition for accessories.">
     <var name="uid" vt="int" defval="0" remark="The unique ID in case of an export."/>
     <var name="class" vt="int" defval="0" remark="Module class in case of an export."/>
@@ -2179,6 +2187,7 @@
         <var name="catnr" vt="string" defval="" range="*" remark="Catalog number."/>
         <var name="decimage" vt="string" defval="NULL" range="*" remark="decoder image file"/>
         <var name="decfile" vt="string" defval="nmra-rp922-acc.xml" range="*" remark="Decoder definition file."/>
+        <cvbyte cardinality="n"/>
       </dec>
     </declist>
     <lclist cardinality="1" remark="Loc table" wrappername="LocList">
@@ -2367,13 +2376,7 @@
         <var name="mode" vt="string" defval="" range="*" remark="Loc mode."/>
 
         <var name="decfile" vt="string" defval="nmra-rp922.xml" range="*" remark="Decoder definition file."/>
-        <cvbyte cardinality="n" wrappername="CVByte">
-          <var name="nr" vt="int" defval="0" range="0-255" remark="CV-Number"/>
-          <var name="value" vt="int" defval="0" range="0-255" remark="CV-Value"/>
-          <var name="desc" vt="string" defval="NULL" range="*" remark="CV-Description"/>
-          <var name="cat" vt="string" defval="generel" range="*" remark="Category"/>
-          <var name="info" vt="string" defval="" range="*" remark="Info"/>
-        </cvbyte>
+        <cvbyte cardinality="n"/>
 
         <var name="consist_lightsoff" vt="bool" defval="False" remark="Keep lights turned off for all slave locos."/>
         <var name="consist_syncfun" vt="bool" defval="False" remark="Synchronise functions for all slave locos."/>
