@@ -125,6 +125,8 @@
 #include "rocrail/wrapper/public/TourList.h"
 #include "rocrail/wrapper/public/SystemActions.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
+#include "rocrail/wrapper/public/Dec.h"
+#include "rocrail/wrapper/public/DecList.h"
 
 static int instCnt = 0;
 
@@ -666,6 +668,11 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     MapOp.put( data->blockGroupMap, wLink.getid( item ), (obj)bg );
     added = True;
   }
+  else if( StrOp.equals( wDec.name(), itemName ) ) {
+    iONode clone = (iONode)item->base.clone( item );
+    __addItemInList( data, wDecList.name(), clone );
+    added = True;
+  }
   else if( StrOp.equals( wTurntable.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     iOTT tt = TTOp.inst( clone );
@@ -1150,6 +1157,25 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       }
     }
     if( link == NULL && wLink.getid( item ) != NULL && StrOp.len( wLink.getid( item ) ) > 0 ) {
+      _addItem( inst, item );
+    }
+  }
+  else if( StrOp.equals( wDec.name(), name ) ) {
+    /* modify decoders... */
+    iONode dec = NULL;
+    iONode declist = wPlan.getdeclist( data->model );
+    if( declist != NULL ) {
+      iONode node = wDecList.getdec( declist );
+      while( node != NULL ) {
+        if( StrOp.equals( wDec.getid( item ), wDec.getid( node ) ) ) {
+          NodeOp.mergeNode( node, item, True, True, True );
+          dec = node;
+          break;
+        }
+        node = wDecList.nextdec( declist, node );
+      }
+    }
+    if( dec == NULL && wDec.getid( item ) != NULL && StrOp.len( wDec.getid( item ) ) > 0 ) {
       _addItem( inst, item );
     }
   }
