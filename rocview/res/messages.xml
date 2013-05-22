@@ -21490,4 +21490,7 @@
   <Msg id="shutdownserver">
     <en txt="Shutdown"/>
   </Msg>
+  <Msg id="accdectable" dialog="true">
+    <en txt="Accessory table" alttxt="Accessory Decoders" tip="Accessory decoder table"/>
+  </Msg>
 </Messages>

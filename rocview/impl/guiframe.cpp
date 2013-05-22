@@ -100,6 +100,7 @@
 #include "rocview/dialogs/guestloco.h"
 #include "rocview/dialogs/cmdrecorder.h"
 #include "rocview/dialogs/throttledlg.h"
+#include "rocview/dialogs/accdecdlg.h"
 
 
 
@@ -305,6 +306,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_CtrlMode       , RocGuiFrame::OnCtrlMode)
     EVT_MENU( ME_EditLocs       , RocGuiFrame::OnEditLocs)
     EVT_MENU( ME_EditCars       , RocGuiFrame::OnEditCars)
+    EVT_MENU( ME_EditAccDecs    , RocGuiFrame::OnEditAccDecs)
     EVT_MENU( ME_EditOperators  , RocGuiFrame::OnEditOperators)
     EVT_MENU( ME_EditWaybills   , RocGuiFrame::OnEditWaybills)
     EVT_MENU( ME_EditTurnouts   , RocGuiFrame::OnEditTurnouts)
@@ -1787,6 +1789,7 @@ void RocGuiFrame::initFrame() {
   menuTables->Append(ME_EditTimedActions, wxGetApp().getMenu("actiontable"), wxGetApp().getTip("actiontable") );
   menuTables->Append(ME_EditBoosters, wxGetApp().getMenu("boostertable"), wxGetApp().getTip("boostertable") );
   menuTables->Append(ME_EditActions, wxGetApp().getMenu("systemactions"), wxGetApp().getTip("systemactions") );
+  menuTables->Append(ME_EditAccDecs, wxGetApp().getMenu("accdectable"), wxGetApp().getTip("accdectable") );
 
   // Turntable dialog has no index tab... disable
   //menuTables->Append(ME_EditTurntables, wxGetApp().getMenu("turntabletable"), wxGetApp().getTip("turntabletable") );
@@ -3321,6 +3324,14 @@ void RocGuiFrame::OnEditLocs( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnEditCars( wxCommandEvent& event ) {
   CarDlg* dlg = new CarDlg(this, NULL );
+  if( wxID_OK == dlg->ShowModal() ) {
+    /* Notify Notebook. */
+  }
+  dlg->Destroy();
+}
+
+void RocGuiFrame::OnEditAccDecs( wxCommandEvent& event ) {
+  AccDecDlg* dlg = new AccDecDlg(this );
   if( wxID_OK == dlg->ShowModal() ) {
     /* Notify Notebook. */
   }
