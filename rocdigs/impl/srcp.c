@@ -372,10 +372,8 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
   /* Switch command. */
   if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
     char key[64] = {'\0'};
-    int mod = wSwitch.getaddr1( node );
-    int pin  = wSwitch.getport1( node );
-    int addr = 0;
-    int port  = 1;
+    int addr = wSwitch.getaddr1( node );
+    int port = wSwitch.getport1( node );
     int action = 1;
     int activationTime = wDigInt.getswtime( o->ini );
     if( wSwitch.getdelay(node) > 0 )
@@ -388,9 +386,7 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
       ga_bus = wSRCP.getsrcpbusGA_n( o->srcpini );
 
     if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
-      port = 0;
-
-    addr = (mod-1)*4+pin;
+      port++;
 
     StrOp.fmtb(key, "sw_%d_%d", wSwitch.getaddr1( node ), wSwitch.getport1( node ));
     if (! MapOp.haskey(o->knownObjects, key) ) {
@@ -404,7 +400,7 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
 
     if( wSwitch.issinglegate(node) ) {
       action = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 1:0;
-      StrOp.fmtb( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, wSwitch.getgate1(node), action, -1 );
+      StrOp.fmtb( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, -1 );
     }
     else {
       StrOp.fmtb( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, activationTime );
@@ -416,10 +412,9 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
     char key[64] = {'\0'};
-    int mod = wOutput.getaddr( node );
-    int pin = wOutput.getport( node );
-    int addr = 0;
-    int port = wOutput.getgate( node );
+    int addr = wOutput.getaddr( node );
+    int port = wOutput.getport( node );
+    int gate = wOutput.getgate( node );
     int action = StrOp.equals( wOutput.getcmd( node ), wOutput.off ) ? 1:0;
     int activationTime = -1;
 
@@ -428,8 +423,6 @@ static iONode __translate( iOSRCPData o, iONode node, char* srcp ) {
       ga_bus = wSRCP.getsrcpbusGA_m( o->srcpini );
     else if( StrOp.equals( wOutput.prot_N, wOutput.getprot( node ) ) )
       ga_bus = wSRCP.getsrcpbusGA_n( o->srcpini );
-
-    addr = (mod-1)*4+pin;
 
     StrOp.fmtb(key, "sw_%d_%d", wOutput.getaddr( node ), wOutput.getport( node ));
     if (! MapOp.haskey(o->knownObjects, key) ) {
