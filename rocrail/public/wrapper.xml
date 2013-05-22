@@ -2185,7 +2185,7 @@
         <var name="desc" vt="string" defval="" range="*" remark="Description of loc."/>
         <var name="manu" vt="string" defval="" range="*" remark="Manufacturer."/>
         <var name="catnr" vt="string" defval="" range="*" remark="Catalog number."/>
-        <var name="decimage" vt="string" defval="NULL" range="*" remark="decoder image file"/>
+        <var name="image" vt="string" defval="NULL" range="*" remark="decoder image file"/>
         <var name="decfile" vt="string" defval="nmra-rp922-acc.xml" range="*" remark="Decoder definition file."/>
         <cvbyte cardinality="n"/>
       </dec>
@@ -2406,6 +2406,8 @@
         <var name="ident" vt="string" defval="" range="*"/>
         <var name="remark" vt="string" defval="" range="*"/>
         <var name="image" vt="string" defval="NULL" range="*" remark="image file to show in dialogs"/>
+        <var name="decfile" vt="string" defval="nmra-rp922.xml" range="*" remark="Decoder definition file."/>
+        <cvbyte cardinality="n"/>
         <var name="number" vt="string" defval="" range="*"/>
         <var name="manuid" vt="string" defval="" range="*"/>
         <var name="era" vt="int" defval="0" range="0-*"/>

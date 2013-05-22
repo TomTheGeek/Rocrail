@@ -54,6 +54,8 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/DataReq.h"
+#include "rocrail/wrapper/public/Dec.h"
+#include "rocrail/wrapper/public/Car.h"
 
 // JMRI
 #include "rocrail/wrapper/public/DecoderConfig.h"
@@ -432,46 +434,69 @@ static int locComparator(obj* o1, obj* o2) {
 void RocProDlg::initLocMap(const char* locid) {
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
-    iONode lclist = wPlan.getlclist( model );
-    if( lclist != NULL ) {
-      int i;
-      int cnt = NodeOp.getChildCnt( lclist );
-      iOList list = ListOp.inst();
+    int i = 0;
+    iOList list = ListOp.inst();
+    iONode lclist  = wPlan.getlclist( model );
+    iONode carlist = wPlan.getcarlist( model );
+    iONode declist = wPlan.getdeclist( model );
 
+    if( lclist != NULL ) {
+      int cnt = NodeOp.getChildCnt( lclist );
       for( i = 0; i < cnt; i++ ) {
         iONode lc = NodeOp.getChild( lclist, i );
         ListOp.add( list, (obj)lc );
       }
-      // Sort the list:
-      ListOp.sort( list, locComparator );
-
-      for( i = 0; i < ListOp.size( list ); i++ ) {
-        iONode lc = (iONode)ListOp.get( list, i );
-        if( lc == NULL )
-          continue;
-        const char* id = wLoc.getid( lc );
-      }
-
-      for( i = 0; i < cnt; i++ ) {
-        iONode lc = (iONode)ListOp.get( list, i );
-        if( lc == NULL )
-          continue;
-        const char* id = wLoc.getid( lc );
-        if( id != NULL && wLoc.getaddr(lc) > 0 && wLoc.isshow(lc) ) {
-          m_LocoList->Append( wxString(id,wxConvUTF8), (void*)lc );
-        }
-      }
-      if( cnt > 0 ) {
-        if( locid == NULL )
-          m_LocoList->SetSelection(0);
-        else
-          m_LocoList->SetStringSelection(wxString(locid,wxConvUTF8));
-        wxCommandEvent event( 0, -1 );
-        onLocoList(event);
-      }
-
-      ListOp.base.del( list );
     }
+
+    if( carlist != NULL ) {
+      int cnt = NodeOp.getChildCnt( carlist );
+      for( i = 0; i < cnt; i++ ) {
+        iONode car = NodeOp.getChild( carlist, i );
+        if( wCar.getaddr(car) > 0 )
+          ListOp.add( list, (obj)car );
+      }
+    }
+
+    if( declist != NULL ) {
+      int cnt = NodeOp.getChildCnt( declist );
+      for( i = 0; i < cnt; i++ ) {
+        iONode dec = NodeOp.getChild( declist, i );
+        if( wDec.getaddr(dec) > 0 )
+          ListOp.add( list, (obj)dec );
+      }
+    }
+
+    // Sort the list:
+    ListOp.sort( list, locComparator );
+
+    for( i = 0; i < ListOp.size( list ); i++ ) {
+      iONode lc = (iONode)ListOp.get( list, i );
+      if( lc == NULL )
+        continue;
+      const char* id = wLoc.getid( lc );
+    }
+
+    for( i = 0; i < ListOp.size( list ); i++ ) {
+      iONode lc = (iONode)ListOp.get( list, i );
+      if( lc == NULL )
+        continue;
+      const char* id = wLoc.getid( lc );
+      if( id != NULL && wLoc.getaddr(lc) > 0 && wLoc.isshow(lc) ) {
+        m_LocoList->Append( wxString(id,wxConvUTF8), (void*)lc );
+      }
+    }
+
+    if( ListOp.size( list ) > 0 ) {
+      if( locid == NULL )
+        m_LocoList->SetSelection(0);
+      else
+        m_LocoList->SetStringSelection(wxString(locid,wxConvUTF8));
+      wxCommandEvent event( 0, -1 );
+      onLocoList(event);
+    }
+
+    ListOp.base.del( list );
+
   }
 }
 
