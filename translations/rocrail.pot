@@ -6395,3 +6395,15 @@ msgstr ""
 msgid "Shutdown"
 msgstr ""
 
+#. 
+# id="accdectable"
+#, c-format
+msgid "Accessory table"
+msgstr ""
+
+#. 
+# id="accdectable"
+#, c-format
+msgid "Accessory decoder table"
+msgstr ""
+
