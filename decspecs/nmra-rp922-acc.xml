@@ -1,0 +1,14 @@
+<decoder manu="NMRA" type="RP-9.2.2" web="http://nmra.org/standards/DCC/standards_rps/rp922.html">
+  <cvbyte nr="1" cat="address" desc="Decoder Address LSB" info="6 LSB of accessory decoder address."/>
+  <cvbyte nr="2" cat="io" desc="Auxiliary activation" info="Auxiliary activation of outputs."/>
+  <cvbyte nr="3" cat="timer" desc="Time On F1" info=""/>
+  <cvbyte nr="4" cat="timer" desc="Time On F2" info=""/>
+  <cvbyte nr="5" cat="timer" desc="Time On F3" info=""/>
+  <cvbyte nr="6" cat="timer" desc="Time On F4" info=""/>
+  <cvbyte nr="7" cat="info" desc="Manufacturer Version No." readonly="true" info="This is reserved for the manufacturer to store information regarding the version of the decoder."/>
+  <cvbyte nr="8" cat="info" desc="Manufactured ID" readonly="true" info="CV8 shall contain the NMRA assigned id number of the manufacturer of this decoder."/>
+  <cvbyte nr="9" cat="address" desc="Decoder Address MSB" info="3 MSB of accessory decoder address."/>
+  <cvbyte nr="28" cat="config" desc="BiDi Communication" info="Bi-Directional Communication Configuration."/>
+  <cvbyte nr="29" cat="config" desc="Configuration" info="Accessory Decoder Configuration."/>
+</decoder>
+
