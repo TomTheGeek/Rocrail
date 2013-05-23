@@ -119,6 +119,7 @@ RocProDlgGen( parent )
     m_Curve[i] = 0;
   }
   m_CVMap = MapOp.inst();
+  m_CVNrMap = MapOp.inst();
   m_CatMap = MapOp.inst();
   m_LocoImage->SetBitmap( wxBitmap(nopict_xpm) );
   GetSizer()->Fit(this);
@@ -132,6 +133,7 @@ RocProDlgGen( parent )
 
 RocProDlg::~RocProDlg() {
   MapOp.base.del(m_CVMap);
+  MapOp.base.del(m_CVNrMap);
   MapOp.base.del(m_CatMap);
   if( m_DecFilename != NULL )
     StrOp.free(m_DecFilename);
@@ -172,6 +174,7 @@ void RocProDlg::loadDecFile() {
   if( parseDecFile() ) {
     m_DecTree->DeleteAllItems();
     MapOp.clear(m_CVMap);
+    MapOp.clear(m_CVNrMap);
     wxTreeItemId root  = m_DecTree->AddRoot(wxString( NodeOp.getStr(m_DecNode, "manu", "?"), wxConvUTF8)+wxT(" ")+wxString( NodeOp.getStr(m_DecNode, "type", "?"), wxConvUTF8));
     iOMap catMap = MapOp.inst();
     int cnt = NodeOp.getChildCnt(m_DecNode);
@@ -190,6 +193,9 @@ void RocProDlg::loadDecFile() {
       }
       m_DecTree->AppendItem( cat, wxString( wCVByte.getdesc(cv), wxConvUTF8));
       MapOp.put( m_CVMap, wCVByte.getdesc(cv), (obj)cv);
+      char key[32];
+      StrOp.fmtb(key, "%d", wCVByte.getnr(cv) );
+      MapOp.put( m_CVNrMap, key, (obj)cv);
     }
     m_DecTree->ExpandAll();
   }
@@ -705,6 +711,9 @@ void RocProDlg::onBit( wxCommandEvent& event ) {
 
 void RocProDlg::onNr( wxSpinEvent& event ) {
   int nr = m_Nr->GetValue();
+  char key[32];
+  StrOp.fmtb( key, "%d", nr );
+  iONode cv = (iONode)MapOp.get( m_CVNrMap, key );
   iONode lococv = getLocoCV(nr);
   if( lococv != NULL ) {
     setCVVal(wCVByte.getvalue(lococv));
@@ -713,6 +722,10 @@ void RocProDlg::onNr( wxSpinEvent& event ) {
     setCVVal(0);
   }
   m_CV29->Enable(nr==29);
+  if( cv != NULL )
+    m_WriteCV->Enable(wCVByte.isreadonly(cv)?false:true);
+  else
+    m_WriteCV->Enable(true);
 }
 void RocProDlg::onNrText( wxCommandEvent& event ) {
 

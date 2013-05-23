@@ -43,6 +43,7 @@ class RocProDlg : public RocProDlgGen
   iONode m_LocoProps;
   iONode m_CVConf;
   iOMap m_CVMap;
+  iOMap m_CVNrMap;
   iOMap m_CatMap;
   bool m_bSpeedCurve;
   int m_CVoperation;
