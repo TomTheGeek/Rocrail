@@ -43,6 +43,10 @@ class CarDlg : public cardlggen, public BaseDialog
   int    m_SetPage;
   int    m_SortCol;
   int    m_FGroup;
+  void initCVDesc();
+  const char* m_CVDesc[256];
+  int m_iSelectedCV;
+  iONode m_CVNodes[1024];
 
   void initLabels();
   bool evaluate();
@@ -75,6 +79,8 @@ public:
   void onDoc( wxCommandEvent& event );
   void onListColClick( wxListEvent& event );
   void onFG( wxCommandEvent& event );
+  void onCVCell( wxGridEvent& event );
+  void onCVModify( wxCommandEvent& event );
 
 };
 

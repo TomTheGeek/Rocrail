@@ -42,6 +42,7 @@
 #include "rocrail/wrapper/public/DataReq.h"
 #include "rocrail/wrapper/public/FunDef.h"
 #include "rocrail/wrapper/public/Operator.h"
+#include "rocrail/wrapper/public/CVByte.h"
 
 #include "rocview/wrapper/public/Gui.h"
 
@@ -223,6 +224,21 @@ void CarDlg::initLabels() {
   // Functions
   m_labFDesc->SetLabel( wxGetApp().getMsg( "description" ) );
   m_labFTimer->SetLabel( wxGetApp().getMsg( "timer" ) );
+
+  //CV
+  m_CVList->SetRowLabelSize(0);
+  m_CVList->EnableEditing(false);
+  m_CVList->EnableDragGridSize(false);
+  m_CVList->SetSelectionMode(wxGrid::wxGridSelectRows);
+  m_CVList->SetColLabelValue(0, _T("CV"));
+  m_CVList->SetColLabelValue(1, wxGetApp().getMsg( "value" ));
+  m_CVList->SetColLabelValue(2, wxGetApp().getMsg( "description" ));
+  m_CVList->AutoSizeColumns();
+  m_CVList->AutoSizeRows();
+  m_CVDescModify->SetLabel( wxGetApp().getMsg( "modify" ) );
+  m_labCVDesc->SetLabel( wxGetApp().getMsg( "description" ) );
+  m_CVDescModify->Enable(false);
+  m_CVDescription->Enable(false);
 
 
   // Buttons
@@ -427,6 +443,20 @@ void CarDlg::setSelection(const char* ID) {
 }
 
 
+static int __sortCV(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int nrA = wCVByte.getnr( a );
+    int nrB = wCVByte.getnr( b );
+    if( nrA == nrB )
+      return 0;
+    if( nrA > nrB )
+      return 1;
+    return -1;
+}
+
+
 void CarDlg::initValues() {
   if( m_Props == NULL ) {
     TraceOp.trc( "cardlg", TRCLEVEL_DEBUG, __LINE__, 9999, "no car selected" );
@@ -537,6 +567,46 @@ void CarDlg::initValues() {
   m_F0VCmd->SetValue( wCar.isf0vcmd(m_Props)?true:false );
 
   initFunctions();
+
+  // CV's
+  TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "CV list...");
+  iOList list = ListOp.inst();
+  iONode cv = wCar.getcvbyte( m_Props );
+  while( cv != NULL ) {
+    if( wCVByte.getnr( cv ) > 0 && wCVByte.getnr( cv ) <= 1024 ) {
+      ListOp.add(list, (obj)cv);
+    }
+    cv = wCar.nextcvbyte( m_Props, cv );
+  };
+
+  TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "CVs...");
+  if( m_CVList->GetNumberRows() > 0 )
+    m_CVList->DeleteRows( 0, m_CVList->GetNumberRows() );
+  ListOp.sort(list, &__sortCV);
+  int cnt = ListOp.size( list );
+  for( int i = 0; i < cnt && cnt < 1024; i++ ) {
+    iONode cv = (iONode)ListOp.get( list, i );
+    char* cvnr = StrOp.fmt( "%d", wCVByte.getnr( cv ) );
+    char* cvval = StrOp.fmt( "%d", wCVByte.getvalue( cv ) );
+    const char* cvdesc = wCVByte.getdesc(cv);
+    m_CVNodes[wCVByte.getnr( cv )] = cv;
+    m_CVList->AppendRows();
+    int row = m_CVList->GetNumberRows()-1;
+    m_CVList->SetCellValue(row, 0, wxString(cvnr,wxConvUTF8) );
+    m_CVList->SetCellValue(row, 1, wxString(cvval,wxConvUTF8) );
+    if( cvdesc != NULL && StrOp.len(cvdesc) > 0 )
+      m_CVList->SetCellValue(row, 2, wxString(cvdesc,wxConvUTF8) );
+    else
+      m_CVList->SetCellValue(row, 2, wxString(m_CVDesc[wCVByte.getnr( cv )&0xff],wxConvUTF8) );
+    m_CVList->SetReadOnly( row, 0, true );
+    m_CVList->SetReadOnly( row, 1, true );
+    m_CVList->SetReadOnly( row, 2, true );
+    StrOp.free( cvnr );
+    StrOp.free( cvval );
+  }
+  /* clean up the temp. list */
+  ListOp.base.del(list);
+
 }
 
 
@@ -972,5 +1042,72 @@ void CarDlg::onFG( wxCommandEvent& event )
   if( m_FGroup > 6 )
     m_FGroup = 0;
   initFunctions();
+}
+
+void CarDlg::initCVDesc() {
+  for( int i = 0; i < 256; i++ )
+    m_CVDesc[i] = "";
+
+  m_CVDesc[  1]  = "Primary Address";
+  m_CVDesc[  2]  = "Vstart";
+  m_CVDesc[  3]  = "Acceleration Rate";
+  m_CVDesc[  4]  = "Deceleration Rate";
+  m_CVDesc[  5]  = "Vhigh";
+  m_CVDesc[  6]  = "Vmid";
+  m_CVDesc[  7]  = "Manufacturer Version No.";
+  m_CVDesc[  8]  = "Manufactured ID";
+  m_CVDesc[  9]  = "Total PWM Period";
+  m_CVDesc[ 10]  = "EMF Feedback Cutout";
+  m_CVDesc[ 11]  = "Packet Time-Out Value";
+  m_CVDesc[ 12]  = "Power Source Conversion";
+  m_CVDesc[ 13]  = "Alternate Mode Function Status F1-F8";
+  m_CVDesc[ 14]  = "Alternate Mode Fnc. Status FL,F9-F12";
+  m_CVDesc[ 15]  = "Decoder Lock";
+  m_CVDesc[ 16]  = "Decoder Lock";
+  m_CVDesc[ 17]  = "Extended Address";
+  m_CVDesc[ 18]  = "Extended Address";
+  m_CVDesc[ 19]  = "Consist Address";
+  m_CVDesc[ 20]  = "Reserved by NMRA for future use";
+  m_CVDesc[ 21]  = "Consist Addr Active for F1-F8";
+  m_CVDesc[ 22]  = "Consist Addr Active for FL-F9-F12";
+  m_CVDesc[ 23]  = "Acceleration Adjustment";
+  m_CVDesc[ 24]  = "Deceleration Adjustment";
+  m_CVDesc[ 25]  = "Speed Table/Mid-range Cab Speed Step";
+  m_CVDesc[ 26]  = "Reserved by NMRA for future use";
+  m_CVDesc[ 27]  = "Decoder Automatic Stopping Configuration";
+  m_CVDesc[ 28]  = "Bi-Directional Communication Configuration";
+  m_CVDesc[ 29]  = "Configuration Data #1";
+  m_CVDesc[ 30]  = "Error Information";
+  m_CVDesc[ 31]  = "Index High Byte";
+  m_CVDesc[ 32]  = "Index Low Byte";
+
+}
+
+void CarDlg::onCVCell( wxGridEvent& event ) {
+  m_iSelectedCV = event.GetRow();
+  if( m_iSelectedCV == -1 )
+    return;
+
+  wxString str = m_CVList->GetCellValue( m_iSelectedCV, 2 );
+  m_CVDescription->SetValue(str);
+  m_CVDescription->Enable(true);
+  m_CVDescModify->Enable(true);
+  event.Skip();
+
+}
+
+void CarDlg::onCVModify( wxCommandEvent& event ) {
+  if( m_iSelectedCV == -1 )
+    return;
+
+  wxString str = m_CVList->GetCellValue(m_iSelectedCV, 0 );
+  long cvnr = 0;
+  str.ToLong(&cvnr);
+  if( cvnr < 256 ) {
+    iONode cv = m_CVNodes[cvnr];
+    wCVByte.setdesc( cv, m_CVDescription->GetValue().mb_str(wxConvUTF8) );
+    m_CVList->SetCellValue(m_iSelectedCV, 2, m_CVDescription->GetValue() );
+  }
+
 }
 
