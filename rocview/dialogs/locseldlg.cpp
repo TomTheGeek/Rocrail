@@ -47,6 +47,8 @@
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Car.h"
+#include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/FunDef.h"
 #include "rocrail/wrapper/public/DataReq.h"
 
@@ -196,24 +198,54 @@ void LocSelDlg::InitValues() {
 
 }
 
+static int locComparator(obj* o1, obj* o2) {
+  if( *o1 == NULL || *o2 == NULL )
+    return 0;
+  return strcmp( wItem.getid( (iONode)*o1 ), wItem.getid( (iONode)*o2 ) );
+}
+
+
+
 void LocSelDlg::InitIndex() {
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
   m_List->Clear();
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode lclist = wPlan.getlclist( model );
+    iONode carlist = wPlan.getcarlist( model );
     if( lclist != NULL ) {
+      iOList list = ListOp.inst();
       int cnt = NodeOp.getChildCnt( lclist );
       for( int i = 0; i < cnt; i++ ) {
         iONode lc = NodeOp.getChild( lclist, i );
         const char* id = wLoc.getid( lc );
         if( id != NULL && wLoc.isshow(lc) ) {
-          m_List->Append( wxString(id,wxConvUTF8) );
+          ListOp.add( list, (obj)lc );
         }
       }
+      if( carlist != NULL ) {
+        int cnt = NodeOp.getChildCnt( carlist );
+        for( int i = 0; i < cnt; i++ ) {
+          iONode car = NodeOp.getChild( carlist, i );
+          if( wCar.getaddr(car) > 0 ) {
+            ListOp.add( list, (obj)car );
+          }
+        }
+      }
+
+      // Sort the list:
+      ListOp.sort( list, locComparator );
+      cnt = ListOp.size( list );
+
+      for( int i = 0; i < ListOp.size( list ); i++ ) {
+        iONode node = (iONode)ListOp.get( list, i );
+        if( node != NULL )
+          m_List->Append( wxString(wItem.getid( node ),wxConvUTF8) );
+      }
+
       if( m_Props != NULL ) {
-        m_List->SetStringSelection( wxString(wLoc.getid( m_Props ),wxConvUTF8) );
-        m_List->SetFirstItem( wxString(wLoc.getid( m_Props ),wxConvUTF8) );
+        m_List->SetStringSelection( wxString(wItem.getid( m_Props ),wxConvUTF8) );
+        m_List->SetFirstItem( wxString(wItem.getid( m_Props ),wxConvUTF8) );
         InitValues();
       }
       else if( m_LocID != NULL && StrOp.len(m_LocID) > 0 ) {
@@ -222,6 +254,7 @@ void LocSelDlg::InitIndex() {
         m_Props = wxGetApp().getFrame()->findLoc( m_List->GetStringSelection().mb_str(wxConvUTF8) );
         InitValues();
       }
+      ListOp.base.del(list);
     }
   }
 }
@@ -293,6 +326,8 @@ void LocSelDlg::OnListboxSelLocSelected( wxCommandEvent& event )
     return;
 
   m_Props = wxGetApp().getFrame()->findLoc( m_List->GetStringSelection().mb_str(wxConvUTF8) );
+  if( m_Props == NULL )
+    m_Props = wxGetApp().getFrame()->findCar( m_List->GetStringSelection().mb_str(wxConvUTF8) );
   InitValues();
 
 }
@@ -339,6 +374,8 @@ void LocSelDlg::OnBitmapbuttonSelLocClick( wxCommandEvent& event )
 {
   if(!m_MICmode) {
     m_Props = wxGetApp().getFrame()->findLoc( m_List->GetStringSelection().mb_str(wxConvUTF8) );
+    if( m_Props == NULL )
+      m_Props = wxGetApp().getFrame()->findCar( m_List->GetStringSelection().mb_str(wxConvUTF8) );
     EndModal( wxID_OK );
     return;
   }
