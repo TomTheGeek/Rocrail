@@ -62,6 +62,7 @@ CarDlg::CarDlg( wxWindow* parent, iONode p_Props, bool save )
   m_SortCol  = 0;
   m_FGroup   = 0;
   initLabels();
+  initCVDesc();
   initIndex();
 
   m_IndexPanel->GetSizer()->Layout();
@@ -606,6 +607,7 @@ void CarDlg::initValues() {
   }
   /* clean up the temp. list */
   ListOp.base.del(list);
+  m_CVList->AutoSize();
 
 }
 
