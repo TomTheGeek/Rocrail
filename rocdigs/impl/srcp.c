@@ -270,7 +270,10 @@ static Boolean __initGA( iOSRCPData o, iONode node, int ga_bus, int addr ) {
 
   StrOp.fmtb(tmpCommand, "GET %d GA %d 0\n", ga_bus, addr );
   if (__srcpSendCommand(o, tmpCommand,NULL) != 100 ) {
-    StrOp.fmtb(tmpCommand,"INIT %d GA %d %s\n", ga_bus, addr, wSwitch.getprot( node ) );
+    const char* prot = wSwitch.getprot( node );
+    if( StrOp.equals( wSwitch.prot_DEF, wSwitch.getprot( node )) )
+      prot = "P";
+    StrOp.fmtb(tmpCommand,"INIT %d GA %d %s\n", ga_bus, addr, prot );
     if (!__srcpSendCommand(o, tmpCommand,NULL)) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Problem initializing GA %d", addr );
       return False;
