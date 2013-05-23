@@ -157,6 +157,7 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
       setCVVal(0);
 
     m_CV29->Enable(nr==29);
+    m_WriteCV->Enable(wCVByte.isreadonly(cv)?false:true);
   }
   else {
     // catagory
