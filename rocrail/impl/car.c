@@ -31,6 +31,8 @@
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/FunDef.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/CVByte.h"
+#include "rocrail/wrapper/public/ModelCmd.h"
 
 static int instCnt = 0;
 
@@ -117,6 +119,20 @@ static char* _toHtml( void* object ) {
 
 
 /**  */
+static void __initCVmap( iOCar car ) {
+  iOCarData data = Data(car);
+  iONode cv = NodeOp.findNode( data->props, wCVByte.name() );
+  while( cv != NULL ) {
+    char* key = StrOp.fmt( "%d", wCVByte.getnr( cv ) );
+    MapOp.put( data->cvMap, key, (obj)cv );
+    StrOp.free( key );
+    cv = NodeOp.findNextNode( data->props, cv );
+  };
+}
+
+
+
+
 static struct OCar* _inst( iONode ini ) {
   iOCar __Car = allocMem( sizeof( struct OCar ) );
   iOCarData data = allocMem( sizeof( struct OCarData ) );
@@ -124,10 +140,14 @@ static struct OCar* _inst( iONode ini ) {
 
   /* Initialize data->xxx members... */
   data->props = ini;
+  data->cvMap = MapOp.inst();
+
   if( StrOp.equals("freight", wCar.gettype(data->props)) ) {
     /* type value changed from freight to goods */
     wCar.settype(data->props, wCar.cartype_freight);
   }
+
+  __initCVmap(__Car);
 
   instCnt++;
   return __Car;
@@ -405,6 +425,44 @@ static void _swapPlacing( iOCar car, iONode cmd ) {
 }
 
 
+
+static int _getCV( iOCar car, int nr ) {
+  iOCarData data = Data(car);
+  int val = -1;
+  char* key = StrOp.fmt( "%d", nr );
+  iONode cv = (iONode)MapOp.get( data->cvMap, key );
+  StrOp.free( key );
+  if( cv != NULL )
+    val = wCVByte.getvalue( cv );
+  return val;
+}
+
+
+static void _setCV( iOCar car, int nr, int value ) {
+  iOCarData data = Data(car);
+  char* key = StrOp.fmt( "%d", nr );
+  iONode cv = (iONode)MapOp.get( data->cvMap, key );
+
+  if( cv != NULL )
+    wCVByte.setvalue( cv, value );
+  else {
+    cv = NodeOp.inst( wCVByte.name(), data->props, ELEMENT_NODE );
+    wCVByte.setnr( cv, nr );
+    wCVByte.setvalue( cv, value );
+    NodeOp.addChild( data->props, cv );
+    MapOp.put( data->cvMap, key, (obj)cv );
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s: set cv %d to %d", wLoc.getid(data->props), nr, value);
+
+  StrOp.free( key );
+
+  /* Broadcast to clients. */
+  {
+    iONode clone = (iONode)data->props->base.clone( data->props );
+    wCar.setcmd( clone, wModelCmd.modify );
+    AppOp.broadcastEvent( clone );
+  }
+}
 
 
 

@@ -30,6 +30,7 @@
 #include "rocrail/public/model.h"
 #include "rocrail/public/block.h"
 #include "rocrail/public/r2rnet.h"
+#include "rocrail/public/dec.h"
 
 #include "rocint/public/digint.h"
 
@@ -974,11 +975,26 @@ static void __callback( obj inst, iONode nodeA ) {
   else if( StrOp.equals( wProgram.name(), nodeName ) ) {
     if( wProgram.getcmd(nodeA) == wProgram.save ) {
       iOLoc loc = ModelOp.getLoc( model, wProgram.getfilename(nodeA), NULL, False );
+      iOCar car = NULL;
+
       if( loc == NULL )
         loc = ModelOp.getLocByAddress( model, wProgram.getaddr(nodeA), wProgram.getiid(nodeA) );
       if( loc != NULL ) {
         LocOp.setCV( loc, wProgram.getcv(nodeA), wProgram.getvalue(nodeA) );
       }
+      if( loc == NULL ) {
+        car = ModelOp.getCar( model, wProgram.getfilename(nodeA) );
+        if( car != NULL ) {
+          CarOp.setCV( car, wProgram.getcv(nodeA), wProgram.getvalue(nodeA) );
+        }
+      }
+      if( loc == NULL && car == NULL ) {
+        iONode dec = ModelOp.getDec( model, wProgram.getfilename(nodeA) );
+        if( dec != NULL ) {
+          DecOp.setCV( dec, wProgram.getcv(nodeA), wProgram.getvalue(nodeA) );
+        }
+      }
+
       ClntConOp.postEvent( AppOp.getClntCon(), (iONode)NodeOp.base.clone(nodeA), wCommand.getserver( nodeA ) );
       NodeOp.base.del( nodeA );
       return;

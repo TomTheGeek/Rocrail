@@ -825,6 +825,10 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="CarID to search for"/>
     </fun>
+    <fun name="getDec" vt="iONode">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="id" vt="const char*" remark="DecID to search for"/>
+    </fun>
     <fun name="getOperator" vt="iOOperator">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="Operator ID to search for"/>
@@ -2022,7 +2026,7 @@
   </object>
 
 
-  <object name="Car" interface="HtmlInt" use="node" include="htmlint" remark="Car object">
+  <object name="Car" interface="HtmlInt" use="node,map" include="htmlint" remark="Car object">
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Car node"/>
     </fun>
@@ -2056,10 +2060,33 @@
       <param name="inst" vt="this" remark="Car instance"/>
       <param name="cmd" vt="iONode" remark="Optional cmd node with placing information."/>
     </fun>
+    <fun name="getCV" vt="int">
+      <param name="inst" vt="this" remark="Car instance"/>
+      <param name="nr" vt="int" remark="CVByte number"/>
+    </fun>
+    <fun name="setCV" vt="void">
+      <param name="inst" vt="this" remark="Car instance"/>
+      <param name="nr" vt="int" remark="CVByte number"/>
+      <param name="value" vt="int" remark="CVByte value"/>
+    </fun>
     <data>
       <var name="props" vt="iONode"/>
       <var name="fx[32]" vt="Boolean"/>
-    </data>
+      <var name="cvMap" vt="iOMap"/>
+      </data>
+  </object>
+
+
+  <object name="Dec" interface="HtmlInt" use="node,map" include="htmlint" remark="Decoder object">
+    <fun name="getCV" vt="int">
+      <param name="props" vt="iONode" remark="Dec properties"/>
+      <param name="nr" vt="int" remark="CVByte number"/>
+    </fun>
+    <fun name="setCV" vt="void">
+      <param name="props" vt="iONode" remark="Dec properties"/>
+      <param name="nr" vt="int" remark="CVByte number"/>
+      <param name="value" vt="int" remark="CVByte value"/>
+    </fun>
   </object>
 
 

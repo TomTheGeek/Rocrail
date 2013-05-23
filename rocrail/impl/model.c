@@ -2407,6 +2407,21 @@ static iOCar _getCar( iOModel inst, const char* id ) {
   return (iOCar)MapOp.get( o->carMap, id );
 }
 
+static iONode _getDec( iOModel inst, const char* id ) {
+  iOModelData data = Data(inst);
+  iONode declist = wPlan.getdeclist( data->model );
+  if( declist != NULL ) {
+    iONode node = wDecList.getdec( declist );
+    while( node != NULL ) {
+      if( StrOp.equals( id, wDec.getid( node ) ) ) {
+        return node;
+      }
+      node = wDecList.nextdec( declist, node );
+    }
+  }
+  return NULL;
+}
+
 static iOCar _getCarByIdent( iOModel inst, const char* ident ) {
   iOModelData o = Data(inst);
   iOCar carAddr = NULL;
