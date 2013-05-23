@@ -2389,7 +2389,7 @@ void LocDialog::CreateControls()
     m_CVDescModify = new wxButton( m_CVPanel, ID_BUTTON_LC_CV_DESC, _("Modify"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer295->Add(m_CVDescModify, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_Notebook->AddPage(m_CVPanel, _("CV's"));
+    m_Notebook->AddPage(m_CVPanel, _("CV"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
