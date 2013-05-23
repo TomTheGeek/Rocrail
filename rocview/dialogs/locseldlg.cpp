@@ -95,12 +95,13 @@ LocSelDlg::LocSelDlg( )
 {
 }
 
-LocSelDlg::LocSelDlg( wxWindow* parent, iONode props, bool mic, const char* locid )
+LocSelDlg::LocSelDlg( wxWindow* parent, iONode props, bool mic, const char* locid, bool cars )
 {
   m_Props = props;
   m_MICmode = mic;
   m_MICini = NULL;
   m_LocID = locid;
+  m_AddCars = cars;
   if( m_MICmode ) {
     m_MICini = wGui.getmic( wxGetApp().getIni() );
     if( m_MICini == NULL ) {
@@ -223,7 +224,7 @@ void LocSelDlg::InitIndex() {
           ListOp.add( list, (obj)lc );
         }
       }
-      if( carlist != NULL ) {
+      if( m_AddCars && carlist != NULL ) {
         int cnt = NodeOp.getChildCnt( carlist );
         for( int i = 0; i < cnt; i++ ) {
           iONode car = NodeOp.getChild( carlist, i );
