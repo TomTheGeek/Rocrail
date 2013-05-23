@@ -263,7 +263,7 @@ static void __SoD( iOBiDiB inst ) {
     if( node->classid & 0x40 ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day: uid=0x%08X", node->uid );
       msgdata[0] = 0; // address range
-      msgdata[1] = 16; // address range
+      msgdata[1] = node->sensorcnt > 0 ? node->sensorcnt:16; // ToDo: address range for GBM16... (for the BiDiB-S88-Bridge feature FEATURE_BM_SIZE is needed... )
       data->subWrite((obj)inst, node->path, MSG_BM_GET_RANGE, msgdata, 2, node->seq++);
       ThreadOp.sleep(10);
 
@@ -1605,6 +1605,9 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
 
       if( feature == FEATURE_FW_UPDATE_MODE ) {
         bidibnode->fwup = (value ? True:False);
+      }
+      if( feature == FEATURE_BM_SIZE ) {
+        bidibnode->sensorcnt = value;
       }
 
 
