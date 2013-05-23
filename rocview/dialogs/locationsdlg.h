@@ -58,6 +58,8 @@ class wxSpinCtrl;
 #define ID_LISTBOX_LOCATIONS_BLOCKS 10302
 #define ID__LOCATIONS_BLOCK_ADD 10278
 #define ID__LOCATIONS_BLOCK_DELETE 10279
+#define ID_LOCATION_BLOCK_UP 10423
+#define ID_LOCATION_BLOCK_DOWN 10422
 #define ID_BUTTON_LOCATIONS_NEW 10303
 #define ID_BUTTON_LOCATIONS_MODIFY 10310
 #define ID_BUTTON_LOCATIONS_DELETE 10304
@@ -116,6 +118,12 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID__LOCATIONS_BLOCK_DELETE
     void OnLocationsBlockDeleteClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_LOCATION_BLOCK_UP
+    void OnBlockUp( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_LOCATION_BLOCK_DOWN
+    void OnBlockDown( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOCATIONS_NEW
     void OnButtonLocationsNewClick( wxCommandEvent& event );
 
@@ -158,6 +166,8 @@ public:
     wxComboBox* m_BlockCombo;
     wxButton* m_AddBlock;
     wxButton* m_DeleteBlock;
+    wxButton* m_BlockUp;
+    wxButton* m_BlockDown;
     wxStaticBox* m_OptionsBox;
     wxStaticText* m_labMinOcc;
     wxSpinCtrl* m_MinOcc;
