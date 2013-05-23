@@ -149,6 +149,8 @@ void LocationsDialog::initLabels() {
 
   m_AddBlock->SetLabel( wxGetApp().getMsg( "add" ) );
   m_DeleteBlock->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_BlockUp->SetLabel( wxGetApp().getMsg( "up" ) );
+  m_BlockDown->SetLabel( wxGetApp().getMsg( "down" ) );
   m_labMinOcc->SetLabel( wxGetApp().getMsg( "minocc" ) );
 
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
