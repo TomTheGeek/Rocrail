@@ -455,6 +455,7 @@ static void __conhelp() {
     TraceOp.println( " y - Power OFF" );
     TraceOp.println( " x - Read all slots" );
     TraceOp.println( " 5 - Query network" );
+    TraceOp.println( " 8 - Start of Day" );
     TraceOp.println( " t - List all active threads" );
     TraceOp.println( " z - Analyse track plan" );
     TraceOp.println( " l - Cleanup analyzed route info" );
@@ -555,8 +556,11 @@ static __checkConsole( iOAppData data ) {
   else if( c == wConCmd.slots ) {
     __syscmd( wSysCmd.slots );
   }
-  else if( c == '5' ) {
+  else if( c == wConCmd.query ) {
     __queryModules();
+  }
+  else if( c == wConCmd.sod ) {
+    __syscmd( wSysCmd.sod );
   }
   else if( c == wConCmd.stopautomode ) {
     iONode cmd = NULL;
@@ -1233,7 +1237,7 @@ static void _play( const char* record ) {
     iOAppData data = Data(__appinst);
     if( data->script == NULL ) {
       data->script = ScriptOp.inst(NULL);
-      ScriptOp.setCallback(data->script, data->control);
+      ScriptOp.setCallback(data->script, (obj)data->control);
     }
     ScriptOp.setScript(data->script, record);
     ScriptOp.Play(data->script);

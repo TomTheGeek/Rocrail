@@ -75,6 +75,8 @@
     <const name="analyseclean" vt="char" val="l" remark="Clean all generated route info."/>
     <const name="stopautomode" vt="char" val="s" remark="Stop automode."/>
     <const name="ebreak" vt="char" val="e" remark="Broadcast emergency break."/>
+    <const name="query" vt="char" val="5" remark="Query network."/>
+    <const name="sod" vt="char" val="8" remark="Start of Day."/>
   </ConCmd>
 
   <Global structname="GC" remark="For internal use only.">
