@@ -1179,6 +1179,7 @@
       <var name="planDoc" vt="iODoc"/>
       <var name="model" vt="iONode"/>
       <var name="locMap" vt="iOMap"/>
+      <var name="locList" vt="iOList"/>
       <var name="masterLocMap" vt="iOMap"/>
       <var name="carMap" vt="iOMap"/>
       <var name="operatorMap" vt="iOMap"/>

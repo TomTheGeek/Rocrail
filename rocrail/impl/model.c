@@ -2429,7 +2429,7 @@ static iOCar _getCarByIdent( iOModel inst, const char* ident ) {
   while( car != NULL ) {
     if( StrOp.equals(CarOp.getIdent(car), ident) )
       return car;
-    car = (iOCar)MapOp.next( o->locMap );
+    car = (iOCar)MapOp.next( o->carMap );
   };
 
   return NULL;
@@ -2506,22 +2506,23 @@ static iOSignal _getSgByAddress( iOModel inst, int addr, int port, int type ) {
 
 static iOLoc _getLocByAddress( iOModel inst, int addr, const char* iid ) {
   iOModelData o = Data(inst);
-  iOLoc loc = (iOLoc)MapOp.first( o->locMap );
-  while( loc != NULL ) {
+  int i = 0;
+  int cnt = ListOp.size(o->locList);
+
+  for( i = 0; i < cnt; i++ ) {
+    iOLoc loc = (iOLoc)ListOp.get( o->locList, i );
     if( LocOp.getAddress(loc) == addr ) {
       if( iid != NULL && StrOp.len(iid) > 0 ) {
         const char* lciid = wLoc.getiid(LocOp.base.properties(loc));
         if( lciid != NULL && StrOp.len(lciid) > 0 ) {
           if( !StrOp.equals(iid, lciid) ) {
-            loc = (iOLoc)MapOp.next( o->locMap );
             continue;
           }
         }
       }
       return loc;
     }
-    loc = (iOLoc)MapOp.next( o->locMap );
-  };
+  }
 
   return NULL;
 }
@@ -3130,6 +3131,7 @@ static Boolean _init( iOModel inst ) {
 
   ListOp.clear( o->routeList);
   ListOp.clear( o->switchList);
+  ListOp.clear( o->locList);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init creatingMaps..." );
   _createMap( o, o->trackMap   , wTrackList.name(), wTrack.name(), (item_inst)TrackOp.inst, NULL  );
@@ -3149,7 +3151,7 @@ static Boolean _init( iOModel inst ) {
   _createMap( o, o->blockMap   , wBlockList.name(), wBlock.name(), (item_inst)BlockOp.inst, NULL  );
   _createMap( o, o->blockGroupMap, wLinkList.name(), wLink.name(), (item_inst)BlockGroupOp.inst, NULL  );
   _createMap( o, o->textMap    , wTextList.name(), wText.name(), (item_inst)TextOp.inst, NULL  );
-  _createMap( o, o->locMap     , wLocList.name(), wLoc.name(), (item_inst)LocOp.inst, NULL );
+  _createMap( o, o->locMap     , wLocList.name(), wLoc.name(), (item_inst)LocOp.inst, o->locList );
   _createMap( o, o->carMap     , wCarList.name(), wCar.name(), (item_inst)CarOp.inst, NULL );
   _createMap( o, o->waybillMap , wWaybillList.name(), wWaybill.name(), NULL, NULL );
   _createMap( o, o->operatorMap, wOperatorList.name(), wOperator.name(), (item_inst)OperatorOp.inst, NULL );
@@ -5280,6 +5282,7 @@ static iOModel _inst( const char* fileName, const char* locoFileName ) {
   data->locoFileName = locoFileName;
 
   data->locMap      = MapOp.inst();
+  data->locList     = ListOp.inst();
   data->masterLocMap= MapOp.inst();
   data->carMap      = MapOp.inst();
   data->waybillMap  = MapOp.inst();
