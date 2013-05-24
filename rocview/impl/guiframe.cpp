@@ -3406,7 +3406,7 @@ void RocGuiFrame::OnEditTours( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnEditLocations( wxCommandEvent& event ) {
-  LocationsDialog*  dlg = new LocationsDialog(this, (iONode)NULL );
+  LocationsDialog*  dlg = new LocationsDialog(this, (iONode)NULL, m_bAutoMode );
   if( wxID_OK == dlg->ShowModal() ) {
     /* Notify RocRail. */
   }
@@ -3730,8 +3730,6 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_EditSchedules);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
   mi = menuBar->FindItem(ME_EditTours);
-  if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
-  mi = menuBar->FindItem(ME_EditLocations);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
   mi = menuBar->FindItem(ME_EditTurntables);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );

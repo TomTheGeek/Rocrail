@@ -91,12 +91,13 @@ class LocationsDialog: public wxDialog
   void initValues();
   bool evaluate();
   int m_TabAlign;
+  bool m_ReadOnly;
 
 public:
     /// Constructors
     LocationsDialog( );
     LocationsDialog( wxWindow* parent, wxWindowID id = SYMBOL_LOCATIONSDIALOG_IDNAME, const wxString& caption = SYMBOL_LOCATIONSDIALOG_TITLE, const wxPoint& pos = SYMBOL_LOCATIONSDIALOG_POSITION, const wxSize& size = SYMBOL_LOCATIONSDIALOG_SIZE, long style = SYMBOL_LOCATIONSDIALOG_STYLE );
-    LocationsDialog( wxWindow* parent, iONode p_Props );
+    LocationsDialog( wxWindow* parent, iONode p_Props, bool readonly=false );
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_LOCATIONSDIALOG_IDNAME, const wxString& caption = SYMBOL_LOCATIONSDIALOG_TITLE, const wxPoint& pos = SYMBOL_LOCATIONSDIALOG_POSITION, const wxSize& size = SYMBOL_LOCATIONSDIALOG_SIZE, long style = SYMBOL_LOCATIONSDIALOG_STYLE );

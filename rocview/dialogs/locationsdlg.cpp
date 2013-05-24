@@ -109,10 +109,11 @@ LocationsDialog::LocationsDialog( wxWindow* parent, wxWindowID id, const wxStrin
     Create(parent, id, caption, pos, size, style);
 }
 
-LocationsDialog::LocationsDialog( wxWindow* parent, iONode p_Props )
+LocationsDialog::LocationsDialog( wxWindow* parent, iONode p_Props, bool readonly )
 {
   m_TabAlign = wxGetApp().getTabAlign();
   Create(parent, -1, wxGetApp().getMsg("locationtable"));
+  m_ReadOnly = readonly;
   m_Props = p_Props;
   initLabels();
   initIndex();
@@ -146,9 +147,16 @@ void LocationsDialog::initLabels() {
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
   m_Modify->SetLabel( wxGetApp().getMsg( "modify" ) );
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_New->Enable(!m_ReadOnly);
+  m_Modify->Enable(!m_ReadOnly);
+  m_Delete->Enable(!m_ReadOnly);
 
   m_AddBlock->SetLabel( wxGetApp().getMsg( "add" ) );
   m_DeleteBlock->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_AddBlock->Enable(!m_ReadOnly);
+  m_DeleteBlock->Enable(!m_ReadOnly);
+
+
   m_BlockUp->SetLabel( wxGetApp().getMsg( "up" ) );
   m_BlockDown->SetLabel( wxGetApp().getMsg( "down" ) );
   m_labMinOcc->SetLabel( wxGetApp().getMsg( "minocc" ) );
