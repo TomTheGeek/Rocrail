@@ -254,33 +254,41 @@ static void __resetSeq( iOBiDiB inst ) {
 }
 
 
-static void __SoD4Node( iOBiDiB inst, iOBiDiBNode node ) {
+static void __SoD4Node( iOBiDiB inst, iOBiDiBNode node, Boolean force ) {
   iOBiDiBData data = Data(inst);
   byte msgdata[127];
+
+  if( !force && node->sod )
+    return;
+
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day: uid=0x%08X %d sensors", node->uid, node->sensorcnt );
+  ThreadOp.sleep(10);
 
   msgdata[0] = 0; // address range
-  msgdata[1] = node->sensorcnt > 0 ? node->sensorcnt:16; // ToDo: address range for GBM16... (for the BiDiB-S88-Bridge feature FEATURE_BM_SIZE is needed... )
+  msgdata[1] = node->sensorcnt;
   data->subWrite((obj)inst, node->path, MSG_BM_GET_RANGE, msgdata, 2, node->seq++);
+  node->sod = True;
   ThreadOp.sleep(10);
 
-  data->subWrite((obj)inst, node->path, MSG_SYS_ENABLE, NULL, 0, node->seq++);
-  ThreadOp.sleep(10);
+  if( !force ) {
+    data->subWrite((obj)inst, node->path, MSG_SYS_ENABLE, NULL, 0, node->seq++);
+    ThreadOp.sleep(10);
 
-  if( data->secAck && data->secAckInt > 0 ) {
-    // MSG_FEATURE_SET
-    msgdata[0] = 2;
-    msgdata[1] = 1;
-    data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+    if( data->secAck && data->secAckInt > 0 ) {
+      // MSG_FEATURE_SET
+      msgdata[0] = 2;
+      msgdata[1] = 1;
+      data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
 
-    msgdata[0] = 3;
-    msgdata[1] = data->secAckInt;
-    data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
-  }
-  else {
-    msgdata[0] = 3;
-    msgdata[1] = 0;
-    data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+      msgdata[0] = 3;
+      msgdata[1] = data->secAckInt;
+      data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+    }
+    else {
+      msgdata[0] = 3;
+      msgdata[1] = 0;
+      data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+    }
   }
 }
 
@@ -290,7 +298,7 @@ static void __SoD( iOBiDiB inst, iOBiDiBNode bidibnode ) {
   byte msgdata[127];
 
   if( bidibnode != NULL ) {
-    __SoD4Node(inst, bidibnode);
+    __SoD4Node(inst, bidibnode, False);
     return;
   }
 
@@ -307,7 +315,7 @@ static void __SoD( iOBiDiB inst, iOBiDiBNode bidibnode ) {
         continue;
       }
 
-      __SoD4Node(inst, node);
+      __SoD4Node(inst, node, True);
       ThreadOp.sleep(10);
     }
     node = (iOBiDiBNode)MapOp.next(data->nodemap);
@@ -1624,19 +1632,16 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
       int value   = pdata[1];
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
           "MSG_FEATURE, uid=%08X feature=(%d) %s value=%d", bidibnode->uid, feature, bidibGetFeatureName(feature), value );
-      data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode->seq++);
 
       if( feature == FEATURE_FW_UPDATE_MODE ) {
         bidibnode->fwup = (value ? True:False);
       }
-      if( feature == FEATURE_BM_SIZE ) {
+      if( feature == FEATURE_BM_SIZE && !bidibnode->sod ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting sensor count to %d for %08X", value, bidibnode->uid );
         bidibnode->sensorcnt = value;
         __SoD(bidib, bidibnode);
       }
-
-
-      if( bidibnode != NULL ) {
+      else {
         iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
         wProgram.setcmd( node, wProgram.datarsp );
         wProgram.setiid( node, data->iid );
@@ -1647,6 +1652,8 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
         wProgram.setcv(node, feature);
         wProgram.setvalue(node, value);
         data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+        data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode->seq++);
       }
     }
   }
