@@ -1248,10 +1248,9 @@ static void __handleMultipleSensors(iOBiDiB bidib, int bus, const byte* pdata, i
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor-base=%d cnt=%d", baseAddr, cnt );
   for( i = 0; i < cnt; i++ ) {
-    int addr = baseAddr + (i / 2);
     int bit = 0;
     for( bit = 0; bit < 8; bit++ ) {
-      __handleSensor(bidib, bus, bit+((i%2)*8), pdata[2+i] & (0x01 << bit), 0, -1, 0);
+      __handleSensor(bidib, bus, bit+(i*8), pdata[2+i] & (0x01 << bit), 0, -1, 0);
     }
   }
 
