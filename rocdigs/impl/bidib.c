@@ -68,7 +68,7 @@
 static int instCnt = 0;
 
 
-static void __SoD( iOBiDiB inst );
+static void __SoD( iOBiDiB inst, iOBiDiBNode bidibnode );
 
 
 /** ----- OBase ----- */
@@ -254,37 +254,60 @@ static void __resetSeq( iOBiDiB inst ) {
 }
 
 
-static void __SoD( iOBiDiB inst ) {
+static void __SoD4Node( iOBiDiB inst, iOBiDiBNode node ) {
   iOBiDiBData data = Data(inst);
   byte msgdata[127];
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day: uid=0x%08X %d sensors", node->uid, node->sensorcnt );
+
+  msgdata[0] = 0; // address range
+  msgdata[1] = node->sensorcnt > 0 ? node->sensorcnt:16; // ToDo: address range for GBM16... (for the BiDiB-S88-Bridge feature FEATURE_BM_SIZE is needed... )
+  data->subWrite((obj)inst, node->path, MSG_BM_GET_RANGE, msgdata, 2, node->seq++);
+  ThreadOp.sleep(10);
+
+  data->subWrite((obj)inst, node->path, MSG_SYS_ENABLE, NULL, 0, node->seq++);
+  ThreadOp.sleep(10);
+
+  if( data->secAck && data->secAckInt > 0 ) {
+    // MSG_FEATURE_SET
+    msgdata[0] = 2;
+    msgdata[1] = 1;
+    data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+
+    msgdata[0] = 3;
+    msgdata[1] = data->secAckInt;
+    data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+  }
+  else {
+    msgdata[0] = 3;
+    msgdata[1] = 0;
+    data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+  }
+}
+
+
+static void __SoD( iOBiDiB inst, iOBiDiBNode bidibnode ) {
+  iOBiDiBData data = Data(inst);
+  byte msgdata[127];
+
+  if( bidibnode != NULL ) {
+    __SoD4Node(inst, bidibnode);
+    return;
+  }
 
   iOBiDiBNode node = (iOBiDiBNode)MapOp.first(data->nodemap);
   while(node != NULL) {
     if( node->classid & 0x40 ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day: uid=0x%08X", node->uid );
-      msgdata[0] = 0; // address range
-      msgdata[1] = node->sensorcnt > 0 ? node->sensorcnt:16; // ToDo: address range for GBM16... (for the BiDiB-S88-Bridge feature FEATURE_BM_SIZE is needed... )
-      data->subWrite((obj)inst, node->path, MSG_BM_GET_RANGE, msgdata, 2, node->seq++);
-      ThreadOp.sleep(10);
 
-      data->subWrite((obj)inst, node->path, MSG_SYS_ENABLE, NULL, 0, node->seq++);
-      ThreadOp.sleep(10);
-
-      if( data->secAck && data->secAckInt > 0 ) {
-        // MSG_FEATURE_SET
-        msgdata[0] = 2;
-        msgdata[1] = 1;
-        data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
-
-        msgdata[0] = 3;
-        msgdata[1] = data->secAckInt;
-        data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+      if( node->sensorcnt == 0 ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get FEATURE_BM_SIZE for node uid=0x%08X", node->uid );
+        msgdata[0] = FEATURE_BM_SIZE;
+        data->subWrite((obj)inst, node->path, MSG_FEATURE_GET, msgdata, 1, node->seq++);
+        ThreadOp.sleep(10);
+        node = (iOBiDiBNode)MapOp.next(data->nodemap);
+        continue;
       }
-      else {
-        msgdata[0] = 3;
-        msgdata[1] = 0;
-        data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
-      }
+
+      __SoD4Node(inst, node);
       ThreadOp.sleep(10);
     }
     node = (iOBiDiBNode)MapOp.next(data->nodemap);
@@ -510,7 +533,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       __inform(inst);
     }
     else if( StrOp.equals( cmd, wSysCmd.sod ) ) {
-      __SoD(inst);
+      __SoD(inst, NULL);
     }
   }
 
@@ -1607,7 +1630,9 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
         bidibnode->fwup = (value ? True:False);
       }
       if( feature == FEATURE_BM_SIZE ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting sensor count to %d for %08X", value, bidibnode->uid );
         bidibnode->sensorcnt = value;
+        __SoD(bidib, bidibnode);
       }
 
 
@@ -2548,7 +2573,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_NODE_NA, path=%s seq=%d na-node=%d", pathKey, Seq, pdata[0] );
-    __SoD(bidib);
+    __SoD(bidib, NULL);
     break;
   }
 
