@@ -276,16 +276,18 @@ static void __SoD4Node( iOBiDiB inst, iOBiDiBNode node, Boolean force ) {
 
     if( data->secAck && data->secAckInt > 0 ) {
       // MSG_FEATURE_SET
-      msgdata[0] = 2;
+      msgdata[0] = FEATURE_BM_SECACK_AVAILABLE;
       msgdata[1] = 1;
       data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
 
-      msgdata[0] = 3;
+      node->pendingfeature = FEATURE_BM_SECACK_ON;
+      msgdata[0] = FEATURE_BM_SECACK_ON;
       msgdata[1] = data->secAckInt;
       data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
     }
     else {
-      msgdata[0] = 3;
+      node->pendingfeature = FEATURE_BM_SECACK_ON;
+      msgdata[0] = FEATURE_BM_SECACK_ON;
       msgdata[1] = 0;
       data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
     }
@@ -308,6 +310,7 @@ static void __SoD( iOBiDiB inst, iOBiDiBNode bidibnode ) {
 
       if( node->sensorcnt == 0 ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get FEATURE_BM_SIZE for node uid=0x%08X", node->uid );
+        node->pendingfeature = FEATURE_BM_SIZE;
         msgdata[0] = FEATURE_BM_SIZE;
         data->subWrite((obj)inst, node->path, MSG_FEATURE_GET, msgdata, 1, node->seq++);
         ThreadOp.sleep(10);
@@ -1583,6 +1586,8 @@ static void __addNode(iOBiDiB bidib, byte* pdata) {
     node->classid = classid;
     node->uid = uid;
     node->vendorid = vid;
+    node->pendingfeature = -1;
+
 
     MemOp.copy(node->path+1, data->nodepath, 3);
     node->path[0] = localaddr;
@@ -1653,6 +1658,8 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
       if( feature == FEATURE_BM_SIZE && !bidibnode->sod ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting sensor count to %d for %08X", value, bidibnode->uid );
         bidibnode->sensorcnt = value;
+        if( bidibnode->pendingfeature == feature )
+          bidibnode->pendingfeature = -1;
         __SoD(bidib, bidibnode);
       }
       else {
@@ -1667,7 +1674,10 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
         wProgram.setvalue(node, value);
         data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 
-        data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode->seq++);
+        if( bidibnode->pendingfeature == feature )
+          bidibnode->pendingfeature = -1;
+        else
+          data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode->seq++);
       }
     }
   }

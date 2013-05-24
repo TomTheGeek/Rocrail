@@ -1238,6 +1238,7 @@
       <var name="bmload[128]" vt="int" remark=""/>
       <var name="sensorcnt" vt="int"/>
       <var name="sod" vt="Boolean"/>
+      <var name="pendingfeature" vt="int"/>
       </struct>
     <struct name="slot" typedef="*iOSlot" remark="Loco slot">
       <var name="id" vt="char*"/>
