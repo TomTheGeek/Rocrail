@@ -860,7 +860,21 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"program type=%d cmd=%d uid=0x%08X",
         wProgram.getlntype(node), wProgram.getcmd( node ), wProgram.getmodid(node) );
 
-    if( wProgram.getlntype(node) == wProgram.lntype_bidib ) {
+    if( wProgram.getlntype(node) == wProgram.lntype_sv && wProgram.getcmd( node ) == wProgram.lncvget &&
+        wProgram.getcv(node) == 0 && wProgram.getmodid(node) == 0 && wProgram.getaddr(node) == 0 )
+    {
+      // Query all modules.
+      iOBiDiBNode bidibnode = (iOBiDiBNode)MapOp.first(data->nodemap);
+      while(bidibnode != NULL) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"uid=%08X path=%d.%d.%d.%d vid=%02X class=%02X",
+            bidibnode->uid, bidibnode->path[0], bidibnode->path[1], bidibnode->path[2], bidibnode->path[3],
+            bidibnode->vendorid, bidibnode->classid);
+        bidibnode = (iOBiDiBNode)MapOp.next(data->nodemap);
+      }
+
+    }
+
+    else if( wProgram.getlntype(node) == wProgram.lntype_bidib ) {
       byte msgdata[32];
       char uidKey[32];
       iOBiDiBNode bidibnode = NULL;
