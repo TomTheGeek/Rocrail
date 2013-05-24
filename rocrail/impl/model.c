@@ -726,6 +726,7 @@ static Boolean _addItem( iOModel inst, iONode item ) {
     iOLoc lc = LocOp.inst( clone );
     __addItemInList( data, wLocList.name(), clone );
     MapOp.put( data->locMap, wLoc.getid( item ), (obj)lc );
+    ListOp.add( data->locList, (obj)lc );
     added = True;
   }
   else if( StrOp.equals( wCar.name(), itemName ) ) {
@@ -2143,6 +2144,7 @@ static Boolean __removeLoco(iOModel inst, iONode item ) {
   iOLoc lc = (iOLoc)MapOp.get( data->locMap, wLoc.getid( item ) );
   if( lc != NULL ) {
     iONode props = LocOp.base.properties( lc );
+    ListOp.removeObj( data->locList, (obj)props);
     ModelOp.removeSysEventListener( AppOp.getModel(), (obj)lc );
     MapOp.remove( data->locMap, wLoc.getid( item ) );
     /* Remove item from list: */
