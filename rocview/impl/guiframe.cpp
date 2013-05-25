@@ -392,6 +392,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_LangJapanese    , RocGuiFrame::OnLangJapanese)
     EVT_MENU( ME_LangKorean      , RocGuiFrame::OnLangKorean)
     EVT_MENU( ME_LangSerbianLatin, RocGuiFrame::OnLangSerbianLatin)
+    EVT_MENU( ME_LangSlovene     , RocGuiFrame::OnLangSlovene)
     EVT_GRID_CELL_LEFT_CLICK( RocGuiFrame::OnCellLeftClick )
     EVT_GRID_CELL_LEFT_DCLICK( RocGuiFrame::OnCellLeftDClick )
     EVT_GRID_CELL_RIGHT_CLICK( RocGuiFrame::OnCellRightClick )
@@ -1875,6 +1876,7 @@ void RocGuiFrame::initFrame() {
   menuLang->AppendCheckItem( ME_LangRomanian , wxGetApp().getMenu("lang_ro"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangRussian  , wxGetApp().getMenu("lang_ru"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangSerbianLatin, wxGetApp().getMenu("lang_sr_latin"), wxGetApp().getMsg("changelang") );
+  menuLang->AppendCheckItem( ME_LangSlovene  , wxGetApp().getMenu("lang_sl"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangSpanish  , wxGetApp().getMenu("lang_es"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangSwedisch , wxGetApp().getMenu("lang_sv"), wxGetApp().getMsg("changelang") );
   menuLang->AppendCheckItem( ME_LangTurkish  , wxGetApp().getMenu("lang_tr"), wxGetApp().getMsg("changelang") );
@@ -4997,6 +4999,11 @@ void RocGuiFrame::OnLangKorean(wxCommandEvent& event) {
 
 void RocGuiFrame::OnLangSerbianLatin(wxCommandEvent& event) {
   wGui.setlang( wxGetApp().getIni(), wGui.lang_serbianlatin );
+  wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
+}
+
+void RocGuiFrame::OnLangSlovene(wxCommandEvent& event) {
+  wGui.setlang( wxGetApp().getIni(), wGui.lang_slovene );
   wxMessageDialog( this, wxGetApp().getMsg("change_language_msg"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
 }
 
