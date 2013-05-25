@@ -1684,10 +1684,11 @@ static void __reset( iOModel inst, Boolean saveCurBlock ) {
   }
 
   {
-    iOLoc loc = (iOLoc)MapOp.first( data->locMap );
-    while( loc != NULL ) {
+    int i = 0;
+    int cnt = ListOp.size( data->locList );
+    for( i = 0; i < cnt; i++ ) {
+      iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
       LocOp.reset( loc, saveCurBlock );
-      loc = (iOLoc)MapOp.next( data->locMap );
     }
   }
 
@@ -1772,26 +1773,30 @@ static Boolean _isEnableSwFb( iOModel inst ) {
 
 static void __stopAllLocs( iOModel inst ) {
   iOModelData data = Data(inst);
-  iOLoc loc = (iOLoc)MapOp.first( data->locMap );
+  int i = 0;
+  int cnt = ListOp.size( data->locList );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Stopping all Locs..." );
-  while( loc != NULL ) {
+  for( i = 0; i < cnt; i++ ) {
+    iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Stop request to Loc [%s]", LocOp.getId(loc) );
     LocOp.stop( loc, True );
     ThreadOp.sleep( 10 );
-    loc = (iOLoc)MapOp.next( data->locMap );
   }
 }
 
 static Boolean __anyRunningLoco( iOModel inst ) {
   iOModelData data = Data(inst);
-  iOLoc loc = (iOLoc)MapOp.first( data->locMap );
+  int i = 0;
+  int cnt = ListOp.size( data->locList );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Checking all Loco's for V=0..." );
-  while( loc != NULL ) {
+
+  for( i = 0; i < cnt; i++ ) {
+    iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
     if( LocOp.getV( loc ) > 0 )
       return True;
     ThreadOp.sleep( 10 );
-    loc = (iOLoc)MapOp.next( data->locMap );
   }
+
   return False;
 }
 
@@ -1821,12 +1826,14 @@ static void __startAllLocosRunner( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOModel model = (iOModel)ThreadOp.getParm( th );
   iOModelData data = Data(model);
-  int gap = wCtrl.getlocostartgap( wRocRail.getctrl( AppOp.getIni(  ) ) );
-
-  iOLoc loc = (iOLoc)MapOp.first( data->locMap );
   Boolean resume = StrOp.equals("resumeall", ThreadOp.getName(th));
+  int gap = wCtrl.getlocostartgap( wRocRail.getctrl( AppOp.getIni(  ) ) );
+  int i = 0;
+  int cnt = ListOp.size( data->locList );
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s locos...", ThreadOp.getName(th) );
-  while( loc != NULL ) {
+  for( i = 0; i < cnt; i++ ) {
+    iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
     Boolean lcgo = True;
     if( resume && !LocOp.isResumeAutomode(loc) )
       lcgo = False;
@@ -1836,7 +1843,6 @@ static void __startAllLocosRunner( void* threadinst ) {
     }
     else
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Loco %s could not be started; skipping start gap.", LocOp.getId(loc) );
-    loc = (iOLoc)MapOp.next( data->locMap );
   }
 
   if( MapOp.size(data->stageMap) > 0 ) {
@@ -2530,29 +2536,31 @@ static iOLoc _getLocByAddress( iOModel inst, int addr, const char* iid ) {
 }
 
 static iOLoc _getLocByIdent( iOModel inst, const char* ident ) {
-  iOModelData o = Data(inst);
+  iOModelData data = Data(inst);
   iOLoc locAddr = NULL;
-  iOLoc loc = (iOLoc)MapOp.first( o->locMap );
-  while( loc != NULL ) {
+  int i = 0;
+  int cnt = ListOp.size( data->locList );
+  for( i = 0; i < cnt; i++ ) {
+    iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
     char locoAddrStr[32];
     StrOp.fmtb(locoAddrStr, "%d", LocOp.getAddress(loc) );
     if( StrOp.equals(LocOp.getIdent(loc), ident) )
       return loc;
     else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident) )
       locAddr = loc;
-    loc = (iOLoc)MapOp.next( o->locMap );
-  };
+  }
 
   return locAddr;
 }
 
 static iOList _getLocIDs( iOModel inst ) {
-  iOModelData o = Data(inst);
+  iOModelData data = Data(inst);
   iOList list = ListOp.inst();
-  iOLoc loc = (iOLoc)MapOp.first( o->locMap );
-  while( loc != NULL ) {
+  int i = 0;
+  int cnt = ListOp.size( data->locList );
+  for( i = 0; i < cnt; i++ ) {
+    iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
     ListOp.add( list, (obj)LocOp.getId( loc ) );
-    loc = (iOLoc)MapOp.next( o->locMap );
   }
   ListOp.sort( list, &__sortStr );
   return list;
@@ -3083,9 +3091,10 @@ static iOLoc _getMasterLoc(iOModel inst, const char* slaveID ) {
 static void __initMasterLocMap(iOModel inst) {
   iOModelData data = Data(inst);
   MapOp.clear( data->masterLocMap );
-
-  iOLoc loc = (iOLoc)MapOp.first( data->locMap );
-  while( loc != NULL ) {
+  int i = 0;
+  int cnt = ListOp.size( data->locList );
+  for( i = 0; i < cnt; i++ ) {
+    iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
     const char* consist = wLoc.getconsist( LocOp.base.properties(loc) );
     if( consist != NULL && StrOp.len( consist ) > 0 ) {
       iOStrTok tok = StrTokOp.inst( consist, ',' );
@@ -3095,7 +3104,6 @@ static void __initMasterLocMap(iOModel inst) {
       }
       StrTokOp.base.del(tok);
     }
-    loc = (iOLoc)MapOp.next( data->locMap );
   }
 
 }
