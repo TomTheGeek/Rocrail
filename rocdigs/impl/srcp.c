@@ -742,293 +742,302 @@ static void __infoReader( void * threadinst ) {
   Boolean exception = False;
   char inbuf[1024] = { 0 };
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Connecting info port %s:%d...", o->host, o->port );
-  o->infoSocket = SocketOp.inst( o->host, o->port, False, False, False );
+  while( o->run && !o->handshakeerror ) {
+    Boolean readok = False;
 
-  if ( SocketOp.connect( o->infoSocket ) ) {
-    __initInfoConnection(o);
+    if( o->infoSocket == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Connecting info port %s:%d...", o->host, o->port );
+      o->infoSocket = SocketOp.inst( o->host, o->port, False, False, False );
+    }
 
-    while( o->run && !o->handshakeerror ) {
-      Boolean readok = False;
-
-      if( o->evalfirst ) {
-        readok = o->evalfirst;
-        o->evalfirst = False;
+    if( o->infoSocket != NULL && !SocketOp.isConnected( o->infoSocket ) ) {
+      if( SocketOp.connect( o->infoSocket ) ) {
+        __initInfoConnection(o);
       }
-      else if( SocketOp.readln( o->infoSocket, inbuf ) != NULL )
-        readok =  True;
+      else {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "unable to connecting info port %s:%d...", o->host, o->port );
+        if( o->infoSocket != NULL ) {
+          SocketOp.base.del(o->infoSocket);
+          o->infoSocket = NULL;
+        }
+        ThreadOp.sleep(1000);
+        continue;
+      }
+    }
 
-      if ( readok ) {
-        char*    fbAddrStr   = NULL;
-        iOStrTok tok         = NULL;
-        int      infotype    = 0; /* 0=FB, 1=GA , 2=GL*/
-        Boolean  ignoreRest  = False;
-        char*    infotypeStr = "";
-        int      msgnr       = 0;
+    if( o->evalfirst ) {
+      readok = o->evalfirst;
+      o->evalfirst = False;
+    }
+    else if( SocketOp.readln( o->infoSocket, inbuf ) != NULL )
+      readok =  True;
 
-        StrOp.replaceAll(inbuf, '\n', ' ');
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "info: [%s]", inbuf );
+    if ( readok ) {
+      char*    fbAddrStr   = NULL;
+      iOStrTok tok         = NULL;
+      int      infotype    = 0; /* 0=FB, 1=GA , 2=GL*/
+      Boolean  ignoreRest  = False;
+      char*    infotypeStr = "";
+      int      msgnr       = 0;
 
-        if( StrOp.find( inbuf, "INFO ") ) {
-          if( StrOp.find( inbuf, "FB ") ) {
-            infotype = 0;
-            infotypeStr = "sensor";
-          }
-          else if( StrOp.find( inbuf, "GA ") ) {
-            infotype = 1;
-            infotypeStr = "accessory";
-          }
-          else if( StrOp.find( inbuf, "GL ") ) {
-            infotype = 2;
-            infotypeStr = "locomotive";
-          }
+      StrOp.replaceAll(inbuf, '\n', ' ');
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "info: [%s]", inbuf );
 
-          tok = StrTokOp.inst( inbuf, ' ' );
-          if( StrTokOp.hasMoreTokens( tok ) ) {
-            /* timestamp */
-            const char* nr = StrTokOp.nextToken( tok );
-            if( StrTokOp.hasMoreTokens( tok ) ) {
-              nr = StrTokOp.nextToken( tok );
-              msgnr = atoi(nr);
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "info number = %d(%s)", msgnr, nr);
-            }
-          }
-          tok->base.del(tok);
-
-          if( !StrOp.find( inbuf, "FB POWER") ) {
-            if( infotype == 0 )
-              fbAddrStr = StrOp.find( inbuf, "FB ");
-            else if( infotype == 1 )
-              fbAddrStr = StrOp.find( inbuf, "GA ");
-            else if( infotype == 2 )
-              fbAddrStr = StrOp.find( inbuf, "GL ");
-          }
-
+      if( StrOp.find( inbuf, "INFO ") ) {
+        if( StrOp.find( inbuf, "FB ") ) {
+          infotype = 0;
+          infotypeStr = "sensor";
+        }
+        else if( StrOp.find( inbuf, "GA ") ) {
+          infotype = 1;
+          infotypeStr = "accessory";
+        }
+        else if( StrOp.find( inbuf, "GL ") ) {
+          infotype = 2;
+          infotypeStr = "locomotive";
         }
 
-        if( !fbAddrStr ) {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "no FB/GA/GL info..." );
-          ThreadOp.sleep( 10 );
-          continue;
-        }
-
-        tok = StrTokOp.inst( fbAddrStr, ' ' );
-
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s addresses: [%s]", infotypeStr, fbAddrStr );
-
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, inbuf, StrOp.len( inbuf ) );
-
+        tok = StrTokOp.inst( inbuf, ' ' );
         if( StrTokOp.hasMoreTokens( tok ) ) {
-          const char* leadinStr = StrTokOp.nextToken( tok );
+          /* timestamp */
+          const char* nr = StrTokOp.nextToken( tok );
+          if( StrTokOp.hasMoreTokens( tok ) ) {
+            nr = StrTokOp.nextToken( tok );
+            msgnr = atoi(nr);
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "info number = %d(%s)", msgnr, nr);
+          }
         }
-
-        while ( !ignoreRest && StrTokOp.hasMoreTokens( tok ) ) {
-          const char* addrStr = StrTokOp.nextToken( tok );
-          if ( StrTokOp.hasMoreTokens( tok ) ) {
-            const char* valStr = NULL;
-            iONode nodeC  = NULL;
-            iONode nodeFn = NULL;
-            int addr  = atoi( addrStr );
-            int port  = 0;
-            int val   = 0;
-            int V     = 0;
-            int steps = 0;
-            int dir   = 0;
-            int f0    = 0;
-            int idxFn = 0;
-            int srcpFx= 0;
-
-            if( infotype == 1 ) {
-              /* GA */
-              if( msgnr != 100 ) {
-                ignoreRest = True;
-                break;
-              }
-              valStr = StrTokOp.nextToken( tok );
-              port = atoi( valStr );
-              if( StrTokOp.hasMoreTokens( tok ) ) {
-                valStr = StrTokOp.nextToken( tok );
-                val = atoi( valStr );
-              }
-              else {
-                TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unexpected end of GA %d, %d info", addr, port );
-                break;
-              }
-
-              if( val != 1 ) {
-                TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "not interrested in GA %d OFF state", addr );
-                break;
-              }
-              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch %d port %d = %d", addr, port, val );
-            }
-            else if( infotype == 2 ) {
-              /* 100 INFO 2 GL 56 1 44 128 0 0 0 0 0 */
-              /* 101 INFO 2 GL 56 N 1 128 5] */
-              if( msgnr != 100 ) {
-                ignoreRest = True;
-                break;
-              }
-
-              valStr = StrTokOp.nextToken( tok );
-              dir = atoi( valStr );
-              if( StrTokOp.hasMoreTokens( tok ) ) {
-                valStr = StrTokOp.nextToken( tok );
-                V = atoi( valStr );
-                if( StrTokOp.hasMoreTokens( tok ) ) {
-                  valStr = StrTokOp.nextToken( tok );
-                  steps = atoi( valStr );
-                  if( StrTokOp.hasMoreTokens( tok ) ) {
-                    valStr = StrTokOp.nextToken( tok );
-                    f0 = atoi( valStr );
-
-                    /* put max 28 function states in a bitmap (integer, 32bit) */
-                    while( idxFn < 28 && StrTokOp.hasMoreTokens( tok ) ) {
-                      valStr = StrTokOp.nextToken( tok );
-                      if( valStr[0] == '1') {
-                        srcpFx |= 1 << idxFn;
-                        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "info: F%d[1] srcpFx[0x%08.8X]", (idxFn+1), srcpFx );
-                      }
-                      idxFn++;
-                    }
-
-                  }
-                }
-              }
-              else {
-                TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unexpected end of GL %d info", addr );
-                break;
-              }
-              ignoreRest = True;
-              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d V=%d dir=%d steps=%d fn=%d idxFn[%d] srcpFx[0x%08.8X]",
-                  addr, V, dir, steps, f0, idxFn, srcpFx );
-            }
-            else {
-              /* FB */
-              valStr = StrTokOp.nextToken( tok );
-              val = atoi( valStr );
-              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d = %d", addr, val );
-            }
-
-            if( infotype == 1 ) {
-              nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-              wSwitch.setaddr1( nodeC, (addr-1)/4 + 1 );
-              wSwitch.setport1( nodeC, (addr-1)%4 + 1 );
-              if( val == 1 )
-                wSwitch.setstate( nodeC, port ? wSwitch.straight : wSwitch.turnout );
-              else
-                wSwitch.setstate( nodeC, wSwitch.straight );
-              if ( o->iid != NULL )
-                wSwitch.setiid( nodeC, o->iid );
-            }
-            else if( infotype == 2 ) {
-              nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-              wLoc.setthrottleid( nodeC, "srcp" );
-              wLoc.setcmd( nodeC, wLoc.dirfun );
-              wLoc.setaddr( nodeC, addr );
-              wLoc.setspcnt( nodeC, steps );
-              wLoc.setV( nodeC, V );
-              wLoc.setV_raw( nodeC, V );
-              wLoc.setfn( nodeC, f0 );
-              wLoc.setdir( nodeC, dir );
-              if ( o->iid != NULL )
-                wLoc.setiid( nodeC, o->iid );
-
-              nodeFn = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-              wLoc.setthrottleid( nodeFn, "srcp" );
-              if ( o->iid != NULL )
-                wLoc.setiid( nodeFn, o->iid );
-
-              wFunCmd.setaddr( nodeFn, addr );
-              wFunCmd.setf28( nodeFn,(srcpFx & 0x08000000)?True:False);
-              wFunCmd.setf27( nodeFn,(srcpFx & 0x04000000)?True:False);
-              wFunCmd.setf26( nodeFn,(srcpFx & 0x02000000)?True:False);
-              wFunCmd.setf25( nodeFn,(srcpFx & 0x01000000)?True:False);
-              wFunCmd.setf24( nodeFn,(srcpFx & 0x00800000)?True:False);
-              wFunCmd.setf23( nodeFn,(srcpFx & 0x00400000)?True:False);
-              wFunCmd.setf22( nodeFn,(srcpFx & 0x00200000)?True:False);
-              wFunCmd.setf21( nodeFn,(srcpFx & 0x00100000)?True:False);
-              wFunCmd.setf20( nodeFn,(srcpFx & 0x00080000)?True:False);
-              wFunCmd.setf19( nodeFn,(srcpFx & 0x00040000)?True:False);
-              wFunCmd.setf18( nodeFn,(srcpFx & 0x00020000)?True:False);
-              wFunCmd.setf17( nodeFn,(srcpFx & 0x00010000)?True:False);
-              wFunCmd.setf16( nodeFn,(srcpFx & 0x00008000)?True:False);
-              wFunCmd.setf15( nodeFn,(srcpFx & 0x00004000)?True:False);
-              wFunCmd.setf14( nodeFn,(srcpFx & 0x00002000)?True:False);
-              wFunCmd.setf13( nodeFn,(srcpFx & 0x00001000)?True:False);
-              wFunCmd.setf12( nodeFn,(srcpFx & 0x00000800)?True:False);
-              wFunCmd.setf11( nodeFn,(srcpFx & 0x00000400)?True:False);
-              wFunCmd.setf10( nodeFn,(srcpFx & 0x00000200)?True:False);
-              wFunCmd.setf9(  nodeFn,(srcpFx & 0x00000100)?True:False);
-              wFunCmd.setf8(  nodeFn,(srcpFx & 0x00000080)?True:False);
-              wFunCmd.setf7(  nodeFn,(srcpFx & 0x00000040)?True:False);
-              wFunCmd.setf6(  nodeFn,(srcpFx & 0x00000020)?True:False);
-              wFunCmd.setf5(  nodeFn,(srcpFx & 0x00000010)?True:False);
-              wFunCmd.setf4(  nodeFn,(srcpFx & 0x00000008)?True:False);
-              wFunCmd.setf3(  nodeFn,(srcpFx & 0x00000004)?True:False);
-              wFunCmd.setf2(  nodeFn,(srcpFx & 0x00000002)?True:False);
-              wFunCmd.setf1(  nodeFn,(srcpFx & 0x00000001)?True:False);
-              wFunCmd.setf0(  nodeFn, f0 );
-            }
-            else {
-              nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-              wFeedback.setaddr( nodeC, addr );
-              wFeedback.setstate( nodeC, val ? True : False );
-              if ( o->iid != NULL )
-                wFeedback.setiid( nodeC, o->iid );
-            }
-
-            if ( nodeC != NULL && o->listenerFun != NULL && o->listenerObj != NULL )
-              o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );
-            if ( nodeFn != NULL && o->listenerFun != NULL && o->listenerObj != NULL )
-              o->listenerFun( o->listenerObj, nodeFn, TRCLEVEL_INFO );
-
-          }
-          else {
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "not an INFO line:" );
-            TraceOp.dump( NULL, TRCLEVEL_DEBUG, inbuf, StrOp.len( inbuf ) );
-          }
-
-        };
-        /* end while */
-
         tok->base.del(tok);
 
-      }
-      /* end if */
-      else {
-        exception = True;
-      }
-
-      if( exception ) {
-        exception = False;
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Try to reconnect..." );
-
-        SocketOp.disConnect( o->infoSocket );
-        SocketOp.base.del(o->infoSocket);
-        o->infoSocket = NULL;
-
-        if( o->cmdSocket != NULL ) {
-          iOSocket socket = o->cmdSocket;
-          o->cmdSocket = NULL;
-          SocketOp.disConnect( socket );
-          SocketOp.base.del(socket);
+        if( !StrOp.find( inbuf, "FB POWER") ) {
+          if( infotype == 0 )
+            fbAddrStr = StrOp.find( inbuf, "FB ");
+          else if( infotype == 1 )
+            fbAddrStr = StrOp.find( inbuf, "GA ");
+          else if( infotype == 2 )
+            fbAddrStr = StrOp.find( inbuf, "GL ");
         }
 
-        ThreadOp.sleep( 1000 );
-        o->infoSocket = SocketOp.inst( o->host, o->port, False, False, False );
-        if( SocketOp.connect( o->infoSocket ) ) {
-          __initInfoConnection(o);
-        }
       }
-      else
+
+      if( !fbAddrStr ) {
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "no FB/GA/GL info..." );
         ThreadOp.sleep( 10 );
-    };
+        continue;
+      }
 
-  }
-  else  {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR connecting to info port %s:%d rc=%d",
-        o->host, o->port, SocketOp.getRc( o->infoSocket ) );
-  }
+      tok = StrTokOp.inst( fbAddrStr, ' ' );
+
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s addresses: [%s]", infotypeStr, fbAddrStr );
+
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, inbuf, StrOp.len( inbuf ) );
+
+      if( StrTokOp.hasMoreTokens( tok ) ) {
+        const char* leadinStr = StrTokOp.nextToken( tok );
+      }
+
+      while ( !ignoreRest && StrTokOp.hasMoreTokens( tok ) ) {
+        const char* addrStr = StrTokOp.nextToken( tok );
+        if ( StrTokOp.hasMoreTokens( tok ) ) {
+          const char* valStr = NULL;
+          iONode nodeC  = NULL;
+          iONode nodeFn = NULL;
+          int addr  = atoi( addrStr );
+          int port  = 0;
+          int val   = 0;
+          int V     = 0;
+          int steps = 0;
+          int dir   = 0;
+          int f0    = 0;
+          int idxFn = 0;
+          int srcpFx= 0;
+
+          if( infotype == 1 ) {
+            /* GA */
+            if( msgnr != 100 ) {
+              ignoreRest = True;
+              break;
+            }
+            valStr = StrTokOp.nextToken( tok );
+            port = atoi( valStr );
+            if( StrTokOp.hasMoreTokens( tok ) ) {
+              valStr = StrTokOp.nextToken( tok );
+              val = atoi( valStr );
+            }
+            else {
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unexpected end of GA %d, %d info", addr, port );
+              break;
+            }
+
+            if( val != 1 ) {
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "not interrested in GA %d OFF state", addr );
+              break;
+            }
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch %d port %d = %d", addr, port, val );
+          }
+          else if( infotype == 2 ) {
+            /* 100 INFO 2 GL 56 1 44 128 0 0 0 0 0 */
+            /* 101 INFO 2 GL 56 N 1 128 5] */
+            if( msgnr != 100 ) {
+              ignoreRest = True;
+              break;
+            }
+
+            valStr = StrTokOp.nextToken( tok );
+            dir = atoi( valStr );
+            if( StrTokOp.hasMoreTokens( tok ) ) {
+              valStr = StrTokOp.nextToken( tok );
+              V = atoi( valStr );
+              if( StrTokOp.hasMoreTokens( tok ) ) {
+                valStr = StrTokOp.nextToken( tok );
+                steps = atoi( valStr );
+                if( StrTokOp.hasMoreTokens( tok ) ) {
+                  valStr = StrTokOp.nextToken( tok );
+                  f0 = atoi( valStr );
+
+                  /* put max 28 function states in a bitmap (integer, 32bit) */
+                  while( idxFn < 28 && StrTokOp.hasMoreTokens( tok ) ) {
+                    valStr = StrTokOp.nextToken( tok );
+                    if( valStr[0] == '1') {
+                      srcpFx |= 1 << idxFn;
+                      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "info: F%d[1] srcpFx[0x%08.8X]", (idxFn+1), srcpFx );
+                    }
+                    idxFn++;
+                  }
+
+                }
+              }
+            }
+            else {
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unexpected end of GL %d info", addr );
+              break;
+            }
+            ignoreRest = True;
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d V=%d dir=%d steps=%d fn=%d idxFn[%d] srcpFx[0x%08.8X]",
+                addr, V, dir, steps, f0, idxFn, srcpFx );
+          }
+          else {
+            /* FB */
+            valStr = StrTokOp.nextToken( tok );
+            val = atoi( valStr );
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d = %d", addr, val );
+          }
+
+          if( infotype == 1 ) {
+            nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+            wSwitch.setaddr1( nodeC, (addr-1)/4 + 1 );
+            wSwitch.setport1( nodeC, (addr-1)%4 + 1 );
+            if( val == 1 )
+              wSwitch.setstate( nodeC, port ? wSwitch.straight : wSwitch.turnout );
+            else
+              wSwitch.setstate( nodeC, wSwitch.straight );
+            if ( o->iid != NULL )
+              wSwitch.setiid( nodeC, o->iid );
+          }
+          else if( infotype == 2 ) {
+            nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+            wLoc.setthrottleid( nodeC, "srcp" );
+            wLoc.setcmd( nodeC, wLoc.dirfun );
+            wLoc.setaddr( nodeC, addr );
+            wLoc.setspcnt( nodeC, steps );
+            wLoc.setV( nodeC, V );
+            wLoc.setV_raw( nodeC, V );
+            wLoc.setfn( nodeC, f0 );
+            wLoc.setdir( nodeC, dir );
+            if ( o->iid != NULL )
+              wLoc.setiid( nodeC, o->iid );
+
+            nodeFn = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+            wLoc.setthrottleid( nodeFn, "srcp" );
+            if ( o->iid != NULL )
+              wLoc.setiid( nodeFn, o->iid );
+
+            wFunCmd.setaddr( nodeFn, addr );
+            wFunCmd.setf28( nodeFn,(srcpFx & 0x08000000)?True:False);
+            wFunCmd.setf27( nodeFn,(srcpFx & 0x04000000)?True:False);
+            wFunCmd.setf26( nodeFn,(srcpFx & 0x02000000)?True:False);
+            wFunCmd.setf25( nodeFn,(srcpFx & 0x01000000)?True:False);
+            wFunCmd.setf24( nodeFn,(srcpFx & 0x00800000)?True:False);
+            wFunCmd.setf23( nodeFn,(srcpFx & 0x00400000)?True:False);
+            wFunCmd.setf22( nodeFn,(srcpFx & 0x00200000)?True:False);
+            wFunCmd.setf21( nodeFn,(srcpFx & 0x00100000)?True:False);
+            wFunCmd.setf20( nodeFn,(srcpFx & 0x00080000)?True:False);
+            wFunCmd.setf19( nodeFn,(srcpFx & 0x00040000)?True:False);
+            wFunCmd.setf18( nodeFn,(srcpFx & 0x00020000)?True:False);
+            wFunCmd.setf17( nodeFn,(srcpFx & 0x00010000)?True:False);
+            wFunCmd.setf16( nodeFn,(srcpFx & 0x00008000)?True:False);
+            wFunCmd.setf15( nodeFn,(srcpFx & 0x00004000)?True:False);
+            wFunCmd.setf14( nodeFn,(srcpFx & 0x00002000)?True:False);
+            wFunCmd.setf13( nodeFn,(srcpFx & 0x00001000)?True:False);
+            wFunCmd.setf12( nodeFn,(srcpFx & 0x00000800)?True:False);
+            wFunCmd.setf11( nodeFn,(srcpFx & 0x00000400)?True:False);
+            wFunCmd.setf10( nodeFn,(srcpFx & 0x00000200)?True:False);
+            wFunCmd.setf9(  nodeFn,(srcpFx & 0x00000100)?True:False);
+            wFunCmd.setf8(  nodeFn,(srcpFx & 0x00000080)?True:False);
+            wFunCmd.setf7(  nodeFn,(srcpFx & 0x00000040)?True:False);
+            wFunCmd.setf6(  nodeFn,(srcpFx & 0x00000020)?True:False);
+            wFunCmd.setf5(  nodeFn,(srcpFx & 0x00000010)?True:False);
+            wFunCmd.setf4(  nodeFn,(srcpFx & 0x00000008)?True:False);
+            wFunCmd.setf3(  nodeFn,(srcpFx & 0x00000004)?True:False);
+            wFunCmd.setf2(  nodeFn,(srcpFx & 0x00000002)?True:False);
+            wFunCmd.setf1(  nodeFn,(srcpFx & 0x00000001)?True:False);
+            wFunCmd.setf0(  nodeFn, f0 );
+          }
+          else {
+            nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+            wFeedback.setaddr( nodeC, addr );
+            wFeedback.setstate( nodeC, val ? True : False );
+            if ( o->iid != NULL )
+              wFeedback.setiid( nodeC, o->iid );
+          }
+
+          if ( nodeC != NULL && o->listenerFun != NULL && o->listenerObj != NULL )
+            o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );
+          if ( nodeFn != NULL && o->listenerFun != NULL && o->listenerObj != NULL )
+            o->listenerFun( o->listenerObj, nodeFn, TRCLEVEL_INFO );
+
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "not an INFO line:" );
+          TraceOp.dump( NULL, TRCLEVEL_DEBUG, inbuf, StrOp.len( inbuf ) );
+        }
+
+      };
+      /* end while */
+
+      tok->base.del(tok);
+
+    }
+    /* end if */
+    else {
+      exception = True;
+    }
+
+    if( exception ) {
+      exception = False;
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Try to reconnect..." );
+
+      SocketOp.disConnect( o->infoSocket );
+      SocketOp.base.del(o->infoSocket);
+      o->infoSocket = NULL;
+
+      if( o->cmdSocket != NULL ) {
+        iOSocket socket = o->cmdSocket;
+        o->cmdSocket = NULL;
+        SocketOp.disConnect( socket );
+        SocketOp.base.del(socket);
+      }
+
+      ThreadOp.sleep( 1000 );
+      o->infoSocket = SocketOp.inst( o->host, o->port, False, False, False );
+      if( SocketOp.connect( o->infoSocket ) ) {
+        __initInfoConnection(o);
+      }
+    }
+    else
+      ThreadOp.sleep( 10 );
+  };
+
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Info reader ended" );
 
@@ -1163,8 +1172,7 @@ static iOSRCP _inst( const iONode settings, const iOTrace trace ) {
 
   data->knownObjects = MapOp.inst();
 
-  if( __srcpConnect( data ) ) {
-    __srcpInitConnect(data);
+  {
     char * infoname = StrOp.fmt( "info%08X", srcp );
     data->infoReader = ThreadOp.inst( infoname, & __infoReader, srcp );
     ThreadOp.start( data->infoReader );
