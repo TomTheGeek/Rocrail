@@ -999,7 +999,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           data->value = wProgram.getvalue( node );
 
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-              "%08X get POM Addr=%d CV%d...", data->defaultprog->uid, addr, data->cv );
+              "%08X set POM Addr=%d CV%d=%d...", data->defaultprog->uid, addr, data->cv, data->value );
           if( data->defaultprog != NULL ) {
             msgdata[0] = addr % 256;
             msgdata[1] = addr / 256;
