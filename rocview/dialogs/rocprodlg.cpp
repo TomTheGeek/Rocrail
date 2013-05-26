@@ -197,7 +197,10 @@ void RocProDlg::loadDecFile() {
       StrOp.fmtb(key, "%d", wCVByte.getnr(cv) );
       MapOp.put( m_CVNrMap, key, (obj)cv);
     }
-    m_DecTree->ExpandAll();
+    if( NodeOp.getBool(m_DecNode, "collapse", False ) )
+      m_DecTree->CollapseAll();
+    else
+      m_DecTree->ExpandAll();
   }
 
 }
