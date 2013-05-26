@@ -117,6 +117,7 @@ XPRESSNETOBJS=$(patsubst impl/xpressnet/%.c,$(TMPOUTDIR)/xpressnet/%.o,$(wildcar
 BIDIBOBJS=$(patsubst impl/bidib/%.c,$(TMPOUTDIR)/bidib/%.o,$(wildcard impl/bidib/*.c))
 CBUSOBJS=$(patsubst impl/cbus/%.c,$(TMPOUTDIR)/cbus/%.o,$(wildcard impl/cbus/*.c))
 RASPIOBJS=$(patsubst impl/raspi/%.c,$(TMPOUTDIR)/raspi/%.o,$(wildcard impl/raspi/*.c))
+SRCPOBJS=$(patsubst impl/srcp/%.c,$(TMPOUTDIR)/srcp/%.o,$(wildcard impl/srcp/*.c))
 
 all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX) $(OUTDIR)$(FS)hsi88$(SHAREDSUFFIX) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)roco$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimo$(SHAREDSUFFIX) $(OUTDIR)$(FS)dinamo$(SHAREDSUFFIX) \
@@ -139,8 +140,8 @@ $(OUTDIR)$(FS)p50$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)p50.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)p50$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)p50.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)p50x.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)p50x.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
-$(OUTDIR)$(FS)srcp$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)srcp.o $(COMMONOBJS) $(RRLIBS)
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)srcp.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)$(FS)srcp$(SHAREDSUFFIX): $(SRCPOBJS) $(TMPOUTDIR)$(FS)srcp.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)srcp.o $(SRCPOBJS) $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)hsi88$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)hsi88.o $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)hsi88$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)hsi88.o $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)roco$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)roco.o $(COMMONOBJS) $(RRLIBS)
@@ -250,6 +251,9 @@ $(TMPOUTDIR)/bidib/%.o: impl/bidib/%.c
 $(TMPOUTDIR)/raspi/%.o: impl/raspi/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
 	
+$(TMPOUTDIR)/srcp/%.o: impl/srcp/%.c
+	$(CPP) $(CC_FLAGS) $< -o $@
+	
 clean:
 	-$(MKDIR) $(OUTDIR)
 	-$(MKDIR) $(TMPOUTDIR)$(FS)ddx
@@ -263,6 +267,7 @@ clean:
 	-$(MKDIR) $(TMPOUTDIR)$(FS)bidib
 	-$(MKDIR) $(TMPOUTDIR)$(FS)cbus
 	-$(MKDIR) $(TMPOUTDIR)$(FS)raspi
+	-$(MKDIR) $(TMPOUTDIR)$(FS)srcp
 	-$(MKDIR) $(GENDIR)$(FS)rocdigs
 	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)ddx$(FS)*.o
@@ -276,6 +281,7 @@ clean:
 	-$(REMOVE) $(TMPOUTDIR)$(FS)cbus$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)nmra$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)raspi$(FS)*.o
+	-$(REMOVE) $(TMPOUTDIR)$(FS)srcp$(FS)*.o
 	-$(REMOVE) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX)
