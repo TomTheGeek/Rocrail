@@ -1262,11 +1262,11 @@ static void __handleCV(iOBiDiB bidib, int addr, int cv, int val) {
 
   iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV response" );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV%d=%d response", cv+1, val );
 
   wProgram.setvalue( node, val );
   wProgram.setcmd( node, wProgram.datarsp );
-  wProgram.setcv( node, cv );
+  wProgram.setcv( node, cv+1 );
   wProgram.setdecaddr( node, addr );
   if( data->iid != NULL )
     wProgram.setiid( node, data->iid );
