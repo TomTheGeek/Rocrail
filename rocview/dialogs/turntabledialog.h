@@ -231,6 +231,7 @@ public:
     wxSpinCtrl* m_Delay;
     wxStaticText* m_labPause;
     wxSpinCtrl* m_Pause;
+    wxCheckBox* m_Inv;
     wxStaticText* m_labProt;
     wxComboBox* m_Prot;
     wxStaticText* m_labBridgeSensor1;

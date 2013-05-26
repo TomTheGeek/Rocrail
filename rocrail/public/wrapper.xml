@@ -2068,6 +2068,7 @@
         <var name="diraddr" vt="int" defval="0" range="0-*" required="true" remark="Direction address."/>
         <var name="poladdr" vt="int" defval="0" range="0-*" required="false" remark="Polarization relay address."/>
         <var name="motoroffdelay" vt="int" defval="1000" range="0-*" required="false" remark="shut off delay for locdec motor"/>
+        <var name="inv" vt="bool" defval="false" remark="invert the commands"/>
 
         <var name="addr0" vt="int" defval="0" range="0-*" required="true" remark="bit 0 of track"/>
         <var name="port0" vt="int" defval="0" range="0-4" required="true" remark="bit 0 of track"/>

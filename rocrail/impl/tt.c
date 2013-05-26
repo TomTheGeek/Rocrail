@@ -648,25 +648,26 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
   Boolean doDirCmd = False;
   int port = 0;
   const char* cmdstr = NULL;
+  Boolean inv = wSwitch.isinv( data->props );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TT command = [%s]", cmdStr );
   if( StrOp.equals( wTurntable.next, cmdStr ) ) {
     port = TTDEC_STEP;
-    cmdstr = wSwitch.straight;
+    cmdstr = inv?wSwitch.turnout:wSwitch.straight;
     data->pending = True;
     /* set gotopos for next track */
     data->gotopos = __getNextTrack(inst, wTurntable.getbridgepos( data->props));
   }
   else if( StrOp.equals( wTurntable.prev, cmdStr ) ) {
     port = TTDEC_STEP;
-    cmdstr = wSwitch.turnout;
+    cmdstr = inv?wSwitch.straight:wSwitch.turnout;
     data->pending = True;
     /* set gotopos for previous track */
     data->gotopos = __getPrevTrack(inst, wTurntable.getbridgepos( data->props));
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
     port = TTDEC_TURN;
-    cmdstr = wSwitch.straight;
+    cmdstr = inv?wSwitch.turnout:wSwitch.straight;
     data->pending = True;
   }
   else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
@@ -700,9 +701,9 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
 
       port = TTDEC_POS + ((tracknr-1)/2);
       if( (tracknr-1) % 2 == 0 )
-        cmdstr = wSwitch.turnout;
+        cmdstr = inv?wSwitch.straight:wSwitch.turnout;
       else
-        cmdstr = wSwitch.straight;
+        cmdstr = inv?wSwitch.turnout:wSwitch.straight;
 
       /* DA check whether 180 degrees turn is required */
       if( (data->tablepos-orig_tracknr) == 24)
@@ -710,14 +711,14 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "Turn 180 ---> Goto track [%d], current pos=[%d]", tracknr, data->tablepos );
         port   = TTDEC_TURN;
-        cmdstr = wSwitch.straight;
+        cmdstr = inv?wSwitch.turnout:wSwitch.straight;
       }
       else if( (data->tablepos-orig_tracknr) == -24)
       {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "Turn 180 ---> Goto track [%d], current pos=[%d]", tracknr, data->tablepos );
         port   = TTDEC_TURN;
-        cmdstr = wSwitch.straight;
+        cmdstr = inv?wSwitch.turnout:wSwitch.straight;
       }
       /* DA check whether 180 degrees turn is required */
 
