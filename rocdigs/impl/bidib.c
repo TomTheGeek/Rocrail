@@ -2752,9 +2752,10 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
 
   case MSG_CS_POM_ACK:
-    {
+    if( pdata[5] > 0 ) {
       iONode rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       wProgram.setcmd( rsp, wProgram.statusrsp );
+      wProgram.setcv( rsp, -1 );
       if( data->iid != NULL )
         wProgram.setiid( rsp, data->iid );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
