@@ -249,9 +249,14 @@ static iONode _parseLine(const char* scriptline) {
       /* bk,<id>,open */
       node = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
       wBlock.setid( node, parm1 );
-      wBlock.setcmd( node, parm2 );
-      if( StrOp.equalsi(wBlock.loc, parm2) )
-        wBlock.setlocid(node, parm3);
+      if( StrOp.equals(parm2, wBlock.closed) || StrOp.equals(parm2, wBlock.open) ) {
+        wBlock.setstate(node, parm2);
+      }
+      else {
+        wBlock.setcmd( node, parm2 );
+        if( StrOp.equalsi(wBlock.loc, parm2) )
+          wBlock.setlocid(node, parm3);
+      }
     }
 
     else if( StrOp.equalsi( wStage.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
