@@ -2752,8 +2752,16 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
 
   case MSG_CS_POM_ACK:
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "MSG_CS_POM_ACK path=%s addr=%d ack=%d", pathKey, pdata[0] + pdata[1]*256, pdata[5] );
+    {
+      iONode rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setcmd( rsp, wProgram.statusrsp );
+      if( data->iid != NULL )
+        wProgram.setiid( rsp, data->iid );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "MSG_CS_POM_ACK path=%s addr=%d ack=%d", pathKey, pdata[0] + pdata[1]*256, pdata[5] );
+      if( data->listenerFun != NULL && data->listenerObj != NULL )
+        data->listenerFun( data->listenerObj, rsp, TRCLEVEL_INFO );
+    }
     break;
 
   case MSG_CS_DRIVE_MANUAL:
