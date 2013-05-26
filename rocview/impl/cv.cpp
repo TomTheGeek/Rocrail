@@ -314,11 +314,13 @@ void CV::event( iONode event ) {
       m_bLongAddress = false;
     }
     else if( m_CVidx >= 67 && m_CVidx <= 94 ) {
-      m_Curve[m_CVidx-67] = ivalue;
-      if(m_CVidx < 94 && m_bSpeedCurve ) {
-        m_CVoperation = CVGET;
-        m_TimerCount = 0;
-        doCV( wProgram.get, m_CVidx + 1, 0 );
+      if( cv == 0 || cv ==  m_CVidx ) {
+        m_Curve[m_CVidx-67] = ivalue;
+        if(m_CVidx < 94 && m_bSpeedCurve ) {
+          m_CVoperation = CVGET;
+          m_TimerCount = 0;
+          doCV( wProgram.get, m_CVidx + 1, 0 );
+        }
       }
       else if(m_CVidx == 94 && m_bSpeedCurve ) {
         /* post an event to activate the speed curve dialog */
