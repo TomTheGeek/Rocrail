@@ -666,7 +666,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
         datagram[0] = 4 | VER3_FLAG | data->header;
         datagram[1] = 0x18 | (addr >> 2);
         datagram[2] = (port & 0x1F) | ((addr&0x03) << 5);
-        datagram[3] = blink?10:5; /* linear */
+        datagram[3] = on ? (blink?10:5):0; /* linear */
         datagram[4] = param;
         datagram[5] = (byte)__generateChecksum( datagram );
         size = 6;
