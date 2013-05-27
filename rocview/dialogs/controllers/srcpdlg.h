@@ -62,6 +62,7 @@ class wxSpinCtrl;
 #define ID_TEXTCTRL_SRCP_HOST 10024
 #define wxID_STATIC_SRCP_CMDPORT 10030
 #define ID_TEXTCTRL_SRCP_CmdPort 10035
+#define ID_SRCPSUBLIB 10031
 #define ID_PANEL_SRCP_BUSSES 10045
 #define SYMBOL_SRCPCTRLDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_SRCPCTRLDLG_TITLE _("SRCP")
@@ -95,7 +96,7 @@ class SRCPCtrlDlg: public wxDialog
 public:
     /// Constructors
     SRCPCtrlDlg( );
-    SRCPCtrlDlg( wxWindow* parent, iONode props );
+    SRCPCtrlDlg( wxWindow* parent, iONode props, const char* devices );
 
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_SRCPCTRLDLG_IDNAME, const wxString& caption = SYMBOL_SRCPCTRLDLG_TITLE, const wxPoint& pos = SYMBOL_SRCPCTRLDLG_POSITION, const wxSize& size = SYMBOL_SRCPCTRLDLG_SIZE, long style = SYMBOL_SRCPCTRLDLG_STYLE );
@@ -134,6 +135,9 @@ public:
     wxTextCtrl* m_Host;
     wxStaticText* m_labCmdPort;
     wxTextCtrl* m_CmdPort;
+    wxStaticText* m_labDevice;
+    wxComboBox* m_Device;
+    wxRadioBox* m_SubLibBox;
     wxPanel* m_BussesPanel;
     wxStaticText* m_labBusServer;
     wxSpinCtrl* m_BusServer;
@@ -160,6 +164,8 @@ public:
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end SRCPCtrlDlg member variables
+    const char* m_Devices;
+
 };
 
 #endif
