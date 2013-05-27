@@ -223,7 +223,8 @@ int tcpipWrite( obj inst, const char *szCommand, char* szRetVal, Boolean info ) 
 
 
 Boolean tcpipAvailable( obj inst ) {
-  return False;
+  iOSRCPData data = Data(inst);
+  return True;
 }
 
 

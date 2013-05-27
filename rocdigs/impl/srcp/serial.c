@@ -41,16 +41,27 @@ Boolean serialInit( obj inst ) {
 
   SerialOp.setLine( data->serial, wDigInt.getbps( data->ini ), 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
+
+  data->serialMux = MutexOp.inst( NULL, True );
+
   return True;
 }
 
 
 int serialConnect( obj inst, Boolean info ) {
   iOSRCPData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "connecting to [%s]", wDigInt.getdevice( data->ini ) );
 
-  if( data->serial != NULL && SerialOp.open( data->serial ) ) {
+  if( data->serial != NULL && !data->serialOK ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "connecting to [%s]", wDigInt.getdevice( data->ini ) );
+    data->serialOK = SerialOp.open( data->serial );
+  }
+
+  if( data->serial != NULL && data->serialOK ) {
     return SRCPCONNECT_OK;
+  }
+
+  if( data->serial != NULL ) {
+    SerialOp.close( data->serial );
   }
   return SRCPCONNECT_ERROR;
 }
@@ -71,15 +82,18 @@ int serialRead ( obj inst, char *cmd, Boolean info ) {
   int idx = 0;
   cmd[idx] = '\0';
 
-  while( data->run && data->serial != NULL ) {
-    if( !SerialOp.read( data->serial, &cmd[idx], 1 ) ) {
-      return 0;
-    }
-    if( cmd[idx] == '\n' ) {
-      break;
-    }
-    idx++;
-  };
+  if( MutexOp.trywait( data->serialMux, 100 ) ) {
+    while( data->run && data->serial != NULL ) {
+      if( !SerialOp.read( data->serial, &cmd[idx], 1 ) ) {
+        return 0;
+      }
+      if( cmd[idx] == '\n' ) {
+        break;
+      }
+      idx++;
+    };
+    MutexOp.post(data->serialMux);
+  }
 
   return StrOp.len(cmd);
 }
@@ -122,5 +136,7 @@ int serialWrite( obj inst, const char *cmd, char* rsp, Boolean info ) {
 
 
 Boolean serialAvailable( obj inst ) {
-  return False;
+  iOSRCPData data = Data(inst);
+  int available = SerialOp.available(data->serial);
+  return available > 0 ? True:False;
 }

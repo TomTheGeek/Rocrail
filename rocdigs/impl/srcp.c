@@ -708,6 +708,11 @@ static void __infoReader( void * threadinst ) {
       continue;
     }
 
+    if( !o->subAvailable((obj)srcp) ) {
+      ThreadOp.sleep(10);
+      continue;
+    }
+
     if( o->subRead( (obj)srcp, inbuf, True ) > 0 ) {
       char*    fbAddrStr   = NULL;
       iOStrTok tok         = NULL;
