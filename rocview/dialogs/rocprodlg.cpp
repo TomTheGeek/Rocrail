@@ -433,7 +433,8 @@ void RocProDlg::event(iONode node) {
         }
         if( cv > 0 )
           m_Nr->SetValue( cv );
-        setCVVal(value);
+        if( cv != -1 )
+          setCVVal(value);
       }
     }
 
