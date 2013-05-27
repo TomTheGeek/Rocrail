@@ -108,7 +108,7 @@
   </object>
 
 
-  <object name="SRCP" interface="$../rocint/rocint.xml:DigInt" use="node,trace,socket,thread,map" include="$rocint/public/digint" remark="SRCP object">
+  <object name="SRCP" interface="$../rocint/rocint.xml:DigInt" use="node,trace,socket,thread,map,serial" include="$rocint/public/digint" remark="SRCP object">
     <typedef def="enum {SRCP_STATE_OK=1, SRCP_STATE_ERROR} srcpstate"/>
     <typedef def="Boolean(*sublib_init)(obj)"/>
       <typedef def="int(*sublib_connect)(obj,Boolean)"/>
@@ -147,7 +147,8 @@
       <var name="subWriter" vt="iOThread"/>
       <var name="subReadQueue" vt="iOQueue"/>
       <var name="subWriteQueue" vt="iOQueue"/>
-      </data>
+      <var name="serial" vt="iOSerial"/>
+    </data>
   </object>
 
 
