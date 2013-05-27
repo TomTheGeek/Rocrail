@@ -582,7 +582,7 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
 
   if( StrOp.len( cmd ) > 0 ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "translation = %s...", cmd);
-    rc = data__srcpWrite((obj)inst, cmd, NULL);
+    rc = __srcpWrite((obj)inst, cmd, NULL);
   }
 
   if( rc == -1 ) {
@@ -596,7 +596,7 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
         rsp = __translate( (iOSRCP)inst, nodeA, cmd );
         if( StrOp.len( cmd ) > 0 ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "retransmit = %s...", cmd);
-          data__srcpWrite((obj)inst, cmd, NULL);
+          __srcpWrite((obj)inst, cmd, NULL);
         }
       }
       else {
