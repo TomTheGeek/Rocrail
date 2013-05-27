@@ -24,11 +24,11 @@
 #define SRCPSERIAL_H_
 
 Boolean serialInit( obj inst );
-Boolean serialConnect( obj inst );
-void  serialDisconnect( obj inst );
+int serialConnect( obj inst, Boolean info );
+void  serialDisconnect( obj inst, Boolean info );
 
-int serialRead ( obj inst, char *cmd );
-Boolean serialWrite( obj inst, char *cmd );
+int serialRead ( obj inst, char *cmd, Boolean info );
+int serialWrite( obj inst, const char *cmd, char* rsp, Boolean info );
 Boolean serialAvailable( obj inst );
 
 #endif /*SRCPSERIAL_H_*/

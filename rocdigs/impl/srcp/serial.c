@@ -24,32 +24,37 @@
 #include "rocdigs/impl/srcp_impl.h"
 
 #include "rocdigs/impl/srcp/serial.h"
+#include "rocdigs/impl/srcp/srcp.h"
 
+#include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/SRCP.h"
 
 
 
 Boolean serialInit( obj inst ) {
+  iOSRCPData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device    : %s", wDigInt.getdevice(data->ini) );
   return False;
 }
 
 
-Boolean serialConnect( obj inst ) {
-  return False;
+int serialConnect( obj inst, Boolean info ) {
+  return SRCPCONNECT_ERROR;
 }
 
 
-void serialDisconnect( obj inst ) {
+void serialDisconnect( obj inst, Boolean info ) {
 
 }
 
 
-int serialRead ( obj inst, char *cmd ) {
+int serialRead ( obj inst, char *cmd, Boolean info ) {
   return 0;
 }
 
 
-Boolean serialWrite( obj inst, char *cmd ) {
-  return False;
+int serialWrite( obj inst, const char *cmd, char* rsp, Boolean info ) {
+  return 0;
 }
 
 

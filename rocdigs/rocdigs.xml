@@ -111,10 +111,10 @@
   <object name="SRCP" interface="$../rocint/rocint.xml:DigInt" use="node,trace,socket,thread,map" include="$rocint/public/digint" remark="SRCP object">
     <typedef def="enum {SRCP_STATE_OK=1, SRCP_STATE_ERROR} srcpstate"/>
     <typedef def="Boolean(*sublib_init)(obj)"/>
-      <typedef def="Boolean(*sublib_connect)(obj)"/>
-    <typedef def="void(*sublib_disconnect)(obj)"/>
-    <typedef def="int(*sublib_read)(obj,char*)"/>
-    <typedef def="Boolean(*sublib_write)(obj,char*)"/>
+      <typedef def="int(*sublib_connect)(obj,Boolean)"/>
+    <typedef def="void(*sublib_disconnect)(obj,Boolean)"/>
+    <typedef def="int(*sublib_read)(obj,char*,Boolean)"/>
+    <typedef def="int(*sublib_write)(obj,const char*,char*,Boolean)"/>
     <typedef def="Boolean(*sublib_available)(obj)"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>

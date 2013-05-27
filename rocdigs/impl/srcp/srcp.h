@@ -21,19 +21,16 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+#ifndef SRCP_H_
+#define SRCP_H_
+
+#define SRCP_OK(x) ( x < 400 )
+#define SRCP_ERROR(x) ( x >= 400 )
+
+#define SRCPCONNECT_OK 0
+#define SRCPCONNECT_ERROR 1
+#define SRCPCONNECT_RECONNECTED 2
 
 
-#ifndef SRCPTCPIP_H_
-#define SRCPTCPIP_H_
 
-
-Boolean tcpipInit( obj inst );
-int tcpipConnect( obj inst, Boolean info );
-void tcpipDisconnect( obj inst, Boolean info );
-
-int tcpipRead ( obj inst, char *cmd, Boolean info );
-int tcpipWrite( obj inst, const char *cmd, char* rsp, Boolean info );
-Boolean tcpipAvailable( obj inst );
-
-
-#endif /* TCPIP_H_ */
+#endif /* SRCP_H_ */
