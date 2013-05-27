@@ -662,11 +662,12 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
       if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_OM32 ) ) {
         Boolean blink = wOutput.isblink( node );
         /* OM32 output (0011MMM) (mmuuuuu) (commando) (parameter) */
-        byte param = on ? gain:0;
+        byte param   = on ? gain:0;
+        byte command = blink ? 10:5;
         datagram[0] = 4 | VER3_FLAG | data->header;
         datagram[1] = 0x18 | (addr >> 2);
         datagram[2] = (port & 0x1F) | ((addr&0x03) << 5);
-        datagram[3] = blink?10:5; /* linear */
+        datagram[3] = on?command:0x08;
         datagram[4] = param;
         datagram[5] = (byte)__generateChecksum( datagram );
         size = 6;
@@ -681,7 +682,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
         datagram[2] = addr & 0x7F;
         datagram[3] = (byte)__generateChecksum( datagram );
         size = 4;
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 digital %s [%d]", wOutput.getcmd( node ), addr+1 );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "digital %s [%d]", wOutput.getcmd( node ), addr+1 );
       }
       else if( StrOp.equals( wOutput.getprot( node ), wOutput.prot_VO ) ) {
         /* virtual output */
@@ -691,7 +692,7 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
         datagram[2] = addr & 0x7F;
         datagram[3] = (byte)__generateChecksum( datagram );
         size = 4;
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 virtual %s [%d]", wOutput.getcmd( node ), addr+1 );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "virtual %s [%d]", wOutput.getcmd( node ), addr+1 );
       }
     }
   }
