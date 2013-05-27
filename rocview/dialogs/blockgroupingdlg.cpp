@@ -382,7 +382,7 @@ void BlockGroupingDialog::CreateControls()
     m_IndexPanel->SetSizer(itemBoxSizer5);
 
     wxArrayString m_ListStrings;
-    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_LINK, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
+    m_List = new wxListBox( m_IndexPanel, ID_LISTBOX_LINK, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
     itemBoxSizer5->Add(m_List, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(2, 2, 0, 0);
@@ -406,6 +406,7 @@ void BlockGroupingDialog::CreateControls()
     m_GeneralPanel->SetSizer(itemBoxSizer13);
 
     wxFlexGridSizer* itemFlexGridSizer14 = new wxFlexGridSizer(1, 2, 0, 0);
+    itemFlexGridSizer14->AddGrowableCol(1);
     itemBoxSizer13->Add(itemFlexGridSizer14, 0, wxGROW|wxALL, 5);
     m_LabelID = new wxStaticText( m_GeneralPanel, wxID_STATIC_LINK_ID, _("ID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer14->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -426,6 +427,7 @@ void BlockGroupingDialog::CreateControls()
     m_PropertiesPanel->SetSizer(itemBoxSizer20);
 
     wxFlexGridSizer* itemFlexGridSizer21 = new wxFlexGridSizer(2, 2, 0, 0);
+    itemFlexGridSizer21->AddGrowableCol(1);
     itemBoxSizer20->Add(itemFlexGridSizer21, 0, wxGROW|wxALL, 5);
     m_LabelMainBlock = new wxStaticText( m_PropertiesPanel, wxID_STATIC_LINK_MAIN, _("source block"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer21->Add(m_LabelMainBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -481,6 +483,7 @@ void BlockGroupingDialog::CreateControls()
     itemBoxSizer37->Add(m_CondList, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer39 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer39->AddGrowableCol(1);
     itemBoxSizer37->Add(itemFlexGridSizer39, 0, wxGROW|wxALL, 5);
     m_labCondFrom = new wxStaticText( m_ConditionsPanel, wxID_ANY, _("From"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer39->Add(m_labCondFrom, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
