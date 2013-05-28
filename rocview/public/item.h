@@ -124,6 +124,7 @@ public:
   void setPanel(PlanPanel* panel);
   void setPosition();
   bool isDragged() {return m_isDragged;}
+  bool isSignal();
 
 private:
   SymbolRenderer* m_Renderer;

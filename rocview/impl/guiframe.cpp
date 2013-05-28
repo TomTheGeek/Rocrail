@@ -4076,6 +4076,17 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
   }
   */
 
+  if( m_ModPanel != NULL) {
+    m_ModPanel->modelEvent( NULL );
+  } else {
+    int pagecnt = getNotebook()->GetPageCount();
+    for( int i = 0; i < pagecnt; i++ ) {
+      PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
+      p->modelEvent( NULL );
+    }
+  }
+
+
   m_LC->stopTimer();
   wxGetApp().OnExit();
   event.Skip();

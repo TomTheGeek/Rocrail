@@ -1195,6 +1195,11 @@ void Symbol::OnTimer(wxTimerEvent& event) {
   }
 }
 
+bool Symbol::isSignal() {
+  if( m_Props != NULL && StrOp.equals( wSignal.name(), NodeOp.getName(m_Props)))
+    return true;
+  return false;
+}
 
 void Symbol::OnMouseEnter(wxMouseEvent& event) {
   if( wxGetApp().getFrame()->isEditMode() ) {

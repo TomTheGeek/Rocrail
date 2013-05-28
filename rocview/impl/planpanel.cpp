@@ -177,6 +177,8 @@ BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
   EVT_MENU( ME_PanelSelect    , PlanPanel::OnSelect )
   EVT_MENU( ME_RemovePlan, PlanPanel::OnRemovePanel )
 
+  EVT_TIMER (ME_TimerAlt, PlanPanel::OnTimer)
+
 END_EVENT_TABLE()
 
 // ----------------------------------------------------------------------------
@@ -224,7 +226,17 @@ PlanPanel::PlanPanel(wxWindow *parent, int itemsize, double scale, double bktext
   else {
     SetToolTip( wxString("",wxConvUTF8) );
   }
+
+  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "starting timer..." );
+  m_Timer = new wxTimer(this, ME_TimerAlt);
+  if( !m_Timer->Start(1000, false) ) {
+    TraceOp.trc( "plan", TRCLEVEL_WARNING, __LINE__, 9999, "could not start the timer.." );
+  }
 }
+
+ PlanPanel::~PlanPanel() {
+   m_Timer->Stop();
+ }
 
 const char* PlanPanel::getZLevelTitle() {
   return wZLevel.gettitle( m_zLevel );
@@ -1055,6 +1067,23 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
     }
 }
 
+void PlanPanel::OnTimer(wxTimerEvent& event) {
+  m_bAlt = !m_bAlt;
+  TraceOp.trc( "planpanel", TRCLEVEL_INFO, __LINE__, 9999, "alternate timer: %d", m_bAlt );
+
+  m_ChildTable->BeginFind();
+  Symbol* item = NULL;
+  wxNode* node = (wxNode*)m_ChildTable->Next();
+  while( node != NULL ) {
+    item = (Symbol*)node->GetData();
+    if( item->isSignal() && !item->isDragged() )
+      item->Refresh();
+    node = (wxNode*)m_ChildTable->Next();
+  }
+}
+
+
+
 
 void PlanPanel::OnBackColor( wxCommandEvent& event ) {
   wxColourDialog* dlg = new wxColourDialog(this);
@@ -1717,6 +1746,12 @@ void PlanPanel::addMultipleItem(wxCommandEvent& event) {
 }
 
 void PlanPanel::modelEvent( iONode node ) {
+
+  if( node == NULL ) {
+    m_Timer->Stop();
+    return;
+  }
+
   const char* name = NodeOp.getName( node );
   const char* id   = wItem.getid( node );
 

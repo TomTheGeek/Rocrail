@@ -32,6 +32,7 @@ class PlanPanel : public BasePanel
 {
 public:
   PlanPanel(wxWindow *parent, int itemsize, double scale, double bktext, int z, iONode zlevel=NULL, bool showBorder=true );
+  ~PlanPanel();
   void OnPaint(wxPaintEvent& event);
   void init(bool modview=false);
   void clean();
@@ -116,6 +117,7 @@ public:
   int m_Z;
   const char* m_Ori;
   bool m_OK2Clear;
+  void OnTimer(wxTimerEvent& event);
 
 
 private:
@@ -134,6 +136,7 @@ private:
   iONode addItemInList( iONode item );
   iOThread  m_InitThread;
 	wxWindow* m_Parent;
+  wxTimer* m_Timer;
   wxHashTable* m_ChildTable;
   double m_Scale;
   double m_Bktext;
@@ -209,7 +212,8 @@ enum {
   ME_ModuleEast,
   ME_ModuleSouth,
   ME_ModuleWest,
-  ME_PlanColor
+  ME_PlanColor,
+  ME_TimerAlt
 };
 
 

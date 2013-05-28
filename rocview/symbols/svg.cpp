@@ -204,8 +204,8 @@ svgSymbol* svgReader::parseSvgSymbol( const char* svgStr ) {
   else {
     polyList = ListOp.inst();
     circleList = ListOp.inst();
-    polyListAlt = ListOp.inst();
-    circleListAlt = ListOp.inst();
+    polyListAlt = NULL;
+    circleListAlt = NULL;
 
     iONode svg = DocOp.getRootNode( doc );
     // clean up
@@ -246,6 +246,8 @@ svgSymbol* svgReader::parseSvgSymbol( const char* svgStr ) {
       // Alternate graphic for blinking
       g = NodeOp.findNextNode( svg, g );
       if( g != NULL ) {
+        polyListAlt = ListOp.inst();
+        circleListAlt = ListOp.inst();
         iONode path = NodeOp.findNode( g, "path" );
         while( path != NULL ) {
           const char* fill = NodeOp.getStr( path, "fill", NULL );
