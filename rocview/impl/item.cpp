@@ -1201,6 +1201,12 @@ bool Symbol::isSignal() {
   return false;
 }
 
+bool Symbol::hasAlt() {
+  if( m_Renderer != NULL && m_Renderer->hasAlt() )
+    return true;
+  return false;
+}
+
 void Symbol::OnMouseEnter(wxMouseEvent& event) {
   if( wxGetApp().getFrame()->isEditMode() ) {
     SetBackgroundColour( Base::getYellow() );

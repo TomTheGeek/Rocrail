@@ -125,6 +125,7 @@ public:
   void setPosition();
   bool isDragged() {return m_isDragged;}
   bool isSignal();
+  bool hasAlt();
 
 private:
   SymbolRenderer* m_Renderer;

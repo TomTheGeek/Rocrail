@@ -1076,7 +1076,7 @@ void PlanPanel::OnTimer(wxTimerEvent& event) {
   wxNode* node = (wxNode*)m_ChildTable->Next();
   while( node != NULL ) {
     item = (Symbol*)node->GetData();
-    if( item->isSignal() && !item->isDragged() )
+    if( item->isSignal() && !item->isDragged() && item->hasAlt())
       item->Refresh();
     node = (wxNode*)m_ChildTable->Next();
   }
