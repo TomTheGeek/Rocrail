@@ -202,6 +202,7 @@ PlanPanel::PlanPanel(wxWindow *parent, int itemsize, double scale, double bktext
   m_Selecting = false;
   m_bModView = false;
   m_OK2Clear = false;
+  m_bAlt = false;
 
   m_Z = z;
   m_Ori = wItem.west;

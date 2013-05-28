@@ -110,6 +110,7 @@ public:
   void refresh(bool eraseBackground = true);
   void setPosition();
   bool isRouteLocked(const char* id);
+  bool isAlt() {return m_bAlt;}
   void putChild(void* item);
   iONode m_zLevel;
   int m_Z;
@@ -153,6 +154,7 @@ private:
   int m_ScGreen;
   int m_ScBlue;
   bool m_ShowSc;
+  bool m_bAlt;
 
   DECLARE_EVENT_TABLE()
 };

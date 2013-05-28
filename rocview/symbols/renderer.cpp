@@ -984,9 +984,22 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
   xOffset += xOff * 32;
   yOffset += yOff * 32;
 
-  int cnt = ListOp.size( svgsym->polyList );
+  iOList polyList   = svgsym->polyList;
+  iOList circleList = svgsym->circleList;
+  if( m_bAlt && svgsym->polyListAlt != NULL )
+    polyList = svgsym->polyListAlt;
+  if( m_bAlt && svgsym->circleListAlt != NULL )
+    circleList = svgsym->circleListAlt;
+
+  if( svgsym->polyListAlt != NULL || svgsym->circleListAlt != NULL )
+    m_bHasAlt = true;
+  else
+    m_bHasAlt = false;
+
+
+  int cnt = ListOp.size( polyList );
   for( int i = 0; i < cnt; i++ ) {
-    svgPoly* svgpoly = (svgPoly*)ListOp.get(svgsym->polyList, i);
+    svgPoly* svgpoly = (svgPoly*)ListOp.get(polyList, i);
     wxPen* pen = getPen(svgpoly->stroke);
     pen->SetWidth(1);
     wxBrush* brush = getBrush(svgpoly->fill, dc );
@@ -1020,10 +1033,10 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
     delete brush;
   }
 
-  if( svgsym->circleList != NULL ) {
-    cnt = ListOp.size( svgsym->circleList );
+  if( circleList != NULL ) {
+    cnt = ListOp.size( circleList );
     for( int i = 0; i < cnt; i++ ) {
-      svgCircle* svgcircle = (svgCircle*)ListOp.get(svgsym->circleList, i);
+      svgCircle* svgcircle = (svgCircle*)ListOp.get(circleList, i);
       wxPen* pen = getPen(svgcircle->stroke);
       pen->SetWidth(1);
       wxBrush* brush = getBrush(svgcircle->fill, dc );
@@ -2272,8 +2285,11 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
 /**
  * Draw dispatcher
  */
-void SymbolRenderer::drawShape( wxPaintDC& dc, wxGraphicsContext* gc, bool occupied, bool actroute, double* bridgepos, bool showID, const char* ori, int status ) {
+void SymbolRenderer::drawShape( wxPaintDC& dc, wxGraphicsContext* gc, bool occupied, bool actroute,
+    double* bridgepos, bool showID, const char* ori, int status, bool alt )
+{
   m_bShowID = showID;
+  m_bAlt = alt;
   m_DC = &dc;
   const char* nodeName = NodeOp.getName( m_Props );
   m_UseGC = false;

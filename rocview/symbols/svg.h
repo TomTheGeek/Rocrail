@@ -59,6 +59,8 @@ class svgSymbol {
   public:
   iOList polyList;
   iOList circleList;
+  iOList polyListAlt;
+  iOList circleListAlt;
   char* name;
   int cx;
   int cy;
