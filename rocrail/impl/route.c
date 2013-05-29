@@ -1419,8 +1419,8 @@ static void _reset( iORoute inst ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                "reset route [%s]", RouteOp.getId( inst ) );
     RouteOp.unLock( inst, data->lockedId, NULL, True, False );
+    wRoute.setstatus(data->props, wRoute.status_free );
   }
-  wRoute.setstatus(data->props, wRoute.status_free );
 }
 
 
