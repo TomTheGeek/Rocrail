@@ -162,11 +162,12 @@ RouteDialog::RouteDialog()
 {
 }
 
-RouteDialog::RouteDialog( wxWindow* parent, iONode p_Props )
+RouteDialog::RouteDialog( wxWindow* parent, iONode p_Props, bool readonly )
 {
   m_TabAlign = wxGetApp().getTabAlign();
   Create(parent, -1, wxGetApp().getMsg("routes") );
   m_Props = p_Props;
+  m_bReadOnly = readonly;
 
   m_CondNr = -1;
 
@@ -180,6 +181,10 @@ RouteDialog::RouteDialog( wxWindow* parent, iONode p_Props )
   m_LocationPanel->GetSizer()->Layout();
   m_WiringPanel->GetSizer()->Layout();
 
+  m_GeneralPanel->Enable(!m_bReadOnly);
+  m_CommandPanel->Enable(!m_bReadOnly);
+  m_SensorPanel->Enable(!m_bReadOnly);
+  m_WiringPanel->Enable(!m_bReadOnly);
 
   m_Notebook->Fit();
   GetSizer()->Fit(this);
@@ -216,6 +221,12 @@ void RouteDialog::initLabels() {
   m_Doc->SetLabel( wxGetApp().getMsg( "doc_report" ) );
   m_CopyRoute->SetLabel( wxGetApp().getMsg( "copy" ) );
   m_ResetRoute->SetLabel( wxGetApp().getMsg( "reset" ) );
+
+  m_New->Enable(!m_bReadOnly);
+  m_DeleteRoute->Enable(!m_bReadOnly);
+  m_Test->Enable(!m_bReadOnly);
+  m_CopyRoute->Enable(!m_bReadOnly);
+
 
   // General
   m_LabelId->SetLabel( wxGetApp().getMsg( "id" ) );

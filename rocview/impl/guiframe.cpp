@@ -3471,7 +3471,7 @@ void RocGuiFrame::OnEditSensors( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnEditRoutes( wxCommandEvent& event ) {
-  RouteDialog*  dlg = new RouteDialog(this, (iONode)NULL );
+  RouteDialog*  dlg = new RouteDialog(this, (iONode)NULL, m_bAutoMode );
   if( wxID_OK == dlg->ShowModal() ) {
     /* Notify RocRail. */
   }
@@ -3718,8 +3718,6 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_EditTurnouts);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
   mi = menuBar->FindItem(ME_EditSensors);
-  if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
-  mi = menuBar->FindItem(ME_EditRoutes);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
   mi = menuBar->FindItem(ME_EditBlocks);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
