@@ -456,6 +456,10 @@ void RouteDialog::initLabels() {
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
   m_Apply->SetLabel( wxGetApp().getMsg( "apply" ) );
+
+  m_OK->Enable(!m_bReadOnly);
+  m_Apply->Enable(!m_bReadOnly);
+
 }
 
 
