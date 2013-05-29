@@ -1152,14 +1152,20 @@ static Boolean _isFree( iORoute inst, const char* id ) {
 
   if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 ) {
     /* Check all switches: */
-    if( !__checkSensors( inst ) )
+    if( !__checkSensors( inst ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route sensors check failed" );
       return False;
+    }
 
-    if( !__checkSwitches( inst, id ) )
+    if( !__checkSwitches( inst, id ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route switches check failed" );
       return False;
+    }
 
-    if( !__checkCrossingBlocks( inst, id ) )
+    if( !__checkCrossingBlocks( inst, id ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route crossing blocks check failed" );
       return False;
+    }
 
     return True;
   }
@@ -1413,8 +1419,8 @@ static void _reset( iORoute inst ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                "reset route [%s]", RouteOp.getId( inst ) );
     RouteOp.unLock( inst, data->lockedId, NULL, True, False );
-    wRoute.setstatus(data->props, wRoute.status_free );
   }
+  wRoute.setstatus(data->props, wRoute.status_free );
 }
 
 

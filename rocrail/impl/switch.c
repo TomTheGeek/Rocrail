@@ -678,6 +678,8 @@ static Boolean _isLocked( iOSwitch inst, const char* id, Boolean manual ) {
   const char* blockid = wSwitch.getblockid(data->props);
 
   if( data->lockedId != NULL && id == NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Switch \"%s\" is locked by \"%s\".",
+                   SwitchOp.getId( inst ), data->lockedId );
     return True;
   }
   if( data->lockedId != NULL && !StrOp.equals( id, data->lockedId ) ) {
