@@ -144,7 +144,7 @@ int serialWrite( obj inst, const char *cmd, char* rsp, Boolean info ) {
         data->state = (SRCP_OK(rc)?SRCP_STATE_OK:SRCP_STATE_ERROR);
 
         if( rsp != NULL )
-          StrOp.copy( rsp, szResponse );
+          StrOp.copy( rsp, inbuf );
 
       }
     }

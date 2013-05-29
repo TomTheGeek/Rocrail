@@ -594,7 +594,7 @@ static int sendRsp2AllInfoChannels(iOSrcpConData data, const char* infoStr) {
 
     if( StrOp.startsWithi( tname, "cmdrSRCP" ) ) {
       if ( oI->infomode ) {
-        SocketOp.fmt(oI->clntSocket, infoStr);
+        __writeRsp(oI, infoStr);
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendRsp2AllInfoChannels: SRCP SEND: %p [%p] %d : %s", oI, oI->clntSocket, oI->id, infoStr ) ;
         num++;
         ThreadOp.sleep( 10 );
@@ -659,7 +659,7 @@ static void sendSessionstate2InfoChannels( int busId, int sessId, int srcpCode, 
     if( StrOp.startsWithi( tname, "cmdrSRCP" ) ) {
       if ( oI->infomode ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP SEND: %p [%p] %d : %s", oI, oI->clntSocket, oI->id, str ) ;
-        SocketOp.fmt(oI->clntSocket, str);
+        __writeRsp(oI, str);
         ThreadOp.sleep( 10 );
       }
     }
@@ -822,7 +822,7 @@ static char* __rr2srcp(iOSrcpCon srcpcon, __iOSrcpService o, iONode evt, char* s
       __setClockRunning( True );
       /* 101 INFO 0 TIME fx fy */
        StrOp.fmtb(str, "%lu.%.3lu 101 INFO 0 TIME %d %d\n", time.tv_sec, time.tv_usec / 1000L, divider, 1 );
-       SocketOp.fmt(o->clntSocket, str);
+       __writeRsp(o, str);
 
       /* 100 INFO 0 TIME <JulDay> <Hour> <Minute> <Second> */
       time_t evt_time = wClock.gettime(evt);
@@ -845,7 +845,7 @@ static char* __rr2srcp(iOSrcpCon srcpcon, __iOSrcpService o, iONode evt, char* s
         if( __isClockRunning() ) {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__rr2srcp: new time divider[%d]", divider );
           StrOp.fmtb(str, "%lu.%.3lu 101 INFO 0 TIME %d %d\n", time.tv_sec, time.tv_usec / 1000L, divider, 1 );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }
       }
       if( __isClockRunning() ) {
@@ -865,7 +865,7 @@ static char* __rr2srcp(iOSrcpCon srcpcon, __iOSrcpService o, iONode evt, char* s
         if( __isClockRunning() ) {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__rr2srcp: new time divider[%d]", divider );
           StrOp.fmtb(str, "%lu.%.3lu 101 INFO 0 TIME %d %d\n", time.tv_sec, time.tv_usec / 1000L, divider, 1 );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }
       }
       /* 100 INFO 0 TIME <JulDay> <Hour> <Minute> <Second> */
@@ -2128,7 +2128,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
             StrOp.fmtb(rsp, "%lu.%.3lu 101 INFO %d GL %d %c %d %d %d\n", 
                 time.tv_sec, time.tv_usec / 1000L, srcpBus, addrGL, srcpProt, srcpProtver, loSpcnt, loFnCnt+1 );
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "101 %s", rsp);
-            SocketOp.fmt(o->clntSocket, rsp);
+            __writeRsp(o, rsp);
 
             *reqRespCode = (int) 0 ;
           }else {
@@ -2218,7 +2218,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
             StrOp.fmtb(rsp, "%lu.%.3lu 100 INFO %d GL %d %d %d %d %d%s\n", 
                 time.tv_sec, time.tv_usec / 1000L, srcpBus, addrGL, loDir?1:0, decStep, loSpcnt, loFn?1:0, funcString);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", rsp);
-            SocketOp.fmt(o->clntSocket, rsp);
+            __writeRsp(o, rsp);
 
             *reqRespCode = (int) 0 ;
           }else {
@@ -2324,7 +2324,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
           }
           StrOp.fmtb(str, "%lu.%.3lu 101 INFO %d GA %d %s\n", time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, prot );
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Answer: %s", str);
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
           *reqRespCode = (int) 0 ;
         }
 
@@ -2419,7 +2419,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
               StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d 0\n",
                   time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr,
                   StrOp.equals(wSwitch.getstate(swProps), wSwitch.straight)? 1:0 );
-              SocketOp.fmt(o->clntSocket, str);
+              __writeRsp(o, str);
               *reqRespCode = (int) 0 ;
             }else if(  StrOp.equals( type, wSwitch.threeway )
                     || StrOp.equals( type, wSwitch.dcrossing )
@@ -2430,14 +2430,14 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
                 StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d 0\n",
                     time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, 
                     (StrOp.equals(wSwitch.getstate(swProps), wSwitch.left)||StrOp.equals(wSwitch.getstate(swProps), wSwitch.turnout))? 1:0 );
-                SocketOp.fmt(o->clntSocket, str);
+                __writeRsp(o, str);
                 *reqRespCode = (int) 0 ;
               }
               if( srcpAddr == addr2 ) {
                 StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d 0\n",
                     time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, 
                     (StrOp.equals(wSwitch.getstate(swProps), wSwitch.right)||StrOp.equals(wSwitch.getstate(swProps), wSwitch.turnout))? 1:0 );
-                SocketOp.fmt(o->clntSocket, str);
+                __writeRsp(o, str);
                 *reqRespCode = (int) 0 ;
               }
             }else {
@@ -2469,28 +2469,28 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
               StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d %d\n", 
                     time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, 0 );
               TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG answer aspect 1: %s", str);
-              SocketOp.fmt(o->clntSocket, str);
+              __writeRsp(o, str);
               *reqRespCode = (int) 0 ;
             }
             if( aspects >= 2 && srcpAddr == addr2 && srcpPort == gate2 ) {
               StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d %d\n", 
                     time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, 0 );
               TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG answer aspect 2: %s", str);
-              SocketOp.fmt(o->clntSocket, str);
+              __writeRsp(o, str);
               *reqRespCode = (int) 0 ;
             }
             if( aspects >= 3 && srcpAddr == addr3 && srcpPort == gate3 ) {
               StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d %d\n", 
                     time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, 0 );
               TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG answer aspect 3: %s", str);
-              SocketOp.fmt(o->clntSocket, str);
+              __writeRsp(o, str);
               *reqRespCode = (int) 0 ;
             }
             if( aspects >= 4 && srcpAddr == addr4 && srcpPort == gate4 ) {
               StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GA %d %d %d\n", 
                     time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, srcpPort, 0 );
               TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SG answer aspect 4: %s", str);
-              SocketOp.fmt(o->clntSocket, str);
+              __writeRsp(o, str);
               *reqRespCode = (int) 0 ;
             }
           }
@@ -2559,7 +2559,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
 
           StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d FB %d %d\n",
                 time.tv_sec, time.tv_usec / 1000L, srcpBus, srcpAddr, value );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Answer: %s", str);
           *reqRespCode = (int) 0 ;
         }
@@ -2577,7 +2577,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       StrOp.fmtb(str, "%lu.%.3lu 100 INFO 0 SERVER RUNNING\n",
           time.tv_sec, time.tv_usec / 1000L );
       /* send back to requesting command channel */
-      SocketOp.fmt(o->clntSocket, str);
+      __writeRsp(o, str);
       *reqRespCode = (int) 0;
     } /* SERVER */
 
@@ -2593,7 +2593,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
           StrOp.fmtb(str, "%lu.%.3lu 100 INFO 0 SESSION %d peer[%s]\n",
               time.tv_sec, time.tv_usec / 1000L, o->id, SocketOp.getPeername( clientSocket ) );
           /* send back to requesting command channel */
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
           *reqRespCode = (int) 0;
           return cmd;
         }else {
@@ -2621,7 +2621,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       time_t rr_time = ControlOp.getTime( AppOp.getControl() );
       StrOp.fmtb(str, "%lu.%.3lu 100 INFO 0 TIME %s\n",
           time.tv_sec, time.tv_usec / 1000L, convModelTimeToSRCP(rr_time) );
-      SocketOp.fmt(o->clntSocket, str);
+      __writeRsp(o, str);
 
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Answer: %s", str);
       *reqRespCode = (int) 0 ;
@@ -2670,7 +2670,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
 
       creaRspBusDescr( str, &time, srcpBus );
       /* send back to requesting command channel */
-      SocketOp.fmt(o->clntSocket, str);
+      __writeRsp(o, str);
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Answer: %s", str);
           *reqRespCode = (int) 0 ;
     }
@@ -2740,7 +2740,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         StrOp.fmtb(str, "%lu.%.3lu 102 INFO %d SESSION %d\n", 
               time.tv_sec, time.tv_usec / 1000L, srcpBus, sessId );
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s [%p]", str, o->clntSocket);
-        SocketOp.fmt(o->clntSocket, str);
+        __writeRsp(o, str);
         /* give some time to send response */
         ThreadOp.sleep( 100 );
         /* close IP socket */
@@ -2864,7 +2864,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
           if( srcpValue == wFeedback.isstate(fbProps) ) {
             StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d FB %d %d\n",
                   currTime.tv_sec, currTime.tv_usec / 1000L, srcpBus, srcpAddr, srcpValue );
-            SocketOp.fmt(o->clntSocket, str);
+            __writeRsp(o, str);
             TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Answer: %s", str);
             *reqRespCode = (int) 0 ;
             return cmd;
@@ -2977,7 +2977,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       if( model_time >= wait_time ) {
         StrOp.fmtb(str, "%lu.%.3lu 100 INFO 0 TIME %s\n",
             time.tv_sec, time.tv_usec / 1000L, convModelTimeToSRCP(model_time) );
-        SocketOp.fmt(o->clntSocket, str);
+        __writeRsp(o, str);
 
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Answer: %s", str);
       }
@@ -3239,7 +3239,7 @@ static void sendBusList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
       digint = wRocRail.nextdigint( ini, digint );
   }
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "creaRspAllPwSts: infoStr[\n%s]", infoStr );
-  SocketOp.fmt(o->clntSocket, infoStr );
+  __writeRsp(o, infoStr);
   ThreadOp.sleep( 10 );
 }
 
@@ -3263,7 +3263,7 @@ static void sendFeedbackList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon )
 
     if( StrOp.len( str ) ){
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendFeedbackList2InfoChannel: snd2info[%d]: %s", o->id, str ) ;
-      SocketOp.fmt(o->clntSocket, str);
+      __writeRsp(o, str);
     }
 
     fb = (iOFBack)MapOp.next( fbackMap );
@@ -3365,7 +3365,7 @@ static void sendSwitchList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
 
     if( StrOp.len( str ) ){
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendSwitchList2InfoChannel: snd2info[%d]: %s", o->id, str ) ;
-      SocketOp.fmt(o->clntSocket, str);
+      __writeRsp(o, str);
     }
 
     sw = (iOSwitch)MapOp.next( switchMap );
@@ -3418,10 +3418,10 @@ static void sendSignalList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
         gate1 = wSignal.getgate1(sgProps);
 
         StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n",   time.tv_sec, time.tv_usec / 1000L, 101, srcpBus, addr, prot );
-        SocketOp.fmt(o->clntSocket, str);
+        __writeRsp(o, str);
 
         StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 0\n", time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr, gate1 );
-        SocketOp.fmt(o->clntSocket, str);
+        __writeRsp(o, str);
         break;
       case 2:
         addr  = AddrOp.toPADA( wSignal.getaddr( sgProps), wSignal.getport1(sgProps) );
@@ -3430,24 +3430,24 @@ static void sendSignalList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
         gate2 = wSignal.getgate2(sgProps);
 
         StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n", time.tv_sec, time.tv_usec / 1000L, 101, srcpBus, addr, prot );
-        SocketOp.fmt(o->clntSocket, str);
+        __writeRsp(o, str);
         if( addr2 != addr ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n", time.tv_sec, time.tv_usec / 1000L, 101, srcpBus, addr2, prot );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }
 
         if( StrOp.equals(sgState,wSignal.red) ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n", time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr, gate1 );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }else if( StrOp.equals(sgState,wSignal.green) ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n", time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr2, gate2 );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }
 
         StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
                           time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr,  gate1,
                           time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr2, gate2 );
-        SocketOp.fmt(o->clntSocket, str);
+        __writeRsp(o, str);
         break;
       case 3:
         addr  = AddrOp.toPADA( wSignal.getaddr( sgProps), wSignal.getport1(sgProps) );
@@ -3458,32 +3458,32 @@ static void sendSignalList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
         gate3 = wSignal.getgate3(sgProps);
 
         StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n", time.tv_sec, time.tv_usec / 1000L, 101, srcpBus, addr, prot );
-        SocketOp.fmt(o->clntSocket, str);
+        __writeRsp(o, str);
         if( addr2 != addr ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n", time.tv_sec, time.tv_usec / 1000L, 101, srcpBus, addr2, prot );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }
         if( (addr3 != addr) && (addr3 != addr2) ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n", time.tv_sec, time.tv_usec / 1000L, 101, srcpBus, addr3, prot );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }
 
         if( StrOp.equals(sgState,wSignal.red) ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n", time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr, gate1 );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }else if( StrOp.equals(sgState,wSignal.green) ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n", time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr2, gate2 );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }else if( StrOp.equals(sgState,wSignal.yellow) ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n", time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr3, gate3 );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }
 
         StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
                           time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr,  gate1,
                           time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr2, gate2,
                           time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr3, gate3 );
-        SocketOp.fmt(o->clntSocket, str);
+        __writeRsp(o, str);
         break;
       case 4:
         addr  = AddrOp.toPADA( wSignal.getaddr( sgProps), wSignal.getport1(sgProps) );
@@ -3496,32 +3496,32 @@ static void sendSignalList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
         gate4 = wSignal.getgate4(sgProps);
 
         StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n", time.tv_sec, time.tv_usec / 1000L, 101, srcpBus, addr, prot );
-        SocketOp.fmt(o->clntSocket, str);
+        __writeRsp(o, str);
         if( addr2 != addr ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n", time.tv_sec, time.tv_usec / 1000L, 101, srcpBus, addr2, prot );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }
         if( (addr3 != addr) && (addr3 != addr2) ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n", time.tv_sec, time.tv_usec / 1000L, 101, srcpBus, addr3, prot );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }
         if( (addr4 != addr) && (addr4 != addr2) && (addr4 != addr3) ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %s\n", time.tv_sec, time.tv_usec / 1000L, 101, srcpBus, addr4, prot );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }
 
         if( StrOp.equals(sgState,wSignal.red) ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n", time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr, gate1 );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }else if( StrOp.equals(sgState,wSignal.green) ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n", time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr2, gate2 );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }else if( StrOp.equals(sgState,wSignal.yellow) ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n", time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr3, gate3 );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }else if( StrOp.equals(sgState,wSignal.white) ) {
           StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 1\n", time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr4, gate4 );
-          SocketOp.fmt(o->clntSocket, str);
+          __writeRsp(o, str);
         }
 
         StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n%lu.%.3lu %d INFO %d GA %d %d 0\n",
@@ -3529,7 +3529,7 @@ static void sendSignalList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
                           time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr2, gate2,
                           time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr3, gate3,
                           time.tv_sec, time.tv_usec / 1000L, 100, srcpBus, addr4, gate4 );
-        SocketOp.fmt(o->clntSocket, str);
+        __writeRsp(o, str);
         break;
       default:
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNHANDLED sgDevice aspects %d, SGaddr %d, SGaddr2 %d, stateE %s, stateP %s", aspects, addr, addr2, wSignal.getstate(sgProps), wSignal.getstate(sgProps));
@@ -3603,12 +3603,12 @@ static void sendLocoList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
       StrOp.fmtb(str, "%lu.%.3lu 101 INFO %d GL %d %c %d %d %d\n",
               time.tv_sec, time.tv_usec / 1000L, srcpBus, loAddr, srcpProt, srcpProtver, loSpcnt, loFnCnt+1 );
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s", str);
-      SocketOp.fmt(o->clntSocket, str);
+      __writeRsp(o, str);
       /* 100 INFO <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn> */
       StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GL %d %d %d %d %d%s\n", 
               time.tv_sec, time.tv_usec / 1000L, srcpBus, loAddr, loDir?1:0, decStep, loSpcnt, loFn?1:0, funcString);
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s", str);
-      SocketOp.fmt(o->clntSocket, str);
+      __writeRsp(o, str);
     }
     loco = (iOLoc)MapOp.next( locoMap );
   };
@@ -3617,7 +3617,7 @@ static void sendLocoList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
 static void sendPowerstate2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
   iOSrcpConData data = Data(srcpcon);
   char *rsp = creaRspAllPwSts( data );
-  SocketOp.fmt(o->clntSocket, rsp);
+  __writeRsp(o, rsp);
 }
 
 
@@ -3713,7 +3713,7 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
       sendSessionstate2InfoChannels( 0, o->id, 101, o->infomode );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP REQUEST: %s", req ) ;
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unexpected request in handshake phase. SRCP REQUEST: %s", req ) ;
       /* 410 ERROR unknown command */
       __writeRsp(o, srcpFmtMsg(410, rsp, time, 0));
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;

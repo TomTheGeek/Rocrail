@@ -622,12 +622,22 @@ static Boolean _supportPT( obj inst ) {
 
 static Boolean __initInfoConnection(iOSRCP inst) {
   iOSRCPData o = Data(inst);
+  int retry = 0;
   char inbuf[1024] = { 0 };
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Info Connected" );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Info Connected; trying the handshake..." );
 
   o->handshakeerror = False;
 
-  if ( o->subRead( (obj)inst, inbuf, True ) ) {
+  while( retry < 100 && !o->subAvailable((obj)inst) ) {
+    ThreadOp.sleep(100);
+    retry++;
+    if( retry >= 100 ) {
+      StrOp.copy(inbuf, "SRCP 0.8" );
+    }
+  };
+
+
+  if ( retry >= 100 || o->subRead( (obj)inst, inbuf, True ) ) {
     StrOp.replaceAll( inbuf, '\n', ' ' );
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, inbuf );
     if( StrOp.findi( inbuf, "SRCP 0.8" ) ) {
@@ -678,6 +688,9 @@ static Boolean __initInfoConnection(iOSRCP inst) {
         }
       }
     }
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "No response from server..." );
   }
   return o->handshakeerror ? False:True;
 }
