@@ -701,6 +701,7 @@
       <var name="active" vt="bool" defval="false" remark="Activate srcp service."/>
       <var name="port" vt="int" defval="4303" range="1-65535"/>
       <var name="maxcon" vt="int" defval="10" range="1-100" remark="Max. concurrent connected clients."/>
+      <var name="device" vt="string" defval="" range="*" remark="Optional serial device."/>
       <srcpbus cardinality="n" wrappername="SrcpBus">
         <var name="iid" vt="string" defval="" range="*"/>
         <var name="bus" vt="int" defval="1" range="*"/>

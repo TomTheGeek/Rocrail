@@ -54,6 +54,7 @@ int serialConnect( obj inst, Boolean info ) {
   if( data->serial != NULL && !data->serialOK ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "connecting to [%s]", wDigInt.getdevice( data->ini ) );
     data->serialOK = SerialOp.open( data->serial );
+    return SRCPCONNECT_RECONNECTED;
   }
 
   if( data->serial != NULL && data->serialOK ) {
@@ -86,6 +87,8 @@ static int __serialReadInternal ( obj inst, char *cmd, Boolean info ) {
 
   while( data->run && data->serial != NULL ) {
     if( !SerialOp.read( data->serial, &cmd[idx], 1 ) ) {
+      if( idx > 0 )
+        TraceOp.dump( NULL, TRCLEVEL_WARNING, cmd, idx );
       return 0;
     }
     if( cmd[idx] == '\n' ) {
@@ -103,7 +106,9 @@ int serialRead ( obj inst, char *cmd, Boolean info ) {
   int len = 0;
 
   if( MutexOp.trywait( data->serialMux, 100 ) ) {
-    len = __serialReadInternal(inst, cmd, info);
+    if( serialAvailable(inst) ) {
+      len = __serialReadInternal(inst, cmd, info);
+    }
     MutexOp.post(data->serialMux);
   }
 
@@ -130,7 +135,7 @@ int serialWrite( obj inst, const char *cmd, char* rsp, Boolean info ) {
 
       if( __serialReadInternal(inst, inbuf, info) > 0 ) {
         StrOp.replaceAll(inbuf, '\n', ' ');
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "srcp response: %s",inbuf);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "srcp response [%s] on command [%s]",inbuf, cmd);
 
         /* Scan for SM return? */
         MemOp.set(szResponse,0,900);

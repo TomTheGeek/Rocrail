@@ -286,7 +286,7 @@
   </object>
 
 
-  <object name="SrcpCon" use="node,map,socket,thread,mutex" remark="SRCP Client connection.">
+  <object name="SrcpCon" use="node,map,socket,thread,mutex,serial" remark="SRCP Client connection.">
     <typedef def="void(*srcpcon_callback)(obj,iONode)"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Client connection setup"/>
@@ -327,7 +327,9 @@
       <var name="muxMap" vt="iOMutex"/>
       <var name="broadcaster" vt="iOThread"/>
       <var name="port" vt="int"/>
-    </data>
+      <var name="serial" vt="iOSerial"/>
+      <var name="serialOK" vt="Boolean"/>
+      </data>
   </object>
 
 

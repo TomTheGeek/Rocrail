@@ -71,6 +71,7 @@ static int idCnt = 1;
 struct __OSrcpService {
   iOSrcpCon     SrcpCon;
   iOSocket      clntSocket;
+  iOSerial      clntSerial;
   Boolean       readonly;
   Boolean       quit;
   Boolean       disablemonitor;
@@ -178,6 +179,14 @@ static void* __event( void* inst, const void* evt ) {
 
 
 /** helper functions **/
+static void __writeRsp(__iOSrcpService o, const char* rsp) {
+  if( o->clntSocket != NULL )
+    SocketOp.fmt(o->clntSocket, rsp);
+  else
+    SerialOp.fmt(o->clntSerial, rsp);
+}
+
+
 
 /* convert model time into SRCP time notation */
 static char* convModelTimeToSRCP(time_t modeltime) {
@@ -2041,7 +2050,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
             time.tv_sec, time.tv_usec / 1000L, srcpBus, isPower?"ON":"OFF", __getSrcpPwFreetext() );
 
         /* send INFO <bus> POWER answer back to requesting command channel */
-        SocketOp.fmt(o->clntSocket, str);
+        __writeRsp(o, str);
 
         *reqRespCode = (int) 0;
       }
@@ -3619,13 +3628,13 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
 
   if( o->handshake ) {
     if( StrOp.startsWithi( req, "SET PROTOCOL SRCP" ) ) {
-      if( StrOp.equalsi( req, "SET PROTOCOL SRCP 0.8.4" ) || StrOp.equalsi( req, "SET PROTOCOL SRCP 0.8.3" ) ) {
+      if( StrOp.startsWithi( req, "SET PROTOCOL SRCP 0.8" ) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d PROTOCOL accepted", o->id ) ;
-        SocketOp.fmt(o->clntSocket, srcpFmtMsg(201, rsp, time, 0));
+        __writeRsp(o, srcpFmtMsg(201, rsp, time, 0));
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "req %s on socket %p: response %s", req, o->clntSocket, rsp ) ;
       }else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d PROTOCOL denied", o->id ) ;
-        SocketOp.fmt(o->clntSocket, srcpFmtMsg(400, rsp, time, 0));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d PROTOCOL denied: %s", o->id, req ) ;
+        __writeRsp(o, srcpFmtMsg(400, rsp, time, 0));
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "req %s on socket %p: response %s", req, o->clntSocket, rsp ) ;
       }
     }
@@ -3633,24 +3642,24 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
       if( StrOp.equalsi( req, "SET CONNECTIONMODE SRCP INFO" ) ) {
         o->infomode = True;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d set to %s", o->id, o->infomode?"INFO":"COMMAND" ) ;
-        SocketOp.fmt(o->clntSocket, srcpFmtMsg(202, rsp, time, 0));
+        __writeRsp(o, srcpFmtMsg(202, rsp, time, 0));
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "req %s on socket %p: response %s", req, o->clntSocket, rsp ) ;
       }
       else if( StrOp.equalsi( req, "SET CONNECTIONMODE SRCP COMMAND" ) ) {
         o->infomode = False;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d set to %s", o->id, o->infomode?"INFO":"COMMAND" ) ;
-        SocketOp.fmt(o->clntSocket, srcpFmtMsg(202, rsp, time, 0));
+        __writeRsp(o, srcpFmtMsg(202, rsp, time, 0));
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "req %s on socket %p: response %s", req, o->clntSocket, rsp ) ;
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP Session %d set to %s", o->id, o->infomode?"INFO":"COMMAND" ) ;
-        SocketOp.fmt(o->clntSocket, srcpFmtMsg(401, rsp, time, 0));
+        __writeRsp(o, srcpFmtMsg(401, rsp, time, 0));
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "req %s on socket %p: response %s", req, o->clntSocket, rsp ) ;
       }
     }
     else if( StrOp.equalsi( req, "GO" ) ) {
       o->handshake = False;
-      SocketOp.fmt(o->clntSocket, srcpFmtMsg(200, rsp, time, o->id));
+      __writeRsp(o, srcpFmtMsg(200, rsp, time, o->id));
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
 
       /* if we started an info channel send all information about server to that channel */
@@ -3665,7 +3674,7 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
         /* announce basic system capabilities (server) */
         /* the system itself is always bus 0 */
         StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO 0 DESCRIPTION SESSION SERVER TIME\n", time.tv_sec, time.tv_usec / 1000L);
-        SocketOp.fmt(o->clntSocket, rspInfo);
+        __writeRsp(o, rspInfo);
 
         /* time data */
         iONode clockini = wRocRail.getclock( AppOp.getIni() );
@@ -3678,16 +3687,16 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
         if( divider > 0 && __isClockRunning() ) {
           /* send current time divider */
           StrOp.fmtb(rspInfo, "%lu.%.3lu 101 INFO 0 TIME %d %d\n", time.tv_sec, time.tv_usec / 1000L, divider, 1 );
-          SocketOp.fmt(o->clntSocket, rspInfo);
+          __writeRsp(o, rspInfo);
 
           /* send current rocrail time */
           time_t rr_time = ModelOp.getTime( AppOp.getModel() );
           StrOp.fmtb(rspInfo, "%lu.%.3lu 100 INFO 0 TIME %s\n",
               time.tv_sec, time.tv_usec / 1000L, convModelTimeToSRCP(rr_time) );
-          SocketOp.fmt(o->clntSocket, rspInfo);
+          __writeRsp(o, rspInfo);
         }else {
           StrOp.fmtb(rspInfo, "%lu.%.3lu 101 INFO 0 TIME 0 0\n", time.tv_sec, time.tv_usec / 1000L );
-          SocketOp.fmt(o->clntSocket, rspInfo);
+          __writeRsp(o, rspInfo);
         }
 
         sendBusList2InfoChannel( o, srcpcon); /* list of command stations */
@@ -3706,7 +3715,7 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
     else {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP REQUEST: %s", req ) ;
       /* 410 ERROR unknown command */
-      SocketOp.fmt(o->clntSocket, srcpFmtMsg(410, rsp, time, 0));
+      __writeRsp(o, srcpFmtMsg(410, rsp, time, 0));
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
     }
   } /* handshake in progress */
@@ -3717,14 +3726,14 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
       ) { 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP REQUEST: %s", req ) ;
       /* 422 ERROR unsupported device group */
-      SocketOp.fmt(o->clntSocket, srcpFmtMsg(422, rsp, time, 0));
+      __writeRsp(o, srcpFmtMsg(422, rsp, time, 0));
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
     }
     else if( StrOp.startsWithi( req, "TERM 0 SERVER" ) 
           || StrOp.startsWithi( req, "RESET 0 SERVER" ) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP REQUEST: %s", req ) ;
       /* 415 ERROR forbidden */
-      SocketOp.fmt(o->clntSocket, srcpFmtMsg(415, rsp, time, 0));
+      __writeRsp(o, srcpFmtMsg(415, rsp, time, 0));
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
     }
     else {
@@ -3740,7 +3749,7 @@ static void __evalRequest(iOSrcpCon srcpcon, __iOSrcpService o, const char* req)
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__srcp2rr( REQ ) returned with CMD == NULL, reqRespCode == %d", reqRespCode );
       }
       if( reqRespCode > 0 ){
-        SocketOp.fmt(o->clntSocket, srcpFmtMsg(reqRespCode, rsp, time, 0));
+        __writeRsp(o, srcpFmtMsg(reqRespCode, rsp, time, 0));
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP RESPONSE: %s", rsp ) ;
       }
     }
@@ -3760,11 +3769,18 @@ static void __SrcpService( void* threadinst ) {
 
   ThreadOp.setDescription( th, "SRCP Client command reader" );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP service started for: %s, with session ID %d",
-      SocketOp.getPeername(o->clntSocket), o->id );
   StrOp.fmtb(str, SRCPVERSION, (int) bzr );
-  SocketOp.write( o->clntSocket, str, StrOp.len(str) );
-  SocketOp.write( o->clntSocket, "\n", 1 );
+  if( o->clntSocket != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP service started for: %s, with session ID %d",
+        SocketOp.getPeername(o->clntSocket), o->id );
+    SocketOp.write( o->clntSocket, str, StrOp.len(str) );
+    SocketOp.write( o->clntSocket, "\n", 1 );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP service started for: Serial, with session ID %d", o->id );
+    SerialOp.write( o->clntSerial, str, StrOp.len(str) );
+    SerialOp.write( o->clntSerial, "\n", 1 );
+  }
 
   sname = StrOp.fmt( "srcp%08X", o->clntSocket );
 
@@ -3785,24 +3801,50 @@ static void __SrcpService( void* threadinst ) {
       if( node != NULL ) {
         if( o->infomode ) {
           __rr2srcp(srcpcon, o, node, str);
-          SocketOp.write( o->clntSocket, str, StrOp.len(str) );
+          if( o->clntSocket != NULL )
+            SocketOp.write( o->clntSocket, str, StrOp.len(str) );
+          else
+            SerialOp.write( o->clntSerial, str, StrOp.len(str) );
+
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__SrcpService __rr2srcp() returned with %s %p [%p] ID: %d", str, o, o->clntSocket, o->id );
         }
         NodeOp.base.del(node);
       }
     }
 
-    if( !SocketOp.peek( o->clntSocket, str, 1 ) ) {
-      if( SocketOp.isBroken( o->clntSocket ) ) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
-                    "SRCP Service: Socket errno=%d", SocketOp.getRc( o->clntSocket ) );
-        break;
+    if( o->clntSocket != NULL ) {
+      if( !SocketOp.peek( o->clntSocket, str, 1 ) ) {
+        if( SocketOp.isBroken( o->clntSocket ) ) {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+                      "SRCP Service: Socket errno=%d", SocketOp.getRc( o->clntSocket ) );
+          break;
+        }
+        ThreadOp.sleep( 10 );
+        continue;
       }
-      ThreadOp.sleep( 10 );
-      continue;
+      SocketOp.readln(o->clntSocket, str);
+    }
+    else {
+      if( !SerialOp.available(data->serial) ) {
+        ThreadOp.sleep( 10 );
+        continue;
+      }
+      else {
+        int idx = 0;
+
+        while( data->serial != NULL ) {
+          if( !SerialOp.read( data->serial, &str[idx], 1 ) ) {
+            ThreadOp.sleep( 10 );
+            continue;
+          }
+          if( str[idx] == '\n' ) {
+            break;
+          }
+          idx++;
+        };
+      }
     }
 
-    SocketOp.readln(o->clntSocket, str);
     strLen = StrOp.len(str);
 
     /* TODO: scan string, replace and/or delete redundant white chars */
@@ -3847,7 +3889,9 @@ static void __SrcpService( void* threadinst ) {
     MutexOp.post( Data(srcpcon)->muxMap );
   }
 
-  SocketOp.base.del(o->clntSocket);
+  if( o->clntSocket != NULL ) {
+    SocketOp.base.del(o->clntSocket);
+  }
   freeMem(o);
   ThreadOp.base.del( th );
 
@@ -3862,6 +3906,25 @@ static void __manager( void* threadinst ) {
 
   ThreadOp.setDescription( th, "SRCP Client Manager" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Manager started." );
+
+  if( data->serial != NULL && data->serialOK ) {
+    iOThread SrcpService = NULL;
+    char*      servername = NULL;
+    __iOSrcpService cargo = allocMem( sizeof( struct __OSrcpService ) );
+    cargo->SrcpCon    = srcpcon;
+    cargo->clntSocket = NULL;
+    cargo->clntSerial = data->serial;
+    cargo->quit       = False;
+    cargo->id         = idCnt;
+    cargo->infomode   = False;
+    cargo->handshake  = True; /* new connection -> initial handshake in progress */
+
+    servername  = StrOp.fmt( "cmdrSRCP%08X", data->serial );
+    SrcpService = ThreadOp.inst( servername, __SrcpService, cargo );
+    ThreadOp.start( SrcpService );
+    StrOp.free( servername );
+    idCnt++;
+  }
 
   do {
     iOThread SrcpService = NULL;
@@ -3916,6 +3979,16 @@ static struct OSrcpCon* _inst( iONode ini, srcpcon_callback callbackfun, obj cal
 
   data->infoWriters = MapOp.inst();
   data->muxMap      = MutexOp.inst( NULL, True );
+
+  if( wSrcpCon.getdevice(ini) != NULL && StrOp.len(wSrcpCon.getdevice(ini)) > 0 ) {
+    data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
+
+    SerialOp.setFlow( data->serial, none );
+
+    SerialOp.setLine( data->serial, 115200, 8, 1, none, False );
+    SerialOp.setTimeout( data->serial, 500, 500 );
+    data->serialOK = SerialOp.open( data->serial );
+  }
 
   instCnt++;
 

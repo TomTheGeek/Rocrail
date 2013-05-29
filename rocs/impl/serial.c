@@ -20,7 +20,10 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
+#include <errno.h>
 
 #include "rocs/impl/serial_impl.h"
 #include "rocs/public/system.h"
@@ -133,6 +136,18 @@ static void _setDivisor( iOSerial inst, int divisor ) {
 static Boolean _writecSerial( iOSerial inst, char c ) {
   return rocs_serial_write( inst, &c, 1 );
 }
+
+static Boolean _fmt( iOSerial inst, const char* fmt, ... ) {
+  va_list args;
+  char s[4096] = {'\0'};
+
+  va_start(args, fmt);
+  vsprintf(s, fmt, args);
+  va_end(args);
+
+  return rocs_serial_write( inst, s, strlen(s) );
+}
+
 
 
 static char _readcSerial( iOSerial inst ) {

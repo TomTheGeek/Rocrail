@@ -1055,6 +1055,11 @@
     <fun name="getReadCnt" vt="int" remark="Get actual readed byte count.">
       <param name="inst" vt="this" remark="Serial instance."/>
     </fun>
+    <fun name="fmt" vt="Boolean" remark="Formats a string.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="format" vt="const char*" remark="Format rules."/>
+      <param name="" vt="..." remark="Multiple parameters."/>
+    </fun>
     <struct name="_line">
       <var name="bps" vt="int"/>
       <var name="bits" vt="int"/>

@@ -570,12 +570,11 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
   iONode rsp = NULL;
   int rc = 0;
 
-  if( data->cmdSocket == NULL ) {
-    if( data->subConnect((obj)inst, False) == SRCPCONNECT_OK ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnected");
-      __srcpInitConnect((iOSRCP)inst);
-    }
+  if( data->subConnect((obj)inst, False) == SRCPCONNECT_RECONNECTED ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnected");
+    __srcpInitConnect((iOSRCP)inst);
   }
+
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node=%s cmd=%s", NodeOp.getName(nodeA), wLoc.getcmd(nodeA)!=NULL?wLoc.getcmd(nodeA):"-" );
   rsp = __translate( (iOSRCP)inst, nodeA, cmd );
@@ -778,11 +777,14 @@ static void __infoReader( void * threadinst ) {
   Boolean exception = False;
   char inbuf[1024] = { 0 };
 
+  ThreadOp.sleep(500);
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "info reader started" );
 
   while( o->run && !o->handshakeerror ) {
+    int inlen = 0;
     int rc = o->subConnect((obj)srcp, True);
-    if( (rc == SRCPCONNECT_RECONNECTED) && __initInfoConnection(srcp) ) {
+    if( (rc == SRCPCONNECT_RECONNECTED ) && __initInfoConnection(srcp) ) {
       /* OK */
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "info reader: connected" );
     }
@@ -797,7 +799,13 @@ static void __infoReader( void * threadinst ) {
       continue;
     }
 
-    if( o->subRead( (obj)srcp, inbuf, True ) > 0 ) {
+    inlen = o->subRead( (obj)srcp, inbuf, True );
+    if( inlen == 0 ) {
+      ThreadOp.sleep(10);
+      continue;
+    }
+
+    if( inlen > 0 ) {
       char*    fbAddrStr   = NULL;
       iOStrTok tok         = NULL;
       int      infotype    = 0; /* 0=FB, 1=GA , 2=GL*/
