@@ -39,7 +39,7 @@ Boolean serialInit( obj inst ) {
 
   SerialOp.setFlow( data->serial, none );
 
-  SerialOp.setLine( data->serial, wDigInt.getbps( data->ini ), 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
+  SerialOp.setLine( data->serial, 115200, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 
   data->serialMux = MutexOp.inst( NULL, True );
