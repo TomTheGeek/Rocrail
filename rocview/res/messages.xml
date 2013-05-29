@@ -984,6 +984,7 @@
     <ja txt="フィールドの初期化"/>
     <pt_BR txt="Campo inicial"/>
     <zh_CN txt="初始化"/>
+    <sl txt="Inicializacijsko polje"/>
   </Msg>
   <Msg id="locctrl" dialog="true" key="Ctrl-L">
     <de txt="Fahrregler" accel="0" tip="Dialog um Züge zu bedienen."/>
@@ -1049,7 +1050,7 @@
     <zh_CN txt="道岔控制"/>
     <sr_latin txt="Kontrola skretnica"/>
     <ja txt="ポイント制御"/>
-    <sl txt="Nadzor kretnic"/>
+    <sl txt="Nadzor preklopnikov"/>
   </Msg>
   <Msg id="stctrl" dialog="true" key="Ctrl-R">
     <de txt="Fahrstraßensteuerung" accel="0" tip="Dialog um Fahrstraßen zu testen."/>
@@ -1660,6 +1661,7 @@
     <sr_latin txt="Ovo će zatvoriti Rocrail server! Zatvori i napusti?"/>
     <ja txt="Rocrailサーバーをシャットダウンします。終了しても良いですか？"/>
     <zh_CN txt="此操作将关闭本软件！确定关闭并退出吗？"/>
+    <sl txt="Dejanje bo ustavilo Rocrail strežnik! Ustavim in zapustim?"/>
   </Msg>
   <Msg id="resetallwarning">
     <de txt="Diese Aktion setzt auch alle Blockbelegungen zurück. Weiter?"/>
@@ -1688,6 +1690,7 @@
     <ja txt="全てのブロックの予約をリセットします。進めてよいですか？"/>
     <pl txt="Zostaną zresetowane wszystkie rezerwacje blokków . Kontynuować ?"/>
     <zh_CN txt="这一操作将重置所有区间的赋值，你还要继续吗？"/>
+    <sl txt="Ta ukrep ponastavi tudi rezervacije odsekov. Nadaljujem?"/>
   </Msg>
   <Msg id="startallwarning">
     <de txt="Alle Loks jetzt starten?"/>
@@ -1864,6 +1867,7 @@
     <sr_latin txt="Nije moguća veza sa Rocrail servererom; proveri postavke za Host i port"/>
     <ja txt="Rocrailサーバに接続できません。設定を確認してください。"/>
     <zh_CN txt="无法与服务器建立连接；请检查主机与端口设置是否正确。"/>
+    <sl txt="Ne morem se povezati z Rocrail strežnikom; preverite nastavitve za gostitelja in vrata."/>
   </Msg>
   <Msg id="auto">
     <de txt="Automatik" accel="0"/>
@@ -2294,7 +2298,7 @@
     <sr_latin txt="Komande skretnica"/>
     <ja txt="コマンド変更"/>
     <zh_CN txt="切换命令"/>
-    <sl txt="Ukaz za kretnico"/>
+    <sl txt="Ukaz za preklopnik"/>
   </Msg>
   <Msg id="decoder">
     <de txt="Dekoder" tip="Decoder Nummer."/>
@@ -2413,7 +2417,7 @@
     <sr_latin txt="Svojstva bloka"/>
     <ja txt="ブロックのプロパティ"/>
     <zh_CN txt="区间属性"/>
-    <sl txt="Lastnosti bloka"/>
+    <sl txt="Lastnosti odseka"/>
   </Msg>
   <Msg id="commuter">
     <de txt="Pendelzug"/>
@@ -2442,6 +2446,7 @@
     <sr_latin txt="Prigradski voz"/>
     <ja txt="通勤電車"/>
     <zh_CN txt="通勤车"/>
+    <sl txt="Motornik"/>
   </Msg>
   <Msg id="loctable" dialog="true" key="Ctrl-1">
     <de txt="Lokomotiven" tip="Lokomotiven"/>
@@ -2471,7 +2476,7 @@
     <sr_latin txt="Tabela lokomotiva"/>
     <ja txt="車輛テーブル"/>
     <zh_CN txt="机车库"/>
-    <sl txt="Tabela lokomotiv"/>
+    <sl txt="Seznam lokomotiv"/>
   </Msg>
   <Msg id="programming">
     <de txt="Programmieren"/>
@@ -2561,6 +2566,7 @@
     <ja txt="設定No CV/SV"/>
     <pl txt="LN CV/SV"/>
     <sl txt="LN CV/SV"/>
+    <zh_CN txt="LN CV/SV"/>
   </Msg>
   <Msg id="routetable" dialog="true" key="Ctrl-2">
     <de txt="Fahrstraßen" tip="Fahrstraßen"/>
@@ -2590,7 +2596,7 @@
     <sr_latin txt="Tabela ruta"/>
     <ja txt="ルートテーブル"/>
     <zh_CN txt="路径列表"/>
-    <sl txt="Tabela poti"/>
+    <sl txt="Seznam poti"/>
   </Msg>
   <Msg id="blockgrouptable" dialog="true" key="Ctrl-6">
     <de txt="Blockgruppen" tip="Blockgruppen Tabelle"/>
@@ -2619,7 +2625,7 @@
     <sr_latin txt="Tabela blokova po grupama"/>
     <ja txt="ブロックグループテーブル"/>
     <zh_CN txt="区间组列表"/>
-    <sl txt="Tabela skupin blokov"/>
+    <sl txt="Seznam skupine odsekov"/>
   </Msg>
   <Msg id="blocktable" dialog="true" key="Ctrl-3">
     <de txt="Blöcke" tip="Blöcke"/>
@@ -2649,7 +2655,7 @@
     <ja txt="ブロックテーブル"/>
     <pl txt="Blokuj tabele"/>
     <zh_CN txt="区块列表"/>
-    <sl txt="Tabela blokov"/>
+    <sl txt="Seznam odsekov"/>
   </Msg>
   <Msg id="turnouttable" dialog="true" key="Ctrl-7">
     <de txt="Weichen" tip="Weichen"/>
@@ -2678,7 +2684,7 @@
     <sr_latin txt="Tabela skretnica"/>
     <ja txt="ポイントテーブル"/>
     <zh_CN txt="转辙机列表"/>
-    <sl txt="Tabela kretnic"/>
+    <sl txt="Seznam preklopnikov"/>
   </Msg>
   <Msg id="outputtable" dialog="true" key="Ctrl-9">
     <de txt="Ausgänge" tip="Ausgänge"/>
@@ -2707,7 +2713,7 @@
     <ja txt="出力テーブル"/>
     <pl txt="Tabela wyjściowa"/>
     <zh_CN txt="输出端列表"/>
-    <sl txt="Tabela izhodov"/>
+    <sl txt="Seznam izhodov"/>
   </Msg>
   <Msg id="signaltable" dialog="true" key="Ctrl-8">
     <de txt="Signale" tip="Signale"/>
@@ -2737,7 +2743,7 @@
     <sr_latin txt="Tabela signala"/>
     <ja txt="信号テーブル"/>
     <zh_CN txt="信号灯列表"/>
-    <sl txt="Tabela signalov"/>
+    <sl txt="Seznam signalov"/>
   </Msg>
   <Msg id="turntable" dialog="true">
     <de txt="Drehscheibe" tip="Drehscheibe"/>
@@ -2796,7 +2802,7 @@
     <sr_latin txt="Tabela senzora"/>
     <ja txt="センサテーブル"/>
     <zh_CN txt="反馈传感器列表"/>
-    <sl txt="Tabela tipal"/>
+    <sl txt="Seznam tipal"/>
   </Msg>
   <Msg id="sensorfromblock">
     <de txt="Rückmelder von Block %s aus:"/>
@@ -2824,6 +2830,7 @@
     <en_GB txt="Sensors comming from block %s:"/>
     <sr_latin txt="Sensori koji se aktiviraju od bloka %s:"/>
     <zh_CN txt="反馈所来自的区间 %s"/>
+    <sl txt="Tipala iz odseka %s:"/>
   </Msg>
   <Msg id="addpanel" dialog="true">
     <de txt="Gleisplan hinzufügen" tip="Gleisplan hinzufügen"/>
@@ -2976,7 +2983,7 @@
     <sr_latin txt="Tabele"/>
     <ja txt="テーブル"/>
     <zh_CN txt="表格"/>
-    <sl txt="Tabele"/>
+    <sl txt="Seznami"/>
   </Msg>
   <Msg id="language">
     <de txt="Sprache" accel="0"/>
@@ -3128,7 +3135,7 @@
     <sr_latin txt="Blok"/>
     <ja txt="ブロック"/>
     <zh_CN txt="区间"/>
-    <sl txt="Blok"/>
+    <sl txt="Odsek"/>
   </Msg>
   <Msg id="blocks">
     <de txt="Blöcke"/>
@@ -3158,7 +3165,7 @@
     <sr_latin txt="Blokovi"/>
     <ja txt="ブロック"/>
     <zh_CN txt="区间"/>
-    <sl txt="Bloki"/>
+    <sl txt="Odseki"/>
   </Msg>
   <Msg id="exceptions">
     <de txt="Ausnahmen:"/>
@@ -3611,7 +3618,7 @@
     <sr_latin txt="Desna skretnica"/>
     <ja txt="右ポイント"/>
     <zh_CN txt="右转辙机"/>
-    <sl txt="Desna kretnica"/>
+    <sl txt="Desni preklopnik"/>
   </Msg>
   <Msg id="leftturnout">
     <de txt="Weiche links"/>
@@ -3642,7 +3649,7 @@
     <sr_latin txt="Leva skretnica"/>
     <ja txt="左ポイント"/>
     <zh_CN txt="左转辙机"/>
-    <sl txt="Leva kretnica"/>
+    <sl txt="Levi preklopnik"/>
   </Msg>
   <Msg id="crossing">
     <de txt="Kreuzung"/>
@@ -3672,6 +3679,7 @@
     <sr_latin txt="Ukrštanje"/>
     <ja txt="交差ポイント"/>
     <zh_CN txt="交叉道口"/>
+    <sl txt="Križanje"/>
   </Msg>
   <Msg id="dcrossing">
     <de txt="Doppelte Kreuzung"/>
@@ -3700,6 +3708,7 @@
     <sr_latin txt="Dvostruko ukrštanje"/>
     <ja txt="ダブルポイント"/>
     <zh_CN txt="双转辙机交叉道口"/>
+    <sl txt="Dvojno križanje"/>
   </Msg>
   <Msg id="ccrossing">
     <de txt="Zentrierte Kreuzung"/>
@@ -3728,6 +3737,7 @@
     <sr_latin txt="Centralno ukrštanje"/>
     <ja txt="中央交差ポイント"/>
     <zh_CN txt="十字交叉道口"/>
+    <sl txt="Centralno križanje"/>
   </Msg>
   <Msg id="threeway">
     <de txt="Dreiwegeweiche"/>
@@ -3756,6 +3766,7 @@
     <sr_latin txt="Trostruka"/>
     <ja txt="３方向ポイント"/>
     <zh_CN txt="三分道岔"/>
+    <sl txt="Trismerno"/>
   </Msg>
   <Msg id="additem">
     <de txt="Symbol hinzufügen"/>
@@ -3876,7 +3887,7 @@
     <sr_latin txt="Skretnica"/>
     <ja txt="ポイント"/>
     <zh_CN txt="转辙机"/>
-    <sl txt="Kretnica"/>
+    <sl txt="Preklopnik"/>
   </Msg>
   <Msg id="switches">
     <de txt="Weichen"/>
@@ -3907,7 +3918,7 @@
     <sr_latin txt="Skretnice"/>
     <ja txt="ポイント"/>
     <zh_CN txt="转辙机"/>
-    <sl txt="Kretnice"/>
+    <sl txt="Preklopniki"/>
   </Msg>
   <Msg id="signal">
     <de txt="Signal"/>
@@ -4027,6 +4038,7 @@
     <sr_latin txt="Postavi raspored lokomotive"/>
     <ja txt="車輛の割当を設定"/>
     <zh_CN txt="分配机车至"/>
+    <sl txt="Nastavi naloge lokomotive"/>
   </Msg>
   <Msg id="resetlocid">
     <de txt="Lokbelegung zurücknehmen"/>
@@ -4056,6 +4068,7 @@
     <sr_latin txt="Poništi raspored lokomotive"/>
     <ja txt="車輛の割当をリセット"/>
     <zh_CN txt="机车位置复原"/>
+    <sl txt="Ponastavi naloge lokomotive"/>
   </Msg>
   <Msg id="close">
     <de txt="Schließen"/>
@@ -4237,6 +4250,7 @@
     <ro txt="Rotește 180"/>
     <sr_latin txt="Okreni za 180"/>
     <zh_CN txt="旋转180度"/>
+    <sl txt="Obrni 180"/>
   </Msg>
   <Msg id="gototrack">
     <de txt="Gehe zum Gleis"/>
@@ -4295,6 +4309,7 @@
     <sr_latin txt="Brzina rotacije"/>
     <ja txt="速度変更"/>
     <zh_CN txt="转动速度"/>
+    <sl txt="Hitrost vrtenja"/>
   </Msg>
   <Msg id="info">
     <de txt="Informationen"/>
@@ -4687,6 +4702,7 @@
     <en_GB txt="Turntable ID"/>
     <sr_latin txt="ID okretnice"/>
     <zh_CN txt="转盘编号"/>
+    <sl txt="ID okretnice"/>
   </Msg>
   <Msg id="configuration">
     <de txt="Einstellungen"/>
@@ -4746,6 +4762,7 @@
     <ro txt="Electrificat"/>
     <sr_latin txt="Elektrifikovan"/>
     <zh_CN txt="电气化"/>
+    <sl txt="Electrified"/>
   </Msg>
   <Msg id="closed">
     <de txt="gesperrt"/>
@@ -5084,6 +5101,7 @@
     <ja txt="デコーダのステップ"/>
     <pl txt="Kroki dekodera"/>
     <zh_CN txt="解码步骤"/>
+    <sl txt="Stopnje dekoderja"/>
   </Msg>
   <Msg id="min">
     <de txt="Min."/>
@@ -5144,6 +5162,7 @@
     <sr_latin txt="Sred."/>
     <ja txt="中間"/>
     <zh_CN txt="中间值"/>
+    <sl txt="Sredina"/>
   </Msg>
   <Msg id="cruise">
     <de txt="Reise"/>
@@ -5171,6 +5190,7 @@
     <sr_latin txt="Putna"/>
     <ja txt="操縦"/>
     <zh_CN txt="巡航速度"/>
+    <sl txt="Potovalna"/>
   </Msg>
   <Msg id="max">
     <de txt="Max."/>
@@ -5261,6 +5281,7 @@
     <sr_latin txt="Podzemni"/>
     <ja txt="郊外"/>
     <zh_CN txt="郊区线"/>
+    <sl txt="Primestni"/>
   </Msg>
   <Msg id="ice">
     <de txt="Fernverkehr"/>
@@ -5347,6 +5368,7 @@
     <sr_latin txt="Ranžirni"/>
     <ja txt="入れ替え"/>
     <zh_CN txt="支线"/>
+    <sl txt="Ranžirna"/>
   </Msg>
   <Msg id="incline">
     <de txt="Steigung"/>
@@ -5375,6 +5397,7 @@
     <sr_latin txt="Povećanje"/>
     <ja txt="勾配"/>
     <zh_CN txt="爬坡线"/>
+    <sl txt="Klanec"/>
   </Msg>
   <Msg id="none">
     <de txt="Keine"/>
@@ -5556,6 +5579,7 @@
     <sr_latin txt="Određeno"/>
     <ja txt="固定"/>
     <zh_CN txt="修正"/>
+    <sl txt="Stalno"/>
   </Msg>
   <Msg id="loc">
     <de txt="Lok"/>
@@ -5615,6 +5639,7 @@
     <ja txt="詳細待ち"/>
     <pl txt="Czekaj na szczegóły"/>
     <zh_CN txt="等待进一步信息"/>
+    <sl txt="Čakam podrobnosti"/>
   </Msg>
   <Msg id="randommin">
     <de txt="Zufall Min."/>
@@ -5644,6 +5669,7 @@
     <ja txt="ランダム最小"/>
     <pl txt="Losowy Min."/>
     <zh_CN txt="自由减速"/>
+    <sl txt="Naključno min."/>
   </Msg>
   <Msg id="randommax">
     <de txt="Zufall Max."/>
@@ -5673,6 +5699,7 @@
     <ja txt="ランダム最大"/>
     <pl txt="Losowy Max."/>
     <zh_CN txt="自由加速"/>
+    <sl txt="Naključno max."/>
   </Msg>
   <Msg id="apply">
     <de txt="Übernehmen"/>
@@ -5916,6 +5943,7 @@
     <ja txt="インターフェースID"/>
     <pl txt="ID Interfejsu"/>
     <zh_CN txt="界面地址"/>
+    <sl txt="ID vmesnika"/>
   </Msg>
   <Msg id="event">
     <de txt="Ereignis"/>
@@ -5973,6 +6001,7 @@
     <ja txt="イベントON"/>
     <pl txt="Przy włączaniu"/>
     <zh_CN txt="事件进行中"/>
+    <sl txt="Dogodek vklop"/>
   </Msg>
   <Msg id="off_event">
     <de txt="Ausschaltereignis"/>
@@ -6000,6 +6029,7 @@
     <ja txt="イベントOFF"/>
     <pl txt="Przy wyłączaniu"/>
     <zh_CN txt="事件执行完毕"/>
+    <sl txt="Dogodek izklop"/>
   </Msg>
   <Msg id="catnr">
     <de txt="Katalognummer"/>
@@ -6029,6 +6059,7 @@
     <ja txt="カタログ番号"/>
     <pl txt="Numer katalogowy"/>
     <zh_CN txt="产品目录编号"/>
+    <sl txt="Kataloška številka"/>
   </Msg>
   <Msg id="purchased">
     <de txt="Kaufdatum"/>
@@ -6218,6 +6249,7 @@
     <ja txt="V_Cru"/>
     <cs txt="V_Cru"/>
     <sl txt="V_Cru"/>
+    <zh_CN txt="V_Cru"/>
   </Msg>
   <Msg id="v_max">
     <de txt="V_Max" tip="Maximale Geschwindigkeit vorwärts"/>
@@ -6315,6 +6347,7 @@
     <ja txt="V_RCru"/>
     <cs txt="V_RCru"/>
     <sl txt="V_RCru"/>
+    <zh_CN txt="V_RCru"/>
   </Msg>
   <Msg id="v_rmax">
     <de txt="V_RMax" tip="Maximale Geschwindigkeit rückwärts"/>
@@ -6371,6 +6404,7 @@
     <sr_latin txt="B_Korak"/>
     <ja txt="V_Step"/>
     <sl txt="V_Step"/>
+    <zh_CN txt="V_Step"/>
   </Msg>
   <Msg id="v_mode">
     <de txt="V_Modus"/>
@@ -6398,6 +6432,7 @@
     <sr_latin txt="B_Mod."/>
     <ja txt="V_Mode"/>
     <sl txt="V_Mode"/>
+    <zh_CN txt="V_Mode"/>
   </Msg>
   <Msg id="percent">
     <de txt="Prozent"/>
@@ -6455,6 +6490,7 @@
     <sr_latin txt="Biblioteka"/>
     <ja txt="ドライバライブラリ"/>
     <zh_CN txt="机车库"/>
+    <sl txt="Knjižnica gonilnikov"/>
   </Msg>
   <Msg id="placing">
     <de txt="Platzierung"/>
@@ -6567,6 +6603,7 @@
     <sr_latin txt="Vreme ćekanja u bloku"/>
     <ja txt="ブロックの待ち時間"/>
     <zh_CN txt="区间等候时间"/>
+    <sl txt="Čas čakanja odseka"/>
   </Msg>
   <Msg id="engine">
     <de txt="Antriebsart"/>
@@ -6713,6 +6750,7 @@
     <sr_latin txt="Vrsta voza"/>
     <ja txt="列車の種類"/>
     <zh_CN txt="机车类型"/>
+    <sl txt="Tip vlaka"/>
   </Msg>
   <Msg id="passenger">
     <de txt="Personenverkehr"/>
@@ -6798,6 +6836,7 @@
     <sr_latin txt="Čistač"/>
     <ja txt="清掃"/>
     <zh_CN txt="清洁车"/>
+    <sl txt="Brisanje"/>
   </Msg>
   <Msg id="ctrlmode">
     <de txt="Bedienung" tip="Gleisbild bedienen."/>
@@ -6882,6 +6921,7 @@
     <sr_latin txt="Trasirati"/>
     <ja txt="トレース"/>
     <zh_CN txt="轨迹"/>
+    <sl txt="Sledenje"/>
   </Msg>
   <Msg id="tracefile">
     <de txt="Log Datei"/>
@@ -6910,6 +6950,7 @@
     <sr_latin txt="Trasirati fajl"/>
     <ja txt="トレースファイル"/>
     <zh_CN txt="轨迹文件"/>
+    <sl txt="Datoteka za sledenje"/>
   </Msg>
   <Msg id="tracelevel">
     <de txt="Log Protokoll Intensität"/>
@@ -6937,6 +6978,7 @@
     <sr_latin txt="Nivo trasiranja"/>
     <ja txt="トレースレベル"/>
     <zh_CN txt="轨迹密度"/>
+    <sl txt="Nivo sledenja"/>
   </Msg>
   <Msg id="debug">
     <de txt="Debug"/>
@@ -7078,6 +7120,7 @@
     <ja txt="コントローラ"/>
     <pl txt="Kontroler"/>
     <zh_CN txt="控制器"/>
+    <sl txt="Krmilnik"/>
   </Msg>
   <Msg id="libpath">
     <de txt="Bibliotheksverzeichnis"/>
@@ -7106,6 +7149,7 @@
     <sr_latin txt="Putanja biblioteke"/>
     <ja txt="ライブラリの場所"/>
     <zh_CN txt="机车库路径"/>
+    <sl txt="Pot knjižnjic"/>
   </Msg>
   <Msg id="http">
     <de txt="HTTP-Dienste"/>
@@ -7220,6 +7264,7 @@
     <sr_latin txt="Najveći broj korisnika"/>
     <ja txt="最大のクライアント数"/>
     <zh_CN txt="最大客户端端口数"/>
+    <sl txt="Maksimalno število klientov"/>
   </Msg>
   <Msg id="switchtime">
     <de txt="Weichenschaltzeit (ms)"/>
@@ -7246,6 +7291,7 @@
     <ro txt="Timp comutare (ms)"/>
     <sr_latin txt="Vreme preklapanja (ms)"/>
     <zh_CN txt="切换时间(ms)"/>
+    <sl txt="Čas preklopa (ms)"/>
   </Msg>
   <Msg id="minblocklen">
     <de txt="Min. Block - Zuglänge (cm)"/>
@@ -7271,6 +7317,7 @@
     <ro txt="Bloc minim - lungime tren (cm)"/>
     <sr_latin txt="Najmanja dužina bloka -voza (cm)"/>
     <zh_CN txt="最小区间-机车长度(cm)"/>
+    <sl txt="Minimalna dolžina odseka - vlaka (cm)"/>
   </Msg>
   <Msg id="ignevent">
     <de txt="Ereignisse ignorieren innerhalb (10ms ticks)"/>
@@ -7324,6 +7371,7 @@
     <sr_latin txt="Brzina serijske veze"/>
     <ja txt="ボーレート"/>
     <zh_CN txt="波特率"/>
+    <sl txt="Baudrate"/>
   </Msg>
   <Msg id="sensormodules">
     <de txt="Sensor Module (links, mitte, rechts, größe)"/>
@@ -7351,6 +7399,7 @@
     <sr_latin txt="Moduli senzora (levo,srednji,desno,veličina)"/>
     <ja txt="センサモジュール(左,中,右,サイズ)"/>
     <zh_CN txt="传感器模块（左，中，右，尺寸）"/>
+    <sl txt="MOduli tipal (levo,sredina,desno,velikost)"/>
   </Msg>
   <Msg id="erddcdports">
     <de txt="Erddcd Ports (cmd,sensor,info)"/>
@@ -7375,6 +7424,7 @@
     <en_GB txt="Erddcd Ports (cmd,sensor,info)"/>
     <sr_latin txt="Erddcd priključci (kmd,senzor,veličina)"/>
     <zh_CN txt="Erddcd端口（CMD，传感器，信息）"/>
+    <sl txt="Erddcd Porti (cmd,sensor,info)"/>
   </Msg>
   <Msg id="commands">
     <de txt="Befehle"/>
@@ -7462,6 +7512,7 @@
     <sr_latin txt="Od bloka"/>
     <ja txt="ブロックから"/>
     <zh_CN txt="从区间"/>
+    <sl txt="Iz odseka"/>
   </Msg>
   <Msg id="toblock">
     <de txt="Nach Block"/>
@@ -7489,6 +7540,7 @@
     <sr_latin txt="Ka bloku"/>
     <ja txt="ブロックへ"/>
     <zh_CN txt="至区间"/>
+    <sl txt="K odseku"/>
   </Msg>
   <Msg id="outputid">
     <de txt="Ausgangs-Kennung"/>
@@ -7517,6 +7569,7 @@
     <sr_latin txt="ID izlaza"/>
     <ja txt="出力ID"/>
     <zh_CN txt="输出地址"/>
+    <sl txt="ID izhoda"/>
   </Msg>
   <Msg id="output">
     <de txt="Ausgang"/>
@@ -7573,6 +7626,7 @@
     <sr_latin txt="ID skretnice"/>
     <ja txt="ポイントID"/>
     <zh_CN txt="转辙机地址"/>
+    <sl txt="ID preklopnika"/>
   </Msg>
   <Msg id="turnout_left">
     <de txt="Weiche (links)"/>
@@ -7600,6 +7654,7 @@
     <sr_latin txt="Skretrnica (levo)"/>
     <ja txt="ポイント(左)"/>
     <zh_CN txt="转辙机（左）"/>
+    <sl txt="Preklopnik (levi)"/>
   </Msg>
   <Msg id="right_3way">
     <de txt="Rechts (Dreiweg)"/>
@@ -7627,6 +7682,7 @@
     <sr_latin txt="Desno (3-struka)"/>
     <ja txt="右(3方向)"/>
     <zh_CN txt="右转辙机（三路）"/>
+    <sl txt="Desno (trismerna)"/>
   </Msg>
   <Msg id="locked">
     <de txt="Verriegelt durch"/>
@@ -7653,6 +7709,7 @@
     <ro txt="Blocat de"/>
     <sr_latin txt="Zauzeto od"/>
     <zh_CN txt="被占据"/>
+    <sl txt="Zaklenjeno s strani"/>
   </Msg>
   <Msg id="invert">
     <de txt="Umkehren"/>
@@ -7707,6 +7764,7 @@
     <sr_latin txt="Senzor pravo"/>
     <ja txt="直線センサ"/>
     <zh_CN txt="直轨反馈"/>
+    <sl txt="Tipalo naravnost"/>
   </Msg>
   <Msg id="sensor_red">
     <de txt="Rückmeldung Abbiegen"/>
@@ -7734,6 +7792,7 @@
     <sr_latin txt="Senzor skretanja"/>
     <ja txt="ポイントセンサ"/>
     <zh_CN txt="道岔反馈"/>
+    <sl txt="Tipalo kretnice"/>
   </Msg>
   <Msg id="opposite">
     <de txt="Entgegengesetzt"/>
@@ -7762,6 +7821,7 @@
     <sr_latin txt="Suprotno"/>
     <ja txt="反対"/>
     <zh_CN txt="反向"/>
+    <sl txt="Nasproten"/>
   </Msg>
   <Msg id="tracknr">
     <de txt="Gleisnummer"/>
@@ -7819,6 +7879,7 @@
     <sr_latin txt="Senzor pozicije"/>
     <ja txt="位置センサ"/>
     <zh_CN txt="位置传感器"/>
+    <sl txt="Tipalo položaja"/>
   </Msg>
   <Msg id="locfb">
     <de txt="Lokrückmeldung"/>
@@ -7846,6 +7907,7 @@
     <sr_latin txt="Senzor lok."/>
     <ja txt="機関車センサ"/>
     <zh_CN txt="机车传感器"/>
+    <sl txt="Tipalo lokomotive"/>
   </Msg>
   <Msg id="turntabletrack">
     <de txt="Drehscheibengleis"/>
@@ -7872,6 +7934,7 @@
     <sr_latin txt="Kolosek okretnice"/>
     <ja txt="ターンテーブル線路"/>
     <zh_CN txt="转盘轨道"/>
+    <sl txt="Tir obračališča"/>
   </Msg>
   <Msg id="add_track">
     <de txt="Gleis hinzufügen"/>
@@ -7957,6 +8020,7 @@
     <sr_latin txt="ID bloka"/>
     <ja txt="ブロックID"/>
     <zh_CN txt="区间编号"/>
+    <sl txt="ID odseka"/>
   </Msg>
   <Msg id="gotoblock" dialog="true">
     <de txt="Ziel setzen" tip="Lok stoppt nach erreichen des Ziels."/>
@@ -8072,6 +8136,7 @@
     <sr_latin txt="Popuni šine"/>
     <ja txt="線路を埋める"/>
     <zh_CN txt="填充轨道"/>
+    <sl txt="Zapolni tire"/>
   </Msg>
   <Msg id="outoforder">
     <de txt="Außer Betrieb setzen"/>
@@ -8182,6 +8247,7 @@
     <sr_latin txt="Izaberi loko."/>
     <ja txt="機関車選択"/>
     <zh_CN txt="选择机车"/>
+    <sl txt="Izbira lokomotive"/>
   </Msg>
   <Msg id="dir">
     <de txt="Richtung"/>
@@ -8241,6 +8307,7 @@
     <sr_latin txt="U oba pravca"/>
     <ja txt="両方向"/>
     <zh_CN txt="双向行驶"/>
+    <sl txt="Obojesmerno"/>
   </Msg>
   <Msg id="unused">
     <de txt="nicht belegt"/>
@@ -8329,6 +8396,7 @@
     <sr_latin txt="Kontrola brzine"/>
     <ja txt="速度コントローラ"/>
     <zh_CN txt="速度控制器"/>
+    <sl txt="Krmilnik hitrosti"/>
   </Msg>
   <Msg id="rocrail_help">
     <de txt="http://wiki.rocrail.net/doku.php?id=german"/>
@@ -8354,6 +8422,7 @@
     <sr_latin txt="http://wiki.rocrail.net/doku.php?id=english"/>
     <ja txt="http://wiki.rocrail.net/doku.php?id=english"/>
     <zh_CN txt="http://wiki.rocrail.net/doku.php?id=english"/>
+    <sl txt="http://wiki.rocrail.net/doku.php?id=english"/>
   </Msg>
   <Msg id="Vstart">
     <de txt="Startgeschwindigkeit"/>
@@ -8381,6 +8450,7 @@
     <sr_latin txt="Početni nivo brzine"/>
     <ja txt="速度ステップを動かす"/>
     <zh_CN txt="起始速度"/>
+    <sl txt="Korak začetne hitrosti"/>
   </Msg>
   <Msg id="acceleration_rate">
     <de txt="Beschleunigungstufe"/>
@@ -8408,6 +8478,7 @@
     <sr_latin txt="Nivo ubrzanja"/>
     <ja txt="加速率"/>
     <zh_CN txt="加速比"/>
+    <sl txt="Stopnja pospeševanja"/>
   </Msg>
   <Msg id="deceleration_rate">
     <de txt="Bremsstufe"/>
@@ -8435,6 +8506,7 @@
     <sr_latin txt="Nivo usporavanja"/>
     <ja txt="減速率"/>
     <zh_CN txt="减速比"/>
+    <sl txt="Stopnja pojemanja"/>
   </Msg>
   <Msg id="Vhigh">
     <de txt="Höchstgeschwindigkeit"/>
@@ -8462,6 +8534,7 @@
     <sr_latin txt="Najviši nivo brzine"/>
     <ja txt="最大速度ステップ"/>
     <zh_CN txt="最大速度"/>
+    <sl txt="Korak maksimalne hitrosti"/>
   </Msg>
   <Msg id="Vmid">
     <de txt="Mittlere Geschwindigkeit"/>
@@ -8489,6 +8562,7 @@
     <sr_latin txt="Srednji nivo brzine"/>
     <ja txt="中間速度ステップ"/>
     <zh_CN txt="中间速度"/>
+    <sl txt="Korak srednje hitrosti"/>
   </Msg>
   <Msg id="version">
     <de txt="Version"/>
@@ -8547,6 +8621,7 @@
     <sr_latin txt="ID proizvođača"/>
     <ja txt="製造者ID"/>
     <zh_CN txt="制造商 ID"/>
+    <sl txt="ID proizvajalca"/>
   </Msg>
   <Msg id="documentation" dialog="true">
     <de txt="Handbuch" accel="0" tip="Das Online Handbuch."/>
@@ -8577,6 +8652,7 @@
     <sr_latin txt="Vodič"/>
     <ja txt="ガイド"/>
     <zh_CN txt="指南"/>
+    <sl txt="Vodilo"/>
   </Msg>
   <Msg id="fbmodsize">
     <de txt="FB ports"/>
@@ -8604,6 +8680,7 @@
     <sr_latin txt="FB veze"/>
     <ja txt="FBポート"/>
     <zh_CN txt="FB端口"/>
+    <sl txt="FB porti"/>
   </Msg>
   <Msg id="swmodsize">
     <de txt="SW ports"/>
@@ -8631,6 +8708,7 @@
     <sr_latin txt="SW veze"/>
     <ja txt="SWポート"/>
     <zh_CN txt="SW端口"/>
+    <sl txt="SW porti"/>
   </Msg>
   <Msg id="switchaction">
     <de txt="Weichen stellen"/>
@@ -8658,6 +8736,7 @@
     <sr_latin txt="Skretnica - akcije"/>
     <ja txt="ポイントのアクション"/>
     <zh_CN txt="转辙机操作"/>
+    <sl txt="Preklopna dejanja"/>
   </Msg>
   <Msg id="signalaction">
     <de txt="Signal stellen"/>
@@ -8685,6 +8764,7 @@
     <sr_latin txt="Signal - akcije"/>
     <ja txt="信号のアクション"/>
     <zh_CN txt="信号灯操作"/>
+    <sl txt="Signalna dejanja"/>
   </Msg>
   <Msg id="streetaction">
     <de txt="Fahrstraße stellen"/>
@@ -8712,6 +8792,7 @@
     <sr_latin txt="Ruta - akcije"/>
     <ja txt="ルートのアクション"/>
     <zh_CN txt="路径选择"/>
+    <sl txt="Dejanja poti"/>
   </Msg>
   <Msg id="systemaction">
     <de txt="System Aktion"/>
@@ -8739,6 +8820,7 @@
     <sr_latin txt="Sistemske akcije"/>
     <ja txt="システムのアクション"/>
     <zh_CN txt="系统操作"/>
+    <sl txt="Sistemska dejanja"/>
   </Msg>
   <Msg id="enableaction">
     <de txt="Aktiviere Aktion"/>
@@ -8766,6 +8848,7 @@
     <sr_latin txt="Omogući akcije"/>
     <ja txt="アクションを有効にする"/>
     <zh_CN txt="启用操作"/>
+    <sl txt="Omogoči dejanja"/>
   </Msg>
   <Msg id="action">
     <de txt="Aktion"/>
@@ -8793,6 +8876,7 @@
     <sr_latin txt="Akcije"/>
     <ja txt="アクション"/>
     <zh_CN txt="操作"/>
+    <sl txt="Dejanje"/>
   </Msg>
   <Msg id="mass">
     <de txt="Masse"/>
@@ -8820,6 +8904,7 @@
     <sr_latin txt="Masa"/>
     <ja txt="重さ"/>
     <zh_CN txt="质量"/>
+    <sl txt="Masa"/>
   </Msg>
   <Msg id="visible">
     <de txt="sichtbar"/>
@@ -8848,6 +8933,7 @@
     <sr_latin txt="vidljivo"/>
     <ja txt="可視"/>
     <zh_CN txt="可用"/>
+    <sl txt="vidno"/>
   </Msg>
   <Msg id="module">
     <de txt="Module"/>
@@ -8876,6 +8962,7 @@
     <sr_latin txt="modul"/>
     <ja txt="モジュール"/>
     <zh_CN txt="模块"/>
+    <sl txt="modul"/>
   </Msg>
   <Msg id="trackdriver">
     <de txt="TD" tip="Analoge Loksteuerung"/>
@@ -8902,6 +8989,7 @@
     <sr_latin txt="TD"/>
     <ja txt="TD"/>
     <zh_CN txt="TD"/>
+    <sl txt="TD"/>
   </Msg>
   <Msg id="sourceblock">
     <de txt="Quellblock"/>
@@ -8928,6 +9016,7 @@
     <ca txt="Bloc origen"/>
     <sr_latin txt="Izvorni blok"/>
     <zh_CN txt="起始区间"/>
+    <sl txt="Vir bolka"/>
   </Msg>
   <Msg id="linkedblocks">
     <de txt="Verbundene Blöcke"/>
@@ -8954,6 +9043,7 @@
     <ro txt="Legături blocaje"/>
     <sr_latin txt="Povezani blokovi"/>
     <zh_CN txt="关联区间"/>
+    <sl txt="Povezani odseki"/>
   </Msg>
   <Msg id="activate">
     <de txt="Aktivieren"/>
@@ -8981,6 +9071,7 @@
     <sr_latin txt="Aktiviraj"/>
     <ja txt="有効化"/>
     <zh_CN txt="激活"/>
+    <sl txt="Aktiviraj"/>
   </Msg>
   <Msg id="signal_type">
     <de txt="Signaltyp"/>
@@ -9009,6 +9100,7 @@
     <sr_latin txt="Vrsta signala"/>
     <ja txt="信号の種類"/>
     <zh_CN txt="信号机类型"/>
+    <sl txt="Tip signala"/>
   </Msg>
   <Msg id="distant_signal">
     <de txt="Vorsignal"/>
@@ -9037,6 +9129,7 @@
     <sr_latin txt="Signal udaljenosti"/>
     <ja txt="距離信号"/>
     <zh_CN txt="远端信号"/>
+    <sl txt="Predsignal"/>
   </Msg>
   <Msg id="main_signal">
     <de txt="Hauptsignal"/>
@@ -9065,6 +9158,7 @@
     <sr_latin txt="Glavni signal"/>
     <ja txt="メイン信号"/>
     <zh_CN txt="主信号"/>
+    <sl txt="Glavni signal"/>
   </Msg>
   <Msg id="shunting_signal">
     <de txt="Sperrsignal"/>
@@ -9092,6 +9186,7 @@
     <sr_latin txt="Ranžirni signal"/>
     <ja txt="入換え信号"/>
     <zh_CN txt="支线信号"/>
+    <sl txt="Ranžirni signal"/>
   </Msg>
   <Msg id="signification">
     <de txt="Bedeutung"/>
@@ -9148,6 +9243,7 @@
     <sr_latin txt="Svetlosni signal"/>
     <ja txt="灯火信号"/>
     <zh_CN txt="闪光信号"/>
+    <sl txt="Svetlobni signal"/>
   </Msg>
   <Msg id="semaphore_signal">
     <de txt="Formsignal"/>
@@ -9176,6 +9272,7 @@
     <sr_latin txt="Semafor"/>
     <ja txt="手旗信号"/>
     <zh_CN txt="臂板信号机"/>
+    <sl txt="Semafor"/>
   </Msg>
   <Msg id="bus">
     <de txt="Bus"/>
@@ -9202,6 +9299,7 @@
     <sr_latin txt="Bus"/>
     <ja txt="バス"/>
     <zh_CN txt="总线"/>
+    <sl txt="Bus"/>
   </Msg>
   <Msg id="free">
     <de txt="frei"/>
@@ -9230,6 +9328,7 @@
     <sr_latin txt="slobodno"/>
     <ja txt="空き"/>
     <zh_CN txt="空闲"/>
+    <sl txt="prosto"/>
   </Msg>
   <Msg id="buffer">
     <de txt="Prellbock"/>
@@ -9257,6 +9356,7 @@
     <sr_latin txt="Branik"/>
     <ja txt="バッファ"/>
     <zh_CN txt="缓冲区"/>
+    <sl txt="Odbojnik"/>
   </Msg>
   <Msg id="decoupler">
     <de txt="Entkoppler"/>
@@ -9308,6 +9408,7 @@
     <ro txt="sfârșit impulsuri"/>
     <sr_latin txt="završni impuls"/>
     <zh_CN txt="终端脉冲"/>
+    <sl txt="končni impulz"/>
   </Msg>
   <Msg id="ghost">
     <de txt="Geist"/>
@@ -9334,6 +9435,7 @@
     <ro txt="urmă de"/>
     <sr_latin txt="duh"/>
     <zh_CN txt="幻象"/>
+    <sl txt="duh"/>
   </Msg>
   <Msg id="text">
     <de txt="Text"/>
@@ -9361,6 +9463,7 @@
     <sr_latin txt="Tekst"/>
     <ja txt="テキスト"/>
     <zh_CN txt="文本"/>
+    <sl txt="Besedilo"/>
   </Msg>
   <Msg id="deprecatedwirering">
     <de txt="Die neuen Events unter dem Fahrstraßenreiter sind vorzuziehen."/>
@@ -9388,6 +9491,7 @@
     <sr_latin txt="Novi događaji nađeni na mapi ruta su korisniji"/>
     <ja txt="ルート表で選ばれた新しいイベントが見つかりました"/>
     <zh_CN txt="优先执行路径表中所存在的事件"/>
+    <sl txt="Prednost imajo novi dogodki v zavihku Poti."/>
   </Msg>
   <Msg id="notsaved">
     <de txt="Änderungen speichern?"/>
@@ -9416,6 +9520,7 @@
     <sr_latin txt="Sačuvaj promene pre zatvaranja."/>
     <ja txt="閉じる前に変更を保存しますか？"/>
     <zh_CN txt="关闭前是否保存所做过的改动？"/>
+    <sl txt="Shranim spremembe pred končanjem?"/>
   </Msg>
   <Msg id="scheduletable" dialog="true" key="Ctrl-4">
     <de txt="Fahrpläne" tip="Fahrpläne"/>
@@ -9444,6 +9549,7 @@
     <sr_latin txt="Tabela rasporeda"/>
     <ja txt="スケジュール表"/>
     <zh_CN txt="计划任务表"/>
+    <sl txt="Seznam urnikov"/>
   </Msg>
   <Msg id="schedule">
     <de txt="Fahrplan"/>
@@ -9472,6 +9578,7 @@
     <sr_latin txt="Raspored"/>
     <ja txt="スケジュール"/>
     <zh_CN txt="计划任务"/>
+    <sl txt="Urnik"/>
   </Msg>
   <Msg id="hour">
     <de txt="Stunde"/>
@@ -9500,6 +9607,7 @@
     <sr_latin txt="sat"/>
     <ja txt="時"/>
     <zh_CN txt="小时"/>
+    <sl txt="ura"/>
   </Msg>
   <Msg id="minute">
     <de txt="Minute"/>
@@ -9527,6 +9635,7 @@
     <sr_latin txt="minut"/>
     <ja txt="分"/>
     <zh_CN txt="分钟"/>
+    <sl txt="minute"/>
   </Msg>
   <Msg id="locationtable" dialog="true" key="Ctrl-5">
     <de txt="Ortschaftsliste" tip="Ortschaften"/>
@@ -9554,6 +9663,7 @@
     <sr_latin txt="Tabela lokacija"/>
     <ja txt="場所表"/>
     <zh_CN txt="目的地列表"/>
+    <sl txt="Seznam lokacij"/>
   </Msg>
   <Msg id="location">
     <de txt="Ortschaft"/>
@@ -9636,6 +9746,7 @@
     <sr_latin txt="od"/>
     <ja txt="from"/>
     <zh_CN txt="从"/>
+    <sl txt="iz"/>
   </Msg>
   <Msg id="to">
     <de txt="nach"/>
@@ -9665,6 +9776,7 @@
     <sr_latin txt="do"/>
     <ja txt="to"/>
     <zh_CN txt="至"/>
+    <sl txt="do"/>
   </Msg>
   <Msg id="time">
     <de txt="Zeit"/>
@@ -9693,6 +9805,7 @@
     <sr_latin txt="vreme"/>
     <ja txt="時刻"/>
     <zh_CN txt="时间"/>
+    <sl txt="Čas"/>
   </Msg>
   <Msg id="selectschedule" dialog="true">
     <de txt="Fahrplan auswählen"/>
@@ -9721,6 +9834,7 @@
     <sr_latin txt="Izaberi raspored"/>
     <ja txt="スケジュール選択"/>
     <zh_CN txt="选择计划任务"/>
+    <sl txt="Izberi urnik"/>
   </Msg>
   <Msg id="modify">
     <de txt="Ändern"/>
@@ -9750,6 +9864,7 @@
     <sr_latin txt="izmeni"/>
     <ja txt="変更"/>
     <zh_CN txt="修改"/>
+    <sl txt="uredi"/>
   </Msg>
   <Msg id="refresh">
     <de txt="aktualisieren"/>
@@ -9779,6 +9894,7 @@
     <sr_latin txt="osveži"/>
     <ja txt="再読み込み"/>
     <zh_CN txt="刷新"/>
+    <sl txt="osveži"/>
   </Msg>
   <Msg id="webclient">
     <de txt="WebClient"/>
@@ -9805,6 +9921,7 @@
     <sr_latin txt="Web korisnik"/>
     <ja txt="Webクライアント"/>
     <zh_CN txt="Web客户端"/>
+    <sl txt="Web klient"/>
   </Msg>
   <Msg id="gomanual">
     <de txt="Halbautomatisch"/>
@@ -9834,6 +9951,7 @@
     <sr_latin txt="Polu automatski"/>
     <ja txt="半自動"/>
     <zh_CN txt="半自动运行"/>
+    <sl txt="Pol avtomatsko"/>
   </Msg>
   <Msg id="schedule2go">
     <de txt="Starte mit Tour oder Fahrplan"/>
@@ -9890,6 +10008,7 @@
     <sr_latin txt="MIC"/>
     <ja txt="MIC"/>
     <zh_CN txt="麦克风"/>
+    <sl txt="MIC"/>
   </Msg>
   <Msg id="mode">
     <de txt="Modus"/>
@@ -9916,6 +10035,7 @@
     <sr_latin txt="Mod"/>
     <ja txt="モード"/>
     <zh_CN txt="模式"/>
+    <sl txt="Način"/>
   </Msg>
   <Msg id="path">
     <de txt="Dateipfad"/>
@@ -9943,6 +10063,7 @@
     <sr_latin txt="Putanja"/>
     <ja txt="パス"/>
     <zh_CN txt="路径"/>
+    <sl txt="Pot"/>
   </Msg>
   <Msg id="power">
     <de txt="Fahrstrom"/>
@@ -9971,6 +10092,7 @@
     <sr_latin txt="Napon"/>
     <ja txt="電源"/>
     <zh_CN txt="电源开关"/>
+    <sl txt="Napajanje"/>
   </Msg>
   <Msg id="repeat">
     <de txt="Wiederholrate"/>
@@ -9998,6 +10120,7 @@
     <sr_latin txt="Ponovi"/>
     <ja txt="繰り返し"/>
     <zh_CN txt="重复"/>
+    <sl txt="Ponovi"/>
   </Msg>
   <Msg id="use">
     <de txt="Benutze"/>
@@ -10025,6 +10148,7 @@
     <sr_latin txt="Koristi"/>
     <ja txt="使用"/>
     <zh_CN txt="使用"/>
+    <sl txt="Uporabi"/>
   </Msg>
   <Msg id="ric">
     <de txt="RIC" tip="Rocrail Innovative Controller"/>
@@ -10051,6 +10175,7 @@
     <sr_latin txt="RIC"/>
     <ja txt="RIC"/>
     <zh_CN txt="读入"/>
+    <sl txt="RIC"/>
   </Msg>
   <Msg id="stoponexit">
     <de txt="Halt nach beenden"/>
@@ -10080,6 +10205,7 @@
     <sr_latin txt="Zaustavi prilikom izlaska"/>
     <ja txt="終了時に停止"/>
     <zh_CN txt="退出前停止运行"/>
+    <sl txt="Ustavi ob izhodu"/>
   </Msg>
   <Msg id="rocguiini" dialog="true">
     <de txt="Rocview Eigenschaften" accel="0" tip="Rocview Eigenschaften ändern."/>
@@ -10108,6 +10234,7 @@
     <sr_latin txt="Svojstva Rocview"/>
     <ja txt="Rocviewのプロパティ"/>
     <zh_CN txt="Rocview 属性"/>
+    <sl txt="Lastnosti Rocview-a"/>
   </Msg>
   <Msg id="bktext">
     <de txt="Blocktext Skalierung"/>
@@ -10186,6 +10313,7 @@
     <sr_latin txt="Identifikator"/>
     <ja txt="識別子"/>
     <zh_CN txt="标识"/>
+    <sl txt="Identifikator"/>
   </Msg>
   <Msg id="dispatch">
     <de txt="Bereitstellen für Regler" tip="Bereitstellung der Lokadresse für Übernahme am Regler."/>
@@ -10235,6 +10363,7 @@
     <ro txt="aceeași direcție de destinație"/>
     <sr_latin txt="isti smer odredišta"/>
     <zh_CN txt="相同目的地方向"/>
+    <sl txt="smer enake destiancije"/>
   </Msg>
   <Msg id="oppositedir">
     <de txt="Fahrziel entgegen der Fahrtrichtung" tip="Sucht neues Fahrziel in der entgegengesetzten Fahrtrichtung."/>
@@ -10260,6 +10389,7 @@
     <ro txt="destinații opuse"/>
     <sr_latin txt="suprotno odredište"/>
     <zh_CN txt="相反的目的地"/>
+    <sl txt="nasprotne destinacije"/>
   </Msg>
   <Msg id="forcesamedir">
     <de txt="Fahrtrichtungswechsel verhindern" tip="Sucht nur neues Fahrziel ohne die momentane Fahrtrichtung zu ändern."/>
@@ -10286,6 +10416,7 @@
     <sr_latin txt="u istom pravcu do odredišta"/>
     <ja txt="同じ進行方向にする"/>
     <zh_CN txt="强制向同一目的地方向"/>
+    <sl txt="prisili enako smer destinacije"/>
   </Msg>
   <Msg id="deactivate">
     <de txt="Deaktivieren"/>
@@ -10311,6 +10442,7 @@
     <sr_latin txt="Deaktiviraj"/>
     <ja txt="無効化"/>
     <zh_CN txt="停用"/>
+    <sl txt="Onemogoči"/>
   </Msg>
   <Msg id="criticalsection">
     <de txt="Kritischer Blockabschnitt"/>
@@ -10336,6 +10468,7 @@
     <ro txt="Secție critică"/>
     <sr_latin txt="Kritičan deo"/>
     <zh_CN txt="交界区域"/>
+    <sl txt="Kritični odsek"/>
   </Msg>
   <Msg id="eventtimer">
     <de txt="Ereignis-Zeitgeber"/>
@@ -10361,6 +10494,7 @@
     <ro txt="Cronometru eveniment"/>
     <sr_latin txt="Tajmer događaja"/>
     <zh_CN txt="事件时钟"/>
+    <sl txt="Časovnik dogodkov"/>
   </Msg>
   <Msg id="acceptghost">
     <de txt="Akzeptiere Geisterzüge"/>
@@ -10386,6 +10520,7 @@
     <ro txt="Acceptă tren nălucă"/>
     <sr_latin txt="Prihvati voz - duh"/>
     <zh_CN txt="允许无规则行车"/>
+    <sl txt="Sprejmi navidezne vlake"/>
   </Msg>
   <Msg id="cx">
     <de txt="cx"/>
@@ -10411,6 +10546,7 @@
     <sr_latin txt="cx"/>
     <ja txt="CX"/>
     <zh_CN txt="cx"/>
+    <sl txt="cx"/>
   </Msg>
   <Msg id="cy">
     <de txt="cy"/>
@@ -10436,6 +10572,7 @@
     <sr_latin txt="cy"/>
     <ja txt="cy"/>
     <zh_CN txt="cy"/>
+    <sl txt="cy"/>
   </Msg>
   <Msg id="pointsize">
     <de txt="Punktgröße"/>
@@ -10462,6 +10599,7 @@
     <sr_latin txt="Veličina"/>
     <ja txt="ポイントサイズ"/>
     <zh_CN txt="像素尺寸"/>
+    <sl txt="Velikost točke"/>
   </Msg>
   <Msg id="tip">
     <de txt="Hinweis"/>
@@ -10487,6 +10625,7 @@
     <sr_latin txt="Savet"/>
     <ja txt="ヒント"/>
     <zh_CN txt="提示"/>
+    <sl txt="Nasvet"/>
   </Msg>
   <Msg id="device">
     <de txt="Gerät"/>
@@ -10513,6 +10652,7 @@
     <sr_latin txt="Uređaj"/>
     <ja txt="デバイス"/>
     <zh_CN txt="设备："/>
+    <sl txt="Naprava"/>
   </Msg>
   <Msg id="terminalstation">
     <de txt="Kopfbahnhof"/>
@@ -10539,6 +10679,7 @@
     <sr_latin txt="Krajnja stanica"/>
     <ja txt="終着駅"/>
     <zh_CN txt="终点站"/>
+    <sl txt="Terminalna postaja (TS)"/>
   </Msg>
   <Msg id="dirpause">
     <de txt="Pause bei Richtungswechsel" tip="Pause xxxms nach dem Schalten der letzten Weiche."/>
@@ -10563,6 +10704,7 @@
     <en_GB txt="DirChange pause"/>
     <sr_latin txt="Pauza za promenu pravca"/>
     <zh_CN txt="暂停换向"/>
+    <sl txt="Pavza ob spremembi smeri"/>
   </Msg>
   <Msg id="dirchgspd">
     <de txt="V=0 bei Fahrtrichtungswechsel" tip="Setze Geschwindigkeit auf 0 bei Richtungswechsel."/>
@@ -10589,6 +10731,7 @@
     <ro txt="v=0 la schimbarea direcției"/>
     <sr_latin txt="B=0 pri promeni pravca"/>
     <zh_CN txt="当转换运行方向时 V=0"/>
+    <sl txt="V=0 pri spremembi smeri"/>
   </Msg>
   <Msg id="destinations">
     <de txt="Ziele"/>
@@ -10615,6 +10758,7 @@
     <sr_latin txt="Odredišta"/>
     <ja txt="行き先"/>
     <zh_CN txt="目的地"/>
+    <sl txt="Cilji"/>
   </Msg>
   <Msg id="destination">
     <de txt="Ziel"/>
@@ -10641,6 +10785,7 @@
     <sr_latin txt="Odredište"/>
     <ja txt="行き先"/>
     <zh_CN txt="目的地"/>
+    <sl txt="Cilj"/>
   </Msg>
   <Msg id="crossingblock">
     <de txt="Kreuzender Block"/>
@@ -10667,6 +10812,7 @@
     <sr_latin txt="prolazni blok"/>
     <ja txt="交差ブロック"/>
     <zh_CN txt="交汇区间"/>
+    <sl txt="odsek križanja"/>
   </Msg>
   <Msg id="crossingblocks">
     <de txt="Kreuzende Blöcke" tip="Comma separated list of crossing blocks."/>
@@ -10692,6 +10838,7 @@
     <ro txt="Încrucișare blocaje"/>
     <sr_latin txt="Prolazni blokovi"/>
     <zh_CN txt="交汇区间"/>
+    <sl txt="Odseki križanja"/>
   </Msg>
   <Msg id="overlappedturnouts">
     <de txt="überlappende Weichen"/>
@@ -10716,6 +10863,7 @@
     <ro txt="Suprapunere schimbătoare"/>
     <sr_latin txt="Preklopljene skretnice"/>
     <zh_CN txt="交分"/>
+    <sl txt="Prekrivajoči preklopniki"/>
   </Msg>
   <Msg id="departure">
     <de txt="Abfahrt"/>
@@ -10743,6 +10891,7 @@
     <sr_latin txt="Polazak"/>
     <ja txt="始発"/>
     <zh_CN txt="出发"/>
+    <sl txt="Odhod"/>
   </Msg>
   <Msg id="usepatterns">
     <de txt="Muster benutzen"/>
@@ -10768,6 +10917,7 @@
     <ro txt="folosește modele"/>
     <sr_latin txt="koristi obrasce"/>
     <zh_CN txt="使用方式"/>
+    <sl txt="uporabi vzorce"/>
   </Msg>
   <Msg id="purgetime">
     <de txt="Slot Freigabezeit (s)"/>
@@ -10817,6 +10967,7 @@
     <ca txt="Fer servir IDLE en lloc de GPOFF"/>
     <sr_latin txt="Koristi IDLE umesto GPOFF"/>
     <zh_CN txt="用IDLE 替换 GPOFF"/>
+    <sl txt="Uporabi NEDEJAVEN namesto GPOFF"/>
   </Msg>
   <Msg id="ptiid">
     <de txt="PT IID" tip="Diesen Controller zum programmieren benutzen."/>
@@ -10841,6 +10992,8 @@
     <ca txt="PT IID"/>
     <sr_latin txt="PT IID"/>
     <ja txt="PT IID"/>
+    <sl txt="PT IID"/>
+    <zh_CN txt="编程控制器ID"/>
   </Msg>
   <Msg id="sviid">
     <de txt="SV IID" tip="Diesen Controller zum LN-SV programmieren benutzen."/>
@@ -10865,6 +11018,8 @@
     <ca txt="SV IID"/>
     <sr_latin txt="SV IID"/>
     <ja txt="SV IID"/>
+    <sl txt="SV IID"/>
+    <zh_CN txt="LN_SV编程控制器ID"/>
   </Msg>
   <Msg id="lciid">
     <de txt="LC IID" tip="Diesen Controller zum fahren benutzen."/>
@@ -10888,6 +11043,8 @@
     <en_GB txt="LC IID"/>
     <ca txt="LC IID"/>
     <sr_latin txt="LC IID"/>
+    <sl txt="LC IID"/>
+    <zh_CN txt="行车控制器ID"/>
   </Msg>
   <Msg id="dpiid">
     <de txt="DP IID" tip="Use this controller to dispatch locomotives for use with a throttle."/>
@@ -10912,6 +11069,8 @@
     <ca txt="DP IID"/>
     <sr_latin txt="DP IID"/>
     <ja txt="DP IID"/>
+    <sl txt="DP IID"/>
+    <zh_CN txt="调度控制器ID"/>
   </Msg>
   <Msg id="clocktype">
     <de txt="Uhranzeige"/>
@@ -10937,6 +11096,7 @@
     <ro txt="Tipul ceasului"/>
     <sr_latin txt="Vrsta sata"/>
     <zh_CN txt="时钟类型"/>
+    <sl txt="Tip ure"/>
   </Msg>
   <Msg id="opendecoder" dialog="true">
     <de txt="OpenDecoder"/>
@@ -10962,6 +11122,7 @@
     <ro txt="Pornește decodor"/>
     <sr_latin txt="OpenDecoder"/>
     <zh_CN txt="开放解码器"/>
+    <sl txt="OpenDecoder"/>
   </Msg>
   <Msg id="red">
     <de txt="rot"/>
@@ -10987,6 +11148,7 @@
     <sr_latin txt="crveno"/>
     <ja txt="赤"/>
     <zh_CN txt="红色"/>
+    <sl txt="rdeča"/>
   </Msg>
   <Msg id="yellow">
     <de txt="gelb"/>
@@ -11012,6 +11174,7 @@
     <sr_latin txt="žuto"/>
     <ja txt="黄"/>
     <zh_CN txt="黄色"/>
+    <sl txt="rumena"/>
   </Msg>
   <Msg id="green">
     <de txt="grün"/>
@@ -11037,6 +11200,7 @@
     <sr_latin txt="zeleno"/>
     <ja txt="緑"/>
     <zh_CN txt="绿色"/>
+    <sl txt="zelena"/>
   </Msg>
   <Msg id="white">
     <de txt="weiß"/>
@@ -11062,6 +11226,7 @@
     <sr_latin txt="belo"/>
     <ja txt="白"/>
     <zh_CN txt="白色"/>
+    <sl txt="bela"/>
   </Msg>
   <Msg id="permissions">
     <de txt="Berechtigungen"/>
@@ -11087,6 +11252,7 @@
     <sr_latin txt="Dozvole"/>
     <ja txt="権限"/>
     <zh_CN txt="授权"/>
+    <sl txt="Dovoljenja"/>
   </Msg>
   <Msg id="exclude">
     <de txt="Lok ausschliessen"/>
@@ -11112,6 +11278,7 @@
     <ro txt="Refuză locomotiva"/>
     <sr_latin txt="Ukini loko."/>
     <zh_CN txt="禁用机车"/>
+    <sl txt="Zavrni lokomotivo"/>
   </Msg>
   <Msg id="include">
     <de txt="Lok zulassen"/>
@@ -11137,6 +11304,7 @@
     <ro txt="Acceptă locomotiva"/>
     <sr_latin txt="Dozvoli loko."/>
     <zh_CN txt="允许的机车"/>
+    <sl txt="Dovoli lokomotivo"/>
   </Msg>
   <Msg id="iconpath">
     <de txt="Symbolverzeichnis"/>
@@ -11163,6 +11331,7 @@
     <sr_latin txt="Putanja ikona"/>
     <ja txt="アイコンのパス"/>
     <zh_CN txt="图标路径"/>
+    <sl txt="Pot do ikon"/>
   </Msg>
   <Msg id="imagepath">
     <de txt="Bilderverzeichnis"/>
@@ -11189,6 +11358,7 @@
     <sr_latin txt="Putanja slika"/>
     <ja txt="画像のパス"/>
     <zh_CN txt="图像路径"/>
+    <sl txt="Pot do slik"/>
   </Msg>
   <Msg id="regulated">
     <de txt="Lastreglung" tip="Decoder verfügt über eine Lastreglung."/>
@@ -11214,6 +11384,7 @@
     <ro txt="Regulat"/>
     <sr_latin txt="Regulisano"/>
     <zh_CN txt="调节"/>
+    <sl txt="Reguliran"/>
   </Msg>
   <Msg id="arrive">
     <de txt="Ankunft"/>
@@ -11240,6 +11411,7 @@
     <sr_latin txt="Prispeti"/>
     <ja txt="到着"/>
     <zh_CN txt="到达"/>
+    <sl txt="Prihod"/>
   </Msg>
   <Msg id="tabalign">
     <de txt="Tab Ansicht"/>
@@ -11263,6 +11435,7 @@
     <ro txt="Aliniere tabel"/>
     <sr_latin txt="Poređati tabelu"/>
     <zh_CN txt="调整选项卡"/>
+    <sl txt="Poravna zavihkov"/>
   </Msg>
   <Msg id="multiline">
     <de txt="Mehrzeilig"/>
@@ -11287,6 +11460,7 @@
     <ro txt="Linii multiple"/>
     <sr_latin txt="Mnogostuko"/>
     <zh_CN txt="多线程"/>
+    <sl txt="Večvrstično"/>
   </Msg>
   <Msg id="usage">
     <de txt="Benutzung"/>
@@ -11312,6 +11486,7 @@
     <sr_latin txt="Upotreba"/>
     <ja txt="使用量"/>
     <zh_CN txt="适用"/>
+    <sl txt="Uporaba"/>
   </Msg>
   <Msg id="rundirection">
     <de txt="Fahrtrichtung"/>
@@ -11337,6 +11512,7 @@
     <ro txt="Urmărește direcția"/>
     <sr_latin txt="Pravac kretanja"/>
     <zh_CN txt="运行方向"/>
+    <sl txt="Smer vožnje"/>
   </Msg>
   <Msg id="forwards">
     <de txt="Vorwärts"/>
@@ -11363,6 +11539,7 @@
     <sr_latin txt="Napred"/>
     <ja txt="前進"/>
     <zh_CN txt="前进"/>
+    <sl txt="Naprej"/>
   </Msg>
   <Msg id="reverse">
     <de txt="Rückwärts"/>
@@ -11389,6 +11566,7 @@
     <sr_latin txt="Unazad"/>
     <ja txt="逆転"/>
     <zh_CN txt="后退"/>
+    <sl txt="Nazaj"/>
   </Msg>
   <Msg id="forwardsignals">
     <de txt="Signale bei Vorwärtsfahrt"/>
@@ -11414,6 +11592,7 @@
     <ro txt="Semnal înaintea conducătorului"/>
     <sr_latin txt="Signali u pravcu vožnje"/>
     <zh_CN txt="超越信号"/>
+    <sl txt="Signali na prihodnjem pogonu"/>
   </Msg>
   <Msg id="reversesignals">
     <de txt="Signale bei Rückwärtsfahrt"/>
@@ -11439,6 +11618,7 @@
     <ro txt="Semnal înapoia conducătorului"/>
     <sr_latin txt="Signali suprotno od vožnje"/>
     <zh_CN txt="反向行驶信号"/>
+    <sl txt="Signali na obratnem pogonu"/>
   </Msg>
   <Msg id="multipleunit">
     <de txt="Mehrfachtraktion"/>
@@ -11465,6 +11645,7 @@
     <sr_latin txt="Umnožene jedinice"/>
     <ja txt="複数ユニット"/>
     <zh_CN txt="多机"/>
+    <sl txt="Večdelna enota"/>
   </Msg>
   <Msg id="consist">
     <de txt="Mehrfachtraktion"/>
@@ -11489,6 +11670,7 @@
     <ro txt="Constă"/>
     <sr_latin txt="Sadrži"/>
     <zh_CN txt="编组"/>
+    <sl txt="Sestavlen"/>
   </Msg>
   <Msg id="members">
     <de txt="Mitglieder"/>
@@ -11515,6 +11697,7 @@
     <sr_latin txt="Članovi"/>
     <ja txt="メンバ"/>
     <zh_CN txt="成员"/>
+    <sl txt="Člani"/>
   </Msg>
   <Msg id="zconnector">
     <de txt="Verbinder"/>
@@ -11564,6 +11747,7 @@
     <ro txt="Tabel de acțiuni"/>
     <sr_latin txt="Tabela akcije"/>
     <zh_CN txt="动作列表"/>
+    <sl txt="Seznam dejanj"/>
   </Msg>
   <Msg id="actions">
     <de txt="Aktionen"/>
@@ -11589,6 +11773,7 @@
     <sr_latin txt="Akcije"/>
     <ja txt="アクション"/>
     <zh_CN txt="动作"/>
+    <sl txt="Dejanja"/>
   </Msg>
   <Msg id="number">
     <de txt="Nummer"/>
@@ -11613,6 +11798,7 @@
     <sr_latin txt="Broj"/>
     <ja txt="数"/>
     <zh_CN txt="数目"/>
+    <sl txt="Število"/>
   </Msg>
   <Msg id="activationtime">
     <de txt="Aktivierungszeit"/>
@@ -11639,6 +11825,7 @@
     <sr_latin txt="Vreme aktiviranja"/>
     <ja txt="動作時間"/>
     <zh_CN txt="启动时间"/>
+    <sl txt="Čas aktivacije"/>
   </Msg>
   <Msg id="next_locomotive">
     <de txt="Nächste Lok"/>
@@ -11665,6 +11852,7 @@
     <sr_latin txt="Sledeća loko."/>
     <ja txt="次の機関車"/>
     <zh_CN txt="下一个机车"/>
+    <sl txt="Naslednja lokomotiva"/>
   </Msg>
   <Msg id="swtype_raster">
     <de txt="Raster"/>
@@ -11689,6 +11877,7 @@
     <ca txt="Trames"/>
     <sr_latin txt="Mreža"/>
     <zh_CN txt="点阵"/>
+    <sl txt="Raster"/>
   </Msg>
   <Msg id="showall">
     <de txt="Zeige alle"/>
@@ -11715,6 +11904,7 @@
     <sr_latin txt="Prikaži sve"/>
     <ja txt="全て表示"/>
     <zh_CN txt="显示全部"/>
+    <sl txt="Pokaži vse"/>
   </Msg>
   <Msg id="startblock">
     <de txt="Anfangsblock"/>
@@ -11740,6 +11930,7 @@
     <ro txt="Pornește blocaje"/>
     <sr_latin txt="Početni blok"/>
     <zh_CN txt="起始区间"/>
+    <sl txt="Začetni odsek"/>
   </Msg>
   <Msg id="select">
     <de txt="Auswählen"/>
@@ -11766,6 +11957,7 @@
     <sr_latin txt="Odaberi"/>
     <ja txt="選択"/>
     <zh_CN txt="选择"/>
+    <sl txt="Izberi"/>
   </Msg>
   <Msg id="range">
     <de txt="Bereich"/>
@@ -11793,6 +11985,7 @@
     <sr_latin txt="Domet"/>
     <ja txt="範囲"/>
     <zh_CN txt="范围"/>
+    <sl txt="Območje"/>
   </Msg>
   <Msg id="target">
     <de txt="Ziel"/>
@@ -11820,6 +12013,7 @@
     <sr_latin txt="Cilj"/>
     <ja txt="対象"/>
     <zh_CN txt="目标"/>
+    <sl txt="Cilj"/>
   </Msg>
   <Msg id="move">
     <de txt="Verschiebe"/>
@@ -11847,6 +12041,7 @@
     <sr_latin txt="Kreni"/>
     <ja txt="移動"/>
     <zh_CN txt="移动"/>
+    <sl txt="Premakni"/>
   </Msg>
   <Msg id="copy">
     <de txt="Kopieren"/>
@@ -11873,6 +12068,7 @@
     <sr_latin txt="Kopiraj"/>
     <ja txt="コピー"/>
     <zh_CN txt="复制(C)"/>
+    <sl txt="Kopiraj"/>
   </Msg>
   <Msg id="width">
     <de txt="Breite"/>
@@ -11899,6 +12095,7 @@
     <sr_latin txt="Sa"/>
     <ja txt="幅"/>
     <zh_CN txt="宽度"/>
+    <sl txt="Širina"/>
   </Msg>
   <Msg id="height">
     <de txt="Höhe"/>
@@ -11925,6 +12122,7 @@
     <sr_latin txt="Visoko"/>
     <ja txt="高さ"/>
     <zh_CN txt="高度"/>
+    <sl txt="Višina"/>
   </Msg>
   <Msg id="usescheduletime">
     <de txt="Fahrplan Abfahrtzeiten benutzen"/>
@@ -11950,6 +12148,7 @@
     <ro txt="folosește timpii plecărilor planificate"/>
     <sr_latin txt="koristi vreme polaska u rasporedu"/>
     <zh_CN txt="按照时间表时间出发"/>
+    <sl txt="uporabi čas iz urnika odhodov"/>
   </Msg>
   <Msg id="clock">
     <de txt="Uhr"/>
@@ -11975,6 +12174,7 @@
     <sr_latin txt="Sat"/>
     <ja txt="時計"/>
     <zh_CN txt="时钟"/>
+    <sl txt="Ura"/>
   </Msg>
   <Msg id="adjusttime">
     <de txt="Uhrzeit einstellen"/>
@@ -12001,6 +12201,7 @@
     <sr_latin txt="Podesi vreme"/>
     <ja txt="調整時間"/>
     <zh_CN txt="调节时间"/>
+    <sl txt="Nastavi uro"/>
   </Msg>
   <Msg id="remark">
     <de txt="Bemerkung"/>
@@ -12026,6 +12227,7 @@
     <ro txt="Observație"/>
     <sr_latin txt="Napomena"/>
     <zh_CN txt="标记"/>
+    <sl txt="Opomba"/>
   </Msg>
   <Msg id="option">
     <de txt="Auswahl"/>
@@ -12051,6 +12253,7 @@
     <ro txt="opțiune"/>
     <sr_latin txt="Izbor"/>
     <zh_CN txt="选项"/>
+    <sl txt="Možnost"/>
   </Msg>
   <Msg id="swapplacing">
     <de txt="Ändern der Platzierung"/>
@@ -12076,6 +12279,7 @@
     <ro txt="Plasament swop"/>
     <sr_latin txt="Zameni postavke"/>
     <zh_CN txt="换位"/>
+    <sl txt="Zamenjaj mesto"/>
   </Msg>
   <Msg id="swapplacingpost">
     <de txt="danach Plazierung ändern"/>
@@ -12099,6 +12303,7 @@
     <en_GB txt="Swap placing post"/>
     <sr_latin txt="Zamena mesta postavke"/>
     <zh_CN txt="换位提交"/>
+    <sl txt="Zamenjaj mesto objave"/>
   </Msg>
   <Msg id="relativetime">
     <de txt="Relative Zeiten"/>
@@ -12124,6 +12329,7 @@
     <ca txt="Temps relatiu"/>
     <sr_latin txt="Relativno vreme"/>
     <zh_CN txt="相对时间"/>
+    <sl txt="Relativni čas"/>
   </Msg>
   <Msg id="cvget">
     <de txt="CV Auslesen"/>
@@ -12149,6 +12355,7 @@
     <ro txt="Primește CV"/>
     <sr_latin txt="Pročitaj CV"/>
     <zh_CN txt="读取CV"/>
+    <sl txt="Pridobi CV"/>
   </Msg>
   <Msg id="waitforpt">
     <de txt="Warten auf Programmiergleis"/>
@@ -12173,6 +12380,7 @@
     <ro txt="Așteaptă PT"/>
     <sr_latin txt="Čekaj na PT"/>
     <zh_CN txt="等候PT"/>
+    <sl txt="Čakaj na PT"/>
   </Msg>
   <Msg id="soget">
     <de txt="Auslesen von Register"/>
@@ -12197,6 +12405,7 @@
     <ro txt="Primește SO"/>
     <sr_latin txt="Uzeti SO"/>
     <zh_CN txt="获取SO"/>
+    <sl txt="Pridobi SO"/>
   </Msg>
   <Msg id="waitforso">
     <de txt="Warten auf Zentrale"/>
@@ -12221,6 +12430,7 @@
     <ca txt="Espera ordres de la Central"/>
     <sr_latin txt="Čekaj na CS"/>
     <zh_CN txt="等候CS"/>
+    <sl txt="Čakaj na CS"/>
   </Msg>
   <Msg id="softwareupdates" dialog="true">
     <de txt="Software-Aktualisierung" tip="Überprüfung auf verfügbare Aktualisierungen für Rocrail."/>
@@ -12246,6 +12456,7 @@
     <ro txt="Actualizare programe"/>
     <sr_latin txt="Osvežavanje programa"/>
     <zh_CN txt="软件更新"/>
+    <sl txt="Posodobitve programske opreme"/>
   </Msg>
   <Msg id="availableupdates">
     <de txt="Verfügbare Aktualisierungen"/>
@@ -12271,6 +12482,7 @@
     <ro txt="Actualizări disponibile."/>
     <sr_latin txt="Dostupna osveženja"/>
     <zh_CN txt="可用更新"/>
+    <sl txt="Posodobitve, ki so na voljo"/>
   </Msg>
   <Msg id="updateinfo">
     <de txt="Info Aktualisierungen"/>
@@ -12296,6 +12508,7 @@
     <ro txt="Informații despre actualizări"/>
     <sr_latin txt="Osveži info."/>
     <zh_CN txt="升级信息"/>
+    <sl txt="Informacije o posodobitvi"/>
   </Msg>
   <Msg id="searchingupdates">
     <de txt="Suche nach verfügbaren Aktualisierungen..."/>
@@ -12321,6 +12534,7 @@
     <ro txt="Căutare actualizări disponibile"/>
     <sr_latin txt="Traži dostupna osveženja..."/>
     <zh_CN txt="寻找可用更新"/>
+    <sl txt="Iskanje posodobitev...."/>
   </Msg>
   <Msg id="downloadingupdates">
     <de txt="Aktualisierungen werden heruntergeladen..."/>
@@ -12346,6 +12560,7 @@
     <ro txt="Descaărcare actualizări"/>
     <sr_latin txt="Učitaj osveženja"/>
     <zh_CN txt="正在下载更新..."/>
+    <sl txt="Prejemanje posodobitev ..."/>
   </Msg>
   <Msg id="successfullydownloaded">
     <de txt="Aktualisierungen erfolgreich heruntergeladen."/>
@@ -12371,6 +12586,7 @@
     <ro txt="Descărcări reușite actualizări"/>
     <sr_latin txt="Osveženja uspešno učitana"/>
     <zh_CN txt="更新已成功下载"/>
+    <sl txt="Posodobitve uspešno prenešene."/>
   </Msg>
   <Msg id="updatespath">
     <de txt="Aktualisierungszeichnis"/>
@@ -12396,6 +12612,7 @@
     <ro txt="cale actualizări"/>
     <sr_latin txt="Putanja osveženja"/>
     <zh_CN txt="更新目录"/>
+    <sl txt="Pot za posodobitve"/>
   </Msg>
   <Msg id="errorondownloading">
     <de txt="Fehler beim Herunterladen! Details finden Sie im Logfile."/>
@@ -12421,6 +12638,7 @@
     <ro txt="Eroare la descărcare ! Verificați copiile pentru detalii."/>
     <sr_latin txt="Greška prilikom učitavanja! Proveri detalje u traseru"/>
     <zh_CN txt="下载出错！请查阅详情"/>
+    <sl txt="Napaka pri prenosu! Preveri sledenje za podrobnosti."/>
   </Msg>
   <Msg id="program">
     <de txt="Ext. Programm starten."/>
@@ -12446,6 +12664,7 @@
     <ro txt="rulează program ext."/>
     <sr_latin txt="pokreni spoljni program."/>
     <zh_CN txt="运行子程序"/>
+    <sl txt="zaženi zunanji program."/>
   </Msg>
   <Msg id="s88">
     <de txt="S88"/>
@@ -12471,6 +12690,7 @@
     <ro txt="S88"/>
     <sr_latin txt="S88"/>
     <zh_CN txt="S88"/>
+    <sl txt="S88"/>
   </Msg>
   <Msg id="busses">
     <de txt="Busse"/>
@@ -12518,6 +12738,7 @@
     <en_GB txt="Ecos"/>
     <sr_latin txt="Ecos"/>
     <zh_CN txt="ECOS"/>
+    <sl txt="Ecos"/>
   </Msg>
   <Msg id="sensors">
     <de txt="Rückmelder"/>
@@ -12543,6 +12764,7 @@
     <ro txt="Senzori"/>
     <sr_latin txt="Senzori"/>
     <zh_CN txt="传感器"/>
+    <sl txt="Tipala"/>
   </Msg>
   <Msg id="poll">
     <de txt="Abfragen"/>
@@ -12592,6 +12814,7 @@
     <ro txt="Opțiuni"/>
     <sr_latin txt="Opcije"/>
     <zh_CN txt="设置"/>
+    <sl txt="Možnosti"/>
   </Msg>
   <Msg id="scentryactions">
     <de txt="Aufstellung der Eingangsaktionen"/>
@@ -12641,6 +12864,7 @@
     <ro txt="Incapabil de a se conecta la "/>
     <sr_latin txt="Nije moguće povezati se "/>
     <zh_CN txt="无法连接至 "/>
+    <sl txt="Ne morem se povezati na "/>
   </Msg>
   <Msg id="usergroup" dialog="true">
     <de txt="Benutzergruppe" tip="Share your experiences, meet other Rocrailers and have fun!"/>
@@ -12666,6 +12890,7 @@
     <ro txt="Grup utilizatori"/>
     <sr_latin txt="Korisnička grupa"/>
     <zh_CN txt="用户组"/>
+    <sl txt="Skupina uporabnikov"/>
   </Msg>
   <Msg id="rug">
     <all txt="http://forum.rocrail.net/portal.php"/>
@@ -12695,6 +12920,7 @@
     <ro txt="Traduceri"/>
     <sr_latin txt="Prevod"/>
     <zh_CN txt="翻译"/>
+    <sl txt="Prevodi"/>
   </Msg>
   <Msg id="consrv" dialog="true">
     <de txt="Konfigurationsdienst" tip="Interactive rocrail.ini configuration."/>
@@ -12720,6 +12946,7 @@
     <ro txt="serviciu de configurări"/>
     <sr_latin txt="Servis za kofiguraciju"/>
     <zh_CN txt="配置服务"/>
+    <sl txt="Storitve konfiguriranja"/>
   </Msg>
   <Msg id="rocrail_consrv">
     <all txt="https://launchpad.net/rocrail"/>
@@ -12748,6 +12975,7 @@
     <ro txt="Raportați o eroare"/>
     <sr_latin txt="Prijavi grešku"/>
     <zh_CN txt="提交错误报告"/>
+    <sl txt="Pošlji poročilo o napaki"/>
   </Msg>
   <Msg id="rocrail_bug">
     <all txt="https://bugs.launchpad.net/rocrail"/>
@@ -12775,6 +13003,7 @@
     <ro txt="Cerință caracteristice"/>
     <sr_latin txt="Izneti zahtev"/>
     <zh_CN txt="功能要求"/>
+    <sl txt="Zahteva po novi funkcionalnosti"/>
   </Msg>
   <Msg id="rocrail_feature">
     <all txt="https://bugs.launchpad.net/rocrail"/>
@@ -12802,6 +13031,7 @@
     <ro txt="Folosește PT"/>
     <sr_latin txt="Koristi PT"/>
     <zh_CN txt="使用PT"/>
+    <sl txt="Uporabi PT"/>
   </Msg>
   <Msg id="shortcutchecking">
     <de txt="Kurzschlussüberwachung"/>
@@ -12849,6 +13079,7 @@
     <ro txt="Inversează DSR"/>
     <sr_latin txt="Inverzija DSR"/>
     <zh_CN txt="反向DSR"/>
+    <sl txt="Obrni DSR"/>
   </Msg>
   <Msg id="delay">
     <de txt="Verzögerung"/>
@@ -12873,6 +13104,7 @@
     <ro txt="Amânare"/>
     <sr_latin txt="Kašnjenje"/>
     <zh_CN txt="延迟"/>
+    <sl txt="Zakasnitev"/>
   </Msg>
   <Msg id="locorefresh">
     <de txt="Lokdekoder Aktualisierung"/>
@@ -12897,6 +13129,7 @@
     <ro txt="Reîmprospătare decodor locomotivă"/>
     <sr_latin txt="Osveži Lok. dekoder"/>
     <zh_CN txt="刷新机车解码器"/>
+    <sl txt="Osveži dekoder lokomotive"/>
   </Msg>
   <Msg id="singlegate">
     <de txt="Ein Ausgang"/>
@@ -12921,6 +13154,7 @@
     <ca txt="Porta senzilla"/>
     <sr_latin txt="Jednostruki prolaz"/>
     <zh_CN txt="单门"/>
+    <sl txt="Enojna vrata"/>
   </Msg>
   <Msg id="aspects">
     <de txt="Begriffe"/>
@@ -12945,6 +13179,7 @@
     <ro txt="Aspecte"/>
     <sr_latin txt="Očekivanja"/>
     <zh_CN txt="多相位"/>
+    <sl txt="Vidiki"/>
   </Msg>
   <Msg id="aspect">
     <de txt="Begriff"/>
@@ -12969,6 +13204,7 @@
     <ro txt="Aspect"/>
     <sr_latin txt="Očekuj"/>
     <zh_CN txt="相位"/>
+    <sl txt="Vidik"/>
   </Msg>
   <Msg id="panelcolor">
     <de txt="Gleisplanfarbe"/>
@@ -12994,6 +13230,7 @@
     <ro txt="Plan color linii"/>
     <sr_latin txt="Boje plana koloseka"/>
     <zh_CN txt="轨道规划颜色"/>
+    <sl txt="Barva tirnega načrta"/>
   </Msg>
   <Msg id="functiongroup">
     <de txt="Funktionsgruppe"/>
@@ -13018,6 +13255,7 @@
     <ro txt="Grup de funcții"/>
     <sr_latin txt="Funkcionalna grupa"/>
     <zh_CN txt="功能组"/>
+    <sl txt="Skuina funkcij"/>
   </Msg>
   <Msg id="iconnotfound">
     <de txt="Rocview Icon(s) wurden nicht gefunden ! Einstellungen überprüfen. [%s]"/>
@@ -13043,6 +13281,7 @@
     <ro txt="Iconițele Rocview nu pot fi găsite ! Verificați setările. [%s]"/>
     <sr_latin txt="Rocview ikona-e ne mogu biti nađene! Proveri setovanje. [%s]"/>
     <zh_CN txt="Rocview 的图标找不见了! 请检查您的设置情况. [%s]"/>
+    <sl txt="Rocview ikone ne najdem! Preveri nastavitve. [%s]"/>
   </Msg>
   <Msg id="dwarfsignal">
     <de txt="Zwergsignal"/>
@@ -13067,6 +13306,7 @@
     <ro txt="Semnal pitic"/>
     <sr_latin txt="Patuljasti signal"/>
     <zh_CN txt="低位信号"/>
+    <sl txt="Postajni signal"/>
   </Msg>
   <Msg id="accessorydecoder">
     <de txt="Zubehör-Dekoder"/>
@@ -13165,6 +13405,7 @@
     <ca txt="Event de desactivació"/>
     <sr_latin txt="Deaktiviacija događaja"/>
     <zh_CN txt="停用条件"/>
+    <sl txt="Dogodek deaktivacije"/>
   </Msg>
   <Msg id="pairgates">
     <de txt="Ausgänge paaren"/>
@@ -13237,6 +13478,7 @@
     <ro txt="Cale ferată"/>
     <sr_latin txt="Put"/>
     <zh_CN txt="道路"/>
+    <sl txt="Cesta"/>
   </Msg>
   <Msg id="turnoff">
     <de txt="Kreuzung"/>
@@ -13261,6 +13503,7 @@
     <ca txt="Desconectar"/>
     <sr_latin txt="Isključi"/>
     <zh_CN txt="关闭"/>
+    <sl txt="Izklopi"/>
   </Msg>
   <Msg id="thrown">
     <de txt="Abzweigend"/>
@@ -13308,6 +13551,7 @@
     <ro txt="Salvează poziția"/>
     <sr_latin txt="Sačuvaj poziciju"/>
     <zh_CN txt="存储位置"/>
+    <sl txt="Shrani položaj"/>
   </Msg>
   <Msg id="savepostime">
     <de txt="Zeit nach der Weichen in Vorzugslage zurückschalten"/>
@@ -13331,6 +13575,7 @@
     <ro txt="Salvează poziția cronometrului"/>
     <sr_latin txt="Sačuvaj tajmer pozicije"/>
     <zh_CN txt="存储位置定时器"/>
+    <sl txt="Shrani položaj časovnika"/>
   </Msg>
   <Msg id="theme">
     <de txt="Thema"/>
@@ -13356,6 +13601,7 @@
     <ro txt="Temă"/>
     <sr_latin txt="Tema"/>
     <zh_CN txt="主题"/>
+    <sl txt="Tema"/>
   </Msg>
   <Msg id="check2in">
     <de txt="Freies Fahrziel suchen bis zum IN-Rückmelder"/>
@@ -13379,6 +13625,7 @@
     <ro txt="Verifică destinație liberă înainte de poziția ÎN"/>
     <sr_latin txt="Proveri da li je slobodno odredište"/>
     <zh_CN txt="找到闲置的目的地为止"/>
+    <sl txt="Preveri prosto destinacijo dokler ne dosežemo V (IN)"/>
   </Msg>
   <Msg id="locobook">
     <de txt="Lok-Steuerung"/>
@@ -13403,6 +13650,7 @@
     <ro txt="Panoul locomotivei"/>
     <sr_latin txt="Panel lokomotive"/>
     <zh_CN txt="机车控制面板"/>
+    <sl txt="Panel lokomotiv"/>
   </Msg>
   <Msg id="secondnextblock">
     <de txt="Zweiten Ziel-Block reservieren."/>
@@ -13427,6 +13675,7 @@
     <ro txt="Inversează blocajul secundar următor."/>
     <sr_latin txt="Zauzmi drugi sledeći blok."/>
     <zh_CN txt="预留下一区间"/>
+    <sl txt="Rezerviraj drugi naslednji odsek."/>
   </Msg>
   <Msg id="dccformat">
     <de txt="DCC Format" tip="Voreinstellung DCC Format"/>
@@ -13451,6 +13700,7 @@
     <ro txt="Format DCC"/>
     <sr_latin txt="DCC format"/>
     <zh_CN txt="DCC格式"/>
+    <sl txt="DCC Format"/>
   </Msg>
   <Msg id="timing">
     <de txt="Zeiteinstellung" tip="Timing Takt puls S88-Bus."/>
@@ -13475,6 +13725,7 @@
     <ca txt="Temporalització"/>
     <sr_latin txt="Tajming"/>
     <zh_CN txt="计时"/>
+    <sl txt="Merjenje časa"/>
   </Msg>
   <Msg id="ptreset">
     <de txt="Programmiergleis zurücksetzen" tip="Extended Reset Commands"/>
@@ -13498,6 +13749,7 @@
     <ro txt="Restare PT"/>
     <sr_latin txt="Poništi PT"/>
     <zh_CN txt="PT复位"/>
+    <sl txt="PT Ponastavitve"/>
   </Msg>
   <Msg id="ptcommands">
     <de txt="Programmiergleis Befehle" tip="Extended Program Commands"/>
@@ -13521,6 +13773,7 @@
     <ro txt="Comenzi PT"/>
     <sr_latin txt="PT komande"/>
     <zh_CN txt="PT命令"/>
+    <sl txt="PT Ukazi"/>
   </Msg>
   <Msg id="ptpom">
     <de txt="Programmiergleis POM" tip="Programmieren auf dem Hauptgleis Wiederholung."/>
@@ -13543,6 +13796,8 @@
     <en_GB txt="PT POM"/>
     <ro txt="PT POM"/>
     <sr_latin txt="PZ POM"/>
+    <sl txt="PT POM"/>
+    <zh_CN txt="主轨道编程"/>
   </Msg>
   <Msg id="scdmain">
     <de txt="SCD Main" tip="Abschaltzeit bei Kurzschluß Hauptgleis."/>
@@ -13565,6 +13820,8 @@
     <en_GB txt="SCD Main"/>
     <ro txt="SCD principal"/>
     <sr_latin txt="Glavni SCD"/>
+    <sl txt="SCD glavni"/>
+    <zh_CN txt="SCD Main"/>
   </Msg>
   <Msg id="scdpt">
     <de txt="SCD PT" tip="Abschaltzeit bei Kurzschluß Programmiergleis."/>
@@ -13587,6 +13844,8 @@
     <en_GB txt="SCD PT"/>
     <ro txt="SCD PT"/>
     <sr_latin txt="SCD PT"/>
+    <sl txt="SCD PT"/>
+    <zh_CN txt="SCD PT"/>
   </Msg>
   <Msg id="swsensors">
     <de txt="Weichenrückmelder" tip=""/>
@@ -13612,6 +13871,7 @@
     <ca txt="Detector agulles"/>
     <sr_latin txt="Senzori skretnice"/>
     <zh_CN txt="转辙机传感器"/>
+    <sl txt="Tipala preklopnikov"/>
   </Msg>
   <Msg id="swinvert">
     <de txt="Umkehrung des Weichenbefehls" tip=""/>
@@ -13635,6 +13895,7 @@
     <ro txt="Inversare schimbător"/>
     <sr_latin txt="Invertuj preklapanje"/>
     <zh_CN txt="转辙机换向"/>
+    <sl txt="Obrnjen preklopnik"/>
   </Msg>
   <Msg id="swcommands">
     <de txt="Wiederholung des Weichenbefehls" tip="Ein Weichenbefehl wird bei der Gleisausgabe sooft wiederholt."/>
@@ -13658,6 +13919,7 @@
     <ro txt="Comandă repetată schimbător"/>
     <sr_latin txt="Ponavljanje komande za skretnicu"/>
     <zh_CN txt="转辙机命令"/>
+    <sl txt="Ponavljanje ukaza za preklopnik"/>
   </Msg>
   <Msg id="swsensoroffset">
     <de txt="Offset für Weichenrückmeldung" tip=""/>
@@ -13682,6 +13944,7 @@
     <ro txt="Compensare senzor schimbător"/>
     <sr_latin txt="Ofset senzora skretnice"/>
     <zh_CN txt="转辙机传感器关闭"/>
+    <sl txt="Odmik tipala preklopnika"/>
   </Msg>
   <Msg id="swsensormode">
     <de txt="Weichenrückmeldungen" tip=""/>
@@ -13706,6 +13969,7 @@
     <ro txt="Mod senzor schimbător"/>
     <sr_latin txt="Modalitet senzora skretnice"/>
     <zh_CN txt="转辙机传感器模式"/>
+    <sl txt="Način tipala preklopnika"/>
   </Msg>
   <Msg id="scale">
     <de txt="Maßstab"/>
@@ -13730,6 +13994,7 @@
     <ro txt="Ecartament"/>
     <sr_latin txt="Razmera"/>
     <zh_CN txt="轨距"/>
+    <sl txt="Merilo"/>
   </Msg>
   <Msg id="distance">
     <de txt="Abstand"/>
@@ -13756,6 +14021,7 @@
     <ro txt="Distanță"/>
     <sr_latin txt="Rastojanje"/>
     <zh_CN txt="远方"/>
+    <sl txt="Razdalja"/>
   </Msg>
   <Msg id="measurement">
     <de txt="Geschwindigkeitsmessung"/>
@@ -13780,6 +14046,7 @@
     <ro txt="Măsurare viteză"/>
     <sr_latin txt="Merenje brzine"/>
     <zh_CN txt="测速"/>
+    <sl txt="Merjenje hitrosti"/>
   </Msg>
   <Msg id="mvtrack" dialog="true" key="Alt-2">
     <de txt="Geschwindigkeits-Messstrecke" tip="Strecke für Geschwindigkeitsmessung"/>
@@ -13805,6 +14072,7 @@
     <ro txt="Linie MV"/>
     <sr_latin txt="MBKolosek"/>
     <zh_CN txt="测速轨"/>
+    <sl txt="MVTrack"/>
   </Msg>
   <Msg id="convert2mph">
     <de txt="Nach MPH umrechnen"/>
@@ -13830,6 +14098,7 @@
     <ro txt="Conversie la mile pe oră"/>
     <sr_latin txt="Prebaci u Milje/h"/>
     <zh_CN txt="转换为英里/小时"/>
+    <sl txt="Pretvori v MPH"/>
   </Msg>
   <Msg id="seltab">
     <de txt="Fiddle Yard"/>
@@ -13852,6 +14121,7 @@
     <en_GB txt="Fiddle Yard"/>
     <sr_latin txt="Skrivena stanica"/>
     <zh_CN txt="停车场"/>
+    <sl txt="Skrita postaja"/>
   </Msg>
   <Msg id="seltabpos">
     <de txt="Schiebebühnen-Position"/>
@@ -13875,6 +14145,7 @@
     <ro txt="Poziție traversor"/>
     <sr_latin txt="Pozicija traverse"/>
     <zh_CN txt="穿越位置"/>
+    <sl txt="Položaj prečkanja"/>
   </Msg>
   <Msg id="image">
     <de txt="Bild"/>
@@ -13901,6 +14172,7 @@
     <ro txt="Imagine"/>
     <sr_latin txt="Slika"/>
     <zh_CN txt="图片"/>
+    <sl txt="Slika"/>
   </Msg>
   <Msg id="activelow">
     <de txt="Aktiv niedrig"/>
@@ -13924,6 +14196,7 @@
     <en_GB txt="Active low"/>
     <sr_latin txt="Aktivno nisko"/>
     <zh_CN txt="低电平有效"/>
+    <sl txt="Aktivna nizko"/>
   </Msg>
   <Msg id="timedactions" dialog="true">
     <de txt="Zeitgesteuerte Aktionen" tip="Aktionen zu einer bestimmten Zeit starten"/>
@@ -13948,6 +14221,7 @@
     <ro txt="Acțiuni cronometrate"/>
     <sr_latin txt="Vremenska akcija"/>
     <zh_CN txt="同步操作"/>
+    <sl txt="Časovna dejanja"/>
   </Msg>
   <Msg id="attributes">
     <de txt="Eigenschaften"/>
@@ -13973,6 +14247,7 @@
     <ro txt="Atribute"/>
     <sr_latin txt="Atributi"/>
     <zh_CN txt="属性"/>
+    <sl txt="Lastnosti"/>
   </Msg>
   <Msg id="color">
     <de txt="Farbe"/>
@@ -13999,6 +14274,7 @@
     <ro txt="Culoare"/>
     <sr_latin txt="Boja"/>
     <zh_CN txt="颜色"/>
+    <sl txt="Barva"/>
   </Msg>
   <Msg id="background">
     <de txt="Hintergrund"/>
@@ -14025,6 +14301,7 @@
     <ro txt="Fundal"/>
     <sr_latin txt="Pozadina"/>
     <zh_CN txt="背景"/>
+    <sl txt="Ozadje"/>
   </Msg>
   <Msg id="bold">
     <de txt="fett"/>
@@ -14049,6 +14326,7 @@
     <ro txt="îngroșat"/>
     <sr_latin txt="podebljano"/>
     <zh_CN txt="粗体"/>
+    <sl txt="krepko"/>
   </Msg>
   <Msg id="italic">
     <de txt="kursiv"/>
@@ -14074,6 +14352,7 @@
     <ro txt="înclinat"/>
     <sr_latin txt="ukoso"/>
     <zh_CN txt="斜体"/>
+    <sl txt="ležeče"/>
   </Msg>
   <Msg id="underlined">
     <de txt="unterstrichen"/>
@@ -14099,6 +14378,7 @@
     <ro txt="subliniat"/>
     <sr_latin txt="podvučeno"/>
     <zh_CN txt="下划线"/>
+    <sl txt="podčrtano"/>
   </Msg>
   <Msg id="transparent">
     <de txt="durchsichtig"/>
@@ -14124,6 +14404,7 @@
     <ro txt="transparent"/>
     <sr_latin txt="providno"/>
     <zh_CN txt="透明"/>
+    <sl txt="prosojno"/>
   </Msg>
   <Msg id="swcmd">
     <de txt="Weichenbefehl"/>
@@ -14148,6 +14429,7 @@
     <ro txt="Comandă schimbător"/>
     <sr_latin txt="Komanda skretnice"/>
     <zh_CN txt="转辙机命令"/>
+    <sl txt="Ukaz preklopnika"/>
   </Msg>
   <Msg id="doc_report">
     <de txt="Dokumentation"/>
@@ -14174,6 +14456,7 @@
     <ro txt="Documentație"/>
     <sr_latin txt="Dokumentacija"/>
     <zh_CN txt="文档"/>
+    <sl txt="Dokumentacija"/>
   </Msg>
   <Msg id="xslpath">
     <de txt="XSL-Verzeichnis"/>
@@ -14199,6 +14482,7 @@
     <ro txt="Cale XSL"/>
     <sr_latin txt="XSL putanja"/>
     <zh_CN txt="XSL文件路径"/>
+    <sl txt="XSL pot"/>
   </Msg>
   <Msg id="showid">
     <de txt="Kennungen anzeigen" tip="Show object ID's."/>
@@ -14224,6 +14508,7 @@
     <ro txt="Arată identități"/>
     <sr_latin txt="Prikaži ID"/>
     <zh_CN txt="显示"/>
+    <sl txt="Pokaži ID-je"/>
   </Msg>
   <Msg id="modpanel">
     <de txt="Modulplan"/>
@@ -14248,6 +14533,7 @@
     <ro txt="Planul modulelor"/>
     <sr_latin txt="Modularni plan"/>
     <zh_CN txt="模块规划"/>
+    <sl txt="Načrt modula"/>
   </Msg>
   <Msg id="addmodule">
     <de txt="Module hinzufügen"/>
@@ -14273,6 +14559,7 @@
     <ro txt="Adaugă modul"/>
     <sr_latin txt="Dodaj modul"/>
     <zh_CN txt="增加模块"/>
+    <sl txt="Dodaj modul"/>
   </Msg>
   <Msg id="blockoccupancy">
     <de txt="Blockbelegung"/>
@@ -14296,6 +14583,7 @@
     <ro txt="Ocupare bloc"/>
     <sr_latin txt="Zauzeće bloka"/>
     <zh_CN txt="块占用"/>
+    <sl txt="Zasedenost odseka"/>
   </Msg>
   <Msg id="modproperties" dialog="true">
     <de txt="Moduleigenschaften"/>
@@ -14321,6 +14609,7 @@
     <ro txt="Proprietăți modul"/>
     <sr_latin txt="Svojstva modula"/>
     <zh_CN txt="模块属性"/>
+    <sl txt="Lastnosti modula"/>
   </Msg>
   <Msg id="modid">
     <de txt="Modul-Kennung"/>
@@ -14346,6 +14635,7 @@
     <ro txt="Identitate modul"/>
     <sr_latin txt="ID modula"/>
     <zh_CN txt="模块ID"/>
+    <sl txt="ID modula"/>
   </Msg>
   <Msg id="connections">
     <de txt="Verbindungen"/>
@@ -14372,6 +14662,7 @@
     <ro txt="Conexiuni"/>
     <sr_latin txt="Veze"/>
     <zh_CN txt="连接数"/>
+    <sl txt="Povezave"/>
   </Msg>
   <Msg id="rotation">
     <de txt="Drehung"/>
@@ -14398,6 +14689,7 @@
     <ro txt="Rotație"/>
     <sr_latin txt="Rotacija"/>
     <zh_CN txt="旋转"/>
+    <sl txt="Zasuk"/>
   </Msg>
   <Msg id="side">
     <de txt="Seite"/>
@@ -14423,6 +14715,7 @@
     <ca txt="Lateral"/>
     <sr_latin txt="Strana"/>
     <zh_CN txt="边缘"/>
+    <sl txt="Stran"/>
   </Msg>
   <Msg id="initfieldpause">
     <de txt="Pause bei Initialisierung"/>
@@ -14493,6 +14786,7 @@
     <ca txt="Permet retroinformació d'agulles"/>
     <sr_latin txt="Omogući povratnu vezu skretnice"/>
     <zh_CN txt="转辙机反馈有效"/>
+    <sl txt="Omogoči povratne informacije preklopnika"/>
   </Msg>
   <Msg id="unusedfbevent">
     <de txt="Ereignis von Block [%s] wird nicht benutzt. Aus der Liste entfernen?"/>
@@ -14517,6 +14811,7 @@
     <ca txt="Esdeveniment del bloc [%s] no usat. Esborrar-lo de la llista?"/>
     <sr_latin txt="Događaj iz bloka [%s] se ne koristi. Ukloni ga sa liste?"/>
     <zh_CN txt="来自区间[%s]的事件没有被使用。从列表中删除它？"/>
+    <sl txt="Dogodek iz odseka [%s] ni v uporabi. Odstranim iz seznama?"/>
   </Msg>
   <Msg id="allowchgdir">
     <de txt="Richtungswechsel erlaubt"/>
@@ -14542,6 +14837,7 @@
     <ca txt="Permet canvi de sentit"/>
     <sr_latin txt="Dozvoli promenu smera"/>
     <zh_CN txt="允许转换行驶方向"/>
+    <sl txt="Dovoli spremembo smeri"/>
   </Msg>
   <Msg id="eventtimeout">
     <de txt="Ereignis-Zeitüberschreitung"/>
@@ -14565,6 +14861,7 @@
     <ro txt="Timp depășit eveniment"/>
     <sr_latin txt="Trajanje događaja"/>
     <zh_CN txt="事件超时"/>
+    <sl txt="Časovna omejitev dogodka"/>
   </Msg>
   <Msg id="accessory">
     <de txt="Zubehör"/>
@@ -14665,6 +14962,7 @@
     <ro txt="Verifică Tx"/>
     <sr_latin txt="Proveri Tx"/>
     <zh_CN txt="检测Tx信号"/>
+    <sl txt="Preveri Tx"/>
   </Msg>
   <Msg id="signalreset">
     <de txt="Signal zurücksetzen"/>
@@ -14690,6 +14988,7 @@
     <ca txt="Reseteja senyal"/>
     <sr_latin txt="Poništi signal"/>
     <zh_CN txt="信号灯复位"/>
+    <sl txt="Ponastavi signal"/>
   </Msg>
   <Msg id="routeswtime">
     <de txt="Schaltzeit für Fahrstraße"/>
@@ -14738,6 +15037,7 @@
     <ca txt="Redueix la velocitat"/>
     <sr_latin txt="Smanji brzinu"/>
     <zh_CN txt="减速"/>
+    <sl txt="Zmanjšaj hitrost"/>
   </Msg>
   <Msg id="conditions">
     <de txt="Bedingungen"/>
@@ -14764,6 +15064,7 @@
     <ro txt="Condiții"/>
     <sr_latin txt="Uslovi"/>
     <zh_CN txt="条件"/>
+    <sl txt="Pogoji"/>
   </Msg>
   <Msg id="resumeall">
     <de txt="Alle Züge wieder starten" tip="Versetzt alle Züge in den Automatikbetrieb aus der letzte Sitzung."/>
@@ -14788,6 +15089,7 @@
     <sr_latin txt="Nastavi sa svim loko."/>
     <ja txt="全ての機関車を再開"/>
     <zh_CN txt="所有机车恢复"/>
+    <sl txt="Nadaljuj z vsemi lokomotivami"/>
   </Msg>
   <Msg id="resumeallwarning">
     <de txt="Alle Züge aus letzter Sitzung jetzt starten?"/>
@@ -14811,6 +15113,7 @@
     <ro txt="Pornim locomotivele din sesiunea precedentă ?"/>
     <sr_latin txt="Pokreni sve loko. iz prethodne sesije?"/>
     <zh_CN txt="让所有机车恢复之前的运行状态吗？"/>
+    <sl txt="Poženem vse lokomotive glede na prejšnjo sejo?"/>
   </Msg>
   <Msg id="disablerouteVreduce">
     <de txt="Keine Geschwindigkeitsänderung bei Weichen"/>
@@ -14834,6 +15137,7 @@
     <sr_latin txt="Bez promene brzine na skretnicama"/>
     <ja txt="ポイントで速度変更しない"/>
     <zh_CN txt="无缝切换"/>
+    <sl txt="Brez sprememb hitrosti za preklopnike"/>
   </Msg>
   <Msg id="onlyfirstmaster">
     <de txt="Nur erster Client kann bedienen"/>
@@ -14859,6 +15163,7 @@
     <ro txt="Doar primul poate controla"/>
     <sr_latin txt="Samo prvi ima kontolu"/>
     <zh_CN txt="只允许控制第一个"/>
+    <sl txt="Nadzira lahko samo prvi"/>
   </Msg>
   <Msg id="defaspect">
     <de txt="Standard Signal-Begriff"/>
@@ -14883,6 +15188,7 @@
     <ro txt="Aspect semnal implicit"/>
     <sr_latin txt="Uobičajen signal"/>
     <zh_CN txt="默认相位信号"/>
+    <sl txt="Privzeto stanje signala"/>
   </Msg>
   <Msg id="greenaspect">
     <de txt="Grün wenn nächstes Signal Rot"/>
@@ -14907,6 +15213,7 @@
     <ro txt="Verde dacă următorul e roșu"/>
     <sr_latin txt="Zeleno ako je sledeće vrveno"/>
     <zh_CN txt="若前方为红色则显示绿灯"/>
+    <sl txt="Zeleni signal če je naslednji rdeči"/>
   </Msg>
   <Msg id="routeids">
     <de txt="Fahrstraßen-Kennungen"/>
@@ -14932,6 +15239,7 @@
     <sr_latin txt="ID ruta"/>
     <ja txt="ルートID"/>
     <zh_CN txt="路由IDs"/>
+    <sl txt="ID-ji poti"/>
   </Msg>
   <Msg id="sharedfb">
     <de txt="Gemeinsam benutzte Rückmelder"/>
@@ -14958,6 +15266,7 @@
     <sr_latin txt="Senzori koji se dele"/>
     <ja txt="共有のセンサ"/>
     <zh_CN txt="公用传感器"/>
+    <sl txt="Deljena tipala"/>
   </Msg>
   <Msg id="managetrackblocks">
     <de txt="Manage track blocks"/>
@@ -14983,6 +15292,7 @@
     <ro txt="Administrare linii blocate"/>
     <sr_latin txt="Upravljanje kolosekom u blokovima"/>
     <zh_CN txt="管理轨道区间"/>
+    <sl txt="Uredi tirni odsek"/>
   </Msg>
   <Msg id="skipsetsw">
     <de txt="Keine Weichenstellung bei richtiger Weichenlage" tip="Skip switch commands in routes if already set"/>
@@ -15007,6 +15317,7 @@
     <ro txt="Omite comanda schimbătoarelor"/>
     <sr_latin txt="Preskoči komande skretnica"/>
     <zh_CN txt="跳过转辙机命令"/>
+    <sl txt="Preskoči preklopne ukaze"/>
   </Msg>
   <Msg id="gamepad">
     <de txt="Gamepad"/>
@@ -15031,6 +15342,7 @@
     <sr_latin txt="Gejmpad"/>
     <ja txt="ゲームパッド"/>
     <zh_CN txt="手柄"/>
+    <sl txt="Igralni plošček"/>
   </Msg>
   <Msg id="restrictedit4auto">
     <de txt="Begrenze Editieren im Automatikmodus"/>
@@ -15079,6 +15391,7 @@
     <sr_latin txt="Vreme semafora"/>
     <ja txt="信号装置の時間"/>
     <zh_CN txt="信号机时间"/>
+    <sl txt="Čas semaforja"/>
   </Msg>
   <Msg id="lightsoff">
     <de txt="Licht aus"/>
@@ -15104,6 +15417,7 @@
     <sr_latin txt="Svetla isključena"/>
     <ja txt="照明オフ"/>
     <zh_CN txt="关闭灯光"/>
+    <sl txt="Izklop luči"/>
   </Msg>
   <Msg id="svg">
     <en txt="SVG"/>
@@ -15129,6 +15443,8 @@
     <nb txt="SVG"/>
     <ro txt="SVG"/>
     <sr_latin txt="SVG"/>
+    <sl txt="SVG"/>
+    <zh_CN txt="SVG"/>
   </Msg>
   <Msg id="followup">
     <de txt="Nachfolge"/>
@@ -15152,6 +15468,7 @@
     <ro txt="Urmare"/>
     <sr_latin txt="Sledi"/>
     <zh_CN txt="跟进"/>
+    <sl txt="Spremljaj"/>
   </Msg>
   <Msg id="ctsflow">
     <en txt="CTS Flow"/>
@@ -15176,6 +15493,7 @@
     <ca txt="Flux CTS"/>
     <sr_latin txt="CTS protok"/>
     <zh_CN txt="CTS流"/>
+    <sl txt="CTS tok"/>
   </Msg>
   <Msg id="savelocoiofileas">
     <de txt="Speichern der LocoIO-Datei als"/>
@@ -15201,6 +15519,7 @@
     <sr_latin txt="Sačuvaj LokoIO fajl kao"/>
     <ja txt="機関車情報ファイルの保存"/>
     <zh_CN txt="将机车输入输出文件另存为"/>
+    <sl txt="Shrani LocoIO datoteko kot"/>
   </Msg>
   <Msg id="openlocoiofile">
     <de txt="Öffnen einer LocoIO-Datei"/>
@@ -15226,6 +15545,7 @@
     <sr_latin txt="Učitaj LokoIO fajl"/>
     <ja txt="機関車情報ファイルを開く"/>
     <zh_CN txt="打开机车输入输出文件"/>
+    <sl txt="Odpri LocoIO datoteko"/>
   </Msg>
   <Msg id="roundhouse">
     <de txt="Ringlokschuppen"/>
@@ -15250,6 +15570,7 @@
     <ca txt="Cotxera"/>
     <sr_latin txt="Radionica za poravku"/>
     <zh_CN txt="扇形车库"/>
+    <sl txt="Kurilnica"/>
   </Msg>
   <Msg id="access">
     <de txt="Zufahrt"/>
@@ -15276,6 +15597,7 @@
     <ca txt="Accés"/>
     <sr_latin txt="Pristup"/>
     <zh_CN txt="权限"/>
+    <sl txt="Dostop"/>
   </Msg>
   <Msg id="ttdirpause">
     <de txt="Wartezeit für Richtungswechsel"/>
@@ -15299,6 +15621,7 @@
     <ro txt="Pauză schimbare direcție"/>
     <sr_latin txt="Pauza za promenu smera"/>
     <zh_CN txt="暂停转换方向"/>
+    <sl txt="Pavza ob spremembi smeri"/>
   </Msg>
   <Msg id="swaprotationdirection">
     <de txt="Wechsel der Drehrichtung"/>
@@ -15322,6 +15645,7 @@
     <en_GB txt="swap rotation direction"/>
     <sr_latin txt="promeni smer rotacije"/>
     <zh_CN txt="交换旋转方向"/>
+    <sl txt="zamenjaj smer vrtenja"/>
   </Msg>
   <Msg id="shortid">
     <en txt="Short ID"/>
@@ -15348,6 +15672,7 @@
     <sr_latin txt="Kratki ID"/>
     <ja txt="短縮ID"/>
     <zh_CN txt="短地址"/>
+    <sl txt="Kratki ID"/>
   </Msg>
   <Msg id="setshortid">
     <en txt="Set short ID"/>
@@ -15375,6 +15700,7 @@
     <sr_latin txt="Postavi kratak ID"/>
     <ja txt="短縮IDのセット"/>
     <zh_CN txt="设置短地址"/>
+    <sl txt="Nastavi karatki ID"/>
   </Msg>
   <Msg id="txshortids">
     <en txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
@@ -15400,6 +15726,7 @@
     <sr_latin txt="Pošalji kratke ID"/>
     <ja txt="短縮IDの送信"/>
     <zh_CN txt="发送短地址"/>
+    <sl txt="Oddajaj kratke ID-je"/>
   </Msg>
   <Msg id="cartable" dialog="true" key="Alt-4">
     <de txt="Wagenliste" tip="Wagontabelle"/>
@@ -15425,6 +15752,7 @@
     <sr_latin txt="Tabela vozila"/>
     <ja txt="機関車表"/>
     <zh_CN txt="车厢列表"/>
+    <sl txt="Seznam vagonov"/>
   </Msg>
   <Msg id="waybilltable" dialog="true" key="Alt-5">
     <de txt="Frachtscheine" tip="Frachtzetteltabelle"/>
@@ -15450,6 +15778,7 @@
     <sr_latin txt="Tabela putnih lista"/>
     <ja txt="乗客名簿"/>
     <zh_CN txt="运单表"/>
+    <sl txt="Seznam tovornih listov"/>
   </Msg>
   <Msg id="operatortable" dialog="true" key="Alt-6">
     <en txt="Operator table" alttxt="Operators" tip="Operator table"/>
@@ -15475,6 +15804,7 @@
     <ja txt="オペレータ表"/>
     <sv txt="Operatörstabell."/>
     <zh_CN txt="操作表"/>
+    <sl txt="Seznam operaterja"/>
   </Msg>
   <Msg id="operator">
     <en txt="Operator"/>
@@ -15501,6 +15831,7 @@
     <ja txt="オペレータ"/>
     <sv txt="Operatör"/>
     <zh_CN txt="操作"/>
+    <sl txt="Operater"/>
   </Msg>
   <Msg id="waybill">
     <de txt="Frachtschein"/>
@@ -15525,6 +15856,7 @@
     <ro txt="Foiae de drum"/>
     <sr_latin txt="Putna lista"/>
     <zh_CN txt="运单"/>
+    <sl txt="Tovorni list"/>
   </Msg>
   <Msg id="freezetime">
     <de txt="Uhrzeit anhalten"/>
@@ -15550,6 +15882,7 @@
     <sr_latin txt="Vreme zaustavljanja"/>
     <ja txt="停止時間"/>
     <zh_CN txt="冻结时钟"/>
+    <sl txt="Ustavi čas"/>
   </Msg>
   <Msg id="resumetime">
     <de txt="Uhrzeit fortsetzen"/>
@@ -15574,6 +15907,7 @@
     <sr_latin txt="Vreme nastavka"/>
     <ja txt="再開時間"/>
     <zh_CN txt="回复时钟"/>
+    <sl txt="Nadaljuj čas"/>
   </Msg>
   <Msg id="code">
     <de txt="Kode"/>
@@ -15601,6 +15935,7 @@
     <sr_latin txt="Kod"/>
     <ja txt="コード"/>
     <zh_CN txt="代码"/>
+    <sl txt="Koda"/>
   </Msg>
   <Msg id="roadname">
     <de txt="Gesellschaft"/>
@@ -15626,6 +15961,7 @@
     <ro txt="Numele căii"/>
     <sr_latin txt="Ime puta"/>
     <zh_CN txt="线路名称"/>
+    <sl txt="Ime ceste"/>
   </Msg>
   <Msg id="era">
     <de txt="Epoche"/>
@@ -15652,6 +15988,7 @@
     <sr_latin txt="Era"/>
     <ja txt="時代"/>
     <zh_CN txt="时代"/>
+    <sl txt="Era"/>
   </Msg>
   <Msg id="subtype">
     <de txt="Untergruppe"/>
@@ -15678,6 +16015,7 @@
     <ro txt="Subtip"/>
     <sr_latin txt="Podtip"/>
     <zh_CN txt="子类型"/>
+    <sl txt="Podvrsta"/>
   </Msg>
   <Msg id="car">
     <de txt="Wagen"/>
@@ -15704,6 +16042,7 @@
     <ca txt="Cotxe"/>
     <sr_latin txt="Vozilo"/>
     <zh_CN txt="车厢"/>
+    <sl txt="Avtomobil"/>
   </Msg>
   <Msg id="poladdr">
     <en txt="Polarization addr."/>
@@ -15728,6 +16067,7 @@
     <ro txt="Adres polarizării"/>
     <sr_latin txt="Adresa polarizacije"/>
     <zh_CN txt="极化地址"/>
+    <sl txt="Naslov polarizacije."/>
   </Msg>
   <Msg id="ttbridgepolarization">
     <en txt="Bridge polarization"/>
@@ -15751,6 +16091,7 @@
     <en_GB txt="Bridge polarisation"/>
     <sr_latin txt="Polarizacija mosta"/>
     <zh_CN txt="桥接极化"/>
+    <sl txt="Polarizacija mostiča"/>
   </Msg>
   <Msg id="readspeedcurve">
     <en txt="Read current speed curve from decoder?"/>
@@ -15774,6 +16115,7 @@
     <sr_latin txt="Pročitaj tekuću krivu brzine iz dekodera?"/>
     <sv txt="Läs nuvarande hastighetskurva från dekoder?"/>
     <zh_CN txt="从解码器读取当前速度曲线"/>
+    <sl txt="Preberem trenutno hitrostno krivuljo iz dekoderja?"/>
   </Msg>
   <Msg id="sync">
     <en txt="Synchronize"/>
@@ -15801,6 +16143,7 @@
     <sr_latin txt="Sinhronizuj"/>
     <ja txt="同期"/>
     <zh_CN txt="同步"/>
+    <sl txt="Sinhroniziraj"/>
   </Msg>
   <Msg id="onlymobiledec">
     <en txt="Mobile only"/>
@@ -15824,6 +16167,7 @@
     <sr_latin txt="Samo mobilno"/>
     <sv txt="Endast mobil."/>
     <zh_CN txt="仅适用无线控制器"/>
+    <sl txt="Samo mobilne"/>
   </Msg>
   <Msg id="purgeslots">
     <en txt="Purge slots"/>
@@ -15886,6 +16230,7 @@
     <es txt="Utilizar evento shortin"/>
     <sr_latin txt="Koristi shortin događaj"/>
     <zh_CN txt="使用短事件"/>
+    <sl txt="Uporabi dogodek \&quot;shortin\&quot;"/>
   </Msg>
   <Msg id="inatpre2in">
     <en txt="Stop at pre2in event"/>
@@ -15906,6 +16251,7 @@
     <en_GB txt="Stop at pre2in event"/>
     <sr_latin txt="Stani na pre2in događaj"/>
     <zh_CN txt="在两事件即将同时发生时停止"/>
+    <sl txt="Stop ob dogodku \&quot;pre2in\&quot;"/>
   </Msg>
   <Msg id="routing">
     <en txt="Routing"/>
@@ -15928,6 +16274,7 @@
     <ca txt="Itineraris"/>
     <sr_latin txt="Rutiranje"/>
     <zh_CN txt="路线"/>
+    <sl txt="Usmerjanje"/>
   </Msg>
   <Msg id="shipper">
     <en txt="Shipper"/>
@@ -15950,6 +16297,7 @@
     <en_GB txt="Shipper"/>
     <sr_latin txt="Prevoznik"/>
     <zh_CN txt="发货人"/>
+    <sl txt="Pošiljatelj"/>
   </Msg>
   <Msg id="origin">
     <en txt="Origin"/>
@@ -15974,6 +16322,7 @@
     <en_GB txt="Origin"/>
     <sr_latin txt="Poreklo"/>
     <zh_CN txt="来源"/>
+    <sl txt="Poreklo"/>
   </Msg>
   <Msg id="consignee">
     <en txt="Consignee"/>
@@ -15997,6 +16346,7 @@
     <en_GB txt="Consignee"/>
     <sr_latin txt="Primalac"/>
     <zh_CN txt="收货人"/>
+    <sl txt="Prejemnik"/>
   </Msg>
   <Msg id="commodity">
     <en txt="Commodity"/>
@@ -16020,6 +16370,7 @@
     <en_GB txt="Commodity"/>
     <sr_latin txt="Roba"/>
     <zh_CN txt="商品"/>
+    <sl txt="Blago"/>
   </Msg>
   <Msg id="status">
     <en txt="Status"/>
@@ -16046,6 +16397,7 @@
     <sr_latin txt="Status"/>
     <ja txt="状態"/>
     <zh_CN txt="状态"/>
+    <sl txt="Stanje"/>
   </Msg>
   <Msg id="waiting">
     <en txt="Waiting"/>
@@ -16072,6 +16424,7 @@
     <sr_latin txt="Čekanje"/>
     <ja txt="大気中"/>
     <zh_CN txt="等待中"/>
+    <sl txt="Čakanje"/>
   </Msg>
   <Msg id="shipping">
     <en txt="Shipping"/>
@@ -16095,6 +16448,7 @@
     <sr_latin txt="Otprema"/>
     <ja txt="移動中"/>
     <zh_CN txt="付运"/>
+    <sl txt="Dostava"/>
   </Msg>
   <Msg id="delivered">
     <en txt="Delivered"/>
@@ -16119,6 +16473,7 @@
     <sr_latin txt="Dostavljeno"/>
     <ja txt="到着済"/>
     <zh_CN txt="已交付"/>
+    <sl txt="Dostavljeno"/>
   </Msg>
   <Msg id="empty">
     <en txt="Empty"/>
@@ -16145,6 +16500,7 @@
     <sr_latin txt="Prazno"/>
     <ja txt="空"/>
     <zh_CN txt="空"/>
+    <sl txt="Prazno"/>
   </Msg>
   <Msg id="loaded">
     <en txt="Loaded"/>
@@ -16171,6 +16527,7 @@
     <sr_latin txt="Učitano"/>
     <ja txt="ロード済"/>
     <zh_CN txt="装载的"/>
+    <sl txt="Naloženo"/>
   </Msg>
   <Msg id="maintenance">
     <en txt="Maintenance"/>
@@ -16195,6 +16552,7 @@
     <en_GB txt="Maintenance"/>
     <sr_latin txt="Održavanja"/>
     <zh_CN txt="维护"/>
+    <sl txt="Vzdrževanje"/>
   </Msg>
   <Msg id="boxcar">
     <en txt="Boxcar"/>
@@ -16217,6 +16575,7 @@
     <en_GB txt="Boxcar"/>
     <sr_latin txt="Teretni vagon"/>
     <zh_CN txt="棚车"/>
+    <sl txt="Pokriti tovorni vagon"/>
   </Msg>
   <Msg id="gondola">
     <en txt="Gondola"/>
@@ -16239,6 +16598,7 @@
     <ca txt="Góndola"/>
     <sr_latin txt="Gondola"/>
     <zh_CN txt="吊舱"/>
+    <sl txt="Gondola"/>
   </Msg>
   <Msg id="flatcar">
     <en txt="Flatcar"/>
@@ -16260,6 +16620,7 @@
     <es txt="Plataforma"/>
     <sr_latin txt="Otvoren teretni vagon"/>
     <zh_CN txt="敞车"/>
+    <sl txt="Odprti tovorni vagon"/>
   </Msg>
   <Msg id="reefer">
     <en txt="Reefer"/>
@@ -16283,6 +16644,7 @@
     <es txt="Furgón"/>
     <sr_latin txt="Rifer"/>
     <zh_CN txt="冷藏车"/>
+    <sl txt="Hladilni vagon"/>
   </Msg>
   <Msg id="stockcar">
     <en txt="Stockcar"/>
@@ -16304,6 +16666,7 @@
     <es txt="Borreguero"/>
     <sr_latin txt="Stočni furgon"/>
     <zh_CN txt="牲畜车"/>
+    <sl txt="Živinski vagon"/>
   </Msg>
   <Msg id="tankcar">
     <en txt="Tankcar"/>
@@ -16327,6 +16690,7 @@
     <en_GB txt="Tankcar"/>
     <sr_latin txt="Vagon cisterna"/>
     <zh_CN txt="罐车"/>
+    <sl txt="Cisterna"/>
   </Msg>
   <Msg id="wellcar">
     <en txt="Wellcar"/>
@@ -16348,6 +16712,7 @@
     <es txt="Plataforma baja"/>
     <sr_latin txt="Kontejnerski vagon"/>
     <zh_CN txt="元宝车"/>
+    <sl txt="Kontejnerski vagon"/>
   </Msg>
   <Msg id="hopper">
     <en txt="Hopper"/>
@@ -16368,6 +16733,7 @@
     <en_GB txt="Hopper"/>
     <sr_latin txt="Kontejner"/>
     <zh_CN txt="料斗车"/>
+    <sl txt="Odprti vagon"/>
   </Msg>
   <Msg id="caboose">
     <en txt="Caboose"/>
@@ -16390,6 +16756,7 @@
     <en_GB txt="Caboose"/>
     <sr_latin txt="Poslednji vagon"/>
     <zh_CN txt="守车"/>
+    <sl txt="Službeni vagon"/>
   </Msg>
   <Msg id="autorack">
     <en txt="Autorack"/>
@@ -16411,6 +16778,7 @@
     <es txt="Vagón coches"/>
     <sr_latin txt="Auto vagon"/>
     <zh_CN txt="汽车运输车"/>
+    <sl txt="Vagon za avtomobile"/>
   </Msg>
   <Msg id="autocarrier">
     <en txt="Autocarrier"/>
@@ -16432,6 +16800,7 @@
     <en_GB txt="Autocarrier"/>
     <sr_latin txt="Auto vagon"/>
     <zh_CN txt="公路卡车"/>
+    <sl txt="Avtovlak"/>
   </Msg>
   <Msg id="logdumpcar">
     <en txt="Logdumpcar"/>
@@ -16451,6 +16820,7 @@
     <en_GB txt="Logdumpcar"/>
     <es txt="Plataforma mercancías"/>
     <zh_CN txt="原木运输车"/>
+    <sl txt="Vagon za hlodovino"/>
   </Msg>
   <Msg id="coilcar">
     <en txt="Coilcar"/>
@@ -16471,6 +16841,7 @@
     <en_CA txt="Coilcar"/>
     <en_GB txt="Coilcar"/>
     <zh_CN txt="钢卷运输车"/>
+    <sl txt="Vagon za pločevino"/>
   </Msg>
   <Msg id="coach">
     <en txt="Coach"/>
@@ -16493,6 +16864,7 @@
     <en_GB txt="Coach"/>
     <sr_latin txt="Kola"/>
     <zh_CN txt="客车（美）"/>
+    <sl txt="Potniški vagon"/>
   </Msg>
   <Msg id="lounge">
     <en txt="Lounge"/>
@@ -16516,6 +16888,7 @@
     <ja txt="ラウンジ"/>
     <sr_latin txt="Čekaonica"/>
     <zh_CN txt="休息室"/>
+    <sl txt="Jedilni vagon"/>
   </Msg>
   <Msg id="dome">
     <en txt="Dome"/>
@@ -16539,6 +16912,7 @@
     <ja txt="ドーム"/>
     <sr_latin txt="Kupola"/>
     <zh_CN txt="玻璃穹顶观光车"/>
+    <sl txt="Razgledni vagon"/>
   </Msg>
   <Msg id="express">
     <en txt="Express"/>
@@ -16564,6 +16938,7 @@
     <ja txt="急行"/>
     <sv txt="Express."/>
     <zh_CN txt="快运"/>
+    <sl txt="Ekspresni"/>
   </Msg>
   <Msg id="dinner">
     <en txt="Dinner"/>
@@ -16589,6 +16964,7 @@
     <sr_latin txt="Kola za ručavanje"/>
     <ja txt="夕食"/>
     <zh_CN txt="餐车"/>
+    <sl txt="Jedilni"/>
   </Msg>
   <Msg id="sleeper">
     <en txt="Sleeper"/>
@@ -16614,6 +16990,7 @@
     <sr_latin txt="Spavaća kola"/>
     <ja txt="寝巻き"/>
     <zh_CN txt="卧铺车"/>
+    <sl txt="Spalnik"/>
   </Msg>
   <Msg id="baggage">
     <en txt="Baggage"/>
@@ -16639,6 +17016,7 @@
     <sr_latin txt="Prtljag"/>
     <sv txt="Bagage."/>
     <zh_CN txt="行李车"/>
+    <sl txt="Prtljažni"/>
   </Msg>
   <Msg id="postoffice">
     <en txt="Postoffice"/>
@@ -16664,6 +17042,7 @@
     <ja txt="郵便局"/>
     <sv txt="Postkontor."/>
     <zh_CN txt="邮政车"/>
+    <sl txt="Poštni"/>
   </Msg>
   <Msg id="lock">
     <en txt="Lock"/>
@@ -16688,6 +17067,7 @@
     <sr_latin txt="Zaključaj"/>
     <sv txt="Låsa."/>
     <zh_CN txt="锁定"/>
+    <sl txt="Zakleni"/>
   </Msg>
   <Msg id="invalidid">
     <en txt="The ID must be at least one character!"/>
@@ -16707,6 +17087,7 @@
     <sr_latin txt="ID mora biti barem jedno slovo"/>
     <sv txt="ID:t måste innehålla minst ett tecken!"/>
     <zh_CN txt="ID必须是至少有一个字符！"/>
+    <sl txt="ID mora biti vsaj en znak!"/>
   </Msg>
   <Msg id="minocc">
     <en txt="Minimal occupied"/>
@@ -16725,6 +17106,7 @@
     <en_GB txt="Minimal occupied"/>
     <sr_latin txt="Najmanje zauzeto"/>
     <zh_CN txt="最小占用"/>
+    <sl txt="Minimalno zaseden"/>
   </Msg>
   <Msg id="timeprocessing">
     <en txt="Time processing"/>
@@ -16743,6 +17125,7 @@
     <en_GB txt="Time processing"/>
     <sr_latin txt="Vreme obrade"/>
     <zh_CN txt="时钟处理"/>
+    <sl txt="Čas obdelave"/>
   </Msg>
   <Msg id="real">
     <en txt="Absolute"/>
@@ -16765,6 +17148,7 @@
     <sr_latin txt="Apsolutno"/>
     <sv txt="Absolut."/>
     <zh_CN txt="绝对"/>
+    <sl txt="Absolutno"/>
   </Msg>
   <Msg id="relative">
     <en txt="Relative"/>
@@ -16786,6 +17170,7 @@
     <sr_latin txt="Relativno"/>
     <sv txt="Relativ."/>
     <zh_CN txt="相对"/>
+    <sl txt="Relativno"/>
   </Msg>
   <Msg id="hourly">
     <en txt="Hourly"/>
@@ -16808,6 +17193,7 @@
     <sr_latin txt="Na sat"/>
     <sv txt="Varje timme."/>
     <zh_CN txt="每小时"/>
+    <sl txt="Urno"/>
   </Msg>
   <Msg id="fullscreen">
     <en txt="Full screen"/>
@@ -16831,6 +17217,7 @@
     <nb txt="Full skjerm"/>
     <sr_latin txt="Pun ekran"/>
     <zh_CN txt="全屏"/>
+    <sl txt="Celozaslonski način"/>
   </Msg>
   <Msg id="timeframe">
     <en txt="Time frame"/>
@@ -16853,6 +17240,7 @@
     <sr_latin txt="Vremenski okvir"/>
     <sv txt="Tidsfönster."/>
     <zh_CN txt="时间框"/>
+    <sl txt="Časovni okvir"/>
   </Msg>
   <Msg id="usebicom">
     <en txt="Use Bi-Directional Communication"/>
@@ -16873,6 +17261,7 @@
     <en_GB txt="Use Bi-Directional Communication"/>
     <sr_latin txt="Koristi obostranu komunikaciju"/>
     <zh_CN txt="使用双向通信"/>
+    <sl txt="Uporabi dvosmerno komunikacijo"/>
   </Msg>
   <Msg id="serviced">
     <en txt="Serviced" tip="Set locomotive to serviced."/>
@@ -16893,6 +17282,7 @@
     <sr_latin txt="Servisirano"/>
     <sv txt="Servat."/>
     <zh_CN txt="服务"/>
+    <sl txt="Servisirano"/>
   </Msg>
   <Msg id="mtime">
     <en txt="M-Time" tip="Last serviced run time."/>
@@ -16912,6 +17302,7 @@
     <en_GB txt="M-Time"/>
     <sr_latin txt="M-vreme"/>
     <zh_CN txt="M-时间"/>
+    <sl txt="M-Time"/>
   </Msg>
   <Msg id="mint">
     <en txt="M-Int" tip="Maintenance interval in hours."/>
@@ -16930,6 +17321,8 @@
     <en_CA txt="M-Int"/>
     <en_GB txt="M-Int"/>
     <sr_latin txt="M-int"/>
+    <sl txt="M-Int"/>
+    <zh_CN txt="M-Int"/>
   </Msg>
   <Msg id="offpos">
     <en txt="Shutdown position"/>
@@ -16950,6 +17343,7 @@
     <en_GB txt="Shutdown position"/>
     <sr_latin txt="Pozicija isključivanja"/>
     <zh_CN txt="关闭位置"/>
+    <sl txt="Položaj zaustavitve"/>
   </Msg>
   <Msg id="position">
     <en txt="Position"/>
@@ -16974,6 +17368,7 @@
     <ja txt="位置"/>
     <sv txt="Position."/>
     <zh_CN txt="位置"/>
+    <sl txt="Položaj"/>
   </Msg>
   <Msg id="motoroffdelay">
     <en txt="Motor off delay"/>
@@ -16992,6 +17387,7 @@
     <sr_latin txt="Zadrška motora"/>
     <ja txt="遅延モータ停止"/>
     <zh_CN txt="马达关闭延迟"/>
+    <sl txt="Zakasnitev izklopa motorja"/>
   </Msg>
   <Msg id="stopatidentmismatch">
     <en txt="Power off at ident mismatch"/>
@@ -17030,6 +17426,7 @@
     <ja txt="手動運転"/>
     <sv txt="Manuell manöverering."/>
     <zh_CN txt="手动操作"/>
+    <sl txt="Ročno upravljan"/>
   </Msg>
   <Msg id="autooperated">
     <en txt="Automatically operated"/>
@@ -17051,6 +17448,7 @@
     <ja txt="自動運転"/>
     <sv txt="Automatisk manöverering."/>
     <zh_CN txt="自动运行"/>
+    <sl txt="Avtomatično upravljan"/>
   </Msg>
   <Msg id="import" dialog="true">
     <en txt="Import"/>
@@ -17072,6 +17470,7 @@
     <ja txt="インポート"/>
     <sv txt="Importera."/>
     <zh_CN txt="导入"/>
+    <sl txt="Uvozi"/>
   </Msg>
   <Msg id="chain">
     <en txt="Chain"/>
@@ -17138,6 +17537,7 @@
     <ja txt="センサのショートカット"/>
     <sv txt="Kortslutningssensor."/>
     <zh_CN txt="快捷传感器"/>
+    <sl txt="Tipalo kratkega stika"/>
   </Msg>
   <Msg id="shortcut">
     <de txt="Kurzschluss"/>
@@ -17161,6 +17561,7 @@
     <ja txt="ショートカット"/>
     <sv txt="Kortslutning."/>
     <zh_CN txt="近路"/>
+    <sl txt="Bližnjica"/>
   </Msg>
   <Msg id="boostertable" dialog="true">
     <en txt="Boosters" tip="Booster setup for power manager."/>
@@ -17180,6 +17581,7 @@
     <sr_latin txt="Busteri"/>
     <ja txt="ブースター"/>
     <zh_CN txt="增压器"/>
+    <sl txt="Ojačevalniki"/>
   </Msg>
   <Msg id="powerctrl" dialog="true">
     <en txt="Power control" tip="Power manager booster control."/>
@@ -17201,6 +17603,7 @@
     <sr_latin txt="Kontrola napajanja"/>
     <ja txt="電力制御"/>
     <zh_CN txt="电源控制"/>
+    <sl txt="Nadzor napajanja"/>
   </Msg>
   <Msg id="boosterid">
     <en txt="Booster ID"/>
@@ -17220,6 +17623,7 @@
     <sr_latin txt="ID bustera"/>
     <ja txt="ブースターID"/>
     <zh_CN txt="增压器编号"/>
+    <sl txt="ID ojačevalnika"/>
   </Msg>
   <Msg id="trackpower">
     <en txt="Track power"/>
@@ -17239,6 +17643,7 @@
     <es txt="Alimentar vía"/>
     <sr_latin txt="Napon koloseka"/>
     <zh_CN txt="轨道电源"/>
+    <sl txt="Napajanje tirov"/>
   </Msg>
   <Msg id="powerdistrict">
     <en txt="District"/>
@@ -17260,6 +17665,7 @@
     <nb txt="Distrikt"/>
     <sr_latin txt="Oblast"/>
     <zh_CN txt="区间"/>
+    <sl txt="Okrožje"/>
   </Msg>
   <Msg id="fastclock">
     <en txt="Fastclock"/>
@@ -17279,6 +17685,7 @@
     <sr_latin txt="Brzi sat"/>
     <sv txt="Snabbklocka."/>
     <zh_CN txt="快速时钟"/>
+    <sl txt="Hitra ura"/>
   </Msg>
   <Msg id="poweronstartup">
     <en txt="Power on at startup"/>
@@ -17298,6 +17705,7 @@
     <sr_latin txt="Uklučeno kod pokretanja"/>
     <sv txt="Spänning på vid uppstart."/>
     <zh_CN txt="开机自动加电"/>
+    <sl txt="Vklop napajanja ob zagonu"/>
   </Msg>
   <Msg id="offset">
     <en txt="Offset"/>
@@ -17318,6 +17726,7 @@
     <ja txt="オフセット"/>
     <sv txt="Förskjutning."/>
     <zh_CN txt="偏移量"/>
+    <sl txt="Odmik"/>
   </Msg>
   <Msg id="debounce">
     <en txt="Debounce"/>
@@ -17353,6 +17762,7 @@
     <en_GB txt="Power off all boosters."/>
     <sr_latin txt="Isključi sve bustere"/>
     <zh_CN txt="关闭所有增压器电源"/>
+    <sl txt="Izklopi vse ojačevalnike."/>
   </Msg>
   <Msg id="scopt_stoplocos">
     <en txt="Stop all locos in this district."/>
@@ -17371,6 +17781,7 @@
     <en_GB txt="Stop all locos in this district."/>
     <sr_latin txt="Zaustavi sve loko. u ovoj oblasti."/>
     <zh_CN txt="停止该区间的所有机车"/>
+    <sl txt="Ustavi vse lokomotive v okrožju."/>
   </Msg>
   <Msg id="scopt_repoweron">
     <en txt="Repower on after the shortcut is cleared."/>
@@ -17390,6 +17801,7 @@
     <sr_latin txt="Uključi napon pošto je kratak spoj otklonjen."/>
     <sv txt="Återställ strömmen när kortslutningen är borta."/>
     <zh_CN txt="修复短路问题后自动加电"/>
+    <sl txt="Vklopi napajanje ob odpravi kratkega stika."/>
   </Msg>
   <Msg id="multiport">
     <en txt="Multiport"/>
@@ -17426,6 +17838,7 @@
     <en_GB txt="Item ID pointsize"/>
     <es txt="Tamaño del Item ID"/>
     <sr_latin txt="Veličina ID naslova"/>
+    <zh_CN txt="提示栏文字大小"/>
   </Msg>
   <Msg id="timeout">
     <en txt="Timeout"/>
@@ -17447,6 +17860,7 @@
     <sr_latin txt="Tajm-aut"/>
     <ja txt="タイムアウト"/>
     <zh_CN txt="超时"/>
+    <sl txt="Zakasnitev"/>
   </Msg>
   <Msg id="virtual">
     <en txt="Virtual"/>
@@ -17470,6 +17884,7 @@
     <sr_latin txt="Virtualan"/>
     <sv txt="Virituell."/>
     <zh_CN txt="虚拟"/>
+    <sl txt="Navidezno"/>
   </Msg>
   <Msg id="smallsymbol">
     <en txt="Small symbol"/>
@@ -17490,6 +17905,7 @@
     <sr_latin txt="Mali simbol"/>
     <sv txt="Liten symbol."/>
     <zh_CN txt="小符号"/>
+    <sl txt="Majhni simboli"/>
   </Msg>
   <Msg id="modview">
     <en txt="Module view"/>
@@ -17508,6 +17924,7 @@
     <sr_latin txt="Pregled modula"/>
     <sv txt="Modul översikt."/>
     <zh_CN txt="模块视图"/>
+    <sl txt="Pogled modula"/>
   </Msg>
   <Msg id="post">
     <en txt="Post"/>
@@ -17528,6 +17945,7 @@
     <nb txt="Post"/>
     <sr_latin txt="Objaviti"/>
     <zh_CN txt="提交"/>
+    <sl txt="Objava"/>
   </Msg>
   <Msg id="all">
     <en txt="All"/>
@@ -17551,6 +17969,7 @@
     <sr_latin txt="Svi"/>
     <sv txt="Alla."/>
     <zh_CN txt="全部"/>
+    <sl txt="Vsi"/>
   </Msg>
   <Msg id="netroutes">
     <en txt="NetRoutes"/>
@@ -17589,6 +18008,7 @@
     <en_GB txt="Restore functions"/>
     <sr_latin txt="Povrati funkcije"/>
     <zh_CN txt="恢复功能"/>
+    <sl txt="Obnovi funkcije"/>
   </Msg>
   <Msg id="maxtrainlen">
     <en txt="Max. train length"/>
@@ -17609,6 +18029,7 @@
     <en_GB txt="Max. train length"/>
     <sr_latin txt="Maks. dužina voza"/>
     <zh_CN txt="最大火车长度"/>
+    <sl txt="Max dolžina vlaka"/>
   </Msg>
   <Msg id="owner">
     <en txt="Owner"/>
@@ -17631,6 +18052,7 @@
     <nb txt="Eier"/>
     <sr_latin txt="Vlasnik"/>
     <zh_CN txt="所有者"/>
+    <sl txt="Lastnik"/>
   </Msg>
   <Msg id="cartype">
     <en txt="Car type"/>
@@ -17653,6 +18075,7 @@
     <sr_latin txt="Vrsta vozila"/>
     <ja txt="機関車の種類"/>
     <zh_CN txt="车辆类型"/>
+    <sl txt="Tip vagona"/>
   </Msg>
   <Msg id="routestolock">
     <en txt="Routes to lock"/>
@@ -17695,6 +18118,7 @@
     <sr_latin txt="sec."/>
     <ja txt="秒"/>
     <zh_CN txt="秒"/>
+    <sl txt="sek."/>
   </Msg>
   <Msg id="interval">
     <en txt="Interval"/>
@@ -17716,6 +18140,7 @@
     <sr_latin txt="Interval"/>
     <ja txt="間隔"/>
     <zh_CN txt="间隔"/>
+    <sl txt="Interval"/>
   </Msg>
   <Msg id="crossingblocksignals">
     <en txt="Crossing block signals"/>
@@ -17751,6 +18176,7 @@
     <en_GB txt="Edit module plan"/>
     <sr_latin txt="Prepravi plan modula"/>
     <zh_CN txt="编辑模块计划"/>
+    <sl txt="Uredi načrt modula"/>
   </Msg>
   <Msg id="dispatchmode">
     <en txt="Use mode column to dispatch"/>
@@ -17786,6 +18212,7 @@
     <sr_latin txt="Isključi napajanje za voz-duh"/>
     <sv txt="Gör strömlöst vid spöktåg."/>
     <zh_CN txt="列车失控是关闭电源"/>
+    <sl txt="Izklopi napajanje ob navideznih vlakih"/>
   </Msg>
   <Msg id="timer">
     <en txt="Timer"/>
@@ -17804,6 +18231,7 @@
     <en_GB txt="Timer"/>
     <sr_latin txt="Tajmer"/>
     <zh_CN txt="计时器"/>
+    <sl txt="Časovnik"/>
   </Msg>
   <Msg id="system">
     <en txt="System"/>
@@ -17827,6 +18255,7 @@
     <sr_latin txt="Sistem"/>
     <sv txt="System."/>
     <zh_CN txt="系统"/>
+    <sl txt="Sistem"/>
   </Msg>
   <Msg id="locomotive">
     <en txt="Locomotive"/>
@@ -17849,6 +18278,7 @@
     <ja txt="機関車"/>
     <sv txt="Lokomotiv."/>
     <zh_CN txt="机车"/>
+    <sl txt="Lokomotiva"/>
   </Msg>
   <Msg id="modules">
     <en txt="Modules"/>
@@ -17870,6 +18300,7 @@
     <sr_latin txt="Moduli"/>
     <sv txt="Moduler."/>
     <zh_CN txt="模块"/>
+    <sl txt="Moduli"/>
   </Msg>
   <Msg id="openworkspace" dialog="true" key="Ctrl-W">
     <en txt="Open Workspace" tip="Open a Workspace to play."/>
@@ -17890,6 +18321,7 @@
     <nb txt="Åpne Arbeidsområde"/>
     <sr_latin txt="Otvori radnu površinu"/>
     <zh_CN txt="打开工作空间"/>
+    <sl txt="Odpri delovno področje"/>
   </Msg>
   <Msg id="rocrailservernotfound">
     <en txt="The Rocrail server is not found in the following location:"/>
@@ -17909,6 +18341,7 @@
     <en_GB txt="The Rocrail server is not found in the following location:"/>
     <sr_latin txt="Rocrail server nije nađen na sledećoj lokaciji:"/>
     <zh_CN txt="在下列位置没有找到 Rocrail 服务器"/>
+    <sl txt="Rocrail strežnik ni najden na naslednjih lokacijah:"/>
   </Msg>
   <Msg id="defaultworkspace">
     <en txt="Default Workspace" tip="Default Workspace to open at startup."/>
@@ -17928,6 +18361,7 @@
     <sr_latin txt="Uobičajena radna površina"/>
     <sv txt="Standardarbetsyta."/>
     <zh_CN txt="预设工作空间"/>
+    <sl txt="Privzeto delovno področje"/>
   </Msg>
   <Msg id="startdefaultworkspace">
     <en txt="Use Workspace at startup"/>
@@ -17946,6 +18380,7 @@
     <en_GB txt="Use Workspace at startup"/>
     <sr_latin txt="Koristi radnu površinu kod startovanja"/>
     <zh_CN txt="启动时使用工作空间"/>
+    <sl txt="Pri zagonu uporabi delovno področje"/>
   </Msg>
   <Msg id="keepghost">
     <en txt="Keep ghost state"/>
@@ -17964,6 +18399,7 @@
     <en_GB txt="Keep ghost state"/>
     <sr_latin txt="Zadrži stanje voz-duh"/>
     <zh_CN txt="保持失控状态"/>
+    <sl txt="Ohrani stanje navideznega objekta"/>
   </Msg>
   <Msg id="priority">
     <en txt="Priority" tip="The wait time will be multiplied with this value in case no destination is found."/>
@@ -17986,6 +18422,7 @@
     <sr_latin txt="Prvenstvo"/>
     <ja txt="優先度"/>
     <zh_CN txt="优先级"/>
+    <sl txt="Prioriteta"/>
   </Msg>
   <Msg id="signalwait">
     <en txt="Signal time"/>
@@ -18003,6 +18440,7 @@
     <en_GB txt="Signal time"/>
     <sr_latin txt="Vreme signala"/>
     <zh_CN txt="信号时间"/>
+    <sl txt="Čas signala"/>
   </Msg>
   <Msg id="locostartgap">
     <en txt="Loco start gap"/>
@@ -18038,6 +18476,7 @@
     <en_GB txt="Send all server traces to Rocview"/>
     <sr_latin txt="Sva trasiranja servera prema Rocview"/>
     <zh_CN txt="发送所有服务器跟踪信息到ROCVIEW"/>
+    <sl txt="Pošlji vsa sledenja strežnika na Rocview"/>
   </Msg>
   <Msg id="manual">
     <en txt="Manual"/>
@@ -18061,6 +18500,7 @@
     <en_GB txt="Manual"/>
     <sr_latin txt="Uputstvo"/>
     <zh_CN txt="手动"/>
+    <sl txt="Ročno"/>
   </Msg>
   <Msg id="both">
     <en txt="Both"/>
@@ -18081,6 +18521,7 @@
     <sr_latin txt="Oba"/>
     <sv txt="Både."/>
     <zh_CN txt="全部"/>
+    <sl txt="Oboje"/>
   </Msg>
   <Msg id="email">
     <en txt="Email"/>
@@ -18103,6 +18544,7 @@
     <ja txt="電子メール"/>
     <sv txt="E-post."/>
     <zh_CN txt="电子邮箱"/>
+    <sl txt="E-pošta"/>
   </Msg>
   <Msg id="expdate">
     <en txt="Expiration date"/>
@@ -18124,6 +18566,7 @@
     <ja txt="期限"/>
     <sv txt="Utgångsdatum."/>
     <zh_CN txt="过期日期"/>
+    <sl txt="Datum poteka"/>
   </Msg>
   <Msg id="donatenow">
     <en txt="Support now"/>
@@ -18142,6 +18585,7 @@
     <en_GB txt="Donate now"/>
     <sr_latin txt="Podrži sada"/>
     <zh_CN txt="现在已经支持"/>
+    <sl txt="Podpri zdaj"/>
   </Msg>
   <Msg id="donkey" dialog="true">
     <en txt="Support"/>
@@ -18162,6 +18606,7 @@
     <nb txt="Doner"/>
     <sr_latin txt="Podrška"/>
     <zh_CN txt="支持"/>
+    <sl txt="Podpora"/>
   </Msg>
   <Msg id="loadkey" dialog="true">
     <en txt="Load key"/>
@@ -18182,6 +18627,7 @@
     <ja txt="動作キー"/>
     <sv txt="Ladda nyckel."/>
     <zh_CN txt="加载密钥"/>
+    <sl txt="Naloži  ključ"/>
   </Msg>
   <Msg id="donatekey">
     <en txt="Rocrail runs entirely on volunteer labor. However, Rocrail also needs contributions of money. Your continued support is vital for keeping Rocrail available. If you already did support you can ask a key to disable this on startup dialog: donate@rocrail.net"/>
@@ -18220,6 +18666,7 @@
     <sr_latin txt="Zahvaljujemo na podršci! Uživajte koristeći Rocrail."/>
     <sv txt="Tack för ditt stöd! Ha så trevligt med Rocrail."/>
     <zh_CN txt="感谢你的支持！欢迎使用Rocrail"/>
+    <sl txt="Hvala za podporo! Veliko užitkov ob uporabi Rocraila."/>
   </Msg>
   <Msg id="donatelink">
     <de txt="http://wiki.rocrail.net/doku.php?id=donate-de"/>
@@ -18238,6 +18685,7 @@
     <en_GB txt="http://wiki.rocrail.net/doku.php?id=donate-en"/>
     <sr_latin txt="http://wiki.rocrail.net/doku.php?id=donate-en"/>
     <zh_CN txt="http://wiki.rocrail.net/doku.php?id=donate-en"/>
+    <sl txt="http://wiki.rocrail.net/doku.php?id=donate-en"/>
   </Msg>
   <Msg id="tristate">
     <en txt="Tri-State"/>
@@ -18255,6 +18703,7 @@
     <fr txt="3 états"/>
     <sr_latin txt="Tri stanja"/>
     <zh_CN txt="三状态"/>
+    <sl txt="Trojno stanje"/>
   </Msg>
   <Msg id="toggleswitch">
     <en txt="Toggle switch"/>
@@ -18273,6 +18722,7 @@
     <fr txt="Basculer l'aiguillage"/>
     <sr_latin txt="Preklopnik"/>
     <zh_CN txt="拨动开关"/>
+    <sl txt="Preklopnik"/>
   </Msg>
   <Msg id="pushbutton">
     <en txt="Push button"/>
@@ -18292,6 +18742,7 @@
     <sr_latin txt="Taster"/>
     <sv txt="Tryckknapp."/>
     <zh_CN txt="按钮"/>
+    <sl txt="Gumb"/>
   </Msg>
   <Msg id="ctc">
     <en txt="CTC" tip="Centralized Traffic Control"/>
@@ -18310,6 +18761,7 @@
     <es txt="CTC"/>
     <sr_latin txt="CTC"/>
     <zh_CN txt="集中式交通控制"/>
+    <sl txt="CTC"/>
   </Msg>
   <Msg id="motor">
     <en txt="Motor"/>
@@ -18331,6 +18783,7 @@
     <sr_latin txt="Motor"/>
     <sv txt="Motor."/>
     <zh_CN txt="马达"/>
+    <sl txt="Motor"/>
   </Msg>
   <Msg id="usemanualroutes">
     <en txt="Use manual routes"/>
@@ -18349,6 +18802,7 @@
     <sr_latin txt="Koristi ručne rute"/>
     <sv txt="Använd manuella tågvägar."/>
     <zh_CN txt="手动设定路由"/>
+    <sl txt="Uporabi ročne poti"/>
   </Msg>
   <Msg id="disablesteal">
     <en txt="Disable steal loco control"/>
@@ -18367,6 +18821,7 @@
     <es txt="Desactivar control loco fantasma"/>
     <sr_latin txt="Onemogući krađu kontrole"/>
     <zh_CN txt="拒绝对失控机车进行控制"/>
+    <sl txt="Onemogoči ukraden nadzor nad lokomotivo"/>
   </Msg>
   <Msg id="blockinitpause">
     <en txt="Block init pause"/>
@@ -18405,6 +18860,7 @@
     <pt txt="Ignorar comandos do sinal"/>
     <sr_latin txt="Preskoči komande signala"/>
     <zh_CN txt="忽略信号"/>
+    <sl txt="Preskoči ukaze signala"/>
   </Msg>
   <Msg id="fromsignals">
     <en txt="From signal pair"/>
@@ -18424,6 +18880,7 @@
     <es txt="Del par de señal"/>
     <sr_latin txt="Od signalnog para"/>
     <zh_CN txt="从信号对方"/>
+    <sl txt="Od signalnega para"/>
   </Msg>
   <Msg id="tosignals">
     <en txt="To signal pair"/>
@@ -18443,6 +18900,7 @@
     <es txt="Al par de señal"/>
     <sr_latin txt="Ka signalnom paru"/>
     <zh_CN txt="到信号对方"/>
+    <sl txt="K signalnemu paru"/>
   </Msg>
   <Msg id="button">
     <en txt="Button"/>
@@ -18467,6 +18925,7 @@
     <ja txt="ボタン"/>
     <sv txt="Knapp."/>
     <zh_CN txt="按钮"/>
+    <sl txt="Gumb"/>
   </Msg>
   <Msg id="light">
     <en txt="Light"/>
@@ -18512,6 +18971,7 @@
     <sr_latin txt="Lako teretni"/>
     <ja txt="貨物の照明"/>
     <zh_CN txt="轻型货车"/>
+    <sl txt="Lahki tovorni"/>
   </Msg>
   <Msg id="regional">
     <en txt="Regional"/>
@@ -18534,6 +18994,7 @@
     <sr_latin txt="Regionalni"/>
     <ja txt="地域"/>
     <zh_CN txt="区域"/>
+    <sl txt="Regionalni"/>
   </Msg>
   <Msg id="size">
     <en txt="size"/>
@@ -18558,6 +19019,7 @@
     <ja txt="サイズ"/>
     <sv txt="storlek."/>
     <zh_CN txt="大小"/>
+    <sl txt="velikost"/>
   </Msg>
   <Msg id="restore">
     <en txt="Restore"/>
@@ -18581,6 +19043,7 @@
     <sr_latin txt="Vratiti"/>
     <sv txt="Återställ."/>
     <zh_CN txt="恢复"/>
+    <sl txt="Obnovi"/>
   </Msg>
   <Msg id="recycle">
     <en txt="Recycle"/>
@@ -18601,6 +19064,7 @@
     <sr_latin txt="Povratni"/>
     <sv txt="Återanvänd."/>
     <zh_CN txt="循环"/>
+    <sl txt="Recikliraj"/>
   </Msg>
   <Msg id="middle">
     <en txt="Middle"/>
@@ -18621,6 +19085,7 @@
     <pt txt="Meio"/>
     <sr_latin txt="Srednji"/>
     <zh_CN txt="中间"/>
+    <sl txt="Srednji"/>
   </Msg>
   <Msg id="power4acc">
     <en txt="Power on state for accessory commands"/>
@@ -18659,6 +19124,7 @@
     <sr_latin txt="Zaustavi kontroler"/>
     <ja txt="コントローラを停止"/>
     <zh_CN txt="停止控制器"/>
+    <sl txt="Ustavi nadzornika"/>
   </Msg>
   <Msg id="ignorebusy">
     <en txt="Ignore Busy message"/>
@@ -18680,6 +19146,7 @@
     <sr_latin txt="Zanemari poruku zauzeto"/>
     <sv txt="Ignorera upptagetmeddelanden."/>
     <zh_CN txt="忽略忙时消息"/>
+    <sl txt="Prezri spročilo o zasedenosti"/>
   </Msg>
   <Msg id="indelay">
     <en txt="IN delay"/>
@@ -18699,6 +19166,7 @@
     <es txt="retraso IN"/>
     <sr_latin txt="Kašnjenje ulaska"/>
     <zh_CN txt="IN 延迟"/>
+    <sl txt="\&quot;IN\&quot; zakasnitev"/>
   </Msg>
   <Msg id="led">
     <en txt="LED"/>
@@ -18720,6 +19188,7 @@
     <sr_latin txt="LED"/>
     <ja txt="LED"/>
     <zh_CN txt="发光二极管"/>
+    <sl txt="LED"/>
   </Msg>
   <Msg id="poweroffatreset">
     <en txt="Power off at reset"/>
@@ -18779,6 +19248,7 @@
     <sr_latin txt="Polarizacija"/>
     <sv txt="Polaritet."/>
     <zh_CN txt="极化"/>
+    <sl txt="Polarizacija"/>
   </Msg>
   <Msg id="servo">
     <en txt="Servo"/>
@@ -18799,6 +19269,7 @@
     <sr_latin txt="Servo"/>
     <ja txt="サーボ"/>
     <zh_CN txt="服务器"/>
+    <sl txt="Servo"/>
   </Msg>
   <Msg id="setup">
     <en txt="Setup"/>
@@ -18821,6 +19292,7 @@
     <ja txt="設定"/>
     <sv txt="Inställningar."/>
     <zh_CN txt="设置"/>
+    <sl txt="Nastavitve"/>
   </Msg>
   <Msg id="reset">
     <en txt="Reset"/>
@@ -18845,6 +19317,7 @@
     <ja txt="リセット"/>
     <sv txt="Återställ"/>
     <zh_CN txt="复位"/>
+    <sl txt="Ponastavi"/>
   </Msg>
   <Msg id="recentworkspaces">
     <en txt="Recent Workspaces"/>
@@ -18863,6 +19336,7 @@
     <sr_latin txt="Skorašnje radne površine"/>
     <sv txt="Tidigare arbetsyta."/>
     <zh_CN txt="最近使用的工作空间"/>
+    <sl txt="Nedavna delovna področja"/>
   </Msg>
   <Msg id="ignorepowercmds">
     <en txt="Ignore power commands"/>
@@ -18882,6 +19356,7 @@
     <sr_latin txt="Zanemari komande napajanja"/>
     <ja txt="電力の指令を無視"/>
     <zh_CN txt="忽略电源站"/>
+    <sl txt="Prezri ukaze za napajanje"/>
   </Msg>
   <Msg id="manually">
     <en txt="Manually"/>
@@ -18904,6 +19379,7 @@
     <ja txt="手動"/>
     <sv txt="Manuellt."/>
     <zh_CN txt="手动"/>
+    <sl txt="Ročno"/>
   </Msg>
   <Msg id="evtcorrection">
     <en txt="Event correction"/>
@@ -18922,6 +19398,7 @@
     <it txt="Correzione evento"/>
     <sr_latin txt="Ispravka događaja"/>
     <zh_CN txt="事件矫正"/>
+    <sl txt="Popravek dogodka"/>
   </Msg>
   <Msg id="relay">
     <en txt="Relay"/>
@@ -18957,6 +19434,7 @@
     <it txt="Conta i vagoni/carri prima di attivare gli eventi"/>
     <sr_latin txt="Brojanje kola pre pokretanja događaja"/>
     <zh_CN txt="触发事件前计数车辆"/>
+    <sl txt="Preštej vagone pred proženjem dogodka."/>
   </Msg>
   <Msg id="odsernum">
     <en txt="Serial Number" tip="OpenDCC serial number"/>
@@ -18978,6 +19456,7 @@
     <ja txt="シリアル番号"/>
     <sv txt="Serienummer."/>
     <zh_CN txt="序列号"/>
+    <sl txt="Serijska številka"/>
   </Msg>
   <Msg id="xpnfbmapping">
     <en txt="XpressNet feedback mapping" tip="Read OpenDCC documentation"/>
@@ -19079,6 +19558,7 @@
     <cs txt="Monitorování"/>
     <sv txt="Övervakning."/>
     <zh_CN txt="监控中"/>
+    <sl txt="Nadzorovanje"/>
   </Msg>
   <Msg id="notfromblock">
     <en txt="Not from block"/>
@@ -19183,6 +19663,7 @@
     <it txt="Accettare Loco BiDi"/>
     <sr_latin txt="Prihvati BiDi loko."/>
     <zh_CN txt="接受双向机车"/>
+    <sl txt="Sprejmi BiDi Lokomotivo"/>
   </Msg>
   <Msg id="useblockside">
     <en txt="Use block side for routes"/>
@@ -19214,6 +19695,7 @@
     <it txt="Invertire lato di ingresso del blocco"/>
     <sr_latin txt="Zameni ulaznu stranu bloka"/>
     <zh_CN txt="交换区间进入另一端"/>
+    <sl txt="Zamenjan stran vhoda v odseku"/>
   </Msg>
   <Msg id="stopnonecommuter">
     <en txt="Stop none commuter in terminal"/>
@@ -19227,6 +19709,7 @@
     <ru txt="Останавливать непригородный поезд на конечной станции"/>
     <it txt="Fermare in presenza di treni non reversibili in stazione di testa"/>
     <sr_latin txt="Zaustavi voz koji nije prigradski u terminalu"/>
+    <zh_CN txt="停在无换向器分界点"/>
   </Msg>
   <Msg id="slotmanagement">
     <en txt="Slot management"/>
@@ -19240,6 +19723,7 @@
     <es txt="Manejo de slots"/>
     <it txt="Gestione spazio"/>
     <sr_latin txt="Upravljanje prolazom"/>
+    <zh_CN txt="插槽分配"/>
   </Msg>
   <Msg id="decodertype">
     <en txt="Decoder type"/>
@@ -19259,6 +19743,7 @@
     <cs txt="Typ dekodéru"/>
     <sv txt="Dekodertyp."/>
     <zh_CN txt="芯片类型"/>
+    <sl txt="Tip dekoderja"/>
   </Msg>
   <Msg id="analyze">
     <en txt="Analyze" tip="Analyze track plan for generating routes."/>
@@ -19277,6 +19762,7 @@
     <cs txt="Analyzovat"/>
     <sv txt="Analysera."/>
     <zh_CN txt="分析"/>
+    <sl txt="Analiziraj"/>
   </Msg>
   <Msg id="systeminfo">
     <en txt="System info" tip="Enable extra CS system info."/>
@@ -19297,6 +19783,7 @@
     <cs txt="Systémové informace"/>
     <sv txt="Systeminformation."/>
     <zh_CN txt="系统信息"/>
+    <sl txt="Podatki o sistemu"/>
   </Msg>
   <Msg id="showonlystartschedules">
     <en txt="Show only start schedules"/>
@@ -19348,6 +19835,7 @@
     <cs txt="Přepsat všechna nastavení?"/>
     <sv txt="Skriva över alla inställningar?"/>
     <zh_CN txt="重写所有设定"/>
+    <sl txt="Prepišem vse nastavitve?"/>
   </Msg>
   <Msg id="free2go">
     <en txt="Free before start"/>
@@ -19464,6 +19952,7 @@
     <cs txt="Obdélníkový"/>
     <sv txt="Rektangulär."/>
     <zh_CN txt="矩形"/>
+    <sl txt="Pravokotno"/>
   </Msg>
   <Msg id="sublib">
     <en txt="Sub-Library"/>
@@ -19492,6 +19981,7 @@
     <cs txt="Uzly"/>
     <sv txt="Noder."/>
     <zh_CN txt="节点"/>
+    <sl txt="Vozlišča"/>
   </Msg>
   <Msg id="stagingyard">
     <en txt="Staging yard"/>
@@ -19533,6 +20023,7 @@
     <cs txt="Sekce"/>
     <sv txt="Sektioner."/>
     <zh_CN txt="章节"/>
+    <sl txt="Odseki"/>
   </Msg>
   <Msg id="section">
     <en txt="Section"/>
@@ -19550,6 +20041,7 @@
     <cs txt="Sekce"/>
     <sv txt="Sektion."/>
     <zh_CN txt="分段"/>
+    <sl txt="Odsek"/>
   </Msg>
   <Msg id="train">
     <en txt="Train"/>
@@ -19567,6 +20059,7 @@
     <cs txt="Vlak"/>
     <sv txt="Tåg."/>
     <zh_CN txt="火车"/>
+    <sl txt="Vlak"/>
   </Msg>
   <Msg id="gap">
     <en txt="gap"/>
@@ -19583,6 +20076,7 @@
     <cs txt="přestávka"/>
     <sv txt="Mellanrum."/>
     <zh_CN txt="距离"/>
+    <sl txt="vrzel"/>
   </Msg>
   <Msg id="patterns">
     <en txt="Patterns"/>
@@ -19599,6 +20093,7 @@
     <cs txt="Vzory"/>
     <sv txt="Mönster."/>
     <zh_CN txt="模式"/>
+    <sl txt="Vzorci"/>
   </Msg>
   <Msg id="aspectnr">
     <en txt="Aspect numbers"/>
@@ -19611,6 +20106,7 @@
     <it txt="Numero aspetti"/>
     <sr_latin txt="Aspekt brojeva"/>
     <cs txt="Poměr stran"/>
+    <zh_CN txt="方位号"/>
   </Msg>
   <Msg id="planhealth">
     <en txt="Plan health"/>
@@ -19639,6 +20135,7 @@
     <cs txt="Komunikace"/>
     <sv txt="Kommunikation."/>
     <zh_CN txt="通讯"/>
+    <sl txt="Komunikacija"/>
   </Msg>
   <Msg id="swaptimer">
     <en txt="Swap timer"/>
@@ -19677,6 +20174,7 @@
     <cs txt="Lokální IP"/>
     <sv txt="Lokal IP."/>
     <zh_CN txt="本地 IP"/>
+    <sl txt="Krajevni IP"/>
   </Msg>
   <Msg id="setloco">
     <en txt="Set loco"/>
@@ -19691,6 +20189,7 @@
     <ja txt="機関車設定"/>
     <cs txt="Nastavení lokomotivy"/>
     <zh_CN txt="设置机车"/>
+    <sl txt="Nastavi lokomotivo"/>
   </Msg>
   <Msg id="compress">
     <en txt="Compress"/>
@@ -19705,6 +20204,7 @@
     <sr_latin txt="Sažmi"/>
     <cs txt="Komprimovat"/>
     <zh_CN txt="压缩"/>
+    <sl txt="Stisni"/>
   </Msg>
   <Msg id="syncroutes">
     <en txt="Synchronize routes"/>
@@ -19721,6 +20221,7 @@
     <cs txt="Synchronizace cest"/>
     <sv txt="Synkronisera tågvägar."/>
     <zh_CN txt="同步路由"/>
+    <sl txt="Sinhroniziraj poti"/>
   </Msg>
   <Msg id="syncroutetimeout">
     <en txt="Route synchronizer timeout"/>
@@ -19818,6 +20319,7 @@
     <cs txt="Uzel"/>
     <sv txt="Nod."/>
     <zh_CN txt="节点"/>
+    <sl txt="Vozlišče"/>
   </Msg>
   <Msg id="variables">
     <en txt="Variables"/>
@@ -19833,6 +20335,7 @@
     <cs txt="Proměnné"/>
     <sv txt="Variabler."/>
     <zh_CN txt="变量"/>
+    <sl txt="Spremenljivke"/>
   </Msg>
   <Msg id="variable">
     <en txt="Variable"/>
@@ -19848,6 +20351,7 @@
     <cs txt="Proměnná"/>
     <sv txt="Variabel."/>
     <zh_CN txt="变量"/>
+    <sl txt="Spremenljivka"/>
   </Msg>
   <Msg id="events">
     <en txt="Events"/>
@@ -19864,6 +20368,7 @@
     <cs txt="Události"/>
     <sv txt="Händelser."/>
     <zh_CN txt="事件"/>
+    <sl txt="Dogodki"/>
   </Msg>
   <Msg id="firmware">
     <en txt="Firmware"/>
@@ -19879,6 +20384,7 @@
     <cs txt="Firmware"/>
     <sv txt="Mjukvara."/>
     <zh_CN txt="固件"/>
+    <sl txt="Strojna programska oprema"/>
   </Msg>
   <Msg id="get">
     <en txt="Get"/>
@@ -19894,6 +20400,7 @@
     <ja txt="取得"/>
     <cs txt="Načíst"/>
     <zh_CN txt="获取"/>
+    <sl txt="Pridobi"/>
   </Msg>
   <Msg id="set">
     <en txt="Set"/>
@@ -19909,6 +20416,7 @@
     <ja txt="セット"/>
     <cs txt="Nastavit"/>
     <zh_CN txt="设置"/>
+    <sl txt="Nastavi"/>
   </Msg>
   <Msg id="getall">
     <en txt="Get all"/>
@@ -19924,6 +20432,7 @@
     <cs txt="Načíst vše"/>
     <sv txt="Hämta alla."/>
     <zh_CN txt="获取所有的"/>
+    <sl txt="Pridobi vse"/>
   </Msg>
   <Msg id="clearall">
     <en txt="Clear all"/>
@@ -19938,6 +20447,7 @@
     <ja txt="全てクリア"/>
     <cs txt="Vyčistit vše"/>
     <zh_CN txt="清除所有的"/>
+    <sl txt="Počisti vse"/>
   </Msg>
   <Msg id="learn">
     <en txt="Learn"/>
@@ -19980,6 +20490,7 @@
     <cs txt="Odeslat"/>
     <sv txt="Skicka."/>
     <zh_CN txt="发送"/>
+    <sl txt="Pošlji"/>
   </Msg>
   <Msg id="bootmode">
     <en txt="Boot mode"/>
@@ -20050,6 +20561,7 @@
     <ja txt="状態のリセット"/>
     <cs txt="Obnovit stav"/>
     <zh_CN txt="重置状态"/>
+    <sl txt="Ponastavi status"/>
   </Msg>
   <Msg id="occupancy">
     <en txt="Occupancy"/>
@@ -20064,6 +20576,7 @@
     <ja txt="占有"/>
     <cs txt="Obsazení"/>
     <zh_CN txt="占用"/>
+    <sl txt="Zasedenost"/>
   </Msg>
   <Msg id="restorespeed">
     <en txt="Restore speed"/>
@@ -20079,6 +20592,7 @@
     <cs txt="Obnoit rychlost"/>
     <sv txt="Återställ hastighet."/>
     <zh_CN txt="恢复速度"/>
+    <sl txt="Obnovi hitrost"/>
   </Msg>
   <Msg id="calibrate">
     <en txt="Calibrate"/>
@@ -20094,6 +20608,7 @@
     <cs txt="Kalibrovat"/>
     <sv txt="Kalibrera."/>
     <zh_CN txt="校准"/>
+    <sl txt="Umeri"/>
   </Msg>
   <Msg id="traverser">
     <en txt="Traverser"/>
@@ -20103,6 +20618,7 @@
     <es txt="Depósito rectangular"/>
     <it txt="Ponte trasbordatore (Coulisse)"/>
     <sr_latin txt="Traverzer"/>
+    <zh_CN txt="机车转盘"/>
   </Msg>
   <Msg id="subtitle">
     <en txt="Sub title"/>
@@ -20115,6 +20631,7 @@
     <cs txt="Náhradní název"/>
     <sv txt="Undertitel."/>
     <zh_CN txt="子菜单"/>
+    <sl txt="Pod naslov"/>
   </Msg>
   <Msg id="timedsensors">
     <en txt="Timed sensors"/>
@@ -20140,6 +20657,7 @@
     <ja txt="解析を利用可能にする"/>
     <cs txt="Povolit analyzátor"/>
     <zh_CN txt="启用分析器"/>
+    <sl txt="Omogoči analizator"/>
   </Msg>
   <Msg id="forceunlockatebreak">
     <en txt="Force unlock at EBreak"/>
@@ -20149,6 +20667,7 @@
     <es txt="Forzar desbloqueo ante EBreak"/>
     <it txt="Forzare lo sblocco in caso di EBreak"/>
     <sr_latin txt="Prisilno otključavanje kod EBrejk-a"/>
+    <zh_CN txt="在EBreak强制解锁"/>
   </Msg>
   <Msg id="triggerblockevents">
     <en txt="Trigger block events"/>
@@ -20190,6 +20709,7 @@
     <cs txt="Zobrazit vše"/>
     <sv txt="Visa alla."/>
     <zh_CN txt="查看全部"/>
+    <sl txt="Pokaži vse"/>
   </Msg>
   <Msg id="locoviewsteam" key="Alt-S">
     <en txt="Steamers"/>
@@ -20204,6 +20724,7 @@
     <cs txt="Parní"/>
     <sv txt="Ånglok."/>
     <zh_CN txt="蒸汽机车"/>
+    <sl txt="Parniki"/>
   </Msg>
   <Msg id="locoviewdiesel" key="Alt-I">
     <en txt="Diesels"/>
@@ -20219,6 +20740,7 @@
     <cs txt="Dieslové"/>
     <sv txt="Diesellok."/>
     <zh_CN txt="内燃机车"/>
+    <sl txt="Dizelske"/>
   </Msg>
   <Msg id="locoviewelectric" key="Alt-E">
     <en txt="Electrics"/>
@@ -20234,6 +20756,7 @@
     <cs txt="Elektrické"/>
     <sv txt="Ellok."/>
     <zh_CN txt="电力机车"/>
+    <sl txt="Električne"/>
   </Msg>
   <Msg id="locoviewcommuter" key="Alt-C">
     <en txt="Commuters"/>
@@ -20247,6 +20770,7 @@
     <ja txt="通勤"/>
     <cs txt="Vnitrostátní"/>
     <zh_CN txt="通勤车"/>
+    <sl txt="Motorniki"/>
   </Msg>
   <Msg id="locoviewspecial" key="Alt-P">
     <en txt="Specials"/>
@@ -20261,6 +20785,7 @@
     <ja txt="特別"/>
     <cs txt="Speciální"/>
     <zh_CN txt="特别指出"/>
+    <sl txt="Posebni"/>
   </Msg>
   <Msg id="locoviewautomobile">
     <en txt="Automobiles and trucks"/>
@@ -20272,6 +20797,7 @@
     <sr_latin txt="Automobili i kamioni"/>
     <sv txt="Bilar och lastbilar."/>
     <zh_CN txt="汽车和卡车"/>
+    <sl txt="Avtomobili in kamioni"/>
   </Msg>
   <Msg id="locoviewtrain">
     <en txt="Trains"/>
@@ -20279,6 +20805,7 @@
     <de txt="Züge"/>
     <it txt="Treni"/>
     <zh_CN txt="火车"/>
+    <sl txt="Vlaki"/>
   </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
@@ -20292,6 +20819,7 @@
     <ja txt="アドレスに応じて機関車を並び替える"/>
     <cs txt="Seřadit dle adresy lokomotivy"/>
     <zh_CN txt="根据机车地址排序"/>
+    <sl txt="Sortiraj lokomotive po naslovu"/>
   </Msg>
   <Msg id="selecttour" dialog="true">
     <en txt="Select tour"/>
@@ -20345,6 +20873,7 @@
     <cs txt="Obnova rychlosti a funkcí"/>
     <sv txt="Återställ hastighet och funktioner."/>
     <zh_CN txt="重置速度和功能"/>
+    <sl txt="Ponastavi hitrost in funkcije"/>
   </Msg>
   <Msg id="divider">
     <en txt="divider"/>
@@ -20357,6 +20886,7 @@
     <ja txt="分割"/>
     <cs txt="rozpojovač"/>
     <zh_CN txt="分频器"/>
+    <sl txt="delilnik"/>
   </Msg>
   <Msg id="temperature">
     <en txt="temperature"/>
@@ -20372,6 +20902,7 @@
     <sv txt="Temperatur."/>
     <fr txt="température"/>
     <zh_CN txt="温度"/>
+    <sl txt="temperatura"/>
   </Msg>
   <Msg id="info4throttle">
     <en txt="Poll info"/>
@@ -20394,6 +20925,7 @@
     <ja txt="未使用時に機関車を開放する"/>
     <cs txt="Uvolnit lokomotivu při nečinnosti"/>
     <zh_CN txt="释放空闲的机车"/>
+    <sl txt="Sprosti lokomotivo v prostem teku"/>
   </Msg>
   <Msg id="sleep">
     <en txt="Sleep"/>
@@ -20406,6 +20938,7 @@
     <ja txt="スリープ"/>
     <cs txt="Uspat"/>
     <zh_CN txt="休眠"/>
+    <sl txt="V pripravljenost"/>
   </Msg>
   <Msg id="closeonghost">
     <en txt="Close block on ghost"/>
@@ -20442,6 +20975,7 @@
     <cs txt="Systémové akce"/>
     <sv txt="Systemåtgärder."/>
     <zh_CN txt="系统动作"/>
+    <sl txt="Sistemska dejanja"/>
   </Msg>
   <Msg id="sound">
     <en txt="Sound"/>
@@ -20456,6 +20990,7 @@
     <sv txt="Ljud."/>
     <fr txt="Son"/>
     <zh_CN txt="声音"/>
+    <sl txt="Zvok"/>
   </Msg>
   <Msg id="soundpath">
     <en txt="Sound path"/>
@@ -20468,6 +21003,7 @@
     <ja txt="サウンドの場所"/>
     <cs txt="Cesta ke zvuku"/>
     <zh_CN txt="声音路径"/>
+    <sl txt="Pot za zvok"/>
   </Msg>
   <Msg id="soundplayer">
     <en txt="Sound player"/>
@@ -20481,6 +21017,7 @@
     <cs txt="Zvukový přehrávač"/>
     <sv txt="Ljudspelare."/>
     <zh_CN txt="声音播放器"/>
+    <sl txt="Predvajalnik zvoka"/>
   </Msg>
   <Msg id="soundplayerlocation">
     <en txt="Add location parameter"/>
@@ -20505,6 +21042,7 @@
     <ja txt="ノード No."/>
     <cs txt="Čís. uzlu"/>
     <sv txt="Nod nr."/>
+    <zh_CN txt="在交轨点附近"/>
   </Msg>
   <Msg id="eventnumber">
     <en txt="Event Nr."/>
@@ -20517,6 +21055,7 @@
     <ja txt="イベント No."/>
     <cs txt="čís. události"/>
     <sv txt="Händelse nr."/>
+    <zh_CN txt="在事件附近"/>
   </Msg>
   <Msg id="triggerlowevents">
     <en txt="Trigger low events after 100ms"/>
@@ -20551,6 +21090,7 @@
     <cs txt="Zpáteční"/>
     <sv txt="Tvåvägs."/>
     <zh_CN txt="双向"/>
+    <sl txt="Dvosmerno"/>
   </Msg>
   <Msg id="departdelay">
     <en txt="Depart delay"/>
@@ -20574,6 +21114,7 @@
     <cs txt="ID již existuje na pozici: %d,%d."/>
     <sv txt="ID.t existerar redan på position: %d,%d."/>
     <zh_CN txt="该标识号已经存在: %d,%d."/>
+    <sl txt="ID že obstaja na poziciji: %d,%d."/>
   </Msg>
   <Msg id="gooffline">
     <en txt="Go offline"/>
@@ -20597,6 +21138,7 @@
     <ja txt="確認"/>
     <cs txt="Dotaz"/>
     <zh_CN txt="查询"/>
+    <sl txt="Poizvedba"/>
   </Msg>
   <Msg id="processsignalevents">
     <en txt="Process signal events"/>
@@ -20618,6 +21160,7 @@
     <ja txt="上書き状態"/>
     <cs txt="Přepsat stav"/>
     <zh_CN txt="覆盖状态"/>
+    <sl txt="Prepiši status"/>
   </Msg>
   <Msg id="closenoevents">
     <en txt="Close on no events"/>
@@ -20639,6 +21182,7 @@
     <ja txt="個々"/>
     <cs txt="každý"/>
     <zh_CN txt="每"/>
+    <sl txt="vsakih"/>
   </Msg>
   <Msg id="startofday">
     <en txt="Start of Day" tip="Initialize accessories and query sensors."/>
@@ -20663,6 +21207,7 @@
     <cs txt="Dotaz senzorů"/>
     <ru txt="Запрос датчиков"/>
     <zh_CN txt="查询传感器"/>
+    <sl txt="Pridobi tipala"/>
   </Msg>
   <Msg id="canid">
     <en txt="CAN ID"/>
@@ -20673,6 +21218,8 @@
     <sr_latin txt="CAN ID"/>
     <ja txt="CAN ID"/>
     <cs txt="CAN ID"/>
+    <sl txt="CAN ID"/>
+    <zh_CN txt="CAN ID"/>
   </Msg>
   <Msg id="selectshortestblock">
     <en txt="Select shortest block"/>
@@ -20698,6 +21245,7 @@
     <ja txt="先頭"/>
     <cs txt="Prefix"/>
     <zh_CN txt="前缀"/>
+    <sl txt="Predpona"/>
   </Msg>
   <Msg id="backup">
     <en txt="Backup"/>
@@ -20710,6 +21258,7 @@
     <cs txt="Záloha"/>
     <sv txt="Säkerhetskopia."/>
     <zh_CN txt="备份"/>
+    <sl txt="Varnostna kopija"/>
   </Msg>
   <Msg id="keypath">
     <en txt="Key path"/>
@@ -20732,6 +21281,7 @@
     <ja txt="キーファイルを開く"/>
     <cs txt="Otevřít soubor klíčů"/>
     <zh_CN txt="打开密钥文件"/>
+    <sl txt="Odpri datoteko s ključem"/>
   </Msg>
   <Msg id="freeall">
     <en txt="Free all"/>
@@ -20743,6 +21293,7 @@
     <cs txt="Vše uvolnit"/>
     <sv txt="Frigör alla."/>
     <zh_CN txt="释放所有"/>
+    <sl txt="Sprosti vse"/>
   </Msg>
   <Msg id="merge">
     <en txt="Merge"/>
@@ -20754,6 +21305,7 @@
     <ja txt="マージ"/>
     <cs txt="Sloučit"/>
     <zh_CN txt="合并"/>
+    <sl txt="Spoji"/>
   </Msg>
   <Msg id="closeexit">
     <en txt="Close exit"/>
@@ -20764,6 +21316,7 @@
     <sr_latin txt="Zatvoren izlaz"/>
     <cs txt="Zavřít výstup"/>
     <zh_CN txt="关闭并退出"/>
+    <sl txt="Zapri izhod"/>
   </Msg>
   <Msg id="openexit">
     <en txt="Open exit"/>
@@ -20774,6 +21327,7 @@
     <sr_latin txt="Otvoren izlaz"/>
     <cs txt="Otevřít výstup"/>
     <zh_CN txt="打开并退出"/>
+    <sl txt="Odpri izhod"/>
   </Msg>
   <Msg id="tooltip">
     <en txt="Tooltip"/>
@@ -20785,6 +21339,7 @@
     <fr txt="Info-bulles"/>
     <sr_latin txt="Savet"/>
     <zh_CN txt="工具提示"/>
+    <sl txt="Namig"/>
   </Msg>
   <Msg id="icon">
     <en txt="Icon"/>
@@ -20798,6 +21353,7 @@
     <fr txt="Icône"/>
     <sv txt="Ikon."/>
     <zh_CN txt="图标"/>
+    <sl txt="Ikona"/>
   </Msg>
   <Msg id="swack">
     <en txt="Check switch acknowledge"/>
@@ -20866,6 +21422,8 @@
     <es txt="Lineal"/>
     <pl txt="Liniowa"/>
     <sv txt="Linjär."/>
+    <sl txt="Linearno"/>
+    <zh_CN txt="直线"/>
   </Msg>
   <Msg id="restoreschedule">
     <en txt="Restore schedule"/>
@@ -20879,6 +21437,7 @@
     <pl txt="Przywróć dziennik"/>
     <sv txt="Återställ tidtabell."/>
     <zh_CN txt="恢复调度"/>
+    <sl txt="Obnovi urnik"/>
   </Msg>
   <Msg id="deprecatedrouting">
     <en txt="Classic routing is deprecated; Please migrate to block side routing."/>
@@ -20887,6 +21446,7 @@
     <it txt="Intinerario classico sconsigliato; passare all'itinerario block side"/>
     <sr_latin txt="Klasično rutiranje je zastarelo; Pređite na rutiranje stranica bloka."/>
     <es txt="La forma clásica de hacer rutas se ha abandonado; por favor use la forma de bloques."/>
+    <zh_CN txt="通常路径已过时;请转移到区段一侧路径。"/>
   </Msg>
   <Msg id="checkplanhealth">
     <en txt="Check plan health"/>
@@ -20899,6 +21459,7 @@
     <es txt="Comprobar salud del plan"/>
     <pl txt="Sprawdź poprawność planu"/>
     <zh_CN txt="检查计划健壮度"/>
+    <sl txt="Preveri stanje načrta"/>
   </Msg>
   <Msg id="extendedcheck">
     <en txt="Extended plan check"/>
@@ -20956,6 +21517,7 @@
     <cs txt="Rezervovat"/>
     <sv txt="Reservera."/>
     <zh_CN txt="保留"/>
+    <sl txt="Rezerviraj"/>
   </Msg>
   <Msg id="goto">
     <en txt="Go to"/>
@@ -20968,6 +21530,7 @@
     <es txt="Ir a"/>
     <sv txt="Gå till."/>
     <zh_CN txt="转到"/>
+    <sl txt="Pojdi na"/>
   </Msg>
   <Msg id="run">
     <en txt="Run"/>
@@ -20982,6 +21545,7 @@
     <sv txt="Kör."/>
     <fr txt="Démarrer"/>
     <zh_CN txt="运行"/>
+    <sl txt="Zaženi"/>
   </Msg>
   <Msg id="leave">
     <en txt="Leave"/>
@@ -20995,6 +21559,7 @@
     <pl txt="Opuść"/>
     <sv txt="Lämna."/>
     <zh_CN txt="离开"/>
+    <sl txt="Zapusti"/>
   </Msg>
   <Msg id="parameter">
     <en txt="Parameter"/>
@@ -21008,6 +21573,7 @@
     <pl txt="Parametr"/>
     <sv txt="Parameter"/>
     <zh_CN txt="参数"/>
+    <sl txt="Parameter"/>
   </Msg>
   <Msg id="duration">
     <en txt="Duration"/>
@@ -21022,6 +21588,7 @@
     <sv txt="Varaktighet"/>
     <fr txt="Durée"/>
     <zh_CN txt="持续时间"/>
+    <sl txt="Trajanje"/>
   </Msg>
   <Msg id="definition">
     <en txt="Definition"/>
@@ -21035,6 +21602,7 @@
     <pl txt="Definicja"/>
     <sv txt="Definition."/>
     <zh_CN txt="定义"/>
+    <sl txt="Definicija"/>
   </Msg>
   <Msg id="switched">
     <en txt="Switched"/>
@@ -21045,6 +21613,7 @@
     <es txt="Cambiado"/>
     <de txt="Geschaltet"/>
     <pl txt="Przełączony"/>
+    <zh_CN txt="转辙器"/>
   </Msg>
   <Msg id="decpath">
     <en txt="Decoder path"/>
@@ -21055,6 +21624,8 @@
     <cs txt="Cesta k decodérům"/>
     <es txt="Ruta del decodificador"/>
     <de txt="Dekoder-Pfad"/>
+    <sl txt="Pot za dekoder"/>
+    <zh_CN txt="解码器文件路径"/>
   </Msg>
   <Msg id="gamepadsupport">
     <en txt="Gamepad support"/>
@@ -21066,6 +21637,7 @@
     <es txt="Soporta mandos de consola"/>
     <de txt="Gamepad-Unterstützung"/>
     <zh_CN txt="支持游戏手柄"/>
+    <sl txt="Podpora za igralni plošček"/>
   </Msg>
   <Msg id="snmp">
     <en txt="SNMP"/>
@@ -21078,6 +21650,7 @@
     <pl txt="SNMP"/>
     <sv txt="SNMP."/>
     <zh_CN txt="简单网络管理协议"/>
+    <sl txt="SNMP"/>
   </Msg>
   <Msg id="usefieldevent">
     <en txt="Use field events"/>
@@ -21099,6 +21672,7 @@
     <es txt="Girar"/>
     <de txt="Spiegeln"/>
     <sv txt="Vänd."/>
+    <sl txt="Obrni"/>
   </Msg>
   <Msg id="analog">
     <en txt="Analog"/>
@@ -21111,6 +21685,7 @@
     <de txt="Analog"/>
     <sv txt="Analog."/>
     <zh_CN txt="模拟"/>
+    <sl txt="Analogno"/>
   </Msg>
   <Msg id="blank">
     <en txt="blank"/>
@@ -21125,6 +21700,7 @@
     <pl txt="pusty"/>
     <sv txt="Blank."/>
     <zh_CN txt="空白"/>
+    <sl txt="prazno"/>
   </Msg>
   <Msg id="powersensor">
     <en txt="Power sensor"/>
@@ -21136,6 +21712,7 @@
     <de txt="Leistungssensor"/>
     <pl txt="Czujnik mocy"/>
     <zh_CN txt="电源传感器"/>
+    <sl txt="Tipalo napajanja"/>
   </Msg>
   <Msg id="poweroutput">
     <en txt="Power output"/>
@@ -21161,6 +21738,7 @@
     <pl txt="UnikalnyID"/>
     <sv txt="Unikt ID."/>
     <zh_CN txt="惟一标识(ID)"/>
+    <sl txt="UniqueID"/>
   </Msg>
   <Msg id="bestchoice">
     <en txt="Best choice"/>
@@ -21192,6 +21770,7 @@
     <sr_latin txt="Gostujuća lokomotiva"/>
     <sv txt="Gästlok"/>
     <zh_CN txt="来宾机车"/>
+    <sl txt="Gostujoča lokomotiva"/>
   </Msg>
   <Msg id="automobile">
     <en txt="Automobile or truck"/>
@@ -21203,6 +21782,7 @@
     <sr_latin txt="Automobil ili kamion"/>
     <sv txt="Bil eller lastbil."/>
     <zh_CN txt="汽车或卡车"/>
+    <sl txt="Avtomobil ali kamion"/>
   </Msg>
   <Msg id="inatlen">
     <en txt="In event at train length"/>
@@ -21220,6 +21800,7 @@
     <sr_latin txt="Analizator"/>
     <sv txt="Analyserare."/>
     <zh_CN txt="分析器"/>
+    <sl txt="Analizator"/>
   </Msg>
   <Msg id="extendedclean">
     <en txt="Extended plan clean"/>
@@ -21378,6 +21959,7 @@
     <de txt="Analysieren zurücksetzen"/>
     <sr_latin txt="Brisanje svih analiza"/>
     <zh_CN txt="清除所有分析"/>
+    <sl txt="Počisti vse analize"/>
   </Msg>
   <Msg id="macro">
     <en txt="Macro"/>
@@ -21388,6 +21970,7 @@
     <sr_latin txt="Makro"/>
     <sv txt="Makro."/>
     <zh_CN txt="宏"/>
+    <sl txt="Makro"/>
   </Msg>
   <Msg id="features">
     <en txt="Features"/>
@@ -21396,6 +21979,7 @@
     <de txt="Leistungsmerkmale"/>
     <sr_latin txt="Karakteristike"/>
     <zh_CN txt="特点"/>
+    <sl txt="Možnosti"/>
   </Msg>
   <Msg id="portsetup">
     <en txt="Port setup"/>
@@ -21438,6 +22022,7 @@
     <it txt="Ignorare il controller"/>
     <nl txt="Overschrijf handregelaar"/>
     <de txt="Ignorier Fahrregler"/>
+    <zh_CN txt="调速器回零"/>
   </Msg>
   <Msg id="resetwc">
     <en txt="Reset wheel counter"/>
@@ -21487,6 +22072,7 @@
     <de txt="Alle Fahrstraßenkennungen zurücksetzen"/>
     <nl txt="Reset alle rijwegen ID's"/>
     <sv txt="Återställ alla tågvägsID"/>
+    <zh_CN txt="复位全部路线IDs."/>
   </Msg>
   <Msg id="force">
     <en txt="Force"/>
@@ -21517,6 +22103,7 @@
     <it txt="Assegnare treno"/>
     <de txt="Zug zuordnen"/>
     <sv txt="Tilldela tåg."/>
+    <zh_CN txt="列车指定"/>
   </Msg>
   <Msg id="releasetrain">
     <en txt="Release train"/>
@@ -21524,6 +22111,8 @@
     <it txt="Rilasciare treno"/>
     <de txt="Zug lösen"/>
     <sv txt="Frigör tåg."/>
+    <sl txt="Sprosti vlak"/>
+    <zh_CN txt="列车释放"/>
   </Msg>
   <Msg id="gain">
     <en txt="Gain"/>
@@ -21536,6 +22125,7 @@
     <de txt="Abfahrt-Verzögerung verwenden"/>
     <nl txt="Gebruik vertrek vertraging"/>
     <it txt="Usare partenza ritardata"/>
+    <zh_CN txt="用于开出延迟"/>
   </Msg>
   <Msg id="blink">
     <en txt="Blink"/>
@@ -21543,12 +22133,14 @@
     <nl txt="Knipperen"/>
     <it txt="Lampeggio"/>
     <sv txt="Blinka"/>
+    <zh_CN txt="闪烁"/>
   </Msg>
   <Msg id="actiontimer60">
     <en txt="Action timer 60 sec."/>
     <de txt="Aktion Zeiteinheit 60 Sek."/>
     <nl txt="Actie tijdseenheid 60 sec."/>
     <it txt="Timer azione 60 sec"/>
+    <zh_CN txt="运作定时器60秒"/>
   </Msg>
   <Msg id="dirimage">
     <en txt="Direction image"/>
@@ -21571,12 +22163,14 @@
     <sv txt="Sektionslängd"/>
     <de txt="Abschnittslänge"/>
     <zh_CN txt="区段长度"/>
+    <sl txt="Dolžina sekcije"/>
   </Msg>
   <Msg id="traingap">
     <en txt="Train gap"/>
     <it txt="Spazio treno"/>
     <nl txt="Trein tussenruimte"/>
     <de txt="Zugabstand"/>
+    <zh_CN txt="列车的间隙"/>
   </Msg>
   <Msg id="entersensor">
     <en txt="Enter sensor"/>
@@ -21584,6 +22178,7 @@
     <nl txt="Ingang melder"/>
     <sv txt="Insensor"/>
     <de txt="Einfahrtsmelder"/>
+    <zh_CN txt="加入传感器"/>
   </Msg>
   <Msg id="entersignal">
     <en txt="Enter signal"/>
@@ -21591,6 +22186,8 @@
     <nl txt="Ingang signaal"/>
     <sv txt="Insignal"/>
     <de txt="Einfahrsignal"/>
+    <sl txt="Vhodni signal"/>
+    <zh_CN txt="投入信号"/>
   </Msg>
   <Msg id="exitsignal">
     <en txt="Exit signal"/>
@@ -21598,6 +22195,8 @@
     <nl txt="Uitgang signaal"/>
     <sv txt="Utsignal"/>
     <de txt="Ausfahrsignal"/>
+    <sl txt="Izhodni signal"/>
+    <zh_CN txt="退出信号"/>
   </Msg>
   <Msg id="frog">
     <en txt="Frog"/>
@@ -21612,6 +22211,8 @@
     <nl txt="Laat gereserveerde wissels zien"/>
     <it txt="Mostrare deviatoi bloccati"/>
     <sv txt="Visa låsta växlar."/>
+    <sl txt="Prikaži zaklenjene preklopnike"/>
+    <zh_CN txt="显示锁定的道岔"/>
   </Msg>
   <Msg id="altthrottle">
     <en txt="Alternative throttle"/>
@@ -21626,6 +22227,7 @@
     <it txt="Apri file locomotiva"/>
     <sv txt="Öppna lokfil"/>
     <zh_CN txt="打开车辆文件"/>
+    <sl txt="Odpri datoteko lokomotive"/>
   </Msg>
   <Msg id="openoccfile" dialog="true">
     <en txt="Open occupancy file"/>
@@ -21647,6 +22249,7 @@
     <it txt="Azzerare velocità al cambio direzione"/>
     <sv txt="Återställ hastighet vid riktningsändring"/>
     <zh_CN txt="重置速度（方向改变时）"/>
+    <sl txt="Ponastavi hitrost ob spremembi smeri"/>
   </Msg>
   <Msg id="cmdrecorder" dialog="true">
     <en txt="Command recorder"/>
@@ -21654,6 +22257,7 @@
     <it txt="Registratore comandi"/>
     <de txt="Befehls-Recorder"/>
     <zh_CN txt="指令记录"/>
+    <sl txt="Snemalnik ukazov"/>
   </Msg>
   <Msg id="slavecode">
     <en txt="Slave code"/>
@@ -21674,6 +22278,7 @@
     <nl txt="Anti-aliasing"/>
     <de txt="Geglättet rendern"/>
     <it txt="Grafica dettagliata"/>
+    <zh_CN txt="实现平滑"/>
   </Msg>
   <Msg id="overload">
     <en txt="Overload"/>
@@ -21681,6 +22286,7 @@
     <de txt="Überlast"/>
     <it txt="Sovraccarico"/>
     <zh_CN txt="过载"/>
+    <sl txt="Preobremenitev"/>
   </Msg>
   <Msg id="processblockevents">
     <en txt="Process block events"/>
@@ -21702,6 +22308,7 @@
     <de txt="Zeitmarkierung"/>
     <it txt="Orario"/>
     <zh_CN txt="标记"/>
+    <sl txt="Pečat"/>
   </Msg>
   <Msg id="export">
     <en txt="Export"/>
@@ -21709,6 +22316,7 @@
     <de txt="Exportieren"/>
     <it txt="Esporta"/>
     <zh_CN txt="导出"/>
+    <sl txt="Izvoz"/>
   </Msg>
   <Msg id="insert">
     <en txt="Insert"/>
@@ -21716,6 +22324,7 @@
     <de txt="Einfügen"/>
     <it txt="Inserisci"/>
     <zh_CN txt="插入"/>
+    <sl txt="Vstavi"/>
   </Msg>
   <Msg id="ebreak">
     <en txt="Emergency break"/>
@@ -21723,6 +22332,7 @@
     <it txt="Emergency break"/>
     <de txt="Not-Halt"/>
     <zh_CN txt="应急中断"/>
+    <sl txt="Prisilna ustavitev"/>
   </Msg>
   <Msg id="shutdownserver">
     <en txt="Shutdown"/>
@@ -21730,10 +22340,12 @@
     <it txt="Spegnere"/>
     <de txt="Herunterfahren"/>
     <zh_CN txt="关闭"/>
+    <sl txt="Izklopi"/>
   </Msg>
   <Msg id="accdectable" dialog="true">
     <en txt="Accessory table" alttxt="Accessory Decoders" tip="Accessory decoder table"/>
     <nl txt="Functie decoders"/>
     <it txt="Tabella accessori"/>
+    <zh_CN txt="附件表"/>
   </Msg>
 </Messages>
