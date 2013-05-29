@@ -215,6 +215,7 @@ void RouteDialog::initLabels() {
   m_Test->SetLabel( wxGetApp().getMsg( "test" ) );
   m_Doc->SetLabel( wxGetApp().getMsg( "doc_report" ) );
   m_CopyRoute->SetLabel( wxGetApp().getMsg( "copy" ) );
+  m_ResetRoute->SetLabel( wxGetApp().getMsg( "reset" ) );
 
   // General
   m_LabelId->SetLabel( wxGetApp().getMsg( "id" ) );
