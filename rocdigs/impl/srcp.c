@@ -628,16 +628,16 @@ static Boolean __initInfoConnection(iOSRCP inst) {
 
   o->handshakeerror = False;
 
-  while( retry < 100 && !o->subAvailable((obj)inst) ) {
+  while( retry < 10 && !o->subAvailable((obj)inst) ) {
     ThreadOp.sleep(100);
     retry++;
-    if( retry >= 100 ) {
+    if( retry >= 10 ) {
       StrOp.copy(inbuf, "SRCP 0.8" );
     }
   };
 
 
-  if ( retry >= 100 || o->subRead( (obj)inst, inbuf, True ) ) {
+  if ( retry >= 10 || o->subRead( (obj)inst, inbuf, True ) ) {
     StrOp.replaceAll( inbuf, '\n', ' ' );
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, inbuf );
     if( StrOp.findi( inbuf, "SRCP 0.8" ) ) {
