@@ -69,33 +69,45 @@ int serialConnect( obj inst, Boolean info ) {
 
 void serialDisconnect( obj inst, Boolean info ) {
   iOSRCPData data = Data(inst);
+  /*
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "disconnecting from [%s]", wDigInt.getdevice( data->ini ) );
   if( data->serial != NULL ) {
     SerialOp.base.del( data->serial );
     data->serial = NULL;
   }
+  */
+}
+
+
+static int __serialReadInternal ( obj inst, char *cmd, Boolean info ) {
+  iOSRCPData data = Data(inst);
+  int idx = 0;
+  cmd[idx] = '\0';
+
+  while( data->run && data->serial != NULL ) {
+    if( !SerialOp.read( data->serial, &cmd[idx], 1 ) ) {
+      return 0;
+    }
+    if( cmd[idx] == '\n' ) {
+      break;
+    }
+    idx++;
+  };
+
+  return StrOp.len(cmd);
 }
 
 
 int serialRead ( obj inst, char *cmd, Boolean info ) {
   iOSRCPData data = Data(inst);
-  int idx = 0;
-  cmd[idx] = '\0';
+  int len = 0;
 
   if( MutexOp.trywait( data->serialMux, 100 ) ) {
-    while( data->run && data->serial != NULL ) {
-      if( !SerialOp.read( data->serial, &cmd[idx], 1 ) ) {
-        return 0;
-      }
-      if( cmd[idx] == '\n' ) {
-        break;
-      }
-      idx++;
-    };
+    len = __serialReadInternal(inst, cmd, info);
     MutexOp.post(data->serialMux);
   }
 
-  return StrOp.len(cmd);
+  return len;
 }
 
 
@@ -108,28 +120,31 @@ int serialWrite( obj inst, const char *cmd, char* rsp, Boolean info ) {
     return retstate;
   }
 
-  rc = SerialOp.write( data->serial, cmd, StrOp.len(cmd) );
+  if( MutexOp.trywait( data->serialMux, 100 ) ) {
 
-  if(rc) {
-    char inbuf[1024] = {'\0'};
-    char szResponse[1024] = {'\0'};
+    rc = SerialOp.write( data->serial, cmd, StrOp.len(cmd) );
 
-    if( serialRead(inst, inbuf, info) > 0 ) {
-      StrOp.replaceAll(inbuf, '\n', ' ');
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "srcp response: %s",inbuf);
+    if(rc) {
+      char inbuf[1024] = {'\0'};
+      char szResponse[1024] = {'\0'};
 
-      /* Scan for SM return? */
-      MemOp.set(szResponse,0,900);
-      sscanf(inbuf,"%*s %d %900c",&retstate,szResponse);
+      if( __serialReadInternal(inst, inbuf, info) > 0 ) {
+        StrOp.replaceAll(inbuf, '\n', ' ');
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "srcp response: %s",inbuf);
 
-      data->state = (SRCP_OK(rc)?SRCP_STATE_OK:SRCP_STATE_ERROR);
+        /* Scan for SM return? */
+        MemOp.set(szResponse,0,900);
+        sscanf(inbuf,"%*s %d %900c",&retstate,szResponse);
 
-      if( rsp != NULL )
-        StrOp.copy( rsp, szResponse );
+        data->state = (SRCP_OK(rc)?SRCP_STATE_OK:SRCP_STATE_ERROR);
 
+        if( rsp != NULL )
+          StrOp.copy( rsp, szResponse );
+
+      }
     }
+    MutexOp.post(data->serialMux);
   }
-
 
   return retstate;
 }

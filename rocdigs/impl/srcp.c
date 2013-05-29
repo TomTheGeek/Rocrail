@@ -636,12 +636,11 @@ static Boolean __initInfoConnection(iOSRCP inst) {
 
       if( !o->handshakeerror ) {
         StrOp.fmtb(cmd, "%s\n", "SET PROTOCOL SRCP 0.8");
-        o->subWrite((obj)inst, cmd, NULL, True);
+        o->subWrite((obj)inst, cmd, inbuf, True);
         StrOp.replaceAll( cmd, '\n', ' ' );
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",cmd);
 
         /*"OK PROTOCOL SRCP"*/
-        o->subRead( (obj)inst, inbuf, True );
         if( !StrOp.find( inbuf, "201" ) ) {
           /* error */
           o->handshakeerror = True;
@@ -652,12 +651,11 @@ static Boolean __initInfoConnection(iOSRCP inst) {
 
       if( !o->handshakeerror ) {
         StrOp.fmtb(cmd, "%s\n", "SET CONNECTIONMODE SRCP INFO");
-        o->subWrite((obj)inst, cmd, NULL, True);
+        o->subWrite((obj)inst, cmd, inbuf, True);
         StrOp.replaceAll( cmd, '\n', ' ' );
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",cmd);
 
         /*"OK CONNECTION MODE"*/
-        o->subRead( (obj)inst, inbuf, True );
         if( !StrOp.find( inbuf, "202" ) ) {
           /* error */
           o->handshakeerror = True;
@@ -668,12 +666,11 @@ static Boolean __initInfoConnection(iOSRCP inst) {
 
       if( !o->handshakeerror ) {
         StrOp.fmtb(cmd, "%s\n", "GO");
-        o->subWrite((obj)inst, cmd, NULL, True);
+        o->subWrite((obj)inst, cmd, inbuf, True);
         StrOp.replaceAll( cmd, '\n', ' ' );
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s",cmd);
 
         /*"OK GO"*/
-        o->subRead( (obj)inst, inbuf, True );
         if( !StrOp.find( inbuf, "200" ) ) {
           /* error */
           o->handshakeerror = True;
@@ -970,6 +967,7 @@ static void __infoReader( void * threadinst ) {
     }
 
     if( exception ) {
+      int rcConnect = 0;
       exception = False;
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Try to reconnect..." );
 
@@ -977,7 +975,8 @@ static void __infoReader( void * threadinst ) {
       o->subDisconnect( (obj)srcp, False);
 
       ThreadOp.sleep( 1000 );
-      if( o->subConnect( (obj)srcp, True ) == SRCPCONNECT_RECONNECTED ) {
+      rcConnect = o->subConnect( (obj)srcp, True );
+      if( rcConnect == SRCPCONNECT_RECONNECTED || rcConnect == SRCPCONNECT_OK) {
         __initInfoConnection(srcp);
       }
     }
