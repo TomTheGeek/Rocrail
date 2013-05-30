@@ -175,6 +175,26 @@ static void _setPortBase( iOSerial inst, int addr ) {
   data->portbase = addr;
 }
 
+static char* _readln( iOSerial inst, char* buf ) {
+  iOSerialData data = Data(inst);
+  Boolean ok = False;
+  int idx = 0;
+  buf[idx] = '\0';
+
+  while( idx < 1024 ) {
+    if( !rocs_serial_read( inst, &buf[idx], 1 ) ) {
+      return NULL;
+    }
+    if( buf[idx] == '\n' || buf[idx] == '\0' ) {
+      break;
+    }
+    idx++;
+  };
+
+  return buf;
+}
+
+
 
 static iOSerial _inst( const char* device ) {
   iOSerial     serial = allocIDMem( sizeof( struct OSerial ), RocsSerialID );

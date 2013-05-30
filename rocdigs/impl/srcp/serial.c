@@ -80,39 +80,18 @@ void serialDisconnect( obj inst, Boolean info ) {
 }
 
 
-static int __serialReadInternal ( obj inst, char *cmd, Boolean info ) {
-  iOSRCPData data = Data(inst);
-  int idx = 0;
-  cmd[idx] = '\0';
-
-  while( data->run && data->serial != NULL ) {
-    if( !SerialOp.read( data->serial, &cmd[idx], 1 ) ) {
-      if( idx > 0 )
-        TraceOp.dump( NULL, TRCLEVEL_WARNING, cmd, idx );
-      return 0;
-    }
-    if( cmd[idx] == '\n' ) {
-      break;
-    }
-    idx++;
-  };
-
-  return StrOp.len(cmd);
-}
-
-
 int serialRead ( obj inst, char *cmd, Boolean info ) {
   iOSRCPData data = Data(inst);
-  int len = 0;
+  cmd[0] = '\0';
 
   if( MutexOp.trywait( data->serialMux, 100 ) ) {
     if( serialAvailable(inst) ) {
-      len = __serialReadInternal(inst, cmd, info);
+      SerialOp.readln(data->serial, cmd);
     }
     MutexOp.post(data->serialMux);
   }
 
-  return len;
+  return cmd != NULL ? StrOp.len(cmd) : 0;
 }
 
 
@@ -133,7 +112,7 @@ int serialWrite( obj inst, const char *cmd, char* rsp, Boolean info ) {
       char inbuf[1024] = {'\0'};
       char szResponse[1024] = {'\0'};
 
-      if( __serialReadInternal(inst, inbuf, info) > 0 ) {
+      if( SerialOp.readln(data->serial, inbuf) != NULL ) {
         StrOp.replaceAll(inbuf, '\n', ' ');
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "srcp response [%s] on command [%s]",inbuf, cmd);
 

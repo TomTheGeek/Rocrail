@@ -1060,6 +1060,10 @@
       <param name="format" vt="const char*" remark="Format rules."/>
       <param name="" vt="..." remark="Multiple parameters."/>
     </fun>
+    <fun name="readln" vt="char*" remark="Read till a linefeed is detected.">
+      <param name="inst" vt="this" remark="Serial instance."/>
+      <param name="buffer" vt="char*" remark="Read buffer."/>
+    </fun>
     <struct name="_line">
       <var name="bps" vt="int"/>
       <var name="bits" vt="int"/>

@@ -3830,18 +3830,7 @@ static void __SrcpService( void* threadinst ) {
         continue;
       }
       else {
-        int idx = 0;
-
-        while( data->serial != NULL ) {
-          if( !SerialOp.read( data->serial, &str[idx], 1 ) ) {
-            ThreadOp.sleep( 10 );
-            continue;
-          }
-          if( str[idx] == '\n' ) {
-            break;
-          }
-          idx++;
-        };
+        SerialOp.readln(data->serial, str);
       }
     }
 
