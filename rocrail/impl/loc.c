@@ -574,7 +574,7 @@ static void* __event( void* inst, const void* evt ) {
       wLoc.setV( data->props, V);
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "not using the field velocity because loco %s is in auto mode", wLoc.getid(data->props));
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "not using the field velocity because loco %s is in auto mode", wLoc.getid(data->props));
     }
 
     if( wCtrl.isallowzerothrottleid( AppOp.getIniNode( wCtrl.name() ) ) ||
@@ -586,7 +586,7 @@ static void* __event( void* inst, const void* evt ) {
     }
     else {
       /* this is an echo comming from the loconet reader; do not broadcast it */
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "ignoring field event for loco %s because its an echo or zero throttleID", wLoc.getid(data->props));
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "ignoring field event for loco %s because its an echo or zero throttleID", wLoc.getid(data->props));
       broadcast = False;
     }
 
