@@ -1421,6 +1421,9 @@ static void _reset( iORoute inst ) {
     RouteOp.unLock( inst, data->lockedId, NULL, True, False );
     wRoute.setstatus(data->props, wRoute.status_free );
   }
+  else if( wRoute.getstatus(data->props) == wRoute.status_closed ) {
+    wRoute.setstatus(data->props, wRoute.status_free );
+  }
 }
 
 
