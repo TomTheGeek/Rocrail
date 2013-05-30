@@ -305,6 +305,8 @@ public:
     wxStaticText* m_labSrcpPort;
     wxSpinCtrl* m_SrcpPort;
     wxCheckBox* m_SrcpServiceActive;
+    wxStaticText* m_labSRCPDevice;
+    wxComboBox* m_SRCPDevice;
     wxStaticBox* m_SNMPBox;
     wxStaticText* m_labSnmpPort;
     wxSpinCtrl* m_SnmpPort;
