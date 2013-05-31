@@ -1510,7 +1510,9 @@ static void __runner( void* threadinst ) {
 
     /* BBT 10ms cycle */
     if( wLoc.isusebbt(data->props) ) {
-      __BBT(loc);
+      if( StrOp.equals( wLoc.mode_wait, wLoc.getmode(data->props) ) ) {
+        __BBT(loc);
+      }
       ThreadOp.sleep( RUNNERBBTTICK );
       data->bbtCycle++;
       if( data->bbtCycle < 10 ) {
