@@ -80,7 +80,7 @@ void eventPre2In( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, B
                    data->loc->getId( data->loc ) );
                    
     if( data->next2Block == NULL ) {
-      if( !data->gomanual ) {
+      if( !data->gomanual && !wLoc.isusebbt(data->loc->base.properties( data->loc )) ) {
         iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
         wLoc.setV_hint( cmd, wLoc.min );
         wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
