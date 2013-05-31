@@ -1818,7 +1818,7 @@ void LocDialog::CreateControls()
     m_BBT->SetValue(false);
     itemFlexGridSizer114->Add(m_BBT, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 2);
 
-    m_BBTSteps = new wxSpinCtrl( m_Interface_Panel, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 10, 32, 10 );
+    m_BBTSteps = new wxSpinCtrl( m_Interface_Panel, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 8, 32, 10 );
     itemFlexGridSizer114->Add(m_BBTSteps, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
 
     m_Notebook->AddPage(m_Interface_Panel, _("Interface"));
