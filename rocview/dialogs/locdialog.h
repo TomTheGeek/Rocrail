@@ -411,6 +411,7 @@ public:
     wxCheckBox* m_V_mode_percent;
     wxCheckBox* m_Info4Throttle;
     wxCheckBox* m_Regulated;
+    wxCheckBox* m_BBT;
     wxPanel* m_DetailsPanel;
     wxStaticText* m_Label_Blockwait;
     wxTextCtrl* m_Blockwait;

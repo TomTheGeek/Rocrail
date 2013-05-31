@@ -58,6 +58,7 @@
 #include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/BBT.h"
 
 static int instCnt = 0;
 
@@ -1322,6 +1323,7 @@ static iONode __resetTimedFunction(iOLoc loc, iONode cmd, int function) {
 
 
 #define RUNNERTICK 100
+#define RUNNERBBTTICK 10
 
 static iOMsg __getQueueMsg( iOLocData data, iOList list, iOMsg msg) {
   iOMsg qmsg = NULL;
@@ -1404,6 +1406,67 @@ static void __theSwap(iOLoc loc, Boolean swap, Boolean consist, iONode cmd) {
 
 }
 
+
+/**
+ * Block Brake Timer
+ */
+static void __BBT(iOLoc loc) {
+  iOLocData data = Data(loc);
+
+  if( data->bbtEnter != 0 && data->bbtIn == 0  && data->bbtBlock != NULL ) {
+    if( data->bbtCycleSpeed == 0 ) {
+      iONode bbt = (iONode)MapOp.get( data->bbtMap, data->bbtBlock );
+      data->bbtInterval = 10;
+      data->bbtCycleNr = 0;
+      if( bbt != NULL ) {
+        data->bbtInterval = wBBT.getinterval(bbt) / 10;
+      }
+      data->bbtSpeed = data->drvSpeed;
+      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "**enter** BBT=%d Block=%s V=%d", data->bbtInterval, data->bbtBlock, data->bbtSpeed );
+    }
+
+    if( data->bbtInterval == 0 )
+      data->bbtInterval = 10;
+
+    if( !data->bbtAtMinSpeed && (data->bbtCycleSpeed % data->bbtInterval) == 0 ) {
+      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      int V_min = wLoc.getV_min( data->props );
+      int speed = 0;
+      data->bbtCycleNr++;
+      speed = data->bbtSpeed - ((data->bbtSpeed / 10) * data->bbtCycleNr);
+      if( speed <= V_min ) {
+        speed = V_min;
+        data->bbtAtMinSpeed = True;
+      }
+      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT V=%d V_enter=%d", speed, data->bbtSpeed );
+
+      wLoc.setV( cmd, speed );
+      wLoc.setdir( cmd, wLoc.isdir( data->props ) );
+      LocOp.cmd( loc, cmd );
+    }
+    data->bbtCycleSpeed++;
+  }
+
+  if( data->bbtIn != 0 && data->bbtBlock != NULL ) {
+    iONode bbt = (iONode)MapOp.get( data->bbtMap, data->bbtBlock );
+    int interval = (int)(data->bbtIn - data->bbtEnter);
+    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "**in** BBT=%d V=%d Block=%s", interval/10, 0, data->bbtBlock );
+    if( bbt == NULL ) {
+      bbt = NodeOp.inst( wBBT.name(), data->props, ELEMENT_NODE );
+      NodeOp.addChild(data->props, bbt);
+      wBBT.setbk(bbt, data->bbtBlock);
+      MapOp.put(data->bbtMap, data->bbtBlock, (obj)bbt);
+    }
+    wBBT.setinterval(bbt, interval);
+    data->bbtEnter      = 0;
+    data->bbtIn         = 0;
+    data->bbtCycleSpeed = 0;
+    data->bbtBlock      = NULL;
+    data->bbtAtMinSpeed = False;
+  }
+}
+
+
 static void __runner( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOLoc loc = (iOLoc)ThreadOp.getParm( th );
@@ -1433,9 +1496,9 @@ static void __runner( void* threadinst ) {
   }
 
   do {
-    iOMsg msg = __getQueueMsg(data, queueList, (iOMsg)ThreadOp.getPost( th ) );
-    obj    emitter = NULL;
-    iONode fncmd   = NULL;
+    iOMsg  msg       = NULL;
+    obj    emitter   = NULL;
+    iONode fncmd     = NULL;
     iONode broadcast = NULL;
 
     int   i     = 0;
@@ -1444,6 +1507,20 @@ static void __runner( void* threadinst ) {
     int   type  = 0;
     int   fx    = 0;
     obj   udata = NULL;
+
+    /* BBT 10ms cycle */
+    if( wLoc.isusebbt(data->props) ) {
+      __BBT(loc);
+      ThreadOp.sleep( RUNNERBBTTICK );
+      data->bbtCycle++;
+      if( data->bbtCycle < 10 ) {
+        continue;
+      }
+      data->bbtCycle = 0;
+    }
+
+    /* Normal 100ms cycle */
+    msg = __getQueueMsg(data, queueList, (iOMsg)ThreadOp.getPost( th ) );
 
     data->nrruns++;
 
@@ -1565,9 +1642,11 @@ static void __runner( void* threadinst ) {
       __engine( loc, NULL );
     }
 
-
-    ThreadOp.sleep( RUNNERTICK );
+    if( !wLoc.isusebbt(data->props) ) {
+      ThreadOp.sleep( RUNNERTICK );
+    }
     tick++;
+
   } while( data->run && !ThreadOp.isQuit(th) );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Runner for \"%s\" ended.", LocOp.getId( loc ) );
@@ -1682,10 +1761,21 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
     return;
   }
 
+  /* BBT timers */
+  if( evt == enter_event ) {
+    data->bbtEnter = SystemOp.getTick();
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT enter=%ld", data->bbtEnter );
+  }
+  else if( evt == in_event ) {
+    data->bbtIn = SystemOp.getTick();
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtBlock );
+  }
+
   if( data->runner != NULL ) {
     iOMsg msg = MsgOp.inst( emitter, evt );
     iIBlockBase block = (iIBlockBase)MsgOp.getSender(msg);
     const char* blockid = block->base.id( block );
+    data->bbtBlock = block->base.id( block );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
         "event %d from [%s], timer=%d, forcewait=%d nrruns=%d", evt, blockid, timer, forcewait, data->nrruns );
     MsgOp.setTimer( msg, timer );
@@ -2865,6 +2955,15 @@ static const char* _getIdent( iOLoc loc ) {
 }
 
 
+static void __initBBTmap( iOLoc loc ) {
+  iOLocData data = Data(loc);
+  iONode bbt = NodeOp.findNode( data->props, wBBT.name() );
+  while( bbt != NULL ) {
+    MapOp.put( data->bbtMap, wBBT.getbk(bbt), (obj)bbt );
+    bbt = NodeOp.findNextNode( data->props, bbt );
+  };
+}
+
 static void __initCVmap( iOLoc loc ) {
   iOLocData data = Data(loc);
   iONode cv = NodeOp.findNode( data->props, wCVByte.name() );
@@ -3129,6 +3228,7 @@ static iOLoc _inst( iONode props ) {
   data->check2in = wLoc.ischeck2in( data->props );
   data->timedfn = -1; /* function 0 is also used */
   data->released = True;
+  data->bbtMap = MapOp.inst();
 
   if( wRocRail.isresetspfx(AppOp.getIni()) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "global reset speed and functions for loco [%s]", wLoc.getid(props));
@@ -3152,6 +3252,7 @@ static iOLoc _inst( iONode props ) {
   wLoc.setthrottleid( data->props, "" );
 
   __initCVmap( loc );
+  __initBBTmap( loc );
 
   ModelOp.addSysEventListener( AppOp.getModel(), (obj)loc );
 

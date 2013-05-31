@@ -758,6 +758,18 @@
       <var name="released" vt="Boolean"/>
       <var name="nrruns" vt="int"/>
       <var name="blocktrip" vt="char*"/>
+      <var name="bbt" vt="Boolean"/>
+      <var name="bbtMap" vt="iOMap"/>
+      <var name="bbtCycle" vt="int"/>
+      <var name="bbtCycleSpeed" vt="int"/>
+      <var name="bbtCycleNr" vt="int"/>
+      <var name="bbtEnter" vt="unsigned long"/>
+      <var name="bbtIn" vt="unsigned long"/>
+      <var name="bbtBlock" vt="const char*"/>
+      <var name="bbtSpeed" vt="int"/>
+      <var name="bbtSpeedInterval" vt="int"/>
+      <var name="bbtInterval" vt="int"/>
+      <var name="bbtAtMinSpeed" vt="Boolean"/>
       </data>
   </object>
 

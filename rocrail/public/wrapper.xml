@@ -2394,6 +2394,13 @@
         <var name="trainlen" vt="int" defval="0" range="0-*" remark="Total train length"/>
 
         <actionctrl cardinality="n"/>
+
+        <var name="usebbt" vt="bool" defval="False" remark="Use block brake time."/>
+        <bbt cardinality="n" wrappername="BBT">
+          <var name="bk" vt="string" defval="" range="*" remark="Block ID."/>
+          <var name="interval" vt="int" defval="1" range="1-*" remark="Brake interval in 10ms units."/>
+          <var name="fixed" vt="bool" defval="False" remark="Fixed block brake timer."/>
+        </bbt>
       </lc>
     </lclist>
 
