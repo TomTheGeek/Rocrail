@@ -412,6 +412,7 @@ public:
     wxCheckBox* m_Info4Throttle;
     wxCheckBox* m_Regulated;
     wxCheckBox* m_BBT;
+    wxSpinCtrl* m_BBTSteps;
     wxPanel* m_DetailsPanel;
     wxStaticText* m_Label_Blockwait;
     wxTextCtrl* m_Blockwait;

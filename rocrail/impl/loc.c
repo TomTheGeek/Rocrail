@@ -1419,7 +1419,7 @@ static void __BBT(iOLoc loc) {
       data->bbtInterval = 10;
       data->bbtCycleNr = 0;
       if( bbt != NULL ) {
-        data->bbtInterval = wBBT.getinterval(bbt) / 10;
+        data->bbtInterval = wBBT.getinterval(bbt) / wLoc.getbbtsteps(data->props);
       }
       data->bbtSpeed = data->drvSpeed;
       TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "**enter** BBT=%d Block=%s V=%d", data->bbtInterval, data->bbtBlock, data->bbtSpeed );
@@ -1428,12 +1428,12 @@ static void __BBT(iOLoc loc) {
     if( data->bbtInterval == 0 )
       data->bbtInterval = 10;
 
-    if( !data->bbtAtMinSpeed && (data->bbtCycleSpeed % data->bbtInterval) == 0 ) {
+    if( !data->bbtAtMinSpeed && data->bbtCycleSpeed > 0 && (data->bbtCycleSpeed % data->bbtInterval) == 0 ) {
       iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       int V_min = wLoc.getV_min( data->props );
       int speed = 0;
       data->bbtCycleNr++;
-      speed = data->bbtSpeed - ((data->bbtSpeed / 10) * data->bbtCycleNr);
+      speed = data->bbtSpeed - ((data->bbtSpeed / wLoc.getbbtsteps(data->props)) * data->bbtCycleNr);
       if( speed <= V_min ) {
         speed = V_min;
         data->bbtAtMinSpeed = True;
@@ -1450,7 +1450,7 @@ static void __BBT(iOLoc loc) {
   if( data->bbtIn != 0 && data->bbtBlock != NULL ) {
     iONode bbt = (iONode)MapOp.get( data->bbtMap, data->bbtBlock );
     int interval = (int)(data->bbtIn - data->bbtEnter);
-    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "**in** BBT=%d V=%d Block=%s", interval/10, 0, data->bbtBlock );
+    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "**in** BBT=%d V=%d Block=%s", interval, 0, data->bbtBlock );
     if( bbt == NULL ) {
       bbt = NodeOp.inst( wBBT.name(), data->props, ELEMENT_NODE );
       NodeOp.addChild(data->props, bbt);

@@ -2396,6 +2396,7 @@
         <actionctrl cardinality="n"/>
 
         <var name="usebbt" vt="bool" defval="False" remark="Use block brake time."/>
+        <var name="bbtsteps" vt="int" defval="10" range="10-32"/>
         <bbt cardinality="n" wrappername="BBT">
           <var name="bk" vt="string" defval="" range="*" remark="Block ID."/>
           <var name="interval" vt="int" defval="1" range="1-*" remark="Brake interval in 10ms units."/>

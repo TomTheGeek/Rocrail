@@ -728,6 +728,7 @@ void LocDialog::InitValues() {
   m_RestoreSpeed->SetValue( wLoc.isrestorespeed( m_Props ) ? true:false );
   m_Info4Throttle->SetValue( wLoc.isinfo4throttle( m_Props ) ? true:false );
   m_BBT->SetValue( wLoc.isusebbt( m_Props ) ? true:false );
+  m_BBTSteps->SetValue( wLoc.getbbtsteps( m_Props ) );
 
   str = StrOp.fmt( "%d", wLoc.getV_step( m_Props ) );
   m_Accel->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
@@ -1067,6 +1068,7 @@ bool LocDialog::Evaluate() {
   wLoc.setrestorespeed( m_Props, m_RestoreSpeed->GetValue() ? True:False );
   wLoc.setinfo4throttle( m_Props, m_Info4Throttle->GetValue() ? True:False );
   wLoc.setusebbt( m_Props, m_BBT->GetValue() ? True:False );
+  wLoc.setbbtsteps( m_Props, m_BBTSteps->GetValue() );
 
   val = atoi( m_DirPause->GetValue().mb_str(wxConvUTF8) );
   wLoc.setdirpause( m_Props, val );
@@ -1269,6 +1271,7 @@ bool LocDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption
     m_Info4Throttle = NULL;
     m_Regulated = NULL;
     m_BBT = NULL;
+    m_BBTSteps = NULL;
     m_DetailsPanel = NULL;
     m_Label_Blockwait = NULL;
     m_Blockwait = NULL;
@@ -1811,12 +1814,12 @@ void LocDialog::CreateControls()
     m_Regulated->SetValue(false);
     itemFlexGridSizer114->Add(m_Regulated, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 2);
 
-    wxStaticText* itemStaticText127 = new wxStaticText( m_Interface_Panel, wxID_STATIC, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer114->Add(itemStaticText127, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 2);
-
     m_BBT = new wxCheckBox( m_Interface_Panel, wxID_ANY, _("BBT"), wxDefaultPosition, wxDefaultSize, 0 );
     m_BBT->SetValue(false);
-    itemFlexGridSizer114->Add(m_BBT, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 2);
+    itemFlexGridSizer114->Add(m_BBT, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 2);
+
+    m_BBTSteps = new wxSpinCtrl( m_Interface_Panel, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 10, 32, 10 );
+    itemFlexGridSizer114->Add(m_BBTSteps, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
 
     m_Notebook->AddPage(m_Interface_Panel, _("Interface"));
 
