@@ -5019,6 +5019,7 @@ static void _setBlockOccupancy( iOModel inst, const char* BlockId, const char* L
 
   if( placing > 0 ) {
     /* 0 = Not set, 1 = True, 2 = False*/
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "occ: set placing in block %s for %s to %d", BlockId, LocId, placing );
     wOccupancy.setplacing( occ, placing );
   }
 
@@ -5028,6 +5029,7 @@ static void _setBlockOccupancy( iOModel inst, const char* BlockId, const char* L
   }
 
   if( LocId == NULL || StrOp.len(LocId) == 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "occ: reset placing in block: %s", BlockId );
     wOccupancy.setplacing( occ, 0 );
   }
 
@@ -5069,7 +5071,7 @@ static void _saveBlockOccupancy( iOModel inst, const char* occfilename ) {
       FileOp.base.del( f );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to write occupancy file [%s]", occFileName );
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "unable to write occupancy file [%s]", occFileName );
     }
   }
 

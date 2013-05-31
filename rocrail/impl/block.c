@@ -423,6 +423,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
 
   if( fbevt == NULL ) {
     /* event without description; look up in map */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ident = %s", ident!=NULL?ident:"-");
     fbevt = ModPlanOp.getEvent4Block( NULL, NULL , data->props, data->fromBlockId, id);
   }
 
@@ -483,34 +484,37 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
         iOLoc identLoc = ModelOp.getLocByIdent(model, ident);
         if( (identLoc != NULL && data->acceptident ) || (identLoc != NULL && !ModelOp.isAuto(model)) ) {
             iONode cmd = NULL;
-            if( loc != NULL ) {
-              iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-              wBlock.setid( cmd, data->id );
-              wBlock.setlocid( cmd, "" );
-              wBlock.setcmd( cmd, wBlock.loc );
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "remove loco %s from block %s", LocOp.getId(loc), data->id );
-              inst->cmd(inst, cmd);
+
+            if( !StrOp.equals( LocOp.getId(identLoc), data->locId )) {
+              if( loc != NULL ) {
+                iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+                wBlock.setid( cmd, data->id );
+                wBlock.setlocid( cmd, "" );
+                wBlock.setcmd( cmd, wBlock.loc );
+                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "remove loco %s from block %s", LocOp.getId(loc), data->id );
+                inst->cmd(inst, cmd);
+              }
+
+              /* broadcast end of acceptident */
+              if( data->acceptident != wBlock.isacceptident(data->props) ) {
+                iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+                wBlock.setid( nodeD, data->id );
+                wBlock.setacceptident(nodeD, data->acceptident);
+                AppOp.broadcastEvent( nodeD );
+
+                wBlock.setacceptident(data->props, data->acceptident);
+              }
+
+              /* Inform Rocrail... */
+              cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+              wLoc.setid( cmd, LocOp.getId(identLoc) );
+              wLoc.setcmd( cmd, wLoc.block );
+              wLoc.setblockid( cmd, data->id );
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "set loco %s in block %s", LocOp.getId(identLoc), data->id );
+              LocOp.cmd( identLoc, cmd );
+              loc = identLoc;
+              __checkAction((iOBlock)inst, "acceptident");
             }
-
-            /* broadcast end of acceptident */
-            if( data->acceptident != wBlock.isacceptident(data->props) ) {
-              iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-              wBlock.setid( nodeD, data->id );
-              wBlock.setacceptident(nodeD, data->acceptident);
-              AppOp.broadcastEvent( nodeD );
-
-              wBlock.setacceptident(data->props, data->acceptident);
-            }
-
-            /* Inform Rocrail... */
-            cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-            wLoc.setid( cmd, LocOp.getId(identLoc) );
-            wLoc.setcmd( cmd, wLoc.block );
-            wLoc.setblockid( cmd, data->id );
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "set loco %s in block %s", LocOp.getId(identLoc), data->id );
-            LocOp.cmd( identLoc, cmd );
-            loc = identLoc;
-            __checkAction((iOBlock)inst, "acceptident");
 
           /*}*/
         }
@@ -2155,8 +2159,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     /* reset ghost flag */
     data->ghost = False;
 
-    ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, locid, False, 0, 0, NULL );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"block %s set locid=%s", wBlock.getid(data->props), locid );
+    ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, locid, False, 0, 0, NULL );
     occUpdate = True;
   }
 

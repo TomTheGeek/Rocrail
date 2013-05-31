@@ -531,7 +531,7 @@ static iONode _getEvent4Block(iOModPlan inst, const char* modid, iONode block, c
       iOList blockids = NULL;
 
       StrOp.fmtb( key, "%s-%s", modid, from );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "get list for [%s]...", key );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "get list for [%s]...", key );
       blockids = (iOList)MapOp.get(data->fbeventMap, key);
 
       if( blockids != NULL && ListOp.size(blockids) > 0 ) {
@@ -546,7 +546,7 @@ static iONode _getEvent4Block(iOModPlan inst, const char* modid, iONode block, c
         }
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no list found for [%s]", key );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "no list found for [%s]", key );
       }
       fbevent = wBlock.nextfbevent(block, fbevent);
     };

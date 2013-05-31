@@ -1422,7 +1422,8 @@ static void __BBT(iOLoc loc) {
         data->bbtInterval = wBBT.getinterval(bbt) / wLoc.getbbtsteps(data->props);
       }
       data->bbtSpeed = data->drvSpeed;
-      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "**enter** BBT=%d Block=%s V=%d", data->bbtInterval, data->bbtBlock, data->bbtSpeed );
+      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "**enter** BBT=%d Block=%s V=%d",
+          wBBT.getinterval(bbt), data->bbtBlock, data->bbtSpeed );
     }
 
     if( data->bbtInterval == 0 )
@@ -1452,16 +1453,17 @@ static void __BBT(iOLoc loc) {
     int interval = (int)(data->bbtIn - data->bbtEnter);
     TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "**in** BBT=%d V=%d Block=%s", interval, 0, data->bbtBlock );
     if( bbt == NULL ) {
+      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT creating node for Block=%s", interval, 0, data->bbtBlock );
       bbt = NodeOp.inst( wBBT.name(), data->props, ELEMENT_NODE );
       NodeOp.addChild(data->props, bbt);
       wBBT.setbk(bbt, data->bbtBlock);
       MapOp.put(data->bbtMap, data->bbtBlock, (obj)bbt);
     }
     wBBT.setinterval(bbt, interval);
+    data->bbtBlock      = NULL;
+    data->bbtCycleSpeed = 0;
     data->bbtEnter      = 0;
     data->bbtIn         = 0;
-    data->bbtCycleSpeed = 0;
-    data->bbtBlock      = NULL;
     data->bbtAtMinSpeed = False;
   }
 }
@@ -2568,12 +2570,14 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       const char* blockid = wLoc.getblockid( nodeA );
 
       if( data->curBlock != NULL ) {
-        iIBlockBase block = ModelOp.getBlock( model, data->curBlock );
-        if( block ) {
-          iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-          wBlock.setid( cmd, data->curBlock );
-          wBlock.setlocid( cmd, "" );
-          block->cmd( block, cmd );
+        if( blockid == NULL || !StrOp.equals(data->curBlock, blockid) ) {
+          iIBlockBase block = ModelOp.getBlock( model, data->curBlock );
+          if( block ) {
+            iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+            wBlock.setid( cmd, data->curBlock );
+            wBlock.setlocid( cmd, "" );
+            block->cmd( block, cmd );
+          }
         }
       }
 
