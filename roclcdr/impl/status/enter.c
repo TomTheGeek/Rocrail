@@ -299,7 +299,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
       wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
 
 
-      if( !data->gomanual && !re_enter ) {
+      if( !data->gomanual && !re_enter && !wLoc.isusebbt(data->loc->base.properties( data->loc )) ) {
         data->loc->cmd( data->loc, cmd );
       }
       else {
