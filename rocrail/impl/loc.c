@@ -1798,8 +1798,10 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
 
   /* BBT timers */
   if( evt == enter_event ) {
-    data->bbtBlock = blockid;
-    data->bbtEnter = SystemOp.getTick();
+    data->bbtBlock      = blockid;
+    data->bbtIn         = 0;
+    data->bbtCycleSpeed = 0;
+    data->bbtEnter      = SystemOp.getTick();
     TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT enter=%ld block=%s", data->bbtEnter, data->bbtBlock );
   }
   else if( evt == in_event ) {
