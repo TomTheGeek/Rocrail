@@ -1460,7 +1460,7 @@ static void __BBT(iOLoc loc) {
     if( data->bbtIn >= data->bbtEnter ) {
       int interval = (int)(data->bbtIn - data->bbtEnter);
       if( bbt == NULL ) {
-        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT creating node for Block=%s", data->bbtBlock );
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT creating node for block=%s", data->bbtBlock );
         bbt = NodeOp.inst( wBBT.name(), data->props, ELEMENT_NODE );
         NodeOp.addChild(data->props, bbt);
         wBBT.setbk(bbt, data->bbtBlock);
@@ -1474,10 +1474,11 @@ static void __BBT(iOLoc loc) {
             interval = oldinterval - ((oldinterval - interval ) / 4);
       }
       wBBT.setinterval(bbt, interval);
-      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT-IN interval=%d Block=%s", interval, data->bbtBlock );
+      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT-IN interval=%d block=%s", interval, data->bbtBlock );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "BBT-IN interval error in=%d < enter=%d", data->bbtIn, data->bbtEnter );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+          "BBT-IN interval error in=%d < enter=%d block=%s", data->bbtIn, data->bbtEnter, data->bbtBlock != NULL ? data->bbtBlock:"?" );
     }
     data->bbtBlock      = NULL;
     data->bbtCycleSpeed = 0;
@@ -2994,6 +2995,11 @@ static void __initBBTmap( iOLoc loc ) {
     MapOp.put( data->bbtMap, wBBT.getbk(bbt), (obj)bbt );
     bbt = NodeOp.findNextNode( data->props, bbt );
   };
+  data->bbtBlock      = NULL;
+  data->bbtCycleSpeed = 0;
+  data->bbtEnter      = 0;
+  data->bbtIn         = 0;
+  data->bbtAtMinSpeed = False;
 }
 
 static void __initCVmap( iOLoc loc ) {
