@@ -4254,13 +4254,15 @@ void RocGuiFrame::OnStateEvent( wxCommandEvent& event ) {
     Boolean console = wState.isconsolemode( node );
     m_bServerConsoleMode = console;
 
-    GetToolBar()->ToggleTool(ME_Go, power);
+    if( wGui.getstatusboosteruid(m_Ini) == 0 || wGui.getstatusboosteruid(m_Ini) == wState.getuid(node) ) {
+      GetToolBar()->ToggleTool(ME_Go, power);
 
-    wxMenuItem* mi = menuBar->FindItem(ME_ShutdownRocRail);
-    if( mi != NULL ) mi->Enable(!console);
+      wxMenuItem* mi = menuBar->FindItem(ME_ShutdownRocRail);
+      if( mi != NULL ) mi->Enable(!console);
 
-    mi = menuBar->FindItem(ME_Go);
-    if( mi != NULL ) mi->Check(power);
+      mi = menuBar->FindItem(ME_Go);
+      if( mi != NULL ) mi->Check(power);
+    }
 
     int state = (wState.ispower( node )?0x01:0x00) |
                 (wState.istrackbus( node )?0x02:0x00) |
