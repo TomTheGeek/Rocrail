@@ -1220,7 +1220,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
     }
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sending command...V=%d",wLoc.getV(cmd) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sending command...V=%d dir=%s",wLoc.getV(cmd), wLoc.isdir(cmd)?"fwd":"rev" );
     if( cmdFn != NULL ) {
       if( wLoc.getaddr( cmdFn ) == 0 && !StrOp.equals( wLoc.prot_A, wLoc.getprot( data->props ))) {
         wLoc.setaddr( cmdFn, wLoc.getaddr(data->props) );
@@ -1463,6 +1463,13 @@ static void __BBT(iOLoc loc) {
       wBBT.setinterval(bbt, interval);
     }
     data->bbtBlock      = NULL;
+    data->bbtCycleSpeed = 0;
+    data->bbtEnter      = 0;
+    data->bbtIn         = 0;
+    data->bbtAtMinSpeed = False;
+  }
+  else if( data->bbtIn != 0 && data->bbtBlock == NULL ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "BBT-IN **block not set**" );
     data->bbtCycleSpeed = 0;
     data->bbtEnter      = 0;
     data->bbtIn         = 0;
