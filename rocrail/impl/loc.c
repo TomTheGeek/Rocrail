@@ -1447,6 +1447,13 @@ static void __BBT(iOLoc loc) {
     }
     data->bbtCycleSpeed++;
   }
+  else if( data->bbtEnter != 0 && data->bbtIn == 0  && data->bbtBlock == NULL ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "BBT-ENTER **block not set**" );
+    data->bbtCycleSpeed = 0;
+    data->bbtEnter      = 0;
+    data->bbtIn         = 0;
+    data->bbtAtMinSpeed = False;
+  }
 
   if( data->bbtIn != 0 && data->bbtBlock != NULL ) {
     iONode bbt = (iONode)MapOp.get( data->bbtMap, data->bbtBlock );
