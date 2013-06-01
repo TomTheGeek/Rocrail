@@ -2248,6 +2248,12 @@ static void _reset( iOLoc inst, Boolean saveCurBlock ) {
   data->exit  = False;
   data->out   = False;
 
+  data->bbtBlock      = NULL;
+  data->bbtCycleSpeed = 0;
+  data->bbtEnter      = 0;
+  data->bbtIn         = 0;
+  data->bbtAtMinSpeed = False;
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "reset [%s] in current block [%s]%s",
       LocOp.getId(inst), data->curBlock==NULL?"?":data->curBlock, saveCurBlock?" (save current block)":"" );
