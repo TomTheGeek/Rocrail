@@ -1423,7 +1423,7 @@ static void __BBT(iOLoc loc) {
       }
       data->bbtSpeed = data->drvSpeed;
       TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT-ENTER interval=%d block=%s V_enter=%d",
-          wBBT.getinterval(bbt), data->bbtBlock, data->bbtSpeed );
+          bbt != NULL ? wBBT.getinterval(bbt):100, data->bbtBlock, data->bbtSpeed );
     }
 
     if( data->bbtInterval == 0 )
