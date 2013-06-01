@@ -408,16 +408,31 @@ static Boolean _cmd(iOPowerMan inst, iONode cmd) {
     /* command for all */
     TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Power command [%s] for all boosters.", wPwrCmd.getcmd(cmd));
     while( booster != NULL ) {
-      iOOutput output = ModelOp.getOutput( model, wBooster.getpowersw(booster) );
-      boosterid = wBooster.getid(booster);
-      TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Power command [%s] for booster [%s].", wPwrCmd.getcmd(cmd), boosterid);
-      if( output != NULL ) {
-        if( StrOp.equals( wPwrCmd.on, wPwrCmd.getcmd(cmd) ) ) {
-          ThreadOp.sleep(50);
-          OutputOp.on(output);
-        }
+      int uid = wBooster.getuid(booster);
+      if( uid > 0 ) {
+        iONode nodeA = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+        wSysCmd.setbus(nodeA, uid);
+        wSysCmd.setiid(nodeA, wBooster.getiid(booster));
+        if( StrOp.equals( wPwrCmd.on, wPwrCmd.getcmd(cmd) ) )
+          wSysCmd.setcmd(nodeA, wSysCmd.go);
         else if( StrOp.equals( wPwrCmd.off, wPwrCmd.getcmd(cmd) ) )
-          OutputOp.off(output);
+          wSysCmd.setcmd(nodeA, wSysCmd.stop);
+        else
+          wSysCmd.setcmd(nodeA, wPwrCmd.getcmd(cmd));
+        ControlOp.cmd( control, nodeA, NULL );
+      }
+      else {
+        iOOutput output = ModelOp.getOutput( model, wBooster.getpowersw(booster) );
+        boosterid = wBooster.getid(booster);
+        TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Power command [%s] for booster [%s].", wPwrCmd.getcmd(cmd), boosterid);
+        if( output != NULL ) {
+          if( StrOp.equals( wPwrCmd.on, wPwrCmd.getcmd(cmd) ) ) {
+            ThreadOp.sleep(50);
+            OutputOp.on(output);
+          }
+          else if( StrOp.equals( wPwrCmd.off, wPwrCmd.getcmd(cmd) ) )
+            OutputOp.off(output);
+        }
       }
       booster = (iONode)MapOp.next( data->boostermap );
     }
