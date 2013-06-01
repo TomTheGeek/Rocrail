@@ -86,7 +86,7 @@ void eventPre2In( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, B
         wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
         data->loc->cmd( data->loc, cmd );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Setting velocity for \"%s\" to V_Min",
+                     "Setting pre2in velocity for \"%s\" to V_Min",
                      data->loc->getId( data->loc ) );
       }
     }

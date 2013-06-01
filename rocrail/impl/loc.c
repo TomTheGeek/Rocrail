@@ -1469,6 +1469,9 @@ static void __BBT(iOLoc loc) {
       }
       wBBT.setinterval(bbt, interval);
     }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "BBT-IN interval error in=%d < enter=%d", data->bbtIn, data->bbtEnter );
+    }
     data->bbtBlock      = NULL;
     data->bbtCycleSpeed = 0;
     data->bbtEnter      = 0;
