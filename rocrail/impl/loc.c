@@ -1422,7 +1422,7 @@ static void __BBT(iOLoc loc) {
         data->bbtInterval = wBBT.getinterval(bbt) / wLoc.getbbtsteps(data->props);
       }
       data->bbtSpeed = data->drvSpeed;
-      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "**enter** BBT=%d Block=%s V=%d",
+      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT-ENTER interval=%d block=%s V_enter=%d",
           wBBT.getinterval(bbt), data->bbtBlock, data->bbtSpeed );
     }
 
@@ -1439,7 +1439,7 @@ static void __BBT(iOLoc loc) {
         speed = V_min;
         data->bbtAtMinSpeed = True;
       }
-      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT V=%d V_enter=%d", speed, data->bbtSpeed );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "BBT-SPEED V=%d", speed );
 
       wLoc.setV( cmd, speed );
       wLoc.setdir( cmd, wLoc.isdir( data->props ) );
@@ -1450,16 +1450,18 @@ static void __BBT(iOLoc loc) {
 
   if( data->bbtIn != 0 && data->bbtBlock != NULL ) {
     iONode bbt = (iONode)MapOp.get( data->bbtMap, data->bbtBlock );
-    int interval = (int)(data->bbtIn - data->bbtEnter);
-    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "**in** BBT=%d V=%d Block=%s", interval, 0, data->bbtBlock );
-    if( bbt == NULL ) {
-      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT creating node for Block=%s", interval, 0, data->bbtBlock );
-      bbt = NodeOp.inst( wBBT.name(), data->props, ELEMENT_NODE );
-      NodeOp.addChild(data->props, bbt);
-      wBBT.setbk(bbt, data->bbtBlock);
-      MapOp.put(data->bbtMap, data->bbtBlock, (obj)bbt);
+    if( data->bbtIn >= data->bbtEnter ) {
+      int interval = (int)(data->bbtIn - data->bbtEnter);
+      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT-IN interval=%d Block=%s", interval, data->bbtBlock );
+      if( bbt == NULL ) {
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "BBT creating node for Block=%s", data->bbtBlock );
+        bbt = NodeOp.inst( wBBT.name(), data->props, ELEMENT_NODE );
+        NodeOp.addChild(data->props, bbt);
+        wBBT.setbk(bbt, data->bbtBlock);
+        MapOp.put(data->bbtMap, data->bbtBlock, (obj)bbt);
+      }
+      wBBT.setinterval(bbt, interval);
     }
-    wBBT.setinterval(bbt, interval);
     data->bbtBlock      = NULL;
     data->bbtCycleSpeed = 0;
     data->bbtEnter      = 0;
