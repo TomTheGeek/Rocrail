@@ -1785,6 +1785,10 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer ) {
 
 static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewait, const char* id ) {
   iOLocData data = Data(inst);
+  iOMsg msg = MsgOp.inst( emitter, evt );
+  iIBlockBase block = (iIBlockBase)MsgOp.getSender(msg);
+  const char* blockid = block->base.id( block );
+
   data->curSensor = id;
 
   if( emitter == (obj)data->driver ) {
@@ -1794,19 +1798,17 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
 
   /* BBT timers */
   if( evt == enter_event ) {
+    data->bbtBlock = blockid;
     data->bbtEnter = SystemOp.getTick();
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT enter=%ld", data->bbtEnter );
+    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT enter=%ld block=%s", data->bbtEnter, data->bbtBlock );
   }
   else if( evt == in_event ) {
+    data->bbtBlock = blockid;
     data->bbtIn = SystemOp.getTick();
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtBlock );
+    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtBlock );
   }
 
   if( data->runner != NULL ) {
-    iOMsg msg = MsgOp.inst( emitter, evt );
-    iIBlockBase block = (iIBlockBase)MsgOp.getSender(msg);
-    const char* blockid = block->base.id( block );
-    data->bbtBlock = block->base.id( block );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
         "event %d from [%s], timer=%d, forcewait=%d nrruns=%d", evt, blockid, timer, forcewait, data->nrruns );
     MsgOp.setTimer( msg, timer );
