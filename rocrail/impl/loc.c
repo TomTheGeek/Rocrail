@@ -1461,7 +1461,7 @@ static void __BBT(iOLoc loc) {
       int interval = (int)(data->bbtIn - data->bbtEnter);
       TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT-IN interval=%d Block=%s", interval, data->bbtBlock );
       if( bbt == NULL ) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "BBT creating node for Block=%s", data->bbtBlock );
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT creating node for Block=%s", data->bbtBlock );
         bbt = NodeOp.inst( wBBT.name(), data->props, ELEMENT_NODE );
         NodeOp.addChild(data->props, bbt);
         wBBT.setbk(bbt, data->bbtBlock);
