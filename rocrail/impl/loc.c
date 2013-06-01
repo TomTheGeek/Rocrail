@@ -1455,11 +1455,10 @@ static void __BBT(iOLoc loc) {
     data->bbtAtMinSpeed = False;
   }
 
-  if( data->bbtIn != 0 && data->bbtBlock != NULL ) {
+  if( data->bbtEnter != 0 && data->bbtIn != 0 && data->bbtBlock != NULL ) {
     iONode bbt = (iONode)MapOp.get( data->bbtMap, data->bbtBlock );
     if( data->bbtIn >= data->bbtEnter ) {
       int interval = (int)(data->bbtIn - data->bbtEnter);
-      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT-IN interval=%d Block=%s", interval, data->bbtBlock );
       if( bbt == NULL ) {
         TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT creating node for Block=%s", data->bbtBlock );
         bbt = NodeOp.inst( wBBT.name(), data->props, ELEMENT_NODE );
@@ -1467,7 +1466,15 @@ static void __BBT(iOLoc loc) {
         wBBT.setbk(bbt, data->bbtBlock);
         MapOp.put(data->bbtMap, data->bbtBlock, (obj)bbt);
       }
+      else {
+        int oldinterval = wBBT.getinterval(bbt);
+        if( interval > oldinterval )
+          interval = oldinterval + ((interval - oldinterval) / 4);
+        else if( interval < oldinterval )
+            interval = oldinterval - ((oldinterval - interval ) / 4);
+      }
       wBBT.setinterval(bbt, interval);
+      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT-IN interval=%d Block=%s", interval, data->bbtBlock );
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "BBT-IN interval error in=%d < enter=%d", data->bbtIn, data->bbtEnter );
