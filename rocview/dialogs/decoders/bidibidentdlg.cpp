@@ -260,6 +260,8 @@ int BidibIdentDlg::getLevel(const char* path, int* n, int* o, int* p ) {
     idx++;
   };
 
+  StrTokOp.base.del(tok);
+
   return level;
 }
 
