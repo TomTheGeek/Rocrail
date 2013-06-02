@@ -133,6 +133,7 @@ class RouteDialog: public wxDialog, public BaseDialog
   void initOutputCombo();
   void initLocPermissionList();
   void initCondList();
+  void setSwCmd( iONode swcmd );
 
 public:
     /// Constructors

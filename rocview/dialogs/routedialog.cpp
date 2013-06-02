@@ -1890,16 +1890,9 @@ wxIcon RouteDialog::GetIconResource( const wxString& name )
     return wxNullIcon;
 ////@end RouteDialog icon retrieval
 }
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_ST_ADD
- */
 
-void RouteDialog::OnButtonTurnoutAddClick( wxCommandEvent& event )
-{
-  iONode swcmd = NodeOp.inst( wSwitchCmd.name(), m_Props, ELEMENT_NODE );
 
-  wSwitchCmd.setid(swcmd, m_SwitchId->GetStringSelection().mb_str(wxConvUTF8) );
-
+void RouteDialog::setSwCmd( iONode swcmd ) {
   int dir = m_SwitchCmd->GetSelection();
   switch( dir ) {
     case 0:
@@ -1944,6 +1937,19 @@ void RouteDialog::OnButtonTurnoutAddClick( wxCommandEvent& event )
 
   wSwitchCmd.setlock( swcmd, m_Lock->IsChecked() ? True:False );
   wSwitchCmd.setreduceV( swcmd, m_SwReduceV->IsChecked() ? True:False );
+}
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_ST_ADD
+ */
+
+void RouteDialog::OnButtonTurnoutAddClick( wxCommandEvent& event )
+{
+  iONode swcmd = NodeOp.inst( wSwitchCmd.name(), m_Props, ELEMENT_NODE );
+
+  wSwitchCmd.setid(swcmd, m_SwitchId->GetStringSelection().mb_str(wxConvUTF8) );
+
+  setSwCmd(swcmd);
 
   NodeOp.addChild( m_Props, swcmd );
 
@@ -2211,47 +2217,7 @@ void RouteDialog::OnButtonTurnoutModifyClick( wxCommandEvent& event )
     wSwitchCmd.setlock( swcmd, m_Lock->IsChecked() ? True:False );
     wSwitchCmd.setreduceV( swcmd, m_SwReduceV->IsChecked() ? True:False );
 
-    int dir = m_SwitchCmd->GetSelection();
-    switch( dir ) {
-      case 0:
-        wSwitchCmd.setcmd( swcmd, wSwitch.straight );
-        break;
-      case 1:
-        wSwitchCmd.setcmd( swcmd, wSwitch.turnout );
-        break;
-      case 2:
-        wSwitchCmd.setcmd( swcmd, wSwitch.left );
-        break;
-      case 3:
-        wSwitchCmd.setcmd( swcmd, wSwitch.right );
-        break;
-      case 4:
-        wSwitchCmd.setcmd( swcmd, wSwitchCmd.cmd_track );
-        wSwitchCmd.settrack( swcmd, m_TrackNumber->GetValue() );
-        break;
-      case 5:
-        wSwitchCmd.setcmd( swcmd, wSignal.red );
-        break;
-      case 6:
-        wSwitchCmd.setcmd( swcmd, wSignal.green );
-        break;
-      case 7:
-        wSwitchCmd.setcmd( swcmd, wSignal.yellow );
-        break;
-      case 8:
-        wSwitchCmd.setcmd( swcmd, wSignal.white );
-        break;
-      case 9:
-        wSwitchCmd.setcmd( swcmd, wOutput.on );
-        break;
-      case 10:
-        wSwitchCmd.setcmd( swcmd, wOutput.off );
-        break;
-      case 11:
-        wSwitchCmd.setcmd( swcmd, wSignal.aspect );
-        wSwitchCmd.settrack( swcmd, m_TrackNumber->GetValue() );
-        break;
-    }
+    setSwCmd(swcmd);
 
     initCommands();
   }
