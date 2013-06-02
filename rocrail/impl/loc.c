@@ -1478,7 +1478,9 @@ static void __BBT(iOLoc loc) {
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-          "BBT-IN interval error in=%d < enter=%d block=%s", data->bbtIn, data->bbtEnter, data->bbtInBlock != NULL ? data->bbtInBlock:"?" );
+          "BBT-IN interval error in=%d enter=%d enterBlock=%s inBlock=%s",
+          data->bbtIn, data->bbtEnter,
+          data->bbtEnterBlock != NULL ? data->bbtEnterBlock:"?", data->bbtInBlock != NULL ? data->bbtInBlock:"?" );
     }
     data->bbtEnterBlock = NULL;
     data->bbtInBlock    = NULL;
