@@ -37,6 +37,7 @@
 
 #include "rocs/public/trace.h"
 #include "rocs/public/system.h"
+#include "rocs/public/strtok.h"
 
 #include "rocview/public/guiapp.h"
 #include "rocview/wrapper/public/Gui.h"
@@ -217,17 +218,49 @@ static int __sortPath(obj* _a, obj* _b)
 }
 
 
-int BidibIdentDlg::getLevel(const char* path ) {
-  // 0.0.0.0
-  if( path[0] == '0')
-    return 0;
-  if( path[2] == '0')
-    return 1;
-  if( path[4] == '0')
-    return 2;
-  if( path[6] == '0')
-    return 3;
-  return 4;
+int BidibIdentDlg::getLevel(const char* path, int* n, int* o, int* p ) {
+  int level = 0;
+  int idx = 0;
+  iOStrTok tok = StrTokOp.inst(path, '.');
+
+  *n = 0;
+  *o = 0;
+  *p = 0;
+  const char* prevLevel = "0";
+  while(StrTokOp.hasMoreTokens(tok) ) {
+    const char* s = StrTokOp.nextToken(tok);
+    if( idx == 0 && atoi(s) == 0) {
+      level = 0;
+      break;
+    }
+
+    if( idx == 1 ) {
+      *n = atoi(prevLevel);
+      if( atoi(s) == 0) {
+        level = 1;
+        break;
+      }
+    }
+    if( idx == 2 ) {
+      *o = atoi(prevLevel);
+      if( atoi(s) == 0) {
+        level = 2;
+        break;
+      }
+    }
+    if( idx == 3 ) {
+      *p = atoi(prevLevel);
+      if( atoi(s) == 0) {
+        level = 3;
+        break;
+      }
+    }
+
+    prevLevel = s;
+    idx++;
+  };
+
+  return level;
 }
 
 wxTreeItemId BidibIdentDlg::addTreeChild( const wxTreeItemId& root, iONode bidibnode) {
@@ -326,24 +359,24 @@ void BidibIdentDlg::initLabels() {
     for( int i = 1; i < ListOp.size(nodeList); i++ ) {
       iONode bidibnode = (iONode)ListOp.get( nodeList, i );
       TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"%s", wBiDiBnode.getpath(bidibnode) );
-      int childLevel = getLevel(wBiDiBnode.getpath(bidibnode));
+      int n = 0;
+      int o = 0;
+      int p = 0;
+      int childLevel = getLevel(wBiDiBnode.getpath(bidibnode), &n, &o, &p);
       if( childLevel == 1 ) {
-        int n = wBiDiBnode.getpath(bidibnode)[0]-'0';
-        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"[%d]", n );
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"[%d] childLevel=%d", n, childLevel );
         r1[n] = bidibnode;
       }
-      if( childLevel == 2 ) {
-        int n = wBiDiBnode.getpath(bidibnode)[2]-'0';
-        int o = wBiDiBnode.getpath(bidibnode)[0]-'0';
+      else if( childLevel == 2 ) {
         TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"[%d][%d]", n, o );
         r2[n][o] = bidibnode;
       }
-      if( childLevel == 3 ) {
-        int n = wBiDiBnode.getpath(bidibnode)[4]-'0';
-        int o = wBiDiBnode.getpath(bidibnode)[2]-'0';
-        int p = wBiDiBnode.getpath(bidibnode)[0]-'0';
+      else if( childLevel == 3 ) {
         TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"[%d][%d][%d]", n, o, p );
         r3[n][o][p] = bidibnode;
+      }
+      else {
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"Oops! childLevel=%d", childLevel );
       }
     }
 

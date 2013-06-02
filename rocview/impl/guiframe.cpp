@@ -3917,16 +3917,10 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi_locobook->Check( m_bLocoBook );
   wxMenuItem* mi_locowidgets  = menuBar->FindItem(ME_LocoWidgets);
   mi_locowidgets->Check( wGui.islocowidgetstab(m_Ini) );
-  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
-      StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL, wGlobal.vmajor, wGlobal.vminor) ) {
-    mi_locowidgets->Enable( false );
-  }
+  mi_locowidgets->Enable( !l_Expired );
 
   wxMenuItem* mi_rocpro  = menuBar->FindItem(ME_RocPro);
-  if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
-      StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL, wGlobal.vmajor, wGlobal.vminor) ) {
-    mi_rocpro->Enable( false );
-  }
+  mi_rocpro->Enable( !l_Expired );
 
   wxMenuItem* mi_planbook  = menuBar->FindItem(ME_PlanBook);
   mi_planbook->Check( m_bPlanBook );
