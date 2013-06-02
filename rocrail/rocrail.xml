@@ -765,7 +765,8 @@
       <var name="bbtCycleNr" vt="int"/>
       <var name="bbtEnter" vt="unsigned long"/>
       <var name="bbtIn" vt="unsigned long"/>
-      <var name="bbtBlock" vt="const char*"/>
+      <var name="bbtEnterBlock" vt="const char*"/>
+      <var name="bbtInBlock" vt="const char*"/>
       <var name="bbtSpeed" vt="int"/>
       <var name="bbtSpeedInterval" vt="int"/>
       <var name="bbtInterval" vt="int"/>
