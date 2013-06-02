@@ -1806,6 +1806,11 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
     data->bbtEnter      = SystemOp.getTick();
     TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT enter=%ld block=%s", data->bbtEnter, data->bbtEnterBlock );
   }
+  else if( evt == pre2in_event && wLoc.isinatpre2in(data->props) && data->bbtIn == 0 && data->bbtEnter > 0 ) {
+    data->bbtInBlock = blockid;
+    data->bbtIn = SystemOp.getTick();
+    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT pre2in=%ld block=%s", data->bbtIn, data->bbtInBlock );
+  }
   else if( evt == in_event && data->bbtIn == 0 && data->bbtEnter > 0 ) {
     data->bbtInBlock = blockid;
     data->bbtIn = SystemOp.getTick();
