@@ -1468,10 +1468,15 @@ static void __BBT(iOLoc loc) {
       }
       else {
         int oldinterval = wBBT.getinterval(bbt);
+        int diffinterval = abs(interval - oldinterval);
+        if( diffinterval > 250 ) {
+          diffinterval = 250;
+          TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, 250 );
+        }
         if( interval > oldinterval )
-          interval = oldinterval + ((interval - oldinterval) / 4);
+          interval = oldinterval + (diffinterval / 4);
         else if( interval < oldinterval )
-            interval = oldinterval - ((oldinterval - interval ) / 4);
+          interval = oldinterval - (diffinterval / 4);
       }
       wBBT.setinterval(bbt, interval);
       TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT-IN interval=%d block=%s", interval, data->bbtInBlock );
