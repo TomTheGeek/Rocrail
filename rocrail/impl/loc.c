@@ -1788,7 +1788,7 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
   iOLocData data = Data(inst);
   iOMsg msg = MsgOp.inst( emitter, evt );
   iIBlockBase block = (iIBlockBase)MsgOp.getSender(msg);
-  const char* blockid = block->base.id( block );
+  const char* blockid = block!=NULL ? block->base.id( block ):"?";
 
   data->curSensor = id;
 
@@ -1798,23 +1798,25 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
   }
 
   /* BBT timers */
-  if( evt == enter_event && data->bbtEnter == 0) {
-    data->bbtEnterBlock = blockid;
-    data->bbtInBlock    = NULL;
-    data->bbtIn         = 0;
-    data->bbtCycleSpeed = 0;
-    data->bbtEnter      = SystemOp.getTick();
-    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT enter=%ld block=%s", data->bbtEnter, data->bbtEnterBlock );
-  }
-  else if( evt == pre2in_event && wLoc.isinatpre2in(data->props) && data->bbtIn == 0 && data->bbtEnter > 0 ) {
-    data->bbtInBlock = blockid;
-    data->bbtIn = SystemOp.getTick();
-    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT pre2in=%ld block=%s", data->bbtIn, data->bbtInBlock );
-  }
-  else if( evt == in_event && data->bbtIn == 0 && data->bbtEnter > 0 ) {
-    data->bbtInBlock = blockid;
-    data->bbtIn = SystemOp.getTick();
-    TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtInBlock );
+  if( block != NULL && !block->hasExtStop(block) ) {
+    if( evt == enter_event && data->bbtEnter == 0) {
+      data->bbtEnterBlock = blockid;
+      data->bbtInBlock    = NULL;
+      data->bbtIn         = 0;
+      data->bbtCycleSpeed = 0;
+      data->bbtEnter      = SystemOp.getTick();
+      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT enter=%ld block=%s", data->bbtEnter, data->bbtEnterBlock );
+    }
+    else if( evt == pre2in_event && wLoc.isinatpre2in(data->props) && data->bbtIn == 0 && data->bbtEnter > 0 ) {
+      data->bbtInBlock = blockid;
+      data->bbtIn = SystemOp.getTick();
+      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT pre2in=%ld block=%s", data->bbtIn, data->bbtInBlock );
+    }
+    else if( evt == in_event && data->bbtIn == 0 && data->bbtEnter > 0 ) {
+      data->bbtInBlock = blockid;
+      data->bbtIn = SystemOp.getTick();
+      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtInBlock );
+    }
   }
 
   if( data->runner != NULL ) {
