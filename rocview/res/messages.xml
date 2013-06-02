@@ -22348,4 +22348,7 @@
     <it txt="Tabella accessori"/>
     <zh_CN txt="附件表"/>
   </Msg>
+  <Msg id="calc">
+    <en txt="Calculation"/>
+  </Msg>
 </Messages>

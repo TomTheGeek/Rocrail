@@ -267,6 +267,7 @@ public:
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Auto;
     wxCheckBox* m_Monitor;
+    wxCheckBox* m_Calc;
     wxStaticBox* m_DevTraceLevel;
     wxCheckBox* m_Byte;
     wxCheckBox* m_Info;

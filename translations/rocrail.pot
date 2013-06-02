@@ -6407,3 +6407,9 @@ msgstr ""
 msgid "Accessory decoder table"
 msgstr ""
 
+#. 
+# id="calc"
+#, c-format
+msgid "Calculation"
+msgstr ""
+
