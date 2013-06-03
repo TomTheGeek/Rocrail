@@ -2475,6 +2475,7 @@ static Boolean __isSignalAddres(int addr, int port, int sgaddr, int sgport) {
     sgaddr = (pada - 1) / 4 + 1;
     sgport = (pada - 1) % 4 + 1;
   }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "is signal address: field=[%d,%d] signal=[%d,%d]", addr, port, sgaddr, sgport );
   if( sgaddr == addr && sgport == port )
     return True;
   return False;
@@ -3510,7 +3511,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
     int type = wSwitch.getporttype( nodeC );
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Signal event: %d:%d:%d", bus, addr, port);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match signal event: %d:%d:%d type=%d", bus, addr, port, type );
     iOSignal sg = ModelOp.getSgByAddress(inst, addr, port, type);
     if( sg != NULL && wCtrl.issgevents( wRocRail.getctrl( AppOp.getIni() ) ) ) {
       SignalOp.event( sg, (iONode)NodeOp.base.clone(nodeC) );
@@ -3536,7 +3537,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       type = wOutput.getporttype( nodeC );
     }
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Output event: %d:%d:%d", bus, addr, port);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match output event: %d:%d:%d type=%d", bus, addr, port, type );
 
     const char* iid = wOutput.getiid( nodeC );
     char* key = OutputOp.createAddrKey( bus, addr, port, type, iid );
@@ -3552,7 +3553,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       return;
     }
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying Signal event: %d:%d:%d type=%d", bus, addr, port, type);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match signal event: %d:%d:%d type=%d", bus, addr, port, type );
 
     iOSignal sg = ModelOp.getSgByAddress(inst, addr, port, type);
     if( sg != NULL && wCtrl.issgevents( wRocRail.getctrl( AppOp.getIni() ) ) ) {
