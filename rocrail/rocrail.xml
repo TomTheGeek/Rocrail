@@ -771,6 +771,7 @@
       <var name="bbtSpeedInterval" vt="int"/>
       <var name="bbtInterval" vt="int"/>
       <var name="bbtAtMinSpeed" vt="Boolean"/>
+      <var name="bbtInTimer" vt="int"/>
       </data>
   </object>
 

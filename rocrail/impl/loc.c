@@ -1414,6 +1414,15 @@ static void __BBT(iOLoc loc) {
   iOLocData data = Data(loc);
 
   if( data->bbtEnter != 0 && data->bbtIn == 0  && data->bbtEnterBlock != NULL ) {
+    if( data->bbtInTimer > 0 ) {
+      data->bbtInTimer--;
+      if( data->bbtInTimer == 0 ) {
+        data->bbtIn = SystemOp.getTick();
+        data->bbtInBlock = data->bbtEnterBlock;
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtInBlock );
+      }
+    }
+
     if( data->bbtCycleSpeed == 0 ) {
       iONode bbt = (iONode)MapOp.get( data->bbtMap, data->bbtEnterBlock );
       data->bbtInterval = 10;
@@ -1811,6 +1820,7 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
       data->bbtInBlock    = NULL;
       data->bbtIn         = 0;
       data->bbtCycleSpeed = 0;
+      data->bbtInTimer    = 0;
       data->bbtEnter      = SystemOp.getTick();
       TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT enter=%ld block=%s", data->bbtEnter, data->bbtEnterBlock );
     }
@@ -1820,9 +1830,16 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
       TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT pre2in=%ld block=%s", data->bbtIn, data->bbtInBlock );
     }
     else if( evt == in_event && data->bbtIn == 0 && data->bbtEnter > 0 ) {
-      data->bbtInBlock = blockid;
-      data->bbtIn = SystemOp.getTick();
-      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtInBlock );
+      if( timer == 0 ) {
+        data->bbtInBlock = blockid;
+        data->bbtIn = SystemOp.getTick();
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtInBlock );
+      }
+      else {
+        data->bbtInTimer = timer / 10;
+        if( data->bbtInTimer == 0 )
+          data->bbtInTimer++;
+      }
     }
   }
 
