@@ -113,7 +113,7 @@
     <all txt="српски srpski" tip="Serbian Latin"/>
   </Msg>
   <Msg id="lang_sl">
-    <all txt="Slovenea" tip="Slovene"/>
+    <all txt="Slovenščina" tip="Slovenea"/>
   </Msg>
   <Msg id="changelang">
     <en txt="Restart to change language."/>
