@@ -199,7 +199,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
       /* swap the loc placing to run backwards in the default direction (to use in terminal stations)*/
       if( data->curBlock->isTerminalStation( data->curBlock ) ) {
         /* only swap after the IN block event! */
-        data->loc->swapPlacing( data->loc, NULL, False, False );
+        data->loc->swapPlacing( data->loc, NULL, False, wLoc.getswaptimer(data->loc->base.properties(data->loc)) > 0 ? False:True );
 
          if( data->stopnonecommuter &&
              !wLoc.iscommuter( data->loc->base.properties(data->loc)) ) {
