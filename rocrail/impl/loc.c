@@ -1412,6 +1412,9 @@ static void __theSwap(iOLoc loc, Boolean swap, Boolean consist, iONode cmd) {
  */
 static void __BBT(iOLoc loc) {
   iOLocData data = Data(loc);
+  int bbtsteps = wLoc.getbbtsteps(data->props);
+  if( bbtsteps < 4 || bbtsteps > 16 )
+    bbtsteps = 10;
 
   if( data->bbtEnter != 0 && data->bbtIn == 0  && data->bbtEnterBlock != NULL ) {
     if( data->bbtInTimer > 0 ) {
@@ -1428,7 +1431,7 @@ static void __BBT(iOLoc loc) {
       data->bbtInterval = 10;
       data->bbtCycleNr = 0;
       if( bbt != NULL ) {
-        data->bbtInterval = wBBT.getinterval(bbt) / wLoc.getbbtsteps(data->props);
+        data->bbtInterval = wBBT.getinterval(bbt) / bbtsteps;
       }
       data->bbtSpeed = data->drvSpeed;
       TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT-ENTER interval=%d block=%s V_enter=%d",
@@ -1443,7 +1446,7 @@ static void __BBT(iOLoc loc) {
       int V_min = wLoc.getV_min( data->props );
       int speed = 0;
       data->bbtCycleNr++;
-      speed = data->bbtSpeed - ((data->bbtSpeed / wLoc.getbbtsteps(data->props)) * data->bbtCycleNr);
+      speed = data->bbtSpeed - ((data->bbtSpeed / bbtsteps) * data->bbtCycleNr);
       if( speed <= V_min ) {
         speed = V_min;
         data->bbtAtMinSpeed = True;
