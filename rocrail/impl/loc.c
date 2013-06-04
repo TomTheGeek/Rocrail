@@ -1422,7 +1422,7 @@ static void __BBT(iOLoc loc) {
       if( data->bbtInTimer == 0 ) {
         data->bbtIn = SystemOp.getTick();
         data->bbtInBlock = data->bbtEnterBlock;
-        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtInBlock );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtInBlock );
       }
     }
 
@@ -1434,7 +1434,7 @@ static void __BBT(iOLoc loc) {
         data->bbtInterval = wBBT.getinterval(bbt) / bbtsteps;
       }
       data->bbtSpeed = data->drvSpeed;
-      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT-ENTER interval=%d block=%s V_enter=%d",
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-ENTER interval=%d block=%s V_enter=%d",
           bbt != NULL ? wBBT.getinterval(bbt):100, data->bbtEnterBlock, data->bbtSpeed );
     }
 
@@ -1472,7 +1472,7 @@ static void __BBT(iOLoc loc) {
     if( data->bbtIn >= data->bbtEnter && StrOp.equals(data->bbtEnterBlock, data->bbtInBlock) ) {
       int interval = (int)(data->bbtIn - data->bbtEnter);
       if( bbt == NULL ) {
-        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT creating node for block=%s", data->bbtInBlock );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT creating node for block=%s", data->bbtInBlock );
         bbt = NodeOp.inst( wBBT.name(), data->props, ELEMENT_NODE );
         NodeOp.addChild(data->props, bbt);
         wBBT.setbk(bbt, data->bbtInBlock);
@@ -1483,7 +1483,7 @@ static void __BBT(iOLoc loc) {
         int diffinterval = abs(interval - oldinterval);
         if( diffinterval > 250 ) {
           diffinterval = 250;
-          TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, 250 );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, 250 );
         }
         if( interval > oldinterval )
           interval = oldinterval + (diffinterval / 4);
@@ -1491,7 +1491,7 @@ static void __BBT(iOLoc loc) {
           interval = oldinterval - (diffinterval / 4);
       }
       wBBT.setinterval(bbt, interval);
-      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT-IN interval=%d block=%s", interval, data->bbtInBlock );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-IN interval=%d block=%s", interval, data->bbtInBlock );
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
@@ -1825,18 +1825,18 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
       data->bbtCycleSpeed = 0;
       data->bbtInTimer    = 0;
       data->bbtEnter      = SystemOp.getTick();
-      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT enter=%ld block=%s", data->bbtEnter, data->bbtEnterBlock );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "BBT enter=%ld block=%s", data->bbtEnter, data->bbtEnterBlock );
     }
     else if( evt == pre2in_event && wLoc.isinatpre2in(data->props) && data->bbtIn == 0 && data->bbtEnter > 0 ) {
       data->bbtInBlock = blockid;
       data->bbtIn = SystemOp.getTick();
-      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT pre2in=%ld block=%s", data->bbtIn, data->bbtInBlock );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "BBT pre2in=%ld block=%s", data->bbtIn, data->bbtInBlock );
     }
     else if( evt == in_event && data->bbtIn == 0 && data->bbtEnter > 0 ) {
       if( timer == 0 ) {
         data->bbtInBlock = blockid;
         data->bbtIn = SystemOp.getTick();
-        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtInBlock );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtInBlock );
       }
       else {
         data->bbtInTimer = timer / 10;
