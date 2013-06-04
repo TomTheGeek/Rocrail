@@ -337,10 +337,10 @@ void SwitchDialog::initLabels() {
   m_labCTCCmdAtOn->SetLabel( wxGetApp().getMsg( "command" ) );
 
   m_CTCOn1->SetString( 0, wxGetApp().getMsg( "straight" ) );
-  m_CTCOn1->SetString( 1, wxGetApp().getMsg( "turnout" ) );
+  m_CTCOn1->SetString( 1, wxGetApp().getMsg( "thrown" ) );
   m_CTCOn1->SetString( 2, wxGetApp().getMsg( "flip" ) );
   m_CTCOn2->SetString( 0, wxGetApp().getMsg( "straight" ) );
-  m_CTCOn2->SetString( 1, wxGetApp().getMsg( "turnout" ) );
+  m_CTCOn2->SetString( 1, wxGetApp().getMsg( "thrown" ) );
   m_CTCOn2->SetString( 2, wxGetApp().getMsg( "flip" ) );
 
   m_labCTCLED->SetLabel( wxGetApp().getMsg( "led" ) );
