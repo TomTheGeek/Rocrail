@@ -61,6 +61,7 @@
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Item.h"
+#include "rocrail/wrapper/public/Block.h"
 
 static int instCnt = 0;
 static iOMutex __routeSem = NULL;
@@ -241,11 +242,16 @@ static void __broadcast(iORoute inst) {
 
   wRoute.setlocid(nodeD, o->lockedId );
 
-  if( o->lockedId == NULL || StrOp.len(o->lockedId) == 0 )
-    wRoute.setstatus( nodeD, wRoute.status_free);
-  else if( o->lockedId != NULL && StrOp.len(o->lockedId) > 0 )
-    wRoute.setstatus( nodeD, wRoute.status_locked);
-  /* TODO: other status reports */
+  if( wRoute.getstatus(o->props) != wRoute.status_closed ) {
+    if( o->lockedId == NULL || StrOp.len(o->lockedId) == 0 )
+      wRoute.setstatus( nodeD, wRoute.status_free);
+    else if( o->lockedId != NULL && StrOp.len(o->lockedId) > 0 )
+      wRoute.setstatus( nodeD, wRoute.status_locked);
+  }
+  else {
+    wRoute.setstatus( nodeD, wRoute.getstatus(o->props));
+  }
+  wRoute.setshow( nodeD, wRoute.isshow(o->props));
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "status of route %s is %d, locked by %s",
       wRoute.getid(o->props), wRoute.getstatus( nodeD), o->lockedId == NULL ? "-":o->lockedId );
@@ -486,6 +492,7 @@ static Boolean _cmd( iORoute inst, iONode nodeA ) {
   iORouteData o = Data(inst);
   Boolean ok = False;
   const char* cmdStr = wRoute.getcmd( nodeA );
+  const char* state  = wBlock.getstate( nodeA );
 
   if( StrOp.equals( wRoute.go, cmdStr ) ) {
     ok = _go( inst );
@@ -493,6 +500,16 @@ static Boolean _cmd( iORoute inst, iONode nodeA ) {
   else if( StrOp.equals( wSwitch.unlock, cmdStr ) ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route %s is reset.", RouteOp.getId(inst) );
     RouteOp.reset(inst);
+  }
+  else if( state != NULL && StrOp.equals( wBlock.closed, state ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route %s is closed.", RouteOp.getId(inst) );
+    wRoute.setstatus(o->props, wRoute.status_closed);
+    __broadcast(inst);
+  }
+  else if( state != NULL && StrOp.equals( wBlock.open, state ) && wRoute.getstatus(o->props) == wRoute.status_closed ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route %s is opened.", RouteOp.getId(inst) );
+    wRoute.setstatus(o->props, wRoute.status_free);
+    __broadcast(inst);
   }
   else if( StrOp.equals( wRoute.force, cmdStr ) ) {
     if( !RouteOp.isFree(inst, "__manualcommand__") )
@@ -1424,6 +1441,7 @@ static void _reset( iORoute inst ) {
   else if( wRoute.getstatus(data->props) == wRoute.status_closed ) {
     wRoute.setstatus(data->props, wRoute.status_free );
   }
+  __broadcast(inst);
 }
 
 

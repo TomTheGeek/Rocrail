@@ -788,6 +788,7 @@ void SymbolRenderer::initSym() {
       m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, routetype::route_locked );
       m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, routetype::route_selected );
       m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, routetype::route_deselected );
+      m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, routetype::route_closed );
     }
   }
   else if( StrOp.equals( wTurntable.name(), nodeName ) ) {
@@ -2070,6 +2071,12 @@ void SymbolRenderer::drawRoute( wxPaintDC& dc, bool occupied, const char* ori, i
   }
   else if( status == 3 && m_SvgSym4!=NULL ) {
     drawSvgSym(dc, m_SvgSym4, ori);
+  }
+  else if( status == 4 && m_SvgSym5!=NULL ) {
+    drawSvgSym(dc, m_SvgSym5, ori);
+  }
+  else if( m_SvgSym1!=NULL ) {
+    drawSvgSym(dc, m_SvgSym1, ori);
   }
 
   if( m_bShowID ) {

@@ -409,6 +409,7 @@ namespace routetype {
   static const char* route_locked     = "route-locked.svg";
   static const char* route_selected   = "route-selected.svg";
   static const char* route_deselected = "route-deselected.svg";
+  static const char* route_closed     = "route-closed.svg";
 
   static const int i_route = 1;
 }

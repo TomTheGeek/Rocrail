@@ -1720,6 +1720,10 @@ void Symbol::OnPopup(wxMouseEvent& event)
     else if( StrOp.equals( wRoute.name(), NodeOp.getName( m_Props ) ) ) {
       //if( !wxGetApp().getFrame()->isAutoMode() ) {
         menu.Append( ME_UnLoc, wxGetApp().getMenu("reset") );
+        if( wRoute.getstatus(m_Props) == wRoute.status_free )
+          menu.Append( ME_CloseBlock, wxGetApp().getMenu("outoforder") );
+        if( wRoute.getstatus(m_Props) == wRoute.status_closed )
+          menu.Append( ME_OpenBlock, wxGetApp().getMenu("operational") );
       //}
     }
 
