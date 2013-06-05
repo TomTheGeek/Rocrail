@@ -301,9 +301,9 @@ public:
     wxButton* m_DelSensor;
     wxPanel* m_PermissionsPanel;
     wxStaticText* m_labInclude;
-    wxListBox* m_IncludeList;
+    wxCheckListBox* m_IncludeList;
     wxStaticText* m_labExclude;
-    wxListBox* m_ExcludeList;
+    wxCheckListBox* m_ExcludeList;
     wxStaticBox* m_PermType;
     wxCheckBox* m_PermTypeGoods;
     wxCheckBox* m_PermTypeMixed;

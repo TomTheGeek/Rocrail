@@ -815,16 +815,13 @@ void RouteDialog::initValues() {
   // Permissions
 
   // remove selections:
-  wxArrayInt ai;
-  int cnt = m_ExcludeList->GetSelections(ai);
+  int cnt = m_ExcludeList->GetCount();
   for( int i = 0; i < cnt; i++ ) {
-    int idx = ai.Item(i);
-    m_ExcludeList->Deselect(idx);
+    m_ExcludeList->Check(i, false);
   }
-  cnt = m_IncludeList->GetSelections(ai);
+  cnt = m_IncludeList->GetCount();
   for( int i = 0; i < cnt; i++ ) {
-    int idx = ai.Item(i);
-    m_IncludeList->Deselect(idx);
+    m_IncludeList->Check(i, false);
   }
 
   // set selections:
@@ -832,7 +829,7 @@ void RouteDialog::initValues() {
   while( excl != NULL ) {
     int nr = m_ExcludeList->FindString( wxString(wPermExclude.getid(excl),wxConvUTF8) );
     if( nr != wxNOT_FOUND ) {
-      m_ExcludeList->Select(nr);
+      m_ExcludeList->Check(nr);
     }
     excl = wRoute.nextexcl( m_Props, excl );
   };
@@ -841,7 +838,7 @@ void RouteDialog::initValues() {
   while( incl != NULL ) {
     int nr = m_IncludeList->FindString( wxString(wPermInclude.getid(incl),wxConvUTF8) );
     if( nr != wxNOT_FOUND ) {
-      m_IncludeList->Select(nr);
+      m_IncludeList->Check(nr);
     }
     incl = wRoute.nextincl( m_Props, incl );
   };
@@ -1073,20 +1070,21 @@ bool RouteDialog::evaluate() {
     excl = wRoute.getexcl( m_Props );
   };
 
-  wxArrayInt ai;
-  int cnt = m_ExcludeList->GetSelections(ai);
+  int cnt = m_ExcludeList->GetCount();
   for( int i = 0; i < cnt; i++ ) {
-    int idx = ai.Item(i);
-    excl = NodeOp.inst( wPermExclude.name(), m_Props, ELEMENT_NODE );
-    wPermExclude.setid( excl, m_ExcludeList->GetString(idx).mb_str(wxConvUTF8) );
-    NodeOp.addChild( m_Props, excl );
+    if( m_ExcludeList->IsChecked(i) ) {
+      excl = NodeOp.inst( wPermExclude.name(), m_Props, ELEMENT_NODE );
+      wPermExclude.setid( excl, m_ExcludeList->GetString(i).mb_str(wxConvUTF8) );
+      NodeOp.addChild( m_Props, excl );
+    }
   }
-  cnt = m_IncludeList->GetSelections(ai);
+  cnt = m_IncludeList->GetCount();
   for( int i = 0; i < cnt; i++ ) {
-    int idx = ai.Item(i);
-    incl = NodeOp.inst( wPermInclude.name(), m_Props, ELEMENT_NODE );
-    wPermInclude.setid( incl, m_IncludeList->GetString(idx).mb_str(wxConvUTF8) );
-    NodeOp.addChild( m_Props, incl );
+    if( m_IncludeList->IsChecked(i) ) {
+      incl = NodeOp.inst( wPermInclude.name(), m_Props, ELEMENT_NODE );
+      wPermInclude.setid( incl, m_IncludeList->GetString(i).mb_str(wxConvUTF8) );
+      NodeOp.addChild( m_Props, incl );
+    }
   }
 
   char* permtype = NULL;
@@ -1617,14 +1615,14 @@ void RouteDialog::CreateControls()
     itemBoxSizer80->Add(m_labInclude, 0, wxALIGN_LEFT|wxALL, 5);
 
     wxArrayString m_IncludeListStrings;
-    m_IncludeList = new wxListBox( m_PermissionsPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_IncludeListStrings, wxLB_MULTIPLE );
+    m_IncludeList = new wxCheckListBox( m_PermissionsPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_IncludeListStrings, 0 );
     itemBoxSizer80->Add(m_IncludeList, 1, wxGROW|wxALL, 5);
 
     m_labExclude = new wxStaticText( m_PermissionsPanel, wxID_ANY, _("Exclude"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer80->Add(m_labExclude, 0, wxALIGN_LEFT|wxALL, 5);
 
     wxArrayString m_ExcludeListStrings;
-    m_ExcludeList = new wxListBox( m_PermissionsPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_ExcludeListStrings, wxLB_MULTIPLE );
+    m_ExcludeList = new wxCheckListBox( m_PermissionsPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_ExcludeListStrings, 0 );
     itemBoxSizer80->Add(m_ExcludeList, 1, wxGROW|wxALL, 5);
 
     m_PermType = new wxStaticBox(m_PermissionsPanel, wxID_ANY, _("Type"));

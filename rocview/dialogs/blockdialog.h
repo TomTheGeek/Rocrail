@@ -151,8 +151,6 @@ class wxSpinCtrl;
 #define wxID_STATIC_BK_PORT 10041
 #define ID_TEXTCTRL_BK_PORT 10042
 #define ID__PANEL_BK_PERMISSIONS 10242
-#define ID_LISTBOX_INCLUDE 10337
-#define ID_LISTBOX_EXCLUDE 10338
 #define ID_RADIOBOX_BK_COMMUTER 10067
 #define SYMBOL_BLOCKDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_BLOCKDIALOG_TITLE _("Blocks")
@@ -421,9 +419,9 @@ public:
     wxTextCtrl* m_Port;
     wxPanel* m_PermissionsPanel;
     wxStaticText* m_labInclude;
-    wxListBox* m_IncludeList;
+    wxCheckListBox* m_IncludeList;
     wxStaticText* m_labExclude;
-    wxListBox* m_ExcludeList;
+    wxCheckListBox* m_ExcludeList;
     wxStaticBox* m_PermType;
     wxCheckBox* m_PermTypeGoods;
     wxCheckBox* m_PermTypeMixed;

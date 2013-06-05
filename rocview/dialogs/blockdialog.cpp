@@ -743,16 +743,13 @@ void BlockDialog::initValues() {
   // Permissions
 
   // remove selections:
-  wxArrayInt ai;
-  int cnt = m_ExcludeList->GetSelections(ai);
+  int cnt = m_ExcludeList->GetCount();
   for( int i = 0; i < cnt; i++ ) {
-    int idx = ai.Item(i);
-    m_ExcludeList->Deselect(idx);
+    m_ExcludeList->Check(i, false);
   }
-  cnt = m_IncludeList->GetSelections(ai);
+  cnt = m_IncludeList->GetCount();
   for( int i = 0; i < cnt; i++ ) {
-    int idx = ai.Item(i);
-    m_IncludeList->Deselect(idx);
+    m_IncludeList->Check(i, false);
   }
 
   // set selections:
@@ -760,7 +757,7 @@ void BlockDialog::initValues() {
   while( excl != NULL ) {
     int nr = m_ExcludeList->FindString( wxString(wPermExclude.getid(excl),wxConvUTF8) );
     if( nr != wxNOT_FOUND ) {
-      m_ExcludeList->Select(nr);
+      m_ExcludeList->Check(nr);
     }
     excl = wBlock.nextexcl( m_Props, excl );
   };
@@ -769,7 +766,7 @@ void BlockDialog::initValues() {
   while( incl != NULL ) {
     int nr = m_IncludeList->FindString( wxString(wPermInclude.getid(incl),wxConvUTF8) );
     if( nr != wxNOT_FOUND ) {
-      m_IncludeList->Select(nr);
+      m_IncludeList->Check(nr);
     }
     incl = wBlock.nextincl( m_Props, incl );
   };
@@ -1005,22 +1002,22 @@ bool BlockDialog::evaluate() {
     excl = wBlock.getexcl( m_Props );
   };
 
-  wxArrayInt ai;
-  int cnt = m_ExcludeList->GetSelections(ai);
+  int cnt = m_ExcludeList->GetCount();
   for( int i = 0; i < cnt; i++ ) {
-    int idx = ai.Item(i);
-    excl = NodeOp.inst( wPermExclude.name(), m_Props, ELEMENT_NODE );
-    wPermExclude.setid( excl, m_ExcludeList->GetString(idx).mb_str(wxConvUTF8) );
-    NodeOp.addChild( m_Props, excl );
+    if( m_ExcludeList->IsChecked(i) ) {
+      excl = NodeOp.inst( wPermExclude.name(), m_Props, ELEMENT_NODE );
+      wPermExclude.setid( excl, m_ExcludeList->GetString(i).mb_str(wxConvUTF8) );
+      NodeOp.addChild( m_Props, excl );
+    }
   }
-  cnt = m_IncludeList->GetSelections(ai);
+  cnt = m_IncludeList->GetCount();
   for( int i = 0; i < cnt; i++ ) {
-    int idx = ai.Item(i);
-    incl = NodeOp.inst( wPermInclude.name(), m_Props, ELEMENT_NODE );
-    wPermInclude.setid( incl, m_IncludeList->GetString(idx).mb_str(wxConvUTF8) );
-    NodeOp.addChild( m_Props, incl );
+    if( m_IncludeList->IsChecked(i) ) {
+      incl = NodeOp.inst( wPermInclude.name(), m_Props, ELEMENT_NODE );
+      wPermInclude.setid( incl, m_IncludeList->GetString(i).mb_str(wxConvUTF8) );
+      NodeOp.addChild( m_Props, incl );
+    }
   }
-
 
   char* permtype = NULL;
 
@@ -1903,14 +1900,14 @@ void BlockDialog::CreateControls()
     itemBoxSizer169->Add(m_labInclude, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxArrayString m_IncludeListStrings;
-    m_IncludeList = new wxListBox( m_PermissionsPanel, ID_LISTBOX_INCLUDE, wxDefaultPosition, wxSize(-1, 90), m_IncludeListStrings, wxLB_MULTIPLE );
+    m_IncludeList = new wxCheckListBox( m_PermissionsPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_IncludeListStrings, wxLB_SINGLE );
     itemBoxSizer169->Add(m_IncludeList, 1, wxGROW|wxALL, 5);
 
     m_labExclude = new wxStaticText( m_PermissionsPanel, wxID_ANY, _("Exclude"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer169->Add(m_labExclude, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxArrayString m_ExcludeListStrings;
-    m_ExcludeList = new wxListBox( m_PermissionsPanel, ID_LISTBOX_EXCLUDE, wxDefaultPosition, wxSize(-1, 90), m_ExcludeListStrings, wxLB_MULTIPLE );
+    m_ExcludeList = new wxCheckListBox( m_PermissionsPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_ExcludeListStrings, wxLB_SINGLE );
     itemBoxSizer169->Add(m_ExcludeList, 1, wxGROW|wxALL, 5);
 
     m_PermType = new wxStaticBox(m_PermissionsPanel, wxID_ANY, _("Type"));
