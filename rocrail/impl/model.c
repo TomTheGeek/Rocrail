@@ -2475,7 +2475,7 @@ static Boolean __isSignalAddres(int addr, int port, int sgaddr, int sgport) {
     sgaddr = (pada - 1) / 4 + 1;
     sgport = (pada - 1) % 4 + 1;
   }
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "is signal address: field=[%d,%d] signal=[%d,%d]", addr, port, sgaddr, sgport );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "is signal address: field=[%d,%d] signal=[%d,%d]", addr, port, sgaddr, sgport );
   if( sgaddr == addr && sgport == port )
     return True;
   return False;
@@ -3462,7 +3462,7 @@ static void _event( iOModel inst, iONode nodeC ) {
         matchport2 = -1;
       }
 
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"bus %d=%d, addr1 %d=%d, addr2 %d=%d, port1 %d=%d, port2 %d=%d, type %d=%d %s",
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"bus %d=%d, addr1 %d=%d, addr2 %d=%d, port1 %d=%d, port2 %d=%d, type %d=%d %s",
           wSwitch.getbus(props), bus, matchaddr1, addr, matchaddr2, addr, matchport1, port, matchport2, port, matchtype, type, flat?"(flat)":"");
 
       if( wSwitch.getbus(props) == bus && matchaddr1 == addr && matchport1 == port && matchtype == type ||
