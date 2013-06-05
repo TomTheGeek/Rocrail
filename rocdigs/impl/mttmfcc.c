@@ -213,7 +213,7 @@ static Boolean __updateSlots(iOMttmFccData data) {
           wLoc.setfn( nodeC, slot->lights);
           wLoc.setdir( nodeC, slot->dir );
           wLoc.setthrottleid( nodeC, "fcc" );
-          wLoc.setcmd( nodeC, wLoc.direction );
+          wLoc.setcmd( nodeC, wLoc.dirfun );
           data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
         }
 
