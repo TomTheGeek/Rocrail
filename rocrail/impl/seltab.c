@@ -899,6 +899,11 @@ static Boolean _hasExtStop( iIBlockBase inst ) {
   return False;
 }
 
+static Boolean _allowBBT( iIBlockBase inst ) {
+  iOSelTabData data = Data(inst);
+  return True;
+}
+
 
 static void _setManager( iIBlockBase inst, iIBlockBase manager ) {
   iOSelTabData data = Data(inst);

@@ -1758,6 +1758,7 @@
         <var name="mvmph" vt="bool" defval="false" remark="convert to MPH"/>
 
         <var name="extstop" vt="bool" defval="false" remark="An external stop module will take over the throttle. Use only with enter2in! (Lenz ABC.)"/>
+        <var name="allowbbt" vt="bool" defval="true"/>
 
         <var name="updateenterside" vt="bool" defval="false" remark="For internal use only: Event for updating the loco block enter side only."/>
         <const name="shortcut" vt="string" val="shortcut"/>

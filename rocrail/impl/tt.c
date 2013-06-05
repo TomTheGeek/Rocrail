@@ -3192,6 +3192,12 @@ static Boolean _hasExtStop( iIBlockBase inst ) {
   return False;
 }
 
+static Boolean _allowBBT( iIBlockBase inst ) {
+  iOTTData data = Data(inst);
+  return False;
+}
+
+
 
 static void _setManager( iIBlockBase inst, iIBlockBase manager ) {
   iOTTData data = Data(inst);

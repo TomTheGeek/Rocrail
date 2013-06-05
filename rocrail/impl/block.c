@@ -891,6 +891,12 @@ static Boolean _hasExtStop( iIBlockBase inst ) {
 }
 
 
+static Boolean _allowBBT( iIBlockBase inst ) {
+  iOBlockData data = Data(inst);
+  return wBlock.isallowbbt(data->props);
+}
+
+
 static Boolean __isElectricallyFree(iOBlock inst) {
   iOBlockData data = Data(inst);
   /* check all sensors... */

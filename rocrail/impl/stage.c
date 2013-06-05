@@ -794,6 +794,12 @@ static Boolean _hasExtStop( iIBlockBase inst ) {
   return wStage.isinatlen(data->props);
 }
 
+static Boolean _allowBBT( iIBlockBase inst ) {
+  iOStageData data = Data(inst);
+  return False;
+}
+
+
 
 /**  */
 static obj _hasManualSignal( iIBlockBase inst ,Boolean distant ,Boolean reverse ) {
