@@ -1887,19 +1887,26 @@ static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte
   int temp    = 0;
   int i       = 0;
 
-  for( i = 0; i < datasize; i+=2 ) {
+  for( i = 0; i < (datasize-1); i+=2 ) {
     switch( pdata[i] ) {
     case BIDIB_BST_DIAG_I:
       current = pdata[i+1];
       break;
     case BIDIB_BST_DIAG_V:
-      volt = pdata[i+1] * 100; /* units=100mV */
+      volt = pdata[i+1];
       break;
     case BIDIB_BST_DIAG_T:
       temp = pdata[i+1];
       break;
     }
   }
+
+  if( temp > 100 ) {
+    TraceOp.dump ( "diagnostic", TRCLEVEL_INFO, (char*)pdata, datasize );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "booster %08X **Raw** load=%dmA %dmV %d°C", bidibnode->uid, current, volt, temp );
+  }
+
+  volt *= 100; /* units=100mV */
 
   current = __calcCurrent(current);
   if( current > 5000 ) {
@@ -1922,7 +1929,7 @@ static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte
     data->load = current;
     data->volt = volt;
     data->temp = temp;
-    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%dmA %dmV %d°C", bidibnode->uid, current, volt, temp );
+    TraceOp.trc( name, temp > 100 ? TRCLEVEL_CALC:TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%dmA %dmV %d°C", bidibnode->uid, current, volt, temp );
     __reportState(bidib, bidibnode, False, False);
   }
   else if( data->load != current ) {
