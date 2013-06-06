@@ -204,6 +204,9 @@ BlockDialog::BlockDialog( wxWindow* parent, iONode p_Props, bool save )
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
+  // Initialize sorted Loco Permission List
+  initLocPermissionList();
+
   if( initIndex() ) {
     initValues();
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_BK_GENERAL );
@@ -472,9 +475,6 @@ void BlockDialog::initLabels() {
   m_PermTypeLight->SetLabel( wxGetApp().getMsg( "light" ) );
   m_PermTypeLightGoods->SetLabel( wxGetApp().getMsg( "lightgoods" ) );
   m_PermTypeLocal->SetLabel( wxGetApp().getMsg( "regional" ) );
-
-  // Initialize sorted Loco Permission List
-  initLocPermissionList();
 
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
