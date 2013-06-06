@@ -206,7 +206,7 @@ int serialRead ( obj inst, unsigned char *msg ) {
       TraceOp.trc( "bidibserial", TRCLEVEL_EXCEPTION, __LINE__, 9999, "invalid checksum" );
       return 0;
     }
-    return size;
+    return size-1; /* crc */
   }
   else {
     TraceOp.trc( "bidibserial", TRCLEVEL_DEBUG, __LINE__, 9999, "could not read queue %d", QueueOp.count(data->subReadQueue)  );

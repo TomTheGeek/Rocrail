@@ -2539,8 +2539,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,"BM port out of range: %d", port);
     }
     else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"BM port %d reports loco %d", port, locoAddr);
       if( locoAddr > 0 ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"BM port %d reports loco %d", port, locoAddr);
         bidibnode->occ[port] = True;
         __handleSensor(bidib, bidibnode->uid, pdata[0], bidibnode->occ[port], locoAddr, type, bidibnode->bmload[port] );
       }
@@ -2847,6 +2847,16 @@ static void __bidibReader( void* threadinst ) {
 
     size = data->subRead( (obj)bidib, msg );
     if( size > 0 ) {
+      if( size > msg[0]+1 ) {
+        int idx = 0;
+        do {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "***** multiple messages available idx=%d", idx );
+          TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)msg+idx, msg[0+idx]+1 );
+          __processBidiMsg(bidib, msg+idx, msg[0+idx]+1);
+          idx += msg[0]+1;
+        } while( idx < size );
+      }
+      else
         __processBidiMsg(bidib, msg, size);
     }
 
