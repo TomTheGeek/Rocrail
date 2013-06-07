@@ -149,10 +149,16 @@ void tcpipDisconnect( obj inst, Boolean info ) {
 
 int tcpipRead ( obj inst, char *inbuf, Boolean info ) {
   iOSRCPData o = Data(inst);
-  if( info && o->infoSocket != NULL )
+  if( info && o->infoSocket != NULL ) {
+    if( SocketOp.isBroken(o->infoSocket) )
+      return -1;
     return SocketOp.readln( o->infoSocket, inbuf ) != NULL ? StrOp.len(inbuf):0;
-  else if( !info && o->cmdSocket != NULL )
+  }
+  else if( !info && o->cmdSocket != NULL ) {
+    if( SocketOp.isBroken(o->cmdSocket) )
+      return -1;
     return SocketOp.readln( o->cmdSocket, inbuf ) != NULL ? StrOp.len(inbuf):0;
+  }
   return 0;
 }
 
