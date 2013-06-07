@@ -388,6 +388,9 @@ static iONode __translate( iOSRCP inst, iONode node, char* srcp ) {
       }
     }
 
+    if( StrOp.equals( wOutput.getcmd( node ), wOutput.value ) ) {
+      action = wOutput.getvalue( node );
+    }
     StrOp.fmtb( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, activationTime );
 
     return NULL;

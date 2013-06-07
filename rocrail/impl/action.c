@@ -477,7 +477,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
       const char* cmdStr = wAction.getcmd( data->action );
       wOutput.setcmd( cmd, cmdStr );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting output [%s] to [%s]", id, cmdStr );
+      wOutput.setvalue( cmd, atoi(wAction.getparam(data->action)) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting output [%s] to [%s] [%d]",
+          id, cmdStr, atoi(wAction.getparam(data->action)) );
       OutputOp.cmd( co, cmd, True );
     }
   }

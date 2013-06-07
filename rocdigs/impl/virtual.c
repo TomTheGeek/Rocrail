@@ -232,12 +232,13 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
 
-    int bus  = wOutput.getbus( node );
-    int addr = wOutput.getaddr( node );
-    int port = wOutput.getport( node );
-    int gate = wOutput.getgate( node );
-    int fada = 0;
-    int pada = 0;
+    int bus   = wOutput.getbus( node );
+    int addr  = wOutput.getaddr( node );
+    int port  = wOutput.getport( node );
+    int gate  = wOutput.getgate( node );
+    int value = wOutput.getvalue( node );
+    int fada  = 0;
+    int pada  = 0;
 
     if( port == 0 ) {
       fada = addr;
@@ -253,8 +254,8 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     if( pada == 0 )
       pada = AddrOp.toPADA( addr, port );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d %d %d %s fada=%d pada=%d",
-        addr, port, gate, wOutput.getcmd(node)!=NULL?wOutput.getcmd(node):"-", fada, pada );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d %d %d %s fada=%d pada=%d value=%d",
+        addr, port, gate, wOutput.getcmd(node)!=NULL?wOutput.getcmd(node):"-", fada, pada, value );
 
     {
       iONode nodeC = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
@@ -267,13 +268,15 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       wOutput.setaddr( nodeC, addr );
       wOutput.setport( nodeC, port );
       wOutput.setgate( nodeC, gate );
+      wOutput.setvalue( nodeC, value );
 
       if( wOutput.getiid(node) != NULL )
         wOutput.setiid( nodeC, wOutput.getiid(node) );
 
       wOutput.setstate( nodeC, wOutput.getcmd( node ) );
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reporting output %d:%d:%d.%d %s", bus, addr, port, gate, wOutput.getstate(nodeC) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reporting output %d:%d:%d.%d %s value=%d",
+          bus, addr, port, gate, wOutput.getstate(nodeC), wOutput.getvalue(nodeC) );
       data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
     }
   }

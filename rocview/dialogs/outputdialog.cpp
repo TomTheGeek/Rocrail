@@ -518,6 +518,7 @@ void OutputDialog::CreateControls()
     m_GeneralPanel->SetSizer(itemBoxSizer11);
 
     wxFlexGridSizer* itemFlexGridSizer12 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer12->AddGrowableCol(1);
     itemBoxSizer11->Add(itemFlexGridSizer12, 0, wxGROW|wxALL, 5);
     m_LabelID = new wxStaticText( m_GeneralPanel, wxID_STATIC_CO_ID, _("id"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer12->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -550,8 +551,6 @@ void OutputDialog::CreateControls()
     m_RouteIDs = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer12->Add(m_RouteIDs, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    itemFlexGridSizer12->AddGrowableCol(1);
-
     m_Show = new wxCheckBox( m_GeneralPanel, ID_CHECKBOX_CO_SHOW, _("visible"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
     m_Show->SetValue(false);
     itemBoxSizer11->Add(m_Show, 0, wxALIGN_LEFT|wxALL, 5);
@@ -577,6 +576,7 @@ void OutputDialog::CreateControls()
     m_InterfacePanel->SetSizer(itemBoxSizer28);
 
     wxFlexGridSizer* itemFlexGridSizer29 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer29->AddGrowableCol(1);
     itemBoxSizer28->Add(itemFlexGridSizer29, 0, wxGROW|wxALL, 5);
     m_Labeliid = new wxStaticText( m_InterfacePanel, wxID_STATIC_CO_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer29->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -625,10 +625,8 @@ void OutputDialog::CreateControls()
     m_labGain = new wxStaticText( m_InterfacePanel, wxID_ANY, _("gain"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer29->Add(m_labGain, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Gain = new wxSpinCtrl( m_InterfacePanel, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 255, 10 );
+    m_Gain = new wxSpinCtrl( m_InterfacePanel, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 65535, 10 );
     itemFlexGridSizer29->Add(m_Gain, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    itemFlexGridSizer29->AddGrowableCol(1);
 
     m_OptionsBox = new wxStaticBox(m_InterfacePanel, wxID_ANY, _("Options"));
     wxStaticBoxSizer* itemStaticBoxSizer44 = new wxStaticBoxSizer(m_OptionsBox, wxHORIZONTAL);
