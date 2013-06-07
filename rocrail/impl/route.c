@@ -498,16 +498,16 @@ static Boolean _cmd( iORoute inst, iONode nodeA ) {
     ok = _go( inst );
   }
   else if( StrOp.equals( wSwitch.unlock, cmdStr ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route %s is reset.", RouteOp.getId(inst) );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "reset route %s", RouteOp.getId(inst) );
     RouteOp.reset(inst);
   }
   else if( state != NULL && StrOp.equals( wBlock.closed, state ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route %s is closed.", RouteOp.getId(inst) );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "close route %s", RouteOp.getId(inst) );
     wRoute.setstatus(o->props, wRoute.status_closed);
     __broadcast(inst);
   }
   else if( state != NULL && StrOp.equals( wBlock.open, state ) && wRoute.getstatus(o->props) == wRoute.status_closed ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route %s is opened.", RouteOp.getId(inst) );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "open route %s", RouteOp.getId(inst) );
     wRoute.setstatus(o->props, wRoute.status_free);
     __broadcast(inst);
   }
@@ -1153,7 +1153,11 @@ static Boolean _isFree( iORoute inst, const char* id ) {
   Boolean isset = False;
 
   if( wRoute.getstatus(data->props) == wRoute.status_closed ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route %s is closed; Wheel count did not match?", wRoute.getid(data->props) );
+    if( data->requestId == NULL || !StrOp.equals(data->requestId, id) ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "route %s is closed (%s)", wRoute.getid(data->props), id!=NULL?id:"-" );
+      data->requestId = id;
+    }
+
     return False;
   }
 
@@ -1287,6 +1291,7 @@ static Boolean _unLock( iORoute inst, const char* lcid, const char** resblocks, 
 
     __unlockCrossingBlocks( inst, lcid, resblocks );
     o->lockedId = NULL;
+    o->requestId = NULL;
     __broadcast(inst);
     return True;
   }
@@ -1441,6 +1446,7 @@ static void _reset( iORoute inst ) {
   else if( wRoute.getstatus(data->props) == wRoute.status_closed ) {
     wRoute.setstatus(data->props, wRoute.status_free );
   }
+  data->requestId = NULL;
   __broadcast(inst);
 }
 

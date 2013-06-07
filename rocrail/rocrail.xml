@@ -1379,6 +1379,7 @@
     </fun>
     <data>
       <var name="lockedId" vt="const char*"/>
+      <var name="requestId" vt="const char*"/>
       <var name="props" vt="iONode"/>
       <var name="reverse" vt="Boolean"/>
       <var name="routeLockId" vt="char*"/>
