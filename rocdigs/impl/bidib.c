@@ -682,8 +682,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
     byte cmd[5];
-    Boolean on = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
-    int addr = wOutput.getaddr( node );
+    Boolean on       = StrOp.equals( wOutput.getcmd( node ), wOutput.on );
+    Boolean setvalue = StrOp.equals( wOutput.getcmd( node ), wOutput.value );
+    int addr  = wOutput.getaddr( node );
+    int value = wOutput.getvalue( node );
 
     StrOp.fmtb( uidKey, "0x%08X", wOutput.getbus(node) );
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
@@ -734,6 +736,14 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc %d:%d type %d set to %d%s",
               wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2], blink?" blink":"" );
+          data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode->seq++);
+        }
+        else if( setvalue && wOutput.getporttype(node) == wProgram.porttype_analog ) {
+          msgdata[0] = wOutput.getporttype(node);
+          msgdata[1] = addr-1;
+          msgdata[2] = value;
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc %d:%d type %d set to %d",
+              wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2] );
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode->seq++);
         }
         else {
