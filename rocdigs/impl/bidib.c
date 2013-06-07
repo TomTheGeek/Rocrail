@@ -738,7 +738,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
               wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2], blink?" blink":"" );
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode->seq++);
         }
-        else if( setvalue && wOutput.getporttype(node) == wProgram.porttype_analog ) {
+        else if( (setvalue || on) && wOutput.getporttype(node) == wProgram.porttype_analog ) {
           msgdata[0] = wOutput.getporttype(node);
           msgdata[1] = addr-1;
           msgdata[2] = value;

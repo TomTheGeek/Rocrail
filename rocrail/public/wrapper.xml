@@ -1587,7 +1587,7 @@
         <var name="port" vt="int" defval="0" range="0-4" required="true" remark="port of decoder module: 0 = not used."/>
         <var name="gate" vt="int" defval="0" range="0-1" required="true" remark="gate of port."/>
         <var name="param" vt="int" defval="0" range="0-*" remark="output parameter"/>
-        <var name="value" vt="int" defval="0" range="0-*" remark="output value"/>
+        <var name="value" vt="int" defval="1" range="0-*" remark="output value"/>
         <var name="type" vt="string" defval="output" range="output,switch,button"/>
         <var name="inv" vt="bool" defval="false" remark="Output as switch inverted. (Software wiring correction)"/>
         <var name="blink" vt="bool" defval="false" remark="Blink output."/>

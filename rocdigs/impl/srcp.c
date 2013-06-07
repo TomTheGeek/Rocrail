@@ -369,7 +369,7 @@ static iONode __translate( iOSRCP inst, iONode node, char* srcp ) {
     int addr = wOutput.getaddr( node );
     int port = wOutput.getport( node );
     int gate = wOutput.getgate( node );
-    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.off ) ? 1:0;
+    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 1:0;
     int activationTime = -1;
 
     int ga_bus = wSRCP.getsrcpbusGA_ps( o->srcpini );
@@ -388,7 +388,7 @@ static iONode __translate( iOSRCP inst, iONode node, char* srcp ) {
       }
     }
 
-    if( StrOp.equals( wOutput.getcmd( node ), wOutput.value ) ) {
+    if( StrOp.equals( wOutput.getcmd( node ), wOutput.value ) || StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ) {
       action = wOutput.getvalue( node );
     }
     StrOp.fmtb( srcp, "SET %d GA %d %d %d %d\n", ga_bus, addr, port, action, activationTime );

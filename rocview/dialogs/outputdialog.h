@@ -220,6 +220,8 @@ public:
     wxRadioBox* m_Gate;
     wxStaticText* m_labGain;
     wxSpinCtrl* m_Gain;
+    wxStaticText* m_labValue;
+    wxSpinCtrl* m_Value;
     wxStaticBox* m_OptionsBox;
     wxCheckBox* m_AsSwitch;
     wxCheckBox* m_Invert;

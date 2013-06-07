@@ -185,9 +185,6 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
   }
 
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting output %s to %s [%d]",
-               wOutput.getid( o->props ), state, value );
-
   /* remember state */
   if( StrOp.equals(wOutput.active, state ) )
     wOutput.setstate( o->props, wOutput.active );
@@ -196,11 +193,15 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
   else if( StrOp.equals(wOutput.on, state ) )
     wOutput.setstate( o->props, wOutput.on );
   else if( StrOp.equals(wOutput.value, state ) ) {
+    wOutput.setvalue( o->props, value );
     if( value > 0 )
       wOutput.setstate( o->props, wOutput.on );
     else
       wOutput.setstate( o->props, wOutput.off );
   }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting output %s to %s [%d]",
+               wOutput.getid( o->props ), state, StrOp.equals(wOutput.off, state )?0:wOutput.getvalue(o->props) );
 
   if( iid != NULL )
     wOutput.setiid( nodeA, iid );
@@ -210,6 +211,7 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
   wOutput.setprot( nodeA, wOutput.getprot( o->props ) );
   wOutput.setblink( nodeA, wOutput.isblink( o->props ) );
   wOutput.setparam( nodeA, wOutput.getparam( o->props ) );
+  wOutput.setvalue( nodeA, StrOp.equals(wOutput.off, state ) ? 0:wOutput.getvalue( o->props ) );
 
   if( wOutput.getaddr( o->props ) > 0 || wOutput.getport( o->props ) > 0 ){
     if( wOutput.isasswitch(o->props) ) {
@@ -229,7 +231,6 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
       wOutput.setcmd( nodeA, state );
     }
 
-    wOutput.setvalue( nodeA, value );
     wOutput.setaccessory( nodeA, wOutput.isaccessory(o->props) );
     wOutput.setporttype( nodeA, wOutput.getporttype( o->props ) );
     if( !ControlOp.cmd( control, nodeA, NULL ) ) {
