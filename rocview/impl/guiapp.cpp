@@ -1157,7 +1157,6 @@ static void rocrailCallback( obj me, iONode node ) {
         }
         if( !__hasIDinList(stlist, wItem.getid(child)) )
           NodeOp.addChild( stlist, (iONode)NodeOp.base.clone(child) );
-        planItems = false;
       }
       else if( StrOp.equals( childName, wSchedule.name() ) ) {
         iONode sclist = wPlan.getsclist( model );
