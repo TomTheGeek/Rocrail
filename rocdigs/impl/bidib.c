@@ -2860,8 +2860,8 @@ static void __bidibReader( void* threadinst ) {
       if( size > msg[0]+1 ) {
         int idx = 0;
         do {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "***** multiple messages available idx=%d", idx );
-          TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)msg+idx, msg[0+idx]+1 );
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "multiple messages index=%d", idx );
+          TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg+idx, msg[0+idx]+1 );
           __processBidiMsg(bidib, msg+idx, msg[0+idx]+1);
           idx += msg[0+idx]+1;
         } while( idx < size );
