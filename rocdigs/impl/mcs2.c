@@ -67,6 +67,8 @@
 
 static int instCnt = 0;
 
+static void __reportState(iOMCS2Data data);
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -187,8 +189,10 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       byte* out = allocMem(32);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System STOP" );
+      data->power = False;
       __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_STOP, 0, 0, 0);
       ThreadOp.post( data->writer, (obj)out );
+      __reportState(data);
       return rsp;
     }
     else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
@@ -201,8 +205,10 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       byte* out = allocMem(32);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "System GO" );
+      data->power = True;
       __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_GO, 0, 0, 0);
       ThreadOp.post( data->writer, (obj)out );
+      __reportState(data);
       return rsp;
     }
   }
@@ -438,6 +444,8 @@ static void __feedbackMCS2Reader( void* threadinst ) {
   long dummy = 0x5263526C;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 feedbackpoll started, polling %d S88 units", data->fbmod );
+  ThreadOp.sleep( 100 );
+  data->sensor = True;
   do {
     ThreadOp.sleep( 250 );
 
@@ -585,6 +593,25 @@ static void __evaluateMCS2Function( iOMCS2Data mcs2, byte* in ) {
     mcs2->listenerFun( mcs2->listenerObj, nodeC, TRCLEVEL_INFO );
   }
 }
+
+
+static void __reportState(iOMCS2Data data) {
+  if( data->listenerFun != NULL && data->listenerObj != NULL ) {
+    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+
+    if( data->iid != NULL )
+      wState.setiid( node, data->iid );
+
+    wState.setpower( node, data->power );
+    wState.settrackbus( node, data->power );
+    wState.setsensorbus( node, data->sensor );
+    wState.setaccessorybus( node, True );
+
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+}
+
+
 static void __evaluateMCS2System( iOMCS2Data data, byte* in ) {
   int cmd = in[9];
   int addr4 = in[8];
@@ -595,19 +622,13 @@ static void __evaluateMCS2System( iOMCS2Data data, byte* in ) {
   if ( (addr1 == 0) && (addr2 == 0) && (addr3 == 0) && (addr4 == 0) ) {
     if (cmd == 0) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CS2 STOP" );
+      data->power = False;
     }
     else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CS2 GO" );
+      data->power = True;
     }
-    if( data->listenerFun != NULL && data->listenerObj != NULL ) {
-      iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
-
-      if( data->iid != NULL )
-        wState.setiid( node, data->iid );
-      wState.setpower( node, cmd );
-
-      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
-   }
+    __reportState(data);
   } 
 }
 
