@@ -879,8 +879,6 @@ static void __infoReader( void * threadinst ) {
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s addresses: [%s]", infotypeStr, fbAddrStr );
 
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, inbuf, StrOp.len( inbuf ) );
-
       if( StrTokOp.hasMoreTokens( tok ) ) {
         const char* leadinStr = StrTokOp.nextToken( tok );
       }
