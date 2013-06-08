@@ -484,13 +484,24 @@ static Boolean _parsePlan( iOModelData o ) {
 }
 
 
-static void __addItemInList( iOModelData o, const char* dbkey, iONode node ) {
+static Boolean __addItemInList( iOModelData o, const char* dbkey, iONode node ) {
   iONode db = NodeOp.findNode( o->model, dbkey );
   if( db == NULL ) {
     db = NodeOp.inst( dbkey, o->model, ELEMENT_NODE );
     NodeOp.addChild( o->model, db );
   }
+  if( db != NULL ) {
+    int cnt = NodeOp.getChildCnt(db);
+    int i = 0;
+    for( i = 0; i < cnt; i++ ) {
+      iONode child = NodeOp.getChild( db, i );
+      if( StrOp.equals( wItem.getid(child), wItem.getid(node) ) ) {
+        return False;
+      }
+    }
+  }
   NodeOp.addChild( db, node );
+  return True;
 }
 
 static Boolean __removeItemFromList( iOModelData o, const char* dbkey, iONode node ) {
@@ -656,57 +667,89 @@ static Boolean _addItem( iOModel inst, iONode item ) {
 
   if( StrOp.equals( wBlock.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOBlock bk = BlockOp.inst( clone );
-    __addItemInList( data, wBlockList.name(), clone );
-    MapOp.put( data->blockMap, wBlock.getid( item ), (obj)bk );
-    added = True;
+    if( __addItemInList( data, wBlockList.name(), clone ) ) {
+      iOBlock bk = BlockOp.inst( clone );
+      MapOp.put( data->blockMap, wBlock.getid( item ), (obj)bk );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wLink.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOBlockGroup bg = BlockGroupOp.inst( clone );
-    __addItemInList( data, wLinkList.name(), clone );
-    MapOp.put( data->blockGroupMap, wLink.getid( item ), (obj)bg );
-    added = True;
+    if( __addItemInList( data, wLinkList.name(), clone ) ) {
+      iOBlockGroup bg = BlockGroupOp.inst( clone );
+      MapOp.put( data->blockGroupMap, wLink.getid( item ), (obj)bg );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wDec.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    __addItemInList( data, wDecList.name(), clone );
-    added = True;
+    if( __addItemInList( data, wDecList.name(), clone ) ) {
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wTurntable.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOTT tt = TTOp.inst( clone );
-    __addItemInList( data, wTurntableList.name(), clone );
-    MapOp.put( data->ttMap, wTurntable.getid( item ), (obj)tt );
-    added = True;
+    if( __addItemInList( data, wTurntableList.name(), clone ) ) {
+      iOTT tt = TTOp.inst( clone );
+      MapOp.put( data->ttMap, wTurntable.getid( item ), (obj)tt );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wSelTab.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOSelTab seltab = SelTabOp.inst( clone );
-    __addItemInList( data, wSelTabList.name(), clone );
-    MapOp.put( data->seltabMap, wSelTab.getid( item ), (obj)seltab );
-    added = True;
+    if( __addItemInList( data, wSelTabList.name(), clone ) ) {
+      iOSelTab seltab = SelTabOp.inst( clone );
+      MapOp.put( data->seltabMap, wSelTab.getid( item ), (obj)seltab );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wStage.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOStage stage = StageOp.inst( clone );
-    __addItemInList( data, wStageList.name(), clone );
-    MapOp.put( data->stageMap, wStage.getid( item ), (obj)stage );
-    added = True;
+    if( __addItemInList( data, wStageList.name(), clone ) ) {
+      iOStage stage = StageOp.inst( clone );
+      MapOp.put( data->stageMap, wStage.getid( item ), (obj)stage );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wAction.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOAction action = ActionOp.inst( clone );
-    __addItemInList( data, wActionList.name(), clone );
-    MapOp.put( data->actionMap, wAction.getid( item ), (obj)action );
-    added = True;
+    if( __addItemInList( data, wActionList.name(), clone ) ) {
+      iOAction action = ActionOp.inst( clone );
+      MapOp.put( data->actionMap, wAction.getid( item ), (obj)action );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wTrack.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOTrack tk = TrackOp.inst( clone );
-    __addItemInList( data, wTrackList.name(), clone );
-    MapOp.put( data->trackMap, wTrack.getid( item ), (obj)tk );
-    added = True;
+    if( __addItemInList( data, wTrackList.name(), clone ) ) {
+      iOTrack tk = TrackOp.inst( clone );
+      MapOp.put( data->trackMap, wTrack.getid( item ), (obj)tk );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wZLevel.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
@@ -715,70 +758,106 @@ static Boolean _addItem( iOModel inst, iONode item ) {
   }
   else if( StrOp.equals( wFeedback.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOFBack fb = FBackOp.inst( clone );
-    __addItemInList( data, wFeedbackList.name(), clone );
-    MapOp.put( data->feedbackMap, wFeedback.getid( item ), (obj)fb );
-    __updateDigInt( inst );
-    added = True;
+    if( __addItemInList( data, wFeedbackList.name(), clone ) ) {
+      iOFBack fb = FBackOp.inst( clone );
+      MapOp.put( data->feedbackMap, wFeedback.getid( item ), (obj)fb );
+      __updateDigInt( inst );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wLoc.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOLoc lc = LocOp.inst( clone );
-    __addItemInList( data, wLocList.name(), clone );
-    MapOp.put( data->locMap, wLoc.getid( item ), (obj)lc );
-    ListOp.add( data->locList, (obj)lc );
-    added = True;
+    if( __addItemInList( data, wLocList.name(), clone ) ) {
+      iOLoc lc = LocOp.inst( clone );
+      MapOp.put( data->locMap, wLoc.getid( item ), (obj)lc );
+      ListOp.add( data->locList, (obj)lc );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wCar.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOCar car = CarOp.inst( clone );
-    __addItemInList( data, wCarList.name(), clone );
-    MapOp.put( data->carMap, wCar.getid( item ), (obj)car );
-    added = True;
+    if( __addItemInList( data, wCarList.name(), clone ) ) {
+      iOCar car = CarOp.inst( clone );
+      MapOp.put( data->carMap, wCar.getid( item ), (obj)car );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wOperator.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOOperator operator = OperatorOp.inst( clone );
-    __addItemInList( data, wOperatorList.name(), clone );
-    MapOp.put( data->operatorMap, wOperator.getid( item ), (obj)operator );
-    added = True;
+    if( __addItemInList( data, wOperatorList.name(), clone ) ) {
+      iOOperator operator = OperatorOp.inst( clone );
+      MapOp.put( data->operatorMap, wOperator.getid( item ), (obj)operator );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wRoute.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iORoute st = RouteOp.inst( clone );
-    __addItemInList( data, wRouteList.name(), clone );
-    MapOp.put( data->routeMap, wRoute.getid( clone ), (obj)st );
-    ListOp.add( data->routeList, (obj)st);
-    added = True;
+    if( __addItemInList( data, wRouteList.name(), clone ) ) {
+      iORoute st = RouteOp.inst( clone );
+      MapOp.put( data->routeMap, wRoute.getid( clone ), (obj)st );
+      ListOp.add( data->routeList, (obj)st);
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wSwitch.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOSwitch sw = SwitchOp.inst( clone );
-    __addItemInList( data, wSwitchList.name(), clone );
-    MapOp.put( data->switchMap, wSwitch.getid( item ), (obj)sw );
-    ListOp.add( data->switchList, (obj)sw );
-    added = True;
+    if( __addItemInList( data, wSwitchList.name(), clone ) ) {
+      iOSwitch sw = SwitchOp.inst( clone );
+      MapOp.put( data->switchMap, wSwitch.getid( item ), (obj)sw );
+      ListOp.add( data->switchList, (obj)sw );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wSignal.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOSignal sg = SignalOp.inst( clone );
-    __addItemInList( data, wSignalList.name(), clone );
-    MapOp.put( data->signalMap, wSignal.getid( item ), (obj)sg );
-    added = True;
+    if( __addItemInList( data, wSignalList.name(), clone ) ) {
+      iOSignal sg = SignalOp.inst( clone );
+      MapOp.put( data->signalMap, wSignal.getid( item ), (obj)sg );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wOutput.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOOutput co = OutputOp.inst( clone );
-    __addItemInList( data, wOutputList.name(), clone );
-    MapOp.put( data->outputMap, wOutput.getid( item ), (obj)co );
-    added = True;
+    if( __addItemInList( data, wOutputList.name(), clone ) ) {
+      iOOutput co = OutputOp.inst( clone );
+      MapOp.put( data->outputMap, wOutput.getid( item ), (obj)co );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wText.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
-    iOText tx = TextOp.inst( clone );
-    __addItemInList( data, wTextList.name(), clone );
-    MapOp.put( data->textMap, wText.getid( item ), (obj)tx );
-    added = True;
+    if( __addItemInList( data, wTextList.name(), clone ) ) {
+      iOText tx = TextOp.inst( clone );
+      MapOp.put( data->textMap, wText.getid( item ), (obj)tx );
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
   }
   else if( StrOp.equals( wLink.name(), itemName ) ) {
     iONode linklist = wPlan.getlinklist( data->model );
@@ -2116,22 +2195,37 @@ typedef obj (*item_inst)(iONode);
 static void _createMap( iOModelData o, iOMap map, const char* dbKey, const char* itemKey, item_inst instFn, iOList list ) {
   iONode db = NodeOp.findNode( o->model, dbKey );
   if( db != NULL ) {
-    iONode item   = NodeOp.findNode( db, itemKey );
+    iONode prev = NULL;
+    iONode item = NodeOp.findNode( db, itemKey );
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "createMap: %s found.", dbKey );
     while( item != NULL ) {
       const char* key = wItem.getid( item );
       if( key != NULL ) {
         if( instFn != NULL ) {
-          obj l_instFn = (obj)instFn(item);
-          MapOp.put( map, key, l_instFn );
-          if( list != NULL ) {
-            ListOp.add( list, l_instFn );
+          if( !MapOp.haskey(map, key ) ) {
+            obj l_instFn = (obj)instFn(item);
+            MapOp.put( map, key, l_instFn );
+            if( list != NULL ) {
+              ListOp.add( list, l_instFn );
+            }
+            prev = item;
+          }
+          else {
+            NodeOp.removeChild(db, item);
+            item = prev;
           }
         }
         else {
-          MapOp.put( map, key, (obj)item );
-          if( list != NULL ) {
-            ListOp.add( list, (obj)item );
+          if( !MapOp.haskey(map, key ) ) {
+            MapOp.put( map, key, (obj)item );
+            if( list != NULL ) {
+              ListOp.add( list, (obj)item );
+            }
+            prev = item;
+          }
+          else {
+            NodeOp.removeChild(db, item);
+            item = prev;
           }
         }
       }
