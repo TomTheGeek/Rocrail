@@ -73,6 +73,7 @@ static int __tcpipConnectInfo( obj inst ) {
 
 int tcpipConnect( obj inst, Boolean info ) {
   iOSRCPData o = Data(inst);
+  int rc = SRCPCONNECT_OK;
   char inbuf[1024];
   /* Will be enough. spec says, no line longer than 1000 chars. */
   char id[1024], data[1024];
@@ -86,48 +87,47 @@ int tcpipConnect( obj inst, Boolean info ) {
     o->cmdSocket = SocketOp.inst( o->host, o->port, False, False, False );
     SocketOp.setSndTimeout( o->cmdSocket, wDigInt.gettimeout(o->ini));
     SocketOp.setRcvTimeout( o->cmdSocket, wDigInt.gettimeout(o->ini));
+    rc = SRCPCONNECT_RECONNECTED;
   }
 
   /* Disconnect if connected */
-  if ( SocketOp.isConnected( o->cmdSocket ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "disconnecting from SRCP server %s:%d", o->host, o->port );
-    SocketOp.disConnect( o->cmdSocket );
+  if ( o->cmdSocket != NULL && !SocketOp.isConnected( o->cmdSocket ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connecting to SRCP server %s:%d", o->host, o->port );
+    rc = SRCPCONNECT_RECONNECTED;
+
+    if ( !SocketOp.connect( o->cmdSocket ) ) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR connecting to SRCP server %s:%d", o->host, o->port );
+      return SRCPCONNECT_ERROR;
+    }
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Handshaking" );
+
+    if ( !SocketOp.readln( o->cmdSocket, inbuf ) ) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking with SRCP server %s:%d", o->host, o->port );
+      SocketOp.disConnect( o->cmdSocket );
+      return SRCPCONNECT_ERROR;
+    }
+
+    /*
+     * All words are case-sensitive. Commands and replies of the SRCP are always written in uppercase letters.
+     * The following keys MUST be determined during normal welcome:
+     * SRCP <version>
+     */
+    StrOp.replaceAll(inbuf, '\n', ' ');
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Response from server: %s", inbuf );
+    if ( StrOp.findi( inbuf, "SRCP 0.8." ) != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server response for protocol 0.8 ok." );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking. No supported protocol found!" );
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, inbuf );
+      SocketOp.disConnect( o->cmdSocket );
+      return SRCPCONNECT_ERROR;
+    }
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Handshake completed." );
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connecting to SRCP server %s:%d", o->host, o->port );
-
-  if ( !SocketOp.connect( o->cmdSocket ) ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR connecting to SRCP server %s:%d", o->host, o->port );
-    return SRCPCONNECT_ERROR;
-  }
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Handshaking" );
-
-  if ( !SocketOp.readln( o->cmdSocket, inbuf ) ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking with SRCP server %s:%d", o->host, o->port );
-    SocketOp.disConnect( o->cmdSocket );
-    return SRCPCONNECT_ERROR;
-  }
-
-  /*
-   * All words are case-sensitive. Commands and replies of the SRCP are always written in uppercase letters.
-   * The following keys MUST be determined during normal welcome:
-   * SRCP <version>
-   */
-  StrOp.replaceAll(inbuf, '\n', ' ');
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Response from server: %s", inbuf );
-  if ( StrOp.findi( inbuf, "SRCP 0.8." ) != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server response for protocol 0.8 ok." );
-  }
-  else {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR handshaking. No supported protocol found!" );
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, inbuf );
-    SocketOp.disConnect( o->cmdSocket );
-    return SRCPCONNECT_ERROR;
-  }
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Handshake completed." );
-
-  return SRCPCONNECT_OK;
+  return rc;
 }
 
 
@@ -199,7 +199,7 @@ int tcpipWrite( obj inst, const char *szCommand, char* szRetVal, Boolean info ) 
     return -1;
   }
   else {
-    StrOp.replaceAll((char*)szCommand, '\n', ' ');
+    StrOp.replaceAll((char*)szCommand, '\n', '#');
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command written: %s",szCommand);
   }
 

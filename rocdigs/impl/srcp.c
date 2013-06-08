@@ -571,13 +571,14 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
   iOSRCPData data = Data( inst );
   char cmd[1024] = {0};
   iONode rsp = NULL;
-  int rc = 0;
+  int rc = data->subConnect((obj)inst, False);
 
-  if( data->subConnect((obj)inst, False) == SRCPCONNECT_RECONNECTED ) {
+  if( rc == SRCPCONNECT_RECONNECTED ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnected");
     __srcpInitConnect((iOSRCP)inst);
   }
 
+  rc = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node=%s cmd=%s", NodeOp.getName(nodeA), wLoc.getcmd(nodeA)!=NULL?wLoc.getcmd(nodeA):"-" );
   rsp = __translate( (iOSRCP)inst, nodeA, cmd );
