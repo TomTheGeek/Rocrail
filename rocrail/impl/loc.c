@@ -1441,7 +1441,7 @@ static void __BBT(iOLoc loc) {
     if( data->bbtInterval == 0 )
       data->bbtInterval = 10;
 
-    if( !data->bbtAtMinSpeed && data->bbtCycleSpeed > 0 && (data->bbtCycleSpeed % data->bbtInterval) == 0 ) {
+    if( data->drvSpeed > 0 && !data->bbtAtMinSpeed && data->bbtCycleSpeed > 0 && (data->bbtCycleSpeed % data->bbtInterval) == 0 ) {
       iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       int V_min = wLoc.getV_min( data->props );
       int speed = 0;
