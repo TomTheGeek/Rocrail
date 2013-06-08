@@ -5489,6 +5489,8 @@ static int __analyseAllLists(iOAnalyse inst) {
 
 static int __generateRoutes(iOAnalyse inst) {
   iOAnalyseData data = Data(inst);
+  iONode aoIni = AppOp.getIni() ;
+  iONode anaOpt = wRocRail.getanaopt( aoIni ) ;
   iONode stlist = wPlan.getstlist(data->plan);
   int modifications = 0;
 
@@ -5583,7 +5585,7 @@ static int __generateRoutes(iOAnalyse inst) {
       addRtId = False;
     }
 
-    char* autogenID = StrOp.fmt( "autogen-[%s%s]-[%s%s]", bka, bkaside, bkb, bkbside );
+    char* autogenID = StrOp.fmt( "%s[%s%s]-[%s%s]", wAnaOpt.isprefixAutogen(anaOpt) ?"autogen-":"", bka, bkaside, bkb, bkbside );
     wRoute.setid( newRoute, autogenID );
     StrOp.free(autogenID);
     wRoute.setbka( newRoute, bka);

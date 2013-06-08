@@ -763,6 +763,7 @@
       <var name="setBlockId"   vt="bool" defval="true" remark="Set blockid for all blocks"/>
       <var name="addSignalBlockAssignment"     vt="bool" defval="false" remark="Assign signals to blocks"/>
       <var name="addFeedbackBlockAssignment"   vt="bool" defval="false" remark="Assign feedbacks to blocks"/>
+      <var name="prefixAutogen"   vt="bool" defval="true"/>
       <!-- clear all analyze -->
       <var name="cleanRouteId" vt="bool" defval="true" remark="Clean routeid of all automatic detected routes"/>
       <var name="resetBlockId" vt="bool" defval="true" remark="Reset blockid in whole plan"/>
