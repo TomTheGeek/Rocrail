@@ -2244,7 +2244,7 @@ static Boolean __removeLoco(iOModel inst, iONode item ) {
   iOLoc lc = (iOLoc)MapOp.get( data->locMap, wLoc.getid( item ) );
   if( lc != NULL ) {
     iONode props = LocOp.base.properties( lc );
-    ListOp.removeObj( data->locList, (obj)props);
+    ListOp.removeObj( data->locList, (obj)lc);
     ModelOp.removeSysEventListener( AppOp.getModel(), (obj)lc );
     MapOp.remove( data->locMap, wLoc.getid( item ) );
     /* Remove item from list: */
