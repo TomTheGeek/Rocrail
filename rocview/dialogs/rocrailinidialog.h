@@ -405,7 +405,6 @@ public:
     wxCheckBox* m_SetBlockId;
     wxCheckBox* m_AddSignalBlockAssignment;
     wxCheckBox* m_AddFeedbackBlockAssignment;
-    wxCheckBox* m_PrefixAutogen;
     wxStaticBox* m_AnaClean;
     wxCheckBox* m_CleanRouteId;
     wxCheckBox* m_ResetBlockId;

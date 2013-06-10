@@ -5585,7 +5585,7 @@ static int __generateRoutes(iOAnalyse inst) {
       addRtId = False;
     }
 
-    char* autogenID = StrOp.fmt( "%s[%s%s]-[%s%s]", wAnaOpt.isprefixAutogen(anaOpt) ?"autogen-":"", bka, bkaside, bkb, bkbside );
+    char* autogenID = StrOp.fmt( "%s[%s%s]-[%s%s]", "autogen-", bka, bkaside, bkb, bkbside );
     wRoute.setid( newRoute, autogenID );
     StrOp.free(autogenID);
     wRoute.setbka( newRoute, bka);
@@ -5614,25 +5614,9 @@ static int __generateRoutes(iOAnalyse inst) {
       if( StrOp.equals( wRoute.getbka( child), wRoute.getbka( newRoute)) &&
           StrOp.equals( wRoute.getbkb( child), wRoute.getbkb( newRoute)) &&
               wRoute.isbkaside( child) ==  wRoute.isbkaside( newRoute) &&
-              wRoute.isbkbside( child) ==  wRoute.isbkbside( newRoute) )
-      {
-        /* check if one of the swcmds is different: */
-        Boolean routeIsEqual = True;
-        iONode swcmdA = wRoute.getswcmd(child);
-        while( routeIsEqual && swcmdA != NULL ) {
-          iONode swcmdB = wRoute.getswcmd(newRoute);
-          while( routeIsEqual && swcmdB != NULL ) {
-            if( StrOp.equals(wSwitchCmd.getid(swcmdA), wSwitchCmd.getid(swcmdB)) &&
-                !StrOp.equals(wSwitchCmd.getcmd(swcmdA), wSwitchCmd.getcmd(swcmdB)) )
-            {
-              routeIsEqual = False;
-            }
-            swcmdB = wRoute.nextswcmd(newRoute, swcmdB);
-          }
-          swcmdA = wRoute.nextswcmd(child, swcmdA);
-        }
+              wRoute.isbkbside( child) ==  wRoute.isbkbside( newRoute) ) {
 
-        if( routeIsEqual || !StrOp.equals( wRoute.getid( child), wRoute.getid( newRoute)) ) {
+        if( !StrOp.equals( wRoute.getid( child), wRoute.getid( newRoute)) ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found an edited route: [%s] from [%s] to [%s] skip", 
               wItem.getid( child), wRoute.getbka( child), wRoute.getbkb( child));
           addToList = False;

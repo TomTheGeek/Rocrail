@@ -35,6 +35,7 @@
 #include "rocrail/wrapper/public/SwitchCmd.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
+#include "rocrail/wrapper/public/FeedbackList.h"
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/RouteList.h"
 #include "rocrail/wrapper/public/Plan.h"
@@ -353,6 +354,16 @@ static void __renameRouteDeps(iONode model, const char* id, const char* previd, 
     while( item != NULL ) {
       __renameRouteId(item, id, previd);
       item = wSwitchList.nextsw(list, item);
+    }
+  }
+
+  /* Iterate feedbacks. */
+  list = wPlan.getfblist(model);
+  if( list != NULL ) {
+    iONode item = wFeedbackList.getfb(list);
+    while( item != NULL ) {
+      __renameRouteId(item, id, previd);
+      item = wFeedbackList.nextfb(list, item);
     }
   }
 
