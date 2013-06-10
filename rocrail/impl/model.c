@@ -25,6 +25,7 @@
 #include <string.h>
 
 #include "rocrail/impl/model_impl.h"
+#include "rocrail/public/modelutils.h"
 #include "rocrail/public/loc.h"
 #include "rocrail/public/car.h"
 #include "rocrail/public/operator.h"
@@ -971,6 +972,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       BlockOp.modify( bk, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->blockMap, prev_id );
       MapOp.put( data->blockMap, id, (obj)bk );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, BlockOp.base.properties(bk) );
       modified = True;
     }
     else if( wBlock.getid( item ) != NULL && StrOp.len( wBlock.getid( item ) ) > 0 ) {
@@ -1020,6 +1022,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       FBackOp.modify( fb, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->feedbackMap, prev_id );
       MapOp.put( data->feedbackMap, id, (obj)fb );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, FBackOp.base.properties(fb) );
       modified = True;
     }
     else if( wFeedback.getid( item ) != NULL && StrOp.len( wFeedback.getid( item ) ) > 0 ) {
@@ -1036,6 +1039,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       LocOp.modify( lc, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->locMap, prev_id );
       MapOp.put( data->locMap, id, (obj)lc );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, LocOp.base.properties(lc) );
       modified = True;
     }
     else if( wLoc.getid( item ) != NULL && StrOp.len( wLoc.getid( item ) ) > 0 ) {
@@ -1055,6 +1059,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       CarOp.modify( car, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->carMap, prev_id );
       MapOp.put( data->carMap, id, (obj)car );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, CarOp.base.properties(car) );
       modified = True;
     }
     else if( wCar.getid( item ) != NULL && StrOp.len( wCar.getid( item ) ) > 0 ) {
@@ -1071,6 +1076,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       OperatorOp.modify( operator, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->carMap, prev_id );
       MapOp.put( data->operatorMap, id, (obj)operator );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, OperatorOp.base.properties(operator) );
       modified = True;
     }
     else if( wOperator.getid( item ) != NULL && StrOp.len( wOperator.getid( item ) ) > 0 ) {
@@ -1087,6 +1093,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       RouteOp.modify( st, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->routeMap, prev_id );
       MapOp.put( data->routeMap, id, (obj)st );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, RouteOp.base.properties(st) );
       modified = True;
     }
     else if( wRoute.getid( item ) != NULL && StrOp.len( wRoute.getid( item ) ) > 0 ) {
@@ -1103,6 +1110,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       SwitchOp.modify( sw, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->switchMap, prev_id );
       MapOp.put( data->switchMap, id, (obj)sw );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, SwitchOp.base.properties(sw) );
       modified = True;
     }
     else if( wSwitch.getid( item ) != NULL && StrOp.len( wSwitch.getid( item ) ) > 0 ) {
@@ -1119,6 +1127,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       SignalOp.modify( sg, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->signalMap, prev_id );
       MapOp.put( data->signalMap, id, (obj)sg );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, SignalOp.base.properties(sg) );
       modified = True;
     }
     else if( wSignal.getid( item ) != NULL && StrOp.len( wSignal.getid( item ) ) > 0 ) {
@@ -1135,6 +1144,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       OutputOp.modify( co, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->outputMap, prev_id );
       MapOp.put( data->outputMap, id, (obj)co );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, OutputOp.base.properties(co) );
       modified = True;
     }
     else if( wOutput.getid( item ) != NULL && StrOp.len( wOutput.getid( item ) ) > 0 ) {
@@ -1151,6 +1161,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       TextOp.modify( txt, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->textMap, prev_id );
       MapOp.put( data->textMap, id, (obj)txt );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, TextOp.base.properties(txt) );
       modified = True;
     }
     else if( wText.getid( item ) != NULL && StrOp.len( wText.getid( item ) ) > 0 ) {
@@ -1167,6 +1178,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       TTOp.modify( tt, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->ttMap, prev_id );
       MapOp.put( data->ttMap, id, (obj)tt );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, TTOp.base.properties(tt) );
       modified = True;
     }
     else if( wTurntable.getid( item ) != NULL && StrOp.len( wTurntable.getid( item ) ) > 0 ) {
@@ -1183,6 +1195,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       SelTabOp.modify( seltab, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->seltabMap, prev_id );
       MapOp.put( data->seltabMap, id, (obj)seltab );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, SelTabOp.base.properties(seltab) );
       modified = True;
     }
     else if( wSelTab.getid( item ) != NULL && StrOp.len( wSelTab.getid( item ) ) > 0 ) {
@@ -1199,6 +1212,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       StageOp.modify( stage, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->stageMap, prev_id );
       MapOp.put( data->stageMap, id, (obj)stage );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, StageOp.base.properties(stage) );
       modified = True;
     }
     else if( wStage.getid( item ) != NULL && StrOp.len( wStage.getid( item ) ) > 0 ) {
@@ -1215,6 +1229,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       ActionOp.modify( action, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->actionMap, prev_id );
       MapOp.put( data->actionMap, id, (obj)action );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, ActionOp.base.properties(action) );
       modified = True;
     }
     else if( wAction.getid( item ) != NULL && StrOp.len( wAction.getid( item ) ) > 0 ) {
@@ -1290,6 +1305,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       LocationOp.modify( location, (iONode)NodeOp.base.clone( item ) );
       MapOp.remove( data->locationMap, prev_id );
       MapOp.put( data->locationMap, id, (obj)location );
+      ModelUtilsOp.renameItemDependencies(data->model, id, prev_id, LocationOp.base.properties(location) );
       modified = True;
     }
     else if( wLocation.getid( item ) != NULL && StrOp.len( wLocation.getid( item ) ) > 0 ) {
