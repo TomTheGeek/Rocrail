@@ -68,6 +68,8 @@
 
 
 #include "rocs/public/mem.h"
+#include "rocs/public/str.h"
+#include "rocs/public/strtok.h"
 
 static int instCnt = 0;
 
@@ -156,6 +158,34 @@ static void __broadcastModifiedItem(iONode props) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "modified dependencies for [%s]", wItem.getid(props) );
   AppOp.broadcastEvent( clone );
 }
+
+
+static char* __renameTokIDs(const char* ids, const char* id, const char* previd) {
+  Boolean modified = False;
+  iOStrTok tok = StrTokOp.inst(ids, ',' );
+  char* tokids = NULL;
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    const char* tokid = StrTokOp.nextToken(tok);
+    if( tokids != NULL )
+      tokids = StrOp.cat( tokids, "," );
+    if( StrOp.equals(previd, tokid) ) {
+      tokids = StrOp.cat( tokids, id );
+      modified = True;
+    }
+    else
+      tokids = StrOp.cat( tokids, tokid );
+  }
+  StrTokOp.base.del(tok);
+
+  if( modified )
+    return tokids;
+  else {
+    if( tokids != NULL )
+      StrOp.free(tokids);
+    return NULL;
+  }
+}
+
 
 
 /**
@@ -248,12 +278,17 @@ static void __renameBlockDeps(iONode model, const char* id, const char* previd, 
         wRoute.setbkb(item, id);
         modified = True;
       }
+
+
       if( StrOp.find(bkc, previd) ) {
-        char* ids = StrOp.replaceAllSub(bkc, previd, id);
-        wRoute.setbkc(item, ids);
-        StrOp.free(ids);
-        modified = True;
+        char* ids = __renameTokIDs(bkc, id, previd);
+        if( ids != NULL ) {
+          wRoute.setbkc(item, ids);
+          StrOp.free(ids);
+          modified = True;
+        }
       }
+
       if(modified) {
         __broadcastModifiedItem(item);
       }
@@ -286,10 +321,12 @@ static void __renameBlockDeps(iONode model, const char* id, const char* previd, 
     while( item != NULL ) {
       const char* blocks = wLocation.getblocks(item);
       if( StrOp.find(blocks, previd) ) {
-        char* ids = StrOp.replaceAllSub(blocks, previd, id);
-        wLocation.setblocks(item, ids);
-        StrOp.free(ids);
-        __broadcastModifiedItem(item);
+        char* ids = __renameTokIDs(blocks, id, previd);
+        if( ids != NULL ) {
+          wLocation.setblocks(item, ids);
+          StrOp.free(ids);
+          __broadcastModifiedItem(item);
+        }
       }
       item = wLocationList.nextlocation(list, item);
     }
@@ -303,10 +340,10 @@ static void __renameBlockDeps(iONode model, const char* id, const char* previd, 
  * Helper function for __renameRouteDeps().
  */
 static void __renameRouteId(iONode item, const char* id, const char* previd) {
-  if( StrOp.find(wItem.getrouteids(item), previd) ) {
-    char* ids = StrOp.replaceAllSub(wItem.getrouteids(item), previd, id);
-    wItem.setrouteids(item, ids);
-    StrOp.free(ids);
+  char* routeids = __renameTokIDs(wItem.getrouteids(item), id, previd);
+  if( routeids != NULL ) {
+    wItem.setrouteids(item, routeids);
+    StrOp.free(routeids);
     __broadcastModifiedItem(item);
   }
 }
