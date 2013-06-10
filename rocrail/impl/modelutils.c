@@ -35,46 +35,33 @@
 #include "rocrail/wrapper/public/SwitchCmd.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
-#include "rocrail/wrapper/public/ModPlan.h"
-#include "rocrail/wrapper/public/Module.h"
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/RouteList.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/SignalList.h"
 #include "rocrail/wrapper/public/SelTab.h"
-#include "rocrail/wrapper/public/Stage.h"
-#include "rocrail/wrapper/public/Ctrl.h"
-#include "rocrail/wrapper/public/RocRail.h"
+#include "rocrail/wrapper/public/SelTabList.h"
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/ActionCond.h"
 #include "rocrail/wrapper/public/Location.h"
+#include "rocrail/wrapper/public/LocationList.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/StageList.h"
 #include "rocrail/wrapper/public/StageSection.h"
-#include "rocrail/wrapper/public/Exception.h"
 #include "rocrail/wrapper/public/AnaOpt.h"
-#include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Turntable.h"
-#include "rocrail/wrapper/public/TTTrack.h"
-#include "rocrail/wrapper/public/ZLevel.h"
 #include "rocrail/wrapper/public/Schedule.h"
+#include "rocrail/wrapper/public/ScheduleList.h"
 #include "rocrail/wrapper/public/ScheduleEntry.h"
 #include "rocrail/wrapper/public/Car.h"
-#include "rocrail/wrapper/public/Waybill.h"
-#include "rocrail/wrapper/public/Operator.h"
 #include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/Link.h"
-#include "rocrail/wrapper/public/Booster.h"
-#include "rocrail/wrapper/public/MVTrack.h"
 #include "rocrail/wrapper/public/Text.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
-#include "rocrail/wrapper/public/DigInt.h"
-#include "rocrail/wrapper/public/SwitchCmd.h"
-#include "rocrail/wrapper/public/SysCmd.h"
-#include "rocrail/wrapper/public/SystemActions.h"
 #include "rocrail/wrapper/public/ActionList.h"
 #include "rocrail/wrapper/public/TurntableList.h"
 #include "rocrail/wrapper/public/TextList.h"
@@ -138,29 +125,6 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OModelUtils ----- */
-/*
-Route:
--> id( routeids( tk( tklist ) ) )
--> id( routeids( sw( swlist ) ) )
--> id( routeids( sg( sglist ) ) )
--> byroute( fbevent( bk( bklist ) ) )
-... (Actions !)
-
-Feedback: =>
--> id( fbevent( bk( bklist ) ) )
--> id( fbevent( st( stlist ) ) )
-... (Actions !)
-
-
-Block:
--> id( blockids( tk( tklist ) ) )
--> id( blockids( sg( sglist ) ) )
--> bka( st( stlist ) )
--> bkb( st( stlist ) )
--> bk( bkc( st( stlist ) ) )
--> block( scentry( sc( sclist ) ) ) )
-... (Actions !)
- */
 
 /**  */
 static struct OModelUtils* _inst( iONode model ) {
@@ -239,6 +203,87 @@ static void __renameBlockDeps(iONode model, const char* id, const char* previd, 
     }
   }
 
+  /* Iterate routes. */
+  list = wPlan.getstlist(model);
+  if( list != NULL ) {
+    iONode item = wRouteList.getst(list);
+    while( item != NULL ) {
+      Boolean modified = False;
+      const char* bka = wRoute.getbka(item);
+      const char* bkb = wRoute.getbkb(item);
+      const char* bkc = wRoute.getbkc(item);
+      if( bka != NULL && StrOp.equals( bka, previd) ) {
+        wRoute.setbka(item, id);
+        modified = True;
+      }
+      if( bkb != NULL && StrOp.equals( bkb, previd) ) {
+        wRoute.setbkb(item, id);
+        modified = True;
+      }
+      if( StrOp.find(bkc, previd) ) {
+        char* ids = StrOp.replaceAllSub(bkc, previd, id);
+        wRoute.setbkc(item, ids);
+        StrOp.free(ids);
+        modified = True;
+      }
+      if(modified) {
+        __broadcastModifiedItem(item);
+      }
+      item = wRouteList.nextst(list, item);
+    }
+  }
+
+  /* Iterate schedules. */
+  list = wPlan.getsclist(model);
+  if( list != NULL ) {
+    iONode item = wScheduleList.getsc(list);
+    while( item != NULL ) {
+      Boolean modified = False;
+      iONode entry = wSchedule.getscentry(item);
+      while( entry != NULL ) {
+        if( wScheduleEntry.getblock(entry) != NULL && StrOp.equals(wScheduleEntry.getblock(entry), previd) ) {
+          wScheduleEntry.setblock(entry, id);
+          modified = True;
+        }
+        entry = wSchedule.nextscentry(item, entry);
+      }
+      if(modified) {
+        __broadcastModifiedItem(item);
+      }
+      item = wScheduleList.nextsc(list, item);
+    }
+  }
+
+  /* Iterate actions. */
+  list = wPlan.getaclist(model);
+  if( list != NULL ) {
+    iONode item = wActionList.getac(list);
+    while( item != NULL ) {
+      if( StrOp.equals( wAction.gettype(item), wBlock.name() ) && StrOp.equals( wAction.getoid(item), previd ) ) {
+        wAction.setoid(item, id );
+        __broadcastModifiedItem(item);
+      }
+      item = wActionList.nextac(list, item);
+    }
+  }
+
+  /* Iterate locations. */
+  list = wPlan.getlocationlist(model);
+  if( list != NULL ) {
+    iONode item = wLocationList.getlocation(list);
+    while( item != NULL ) {
+      const char* blocks = wLocation.getblocks(item);
+      if( StrOp.find(blocks, previd) ) {
+        char* ids = StrOp.replaceAllSub(blocks, previd, id);
+        wLocation.setblocks(item, ids);
+        StrOp.free(ids);
+        __broadcastModifiedItem(item);
+      }
+      item = wLocationList.nextlocation(list, item);
+    }
+  }
+
+
 }
 
 
@@ -312,6 +357,28 @@ static void __renameRouteDeps(iONode model, const char* id, const char* previd, 
     }
   }
 
+  /* Iterate seltab events. */
+  list = wPlan.getseltablist(model);
+  if( list != NULL ) {
+    iONode item = wSelTabList.getseltab(list);
+    while( item != NULL ) {
+      Boolean modified = False;
+      iONode event = wSelTab.getfbevent(item);
+      while( event != NULL ) {
+        const char* byroute = wFeedbackEvent.getbyroute(event);
+        if( byroute != NULL && StrOp.len(byroute) > 0 && StrOp.equals(byroute, previd) ) {
+          wFeedbackEvent.setbyroute(event, id);
+          modified = True;
+        }
+        event = wSelTab.nextfbevent(item, event);
+      }
+      if( modified ) {
+        __broadcastModifiedItem(item);
+      }
+      item = wSelTabList.nextseltab(list, item);
+    }
+  }
+
   /* Iterate actions. */
   list = wPlan.getaclist(model);
   if( list != NULL ) {
@@ -372,6 +439,99 @@ static void __renameSensorDeps(iONode model, const char* id, const char* previd,
       item = wRouteList.nextst(list, item);
     }
   }
+
+  /* Iterate tracks. */
+  list = wPlan.gettklist(model);
+  if( list != NULL ) {
+    iONode item = wTrackList.gettk(list);
+    while( item != NULL ) {
+      __renameBlockId(item, id, previd);
+      item = wTrackList.nexttk(list, item);
+    }
+  }
+
+
+  /* Iterate stages. */
+  list = wPlan.getsblist(model);
+  if( list != NULL ) {
+    iONode item = wStageList.getsb(list);
+    while( item != NULL ) {
+      Boolean modified = False;
+      iONode section = wStage.getsection(item);
+      while( section != NULL ) {
+        if( wStageSection.getfbid(section) != NULL && StrOp.equals(wStageSection.getfbid(section), previd) ) {
+          wStageSection.setfbid(section, id);
+          modified = True;
+        }
+        if( wStageSection.getfbidocc(section) != NULL && StrOp.equals(wStageSection.getfbidocc(section), previd) ) {
+          wStageSection.setfbidocc(section, id);
+          modified = True;
+        }
+        section = wStage.nextsection(item, section);
+      }
+      if( wStage.getfbenterid(item) != NULL && StrOp.equals(wStage.getfbenterid(item), previd) ) {
+        wStage.setfbenterid(item, id);
+        modified = True;
+      }
+      if( modified ) {
+        __broadcastModifiedItem(item);
+      }
+      item = wStageList.nextsb(list, item);
+    }
+  }
+
+  /* Iterate fiddleyards. */
+  list = wPlan.getseltablist(model);
+  if( list != NULL ) {
+    iONode item = wSelTabList.getseltab(list);
+    while( item != NULL ) {
+      Boolean modified = False;
+      iONode event = wSelTab.getfbevent(item);
+      while( event != NULL ) {
+        const char* fbid = wFeedbackEvent.getid(event);
+        if( fbid != NULL && StrOp.len(fbid) > 0 && StrOp.equals(fbid, previd) ) {
+          wFeedbackEvent.setid(event, id);
+          modified = True;
+        }
+        event = wSelTab.nextfbevent(item, event);
+      }
+      if( wSelTab.getb0sen(item) != NULL && StrOp.equals(wSelTab.getb0sen(item), previd) ) {
+        wSelTab.setb0sen(item, id);
+        modified = True;
+      }
+      if( wSelTab.getb1sen(item) != NULL && StrOp.equals(wSelTab.getb1sen(item), previd) ) {
+        wSelTab.setb1sen(item, id);
+        modified = True;
+      }
+      if( wSelTab.getb2sen(item) != NULL && StrOp.equals(wSelTab.getb2sen(item), previd) ) {
+        wSelTab.setb2sen(item, id);
+        modified = True;
+      }
+      if( wSelTab.getb3sen(item) != NULL && StrOp.equals(wSelTab.getb3sen(item), previd) ) {
+        wSelTab.setb3sen(item, id);
+        modified = True;
+      }
+      if( wSelTab.getb4sen(item) != NULL && StrOp.equals(wSelTab.getb4sen(item), previd) ) {
+        wSelTab.setb4sen(item, id);
+        modified = True;
+      }
+      if( wSelTab.getb5sen(item) != NULL && StrOp.equals(wSelTab.getb5sen(item), previd) ) {
+        wSelTab.setb5sen(item, id);
+        modified = True;
+      }
+      if( wSelTab.getb6sen(item) != NULL && StrOp.equals(wSelTab.getb6sen(item), previd) ) {
+        wSelTab.setb6sen(item, id);
+        modified = True;
+      }
+      if( modified ) {
+        __broadcastModifiedItem(item);
+      }
+      item = wSelTabList.nextseltab(list, item);
+    }
+  }
+
+  /* Iterate tts... */
+
 }
 
 
