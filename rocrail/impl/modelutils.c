@@ -168,38 +168,66 @@ static void __renameBlockId(iONode item, const char* id, const char* previd) {
   }
 }
 
+static void __renameBlockId4Schedules(iONode model, const char* id, const char* previd) {
+  /* Iterate schedules. */
+  iONode list = wPlan.getsclist(model);
+  if( list != NULL ) {
+    iONode item = wScheduleList.getsc(list);
+    while( item != NULL ) {
+      Boolean modified = False;
+      iONode entry = wSchedule.getscentry(item);
+      while( entry != NULL ) {
+        if( wScheduleEntry.getblock(entry) != NULL && StrOp.equals(wScheduleEntry.getblock(entry), previd) ) {
+          wScheduleEntry.setblock(entry, id);
+          modified = True;
+        }
+        entry = wSchedule.nextscentry(item, entry);
+      }
+      if(modified) {
+        __broadcastModifiedItem(item);
+      }
+      item = wScheduleList.nextsc(list, item);
+    }
+  }
+
+}
+
 /**
  * Iterate all items which could have a reference to the renamed block.
  * Called by _renameItemDependencies().
  */
-static void __renameBlockDeps(iONode model, const char* id, const char* previd, iONode props) {
-  /* Iterate tracks. */
-  iONode list = wPlan.gettklist(model);
-  if( list != NULL ) {
-    iONode item = wTrackList.gettk(list);
-    while( item != NULL ) {
-      __renameBlockId(item, id, previd);
-      item = wTrackList.nexttk(list, item);
-    }
-  }
+static void __renameBlockDeps(iONode model, const char* id, const char* previd, iONode props, Boolean doTracks) {
+  iONode list = NULL;
 
-  /* Iterate signals. */
-  list = wPlan.getsglist(model);
-  if( list != NULL ) {
-    iONode item = wSignalList.getsg(list);
-    while( item != NULL ) {
-      __renameBlockId(item, id, previd);
-      item = wSignalList.nextsg(list, item);
+  if( doTracks ) {
+    /* Iterate tracks. */
+    list = wPlan.gettklist(model);
+    if( list != NULL ) {
+      iONode item = wTrackList.gettk(list);
+      while( item != NULL ) {
+        __renameBlockId(item, id, previd);
+        item = wTrackList.nexttk(list, item);
+      }
     }
-  }
 
-  /* Iterate switches. */
-  list = wPlan.getswlist(model);
-  if( list != NULL ) {
-    iONode item = wSwitchList.getsw(list);
-    while( item != NULL ) {
-      __renameBlockId(item, id, previd);
-      item = wSwitchList.nextsw(list, item);
+    /* Iterate signals. */
+    list = wPlan.getsglist(model);
+    if( list != NULL ) {
+      iONode item = wSignalList.getsg(list);
+      while( item != NULL ) {
+        __renameBlockId(item, id, previd);
+        item = wSignalList.nextsg(list, item);
+      }
+    }
+
+    /* Iterate switches. */
+    list = wPlan.getswlist(model);
+    if( list != NULL ) {
+      iONode item = wSwitchList.getsw(list);
+      while( item != NULL ) {
+        __renameBlockId(item, id, previd);
+        item = wSwitchList.nextsw(list, item);
+      }
     }
   }
 
@@ -233,26 +261,10 @@ static void __renameBlockDeps(iONode model, const char* id, const char* previd, 
     }
   }
 
+
   /* Iterate schedules. */
-  list = wPlan.getsclist(model);
-  if( list != NULL ) {
-    iONode item = wScheduleList.getsc(list);
-    while( item != NULL ) {
-      Boolean modified = False;
-      iONode entry = wSchedule.getscentry(item);
-      while( entry != NULL ) {
-        if( wScheduleEntry.getblock(entry) != NULL && StrOp.equals(wScheduleEntry.getblock(entry), previd) ) {
-          wScheduleEntry.setblock(entry, id);
-          modified = True;
-        }
-        entry = wSchedule.nextscentry(item, entry);
-      }
-      if(modified) {
-        __broadcastModifiedItem(item);
-      }
-      item = wScheduleList.nextsc(list, item);
-    }
-  }
+  __renameBlockId4Schedules(model, id, previd);
+
 
   /* Iterate actions. */
   list = wPlan.getaclist(model);
@@ -389,6 +401,32 @@ static void __renameRouteDeps(iONode model, const char* id, const char* previd, 
         __broadcastModifiedItem(item);
       }
       item = wActionList.nextac(list, item);
+    }
+  }
+
+}
+
+
+static void __renameSwitchDeps(iONode model, const char* id, const char* previd, iONode props) {
+  /* Iterate route events. */
+  iONode list = wPlan.getstlist(model);
+  if( list != NULL ) {
+    iONode item = wRouteList.getst(list);
+    while( item != NULL ) {
+      Boolean modified = False;
+      iONode swcmd = wRoute.getswcmd(item);
+      while( swcmd != NULL ) {
+        const char* swid = wSwitchCmd.getid(swcmd);
+        if( swid != NULL && StrOp.len(swid) > 0 && StrOp.equals(swid, previd) ) {
+          wSwitchCmd.setid(swcmd, id);
+          modified = True;
+        }
+        swcmd = wRoute.nextswcmd(item, swcmd);
+      }
+      if( modified ) {
+        __broadcastModifiedItem(item);
+      }
+      item = wRouteList.nextst(list, item);
     }
   }
 
@@ -541,7 +579,27 @@ static void __renameSensorDeps(iONode model, const char* id, const char* previd,
 static Boolean _renameItemDependencies( iONode model ,const char* id ,const char* previd ,iONode props ) {
 
   if( StrOp.equals( wBlock.name(), NodeOp.getName(props) )) {
-    __renameBlockDeps(model, id, previd, props);
+    __renameBlockDeps(model, id, previd, props, True);
+    return True;
+  }
+
+  if( StrOp.equals( wStage.name(), NodeOp.getName(props) )) {
+    __renameBlockDeps(model, id, previd, props, True);
+    return True;
+  }
+
+  if( StrOp.equals( wSelTab.name(), NodeOp.getName(props) )) {
+    __renameBlockDeps(model, id, previd, props, True);
+    return True;
+  }
+
+  if( StrOp.equals( wTurntable.name(), NodeOp.getName(props) )) {
+    __renameBlockDeps(model, id, previd, props, False);
+    return True;
+  }
+
+  if( StrOp.equals( wLocation.name(), NodeOp.getName(props) )) {
+    __renameBlockId4Schedules(model, id, previd);
     return True;
   }
 
@@ -554,6 +612,14 @@ static Boolean _renameItemDependencies( iONode model ,const char* id ,const char
     __renameSensorDeps(model, id, previd, props);
     return True;
   }
+
+  if( StrOp.equals( wSwitch.name(), NodeOp.getName(props) )) {
+    __renameSwitchDeps(model, id, previd, props);
+    return True;
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "auto rename of dependencies for object %s [%s] is not supported",
+      NodeOp.getName(props), wItem.getid(props) );
 
   return False;
 }
