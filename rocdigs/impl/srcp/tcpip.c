@@ -199,7 +199,7 @@ int tcpipWrite( obj inst, const char *szCommand, char* szRetVal, Boolean info ) 
     return -1;
   }
   else {
-    StrOp.replaceAll((char*)szCommand, '\n', '#');
+    StrOp.replaceAll((char*)szCommand, '\n', ' ');
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command written: %s",szCommand);
   }
 
