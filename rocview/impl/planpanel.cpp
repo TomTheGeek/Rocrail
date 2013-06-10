@@ -1069,7 +1069,7 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
 
 void PlanPanel::OnTimer(wxTimerEvent& event) {
   m_bAlt = !m_bAlt;
-  TraceOp.trc( "planpanel", TRCLEVEL_INFO, __LINE__, 9999, "alternate timer: %d", m_bAlt );
+  TraceOp.trc( "planpanel", TRCLEVEL_DEBUG, __LINE__, 9999, "alternate timer: %d", m_bAlt );
 
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
