@@ -1251,6 +1251,7 @@
       <param name="model" vt="iONode"/>
     </fun>
     <fun name="setModel" vt="void">
+      <param name="inst" vt="this"/>
       <param name="model" vt="iONode"/>
     </fun>
     <fun name="renameItemDependencies" vt="Boolean">

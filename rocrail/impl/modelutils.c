@@ -31,6 +31,7 @@
 #include "rocrail/wrapper/public/Track.h"
 #include "rocrail/wrapper/public/TrackList.h"
 #include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/SwitchList.h"
 #include "rocrail/wrapper/public/SwitchCmd.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/FeedbackEvent.h"
@@ -194,47 +195,183 @@ static void __broadcastModifiedItem(iONode props) {
 
 
 /**
+ * Helper function for __renameBlockDeps().
+ */
+static void __renameBlockId(iONode item, const char* id, const char* previd) {
+  if( wItem.getblockid(item) != NULL && StrOp.equals(wItem.getblockid(item), previd) ) {
+    wItem.setblockid(item, id);
+    __broadcastModifiedItem(item);
+  }
+}
+
+/**
  * Iterate all items which could have a reference to the renamed block.
  * Called by _renameItemDependencies().
  */
 static void __renameBlockDeps(iONode model, const char* id, const char* previd, iONode props) {
+  /* Iterate tracks. */
+  iONode list = wPlan.gettklist(model);
+  if( list != NULL ) {
+    iONode item = wTrackList.gettk(list);
+    while( item != NULL ) {
+      __renameBlockId(item, id, previd);
+      item = wTrackList.nexttk(list, item);
+    }
+  }
+
+  /* Iterate signals. */
+  list = wPlan.getsglist(model);
+  if( list != NULL ) {
+    iONode item = wSignalList.getsg(list);
+    while( item != NULL ) {
+      __renameBlockId(item, id, previd);
+      item = wSignalList.nextsg(list, item);
+    }
+  }
+
+  /* Iterate switches. */
+  list = wPlan.getswlist(model);
+  if( list != NULL ) {
+    iONode item = wSwitchList.getsw(list);
+    while( item != NULL ) {
+      __renameBlockId(item, id, previd);
+      item = wSwitchList.nextsw(list, item);
+    }
+  }
 
 }
 
+
+/**
+ * Helper function for __renameRouteDeps().
+ */
+static void __renameRouteId(iONode item, const char* id, const char* previd) {
+  if( StrOp.find(wItem.getrouteids(item), previd) ) {
+    char* ids = StrOp.replaceAllSub(wItem.getrouteids(item), previd, id);
+    wItem.setrouteids(item, ids);
+    StrOp.free(ids);
+    __broadcastModifiedItem(item);
+  }
+}
 
 /**
  * Iterate all items which could have a reference to the renamed route.
  * Called by _renameItemDependencies().
  */
 static void __renameRouteDeps(iONode model, const char* id, const char* previd, iONode props) {
+
+  /* Iterate tracks. */
   iONode list = wPlan.gettklist(model);
   if( list != NULL ) {
     iONode item = wTrackList.gettk(list);
     while( item != NULL ) {
-      if( StrOp.find(wItem.getrouteids(item), previd) ) {
-        char* ids = StrOp.replaceAllSub(wItem.getrouteids(item), previd, id);
-        wItem.setrouteids(item, ids);
-        StrOp.free(ids);
-        __broadcastModifiedItem(item);
-      }
+      __renameRouteId(item, id, previd);
       item = wTrackList.nexttk(list, item);
     }
   }
 
+  /* Iterate signals. */
   list = wPlan.getsglist(model);
   if( list != NULL ) {
     iONode item = wSignalList.getsg(list);
     while( item != NULL ) {
-      if( StrOp.find(wItem.getrouteids(item), previd) ) {
-        char* ids = StrOp.replaceAllSub(wItem.getrouteids(item), previd, id);
-        wItem.setrouteids(item, ids);
-        StrOp.free(ids);
-        __broadcastModifiedItem(item);
-      }
+      __renameRouteId(item, id, previd);
       item = wSignalList.nextsg(list, item);
     }
   }
 
+  /* Iterate switches. */
+  list = wPlan.getswlist(model);
+  if( list != NULL ) {
+    iONode item = wSwitchList.getsw(list);
+    while( item != NULL ) {
+      __renameRouteId(item, id, previd);
+      item = wSwitchList.nextsw(list, item);
+    }
+  }
+
+  /* Iterate block events. */
+  list = wPlan.getbklist(model);
+  if( list != NULL ) {
+    iONode item = wBlockList.getbk(list);
+    while( item != NULL ) {
+      Boolean modified = False;
+      iONode event = wBlock.getfbevent(item);
+      while( event != NULL ) {
+        const char* byroute = wFeedbackEvent.getbyroute(event);
+        if( byroute != NULL && StrOp.len(byroute) > 0 && StrOp.equals(byroute, previd) ) {
+          wFeedbackEvent.setbyroute(event, id);
+          modified = True;
+        }
+        event = wBlock.nextfbevent(item, event);
+      }
+      if( modified ) {
+        __broadcastModifiedItem(item);
+      }
+      item = wBlockList.nextbk(list, item);
+    }
+  }
+
+  /* Iterate actions. */
+  list = wPlan.getaclist(model);
+  if( list != NULL ) {
+    iONode item = wActionList.getac(list);
+    while( item != NULL ) {
+      if( StrOp.equals( wAction.gettype(item), wRoute.name() ) && StrOp.equals( wAction.getoid(item), previd ) ) {
+        wAction.setoid(item, id );
+        __broadcastModifiedItem(item);
+      }
+      item = wActionList.nextac(list, item);
+    }
+  }
+
+}
+
+
+static void __renameSensorDeps(iONode model, const char* id, const char* previd, iONode props) {
+  /* Iterate block events. */
+  iONode list = wPlan.getbklist(model);
+  if( list != NULL ) {
+    iONode item = wBlockList.getbk(list);
+    while( item != NULL ) {
+      Boolean modified = False;
+      iONode event = wBlock.getfbevent(item);
+      while( event != NULL ) {
+        const char* fbid = wFeedbackEvent.getid(event);
+        if( fbid != NULL && StrOp.len(fbid) > 0 && StrOp.equals(fbid, previd) ) {
+          wFeedbackEvent.setid(event, id);
+          modified = True;
+        }
+        event = wBlock.nextfbevent(item, event);
+      }
+      if( modified ) {
+        __broadcastModifiedItem(item);
+      }
+      item = wBlockList.nextbk(list, item);
+    }
+  }
+
+  /* Iterate route events. */
+  list = wPlan.getstlist(model);
+  if( list != NULL ) {
+    iONode item = wRouteList.getst(list);
+    while( item != NULL ) {
+      Boolean modified = False;
+      iONode event = wRoute.getfbevent(item);
+      while( event != NULL ) {
+        const char* fbid = wFeedbackEvent.getid(event);
+        if( fbid != NULL && StrOp.len(fbid) > 0 && StrOp.equals(fbid, previd) ) {
+          wFeedbackEvent.setid(event, id);
+          modified = True;
+        }
+        event = wRoute.nextfbevent(item, event);
+      }
+      if( modified ) {
+        __broadcastModifiedItem(item);
+      }
+      item = wRouteList.nextst(list, item);
+    }
+  }
 }
 
 
@@ -245,13 +382,20 @@ static Boolean _renameItemDependencies( iONode model ,const char* id ,const char
 
   if( StrOp.equals( wBlock.name(), NodeOp.getName(props) )) {
     __renameBlockDeps(model, id, previd, props);
+    return True;
   }
 
   if( StrOp.equals( wRoute.name(), NodeOp.getName(props) )) {
     __renameRouteDeps(model, id, previd, props);
+    return True;
   }
 
-  return True;
+  if( StrOp.equals( wFeedback.name(), NodeOp.getName(props) )) {
+    __renameSensorDeps(model, id, previd, props);
+    return True;
+  }
+
+  return False;
 }
 
 
