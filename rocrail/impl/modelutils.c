@@ -160,34 +160,6 @@ static void __broadcastModifiedItem(iONode props) {
 }
 
 
-static char* __renameTokIDs(const char* ids, const char* id, const char* previd) {
-  Boolean modified = False;
-  iOStrTok tok = StrTokOp.inst(ids, ',' );
-  char* tokids = NULL;
-  while( StrTokOp.hasMoreTokens(tok) ) {
-    const char* tokid = StrTokOp.nextToken(tok);
-    if( tokids != NULL )
-      tokids = StrOp.cat( tokids, "," );
-    if( StrOp.equals(previd, tokid) ) {
-      tokids = StrOp.cat( tokids, id );
-      modified = True;
-    }
-    else
-      tokids = StrOp.cat( tokids, tokid );
-  }
-  StrTokOp.base.del(tok);
-
-  if( modified )
-    return tokids;
-  else {
-    if( tokids != NULL )
-      StrOp.free(tokids);
-    return NULL;
-  }
-}
-
-
-
 /**
  * Helper function for __renameBlockDeps().
  */
@@ -281,7 +253,7 @@ static void __renameBlockDeps(iONode model, const char* id, const char* previd, 
 
 
       if( StrOp.find(bkc, previd) ) {
-        char* ids = __renameTokIDs(bkc, id, previd);
+        char* ids = StrTokOp.replaceAll(bkc, ',', previd, id);
         if( ids != NULL ) {
           wRoute.setbkc(item, ids);
           StrOp.free(ids);
@@ -321,7 +293,7 @@ static void __renameBlockDeps(iONode model, const char* id, const char* previd, 
     while( item != NULL ) {
       const char* blocks = wLocation.getblocks(item);
       if( StrOp.find(blocks, previd) ) {
-        char* ids = __renameTokIDs(blocks, id, previd);
+        char* ids = StrTokOp.replaceAll(blocks, ',', previd, id);
         if( ids != NULL ) {
           wLocation.setblocks(item, ids);
           StrOp.free(ids);
@@ -340,7 +312,7 @@ static void __renameBlockDeps(iONode model, const char* id, const char* previd, 
  * Helper function for __renameRouteDeps().
  */
 static void __renameRouteId(iONode item, const char* id, const char* previd) {
-  char* routeids = __renameTokIDs(wItem.getrouteids(item), id, previd);
+  char* routeids = StrTokOp.replaceAll(wItem.getrouteids(item), ',', previd, id);
   if( routeids != NULL ) {
     wItem.setrouteids(item, routeids);
     StrOp.free(routeids);

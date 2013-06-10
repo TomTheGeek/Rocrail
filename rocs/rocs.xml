@@ -1479,6 +1479,12 @@
     <fun name="nextToken" vt="const char*" remark="A token.">
       <param name="inst" vt="this" remark="String instance."/>
     </fun>
+    <fun name="replaceAll" vt="char*">
+      <param name="str" vt="const char*" remark="Initial string value."/>
+      <param name="sep" vt="char" remark="String separator."/>
+      <param name="oldTok" vt="const char*" remark="String token to be replaced."/>
+      <param name="newTok" vt="const char*" remark="Replacement for the old token."/>
+    </fun>
     <data>
       <var name="str" vt="char*" remark="String value."/>
       <var name="sep" vt="char" remark="Separator."/>
