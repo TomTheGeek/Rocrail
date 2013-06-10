@@ -5616,7 +5616,7 @@ static int __generateRoutes(iOAnalyse inst) {
               wRoute.isbkaside( child) ==  wRoute.isbkaside( newRoute) &&
               wRoute.isbkbside( child) ==  wRoute.isbkbside( newRoute) ) {
 
-        if( !StrOp.equals( wRoute.getid( child), wRoute.getid( newRoute)) ) {
+        if( !StrOp.equals( wRoute.getid( child), wRoute.getid( newRoute)) || !wAnaOpt.isprefixAutogen(anaOpt) ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found an edited route: [%s] from [%s] to [%s] skip", 
               wItem.getid( child), wRoute.getbka( child), wRoute.getbkb( child));
           addToList = False;
