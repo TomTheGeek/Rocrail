@@ -363,6 +363,7 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
         nrSections++;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "free section idx=%d", wStageSection.getidx(section ) );
         wStageSection.setlcid(section, NULL );
+        ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, "", False, 0, 0, wStageSection.getid(section) );
       }
     }
 
