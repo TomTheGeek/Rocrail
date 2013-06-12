@@ -437,6 +437,7 @@ static __help( void ) {
   TraceOp.println( "-x [planfile]            | Ini file. [%s].", wRocRail.getplanfile(NULL) );
   TraceOp.println( "-f                       | Init field." );
   TraceOp.println( "-nodevcheck              | Disable check for serial devices at startup." );
+  TraceOp.println( "-stress                  | Enable the stress runner for testing communication." );
   TraceOp.println( "-------------------------+--------------------------------------------"  );
   TraceOp.println( "-installservice          | Install Rocrail as Windows service." );
   TraceOp.println( "-deleteservice           | Uninstall Rocrail as Windows service." );
