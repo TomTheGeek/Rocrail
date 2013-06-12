@@ -241,8 +241,8 @@ Boolean serialWrite( obj inst, unsigned char *path, unsigned char code, unsigned
     msgidx++;
 
     if( pdata != NULL ) {
-      for( dataidx = 0; dataidx < datalen; dataidx++ )
-        msg[msgidx+dataidx] = pdata[dataidx]; // address
+      MemOp.copy( msg+msgidx, pdata, datalen);
+      dataidx += datalen;
     }
 
     size = msgidx+datalen;
