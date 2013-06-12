@@ -270,6 +270,9 @@ static void __SoD4Node( iOBiDiB inst, iOBiDiBNode node, Boolean force ) {
   node->sod = True;
   ThreadOp.sleep(10);
 
+  if( data->stressnode == NULL )
+    data->stressnode = node;
+
   if( !force ) {
     data->subWrite((obj)inst, node->path, MSG_SYS_ENABLE, NULL, 0, node->seq++);
     ThreadOp.sleep(10);
@@ -2884,6 +2887,34 @@ static int _version( obj inst ) {
   return vmajor*10000 + vminor*100 + patch;
 }
 
+static void __stressRunner( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOBiDiB bidib = (iOBiDiB)ThreadOp.getParm( th );
+  iOBiDiBData data = Data(bidib);
+  byte msgdata[128];
+
+  if( data->stress )
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDiB stress runner started." );
+
+  /* try to get the system status: */
+  while( data->run && data->stress ) {
+
+    if( data->stressnode != NULL ) {
+      msgdata[0] = 0; // address range
+      msgdata[1] = data->stressnode->sensorcnt;
+      data->subWrite((obj)bidib, data->stressnode->path, MSG_BM_GET_RANGE, msgdata, 2, data->stressnode->seq++);
+    }
+
+    ThreadOp.sleep(10);
+  };
+
+  if( data->stress )
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDiB stress runner ended." );
+}
+
+
+
+
 
 /**  */
 static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
@@ -2910,6 +2941,7 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   data->swtime   = wDigInt.getswtime( ini );
   data->lcmap    = MapOp.inst();
   data->lcmux    = MutexOp.inst( NULL, True );
+  data->stress   = wDigInt.isstress(ini);
 
   data->nodepath[0] = 0;
 
@@ -2957,6 +2989,12 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->reader = ThreadOp.inst( "bidibreader", &__bidibReader, __BiDiB );
   ThreadOp.start( data->reader );
+
+  if( data->stress ) {
+    data->stressRunner = ThreadOp.inst( "bidibstress", &__stressRunner, __BiDiB );
+    ThreadOp.start( data->stressRunner );
+  }
+
 
   instCnt++;
   return __BiDiB;

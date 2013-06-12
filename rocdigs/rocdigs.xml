@@ -1324,6 +1324,9 @@
       <var name="fcsync" vt="Boolean"/>
       <var name="lcmux" vt="iOMutex"/>
       <var name="lcmap" vt="iOMap"/>
+      <var name="stress" vt="Boolean"/>
+      <var name="stressRunner" vt="iOThread"/>
+      <var name="stressnode" vt="iOBiDiBNode"/>
     </data>
   </object>
 
