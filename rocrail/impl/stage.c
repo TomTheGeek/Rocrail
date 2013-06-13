@@ -1000,6 +1000,11 @@ static Boolean _isFree( iIBlockBase inst ,const char* locid ) {
     return False;
   }
 
+  if( data->pendingMove ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stagingblock %s has a pending move", data->id );
+    return False;
+  }
+
   locoFit = __willLocoFit(inst, locid, False);
   if( !locoFit ) {
     __moveStageLocos(inst);
@@ -1071,6 +1076,11 @@ static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,
 
   if( data->early2in ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stagingblock %s has a pending IN event", data->id );
+    return False;
+  }
+
+  if( data->pendingMove ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stagingblock %s has a pending move", data->id );
     return False;
   }
 
