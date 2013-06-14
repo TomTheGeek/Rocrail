@@ -372,10 +372,10 @@ public:
     wxCheckBox* m_TriggerBlockEvents;
     wxCheckBox* m_ReleaseOnIdle;
     wxCheckBox* m_CloseOnGhost;
-    wxCheckBox* m_CloseNoEvents;
-    wxCheckBox* m_SelectShortestBlock;
-    wxCheckBox* m_RestoreSchedule;
     wxCheckBox* m_ActionTimer60;
+    wxCheckBox* m_RestoreSchedule;
+    wxCheckBox* m_SelectShortestBlock;
+    wxCheckBox* m_CloseNoEvents;
     wxCheckBox* m_GreenAspect;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;

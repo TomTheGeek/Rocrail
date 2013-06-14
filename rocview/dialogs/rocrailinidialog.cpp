@@ -1038,10 +1038,10 @@ bool RocrailIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& 
     m_TriggerBlockEvents = NULL;
     m_ReleaseOnIdle = NULL;
     m_CloseOnGhost = NULL;
-    m_CloseNoEvents = NULL;
-    m_SelectShortestBlock = NULL;
-    m_RestoreSchedule = NULL;
     m_ActionTimer60 = NULL;
+    m_RestoreSchedule = NULL;
+    m_SelectShortestBlock = NULL;
+    m_CloseNoEvents = NULL;
     m_GreenAspect = NULL;
     m_DefAspect = NULL;
     m_ControllersPanel = NULL;
@@ -1704,30 +1704,30 @@ void RocrailIniDialog::CreateControls()
     m_CloseOnGhost->SetValue(false);
     itemFlexGridSizer162->Add(m_CloseOnGhost, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_CloseNoEvents = new wxCheckBox( m_AtomatPanel, wxID_ANY, _("Close on no events"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_CloseNoEvents->SetValue(true);
-    itemFlexGridSizer162->Add(m_CloseNoEvents, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    wxStaticLine* itemStaticLine185 = new wxStaticLine( m_AtomatPanel, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+    itemBoxSizer125->Add(itemStaticLine185, 0, wxGROW|wxALL, 5);
 
-    m_SelectShortestBlock = new wxCheckBox( m_AtomatPanel, wxID_ANY, _("Select shortest block"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_SelectShortestBlock->SetValue(false);
-    itemFlexGridSizer162->Add(m_SelectShortestBlock, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    wxBoxSizer* itemBoxSizer186 = new wxBoxSizer(wxVERTICAL);
+    itemBoxSizer125->Add(itemBoxSizer186, 0, wxALIGN_TOP|wxALL, 5);
+    m_ActionTimer60 = new wxCheckBox( m_AtomatPanel, wxID_ANY, _("Action timer 60 sec."), wxDefaultPosition, wxDefaultSize, 0 );
+    m_ActionTimer60->SetValue(true);
+    itemBoxSizer186->Add(m_ActionTimer60, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
     m_RestoreSchedule = new wxCheckBox( m_AtomatPanel, wxID_ANY, _("Restore schedule"), wxDefaultPosition, wxDefaultSize, 0 );
     m_RestoreSchedule->SetValue(false);
-    itemFlexGridSizer162->Add(m_RestoreSchedule, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemBoxSizer186->Add(m_RestoreSchedule, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
-    m_ActionTimer60 = new wxCheckBox( m_AtomatPanel, wxID_ANY, _("Action timer 60 sec."), wxDefaultPosition, wxDefaultSize, 0 );
-    m_ActionTimer60->SetValue(true);
-    itemFlexGridSizer162->Add(m_ActionTimer60, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    m_SelectShortestBlock = new wxCheckBox( m_AtomatPanel, wxID_ANY, _("Select shortest block"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_SelectShortestBlock->SetValue(false);
+    itemBoxSizer186->Add(m_SelectShortestBlock, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
-    wxStaticLine* itemStaticLine189 = new wxStaticLine( m_AtomatPanel, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
-    itemBoxSizer125->Add(itemStaticLine189, 0, wxGROW|wxALL, 5);
+    m_CloseNoEvents = new wxCheckBox( m_AtomatPanel, wxID_ANY, _("Close on no events"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_CloseNoEvents->SetValue(true);
+    itemBoxSizer186->Add(m_CloseNoEvents, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
-    wxBoxSizer* itemBoxSizer190 = new wxBoxSizer(wxVERTICAL);
-    itemBoxSizer125->Add(itemBoxSizer190, 0, wxALIGN_TOP|wxALL, 5);
     m_GreenAspect = new wxCheckBox( m_AtomatPanel, wxID_ANY, _("Green aspect if next is red"), wxDefaultPosition, wxDefaultSize, 0 );
     m_GreenAspect->SetValue(false);
-    itemBoxSizer190->Add(m_GreenAspect, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemBoxSizer186->Add(m_GreenAspect, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
     wxArrayString m_DefAspectStrings;
     m_DefAspectStrings.Add(_("&red"));
@@ -1736,7 +1736,7 @@ void RocrailIniDialog::CreateControls()
     m_DefAspectStrings.Add(_("&white"));
     m_DefAspect = new wxRadioBox( m_AtomatPanel, wxID_ANY, _("Default Signal Aspect"), wxDefaultPosition, wxDefaultSize, m_DefAspectStrings, 1, wxRA_SPECIFY_ROWS );
     m_DefAspect->SetSelection(0);
-    itemBoxSizer190->Add(m_DefAspect, 0, wxALIGN_LEFT|wxALL, 5);
+    itemBoxSizer186->Add(m_DefAspect, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_RRNotebook->AddPage(m_AtomatPanel, _("Automat"));
 
