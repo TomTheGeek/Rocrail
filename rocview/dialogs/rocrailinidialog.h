@@ -249,6 +249,11 @@ public:
     wxCheckBox* m_SoundPlayerLocation;
     wxStaticText* m_LabelTraceFile;
     wxTextCtrl* m_TraceFile;
+    wxStaticBox* m_ScBox;
+    wxStaticText* m_labScSensor;
+    wxComboBox* m_ScSensor;
+    wxStaticText* m_labScIID;
+    wxTextCtrl* m_ScIID;
     wxStaticText* m_labPTIID;
     wxTextCtrl* m_PTIID;
     wxStaticText* m_labLCIID;
@@ -257,11 +262,6 @@ public:
     wxTextCtrl* m_DPIID;
     wxStaticText* m_labSVIID;
     wxTextCtrl* m_SVIID;
-    wxStaticBox* m_ScBox;
-    wxStaticText* m_labScSensor;
-    wxComboBox* m_ScSensor;
-    wxStaticText* m_labScIID;
-    wxTextCtrl* m_ScIID;
     wxCheckBox* m_FSUTF8;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
