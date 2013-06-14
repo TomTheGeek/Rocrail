@@ -1304,6 +1304,11 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
   iONode firstOccupiedSection = NULL;
   iONode lastSection = NULL;
 
+  if( data->wait4enter ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "can not move a loco because a %s is entering", data->locId);
+    return False;
+  }
+
   /* wait only 100ms for getting the mutex: */
   if( !MutexOp.trywait( data->moveMux, 100 ) ) {
     return False;
