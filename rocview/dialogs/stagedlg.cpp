@@ -410,6 +410,10 @@ void StageDlg::OnSectionList( wxCommandEvent& event )
 
 
 void StageDlg::OnFreeAll( wxCommandEvent& event ) {
+  int action = wxMessageDialog( this, wxGetApp().getMsg("freeallwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO )
+    return;
+
   iONode section = wStage.getsection(m_Props);
   while( section != NULL ) {
     wStageSection.setlcid(section, NULL);

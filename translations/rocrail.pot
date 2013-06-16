@@ -6413,3 +6413,9 @@ msgstr ""
 msgid "Calculation"
 msgstr ""
 
+#. 
+# id="freeallwarning"
+#, c-format
+msgid "This action will free all section reservations. Proceed?"
+msgstr ""
+

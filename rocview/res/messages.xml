@@ -22509,4 +22509,7 @@
     <nl txt="Berekening"/>
     <it txt="Calcolo"/>
   </Msg>
+  <Msg id="freeallwarning">
+    <en txt="This action will free all section reservations. Proceed?"/>
+  </Msg>
 </Messages>
