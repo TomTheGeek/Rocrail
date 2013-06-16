@@ -342,10 +342,11 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       if( data->iid != NULL )
         wLoc.setiid( rsp, data->iid );
       wLoc.setaddr( rsp, addr );
+      wLoc.setfn( rsp, fn );
       wLoc.setV_raw( rsp, speed );
       wLoc.setV_rawMax( rsp, spcnt );
       wLoc.setthrottleid( rsp, "vthrottle" );
-      wLoc.setcmd( rsp, wLoc.velocity );
+      wLoc.setcmd( rsp, wLoc.dirfun );
     }
   }
 
