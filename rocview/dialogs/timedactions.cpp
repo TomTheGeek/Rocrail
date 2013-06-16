@@ -909,6 +909,8 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wAction.route_lock, wxConvUTF8));
       m_Command->Append(wxString( wAction.route_lockset, wxConvUTF8));
       m_Command->Append(wxString( wAction.route_unlock, wxConvUTF8));
+      m_Command->Append(wxString( wBlock.open, wxConvUTF8));
+      m_Command->Append(wxString( wBlock.closed, wxConvUTF8));
       break;
     case 4: // system
       m_Command->Append(wxString( wAction.system_stoplocs, wxConvUTF8));

@@ -767,6 +767,16 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
           lockid = wAction.getid( data->action );
         RouteOp.unLock(st, lockid, NULL, True, False);
       }
+      else if( StrOp.equals( wBlock.closed, wAction.getcmd( data->action ) ) ) {
+        iONode cmd = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
+        wBlock.setstate( cmd, wBlock.closed );
+        RouteOp.cmd(st, cmd);
+      }
+      else if( StrOp.equals( wBlock.open, wAction.getcmd( data->action ) ) ) {
+        iONode cmd = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
+        wBlock.setstate( cmd, wBlock.open );
+        RouteOp.cmd(st, cmd);
+      }
       else {
         RouteOp.go( st );
       }
