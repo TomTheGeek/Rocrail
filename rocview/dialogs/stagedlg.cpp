@@ -490,6 +490,11 @@ void StageDlg::OnSectionDelete( wxCommandEvent& event )
 {
   if( m_Props == NULL )
     return;
+
+  int action = wxMessageDialog( this, wxGetApp().getMsg("removewarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO )
+    return;
+
   TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "delete node..." );
 
   if( m_SectionList->GetSelection() != wxNOT_FOUND ) {
