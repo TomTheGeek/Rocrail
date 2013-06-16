@@ -2902,7 +2902,7 @@ static void __watchdogRunner( void* threadinst ) {
 
   while( data->run ) {
     ThreadOp.sleep(data->watchdogInt * 1000);
-    if( data->power ) {
+    if( data->power && data->defaultmain != NULL ) {
       iOBiDiBNode bidibnode = data->defaultmain;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "watchdog: send BIDIB_CS_STATE_GO" );
       msgdata[0] = BIDIB_CS_STATE_GO;
