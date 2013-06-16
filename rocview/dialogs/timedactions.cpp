@@ -939,6 +939,7 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wAction.loco_go, wxConvUTF8));
       m_Command->Append(wxString( wBlock.open, wxConvUTF8));
       m_Command->Append(wxString( wBlock.closed, wxConvUTF8));
+      m_Command->Append(wxString( wAction.loco_dispatch, wxConvUTF8));
       break;
     case 7: // loco
       m_Command->Append(wxString( wAction.loco_go, wxConvUTF8));

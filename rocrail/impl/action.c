@@ -684,6 +684,12 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         }
 
       }
+      else if( StrOp.equals(wLoc.dispatch, wAction.getcmd(data->action) ) ) {
+        iOLoc lc = ModelOp.getLoc( model, bl->getLoc(bl), NULL, False);
+        if( lc != NULL ) {
+          LocOp.dispatch(lc);
+        }
+      }
     }
   }
 
