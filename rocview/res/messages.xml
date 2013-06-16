@@ -3498,7 +3498,7 @@
     <sr_latin txt="Pravo"/>
     <ja txt="直線"/>
     <zh_CN txt="直轨"/>
-    <sl txt="V premo"/>
+    <sl txt="Ravna"/>
   </Msg>
   <Msg id="curve">
     <de txt="Kurve/Bogen"/>
@@ -3709,7 +3709,7 @@
     <sr_latin txt="Dvostruko ukrštanje"/>
     <ja txt="ダブルポイント"/>
     <zh_CN txt="双转辙机交叉道口"/>
-    <sl txt="Dvojno križanje"/>
+    <sl txt="dvojnokrižna"/>
   </Msg>
   <Msg id="ccrossing">
     <de txt="Zentrierte Kreuzung"/>
@@ -10379,7 +10379,7 @@
     <ro txt="aceeași direcție de destinație"/>
     <sr_latin txt="isti smer odredišta"/>
     <zh_CN txt="相同目的地方向"/>
-    <sl txt="smer enake destiancije"/>
+    <sl txt="smer enake destinacije"/>
   </Msg>
   <Msg id="oppositedir">
     <de txt="Fahrziel entgegen der Fahrtrichtung" tip="Sucht neues Fahrziel in der entgegengesetzten Fahrtrichtung."/>
@@ -12165,7 +12165,7 @@
     <ro txt="folosește timpii plecărilor planificate"/>
     <sr_latin txt="koristi vreme polaska u rasporedu"/>
     <zh_CN txt="按照时间表时间出发"/>
-    <sl txt="uporabi čas iz urnika odhodov"/>
+    <sl txt="uporabi čas iz voznega reda odhodov"/>
   </Msg>
   <Msg id="clock">
     <de txt="Uhr"/>
@@ -13651,7 +13651,7 @@
     <ro txt="Verifică destinație liberă înainte de poziția ÎN"/>
     <sr_latin txt="Proveri da li je slobodno odredište"/>
     <zh_CN txt="找到闲置的目的地为止"/>
-    <sl txt="Preveri prosto destinacijo dokler ne dosežemo V (IN)"/>
+    <sl txt="Preveri prosto destinacijo dokler ne doseže V (IN)"/>
   </Msg>
   <Msg id="locobook">
     <de txt="Lok-Steuerung"/>
@@ -14765,6 +14765,7 @@
     <ro txt="Inițializează pauză sistem"/>
     <sr_latin txt="Pauza u inicijalnom polju"/>
     <zh_CN txt="暂停初始化"/>
+    <sl txt="Pavza za inicializacijska polja"/>
   </Msg>
   <Msg id="initfieldpower">
     <de txt="Fahrstrom EIN während der Initalisierung der Weichen"/>
@@ -15991,7 +15992,7 @@
     <ro txt="Numele căii"/>
     <sr_latin txt="Ime puta"/>
     <zh_CN txt="线路名称"/>
-    <sl txt="Ime ceste"/>
+    <sl txt="Ime"/>
   </Msg>
   <Msg id="era">
     <de txt="Epoche"/>
@@ -17332,7 +17333,7 @@
     <en_GB txt="M-Time"/>
     <sr_latin txt="M-vreme"/>
     <zh_CN txt="M-时间"/>
-    <sl txt="M-Time"/>
+    <sl txt="Čas do servisa"/>
   </Msg>
   <Msg id="mint">
     <en txt="M-Int" tip="Maintenance interval in hours."/>
@@ -17351,7 +17352,7 @@
     <en_CA txt="M-Int"/>
     <en_GB txt="M-Int"/>
     <sr_latin txt="M-int"/>
-    <sl txt="M-Int"/>
+    <sl txt="Serv.-Int"/>
     <zh_CN txt="M-Int"/>
   </Msg>
   <Msg id="offpos">
@@ -21156,6 +21157,7 @@
     <sr_latin txt="Aktiviraj retke događaje posle 100ms"/>
     <ja txt="100ms後に優先度の低いイベントを動かす"/>
     <zh_CN txt="100毫秒后触发低等事件"/>
+    <sl txt="Sproži nižje dogodke po 100ms"/>
   </Msg>
   <Msg id="showsecondhand">
     <en txt="Show secondhand"/>
@@ -21494,6 +21496,7 @@
     <it txt="Percorso segnalazioni"/>
     <sr_latin txt="Putanja izdanja"/>
     <zh_CN txt="发布路径"/>
+    <sl txt="Pot za datoteke težav"/>
   </Msg>
   <Msg id="reconnectafterservershutdown">
     <en txt="Reconnect after server shutdown"/>
@@ -21611,6 +21614,7 @@
     <es txt="Tarjeta de vagón"/>
     <sv txt="Vagnskort"/>
     <zh_CN txt="车辆卡片"/>
+    <sl txt="Evidenčni karton"/>
   </Msg>
   <Msg id="reserve">
     <en txt="Reserve"/>
@@ -22352,6 +22356,7 @@
     <nl txt="Puntstuk"/>
     <it txt="Cuore"/>
     <zh_CN txt="道岔"/>
+    <sl txt="Srce kretnice"/>
   </Msg>
   <Msg id="showlocked">
     <en txt="Show locked switches" tip="Show locked switches with a different color."/>
@@ -22384,6 +22389,7 @@
     <nl txt="Open bezetting bestand"/>
     <it txt="Apri file occupazione"/>
     <zh_CN txt="打开占用文件"/>
+    <sl txt="Odpri datoteka zasedenosti"/>
   </Msg>
   <Msg id="guestimport" dialog="true">
     <en txt="Guest import"/>
@@ -22511,5 +22517,6 @@
   </Msg>
   <Msg id="freeallwarning">
     <en txt="This action will free all section reservations. Proceed?"/>
+    <nl txt="Deze actie heft alle reserveringen op. Doorgaan?"/>
   </Msg>
 </Messages>
