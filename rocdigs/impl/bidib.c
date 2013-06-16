@@ -2887,6 +2887,35 @@ static int _version( obj inst ) {
   return vmajor*10000 + vminor*100 + patch;
 }
 
+
+static void __watchdogRunner( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOBiDiB bidib = (iOBiDiB)ThreadOp.getParm( th );
+  iOBiDiBData data = Data(bidib);
+  byte msgdata[128];
+
+  ThreadOp.sleep(1000);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDiB watchdog runner started." );
+
+  if( data->watchdogInt < 1 )
+    data->watchdogInt = 2;
+
+  while( data->run ) {
+    ThreadOp.sleep(data->watchdogInt * 1000);
+    if( data->power ) {
+      iOBiDiBNode bidibnode = data->defaultmain;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "watchdog: send BIDIB_CS_STATE_GO" );
+      msgdata[0] = BIDIB_CS_STATE_GO;
+      data->subWrite((obj)bidib, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode->seq++);
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "watchdog: power is off" );
+    }
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDiB watchdog runner ended." );
+}
+
+
 static void __stressRunner( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOBiDiB bidib = (iOBiDiB)ThreadOp.getParm( th );
@@ -2957,10 +2986,12 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDiB %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "http://www.bidib.org/" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid     = %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib  = %s", wDigInt.getsublib( ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "secAck  = %s, interval=%dms",
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib   = %s", wDigInt.getsublib( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "secAck   = %s, interval=%d ms",
       wBiDiB.issecAck( data->bidibini ) ? "enabled":"disabled", wBiDiB.getsecAckInt(data->bidibini) * 10 );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "watchdog = %s, interval=%d s",
+      wBiDiB.iswatchdog( data->bidibini ) ? "enabled":"disabled", wBiDiB.getwatchdogInt(data->bidibini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   /* choose interface: */
@@ -2989,6 +3020,12 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->reader = ThreadOp.inst( "bidibreader", &__bidibReader, __BiDiB );
   ThreadOp.start( data->reader );
+
+  if( wBiDiB.iswatchdog( data->bidibini ) ) {
+    data->watchdogInt = wBiDiB.getwatchdogInt( data->bidibini );
+    data->watchdogRunner = ThreadOp.inst( "bidibwdog", &__watchdogRunner, __BiDiB );
+    ThreadOp.start( data->watchdogRunner );
+  }
 
   if( data->stress ) {
     data->stressRunner = ThreadOp.inst( "bidibstress", &__stressRunner, __BiDiB );

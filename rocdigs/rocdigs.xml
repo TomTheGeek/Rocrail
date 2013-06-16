@@ -1327,7 +1327,9 @@
       <var name="stress" vt="Boolean"/>
       <var name="stressRunner" vt="iOThread"/>
       <var name="stressnode" vt="iOBiDiBNode"/>
-    </data>
+      <var name="watchdogRunner" vt="iOThread"/>
+      <var name="watchdogInt" vt="int"/>
+      </data>
   </object>
 
 
