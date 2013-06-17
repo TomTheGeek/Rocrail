@@ -4651,7 +4651,7 @@
   </Msg>
   <Msg id="locid">
     <de txt="Lokkennung"/>
-    <en txt="Loc ID"/>
+    <en txt="Loc ID" alttxt="Loco ID"/>
     <nl txt="Loc ID"/>
     <sv txt="Lok-ID"/>
     <fr txt="Indicatif de la locomotive"/>
@@ -5586,7 +5586,7 @@
   </Msg>
   <Msg id="loc">
     <de txt="Lok"/>
-    <en txt="Loc"/>
+    <en txt="Loc" alttxt="Loco"/>
     <nl txt="loc"/>
     <sv txt="Lok"/>
     <fr txt="Locomotive"/>
