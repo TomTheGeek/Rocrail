@@ -161,7 +161,7 @@ void checkScheduleActions( iILcDriverInt inst, int state) {
   }
 }
 
-Boolean checkScheduleEntryActions( iILcDriverInt inst, int index ) {
+Boolean checkScheduleEntryActions( iILcDriverInt inst, int index, Boolean checkSwapOnly ) {
   iOLcDriverData data = Data(inst);
   int scheduleIdx = (index == -1 ? data->scheduleIdx:index);
 
@@ -174,16 +174,18 @@ Boolean checkScheduleEntryActions( iILcDriverInt inst, int index ) {
     if( sc != NULL && scheduleIdx < NodeOp.getChildCnt(sc)) {
       iONode entry = NodeOp.getChild(sc,scheduleIdx);
       if( entry != NULL ) {
-        iONode actionctrl = wScheduleEntry.getactionctrl(entry);
+        if( !checkSwapOnly ) {
+          iONode actionctrl = wScheduleEntry.getactionctrl(entry);
 
-        while( actionctrl != NULL ) {
-          iOAction action = data->model->getAction(data->model, wActionCtrl.getid(actionctrl) );
-          if( action != NULL ) {
-            wActionCtrl.setlcid( actionctrl, data->loc->getId( data->loc ) );
-            action->exec(action, actionctrl);
-          }
-          actionctrl = wSchedule.nextactionctrl(entry, actionctrl);
-        };
+          while( actionctrl != NULL ) {
+            iOAction action = data->model->getAction(data->model, wActionCtrl.getid(actionctrl) );
+            if( action != NULL ) {
+              wActionCtrl.setlcid( actionctrl, data->loc->getId( data->loc ) );
+              action->exec(action, actionctrl);
+            }
+            actionctrl = wSchedule.nextactionctrl(entry, actionctrl);
+          };
+        }
 
         return wScheduleEntry.isswap(entry);
       }

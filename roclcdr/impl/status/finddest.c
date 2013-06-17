@@ -73,7 +73,7 @@ void statusFindDest( iILcDriverInt inst ) {
     }
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkScheduleEntryActions for entry %d...", scheduleIdx );
-    checkScheduleEntryActions(inst, scheduleIdx);
+    checkScheduleEntryActions(inst, scheduleIdx, False);
     if( data->pendingSwap ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "pending swap for schedule" );
       data->loc->swapPlacing( data->loc, NULL, False, True );
@@ -106,7 +106,7 @@ void statusFindDest( iILcDriverInt inst ) {
     else {
       if( isScheduleEnd(inst) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "End of schedule: STOP." );
-        checkScheduleEntryActions(inst, scheduleIdx);
+        checkScheduleEntryActions(inst, scheduleIdx, False);
         checkScheduleActions(inst, LC_FINDDEST);
       }
     }
