@@ -123,7 +123,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
       }
 
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkScheduleEntryActions for entry %d...", scheduleIdx );
-      if( checkScheduleEntryActions(inst, scheduleIdx, (wait | data->next2Route == NULL) ) ) {
+      if( checkScheduleEntryActions(inst, scheduleIdx, (wait || data->next2Route == NULL) ) ) {
         /* wait in block if we have to swap placing... */
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Wait in block because the schedule entry wants a swap placing..." );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block" );
