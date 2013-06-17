@@ -22519,4 +22519,7 @@
     <en txt="This action will free all section reservations. Proceed?"/>
     <nl txt="Deze actie heft alle reserveringen op. Doorgaan?"/>
   </Msg>
+  <Msg id="deleteall">
+    <en txt="Delete all"/>
+  </Msg>
 </Messages>

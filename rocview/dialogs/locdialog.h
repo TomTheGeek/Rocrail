@@ -144,6 +144,10 @@ class wxGrid;
 #define ID_PANEL_LOC_CV 10345
 #define ID_GRID_LOC_CV 10346
 #define ID_BUTTON_LC_CV_DESC 10347
+#define ID_PANEL_LOC_BBT 10337
+#define ID_LOC_BBTLIST 10338
+#define ID_BUTTON_BBT_DELETE 10424
+#define ID_BUTTON_BBT_DELETEALL 10425
 #define SYMBOL_LOCDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_LOCDIALOG_TITLE _("Dialog")
 #define SYMBOL_LOCDIALOG_IDNAME ID_DIALOG_LOC
@@ -285,6 +289,15 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LC_CV_DESC
     void OnButtonLcCvDescClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LOC_BBTLIST
+    void OnLocBbtlistSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BBT_DELETE
+    void OnButtonBbtDeleteClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BBT_DELETEALL
+    void OnButtonBbtDeleteallClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
 
@@ -411,8 +424,6 @@ public:
     wxCheckBox* m_V_mode_percent;
     wxCheckBox* m_Info4Throttle;
     wxCheckBox* m_Regulated;
-    wxCheckBox* m_BBT;
-    wxSpinCtrl* m_BBTSteps;
     wxPanel* m_DetailsPanel;
     wxStaticText* m_Label_Blockwait;
     wxTextCtrl* m_Blockwait;
@@ -538,6 +549,12 @@ public:
     wxStaticText* m_labCVDesc;
     wxTextCtrl* m_CVDescription;
     wxButton* m_CVDescModify;
+    wxPanel* m_BBTPanel;
+    wxCheckBox* m_BBT;
+    wxSpinCtrl* m_BBTSteps;
+    wxListBox* m_BBTList;
+    wxButton* m_BBTDelete;
+    wxButton* m_BBTDeleteAll;
     wxButton* m_Cancel;
     wxButton* m_Apply;
     wxButton* m_OK;

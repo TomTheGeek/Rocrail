@@ -6419,3 +6419,9 @@ msgstr ""
 msgid "This action will free all section reservations. Proceed?"
 msgstr ""
 
+#. 
+# id="deleteall"
+#, c-format
+msgid "Delete all"
+msgstr ""
+
