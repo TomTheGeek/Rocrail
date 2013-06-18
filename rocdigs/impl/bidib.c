@@ -1623,12 +1623,15 @@ static void __addNode(iOBiDiB bidib, byte* pdata) {
     NodeOp.addChild(data->bidibini, child);
  
     if( data->defaultmain == NULL && StrOp.find(classname, wBiDiBnode.class_dcc_main) != NULL ) {
+      byte msgdata[32];
       data->defaultmain = node;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, classname);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s, trying to get FEATURE_GEN_WATCHDOG...", uidKey, wBiDiBnode.class_dcc_main);
+      msgdata[0] = FEATURE_GEN_WATCHDOG;
+      data->subWrite((obj)bidib, node->path, MSG_FEATURE_GET, msgdata, 1, node->seq++);
     }
     if( data->defaultbooster == NULL && StrOp.find(classname, wBiDiBnode.class_booster) != NULL ) {
       data->defaultbooster = node;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, classname);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, wBiDiBnode.class_booster);
     }
     if( data->defaultprog == NULL && StrOp.find(classname, wBiDiBnode.class_dcc_prog) != NULL ) {
       data->defaultprog = node;
@@ -1667,6 +1670,12 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
       if( feature == FEATURE_FW_UPDATE_MODE ) {
         bidibnode->fwup = (value ? True:False);
       }
+
+      if( feature == FEATURE_GEN_WATCHDOG ) {
+        data->watchdogInt = value;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "watchdog timer set to %d for %08X", value, bidibnode->uid );
+      }
+
       if( feature == FEATURE_BM_SIZE && !bidibnode->sod ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting sensor count to %d for %08X", value, bidibnode->uid );
         bidibnode->sensorcnt = value;
@@ -1691,6 +1700,11 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
         else
           data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode->seq++);
       }
+    }
+    else if( Type == MSG_FEATURE_NA ) {
+      int feature = pdata[0];
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+          "MSG_FEATURE_NA, uid=%08X feature=(%d) %s is not available", bidibnode->uid, feature, bidibGetFeatureName(feature) );
     }
   }
   else {
@@ -2897,11 +2911,13 @@ static void __watchdogRunner( void* threadinst ) {
   ThreadOp.sleep(1000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BiDiB watchdog runner started." );
 
-  if( data->watchdogInt < 1 )
-    data->watchdogInt = 2;
-
   while( data->run ) {
-    ThreadOp.sleep(data->watchdogInt * 1000);
+    if( data->watchdogInt == 0 ) {
+      ThreadOp.sleep(1000);
+      continue;
+    }
+
+    ThreadOp.sleep(data->watchdogInt * 100);
     if( data->power && data->defaultmain != NULL ) {
       iOBiDiBNode bidibnode = data->defaultmain;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "watchdog: send BIDIB_CS_STATE_GO" );
@@ -2990,8 +3006,6 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib   = %s", wDigInt.getsublib( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "secAck   = %s, interval=%d ms",
       wBiDiB.issecAck( data->bidibini ) ? "enabled":"disabled", wBiDiB.getsecAckInt(data->bidibini) * 10 );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "watchdog = %s, interval=%d s",
-      wBiDiB.iswatchdog( data->bidibini ) ? "enabled":"disabled", wBiDiB.getwatchdogInt(data->bidibini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   /* choose interface: */
@@ -3021,11 +3035,8 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
   data->reader = ThreadOp.inst( "bidibreader", &__bidibReader, __BiDiB );
   ThreadOp.start( data->reader );
 
-  if( wBiDiB.iswatchdog( data->bidibini ) ) {
-    data->watchdogInt = wBiDiB.getwatchdogInt( data->bidibini );
-    data->watchdogRunner = ThreadOp.inst( "bidibwdog", &__watchdogRunner, __BiDiB );
-    ThreadOp.start( data->watchdogRunner );
-  }
+  data->watchdogRunner = ThreadOp.inst( "bidibwdog", &__watchdogRunner, __BiDiB );
+  ThreadOp.start( data->watchdogRunner );
 
   if( data->stress ) {
     data->stressRunner = ThreadOp.inst( "bidibstress", &__stressRunner, __BiDiB );

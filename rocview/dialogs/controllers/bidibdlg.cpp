@@ -84,9 +84,6 @@ void BidibDlg::initLabels() {
   // Options
   m_SecAck->SetLabel(wxGetApp().getMsg( "enable" ));
   m_labSecAckInt->SetLabel(wxGetApp().getMsg( "interval" ));
-  m_Watchdog->SetLabel(wxGetApp().getMsg( "enable" ));
-  m_labWatchdogInt->SetLabel(wxGetApp().getMsg( "interval" ));
-  m_labSeconds->SetLabel(wxGetApp().getMsg( "seconds" ));
 
   // Nodes
 
@@ -140,8 +137,6 @@ void BidibDlg::initValues() {
   }
   m_SecAck->SetValue( wBiDiB.issecAck( bidib ) ? true:false );
   m_SecAckInt->SetValue( wBiDiB.getsecAckInt( bidib ) );
-  m_Watchdog->SetValue( wBiDiB.iswatchdog( bidib ) ? true:false );
-  m_WatchdogInt->SetValue( wBiDiB.getwatchdogInt( bidib ) );
 
   // Nodes
   initNodes();
@@ -197,8 +192,6 @@ void BidibDlg::evaluate() {
   iONode bidib = wDigInt.getbidib(m_Props);
   wBiDiB.setsecAck( bidib, m_SecAck->IsChecked() ? True:False );
   wBiDiB.setsecAckInt( bidib, m_SecAckInt->GetValue() );
-  wBiDiB.setwatchdog( bidib, m_Watchdog->IsChecked() ? True:False );
-  wBiDiB.setwatchdogInt( bidib, m_WatchdogInt->GetValue() );
 }
 
 
