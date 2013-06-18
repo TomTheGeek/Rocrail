@@ -787,6 +787,7 @@ void RocProDlg::doCV(int command, int nr, int value) {
   TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "m_PendingCV=%d", m_PendingCV );
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setcmd( cmd, command );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8)  );
   if( m_LocoProps != NULL ) {
     int addr = wLoc.getaddr(m_LocoProps);
     wProgram.setaddr( cmd, addr );

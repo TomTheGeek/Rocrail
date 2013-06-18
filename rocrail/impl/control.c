@@ -296,7 +296,7 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "NodeOp.getName=%s", NodeOp.getName( node ));
 
     /* check for program commands which must be send to other than the default */
-    if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    if( (iid == NULL || StrOp.len(iid) == 0) && StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
       const char* lciid = wRocRail.getlciid( AppOp.getIni() );
       const char* ptiid = wRocRail.getptiid( AppOp.getIni() );
       const char* sviid = wRocRail.getsviid( AppOp.getIni() );
@@ -320,6 +320,10 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
         iid = lciid;
       }
     }
+    else if( (iid != NULL && StrOp.len(iid) > 0) && StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using iid=[%s] for programming", iid );
+    }
+
 
     /* check for locomotive commands which must be send to other than the default */
     if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) || StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
