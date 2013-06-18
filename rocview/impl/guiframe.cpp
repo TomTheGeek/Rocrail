@@ -4125,7 +4125,7 @@ void RocGuiFrame::OnGCA(wxCommandEvent& WXUNUSED(event)) {
 }
 
 void RocGuiFrame::OnOpenDCC(wxCommandEvent& WXUNUSED(event)) {
-  wxLaunchDefaultBrowser(wxT("http://www.opendcc.de"), wxBROWSER_NEW_WINDOW );
+  wxLaunchDefaultBrowser(wxT("http://www.bidib.org"), wxBROWSER_NEW_WINDOW );
 }
 
 void RocGuiFrame::OnTranslations(wxCommandEvent& WXUNUSED(event)) {
