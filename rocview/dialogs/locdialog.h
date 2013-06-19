@@ -559,6 +559,7 @@ public:
     wxStaticText* m_labBBTCorrection;
     wxSpinCtrl* m_BBTCorrection;
     wxStaticText* m_labBBTPer;
+    wxStaticText* m_labBBTCalculation;
     wxListBox* m_BBTList;
     wxButton* m_BBTDelete;
     wxButton* m_BBTDeleteAll;
