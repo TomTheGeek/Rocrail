@@ -2402,7 +2402,8 @@
 
         <var name="usebbt" vt="bool" defval="False" remark="Use block brake time."/>
         <var name="bbtsteps" vt="int" defval="10" range="4-32"/>
-        <var name="bbtmaxdiff" vt="int" defval="250" range="100-500"/>
+        <var name="bbtmaxdiff" vt="int" defval="250" range="100-500" unit="10ms"/>
+        <var name="bbtcorrection" vt="int" defval="25" range="10-75" unit="%"/>
         <bbt cardinality="n" wrappername="BBT">
           <var name="bk" vt="string" defval="" range="*" remark="Block ID."/>
           <var name="interval" vt="int" defval="1" range="1-*" unit="10ms" remark="Brake interval."/>

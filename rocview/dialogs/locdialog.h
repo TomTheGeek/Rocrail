@@ -552,6 +552,13 @@ public:
     wxPanel* m_BBTPanel;
     wxCheckBox* m_BBT;
     wxSpinCtrl* m_BBTSteps;
+    wxStaticText* m_labSteps;
+    wxStaticText* m_labBBTMaxDiff;
+    wxSpinCtrl* m_BBTMaxDiff;
+    wxStaticText* m_labBBT10ms;
+    wxStaticText* m_labBBTCorrection;
+    wxSpinCtrl* m_BBTCorrection;
+    wxStaticText* m_labBBTPer;
     wxListBox* m_BBTList;
     wxButton* m_BBTDelete;
     wxButton* m_BBTDeleteAll;

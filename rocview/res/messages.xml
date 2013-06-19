@@ -22522,4 +22522,10 @@
   <Msg id="deleteall">
     <en txt="Delete all"/>
   </Msg>
+  <Msg id="maxdiff">
+    <en txt="Max.difference"/>
+  </Msg>
+  <Msg id="correction">
+    <en txt="Correction"/>
+  </Msg>
 </Messages>

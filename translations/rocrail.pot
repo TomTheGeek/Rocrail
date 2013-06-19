@@ -6425,3 +6425,15 @@ msgstr ""
 msgid "Delete all"
 msgstr ""
 
+#. 
+# id="maxdiff"
+#, c-format
+msgid "Max.difference"
+msgstr ""
+
+#. 
+# id="correction"
+#, c-format
+msgid "Correction"
+msgstr ""
+
