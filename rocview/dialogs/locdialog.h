@@ -146,6 +146,7 @@ class wxGrid;
 #define ID_BUTTON_LC_CV_DESC 10347
 #define ID_PANEL_LOC_BBT 10337
 #define ID_LOC_BBTLIST 10338
+#define ID_BBT_MODIFY 10426
 #define ID_BUTTON_BBT_DELETE 10424
 #define ID_BUTTON_BBT_DELETEALL 10425
 #define SYMBOL_LOCDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -291,6 +292,9 @@ public:
 
     /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LOC_BBTLIST
     void OnLocBbtlistSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BBT_MODIFY
+    void OnBbtModifyClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BBT_DELETE
     void OnButtonBbtDeleteClick( wxCommandEvent& event );
@@ -561,6 +565,11 @@ public:
     wxStaticText* m_labBBTPer;
     wxStaticText* m_labBBTCalculation;
     wxListBox* m_BBTList;
+    wxStaticText* m_labBBTBlock;
+    wxTextCtrl* m_BBTBlock;
+    wxStaticText* m_labBBTInterval;
+    wxSpinCtrl* m_BBTInterval;
+    wxButton* m_BBTModify;
     wxButton* m_BBTDelete;
     wxButton* m_BBTDeleteAll;
     wxButton* m_Cancel;
