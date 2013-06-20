@@ -342,6 +342,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       if( data->iid != NULL )
         wLoc.setiid( rsp, data->iid );
       wLoc.setaddr( rsp, addr );
+      wLoc.setdir( rsp, dir );
       wLoc.setfn( rsp, fn );
       wLoc.setV_raw( rsp, speed );
       wLoc.setV_rawMax( rsp, spcnt );
