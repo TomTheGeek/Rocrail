@@ -890,6 +890,8 @@ void LocDialog::InitValues() {
     m_BBTList->Append(wxString(s,wxConvUTF8), bbt);
     bbt = wLoc.nextbbt( m_Props, bbt );
   };
+  m_BBTBlock->SetValue( wxT(""));
+  m_BBTInterval->SetValue(0);
 
   m_BBTDelete->Enable(false);
   m_BBTDeleteAll->Enable( m_BBTList->GetCount() > 0 ? true:false);
