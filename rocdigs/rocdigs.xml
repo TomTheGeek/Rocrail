@@ -1329,7 +1329,8 @@
       <var name="stressnode" vt="iOBiDiBNode"/>
       <var name="watchdogRunner" vt="iOThread"/>
       <var name="watchdogInt" vt="int"/>
-      </data>
+      <var name="dccreset" vt="Boolean"/>
+    </data>
   </object>
 
 

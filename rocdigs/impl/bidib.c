@@ -768,6 +768,31 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     }
   }
 
+
+  /* Loc release command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals(wLoc.release, wLoc.getcmd(node)) ) {
+    int   addr = wLoc.getaddr( node );
+    StrOp.fmtb( uidKey, "0x%08X", wLoc.getbus(node) );
+    bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
+    if( bidibnode == NULL )
+      bidibnode = data->defaultmain;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "release loco %d", addr);
+    if( bidibnode != NULL ) {
+      msgdata[0] = addr % 256;
+      msgdata[1] = addr / 256;
+      msgdata[2] = 0;
+      msgdata[3] = 0;
+      msgdata[4] = 0;
+      msgdata[5] = 0;
+      msgdata[6] = 0;
+      msgdata[7] = 0;
+      msgdata[8] = 0;
+      data->subWrite((obj)inst, bidibnode->path, MSG_CS_DRIVE, msgdata, 9, bidibnode->seq++);
+    }
+  }
+
+
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
     int   addr = wLoc.getaddr( node );
@@ -1624,10 +1649,12 @@ static void __addNode(iOBiDiB bidib, byte* pdata) {
  
     if( data->defaultmain == NULL && StrOp.find(classname, wBiDiBnode.class_dcc_main) != NULL ) {
       byte msgdata[32];
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, wBiDiBnode.class_dcc_main);
       data->defaultmain = node;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s, trying to get FEATURE_GEN_WATCHDOG...", uidKey, wBiDiBnode.class_dcc_main);
-      msgdata[0] = FEATURE_GEN_WATCHDOG;
-      data->subWrite((obj)bidib, node->path, MSG_FEATURE_GET, msgdata, 1, node->seq++);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reset DCC stack...");
+      MemOp.set(msgdata, 0, 32);
+      data->dccreset = True;
+      data->subWrite((obj)bidib, node->path, MSG_CS_DRIVE, msgdata, 9, node->seq++);
     }
     if( data->defaultbooster == NULL && StrOp.find(classname, wBiDiBnode.class_booster) != NULL ) {
       data->defaultbooster = node;
@@ -1749,6 +1776,13 @@ static void __handleCSDriveAck(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
   int addr = pdata[0] + pdata[1] * 256;
   int ack = pdata[2];
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d ack=%d", addr, ack );
+  if( addr == 0 && data->defaultmain != NULL && data->dccreset) {
+    byte msgdata[32];
+    data->dccreset = False;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC stack is reseted, trying to get FEATURE_GEN_WATCHDOG...");
+    msgdata[0] = FEATURE_GEN_WATCHDOG;
+    data->subWrite((obj)bidib, data->defaultmain->path, MSG_FEATURE_GET, msgdata, 1, data->defaultmain->seq++);
+  }
 }
 
 
@@ -2440,7 +2474,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   }
 
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999,
-      "processing bidib message path=%s type=0x%02X uid=0x%08X", pathKey, Type, bidibnode!=NULL?bidibnode->uid:0 );
+      "processing bidib message path=%s type=0x%02X uid=0x%08X seq=%d", pathKey, Type, bidibnode!=NULL?bidibnode->uid:0, Seq );
 
   switch( Type ) {
   case MSG_SYS_MAGIC:
