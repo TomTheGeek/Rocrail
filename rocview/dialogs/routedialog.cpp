@@ -219,19 +219,23 @@ void RouteDialog::initLabels() {
   m_BlockC->SetToolTip( wxGetApp().getTip( "crossingblocks" ) );
   m_labModID->SetLabel( wxGetApp().getMsg( "modid" ) );
 
+  // none blockside options
+  m_Dir->Enable(false);
+  m_RunDir->Enable(false);
+
   m_FromSignals->SetLabel( wxGetApp().getMsg( "fromsignals" ) );
-  m_FromSignals->SetString( 0, wxGetApp().getMsg( "forwards" ) );
-  m_FromSignals->SetString( 1, wxGetApp().getMsg( "reverse" ) );
+  m_FromSignals->SetString( 0, wxT("+") );
+  m_FromSignals->SetString( 1, wxT("-") );
   m_FromSignals->SetString( 2, wxGetApp().getMsg( "none" ) );
   m_ToSignals->SetLabel( wxGetApp().getMsg( "tosignals" ) );
-  m_ToSignals->SetString( 0, wxGetApp().getMsg( "forwards" ) );
-  m_ToSignals->SetString( 1, wxGetApp().getMsg( "reverse" ) );
+  m_ToSignals->SetString( 0, wxT("+") );
+  m_ToSignals->SetString( 1, wxT("-") );
   m_ToSignals->SetString( 2, wxGetApp().getMsg( "none" ) );
 
   m_CountCars->SetLabel( wxGetApp().getMsg( "countcars" ) );
   m_CountCars->SetString( 0, wxGetApp().getMsg( "none" ) );
-  m_CountCars->SetString( 1, wxGetApp().getMsg( "forwards" ) );
-  m_CountCars->SetString( 2, wxGetApp().getMsg( "reverse" ) );
+  m_CountCars->SetString( 1, wxT("+") );
+  m_CountCars->SetString( 2, wxT("-") );
 
 
   m_Speed->SetLabel( wxGetApp().getMsg( "speed" ) );

@@ -346,6 +346,12 @@ void LocDialog::initLabels() {
   m_Check2In->SetLabel( wxGetApp().getMsg( "check2in" ) );
   m_UseDepartDelay->SetLabel( wxGetApp().getMsg( "usedepartdelay" ) );
 
+  // none blockside options
+  m_SameDir->Enable(false);
+  m_OppositeDir->Enable(false);
+  m_ForceSameDir->Enable(false);
+
+
   m_labStartupSchedule->SetLabel( wxGetApp().getMsg( "startupschedule" ) );
   m_StartupSchedule->Append( _T("") );
   iONode model = wxGetApp().getModel();
