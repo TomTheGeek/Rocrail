@@ -965,6 +965,38 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           }
 
         }
+        else if( wProgram.getcmd( node ) == wProgram.vendorcvenable ) {
+          Boolean enable = wProgram.getvalue(node) == 1;
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s vendor CVs", enable?"enable":"disable");
+          data->subWrite((obj)inst, bidibnode->path, enable?MSG_VENDOR_ENABLE:MSG_VENDOR_DISABLE, NULL, 0, bidibnode);
+        }
+        else if( wProgram.getcmd( node ) == wProgram.vendorcvget ) {
+          const char* cvname = wProgram.getstrval1(node);
+          int i = 0;
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "vendor CV %s get", cvname);
+          msgdata[0] = StrOp.len(cvname);
+          for( i = 0; i < msgdata[0]; i++ ) {
+            msgdata[i+1] = cvname[i];
+          }
+          data->subWrite((obj)inst, bidibnode->path, MSG_VENDOR_GET, msgdata, msgdata[0]+1, bidibnode);
+        }
+        else if( wProgram.getcmd( node ) == wProgram.vendorcvset ) {
+          const char* cvname  = wProgram.getstrval1(node);
+          const char* cvvalue = wProgram.getstrval2(node);
+          int i = 0;
+          int n = 0;
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "vendor CV %s set to %s", cvname, cvvalue);
+          msgdata[0] = StrOp.len(cvname);
+          for( i = 0; i < msgdata[0]; i++ ) {
+            msgdata[i+1] = cvname[i];
+          }
+          n = i;
+          msgdata[n] = StrOp.len(cvvalue);
+          for( i = 0; i < msgdata[n]; i++ ) {
+            msgdata[i+n+1] = cvvalue[i];
+          }
+          data->subWrite((obj)inst, bidibnode->path, MSG_VENDOR_SET, msgdata, msgdata[0]+1+msgdata[n]+1, bidibnode);
+        }
         else if( wProgram.getcmd( node ) == wProgram.get ) {
           msgdata[0] = wProgram.getcv(node);
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get feature %d", msgdata[0]);
@@ -2353,6 +2385,19 @@ static void __handleVendor(iOBiDiB bidib, int uid, byte* pdata) {
     value[i+1] = '\0';
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"vendor: name=%s value=%s", name, value);
+
+  iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+
+  wProgram.setmodid( node, uid );
+  wProgram.setstrval1( node, name );
+  wProgram.setstrval2( node, value );
+  wProgram.setcmd( node, wProgram.vendorcvget );
+  if( data->iid != NULL )
+    wProgram.setiid( node, data->iid );
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL )
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
 }
 
 

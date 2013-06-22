@@ -118,6 +118,11 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onMacroRestoreMacro( wxCommandEvent& event );
     void onMacroTest( wxCommandEvent& event );
 
+    void onVendorCVEnable( wxCommandEvent& event );
+    void onVendorCVDisable( wxCommandEvent& event );
+    void onVendorCVGet( wxCommandEvent& event );
+    void onVendorCVSet( wxCommandEvent& event );
+
     void onAccessoryOnTest( wxCommandEvent& event );
     void onAccessoryOffTest( wxCommandEvent& event );
     void onAccessoryReadOptions( wxCommandEvent& event );

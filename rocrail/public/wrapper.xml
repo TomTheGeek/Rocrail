@@ -861,6 +861,9 @@
     <const name="acc_getparam" vt="int" val="38"/>
     <const name="fb_setaddr" vt="int" val="39"/>
     <const name="pomack" vt="int" val="40"/>
+    <const name="vendorcvset" vt="int" val="41" remark="Vendor CV set. (strval1,strval2)"/>
+    <const name="vendorcvget" vt="int" val="42" remark="Vendor CV get.(strval1)"/>
+    <const name="vendorcvenable" vt="int" val="43" remark="Vendor CV enable. (value=1/0)"/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>

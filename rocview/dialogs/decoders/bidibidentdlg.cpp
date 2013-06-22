@@ -150,6 +150,13 @@ void BidibIdentDlg::event(iONode node) {
     handleFeature(node);
     NodeOp.base.del(node);
   }
+  else if(  wProgram.getcmd( node ) == wProgram.vendorcvget ) {
+    eventUpdate = true;
+    m_VendorCVName->SetValue( wxString( wProgram.getstrval1(node),wxConvUTF8));
+    m_VendorCVValue->SetValue( wxString( wProgram.getstrval2(node),wxConvUTF8));
+    eventUpdate = false;
+    NodeOp.base.del(node);
+  }
   else if(  wProgram.getcmd( node ) == wProgram.nvget ) {
     eventUpdate = true;
     m_PortType->SetSelection(wProgram.getporttype(node));
@@ -1587,4 +1594,62 @@ void BidibIdentDlg::onPageChanged( wxNotebookEvent& event ) {
 void BidibIdentDlg::onPortSet( wxCommandEvent& event ) {
   onServoSet(true);
 }
+
+
+void BidibIdentDlg::onVendorCVEnable( wxCommandEvent& event ) {
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.vendorcvenable );
+    wProgram.setvalue( cmd, 1 );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+}
+
+
+void BidibIdentDlg::onVendorCVDisable( wxCommandEvent& event ) {
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.vendorcvenable );
+    wProgram.setvalue( cmd, 0 );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+}
+
+
+void BidibIdentDlg::onVendorCVGet( wxCommandEvent& event ) {
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.vendorcvget );
+    wProgram.setstrval1( cmd, m_VendorCVName->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+}
+
+
+void BidibIdentDlg::onVendorCVSet( wxCommandEvent& event ) {
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.vendorcvset );
+    wProgram.setstrval1( cmd, m_VendorCVName->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setstrval2( cmd, m_VendorCVValue->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+}
+
 
