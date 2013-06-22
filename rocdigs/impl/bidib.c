@@ -266,7 +266,7 @@ static void __SoD4Node( iOBiDiB inst, iOBiDiBNode node, Boolean force ) {
 
   msgdata[0] = 0; // address range
   msgdata[1] = node->sensorcnt;
-  data->subWrite((obj)inst, node->path, MSG_BM_GET_RANGE, msgdata, 2, node->seq++);
+  data->subWrite((obj)inst, node->path, MSG_BM_GET_RANGE, msgdata, 2, node);
   node->sod = True;
   ThreadOp.sleep(10);
 
@@ -274,25 +274,25 @@ static void __SoD4Node( iOBiDiB inst, iOBiDiBNode node, Boolean force ) {
     data->stressnode = node;
 
   if( !force ) {
-    data->subWrite((obj)inst, node->path, MSG_SYS_ENABLE, NULL, 0, node->seq++);
+    data->subWrite((obj)inst, node->path, MSG_SYS_ENABLE, NULL, 0, node);
     ThreadOp.sleep(10);
 
     if( data->secAck && data->secAckInt > 0 ) {
       // MSG_FEATURE_SET
       msgdata[0] = FEATURE_BM_SECACK_AVAILABLE;
       msgdata[1] = 1;
-      data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+      data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node);
 
       node->pendingfeature = FEATURE_BM_SECACK_ON;
       msgdata[0] = FEATURE_BM_SECACK_ON;
       msgdata[1] = data->secAckInt;
-      data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+      data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node);
     }
     else {
       node->pendingfeature = FEATURE_BM_SECACK_ON;
       msgdata[0] = FEATURE_BM_SECACK_ON;
       msgdata[1] = 0;
-      data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node->seq++);
+      data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node);
     }
   }
 }
@@ -312,10 +312,13 @@ static void __SoD( iOBiDiB inst, iOBiDiBNode bidibnode ) {
     if( node->classid & 0x40 ) {
 
       if( node->sensorcnt == 0 ) {
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get FEATURE_BM_SIZE for node uid=0x%08X", node->uid );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+            "get FEATURE_BM_SIZE for node uid=0x%08X seq=%d", node->uid, node->seq );
         node->pendingfeature = FEATURE_BM_SIZE;
         msgdata[0] = FEATURE_BM_SIZE;
-        data->subWrite((obj)inst, node->path, MSG_FEATURE_GET, msgdata, 1, node->seq++);
+        data->subWrite((obj)inst, node->path, MSG_FEATURE_GET, msgdata, 1, node);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+            "get FEATURE_BM_SIZE for node uid=0x%08X seq=%d", node->uid, node->seq );
         ThreadOp.sleep(10);
         node = (iOBiDiBNode)MapOp.next(data->nodemap);
         continue;
@@ -346,7 +349,7 @@ static Boolean __accessoryCommand(iOBiDiB inst, iONode node) {
         msgdata[0] = wProgram.getaddr(node);
         msgdata[1] = BIDIB_ACCESSORY_SWITCH_TIME;
         msgdata[2] = wProgram.getval1(node);
-        data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_PARA_SET, msgdata, 3, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_PARA_SET, msgdata, 3, bidibnode);
       }
       else if( wProgram.getcv(node) == BIDIB_ACCESSORY_PARA_MACROMAP ) {
         msgdata[ 0] = wProgram.getaddr(node);
@@ -367,14 +370,14 @@ static Boolean __accessoryCommand(iOBiDiB inst, iONode node) {
         msgdata[15] = wProgram.getval14(node);
         msgdata[16] = wProgram.getval15(node);
         msgdata[17] = wProgram.getval16(node);
-        data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_PARA_SET, msgdata, 18, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_PARA_SET, msgdata, 18, bidibnode);
       }
     }
     else if( cmd == wProgram.acc_getparam ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get accessory param %d", wProgram.getcv(node) );
       msgdata[0] = wProgram.getaddr(node);
       msgdata[1] = wProgram.getcv(node);
-      data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_PARA_GET, msgdata, 2, bidibnode->seq++);
+      data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_PARA_GET, msgdata, 2, bidibnode);
     }
     return True;
   }
@@ -399,7 +402,7 @@ static Boolean __macroCommand(iOBiDiB inst, iONode node) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "restore macro %d", wProgram.getval1(node) );
         msgdata[0] = wProgram.getval1(node);
         msgdata[1] = BIDIB_MACRO_RESTORE;
-        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode);
       }
 
       else if( cmd == wProgram.macro_save ) {
@@ -407,7 +410,7 @@ static Boolean __macroCommand(iOBiDiB inst, iONode node) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "save macro %d", wProgram.getval1(node) );
         msgdata[0] = wProgram.getval1(node);
         msgdata[1] = BIDIB_MACRO_SAVE;
-        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode);
       }
 
       else if( cmd == wProgram.macro_delete ) {
@@ -415,7 +418,7 @@ static Boolean __macroCommand(iOBiDiB inst, iONode node) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "delete macro %d", wProgram.getval1(node) );
         msgdata[0] = wProgram.getval1(node);
         msgdata[1] = BIDIB_MACRO_DELETE;
-        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode);
       }
 
       else if( cmd == wProgram.macro_set ) {
@@ -429,7 +432,7 @@ static Boolean __macroCommand(iOBiDiB inst, iONode node) {
         msgdata[3] = wProgram.getval4(node);
         msgdata[4] = wProgram.getval5(node);
         msgdata[5] = wProgram.getval6(node);
-        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_SET, msgdata, 6, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_SET, msgdata, 6, bidibnode);
       }
 
       else if( cmd == wProgram.macro_get ) {
@@ -438,7 +441,7 @@ static Boolean __macroCommand(iOBiDiB inst, iONode node) {
             wProgram.getval1(node), wProgram.getval2(node) );
         msgdata[0] = wProgram.getval1(node);
         msgdata[1] = wProgram.getval2(node);
-        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_GET, msgdata, 2, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_GET, msgdata, 2, bidibnode);
       }
 
       else if( cmd == wProgram.macro_setparams ) {
@@ -452,7 +455,7 @@ static Boolean __macroCommand(iOBiDiB inst, iONode node) {
         msgdata[3] = wProgram.getval4(node);
         msgdata[4] = wProgram.getval5(node);
         msgdata[5] = wProgram.getval6(node);
-        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_PARA_SET, msgdata, 6, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_PARA_SET, msgdata, 6, bidibnode);
       }
 
       else if( cmd == wProgram.macro_getparams ) {
@@ -461,7 +464,7 @@ static Boolean __macroCommand(iOBiDiB inst, iONode node) {
             wProgram.getval1(node), wProgram.getval2(node) );
         msgdata[0] = wProgram.getval1(node);
         msgdata[1] = wProgram.getval2(node);
-        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_PARA_GET, msgdata, 2, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_PARA_GET, msgdata, 2, bidibnode);
       }
 
       return True;
@@ -494,13 +497,13 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       if( StrOp.equals( cmd, wSysCmd.go ) ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Booster Power ON" );
         msgdata[0] = 1;
-        data->subWrite((obj)inst, bidibnode->path, MSG_BOOST_ON, msgdata, 1, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_BOOST_ON, msgdata, 1, bidibnode);
         return rsp;
       }
       if( StrOp.equals( cmd, wSysCmd.stop ) ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Booster Power OFF" );
         msgdata[0] = 1;
-        data->subWrite((obj)inst, bidibnode->path, MSG_BOOST_OFF, msgdata, 1, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_BOOST_OFF, msgdata, 1, bidibnode);
         return rsp;
       }
       if( StrOp.equals( cmd, wSysCmd.resetstat ) ) {
@@ -526,7 +529,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       bidibnode = data->defaultmain;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
       msgdata[0] = BIDIB_CS_STATE_OFF;
-      data->subWrite((obj)inst, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode->seq++);
+      data->subWrite((obj)inst, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode);
       data->power = False;
       __inform(inst);
     }
@@ -534,7 +537,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       bidibnode = data->defaultmain;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       msgdata[0] = BIDIB_CS_STATE_GO;
-      data->subWrite((obj)inst, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode->seq++);
+      data->subWrite((obj)inst, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode);
       data->power = True;
       __inform(inst);
     }
@@ -542,7 +545,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       bidibnode = data->defaultmain;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
       msgdata[0] = BIDIB_CS_STATE_STOP;
-      data->subWrite((obj)inst, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode->seq++);
+      data->subWrite((obj)inst, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode);
       data->power = False;
       __inform(inst);
     }
@@ -576,7 +579,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           msgdata[2] = (StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 0x20:0x00) + gate;
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d.%d single gate %s",
               wSwitch.getbus( node ), addr, gate, StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? "ON":"OFF" );
-          data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 3, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 3, bidibnode);
         }
         else {
           msgdata[0] = (addr-1) % 256;
@@ -595,7 +598,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           msgdata[3] = delay;
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d set to %s",
               wSwitch.getbus( node ), addr, wSwitch.getcmd(node) );
-          data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 4, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 4, bidibnode);
         }
       }
       else if( wSwitch.isaccessory(node) ) {
@@ -609,7 +612,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         }
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "accessory %d:%d set to %d (%s)",
             wSwitch.getbus( node ), msgdata[0], msgdata[1], wSwitch.getcmd(node) );
-        data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_SET, msgdata, 2, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_SET, msgdata, 2, bidibnode);
       }
       else {
         if( wSwitch.getporttype(node) == wProgram.porttype_macro ) {
@@ -623,7 +626,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           }
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "macro %d:%d set to %d",
               wSwitch.getbus( node ), msgdata[0], msgdata[1] );
-          data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode);
         }
         else {
           msgdata[0] = wSwitch.getporttype(node);
@@ -640,7 +643,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           }
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc %d:%d type %d set to %d",
               wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2] );
-          data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode);
         }
       }
 
@@ -668,7 +671,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         msgdata[2] = 0x80 + 0x20 + aspect;
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "extended DCC accessory %d:%d aspect=%d",
             wSwitch.getbus( node ), addr, aspect );
-        data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 3, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 3, bidibnode);
       }
       else {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "signal %d:%d aspect %d",
@@ -676,7 +679,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
         msgdata[0] = addr-1; // Null offset.
         msgdata[1] = aspect;
-        data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_SET, msgdata, 2, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_SET, msgdata, 2, bidibnode);
       }
     }
   }
@@ -710,14 +713,14 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         msgdata[2] = on ? 0x20:0x00;
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC accessory %d:%d %s",
             wSwitch.getbus( node ), addr, on ? "ON":"OFF" );
-        data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 3, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_CS_ACCESSORY, msgdata, 3, bidibnode);
       }
       else if( wOutput.isaccessory(node) ) {
         msgdata[0] = addr-1; // Null offset.
         msgdata[1] = on ? 1:0;
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "accessory %d:%d set to %d",
             wSwitch.getbus( node ), msgdata[0], msgdata[1] );
-        data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_SET, msgdata, 2, bidibnode->seq++);
+        data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_SET, msgdata, 2, bidibnode);
       }
       else {
         if( wOutput.getporttype(node) == wProgram.porttype_macro ) {
@@ -725,7 +728,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           msgdata[1] = on ? BIDIB_MACRO_START:BIDIB_MACRO_OFF;
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "macro %d:%d set to %d",
               wSwitch.getbus( node ), msgdata[0], msgdata[1] );
-          data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode);
         }
         else if( wOutput.getporttype(node) == wProgram.porttype_light ) {
           Boolean blink = wOutput.isblink( node );
@@ -739,7 +742,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc %d:%d type %d set to %d%s",
               wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2], blink?" blink":"" );
-          data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode);
         }
         else if( (setvalue || on) && wOutput.getporttype(node) == wProgram.porttype_analog ) {
           msgdata[0] = wOutput.getporttype(node);
@@ -747,7 +750,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           msgdata[2] = value;
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc %d:%d type %d set to %d",
               wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2] );
-          data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode);
         }
         else {
           msgdata[0] = wOutput.getporttype(node);
@@ -759,7 +762,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc %d:%d type %d set to %d",
               wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2] );
-          data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode);
         }
       }
     }
@@ -788,7 +791,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       msgdata[6] = 0;
       msgdata[7] = 0;
       msgdata[8] = 0;
-      data->subWrite((obj)inst, bidibnode->path, MSG_CS_DRIVE, msgdata, 9, bidibnode->seq++);
+      data->subWrite((obj)inst, bidibnode->path, MSG_CS_DRIVE, msgdata, 9, bidibnode);
     }
   }
 
@@ -840,7 +843,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       msgdata[6] = 0;
       msgdata[7] = 0;
       msgdata[8] = 0;
-      data->subWrite((obj)inst, bidibnode->path, MSG_CS_DRIVE, msgdata, 9, bidibnode->seq++);
+      data->subWrite((obj)inst, bidibnode->path, MSG_CS_DRIVE, msgdata, 9, bidibnode);
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no booster available");
@@ -877,7 +880,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       msgdata[7]+= (wFunCmd.isf17(node)?0x10:0x00) + (wFunCmd.isf18(node)?0x20:0x00) + (wFunCmd.isf19(node)?0x40:0x00) + (wFunCmd.isf20(node)?0x80:0x00);
       msgdata[8] = (wFunCmd.isf21(node)?0x01:0x00) + (wFunCmd.isf22(node)?0x02:0x00) + (wFunCmd.isf23(node)?0x04:0x00) + (wFunCmd.isf24(node)?0x08:0x00);
       msgdata[8]+= (wFunCmd.isf25(node)?0x10:0x00) + (wFunCmd.isf26(node)?0x20:0x00) + (wFunCmd.isf27(node)?0x40:0x00) + (wFunCmd.isf28(node)?0x80:0x00);
-      data->subWrite((obj)inst, bidibnode->path, MSG_CS_DRIVE, msgdata, 9, bidibnode->seq++);
+      data->subWrite((obj)inst, bidibnode->path, MSG_CS_DRIVE, msgdata, 9, bidibnode);
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no booster available");
@@ -940,7 +943,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
               msgdata[3] = bidibnode->vendorid;
               __uid2Array(bidibnode->uid, msgdata+4 );
               TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"MSG_FW_UPDATE_OP -> %08X", bidibnode->uid);
-              data->subWrite((obj)inst, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 8, bidibnode->seq++);
+              data->subWrite((obj)inst, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 8, bidibnode);
             }
             else {
               iONode rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
@@ -965,19 +968,19 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         else if( wProgram.getcmd( node ) == wProgram.get ) {
           msgdata[0] = wProgram.getcv(node);
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get feature %d", msgdata[0]);
-          data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_SET, msgdata, 1, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_SET, msgdata, 1, bidibnode);
         }
         else if( wProgram.getcmd( node ) == wProgram.set ) {
           msgdata[0] = wProgram.getcv(node);
           msgdata[1] = wProgram.getvalue(node);
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set feature %d to %d", msgdata[0], msgdata[1]);
-          data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_SET, msgdata, 2, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_SET, msgdata, 2, bidibnode);
         }
         else if( wProgram.getcmd( node ) == wProgram.evgetall ) {
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
               "get all features from module %d.%d.%d.%d %s...",
               bidibnode->path[0], bidibnode->path[1], bidibnode->path[2], bidibnode->path[3], uidKey );
-          data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_GETALL, NULL, 0, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_GETALL, NULL, 0, bidibnode);
         }
         else if( wProgram.getcmd( node ) == wProgram.nvset ) {
           msgdata[0] = wProgram.getporttype(node);
@@ -986,12 +989,12 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           msgdata[3] = wProgram.getval2(node);
           msgdata[4] = wProgram.getval3(node);
           msgdata[5] = wProgram.getval4(node);
-          data->subWrite((obj)inst, bidibnode->path, MSG_LC_CONFIG_SET, msgdata, 6, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_LC_CONFIG_SET, msgdata, 6, bidibnode);
         }
         else if( wProgram.getcmd( node ) == wProgram.nvget ) {
           msgdata[0] = wProgram.getporttype(node);
           msgdata[1] = wProgram.getcv(node);
-          data->subWrite((obj)inst, bidibnode->path, MSG_LC_CONFIG_GET, msgdata, 2, bidibnode->seq++);
+          data->subWrite((obj)inst, bidibnode->path, MSG_LC_CONFIG_GET, msgdata, 2, bidibnode);
         }
         else if( wProgram.getcmd( node ) >= wProgram.macro_restore && wProgram.getcmd( node ) <= wProgram.macro_getparams ) {
           __macroCommand(inst, node);
@@ -1028,7 +1031,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
             msgdata[7] = (data->cv-1) / 256;
             msgdata[8] = 0;
             msgdata[9] = 0;
-            data->subWrite((obj)inst, data->defaultprog->path, MSG_CS_POM, msgdata, 10, data->defaultprog->seq++);
+            data->subWrite((obj)inst, data->defaultprog->path, MSG_CS_POM, msgdata, 10, data->defaultprog);
           }
         }
         else if( wProgram.getcmd( node ) == wProgram.set ) {
@@ -1049,7 +1052,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
             msgdata[7] = (data->cv-1) / 256;
             msgdata[8] = 0;
             msgdata[9] = data->value;
-            data->subWrite((obj)inst, data->defaultprog->path, MSG_CS_POM, msgdata, 10, data->defaultprog->seq++);
+            data->subWrite((obj)inst, data->defaultprog->path, MSG_CS_POM, msgdata, 10, data->defaultprog);
           }
         }
       }
@@ -1060,7 +1063,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           if( data->defaultprog != NULL ) {
             msgdata[0] = data->cv % 256;
             msgdata[1] = data->cv / 256;
-            data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_READ, msgdata, 2, data->defaultprog->seq++);
+            data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_READ, msgdata, 2, data->defaultprog);
           }
         }
         else if( wProgram.getcmd( node ) == wProgram.set ) {
@@ -1071,7 +1074,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
             msgdata[0] = data->cv % 256;
             msgdata[1] = data->cv / 256;
             msgdata[2] = data->value;
-            data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_WRITE, msgdata, 3, data->defaultprog->seq++);
+            data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_WRITE, msgdata, 3, data->defaultprog);
           }
         }
       }
@@ -1132,9 +1135,9 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       msgdata[3] = div   + 0xC0;
 
       if( broadcastnode != NULL )
-        data->subWrite((obj)inst, broadcastnode->path, MSG_SYS_CLOCK, msgdata, 4, broadcastnode->seq++);
+        data->subWrite((obj)inst, broadcastnode->path, MSG_SYS_CLOCK, msgdata, 4, broadcastnode);
       else
-        data->subWrite((obj)inst, path, MSG_SYS_CLOCK, msgdata, 4, 0);
+        data->subWrite((obj)inst, path, MSG_SYS_CLOCK, msgdata, 4, NULL);
     }
   }
 
@@ -1167,12 +1170,12 @@ static void _halt( obj inst ,Boolean poweroff ) {
 
   if( data->defaultmain != NULL && poweroff ) {
     msgdata[0] = BIDIB_CS_STATE_OFF;
-    data->subWrite((obj)inst, data->defaultmain->path, MSG_CS_SET_STATE, msgdata, 1, data->defaultmain->seq++);
+    data->subWrite((obj)inst, data->defaultmain->path, MSG_CS_SET_STATE, msgdata, 1, data->defaultmain);
     data->power = False;
   }
   if( broadcastnode != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "disable the BiDiBus" );
-    data->subWrite((obj)inst, broadcastnode->path, MSG_SYS_DISABLE, NULL, 0, broadcastnode->seq++);
+    data->subWrite((obj)inst, broadcastnode->path, MSG_SYS_DISABLE, NULL, 0, broadcastnode);
   }
 
   ThreadOp.sleep(250);
@@ -1497,7 +1500,7 @@ static void __seqAck(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type, byte* pdat
   if( data->secAck && data->secAckInt > 0 ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "seqAck for uid=%d", bidibnode->uid );
     TraceOp.dump ( name, TRCLEVEL_DEBUG, (char*)pdata, datasize );
-    data->subWrite((obj)bidib, bidibnode->path, Type, pdata, datasize, bidibnode->seq++);
+    data->subWrite((obj)bidib, bidibnode->path, Type, pdata, datasize, bidibnode);
   }
 }
 
@@ -1575,7 +1578,7 @@ static Boolean __delNode(iOBiDiB bidib, byte* pdata) {
 }
 
 
-static void __addNode(iOBiDiB bidib, byte* pdata) {
+static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata) {
   iOBiDiBData data = Data(bidib);
   /*
   MSG_NODETAB:
@@ -1654,7 +1657,11 @@ static void __addNode(iOBiDiB bidib, byte* pdata) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reset DCC stack...");
       MemOp.set(msgdata, 0, 32);
       data->dccreset = True;
-      data->subWrite((obj)bidib, node->path, MSG_CS_DRIVE, msgdata, 9, node->seq++);
+      data->subWrite((obj)bidib, data->defaultmain->path, MSG_CS_DRIVE, msgdata, 9, data->defaultmain);
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "trying to get FEATURE_GEN_WATCHDOG...");
+      msgdata[0] = FEATURE_GEN_WATCHDOG;
+      data->subWrite((obj)bidib, data->defaultmain->path, MSG_FEATURE_GET, msgdata, 1, data->defaultmain);
     }
     if( data->defaultbooster == NULL && StrOp.find(classname, wBiDiBnode.class_booster) != NULL ) {
       data->defaultbooster = node;
@@ -1676,6 +1683,8 @@ static void __addNode(iOBiDiB bidib, byte* pdata) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "already registered: uid=%s", uidKey);
   }
 
+  return node;
+
 }
 
 
@@ -1686,7 +1695,7 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
     if( Type == MSG_FEATURE_COUNT ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
           "MSG_FEATURE_COUNT, uid=%08X features=%d", bidibnode->uid, pdata[0] );
-      data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode->seq++);
+      data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode);
     }
     else if( Type == MSG_FEATURE ) {
       int feature = pdata[0];
@@ -1725,7 +1734,7 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
         if( bidibnode->pendingfeature == feature )
           bidibnode->pendingfeature = -1;
         else
-          data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode->seq++);
+          data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode);
       }
     }
     else if( Type == MSG_FEATURE_NA ) {
@@ -1776,13 +1785,15 @@ static void __handleCSDriveAck(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
   int addr = pdata[0] + pdata[1] * 256;
   int ack = pdata[2];
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d ack=%d", addr, ack );
+  /*
   if( addr == 0 && data->defaultmain != NULL && data->dccreset) {
     byte msgdata[32];
     data->dccreset = False;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "DCC stack is reseted, trying to get FEATURE_GEN_WATCHDOG...");
     msgdata[0] = FEATURE_GEN_WATCHDOG;
-    data->subWrite((obj)bidib, data->defaultmain->path, MSG_FEATURE_GET, msgdata, 1, data->defaultmain->seq++);
+    data->subWrite((obj)bidib, data->defaultmain->path, MSG_FEATURE_GET, msgdata, 1, data->defaultmain);
   }
+  */
 }
 
 
@@ -2075,7 +2086,7 @@ static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, int Type, const cha
     }
     else {
       // request next
-      data->subWrite((obj)bidib, node==NULL?path:node->path, MSG_NODETAB_GETNEXT, NULL, 0, node==NULL?0:node->seq++);
+      data->subWrite((obj)bidib, node==NULL?path:node->path, MSG_NODETAB_GETNEXT, NULL, 0, node);
     }
     return;
   }
@@ -2101,9 +2112,13 @@ static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, int Type, const cha
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "MSG_NODETAB, path=%s tab-ver=%d tab-idx=%d", pathKey, data->tabver, entry );
     // ToDo: Data offset in TAB message.
-    __addNode(bidib, pdata );
+    iOBiDiBNode newNode = __addNode(bidib, pdata );
+    if( node == NULL && MemOp.cmp(newNode->path, path, 4) ) {
+      /* must be the master node */
+      node = newNode;
+    }
 
-    data->subWrite((obj)bidib, node==NULL?path:node->path, MSG_NODETAB_GETNEXT, NULL, 0, node==NULL?0:node->seq++);
+    data->subWrite((obj)bidib, node==NULL?path:node->path, MSG_NODETAB_GETNEXT, NULL, 0, node);
   }
 
     /*
@@ -2136,9 +2151,9 @@ static void __handleNewNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, i
   if( bidibnode != NULL && pdata != NULL ) {
     data->tabver = pdata[0];
     __addNode(bidib, pdata);
-    data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode->seq++);
+    data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode);
     ThreadOp.sleep(50);
-    data->subWrite((obj)bidib, bidibnode->path, MSG_SYS_ENABLE, NULL, 0, bidibnode->seq++);
+    data->subWrite((obj)bidib, bidibnode->path, MSG_SYS_ENABLE, NULL, 0, bidibnode);
 
   }
 }
@@ -2148,7 +2163,7 @@ static void __handleLostNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, 
   iOBiDiBData data = Data(bidib);
   TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "MSG_NODE_LOST" );
   if( __delNode(bidib, pdata) && bidibnode != NULL) {
-    data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode->seq++);
+    data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode);
     {
       iONode cmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
       wSysCmd.setcmd(cmd, wSysCmd.stop);
@@ -2956,7 +2971,7 @@ static void __watchdogRunner( void* threadinst ) {
       iOBiDiBNode bidibnode = data->defaultmain;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "watchdog: send BIDIB_CS_STATE_GO" );
       msgdata[0] = BIDIB_CS_STATE_GO;
-      data->subWrite((obj)bidib, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode->seq++);
+      data->subWrite((obj)bidib, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode);
     }
     else {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "watchdog: power is off" );
@@ -2981,7 +2996,7 @@ static void __stressRunner( void* threadinst ) {
     if( data->stressnode != NULL ) {
       msgdata[0] = 0; // address range
       msgdata[1] = data->stressnode->sensorcnt;
-      data->subWrite((obj)bidib, data->stressnode->path, MSG_BM_GET_RANGE, msgdata, 2, data->stressnode->seq++);
+      data->subWrite((obj)bidib, data->stressnode->path, MSG_BM_GET_RANGE, msgdata, 2, data->stressnode);
     }
 
     ThreadOp.sleep(10);

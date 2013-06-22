@@ -86,7 +86,7 @@ int udpRead ( obj inst, unsigned char *msg ) {
 }
 
 
-Boolean udpWrite( obj inst, unsigned char *path, unsigned char code, unsigned char* pdata, int datalen, int seq ) {
+Boolean udpWrite( obj inst, unsigned char *path, unsigned char code, unsigned char* pdata, int datalen, void* node ) {
   iOBiDiBData data = Data(inst);
   int   size = 0;
   byte  msg[256];
@@ -104,7 +104,10 @@ Boolean udpWrite( obj inst, unsigned char *path, unsigned char code, unsigned ch
 
   msgidx += 2; // point to sequence offset
 
-  msg[msgidx] = seq;
+  if( node != NULL )
+    msg[msgidx] = ((iOBiDiBNode)node)->seq++;
+  else
+    msg[msgidx] = 0;
   msgidx++;
 
   msg[msgidx] = code;

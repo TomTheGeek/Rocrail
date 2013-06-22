@@ -29,7 +29,7 @@ Boolean udpConnect( obj inst );
 void  udpDisconnect( obj inst );
 
 int udpRead ( obj inst, unsigned char *msg );
-Boolean udpWrite( obj inst, unsigned char *path, unsigned char code, unsigned char* data, int datalen, int seq );
+Boolean udpWrite( obj inst, unsigned char *path, unsigned char code, unsigned char* data, int datalen, void* node );
 Boolean udpAvailable( obj inst );
 
 #endif /* BIDIBUDP_H_ */

@@ -214,8 +214,9 @@ int serialRead ( obj inst, unsigned char *msg ) {
   return 0;
 }
 
-Boolean serialWrite( obj inst, unsigned char *path, unsigned char code, unsigned char* pdata, int datalen, int seq ) {
+Boolean serialWrite( obj inst, unsigned char *path, unsigned char code, unsigned char* pdata, int datalen, void* pnode ) {
   iOBiDiBData data = Data(inst);
+  iOBiDiBNode node = (iOBiDiBNode)pnode;
   int   size = 0;
   byte  msg[256];
   byte* post = NULL;
@@ -234,7 +235,14 @@ Boolean serialWrite( obj inst, unsigned char *path, unsigned char code, unsigned
 
     msgidx += 2; // point to sequence offset
 
-    msg[msgidx] = seq;
+    if( node != NULL ) {
+      msg[msgidx] = node->seq;
+      TraceOp.trc( "bidibserial", TRCLEVEL_BYTE, __LINE__, 9999, "uid=%08X seq=%d", node->uid, node->seq );
+      node->seq++;
+    }
+    else
+      msg[msgidx] = 0;
+
     msgidx++;
 
     msg[msgidx] = code;
