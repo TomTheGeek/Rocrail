@@ -2337,6 +2337,26 @@ static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
 }
 
 
+static void __handleVendor(iOBiDiB bidib, int uid, byte* pdata) {
+  iOBiDiBData data = Data(bidib);
+  char name [32] = {'\0'};
+  char value[32] = {'\0'};
+  int i = 0;
+  int n = 0;
+  for( i = 0; i < pdata[0] && i < 32; i++ ) {
+    name[i] = pdata[i+1];
+    name[i+1] = '\0';
+  }
+  n = i;
+  for( i = 0; i < pdata[n] && i < 32; i++ ) {
+    value[i] = pdata[i+n+1];
+    value[i+1] = '\0';
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"vendor: name=%s value=%s", name, value);
+}
+
+
+
 static void __handleDriveManual(iOBiDiB bidib, int uid, byte* pdata) {
   iOBiDiBData data = Data(bidib);
   /*
@@ -2858,6 +2878,11 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_CS_DRIVE_EVENT path=%s addr=%d event=0x%02X %s",
         pathKey, pdata[0] + pdata[1]*256, pdata[2], (pdata[2]&0x01)?"***LOST***":"" );
+    break;
+
+  case MSG_VENDOR:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"MSG_VENDOR");
+    __handleVendor(bidib, bidibnode->uid, pdata);
     break;
 
   default:
