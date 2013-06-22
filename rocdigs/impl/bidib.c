@@ -968,7 +968,13 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         else if( wProgram.getcmd( node ) == wProgram.vendorcvenable ) {
           Boolean enable = wProgram.getvalue(node) == 1;
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s vendor CVs", enable?"enable":"disable");
-          data->subWrite((obj)inst, bidibnode->path, enable?MSG_VENDOR_ENABLE:MSG_VENDOR_DISABLE, NULL, 0, bidibnode);
+          if( enable ) {
+            __uid2Array(bidibnode->uid, msgdata );
+            data->subWrite((obj)inst, bidibnode->path, MSG_VENDOR_ENABLE, msgdata, 4, bidibnode);
+          }
+          else {
+            data->subWrite((obj)inst, bidibnode->path, MSG_VENDOR_DISABLE, NULL, 0, bidibnode);
+          }
         }
         else if( wProgram.getcmd( node ) == wProgram.vendorcvget ) {
           const char* cvname = wProgram.getstrval1(node);
