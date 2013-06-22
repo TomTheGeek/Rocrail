@@ -2931,7 +2931,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
 
   case MSG_VENDOR_ACK:
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"MSG_VENDOR_ACK: %s user config mode", pdata[0] == 0 ? "NOT IN":"IN");
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"MSG_VENDOR_ACK: %s user config mode", pdata[0] == 0 ? "NOT IN":"IN");
     break;
 
   default:
