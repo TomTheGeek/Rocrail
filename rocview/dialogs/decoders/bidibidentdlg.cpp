@@ -334,6 +334,65 @@ void BidibIdentDlg::initLabels() {
   m_AccessoryReadMacroMap->SetLabel(wxGetApp().getMsg( "get" ));
   m_AccessoryWriteMacroMap->SetLabel(wxGetApp().getMsg( "set" ));
 
+  // Port setup
+  m_PortType->SetLabel(wxGetApp().getMsg( "type" ));
+  m_PortType->SetString( 0, wxGetApp().getMsg( "default" ) );
+  m_PortType->SetString( 1, wxGetApp().getMsg( "lights" ) );
+  m_PortType->SetString( 2, wxGetApp().getMsg( "servo" ) );
+  m_PortType->SetString( 3, wxGetApp().getMsg( "sound" ) );
+  m_PortType->SetString( 4, wxGetApp().getMsg( "motor" ) );
+  m_PortType->SetString( 5, wxGetApp().getMsg( "analog" ) );
+  m_PortType->SetString( 6, wxGetApp().getMsg( "macro" ) );
+  m_PortBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "port" ));
+  m_ServoGet->SetLabel(wxGetApp().getMsg( "get" ));
+  m_PortSet->SetLabel(wxGetApp().getMsg( "set" ));
+  m_ServoTestBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "test" ));
+  m_ServoLeftTest->SetLabel(wxGetApp().getMsg( "on" ));
+  m_ServoRightTest->SetLabel(wxGetApp().getMsg( "off" ));
+
+  // Macro
+  m_labMacroList->SetLabel(wxGetApp().getMsg( "macro" ) + wxT(":"));
+  m_labMacroSlowdown->SetLabel(wxGetApp().getMsg( "slowdown" ));
+  m_labCycles->SetLabel(wxGetApp().getMsg( "cycles" ));
+  m_labMacroTime->SetLabel(wxGetApp().getMsg( "time" ));
+  m_MacroStartBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "every" ));
+  m_MacroStartDaily->SetLabel(wxGetApp().getMsg( "day" ));
+  m_MacroStartHourly->SetLabel(wxGetApp().getMsg( "hour" ));
+  m_MacroStart30->SetLabel(wxT("30 ") + wxGetApp().getMsg( "minutes" ));
+  m_MacroStart15->SetLabel(wxT("15 ") + wxGetApp().getMsg( "minutes" ));
+  m_MacroStart1->SetLabel(wxGetApp().getMsg( "minute" ));
+  m_labMacroDelay->SetLabel(wxGetApp().getMsg( "delay" ));
+  m_labMacroType->SetLabel(wxGetApp().getMsg( "type" ));
+  m_labMacroPort->SetLabel(wxGetApp().getMsg( "port" ));
+  m_labMacroValue->SetLabel(wxGetApp().getMsg( "value" ));
+
+  m_MacroApply->SetLabel(wxGetApp().getMsg( "apply" ));
+  m_MacroReload->SetLabel(wxGetApp().getMsg( "get" ));
+  m_MacroSave->SetLabel(wxGetApp().getMsg( "set" ));
+  m_MacroExport->SetLabel(wxGetApp().getMsg( "export" ) + wxT("..."));
+  m_MacroImport->SetLabel(wxGetApp().getMsg( "import" ) + wxT("..."));
+  m_MacroSaveMacro->SetLabel(wxGetApp().getMsg( "save" ));
+  m_MacroDeleteMacro->SetLabel(wxGetApp().getMsg( "delete" ));
+  m_MacroRestoreMacro->SetLabel(wxGetApp().getMsg( "restore" ));
+  m_MacroTest->SetLabel(wxGetApp().getMsg( "test" ));
+
+  m_MacroLines->SetColLabelValue(0, wxGetApp().getMsg("delay") );
+  m_MacroLines->SetColLabelValue(1, wxGetApp().getMsg("type") );
+  m_MacroLines->SetColLabelValue(2, wxGetApp().getMsg("port") );
+  m_MacroLines->SetColLabelValue(3, wxGetApp().getMsg("value") );
+  m_MacroLines->AutoSizeColumns(false);
+
+  m_MacroType->Append( wxGetApp().getMsg( "default" ) );
+  m_MacroType->Append( wxGetApp().getMsg( "lights" ) );
+  m_MacroType->Append( wxGetApp().getMsg( "servo" ) );
+  m_MacroType->Append( wxGetApp().getMsg( "sound" ) );
+  m_MacroType->Append( wxGetApp().getMsg( "motor" ) );
+  m_MacroType->Append( wxGetApp().getMsg( "analog" ) );
+
+  // Update
+  m_labUpdateFile->SetLabel(wxGetApp().getMsg( "file" ));
+  m_labUpdateFilePreview->SetLabel(wxGetApp().getMsg( "preview" ) + wxT(":"));
+  m_UpdateStart->SetLabel(wxGetApp().getMsg( "start" ));
 
   nodeMap  = MapOp.inst();
   nodePathMap  = MapOp.inst();
@@ -472,19 +531,6 @@ void BidibIdentDlg::initLabels() {
       m_Tree->SelectItem(root, true);
     }
   }
-
-  m_MacroLines->SetColLabelValue(0, wxGetApp().getMsg("delay") );
-  m_MacroLines->SetColLabelValue(1, wxGetApp().getMsg("type") );
-  m_MacroLines->SetColLabelValue(2, wxGetApp().getMsg("port") );
-  m_MacroLines->SetColLabelValue(3, wxGetApp().getMsg("value") );
-  m_MacroLines->AutoSizeColumns(false);
-
-  m_MacroType->Append( wxGetApp().getMsg( "default" ) );
-  m_MacroType->Append( wxGetApp().getMsg( "lights" ) );
-  m_MacroType->Append( wxGetApp().getMsg( "servo" ) );
-  m_MacroType->Append( wxGetApp().getMsg( "sound" ) );
-  m_MacroType->Append( wxGetApp().getMsg( "motor" ) );
-  m_MacroType->Append( wxGetApp().getMsg( "analog" ) );
 
   // Resize
   m_IndexPanel->GetSizer()->Layout();

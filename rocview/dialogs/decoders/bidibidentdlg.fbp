@@ -6734,7 +6734,7 @@
                                             <property name="minimum_size"></property>
                                             <property name="name">m_ServoTestBox</property>
                                             <property name="orient">wxVERTICAL</property>
-                                            <property name="permission">none</property>
+                                            <property name="permission">protected</property>
                                             <event name="OnUpdateUI"></event>
                                             <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
@@ -7784,7 +7784,7 @@
                                                             <property name="minimum_size"></property>
                                                             <property name="name">m_MacroStartBox</property>
                                                             <property name="orient">wxVERTICAL</property>
-                                                            <property name="permission">none</property>
+                                                            <property name="permission">protected</property>
                                                             <event name="OnUpdateUI"></event>
                                                             <object class="sizeritem" expanded="0">
                                                                 <property name="border">5</property>

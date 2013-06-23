@@ -22549,4 +22549,19 @@
   <Msg id="macromap">
     <en txt="Macro Map"/>
   </Msg>
+  <Msg id="slowdown">
+    <en txt="Slowdown"/>
+  </Msg>
+  <Msg id="cycles">
+    <en txt="Cycles"/>
+  </Msg>
+  <Msg id="minutes">
+    <en txt="minutes"/>
+  </Msg>
+  <Msg id="day">
+    <en txt="day"/>
+  </Msg>
+  <Msg id="preview">
+    <en txt="Preview"/>
+  </Msg>
 </Messages>
