@@ -297,6 +297,44 @@ void BidibIdentDlg::initLabels() {
   m_BiDiBlogo->SetToolTip(wxT("http://www.bidib.org"));
   m_FbLogo->SetToolTip(wxT("http://www.fichtelbahn.de/shop"));
 
+  // Index
+  m_labPath->SetLabel(wxGetApp().getMsg( "path" ));
+  m_labVendor->SetLabel(wxGetApp().getMsg( "vendor" ));
+  m_labProduct->SetLabel(wxGetApp().getMsg( "product" ));
+  m_labClass->SetLabel(wxGetApp().getMsg( "class" ));
+  m_labUID->SetLabel(wxGetApp().getMsg( "uid" ));
+  m_labVersion->SetLabel(wxGetApp().getMsg( "version" ));
+
+  // Features
+  m_labIID->SetLabel(wxGetApp().getMsg( "iid" ));
+  m_FeatureBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "featurecv" ));
+  m_labFeature->SetLabel(wxGetApp().getMsg( "number" ));
+  m_labFeatureValue->SetLabel(wxGetApp().getMsg( "value" ));
+  m_FeaturesGet->SetLabel(wxGetApp().getMsg( "get" ));
+  m_FeatureSet->SetLabel(wxGetApp().getMsg( "set" ));
+  m_VendorCVBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "vendorcv" ));
+  m_labVendorCVName->SetLabel(wxGetApp().getMsg( "name" ));
+  m_labVendorCVValue->SetLabel(wxGetApp().getMsg( "value" ));
+  m_VendorCVEnable->SetLabel(wxGetApp().getMsg( "enable" ));
+  m_VendorCVDisable->SetLabel(wxGetApp().getMsg( "disable" ));
+  m_VendorCVGet->SetLabel(wxGetApp().getMsg( "get" ));
+  m_VendorCVSet->SetLabel(wxGetApp().getMsg( "set" ));
+
+  // Accessory
+  m_AccessoryPortBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "port" ));
+  m_labAccessoryPort->SetLabel(wxGetApp().getMsg( "number" ));
+  m_AccessoryOn->SetLabel(wxGetApp().getMsg( "on" ));
+  m_AccessoryOff->SetLabel(wxGetApp().getMsg( "off" ));
+  m_AccessoryOptionsBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "options" ));
+  m_labAccessorySwitchTime->SetLabel(wxGetApp().getMsg( "switchtime" ));
+  m_AccessorySwitchTimeSeconds->SetLabel(wxGetApp().getMsg( "seconds" ));
+  m_AccessoryReadOptions->SetLabel(wxGetApp().getMsg( "get" ));
+  m_AccessoryWriteOptions->SetLabel(wxGetApp().getMsg( "set" ));
+  m_AccessoryMacroMapBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "macromap" ));
+  m_AccessoryReadMacroMap->SetLabel(wxGetApp().getMsg( "get" ));
+  m_AccessoryWriteMacroMap->SetLabel(wxGetApp().getMsg( "set" ));
+
+
   nodeMap  = MapOp.inst();
   nodePathMap  = MapOp.inst();
   nodeList = ListOp.inst();

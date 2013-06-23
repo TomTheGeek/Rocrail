@@ -22528,4 +22528,25 @@
   <Msg id="correction">
     <en txt="Correction"/>
   </Msg>
+  <Msg id="vendor">
+    <en txt="Vendor"/>
+  </Msg>
+  <Msg id="product">
+    <en txt="Product"/>
+  </Msg>
+  <Msg id="class">
+    <en txt="Class"/>
+  </Msg>
+  <Msg id="featurecv">
+    <en txt="Feature CV"/>
+  </Msg>
+  <Msg id="vendorcv">
+    <en txt="Vendor CV"/>
+  </Msg>
+  <Msg id="disable">
+    <en txt="Disable"/>
+  </Msg>
+  <Msg id="macromap">
+    <en txt="Macro Map"/>
+  </Msg>
 </Messages>

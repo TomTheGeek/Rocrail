@@ -6437,3 +6437,45 @@ msgstr ""
 msgid "Correction"
 msgstr ""
 
+#. 
+# id="vendor"
+#, c-format
+msgid "Vendor"
+msgstr ""
+
+#. 
+# id="product"
+#, c-format
+msgid "Product"
+msgstr ""
+
+#. 
+# id="class"
+#, c-format
+msgid "Class"
+msgstr ""
+
+#. 
+# id="featurecv"
+#, c-format
+msgid "Feature CV"
+msgstr ""
+
+#. 
+# id="vendorcv"
+#, c-format
+msgid "Vendor CV"
+msgstr ""
+
+#. 
+# id="disable"
+#, c-format
+msgid "Disable"
+msgstr ""
+
+#. 
+# id="macromap"
+#, c-format
+msgid "Macro Map"
+msgstr ""
+
