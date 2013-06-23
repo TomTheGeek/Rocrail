@@ -2409,6 +2409,7 @@
         <var name="bbtcorrection" vt="int" defval="25" range="10-75" unit="%"/>
         <bbt cardinality="n" wrappername="BBT">
           <var name="bk" vt="string" defval="" range="*" remark="Block ID."/>
+          <var name="frombk" vt="string" defval="" range="*" remark="From block ID."/>
           <var name="interval" vt="int" defval="1" range="1-*" unit="10ms" remark="Brake interval."/>
           <var name="diff" vt="int" defval="0" range="0-*" unit="10ms" remark="Last calculated difference."/>
           <var name="fixed" vt="bool" defval="False" remark="Fixed block brake timer."/>

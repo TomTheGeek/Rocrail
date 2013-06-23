@@ -1476,15 +1476,22 @@ static void __BBT(iOLoc loc) {
   }
 
   if( data->bbtEnter != 0 && data->bbtIn != 0 && data->bbtEnterBlock != NULL && data->bbtInBlock != NULL ) {
-    iONode bbt = (iONode)MapOp.get( data->bbtMap, data->bbtInBlock );
+    /*data->prevBlock*/
+    char* key = StrOp.fmt("%s-%s", data->bbtInBlock, data->prevBlock);
+    iONode bbt = (iONode)MapOp.get( data->bbtMap, key );
+    if( bbt == NULL ) {
+      bbt = (iONode)MapOp.get( data->bbtMap, data->bbtInBlock );
+    }
+
     if( data->bbtIn >= data->bbtEnter && StrOp.equals(data->bbtEnterBlock, data->bbtInBlock) ) {
       int interval = (int)(data->bbtIn - data->bbtEnter);
       if( bbt == NULL ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT creating node for block=%s", data->bbtInBlock );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT creating node for block=%s from=%s", data->bbtInBlock, data->prevBlock );
         bbt = NodeOp.inst( wBBT.name(), data->props, ELEMENT_NODE );
         NodeOp.addChild(data->props, bbt);
         wBBT.setbk(bbt, data->bbtInBlock);
-        MapOp.put(data->bbtMap, data->bbtInBlock, (obj)bbt);
+        wBBT.setfrombk(bbt, data->prevBlock);
+        MapOp.put(data->bbtMap, key, (obj)bbt);
       }
       else {
         int oldinterval = wBBT.getinterval(bbt);
@@ -1507,6 +1514,9 @@ static void __BBT(iOLoc loc) {
           data->bbtIn, data->bbtEnter,
           data->bbtEnterBlock != NULL ? data->bbtEnterBlock:"?", data->bbtInBlock != NULL ? data->bbtInBlock:"?" );
     }
+
+    StrOp.free(key);
+
     data->bbtEnterBlock = NULL;
     data->bbtInBlock    = NULL;
     data->bbtCycleSpeed = 0;
@@ -3048,7 +3058,9 @@ static void __initBBTmap( iOLoc loc ) {
   iOLocData data = Data(loc);
   iONode bbt = NodeOp.findNode( data->props, wBBT.name() );
   while( bbt != NULL ) {
+    char* key = StrOp.fmt("%s-%s", wBBT.getbk(bbt), wBBT.getfrombk(bbt));
     MapOp.put( data->bbtMap, wBBT.getbk(bbt), (obj)bbt );
+    StrOp.free(key);
     bbt = NodeOp.findNextNode( data->props, bbt );
   };
   data->bbtEnterBlock = NULL;

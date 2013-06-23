@@ -892,7 +892,7 @@ void LocDialog::InitValues() {
   m_BBTList->Clear();
   iONode bbt = wLoc.getbbt( m_Props );
   while( bbt != NULL ) {
-    char* s = StrOp.fmt("%s, %d", wBBT.getbk(bbt), wBBT.getinterval(bbt));
+    char* s = StrOp.fmt("%s -> %s, %d", wBBT.getfrombk(bbt), wBBT.getbk(bbt), wBBT.getinterval(bbt));
     m_BBTList->Append(wxString(s,wxConvUTF8), bbt);
     bbt = wLoc.nextbbt( m_Props, bbt );
   };
@@ -3308,7 +3308,7 @@ void LocDialog::OnBbtModifyClick( wxCommandEvent& event )
 
       bbt = wLoc.getbbt( m_Props );
       while( bbt != NULL ) {
-        char* s = StrOp.fmt("%s, %d", wBBT.getbk(bbt), wBBT.getinterval(bbt));
+        char* s = StrOp.fmt("%s -> %s, %d", wBBT.getfrombk(bbt), wBBT.getbk(bbt), wBBT.getinterval(bbt));
         m_BBTList->Append(wxString(s,wxConvUTF8), bbt);
         bbt = wLoc.nextbbt( m_Props, bbt );
       };
