@@ -628,8 +628,10 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
     if( data->iid != NULL )
       wFeedback.setiid( nodeC, data->iid );
 
-    StrOp.fmtb(ident, "%d", locoaddr);
-    wFeedback.setidentifier( nodeC, ident );
+    if( present ) {
+      StrOp.fmtb(ident, "%d", locoaddr);
+      wFeedback.setidentifier( nodeC, ident );
+    }
     wFeedback.setstate( nodeC, present );
 /*
 D0 20 06 7D 01 75
