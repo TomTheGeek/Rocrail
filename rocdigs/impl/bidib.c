@@ -1777,8 +1777,10 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
     }
     else if( Type == MSG_FEATURE_NA ) {
       int feature = pdata[0];
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-          "MSG_FEATURE_NA, uid=%08X feature=(%d) %s is not available", bidibnode->uid, feature, bidibGetFeatureName(feature) );
+      if( feature != 255 ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+            "MSG_FEATURE_NA, uid=%08X feature=(%d) %s is not available", bidibnode->uid, feature, bidibGetFeatureName(feature) );
+      }
     }
   }
   else {
