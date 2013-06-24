@@ -132,7 +132,7 @@ static iONode __translate( iODTC inst, iONode node ) {
 
     /* PT */
     else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
-      if( wProgram.getcmd( node ) == wProgram.set ) {
+      if( wProgram.getcmd( node ) == wProgram.lncvset ) {
         byte* cmd = allocMem(32);
         cmd[ 0] = 7;
         cmd[ 1] = DEVICE;
