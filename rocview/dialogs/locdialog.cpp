@@ -133,7 +133,7 @@ BEGIN_EVENT_TABLE( LocDialog, wxDialog )
 
     EVT_BUTTON( ID_BUTTON_LC_CV_DESC, LocDialog::OnButtonLcCvDescClick )
 
-    EVT_LISTBOX( ID_LOC_BBTLIST, LocDialog::OnLocBbtlistSelected )
+    EVT_LIST_ITEM_SELECTED( ID_LOC_BBTLIST2, LocDialog::OnLocBbtlist2Selected )
 
     EVT_BUTTON( ID_BBT_MODIFY, LocDialog::OnBbtModifyClick )
 
@@ -164,6 +164,8 @@ LocDialog::LocDialog(  wxWindow* parent, iONode p_Props, bool save )
   m_bSave = save;
   m_iSelectedCV = -1;
   m_iFunGroup = 0;
+  m_BBTSel = NULL;
+
 
   initLabels();
   initCVDesc();
@@ -441,6 +443,10 @@ void LocDialog::initLabels() {
   m_labCVDesc->SetLabel( wxGetApp().getMsg( "description" ) );
   m_CVDescModify->Enable(false);
   m_CVDescription->Enable(false);
+
+  m_BBTList2->InsertColumn(0, wxGetApp().getMsg( "fromblock" ), wxLIST_FORMAT_LEFT );
+  m_BBTList2->InsertColumn(1, wxGetApp().getMsg( "toblock" ), wxLIST_FORMAT_LEFT );
+  m_BBTList2->InsertColumn(2, wxGetApp().getMsg( "interval" ), wxLIST_FORMAT_LEFT );
 
   m_labBBTMaxDiff->SetLabel( wxGetApp().getMsg( "maxdiff" ) );
   m_labBBTCorrection->SetLabel( wxGetApp().getMsg( "correction" ) );
@@ -889,18 +895,14 @@ void LocDialog::InitValues() {
   m_BBTMaxDiff->SetValue( wLoc.getbbtmaxdiff( m_Props ) );
   m_BBTCorrection->SetValue( wLoc.getbbtcorrection( m_Props ) );
 
-  m_BBTList->Clear();
-  iONode bbt = wLoc.getbbt( m_Props );
-  while( bbt != NULL ) {
-    char* s = StrOp.fmt("%s -> %s, %d", wBBT.getfrombk(bbt), wBBT.getbk(bbt), wBBT.getinterval(bbt));
-    m_BBTList->Append(wxString(s,wxConvUTF8), bbt);
-    bbt = wLoc.nextbbt( m_Props, bbt );
-  };
+
+  initBBT();
+
   m_BBTBlock->SetValue( wxT(""));
   m_BBTInterval->SetValue(0);
 
   m_BBTDelete->Enable(false);
-  m_BBTDeleteAll->Enable( m_BBTList->GetCount() > 0 ? true:false);
+  m_BBTDeleteAll->Enable( m_BBTList2->GetItemCount() > 0 ? true:false);
 
 }
 
@@ -1449,7 +1451,7 @@ bool LocDialog::Create( wxWindow* parent, wxWindowID id, const wxString& caption
     m_BBTCorrection = NULL;
     m_labBBTPer = NULL;
     m_labBBTCalculation = NULL;
-    m_BBTList = NULL;
+    m_BBTList2 = NULL;
     m_labBBTBlock = NULL;
     m_BBTBlock = NULL;
     m_labBBTInterval = NULL;
@@ -2512,9 +2514,8 @@ void LocDialog::CreateControls()
     m_labBBTCalculation = new wxStaticText( m_BBTPanel, wxID_ANY, _("Calculation"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer300->Add(m_labBBTCalculation, 0, wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
-    wxArrayString m_BBTListStrings;
-    m_BBTList = new wxListBox( m_BBTPanel, ID_LOC_BBTLIST, wxDefaultPosition, wxDefaultSize, m_BBTListStrings, wxLB_SINGLE );
-    itemBoxSizer300->Add(m_BBTList, 1, wxGROW|wxALL, 5);
+    m_BBTList2 = new wxListCtrl( m_BBTPanel, ID_LOC_BBTLIST2, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES );
+    itemBoxSizer300->Add(m_BBTList2, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer314 = new wxFlexGridSizer(0, 5, 0, 0);
     itemBoxSizer300->Add(itemFlexGridSizer314, 0, wxGROW, 5);
@@ -3236,14 +3237,12 @@ void LocDialog::OnListctrlindexLcColLeftClick( wxListEvent& event )
 
 void LocDialog::OnButtonBbtDeleteClick( wxCommandEvent& event )
 {
-  if( m_Props != NULL ) {
-    int sel = m_BBTList->GetSelection();
-    if( sel != wxNOT_FOUND ) {
-      iONode bbt = (iONode)m_BBTList->GetClientData(sel);
-      NodeOp.removeChild( m_Props, bbt );
-      m_BBTList->Delete(sel);
-    }
-    if( m_BBTList->GetCount() == 0 ) {
+  if( m_Props != NULL && m_BBTSel != NULL) {
+    NodeOp.removeChild( m_Props, m_BBTSel );
+    m_BBTSel = NULL;
+    initBBT();
+
+    if( m_BBTList2->GetItemCount() == 0 ) {
       m_BBTDelete->Enable(false);
       m_BBTDeleteAll->Enable(false);
     }
@@ -3258,36 +3257,15 @@ void LocDialog::OnButtonBbtDeleteClick( wxCommandEvent& event )
 void LocDialog::OnButtonBbtDeleteallClick( wxCommandEvent& event )
 {
   if( m_Props != NULL ) {
-    m_BBTList->Clear();
     iONode bbt = wLoc.getbbt( m_Props );
     while( bbt != NULL ) {
       NodeOp.removeChild( m_Props, bbt );
       NodeOp.base.del(bbt);
       bbt = wLoc.getbbt( m_Props );
     };
+    initBBT();
     m_BBTDelete->Enable(false);
     m_BBTDeleteAll->Enable(false);
-  }
-}
-
-
-/*!
- * wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LOC_BBTLIST
- */
-
-void LocDialog::OnLocBbtlistSelected( wxCommandEvent& event )
-{
-  if( m_Props != NULL ) {
-    int sel = m_BBTList->GetSelection();
-    if( sel != wxNOT_FOUND ) {
-      m_BBTDelete->Enable(true);
-      iONode bbt = (iONode)m_BBTList->GetClientData(sel);
-      m_BBTBlock->SetValue( wxString(wBBT.getbk(bbt),wxConvUTF8));
-      m_BBTInterval->SetValue(wBBT.getinterval(bbt));
-    }
-    else {
-      m_BBTDelete->Enable(false);
-    }
   }
 }
 
@@ -3298,22 +3276,53 @@ void LocDialog::OnLocBbtlistSelected( wxCommandEvent& event )
 
 void LocDialog::OnBbtModifyClick( wxCommandEvent& event )
 {
+  if( m_Props != NULL && m_BBTSel != NULL ) {
+    wBBT.setinterval(m_BBTSel, m_BBTInterval->GetValue());
+
+    initBBT();
+    m_BBTList2->SetItemState(m_iBBTSel, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+  }
+}
+
+
+/*!
+ * wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LOC_BBTLIST2
+ */
+
+void LocDialog::OnLocBbtlist2Selected( wxListEvent& event )
+{
   if( m_Props != NULL ) {
-    int sel = m_BBTList->GetSelection();
-    if( sel != wxNOT_FOUND ) {
-      iONode bbt = (iONode)m_BBTList->GetClientData(sel);
-      wBBT.setinterval(bbt, m_BBTInterval->GetValue());
+    int index = event.GetIndex();
+    iONode bbt = (iONode)m_BBTList2->GetItemData(index);
+    m_BBTDelete->Enable(true);
+    m_BBTBlock->SetValue( wxString(wBBT.getbk(bbt),wxConvUTF8));
+    m_BBTInterval->SetValue(wBBT.getinterval(bbt));
+    m_BBTSel = bbt;
+    m_iBBTSel = index;
+  }
+}
 
-      m_BBTList->Clear();
+void LocDialog::initBBT() {
+  m_BBTList2->DeleteAllItems();
+  iONode bbt = wLoc.getbbt( m_Props );
+  int i = 0;
+  while( bbt != NULL ) {
+    m_BBTList2->InsertItem( i, wxString(wBBT.getfrombk(bbt),wxConvUTF8) );
+    m_BBTList2->SetItem( i, 1, wxString(wBBT.getbk(bbt), wxConvUTF8) );
+    m_BBTList2->SetItem( i, 2, wxString::Format(wxT("%d"), wBBT.getinterval(bbt)) );
+    m_BBTList2->SetItemPtrData(i, (wxUIntPtr)bbt);
 
-      bbt = wLoc.getbbt( m_Props );
-      while( bbt != NULL ) {
-        char* s = StrOp.fmt("%s -> %s, %d", wBBT.getfrombk(bbt), wBBT.getbk(bbt), wBBT.getinterval(bbt));
-        m_BBTList->Append(wxString(s,wxConvUTF8), bbt);
-        bbt = wLoc.nextbbt( m_Props, bbt );
-      };
-      m_BBTList->SetSelection(sel);
-    }
+    i++;
+    bbt = wLoc.nextbbt( m_Props, bbt );
+  };
+  // resize
+  for( int n = 0; n < 3; n++ ) {
+    m_BBTList2->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+    int autoheadersize = m_BBTList2->GetColumnWidth(n);
+    m_BBTList2->SetColumnWidth(n, wxLIST_AUTOSIZE);
+    int autosize = m_BBTList2->GetColumnWidth(n);
+    if(autoheadersize > autosize )
+      m_BBTList2->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
   }
 }
 

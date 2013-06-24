@@ -145,7 +145,7 @@ class wxGrid;
 #define ID_GRID_LOC_CV 10346
 #define ID_BUTTON_LC_CV_DESC 10347
 #define ID_PANEL_LOC_BBT 10337
-#define ID_LOC_BBTLIST 10338
+#define ID_LOC_BBTLIST2 10427
 #define ID_BBT_MODIFY 10426
 #define ID_BUTTON_BBT_DELETE 10424
 #define ID_BUTTON_BBT_DELETEALL 10425
@@ -203,6 +203,7 @@ public:
     void OnSelectPage( wxCommandEvent& event );
     void SelectNext();
     void SelectPrev();
+    void initBBT();
 
 ////@begin LocDialog event handler declarations
 
@@ -290,8 +291,8 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LC_CV_DESC
     void OnButtonLcCvDescClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LOC_BBTLIST
-    void OnLocBbtlistSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LOC_BBTLIST2
+    void OnLocBbtlist2Selected( wxListEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BBT_MODIFY
     void OnBbtModifyClick( wxCommandEvent& event );
@@ -564,7 +565,7 @@ public:
     wxSpinCtrl* m_BBTCorrection;
     wxStaticText* m_labBBTPer;
     wxStaticText* m_labBBTCalculation;
-    wxListBox* m_BBTList;
+    wxListCtrl* m_BBTList2;
     wxStaticText* m_labBBTBlock;
     wxTextCtrl* m_BBTBlock;
     wxStaticText* m_labBBTInterval;
@@ -577,6 +578,8 @@ public:
     wxButton* m_OK;
     iONode m_Props;
 ////@end LocDialog member variables
+    iONode m_BBTSel;
+    int m_iBBTSel;
 };
 
 /*!
