@@ -1506,6 +1506,13 @@ static void __BBT(iOLoc loc) {
           interval = oldinterval - (diffinterval / bbtcorrection);
       }
       wBBT.setinterval(bbt, interval);
+
+      {
+        iONode broadcast = (iONode)NodeOp.base.clone(data->props);
+        wLoc.setV( broadcast, data->drvSpeed );
+        AppOp.broadcastEvent( broadcast );
+      }
+
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-IN interval=%d block=%s", interval, data->bbtInBlock );
     }
     else {
