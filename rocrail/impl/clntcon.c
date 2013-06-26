@@ -459,6 +459,10 @@ static void __doBroadcast( iOClntCon inst, iONode nodeDF ) {
         /* skipping this broadcast for the client */
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Skipping exception broadcast for %s.", ThreadOp.getName(iw) );
       }
+      else if( param->disablemonitor && StrOp.equals( NodeOp.getName(nodeDF), wLoc.name() ) && wLoc.isbbtevent(nodeDF) ) {
+        /* skipping this broadcast for the client */
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Skipping bbt event broadcast for %s.", ThreadOp.getName(iw) );
+      }
       else {
         iONode clone = (iONode)nodeDF->base.clone( nodeDF );
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "broadcasting %s...", NodeOp.getName(clone) );

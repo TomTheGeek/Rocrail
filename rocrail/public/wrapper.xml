@@ -2405,6 +2405,7 @@
         <actionctrl cardinality="n"/>
 
         <var name="usebbt" vt="bool" defval="False" remark="Use block brake time."/>
+        <var name="bbtevent" vt="bool" defval="False" remark="Flag for filter out at broadcast."/>
         <var name="bbtsteps" vt="int" defval="10" range="4-32"/>
         <var name="bbtmaxdiff" vt="int" defval="250" range="100-500" unit="10ms"/>
         <var name="bbtcorrection" vt="int" defval="25" range="10-75" unit="%"/>

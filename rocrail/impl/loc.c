@@ -1510,6 +1510,7 @@ static void __BBT(iOLoc loc) {
       {
         iONode broadcast = (iONode)NodeOp.base.clone(data->props);
         wLoc.setV( broadcast, data->drvSpeed );
+        wLoc.setbbtevent(broadcast, True);
         AppOp.broadcastEvent( broadcast );
       }
 
