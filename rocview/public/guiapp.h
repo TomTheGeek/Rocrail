@@ -92,6 +92,7 @@ public:
   iOScript getScript(){return m_Script;}
   iOList getSensorEvents(){return m_SensorEvents;}
   void sensorEvent(iONode event);
+  void setSensorEventListener(wxDialog* listener) {m_SensorEventListener=listener;}
 
   iORCon        m_RCon;
   const char*   m_Host;
@@ -130,6 +131,7 @@ private:
   iOWrpInf      m_WrpInf;
   bool          m_bInit;
   iOList        m_SensorEvents;
+  wxDialog*     m_SensorEventListener;
 };
 DECLARE_APP(RocGui)
 

@@ -35,6 +35,7 @@ class SensorEventsGen : public wxDialog
 		wxButton* m_StdButtonsOK;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void onClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void onRefresh( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ) { event.Skip(); }
 		

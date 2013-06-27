@@ -42,6 +42,7 @@ SensorEventsGen::SensorEventsGen( wxWindow* parent, wxWindowID id, const wxStrin
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( SensorEventsGen::onClose ) );
 	m_Refresh->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SensorEventsGen::onRefresh ), NULL, this );
 	m_StdButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SensorEventsGen::onOK ), NULL, this );
 }
@@ -49,6 +50,7 @@ SensorEventsGen::SensorEventsGen( wxWindow* parent, wxWindowID id, const wxStrin
 SensorEventsGen::~SensorEventsGen()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( SensorEventsGen::onClose ) );
 	m_Refresh->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SensorEventsGen::onRefresh ), NULL, this );
 	m_StdButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SensorEventsGen::onOK ), NULL, this );
 	

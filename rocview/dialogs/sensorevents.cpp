@@ -29,15 +29,16 @@ SensorEventsDlg::SensorEventsDlg( wxWindow* parent )
 {
   initLabels();
   initValues();
+  wxGetApp().setSensorEventListener(this);
 }
 
 
 void SensorEventsDlg::initLabels() {
   SetTitle(wxGetApp().getMsg( "sensormonitor" ));
   m_EventList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
-  m_EventList->InsertColumn(1, wxGetApp().getMsg( "bus" ), wxLIST_FORMAT_LEFT );
-  m_EventList->InsertColumn(2, wxGetApp().getMsg( "address" ), wxLIST_FORMAT_LEFT );
-  m_EventList->InsertColumn(3, wxGetApp().getMsg( "state" ), wxLIST_FORMAT_LEFT );
+  m_EventList->InsertColumn(1, wxGetApp().getMsg( "bus" ), wxLIST_FORMAT_RIGHT );
+  m_EventList->InsertColumn(2, wxGetApp().getMsg( "address" ), wxLIST_FORMAT_RIGHT );
+  m_EventList->InsertColumn(3, wxGetApp().getMsg( "state" ), wxLIST_FORMAT_CENTER );
   m_EventList->InsertColumn(4, wxGetApp().getMsg( "identifier" ), wxLIST_FORMAT_LEFT );
   m_Refresh->SetLabel(wxGetApp().getMsg( "refresh" ));
 }
@@ -72,7 +73,24 @@ void SensorEventsDlg::onRefresh( wxCommandEvent& event ) {
   initValues();
 }
 
+bool SensorEventsDlg::Validate() {
+  wxCommandEvent event( wxEVT_COMMAND_BUTTON_CLICKED );
+  event.SetEventObject(m_Refresh);
+  wxPostEvent( m_Refresh, event );
+  return false;
+}
+
 void SensorEventsDlg::onOK( wxCommandEvent& event ) {
-  EndModal(wxID_OK);
+  wxGetApp().setSensorEventListener(NULL);
+  //EndModal(wxID_OK);
+  Destroy();
+
+}
+
+void SensorEventsDlg::onClose( wxCloseEvent& event ) {
+  wxGetApp().setSensorEventListener(NULL);
+  //EndModal(wxID_OK);
+  Destroy();
+
 }
 

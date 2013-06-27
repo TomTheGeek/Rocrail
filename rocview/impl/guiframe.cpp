@@ -3455,10 +3455,7 @@ void RocGuiFrame::OnEditBoosters( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnSensorEvents( wxCommandEvent& event ) {
   SensorEventsDlg*  dlg = new SensorEventsDlg(this );
-  if( wxID_OK == dlg->ShowModal() ) {
-    /* Notify RocRail. */
-  }
-  dlg->Destroy();
+  dlg->Show(true);
 }
 
 void RocGuiFrame::OnCtrlBoosters( wxCommandEvent& event ) {

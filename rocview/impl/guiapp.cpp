@@ -580,6 +580,7 @@ bool RocGui::OnInit() {
   m_doneml = "";
   m_Script = ScriptOp.inst(NULL);
   m_SensorEvents = ListOp.inst();
+  m_SensorEventListener = NULL;
 
   // we could need some of these:
   wxInitAllImageHandlers();
@@ -1266,7 +1267,9 @@ static void rocrailCallback( obj me, iONode node ) {
 
 
 void RocGui::sensorEvent(iONode event) {
-  // ToDo: Inform listener.
+  // Inform listener.
+  if( m_SensorEventListener != NULL )
+    m_SensorEventListener->Validate();
 }
 
 

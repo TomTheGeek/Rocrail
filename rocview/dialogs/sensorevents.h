@@ -44,6 +44,8 @@ class SensorEventsDlg : public SensorEventsGen
 	//// end generated class members
 		void onRefresh( wxCommandEvent& event );
 		void onOK( wxCommandEvent& event );
+		void onClose( wxCloseEvent& event );
+		bool Validate();
 	
 };
 
