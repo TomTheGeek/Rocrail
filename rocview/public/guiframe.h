@@ -59,6 +59,7 @@
 #include "rocview/dialogs/powerctrldlg.h"
 #include "rocview/dialogs/widgetspanel.h"
 #include "rocview/dialogs/cmdrecorder.h"
+#include "rocview/dialogs/sensorevents.h"
 
 #include <wx/splitter.h>
 #include <wx/textctrl.h>
@@ -350,6 +351,7 @@ public:
   bool Connect( const char* host, int port, bool wait4rr=false, bool showpopup=true );
   void putChild( void* item, int z  );
   void resetPowerCtrlRef() {m_PowerCtrl=NULL;}
+  void resetSensorMonitorRef() {m_SensorMonitor=NULL;}
 
 private:
   void Save();
@@ -394,6 +396,7 @@ private:
   MGVDlg* m_MGV;
   MGV141Dlg* m_MGV141;
   PowerCtrlDlg* m_PowerCtrl;
+  SensorEventsDlg* m_SensorMonitor;
 
   iOMutex m_muxInitActiveLocs;
 

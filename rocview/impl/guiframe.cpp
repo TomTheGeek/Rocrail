@@ -1599,6 +1599,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_ThemesPath         = tp;
   m_bInitialized       = false;
   m_PowerCtrl          = NULL;
+  m_SensorMonitor      = NULL;
   m_bActiveWorkspace   = false;
   m_bCheckedDonKey     = false;
   m_WorkSpace          = NULL;
@@ -3454,8 +3455,10 @@ void RocGuiFrame::OnEditBoosters( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnSensorEvents( wxCommandEvent& event ) {
-  SensorEventsDlg*  dlg = new SensorEventsDlg(this );
-  dlg->Show(true);
+  if( m_SensorMonitor == NULL ) {
+    m_SensorMonitor = new SensorEventsDlg(this );
+    m_SensorMonitor->Show(true);
+  }
 }
 
 void RocGuiFrame::OnCtrlBoosters( wxCommandEvent& event ) {

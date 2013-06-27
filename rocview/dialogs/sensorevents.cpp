@@ -20,9 +20,14 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#include "rocview/public/guiapp.h"
-#include "rocrail/wrapper/public/Feedback.h"
 #include "sensorevents.h"
+
+#include "rocview/public/guiapp.h"
+#include "rocview/wrapper/public/Gui.h"
+#include "rocview/wrapper/public/SensorMonitor.h"
+
+#include "rocrail/wrapper/public/Feedback.h"
+
 
 SensorEventsDlg::SensorEventsDlg( wxWindow* parent )
     :SensorEventsGen( parent )
@@ -33,6 +38,16 @@ SensorEventsDlg::SensorEventsDlg( wxWindow* parent )
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
   wxGetApp().setSensorEventListener(this);
+
+  iONode ini = wxGetApp().getIni();
+  iONode sensmon = wGui.getsensormonitor(ini);
+  if( sensmon != NULL ) {
+    if( wSensorMonitor.getcx(sensmon) > 0 && wSensorMonitor.getcy(sensmon) > 0 ) {
+      SetSize(wSensorMonitor.getx(sensmon), wSensorMonitor.gety(sensmon), wSensorMonitor.getcx(sensmon), wSensorMonitor.getcy(sensmon));
+    }
+    else
+      SetSize(wSensorMonitor.getx(sensmon), wSensorMonitor.gety(sensmon));
+  }
 }
 
 
@@ -92,16 +107,30 @@ bool SensorEventsDlg::Validate() {
 }
 
 void SensorEventsDlg::onOK( wxCommandEvent& event ) {
+  int x,y;
+  GetPosition(&x,&y);
+  int cx,cy;
+  GetSize(&cx,&cy);
+
+  iONode ini = wxGetApp().getIni();
+  iONode sensmon = wGui.getsensormonitor(ini);
+  if( sensmon == NULL ) {
+    sensmon = NodeOp.inst(wSensorMonitor.name(), ini, ELEMENT_NODE);
+    NodeOp.addChild(ini, sensmon);
+  }
+  wSensorMonitor.setx(sensmon,x);
+  wSensorMonitor.sety(sensmon,y);
+  wSensorMonitor.setcx(sensmon,cx);
+  wSensorMonitor.setcy(sensmon,cy);
+
   wxGetApp().setSensorEventListener(NULL);
-  //EndModal(wxID_OK);
+  wxGetApp().getFrame()->resetSensorMonitorRef();
   Destroy();
 
 }
 
 void SensorEventsDlg::onClose( wxCloseEvent& event ) {
-  wxGetApp().setSensorEventListener(NULL);
-  //EndModal(wxID_OK);
-  Destroy();
-
+  wxCommandEvent e;
+  onOK(e);
 }
 
