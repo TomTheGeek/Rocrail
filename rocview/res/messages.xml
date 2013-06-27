@@ -151,7 +151,7 @@
     <en txt="Cancel" tip="Cancel the dialog."/>
     <nl txt="Annuleren" tip="Annuleer de dialoog."/>
     <sv txt="Avbryt" tip="Stäng dialogrutan utan att spara."/>
-    <fr txt="Annuler" tip="Fermer la boite de dialogue."/>
+    <fr txt="Quitter" tip="Fermer la boite de dialogue."/>
     <tr txt="İptal" tip="Diyaloğu iptal et."/>
     <es txt="Cancelar" tip="Anular dialogo."/>
     <it txt="Annulla" tip="Annullare il Dialogo."/>
@@ -12732,6 +12732,7 @@
     <en_GB txt="Busses"/>
     <zh_CN txt="总线"/>
     <sl txt="Vodila"/>
+    <sr_latin txt="Međuveze"/>
   </Msg>
   <Msg id="ecos">
     <de txt="Ecos - Märklin CS1"/>
@@ -16852,6 +16853,7 @@
     <es txt="Plataforma mercancías"/>
     <zh_CN txt="原木运输车"/>
     <sl txt="Vagon za hlodovino"/>
+    <sr_latin txt="Kola za rasuti teret"/>
   </Msg>
   <Msg id="coilcar">
     <en txt="Coilcar"/>
@@ -16873,6 +16875,7 @@
     <en_GB txt="Coilcar"/>
     <zh_CN txt="钢卷运输车"/>
     <sl txt="Vagon za pločevino"/>
+    <sr_latin txt="Kola za ugalj"/>
   </Msg>
   <Msg id="coach">
     <en txt="Coach"/>
@@ -18161,7 +18164,7 @@
     <cs txt="Interval"/>
     <nl txt="Interval"/>
     <fr txt="Intervalle"/>
-    <de txt="Abstand"/>
+    <de txt="Intervall"/>
     <it txt="Intervallo"/>
     <pt txt="Intervalo"/>
     <ru txt="Интервал"/>
@@ -19910,6 +19913,7 @@
     <cs txt="Volno před spuštěním"/>
     <zh_CN txt="免费启动"/>
     <sl txt="Sprosti pred zagonom"/>
+    <ru txt="Свободно перед стартом"/>
   </Msg>
   <Msg id="embeddedblock">
     <en txt="Embedded block"/>
@@ -20074,6 +20078,7 @@
     <cs txt="Stupeň Blok"/>
     <zh_CN txt="分段闭塞"/>
     <sl txt="Počivališčni odsek"/>
+    <ru txt="Блок расстановки"/>
   </Msg>
   <Msg id="sections">
     <en txt="Sections"/>
@@ -20889,6 +20894,8 @@
     <it txt="Treni"/>
     <zh_CN txt="火车"/>
     <sl txt="Vlaki"/>
+    <ru txt="Поезда"/>
+    <sr_latin txt="Vozovi"/>
   </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
@@ -21208,6 +21215,7 @@
     <sv txt="ID.t existerar redan på position: %d,%d."/>
     <zh_CN txt="该标识号已经存在: %d,%d."/>
     <sl txt="ID že obstaja na poziciji: %d,%d."/>
+    <ru txt="Это ID уже существует на позиции: %d,%d."/>
   </Msg>
   <Msg id="gooffline">
     <en txt="Go offline"/>
@@ -21220,6 +21228,7 @@
     <cs txt="režim offline"/>
     <zh_CN txt="设成离线"/>
     <sl txt="Prekini povezavo"/>
+    <ru txt="Отключиться"/>
   </Msg>
   <Msg id="query">
     <en txt="Query"/>
@@ -21244,6 +21253,7 @@
     <ja txt="信号イベントを実施"/>
     <zh_CN txt="处理信号事件"/>
     <sl txt="Obdelava dogodkov signala"/>
+    <ru txt="Обработка сигнальных событий"/>
   </Msg>
   <Msg id="overwritestatus">
     <en txt="Overwrite status"/>
@@ -21256,6 +21266,7 @@
     <cs txt="Přepsat stav"/>
     <zh_CN txt="覆盖状态"/>
     <sl txt="Prepiši status"/>
+    <ru txt="Переписать состояние"/>
   </Msg>
   <Msg id="closenoevents">
     <en txt="Close on no events"/>
@@ -21292,6 +21303,7 @@
     <ja txt="開始日"/>
     <cs txt="Začátek dne"/>
     <sl txt="Začetek dneva"/>
+    <ru txt="Начало дня"/>
   </Msg>
   <Msg id="querysensors">
     <en txt="Query sensors" tip="Query actual state of all sensors."/>
@@ -21331,6 +21343,7 @@
     <fr txt="Selection du bloc le plus court"/>
     <zh_CN txt="选择最短区间"/>
     <sl txt="Izberi najkrajši odsek"/>
+    <ru txt="Выбор коротких блоков"/>
   </Msg>
   <Msg id="prefix">
     <en txt="Prefix"/>
@@ -21439,6 +21452,7 @@
     <sr_latin txt="Savet"/>
     <zh_CN txt="工具提示"/>
     <sl txt="Namig"/>
+    <ru txt="Подсказка"/>
   </Msg>
   <Msg id="icon">
     <en txt="Icon"/>
@@ -21542,6 +21556,7 @@
     <sv txt="Återställ tidtabell."/>
     <zh_CN txt="恢复调度"/>
     <sl txt="Obnovi urnik"/>
+    <ru txt="Восстановить расписание"/>
   </Msg>
   <Msg id="deprecatedrouting">
     <en txt="Classic routing is deprecated; Please migrate to block side routing."/>
@@ -21552,6 +21567,7 @@
     <es txt="La forma clásica de hacer rutas se ha abandonado; por favor use la forma de bloques."/>
     <zh_CN txt="通常路径已过时;请转移到区段一侧路径。"/>
     <sl txt="Klasično iskanje poti ni zaželjeno; prosim da uporabite iskanje poti glede na stran odseka."/>
+    <ru txt="Классическая маршрутизация устарела: Пожалуйста, перейдите к маршрутизации с использованием сторон блока."/>
   </Msg>
   <Msg id="checkplanhealth">
     <en txt="Check plan health"/>
@@ -21578,6 +21594,7 @@
     <pl txt="Szczegółowa poprawność planu"/>
     <zh_CN txt="检查扩展计划"/>
     <sl txt="Razširjeno preverjanje načrta"/>
+    <ru txt="Расширенная проверка плана"/>
   </Msg>
   <Msg id="booster">
     <en txt="Booster"/>
@@ -21603,6 +21620,7 @@
     <es txt="Control de acción"/>
     <zh_CN txt="动作控制"/>
     <sl txt="Nadzorna dejanja"/>
+    <ru txt="Управление действиями"/>
   </Msg>
   <Msg id="carcard">
     <en txt="Car card"/>
@@ -21615,6 +21633,7 @@
     <sv txt="Vagnskort"/>
     <zh_CN txt="车辆卡片"/>
     <sl txt="Evidenčni karton"/>
+    <ru txt="Карточка вагона"/>
   </Msg>
   <Msg id="reserve">
     <en txt="Reserve"/>
@@ -21627,6 +21646,7 @@
     <sv txt="Reservera."/>
     <zh_CN txt="保留"/>
     <sl txt="Rezerviraj"/>
+    <ru txt="Резервирование"/>
   </Msg>
   <Msg id="goto">
     <en txt="Go to"/>
@@ -21640,6 +21660,7 @@
     <sv txt="Gå till."/>
     <zh_CN txt="转到"/>
     <sl txt="Pojdi na"/>
+    <ru txt="Перейти  к"/>
   </Msg>
   <Msg id="run">
     <en txt="Run"/>
@@ -21655,6 +21676,7 @@
     <fr txt="Démarrer"/>
     <zh_CN txt="运行"/>
     <sl txt="Zaženi"/>
+    <ru txt="Запустить"/>
   </Msg>
   <Msg id="leave">
     <en txt="Leave"/>
@@ -21873,6 +21895,7 @@
     <es txt="Chismes de locomotora"/>
     <de txt="Lok-Steuerelemente"/>
     <zh_CN txt="机车组件"/>
+    <sr_latin txt="Vidžeti lokomotiva"/>
   </Msg>
   <Msg id="guestloco" dialog="true">
     <en txt="Guest Loco"/>
@@ -21904,6 +21927,7 @@
     <de txt="In-Ereignis bei Zug-Länge"/>
     <zh_CN txt="火车长度方面的事件"/>
     <sl txt="In event ob dolžini vlaka"/>
+    <sr_latin txt="Ulazni događaj na dužinu voza"/>
   </Msg>
   <Msg id="analyser">
     <en txt="Analyser"/>
@@ -22159,6 +22183,7 @@
     <de txt="Ignorier Fahrregler"/>
     <zh_CN txt="调速器回零"/>
     <sl txt="Preglasi nadzornika hitrosti"/>
+    <sr_latin txt="Odbi upravljač"/>
   </Msg>
   <Msg id="resetwc">
     <en txt="Reset wheel counter"/>
@@ -22249,6 +22274,7 @@
     <sv txt="Tilldela tåg."/>
     <zh_CN txt="列车指定"/>
     <sl txt="Določi vlak"/>
+    <sr_latin txt="Dodeli voz"/>
   </Msg>
   <Msg id="releasetrain">
     <en txt="Release train"/>
@@ -22258,12 +22284,14 @@
     <sv txt="Frigör tåg."/>
     <sl txt="Sprosti vlak"/>
     <zh_CN txt="列车释放"/>
+    <sr_latin txt="Oslobodi voz"/>
   </Msg>
   <Msg id="gain">
     <en txt="Gain"/>
     <de txt="Verstärkung"/>
     <nl txt="Versterking"/>
     <it txt="Guadagno"/>
+    <sr_latin txt="Pojačanje"/>
   </Msg>
   <Msg id="usedepartdelay">
     <en txt="Use depart delay"/>
@@ -22272,6 +22300,7 @@
     <it txt="Usare partenza ritardata"/>
     <zh_CN txt="用于开出延迟"/>
     <sl txt="Uporabi zamudo pri odhodu"/>
+    <sr_latin txt="Koristi kašnjenje u odlasku"/>
   </Msg>
   <Msg id="blink">
     <en txt="Blink"/>
@@ -22281,6 +22310,7 @@
     <sv txt="Blinka"/>
     <zh_CN txt="闪烁"/>
     <sl txt="Utripaj"/>
+    <sr_latin txt="Treptaj"/>
   </Msg>
   <Msg id="actiontimer60">
     <en txt="Action timer 60 sec."/>
@@ -22289,6 +22319,7 @@
     <it txt="Timer azione 60 sec"/>
     <zh_CN txt="运作定时器60秒"/>
     <sl txt="Časovnik dejanj 60 sec."/>
+    <sr_latin txt="Vreme akcije 60 sec."/>
   </Msg>
   <Msg id="dirimage">
     <en txt="Direction image"/>
@@ -22297,6 +22328,7 @@
     <de txt="Richtungsbild"/>
     <zh_CN txt="方向图示"/>
     <sl txt="Slika smeri"/>
+    <sr_latin txt="Slika pravca"/>
   </Msg>
   <Msg id="newposflag">
     <en txt="New Position Flag"/>
@@ -22305,6 +22337,7 @@
     <de txt="Position erreicht"/>
     <zh_CN txt="新建位置标志"/>
     <sl txt="Nova zastavica položaja"/>
+    <sr_latin txt="Oznaka nove pozicije"/>
   </Msg>
   <Msg id="sectionlength">
     <en txt="Section length"/>
@@ -22314,6 +22347,7 @@
     <de txt="Abschnittslänge"/>
     <zh_CN txt="区段长度"/>
     <sl txt="Dolžina sekcije"/>
+    <sr_latin txt="Dužina sekcije"/>
   </Msg>
   <Msg id="traingap">
     <en txt="Train gap"/>
@@ -22322,6 +22356,7 @@
     <de txt="Zugabstand"/>
     <zh_CN txt="列车的间隙"/>
     <sl txt="Razmik vlaka"/>
+    <sr_latin txt="Razmak vagona"/>
   </Msg>
   <Msg id="entersensor">
     <en txt="Enter sensor"/>
@@ -22331,6 +22366,7 @@
     <de txt="Einfahrtsmelder"/>
     <zh_CN txt="加入传感器"/>
     <sl txt="Vhodno tipalo"/>
+    <sr_latin txt="Ulazni sensor"/>
   </Msg>
   <Msg id="entersignal">
     <en txt="Enter signal"/>
@@ -22340,6 +22376,7 @@
     <de txt="Einfahrsignal"/>
     <sl txt="Vhodni signal"/>
     <zh_CN txt="投入信号"/>
+    <sr_latin txt="Ulazni signal"/>
   </Msg>
   <Msg id="exitsignal">
     <en txt="Exit signal"/>
@@ -22349,6 +22386,7 @@
     <de txt="Ausfahrsignal"/>
     <sl txt="Izhodni signal"/>
     <zh_CN txt="退出信号"/>
+    <sr_latin txt="Izlazni signal"/>
   </Msg>
   <Msg id="frog">
     <en txt="Frog"/>
@@ -22357,6 +22395,7 @@
     <it txt="Cuore"/>
     <zh_CN txt="道岔"/>
     <sl txt="Srce kretnice"/>
+    <sr_latin txt="Žaba"/>
   </Msg>
   <Msg id="showlocked">
     <en txt="Show locked switches" tip="Show locked switches with a different color."/>
@@ -22366,6 +22405,7 @@
     <sv txt="Visa låsta växlar."/>
     <sl txt="Prikaži zaklenjene kretnice"/>
     <zh_CN txt="显示锁定的道岔"/>
+    <sr_latin txt="Prikaži zaključane skretnice"/>
   </Msg>
   <Msg id="altthrottle">
     <en txt="Alternative throttle"/>
@@ -22373,6 +22413,7 @@
     <nl txt="Alternatieve regelaar"/>
     <it txt="Controller alternativo"/>
     <sl txt="Alternativni nadzornik hitrosti"/>
+    <sr_latin txt="Dodatni upravljač"/>
   </Msg>
   <Msg id="openlocofile" dialog="true">
     <en txt="Open locomotive file"/>
@@ -22382,6 +22423,7 @@
     <sv txt="Öppna lokfil"/>
     <zh_CN txt="打开车辆文件"/>
     <sl txt="Odpri datoteko lokomotive"/>
+    <sr_latin txt="Otvori dokument lokomotive"/>
   </Msg>
   <Msg id="openoccfile" dialog="true">
     <en txt="Open occupancy file"/>
@@ -22390,6 +22432,7 @@
     <it txt="Apri file occupazione"/>
     <zh_CN txt="打开占用文件"/>
     <sl txt="Odpri datoteka zasedenosti"/>
+    <sr_latin txt="Otvori dokument zauzeća"/>
   </Msg>
   <Msg id="guestimport" dialog="true">
     <en txt="Guest import"/>
@@ -22406,6 +22449,7 @@
     <sv txt="Återställ hastighet vid riktningsändring"/>
     <zh_CN txt="重置速度（方向改变时）"/>
     <sl txt="Ponastavi hitrost ob spremembi smeri"/>
+    <sr_latin txt="Poništi brzinu pri promeni pravca"/>
   </Msg>
   <Msg id="cmdrecorder" dialog="true">
     <en txt="Command recorder"/>
@@ -22414,6 +22458,7 @@
     <de txt="Befehls-Recorder"/>
     <zh_CN txt="指令记录"/>
     <sl txt="Snemalnik ukazov"/>
+    <sr_latin txt="Snimač komandi"/>
   </Msg>
   <Msg id="slavecode">
     <en txt="Slave code"/>
@@ -22429,6 +22474,7 @@
     <it txt="Dimensione testo"/>
     <zh_CN txt="字号"/>
     <sl txt="Velikost besedila"/>
+    <sr_latin txt="Veličina slova u tekstu"/>
   </Msg>
   <Msg id="rendergc">
     <en txt="Render smooth"/>
@@ -22445,6 +22491,7 @@
     <it txt="Sovraccarico"/>
     <zh_CN txt="过载"/>
     <sl txt="Preobremenitev"/>
+    <sr_latin txt="Preopterećenje"/>
   </Msg>
   <Msg id="processblockevents">
     <en txt="Process block events"/>
@@ -22453,6 +22500,7 @@
     <it txt="Elaborare eventi blocco"/>
     <zh_CN txt="执行区间事件"/>
     <sl txt="Obdelaj dogodke odseka"/>
+    <sr_latin txt="Obraditi događaje u bloku"/>
   </Msg>
   <Msg id="processrouteevents">
     <en txt="Process route events"/>
@@ -22461,6 +22509,7 @@
     <it txt="Elaborare eventi itinerario"/>
     <zh_CN txt="执行线路事件"/>
     <sl txt="Obdelaj dogodke poti"/>
+    <sr_latin txt="Obraditi događaje rute"/>
   </Msg>
   <Msg id="stamp">
     <en txt="Stamp"/>
@@ -22469,6 +22518,7 @@
     <it txt="Orario"/>
     <zh_CN txt="标记"/>
     <sl txt="Pečat"/>
+    <sr_latin txt="Pečat"/>
   </Msg>
   <Msg id="export">
     <en txt="Export"/>
@@ -22477,6 +22527,7 @@
     <it txt="Esporta"/>
     <zh_CN txt="导出"/>
     <sl txt="Izvoz"/>
+    <sr_latin txt="Izvoz"/>
   </Msg>
   <Msg id="insert">
     <en txt="Insert"/>
@@ -22485,6 +22536,7 @@
     <it txt="Inserisci"/>
     <zh_CN txt="插入"/>
     <sl txt="Vstavi"/>
+    <sr_latin txt="Umetni"/>
   </Msg>
   <Msg id="ebreak">
     <en txt="Emergency break"/>
@@ -22493,6 +22545,7 @@
     <de txt="Not-Halt"/>
     <zh_CN txt="应急中断"/>
     <sl txt="Prisilna ustavitev"/>
+    <sr_latin txt="Koči u slučaju havarije"/>
   </Msg>
   <Msg id="shutdownserver">
     <en txt="Shutdown"/>
@@ -22501,6 +22554,7 @@
     <de txt="Herunterfahren"/>
     <zh_CN txt="关闭"/>
     <sl txt="Izklopi"/>
+    <sr_latin txt="Isključi"/>
   </Msg>
   <Msg id="accdectable" dialog="true">
     <en txt="Accessory table" alttxt="Accessory Decoders" tip="Accessory decoder table"/>
@@ -22508,58 +22562,121 @@
     <it txt="Tabella accessori"/>
     <zh_CN txt="附件表"/>
     <sl txt="Seznam dodatne opreme"/>
+    <de txt="Zubehör-Tabelle"/>
+    <sr_latin txt="Tabela pomoćnih uređaja"/>
   </Msg>
   <Msg id="calc">
     <en txt="Calculation"/>
     <de txt="Berechnung"/>
     <nl txt="Berekening"/>
     <it txt="Calcolo"/>
+    <sr_latin txt="Izračunavanje"/>
   </Msg>
   <Msg id="freeallwarning">
     <en txt="This action will free all section reservations. Proceed?"/>
     <nl txt="Deze actie heft alle reserveringen op. Doorgaan?"/>
+    <de txt="Belegung aller Sektionen löschen?"/>
+    <it txt="Questa azione libererà tutte le sezioni riservate. Continuare?"/>
+    <sl txt="To dejanje bo sprostilo vse rezervacije odsekov. Nadaljujem?"/>
+    <sr_latin txt="Ova akcija će osloboditi sve rezervacije sekcija. Izvrši?"/>
   </Msg>
   <Msg id="deleteall">
     <en txt="Delete all"/>
+    <de txt="Alle löschen"/>
+    <it txt="Cancella tutto"/>
+    <nl txt="Alles verwijderen"/>
+    <sl txt="Izbriši vse"/>
+    <sr_latin txt="Obriši sve"/>
   </Msg>
   <Msg id="maxdiff">
     <en txt="Max.difference"/>
+    <de txt="Max. Differenz"/>
+    <it txt="Differenza Max."/>
+    <nl txt="Max. verschil"/>
+    <sr_latin txt="Maks.razlika"/>
   </Msg>
   <Msg id="correction">
     <en txt="Correction"/>
+    <de txt="Korrektur"/>
+    <it txt="Correzione"/>
+    <nl txt="Correctie"/>
+    <sr_latin txt="Ispravka"/>
   </Msg>
   <Msg id="vendor">
     <en txt="Vendor"/>
+    <de txt="Hersteller"/>
+    <it txt="Produttore"/>
+    <nl txt="Fabrikant"/>
+    <sr_latin txt="Proizvođač"/>
   </Msg>
   <Msg id="product">
     <en txt="Product"/>
+    <de txt="Produkt"/>
+    <it txt="Articolo"/>
+    <nl txt="Produkt"/>
+    <sr_latin txt="Proizvod"/>
   </Msg>
   <Msg id="class">
     <en txt="Class"/>
+    <de txt="Klasse"/>
+    <it txt="Classe"/>
+    <nl txt="Klasse"/>
+    <sr_latin txt="Razred"/>
   </Msg>
   <Msg id="featurecv">
     <en txt="Feature CV"/>
+    <de txt="Eigenschaft CV"/>
+    <it txt="CV Caratteristiche"/>
+    <nl txt="Feature CV"/>
+    <sr_latin txt="CV odlika"/>
   </Msg>
   <Msg id="vendorcv">
     <en txt="Vendor CV"/>
+    <de txt="Hersteller CV"/>
+    <it txt="CV Produttore"/>
+    <nl txt="Fabrikant CV"/>
+    <sr_latin txt="CV proizvođača"/>
   </Msg>
   <Msg id="disable">
     <en txt="Disable"/>
+    <de txt="Deaktivieren"/>
+    <it txt="Disabilta"/>
+    <nl txt="Schakel uit"/>
+    <sr_latin txt="Onemogući"/>
   </Msg>
   <Msg id="macromap">
     <en txt="Macro Map"/>
+    <de txt="Macro Liste"/>
+    <it txt="Mappa Macro"/>
+    <nl txt="Macro overzicht"/>
   </Msg>
   <Msg id="slowdown">
     <en txt="Slowdown"/>
+    <de txt="Verlangsamung"/>
+    <it txt="Rallentare"/>
+    <nl txt="Retardatie"/>
+    <sr_latin txt="Uspori"/>
   </Msg>
   <Msg id="cycles">
     <en txt="Cycles"/>
+    <de txt="Zyklen"/>
+    <it txt="Cicli"/>
+    <nl txt="Cycli"/>
+    <sr_latin txt="Ciklusi"/>
   </Msg>
   <Msg id="minutes">
     <en txt="minutes"/>
+    <de txt="Minuten"/>
+    <it txt="minuti"/>
+    <nl txt="minuten"/>
+    <sr_latin txt="minuti"/>
   </Msg>
   <Msg id="day">
     <en txt="day"/>
+    <de txt="Tag"/>
+    <it txt="giorno"/>
+    <nl txt="dag"/>
+    <sr_latin txt="dan"/>
   </Msg>
   <Msg id="preview">
     <en txt="Preview"/>
