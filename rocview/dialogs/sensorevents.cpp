@@ -34,10 +34,11 @@ SensorEventsDlg::SensorEventsDlg( wxWindow* parent )
 
 void SensorEventsDlg::initLabels() {
   SetTitle(wxGetApp().getMsg( "sensormonitor" ));
-  m_EventList->InsertColumn(0, wxGetApp().getMsg( "bus" ), wxLIST_FORMAT_LEFT );
-  m_EventList->InsertColumn(1, wxGetApp().getMsg( "address" ), wxLIST_FORMAT_LEFT );
-  m_EventList->InsertColumn(2, wxGetApp().getMsg( "state" ), wxLIST_FORMAT_LEFT );
-  m_EventList->InsertColumn(3, wxGetApp().getMsg( "identifier" ), wxLIST_FORMAT_LEFT );
+  m_EventList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
+  m_EventList->InsertColumn(1, wxGetApp().getMsg( "bus" ), wxLIST_FORMAT_LEFT );
+  m_EventList->InsertColumn(2, wxGetApp().getMsg( "address" ), wxLIST_FORMAT_LEFT );
+  m_EventList->InsertColumn(3, wxGetApp().getMsg( "state" ), wxLIST_FORMAT_LEFT );
+  m_EventList->InsertColumn(4, wxGetApp().getMsg( "identifier" ), wxLIST_FORMAT_LEFT );
   m_Refresh->SetLabel(wxGetApp().getMsg( "refresh" ));
 }
 
@@ -49,10 +50,20 @@ void SensorEventsDlg::initValues() {
   int cnt = ListOp.size( list );
   for( int i = 0; i < cnt; i++ ) {
     iONode fbevent = (iONode)ListOp.get( list, i );
-    m_EventList->InsertItem( i, wxString::Format(wxT("%d"), wFeedback.getbus(fbevent) ) );
-    m_EventList->SetItem( i, 1, wxString::Format(wxT("%d"), wFeedback.getaddr(fbevent) ) );
-    m_EventList->SetItem( i, 2, wxString::Format(wxT("%d"), wFeedback.isstate(fbevent)?1:0 ) );
-    m_EventList->SetItem( i, 3, wxString(wFeedback.getidentifier(fbevent), wxConvUTF8) );
+    m_EventList->InsertItem( i, wxString(wFeedback.getid(fbevent), wxConvUTF8) );
+    m_EventList->SetItem( i, 1, wxString::Format(wxT("%d"), wFeedback.getbus(fbevent) ) );
+    m_EventList->SetItem( i, 2, wxString::Format(wxT("%d"), wFeedback.getaddr(fbevent) ) );
+    m_EventList->SetItem( i, 3, wxString::Format(wxT("%d"), wFeedback.isstate(fbevent)?1:0 ) );
+    m_EventList->SetItem( i, 4, wxString(wFeedback.getidentifier(fbevent), wxConvUTF8) );
+  }
+  // resize
+  for( int n = 0; n < 5; n++ ) {
+    m_EventList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+    int autoheadersize = m_EventList->GetColumnWidth(n);
+    m_EventList->SetColumnWidth(n, wxLIST_AUTOSIZE);
+    int autosize = m_EventList->GetColumnWidth(n);
+    if(autoheadersize > autosize )
+      m_EventList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
   }
 }
 
