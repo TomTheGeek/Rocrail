@@ -579,6 +579,7 @@ bool RocGui::OnInit() {
   m_donkey = "";
   m_doneml = "";
   m_Script = ScriptOp.inst(NULL);
+  m_SensorEvents = ListOp.inst();
 
   // we could need some of these:
   wxInitAllImageHandlers();
@@ -887,6 +888,27 @@ static void rocrailCallback( obj me, iONode node ) {
     return;
   }
 
+  /* Capture all feedback events for visualisation. */
+  if( StrOp.equals( wFeedback.name(), NodeOp.getName( node ) ) ) {
+    bool FoundEvent = false;
+    for( int i = 0; i < ListOp.size(guiApp->getSensorEvents()); i++ ) {
+      iONode fbevent = (iONode)ListOp.get( guiApp->getSensorEvents(), i);
+      if( wFeedback.getbus(node) == wFeedback.getbus(fbevent) && wFeedback.getaddr(node) == wFeedback.getaddr(fbevent) ) {
+        TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "update sensor event %d", wFeedback.getaddr(node) );
+        wFeedback.setstate(fbevent, wFeedback.isstate(node));
+        wFeedback.setidentifier(fbevent, wFeedback.getidentifier(node));
+        FoundEvent = true;
+        guiApp->sensorEvent(fbevent);
+        break;
+      }
+    }
+    if( !FoundEvent ) {
+      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "add sensor event %d", wFeedback.getaddr(node) );
+      iONode fbevent = (iONode)NodeOp.base.clone(node);
+      ListOp.add( guiApp->getSensorEvents(), (obj)fbevent);
+      guiApp->sensorEvent(fbevent);
+    }
+  }
 
   /* State */
   if( StrOp.equals( wState.name(), NodeOp.getName( node ) ) ) {
@@ -1240,6 +1262,11 @@ static void rocrailCallback( obj me, iONode node ) {
       }
     }
   }
+}
+
+
+void RocGui::sensorEvent(iONode event) {
+  // ToDo: Inform listener.
 }
 
 

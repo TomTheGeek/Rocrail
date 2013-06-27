@@ -22681,4 +22681,7 @@
   <Msg id="preview">
     <en txt="Preview"/>
   </Msg>
+  <Msg id="sensormonitor">
+    <en txt="Sensor monitor"/>
+  </Msg>
 </Messages>

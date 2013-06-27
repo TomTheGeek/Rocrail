@@ -32,6 +32,7 @@
 #include "rocs/public/trace.h"
 #include "rocs/public/res.h"
 #include "rocs/public/wrpinf.h"
+#include "rocs/public/map.h"
 
 #include "rocrail/public/rcon.h"
 
@@ -89,6 +90,8 @@ public:
   bool isTabViewRotated() { return m_bTabViewRotated; }
   const char* findID(bool output, int addr);
   iOScript getScript(){return m_Script;}
+  iOList getSensorEvents(){return m_SensorEvents;}
+  void sensorEvent(iONode event);
 
   iORCon        m_RCon;
   const char*   m_Host;
@@ -126,6 +129,7 @@ private:
   iORes         m_Res;
   iOWrpInf      m_WrpInf;
   bool          m_bInit;
+  iOList        m_SensorEvents;
 };
 DECLARE_APP(RocGui)
 

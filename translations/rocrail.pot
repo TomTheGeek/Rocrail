@@ -6503,3 +6503,15 @@ msgstr ""
 msgid "day"
 msgstr ""
 
+#. 
+# id="preview"
+#, c-format
+msgid "Preview"
+msgstr ""
+
+#. 
+# id="sensormonitor"
+#, c-format
+msgid "Sensor monitor"
+msgstr ""
+

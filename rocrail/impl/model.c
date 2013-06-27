@@ -3431,7 +3431,8 @@ static void _event( iOModel inst, iONode nodeC ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unregistered sensor event: %s %s",
                    key, wFeedback.isstate( nodeC )?"ON":"OFF" );
       /* Cleanup Node3 */
-      nodeC->base.del(nodeC);
+      /* nodeC->base.del(nodeC);*/
+      AppOp.broadcastEvent( nodeC ); /* Send to clients to visualize all sensors. */
     }
     StrOp.free( key );
     return;

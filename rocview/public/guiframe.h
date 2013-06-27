@@ -181,6 +181,7 @@ public:
   void OnCtrlBoosters(wxCommandEvent& event);
   void OnDonKey(wxCommandEvent& event);
   void OnDonKeyInfo(wxCommandEvent& event);
+  void OnSensorEvents(wxCommandEvent& event);
 
   iONode getTabColor(int z);
   void setLocalPlan( wxString plan );
@@ -616,6 +617,7 @@ enum
     ME_EditActions,
     ME_DonKey,
     ME_DonKeyInfo,
+    ME_SensorEvents,
     ME_F1,
     ME_F2,
     ME_F3,

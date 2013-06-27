@@ -101,6 +101,7 @@
 #include "rocview/dialogs/cmdrecorder.h"
 #include "rocview/dialogs/throttledlg.h"
 #include "rocview/dialogs/accdecdlg.h"
+#include "rocview/dialogs/sensorevents.h"
 
 
 
@@ -328,6 +329,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_PanelProps     , RocGuiFrame::OnPanelProps)
     EVT_MENU( ME_AddPanel       , RocGuiFrame::OnAddPanel)
     EVT_MENU( ME_Undo           , RocGuiFrame::OnUndo)
+    EVT_MENU( ME_SensorEvents   , RocGuiFrame::OnSensorEvents)
     EVT_MENU( ME_OpenDecoder    , RocGuiFrame::OnOpenDecoder)
     EVT_MENU( ME_CBusNode       , RocGuiFrame::OnCBusNode)
     EVT_MENU( ME_BiDiB          , RocGuiFrame::OnBiDiB)
@@ -1805,6 +1807,7 @@ void RocGuiFrame::initFrame() {
   menuSoD->Append(ME_InitField, wxGetApp().getMenu("initfield"), wxGetApp().getTip("initfield") );
   menuSoD->Append(ME_QuerySensors, wxGetApp().getMenu("querysensors"), wxGetApp().getTip("querysensors") );
   menuControl->Append( -1, wxGetApp().getMenu("startofday"), menuSoD );
+  menuControl->Append(ME_SensorEvents, wxGetApp().getMenu("sensormonitor"), wxGetApp().getTip("sensormonitor") );
 
   menuControl->AppendSeparator();
   menuControl->Append(ME_TxShortIDs, wxGetApp().getMenu("txshortids"), wxGetApp().getTip("txshortids") );
@@ -3444,6 +3447,14 @@ void RocGuiFrame::OnEditTimedActions( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnEditBoosters( wxCommandEvent& event ) {
   PowerManDlg*  dlg = new PowerManDlg(this );
+  if( wxID_OK == dlg->ShowModal() ) {
+    /* Notify RocRail. */
+  }
+  dlg->Destroy();
+}
+
+void RocGuiFrame::OnSensorEvents( wxCommandEvent& event ) {
+  SensorEventsDlg*  dlg = new SensorEventsDlg(this );
   if( wxID_OK == dlg->ShowModal() ) {
     /* Notify RocRail. */
   }
