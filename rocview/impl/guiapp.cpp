@@ -898,6 +898,12 @@ static void rocrailCallback( obj me, iONode node ) {
         TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "update sensor event %d", wFeedback.getaddr(node) );
         wFeedback.setstate(fbevent, wFeedback.isstate(node));
         wFeedback.setidentifier(fbevent, wFeedback.getidentifier(node));
+        wFeedback.setcounter(fbevent, wFeedback.getcounter(node));
+        wFeedback.setwheelcount(fbevent, wFeedback.getwheelcount(node));
+        wFeedback.setcountedcars(fbevent, wFeedback.getcountedcars(node));
+        char* stamp = StrOp.createStamp();
+        NodeOp.setStr( fbevent, "stamp", stamp);
+        StrOp.free(stamp);
         FoundEvent = true;
         guiApp->sensorEvent(fbevent);
         break;
@@ -906,6 +912,9 @@ static void rocrailCallback( obj me, iONode node ) {
     if( !FoundEvent ) {
       TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "add sensor event %d", wFeedback.getaddr(node) );
       iONode fbevent = (iONode)NodeOp.base.clone(node);
+      char* stamp = StrOp.createStamp();
+      NodeOp.setStr( fbevent, "stamp", stamp);
+      StrOp.free(stamp);
       ListOp.add( guiApp->getSensorEvents(), (obj)fbevent);
       guiApp->sensorEvent(fbevent);
     }

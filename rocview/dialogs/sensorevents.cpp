@@ -29,6 +29,9 @@ SensorEventsDlg::SensorEventsDlg( wxWindow* parent )
 {
   initLabels();
   initValues();
+  GetSizer()->Layout();
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
   wxGetApp().setSensorEventListener(this);
 }
 
@@ -40,6 +43,10 @@ void SensorEventsDlg::initLabels() {
   m_EventList->InsertColumn(2, wxGetApp().getMsg( "address" ), wxLIST_FORMAT_RIGHT );
   m_EventList->InsertColumn(3, wxGetApp().getMsg( "state" ), wxLIST_FORMAT_CENTER );
   m_EventList->InsertColumn(4, wxGetApp().getMsg( "identifier" ), wxLIST_FORMAT_LEFT );
+  m_EventList->InsertColumn(5, wxGetApp().getMsg( "counter" ), wxLIST_FORMAT_RIGHT );
+  m_EventList->InsertColumn(6, wxGetApp().getMsg( "wheelcount" ), wxLIST_FORMAT_RIGHT );
+  m_EventList->InsertColumn(7, wxGetApp().getMsg( "countedcars" ), wxLIST_FORMAT_RIGHT );
+  m_EventList->InsertColumn(8, wxGetApp().getMsg( "stamp" ), wxLIST_FORMAT_LEFT );
   m_Refresh->SetLabel(wxGetApp().getMsg( "refresh" ));
 }
 
@@ -56,9 +63,13 @@ void SensorEventsDlg::initValues() {
     m_EventList->SetItem( i, 2, wxString::Format(wxT("%d"), wFeedback.getaddr(fbevent) ) );
     m_EventList->SetItem( i, 3, wxString::Format(wxT("%d"), wFeedback.isstate(fbevent)?1:0 ) );
     m_EventList->SetItem( i, 4, wxString(wFeedback.getidentifier(fbevent), wxConvUTF8) );
+    m_EventList->SetItem( i, 5, wxString::Format(wxT("%d"), wFeedback.getcounter(fbevent) ) );
+    m_EventList->SetItem( i, 6, wxString::Format(wxT("%d"), wFeedback.getwheelcount(fbevent) ) );
+    m_EventList->SetItem( i, 7, wxString::Format(wxT("%d"), wFeedback.getcountedcars(fbevent) ) );
+    m_EventList->SetItem( i, 8, wxString(NodeOp.getStr(fbevent, "stamp", ""), wxConvUTF8) );
   }
   // resize
-  for( int n = 0; n < 5; n++ ) {
+  for( int n = 0; n < 9; n++ ) {
     m_EventList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
     int autoheadersize = m_EventList->GetColumnWidth(n);
     m_EventList->SetColumnWidth(n, wxLIST_AUTOSIZE);

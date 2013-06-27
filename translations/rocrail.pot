@@ -6515,3 +6515,21 @@ msgstr ""
 msgid "Sensor monitor"
 msgstr ""
 
+#. 
+# id="wheelcount"
+#, c-format
+msgid "Wheel count"
+msgstr ""
+
+#. 
+# id="counter"
+#, c-format
+msgid "Counter"
+msgstr ""
+
+#. 
+# id="countedcars"
+#, c-format
+msgid "Counted cars"
+msgstr ""
+

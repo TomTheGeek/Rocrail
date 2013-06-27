@@ -22684,4 +22684,13 @@
   <Msg id="sensormonitor">
     <en txt="Sensor monitor"/>
   </Msg>
+  <Msg id="wheelcount">
+    <en txt="Wheel count"/>
+  </Msg>
+  <Msg id="counter">
+    <en txt="Counter"/>
+  </Msg>
+  <Msg id="countedcars">
+    <en txt="Counted cars"/>
+  </Msg>
 </Messages>
