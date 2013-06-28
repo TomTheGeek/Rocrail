@@ -117,7 +117,6 @@ public:
     wxCheckBox* m_PowerAtStartup;
     wxCheckBox* m_FastClock;
     wxCheckBox* m_AccPower;
-    wxCheckBox* m_IgnoreBusy;
     wxCheckBox* m_V2;
     wxStaticText* m_labSwitchTime;
     wxSpinCtrl* m_SwitchTime;

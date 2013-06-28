@@ -94,7 +94,6 @@ void LenzDlg::initLabels() {
   m_FastClock->SetLabel( wxGetApp().getMsg( "fastclock" ) );
   m_HardwareFlow->SetLabel( wxGetApp().getMsg( "ctsflow" ) );
   m_AccPower->SetLabel( wxGetApp().getMsg( "power4acc" ) );
-  m_IgnoreBusy->SetLabel( wxGetApp().getMsg( "ignorebusy" ) );
 }
 
 void LenzDlg::initValues() {
@@ -139,7 +138,6 @@ void LenzDlg::initValues() {
   m_PowerAtStartup->SetValue( wDigInt.isstartpwstate(m_Props)?true:false);
   m_FastClock->SetValue( wDigInt.isfastclock(m_Props)?true:false);
   m_AccPower->SetValue( wDigInt.ispw4acc(m_Props)?true:false);
-  m_IgnoreBusy->SetValue( wDigInt.isignorebusy(m_Props)?true:false);
   m_V2->SetValue( wDigInt.getprotver(m_Props) > 0 ? true:false);
 
   if( wDigInt.getbps( m_Props ) == 9600 )
@@ -173,7 +171,6 @@ void LenzDlg::evaluate() {
   wDigInt.setstartpwstate(m_Props, m_PowerAtStartup->IsChecked()?True:False);
   wDigInt.setfastclock(m_Props, m_FastClock->IsChecked()?True:False);
   wDigInt.setpw4acc(m_Props, m_AccPower->IsChecked()?True:False);
-  wDigInt.setignorebusy(m_Props, m_IgnoreBusy->IsChecked()?True:False);
 
   if( m_Type->GetSelection() == 2 ) // Elite
     wDigInt.setprotver(m_Props, m_V2->IsChecked()?1:0);
@@ -271,7 +268,6 @@ void LenzDlg::Init()
     m_PowerAtStartup = NULL;
     m_FastClock = NULL;
     m_AccPower = NULL;
-    m_IgnoreBusy = NULL;
     m_V2 = NULL;
     m_labSwitchTime = NULL;
     m_SwitchTime = NULL;
@@ -377,34 +373,30 @@ void LenzDlg::CreateControls()
     m_AccPower->SetValue(true);
     itemStaticBoxSizer19->Add(m_AccPower, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
-    m_IgnoreBusy = new wxCheckBox( m_MainPanel, wxID_ANY, _("Ignore busy"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_IgnoreBusy->SetValue(false);
-    itemStaticBoxSizer19->Add(m_IgnoreBusy, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
-
     m_V2 = new wxCheckBox( m_MainPanel, wxID_ANY, _("V2"), wxDefaultPosition, wxDefaultSize, 0 );
     m_V2->SetValue(false);
     itemStaticBoxSizer19->Add(m_V2, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer25 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer25->AddGrowableCol(1);
-    itemStaticBoxSizer19->Add(itemFlexGridSizer25, 0, wxALIGN_LEFT, 5);
+    wxFlexGridSizer* itemFlexGridSizer24 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer24->AddGrowableCol(1);
+    itemStaticBoxSizer19->Add(itemFlexGridSizer24, 0, wxALIGN_LEFT, 5);
 
     m_labSwitchTime = new wxStaticText( m_MainPanel, wxID_ANY, _("Switch time (ms)"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer25->Add(m_labSwitchTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer24->Add(m_labSwitchTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_SwitchTime = new wxSpinCtrl( m_MainPanel, wxID_ANY, _T("250"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 1000, 250 );
-    itemFlexGridSizer25->Add(m_SwitchTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer24->Add(m_SwitchTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer28 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer27 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer28, 0, wxALIGN_RIGHT|wxALL, 5);
-    wxButton* itemButton29 = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer28->AddButton(itemButton29);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer27, 0, wxALIGN_RIGHT|wxALL, 5);
+    wxButton* itemButton28 = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer27->AddButton(itemButton28);
 
-    wxButton* itemButton30 = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer28->AddButton(itemButton30);
+    wxButton* itemButton29 = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer27->AddButton(itemButton29);
 
-    itemStdDialogButtonSizer28->Realize();
+    itemStdDialogButtonSizer27->Realize();
 
 ////@end LenzDlg content construction
 }
