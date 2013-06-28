@@ -32,6 +32,8 @@
 SensorEventsDlg::SensorEventsDlg( wxWindow* parent )
     :SensorEventsGen( parent )
 {
+  m_FbEvent = NULL;
+
   initLabels();
   initValues();
   GetSizer()->Layout();
@@ -48,6 +50,8 @@ SensorEventsDlg::SensorEventsDlg( wxWindow* parent )
     else
       SetSize(wSensorMonitor.getx(sensmon), wSensorMonitor.gety(sensmon));
   }
+
+  m_Reset->Enable(false);
 }
 
 
@@ -63,6 +67,7 @@ void SensorEventsDlg::initLabels() {
   m_EventList->InsertColumn(7, wxGetApp().getMsg( "countedcars" ), wxLIST_FORMAT_RIGHT );
   m_EventList->InsertColumn(8, wxGetApp().getMsg( "stamp" ), wxLIST_FORMAT_LEFT );
   m_Refresh->SetLabel(wxGetApp().getMsg( "refresh" ));
+  m_Reset->SetLabel(wxGetApp().getMsg( "reset" ));
 }
 
 
@@ -82,6 +87,7 @@ void SensorEventsDlg::initValues() {
     m_EventList->SetItem( i, 6, wxString::Format(wxT("%d"), wFeedback.getwheelcount(fbevent) ) );
     m_EventList->SetItem( i, 7, wxString::Format(wxT("%d"), wFeedback.getcountedcars(fbevent) ) );
     m_EventList->SetItem( i, 8, wxString(NodeOp.getStr(fbevent, "stamp", ""), wxConvUTF8) );
+    m_EventList->SetItemPtrData(i, (wxUIntPtr)fbevent);
   }
   // resize
   for( int n = 0; n < 9; n++ ) {
@@ -132,5 +138,24 @@ void SensorEventsDlg::onOK( wxCommandEvent& event ) {
 void SensorEventsDlg::onClose( wxCloseEvent& event ) {
   wxCommandEvent e;
   onOK(e);
+}
+
+void SensorEventsDlg::onListSelected( wxListEvent& event ) {
+  int index = event.GetIndex();
+  m_FbEvent = (iONode)m_EventList->GetItemData(index);
+  m_Reset->Enable(true);
+}
+
+
+void SensorEventsDlg::onReset( wxCommandEvent& event ) {
+  if( m_FbEvent != NULL && wFeedback.getid( m_FbEvent ) != NULL ) {
+    iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    wFeedback.setid( cmd, wFeedback.getid( m_FbEvent ) );
+    wFeedback.setcmd( cmd, wFeedback.reset );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+    m_Reset->Enable(false);
+    m_FbEvent = NULL;
+  }
 }
 
