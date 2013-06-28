@@ -333,14 +333,14 @@ void LenzDlg::CreateControls()
     m_BPSStrings.Add(_("&115200"));
     m_BPS = new wxRadioBox( m_MainPanel, wxID_ANY, _("BPS"), wxDefaultPosition, wxDefaultSize, m_BPSStrings, 2, wxRA_SPECIFY_ROWS );
     m_BPS->SetSelection(0);
-    itemBoxSizer5->Add(m_BPS, 0, wxGROW|wxALL, 5);
+    itemBoxSizer5->Add(m_BPS, 0, wxALIGN_LEFT|wxALL, 5);
 
     wxArrayString m_HardwareFlowStrings;
     m_HardwareFlowStrings.Add(_("&None"));
     m_HardwareFlowStrings.Add(_("&CTS"));
     m_HardwareFlow = new wxRadioBox( m_MainPanel, wxID_ANY, _("Hardware Flow"), wxDefaultPosition, wxDefaultSize, m_HardwareFlowStrings, 2, wxRA_SPECIFY_COLS );
     m_HardwareFlow->SetSelection(0);
-    itemBoxSizer5->Add(m_HardwareFlow, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemBoxSizer5->Add(m_HardwareFlow, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxBoxSizer* itemBoxSizer17 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer4->Add(itemBoxSizer17, 0, wxALIGN_TOP|wxALL, 5);
@@ -355,11 +355,11 @@ void LenzDlg::CreateControls()
     m_TypeStrings.Add(_("&LI-ETH"));
     m_Type = new wxRadioBox( m_MainPanel, ID_LENZTYPE, _("SubType"), wxDefaultPosition, wxDefaultSize, m_TypeStrings, 2, wxRA_SPECIFY_ROWS );
     m_Type->SetSelection(0);
-    itemBoxSizer17->Add(m_Type, 0, wxGROW|wxALL, 5);
+    itemBoxSizer17->Add(m_Type, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_labPower = new wxStaticBox(m_MainPanel, wxID_ANY, _("Options"));
     wxStaticBoxSizer* itemStaticBoxSizer19 = new wxStaticBoxSizer(m_labPower, wxVERTICAL);
-    itemBoxSizer17->Add(itemStaticBoxSizer19, 0, wxGROW|wxALL, 5);
+    itemBoxSizer17->Add(itemStaticBoxSizer19, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_PowerAtStartup = new wxCheckBox( m_MainPanel, wxID_ANY, _("Power on at startup"), wxDefaultPosition, wxDefaultSize, 0 );
     m_PowerAtStartup->SetValue(false);
