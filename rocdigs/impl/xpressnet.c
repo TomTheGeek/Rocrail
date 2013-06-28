@@ -1397,15 +1397,13 @@ static void __transactor( void* threadinst ) {
       else if (in[0] == 0x61 && in[1] == 0x81){
         /* Just ignore this as done in lenz.c :!: */
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "LZV busy. [%s]", data->iid );
-        //if( !data->ignoreBusy ) {
-          rspReceived = True;
-          reSend = True;
-          ThreadOp.sleep(10);
-        //}
+        rspReceived = True;
+        reSend = True;
+        ThreadOp.sleep(10);
       }
       /* PT busy*/
       else if (in[0] == 0x61 && in[1] == 0x1F){
-        //TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "PT: Busy; Resend.");
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "PT: Busy; Resend.");
         reSend = True;
       }
       /* Command not known*/
