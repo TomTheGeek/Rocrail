@@ -116,20 +116,22 @@ void xntcpInit(obj xpressnet) {
 
 int xntcpRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   iOXpressNetData data = Data(xpressnet);
+  int len = 0;
 
   if( data->socket != NULL && !SocketOp.isBroken(data->socket) && MutexOp.wait( data->serialmux ) ) {
     if( data->availFlag || SocketOp.read( data->socket, &data->startbyte, 1 ) ) {
       buffer[0] = data->startbyte;
-      int len = (buffer[0] & 0x0F) + 1;
+      len = (buffer[0] & 0x0F) + 1;
       if( SocketOp.read( data->socket, buffer+1, len ) )
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len+1 );
       data->availFlag = False;
-      return len;
     }
     MutexOp.post( data->serialmux );
   }
-  return 0;
+  return len;
 }
+
+
 Boolean xntcpWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
   iOXpressNetData data = Data(xpressnet);
 
