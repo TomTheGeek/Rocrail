@@ -27,6 +27,39 @@
 
 #include "rocrail/wrapper/public/DigInt.h"
 
+
+static void __availwd( void* threadinst ) {
+  iOThread        th = (iOThread)threadinst;
+  iOXpressNet     xpressnet = (iOXpressNet)ThreadOp.getParm(th);
+  iOXpressNetData data = Data(xpressnet);
+
+  ThreadOp.sleep(10);
+  TraceOp.trc( "xntcp", TRCLEVEL_INFO, __LINE__, 9999, "available watchdog started" );
+
+  while( data->run ) {
+    if( MutexOp.wait( data->serialmux ) ) {
+      if( data->socket == NULL ) {
+        xntcpConnect((obj)xpressnet);
+      }
+      if( !data->availFlag && data->socket != NULL && !SocketOp.isBroken(data->socket)) {
+        data->availFlag = SocketOp.read( data->socket, &data->startbyte, 1 );
+      }
+      MutexOp.post( data->serialmux );
+      if( data->socket != NULL && SocketOp.isBroken(data->socket)) {
+        TraceOp.trc( "xntcp", TRCLEVEL_EXCEPTION, __LINE__, 9999, "problem reading XnTcp: Disconnect" );
+        xntcpDisConnect((obj)xpressnet);
+        ThreadOp.sleep(1000);
+      }
+    }
+    ThreadOp.sleep(10);
+  }
+
+  TraceOp.trc( "xntcp", TRCLEVEL_INFO, __LINE__, 9999, "available watchdog ended" );
+}
+
+
+
+
 Boolean xntcpConnect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
 
@@ -44,6 +77,10 @@ Boolean xntcpConnect(obj xpressnet) {
   }
 
   if ( SocketOp.connect( data->socket ) ) {
+    if( data->availWD == NULL ) {
+      data->availWD = ThreadOp.inst( "availwd", &__availwd, xpressnet );
+      ThreadOp.start( data->availWD );
+    }
     return True;
   }
   else {
@@ -55,32 +92,41 @@ Boolean xntcpConnect(obj xpressnet) {
 
 void xntcpDisConnect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
-  if( data->socket != NULL ) {
-    SocketOp.disConnect( data->socket );
-    SocketOp.base.del( data->socket );
+  if( data->socket != NULL && MutexOp.wait( data->serialmux ) ) {
+    iOSocket socket = data->socket;
+    TraceOp.trc( "xntcp", TRCLEVEL_INFO, __LINE__, 9999, "disconnecting..." );
     data->socket = NULL;
+    SocketOp.disConnect( socket );
+    SocketOp.base.del( socket );
+    MutexOp.post( data->serialmux );
   }
 }
 
 Boolean xntcpAvail(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
-  char msgStr[32];
-  if( SocketOp.isBroken(data->socket) ) {
-    return False;
-  }
-  return SocketOp.peek( data->socket, msgStr, 1 );
+  return data->availFlag;
 }
 
 void xntcpInit(obj xpressnet) {
+  iOXpressNetData data = Data(xpressnet);
   li101Init(xpressnet);
+  data->availFlag = False;
 }
+
+
 int xntcpRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   iOXpressNetData data = Data(xpressnet);
-  if( !SocketOp.isBroken(data->socket) && SocketOp.read( data->socket, buffer, 1 ) ) {
-    int len = (buffer[0] & 0x0F) + 1;
-    if( SocketOp.read( data->socket, buffer+1, len ) )
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len+1 );
+
+  if( data->socket != NULL && !SocketOp.isBroken(data->socket) && MutexOp.wait( data->serialmux ) ) {
+    if( data->availFlag || SocketOp.read( data->socket, &data->startbyte, 1 ) ) {
+      buffer[0] = data->startbyte;
+      int len = (buffer[0] & 0x0F) + 1;
+      if( SocketOp.read( data->socket, buffer+1, len ) )
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len+1 );
+      data->availFlag = False;
       return len;
+    }
+    MutexOp.post( data->serialmux );
   }
   return 0;
 }
