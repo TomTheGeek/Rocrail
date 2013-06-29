@@ -2820,8 +2820,12 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
         l_locidStr = StrOp.fmt( "%s", locoid );
       else if( wBlock.issmallsymbol(m_Props) )
         l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
-      else
-        l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locoid );
+      else {
+        if(showID)
+          l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locoid );
+        else
+          l_locidStr = StrOp.fmt( "%s", locoid );
+      }
 
       // compose the ToolTip and update occupied state
       if( StrOp.len( locoid ) > 0 ) {
