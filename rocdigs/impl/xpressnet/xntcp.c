@@ -67,10 +67,10 @@ Boolean xntcpConnect(obj xpressnet) {
       wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
 
   data->socket = SocketOp.inst( wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ), False, False, False );
-  SocketOp.setRcvTimeout( data->socket, wDigInt.gettimeout(data->ini) / 1000);
 
   if( data->socket != NULL ) {
     SocketOp.setNodelay(data->socket, True);
+    SocketOp.setBlocking( data->socket, True );
   }
   else {
     return False;
