@@ -1286,6 +1286,7 @@ static void __transactor( void* threadinst ) {
 
     if( rspExpected || data->subAvail( (obj)xpressnet ) ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "read incomming packet..." );
+      MemOp.set( in, 0, 32 );
       inlen = data->subRead((obj)xpressnet, in, &rspReceived);
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "incomming packet = %d", inlen );
     }

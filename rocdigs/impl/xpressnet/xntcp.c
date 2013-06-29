@@ -42,6 +42,7 @@ static void __availwd( void* threadinst ) {
         xntcpConnect((obj)xpressnet);
       }
       if( !data->availFlag && data->socket != NULL && !SocketOp.isBroken(data->socket)) {
+        data->startbyte = 0;
         data->availFlag = SocketOp.read( data->socket, &data->startbyte, 1 );
       }
       MutexOp.post( data->serialmux );
@@ -124,6 +125,9 @@ int xntcpRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
       len = (buffer[0] & 0x0F) + 1;
       if( SocketOp.read( data->socket, buffer+1, len ) )
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len+1 );
+      else
+        len = 0;
+      data->startbyte = 0;
       data->availFlag = False;
     }
     MutexOp.post( data->serialmux );
