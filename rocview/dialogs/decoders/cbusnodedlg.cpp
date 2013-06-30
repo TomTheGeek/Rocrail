@@ -52,6 +52,7 @@
 #include "rocview/res/icons.hpp"
 
 #define ME_GC2Timer 4711
+#define ME_ReportTimer 4712
 
 CBusNodeDlg::CBusNodeDlg( wxWindow* parent ):cbusnodedlggen( parent )
 {
@@ -79,6 +80,7 @@ void CBusNodeDlg::initLabels() {
   m_GC2IgnorePortTest = 0;
   m_CANID = 0;
   m_CBus = NodeOp.inst(wCBus.name(), NULL, ELEMENT_NODE);
+  m_bReporting = false;
 
   /*TEST
   iONode node = NodeOp.inst(wCBusNode.name(),m_CBus,ELEMENT_NODE);
@@ -117,6 +119,7 @@ void CBusNodeDlg::initLabels() {
   m_SortCol = 0;
 
   m_Timer = new wxTimer( this, ME_GC2Timer );
+  m_ReportTimer = new wxTimer( this, ME_ReportTimer );
   Connect( wxEVT_TIMER, wxTimerEventHandler( CBusNodeDlg::OnTimer ), NULL, this );
 
   // Init labels.
@@ -544,20 +547,21 @@ const char* CBusNodeDlg::getTypeDesc( int manu, int mtype ) {
   return "UNKNOWN";
 }
 
-void CBusNodeDlg::selectPage4Type( int manu, int mtype ) {
+bool CBusNodeDlg::selectPage4Type( int manu, int mtype ) {
   int offset = 0;
   if( manu == MANU_ROCRAIL ) {
     wxCommandEvent evt;
     switch( mtype ) {
-    case MTYP_CANGC1E:   m_NoteBook->SetSelection( 5 - offset );  onGC1eGetAll( evt ); break;
-    case MTYP_CANGC2:    m_NoteBook->SetSelection( 6 - offset);   onGC2GetAll( evt ); break;
-    case MTYP_CANGC4:    m_NoteBook->SetSelection( 7 - offset );  onGC4GetAll( evt ); break;
-    case MTYP_CANGC6:    m_NoteBook->SetSelection( 8 - offset );  onGC6GetAll( evt ); break;
-    case MTYP_CANGC7:    m_NoteBook->SetSelection( 9 - offset );  onGC7GetAll( evt ); break;
-    case MTYP_CANGC8:    m_NoteBook->SetSelection( 10 - offset );  onGC8GetAll( evt ); break;
-    case MTYP_CANGCLN:   m_NoteBook->SetSelection( 11 - offset ); onGCLNGetAll( evt ); break;
+    case MTYP_CANGC1E:   m_NoteBook->SetSelection( 5 - offset );  onGC1eGetAll( evt ); return true;
+    case MTYP_CANGC2:    m_NoteBook->SetSelection( 6 - offset);   onGC2GetAll( evt ); return true;
+    case MTYP_CANGC4:    m_NoteBook->SetSelection( 7 - offset );  onGC4GetAll( evt ); return true;
+    case MTYP_CANGC6:    m_NoteBook->SetSelection( 8 - offset );  onGC6GetAll( evt ); return true;
+    case MTYP_CANGC7:    m_NoteBook->SetSelection( 9 - offset );  onGC7GetAll( evt ); return true;
+    case MTYP_CANGC8:    m_NoteBook->SetSelection( 10 - offset );  onGC8GetAll( evt ); return true;
+    case MTYP_CANGCLN:   m_NoteBook->SetSelection( 11 - offset ); onGCLNGetAll( evt ); return true;
     }
   }
+  return false;
 }
 
 void CBusNodeDlg::onSetPage(wxCommandEvent& event) {
@@ -571,7 +575,10 @@ void CBusNodeDlg::onOK( wxCommandEvent& event )
   if( m_CBus != NULL ) {
     NodeOp.base.del(m_CBus);
   }
+  m_Timer->Stop();
+  m_ReportTimer->Stop();
   delete m_Timer;
+  delete m_ReportTimer;
   EndModal( wxID_OK );
 }
 
@@ -615,13 +622,14 @@ void CBusNodeDlg::onIndexActivated( wxListEvent& event ) {
   onIndexActivated(index);
 }
 
-void CBusNodeDlg::onIndexActivated( int index ) {
+bool CBusNodeDlg::onIndexActivated( int index ) {
   iONode node = (iONode)m_IndexList2->GetItemData(index);
   if( node != NULL ) {
-    selectPage4Type(wCBusNode.getmanuid(node), wCBusNode.getmtyp(node));
+    return selectPage4Type(wCBusNode.getmanuid(node), wCBusNode.getmtyp(node));
   }
   else
     TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+  return false;
 }
 
 void CBusNodeDlg::onQuery( wxCommandEvent& event ) {
@@ -787,6 +795,40 @@ void CBusNodeDlg::eventGetAll() {
   wProgram.setdecaddr( cmd, nn );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+
+  if( m_bReporting ) {
+    bool knownType = false;
+    m_iReportIdx++;
+
+    int count = m_IndexList2->GetItemCount();
+
+    while( !knownType && m_iReportIdx < count ) {
+
+      iONode node = (iONode)m_IndexList2->GetItemData(m_iReportIdx);
+      if( node != NULL ) {
+        if( wCBusNode.getmanuid(node) == MANU_ROCRAIL ) {
+          switch( wCBusNode.getmtyp(node) ) {
+          case MTYP_CANGC2: knownType = true; break;
+          case MTYP_CANGC4: knownType = true; break;
+          case MTYP_CANGC6: knownType = true; break;
+          }
+        }
+      }
+
+      if( knownType ) {
+        // On the event queue.
+        TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "report index is %d", m_iReportIdx);
+        m_ReportTimer->Start( 2500, wxTIMER_ONE_SHOT );
+        break;
+      }
+      else
+        m_iReportIdx++;
+    }
+
+    if( !knownType && m_iReportIdx >= count ) {
+      m_ReportTimer->Start( 2500, wxTIMER_ONE_SHOT );
+    }
+  }
 }
 
 void CBusNodeDlg::onEvtGetVar( wxCommandEvent& event ) {
@@ -1217,6 +1259,15 @@ void CBusNodeDlg::gc6SetServoEvent(int idx, int nn, int addr) {
     gc6FbAddr[(idx-4)+1]->SetValue(addr);
   }
 
+  if( m_bReporting) {
+    // Lookup the Rocrail object ID.
+    const char* id = wxGetApp().findID( idx < 4 , addr);
+    FileOp.fmt(m_ReportFile, "\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
+        m_GC6CanID->GetValue(), m_NodeNumber->GetValue(), nn, addr, idx < 4 ?"servo":"sensor", id );
+    FileOp.flush(m_ReportFile);
+ }
+
+
 }
 
 
@@ -1626,6 +1677,13 @@ void CBusNodeDlg::onGC2Set( wxCommandEvent& event ) {
 
 
 void CBusNodeDlg::OnTimer(wxTimerEvent& event) {
+  if( event.GetId() == ME_ReportTimer ) {
+    wxCommandEvent cmd(wxEVT_COMMAND_BUTTON_CLICKED);
+    m_Report->Enable(true);
+    wxPostEvent( m_Report, cmd );
+    return;
+  }
+
   TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999,
       "timer gc1e=%d[%d] gc2=%d[%d] gc4=%d[%d] gc6=%d[%d] gcln=%d[%d] gc8=%d[%d]",
       m_bGC1eSetAll, m_GC1eSetIndex, m_bGC2SetAll, m_GC2SetIndex, m_bGC4SetAll, m_GC4SetIndex,
@@ -2315,6 +2373,29 @@ void CBusNodeDlg::onGCA( wxMouseEvent& event ) {
 
 void CBusNodeDlg::onReport( wxCommandEvent& event ) {
   int count = m_IndexList2->GetItemCount();
+
+  if( m_bReporting ) {
+    if( m_iReportIdx >= count ) {
+      TraceOp.trc( "cbusnode", TRCLEVEL_INFO, __LINE__, 9999, "end of reporting, index is %d", m_iReportIdx);
+      m_bReporting = false;
+      m_iReportIdx = 0;
+      m_Report->Enable(true);
+      m_QueryNN->Enable(true);
+      if(m_ReportFile != NULL) {
+        FileOp.close(m_ReportFile);
+        FileOp.base.del(m_ReportFile);
+        m_ReportFile = NULL;
+      }
+    }
+    else {
+      m_IndexList2->SetItemState(m_iReportIdx, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      onIndexSelect(m_iReportIdx);
+      onIndexActivated(m_iReportIdx);
+      m_Report->Enable(false);
+    }
+    return;
+  }
+
   m_iReportIdx = 0;
 
   if( count == 0 ) {

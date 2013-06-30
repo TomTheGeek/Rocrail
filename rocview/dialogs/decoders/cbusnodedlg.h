@@ -78,7 +78,7 @@ class CBusNodeDlg : public cbusnodedlggen
   void initVarList(iONode node);
   void initEvtList(iONode node);
   void initType(int manu, int mtype, const char* ver);
-  void selectPage4Type( int manu, int mtype );
+  bool selectPage4Type( int manu, int mtype );
   iONode getNode(int nr, int mtype, int manu, const char* ver, int canid=0);
   iONode getNodeVar(int nn, int mtype, int nr, int val);
   iONode getNodeEvent(int nn, int mtype, int evnn, int evaddr, int evnr, int evval);
@@ -111,6 +111,7 @@ class CBusNodeDlg : public cbusnodedlggen
   void sortOnColumn( int col );
 
   wxTimer* m_Timer;
+  wxTimer* m_ReportTimer;
   iOQueue m_Queue;
   int m_GC2SetIndex;
   int m_GC6SetIndex;
@@ -147,7 +148,7 @@ protected:
   void onIndexSelect2( wxListEvent& event );
   void onIndexSelect( int index );
   void onIndexActivated( wxListEvent& event );
-  void onIndexActivated( int index );
+  bool onIndexActivated( int index );
   void onVarSelect( wxCommandEvent& event );
   void onVarValue( wxSpinEvent& event );
   void onVarBit( wxCommandEvent& event );
