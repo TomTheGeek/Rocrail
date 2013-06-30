@@ -2818,7 +2818,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
       if( wBlock.issmallsymbol(m_Props) && StrOp.len(locoid) > 0 )
         l_locidStr = StrOp.fmt( "%s", locoid );
-      else if( wBlock.issmallsymbol(m_Props) )
+      else if( showID && wBlock.issmallsymbol(m_Props) )
         l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
       else {
         if(showID)
@@ -2908,7 +2908,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       else {
         if( wBlock.issmallsymbol(m_Props) && StrOp.len(locoid) > 0 )
           l_locidStr = StrOp.fmt( "%s", locoid );
-        else if( wBlock.issmallsymbol(m_Props) )
+        else if( showID && wBlock.issmallsymbol(m_Props) )
           l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
         else {
           if(showID)
