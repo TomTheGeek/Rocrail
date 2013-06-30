@@ -140,6 +140,7 @@ class CBusNodeDlg : public cbusnodedlggen
   iOFile m_ReportFile;
   int m_iReportIdx;
   bool m_bReporting;
+  int m_iReportCanID;
 
 protected:
 	// Handlers for cbusnodedlggen events.

@@ -1030,7 +1030,7 @@ static iONode __evaluateXFrame(iOCBUS cbus, byte* frame) {
         // wProgram.setcmd( node, wProgram.datarsp );
         // wProgram.setcv( node, cv );
         wProgram.setaddr( node, addr );
-        wProgram.setmodid( node, modid );
+        wProgram.setmodid( node, modid&0x7F );
         if( data->iid != NULL )
           wProgram.setiid( node, data->iid );
 

@@ -605,6 +605,7 @@ void CBusNodeDlg::onIndexSelect( int index ) {
   if( node != NULL ) {
     initType(wCBusNode.getmanuid(node), wCBusNode.getmtyp(node), wCBusNode.getversion(node));
     m_NodeNumber->SetValue(wCBusNode.getnr(node));
+    m_iReportCanID = wCBusNode.getcanid(node)&0x7F;
     initVarList(node);
     initEvtList(node);
     char* title = StrOp.fmt("CBUS: %s %d",
@@ -1232,7 +1233,9 @@ void CBusNodeDlg::gc2SetPort(int port, int conf, int nn, int addr) {
       gc2NN[port]->SetValue(0);
   }
 
-  if( m_bReporting && nn != -1 && addr != -1) {
+  TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "reporting canid=%d received canid=%d", m_iReportCanID, m_GC2CanID->GetValue()&0x7F );
+
+  if( m_bReporting && nn != -1 && addr != -1 && m_iReportCanID == (m_GC2CanID->GetValue()&0x7F)) {
     // Lookup the Rocrail object ID.
     const char* id = wxGetApp().findID( !input, addr);
     FileOp.fmt(m_ReportFile, "\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
@@ -1259,7 +1262,9 @@ void CBusNodeDlg::gc6SetServoEvent(int idx, int nn, int addr) {
     gc6FbAddr[(idx-4)+1]->SetValue(addr);
   }
 
-  if( m_bReporting) {
+  TraceOp.trc( "cbusnodedlg", TRCLEVEL_INFO, __LINE__, 9999, "reporting canid=%d received canid=%d", m_iReportCanID, m_GC6CanID->GetValue()&0x7F );
+
+  if( m_bReporting && m_iReportCanID == (m_GC6CanID->GetValue()&0x7F)) {
     // Lookup the Rocrail object ID.
     const char* id = wxGetApp().findID( idx < 4 , addr);
     FileOp.fmt(m_ReportFile, "\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
