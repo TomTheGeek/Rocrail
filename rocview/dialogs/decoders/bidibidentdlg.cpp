@@ -1785,6 +1785,8 @@ void BidibIdentDlg::onReport( wxCommandEvent& event ) {
       }
     }
 
+    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"open report %s...", FileOp.getFilename(l_ReportFile) );
+    wxShell(wxString(FileOp.getFilename(l_ReportFile), wxConvUTF8));
     FileOp.base.del(l_ReportFile);
   }
   fdlg->Destroy();
