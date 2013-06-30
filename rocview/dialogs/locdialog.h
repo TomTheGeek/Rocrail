@@ -564,6 +564,7 @@ public:
     wxStaticText* m_labBBTCorrection;
     wxSpinCtrl* m_BBTCorrection;
     wxStaticText* m_labBBTPer;
+    wxCheckBox* m_BBTUseFromBlockID;
     wxStaticText* m_labBBTCalculation;
     wxListCtrl* m_BBTList2;
     wxStaticText* m_labBBTBlock;

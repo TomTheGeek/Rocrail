@@ -489,6 +489,14 @@ static void _curblock( iILcDriverInt inst, const char* blockid ) {
   data->curBlock  = data->model->getBlock( data->model, blockid );
 }
 
+static const char* _getCurblock( iILcDriverInt inst ) {
+  iOLcDriverData data = Data(inst);
+  if( data->curBlock!= NULL )
+    return data->curBlock->base.id( data->curBlock );
+  else
+    return NULL;
+}
+
 static void _gotoblock( iILcDriverInt inst, const char* blockid ) {
   iOLcDriverData data = Data(inst);
   data->gotoBlock = blockid;

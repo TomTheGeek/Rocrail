@@ -1430,17 +1430,32 @@ static void __BBT(iOLoc loc) {
       if( data->bbtInTimer == 0 ) {
         data->bbtIn = SystemOp.getTick();
         data->bbtInBlock = data->bbtEnterBlock;
+        data->bbtPrevBlock = data->driver->getCurblock(data->driver);
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtInBlock );
       }
     }
 
     if( data->bbtCycleSpeed == 0 ) {
-      iONode bbt = (iONode)MapOp.get( data->bbtMap, data->bbtEnterBlock );
-      data->bbtInterval = 10;
+      char* key = NULL;
+      iONode bbt = NULL;
+      data->bbtPrevBlock = data->driver->getCurblock(data->driver);
+      if( wLoc.isbbtusefromblock( data->props ) )
+        key = StrOp.fmt("%s-%s", data->bbtEnterBlock, data->bbtPrevBlock);
+      else
+        key = StrOp.fmt("%s", data->bbtEnterBlock);
+
+      bbt = (iONode)MapOp.get( data->bbtMap, key );
+
       data->bbtCycleNr = 0;
       if( bbt != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-Record found: %s", key);
         data->bbtInterval = wBBT.getinterval(bbt) / bbtsteps;
       }
+      else {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-Record **not** found: %s", key);
+        data->bbtInterval = 10;
+      }
+      StrOp.free(key);
       data->bbtSpeed = data->drvSpeed;
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-ENTER interval=%d block=%s V_enter=%d",
           bbt != NULL ? wBBT.getinterval(bbt):100, data->bbtEnterBlock, data->bbtSpeed );
@@ -1477,20 +1492,20 @@ static void __BBT(iOLoc loc) {
 
   if( data->bbtEnter != 0 && data->bbtIn != 0 && data->bbtEnterBlock != NULL && data->bbtInBlock != NULL ) {
     /*data->prevBlock*/
-    char* key = StrOp.fmt("%s-%s", data->bbtInBlock, data->prevBlock);
+    char* key = StrOp.fmt("%s-%s", data->bbtInBlock, data->bbtPrevBlock);
     iONode bbt = (iONode)MapOp.get( data->bbtMap, key );
-    if( bbt == NULL ) {
+    if( !wLoc.isbbtusefromblock( data->props ) || bbt == NULL ) {
       bbt = (iONode)MapOp.get( data->bbtMap, data->bbtInBlock );
     }
 
     if( data->bbtIn >= data->bbtEnter && StrOp.equals(data->bbtEnterBlock, data->bbtInBlock) ) {
       int interval = (int)(data->bbtIn - data->bbtEnter);
       if( bbt == NULL ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT creating node for block=%s from=%s", data->bbtInBlock, data->prevBlock );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT creating node for block=%s from=%s", data->bbtInBlock, data->bbtPrevBlock );
         bbt = NodeOp.inst( wBBT.name(), data->props, ELEMENT_NODE );
         NodeOp.addChild(data->props, bbt);
         wBBT.setbk(bbt, data->bbtInBlock);
-        wBBT.setfrombk(bbt, data->prevBlock);
+        wBBT.setfrombk(bbt, data->bbtPrevBlock);
         MapOp.put(data->bbtMap, key, (obj)bbt);
       }
       else {
@@ -1527,6 +1542,7 @@ static void __BBT(iOLoc loc) {
 
     data->bbtEnterBlock = NULL;
     data->bbtInBlock    = NULL;
+    data->bbtPrevBlock  = NULL;
     data->bbtCycleSpeed = 0;
     data->bbtEnter      = 0;
     data->bbtIn         = 0;
@@ -1851,18 +1867,18 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
       data->bbtCycleSpeed = 0;
       data->bbtInTimer    = 0;
       data->bbtEnter      = SystemOp.getTick();
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "BBT enter=%ld block=%s", data->bbtEnter, data->bbtEnterBlock );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT enter=%ld block=%s", data->bbtEnter, data->bbtEnterBlock );
     }
     else if( evt == pre2in_event && wLoc.isinatpre2in(data->props) && data->bbtIn == 0 && data->bbtEnter > 0 ) {
       data->bbtInBlock = blockid;
       data->bbtIn = SystemOp.getTick();
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "BBT pre2in=%ld block=%s", data->bbtIn, data->bbtInBlock );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT pre2in=%ld block=%s", data->bbtIn, data->bbtInBlock );
     }
     else if( evt == in_event && data->bbtIn == 0 && data->bbtEnter > 0 ) {
       if( timer == 0 ) {
         data->bbtInBlock = blockid;
         data->bbtIn = SystemOp.getTick();
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtInBlock );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT in=%ld block=%s", data->bbtIn, data->bbtInBlock );
       }
       else {
         data->bbtInTimer = timer / 10;
@@ -3066,8 +3082,12 @@ static void __initBBTmap( iOLoc loc ) {
   iOLocData data = Data(loc);
   iONode bbt = NodeOp.findNode( data->props, wBBT.name() );
   while( bbt != NULL ) {
-    char* key = StrOp.fmt("%s-%s", wBBT.getbk(bbt), wBBT.getfrombk(bbt));
-    MapOp.put( data->bbtMap, wBBT.getbk(bbt), (obj)bbt );
+    char* key = NULL;
+    if( wLoc.isbbtusefromblock( data->props ) )
+      key = StrOp.fmt("%s-%s", wBBT.getbk(bbt), wBBT.getfrombk(bbt));
+    else
+      key = StrOp.fmt("%s", wBBT.getbk(bbt));
+    MapOp.put( data->bbtMap, key, (obj)bbt );
     StrOp.free(key);
     bbt = NodeOp.findNextNode( data->props, bbt );
   };

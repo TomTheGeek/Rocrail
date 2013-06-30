@@ -104,6 +104,9 @@
       <param name="inst" vt="this" remark="LcDriver instance"/>
       <param name="blockid" vt="const char*" remark="New current block."/>
     </fun>
+    <fun name="getCurblock" vt="const char*">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+    </fun>
     <fun name="gotoblock" vt="void">
       <param name="inst" vt="this" remark="LcDriver instance"/>
       <param name="blockid" vt="const char*" remark="Block to find."/>
