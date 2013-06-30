@@ -1751,11 +1751,15 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
       }
 
       if( feature == FEATURE_BM_SIZE && !bidibnode->sod ) {
+        iONode child = __getIniNode(bidib, bidibnode->uid);
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting sensor count to %d for %08X", value, bidibnode->uid );
         bidibnode->sensorcnt = value;
         if( bidibnode->pendingfeature == feature )
           bidibnode->pendingfeature = -1;
         __SoD(bidib, bidibnode);
+        if( child!= NULL ) {
+          wBiDiBnode.setsensorcnt(child, value);
+        }
       }
       else {
         iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );

@@ -38,6 +38,7 @@
 #include "rocs/public/trace.h"
 #include "rocs/public/system.h"
 #include "rocs/public/strtok.h"
+#include "rocs/public/file.h"
 
 #include "rocview/public/guiapp.h"
 #include "rocview/wrapper/public/Gui.h"
@@ -1736,4 +1737,57 @@ void BidibIdentDlg::onVendorCVSet( wxCommandEvent& event ) {
   }
 }
 
+
+void BidibIdentDlg::onReport( wxCommandEvent& event ) {
+  const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  wxString ms_FileExt = _T("BiDiB-Report (*.csv)|*.csv");
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("saveas"), wxString(l_openpath,wxConvUTF8),
+                       wxString::Format( _T("bidib-report.csv")), ms_FileExt, wxFD_SAVE);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    iONode model = wxGetApp().getModel();
+    // Check for existence.
+    wxString path = fdlg->GetPath();
+    if( FileOp.exist( path.mb_str(wxConvUTF8) ) ) {
+      int action = wxMessageDialog( this, wxGetApp().getMsg("fileexistwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+      if( action == wxID_NO ) {
+        fdlg->Destroy();
+        return;
+      }
+    }
+    if( !path.Contains( _T(".csv") ) )
+      path.Append( _T(".csv") );
+
+    iOFile l_ReportFile = FileOp.inst( path.mb_str(wxConvUTF8), OPEN_WRITE );
+    FileOp.fmt(l_ReportFile, "\"bus\",\"port\",\"I/O\",\"ID\"\n");
+    FileOp.flush(l_ReportFile);
+
+    iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
+    if( l_RocrailIni != NULL ) {
+      iONode digint = wRocRail.getdigint(l_RocrailIni);
+      while( digint != NULL ) {
+        iONode bidib = wDigInt.getbidib(digint);
+        if( bidib != NULL ) {
+          m_IID->SetValue( wxString( wDigInt.getiid(digint), wxConvUTF8) );
+          iONode bidibnode = wBiDiB.getbidibnode(bidib);
+          while( bidibnode != NULL ) {
+            if( wBiDiBnode.getsensorcnt(bidibnode) > 0 ) {
+              for( int i = 0; i < wBiDiBnode.getsensorcnt(bidibnode); i++ ) {
+                const char* id = wxGetApp().findID( false, i+1, wBiDiBnode.getuid(bidibnode) );
+                FileOp.fmt(l_ReportFile, "\"%d\",\"%d\",\"%s\",\"%s\"\n",
+                    wBiDiBnode.getuid(bidibnode), i+1, "sensor", id);
+              }
+            }
+            bidibnode = wBiDiB.nextbidibnode( bidib, bidibnode );
+          }
+          break;
+        }
+        digint = wRocRail.nextdigint(l_RocrailIni, digint);
+      }
+    }
+
+    FileOp.base.del(l_ReportFile);
+  }
+  fdlg->Destroy();
+
+}
 

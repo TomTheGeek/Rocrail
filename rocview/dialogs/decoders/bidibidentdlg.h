@@ -133,6 +133,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onFbLogo( wxMouseEvent& event );
     void onProductName( wxMouseEvent& event );
     int getProductID(int uid);
+    void onReport( wxCommandEvent& event );
 
 	public:
 		/** Constructor */

@@ -1296,7 +1296,7 @@ void RocGui::setModel( iONode node ) {
     m_Model = (iONode)node->base.clone( node );
 }
 
-const char* RocGui::findID( bool output, int addr ) {
+const char* RocGui::findID( bool output, int addr, int bus ) {
   // TODO: Lookup ID in model.
   if( m_Model != NULL ) {
     if( output ) {
@@ -1404,7 +1404,7 @@ const char* RocGui::findID( bool output, int addr ) {
         int cnt = NodeOp.getChildCnt( fblist );
         for( int i = 0; i < cnt; i++ ) {
           iONode fb = NodeOp.getChild( fblist, i );
-          if( addr == wFeedback.getaddr( fb ) ) {
+          if( addr == wFeedback.getaddr( fb ) && wFeedback.getbus(fb) == bus ) {
             return wFeedback.getid( fb );
           }
         }
