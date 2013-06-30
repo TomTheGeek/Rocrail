@@ -305,6 +305,7 @@ void BidibIdentDlg::initLabels() {
   m_labClass->SetLabel(wxGetApp().getMsg( "class" ));
   m_labUID->SetLabel(wxGetApp().getMsg( "uid" ));
   m_labVersion->SetLabel(wxGetApp().getMsg( "version" ));
+  m_Report->SetLabel(wxGetApp().getMenu( "report" ));
 
   // Features
   m_labIID->SetLabel(wxGetApp().getMsg( "iid" ));

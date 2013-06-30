@@ -22693,4 +22693,7 @@
   <Msg id="countedcars">
     <en txt="Counted cars"/>
   </Msg>
+  <Msg id="report" dialog="true">
+    <en txt="Report"/>
+  </Msg>
 </Messages>

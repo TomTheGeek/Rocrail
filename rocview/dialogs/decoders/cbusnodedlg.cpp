@@ -139,6 +139,7 @@ void CBusNodeDlg::initLabels() {
   //m_IndexDelete->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_labIndexIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_QueryNN->SetLabel( wxGetApp().getMsg( "query" ) );
+  m_Report->SetLabel(wxGetApp().getMenu( "report" ));
 
   m_IndexList2->InsertColumn(0, wxGetApp().getMsg( "nodenumber" ), wxLIST_FORMAT_RIGHT );
   m_IndexList2->InsertColumn(1, wxT( "CANID" ), wxLIST_FORMAT_RIGHT );
