@@ -590,6 +590,10 @@ void CBusNodeDlg::onSetNodeNumber( wxCommandEvent& event ) {
 
 void CBusNodeDlg::onIndexSelect2( wxListEvent& event ) {
   int index = event.GetIndex();
+  onIndexSelect(index);
+}
+
+void CBusNodeDlg::onIndexSelect( int index ) {
   iONode node = (iONode)m_IndexList2->GetItemData(index);
   if( node != NULL ) {
     initType(wCBusNode.getmanuid(node), wCBusNode.getmtyp(node), wCBusNode.getversion(node));
@@ -608,6 +612,10 @@ void CBusNodeDlg::onIndexSelect2( wxListEvent& event ) {
 
 void CBusNodeDlg::onIndexActivated( wxListEvent& event ) {
   int index = event.GetIndex();
+  onIndexActivated(index);
+}
+
+void CBusNodeDlg::onIndexActivated( int index ) {
   iONode node = (iONode)m_IndexList2->GetItemData(index);
   if( node != NULL ) {
     selectPage4Type(wCBusNode.getmanuid(node), wCBusNode.getmtyp(node));
@@ -1161,8 +1169,9 @@ void CBusNodeDlg::gc2SetPort(int port, int conf, int nn, int addr) {
   if( addr != -1 )
     gc2Addr[port]->SetValue(addr);
 
+  int input = 0;
   if( conf != -1 ) {
-    int input  = (conf & 0x01) ? 1:0;
+    input  = (conf & 0x01) ? 1:0;
     int delay  = (conf & 0x02) ? 1:0;
     int ir     = (conf & 0x08) ? 1:0;
 
@@ -1180,6 +1189,15 @@ void CBusNodeDlg::gc2SetPort(int port, int conf, int nn, int addr) {
     if( input )
       gc2NN[port]->SetValue(0);
   }
+
+  if( m_bReporting && nn != -1 && addr != -1) {
+    // Lookup the Rocrail object ID.
+    const char* id = wxGetApp().findID( !input, addr);
+    FileOp.fmt(m_ReportFile, "\"%d\",\"%d\",\"%d\",\"%d\",\"%s\",\"%s\"\n",
+        m_GC2CanID->GetValue(), m_NodeNumber->GetValue(), nn, addr, input ?"input":"output", id );
+    FileOp.flush(m_ReportFile);
+ }
+
 
 }
 
@@ -2294,4 +2312,49 @@ void CBusNodeDlg::onLogo( wxMouseEvent& event ) {
 void CBusNodeDlg::onGCA( wxMouseEvent& event ) {
   wxLaunchDefaultBrowser(wxT("http://www.phgiling.net"), wxBROWSER_NEW_WINDOW );
 }
+
+void CBusNodeDlg::onReport( wxCommandEvent& event ) {
+  int count = m_IndexList2->GetItemCount();
+  m_iReportIdx = 0;
+
+  if( count == 0 ) {
+    return;
+  }
+
+  const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  wxString ms_FileExt = _T("CBUS-Report (*.csv)|*.csv");
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("saveas"), wxString(l_openpath,wxConvUTF8),
+                       wxString::Format( _T("cbus-report.csv")), ms_FileExt, wxFD_SAVE);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    iONode model = wxGetApp().getModel();
+    // Check for existence.
+    wxString path = fdlg->GetPath();
+    if( FileOp.exist( path.mb_str(wxConvUTF8) ) ) {
+      int action = wxMessageDialog( this, wxGetApp().getMsg("fileexistwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+      if( action == wxID_NO ) {
+        fdlg->Destroy();
+        return;
+      }
+    }
+    if( !path.Contains( _T(".csv") ) )
+      path.Append( _T(".csv") );
+
+    m_ReportFile = FileOp.inst( path.mb_str(wxConvUTF8), OPEN_WRITE );
+    m_bReporting = true;
+    FileOp.fmt(m_ReportFile, "\"canid\",\"ownnodenr.\",\"eventnodenr.\",\"eventnr.\",\"I/O\",\"ID\"\n");
+    FileOp.flush(m_ReportFile);
+
+    if( m_iReportIdx < count ) {
+      m_Report->Enable(false);
+      m_QueryNN->Enable(false);
+      m_IndexList2->SetItemState(m_iReportIdx, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      onIndexSelect(m_iReportIdx);
+      onIndexActivated(m_iReportIdx);
+    }
+  }
+  fdlg->Destroy();
+
+
+}
+
 
