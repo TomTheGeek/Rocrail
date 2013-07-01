@@ -1709,9 +1709,14 @@ static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata) {
       data->defaultprog = node;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, classname);
     }
-    if( data->defaultswitch == NULL && StrOp.find(classname, wBiDiBnode.class_switch) != NULL ) {
-      data->defaultswitch = node;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, classname);
+    if( StrOp.find(classname, wBiDiBnode.class_switch) != NULL ) {
+      byte msgdata[32];
+      if(data->defaultswitch == NULL) {
+        data->defaultswitch = node;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, classname);
+      }
+      msgdata[0] = FEATURE_CTRL_SERVO_COUNT;
+      data->subWrite((obj)bidib, data->defaultswitch->path, MSG_FEATURE_GET, msgdata, 1, data->defaultswitch);
     }
 
     StrOp.free(classname);
@@ -1730,6 +1735,8 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
   iOBiDiBData data = Data(bidib);
 
   if( bidibnode != NULL ) {
+    iONode child = __getIniNode(bidib, bidibnode->uid);
+
     if( Type == MSG_FEATURE_COUNT ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
           "MSG_FEATURE_COUNT, uid=%08X features=%d", bidibnode->uid, pdata[0] );
@@ -1750,8 +1757,13 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "watchdog timer set to %d for %08X", value, bidibnode->uid );
       }
 
+      if( feature == FEATURE_CTRL_SERVO_COUNT ) {
+        if( child!= NULL ) {
+          wBiDiBnode.setservocnt(child, value);
+        }
+      }
+
       if( feature == FEATURE_BM_SIZE && !bidibnode->sod ) {
-        iONode child = __getIniNode(bidib, bidibnode->uid);
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting sensor count to %d for %08X", value, bidibnode->uid );
         bidibnode->sensorcnt = value;
         if( bidibnode->pendingfeature == feature )

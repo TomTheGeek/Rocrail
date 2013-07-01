@@ -537,7 +537,13 @@
           <var name="vendor" vt="int" defval="0" remark="DCC vendor ID."/>
           <var name="version" vt="string" defval="" remark="Software version."/>
           <var name="sensorcnt" vt="int" defval="0" remark="Number of sensors."/>
-          <var name="portcnt" vt="int" defval="0" remark="Number of ports."/>
+          <var name="sportcnt" vt="int" defval="0" remark="Number of ports."/>
+          <var name="lportcnt" vt="int" defval="0" remark="Number of ports."/>
+          <var name="inputcnt" vt="int" defval="0" remark="Number of ports."/>
+          <var name="servocnt" vt="int" defval="0" remark="Number of ports."/>
+          <var name="soundcnt" vt="int" defval="0" remark="Number of ports."/>
+          <var name="motorcnt" vt="int" defval="0" remark="Number of ports."/>
+          <var name="analogcnt" vt="int" defval="0" remark="Number of ports."/>
         </bidibnode>
       </bidib>
 

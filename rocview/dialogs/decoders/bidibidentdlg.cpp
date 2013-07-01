@@ -1778,6 +1778,13 @@ void BidibIdentDlg::onReport( wxCommandEvent& event ) {
                     wBiDiBnode.getuid(bidibnode), i+1, "sensor", id);
               }
             }
+            if( wBiDiBnode.getservocnt(bidibnode) > 0 ) {
+              for( int i = 0; i < wBiDiBnode.getservocnt(bidibnode); i++ ) {
+                const char* id = wxGetApp().findID( true, i+1, wBiDiBnode.getuid(bidibnode), wProgram.porttype_servo );
+                FileOp.fmt(l_ReportFile, "\"%d\",\"%d\",\"%s\",\"%s\"\n",
+                    wBiDiBnode.getuid(bidibnode), i+1, "servo", id);
+              }
+            }
             bidibnode = wBiDiB.nextbidibnode( bidib, bidibnode );
           }
           break;
