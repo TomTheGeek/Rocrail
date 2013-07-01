@@ -1306,11 +1306,11 @@ const char* RocGui::findID( bool output, int addr, int bus, int porttype ) {
         for( int i = 0; i < cnt; i++ ) {
           iONode sw = NodeOp.getChild( swlist, i );
           if( addr == wSwitch.getport1( sw ) || addr == wSwitch.getaddr1( sw ) ) {
-            if( wSwitch.getporttype(sw) == porttype )
+            if( wSwitch.getporttype(sw) == porttype && wSwitch.getbus(sw) == bus )
               return wSwitch.getid( sw );
           }
           if( addr == wSwitch.getport2( sw ) || addr == wSwitch.getaddr2( sw ) ) {
-            if( wSwitch.getporttype(sw) == porttype )
+            if( wSwitch.getporttype(sw) == porttype && wSwitch.getbus(sw) == bus  )
               return wSwitch.getid( sw );
           }
         }
@@ -1321,19 +1321,19 @@ const char* RocGui::findID( bool output, int addr, int bus, int porttype ) {
         for( int i = 0; i < cnt; i++ ) {
           iONode sg = NodeOp.getChild( sglist, i );
           if( addr == wSignal.getport1( sg ) || addr == wSignal.getaddr( sg ) ) {
-            if( wSignal.getporttype(sg) == porttype )
+            if( wSignal.getporttype(sg) == porttype && wSignal.getbus(sg) == bus  )
               return wSignal.getid( sg );
           }
           if( addr == wSignal.getport2( sg ) || addr == wSignal.getaddr2( sg ) ) {
-            if( wSignal.getporttype(sg) == porttype )
+            if( wSignal.getporttype(sg) == porttype && wSignal.getbus(sg) == bus )
               return wSignal.getid( sg );
           }
           if( addr == wSignal.getport3( sg ) || addr == wSignal.getaddr3( sg ) ) {
-            if( wSignal.getporttype(sg) == porttype )
+            if( wSignal.getporttype(sg) == porttype && wSignal.getbus(sg) == bus )
               return wSignal.getid( sg );
           }
           if( addr == wSignal.getport4( sg ) || addr == wSignal.getaddr4( sg ) ) {
-            if( wSignal.getporttype(sg) == porttype )
+            if( wSignal.getporttype(sg) == porttype && wSignal.getbus(sg) == bus )
               return wSignal.getid( sg );
           }
         }
@@ -1345,7 +1345,7 @@ const char* RocGui::findID( bool output, int addr, int bus, int porttype ) {
         for( int i = 0; i < cnt; i++ ) {
           iONode co = NodeOp.getChild( colist, i );
           if( addr == wOutput.getport( co ) || addr == wOutput.getaddr( co ) ) {
-            if( wOutput.getporttype(co) == porttype )
+            if( wOutput.getporttype(co) == porttype && wOutput.getbus(co) == bus )
               return wOutput.getid( co );
           }
         }

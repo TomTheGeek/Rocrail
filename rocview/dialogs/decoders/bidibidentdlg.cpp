@@ -1759,7 +1759,7 @@ void BidibIdentDlg::onReport( wxCommandEvent& event ) {
       path.Append( _T(".csv") );
 
     iOFile l_ReportFile = FileOp.inst( path.mb_str(wxConvUTF8), OPEN_WRITE );
-    FileOp.fmt(l_ReportFile, "\"bus\",\"port\",\"I/O\",\"ID\"\n");
+    FileOp.fmt(l_ReportFile, "\"uid\",\"port\",\"type\",\"RocrailID\"\n");
     FileOp.flush(l_ReportFile);
 
     iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
