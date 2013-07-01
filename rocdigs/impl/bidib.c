@@ -1769,6 +1769,25 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
         }
       }
 
+      if( feature == FEATURE_CTRL_INPUT_COUNT ) {
+        if( child!= NULL ) {
+          wBiDiBnode.setinputcnt(child, value);
+        }
+      }
+
+      if( feature == FEATURE_CTRL_SPORT_COUNT ) {
+        if( child!= NULL ) {
+          wBiDiBnode.setsportcnt(child, value);
+        }
+      }
+
+      if( feature == FEATURE_CTRL_LPORT_COUNT ) {
+        if( child!= NULL ) {
+          wBiDiBnode.setlportcnt(child, value);
+        }
+      }
+
+
       if( feature == FEATURE_BM_SIZE && !bidibnode->sod ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting sensor count to %d for %08X", value, bidibnode->uid );
         bidibnode->sensorcnt = value;
