@@ -2416,7 +2416,7 @@
         <var name="bbtevent" vt="bool" defval="False" remark="Flag for filter out at broadcast."/>
         <var name="bbtsteps" vt="int" defval="10" range="4-32"/>
         <var name="bbtmaxdiff" vt="int" defval="250" range="100-500" unit="10ms"/>
-        <var name="bbtcorrection" vt="int" defval="25" range="10-75" unit="%"/>
+        <var name="bbtcorrection" vt="int" defval="50" range="10-100" unit="%"/>
         <var name="bbtusefromblock" vt="bool" defval="True" remark="Use the from blockID also as key."/>
         <bbt cardinality="n" wrappername="BBT">
           <var name="bk" vt="string" defval="" range="*" remark="Block ID."/>

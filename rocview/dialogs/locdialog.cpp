@@ -2491,7 +2491,7 @@ void LocDialog::CreateControls()
     m_labBBTCorrection = new wxStaticText( m_BBTPanel, wxID_ANY, _("Correction"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer301->Add(m_labBBTCorrection, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_BBTCorrection = new wxSpinCtrl( m_BBTPanel, wxID_ANY, _T("25"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 10, 75, 25 );
+    m_BBTCorrection = new wxSpinCtrl( m_BBTPanel, wxID_ANY, _T("50"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 10, 100, 50 );
     itemFlexGridSizer301->Add(m_BBTCorrection, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labBBTPer = new wxStaticText( m_BBTPanel, wxID_ANY, _("%"), wxDefaultPosition, wxDefaultSize, 0 );
