@@ -1785,6 +1785,27 @@ void BidibIdentDlg::onReport( wxCommandEvent& event ) {
                     wBiDiBnode.getuid(bidibnode), i+1, "servo", id);
               }
             }
+            if( wBiDiBnode.getinputcnt(bidibnode) > 0 ) {
+              for( int i = 0; i < wBiDiBnode.getinputcnt(bidibnode); i++ ) {
+                const char* id = wxGetApp().findID( false, i+1, wBiDiBnode.getuid(bidibnode) );
+                FileOp.fmt(l_ReportFile, "\"%d\",\"%d\",\"%s\",\"%s\"\n",
+                    wBiDiBnode.getuid(bidibnode), i+1, "input", id);
+              }
+            }
+            if( wBiDiBnode.getsportcnt(bidibnode) > 0 ) {
+              for( int i = 0; i < wBiDiBnode.getsportcnt(bidibnode); i++ ) {
+                const char* id = wxGetApp().findID( false, i+1, wBiDiBnode.getuid(bidibnode), wProgram.porttype_switch );
+                FileOp.fmt(l_ReportFile, "\"%d\",\"%d\",\"%s\",\"%s\"\n",
+                    wBiDiBnode.getuid(bidibnode), i+1, "sport", id);
+              }
+            }
+            if( wBiDiBnode.getlportcnt(bidibnode) > 0 ) {
+              for( int i = 0; i < wBiDiBnode.getlportcnt(bidibnode); i++ ) {
+                const char* id = wxGetApp().findID( false, i+1, wBiDiBnode.getuid(bidibnode), wProgram.porttype_light );
+                FileOp.fmt(l_ReportFile, "\"%d\",\"%d\",\"%s\",\"%s\"\n",
+                    wBiDiBnode.getuid(bidibnode), i+1, "lport", id);
+              }
+            }
             bidibnode = wBiDiB.nextbidibnode( bidib, bidibnode );
           }
           break;

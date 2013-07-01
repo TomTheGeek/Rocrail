@@ -1709,14 +1709,20 @@ static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata) {
       data->defaultprog = node;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, classname);
     }
-    if( StrOp.find(classname, wBiDiBnode.class_switch) != NULL ) {
+    if( StrOp.find(classname, wBiDiBnode.class_switch) != NULL || StrOp.find(classname, wBiDiBnode.class_accessory) != NULL ) {
       byte msgdata[32];
       if(data->defaultswitch == NULL) {
         data->defaultswitch = node;
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, classname);
       }
       msgdata[0] = FEATURE_CTRL_SERVO_COUNT;
-      data->subWrite((obj)bidib, data->defaultswitch->path, MSG_FEATURE_GET, msgdata, 1, data->defaultswitch);
+      data->subWrite((obj)bidib, node->path, MSG_FEATURE_GET, msgdata, 1, node);
+      msgdata[0] = FEATURE_CTRL_INPUT_COUNT;
+      data->subWrite((obj)bidib, node->path, MSG_FEATURE_GET, msgdata, 1, node);
+      msgdata[0] = FEATURE_CTRL_SPORT_COUNT;
+      data->subWrite((obj)bidib, node->path, MSG_FEATURE_GET, msgdata, 1, node);
+      msgdata[0] = FEATURE_CTRL_LPORT_COUNT;
+      data->subWrite((obj)bidib, node->path, MSG_FEATURE_GET, msgdata, 1, node);
     }
 
     StrOp.free(classname);
