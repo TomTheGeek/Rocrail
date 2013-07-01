@@ -346,7 +346,6 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       wLoc.setfn( rsp, fn );
       wLoc.setV_raw( rsp, speed );
       wLoc.setV_rawMax( rsp, spcnt );
-      wLoc.setthrottleid( rsp, "vthrottle" );
       wLoc.setcmd( rsp, wLoc.dirfun );
     }
   }
@@ -392,7 +391,6 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       wFunCmd.setf2( rsp, f2 );
       wFunCmd.setf3( rsp, f3 );
       wFunCmd.setf4( rsp, f4 );
-      wLoc.setthrottleid( rsp, "vthrottle" );
       wFunCmd.setgroup( rsp, 1 );
     }
   }

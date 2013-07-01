@@ -2180,11 +2180,12 @@ static const char* _getSchedule( iOLoc inst, int* scidx ) {
 static void _setMode( iOLoc inst, const char* mode ) {
   iOLocData data = Data(inst);
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco [%s] mode=%s prevmode=%s", LocOp.getId(inst), mode, wLoc.getmode(data->props) );
-  wLoc.setmode(data->props, mode);
   /* Only take over the new mode if it is different; Broadcast to clients. */
   if( !StrOp.equals( wLoc.getmode(data->props), mode ) ) {
     iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Loco [%s] mode=%s prevmode=%s", LocOp.getId(inst), mode, wLoc.getmode(data->props) );
+    wLoc.setmode(data->props, mode);
 
     wLoc.setid( node, wLoc.getid( data->props ) );
     wLoc.setaddr( node, wLoc.getaddr( data->props ) );
