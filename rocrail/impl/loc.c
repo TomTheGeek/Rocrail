@@ -1422,7 +1422,7 @@ static void __BBT(iOLoc loc) {
   if( bbtcorrection < 10 || bbtcorrection > 75 )
     bbtcorrection = 25;
 
-  bbtcorrection = 100/25;
+  bbtcorrection = 100 / bbtcorrection;
 
   if( data->bbtEnter != 0 && data->bbtIn == 0  && data->bbtEnterBlock != NULL ) {
     if( data->bbtInTimer > 0 ) {
@@ -1529,7 +1529,7 @@ static void __BBT(iOLoc loc) {
         AppOp.broadcastEvent( broadcast );
       }
 
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-IN interval=%d block=%s", interval, data->bbtInBlock );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-IN interval=%d block=%s bbtcorrection=%d", interval, data->bbtInBlock, bbtcorrection );
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
