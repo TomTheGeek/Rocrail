@@ -18988,7 +18988,7 @@
     <em_GB txt="Light"/>
     <em_AU txt="Light"/>
     <pt txt="Luz"/>
-    <sr_latin txt="Svetlo"/>
+    <sr_latin txt="Laki"/>
     <ja txt="照明"/>
     <sv txt="Ljus."/>
     <zh_CN txt="灯"/>
@@ -19176,7 +19176,7 @@
     <da txt="Se bort fra optaget meddelelse"/>
     <nl txt="Negeer Busy meldingen"/>
     <ca txt="Ignora missatge d'ocupació"/>
-    <de txt="Belegtmeldung ignorieren"/>
+    <de txt="Busy-Meldungen ignorieren"/>
     <ru txt="Игнорировать сообщение Занято"/>
     <en_AU txt="Ignore Busy message"/>
     <en_CA txt="Ignore Busy message"/>
@@ -19682,7 +19682,7 @@
     <es txt="Habla para bloque"/>
     <ru txt="Говорить на блоке"/>
     <it txt="Comando Speak per il blocco"/>
-    <sr_latin txt="Govor za blok"/>
+    <sr_latin txt="Objava za blok"/>
     <cs txt="Hlášení v blocích"/>
     <zh_CN txt="区间的表述"/>
     <sl txt="Govor za odsek"/>
@@ -19816,7 +19816,7 @@
     <en_AU txt="Analyze"/>
     <es txt="Analizar"/>
     <it txt="Analyser"/>
-    <sr_latin txt="Analiziranje"/>
+    <sr_latin txt="Analiza"/>
     <ja txt="解析"/>
     <cs txt="Analyzovat"/>
     <sv txt="Analysera."/>
@@ -22440,6 +22440,7 @@
     <nl txt="Gast import"/>
     <it txt="Importa ospite"/>
     <sl txt="Uvoz gostov"/>
+    <sr_latin txt="Kao gost"/>
   </Msg>
   <Msg id="resetspeeddir">
     <en txt="Reset speed at direction change"/>
@@ -22466,6 +22467,7 @@
     <it txt="Codice slave"/>
     <zh_CN txt="从动代码"/>
     <de txt="Eingeschränkter Zugangscode"/>
+    <sr_latin txt="Korisnički kod"/>
   </Msg>
   <Msg id="textps">
     <en txt="Text pointsize"/>
@@ -22483,6 +22485,7 @@
     <it txt="Grafica dettagliata"/>
     <zh_CN txt="实现平滑"/>
     <sl txt="Glajenje slike"/>
+    <sr_latin txt="Učiniti glatkim"/>
   </Msg>
   <Msg id="overload">
     <en txt="Overload"/>
@@ -22559,7 +22562,7 @@
   <Msg id="accdectable" dialog="true">
     <en txt="Accessory table" alttxt="Accessory Decoders" tip="Accessory decoder table"/>
     <nl txt="Functie decoders"/>
-    <it txt="Tabella accessori"/>
+    <it txt="Accessori"/>
     <zh_CN txt="附件表"/>
     <sl txt="Seznam dodatne opreme"/>
     <de txt="Zubehör-Tabelle"/>
@@ -22649,6 +22652,7 @@
     <de txt="Macro Liste"/>
     <it txt="Mappa Macro"/>
     <nl txt="Macro overzicht"/>
+    <sr_latin txt="Makro mapa"/>
   </Msg>
   <Msg id="slowdown">
     <en txt="Slowdown"/>
@@ -22680,20 +22684,43 @@
   </Msg>
   <Msg id="preview">
     <en txt="Preview"/>
+    <sr_latin txt="Pregled"/>
+    <nl txt="Voorbeeld"/>
+    <de txt="Vorschau"/>
+    <it txt="Anteprima"/>
   </Msg>
   <Msg id="sensormonitor">
     <en txt="Sensor monitor"/>
+    <sr_latin txt="Monitor senzora"/>
+    <nl txt="Melder monitor"/>
+    <de txt="Rückmelder-Monitor"/>
+    <it txt="Controllo sensori"/>
   </Msg>
   <Msg id="wheelcount">
     <en txt="Wheel count"/>
+    <sr_latin txt="Broj točkova"/>
+    <nl txt="Aantal wielen"/>
+    <de txt="Rad-/ Achs-Zähler"/>
+    <it txt="Conta assi"/>
   </Msg>
   <Msg id="counter">
     <en txt="Counter"/>
+    <sr_latin txt="Brojač"/>
+    <nl txt="Teller"/>
+    <de txt="Zähler"/>
+    <it txt="Contatore"/>
   </Msg>
   <Msg id="countedcars">
     <en txt="Counted cars"/>
+    <sr_latin txt="Prebrojana kola"/>
+    <nl txt="Aantal wagons"/>
+    <de txt="gezählte Wagen"/>
+    <it txt="Carri contati"/>
   </Msg>
   <Msg id="report" dialog="true">
     <en txt="Report"/>
+    <nl txt="Overzicht"/>
+    <de txt="Bericht"/>
+    <it txt="Rapporto"/>
   </Msg>
 </Messages>
