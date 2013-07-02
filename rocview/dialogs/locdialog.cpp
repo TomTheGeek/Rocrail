@@ -3265,6 +3265,12 @@ void LocDialog::OnButtonBbtDeleteClick( wxCommandEvent& event )
     m_BBTSel = NULL;
     initBBT();
 
+    if( NodeOp.getChildCnt(m_Props) == 0 ) {
+      // ToDo: Work aroud for forcing the loco objects to remove all child nodes...
+      iONode node = NodeOp.inst( wCVByte.name(), m_Props, ELEMENT_NODE);
+      NodeOp.addChild( m_Props, node );
+    }
+
     if( m_BBTList2->GetItemCount() == 0 ) {
       m_BBTDelete->Enable(false);
       m_BBTDeleteAll->Enable(false);
@@ -3286,6 +3292,12 @@ void LocDialog::OnButtonBbtDeleteallClick( wxCommandEvent& event )
       NodeOp.base.del(bbt);
       bbt = wLoc.getbbt( m_Props );
     };
+
+    if( NodeOp.getChildCnt(m_Props) == 0 ) {
+      // ToDo: Work aroud for forcing the loco objects to remove all child nodes...
+      iONode node = NodeOp.inst( wCVByte.name(), m_Props, ELEMENT_NODE);
+      NodeOp.addChild( m_Props, node );
+    }
     initBBT();
     m_BBTDelete->Enable(false);
     m_BBTDeleteAll->Enable(false);
