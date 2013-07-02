@@ -448,7 +448,8 @@ void LocDialog::initLabels() {
 
   m_BBTList2->InsertColumn(0, wxGetApp().getMsg( "fromblock" ), wxLIST_FORMAT_LEFT );
   m_BBTList2->InsertColumn(1, wxGetApp().getMsg( "toblock" ), wxLIST_FORMAT_LEFT );
-  m_BBTList2->InsertColumn(2, wxGetApp().getMsg( "interval" ), wxLIST_FORMAT_LEFT );
+  m_BBTList2->InsertColumn(2, wxGetApp().getMsg( "interval" ), wxLIST_FORMAT_RIGHT );
+  m_BBTList2->InsertColumn(3, wxGetApp().getMsg( "count" ), wxLIST_FORMAT_RIGHT );
 
   m_labBBTMaxDiff->SetLabel( wxGetApp().getMsg( "maxdiff" ) );
   m_labBBTCorrection->SetLabel( wxGetApp().getMsg( "correction" ) );
@@ -3332,13 +3333,14 @@ void LocDialog::initBBT() {
     m_BBTList2->InsertItem( i, wxString(wBBT.getfrombk(bbt),wxConvUTF8) );
     m_BBTList2->SetItem( i, 1, wxString(wBBT.getbk(bbt), wxConvUTF8) );
     m_BBTList2->SetItem( i, 2, wxString::Format(wxT("%d"), wBBT.getinterval(bbt)) );
+    m_BBTList2->SetItem( i, 3, wxString::Format(wxT("%d"), wBBT.getcount(bbt)) );
     m_BBTList2->SetItemPtrData(i, (wxUIntPtr)bbt);
 
     i++;
     bbt = wLoc.nextbbt( m_Props, bbt );
   };
   // resize
-  for( int n = 0; n < 3; n++ ) {
+  for( int n = 0; n < 4; n++ ) {
     m_BBTList2->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
     int autoheadersize = m_BBTList2->GetColumnWidth(n);
     m_BBTList2->SetColumnWidth(n, wxLIST_AUTOSIZE);
