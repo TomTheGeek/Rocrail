@@ -138,7 +138,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
       data->next1Route->unLink(data->next1Route);
 
       if( data->next2Block == NULL || (data->next2Block != NULL && data->next2Block != data->curBlock) ) {
-        data->curBlock->unLock( data->curBlock, data->loc->getId( data->loc ) );
+        data->curBlock->unLock( data->curBlock, data->loc->getId( data->loc ), NULL );
       }
       else {
         data->curBlock->resetTrigs( data->curBlock );

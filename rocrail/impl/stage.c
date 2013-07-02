@@ -1517,7 +1517,7 @@ static Boolean __occSection(iIBlockBase inst, const char* secid, const char* lci
 
 
 /**  */
-static Boolean _unLock( iIBlockBase inst ,const char* locid ) {
+static Boolean _unLock( iIBlockBase inst ,const char* locid, const char* routeid ) {
   iOStageData data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock for loco %s", locid!=NULL?locid:"?" );
   if( locid != NULL ) {

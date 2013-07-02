@@ -526,7 +526,7 @@ static void __processCmd( struct OSelTab* inst ,iONode nodeA ) {
   if( StrOp.equals( wSwitch.unlock, cmdStr ) ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unlock seltab [%s]",
                  SelTabOp.base.id( inst ) );
-    SelTabOp.unLock((iIBlockBase)inst, data->lockedId );
+    SelTabOp.unLock((iIBlockBase)inst, data->lockedId, NULL );
     return;
   }
 
@@ -1074,7 +1074,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
           inst->base.id( inst ), data->lockedId );
       ok = False;
       if( block != NULL ) {
-        block->unLock(block, id);
+        block->unLock(block, id, NULL);
       }
     }
   }
@@ -1144,7 +1144,7 @@ static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
   iOSelTabData data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
              "reset selectiontable [%s]", inst->base.id( inst ) );
-  SelTabOp.unLock( inst, data->lockedId );
+  SelTabOp.unLock( inst, data->lockedId, NULL );
   ListOp.clear( data->lockedRouteList );
 
   {
@@ -1174,7 +1174,7 @@ static Boolean _setLocTour( iIBlockBase inst, const char* tourid ) {
 }
 
 /**  */
-static Boolean _unLock( iIBlockBase inst ,const char* id ) {
+static Boolean _unLock( iIBlockBase inst ,const char* id, const char* routeid ) {
   iOSelTabData data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlock for [%s]", id!=NULL?id:"?" );
 
@@ -1189,7 +1189,7 @@ static Boolean _unLock( iIBlockBase inst ,const char* id ) {
     if( block != NULL ) {
       int track = __getTrack4Loc(inst, id);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock FY block [%s] for [%s]", block->base.id(block), id );
-      block->unLock( block, id );
+      block->unLock( block, id, NULL );
     }
   }
   else if( StrOp.startsWith(id, wRoute.routelock) && wSelTab.ismanager(data->props) ) {

@@ -1885,7 +1885,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
 
 
   if( StrOp.equals( wTurntable.getcmd(nodeA), wSwitch.unlock ) ) {
-    TTOp.unLock( inst, data->lockedId );
+    TTOp.unLock( inst, data->lockedId, NULL );
   }
   else if( StrOp.equals( wTurntable.gettype( data->props ), wTurntable.locdec ) )
     return __cmd_locdec( (iOTT)inst, nodeA );
@@ -2675,7 +2675,7 @@ static Boolean _setLocTour( iIBlockBase inst, const char* tourid ) {
 
 
 
-static Boolean _unLock( iIBlockBase inst, const char* id ) {
+static Boolean _unLock( iIBlockBase inst, const char* id, const char* routeid ) {
   iOTTData data = Data(inst);
   if( StrOp.equals( id, data->lockedId ) ) {
     data->lockedId = NULL;
@@ -2746,7 +2746,7 @@ static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
   iOTTData data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
              "reset turntable [%s]", inst->base.id(inst) );
-  TTOp.unLock( inst, data->lockedId );
+  TTOp.unLock( inst, data->lockedId, NULL );
 }
 
 

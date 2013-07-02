@@ -86,7 +86,7 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
           return True;
         }
         else {
-          block->unLock( block, data->loc->getId( data->loc ) );
+          block->unLock( block, data->loc->getId( data->loc ), NULL );
           street->unLock( street, data->loc->getId( data->loc ), NULL, True, False );
           if(grouplocked) {
             unlockBlockGroup(inst, data->blockgroup);
@@ -97,7 +97,7 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
         }
       }
       else {
-        block->unLock( block, data->loc->getId( data->loc ) );
+        block->unLock( block, data->loc->getId( data->loc ), NULL );
         if(grouplocked) {
           unlockBlockGroup(inst, data->blockgroup);
         }

@@ -621,7 +621,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     iIBlockBase bl = ModelOp.getBlock( model, wAction.getoid( data->action ) );
     if( bl != NULL ) {
       if( StrOp.equals( wAction.block_unlock, wAction.getcmd( data->action ) ) ) {
-        bl->unLock(bl, wAction.getparam( data->action ));
+        bl->unLock(bl, wAction.getparam( data->action ), NULL);
       }
       else if( StrOp.equals( wAction.block_event, wAction.getcmd( data->action ) ) ) {
         bl->event(bl, True, wAction.getparam( data->action ), 0, 0, 0, NULL);
@@ -700,7 +700,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "stageblock: cmd %s",
           wAction.getcmd( data->action ) );
       if( StrOp.equals( wAction.block_unlock, wAction.getcmd( data->action ) ) ) {
-        bl->unLock(bl, wAction.getparam( data->action ));
+        bl->unLock(bl, wAction.getparam( data->action ), NULL);
       }
       else if( StrOp.equals( wStage.closed, wAction.getcmd( data->action ) ) ) {
         iONode cmd = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );

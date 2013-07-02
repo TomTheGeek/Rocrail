@@ -274,9 +274,9 @@ static void __handleNetReq(iOR2Rnet inst, iONode req) {
       iOLoc loc = NULL;
 
       if( StrOp.equals( rrid, wR2RnetIni.getid(data->props)) )
-        unlocked = block->unLock(block, lcid );
+        unlocked = block->unLock(block, lcid, NULL );
       else {
-        unlocked = block->unLock(block, wNetReq.getlcid(req) );
+        unlocked = block->unLock(block, wNetReq.getlcid(req), NULL );
         lcid = wNetReq.getlcid(req);
       }
 

@@ -193,6 +193,7 @@
     <fun name="unLock" vt="Boolean">
       <param name="inst" vt="this"/>
       <param name="locid" vt="const char*" remark="Unlocking loc"/>
+      <param name="routeid" vt="const char*" remark="By route"/>
     </fun>
     <fun name="setLocSchedule" vt="Boolean">
       <param name="inst" vt="this"/>

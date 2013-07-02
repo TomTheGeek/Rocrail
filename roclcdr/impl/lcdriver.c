@@ -446,20 +446,20 @@ static void _reset( iILcDriverInt inst, Boolean saveCurBlock ) {
 
   if( data->prevBlock != NULL && data->prevBlock != data->curBlock ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking prevBlock for %s...", data->loc->getId( data->loc ));
-    data->prevBlock->unLock( data->prevBlock, data->loc->getId( data->loc ) );
+    data->prevBlock->unLock( data->prevBlock, data->loc->getId( data->loc ), NULL );
   }
 
   if( data->next1Block != NULL && data->next1Block != data->curBlock ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking next1Block for %s...", data->loc->getId( data->loc ));
-    data->next1Block->unLock( data->next1Block, data->loc->getId( data->loc ) );
+    data->next1Block->unLock( data->next1Block, data->loc->getId( data->loc ), NULL );
   }
   if( data->next2Block != NULL && data->next2Block != data->curBlock ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking next2Block for %s...", data->loc->getId( data->loc ));
-    data->next2Block->unLock( data->next2Block, data->loc->getId( data->loc ) );
+    data->next2Block->unLock( data->next2Block, data->loc->getId( data->loc ), NULL );
   }
   if( data->next3Block != NULL && data->next3Block != data->curBlock ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking next3Block for %s...", data->loc->getId( data->loc ));
-    data->next3Block->unLock( data->next3Block, data->loc->getId( data->loc ) );
+    data->next3Block->unLock( data->next3Block, data->loc->getId( data->loc ), NULL );
   }
 
   data->next1Route = NULL;
@@ -472,7 +472,7 @@ static void _reset( iILcDriverInt inst, Boolean saveCurBlock ) {
 
   if( data->curBlock != NULL && !saveCurBlock ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlocking curBlock for %s...", data->loc->getId( data->loc ));
-    data->curBlock->unLock( data->curBlock, data->loc->getId( data->loc ) );
+    data->curBlock->unLock( data->curBlock, data->loc->getId( data->loc ), NULL );
     data->curBlock = NULL;
     data->loc->setCurBlock( data->loc, NULL );
   }

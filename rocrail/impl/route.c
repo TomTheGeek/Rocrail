@@ -728,7 +728,7 @@ static Boolean __lockCrossingBlocks( iORoute inst, const char* id ) {
       const char* bk = StrTokOp.nextToken( tok );
       iIBlockBase block = ModelOp.getBlock( model, bk );
       if( block != NULL ) {
-        if( !block->lock( block, id, "", "", True, False, False, 0 ) ) {
+        if( !block->lock( block, id, "", wRoute.getid(o->props), True, False, False, 0 ) ) {
           StrTokOp.base.del(tok);
           return False;
         }
@@ -778,7 +778,7 @@ static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char*
       if( !__isReservedBlock(bk, resblocks) ) {
         iIBlockBase block = ModelOp.getBlock( model, bk );
         if( block != NULL ) {
-          if( !block->unLock( block, id ) )
+          if( !block->unLock( block, id, wRoute.getid( o->props ) ) )
             ok = False;
         }
         else {
@@ -891,7 +891,7 @@ static Boolean __unlockSwitches( iORoute inst, const char* locId, Boolean force 
       iOSelTab iseltab = ModelOp.getSelectiontable( model, swId );
       iOTT itt = ModelOp.getTurntable( model, swId );
       if( itt != NULL ) {
-        if( !TTOp.unLock( (iIBlockBase)itt, locId ) ) {
+        if( !TTOp.unLock( (iIBlockBase)itt, locId, wRoute.getid( o->props ) ) ) {
           ok = False;
         }
       }
@@ -899,7 +899,7 @@ static Boolean __unlockSwitches( iORoute inst, const char* locId, Boolean force 
         StrOp.free(o->routeLockId);
         o->routeLockId = StrOp.fmt( "%s%s%s", wRoute.routelock, wRoute.getid(o->props), locId );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"unlock FY for route [%s]", o->routeLockId );
-        if( !SelTabOp.unLock( (iIBlockBase)iseltab, SelTabOp.isManager( iseltab)?o->routeLockId:locId ) ) {
+        if( !SelTabOp.unLock( (iIBlockBase)iseltab, SelTabOp.isManager( iseltab)?o->routeLockId:locId, wRoute.getid( o->props ) ) ) {
           ok = False;
         }
       }

@@ -1931,7 +1931,7 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
   return True;
 }
 
-static Boolean _unLock( iIBlockBase inst, const char* id ) {
+static Boolean _unLock( iIBlockBase inst, const char* id, const char* routeId ) {
   if( inst != NULL && id != NULL ) {
     iOBlockData data = Data(inst);
     Boolean ok = False;
@@ -1946,7 +1946,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
 
 
       /* wait only 10ms for getting the mutex: */
-      if( !MutexOp.trywait( data->muxLock, 10 ) ) {
+      if( !MutexOp.trywait( data->muxLock, 100 ) ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                        "time out on unlocking block \"%s\" by \"%s\"",
                        data->id, id );
@@ -1955,6 +1955,13 @@ static Boolean _unLock( iIBlockBase inst, const char* id ) {
 
       if( data->locId == NULL || StrOp.len(data->locId) == 0 || StrOp.equals( id, data->locId ) ) {
         iOLocation location = ModelOp.getBlockLocation(AppOp.getModel(), data->id );
+
+        if( data->byRouteId != NULL && routeId != NULL && !StrOp.equals(data->byRouteId, routeId) ) {
+          /* same loco did locked it for another route */
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "keep [%s] locked for route [%s]!=[%s]", data->id, data->byRouteId, routeId );
+          MutexOp.post( data->muxLock );
+          return True;
+        }
 
         data->locId = NULL;
         data->fromBlockId = NULL;
