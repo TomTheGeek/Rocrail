@@ -1412,9 +1412,10 @@ static void __theSwap(iOLoc loc, Boolean swap, Boolean consist, iONode cmd) {
  */
 static void __BBT(iOLoc loc) {
   iOLocData data = Data(loc);
-  int bbtsteps      = wLoc.getbbtsteps(data->props);
-  int bbtmaxdiff    = wLoc.getbbtmaxdiff(data->props);
-  int bbtcorrection = wLoc.getbbtcorrection(data->props);
+  int     bbtsteps      = wLoc.getbbtsteps(data->props);
+  int     bbtmaxdiff    = wLoc.getbbtmaxdiff(data->props);
+  int     bbtcorrection = wLoc.getbbtcorrection(data->props);
+  Boolean bbtdynamically = wLoc.isbbtdynamically(data->props);
   if( bbtsteps < 4 || bbtsteps > 16 )
     bbtsteps = 10;
   if( bbtmaxdiff < 100 || bbtmaxdiff > 500 )
@@ -1509,8 +1510,25 @@ static void __BBT(iOLoc loc) {
         MapOp.put(data->bbtMap, key, (obj)bbt);
       }
       else {
-        int oldinterval = wBBT.getinterval(bbt);
+        int count        = wBBT.getcount(bbt);
+        int oldinterval  = wBBT.getinterval(bbt);
         int diffinterval = abs(interval - oldinterval);
+
+        if( bbtdynamically ) {
+          if( count < 5 ) {
+            bbtmaxdiff    = 750;
+            bbtcorrection = 1; /* 100% */
+          }
+          else if( count < 10 ) {
+            bbtmaxdiff    = 500;
+            bbtcorrection = 2; /* 50% */
+          }
+          else {
+            bbtmaxdiff    = 250;
+            bbtcorrection = 4; /* 25% */
+          }
+        }
+
         if( diffinterval > bbtmaxdiff ) {
           diffinterval = bbtmaxdiff;
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, bbtmaxdiff );
@@ -1521,6 +1539,9 @@ static void __BBT(iOLoc loc) {
           interval = oldinterval - (diffinterval / bbtcorrection);
       }
       wBBT.setinterval(bbt, interval);
+      if( wBBT.getcount(bbt) < 10 ) {
+        wBBT.setcount(bbt, wBBT.getcount(bbt) + 1 );
+      }
 
       {
         iONode broadcast = (iONode)NodeOp.base.clone(data->props);
