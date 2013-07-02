@@ -1515,13 +1515,13 @@ static void __BBT(iOLoc loc) {
         int diffinterval = abs(interval - oldinterval);
 
         if( bbtdynamically ) {
-          if( count < 5 ) {
-            bbtmaxdiff    = 750;
-            bbtcorrection = 1; /* 100% */
-          }
-          else if( count < 10 ) {
+          if( count < 3 ) {
             bbtmaxdiff    = 500;
             bbtcorrection = 2; /* 50% */
+          }
+          else if( count < 6 ) {
+            bbtmaxdiff    = 333;
+            bbtcorrection = 3; /* 33% */
           }
           else {
             bbtmaxdiff    = 250;
