@@ -626,6 +626,11 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         wBinCmd.setout( lccmd, byteStr );
         StrOp.free( byteStr );
         response = data->sublib->cmd((obj)data->sublib, lccmd);
+
+        lccmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
+        wSysCmd.setcmd( lccmd, "startio");
+        response = data->sublib->cmd((obj)data->sublib, lccmd);
+
       }
       else {
         /* lenz sublib */
@@ -634,8 +639,12 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     else if( StrOp.equals( wSysCmd.clearshortids, wSysCmd.getcmd(cmd) ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "clear short IDs" );
       if( StrOp.equals( wDigInt.p50x, data->sublibname ) ) {
+        iONode lccmd = NodeOp.inst(wSysCmd.name(), NULL, ELEMENT_NODE);
+        wSysCmd.setcmd( lccmd, "stopio");
+        response = data->sublib->cmd((obj)data->sublib, lccmd);
+
         /* dump the loco data base in the throttle */
-        iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
+        lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
         char* cmd = "XLOCCLEAR\r";
         char* byteStr = StrOp.byteToStr( cmd, StrOp.len(cmd) );
         wBinCmd.setoutlen( lccmd, StrOp.len(cmd) );
