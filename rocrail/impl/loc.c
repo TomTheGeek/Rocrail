@@ -67,6 +67,7 @@ static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent );
 static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer );
 static void __swapConsist( iOLoc inst, iONode cmd );
 static int __getFnAddr( iOLoc inst, int function, int* mappedfn);
+static void __doSound(iOLoc inst, iONode cmd);
 
 /*
  ***** OBase functions.
@@ -608,6 +609,9 @@ static void* __event( void* inst, const void* evt ) {
         StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) )
     {
       wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
+      if( SystemOp.getTick() - data->lastfncmd > 100 ) {
+        __doSound( inst, evtNode );
+      }
       __checkConsist(inst, evtNode, True);
       broadcast = True;
     }
@@ -848,6 +852,34 @@ static const char* __getFnSound( iOLoc inst, int function) {
   return NULL;
 }
 
+static void __doSound(iOLoc inst, iONode cmd) {
+  iOLocData    data = Data(inst);
+
+  if( wFunCmd.getfnchanged(cmd) != -1 ) {
+    int fx = wLoc.getfx( data->props );
+    if( fx & 1 << wFunCmd.getfnchanged(cmd)-1 ) {
+      const char* sound = __getFnSound(inst, wFunCmd.getfnchanged(cmd) );
+      if( sound != NULL && StrOp.len(sound) > 0 ) {
+        /* play */
+        char* s = NULL;
+        if( wRocRail.issoundplayerlocation(AppOp.getIni()) && data->curBlock != NULL && data->curSensor != NULL )
+          s = StrOp.fmt("%s \"%s%c%s\" \"%s\" \"%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
+              wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound, data->curBlock, data->curSensor );
+        else if( wRocRail.issoundplayerlocation(AppOp.getIni()) && data->curBlock != NULL )
+          s = StrOp.fmt("%s \"%s%c%s\" \"%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
+              wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound, data->curBlock );
+        else
+          s = StrOp.fmt("%s \"%s%c%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
+              wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
+        SystemOp.system( s, True, False );
+        StrOp.free(s);
+      }
+    }
+  }
+
+}
+
 /*
   Using the new V_* attributes for controlling loc speed.
 */
@@ -1013,28 +1045,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
       }
 
       /* sound */
-      if( wFunCmd.getfnchanged(cmd) != -1 ) {
-        int fx = wLoc.getfx( data->props );
-        if( fx & 1 << wFunCmd.getfnchanged(cmd)-1 ) {
-          const char* sound = __getFnSound(inst, wFunCmd.getfnchanged(cmd) );
-          if( sound != NULL && StrOp.len(sound) > 0 ) {
-            /* play */
-            char* s = NULL;
-            if( wRocRail.issoundplayerlocation(AppOp.getIni()) && data->curBlock != NULL && data->curSensor != NULL )
-              s = StrOp.fmt("%s \"%s%c%s\" \"%s\" \"%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
-                  wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound, data->curBlock, data->curSensor );
-            else if( wRocRail.issoundplayerlocation(AppOp.getIni()) && data->curBlock != NULL )
-              s = StrOp.fmt("%s \"%s%c%s\" \"%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
-                  wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound, data->curBlock );
-            else
-              s = StrOp.fmt("%s \"%s%c%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
-                  wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound );
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
-            SystemOp.system( s, True, False );
-            StrOp.free(s);
-          }
-        }
-      }
+      __doSound( inst, cmd );
 
     }
     else {
@@ -2779,6 +2790,10 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   }
   else {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "processing cmd=\"%s\" for [%s]",  cmd==NULL?"-":cmd, LocOp.getId( inst ) );
+  }
+
+  if( StrOp.equals(wFunCmd.name(), NodeOp.getName(nodeA))) {
+    data->lastfncmd = SystemOp.getTick();
   }
 
   nodeF = (iONode)NodeOp.base.clone( nodeA );
