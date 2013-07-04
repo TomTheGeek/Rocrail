@@ -72,6 +72,7 @@ void SensorEventsDlg::initLabels() {
   m_Reset->SetLabel(wxGetApp().getMsg( "reset" ));
 }
 
+static bool m_bSortInvert = false;
 
 static int __sortID(obj* _a, obj* _b)
 {
@@ -79,7 +80,7 @@ static int __sortID(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* idA = wItem.getid( a );
     const char* idB = wItem.getid( b );
-    return strcmp( idA, idB );
+    return m_bSortInvert ? strcmp( idB, idA ):strcmp( idA, idB );
 }
 
 
@@ -90,9 +91,9 @@ static int __sortBus(obj* _a, obj* _b)
     int busA = wItem.getbus( a );
     int busB = wItem.getbus( b );
     if( busA > busB )
-      return 1;
+      return m_bSortInvert ? -1:1;
     if( busA < busB )
-      return -1;
+      return m_bSortInvert ? 1:-1;
     return 0;
 }
 
@@ -104,9 +105,85 @@ static int __sortAddr(obj* _a, obj* _b)
     int addrA = wFeedback.getaddr( a );
     int addrB = wFeedback.getaddr( b );
     if( addrA > addrB )
-      return 1;
+      return m_bSortInvert ? -1:1;
     if( addrA < addrB )
-      return -1;
+      return m_bSortInvert ? 1:-1;
+    return 0;
+}
+
+
+static int __sortStamp(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = NodeOp.getStr(a, "stamp", "");
+    const char* idB = NodeOp.getStr(b, "stamp", "");
+    return m_bSortInvert ? strcmp( idB, idA ):strcmp( idA, idB );
+}
+
+
+static int __sortIdent(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wFeedback.getidentifier(a);
+    const char* idB = wFeedback.getidentifier(b);
+    return m_bSortInvert ? strcmp( idB, idA ):strcmp( idA, idB );
+}
+
+
+static int __sortState(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int addrA = wFeedback.isstate( a );
+    int addrB = wFeedback.isstate( b );
+    if( addrA > addrB )
+      return m_bSortInvert ? -1:1;
+    if( addrA < addrB )
+      return m_bSortInvert ? 1:-1;
+    return 0;
+}
+
+
+static int __sortCounter(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int addrA = wFeedback.getcounter( a );
+    int addrB = wFeedback.getcounter( b );
+    if( addrA > addrB )
+      return m_bSortInvert ? -1:1;
+    if( addrA < addrB )
+      return m_bSortInvert ? 1:-1;
+    return 0;
+}
+
+
+static int __sortWheelCount(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int addrA = wFeedback.getwheelcount( a );
+    int addrB = wFeedback.getwheelcount( b );
+    if( addrA > addrB )
+      return m_bSortInvert ? -1:1;
+    if( addrA < addrB )
+      return m_bSortInvert ? 1:-1;
+    return 0;
+}
+
+
+static int __sortCarCount(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int addrA = wFeedback.getcountedcars( a );
+    int addrB = wFeedback.getcountedcars( b );
+    if( addrA > addrB )
+      return m_bSortInvert ? -1:1;
+    if( addrA < addrB )
+      return m_bSortInvert ? 1:-1;
     return 0;
 }
 
@@ -120,6 +197,24 @@ void SensorEventsDlg::initValues() {
   }
   else if( m_SortCol == 2 ) {
     ListOp.sort(list, &__sortAddr);
+  }
+  else if( m_SortCol == 3 ) {
+    ListOp.sort(list, &__sortState);
+  }
+  else if( m_SortCol == 4 ) {
+    ListOp.sort(list, &__sortIdent);
+  }
+  else if( m_SortCol == 5 ) {
+    ListOp.sort(list, &__sortCounter);
+  }
+  else if( m_SortCol == 6 ) {
+    ListOp.sort(list, &__sortWheelCount);
+  }
+  else if( m_SortCol == 7 ) {
+    ListOp.sort(list, &__sortCarCount);
+  }
+  else if( m_SortCol == 8 ) {
+    ListOp.sort(list, &__sortStamp);
   }
   else {
     ListOp.sort(list, &__sortID);
@@ -212,6 +307,11 @@ void SensorEventsDlg::onReset( wxCommandEvent& event ) {
 
 
 void SensorEventsDlg::onColClick( wxListEvent& event ) {
+  if( m_SortCol == event.GetColumn() )
+    m_bSortInvert = !m_bSortInvert;
+  else
+    m_bSortInvert = false;
+
   m_SortCol = event.GetColumn();
   initValues();
 }
