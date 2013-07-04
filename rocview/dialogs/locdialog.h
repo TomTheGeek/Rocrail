@@ -562,6 +562,8 @@ public:
     wxCheckBox* m_BBT;
     wxSpinCtrl* m_BBTSteps;
     wxStaticText* m_labSteps;
+    wxStaticText* m_labBBTStartInterval;
+    wxSpinCtrl* m_BBTStartInterval;
     wxStaticText* m_labBBTMaxDiff;
     wxSpinCtrl* m_BBTMaxDiff;
     wxStaticText* m_labBBT10ms;

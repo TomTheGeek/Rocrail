@@ -22726,4 +22726,7 @@
   <Msg id="dynamically">
     <en txt="Dynamically"/>
   </Msg>
+  <Msg id="startinterval">
+    <en txt="Start interval"/>
+  </Msg>
 </Messages>
