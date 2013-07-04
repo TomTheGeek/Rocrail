@@ -1460,11 +1460,11 @@ static void __BBT(iOLoc loc) {
 
       data->bbtCycleNr = 0;
       if( bbt != NULL ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-Record found: %s", key);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-Record found: [%s]", key);
         data->bbtInterval = wBBT.getinterval(bbt) / bbtsteps;
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-Record **not** found: %s", key);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-Record **not** found: [%s]", key);
         data->bbtInterval = wLoc.getbbtstartinterval(data->props);
       }
       StrOp.free(key);
@@ -1504,16 +1504,19 @@ static void __BBT(iOLoc loc) {
 
   if( data->bbtEnter != 0 && data->bbtIn != 0 && data->bbtEnterBlock != NULL && data->bbtInBlock != NULL ) {
     /*data->prevBlock*/
-    char* key = StrOp.fmt("%s-%s", data->bbtInBlock, data->bbtPrevBlock);
+    char* key = NULL;
+    if( wLoc.isbbtusefromblock( data->props ) )
+      key = StrOp.fmt("%s-%s", data->bbtInBlock, data->bbtPrevBlock);
+    else
+      key = StrOp.fmt("%s", data->bbtInBlock);
+
     iONode bbt = (iONode)MapOp.get( data->bbtMap, key );
-    if( !wLoc.isbbtusefromblock( data->props ) || bbt == NULL ) {
-      bbt = (iONode)MapOp.get( data->bbtMap, data->bbtInBlock );
-    }
 
     if( data->bbtIn >= data->bbtEnter && StrOp.equals(data->bbtEnterBlock, data->bbtInBlock) ) {
       int interval = (int)(data->bbtIn - data->bbtEnter);
       if( bbt == NULL ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT creating node for block=%s from=%s", data->bbtInBlock, data->bbtPrevBlock );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT creating node for block=%s from=%s with key=[%s]",
+            data->bbtInBlock, data->bbtPrevBlock, key );
         bbt = NodeOp.inst( wBBT.name(), data->props, ELEMENT_NODE );
         NodeOp.addChild(data->props, bbt);
         wBBT.setbk(bbt, data->bbtInBlock);
@@ -3124,6 +3127,8 @@ static void __initBBTmap( iOLoc loc ) {
       key = StrOp.fmt("%s-%s", wBBT.getbk(bbt), wBBT.getfrombk(bbt));
     else
       key = StrOp.fmt("%s", wBBT.getbk(bbt));
+
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "add BBT record with key [%s]", key);
     MapOp.put( data->bbtMap, key, (obj)bbt );
     StrOp.free(key);
     bbt = NodeOp.findNextNode( data->props, bbt );
