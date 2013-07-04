@@ -1465,7 +1465,7 @@ static void __BBT(iOLoc loc) {
       }
       else {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-Record **not** found: %s", key);
-        data->bbtInterval = wLoc.getbbtstartinterval(data->props);;
+        data->bbtInterval = wLoc.getbbtstartinterval(data->props);
       }
       StrOp.free(key);
       data->bbtSpeed = data->drvSpeed;
