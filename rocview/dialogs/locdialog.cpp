@@ -449,7 +449,7 @@ void LocDialog::initLabels() {
   m_BBTList2->InsertColumn(0, wxGetApp().getMsg( "fromblock" ), wxLIST_FORMAT_LEFT );
   m_BBTList2->InsertColumn(1, wxGetApp().getMsg( "toblock" ), wxLIST_FORMAT_LEFT );
   m_BBTList2->InsertColumn(2, wxGetApp().getMsg( "interval" ), wxLIST_FORMAT_RIGHT );
-  m_BBTList2->InsertColumn(3, wxGetApp().getMsg( "count" ), wxLIST_FORMAT_RIGHT );
+  m_BBTList2->InsertColumn(3, wxGetApp().getMsg( "counter" ), wxLIST_FORMAT_RIGHT );
 
   m_labBBTMaxDiff->SetLabel( wxGetApp().getMsg( "maxdiff" ) );
   m_labBBTCorrection->SetLabel( wxGetApp().getMsg( "correction" ) );
