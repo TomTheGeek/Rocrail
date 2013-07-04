@@ -628,8 +628,6 @@ static void sendAllPWstates2AllInfoChannels(iOSrcpConData data) {
 
 /* Send sessionState to all srcp info connections */
 static void sendSessionstate2InfoChannels( int busId, int sessId, int srcpCode, Boolean mode ) {
-  iOList thList = ThreadOp.getAll(); 
-  int cnt = ListOp.size( thList );
   char str[1025] = {'\0'};
   int j;
   struct timeval time;
@@ -655,25 +653,32 @@ static void sendSessionstate2InfoChannels( int busId, int sessId, int srcpCode, 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s", str);
 
   /* go through all threads, search the SRCP server connections ("cmdrSRCP") and send the data to the info channel */
+  {
+    iOList thList = ThreadOp.getAll();
+    int cnt = ListOp.size( thList );
 
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%d active threads.", cnt );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%d active threads.", cnt );
 
-  for( j = 0; j < cnt; j++ ) {
-    iOThread th = (iOThread)ListOp.get( thList, j );
-    const char* tname = ThreadOp.getName( th );
+    for( j = 0; j < cnt; j++ ) {
+      iOThread th = (iOThread)ListOp.get( thList, j );
+      const char* tname = ThreadOp.getName( th );
 
-    iOSrcpCon srcpcon = (iOSrcpCon)ThreadOp.getParm(th);
-    iOSrcpConData data = Data(srcpcon);
-    __iOSrcpService   oI = (__iOSrcpService)ThreadOp.getParm(th);
+      iOSrcpCon srcpcon = (iOSrcpCon)ThreadOp.getParm(th);
+      iOSrcpConData data = Data(srcpcon);
+      __iOSrcpService   oI = (__iOSrcpService)ThreadOp.getParm(th);
 
-    if( StrOp.startsWithi( tname, "cmdrSRCP" ) ) {
-      if ( oI->infomode ) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP SEND: %p [%p] %d : %s", oI, oI->clntSocket, oI->id, str ) ;
-        __writeRsp(oI, str);
-        ThreadOp.sleep( 10 );
+      if( StrOp.startsWithi( tname, "cmdrSRCP" ) ) {
+        if ( oI->infomode ) {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SRCP SEND: %p [%p] %d : %s", oI, oI->clntSocket, oI->id, str ) ;
+          __writeRsp(oI, str);
+          ThreadOp.sleep( 10 );
+        }
       }
     }
+    ListOp.base.del(thList);
   }
+
+
 }
 
 
@@ -3991,8 +3996,8 @@ static void __SrcpService( void* threadinst ) {
   if( o->clntSocket != NULL ) {
     SocketOp.base.del(o->clntSocket);
   }
-  freeMem(o);
   ThreadOp.base.del( th );
+  freeMem(o);
 
   sendSessionstate2InfoChannels( 0, sessId, 102, False );
 }
