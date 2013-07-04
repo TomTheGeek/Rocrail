@@ -40,6 +40,7 @@ class SensorEventsDlg : public SensorEventsGen
   void initValues();
 
   iONode m_FbEvent;
+  int    m_SortCol;
 
 	public:
 		/** Constructor */
@@ -50,6 +51,7 @@ class SensorEventsDlg : public SensorEventsGen
 		void onClose( wxCloseEvent& event );
 		void onReset( wxCommandEvent& event );
 		void onListSelected( wxListEvent& event );
+		void onColClick( wxListEvent& event );
 		bool Validate();
 	
 };

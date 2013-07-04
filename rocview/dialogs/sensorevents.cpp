@@ -27,12 +27,14 @@
 #include "rocview/wrapper/public/SensorMonitor.h"
 
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Item.h"
 
 
 SensorEventsDlg::SensorEventsDlg( wxWindow* parent )
     :SensorEventsGen( parent )
 {
   m_FbEvent = NULL;
+  m_SortCol = 0;
 
   initLabels();
   initValues();
@@ -71,9 +73,58 @@ void SensorEventsDlg::initLabels() {
 }
 
 
+static int __sortID(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wItem.getid( a );
+    const char* idB = wItem.getid( b );
+    return strcmp( idA, idB );
+}
+
+
+static int __sortBus(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int busA = wItem.getbus( a );
+    int busB = wItem.getbus( b );
+    if( busA > busB )
+      return 1;
+    if( busA < busB )
+      return -1;
+    return 0;
+}
+
+
+static int __sortAddr(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int addrA = wFeedback.getaddr( a );
+    int addrB = wFeedback.getaddr( b );
+    if( addrA > addrB )
+      return 1;
+    if( addrA < addrB )
+      return -1;
+    return 0;
+}
+
+
 void SensorEventsDlg::initValues() {
   m_EventList->DeleteAllItems();
   iOList list = wxGetApp().getSensorEvents();
+
+  if( m_SortCol == 1 ) {
+    ListOp.sort(list, &__sortBus);
+  }
+  else if( m_SortCol == 2 ) {
+    ListOp.sort(list, &__sortAddr);
+  }
+  else {
+    ListOp.sort(list, &__sortID);
+  }
+
 
   int cnt = ListOp.size( list );
   for( int i = 0; i < cnt; i++ ) {
@@ -157,5 +208,11 @@ void SensorEventsDlg::onReset( wxCommandEvent& event ) {
     m_Reset->Enable(false);
     m_FbEvent = NULL;
   }
+}
+
+
+void SensorEventsDlg::onColClick( wxListEvent& event ) {
+  m_SortCol = event.GetColumn();
+  initValues();
 }
 
