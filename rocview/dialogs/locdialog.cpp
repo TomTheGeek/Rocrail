@@ -445,7 +445,7 @@ void LocDialog::initLabels() {
   m_CVDescription->Enable(false);
 
   m_BBTList2->InsertColumn(0, wxGetApp().getMsg( "fromblock" ), wxLIST_FORMAT_LEFT );
-  m_BBTList2->InsertColumn(1, wxGetApp().getMsg( "toblock" ), wxLIST_FORMAT_LEFT );
+  m_BBTList2->InsertColumn(1, wxGetApp().getMsg( "block" ), wxLIST_FORMAT_LEFT );
   m_BBTList2->InsertColumn(2, wxGetApp().getMsg( "interval" ), wxLIST_FORMAT_RIGHT );
   m_BBTList2->InsertColumn(3, wxGetApp().getMsg( "counter" ), wxLIST_FORMAT_RIGHT );
 
@@ -3328,7 +3328,7 @@ void LocDialog::initBBT() {
   iONode bbt = wLoc.getbbt( m_Props );
   int i = 0;
   while( bbt != NULL ) {
-    m_BBTList2->InsertItem( i, wxString(wBBT.getfrombk(bbt),wxConvUTF8) );
+    m_BBTList2->InsertItem( i, wLoc.isbbtusefromblock(m_Props) ? wxString(wBBT.getfrombk(bbt),wxConvUTF8):"-" );
     m_BBTList2->SetItem( i, 1, wxString(wBBT.getbk(bbt), wxConvUTF8) );
     m_BBTList2->SetItem( i, 2, wxString::Format(wxT("%d"), wBBT.getinterval(bbt)) );
     m_BBTList2->SetItem( i, 3, wxString::Format(wxT("%d"), wBBT.getcount(bbt)) );
