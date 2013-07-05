@@ -22729,4 +22729,7 @@
   <Msg id="startinterval">
     <en txt="Start interval"/>
   </Msg>
+  <Msg id="mintrainlen">
+    <en txt="Min. train length"/>
+  </Msg>
 </Messages>

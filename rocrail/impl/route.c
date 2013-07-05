@@ -1023,6 +1023,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
   /* test if the train length does not exceed the maxlen */
   {
     int maxlen = wRoute.getmaxlen(data->props);
+    int minlen = wRoute.getminlen(data->props);
     if( maxlen > 0 ) {
       if( LocOp.getLen(loc) > maxlen ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -1030,7 +1031,17 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
                        id, wRoute.getid(data->props), LocOp.getLen(loc), maxlen );
         return suits_not;
       }
+    }
+
+    if( minlen > 0 ) {
+      if( LocOp.getLen(loc) < minlen ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                       "Loc [%s] has no permission to use route [%s]; train length is less then the min. allowed length. (%d<%d)",
+                       id, wRoute.getid(data->props), LocOp.getLen(loc), minlen );
+        return suits_not;
       }
+    }
+
 
   }
 

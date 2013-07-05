@@ -6551,3 +6551,9 @@ msgstr ""
 msgid "Start interval"
 msgstr ""
 
+#. 
+# id="mintrainlen"
+#, c-format
+msgid "Min. train length"
+msgstr ""
+

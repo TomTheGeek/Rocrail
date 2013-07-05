@@ -318,6 +318,8 @@ public:
     wxStaticText* m_labMaxLen;
     wxSpinCtrl* m_MaxLen;
     wxCheckBox* m_Commuter;
+    wxStaticText* m_labMinLen;
+    wxSpinCtrl* m_MinLen;
     wxPanel* m_ConditionsPanel;
     wxGrid* m_CondGrid;
     wxCheckBox* m_CondNotFromBlock;
