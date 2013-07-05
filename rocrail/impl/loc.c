@@ -1458,7 +1458,6 @@ static void __BBT(iOLoc loc) {
   int     bbtsteps      = wLoc.getbbtsteps(data->props);
   int     bbtmaxdiff    = wLoc.getbbtmaxdiff(data->props);
   int     bbtcorrection = wLoc.getbbtcorrection(data->props);
-  Boolean bbtdynamically = wLoc.isbbtdynamically(data->props);
   if( bbtsteps < 4 || bbtsteps > 16 )
     bbtsteps = 10;
   if( bbtmaxdiff < 100 || bbtmaxdiff > 500 )
@@ -1559,21 +1558,6 @@ static void __BBT(iOLoc loc) {
         int count        = wBBT.getcount(bbt);
         int oldinterval  = wBBT.getinterval(bbt);
         int diffinterval = abs(interval - oldinterval);
-
-        if( bbtdynamically ) {
-          if( count < 3 ) {
-            bbtmaxdiff    = 500;
-            bbtcorrection = 2; /* 50% */
-          }
-          else if( count < 6 ) {
-            bbtmaxdiff    = 333;
-            bbtcorrection = 3; /* 33% */
-          }
-          else {
-            bbtmaxdiff    = 250;
-            bbtcorrection = 4; /* 25% */
-          }
-        }
 
         if( diffinterval > bbtmaxdiff ) {
           diffinterval = bbtmaxdiff;

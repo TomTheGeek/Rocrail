@@ -145,7 +145,6 @@ class wxGrid;
 #define ID_GRID_LOC_CV 10346
 #define ID_BUTTON_LC_CV_DESC 10347
 #define ID_PANEL_LOC_BBT 10337
-#define ID_BBT_DYNAMICALLY 10338
 #define ID_LOC_BBTLIST2 10427
 #define ID_BBT_MODIFY 10426
 #define ID_BUTTON_BBT_DELETE 10424
@@ -291,9 +290,6 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LC_CV_DESC
     void OnButtonLcCvDescClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_BBT_DYNAMICALLY
-    void OnBbtDynamicallyClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LOC_BBTLIST2
     void OnLocBbtlist2Selected( wxListEvent& event );
@@ -571,7 +567,6 @@ public:
     wxSpinCtrl* m_BBTCorrection;
     wxStaticText* m_labBBTPer;
     wxCheckBox* m_BBTUseFromBlockID;
-    wxCheckBox* m_BBTDynamically;
     wxStaticText* m_labBBTCalculation;
     wxListCtrl* m_BBTList2;
     wxStaticText* m_labBBTBlock;
