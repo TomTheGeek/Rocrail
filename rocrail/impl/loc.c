@@ -650,9 +650,11 @@ static void* __event( void* inst, const void* evt ) {
       broadcast = False;
     }
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s throttleid=%s f0=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "lc=%s throttleid=%s chfn=%d f0=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
         wLoc.getid( data->props ),
         wLoc.getthrottleid( data->props),
+        wFunCmd.getfnchanged( evtNode),
         wLoc.isfn(data->props) ? "on":"off",
         data->fn1  ? "01":"--", data->fn2  ? "02":"--", data->fn3  ? "03":"--", data->fn4  ? "04":"--",
         data->fn5  ? "05":"--", data->fn6  ? "06":"--", data->fn7  ? "07":"--", data->fn8  ? "08":"--",
