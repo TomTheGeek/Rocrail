@@ -291,46 +291,74 @@ static Boolean __cpNode2Fn(iOLoc inst, iONode cmd) {
     if( wFunCmd.getgroup(cmd) == 0)
       data->fn0  = wFunCmd.isf0 ( cmd );
     if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 1 ) {
-    data->fn1  = wFunCmd.isf1 ( cmd );
-    data->fn2  = wFunCmd.isf2 ( cmd );
-    data->fn3  = wFunCmd.isf3 ( cmd );
-    data->fn4  = wFunCmd.isf4 ( cmd );
+      if( data->fn1 != wFunCmd.isf1 ( cmd ) ) wFunCmd.setfnchanged(cmd, 1);
+      if( data->fn2 != wFunCmd.isf2 ( cmd ) ) wFunCmd.setfnchanged(cmd, 2);
+      if( data->fn3 != wFunCmd.isf3 ( cmd ) ) wFunCmd.setfnchanged(cmd, 3);
+      if( data->fn4 != wFunCmd.isf4 ( cmd ) ) wFunCmd.setfnchanged(cmd, 4);
+      data->fn1  = wFunCmd.isf1 ( cmd );
+      data->fn2  = wFunCmd.isf2 ( cmd );
+      data->fn3  = wFunCmd.isf3 ( cmd );
+      data->fn4  = wFunCmd.isf4 ( cmd );
     }
     if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 2 ) {
-    data->fn5  = wFunCmd.isf5 ( cmd );
-    data->fn6  = wFunCmd.isf6 ( cmd );
-    data->fn7  = wFunCmd.isf7 ( cmd );
-    data->fn8  = wFunCmd.isf8 ( cmd );
+      if( data->fn5 != wFunCmd.isf5 ( cmd ) ) wFunCmd.setfnchanged(cmd, 5);
+      if( data->fn6 != wFunCmd.isf6 ( cmd ) ) wFunCmd.setfnchanged(cmd, 6);
+      if( data->fn7 != wFunCmd.isf7 ( cmd ) ) wFunCmd.setfnchanged(cmd, 7);
+      if( data->fn8 != wFunCmd.isf8 ( cmd ) ) wFunCmd.setfnchanged(cmd, 8);
+      data->fn5  = wFunCmd.isf5 ( cmd );
+      data->fn6  = wFunCmd.isf6 ( cmd );
+      data->fn7  = wFunCmd.isf7 ( cmd );
+      data->fn8  = wFunCmd.isf8 ( cmd );
     }
     if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 3 ) {
-    data->fn9  = wFunCmd.isf9 ( cmd );
-    data->fn10 = wFunCmd.isf10( cmd );
-    data->fn11 = wFunCmd.isf11( cmd );
-    data->fn12 = wFunCmd.isf12( cmd );
+      if( data->fn9  != wFunCmd.isf9  ( cmd ) ) wFunCmd.setfnchanged(cmd, 9 );
+      if( data->fn10 != wFunCmd.isf10 ( cmd ) ) wFunCmd.setfnchanged(cmd, 10);
+      if( data->fn11 != wFunCmd.isf11 ( cmd ) ) wFunCmd.setfnchanged(cmd, 11);
+      if( data->fn12 != wFunCmd.isf12 ( cmd ) ) wFunCmd.setfnchanged(cmd, 12);
+      data->fn9  = wFunCmd.isf9 ( cmd );
+      data->fn10 = wFunCmd.isf10( cmd );
+      data->fn11 = wFunCmd.isf11( cmd );
+      data->fn12 = wFunCmd.isf12( cmd );
     }
     if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 4 ) {
-    data->fn13 = wFunCmd.isf13( cmd );
-    data->fn14 = wFunCmd.isf14( cmd );
-    data->fn15 = wFunCmd.isf15( cmd );
-    data->fn16 = wFunCmd.isf16( cmd );
+      if( data->fn13 != wFunCmd.isf13 ( cmd ) ) wFunCmd.setfnchanged(cmd, 13);
+      if( data->fn14 != wFunCmd.isf14 ( cmd ) ) wFunCmd.setfnchanged(cmd, 14);
+      if( data->fn15 != wFunCmd.isf15 ( cmd ) ) wFunCmd.setfnchanged(cmd, 15);
+      if( data->fn16 != wFunCmd.isf16 ( cmd ) ) wFunCmd.setfnchanged(cmd, 16);
+      data->fn13 = wFunCmd.isf13( cmd );
+      data->fn14 = wFunCmd.isf14( cmd );
+      data->fn15 = wFunCmd.isf15( cmd );
+      data->fn16 = wFunCmd.isf16( cmd );
     }
     if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 5 ) {
-    data->fn17 = wFunCmd.isf17( cmd );
-    data->fn18 = wFunCmd.isf18( cmd );
-    data->fn19 = wFunCmd.isf19( cmd );
-    data->fn20 = wFunCmd.isf20( cmd );
+      if( data->fn17 != wFunCmd.isf17 ( cmd ) ) wFunCmd.setfnchanged(cmd, 17);
+      if( data->fn18 != wFunCmd.isf18 ( cmd ) ) wFunCmd.setfnchanged(cmd, 18);
+      if( data->fn19 != wFunCmd.isf19 ( cmd ) ) wFunCmd.setfnchanged(cmd, 19);
+      if( data->fn20 != wFunCmd.isf20 ( cmd ) ) wFunCmd.setfnchanged(cmd, 20);
+      data->fn17 = wFunCmd.isf17( cmd );
+      data->fn18 = wFunCmd.isf18( cmd );
+      data->fn19 = wFunCmd.isf19( cmd );
+      data->fn20 = wFunCmd.isf20( cmd );
     }
     if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 6 ) {
-    data->fn21 = wFunCmd.isf21( cmd );
-    data->fn22 = wFunCmd.isf22( cmd );
-    data->fn23 = wFunCmd.isf23( cmd );
-    data->fn24 = wFunCmd.isf24( cmd );
+      if( data->fn21 != wFunCmd.isf21 ( cmd ) ) wFunCmd.setfnchanged(cmd, 21);
+      if( data->fn22 != wFunCmd.isf22 ( cmd ) ) wFunCmd.setfnchanged(cmd, 22);
+      if( data->fn23 != wFunCmd.isf23 ( cmd ) ) wFunCmd.setfnchanged(cmd, 23);
+      if( data->fn24 != wFunCmd.isf24 ( cmd ) ) wFunCmd.setfnchanged(cmd, 24);
+      data->fn21 = wFunCmd.isf21( cmd );
+      data->fn22 = wFunCmd.isf22( cmd );
+      data->fn23 = wFunCmd.isf23( cmd );
+      data->fn24 = wFunCmd.isf24( cmd );
     }
     if( wFunCmd.getgroup(cmd) == 0 || wFunCmd.getgroup(cmd) == 7 ) {
-    data->fn25 = wFunCmd.isf25( cmd );
-    data->fn26 = wFunCmd.isf26( cmd );
-    data->fn27 = wFunCmd.isf27( cmd );
-    data->fn28 = wFunCmd.isf28( cmd );
+      if( data->fn25 != wFunCmd.isf25 ( cmd ) ) wFunCmd.setfnchanged(cmd, 25);
+      if( data->fn26 != wFunCmd.isf26 ( cmd ) ) wFunCmd.setfnchanged(cmd, 26);
+      if( data->fn27 != wFunCmd.isf27 ( cmd ) ) wFunCmd.setfnchanged(cmd, 27);
+      if( data->fn28 != wFunCmd.isf28 ( cmd ) ) wFunCmd.setfnchanged(cmd, 28);
+      data->fn25 = wFunCmd.isf25( cmd );
+      data->fn26 = wFunCmd.isf26( cmd );
+      data->fn27 = wFunCmd.isf27( cmd );
+      data->fn28 = wFunCmd.isf28( cmd );
     }
   }
   return False;
@@ -610,6 +638,8 @@ static void* __event( void* inst, const void* evt ) {
     {
       wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
       if( SystemOp.getTick() - data->lastfncmd > 100 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trigger sound for external throttle lc=%s throttleid=%s",
+            wLoc.getid( data->props ), wLoc.getthrottleid( data->props));
         __doSound( inst, evtNode );
       }
       __checkConsist(inst, evtNode, True);
