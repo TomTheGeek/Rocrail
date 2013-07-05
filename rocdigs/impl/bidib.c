@@ -2509,7 +2509,7 @@ static void __handleDriveManual(iOBiDiB bidib, int uid, byte* pdata) {
       wFunCmd.setf3( nodeD, (fg1 & 0x04) ? True:False );
       wFunCmd.setf4( nodeD, (fg1 & 0x08) ? True:False );
       wFunCmd.setgroup( nodeD, 1 );
-      data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+      data->listenerFun( data->listenerObj, (iONode)NodeOp.base.clone(nodeD), TRCLEVEL_INFO );
     }
 
     if( change & 0x04 ) {
@@ -2519,7 +2519,7 @@ static void __handleDriveManual(iOBiDiB bidib, int uid, byte* pdata) {
       wFunCmd.setf7( nodeD, (fg2 & 0x04) ? True:False );
       wFunCmd.setf8( nodeD, (fg2 & 0x08) ? True:False );
       wFunCmd.setgroup( nodeD, 2 );
-      data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+      data->listenerFun( data->listenerObj, (iONode)NodeOp.base.clone(nodeD), TRCLEVEL_INFO );
     }
 
     if( change & 0x08 ) {
@@ -2529,7 +2529,7 @@ static void __handleDriveManual(iOBiDiB bidib, int uid, byte* pdata) {
       wFunCmd.setf11( nodeD, (fg3 & 0x40) ? True:False );
       wFunCmd.setf12( nodeD, (fg3 & 0x80) ? True:False );
       wFunCmd.setgroup( nodeD, 3 );
-      data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+      data->listenerFun( data->listenerObj, (iONode)NodeOp.base.clone(nodeD), TRCLEVEL_INFO );
     }
 
     if( change & 0x10 ) {
@@ -2545,7 +2545,7 @@ static void __handleDriveManual(iOBiDiB bidib, int uid, byte* pdata) {
       wFunCmd.setgroup( nodeD, 4 );
       data->listenerFun( data->listenerObj, (iONode)NodeOp.base.clone(nodeD), TRCLEVEL_INFO );
       wFunCmd.setgroup( nodeD, 5 );
-      data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+      data->listenerFun( data->listenerObj, (iONode)NodeOp.base.clone(nodeD), TRCLEVEL_INFO );
     }
 
     if( change & 0x20 ) {
@@ -2561,8 +2561,10 @@ static void __handleDriveManual(iOBiDiB bidib, int uid, byte* pdata) {
       wFunCmd.setgroup( nodeD, 6 );
       data->listenerFun( data->listenerObj, (iONode)NodeOp.base.clone(nodeD), TRCLEVEL_INFO );
       wFunCmd.setgroup( nodeD, 7 );
-      data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+      data->listenerFun( data->listenerObj, (iONode)NodeOp.base.clone(nodeD), TRCLEVEL_INFO );
     }
+
+    NodeOp.base.del(nodeD);
 
   }
 }
@@ -2667,13 +2669,15 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_NODE_NEW:
   {
-    __handleNewNode(bidib, bidibnode, pdata, datasize);
+    if( bidibnode != NULL )
+      __handleNewNode(bidib, bidibnode, pdata, datasize);
     break;
   }
 
   case MSG_NODE_LOST:
   {
-    __handleLostNode(bidib, bidibnode, pdata, datasize);
+    if( bidibnode != NULL )
+      __handleLostNode(bidib, bidibnode, pdata, datasize);
     break;
   }
 
@@ -2686,27 +2690,33 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_BM_OCC:
   { // len = 4
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"BM port %d occupied", pdata[0]);
-    if(!bidibnode->occ[pdata[0]]) {
-      bidibnode->occ[pdata[0]] = True;
-      __handleSensor(bidib, bidibnode->uid, pdata[0], True, 0, -1, bidibnode->bmload[pdata[0]]);
+    if( bidibnode != NULL ) {
+      if(!bidibnode->occ[pdata[0]]) {
+        bidibnode->occ[pdata[0]] = True;
+        __handleSensor(bidib, bidibnode->uid, pdata[0], True, 0, -1, bidibnode->bmload[pdata[0]]);
+      }
+      __seqAck(bidib, bidibnode, MSG_BM_MIRROR_OCC, pdata, datasize);
     }
-    __seqAck(bidib, bidibnode, MSG_BM_MIRROR_OCC, pdata, datasize);
     break;
   }
 
   case MSG_BM_FREE:
   { // len = 4
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"BM port %d free", pdata[0]);
-    bidibnode->occ[pdata[0]] = False;
-    __handleSensor(bidib, bidibnode->uid, pdata[0], False, 0, -1, bidibnode->bmload[pdata[0]]);
-    __seqAck(bidib, bidibnode, MSG_BM_MIRROR_FREE, pdata, datasize);
+    if( bidibnode != NULL ) {
+      bidibnode->occ[pdata[0]] = False;
+      __handleSensor(bidib, bidibnode->uid, pdata[0], False, 0, -1, bidibnode->bmload[pdata[0]]);
+      __seqAck(bidib, bidibnode, MSG_BM_MIRROR_FREE, pdata, datasize);
+    }
     break;
   }
 
   case MSG_BM_MULTIPLE:
   {
-    __handleMultipleSensors(bidib, bidibnode->uid, pdata, size);
-    __seqAck(bidib, bidibnode, MSG_BM_MIRROR_MULTIPLE, pdata, datasize);
+    if( bidibnode != NULL ) {
+      __handleMultipleSensors(bidib, bidibnode->uid, pdata, size);
+      __seqAck(bidib, bidibnode, MSG_BM_MIRROR_MULTIPLE, pdata, datasize);
+    }
     break;
   }
 
@@ -2714,7 +2724,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_FEATURE:
   case MSG_FEATURE_NA:
   {
-    __handleNodeFeature(bidib, bidibnode, Type, size, pdata, datasize);
+    if( bidibnode != NULL )
+      __handleNodeFeature(bidib, bidibnode, Type, size, pdata, datasize);
     break;
   }
 
@@ -2730,7 +2741,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"BM port %d reports loco %d", port, locoAddr);
-      if( locoAddr > 0 ) {
+      if( bidibnode != NULL && locoAddr > 0 ) {
         bidibnode->occ[port] = True;
         __handleSensor(bidib, bidibnode->uid, pdata[0], bidibnode->occ[port], locoAddr, type, bidibnode->bmload[port] );
       }
@@ -2820,19 +2831,22 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_LC_STAT path=%s type=%d port=%d state=%d", pathKey, pdata[0], pdata[1], pdata[2] );
-    __handleStat(bidib, bidibnode, pdata);
+    if( bidibnode != NULL )
+      __handleStat(bidib, bidibnode, pdata);
     break;
   }
 
   case MSG_SYS_IDENTIFY_STATE:
   {
-    __handleIdentify(bidib, bidibnode, pathKey);
+    if( bidibnode != NULL )
+      __handleIdentify(bidib, bidibnode, pathKey);
     break;
   }
 
   case MSG_LC_CONFIG:
   {
-    __handleConfig(bidib, bidibnode, pdata);
+    if( bidibnode != NULL )
+      __handleConfig(bidib, bidibnode, pdata);
     break;
   }
 
@@ -2843,7 +2857,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   }
 
   case MSG_BOOST_STAT:
-    __handleBoosterStat(bidib, bidibnode, pdata);
+    if( bidibnode != NULL )
+      __handleBoosterStat(bidib, bidibnode, pdata);
     break;
 
   case MSG_BOOST_CURRENT:
@@ -2851,15 +2866,18 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
 
   case MSG_BOOST_DIAGNOSTIC:
-    __handleBoosterDiagnostic(bidib, bidibnode, pdata, datasize);
+    if( bidibnode != NULL )
+      __handleBoosterDiagnostic(bidib, bidibnode, pdata, datasize);
     break;
 
   case MSG_CS_STATE:
-    __handleCSStat(bidib, bidibnode, pdata);
+    if( bidibnode != NULL )
+      __handleCSStat(bidib, bidibnode, pdata);
     break;
 
   case MSG_CS_DRIVE_ACK:
-    __handleCSDriveAck(bidib, bidibnode, pdata);
+    if( bidibnode != NULL )
+      __handleCSDriveAck(bidib, bidibnode, pdata);
     break;
 
   case MSG_BM_CONFIDENCE:
@@ -2878,7 +2896,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
 
   case MSG_FW_UPDATE_STAT:
-    __handleUpdateStat(bidib, bidibnode, pdata);
+    if( bidibnode != NULL )
+      __handleUpdateStat(bidib, bidibnode, pdata);
     break;
 
   case MSG_LC_WAIT:
@@ -2894,6 +2913,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
       pdata[2] = pdata[1]; /* state */
       pdata[1] = pdata[0]; /* address */
       pdata[0] = wProgram.porttype_macro; /* type */
+      if( bidibnode != NULL )
       __handleStat(bidib, bidibnode, pdata);
     }
     else {
@@ -2902,37 +2922,43 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
        * BIDIB_MACRO_SAVE
        * BIDIB_MACRO_DELETE
        * */
-      __handleMacroStat(bidib, bidibnode->uid, pdata );
+      if( bidibnode != NULL )
+        __handleMacroStat(bidib, bidibnode->uid, pdata );
     }
     break;
 
   case MSG_LC_MACRO:
     /* macro get response */
-    __handleMacroGet(bidib, bidibnode->uid, pdata );
+    if( bidibnode != NULL )
+      __handleMacroGet(bidib, bidibnode->uid, pdata );
     break;
 
   case MSG_LC_MACRO_PARA:
     /* macro get response */
-    __handleMacroParaGet(bidib, bidibnode->uid, pdata );
+    if( bidibnode != NULL )
+      __handleMacroParaGet(bidib, bidibnode->uid, pdata );
     break;
 
   case MSG_ACCESSORY_PARA:
     /* accessory get response */
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_ACCESSORY_PARA path=%s port=%d param=%d datasize=%d", pathKey, pdata[0], pdata[1], size );
-    __handleAccessoryParaGet(bidib, bidibnode->uid, pdata );
+    if( bidibnode != NULL )
+      __handleAccessoryParaGet(bidib, bidibnode->uid, pdata );
     break;
 
   case MSG_LC_KEY:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_LC_KEY path=%s port=%d state=%d", pathKey, pdata[0], pdata[1] );
-    __handleSensor(bidib, bidibnode->uid, pdata[0], pdata[1] > 0 ? True:False, 0, -1, 0);
+    if( bidibnode != NULL )
+      __handleSensor(bidib, bidibnode->uid, pdata[0], pdata[1] > 0 ? True:False, 0, -1, 0);
     break;
 
   case MSG_ACCESSORY_STATE:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_ACCESSORY_STATE path=%s port=%d aspect=%d", pathKey, pdata[0], pdata[1] );
-    __handleAccessory(bidib, bidibnode->uid, pdata);
+    if( bidibnode != NULL )
+      __handleAccessory(bidib, bidibnode->uid, pdata);
     break;
 
   case MSG_SYS_GET_MAGIC:
@@ -2945,7 +2971,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_CS_ACCESSORY_ACK:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_CS_ACCESSORY_ACK path=%s addr=%d ack=%d", pathKey, pdata[0] + pdata[1]*256, pdata[2] );
-    __handleAccessoryAck(bidib, bidibnode->uid, pdata);
+    if( bidibnode != NULL )
+      __handleAccessoryAck(bidib, bidibnode->uid, pdata);
     break;
 
   case MSG_CS_POM_ACK:
@@ -2965,7 +2992,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_CS_DRIVE_MANUAL:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_CS_DRIVE_MANUAL path=%s addr=%d", pathKey, pdata[0] + pdata[1]*256 );
-    __handleDriveManual(bidib, bidibnode->uid, pdata);
+    if( bidibnode != NULL )
+      __handleDriveManual(bidib, bidibnode->uid, pdata);
     break;
 
   case MSG_CS_DRIVE_EVENT:
@@ -2976,7 +3004,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_VENDOR:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"MSG_VENDOR");
-    __handleVendor(bidib, bidibnode->uid, pdata);
+    if( bidibnode != NULL )
+      __handleVendor(bidib, bidibnode->uid, pdata);
     break;
 
   case MSG_VENDOR_ACK:
