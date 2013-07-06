@@ -3328,7 +3328,7 @@ void LocDialog::initBBT() {
   iONode bbt = wLoc.getbbt( m_Props );
   int i = 0;
   while( bbt != NULL ) {
-    m_BBTList2->InsertItem( i, wLoc.isbbtusefromblock(m_Props) ? wxString(wBBT.getfrombk(bbt),wxConvUTF8):"-" );
+    m_BBTList2->InsertItem( i, wLoc.isbbtusefromblock(m_Props) ? wxString(wBBT.getfrombk(bbt),wxConvUTF8):wxT("-") );
     m_BBTList2->SetItem( i, 1, wxString(wBBT.getbk(bbt), wxConvUTF8) );
     m_BBTList2->SetItem( i, 2, wxString::Format(wxT("%d"), wBBT.getinterval(bbt)) );
     m_BBTList2->SetItem( i, 3, wxString::Format(wxT("%d"), wBBT.getcount(bbt)) );

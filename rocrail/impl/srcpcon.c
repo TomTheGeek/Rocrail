@@ -81,7 +81,7 @@ struct __OSrcpService {
 };
 typedef struct __OSrcpService* __iOSrcpService;
 
-static const char* SRCPVERSION="Rocrail 2.0r%d; SRCP 0.8.4; SRCPOTHER 0.8.3";
+static const char* SRCPVERSION="Rocrail 2.0r%d; SRCP 0.8.4; SRCPOTHER 0.8.3%s";
 
 static volatile Boolean srcpPwCmdInProgress = False;
 static char* srcpPwFreetext = NULL;
@@ -3884,17 +3884,15 @@ static void __SrcpService( void* threadinst ) {
 
   ThreadOp.setDescription( th, "SRCP Client command reader" );
 
-  StrOp.fmtb(str, SRCPVERSION, (int) bzr );
+  StrOp.fmtb(str, SRCPVERSION, (int) bzr, "\n" );
   if( o->clntSocket != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP service started for: %s, with session ID %d",
         SocketOp.getPeername(o->clntSocket), o->id );
     SocketOp.write( o->clntSocket, str, StrOp.len(str) );
-    SocketOp.write( o->clntSocket, "\n", 1 );
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP service started for: Serial, with session ID %d", o->id );
     SerialOp.write( o->clntSerial, str, StrOp.len(str) );
-    SerialOp.write( o->clntSerial, "\n", 1 );
   }
 
   sname = StrOp.fmt( "srcp%08X", o->clntSocket );
