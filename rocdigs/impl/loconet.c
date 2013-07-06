@@ -1742,7 +1742,10 @@ static int __processFunctions(iOLocoNet loconet_inst, iONode node, byte* cmd, in
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function command for address [%d] in group [%d]", addr, group );
 
-  if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn(data->loconet) ) ||  StrOp.equals( wDigInt.sublib_ulni, wDigInt.getsublib( data->ini ) ) ) {
+  if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn(data->loconet) ) ||
+      StrOp.equals( wLocoNet.cs_intellibox, wLocoNet.getcmdstn(data->loconet) ) ||
+      StrOp.equals( wDigInt.sublib_ulni, wDigInt.getsublib( data->ini ) ) )
+  {
     /*
       addr 24 F9
           00000000: D4 20 03 07 10 1F
