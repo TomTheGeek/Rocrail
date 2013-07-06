@@ -1762,7 +1762,7 @@ static int __processFunctions(iOLocoNet loconet_inst, iONode node, byte* cmd, in
           00000000: D4 20 03 05 00 0D
 
      */
-    cmd[0] = 0xD4;
+    cmd[0] = OPC_UHLI_FUN;
     cmd[1] = 0x20;
     cmd[2] = slot;
     if( fnchanged > 8 && fnchanged < 12 ) {

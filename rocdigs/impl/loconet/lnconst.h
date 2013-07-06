@@ -233,6 +233,7 @@
 #define OPC_SW_ACK        0xbd
 #define OPC_LOCO_ADR      0xbf
 #define OPC_MULTI_SENSE   0xd0
+#define OPC_UHLI_FUN      0xd4
 #define OPC_LISSY_REP     0xe4
 #define OPC_PEER_XFER     0xe5
 #define OPC_SL_RD_DATA    0xe7
