@@ -111,6 +111,7 @@ public:
     wxBitmapButton* m_Splash;
     wxStaticText* m_Build;
     wxStaticText* m_RocrailVersion;
+    wxStaticText* m_RocrailPwd;
     wxStaticText* m_Home;
     wxStaticText* m_Support;
     wxStaticText* m_labLic;

@@ -2119,6 +2119,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
 
     char* version = StrOp.fmt( "%d.%d-%d", wGlobal.vmajor, wGlobal.vminor, AppOp.getrevno() );
     wPlan.setrocrailversion( data->model, version );
+    wPlan.setrocrailpwd( data->model, FileOp.pwd() );
     StrOp.free(version);
 
     unsigned char* donkey = StrOp.strToByte(AppOp.getdonkey());
@@ -2413,6 +2414,7 @@ static void _save( iOModel inst, Boolean removeGen ) {
     char* xml = NULL;
     char* version = StrOp.fmt( "%d.%d.%d-%d", wGlobal.vmajor, wGlobal.vminor, wGlobal.patch, AppOp.getrevno() );
     wPlan.setrocrailversion( o->model, version );
+    wPlan.setrocrailpwd( o->model, FileOp.pwd() );
     StrOp.free(version);
     /* Serialize plan. */
     if( o->locoFileName != NULL && StrOp.len( o->locoFileName ) > 0  ) {

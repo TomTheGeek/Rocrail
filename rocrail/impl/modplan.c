@@ -1304,6 +1304,7 @@ static void __saveModule( iOModPlan inst, iONode module, int level ) {
   __copyUnresolvedRoutes( inst, model, level );
 
   wPlan.setrocrailversion( model, version );
+  wPlan.setrocrailpwd( model, FileOp.pwd() );
   /* Serialize plan. */
   xml = model->base.toString( model );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Serialized Module=%d", StrOp.len( xml ) );

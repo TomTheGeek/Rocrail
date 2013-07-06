@@ -96,6 +96,7 @@ InfoDialog::InfoDialog( wxWindow* parent, wxWindowID id, const wxString& caption
   m_ThanksLine->SetLabel( _T("") );
 
   m_RocrailVersion->SetLabel( wxT("Rocrail ") + wxString( wPlan.getrocrailversion(wxGetApp().getModel()),wxConvUTF8) );
+  m_RocrailPwd->SetLabel( wxString( wPlan.getrocrailpwd(wxGetApp().getModel()),wxConvUTF8) );
 
   m_Thanks->AppendText( _T("The name Rocrail and the associated logo is our trademark and is officially registered in Germany under number 302008050592 and in the Benelux under number 928454.") );
   m_Thanks->AppendText( _T("\n\n") );
@@ -132,6 +133,7 @@ bool InfoDialog::Create( wxWindow* parent, wxWindowID id, const wxString& captio
     m_Splash = NULL;
     m_Build = NULL;
     m_RocrailVersion = NULL;
+    m_RocrailPwd = NULL;
     m_Home = NULL;
     m_Support = NULL;
     m_labLic = NULL;
@@ -178,6 +180,9 @@ void InfoDialog::CreateControls()
 
     m_RocrailVersion = new wxStaticText( itemDialog1, wxID_ANY, _("Rocrail Version"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_RocrailVersion, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+
+    m_RocrailPwd = new wxStaticText( itemDialog1, wxID_ANY, _("."), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer3->Add(m_RocrailPwd, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_Home = new wxStaticText( itemDialog1, wxID_STATIC_INFO_HOME, _("home"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
     itemFlexGridSizer3->Add(m_Home, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);

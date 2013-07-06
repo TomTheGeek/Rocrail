@@ -1300,6 +1300,7 @@
     <var name="name" vt="string" defval="plan.xml" range="*" remark="Filename of plan."/>
     <var name="rocguiversion" vt="string" defval="" range="*" remark="Rocgui version at last save of a local plan."/>
     <var name="rocrailversion" vt="string" defval="" range="*" remark="Rocrail version at last save of a plan."/>
+    <var name="rocrailpwd" vt="string" defval="" range="*" remark="Rocrail working directory."/>
     <var name="modplan" vt="bool" defval="false" remark="Flags the Rocview if it is assembled from a modular layout definition."/>
     <var name="themes" vt="string" defval="" range="*" remark="Preferred themes for redndering this plan by Rocviews."/>
     <var name="donkey" vt="bool" defval="false" remark="Flags if a valid donation key is found."/>
