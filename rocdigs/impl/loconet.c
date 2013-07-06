@@ -1732,7 +1732,7 @@ static int __setFastClock(iOLocoNet loconet, iONode node, byte* cmd) {
  * Create packet for functions 9-28.
  * Group 3=f9-f12, 4=f13-f16, 5=f17-f20, 6=f21-f24, 7=f25-f28
  */
-static int __processFunctions(iOLocoNet loconet_inst, iONode node, byte* cmd) {
+static int __processFunctions(iOLocoNet loconet_inst, iONode node, byte* cmd, int slot) {
   iOLocoNetData data = Data(loconet_inst);
   int addr      = wFunCmd.getaddr(node);
   int group     = wFunCmd.getgroup(node);
@@ -1742,10 +1742,26 @@ static int __processFunctions(iOLocoNet loconet_inst, iONode node, byte* cmd) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "function command for address [%d] in group [%d]", addr, group );
 
-  if( StrOp.equals( wDigInt.sublib_ulni, wDigInt.getsublib( data->ini ) ) ) {
+  if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn(data->loconet) ) ||  StrOp.equals( wDigInt.sublib_ulni, wDigInt.getsublib( data->ini ) ) ) {
+    /*
+      addr 24 F9
+          00000000: D4 20 03 07 10 1F
+      addr 200 F9
+          00000000: D4 20 07 07 10 1B
+
+      addr 24 F10
+          00000000: D4 20 03 07 30 3F
+      addr 24 F11
+          00000000: D4 20 03 07 70 7F
+      addr 24 F12 on
+          00000000: D4 20 03 05 10 1D
+      addr 24 F12 off
+          00000000: D4 20 03 05 00 0D
+
+     */
     cmd[0] = 0xD4;
     cmd[1] = 0x20;
-    cmd[2] = 0x01;
+    cmd[2] = slot;
     if( fnchanged > 8 && fnchanged < 12 ) {
       cmd[3] = 0x07;
       cmd[4]  = wFunCmd.isf9  (node)?0x10:0x00;;
@@ -2000,7 +2016,9 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
 
   /* Function command groups > 1 */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) && wFunCmd.getgroup(node) > 2 ) {
-    return __processFunctions(loconet_inst, node, cmd);
+    int status = 0;
+    int slot =  __getLocoSlot( loconet_inst, node, &status);
+    return __processFunctions(loconet_inst, node, cmd, slot);
   }
 
 
