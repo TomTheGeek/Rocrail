@@ -1513,7 +1513,8 @@ static void __BBT(iOLoc loc) {
       int V_min = wLoc.getV_min( data->props );
       int speed = 0;
       data->bbtCycleNr++;
-      speed = data->bbtSpeed - ((data->bbtSpeed / bbtsteps) * data->bbtCycleNr);
+      /* ToDo: Subtract the Min. speed from the calculation. */
+      speed = data->bbtSpeed - (((data->bbtSpeed-V_min) / bbtsteps) * data->bbtCycleNr);
       if( speed <= V_min ) {
         speed = V_min;
         data->bbtAtMinSpeed = True;
