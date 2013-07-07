@@ -1554,7 +1554,7 @@ static void __BBT(iOLoc loc) {
         NodeOp.addChild(data->props, bbt);
         wBBT.setbk(bbt, data->bbtInBlock);
         wBBT.setfrombk(bbt, data->bbtPrevBlock);
-        wBBT.setinterval(bbt, data->bbtInterval * bbtsteps);
+        wBBT.setinterval(bbt, data->bbtInterval * data->bbtCycleNr);
         MapOp.put(data->bbtMap, key, (obj)bbt);
       }
 
