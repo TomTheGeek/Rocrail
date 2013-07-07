@@ -64,13 +64,13 @@ class wxSpinCtrl;
 #define ID_BUTTON_KEYPATH 10411
 #define wxID_STATIC_RR_LIBPATH 10095
 #define ID_TEXTCTRL_RR_LIBPATH 10096
-#define wxID_STATIC_RR_TRACEFILE 10097
-#define ID_TEXTCTRL_RR_TRACEFILE 10101
 #define ID_PANEL_RR_TRACE 10102
 #define ID_CHECKBOX_RR_AUTO 10006
 #define ID_CHECKBOX_RR_MONITOR 10232
 #define ID_CHECKBOX_RR_BYTE 10007
 #define ID_CHECKBOX_RR_DEBUG 10005
+#define wxID_STATIC_RR_TRACEFILE 10097
+#define ID_TEXTCTRL_RR_TRACEFILE 10101
 #define ID_PANEL_RR_SERVICE 10107
 #define wxID_STATIC_RR_HTTPPORT 10003
 #define ID_TEXTCTRL_RR_HTTPPORT 10004
@@ -247,8 +247,6 @@ public:
     wxStaticText* m_labSoundPlayer;
     wxTextCtrl* m_SoundPlayer;
     wxCheckBox* m_SoundPlayerLocation;
-    wxStaticText* m_LabelTraceFile;
-    wxTextCtrl* m_TraceFile;
     wxStaticBox* m_ScBox;
     wxStaticText* m_labScSensor;
     wxComboBox* m_ScSensor;
@@ -273,6 +271,10 @@ public:
     wxCheckBox* m_Info;
     wxCheckBox* m_Debug;
     wxCheckBox* m_SendAllTraces;
+    wxStaticText* m_LabelTraceFile;
+    wxTextCtrl* m_TraceFile;
+    wxStaticText* m_labProtPath;
+    wxTextCtrl* m_ProtPath;
     wxPanel* m_ServicePanel;
     wxStaticBoxSizer* m_HttpBox;
     wxStaticText* m_LabelHttpPort;
