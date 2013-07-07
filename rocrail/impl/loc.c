@@ -68,6 +68,7 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer );
 static void __swapConsist( iOLoc inst, iONode cmd );
 static int __getFnAddr( iOLoc inst, int function, int* mappedfn);
 static void __doSound(iOLoc inst, iONode cmd);
+static void __initBBTmap( iOLoc loc );
 
 /*
  ***** OBase functions.
@@ -1569,18 +1570,17 @@ static void __BBT(iOLoc loc) {
           interval = oldinterval - (diffinterval / bbtcorrection);
       }
       wBBT.setinterval(bbt, interval);
-      if( wBBT.getcount(bbt) < 10 ) {
-        wBBT.setcount(bbt, wBBT.getcount(bbt) + 1 );
-      }
+      wBBT.setcount(bbt, wBBT.getcount(bbt) + 1 );
 
       {
         iONode broadcast = (iONode)NodeOp.base.clone(data->props);
         wLoc.setV( broadcast, data->drvSpeed );
         wLoc.setbbtevent(broadcast, True);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-IN interval=%d block=%s bbtcorrection=%d count=%d (broadcast)",
+            interval, data->bbtInBlock, bbtcorrection, wBBT.getcount(bbt) );
         AppOp.broadcastEvent( broadcast );
       }
 
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-IN interval=%d block=%s bbtcorrection=%d", interval, data->bbtInBlock, bbtcorrection );
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
@@ -2952,6 +2952,8 @@ static void _modify( iOLoc inst, iONode props ) {
 
   data->secondnextblock = wLoc.issecondnextblock( data->props );
 
+  __initBBTmap(inst);
+
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)props->base.clone( props );
@@ -3137,6 +3139,7 @@ static const char* _getIdent( iOLoc loc ) {
 static void __initBBTmap( iOLoc loc ) {
   iOLocData data = Data(loc);
   iONode bbt = NodeOp.findNode( data->props, wBBT.name() );
+  MapOp.clear(data->bbtMap);
   while( bbt != NULL ) {
     char* key = NULL;
     if( wLoc.isbbtusefromblock( data->props ) )
