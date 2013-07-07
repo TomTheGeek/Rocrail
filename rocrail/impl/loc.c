@@ -1556,20 +1556,19 @@ static void __BBT(iOLoc loc) {
         wBBT.setfrombk(bbt, data->bbtPrevBlock);
         MapOp.put(data->bbtMap, key, (obj)bbt);
       }
-      else {
-        int count        = wBBT.getcount(bbt);
-        int oldinterval  = wBBT.getinterval(bbt);
-        int diffinterval = abs(interval - oldinterval);
 
-        if( diffinterval > bbtmaxdiff ) {
-          diffinterval = bbtmaxdiff;
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, bbtmaxdiff );
-        }
-        if( interval > oldinterval )
-          interval = oldinterval + (diffinterval / bbtcorrection);
-        else if( interval < oldinterval )
-          interval = oldinterval - (diffinterval / bbtcorrection);
+      int count        = wBBT.getcount(bbt);
+      int oldinterval  = wBBT.getinterval(bbt);
+      int diffinterval = abs(interval - oldinterval);
+
+      if( diffinterval > bbtmaxdiff ) {
+        diffinterval = bbtmaxdiff;
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, bbtmaxdiff );
       }
+      if( interval > oldinterval )
+        interval = oldinterval + (diffinterval / bbtcorrection);
+      else if( interval < oldinterval )
+        interval = oldinterval - (diffinterval / bbtcorrection);
       wBBT.setinterval(bbt, interval);
       wBBT.setcount(bbt, wBBT.getcount(bbt) + 1 );
 
