@@ -163,7 +163,34 @@ Boolean rocs_serial_open( iOSerial inst ) {
       if( o->line.stopbits == twostopbits )
         dcb.StopBits = TWOSTOPBITS;
 
-      lineSet = SetCommState( o->handle, &dcb );
+      if( o->line.bps > 256000 ) {
+        COMMCONFIG cc;
+        int size = sizeof(COMMCONFIG);
+        DWORD confSize = sizeof(COMMCONFIG);
+        memset((void *)(&cc), 0, size);
+        GetCommConfig(o->handle, &cc, &confSize);
+        cc.dcb.DCBlength         = sizeof(DCB) ;
+        cc.dcb.BaudRate          = o->line.bps;
+        cc.dcb.fBinary           = True;
+        cc.dcb.fParity           = False;
+        cc.dcb.fOutxCtsFlow      = o->line.flow == cts ? True:False;
+        cc.dcb.fOutxDsrFlow      = o->line.flow == dsr ? True:False;
+        cc.dcb.fDtrControl       = o->line.flow == dsr ? DTR_CONTROL_HANDSHAKE:DTR_CONTROL_DISABLE;
+        cc.dcb.fDsrSensitivity   = False;
+        cc.dcb.fTXContinueOnXoff = False;
+        cc.dcb.fOutX             = o->line.flow == xon ? True:False;
+        cc.dcb.fInX              = o->line.flow == xon ? True:False;
+        cc.dcb.fErrorChar        = False;
+        cc.dcb.fNull             = False;
+        cc.dcb.fRtsControl       = o->line.rtsdisabled ? RTS_CONTROL_DISABLE:RTS_CONTROL_HANDSHAKE;
+        cc.dcb.fAbortOnError     = False;
+        cc.dcb.wReserved         = 0;
+        cc.dcb.ByteSize          = o->line.bits;
+        SetCommConfig(o->handle, &cc, sizeof(COMMCONFIG));
+      }
+      else {
+        lineSet = SetCommState( o->handle, &dcb );
+      }
       rc = GetLastError();
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Serial[%s] line setted.[rc=%d]", o->device, rc );
     }
