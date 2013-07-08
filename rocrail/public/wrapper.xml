@@ -2420,6 +2420,7 @@
         <var name="bbtstartinterval" vt="int" defval="10" range="10-50"/>
         <var name="bbtmaxdiff" vt="int" defval="250" range="10-500" unit="10ms"/>
         <var name="bbtcorrection" vt="int" defval="25" range="10-100" unit="%"/>
+        <var name="bbtshortcorrection" vt="int" defval="50" range="10-100" unit="%"/>
         <var name="bbtusefromblock" vt="bool" defval="True" remark="Use the from blockID also as key."/>
         <bbt cardinality="n" wrappername="BBT">
           <var name="bk" vt="string" defval="" range="*" remark="Block ID."/>

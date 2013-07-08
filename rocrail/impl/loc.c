@@ -1456,17 +1456,21 @@ static void __theSwap(iOLoc loc, Boolean swap, Boolean consist, iONode cmd) {
  */
 static void __BBT(iOLoc loc) {
   iOLocData data = Data(loc);
-  int     bbtsteps      = wLoc.getbbtsteps(data->props);
-  int     bbtmaxdiff    = wLoc.getbbtmaxdiff(data->props);
-  int     bbtcorrection = wLoc.getbbtcorrection(data->props);
+  int     bbtsteps           = wLoc.getbbtsteps(data->props);
+  int     bbtmaxdiff         = wLoc.getbbtmaxdiff(data->props);
+  int     bbtcorrection      = wLoc.getbbtcorrection(data->props);
+  int     bbtshortcorrection = wLoc.getbbtshortcorrection(data->props);
   if( bbtsteps < 4 || bbtsteps > 16 )
     bbtsteps = 10;
   if( bbtmaxdiff < 100 || bbtmaxdiff > 500 )
     bbtmaxdiff = 250;
-  if( bbtcorrection < 10 || bbtcorrection > 75 )
+  if( bbtcorrection < 10 || bbtcorrection > 100 )
     bbtcorrection = 25;
+  if( bbtshortcorrection < 10 || bbtshortcorrection > 100 )
+    bbtshortcorrection = 50;
 
-  bbtcorrection = 100 / bbtcorrection;
+  bbtcorrection      = 100 / bbtcorrection;
+  bbtshortcorrection = 100 / bbtshortcorrection;
 
   if( data->bbtEnter != 0 && data->bbtIn == 0  && data->bbtEnterBlock != NULL ) {
     if( data->bbtInTimer > 0 ) {
@@ -1567,7 +1571,7 @@ static void __BBT(iOLoc loc) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, bbtmaxdiff );
       }
       if( interval > oldinterval )
-        interval = oldinterval + (diffinterval / bbtcorrection);
+        interval = oldinterval + (diffinterval / bbtshortcorrection);
       else if( interval < oldinterval )
         interval = oldinterval - (diffinterval / bbtcorrection);
       wBBT.setinterval(bbt, interval);
