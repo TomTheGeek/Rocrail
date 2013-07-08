@@ -1459,18 +1459,14 @@ static void __BBT(iOLoc loc) {
   int     bbtsteps           = wLoc.getbbtsteps(data->props);
   int     bbtmaxdiff         = wLoc.getbbtmaxdiff(data->props);
   int     bbtcorrection      = wLoc.getbbtcorrection(data->props);
-  int     bbtshortcorrection = wLoc.getbbtshortcorrection(data->props);
   if( bbtsteps < 4 || bbtsteps > 16 )
     bbtsteps = 10;
   if( bbtmaxdiff < 100 || bbtmaxdiff > 500 )
     bbtmaxdiff = 250;
   if( bbtcorrection < 10 || bbtcorrection > 100 )
     bbtcorrection = 25;
-  if( bbtshortcorrection < 10 || bbtshortcorrection > 100 )
-    bbtshortcorrection = 50;
 
   bbtcorrection      = 100 / bbtcorrection;
-  bbtshortcorrection = 100 / bbtshortcorrection;
 
   if( data->bbtEnter != 0 && data->bbtIn == 0  && data->bbtEnterBlock != NULL ) {
     if( data->bbtInTimer > 0 ) {
@@ -1498,6 +1494,7 @@ static void __BBT(iOLoc loc) {
       if( bbt != NULL ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-Record found: [%s]", key);
         data->bbtInterval = wBBT.getinterval(bbt) / bbtsteps;
+        wBBT.setsteps(bbt, 0 );
       }
       else {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-Record **not** found: [%s]", key);
@@ -1517,7 +1514,7 @@ static void __BBT(iOLoc loc) {
       int V_min = wLoc.getV_min( data->props );
       int speed = 0;
       data->bbtCycleNr++;
-      /* ToDo: Subtract the Min. speed from the calculation. */
+      /* Subtract the Min. speed from the calculation. */
       speed = data->bbtSpeed - (((data->bbtSpeed-V_min) / bbtsteps) * data->bbtCycleNr);
       if( speed <= V_min ) {
         speed = V_min;
@@ -1559,6 +1556,7 @@ static void __BBT(iOLoc loc) {
         wBBT.setbk(bbt, data->bbtInBlock);
         wBBT.setfrombk(bbt, data->bbtPrevBlock);
         wBBT.setinterval(bbt, data->bbtInterval * data->bbtCycleNr);
+        wBBT.setsteps(bbt, data->bbtCycleNr);
         MapOp.put(data->bbtMap, key, (obj)bbt);
       }
 
@@ -1571,11 +1569,13 @@ static void __BBT(iOLoc loc) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, bbtmaxdiff );
       }
       if( interval > oldinterval )
-        interval = oldinterval + (diffinterval / bbtshortcorrection);
+        interval = oldinterval + (diffinterval / bbtcorrection);
       else if( interval < oldinterval )
         interval = oldinterval - (diffinterval / bbtcorrection);
       wBBT.setinterval(bbt, interval);
       wBBT.setcount(bbt, wBBT.getcount(bbt) + 1 );
+      if( data->bbtCycleNr > 0 )
+        wBBT.setsteps(bbt, data->bbtCycleNr );
 
       {
         iONode broadcast = (iONode)NodeOp.base.clone(data->props);

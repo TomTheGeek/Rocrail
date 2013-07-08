@@ -519,7 +519,7 @@ static iONode _getEvent4Block(iOModPlan inst, const char* modid, iONode block, c
       return NULL;
     }
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
         "searching event[%s] from block[%s] to block[%s-%s]...", eventid, comingfrom, modid, wBlock.getid(block) );
 
     /* iterate all fbevents */
@@ -538,7 +538,7 @@ static iONode _getEvent4Block(iOModPlan inst, const char* modid, iONode block, c
         int i = 0;
         for( i = 0; i < ListOp.size(blockids); i++ ) {
           const char* blockid = (const char*)ListOp.get( blockids, i );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
               "eventmap[%s]=[%s], fbid=%s, comingfrom=%s, eventid=%s", key, blockid, fbid, comingfrom, eventid );
           if( StrOp.equals(blockid, comingfrom) && StrOp.equals(fbid, eventid) ) {
             return fbevent;

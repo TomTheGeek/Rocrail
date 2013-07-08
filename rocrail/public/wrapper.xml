@@ -2420,13 +2420,12 @@
         <var name="bbtstartinterval" vt="int" defval="10" range="10-50"/>
         <var name="bbtmaxdiff" vt="int" defval="250" range="10-500" unit="10ms"/>
         <var name="bbtcorrection" vt="int" defval="25" range="10-100" unit="%"/>
-        <var name="bbtshortcorrection" vt="int" defval="25" range="10-100" unit="%"/>
         <var name="bbtusefromblock" vt="bool" defval="True" remark="Use the from blockID also as key."/>
         <bbt cardinality="n" wrappername="BBT">
           <var name="bk" vt="string" defval="" range="*" remark="Block ID."/>
           <var name="frombk" vt="string" defval="" range="*" remark="From block ID."/>
           <var name="interval" vt="int" defval="1" range="1-*" unit="10ms" remark="Brake interval."/>
-          <var name="diff" vt="int" defval="0" range="0-*" unit="10ms" remark="Last calculated difference."/>
+          <var name="steps" vt="int" defval="0" range="0-*"/>
           <var name="fixed" vt="bool" defval="False" remark="Fixed block brake timer."/>
           <var name="count" vt="int" defval="0" remark="Counter for dynamically adjust the correction factor."/>
         </bbt>
