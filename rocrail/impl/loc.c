@@ -1521,6 +1521,7 @@ static void __BBT(iOLoc loc) {
       if( speed <= V_min ) {
         speed = V_min;
         data->bbtAtMinSpeed = True;
+        data->bbtAtMin = SystemOp.getTick();
       }
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-SPEED V=%d id=%s mode=%s", speed, wLoc.getid(data->props), wLoc.getmode(data->props)  );
 
@@ -1571,10 +1572,25 @@ static void __BBT(iOLoc loc) {
         diffinterval = bbtmaxdiff;
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, bbtmaxdiff );
       }
-      if( interval > oldinterval )
-        interval = oldinterval + (diffinterval / bbtcorrection);
-      else if( interval < oldinterval )
+      if( interval > oldinterval ) {
+        if( data->bbtAtMin > 0 ) {
+          /* NewBBT = BBT + (( T-(BBT/9() * 0,3) */
+          float BBT    = oldinterval;
+          int   T      = data->bbtIn - data->bbtAtMin;
+          int   NewBBT = BBT + ( T-(BBT / 9.0) * 0.3);
+          TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT L-interval %d (PhG)", NewBBT );
+          interval = NewBBT;
+        }
+        else {
+          interval = oldinterval + (diffinterval / bbtcorrection);
+          TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT L-interval %d", interval );
+        }
+      }
+      else if( interval < oldinterval ) {
         interval = oldinterval - (diffinterval / bbtcorrection);
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT S-interval %d", interval );
+      }
+
       wBBT.setinterval(bbt, interval);
       wBBT.setcount(bbt, wBBT.getcount(bbt) + 1 );
       if( data->bbtCycleNr > 0 )
@@ -1607,12 +1623,14 @@ static void __BBT(iOLoc loc) {
     data->bbtIn         = 0;
     data->bbtAtMinSpeed = False;
     data->bbtStepCount  = 0;
+    data->bbtAtMin      = 0;
   }
   else if( data->bbtIn != 0 && data->bbtInBlock == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "BBT-IN **block not set**" );
     data->bbtCycleSpeed = 0;
     data->bbtEnter      = 0;
     data->bbtIn         = 0;
+    data->bbtAtMin      = 0;
     data->bbtAtMinSpeed = False;
     data->bbtStepCount  = 0;
   }
@@ -1925,6 +1943,7 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
       data->bbtEnterBlock = blockid;
       data->bbtInBlock    = NULL;
       data->bbtIn         = 0;
+      data->bbtAtMin      = 0;
       data->bbtCycleSpeed = 0;
       data->bbtInTimer    = 0;
       data->bbtStepCount  = 0;
