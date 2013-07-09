@@ -1551,7 +1551,9 @@ static void __BBT(iOLoc loc) {
     iONode bbt = (iONode)MapOp.get( data->bbtMap, key );
 
     if( data->bbtIn >= data->bbtEnter && StrOp.equals(data->bbtEnterBlock, data->bbtInBlock) ) {
+      Boolean newBBTRecord = False;
       int interval = (int)(data->bbtIn - data->bbtEnter);
+
       if( bbt == NULL ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT creating node for block=%s from=%s with key=[%s]",
             data->bbtInBlock, data->bbtPrevBlock, key );
@@ -1562,6 +1564,7 @@ static void __BBT(iOLoc loc) {
         wBBT.setinterval(bbt, data->bbtInterval * data->bbtCycleNr);
         wBBT.setsteps(bbt, data->bbtCycleNr);
         MapOp.put(data->bbtMap, key, (obj)bbt);
+        newBBTRecord = True;
       }
 
       int count        = wBBT.getcount(bbt);
@@ -1573,23 +1576,28 @@ static void __BBT(iOLoc loc) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, bbtmaxdiff );
       }
       if( interval > oldinterval ) {
-        if( data->bbtAtMin > 0 ) {
-          /* NewBBT = BBT + (( T-(BBT/9() * 0,3) */
+        if( newBBTRecord && bbtsteps == 10 && data->bbtAtMin > 0 && data->bbtAtMin < data->bbtIn ) {
+          /*
+                           (( Tijd - BBT / ( steps - 1 ) ) * percent)
+             NewBBT = BBT + ______________________________
+                           (  steps -  1 )  *  10
+           */
           float BBT       = oldinterval;
-          float reststeps = bbtsteps - 1;
+          float steps     = bbtsteps;
+          float percent   = 20 + (bbtsteps - 10);
           int   T         = data->bbtIn - data->bbtAtMin;
-          int   NewBBT    = BBT + ( T-(BBT / reststeps) * 0.3);
-          TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT L-interval %d (PhG)", NewBBT );
+          int   NewBBT    = BBT + (( T - BBT/(steps-1)) * percent ) / ((steps-1) * 10);
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT L-interval %d %.1f%%", NewBBT, percent );
           interval = NewBBT;
         }
         else {
           interval = oldinterval + (diffinterval / bbtcorrection);
-          TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT L-interval %d", interval );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT L-interval %d", interval );
         }
       }
       else if( interval < oldinterval ) {
         interval = oldinterval - (diffinterval / bbtcorrection);
-        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT S-interval %d", interval );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT S-interval %d", interval );
       }
 
       wBBT.setinterval(bbt, interval);
