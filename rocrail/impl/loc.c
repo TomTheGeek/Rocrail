@@ -1584,9 +1584,10 @@ static void __BBT(iOLoc loc) {
            */
           float BBT       = oldinterval;
           float steps     = bbtsteps;
-          float percent   = 20 + (bbtsteps - 10);
+          float percent   = 19 + (bbtsteps - 10);
           int   T         = data->bbtIn - data->bbtAtMin;
-          int   NewBBT    = BBT + (( T - BBT/(steps-1)) * percent ) / ((steps-1) * 10);
+          float bbtTime   = T - (BBT/(steps-1));
+          int   NewBBT    = BBT + (( bbtTime * percent ) / ((steps-1) * 10));
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT L-interval %d %.1f%%", NewBBT, percent );
           interval = NewBBT;
         }
