@@ -1494,6 +1494,8 @@ static void __BBT(iOLoc loc) {
       if( bbt != NULL ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-Record found: [%s]", key);
         data->bbtInterval = wBBT.getinterval(bbt) / bbtsteps;
+        if( wBBT.getinterval(bbt) % bbtsteps > 5 )
+          data->bbtInterval++;
         wBBT.setsteps(bbt, 0 );
       }
       else {
