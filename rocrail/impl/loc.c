@@ -1456,9 +1456,9 @@ static void __theSwap(iOLoc loc, Boolean swap, Boolean consist, iONode cmd) {
  */
 static void __BBT(iOLoc loc) {
   iOLocData data = Data(loc);
-  int     bbtsteps           = wLoc.getbbtsteps(data->props);
-  int     bbtmaxdiff         = wLoc.getbbtmaxdiff(data->props);
-  int     bbtcorrection      = wLoc.getbbtcorrection(data->props);
+  int bbtsteps      = wLoc.getbbtsteps(data->props);
+  int bbtmaxdiff    = wLoc.getbbtmaxdiff(data->props);
+  int bbtcorrection = wLoc.getbbtcorrection(data->props);
   if( bbtsteps < 4 || bbtsteps > 16 )
     bbtsteps = 10;
   if( bbtmaxdiff < 100 || bbtmaxdiff > 500 )
@@ -1466,7 +1466,7 @@ static void __BBT(iOLoc loc) {
   if( bbtcorrection < 10 || bbtcorrection > 100 )
     bbtcorrection = 25;
 
-  bbtcorrection      = 100 / bbtcorrection;
+  bbtcorrection = 100 / bbtcorrection;
 
   if( data->bbtEnter != 0 && data->bbtIn == 0  && data->bbtEnterBlock != NULL ) {
     if( data->bbtInTimer > 0 ) {
@@ -1515,7 +1515,7 @@ static void __BBT(iOLoc loc) {
       int speed = 0;
       data->bbtCycleNr++;
       /* Subtract the Min. speed from the calculation. */
-      speed = data->bbtSpeed - (((data->bbtSpeed-V_min) / bbtsteps) * data->bbtCycleNr);
+      speed = data->bbtSpeed - (((data->bbtSpeed-V_min) * data->bbtCycleNr) / bbtsteps );
       if( speed <= V_min ) {
         speed = V_min;
         data->bbtAtMinSpeed = True;
