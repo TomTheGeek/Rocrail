@@ -1575,9 +1575,10 @@ static void __BBT(iOLoc loc) {
       if( interval > oldinterval ) {
         if( data->bbtAtMin > 0 ) {
           /* NewBBT = BBT + (( T-(BBT/9() * 0,3) */
-          float BBT    = oldinterval;
-          int   T      = data->bbtIn - data->bbtAtMin;
-          int   NewBBT = BBT + ( T-(BBT / 9.0) * 0.3);
+          float BBT       = oldinterval;
+          float reststeps = bbtsteps - 1;
+          int   T         = data->bbtIn - data->bbtAtMin;
+          int   NewBBT    = BBT + ( T-(BBT / reststeps) * 0.3);
           TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT L-interval %d (PhG)", NewBBT );
           interval = NewBBT;
         }
