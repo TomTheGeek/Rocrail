@@ -22732,4 +22732,7 @@
   <Msg id="mintrainlen">
     <en txt="Min. train length"/>
   </Msg>
+  <Msg id="steps">
+    <en txt="Steps"/>
+  </Msg>
 </Messages>

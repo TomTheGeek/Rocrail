@@ -773,6 +773,7 @@
       <var name="bbtInterval" vt="int"/>
       <var name="bbtAtMinSpeed" vt="Boolean"/>
       <var name="bbtInTimer" vt="int"/>
+      <var name="bbtStepCount" vt="int"/>
       <var name="lastfncmd" vt="long"/>
       </data>
   </object>

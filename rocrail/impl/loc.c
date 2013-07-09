@@ -1509,7 +1509,7 @@ static void __BBT(iOLoc loc) {
     if( data->bbtInterval == 0 )
       data->bbtInterval = 10;
 
-    if( data->drvSpeed > 0 && !data->bbtAtMinSpeed && data->bbtCycleSpeed > 0 && (data->bbtCycleSpeed % data->bbtInterval) == 0 ) {
+    if( data->drvSpeed > 0 && !data->bbtAtMinSpeed && data->bbtCycleSpeed >= 0 && (data->bbtCycleSpeed % data->bbtInterval) == 0 ) {
       iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       int V_min = wLoc.getV_min( data->props );
       int speed = 0;
@@ -1525,6 +1525,7 @@ static void __BBT(iOLoc loc) {
       wLoc.setV( cmd, speed );
       wLoc.setdir( cmd, wLoc.isdir( data->props ) );
       LocOp.cmd( loc, cmd );
+      data->bbtStepCount++;
     }
     data->bbtCycleSpeed++;
   }
@@ -1575,7 +1576,7 @@ static void __BBT(iOLoc loc) {
       wBBT.setinterval(bbt, interval);
       wBBT.setcount(bbt, wBBT.getcount(bbt) + 1 );
       if( data->bbtCycleNr > 0 )
-        wBBT.setsteps(bbt, data->bbtCycleNr );
+        wBBT.setsteps(bbt, data->bbtStepCount );
 
       {
         iONode broadcast = (iONode)NodeOp.base.clone(data->props);
@@ -1603,6 +1604,7 @@ static void __BBT(iOLoc loc) {
     data->bbtEnter      = 0;
     data->bbtIn         = 0;
     data->bbtAtMinSpeed = False;
+    data->bbtStepCount  = 0;
   }
   else if( data->bbtIn != 0 && data->bbtInBlock == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "BBT-IN **block not set**" );
@@ -1610,6 +1612,7 @@ static void __BBT(iOLoc loc) {
     data->bbtEnter      = 0;
     data->bbtIn         = 0;
     data->bbtAtMinSpeed = False;
+    data->bbtStepCount  = 0;
   }
 }
 
@@ -1922,6 +1925,7 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
       data->bbtIn         = 0;
       data->bbtCycleSpeed = 0;
       data->bbtInTimer    = 0;
+      data->bbtStepCount  = 0;
       data->bbtEnter      = SystemOp.getTick();
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT enter=%ld block=%s", data->bbtEnter, data->bbtEnterBlock );
     }

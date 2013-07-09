@@ -6557,3 +6557,9 @@ msgstr ""
 msgid "Min. train length"
 msgstr ""
 
+#. 
+# id="steps"
+#, c-format
+msgid "Steps"
+msgstr ""
+
