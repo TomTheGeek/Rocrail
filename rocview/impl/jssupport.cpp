@@ -49,7 +49,6 @@
 #include "rocview/public/guiapp.h"
 
 #include "rocview/dialogs/locseldlg.h"
-#include "rocview/dialogs/loccontroldlg.h"
 
 #include "rocview/public/jssupport.h"
 

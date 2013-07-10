@@ -68,7 +68,6 @@
 #include "rocview/dialogs/waybilldlg.h"
 #include "rocview/dialogs/operatordlg.h"
 #include "rocview/dialogs/locseldlg.h"
-#include "rocview/dialogs/loccontroldlg.h"
 #include "rocview/dialogs/switchdialog.h"
 #include "rocview/dialogs/signaldialog.h"
 #include "rocview/dialogs/scheduledialog.h"
@@ -1192,11 +1191,7 @@ void RocGuiFrame::initLocCtrlDialogs() {
     int y = wLcCtrl.gety(lcctrl);
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "previous position [%d,%d] for [%s]", x, y, id );
 
-    wxDialog* dlg = NULL;
-    if( wGui.isaltthrottle( m_Ini ) )
-      dlg = new ThrottleDlg(this, m_ThrottleList, m_LocDlgMap, id);
-    else
-      dlg = new LocControlDialog(this, m_LocCtrlList, m_LocDlgMap, id);
+    wxDialog* dlg = new ThrottleDlg(this, m_ThrottleList, m_LocDlgMap, id);
     dlg->Show(TRUE);
     dlg->Move( x, y );
 
@@ -1295,10 +1290,6 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
   {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "FunCmd event: [%s] destblock=[%s]",
         wLoc.getid( node ), (wLoc.getdestblockid( node ) != NULL ? wLoc.getdestblockid( node ):"-") );
-    for( int i = 0; i < ListOp.size(m_LocCtrlList); i++ ) {
-      LocControlDialog* dlg = (LocControlDialog*)ListOp.get(m_LocCtrlList, i);
-      dlg->modelEvent(node);
-    }
     for( int i = 0; i < ListOp.size(m_ThrottleList); i++ ) {
       ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_ThrottleList, i);
       dlg->modelEvent(node);
@@ -1321,10 +1312,6 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
     }
 
 
-    for( int i = 0; i < ListOp.size(m_LocCtrlList); i++ ) {
-      LocControlDialog* dlg = (LocControlDialog*)ListOp.get(m_LocCtrlList, i);
-      dlg->modelEvent(node);
-    }
     for( int i = 0; i < ListOp.size(m_ThrottleList); i++ ) {
       ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_ThrottleList, i);
       dlg->modelEvent(node);
@@ -1590,7 +1577,6 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_Uhl68610           = NULL;
   m_Uhl633x0           = NULL;
   m_ModPanel           = NULL;
-  m_LocCtrlList        = ListOp.inst();
   m_LocDlgMap          = MapOp.inst();
   m_ThrottleList       = ListOp.inst();
   m_bAutoMode          = false;
@@ -4059,11 +4045,6 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
   }
 
   MapOp.clear(m_LocDlgMap);
-  while( ListOp.size(m_LocCtrlList) > 0 ) {
-    LocControlDialog* dlg = (LocControlDialog*)ListOp.get(m_LocCtrlList, 0);
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "inform loc control dialog to save position..." );
-    dlg->Close();
-  }
   for( int i = 0; i < ListOp.size(m_ThrottleList); i++ ) {
     ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_ThrottleList, i);
     dlg->Close();
@@ -4193,11 +4174,7 @@ void RocGuiFrame::OnCmdRecorderDlg(wxCommandEvent& event){
 
 
 void RocGuiFrame::OnLcDlg(wxCommandEvent& event){
-  wxDialog* dlg = NULL;
-  if( wxGetKeyState(WXK_ALT) || wGui.isaltthrottle( m_Ini ) )
-    dlg = new ThrottleDlg(this, m_ThrottleList, m_LocDlgMap, m_LocID);
-  else
-    dlg = new LocControlDialog(this, m_LocCtrlList, m_LocDlgMap, m_LocID);
+  wxDialog* dlg = new ThrottleDlg(this, m_ThrottleList, m_LocDlgMap, m_LocID);
 
   dlg->Show(TRUE);
 

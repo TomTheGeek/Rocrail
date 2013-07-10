@@ -428,7 +428,6 @@ private:
   double m_Bktext;
   iOMap m_SymbolMap;
 public:
-  iOList m_LocCtrlList;
   iOList m_ThrottleList;
   iOMap m_LocDlgMap;
 private:
