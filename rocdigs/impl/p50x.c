@@ -362,10 +362,15 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
 
     if( wLoc.getV( node ) != -1 ) {
       if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
-        speed = (wLoc.getV( node ) * 127) / 100;
+        speed = (wLoc.getV( node ) * 126) / 100;
       else if( wLoc.getV_max( node ) > 0 )
-        speed = (wLoc.getV( node ) * 127) / wLoc.getV_max( node );
+        speed = (wLoc.getV( node ) * 126) / wLoc.getV_max( node );
     }
+    if( speed > 0 ) {
+      /* skip step 1: emergency break */
+      speed++;
+    }
+
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d speed=%d lights=%s dir=%s",
         addr, speed, fn?"on":"off", dir?"forwards":"reverse" );
 
