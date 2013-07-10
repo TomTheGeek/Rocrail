@@ -1576,25 +1576,8 @@ static void __BBT(iOLoc loc) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, bbtmaxdiff );
       }
       if( interval > oldinterval ) {
-        if( newBBTRecord && data->bbtAtMin > 0 && data->bbtAtMin < data->bbtIn ) {
-          float BBT   = oldinterval;
-          float steps = bbtsteps;
-          int   T     = data->bbtIn - data->bbtAtMin;
-          float Vmin  = wLoc.getV_min(data->props);
-          float Vmax  = wLoc.getV_max(data->props);
-
-          float Vgem  = ((( steps-1 ) / steps ) * Vmax - Vmin ) / 2 + Vmin;
-          float verH  = Vgem / Vmin;
-
-          int NewBBT = BBT + ( T / verH);
-
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT L-interval %d", NewBBT );
-          interval = NewBBT;
-        }
-        else {
-          interval = oldinterval + (diffinterval / bbtcorrection);
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT L-interval %d", interval );
-        }
+        interval = oldinterval + (diffinterval / bbtcorrection);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT L-interval %d", interval );
       }
       else if( interval < oldinterval ) {
         interval = oldinterval - (diffinterval / bbtcorrection);
