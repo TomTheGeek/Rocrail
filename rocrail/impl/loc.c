@@ -1576,19 +1576,14 @@ static void __BBT(iOLoc loc) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, bbtmaxdiff );
       }
       if( interval > oldinterval ) {
-        if( newBBTRecord && bbtsteps == 10 && data->bbtAtMin > 0 && data->bbtAtMin < data->bbtIn ) {
-          /*
-                           (( Tijd - BBT / ( steps - 1 ) ) * percent)
-             NewBBT = BBT + ______________________________
-                           (  steps -  1 )  *  10
-           */
+        if( newBBTRecord && data->bbtAtMin > 0 && data->bbtAtMin < data->bbtIn ) {
+          float percent[] = {0,0,0,0,86,60,45,35,28,23,19,16,14,12,11,10,9};
           float BBT       = oldinterval;
           float steps     = bbtsteps;
-          float percent   = 19 + (bbtsteps - 10);
           int   T         = data->bbtIn - data->bbtAtMin;
           float bbtTime   = T - (BBT/(steps-1));
-          int   NewBBT    = BBT + (( bbtTime * percent ) / ((steps-1) * 10));
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT L-interval %d %.1f%%", NewBBT, percent );
+          int   NewBBT    = BBT + (( bbtTime * percent[bbtsteps] ) / ((steps-1) * 10));
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT L-interval %d %.1f%%", NewBBT, percent[bbtsteps] );
           interval = NewBBT;
         }
         else {
