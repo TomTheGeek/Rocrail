@@ -209,6 +209,7 @@ const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexi
   /* the route velocity has a higher priority, so check first: */
   if( street != NULL ) {
     const char* V_hint_route = street->getVelocity( street, &percent );
+    *maxkmh = street->getMaxKmh(street);
     reduceSpeed = street->hasThrownSwitch(street);
     if( !StrOp.equals( V_hint_route, wRoute.V_none ) ) {
       StrOp.copy( data->V_hint, V_hint_route );

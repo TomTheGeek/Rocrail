@@ -270,6 +270,8 @@ public:
     wxRadioBox* m_Speed;
     wxSpinCtrl* m_SpeedPercent;
     wxCheckBox* m_ReduceV;
+    wxStaticText* m_labMaxKmH;
+    wxSpinCtrl* m_MaxKmH;
     wxRadioBox* m_Dir;
     wxRadioBox* m_FromSignals;
     wxRadioBox* m_RunDir;

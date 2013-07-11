@@ -589,6 +589,12 @@ static const char* _getVelocity( iORoute inst, int* percent ) {
   return V_hint;
 }
 
+static int _getMaxKmh( iORoute inst ) {
+  iORouteData data = Data(inst);
+  return wRoute.getmaxkmh(data->props);
+}
+
+
 
 static Boolean _getDir( iORoute inst ) {
   iORouteData o = Data(inst);

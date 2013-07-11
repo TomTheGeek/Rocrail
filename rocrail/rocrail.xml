@@ -1357,6 +1357,9 @@
       <param name="inst" vt="this" remark="Route instance"/>
       <param name="percent" vt="int*" remark="Speed percent"/>
     </fun>
+    <fun name="getMaxKmh" vt="int">
+      <param name="inst" vt="this" remark="Route instance"/>
+    </fun>
     <fun name="isSwap" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
     </fun>

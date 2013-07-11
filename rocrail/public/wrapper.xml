@@ -2019,6 +2019,7 @@
         <const name="V_none" vt="string" val="none" remark="No V_hint defined."/>
         <var name="speed" vt="string" defval="none" range="none,min,cruise,max" remark="Route speed on departure; overwrites block departure speed if set."/>
         <var name="speedpercent" vt="int" defval="80" unit="%" range="0-100" remark="Route speed in percent."/>
+        <var name="maxkmh" vt="int" defval="0" range="0-*" remark="Route max. speed in km/h or mph."/>
         <fbevent cardinality="n"/>
         <actionctrl cardinality="n"/>
         <incl cardinality="n" />
