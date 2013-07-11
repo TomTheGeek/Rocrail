@@ -573,6 +573,7 @@ public:
     wxTextCtrl* m_BBTBlock;
     wxStaticText* m_labBBTInterval;
     wxSpinCtrl* m_BBTInterval;
+    wxCheckBox* m_BBTFixed;
     wxButton* m_BBTModify;
     wxButton* m_BBTDelete;
     wxButton* m_BBTDeleteAll;

@@ -1584,7 +1584,9 @@ static void __BBT(iOLoc loc) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT S-interval %d", interval );
       }
 
-      wBBT.setinterval(bbt, interval);
+      if( !wBBT.isfixed(bbt) )
+        wBBT.setinterval(bbt, interval);
+
       wBBT.setcount(bbt, wBBT.getcount(bbt) + 1 );
       if( data->bbtCycleNr > 0 )
         wBBT.setsteps(bbt, data->bbtStepCount );
