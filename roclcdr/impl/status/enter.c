@@ -298,13 +298,15 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
 
       wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
 
-
-      if( !data->gomanual && !re_enter && !wLoc.isusebbt(data->loc->base.properties( data->loc )) ) {
-        data->loc->cmd( data->loc, cmd );
-      }
-      else {
-        /* delete un sended node */
-        NodeOp.base.del(cmd);
+      {
+        Boolean bbt = wLoc.isusebbt(data->loc->base.properties( data->loc )) && data->next1Block->allowBBT(data->next1Block);
+        if( !data->gomanual && !re_enter && !bbt ) {
+          data->loc->cmd( data->loc, cmd );
+        }
+        else {
+          /* delete un sended node */
+          NodeOp.base.del(cmd);
+        }
       }
     }
 

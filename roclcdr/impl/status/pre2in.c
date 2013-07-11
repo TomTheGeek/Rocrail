@@ -47,7 +47,8 @@ void statusPre2In( iILcDriverInt inst ) {
 
   /* set velocitiy to V_min if the train has to wait */
   if( data->next2Block == NULL ) {
-    if( !data->gomanual && !wLoc.isusebbt(data->loc->base.properties( data->loc )) ) {
+    Boolean bbt = wLoc.isusebbt(data->loc->base.properties( data->loc )) && data->next1Block->allowBBT(data->next1Block);
+    if( !data->gomanual && !bbt ) {
       iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       wLoc.setV_hint( cmd, wLoc.min );
       wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
