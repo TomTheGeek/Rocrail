@@ -4045,9 +4045,12 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
   }
 
   MapOp.clear(m_LocDlgMap);
-  for( int i = 0; i < ListOp.size(m_ThrottleList); i++ ) {
-    ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_ThrottleList, i);
+  ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_ThrottleList, 0);
+  while( dlg != NULL ) {
     dlg->Close();
+    dlg = NULL;
+    if( ListOp.size(m_ThrottleList) > 0 )
+      dlg = (ThrottleDlg*)ListOp.get(m_ThrottleList, 0);
   }
 
   /*
