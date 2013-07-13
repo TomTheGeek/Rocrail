@@ -3268,20 +3268,26 @@ void LocDialog::OnListctrlindexLcColLeftClick( wxListEvent& event )
 
 void LocDialog::OnButtonBbtDeleteClick( wxCommandEvent& event )
 {
-  if( m_Props != NULL && m_BBTSel != NULL) {
-    NodeOp.removeChild( m_Props, m_BBTSel );
-    m_BBTSel = NULL;
+  if( m_Props != NULL) {
+    // re-init the list to update the bbt pointers
     initBBT();
+    m_BBTSel = (iONode)m_BBTList2->GetItemData(m_iBBTSel);
 
-    if( NodeOp.getChildCnt(m_Props) == 0 ) {
-      // ToDo: Work aroud for forcing the loco objects to remove all child nodes...
-      iONode node = NodeOp.inst( wCVByte.name(), m_Props, ELEMENT_NODE);
-      NodeOp.addChild( m_Props, node );
-    }
+    if( m_BBTSel != NULL ) {
+      NodeOp.removeChild( m_Props, m_BBTSel );
+      m_BBTSel = NULL;
+      initBBT();
 
-    if( m_BBTList2->GetItemCount() == 0 ) {
-      m_BBTDelete->Enable(false);
-      m_BBTDeleteAll->Enable(false);
+      if( NodeOp.getChildCnt(m_Props) == 0 ) {
+        // ToDo: Work aroud for forcing the loco objects to remove all child nodes...
+        iONode node = NodeOp.inst( wCVByte.name(), m_Props, ELEMENT_NODE);
+        NodeOp.addChild( m_Props, node );
+      }
+
+      if( m_BBTList2->GetItemCount() == 0 ) {
+        m_BBTDelete->Enable(false);
+        m_BBTDeleteAll->Enable(false);
+      }
     }
   }
 }
