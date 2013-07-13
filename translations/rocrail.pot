@@ -6563,3 +6563,9 @@ msgstr ""
 msgid "Steps"
 msgstr ""
 
+#. 
+# id="createguestonbidi"
+#, c-format
+msgid "Create guest on BiDi"
+msgstr ""
+

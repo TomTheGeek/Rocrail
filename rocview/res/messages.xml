@@ -22735,4 +22735,7 @@
   <Msg id="steps">
     <en txt="Steps"/>
   </Msg>
+  <Msg id="createguestonbidi">
+    <en txt="Create guest on BiDi"/>
+  </Msg>
 </Messages>

@@ -764,6 +764,7 @@
       <var name="selectshortestblock" vt="bool" defval="false" remark="Select shortest block in case block and train length are set."/>
       <var name="restoreschedule" vt="bool" defval="true"/>
       <var name="actiontimer60" vt="bool" defval="true"/>
+      <var name="createguestonbidi" vt="bool" defval="false"/>
     </ctrl>
     <anaopt remark="Analyser options." wrappername="AnaOpt">
       <!-- option -->

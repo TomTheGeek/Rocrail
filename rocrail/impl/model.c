@@ -2661,6 +2661,10 @@ static iOLoc _getLocByIdent( iOModel inst, const char* ident ) {
       return loc;
     else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident) )
       locAddr = loc;
+    else if(wCtrl.iscreateguestonbidi(wRocRail.getctrl( AppOp.getIni()))) {
+      /* Guest loco? */
+      return ModelOp.getLoc( inst, ident, NULL, True );
+    }
   }
 
   return locAddr;
