@@ -205,11 +205,13 @@ const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexi
   iOLcDriverData data = Data(inst);
   int percent = 0;
   Boolean reduceSpeed = False;
+  int routeMaxKmh = 0;
 
   /* the route velocity has a higher priority, so check first: */
   if( street != NULL ) {
     const char* V_hint_route = street->getVelocity( street, &percent );
     *maxkmh = street->getMaxKmh(street);
+    routeMaxKmh = street->getMaxKmh(street);
     reduceSpeed = street->hasThrownSwitch(street);
     if( !StrOp.equals( V_hint_route, wRoute.V_none ) ) {
       StrOp.copy( data->V_hint, V_hint_route );
@@ -226,7 +228,10 @@ const char* getBlockV_hint( iILcDriverInt inst, iIBlockBase block, Boolean onexi
   if( StrOp.equals( wBlock.percent, data->V_hint ) ) {
     StrOp.fmtb( data->V_hint, "%d", percent );
   }
-  *maxkmh = block->getMaxKmh(block);
+
+  /* check for route maxkmh */
+  if(routeMaxKmh == 0)
+    *maxkmh = block->getMaxKmh(block);
 
   /* check for thrown switches in route */
   if( !StrOp.equals( data->V_hint, wLoc.min ) && (reduceSpeed && onexit) ) {
