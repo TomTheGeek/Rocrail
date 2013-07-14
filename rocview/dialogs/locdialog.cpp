@@ -3348,6 +3348,7 @@ void LocDialog::OnLocBbtlist2Selected( wxListEvent& event )
 {
   if( m_Props != NULL ) {
     m_iBBTSel = event.GetIndex();
+    m_BBTSel = (iONode)m_BBTList2->GetItemData(m_iBBTSel);
     m_BBTDelete->Enable(true);
     m_BBTBlock->SetValue( wxString(wBBT.getbk(m_BBTSel),wxConvUTF8));
     m_BBTInterval->SetValue(wBBT.getinterval(m_BBTSel));
