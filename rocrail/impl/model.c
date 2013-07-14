@@ -2486,6 +2486,7 @@ static iIBlockBase _addNetBlock(iOModel inst, iONode bkprops) {
 static iOLoc _getLoc( iOModel inst, const char* id, iONode props, Boolean generate ) {
   iOModelData o = Data(inst);
   iOLoc loc = (iOLoc)MapOp.get( o->locMap, id );
+  char identifier[64] = {'\0'};
   if( loc == NULL && id != NULL && StrOp.len(id) > 0 ) {
     int addr = atoi(id);
     if( addr > 0 ) {
@@ -2509,6 +2510,8 @@ static iOLoc _getLoc( iOModel inst, const char* id, iONode props, Boolean genera
           wLoc.setprot( lc, addr > 127 ? wLoc.prot_L:wLoc.prot_N );
         }
         wLoc.setaddr( lc, addr );
+        StrOp.fmtb( identifier, "%d", addr );
+        wLoc.setidentifier( lc, identifier );
         wLoc.setshow( lc, True );
         wItem.setgenerated( lc, True );
         _addItem(inst, lc);
