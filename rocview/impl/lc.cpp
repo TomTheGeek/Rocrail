@@ -344,8 +344,26 @@ bool LC::updateLoc( iONode node ) {
 void LC::OnSlider(wxScrollEvent& event)
 {
   if ( event.GetEventObject() == m_Vslider ) {
-    m_iSpeed = m_Vslider->GetValue();
-    speedCmd( event.GetEventType() != wxEVT_SCROLL_THUMBTRACK );
+    int speed = m_Vslider->GetValue();
+    if(wLoc.getspcnt(m_LocProps) > 28 ) {
+      int step = wLoc.getspcnt(m_LocProps) / 28;
+      if( speed > m_iSpeed ) {
+        if( speed - m_iSpeed >= step ){
+          m_iSpeed = m_Vslider->GetValue();
+          speedCmd( event.GetEventType() != wxEVT_SCROLL_THUMBTRACK );
+        }
+      }
+      else if( speed < m_iSpeed ) {
+        if( m_iSpeed - speed >= step ){
+          m_iSpeed = m_Vslider->GetValue();
+          speedCmd( event.GetEventType() != wxEVT_SCROLL_THUMBTRACK );
+        }
+      }
+    }
+    else {
+      m_iSpeed = m_Vslider->GetValue();
+      speedCmd( event.GetEventType() != wxEVT_SCROLL_THUMBTRACK );
+    }
   }
 }
 
