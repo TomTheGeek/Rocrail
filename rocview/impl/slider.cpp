@@ -212,14 +212,12 @@ void Slider::mouseDown(wxMouseEvent& event)
 {
   PrevFocusWindow = FindFocus();
   SetFocus();
-  if( event.m_y > ThumbPos ) {
+  if( event.m_y > ThumbPos+ThumbHeight/2 ) {
     Move = ThumbPos + ThumbRange/10;
-    TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "***** %d > %d move=%d", event.m_y - ThumbPos, ThumbPos, Move  );
     ThumbPos = Move;
   }
-  else if( event.m_y < ThumbPos ) {
+  else if( event.m_y < ThumbPos-ThumbHeight/2 ) {
     Move = ThumbPos - ThumbRange/10;
-    TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "***** %d < %d move=%d", event.m_y - ThumbPos, ThumbPos, Move  );
     ThumbPos = Move;
   }
   else {
