@@ -210,12 +210,24 @@ void Slider::SetRange(int minValue, int maxValue) {
 
 void Slider::mouseDown(wxMouseEvent& event)
 {
-  TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "mouseDown");
   PrevFocusWindow = FindFocus();
   SetFocus();
-  Move = event.m_y;
+  if( event.m_y > ThumbPos ) {
+    Move = ThumbPos + ThumbRange/10;
+    TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "***** %d > %d move=%d", event.m_y - ThumbPos, ThumbPos, Move  );
+    ThumbPos = Move;
+  }
+  else if( event.m_y < ThumbPos ) {
+    Move = ThumbPos - ThumbRange/10;
+    TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "***** %d < %d move=%d", event.m_y - ThumbPos, ThumbPos, Move  );
+    ThumbPos = Move;
+  }
+  else {
+    Move = event.m_y;
+    ThumbPos = Move - (ThumbHeight/2);
+  }
+
   Drag = true;
-  ThumbPos = Move - (ThumbHeight/2);
 
   if( ThumbPos < 0 )
     ThumbPos = 0;
