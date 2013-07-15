@@ -1522,6 +1522,7 @@ static void __BBT(iOLoc loc) {
         speed = V_min;
         data->bbtAtMinSpeed = True;
         data->bbtAtMin = SystemOp.getTick();
+        wLoc.setV_hint( data->props, wLoc.min );
       }
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT-SPEED V=%d id=%s mode=%s", speed, wLoc.getid(data->props), wLoc.getmode(data->props)  );
 
