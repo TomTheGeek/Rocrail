@@ -795,6 +795,37 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     }
   }
 
+  /* Loc brake command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals(wLoc.brake, wLoc.getcmd(node)) ) {
+    int    addr = wLoc.getaddr( node );
+    Boolean dir = wLoc.isdir( node ); /* True == forwards */
+    Boolean fn  = wLoc.isfn( node );
+    iOSlot slot = __getSlot(inst, node);
+    StrOp.fmtb( uidKey, "0x%08X", wLoc.getbus(node) );
+    bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
+    if( bidibnode == NULL )
+      bidibnode = data->defaultmain;
+
+    if( slot != NULL ) {
+      slot->f[0] = fn;
+      slot->V    = 0;
+      slot->dir  = dir;
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "ebrake loco %d", addr);
+      if( bidibnode != NULL ) {
+        msgdata[0] = addr % 256;
+        msgdata[1] = addr / 256;
+        msgdata[2] = 0;
+        msgdata[3] = 0x03; // speed and function group 1
+        msgdata[4] = (dir ? 0x80:0x00) + 1;
+        msgdata[5] = (fn?0x10:0x00) + (slot->f[1]?0x01:0x00) + (slot->f[2]?0x02:0x00) + (slot->f[3]?0x04:0x00) + (slot->f[4]?0x08:0x00);
+        msgdata[6] = 0;
+        msgdata[7] = 0;
+        msgdata[8] = 0;
+        data->subWrite((obj)inst, bidibnode->path, MSG_CS_DRIVE, msgdata, 9, bidibnode);
+      }
+    }
+  }
 
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
