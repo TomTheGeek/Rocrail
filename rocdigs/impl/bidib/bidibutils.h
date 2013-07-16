@@ -29,7 +29,7 @@
   extern "C" {
 #endif
 
-char* bidibGetClassName(int classid, char* mnemonic );
+char* bidibGetClassName(int classid, char* mnemonic, Boolean* bridge );
 const char* bidibGetFeatureName(int feature);
 int bidibDeEscapeMessage(byte* msg, int inLen);
 void bidibUpdateCRC(byte newb, byte* crc);

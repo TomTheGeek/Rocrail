@@ -1616,7 +1616,7 @@ static Boolean __delNode(iOBiDiB bidib, byte* pdata) {
 }
 
 
-static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata) {
+static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata, byte* path) {
   iOBiDiBData data = Data(bidib);
   /*
   MSG_NODETAB:
@@ -1658,7 +1658,8 @@ static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata) {
     byte l_msg[32];
     int size = 0;
     int msgidx = 0;
-    char* classname = bidibGetClassName(classid, mnemonic);
+    Boolean bridge = False;
+    char* classname = bidibGetClassName(classid, mnemonic, &bridge);
 
     node = allocMem(sizeof(struct bidibnode));
     node->classid = classid;
@@ -1667,7 +1668,7 @@ static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata) {
     node->pendingfeature = -1;
 
 
-    MemOp.copy(node->path+1, data->nodepath, 3);
+    MemOp.copy(node->path+1, path, 3);
     node->path[0] = localaddr;
 
     StrOp.fmtb( localKey, "%d.%d.%d.%d", node->path[0], node->path[1], node->path[2], node->path[3] );
@@ -1726,6 +1727,11 @@ static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata) {
     }
 
     StrOp.free(classname);
+
+    if(bridge && node->path[0] != 0 ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get node table for bridge...");
+      data->subWrite((obj)bidib, node->path, MSG_NODETAB_GETALL, NULL, 0, 0);
+    }
 
   }
   else {
@@ -2145,9 +2151,8 @@ static void __handleConfig(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
   }
 }
 
-static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, int Type, const char* pathKey, byte* pdata, int datasize) {
+static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, int Type, byte* path, const char* pathKey, byte* pdata, int datasize) {
   iOBiDiBData data = Data(bidib);
-  byte path[4] = {0,0,0,0}; // Default path in case no node was found.
 
   //                                 UID
   //             ver len start locaddr class res vid productid   crc
@@ -2193,7 +2198,7 @@ static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, int Type, const cha
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "MSG_NODETAB, path=%s tab-ver=%d tab-idx=%d", pathKey, data->tabver, entry );
     // ToDo: Data offset in TAB message.
-    iOBiDiBNode newNode = __addNode(bidib, pdata );
+    iOBiDiBNode newNode = __addNode(bidib, pdata, path );
     if( node == NULL && MemOp.cmp(newNode->path, path, 4) ) {
       /* must be the master node */
       node = newNode;
@@ -2227,11 +2232,11 @@ static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, int Type, const cha
 }
 
 
-static void __handleNewNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, int size) {
+static void __handleNewNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, int size, byte* path) {
   iOBiDiBData data = Data(bidib);
   if( bidibnode != NULL && pdata != NULL ) {
     data->tabver = pdata[0];
-    __addNode(bidib, pdata);
+    __addNode(bidib, pdata, path);
     data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode);
     ThreadOp.sleep(50);
     data->subWrite((obj)bidib, bidibnode->path, MSG_SYS_ENABLE, NULL, 0, bidibnode);
@@ -2601,7 +2606,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   bidibnode = (iOBiDiBNode)MapOp.get( data->localmap, pathKey );
 
   if( bidibnode == NULL ) {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "node not found by local address [%s]", pathKey );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "node not found by local address [%s]", pathKey );
   }
 
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999,
@@ -2609,7 +2614,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   switch( Type ) {
   case MSG_SYS_MAGIC:
-  { // len = 5
+  if(path[0] == 0 ) { // len = 5
     int Magic = (pdata[1]<<8)+pdata[0];
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "MSG_SYS_MAGIC, path=%s seq=%d magic=0x%04X", pathKey, Seq, Magic );
@@ -2653,7 +2658,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
         }
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"no ini node found for uid=%d", bidibnode->uid);
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,"no ini node found for uid=%d path=%s", bidibnode->uid, pathKey);
       }
     }
 
@@ -2663,14 +2668,14 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_NODETAB_COUNT:
   case MSG_NODETAB:
   {
-    __handleNodeTab(bidib, bidibnode, Type, pathKey, pdata, datasize);
+    __handleNodeTab(bidib, bidibnode, Type, path, pathKey, pdata, datasize);
     break;
   }
 
   case MSG_NODE_NEW:
   {
     if( bidibnode != NULL )
-      __handleNewNode(bidib, bidibnode, pdata, datasize);
+      __handleNewNode(bidib, bidibnode, pdata, datasize, path);
     break;
   }
 

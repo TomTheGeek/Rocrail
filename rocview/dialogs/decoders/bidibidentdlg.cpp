@@ -622,7 +622,7 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
 void BidibIdentDlg::initValues() {
   if( node != NULL && StrOp.equals(wProgram.name(), NodeOp.getName(node)) ) {
     char mnemonic[32];
-    char* classname = bidibGetClassName(wProgram.getprod(node), mnemonic);
+    char* classname = bidibGetClassName(wProgram.getprod(node), mnemonic, NULL);
     TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999, "%s", classname );
 
     m_Path->SetValue( wxString( wProgram.getfilename(node), wxConvUTF8) );
@@ -794,7 +794,7 @@ void BidibIdentDlg::onFeatureSet( wxCommandEvent& event ) {
 
 void BidibIdentDlg::handleFeature(iONode node) {
   char mnemonic[32] = {'\0'};
-  char* classname = bidibGetClassName(wProgram.getprod(node), mnemonic);
+  char* classname = bidibGetClassName(wProgram.getprod(node), mnemonic, NULL);
   StrOp.free(classname);
 
   char uidKey[32];

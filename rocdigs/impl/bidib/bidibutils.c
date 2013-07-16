@@ -142,13 +142,17 @@ int bidibMakeMessage(byte* msg, int inLen) {
 
 
 
-char* bidibGetClassName(int classid, char* mnemonic ) {
+char* bidibGetClassName(int classid, char* mnemonic, Boolean* bridge ) {
   char* classname = NULL;
   int idx = 0;
+  if( bridge!=NULL )
+    *bridge = False;
   mnemonic[idx] = '\0';
   if( classid & 0x80 ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
     classname = StrOp.cat( classname, wBiDiBnode.class_bridge);
+    if( bridge!=NULL )
+      *bridge = True;
     mnemonic[idx] = 'L';
     idx++;
     mnemonic[idx] = '\0';
