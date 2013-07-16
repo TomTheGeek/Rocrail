@@ -402,6 +402,7 @@ static void _brake( iILcDriverInt inst ) {
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   data->brake = True;
   wLoc.setV( cmd, 0 );
+  wLoc.setcmd( cmd, wLoc.brake );
   data->loc->cmd( data->loc, cmd );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
                  "brake event for \"%s\"...",

@@ -675,7 +675,10 @@
       <param name="desc" vt="const char*" remark="Function description"/>
     </fun>
     <fun name="isCheck2In" vt="Boolean">
-      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="inst" vt="this" remark="Loco instance"/>
+    </fun>
+    <fun name="resetBBT" vt="void">
+      <param name="inst" vt="this" remark="Loco instance"/>
     </fun>
     <data include="$rocint/public/lcdriverint">
       <var name="props" vt="iONode"/>

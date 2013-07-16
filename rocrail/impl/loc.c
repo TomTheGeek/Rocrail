@@ -1451,6 +1451,19 @@ static void __theSwap(iOLoc loc, Boolean swap, Boolean consist, iONode cmd) {
 }
 
 
+static void _resetBBT(iOLoc loc) {
+  iOLocData data = Data(loc);
+  data->bbtEnterBlock = NULL;
+  data->bbtInBlock    = NULL;
+  data->bbtPrevBlock  = NULL;
+  data->bbtCycleSpeed = 0;
+  data->bbtEnter      = 0;
+  data->bbtIn         = 0;
+  data->bbtAtMinSpeed = False;
+  data->bbtStepCount  = 0;
+  data->bbtAtMin      = 0;
+}
+
 /**
  * Block Brake Timer
  */

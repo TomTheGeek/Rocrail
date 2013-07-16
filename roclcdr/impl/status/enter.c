@@ -163,6 +163,11 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                         data->next1Block->base.id(data->next1Block),
                 &data->next2RouteFromTo );
       Boolean swapDir = False;
+
+      if(re_enter) {
+        data->loc->resetBBT(data->loc);
+      }
+
       if( data->next2RouteFromTo )
         swapDir = data->next2Route->isSwapPost( data->next2Route ) ? data->next2RouteFromTo : !data->next2RouteFromTo;
       else
