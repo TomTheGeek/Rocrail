@@ -1574,15 +1574,20 @@ static void __BBT(iOLoc loc) {
 
       if( diffinterval > bbtmaxdiff ) {
         diffinterval = bbtmaxdiff;
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, bbtmaxdiff );
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT interval difference %d exeeds the max. of %d", diffinterval, bbtmaxdiff );
       }
+
+      if( newBBTRecord ) {
+        bbtcorrection = 1.0;
+      }
+
       if( interval > oldinterval ) {
         interval = oldinterval + (diffinterval / bbtcorrection);
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT L-interval %d", interval );
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT L-interval %d", interval );
       }
       else if( interval < oldinterval ) {
         interval = oldinterval - (diffinterval / bbtcorrection);
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT S-interval %d", interval );
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "BBT S-interval %d", interval );
       }
 
       if( !wBBT.isfixed(bbt) )
