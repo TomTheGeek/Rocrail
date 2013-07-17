@@ -1615,6 +1615,9 @@ static void __handleError(iOBiDiB bidib, byte* pdata) {
   case BIDIB_ERR_HW: // Hardware error
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Hardware error: %d", pdata[1] );
     break;
+  case BIDIB_ERR_OVERRUN:
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Message buffer in downstream overrun, messages lost: %d", pdata[1] );
+    break;
   }
 }
 

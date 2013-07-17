@@ -44,6 +44,10 @@
 //            2013-02-10 V0.09 kw  added addtional BST_STATE values
 //            2013-02-21 V0.10 kw  added MSG_BOOST_DIAGNOSTIC, BIDIB_ERR_SUBPAKET
 //            2013-03-25 V0.11 kw  added MSG_LOGON_REJECTED
+//            2013-06-04       kw  added FEATURE_CTRL_STRETCH_DIMM
+//            2013-06-17       kw  added FEATURE_GEN_WATCHDOG, BIDIB_ERR_OVERRUN
+//                                 added useful defines for Accessory States
+//            2013-07-10 V0.12 kw  added BIDIB_BOOT_MAGIC
 //
 //===============================================================================
 //
@@ -85,7 +89,8 @@
 //                              Mainversion   Subversion
 #define BIDIB_VERSION           (0 * 256 +    5)
 
-#define BIDIB_SYS_MAGIC         0xAFFE
+#define BIDIB_SYS_MAGIC         0xAFFE                  // full featured BiDiB-Node
+#define BIDIB_BOOT_MAGIC        0xB00D                  // reduced Node, bootloader only
 
 //===============================================================================
 //
@@ -226,7 +231,7 @@
 #define MSG_BM_ADDRESS          (MSG_UBM + 0x03)        // 1:mnum, [2,3:addr_l, addr_h]
 #define MSG_BM_ACCESSORY        (MSG_UBM + 0x04)        //
 #define MSG_BM_CV               (MSG_UBM + 0x05)        // 1:addr_l, 2:addr_h, 3:cv_addr_l, 4:cv_addr_h, 5:cv_dat
-#define MSG_BM_SPEED            (MSG_UBM + 0x06)        // 1:addr_l, 2:addr_h, 3:speed_l, 4:speed_h
+#define MSG_BM_SPEED            (MSG_UBM + 0x06)        // 1:addr_l, 2:addr_h, 3:speed_l, 4:speed_h (from loco)
 #define MSG_BM_CURRENT          (MSG_UBM + 0x07)        // 1:mnum, 2:current
 #define MSG_BM_BLOCK_CV         (MSG_UBM + 0x08)        //
 #define MSG_BM_CONFIDENCE       (MSG_UBM + 0x09)        // 1:void, 2:freeze, 3:signal
@@ -493,35 +498,35 @@ typedef struct                              // t_bidib_cs_pom
 //
 //===============================================================================
 
-#define FEATURE_BM_SIZE                     0
-#define FEATURE_BM_ON                       1
-#define FEATURE_BM_SECACK_AVAILABLE         2
-#define FEATURE_BM_SECACK_ON                3
-#define FEATURE_BM_CURMEAS_AVAILABLE        4
-#define FEATURE_BM_CURMEAS_INTERVAL         5
-#define FEATURE_BM_DC_MEAS_AVAILABLE        6
-#define FEATURE_BM_DC_MEAS_ON               7
-#define FEATURE_BM_ADDR_DETECT_AVAILABLE    8
-#define FEATURE_BM_ADDR_DETECT_ON           9
-#define FEATURE_BM_ADDR_AND_DIR            10
-#define FEATURE_BM_ISTSPEED_AVAILABLE      11
-#define FEATURE_BM_ISTSPEED_INTERVAL       12
-#define FEATURE_BM_CV_AVAILABLE            13
-#define FEATURE_BM_CV_ON                   14
+#define FEATURE_BM_SIZE                     0   // number of occupancy detectors
+#define FEATURE_BM_ON                       1   // occupancy detection on/off
+#define FEATURE_BM_SECACK_AVAILABLE         2   // secure ack available
+#define FEATURE_BM_SECACK_ON                3   // secure ack on/off
+#define FEATURE_BM_CURMEAS_AVAILABLE        4   // occupancy detectors with current measurement results
+#define FEATURE_BM_CURMEAS_INTERVAL         5   // interval for current measurements
+#define FEATURE_BM_DC_MEAS_AVAILABLE        6   // (dc) measurements available, even if track voltage is off
+#define FEATURE_BM_DC_MEAS_ON               7   // dc measurement enabled
+#define FEATURE_BM_ADDR_DETECT_AVAILABLE    8   // detector ic capable to detect loco address
+#define FEATURE_BM_ADDR_DETECT_ON           9   // address detection enabled
+#define FEATURE_BM_ADDR_AND_DIR            10   // address detection contains direction 
+#define FEATURE_BM_ISTSPEED_AVAILABLE      11   // speed messages enabled
+#define FEATURE_BM_ISTSPEED_INTERVAL       12   // speed update interval
+#define FEATURE_BM_CV_AVAILABLE            13   // CV readback available
+#define FEATURE_BM_CV_ON                   14   // CV readback enabled
 //-- booster
-#define FEATURE_BST_VOLT_ADJUSTABLE        15
-#define FEATURE_BST_VOLT                   16
-#define FEATURE_BST_CUTOUT_AVAIALABLE      17
-#define FEATURE_BST_CUTOUT_ON              18
-#define FEATURE_BST_TURNOFF_TIME           19
-#define FEATURE_BST_INRUSH_TURNOFF_TIME    20
-#define FEATURE_BST_AMPERE_ADJUSTABLE      21
-#define FEATURE_BST_AMPERE                 22
-#define FEATURE_BST_CURMEAS_INTERVAL       23
-#define FEATURE_BST_CV_AVAILABLE           24
-#define FEATURE_BST_CV_ON                  25
-#define FEATURE_BST_INHIBIT_AUTOSTART      26  // 1: Booster does no automatic BOOST_ON when DCC at input wakes up.
-#define FEATURE_BST_INHIBIT_LOCAL_ONOFF    27  // 1: Booster annouces local STOP/GO key stroke only, no local action
+#define FEATURE_BST_VOLT_ADJUSTABLE        15   // booster output voltage is adjustable
+#define FEATURE_BST_VOLT                   16   // booster output voltage setting (unit: V)
+#define FEATURE_BST_CUTOUT_AVAIALABLE      17   // booster can do cutout for railcom
+#define FEATURE_BST_CUTOUT_ON              18   // cutout is enabled
+#define FEATURE_BST_TURNOFF_TIME           19   // time in ms until booster turns off in case of a short
+#define FEATURE_BST_INRUSH_TURNOFF_TIME    20   // time in ms until booster turns off in case of a short after the first power up
+#define FEATURE_BST_AMPERE_ADJUSTABLE      21   // booster output current is adjustable
+#define FEATURE_BST_AMPERE                 22   // booster output current value (special coding)
+#define FEATURE_BST_CURMEAS_INTERVAL       23   // current update interval
+#define FEATURE_BST_CV_AVAILABLE           24   // CV readback available
+#define FEATURE_BST_CV_ON                  25   // CV readback enabled
+#define FEATURE_BST_INHIBIT_AUTOSTART      26   // 1: Booster does no automatic BOOST_ON when DCC at input wakes up.
+#define FEATURE_BST_INHIBIT_LOCAL_ONOFF    27   // 1: Booster annouces local STOP/GO key stroke only, no local action
 
 //-- accessory
 #define FEATURE_ACCESSORY_COUNT            40   // number of objects
@@ -529,35 +534,35 @@ typedef struct                              // t_bidib_cs_pom
 #define FEATURE_ACCESSORY_MACROMAPPED      42   // 1..n: no of accessory aspects are mapped to macros
 
 //-- control
-#define FEATURE_CTRL_INPUT_COUNT           50
-#define FEATURE_CTRL_INPUT_NOTIFY          51   // 1: report to host
-#define FEATURE_CTRL_SPORT_COUNT           52
-#define FEATURE_CTRL_LPORT_COUNT           53
-#define FEATURE_CTRL_SERVO_COUNT           54
-#define FEATURE_CTRL_SOUND_COUNT           55
-#define FEATURE_CTRL_MOTOR_COUNT           56
-#define FEATURE_CTRL_ANALOG_COUNT          57
-#define FEATURE_CTRL_MAC_LEVEL             60
-#define FEATURE_CTRL_MAC_SAVE              61
-#define FEATURE_CTRL_MAC_COUNT             62
-#define FEATURE_CTRL_MAC_SIZE              63
-#define FEATURE_CTRL_MAC_START_MAN         64
-#define FEATURE_CTRL_MAC_START_DCC         65
+#define FEATURE_CTRL_INPUT_COUNT           50   // number of inputs for keys
+#define FEATURE_CTRL_INPUT_NOTIFY          51   // 1: report a keystroke to host
+#define FEATURE_CTRL_SPORT_COUNT           52   // number of switch ports (direct controlled)
+#define FEATURE_CTRL_LPORT_COUNT           53   // number of light ports (direct controlled)
+#define FEATURE_CTRL_SERVO_COUNT           54   // number of servo ports (direct controlled)
+#define FEATURE_CTRL_SOUND_COUNT           55   // number of sound ports (direct controlled)
+#define FEATURE_CTRL_MOTOR_COUNT           56   // number of motor ports (direct controlled)
+#define FEATURE_CTRL_ANALOG_COUNT          57   // number of analog ports (direct controlled)
+#define FEATURE_CTRL_STRETCH_DIMM          58   // additional time stretch for dimming (for LPORT)
+#define FEATURE_CTRL_MAC_LEVEL             60   // supported macro level
+#define FEATURE_CTRL_MAC_SAVE              61   // number of permanent storage places for macros
+#define FEATURE_CTRL_MAC_COUNT             62   // number of macros
+#define FEATURE_CTRL_MAC_SIZE              63   // length of each macro (entries)
+#define FEATURE_CTRL_MAC_START_MAN         64   // (local) manual control of macros enabled
+#define FEATURE_CTRL_MAC_START_DCC         65   // (local) dcc control of macros enabled
 
 //-- dcc gen
 #define FEATURE_GEN_SPYMODE                100  // 1: watch bidib handsets
-#define FEATURE_GEN_WATCHDOG               101  // watchdog (MSG_CS_ALLOCATE)
-#define FEATURE_GEN_DRIVE_ACK              102  //  
-#define FEATURE_GEN_SWITCH_ACK             103  // 
+#define FEATURE_GEN_WATCHDOG               101  // 0: no watchdog, 1: permanent update of MSG_CS_SET_STATE required, unit 100ms
+#define FEATURE_GEN_DRIVE_ACK              102  // not used 
+#define FEATURE_GEN_SWITCH_ACK             103  // not used
 #define FEATURE_GEN_LOK_DB_SIZE            104  // 
 #define FEATURE_GEN_LOK_DB_STRING          105  // 
-#define FEATURE_GEN_SERVICE_MODES          106  // 
+#define FEATURE_GEN_SERVICE_MODES          106  // supported service modes
 #define FEATURE_GEN_DRIVE_BUS              107  // 1: this node drive the dcc bus. 
 #define FEATURE_GEN_LOK_LOST_DETECT        108  // 1: command station annouces lost loco
 #define FEATURE_GEN_NOTIFY_DRIVE_MANUAL    109  // 1: dcc gen reports manual operation
 
-
-#define FEATURE_FW_UPDATE_MODE             254  // 0: no fw-update, 1: intel hex
+#define FEATURE_FW_UPDATE_MODE             254  // 0: no fw-update, 1: intel hex (max. 10 byte / record)
 #define FEATURE_EXTENSION                  255  // 1: reserved for future expansion
 
 //===============================================================================
@@ -578,6 +583,7 @@ typedef struct                              // t_bidib_cs_pom
 #define BIDIB_ERR_SUBCRC                  0x13  // Message in Subsystem had crc error, 1 byte with node addr follow 
 #define BIDIB_ERR_SUBTIME                 0x14  // Message in Subsystem timed out
 #define BIDIB_ERR_SUBPAKET                0x15  // Message in Subsystem Paket Size Error
+#define BIDIB_ERR_OVERRUN                 0x16  // Message buffer in downstream overrun, messages lost.
 #define BIDIB_ERR_HW                      0x20  // self test failed
 
 //===============================================================================
@@ -637,31 +643,32 @@ typedef struct                              // t_bidib_cs_pom
 //
 //===============================================================================
 
-#define BIDIB_BST_STATE_OFF         0x00    // Booster turned off
-#define BIDIB_BST_STATE_OFF_SHORT   0x01    // Booster is off, output shortend
-#define BIDIB_BST_STATE_OFF_HOT     0x02    // Booster off and too hot
-#define BIDIB_BST_STATE_OFF_NOPOWER 0x03    // Booster has no mains
-#define BIDIB_BST_STATE_OFF_GO_REQ  0x04    // Booster off and local go request is present
-#define BIDIB_BST_STATE_OFF_HERE    0x05    // Booster off (was turned off by a local key)
-#define BIDIB_BST_STATE_OFF_NO_DCC  0x06    // Booster is off (no DCC input)
-#define BIDIB_BST_STATE_ON          0x80    // Booster on
-#define BIDIB_BST_STATE_ON_LIMIT    0x81    // Booster on and critical current flows
-#define BIDIB_BST_STATE_ON_HOT      0x82    // Booster on and is getting hot
-#define BIDIB_BST_STATE_ON_STOP_REQ 0x83    // Booster on and a local stop request is present
-#define BIDIB_BST_STATE_ON_HERE     0x84    // Booster on (was turned on by a local key)
+#define BIDIB_BST_STATE_OFF           0x00  // Booster turned off
+#define BIDIB_BST_STATE_OFF_SHORT     0x01  // Booster is off, output shortend
+#define BIDIB_BST_STATE_OFF_HOT       0x02  // Booster off and too hot
+#define BIDIB_BST_STATE_OFF_NOPOWER   0x03  // Booster has no mains
+#define BIDIB_BST_STATE_OFF_GO_REQ    0x04  // Booster off and local go request is present
+#define BIDIB_BST_STATE_OFF_HERE      0x05  // Booster off (was turned off by a local key)
+#define BIDIB_BST_STATE_OFF_NO_DCC    0x06  // Booster is off (no DCC input)
+#define BIDIB_BST_STATE_ON            0x80  // Booster on
+#define BIDIB_BST_STATE_ON_LIMIT      0x81  // Booster on and critical current flows
+#define BIDIB_BST_STATE_ON_HOT        0x82  // Booster on and is getting hot
+#define BIDIB_BST_STATE_ON_STOP_REQ   0x83  // Booster on and a local stop request is present
+#define BIDIB_BST_STATE_ON_HERE       0x84  // Booster on (was turned on by a local key)
 
-#define BIDIB_BST_DIAG_I            0x00    // Current
-#define BIDIB_BST_DIAG_V            0x01    // Voltage
-#define BIDIB_BST_DIAG_T            0x02    // Temperatur
-
-#define BIDIB_CS_STATE_OFF          0x00    // no DCC, DCC-line is static, not toggling
-#define BIDIB_CS_STATE_STOP         0x01    // DCC, all speed setting = 0
-#define BIDIB_CS_STATE_SOFTSTOP     0x02    // DCC, soft stop is progress
-#define BIDIB_CS_STATE_GO           0x03    // DCC
-#define BIDIB_CS_STATE_PROG         0x08    // in Programming Mode (ready for commands)
-#define BIDIB_CS_STATE_PROGBUSY     0x09    // in Programming Mode (busy)
-#define BIDIB_CS_STATE_BUSY         0x0D    // busy
-#define BIDIB_CS_STATE_QUERY        0xFF
+#define BIDIB_BST_DIAG_I              0x00  // Current
+#define BIDIB_BST_DIAG_V              0x01  // Voltage
+#define BIDIB_BST_DIAG_T              0x02  // Temperatur
+                                      
+#define BIDIB_CS_STATE_OFF            0x00  // no DCC, DCC-line is static, not toggling
+#define BIDIB_CS_STATE_STOP           0x01  // DCC, all speed setting = 0
+#define BIDIB_CS_STATE_SOFTSTOP       0x02  // DCC, soft stop is progress
+#define BIDIB_CS_STATE_GO             0x03  // DCC on (must be repeated if watchdog is on)
+#define BIDIB_CS_STATE_GO_IGN_WD      0x04  // DCC on (watchdog ignored)
+#define BIDIB_CS_STATE_PROG           0x08  // in Programming Mode (ready for commands)
+#define BIDIB_CS_STATE_PROGBUSY       0x09  // in Programming Mode (busy)
+#define BIDIB_CS_STATE_BUSY           0x0D  // busy
+#define BIDIB_CS_STATE_QUERY          0xFF
 
 
 #define BIDIB_CS_DRIVE_FORMAT_DCC14      0 
@@ -694,6 +701,22 @@ typedef struct                              // t_bidib_cs_pom
 // Accessory parameter
 #define BIDIB_ACCESSORY_PARA_MACROMAP  253   // following data defines a mapping
 #define BIDIB_ACCESSORY_SWITCH_TIME    254   // 
+
+// Accessory states
+#define BIDIB_ACC_STATE_DONE               0
+#define BIDIB_ACC_STATE_WAIT               0   // plus time like railcom spec
+#define BIDIB_ACC_STATE_ERROR_MORE      0x40   // more errors are present
+#define BIDIB_ACC_STATE_ERROR_NONE      0x00   // no (more) errors
+#define BIDIB_ACC_STATE_ERROR_VOID      0x01   // no processing possilbe, illegal aspect
+#define BIDIB_ACC_STATE_ERROR_CURRENT   0x02   // current comsumption to high
+#define BIDIB_ACC_STATE_ERROR_LOWPOWER  0x03   // supply too low
+#define BIDIB_ACC_STATE_ERROR_FUSE      0x04   // fuse blown
+#define BIDIB_ACC_STATE_ERROR_TEMP      0x05   // temp too high
+#define BIDIB_ACC_STATE_ERROR_POSITION  0x06   // feedback error
+#define BIDIB_ACC_STATE_ERROR_MAN_OP    0x07   // manually operated
+#define BIDIB_ACC_STATE_ERROR_BULB      0x10   // bulb blown
+#define BIDIB_ACC_STATE_ERROR_SERVO     0x20   // servo broken
+#define BIDIB_ACC_STATE_ERROR_SELFTEST  0x3F   // internal error
 
 // Macro / Switch Pointparameters
 // type codes
