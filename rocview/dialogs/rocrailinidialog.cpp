@@ -513,6 +513,8 @@ void RocrailIniDialog::initValues() {
   m_Auto->SetValue( wTrace.isautomatic( trace ) );
   m_Monitor->SetValue( wTrace.ismonitor( trace ) );
   m_SendAllTraces->SetValue( wTrace.islisten2all( trace ) );
+  if( !m_SendAllTraces->IsChecked() )
+    m_SendAllTraces->Enable(false);
 
   // Automat
   iONode ctrl = wRocRail.getctrl( m_Props );
