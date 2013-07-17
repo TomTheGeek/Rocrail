@@ -37,6 +37,7 @@ byte bidibCheckSum(byte* packet, int len);
 void bidibEscapeMessage(byte* msg, int* newLen, int inLen);
 int bidibMakeMessage(byte* msg, int inLen);
 const char* bidibGetProductName(int vid, int pid, char** www);
+const char* bidibGetAccError(int rc);
 
 /* C++ */
 #ifdef __cplusplus

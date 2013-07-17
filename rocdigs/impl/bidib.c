@@ -1508,21 +1508,26 @@ static void __handleMacroStat(iOBiDiB bidib, int uid, byte* pdata ) {
 
 static void __handleAccessory(iOBiDiB bidib, int uid, byte* pdata) {
   iOBiDiBData data = Data(bidib);
-  iONode nodeC = NodeOp.inst( wAccessory.name(), NULL, ELEMENT_NODE );
 
-  wAccessory.setnodenr( nodeC, uid );
-  wAccessory.setdevid( nodeC, pdata[0]+1 );
-  wAccessory.setval1( nodeC, pdata[1] );
-  wAccessory.setval2( nodeC, pdata[2] );
-  wAccessory.setval3( nodeC, pdata[3] );
-  wAccessory.setval4( nodeC, pdata[4] );
+  if( pdata[3] & 0x80 ) {
+    /* error */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Accessory error %02X %s", pdata[4], bidibGetAccError(pdata[4]) );
+  }
+  else {
+    iONode nodeC = NodeOp.inst( wAccessory.name(), NULL, ELEMENT_NODE );
+    wAccessory.setnodenr( nodeC, uid );
+    wAccessory.setdevid( nodeC, pdata[0]+1 );
+    wAccessory.setval1( nodeC, pdata[1] );
+    wAccessory.setval2( nodeC, pdata[2] );
+    wAccessory.setval3( nodeC, pdata[3] );
+    wAccessory.setval4( nodeC, pdata[4] );
+    wAccessory.setaccevent( nodeC, True );
+    if( data->iid != NULL )
+      wAccessory.setiid( nodeC, data->iid );
 
-  wAccessory.setaccevent( nodeC, True );
-  if( data->iid != NULL )
-    wAccessory.setiid( nodeC, data->iid );
-
-  if( data->listenerFun != NULL && data->listenerObj != NULL )
-    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
+      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
 }
 
 

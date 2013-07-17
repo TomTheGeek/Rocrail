@@ -309,3 +309,19 @@ const char* bidibGetFeatureName(int feature) {
 
   return "*** unknown feature ***";
 }
+
+
+const char* bidibGetAccError(int rc) {
+  if( rc == BIDIB_ACC_STATE_ERROR_VOID ) return "no processing possilbe, illegal aspect";
+  if( rc == BIDIB_ACC_STATE_ERROR_CURRENT ) return "current comsumption to high";
+  if( rc == BIDIB_ACC_STATE_ERROR_LOWPOWER ) return "supply too low";
+  if( rc == BIDIB_ACC_STATE_ERROR_FUSE ) return "fuse blown";
+  if( rc == BIDIB_ACC_STATE_ERROR_TEMP ) return "temp too high";
+  if( rc == BIDIB_ACC_STATE_ERROR_POSITION ) return "feedback error";
+  if( rc == BIDIB_ACC_STATE_ERROR_MAN_OP ) return "manually operated";
+  if( rc == BIDIB_ACC_STATE_ERROR_BULB ) return "bulb blown";
+  if( rc == BIDIB_ACC_STATE_ERROR_SERVO ) return "servo broken";
+  if( rc == BIDIB_ACC_STATE_ERROR_SELFTEST ) return "internal error";
+
+  return "*** unknown error ***";
+}
