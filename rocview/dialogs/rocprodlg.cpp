@@ -346,13 +346,18 @@ bool RocProDlg::parseDecFile() {
       m_DecNode = DocOp.getRootNode( doc );
       DocOp.base.del( doc );
 
-      iONode decoder = NodeOp.findNode(m_DecNode, wDecoder.name());
-      if( decoder != NULL ) {
-        // JMRI definition; Translate.
-        importJMRI(decoder);
-      }
+      if( m_DecNode != NULL ) {
+        iONode decoder = NodeOp.findNode(m_DecNode, wDecoder.name());
+        if( decoder != NULL ) {
+          // JMRI definition; Translate.
+          importJMRI(decoder);
+        }
 
-      return true;
+        return true;
+      }
+      else {
+        TraceOp.trc( "frame", TRCLEVEL_EXCEPTION, __LINE__, 9999, "DecFile [%s] is not parseable!", m_DecFilename );
+      }
     }
     else {
       TraceOp.trc( "frame", TRCLEVEL_EXCEPTION, __LINE__, 9999, "DecFile [%s] is not parseable!", m_DecFilename );
