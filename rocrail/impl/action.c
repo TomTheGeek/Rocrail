@@ -222,6 +222,10 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           const char* state = "";
           const char* direction = NULL;
 
+          if( lc == NULL ) {
+            lc = ModelOp.getLocByIdent(model, wActionCtrl.getlcid(actionctrl));
+          }
+
           iOStrTok tok = StrTokOp.inst(wActionCond.getstate(actionCond), ',');
           if(StrTokOp.hasMoreTokens(tok))
             state = StrTokOp.nextToken(tok);
