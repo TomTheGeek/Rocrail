@@ -1506,16 +1506,25 @@ static void __handleMacroStat(iOBiDiB bidib, int uid, byte* pdata ) {
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 }
 
-static void __handleAccessory(iOBiDiB bidib, int uid, byte* pdata) {
+static void __handleAccessory(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
   iOBiDiBData data = Data(bidib);
+  Boolean report = True;
 
   if( pdata[3] & 0x80 ) {
     /* error */
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Accessory error %02X %s", pdata[4], bidibGetAccError(pdata[4]) );
+    if( pdata[4] == BIDIB_ACC_STATE_ERROR_MAN_OP ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Ack Accessory state %02X %s", pdata[4], bidibGetAccError(pdata[4]) );
+      data->subWrite((obj)bidib, bidibnode->path, MSG_ACCESSORY_SET, pdata, 2, bidibnode);
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Accessory error %02X %s", pdata[4], bidibGetAccError(pdata[4]) );
+      report = False;
+    }
   }
-  else {
+
+  if( report ) {
     iONode nodeC = NodeOp.inst( wAccessory.name(), NULL, ELEMENT_NODE );
-    wAccessory.setnodenr( nodeC, uid );
+    wAccessory.setnodenr( nodeC, bidibnode->uid );
     wAccessory.setdevid( nodeC, pdata[0]+1 );
     wAccessory.setval1( nodeC, pdata[1] );
     wAccessory.setval2( nodeC, pdata[2] );
@@ -3002,7 +3011,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_ACCESSORY_STATE path=%s port=%d aspect=%d", pathKey, pdata[0], pdata[1] );
     if( bidibnode != NULL )
-      __handleAccessory(bidib, bidibnode->uid, pdata);
+      __handleAccessory(bidib, bidibnode, pdata);
     break;
 
   case MSG_SYS_GET_MAGIC:
