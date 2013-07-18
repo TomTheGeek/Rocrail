@@ -53,7 +53,6 @@ class Clock : public wxPanel{
     void drawSecondHand(wxGraphicsContext* gc, double c, bool erase=false);
 
 	private:
-		wxBitmap* m_Plate;
     wxBitmap* m_Logo;
 		wxTimer *WxTimer;
 		double x,y,z;

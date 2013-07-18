@@ -74,11 +74,10 @@ Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_
   run   = true;
   deviderchanged = false;
   this->showsecondhand = showsecondhand;
-  m_Plate = _img_plate;
   m_Logo  = _img_logo;
   m_Temp = 20;
 
-	int clockpicwidth = m_Plate->GetWidth();
+	int clockpicwidth = 100;
   SetSize(wxSize(clockpicwidth, clockpicwidth));
   type = clocktype;
 
@@ -176,15 +175,9 @@ void Clock::OnResumeTime(wxCommandEvent& event) {
   wxGetApp().sendToRocrail( tick, false );
 }
 
-#define USENEWLOOK
 void Clock::OnPaint(wxPaintEvent& event)
 {
-#ifdef USENEWLOOK
   drawNewClock();
-#else
-  drawClock();
-#endif
-
 }
 
 void Clock::stopTimer() {
@@ -266,113 +259,6 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
     Refresh(false);
   }
 }
-
-
-
-void Clock::drawClock() {
-  int width, height;
-  wxPaintDC dc(this);
-  GetSize(&width, &height);
-
-  TraceOp.trc( "clock", TRCLEVEL_DEBUG, __LINE__, 9999, "draw clock" );
-
-  if( height < width )
-    width = height;
-
-  double c = width/2;
-
-#if defined __APPLE__
-  wxPen borderPen( wxColour(0, 0, 0), wxSOLID );
-  borderPen.SetWidth(1);
-  dc.SetPen( borderPen );
-  dc.SetBrush(*wxWHITE_BRUSH);
-  dc.DrawCircle( c, c, c );
-
-  int i;
-  for (i = 0; i < 60; i++) {
-    double k = sm_angle( i );
-
-    wxPen pen( wxColour(0, 0, 0), wxSOLID );
-    pen.SetWidth(1);
-    dc.SetPen( pen );
-
-    dc.DrawLine((int)(c + 0.85 * c * cos(k)), (int)(c - 0.85 * c * sin(k)), (int)(c + 0.90 * c * cos(k)), (int)(c - 0.90 * c * sin(k)));
-
-    if( i%5 == 0 ) {
-      pen.SetWidth(4);
-      dc.SetPen( pen );
-      dc.DrawLine((int)(c + 0.75 * c * cos(k)), (int)(c - 0.75 * c * sin(k)), (int)(c + 0.90 * c * cos(k)), (int)(c - 0.90 * c * sin(k)));
-    }
-  }
-#else
-  width = m_Plate->GetWidth();
-  c = width/2;
-
-  dc.SetPen(*wxWHITE_PEN);
-  dc.SetBrush(*wxWHITE_BRUSH);
-  dc.DrawCircle( c-1, c-1, c );
-
-  // draw now
-  if(m_Plate != NULL)
-    dc.DrawBitmap(wxBitmap(*m_Plate),0,0,true);
-#endif
-
-  dc.SetPen(*wxBLACK_PEN);
-
-  if( type > 0 ) {
-    wxString timestring;
-    if( type == 1 && hours < 12 )
-      timestring = wxString::Format(_T("AM %d:%02d"), hours, minutes);
-    else if( type == 1 && hours >= 12 )
-      timestring = wxString::Format(_T("PM %d:%02d"), hours-12, minutes);
-    else
-      timestring = wxString::Format(_T("%02d:%02d"), hours, minutes);
-    int w = 0;
-    int h = 0;
-    dc.GetTextExtent(timestring, &w, &h);
-    dc.DrawText(timestring, (width/2)-(w/2),width*0.6);
-  }
-
-  if(m_Logo != NULL && m_Logo->Ok()) {
-    int w = m_Logo->GetWidth();
-    dc.DrawBitmap(wxBitmap(*m_Logo),(width/2)-(w/2),width*0.3,true);
-  }
-
-
-  // hour
-  wxPen blackPen( wxColour(0, 0, 0), wxSOLID );
-  blackPen.SetWidth(4);
-  dc.SetPen( blackPen );
-  dc.DrawLine((int)c, (int)c, (int)(c + 0.6 * c * cos(z)), (int)(c - 0.6  * c * sin(z))); // hour hand
-
-
-  // minute
-  dc.DrawLine((int)c, (int)c, (int)(c + 0.85 * c * cos(y)), (int)(c - 0.85  * c * sin(y))); // minute hand
-
-
-  // second
-  if( this->devider <= 10 ) {
-    wxBrush brush( wxColour(255, 0, 0), wxSOLID );
-    dc.SetBrush( brush );
-    wxPen redPen( wxColour(255, 0, 0), wxSOLID );
-    redPen.SetWidth(2);
-    dc.SetPen( redPen );
-    //dc.DrawLine((int)c, (int)c, (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
-#if defined __APPLE__
-    dc.DrawLine((int)c, (int)c, (int)(c + 0.52 * c * cos(x)), (int)(c - 0.52 * c * sin(x))); // second hand
-    dc.SetBrush(*wxTRANSPARENT_BRUSH);
-    dc.DrawCircle((int)(c + 0.60 * c * cos(x)), (int)(c - 0.60 * c * sin(x)), 4); // second hand
-    dc.DrawLine((int)(c + 0.68 * c * cos(x)), (int)(c - 0.68 * c * sin(x)), (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
-#else
-    dc.DrawLine((int)c, (int)c, (int)(c + 0.90 * c * cos(x)), (int)(c - 0.90 * c * sin(x))); // second hand
-#endif
-  }
-  dc.SetBrush(*wxRED_BRUSH);
-  dc.DrawCircle( c, c, 2 );
-
-
-}
-
 
 
 
