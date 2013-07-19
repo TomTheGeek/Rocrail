@@ -521,11 +521,10 @@ static iONode __translate( iOSRCP inst, iONode node, char* srcp ) {
 
     wProgram.setaddr( rsp, addr );
     wProgram.setcv( rsp, cv );
-    wProgram.setcmd( rsp, wProgram.datarsp );
+    wProgram.setcmd( rsp, wProgram.statusrsp );
 
     if( o->iid != NULL )
       wProgram.setiid( rsp, o->iid );
-    wProgram.setcmd( rsp, wProgram.statusrsp );
 
     if( wProgram.getcmd( node ) == wProgram.set ) {
       int ack = 0;
@@ -552,6 +551,7 @@ static iONode __translate( iOSRCP inst, iONode node, char* srcp ) {
       ack = __srcpWrite((obj)inst,tmpCommand,NULL);
       if( ack == 200 ) {
         wProgram.setvalue( rsp, value-1 );
+        wProgram.setcmd( rsp, wProgram.datarsp );
       }
       else if( ack == 0 ) {
         NodeOp.base.del(rsp);
