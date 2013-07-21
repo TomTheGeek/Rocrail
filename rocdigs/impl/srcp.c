@@ -318,6 +318,7 @@ static int __getSRCPbusList( iOSRCPData o ) {
 static iONode __translate( iOSRCP inst, iONode node, char* srcp ) {
   iOSRCPData o = Data( inst );
   char   tmpCommand[1024];
+  char   tmpRsp[1024];
   iONode rsp = NULL;
   int    i   = 0;
 
@@ -529,7 +530,7 @@ static iONode __translate( iOSRCP inst, iONode node, char* srcp ) {
     if( wProgram.getcmd( node ) == wProgram.set ) {
       int ack = 0;
       StrOp.fmtb (tmpCommand, "SET %d SM %d CV %d %d\n", wSRCP.getsrcpbusGL_ns( o->srcpini ), addr, cv, value );
-      ack = __srcpWrite((obj)inst,tmpCommand,NULL);
+      ack = __srcpWrite((obj)inst,tmpCommand,tmpRsp);
       if( ack == 200 ) {
         wProgram.setvalue( rsp, value );
       }
@@ -548,7 +549,7 @@ static iONode __translate( iOSRCP inst, iONode node, char* srcp ) {
       int value = 0;
       int ack = 0;
       StrOp.fmtb (tmpCommand, "GET %d SM %d CV %d\n", wSRCP.getsrcpbusGL_ns( o->srcpini ), addr, cv );
-      ack = __srcpWrite((obj)inst,tmpCommand,NULL);
+      ack = __srcpWrite((obj)inst,tmpCommand,tmpRsp);
       if( ack == 200 ) {
         wProgram.setvalue( rsp, value-1 );
         wProgram.setcmd( rsp, wProgram.datarsp );

@@ -177,12 +177,13 @@ int tcpipWrite( obj inst, const char *szCommand, char* szRetVal, Boolean info ) 
       return -1;
     if( szRetVal != NULL ) {
       SocketOp.readln(o->infoSocket,szRetVal);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read line: %s", szRetVal );
     }
     return retstate;
   }
 
   /* write command port */
-  if (szRetVal)
+  if (szRetVal != NULL )
     szRetVal[0]= '\0';
 
   if ((o->cmdSocket == NULL) || (!SocketOp.isConnected( o->cmdSocket ))) {
@@ -221,8 +222,9 @@ int tcpipWrite( obj inst, const char *szCommand, char* szRetVal, Boolean info ) 
 
   o->state = (SRCP_OK(retstate)?SRCP_STATE_OK:SRCP_STATE_ERROR);
 
-  if (szRetVal)
+  if( szRetVal != NULL ) {
     StrOp.copy( szRetVal, szResponse );
+  }
 
   return retstate;
 }
