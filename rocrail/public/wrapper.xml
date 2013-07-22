@@ -2412,6 +2412,11 @@
 
         <var name="train" vt="string" defval="" range="*" remark="Operator consist ID"/>
         <var name="trainlen" vt="int" defval="0" range="0-*" remark="Total train length"/>
+        <var name="trainweight" vt="int" defval="0" range="0-*" unit="ton" remark="Total train weight"/>
+        <var name="maxload" vt="int" defval="0" range="0-*" unit="ton" remark="Maximal loco load"/>
+        <var name="adjustaccel" vt="bool" defval="False" remark="Adjust CV3 acceleration."/>
+        <var name="accelmin" vt="int" defval="0" range="0-255" remark="Minimal acceleration CV3 value."/>
+        <var name="accelmax" vt="int" defval="0" range="0-255" remark="Maximal acceleration CV3 value."/>
 
         <actionctrl cardinality="n"/>
 
@@ -2483,6 +2488,8 @@
         <const name="passenger_postoffice" vt="string" val="postoffice"/>
         <var name="subtype" vt="string" defval="" range="*" remark="Car sub type like Boxcar or gondola."/>
         <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Car lenght."/>
+        <var name="weight_empty" vt="int" defval="0" range="0-*" unit="ton" remark="Car weight empty."/>
+        <var name="weight_loaded" vt="int" defval="0" range="0-*" unit="ton" remark="Car weight loaded."/>
         <var name="waybills" vt="string" defval="" range="*" remark="Option for freight cars; where to go and what to load."/>
         <const name="status_empty" vt="string" val="empty"/>
         <const name="status_loaded" vt="string" val="loaded"/>
