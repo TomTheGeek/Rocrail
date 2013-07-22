@@ -1203,7 +1203,7 @@ void TurntableDialog::CreateControls()
     wxBoxSizer* itemBoxSizer125 = new wxBoxSizer(wxVERTICAL);
     m_TracksPanel->SetSizer(itemBoxSizer125);
 
-    m_TracksGrid = new wxGrid( m_TracksPanel, ID_GRID, wxDefaultPosition, wxSize(220, 200), wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL|wxALWAYS_SHOW_SB );
+    m_TracksGrid = new wxGrid( m_TracksPanel, ID_GRID, wxDefaultPosition, wxSize(220, 200), wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL );
     m_TracksGrid->SetDefaultColSize(50);
     m_TracksGrid->SetDefaultRowSize(20);
     m_TracksGrid->SetColLabelSize(20);

@@ -1185,7 +1185,7 @@ void SelTabDialog::CreateControls()
     wxBoxSizer* itemBoxSizer104 = new wxBoxSizer(wxVERTICAL);
     m_TracksPanel->SetSizer(itemBoxSizer104);
 
-    m_TracksGrid = new wxGrid( m_TracksPanel, ID_SELTAB_GRID, wxDefaultPosition, wxSize(220, 200), wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL|wxALWAYS_SHOW_SB );
+    m_TracksGrid = new wxGrid( m_TracksPanel, ID_SELTAB_GRID, wxDefaultPosition, wxSize(220, 200), wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL );
     m_TracksGrid->SetDefaultColSize(50);
     m_TracksGrid->SetDefaultRowSize(20);
     m_TracksGrid->SetColLabelSize(20);

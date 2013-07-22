@@ -2461,7 +2461,7 @@ void LocDialog::CreateControls()
     wxBoxSizer* itemBoxSizer293 = new wxBoxSizer(wxVERTICAL);
     m_CVPanel->SetSizer(itemBoxSizer293);
 
-    m_CVList = new wxGrid( m_CVPanel, ID_GRID_LOC_CV, wxDefaultPosition, wxSize(200, 150), wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL|wxALWAYS_SHOW_SB );
+    m_CVList = new wxGrid( m_CVPanel, ID_GRID_LOC_CV, wxDefaultPosition, wxSize(200, 150), wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL );
     m_CVList->SetDefaultColSize(50);
     m_CVList->SetDefaultRowSize(25);
     m_CVList->SetColLabelSize(25);
