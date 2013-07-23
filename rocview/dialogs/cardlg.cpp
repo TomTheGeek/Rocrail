@@ -206,6 +206,7 @@ void CarDlg::initLabels() {
   m_Type->SetString( 1, wxGetApp().getMsg( "passenger" ) );
   m_labSubtype->SetLabel( wxGetApp().getMsg( "subtype" ) );
   m_labLength->SetLabel( wxGetApp().getMsg( "length" ) );
+  m_labWeight->SetLabel( wxGetApp().getMsg( "weight" ) );
   m_labManuId->SetLabel( wxGetApp().getMsg( "manufactured_ID" ) );
   m_labRemark->SetLabel( wxGetApp().getMsg( "remark" ) );
 
@@ -539,6 +540,8 @@ void CarDlg::initValues() {
   initSubType();
 
   m_Length->SetValue( wCar.getlen( m_Props ) );
+  m_WeightEmpty->SetValue( wCar.getweight_empty( m_Props ) );
+  m_WeightLoaded->SetValue( wCar.getweight_loaded( m_Props ) );
   m_ManuId->SetValue( wxString(wCar.getmanuid( m_Props ),wxConvUTF8) );
   m_Remark->SetValue( wxString(wCar.getremark( m_Props ),wxConvUTF8) );
 
@@ -654,6 +657,9 @@ bool CarDlg::evaluate(){
     wCar.setsubtype( m_Props, (char*)((wxItemContainer*)m_SubType)->GetClientData( m_SubType->GetSelection()) );
 
   wCar.setlen( m_Props, m_Length->GetValue() );
+  wCar.setweight_empty( m_Props, m_WeightEmpty->GetValue() );
+  wCar.setweight_loaded( m_Props, m_WeightLoaded->GetValue() );
+
   wCar.setmanuid( m_Props, m_ManuId->GetValue().mb_str(wxConvUTF8) );
   wCar.setremark( m_Props, m_Remark->GetValue().mb_str(wxConvUTF8) );
 

@@ -22807,4 +22807,7 @@
     <it txt="Creare ospite BiDi"/>
     <sl txt="Kreiraj gosta na BiDi"/>
   </Msg>
+  <Msg id="weight">
+    <en txt="Weight"/>
+  </Msg>
 </Messages>

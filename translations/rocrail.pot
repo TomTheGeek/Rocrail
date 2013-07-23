@@ -6569,3 +6569,9 @@ msgstr ""
 msgid "Create guest on BiDi"
 msgstr ""
 
+#. 
+# id="weight"
+#, c-format
+msgid "Weight"
+msgstr ""
+
