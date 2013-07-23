@@ -209,15 +209,17 @@ static void _modify( struct OOperator* inst ,iONode props ) {
   props->base.del(props);
 }
 
-static int _getLen( struct OOperator* inst ) {
+static int _getLen( struct OOperator* inst, int* trainweight ) {
   iOOperatorData data = Data(inst);
   /* ToDo: Calculate consist length. */
   int len = 0;
+  int weight = 0;
   iOStrTok tok = StrTokOp.inst(wOperator.getcarids(data->props), ',');
   while( StrTokOp.hasMoreTokens(tok) ) {
     iOCar car = ModelOp.getCar(AppOp.getModel(), StrTokOp.nextToken(tok) );
     if( car != NULL ) {
       len += CarOp.getLen(car);
+      weight += CarOp.getWeight(car);
     }
   }
   StrTokOp.base.del(tok);

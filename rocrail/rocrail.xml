@@ -2094,6 +2094,9 @@
     <fun name="getLen" vt="int">
       <param name="inst" vt="this" remark="Car instance"/>
     </fun>
+    <fun name="getWeight" vt="int">
+      <param name="inst" vt="this" remark="Car instance"/>
+    </fun>
     <fun name="setLocality" vt="void">
       <param name="inst" vt="this" remark="Car instance"/>
       <param name="id" vt="const char*" remark="Locality ID"/>
@@ -2150,6 +2153,7 @@
     </fun>
     <fun name="getLen" vt="int">
       <param name="inst" vt="this" remark="Operator instance"/>
+      <param name="trainweight" vt="int*"/>
     </fun>
     <fun name="swapPlacing" vt="void">
       <param name="inst" vt="this" remark="Operator instance"/>

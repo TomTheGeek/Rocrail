@@ -348,6 +348,15 @@ static int _getLen( struct OCar* inst ) {
 }
 
 
+static int _getWeight( struct OCar* inst ) {
+  iOCarData data = Data(inst);
+  if( StrOp.equals( wCar.status_loaded, wCar.getstatus( data->props) ) )
+    return wCar.getweight_loaded(data->props);
+  else
+    return wCar.getweight_empty(data->props);
+}
+
+
 /**  */
 static void _setLocality( struct OCar* inst, const char* id ) {
   iOCarData data = Data(inst);

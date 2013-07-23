@@ -59,6 +59,7 @@
 #include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/BBT.h"
+#include "rocrail/wrapper/public/Program.h"
 
 static int instCnt = 0;
 
@@ -2010,6 +2011,23 @@ static const char* _getEngine( iOLoc inst ) {
 }
 
 
+static void __adjustAccel(iOLoc inst, int accel) {
+  iOLocData data = Data(inst);
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.set );
+  wProgram.setiid( cmd, wLoc.getiid(data->props) );
+  wProgram.setaddr( cmd, wLoc.getaddr(data->props) );
+  wProgram.setlongaddr( cmd, (wLoc.getaddr(data->props) > 127) ? True:False );
+  wProgram.setcv( cmd, 3 );
+  wProgram.setvalue( cmd, accel );
+  wProgram.setpom( cmd, True );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] adjust acceleration: CV3=%d",
+      wLoc.getid(data->props), (int)accel );
+  ControlOp.cmd( AppOp.getControl(), cmd, NULL );
+}
+
+
 static void __calcTrainLen(iOLoc inst) {
   iOLocData data = Data(inst);
   Boolean report = False;
@@ -2020,8 +2038,23 @@ static void __calcTrainLen(iOLoc inst) {
   if( wLoc.gettrain( data->props) != NULL && StrOp.len(wLoc.gettrain( data->props)) > 0 ) {
     iOOperator train = ModelOp.getOperator(AppOp.getModel(), wLoc.gettrain( data->props) );
     if( train != NULL ) {
-      wLoc.settrainlen( data->props, OperatorOp.getLen(train) + wLoc.getlen(data->props));
+      int weight = 0;
+      wLoc.settrainlen( data->props, OperatorOp.getLen(train, &weight) + wLoc.getlen(data->props));
+      wLoc.settrainweight( data->props, weight );
       report = True;
+
+      if( weight > 0 && wLoc.isadjustaccel(data->props) ) {
+        float maxload = wLoc.getmaxload(data->props);
+        int accelmin = wLoc.getaccelmin(data->props);
+        int accelmax = wLoc.getaccelmax(data->props);
+        if( maxload > 0 && accelmin > 0 && accelmax > 0 ) {
+          float accel = accelmax - accelmin;
+          accel /= maxload;
+          accel *= weight;
+          accel += accelmin;
+          __adjustAccel(inst, (int)accel);
+        }
+      }
     }
   }
 
@@ -2039,7 +2072,8 @@ static void __calcTrainLen(iOLoc inst) {
     StrTokOp.base.del( consist );
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] train length=%d", wLoc.getid(data->props), wLoc.gettrainlen(data->props) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] train length=%d weight=%d",
+      wLoc.getid(data->props), wLoc.gettrainlen(data->props), wLoc.gettrainweight(data->props) );
 }
 
 
