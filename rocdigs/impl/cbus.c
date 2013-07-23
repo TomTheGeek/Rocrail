@@ -1766,9 +1766,9 @@ static void __makeDFUN(iOSlot slot, iONode node, byte* cmd) {
     }
     cmd[3] = fmask;
   }
-  else if( fnchanged < 20  || fngroup == 4 || fngroup == 5) {
+  else if( fnchanged < 21  || fngroup == 4 || fngroup == 5) {
     cmd[2] = 4;
-    for( i = 13; i < 20; i++ ) {
+    for( i = 13; i < 21; i++ ) {
       if( __getFState(node, i) )
         fmask |= (1 << (i-13));
     }
@@ -1776,7 +1776,7 @@ static void __makeDFUN(iOSlot slot, iONode node, byte* cmd) {
   }
   else if( fnchanged < 29 || fngroup == 6 || fngroup == 7 ) {
     cmd[2] = 5;
-    for( i = 20; i < 29; i++ ) {
+    for( i = 21; i < 29; i++ ) {
       if( __getFState(node, i) )
         fmask |= (1 << (i-20));
     }
