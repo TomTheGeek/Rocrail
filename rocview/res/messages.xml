@@ -22810,4 +22810,16 @@
   <Msg id="weight">
     <en txt="Weight"/>
   </Msg>
+  <Msg id="adjustaccel">
+    <en txt="Adjust acceleration"/>
+  </Msg>
+  <Msg id="maxload">
+    <en txt="Max. load"/>
+  </Msg>
+  <Msg id="minaccel">
+    <en txt="Min. acceleration"/>
+  </Msg>
+  <Msg id="maxaccel">
+    <en txt="Max. acceleration"/>
+  </Msg>
 </Messages>

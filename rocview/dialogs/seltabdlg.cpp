@@ -880,7 +880,6 @@ void SelTabDialog::CreateControls()
     wxBoxSizer* itemBoxSizer6 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer5->Add(itemBoxSizer6, 1, wxALIGN_TOP|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer7->AddGrowableCol(1);
     itemBoxSizer6->Add(itemFlexGridSizer7, 0, wxGROW|wxALL, 5);
     m_LabelID = new wxStaticText( m_GeneralPanel, wxID_ANY, _("id"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -917,6 +916,8 @@ void SelTabDialog::CreateControls()
 
     m_OffPos = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 16, 0 );
     itemFlexGridSizer7->Add(m_OffPos, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer7->AddGrowableCol(1);
 
     wxStaticLine* itemStaticLine20 = new wxStaticLine( m_GeneralPanel, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
     itemBoxSizer5->Add(itemStaticLine20, 0, wxGROW|wxALL, 5);
@@ -979,13 +980,14 @@ void SelTabDialog::CreateControls()
     wxBoxSizer* itemBoxSizer37 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer36->Add(itemBoxSizer37, 0, wxALIGN_TOP|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer38 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer38->AddGrowableCol(1);
     itemBoxSizer37->Add(itemFlexGridSizer38, 0, wxGROW|wxALL, 5);
     m_Labeliid = new wxStaticText( m_Interface, wxID_ANY, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer38->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_IID = new wxTextCtrl( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer38->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer38->AddGrowableCol(1);
 
     wxFlexGridSizer* itemFlexGridSizer41 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer37->Add(itemFlexGridSizer41, 0, wxGROW|wxALL, 5);
@@ -1098,7 +1100,6 @@ void SelTabDialog::CreateControls()
     wxBoxSizer* itemBoxSizer77 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer36->Add(itemBoxSizer77, 0, wxALIGN_TOP|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer78 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer78->AddGrowableCol(1);
     itemBoxSizer77->Add(itemFlexGridSizer78, 0, wxGROW|wxALL, 5);
     m_labPosSen = new wxStaticText( m_Interface, wxID_ANY, _("Position Sensor"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer78->Add(m_labPosSen, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
@@ -1155,6 +1156,8 @@ void SelTabDialog::CreateControls()
     wxArrayString m_b6SenStrings;
     m_b6Sen = new wxComboBox( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_b6SenStrings, wxCB_READONLY );
     itemFlexGridSizer78->Add(m_b6Sen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    itemFlexGridSizer78->AddGrowableCol(1);
 
     m_NewPosBox = new wxStaticBox(m_Interface, wxID_ANY, _("New position flag"));
     wxStaticBoxSizer* itemStaticBoxSizer95 = new wxStaticBoxSizer(m_NewPosBox, wxVERTICAL);

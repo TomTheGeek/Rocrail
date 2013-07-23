@@ -6575,3 +6575,27 @@ msgstr ""
 msgid "Weight"
 msgstr ""
 
+#. 
+# id="adjustaccel"
+#, c-format
+msgid "Adjust acceleration"
+msgstr ""
+
+#. 
+# id="maxload"
+#, c-format
+msgid "Max. load"
+msgstr ""
+
+#. 
+# id="minaccel"
+#, c-format
+msgid "Min. acceleration"
+msgstr ""
+
+#. 
+# id="maxaccel"
+#, c-format
+msgid "Max. acceleration"
+msgstr ""
+

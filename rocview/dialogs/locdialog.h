@@ -429,6 +429,13 @@ public:
     wxCheckBox* m_V_mode_percent;
     wxCheckBox* m_Info4Throttle;
     wxCheckBox* m_Regulated;
+    wxCheckBox* m_AdjustAccel;
+    wxStaticText* m_labMaxLoad;
+    wxSpinCtrl* m_MaxLoad;
+    wxStaticText* m_labMinAccel;
+    wxSpinCtrl* m_MinAccel;
+    wxStaticText* m_labMaxAccel;
+    wxSpinCtrl* m_MaxAccel;
     wxPanel* m_DetailsPanel;
     wxStaticText* m_Label_Blockwait;
     wxTextCtrl* m_Blockwait;

@@ -1723,7 +1723,7 @@ void RouteDialog::CreateControls()
     wxBoxSizer* itemBoxSizer108 = new wxBoxSizer(wxVERTICAL);
     m_ConditionsPanel->SetSizer(itemBoxSizer108);
 
-    m_CondGrid = new wxGrid( m_ConditionsPanel, ID_COND_GRID, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL);
+    m_CondGrid = new wxGrid( m_ConditionsPanel, ID_COND_GRID, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL );
     m_CondGrid->SetDefaultColSize(50);
     m_CondGrid->SetDefaultRowSize(25);
     m_CondGrid->SetColLabelSize(25);
