@@ -610,8 +610,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           msgdata[0] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? addr:addr-1;
           msgdata[1] = 1;
         }
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "accessory %d:%d set to %d (%s)",
-            wSwitch.getbus( node ), msgdata[0], msgdata[1], wSwitch.getcmd(node) );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "accessory %d:%d set to %d (%s) %s",
+            wSwitch.getbus( node ), msgdata[0], msgdata[1], wSwitch.getcmd(node), wSwitch.issinglegate(node)?"single gate":"" );
         data->subWrite((obj)inst, bidibnode->path, MSG_ACCESSORY_SET, msgdata, 2, bidibnode);
       }
       else {
@@ -624,8 +624,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
             msgdata[0] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? addr-1:addr;
             msgdata[1] = BIDIB_MACRO_START;
           }
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "macro %d:%d set to %d",
-              wSwitch.getbus( node ), msgdata[0], msgdata[1] );
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "macro %d:%d set to %d %s",
+              wSwitch.getbus( node ), msgdata[0], msgdata[1], wSwitch.issinglegate(node)?"single gate":"" );
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_MACRO_HANDLE, msgdata, 2, bidibnode);
         }
         else {
@@ -641,8 +641,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
             msgdata[1] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? addr-1:addr;
             msgdata[2] = BIDIB_PORT_TURN_ON; // ToDo: Switch off other coil.
           }
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc %d:%d type %d set to %d",
-              wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2] );
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc %d:%d type %d set to %d %s",
+              wSwitch.getbus( node ), msgdata[1], msgdata[0], msgdata[2], wSwitch.issinglegate(node)?"single gate":"" );
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_OUTPUT, msgdata, 3, bidibnode);
         }
       }
