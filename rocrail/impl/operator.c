@@ -223,6 +223,8 @@ static int _getLen( struct OOperator* inst, int* trainweight ) {
     }
   }
   StrTokOp.base.del(tok);
+  if( trainweight != NULL )
+    *trainweight = weight;
   return len;
 }
 

@@ -350,10 +350,14 @@ static int _getLen( struct OCar* inst ) {
 
 static int _getWeight( struct OCar* inst ) {
   iOCarData data = Data(inst);
-  if( StrOp.equals( wCar.status_loaded, wCar.getstatus( data->props) ) )
+  if( StrOp.equals( wCar.status_loaded, wCar.getstatus( data->props) ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "car [%s] loaded weight [%d]", CarOp.base.id(inst), wCar.getweight_loaded(data->props) );
     return wCar.getweight_loaded(data->props);
-  else
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "car [%s] empty weight [%d]", CarOp.base.id(inst), wCar.getweight_empty(data->props) );
     return wCar.getweight_empty(data->props);
+  }
 }
 
 

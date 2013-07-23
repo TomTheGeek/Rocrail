@@ -2018,6 +2018,7 @@ static void __adjustAccel(iOLoc inst, int accel) {
   wProgram.setiid( cmd, wLoc.getiid(data->props) );
   wProgram.setaddr( cmd, wLoc.getaddr(data->props) );
   wProgram.setlongaddr( cmd, (wLoc.getaddr(data->props) > 127) ? True:False );
+  wProgram.setdecaddr( cmd, wLoc.getaddr(data->props) );
   wProgram.setcv( cmd, 3 );
   wProgram.setvalue( cmd, accel );
   wProgram.setpom( cmd, True );
