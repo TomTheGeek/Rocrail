@@ -6576,6 +6576,12 @@ msgid "Weight"
 msgstr ""
 
 #. 
+# id="acceleration"
+#, c-format
+msgid "Acceleration"
+msgstr ""
+
+#. 
 # id="adjustaccel"
 #, c-format
 msgid "Adjust acceleration"

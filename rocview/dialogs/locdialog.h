@@ -109,10 +109,10 @@ class wxGrid;
 #define ID_TEXTCTRL_LOC_ACCEL 10034
 #define wxID_STATIC_MASS 10028
 #define ID_TEXTCTRL_MASS 10029
-#define wxID_STATIC_LOC_PLACING 10118
-#define ID_CHECKBOX_LOC_PLACING 10119
 #define wxID_STATIC_LOC_V_MODE 10116
 #define ID_CHECKBOX_LOC_CONTROLLED 10117
+#define wxID_STATIC_LOC_PLACING 10118
+#define ID_CHECKBOX_LOC_PLACING 10119
 #define ID_LOC_REGULATED 10375
 #define ID_PANEL_DETAILS 10030
 #define wxID_STATIC_BLOCKWAIT 10031
@@ -401,6 +401,7 @@ public:
     wxTextCtrl* m_SpeedSteps;
     wxStaticText* m_LabelFunCnt;
     wxTextCtrl* m_FunCnt;
+    wxStaticBox* m_VelocityBox;
     wxStaticText* m_Label_V_min;
     wxTextCtrl* m_V_min;
     wxStaticText* m_Label_V_Rmin;
@@ -419,16 +420,18 @@ public:
     wxTextCtrl* m_V_Rmax;
     wxStaticText* m_LabelV_step;
     wxTextCtrl* m_Accel;
+    wxStaticBox* m_OptionsBox;
     wxStaticText* m_Label_Mass;
     wxTextCtrl* m_Mass;
     wxStaticText* m_labDirPause;
     wxTextCtrl* m_DirPause;
-    wxStaticText* m_LabelPlacing;
-    wxCheckBox* m_Placing;
     wxStaticText* m_LabelV_mode;
     wxCheckBox* m_V_mode_percent;
+    wxStaticText* m_LabelPlacing;
+    wxCheckBox* m_Placing;
     wxCheckBox* m_Info4Throttle;
     wxCheckBox* m_Regulated;
+    wxStaticBox* m_AccelerationBox;
     wxCheckBox* m_AdjustAccel;
     wxStaticText* m_labMaxLoad;
     wxSpinCtrl* m_MaxLoad;

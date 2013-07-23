@@ -22810,6 +22810,9 @@
   <Msg id="weight">
     <en txt="Weight"/>
   </Msg>
+  <Msg id="acceleration">
+    <en txt="Acceleration"/>
+  </Msg>
   <Msg id="adjustaccel">
     <en txt="Adjust acceleration"/>
   </Msg>
