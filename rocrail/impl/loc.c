@@ -2043,16 +2043,19 @@ static void __calcTrainLen(iOLoc inst) {
       wLoc.settrainweight( data->props, weight );
       report = True;
 
-      if( weight > 0 && wLoc.isadjustaccel(data->props) ) {
+      if( wLoc.isadjustaccel(data->props) ) {
         float maxload = wLoc.getmaxload(data->props);
         int accelmin = wLoc.getaccelmin(data->props);
         int accelmax = wLoc.getaccelmax(data->props);
-        if( maxload > 0 && accelmin > 0 && accelmax > 0 ) {
+        if( weight > 0 && maxload > 0 && accelmin > 0 && accelmax > 0 ) {
           float accel = accelmax - accelmin;
           accel /= maxload;
           accel *= weight;
           accel += accelmin;
           __adjustAccel(inst, (int)accel);
+        }
+        else {
+          __adjustAccel(inst, accelmin);
         }
       }
     }
