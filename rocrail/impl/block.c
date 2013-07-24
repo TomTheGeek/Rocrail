@@ -243,58 +243,39 @@ static Boolean __acceptGhost( obj inst ) {
 static int _getEventCode( iOBlock inst, const char* evtname ) {
   if( inst != NULL ) {
     iOBlockData data = Data(inst);
-    Boolean trig = True;
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event [%s] in block [%s]", evtname, data->id );
 
-    if( !wCtrl.istriggerblockevents( wRocRail.getctrl( AppOp.getIni() ) ) ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ignoring trigger for event [%s] in block [%s]", evtname, data->id );
-      trig = False;
-    }
-
-    if( data->locId == NULL || StrOp.len(data->locId) == 0 ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ignoring trigger for event [%s] in block [%s]; not locked.", evtname, data->id );
-      trig = False;
-    }
-
-    if( !data->trig_enter && StrOp.equals( evtname, wFeedbackEvent.enter_event ) ) {
-      data->trig_enter = trig;
+    if( StrOp.equals( evtname, wFeedbackEvent.enter_event ) ) {
       return enter_event;
     }
-    else if( !data->trig_enter2in && StrOp.equals( evtname, wFeedbackEvent.enter2in_event ) ) {
-      data->trig_enter2in = trig;
+    else if( StrOp.equals( evtname, wFeedbackEvent.enter2in_event ) ) {
       return enter2in_event;
     }
-    else if( !data->trig_enter2shortin && StrOp.equals( evtname, wFeedbackEvent.enter2shortin_event ) ) {
-      data->trig_enter2shortin = trig;
+    else if( StrOp.equals( evtname, wFeedbackEvent.enter2shortin_event ) ) {
       return enter2shortin_event;
     }
-    else if( !data->trig_enter2pre && StrOp.equals( evtname, wFeedbackEvent.enter2pre_event ) ) {
-      data->trig_enter2pre = trig;
+    else if( StrOp.equals( evtname, wFeedbackEvent.enter2pre_event ) ) {
       return enter2pre_event;
     }
-    else if( !data->trig_in && StrOp.equals( evtname, wFeedbackEvent.in_event ) ) {
-      data->trig_in = trig;
+    else if( StrOp.equals( evtname, wFeedbackEvent.in_event ) ) {
       return in_event;
     }
-    else if( !data->trig_exit && StrOp.equals( evtname, wFeedbackEvent.exit_event ) ) {
-      data->trig_exit = True;
+    else if( StrOp.equals( evtname, wFeedbackEvent.exit_event ) ) {
       return exit_event;
     }
-    else if( !data->trig_pre2in && StrOp.equals( evtname, wFeedbackEvent.pre2in_event ) ) {
-      data->trig_pre2in = trig;
+    else if( StrOp.equals( evtname, wFeedbackEvent.pre2in_event ) ) {
       return pre2in_event;
     }
     else if( StrOp.equals( evtname, wFeedbackEvent.occupied_event ) )
       return occupied_event;
     else if( StrOp.equals( evtname, wFeedbackEvent.ident_event ) )
       return ident_event;
-    else if( !data->trig_shortin && StrOp.equals( evtname, wFeedbackEvent.shortin_event ) ) {
-      data->trig_shortin = trig;
+    else if( StrOp.equals( evtname, wFeedbackEvent.shortin_event ) ) {
       return shortin_event;
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event=%s was already triggered", evtname );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unknown event=%s", evtname );
       return 0;
     }
   }
@@ -1827,23 +1808,8 @@ static void _setGroup( iIBlockBase inst, const char* group ) {
 
 static void _resetTrigs( iIBlockBase inst ) {
   iOBlockData data = Data(inst);
-  data->trig_enter         = False;
-  data->trig_enter2in      = False;
-  data->trig_enter2shortin = False;
-  data->trig_enter2pre     = False;
-  data->trig_pre2in        = False;
-  data->trig_shortin       = False;
-  data->trig_in            = False;
-  data->trig_exit          = False;
-  data->trig_out           = False;
-
-  data->trig_enter_mid  = False;
-  data->trig_exit_mid   = False;
-  data->trig_renter_mid = False;
-  data->trig_rexit_mid  = False;
-
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                 "Block \"%s\" resetTrigs.",
+                 "Block \"%s\" reset counters.",
                  data->id );
 
   /* reset wheel counters */

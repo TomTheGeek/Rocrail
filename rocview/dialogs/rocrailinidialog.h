@@ -372,7 +372,6 @@ public:
     wxCheckBox* m_TimedSensors;
     wxCheckBox* m_EnableAnalyzer;
     wxCheckBox* m_ForceUnlock;
-    wxCheckBox* m_TriggerBlockEvents;
     wxCheckBox* m_ReleaseOnIdle;
     wxCheckBox* m_CloseOnGhost;
     wxCheckBox* m_ActionTimer60;

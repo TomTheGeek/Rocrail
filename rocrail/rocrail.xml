@@ -152,19 +152,6 @@
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="block_listener"/>
       <var name="closereq" vt="Boolean"/>
-      <var name="trig_enter" vt="Boolean"/>
-      <var name="trig_enter2in" vt="Boolean"/>
-      <var name="trig_enter2shortin" vt="Boolean"/>
-      <var name="trig_enter2pre" vt="Boolean"/>
-      <var name="trig_pre2in" vt="Boolean"/>
-      <var name="trig_shortin" vt="Boolean"/>
-      <var name="trig_in" vt="Boolean"/>
-      <var name="trig_exit" vt="Boolean"/>
-      <var name="trig_out" vt="Boolean"/>
-      <var name="trig_enter_mid" vt="Boolean"/>
-      <var name="trig_exit_mid" vt="Boolean"/>
-      <var name="trig_renter_mid" vt="Boolean" remark="reverse enter"/>
-      <var name="trig_rexit_mid" vt="Boolean" remark="reverse exit"/>
       <var name="minbklc" vt="int"/>
       <var name="linkto" vt="iIBlockBase"/>
       <var name="props" vt="iONode" remark="Block properties"/>
