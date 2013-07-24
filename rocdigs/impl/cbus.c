@@ -1778,7 +1778,7 @@ static void __makeDFUN(iOSlot slot, iONode node, byte* cmd) {
     cmd[2] = 5;
     for( i = 21; i < 29; i++ ) {
       if( __getFState(node, i) )
-        fmask |= (1 << (i-20));
+        fmask |= (1 << (i-21));
     }
     cmd[3] = fmask;
   }
