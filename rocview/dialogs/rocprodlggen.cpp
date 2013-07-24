@@ -34,7 +34,7 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_Info = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,60 ), wxTE_MULTILINE|wxTE_READONLY );
 	bSizer10->Add( m_Info, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
-	bSizer8->Add( bSizer10, 1, wxEXPAND, 5 );
+	bSizer8->Add( bSizer10, 0, wxEXPAND, 5 );
 	
 	m_staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer8->Add( m_staticline2, 0, wxEXPAND | wxALL, 5 );
@@ -46,12 +46,16 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	bSizer71 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_LocoImage = new wxStaticBitmap( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE );
+	m_LocoImage->SetMaxSize( wxSize( -1,80 ) );
+	
 	bSizer71->Add( m_LocoImage, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	m_staticline21 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer71->Add( m_staticline21, 0, wxEXPAND | wxALL, 5 );
 	
 	m_DecoderImage = new wxStaticBitmap( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE );
+	m_DecoderImage->SetMaxSize( wxSize( -1,80 ) );
+	
 	bSizer71->Add( m_DecoderImage, 0, wxALL, 5 );
 	
 	bSizer9->Add( bSizer71, 0, wxEXPAND, 5 );
@@ -273,7 +277,7 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_sdbSizer2OK = new wxButton( this, wxID_OK );
 	m_sdbSizer2->AddButton( m_sdbSizer2OK );
 	m_sdbSizer2->Realize();
-	bSizer7->Add( m_sdbSizer2, 0, wxEXPAND|wxALL, 5 );
+	bSizer7->Add( m_sdbSizer2, 0, wxALL|wxALIGN_RIGHT, 5 );
 	
 	this->SetSizer( bSizer7 );
 	this->Layout();
