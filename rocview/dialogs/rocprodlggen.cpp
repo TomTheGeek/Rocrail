@@ -45,7 +45,7 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxBoxSizer* bSizer71;
 	bSizer71 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_LocoImage = new wxStaticBitmap( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE );
+	m_LocoImage = new wxStaticBitmap( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize( -1,80 ), wxFULL_REPAINT_ON_RESIZE );
 	m_LocoImage->SetMaxSize( wxSize( -1,80 ) );
 	
 	bSizer71->Add( m_LocoImage, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
@@ -53,7 +53,7 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_staticline21 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer71->Add( m_staticline21, 0, wxEXPAND | wxALL, 5 );
 	
-	m_DecoderImage = new wxStaticBitmap( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE );
+	m_DecoderImage = new wxStaticBitmap( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize( -1,80 ), wxFULL_REPAINT_ON_RESIZE );
 	m_DecoderImage->SetMaxSize( wxSize( -1,80 ) );
 	
 	bSizer71->Add( m_DecoderImage, 0, wxALL, 5 );
@@ -71,10 +71,10 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	m_labIID = new wxStaticText( this, wxID_ANY, wxT("IID"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labIID->Wrap( -1 );
-	fgSizer4->Add( m_labIID, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer4->Add( m_labIID, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_IID = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer4->Add( m_IID, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer4->Add( m_IID, 0, wxEXPAND|wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	bSizer9->Add( fgSizer4, 0, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -99,13 +99,13 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	m_labImage = new wxStaticText( this, wxID_ANY, wxT("Image"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labImage->Wrap( -1 );
-	fgSizer8->Add( m_labImage, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer8->Add( m_labImage, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_Image = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer8->Add( m_Image, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	fgSizer8->Add( m_Image, 0, wxEXPAND|wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_ImgFileOpen = new wxButton( this, wxID_ANY, wxT("Open..."), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer8->Add( m_ImgFileOpen, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	fgSizer8->Add( m_ImgFileOpen, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxTOP|wxRIGHT, 5 );
 	
 	bSizer9->Add( fgSizer8, 0, wxEXPAND, 5 );
 	
@@ -158,57 +158,57 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	fgSizer9->Add( m_staticText11, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_Nr = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), wxSP_ARROW_KEYS, 1, 1024, 1 );
-	fgSizer9->Add( m_Nr, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
+	fgSizer9->Add( m_Nr, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 	
 	m_Value = new wxSpinCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 80,-1 ), wxSP_ARROW_KEYS|wxSP_WRAP, 0, 255, 0 );
-	fgSizer9->Add( m_Value, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
+	fgSizer9->Add( m_Value, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 	
 	m_Bit7 = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer9->Add( m_Bit7, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxLEFT, 5 );
+	fgSizer9->Add( m_Bit7, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 5 );
 	
 	m_Bit6 = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer9->Add( m_Bit6, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
+	fgSizer9->Add( m_Bit6, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_Bit5 = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer9->Add( m_Bit5, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
+	fgSizer9->Add( m_Bit5, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_Bit4 = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer9->Add( m_Bit4, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
+	fgSizer9->Add( m_Bit4, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_Bit3 = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer9->Add( m_Bit3, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
+	fgSizer9->Add( m_Bit3, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_Bit2 = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer9->Add( m_Bit2, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
+	fgSizer9->Add( m_Bit2, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_Bit1 = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer9->Add( m_Bit1, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
+	fgSizer9->Add( m_Bit1, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_Bit0 = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer9->Add( m_Bit0, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
+	fgSizer9->Add( m_Bit0, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	sbSizer3->Add( fgSizer9, 0, 0, 5 );
 	
 	m_ValueSlider = new wxSlider( this, wxID_ANY, 0, 0, 255, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
-	sbSizer3->Add( m_ValueSlider, 0, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
+	sbSizer3->Add( m_ValueSlider, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_ReadCV = new wxButton( this, wxID_ANY, wxT("Read"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer5->Add( m_ReadCV, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	bSizer5->Add( m_ReadCV, 0, wxRIGHT|wxLEFT, 5 );
 	
 	m_ReadAllCV = new wxButton( this, wxID_ANY, wxT("Read All"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer5->Add( m_ReadAllCV, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	bSizer5->Add( m_ReadAllCV, 0, wxRIGHT|wxLEFT, 5 );
 	
 	m_WriteCV = new wxButton( this, wxID_ANY, wxT("Write"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer5->Add( m_WriteCV, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	bSizer5->Add( m_WriteCV, 0, wxRIGHT|wxLEFT, 5 );
 	
 	m_POM = new wxCheckBox( this, wxID_ANY, wxT("PoM"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer5->Add( m_POM, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
+	bSizer5->Add( m_POM, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 	
 	m_SaveCV = new wxButton( this, wxID_ANY, wxT("Save"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer5->Add( m_SaveCV, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
+	bSizer5->Add( m_SaveCV, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 	
 	sbSizer3->Add( bSizer5, 0, wxEXPAND, 5 );
 	
@@ -218,7 +218,7 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_Mode->SetSelection( 0 );
 	sbSizer3->Add( m_Mode, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	bSizer9->Add( sbSizer3, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	bSizer9->Add( sbSizer3, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
 	wxStaticBoxSizer* sbSizer31;
 	sbSizer31 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Extended Address") ), wxVERTICAL );
@@ -242,7 +242,7 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	sbSizer31->Add( fgSizer3, 0, wxEXPAND, 5 );
 	
-	bSizer9->Add( sbSizer31, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	bSizer9->Add( sbSizer31, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
 	wxStaticBoxSizer* m_Special;
 	m_Special = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Special") ), wxVERTICAL );
@@ -267,7 +267,7 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	m_Special->Add( bSizer6, 0, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
 	
-	bSizer9->Add( m_Special, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	bSizer9->Add( m_Special, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
 	bSizer8->Add( bSizer9, 0, wxEXPAND, 5 );
 	
