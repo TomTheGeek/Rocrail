@@ -3750,7 +3750,7 @@ static void _analyse( iOModel inst, int mode ) {
 
   /* check requirements for analyzer or other plan modifing calls (clean/repair) */
 
-  if( ! analyzerEnabled ) {
+  if( ( mode == AN_JOB ) && ! analyzerEnabled ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Analyzer is disabled.");
     requirements = False;
   }
@@ -3761,12 +3761,12 @@ static void _analyse( iOModel inst, int mode ) {
   }
 
   if( automode ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Automode is on. Switch off to use analyzer.");
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Automode is on. Switch off to use analyze/clean.");
     requirements = False;
   }
 
   if( isPowerOn ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Track power is on. Switch off to use analyzer.");
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Track power is on. Switch off to use analyze/clean.");
     requirements = False;
   }
 
