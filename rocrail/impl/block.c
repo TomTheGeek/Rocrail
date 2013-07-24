@@ -293,8 +293,10 @@ static int _getEventCode( iOBlock inst, const char* evtname ) {
       data->trig_shortin = trig;
       return shortin_event;
     }
-    else
+    else {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event=%s was already triggered", evtname );
       return 0;
+    }
   }
 
   if( StrOp.equals( evtname, wFeedbackEvent.enter_event ) )
