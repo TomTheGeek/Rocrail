@@ -176,13 +176,17 @@ static void _swapPlacing( iOOperator inst, iONode cmd ) {
 /**  */
 static void _modify( struct OOperator* inst ,iONode props ) {
   iOOperatorData data = Data(inst);
-  int cnt = NodeOp.getAttrCnt( props );
-  int i = 0;
-  for( i = 0; i < cnt; i++ ) {
-    iOAttr attr = NodeOp.getAttr( props, i );
-    const char* name  = AttrOp.getName( attr );
-    const char* value = AttrOp.getVal( attr );
-    NodeOp.setStr( data->props, name, value );
+
+  if( props != NULL ) {
+    int cnt = NodeOp.getAttrCnt( props );
+    int i = 0;
+    for( i = 0; i < cnt; i++ ) {
+      iOAttr attr = NodeOp.getAttr( props, i );
+      const char* name  = AttrOp.getName( attr );
+      const char* value = AttrOp.getVal( attr );
+      NodeOp.setStr( data->props, name, value );
+    }
+    props->base.del(props);
   }
 
   /* Inform locos */
@@ -206,8 +210,23 @@ static void _modify( struct OOperator* inst ,iONode props ) {
     iONode clone = (iONode)NodeOp.base.clone( data->props );
     AppOp.broadcastEvent( clone );
   }
-  props->base.del(props);
 }
+
+
+static Boolean _hasCar( struct OOperator* inst, const char* id ) {
+  iOOperatorData data = Data(inst);
+  Boolean hascar = False;
+  iOStrTok tok = StrTokOp.inst(wOperator.getcarids(data->props), ',');
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    if( StrOp.equals(id, StrTokOp.nextToken(tok)) ) {
+      hascar = True;
+      break;
+    }
+  }
+  StrTokOp.base.del(tok);
+  return hascar;
+}
+
 
 static int _getLen( struct OOperator* inst, int* trainweight ) {
   iOOperatorData data = Data(inst);

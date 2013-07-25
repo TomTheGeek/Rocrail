@@ -843,6 +843,10 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="Operator ID to search for"/>
     </fun>
+    <fun name="getOperator4Car" vt="iOOperator">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="id" vt="const char*" remark="Car ID to search for"/>
+    </fun>
     <fun name="getSwByAddress" vt="iOSwitch">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="addr" vt="int" remark="Decoder address to search for"/>
@@ -2145,6 +2149,10 @@
     <fun name="swapPlacing" vt="void">
       <param name="inst" vt="this" remark="Operator instance"/>
       <param name="cmd" vt="iONode" remark="Optional cmd node with placing information."/>
+    </fun>
+    <fun name="hasCar" vt="int">
+      <param name="inst" vt="this" remark="Operator instance"/>
+      <param name="id" vt="const char*"/>
     </fun>
     <data>
       <var name="props" vt="iONode"/>

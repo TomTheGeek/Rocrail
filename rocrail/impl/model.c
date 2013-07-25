@@ -2563,6 +2563,18 @@ static iOOperator _getOperator( iOModel inst, const char* id ) {
   return (iOOperator)MapOp.get( o->operatorMap, id );
 }
 
+static iOOperator _getOperator4Car( iOModel inst, const char* id ) {
+  iOModelData o = Data(inst);
+  iOOperator operator = (iOOperator)MapOp.first( o->operatorMap );
+  while( operator != NULL ) {
+    if( OperatorOp.hasCar( operator, id ) ) {
+      return operator;
+    }
+    operator = (iOOperator)MapOp.next( o->operatorMap );
+  }
+  return NULL;
+}
+
 static iOSwitch _getSwByAddress( iOModel inst, int addr, int port ) {
   iOModelData o = Data(inst);
   iOSwitch sw = (iOSwitch)MapOp.first( o->switchMap );

@@ -24,6 +24,8 @@
 #include "rocrail/impl/car_impl.h"
 
 #include "rocrail/public/app.h"
+#include "rocrail/public/model.h"
+#include "rocrail/public/operator.h"
 
 #include "rocs/public/mem.h"
 
@@ -426,6 +428,14 @@ static void _modify( struct OCar* inst ,iONode props ) {
     AppOp.broadcastEvent( clone );
   }
   props->base.del(props);
+
+  /* Inform the operator */
+  {
+    iOOperator operator = ModelOp.getOperator4Car(AppOp.getModel(), wCar.getid(data->props) );
+    if( operator != NULL ) {
+      OperatorOp.modify( operator, NULL );
+    }
+  }
 }
 
 
