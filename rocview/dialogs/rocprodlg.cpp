@@ -109,10 +109,28 @@ RocProDlgGen( parent )
   const char* nr = StrTokOp.nextToken(tok);
 
   while( nr != NULL ) {
-    int cvnr = atoi(nr);
-    m_CVall[nridx] = cvnr;
-    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "m_CVall[%d]=%d", nridx, cvnr );
-    nridx++;
+    if( StrOp.findc(nr, '-')) {
+      iOStrTok subtok = StrTokOp.inst( nr, '-' );
+      int firstnr = atoi(StrTokOp.nextToken(subtok));
+      if( StrTokOp.hasMoreTokens(subtok)) {
+        int lastnr = atoi(StrTokOp.nextToken(subtok));
+        if( lastnr > firstnr ) {
+          int x = 0;
+          for( x = 0; x < lastnr-firstnr; x++) {
+            m_CVall[nridx] = x + firstnr;
+            TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "m_CVall[%d]=%d", nridx, m_CVall[nridx] );
+            nridx++;
+          }
+        }
+      }
+      StrTokOp.base.del( subtok );
+    }
+    else {
+      int cvnr = atoi(nr);
+      m_CVall[nridx] = cvnr;
+      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "m_CVall[%d]=%d", nridx, cvnr );
+      nridx++;
+    }
     nr = StrTokOp.nextToken(tok);
   };
   StrTokOp.base.del( tok );

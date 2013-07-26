@@ -937,18 +937,18 @@ void RocGuiFrame::modifyLoc( iONode props, bool deep ) {
     /* Leave the childs if no new are coming */
     if( deep && NodeOp.getChildCnt( props ) > 0 ) {
       cnt = NodeOp.getChildCnt( loc );
-      TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "remove %d child nodes from loco[%s]", cnt, wLoc.getid(loc) );
+      TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "remove %d child nodes from loco[%s]", cnt, wLoc.getid(loc) );
       for( i = 0; i < cnt; i++ ) {
         iONode child = NodeOp.getChild( loc, 0 );
-        TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "remove child %d %s 0x%08X", i, NodeOp.getName(child), child );
+        TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "remove child %d %s 0x%08X", i, NodeOp.getName(child), child );
         NodeOp.removeChild( loc, child );
         NodeOp.base.del(child);
       }
       cnt = NodeOp.getChildCnt( props );
-      TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "add %d child nodes to loco[%s]", cnt, wLoc.getid(loc) );
+      TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "add %d child nodes to loco[%s]", cnt, wLoc.getid(loc) );
       for( i = 0; i < cnt; i++ ) {
         iONode child = (iONode)NodeOp.base.clone(NodeOp.getChild( props, i ));
-        TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "add child %d %s 0x%08X", i, NodeOp.getName(child), child );
+        TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "add child %d %s 0x%08X", i, NodeOp.getName(child), child );
         NodeOp.addChild( loc, child );
       }
     }
