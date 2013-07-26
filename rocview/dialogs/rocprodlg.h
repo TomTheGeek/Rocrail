@@ -57,6 +57,7 @@ class RocProDlg : public RocProDlgGen
   int m_CVall[1024];
   int m_CVcountAll;
   int m_CVidxAll;
+  bool m_Save;
 
   bool parseDecFile();
   void initLocMap(const char* locid=NULL);

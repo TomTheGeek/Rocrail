@@ -92,12 +92,16 @@ RocProDlgGen( parent )
   m_CVidx = 0;
   m_CVidxAll = 0;
   m_CVoperation = 0;
+  m_Save = false;
 
   m_CVconf = wGui.getcvconf( wxGetApp().getIni() );
   if( m_CVconf == NULL ) {
     m_CVconf = NodeOp.inst( wCVconf.name(), wxGetApp().getIni(), ELEMENT_NODE );
     NodeOp.addChild(wxGetApp().getIni(), m_CVconf);
   }
+
+  m_Save = wCVconf.issave(m_CVconf) ? true:false;
+  m_SaveCV->SetValue(m_Save);
 
   const char* nrs = wCVconf.getnrs( m_CVconf );
   iOStrTok tok = StrTokOp.inst( nrs, ',' );
@@ -367,12 +371,13 @@ bool RocProDlg::parseDecFile() {
 }
 
 
-void RocProDlg::onOK( wxCommandEvent& event )
-{
+void RocProDlg::onOK( wxCommandEvent& event ) {
+  wCVconf.setsave(m_CVconf, m_Save?True:False);
   EndModal( wxID_OK );
 }
 
 void RocProDlg::onClose( wxCloseEvent& event ) {
+  wCVconf.setsave(m_CVconf, m_Save?True:False);
   EndModal(0);
 }
 
@@ -636,6 +641,10 @@ void RocProDlg::setCVVal(int val, bool updateval) {
     m_Bit5->SetValue(val&0x20?true:false);
     m_Bit6->SetValue(val&0x40?true:false);
     m_Bit7->SetValue(val&0x80?true:false);
+
+    if( m_Save && m_Nr->GetValue() > 0 )
+      doCV( wProgram.save, m_Nr->GetValue(), m_Value->GetValue() );
+
   }
 }
 
@@ -784,8 +793,7 @@ void RocProDlg::onWrite( wxCommandEvent& event ) {
 }
 
 void RocProDlg::onSaveCV( wxCommandEvent& event ) {
-  if( m_Nr->GetValue() > 0 )
-    doCV( wProgram.save, m_Nr->GetValue(), m_Value->GetValue() );
+  m_Save = m_SaveCV->GetValue();
 }
 
 void RocProDlg::doCV(int command, int nr, int value) {
