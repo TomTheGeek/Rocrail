@@ -479,8 +479,10 @@ void LC::setFLabels() {
         if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
           m_F0->SetIcon(getIcon(wFunDef.geticon(fundef)));
         }
-        else
+        else {
+          m_F0->SetLabel(fntxt);
           m_F0->SetIcon(NULL);
+        }
       }
       else if( wFunDef.getfn( fundef ) == 1 + (m_iFnGroup * 4 )) {
         if( wxGetApp().getFrame()->isTooltip())
@@ -488,8 +490,10 @@ void LC::setFLabels() {
         if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
           m_F1->SetIcon(getIcon(wFunDef.geticon(fundef)));
         }
-        else
+        else {
+          m_F1->SetLabel(fntxt);
           m_F1->SetIcon(NULL);
+        }
       }
       else if( wFunDef.getfn( fundef ) == 2 + (m_iFnGroup * 4 ) ) {
         if( wxGetApp().getFrame()->isTooltip())
@@ -497,8 +501,10 @@ void LC::setFLabels() {
         if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
           m_F2->SetIcon(getIcon(wFunDef.geticon(fundef)));
         }
-        else
+        else {
+          m_F2->SetLabel(fntxt);
           m_F2->SetIcon(NULL);
+        }
       }
       else if( wFunDef.getfn( fundef ) == 3 + (m_iFnGroup * 4 ) ) {
         if( wxGetApp().getFrame()->isTooltip())
@@ -506,8 +512,10 @@ void LC::setFLabels() {
         if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
           m_F3->SetIcon(getIcon(wFunDef.geticon(fundef)));
         }
-        else
+        else {
+          m_F3->SetLabel(fntxt);
           m_F3->SetIcon(NULL);
+        }
       }
       else if( wFunDef.getfn( fundef ) == 4 + (m_iFnGroup * 4 ) ) {
         if( wxGetApp().getFrame()->isTooltip())
@@ -515,8 +523,10 @@ void LC::setFLabels() {
         if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
           m_F4->SetIcon(getIcon(wFunDef.geticon(fundef)));
         }
-        else
+        else {
+          m_F4->SetLabel(fntxt);
           m_F4->SetIcon(NULL);
+        }
       }
       fundef = wLoc.nextfundef( m_LocProps, fundef );
     }
