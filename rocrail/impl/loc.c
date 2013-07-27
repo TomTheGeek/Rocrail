@@ -3024,7 +3024,11 @@ static void _modify( iOLoc inst, iONode props ) {
       cnt = NodeOp.getChildCnt( data->props );
       while( cnt > 0 ) {
         iONode child = NodeOp.getChild( data->props, 0 );
-        NodeOp.removeChild( data->props, child );
+        iONode removedChild = NodeOp.removeChild( data->props, child );
+        if( removedChild != NULL) {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "remove child node %s of %s", NodeOp.getName(removedChild), LocOp.getId(inst));
+          NodeOp.base.del(removedChild);
+        }
         cnt = NodeOp.getChildCnt( data->props );
       }
       cnt = NodeOp.getChildCnt( props );
