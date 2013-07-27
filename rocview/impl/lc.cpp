@@ -139,15 +139,12 @@ void LC::setLocProps( iONode props ) {
 
 void LC::speedCmd(bool sendCmd)
 {
-  wxString value;
-  value.Printf( _T("%d"), m_iSpeed );
-  m_V->SetValue( value );
-
   if( !sendCmd || m_LocProps == NULL ) {
     return;
   }
 
   TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "speedCmd" );
+  m_V->SetValue( wxString::Format(wxT("%d"), m_iSpeed) );
 
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   wLoc.setid( cmd, wLoc.getid( m_LocProps ) );
@@ -343,8 +340,9 @@ bool LC::updateLoc( iONode node ) {
 
 void LC::OnSlider(wxScrollEvent& event)
 {
-  if ( event.GetEventObject() == m_Vslider ) {
+  if ( event.GetEventObject() == m_Vslider && event.GetEventType() != wxEVT_SCROLL_THUMBTRACK ) {
     int speed = m_Vslider->GetValue();
+    TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "slider new=%d old=%d steps=%d", speed, m_iSpeed, wLoc.getspcnt(m_LocProps));
     if(wLoc.getspcnt(m_LocProps) > 28 ) {
       int step = wLoc.getspcnt(m_LocProps) / 28;
       if( speed > m_iSpeed ) {
@@ -364,6 +362,9 @@ void LC::OnSlider(wxScrollEvent& event)
       m_iSpeed = m_Vslider->GetValue();
       speedCmd( event.GetEventType() != wxEVT_SCROLL_THUMBTRACK );
     }
+  }
+  else if ( event.GetEventObject() == m_Vslider ) {
+    m_V->SetValue( wxString::Format(wxT("%d"), m_Vslider->GetValue()) );
   }
 }
 
