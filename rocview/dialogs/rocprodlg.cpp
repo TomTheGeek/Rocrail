@@ -116,7 +116,7 @@ RocProDlgGen( parent )
         int lastnr = atoi(StrTokOp.nextToken(subtok));
         if( lastnr > firstnr ) {
           int x = 0;
-          for( x = 0; x < lastnr-firstnr; x++) {
+          for( x = 0; x <= lastnr-firstnr; x++) {
             m_CVall[nridx] = x + firstnr;
             TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "m_CVall[%d]=%d", nridx, m_CVall[nridx] );
             nridx++;
