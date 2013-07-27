@@ -280,6 +280,7 @@ const char* bidibGetFeatureName(int feature) {
   if( feature == FEATURE_CTRL_SOUND_COUNT ) return "sound count";
   if( feature == FEATURE_CTRL_MOTOR_COUNT ) return "motor count";
   if( feature == FEATURE_CTRL_ANALOG_COUNT ) return "analog count";
+  if( feature == FEATURE_CTRL_STRETCH_DIMM ) return "time stretch for dimming";
   if( feature == FEATURE_CTRL_MAC_LEVEL ) return "MAC level";
   if( feature == FEATURE_CTRL_MAC_SAVE ) return "MAC save";
   if( feature == FEATURE_CTRL_MAC_COUNT ) return "MAC count";
