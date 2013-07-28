@@ -1290,12 +1290,14 @@ static void _modify( iOSwitch inst, iONode props ) {
       cnt = NodeOp.getChildCnt( o->props );
       while( cnt > 0 ) {
         iONode child = NodeOp.getChild( o->props, 0 );
+        iONode removedChild = NodeOp.removeChild( o->props, child );
         if( StrOp.equals( wAccessoryCtrl.name(), NodeOp.getName(child) ) ) {
           /* keep this node because it is referenced by the accessory thread */
           accctrl = child;
         }
-        NodeOp.removeChild( o->props, child );
-        /* TODO: NodeOp.base.del(child) ?! */
+        else if( removedChild != NULL) {
+          NodeOp.base.del(removedChild);
+        }
         cnt = NodeOp.getChildCnt( o->props );
       }
 

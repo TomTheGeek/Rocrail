@@ -1310,7 +1310,10 @@ static void _modify( iOSignal inst, iONode props ) {
     cnt = NodeOp.getChildCnt( o->props );
     while( cnt > 0 ) {
       iONode child = NodeOp.getChild( o->props, 0 );
-      NodeOp.removeChild( o->props, child );
+      iONode removedChild = NodeOp.removeChild( o->props, child );
+      if( removedChild != NULL) {
+        NodeOp.base.del(removedChild);
+      }
       cnt = NodeOp.getChildCnt( o->props );
     }
 

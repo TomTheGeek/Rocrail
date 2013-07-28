@@ -411,7 +411,10 @@ static void _modify( struct OCar* inst ,iONode props ) {
     cnt = NodeOp.getChildCnt( data->props );
     while( cnt > 0 ) {
       iONode child = NodeOp.getChild( data->props, 0 );
-      NodeOp.removeChild( data->props, child );
+      iONode removedChild = NodeOp.removeChild( data->props, child );
+      if( removedChild != NULL) {
+        NodeOp.base.del(removedChild);
+      }
       cnt = NodeOp.getChildCnt( data->props );
     }
     cnt = NodeOp.getChildCnt( props );
