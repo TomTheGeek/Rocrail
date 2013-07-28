@@ -1087,6 +1087,16 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   data->fbreset    = wDigInt.isfbreset(ini);
   data->systeminfo = wDigInt.issysteminfo(ini);
   data->useParallelFunctions = True;
+  data->flow       = none;
+
+  if( StrOp.equals( wDigInt.dsr, wDigInt.getflow( ini ) ) )
+    data->flow = dsr;
+  else if( StrOp.equals( wDigInt.cts, wDigInt.getflow( ini ) ) )
+    data->flow = cts;
+  else if( StrOp.equals( wDigInt.xon, wDigInt.getflow( ini ) ) )
+    data->flow = xon;
+
+
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Massoth %d.%d.%d", vmajor, vminor, patch );
@@ -1094,6 +1104,7 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid           = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device        = %s", data->device );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate      = 57600 (fix)" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow          = %s", wDigInt.getflow( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset sensors = %s", data->fbreset ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "system info   = %s", data->systeminfo ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
@@ -1101,7 +1112,7 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   data->serialOK = False;
   if( !data->dummyio ) {
     data->serial = SerialOp.inst( data->device );
-    SerialOp.setFlow( data->serial, cts );
+    SerialOp.setFlow( data->serial, data->flow );
     SerialOp.setLine( data->serial, 57600, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
     SerialOp.setTimeout( data->serial, wDigInt.gettimeout(ini), wDigInt.gettimeout(ini) );
     data->serialOK = SerialOp.open( data->serial );

@@ -1147,6 +1147,7 @@
       <var name="mux" vt="iOMutex"/>
       <var name="lcmux" vt="iOMutex"/>
       <var name="serial" vt="iOSerial"/>
+      <var name="flow" vt="serial_flow"/>
       <var name="run" vt="Boolean"/>
       <var name="serialOK" vt="Boolean"/>
       <var name="initOK" vt="Boolean"/>
