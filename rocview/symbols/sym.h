@@ -113,6 +113,21 @@ namespace switchtype {
   static const char* crossingright_occ  = "crossingright-occ.svg";
   static const char* crossingright_t_occ= "crossingright-t-occ.svg";
 
+  // raster crossings
+  static const char* crossingleft_r_0m = "crossingleft-r-0m.svg";
+  static const char* crossingleft_r_0m_occ = "crossingleft-r-0m-occ.svg";
+  static const char* crossingleft_r    = "crossingleft-r.svg";
+  static const char* crossingleft_r_t  = "crossingleft-r-t.svg";
+  static const char* crossingleft_r_occ    = "crossingleft-r-occ.svg";
+  static const char* crossingleft_r_t_occ  = "crossingleft-r-t-occ.svg";
+
+  static const char* crossingright_r_0m = "crossingright-r-0m.svg";
+  static const char* crossingright_r_0m_occ = "crossingright-r-0m-occ.svg";
+  static const char* crossingright_r    = "crossingright-r.svg";
+  static const char* crossingright_r_t  = "crossingright-r-t.svg";
+  static const char* crossingright_r_occ    = "crossingright-r-occ.svg";
+  static const char* crossingright_r_t_occ  = "crossingright-r-t-occ.svg";
+
   static const char* road_crossing       = "road-crossing.svg";
   static const char* road_ccrossing      = "road-ccrossing.svg";
   static const char* road_crossing_t     = "road-crossing-t.svg";
@@ -186,6 +201,11 @@ namespace switchtype {
   static const char* twoway_tl     = "twoway-tl.svg";
   static const char* twoway_tl_occ = "twoway-tl-occ.svg";
   static const char* twoway_tr_occ = "twoway-tr-occ.svg";
+
+  static const char* twoway_r_tr     = "twoway-r-tr.svg";
+  static const char* twoway_r_tl     = "twoway-r-tl.svg";
+  static const char* twoway_r_tl_occ = "twoway-r-tl-occ.svg";
+  static const char* twoway_r_tr_occ = "twoway-r-tr-occ.svg";
 
   static const char* road_twoway_tr = "road-twoway-tr.svg";
   static const char* road_twoway_tl = "road-twoway-tl.svg";

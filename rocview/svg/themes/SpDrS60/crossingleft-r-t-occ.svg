@@ -1,0 +1,15 @@
+<svg width="32" height="32">
+  <g>
+    <!-- Diagonale links oben rechts unten -->  
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,0 L 0,4 L 27,31 L 31,31 L 31,27 L 4,0 z " />
+    <!-- Gerade --> 
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,19 L 31,19 L 31,12 L 0,12 z " />
+    <!-- Mitte etwas dicker --> 
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 8,19 L 21,25 L 23,12 L 10,6 z " />
+    <!-- Diagonalverbinder -->
+    <!-- Ausleuchtung links nach rechts oben rot -->
+    <path stroke="rgb(255,0,0)" fill="rgb(255,0,0)" d="M 4,17 L 8,17 L 21,23 L 26,28 L 28,26 L 23,21 L 8,14 L 4,14 z " />
+    <!-- Ausleuchtung links unten nach rechts rot -->
+    <path stroke="rgb(255,0,0)" fill="rgb(255,0,0)" d="M 3,5 L 8,10 L 23,17 L 27,17 L 27,14 L 23,14 L 10,8 L 5,3 z " />
+  </g>
+</svg>

@@ -282,9 +282,22 @@ void SymbolRenderer::initSym() {
             m_SvgSym8 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing_route );
           }
           else if( wSwitch.getaddr1( m_Props ) == 0 && wSwitch.getport1( m_Props ) == 0 ) {
-            m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft0m : switchtype::crossingright0m );
-            m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft0m_occ : switchtype::crossingright0m_occ );
+            if( raster ) {
+              m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_r_0m : switchtype::crossingright_r_0m );
+              m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_r_0m_occ : switchtype::crossingright_r_0m_occ );
+            }
+            else {
+              m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft0m : switchtype::crossingright0m );
+              m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft0m_occ : switchtype::crossingright0m_occ );
+            }
             m_iSymSubType = wSwitch.isdir(m_Props) ? switchtype::i_crossingleft : switchtype::i_crossingright;
+          }
+          else if( raster ) {
+            m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_r:switchtype::crossingright_r );
+            m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_r_t:switchtype::crossingright_r_t );
+            m_iSymSubType = wSwitch.isdir(m_Props) ? switchtype::i_crossingleft : switchtype::i_crossingright;
+            m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_r_occ:switchtype::crossingright_r_occ );
+            m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_r_t_occ:switchtype::crossingright_r_t_occ );
           }
           else {
             m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft : switchtype::crossingright );
@@ -393,6 +406,13 @@ void SymbolRenderer::initSym() {
           m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_twoway_tr );
           m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_twoway_tl );
           m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_twoway_tl );
+        }
+        else if( raster ) {
+          m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_r_tr );
+          m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_r_tl );
+          m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_r_tl );
+          m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_r_tr_occ );
+          m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_r_tl_occ );
         }
         else {
           m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_tr );
@@ -1168,6 +1188,7 @@ void SymbolRenderer::drawCCrossing( wxPaintDC& dc, bool occupied, bool actroute,
  */
 void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
+  Boolean raster = StrOp.equals( wSwitch.getswtype( m_Props ), wSwitch.swtype_raster );
 
   TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "Crossing %s occ=%d route=%d",
       wSwitch.getid( m_Props ), occupied, actroute );
@@ -1192,12 +1213,21 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, bool actroute, 
   if( m_bShowID ) {
     if( m_iSymSubType == switchtype::i_crossingright ) {
       if( StrOp.equals( ori, wItem.south ) || StrOp.equals( ori, wItem.north ) ) {
-        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 0, 63, 90.0);
+        if( raster )
+          drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 0, 31, 90.0);
+        else
+          drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 0, 63, 90.0);
+      }
+      else {
+        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 0, 0, 0.0);
       }
     }
     else {
       if( StrOp.equals( ori, wItem.south ) || StrOp.equals( ori, wItem.north ) ) {
-        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 20, 63, 90.0);
+        if( raster )
+          drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 20, 31, 90.0);
+        else
+          drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 20, 63, 90.0);
       }
       else {
         drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 0, 21, 0.0);
@@ -1214,6 +1244,7 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, bool actroute, 
 void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
   Boolean has2Units = ( wSwitch.getaddr2( m_Props ) > 0 || wSwitch.getport2( m_Props ) > 0 )  ? True:False;
+  Boolean raster = StrOp.equals( wSwitch.getswtype( m_Props ), wSwitch.swtype_raster );
 
   TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "drawDCrossing %s state=%s", wSwitch.getid( m_Props ), state );
 
@@ -1266,7 +1297,10 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, const char* or
         drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0);
       }
       else if( StrOp.equals( ori, wItem.north ) ) {
-        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 1, 63, 90.0);
+        if( raster )
+          drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 1, 31, 90.0);
+        else
+          drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 1, 63, 90.0);
       }
       else {
         drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0);
@@ -1274,10 +1308,16 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, const char* or
     }
     else {
       if( StrOp.equals( ori, wItem.south ) ) {
-        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 32, 32, 270.0);
+        if( raster )
+          drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 10, 0, 270.0);
+        else
+          drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 32, 32, 270.0);
       }
       else if( StrOp.equals( ori, wItem.north ) ) {
-        drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0);
+        if( raster )
+          drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 10, 0, 270.0);
+        else
+          drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0);
       }
       else {
         drawString(wxString(wItem.getid(m_Props),wxConvUTF8), 0, 20, 0.0);
@@ -1294,6 +1334,7 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, const char* or
  */
 void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
+  Boolean raster = StrOp.equals( wSwitch.getswtype( m_Props ), wSwitch.swtype_raster );
 
   // SVG Symbol:
   if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.left ) ) {
@@ -1332,17 +1373,33 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, const char* ori
     }
 
 
-    if( StrOp.equals( ori, wItem.south ) ) {
-      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, width, 90.0, false );
-    }
-    else if( StrOp.equals( ori, wItem.north ) ) {
-      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0, false );
-    }
-    else if( StrOp.equals( ori, wItem.east ) ) {
-      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 32 - width, 1, 0.0, false );
+    if( raster ) {
+      if( StrOp.equals( ori, wItem.south ) ) {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 31, 90.0, false );
+      }
+      else if( StrOp.equals( ori, wItem.north ) ) {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 31, 1, 270.0, false );
+      }
+      else if( StrOp.equals( ori, wItem.east ) ) {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0, false );
+      }
+      else {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 31 - width, 1, 0.0, false );
+      }
     }
     else {
-      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0, false );
+      if( StrOp.equals( ori, wItem.south ) ) {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, width, 90.0, false );
+      }
+      else if( StrOp.equals( ori, wItem.north ) ) {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0, false );
+      }
+      else if( StrOp.equals( ori, wItem.east ) ) {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 32 - width, 1, 0.0, false );
+      }
+      else {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0, false );
+      }
     }
     delete font;
   }
@@ -1400,7 +1457,37 @@ void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool occupied, const char* ori 
   }
 
   if( m_bShowID ) {
-    if( StrOp.equals( ori, wItem.south ) ) {
+    /* twoway switch is different */
+    if( m_iSymSubType == switchtype::i_twoway && raster ) {
+      if( StrOp.equals( ori, wItem.south ) ) {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
+      }
+      else if( StrOp.equals( ori, wItem.north ) ) {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
+      }
+      else if( StrOp.equals( ori, wItem.east ) ) {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 20, 0.0 );
+      }
+      else {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 13, 1, 0.0 );
+      }
+    }
+    else if( m_iSymSubType == switchtype::i_twoway ) {
+      if( StrOp.equals( ori, wItem.south ) ) {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 18, 1, 270.0 );
+      }
+      else if( StrOp.equals( ori, wItem.north ) ) {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 14, 32, 90.0 );
+      }
+      else if( StrOp.equals( ori, wItem.east ) ) {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 12, 12, 0.0 );
+      }
+      else {
+        drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 12, 0.0 );
+      }
+    }
+    /* standard switches non raster and raster */
+    else if( StrOp.equals( ori, wItem.south ) ) {
       drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
     }
     else if( StrOp.equals( ori, wItem.north ) ) {
