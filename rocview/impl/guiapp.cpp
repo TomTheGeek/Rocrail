@@ -128,6 +128,8 @@
 #include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/Booster.h"
+#include "rocrail/wrapper/public/Dec.h"
+#include "rocrail/wrapper/public/DecList.h"
 
 #include "rocview/res/icons.hpp"
 
@@ -1261,14 +1263,31 @@ static void rocrailCallback( obj me, iONode node ) {
 
       }
       else if( guiApp->isInit() ) {
-        int pagecnt = guiApp->getFrame()->getNotebook()->GetPageCount();
-        for( int i = 0; i < pagecnt; i++ ) {
-          PlanPanel* p = (PlanPanel*)guiApp->getFrame()->getNotebook()->GetPage(i);
-          p->modelEvent( node );
+        if( StrOp.equals( wDec.name(), NodeOp.getName(node) ) ) {
+          /* ToDo: Change it for general use. (Tours, Schedules...) */
+          TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "Decoder %s", wDec.getid(node) );
+          iONode db = NodeOp.findNode( guiApp->getModel(), wDecList.name() );
+          if( db != NULL ) {
+            int cnt = NodeOp.getChildCnt( db );
+            for( int i = 0; i < cnt; i++ ) {
+              iONode child = NodeOp.getChild( db, i );
+              if( StrOp.equals( wDec.getid(node), wItem.getid(child) ) ) {
+                NodeOp.mergeNode(child, node, True, True, True);
+                break;
+              }
+            }
+          }
         }
-        wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATE_ACTIVELOCS_EVENT );
-        event.SetClientData( node->base.clone( node ) );
-        wxPostEvent( guiApp->getFrame(), event );
+        else {
+          int pagecnt = guiApp->getFrame()->getNotebook()->GetPageCount();
+          for( int i = 0; i < pagecnt; i++ ) {
+            PlanPanel* p = (PlanPanel*)guiApp->getFrame()->getNotebook()->GetPage(i);
+            p->modelEvent( node );
+          }
+          wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATE_ACTIVELOCS_EVENT );
+          event.SetClientData( node->base.clone( node ) );
+          wxPostEvent( guiApp->getFrame(), event );
+        }
       }
     }
   }

@@ -26,7 +26,11 @@
 
 #include "rocs/public/mem.h"
 
+#include "rocrail/public/app.h"
+
 #include "rocrail/wrapper/public/CVByte.h"
+#include "rocrail/wrapper/public/Dec.h"
+#include "rocrail/wrapper/public/ModelCmd.h"
 
 static int instCnt = 0;
 
@@ -125,18 +129,30 @@ static int _getCV( iONode props ,int nr ) {
 
 /**  */
 static void _setCV( iONode props ,int nr ,int value ) {
+  Boolean existingcv = False;
   iONode cv = NodeOp.findNode( props, wCVByte.name() );
   while( cv != NULL ) {
     if(wCVByte.getnr( cv ) == nr ) {
       wCVByte.setvalue( cv, value );
-      return;
+      existingcv = True;
+      break;
     }
     cv = NodeOp.findNextNode( props, cv );
   };
-  cv = NodeOp.inst( wCVByte.name(), props, ELEMENT_NODE );
-  wCVByte.setnr( cv, nr );
-  wCVByte.setvalue( cv, value );
-  NodeOp.addChild( props, cv );
+  if( !existingcv ) {
+    cv = NodeOp.inst( wCVByte.name(), props, ELEMENT_NODE );
+    wCVByte.setnr( cv, nr );
+    wCVByte.setvalue( cv, value );
+    NodeOp.addChild( props, cv );
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s: set cv %d to %d", wDec.getid(props), nr, value);
+  /* Broadcast to clients. */
+  {
+    iONode clone = (iONode)NodeOp.base.clone( props );
+    AppOp.broadcastEvent( clone );
+  }
+
 }
 
 
