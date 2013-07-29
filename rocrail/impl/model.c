@@ -2519,7 +2519,7 @@ static iOLoc _getLoc( iOModel inst, const char* id, iONode props, Boolean genera
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "undefined loco [%s]", id );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "undefined loco [%s]", id );
     }
   }
   return loc;
