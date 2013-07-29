@@ -130,6 +130,7 @@
 #include "rocrail/wrapper/public/Booster.h"
 #include "rocrail/wrapper/public/Dec.h"
 #include "rocrail/wrapper/public/DecList.h"
+#include "rocrail/wrapper/public/CVByte.h"
 
 #include "rocview/res/icons.hpp"
 
@@ -1272,7 +1273,9 @@ static void rocrailCallback( obj me, iONode node ) {
             for( int i = 0; i < cnt; i++ ) {
               iONode child = NodeOp.getChild( db, i );
               if( StrOp.equals( wDec.getid(node), wItem.getid(child) ) ) {
+                NodeOp.setBool(child, "replacechilds", True);
                 NodeOp.mergeNode(child, node, True, True, True);
+                NodeOp.setBool(child, "replacechilds", False);
                 break;
               }
             }

@@ -478,7 +478,18 @@ static iONode _mergeNode( iONode nodeA, iONode nodeB, Boolean overwrite, Boolean
     }
   }
 
-  if( recursive ) {
+  if( recursive && NodeOp.getBool(nodeA, "replacechilds", False) ) {
+    iONode child = NodeOp.getChild( nodeA, 0 );
+    while( child != NULL ) {
+      NodeOp.removeChild(nodeA, child);
+      child = NodeOp.getChild( nodeA, 0 );
+    }
+    cnt = NodeOp.getChildCnt(nodeB);
+    for( i = 0; i < cnt; i++) {
+      NodeOp.addChild( nodeA, (iONode)NodeOp.base.clone(NodeOp.getChild(nodeB, i)));
+    }
+  }
+  else if( recursive ) {
     cnt = NodeOp.getChildCnt( nodeB );
     for( i = 0; i < cnt; i++ ) {
       iONode node = NodeOp.getChild( nodeB, i );
