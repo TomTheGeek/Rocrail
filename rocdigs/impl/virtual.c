@@ -216,8 +216,9 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
         AddrOp.fromFADA( addr, &addr, &port, &gate );
       else if( addr == 0 && port > 0 )
         AddrOp.fromPADA( port, &addr, &port );
-      wSwitch.setaddr1( nodeC, addr );
-      wSwitch.setport1( nodeC, port );
+
+      wSwitch.setaddr1( nodeC, wSwitch.getaddr1( node ) );
+      wSwitch.setport1( nodeC, wSwitch.getport1( node ) );
 
       if( wSwitch.getiid(node) != NULL )
         wSwitch.setiid( nodeC, wSwitch.getiid(node) );
@@ -265,9 +266,9 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       else if( addr == 0 && port > 0 )
         AddrOp.fromPADA( port, &addr, &port );
       wOutput.setbus( nodeC, bus );
-      wOutput.setaddr( nodeC, addr );
-      wOutput.setport( nodeC, port );
-      wOutput.setgate( nodeC, gate );
+      wOutput.setaddr( nodeC, wOutput.getaddr( node ) );
+      wOutput.setport( nodeC, wOutput.getport( node ) );
+      wOutput.setgate( nodeC, wOutput.getgate( node ) );
       wOutput.setvalue( nodeC, value );
 
       if( wOutput.getiid(node) != NULL )
@@ -276,7 +277,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       wOutput.setstate( nodeC, wOutput.getcmd( node ) );
 
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reporting output %d:%d:%d.%d %s value=%d",
-          bus, addr, port, gate, wOutput.getstate(nodeC), wOutput.getvalue(nodeC) );
+          bus, wOutput.getaddr( node ), wOutput.getport( node ), wOutput.getgate( node ), wOutput.getstate(nodeC), wOutput.getvalue(nodeC) );
       data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
     }
   }
