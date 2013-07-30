@@ -23006,40 +23006,47 @@
     <it txt="Creare ospite BiDi"/>
     <sl txt="Kreiraj gosta na BiDi"/>
     <ru txt="Create guest on BiDi"/>
+    <sr_latin txt="Kreiraj gosta za BiDi"/>
   </Msg>
   <Msg id="weight">
     <en txt="Weight"/>
     <nl txt="Gewicht"/>
     <de txt="Gewicht"/>
     <ru txt="Вес"/>
+    <sr_latin txt="Težina"/>
   </Msg>
   <Msg id="acceleration">
     <en txt="Acceleration"/>
     <de txt="Beschleunigung"/>
     <ru txt="Ускорение"/>
+    <sr_latin txt="Ubrzanje"/>
   </Msg>
   <Msg id="adjustaccel">
     <en txt="Adjust acceleration"/>
     <nl txt="Pas acceleratie aan"/>
     <de txt="Beschleunigung anpassen"/>
     <ru txt="Настройка ускорения"/>
+    <sr_latin txt="Podesi ubrzanje"/>
   </Msg>
   <Msg id="maxload">
     <en txt="Max. load"/>
     <nl txt="Max. last"/>
-    <de txt="Max. Gewicht"/>
+    <de txt="Max. Last"/>
     <ru txt="Макс.загрузка"/>
+    <sr_latin txt="Maks. opterećenje"/>
   </Msg>
   <Msg id="minaccel">
     <en txt="Min. acceleration"/>
     <nl txt="Min. acceleratie"/>
     <de txt="Min. Beschleunigung"/>
     <ru txt="Мин.ускорение"/>
+    <sr_latin txt="Min. ubrzanje"/>
   </Msg>
   <Msg id="maxaccel">
     <en txt="Max. acceleration"/>
     <nl txt="Max. acceleratie"/>
     <de txt="Max. Beschleunigung"/>
     <ru txt="Макс.ускорение"/>
+    <sr_latin txt="Maks. ubrzanje"/>
   </Msg>
 </Messages>
