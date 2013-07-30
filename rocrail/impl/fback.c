@@ -464,7 +464,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
   wFeedback.setdirection( data->props, wFeedback.isdirection( nodeC ) );
   wFeedback.setload( data->props, wFeedback.getload( nodeC ) );
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fb[%s] state=%s ident=%d dir=%s val=%d count=%d",
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fb[%s] state=%s ident=%s dir=%s val=%d count=%d",
                FBackOp.getId(inst), data->state?"ON":"OFF", wFeedback.getidentifier( nodeC ), wFeedback.isdirection( nodeC )?"fwd":"rev",
                wFeedback.getval( nodeC ), data->counter );
 
