@@ -2680,7 +2680,7 @@ static iOLoc _getLocByIdent( iOModel inst, const char* ident, Boolean dir ) {
       /* Guest loco? */
       iOLoc loco = ModelOp.getLoc( inst, ident, NULL, True );
       iONode locoProps = LocOp.base.properties(loco);
-      wLoc.setdir( locoProps, dir );
+      wLoc.setplacing( locoProps, dir );
       return loco;
     }
   }

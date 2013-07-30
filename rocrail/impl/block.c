@@ -471,7 +471,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
             iONode locoProps = LocOp.base.properties(identLoc);
             if( !ModelOp.isAuto(model) && !wItem.isgenerated(locoProps) ) {
               /* set bidi direction flag */
-              wLoc.setdir(locoProps, dir);
+              wLoc.setplacing(locoProps, dir);
             }
 
             if( !StrOp.equals( LocOp.getId(identLoc), data->locId )) {

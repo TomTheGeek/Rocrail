@@ -152,7 +152,8 @@ enum {
     ME_AcceptIdent,
     ME_ResetWheelcounter,
     ME_ResetSensor,
-    ME_Identifier,
+    ME_IdentifierFwd,
+    ME_IdentifierRev,
     ME_Compress,
     ME_Info,
     ME_Timer,
@@ -234,7 +235,8 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_Info, Symbol::OnInfo)
   EVT_MENU     (ME_ResetWheelcounter, Symbol::OnResetWheelcounter)
   EVT_MENU     (ME_ResetSensor, Symbol::OnResetSensor)
-  EVT_MENU     (ME_Identifier, Symbol::OnIdentifier)
+  EVT_MENU     (ME_IdentifierFwd, Symbol::OnIdentifierFwd)
+  EVT_MENU     (ME_IdentifierRev, Symbol::OnIdentifierRev)
   EVT_MENU     (ME_Compress, Symbol::OnCompress)
 
   EVT_MENU     (ME_FYGo+0, Symbol::OnFYGo)
@@ -831,13 +833,28 @@ void Symbol::OnResetSensor(wxCommandEvent& event) {
   cmd->base.del(cmd);
 }
 
-void Symbol::OnIdentifier(wxCommandEvent& event) {
+void Symbol::OnIdentifierFwd(wxCommandEvent& event) {
   wxTextEntryDialog* dlg = new wxTextEntryDialog(m_PlanPanel, wxGetApp().getMenu("identifier") );
   if( wxID_OK == dlg->ShowModal() ) {
     iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
     wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
     wFeedback.setidentifier( cmd, dlg->GetValue().mb_str(wxConvUTF8)  );
     wFeedback.setstate( cmd, True);
+    wFeedback.setdirection( cmd, True);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+  dlg->Destroy();
+}
+
+void Symbol::OnIdentifierRev(wxCommandEvent& event) {
+  wxTextEntryDialog* dlg = new wxTextEntryDialog(m_PlanPanel, wxGetApp().getMenu("identifier") );
+  if( wxID_OK == dlg->ShowModal() ) {
+    iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
+    wFeedback.setidentifier( cmd, dlg->GetValue().mb_str(wxConvUTF8)  );
+    wFeedback.setstate( cmd, True);
+    wFeedback.setdirection( cmd, False);
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }
@@ -1097,8 +1114,8 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
     }
     else if( StrOp.equals( wFeedback.name(), nodeName ) ) {
       if(event.ShiftDown()) {
-        wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_Identifier );
-        OnIdentifier(evt);
+        wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_IdentifierFwd );
+        OnIdentifierFwd(evt);
       }
       else {
         iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
@@ -1696,7 +1713,10 @@ void Symbol::OnPopup(wxMouseEvent& event)
         menu.Append( ME_ResetWheelcounter, wxGetApp().getMenu("reset") );
       }
       menu.Append( ME_ResetSensor, wxGetApp().getMenu("resetstatus") );
-      menu.Append( ME_Identifier, wxGetApp().getMenu("identifier") );
+      wxMenu* identifiermenu = new wxMenu();
+      identifiermenu->Append( ME_IdentifierFwd, wxGetApp().getMenu("forwards")  );
+      identifiermenu->Append( ME_IdentifierRev, wxGetApp().getMenu("reverse")  );
+      menu.Append( -1, wxGetApp().getMenu("identifier"), identifiermenu);
     }
 
     else if( StrOp.equals( wStage.name(), NodeOp.getName( m_Props ) ) ) {
