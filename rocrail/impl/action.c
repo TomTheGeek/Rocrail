@@ -223,7 +223,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           const char* direction = NULL;
 
           if( lc == NULL ) {
-            lc = ModelOp.getLocByIdent(model, wActionCtrl.getlcid(actionctrl));
+            lc = ModelOp.getLocByIdent(model, wActionCtrl.getlcid(actionctrl), True);
           }
 
           iOStrTok tok = StrTokOp.inst(wActionCond.getstate(actionCond), ',');

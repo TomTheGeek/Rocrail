@@ -461,16 +461,17 @@ static void _event( iOFBack inst, iONode nodeC ) {
   wFeedback.setstate( data->props, data->state );
   wFeedback.setcounter( data->props, data->counter );
   wFeedback.setidentifier( data->props, wFeedback.getidentifier( nodeC ) );
+  wFeedback.setdirection( data->props, wFeedback.isdirection( nodeC ) );
   wFeedback.setload( data->props, wFeedback.getload( nodeC ) );
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fb[%s] state=%s ident=%d val=%d count=%d",
-               FBackOp.getId(inst), data->state?"ON":"OFF", wFeedback.getidentifier( nodeC ),
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fb[%s] state=%s ident=%d dir=%s val=%d count=%d",
+               FBackOp.getId(inst), data->state?"ON":"OFF", wFeedback.getidentifier( nodeC ), wFeedback.isdirection( nodeC )?"fwd":"rev",
                wFeedback.getval( nodeC ), data->counter );
 
   /* Call listener. */
   if( data->listenerFun != NULL ) {
     data->listenerFun( data->listenerObj, data->state, FBackOp.getId( inst ), wFeedback.getidentifier( nodeC ),
-        wFeedback.getval( nodeC ), wFeedback.getwheelcount( nodeC ) + data->wheelcount );
+        wFeedback.getval( nodeC ), wFeedback.getwheelcount( nodeC ) + data->wheelcount, wFeedback.isdirection(nodeC) );
     hasListener = True;
   }
 
@@ -707,7 +708,7 @@ static void _doTimedOff( iOFBack inst ) {
           "timed off event for %s", FBackOp.getId( inst ));
 
       if( data->listenerFun != NULL ) {
-        data->listenerFun( data->listenerObj, data->state, FBackOp.getId( inst ), 0, 0, 0 );
+        data->listenerFun( data->listenerObj, data->state, FBackOp.getId( inst ), 0, 0, 0, True );
       }
 
       __ctcAction( inst );

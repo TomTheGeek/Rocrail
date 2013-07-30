@@ -604,7 +604,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
   return True;
 }
 
-static void _fbEvent( obj inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount ) {
+static void _fbEvent( obj inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, Boolean dir ) {
   _event( (iIBlockBase)inst, puls, id, ident, val, wheelcount, NULL );
 }
 

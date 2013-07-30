@@ -2663,7 +2663,7 @@ static iOLoc _getLocByAddress( iOModel inst, int addr, const char* iid ) {
   return NULL;
 }
 
-static iOLoc _getLocByIdent( iOModel inst, const char* ident ) {
+static iOLoc _getLocByIdent( iOModel inst, const char* ident, Boolean dir ) {
   iOModelData data = Data(inst);
   iOLoc locAddr = NULL;
   int i = 0;
@@ -2678,7 +2678,10 @@ static iOLoc _getLocByIdent( iOModel inst, const char* ident ) {
       locAddr = loc;
     else if(wCtrl.iscreateguestonbidi(wRocRail.getctrl( AppOp.getIni()))) {
       /* Guest loco? */
-      return ModelOp.getLoc( inst, ident, NULL, True );
+      iOLoc loco = ModelOp.getLoc( inst, ident, NULL, True );
+      iONode locoProps = LocOp.base.properties(loco);
+      wLoc.setdir( locoProps, dir );
+      return loco;
     }
   }
 

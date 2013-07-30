@@ -377,7 +377,7 @@ static void __measureVelocity( iOBlock inst, int event ) {
 /**
  * event listener callback for all fbevents
  */
-static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, iONode fbevt ) {
+static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, iONode fbevt, Boolean dir ) {
   iOBlockData data = Data(inst);
   iOLoc        loc = NULL;
   obj      manager = (obj)(data->manager == NULL ? inst:data->manager);
@@ -464,7 +464,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
       /* Set in block if a loco was found with the ident. */
       if( StrOp.len(ident) > 0 && wCtrl.isuseident( wRocRail.getctrl( AppOp.getIni())) ) {
         iOModel model = AppOp.getModel(  );
-        iOLoc identLoc = ModelOp.getLocByIdent(model, ident);
+        iOLoc identLoc = ModelOp.getLocByIdent(model, ident, dir);
         if( (identLoc != NULL && data->acceptident ) || (identLoc != NULL && !ModelOp.isAuto(model)) ) {
             iONode cmd = NULL;
 
@@ -704,10 +704,10 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
   return countwheels;
 }
 
-static void _fbEvent( obj inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount ) {
+static void _fbEvent( obj inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, Boolean dir ) {
   iOBlockData data = Data(inst);
 
-  if( _event( (iIBlockBase)inst, puls, id, ident, val, wheelcount, NULL ) ) {
+  if( _event( (iIBlockBase)inst, puls, id, ident, val, wheelcount, NULL, dir ) ) {
     if( wheelcount > 0 ) {
       data->wheelcount = wheelcount;
       data->wheelcounterId = id;
