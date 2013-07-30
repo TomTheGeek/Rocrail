@@ -623,8 +623,27 @@ static Boolean _hasThrownSwitch( iORoute inst ) {
   if( wRoute.isreduceV(o->props) ) {
     while( sw != NULL ) {
       iOSwitch isw = ModelOp.getSwitch( model, wSwitchCmd.getid(sw) );
-      if( isw != NULL && wSwitchCmd.isreduceV(sw) && !StrOp.equals( wSwitch.straight, wSwitchCmd.getcmd(sw) ) ) {
-        return True;
+
+      if( isw != NULL && wSwitchCmd.isreduceV(sw) ) {
+        iONode swProps = SwitchOp.base.properties(isw);
+        if( StrOp.equals( wItem.gettype(swProps), wSwitch.dcrossing ) &&
+            ( StrOp.equals( wSwitch.straight, wSwitchCmd.getcmd(sw) ) || StrOp.equals( wSwitch.turnout, wSwitchCmd.getcmd(sw) ) ) )
+        {
+          /* turnout on dcrossing is like straight -> do nothing */
+        }
+        else if( StrOp.equals( wItem.gettype(swProps), wSwitch.dcrossing ) &&
+            ( StrOp.equals( wSwitch.left, wSwitchCmd.getcmd(sw) ) || StrOp.equals( wSwitch.right, wSwitchCmd.getcmd(sw) ) ) )
+        {
+          return True;
+        }
+        else if( StrOp.equals( wItem.gettype(swProps), wSwitch.twoway )) {
+          /* twoway always -> reduce speed */
+          return True;
+        }
+        else if( !StrOp.equals( wSwitch.straight, wSwitchCmd.getcmd(sw) ) ) {
+          /* everything not straight on all others -> reduce speed */
+          return True;
+        }
       }
       sw = wRoute.nextswcmd( o->props, sw );
     };
