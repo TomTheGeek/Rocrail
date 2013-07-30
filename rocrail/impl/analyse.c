@@ -5671,7 +5671,7 @@ static int __generateRoutes(iOAnalyse inst) {
         ) {
         iONode swcmd = NodeOp.inst( wSwitchCmd.name(), NULL, ELEMENT_NODE );
         wItem.setid( swcmd, wItem.getid(item));
-        wSwitch.setcmd( swcmd, wItem.getstate(item));
+        wSwitchCmd.setcmd( swcmd, wItem.getstate(item));
         NodeOp.addChild( newRoute, swcmd );
       }
 
