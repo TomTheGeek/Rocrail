@@ -55,6 +55,7 @@
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
+#include "rocrail/wrapper/public/Item.h"
 
 
 static int instCnt = 0;
@@ -467,6 +468,11 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
         iOLoc identLoc = ModelOp.getLocByIdent(model, ident, dir);
         if( (identLoc != NULL && data->acceptident ) || (identLoc != NULL && !ModelOp.isAuto(model)) ) {
             iONode cmd = NULL;
+            iONode locoProps = LocOp.base.properties(identLoc);
+            if( !ModelOp.isAuto(model) && !wItem.isgenerated(locoProps) ) {
+              /* set bidi direction flag */
+              wLoc.setdir(locoProps, dir);
+            }
 
             if( !StrOp.equals( LocOp.getId(identLoc), data->locId )) {
               if( loc != NULL ) {
