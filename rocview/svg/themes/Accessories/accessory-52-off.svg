@@ -1,6 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="32">
   <g>
-    <path stroke-width="3" stroke="rgb(120,120,120)" fill="rgb(180,180,180)" d="M 2,2 L 125,2 L 125,29 L 2,29 z " />
-    <path stroke-width="3" stroke="rgb(140,140,140)" fill="none" d="M 3,15 L 124,15" />
+    <path stroke-width="3" stroke="rgb(120,120,120)" fill="rgb(180,180,180)" d="M 2,2 L 126,2 L 126,30 L 2,30 z " />
+    <path stroke-width="1" stroke="rgb(140,140,140)" fill="none" d="M 3,10 L 124,10" />
+    <path stroke-width="1" stroke="rgb(140,140,140)" fill="none" d="M 3,16 L 124,16" />
+    <path stroke-width="1" stroke="rgb(140,140,140)" fill="none" d="M 3,22 L 124,22" />
   </g>
 </svg>
