@@ -1022,7 +1022,7 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
   for( int i = 0; i < cnt; i++ ) {
     svgPoly* svgpoly = (svgPoly*)ListOp.get(polyList, i);
     wxPen* pen = getPen(svgpoly->stroke);
-    pen->SetWidth(1);
+    pen->SetWidth(atoi(svgpoly->stroke_width));
     wxBrush* brush = getBrush(svgpoly->fill, dc );
     setPen( *pen );
     setBrush( *brush );
@@ -1059,7 +1059,7 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
     for( int i = 0; i < cnt; i++ ) {
       svgCircle* svgcircle = (svgCircle*)ListOp.get(circleList, i);
       wxPen* pen = getPen(svgcircle->stroke);
-      pen->SetWidth(1);
+      pen->SetWidth(atoi(svgcircle->stroke_width));
       wxBrush* brush = getBrush(svgcircle->fill, dc );
       wxPoint point = wxPoint(svgcircle->cx, svgcircle->cy);
       wxPoint* points = rotateShape( &point, 1, ori );

@@ -42,6 +42,7 @@ class svgPoly {
   wxPoint* poly;
   int cnt;
   char* stroke;
+  char* stroke_width;
   char* fill;
   bool arc;
 };
@@ -52,6 +53,7 @@ class svgCircle {
   int cy;
   int r;
   char* stroke;
+  char* stroke_width;
   char* fill;
 };
 
@@ -70,8 +72,8 @@ class svgSymbol {
 
 class svgReader {
   private:
-  void addPoly2List( iOList polyList, int cnt, int xpoints[], int ypoints[], const char* stroke, const char* fill, bool arc );
-  void addCircle2List( iOList circleList, int cx, int cy, int r, const char* stroke, const char* fill );
+  void addPoly2List( iOList polyList, int cnt, int xpoints[], int ypoints[], const char* stroke, const char* fill, bool arc, const char* stroke_width );
+  void addCircle2List( iOList circleList, int cx, int cy, int r, const char* stroke, const char* fill, const char* stroke_width );
   bool parsePoly( const char* d, int xpoints[], int ypoints[], int* cnt );
   int evalCoord( const char* d, int* x, int* y );
 
