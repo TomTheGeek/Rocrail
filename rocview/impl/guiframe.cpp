@@ -3945,6 +3945,7 @@ void RocGuiFrame::OnAutoMode( wxCommandEvent& event ) {
 
   autoMode = event.IsChecked();
   mi_automode->Check(autoMode);
+  m_StatusBar->Automode( autoMode );
 
 
   m_bAutoMode = autoMode?True:False;
@@ -4217,6 +4218,7 @@ void RocGuiFrame::OnAutoEvent( wxCommandEvent& event ) {
   if( mi != NULL ) mi->Check(autoMode);
 
   GetToolBar()->ToggleTool(ME_AutoMode, m_bAutoMode);
+  m_StatusBar->Automode( m_bAutoMode );
 
   // Cleanup node:
   node->base.del( node );

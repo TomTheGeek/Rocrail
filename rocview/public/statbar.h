@@ -39,6 +39,7 @@ public:
     void OnSize(wxSizeEvent& event);
     void Update(int flags);
     void Health(bool health);
+    void Automode(bool automode);
 
 private:
 
@@ -47,6 +48,7 @@ private:
     wxStaticBitmap *m_statbmpT;
     wxStaticBitmap *m_statbmpS;
     wxStaticBitmap *m_statbmpA;
+    wxStaticBitmap *m_statbmpR;
 
     DECLARE_EVENT_TABLE()
 };

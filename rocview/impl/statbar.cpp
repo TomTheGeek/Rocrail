@@ -60,7 +60,7 @@ StatusBar::StatusBar(wxWindow *parent)
            : wxStatusBar(parent, wxID_ANY)
              
 {
-    static const int widths[status_max] = { -1, -1, -1, 160, BITMAP_SIZE_X*6 };
+    static const int widths[status_max] = { -1, -1, -1, 160, BITMAP_SIZE_X*8 };
 
 
     SetFieldsCount(status_max);
@@ -71,12 +71,14 @@ StatusBar::StatusBar(wxWindow *parent)
     m_statbmpT = new wxStaticBitmap(this, wxID_ANY, wxIcon(off_xpm));
     m_statbmpS = new wxStaticBitmap(this, wxID_ANY, wxIcon(off_xpm));
     m_statbmpA = new wxStaticBitmap(this, wxID_ANY, wxIcon(off_xpm));
+    m_statbmpR = new wxStaticBitmap(this, wxID_ANY, wxIcon(off_xpm));
 
     m_statbmpH->SetToolTip(wxGetApp().getMsg("planhealth"));
     m_statbmpP->SetToolTip(wxGetApp().getMsg("power"));
     m_statbmpT->SetToolTip(wxGetApp().getMsg("communication"));
     m_statbmpS->SetToolTip(wxGetApp().getMsg("sensors"));
     m_statbmpA->SetToolTip(wxGetApp().getMsg("accessory"));
+    m_statbmpR->SetToolTip(wxGetApp().getMsg("automode"));
     SetMinHeight(BITMAP_SIZE_Y);
 
 }
@@ -102,6 +104,8 @@ void StatusBar::OnSize(wxSizeEvent& event)
                     rect.y + (rect.height - size.y) / 2);
     m_statbmpA->Move(rect.x + size.x*4+ 4+(rect.width - size.x*5) / 2,
                     rect.y + (rect.height - size.y) / 2);
+    m_statbmpR->Move(rect.x + size.x*5+ 5+(rect.width - size.x*5) / 2,
+                    rect.y + (rect.height - size.y) / 2);
 
     event.Skip();
 }
@@ -117,4 +121,9 @@ void StatusBar::Update( int flags)
 void StatusBar::Health( bool health)
 {
     m_statbmpH->SetIcon(health?wxIcon(on_xpm):wxIcon(off_xpm));
+}
+
+void StatusBar::Automode( bool automode)
+{
+    m_statbmpR->SetIcon(automode?wxIcon(on_xpm):wxIcon(off_xpm));
 }
