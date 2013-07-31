@@ -3614,7 +3614,7 @@ static void _event( iOModel inst, iONode nodeC ) {
         {
           iONode clone = (iONode)NodeOp.base.clone(nodeC);
           if( invertstate ) {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"inver state from %s", wSwitch.getstate(clone) );
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"invert state from %s", wSwitch.getstate(clone) );
             if( StrOp.equals(wSwitch.straight, wSwitch.getstate(clone)) )
               wSwitch.setstate(clone, wSwitch.turnout);
             else

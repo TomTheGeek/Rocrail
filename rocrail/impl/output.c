@@ -214,8 +214,8 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
   wOutput.setvalue( nodeA, StrOp.equals(wOutput.off, state ) ? 0:wOutput.getvalue( o->props ) );
 
   if( wOutput.getaddr( o->props ) > 0 || wOutput.getport( o->props ) > 0 ){
+    Boolean inv = wOutput.isinv(o->props);
     if( wOutput.isasswitch(o->props) ) {
-      Boolean inv = wOutput.isinv(o->props);
       NodeOp.setName( nodeA, wSwitch.name() );
 
       wSwitch.setaddr1( nodeA, wOutput.getaddr( o->props ) );
@@ -229,6 +229,7 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
       wOutput.setport( nodeA, wOutput.getport( o->props ) );
       wOutput.setgate( nodeA, wOutput.getgate( o->props ) );
       wOutput.setcmd( nodeA, state );
+      wOutput.setcmd( nodeA, StrOp.equals( state, wOutput.on ) ? (inv?wOutput.off:wOutput.on):(inv?wOutput.on:wOutput.off) );
     }
 
     wOutput.setaccessory( nodeA, wOutput.isaccessory(o->props) );
@@ -268,9 +269,9 @@ static void _event( iOOutput inst, iONode nodeC ) {
   const char* state = wOutput.getstate( nodeC );
 
   if( StrOp.equals( state, wOutput.on ) )
-    wOutput.setstate( data->props, wOutput.on );
+    wOutput.setstate( data->props, inv?wOutput.off:wOutput.on );
   else if( StrOp.equals( state, wOutput.off ) )
-    wOutput.setstate( data->props, wOutput.off );
+    wOutput.setstate( data->props, inv?wOutput.on:wOutput.off );
 
   /* Broadcast to clients. Node4 */
   {
@@ -283,7 +284,7 @@ static void _event( iOOutput inst, iONode nodeC ) {
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing %d listeners [%s:%s]",
-      ListOp.size( data->listeners ), wOutput.getid( data->props ), state );
+      ListOp.size( data->listeners ), wOutput.getid( data->props ), wOutput.getstate(data->props) );
 
   {
     obj listener = ListOp.first( data->listeners );
