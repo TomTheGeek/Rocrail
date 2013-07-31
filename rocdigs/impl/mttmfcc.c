@@ -883,13 +883,13 @@ static __evaluateFB( iOMttmFccData data ) {
         Boolean arrived = (ctrl & 0x08) ? True:False;
         Boolean direction = (ctrl & 0x10) ? True:False;
         iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco address for unit %d:%d(%d) is %d and did %s in Direction %s", addr, port, rraddr, id & 0b01111111, arrived?"arrive":"depart", direction?"Forward":"Backward" );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco address for unit %d:%d(%d) is %d and did %s in Direction %s", addr, port, rraddr, id & 0x7F, arrived?"arrive":"depart", direction?"Forward":"Backward" );
         wFeedback.setstate( evt, state?True:False);
         wFeedback.setdirection( evt, direction);
         wFeedback.setaddr( evt, rraddr );
         wFeedback.setbus( evt, bus );
         wFeedback.setfbtype( evt, wFeedback.fbtype_lissy );
-        StrOp.fmtb(ident, "%d", id & 0b01111111);
+        StrOp.fmtb(ident, "%d", id & 0x7F);
         wFeedback.setidentifier( evt, arrived ? ident:"0" );
         if( data->iid != NULL )
           wFeedback.setiid( evt, data->iid );
