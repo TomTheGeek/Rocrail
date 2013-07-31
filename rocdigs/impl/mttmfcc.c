@@ -847,6 +847,9 @@ static __evaluateFB( iOMttmFccData data ) {
     for( mod = 0; mod < data->fbmodcnt[bus]; mod++ ) {
       int addr = data->fbmods[bus][mod];
       byte in = data->sx1[bus][addr];
+      byte ctrl = data->sx1[bus][addr+1];
+      byte id = data->sx1[bus][addr+2];
+      char ident[32];
       
       if( !data->fbInited || (in != data->fbstate[bus][addr]) ) {
         int n = 0;
@@ -873,6 +876,28 @@ static __evaluateFB( iOMttmFccData data ) {
         }
         data->fbstate[bus][addr] = in;
       }
+      if (ctrl != data->fbstate[bus][addr+1]) {
+        int port = ctrl & 0x07;
+        int rraddr = addr*8+port+1;
+        int state = (data->fbstate[bus][addr] & (0x01 << port)) ? 1:0;
+        Boolean arrived = (ctrl & 0x08) ? True:False;
+        Boolean direction = (ctrl & 0x10) ? True:False;
+        iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco address for unit %d:%d(%d) is %d and did %s in Direction %s", addr, port, rraddr, id & 0b01111111, arrived?"arrive":"depart", direction?"Forward":"Backward" );
+        wFeedback.setstate( evt, state?True:False);
+        wFeedback.setdirection( evt, direction);
+        wFeedback.setaddr( evt, rraddr );
+        wFeedback.setbus( evt, bus );
+        wFeedback.setfbtype( evt, wFeedback.fbtype_lissy );
+        StrOp.fmtb(ident, "%d", id & 0b01111111);
+        wFeedback.setidentifier( evt, arrived ? ident:"0" );
+        if( data->iid != NULL )
+          wFeedback.setiid( evt, data->iid );
+
+        data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+      }
+      data->fbstate[bus][addr+1] = ctrl;
+      data->fbstate[bus][addr+2] = id;
     }
   }
   data->fbInited = True;
