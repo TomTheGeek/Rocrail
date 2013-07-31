@@ -1511,6 +1511,7 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
     if( tt != NULL ) {
       iONode props = TTOp.base.properties( tt );
       MapOp.remove( o->ttMap, wTurntable.getid( item ) );
+      MapOp.remove( o->blockMap, wTurntable.getid( item ) );
       /* Remove item from list: */
       __removeItemFromList( o, wTurntableList.name(), props );
       tt->base.del( tt );
@@ -1523,6 +1524,7 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
     if( seltab != NULL ) {
       iONode props = SelTabOp.base.properties( seltab );
       MapOp.remove( o->seltabMap, wSelTab.getid( item ) );
+      MapOp.remove( o->blockMap, wSelTab.getid( item ) );
       /* Remove item from list: */
       __removeItemFromList( o, wSelTabList.name(), props );
       seltab->base.del( seltab );
@@ -1535,6 +1537,7 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
     if( stage != NULL ) {
       iONode props = StageOp.base.properties( stage );
       MapOp.remove( o->stageMap, wStage.getid( item ) );
+      MapOp.remove( o->blockMap, wStage.getid( item ) );
       /* Remove item from list: */
       __removeItemFromList( o, wStageList.name(), props );
       stage->base.del( stage );
