@@ -3681,7 +3681,7 @@ static void _event( iOModel inst, iONode nodeC ) {
 
     if( co != NULL ) {
       if( StrOp.equals( wSwitch.turnout, wSwitch.getstate(nodeC)) || StrOp.equals( wSwitch.straight, wSwitch.getstate(nodeC)) )
-        wOutput.setstate( nodeC, StrOp.equals( wSwitch.turnout, wSwitch.getstate(nodeC))?wOutput.off:wOutput.on);
+        wOutput.setstate( nodeC, StrOp.equals( wSwitch.turnout, wSwitch.getstate(nodeC))?wOutput.on:wOutput.off);
       else
         wOutput.setstate( nodeC, wOutput.getstate(nodeC) );
       OutputOp.event( co, nodeC );
