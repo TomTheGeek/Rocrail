@@ -697,7 +697,7 @@ void ActionsCtrlDlg::CreateControls()
 
     wxArrayString m_CtrlListStrings;
     m_CtrlList = new wxListBox( m_IndexPanel, ID_ACTIONCTRL_LIST, wxDefaultPosition, wxSize(-1, 100), m_CtrlListStrings, wxLB_SINGLE );
-    itemBoxSizer5->Add(m_CtrlList, 0, wxGROW|wxALL, 5);
+    itemBoxSizer5->Add(m_CtrlList, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer7, 0, wxGROW|wxALL, 5);
@@ -762,7 +762,7 @@ void ActionsCtrlDlg::CreateControls()
 
     wxArrayString m_ConditionsStrings;
     m_Conditions = new wxListBox( m_ConditionsPanel, ID_CONDITIONS, wxDefaultPosition, wxSize(-1, 100), m_ConditionsStrings, wxLB_SINGLE );
-    itemBoxSizer24->Add(m_Conditions, 0, wxGROW|wxALL, 5);
+    itemBoxSizer24->Add(m_Conditions, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer26 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer24->Add(itemFlexGridSizer26, 0, wxGROW|wxALL, 5);
@@ -801,7 +801,7 @@ void ActionsCtrlDlg::CreateControls()
 
     m_Notebook->AddPage(m_ConditionsPanel, _("Conditions"));
 
-    itemBoxSizer2->Add(m_Notebook, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer37 = new wxStdDialogButtonSizer;
 
