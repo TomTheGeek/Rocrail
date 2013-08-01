@@ -1066,10 +1066,10 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
       setPen( *pen );
       setBrush( *brush );
       if( m_UseGC ) {
-        m_GC->DrawEllipse(points[0].x-svgcircle->r, points[0].y-svgcircle->r, svgcircle->r*2, svgcircle->r*2);
+        m_GC->DrawEllipse(points[0].x-svgcircle->r + xOffset, points[0].y-svgcircle->r + yOffset, svgcircle->r*2, svgcircle->r*2);
       }
       else {
-        dc.DrawCircle( points[0].x, points[0].y, svgcircle->r );
+        dc.DrawCircle( points[0].x + xOffset, points[0].y + yOffset, svgcircle->r );
       }
       delete pen;
       delete brush;
