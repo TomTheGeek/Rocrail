@@ -92,6 +92,7 @@ public:
   void OnCmdTurnout(wxCommandEvent& event);
   void OnCmdLeft(wxCommandEvent& event);
   void OnCmdRight(wxCommandEvent& event);
+  void OnCmdAction(wxCommandEvent& event);
 
   void OnCmdSignalAuto(wxCommandEvent& event);
   void OnCmdSignalManual(wxCommandEvent& event);
@@ -155,6 +156,7 @@ private:
   iOList m_sclist;
   iOList m_fylist;
   iOList m_ttlist;
+  iOList m_actionlist;
 
   bool m_RotateSym;
 

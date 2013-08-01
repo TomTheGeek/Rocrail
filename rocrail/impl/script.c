@@ -443,7 +443,8 @@ static void __player( void* threadinst ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "play: %s", NodeOp.getName(node) );
           data->callback->event( data->callback, node );
         }
-        NodeOp.base.del(node);
+        else
+          NodeOp.base.del(node);
       }
     }
     else {

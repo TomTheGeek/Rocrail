@@ -98,6 +98,7 @@
 #include "rocrail/wrapper/public/ScheduleEntry.h"
 #include "rocrail/wrapper/public/Location.h"
 #include "rocrail/wrapper/public/LocationList.h"
+#include "rocrail/wrapper/public/ActionCtrl.h"
 
 #include "rocview/wrapper/public/Gui.h"
 #include "rocview/wrapper/public/PlanPanel.h"
@@ -168,7 +169,9 @@ enum {
     ME_ScheduleGo = ME_TTTrack + 48,
     ME_FYGo = ME_ScheduleGo + 20,
     ME_TTGo = ME_FYGo + 10,
-    ME_CmdSignalAspect = ME_TTGo + 10
+    ME_CmdSignalAspect = ME_TTGo + 10,
+    ME_CmdAction = ME_CmdSignalAspect + 20,
+
 };
 
 BEGIN_EVENT_TABLE(Symbol, wxWindow)
@@ -223,6 +226,16 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_CmdTurnout, Symbol::OnCmdTurnout )
   EVT_MENU     (ME_CmdLeft, Symbol::OnCmdLeft )
   EVT_MENU     (ME_CmdRight, Symbol::OnCmdRight )
+  EVT_MENU     (ME_CmdAction + 0, Symbol::OnCmdAction )
+  EVT_MENU     (ME_CmdAction + 1, Symbol::OnCmdAction )
+  EVT_MENU     (ME_CmdAction + 2, Symbol::OnCmdAction )
+  EVT_MENU     (ME_CmdAction + 3, Symbol::OnCmdAction )
+  EVT_MENU     (ME_CmdAction + 4, Symbol::OnCmdAction )
+  EVT_MENU     (ME_CmdAction + 5, Symbol::OnCmdAction )
+  EVT_MENU     (ME_CmdAction + 6, Symbol::OnCmdAction )
+  EVT_MENU     (ME_CmdAction + 7, Symbol::OnCmdAction )
+  EVT_MENU     (ME_CmdAction + 8, Symbol::OnCmdAction )
+  EVT_MENU     (ME_CmdAction + 9, Symbol::OnCmdAction )
 
   EVT_MENU     (ME_CmdSignalAuto, Symbol::OnCmdSignalAuto )
   EVT_MENU     (ME_CmdSignalManual, Symbol::OnCmdSignalManual )
@@ -815,6 +828,18 @@ void Symbol::OnCmdRight(wxCommandEvent& event) {
   wSwitch.setforcecmd( cmd, wxGetKeyState(WXK_CONTROL)?True:False);
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+}
+
+void Symbol::OnCmdAction(wxCommandEvent& event) {
+  int id = event.GetId()-ME_CmdAction;
+  iONode actionCtrl = (iONode)ListOp.get( m_actionlist, id );
+
+  TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999,
+      "action command: %d %s", id, wActionCtrl.getid(actionCtrl) );
+  wxGetApp().sendToRocrail( actionCtrl );
+
+  /* clean up the list */
+  ListOp.base.del(m_actionlist);
 }
 
 void Symbol::OnResetWheelcounter(wxCommandEvent& event) {
@@ -1610,6 +1635,22 @@ void Symbol::OnPopup(wxMouseEvent& event)
             menuSwCmd->Append( ME_CmdLeft, wxGetApp().getMenu("left") );
           if( StrOp.equals( "default", subtype ) || StrOp.equals( wSwitch.subright, subtype ) )
             menuSwCmd->Append( ME_CmdRight, wxGetApp().getMenu("right") );
+        }
+
+        if( StrOp.equals( wSwitch.accessory, type ) ) {
+          iONode actionctrl = wSwitch.getactionctrl(m_Props);
+          if( actionctrl != NULL ) {
+            menuSwCmd->AppendSeparator();
+            m_actionlist = ListOp.inst();
+          }
+
+          int actcnt = 0;
+          while( actionctrl != NULL && actcnt < 10) {
+            ListOp.add( m_actionlist, (obj)actionctrl );
+            menuSwCmd->Append( ME_CmdAction+actcnt, wxString(wActionCtrl.getid(actionctrl),wxConvUTF8) );
+            actionctrl = wSwitch.nextactionctrl(m_Props, actionctrl);
+            actcnt++;
+          }
         }
       }
       menu.Append( -1, wxGetApp().getMenu("command"), menuSwCmd );
