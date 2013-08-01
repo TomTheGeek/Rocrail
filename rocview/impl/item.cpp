@@ -1647,7 +1647,10 @@ void Symbol::OnPopup(wxMouseEvent& event)
           int actcnt = 0;
           while( actionctrl != NULL && actcnt < 10) {
             ListOp.add( m_actionlist, (obj)actionctrl );
-            menuSwCmd->Append( ME_CmdAction+actcnt, wxString(wActionCtrl.getid(actionctrl),wxConvUTF8) );
+            if( wActionCtrl.getdesc(actionctrl) != NULL && StrOp.len(wActionCtrl.getdesc(actionctrl)) > 0 )
+              menuSwCmd->Append( ME_CmdAction+actcnt, wxString(wActionCtrl.getdesc(actionctrl),wxConvUTF8) );
+            else
+              menuSwCmd->Append( ME_CmdAction+actcnt, wxString(wActionCtrl.getid(actionctrl),wxConvUTF8) );
             actionctrl = wSwitch.nextactionctrl(m_Props, actionctrl);
             actcnt++;
           }

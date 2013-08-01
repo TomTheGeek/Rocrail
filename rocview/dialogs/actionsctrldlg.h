@@ -161,6 +161,8 @@ public:
     wxTextCtrl* m_State;
     wxStaticText* m_labLocoID;
     wxChoice* m_LocoID;
+    wxStaticText* m_labDesc;
+    wxTextCtrl* m_Desc;
     wxCheckBox* m_Reset;
     wxRadioBox* m_Auto;
     wxButton* m_Add;

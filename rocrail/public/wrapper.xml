@@ -1267,6 +1267,7 @@
     <var name="temp" vt="int" defval="0" range="0-*"/>
     <var name="reset" vt="bool" defval="true" remark="Reset counter."/>
     <var name="param" vt="string" defval="" range="*"/>
+    <var name="desc" vt="string" defval="" range="*"/>
     <actioncond cardinality="n" remark="Optional condition." wrappername="ActionCond">
       <var name="id" vt="string" defval="" range="*" required="true"/>
       <var name="type" vt="string" defval="" range="co,sw,sg,fb,lc,bk" required="true"/>
