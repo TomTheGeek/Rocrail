@@ -210,6 +210,12 @@ int tcpipWrite( obj inst, const char *szCommand, char* szRetVal, Boolean info ) 
     SocketOp.disConnect(o->cmdSocket);
     SocketOp.base.del(o->cmdSocket);
     o->cmdSocket = NULL;
+
+    if( o->infoSocket != NULL ) {
+      SocketOp.disConnect(o->infoSocket);
+      SocketOp.base.del(o->infoSocket);
+      o->infoSocket = NULL;
+    }
     return -1;
   }
 
