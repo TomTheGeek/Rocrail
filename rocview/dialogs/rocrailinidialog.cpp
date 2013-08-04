@@ -559,6 +559,7 @@ void RocrailIniDialog::initValues() {
   m_PowerOffAtReset->SetValue( wCtrl.ispoweroffatreset( ctrl ) );
   m_ZeroThrottleID->SetValue( wCtrl.isallowzerothrottleid( ctrl ) );
   m_UseBlockSide->SetValue( wCtrl.isuseblockside( ctrl ) ? true:false );
+  m_UseBlockSide->Enable( wCtrl.isuseblockside( ctrl ) ? false:true );
   m_StopNoneCommuter->SetValue( wCtrl.isstopnonecommuter( ctrl ) ? true:false );
   m_SyncRoutes->SetValue( wCtrl.issyncroutes( ctrl ) ? true:false );
   m_SyncRouteTimeout->SetValue( wCtrl.getsyncroutetimeout( ctrl ) );

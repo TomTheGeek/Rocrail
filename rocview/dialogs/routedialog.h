@@ -77,7 +77,6 @@ class wxGrid;
 #define ID_COMBOBOX_ST_BLOCKB 10011
 #define wxID_STATIC_BLOCKC 10336
 #define ID_ROUTE_VELOCITY 10004
-#define ID_RADIOBOX_DIR 10013
 #define ID_ROUTE_ACTIONS 10197
 #define ID_PANEL_ST_COMMANDS 10014
 #define ID_LISTBOX_COMMANDS 10015
@@ -272,15 +271,10 @@ public:
     wxCheckBox* m_ReduceV;
     wxStaticText* m_labMaxKmH;
     wxSpinCtrl* m_MaxKmH;
-    wxRadioBox* m_Dir;
     wxRadioBox* m_FromSignals;
-    wxRadioBox* m_RunDir;
     wxRadioBox* m_ToSignals;
-    wxStaticText* m_PlaceHolderX;
     wxRadioBox* m_CountCars;
     wxStaticBox* m_DetailsBox;
-    wxCheckBox* m_Swap;
-    wxCheckBox* m_SwapPost;
     wxCheckBox* m_Show;
     wxCheckBox* m_Manual;
     wxButton* m_Actions;

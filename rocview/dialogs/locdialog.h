@@ -119,8 +119,6 @@ class wxGrid;
 #define ID_TEXTCTRL_BLOCKWAIT 10032
 #define ID_RADIOBOX_CARGO 10003
 #define ID_CHECKBOX_COMMUTER 10114
-#define ID_CHECKBOX_LC_SAMEDIR 10162
-#define ID_CHECKBOX_LC_FORCESAMEDIR 10163
 #define ID_RADIOBOX_ENGINE 10002
 #define ID_PANEL_FUNCTIONS 10035
 #define ID_BUTTON_F0 10061
@@ -456,9 +454,6 @@ public:
     wxComboBox* m_StartupSchedule;
     wxRadioBox* m_CargoBox;
     wxCheckBox* m_Commuter;
-    wxCheckBox* m_SameDir;
-    wxCheckBox* m_OppositeDir;
-    wxCheckBox* m_ForceSameDir;
     wxCheckBox* m_UseScheduleTime;
     wxCheckBox* m_secondNextBlock;
     wxCheckBox* m_ShortIn;
