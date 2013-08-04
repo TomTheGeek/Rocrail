@@ -514,6 +514,12 @@ static void _event( iOFBack inst, iONode nodeC ) {
     AppOp.broadcastEvent( nodeD );
   }
 
+  if( data->state && wFeedback.getfbtype(data->props) == wFeedback.fbtype_lissy ) {
+    /* timed off */
+    data->state = False;
+    data->timer = data->timedoff;
+  }
+
   /* Cleanup Node3 */
   nodeC->base.del(nodeC);
 }
