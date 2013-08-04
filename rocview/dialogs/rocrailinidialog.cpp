@@ -560,6 +560,11 @@ void RocrailIniDialog::initValues() {
   m_ZeroThrottleID->SetValue( wCtrl.isallowzerothrottleid( ctrl ) );
   m_UseBlockSide->SetValue( wCtrl.isuseblockside( ctrl ) ? true:false );
   m_UseBlockSide->Show( wCtrl.isuseblockside( ctrl ) ? false:true );
+  if( !wCtrl.isuseblockside( ctrl ) ) {
+    wxCommandEvent cmd;
+    OnBlocksideClick(cmd);
+  }
+
   m_StopNoneCommuter->SetValue( wCtrl.isstopnonecommuter( ctrl ) ? true:false );
   m_SyncRoutes->SetValue( wCtrl.issyncroutes( ctrl ) ? true:false );
   m_SyncRouteTimeout->SetValue( wCtrl.getsyncroutetimeout( ctrl ) );
