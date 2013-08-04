@@ -2383,15 +2383,18 @@ void BlockDialog::initSensors() {
 
   iONode st = NULL;
   const char* routeID = NULL;
+  const char* enterSide = "";
   int idx = m_Routes->GetSelection();
   if( idx != wxNOT_FOUND ) {
     st = (iONode)m_Routes->GetClientData(idx);
 
     if( StrOp.equals( wFeedbackEvent.from_all, m_Routes->GetStringSelection().mb_str(wxConvUTF8) ) ) {
       routeID = wFeedbackEvent.from_all;
+      enterSide = "(+enter)";
     }
     else if( StrOp.equals( wFeedbackEvent.from_all_reverse, m_Routes->GetStringSelection().mb_str(wxConvUTF8) ) ) {
       routeID = wFeedbackEvent.from_all_reverse;
+      enterSide = "(-enter)";
     }
     else if( st == NULL ) {
       TraceOp.trc( "blockdlg", TRCLEVEL_WARNING, __LINE__, 9999,
@@ -2427,7 +2430,7 @@ void BlockDialog::initSensors() {
 
 
 
-  char* br = StrOp.fmt( "%s (%s)", m_FromBlockID, m_ByRouteID );
+  char* br = StrOp.fmt( "%s %s(%s)", m_FromBlockID, enterSide, m_ByRouteID );
   char* s = StrOp.fmt( wxGetApp().getMsg("sensorfromblock").mb_str(wxConvUTF8), br );
   m_LabelSensorsFromBlock->SetLabel( wxString( s ,wxConvUTF8) );
   StrOp.free(s);
