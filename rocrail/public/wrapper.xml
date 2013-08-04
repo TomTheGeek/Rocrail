@@ -1995,9 +1995,9 @@
         <var name="dir" vt="bool" defval="true" remark="Direction permission; true is from-to only, false is both directions."/>
         <var name="lcdir" vt="bool" defval="true" remark="Loco running direction from-to; true is forwards, false is backwards."/>
         <var name="swap" vt="bool" defval="false" remark="swap loco placing at activating this route"/>
-        <var name="swappost" vt="bool" defval="false" remark="swap loco placing at terminating this route"/>
         <!-- DEPRECATED -->
-        
+
+        <var name="swappost" vt="bool" defval="false" remark="swap loco placing at terminating this route"/>
         <var name="reduceV" vt="bool" defval="true" remark="reduce speed by thrown switches"/>
         <var name="crossingblocksignals" vt="bool" defval="false" remark="Set the signals in the crossing blocks according to the from block."/>
         <var name="manual" vt="bool" defval="false" remark="manual controlled route"/>

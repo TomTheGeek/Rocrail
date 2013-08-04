@@ -275,9 +275,10 @@ public:
     wxRadioBox* m_ToSignals;
     wxRadioBox* m_CountCars;
     wxStaticBox* m_DetailsBox;
-    wxCheckBox* m_Show;
+    wxCheckBox* m_SwapPost;
     wxCheckBox* m_Manual;
     wxButton* m_Actions;
+    wxCheckBox* m_Show;
     wxPanel* m_CommandPanel;
     wxListBox* m_Commands;
     wxButton* m_Delete;
