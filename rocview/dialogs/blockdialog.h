@@ -445,5 +445,8 @@ public:
     const char* m_ByRouteID;
 };
 
+#define ROUTE_ALL "all enter +"
+#define ROUTE_ALL_REVERSE "all enter -"
+
 #endif
     // _BLOCKDIALOG_H_

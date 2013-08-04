@@ -711,8 +711,8 @@ void BlockDialog::initValues() {
 
   // Routes
   m_Routes->Clear();
-  m_Routes->Append( wxString(wFeedbackEvent.from_all,wxConvUTF8), (void*)NULL );
-  m_Routes->Append( wxString(wFeedbackEvent.from_all_reverse,wxConvUTF8), (void*)NULL );
+  m_Routes->Append( wxString(ROUTE_ALL,wxConvUTF8), (void*)NULL );
+  m_Routes->Append( wxString(ROUTE_ALL_REVERSE,wxConvUTF8), (void*)NULL );
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode stlist = wPlan.getstlist( model );
@@ -2383,18 +2383,20 @@ void BlockDialog::initSensors() {
 
   iONode st = NULL;
   const char* routeID = NULL;
-  const char* enterSide = "";
+  const char* enterSide = NULL;
   int idx = m_Routes->GetSelection();
   if( idx != wxNOT_FOUND ) {
     st = (iONode)m_Routes->GetClientData(idx);
 
-    if( StrOp.equals( wFeedbackEvent.from_all, m_Routes->GetStringSelection().mb_str(wxConvUTF8) ) ) {
-      routeID = wFeedbackEvent.from_all;
-      enterSide = "(+enter)";
+    if( StrOp.equals( ROUTE_ALL, m_Routes->GetStringSelection().mb_str(wxConvUTF8) ) ) {
+      m_FromBlockID = wFeedbackEvent.from_all;
+      m_ByRouteID   = wFeedbackEvent.from_all;
+      enterSide = "+ enter";
     }
-    else if( StrOp.equals( wFeedbackEvent.from_all_reverse, m_Routes->GetStringSelection().mb_str(wxConvUTF8) ) ) {
-      routeID = wFeedbackEvent.from_all_reverse;
-      enterSide = "(-enter)";
+    else if( StrOp.equals( ROUTE_ALL_REVERSE, m_Routes->GetStringSelection().mb_str(wxConvUTF8) ) ) {
+      m_FromBlockID = wFeedbackEvent.from_all_reverse;
+      m_ByRouteID   = wFeedbackEvent.from_all_reverse;
+      enterSide = "- enter";
     }
     else if( st == NULL ) {
       TraceOp.trc( "blockdlg", TRCLEVEL_WARNING, __LINE__, 9999,
@@ -2410,10 +2412,8 @@ void BlockDialog::initSensors() {
 
   if( st == NULL ) {
     /* all */
-    m_FromBlockID = routeID;
-    m_ByRouteID   = routeID;
   }
-  else if( StrOp.equals( wBlock.getid( m_Props ), wRoute.getbkb( st ) ) ) {
+  else if( st != NULL && StrOp.equals( wBlock.getid( m_Props ), wRoute.getbkb( st ) ) ) {
     m_FromBlockID = wRoute.getbka( st );
     m_ByRouteID   = wRoute.getid(st);
   }
@@ -2430,7 +2430,7 @@ void BlockDialog::initSensors() {
 
 
 
-  char* br = StrOp.fmt( "%s %s(%s)", m_FromBlockID, enterSide, m_ByRouteID );
+  char* br = StrOp.fmt( "%s (%s)", m_FromBlockID, enterSide!=NULL?enterSide:m_ByRouteID );
   char* s = StrOp.fmt( wxGetApp().getMsg("sensorfromblock").mb_str(wxConvUTF8), br );
   m_LabelSensorsFromBlock->SetLabel( wxString( s ,wxConvUTF8) );
   StrOp.free(s);
