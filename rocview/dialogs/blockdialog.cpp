@@ -382,8 +382,8 @@ void BlockDialog::initLabels() {
   */
 
   // Signals
-  m_ForwardSignalsBox->SetLabel( wxGetApp().getMsg( "forwardsignals" ) );
-  m_ReverseSignalsBox->SetLabel( wxGetApp().getMsg( "reversesignals" ) );
+  m_ForwardSignalsBox->SetLabel( wxGetApp().getMsg( "minsidesignals" ) );
+  m_ReverseSignalsBox->SetLabel( wxGetApp().getMsg( "plussidesignals" ) );
   m_LabelSignal->SetLabel( wxGetApp().getMsg( "signal" ) );
   m_LabelWSignal->SetLabel( wxGetApp().getMsg( "distant_signal" ) );
   m_BlankAtRedSignal->SetLabel( wxGetApp().getMsg( "blankatredsignal" ) );

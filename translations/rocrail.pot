@@ -6605,3 +6605,15 @@ msgstr ""
 msgid "Max. acceleration"
 msgstr ""
 
+#. 
+# id="minsidesignals"
+#, c-format
+msgid "Minus(-) side signals"
+msgstr ""
+
+#. 
+# id="plussidesignals"
+#, c-format
+msgid "Plus(+) side signals"
+msgstr ""
+

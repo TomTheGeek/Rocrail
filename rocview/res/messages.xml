@@ -23049,4 +23049,10 @@
     <ru txt="Макс.ускорение"/>
     <sr_latin txt="Maks. ubrzanje"/>
   </Msg>
+  <Msg id="minsidesignals">
+    <en txt="Minus(-) side signals"/>
+  </Msg>
+  <Msg id="plussidesignals">
+    <en txt="Plus(+) side signals"/>
+  </Msg>
 </Messages>
