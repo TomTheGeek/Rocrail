@@ -212,6 +212,8 @@ int tcpipWrite( obj inst, const char *szCommand, char* szRetVal, Boolean info ) 
     o->cmdSocket = NULL;
 
     if( o->infoSocket != NULL ) {
+      /* Trigger the socket to generate an exception. */
+      SocketOp.write( o->infoSocket, szCommand, StrOp.len(szCommand));
       SocketOp.disConnect(o->infoSocket);
       SocketOp.base.del(o->infoSocket);
       o->infoSocket = NULL;
