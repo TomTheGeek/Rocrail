@@ -385,7 +385,6 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
   Boolean blockSide = False;
   Boolean countwheels = True;
   /* The use blockside option works only with one way type, so both directions will fail. */
-  Boolean useBlockSide = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) );
   char    key[256] = {'\0'};
 
   if( fbevt == NULL && data->byRouteId != NULL && StrOp.len(data->byRouteId) > 0 ) {
@@ -415,24 +414,10 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] no event found for fromBlockId [%s], try to find one for all...",
         data->id, data->fromBlockId?data->fromBlockId:"?" );
 
-    /* TODO: check running direction -> from_all or from_all_reverse */
-/*
-    if ( ( data->reverse && !data->next1Route->isSwapPost( data->next1Route ) )
-      || ( !data->reverse && data->next1Route->isSwapPost( data->next1Route ) ) ) {
-*/
-    if( useBlockSide ) {
-      if ( blockSide )
-        StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all );
-      else
-        StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
-    }
-    else {
-      if ( data->reverse )
-        StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
-      else
-        StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all );
-    }
-
+    if ( blockSide )
+      StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all );
+    else
+      StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
   }
 
@@ -1099,15 +1084,9 @@ static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse, int* oppwait 
   iOSignal signal = NULL;
   iOSignal oppsignal = NULL;
 
-  if ( wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
-    Boolean bkeside = wLoc.isblockenterside( (iONode)loc->base.properties( loc ) );
-    signal = (iOSignal)inst->hasManualSignal(inst, False, !bkeside );
-    oppsignal = (iOSignal)inst->hasManualSignal(inst, False, bkeside );
-  }
-  else {
-    signal = (iOSignal)inst->hasManualSignal(inst, False, reverse );
-    oppsignal = (iOSignal)inst->hasManualSignal(inst, False, !reverse );
-  }
+  Boolean bkeside = wLoc.isblockenterside( (iONode)loc->base.properties( loc ) );
+  signal = (iOSignal)inst->hasManualSignal(inst, False, !bkeside );
+  oppsignal = (iOSignal)inst->hasManualSignal(inst, False, bkeside );
 
   /* check the manual operated signal */
   if( oppsignal != NULL && SignalOp.isState(oppsignal, wSignal.red) ) {
@@ -1461,15 +1440,9 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse, Boolean* opp
   iOSignal signal = NULL;
   iOSignal oppsignal = NULL;
 
-  if ( wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
-    Boolean bkeside = wLoc.isblockenterside( (iONode)loc->base.properties( loc ) );
-    signal = (iOSignal)inst->hasManualSignal(inst, False, !bkeside );
-    oppsignal = (iOSignal)inst->hasManualSignal(inst, False, bkeside );
-  }
-  else {
-    signal = (iOSignal)inst->hasManualSignal(inst, False, reverse );
-    oppsignal = (iOSignal)inst->hasManualSignal(inst, False, !reverse );
-  }
+  Boolean bkeside = wLoc.isblockenterside( (iONode)loc->base.properties( loc ) );
+  signal = (iOSignal)inst->hasManualSignal(inst, False, !bkeside );
+  oppsignal = (iOSignal)inst->hasManualSignal(inst, False, bkeside );
 
   if( oppsignal != NULL && SignalOp.isState(oppsignal, wSignal.red) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has an oppwait red manual signal", inst->base.id(inst) );

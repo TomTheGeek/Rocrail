@@ -59,12 +59,6 @@
 			</scannerInfoProvider>
 		</profile>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.pathentry">
-		<pathentry include="/usr/local/include/wx-2.9" kind="inc" path="" system="true"/>
-		<pathentry kind="src" path=""/>
-		<pathentry kind="out" path=""/>
-		<pathentry kind="con" path="org.eclipse.cdt.make.core.DISCOVERED_SCANNER_INFO"/>
-	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope"/>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
@@ -501,5 +495,12 @@
 				<runAllBuilders>true</runAllBuilders>
 			</target>
 		</buildTargets>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.pathentry">
+		<pathentry include="/usr/local/include/wx-2.9" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/local/lib/wx/include/gtk2-unicode-2.9" kind="inc" path="" system="true"/>
+		<pathentry kind="src" path=""/>
+		<pathentry kind="out" path=""/>
+		<pathentry kind="con" path="org.eclipse.cdt.make.core.DISCOVERED_SCANNER_INFO"/>
 	</storageModule>
 </cproject>

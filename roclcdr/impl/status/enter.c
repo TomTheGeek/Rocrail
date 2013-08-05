@@ -79,9 +79,6 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         data->next2Block = data->model->findDest( data->model, data->next1Block->base.id( data->next1Block ),
                                               data->next1Route->base.id( data->next1Route ),
                                               data->loc, &data->next2Route, data->gotoBlock,
-                                              wLoc.istrysamedir( data->loc->base.properties( data->loc ) ),
-                                              wLoc.istryoppositedir( data->loc->base.properties( data->loc ) ),
-                                              wLoc.isforcesamedir( data->loc->base.properties( data->loc ) ),
                                               data->next1Route->isSwapPost( data->next1Route ), False, False );
       }
       else {
@@ -97,7 +94,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                                                                data->schedule, &data->scheduleIdx,
                                                                data->next1Block->base.id( data->next1Block ),
                                                                data->next1Route != NULL ? data->next1Route->base.id( data->next1Route ):NULL,
-                                                               data->loc, False,
+                                                               data->loc,
                                                                data->next1Route->isSwapPost( data->next1Route ),
                                                                &indelay);
       }

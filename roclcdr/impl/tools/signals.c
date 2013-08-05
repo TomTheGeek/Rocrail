@@ -120,25 +120,14 @@ static Boolean __checkSignalPair(iOLcDriver inst, iORoute route, iIBlockBase blo
   if( route != NULL && block != NULL ) {
     const char* blockid = block->base.id(block);
     int sgpair = 0;
-    if( data->useblockside) {
 
-      *signalpair = route->getFromBlockSide(route);
-      if( *signalpair )
-        sgpair = wRoute.getsgb(route->base.properties(route));
-      else
-        sgpair = wRoute.getsga(route->base.properties(route));
-      return sgpair == 2 ? False:True;
+    *signalpair = route->getFromBlockSide(route);
+    if( *signalpair )
+      sgpair = wRoute.getsgb(route->base.properties(route));
+    else
+      sgpair = wRoute.getsga(route->base.properties(route));
+    return sgpair == 2 ? False:True;
 
-    } else {
-
-      if( StrOp.equals( route->getFromBlock(route), blockid ) )
-        sgpair = wRoute.getsga(route->base.properties(route));
-      else
-        sgpair = wRoute.getsgb(route->base.properties(route));
-
-      *signalpair = sgpair == 0 ? !fromTo:fromTo;
-      return sgpair == 2 ? False:True;
-    }
   }
 
   *signalpair = !fromTo;

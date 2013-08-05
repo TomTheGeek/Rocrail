@@ -2968,12 +2968,6 @@ static void _modify( iOLoc inst, iONode props ) {
       wLoc.setV_Rmid( data->props, wLoc.getV_Rmid(props) );
     if(NodeOp.findAttr(props, "V_Rmin"))
       wLoc.setV_Rmin( data->props, wLoc.getV_Rmin(props) );
-    if(NodeOp.findAttr(props, "trysamedir"))
-      wLoc.settrysamedir( data->props, wLoc.istrysamedir(props) );
-    if(NodeOp.findAttr(props, "tryoppositedir"))
-      wLoc.settryoppositedir( data->props, wLoc.istryoppositedir(props) );
-    if(NodeOp.findAttr(props, "forcesamedir"))
-      wLoc.setforcesamedir( data->props, wLoc.isforcesamedir(props) );
     if(NodeOp.findAttr(props, "desc"))
       wLoc.setdesc( data->props, wLoc.getdesc(props) );
     if(NodeOp.findAttr(props, "rmark"))

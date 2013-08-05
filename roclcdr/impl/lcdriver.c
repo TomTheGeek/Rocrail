@@ -548,7 +548,7 @@ static void _usetour( iILcDriverInt inst, const char* tourid ) {
       iORoute route = NULL;
       const char* scid = StrTokOp.nextToken(tok);
       route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL, scid, &scheduleIdx,
-                                                    data->loc->getCurBlock( data->loc ), NULL, data->loc, False, False, &data->indelay );
+                                                    data->loc->getCurBlock( data->loc ), NULL, data->loc, False, &data->indelay );
       if( route != NULL )
         break;
       data->tourIdx++;
@@ -597,7 +597,6 @@ static iOLcDriver _inst( const iOLoc loc, const iOModel model, const iOTrace tra
   data->semaphoreWait    = wCtrl.getsemaphorewait(ctrl) * 1000;
   data->signalWait       = wCtrl.getsignalwait(ctrl) * 1000;
   data->stopnonecommuter = wCtrl.isstopnonecommuter(ctrl);
-  data->useblockside     = wCtrl.isuseblockside(ctrl);
 
   instCnt++;
 

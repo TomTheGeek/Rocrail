@@ -99,7 +99,6 @@ class wxSpinCtrl;
 #define ID_TEXTCTRL_RR_IGNEVT 10152
 #define wxID_STATIC_RR_INITPAUSE 10311
 #define ID_TEXTCTRL_RR_PAUSEINIT 10298
-#define wxID_BLOCKSIDE 10203
 #define ID_PANEL_RR_CONTROLLERS 10153
 #define ID_LISTBOX_RR_CONTROLLERS 10154
 #define ID_BUTTON_RR_DELETE 10105
@@ -170,9 +169,6 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_KEYPATH
     void OnButtonKeypathClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_BLOCKSIDE
-    void OnBlocksideClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_RR_CONTROLLERS
     void OnListboxRrControllersSelected( wxCommandEvent& event );
@@ -366,7 +362,6 @@ public:
     wxCheckBox* m_DisableSteal;
     wxCheckBox* m_PowerOffAtReset;
     wxCheckBox* m_ZeroThrottleID;
-    wxCheckBox* m_UseBlockSide;
     wxCheckBox* m_StopNoneCommuter;
     wxCheckBox* m_SyncRoutes;
     wxCheckBox* m_TimedSensors;

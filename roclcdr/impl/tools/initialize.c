@@ -76,11 +76,6 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
             }
           }
 
-          if( street->isSwap( street ) ) {
-            /* swap only now for a next block, not for a second next block! */
-            /* data->loc->swapPlacing( data->loc ); initializeSwap??!! */
-          }
-
           data->slowdown4route = False;
 
           return True;
@@ -173,28 +168,6 @@ Boolean initializeGroup( iOLcDriver inst, iIBlockBase block, iIBlockBase curBloc
   return True;
 }
 
-
-
-/**
- * Initialize block groups and swapping.
- *
- * @param inst       LcDiver instance
- * @param route      route to go
- */
-Boolean initializeSwap( iOLcDriver inst, iORoute route ) {
-  iOLcDriverData data = Data(inst);
-  Boolean grouplocked = False;
-
-  if( !data->useblockside && route->isSwap( route ) ) {
-    /* swap only now for a next block, not for a second next block! */
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swap placing for route %s", route->getId(route));
-    data->loc->swapPlacing( data->loc, NULL, False, False );
-  }
-
-  data->slowdown4route = False;
-
-  return True;
-}
 
 
 /**

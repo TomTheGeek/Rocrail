@@ -3733,13 +3733,12 @@ static void _analyse( iOModel inst, int mode ) {
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_analyse (%d)", mode );
 
   Boolean analyzerEnabled  = wCtrl.isenableanalyzer( wRocRail.getctrl( AppOp.getIni() ));
-  Boolean blocksideEnabled = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ));
   Boolean planIsHealthy    = ModelOp.isHealthy(inst);
   Boolean automode         = ModelOp.isAuto(inst);
   Boolean isPowerOn        = wState.ispower(ControlOp.getState(AppOp.getControl()));
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "pw %d auto %d health %d bs %d anaE %d",
-      isPowerOn, automode, planIsHealthy, blocksideEnabled, analyzerEnabled);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "pw %d auto %d health %d anaE %d",
+      isPowerOn, automode, planIsHealthy, analyzerEnabled);
 
   if( mode == AN_HEALTH ) {
     /* health check is allowed all the time */
@@ -3773,11 +3772,6 @@ static void _analyse( iOModel inst, int mode ) {
     requirements = False;
   }
   
-  if( ! blocksideEnabled ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Use block side routes is not set.");
-    requirements = False;
-  }
-
   if( automode ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Automode is on. Switch off to use analyze/clean.");
     requirements = False;
@@ -3946,7 +3940,6 @@ static iORoute __lookup( iOModel inst, iOLoc loc, iOList stlist, const char* fro
     iORoute route = (iORoute)ListOp.get( searchlist, i );
     const char* stFrom = RouteOp.getFromBlock( route );
     const char* stTo = RouteOp.getToBlock( route );
-    Boolean dir = RouteOp.getDir( route );
 
     if( !StrOp.equals( stFrom, fromid ) && !StrOp.equals( stTo, fromid ) ) {
       /* not useable; go on */
@@ -3957,15 +3950,6 @@ static iORoute __lookup( iOModel inst, iOLoc loc, iOList stlist, const char* fro
     if( !route->hasPermission( route, loc, fromid, False ) ) {
       /* not useable; go on */
       continue;
-    }
-
-    /* TODO: if( StrOp.equals( stTo, fromid ) && !dir && !forceSameDir) {*/
-    if( StrOp.equals( stTo, fromid ) && !dir) {
-      /* swap direction */
-      const char* tmp = stTo;
-      stTo = stFrom;
-      stFrom = tmp;
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "swapped route[%d]-[%s][%s]: level=%d", i, stFrom, stTo, cnt );
     }
 
     if( StrOp.equals( stTo, destid ) ) {
@@ -4214,7 +4198,7 @@ static int _getScheduleIndex( iOModel inst, const char* scheduleid, const char* 
  */
 static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* scheduleid,
                                         int* scheduleIdx, const char* curblockid, const char* currouteid, iOLoc loc,
-                                        Boolean forceSameDir, Boolean swapPlacingInPrevRoute, int *indelay ) {
+                                        Boolean swapPlacingInPrevRoute, int *indelay ) {
   iONode entry = NULL;
   iONode schedule = ModelOp.getSchedule( inst, scheduleid );
   int entryIndex = *scheduleIdx;
@@ -4236,117 +4220,75 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
    *   LocOp.getBlockEnterSide(loc)
    */
 
-  if( wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
-    curblockid = ModelOp.getManagedID(inst, curblockid);
-    entry = _findScheduleEntry( inst, scheduleid, scheduleIdx, curblockid, False );
+  curblockid = ModelOp.getManagedID(inst, curblockid);
+  entry = _findScheduleEntry( inst, scheduleid, scheduleIdx, curblockid, False );
+
+  if( entry != NULL ) {
+    /* save real index */
+    entryIndex = *scheduleIdx;
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "schedule [%s] real index %d", scheduleid, *scheduleIdx );
+  }
+
+  while( entry != NULL && maxLoop < 2 ) {
+    /* entry found, get the next destination... */
+    entry = wSchedule.nextscentry( schedule, entry );
+    *scheduleIdx += 1;
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "schedule [%s] index %d", scheduleid, *scheduleIdx );
+    maxLoop++;
 
     if( entry != NULL ) {
-      /* save real index */
-      entryIndex = *scheduleIdx;
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "schedule [%s] real index %d", scheduleid, *scheduleIdx );
-    }
+      const char* nextlocation = wScheduleEntry.getlocation( entry );
+      const char* nextblock    = wScheduleEntry.getblock( entry );
 
-    while( entry != NULL && maxLoop < 2 ) {
-      /* entry found, get the next destination... */
-      entry = wSchedule.nextscentry( schedule, entry );
-      *scheduleIdx += 1;
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "schedule [%s] index %d", scheduleid, *scheduleIdx );
-      maxLoop++;
-
-      if( entry != NULL ) {
-        const char* nextlocation = wScheduleEntry.getlocation( entry );
-        const char* nextblock    = wScheduleEntry.getblock( entry );
-
-        if( (nextlocation == NULL || StrOp.len(nextlocation) == 0 ) && (nextblock == NULL || StrOp.len(nextblock) == 0) ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "entry in schedule [%s] is undefined.", scheduleid );
-          return NULL;
-        }
-
-        *indelay = wScheduleEntry.getindelay( entry );
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "entry %d in schedule [%s] has indelay=%d", *scheduleIdx, scheduleid, *indelay );
-        if( nextlocation != NULL && StrOp.len(nextlocation) > 0 )
-          nextblock = NULL;
-        iORoute route = ModelOp.calcRoute( inst, stlist, curblockid, nextlocation, nextblock, loc, forceSameDir, swapPlacingInPrevRoute );
-        if( route != NULL ) {
-          iORoute routeref = NULL;
-          const char* gotoBlock = NULL;
-          /* check if findDest with gotoBlock will return positively */
-          if( StrOp.equals( curblockid, RouteOp.getFromBlock(route) ) )
-            gotoBlock = RouteOp.getToBlock(route);
-          else
-            gotoBlock = RouteOp.getFromBlock(route);
-
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "curblockid [%s], gotoBlock [%s]", curblockid, gotoBlock );
-
-          iIBlockBase destBlock = ModelOp.findDest( inst, curblockid, currouteid, loc, &routeref, gotoBlock,
-                                    False, False, forceSameDir, swapPlacingInPrevRoute, False, True);
-
-          if( destBlock != NULL && StrOp.equals( gotoBlock, destBlock->base.id(destBlock) ) ) {
-            return routeref;
-          }
-          else {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route [%s] to block [%s] is not usable", RouteOp.getId(route), gotoBlock );
-            return NULL;
-          }
-
-
-        }
-
-      }
-      else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "last entry[%d] in schedule [%s] is reached.", *scheduleIdx, scheduleid );
-        *scheduleIdx += 1;
+      if( (nextlocation == NULL || StrOp.len(nextlocation) == 0 ) && (nextblock == NULL || StrOp.len(nextblock) == 0) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "entry in schedule [%s] is undefined.", scheduleid );
         return NULL;
       }
 
-      *scheduleIdx += 1;
-      entry = _findScheduleEntry( inst, scheduleid, scheduleIdx, curblockid, True );
-    };
+      *indelay = wScheduleEntry.getindelay( entry );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "entry %d in schedule [%s] has indelay=%d", *scheduleIdx, scheduleid, *indelay );
+      if( nextlocation != NULL && StrOp.len(nextlocation) > 0 )
+        nextblock = NULL;
+      iORoute route = ModelOp.calcRoute( inst, stlist, curblockid, nextlocation, nextblock, loc, swapPlacingInPrevRoute );
+      if( route != NULL ) {
+        iORoute routeref = NULL;
+        const char* gotoBlock = NULL;
+        /* check if findDest with gotoBlock will return positively */
+        if( StrOp.equals( curblockid, RouteOp.getFromBlock(route) ) )
+          gotoBlock = RouteOp.getToBlock(route);
+        else
+          gotoBlock = RouteOp.getFromBlock(route);
 
-    *scheduleIdx = entryIndex;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "curblockid [%s], gotoBlock [%s]", curblockid, gotoBlock );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no fitting entry in schedule [%s] found.", scheduleid );
-    return NULL;
-  }
+        iIBlockBase destBlock = ModelOp.findDest( inst, curblockid, currouteid, loc, &routeref, gotoBlock,
+                                  swapPlacingInPrevRoute, False, True);
+
+        if( destBlock != NULL && StrOp.equals( gotoBlock, destBlock->base.id(destBlock) ) ) {
+          return routeref;
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route [%s] to block [%s] is not usable", RouteOp.getId(route), gotoBlock );
+          return NULL;
+        }
 
 
-  /* for none blockside only */
+      }
 
-  entry = _findScheduleEntry( inst, scheduleid, scheduleIdx, curblockid, False );
-
-
-  if( entry == NULL ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "in schedule [%s] no fitting entry found with blockid [%s]: routing to first entry...", scheduleid, curblockid );
-    /* take first schedule entry: */
-    entry = wSchedule.getscentry( schedule );
-    *scheduleIdx = 0;
-  }
-  else {
-    /* take next schedule entry: */
-    entry = wSchedule.nextscentry( schedule, entry );
-    if( entry == NULL ) {
+    }
+    else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "last entry[%d] in schedule [%s] is reached.", *scheduleIdx, scheduleid );
       *scheduleIdx += 1;
       return NULL;
     }
+
     *scheduleIdx += 1;
-  }
+    entry = _findScheduleEntry( inst, scheduleid, scheduleIdx, curblockid, True );
+  };
 
-  {
-    const char* nextlocation = wScheduleEntry.getlocation( entry );
-    const char* nextblock    = wScheduleEntry.getblock( entry );
+  *scheduleIdx = entryIndex;
 
-    if( (nextlocation == NULL || StrOp.len(nextlocation) == 0 ) && (nextblock == NULL || StrOp.len(nextblock) == 0) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "entry in schedule [%s] is undefined.", scheduleid );
-      return NULL;
-    }
-
-    *indelay = wScheduleEntry.getindelay( entry );
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "entry %d in schedule [%s] has indelay=%d", *scheduleIdx, scheduleid, *indelay );
-    return ModelOp.calcRoute( inst, stlist, curblockid, nextlocation, nextblock, loc, forceSameDir, swapPlacingInPrevRoute );
-
-  }
-
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "no fitting entry in schedule [%s] found.", scheduleid );
   return NULL;
 }
 
@@ -4522,7 +4464,6 @@ static const char* _getManagedID(iOModel inst, const char* fromBlockId) {
 /* synchronized!!! */
 static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char* fromRouteId, iOLoc loc,
                           iORoute* routeref, const char* gotoBlockId,
-                          Boolean trysamedir, Boolean tryoppositedir, Boolean forceSameDir,
                           Boolean swapPlacingInPrevRoute, Boolean forceOppDir, Boolean schedule) {
   iOModelData o = Data(inst);
 
@@ -4547,7 +4488,6 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   Boolean stExitSide  = True;  /* the From side of the new to route */
 
   /* The use blockside option works only with one way type, so both directions will fail. */
-  Boolean useBlockSide     = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni(  ) ) );
   Boolean selectShortest   = wCtrl.isselectshortestblock( wRocRail.getctrl( AppOp.getIni(  ) ) );
 
   Boolean destdir = False;
@@ -4639,18 +4579,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
           continue;
         }
 
-        if( !RouteOp.getDir( route ) ) {
-          /* route is useable for both directions */
-          if( StrOp.equals( fromBlockId, stTo ) ) {
-            stFrom = RouteOp.getToBlock( route );
-            stTo = RouteOp.getFromBlock( route );
-            stExitSide = wRoute.isbkbside(route->base.properties(route));
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "<-> route [%s] enter side [%s], exit side [%s]",
-                RouteOp.getId(route), stEnterSide?"+":"-", stExitSide?"+":"-");
-          }
-        }
-
-        if( useBlockSide && stEnterSide == stExitSide ) {
+        if( stEnterSide == stExitSide ) {
           /* need to change direction but blocksides are used, check if allowed*/
           if( LocOp.getV(loc) == 0 &&  (fromBlock->isTTBlock(fromBlock) || wLoc.iscommuter( LocOp.base.properties(loc) ) ) ) {
             if( fromBlock->isTTBlock(fromBlock) ) {
@@ -4685,7 +4614,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
         destdir = RouteOp.getDirection( route, fromBlockId, &fromTo );
         samedir = ( ( swapPlacingInPrevRoute ? !locdir : locdir ) == destdir ? True : False);
 
-        if( useBlockSide && swap4BlockSide ) {
+        if( swap4BlockSide ) {
           samedir = False;
         }
 
@@ -4740,25 +4669,17 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ignore gotoblock [%s] for schedule", gotoBlockId );
                 }
                 else {
-                  if( forceSameDir && !samedir ) {
-                    gotoinwrongdir = True;
-                    fromBlock->setTempWait(fromBlock, True);
-                    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                                   "found the GOTO block [%s] for [%s] but its in the wrong direction", gotoBlockId, LocOp.getId( loc ) );
-                  }
-                  else {
-                    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                                   "found the GOTO block [%s] for [%s]", gotoBlockId, LocOp.getId( loc ) );
-                    blockBest = block;
-                    routeBest = route;
-                    /* ignore all other found fitting blocks */
-                    ListOp.clear(fitBlocks);
-                    ListOp.clear(fitRoutes);
-                    /* add the goto block as the one and only */
-                    ListOp.add( fitBlocks, (obj)block );
-                    ListOp.add( fitRoutes, (obj)route );
-                    break;
-                  }
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                                 "found the GOTO block [%s] for [%s]", gotoBlockId, LocOp.getId( loc ) );
+                  blockBest = block;
+                  routeBest = route;
+                  /* ignore all other found fitting blocks */
+                  ListOp.clear(fitBlocks);
+                  ListOp.clear(fitRoutes);
+                  /* add the goto block as the one and only */
+                  ListOp.add( fitBlocks, (obj)block );
+                  ListOp.add( fitRoutes, (obj)route );
+                  break;
                 }
               }
 
@@ -4768,10 +4689,10 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
               if( suits == suits_well ) {
                 Boolean dirOK = True;
                 /* using blockside, in case of a commuter changing direction making sure that it is an alternative route */
-                if( (!samedir && !allowChgDir)  || (swap4BlockSide && useBlockSide) || (forceOppDir && samedir))
+                if( (!samedir && !allowChgDir)  || swap4BlockSide || (forceOppDir && samedir))
                   dirOK = False;
 
-                if( dirOK && (!trysamedir && !forceSameDir && !tryoppositedir) ) {
+                if( dirOK ) {
                   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "found a BEST block [%s] for [%s]", blockId, LocOp.getId( loc ) );
                   blockBest = block;
                   routeBest = route;
@@ -4779,29 +4700,13 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                   ListOp.add( fitRoutes, (obj)route );
                   fitRestLen[ListOp.size(fitBlocks)-1] = restlen;
                 }
-                else if( (dirOK && ( trysamedir || forceSameDir) && samedir) || (dirOK && tryoppositedir && !destdir) ) {
-                  /* direction flags fits */
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                                 "found a BEST block [%s] for [%s] in the wanted direction",
-                                 blockId, LocOp.getId( loc ) );
-                  blockBest = block;
-                  routeBest = route;
-                  ListOp.add( fitBlocks, (obj)block );
-                  ListOp.add( fitRoutes, (obj)route );
-                  fitRestLen[ListOp.size(fitBlocks)-1] = restlen;
-                }
-                else if( !forceSameDir && allowChgDir ) {
+                else if( allowChgDir ) {
                   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "found a block [%s] for [%s] in the other direction", blockId, LocOp.getId( loc ) );
                   blockAlt = block;
                   routeAlt = route;
                   ListOp.add( altBlocks, (obj)block );
                   ListOp.add( altRoutes, (obj)route );
                   altRestLen[ListOp.size(altBlocks)-1] = restlen;
-                }
-                else if( forceSameDir ) {
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                                 "block [%s] for [%s] is in the wrong direction (force same direction)",
-                                 blockId, LocOp.getId( loc ) );
                 }
               }
               else if( suits == suits_ok ) {
@@ -4810,11 +4715,11 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                   dirOK = False;
 
                 TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                    "dirOK=%d locdir=%d destdir=%d samedir=%d allowChgDir=%d trysamedir=%d tryoppositedir=%d forceSameDir=%d swapPlacingInPrevRoute=%d",
-                     dirOK,   locdir,   destdir,   samedir,   allowChgDir,   trysamedir,   tryoppositedir,   forceSameDir,   swapPlacingInPrevRoute);
+                    "dirOK=%d locdir=%d destdir=%d samedir=%d allowChgDir=%d swapPlacingInPrevRoute=%d",
+                     dirOK,   locdir,   destdir,   samedir,   allowChgDir,   swapPlacingInPrevRoute);
 
                 if( blockBest == NULL ) {
-                  if( (dirOK && ( trysamedir | forceSameDir | useBlockSide ) && samedir) || (dirOK && tryoppositedir && !samedir) ) {
+                  if( (dirOK && samedir) ) {
                     /* direction flags fits */
                     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                                    "found an ALT block [%s] for [%s] in the wanted direction",
@@ -4825,7 +4730,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                     ListOp.add( altRoutes, (obj)route );
                     altRestLen[ListOp.size(altBlocks)-1] = restlen;
                   }
-                  else if( dirOK && !forceSameDir ) {
+                  else if( dirOK && !samedir ) {
                     /* wrong direction alternative */
                     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                                    "found an ALT block [%s] for [%s] in a permitted direction",
@@ -4843,7 +4748,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                                    blockId, LocOp.getId( loc ) );
                   }
                 }
-                else if( ( dirOK && forceSameDir && samedir ) || ( dirOK && !forceSameDir ) ) {
+                else if( ( dirOK && samedir ) ) {
                   /* normal case alternative */
                   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                                  "found an ALT block [%s] for [%s]",
@@ -4925,9 +4830,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
     /* when using blocksides the best route can be, in case of commuter,
        a destination in the other direction. For a commuter to change direction
        the block must allow change direction and the loc must be swapped. */
-    if( useBlockSide &&
-        wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) ) &&
-        MapOp.haskey( swapRoutes, (*routeref)->base.id(*routeref) ) )
+    if( wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) ) && MapOp.haskey( swapRoutes, (*routeref)->base.id(*routeref) ) )
     {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Loco [%s] must swap for this route.",
@@ -4974,9 +4877,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
     /* when using blocksides the alternative route can be a mismatch between properties or, in case of commuter,
        a destination in the other direction. For a commuter to change direction the block must allow change direction and
        the loc must be swapped. In case of a mismatch the loc must not be swapped */
-    if( useBlockSide &&
-        wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) ) &&
-        MapOp.haskey( swapRoutes, (*routeref)->base.id(*routeref) ) )
+    if( wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) ) && MapOp.haskey( swapRoutes, (*routeref)->base.id(*routeref) ) )
     {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Loco [%s] must swap for this route.",

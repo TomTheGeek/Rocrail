@@ -584,7 +584,6 @@ static void __resolveRoutes( iOModPlanData data, iONode model, iONode module, iO
     if( wModule.isswaprrd(module) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "swap running direction for route [%s] module [%s]",
           wRoute.getid(stclone), wModule.getid(module) );
-      wRoute.setlcdir( stclone, !wRoute.islcdir(stclone));
     }
 
     if( StrOp.startsWith( wRoute.getbka(route), "point-" ) || StrOp.startsWith( wRoute.getbkb(route), "point-" ) ) {

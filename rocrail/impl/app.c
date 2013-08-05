@@ -717,7 +717,6 @@ static int _Main( iOApp inst, int argc, char** argv ) {
         /* activate use block side routes for new work spaces */
         iONode ctrl = NodeOp.inst( wCtrl.name(), data->ini, ELEMENT_NODE );
         NodeOp.addChild( data->ini, ctrl );
-        wCtrl.setuseblockside(ctrl, True);
       }
     }
     else {

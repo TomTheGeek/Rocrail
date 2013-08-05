@@ -51,9 +51,6 @@ void statusFindDest( iILcDriverInt inst ) {
     data->next1Block = data->model->findDest( data->model, data->loc->getCurBlock( data->loc ),
                                         NULL,
                                         data->loc, &data->next1Route, data->gotoBlock,
-                                        data->opponly ? False:wLoc.istrysamedir( data->loc->base.properties( data->loc ) ),
-                                        data->opponly | wLoc.istryoppositedir( (iONode)data->loc->base.properties( data->loc ) ),
-                                        data->opponly ? False:(mansignal|wLoc.isforcesamedir( data->loc->base.properties( data->loc ) )),
                                         False, data->opponly, False ); /* currently is no prev route running */
   }
   else {
@@ -89,7 +86,7 @@ void statusFindDest( iILcDriverInt inst ) {
         data->prewaitScheduleIdx = -1;
       }
       data->next1Route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL, data->schedule, &data->scheduleIdx,
-                                                      data->loc->getCurBlock( data->loc ), NULL, data->loc, False, False, &data->indelay );
+                                                      data->loc->getCurBlock( data->loc ), NULL, data->loc, False, &data->indelay );
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reported schedule index=%d", data->scheduleIdx );
     }
 

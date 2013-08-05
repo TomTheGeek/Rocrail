@@ -560,7 +560,6 @@ static Boolean _getFromBlockSide( iORoute inst ) {
 
 static Boolean _getDirection( iORoute inst, const char* blockid, Boolean* fromto ) {
   iORouteData o = Data(inst);
-  Boolean lcdir = wRoute.islcdir( o->props );
 
   /* in case of a managed block of a fiddle yard the manager ID is needed */
   blockid = ModelOp.getManagedID( AppOp.getModel(), blockid );
@@ -568,12 +567,12 @@ static Boolean _getDirection( iORoute inst, const char* blockid, Boolean* fromto
   if( R2RnetOp.compare( blockid, wRoute.getbka( o->props ) ) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "blockid [%s] in route [%s] is --from--", blockid, RouteOp.getId(inst) );
     *fromto = True;
-    return lcdir;
+    return True;
   }
   else if( R2RnetOp.compare( blockid, wRoute.getbkb( o->props ) ) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "blockid [%s] in route [%s] is --to--", blockid, RouteOp.getId(inst) );
     *fromto = False;
-    return !lcdir;
+    return False;
   }
   else {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unknown blockid %s", blockid );
@@ -594,17 +593,6 @@ static int _getMaxKmh( iORoute inst ) {
   return wRoute.getmaxkmh(data->props);
 }
 
-
-
-static Boolean _getDir( iORoute inst ) {
-  iORouteData o = Data(inst);
-  return wRoute.isdir( o->props );
-}
-
-static Boolean _isSwap( iORoute inst ) {
-  iORouteData o = Data(inst);
-  return wRoute.isswap( o->props );
-}
 
 static Boolean _isSwapPost( iORoute inst ) {
   iORouteData o = Data(inst);
@@ -852,20 +840,8 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
         StrOp.free(o->routeLockId);
         o->routeLockId = StrOp.fmt( "%s%s%s", wRoute.routelock, wRoute.getid(o->props), locId );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"lock FY for route [%s]", o->routeLockId );
-        Boolean useBlockSide = wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) );
         Boolean reverse = False;
-        if( useBlockSide ) {
-          reverse = ! wRoute.isbkbside( o->props );
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"lock FY using blockside" );
-        }
-        else {
-          /* old behaviour */
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"lock FY not using blockside" );
-          if( wRoute.isswappost( o->props ) )
-            reverse = !o->reverse;
-          else
-            reverse = o->reverse;
-        }
+        reverse = ! wRoute.isbkbside( o->props );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"lock FY for route [%s] with reverse[%s]", o->routeLockId, reverse?"True":"False" );
         /* useBlockSide?!wRoute.isbkbside( o->props ):wRoute.isswappost( o->props ) ? !o->reverse : o->reverse */
         if( !SelTabOp.lock( (iIBlockBase)iseltab,

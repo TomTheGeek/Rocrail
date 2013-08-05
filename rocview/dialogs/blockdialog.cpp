@@ -723,8 +723,7 @@ void BlockDialog::initValues() {
         const char* id = wRoute.getid( st );
         const char* bka = wRoute.getbka( st );
         const char* bkb = wRoute.getbkb( st );
-        if( (bkb != NULL && StrOp.equals( bkb, wBlock.getid( m_Props ) )) ||
-            (bka != NULL && StrOp.equals( bka, wBlock.getid( m_Props ) ) && !wRoute.isdir(st)) ) {
+        if( (bkb != NULL && StrOp.equals( bkb, wBlock.getid( m_Props ) ))) {
           char* str = StrOp.fmt( "%s = from \"%s\" to \"%s\"", id, bka, bkb );
           m_Routes->Append( wxString(str,wxConvUTF8), st );
           StrOp.free( str );
@@ -1104,10 +1103,6 @@ bool BlockDialog::evaluate() {
           StrOp.equals( wFeedbackEvent.from_all_reverse, wFeedbackEvent.getfrom( fb ) ) ||
           StrOp.equals( fromID, wFeedbackEvent.getfrom( fb ) ) )
       {
-        hasRoute = true;
-        break;
-      }
-      else if( !wRoute.isdir(st) && StrOp.equals( wRoute.getbkb( st ), wFeedbackEvent.getfrom( fb ) ) ) {
         hasRoute = true;
         break;
       }
@@ -2415,10 +2410,6 @@ void BlockDialog::initSensors() {
   }
   else if( st != NULL && StrOp.equals( wBlock.getid( m_Props ), wRoute.getbkb( st ) ) ) {
     m_FromBlockID = wRoute.getbka( st );
-    m_ByRouteID   = wRoute.getid(st);
-  }
-  else if( !wRoute.isdir(st) ) {
-    m_FromBlockID = wRoute.getbkb( st );
     m_ByRouteID   = wRoute.getid(st);
   }
   else {

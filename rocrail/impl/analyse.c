@@ -5965,10 +5965,6 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking plan health..." );
 
-  if( !wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni() ) ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: Block side routing is not enabled; The classic method is deprecated." );
-  }
-
   /* checking ID's */
   for( i = 0; i < dbs; i++ ) {
     iOMap idMap = MapOp.inst();
@@ -6448,11 +6444,9 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
           const char* bka = wRoute.getbka( stNode );
           const char* bkb = wRoute.getbkb( stNode );
           const char* bkc = wRoute.getbkc( stNode );
-          Boolean dir = wRoute.isdir(stNode);
-          Boolean lcdir = wRoute.islcdir(stNode);
 
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "routeCheck: st[%d] [%s] bka[%s] bkb[%s] bkc[%s] dir[%d] lcdir[%d]",
-              i, wRoute.getid(stNode), bka, bkb, bkc, dir, lcdir );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "routeCheck: st[%d] [%s] bka[%s] bkb[%s] bkc[%s]",
+              i, wRoute.getid(stNode), bka, bkb, bkc );
 
           iOList delList = ListOp.inst();
           iONode swCmd = wRoute.getswcmd( stNode );
@@ -6545,33 +6539,6 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
               StrTokOp.base.del(tok);
             }
 
-            /* "dir" is "from-to" or "both directions" */
-            if( ! dir ) {
-              /* routes with a turntable block as destination may use "both directions" in block side mode! */
-              /* bkb is the destination block */
-              /* find destination blocks in model/plan */
-              /* check if it is a turntable block */
-              Boolean isTTBlock = False;
-              if( blockB != NULL ) {
-                isTTBlock = BlockOp.isTTBlock( blockB );
-              }
-
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route check: route [%s]: bkb[%s] isTTBlock[%d]",
-                wRoute.getid(stNode), bkb, isTTBlock );
-
-              if( ! isTTBlock ) {
-                retVal = False;
-                TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: route [%s] uses incompatible Usage: both directions",
-                  wRoute.getid(stNode) );
-                numProblems++;
-              }
-            }
-            if( ! lcdir ) {
-              retVal = False;
-              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: route [%s] uses incompatible Run direction: reverse",
-                wRoute.getid(stNode) );
-              numProblems++;
-            }
           }
 
         } else {
