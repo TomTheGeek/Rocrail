@@ -75,8 +75,7 @@ void statusInitDest( iILcDriverInt inst ) {
                 data->next1Block,
                 data->next1Route,
                 data->curBlock,
-                swapDir, data->indelay ) &&
-        initializeSwap( (iOLcDriver)inst, data->next1Route ) )
+                swapDir, data->indelay ) )
     {
 
       if( !data->gomanual ) {

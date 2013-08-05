@@ -190,8 +190,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                        data->next2Block,
                        data->next2Route,
                        data->next1Block,
-                       swapDir, indelay ) &&
-               initializeSwap( (iOLcDriver)inst, data->next2Route) )
+                       swapDir, indelay ) )
       {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "Found destination for \"%s\": \"%s\" (from %s)",
