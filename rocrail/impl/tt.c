@@ -2840,7 +2840,7 @@ static const char* _getInLoc( iIBlockBase inst ) {
   return "";
 }
 
-static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, iONode fbevt ) {
+static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, iONode fbevt, Boolean dir ) {
   iOTTData data = Data(inst);
   /* TODO: dispatch to active tracke block */
   return False;

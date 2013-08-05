@@ -2140,7 +2140,7 @@
       <param name="inst" vt="this" remark="Operator instance"/>
       <param name="cmd" vt="iONode" remark="Optional cmd node with placing information."/>
     </fun>
-    <fun name="hasCar" vt="int">
+    <fun name="hasCar" vt="Boolean">
       <param name="inst" vt="this" remark="Operator instance"/>
       <param name="id" vt="const char*"/>
     </fun>

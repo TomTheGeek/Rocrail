@@ -343,6 +343,7 @@
       <param name="val" vt="int" remark="Value of object which triggered the event."/>
       <param name="wheelcount" vt="int" remark="Number of wheels counted sofar."/>
       <param name="evtDescr" vt="iONode" remark="event description: optional"/>
+      <param name="dir" vt="Boolean" remark="Running direction of loco"/>
     </fun>
     <fun name="reset" vt="void">
       <param name="inst" vt="this" remark="Block instance"/>

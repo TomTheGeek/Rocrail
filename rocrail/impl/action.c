@@ -628,8 +628,8 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         bl->unLock(bl, wAction.getparam( data->action ), NULL);
       }
       else if( StrOp.equals( wAction.block_event, wAction.getcmd( data->action ) ) ) {
-        bl->event(bl, True, wAction.getparam( data->action ), 0, 0, 0, NULL);
-        bl->event(bl, False, wAction.getparam( data->action ), 0, 0, 0, NULL);
+        bl->event(bl, True, wAction.getparam( data->action ), 0, 0, 0, NULL, True);
+        bl->event(bl, False, wAction.getparam( data->action ), 0, 0, 0, NULL, True);
       }
       else if( StrOp.equals( wBlock.closed, wAction.getcmd( data->action ) ) ) {
         iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );

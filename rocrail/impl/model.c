@@ -3909,7 +3909,7 @@ static void _analyse( iOModel inst, int mode ) {
  * needed to get to the destination.
  */
 static iORoute __lookup( iOModel inst, iOLoc loc, iOList stlist, const char* fromid, const char* destid,
-    int cnt, iOList searchlist, int* foundlevel, Boolean forceSameDir, Boolean swapPlacingInPrevRoute ) {
+    int cnt, iOList searchlist, int* foundlevel, Boolean swapPlacingInPrevRoute ) {
   iOModelData data = Data(inst);
 
   iOList list = NULL;
@@ -4211,15 +4211,6 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "schedule [%s] index %d", scheduleid, *scheduleIdx );
 
-  /* https://bugs.launchpad.net/rocrail/+bug/706593
-   * TODO: Evaluate the block enterside using ModelOp.findDest(...gotoBlock...) or
-   *   ModelOp.calcRoute() within the __findScheduleEntry() function.
-   *
-   * Needed info:
-   *   wCtrl.isuseblockside( wRocRail.getctrl( AppOp.getIni(  ) ) )
-   *   LocOp.getBlockEnterSide(loc)
-   */
-
   curblockid = ModelOp.getManagedID(inst, curblockid);
   entry = _findScheduleEntry( inst, scheduleid, scheduleIdx, curblockid, False );
 
@@ -4295,7 +4286,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
 
 /* synchronized!!! */
 static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId, const char* toLocationId,
-                             const char* toBlockId, iOLoc loc, Boolean forceSameDir, Boolean swapPlacingInPrevRoute ) {
+                             const char* toBlockId, iOLoc loc, Boolean swapPlacingInPrevRoute ) {
   iOModelData data = Data(inst);
   iOLocation location = NULL;
   iORoute street = NULL;
@@ -4331,7 +4322,7 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
         if( stlist != NULL )
           ListOp.clear( stlist );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Try to find a route to block \"%s\".", id );
-        street = __lookup( inst, loc, stlist, currBlockId, id, 0, NULL, NULL, forceSameDir, swapPlacingInPrevRoute );
+        street = __lookup( inst, loc, stlist, currBlockId, id, 0, NULL, NULL, swapPlacingInPrevRoute );
         if( street == NULL || !RouteOp.isFree( street, LocOp.getId(loc) )) {
           continue;
         }
@@ -4347,11 +4338,11 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Try to find a route to block \"%s\".", toBlockId );
-      street = __lookup( inst, loc, stlist, currBlockId, toBlockId, 0, NULL, NULL, forceSameDir, swapPlacingInPrevRoute );
+      street = __lookup( inst, loc, stlist, currBlockId, toBlockId, 0, NULL, NULL, swapPlacingInPrevRoute );
     }
 
     /* check if the direction is the same if wanted to be */
-    if( street != NULL && forceSameDir ) {
+    if( street != NULL ) {
       Boolean fromTo = False;
       Boolean locdir  = LocOp.getDir( loc );
       destdir = RouteOp.getDirection( street, currBlockId, &fromTo );
