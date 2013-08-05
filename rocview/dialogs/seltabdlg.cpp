@@ -158,6 +158,7 @@ SelTabDialog::SelTabDialog( wxWindow* parent, iONode p_Props )
   m_LocationPanel->GetSizer()->Layout();
   m_Interface->GetSizer()->Layout();
   m_TracksPanel->GetSizer()->Layout();
+  m_RoutesPanel->GetSizer()->Layout();
   m_Notebook->Fit();
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
@@ -392,7 +393,8 @@ void SelTabDialog::initValues() {
     m_b6Sen->SetStringSelection( wxString(wSelTab.getb6sen(m_Props),wxConvUTF8) );
 
   // Tracks
-  m_TracksGrid->DeleteRows(0,m_TracksGrid->GetNumberRows());
+  if( m_TracksGrid->GetNumberRows() > 0 )
+    m_TracksGrid->DeleteRows(0,m_TracksGrid->GetNumberRows());
   iONode track = wSelTab.getseltabpos( m_Props );
   while( track != NULL ) {
     m_TracksGrid->AppendRows();
@@ -417,8 +419,8 @@ void SelTabDialog::initValues() {
 
   // Routes
   m_Routes->Clear();
-  m_Routes->Append( wxString(wFeedbackEvent.from_all,wxConvUTF8), (void*)NULL );
-  m_Routes->Append( wxString(wFeedbackEvent.from_all_reverse,wxConvUTF8), (void*)NULL );
+  m_Routes->Append( wxString(ROUTE_ALL,wxConvUTF8), (void*)NULL );
+  m_Routes->Append( wxString(ROUTE_ALL_REVERSE,wxConvUTF8), (void*)NULL );
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode stlist = wPlan.getstlist( model );
@@ -612,10 +614,10 @@ void SelTabDialog::initSensors() {
   if( idx != wxNOT_FOUND ) {
     st = (iONode)m_Routes->GetClientData(idx);
 
-    if( StrOp.equals( wFeedbackEvent.from_all, m_Routes->GetStringSelection().mb_str(wxConvUTF8) ) ) {
+    if( StrOp.equals( ROUTE_ALL, m_Routes->GetStringSelection().mb_str(wxConvUTF8) ) ) {
       routeID = wFeedbackEvent.from_all;
     }
-    else if( StrOp.equals( wFeedbackEvent.from_all_reverse, m_Routes->GetStringSelection().mb_str(wxConvUTF8) ) ) {
+    else if( StrOp.equals( ROUTE_ALL_REVERSE, m_Routes->GetStringSelection().mb_str(wxConvUTF8) ) ) {
       routeID = wFeedbackEvent.from_all_reverse;
     }
     else if( st == NULL ) {

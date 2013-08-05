@@ -259,5 +259,7 @@ public:
     const char* m_FromBlockID;
 };
 
+#define ROUTE_ALL "all enter +"
+#define ROUTE_ALL_REVERSE "all enter -"
 #endif
     // _SELTABDLG_H_
