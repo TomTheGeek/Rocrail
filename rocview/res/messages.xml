@@ -18966,7 +18966,7 @@
     <cs txt="Tlačítko"/>
     <da txt="Knap"/>
     <nl txt="Knop"/>
-    <de txt="Knopf"/>
+    <de txt="Taste"/>
     <it txt="Pulsante"/>
     <ru txt="Кнопка"/>
     <tr txt="Buton"/>
@@ -20981,6 +20981,7 @@
     <sl txt="Vlaki"/>
     <ru txt="Поезда"/>
     <sr_latin txt="Vozovi"/>
+    <es txt="Trenes"/>
   </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
@@ -22282,6 +22283,7 @@
     <zh_CN txt="特点"/>
     <sl txt="Možnosti"/>
     <ru txt="Features"/>
+    <es txt="Características"/>
   </Msg>
   <Msg id="portsetup">
     <en txt="Port setup"/>
@@ -22427,6 +22429,7 @@
     <de txt="Doppelte Anführungszeichen"/>
     <sl txt="Dvojni narekovaj"/>
     <ru txt="Double quote"/>
+    <es txt="Comilla doble"/>
   </Msg>
   <Msg id="assigntrain">
     <en txt="Assign train"/>
@@ -22479,6 +22482,7 @@
     <sl txt="Utripaj"/>
     <sr_latin txt="Treptaj"/>
     <ru txt="Мигание"/>
+    <es txt="Parpadeo"/>
   </Msg>
   <Msg id="actiontimer60">
     <en txt="Action timer 60 sec."/>
@@ -22684,6 +22688,7 @@
     <sl txt="Preobremenitev"/>
     <sr_latin txt="Preopterećenje"/>
     <ru txt="Перегрузка"/>
+    <es txt="Sobrecarga"/>
   </Msg>
   <Msg id="processblockevents">
     <en txt="Process block events"/>
@@ -22714,6 +22719,7 @@
     <sl txt="Časovni žig"/>
     <sr_latin txt="Pečat"/>
     <ru txt="Stamp"/>
+    <es txt="Sellar"/>
   </Msg>
   <Msg id="export">
     <en txt="Export"/>
@@ -22724,6 +22730,7 @@
     <sl txt="Izvoz"/>
     <sr_latin txt="Izvoz"/>
     <ru txt="Экспорт"/>
+    <es txt="Exportar"/>
   </Msg>
   <Msg id="insert">
     <en txt="Insert"/>
@@ -22734,6 +22741,7 @@
     <sl txt="Vstavi"/>
     <sr_latin txt="Umetni"/>
     <ru txt="Вставка"/>
+    <es txt="Insertar"/>
   </Msg>
   <Msg id="ebreak">
     <en txt="Emergency break"/>
@@ -22754,6 +22762,7 @@
     <sl txt="Izklopi"/>
     <sr_latin txt="Isključi"/>
     <ru txt="Выключение"/>
+    <es txt="Apagar"/>
   </Msg>
   <Msg id="accdectable" dialog="true">
     <en txt="Accessory table" alttxt="Accessory Decoders" tip="Accessory decoder table"/>
@@ -22773,6 +22782,7 @@
     <sr_latin txt="Izračunavanje"/>
     <sl txt="Izračun"/>
     <ru txt="Расчет"/>
+    <es txt="Cálculo"/>
   </Msg>
   <Msg id="freeallwarning">
     <en txt="This action will free all section reservations. Proceed?"/>
@@ -22791,6 +22801,7 @@
     <sl txt="Izbriši vse"/>
     <sr_latin txt="Obriši sve"/>
     <ru txt="Удалить все"/>
+    <es txt="Eliminar todos"/>
   </Msg>
   <Msg id="maxdiff">
     <en txt="Max.difference"/>
@@ -22827,6 +22838,7 @@
     <sr_latin txt="Proizvod"/>
     <sl txt="Izdelek"/>
     <ru txt="Product"/>
+    <es txt="Producto"/>
   </Msg>
   <Msg id="class">
     <en txt="Class"/>
@@ -22836,6 +22848,7 @@
     <sr_latin txt="Razred"/>
     <sl txt="Razred"/>
     <ru txt="Class"/>
+    <es txt="Clase"/>
   </Msg>
   <Msg id="featurecv">
     <en txt="Feature CV"/>
@@ -22854,6 +22867,7 @@
     <sr_latin txt="CV proizvođača"/>
     <sl txt="CV Proizvajalca"/>
     <ru txt="Vendor CV"/>
+    <es txt="Vendedor CV"/>
   </Msg>
   <Msg id="disable">
     <en txt="Disable"/>
@@ -22863,6 +22877,7 @@
     <sr_latin txt="Onemogući"/>
     <sl txt="Onemogoči"/>
     <ru txt="Disable"/>
+    <es txt="Deshalilitar"/>
   </Msg>
   <Msg id="macromap">
     <en txt="Macro Map"/>
@@ -22881,6 +22896,7 @@
     <sr_latin txt="Uspori"/>
     <sl txt="Upočasnitev"/>
     <ru txt="Замедление"/>
+    <es txt="Deceleración"/>
   </Msg>
   <Msg id="cycles">
     <en txt="Cycles"/>
@@ -22908,6 +22924,7 @@
     <sr_latin txt="dan"/>
     <sl txt="dan"/>
     <ru txt="день"/>
+    <es txt="dia"/>
   </Msg>
   <Msg id="preview">
     <en txt="Preview"/>
@@ -22926,6 +22943,7 @@
     <it txt="Controllo sensori"/>
     <sl txt="Spremljanje senzorjev"/>
     <ru txt="Мониторинг датчикрв"/>
+    <es txt="Control del sensor"/>
   </Msg>
   <Msg id="wheelcount">
     <en txt="Wheel count"/>
@@ -22944,6 +22962,7 @@
     <it txt="Contatore"/>
     <sl txt="Števec"/>
     <ru txt="Счетчик"/>
+    <es txt="Contador"/>
   </Msg>
   <Msg id="countedcars">
     <en txt="Counted cars"/>
@@ -22962,6 +22981,7 @@
     <sl txt="Poročaj"/>
     <sr_latin txt="Izveštaj"/>
     <ru txt="Report"/>
+    <es txt="Informe"/>
   </Msg>
   <Msg id="dynamically">
     <en txt="Dynamically"/>
@@ -22998,6 +23018,7 @@
     <sl txt="Korakov"/>
     <sr_latin txt="Koraka"/>
     <ru txt="Шаги"/>
+    <es txt="Intervalos"/>
   </Msg>
   <Msg id="createguestonbidi">
     <en txt="Create guest on BiDi"/>
@@ -23014,12 +23035,19 @@
     <de txt="Gewicht"/>
     <ru txt="Вес"/>
     <sr_latin txt="Težina"/>
+    <it txt="Peso"/>
+    <es txt="Peso"/>
+    <sl txt="Teža"/>
   </Msg>
   <Msg id="acceleration">
     <en txt="Acceleration"/>
     <de txt="Beschleunigung"/>
     <ru txt="Ускорение"/>
     <sr_latin txt="Ubrzanje"/>
+    <nl txt="Acceleratie"/>
+    <it txt="Accelerazione"/>
+    <es txt="Aceleración"/>
+    <sl txt="Pospešek"/>
   </Msg>
   <Msg id="adjustaccel">
     <en txt="Adjust acceleration"/>
@@ -23027,6 +23055,8 @@
     <de txt="Beschleunigung anpassen"/>
     <ru txt="Настройка ускорения"/>
     <sr_latin txt="Podesi ubrzanje"/>
+    <it txt="Regola accelerazione"/>
+    <sl txt="Nastavi pospešek"/>
   </Msg>
   <Msg id="maxload">
     <en txt="Max. load"/>
@@ -23034,6 +23064,8 @@
     <de txt="Max. Last"/>
     <ru txt="Макс.загрузка"/>
     <sr_latin txt="Maks. opterećenje"/>
+    <it txt="Carico max"/>
+    <sl txt="Maks. teža"/>
   </Msg>
   <Msg id="minaccel">
     <en txt="Min. acceleration"/>
@@ -23041,6 +23073,8 @@
     <de txt="Min. Beschleunigung"/>
     <ru txt="Мин.ускорение"/>
     <sr_latin txt="Min. ubrzanje"/>
+    <it txt="Accelerazione min"/>
+    <sl txt="Min. pospešek"/>
   </Msg>
   <Msg id="maxaccel">
     <en txt="Max. acceleration"/>
@@ -23048,11 +23082,19 @@
     <de txt="Max. Beschleunigung"/>
     <ru txt="Макс.ускорение"/>
     <sr_latin txt="Maks. ubrzanje"/>
+    <it txt="Accelerazione max"/>
+    <sl txt="Maks. pospešek"/>
   </Msg>
   <Msg id="minsidesignals">
     <en txt="Minus(-) side signals"/>
+    <de txt="Minus(-)-Seiten-Signale"/>
+    <nl txt="Min(-) zijde signalen"/>
+    <it txt="Segnali lato meno(-)"/>
   </Msg>
   <Msg id="plussidesignals">
     <en txt="Plus(+) side signals"/>
+    <de txt="Plus(+)-Seiten-Signale"/>
+    <nl txt="Plus(-) zijde signalen"/>
+    <it txt="Segnali lato più(+)"/>
   </Msg>
 </Messages>
