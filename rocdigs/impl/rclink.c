@@ -262,6 +262,8 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
       Diagnosemeldung:
       0xD1 A1 A2 0xD2 V1 V2 0xD3 SB AB 0xD4 OSCCAL 0xFF
       A1, A2 = Adressbyte 1 und 2 (bestaetigt)
+               Ab Version 1.5 werden auch reine Belegtmeldungen an den PC gesendet.
+               Der Adressteil (sowohl A1 wie auch A2) wird dann auf 0x77 gestezt und so an die Sofware weiter geleitet.
       V1, V2 = Vergleichsbytes 1 und 2 (gemeldete, unbestaetigte Adressen)
       SB = Statusbyte
       AB = Alivebyte
@@ -285,7 +287,7 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
     unsigned short addr = ((packet[2] & 0xBF) << 8) | packet[3];
     Boolean direction = (packet[2] & 0x80) ? False:True;
 
-    if((addr & 0x3FFF) > 0x27FF)
+    if((addr & 0x3FFF) > 0x27FF || (packet[2] == 0x77 && packet[3] == 0x77) )
       addr = 0x3FFF;
     if(addr == data->prevAddress[packet[1]-1])
       break;
@@ -295,14 +297,14 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
     wFeedback.setaddr( evt, packet[1] );
     wFeedback.setfbtype( evt, wFeedback.fbtype_railcom );
     wFeedback.setdirection( evt, direction );
-    if(addr == 0x3FFF)
+    if(addr == 0x3FFF )
       wFeedback.setidentifier(evt,"0");
     else {
       char ident[32];
       StrOp.fmtb(ident, "%d", addr & 0x3FFF);
       wFeedback.setidentifier(evt,ident);
     }
-    wFeedback.setstate(evt,!!addr);
+    wFeedback.setstate(evt, addr > 0 );
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );
 
