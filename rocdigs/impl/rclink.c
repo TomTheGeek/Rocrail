@@ -21,10 +21,10 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-/* PROTOCOL
+/* PROTOCOL 1.5
  * ------------------------------------------------------------
-Nach dem Einschalten des RC-Link befindet sich dieser in einem Schlafmodus. Um den RC-Link zu aktivieren reicht es,
-ein beliebiges Kommando, ausser E0, zu senden.
+Nach dem Einschalten des RC-Link befindet sich dieser in einem Schlafmodus.
+Um den RC-Link zu aktivieren reicht es, ein beliebiges Kommando, ausser E0, zu senden.
 
 RC-Talk-Meldungen:
 
@@ -38,15 +38,19 @@ Adressmeldung:
 
 0xFC DD* A1* A2* 0xFF
 
-DD = Detektoradresse (0x01 - 0x18)
-A1 = Adressteil 1 higher byte (bei langer DCC-Adresse ist Bit 7 gesetzt!)
+DD = Detektoradresse (0x01 - 0xEF)
+A1 = Adressteil 1 higher byte**
 A2 = Adressteil 2 lower byte
 *Werte im Hex-Format
+** Je nach Aufgleisrichtung ist Bit7 des Adressteil 1 gesetzt oder geloescht
 
-Eine Adressmeldung wird einmal generiert sobald ein Detektorabschnitt die Daten eines RailCom-Senders empfaengt
-und wenn der Abschnitt frei ist (dann werden 00 00 fuer A1 und A2 gesendet). Bei der Inbetriebnahme werden die
-Stati aller Detektoren einmal gesendet.
+Eine Adressmeldung wird einmal generiert sobald ein Detektorabschnitt die Daten eines RailCom-Senders
+empfaengt und wenn der Abschnitt frei ist (dann werden 00 00 fuer A1 und A2 gesendet).
+Bei der Inbetriebnahme werden die Stati aller Detektoren einmal gesendet.
 Ferner kann eine Adressmeldung mittels eines RC-Talk-Kommandos aus dem PC fuer einen Detektor angefordert werden.
+
+Ab Version 1.5 werden auch reine Belegtmeldungen an den PC gesendet.
+Der Adressteil (sowohl A1 wie auch A2) wird dann auf 0x77 gestezt und so an die Sofware weiter geleitet.
 
 CV-Meldung:
 
@@ -81,8 +85,7 @@ System-Aus-Meldung:
 Diese Meldung wird generiert, wenn der RC-Link deaktiviert wird, z.B. durch das Kommando E0 oder durch ein ungueltiges Kommando.
 
 
-Eine Systemmeldung wird durch ein RC-Talk-Kommando initiiert und enthaelt Informationen ueber die Hard-bzw.
-Software des RC-Link
+Eine Systemmeldung wird durch ein RC-Talk-Kommando initiiert und enthaelt Informationen ueber die Hard-bzw. Software des RC-Link
 
 RC-Talk-Kommandos:
 
@@ -90,8 +93,8 @@ Grundsaetzlich ist ein RC-Talk-Kommando 1 Byte gross und erlaubt, verschiedene F
 
 0x20 = Initialisiere alle:
 
-Wird der Wert 0x20 an den RC-Link gesendet werden alle Detektoren initialisiert und die Adressdaten
-aller Detektoren gesendet (entspricht funktional einem Reset)
+Wird der Wert 0x20 an den RC-Link gesendet werden alle Detektoren initialisiert und die A
+dressdaten aller Detektoren gesendet (entspricht funktional einem Reset)
 
 0x40 + DD = Abfrage explizit
 
@@ -102,14 +105,12 @@ Adressmeldung fuer diesen Detektor generiert. Z.B. wird ueber 0x42 der Detektor 
 
 0x60 = Sende Info
 
-Auf dieses Kommando erfolgt eine Systemmeldung, mit deren Hilfe die Softwareversion und die Seriennummer
-abgefragt werden kann
+Auf dieses Kommando erfolgt eine Systemmeldung, mit deren Hilfe die Softwareversion und die Seriennummer abgefragt werden kann
 
 0x80 + DD = Programmiere Detektor
 
-Wird der Hexwert 0x80, addiert mit der gewuenschten Detektoradresse, an das RC-Talk-Modul gesendet wird dem am
-Bus angeschlossenen Detektor, welcher vorher via Steckbruecke in den Programmiermodus versetzt wurde,
-die Detektoradresse DD zugewiesen.
+Wird der Hexwert 0x80, addiert mit der gewuenschten Detektoradresse, an das RC-Talk-Modul gesendet wird
+dem am Bus angeschlossenen Detektor, welcher vorher via Steckbruecke in den Programmiermodus versetzt wurde, die Detektoradresse DD zugewiesen.
 
 0xA0 + DD = Anforderung Diagnosedaten
 
