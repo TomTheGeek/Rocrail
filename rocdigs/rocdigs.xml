@@ -704,7 +704,6 @@
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="fboffset" vt="int"/>
-      <var name="prevAddress[256]" vt="unsigned short"/>
     </data>
   </object>
 

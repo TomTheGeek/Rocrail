@@ -289,8 +289,6 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
 
     if((addr & 0x3FFF) > 0x27FF || (packet[2] == 0x77 && packet[3] == 0x77) )
       addr = 0x3FFF;
-    if(addr == data->prevAddress[packet[1]-1])
-      break;
 
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
@@ -313,7 +311,6 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
 
     data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
 
-    data->prevAddress[packet[1]-1] = addr;
     break;
   case 0xFD:
     /* System report
@@ -506,9 +503,6 @@ static struct ORcLink* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->bps      = wDigInt.getbps(ini);
   data->fboffset = wDigInt.getfboffset( ini );
-
-  MemOp.set(data->prevAddress,0,sizeof(data->prevAddress));
-
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RcLink %d.%d.%d", vmajor, vminor, patch );
