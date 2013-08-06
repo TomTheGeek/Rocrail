@@ -117,46 +117,62 @@ static int __generateChecksum( byte* datagram ) {
 static void __translate(  iOOM32 inst, iONode node, byte* datagram ) {
   iOOM32Data data = Data(inst);
 
+  /* Switch command. */
+  if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    int  addr    = wSwitch.getaddr1( node ) - 1;
+    int  port    = wSwitch.getport1( node ) - 1;
+    int  delay   = wSwitch.getdelay( node );
+    int  command = 0;
+    int  nr      = addr * 4 + port;
 
-  /* Output command. */
-  if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
-    int  module = wOutput.getaddr( node );
-    int  port   = wOutput.getport( node );
-    byte param  = 10; /* level */
+    if( delay == 0 )
+      delay = wDigInt.getswtime(data->ini);
 
-    if( StrOp.equals( wOutput.on, wOutput.getcmd( node ) ) ) {
-      param = 10; /* level */
+    delay = delay / 16; /* units of 1/60 sec. */
+    if( !wSwitch.isactdelay( node ) )
+      delay = 0; /* use default of 200 ms */
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 %s [%d-%d] %s",
+        wSwitch.getcmd( node ), addr+1, port+1, wSwitch.issinglegate( node )?" (single gate)":"" );
+
+    if( wSwitch.issinglegate( node ) ) {
+      command = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 9:8;
+      delay = 0;
     }
     else {
-      param = 0; /* level */
+      command = 9; /* ON */
+      if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) )
+        port++;
     }
 
-    datagram[0] = (module << 2) | FIXED_FLAG;
-    datagram[1] = 0x05;
+    datagram[0] = (addr << 2) | FIXED_FLAG;
+    datagram[1] = command;
     datagram[2] = port;
-    datagram[3] = param;
+    datagram[3] = delay;
     datagram[4] = (byte)__generateChecksum( datagram );
   }
 
-  /* Signal command. */
-  else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {
-    int  module = wSignal.getaddr( node );
-    int  port   = wSignal.getport1( node );
-    byte param  = 0x00; /* mask */
+  /* Output command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    int  module = wOutput.getaddr( node ) - 1;
+    int  port   = wOutput.getport( node ) - 1;
+    int  gain   = wOutput.getparam( node );
+    Boolean blink = wOutput.isblink( node );
+    Boolean on    = StrOp.equals( wOutput.on, wOutput.getcmd( node ) );
 
-    if( StrOp.equals( wSignal.green, wSignal.getcmd( node ) ) )
-      param = 0x01;
-    else if( StrOp.equals( wSignal.yellow, wSignal.getcmd( node ) ) )
-      param = 0x02;
-    else
-      param = 0x04;
+    if( gain == 0 )
+      gain = 10;
 
+    byte param   = on ? gain:0;
+    byte command = blink ? 10:5;
 
     datagram[0] = (module << 2) | FIXED_FLAG;
-    datagram[1] = 0x1D;
+    datagram[1] = command;
     datagram[2] = port;
-    datagram[3] = param;
+    datagram[3] = gain;
     datagram[4] = (byte)__generateChecksum( datagram );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 %s %s [%d-%d] gain=%d",
+        blink?"blink":"lnear", wOutput.getcmd( node ), module+1, port+1, gain );
   }
 
 }
