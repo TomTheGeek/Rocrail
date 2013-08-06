@@ -168,14 +168,15 @@ Boolean checkScheduleEntryActions( iILcDriverInt inst, int index, Boolean checkS
   if( data->schedule != NULL ) {
     iONode sc = data->model->getSchedule( data->model, data->schedule );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-        "check schedule entry actions [%s:%d]",
-        data->schedule, scheduleIdx );
+        "check schedule entry actions [%s:%d] %s",
+        data->schedule, scheduleIdx, checkSwapOnly?"Swap only":"" );
 
     if( sc != NULL && scheduleIdx < NodeOp.getChildCnt(sc)) {
       iONode entry = NodeOp.getChild(sc,scheduleIdx);
       if( entry != NULL ) {
-        if( !checkSwapOnly ) {
+        if( !checkSwapOnly && data->entryActionsChecked != index ) {
           iONode actionctrl = wScheduleEntry.getactionctrl(entry);
+          data->entryActionsChecked = index;
 
           while( actionctrl != NULL ) {
             iOAction action = data->model->getAction(data->model, wActionCtrl.getid(actionctrl) );
