@@ -905,7 +905,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
 
 
   /* Test */
-  if( StrOp.equals( wSwitch.teston, wSwitch.getcmd( nodeA ) ) ) {
+  if( StrOp.equals( wSwitch.teston, wSwitch.getcmd( nodeA ) ) && o->testThread == NULL ) {
     o->testThread = ThreadOp.inst( o->id, &__testThread, inst );
     o->testRun = True;
     ThreadOp.start( o->testThread );
@@ -1631,6 +1631,7 @@ static void __testThread( void* threadinst ) {
   } while( data->testRun );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Test thread for \"%s\" stopped.", data->id );
+  data->testThread = NULL;
   ThreadOp.base.del(threadinst);
 }
 
@@ -1744,6 +1745,7 @@ static iOSwitch _inst( iONode props ) {
   data->id      = wSwitch.getid( props );
   data->accctrl = wSwitch.getaccessoryctrl(props);
   data->listeners = ListOp.inst();
+  data->testThread = NULL;
 
 
   if( __initCallback( sw ) ) {
