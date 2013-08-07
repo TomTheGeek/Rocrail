@@ -1525,6 +1525,8 @@
       <var name="ctc2" vt="Boolean"/>
       <var name="pendingflip" vt="Boolean"/>
       <var name="listeners" vt="iOList"/>
+      <var name="testThread" vt="iOThread"/>
+      <var name="testRun" vt="Boolean"/>
       </data>
   </object>
 

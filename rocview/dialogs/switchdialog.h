@@ -34,6 +34,7 @@
 ////@begin includes
 #include "wx/notebook.h"
 #include "wx/listctrl.h"
+#include "wx/tglbtn.h"
 #include "wx/spinctrl.h"
 #include "wx/statline.h"
 ////@end includes
@@ -49,6 +50,7 @@
 ////@begin forward declarations
 class wxNotebook;
 class wxListCtrl;
+class wxToggleButton;
 class wxSpinCtrl;
 ////@end forward declarations
 
@@ -64,6 +66,7 @@ class wxSpinCtrl;
 #define ID_BUTTON_SW_NEW 10007
 #define ID_BUTTON_SW_DELETE 10008
 #define ID_BUTTON_SW_DOC 10372
+#define ID_TOGGLEBUTTON_TEST 10162
 #define ID_PANEL_SW_GENERAL 10009
 #define wxID_STATIC_SW_ID 10010
 #define ID_TEXTCTRL_SW_ID 10011
@@ -188,6 +191,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SW_DOC
     void OnButtonSwDocClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_TOGGLEBUTTON_TEST
+    void OnTogglebuttonTestClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SW_RESET_SWITCHED
     void OnSwResetSwitchedClick( wxCommandEvent& event );
 
@@ -242,6 +248,7 @@ public:
     wxButton* m_New;
     wxButton* m_Delete;
     wxButton* m_Doc;
+    wxToggleButton* m_Test;
     wxPanel* m_GeneralPanel;
     wxStaticText* m_LabelID;
     wxTextCtrl* m_ID;

@@ -1417,6 +1417,8 @@
         <var name="set" vt="bool" defval="true"/>
         <var name="savepos" vt="string" defval="none" range="none,straight,turnout,left,right" remark="save position of switch"/>
         <const name="flip" vt="string" val="flip" remark="Change current state."/>
+        <const name="teston" vt="string" val="teston"/>
+        <const name="testoff" vt="string" val="testoff"/>
         <const name="unlock" vt="string" val="unlock" remark="Unlock this switch. (Manually)"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <var name="manualcmd" vt="bool" defval="false" remark="Manual command issued from a client."/>

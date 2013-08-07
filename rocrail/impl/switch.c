@@ -59,6 +59,7 @@ static int instCnt = 0;
 
 static Boolean __unregisterCallback( iOSwitch inst );
 static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean relays2);
+static void __testThread( void* threadinst );
 
 
 /*
@@ -903,10 +904,25 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
   }
 
 
+  /* Test */
+  if( StrOp.equals( wSwitch.teston, wSwitch.getcmd( nodeA ) ) ) {
+    o->testThread = ThreadOp.inst( o->id, &__testThread, inst );
+    o->testRun = True;
+    ThreadOp.start( o->testThread );
+    NodeOp.base.del(nodeA);
+    return True;
+  }
+  else if( StrOp.equals( wSwitch.testoff, wSwitch.getcmd( nodeA ) ) ) {
+    o->testRun = False;
+    NodeOp.base.del(nodeA);
+    return True;
+  }
+
   if( !MutexOp.trywait( o->muxCmd, 100 ) ) {
     NodeOp.base.del(nodeA);
     return False;
   }
+
 
   __polariseFrog(inst, 0, False, False);
   __polariseFrog(inst, 1, False, False);
@@ -1573,6 +1589,49 @@ static void _checkSenPos( iOSwitch inst ) {
     }
   }
 
+}
+
+
+static void __testThread( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOSwitch sw = (iOSwitch)ThreadOp.getParm( th );
+  iOSwitchData data = Data(sw);
+  int retry = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Test thread for \"%s\" started.", data->id );
+
+  if( wAccessoryCtrl.getdelay(data->accctrl) == 0 )
+    wAccessoryCtrl.setdelay(data->accctrl, 2);
+
+  do {
+    iONode swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    wSwitch.setcmd( swcmd, wSwitch.flip );
+
+    retry = 0;
+    while( !SwitchOp.isSet(sw) && retry < 60) {
+      ThreadOp.sleep(1000);
+      retry++;
+    }
+    /* activate */
+    SwitchOp.cmd(sw, (iONode)NodeOp.base.clone(swcmd), True, 0, NULL, NULL );
+    /* sleep delay */
+    ThreadOp.sleep(wAccessoryCtrl.getdelay(data->accctrl) * 1000);
+
+    retry = 0;
+    while( !SwitchOp.isSet(sw) && retry < 60) {
+      ThreadOp.sleep(1000);
+      retry++;
+    }
+    /* sleep delay */
+    SwitchOp.cmd(sw, swcmd, True, 0, NULL, NULL );
+    /* sleep delay */
+    ThreadOp.sleep(wAccessoryCtrl.getdelay(data->accctrl) * 1000);
+
+
+  } while( data->testRun );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Test thread for \"%s\" stopped.", data->id );
+  ThreadOp.base.del(threadinst);
 }
 
 
