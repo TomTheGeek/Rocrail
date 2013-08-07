@@ -114,8 +114,9 @@ static int __generateChecksum( byte* datagram ) {
 }
 
 
-static void __translate(  iOOM32 inst, iONode node, byte* datagram ) {
+static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
   iOOM32Data data = Data(inst);
+  int size = 0;
 
   /* Switch command. */
   if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
@@ -150,6 +151,7 @@ static void __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     datagram[2] = port;
     datagram[3] = delay;
     datagram[4] = (byte)__generateChecksum( datagram );
+    size = 5;
   }
 
   /* Output command. */
@@ -169,20 +171,24 @@ static void __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     datagram[0] = (module << 2) | FIXED_FLAG;
     datagram[1] = command;
     datagram[2] = port;
-    datagram[3] = gain;
+    datagram[3] = param;
     datagram[4] = (byte)__generateChecksum( datagram );
+    size = 5;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 %s %s [%d-%d] gain=%d",
         blink?"blink":"lnear", wOutput.getcmd( node ), module+1, port+1, gain );
   }
 
+  return size;
 }
 
 
 static void __sendToOM32( iOOM32 inst, iONode cmd ) {
   iOOM32Data data = Data(inst);
   byte datagram[32];
-  __translate( inst, cmd, datagram );
-  SerialOp.write( data->serial, (char*)datagram, 5 );
+  if( __translate( inst, cmd, datagram ) > 0 ) {
+    TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)datagram, 5 );
+    SerialOp.write( data->serial, (char*)datagram, 5 );
+  }
 
 }
 

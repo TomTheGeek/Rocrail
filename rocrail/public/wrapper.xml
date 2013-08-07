@@ -392,6 +392,7 @@
       <const name="ecos" vt="string" val="ecos"/>
       <const name="loconet" vt="string" val="loconet"/>
       <const name="ddx" vt="string" val="ddx" remark="Digital Direct X"/>
+      <const name="om32" vt="string" val="om32"/>
       <const name="opendcc" vt="string" val="opendcc"/>
       <const name="vcs" vt="string" val="virtual"/>
       <const name="rocnet" vt="string" val="rocnet"/>
