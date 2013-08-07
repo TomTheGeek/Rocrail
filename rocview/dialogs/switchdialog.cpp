@@ -445,6 +445,9 @@ void SwitchDialog::initValues() {
                                 _T(""):wxString(wSwitch.getblockid( m_Props ),wxConvUTF8)  );
   m_RouteIDs->SetValue( wxString(wItem.getrouteids( m_Props ),wxConvUTF8) );
 
+  m_Test->SetLabel( wSwitch.istesting(m_Props) ? wxGetApp().getMsg( "stop" ):wxGetApp().getMsg( "test" ) );
+  m_Test->SetValue(wSwitch.istesting(m_Props) ? true:false);
+
   int type = 0;
   if( StrOp.equals( wSwitch.right, wSwitch.gettype( m_Props ) ) )
     type = 0;

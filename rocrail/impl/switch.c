@@ -910,11 +910,13 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     o->testRun = True;
     ThreadOp.start( o->testThread );
     NodeOp.base.del(nodeA);
+    wSwitch.settesting( o->props, True);
     return True;
   }
   else if( StrOp.equals( wSwitch.testoff, wSwitch.getcmd( nodeA ) ) ) {
     o->testRun = False;
     NodeOp.base.del(nodeA);
+    wSwitch.settesting( o->props, False);
     return True;
   }
 
@@ -1205,6 +1207,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     wSwitch.setid( nodeF, SwitchOp.getId( inst ) );
     wSwitch.setstate( nodeF, wSwitch.getstate( o->props ) );
     wSwitch.setswitched( nodeF, wSwitch.getswitched( o->props ) );
+    wSwitch.settesting( nodeF, wSwitch.istesting( o->props ) );
 
     if( o->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel()) )
       wSwitch.setset( nodeF, SwitchOp.isSet(inst) );
@@ -1769,6 +1772,8 @@ static iOSwitch _inst( iONode props ) {
     wSwitch.getporttype( props ),
     wSwitch.getiid( props )
     );
+
+  wSwitch.settesting( data->props, False);
 
   if( data->accctrl != NULL && wAccessoryCtrl.isactive(data->accctrl) ) {
     data->accThread = ThreadOp.inst( data->id, &__accThread, sw );

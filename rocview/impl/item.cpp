@@ -2640,6 +2640,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     }
 
     wSwitch.setswitched( m_Props, wSwitch.getswitched(node) );
+    wSwitch.settesting( m_Props, wSwitch.istesting(node) );
 
     if( wSwitch.getlocid( node )!=NULL && StrOp.equals( wSwitch.unlocked, wSwitch.getlocid( node )) )
       isLocked = False;
