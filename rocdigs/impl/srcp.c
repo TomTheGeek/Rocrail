@@ -609,6 +609,10 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
     }
   }
 
+  if( nodeA != NULL ) {
+    NodeOp.base.del(nodeA);
+  }
+
   return rsp;
 }
 
