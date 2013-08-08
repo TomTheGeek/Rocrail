@@ -1600,11 +1600,12 @@ static void __testThread( void* threadinst ) {
   iOSwitch sw = (iOSwitch)ThreadOp.getParm( th );
   iOSwitchData data = Data(sw);
   int retry = 0;
+  int delay = wAccessoryCtrl.getdelay(data->accctrl);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Test thread for \"%s\" started.", data->id );
 
-  if( wAccessoryCtrl.getdelay(data->accctrl) == 0 )
-    wAccessoryCtrl.setdelay(data->accctrl, 2);
+  if( delay == 0 )
+    delay = 2;
 
   do {
     iONode swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
@@ -1618,7 +1619,7 @@ static void __testThread( void* threadinst ) {
     /* activate */
     SwitchOp.cmd(sw, (iONode)NodeOp.base.clone(swcmd), True, 0, NULL, NULL );
     /* sleep delay */
-    ThreadOp.sleep(wAccessoryCtrl.getdelay(data->accctrl) * 1000);
+    ThreadOp.sleep(delay * 1000);
 
     retry = 0;
     while( !SwitchOp.isSet(sw) && retry < 60) {
@@ -1628,7 +1629,7 @@ static void __testThread( void* threadinst ) {
     /* sleep delay */
     SwitchOp.cmd(sw, swcmd, True, 0, NULL, NULL );
     /* sleep delay */
-    ThreadOp.sleep(wAccessoryCtrl.getdelay(data->accctrl) * 1000);
+    ThreadOp.sleep(delay * 1000);
 
 
   } while( data->testRun );
