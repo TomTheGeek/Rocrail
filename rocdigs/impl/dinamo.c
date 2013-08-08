@@ -635,9 +635,18 @@ static int __translate( iODINAMO dinamo, iONode node, byte* datagram, Boolean* r
 
   /* Signal command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-        "Signal commands are no longer supported at this level." );
-    size = 0;
+    int addr   = wSignal.getaddr( node ) - 1;
+    int port   = wSignal.getport1( node ) - 1;
+    int aspect = wSignal.getaspect(node);
+
+    datagram[0] = 4 | VER3_FLAG | data->header;
+    datagram[1] = 0x18 | (addr >> 2);
+    datagram[2] = (port & 0x1F) | ((addr&0x03) << 5);
+    datagram[3] = 0x01;
+    datagram[4] = aspect;
+    datagram[5] = (byte)__generateChecksum( datagram );
+    size = 6;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "oc32 signal cmd=%s [%d-%d]", wSignal.getcmd( node ), addr+1, port+1 );
   }
 
 
