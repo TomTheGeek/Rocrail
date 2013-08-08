@@ -1419,7 +1419,7 @@ void TurntableDialog::OnTtActionsClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props );
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props, "goto,next,prev,turn180,lighton,lightoff,calibrate,atposition" );
 
   if( wxID_OK == dlg->ShowModal() ) {
     // TODO: inform

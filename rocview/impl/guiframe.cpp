@@ -3500,7 +3500,7 @@ void RocGuiFrame::OnEditActions( wxCommandEvent& event ) {
     system = NodeOp.inst(wSystemActions.name(), wxGetApp().getModel(), ELEMENT_NODE );
     NodeOp.addChild(wxGetApp().getModel(), system);
   }
-  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, system );
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, system, "go-cmd,go-event,stop-cmd,stop-event,stoplocs,save,shutdown,analyse,reset,ebreak" );
 
   if( wxID_OK == dlg->ShowModal() ) {
     // TODO: inform

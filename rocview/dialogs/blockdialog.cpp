@@ -2610,7 +2610,7 @@ void BlockDialog::OnButtonBlockActionsClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props );
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props, "ghost,enter,occupied,reserved,free,closed,depart,acceptident,exit" );
 
   if( wxID_OK == dlg->ShowModal() ) {
     // TODO: inform

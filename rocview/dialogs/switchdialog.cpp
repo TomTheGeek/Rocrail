@@ -1991,7 +1991,7 @@ void SwitchDialog::OnSwitchActionsClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props );
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props, "turnout,straight,left,right,none" );
 
   if( wxID_OK == dlg->ShowModal() ) {
     // TODO: inform

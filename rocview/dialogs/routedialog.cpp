@@ -2378,7 +2378,7 @@ void RouteDialog::OnRouteActionsClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props );
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props, "go,lock,unlock" );
 
   if( wxID_OK == dlg->ShowModal() ) {
     // TODO: inform

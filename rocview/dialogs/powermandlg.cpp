@@ -514,7 +514,7 @@ void PowerManDlg::onActions( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props );
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props, "load,shortcut " );
 
   if( wxID_OK == dlg->ShowModal() ) {
     // TODO: inform

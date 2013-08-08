@@ -932,7 +932,7 @@ void FeedbackDialog::OnFeedbackActionsClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props );
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props, "on,off,true,false" );
 
   if( wxID_OK == dlg->ShowModal() ) {
     // TODO: inform

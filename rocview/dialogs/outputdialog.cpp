@@ -892,7 +892,7 @@ void OutputDialog::OnOutputActionsClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props );
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props, "on,active,off" );
 
   if( wxID_OK == dlg->ShowModal() ) {
     // TODO: inform

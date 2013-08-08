@@ -536,7 +536,7 @@ void StageDlg::onActions( wxCommandEvent& event ) {
   if( m_Props == NULL )
     return;
 
-  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props );
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props, "ghost,enter,occupied,reserved,free,closed,depart,exit" );
 
   if( wxID_OK == dlg->ShowModal() ) {
     // TODO: inform

@@ -48,6 +48,7 @@
 
 #include "rocs/public/node.h"
 #include "rocs/public/list.h"
+#include "rocs/public/strtok.h"
 
 
 
@@ -105,7 +106,7 @@ ActionsCtrlDlg::ActionsCtrlDlg()
     Init();
 }
 
-ActionsCtrlDlg::ActionsCtrlDlg( wxWindow* parent, iONode node )
+ActionsCtrlDlg::ActionsCtrlDlg( wxWindow* parent, iONode node, const char* states )
 {
   Init();
   Create(parent, -1, wxGetApp().getMsg("actionctrl"));
@@ -127,6 +128,14 @@ ActionsCtrlDlg::ActionsCtrlDlg( wxWindow* parent, iONode node )
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
   GetSizer()->Layout();
+
+  if( states != NULL ) {
+    iOStrTok tok = StrTokOp.inst(states, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_State->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+  }
 }
 
 
@@ -711,7 +720,8 @@ void ActionsCtrlDlg::CreateControls()
     m_labState = new wxStaticText( m_IndexPanel, wxID_ANY, _("State"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_labState, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_State = new wxTextCtrl( m_IndexPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    wxArrayString m_StateStrings;
+    m_State = new wxComboBox( m_IndexPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_StateStrings, wxCB_DROPDOWN );
     itemFlexGridSizer7->Add(m_State, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labLocoID = new wxStaticText( m_IndexPanel, wxID_ANY, _("Loco ID"), wxDefaultPosition, wxDefaultSize, 0 );
