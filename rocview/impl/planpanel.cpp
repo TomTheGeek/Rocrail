@@ -1301,7 +1301,9 @@ void PlanPanel::addItemAttr( iONode node ) {
   else if( !StrOp.equals( wTrack.name(), NodeOp.getName( node ) ) &&
       ( wItem.getid(node) == NULL || StrOp.len( wItem.getid(node) ) == 0 ) ) {
 
-    wxTextEntryDialog* dlg = new wxTextEntryDialog(m_Parent, wxGetApp().getMenu("enterid") + wxT(" (") + wxString(NodeOp.getName(node),wxConvUTF8) + wxT(")") );
+    wxTextEntryDialog* dlg = new wxTextEntryDialog(m_Parent,
+        wxGetApp().getMenu("enterid") + wxT(" (") + wxString(NodeOp.getName(node),wxConvUTF8) + (wItem.gettype(node)!=NULL?wxT(":"):wxT(":")) +
+        wxString(wItem.gettype(node)!=NULL?wItem.gettype(node):"",wxConvUTF8) + wxT(")") );
 
     Symbol* item = NULL;
     do {
