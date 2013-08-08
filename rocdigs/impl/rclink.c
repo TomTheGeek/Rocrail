@@ -201,9 +201,18 @@ static void* __event( void* inst, const void* evt ) {
 
 
 /**  */
-static iONode _cmd( obj inst ,const iONode cmd ) {
+static iONode _cmd( obj inst ,const iONode node ) {
+  iORcLinkData data = Data(inst);
   /* Cleanup cmd node to avoid memory leak. */
-  cmd->base.del(cmd);
+  /* System command. */
+  if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+    if( StrOp.equals( wSysCmd.sod, wSysCmd.getcmd(node) ) ) {
+      byte cmd = 0x20;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day" );
+      SerialOp.write(data->serial, &cmd, 1);
+    }
+  }
+  NodeOp.base.del(node);
   return NULL;
 }
 
@@ -307,8 +316,8 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detector [%d] reported address [%d] state [%s] direction [%s]",
-        packet[1], addr, wFeedback.isstate( evt)?"on":"off", direction?"right":"left" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detector [%02d] reported address [%05d] state [%s] direction [%s]",
+        packet[1], addr, wFeedback.isstate( evt)?"on":"off", direction?"fwd":"rev" );
 
     data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
 
