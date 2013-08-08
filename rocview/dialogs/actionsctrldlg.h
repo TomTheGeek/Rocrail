@@ -175,7 +175,7 @@ public:
     wxStaticText* m_labCondID;
     wxChoice* m_CondID;
     wxStaticText* m_labCondState;
-    wxTextCtrl* m_CondState;
+    wxComboBox* m_CondState;
     wxButton* m_CondAdd;
     wxButton* m_CondDelete;
     wxButton* m_CondModify;

@@ -380,10 +380,44 @@ void ActionsCtrlDlg::initCondIDs() {
   m_CondID->Clear();
   m_CondID->Append( _T("*") );
 
+  m_CondState->Clear();
+
+  /*
+    m_CondType->Append(wxGetApp().getMsg( "turnout" ));
+    m_CondType->Append(wxGetApp().getMsg( "signal" ));
+    m_CondType->Append(wxGetApp().getMsg( "output" ));
+    m_CondType->Append(wxGetApp().getMsg( "sensor" ));
+    m_CondType->Append(wxGetApp().getMsg( "loc" ));
+    m_CondType->Append(wxGetApp().getMsg( "block" ));
+    m_CondType->Append(wxGetApp().getMsg( "system" ));
+    m_CondType->Append(wxGetApp().getMsg( "route" ));
+   */
+
   if( model != NULL ) {
+    const char* statelist = "";
     iONode colist = wPlan.getswlist( model );
 
     int typenr = m_CondType->GetSelection();
+
+    switch( typenr ) {
+      case 0: statelist = "straight,turnout,left,right"; break;
+      case 1: statelist = "red,yellow,green,white"; break;
+      case 2: statelist = "on,off,active"; break;
+      case 3: statelist = "true,false,identifier"; break;
+      case 4: statelist = "forwards,reverse,diesel,steam,electric,min,mid,cruise,max,fon,foff,+,-,#,x"; break;
+      case 5: statelist = "free,!free,occupied,open,closed"; break;
+      case 6: statelist = "go,stop"; break;
+      case 7: statelist = "locked,unlocked"; break;
+    }
+    iOStrTok tok = StrTokOp.inst(statelist, ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      m_CondState->Append( wxString( StrTokOp.nextToken(tok), wxConvUTF8 ) );
+    }
+    StrTokOp.base.del(tok);
+
+
+
+
     switch( typenr ) {
       case 0: colist = wPlan.getswlist( model ); break;
       case 1: colist = wPlan.getsglist( model ); break;
@@ -781,7 +815,7 @@ void ActionsCtrlDlg::CreateControls()
 
     wxArrayString m_CondTypeStrings;
     m_CondType = new wxChoice( m_ConditionsPanel, ID_ACTIONCTRL_COND_TYPE, wxDefaultPosition, wxDefaultSize, m_CondTypeStrings, 0 );
-    itemFlexGridSizer26->Add(m_CondType, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer26->Add(m_CondType, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labCondID = new wxStaticText( m_ConditionsPanel, wxID_ANY, _("ID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer26->Add(m_labCondID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -793,7 +827,8 @@ void ActionsCtrlDlg::CreateControls()
     m_labCondState = new wxStaticText( m_ConditionsPanel, wxID_ANY, _("State"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer26->Add(m_labCondState, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_CondState = new wxTextCtrl( m_ConditionsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    wxArrayString m_CondStateStrings;
+    m_CondState = new wxComboBox( m_ConditionsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_CondStateStrings, wxCB_DROPDOWN );
     itemFlexGridSizer26->Add(m_CondState, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     itemFlexGridSizer26->AddGrowableCol(1);
