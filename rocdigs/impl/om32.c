@@ -133,7 +133,7 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     if( !wSwitch.isactdelay( node ) )
       delay = 0; /* use default of 200 ms */
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 %s [%d-%d] %s",
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 switch %s [%d-%d] %s",
         wSwitch.getcmd( node ), addr+1, port+1, wSwitch.issinglegate( node )?" (single gate)":"" );
 
     if( wSwitch.issinglegate( node ) ) {
@@ -174,8 +174,23 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     datagram[3] = param;
     datagram[4] = (byte)__generateChecksum( datagram );
     size = 5;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 %s %s [%d-%d] gain=%d",
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 output %s %s [%d-%d] gain=%d",
         blink?"blink":"lnear", wOutput.getcmd( node ), module+1, port+1, gain );
+  }
+
+  /* Signal command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {
+    int module = wSignal.getaddr( node ) - 1;
+    int port   = wSignal.getport1( node ) - 1;
+    int aspect = wSignal.getaspect(node);
+
+    datagram[0] = (module << 2) | FIXED_FLAG;
+    datagram[1] = 0x01;
+    datagram[2] = port;
+    datagram[3] = aspect;
+    datagram[4] = (byte)__generateChecksum( datagram );
+    size = 5;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "oc32 signal cmd=%s [%d-%d]", wOutput.getcmd( node ), module+1, port+1 );
   }
 
   return size;
