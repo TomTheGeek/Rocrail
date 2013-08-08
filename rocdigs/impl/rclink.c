@@ -308,7 +308,7 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
       wFeedback.setiid( evt, data->iid );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detector [%d] reported address [%d] state [%s] direction [%s]",
-        packet[1], wFeedback.getidentifier(evt), wFeedback.isstate( evt)?"on":"off", direction?"right":"left" );
+        packet[1], addr, wFeedback.isstate( evt)?"on":"off", direction?"right":"left" );
 
     data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
 
