@@ -482,6 +482,7 @@ static void __syscmd( const char* command ) {
     iOAppData data = Data(__appinst);
     iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE);
     wSysCmd.setcmd( cmd, command );
+    wSysCmd.setinformall(cmd, True);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SysCommand: %s", command );
     ControlOp.cmd( data->control, (iONode)NodeOp.base.clone(cmd), NULL );
     AppOp.broadcastEvent( cmd );
