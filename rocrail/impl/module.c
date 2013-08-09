@@ -303,12 +303,18 @@ static void _rotate90( iONode item, int cx, int cy ) {
   iCX--;
   iCY--;
 
-  if( StrOp.equals( wItem.east, ori ) )
+  if( StrOp.equals( wItem.east, ori ) ) {
+    iX += iCX;
     wItem.setori( item, wItem.south );
-  else if( StrOp.equals( wItem.north, ori ) )
+  }
+  else if( StrOp.equals( wItem.north, ori ) ) {
+    iX += iCY;
     wItem.setori( item, wItem.east );
-  else if( StrOp.equals( wItem.south, ori ) )
+  }
+  else if( StrOp.equals( wItem.south, ori ) ) {
+    iX += iCY;
     wItem.setori( item, wItem.west );
+  }
   else {
     iX += iCX;
     wItem.setori( item, wItem.north );
