@@ -287,37 +287,39 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system off" );
     break;
   case 0xFC:
-    /* Address report */
+    /* Address report
+     * FC 01 89 68 FF
+     * FC 01 09 68 FF
+     */
     if((packet[1] == 0) || (packet[1] > 239))
       break;
     /*
      * Bit7=0 Lok nach rechts
      * Bit7=1 Lok nach links
      */
-    unsigned short addr = ((packet[2] & 0xBF) << 8) | packet[3];
+    int addr = ((packet[2] & 0x7F) << 8) + packet[3];
     Boolean direction = (packet[2] & 0x80) ? False:True;
+    Boolean state = addr > 0;
+    char ident[32] = {'\0'};
 
-    if((addr & 0x3FFF) > 0x27FF || (packet[2] == 0x77 && packet[3] == 0x77) )
-      addr = 0x3FFF;
+    if( packet[2] == 0x77 && packet[3] == 0x77 ) {
+      addr = 0;
+      state = True;
+    }
 
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
     wFeedback.setaddr( evt, packet[1] );
     wFeedback.setfbtype( evt, wFeedback.fbtype_railcom );
     wFeedback.setdirection( evt, direction );
-    if(addr == 0x3FFF )
-      wFeedback.setidentifier(evt,"0");
-    else {
-      char ident[32];
-      StrOp.fmtb(ident, "%d", addr & 0x3FFF);
-      wFeedback.setidentifier(evt,ident);
-    }
-    wFeedback.setstate(evt, addr > 0 );
+    StrOp.fmtb(ident, "%d", addr);
+    wFeedback.setidentifier(evt,ident);
+    wFeedback.setstate(evt, state );
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "detector [%02d] reported address [%05d] state [%s] direction [%s]",
-        packet[1], addr, wFeedback.isstate( evt)?"on":"off", direction?"fwd":"rev" );
+        packet[1], addr, state?"on ":"off", direction?"fwd":"rev" );
 
     data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
 
