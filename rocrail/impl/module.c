@@ -37,6 +37,8 @@
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Text.h"
 #include "rocrail/wrapper/public/Item.h"
+#include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/StageList.h"
 
 
 static int instCnt = 0;
@@ -154,6 +156,11 @@ static void _getRotationArea( iONode moduleRoot, int* Xmax, int* Ymax ) {
     if( *Ymax == -1 || ymax > *Ymax ) *Ymax = ymax;
   }
 
+  if( __getXYextremes(wStageList.name()    , moduleRoot, &xmax, &ymax) ) {
+    if( *Xmax == -1 || xmax > *Xmax ) *Xmax = xmax;
+    if( *Ymax == -1 || ymax > *Ymax ) *Ymax = ymax;
+  }
+
   if( __getXYextremes(wSwitchList.name()   , moduleRoot, &xmax, &ymax) ) {
     if( *Xmax == -1 || xmax > *Xmax ) *Xmax = xmax;
     if( *Ymax == -1 || ymax > *Ymax ) *Ymax = ymax;
@@ -248,6 +255,10 @@ static void __getItemSize( iONode item, int* iCX, int* iCY, Boolean defSize ) {
       int blocklen = m_bSmall ? 2:4;
       *iCX = defOri ? blocklen:1;
       *iCY = defOri ? 1:blocklen;
+    }
+    else if( StrOp.equals( wStage.name(), NodeOp.getName(item) ) ) {
+      *iCX = defOri ? 4:1;
+      *iCY = defOri ? 1:4;
     }
     else if( StrOp.equals( wSelTab.name(), NodeOp.getName(item) ) ) {
       *iCX = defOri ? wSelTab.getnrtracks(item):1;
@@ -458,6 +469,7 @@ static void _rotateModule( iONode model, iONode module, int level, int rotation 
   __rotateList( model, module, level, wSignalList.name(), rotation );
   __rotateList( model, module, level, wOutputList.name(), rotation );
   __rotateList( model, module, level, wBlockList.name(), rotation );
+  __rotateList( model, module, level, wStageList.name(), rotation );
   __rotateList( model, module, level, wTextList.name(), rotation );
   __rotateList( model, module, level, wTurntableList.name(), rotation );
   __rotateList( model, module, level, wSelTabList.name(), rotation );
