@@ -1809,6 +1809,7 @@
         <const name="percent" vt="string" val="percent" remark="Blockspeed is set by percent."/>
         <var name="speed" vt="string" defval="cruise" range="*" remark="Block speed on arrive."/>
         <var name="speedpercent" vt="int" defval="80" unit="%" range="0-100" remark="Blockspeed in percent."/>
+        <var name="exitspeedpercent" vt="int" defval="80" unit="%" range="0-100" remark="Block depart speed in percent."/>
         <var name="stopspeed" vt="string" defval="mid" range="mid,min,percent" remark="Block speed on arrive and stop."/>
         <var name="exitspeed" vt="string" defval="cruise" range="*" remark="Block speed on departure."/>
         <var name="maxkmh" vt="int" defval="0" range="0-*" remark="Block max. speed in km/h or mph."/>
@@ -1906,6 +1907,7 @@
         <var name="minwaittime" vt="int" defval="1" unit="s" range="0-*" remark="Min. wait time in case of wait_random."/>
         <var name="maxwaittime" vt="int" defval="30" unit="s" range="0-*" remark="Max. wait time in case of wait_random."/>
         <var name="speedpercent" vt="int" defval="10" unit="%" range="0-100" remark="Block arrive speed in percent."/>
+        <var name="exitspeedpercent" vt="int" defval="80" unit="%" range="0-100" remark="Block depart speed in percent."/>
         <var name="stopspeed" vt="string" defval="min" range="min,percent" remark="Block speed on arrive and stop."/>
         <var name="exitspeed" vt="string" defval="cruise" range="*" remark="Block speed on departure."/>
         <var name="suitswell" vt="bool" defval="false" remark=""/>

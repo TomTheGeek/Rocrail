@@ -678,8 +678,10 @@ static int _getTDport( iIBlockBase inst ) {
 /**  */
 static const char* _getVelocity( iIBlockBase inst ,int* percent ,Boolean onexit ,Boolean reverse, Boolean onstop ) {
   iOStageData data = Data(inst);
-  if( onexit )
+  if( onexit ) {
+    *percent = wStage.getexitspeedpercent(data->props);
     return wStage.getexitspeed(data->props);
+  }
   else {
     *percent = wStage.getspeedpercent(data->props);
     return wStage.getstopspeed(data->props);

@@ -279,6 +279,8 @@ bool StageDlg::evaluate() {
     wStage.setexitspeed( m_Props, wBlock.cruise );
   else if( m_ExitSpeed->GetSelection() == 3 )
     wStage.setexitspeed( m_Props, wBlock.max );
+  else if( m_ExitSpeed->GetSelection() == 4 )
+    wStage.setexitspeed( m_Props, wBlock.percent );
 
   if( m_ArriveSpeed->GetSelection() == 0 )
     wStage.setstopspeed( m_Props, wBlock.min );
@@ -286,6 +288,7 @@ bool StageDlg::evaluate() {
     wStage.setstopspeed( m_Props, wBlock.percent );
   }
   wStage.setspeedpercent( m_Props, m_ArriveSpeedPercent->GetValue() );
+  wStage.setexitspeedpercent( m_Props, m_DepartSpeedPercent->GetValue() );
   wStage.setsuitswell( m_Props, m_SuitsWell->IsChecked() ? True:False );
   wStage.setinatlen( m_Props, m_InAtLen->IsChecked() ? True:False );
   wStage.setusewd( m_Props, m_UseWD->IsChecked() ? True:False );
@@ -364,7 +367,10 @@ void StageDlg::initValues() {
     speed = 2;
   else if( StrOp.equals( wBlock.max, wStage.getexitspeed( m_Props ) ) )
     speed = 3;
+  else if( StrOp.equals( wBlock.percent, wStage.getexitspeed( m_Props ) ) )
+    speed = 4;
   m_ExitSpeed->SetSelection( speed );
+  m_DepartSpeedPercent->SetValue(wStage.getexitspeedpercent( m_Props ));
 
   speed = 0;
   if( StrOp.equals( wBlock.min, wStage.getstopspeed( m_Props ) ) )
@@ -372,9 +378,7 @@ void StageDlg::initValues() {
   else if( StrOp.equals( wBlock.percent, wStage.getstopspeed( m_Props ) ) )
     speed = 1;
   m_ArriveSpeed->SetSelection( speed );
-
-  char* str = StrOp.fmt( "%d", wStage.getspeedpercent(m_Props) );
-  m_ArriveSpeedPercent->SetValue( wxString(str,wxConvUTF8) ); StrOp.free( str );
+  m_ArriveSpeedPercent->SetValue( wStage.getspeedpercent(m_Props) );
 
   m_SuitsWell->SetValue( wStage.issuitswell( m_Props ) ? true:false );
   m_InAtLen->SetValue( wStage.isinatlen( m_Props ) ? true:false );

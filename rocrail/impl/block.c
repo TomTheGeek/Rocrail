@@ -1029,14 +1029,16 @@ static const char* _getVelocity( iIBlockBase inst, int* percent, Boolean onexit,
   iOSignal    distand = (iOSignal)inst->hasManualSignal(inst, True, reverse );
   const char* V_hint  = wBlock.getspeed(data->props);
 
-  if( onexit )
+  if( onexit ) {
     V_hint  = wBlock.getexitspeed(data->props);
+    *percent = wBlock.getexitspeedpercent(data->props);
+  }
   else if( onstop ) {
     if( !StrOp.equals( V_hint, wBlock.min ) )
       V_hint  = wBlock.getstopspeed(data->props);
+    *percent = wBlock.getspeedpercent(data->props);
   }
 
-  *percent = wBlock.getspeedpercent(data->props);
 
   /* check for manual operated signals */
   if( onexit && signal != NULL && SignalOp.isState( signal, wSignal.yellow) ) {
