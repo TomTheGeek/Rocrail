@@ -531,7 +531,7 @@ void RocProDlg::initLocMap(const char* locid) {
     }
 
     if( ListOp.size( list ) > 0 ) {
-      if( locid == NULL )
+      if( locid == NULL && m_LocoList->GetCount() > 0 )
         m_LocoList->SetSelection(0);
       else
         m_LocoList->SetStringSelection(wxString(locid,wxConvUTF8));
