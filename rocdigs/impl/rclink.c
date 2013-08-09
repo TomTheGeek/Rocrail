@@ -139,6 +139,7 @@ Der RC-Link wird damit quasi ausser Betrieb gesetzt und kann mit jedem anderen K
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Program.h"
 
@@ -211,6 +212,22 @@ static iONode _cmd( obj inst ,const iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day" );
       SerialOp.write(data->serial, &cmd, 1);
     }
+    if( StrOp.equals( wSysCmd.slots, wSysCmd.getcmd(node) ) ) {
+      int  rcd = 1;
+      byte cmd = 0xA0;
+      for( rcd = 1; rcd < 25; rcd++) {
+        cmd = 0xA0 + rcd;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "query RCD %d", rcd );
+        SerialOp.write(data->serial, &cmd, 1);
+        ThreadOp.sleep(100);
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "command not supported: %s:%s", NodeOp.getName(node), wSysCmd.getcmd(node) );
+    }
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "command not supported: %s:%s", NodeOp.getName(node), wSysCmd.getcmd(node) );
   }
   NodeOp.base.del(node);
   return NULL;
@@ -278,9 +295,12 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
       SB = Statusbyte
       AB = Alivebyte
       OSCCAL = Kallibrierwert fuer internen Oszillator
+
+      D1 FF FF D2 FF FF D3 00 FF D4 49 FF
+      D1 89 68 D2 89 68 D3 00 03 D4 49 FF
      */
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "diagnose:" );
-    TraceOp.dump ( name, TRCLEVEL_MONITOR, (char*)packet, idx );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "diagnose: addr=%d status=%d alive=%d cal=%d",
+        ((packet[1]&0x7F)<<8)+packet[2], packet[7], packet[8], packet[10] );
     break;
   case 0xFA:
     /* off */
