@@ -32,6 +32,7 @@
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/Program.h"
 
 static int instCnt = 0;
 
@@ -146,10 +147,17 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
         port++;
     }
 
+    if( !wSwitch.isaccessory(node) && wSwitch.getporttype(node) == wProgram.porttype_servo ) {
+      datagram[1] = 0x26;
+      datagram[3] = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 127:0;
+    }
+    else {
+      datagram[1] = command;
+      datagram[3] = delay;
+    }
+
     datagram[0] = (addr << 2) | FIXED_FLAG;
-    datagram[1] = command;
     datagram[2] = port;
-    datagram[3] = delay;
     datagram[4] = (byte)__generateChecksum( datagram );
     size = 5;
   }
