@@ -176,6 +176,10 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     byte param   = on ? gain:0;
     byte command = blink ? 10:5;
 
+    if( !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_motor ) {
+      command = 0x27;
+    }
+
     datagram[0] = (module << 2) | FIXED_FLAG;
     datagram[1] = command;
     datagram[2] = port;
