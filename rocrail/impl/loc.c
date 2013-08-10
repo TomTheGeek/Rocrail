@@ -70,6 +70,7 @@ static void __swapConsist( iOLoc inst, iONode cmd );
 static int __getFnAddr( iOLoc inst, int function, int* mappedfn);
 static void __doSound(iOLoc inst, iONode cmd);
 static void __initBBTmap( iOLoc loc );
+static void __initCVmap( iOLoc loc );
 
 /*
  ***** OBase functions.
@@ -3043,6 +3044,8 @@ static void _modify( iOLoc inst, iONode props ) {
 
   __initBBTmap(inst);
 
+  __initCVmap(inst);
+
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)props->base.clone( props );
@@ -3252,6 +3255,7 @@ static void __initBBTmap( iOLoc loc ) {
 static void __initCVmap( iOLoc loc ) {
   iOLocData data = Data(loc);
   iONode cv = NodeOp.findNode( data->props, wCVByte.name() );
+  MapOp.clear(data->cvMap);
   while( cv != NULL ) {
     char* key = StrOp.fmt( "%d", wCVByte.getnr( cv ) );
     MapOp.put( data->cvMap, key, (obj)cv );
