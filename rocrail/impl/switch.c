@@ -1027,11 +1027,15 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       wSwitch.setaddr1( nodeA, wSwitch.getaddr2( o->props ) );
       wSwitch.setport1( nodeA, wSwitch.getport2( o->props ) );
       wSwitch.setgate1( nodeA, wSwitch.getgate2( o->props ) );
+      wSwitch.setparam1( nodeA, wSwitch.getparam2( o->props ) );
+      wSwitch.setvalue1( nodeA, wSwitch.getvalue2( o->props ) );
       wSwitch.setcmd( nodeA, state2 );
 
       wSwitch.setaddr1( nodeA2, wSwitch.getaddr1( o->props ) );
       wSwitch.setport1( nodeA2, wSwitch.getport1( o->props ) );
       wSwitch.setgate1( nodeA2, wSwitch.getgate1( o->props ) );
+      wSwitch.setparam1( nodeA, wSwitch.getparam1( o->props ) );
+      wSwitch.setvalue1( nodeA, wSwitch.getvalue1( o->props ) );
       wSwitch.setcmd( nodeA2, state1 );
     }
     else if( StrOp.equals( state, wSwitch.right ) ) {
@@ -1041,11 +1045,15 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       wSwitch.setaddr1( nodeA, wSwitch.getaddr1( o->props ) );
       wSwitch.setport1( nodeA, wSwitch.getport1( o->props ) );
       wSwitch.setgate1( nodeA, wSwitch.getgate1( o->props ) );
+      wSwitch.setparam1( nodeA, wSwitch.getparam1( o->props ) );
+      wSwitch.setvalue1( nodeA, wSwitch.getvalue1( o->props ) );
       wSwitch.setcmd( nodeA, state1 );
 
       wSwitch.setaddr1( nodeA2, wSwitch.getaddr2( o->props ) );
       wSwitch.setport1( nodeA2, wSwitch.getport2( o->props ) );
       wSwitch.setgate1( nodeA2, wSwitch.getgate2( o->props ) );
+      wSwitch.setparam1( nodeA2, wSwitch.getparam2( o->props ) );
+      wSwitch.setvalue1( nodeA2, wSwitch.getvalue2( o->props ) );
       wSwitch.setcmd( nodeA2, state2 );
     }
     else {
@@ -1055,11 +1063,15 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       wSwitch.setaddr1( nodeA, wSwitch.getaddr1( o->props ) );
       wSwitch.setport1( nodeA, wSwitch.getport1( o->props ) );
       wSwitch.setgate1( nodeA, wSwitch.getgate1( o->props ) );
+      wSwitch.setparam1( nodeA, wSwitch.getparam1( o->props ) );
+      wSwitch.setvalue1( nodeA, wSwitch.getvalue1( o->props ) );
       wSwitch.setcmd( nodeA, state1 );
 
       wSwitch.setaddr1( nodeA2, wSwitch.getaddr2( o->props ) );
       wSwitch.setport1( nodeA2, wSwitch.getport2( o->props ) );
       wSwitch.setgate1( nodeA2, wSwitch.getgate2( o->props ) );
+      wSwitch.setparam1( nodeA2, wSwitch.getparam2( o->props ) );
+      wSwitch.setvalue1( nodeA2, wSwitch.getvalue2( o->props ) );
       wSwitch.setcmd( nodeA2, state2 );
     }
 
@@ -1121,6 +1133,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       wSwitch.setaddr1( nodeA, wSwitch.getaddr1( o->props ) );
       wSwitch.setport1( nodeA, wSwitch.getport1( o->props ) );
       wSwitch.setgate1( nodeA, wSwitch.getgate1( o->props ) );
+      wSwitch.setparam1( nodeA, wSwitch.getparam1( o->props ) );
+      wSwitch.setvalue1( nodeA, wSwitch.getvalue1( o->props ) );
       wSwitch.setdelay( nodeA, wSwitch.getdelay( o->props ) );
       wSwitch.setactdelay( nodeA, wSwitch.isactdelay( o->props ) );
       wSwitch.setsinglegate( nodeA, wSwitch.issinglegate( o->props ) );
@@ -1139,6 +1153,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       wSwitch.setaddr1( nodeA2, wSwitch.getaddr2( o->props ) );
       wSwitch.setport1( nodeA2, wSwitch.getport2( o->props ) );
       wSwitch.setgate1( nodeA2, wSwitch.getgate2( o->props ) );
+      wSwitch.setparam1( nodeA, wSwitch.getparam2( o->props ) );
+      wSwitch.setvalue1( nodeA, wSwitch.getvalue2( o->props ) );
       wSwitch.setdelay( nodeA2, wSwitch.getdelay( o->props ) );
       wSwitch.setactdelay( nodeA2, wSwitch.isactdelay( o->props ) );
       wSwitch.setsinglegate( nodeA2, wSwitch.issinglegate( o->props ) );
@@ -1175,6 +1191,8 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     wSwitch.setaddr1( nodeA, wSwitch.getaddr1( o->props ) );
     wSwitch.setport1( nodeA, wSwitch.getport1( o->props ) );
     wSwitch.setgate1( nodeA, wSwitch.getgate1( o->props ) );
+    wSwitch.setparam1( nodeA, wSwitch.getparam1( o->props ) );
+    wSwitch.setvalue1( nodeA, wSwitch.getvalue1( o->props ) );
     wSwitch.setdelay( nodeA, wSwitch.getdelay( o->props ) );
     wSwitch.setactdelay( nodeA, wSwitch.isactdelay( o->props ) );
     wSwitch.setsinglegate( nodeA, wSwitch.issinglegate( o->props ) );
