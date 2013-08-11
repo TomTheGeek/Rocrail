@@ -180,19 +180,19 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     if( on && !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_motor ) {
       /* PWM value */
       command = 0x27;
-      gain = wOutput.getparam( node );
+      param = value;
     }
 
     if( on && !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_light ) {
       /* param = Aspect */
       command = 0x1;
-      gain = wOutput.getparam( node );
+      param = wOutput.getparam( node );
     }
 
     if( on && !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_servo ) {
       /* param = position */
       command = 0x26;
-      gain = wOutput.getparam( node );
+      param = value;
     }
 
     datagram[0] = (module << 2) | FIXED_FLAG;
