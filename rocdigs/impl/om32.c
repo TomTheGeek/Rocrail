@@ -167,6 +167,7 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     int  module = wOutput.getaddr( node ) - 1;
     int  port   = wOutput.getport( node ) - 1;
     int  gain   = wOutput.getparam( node );
+    int  value  = wOutput.getvalue( node );
     Boolean blink = wOutput.isblink( node );
     Boolean on    = StrOp.equals( wOutput.on, wOutput.getcmd( node ) );
 
@@ -176,8 +177,22 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     byte param   = on ? gain:0;
     byte command = blink ? 10:5;
 
-    if( !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_motor ) {
+    if( on && !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_motor ) {
+      /* PWM value */
       command = 0x27;
+      gain = wOutput.getparam( node );
+    }
+
+    if( on && !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_light ) {
+      /* param = Aspect */
+      command = 0x1;
+      gain = wOutput.getparam( node );
+    }
+
+    if( on && !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_servo ) {
+      /* param = position */
+      command = 0x26;
+      gain = wOutput.getparam( node );
     }
 
     datagram[0] = (module << 2) | FIXED_FLAG;
