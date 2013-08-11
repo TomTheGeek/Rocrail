@@ -1378,6 +1378,11 @@
         <var name="port2" vt="int" defval="0" range="0-*" required="false" remark="Only in case of type 3way."/>
         <var name="gate2" vt="int" defval="0" range="0-*" required="false" remark="Only in case of type 3way."/>
         
+        <var name="param1" vt="int" defval="0" range="0-*" remark="parameter"/>
+        <var name="value1" vt="int" defval="1" range="0-*" remark="value"/>
+        <var name="param2" vt="int" defval="0" range="0-*" remark="parameter"/>
+        <var name="value2" vt="int" defval="1" range="0-*" remark="value"/>
+        
         <!-- If the frog polarisation needs to be switched separately.  -->
         <var name="buspol" vt="int" defval="0" range="0-*" required="false"/>
         <var name="addr0pol1" vt="int" defval="0" range="0-*" required="false" remark="decoder address of the polarisation"/>

@@ -124,6 +124,8 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     int  addr    = wSwitch.getaddr1( node ) - 1;
     int  port    = wSwitch.getport1( node ) - 1;
     int  delay   = wSwitch.getdelay( node );
+    int  param   = wSwitch.getparam1( node );
+    int  value   = wSwitch.getvalue1( node );
     int  command = 0;
     int  nr      = addr * 4 + port;
 
@@ -149,7 +151,15 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
 
     if( !wSwitch.isaccessory(node) && wSwitch.getporttype(node) == wProgram.porttype_servo ) {
       datagram[1] = 0x26;
-      datagram[3] = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 127:0;
+      datagram[3] = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? value:param;
+    }
+    else if( !wSwitch.isaccessory(node) && wSwitch.getporttype(node) == wProgram.porttype_motor ) {
+      datagram[1] = 0x27;
+      datagram[3] = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? value:param;
+    }
+    else if( !wSwitch.isaccessory(node) && wSwitch.getporttype(node) == wProgram.porttype_light ) {
+      datagram[1] = 0x01;
+      datagram[3] = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? value:param;
     }
     else {
       datagram[1] = command;
@@ -185,8 +195,8 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
 
     if( on && !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_light ) {
       /* param = Aspect */
-      command = 0x1;
-      param = wOutput.getparam( node );
+      command = 0x01;
+      param = on ? value:wOutput.getparam( node );
     }
 
     if( !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_servo ) {

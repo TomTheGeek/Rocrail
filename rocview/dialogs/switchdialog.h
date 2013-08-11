@@ -299,6 +299,10 @@ public:
     wxTextCtrl* m_Address1;
     wxStaticText* m_LabelPort1;
     wxTextCtrl* m_Port1;
+    wxStaticText* m_labParam1;
+    wxSpinCtrl* m_Param1;
+    wxStaticText* m_labValue1;
+    wxSpinCtrl* m_Value1;
     wxStaticText* m_labGate;
     wxRadioBox* m_Gate;
     wxCheckBox* m_SingleGate;
@@ -307,6 +311,10 @@ public:
     wxTextCtrl* m_Address2;
     wxStaticText* m_LabelPort2;
     wxTextCtrl* m_Port2;
+    wxStaticText* m_labParam2;
+    wxSpinCtrl* m_Param2;
+    wxStaticText* m_labValue2;
+    wxSpinCtrl* m_Value2;
     wxCheckBox* m_Invert2;
     wxCheckBox* m_ActDelay;
     wxTextCtrl* m_Delay;
