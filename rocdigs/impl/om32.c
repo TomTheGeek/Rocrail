@@ -136,9 +136,6 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     if( !wSwitch.isactdelay( node ) )
       delay = 0; /* use default of 200 ms */
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 switch %s [%d-%d] %s",
-        wSwitch.getcmd( node ), addr+1, port+1, wSwitch.issinglegate( node )?" (single gate)":"" );
-
     if( wSwitch.issinglegate( node ) ) {
       command = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 9:8;
       delay = 0;
@@ -152,18 +149,23 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     if( !wSwitch.isaccessory(node) && wSwitch.getporttype(node) == wProgram.porttype_servo ) {
       datagram[1] = 0x26;
       datagram[3] = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? value:param;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 switch servo [%d-%d] %s position=%d", addr+1, port+1, datagram[3]);
     }
     else if( !wSwitch.isaccessory(node) && wSwitch.getporttype(node) == wProgram.porttype_motor ) {
       datagram[1] = 0x27;
       datagram[3] = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? value:param;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 switch motor [%d-%d] %s PWM=%d", addr+1, port+1, datagram[3]);
     }
     else if( !wSwitch.isaccessory(node) && wSwitch.getporttype(node) == wProgram.porttype_light ) {
       datagram[1] = 0x01;
       datagram[3] = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? value:param;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 switch lights [%d-%d] %s aspect=%d", addr+1, port+1, datagram[3]);
     }
     else {
       datagram[1] = command;
       datagram[3] = delay;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 switch %s [%d-%d] %s",
+          wSwitch.getcmd( node ), addr+1, port+1, wSwitch.issinglegate( node )?" (single gate)":"" );
     }
 
     datagram[0] = (addr << 2) | FIXED_FLAG;
@@ -191,18 +193,25 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
       /* PWM value */
       command = 0x27;
       param = on ? value:wOutput.getparam( node );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 output motor [%d-%d] %s PWM=%d", module+1, port+1, param);
     }
 
-    if( on && !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_light ) {
+    else if( on && !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_light ) {
       /* param = Aspect */
       command = 0x01;
       param = on ? value:wOutput.getparam( node );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 output lights [%d-%d] %s aspect=%d", module+1, port+1, param);
     }
 
-    if( !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_servo ) {
+    else if( !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_servo ) {
       /* param = position */
       command = 0x26;
       param = on ? value:wOutput.getparam( node );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 output servo [%d-%d] %s position=%d", module+1, port+1, param);
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 output %s %s [%d-%d] gain=%d",
+          blink?"blink":"lnear", wOutput.getcmd( node ), module+1, port+1, gain );
     }
 
     datagram[0] = (module << 2) | FIXED_FLAG;
@@ -211,8 +220,6 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     datagram[3] = param;
     datagram[4] = (byte)__generateChecksum( datagram );
     size = 5;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 output %s %s [%d-%d] gain=%d",
-        blink?"blink":"lnear", wOutput.getcmd( node ), module+1, port+1, gain );
   }
 
   /* Signal command. */
@@ -227,7 +234,8 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     datagram[3] = aspect;
     datagram[4] = (byte)__generateChecksum( datagram );
     size = 5;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "oc32 signal cmd=%s [%d-%d]", wOutput.getcmd( node ), module+1, port+1 );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "oc32 signal cmd=%s [%d-%d] aspect=%d",
+        wOutput.getcmd( node ), module+1, port+1, aspect );
   }
 
   return size;
