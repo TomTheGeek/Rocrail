@@ -967,6 +967,7 @@ static char* __rr2srcp(iOSrcpCon srcpcon, __iOSrcpService o, iONode evt, char* s
       int   loAddr = wLoc.getaddr(loProps);
       
       Boolean loDir = wLoc.isdir(loProps);
+      Boolean loPlacing = wLoc.isplacing(loProps);
       int   loV = wLoc.getV(loProps);
       int   loVmax = wLoc.getV_max(loProps);
       const char *loVmode = wLoc.getV_mode(loProps);
@@ -998,12 +999,18 @@ static char* __rr2srcp(iOSrcpCon srcpcon, __iOSrcpService o, iONode evt, char* s
       
       int srcpBus = getSrcpBus( data, wLoc.getiid(loProps));
 
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "addr %d isdir %d V %d Vmode %s decStep %d spcnt %d loFx %d loId %s loFnCnt %d functions %s", 
-              loAddr, loDir, loV, loVmode, decStep, loSpcnt, loFx, loId, loFnCnt, funcString );
+      Boolean drivemode ;
+      if( loPlacing )
+        drivemode = loDir ;
+      else
+        drivemode = ! loDir ;
+
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "addr %d dir %d placing %d drivemode %d V %d Vmode %s decStep %d spcnt %d loFx %d loId %s loFnCnt %d functions %s", 
+              loAddr, loDir, loPlacing, drivemode, loV, loVmode, decStep, loSpcnt, loFx, loId, loFnCnt, funcString );
 
       StrOp.fmtb(str, "%lu.%.3lu %d INFO %d GL %d %d %d %d %d%s\n",
           time.tv_sec, time.tv_usec / 1000L,
-          100, srcpBus, loAddr,  loDir?1:0, decStep, loSpcnt, loFn?1:0, funcString );
+          100, srcpBus, loAddr,  drivemode?1:0, decStep, loSpcnt, loFn?1:0, funcString );
     }
   }
 
@@ -1488,6 +1495,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         int loVmax    = wLoc.getV_max(loProps);
         int loSpcnt   = wLoc.getspcnt(loProps);
         int loDir     = wLoc.isdir( loProps );
+        Boolean loPlacing = wLoc.isplacing(loProps);
         Boolean loFn  = wLoc.isfn( loProps );
         int loFnCnt   = wLoc.getfncnt(loProps);
         int loFx      = wLoc.getfx(loProps);
@@ -1582,7 +1590,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
         /* send new loco basic settings after sending all functions */
         cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE );
         wLoc.setid(cmd, lcID);
-        wLoc.setdir(cmd, srcpDir);
+        wLoc.setdir(cmd, loPlacing?srcpDir:!srcpDir);
         wLoc.setfn(cmd, srcpF0);
         wLoc.setV(cmd, newSpeed);
         data->callback( data->callbackObj, cmd );
@@ -2263,6 +2271,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
 
           if( StrOp.equals( loIid, srcpBusIid)) {
             Boolean loDir = wLoc.isdir(loProps);
+            Boolean loPlacing = wLoc.isplacing(loProps);
             int   loV = wLoc.getV(loProps);
             int   loVmax = wLoc.getV_max(loProps);
             const char *loVmode = wLoc.getV_mode(loProps);
@@ -2286,8 +2295,14 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
             }
             funcString[2*loFnCnt] = '\0';
 
+            Boolean drivemode ;
+            if( loPlacing )
+              drivemode = loDir ;
+            else
+              drivemode = ! loDir ;
+
             StrOp.fmtb(rsp, "%lu.%.3lu 100 INFO %d GL %d %d %d %d %d%s\n", 
-                time.tv_sec, time.tv_usec / 1000L, srcpBus, addrGL, loDir?1:0, decStep, loSpcnt, loFn?1:0, funcString);
+                time.tv_sec, time.tv_usec / 1000L, srcpBus, addrGL, drivemode?1:0, decStep, loSpcnt, loFn?1:0, funcString);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s", rsp);
             __writeRsp(o, rsp);
 
@@ -3670,6 +3685,7 @@ static void sendLocoList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
       int         loProtver = wLoc.getprotver(loProps);
       int             loBus = wLoc.getbus(loProps);
       Boolean         loDir = wLoc.isdir(loProps);
+      Boolean     loPlacing = wLoc.isplacing(loProps);
       int               loV = wLoc.getV(loProps);
       int            loVmax = wLoc.getV_max(loProps);
       const char   *loVmode = wLoc.getV_mode(loProps);
@@ -3707,6 +3723,12 @@ static void sendLocoList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
         case 'X': srcpProt='S';break;
       }
 
+      Boolean drivemode ;
+      if( loPlacing )
+        drivemode = loDir ;
+      else
+        drivemode = ! loDir ;
+
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "addr %d iid %s prot %s/%c protver %d/%d loBus %d srcpBus %d", loAddr, loIid, loProt, srcpProt, loProtver, srcpProtver, loBus, srcpBus);
 
       /* 101 INFO <bus> GL <addr> <protocol> <optional further parameters> */
@@ -3716,7 +3738,7 @@ static void sendLocoList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
       __writeRsp(o, str);
       /* 100 INFO <bus> GL <addr> <drivemode> <V> <V_max> <f1> . . <fn> */
       StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d GL %d %d %d %d %d%s\n", 
-              time.tv_sec, time.tv_usec / 1000L, srcpBus, loAddr, loDir?1:0, decStep, loSpcnt, loFn?1:0, funcString);
+              time.tv_sec, time.tv_usec / 1000L, srcpBus, loAddr, drivemode?1:0, decStep, loSpcnt, loFn?1:0, funcString);
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s", str);
       __writeRsp(o, str);
     }
