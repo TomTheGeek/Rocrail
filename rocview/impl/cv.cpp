@@ -942,7 +942,7 @@ void CV::doCV( int id ) {
 void CV::doCV( int command, int index, int value ) {
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   int addr = atoi( m_CVaddress->GetValue().mb_str(wxConvUTF8) );
-  wProgram.setlongaddr( cmd, False );
+  wProgram.setlongaddr( cmd, (addr > 127) ? True:False );
 
   if( addr == 0 ) {
     addr = atoi( m_CVlongaddress->GetValue().mb_str(wxConvUTF8) );
@@ -953,6 +953,7 @@ void CV::doCV( int command, int index, int value ) {
   update4POM();
   wProgram.setcmd( cmd, command );
   wProgram.setaddr( cmd, addr );
+  wProgram.setdecaddr( cmd, addr );
   wProgram.setcv( cmd, index );
   wProgram.setvalue( cmd, value );
   wProgram.setpom( cmd, m_bPOM );
