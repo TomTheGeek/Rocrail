@@ -149,17 +149,17 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
     if( !wSwitch.isaccessory(node) && wSwitch.getporttype(node) == wProgram.porttype_servo ) {
       datagram[1] = 0x26;
       datagram[3] = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? value:param;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 switch servo [%d-%d] %s position=%d", addr+1, port+1, datagram[3]);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 switch servo [%d-%d] position=%d", addr+1, port+1, datagram[3]);
     }
     else if( !wSwitch.isaccessory(node) && wSwitch.getporttype(node) == wProgram.porttype_motor ) {
       datagram[1] = 0x27;
       datagram[3] = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? value:param;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 switch motor [%d-%d] %s PWM=%d", addr+1, port+1, datagram[3]);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 switch motor [%d-%d] PWM=%d", addr+1, port+1, datagram[3]);
     }
     else if( !wSwitch.isaccessory(node) && wSwitch.getporttype(node) == wProgram.porttype_light ) {
       datagram[1] = 0x01;
       datagram[3] = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? value:param;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 switch lights [%d-%d] %s aspect=%d", addr+1, port+1, datagram[3]);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 switch lights [%d-%d] aspect=%d", addr+1, port+1, datagram[3]);
     }
     else {
       datagram[1] = command;
@@ -193,21 +193,21 @@ static int __translate(  iOOM32 inst, iONode node, byte* datagram ) {
       /* PWM value */
       command = 0x27;
       param = on ? value:wOutput.getparam( node );
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 output motor [%d-%d] %s PWM=%d", module+1, port+1, param);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 output motor [%d-%d] PWM=%d", module+1, port+1, param);
     }
 
     else if( on && !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_light ) {
       /* param = Aspect */
       command = 0x01;
       param = on ? value:wOutput.getparam( node );
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 output lights [%d-%d] %s aspect=%d", module+1, port+1, param);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 output lights [%d-%d] aspect=%d", module+1, port+1, param);
     }
 
     else if( !wOutput.isaccessory(node) && wOutput.getporttype(node) == wProgram.porttype_servo ) {
       /* param = position */
       command = 0x26;
       param = on ? value:wOutput.getparam( node );
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 output servo [%d-%d] %s position=%d", module+1, port+1, param);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 output servo [%d-%d] position=%d", module+1, port+1, param);
     }
     else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "om32 output %s %s [%d-%d] gain=%d",
