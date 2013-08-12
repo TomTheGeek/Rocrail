@@ -720,7 +720,8 @@
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="fboffset" vt="int"/>
-    </data>
+      <var name="ident[24]" vt="int"/>
+      </data>
   </object>
 
 

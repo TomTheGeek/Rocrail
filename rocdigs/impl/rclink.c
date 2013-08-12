@@ -311,12 +311,16 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
      * FC 01 89 68 FF
      * FC 01 09 68 FF
      */
-    if((packet[1] == 0) || (packet[1] > 239))
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "detector [%02d] report", packet[1]);
+    if((packet[1] == 0) || (packet[1] > 24)) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "detector [%02d] out of range", packet[1]);
       break;
+    }
     /*
      * Bit7=0 Lok nach rechts
      * Bit7=1 Lok nach links
      */
+    int sensor = packet[1];
     int addr = ((packet[2] & 0x7F) << 8) + packet[3];
     Boolean direction = (packet[2] & 0x80) ? False:True;
     Boolean state = addr > 0;
@@ -325,6 +329,23 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
     if( packet[2] == 0x77 && packet[3] == 0x77 ) {
       addr = 0;
       state = True;
+      if( data->ident[sensor] > 0 ) {
+        /* Do not report twice. */
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "detector [%02d] already reported address %d; skip current detection", addr);
+        break;
+      }
+    }
+
+    if( !state ) {
+      data->ident[sensor] = 0;
+    }
+    else if( state && addr > 0 ) {
+      if( data->ident[sensor] == addr ) {
+        /* Do not report twice. */
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "detector [%02d] already reported address %d", addr);
+        break;
+      }
+      data->ident[sensor] = addr;
     }
 
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
@@ -332,7 +353,7 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
     wFeedback.setaddr( evt, packet[1] );
     wFeedback.setfbtype( evt, wFeedback.fbtype_railcom );
     wFeedback.setdirection( evt, direction );
-    StrOp.fmtb(ident, "%d", addr);
+    StrOp.fmtb(ident, "%d", data->ident[sensor]);
     wFeedback.setidentifier(evt,ident);
     wFeedback.setstate(evt, state );
     if( data->iid != NULL )
@@ -436,7 +457,7 @@ static void __RcLinkReader( void* threadinst ) {
     while (bAvail > 0) {
       byte c;
       SerialOp.read( data->serial, &c, 1 );
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, &c, 1 );
+      TraceOp.dump( NULL, TRCLEVEL_DEBUG, &c, 1 );
       if( !packetStart && __isStartByte( c, &datalen ) ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "STX 0x%02X datalen=%d", c, datalen );
         /* STX */
