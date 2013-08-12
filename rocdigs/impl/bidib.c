@@ -632,8 +632,13 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           msgdata[0] = wSwitch.getporttype(node);
           if( wSwitch.issinglegate(node) ) {
             msgdata[1] = addr-1; // Null offset.
-            if( msgdata[0] == BIDIB_OUTTYPE_SERVO )
-              msgdata[2] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? 255:0;
+            if( msgdata[0] == BIDIB_OUTTYPE_SERVO ) {
+              int param = wSwitch.getparam1(node);
+              int value = wSwitch.getvalue1(node);
+              if( value <= 1 )
+                value = 255;
+              msgdata[2] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? value:param;
+            }
             else
               msgdata[2] = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node)) ? BIDIB_PORT_TURN_ON:BIDIB_PORT_TURN_OFF;
           }
@@ -755,8 +760,13 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         else {
           msgdata[0] = wOutput.getporttype(node);
           msgdata[1] = addr-1;
-          if( msgdata[0] == BIDIB_OUTTYPE_SERVO )
-            msgdata[2] = on ? 255:0;
+          if( msgdata[0] == BIDIB_OUTTYPE_SERVO ) {
+            int param = wOutput.getparam(node);
+            int value = wOutput.getvalue(node);
+            if( value <= 1 )
+              value = 255;
+            msgdata[2] = on ? value:param;
+          }
           else
             msgdata[2] = on ? BIDIB_PORT_TURN_ON:BIDIB_PORT_TURN_OFF;
 
