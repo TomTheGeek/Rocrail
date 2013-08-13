@@ -182,6 +182,16 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
 
     m_CV29->Enable(nr==29);
     m_WriteCV->Enable(wCVByte.isreadonly(cv)?false:true);
+    m_ValueSlider->Enable(wCVByte.isword(cv)?false:true);
+    m_ValueSlider->SetRange(0, wCVByte.isword(cv)?65535:255);
+    m_Bit0->Enable(wCVByte.isword(cv)?false:true);
+    m_Bit1->Enable(wCVByte.isword(cv)?false:true);
+    m_Bit2->Enable(wCVByte.isword(cv)?false:true);
+    m_Bit3->Enable(wCVByte.isword(cv)?false:true);
+    m_Bit4->Enable(wCVByte.isword(cv)?false:true);
+    m_Bit5->Enable(wCVByte.isword(cv)?false:true);
+    m_Bit6->Enable(wCVByte.isword(cv)?false:true);
+    m_Bit7->Enable(wCVByte.isword(cv)?false:true);
   }
   else {
     // catagory
@@ -647,7 +657,7 @@ iONode RocProDlg::getLocoCV(int nr) {
 }
 
 void RocProDlg::setCVVal(int val, bool updateval) {
-  if( val >= 0 && val < 256 ) {
+  if( val >= 0 ) {
     if(updateval)
       m_Value->SetValue(val);
     m_ValueSlider->SetValue(val);

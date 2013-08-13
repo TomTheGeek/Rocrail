@@ -988,6 +988,9 @@ static void __callback( obj inst, iONode nodeA ) {
       iOLoc loc = ModelOp.getLoc( model, wProgram.getfilename(nodeA), NULL, False );
       iOCar car = NULL;
 
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Program event %d: cv%d=%d addr=%d",
+          wProgram.getcmd( nodeA ), wProgram.getcv( nodeA ), wProgram.getvalue( nodeA ), wProgram.getdecaddr( nodeA ) );
+
       if( loc == NULL )
         loc = ModelOp.getLocByAddress( model, wProgram.getaddr(nodeA), wProgram.getiid(nodeA) );
       if( loc != NULL ) {

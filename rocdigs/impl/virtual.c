@@ -472,6 +472,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CV%d to %d...", cv, value );
           rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+          wProgram.setdecaddr( rsp, decaddr );
           wProgram.setcv( rsp, cv );
           wProgram.setvalue( rsp, value );
           wProgram.setcmd( rsp, wProgram.statusrsp );
