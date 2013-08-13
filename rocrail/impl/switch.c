@@ -506,18 +506,20 @@ static Boolean __unregisterCallback( iOSwitch inst ) {
 static Boolean __initCallback( iOSwitch inst ) {
   iOSwitchData data = Data(inst);
   Boolean hasFb = False;
-  iOModel model = AppOp.getModel(  );
-  iOFBack fbR   = ModelOp.getFBack( model, wSwitch.getfbR( data->props ) );
-  iOFBack fbG   = ModelOp.getFBack( model, wSwitch.getfbG( data->props ) );
-  iOFBack fb2R  = ModelOp.getFBack( model, wSwitch.getfb2R( data->props ) );
-  iOFBack fb2G  = ModelOp.getFBack( model, wSwitch.getfb2G( data->props ) );
-  iOFBack fbOcc = ModelOp.getFBack( model, wSwitch.getfbOcc( data->props ) );
+  iOModel model  = AppOp.getModel(  );
+  iOFBack fbR    = ModelOp.getFBack( model, wSwitch.getfbR( data->props ) );
+  iOFBack fbG    = ModelOp.getFBack( model, wSwitch.getfbG( data->props ) );
+  iOFBack fb2R   = ModelOp.getFBack( model, wSwitch.getfb2R( data->props ) );
+  iOFBack fb2G   = ModelOp.getFBack( model, wSwitch.getfb2G( data->props ) );
+  iOFBack fbOcc  = ModelOp.getFBack( model, wSwitch.getfbOcc( data->props ) );
+  iOFBack fbOcc2 = ModelOp.getFBack( model, wSwitch.getfbOcc2( data->props ) );
 
-  data->fbR   = NULL;
-  data->fbG   = NULL;
-  data->fb2R  = NULL;
-  data->fb2G  = NULL;
-  data->fbOcc = NULL;
+  data->fbR    = NULL;
+  data->fbG    = NULL;
+  data->fb2R   = NULL;
+  data->fb2G   = NULL;
+  data->fbOcc  = NULL;
+  data->fbOcc2 = NULL;
 
 
   if( fbR != NULL ) {
@@ -550,6 +552,10 @@ static Boolean __initCallback( iOSwitch inst ) {
   }
   if( fbOcc != NULL ) {
     data->fbOcc = fbOcc;
+  }
+
+  if( fbOcc2 != NULL ) {
+    data->fbOcc2 = fbOcc2;
   }
 
   return hasFb;
@@ -896,7 +902,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     return True;
   }
 
-  if( o->fbOcc != NULL && FBackOp.getState(o->fbOcc) ) {
+  if( o->fbOcc != NULL && FBackOp.getState(o->fbOcc) ||  o->fbOcc2 != NULL && FBackOp.getState(o->fbOcc2) ) {
     /* reject command because its electically occupied */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reject command because switch [%s] electically occupied",
                  SwitchOp.getId( inst ) );

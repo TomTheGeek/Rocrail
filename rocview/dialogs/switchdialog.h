@@ -344,6 +344,8 @@ public:
     wxCheckBox* m_Fb2Ginvert;
     wxStaticText* m_labFbOcc;
     wxComboBox* m_FbOcc;
+    wxStaticText* m_labFbOcc2;
+    wxComboBox* m_FbOcc2;
     wxCheckBox* m_FbSet;
     wxCheckBox* m_FbUseField;
     wxStaticBox* m_CTCBox;
