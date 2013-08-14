@@ -874,6 +874,8 @@
     <const name="vendorcvget" vt="int" val="42" remark="Vendor CV get.(strval1)"/>
     <const name="vendorcvenable" vt="int" val="43" remark="Vendor CV enable. (value=1/0)"/>
     <const name="identify" vt="int" val="44"/>
+    <const name="ping" vt="int" val="45"/>
+    <const name="getlasterror" vt="int" val="46"/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>

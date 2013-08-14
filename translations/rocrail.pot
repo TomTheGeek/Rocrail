@@ -6623,3 +6623,15 @@ msgstr ""
 msgid "Identify"
 msgstr ""
 
+#. 
+# id="ping"
+#, c-format
+msgid "Ping"
+msgstr ""
+
+#. 
+# id="getlasterror"
+#, c-format
+msgid "Get last error"
+msgstr ""
+

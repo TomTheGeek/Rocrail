@@ -746,6 +746,25 @@ void BidibIdentDlg::onMenu( wxCommandEvent& event ) {
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }
+  else if( menuItem == 1003 && m_SelectedBidibNode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(m_SelectedBidibNode));
+    wProgram.setcmd( cmd, wProgram.ping );
+    wProgram.setvalue(cmd, 1);
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+  else if( menuItem == 1004 && m_SelectedBidibNode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(m_SelectedBidibNode));
+    wProgram.setcmd( cmd, wProgram.getlasterror );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
 
 void BidibIdentDlg::onItemRightClick( wxTreeEvent& event ) {
@@ -755,6 +774,8 @@ void BidibIdentDlg::onItemRightClick( wxTreeEvent& event ) {
   wxMenu menu( wxString(wBiDiBnode.getpath( bidibnode ),wxConvUTF8) );
   menu.Append( 1001, wxGetApp().getMenu("info") );
   menu.Append( 1002, wxGetApp().getMenu("identify") );
+  menu.Append( 1003, wxGetApp().getMenu("ping") );
+  menu.Append( 1004, wxGetApp().getMenu("getlasterror") );
   menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BidibIdentDlg::onMenu ), NULL, this );
 
   PopupMenu(&menu );

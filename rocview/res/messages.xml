@@ -23203,4 +23203,10 @@
   <Msg id="identify">
     <en txt="Identify"/>
   </Msg>
+  <Msg id="ping">
+    <en txt="Ping"/>
+  </Msg>
+  <Msg id="getlasterror">
+    <en txt="Get last error"/>
+  </Msg>
 </Messages>

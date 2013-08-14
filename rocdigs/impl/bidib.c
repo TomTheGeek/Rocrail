@@ -1086,6 +1086,15 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "identify %d", bidibnode->uid);
           data->subWrite((obj)inst, bidibnode->path, MSG_SYS_IDENTIFY, msgdata, 1, bidibnode);
         }
+        else if( wProgram.getcmd( node ) == wProgram.ping ) {
+          msgdata[0] = wProgram.getvalue(node);
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "ping %d", bidibnode->uid);
+          data->subWrite((obj)inst, bidibnode->path, MSG_SYS_PING, msgdata, 1, bidibnode);
+        }
+        else if( wProgram.getcmd( node ) == wProgram.getlasterror ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get last error %d", bidibnode->uid);
+          data->subWrite((obj)inst, bidibnode->path, MSG_SYS_GET_ERROR, NULL, 0, bidibnode);
+        }
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
@@ -2701,9 +2710,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get node table...");
     data->subWrite((obj)bidib, path, MSG_NODETAB_GETALL, NULL, 0, 0);
-
-    break;
   }
+  break;
 
   case MSG_SYS_SW_VERSION:
   { // len = 6
@@ -3078,6 +3086,11 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_VENDOR_ACK:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"MSG_VENDOR_ACK: %s user config mode", pdata[0] == 0 ? "NOT IN":"IN");
+    break;
+
+  case MSG_SYS_PONG:
+    if( bidibnode != NULL )
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"MSG_SYS_PONG: from %d with echoed value %d", bidibnode->uid, pdata[0] );
     break;
 
   default:
