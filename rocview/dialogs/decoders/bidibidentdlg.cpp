@@ -59,40 +59,6 @@
 
 #include "rocview/res/icons.hpp"
 
-/* XPM */
-static const char * pcb_xpm[] = {
-"32 20 11 1",
-"   c None",
-".  c #848484",
-"+  c #FFFFFF",
-"@  c #C6C6C6",
-"#  c #000000",
-"$  c #008400",
-"%  c #00FF00",
-"&  c #FF0000",
-"*  c #840000",
-"=  c #FFFF00",
-"-  c #848400",
-".+@@@@@@@@@@@@@@@@@@@@@@@@@@@#  ",
-".+$$$@$$$$@$$$@$%@%$%@$$$$@$$#  ",
-".+&$$@$$$$@$$$@$$@$$$@$$$$@$$#  ",
-".+$$+@@#$+@@#$@$$@$$+@@@#$@@@#.#",
-".+$$@..#$@..#$@$$@$$@...#$@$$#+#",
-".+&$####$####$@$$@$$@...#$@$$#@#",
-".+$$$$$$$$$$$$@@@@$$@...#$@@@#@#",
-".+$$+@@#$+@@#$@$$$$$#####$@$$#@#",
-".+&$@..#$@..#$@$$$$$$$$$$$@$$#@#",
-".+$$####$####$@@@@%@@%@@%@@$$#@#",
-".+$$$$$$$$$$$$@$$$$$$$$$$$$$$#@#",
-".+$$+@@#$+@@#$@$$$@..#$@..#$$#@#",
-".+$$@..#$@..#$@$$$####$####$$###",
-".+$$####$####$@$$$$$$$$$$$$$$#  ",
-".+$$$$@$$$$@$$@$$$$*$$*$$*$$$#  ",
-".............................#  ",
-"##############.=-=-=-=-=-#####  ",
-"              .=-=-=-=-=-#      ",
-"              .=-=-=-=-=-#      ",
-"              ############      "};
 
 BidibIdentDlg::BidibIdentDlg( wxWindow* parent ):BidibIdentDlgGen( parent )
 {
@@ -734,8 +700,12 @@ void BidibIdentDlg::onBeginDrag( wxTreeEvent& event ) {
 void BidibIdentDlg::onMenu( wxCommandEvent& event ) {
   int menuItem = event.GetId();
   TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999, "action %d for UID %d", menuItem, wBiDiBnode.getuid(m_SelectedBidibNode) );
-  if( menuItem == 1001 )
-    wxLaunchDefaultBrowser(wxT("http://www.opendcc.de/bidib/overview/overview.html"), wxBROWSER_NEW_WINDOW );
+  if( menuItem == 1001 && m_SelectedBidibNode != NULL) {
+    int pid = getProductID(wBiDiBnode.getuid(m_SelectedBidibNode));
+    char* l_www;
+    bidibGetProductName(wBiDiBnode.getvendor(m_SelectedBidibNode)&0xFF, pid, &l_www);
+    wxLaunchDefaultBrowser(wxString(l_www, wxConvUTF8), wxBROWSER_NEW_WINDOW );
+  }
   else if( menuItem == 1002 && m_SelectedBidibNode != NULL ) {
     iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setmodid(cmd, wBiDiBnode.getuid(m_SelectedBidibNode));
