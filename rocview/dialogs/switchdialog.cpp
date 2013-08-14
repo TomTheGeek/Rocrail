@@ -297,6 +297,7 @@ void SwitchDialog::initLabels() {
   m_TrackDriverEnable->SetLabel( wxGetApp().getMsg( "enable" ) );
 
   // Wiring
+  m_WiringBox->SetLabel( wxGetApp().getMsg( "sensors" ) );
   m_LabelFb1R->SetLabel( wxGetApp().getMsg( "sensor_red" ) );
   m_LabelFb1G->SetLabel( wxGetApp().getMsg( "sensor_green" ) );
   m_LabelFb2R->SetLabel( wxGetApp().getMsg( "sensor_red" ) );
