@@ -54,6 +54,7 @@
 #include "rocrail/wrapper/public/Macro.h"
 #include "rocrail/wrapper/public/MacroLine.h"
 #include "rocrail/wrapper/public/DataReq.h"
+#include "rocrail/wrapper/public/Product.h"
 #include "rocdigs/impl/bidib/bidibutils.h"
 #include "rocdigs/impl/bidib/bidib_messages.h"
 
@@ -65,6 +66,7 @@ BidibIdentDlg::BidibIdentDlg( wxWindow* parent ):BidibIdentDlgGen( parent )
   this->node = NULL;
   __initVendors();
   initLabels();
+  initProducts();
   m_Notebook->SetSelection( 0 );
 }
 
@@ -73,6 +75,7 @@ BidibIdentDlg::BidibIdentDlg( wxWindow* parent, iONode node ):BidibIdentDlgGen( 
   this->node = node;
   __initVendors();
   initLabels();
+  initProducts();
   initValues();
   m_Notebook->SetSelection( 0 );
 }
@@ -83,7 +86,39 @@ BidibIdentDlg::~BidibIdentDlg() {
   MapOp.base.del(nodePathMap);
   if( this->node != NULL )
     NodeOp.base.del(this->node);
+  if( m_ProductsNode != NULL )
+    NodeOp.base.del(m_ProductsNode);
+  if( m_ProductsMap != NULL )
+    MapOp.base.del(m_ProductsMap);
   clearFeatureList();
+}
+
+
+void BidibIdentDlg::initProducts() {
+  char* l_path = StrOp.fmt( "%s%c%s", wGui.getdecpath( wxGetApp().getIni() ), SystemOp.getFileSeparator(), "bidib.xml" );
+  if( FileOp.exist(l_path) ) {
+    iOFile f = FileOp.inst( l_path, OPEN_READONLY );
+    char* buffer = (char*)allocMem( FileOp.size( f ) +1 );
+    FileOp.read( f, buffer, FileOp.size( f ) );
+    FileOp.base.del( f );
+    iODoc doc = DocOp.parse( buffer );
+    if( doc != NULL ) {
+      m_ProductsNode = DocOp.getRootNode( doc );
+      DocOp.base.del( doc );
+
+      if( m_ProductsNode != NULL ) {
+        iONode product = NodeOp.findNode(m_ProductsNode, wProduct.name());
+        while( product != NULL ) {
+          char key[32];
+          StrOp.fmtb( key, "%d-%d", wProduct.getvid(product), wProduct.getpid(product));
+          MapOp.put( m_ProductsMap, key, (obj)product);
+          product = NodeOp.findNextNode( m_ProductsNode, product );
+        }
+      }
+    }
+    freeMem(buffer);
+  }
+  StrOp.free(l_path);
 }
 
 
@@ -395,6 +430,9 @@ void BidibIdentDlg::initLabels() {
   eventUpdate = false;
   servoSetMutex = MutexOp.inst(NULL, True);
   m_SelectedBidibNode = NULL;
+  m_ProductsNode = NULL;
+  m_ProductsMap = MapOp.inst();
+
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -536,6 +574,19 @@ int BidibIdentDlg::getProductID(int uid) {
   return pid;
 }
 
+const char* BidibIdentDlg::GetProductName(int vid, int pid, char** www) {
+  char key[32];
+  StrOp.fmtb( key, "%d-%d", vid, pid );
+  iONode product = (iONode)MapOp.get( m_ProductsMap, key);
+  if( product != NULL ) {
+    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"product from xml: %s", wProduct.getdesc(product) );
+    *www = (char*)wProduct.geturl(product);
+    return wProduct.getdesc(product);
+  }
+  return bidibGetProductName(vid, pid, www);
+}
+
+
 
 void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
   wxString itemText = m_Tree->GetItemText(event.GetItem());
@@ -558,7 +609,7 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
     int pid = getProductID(wBiDiBnode.getuid(bidibnode));
     m_PID->SetValue( wxString::Format(_T("%02X"), pid ) );
     m_PIDD->SetValue( wxString::Format(_T("%d"), pid ) );
-    m_ProductName->SetValue( wxString( bidibGetProductName(wBiDiBnode.getvendor(bidibnode)&0xFF, pid, &www), wxConvUTF8) );
+    m_ProductName->SetValue( wxString( GetProductName(wBiDiBnode.getvendor(bidibnode)&0xFF, pid, &www), wxConvUTF8) );
     m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
 
     SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(bidibnode) ) + wxT(" ") + wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
@@ -618,7 +669,7 @@ void BidibIdentDlg::initValues() {
     int pid = getProductID(wProgram.getmodid(node));
     m_PID->SetValue( wxString::Format(_T("%02X"), pid ) );
     m_PIDD->SetValue( wxString::Format(_T("%d"), pid ) );
-    m_ProductName->SetValue( wxString( bidibGetProductName(wProgram.getmanu(node)&0xFF, pid, &www), wxConvUTF8) );
+    m_ProductName->SetValue( wxString( GetProductName(wProgram.getmanu(node)&0xFF, pid, &www), wxConvUTF8) );
     m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
 
     char key[32];
@@ -642,7 +693,7 @@ void BidibIdentDlg::initValues() {
     int pid = getProductID(wBiDiBnode.getuid(node));
     m_PID->SetValue( wxString::Format(_T("%02X"), pid ) );
     m_PIDD->SetValue( wxString::Format(_T("%d"), pid ) );
-    m_ProductName->SetValue( wxString( bidibGetProductName(wBiDiBnode.getvendor(node)&0xFF, pid, &www), wxConvUTF8) );
+    m_ProductName->SetValue( wxString( GetProductName(wBiDiBnode.getvendor(node)&0xFF, pid, &www), wxConvUTF8) );
     m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
 
     SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(node) ) + wxT(" ") + wxString( wBiDiBnode.getclass(node), wxConvUTF8) );
@@ -703,7 +754,7 @@ void BidibIdentDlg::onMenu( wxCommandEvent& event ) {
   if( menuItem == 1001 && m_SelectedBidibNode != NULL) {
     int pid = getProductID(wBiDiBnode.getuid(m_SelectedBidibNode));
     char* l_www;
-    bidibGetProductName(wBiDiBnode.getvendor(m_SelectedBidibNode)&0xFF, pid, &l_www);
+    GetProductName(wBiDiBnode.getvendor(m_SelectedBidibNode)&0xFF, pid, &l_www);
     wxLaunchDefaultBrowser(wxString(l_www, wxConvUTF8), wxBROWSER_NEW_WINDOW );
   }
   else if( menuItem == 1002 && m_SelectedBidibNode != NULL ) {

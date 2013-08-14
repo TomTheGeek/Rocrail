@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bidib>
+  <product vid="13" pid="101" desc="GBM16TC Stand-Alone" url="http://www.opendcc.de/s88/gbm_bidi/gbm_bidi.html"/> 
+  <product vid="13" pid="102" desc="GBM16TC Interface" url="http://www.opendcc.de/s88/gbm_bidi/gbm_bidi.html"/> 
+  <product vid="13" pid="103" desc="GBMBoost Node" url="http://www.opendcc.de/elektronik/gbmboost/gbmboost.html"/> 
+  <product vid="13" pid="104" desc="GBMBoost Master" url="http://www.opendcc.de/elektronik/gbmboost/gbmboost.html"/> 
+  <product vid="13" pid="105" desc="BiDiB-S88-Bridge" url="http://www.opendcc.de/s88/s88_bidib/s88_bidib.html"/> 
+  <product vid="13" pid="106" desc="BiDiB-IO16" url="http://www.opendcc.de/bidib/overview/in_entwicklung.html"/> 
+  <product vid="13" pid="107" desc="LightControl" url="http://www.opendcc.de/elektronik/lightcontrol1/lightcontrol.html"/> 
+  <product vid="13" pid="108" desc="MoBaLiSt" url="http://www.opendcc.de/elektronik/lightcontrol1/mobalist.html"/> 
+  <product vid="13" pid="110" desc="Bootloader LightControl" url="http://www.opendcc.de/elektronik/lightcontrol1/lightcontrol.html"/> 
+  <product vid="13" pid="111" desc="Bootloader GBMBoost" url="http://www.opendcc.de/elektronik/gbmboost/gbmboost_download.html"/> 
+  <product vid="13" pid="112" desc="BiDiBOne Bootloader" url="http://www.opendcc.de/elektronik/bidibone/bidibone.html"/> 
+  <product vid="13" pid="113" desc="BiDiBOne OneTester 24 LED-Testboard" url="http://www.opendcc.de/elektronik/bidibone/onetester.html"/> 
+  <product vid="13" pid="114" desc="BiDiBOne OneHub BiDiBus Hub" url="http://www.opendcc.de/elektronik/bidibone/onehub.html"/> 
+  <product vid="13" pid="115" desc="BiDiBOne OneDMX DMX Controller" url="http://www.opendcc.de/elektronik/bidibone/onedmx.html"/> 
+  <product vid="13" pid="220" desc="Switch-64" url="http://www.bidib.org/support/product_id.html"/> 
+  <product vid="13" pid="221" desc="LED-Optics" url="http://www.bidib.org/support/product_id.html"/> 
+</bidib>
+

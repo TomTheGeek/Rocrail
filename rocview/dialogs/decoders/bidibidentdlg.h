@@ -47,6 +47,8 @@ class BidibIdentDlg : public BidibIdentDlgGen
   iOMap nodeMap;
   iOMap nodePathMap;
   iONode m_SelectedBidibNode;
+  iONode m_ProductsNode;
+  iOMap  m_ProductsMap;
   int macro;
   int macroline;
   int macrosize;
@@ -145,6 +147,9 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void event(iONode node);
     void initLabels();
     void initValues();
+    void initProducts();
+    const char* GetProductName(int vid, int pid, char** www);
+
 	
 };
 

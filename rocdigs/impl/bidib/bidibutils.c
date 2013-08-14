@@ -218,16 +218,16 @@ http://www.bidib.org/support/product_id.html
  */
 const char* bidibGetProductName(int vid, int pid, char** www) {
   if( vid == 13 ) {
-    if( pid == 101 ) {if(www!=NULL) *www="http://opendcc.de/s88/gbm_bidi/gbm_bidi.html"; return "GBM16TC Stand-Alone";}
-    if( pid == 102 ) {if(www!=NULL) *www="http://opendcc.de/s88/gbm_bidi/gbm_bidi.html"; return "GBM16TC Interface";}
-    if( pid == 103 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/gbmboost/gbmboost.html"; return "GBMBoost Node";}
-    if( pid == 104 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/gbmboost/gbmboost.html"; return "GBMBoost Master";}
-    if( pid == 105 ) {if(www!=NULL) *www="http://opendcc.de/s88/s88_bidib/s88_bidib.html"; return "BiDiB-S88-Bridge";}
-    if( pid == 106 ) {if(www!=NULL) *www="http://opendcc.de/bidib/overview/in_entwicklung.html"; return "BiDiB-IO16";}
-    if( pid == 107 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/lightcontrol1/lightcontrol.html"; return "LightControl";}
-    if( pid == 108 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/lightcontrol1/mobalist.html"; return "MoBaLiSt";}
-    if( pid == 110 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/lightcontrol1/lightcontrol.html"; return "Bootloader LightControl";}
-    if( pid == 111 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/gbmboost/gbmboost_download.html"; return "Bootloader GBMBoost";}
+    if( pid == 101 ) {if(www!=NULL) *www="http://www.opendcc.de/s88/gbm_bidi/gbm_bidi.html"; return "GBM16TC Stand-Alone";}
+    if( pid == 102 ) {if(www!=NULL) *www="http://www.opendcc.de/s88/gbm_bidi/gbm_bidi.html"; return "GBM16TC Interface";}
+    if( pid == 103 ) {if(www!=NULL) *www="http://www.opendcc.de/elektronik/gbmboost/gbmboost.html"; return "GBMBoost Node";}
+    if( pid == 104 ) {if(www!=NULL) *www="http://www.opendcc.de/elektronik/gbmboost/gbmboost.html"; return "GBMBoost Master";}
+    if( pid == 105 ) {if(www!=NULL) *www="http://www.opendcc.de/s88/s88_bidib/s88_bidib.html"; return "BiDiB-S88-Bridge";}
+    if( pid == 106 ) {if(www!=NULL) *www="http://www.opendcc.de/bidib/overview/in_entwicklung.html"; return "BiDiB-IO16";}
+    if( pid == 107 ) {if(www!=NULL) *www="http://www.opendcc.de/elektronik/lightcontrol1/lightcontrol.html"; return "LightControl";}
+    if( pid == 108 ) {if(www!=NULL) *www="http://www.opendcc.de/elektronik/lightcontrol1/mobalist.html"; return "MoBaLiSt";}
+    if( pid == 110 ) {if(www!=NULL) *www="http://www.opendcc.de/elektronik/lightcontrol1/lightcontrol.html"; return "Bootloader LightControl";}
+    if( pid == 111 ) {if(www!=NULL) *www="http://www.opendcc.de/elektronik/gbmboost/gbmboost_download.html"; return "Bootloader GBMBoost";}
     if( pid == 112 ) {if(www!=NULL) *www="http://www.opendcc.de/elektronik/bidibone/bidibone.html"; return "BiDiBOne Bootloader";}
     if( pid == 113 ) {if(www!=NULL) *www="http://www.opendcc.de/elektronik/bidibone/onetester.html"; return "BiDiBOne OneTester 24 LED-Testboard";}
     if( pid == 114 ) {if(www!=NULL) *www="http://www.opendcc.de/elektronik/bidibone/onehub.html"; return "BiDiBOne OneHub BiDiBus Hub";}
