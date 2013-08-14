@@ -410,6 +410,7 @@ void RouteDialog::initLabels() {
   m_ori->SetString( 3, wxGetApp().getMsg( "west" ) );
 
   // Wiring
+  m_CTCBox->SetLabel( wxGetApp().getMsg( "ctc" ) );
   m_labCTCbutton->SetLabel( wxGetApp().getMsg( "button" ) );
   m_labCTCIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_labCTCAddr->SetLabel( wxGetApp().getMsg( "address" ) );

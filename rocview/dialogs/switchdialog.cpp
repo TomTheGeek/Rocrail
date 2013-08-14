@@ -343,6 +343,7 @@ void SwitchDialog::initLabels() {
 
   }
 
+  m_CTCBox->SetLabel( wxGetApp().getMsg( "ctc" ) );
   m_labCTCMotor->SetLabel( wxGetApp().getMsg( "motor" ) );
   m_labCTCIID->SetLabel( wxGetApp().getMsg( "iid" ) );
   m_labCTCAddress->SetLabel( wxGetApp().getMsg( "address" ) );
