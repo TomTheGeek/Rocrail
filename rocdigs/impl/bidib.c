@@ -1617,6 +1617,9 @@ static void __handleError(iOBiDiB bidib, byte* pdata) {
   char txt[256] = {'\0'};
 
   switch( pdata[0] ) {
+  case BIDIB_ERR_NONE: // OK
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "No error" );
+    break;
   case BIDIB_ERR_TXT: // Txt
     MemOp.set( txt, 0, 256 );
     MemOp.copy( txt, pdata+2, pdata[1]);
@@ -2876,7 +2879,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_SYS_ERROR:
   { // MSG_SYS_ERROR
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+    TraceOp.trc( name, pdata[0]==0 ? TRCLEVEL_MONITOR:TRCLEVEL_EXCEPTION, __LINE__, 9999,
         "MSG_SYS_ERROR, path=%s seq=%d error=%d", pathKey, Seq, pdata[0] );
     __handleError(bidib, pdata);
     break;
