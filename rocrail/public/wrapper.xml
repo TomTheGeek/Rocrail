@@ -873,6 +873,7 @@
     <const name="vendorcvset" vt="int" val="41" remark="Vendor CV set. (strval1,strval2)"/>
     <const name="vendorcvget" vt="int" val="42" remark="Vendor CV get.(strval1)"/>
     <const name="vendorcvenable" vt="int" val="43" remark="Vendor CV enable. (value=1/0)"/>
+    <const name="identify" vt="int" val="44"/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>

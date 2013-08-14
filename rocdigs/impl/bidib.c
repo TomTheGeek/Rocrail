@@ -1081,6 +1081,11 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         else if( wProgram.getcmd( node ) == wProgram.acc_setparam || wProgram.getcmd( node ) == wProgram.acc_getparam ) {
           __accessoryCommand(inst, node);
         }
+        else if( wProgram.getcmd( node ) == wProgram.identify ) {
+          msgdata[0] = wProgram.getvalue(node);
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "identify %d", bidibnode->uid);
+          data->subWrite((obj)inst, bidibnode->path, MSG_SYS_IDENTIFY, msgdata, 1, bidibnode);
+        }
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,

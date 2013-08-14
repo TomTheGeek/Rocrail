@@ -46,6 +46,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
   iOList nodeList;
   iOMap nodeMap;
   iOMap nodePathMap;
+  iONode m_SelectedBidibNode;
   int macro;
   int macroline;
   int macrosize;

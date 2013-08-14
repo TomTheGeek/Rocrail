@@ -415,6 +415,7 @@ void BidibIdentDlg::initLabels() {
   uid = 0;
   eventUpdate = false;
   servoSetMutex = MutexOp.inst(NULL, True);
+  m_SelectedBidibNode = NULL;
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -718,22 +719,29 @@ void BidibIdentDlg::onBeginDrag( wxTreeEvent& event ) {
 
 
 void BidibIdentDlg::onMenu( wxCommandEvent& event ) {
-  int path = event.GetId();
-  char pathStr[32] = {'\0'};
-  StrOp.fmtb( pathStr, "%d.%d.%d.%d", path/1000, (path%1000)/100, (path%100)/10, (path%10) );
-  TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999, "%d [%s]", path, pathStr );
-  iONode bidibnode = (iONode)MapOp.get( nodePathMap, pathStr );
-  wxLaunchDefaultBrowser(wxT("http://www.opendcc.de/bidib/overview/overview.html"), wxBROWSER_NEW_WINDOW );
+  int menuItem = event.GetId();
+  TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999, "action %d for UID %d", menuItem, wBiDiBnode.getuid(m_SelectedBidibNode) );
+  if( menuItem == 1001 )
+    wxLaunchDefaultBrowser(wxT("http://www.opendcc.de/bidib/overview/overview.html"), wxBROWSER_NEW_WINDOW );
+  else if( menuItem == 1002 && m_SelectedBidibNode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(m_SelectedBidibNode));
+    wProgram.setcmd( cmd, wProgram.identify );
+    wProgram.setvalue(cmd, 1);
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
 
 void BidibIdentDlg::onItemRightClick( wxTreeEvent& event ) {
   wxString itemText = m_Tree->GetItemText(event.GetItem());
   const char* uid = itemText.mb_str(wxConvUTF8);
-  iONode bidibnode = (iONode)MapOp.get( nodeMap, uid );
-  const char* pathStr = wBiDiBnode.getpath(bidibnode);
-  int path = (pathStr[0]-'0')*1000 + (pathStr[2]-'0')*100 + (pathStr[4]-'0')*10 + (pathStr[6]-'0');
+  m_SelectedBidibNode = (iONode)MapOp.get( nodeMap, uid );
   wxMenu menu( wxString(wBiDiBnode.getpath( bidibnode ),wxConvUTF8) );
-  menu.Append( path, wxGetApp().getMenu("info") );
+  menu.Append( 1001, wxGetApp().getMenu("info") );
+  menu.Append( 1002, wxGetApp().getMenu("identify") );
   menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BidibIdentDlg::onMenu ), NULL, this );
 
   PopupMenu(&menu );

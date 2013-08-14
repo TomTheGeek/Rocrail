@@ -23200,4 +23200,7 @@
     <ru txt="Сигналы со стороны (+)"/>
     <sl txt="Plus(+) stran signalov"/>
   </Msg>
+  <Msg id="identify">
+    <en txt="Identify"/>
+  </Msg>
 </Messages>
