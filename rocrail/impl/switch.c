@@ -906,7 +906,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     /* reject command because its electically occupied */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reject command because switch [%s] electically occupied",
                  SwitchOp.getId( inst ) );
-    return True;
+    return False;
   }
 
 
