@@ -228,6 +228,10 @@ const char* bidibGetProductName(int vid, int pid, char** www) {
     if( pid == 108 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/lightcontrol1/mobalist.html"; return "MoBaLiSt";}
     if( pid == 110 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/lightcontrol1/lightcontrol.html"; return "Bootloader LightControl";}
     if( pid == 111 ) {if(www!=NULL) *www="http://opendcc.de/elektronik/gbmboost/gbmboost_download.html"; return "Bootloader GBMBoost";}
+    if( pid == 112 ) {if(www!=NULL) *www="http://www.opendcc.de/elektronik/bidibone/bidibone.html"; return "BiDiBOne Bootloader";}
+    if( pid == 113 ) {if(www!=NULL) *www="http://www.opendcc.de/elektronik/bidibone/onetester.html"; return "BiDiBOne OneTester 24 LED-Testboard";}
+    if( pid == 114 ) {if(www!=NULL) *www="http://www.opendcc.de/elektronik/bidibone/onehub.html"; return "BiDiBOne OneHub BiDiBus Hub";}
+    if( pid == 115 ) {if(www!=NULL) *www="http://www.opendcc.de/elektronik/bidibone/onedmx.html"; return "BiDiBOne OneDMX DMX Controller";}
     if( pid == 220 ) {if(www!=NULL) *www="http://www.bidib.org/support/product_id.html"; return "Switch-64";}
     if( pid == 221 ) {if(www!=NULL) *www="http://www.bidib.org/support/product_id.html"; return "LED-Optics";}
   }
