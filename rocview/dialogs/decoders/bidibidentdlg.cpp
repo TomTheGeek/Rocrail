@@ -151,6 +151,19 @@ void BidibIdentDlg::event(iONode node) {
     handleFeature(node);
     NodeOp.base.del(node);
   }
+  else if(  wProgram.getcmd( node ) == wProgram.type ) {
+    char mnemonic[32];
+    char* classname = bidibGetClassName(wProgram.getprod(node), mnemonic, NULL);
+    char key[32];
+    StrOp.fmtb(key, "[%s] %08X", mnemonic, wProgram.getmodid(node) );
+    wxTreeItemId item = findTreeItem( m_Tree->GetRootItem(), wxString( key, wxConvUTF8));
+    if( item.IsOk() ) {
+      m_Tree->SelectItem(item);
+      m_Tree->ScrollTo(item);
+    }
+    StrOp.free(classname);
+    NodeOp.base.del(node);
+  }
   else if(  wProgram.getcmd( node ) == wProgram.vendorcvget ) {
     eventUpdate = true;
     m_VendorCVName->SetValue( wxString( wProgram.getstrval1(node),wxConvUTF8));
