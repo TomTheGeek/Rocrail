@@ -66,8 +66,8 @@ BidibIdentDlg::BidibIdentDlg( wxWindow* parent ):BidibIdentDlgGen( parent )
 {
   this->node = NULL;
   __initVendors();
-  initLabels();
   initProducts();
+  initLabels();
   m_Notebook->SetSelection( 0 );
 }
 
@@ -75,8 +75,8 @@ BidibIdentDlg::BidibIdentDlg( wxWindow* parent, iONode node ):BidibIdentDlgGen( 
 {
   this->node = node;
   __initVendors();
-  initLabels();
   initProducts();
+  initLabels();
   initValues();
   m_Notebook->SetSelection( 0 );
 }
@@ -97,6 +97,7 @@ BidibIdentDlg::~BidibIdentDlg() {
 
 void BidibIdentDlg::initProducts() {
   char* l_path = StrOp.fmt( "%s%c%s", wGui.getdecpath( wxGetApp().getIni() ), SystemOp.getFileSeparator(), "bidib.xml" );
+  m_ProductsMap = MapOp.inst();
   if( FileOp.exist(l_path) ) {
     iOFile f = FileOp.inst( l_path, OPEN_READONLY );
     char* buffer = (char*)allocMem( FileOp.size( f ) +1 );
@@ -114,6 +115,7 @@ void BidibIdentDlg::initProducts() {
           while( product != NULL ) {
             char key[32];
             StrOp.fmtb( key, "%d-%d", wProduct.getvid(product), wProduct.getpid(product));
+            TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"product key=%s %s", key, wProduct.getdesc(product) );
             MapOp.put( m_ProductsMap, key, (obj)product);
             product = NodeOp.findNextNode( list, product );
           }
@@ -435,7 +437,6 @@ void BidibIdentDlg::initLabels() {
   servoSetMutex = MutexOp.inst(NULL, True);
   m_SelectedBidibNode = NULL;
   m_ProductsNode = NULL;
-  m_ProductsMap = MapOp.inst();
 
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
@@ -581,13 +582,16 @@ int BidibIdentDlg::getProductID(int uid) {
 const char* BidibIdentDlg::GetProductName(int vid, int pid, char** www) {
   char key[32];
   StrOp.fmtb( key, "%d-%d", vid, pid );
+  TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"looking up product key=%s", key );
   iONode product = (iONode)MapOp.get( m_ProductsMap, key);
   if( product != NULL ) {
     TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"product from xml: %s", wProduct.getdesc(product) );
     *www = (char*)wProduct.geturl(product);
     return wProduct.getdesc(product);
   }
-  return bidibGetProductName(vid, pid, www);
+  TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"product key=% not found", key );
+  *www = (char*)"http://www.bidib.org/support/product_id.html";
+  return "Unknown product.";
 }
 
 
