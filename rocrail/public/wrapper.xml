@@ -100,12 +100,23 @@
     <var name="currenttrc" vt="bool" defval="false" remark="Current trace only."/>
   </issue>
 
-  <product wrappername="Product">
-    <var name="vid" vt="int" defval="0" range="0-*" remark="Vendor ID"/>
-    <var name="pid" vt="int" defval="0" range="0-*" remark="Product ID"/>
-    <var name="desc" vt="string" defval="" range="*" remark="Description"/>
+  <description wrappername="Description">
+    <var name="lang" vt="string" defval="" range="*" remark="Language"/>
+    <var name="text" vt="string" defval="" range="*" remark="Description"/>
     <var name="url" vt="string" defval="" range="*" remark="Documentation URL"/>
-  </product>
+  </description>
+  
+  <productlist wrappername="ProductList">
+    <product wrappername="Product" cardinality="n">
+      <var name="vid" vt="int" defval="0" range="0-*" remark="Vendor ID"/>
+      <var name="pid" vt="int" defval="0" range="0-*" remark="Product ID"/>
+      <var name="cid" vt="int" defval="0" range="0-*" remark="Class ID"/>
+      <var name="cidext" vt="int" defval="0" range="0-*" remark="Class ID extension"/>
+      <var name="desc" vt="string" defval="" range="*" remark="Description"/>
+      <var name="url" vt="string" defval="" range="*" remark="Documentation URL"/>
+      <description cardinality="n"/>
+    </product>
+  </productlist>
 
   <cvbyte wrappername="CVByte">
     <var name="nr" vt="int" defval="0" range="0-*" remark="CV-Number"/>

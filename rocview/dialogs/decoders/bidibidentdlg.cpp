@@ -54,6 +54,7 @@
 #include "rocrail/wrapper/public/Macro.h"
 #include "rocrail/wrapper/public/MacroLine.h"
 #include "rocrail/wrapper/public/DataReq.h"
+#include "rocrail/wrapper/public/ProductList.h"
 #include "rocrail/wrapper/public/Product.h"
 #include "rocdigs/impl/bidib/bidibutils.h"
 #include "rocdigs/impl/bidib/bidib_messages.h"
@@ -107,12 +108,15 @@ void BidibIdentDlg::initProducts() {
       DocOp.base.del( doc );
 
       if( m_ProductsNode != NULL ) {
-        iONode product = NodeOp.findNode(m_ProductsNode, wProduct.name());
-        while( product != NULL ) {
-          char key[32];
-          StrOp.fmtb( key, "%d-%d", wProduct.getvid(product), wProduct.getpid(product));
-          MapOp.put( m_ProductsMap, key, (obj)product);
-          product = NodeOp.findNextNode( m_ProductsNode, product );
+        iONode list = NodeOp.findNode(m_ProductsNode, wProductList.name());
+        if( list != NULL ) {
+          iONode product = NodeOp.findNode(list, wProduct.name());
+          while( product != NULL ) {
+            char key[32];
+            StrOp.fmtb( key, "%d-%d", wProduct.getvid(product), wProduct.getpid(product));
+            MapOp.put( m_ProductsMap, key, (obj)product);
+            product = NodeOp.findNextNode( list, product );
+          }
         }
       }
     }
