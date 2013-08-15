@@ -1277,7 +1277,9 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
     if( m_RocProDlg != NULL ) {
       m_RocProDlg->event(node);
     }
-    m_CV->event( node );
+    else {
+      m_CV->event( node );
+    }
   }
 }
 
