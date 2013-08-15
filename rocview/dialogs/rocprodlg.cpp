@@ -410,11 +410,12 @@ void RocProDlg::onClose( wxCloseEvent& event ) {
 }
 
 void RocProDlg::event(iONode node) {
-  TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "m_PendingCV=%d", m_PendingCV );
   if( StrOp.equals(NodeOp.getName(node), wProgram.name() ) ) {
     int cmd = wProgram.getcmd(node);
     int cv  = wProgram.getcv (node);
     int value = wProgram.getvalue(node);
+
+    TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "event cmd=%d cv=%d value=%d", cmd, cv, value );
 
     if( cmd == wProgram.datarsp || cmd == wProgram.statusrsp ) {
 
@@ -825,10 +826,10 @@ void RocProDlg::onSaveCV( wxCommandEvent& event ) {
 }
 
 void RocProDlg::doCV(int command, int nr, int value) {
-  TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "m_PendingCV=%d", m_PendingCV );
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setcmd( cmd, command );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8)  );
+  TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "doCV cmd=%d cv=%d value=%d", command, nr, value );
   if( m_LocoProps != NULL ) {
     int addr = wLoc.getaddr(m_LocoProps);
     wProgram.setaddr( cmd, addr );
