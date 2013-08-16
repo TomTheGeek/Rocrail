@@ -49,7 +49,14 @@
      <TD align="left"><xsl:value-of select="@pid" /></TD>
      <TD align="left"><xsl:value-of select="@cid" /></TD>
      <TD align="left"><xsl:value-of select="@desc" /></TD>
-     <TD align="left"><xsl:value-of select="@url" /></TD>
+     <TD align="left">
+       <xsl:element name="a">
+       <xsl:attribute name="href">
+       <xsl:value-of select="@url"/>
+       </xsl:attribute>
+       <xsl:value-of select="@url"/>
+       </xsl:element>
+     </TD>
   </TR>
 
 
