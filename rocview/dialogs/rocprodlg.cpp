@@ -671,8 +671,11 @@ void RocProDlg::setCVVal(int val, bool updateval) {
     m_Bit6->SetValue(val&0x40?true:false);
     m_Bit7->SetValue(val&0x80?true:false);
 
-    if( m_Save && m_Nr->GetValue() > 0 )
-      doCV( wProgram.save, m_Nr->GetValue(), m_Value->GetValue() );
+    if( m_Save && m_Nr->GetValue() > 0 ) {
+      iONode cv = getLocoCV(m_Nr->GetValue());
+      if( cv == NULL || wCVByte.getvalue(cv) != m_Value->GetValue() )
+        doCV( wProgram.save, m_Nr->GetValue(), m_Value->GetValue() );
+    }
 
   }
 }
