@@ -1612,8 +1612,9 @@ static void __seqAck(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type, byte* pdat
 }
 
 
-static void __handleError(iOBiDiB bidib, byte* pdata) {
+static Boolean __handleError(iOBiDiB bidib, byte* pdata) {
   iOBiDiBData data = Data(bidib);
+  Boolean STOP = False;
   char txt[256] = {'\0'};
 
   switch( pdata[0] ) {
@@ -1640,26 +1641,34 @@ static void __handleError(iOBiDiB bidib, byte* pdata) {
     break;
   case BIDIB_ERR_BUS: // Bus fault
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Bus fault: %d", pdata[1] );
+    STOP = True;
     break;
   case BIDIB_ERR_ADDRSTACK:
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Address stack overflow: %02X%02X%02X%02X", pdata[1], pdata[2], pdata[3], pdata[4] );
+    STOP = True;
     break;
   case BIDIB_ERR_IDDOUBLE:
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Double ID detected" );
     break;
   case BIDIB_ERR_SUBCRC:
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Sub node %d CRC error", pdata[1] );
+    STOP = True;
     break;
   case BIDIB_ERR_SUBTIME:
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Sub node %d time out", pdata[1] );
+    STOP = True;
     break;
   case BIDIB_ERR_HW: // Hardware error
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Hardware error: %d", pdata[1] );
+    STOP = True;
     break;
   case BIDIB_ERR_OVERRUN:
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Message buffer in downstream overrun, messages lost: %d", pdata[1] );
+    STOP = True;
     break;
   }
+
+  return STOP;
 }
 
 
@@ -2881,7 +2890,17 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // MSG_SYS_ERROR
     TraceOp.trc( name, pdata[0]==0 ? TRCLEVEL_MONITOR:TRCLEVEL_EXCEPTION, __LINE__, 9999,
         "MSG_SYS_ERROR, path=%s seq=%d error=%d", pathKey, Seq, pdata[0] );
-    __handleError(bidib, pdata);
+    if( __handleError(bidib, pdata) ) {
+      /* STOP */
+      if( data->defaultmain != NULL ) {
+        byte msgdata[128];
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Power OFF on ERROR" );
+        msgdata[0] = BIDIB_CS_STATE_OFF;
+        data->subWrite((obj)bidib, data->defaultmain->path, MSG_CS_SET_STATE, msgdata, 1, data->defaultmain);
+        data->power = False;
+        __inform(bidib);
+      }
+    }
     break;
   }
 
