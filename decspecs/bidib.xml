@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <?xml-stylesheet type="text/xsl" href="bidib_products_en.xsl"?>
-<bidib title="BiDiB">
+<bidib title="BiDiB" version="1.0">
 	<productlist>
 	  <product vid="13" pid="101" desc="GBM16TC Stand-Alone" url="http://www.opendcc.de/s88/gbm_bidi/gbm_bidi.html"/> 
 	  <product vid="13" pid="102" desc="GBM16TC Interface" url="http://www.opendcc.de/s88/gbm_bidi/gbm_bidi.html"/> 

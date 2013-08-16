@@ -9,8 +9,7 @@
   </head>
   <body>
   <h2>BiDiB Products</h2>
-
-  <table border="1" rules="all" cellpadding="4" cellspacing="0" width="80%">
+  <table border="0" rules="none" cellpadding="4" cellspacing="0" width="90%">
       <THEAD>
     <TR>
        <TH bgcolor="lightgrey">VID</TH>
@@ -27,6 +26,11 @@
    </body>
    </html>
    
+</xsl:template>
+
+<xsl:template match="bidib">  
+  <h3>Version: <xsl:value-of select="@version"/></h3>
+  <xsl:apply-templates/>
 </xsl:template>
 
 <xsl:template match="productlist">  
