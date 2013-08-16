@@ -235,11 +235,12 @@ static iONode __getIniNode(iOBiDiB bidib, int uid) {
 }
 
 
-static void __inform( iOBiDiB inst ) {
+static void __inform( iOBiDiB inst, Boolean stopall ) {
   iOBiDiBData data = Data(inst);
   iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
   wState.setiid( node, wDigInt.getiid( data->ini ) );
   wState.setpower( node, data->power );
+  wState.setemergency( node, stopall );
   data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 }
 
@@ -531,7 +532,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       msgdata[0] = BIDIB_CS_STATE_OFF;
       data->subWrite((obj)inst, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode);
       data->power = False;
-      __inform(inst);
+      __inform(inst, False);
     }
     else if( data->defaultmain != NULL && StrOp.equals( cmd, wSysCmd.go ) ) {
       bidibnode = data->defaultmain;
@@ -539,7 +540,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       msgdata[0] = BIDIB_CS_STATE_GO;
       data->subWrite((obj)inst, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode);
       data->power = True;
-      __inform(inst);
+      __inform(inst, False);
     }
     else if( data->defaultmain != NULL && StrOp.equals( cmd, wSysCmd.ebreak ) ) {
       bidibnode = data->defaultmain;
@@ -547,7 +548,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       msgdata[0] = BIDIB_CS_STATE_STOP;
       data->subWrite((obj)inst, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode);
       data->power = False;
-      __inform(inst);
+      __inform(inst, False);
     }
     else if( StrOp.equals( cmd, wSysCmd.sod ) ) {
       __SoD(inst, NULL);
@@ -2898,7 +2899,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
         msgdata[0] = BIDIB_CS_STATE_OFF;
         data->subWrite((obj)bidib, data->defaultmain->path, MSG_CS_SET_STATE, msgdata, 1, data->defaultmain);
         data->power = False;
-        __inform(bidib);
+        __inform(bidib, True);
       }
     }
     break;

@@ -982,6 +982,7 @@
     <var name="voltmin" vt="int" defval="0" remark="Track voltage in mV."/>
     <var name="uid" vt="int" defval="0" remark="Unique-ID of reporter."/>
     <var name="shortcut" vt="bool" defval="false"/>
+    <var name="emergency" vt="bool" defval="false"/>
   </state>
 
   <response remark="Interface Response." wrappername="Response">

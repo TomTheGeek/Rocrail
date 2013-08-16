@@ -1088,6 +1088,16 @@ static void __listener( obj inst, iONode nodeC, int level ) {
       cb(inst,clockcmd);
     }
 
+    if( wState.isemergency(nodeC) ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "controller reports emergency: power off, stop all" );
+      AppOp.stop();
+      if( AppOp.getModel() != NULL ) {
+        iONode cmd = NodeOp.inst(wAutoCmd.name(), NULL, ELEMENT_NODE);
+        wAutoCmd.setcmd(cmd, wAutoCmd.stop);
+        ModelOp.cmd( AppOp.getModel(), cmd);
+      }
+    }
+
     data->programming  = wState.isprogramming( nodeC );
     data->trackbus     = wState.istrackbus( nodeC );
     data->sensorbus    = wState.issensorbus( nodeC );
