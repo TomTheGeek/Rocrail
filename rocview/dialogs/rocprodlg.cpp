@@ -118,7 +118,7 @@ RocProDlgGen( parent )
           int x = 0;
           for( x = 0; x <= lastnr-firstnr; x++) {
             m_CVall[nridx] = x + firstnr;
-            TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "m_CVall[%d]=%d", nridx, m_CVall[nridx] );
+            TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "m_CVall[%d]=%d", nridx, m_CVall[nridx] );
             nridx++;
           }
         }
@@ -128,7 +128,7 @@ RocProDlgGen( parent )
     else {
       int cvnr = atoi(nr);
       m_CVall[nridx] = cvnr;
-      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "m_CVall[%d]=%d", nridx, cvnr );
+      TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "m_CVall[%d]=%d", nridx, cvnr );
       nridx++;
     }
     nr = StrTokOp.nextToken(tok);
@@ -866,7 +866,7 @@ void RocProDlg::onTreeItemPopup( wxTreeEvent& event ) {
 
 
 void RocProDlg::onExtAddrRead( wxCommandEvent& event ) {
-  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "get long address..." );
+  TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "get long address..." );
   m_CVoperation = wProgram.get;
   m_bLongAddress = true;
   m_PendingCV = 17;
