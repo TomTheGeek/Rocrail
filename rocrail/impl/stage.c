@@ -457,8 +457,10 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
   }
 
   else if( section != NULL && !data->wait4enter ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensors [%s] %s event for stage [%s] section [%s][%d] of [%d]",
-        id, puls?"on":"off", data->id, wStageSection.getid(section), wStageSection.getnr(section), data->sectionCount );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "sensors [%s] %s event for stage [%s] section [%s][%d] of [%d] target=%d sectionidx=%d",
+        id, puls?"on":"off", data->id, wStageSection.getid(section), wStageSection.getnr(section),
+        data->sectionCount, data->targetSection, wStageSection.getidx(section) );
 
     __dumpSections((iOStage)inst);
 
