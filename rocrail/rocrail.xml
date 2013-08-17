@@ -370,6 +370,7 @@
       <var name="trackbus" vt="Boolean"/>
       <var name="sensorbus" vt="Boolean"/>
       <var name="accessorybus" vt="Boolean"/>
+      <var name="needkey4loconet" vt="Boolean"/>
       <var name="checker" vt="iOThread"/>
       <var name="powerman" vt="iOPowerMan"/>
       <var name="r2rnet" vt="iOR2Rnet"/>

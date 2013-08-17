@@ -4272,6 +4272,10 @@ void RocGuiFrame::OnStateEvent( wxCommandEvent& event ) {
         SetStatusText( wxString::Format( _T("%dV%d %dmA"),
             wState.getvolt( node )/1000, (wState.getvolt( node )%1000)/100, wState.getload( node )), status_load );
     }
+
+    if( wState.isneedkey4loconet( node ) ) {
+      wxMessageDialog( this, wxGetApp().getMsg("loconetlicense"), _T("Rocrail"), wxOK | wxICON_INFORMATION ).ShowModal();
+    }
   }
 
   // Cleanup node:

@@ -1132,6 +1132,7 @@ static iONode _getState( iOControl inst ) {
   wState.setsensorbus( node, data->sensorbus );
   wState.setaccessorybus( node, data->accessorybus );
   wState.sethealthy( node, ModelOp.isHealthy(model) );
+  wState.setneedkey4loconet( node, data->needkey4loconet );
   return node;
 }
 
@@ -1195,6 +1196,18 @@ static Boolean __initDigInts( iOControl inst ) {
     iIDigInt pDi = NULL;
     iOLib    pLib = NULL;
     LPFNROCGETDIGINT pInitFun = (void *) NULL;
+
+    if( StrOp.equals( wDigInt.loconet, lib ) && !AppOp.isKeyValid() ) {
+      o->needkey4loconet = True;
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "--------------------------------------------------" );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " A valid support key is needed for using LocoNet." );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "--------------------------------------------------" );
+      digint = wRocRail.nextdigint( ini, digint );
+      continue;
+    }
+    else {
+      o->needkey4loconet = False;
+    }
 
     if( StrOp.equals( wDigInt.lenz, lib ) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set lib from [lenz] to [xpressnet]" );

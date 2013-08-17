@@ -23209,4 +23209,7 @@
   <Msg id="getlasterror">
     <en txt="Get last error"/>
   </Msg>
+  <Msg id="loconetlicense">
+    <en txt="Due to license fee for Digitrax LocoNet(r) a valid support key is required."/>
+  </Msg>
 </Messages>
