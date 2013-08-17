@@ -1202,11 +1202,11 @@ static Boolean __initDigInts( iOControl inst ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "--------------------------------------------------" );
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " A valid support key is needed for using LocoNet." );
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "--------------------------------------------------" );
-      digint = wRocRail.nextdigint( ini, digint );
-      continue;
+      wDigInt.setrestricted(digint, True);
     }
     else {
       o->needkey4loconet = False;
+      wDigInt.setrestricted(digint, False);
     }
 
     if( StrOp.equals( wDigInt.lenz, lib ) ) {

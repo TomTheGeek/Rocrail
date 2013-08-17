@@ -2036,6 +2036,12 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
 
       slot =  __getLocoSlot( loconet_inst, node, &status);
 
+      if( wDigInt.isrestricted( data->ini ) ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+            "Restricted functionality due to missing valid support key; Loco command ignored for %s.", wLoc.getid(node) );
+        return 0;
+      }
+
       if( slot > 0 && StrOp.equals( wLoc.dispatch, wLoc.getcmd(node) ) ) {
         /* set as purged: */
         data->locoslot[slot] = 0;
@@ -2583,8 +2589,9 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid     =%s", wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib  =%s", wDigInt.getsublib( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid        = %s", wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib     = %s", wDigInt.getsublib( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restricted = %s", wDigInt.isrestricted( data->ini ) ? "yes":"no" );
 
   /* choose interface: */
   if( StrOp.equals( wDigInt.sublib_socket, wDigInt.getsublib( ini ) ) ) {

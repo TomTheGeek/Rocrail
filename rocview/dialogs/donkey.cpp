@@ -111,6 +111,7 @@ void DonKey::initLabels() {
 }
 
 void DonKey::initValues() {
+  TraceOp.trc( "donkey", TRCLEVEL_INFO, __LINE__, 9999, "init values..." );
   char* expdate = NULL;
   long expdays = 0;
   if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),

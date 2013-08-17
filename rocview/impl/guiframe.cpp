@@ -3623,12 +3623,14 @@ void RocGuiFrame::OnDonKey( wxCommandEvent& event ) {
   if( SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
       StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, &expdays, wGlobal.vmajor, wGlobal.vminor) ) {
     DonKey* dlg = new DonKey(this, m_Ini );
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "key is expired");
     if( wxID_OK == dlg->ShowModal() ) {
     }
     dlg->Destroy();
   }
   else if( expdays < 8 && expdays >= 0 ) {
     DonKey* dlg = new DonKey(this, m_Ini );
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "key expires in less then 8 days");
     if( wxID_OK == dlg->ShowModal() ) {
     }
     dlg->Destroy();
@@ -3637,6 +3639,7 @@ void RocGuiFrame::OnDonKey( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnDonKeyInfo( wxCommandEvent& event ) {
   DonKey* dlg = new DonKey(this, m_Ini );
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "key info");
   if( wxID_OK == dlg->ShowModal() ) {
   }
   dlg->Destroy();
