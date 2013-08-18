@@ -673,8 +673,11 @@ void RocProDlg::setCVVal(int val, bool updateval) {
 
     if( m_Save && m_Nr->GetValue() > 0 ) {
       iONode cv = getLocoCV(m_Nr->GetValue());
-      if( cv == NULL || wCVByte.getvalue(cv) != m_Value->GetValue() )
+      if( cv == NULL || wCVByte.getvalue(cv) != m_Value->GetValue() ) {
+        // Change the value in the local copy too.
+        wCVByte.setvalue(cv, m_Value->GetValue());
         doCV( wProgram.save, m_Nr->GetValue(), m_Value->GetValue() );
+      }
     }
 
   }
