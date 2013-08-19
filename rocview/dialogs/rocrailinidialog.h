@@ -355,6 +355,7 @@ public:
     wxCheckBox* m_SkipSetSg;
     wxCheckBox* m_UseBiCom;
     wxCheckBox* m_CreateGuestOnBiDi;
+    wxCheckBox* m_UseBiDiDirection;
     wxCheckBox* m_StopAtIdentMisMatch;
     wxCheckBox* m_PowerOffAtGhost;
     wxCheckBox* m_EBreakAtGhost;

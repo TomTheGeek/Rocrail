@@ -784,6 +784,7 @@
       <var name="restoreschedule" vt="bool" defval="true"/>
       <var name="actiontimer60" vt="bool" defval="true"/>
       <var name="createguestonbidi" vt="bool" defval="false"/>
+      <var name="usebididir" vt="bool" defval="false"/>
     </ctrl>
     <anaopt remark="Analyser options." wrappername="AnaOpt">
       <!-- option -->

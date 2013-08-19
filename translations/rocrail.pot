@@ -6641,3 +6641,9 @@ msgstr ""
 msgid "Due to license fee for Digitrax LocoNet(r) a valid support key is required."
 msgstr ""
 
+#. 
+# id="usebididir"
+#, c-format
+msgid "Use BiDi direction"
+msgstr ""
+
