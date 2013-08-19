@@ -396,6 +396,20 @@ static void reconThread( void* threadinst ) {
 }
 
 
+static void donkeyThread( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  RocGui* o = (RocGui*)ThreadOp.getParm( th );
+
+  TraceOp.trc( "conthread", TRCLEVEL_INFO, __LINE__, 9999, "donkeyThread" );
+  ThreadOp.sleep(2500);
+  /* Donation dialog at startup */
+  wxCommandEvent evt1( wxEVT_COMMAND_MENU_SELECTED, ME_DonKey );
+  wxPostEvent( o->m_Frame, evt1 );
+
+  ThreadOp.base.del(th);
+}
+
+
 static void conThread( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   RocGui* o = (RocGui*)ThreadOp.getParm( th );
@@ -811,8 +825,8 @@ bool RocGui::OnInit() {
   m_Frame->Raise();
 
   /* Donation dialog at startup */
-  wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_DonKey );
-  wxPostEvent( m_Frame, evt );
+  iOThread dkth = ThreadOp.inst( "donkeythread", &donkeyThread, this );
+  ThreadOp.start( dkth );
 
 
   if( !m_bOffline ) {

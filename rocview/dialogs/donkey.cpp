@@ -51,10 +51,12 @@ DonKeyGen( parent )
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
   initValues();
+  Raise();
 }
 
 void DonKey::OnSplash( wxCommandEvent& event ) {
   OnLoadKey(event);
+  Raise();
 }
 void DonKey::OnLoadKey( wxCommandEvent& event )
 {
