@@ -643,6 +643,11 @@ void RocProDlg::onLocoList(wxCommandEvent& event) {
   else {
     m_Image->SetValue(_T(""));
   }
+
+  m_IID->SetValue( wxT("") );
+  if( m_LocoProps != NULL ) {
+    m_IID->SetValue(wxString( wLoc.getiid(m_LocoProps), wxConvUTF8));
+  }
 }
 
 iONode RocProDlg::getLocoCV(int nr) {
