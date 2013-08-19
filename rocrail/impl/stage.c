@@ -329,6 +329,7 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
   int sections = ListOp.size( data->sectionList );
   int i = 0;
   int nrSections = 0;
+  int nrOccSections = 0;
   iOLoc loco = ModelOp.getLoc( model, locId, NULL, False );
 
   if( loco != NULL ) {
@@ -348,16 +349,17 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
         freelen += data->sectionLength;
       }
       freeupsection = i;
+      nrOccSections++;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "freelen=%d trainlen=%d", freelen, data->trainGap + lclen );
       if( freelen >= (data->trainGap + lclen) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "freelen=%d loco=%s freeupsection=%d", freelen, data->locId, freeupsection );
+            "freelen=%d loco=%s freeupsection=%d nrOccSections=%d", freelen, data->locId, freeupsection, nrOccSections );
         break;
       }
     }
 
     /* check the sections */
-    for( i = 0; i < freeupsection; i++ ) {
+    for( i = 0; i < ListOp.size( data->sectionList); i++ ) {
       iONode section = (iONode)ListOp.get( data->sectionList, i);
       if( StrOp.equals( locId, wStageSection.getlcid(section) ) ) {
         nrSections++;
@@ -368,10 +370,10 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
     }
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "moving %d sections of loco %s to section head %d", nrSections, data->locId, targetSection );
+        "moving %d sections of loco %s to section head %d (nrsections=%d)", nrSections, data->locId, targetSection, nrOccSections );
 
-    if( nrSections >  0 ) {
-      for( i = 0; i < nrSections; i++ ) {
+    if( nrOccSections >  0 ) {
+      for( i = 0; i < nrOccSections; i++ ) {
         iONode section = (iONode)ListOp.get( data->sectionList, targetSection - i);
         wStageSection.setlcid(section, locId );
       }
