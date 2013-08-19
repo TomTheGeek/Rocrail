@@ -253,7 +253,7 @@
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
                                         <property name="size">-1,60</property>
-                                        <property name="style">wxTE_MULTILINE|wxTE_READONLY</property>
+                                        <property name="style">wxTE_MULTILINE|wxTE_PROCESS_ENTER</property>
                                         <property name="subclass"></property>
                                         <property name="tooltip"></property>
                                         <property name="validator_data_type"></property>
@@ -287,7 +287,7 @@
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
                                         <event name="OnText"></event>
-                                        <event name="OnTextEnter"></event>
+                                        <event name="OnTextEnter">onCVInfoEnter</event>
                                         <event name="OnTextMaxLen"></event>
                                         <event name="OnTextURL"></event>
                                         <event name="OnUpdateUI"></event>

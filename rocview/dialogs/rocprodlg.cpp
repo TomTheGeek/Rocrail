@@ -93,6 +93,7 @@ RocProDlgGen( parent )
   m_CVidxAll = 0;
   m_CVoperation = 0;
   m_Save = false;
+  m_SelectedCV = NULL;
 
   m_CVconf = wGui.getcvconf( wxGetApp().getIni() );
   if( m_CVconf == NULL ) {
@@ -168,6 +169,7 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
   char* desc = StrOp.dup(itemText.mb_str(wxConvUTF8));
   TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "tree sel=%s", desc );
   iONode cv = (iONode)MapOp.get( m_CVMap, desc );
+  m_SelectedCV = cv;
   if( cv != NULL ) {
     int nr = wCVByte.getnr(cv);
     m_Info->SetValue(wxString( wCVByte.getinfo(cv), wxConvUTF8));
@@ -207,6 +209,7 @@ void RocProDlg::loadDecFile() {
     m_DecTree->DeleteAllItems();
     MapOp.clear(m_CVMap);
     MapOp.clear(m_CVNrMap);
+    m_SelectedCV = NULL;
     wxTreeItemId root  = m_DecTree->AddRoot(wxString( NodeOp.getStr(m_DecNode, "manu", "?"), wxConvUTF8)+wxT(" ")+wxString( NodeOp.getStr(m_DecNode, "type", "?"), wxConvUTF8));
     iOMap catMap = MapOp.inst();
     int cnt = NodeOp.getChildCnt(m_DecNode);
@@ -933,5 +936,20 @@ void RocProDlg::onReadAllCV( wxCommandEvent& event ) {
   m_CVoperation = CVGETALL;
   TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "reading m_CVall[%d]=%d", m_CVidxAll, m_CVall[m_CVidxAll] );
   doCV( wProgram.get, m_CVall[m_CVidxAll], 0 );
+}
+
+void RocProDlg::onCVInfoEnter( wxCommandEvent& event ) {
+  if( m_SelectedCV != NULL ) {
+    TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "save changed CV info." );
+    wCVByte.setinfo(m_SelectedCV, m_Info->GetValue().mb_str(wxConvUTF8));
+    if( StrOp.len(m_DecFilename) > 0 ) {
+      iOFile f = FileOp.inst( m_DecFilename, OPEN_WRITE );
+      if( f != NULL ) {
+        char* dec = NodeOp.base.toString(m_DecNode);
+        FileOp.writeStr( f, dec );
+        FileOp.base.del( f );
+      }
+    }
+  }
 }
 

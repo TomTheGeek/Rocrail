@@ -45,6 +45,7 @@ class RocProDlg : public RocProDlgGen
   iOMap m_CVMap;
   iOMap m_CVNrMap;
   iOMap m_CatMap;
+  iONode m_SelectedCV;
   bool m_bSpeedCurve;
   int m_CVoperation;
   int m_PendingCV;
@@ -95,6 +96,7 @@ class RocProDlg : public RocProDlgGen
     void onPTOFF( wxCommandEvent& event );
     void onImgOpen( wxCommandEvent& event );
     void onReadAllCV( wxCommandEvent& event );
+    void onCVInfoEnter( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		RocProDlg( wxWindow* parent );
