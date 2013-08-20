@@ -91,13 +91,13 @@ ifeq ($(PLATFORM),WIN64)
 else ifeq ($(PLATFORM),WIN32)
 	LIBS=-lgdiplus -liphlpapi -lmpr
 	ifeq ($(TOOLPREFIX),i686-w64-mingw32-)
-	  LNK_FLAGS=`$(FS)usr$(FS)i686-w64-mingw32$(FS)bin$(FS)wx-config --libs` -mthreads
+	  LNK_FLAGS=`$(FS)usr$(FS)i686-w64-mingw32$(FS)bin$(FS)wx-config --libs` -mthreads -static
 	else
-	  LNK_FLAGS=`$(FS)usr$(FS)i586-mingw32msvc$(FS)bin$(FS)wx-config --libs` -mthreads
+	  LNK_FLAGS=`$(FS)usr$(FS)i586-mingw32msvc$(FS)bin$(FS)wx-config --libs` -mthreads -static
 	endif
 	WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
 	ifeq ($(NATIVE),WIN32)
-		LNK_FLAGS=-L$(MINGWINSTALL)\lib-$(LIBRARY) -mthreads -Wl,--subsystem,windows -mwindows -lwx_msw$(LIBEXT)_html-$(wxversion) -lwx_msw$(LIBEXT)_core-$(wxversion) -lwx_base$(LIBEXT)-$(wxversion) -lwxtiff-$(wxversion) -lwxjpeg-$(wxversion) -lwxpng-$(wxversion) -lwxzlib-$(wxversion) -lwxregex$(LIBEXT)-$(wxversion) -lwxexpat-$(wxversion) -lwx_msw$(LIBEXT)_adv-$(wxversion) -lwx_msw$(LIBEXT)_qa-$(wxversion) -lwx_base$(LIBEXT)_xml-$(wxversion) -lwx_base$(LIBEXT)_net-$(wxversion)
+		LNK_FLAGS=-L$(MINGWINSTALL)\lib-$(LIBRARY) -mthreads -static -Wl,--subsystem,windows -mwindows -lwx_msw$(LIBEXT)_html-$(wxversion) -lwx_msw$(LIBEXT)_core-$(wxversion) -lwx_base$(LIBEXT)-$(wxversion) -lwxtiff-$(wxversion) -lwxjpeg-$(wxversion) -lwxpng-$(wxversion) -lwxzlib-$(wxversion) -lwxregex$(LIBEXT)-$(wxversion) -lwxexpat-$(wxversion) -lwx_msw$(LIBEXT)_adv-$(wxversion) -lwx_msw$(LIBEXT)_qa-$(wxversion) -lwx_base$(LIBEXT)_xml-$(wxversion) -lwx_base$(LIBEXT)_net-$(wxversion)
 		WX_FLAGS=-c $(DEBUG) -D__WXMSW__ -O2 -fno-strict-aliasing -mthreads -mwindows -DWX_PRECOMP -DNO_GCC_PRAGMA
 	endif
 	DIRPREFIX=win

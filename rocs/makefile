@@ -65,7 +65,7 @@ ifeq ($(PLATFORM),WIN32)
 	COREDIR=win
 	BINSUFFIX=.exe
 	CC_EXTRA_FLAGS=-mthreads
-	LNK_FLAGS=-mthreads
+	LNK_FLAGS=-mthreads -static
 else
 	COREDIR=unx
 	BINSUFFIX=

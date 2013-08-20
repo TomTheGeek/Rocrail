@@ -62,7 +62,7 @@ ifeq ($(PLATFORM),WIN32)
 	LIBS=-liphlpapi -lmpr -lws2_32 -ladvapi32 -lwinmm
 	DIRPREFIX=win
 	CC_EXTRA_FLAGS=-mthreads
-	LNK_FLAGS=-mthreads
+	LNK_FLAGS=-mthreads -static
 	BINSUFFIX=.exe
 else ifeq ($(PLATFORM),WIN64)
 	DIRPREFIX=win

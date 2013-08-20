@@ -57,7 +57,7 @@ ifeq ($(PLATFORM),WIN32)
 	LIBS=-liphlpapi -lmpr -lws2_32 -ladvapi32 -lwinmm
 	DIRPREFIX=win
 	CC_EXTRA_FLAGS=-mthreads
-	LNK_FLAGS=--def rocdigs.def -mthreads
+	LNK_FLAGS=--def rocdigs.def -mthreads -static
 	LNK=$(TOOLPREFIX)dllwrap
 	SHAREDSUFFIX=.dll
 else ifeq ($(PLATFORM),WIN64)
