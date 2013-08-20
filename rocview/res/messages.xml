@@ -8641,7 +8641,7 @@
     <de txt="Handbuch" accel="0" tip="Das Online Handbuch."/>
     <en txt="Guide" accel="0" tip="The online Manual."/>
     <nl txt="Handboek" accel="0" tip="Het online handboek."/>
-    <sv txt="Hjälp" accel="0" tip="Manual"/>
+    <sv txt="Guide" accel="0" tip="Manual"/>
     <fr txt="Guide" accel="0" tip="Mode d'emploi en ligne."/>
     <tr txt="Kılavuz" accel="0" tip="The online Manual."/>
     <es txt="Guía" accel="0" tip="Ayuda online."/>
@@ -16341,6 +16341,7 @@
     <sr_latin txt="Prevoznik"/>
     <zh_CN txt="发货人"/>
     <sl txt="Pošiljatelj"/>
+    <sv txt="Speditör"/>
   </Msg>
   <Msg id="origin">
     <en txt="Origin"/>
@@ -17565,7 +17566,7 @@
     <sl txt="Verige"/>
   </Msg>
   <Msg id="shortcutsensor">
-    <de txt="Kurzschluss-Sensor"/>
+    <de txt="Kurzschluss-Rückmelder"/>
     <en txt="Shortcut sensor"/>
     <nl txt="Kortsluit melder"/>
     <pt txt="Atalho de sensor"/>
@@ -19337,6 +19338,7 @@
     <zh_CN txt="服务器"/>
     <sl txt="Servo"/>
     <da txt="servo"/>
+    <sv txt="Servo"/>
   </Msg>
   <Msg id="setup">
     <en txt="Setup"/>
@@ -20006,6 +20008,7 @@
     <sr_latin txt="SVG tema nije nađena; Proveri postavku SVG u Rocview."/>
     <zh_CN txt="没有找到SVG主题，检查Rocview的SVG设置"/>
     <sl txt="Ni SVG teme; preveri SVG nastavitve Rocview-a."/>
+    <sv txt="Inga SVG Teman funna, kontrollera Rocview SVG inställningar."/>
   </Msg>
   <Msg id="useownwaittime">
     <en txt="Use own wait time in blocks"/>
@@ -20383,6 +20386,7 @@
     <sl txt="Stisni"/>
     <en_GB txt="Compress"/>
     <da txt="Komprimér"/>
+    <sv txt="Komprimera"/>
   </Msg>
   <Msg id="syncroutes">
     <en txt="Synchronize routes"/>
@@ -20467,6 +20471,7 @@
     <zh_CN txt="控制代码"/>
     <sl txt="Kontrolna koda"/>
     <en_GB txt="Control code"/>
+    <sv txt="Kontrollkod"/>
   </Msg>
   <Msg id="turntable2go">
     <en txt="Goto Turntable"/>
@@ -20606,6 +20611,7 @@
     <zh_CN txt="获取"/>
     <sl txt="Pridobi"/>
     <da txt="Hent"/>
+    <sv txt="Hämta."/>
   </Msg>
   <Msg id="set">
     <en txt="Set"/>
@@ -20623,6 +20629,7 @@
     <zh_CN txt="设置"/>
     <sl txt="Nastavi"/>
     <da txt="Indstil"/>
+    <sv txt="Ange."/>
   </Msg>
   <Msg id="getall">
     <en txt="Get all"/>
@@ -20656,6 +20663,7 @@
     <zh_CN txt="清除所有的"/>
     <sl txt="Počisti vse"/>
     <da txt="Ryd alle"/>
+    <sv txt="Rensa alla."/>
   </Msg>
   <Msg id="learn">
     <en txt="Learn"/>
@@ -20735,6 +20743,7 @@
     <cs txt="Doba nakládky(ms)"/>
     <zh_CN txt="装载时间"/>
     <sl txt="Čas nalaganja (ms)"/>
+    <sv txt="Laddningstid (ms)."/>
   </Msg>
   <Msg id="shortevents">
     <en txt="Short events"/>
@@ -21050,6 +21059,7 @@
     <sr_latin txt="Vozovi"/>
     <es txt="Trenes"/>
     <da txt="Tog"/>
+    <sv txt="Tåg."/>
   </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
@@ -21095,6 +21105,7 @@
     <zh_CN txt="导航表"/>
     <sl txt="Seznam tur"/>
     <da txt="Tur liste"/>
+    <sv txt="Turlista."/>
   </Msg>
   <Msg id="tour">
     <en txt="Tour"/>
@@ -21110,6 +21121,7 @@
     <zh_CN txt="导航"/>
     <sl txt="Tura"/>
     <da txt="Tur"/>
+    <sv txt="Tur."/>
   </Msg>
   <Msg id="resetspfx">
     <en txt="Reset speed and functions"/>
@@ -21195,6 +21207,7 @@
     <zh_CN txt="休眠"/>
     <sl txt="V pripravljenost"/>
     <da txt="Slumre"/>
+    <sv txt="Viloläge."/>
   </Msg>
   <Msg id="closeonghost">
     <en txt="Close block on ghost"/>
@@ -21463,6 +21476,7 @@
     <zh_CN txt="每"/>
     <sl txt="vsakih"/>
     <ru txt="every"/>
+    <sv txt="varje"/>
   </Msg>
   <Msg id="startofday">
     <en txt="Start of Day" tip="Initialize accessories and query sensors."/>
@@ -21477,6 +21491,7 @@
     <cs txt="Začátek dne"/>
     <sl txt="Začetek dneva"/>
     <ru txt="Начало дня"/>
+    <sv txt="Start på dagen."/>
   </Msg>
   <Msg id="querysensors">
     <en txt="Query sensors" tip="Query actual state of all sensors."/>
@@ -21599,6 +21614,7 @@
     <zh_CN txt="合并"/>
     <sl txt="Spoji"/>
     <ru txt="Merge"/>
+    <sv txt="Slå ihop"/>
   </Msg>
   <Msg id="closeexit">
     <en txt="Close exit"/>
@@ -21637,6 +21653,7 @@
     <sl txt="Namig"/>
     <ru txt="Подсказка"/>
     <da txt="Værktøjstip"/>
+    <sv txt="Verktygstips"/>
   </Msg>
   <Msg id="icon">
     <en txt="Icon"/>
@@ -21801,6 +21818,7 @@
     <ru txt="Бустер"/>
     <zh_CN txt="增压站"/>
     <sl txt="Ojačevalec"/>
+    <sv txt="Booster"/>
   </Msg>
   <Msg id="actionctrl">
     <en txt="Action control"/>
@@ -22011,7 +22029,7 @@
     <ja txt="反転"/>
     <cs txt="Překlopit"/>
     <es txt="Girar"/>
-    <de txt="Spiegeln"/>
+    <de txt="Umschalten"/>
     <sv txt="Vänd."/>
     <sl txt="Obrni"/>
     <ru txt="Flip"/>
@@ -22056,7 +22074,7 @@
     <sr_latin txt="Senzor napajanja"/>
     <ja txt="電力センサ"/>
     <es txt="Sensor de potencia"/>
-    <de txt="Leistungssensor"/>
+    <de txt="Fahrstrom-Rückmelder"/>
     <pl txt="Czujnik mocy"/>
     <zh_CN txt="电源传感器"/>
     <sl txt="Tipalo napajanja"/>
@@ -22069,7 +22087,7 @@
     <sr_latin txt="Izlaz napajanja"/>
     <ja txt="電力出力"/>
     <es txt="Salida de potencia"/>
-    <de txt="Leistungsabgabe"/>
+    <de txt="Fahrstrom-Schalter"/>
     <pl txt="Wyjście"/>
     <zh_CN txt="电源输出"/>
     <sl txt="Izhod napajanja"/>
@@ -22084,7 +22102,7 @@
     <cs txt="Unikátní ID"/>
     <fr txt="Identifiant Unique"/>
     <es txt="ID único"/>
-    <de txt="EInzigartige ID"/>
+    <de txt="Eindeutige Kennung"/>
     <pl txt="UnikalnyID"/>
     <sv txt="Unikt ID."/>
     <zh_CN txt="惟一标识(ID)"/>
@@ -22788,6 +22806,7 @@
     <sr_latin txt="Preopterećenje"/>
     <ru txt="Перегрузка"/>
     <es txt="Sobrecarga"/>
+    <sv txt="Överlast"/>
   </Msg>
   <Msg id="processblockevents">
     <en txt="Process block events"/>
@@ -22830,6 +22849,7 @@
     <sr_latin txt="Izvoz"/>
     <ru txt="Экспорт"/>
     <es txt="Exportar"/>
+    <sv txt="Exportera"/>
   </Msg>
   <Msg id="insert">
     <en txt="Insert"/>
@@ -22841,6 +22861,7 @@
     <sr_latin txt="Umetni"/>
     <ru txt="Вставка"/>
     <es txt="Insertar"/>
+    <sv txt="Infoga"/>
   </Msg>
   <Msg id="ebreak">
     <en txt="Emergency break"/>
@@ -22851,6 +22872,7 @@
     <sl txt="Prisilna ustavitev"/>
     <sr_latin txt="Koči u slučaju havarije"/>
     <ru txt="Аварийное отключение"/>
+    <sv txt="Nödbroms"/>
   </Msg>
   <Msg id="shutdownserver">
     <en txt="Shutdown"/>
@@ -22862,6 +22884,7 @@
     <sr_latin txt="Isključi"/>
     <ru txt="Выключение"/>
     <es txt="Apagar"/>
+    <sv txt="Stäng av"/>
   </Msg>
   <Msg id="accdectable" dialog="true">
     <en txt="Accessory table" alttxt="Accessory Decoders" tip="Accessory decoder table"/>
@@ -22882,6 +22905,7 @@
     <sl txt="Izračun"/>
     <ru txt="Расчет"/>
     <es txt="Cálculo"/>
+    <sv txt="Beräkning"/>
   </Msg>
   <Msg id="freeallwarning">
     <en txt="This action will free all section reservations. Proceed?"/>
@@ -22901,6 +22925,7 @@
     <sr_latin txt="Obriši sve"/>
     <ru txt="Удалить все"/>
     <es txt="Eliminar todos"/>
+    <sv txt="Radera allt"/>
   </Msg>
   <Msg id="maxdiff">
     <en txt="Max.difference"/>
@@ -22919,6 +22944,7 @@
     <sr_latin txt="Ispravka"/>
     <sl txt="Popravek"/>
     <ru txt="Коррекция"/>
+    <sv txt="Rättning"/>
   </Msg>
   <Msg id="vendor">
     <en txt="Vendor"/>
@@ -22938,6 +22964,7 @@
     <sl txt="Izdelek"/>
     <ru txt="Product"/>
     <es txt="Producto"/>
+    <sv txt="Produkt"/>
   </Msg>
   <Msg id="class">
     <en txt="Class"/>
@@ -22948,6 +22975,7 @@
     <sl txt="Razred"/>
     <ru txt="Class"/>
     <es txt="Clase"/>
+    <sv txt="Klass"/>
   </Msg>
   <Msg id="featurecv">
     <en txt="Feature CV"/>
@@ -22977,6 +23005,7 @@
     <sl txt="Onemogoči"/>
     <ru txt="Disable"/>
     <es txt="Deshalilitar"/>
+    <sv txt="Inaktivera"/>
   </Msg>
   <Msg id="macromap">
     <en txt="Macro Map"/>
@@ -22996,6 +23025,7 @@
     <sl txt="Upočasnitev"/>
     <ru txt="Замедление"/>
     <es txt="Deceleración"/>
+    <sv txt="Sakta ner"/>
   </Msg>
   <Msg id="cycles">
     <en txt="Cycles"/>
@@ -23005,6 +23035,7 @@
     <sr_latin txt="Ciklusi"/>
     <sl txt="Ciklov"/>
     <ru txt="Циклы"/>
+    <sv txt="Cykler"/>
   </Msg>
   <Msg id="minutes">
     <en txt="minutes"/>
@@ -23014,6 +23045,7 @@
     <sr_latin txt="minuti"/>
     <sl txt="minut"/>
     <ru txt="минуты"/>
+    <sv txt="minuter"/>
   </Msg>
   <Msg id="day">
     <en txt="day"/>
@@ -23024,6 +23056,7 @@
     <sl txt="dan"/>
     <ru txt="день"/>
     <es txt="dia"/>
+    <sv txt="dag"/>
   </Msg>
   <Msg id="preview">
     <en txt="Preview"/>
@@ -23033,6 +23066,7 @@
     <it txt="Anteprima"/>
     <sl txt="Predogled"/>
     <ru txt="Предварительный просмотр"/>
+    <sv txt="Förhandsgranska"/>
   </Msg>
   <Msg id="sensormonitor">
     <en txt="Sensor monitor"/>
@@ -23062,6 +23096,7 @@
     <sl txt="Števec"/>
     <ru txt="Счетчик"/>
     <es txt="Contador"/>
+    <sv txt="Räknare"/>
   </Msg>
   <Msg id="countedcars">
     <en txt="Counted cars"/>
@@ -23081,6 +23116,7 @@
     <sr_latin txt="Izveštaj"/>
     <ru txt="Report"/>
     <es txt="Informe"/>
+    <sv txt="Rapport"/>
   </Msg>
   <Msg id="dynamically">
     <en txt="Dynamically"/>
@@ -23090,6 +23126,7 @@
     <sl txt="Dinamično"/>
     <sr_latin txt="Dinamički"/>
     <ru txt="Динамически"/>
+    <sv txt="Dynamisk"/>
   </Msg>
   <Msg id="startinterval">
     <en txt="Start interval"/>
@@ -23099,6 +23136,7 @@
     <sl txt="Startni razmik"/>
     <sr_latin txt="Početni interval"/>
     <ru txt="Начальный интервал"/>
+    <sv txt="Startintervall"/>
   </Msg>
   <Msg id="mintrainlen">
     <en txt="Min. train length"/>
@@ -23118,6 +23156,7 @@
     <sr_latin txt="Koraka"/>
     <ru txt="Шаги"/>
     <es txt="Intervalos"/>
+    <sv txt="Steg"/>
   </Msg>
   <Msg id="createguestonbidi">
     <en txt="Create guest on BiDi"/>
@@ -23137,6 +23176,7 @@
     <it txt="Peso"/>
     <es txt="Peso"/>
     <sl txt="Teža"/>
+    <sv txt="Vikt"/>
   </Msg>
   <Msg id="acceleration">
     <en txt="Acceleration"/>
@@ -23147,6 +23187,7 @@
     <it txt="Accelerazione"/>
     <es txt="Aceleración"/>
     <sl txt="Pospešek"/>
+    <sv txt="Acceleration"/>
   </Msg>
   <Msg id="adjustaccel">
     <en txt="Adjust acceleration"/>
@@ -23156,6 +23197,7 @@
     <sr_latin txt="Podesi ubrzanje"/>
     <it txt="Regola accelerazione"/>
     <sl txt="Nastavi pospešek"/>
+    <sv txt="Justera acceleration"/>
   </Msg>
   <Msg id="maxload">
     <en txt="Max. load"/>
@@ -23165,6 +23207,7 @@
     <sr_latin txt="Maks. opterećenje"/>
     <it txt="Carico max"/>
     <sl txt="Maks. teža"/>
+    <sv txt="Maxlast"/>
   </Msg>
   <Msg id="minaccel">
     <en txt="Min. acceleration"/>
@@ -23191,6 +23234,7 @@
     <it txt="Segnali lato meno(-)"/>
     <ru txt="Сигналы со стороны (-)"/>
     <sl txt="Minus(-) stran signalov"/>
+    <sr_latin txt="Negativna(-) strana signala"/>
   </Msg>
   <Msg id="plussidesignals">
     <en txt="Plus(+) side signals"/>
@@ -23199,20 +23243,43 @@
     <it txt="Segnali lato più(+)"/>
     <ru txt="Сигналы со стороны (+)"/>
     <sl txt="Plus(+) stran signalov"/>
+    <sr_latin txt="Pozitivna(+) strana signala"/>
   </Msg>
   <Msg id="identify">
     <en txt="Identify"/>
+    <de txt="Identifizieren"/>
+    <it txt="Identifica"/>
+    <nl txt="Identificeer"/>
+    <ru txt="Идентифицировать"/>
+    <sl txt="Identificiraj"/>
+    <sv txt="Identifiera"/>
+    <sr_latin txt="Identifikovati"/>
   </Msg>
   <Msg id="ping">
     <en txt="Ping"/>
+    <de txt="Ping"/>
+    <nl txt="Ping"/>
+    <ru txt="Пинг"/>
+    <sl txt="Ping"/>
+    <sv txt="Pinga"/>
   </Msg>
   <Msg id="getlasterror">
     <en txt="Get last error"/>
+    <de txt="Letzten Fehler lesen"/>
+    <nl txt="Vraag laatste fout code"/>
+    <ru txt="Получить последнюю ошибку"/>
+    <sl txt="Pridobi zadnjo napako"/>
+    <sr_latin txt="Poslednja greška"/>
   </Msg>
   <Msg id="loconetlicense">
     <en txt="Due to license fee for Digitrax LocoNet(r) a valid support key is required."/>
+    <nl txt="Wegens licentie kosten voor Digitrax LocoNet(r) is een geldige support sleutel nodig."/>
+    <sl txt="Zaradi licenčnine za Digitrax Loconet(r) je potreben veljavni ključ."/>
+    <sv txt="På grund av licensavgifter för Digitrax LocoNet(r) krävs en giltig supportnyckel."/>
   </Msg>
   <Msg id="usebididir">
     <en txt="Use BiDi direction"/>
+    <de txt="Verwende BiDi-Richtung"/>
+    <nl txt="Gebruik de BiDi richting"/>
   </Msg>
 </Messages>
