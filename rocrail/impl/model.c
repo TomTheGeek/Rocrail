@@ -3555,11 +3555,14 @@ static void _event( iOModel inst, iONode nodeC ) {
       }
 
       if( matchaddr1 > 0 && matchport1 == 0 && addr > 0 && port == 0 ) {
-        /* flat */
+        /* 1:1 flat */
         flat = True;
         if( matchaddr1 +1 == addr) {
           invertstate = True;
         }
+      }
+      else if( matchaddr1 == 0 && matchport1 > 0 && addr == 0 && port > 0 ) {
+        /* 1:1 pada */
       }
       else if( matchport1 == 0 && matchaddr1 > 0 ) {
         fada = matchaddr1;
@@ -3584,6 +3587,9 @@ static void _event( iOModel inst, iONode nodeC ) {
         if( matchaddr2 +1 == addr) {
           invertstate = True;
         }
+      }
+      else if( matchaddr2 == 0 && matchport2 > 0 && addr == 0 && port > 0 ) {
+        /* 1:1 pada */
       }
       else if( matchport2 == 0 && matchaddr2 > 0 ) {
         fada = matchaddr2;
