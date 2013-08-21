@@ -522,7 +522,7 @@ static void __evaluateSensor( iOrocNet rocnet, byte* rn ) {
   switch( action ) {
   case RN_SENSOR_REPORT:
   {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor report" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor report %d %s", sndr, rn[RN_PACKET_DATA+2]?"on":"off" );
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
     wFeedback.setaddr( evt, sndr );

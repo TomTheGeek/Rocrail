@@ -1,0 +1,47 @@
+<!--
+ Rocrail - Model Railroad Software
+
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
+
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.  
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+<Project name="RocNetNode" title="RocNet Node" docname="rocnetnodeapi">
+
+
+  <object name="RocNetNode" use="node,trace,thread,socket">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="iONode"/>
+    </fun>
+    <fun name="Main" vt="int">
+      <param name="inst" vt="this" remark="RocNetNode instance"/>
+      <param name="argc" vt="int" remark="Commandline argument count"/>
+      <param name="argv" vt="char**" remark="Commandline arguments"/>
+    </fun>
+    <fun name="shutdown" vt="Boolean"/>
+    <fun name="stop" vt="void"/>
+    <data>
+      <var name="ini" vt="iONode"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="run" vt="Boolean"/>
+      <var name="readUDP" vt="iOSocket"/>
+      <var name="writeUDP" vt="iOSocket"/>
+      </data>
+  </object>
+
+
+</Project>
