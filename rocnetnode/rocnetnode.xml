@@ -39,6 +39,10 @@
       <var name="reader" vt="iOThread"/>
       <var name="scanner" vt="iOThread"/>
       <var name="run" vt="Boolean"/>
+      <var name="id" vt="int"/>
+      <var name="addr" vt="const char*"/>
+      <var name="port" vt="int"/>
+      <var name="iomap" vt="int"/>
       <var name="readUDP" vt="iOSocket"/>
       <var name="writeUDP" vt="iOSocket"/>
       </data>

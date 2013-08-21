@@ -40,6 +40,8 @@
 #include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/Cmdline.h"
+#include "rocrail/wrapper/public/RocNet.h"
+#include "rocrail/wrapper/public/Trace.h"
 
 #include "rocnetnode/impl/rocnetnode_impl.h"
 
@@ -50,12 +52,6 @@
 
 
 static int instCnt = 0;
-
-#define rnid 4711
-#define rnaddr "224.0.0.1"
-#define rnport 4321
-#define rniomap 0x003F
-
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -117,7 +113,7 @@ static iORocNetNode __RocNetNode = NULL;
 
 static Boolean __isThis( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data = Data(rocnetnode);
-  return (rnReceipientAddrFromPacket(rn, 0) == rnid);
+  return (rnReceipientAddrFromPacket(rn, 0) == data->id);
 }
 
 
@@ -198,7 +194,7 @@ static void __scanner( void* threadinst ) {
   while( data->run ) {
     int i;
     for( i = 0; i < 32; i++ ) {
-      if( rniomap & (1 << i) ) {
+      if( data->iomap & (1 << i) ) {
         int val = raspiRead(i);
         if( inputVal[i] != val ) {
           inputVal[i] = val;
@@ -207,7 +203,7 @@ static void __scanner( void* threadinst ) {
           msg[RN_PACKET_LEN] = 4;
           msg[RN_PACKET_DATA+2] = val;
           msg[RN_PACKET_DATA+3] = i + 1;
-          rnSenderAddresToPacket( rnid, msg, 0 );
+          rnSenderAddresToPacket( data->id, msg, 0 );
           SocketOp.sendto( data->writeUDP, msg, 8 + msg[RN_PACKET_LEN], NULL, 0 );
           ThreadOp.sleep(raspiDummy()?500:10);
         }
@@ -253,22 +249,80 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   tracelevel  monitor = CmdLnOp.hasKey( arg, wCmdline.monitor) ? TRCLEVEL_MONITOR:0;
   tracelevel  info    = CmdLnOp.hasKey( arg, wCmdline.info   ) ? TRCLEVEL_INFO:0;
 
-  trc = TraceOp.inst( debug | dump | monitor | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
-  TraceOp.setAppID( trc, "r" );
+
+  /* Read the Inifile: */
+  {
+    char* iniXml = NULL;
+    iODoc iniDoc = NULL;
+    iOFile iniFile = FileOp.inst( "rocnetnode.ini", True );
+    if( iniFile != NULL ) {
+      iniXml = allocMem( FileOp.size( iniFile ) + 1 );
+      FileOp.read( iniFile, iniXml, FileOp.size( iniFile ) );
+      if( StrOp.len( iniXml ) == 0 )
+        iniXml = StrOp.fmt( "<%s/>", "rocnetnode");
+      FileOp.close( iniFile );
+    }
+    else {
+      iniXml = StrOp.fmt( "<%s/>", "rocnetnode");
+    }
+
+    /* Parse the Inifile: */
+    iniDoc = DocOp.parse( iniXml );
+    if( iniDoc != NULL ) {
+      data->ini = DocOp.getRootNode( iniDoc );
+    }
+    else {
+      printf( "Invalid ini file! [%s]", "rocnetnode.ini" );
+      return -1;
+    }
+  }
+
+
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Up and running the RocNetNode" );
+  if( NodeOp.findNode(data->ini, wRocNet.name()) != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using ini setup" );
+    data->id    = wRocNet.getid(NodeOp.findNode(data->ini, wRocNet.name()));
+    data->addr  = wRocNet.getaddr(NodeOp.findNode(data->ini, wRocNet.name()));
+    data->port  = wRocNet.getport(NodeOp.findNode(data->ini, wRocNet.name()));
+    data->iomap = wRocNet.getiomap(NodeOp.findNode(data->ini, wRocNet.name()));
+    if( NodeOp.findNode(data->ini, wTrace.name()) != NULL ) {
+      iONode traceini = NodeOp.findNode(data->ini, wTrace.name());
+      tf = wTrace.getrfile(traceini);
+      trc = TraceOp.inst( debug | dump | monitor | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
+      if( wTrace.isdebug( traceini ) || debug )
+        TraceOp.setLevel( trc, TraceOp.getLevel( trc ) | TRCLEVEL_DEBUG );
+      if( wTrace.ismonitor( traceini ) || monitor )
+        TraceOp.setLevel( trc, TraceOp.getLevel( trc ) | TRCLEVEL_MONITOR );
+      if( wTrace.isbyte( traceini ) || dump )
+        TraceOp.setLevel( trc, TraceOp.getLevel( trc ) | TRCLEVEL_BYTE );
+      if( wTrace.isparse( traceini ) || parse )
+        TraceOp.setLevel( trc, TraceOp.getLevel( trc ) | TRCLEVEL_PARSE );
+      if( wTrace.iscalc( traceini ) )
+        TraceOp.setLevel( trc, TraceOp.getLevel( trc ) | TRCLEVEL_CALC );
+    }
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using default setup" );
+    trc = TraceOp.inst( debug | dump | monitor | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
+    data->id    = 4711;
+    data->addr  = "224.0.0.1";
+    data->port  = 4321;
+    data->iomap = 0x3F;
+  }
+  TraceOp.setAppID( trc, "r" );
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast address [%s]", rnaddr );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast port    [%d]", rnport );
-  data->readUDP = SocketOp.inst( rnaddr, rnport, False, True, True );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast address [%s]", data->addr );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast port    [%d]", data->port );
+  data->readUDP = SocketOp.inst( data->addr, data->port, False, True, True );
   SocketOp.bind(data->readUDP);
-  data->writeUDP = SocketOp.inst( rnaddr, rnport, False, True, True );
+  data->writeUDP = SocketOp.inst( data->addr, data->port, False, True, True );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   /* I/O map: 0=output, 1=input*/
-  raspiSetupIO(rniomap);
+  raspiSetupIO(data->iomap);
 
   data->run = True;
   data->reader = ThreadOp.inst( "rnreader", &__reader, __RocNetNode );
