@@ -552,7 +552,12 @@ static void __evaluateInput( iOrocNet rocnet, byte* rn ) {
 static void __evaluateRN( iOrocNet rocnet, byte* rn ) {
   iOrocNetData data = Data(rocnet);
   int group = rn[RN_PACKET_GROUP];
+  int actionType = rnActionTypeFromPacket(rn);
+  int sndr = rnSenderAddrFromPacket(rn, data->seven);
+  int port = rn[RN_PACKET_DATA + 3];
   byte* rnReply = NULL;
+
+  TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)rn, 8 + rn[RN_PACKET_LEN] );
 
   switch( group ) {
     case RN_GROUP_CS:
@@ -561,6 +566,18 @@ static void __evaluateRN( iOrocNet rocnet, byte* rn ) {
 
     case RN_GROUP_OUTPUT:
       rnReply = rocnetParseOutput( rocnet, rn );
+      if( actionType == RN_ACTIONTYPE_EVENT) {
+        iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+        wSwitch.setbus( nodeC, sndr );
+        wSwitch.setaddr1( nodeC, port );
+        wSwitch.setaddr1( nodeC, port );
+        wSwitch.setstate( nodeC, (rn[RN_PACKET_DATA + 0] == 0) ?"straight":"turnout" );
+        if( data->iid != NULL )
+          wSwitch.setiid( nodeC, data->iid );
+
+        if( data->listenerFun != NULL && data->listenerObj != NULL )
+          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+      }
       break;
 
     case RN_GROUP_INPUT:
