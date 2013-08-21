@@ -37,6 +37,7 @@
     <data>
       <var name="ini" vt="iONode"/>
       <var name="reader" vt="iOThread"/>
+      <var name="scanner" vt="iOThread"/>
       <var name="run" vt="Boolean"/>
       <var name="readUDP" vt="iOSocket"/>
       <var name="writeUDP" vt="iOSocket"/>

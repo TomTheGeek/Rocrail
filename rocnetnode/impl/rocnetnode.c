@@ -46,12 +46,15 @@
 #include "rocdigs/impl/rocnet/rocnet-const.h"
 #include "rocdigs/impl/rocnet/rn-utils.h"
 
+#include "rocnetnode/public/io.h"
+
 
 static int instCnt = 0;
 
 #define rnid 4711
 #define rnaddr "224.0.0.1"
 #define rnport 4321
+#define rniomap 0x003F
 
 
 /** ----- OBase ----- */
@@ -135,21 +138,11 @@ byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
 
   switch( action ) {
   case RN_OUTPUT_SWITCH:
-  {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "output SWITCH(%s) port=%d %s action for %d%s from %d, %d data bytes",
         rnActionTypeString(rn), port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? "on":"off",
         rcpt, isThis?"(this)":"", sndr, rn[RN_PACKET_LEN] );
-    msg = allocMem(32);
-
-    msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
-    msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
-    msg[RN_PACKET_LEN] = 4;
-    msg[RN_PACKET_DATA+2] = rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0;
-    msg[RN_PACKET_DATA+3] = 15;
-    rnSenderAddresToPacket( 4711, msg, 0 );
-
-  }
+    raspiWrite(port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0);
   break;
 
   default:
@@ -178,7 +171,7 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
       break;
 
     default:
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported group [%d]", group );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "unsupported group [%d]", group );
       break;
   }
 
@@ -190,13 +183,49 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
 }
 
 
+static void __scanner( void* threadinst ) {
+  iOThread         th         = (iOThread)threadinst;
+  iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
+  iORocNetNodeData data       = Data(rocnetnode);
+  int inputVal[32];
+  byte msg[256];
+
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet scanner started" );
+
+  MemOp.set( inputVal, 32*sizeof(int), 0);
+
+  while( data->run ) {
+    int i;
+    for( i = 0; i < 32; i++ ) {
+      if( rniomap & (1 << i) ) {
+        int val = raspiRead(i);
+        if( inputVal[i] != val ) {
+          inputVal[i] = val;
+          msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
+          msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
+          msg[RN_PACKET_LEN] = 4;
+          msg[RN_PACKET_DATA+2] = val;
+          msg[RN_PACKET_DATA+3] = i + 1;
+          rnSenderAddresToPacket( rnid, msg, 0 );
+          SocketOp.sendto( data->writeUDP, msg, 8 + msg[RN_PACKET_LEN], NULL, 0 );
+          ThreadOp.sleep(raspiDummy()?500:10);
+        }
+      }
+    }
+
+    ThreadOp.sleep(10);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet scanner stopped" );
+}
+
+
 static void __reader( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
   iORocNetNodeData data       = Data(rocnetnode);
   byte msg[256];
-  Boolean reported = False;
-
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet reader started" );
 
@@ -204,18 +233,6 @@ static void __reader( void* threadinst ) {
     SocketOp.recvfrom( data->readUDP, msg, 0x7F, NULL, NULL );
     __evaluateRN(rocnetnode, msg);
     ThreadOp.sleep(10);
-
-    if( !reported) {
-      /* Fake test report: */
-      msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
-      msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
-      msg[RN_PACKET_LEN] = 4;
-      msg[RN_PACKET_DATA+2] = 1;
-      msg[RN_PACKET_DATA+3] = 15;
-      rnSenderAddresToPacket( 4711, msg, 0 );
-      SocketOp.sendto( data->writeUDP, msg, 8 + msg[RN_PACKET_LEN], NULL, 0 );
-      reported = True;
-    }
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet reader stopped" );
@@ -250,10 +267,14 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   data->writeUDP = SocketOp.inst( rnaddr, rnport, False, True, True );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
+  /* I/O map: 0=output, 1=input*/
+  raspiSetupIO(rniomap);
 
   data->run = True;
-  data->reader = ThreadOp.inst( "rocnetreader", &__reader, __RocNetNode );
+  data->reader = ThreadOp.inst( "rnreader", &__reader, __RocNetNode );
   ThreadOp.start( data->reader );
+  data->scanner = ThreadOp.inst( "rnscanner", &__scanner, __RocNetNode );
+  ThreadOp.start( data->scanner );
 
   /* Memory watcher */
   while( !bShutdown ) {
@@ -274,7 +295,7 @@ static Boolean _shutdown( void ) {
   iORocNetNodeData data = Data(__RocNetNode);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutdown the RocNetNode" );
   data->run = False;
-  ThreadOp.sleep(100);
+  ThreadOp.sleep(1000);
   bShutdown = True;
   return False;
 }
