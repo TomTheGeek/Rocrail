@@ -41,6 +41,7 @@
 
 #include "rocrail/wrapper/public/Cmdline.h"
 #include "rocrail/wrapper/public/RocNet.h"
+#include "rocrail/wrapper/public/PortSetup.h"
 #include "rocrail/wrapper/public/Trace.h"
 
 #include "rocnetnode/impl/rocnetnode_impl.h"
@@ -194,7 +195,7 @@ static void __scanner( void* threadinst ) {
   while( data->run ) {
     int i;
     for( i = 0; i < 32; i++ ) {
-      if( data->iomap & (1 << i) ) {
+      if( data->ports[i] != NULL && data->ports[i]->type == 1 ) {
         int val = raspiRead(i);
         if( inputVal[i] != val ) {
           inputVal[i] = val;
@@ -232,6 +233,38 @@ static void __reader( void* threadinst ) {
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet reader stopped" );
+}
+
+
+static void __initPorts(iORocNetNode inst) {
+  iORocNetNodeData data = Data(inst);
+  int iomap = 0;
+  iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read portsetups" );
+
+  if( rocnet != NULL ) {
+    iONode portsetup = wRocNet.getportsetup(rocnet);
+    while( portsetup != NULL ) {
+      int portnr = wPortSetup.getport(portsetup);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "portsetup: port=%d type=%d", portnr, wPortSetup.gettype(portsetup) );
+      if( portnr < 32 ) {
+        iOPort port = allocMem( sizeof( struct Port) );
+        port->port = portnr;
+        port->offtime = wPortSetup.getofftime(portsetup);
+        port->pulsetime = wPortSetup.getpulsetime(portsetup);
+        port->type = wPortSetup.gettype(portsetup);
+        port->invert = wPortSetup.isinvert(portsetup);
+        data->ports[portnr] = port;
+        if( wPortSetup.gettype(portsetup) == 1 )
+          iomap |= (1 << portnr );
+
+      }
+      portsetup = wRocNet.nextportsetup(rocnet, portsetup);
+    }
+  }
+  /* I/O map: 0=output, 1=input*/
+  raspiSetupIO(iomap);
 }
 
 
@@ -281,15 +314,15 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Up and running the RocNetNode" );
   if( NodeOp.findNode(data->ini, wRocNet.name()) != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using ini setup" );
     data->id    = wRocNet.getid(NodeOp.findNode(data->ini, wRocNet.name()));
     data->addr  = wRocNet.getaddr(NodeOp.findNode(data->ini, wRocNet.name()));
     data->port  = wRocNet.getport(NodeOp.findNode(data->ini, wRocNet.name()));
-    data->iomap = wRocNet.getiomap(NodeOp.findNode(data->ini, wRocNet.name()));
     if( NodeOp.findNode(data->ini, wTrace.name()) != NULL ) {
       iONode traceini = NodeOp.findNode(data->ini, wTrace.name());
       tf = wTrace.getrfile(traceini);
       trc = TraceOp.inst( debug | dump | monitor | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using ini setup" );
+
       if( wTrace.isdebug( traceini ) || debug )
         TraceOp.setLevel( trc, TraceOp.getLevel( trc ) | TRCLEVEL_DEBUG );
       if( wTrace.ismonitor( traceini ) || monitor )
@@ -303,12 +336,11 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
     }
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using default setup" );
     trc = TraceOp.inst( debug | dump | monitor | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using default setup" );
     data->id    = 4711;
     data->addr  = "224.0.0.1";
     data->port  = 4321;
-    data->iomap = 0x3F;
   }
   TraceOp.setAppID( trc, "r" );
 
@@ -321,8 +353,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   data->writeUDP = SocketOp.inst( data->addr, data->port, False, True, True );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  /* I/O map: 0=output, 1=input*/
-  raspiSetupIO(data->iomap);
+  __initPorts(inst);
 
   data->run = True;
   data->reader = ThreadOp.inst( "rnreader", &__reader, __RocNetNode );
