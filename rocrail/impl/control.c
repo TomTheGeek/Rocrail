@@ -1198,11 +1198,13 @@ static Boolean __initDigInts( iOControl inst ) {
     LPFNROCGETDIGINT pInitFun = (void *) NULL;
 
     if( StrOp.equals( wDigInt.loconet, lib ) && !AppOp.isKeyValid() ) {
+      /*
       o->needkey4loconet = True;
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "--------------------------------------------------" );
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " A valid support key is needed for using LocoNet." );
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "--------------------------------------------------" );
       wDigInt.setrestricted(digint, True);
+      */
     }
     else {
       o->needkey4loconet = False;
