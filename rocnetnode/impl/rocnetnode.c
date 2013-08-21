@@ -49,6 +49,11 @@
 
 static int instCnt = 0;
 
+#define rnid 4711
+#define rnaddr "224.0.0.1"
+#define rnport 4321
+
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -107,9 +112,86 @@ static void* __event( void* inst, const void* evt ) {
 static Boolean bShutdown = False;
 static iORocNetNode __RocNetNode = NULL;
 
+static Boolean __isThis( iORocNetNode rocnetnode, byte* rn ) {
+  iORocNetNodeData data = Data(rocnetnode);
+  return (rnReceipientAddrFromPacket(rn, 0) == rnid);
+}
+
+
+
+
+byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
+  iORocNetNodeData data       = Data(rocnetnode);
+  int port       = rn[RN_PACKET_DATA + 3];
+  int rcpt       = 0;
+  int sndr       = 0;
+  int action     = rnActionFromPacket(rn);
+  int actionType = rnActionTypeFromPacket(rn);
+  Boolean isThis = __isThis( rocnetnode, rn);
+  byte* msg = NULL;
+
+  rcpt = rnReceipientAddrFromPacket(rn, 0);
+  sndr = rnSenderAddrFromPacket(rn, 0);
+
+  switch( action ) {
+  case RN_OUTPUT_SWITCH:
+  {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "output SWITCH(%s) port=%d %s action for %d%s from %d, %d data bytes",
+        rnActionTypeString(rn), port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? "on":"off",
+        rcpt, isThis?"(this)":"", sndr, rn[RN_PACKET_LEN] );
+    msg = allocMem(32);
+
+    msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
+    msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
+    msg[RN_PACKET_LEN] = 4;
+    msg[RN_PACKET_DATA+2] = rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0;
+    msg[RN_PACKET_DATA+3] = 15;
+    rnSenderAddresToPacket( 4711, msg, 0 );
+
+  }
+  break;
+
+  default:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported action [%d]", action );
+    break;
+  }
+
+  return msg;
+}
+
+
+
+static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
+  iORocNetNodeData data = Data(rocnetnode);
+  int group = rn[RN_PACKET_GROUP];
+  byte* rnReply = NULL;
+
+  TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)rn, 8 + rn[RN_PACKET_LEN] );
+
+  switch( group ) {
+    case RN_GROUP_OUTPUT:
+      rnReply = __handleOutput( rocnetnode, rn );
+      break;
+
+    case RN_GROUP_INPUT:
+      break;
+
+    default:
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported group [%d]", group );
+      break;
+  }
+
+  if( rnReply != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting reply..." );
+    SocketOp.sendto( data->writeUDP, rnReply, 8 + rnReply[RN_PACKET_LEN], NULL, 0 );
+    freeMem(rnReply);
+  }
+}
+
 
 static void __reader( void* threadinst ) {
-  iOThread            th         = (iOThread)threadinst;
+  iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
   iORocNetNodeData data       = Data(rocnetnode);
   byte msg[256];
@@ -120,17 +202,18 @@ static void __reader( void* threadinst ) {
 
   while( data->run ) {
     SocketOp.recvfrom( data->readUDP, msg, 0x7F, NULL, NULL );
-    TraceOp.dump ( name, TRCLEVEL_INFO, (char*)msg, 8 + msg[7] );
+    __evaluateRN(rocnetnode, msg);
     ThreadOp.sleep(10);
 
     if( !reported) {
       /* Fake test report: */
       msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
       msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
-      msg[RN_PACKET_LEN] = 3;
+      msg[RN_PACKET_LEN] = 4;
       msg[RN_PACKET_DATA+2] = 1;
+      msg[RN_PACKET_DATA+3] = 15;
       rnSenderAddresToPacket( 4711, msg, 0 );
-      SocketOp.sendto( data->writeUDP, msg, 32, NULL, 0 );
+      SocketOp.sendto( data->writeUDP, msg, 8 + msg[RN_PACKET_LEN], NULL, 0 );
       reported = True;
     }
   }
@@ -138,9 +221,6 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet reader stopped" );
 }
 
-
-#define rnaddr "224.0.0.1"
-#define rnport 4321
 
 static int _Main( iORocNetNode inst, int argc, char** argv ) {
   iORocNetNodeData data = Data(inst);

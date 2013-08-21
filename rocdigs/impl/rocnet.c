@@ -193,37 +193,27 @@ static iONode __translate( iOrocNet inst, iONode node ) {
 
   /* Switch command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    int bus    = wSwitch.getbus( node );
     int addr   = wSwitch.getaddr1( node );
-    int port   = wSwitch.getport1( node );
-    int gate   = 0;
     int single = wSwitch.issinglegate( node );
     byte cmd   = 0;
-    byte mask  = single ? 0x01:0x03;
 
-    if( port == 0 )
-      AddrOp.fromFADA( addr, &addr, &port, &gate );
-    else if( addr == 0 && port > 0 )
-      AddrOp.fromPADA( port, &addr, &port );
-
-    addr = (addr-1) * 4 + port;
-
-    if( StrOp.equals( wSwitch.getcmd( node ), wSwitch.straight ) ) {
-      if( single ) cmd = 0x00;
-      else         cmd = 0x01;
+    if( single ) {
+      cmd = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout );
     }
     else {
-      if( single ) cmd = 0x01;
-      else         cmd = 0x02;
+      cmd = 1;
+      addr = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? addr+1 : addr;
     }
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
-    rnReceipientAddresToPacket( addr, rn, data->seven );
-    rn[RN_PACKET_ACTION] = RN_OUTPUT_SWITCH_MULTI;
+    rnReceipientAddresToPacket( bus, rn, data->seven );
+    rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
     rn[RN_PACKET_LEN] = 4;
-    rn[RN_PACKET_DATA + 0] = 0;
-    rn[RN_PACKET_DATA + 1] = mask;
-    rn[RN_PACKET_DATA + 2] = 0;
-    rn[RN_PACKET_DATA + 3] = cmd;
+    rn[RN_PACKET_DATA + 0] = cmd;
+    rn[RN_PACKET_DATA + 1] = 0;
+    rn[RN_PACKET_DATA + 2] = wSwitch.getdelay(node);
+    rn[RN_PACKET_DATA + 3] = addr;
     ThreadOp.post( data->writer, (obj)rn );
     return rsp;
   }
@@ -245,27 +235,22 @@ static iONode __translate( iOrocNet inst, iONode node ) {
 
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    int bus  = wOutput.getbus( node );
     int addr = wOutput.getaddr( node );
-    int port = wOutput.getport( node );
-    int gate = wOutput.getgate( node );
     byte cmd   = RN_OUTPUT_ON;
-
-    if( port == 0 )
-      AddrOp.fromFADA( addr, &addr, &port, &gate );
-    else if( addr == 0 && port > 0 )
-      AddrOp.fromPADA( port, &addr, &port );
-
-    addr = (addr-1) * 4 + port;
 
     if( StrOp.equals( wOutput.getcmd( node ), wOutput.off ) ) {
       cmd = RN_OUTPUT_OFF;
     }
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
-    rnReceipientAddresToPacket( addr, rn, data->seven );
-    rn[RN_PACKET_ACTION] = RN_OUTPUT_SWITCH;
-    rn[RN_PACKET_LEN] = 1;
+    rnReceipientAddresToPacket( bus, rn, data->seven );
+    rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
+    rn[RN_PACKET_LEN] = 4;
     rn[RN_PACKET_DATA + 0] = cmd;
+    rn[RN_PACKET_DATA + 1] = 0;
+    rn[RN_PACKET_DATA + 2] = 0;
+    rn[RN_PACKET_DATA + 3] = addr;
     ThreadOp.post( data->writer, (obj)rn );
     return rsp;
   }
@@ -509,7 +494,7 @@ static void __evaluateClock( iOrocNet rocnet, byte* rn ) {
 
 static void __evaluateSensor( iOrocNet rocnet, byte* rn ) {
   iOrocNetData data       = Data(rocnet);
-  int          addr       = 0;
+  int          addr       = rn[RN_PACKET_DATA+3];
   int          rcpt       = 0;
   int          sndr       = 0;
   Boolean      isThis     = rocnetIsThis( rocnet, rn);
@@ -522,10 +507,11 @@ static void __evaluateSensor( iOrocNet rocnet, byte* rn ) {
   switch( action ) {
   case RN_SENSOR_REPORT:
   {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor report %d %s", sndr, rn[RN_PACKET_DATA+2]?"on":"off" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor report %d:%d %s", sndr, addr, rn[RN_PACKET_DATA+2]?"on":"off" );
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
-    wFeedback.setaddr( evt, sndr );
+    wFeedback.setbus( evt, sndr );
+    wFeedback.setaddr( evt, addr );
     wFeedback.setfbtype( evt, wFeedback.fbtype_sensor );
 
     if( data->iid != NULL )
