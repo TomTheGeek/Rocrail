@@ -674,7 +674,7 @@ static void __reader( void* threadinst ) {
         int sndr = rnSenderAddrFromPacket(rn, 0);
         if( isThis ) {
           char* str = StrOp.byteToStr(rn, 8 + rn[RN_PACKET_LEN]);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore %s [%s] from %d to %d", rnActionTypeString(rn), str, sndr, rcpt );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore %s [%s] from %d(self) to %d", rnActionTypeString(rn), str, sndr, rcpt );
           StrOp.free(str);
         }
         else {
