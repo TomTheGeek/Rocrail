@@ -115,7 +115,7 @@ static iORocNetNode __RocNetNode = NULL;
 
 static Boolean __isThis( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data = Data(rocnetnode);
-  return (rnReceipientAddrFromPacket(rn, 0) == data->id);
+  return (rnSenderAddrFromPacket(rn, 0) == data->id);
 }
 
 
@@ -208,9 +208,16 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
   int rcpt = rnReceipientAddrFromPacket(rn, 0);
   int sndr = rnSenderAddrFromPacket(rn, 0);
 
-  if( isThis || actionType != RN_ACTIONTYPE_REQUEST ) {
+  if( isThis || actionType != RN_ACTIONTYPE_REQUEST  ) {
     char* str = StrOp.byteToStr(rn, 8 + rn[RN_PACKET_LEN]);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore %s [%s] from %d to %d", rnActionTypeString(rn), str, sndr, rcpt );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "ignore %s [%s] from %d to %d this=%s", rnActionTypeString(rn), str, sndr, rcpt, isThis?"true":"false" );
+    StrOp.free(str);
+    return;
+  }
+  else if(rcpt != data->id && rcpt != 0) {
+    char* str = StrOp.byteToStr(rn, 8 + rn[RN_PACKET_LEN]);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore %s [%s] from %d to %d; address does not match", rnActionTypeString(rn), str, sndr, rcpt );
     StrOp.free(str);
     return;
   }
@@ -455,6 +462,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ID [%d]", data->id );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast address [%s]", data->addr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast port    [%d]", data->port );
   data->readUDP = SocketOp.inst( data->addr, data->port, False, True, True );
