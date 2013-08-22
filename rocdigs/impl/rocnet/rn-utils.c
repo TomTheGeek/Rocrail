@@ -85,6 +85,14 @@ const char* rnActionTypeString(unsigned char* rn) {
   }
 }
 
+const char* rnClassString(int pclass) {
+  switch(pclass) {
+    case RN_CLASS_RASPI_IO:
+      return "RasPi I/O";
+    default:
+      return "unsupported";
+  }
+}
 
 
 

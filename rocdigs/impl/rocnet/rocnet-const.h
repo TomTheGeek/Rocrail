@@ -118,4 +118,7 @@
 #define RN_SENSOR_REPORT    1
 
 
+#define RN_CLASS_RASPI_IO    1
+
+
 #endif /*ROCNETCONST_H_*/

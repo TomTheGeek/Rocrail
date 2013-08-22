@@ -141,7 +141,11 @@ byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     rnSenderAddresToPacket( data->id, msg, 0 );
     msg[RN_PACKET_ACTION] = RN_STATIONARY_QUERYIDS;
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-    msg[RN_PACKET_LEN] = 0;
+    msg[RN_PACKET_LEN] = 4;
+    msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;
+    msg[RN_PACKET_DATA+1] = 70;
+    msg[RN_PACKET_DATA+2] = 0;
+    msg[RN_PACKET_DATA+3] = 0;
     break;
   }
   return msg;

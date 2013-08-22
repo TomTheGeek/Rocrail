@@ -35,6 +35,7 @@ void rnReceipientAddresToPacket( int addr, unsigned char* rn, int seven );
 const char* rnActionTypeString(unsigned char* rn);
 int rnActionFromPacket(unsigned char* rn);
 int rnActionTypeFromPacket(unsigned char* rn);
+const char* rnClassString(int pclass);
 
 
 
