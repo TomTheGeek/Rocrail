@@ -320,6 +320,16 @@ static Boolean __isEndSection(iIBlockBase inst, iONode section ) {
 }
 
 
+static Boolean __isLocoInEndSection(iIBlockBase inst, const char* lcid ) {
+  iOStageData data = Data(inst);
+  int cnt = ListOp.size(data->sectionList);
+  iONode section = (iONode)ListOp.get(data->sectionList, cnt - 1);
+  if( StrOp.equals( lcid, wStageSection.getlcid(section) ) )
+    return True;
+  return False;
+}
+
+
 /**
  * Update the section list after a train has been moved.
  */
@@ -1087,6 +1097,11 @@ static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,
 
   if( data->pendingMove ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stagingblock %s has a pending move", data->id );
+    return False;
+  }
+
+  if( __isLocoInEndSection(inst, locid) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s is already in the end section", locid );
     return False;
   }
 
