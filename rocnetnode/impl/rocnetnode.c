@@ -53,6 +53,7 @@
 
 
 static int instCnt = 0;
+static void __sendRN( iORocNetNode rocnetnode, byte* rn );
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -118,7 +119,33 @@ static Boolean __isThis( iORocNetNode rocnetnode, byte* rn ) {
 }
 
 
+byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
+  iORocNetNodeData data       = Data(rocnetnode);
+  int port       = rn[RN_PACKET_DATA + 3];
+  int rcpt       = 0;
+  int sndr       = 0;
+  int action     = rnActionFromPacket(rn);
+  int actionType = rnActionTypeFromPacket(rn);
+  Boolean isThis = __isThis( rocnetnode, rn);
+  byte* msg = NULL;
 
+  rcpt = rnReceipientAddrFromPacket(rn, 0);
+  sndr = rnSenderAddrFromPacket(rn, 0);
+
+  switch( action ) {
+  case RN_STATIONARY_QUERYIDS:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "queryids request from %d to %d", sndr, rcpt );
+    msg = allocMem(32);
+    msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+    rnReceipientAddresToPacket( sndr, msg, 0 );
+    rnSenderAddresToPacket( data->id, msg, 0 );
+    msg[RN_PACKET_ACTION] = RN_STATIONARY_QUERYIDS;
+    msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+    msg[RN_PACKET_LEN] = 0;
+    break;
+  }
+  return msg;
+}
 
 byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data       = Data(rocnetnode);
@@ -155,15 +182,47 @@ byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
 }
 
 
+static void __sendRN( iORocNetNode rocnetnode, byte* rn ) {
+  iORocNetNodeData data = Data(rocnetnode);
+  int rcpt = rnReceipientAddrFromPacket(rn, 0);
+  char* str = StrOp.byteToStr(rn, 8 + rn[RN_PACKET_LEN]);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %s [%s] to %d", rnActionTypeString(rn), str, rcpt );
+  StrOp.free(str);
+  SocketOp.sendto( data->writeUDP, rn, 8 + rn[RN_PACKET_LEN], NULL, 0 );
+
+}
+
 
 static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data = Data(rocnetnode);
   int group = rn[RN_PACKET_GROUP];
   byte* rnReply = NULL;
+  int actionType = rnActionTypeFromPacket(rn);
+  Boolean isThis = __isThis( rocnetnode, rn);
+  byte* msg = NULL;
+
+  int rcpt = rnReceipientAddrFromPacket(rn, 0);
+  int sndr = rnSenderAddrFromPacket(rn, 0);
+
+  if( isThis || actionType != RN_ACTIONTYPE_REQUEST ) {
+    char* str = StrOp.byteToStr(rn, 8 + rn[RN_PACKET_LEN]);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore %s [%s] from %d to %d", rnActionTypeString(rn), str, sndr, rcpt );
+    StrOp.free(str);
+    return;
+  }
+  else {
+    char* str = StrOp.byteToStr(rn, 8 + rn[RN_PACKET_LEN]);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluate %s [%s] from %d to %d", rnActionTypeString(rn), str, sndr, rcpt );
+    StrOp.free(str);
+  }
 
   TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)rn, 8 + rn[RN_PACKET_LEN] );
 
   switch( group ) {
+    case RN_GROUP_STATIONARY:
+      rnReply = __handleStationary( rocnetnode, rn );
+      break;
+
     case RN_GROUP_OUTPUT:
       rnReply = __handleOutput( rocnetnode, rn );
       break;
@@ -178,7 +237,7 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
 
   if( rnReply != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting reply..." );
-    SocketOp.sendto( data->writeUDP, rnReply, 8 + rnReply[RN_PACKET_LEN], NULL, 0 );
+    __sendRN(rocnetnode, rnReply);
     freeMem(rnReply);
   }
 }
@@ -215,7 +274,7 @@ static void __scanner( void* threadinst ) {
             msg[RN_PACKET_DATA + 1] = 0;
             msg[RN_PACKET_DATA + 2] = 0;
             msg[RN_PACKET_DATA + 3] = i;
-            SocketOp.sendto( data->writeUDP, msg, 8 + msg[RN_PACKET_LEN], NULL, 0 );
+            __sendRN(rocnetnode, msg);
 
           }
         }
@@ -250,7 +309,7 @@ static void __scanner( void* threadinst ) {
           msg[RN_PACKET_DATA+2] = val;
           msg[RN_PACKET_DATA+3] = i + 1;
           rnSenderAddresToPacket( data->id, msg, 0 );
-          SocketOp.sendto( data->writeUDP, msg, 8 + msg[RN_PACKET_LEN], NULL, 0 );
+          __sendRN(rocnetnode, msg);
           ThreadOp.sleep(raspiDummy()?500:10);
         }
       }

@@ -73,6 +73,7 @@
 #define RN_OUTPUT_OFF          0
 
 /* stationary group actions */
+#define RN_STATIONARY_NOP                0
 #define RN_STATIONARY_SINGLE_PORT        1
 #define RN_STATIONARY_PORT_PAIR          2
 #define RN_STATIONARY_MULTI_PORT         3
@@ -80,7 +81,7 @@
 #define RN_STATIONARY_QUERY_PORT_PAIR    5
 #define RN_STATIONARY_QUERY_MULTI_PORT   6
 #define RN_STATIONARY_REPORT             7
-#define RN_STATIONARY_QUERY              8
+#define RN_STATIONARY_QUERYIDS           8
 
 
 /* programming group actions */

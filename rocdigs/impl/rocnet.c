@@ -321,6 +321,24 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     return rsp;
   }
 
+  /* Program command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    Boolean direct = wProgram.getmode(node) == wProgram.mode_direct;
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "program type %d...", wProgram.getlntype(node) );
+    if( wProgram.getlntype(node) == wProgram.lntype_sv && wProgram.getcmd( node ) == wProgram.lncvget &&
+        wProgram.getcv(node) == 0 && wProgram.getmodid(node) == 0 && wProgram.getaddr(node) == 0 )
+    {
+      /* This construct is used to to query all LocoIOs, but is here recycled for query all CAN-GC2s. */
+      rn[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+      rnReceipientAddresToPacket( 0, rn, data->seven );
+      rn[RN_PACKET_ACTION] = RN_STATIONARY_QUERYIDS;
+      rn[RN_PACKET_LEN] = 0;
+      ThreadOp.post( data->writer, (obj)rn );
+    }
+    return rsp;
+  }
+
   /* unhandled command */
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Unhandled command: [%s][%s]",
       NodeOp.getName(node), NodeOp.getStr(node, "cmd", "?") );
@@ -419,8 +437,14 @@ static void __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   sndr = rnSenderAddrFromPacket(rn, data->seven);
 
   switch( action ) {
+  case RN_STATIONARY_QUERYIDS:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Identified: %d", sndr );
+    break;
+  case RN_STATIONARY_NOP:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NOP from %d to %d", sndr, rcpt );
+    break;
   default:
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported action [%d]", action );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported action [%d] from %d", action, sndr );
     break;
   }
 }
@@ -643,8 +667,22 @@ static void __reader( void* threadinst ) {
     if( data->rnAvailable((obj)rocnet) ) {
       insize = data->rnRead( (obj)rocnet, rn );
 
-      if( rnCheckPacket(rn, &extended, &event) )
-        __evaluateRN( rocnet, rn );
+      if( rnCheckPacket(rn, &extended, &event) ) {
+        Boolean isThis = rocnetIsThis( rocnet, rn);
+        int rcpt = rnReceipientAddrFromPacket(rn, 0);
+        int sndr = rnSenderAddrFromPacket(rn, 0);
+        if( isThis ) {
+          char* str = StrOp.byteToStr(rn, 8 + rn[RN_PACKET_LEN]);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore %s [%s] from %d to %d", rnActionTypeString(rn), str, sndr, rcpt );
+          StrOp.free(str);
+        }
+        else {
+          char* str = StrOp.byteToStr(rn, 8 + rn[RN_PACKET_LEN]);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluate %s [%s] from %d to %d", rnActionTypeString(rn), str, sndr, rcpt );
+          StrOp.free(str);
+          __evaluateRN( rocnet, rn );
+        }
+      }
       else
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "reject invalid packet" );
     }
@@ -681,8 +719,9 @@ static void __writer( void* threadinst ) {
         plen = 8 + rnRequest[RN_PACKET_LEN];
 
         if( rnCheckPacket(rnRequest, &extended, &event) ) {
-          char* str = StrOp.byteToStr(rnRequest, plen);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write request from queue: [%s]", str );
+          int rcpt = rnReceipientAddrFromPacket(rnRequest, 0);
+          char* str = StrOp.byteToStr(rnRequest, 8 + rnRequest[RN_PACKET_LEN]);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %s [%s] to %d", rnActionTypeString(rnRequest), str, rcpt );
           StrOp.free(str);
           ok = data->rnWrite( (obj)rocnet, rnRequest, plen );
 
