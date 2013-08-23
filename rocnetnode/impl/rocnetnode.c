@@ -48,6 +48,7 @@
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/Program.h"
 
 #include "rocnetnode/impl/rocnetnode_impl.h"
 
@@ -153,6 +154,23 @@ byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
         iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE);
         wSysCmd.setcmd(cmd, rn[RN_PACKET_DATA + 0] & 0x01 ? wSysCmd.go:wSysCmd.stop);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CS track power %s", rn[RN_PACKET_DATA + 0] & 0x01 ? "ON":"OFF" );
+        data->pDI->cmd( (obj)data->pDI, cmd );
+      }
+      break;
+
+    case RN_CS_POM:
+      if(data->pDI != NULL) {
+        iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE);
+        int cv = rn[RN_PACKET_DATA + 2] * 256 + rn[RN_PACKET_DATA + 3];
+        addr = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
+        wProgram.setaddr(cmd, addr);
+        wProgram.setlongaddr(cmd, addr > 127 ? True:False);
+        wProgram.setcv(cmd, cv );
+        wProgram.setvalue(cmd, rn[RN_PACKET_DATA + 4]);
+        wProgram.setpom(cmd, True);
+        wProgram.setcmd(cmd, rn[RN_PACKET_DATA + 5] == 0 ? wProgram.get:wProgram.set );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "CS POM %s loco=%d cv=%d value=%d", rn[RN_PACKET_DATA + 5] == 0 ? "read":"write" ,addr, cv, rn[RN_PACKET_DATA + 4] );
         data->pDI->cmd( (obj)data->pDI, cmd );
       }
       break;

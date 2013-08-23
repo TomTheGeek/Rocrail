@@ -370,6 +370,20 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_LEN] = 0;
       ThreadOp.post( data->writer, (obj)rn );
     }
+    else if(wProgram.ispom(node)) {
+      int addr = wProgram.getaddr( node );
+      rn[RN_PACKET_GROUP] = RN_GROUP_CS;
+      rnReceipientAddresToPacket( 0, rn, data->seven );
+      rn[RN_PACKET_ACTION] = RN_CS_POM;
+      rn[RN_PACKET_LEN] = 6;
+      rn[RN_PACKET_DATA + 0] = addr / 256;
+      rn[RN_PACKET_DATA + 1] = addr % 256;
+      rn[RN_PACKET_DATA + 2] = wProgram.getcv(node)/256;
+      rn[RN_PACKET_DATA + 3] = wProgram.getcv(node)%256;
+      rn[RN_PACKET_DATA + 4] = wProgram.getvalue(node);
+      rn[RN_PACKET_DATA + 5] = wProgram.getcmd(node) == wProgram.set ?1:0;
+      ThreadOp.post( data->writer, (obj)rn );
+    }
     return rsp;
   }
 
