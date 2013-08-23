@@ -29,7 +29,7 @@
 #include "rocnetnode/public/io.h"
 
 #ifdef __arm__
-// Access from ARM Running Linux
+/* Access from ARM Running Linux */
 
 #define BCM2708_PERI_BASE        0x20000000
 #define GPIO_BASE                (BCM2708_PERI_BASE + 0x200000) /* GPIO controller */
@@ -47,22 +47,20 @@
 int  mem_fd;
 void *gpio_map;
 
-// I/O access
+/* I/O access */
 volatile unsigned *gpio;
 
 
-// GPIO setup macros. Always use INP_GPIO(x) before using OUT_GPIO(x) or SET_GPIO_ALT(x,y)
+/* GPIO setup macros. Always use INP_GPIO(x) before using OUT_GPIO(x) or SET_GPIO_ALT(x,y) */
 #define INP_GPIO(g) *(gpio+((g)/10)) &= ~(7<<(((g)%10)*3))
 #define OUT_GPIO(g) *(gpio+((g)/10)) |=  (1<<(((g)%10)*3))
 #define SET_GPIO_ALT(g,a) *(gpio+(((g)/10))) |= (((a)<=3?(a)+4:(a)==4?3:2)<<(((g)%10)*3))
 
-#define GPIO_SET *(gpio+7)  // sets   bits which are 1 ignores bits which are 0
-#define GPIO_CLR *(gpio+10) // clears bits which are 1 ignores bits which are 0
+#define GPIO_SET *(gpio+7)  /* sets   bits which are 1 ignores bits which are 0 */
+#define GPIO_CLR *(gpio+10) /* clears bits which are 1 ignores bits which are 0 */
 #define GPIO_READ(g) *(gpio + 13) &= (1<<(g))
 
-//
-// Set up a memory regions to access GPIO
-//
+/* Set up a memory regions to access GPIO */
 int raspiSetupIO(int mask)
 {
   int g, rep, port, i;
@@ -85,31 +83,31 @@ int raspiSetupIO(int mask)
       GPIO_BASE         //Offset to GPIO peripheral
    );
 
-   close(mem_fd); //No need to keep mem_fd open after mmap
+   close(mem_fd); /* No need to keep mem_fd open after mmap */
 
    if (gpio_map == MAP_FAILED) {
       TraceOp.trc( "raspi", TRCLEVEL_EXCEPTION, __LINE__, 9999, "mmap error %d", (int)gpio_map );//errno also set!
       return -1;
    }
 
-   // Always use volatile pointer!
+   /* Always use volatile pointer! */
    gpio = (volatile unsigned *)gpio_map;
 
 
    for( i = 0; i < 32; i++ ) {
-     // Always use INP_GPIO(x) before using OUT_GPIO(x)
+     /* Always use INP_GPIO(x) before using OUT_GPIO(x) */
      INP_GPIO(i);
      if( mask & (1 << i) ) {
-       // input
+       /* input */
      }
      else {
-       // output
+       /* output */
        OUT_GPIO(i);
      }
    }
 
    return 0;
-} // setup_io
+}
 
 
 int raspiRead(int port) {
