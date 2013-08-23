@@ -69,7 +69,7 @@ int raspiSetupIO(int mask)
 
    /* open /dev/mem */
    if ((mem_fd = open("/dev/mem", O_RDWR|O_SYNC) ) < 0) {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "can't open /dev/mem" );
+      TraceOp.trc( "raspi", TRCLEVEL_EXCEPTION, __LINE__, 9999, "can't open /dev/mem" );
       return -1;
    }
 
