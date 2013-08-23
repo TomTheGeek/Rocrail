@@ -65,7 +65,7 @@ int raspiSetupIO(int mask)
 {
   int g, rep, port, i;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setup RasPi I/O 0x%08X", mask );
+  TraceOp.trc( "raspi", TRCLEVEL_INFO, __LINE__, 9999, "setup RasPi I/O 0x%08X", mask );
 
    /* open /dev/mem */
    if ((mem_fd = open("/dev/mem", O_RDWR|O_SYNC) ) < 0) {
@@ -75,18 +75,18 @@ int raspiSetupIO(int mask)
 
    /* mmap GPIO */
    gpio_map = mmap(
-      NULL,             //Any adddress in our space will do
-      BLOCK_SIZE,       //Map length
-      PROT_READ|PROT_WRITE,// Enable reading & writting to mapped memory
-      MAP_SHARED,       //Shared with other processes
-      mem_fd,           //File to map
-      GPIO_BASE         //Offset to GPIO peripheral
+      NULL,
+      BLOCK_SIZE,
+      PROT_READ|PROT_WRITE,
+      MAP_SHARED,
+      mem_fd,
+      GPIO_BASE
    );
 
    close(mem_fd); /* No need to keep mem_fd open after mmap */
 
    if (gpio_map == MAP_FAILED) {
-      TraceOp.trc( "raspi", TRCLEVEL_EXCEPTION, __LINE__, 9999, "mmap error %d", (int)gpio_map );//errno also set!
+      TraceOp.trc( "raspi", TRCLEVEL_EXCEPTION, __LINE__, 9999, "mmap error %d", (int)gpio_map );
       return -1;
    }
 
