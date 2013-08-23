@@ -152,6 +152,7 @@ byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
       if(data->pDI != NULL) {
         iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE);
         wSysCmd.setcmd(cmd, rn[RN_PACKET_DATA + 0] & 0x01 ? wSysCmd.go:wSysCmd.stop);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CS track power %s", rn[RN_PACKET_DATA + 0] & 0x01 ? "ON":"OFF" );
         data->pDI->cmd( (obj)data->pDI, cmd );
       }
       break;
