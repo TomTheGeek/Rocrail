@@ -4082,8 +4082,8 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
     return False;
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%-20s] travel: [%d] name=%s type=%s",
-      wItem.getid(item), travel, NodeOp.getName(item), wItem.gettype(item) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%-20s] travel: [%d] name=%s type=%s (depth=%d)",
+      wItem.getid(item), travel, NodeOp.getName(item), wItem.gettype(item), depth );
 
   if( ( ! StrOp.equals(NodeOp.getName(item), wBlock.name() ) && 
         ! StrOp.equals(NodeOp.getName(item), wStage.name() ) && 

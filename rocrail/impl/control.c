@@ -579,6 +579,17 @@ static void __handleIssue(obj inst, iONode node) {
   }
 }
 
+static int __AnalyseMode = 0;
+static void __analyse( void* threadinst ) {
+  iOThread        th = (iOThread)threadinst;
+  iOControl  control = (iOControl)ThreadOp.getParm(th);
+  iOControlData data = Data(control);
+
+  ModelOp.analyse( AppOp.getModel(), __AnalyseMode );
+  AppOp.broadcastEvent( ControlOp.getState(control));
+  ThreadOp.base.del(th);
+}
+
 
 static void __callback( obj inst, iONode nodeA ) {
   iOControlData data    = Data(inst);
@@ -938,9 +949,11 @@ static void __callback( obj inst, iONode nodeA ) {
       return;
     }
     else if( StrOp.equals( wSysCmd.analyze, wSysCmd.getcmd( nodeA ) ) ) {
-      ModelOp.analyse( AppOp.getModel(), wSysCmd.getval( nodeA ) );
+      iOThread ana = ThreadOp.inst( NULL, __analyse, inst );
+      ThreadOp.setStacksize(ana, 256 * 4096);
+      __AnalyseMode = wSysCmd.getval( nodeA );
       NodeOp.base.del( nodeA );
-      AppOp.broadcastEvent( ControlOp.getState((iOControl)inst) );
+      ThreadOp.start( ana );
       return;
     }
     else if( StrOp.equals( wSysCmd.txshortids, wSysCmd.getcmd(nodeA) ) ) {
