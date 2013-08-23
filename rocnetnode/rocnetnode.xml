@@ -23,7 +23,7 @@
 <Project name="RocNetNode" title="RocNet Node" docname="rocnetnodeapi">
 
 
-  <object name="RocNetNode" use="node,trace,thread,socket">
+  <object name="RocNetNode" use="node,trace,thread,socket" include="$rocint/public/digint">
     <struct name="Port" typedef="*iOPort">
       <var name="port" vt="int"/>
       <var name="type" vt="int"/>
@@ -46,6 +46,7 @@
     <fun name="stop" vt="void"/>
     <data>
       <var name="ini" vt="iONode"/>
+      <var name="digintini" vt="iONode"/>
       <var name="reader" vt="iOThread"/>
       <var name="scanner" vt="iOThread"/>
       <var name="run" vt="Boolean"/>
@@ -55,7 +56,8 @@
       <var name="readUDP" vt="iOSocket"/>
       <var name="writeUDP" vt="iOSocket"/>
       <var name="ports[32]" vt="iOPort"/>
-      </data>
+      <var name="pDI" vt="iIDigInt"/>
+    </data>
   </object>
 
 

@@ -257,6 +257,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
 
   /* Loco command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    int   bus  = wLoc.getbus( node );
     int   addr = wLoc.getaddr( node );
     int      V = 0;
     byte    fn = wLoc.isfn( node )  ? RN_MOBILE_LIGHTS_ON:0;
@@ -269,54 +270,87 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       else if( wLoc.getV_max( node ) > 0 )
         V = (wLoc.getV( node ) * 127) / wLoc.getV_max( node );
     }
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d V=%d lights=%s dir=%s",
-        addr, V, fn?"on":"off", dir?"forwards":"reverse" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d:%d V=%d lights=%s dir=%s",
+        bus, addr, V, fn?"on":"off", dir?"forwards":"reverse" );
 
-    rn[RN_PACKET_GROUP] |= RN_GROUP_MOBILE;
-    rnReceipientAddresToPacket( addr, rn, data->seven );
-    rn[RN_PACKET_ACTION] = RN_MOBILE_VELOCITY;
-    rn[RN_PACKET_LEN] = 4;
-    rn[RN_PACKET_DATA + 0] = V;
-    rn[RN_PACKET_DATA + 1] = dir;
-    rn[RN_PACKET_DATA + 2] = fn;
-    rn[RN_PACKET_DATA + 3] = prot;
+    if( bus > 0 ) {
+      rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
+      rnReceipientAddresToPacket( bus, rn, data->seven );
+      rn[RN_PACKET_ACTION] = RN_CS_VELOCITY;
+      rn[RN_PACKET_LEN] = 6;
+      rn[RN_PACKET_DATA + 0] = addr / 256;
+      rn[RN_PACKET_DATA + 1] = addr % 256;
+      rn[RN_PACKET_DATA + 2] = V;
+      rn[RN_PACKET_DATA + 3] = dir;
+      rn[RN_PACKET_DATA + 4] = fn;
+      rn[RN_PACKET_DATA + 5] = prot;
+    }
+    else {
+      rn[RN_PACKET_GROUP] |= RN_GROUP_MOBILE;
+      rnReceipientAddresToPacket( addr, rn, data->seven );
+      rn[RN_PACKET_ACTION] = RN_MOBILE_VELOCITY;
+      rn[RN_PACKET_LEN] = 4;
+      rn[RN_PACKET_DATA + 0] = V;
+      rn[RN_PACKET_DATA + 1] = dir;
+      rn[RN_PACKET_DATA + 2] = fn;
+      rn[RN_PACKET_DATA + 3] = prot;
+    }
     ThreadOp.post( data->writer, (obj)rn );
     return rsp;
   }
 
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    int   bus  = wFunCmd.getbus( node );
     int   addr = wFunCmd.getaddr( node );
     byte  prot = __getProtocol(node);
-    Boolean fn   = wFunCmd.isf0(node);
-    Boolean fn1  = wFunCmd.isf1(node);
-    Boolean fn2  = wFunCmd.isf2(node);
-    Boolean fn3  = wFunCmd.isf3(node);
-    Boolean fn4  = wFunCmd.isf4(node);
-    Boolean fn5  = wFunCmd.isf5(node);
-    Boolean fn6  = wFunCmd.isf6(node);
-    Boolean fn7  = wFunCmd.isf7(node);
-    Boolean fn8  = wFunCmd.isf8(node);
-    Boolean fn9  = wFunCmd.isf9(node);
-    Boolean fn10 = wFunCmd.isf10(node);
-    Boolean fn11 = wFunCmd.isf11(node);
-    Boolean fn12 = wFunCmd.isf12(node);
+    int i = 0;
+    int fb1 = 0;
+    int fb2 = 0;
+    int fb3 = 0;
+    for( i = 0; i < 8; i++) {
+      char key[32];
+      StrOp.fmtb(key, "f%d", i+1 );
+      if( NodeOp.getBool(node, key, False) )
+        fb1 |= (1 << i);
+    }
+    for( i = 0; i < 8; i++) {
+      char key[32];
+      StrOp.fmtb(key, "f%d", i+9 );
+      if( NodeOp.getBool(node, key, False) )
+        fb2 |= (1 << i);
+    }
+    for( i = 0; i < 8; i++) {
+      char key[32];
+      StrOp.fmtb(key, "f%d", i+17 );
+      if( NodeOp.getBool(node, key, False) )
+        fb3 |= (1 << i);
+    }
 
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d:%d fb1=0x%02X fb2=0x%02X fb3=0x%02X", fb1, fb2, fb3);
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "lc=%d lights=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s",
-        addr, fn?"on":"off",
-        fn1?"on":"off", fn2 ?"on":"off", fn3 ?"on":"off", fn4 ?"on":"off",
-        fn5?"on":"off", fn6 ?"on":"off", fn7 ?"on":"off", fn8 ?"on":"off",
-        fn9?"on":"off", fn10?"on":"off", fn11?"on":"off", fn12?"on":"off" );
-
-    rn[RN_PACKET_GROUP] |= RN_GROUP_MOBILE;
-    rnReceipientAddresToPacket( addr, rn, data->seven );
-    rn[RN_PACKET_ACTION] = RN_MOBILE_FUNCTIONS;
-    rn[RN_PACKET_LEN] = 3;
-    rn[RN_PACKET_DATA + 0] = (fn1?0x01:0x00) | (fn2?0x02:0x00) | (fn3?0x04:0x00) | (fn4?0x08:0x00) | (fn5?0x10:0x00) | (fn6?0x20:0x00) | (fn?0x40:0x00) ;
-    rn[RN_PACKET_DATA + 1] = (fn7?0x01:0x00) | (fn8?0x02:0x00) | (fn9?0x04:0x00) | (fn10?0x08:0x00) | (fn11?0x10:0x00) | (fn12?0x20:0x00) ;
-    rn[RN_PACKET_DATA + 2] = prot;
+    if( bus > 0 ) {
+      rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
+      rnReceipientAddresToPacket( bus, rn, data->seven );
+      rn[RN_PACKET_ACTION] = RN_CS_FUNCTION;
+      rn[RN_PACKET_LEN] = 6;
+      rn[RN_PACKET_DATA + 0] = addr / 256;
+      rn[RN_PACKET_DATA + 1] = addr % 256;
+      rn[RN_PACKET_DATA + 2] = fb1;
+      rn[RN_PACKET_DATA + 3] = fb2;
+      rn[RN_PACKET_DATA + 4] = fb3;
+      rn[RN_PACKET_DATA + 5] = prot;
+    }
+    else {
+      rn[RN_PACKET_GROUP] |= RN_GROUP_MOBILE;
+      rnReceipientAddresToPacket( addr, rn, data->seven );
+      rn[RN_PACKET_ACTION] = RN_MOBILE_FUNCTIONS;
+      rn[RN_PACKET_LEN] = 3;
+      rn[RN_PACKET_DATA + 0] = fb1;
+      rn[RN_PACKET_DATA + 1] = fb2;
+      rn[RN_PACKET_DATA + 3] = fb3;
+      rn[RN_PACKET_DATA + 4] = prot;
+    }
     ThreadOp.post( data->writer, (obj)rn );
     return rsp;
   }

@@ -38,13 +38,20 @@
 #include "rocs/public/cmdln.h"
 #include "rocs/public/stats.h"
 #include "rocs/public/system.h"
+#include "rocs/public/lib.h"
 
 #include "rocrail/wrapper/public/Cmdline.h"
 #include "rocrail/wrapper/public/RocNet.h"
 #include "rocrail/wrapper/public/PortSetup.h"
 #include "rocrail/wrapper/public/Trace.h"
+#include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/FunCmd.h"
+#include "rocrail/wrapper/public/SysCmd.h"
 
 #include "rocnetnode/impl/rocnetnode_impl.h"
+
+#include "rocint/public/digint.h"
 
 #include "rocdigs/impl/rocnet/rocnet-const.h"
 #include "rocdigs/impl/rocnet/rn-utils.h"
@@ -53,6 +60,9 @@
 
 
 static int instCnt = 0;
+
+typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
+
 static void __sendRN( iORocNetNode rocnetnode, byte* rn );
 
 /** ----- OBase ----- */
@@ -116,6 +126,79 @@ static iORocNetNode __RocNetNode = NULL;
 static Boolean __isThis( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data = Data(rocnetnode);
   return (rnSenderAddrFromPacket(rn, 0) == data->id);
+}
+
+
+byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
+  iORocNetNodeData data       = Data(rocnetnode);
+  int rcpt       = 0;
+  int sndr       = 0;
+  int action     = rnActionFromPacket(rn);
+  int actionType = rnActionTypeFromPacket(rn);
+  byte* msg = NULL;
+  int addr = 0;
+  int V = 0;
+  int dir = 0;
+  int lights = 0;
+  int i = 0;
+
+  rcpt = rnReceipientAddrFromPacket(rn, 0);
+  sndr = rnSenderAddrFromPacket(rn, 0);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CS request %d from %d to %d", action, sndr, rcpt );
+
+  switch( action ) {
+    case RN_CS_TRACKPOWER:
+      if(data->pDI != NULL) {
+        iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE);
+        wSysCmd.setcmd(cmd, rn[RN_PACKET_DATA + 0] & 0x01 ? wSysCmd.go:wSysCmd.stop);
+        data->pDI->cmd( (obj)data->pDI, cmd );
+      }
+      break;
+
+    case RN_CS_VELOCITY:
+      addr = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
+      V = rn[RN_PACKET_DATA + 2];
+      dir = rn[RN_PACKET_DATA + 3];
+      lights = rn[RN_PACKET_DATA + 4];
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco addr=%d V=%d dir=%d lights=%d", addr, V, dir, lights );
+      if(data->pDI != NULL) {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+        wLoc.setaddr(cmd, addr);
+        wLoc.setV(cmd, V);
+        wLoc.setdir(cmd, dir);
+        wLoc.setfn(cmd, lights);
+        data->pDI->cmd( (obj)data->pDI, cmd );
+      }
+      break;
+
+    case RN_CS_FUNCTION:
+      addr = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco function addr=%d", addr );
+      if(data->pDI != NULL) {
+        iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE);
+        wFunCmd.setaddr(cmd, addr);
+        for( i = 0; i < 8; i++ ) {
+          char key[32];
+          StrOp.fmtb(key, "f%d", i+1);
+          NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 2] & (1 << i)) ? True:False);
+        }
+        for( i = 0; i < 8; i++ ) {
+          char key[32];
+          StrOp.fmtb(key, "f%d", i+9);
+          NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 3] & (1 << (i+8))) ? True:False);
+        }
+        for( i = 0; i < 8; i++ ) {
+          char key[32];
+          StrOp.fmtb(key, "f%d", i+17);
+          NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 3] & (1 << (i+16))) ? True:False);
+        }
+        data->pDI->cmd( (obj)data->pDI, cmd );
+      }
+      break;
+  }
+
+  return msg;
 }
 
 
@@ -240,6 +323,10 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
     case RN_GROUP_INPUT:
       break;
 
+    case RN_GROUP_CS:
+      rnReply = __handleCS( rocnetnode, rn );
+      break;
+
     default:
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "unsupported group [%d]", group );
       break;
@@ -350,6 +437,36 @@ static void __reader( void* threadinst ) {
 }
 
 
+static void __listener( obj inst, iONode nodeC, int level ) {
+  iORocNetNodeData data = Data(inst);
+  if( nodeC != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "listener: %s", NodeOp.getName(nodeC) );
+    NodeOp.base.del(nodeC);
+  }
+}
+
+static Boolean __initDigInt(iORocNetNode inst) {
+  iORocNetNodeData data = Data(inst);
+  const char*  lib = wDigInt.getlib( data->digintini );
+  const char*  iid = wDigInt.getiid( data->digintini );
+  iIDigInt pDi = NULL;
+  iOLib    pLib = NULL;
+  LPFNROCGETDIGINT pInitFun = (void *) NULL;
+  char* libpath = StrOp.fmt( "%s%c%s", ".", SystemOp.getFileSeparator(), lib );
+  pLib = LibOp.inst( libpath );
+  StrOp.free( libpath );
+  if (pLib == NULL)
+    return False;
+  pInitFun = (LPFNROCGETDIGINT)LibOp.getProc(pLib,"rocGetDigInt");
+  if (pInitFun == NULL)
+    return False;
+  data->pDI = pInitFun(data->digintini,TraceOp.get());
+  data->pDI->setListener( (obj)data->pDI, (obj)inst, &__listener );
+
+  return True;
+}
+
+
 static void __initPorts(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
   int iomap = 0;
@@ -449,6 +566,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       if( wTrace.iscalc( traceini ) )
         TraceOp.setLevel( trc, TraceOp.getLevel( trc ) | TRCLEVEL_CALC );
     }
+    data->digintini = NodeOp.findNode(data->ini, wDigInt.name());
   }
   else {
     trc = TraceOp.inst( debug | dump | monitor | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
@@ -470,6 +588,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   __initPorts(inst);
+  __initDigInt(inst);
 
   data->run = True;
   data->reader = ThreadOp.inst( "rnreader", &__reader, __RocNetNode );

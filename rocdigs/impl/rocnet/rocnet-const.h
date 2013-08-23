@@ -48,6 +48,8 @@
 #define RN_CS_PT             5
 #define RN_CS_PT_ON          1 /* data byte */
 #define RN_CS_PT_OFF         0 /* data byte */
+#define RN_CS_VELOCITY       6
+#define RN_CS_FUNCTION       7
 
 /* mobile group actions */
 #define RN_MOBILE_SETUP          1
