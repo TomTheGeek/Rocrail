@@ -80,7 +80,9 @@ const char* rocs_system_getProperty( iOSystemData o, const char* name ) {
 
 int rocs_system_getMillis( void ) {
 #ifdef __ROCS_SYSTEM__
-  return GetTickCount() % 1000;
+  SYSTEMTIME st;
+  GetSystemTime(&st);
+  return st.wMilliseconds;
 #endif
 }
 
