@@ -132,6 +132,33 @@ static Boolean __isThis( iORocNetNode rocnetnode, byte* rn ) {
   return (rnSenderAddrFromPacket(rn, 0) == data->id);
 }
 
+byte* __handleClock( iORocNetNode rocnetnode, byte* rn ) {
+  iORocNetNodeData data       = Data(rocnetnode);
+  int rcpt       = 0;
+  int sndr       = 0;
+  int action     = rnActionFromPacket(rn);
+  int actionType = rnActionTypeFromPacket(rn);
+  byte* msg = NULL;
+
+  rcpt = rnReceipientAddrFromPacket(rn, 0);
+  sndr = rnSenderAddrFromPacket(rn, 0);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Clock request %d from %d to %d", action, sndr, rcpt );
+
+  switch( action ) {
+    case RN_CLOCK_SET:
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "Clock set to %02d:%02d divider=%d", rn[RN_PACKET_DATA + 4], rn[RN_PACKET_DATA + 5], rn[RN_PACKET_DATA + 6] );
+      break;
+    case RN_CLOCK_SYNC:
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "Clock sync to %02d:%02d divider=%d", rn[RN_PACKET_DATA + 4], rn[RN_PACKET_DATA + 5], rn[RN_PACKET_DATA + 6] );
+      break;
+  }
+
+  return msg;
+}
+
 
 byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data       = Data(rocnetnode);
@@ -159,6 +186,14 @@ byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CS track power %s", rn[RN_PACKET_DATA + 0] & 0x01 ? "ON":"OFF" );
         data->pDI->cmd( (obj)data->pDI, cmd );
       }
+      data->power = rn[RN_PACKET_DATA + 0] & 0x01 ? True:False;
+      msg = allocMem(32);
+      msg[RN_PACKET_GROUP] = RN_GROUP_CS;
+      rnSenderAddresToPacket( data->id, msg, 0 );
+      msg[RN_PACKET_ACTION] = RN_CS_TRACKPOWER;
+      msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+      msg[RN_PACKET_LEN] = 1;
+      msg[RN_PACKET_DATA + 0] = data->power;
       break;
 
     case RN_CS_POM:
@@ -351,13 +386,16 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
       rnReply = __handleCS( rocnetnode, rn );
       break;
 
+    case RN_GROUP_CLOCK:
+      rnReply = __handleClock( rocnetnode, rn );
+      break;
+
     default:
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "unsupported group [%d]", group );
       break;
   }
 
   if( rnReply != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "posting reply..." );
     __sendRN(rocnetnode, rnReply);
     freeMem(rnReply);
   }
