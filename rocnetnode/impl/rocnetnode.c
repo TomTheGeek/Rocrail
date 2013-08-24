@@ -512,7 +512,7 @@ static void __initPorts(iORocNetNode inst) {
         port->invert = wPortSetup.isinvert(portsetup);
         data->ports[portnr] = port;
         if( wPortSetup.gettype(portsetup) == 1 )
-          iomap |= (1 << portnr );
+          iomap |= (1 << port->ionr );
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "portsetup: port=%d ionr=%d type=%d offtime=%d pulsetime=%d", port->port, port->ionr, port->type, port->offtime, port->pulsetime );
