@@ -222,6 +222,7 @@ void CarDlg::initLabels() {
   m_UseLights->SetLabel( wxGetApp().getMsg( "lights" ) );
   m_F0VCmd->SetLabel( wxGetApp().getMsg( "speed" ) + wxT(" ") + wxGetApp().getMsg( "command" ));
   m_Placing->SetLabel( wxGetApp().getMsg( "placing" ) );
+  m_labSteps->SetLabel( wxGetApp().getMsg( "speedsteps" ) );
 
   // Functions
   m_labFDesc->SetLabel( wxGetApp().getMsg( "description" ) );
@@ -569,6 +570,7 @@ void CarDlg::initValues() {
   m_UseLights->SetValue( wCar.isuselights(m_Props)?true:false );
   m_FnLights->SetValue( wCar.getfnlights(m_Props) );
   m_F0VCmd->SetValue( wCar.isf0vcmd(m_Props)?true:false );
+  m_SpeedSteps->SetValue( wLoc.getspcnt( m_Props ) );
 
   initFunctions();
 
@@ -687,6 +689,7 @@ bool CarDlg::evaluate(){
   wCar.setuselights(m_Props, m_UseLights->IsChecked()?True:False );
   wCar.setfnlights(m_Props, m_FnLights->GetValue() );
   wCar.setf0vcmd(m_Props, m_F0VCmd->IsChecked()?True:False );
+  wLoc.setspcnt( m_Props, m_SpeedSteps->GetValue() );
 
   evaluateFunctions();
 
