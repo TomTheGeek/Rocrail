@@ -148,11 +148,11 @@ byte* __handleClock( iORocNetNode rocnetnode, byte* rn ) {
   switch( action ) {
     case RN_CLOCK_SET:
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "Clock set to %02d:%02d divider=%d", rn[RN_PACKET_DATA + 4], rn[RN_PACKET_DATA + 5], rn[RN_PACKET_DATA + 6] );
+          "Clock set to %02d:%02d divider=%d", rn[RN_PACKET_DATA + 4], rn[RN_PACKET_DATA + 5], rn[RN_PACKET_DATA + 7] );
       break;
     case RN_CLOCK_SYNC:
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "Clock sync to %02d:%02d divider=%d", rn[RN_PACKET_DATA + 4], rn[RN_PACKET_DATA + 5], rn[RN_PACKET_DATA + 6] );
+          "Clock sync to %02d:%02d divider=%d", rn[RN_PACKET_DATA + 4], rn[RN_PACKET_DATA + 5], rn[RN_PACKET_DATA + 7] );
       break;
   }
 
@@ -676,7 +676,16 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
 
 static Boolean _shutdown( void ) {
   iORocNetNodeData data = Data(__RocNetNode);
+  byte msg[32];
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutdown the RocNetNode" );
+
+  msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+  rnSenderAddresToPacket( data->id, msg, 0 );
+  msg[RN_PACKET_ACTION] = RN_STATIONARY_SHUTDOWN;
+  msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+  msg[RN_PACKET_LEN] = 0;
+  __sendRN(__RocNetNode, msg);
+
   data->run = False;
   ThreadOp.sleep(1000);
   bShutdown = True;

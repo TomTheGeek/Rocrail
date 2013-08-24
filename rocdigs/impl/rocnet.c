@@ -49,6 +49,8 @@
 
 #include "rocutils/public/addr.h"
 
+#include <time.h>
+
 
 static int instCnt = 0;
 
@@ -142,6 +144,14 @@ static iONode __translate( iOrocNet inst, iONode node ) {
   /* Clock command. */
   else if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
     const char* cmd = wClock.getcmd( node );
+    long l_time = wClock.gettime(node);
+    struct tm* lTime = localtime( &l_time );
+
+    int mins  = lTime->tm_min;
+    int hours = lTime->tm_hour;
+    int wday  = lTime->tm_wday;
+    int mday  = lTime->tm_mday;
+    int mon   = lTime->tm_mon;
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_CLOCK;
 
@@ -149,8 +159,10 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Clock set" );
       rn[RN_PACKET_ACTION] = RN_CLOCK_SET;
       rn[RN_PACKET_LEN] = 8;
-      rn[RN_PACKET_DATA + 4] = wClock.gethour(node);
-      rn[RN_PACKET_DATA + 5] = wClock.getminute(node);
+      rn[RN_PACKET_DATA + 2] = mon;
+      rn[RN_PACKET_DATA + 3] = mday;
+      rn[RN_PACKET_DATA + 4] = hours;
+      rn[RN_PACKET_DATA + 5] = mins;
       rn[RN_PACKET_DATA + 7] = wClock.getdivider(node);
       ThreadOp.post( data->writer, (obj)rn );
       return rsp;
@@ -159,8 +171,10 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Clock sync" );
       rn[RN_PACKET_ACTION] = RN_CLOCK_SYNC;
       rn[RN_PACKET_LEN] = 8;
-      rn[RN_PACKET_DATA + 4] = wClock.gethour(node);
-      rn[RN_PACKET_DATA + 5] = wClock.getminute(node);
+      rn[RN_PACKET_DATA + 2] = mon;
+      rn[RN_PACKET_DATA + 3] = mday;
+      rn[RN_PACKET_DATA + 4] = hours;
+      rn[RN_PACKET_DATA + 5] = mins;
       rn[RN_PACKET_DATA + 7] = wClock.getdivider(node);
       ThreadOp.post( data->writer, (obj)rn );
       return rsp;
@@ -492,6 +506,9 @@ static void __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     break;
   case RN_STATIONARY_NOP:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NOP from %d to %d", sndr, rcpt );
+    break;
+  case RN_STATIONARY_SHUTDOWN:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node %d has been shutdown", sndr );
     break;
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported action [%d] from %d", action, sndr );
