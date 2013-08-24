@@ -1717,6 +1717,7 @@
         <var name="load" vt="int" defval="0" units="mA" remark="current"/>
         <const name="reset" vt="string" val="reset"/>
         <const name="resetstatus" vt="string" val="resetstatus"/>
+        <const name="setcounterval" vt="string" val="setcounterval"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <const name="fbtype_sensor" vt="int" val="0" remark="default sensor type"/>
         <const name="fbtype_lissy" vt="int" val="1" remark="lissy"/>

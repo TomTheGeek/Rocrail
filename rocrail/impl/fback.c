@@ -347,6 +347,13 @@ static Boolean _cmd( iOFBack inst, iONode cmd, Boolean update ) {
     iONode clone = (iONode)NodeOp.base.clone( data->props );
     AppOp.broadcastEvent( clone );
   }
+  else if( StrOp.equals(wFeedback.setcounterval, wFeedback.getcmd(cmd))) {
+    data->counter = wFeedback.getcounter(cmd);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set sensor [%s] counter to %d", FBackOp.getId(inst), data->counter);
+    iONode clone = (iONode)NodeOp.base.clone( data->props );
+    wFeedback.setcounter( clone, data->counter);
+    AppOp.broadcastEvent( clone );
+  }
   else {
     if( wFeedback.getfbtype(data->props) == wFeedback.fbtype_wheelcounter && wFeedback.isstate(cmd) )
       data->wheelcount++;
