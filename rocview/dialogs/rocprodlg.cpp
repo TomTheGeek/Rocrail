@@ -667,8 +667,12 @@ iONode RocProDlg::getLocoCV(int nr) {
 
 void RocProDlg::setCVVal(int val, bool updateval) {
   if( val >= 0 ) {
-    if(updateval)
+    if(updateval) {
       m_Value->SetValue(val);
+      char hexval[32];
+      StrOp.fmtb( hexval, "%X", val);
+      m_HexValue->SetValue(wxString(hexval,wxConvUTF8));
+    }
     m_ValueSlider->SetValue(val);
     m_Bit0->SetValue(val&0x01?true:false);
     m_Bit1->SetValue(val&0x02?true:false);
@@ -953,3 +957,9 @@ void RocProDlg::onCVInfoEnter( wxCommandEvent& event ) {
   }
 }
 
+
+void RocProDlg::onHexValue( wxCommandEvent& event ) {
+  char* hexval = StrOp.dup((const char*)m_HexValue->GetValue().mb_str(wxConvUTF8));
+  long lhexval = strtol(hexval, (char **)NULL, 16);
+  setCVVal(lhexval, true);
+}

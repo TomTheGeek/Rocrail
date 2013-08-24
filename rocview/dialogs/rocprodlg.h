@@ -97,6 +97,7 @@ class RocProDlg : public RocProDlgGen
     void onImgOpen( wxCommandEvent& event );
     void onReadAllCV( wxCommandEvent& event );
     void onCVInfoEnter( wxCommandEvent& event );
+    void onHexValue( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		RocProDlg( wxWindow* parent );
