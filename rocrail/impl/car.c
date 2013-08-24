@@ -210,6 +210,7 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
         wCar.setaddr( nodeA, wCar.getaddr(data->props) );
         wCar.setprot( nodeA, wCar.getprot( data->props ) );
         wCar.setprotver( nodeA, wCar.getprotver( data->props ) );
+        wLoc.setspcnt( nodeA, 28 );
         ControlOp.cmd( control, (iONode)NodeOp.base.clone(nodeA), NULL );
       }
 
@@ -229,6 +230,7 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
         wCar.setaddr( nodeA, wCar.getaddr(data->props) );
         wCar.setprot( nodeA, wCar.getprot( data->props ) );
         wCar.setprotver( nodeA, wCar.getprotver( data->props ) );
+        wLoc.setspcnt( nodeA, 28 );
         ControlOp.cmd( control, (iONode)NodeOp.base.clone(nodeA), NULL );
       }
 
@@ -251,6 +253,7 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
       wCar.setaddr( nodeA, wCar.getaddr(data->props) );
       wCar.setprot( nodeA, wCar.getprot( data->props ) );
       wCar.setprotver( nodeA, wCar.getprotver( data->props ) );
+      wLoc.setspcnt( nodeA, 28 );
 
       if(fnchanged != -1) {
         if(mappedfn != fnchanged) {
