@@ -507,8 +507,15 @@ static void __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   case RN_STATIONARY_NOP:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NOP from %d to %d", sndr, rcpt );
     break;
-  case RN_STATIONARY_SHUTDOWN:
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node %d has been shutdown", sndr );
+  case RN_STATIONARY_SHUTDOWN: {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "node %d has been shutdown", sndr );
+    /* STOP */
+    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+    wState.setiid( node, wDigInt.getiid( data->ini ) );
+    wState.setpower( node, False );
+    wState.setemergency( node, True );
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+    }
     break;
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported action [%d] from %d", action, sndr );
