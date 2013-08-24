@@ -503,7 +503,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         FBackOp.cmd( fb, cmd, True );
       }
       else if( StrOp.equals(wFeedback.setcounterval, cmdStr) ) {
-        wFeedback.setcmd( cmd, wFeedback.setcounter );
+        wFeedback.setcmd( cmd, wFeedback.setcounterval );
         wFeedback.setcounter( cmd, atoi(wAction.getparam(data->action)) );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set counter sensor [%s] to %d", id, atoi(wAction.getparam(data->action))  );
         FBackOp.cmd( fb, cmd, True );
