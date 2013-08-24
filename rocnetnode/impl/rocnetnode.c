@@ -62,6 +62,9 @@
 
 static int instCnt = 0;
 
+static int versionH = 1;
+static int versionL = 0;
+
 typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 
 static void __sendRN( iORocNetNode rocnetnode, byte* rn );
@@ -246,8 +249,8 @@ byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_LEN] = 4;
     msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;
     msg[RN_PACKET_DATA+1] = 70;
-    msg[RN_PACKET_DATA+2] = 0;
-    msg[RN_PACKET_DATA+3] = 0;
+    msg[RN_PACKET_DATA+2] = versionH;
+    msg[RN_PACKET_DATA+3] = versionL;
     break;
   }
   return msg;
@@ -272,11 +275,13 @@ byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
         "output SWITCH(%s) port=%d %s action for %d%s from %d, %d data bytes",
         rnActionTypeString(rn), port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? "on":"off",
         rcpt, isThis?"(this)":"", sndr, rn[RN_PACKET_LEN] );
-    if( port < 32 && rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ) {
+    if( port < 32 && data->ports[port] != NULL && rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ) {
       data->ports[port]->offtimer = SystemOp.getTick();
       data->ports[port]->state = True;
     }
-    raspiWrite(port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0);
+    if(data->ports[port] != NULL) {
+      raspiWrite(data->ports[port]->ionr, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0);
+    }
   break;
 
   default:
@@ -379,7 +384,7 @@ static void __scanner( void* threadinst ) {
           if( data->ports[i]->offtimer + data->ports[i]->pulsetime <= SystemOp.getTick() ) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "pulse off port %d", i );
             data->ports[i]->state = False;
-            raspiWrite(i, 0);
+            raspiWrite(data->ports[i]->ionr, 0);
 
             msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
             rnSenderAddresToPacket( data->id, msg, 0 );
@@ -397,7 +402,7 @@ static void __scanner( void* threadinst ) {
       }
 
       if( data->ports[i] != NULL && data->ports[i]->type == 1 ) {
-        int val = raspiRead(i);
+        int val = raspiRead(data->ports[i]->ionr);
         Boolean report = inputVal[i] != val;
 
         if( data->ports[i]->offtime > 0 ) {
@@ -500,6 +505,7 @@ static void __initPorts(iORocNetNode inst) {
       if( portnr < 32 ) {
         iOPort port = allocMem( sizeof( struct Port) );
         port->port = portnr;
+        port->ionr = wPortSetup.getionr(portsetup);
         port->offtime = wPortSetup.getofftime(portsetup);
         port->pulsetime = wPortSetup.getpulsetime(portsetup);
         port->type = wPortSetup.gettype(portsetup);
@@ -509,7 +515,7 @@ static void __initPorts(iORocNetNode inst) {
           iomap |= (1 << portnr );
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "portsetup: port=%d type=%d offtime=%d pulsetime=%d", port->port, port->type, port->offtime, port->pulsetime );
+            "portsetup: port=%d ionr=%d type=%d offtime=%d pulsetime=%d", port->port, port->ionr, port->type, port->offtime, port->pulsetime );
       }
       portsetup = wRocNet.nextportsetup(rocnet, portsetup);
     }

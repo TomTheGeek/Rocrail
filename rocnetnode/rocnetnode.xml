@@ -26,6 +26,7 @@
   <object name="RocNetNode" use="node,trace,thread,socket" include="$rocint/public/digint">
     <struct name="Port" typedef="*iOPort">
       <var name="port" vt="int"/>
+      <var name="ionr" vt="int"/>
       <var name="type" vt="int"/>
       <var name="offtime" vt="int"/>
       <var name="pulsetime" vt="int"/>

@@ -487,7 +487,8 @@ static void __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   switch( action ) {
   case RN_STATIONARY_QUERYIDS:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "Identified: %d class=%s vid=%d", sndr, rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1] );
+        "Identified: rocnetid=%d class=%s vid=%d version=%d.%d", sndr,
+        rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2], rn[RN_PACKET_DATA+3] );
     break;
   case RN_STATIONARY_NOP:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NOP from %d to %d", sndr, rcpt );
