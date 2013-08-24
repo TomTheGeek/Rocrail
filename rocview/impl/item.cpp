@@ -2603,8 +2603,14 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
     wFeedback.setshortcut( m_Props, wFeedback.isshortcut(node) );
     wFeedback.setstate( m_Props, state );
-    wFeedback.setcarcount( m_Props, carcount );
-    wFeedback.setcountedcars( m_Props, countedcars );
+    wFeedback.setcounter( m_Props, wFeedback.getcounter( node ) );
+    wFeedback.setwheelcount( m_Props, wFeedback.getwheelcount( node ) );
+    wFeedback.setcarcount( m_Props, wFeedback.getcarcount( node ) );
+    wFeedback.setcountedcars( m_Props, wFeedback.getcountedcars( node ) );
+    wFeedback.setidentifier( m_Props, wFeedback.getidentifier( node ) );
+    wFeedback.setval( m_Props, wFeedback.getval( node ) );
+    wFeedback.setload( m_Props, wFeedback.getload( node ) );
+
     m_PlanPanel->blockEvent( wFeedback.getid( m_Props ) );
     refresh = true;
   }
