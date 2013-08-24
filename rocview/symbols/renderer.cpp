@@ -2124,20 +2124,24 @@ void SymbolRenderer::drawSensor( wxPaintDC& dc, bool occupied, bool actroute, co
       drawSvgSym(dc, m_SvgSym1, ori);
   }
 
-  if( m_bShowID ) {
-    double degrees = 0.0;
-    if( StrOp.equals( ori, wItem.south ) ) {
-      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 32, 1, 270.0 );
-    }
-    else if( StrOp.equals( ori, wItem.north ) ) {
-      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 1, 32, 90.0 );
-    }
-    else if(StrOp.equals( ori, wItem.east ) && wFeedback.iscurve( m_Props )) {
-      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 22, 0.0 );
-    }
-    else {
-      drawString( wxString(wItem.getid(m_Props),wxConvUTF8), 0, 1, 0.0 );
-    }
+  double degrees = 0.0;
+  char lab[128];
+  if( m_bShowID )
+    StrOp.fmtb(lab, "%s", wItem.getid(m_Props));
+  else
+    StrOp.fmtb(lab, "%d,%d,%d", wFeedback.getcounter(m_Props), wFeedback.getcarcount(m_Props), wFeedback.getwheelcount(m_Props));
+
+  if( StrOp.equals( ori, wItem.south ) ) {
+    drawString( wxString(lab,wxConvUTF8), 32, 1, 270.0 );
+  }
+  else if( StrOp.equals( ori, wItem.north ) ) {
+    drawString( wxString(lab,wxConvUTF8), 1, 32, 90.0 );
+  }
+  else if(StrOp.equals( ori, wItem.east ) && wFeedback.iscurve( m_Props )) {
+    drawString( wxString(lab,wxConvUTF8), 0, 22, 0.0 );
+  }
+  else {
+    drawString( wxString(lab,wxConvUTF8), 0, 1, 0.0 );
   }
 
 }
