@@ -609,7 +609,7 @@ static void __evaluateClock( iOrocNet rocnet, byte* rn ) {
 }
 
 
-static void __evaluateSensor( iOrocNet rocnet, byte* rn ) {
+static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
   iOrocNetData data       = Data(rocnet);
   int          addr       = rn[RN_PACKET_DATA+3];
   int          rcpt       = 0;
@@ -617,6 +617,7 @@ static void __evaluateSensor( iOrocNet rocnet, byte* rn ) {
   Boolean      isThis     = rocnetIsThis( rocnet, rn);
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
+  byte* rnReply = NULL;
 
   rcpt = rnReceipientAddrFromPacket(rn, data->seven);
   sndr = rnSenderAddrFromPacket(rn, data->seven);
@@ -637,12 +638,23 @@ static void __evaluateSensor( iOrocNet rocnet, byte* rn ) {
     wFeedback.setstate( evt, rn[RN_PACKET_DATA+2]?True:False );
 
     data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+
+    rnReply = allocMem(32);
+    rnReply[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+    rnReceipientAddresToPacket( sndr, rnReply, data->seven );
+    rnSenderAddresToPacket( wRocNet.getid(data->rnini), rnReply, data->seven );
+    rnReply[RN_PACKET_ACTION] = RN_STATIONARY_ACK;
+    rnReply[RN_PACKET_LEN] = 2;
+    rnReply[RN_PACKET_DATA+0] = RN_SENSOR_REPORT;
+    rnReply[RN_PACKET_DATA+1] = addr;
     break;
   }
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported action [%d]", action );
     break;
   }
+
+  return rnReply;
 }
 
 
@@ -722,7 +734,7 @@ static void __evaluateRN( iOrocNet rocnet, byte* rn ) {
       break;
 
     case RN_GROUP_SENSOR:
-      __evaluateSensor( rocnet, rn );
+      rnReply = __evaluateSensor( rocnet, rn );
       break;
 
     default:
@@ -766,7 +778,7 @@ static void __reader( void* threadinst ) {
         int sndr = rnSenderAddrFromPacket(rn, 0);
         if( isThis ) {
           char* str = StrOp.byteToStr(rn, 8 + rn[RN_PACKET_LEN]);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore %s [%s] from %d(self) to %d", rnActionTypeString(rn), str, sndr, rcpt );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "ignore %s [%s] from %d(self) to %d", rnActionTypeString(rn), str, sndr, rcpt );
           StrOp.free(str);
         }
         else {

@@ -34,7 +34,10 @@
       <var name="offtimer" vt="unsigned long"/>
       <var name="invert" vt="Boolean"/>
       <var name="state" vt="Boolean"/>
-    </struct>
+      <var name="acktimer" vt="int"/>
+      <var name="ackretry" vt="int"/>
+      <var name="ackpending" vt="Boolean"/>
+      </struct>
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode"/>
     </fun>

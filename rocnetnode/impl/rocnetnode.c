@@ -278,6 +278,15 @@ byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "queryids acknowleged from %d to %d", sndr, rcpt );
       data->identack = True;
     }
+    else if( rn[RN_PACKET_DATA + 0] == RN_SENSOR_REPORT ) {
+      int port = rn[RN_PACKET_DATA + 1];
+      if( port < 32 && data->ports[port] != NULL ) {
+        data->ports[port]->acktimer = 0;
+        data->ports[port]->ackretry = 0;
+        data->ports[port]->ackpending = False;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor %d acknowleged from %d to %d", port, sndr, rcpt );
+      }
+    }
     break;
 
   case RN_STATIONARY_QUERYIDS:
@@ -360,7 +369,7 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
 
   if( isThis ) {
     char* str = StrOp.byteToStr(rn, 8 + rn[RN_PACKET_LEN]);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore %s [%s] from %d(self) to %d", rnActionTypeString(rn), str, sndr, rcpt );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "ignore %s [%s] from %d(self) to %d", rnActionTypeString(rn), str, sndr, rcpt );
     StrOp.free(str);
     return;
   }
@@ -455,7 +464,34 @@ static void __scanner( void* threadinst ) {
         }
       }
 
-      if( data->ports[i] != NULL && data->ports[i]->type == 1 ) {
+      /* Check for pending Ack */
+      if( data->ports[i] != NULL && data->ports[i]->type == 1 && data->ports[i]->ackpending) {
+        data->ports[i]->acktimer++;
+        if( data->ports[i]->acktimer > 50 ) {
+          data->ports[i]->ackretry++;
+          data->ports[i]->acktimer = 0;
+          if( data->ports[i]->ackretry <= 10 ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no ack for port %d; resend", i );
+            msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
+            msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
+            msg[RN_PACKET_LEN] = 4;
+            msg[RN_PACKET_DATA+2] = data->ports[i]->state;
+            msg[RN_PACKET_DATA+3] = i;
+            rnSenderAddresToPacket( data->id, msg, 0 );
+            __sendRN(rocnetnode, msg);
+          }
+          else {
+            /* giving up */
+            data->ports[i]->ackpending = False;
+            data->ports[i]->ackretry = 0;
+            data->ports[i]->acktimer = 0;
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "no ack for port %d", i );
+          }
+        }
+      }
+
+
+      if( data->ports[i] != NULL && data->ports[i]->type == 1 && !data->ports[i]->ackpending ) {
         int val = raspiRead(data->ports[i]->ionr);
         Boolean report = inputVal[i] != val;
 
@@ -477,12 +513,15 @@ static void __scanner( void* threadinst ) {
         }
 
         if( report ) {
+          data->ports[i]->ackpending = True;
+          data->ports[i]->ackretry = 0;
+          data->ports[i]->acktimer = 0;
           inputVal[i] = val;
           msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
           msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
           msg[RN_PACKET_LEN] = 4;
           msg[RN_PACKET_DATA+2] = val;
-          msg[RN_PACKET_DATA+3] = i + 1;
+          msg[RN_PACKET_DATA+3] = i;
           rnSenderAddresToPacket( data->id, msg, 0 );
           __sendRN(rocnetnode, msg);
           ThreadOp.sleep(raspiDummy()?500:10);
