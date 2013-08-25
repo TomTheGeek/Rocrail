@@ -1418,6 +1418,7 @@
         <var name="value2" vt="int" defval="1" range="0-*" remark="value"/>
         
         <!-- If the frog polarisation needs to be switched separately.  -->
+        <var name="frogiid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
         <var name="buspol" vt="int" defval="0" range="0-*" required="false"/>
         <var name="addr0pol1" vt="int" defval="0" range="0-*" required="false" remark="decoder address of the polarisation"/>
         <var name="port0pol1" vt="int" defval="0" range="0-*" required="false" remark="port of decoder unit."/>

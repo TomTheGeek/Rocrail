@@ -390,6 +390,8 @@ public:
     wxStaticText* m_labCtrlRoutes;
     wxTextCtrl* m_CtrlRoutes;
     wxPanel* m_FrogPanel;
+    wxStaticText* m_labFrogIID;
+    wxTextCtrl* m_FrogIID;
     wxStaticText* m_labBusPol;
     wxTextCtrl* m_BusPol;
     wxStaticText* m_labFrogTimer;
