@@ -51,6 +51,7 @@ cp ../rocrail/package/control debian/DEBIAN/control
 
 cp ../unxbin/rocrail debian/opt/rocrail
 cp ../unxbin/rocview debian/opt/rocrail
+cp ../unxbin/rocnetnode debian/opt/rocrail
 cp ../unxbin/*.so debian/opt/rocrail
 
 strip debian/opt/rocrail/rocrail
