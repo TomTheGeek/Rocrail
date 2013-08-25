@@ -611,7 +611,7 @@
         <var name="port" vt="int" defval="4321" range="0-*" remark="multicast port"/>
         <var name="crc" vt="bool" defval="false"/>
         <portsetup wrappername="PortSetup" cardinality="n">
-          <var name="port" vt="int" defval="0" range="0-*"/>
+          <var name="port" vt="int" defval="1" range="1-*"/>
           <var name="ionr" vt="int" defval="0" range="0-*"/>
           <var name="type" vt="int" defval="0" range="0-*" remark="0=output, 1=input"/>
           <var name="offtime" vt="int" defval="0" range="0-*" remark="0=directly"/>
