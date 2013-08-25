@@ -273,6 +273,13 @@ byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
   sndr = rnSenderAddrFromPacket(rn, 0);
 
   switch( action ) {
+  case RN_STATIONARY_ACK:
+    if( rn[RN_PACKET_DATA + 0] == RN_STATIONARY_QUERYIDS ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "queryids acknowleged from %d to %d", sndr, rcpt );
+      data->identack = True;
+    }
+    break;
+
   case RN_STATIONARY_QUERYIDS:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "queryids request from %d to %d", sndr, rcpt );
     msg = allocMem(32);
@@ -343,6 +350,7 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data = Data(rocnetnode);
   int group = rn[RN_PACKET_GROUP];
   byte* rnReply = NULL;
+  int action = rnActionFromPacket(rn);
   int actionType = rnActionTypeFromPacket(rn);
   Boolean isThis = __isThis( rocnetnode, rn);
   byte* msg = NULL;
@@ -371,6 +379,13 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
   TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)rn, 8 + rn[RN_PACKET_LEN] );
 
   switch( group ) {
+    case RN_GROUP_HOST:
+      if( action == RN_HOST_SHUTDOWN ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "host shutdown from %d to %d", sndr, rcpt );
+        data->identack = False;
+      }
+      break;
+
     case RN_GROUP_STATIONARY:
       rnReply = __handleStationary( rocnetnode, rn );
       break;
@@ -408,6 +423,7 @@ static void __scanner( void* threadinst ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int inputVal[32];
   byte msg[256];
+  int identwait = 0;
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet scanner started" );
@@ -471,6 +487,24 @@ static void __scanner( void* threadinst ) {
           __sendRN(rocnetnode, msg);
           ThreadOp.sleep(raspiDummy()?500:10);
         }
+      }
+    }
+
+    if( !data->identack ) {
+      identwait++;
+      if( identwait > 100 ) {
+        identwait = 0;
+        msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+        rnReceipientAddresToPacket( 0, msg, 0 );
+        rnSenderAddresToPacket( data->id, msg, 0 );
+        msg[RN_PACKET_ACTION] = RN_STATIONARY_QUERYIDS;
+        msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+        msg[RN_PACKET_LEN] = 4;
+        msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;
+        msg[RN_PACKET_DATA+1] = 70;
+        msg[RN_PACKET_DATA+2] = versionH;
+        msg[RN_PACKET_DATA+3] = versionL;
+        __sendRN(rocnetnode, msg);
       }
     }
 

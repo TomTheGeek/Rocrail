@@ -26,6 +26,7 @@
 
 
 /* groups */
+#define RN_GROUP_HOST          0
 #define RN_GROUP_CS            1
 #define RN_GROUP_MOBILE        2
 #define RN_GROUP_STATIONARY    3
@@ -36,6 +37,9 @@
 #define RN_GROUP_SENSOR        8
 #define RN_GROUP_OUTPUT        9
 #define RN_GROUP_INPUT        10
+
+/* host group actions */
+#define RN_HOST_SHUTDOWN     1
 
 /* command station group actions */
 #define RN_CS_NOP            0
@@ -86,6 +90,7 @@
 #define RN_STATIONARY_REPORT             7
 #define RN_STATIONARY_QUERYIDS           8
 #define RN_STATIONARY_SHUTDOWN           9
+#define RN_STATIONARY_ACK                10
 
 
 /* programming group actions */

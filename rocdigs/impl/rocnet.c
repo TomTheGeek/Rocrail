@@ -430,13 +430,21 @@ static void _halt( obj inst, Boolean poweroff ) {
   if( poweroff ) {
     byte* rn;
     rn = allocMem(32);
-    rn[0] = 0;
-    rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
+    rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
+    rn[RN_PACKET_GROUP] = RN_GROUP_CS;
     rn[RN_PACKET_ACTION] = RN_CS_TRACKPOWER;
     rn[RN_PACKET_LEN] = 1;
     rn[RN_PACKET_DATA + 0] = RN_CS_TRACKPOWER_OFF;
-
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+    ThreadOp.post( data->writer, (obj)rn );
+    ThreadOp.sleep(500);
+
+    rn = allocMem(32);
+    rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
+    rn[RN_PACKET_GROUP] = RN_GROUP_HOST;
+    rn[RN_PACKET_ACTION] = RN_HOST_SHUTDOWN;
+    rn[RN_PACKET_LEN] = 0;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Shutdown" );
     ThreadOp.post( data->writer, (obj)rn );
     /* grab some time to process the request */
     ThreadOp.sleep(500);
@@ -486,7 +494,7 @@ static Boolean _supportPT( obj inst ) {
 }
 
 
-static void __evaluateStationary( iOrocNet rocnet, byte* rn ) {
+static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   iOrocNetData data       = Data(rocnet);
   int          addr       = 0;
   int          rcpt       = 0;
@@ -494,6 +502,8 @@ static void __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   Boolean      isThis     = rocnetIsThis( rocnet, rn);
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
+  byte* rnReply = NULL;
+
 
   rcpt = rnReceipientAddrFromPacket(rn, data->seven);
   sndr = rnSenderAddrFromPacket(rn, data->seven);
@@ -503,6 +513,13 @@ static void __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Identified: rocnetid=%d class=%s vid=%d version=%d.%d", sndr,
         rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2], rn[RN_PACKET_DATA+3] );
+    rnReply = allocMem(32);
+    rnReply[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+    rnReceipientAddresToPacket( sndr, rnReply, data->seven );
+    rnSenderAddresToPacket( wRocNet.getid(data->rnini), rnReply, data->seven );
+    rnReply[RN_PACKET_ACTION] = RN_STATIONARY_ACK;
+    rnReply[RN_PACKET_LEN] = 1;
+    rnReply[RN_PACKET_DATA] = RN_STATIONARY_QUERYIDS;
     break;
   case RN_STATIONARY_NOP:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NOP from %d to %d", sndr, rcpt );
@@ -521,6 +538,8 @@ static void __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported action [%d] from %d", action, sndr );
     break;
   }
+
+  return rnReply;
 }
 
 
@@ -687,7 +706,7 @@ static void __evaluateRN( iOrocNet rocnet, byte* rn ) {
       break;
 
     case RN_GROUP_STATIONARY:
-      __evaluateStationary( rocnet, rn );
+      rnReply = __evaluateStationary( rocnet, rn );
       break;
 
     case RN_GROUP_PT_MOBILE:
