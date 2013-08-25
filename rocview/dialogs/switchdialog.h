@@ -392,6 +392,8 @@ public:
     wxPanel* m_FrogPanel;
     wxStaticText* m_labBusPol;
     wxTextCtrl* m_BusPol;
+    wxStaticText* m_labFrogTimer;
+    wxSpinCtrl* m_FrogTimer;
     wxStaticBox* m_Frog1Box;
     wxStaticText* m_labRelayFrog2;
     wxStaticText* m_labAddressFrog2;

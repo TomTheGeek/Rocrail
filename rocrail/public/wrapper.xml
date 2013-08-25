@@ -1433,6 +1433,7 @@
         <var name="gate1pol2" vt="int" defval="0" range="0-1" required="false" remark="gate of port."/>
         <var name="frogaccessory" vt="bool" defval="true"/>
         <var name="frogporttype" vt="int" defval="0" range="0-*" required="false" remark=""/>
+        <var name="frogtimer" vt="int" defval="0" range="0-1000" required="false" remark="If set to zero the wiring event is used."/>
 
         <var name="singlegate" vt="bool" defval="false"/>
         <var name="gatevalue" vt="int" defval="-1" range="0-1" required="false"/>

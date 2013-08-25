@@ -1223,6 +1223,14 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     wSwitch.setswitched(o->props, switched);
   }
 
+  if( wSwitch.getfrogtimer(o->props) > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "polarise Frog [%s] timer=%d state=%s(%s)",
+        SwitchOp.getId(inst), wSwitch.getfrogtimer(o->props), state, wSwitch.getstate( o->props) );
+    ThreadOp.sleep(wSwitch.getfrogtimer(o->props));
+    __polariseFrog(inst, 0, StrOp.equals(wSwitch.straight, state), StrOp.equals(wSwitch.turnout, state));
+    __polariseFrog(inst, 1, StrOp.equals(wSwitch.left, state), StrOp.equals(wSwitch.right, state));
+  }
+
 
   /* Broadcast to clients. Node6 */
 
