@@ -755,6 +755,7 @@ static Boolean _shutdown( void ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutdown the RocNetNode" );
 
   msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+  rnReceipientAddresToPacket( 0, msg, 0 );
   rnSenderAddresToPacket( data->id, msg, 0 );
   msg[RN_PACKET_ACTION] = RN_STATIONARY_SHUTDOWN;
   msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
