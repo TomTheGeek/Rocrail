@@ -90,6 +90,8 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocs/public/trace.h"
 #include "rocs/public/strtok.h"
 
+#include "rocutils/public/addr.h"
+
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/BlockList.h"
 #include "rocrail/wrapper/public/Item.h"
@@ -311,6 +313,27 @@ static int __getOri(iONode item ) {
   return oriWest;
 }
 
+/* create switchmap key (FADA) from address port gate parameter value interface and bus */
+static char* __createAccessorymapKeyFromAPGPVIB( char key[], int addr, int port, int gate, int param, int value, const char *iid , int bus ) {
+  /* accessory map is in FADA format */
+  int fAddr = addr;
+
+  if( addr == 0 ) {
+    /* PADA -> FADA */
+    fAddr = (port-1)*2 + gate;
+  }else if( port != 0 ) {
+    /* MADA (NMRA) -> FADA */
+    fAddr = (addr-1)*8 + (port-1)*2 + gate ;
+  }
+
+  StrOp.fmtb( key, "%d-%d-%d-%s-%d", fAddr, param, value, iid, bus );
+
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__createAccessorymapKeyFromAPGPVIB: addr[%d] port[%d] gate[%d] param[%d] value[%d] iid[%s] bus[%d] ( fAddr[%d] ) -> key[%s]",
+      addr, port, gate, param, value, iid, bus, fAddr, key);
+  return key;
+}
+
+
 static char* __createKey( char* key, iONode node, int xoffset, int yoffset, int zoffset) {
 
   int itemx = 0;
@@ -356,6 +379,29 @@ static Boolean isDoubleTrackRRCrossing( iONode node ) {
   return( False );
 }
 
+static Boolean isTrackNo3( iONode item ) {
+  if( StrOp.equals( NodeOp.getName(item), "tk" ) &&
+      StrOp.equals( wItem.gettype(item), wTrack.tracknr ) &&
+      ( wTrack.gettknr(item) == 3 )
+    ) {
+    return( True );
+  }
+  return( False );
+}
+
+static Boolean oriAndTravelFit( const char* ori, int travel ) {
+  if(  ( StrOp.equals( ori, wItem.west ) || StrOp.equals( ori, wItem.east ) )
+    && ( ( travel == 0 ) || ( travel == 2 ) )
+    ) {
+    return True;
+  }
+  if(  ( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) )
+    && ( ( travel == 1 ) || ( travel == 3 ) )
+    ) {
+    return True;
+  }
+  return False;
+}
 
 static Boolean isStageBlockById( iOModel model, const char* blockid  ) {
   return( NULL != ModelOp.getStage(model, blockid ));
@@ -598,7 +644,7 @@ static Boolean locoFnChecks( const char* state ) {
   return rc ;
 }
 
-/* conID == loco condState(loco) [min, mid, cruise, max, consist]  ??? [+|-] */
+/* conID == loco condState(loco) [min, mid, cruise, max, consist(???)][forwards|reverse] [+|-] */
 static Boolean checkActionCondLoco( const char* lcid, const char* state ) {
   if( state == NULL || StrOp.len( state ) == 0 )
     return True;
@@ -622,6 +668,8 @@ static Boolean checkActionCondLoco( const char* lcid, const char* state ) {
         ! StrOp.equals( token, wLoc.mid     ) &&
         ! StrOp.equals( token, wLoc.cruise  ) &&
         ! StrOp.equals( token, wLoc.max     ) &&
+        ! StrOp.equals( token, "forwards"   ) &&
+        ! StrOp.equals( token, "reverse"    ) &&
         ! StrOp.equals( token, "+"          ) &&
         ! StrOp.equals( token, "-"          )
       ) {
@@ -636,10 +684,13 @@ static Boolean checkActionCondLoco( const char* lcid, const char* state ) {
   return rc;
 }
 
-/* conID == "*"  condState(loco_wildcard) == [diesel, steam, electric][+|-][#addr[,#addr]][#addr-addr] */
+/* conID == "*"  condState(loco_wildcard) == [][diesel, steam, electric][forwards|reverse]][+|-][#addr[,#addr]][#addr-addr] */
 static Boolean checkActionCondLocoWc( iOAnalyse inst, const char* acLcid, const char* state ) {
-  if( state == NULL || StrOp.len( state ) == 0 )
-    return False;
+  if( state == NULL || StrOp.len( state ) == 0 ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkActionCondLocoWc: lc[%s] state[%s] is empty state.",
+        acLcid, state );
+    return True;
+  }
 
   if( StrOp.startsWith( state, "#" ) ||
       StrOp.startsWith( state, "x" )
@@ -661,6 +712,8 @@ static Boolean checkActionCondLocoWc( iOAnalyse inst, const char* acLcid, const 
     if( ! StrOp.equals( token, "diesel"   ) &&
         ! StrOp.equals( token, "steam"    ) &&
         ! StrOp.equals( token, "electric" ) &&
+        ! StrOp.equals( token, "forwards" ) &&
+        ! StrOp.equals( token, "reverse"  ) &&
         ! StrOp.equals( token, "+"        ) &&
         ! StrOp.equals( token, "-"        )
       ) {
@@ -2543,6 +2596,13 @@ static void __notifyOverlapError( iONode node, iOMap map, const char* key ) {
   return;
 }
 
+/* check if switch is in raster mode */
+Boolean isRasterSwitch( iONode node ) {
+  return(  StrOp.equals( NodeOp.getName(node), wSwitch.name() )
+        && StrOp.equals( wSwitch.getswtype(node), wSwitch.swtype_raster )
+        );
+}
+
 /* return False if something is overlapping */ 
 static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
   iOAnalyseData data = Data(inst);
@@ -2614,8 +2674,19 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
 
       /* put keys for all covered fields */
       if( StrOp.equals( NodeOp.getName(node), wSwitch.name() ) ) {
-        if( ( StrOp.equals( type, wSwitch.crossing ) && ! ( wSwitch.getaddr1(node) == 0 && wSwitch.getport1(node) == 0 && wSwitch.isrectcrossing(node) ) ) ||
-            StrOp.equals( type, wSwitch.dcrossing ) ||
+        if( isRasterSwitch( node ) ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "INFO: switch[%s] at [%s] is type[%s]",
+              wItem.getid(node), key, wSwitch.getswtype(node) );
+        }
+        if( (  StrOp.equals( type, wSwitch.crossing )
+            && ! ( wSwitch.getaddr1(node) == 0 && wSwitch.getport1(node) == 0 && wSwitch.isrectcrossing(node) )
+            && ! isRasterSwitch(node)  
+            ) 
+            ||
+            (  StrOp.equals( type, wSwitch.dcrossing )
+            && ! isRasterSwitch(node) 
+            )
+            ||
             StrOp.equals( type, wSwitch.ccrossing )) {
 
           if( StrOp.equals( ori, wItem.east ) || StrOp.equals( ori, wItem.west ) ) {
@@ -2882,6 +2953,7 @@ static const int typeTrackStraight  =    0;
 static const int typeTrackCurve     =    1;
 static const int typeBlock          =    2;
 static const int typeSwitch         =    3;
+static const int typeRasterSwitch   =    4;
 static const int itemNotInDirection = 1000;
 
 static int __getType(iONode item ) {
@@ -2890,6 +2962,8 @@ static int __getType(iONode item ) {
 
   if( ( StrOp.equals( wTrack.name(), type ) ||  StrOp.equals( wFeedback.name(), type ) ) && StrOp.equals( wTrack.curve, subtype ) ) {
     return typeTrackCurve;
+  } else if( isRasterSwitch( item ) ) {
+    return typeRasterSwitch;
   } else if( StrOp.equals( wSwitch.name(), type ) ) {
     return typeSwitch;
   } else {
@@ -2974,6 +3048,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
         return travel;
       return itemNotInDirection;
     }
+
     /* block */
     else if( StrOp.equals( NodeOp.getName(item), wBlock.name() )) {
 
@@ -2997,7 +3072,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           return travel;
       }
       return itemNotInDirection;
-    }
+    } /* block */
 
     /* stage block */
     else if( StrOp.equals( NodeOp.getName(item), wStage.name() )) {
@@ -3019,7 +3094,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           return travel;
       }
       return itemNotInDirection;
-    }
+    } /* stage block */
 
     /* seltab / fiddle yard */
     else if( StrOp.equals( NodeOp.getName(item), wSelTab.name() )) {
@@ -3041,19 +3116,23 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           return travel;
       }
       return itemNotInDirection;
-    }
+    } /* seltab / fiddle yard */
+
     /* decoupler */
     else if( __getType(item) == typeSwitch && StrOp.equals( subtype, wSwitch.decoupler)) {
       return travel;
     }
+
     /* accessory 1 (double railroad crossing) */
     else if( isDoubleTrackRRCrossing( item ) ) {
       return travel;
     }
+
     /* accessory 10/11/12 (single railroad crossing) */
     else if( isSingleTrackRRCrossing( item ) ) {
       return travel;
     }
+
     /* switch */
     else if( __getType(item) == typeSwitch) {
 
@@ -3213,6 +3292,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
         }
         return itemNotInDirection;
       }
+
       /* ccrossing */
       else if( StrOp.equals( subtype, wSwitch.ccrossing ) ) {
         /* something was wrong with ccrossing :) */
@@ -3253,7 +3333,8 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
             return travel;
           }
         }
-      }
+      } /* ccrossing */
+
       /* dcrossing */
       else if( StrOp.equals( subtype, wSwitch.dcrossing ) ||
                StrOp.equals( subtype, wSwitch.crossing ) && (wSwitch.getaddr1(item) != 0 || wSwitch.getport1(item) != 0 ) )
@@ -3527,7 +3608,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
             "DCROSSING travel:%d- turnoutstate: %d itemori: %s id: %s dir: %d",
             travel,turnoutstate, itemori,wItem.getid(item),wSwitch.isdir(item));
         return dcrossingAhead + travel;
-      }
+      } /* dcrossing */
 
       /* threeway */
       else if( StrOp.equals( subtype, wSwitch.threeway ) ) {
@@ -3624,7 +3705,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
             return travel;
           }
         }
-      }
+      } /* threeway */
 
       /* twoway */
       else if( StrOp.equals( subtype, wSwitch.twoway ) ) {
@@ -3677,15 +3758,641 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           *turnoutstate_out = 1;
           return oriWest;
         }
-      }
+      } /* twoway */
 
       /* turnout in wrong direction*/
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ---------- no valid turnout for us! [%s]", wItem.getid(item) );
         return -1; /* end of the game */
       }
+    } /* switch */
 
-    } else { /* elements which do not change travel direction */
+    /* raster switch */
+    else if( __getType(item) == typeRasterSwitch) {
+
+      /* "normal" switches (raster) */
+      /* coming from the points */
+      if(        travel == 0 &&  StrOp.equals( itemori, wItem.east )
+              && StrOp.equals( subtype, wSwitch.right ) ) {
+        if(turnoutstate == 1) {
+          *x = -1;
+          return oriNorth+twoWayTurnout;
+        }
+        return travel+twoWayTurnout;
+      } else if( travel == 0 &&  StrOp.equals( itemori, wItem.west )
+              && StrOp.equals( subtype, wSwitch.left ) ) {
+        if(turnoutstate == 1) {
+          *x = -1;
+          return oriSouth+twoWayTurnout;
+        }
+        return travel+twoWayTurnout;
+      } else if( travel == 1 &&  StrOp.equals( itemori, wItem.north )
+              && StrOp.equals( subtype, wSwitch.right ) ) {
+        if(turnoutstate == 1) {
+          *y = -1;
+          return oriEast+twoWayTurnout;
+        }
+        return travel+twoWayTurnout;
+      } else if( travel == 1 &&  StrOp.equals( itemori, wItem.south )
+              && StrOp.equals( subtype, wSwitch.left ) ) {
+        if(turnoutstate == 1) {
+          *y = -1;
+          return oriWest+twoWayTurnout;
+        }
+        return travel+twoWayTurnout;
+      } else if( travel == 2 &&  StrOp.equals( itemori, wItem.west )
+              && StrOp.equals( subtype, wSwitch.right ) ) {
+        if(turnoutstate == 1) {
+          *x = 1;
+          return oriSouth+twoWayTurnout;
+        }
+        return travel+twoWayTurnout;
+      } else if( travel == 2 &&  StrOp.equals( itemori, wItem.east )
+              && StrOp.equals( subtype, wSwitch.left ) ) {
+        if(turnoutstate == 1) {
+          *x = 1;
+          return oriNorth+twoWayTurnout;
+        }
+        return travel+twoWayTurnout;
+      } else if( travel == 3 &&  StrOp.equals( itemori, wItem.south )
+              && StrOp.equals( subtype, wSwitch.right ) ) {
+        if(turnoutstate == 1) {
+          *y = 1;
+          return oriWest+twoWayTurnout;
+        }
+        return travel+twoWayTurnout;
+      } else if( travel == 3 &&  StrOp.equals( itemori, wItem.north )
+              && StrOp.equals( subtype, wSwitch.left ) ) {
+        if(turnoutstate == 1) {
+          *y = 1;
+          return oriEast+twoWayTurnout;
+        }
+        return travel+twoWayTurnout;
+      }
+
+      /* coming from the frog -> straight line */
+      else if( travel == 0 &&  StrOp.equals( itemori, wItem.west )
+              && StrOp.equals( subtype, wSwitch.right ) ) {
+        *turnoutstate_out = 0;
+        return travel;
+      } else if( travel == 0 &&  StrOp.equals( itemori, wItem.east )
+              && StrOp.equals( subtype, wSwitch.left ) ) {
+        *turnoutstate_out = 0;
+        return travel;
+      } else if( travel == 1 &&  StrOp.equals( itemori, wItem.south )
+              && StrOp.equals( subtype, wSwitch.right ) ) {
+        *turnoutstate_out = 0;
+        return travel;
+      } else if( travel == 1 &&  StrOp.equals( itemori, wItem.north )
+              && StrOp.equals( subtype, wSwitch.left ) ) {
+        *turnoutstate_out = 0;
+        return travel;
+      } else if( travel == 2 &&  StrOp.equals( itemori, wItem.east )
+             && StrOp.equals( subtype, wSwitch.right ) ) {
+        *x = 1;
+        *turnoutstate_out = 0;
+        return travel;
+      } else if( travel == 2 &&  StrOp.equals( itemori, wItem.west )
+             && StrOp.equals( subtype, wSwitch.left ) ) {
+        *turnoutstate_out = 0;
+        return travel;
+      } else if( travel == 3 &&  StrOp.equals( itemori, wItem.north )
+            && StrOp.equals( subtype, wSwitch.right ) ) {
+        *turnoutstate_out = 0;
+        return travel;
+      } else if( travel == 3 &&  StrOp.equals( itemori, wItem.south )
+            && StrOp.equals( subtype, wSwitch.left ) ) {
+        *turnoutstate_out = 0;
+        return travel;
+      }
+
+      /* coming from the frog -> diverging line */
+      else if( travel == 0 &&  StrOp.equals( itemori, wItem.north )
+              && StrOp.equals( subtype, wSwitch.right ) ) {
+        *turnoutstate_out = 1;
+        return oriSouth;
+      } else if( travel == 0 &&  StrOp.equals( itemori, wItem.north )
+              && StrOp.equals( subtype, wSwitch.left ) ) {
+        *turnoutstate_out = 1;
+        return oriNorth;
+      } else if( travel == 1 &&  StrOp.equals( itemori, wItem.west )
+              && StrOp.equals( subtype, wSwitch.right ) ) {
+        *turnoutstate_out = 1;
+        return oriWest;
+      } else if( travel == 1 &&  StrOp.equals( itemori, wItem.west )
+              && StrOp.equals( subtype, wSwitch.left ) ) {
+        *turnoutstate_out = 1;
+        return oriEast;
+      } else if( travel == 2 &&  StrOp.equals( itemori, wItem.south )
+             && StrOp.equals( subtype, wSwitch.right ) ) {
+        *turnoutstate_out = 1;
+        return oriNorth;
+      } else if( travel == 2 &&  StrOp.equals( itemori, wItem.south )
+             && StrOp.equals( subtype, wSwitch.left ) ) {
+        *turnoutstate_out = 1;
+        return oriSouth;
+      } else if( travel == 3 &&  StrOp.equals( itemori, wItem.east )
+            && StrOp.equals( subtype, wSwitch.right ) ) {
+        *turnoutstate_out = 1;
+        return oriEast;
+      } else if( travel == 3 &&  StrOp.equals( itemori, wItem.east )
+            && StrOp.equals( subtype, wSwitch.left ) ) {
+        *turnoutstate_out = 1;
+        return oriWest;
+      }
+
+      /* crossing (raster) */
+      else if( StrOp.equals( subtype, wSwitch.crossing ) && wSwitch.getaddr1(item) == 0 && wSwitch.getport1(item) == 0 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " crossing %d travel: %d", wSwitch.isdir(item), travel );
+
+        /* rectcrossing (is always non-raster) */
+        if( wSwitch.isrectcrossing(item)){
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " rectcrossing");
+          return travel;
+        }
+
+        if( !wSwitch.isdir(item)  ) { /* left */
+          if( StrOp.equals( itemori, wItem.west ) || StrOp.equals( itemori, wItem.east )) {
+            if(travel == 1)
+              *x = 1;
+            if(travel == 3)
+              *x = -1;
+            return travel;
+          }
+          else if( StrOp.equals( itemori, wItem.north ) || StrOp.equals( itemori, wItem.south )) {
+            if(travel == 0)
+              *y = -1;
+            if(travel == 2)
+              *y = 1;
+            return travel;
+          }
+        } else if( wSwitch.isdir(item) ) { /* right */
+          if( StrOp.equals( itemori, wItem.west ) || StrOp.equals( itemori, wItem.east )) {
+            if(travel == 1)
+              *x = -1;
+            if(travel == 3)
+              *x = 1;
+            return travel;
+          }
+          else if( StrOp.equals( itemori, wItem.north ) || StrOp.equals( itemori, wItem.south )) {
+            if(travel == 0)
+              *y = 1;
+            if(travel == 2)
+              *y = -1;
+            return travel;
+          }
+        }
+        return itemNotInDirection;
+      }
+
+      /* dcrossing (raster) */
+      else if( StrOp.equals( subtype, wSwitch.dcrossing )
+             || ( StrOp.equals( subtype, wSwitch.crossing ) && (wSwitch.getaddr1(item) != 0 || wSwitch.getport1(item) != 0 ) )
+             )
+      {
+        /* if dcrossing has subtype left or right then skip search in wrong direction */
+        if( StrOp.equals( subtype, wSwitch.dcrossing ) )
+        {
+          if( StrOp.equals( wSwitch.getsubtype(item), wSwitch.subleft) && ( turnoutstate == 3 ) ) {
+            /* subleft has no "right" position */
+            return itemNotInDirection;
+          }
+          if( StrOp.equals( wSwitch.getsubtype(item), wSwitch.subright) && ( turnoutstate == 2 ) ) {
+            /* subright has no "left" position */
+            return itemNotInDirection;
+          }
+        }
+
+        if( !wSwitch.isdir(item)  ) { /* left */
+          if( StrOp.equals( itemori, wItem.west ) ) { /* left west */
+            if( (travel == 0) ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                *x = -1;
+                return oriSouth+dcrossing;
+              }
+            } else if ( travel == 1 ) {
+              if ( turnoutstate == 1) {
+                *x = 1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                return oriEast+dcrossing;
+              }
+            } else if ( travel == 2 ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                *x = 1;
+                return oriNorth+dcrossing;
+              }
+            } else if ( travel == 3 ) {
+              if ( turnoutstate == 1) {
+                *x = -1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                return oriWest+dcrossing;
+              }
+            }
+          }
+          if( StrOp.equals( itemori, wItem.east ) ) { /* left east */
+            if( (travel == 0) ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                *x = -1;
+                return oriSouth+dcrossing;
+              }
+            } else if ( travel == 1 ) {
+              if ( turnoutstate == 1) {
+                *x = 1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                return oriEast+dcrossing;
+              }
+            } else if ( travel == 2 ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                *x = 1;
+                return oriNorth+dcrossing;
+              }
+            } else if ( travel == 3 ) {
+              if ( turnoutstate == 1) {
+                *x = -1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                return oriWest+dcrossing;
+              }
+            }
+          }
+          else if( StrOp.equals( itemori, wItem.north )) { /* left north */
+            if( (travel == 0) ) {
+              if ( turnoutstate == 1) {
+                *y = -1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                return oriNorth+dcrossing;
+              }
+            } else if ( travel == 1 ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                *y = -1;
+                return oriWest+dcrossing;
+              }
+            } else if ( travel == 2 ) {
+              if ( turnoutstate == 1) {
+                *y = 1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                return oriSouth+dcrossing;
+              }
+            } else if ( travel == 3 ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                *y = 1;
+                return oriEast+dcrossing;
+              }
+            }
+          }
+          else if( StrOp.equals( itemori, wItem.south )) { /* left south */
+            if( (travel == 0) ) {
+              if ( turnoutstate == 1) {
+                *y = -1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                return oriNorth+dcrossing;
+              }
+            } else if ( travel == 1 ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                *y = -1;
+                return oriWest+dcrossing;
+              }
+            } else if ( travel == 2 ) {
+              if ( turnoutstate == 1) {
+                *y = 1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                return oriSouth+dcrossing;
+              }
+            } else if ( travel == 3 ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                *y = 1;
+                return oriEast+dcrossing;
+              }
+            }
+          }
+        } else if( wSwitch.isdir(item) ) { /* right */
+          if( StrOp.equals( itemori, wItem.west )) { /* right west */
+            if( (travel == 0) ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                *x = -1;
+                return oriNorth+dcrossing;
+              }
+            } else if ( travel == 1 ) {
+              if ( turnoutstate == 1) {
+                *x = -1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                return oriWest+dcrossing;
+              }
+            } else if ( travel == 2 ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                *x = 1;
+                return oriSouth+dcrossing;
+              }
+            } else if ( travel == 3 ) {
+              if ( turnoutstate == 1) {
+                *x = 1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                return oriEast+dcrossing;
+              }
+            }
+          }
+
+          if( StrOp.equals( itemori, wItem.east )) { /* right east */
+            if( (travel == 0) ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                *x = -1;
+                return oriNorth+dcrossing;
+              }
+            } else if ( travel == 1 ) {
+              if ( turnoutstate == 1) {
+                *x = -1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                return oriWest+dcrossing;
+              }
+            } else if ( travel == 2 ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                *x = 1;
+                return oriSouth+dcrossing;
+              }
+            } else if ( travel == 3 ) {
+              if ( turnoutstate == 1) {
+                *x = 1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                return oriEast+dcrossing;
+              }
+            }
+          }
+          else if( StrOp.equals( itemori, wItem.north )) { /* right north */
+            if( (travel == 0) ) {
+              if ( turnoutstate == 1) {
+                *y = 1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                return oriSouth+dcrossing;
+              }
+            } else if ( travel == 1 ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                *y = -1;
+                return oriEast+dcrossing;
+              }
+            } else if ( travel == 2 ) {
+              if ( turnoutstate == 1) {
+                *y = -1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                return oriNorth+dcrossing;
+              }
+            } else if ( travel == 3 ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                *y = 1;
+                return oriWest+dcrossing;
+              }
+            }
+          }
+          else if( StrOp.equals( itemori, wItem.south )) { /* right south */
+            if( (travel == 0) ) {
+              if ( turnoutstate == 1) {
+                *y = 1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                return oriSouth+dcrossing;
+              }
+            } else if ( travel == 1 ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 3) {
+                *y = -1;
+                return oriEast+dcrossing;
+              }
+            } else if ( travel == 2 ) {
+              if ( turnoutstate == 1) {
+                *y = -1;
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                return oriNorth+dcrossing;
+              }
+            } else if ( travel == 3 ) {
+              if ( turnoutstate == 0) {
+                return travel+dcrossing;
+              } else if( turnoutstate == 2) {
+                *y = 1;
+                return oriWest+dcrossing;
+              }
+            }
+          }
+        }
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "  "
+            "DCROSSING travel:%d- turnoutstate: %d itemori: %s id: %s dir: %d",
+            travel,turnoutstate, itemori,wItem.getid(item),wSwitch.isdir(item));
+        return dcrossingAhead + travel;
+      }
+
+      /* threeway (raster) */
+      if( StrOp.equals( subtype, wSwitch.threeway ) ) {
+
+        if( StrOp.equals( itemori, wItem.west )) {
+          if( (travel == 0) ) {
+            if( turnoutstate == 0) { /* center */
+              return travel+threeWayTurnout;
+            } else if (turnoutstate == 1) { /* left */
+              *x = -1;
+              return oriSouth+threeWayTurnout;
+            } else if (turnoutstate == 2) { /* right */
+              *x = -1;
+              return oriNorth+threeWayTurnout;
+            }
+          }
+          else if ( travel == 1 ) {
+            *turnoutstate_out = 1;
+            return oriEast;
+          }
+          else if ( travel == 2 ) {
+            *turnoutstate_out = 0;
+            return travel;
+          }
+          else if ( travel == 3 ) {
+            *turnoutstate_out = 2;
+            return oriEast;
+          }
+        }
+        else if( StrOp.equals( itemori, wItem.north )) {
+          if( (travel == 0) ) {
+            *turnoutstate_out = 1;
+            return oriNorth;
+          }
+          else if ( travel == 1 ) {
+            *turnoutstate_out = 0;
+            return travel;
+          }
+          else if ( travel == 2 ) {
+            *turnoutstate_out = 2;
+            return oriNorth;
+          }
+          else if ( travel == 3 ) {
+            if( turnoutstate == 0) {
+              return travel+threeWayTurnout;
+            } else if (turnoutstate == 1) {
+              *y = 1;
+              return oriEast+threeWayTurnout;
+            } else if (turnoutstate == 2) {
+              *y = 1;
+              return oriWest+threeWayTurnout;
+            }
+          }
+        }
+        else if( StrOp.equals( itemori, wItem.east )) {
+          if( (travel == 0) ) {
+            *turnoutstate_out = 0;
+            return travel;
+          }
+          else if ( travel == 1 ) {
+            *turnoutstate_out = 2;
+            return oriWest;
+          }
+          else if ( travel == 2 ) {
+            if( turnoutstate == 0) {
+              return travel+threeWayTurnout;
+            } else if (turnoutstate == 1) {
+              *x = 1;
+              return oriNorth+threeWayTurnout;
+            } else if (turnoutstate == 2) {
+              *x = 1;
+              return oriSouth+threeWayTurnout;
+            }
+          }
+          else if ( travel == 3 ) {
+            *turnoutstate_out = 1;
+            return oriWest;
+          }
+        }
+        else if( StrOp.equals( itemori, wItem.south )) {
+          if( (travel == 0) ) {
+            *turnoutstate_out = 2;
+            return oriSouth;
+          }
+          else if ( travel == 1 ) {
+            if( turnoutstate == 0) {
+             return travel+threeWayTurnout;
+            } else if (turnoutstate == 1) {
+              *y = -1;
+              return oriWest+threeWayTurnout;
+            } else if (turnoutstate == 2) {
+              *y = -1;
+              return oriEast+threeWayTurnout;
+            }
+          }
+          else if ( travel == 2 ) {
+            *turnoutstate_out = 1;
+            return oriSouth;
+          }
+          else if ( travel == 3 ) {
+            *turnoutstate_out = 0;
+            return travel;
+          }
+        }
+      } /* threeway (raster) */
+
+      /* twoway (raster) */
+      else if( StrOp.equals( subtype, wSwitch.twoway ) ) {
+
+        /* coming from the points */
+        if( travel == 0 &&  StrOp.equals( itemori, wItem.west ) ) {
+          *x = -1;
+          if(turnoutstate == 1)
+            return oriSouth+twoWayTurnout;
+          return oriNorth+twoWayTurnout;
+        } else if( travel == 1 &&  StrOp.equals( itemori, wItem.south ) ) {
+          *y = -1;
+          if(turnoutstate == 1)
+            return oriWest+twoWayTurnout;
+          return oriEast+twoWayTurnout;
+        } else if( travel == 2 &&  StrOp.equals( itemori, wItem.east ) ) {
+          *x = 1;
+          if(turnoutstate == 1)
+            return oriNorth+twoWayTurnout;
+          return oriSouth+twoWayTurnout;
+        } else if( travel == 3 &&  StrOp.equals( itemori, wItem.north ) ) {
+          *y = 1;
+          if(turnoutstate == 1)
+            return oriEast+twoWayTurnout;
+          return oriWest+twoWayTurnout;
+        }
+
+        /* coming from the frog -> diverging right line (straight)  */
+        else if( travel == 0 &&  StrOp.equals( itemori, wItem.south ) ) {
+          *turnoutstate_out = 0;
+          return oriSouth;
+        } else if( travel == 1 &&  StrOp.equals( itemori, wItem.east ) ) {
+          *turnoutstate_out = 0;
+          return oriWest;
+        } else if( travel == 2 &&  StrOp.equals( itemori, wItem.north ) ) {
+          *turnoutstate_out = 0;
+          return oriNorth;
+        } else if( travel == 3 &&  StrOp.equals( itemori, wItem.west ) ) {
+          *turnoutstate_out = 0;
+          return oriEast;
+        }
+
+        /* coming from the frog -> diverging left line (turnout) */
+        else if( travel == 0 &&  StrOp.equals( itemori, wItem.north ) ) {
+          *turnoutstate_out = 1;
+          return oriNorth;
+        } else if( travel == 1 &&  StrOp.equals( itemori, wItem.west ) ) {
+          *turnoutstate_out = 1;
+          return oriEast;
+        } else if( travel == 2 &&  StrOp.equals( itemori, wItem.south ) ) {
+          *turnoutstate_out = 1;
+          return oriSouth;
+        } else if( travel == 3 &&  StrOp.equals( itemori, wItem.east ) ) {
+          *turnoutstate_out = 1;
+          return oriWest;
+        }
+      } /* twoway (raster) */
+
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: switch[%s] in raster mode not supported. stop analyzing this route.", wItem.getid(item) );
+    } /* raster switch */
+
+    else { /* elements which do not change travel direction */
+
+      if( isTrackNo3( item ) ) {
+        /* accessory track #3 is a 1x1 bridge (90° crossing) -> direction always straight */
+        return travel;
+      }
+
       /* is the item in our direction? */
       if( !(((StrOp.equals( itemori, wItem.north ) || StrOp.equals( itemori, wItem.south ))
                   && (travel == 1 || travel == 3)) ||
@@ -4087,14 +4794,16 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
 
   if( ( ! StrOp.equals(NodeOp.getName(item), wBlock.name() ) && 
         ! StrOp.equals(NodeOp.getName(item), wStage.name() ) && 
-        ! StrOp.equals(NodeOp.getName(item), wSelTab.name() ) 
+        ! StrOp.equals(NodeOp.getName(item), wSelTab.name() ) &&
+        /* do not use track #3 in "wrong" orientation (hidden track) as part of a route */
+        ! ( isTrackNo3( item ) && ! oriAndTravelFit( itemori, travel ) )
       ) ||
       ( depth == 0 && 
         ( StrOp.equals(NodeOp.getName(item), wBlock.name() ) || 
           StrOp.equals(NodeOp.getName(item), wStage.name() ) || 
           StrOp.equals(NodeOp.getName(item), wSelTab.name() )
         ) 
-      ) 
+      )
     ) {
     /* add item to route */
     iONode itemA = (iONode)NodeOp.base.clone( item);
@@ -5959,7 +6668,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
   char key[64] = {'\0'};
   Boolean healthy = True;
   iOMap sensorMap = MapOp.inst();
-  iOMap switchMap = MapOp.inst();
+  iOMap accessoryMap = MapOp.inst();
   int dbs = NodeOp.getChildCnt(data->plan);
   int i = 0;
 
@@ -6007,7 +6716,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
         }
         else {
           char* key = FBackOp.createAddrKey( wFeedback.getbus(item), wFeedback.getaddr(item), wFeedback.getiid(item) );
-          if( MapOp.haskey(sensorMap, key ) ) {
+          if( MapOp.haskey( sensorMap, key ) ) {
             iONode sensorItem = (iONode)MapOp.get( sensorMap, key );
             TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: sensor %s has an already used address %d by %s (%s)",
                 wItem.getid(item), wFeedback.getaddr(item), wItem.getid(sensorItem), key );
@@ -6037,25 +6746,25 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
         }
         else {
           char key[32];
-          StrOp.fmtb( key, "%d-%d-%d-%s", wSwitch.getaddr1(item), wSwitch.getport1(item), wSwitch.getgate1(item), wItem.getiid(item) );
-          if( MapOp.haskey(switchMap, key ) ) {
-            iONode switchItem = (iONode)MapOp.get( switchMap, key );
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: switch %s has an already used address %d-%d by %s (%s)",
+          __createAccessorymapKeyFromAPGPVIB( key, wSwitch.getaddr1(item), wSwitch.getport1(item), wSwitch.getgate1(item), wSwitch.getparam1(item), wSwitch.getvalue1(item), wItem.getiid(item), wSwitch.getbus(item) );
+          if( MapOp.haskey( accessoryMap, key ) ) {
+            iONode switchItem = (iONode)MapOp.get( accessoryMap, key );
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: switch %s has an already used address %d-%d by %s (aMapKey=%s)",
                 wItem.getid(item), wSwitch.getaddr1(item), wSwitch.getport1(item), wItem.getid(switchItem), key );
           }
           else {
-            MapOp.put( switchMap, key, (obj)item );
+            MapOp.put( accessoryMap, key, (obj)item );
           }
 
           if( ( StrOp.equals( wSwitch.gettype(item), wSwitch.dcrossing ) || StrOp.equals( wSwitch.gettype(item), wSwitch.threeway ) ) && ( wSwitch.getaddr2(item) > 0 || wSwitch.getport2(item) > 0 ) ) {
-            StrOp.fmtb( key, "%d-%d-%d-%s", wSwitch.getaddr2(item), wSwitch.getport2(item), wSwitch.getgate2(item), wItem.getiid(item) );
-            if( MapOp.haskey(switchMap, key ) ) {
-              iONode switchItem = (iONode)MapOp.get( switchMap, key );
-              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: switch %s has an already used second address %d-%d by %s (%s)",
+            __createAccessorymapKeyFromAPGPVIB( key, wSwitch.getaddr2(item), wSwitch.getport2(item), wSwitch.getgate2(item), wSwitch.getparam2(item), wSwitch.getvalue2(item), wItem.getiid(item), wSwitch.getbus(item) );
+            if( MapOp.haskey( accessoryMap, key ) ) {
+              iONode switchItem = (iONode)MapOp.get( accessoryMap, key );
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: switch %s has an already used second address %d-%d by %s (aMapKey=%s)",
                   wItem.getid(item), wSwitch.getaddr2(item), wSwitch.getport2(item), wItem.getid(switchItem), key );
             }
             else {
-              MapOp.put( switchMap, key, (obj)item );
+              MapOp.put( accessoryMap, key, (obj)item );
             }
           }
         }
@@ -6069,14 +6778,14 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
       if( StrOp.equals( wOutput.name(), NodeOp.getName(item) ) ) {
         if( wOutput.getaddr(item) > 0 || wOutput.getport(item) > 0 ) {
           char key[32];
-          StrOp.fmtb( key, "%d-%d-%s", wOutput.getaddr(item), wOutput.getport(item), wItem.getiid(item) );
-          if( MapOp.haskey(switchMap, key ) ) {
-            iONode switchItem = (iONode)MapOp.get( switchMap, key );
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: output %s has an already used address %d-%d by %s (%s)",
-                wItem.getid(item), wOutput.getaddr(item), wOutput.getport(item), wItem.getid(switchItem), key );
+          __createAccessorymapKeyFromAPGPVIB( key, wOutput.getaddr(item), wOutput.getport(item), wOutput.getgate(item), wOutput.getparam(item), wOutput.getvalue(item), wItem.getiid(item), wOutput.getbus(item) );
+          if( MapOp.haskey( accessoryMap, key ) ) {
+            iONode switchItem = (iONode)MapOp.get( accessoryMap, key );
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: output %s has an already used address %d-%d-%d by %s (aMapKey=%s)",
+                wItem.getid(item), wOutput.getaddr(item), wOutput.getport(item), wOutput.getgate(item), wItem.getid(switchItem), key );
           }
           else {
-            MapOp.put( switchMap, key, (obj)item );
+            MapOp.put( accessoryMap, key, (obj)item );
           }
         }
         if( ! isValidInterfaceID( inst, wOutput.getiid(item) ) ) {
@@ -6088,60 +6797,139 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
 
       if( StrOp.equals( wSignal.name(), NodeOp.getName(item) ) ) {
         if( wSignal.getaddr(item) == 0 && wSignal.getport1(item) == 0 ) {
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: signal %s has no address set", wItem.getid(item) );
-          healthy = False;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: signal %s has no primary address set", wItem.getid(item) );
         }
         else {
-          char key[32];
-          StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr(item), wSignal.getport1(item), wSignal.getgate1(item), wItem.getiid(item) );
-          if( MapOp.haskey(switchMap, key ) ) {
-            iONode switchItem = (iONode)MapOp.get( switchMap, key );
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: signal %s has an already used first address %s by %s (%s)",
-                wItem.getid(item), key, wItem.getid(switchItem), key );
+          int patterns = wSignal.getusepatterns(item);
+          int aspects = wSignal.getaspects(item);
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "signal[%s] mode[%d] addr1[%d] port1[%d] gate1[%d] iid[%s]",
+              wItem.getid(item), wSignal.getusepatterns(item), wSignal.getaddr(item), wSignal.getport1(item), wSignal.getgate1(item), wItem.getiid(item) );
+
+          /* "usepatterns",  "0=no, 1=patterns, 2=aspectnrs, 3=linear" */
+          if( patterns == 0 ) {
+            /* default / standard */
+            if( aspects <= 4 ) {
+              const char *iid = wItem.getiid(item);
+              int bus = wSignal.getbus(item);
+
+              int addr1 = wSignal.getaddr (item);
+              int port1 = wSignal.getport1(item);
+              int gate1 = wSignal.getgate1(item);
+              int addr2 = wSignal.getaddr2(item);
+              int port2 = wSignal.getport2(item);
+              int gate2 = wSignal.getgate2(item);
+              int addr3 = wSignal.getaddr3(item);
+              int port3 = wSignal.getport3(item);
+              int gate3 = wSignal.getgate3(item);
+              int addr4 = wSignal.getaddr4(item);
+              int port4 = wSignal.getport4(item);
+              int gate4 = wSignal.getgate4(item);
+              iONode accessoryMapItem;
+
+              char key[32];
+
+              __createAccessorymapKeyFromAPGPVIB( key, addr1, port1, gate1, 0, 1, iid, bus );
+              accessoryMapItem = (iONode)MapOp.get( accessoryMap, key );
+              if( accessoryMapItem != NULL ) {
+                Boolean iMain = StrOp.equals( wSignal.main, wSignal.getsignal( item ) ) ;
+                Boolean iDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( item ) ) ;
+                Boolean amiMain = StrOp.equals( wSignal.main, wSignal.getsignal( accessoryMapItem ) ) ;
+                Boolean amiDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( accessoryMapItem ) ) ;
+                Boolean typeMatch = ( iMain && amiDistant ) || ( iDistant && amiMain );
+                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING%s: signal %s(%s) RED uses same address %d-%d-%d as %s(%s) (aMapKey=%s)",
+                    typeMatch?"(minor)":"", wItem.getid(item), wSignal.getsignal( item ), addr1, port1, gate1, wItem.getid(accessoryMapItem), wSignal.getsignal(accessoryMapItem), key );
+                if( typeMatch && iMain ) {
+                  /* replace distant entry by main entry */
+                  MapOp.remove( accessoryMap, key );
+                  MapOp.put( accessoryMap, key, (obj)item );
+                }
+              }
+              else {
+                MapOp.put( accessoryMap, key, (obj)item );
+              }
+
+              __createAccessorymapKeyFromAPGPVIB( key, addr2, port2, gate2, 0, 1, iid, bus );
+              accessoryMapItem = (iONode)MapOp.get( accessoryMap, key );
+              if( accessoryMapItem != NULL ) {
+                Boolean iMain = StrOp.equals( wSignal.main, wSignal.getsignal( item ) ) ;
+                Boolean iDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( item ) ) ;
+                Boolean amiMain = StrOp.equals( wSignal.main, wSignal.getsignal( accessoryMapItem ) ) ;
+                Boolean amiDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( accessoryMapItem ) ) ;
+                Boolean typeMatch = ( iMain && amiDistant ) || ( iDistant && amiMain );
+                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING%s: signal %s(%s) GREEN uses same address %d-%d-%d as %s(%s) (aMapKey=%s)",
+                    typeMatch?"(minor)":"", wItem.getid(item), wSignal.getsignal( item ), addr2, port2, gate2, wItem.getid(accessoryMapItem), wSignal.getsignal(accessoryMapItem), key );
+                if( typeMatch && iMain ) {
+                  /* replace distant entry by main entry */
+                  MapOp.remove( accessoryMap, key );
+                  MapOp.put( accessoryMap, key, (obj)item );
+                }
+              }
+              else {
+                MapOp.put( accessoryMap, key, (obj)item );
+              }
+
+              if( aspects >= 3 ) {
+                __createAccessorymapKeyFromAPGPVIB( key, addr3, port3, gate3, 0, 1, iid, bus );
+                accessoryMapItem = (iONode)MapOp.get( accessoryMap, key );
+                if( accessoryMapItem != NULL ) {
+                  Boolean iMain = StrOp.equals( wSignal.main, wSignal.getsignal( item ) ) ;
+                  Boolean iDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( item ) ) ;
+                  Boolean amiMain = StrOp.equals( wSignal.main, wSignal.getsignal( accessoryMapItem ) ) ;
+                  Boolean amiDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( accessoryMapItem ) ) ;
+                  Boolean typeMatch = ( iMain && amiDistant ) || ( iDistant && amiMain );
+                  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING%s: signal %s(%s) YELLOW uses same address %d-%d-%d as %s(%s) (aMapKey=%s)",
+                      typeMatch?"(minor)":"", wItem.getid(item), wSignal.getsignal( item ), addr3, port3, gate3, wItem.getid(accessoryMapItem), wSignal.getsignal(accessoryMapItem), key );
+                  if( typeMatch && iMain ) {
+                    /* replace distant entry by main entry */
+                    MapOp.remove( accessoryMap, key );
+                    MapOp.put( accessoryMap, key, (obj)item );
+                  }
+                }
+                else {
+                  MapOp.put( accessoryMap, key, (obj)item );
+                }
+              }
+
+              if( aspects == 4 ) {
+                __createAccessorymapKeyFromAPGPVIB( key, addr4, port4, gate4, 0, 1, iid, bus );
+                accessoryMapItem = (iONode)MapOp.get( accessoryMap, key );
+                if( accessoryMapItem != NULL ) {
+                  Boolean iMain = StrOp.equals( wSignal.main, wSignal.getsignal( item ) ) ;
+                  Boolean iDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( item ) ) ;
+                  Boolean amiMain = StrOp.equals( wSignal.main, wSignal.getsignal( accessoryMapItem ) ) ;
+                  Boolean amiDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( accessoryMapItem ) ) ;
+                  Boolean typeMatch = ( iMain && amiDistant ) || ( iDistant && amiMain );
+                  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING%s: signal %s(%s) WHITE uses same address %d-%d-%d as %s(%s) (aMapKey=%s)",
+                      typeMatch?"(minor)":"", wItem.getid(item), wSignal.getsignal( item ), addr4, port4, gate4, wItem.getid(accessoryMapItem), wSignal.getsignal(accessoryMapItem), key );
+                  if( typeMatch && iMain ) {
+                    /* replace distant entry by main entry */
+                    MapOp.remove( accessoryMap, key );
+                    MapOp.put( accessoryMap, key, (obj)item );
+                  }
+                }
+                else {
+                  MapOp.put( accessoryMap, key, (obj)item );
+                }
+              }
+
+            }else {
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: standard signal %s has too many aspects[%d]",
+                  wItem.getid(item), aspects );
+              /* too many aspects */
+            }
+          }else if( patterns == wSignal.use_patterns ) {
+            /* patterns */
+
+          }else if( patterns == wSignal.use_aspectnrs ) {
+            /* aspectnrs */
+
+          }else if( patterns == wSignal.use_linear ) {
+            /* linear */
+
           }
-          else {
-            MapOp.put( switchMap, key, (obj)item );
-          }
+
         }
 
-        if( wSignal.getaddr2(item) > 0 || wSignal.getport2(item) > 0 ) {
-          char key[32];
-          StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr2(item), wSignal.getport2(item), wSignal.getgate2(item), wItem.getiid(item) );
-          if( MapOp.haskey(switchMap, key ) ) {
-            iONode switchItem = (iONode)MapOp.get( switchMap, key );
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: signal %s has an already used second address %s by %s (%s)",
-                wItem.getid(item), key, wItem.getid(switchItem), key );
-          }
-          else {
-            MapOp.put( switchMap, key, (obj)item );
-          }
-        }
-
-        if( wSignal.getaspects(item) >= 3 && ( wSignal.getaddr3(item) > 0 || wSignal.getport3(item) > 0 ) ) {
-          char key[32];
-          StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr3(item), wSignal.getport3(item), wSignal.getgate3(item), wItem.getiid(item) );
-          if( MapOp.haskey(switchMap, key ) ) {
-            iONode switchItem = (iONode)MapOp.get( switchMap, key );
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: signal %s has an already used third address %s by %s (%s)",
-                wItem.getid(item), key, wItem.getid(switchItem), key );
-          }
-          else {
-            MapOp.put( switchMap, key, (obj)item );
-          }
-        }
-
-        if( wSignal.getaspects(item) >= 4 && ( wSignal.getaddr4(item) > 0 || wSignal.getport4(item) > 0 ) ) {
-          char key[32];
-          StrOp.fmtb( key, "%d-%d-%d-%s", wSignal.getaddr4(item), wSignal.getport4(item), wSignal.getgate4(item), wItem.getiid(item) );
-          if( MapOp.haskey(switchMap, key ) ) {
-            iONode switchItem = (iONode)MapOp.get( switchMap, key );
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: signal %s has an already used fourth address %s by %s (%s)",
-                wItem.getid(item), key, wItem.getid(switchItem), key );
-          }
-          else {
-            MapOp.put( switchMap, key, (obj)item );
-          }
-        }
         if( ! isValidInterfaceID( inst, wSignal.getiid(item) ) ) {
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: signal %s configured for non existent interface id [%s]",
               wItem.getid(item), wSignal.getiid(item) );
@@ -6153,7 +6941,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
 
       StrOp.fmtb( key, "%d-%d-%d", wItem.getx(item), wItem.gety(item), wItem.getz(item) );
 
-      if( MapOp.haskey(idMap, wItem.getid(item)) ) {
+      if( MapOp.haskey( idMap, wItem.getid(item) ) ) {
         iONode firstItem = (iONode)MapOp.get(idMap, wItem.getid(item));
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: object [%s] with id [%s] at [%d,%d,%d] already exist at [%d,%d,%d]",
             NodeOp.getName(item), wItem.getid(item),
@@ -6273,7 +7061,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
   MapOp.clear(data->objectmap);
 
   MapOp.base.del(sensorMap);
-  MapOp.base.del(switchMap);
+  MapOp.base.del(accessoryMap);
 
 
   if( healthy ) {
