@@ -441,90 +441,92 @@ static void __scanner( void* threadinst ) {
 
   while( data->run ) {
     int i;
-    for( i = 0; i < 32; i++ ) {
-      if( data->ports[i] != NULL && data->ports[i]->type == 0 ) {
-        if( data->ports[i]->pulsetime > 0 && data->ports[i]->state ) {
-          if( data->ports[i]->offtimer + data->ports[i]->pulsetime <= SystemOp.getTick() ) {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "pulse off port %d", i );
-            data->ports[i]->state = False;
-            raspiWrite(data->ports[i]->ionr, 0);
+    if( data->iorc == 0 ) {
+      for( i = 0; i < 32; i++ ) {
+        if( data->ports[i] != NULL && data->ports[i]->type == 0 ) {
+          if( data->ports[i]->pulsetime > 0 && data->ports[i]->state ) {
+            if( data->ports[i]->offtimer + data->ports[i]->pulsetime <= SystemOp.getTick() ) {
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "pulse off port %d", i );
+              data->ports[i]->state = False;
+              raspiWrite(data->ports[i]->ionr, 0);
 
-            msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
-            rnSenderAddresToPacket( data->id, msg, 0 );
-            msg[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
-            msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-            msg[RN_PACKET_LEN] = 4;
-            msg[RN_PACKET_DATA + 0] = 0; /* off */
-            msg[RN_PACKET_DATA + 1] = 0;
-            msg[RN_PACKET_DATA + 2] = 0;
-            msg[RN_PACKET_DATA + 3] = i;
-            __sendRN(rocnetnode, msg);
+              msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
+              rnSenderAddresToPacket( data->id, msg, 0 );
+              msg[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
+              msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+              msg[RN_PACKET_LEN] = 4;
+              msg[RN_PACKET_DATA + 0] = 0; /* off */
+              msg[RN_PACKET_DATA + 1] = 0;
+              msg[RN_PACKET_DATA + 2] = 0;
+              msg[RN_PACKET_DATA + 3] = i;
+              __sendRN(rocnetnode, msg);
 
+            }
           }
         }
-      }
 
-      /* Check for pending Ack */
-      if( data->ports[i] != NULL && data->ports[i]->type == 1 && data->ports[i]->ackpending) {
-        data->ports[i]->acktimer++;
-        if( data->ports[i]->acktimer > 50 ) {
-          data->ports[i]->ackretry++;
-          data->ports[i]->acktimer = 0;
-          if( data->ports[i]->ackretry <= 10 ) {
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no ack for port %d; resend", i );
-            msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
-            msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
-            msg[RN_PACKET_LEN] = 4;
-            msg[RN_PACKET_DATA+2] = data->ports[i]->state;
-            msg[RN_PACKET_DATA+3] = i;
-            rnSenderAddresToPacket( data->id, msg, 0 );
-            __sendRN(rocnetnode, msg);
-          }
-          else {
-            /* giving up */
-            data->ports[i]->ackpending = False;
-            data->ports[i]->ackretry = 0;
+        /* Check for pending Ack */
+        if( data->ports[i] != NULL && data->ports[i]->type == 1 && data->ports[i]->ackpending) {
+          data->ports[i]->acktimer++;
+          if( data->ports[i]->acktimer > 50 ) {
+            data->ports[i]->ackretry++;
             data->ports[i]->acktimer = 0;
-            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "no ack for port %d", i );
+            if( data->ports[i]->ackretry <= 10 ) {
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no ack for port %d; resend", i );
+              msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
+              msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
+              msg[RN_PACKET_LEN] = 4;
+              msg[RN_PACKET_DATA+2] = data->ports[i]->state;
+              msg[RN_PACKET_DATA+3] = i;
+              rnSenderAddresToPacket( data->id, msg, 0 );
+              __sendRN(rocnetnode, msg);
+            }
+            else {
+              /* giving up */
+              data->ports[i]->ackpending = False;
+              data->ports[i]->ackretry = 0;
+              data->ports[i]->acktimer = 0;
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "no ack for port %d", i );
+            }
           }
         }
-      }
 
 
-      if( data->ports[i] != NULL && data->ports[i]->type == 1 && !data->ports[i]->ackpending ) {
-        int val = raspiRead(data->ports[i]->ionr);
-        Boolean report = inputVal[i] != val;
+        if( data->ports[i] != NULL && data->ports[i]->type == 1 && !data->ports[i]->ackpending ) {
+          int val = raspiRead(data->ports[i]->ionr);
+          Boolean report = inputVal[i] != val;
 
-        if( data->ports[i]->offtime > 0 ) {
-          report = False;
-          if( val > 0 ) {
-            data->ports[i]->offtimer = SystemOp.getTick();
-            if( !data->ports[i]->state ) {
-              data->ports[i]->state = True;
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delayed on port %d", i );
+          if( data->ports[i]->offtime > 0 ) {
+            report = False;
+            if( val > 0 ) {
+              data->ports[i]->offtimer = SystemOp.getTick();
+              if( !data->ports[i]->state ) {
+                data->ports[i]->state = True;
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delayed on port %d", i );
+                report = True;
+              }
+            }
+            else if( data->ports[i]->state && data->ports[i]->offtimer + data->ports[i]->offtime <= SystemOp.getTick() ) {
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delayed off port %d", i );
+              data->ports[i]->state = False;
               report = True;
             }
           }
-          else if( data->ports[i]->state && data->ports[i]->offtimer + data->ports[i]->offtime <= SystemOp.getTick() ) {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delayed off port %d", i );
-            data->ports[i]->state = False;
-            report = True;
-          }
-        }
 
-        if( report ) {
-          data->ports[i]->ackpending = True;
-          data->ports[i]->ackretry = 0;
-          data->ports[i]->acktimer = 0;
-          inputVal[i] = val;
-          msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
-          msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
-          msg[RN_PACKET_LEN] = 4;
-          msg[RN_PACKET_DATA+2] = val;
-          msg[RN_PACKET_DATA+3] = i;
-          rnSenderAddresToPacket( data->id, msg, 0 );
-          __sendRN(rocnetnode, msg);
-          ThreadOp.sleep(raspiDummy()?500:10);
+          if( report ) {
+            data->ports[i]->ackpending = True;
+            data->ports[i]->ackretry = 0;
+            data->ports[i]->acktimer = 0;
+            inputVal[i] = val;
+            msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
+            msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
+            msg[RN_PACKET_LEN] = 4;
+            msg[RN_PACKET_DATA+2] = val;
+            msg[RN_PACKET_DATA+3] = i;
+            rnSenderAddresToPacket( data->id, msg, 0 );
+            __sendRN(rocnetnode, msg);
+            ThreadOp.sleep(raspiDummy()?500:10);
+          }
         }
       }
     }
@@ -632,7 +634,7 @@ static void __initPorts(iORocNetNode inst) {
     }
   }
   /* I/O map: 0=output, 1=input*/
-  raspiSetupIO(iomap);
+  data->iorc = raspiSetupIO(iomap);
 }
 
 
