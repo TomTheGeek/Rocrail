@@ -1086,7 +1086,7 @@ bool SwitchDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capt
     m_FrogPanel = NULL;
     m_labBusPol = NULL;
     m_BusPol = NULL;
-    m_Frog2Box = NULL;
+    m_Frog1Box = NULL;
     m_labRelayFrog2 = NULL;
     m_labAddressFrog2 = NULL;
     m_labPortFrog2 = NULL;
@@ -1099,7 +1099,7 @@ bool SwitchDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capt
     m_Addr0Pol2 = NULL;
     m_Port0Pol2 = NULL;
     m_Gate0Pol2 = NULL;
-    m_Frog1Box = NULL;
+    m_Frog2Box = NULL;
     m_labRelayFrog1 = NULL;
     m_labAddressFrog1 = NULL;
     m_labPortFrog1 = NULL;
@@ -1750,8 +1750,8 @@ void SwitchDialog::CreateControls()
     m_BusPol = new wxTextCtrl( m_FrogPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(120, -1), 0 );
     itemFlexGridSizer181->Add(m_BusPol, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Frog2Box = new wxStaticBox(m_FrogPanel, wxID_ANY, _("Frog 2"));
-    wxStaticBoxSizer* itemStaticBoxSizer184 = new wxStaticBoxSizer(m_Frog2Box, wxVERTICAL);
+    m_Frog1Box = new wxStaticBox(m_FrogPanel, wxID_ANY, _("Frog 1"));
+    wxStaticBoxSizer* itemStaticBoxSizer184 = new wxStaticBoxSizer(m_Frog1Box, wxVERTICAL);
     itemBoxSizer180->Add(itemStaticBoxSizer184, 0, wxALIGN_LEFT|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer185 = new wxFlexGridSizer(0, 4, 0, 0);
     itemStaticBoxSizer184->Add(itemFlexGridSizer185, 0, wxALIGN_LEFT, 5);
@@ -1799,8 +1799,8 @@ void SwitchDialog::CreateControls()
     m_Gate0Pol2->SetSelection(0);
     itemFlexGridSizer185->Add(m_Gate0Pol2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Frog1Box = new wxStaticBox(m_FrogPanel, wxID_ANY, _("Frog 1"));
-    wxStaticBoxSizer* itemStaticBoxSizer198 = new wxStaticBoxSizer(m_Frog1Box, wxVERTICAL);
+    m_Frog2Box = new wxStaticBox(m_FrogPanel, wxID_ANY, _("Frog 2"));
+    wxStaticBoxSizer* itemStaticBoxSizer198 = new wxStaticBoxSizer(m_Frog2Box, wxVERTICAL);
     itemBoxSizer180->Add(itemStaticBoxSizer198, 0, wxALIGN_LEFT|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer199 = new wxFlexGridSizer(0, 4, 0, 0);
     itemStaticBoxSizer198->Add(itemFlexGridSizer199, 0, wxALIGN_LEFT, 5);

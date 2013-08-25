@@ -392,7 +392,7 @@ public:
     wxPanel* m_FrogPanel;
     wxStaticText* m_labBusPol;
     wxTextCtrl* m_BusPol;
-    wxStaticBox* m_Frog2Box;
+    wxStaticBox* m_Frog1Box;
     wxStaticText* m_labRelayFrog2;
     wxStaticText* m_labAddressFrog2;
     wxStaticText* m_labPortFrog2;
@@ -405,7 +405,7 @@ public:
     wxSpinCtrl* m_Addr0Pol2;
     wxSpinCtrl* m_Port0Pol2;
     wxRadioBox* m_Gate0Pol2;
-    wxStaticBox* m_Frog1Box;
+    wxStaticBox* m_Frog2Box;
     wxStaticText* m_labRelayFrog1;
     wxStaticText* m_labAddressFrog1;
     wxStaticText* m_labPortFrog1;
