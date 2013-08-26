@@ -332,6 +332,17 @@ byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
     }
     if(data->ports[port] != NULL) {
       raspiWrite(data->ports[port]->ionr, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0);
+      msg = allocMem(32);
+      msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
+      rnReceipientAddresToPacket( 0, msg, 0 );
+      rnSenderAddresToPacket( data->id, msg, 0 );
+      msg[RN_PACKET_ACTION] = RN_OUTPUT_SWITCH;
+      msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+      msg[RN_PACKET_LEN] = 4;
+      msg[RN_PACKET_DATA + 0] = RN_OUTPUT_ON;
+      msg[RN_PACKET_DATA + 1] = 0;
+      msg[RN_PACKET_DATA + 2] = 0;
+      msg[RN_PACKET_DATA + 3] = port;
     }
   break;
 
