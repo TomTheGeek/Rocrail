@@ -32,6 +32,7 @@
 #include "rocs/public/mem.h"
 #include "rocs/public/objbase.h"
 #include "rocs/public/string.h"
+#include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -228,6 +229,11 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     rn[RN_PACKET_DATA + 1] = 0;
     rn[RN_PACKET_DATA + 2] = wSwitch.getdelay(node);
     rn[RN_PACKET_DATA + 3] = addr;
+    if( data->watchdog != NULL ) {
+      byte*  rnwd  = allocMem(32);
+      MemOp.copy(rnwd, rn, 32);
+      ThreadOp.post( data->watchdog, (obj)rnwd );
+    }
     ThreadOp.post( data->writer, (obj)rn );
     return rsp;
   }
@@ -265,6 +271,11 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     rn[RN_PACKET_DATA + 1] = 0;
     rn[RN_PACKET_DATA + 2] = 0;
     rn[RN_PACKET_DATA + 3] = addr;
+    if( data->watchdog != NULL ) {
+      byte*  rnwd  = allocMem(32);
+      MemOp.copy(rnwd, rn, 32);
+      ThreadOp.post( data->watchdog, (obj)rnwd );
+    }
     ThreadOp.post( data->writer, (obj)rn );
     return rsp;
   }
@@ -706,6 +717,12 @@ static void __evaluateRN( iOrocNet rocnet, byte* rn ) {
 
         if( data->listenerFun != NULL && data->listenerObj != NULL )
           data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+        if( data->watchdog != NULL ) {
+          byte* rnwd = allocMem(8+rn[RN_PACKET_LEN]);
+          MemOp.copy( rnwd, rn, 8+rn[RN_PACKET_LEN]);
+          ThreadOp.post( data->watchdog, (obj)rnwd );
+        }
       }
       break;
 
@@ -801,6 +818,98 @@ static void __reader( void* threadinst ) {
 }
 
 
+static void __watchdog( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOrocNet rocnet = (iOrocNet)ThreadOp.getParm( th );
+  iOrocNetData data = Data(rocnet);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNet watchdog started." );
+
+  /* give the sublib time to connect */
+  ThreadOp.sleep(1000);
+  while( data->run ) {
+    int i = 0;
+    int size = ListOp.size( data->AckList );
+    byte* rn = (byte*)ThreadOp.getPost( th );
+
+    if (rn != NULL) {
+      int group = rn[RN_PACKET_GROUP];
+      int actionType = rnActionTypeFromPacket(rn);
+      int sndr = rnSenderAddrFromPacket(rn, data->seven);
+
+      if( actionType == RN_ACTIONTYPE_REQUEST ) {
+        Boolean newReq = True;
+        for( i = 0; i < size; i++ ) {
+          iORNreq req = (iORNreq)ListOp.get( data->AckList, i );
+          if( rn[RN_PACKET_LEN] == req->req[RN_PACKET_LEN] && MemOp.cmp(req->req, rn, 8 + rn[RN_PACKET_LEN]) ) {
+            newReq = False;
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "same request is allready in the list %d", i );
+            break;
+          }
+        }
+
+        if( newReq ) {
+          iORNreq req = allocMem(sizeof(struct rnreq));
+          req->req = rn;
+          req->timer = SystemOp.getTick();
+          req->ack = False;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "add request to the list" );
+          ListOp.add( data->AckList, (obj)req );
+        }
+
+      }
+      else if( actionType == RN_ACTIONTYPE_EVENT ) {
+        rn[RN_PACKET_ACTION] &= RN_ACTION_CODE_MASK;
+        for( i = 0; i < size; i++ ) {
+          iORNreq req = (iORNreq)ListOp.get( data->AckList, i );
+          if( sndr == rnReceipientAddrFromPacket(req->req, data->seven) && rn[RN_PACKET_LEN] == req->req[RN_PACKET_LEN] && MemOp.cmp(rn+RN_PACKET_GROUP, req->req+RN_PACKET_GROUP, 2 + rn[RN_PACKET_LEN]) ) {
+            req->ack = True;
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request %d is acknowledged", i );
+          }
+        }
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unhandled request" );
+        freeMem(rn);
+      }
+    }
+
+    Boolean ack = False;
+    do {
+      ack = False;
+      size = ListOp.size( data->AckList );
+      for( i = 0; i < size; i++ ) {
+        iORNreq req = (iORNreq)ListOp.get( data->AckList, i );
+        if( req->ack ) {
+          iORNreq req = (iORNreq)ListOp.remove(data->AckList, i);
+          freeMem(req->req);
+          freeMem(req);
+          ack = True;
+          break;
+        }
+      }
+    } while(ack);
+
+    size = ListOp.size( data->AckList );
+    for( i = 0; i < size; i++ ) {
+      iORNreq req = (iORNreq)ListOp.get( data->AckList, i );
+      if( req->timer + 50 <= SystemOp.getTick() ) {
+        byte* rncopy = allocMem(8+req->req[RN_PACKET_LEN]);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request %d of %d timeout: resend", i, size );
+        req->timer = SystemOp.getTick();
+        MemOp.copy(rncopy, req->req, 8+req->req[RN_PACKET_LEN]);
+        ThreadOp.post( data->writer, (obj)rncopy );
+      }
+    }
+
+
+    ThreadOp.sleep(10);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNet watchdog stopped." );
+}
+
+
 static void __writer( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOrocNet rocnet = (iOrocNet)ThreadOp.getParm( th );
@@ -865,6 +974,7 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
   /* Initialize data->xxx members... */
   data->ini    = ini;
   data->rnini = wDigInt.getrocnet(ini);
+  data->AckList = ListOp.inst();
 
   if( data->rnini == NULL ) {
     data->rnini = NodeOp.inst( wRocNet.name(), ini, ELEMENT_NODE );
@@ -923,6 +1033,11 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
 
     data->writer = ThreadOp.inst( "rnwriter", &__writer, __rocNet );
     ThreadOp.start( data->writer );
+
+    if( wRocNet.iswd(data->rnini) ) {
+      data->watchdog = ThreadOp.inst( "rnwatchdog", &__watchdog, __rocNet );
+      ThreadOp.start( data->watchdog );
+    }
   }
 
   instCnt++;

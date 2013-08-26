@@ -339,7 +339,7 @@ byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
       msg[RN_PACKET_ACTION] = RN_OUTPUT_SWITCH;
       msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
       msg[RN_PACKET_LEN] = 4;
-      msg[RN_PACKET_DATA + 0] = RN_OUTPUT_ON;
+      msg[RN_PACKET_DATA + 0] = rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0;
       msg[RN_PACKET_DATA + 1] = 0;
       msg[RN_PACKET_DATA + 2] = 0;
       msg[RN_PACKET_DATA + 3] = port;

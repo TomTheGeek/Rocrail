@@ -821,6 +821,11 @@
     <typedef def="int(*sublib_read)(obj,byte*)"/>
     <typedef def="Boolean(*sublib_write)(obj,byte*,int)"/>
     <typedef def="Boolean(*sublib_available)(obj)"/>
+    <struct name="rnreq" typedef="*iORNreq">
+      <var name="req" vt="byte*"/>
+      <var name="timer" vt="long"/>
+      <var name="ack" vt="Boolean"/>
+    </struct>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -846,8 +851,10 @@
       <var name="ctsretry" vt="int"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
+      <var name="watchdog" vt="iOThread"/>
       <var name="seven" vt="Boolean"/>
       <var name="crc" vt="Boolean"/>
+      <var name="AckList" vt="iOList"/>
     </data>
   </object>
 
