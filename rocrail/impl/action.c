@@ -503,9 +503,16 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         FBackOp.cmd( fb, cmd, True );
       }
       else if( StrOp.equals(wFeedback.setcounterval, cmdStr) ) {
+        int counter = FBackOp.getCounter(fb);
         wFeedback.setcmd( cmd, wFeedback.setcounterval );
-        wFeedback.setcounter( cmd, atoi(wAction.getparam(data->action)) );
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set counter sensor [%s] to %d", id, atoi(wAction.getparam(data->action))  );
+        if( wAction.getparam(data->action)[0] == '-' || wAction.getparam(data->action)[0] == '+' ) {
+          counter += atoi(wAction.getparam(data->action));
+        }
+        else {
+          counter = atoi(wAction.getparam(data->action));
+        }
+        wFeedback.setcounter( cmd, counter );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set counter sensor [%s] to %d", id, counter );
         FBackOp.cmd( fb, cmd, True );
       }
       else {
