@@ -280,6 +280,10 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s exitstate=%s", data->id, exitstate );
     /* Broadcast to clients. */
     AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
+
+    if( StrOp.equals( wStage.exitopen, exitstate ) ) {
+      __moveStageLocos(inst);
+    }
   }
 
   NodeOp.base.del(cmd);
