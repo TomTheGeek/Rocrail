@@ -282,6 +282,7 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
     AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
 
     if( StrOp.equals( wStage.exitopen, exitstate ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "move stage %s locos on %s command...", data->id, exitstate );
       __moveStageLocos(inst);
     }
   }
@@ -1336,6 +1337,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
 
   /* wait only 100ms for getting the mutex: */
   if( !MutexOp.trywait( data->moveMux, 100 ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "a move in stage %s is pending: mutex timeout", data->id);
     return False;
   }
 
