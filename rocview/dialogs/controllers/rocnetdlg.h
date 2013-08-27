@@ -40,9 +40,11 @@ protected:
 	void OnSublib( wxCommandEvent& event );
 	void OnCancel( wxCommandEvent& event );
 	void OnOK( wxCommandEvent& event );
+	void onNodeListSelected( wxListEvent& event );
 	
   void initLabels();
   void initValues();
+  void initNodeList();
   void evaluate();
   iONode m_Props;
   const char* m_Devices;

@@ -33,6 +33,7 @@
 #include "rocview/public/guiapp.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/RocNet.h"
+#include "rocrail/wrapper/public/RocNetNode.h"
 #include "rocs/public/strtok.h"
 
 RocNetDlg::RocNetDlg( wxWindow* parent, iONode props, const char* devices ):rocnetdlggen( parent ) {
@@ -59,6 +60,11 @@ void RocNetDlg::initLabels() {
   m_Sublib->SetLabel(wxGetApp().getMsg( "sublib" ));
   m_Address->SetLabel(wxGetApp().getMsg( "address" ));
   m_Port->SetLabel(wxGetApp().getMsg( "port" ));
+
+  m_NodeList->InsertColumn(0, wxGetApp().getMsg( "nodenumber" ), wxLIST_FORMAT_RIGHT );
+  m_NodeList->InsertColumn(1, wxGetApp().getMsg( "class" ), wxLIST_FORMAT_LEFT );
+  m_NodeList->InsertColumn(2, wxGetApp().getMsg( "manufactured_ID" ), wxLIST_FORMAT_LEFT );
+  m_NodeList->InsertColumn(3, wxGetApp().getMsg( "version" ), wxLIST_FORMAT_LEFT );
 
 }
 
@@ -115,9 +121,11 @@ void RocNetDlg::initValues() {
   }
 
   m_CRC->SetValue( wRocNet.iscrc(rnini) ? true:false);
+  m_Watchdog->SetValue( wRocNet.iswd(rnini) ? true:false);
   m_Address->SetValue( wxString( wRocNet.getaddr( rnini ), wxConvUTF8 ) );
   m_Port->SetValue( wRocNet.getport( rnini ) );
 
+  initNodeList();
 }
 
 
@@ -151,6 +159,7 @@ void RocNetDlg::evaluate() {
     wDigInt.setbps( m_Props, 125000 );
 
   wRocNet.setcrc(m_Props, m_CRC->IsChecked()?True:False);
+  wRocNet.setwd(m_Props, m_Watchdog->IsChecked()?True:False);
 }
 
 
@@ -181,3 +190,24 @@ void RocNetDlg::OnOK( wxCommandEvent& event ) {
   evaluate();
   EndModal( wxID_OK );
 }
+
+void RocNetDlg::onNodeListSelected( wxListEvent& event ) {
+
+
+}
+
+void RocNetDlg::initNodeList() {
+  m_NodeList->DeleteAllItems();
+  int index = 0;
+  iONode rnnode = wRocNet.getrocnetnode(m_Props);
+  while( rnnode != NULL ) {
+    m_NodeList->InsertItem( index, wxString::Format(_T("%d"), wRocNetNode.getid(rnnode)));
+    m_NodeList->SetItem( index, 1, wxString(wRocNetNode.getclass(rnnode),wxConvUTF8));
+    m_NodeList->SetItem( index, 2, wxString::Format(_T("%d"), wRocNetNode.getvendor(rnnode)));
+    m_NodeList->SetItem( index, 3, wxString(wRocNetNode.getversion(rnnode),wxConvUTF8));
+    m_NodeList->SetItemPtrData(index, (wxUIntPtr)rnnode);
+    index++;
+    rnnode = wRocNet.nextrocnetnode(m_Props, rnnode);
+  }
+}
+
