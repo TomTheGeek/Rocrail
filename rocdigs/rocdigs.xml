@@ -855,6 +855,7 @@
       <var name="seven" vt="Boolean"/>
       <var name="crc" vt="Boolean"/>
       <var name="AckList" vt="iOList"/>
+      <var name="nodemap" vt="iOMap"/>
     </data>
   </object>
 

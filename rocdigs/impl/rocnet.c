@@ -45,6 +45,7 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/RocNet.h"
+#include "rocrail/wrapper/public/RocNetNode.h"
 #include "rocrail/wrapper/public/BinCmd.h"
 #include "rocrail/wrapper/public/Clock.h"
 
@@ -514,6 +515,8 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
   byte* rnReply = NULL;
+  char key[32] = {'\0'};
+  char version[32] = {'\0'};
 
 
   rcpt = rnReceipientAddrFromPacket(rn, data->seven);
@@ -524,6 +527,17 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Identified: rocnetid=%d class=%s vid=%d version=%d.%d", sndr,
         rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2], rn[RN_PACKET_DATA+3] );
+    StrOp.fmtb( key, "%d-%d", rn[RN_PACKET_NETID], sndr);
+    if( data->run && !MapOp.haskey( data->nodemap, key ) ) {
+      iONode rnnode = NodeOp.inst( wRocNetNode.name(), data->ini, ELEMENT_NODE );
+      wRocNetNode.setid(rnnode, sndr);
+      wRocNetNode.setclass(rnnode, rnClassString(rn[RN_PACKET_DATA+0]));
+      wRocNetNode.setvendor(rnnode, rn[RN_PACKET_DATA+1]);
+      StrOp.fmtb( version, "%d.%d", rn[RN_PACKET_DATA+2], rn[RN_PACKET_DATA+3] );
+      wRocNetNode.setversion(rnnode, version);
+      MapOp.put( data->nodemap, key, (obj)rnnode);
+      NodeOp.addChild( data->ini, rnnode );
+    }
     rnReply = allocMem(32);
     rnReply[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
     rnReceipientAddresToPacket( sndr, rnReply, data->seven );
@@ -537,6 +551,11 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     break;
   case RN_STATIONARY_SHUTDOWN: {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "node %d has been shutdown", sndr );
+
+    StrOp.fmtb( key, "%d-%d", rn[RN_PACKET_NETID], sndr);
+    if( MapOp.haskey( data->nodemap, key ) ) {
+      NodeOp.removeChild( data->ini, (iONode)MapOp.remove( data->nodemap, key ) );
+    }
     /* STOP */
     iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
     wState.setiid( node, wDigInt.getiid( data->ini ) );
@@ -975,6 +994,7 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->ini    = ini;
   data->rnini = wDigInt.getrocnet(ini);
   data->AckList = ListOp.inst();
+  data->nodemap = MapOp.inst();
 
   if( data->rnini == NULL ) {
     data->rnini = NodeOp.inst( wRocNet.name(), ini, ELEMENT_NODE );
@@ -1025,7 +1045,14 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib [%s] is not supported", wDigInt.getsublib( ini ) );
   }
 
-
+  /* Remove all nodes from previous session: */
+  {
+    iONode rnnode = wRocNet.getrocnetnode(data->ini);
+    while( rnnode != NULL ) {
+      NodeOp.removeChild(data->ini, rnnode);
+      rnnode = wRocNet.getrocnetnode(data->ini);
+    }
+  }
 
   if( data->run == True ) {
     data->reader = ThreadOp.inst( "rnreader", &__reader, __rocNet );
