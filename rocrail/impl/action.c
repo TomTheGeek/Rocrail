@@ -511,6 +511,10 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         else {
           counter = atoi(wAction.getparam(data->action));
         }
+        if( counter < 0 ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "negative counter value %d for sensor [%s] is reset to zero", counter, id );
+          counter = 0;
+        }
         wFeedback.setcounter( cmd, counter );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set counter sensor [%s] to %d", id, counter );
         FBackOp.cmd( fb, cmd, True );
