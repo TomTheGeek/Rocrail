@@ -389,6 +389,7 @@ void SwitchDialog::initLabels() {
   m_labGateFrog2->SetLabel( wxGetApp().getMsg( "gate" ) );
 
   m_FrogAccessory->SetLabel( wxGetApp().getMsg( "accessory" ) );
+  m_FrogAsSwitch->SetLabel( wxGetApp().getMsg( "turnout" ) );
   m_FrogPortType->SetLabel( wxGetApp().getMsg( "type" ) );
   m_FrogPortType->SetString( 0, wxGetApp().getMsg( "output" ) );
   m_FrogPortType->SetString( 1, wxGetApp().getMsg( "lights" ) );
@@ -691,6 +692,7 @@ void SwitchDialog::initValues() {
   m_Gate1Pol2->SetSelection( wSwitch.getgate1pol2(m_Props) );
 
   m_FrogAccessory->SetValue( wSwitch.isfrogaccessory(m_Props) );
+  m_FrogAsSwitch->SetValue( wSwitch.isfrogswitch(m_Props) );
   m_FrogPortType->Enable(!m_FrogAccessory->IsChecked());
   if(wSwitch.isfrogaccessory(m_Props))
     wSwitch.setfrogporttype(m_Props, 0);
@@ -929,6 +931,7 @@ bool SwitchDialog::evaluate() {
   wSwitch.setport1pol2( m_Props, m_Port1Pol2->GetValue() );
   wSwitch.setgate1pol2( m_Props, m_Gate1Pol2->GetSelection() );
   wSwitch.setfrogaccessory( m_Props, m_FrogAccessory->GetValue()?True:False );
+  wSwitch.setfrogswitch( m_Props, m_FrogAsSwitch->GetValue()?True:False );
   wSwitch.setfrogporttype(m_Props, m_FrogPortType->GetSelection());
 
   return true;
@@ -1122,6 +1125,7 @@ bool SwitchDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capt
     m_Addr1Pol2 = NULL;
     m_Port1Pol2 = NULL;
     m_Gate1Pol2 = NULL;
+    m_FrogAsSwitch = NULL;
     m_FrogAccessory = NULL;
     m_FrogPortType = NULL;
     m_Cancel = NULL;
@@ -1872,9 +1876,15 @@ void SwitchDialog::CreateControls()
     m_Gate1Pol2->SetSelection(0);
     itemFlexGridSizer204->Add(m_Gate1Pol2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
+    wxBoxSizer* itemBoxSizer217 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer180->Add(itemBoxSizer217, 0, wxALIGN_LEFT, 5);
+    m_FrogAsSwitch = new wxCheckBox( m_FrogPanel, wxID_ANY, _("Switch"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_FrogAsSwitch->SetValue(false);
+    itemBoxSizer217->Add(m_FrogAsSwitch, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+
     m_FrogAccessory = new wxCheckBox( m_FrogPanel, ID_FROG_ACCESSORY, _("Accessory"), wxDefaultPosition, wxDefaultSize, 0 );
     m_FrogAccessory->SetValue(false);
-    itemBoxSizer180->Add(m_FrogAccessory, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemBoxSizer217->Add(m_FrogAccessory, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxArrayString m_FrogPortTypeStrings;
     m_FrogPortTypeStrings.Add(_("&Standard"));
@@ -1892,20 +1902,20 @@ void SwitchDialog::CreateControls()
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer219 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer221 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer219, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer221, 0, wxALIGN_RIGHT|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer219->AddButton(m_Cancel);
+    itemStdDialogButtonSizer221->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer219->AddButton(m_OK);
+    itemStdDialogButtonSizer221->AddButton(m_OK);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer219->AddButton(m_Apply);
+    itemStdDialogButtonSizer221->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer219->Realize();
+    itemStdDialogButtonSizer221->Realize();
 
 ////@end SwitchDialog content construction
 }

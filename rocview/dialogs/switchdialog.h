@@ -422,6 +422,7 @@ public:
     wxSpinCtrl* m_Addr1Pol2;
     wxSpinCtrl* m_Port1Pol2;
     wxRadioBox* m_Gate1Pol2;
+    wxCheckBox* m_FrogAsSwitch;
     wxCheckBox* m_FrogAccessory;
     wxRadioBox* m_FrogPortType;
     wxButton* m_Cancel;

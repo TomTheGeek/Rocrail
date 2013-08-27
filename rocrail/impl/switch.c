@@ -816,37 +816,65 @@ static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean rel
   }
 
   if( addrpol1 > 0 || portpol1 > 0 ) {
-    iONode cmd = NodeOp.inst(  wOutput.name(), NULL, ELEMENT_NODE );
+    iONode cmd = NULL;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "polarise: frog=%d addr1=%d addr2=%d relays1=%d relays2=%d", frog, addrpol1, addrpol2, relays1, relays2 );
-    wOutput.setiid( cmd, wSwitch.getfrogiid( data->props ) );
-    if( wSwitch.getbuspol(data->props) > 0 )
-      wOutput.setbus( cmd, wSwitch.getbuspol(data->props));
-    else
-      wOutput.setbus( cmd, wSwitch.getbus(data->props));
-    wOutput.setaddr( cmd, addrpol1);
-    wOutput.setport( cmd, portpol1);
-    wOutput.setgate( cmd, gatepol1);
-    wOutput.setporttype( cmd, wSwitch.getfrogporttype(data->props));
-    wOutput.setaccessory( cmd, wSwitch.isfrogaccessory(data->props));
-    wOutput.setcmd( cmd, relays1?wOutput.on:wOutput.off);
+    if( wSwitch.isfrogswitch(data->props) ) {
+      cmd = NodeOp.inst(  wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setiid( cmd, wSwitch.getfrogiid( data->props ) );
+      if( wSwitch.getbuspol(data->props) > 0 )
+        wSwitch.setbus( cmd, wSwitch.getbuspol(data->props));
+      else
+        wSwitch.setbus( cmd, wSwitch.getbus(data->props));
+      wSwitch.setaddr1( cmd, addrpol1);
+      wSwitch.setport1( cmd, portpol1);
+      wSwitch.setcmd( cmd, relays1?wSwitch.turnout:wSwitch.straight);
+    }
+    else {
+      cmd = NodeOp.inst(  wOutput.name(), NULL, ELEMENT_NODE );
+      wOutput.setiid( cmd, wSwitch.getfrogiid( data->props ) );
+      if( wSwitch.getbuspol(data->props) > 0 )
+        wOutput.setbus( cmd, wSwitch.getbuspol(data->props));
+      else
+        wOutput.setbus( cmd, wSwitch.getbus(data->props));
+      wOutput.setaddr( cmd, addrpol1);
+      wOutput.setport( cmd, portpol1);
+      wOutput.setgate( cmd, gatepol1);
+      wOutput.setporttype( cmd, wSwitch.getfrogporttype(data->props));
+      wOutput.setaccessory( cmd, wSwitch.isfrogaccessory(data->props));
+      wOutput.setcmd( cmd, relays1?wOutput.on:wOutput.off);
+    }
     ControlOp.cmd( control, cmd, &error );
     ThreadOp.sleep(50);
   }
 
   if( addrpol2 > 0 || portpol2 > 0 ) {
-    iONode cmd = NodeOp.inst(  wOutput.name(), NULL, ELEMENT_NODE );
-    wOutput.setiid( cmd, wSwitch.getfrogiid( data->props ) );
-    if( wSwitch.getbuspol(data->props) > 0 )
-      wOutput.setbus( cmd, wSwitch.getbuspol(data->props));
-    else
-      wOutput.setbus( cmd, wSwitch.getbus(data->props));
-    wOutput.setaddr( cmd, addrpol2);
-    wOutput.setport( cmd, portpol2);
-    wOutput.setgate( cmd, gatepol2);
-    wOutput.setporttype( cmd, wSwitch.getfrogporttype(data->props));
-    wOutput.setaccessory( cmd, wSwitch.isfrogaccessory(data->props));
-    wOutput.setcmd( cmd, relays2?wOutput.on:wOutput.off);
+    iONode cmd = NULL;
+    if( wSwitch.isfrogswitch(data->props) ) {
+      cmd = NodeOp.inst(  wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setiid( cmd, wSwitch.getfrogiid( data->props ) );
+      if( wSwitch.getbuspol(data->props) > 0 )
+        wSwitch.setbus( cmd, wSwitch.getbuspol(data->props));
+      else
+        wSwitch.setbus( cmd, wSwitch.getbus(data->props));
+      wSwitch.setaddr1( cmd, addrpol2);
+      wSwitch.setport1( cmd, portpol2);
+      wSwitch.setcmd( cmd, relays2?wSwitch.turnout:wSwitch.straight);
+    }
+    else {
+      cmd = NodeOp.inst(  wOutput.name(), NULL, ELEMENT_NODE );
+      wOutput.setiid( cmd, wSwitch.getfrogiid( data->props ) );
+      if( wSwitch.getbuspol(data->props) > 0 )
+        wOutput.setbus( cmd, wSwitch.getbuspol(data->props));
+      else
+        wOutput.setbus( cmd, wSwitch.getbus(data->props));
+      wOutput.setaddr( cmd, addrpol2);
+      wOutput.setport( cmd, portpol2);
+      wOutput.setgate( cmd, gatepol2);
+      wOutput.setporttype( cmd, wSwitch.getfrogporttype(data->props));
+      wOutput.setaccessory( cmd, wSwitch.isfrogaccessory(data->props));
+      wOutput.setcmd( cmd, relays2?wOutput.on:wOutput.off);
+    }
     ControlOp.cmd( control, cmd, &error );
     ThreadOp.sleep(50);
   }
