@@ -1835,8 +1835,19 @@ static void __watchdog( void* threadinst ) {
           for( i = 0; i < cnt - 1; i++ ) {
             section = (iONode)ListOp.get(data->sectionList, i);
             if( wStageSection.getlcid(section) != NULL && StrOp.len(wStageSection.getlcid(section)) > 0 ) {
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Watchdog triggers a move in staging block \"%s\"...", data->id );
               __moveStageLocos((iIBlockBase)stage);
               break;
+            }
+          }
+        }
+        else if( wStageSection.getlcid(section) != NULL && StrOp.len(wStageSection.getlcid(section)) > 0 ) {
+          iOLoc loco = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(section), NULL, False );
+          if( loco != NULL && !LocOp.isAutomode(loco) ) {
+            if( ModelOp.isAuto( AppOp.getModel() ) && !StrOp.equals( wStage.getexitstate(data->props), wBlock.closed )  ) {
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                  "Watchdog triggers a move in staging block \"%s\" for %s...", data->id, LocOp.getId(loco) );
+              __moveStageLocos((iIBlockBase)stage);
             }
           }
         }
