@@ -63,9 +63,9 @@ void RocNetDlg::initLabels() {
   m_Address->SetLabel(wxGetApp().getMsg( "address" ));
   m_Port->SetLabel(wxGetApp().getMsg( "port" ));
 
-  m_NodeList->InsertColumn(0, wxGetApp().getMsg( "nodenumber" ), wxLIST_FORMAT_RIGHT );
+  m_NodeList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(1, wxGetApp().getMsg( "vendor" ), wxLIST_FORMAT_LEFT );
-  m_NodeList->InsertColumn(2, wxGetApp().getMsg( "class" ), wxLIST_FORMAT_LEFT );
+  m_NodeList->InsertColumn(2, wxGetApp().getMsg( "product" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(3, wxGetApp().getMsg( "version" ), wxLIST_FORMAT_LEFT );
 
 }
