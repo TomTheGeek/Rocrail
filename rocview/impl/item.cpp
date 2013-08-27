@@ -2197,7 +2197,10 @@ void Symbol::OnInfo(wxCommandEvent& event) {
     iONode track = wTurntable.gettrack( m_Props );
     while( track != NULL ) {
       char* tmp = msg;
-      msg = StrOp.fmt( "%s\n%s", msg==NULL?"":msg, wTTTrack.getdesc( track ) );
+      if( SystemOp.isWindows() )
+        msg = StrOp.fmt( "%s\r\n%s", msg==NULL?"":msg, wTTTrack.getdesc( track ) );
+      else
+        msg = StrOp.fmt( "%s\n%s", msg==NULL?"":msg, wTTTrack.getdesc( track ) );
       StrOp.free(tmp);
       track = wTurntable.nexttrack( m_Props, track );
     }
@@ -2795,7 +2798,11 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     while( section != NULL ) {
       iONode l_section = wStage.getsection(m_Props);
       if(wStageSection.getlcid(section) != NULL && StrOp.len( wStageSection.getlcid(section) ) > 0 ) {
-        char* formatS = StrOp.fmt("\n%s: %s", wStageSection.getid(section), wStageSection.getlcid(section));
+        char* formatS = NULL;
+        if( SystemOp.isWindows() )
+          formatS = StrOp.fmt("\r\n%s: %s", wStageSection.getid(section), wStageSection.getlcid(section));
+        else
+          formatS = StrOp.fmt("\n%s: %s", wStageSection.getid(section), wStageSection.getlcid(section));
         nrlocos++;
         m_Tip = StrOp.cat( m_Tip, formatS);
         StrOp.free(formatS);
