@@ -221,6 +221,8 @@ static iONode _parseLine(const char* scriptline) {
         /* lc,<id>,useschedule,<scid> */
         if( StrOp.equalsi(wLoc.useschedule, parm2) )
           wLoc.setscheduleid(node, parm3);
+        if( StrOp.equalsi(wLoc.assigntrain, parm2) )
+          wLoc.settrain(node, parm3);
       }
     }
 
