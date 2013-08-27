@@ -892,6 +892,17 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       else if( StrOp.equals(wAction.loco_carcount, wAction.getcmd(data->action) ) ) {
         LocOp.setCarCount(lc, atoi(wAction.getparam(data->action)));
       }
+      else if( StrOp.equals(wLoc.assigntrain, wAction.getcmd(data->action) ) ) {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+        wLoc.setcmd( cmd, wLoc.assigntrain );
+        wLoc.settrain( cmd, wAction.getparam(data->action) );
+        LocOp.cmd(lc, cmd);
+      }
+      else if( StrOp.equals(wLoc.releasetrain, wAction.getcmd(data->action) ) ) {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+        wLoc.setcmd( cmd, wLoc.releasetrain );
+        LocOp.cmd(lc, cmd);
+      }
       else if( StrOp.equals(wLoc.stop, wAction.getcmd(data->action) ) ) {
         LocOp.stop(lc, False);
       }
