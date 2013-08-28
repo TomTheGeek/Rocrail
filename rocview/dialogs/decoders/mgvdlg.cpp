@@ -68,6 +68,7 @@ MGVDlg::MGVDlg( wxWindow* parent ):mgvdlggen( parent ) {
   }
 
   m_IID->SetValue(wxString(wMGV.getiid(mgv),wxConvUTF8));
+  m_Bus->SetValue(wxString::Format("%d", wMGV.getbus(mgv)));
   m_Addr1->SetValue(wMGV.getaddr1(mgv));
   m_Addr2->SetValue(wMGV.getaddr2(mgv));
   m_Addr3->SetValue(wMGV.getaddr3(mgv));
@@ -93,6 +94,7 @@ void MGVDlg::SetBit(int addr, int port, bool on) {
   /* Address-Port, Direction = on, Output = true */
   iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.setiid(cmd, m_IID->GetValue().mb_str(wxConvUTF8));
+  wSwitch.setbus(cmd, atoi(m_Bus->GetValue().mb_str(wxConvUTF8)));
   wSwitch.setaddr1( cmd, addr );
   wSwitch.setport1( cmd, port );
   wSwitch.setsinglegate(cmd, m_SingleGate->IsChecked()?True:False);
@@ -135,6 +137,8 @@ void MGVDlg::initLabels() {
   m_MGVBook->SetPageText( 1, wxGetApp().getMsg( "servo" ) );
 
   // Setup
+  m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
+  m_labBus->SetLabel( wxGetApp().getMsg( "bus" ) );
   m_labAddress->SetLabel( wxGetApp().getMsg( "address" ) );
   m_labPort->SetLabel( wxGetApp().getMsg( "port" ) );
   m_labProgramming->SetLabel( wxGetApp().getMsg( "programming" ) );
@@ -370,6 +374,7 @@ void MGVDlg::OnOK( wxCommandEvent& event ){
   iONode mgv = wGui.getmgv( wxGetApp().getIni() );
 
   wMGV.setiid(mgv, m_IID->GetValue().mb_str(wxConvUTF8));
+  wMGV.setbus(mgv, atoi(m_Bus->GetValue().mb_str(wxConvUTF8)));
   wMGV.setaddr1(mgv, m_Addr1->GetValue());
   wMGV.setaddr2(mgv, m_Addr2->GetValue());
   wMGV.setaddr3(mgv, m_Addr3->GetValue());
