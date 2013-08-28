@@ -147,6 +147,11 @@ static void __checkAction( iOFBack inst ) {
   /* loop over all actions */
   while( fbaction != NULL ) {
     int counter = atoi(wActionCtrl.getstate( fbaction ));
+    if( counter == 0 && StrOp.len(wActionCtrl.getstate( fbaction )) > 0 && wActionCtrl.getstate( fbaction )[0] != '0' ||
+        StrOp.len(wActionCtrl.getstate( fbaction )) == 0 )
+    {
+      counter = -1;
+    }
 
     if( StrOp.equals( data->state?"on":"off"    , wActionCtrl.getstate( fbaction ) ) ||
         StrOp.equals( data->state?"true":"false", wActionCtrl.getstate( fbaction ) ) ||
@@ -178,8 +183,8 @@ static void __checkAction( iOFBack inst ) {
           data->counter, data->carcount, data->countedcars, data->wheelcount );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
-          wActionCtrl.getstate( fbaction ), data->state?"on/true":"off/false" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s] statecounter=%d counter=%d",
+          wActionCtrl.getstate( fbaction ), data->state?"on/true":"off/false", counter, data->counter );
     }
 
     fbaction = wFeedback.nextactionctrl( data->props, fbaction );
