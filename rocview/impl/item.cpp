@@ -2198,7 +2198,7 @@ void Symbol::OnInfo(wxCommandEvent& event) {
     while( track != NULL ) {
       char* tmp = msg;
       if( SystemOp.isWindows() )
-        msg = StrOp.fmt( "%s\r\n%s", msg==NULL?"":msg, wTTTrack.getdesc( track ) );
+        msg = StrOp.fmt( "%s, %s", msg==NULL?"":msg, wTTTrack.getdesc( track ) );
       else
         msg = StrOp.fmt( "%s\n%s", msg==NULL?"":msg, wTTTrack.getdesc( track ) );
       StrOp.free(tmp);
@@ -2800,7 +2800,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       if(wStageSection.getlcid(section) != NULL && StrOp.len( wStageSection.getlcid(section) ) > 0 ) {
         char* formatS = NULL;
         if( SystemOp.isWindows() )
-          formatS = StrOp.fmt("\r\n%s: %s", wStageSection.getid(section), wStageSection.getlcid(section));
+          formatS = StrOp.fmt(", %s: %s", wStageSection.getid(section), wStageSection.getlcid(section));
         else
           formatS = StrOp.fmt("\n%s: %s", wStageSection.getid(section), wStageSection.getlcid(section));
         nrlocos++;
