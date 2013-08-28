@@ -525,8 +525,8 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   switch( action ) {
   case RN_STATIONARY_QUERYIDS:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "Identified: rocnetid=%d class=%s vid=%d version=%d.%d", sndr,
-        rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2], rn[RN_PACKET_DATA+3] );
+        "Identified: rocnetid=%d class=%s vid=%d version=%d.%d nrio=%d", sndr,
+        rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2], rn[RN_PACKET_DATA+3], rn[RN_PACKET_DATA+4] );
     StrOp.fmtb( key, "%d-%d", rn[RN_PACKET_NETID], sndr);
     if( data->run && !MapOp.haskey( data->nodemap, key ) ) {
       iONode rnnode = NodeOp.inst( wRocNetNode.name(), data->ini, ELEMENT_NODE );
@@ -535,6 +535,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       wRocNetNode.setvendor(rnnode, rn[RN_PACKET_DATA+1]);
       StrOp.fmtb( version, "%d.%d", rn[RN_PACKET_DATA+2], rn[RN_PACKET_DATA+3] );
       wRocNetNode.setversion(rnnode, version);
+      wRocNetNode.setnrio(rnnode, rn[RN_PACKET_DATA+4]);
       MapOp.put( data->nodemap, key, (obj)rnnode);
       NodeOp.addChild( data->ini, rnnode );
     }

@@ -67,6 +67,7 @@ void RocNetDlg::initLabels() {
   m_NodeList->InsertColumn(1, wxGetApp().getMsg( "vendor" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(2, wxGetApp().getMsg( "product" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(3, wxGetApp().getMsg( "version" ), wxLIST_FORMAT_LEFT );
+  m_NodeList->InsertColumn(4, wxT("I/O"), wxLIST_FORMAT_RIGHT );
 
 }
 
@@ -207,6 +208,7 @@ void RocNetDlg::initNodeList() {
     m_NodeList->SetItem( index, 1, wxString( m_Vendor[wRocNetNode.getvendor(rnnode)&0xFF],wxConvUTF8) );
     m_NodeList->SetItem( index, 2, wxString(wRocNetNode.getclass(rnnode),wxConvUTF8));
     m_NodeList->SetItem( index, 3, wxString(wRocNetNode.getversion(rnnode),wxConvUTF8));
+    m_NodeList->SetItem( index, 4, wxString::Format(_T("%d"), wRocNetNode.getnrio(rnnode)));
     m_NodeList->SetItemPtrData(index, (wxUIntPtr)rnnode);
     index++;
     rnnode = wRocNet.nextrocnetnode(m_Props, rnnode);
@@ -215,6 +217,7 @@ void RocNetDlg::initNodeList() {
   m_NodeList->SetColumnWidth(1, wxLIST_AUTOSIZE);
   m_NodeList->SetColumnWidth(2, wxLIST_AUTOSIZE);
   m_NodeList->SetColumnWidth(3, wxLIST_AUTOSIZE);
+  m_NodeList->SetColumnWidth(4, wxLIST_AUTOSIZE);
 
 }
 

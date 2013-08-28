@@ -551,11 +551,12 @@ static void __scanner( void* threadinst ) {
         rnSenderAddresToPacket( data->id, msg, 0 );
         msg[RN_PACKET_ACTION] = RN_STATIONARY_QUERYIDS;
         msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-        msg[RN_PACKET_LEN] = 4;
+        msg[RN_PACKET_LEN] = 5;
         msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;
         msg[RN_PACKET_DATA+1] = 70;
         msg[RN_PACKET_DATA+2] = versionH;
         msg[RN_PACKET_DATA+3] = versionL;
+        msg[RN_PACKET_DATA+4] = 16;
         __sendRN(rocnetnode, msg);
       }
     }

@@ -97,6 +97,8 @@
 #define RN_PROGRAMMING_WRITE  1
 #define RN_PROGRAMMING_READ   2
 #define RN_PROGRAMMING_COPY   3
+#define RN_PROGRAMMING_RPORT  4
+#define RN_PROGRAMMING_WPORT  5
 
 
 /* extended packet offsets */

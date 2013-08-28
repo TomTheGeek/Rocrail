@@ -616,6 +616,7 @@
           <var name="class" vt="string" defval="" remark="Class ID."/>
           <var name="vendor" vt="int" defval="0" remark="NMRA vendor ID."/>
           <var name="version" vt="string" defval="0.0" remark="Software version."/>
+          <var name="nrio" vt="int" defval="0" range="0-255" remark="Number of I/Os"/>
         </rocnetnode>
         <portsetup wrappername="PortSetup" cardinality="n">
           <var name="port" vt="int" defval="1" range="1-*"/>
