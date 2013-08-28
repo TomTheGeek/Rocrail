@@ -151,7 +151,7 @@ static void __checkAction( iOFBack inst ) {
     if( StrOp.equals( data->state?"on":"off"    , wActionCtrl.getstate( fbaction ) ) ||
         StrOp.equals( data->state?"true":"false", wActionCtrl.getstate( fbaction ) ) ||
         data->state && StrOp.len(wActionCtrl.getstate( fbaction )) == 0 ||
-        counter > 0 && data->counter == counter )
+        counter >= 0 && data->counter == counter )
     {
       if( data->counter == counter && wActionCtrl.isreset( fbaction ) ) {
         /* reset counter */
