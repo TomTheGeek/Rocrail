@@ -175,6 +175,33 @@ void RocnetNodeDlg::initValues() {
 }
 
 void RocnetNodeDlg::event(iONode node) {
+  char* s = NodeOp.toEscString(node);
+  TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "event: \n%s", s );
+  StrOp.free(s);
+  if( StrOp.equals( wProgram.name(), NodeOp.getName(node)) && wProgram.getlntype(node) == wProgram.lntype_rocnet ) {
+    wxSpinCtrl* l_IO[] = { NULL, m_IO1, m_IO2, m_IO3, m_IO4, m_IO5, m_IO6, m_IO7, m_IO8};
+    wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
 
+    char key[32] = {'\0'};
+    if( wProgram.getcmd(node) == wProgram.nvget ) {
+      for( int i = 0; i < 8; i++ ) {
+        StrOp.fmtb(key, "val%d", 1 + i*4);
+        int port = NodeOp.getInt( node, key, 0);
+        StrOp.fmtb(key, "val%d", 2 + i*4);
+        int ionr = NodeOp.getInt( node, key, 0);
+        StrOp.fmtb(key, "val%d", 3 + i*4);
+        int type = NodeOp.getInt( node, key, 0);
+        StrOp.fmtb(key, "val%d", 4 + i*4);
+        int delay = NodeOp.getInt( node, key, 0);
+
+        if( port != 0 && port < 9) {
+          TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "set ionr[%d]=%d", port, ionr );
+          l_IO[port]->SetValue(ionr);
+          TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "set delay[%d]=%d", port, delay );
+          l_Delay[port]->SetValue(delay);
+        }
+      }
+    }
+  }
 }
 

@@ -637,7 +637,7 @@ static void __evaluatePTStationary( iOrocNet rocnet, byte* rn ) {
     iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     int nrports = rn[RN_PACKET_LEN] / 4;
     int i = 0;
-    int idx = 0;
+    int idx = 1;
     char key[32] = {'\0'};
     wProgram.setmodid(node, sndr);
     wProgram.setcmd( node, wProgram.nvget );

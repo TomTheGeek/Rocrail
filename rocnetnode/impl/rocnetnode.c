@@ -328,7 +328,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_ACTION] = RN_PROGRAMMING_RPORT;
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
     msg[RN_PACKET_LEN] = ((to-from)+1)*4;
-    for( i = from; i < to; i++ ) {
+    for( i = from; i <= to; i++ ) {
       if( data->ports[i] != NULL ) {
         msg[RN_PACKET_DATA + 0 + idx * 4] = i;
         msg[RN_PACKET_DATA + 1 + idx * 4] = data->ports[i]->ionr;
