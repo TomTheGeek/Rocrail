@@ -37,6 +37,8 @@
 #include "rocs/public/strtok.h"
 #include "rocutils/public/vendors.h"
 
+#include "rocview/dialogs/decoders/rocnetnodedlg.h"
+
 RocNetDlg::RocNetDlg( wxWindow* parent, iONode props, const char* devices ):rocnetdlggen( parent ) {
 
   m_Props = props;
@@ -195,8 +197,9 @@ void RocNetDlg::OnOK( wxCommandEvent& event ) {
 }
 
 void RocNetDlg::onNodeListSelected( wxListEvent& event ) {
-
-
+  RocnetNodeDlg* dlg = new RocnetNodeDlg(this);
+  dlg->ShowModal();
+  dlg->Destroy();
 }
 
 void RocNetDlg::initNodeList() {
