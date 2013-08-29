@@ -1415,7 +1415,7 @@
                                                 <property name="proportion">0</property>
                                                 <object class="wxRadioBox" expanded="0">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;I&quot; &quot;O&quot;</property>
+                                                    <property name="choices">&quot;O&quot; &quot;I&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -1650,7 +1650,7 @@
                                                 <property name="proportion">0</property>
                                                 <object class="wxRadioBox" expanded="0">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;I&quot; &quot;O&quot;</property>
+                                                    <property name="choices">&quot;O&quot; &quot;I&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -1665,7 +1665,7 @@
                                                     <property name="name">m_Type2</property>
                                                     <property name="permission">protected</property>
                                                     <property name="pos"></property>
-                                                    <property name="selection">0</property>
+                                                    <property name="selection">1</property>
                                                     <property name="size"></property>
                                                     <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
@@ -1885,7 +1885,7 @@
                                                 <property name="proportion">0</property>
                                                 <object class="wxRadioBox" expanded="0">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;I&quot; &quot;O&quot;</property>
+                                                    <property name="choices">&quot;O&quot; &quot;I&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -1900,7 +1900,7 @@
                                                     <property name="name">m_Type3</property>
                                                     <property name="permission">protected</property>
                                                     <property name="pos"></property>
-                                                    <property name="selection">0</property>
+                                                    <property name="selection">1</property>
                                                     <property name="size"></property>
                                                     <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
@@ -2120,7 +2120,7 @@
                                                 <property name="proportion">0</property>
                                                 <object class="wxRadioBox" expanded="0">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;I&quot; &quot;O&quot;</property>
+                                                    <property name="choices">&quot;O&quot; &quot;I&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -2135,7 +2135,7 @@
                                                     <property name="name">m_Type4</property>
                                                     <property name="permission">protected</property>
                                                     <property name="pos"></property>
-                                                    <property name="selection">0</property>
+                                                    <property name="selection">1</property>
                                                     <property name="size"></property>
                                                     <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
@@ -2355,7 +2355,7 @@
                                                 <property name="proportion">0</property>
                                                 <object class="wxRadioBox" expanded="0">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;I&quot; &quot;O&quot;</property>
+                                                    <property name="choices">&quot;O&quot; &quot;I&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -2370,7 +2370,7 @@
                                                     <property name="name">m_Type5</property>
                                                     <property name="permission">protected</property>
                                                     <property name="pos"></property>
-                                                    <property name="selection">0</property>
+                                                    <property name="selection">1</property>
                                                     <property name="size"></property>
                                                     <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
@@ -2590,7 +2590,7 @@
                                                 <property name="proportion">0</property>
                                                 <object class="wxRadioBox" expanded="0">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;I&quot; &quot;O&quot;</property>
+                                                    <property name="choices">&quot;O&quot; &quot;I&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -2605,7 +2605,7 @@
                                                     <property name="name">m_Type6</property>
                                                     <property name="permission">protected</property>
                                                     <property name="pos"></property>
-                                                    <property name="selection">0</property>
+                                                    <property name="selection">1</property>
                                                     <property name="size"></property>
                                                     <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
@@ -2825,7 +2825,7 @@
                                                 <property name="proportion">0</property>
                                                 <object class="wxRadioBox" expanded="0">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;I&quot; &quot;O&quot;</property>
+                                                    <property name="choices">&quot;O&quot; &quot;I&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -2840,7 +2840,7 @@
                                                     <property name="name">m_Type7</property>
                                                     <property name="permission">protected</property>
                                                     <property name="pos"></property>
-                                                    <property name="selection">0</property>
+                                                    <property name="selection">1</property>
                                                     <property name="size"></property>
                                                     <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
@@ -3060,7 +3060,7 @@
                                                 <property name="proportion">0</property>
                                                 <object class="wxRadioBox" expanded="0">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;I&quot; &quot;O&quot;</property>
+                                                    <property name="choices">&quot;O&quot; &quot;I&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -3075,7 +3075,7 @@
                                                     <property name="name">m_Type8</property>
                                                     <property name="permission">protected</property>
                                                     <property name="pos"></property>
-                                                    <property name="selection">0</property>
+                                                    <property name="selection">1</property>
                                                     <property name="size"></property>
                                                     <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>

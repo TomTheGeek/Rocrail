@@ -43,6 +43,8 @@ class RocnetNodeDlg : public rocnetnodegen
   void initLabels();
   void initValues();
   void initNodeList();
+  void initPorts();
+  int m_PortGroup;
 
 	protected:
 		// Handlers for rocnetnodegen events.
