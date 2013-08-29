@@ -644,8 +644,70 @@ static Boolean locoFnChecks( const char* state ) {
   return rc ;
 }
 
+
+static Boolean isValidScheduleId( iOAnalyse inst, const char* lcid, const char* lcAcCondSchedule ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getsclist(data->plan);
+  iOStrTok tok = StrTokOp.inst( lcAcCondSchedule, ':');
+  const char* scstate = NULL;
+  const char* scid = NULL;
+  int scidx = -1;
+  Boolean rc = False;
+
+  if( StrTokOp.hasMoreTokens(tok) )
+    scstate = StrTokOp.nextToken(tok);
+  if( StrTokOp.hasMoreTokens(tok) )
+    scid = StrTokOp.nextToken(tok);
+  if( StrTokOp.hasMoreTokens(tok) )
+    scidx = atoi(StrTokOp.nextToken(tok));
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
+      "isValidScheduleId for lcid[%s]: scstate[%s] scid[%s] scidx[%d]", lcid, scstate, scid, scidx );
+
+  if( scid != NULL ) {
+    /* verify schedule id (scid) and optional index (scidx) */
+
+    int listSize = 0;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidScheduleId: Checking [%08.8X]", list );
+    if( list != NULL ) {
+      listSize = NodeOp.getChildCnt( list );
+    }
+
+    if( listSize > 0 ) {
+      iONode node;
+      const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+      int i = 0;
+      Boolean thisNodeChanged ;
+
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidScheduleId: Checking %d %s nodes", listSize, listType );
+      for( i = 0 ; i < listSize ; i++ ) {
+        node = NodeOp.getChild(list, i);
+        if( node ) {
+          int acIdx = 0;
+          iONode action = wSchedule.getactionctrl( node );
+          const char* id = wSchedule.getid( node);
+          int scEntries = NodeOp.getChildCnt(node);
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidScheduleId: id[%s] #entries[%d]", id, scEntries );
+          if( StrOp.equals( id, scid ) && ( ( -1 == scidx ) || ( scEntries >= scidx ) ) ) {
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidScheduleId: rc = True" );
+            rc = True ;
+          }
+        }
+      }
+    }
+
+    if( rc == False ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco id [%s] no schedule %s:%d", lcid, scid, scidx );
+    }
+  }
+  StrTokOp.base.del(tok);
+
+  return rc;
+}
+
 /* conID == loco condState(loco) [min, mid, cruise, max, consist(???)][forwards|reverse] [+|-] */
-static Boolean checkActionCondLoco( const char* lcid, const char* state ) {
+static Boolean checkActionCondLoco( iOAnalyse inst, const char* acLcid, const char* lcid, const char* state ) {
   if( state == NULL || StrOp.len( state ) == 0 )
     return True;
 
@@ -671,10 +733,11 @@ static Boolean checkActionCondLoco( const char* lcid, const char* state ) {
         ! StrOp.equals( token, "forwards"   ) &&
         ! StrOp.equals( token, "reverse"    ) &&
         ! StrOp.equals( token, "+"          ) &&
-        ! StrOp.equals( token, "-"          )
+        ! StrOp.equals( token, "-"          ) &&
+        ! ( StrOp.startsWith( token, "schedule:" ) && isValidScheduleId( inst, lcid, token ) )
       ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondLoco: lc[%s] unsupported state[%s] will always be treated as valid. You should use empty state.",
-          lcid, token );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondLoco for lc[%s]: lc[%s] invalid state[%s]",
+          acLcid, lcid, token );
       rc = False;
     }
   }
@@ -687,7 +750,7 @@ static Boolean checkActionCondLoco( const char* lcid, const char* state ) {
 /* conID == "*"  condState(loco_wildcard) == [][diesel, steam, electric][forwards|reverse]][+|-][#addr[,#addr]][#addr-addr] */
 static Boolean checkActionCondLocoWc( iOAnalyse inst, const char* acLcid, const char* state ) {
   if( state == NULL || StrOp.len( state ) == 0 ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkActionCondLocoWc: lc[%s] state[%s] is empty state.",
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkActionCondLocoWc for lc[%s]: lc[*] state[%s] is empty state.",
         acLcid, state );
     return True;
   }
@@ -702,8 +765,6 @@ static Boolean checkActionCondLocoWc( iOAnalyse inst, const char* acLcid, const 
     )
     return locoFnChecks( state );
 
-  iOAnalyseData data = Data(inst);
-  iOLoc lc = ModelOp.getLoc( data->model, acLcid, NULL, False);
   Boolean rc = True;
 
   iOStrTok tok = StrTokOp.inst( state, ',');
@@ -715,9 +776,10 @@ static Boolean checkActionCondLocoWc( iOAnalyse inst, const char* acLcid, const 
         ! StrOp.equals( token, "forwards" ) &&
         ! StrOp.equals( token, "reverse"  ) &&
         ! StrOp.equals( token, "+"        ) &&
-        ! StrOp.equals( token, "-"        )
+        ! StrOp.equals( token, "-"        ) &&
+        ! ( StrOp.startsWith( token, "schedule:" ) && isValidScheduleId( inst, acLcid, token ) )
       ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondLocoWc: lc[%s] unsupported state[%s] will always be treated as valid. You should use empty state.",
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondLocoWcfor lc[%s]: lc[*] invalid state[%s]",
           acLcid, token );
       rc = False;
     }
@@ -820,14 +882,15 @@ static int checkAction( iOAnalyse inst, int acIdx, iONode action, Boolean repair
         condOK = True;
     }else if ( StrOp.equals( condType, wLoc.name() ) ) {
       ptr = (char *) ModelOp.getLoc( data->model, condId, NULL, False );
-      if( ptr && checkActionCondLoco( condId, condState ) ) {
+      if( ptr && checkActionCondLoco( inst, acLcid, condId, condState ) ) {
         condOK = True;
-      }else if( StrOp.equals( condId, "*" ) )
+      }else if( StrOp.equals( condId, "*" ) ) {
         /* "*" is always a valid loco */
         ptr = (char *) ~0 ;
         if( checkActionCondLocoWc( inst, acLcid, condState ) ) {
           condOK = True;
         }
+      }
     }else if ( StrOp.equals( condType, wBlock.name() ) ) {
       ptr = (char *) ModelOp.getBlock( data->model, condId );
       if( ptr && checkActionCondBlock( condState ) ) {
@@ -1463,6 +1526,8 @@ static int checkScAction( iOAnalyse inst, Boolean repair ) {
               acIdx++;
               int changes = checkAction( inst, acIdx, entryAction, repair, &checkedTotal );
               if( changes > 0 ) {
+                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something is wrong in actions of schedule[%s] entry[%d] action[%d]",
+                    id, (j+1), acIdx );
                 modifications += changes;
                 thisNodeChanged = True;
               }
