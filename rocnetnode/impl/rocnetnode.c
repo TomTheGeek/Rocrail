@@ -59,6 +59,7 @@
 
 #include "rocnetnode/public/io.h"
 
+#define ROCNETNODEINI "rocnetnode.ini"
 
 static int instCnt = 0;
 
@@ -132,7 +133,7 @@ static Boolean __isThis( iORocNetNode rocnetnode, byte* rn ) {
   return (rnSenderAddrFromPacket(rn, 0) == data->id);
 }
 
-byte* __handleClock( iORocNetNode rocnetnode, byte* rn ) {
+static byte* __handleClock( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int rcpt       = 0;
   int sndr       = 0;
@@ -160,7 +161,7 @@ byte* __handleClock( iORocNetNode rocnetnode, byte* rn ) {
 }
 
 
-byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
+static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int rcpt       = 0;
   int sndr       = 0;
@@ -258,7 +259,21 @@ byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
   return msg;
 }
 
-byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
+static void __saveIni(iORocNetNode rocnetnode) {
+  iORocNetNodeData data = Data(rocnetnode);
+  iOFile iniFile = FileOp.inst( ROCNETNODEINI, OPEN_WRITE );
+
+  if( iniFile != NULL ) {
+    char* iniStr = NodeOp.base.toString( data->ini );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "saving ini %s...", ROCNETNODEINI );
+    FileOp.write( iniFile, iniStr, StrOp.len( iniStr ) );
+    FileOp.close( iniFile );
+    StrOp.free(iniStr);
+  }
+}
+
+
+static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int port       = rn[RN_PACKET_DATA + 3];
   int rcpt       = 0;
@@ -283,7 +298,12 @@ byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
 
     data->id = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
     data->identack = False;
-    /* ToDo: Save the rocnetnode.ini to persistent the new ID. */
+    /* Save the rocnetnode.ini to persistent the new ID. */
+    {
+      iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+      wRocNet.setid(rocnet, data->id);
+      __saveIni(rocnetnode);
+    }
     break;
   }
 
@@ -291,7 +311,7 @@ byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
 }
 
 
-byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
+static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int port       = rn[RN_PACKET_DATA + 3];
   int rcpt       = 0;
@@ -339,7 +359,7 @@ byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
   return msg;
 }
 
-byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
+static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int port       = rn[RN_PACKET_DATA + 3];
   int rcpt       = 0;
@@ -704,7 +724,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   {
     char* iniXml = NULL;
     iODoc iniDoc = NULL;
-    iOFile iniFile = FileOp.inst( "rocnetnode.ini", True );
+    iOFile iniFile = FileOp.inst( ROCNETNODEINI, True );
     if( iniFile != NULL ) {
       iniXml = allocMem( FileOp.size( iniFile ) + 1 );
       FileOp.read( iniFile, iniXml, FileOp.size( iniFile ) );
@@ -722,7 +742,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       data->ini = DocOp.getRootNode( iniDoc );
     }
     else {
-      printf( "Invalid ini file! [%s]", "rocnetnode.ini" );
+      printf( "Invalid ini file! [%s]", ROCNETNODEINI );
       return -1;
     }
   }
