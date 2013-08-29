@@ -76,9 +76,19 @@ void RocnetNodeDlg::onPortNext( wxCommandEvent& event )
 // TODO: Implement onPortNext
 }
 
-void RocnetNodeDlg::onPortRead( wxCommandEvent& event )
-{
-// TODO: Implement onPortRead
+void RocnetNodeDlg::onPortRead( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
+  wProgram.setcmd( cmd, wProgram.nvget );
+  wProgram.setval1(cmd, 1 ); // range
+  wProgram.setval2(cmd, 8 );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
 }
 
 void RocnetNodeDlg::onPortWrite( wxCommandEvent& event )

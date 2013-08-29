@@ -282,6 +282,10 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
   int actionType = rnActionTypeFromPacket(rn);
   Boolean isThis = __isThis( rocnetnode, rn);
   byte* msg = NULL;
+  int i = 0;
+  int from = 0;
+  int to = 0;
+  int idx = 0;
 
   rcpt = rnReceipientAddrFromPacket(rn, 0);
   sndr = rnSenderAddrFromPacket(rn, 0);
@@ -303,6 +307,32 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
       wRocNet.setid(rocnet, data->id);
       __saveIni(rocnetnode);
+    }
+    break;
+
+  case RN_PROGRAMMING_RPORT:
+    from = rn[RN_PACKET_DATA+0];
+    to   = rn[RN_PACKET_DATA+1];
+    if( from > to ) {
+      from = rn[RN_PACKET_DATA+1];
+      to   = rn[RN_PACKET_DATA+0];
+    }
+
+    msg = allocMem(128);
+    msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+    rnReceipientAddresToPacket( sndr, msg, 0 );
+    rnSenderAddresToPacket( data->id, msg, 0 );
+    msg[RN_PACKET_ACTION] = RN_PROGRAMMING_RPORT;
+    msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+    msg[RN_PACKET_LEN] = ((to-from)+1)*4;
+    for( i = from; i < to; i++ ) {
+      if( data->ports[i] != NULL ) {
+        msg[RN_PACKET_DATA + 0 + idx * 4] = i;
+        msg[RN_PACKET_DATA + 1 + idx * 4] = data->ports[i]->ionr;
+        msg[RN_PACKET_DATA + 2 + idx * 4] = data->ports[i]->type;
+        msg[RN_PACKET_DATA + 3 + idx * 4] = data->ports[i]->delay;
+      }
+      idx++;
     }
     break;
   }
