@@ -338,6 +338,32 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "loco type [%s] does %smatch condtion [%s]", LocOp.getEngine(lc), rc?"":"not ", state );
           }
+          else if( lc != NULL && ( StrOp.startsWithi( state, "schedule" ) ) ) {
+            iOStrTok tok = StrTokOp.inst(state, ':');
+            const char* scstate = NULL;
+            const char* scid = NULL;
+            int scidx = -1;
+            if( StrTokOp.hasMoreTokens(tok) )
+              scstate = StrTokOp.nextToken(tok);
+            if( StrTokOp.hasMoreTokens(tok) )
+              scid = StrTokOp.nextToken(tok);
+            if( StrTokOp.hasMoreTokens(tok) )
+              scidx = atoi(StrTokOp.nextToken(tok));
+            rc = False;
+            if( scid != NULL ) {
+              int lcscidx = 0;
+              const char* lcscid = LocOp.getSchedule(lc, &lcscidx);
+              if( StrOp.equals(scid, lcscid) && (scidx == -1 || scidx == lcscidx) ) {
+                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco id [%s] is in schedule %s:%d", LocOp.getId(lc), lcscid, lcscidx );
+                rc = True;
+              }
+              else {
+                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                    "loco id [%s] is not in schedule %s(%s):%d(%d)", LocOp.getId(lc), scid, lcscid, scidx, lcscidx );
+              }
+            }
+            StrTokOp.base.del(tok);
+          }
           else {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "check if loco id [%s] equals [%s]", id, wActionCtrl.getlcid(actionctrl) );
