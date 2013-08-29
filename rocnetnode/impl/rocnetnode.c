@@ -455,8 +455,8 @@ static void __scanner( void* threadinst ) {
     if( data->iorc == 0 ) {
       for( i = 0; i < 32; i++ ) {
         if( data->ports[i] != NULL && data->ports[i]->type == 0 ) {
-          if( data->ports[i]->pulsetime > 0 && data->ports[i]->state ) {
-            if( data->ports[i]->offtimer + data->ports[i]->pulsetime <= SystemOp.getTick() ) {
+          if( data->ports[i]->delay > 0 && data->ports[i]->state ) {
+            if( data->ports[i]->offtimer + data->ports[i]->delay <= SystemOp.getTick() ) {
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "pulse off port %d", i );
               data->ports[i]->state = False;
               raspiWrite(data->ports[i]->ionr, 0);
@@ -507,7 +507,7 @@ static void __scanner( void* threadinst ) {
           int val = raspiRead(data->ports[i]->ionr);
           Boolean report = inputVal[i] != val;
 
-          if( data->ports[i]->offtime > 0 ) {
+          if( data->ports[i]->delay > 0 ) {
             report = False;
             if( val > 0 ) {
               data->ports[i]->offtimer = SystemOp.getTick();
@@ -517,7 +517,7 @@ static void __scanner( void* threadinst ) {
                 report = True;
               }
             }
-            else if( data->ports[i]->state && data->ports[i]->offtimer + data->ports[i]->offtime <= SystemOp.getTick() ) {
+            else if( data->ports[i]->state && data->ports[i]->offtimer + data->ports[i]->delay <= SystemOp.getTick() ) {
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delayed off port %d", i );
               data->ports[i]->state = False;
               report = True;
@@ -631,8 +631,7 @@ static void __initPorts(iORocNetNode inst) {
         iOPort port = allocMem( sizeof( struct Port) );
         port->port = portnr;
         port->ionr = wPortSetup.getionr(portsetup);
-        port->offtime = wPortSetup.getofftime(portsetup);
-        port->pulsetime = wPortSetup.getpulsetime(portsetup);
+        port->delay = wPortSetup.getdelay(portsetup);
         port->type = wPortSetup.gettype(portsetup);
         port->invert = wPortSetup.isinvert(portsetup);
         data->ports[portnr] = port;
@@ -640,7 +639,7 @@ static void __initPorts(iORocNetNode inst) {
           iomap |= (1 << port->ionr );
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "portsetup: port=%d ionr=%d type=%d offtime=%d pulsetime=%d", port->port, port->ionr, port->type, port->offtime, port->pulsetime );
+            "portsetup: port=%d ionr=%d type=%d delay=%d", port->port, port->ionr, port->type, port->delay );
       }
       portsetup = wRocNet.nextportsetup(rocnet, portsetup);
     }

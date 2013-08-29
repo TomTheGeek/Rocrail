@@ -622,8 +622,7 @@
           <var name="port" vt="int" defval="1" range="1-*"/>
           <var name="ionr" vt="int" defval="0" range="0-*"/>
           <var name="type" vt="int" defval="0" range="0-*" remark="0=output, 1=input"/>
-          <var name="offtime" vt="int" defval="0" range="0-*" remark="0=directly"/>
-          <var name="pulsetime" vt="int" defval="0" range="0-*" remark="0=continous"/>
+          <var name="delay" vt="int" defval="0" range="0-*" remark="0=directly/continous"/>
           <var name="invert" vt="bool" defval="false"/>
         </portsetup>
       </rocnet>

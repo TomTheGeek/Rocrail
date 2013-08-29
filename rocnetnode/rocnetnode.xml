@@ -28,8 +28,7 @@
       <var name="port" vt="int"/>
       <var name="ionr" vt="int"/>
       <var name="type" vt="int"/>
-      <var name="offtime" vt="int"/>
-      <var name="pulsetime" vt="int"/>
+      <var name="delay" vt="int"/>
       <var name="ontimer" vt="unsigned long"/>
       <var name="offtimer" vt="unsigned long"/>
       <var name="invert" vt="Boolean"/>
