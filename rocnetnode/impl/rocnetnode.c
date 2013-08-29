@@ -322,7 +322,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     }
 
     msg = allocMem(128);
-    msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+    msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
     rnReceipientAddresToPacket( sndr, msg, 0 );
     rnSenderAddresToPacket( data->id, msg, 0 );
     msg[RN_PACKET_ACTION] = RN_PROGRAMMING_RPORT;
