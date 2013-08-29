@@ -258,6 +258,38 @@ byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
   return msg;
 }
 
+byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
+  iORocNetNodeData data       = Data(rocnetnode);
+  int port       = rn[RN_PACKET_DATA + 3];
+  int rcpt       = 0;
+  int sndr       = 0;
+  int action     = rnActionFromPacket(rn);
+  int actionType = rnActionTypeFromPacket(rn);
+  Boolean isThis = __isThis( rocnetnode, rn);
+  byte* msg = NULL;
+
+  rcpt = rnReceipientAddrFromPacket(rn, 0);
+  sndr = rnSenderAddrFromPacket(rn, 0);
+
+  switch( action ) {
+  case RN_PROGRAMMING_WRNID:
+    msg = allocMem(32);
+    msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+    rnReceipientAddresToPacket( 0, msg, 0 );
+    rnSenderAddresToPacket( data->id, msg, 0 );
+    msg[RN_PACKET_ACTION] = RN_STATIONARY_SHUTDOWN;
+    msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+    msg[RN_PACKET_LEN] = 0;
+
+    data->id = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
+    data->identack = False;
+    /* ToDo: Save the rocnetnode.ini to persistent the new ID. */
+    break;
+  }
+
+  return msg;
+}
+
 
 byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data       = Data(rocnetnode);
@@ -408,6 +440,10 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
 
     case RN_GROUP_STATIONARY:
       rnReply = __handleStationary( rocnetnode, rn );
+      break;
+
+    case RN_GROUP_PT_STATIONARY:
+      rnReply = __handlePTStationary( rocnetnode, rn );
       break;
 
     case RN_GROUP_OUTPUT:

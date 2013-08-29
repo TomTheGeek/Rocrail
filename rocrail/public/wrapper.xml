@@ -954,6 +954,7 @@
     <const name="lntype_opsw" vt="int" val="5" remark="Stationary decoder programming"/>
     <const name="lntype_cbus" vt="int" val="6" remark="CBUS"/>
     <const name="lntype_bidib" vt="int" val="7" remark="BiDiB"/>
+    <const name="lntype_rocnet" vt="int" val="8" remark="RocNet"/>
     <var name="lntype" vt="int" defval="0" remark="LNCV programming type"/>
     <const name="porttype_switch" vt="int" val="0"/>
     <const name="porttype_light" vt="int" val="1"/>

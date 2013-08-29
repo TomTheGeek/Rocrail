@@ -34,6 +34,7 @@
 
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/RocNet.h"
 #include "rocrail/wrapper/public/RocNetNode.h"
 #include "rocs/public/strtok.h"
@@ -51,9 +52,18 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   initNodeList();
 }
 
-void RocnetNodeDlg::onRocnetWrite( wxCommandEvent& event )
-{
-// TODO: Implement onRocnetWrite
+void RocnetNodeDlg::onRocnetWrite( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
+  wProgram.setcmd( cmd, wProgram.nnreq );
+  wProgram.setvalue(cmd, m_ID->GetValue() );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
 }
 
 void RocnetNodeDlg::onPortPrev( wxCommandEvent& event )
