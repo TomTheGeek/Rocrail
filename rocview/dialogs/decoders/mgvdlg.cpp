@@ -68,7 +68,7 @@ MGVDlg::MGVDlg( wxWindow* parent ):mgvdlggen( parent ) {
   }
 
   m_IID->SetValue(wxString(wMGV.getiid(mgv),wxConvUTF8));
-  m_Bus->SetValue(wxString::Format("%d", wMGV.getbus(mgv)));
+  m_Bus->SetValue(wxString::Format(wxT("%d"), wMGV.getbus(mgv)));
   m_Addr1->SetValue(wMGV.getaddr1(mgv));
   m_Addr2->SetValue(wMGV.getaddr2(mgv));
   m_Addr3->SetValue(wMGV.getaddr3(mgv));
