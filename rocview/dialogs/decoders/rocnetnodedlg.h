@@ -58,6 +58,7 @@ class RocnetNodeDlg : public rocnetnodegen
 		/** Constructor */
 		RocnetNodeDlg( wxWindow* parent, iONode ini );
 	//// end generated class members
+		void event(iONode node);
 	
 };
 

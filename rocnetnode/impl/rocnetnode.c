@@ -317,6 +317,9 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       from = rn[RN_PACKET_DATA+1];
       to   = rn[RN_PACKET_DATA+0];
     }
+    if( to - from > 7 ) {
+      to = from + 7;
+    }
 
     msg = allocMem(128);
     msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;

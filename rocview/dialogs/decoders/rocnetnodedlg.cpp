@@ -174,3 +174,7 @@ void RocnetNodeDlg::initValues() {
   m_Version->SetValue( wxString(wRocNetNode.getversion(m_Props),wxConvUTF8) );
 }
 
+void RocnetNodeDlg::event(iONode node) {
+
+}
+

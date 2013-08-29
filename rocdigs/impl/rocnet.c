@@ -632,6 +632,34 @@ static void __evaluatePTStationary( iOrocNet rocnet, byte* rn ) {
   sndr = rnSenderAddrFromPacket(rn, data->seven);
 
   switch( action ) {
+  case RN_PROGRAMMING_RPORT:
+  {
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    int nrports = rn[RN_PACKET_LEN] / 4;
+    int i = 0;
+    int idx = 0;
+    char key[32] = {'\0'};
+    wProgram.setmodid(node, sndr);
+    wProgram.setcmd( node, wProgram.nvget );
+    for( i = 0; i < nrports; i++ ) {
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 0] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 1] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 2] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 3] );
+      idx++;
+    }
+    wProgram.setiid( node, data->iid );
+    wProgram.setlntype(node, wProgram.lntype_rocnet);
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+  break;
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported action [%d]", action );
     break;

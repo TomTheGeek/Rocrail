@@ -1270,6 +1270,11 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
       m_BidibIdentDlg = NULL;
     }
   }
+  else if( wProgram.getlntype(node) == wProgram.lntype_rocnet ) {
+    /* New BiDiB dialog for selecting the UID of the identified node. */
+    if( m_RocnetNodeDlg != NULL )
+      m_RocnetNodeDlg->event( node );
+  }
   else if( wProgram.getlntype(node) == wProgram.lntype_cs ) {
     if( m_RocrailIniDlg != NULL )
       m_RocrailIniDlg->event( node );
