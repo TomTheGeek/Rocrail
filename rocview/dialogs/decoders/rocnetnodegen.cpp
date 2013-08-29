@@ -17,6 +17,17 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
 	
 	m_notebook2 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_IndexPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer10;
+	bSizer10 = new wxBoxSizer( wxVERTICAL );
+	
+	m_NodeList = new wxListCtrl( m_IndexPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_REPORT|wxLC_SINGLE_SEL );
+	bSizer10->Add( m_NodeList, 1, wxALL|wxEXPAND, 5 );
+	
+	m_IndexPanel->SetSizer( bSizer10 );
+	m_IndexPanel->Layout();
+	bSizer10->Fit( m_IndexPanel );
+	m_notebook2->AddPage( m_IndexPanel, wxT("Index"), true );
 	m_RocNetPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
@@ -26,6 +37,13 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	fgSizer5->AddGrowableCol( 1 );
 	fgSizer5->SetFlexibleDirection( wxBOTH );
 	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_labIID = new wxStaticText( m_RocNetPanel, wxID_ANY, wxT("IID"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labIID->Wrap( -1 );
+	fgSizer5->Add( m_labIID, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_IID = new wxTextCtrl( m_RocNetPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer5->Add( m_IID, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_labID = new wxStaticText( m_RocNetPanel, wxID_ANY, wxT("ID"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labID->Wrap( -1 );
@@ -38,22 +56,29 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_labVendor->Wrap( -1 );
 	fgSizer5->Add( m_labVendor, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
 	
-	m_Vendor = new wxTextCtrl( m_RocNetPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	fgSizer5->Add( m_Vendor, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	m_VendorName = new wxTextCtrl( m_RocNetPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	fgSizer5->Add( m_VendorName, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_labProduct = new wxStaticText( m_RocNetPanel, wxID_ANY, wxT("Product"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labProduct->Wrap( -1 );
 	fgSizer5->Add( m_labProduct, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_Product = new wxTextCtrl( m_RocNetPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-	fgSizer5->Add( m_Product, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	m_ProductName = new wxTextCtrl( m_RocNetPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	fgSizer5->Add( m_ProductName, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_labVersion = new wxStaticText( m_RocNetPanel, wxID_ANY, wxT("Version"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labVersion->Wrap( -1 );
+	fgSizer5->Add( m_labVersion, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_Version = new wxTextCtrl( m_RocNetPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	fgSizer5->Add( m_Version, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer6->Add( fgSizer5, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_RocnetWrite = new wxButton( m_RocNetPanel, wxID_ANY, wxT("MyButton"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_RocnetWrite = new wxButton( m_RocNetPanel, wxID_ANY, wxT("Write"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer9->Add( m_RocnetWrite, 0, wxALL, 5 );
 	
 	bSizer6->Add( bSizer9, 0, wxALIGN_RIGHT, 5 );
@@ -237,7 +262,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_PortSetupPanel->SetSizer( bSizer7 );
 	m_PortSetupPanel->Layout();
 	bSizer7->Fit( m_PortSetupPanel );
-	m_notebook2->AddPage( m_PortSetupPanel, wxT("Port Setup"), true );
+	m_notebook2->AddPage( m_PortSetupPanel, wxT("Port Setup"), false );
 	
 	bSizer5->Add( m_notebook2, 0, wxEXPAND | wxALL, 5 );
 	
@@ -255,6 +280,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( rocnetnodegen::onClose ) );
+	m_NodeList->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
+	m_NodeList->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
 	m_RocnetWrite->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onRocnetWrite ), NULL, this );
 	m_PortPrev->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortPrev ), NULL, this );
 	m_PortNext->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortNext ), NULL, this );
@@ -267,6 +294,8 @@ rocnetnodegen::~rocnetnodegen()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( rocnetnodegen::onClose ) );
+	m_NodeList->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
+	m_NodeList->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
 	m_RocnetWrite->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onRocnetWrite ), NULL, this );
 	m_PortPrev->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortPrev ), NULL, this );
 	m_PortNext->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortNext ), NULL, this );

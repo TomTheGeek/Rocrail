@@ -197,9 +197,8 @@ void RocNetDlg::OnOK( wxCommandEvent& event ) {
 }
 
 void RocNetDlg::onNodeListSelected( wxListEvent& event ) {
-  RocnetNodeDlg* dlg = new RocnetNodeDlg(this);
-  dlg->ShowModal();
-  dlg->Destroy();
+  wxCommandEvent menuevent( wxEVT_COMMAND_MENU_SELECTED, ME_RocNet );
+  wxPostEvent( wxGetApp().getFrame(), menuevent );
 }
 
 void RocNetDlg::initNodeList() {

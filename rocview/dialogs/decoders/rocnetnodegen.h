@@ -8,20 +8,21 @@
 #ifndef __rocnetnodegen__
 #define __rocnetnodegen__
 
-#include <wx/string.h>
-#include <wx/stattext.h>
+#include <wx/listctrl.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
-#include <wx/spinctrl.h>
-#include <wx/textctrl.h>
+#include <wx/string.h>
 #include <wx/sizer.h>
-#include <wx/button.h>
 #include <wx/panel.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
+#include <wx/spinctrl.h>
+#include <wx/button.h>
 #include <wx/radiobox.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
@@ -38,13 +39,19 @@ class rocnetnodegen : public wxDialog
 	
 	protected:
 		wxNotebook* m_notebook2;
+		wxPanel* m_IndexPanel;
+		wxListCtrl* m_NodeList;
 		wxPanel* m_RocNetPanel;
+		wxStaticText* m_labIID;
+		wxTextCtrl* m_IID;
 		wxStaticText* m_labID;
 		wxSpinCtrl* m_ID;
 		wxStaticText* m_labVendor;
-		wxTextCtrl* m_Vendor;
+		wxTextCtrl* m_VendorName;
 		wxStaticText* m_labProduct;
-		wxTextCtrl* m_Product;
+		wxTextCtrl* m_ProductName;
+		wxStaticText* m_labVersion;
+		wxTextCtrl* m_Version;
 		wxButton* m_RocnetWrite;
 		wxPanel* m_PortSetupPanel;
 		wxStaticText* m_labPort;
@@ -92,6 +99,7 @@ class rocnetnodegen : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onClose( wxCloseEvent& event ) { event.Skip(); }
+		virtual void onIndexSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void onRocnetWrite( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortPrev( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortNext( wxCommandEvent& event ) { event.Skip(); }

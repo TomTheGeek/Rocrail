@@ -593,6 +593,7 @@ bool RocGui::OnInit() {
   m_UndoItems = ListOp.inst();
   m_InitialRocrailIni = false;
   m_FireBiDiB4RocrailIni = false;
+  m_FireRocNet4RocrailIni = false;
   m_donkey = "";
   m_doneml = "";
   m_Script = ScriptOp.inst(NULL);
@@ -979,6 +980,11 @@ static void rocrailCallback( obj me, iONode node ) {
     if(guiApp->m_FireBiDiB4RocrailIni) {
       wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_BiDiB );
       guiApp->m_FireBiDiB4RocrailIni = false;
+      wxPostEvent( guiApp->getFrame(), event );
+    }
+    else if(guiApp->m_FireRocNet4RocrailIni) {
+      wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_RocNet );
+      guiApp->m_FireRocNet4RocrailIni = false;
       wxPostEvent( guiApp->getFrame(), event );
     }
     else if( !guiApp->m_InitialRocrailIni ) {

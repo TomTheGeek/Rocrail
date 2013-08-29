@@ -332,6 +332,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_OpenDecoder    , RocGuiFrame::OnOpenDecoder)
     EVT_MENU( ME_CBusNode       , RocGuiFrame::OnCBusNode)
     EVT_MENU( ME_BiDiB          , RocGuiFrame::OnBiDiB)
+    EVT_MENU( ME_RocNet         , RocGuiFrame::OnRocNet)
     EVT_MENU( ME_RocPro         , RocGuiFrame::OnRocPro)
     EVT_MENU( ME_Zoom25         , RocGuiFrame::OnZoom25)
     EVT_MENU( ME_Zoom50         , RocGuiFrame::OnZoom50)
@@ -1572,6 +1573,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LocoIO             = NULL;
   m_CBusNodeDlg        = NULL;
   m_BidibIdentDlg      = NULL;
+  m_RocnetNodeDlg      = NULL;
   m_MGV141             = NULL;
   m_DTOpSw             = NULL;
   m_RocrailIniDlg      = NULL;
@@ -1943,6 +1945,7 @@ void RocGuiFrame::initFrame() {
   //menuProgramming->Append( -1, _T("CBUS"), menuCBus );
   menuProgramming->Append( ME_CBusNode, _T("CBUS Node"), _T("CBUS Node") );
   menuProgramming->Append( ME_BiDiB, _T("BiDiB"), _T("BiDiB") );
+  menuProgramming->Append( ME_RocNet, _T("RocNet"), _T("RocNet") );
   menuProgramming->Append( ME_RocPro, _T("RocPro"), _T("RocPro") );
 
   // the "About" item should be in the help menu
@@ -3592,6 +3595,23 @@ void RocGuiFrame::OnBiDiB( wxCommandEvent& event ) {
   else {
     wxGetApp().m_InitialRocrailIni = true;
     wxGetApp().m_FireBiDiB4RocrailIni = true;
+    iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+    wSysCmd.setcmd( cmd, wSysCmd.getini );
+    wxGetApp().sendToRocrail( cmd, false );
+    cmd->base.del(cmd);
+  }
+}
+
+void RocGuiFrame::OnRocNet( wxCommandEvent& event ) {
+  if( m_RocrailIni != NULL ) {
+    m_RocnetNodeDlg = new RocnetNodeDlg(this, m_RocrailIni);
+    m_RocnetNodeDlg->ShowModal();
+    m_RocnetNodeDlg->Destroy();
+    m_RocnetNodeDlg = NULL;
+  }
+  else {
+    wxGetApp().m_InitialRocrailIni = true;
+    wxGetApp().m_FireRocNet4RocrailIni = true;
     iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
     wSysCmd.setcmd( cmd, wSysCmd.getini );
     wxGetApp().sendToRocrail( cmd, false );

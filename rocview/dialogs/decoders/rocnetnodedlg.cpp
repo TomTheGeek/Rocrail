@@ -22,11 +22,33 @@
 */
 
 #include "rocnetnodedlg.h"
+#include "wx/wxprec.h"
 
-RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent )
+#ifndef WX_PRECOMP
+#include "wx/wx.h"
+#include "wx/defs.h"
+#endif
+
+
+#include "rocview/public/guiapp.h"
+
+#include "rocrail/wrapper/public/RocRail.h"
+#include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/RocNet.h"
+#include "rocrail/wrapper/public/RocNetNode.h"
+#include "rocs/public/strtok.h"
+#include "rocutils/public/vendors.h"
+
+RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   :rocnetnodegen( parent )
 {
+  m_Ini = ini;
+  m_Digint = NULL;
+  m_Props = NULL;
+  __initVendors();
 
+  initLabels();
+  initNodeList();
 }
 
 void RocnetNodeDlg::onRocnetWrite( wxCommandEvent& event )
@@ -61,3 +83,74 @@ void RocnetNodeDlg::onOK( wxCommandEvent& event ) {
 void RocnetNodeDlg::onClose( wxCloseEvent& event ) {
   EndModal( wxID_OK );
 }
+
+
+void RocnetNodeDlg::initLabels() {
+  m_NodeList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_RIGHT );
+  m_NodeList->InsertColumn(1, wxGetApp().getMsg( "vendor" ), wxLIST_FORMAT_LEFT );
+  m_NodeList->InsertColumn(2, wxGetApp().getMsg( "product" ), wxLIST_FORMAT_LEFT );
+  m_NodeList->InsertColumn(3, wxGetApp().getMsg( "version" ), wxLIST_FORMAT_LEFT );
+  m_NodeList->InsertColumn(4, wxT("I/O"), wxLIST_FORMAT_RIGHT );
+
+  iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
+  if( l_RocrailIni != NULL ) {
+    iONode digint = wRocRail.getdigint(l_RocrailIni);
+    while( digint != NULL ) {
+      iONode rocnet = wDigInt.getrocnet(digint);
+      if( rocnet != NULL ) {
+        m_IID->SetValue( wxString( wDigInt.getiid(digint), wxConvUTF8) );
+        m_Digint = digint;
+        break;
+      }
+      digint = wRocRail.nextdigint(l_RocrailIni, digint);
+    }
+  }
+
+}
+
+
+void RocnetNodeDlg::initNodeList() {
+  m_NodeList->DeleteAllItems();
+
+  if( m_Digint == NULL )
+    return;
+
+  int index = 0;
+  iONode rnnode = wRocNet.getrocnetnode(m_Digint);
+  while( rnnode != NULL ) {
+    m_NodeList->InsertItem( index, wxString::Format(_T("%d"), wRocNetNode.getid(rnnode)));
+    m_NodeList->SetItem( index, 1, wxString( m_Vendor[wRocNetNode.getvendor(rnnode)&0xFF],wxConvUTF8) );
+    m_NodeList->SetItem( index, 2, wxString(wRocNetNode.getclass(rnnode),wxConvUTF8));
+    m_NodeList->SetItem( index, 3, wxString(wRocNetNode.getversion(rnnode),wxConvUTF8));
+    m_NodeList->SetItem( index, 4, wxString::Format(_T("%d"), wRocNetNode.getnrio(rnnode)));
+    m_NodeList->SetItemPtrData(index, (wxUIntPtr)rnnode);
+    index++;
+    rnnode = wRocNet.nextrocnetnode(m_Digint, rnnode);
+  }
+  m_NodeList->SetColumnWidth(0, wxLIST_AUTOSIZE);
+  m_NodeList->SetColumnWidth(1, wxLIST_AUTOSIZE);
+  m_NodeList->SetColumnWidth(2, wxLIST_AUTOSIZE);
+  m_NodeList->SetColumnWidth(3, wxLIST_AUTOSIZE);
+  m_NodeList->SetColumnWidth(4, wxLIST_AUTOSIZE);
+
+}
+
+void RocnetNodeDlg::onIndexSelected( wxListEvent& event ) {
+  int index = event.GetIndex();
+  m_Props = (iONode)m_NodeList->GetItemData(index);
+  if( m_Props != NULL ) {
+    initValues();
+    SetTitle(wxT("RocNetNode: ") + wxString::Format(_T("%d"), wRocNetNode.getid(m_Props) ) );
+  }
+  else
+    TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+
+}
+
+void RocnetNodeDlg::initValues() {
+  m_ID->SetValue( wRocNetNode.getid(m_Props) );
+  m_VendorName->SetValue( wxString( m_Vendor[wRocNetNode.getvendor(m_Props)&0xFF],wxConvUTF8) );
+  m_ProductName->SetValue( wxString(wRocNetNode.getclass(m_Props),wxConvUTF8) );
+  m_Version->SetValue( wxString(wRocNetNode.getversion(m_Props),wxConvUTF8) );
+}
+

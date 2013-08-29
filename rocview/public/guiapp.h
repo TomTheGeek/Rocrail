@@ -104,6 +104,7 @@ public:
   bool          m_bConsoleMode;
   bool          m_InitialRocrailIni;
   bool          m_FireBiDiB4RocrailIni;
+  bool          m_FireRocNet4RocrailIni;
   const char*   m_donkey;
   const char*   m_doneml;
   iOScript       m_Script;
