@@ -632,7 +632,7 @@ static void __scanner( void* threadinst ) {
 
 
         if( data->ports[i] != NULL && data->ports[i]->type == 1 && !data->ports[i]->ackpending ) {
-          int val = raspiRead(data->ports[i]->ionr);
+          int val = (raspiRead(data->ports[i]->ionr) ? 0:1);
           Boolean report = inputVal[i] != val;
 
           if( data->ports[i]->delay > 0 ) {
