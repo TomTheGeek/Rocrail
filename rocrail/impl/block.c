@@ -1906,6 +1906,9 @@ static Boolean _unLock( iIBlockBase inst, const char* id, const char* routeId ) 
 
       if( data->locId == NULL || StrOp.len(data->locId) == 0 || StrOp.equals( id, data->locId ) || StrOp.equals( id, "*" ) ) {
         iOLocation location = ModelOp.getBlockLocation(AppOp.getModel(), data->id );
+        if( StrOp.equals( id, "*" ) ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block [%s] is unlocked by [%s]", data->id, id );
+        }
 
         if( data->byRouteId != NULL && routeId != NULL && !StrOp.equals(data->byRouteId, routeId) ) {
           /* same loco did locked it for another route */

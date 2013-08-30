@@ -3533,7 +3533,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     }
 
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying to match %s event: %d:%d:%d type=%d",
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "trying to match %s event: %d:%d:%d type=%d",
         wAccessory.isaccevent(nodeC)?"accessory":"switch", bus, addr, port, type );
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "iterating switch list %d", ListOp.size(o->switchList) );
