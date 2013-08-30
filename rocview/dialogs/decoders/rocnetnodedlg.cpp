@@ -132,11 +132,11 @@ void RocnetNodeDlg::onPortWrite( wxCommandEvent& event ) {
     StrOp.fmtb(key, "val%d", 1 + i*4);
     NodeOp.setInt( cmd, key, m_PortGroup*8 + 1 + i);
     StrOp.fmtb(key, "val%d", 2 + i*4);
-    NodeOp.setInt( cmd, key, l_IO[m_PortGroup*8 + 1 + i]->GetValue() );
+    NodeOp.setInt( cmd, key, l_IO[1 + i]->GetValue() );
     StrOp.fmtb(key, "val%d", 3 + i*4);
-    NodeOp.setInt( cmd, key, l_Type[m_PortGroup*8 + 1 + i]->GetSelection() );
+    NodeOp.setInt( cmd, key, l_Type[1 + i]->GetSelection() );
     StrOp.fmtb(key, "val%d", 4 + i*4);
-    NodeOp.setInt( cmd, key, l_Delay[m_PortGroup*8 + 1 + i]->GetValue() );
+    NodeOp.setInt( cmd, key, l_Delay[1 + i]->GetValue() );
   }
 
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
