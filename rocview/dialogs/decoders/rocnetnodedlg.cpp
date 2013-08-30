@@ -74,7 +74,7 @@ void RocnetNodeDlg::initPorts() {
   wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
   wxStaticText* l_labPort[] = { NULL, m_labPort1, m_labPort2, m_labPort3, m_labPort4, m_labPort5, m_labPort6, m_labPort7, m_labPort8 };
   for( int i = 1; i < 9; i++ ) {
-    l_labPort[i]->SetLabel( wxString::Format("%d",i + m_PortGroup*8) );
+    l_labPort[i]->SetLabel( wxString::Format(wxT("%d"),i + m_PortGroup*8) );
     l_IO[i]->SetValue(0);
     l_Type[i]->SetSelection(0);
     l_Delay[i]->SetValue(0);
