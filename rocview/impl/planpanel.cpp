@@ -1294,9 +1294,18 @@ void PlanPanel::addItemAttr( iONode node ) {
 
     wxTextEntryDialog* dlg = new wxTextEntryDialog(m_Parent, wxGetApp().getMenu("entertext") );
     if( wxID_OK == dlg->ShowModal() ) {
+      dlg->Destroy();
       wText.settext( node, dlg->GetValue().mb_str(wxConvUTF8) );
+      if( StrOp.len(wText.gettext(node)) == 0 ) {
+        NodeOp.base.del(node);
+        return;
+      }
     }
-    dlg->Destroy();
+    else {
+      dlg->Destroy();
+      NodeOp.base.del(node);
+      return;
+    }
   }
   else if( !StrOp.equals( wTrack.name(), NodeOp.getName( node ) ) &&
       ( wItem.getid(node) == NULL || StrOp.len( wItem.getid(node) ) == 0 ) ) {
