@@ -1904,7 +1904,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id, const char* routeId ) 
         return False;
       }
 
-      if( data->locId == NULL || StrOp.len(data->locId) == 0 || StrOp.equals( id, data->locId ) ) {
+      if( data->locId == NULL || StrOp.len(data->locId) == 0 || StrOp.equals( id, data->locId ) || StrOp.equals( id, "*" ) ) {
         iOLocation location = ModelOp.getBlockLocation(AppOp.getModel(), data->id );
 
         if( data->byRouteId != NULL && routeId != NULL && !StrOp.equals(data->byRouteId, routeId) ) {
