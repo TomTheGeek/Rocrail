@@ -61,7 +61,7 @@
       <var name="port" vt="int"/>
       <var name="readUDP" vt="iOSocket"/>
       <var name="writeUDP" vt="iOSocket"/>
-      <var name="ports[32]" vt="iOPort"/>
+      <var name="ports[128]" vt="iOPort"/>
       <var name="pDI" vt="iIDigInt"/>
     </data>
   </object>

@@ -69,6 +69,8 @@ static int versionL = 0;
 typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 
 static void __sendRN( iORocNetNode rocnetnode, byte* rn );
+static iONode __findPort(iORocNetNode inst, int port);
+static void __initPorts(iORocNetNode inst);
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -308,7 +310,44 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       wRocNet.setid(rocnet, data->id);
       __saveIni(rocnetnode);
     }
+
+    msg = allocMem(128);
+    MemOp.copy(msg, rn, rn[RN_PACKET_LEN] + 8 );
+    rnReceipientAddresToPacket( sndr, msg, 0 );
+    rnSenderAddresToPacket( data->id, msg, 0 );
+    msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+
     break;
+
+  case RN_PROGRAMMING_WPORT:
+  {
+    iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+    int i = 0;
+
+    if( rocnet == NULL ) {
+      rocnet = NodeOp.inst( wRocNet.name(), data->ini, ELEMENT_NODE);
+      NodeOp.addChild( data->ini, rocnet );
+    }
+
+    for( i = 0; i < 8; i++ ) {
+      int port  = rn[RN_PACKET_DATA+0+i*4];
+      int ionr  = rn[RN_PACKET_DATA+1+i*4];
+      int type  = rn[RN_PACKET_DATA+2+i*4];
+      int delay = rn[RN_PACKET_DATA+3+i*4];
+      iONode portsetup = __findPort(rocnetnode, port);
+      if( portsetup == NULL ) {
+        portsetup = NodeOp.inst( wPortSetup.name(), rocnet, ELEMENT_NODE);
+        wPortSetup.setport( portsetup, port);
+        NodeOp.addChild( rocnet, portsetup );
+      }
+      wPortSetup.setionr( portsetup, ionr);
+      wPortSetup.settype( portsetup, type);
+      wPortSetup.setdelay( portsetup, delay);
+    }
+    __saveIni(rocnetnode);
+    __initPorts(rocnetnode);
+  }
+  break;
 
   case RN_PROGRAMMING_RPORT:
     from = rn[RN_PACKET_DATA+0];
@@ -704,6 +743,23 @@ static Boolean __initDigInt(iORocNetNode inst) {
   return True;
 }
 
+static iONode __findPort(iORocNetNode inst, int port) {
+  iORocNetNodeData data = Data(inst);
+  iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+  iONode portsetup = NULL;
+
+  if( rocnet != NULL ) {
+    iONode portsetup = wRocNet.getportsetup(rocnet);
+    while( portsetup != NULL ) {
+      if( wPortSetup.getport(portsetup) == port ) {
+        return portsetup;
+      }
+      portsetup = wRocNet.nextportsetup(rocnet, portsetup);
+    }
+  }
+
+  return portsetup;
+}
 
 static void __initPorts(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
@@ -716,7 +772,7 @@ static void __initPorts(iORocNetNode inst) {
     iONode portsetup = wRocNet.getportsetup(rocnet);
     while( portsetup != NULL ) {
       int portnr = wPortSetup.getport(portsetup);
-      if( portnr < 32 ) {
+      if( portnr < 128 ) {
         iOPort port = allocMem( sizeof( struct Port) );
         port->port = portnr;
         port->ionr = wPortSetup.getionr(portsetup);

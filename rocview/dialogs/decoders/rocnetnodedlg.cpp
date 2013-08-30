@@ -115,9 +115,34 @@ void RocnetNodeDlg::onPortRead( wxCommandEvent& event ) {
   cmd->base.del(cmd);
 }
 
-void RocnetNodeDlg::onPortWrite( wxCommandEvent& event )
-{
-// TODO: Implement onPortWrite
+void RocnetNodeDlg::onPortWrite( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
+  wProgram.setcmd( cmd, wProgram.nvset );
+
+  wxSpinCtrl* l_IO[] = { NULL, m_IO1, m_IO2, m_IO3, m_IO4, m_IO5, m_IO6, m_IO7, m_IO8};
+  wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
+  wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
+
+  char key[32] = {'\0'};
+  for( int i = 0; i < 8; i++ ) {
+    StrOp.fmtb(key, "val%d", 1 + i*4);
+    NodeOp.setInt( cmd, key, m_PortGroup*8 + 1 + i);
+    StrOp.fmtb(key, "val%d", 2 + i*4);
+    NodeOp.setInt( cmd, key, l_IO[m_PortGroup*8 + 1 + i]->GetValue() );
+    StrOp.fmtb(key, "val%d", 3 + i*4);
+    NodeOp.setInt( cmd, key, l_Type[m_PortGroup*8 + 1 + i]->GetSelection() );
+    StrOp.fmtb(key, "val%d", 4 + i*4);
+    NodeOp.setInt( cmd, key, l_Delay[m_PortGroup*8 + 1 + i]->GetValue() );
+  }
+
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
 }
 
 void RocnetNodeDlg::onOK( wxCommandEvent& event ) {
@@ -189,6 +214,8 @@ void RocnetNodeDlg::onIndexSelected( wxListEvent& event ) {
   int index = event.GetIndex();
   m_Props = (iONode)m_NodeList->GetItemData(index);
   if( m_Props != NULL ) {
+    m_PortGroup = 0;
+    initPorts();
     initValues();
     SetTitle(wxT("RocNetNode: ") + wxString::Format(_T("%d"), wRocNetNode.getid(m_Props) ) );
   }

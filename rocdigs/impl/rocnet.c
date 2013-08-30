@@ -420,6 +420,27 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         rn[RN_PACKET_DATA + 1] = wProgram.getval2(node);
         ThreadOp.post( data->writer, (obj)rn );
       }
+      else if( wProgram.getcmd( node ) == wProgram.nvset ) {
+        char key[32] = {'\0'};
+        int i = 0;
+        int rnid = wProgram.getmodid(node);
+        rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+        rnReceipientAddresToPacket( rnid, rn, data->seven );
+        rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
+        rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WPORT;
+        rn[RN_PACKET_LEN] = 8*4;
+        for( i = 0; i < 8; i++ ) {
+          StrOp.fmtb(key, "val%d", i*4 + 1);
+          rn[RN_PACKET_DATA + 0 + i*4] = NodeOp.getInt(node, key, 0);
+          StrOp.fmtb(key, "val%d", i*4 + 2);
+          rn[RN_PACKET_DATA + 1 + i*4] = NodeOp.getInt(node, key, 0);
+          StrOp.fmtb(key, "val%d", i*4 + 3);
+          rn[RN_PACKET_DATA + 2 + i*4] = NodeOp.getInt(node, key, 0);
+          StrOp.fmtb(key, "val%d", i*4 + 4);
+          rn[RN_PACKET_DATA + 3 + i*4] = NodeOp.getInt(node, key, 0);
+        }
+        ThreadOp.post( data->writer, (obj)rn );
+      }
     }
     else if(wProgram.ispom(node)) {
       int addr = wProgram.getaddr( node );
@@ -633,6 +654,7 @@ static void __evaluatePTStationary( iOrocNet rocnet, byte* rn ) {
 
   switch( action ) {
   case RN_PROGRAMMING_RPORT:
+  case RN_PROGRAMMING_WPORT:
   {
     iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     int nrports = rn[RN_PACKET_LEN] / 4;
