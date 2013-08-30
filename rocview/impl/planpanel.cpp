@@ -1296,10 +1296,6 @@ void PlanPanel::addItemAttr( iONode node ) {
     if( wxID_OK == dlg->ShowModal() ) {
       dlg->Destroy();
       wText.settext( node, dlg->GetValue().mb_str(wxConvUTF8) );
-      if( StrOp.len(wText.gettext(node)) == 0 ) {
-        NodeOp.base.del(node);
-        return;
-      }
     }
     else {
       dlg->Destroy();
