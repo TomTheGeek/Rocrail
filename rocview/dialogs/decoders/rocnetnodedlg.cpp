@@ -230,7 +230,7 @@ void RocnetNodeDlg::initValues() {
   m_VendorName->SetValue( wxString( m_Vendor[wRocNetNode.getvendor(m_Props)&0xFF],wxConvUTF8) );
   m_ProductName->SetValue( wxString(wRocNetNode.getclass(m_Props),wxConvUTF8) );
   m_Version->SetValue( wxString(wRocNetNode.getversion(m_Props),wxConvUTF8) );
-  m_I2CDevice->SetValue( wRocNetNode.geti2cdevice(m_Props) );
+  m_I2CDevice->SetValue( wxString(wRocNetNode.geti2cdevice(m_Props),wxConvUTF8) );
 }
 
 void RocnetNodeDlg::event(iONode node) {
