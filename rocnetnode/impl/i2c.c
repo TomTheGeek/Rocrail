@@ -60,7 +60,7 @@ int raspiReadRegI2C(int descriptor, unsigned char dev_addr, unsigned char reg_ad
   messages[0].len = sizeof(outbuff);
   messages[0].buf = &outbuff;
   inbuff = data;
-  messages[1].addr = devicename;
+  messages[1].addr = dev_addr;
   messages[1].flags = I2C_M_RD;
   messages[1].len = sizeof(*inbuff);
   messages[1].buf = inbuff;
