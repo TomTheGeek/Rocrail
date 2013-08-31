@@ -818,7 +818,7 @@ static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean rel
   if( addrpol1 > 0 || portpol1 > 0 ) {
     iONode cmd = NULL;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "polarise: frog=%d addr1=%d addr2=%d relays1=%d relays2=%d", frog, addrpol1, addrpol2, relays1, relays2 );
+        "polarise: frog=%d addr1=%d:%d addr2=%d:%d relays1=%d relays2=%d", frog, addrpol1, portpol1, addrpol2, portpol2, relays1, relays2 );
     if( wSwitch.isfrogswitch(data->props) ) {
       cmd = NodeOp.inst(  wSwitch.name(), NULL, ELEMENT_NODE );
       wSwitch.setiid( cmd, wSwitch.getfrogiid( data->props ) );
@@ -1252,11 +1252,16 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
   }
 
   if( wSwitch.getfrogtimer(o->props) > 0 ) {
+    Boolean relays1a = StrOp.equals(wSwitch.straight, state);
+    Boolean relays2a = StrOp.equals(wSwitch.turnout, state);
+    Boolean relays1b = StrOp.equals(wSwitch.left, state);
+    Boolean relays2b = StrOp.equals(wSwitch.right, state);
+
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "polarise Frog [%s] timer=%d state=%s(%s)",
         SwitchOp.getId(inst), wSwitch.getfrogtimer(o->props), state, wSwitch.getstate( o->props) );
     ThreadOp.sleep(wSwitch.getfrogtimer(o->props));
-    __polariseFrog(inst, 0, StrOp.equals(wSwitch.straight, state), StrOp.equals(wSwitch.turnout, state));
-    __polariseFrog(inst, 1, StrOp.equals(wSwitch.left, state), StrOp.equals(wSwitch.right, state));
+    __polariseFrog(inst, 0, relays1a, relays2a);
+    __polariseFrog(inst, 1, relays1b, relays2b);
   }
 
 
