@@ -62,6 +62,7 @@ void RocnetNodeDlg::onRocnetWrite( wxCommandEvent& event ) {
   wProgram.setcmd( cmd, wProgram.nnreq );
   wProgram.setvalue(cmd, m_ID->GetValue() );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setfilename(cmd, m_I2CDevice->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_rocnet);
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
@@ -229,6 +230,7 @@ void RocnetNodeDlg::initValues() {
   m_VendorName->SetValue( wxString( m_Vendor[wRocNetNode.getvendor(m_Props)&0xFF],wxConvUTF8) );
   m_ProductName->SetValue( wxString(wRocNetNode.getclass(m_Props),wxConvUTF8) );
   m_Version->SetValue( wxString(wRocNetNode.getversion(m_Props),wxConvUTF8) );
+  m_I2CDevice->SetValue( wRocNetNode.geti2cdevice(m_Props) );
 }
 
 void RocnetNodeDlg::event(iONode node) {

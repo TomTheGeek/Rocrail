@@ -617,6 +617,7 @@
           <var name="vendor" vt="int" defval="0" remark="NMRA vendor ID."/>
           <var name="version" vt="string" defval="0.0" remark="Software version."/>
           <var name="nrio" vt="int" defval="0" range="0-255" remark="Number of I/Os"/>
+          <var name="i2cdevice" vt="string" defval="/dev/i2c-0" remark="I2C device name."/>
         </rocnetnode>
         <portsetup wrappername="PortSetup" cardinality="n">
           <var name="port" vt="int" defval="1" range="1-*"/>
@@ -625,6 +626,9 @@
           <var name="delay" vt="int" defval="0" range="0-*" remark="0=directly/continous"/>
           <var name="invert" vt="bool" defval="false"/>
         </portsetup>
+        <i2csetup wrappername="I2CSetup" cardinality="1">
+          <var name="i2cdevice" vt="string" defval="/dev/i2c-0" remark="I2C device name."/>
+        </i2csetup>
       </rocnet>
 
       <mcs2 remark="CS2 options" wrappername="MCS2">

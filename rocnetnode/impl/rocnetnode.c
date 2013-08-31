@@ -43,6 +43,7 @@
 #include "rocrail/wrapper/public/Cmdline.h"
 #include "rocrail/wrapper/public/RocNet.h"
 #include "rocrail/wrapper/public/PortSetup.h"
+#include "rocrail/wrapper/public/I2CSetup.h"
 #include "rocrail/wrapper/public/Trace.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/Loc.h"
@@ -673,18 +674,28 @@ static void __scanner( void* threadinst ) {
     if( !data->identack ) {
       identwait++;
       if( identwait > 100 ) {
+        int devlen = 0;
+        int i = 0;
+        if( data->i2cdevice != NULL && StrOp.len(data->i2cdevice) > 0 ) {
+          devlen = StrOp.len(data->i2cdevice);
+        }
         identwait = 0;
         msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
         rnReceipientAddresToPacket( 0, msg, 0 );
         rnSenderAddresToPacket( data->id, msg, 0 );
         msg[RN_PACKET_ACTION] = RN_STATIONARY_QUERYIDS;
         msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-        msg[RN_PACKET_LEN] = 5;
+        msg[RN_PACKET_LEN] = 5 + devlen;
         msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;
         msg[RN_PACKET_DATA+1] = 70;
         msg[RN_PACKET_DATA+2] = versionH;
         msg[RN_PACKET_DATA+3] = versionL;
         msg[RN_PACKET_DATA+4] = 16;
+        if( devlen > 0 ) {
+          for( i = 0; i < devlen; i++ ) {
+            msg[RN_PACKET_DATA+5+i] = data->i2cdevice[i];
+          }
+        }
         __sendRN(rocnetnode, msg);
       }
     }
@@ -840,9 +851,16 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Up and running the RocNetNode" );
   if( NodeOp.findNode(data->ini, wRocNet.name()) != NULL ) {
-    data->id    = wRocNet.getid(NodeOp.findNode(data->ini, wRocNet.name()));
-    data->addr  = wRocNet.getaddr(NodeOp.findNode(data->ini, wRocNet.name()));
-    data->port  = wRocNet.getport(NodeOp.findNode(data->ini, wRocNet.name()));
+    iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+    data->id    = wRocNet.getid(rocnet);
+    data->addr  = wRocNet.getaddr(rocnet);
+    data->port  = wRocNet.getport(rocnet);
+
+    if( NodeOp.findNode(rocnet, wI2CSetup.name()) != NULL ) {
+      iONode i2cini = NodeOp.findNode(rocnet, wI2CSetup.name());
+      data->i2cdevice = wI2CSetup.geti2cdevice(i2cini);
+    }
+
     if( NodeOp.findNode(data->ini, wTrace.name()) != NULL ) {
       iONode traceini = NodeOp.findNode(data->ini, wTrace.name());
       tf = wTrace.getrfile(traceini);

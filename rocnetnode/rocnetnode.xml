@@ -63,7 +63,9 @@
       <var name="writeUDP" vt="iOSocket"/>
       <var name="ports[128]" vt="iOPort"/>
       <var name="pDI" vt="iIDigInt"/>
-    </data>
+      <var name="i2cdevice" vt="const char*"/>
+      <var name="i2cdescriptor" vt="int"/>
+      </data>
   </object>
 
 
