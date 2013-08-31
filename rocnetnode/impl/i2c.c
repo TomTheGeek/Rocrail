@@ -35,13 +35,13 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 
-int raspiWriteRegI2C(const char* devicename, int descriptor, unsigned char reg_addr, unsigned char data) {
+int raspiWriteRegI2C(int descriptor, unsigned char dev_addr, unsigned char reg_addr, unsigned char data) {
   unsigned char buff[2];
   struct i2c_rdwr_ioctl_data packets;
   struct i2c_msg messages[1];
   buff[0] = reg_addr;
   buff[1] = data;
-  messages[0].addr = devicename;
+  messages[0].addr = dev_addr;
   messages[0].flags = 0;
   messages[0].len = sizeof(buff);
   messages[0].buf = buff;
@@ -50,12 +50,12 @@ int raspiWriteRegI2C(const char* devicename, int descriptor, unsigned char reg_a
   return ioctl(descriptor, I2C_RDWR, &packets);
 }
 
-int raspiReadRegI2C(const char* devicename, int descriptor, unsigned char reg_addr, unsigned char* data) {
+int raspiReadRegI2C(int descriptor, unsigned char dev_addr, unsigned char reg_addr, unsigned char* data) {
   unsigned char *inbuff, outbuff;
   struct i2c_rdwr_ioctl_data packets;
   struct i2c_msg messages[2];
   outbuff = reg_addr;
-  messages[0].addr = devicename;
+  messages[0].addr = dev_addr;
   messages[0].flags= 0;
   messages[0].len = sizeof(outbuff);
   messages[0].buf = &outbuff;
@@ -79,11 +79,11 @@ int raspiCloseI2C( int i2cdescriptor ) {
 
 #else
 
-int raspiWriteRegI2C(const char* devicename, int descriptor, unsigned char reg_addr, unsigned char data) {
+int raspiWriteRegI2C(int descriptor, unsigned char dev_addr, unsigned char reg_addr, unsigned char data) {
   return 0;
 }
 
-int raspiReadRegI2C(const char* devicename, int descriptor, unsigned char reg_addr, unsigned char* data) {
+int raspiReadRegI2C(int descriptor, unsigned char dev_addr, unsigned char reg_addr, unsigned char* data) {
   return 0;
 }
 

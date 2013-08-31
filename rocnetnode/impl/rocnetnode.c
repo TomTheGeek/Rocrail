@@ -318,7 +318,8 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
         i2csetup = NodeOp.inst(wI2CSetup.name(), rocnet, ELEMENT_NODE);
         NodeOp.addChild(rocnet, i2csetup);
       }
-      wI2CSetup.seti2cdevice(i2csetup, devname);
+      wI2CSetup.setdevice(i2csetup, devname);
+      wI2CSetup.setaddr(i2csetup, data->i2caddr);
     }
 
     data->identack = False;
@@ -875,7 +876,8 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
 
     if( NodeOp.findNode(rocnet, wI2CSetup.name()) != NULL ) {
       iONode i2cini = NodeOp.findNode(rocnet, wI2CSetup.name());
-      data->i2cdevice = wI2CSetup.geti2cdevice(i2cini);
+      data->i2cdevice = wI2CSetup.getdevice(i2cini);
+      data->i2caddr = wI2CSetup.getaddr(i2cini);
     }
 
     if( NodeOp.findNode(data->ini, wTrace.name()) != NULL ) {

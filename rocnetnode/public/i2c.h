@@ -24,8 +24,8 @@
 #ifndef ROCNETNODE_I2C_H_
 #define ROCNETNODE_I2C_H_
 
-int raspiWriteRegI2C( const char* devicename, int descriptor, unsigned char regaddr, unsigned char data );
-int raspiReadRegI2C( const char* devicename, int descriptor, unsigned char regaddr, unsigned char* data );
+int raspiWriteRegI2C( int descriptor, unsigned char dev_addr, unsigned char regaddr, unsigned char data );
+int raspiReadRegI2C( int descriptor, unsigned char dev_addr, unsigned char regaddr, unsigned char* data );
 int raspiOpenI2C( const char* devicename );
 int raspiCloseI2C( int descriptor );
 

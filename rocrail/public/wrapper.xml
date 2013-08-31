@@ -627,7 +627,8 @@
           <var name="invert" vt="bool" defval="false"/>
         </portsetup>
         <i2csetup wrappername="I2CSetup" cardinality="1">
-          <var name="i2cdevice" vt="string" defval="/dev/i2c-0" remark="I2C device name."/>
+          <var name="device" vt="string" defval="/dev/i2c-0" remark="I2C device name."/>
+          <var name="addr" vt="int" defval="32" range="0-*"/>
         </i2csetup>
       </rocnet>
 
