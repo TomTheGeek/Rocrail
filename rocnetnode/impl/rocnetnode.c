@@ -304,6 +304,23 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_LEN] = 0;
 
     data->id = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
+    if( rn[RN_PACKET_LEN] > 2 ) {
+      iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+      iONode i2csetup = NodeOp.findNode(rocnet, wI2CSetup.name());
+      char devname[128] = {'\0'};
+      int devlen = rn[RN_PACKET_LEN] - 2;
+      int i = 0;
+      for( i = 0; i < devlen; i++ ) {
+        devname[i] = rn[RN_PACKET_DATA + 2 + i];
+        devname[i+1] = '\0';
+      }
+      if( i2csetup == NULL ) {
+        i2csetup = NodeOp.inst(wI2CSetup.name(), rocnet, ELEMENT_NODE);
+        NodeOp.addChild(rocnet, i2csetup);
+      }
+      wI2CSetup.seti2cdevice(i2csetup, devname);
+    }
+
     data->identack = False;
     /* Save the rocnetnode.ini to persistent the new ID. */
     {

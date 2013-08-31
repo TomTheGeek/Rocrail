@@ -36,45 +36,37 @@
 #include <sys/ioctl.h>
 
 int raspiWriteRegI2C(const char* devicename, int descriptor, unsigned char reg_addr, unsigned char data) {
-  unsigned char buff[2];
-  struct i2c_rdwr_ioctl_data packets;
-  struct i2c_msg messages[1];
- 
-  buff[0] = reg_addr;
-  buff[1] = data;
- 
-  messages[0].addr = devicename;
-  messages[0].flags = 0;
-  messages[0].len = sizeof(buff);
-  messages[0].buf = buff;
- 
-  packets.msgs = messages;
-  packets.nmsgs = 1;
- 
-  return ioctl(descriptor, I2C_RDWR, &packets);
+  unsigned char buff[2];
+  struct i2c_rdwr_ioctl_data packets;
+  struct i2c_msg messages[1];
+  buff[0] = reg_addr;
+  buff[1] = data;
+  messages[0].addr = devicename;
+  messages[0].flags = 0;
+  messages[0].len = sizeof(buff);
+  messages[0].buf = buff;
+  packets.msgs = messages;
+  packets.nmsgs = 1;
+  return ioctl(descriptor, I2C_RDWR, &packets);
 }
 
 int raspiReadRegI2C(const char* devicename, int descriptor, unsigned char reg_addr, unsigned char* data) {
-  unsigned char *inbuff, outbuff;
-  struct i2c_rdwr_ioctl_data packets;
-  struct i2c_msg messages[2];
- 
-  outbuff = reg_addr;
-  messages[0].addr = devicename;
-  messages[0].flags= 0;
-  messages[0].len = sizeof(outbuff);
-  messages[0].buf = &outbuff;
- 
-  inbuff = data;
-  messages[1].addr = devicename;
-  messages[1].flags = I2C_M_RD;
-  messages[1].len = sizeof(*inbuff);
-  messages[1].buf = inbuff;
- 
-  packets.msgs = messages;
-  packets.nmsgs = 2;
- 
-  return ioctl(descriptor, I2C_RDWR, &packets);
+  unsigned char *inbuff, outbuff;
+  struct i2c_rdwr_ioctl_data packets;
+  struct i2c_msg messages[2];
+  outbuff = reg_addr;
+  messages[0].addr = devicename;
+  messages[0].flags= 0;
+  messages[0].len = sizeof(outbuff);
+  messages[0].buf = &outbuff;
+  inbuff = data;
+  messages[1].addr = devicename;
+  messages[1].flags = I2C_M_RD;
+  messages[1].len = sizeof(*inbuff);
+  messages[1].buf = inbuff;
+  packets.msgs = messages;
+  packets.nmsgs = 2;
+  return ioctl(descriptor, I2C_RDWR, &packets);
 }
 
 int raspiOpenI2C( const char* i2cdevice ) {
