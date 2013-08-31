@@ -196,6 +196,7 @@ install_all:
 	-mkdir -p $(DESTDIR)
 	-mkdir -p $(DESTDIR)$(FS)default
 	-cp -p $(OUTDIR)$(FS)rocrail$(BINSUFFIX) $(DESTDIR)
+	-cp -p $(OUTDIR)$(FS)rocnetnode$(BINSUFFIX) $(DESTDIR)
 	cd ..$(FS)rocdigs$(CS) $(MAKE) install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM) NATIVE=$(NATIVE)
 	cd ..$(FS)roclcdr$(CS) $(MAKE) install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM) NATIVE=$(NATIVE)
 	cd ..$(FS)rocview$(CS) $(MAKE) install TOOLPREFIX=$(TOOLPREFIX) PLATFORM=$(PLATFORM) NATIVE=$(NATIVE)
