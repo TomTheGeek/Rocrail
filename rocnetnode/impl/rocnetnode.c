@@ -59,6 +59,7 @@
 #include "rocdigs/impl/rocnet/rn-utils.h"
 
 #include "rocnetnode/public/io.h"
+#include "rocnetnode/public/i2c.h"
 
 #define ROCNETNODEINI "rocnetnode.ini"
 
@@ -72,6 +73,9 @@ typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 static void __sendRN( iORocNetNode rocnetnode, byte* rn );
 static iONode __findPort(iORocNetNode inst, int port);
 static void __initPorts(iORocNetNode inst);
+static void __initI2C(iORocNetNode inst);
+static void __writePort(iORocNetNode rocnetnode, int port, int value);
+static int __readPort(iORocNetNode rocnetnode, int port);
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -474,7 +478,8 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
       data->ports[port]->state = True;
     }
     if(data->ports[port] != NULL) {
-      raspiWrite(data->ports[port]->ionr, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0);
+      __writePort(rocnetnode, data->ports[port]->ionr, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0);
+
       msg = allocMem(32);
       msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
       rnReceipientAddresToPacket( 0, msg, 0 );
@@ -584,6 +589,27 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
 }
 
 
+static int __readPort(iORocNetNode rocnetnode, int port) {
+  iORocNetNodeData data = Data(rocnetnode);
+  if( data->i2cdescriptor > 0 ) {
+    /* ToDo: Read the I2C. */
+    return 0;
+  }
+  else {
+    return (raspiRead(data->ports[port]->ionr) ? 0:1);
+  }
+}
+
+static void __writePort(iORocNetNode rocnetnode, int port, int value) {
+  iORocNetNodeData data = Data(rocnetnode);
+  if( data->i2cdescriptor > 0 ) {
+    /* ToDo: Read the I2C. */
+  }
+  else {
+    raspiWrite(data->ports[port]->ionr, value);
+  }
+}
+
 static void __scanner( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
@@ -606,7 +632,7 @@ static void __scanner( void* threadinst ) {
             if( data->ports[i]->offtimer + data->ports[i]->delay <= SystemOp.getTick() ) {
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "pulse off port %d", i );
               data->ports[i]->state = False;
-              raspiWrite(data->ports[i]->ionr, 0);
+              __writePort(rocnetnode, data->ports[i]->ionr, 0);
 
               msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
               rnSenderAddresToPacket( data->id, msg, 0 );
@@ -651,7 +677,7 @@ static void __scanner( void* threadinst ) {
 
 
         if( data->ports[i] != NULL && data->ports[i]->type == 1 && !data->ports[i]->ackpending ) {
-          int val = (raspiRead(data->ports[i]->ionr) ? 0:1);
+          int val = __readPort(rocnetnode, i);
           Boolean report = inputVal[i] != val;
 
           if( data->ports[i]->delay > 0 ) {
@@ -790,6 +816,19 @@ static iONode __findPort(iORocNetNode inst, int port) {
   return portsetup;
 }
 
+static void __initI2C(iORocNetNode inst) {
+  iORocNetNodeData data = Data(inst);
+  iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+  int rc = 0;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init I2C..." );
+  rc = raspiOpenI2C(data->i2cdevice);
+  if( rc < 0 ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not open I2C device %s rc=%d", data->i2cdevice, errno );
+    data->i2cdescriptor = -1;
+  }
+}
+
+
 static void __initPorts(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
   int iomap = 0;
@@ -913,12 +952,19 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ID [%d]", data->id );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast address [%s]", data->addr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast port    [%d]", data->port );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  I2C device [%s]", data->i2cdevice != NULL ? data->i2cdevice:"" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   data->readUDP = SocketOp.inst( data->addr, data->port, False, True, True );
   SocketOp.bind(data->readUDP);
   data->writeUDP = SocketOp.inst( data->addr, data->port, False, True, True );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  __initPorts(inst);
+  if( data->i2cdevice != NULL && StrOp.len(data->i2cdevice) > 0 ) {
+    __initI2C(inst);
+  }
+  else {
+    __initPorts(inst);
+  }
+
   __initDigInt(inst);
 
   data->run = True;
