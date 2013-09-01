@@ -749,15 +749,17 @@ static void __scanner( void* threadinst ) {
         rnSenderAddresToPacket( data->id, msg, 0 );
         msg[RN_PACKET_ACTION] = RN_STATIONARY_QUERYIDS;
         msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-        msg[RN_PACKET_LEN] = 5 + devlen;
+        msg[RN_PACKET_LEN] = 7 + devlen;
         msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;
         msg[RN_PACKET_DATA+1] = 70;
         msg[RN_PACKET_DATA+2] = versionH;
         msg[RN_PACKET_DATA+3] = versionL;
         msg[RN_PACKET_DATA+4] = 16;
+        msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
+        msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];
         if( devlen > 0 ) {
           for( i = 0; i < devlen; i++ ) {
-            msg[RN_PACKET_DATA+5+i] = data->i2cdevice[i];
+            msg[RN_PACKET_DATA+7+i] = data->i2cdevice[i];
           }
         }
         __sendRN(rocnetnode, msg);
@@ -776,8 +778,16 @@ static void __reader( void* threadinst ) {
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
   iORocNetNodeData data       = Data(rocnetnode);
   byte msg[256];
+  int idx = 0;
+  iOStrTok tok = StrTokOp.inst(SocketOp.gethostaddr(), '.');
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    data->ip[idx] = atoi(StrTokOp.nextToken( tok ));
+    idx++;
+  }
+  StrTokOp.base.del(tok);
+  data->ipsize = idx;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet reader started" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet reader started on: %d.%d.%d.%d", data->ip[0], data->ip[1], data->ip[2], data->ip[3] );
 
   while( data->run ) {
     SocketOp.recvfrom( data->readUDP, msg, 0x7F, NULL, NULL );

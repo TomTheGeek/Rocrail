@@ -571,6 +571,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   char version[32] = {'\0'};
   char devname[128] = {'\0'};
   int i;
+  int subip = 0;
 
 
   rcpt = rnReceipientAddrFromPacket(rn, data->seven);
@@ -578,9 +579,11 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
 
   switch( action ) {
   case RN_STATIONARY_QUERYIDS:
+    subip = rn[RN_PACKET_DATA+5]*256+rn[RN_PACKET_DATA+6];
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "Identified: rocnetid=%d class=%s vid=%d version=%d.%d nrio=%d", sndr,
-        rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2], rn[RN_PACKET_DATA+3], rn[RN_PACKET_DATA+4] );
+        "Identified: rocnetid=%d class=%s vid=%d version=%d.%d nrio=%d subip=%d", sndr,
+        rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2],
+        rn[RN_PACKET_DATA+3], rn[RN_PACKET_DATA+4], subip );
     if( sndr == 65535 ) {
       /* default address; send a new ID */
       int highestID = wRocNet.getid(data->rnini);
@@ -607,20 +610,31 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     if( data->run && !MapOp.haskey( data->nodemap, key ) ) {
       iONode rnnode = NodeOp.inst( wRocNetNode.name(), data->ini, ELEMENT_NODE );
       wRocNetNode.setid(rnnode, sndr);
+      wRocNetNode.setsubip(rnnode, subip);
       wRocNetNode.setclass(rnnode, rnClassString(rn[RN_PACKET_DATA+0]));
       wRocNetNode.setvendor(rnnode, rn[RN_PACKET_DATA+1]);
       StrOp.fmtb( version, "%d.%d", rn[RN_PACKET_DATA+2], rn[RN_PACKET_DATA+3] );
       wRocNetNode.setversion(rnnode, version);
       wRocNetNode.setnrio(rnnode, rn[RN_PACKET_DATA+4]);
-      if( rn[RN_PACKET_LEN] > 5 ) {
-        for( i = 0; i < rn[RN_PACKET_LEN]-5; i++ ) {
-          devname[i] = rn[RN_PACKET_DATA + 5 + i];
+      if( rn[RN_PACKET_LEN] > 7 ) {
+        for( i = 0; i < rn[RN_PACKET_LEN]-7; i++ ) {
+          devname[i] = rn[RN_PACKET_DATA + 7 + i];
           devname[i+1] = '\0';
         }
         wRocNetNode.seti2cdevice(rnnode, devname);
       }
       MapOp.put( data->nodemap, key, (obj)rnnode);
       NodeOp.addChild( data->ini, rnnode );
+    }
+    else if( MapOp.haskey( data->nodemap, key ) ) {
+      iONode rnnode = (iONode)MapOp.get( data->nodemap, key );
+      if( wRocNetNode.getsubip(rnnode) != subip ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "node %s is already registered with another subIP: %d", key, wRocNetNode.getsubip(rnnode) );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node %s is already registered", key );
+      }
     }
 
     rnReply = allocMem(32);
@@ -905,7 +919,7 @@ static void __reader( void* threadinst ) {
   iOrocNetData data = Data(rocnet);
   char rn[0x7F];
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNet reader started." );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNet reader started on: %s", SocketOp.gethostaddr() );
 
   /* Connect with the sublib. */
   while( !data->connected && data->run ) {

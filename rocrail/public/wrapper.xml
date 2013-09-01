@@ -617,6 +617,7 @@
           <var name="vendor" vt="int" defval="0" remark="NMRA vendor ID."/>
           <var name="version" vt="string" defval="0.0" remark="Software version."/>
           <var name="nrio" vt="int" defval="0" range="0-255" remark="Number of I/Os"/>
+          <var name="subip" vt="int" defval="0" remark="Last 16 bits of the IP."/>
           <var name="i2cdevice" vt="string" defval="/dev/i2c-0" remark="I2C device name."/>
         </rocnetnode>
         <portsetup wrappername="PortSetup" cardinality="n">
