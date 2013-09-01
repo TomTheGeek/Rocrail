@@ -1216,6 +1216,9 @@
     </fun>
     <fun name="gethostname" vt="const char*" static="true" remark="Get local hostname."/>
     <fun name="gethostaddr" vt="const char*" static="true" remark="Get local host dotted address."/>
+    <fun name="getsockname" vt="const char*">
+      <param name="inst" vt="this" remark="Socket instance."/>
+    </fun>
     <fun name="getPeeked" vt="long" remark="Get number of peeked bytes.">
       <param name="inst" vt="this" remark="Socket instance."/>
     </fun>
