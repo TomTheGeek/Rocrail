@@ -622,8 +622,10 @@ static void __writePort(iORocNetNode rocnetnode, int port, int value) {
   iORocNetNodeData data = Data(rocnetnode);
   if( data->i2cdescriptor > 0 ) {
     /* ToDo: Read the I2C. */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "I2C writeport %d=%d", port, value );
   }
   else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GPIO writeport %d=%d", port, value );
     raspiWrite(data->ports[port]->ionr, value);
   }
 }
