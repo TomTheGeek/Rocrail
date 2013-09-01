@@ -496,7 +496,7 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
       data->ports[port]->state = True;
     }
     if(data->ports[port] != NULL) {
-      __writePort(rocnetnode, data->ports[port]->ionr, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0);
+      __writePort(rocnetnode, port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0);
 
       msg = allocMem(32);
       msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
@@ -650,7 +650,7 @@ static void __scanner( void* threadinst ) {
             if( data->ports[i]->offtimer + data->ports[i]->delay <= SystemOp.getTick() ) {
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "pulse off port %d", i );
               data->ports[i]->state = False;
-              __writePort(rocnetnode, data->ports[i]->ionr, 0);
+              __writePort(rocnetnode, i, 0);
 
               msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
               rnSenderAddresToPacket( data->id, msg, 0 );
@@ -885,7 +885,7 @@ static void __initPorts(iORocNetNode inst) {
     int i = 0;
     for( i = 0; i < 32; i++ ) {
       if( data->ports[i] != NULL && data->ports[i]->type == 0 ) {
-        __writePort(inst, data->ports[i]->ionr, data->ports[i]->state);
+        __writePort(inst, i, data->ports[i]->state);
       }
     }
   }
