@@ -76,6 +76,8 @@ static void __initPorts(iORocNetNode inst);
 static void __initI2C(iORocNetNode inst);
 static void __writePort(iORocNetNode rocnetnode, int port, int value);
 static int __readPort(iORocNetNode rocnetnode, int port);
+static void __saveIni(iORocNetNode rocnetnode);
+
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -188,6 +190,11 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
 
   switch( action ) {
     case RN_CS_TRACKPOWER:
+      if( (rn[RN_PACKET_DATA + 0] & 0x01) == 0x00) {
+        /* save at power off to persistent the output state */
+        __saveIni(rocnetnode);
+      }
+
       if(data->pDI != NULL) {
         iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE);
         wSysCmd.setcmd(cmd, rn[RN_PACKET_DATA + 0] & 0x01 ? wSysCmd.go:wSysCmd.stop);
@@ -269,6 +276,17 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
 static void __saveIni(iORocNetNode rocnetnode) {
   iORocNetNodeData data = Data(rocnetnode);
   iOFile iniFile = FileOp.inst( ROCNETNODEINI, OPEN_WRITE );
+
+  int i = 0;
+  for( i = 0; i < 128; i++ ) {
+    if( data->ports[i] != NULL && data->ports[i]->type == 0 ) {
+      iONode portsetup = __findPort(rocnetnode, i);
+      if( portsetup != NULL ) {
+        wPortSetup.setstate(portsetup, data->ports[i]->state);
+      }
+    }
+  }
+
 
   if( iniFile != NULL ) {
     char* iniStr = NodeOp.base.toString( data->ini );
@@ -847,6 +865,8 @@ static void __initPorts(iORocNetNode inst) {
         port->delay = wPortSetup.getdelay(portsetup);
         port->type = wPortSetup.gettype(portsetup);
         port->invert = wPortSetup.isinvert(portsetup);
+        if( port->type == 0 )
+          port->state = wPortSetup.isstate(portsetup);
         data->ports[portnr] = port;
         if( wPortSetup.gettype(portsetup) == 1 )
           iomap |= (1 << port->ionr );
@@ -859,6 +879,16 @@ static void __initPorts(iORocNetNode inst) {
   }
   /* I/O map: 0=output, 1=input*/
   data->iorc = raspiSetupIO(iomap);
+
+  /* restore persistent state */
+  if( data->iorc == 0 ) {
+    int i = 0;
+    for( i = 0; i < 32; i++ ) {
+      if( data->ports[i] != NULL && data->ports[i]->type == 0 ) {
+        __writePort(inst, data->ports[i]->ionr, data->ports[i]->state);
+      }
+    }
+  }
 }
 
 

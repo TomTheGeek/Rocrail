@@ -625,6 +625,7 @@
           <var name="type" vt="int" defval="0" range="0-*" remark="0=output, 1=input"/>
           <var name="delay" vt="int" defval="0" range="0-*" remark="0=directly/continous"/>
           <var name="invert" vt="bool" defval="false"/>
+          <var name="state" vt="bool" defval="false" remark="Saved output state."/>
         </portsetup>
         <i2csetup wrappername="I2CSetup" cardinality="1">
           <var name="device" vt="string" defval="/dev/i2c-0" remark="I2C device name."/>

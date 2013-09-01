@@ -59,6 +59,7 @@
       <var name="id" vt="int"/>
       <var name="addr" vt="const char*"/>
       <var name="port" vt="int"/>
+      <var name="nrio" vt="int"/>
       <var name="readUDP" vt="iOSocket"/>
       <var name="writeUDP" vt="iOSocket"/>
       <var name="ports[128]" vt="iOPort"/>
