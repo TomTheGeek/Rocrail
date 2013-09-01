@@ -1,7 +1,7 @@
  /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -581,6 +581,28 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Identified: rocnetid=%d class=%s vid=%d version=%d.%d nrio=%d", sndr,
         rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2], rn[RN_PACKET_DATA+3], rn[RN_PACKET_DATA+4] );
+    if( sndr == 65535 ) {
+      /* default address; send a new ID */
+      int highestID = wRocNet.getid(data->rnini);
+      iONode rrnode = wRocNet.getrocnetnode(data->ini);
+      while( rrnode != NULL ) {
+        if( wRocNetNode.getid(rrnode) > highestID )
+          highestID = wRocNetNode.getid(rrnode);
+        rrnode = wRocNet.nextrocnetnode(data->ini, rrnode);
+      }
+      highestID++;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send %d a new ID: %d", sndr, highestID );
+      rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+      rnReceipientAddresToPacket( sndr, rn, data->seven );
+      rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
+      rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WRNID;
+      rn[RN_PACKET_LEN] = 2;
+      rn[RN_PACKET_DATA + 0] = highestID / 256;
+      rn[RN_PACKET_DATA + 1] = highestID % 256;
+      ThreadOp.post( data->writer, (obj)rn );
+      break;
+    }
+
     StrOp.fmtb( key, "%d-%d", rn[RN_PACKET_NETID], sndr);
     if( data->run && !MapOp.haskey( data->nodemap, key ) ) {
       iONode rnnode = NodeOp.inst( wRocNetNode.name(), data->ini, ELEMENT_NODE );
@@ -600,6 +622,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       MapOp.put( data->nodemap, key, (obj)rnnode);
       NodeOp.addChild( data->ini, rnnode );
     }
+
     rnReply = allocMem(32);
     rnReply[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
     rnReceipientAddresToPacket( sndr, rnReply, data->seven );
