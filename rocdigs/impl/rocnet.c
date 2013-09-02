@@ -401,18 +401,13 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         int i = 0;
         int rnid = wProgram.getmodid(node);
         int newrnid = wProgram.getvalue(node);
-        int devlen = StrOp.len(wProgram.getfilename( node ) );
-        const char* devname = wProgram.getfilename( node );
         rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
         rnReceipientAddresToPacket( rnid, rn, data->seven );
         rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
         rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WRNID;
-        rn[RN_PACKET_LEN] = 2 + devlen;
+        rn[RN_PACKET_LEN] = 2;
         rn[RN_PACKET_DATA + 0] = newrnid / 256;
         rn[RN_PACKET_DATA + 1] = newrnid % 256;
-        for( i = 0; i < devlen; i++ ) {
-          rn[RN_PACKET_DATA + 2 + i] = devname[i];
-        }
         ThreadOp.post( data->writer, (obj)rn );
       }
       else if( wProgram.getcmd( node ) == wProgram.nvget ) {
@@ -616,13 +611,6 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       StrOp.fmtb( version, "%d.%d", rn[RN_PACKET_DATA+2], rn[RN_PACKET_DATA+3] );
       wRocNetNode.setversion(rnnode, version);
       wRocNetNode.setnrio(rnnode, rn[RN_PACKET_DATA+4]);
-      if( rn[RN_PACKET_LEN] > 7 ) {
-        for( i = 0; i < rn[RN_PACKET_LEN]-7; i++ ) {
-          devname[i] = rn[RN_PACKET_DATA + 7 + i];
-          devname[i+1] = '\0';
-        }
-        wRocNetNode.seti2cdevice(rnnode, devname);
-      }
       MapOp.put( data->nodemap, key, (obj)rnnode);
       NodeOp.addChild( data->ini, rnnode );
     }

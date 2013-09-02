@@ -326,23 +326,6 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_LEN] = 0;
 
     data->id = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
-    if( rn[RN_PACKET_LEN] > 2 ) {
-      iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
-      iONode i2csetup = NodeOp.findNode(rocnet, wI2CSetup.name());
-      char devname[128] = {'\0'};
-      int devlen = rn[RN_PACKET_LEN] - 2;
-      int i = 0;
-      for( i = 0; i < devlen; i++ ) {
-        devname[i] = rn[RN_PACKET_DATA + 2 + i];
-        devname[i+1] = '\0';
-      }
-      if( i2csetup == NULL ) {
-        i2csetup = NodeOp.inst(wI2CSetup.name(), rocnet, ELEMENT_NODE);
-        NodeOp.addChild(rocnet, i2csetup);
-      }
-      wI2CSetup.setdevice(i2csetup, devname);
-      wI2CSetup.setaddr(i2csetup, data->i2caddr);
-    }
 
     data->identack = False;
     /* Save the rocnetnode.ini to persistent the new ID. */
@@ -648,7 +631,7 @@ static void __writePort(iORocNetNode rocnetnode, int port, int value) {
     byte rdata = 0;
     /* read the latch byte */
     raspiReadRegI2C(data->i2cdescriptor, (port-1)/16, gpio?0x15:0x14, &rdata);
-    rdata ^= mask;  /* fileter out the wanted port */
+    rdata &= ~mask; /* fileter out the wanted port */
     wdata |= rdata; /* save other port values */
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "I2C writeport %d=0x%02X i2caddr=%d gpio=%d mask=0x%02X", port, wdata, i2caddr, gpio, mask );
     raspiWriteRegI2C(data->i2cdescriptor, i2caddr, gpio?0x13:0x12, wdata);
@@ -770,18 +753,13 @@ static void __scanner( void* threadinst ) {
     if( !data->identack ) {
       identwait++;
       if( identwait > 100 ) {
-        int devlen = 0;
-        int i = 0;
-        if( data->i2cdevice != NULL && StrOp.len(data->i2cdevice) > 0 ) {
-          devlen = StrOp.len(data->i2cdevice);
-        }
         identwait = 0;
         msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
         rnReceipientAddresToPacket( 0, msg, 0 );
         rnSenderAddresToPacket( data->id, msg, 0 );
         msg[RN_PACKET_ACTION] = RN_STATIONARY_QUERYIDS;
         msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-        msg[RN_PACKET_LEN] = 7 + devlen;
+        msg[RN_PACKET_LEN] = 7;
         msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;
         msg[RN_PACKET_DATA+1] = 70;
         msg[RN_PACKET_DATA+2] = versionH;
@@ -789,11 +767,6 @@ static void __scanner( void* threadinst ) {
         msg[RN_PACKET_DATA+4] = 16;
         msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
         msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];
-        if( devlen > 0 ) {
-          for( i = 0; i < devlen; i++ ) {
-            msg[RN_PACKET_DATA+7+i] = data->i2cdevice[i];
-          }
-        }
         __sendRN(rocnetnode, msg);
       }
     }
