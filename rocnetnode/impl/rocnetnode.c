@@ -609,24 +609,45 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
 
 static int __readPort(iORocNetNode rocnetnode, int port) {
   iORocNetNodeData data = Data(rocnetnode);
-  if( data->i2cdescriptor > 0 ) {
-    /* ToDo: Read the I2C. */
-    return 0;
+  if( data->i2cdescriptor > 0 && port > 0 && port < 129 ) {
+    byte rdata = 0;
+    /* Read the I2C. */
+    int gpio = ((port-1)%16)/8;
+    byte mask = 1 << (((port-1)%16)%8);
+    raspiReadRegI2C(data->i2cdescriptor, (port-1)/16, gpio?0x13:0x12, &rdata);
+    return (rdata&mask)?0:1;
+  }
+  else  if( port > 0 && port < 32 ) {
+    return (raspiRead(data->ports[port]->ionr) ? 0:1);
   }
   else {
-    return (raspiRead(data->ports[port]->ionr) ? 0:1);
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "port out of range [%d]", port );
+    return 0;
   }
 }
 
 static void __writePort(iORocNetNode rocnetnode, int port, int value) {
   iORocNetNodeData data = Data(rocnetnode);
-  if( data->i2cdescriptor > 0 ) {
-    /* ToDo: Read the I2C. */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "I2C writeport %d=%d", port, value );
+  if( data->i2cdescriptor > 0 && port > 0 && port < 129 ) {
+    /* Read the I2C, then write. */
+    int i2caddr = (port-1)/16;
+    int gpio = ((port-1)%16)/8; /* GPIO A or B */
+    byte mask = 1 << (((port-1)%16)%8); /* create the port mask */
+    byte wdata = value << (((port-1)%16)%8); /* shift the new value on its place */
+    byte rdata = 0;
+    /* read the port byte */
+    raspiReadRegI2C(data->i2cdescriptor, (port-1)/16, gpio?0x13:0x12, &rdata);
+    rdata ^= mask;  /* fileter out the wanted port */
+    wdata |= rdata; /* save other port values */
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "I2C writeport %d=0x%02X i2caddr=%d gpio=%d mask=0x%02X", port, wdata, i2caddr, gpio, mask );
+    raspiWriteRegI2C(data->i2cdescriptor, i2caddr, gpio?0x13:0x12, wdata);
   }
-  else {
+  else if( port > 0 && port < 32 ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GPIO writeport %d=%d", port, value );
     raspiWrite(data->ports[port]->ionr, value);
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "port out of range [%d]", port );
   }
 }
 
@@ -855,7 +876,45 @@ static void __initI2C(iORocNetNode inst) {
   if( rc < 0 ) {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not open I2C device %s rc=%d", data->i2cdevice, errno );
     data->i2cdescriptor = -1;
+    return;
   }
+
+  if( rocnet != NULL ) {
+    int i = 0;
+    int iomap[8] = {0,0,0,0,0,0,0,0};
+    int i2caddr = 0;
+    iONode portsetup = wRocNet.getportsetup(rocnet);
+    while( portsetup != NULL ) {
+      int portnr = wPortSetup.getport(portsetup);
+      if( portnr < 128 ) {
+        iOPort port = allocMem( sizeof( struct Port) );
+        port->port = portnr;
+        port->delay = wPortSetup.getdelay(portsetup);
+        port->type = wPortSetup.gettype(portsetup);
+        port->invert = wPortSetup.isinvert(portsetup);
+        if( port->type == 0 )
+          port->state = wPortSetup.isstate(portsetup);
+        data->ports[portnr] = port;
+
+        i2caddr = (portnr-1) / 16;
+        if( i2caddr >= 0 && i2caddr < 8 ) {
+          if( wPortSetup.gettype(portsetup) == 1 )
+            iomap[i2caddr] |= (1 << (portnr-1) );
+
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "portsetup: port=%d i2caddr=%d type=%d delay=%d", port->port, i2caddr, port->type, port->delay );
+        }
+      }
+      portsetup = wRocNet.nextportsetup(rocnet, portsetup);
+    }
+
+    for( i = 0; i < 8; i++ ) {
+      raspiWriteRegI2C(data->i2cdescriptor, 0x20+i, 0x00, iomap[i]&0x00FF);
+      raspiWriteRegI2C(data->i2cdescriptor, 0x20+i, 0x01, (iomap[i]&0xFF00) >> 8);
+    }
+  }
+
+
 }
 
 
