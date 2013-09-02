@@ -919,7 +919,7 @@ static void __reader( void* threadinst ) {
   iOrocNetData data = Data(rocnet);
   char rn[0x7F];
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNet reader started on: %s", SocketOp.gethostaddr() );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNet reader started" );
 
   /* Connect with the sublib. */
   while( !data->connected && data->run ) {
