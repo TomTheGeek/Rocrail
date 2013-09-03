@@ -817,7 +817,7 @@ static void __handleSystem(iOMassothData data, byte* in) {
 
 static void __handleSwitch(iOMassothData data, byte* in) {
   iONode nodeC = NULL;
-  Boolean straight = (in[3] & 0x01) ? True:False;
+  Boolean straight = (in[3] & 0x01) ? False:True;
   int addr = in[2] << 6;
   addr += in[3] >> 2;
 
