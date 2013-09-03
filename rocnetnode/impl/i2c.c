@@ -47,7 +47,7 @@ int raspiWriteRegI2C(int descriptor, unsigned char dev_addr, unsigned char reg_a
   messages[0].buf = buff;
   packets.msgs = messages;
   packets.nmsgs = 1;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write I2C register: addr=0x%02X msg=0x%02X", dev_addr, messages );
+  TraceOp.trc( raspi-i2c, TRCLEVEL_INFO, __LINE__, 9999, "write I2C register: addr=0x%02X msg=0x%02X", dev_addr, messages );
   return ioctl(descriptor, I2C_RDWR, &packets);
 }
 
@@ -67,7 +67,7 @@ int raspiReadRegI2C(int descriptor, unsigned char dev_addr, unsigned char reg_ad
   messages[1].buf = inbuff;
   packets.msgs = messages;
   packets.nmsgs = 2;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read I2C register: addr=0x%02X msg=0x%02X", dev_addr, messages );
+  TraceOp.trc( "raspi-i2c", TRCLEVEL_INFO, __LINE__, 9999, "read I2C register: addr=0x%02X msg=0x%02X", dev_addr, messages );
   return ioctl(descriptor, I2C_RDWR, &packets);
 }
 
