@@ -612,10 +612,14 @@ static void __scanI2C(iORocNetNode rocnetnode) {
   iORocNetNodeData data = Data(rocnetnode);
   int i = 0;
   for(i = 0; i < 8; i++) {
-    if( data->iomap[i] && 0x00FF )
-      raspiReadRegI2C(data->i2cdescriptor, i, 0x12, &data->iodata[i*2+0]);
-    if( data->iomap[i] && 0xFF00 )
-      raspiReadRegI2C(data->i2cdescriptor, i, 0x13, &data->iodata[i*2+1]);
+    if( data->iomap[i] && 0x00FF ) {
+      raspiReadRegI2C(data->i2cdescriptor, 0x20+i, 0x12, &data->iodata[i*2+0]);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "i2c %dA [0x%02X]", i, data->iodata[i*2+0] );
+    }
+    if( data->iomap[i] && 0xFF00 ) {
+      raspiReadRegI2C(data->i2cdescriptor, 0x20+i, 0x13, &data->iodata[i*2+1]);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "i2c %dB [0x%02X]", i, data->iodata[i*2+1] );
+    }
   }
 }
 
@@ -685,7 +689,7 @@ static void __scanner( void* threadinst ) {
         }
 
         /* Check for pending Ack */
-        if( data->ports[i] != NULL && data->ports[i]->type == 1 && data->ports[i]->ackpending) {
+        if( data->sack && data->ports[i] != NULL && data->ports[i]->type == 1 && data->ports[i]->ackpending) {
           data->ports[i]->acktimer++;
           if( data->ports[i]->acktimer > 50 ) {
             data->ports[i]->ackretry++;
@@ -995,6 +999,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
     data->id    = wRocNet.getid(rocnet);
     data->addr  = wRocNet.getaddr(rocnet);
     data->port  = wRocNet.getport(rocnet);
+    data->sack  = wRocNet.issack(rocnet);
 
     if( NodeOp.findNode(rocnet, wI2CSetup.name()) != NULL ) {
       iONode i2cini = NodeOp.findNode(rocnet, wI2CSetup.name());

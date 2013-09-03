@@ -71,6 +71,7 @@
       <var name="ipsize" vt="int"/>
       <var name="iomap[8]" vt="int"/>
       <var name="iodata[16]" vt="byte"/>
+      <var name="sack" vt="Boolean"/>
       </data>
   </object>
 

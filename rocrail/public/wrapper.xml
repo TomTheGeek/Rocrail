@@ -611,6 +611,7 @@
         <var name="port" vt="int" defval="4321" range="0-*" remark="multicast port"/>
         <var name="crc" vt="bool" defval="false"/>
         <var name="wd" vt="bool" defval="false"/>
+        <var name="sack" vt="bool" defval="false"/>
         <rocnetnode wrappername="RocNetNode" cardinality="n">
 	        <var name="id" vt="int" defval="10" range="0-*" remark="RocNet sender ID."/>
           <var name="class" vt="string" defval="" remark="Class ID."/>
