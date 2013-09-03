@@ -854,12 +854,10 @@ static iONode __findPort(iORocNetNode inst, int port) {
 static void __initI2C(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
   iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
-  int rc = 0;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init I2C..." );
-  rc = raspiOpenI2C(data->i2cdevice);
-  if( rc < 0 ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not open I2C device %s rc=%d", data->i2cdevice, errno );
-    data->i2cdescriptor = -1;
+  data->i2cdescriptor = raspiOpenI2C(data->i2cdevice);
+  if( data->i2cdescriptor < 0 ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not open I2C device %s errno=%d", data->i2cdevice, errno );
     return;
   }
 
