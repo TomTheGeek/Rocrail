@@ -715,7 +715,7 @@ static void __scanner( void* threadinst ) {
           }
         }
 
-        if( data->ports[i] != NULL && data->ports[i]->type == 1 && !data->ports[i]->ackpending ) {
+        if( data->ports[i] != NULL && data->ports[i]->type == 1 && (!data->sack || !data->ports[i]->ackpending) ) {
           int val = __readPort(rocnetnode, i);
           Boolean report = inputVal[i] != val;
 
