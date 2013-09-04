@@ -77,6 +77,7 @@ static void __initI2C(iORocNetNode inst);
 static void __writePort(iORocNetNode rocnetnode, int port, int value);
 static int __readPort(iORocNetNode rocnetnode, int port);
 static void __saveIni(iORocNetNode rocnetnode);
+static void __initIO(iORocNetNode rocnetnode);
 
 
 /** ----- OBase ----- */
@@ -370,7 +371,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       wPortSetup.setdelay( portsetup, delay);
     }
     __saveIni(rocnetnode);
-    __initPorts(rocnetnode);
+    __initIO(rocnetnode);
   }
   break;
 
@@ -432,7 +433,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
       iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
       if( wRocNetNodeOptions.getiotype(optionsini) != data->iotype )
-        __initPorts(rocnetnode);
+        __initIO(rocnetnode);
       wRocNetNodeOptions.setiotype( optionsini, data->iotype );
       wRocNetNodeOptions.setsack( optionsini, data->sack );
     }
@@ -1026,6 +1027,23 @@ static void __initPorts(iORocNetNode inst) {
 }
 
 
+static void __initIO(iORocNetNode inst) {
+  iORocNetNodeData data = Data(inst);
+
+  if( data->iotype == 0 ) {
+    __initPorts(inst);
+  }
+  else if(data->iotype == 1) {
+    data->i2cdevice = "/dev/i2c-0";
+    __initI2C(inst);
+  }
+  else {
+    data->i2cdevice = "/dev/i2c-1";
+    __initI2C(inst);
+  }
+
+}
+
 static int _Main( iORocNetNode inst, int argc, char** argv ) {
   iORocNetNodeData data = Data(inst);
   iOTrace trc = NULL;
@@ -1128,17 +1146,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   SocketOp.bind(data->readUDP);
   data->writeUDP = SocketOp.inst( data->addr, data->port, False, True, True );
 
-  if( data->iotype == 0 ) {
-    __initPorts(inst);
-  }
-  else if(data->iotype == 1) {
-    data->i2cdevice = "/dev/i2c-0";
-    __initI2C(inst);
-  }
-  else {
-    data->i2cdevice = "/dev/i2c-1";
-    __initI2C(inst);
-  }
+  __initIO(inst);
 
   __initDigInt(inst);
 
