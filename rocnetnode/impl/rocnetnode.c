@@ -292,6 +292,7 @@ static void __saveIni(iORocNetNode rocnetnode) {
     char* iniStr = NodeOp.base.toString( data->ini );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "saving ini %s...", ROCNETNODEINI );
     FileOp.write( iniFile, iniStr, StrOp.len( iniStr ) );
+    FileOp.flush( iniFile );
     FileOp.close( iniFile );
     StrOp.free(iniStr);
   }
