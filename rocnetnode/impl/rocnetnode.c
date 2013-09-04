@@ -426,6 +426,16 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_LEN] = 2;
     msg[RN_PACKET_DATA + 0] = data->iotype;
     msg[RN_PACKET_DATA + 1] = data->sack ? 0x01:0x00;
+    /* Save the rocnetnode.ini to persistent the new ID. */
+    {
+      iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+      iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
+      if( wRocNetNodeOptions.getiotype(optionsini) != data->iotype )
+        __initPorts(rocnetnode);
+      wRocNetNodeOptions.setiotype( optionsini, data->iotype );
+      wRocNetNodeOptions.setsack( optionsini, data->sack );
+    }
+    __saveIni(rocnetnode);
     break;
   }
 
@@ -1030,6 +1040,10 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
       data->sack  = wRocNetNodeOptions.issack(optionsini);
       data->iotype = wRocNetNodeOptions.getiotype(optionsini);
+    }
+    else {
+      iONode optionsini = NodeOp.inst(wRocNetNodeOptions.name(), rocnet, ELEMENT_NODE );
+      NodeOp.addChild( rocnet, optionsini);
     }
 
     if( NodeOp.findNode(data->ini, wTrace.name()) != NULL ) {
