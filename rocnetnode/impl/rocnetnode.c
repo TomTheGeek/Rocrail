@@ -464,7 +464,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     }
     else if( rn[RN_PACKET_DATA + 0] == RN_SENSOR_REPORT ) {
       int port = rn[RN_PACKET_DATA + 1];
-      if( port < 32 && data->ports[port] != NULL ) {
+      if( port < 128 && data->ports[port] != NULL ) {
         data->ports[port]->acktimer = 0;
         data->ports[port]->ackretry = 0;
         data->ports[port]->ackpending = False;
@@ -481,11 +481,14 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     rnSenderAddresToPacket( data->id, msg, 0 );
     msg[RN_PACKET_ACTION] = RN_STATIONARY_QUERYIDS;
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-    msg[RN_PACKET_LEN] = 4;
+    msg[RN_PACKET_LEN] = 7;
     msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;
     msg[RN_PACKET_DATA+1] = 70;
     msg[RN_PACKET_DATA+2] = versionH;
     msg[RN_PACKET_DATA+3] = versionL;
+    msg[RN_PACKET_DATA+4] = (data->iotype == 0) ? 16:128;
+    msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
+    msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];
     break;
   }
   return msg;
@@ -510,7 +513,7 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
         "output SWITCH(%s) port=%d %s action for %d%s from %d, %d data bytes",
         rnActionTypeString(rn), port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? "on":"off",
         rcpt, isThis?"(this)":"", sndr, rn[RN_PACKET_LEN] );
-    if( port < 32 && data->ports[port] != NULL && rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ) {
+    if( port < 128 && data->ports[port] != NULL && rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ) {
       data->ports[port]->offtimer = SystemOp.getTick();
       data->ports[port]->state = True;
     }
@@ -689,20 +692,22 @@ static void __scanner( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
   iORocNetNodeData data       = Data(rocnetnode);
-  int inputVal[32];
+  int inputVal[128];
   byte msg[256];
   int identwait = 0;
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet scanner started" );
 
-  MemOp.set( inputVal, 32*sizeof(int), 0);
+  MemOp.set( inputVal, 128*sizeof(int), 0);
 
   while( data->run ) {
     int i;
+    int nrios = (data->iotype == 0) ? 16:128;
+
     if( data->iorc == 0 ) {
         __scanI2C(rocnetnode);
-      for( i = 0; i < 32; i++ ) {
+      for( i = 0; i < nrios; i++ ) {
         if( data->ports[i] != NULL && data->ports[i]->type == 0 ) {
           if( data->ports[i]->delay > 0 && data->ports[i]->state ) {
             if( data->ports[i]->offtimer + data->ports[i]->delay <= SystemOp.getTick() ) {
@@ -804,7 +809,7 @@ static void __scanner( void* threadinst ) {
         msg[RN_PACKET_DATA+1] = 70;
         msg[RN_PACKET_DATA+2] = versionH;
         msg[RN_PACKET_DATA+3] = versionL;
-        msg[RN_PACKET_DATA+4] = 16;
+        msg[RN_PACKET_DATA+4] = (data->iotype == 0) ? 16:128;
         msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
         msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];
         __sendRN(rocnetnode, msg);
@@ -976,7 +981,9 @@ static void __initPorts(iORocNetNode inst) {
   /* restore persistent state */
   if( data->iorc == 0 ) {
     int i = 0;
-    for( i = 0; i < 32; i++ ) {
+    int nrios = (data->iotype == 0) ? 16:128;
+
+    for( i = 0; i < nrios; i++ ) {
       if( data->ports[i] != NULL && data->ports[i]->type == 0 ) {
         __writePort(inst, i, data->ports[i]->state);
       }
