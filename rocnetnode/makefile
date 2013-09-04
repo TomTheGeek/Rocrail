@@ -87,6 +87,7 @@ OUTDIR=..$(FS)$(DIRPREFIX)bin
 GENDIR=..$(FS)$(DIRPREFIX)gen
 TMPOUTDIR=$(GENDIR)$(FS)rocnetnode$(FS)bin
 DEBUG=-g
+DESTDIR=$(FS)opt$(FS)rocrail
 BINDIR=..$(FS)rocs$(FS)bin
 
 CPP=$(TOOLPREFIX)gcc
@@ -119,4 +120,10 @@ clean:
 	-$(REMOVE) $(GENDIR)$(FS)rocnetnode$(FS)bin$(FS)*
 	-$(REMOVE) $(GENDIR)$(FS)rocnetnode$(FS)public$(FS)*
 	cd $(GENDIR)$(FS)rocnetnode$(CS) ..$(FS)$(BINDIR)$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocnetnode$(FS)rocnetnode.xml ..$(FS)
+
+
+install:
+	-$(COPY) -p $(OUTDIR)$(FS)rocnetnode$(BINSUFFIX) $(DESTDIR)
+	-cp -p package$(FS)rocnetnode.sh $(DESTDIR)
+	-cp -p package$(FS)rocnetnode.ini $(DESTDIR)
 
