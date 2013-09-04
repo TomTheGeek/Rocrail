@@ -70,6 +70,7 @@
       <var name="ip[6]" vt="int"/>
       <var name="ipsize" vt="int"/>
       <var name="iomap[8]" vt="int"/>
+      <var name="i2caddr[8]" vt="Boolean"/>
       <var name="iodata[16]" vt="byte"/>
       <var name="sack" vt="Boolean"/>
       </data>

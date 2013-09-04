@@ -899,16 +899,15 @@ static iONode __findPort(iORocNetNode inst, int port) {
 static void __initI2C(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
   iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init I2C..." );
-  data->i2cdescriptor = raspiOpenI2C(data->i2cdevice);
-  if( data->i2cdescriptor < 0 ) {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not open I2C device %s errno=%d", data->i2cdevice, errno );
-    return;
-  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init I2C [%s]", data->i2cdevice );
+
+  MemOp.set(data->iomap, 0, sizeof(data->iomap));
+  MemOp.set(data->i2caddr, 0, sizeof(data->i2caddr));
 
   if( rocnet != NULL ) {
     int i = 0;
     int i2caddr = 0;
+    int shift = 0;
     iONode portsetup = wRocNet.getportsetup(rocnet);
     MemOp.set( data->iomap, 0, sizeof(data->iomap));
     while( portsetup != NULL ) {
@@ -924,20 +923,36 @@ static void __initI2C(iORocNetNode inst) {
         data->ports[portnr] = port;
 
         i2caddr = (portnr-1) / 16;
+        shift = (portnr-1) % 16;
         if( i2caddr >= 0 && i2caddr < 8 ) {
+          data->i2caddr[i2caddr] = True;
           if( wPortSetup.gettype(portsetup) == 1 )
-            data->iomap[i2caddr] |= (1 << (portnr-1) );
+            data->iomap[i2caddr] |= (1 << shift );
 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-              "portsetup: port=%d i2caddr=%d type=%d delay=%d", port->port, i2caddr, port->type, port->delay );
+              "portsetup: port=%d i2caddr=%d shift=%d mask=0x%02X type=%d delay=%d",
+              port->port, i2caddr, shift, data->iomap[i2caddr], port->type, port->delay );
         }
       }
       portsetup = wRocNet.nextportsetup(rocnet, portsetup);
     }
 
     for( i = 0; i < 8; i++ ) {
-      raspiWriteRegI2C(data->i2cdescriptor, 0x20+i, 0x00, data->iomap[i]&0x00FF);
-      raspiWriteRegI2C(data->i2cdescriptor, 0x20+i, 0x01, (data->iomap[i]&0xFF00) >> 8);
+      if( data->i2caddr[i] )
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "i2c addr=%d A=0x%02X B=0x%02X", i, data->iomap[i]&0x00FF, (data->iomap[i]&0xFF00) >> 8 );
+    }
+
+    data->i2cdescriptor = raspiOpenI2C(data->i2cdevice);
+    if( data->i2cdescriptor < 0 ) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not open I2C device %s errno=%d", data->i2cdevice, errno );
+      return;
+    }
+    for( i = 0; i < 8; i++ ) {
+      if( data->i2caddr[i] ) {
+        raspiWriteRegI2C(data->i2cdescriptor, 0x20+i, 0x00, data->iomap[i]&0x00FF);
+        raspiWriteRegI2C(data->i2cdescriptor, 0x20+i, 0x01, (data->iomap[i]&0xFF00) >> 8);
+      }
     }
   }
 
@@ -1086,7 +1101,8 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ID [%d]", data->id );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast address [%s]", data->addr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast port    [%d]", data->port );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  I2C device [%s]", data->i2cdevice != NULL ? data->i2cdevice:"" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  I/O type [%d]", data->iotype );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor ack [%s]", data->sack?"ON":"OFF" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   data->readUDP = SocketOp.inst( data->addr, data->port, False, True, True );
   SocketOp.bind(data->readUDP);
@@ -1095,7 +1111,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   if( data->iotype == 0 ) {
     __initPorts(inst);
   }
-  else if(data->iotype == 0) {
+  else if(data->iotype == 1) {
     data->i2cdevice = "/dev/i2c-0";
     __initI2C(inst);
   }

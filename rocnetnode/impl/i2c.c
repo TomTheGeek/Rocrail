@@ -90,11 +90,11 @@ int raspiReadRegI2C(int descriptor, unsigned char dev_addr, unsigned char reg_ad
 }
 
 int raspiOpenI2C( const char* devicename ) {
-  return 0;
+  return -1;
 }
 
 int raspiCloseI2C( int descriptor ) {
-  return 0;
+  return -1;
 }
 
 #endif
