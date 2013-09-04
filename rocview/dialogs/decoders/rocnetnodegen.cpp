@@ -16,8 +16,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
 	
-	m_notebook2 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	m_IndexPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_NodeBook = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_IndexPanel = new wxPanel( m_NodeBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer10;
 	bSizer10 = new wxBoxSizer( wxVERTICAL );
 	
@@ -27,8 +27,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_IndexPanel->SetSizer( bSizer10 );
 	m_IndexPanel->Layout();
 	bSizer10->Fit( m_IndexPanel );
-	m_notebook2->AddPage( m_IndexPanel, wxT("Index"), false );
-	m_RocNetPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_NodeBook->AddPage( m_IndexPanel, wxT("Index"), false );
+	m_RocNetPanel = new wxPanel( m_NodeBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
 	
@@ -86,8 +86,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_RocNetPanel->SetSizer( bSizer6 );
 	m_RocNetPanel->Layout();
 	bSizer6->Fit( m_RocNetPanel );
-	m_notebook2->AddPage( m_RocNetPanel, wxT("RocNet"), false );
-	m_NodeOptions = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_NodeBook->AddPage( m_RocNetPanel, wxT("RocNet"), false );
+	m_NodeOptions = new wxPanel( m_NodeBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer91;
 	bSizer91 = new wxBoxSizer( wxVERTICAL );
 	
@@ -97,7 +97,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_SecAck = new wxCheckBox( m_NodeOptions, wxID_ANY, wxT("Acknowledge sensor events"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_RocNetOptionBox->Add( m_SecAck, 0, wxALL, 5 );
 	
-	wxString m_IOTypeChoices[] = { wxT("I2C 0"), wxT("I2C 1"), wxT("GPIO") };
+	wxString m_IOTypeChoices[] = { wxT("GPIO"), wxT("I2C 0"), wxT("I2C 1") };
 	int m_IOTypeNChoices = sizeof( m_IOTypeChoices ) / sizeof( wxString );
 	m_IOType = new wxRadioBox( m_NodeOptions, wxID_ANY, wxT("I/O Type"), wxDefaultPosition, wxDefaultSize, m_IOTypeNChoices, m_IOTypeChoices, 1, wxRA_SPECIFY_ROWS );
 	m_IOType->SetSelection( 1 );
@@ -119,8 +119,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_NodeOptions->SetSizer( bSizer91 );
 	m_NodeOptions->Layout();
 	bSizer91->Fit( m_NodeOptions );
-	m_notebook2->AddPage( m_NodeOptions, wxT("Options"), true );
-	m_PortSetupPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_NodeBook->AddPage( m_NodeOptions, wxT("Options"), true );
+	m_PortSetupPanel = new wxPanel( m_NodeBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
 	
@@ -295,9 +295,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_PortSetupPanel->SetSizer( bSizer7 );
 	m_PortSetupPanel->Layout();
 	bSizer7->Fit( m_PortSetupPanel );
-	m_notebook2->AddPage( m_PortSetupPanel, wxT("Port Setup"), false );
+	m_NodeBook->AddPage( m_PortSetupPanel, wxT("Port Setup"), false );
 	
-	bSizer5->Add( m_notebook2, 0, wxEXPAND | wxALL, 5 );
+	bSizer5->Add( m_NodeBook, 0, wxEXPAND | wxALL, 5 );
 	
 	m_StdButton = new wxStdDialogButtonSizer();
 	m_StdButtonOK = new wxButton( this, wxID_OK );

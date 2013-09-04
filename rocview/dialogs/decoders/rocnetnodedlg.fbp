@@ -100,7 +100,7 @@
                         <property name="id">wxID_ANY</property>
                         <property name="maximum_size"></property>
                         <property name="minimum_size"></property>
-                        <property name="name">m_notebook2</property>
+                        <property name="name">m_NodeBook</property>
                         <property name="permission">protected</property>
                         <property name="pos"></property>
                         <property name="size"></property>
@@ -1128,7 +1128,7 @@
                                                 <property name="proportion">0</property>
                                                 <object class="wxRadioBox" expanded="1">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;I2C 0&quot; &quot;I2C 1&quot; &quot;GPIO&quot;</property>
+                                                    <property name="choices">&quot;GPIO&quot; &quot;I2C 0&quot; &quot;I2C 1&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>

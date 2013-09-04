@@ -48,6 +48,7 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   m_Props = NULL;
   m_PortGroup = 0;
   __initVendors();
+  m_NodeBook->SetSelection(0);
 
   initLabels();
   initNodeList();

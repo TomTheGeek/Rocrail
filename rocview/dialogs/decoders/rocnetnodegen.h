@@ -40,7 +40,7 @@ class rocnetnodegen : public wxDialog
 	private:
 	
 	protected:
-		wxNotebook* m_notebook2;
+		wxNotebook* m_NodeBook;
 		wxPanel* m_IndexPanel;
 		wxListCtrl* m_NodeList;
 		wxPanel* m_RocNetPanel;
