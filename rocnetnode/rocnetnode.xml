@@ -23,7 +23,7 @@
 <Project name="RocNetNode" title="RocNet Node" docname="rocnetnodeapi">
 
 
-  <object name="RocNetNode" use="node,trace,thread,socket" include="$rocint/public/digint">
+  <object name="RocNetNode" use="node,trace,thread,socket,mutex" include="$rocint/public/digint">
     <struct name="Port" typedef="*iOPort">
       <var name="port" vt="int"/>
       <var name="ionr" vt="int"/>
@@ -73,6 +73,7 @@
       <var name="i2caddr[8]" vt="Boolean"/>
       <var name="iodata[16]" vt="byte"/>
       <var name="sack" vt="Boolean"/>
+      <var name="i2cmux" vt="iOMutex"/>
       </data>
   </object>
 

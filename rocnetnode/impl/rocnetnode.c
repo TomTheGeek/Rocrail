@@ -651,6 +651,7 @@ static int __readPort(iORocNetNode rocnetnode, int port) {
 static void __scanI2C(iORocNetNode rocnetnode) {
   iORocNetNodeData data = Data(rocnetnode);
   int i = 0;
+  MutexOp.wait( data->i2cmux );
   for(i = 0; i < 8; i++) {
     if( data->iomap[i] && 0x00FF ) {
       raspiReadRegI2C(data->i2cdescriptor, 0x20+i, 0x12, &data->iodata[i*2+0]);
@@ -661,6 +662,7 @@ static void __scanI2C(iORocNetNode rocnetnode) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "i2c %dB [0x%02X]", i, data->iodata[i*2+1] );
     }
   }
+  MutexOp.post( data->i2cmux );
 }
 
 
@@ -669,16 +671,32 @@ static void __writePort(iORocNetNode rocnetnode, int port, int value) {
   if( data->i2cdescriptor > 0 && port > 0 && port < 129 ) {
     /* Read the I2C, then write. */
     int i2caddr = (port-1)/16;
-    int gpio = ((port-1)%16)/8; /* GPIO A or B */
-    byte mask = 1 << (((port-1)%16)%8); /* create the port mask */
-    byte wdata = value << (((port-1)%16)%8); /* shift the new value on its place */
-    byte rdata = 0;
+    int shift   = (port-1)%16;
+    int mask16  = (1 << shift); /* create the port mask */
+    int wdata16 = (value << shift); /* shift the new value on its place */
+    byte mask8  = 0;
+    byte wdata8 = 0;
+    byte rdata  = 0;
     /* read the latch byte */
-    raspiReadRegI2C(data->i2cdescriptor, (port-1)/16, gpio?0x15:0x14, &rdata);
-    rdata &= ~mask; /* fileter out the wanted port */
-    wdata |= rdata; /* save other port values */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "I2C writeport %d=0x%02X i2caddr=%d gpio=%d mask=0x%02X", port, wdata, i2caddr, gpio, mask );
-    raspiWriteRegI2C(data->i2cdescriptor, i2caddr, gpio?0x13:0x12, wdata);
+    MutexOp.wait( data->i2cmux );
+    raspiReadRegI2C(data->i2cdescriptor, 0x20+i2caddr, (shift > 7) ? 0x15:0x14, &rdata);
+
+    if( shift > 7 ) {
+      mask8  = (mask16 >> 8) & 0x00FF;
+      wdata8 = (wdata16 >> 8) & 0x00FF;
+    }
+    else {
+      mask8  = mask16 & 0x00FF;
+      wdata8 = wdata16 & 0x00FF;
+    }
+
+    rdata &= ~mask8; /* fileter out the wanted port */
+    wdata8 |= rdata; /* save other port values */
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "I2C writeport %d=0x%02X i2caddr=%d shift=%d mask=0x%02X", port, wdata8, i2caddr, shift, mask8 );
+    raspiWriteRegI2C(data->i2cdescriptor, 0x20+i2caddr, (shift > 7) ? 0x13:0x12, wdata8);
+    MutexOp.post( data->i2cmux );
   }
   else if( port > 0 && port < 32 ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GPIO writeport %d=%d", port, value );
@@ -1097,6 +1115,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   }
   TraceOp.setAppID( trc, "r" );
 
+  data->i2cmux = MutexOp.inst( NULL, True );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ID [%d]", data->id );
