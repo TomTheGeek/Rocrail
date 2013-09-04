@@ -60,6 +60,11 @@ volatile unsigned *gpio;
 #define GPIO_CLR *(gpio+10) /* clears bits which are 1 ignores bits which are 0 */
 #define GPIO_READ(g) *(gpio + 13) &= (1<<(g))
 
+void raspiGPIOAlt(int g, int alt) {
+  INP_GPIO(g);
+  SET_GPIO_ALT(g,alt);
+}
+
 /* Set up a memory regions to access GPIO */
 int raspiSetupIO(int mask)
 {
@@ -130,6 +135,9 @@ int raspiDummy(void) {
 
 int raspiDummy(void) {
   return 1;
+}
+
+void raspiGPIOAlt(int g, int alt) {
 }
 
 int raspiSetupIO(int mask) {

@@ -921,6 +921,15 @@ static void __initI2C(iORocNetNode inst) {
   iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init I2C [%s]", data->i2cdevice );
 
+  if( data->iotype == 1 ) {
+    raspiGPIOAlt(28, 0);
+    raspiGPIOAlt(29, 0);
+  }
+  else if( data->iotype == 2 ) {
+    raspiGPIOAlt(2, 0);
+    raspiGPIOAlt(3, 0);
+  }
+
   MemOp.set(data->iomap, 0, sizeof(data->iomap));
   MemOp.set(data->i2caddr, 0, sizeof(data->i2caddr));
 

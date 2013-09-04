@@ -24,6 +24,7 @@
 #ifndef ROCNETNODE_IO_H_
 #define ROCNETNODE_IO_H_
 
+void raspiGPIOAlt(int g, int alt);
 int raspiSetupIO(int mask);
 int raspiRead(int port);
 void raspiWrite(int port, int val);
