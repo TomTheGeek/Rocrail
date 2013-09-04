@@ -611,7 +611,13 @@
         <var name="port" vt="int" defval="4321" range="0-*" remark="multicast port"/>
         <var name="crc" vt="bool" defval="false"/>
         <var name="wd" vt="bool" defval="false"/>
-        <var name="sack" vt="bool" defval="false"/>
+        <rocnetnodeoptions wrappername="RocNetNodeOptions" cardinality="1">
+          <var name="sack" vt="bool" defval="false"/>
+          <const name="iotype_gpio" vt="int" val="0"/>
+          <const name="iotype_i2c0" vt="int" val="1"/>
+          <const name="iotype_i2c1" vt="int" val="2"/>
+          <var name="iotype" vt="int" defval="0"/>
+        </rocnetnodeoptions>
         <rocnetnode wrappername="RocNetNode" cardinality="n">
 	        <var name="id" vt="int" defval="10" range="0-*" remark="RocNet sender ID."/>
           <var name="class" vt="string" defval="" remark="Class ID."/>
@@ -619,7 +625,6 @@
           <var name="version" vt="string" defval="0.0" remark="Software version."/>
           <var name="nrio" vt="int" defval="0" range="0-255" remark="Number of I/Os"/>
           <var name="subip" vt="int" defval="0" remark="Last 16 bits of the IP."/>
-          <var name="i2cdevice" vt="string" defval="/dev/i2c-0" remark="I2C device name."/>
         </rocnetnode>
         <portsetup wrappername="PortSetup" cardinality="n">
           <var name="port" vt="int" defval="1" range="1-*"/>
@@ -629,10 +634,6 @@
           <var name="invert" vt="bool" defval="false"/>
           <var name="state" vt="bool" defval="false" remark="Saved output state."/>
         </portsetup>
-        <i2csetup wrappername="I2CSetup" cardinality="1">
-          <var name="device" vt="string" defval="/dev/i2c-0" remark="I2C device name."/>
-          <var name="addr" vt="int" defval="32" range="0-*"/>
-        </i2csetup>
       </rocnet>
 
       <mcs2 remark="CS2 options" wrappername="MCS2">
@@ -919,6 +920,8 @@
     <const name="identify" vt="int" val="44"/>
     <const name="ping" vt="int" val="45"/>
     <const name="getlasterror" vt="int" val="46"/>
+    <const name="getoptions" vt="int" val="47"/>
+    <const name="setoptions" vt="int" val="48"/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>

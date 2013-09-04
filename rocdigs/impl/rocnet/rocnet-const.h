@@ -100,6 +100,8 @@
 #define RN_PROGRAMMING_RPORT  4
 #define RN_PROGRAMMING_WPORT  5
 #define RN_PROGRAMMING_WRNID  6
+#define RN_PROGRAMMING_RDOPT  7
+#define RN_PROGRAMMING_WROPT  8
 
 
 /* extended packet offsets */

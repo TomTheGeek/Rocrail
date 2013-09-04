@@ -66,7 +66,7 @@
       <var name="pDI" vt="iIDigInt"/>
       <var name="i2cdevice" vt="const char*"/>
       <var name="i2cdescriptor" vt="int"/>
-      <var name="i2caddr" vt="int"/>
+      <var name="iotype" vt="int"/>
       <var name="ip[6]" vt="int"/>
       <var name="ipsize" vt="int"/>
       <var name="iomap[8]" vt="int"/>

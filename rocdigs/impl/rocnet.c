@@ -442,6 +442,28 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         }
         ThreadOp.post( data->writer, (obj)rn );
       }
+      else if( wProgram.getcmd( node ) == wProgram.getoptions ) {
+        int i = 0;
+        int rnid = wProgram.getmodid(node);
+        rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+        rnReceipientAddresToPacket( rnid, rn, data->seven );
+        rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
+        rn[RN_PACKET_ACTION] = RN_PROGRAMMING_RDOPT;
+        rn[RN_PACKET_LEN] = 0;
+        ThreadOp.post( data->writer, (obj)rn );
+      }
+      else if( wProgram.getcmd( node ) == wProgram.setoptions ) {
+        int i = 0;
+        int rnid = wProgram.getmodid(node);
+        rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+        rnReceipientAddresToPacket( rnid, rn, data->seven );
+        rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
+        rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WROPT;
+        rn[RN_PACKET_LEN] = 2;
+        rn[RN_PACKET_DATA + 0] = wProgram.getval1(node);
+        rn[RN_PACKET_DATA + 1] = wProgram.getval2(node);
+        ThreadOp.post( data->writer, (obj)rn );
+      }
     }
     else if(wProgram.ispom(node)) {
       int addr = wProgram.getaddr( node );
@@ -722,6 +744,21 @@ static void __evaluatePTStationary( iOrocNet rocnet, byte* rn ) {
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }
   break;
+
+  case RN_PROGRAMMING_RDOPT:
+  case RN_PROGRAMMING_WROPT:
+  {
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(node, sndr);
+    wProgram.setcmd( node, wProgram.getoptions );
+    wProgram.setval1( node, rn[RN_PACKET_DATA+0] );
+    wProgram.setval2( node, rn[RN_PACKET_DATA+1] );
+    wProgram.setiid( node, data->iid );
+    wProgram.setlntype(node, wProgram.lntype_rocnet);
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+  break;
+
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported action [%d]", action );
     break;

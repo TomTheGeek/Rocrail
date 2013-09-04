@@ -43,7 +43,7 @@
 #include "rocrail/wrapper/public/Cmdline.h"
 #include "rocrail/wrapper/public/RocNet.h"
 #include "rocrail/wrapper/public/PortSetup.h"
-#include "rocrail/wrapper/public/I2CSetup.h"
+#include "rocrail/wrapper/public/RocNetNodeOptions.h"
 #include "rocrail/wrapper/public/Trace.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/Loc.h"
@@ -400,6 +400,32 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       }
       idx++;
     }
+    break;
+
+  case RN_PROGRAMMING_RDOPT:
+    msg = allocMem(128);
+    msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+    rnReceipientAddresToPacket( sndr, msg, 0 );
+    rnSenderAddresToPacket( data->id, msg, 0 );
+    msg[RN_PACKET_ACTION] = RN_PROGRAMMING_RDOPT;
+    msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+    msg[RN_PACKET_LEN] = 2;
+    msg[RN_PACKET_DATA + 0] = data->iotype;
+    msg[RN_PACKET_DATA + 1] = data->sack ? 0x01:0x00;
+    break;
+
+  case RN_PROGRAMMING_WROPT:
+    data->iotype = rn[RN_PACKET_DATA + 0];
+    data->sack   = (rn[RN_PACKET_DATA + 1] & 0x01) ? True:False;
+    msg = allocMem(128);
+    msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+    rnReceipientAddresToPacket( sndr, msg, 0 );
+    rnSenderAddresToPacket( data->id, msg, 0 );
+    msg[RN_PACKET_ACTION] = RN_PROGRAMMING_WROPT;
+    msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+    msg[RN_PACKET_LEN] = 2;
+    msg[RN_PACKET_DATA + 0] = data->iotype;
+    msg[RN_PACKET_DATA + 1] = data->sack ? 0x01:0x00;
     break;
   }
 
@@ -999,12 +1025,11 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
     data->id    = wRocNet.getid(rocnet);
     data->addr  = wRocNet.getaddr(rocnet);
     data->port  = wRocNet.getport(rocnet);
-    data->sack  = wRocNet.issack(rocnet);
 
-    if( NodeOp.findNode(rocnet, wI2CSetup.name()) != NULL ) {
-      iONode i2cini = NodeOp.findNode(rocnet, wI2CSetup.name());
-      data->i2cdevice = wI2CSetup.getdevice(i2cini);
-      data->i2caddr = wI2CSetup.getaddr(i2cini);
+    if( NodeOp.findNode(rocnet, wRocNetNodeOptions.name()) != NULL ) {
+      iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
+      data->sack  = wRocNetNodeOptions.issack(optionsini);
+      data->iotype = wRocNetNodeOptions.getiotype(optionsini);
     }
 
     if( NodeOp.findNode(data->ini, wTrace.name()) != NULL ) {
@@ -1046,11 +1071,16 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   SocketOp.bind(data->readUDP);
   data->writeUDP = SocketOp.inst( data->addr, data->port, False, True, True );
 
-  if( data->i2cdevice != NULL && StrOp.len(data->i2cdevice) > 0 ) {
+  if( data->iotype == 0 ) {
+    __initPorts(inst);
+  }
+  else if(data->iotype == 0) {
+    data->i2cdevice = "/dev/i2c-0";
     __initI2C(inst);
   }
   else {
-    __initPorts(inst);
+    data->i2cdevice = "/dev/i2c-1";
+    __initI2C(inst);
   }
 
   __initDigInt(inst);

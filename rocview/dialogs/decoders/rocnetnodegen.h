@@ -23,8 +23,9 @@
 #include <wx/textctrl.h>
 #include <wx/spinctrl.h>
 #include <wx/button.h>
-#include <wx/radiobox.h>
 #include <wx/checkbox.h>
+#include <wx/radiobox.h>
+#include <wx/statbox.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
 
@@ -54,6 +55,11 @@ class rocnetnodegen : public wxDialog
 		wxStaticText* m_labVersion;
 		wxTextCtrl* m_Version;
 		wxButton* m_RocnetWrite;
+		wxPanel* m_NodeOptions;
+		wxCheckBox* m_SecAck;
+		wxRadioBox* m_IOType;
+		wxButton* m_NodeOptionsRead;
+		wxButton* m_NodeOptionsWrite;
 		wxPanel* m_PortSetupPanel;
 		wxStaticText* m_labPort;
 		wxStaticText* m_labIO;
@@ -95,12 +101,6 @@ class rocnetnodegen : public wxDialog
 		wxButton* m_PortNext;
 		wxButton* m_PortRead;
 		wxButton* m_PortWrite;
-		wxPanel* m_DCCPanel;
-		wxCheckBox* m_DCC232Enable;
-		wxStaticText* m_labDCC232Device;
-		wxTextCtrl* m_DCC232Device;
-		wxButton* m_DCC232Read;
-		wxButton* m_DCC232Write;
 		wxStdDialogButtonSizer* m_StdButton;
 		wxButton* m_StdButtonOK;
 		
@@ -108,12 +108,12 @@ class rocnetnodegen : public wxDialog
 		virtual void onClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void onIndexSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void onRocnetWrite( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onNodeOptionsRead( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onNodeOptionsWrite( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortPrev( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortNext( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortRead( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortWrite( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onDCC232Read( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onDCC232Write( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ) { event.Skip(); }
 		
 	

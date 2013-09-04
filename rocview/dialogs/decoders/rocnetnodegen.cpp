@@ -86,7 +86,40 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_RocNetPanel->SetSizer( bSizer6 );
 	m_RocNetPanel->Layout();
 	bSizer6->Fit( m_RocNetPanel );
-	m_notebook2->AddPage( m_RocNetPanel, wxT("RocNet"), true );
+	m_notebook2->AddPage( m_RocNetPanel, wxT("RocNet"), false );
+	m_NodeOptions = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer91;
+	bSizer91 = new wxBoxSizer( wxVERTICAL );
+	
+	wxStaticBoxSizer* m_RocNetOptionBox;
+	m_RocNetOptionBox = new wxStaticBoxSizer( new wxStaticBox( m_NodeOptions, wxID_ANY, wxT("Options") ), wxVERTICAL );
+	
+	m_SecAck = new wxCheckBox( m_NodeOptions, wxID_ANY, wxT("Acknowledge sensor events"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_RocNetOptionBox->Add( m_SecAck, 0, wxALL, 5 );
+	
+	wxString m_IOTypeChoices[] = { wxT("I2C 0"), wxT("I2C 1"), wxT("GPIO") };
+	int m_IOTypeNChoices = sizeof( m_IOTypeChoices ) / sizeof( wxString );
+	m_IOType = new wxRadioBox( m_NodeOptions, wxID_ANY, wxT("I/O Type"), wxDefaultPosition, wxDefaultSize, m_IOTypeNChoices, m_IOTypeChoices, 1, wxRA_SPECIFY_ROWS );
+	m_IOType->SetSelection( 1 );
+	m_RocNetOptionBox->Add( m_IOType, 0, wxALL, 5 );
+	
+	bSizer91->Add( m_RocNetOptionBox, 0, wxEXPAND|wxALL, 5 );
+	
+	wxBoxSizer* bSizer92;
+	bSizer92 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_NodeOptionsRead = new wxButton( m_NodeOptions, wxID_ANY, wxT("Read"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer92->Add( m_NodeOptionsRead, 0, wxALL, 5 );
+	
+	m_NodeOptionsWrite = new wxButton( m_NodeOptions, wxID_ANY, wxT("Write"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer92->Add( m_NodeOptionsWrite, 0, wxALL, 5 );
+	
+	bSizer91->Add( bSizer92, 0, wxALIGN_RIGHT, 5 );
+	
+	m_NodeOptions->SetSizer( bSizer91 );
+	m_NodeOptions->Layout();
+	bSizer91->Fit( m_NodeOptions );
+	m_notebook2->AddPage( m_NodeOptions, wxT("Options"), true );
 	m_PortSetupPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
@@ -263,43 +296,6 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_PortSetupPanel->Layout();
 	bSizer7->Fit( m_PortSetupPanel );
 	m_notebook2->AddPage( m_PortSetupPanel, wxT("Port Setup"), false );
-	m_DCCPanel = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer71;
-	bSizer71 = new wxBoxSizer( wxVERTICAL );
-	
-	m_DCC232Enable = new wxCheckBox( m_DCCPanel, wxID_ANY, wxT("Enable"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer71->Add( m_DCC232Enable, 0, wxALL, 5 );
-	
-	wxFlexGridSizer* fgSizer4;
-	fgSizer4 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer4->AddGrowableCol( 1 );
-	fgSizer4->SetFlexibleDirection( wxBOTH );
-	fgSizer4->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_labDCC232Device = new wxStaticText( m_DCCPanel, wxID_ANY, wxT("Device"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labDCC232Device->Wrap( -1 );
-	fgSizer4->Add( m_labDCC232Device, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_DCC232Device = new wxTextCtrl( m_DCCPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer4->Add( m_DCC232Device, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	bSizer71->Add( fgSizer4, 0, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer81;
-	bSizer81 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_DCC232Read = new wxButton( m_DCCPanel, wxID_ANY, wxT("Read"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer81->Add( m_DCC232Read, 0, wxALL, 5 );
-	
-	m_DCC232Write = new wxButton( m_DCCPanel, wxID_ANY, wxT("Write"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer81->Add( m_DCC232Write, 0, wxALL, 5 );
-	
-	bSizer71->Add( bSizer81, 0, wxALIGN_RIGHT, 5 );
-	
-	m_DCCPanel->SetSizer( bSizer71 );
-	m_DCCPanel->Layout();
-	bSizer71->Fit( m_DCCPanel );
-	m_notebook2->AddPage( m_DCCPanel, wxT("DCC"), false );
 	
 	bSizer5->Add( m_notebook2, 0, wxEXPAND | wxALL, 5 );
 	
@@ -320,12 +316,12 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_NodeList->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
 	m_NodeList->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
 	m_RocnetWrite->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onRocnetWrite ), NULL, this );
+	m_NodeOptionsRead->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onNodeOptionsRead ), NULL, this );
+	m_NodeOptionsWrite->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onNodeOptionsWrite ), NULL, this );
 	m_PortPrev->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortPrev ), NULL, this );
 	m_PortNext->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortNext ), NULL, this );
 	m_PortRead->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortRead ), NULL, this );
 	m_PortWrite->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortWrite ), NULL, this );
-	m_DCC232Read->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onDCC232Read ), NULL, this );
-	m_DCC232Write->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onDCC232Write ), NULL, this );
 	m_StdButtonOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onOK ), NULL, this );
 }
 
@@ -336,12 +332,12 @@ rocnetnodegen::~rocnetnodegen()
 	m_NodeList->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
 	m_NodeList->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
 	m_RocnetWrite->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onRocnetWrite ), NULL, this );
+	m_NodeOptionsRead->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onNodeOptionsRead ), NULL, this );
+	m_NodeOptionsWrite->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onNodeOptionsWrite ), NULL, this );
 	m_PortPrev->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortPrev ), NULL, this );
 	m_PortNext->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortNext ), NULL, this );
 	m_PortRead->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortRead ), NULL, this );
 	m_PortWrite->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortWrite ), NULL, this );
-	m_DCC232Read->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onDCC232Read ), NULL, this );
-	m_DCC232Write->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onDCC232Write ), NULL, this );
 	m_StdButtonOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onOK ), NULL, this );
 	
 }
