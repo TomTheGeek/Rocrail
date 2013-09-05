@@ -598,13 +598,14 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   case RN_STATIONARY_QUERYIDS:
     subip = rn[RN_PACKET_DATA+5]*256+rn[RN_PACKET_DATA+6];
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "Identified: rocnetid=%d class=%s vid=%d version=%d.%d nrio=%d subip=%d", sndr,
+        "Identified: rocnetid=%d class=%s vid=%d version=%d.%d nrio=%d subip=%d.%d", sndr,
         rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2],
-        rn[RN_PACKET_DATA+3], rn[RN_PACKET_DATA+4], subip );
+        rn[RN_PACKET_DATA+3], rn[RN_PACKET_DATA+4], rn[RN_PACKET_DATA+5], rn[RN_PACKET_DATA+6] );
     if( sndr == 65535 ) {
       /* default address; send a new ID */
       int highestID = wRocNet.getid(data->rnini);
       iONode rrnode = wRocNet.getrocnetnode(data->ini);
+      byte* rnID = allocMem(32);
       while( rrnode != NULL ) {
         if( wRocNetNode.getid(rrnode) > highestID )
           highestID = wRocNetNode.getid(rrnode);
@@ -612,14 +613,14 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       }
       highestID++;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send %d a new ID: %d", sndr, highestID );
-      rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
-      rnReceipientAddresToPacket( sndr, rn, data->seven );
-      rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
-      rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WRNID;
-      rn[RN_PACKET_LEN] = 2;
-      rn[RN_PACKET_DATA + 0] = highestID / 256;
-      rn[RN_PACKET_DATA + 1] = highestID % 256;
-      ThreadOp.post( data->writer, (obj)rn );
+      rnID[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+      rnReceipientAddresToPacket( sndr, rnID, data->seven );
+      rnSenderAddresToPacket( wRocNet.getid(data->rnini), rnID, data->seven );
+      rnID[RN_PACKET_ACTION] = RN_PROGRAMMING_WRNID;
+      rnID[RN_PACKET_LEN] = 2;
+      rnID[RN_PACKET_DATA + 0] = highestID / 256;
+      rnID[RN_PACKET_DATA + 1] = highestID % 256;
+      ThreadOp.post( data->writer, (obj)rnID );
       break;
     }
 
