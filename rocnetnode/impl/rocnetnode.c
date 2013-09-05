@@ -1044,6 +1044,8 @@ static void __initPorts(iORocNetNode inst) {
 static void __initIO(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
 
+  raspiSetupIO(-1);
+
   if( data->iotype == 0 ) {
     __initPorts(inst);
   }

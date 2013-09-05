@@ -48,7 +48,7 @@ int  mem_fd;
 void *gpio_map;
 
 /* I/O access */
-volatile unsigned *gpio;
+volatile unsigned *gpio = NULL;
 
 
 /* GPIO setup macros. Always use INP_GPIO(x) before using OUT_GPIO(x) or SET_GPIO_ALT(x,y) */
@@ -61,8 +61,10 @@ volatile unsigned *gpio;
 #define GPIO_READ(g) *(gpio + 13) &= (1<<(g))
 
 void raspiGPIOAlt(int g, int alt) {
-  INP_GPIO(g);
-  SET_GPIO_ALT(g,alt);
+  if( gpio != NULL ) {
+    INP_GPIO(g);
+    SET_GPIO_ALT(g,alt);
+  }
 }
 
 /* Set up a memory regions to access GPIO */
@@ -99,15 +101,17 @@ int raspiSetupIO(int mask)
    gpio = (volatile unsigned *)gpio_map;
 
 
-   for( i = 0; i < 32; i++ ) {
-     /* Always use INP_GPIO(x) before using OUT_GPIO(x) */
-     INP_GPIO(i);
-     if( mask & (1 << i) ) {
-       /* input */
-     }
-     else {
-       /* output */
-       OUT_GPIO(i);
+   if( mask != -1) {
+     for( i = 0; i < 32; i++ ) {
+       /* Always use INP_GPIO(x) before using OUT_GPIO(x) */
+       INP_GPIO(i);
+       if( mask & (1 << i) ) {
+         /* input */
+       }
+       else {
+         /* output */
+         OUT_GPIO(i);
+       }
      }
    }
 
