@@ -312,6 +312,7 @@ Boolean ulniConnect( obj inst ) {
   }
   else {
     SerialOp.base.del( data->serial );
+    data->serial = NULL;
     return False;
   }
 }
@@ -360,6 +361,8 @@ Boolean ulniWrite( obj inst, unsigned char *msg, int len ) {
 
 Boolean ulniAvailable( obj inst ) {
   iOLocoNetData data = Data(inst);
-  return !QueueOp.isEmpty(data->subReadQueue);
+  if( data->serial != NULL )
+    return !QueueOp.isEmpty(data->subReadQueue);
+  return False;
 }
 

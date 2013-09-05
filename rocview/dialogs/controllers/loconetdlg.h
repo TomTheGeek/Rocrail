@@ -157,6 +157,7 @@ public:
     wxStaticText* m_labQueryAddr;
     wxTextCtrl* m_QueryAddr;
     wxCheckBox* m_SlotPing;
+    wxCheckBox* m_ResetLissy;
     wxCheckBox* m_SwAck;
     wxStaticText* m_labSwRetries;
     wxSpinCtrl* m_SwRetries;

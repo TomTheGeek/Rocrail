@@ -541,6 +541,9 @@ static void __handleLissy(iOLocoNet loconet, byte* msg) {
     wFeedback.setdirection( nodeC, dir );
   }
 
+  if( data->resetLissy )
+    ThreadOp.post( data->lissyReset, NodeOp.base.clone(nodeC) );
+
   data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 }
 
@@ -776,6 +779,36 @@ static void __slotPing( void* threadinst ) {
   };
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LocoNet slotPing ended." );
+}
+
+
+static void __lissyReset( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOLocoNet loconet = (iOLocoNet)ThreadOp.getParm( th );
+  iOLocoNetData data = Data(loconet);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LocoNet lissyReset started." );
+
+  while( data->run ) {
+    obj post = ThreadOp.waitPost( th );
+    if( post != NULL ) {
+      iONode node = (iONode)post;
+
+      if( StrOp.equals( "quit", NodeOp.getName( node ) ) ) {
+        node->base.del( node );
+        break;
+      }
+
+      ThreadOp.sleep( 1000 );
+      wFeedback.setstate( node, False );
+      wFeedback.setidentifier( node, "" );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+    }
+
+    ThreadOp.sleep( 10 );
+  };
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LocoNet lissyReset ended." );
 }
 
 
@@ -2572,6 +2605,7 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->swack = wLocoNet.isswack(data->loconet);
   data->swretry = wLocoNet.getswretry(data->loconet);
   data->swsleep = wLocoNet.getswsleep(data->loconet);
+  data->resetLissy = wLocoNet.isresetlissy(data->loconet);
 
   data->didSensorQuery = False;
 
@@ -2651,7 +2685,7 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->commOK = data->lnConnect((obj)__LocoNet);
 
-  if( data->commOK ) {
+  if( data->commOK) {
     if( data->stress ) {
       data->stressRunner = ThreadOp.inst( "lnstress", &__stressRunner, __LocoNet );
       ThreadOp.start( data->stressRunner );
@@ -2665,6 +2699,9 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
 
     data->swReset = ThreadOp.inst( "swreset", &__swReset, __LocoNet );
     ThreadOp.start( data->swReset );
+
+    data->lissyReset = ThreadOp.inst( "lissyreset", &__lissyReset, __LocoNet );
+    ThreadOp.start( data->lissyReset );
 
     if( data->purgetime > 0 && wLocoNet.isslotping(data->loconet) ) {
       data->slotPing = ThreadOp.inst( "slotping", &__slotPing, __LocoNet );

@@ -729,6 +729,7 @@
         <var name="swack" vt="bool" defval="false" remark="Check long ack for switch commands."/>
         <var name="swretry" vt="int" defval="10" range="1-*" remark="Number of switch command retries."/>
         <var name="swsleep" vt="int" defval="50" range="10-*" remark="Number of ms sleep between switch command retries."/>
+        <var name="resetlissy" vt="bool" defval="false" remark="Reset Lissy events after 1 second."/>
         <options wrappername="CSOptions">
           <var name="store" vt="bool" defval="false" remark="set by client to signal to store the options in the command station"/>
           <var name="opsw" vt="string" defval="" range="*" remark="zero based options list 0=open 1=set"/>
