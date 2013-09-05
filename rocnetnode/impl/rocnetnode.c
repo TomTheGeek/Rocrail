@@ -460,7 +460,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
 
   switch( action ) {
   case RN_STATIONARY_ACK:
-    if( rn[RN_PACKET_DATA + 0] == RN_STATIONARY_QUERYIDS ) {
+    if( rn[RN_PACKET_DATA + 0] == RN_STATIONARY_IDENTIFY ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "queryids acknowleged from %d to %d", sndr, rcpt );
       data->identack = True;
     }
@@ -475,13 +475,13 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     }
     break;
 
-  case RN_STATIONARY_QUERYIDS:
+  case RN_STATIONARY_IDENTIFY:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "queryids request from %d to %d", sndr, rcpt );
     msg = allocMem(32);
     msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
     rnReceipientAddresToPacket( sndr, msg, 0 );
     rnSenderAddresToPacket( data->id, msg, 0 );
-    msg[RN_PACKET_ACTION] = RN_STATIONARY_QUERYIDS;
+    msg[RN_PACKET_ACTION] = RN_STATIONARY_IDENTIFY;
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
     msg[RN_PACKET_LEN] = 7;
     msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;
@@ -492,6 +492,11 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
     msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];
     break;
+
+  case RN_STATIONARY_SHOW:
+    /* ToDo: Flash LED. */
+    break;
+
   }
   return msg;
 }
@@ -822,7 +827,7 @@ static void __scanner( void* threadinst ) {
         msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
         rnReceipientAddresToPacket( 0, msg, 0 );
         rnSenderAddresToPacket( data->id, msg, 0 );
-        msg[RN_PACKET_ACTION] = RN_STATIONARY_QUERYIDS;
+        msg[RN_PACKET_ACTION] = RN_STATIONARY_IDENTIFY;
         msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
         msg[RN_PACKET_LEN] = 7;
         msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;

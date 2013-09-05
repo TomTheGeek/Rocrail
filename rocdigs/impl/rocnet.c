@@ -392,7 +392,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       /* This construct is used to to query all LocoIOs, but is here recycled for query all CAN-GC2s. */
       rn[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
       rnReceipientAddresToPacket( 0, rn, data->seven );
-      rn[RN_PACKET_ACTION] = RN_STATIONARY_QUERYIDS;
+      rn[RN_PACKET_ACTION] = RN_STATIONARY_IDENTIFY;
       rn[RN_PACKET_LEN] = 0;
       ThreadOp.post( data->writer, (obj)rn );
     }
@@ -595,7 +595,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   sndr = rnSenderAddrFromPacket(rn, data->seven);
 
   switch( action ) {
-  case RN_STATIONARY_QUERYIDS:
+  case RN_STATIONARY_IDENTIFY:
     subip = rn[RN_PACKET_DATA+5]*256+rn[RN_PACKET_DATA+6];
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Identified: rocnetid=%d class=%s vid=%d version=%d.%d nrio=%d subip=%d.%d", sndr,
@@ -654,11 +654,13 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     rnSenderAddresToPacket( wRocNet.getid(data->rnini), rnReply, data->seven );
     rnReply[RN_PACKET_ACTION] = RN_STATIONARY_ACK;
     rnReply[RN_PACKET_LEN] = 1;
-    rnReply[RN_PACKET_DATA] = RN_STATIONARY_QUERYIDS;
+    rnReply[RN_PACKET_DATA] = RN_STATIONARY_IDENTIFY;
     break;
+
   case RN_STATIONARY_NOP:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NOP from %d to %d", sndr, rcpt );
     break;
+
   case RN_STATIONARY_SHUTDOWN: {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "node %d has been shutdown", sndr );
 
@@ -674,6 +676,11 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
     }
     break;
+
+  case RN_STATIONARY_SHOW:
+    /* ToDo: Inform Rocview to show this node. */
+    break;
+
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported action [%d] from %d", action, sndr );
     break;

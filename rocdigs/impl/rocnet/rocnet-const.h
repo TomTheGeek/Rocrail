@@ -88,9 +88,10 @@
 #define RN_STATIONARY_QUERY_PORT_PAIR    5
 #define RN_STATIONARY_QUERY_MULTI_PORT   6
 #define RN_STATIONARY_REPORT             7
-#define RN_STATIONARY_QUERYIDS           8
+#define RN_STATIONARY_IDENTIFY           8
 #define RN_STATIONARY_SHUTDOWN           9
 #define RN_STATIONARY_ACK                10
+#define RN_STATIONARY_SHOW               11
 
 
 /* programming group actions */
