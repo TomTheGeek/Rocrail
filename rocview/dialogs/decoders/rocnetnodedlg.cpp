@@ -219,6 +219,8 @@ void RocnetNodeDlg::onIndexSelected( wxListEvent& event ) {
     initPorts();
     initValues();
     SetTitle(wxT("RocNetNode: ") + wxString::Format(_T("%d"), wRocNetNode.getid(m_Props) ) );
+    wxCommandEvent cmd;
+    onNodeOptionsRead(cmd);
   }
   else
     TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
