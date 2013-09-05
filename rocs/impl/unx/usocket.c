@@ -971,7 +971,7 @@ const char* rocs_socket_gethostaddr( void ) {
 
   gethostname( __hostname, sizeof( __hostname ) );
   he = gethostbyname (__hostname);
-  while(he->h_addr_list[i] != NULL ) {
+  while( he!=NULL && he->h_addr_list[i] != NULL ) {
     const char* s = inet_ntoa (*(struct in_addr *)he->h_addr_list[i]);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "address %d = %s", i, s );
     i++;

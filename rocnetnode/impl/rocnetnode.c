@@ -61,6 +61,8 @@
 #include "rocnetnode/public/io.h"
 #include "rocnetnode/public/i2c.h"
 
+#include "common/version.h"
+
 #define ROCNETNODEINI "rocnetnode.ini"
 
 static int instCnt = 0;
@@ -1152,6 +1154,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   data->i2cmux = MutexOp.inst( NULL, True );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  revision [%d]", bzr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ID [%d]", data->id );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast address [%s]", data->addr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast port    [%d]", data->port );
