@@ -314,3 +314,16 @@ void RocnetNodeDlg::onShutdown( wxCommandEvent& event ) {
   cmd->base.del(cmd);
 }
 
+
+void RocnetNodeDlg::onShutdownAll( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+  wSysCmd.setcmd( cmd, wSysCmd.shutdownnode );
+  wSysCmd.setbus(cmd, 0);
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+
