@@ -92,6 +92,7 @@
 #define RN_STATIONARY_SHUTDOWN           9
 #define RN_STATIONARY_ACK                10
 #define RN_STATIONARY_SHOW               11
+#define RN_STATIONARY_STARTOFDAY         12
 
 
 /* programming group actions */

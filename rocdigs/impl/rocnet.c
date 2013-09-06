@@ -205,6 +205,15 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       ThreadOp.post( data->writer, (obj)rn );
       return rsp;
     }
+    else if( StrOp.equals( cmd, wSysCmd.sod ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day" );
+      rn[RN_PACKET_ACTION] = RN_GROUP_STATIONARY;
+      rn[RN_PACKET_LEN] = 1;
+      rn[RN_PACKET_DATA + 0] = RN_STATIONARY_STARTOFDAY;
+      ThreadOp.post( data->writer, (obj)rn );
+      return rsp;
+    }
+
   }
 
   /* Switch command. */

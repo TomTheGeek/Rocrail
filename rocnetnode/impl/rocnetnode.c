@@ -465,6 +465,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     if( rn[RN_PACKET_DATA + 0] == RN_STATIONARY_IDENTIFY ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "queryids acknowleged from %d to %d", sndr, rcpt );
       data->identack = True;
+      data->startofday = True;
     }
     else if( rn[RN_PACKET_DATA + 0] == RN_SENSOR_REPORT ) {
       int port = rn[RN_PACKET_DATA + 1];
@@ -493,6 +494,10 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_DATA+4] = (data->iotype == 0) ? 16:128;
     msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
     msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];
+    break;
+
+  case RN_STATIONARY_STARTOFDAY:
+    data->startofday = True;
     break;
 
   case RN_STATIONARY_SHOW:
@@ -783,6 +788,11 @@ static void __scanner( void* threadinst ) {
           }
         }
 
+        /* reset input values to zero to trigger a start of day */
+        if( data->ports[i] != NULL && data->ports[i]->type == 1 && data->startofday ) {
+          inputVal[i] = 0;
+        }
+
         if( data->ports[i] != NULL && data->ports[i]->type == 1 && (!data->sack || !data->ports[i]->ackpending) ) {
           int val = __readPort(rocnetnode, i);
           Boolean report = inputVal[i] != val;
@@ -820,6 +830,9 @@ static void __scanner( void* threadinst ) {
           }
         }
       }
+
+      data->startofday = False;
+
     }
 
     if( !data->identack ) {
