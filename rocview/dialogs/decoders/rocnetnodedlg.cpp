@@ -35,6 +35,7 @@
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/RocNet.h"
 #include "rocrail/wrapper/public/RocNetNode.h"
 #include "rocs/public/strtok.h"
@@ -161,6 +162,7 @@ void RocnetNodeDlg::initLabels() {
   m_NodeList->InsertColumn(2, wxGetApp().getMsg( "product" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(3, wxGetApp().getMsg( "version" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(4, wxT("I/O"), wxLIST_FORMAT_RIGHT );
+  m_NodeList->InsertColumn(5, wxT("Sub IP"), wxLIST_FORMAT_CENTER);
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -193,6 +195,7 @@ void RocnetNodeDlg::initNodeList() {
     m_NodeList->SetItem( index, 2, wxString(wRocNetNode.getclass(rnnode),wxConvUTF8));
     m_NodeList->SetItem( index, 3, wxString(wRocNetNode.getversion(rnnode),wxConvUTF8));
     m_NodeList->SetItem( index, 4, wxString::Format(_T("%d"), wRocNetNode.getnrio(rnnode)));
+    m_NodeList->SetItem( index, 5, wxString::Format(_T("%d.%d"), wRocNetNode.getsubip(rnnode)/256, wRocNetNode.getsubip(rnnode)%256));
     m_NodeList->SetItemPtrData(index, (wxUIntPtr)rnnode);
     index++;
     rnnode = wRocNet.nextrocnetnode(m_Digint, rnnode);
@@ -202,6 +205,7 @@ void RocnetNodeDlg::initNodeList() {
   m_NodeList->SetColumnWidth(2, wxLIST_AUTOSIZE);
   m_NodeList->SetColumnWidth(3, wxLIST_AUTOSIZE);
   m_NodeList->SetColumnWidth(4, wxLIST_AUTOSIZE);
+  m_NodeList->SetColumnWidth(5, wxLIST_AUTOSIZE);
 
   if(m_NodeList->GetItemCount() > 0 ) {
     m_NodeList->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
@@ -295,6 +299,17 @@ void RocnetNodeDlg::onNodeOptionsWrite( wxCommandEvent& event ) {
   wProgram.setval2( cmd, m_SecAck->IsChecked()?0x01:0x00);
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void RocnetNodeDlg::onShutdown( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+  wSysCmd.setcmd( cmd, wSysCmd.shutdownnode );
+  wSysCmd.setbus(cmd, wRocNetNode.getid(m_Props));
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }

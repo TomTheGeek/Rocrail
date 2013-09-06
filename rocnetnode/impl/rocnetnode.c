@@ -500,6 +500,13 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     data->startofday = True;
     break;
 
+  case RN_STATIONARY_SHUTDOWN:
+    if( rn[RN_PACKET_LEN] > 0 && rn[RN_PACKET_DATA+0] == 1 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "shutdown the system...");
+      SystemOp.system("halt -p", True, True);
+    }
+    break;
+
   case RN_STATIONARY_SHOW:
     /* ToDo: Flash LED. */
     break;

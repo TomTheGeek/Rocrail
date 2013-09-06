@@ -131,7 +131,7 @@ static byte __getProtocol(iONode loc) {
 /** ----- OrocNet ----- */
 static iONode __translate( iOrocNet inst, iONode node ) {
   iOrocNetData data = Data(inst);
-  byte*  rn  = allocMem(32);;
+  byte*  rn  = allocMem(128);
   iONode rsp = NULL;
 
   rn[0] = 0; /* network ID 0=ALL */
@@ -206,10 +206,20 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       return rsp;
     }
     else if( StrOp.equals( cmd, wSysCmd.sod ) ) {
+      rn[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day" );
-      rn[RN_PACKET_ACTION] = RN_GROUP_STATIONARY;
+      rn[RN_PACKET_ACTION] = RN_STATIONARY_STARTOFDAY;
+      rn[RN_PACKET_LEN] = 0;
+      ThreadOp.post( data->writer, (obj)rn );
+      return rsp;
+    }
+    else if( StrOp.equals( cmd, wSysCmd.shutdownnode ) ) {
+      rn[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+      rnReceipientAddresToPacket( wSysCmd.getbus(node), rn, data->seven );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Shutdown node %d", wSysCmd.getbus(node) );
+      rn[RN_PACKET_ACTION] = RN_STATIONARY_SHUTDOWN;
       rn[RN_PACKET_LEN] = 1;
-      rn[RN_PACKET_DATA + 0] = RN_STATIONARY_STARTOFDAY;
+      rn[RN_PACKET_DATA + 0] = 1;
       ThreadOp.post( data->writer, (obj)rn );
       return rsp;
     }
