@@ -734,7 +734,8 @@ static void __scanner( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet scanner started" );
 
   MemOp.set( inputVal, 0, sizeof(inputVal) );
-  MemOp.set( data->iodata, 0, sizeof(data->iodata) );
+  /* negative logic level */
+  MemOp.set( data->iodata, 0xFF, sizeof(data->iodata) );
 
   while( data->run ) {
     int i;
