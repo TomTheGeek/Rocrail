@@ -1,20 +1,18 @@
 #! /bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          rocnetnode
-# Required-Start:    $network
-# X-UnitedLinux-Should-Start: 
+# Provides: rocnetnoded
+# Required-Start: $all
 # Required-Stop:     
-# X-UnitedLinux-Should-Stop: 
-# Default-Start:     3
-# Default-Stop:      
+# Default-Start:
+# Default-Stop:
 # Short-Description: Starts the RocNetNode Daemon
-# Description:       Starts the RocNetNode Daemon
+# Description: Starts the RocNetNode Daemon
 ### END INIT INFO
 
 rocnetnoded_BIN=/opt/rocrail/rocnetnode
 rocnetnoded_PID=/opt/rocrail/rocnetnoded.pid
-rocnetnoded_SH=/opt/rocrail/rocnetnoded.sh
+rocnetnoded_SH=/opt/rocrail/rocnetnode.sh
 
 if [ ! -x $rocnetnoded_BIN ] ; then
 	echo -n "RocNetNode not installed ! "
