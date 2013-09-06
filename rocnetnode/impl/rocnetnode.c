@@ -976,6 +976,8 @@ static void __initI2C(iORocNetNode inst) {
         if( port->type == 0 )
           port->state = wPortSetup.isstate(portsetup);
         data->ports[portnr] = port;
+        if( port->type == 1 && port->delay == 0 )
+          port->delay = 10;
 
         i2caddr = (portnr-1) / 16;
         shift = (portnr-1) % 16;
