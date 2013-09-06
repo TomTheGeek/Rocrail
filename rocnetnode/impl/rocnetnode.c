@@ -736,6 +736,7 @@ static void __scanner( void* threadinst ) {
   while( data->run ) {
     int i;
     int nrios = (data->iotype == 0) ? 16:128;
+    Boolean startofday = data->startofday;
 
     if( data->iorc == 0 ) {
         __scanI2C(rocnetnode);
@@ -789,7 +790,7 @@ static void __scanner( void* threadinst ) {
         }
 
         /* reset input values to zero to trigger a start of day */
-        if( data->ports[i] != NULL && data->ports[i]->type == 1 && data->startofday ) {
+        if( data->ports[i] != NULL && data->ports[i]->type == 1 && startofday ) {
           inputVal[i] = 0;
         }
 
@@ -831,7 +832,8 @@ static void __scanner( void* threadinst ) {
         }
       }
 
-      data->startofday = False;
+      if( startofday )
+        data->startofday = False;
 
     }
 
