@@ -4,7 +4,7 @@
 # Provides: rocnetnoded
 # Required-Start: $all
 # Required-Stop:     
-# Default-Start:
+# Default-Start: 2 3
 # Default-Stop:
 # Short-Description: Starts the RocNetNode Daemon
 # Description: Starts the RocNetNode Daemon
