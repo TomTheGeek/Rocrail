@@ -622,6 +622,7 @@
 	        <var name="id" vt="int" defval="10" range="0-*" remark="RocNet sender ID."/>
           <var name="class" vt="string" defval="" remark="Class ID."/>
           <var name="vendor" vt="int" defval="0" remark="NMRA vendor ID."/>
+          <var name="revision" vt="int" defval="0" remark="Repository revision."/>
           <var name="version" vt="string" defval="0.0" remark="Software version."/>
           <var name="nrio" vt="int" defval="0" range="0-255" remark="Number of I/Os"/>
           <var name="subip" vt="int" defval="0" remark="Last 16 bits of the IP."/>

@@ -604,8 +604,6 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   int          actionType = rnActionTypeFromPacket(rn);
   byte* rnReply = NULL;
   char key[32] = {'\0'};
-  char version[32] = {'\0'};
-  char devname[128] = {'\0'};
   int i;
   int subip = 0;
 
@@ -652,8 +650,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       wRocNetNode.setsubip(rnnode, subip);
       wRocNetNode.setclass(rnnode, rnClassString(rn[RN_PACKET_DATA+0]));
       wRocNetNode.setvendor(rnnode, rn[RN_PACKET_DATA+1]);
-      StrOp.fmtb( version, "%d.%d", rn[RN_PACKET_DATA+2], rn[RN_PACKET_DATA+3] );
-      wRocNetNode.setversion(rnnode, version);
+      wRocNetNode.setrevision(rnnode, rn[RN_PACKET_DATA+2] *256 + rn[RN_PACKET_DATA+3]);
       wRocNetNode.setnrio(rnnode, rn[RN_PACKET_DATA+4]);
       MapOp.put( data->nodemap, key, (obj)rnnode);
       NodeOp.addChild( data->ini, rnnode );

@@ -489,8 +489,8 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_LEN] = 7;
     msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;
     msg[RN_PACKET_DATA+1] = 70;
-    msg[RN_PACKET_DATA+2] = versionH;
-    msg[RN_PACKET_DATA+3] = versionL;
+    msg[RN_PACKET_DATA+2] = bzr/256;
+    msg[RN_PACKET_DATA+3] = bzr%256;
     msg[RN_PACKET_DATA+4] = (data->iotype == 0) ? 16:128;
     msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
     msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];
@@ -868,8 +868,8 @@ static void __scanner( void* threadinst ) {
         msg[RN_PACKET_LEN] = 7;
         msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;
         msg[RN_PACKET_DATA+1] = 70;
-        msg[RN_PACKET_DATA+2] = versionH;
-        msg[RN_PACKET_DATA+3] = versionL;
+        msg[RN_PACKET_DATA+2] = bzr/256;
+        msg[RN_PACKET_DATA+3] = bzr%256;
         msg[RN_PACKET_DATA+4] = (data->iotype == 0) ? 16:128;
         msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
         msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];

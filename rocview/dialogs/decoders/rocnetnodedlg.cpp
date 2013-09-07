@@ -160,7 +160,7 @@ void RocnetNodeDlg::initLabels() {
   m_NodeList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(1, wxGetApp().getMsg( "vendor" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(2, wxGetApp().getMsg( "product" ), wxLIST_FORMAT_LEFT );
-  m_NodeList->InsertColumn(3, wxGetApp().getMsg( "version" ), wxLIST_FORMAT_LEFT );
+  m_NodeList->InsertColumn(3, wxGetApp().getMsg( "revision" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(4, wxT("I/O"), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(5, wxT("Sub IP"), wxLIST_FORMAT_CENTER);
 
@@ -193,7 +193,7 @@ void RocnetNodeDlg::initNodeList() {
     m_NodeList->InsertItem( index, wxString::Format(_T("%d"), wRocNetNode.getid(rnnode)));
     m_NodeList->SetItem( index, 1, wxString( m_Vendor[wRocNetNode.getvendor(rnnode)&0xFF],wxConvUTF8) );
     m_NodeList->SetItem( index, 2, wxString(wRocNetNode.getclass(rnnode),wxConvUTF8));
-    m_NodeList->SetItem( index, 3, wxString(wRocNetNode.getversion(rnnode),wxConvUTF8));
+    m_NodeList->SetItem( index, 3, wxString::Format(_T("%d"), wRocNetNode.getrevision(rnnode)));
     m_NodeList->SetItem( index, 4, wxString::Format(_T("%d"), wRocNetNode.getnrio(rnnode)));
     m_NodeList->SetItem( index, 5, wxString::Format(_T("%d.%d"), wRocNetNode.getsubip(rnnode)/256, wRocNetNode.getsubip(rnnode)%256));
     m_NodeList->SetItemPtrData(index, (wxUIntPtr)rnnode);
