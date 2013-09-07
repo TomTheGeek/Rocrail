@@ -24344,4 +24344,7 @@
     <sv txt="Använd BiDi riktning"/>
     <sl txt="Uporabi BiDi smer"/>
   </Msg>
+  <Msg id="revision">
+    <en txt="Revision"/>
+  </Msg>
 </Messages>

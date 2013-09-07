@@ -160,7 +160,7 @@ void RocnetNodeDlg::initLabels() {
   m_NodeList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(1, wxGetApp().getMsg( "vendor" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(2, wxGetApp().getMsg( "product" ), wxLIST_FORMAT_LEFT );
-  m_NodeList->InsertColumn(3, wxGetApp().getMsg( "revision" ), wxLIST_FORMAT_LEFT );
+  m_NodeList->InsertColumn(3, wxGetApp().getMsg( "revision" ), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(4, wxT("I/O"), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(5, wxT("Sub IP"), wxLIST_FORMAT_CENTER);
 

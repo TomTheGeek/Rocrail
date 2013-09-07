@@ -6647,3 +6647,9 @@ msgstr ""
 msgid "Use BiDi direction"
 msgstr ""
 
+#. 
+# id="revision"
+#, c-format
+msgid "Revision"
+msgstr ""
+
