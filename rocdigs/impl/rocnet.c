@@ -621,24 +621,26 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
         rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2],
         rn[RN_PACKET_DATA+3], rn[RN_PACKET_DATA+4], rn[RN_PACKET_DATA+5], rn[RN_PACKET_DATA+6] );
     if( sndr == 65535 ) {
-      /* default address; send a new ID */
-      int highestID = wRocNet.getid(data->rnini);
-      iONode rrnode = wRocNet.getrocnetnode(data->ini);
-      byte* rnID = allocMem(32);
-      while( rrnode != NULL ) {
-        if( wRocNetNode.getid(rrnode) > highestID )
-          highestID = wRocNetNode.getid(rrnode);
-        rrnode = wRocNet.nextrocnetnode(data->ini, rrnode);
+      if( data->highestID == 0 ) {
+        /* default address; send a new ID */
+        data->highestID = wRocNet.getid(data->rnini);
+        iONode rrnode = wRocNet.getrocnetnode(data->ini);
+        while( rrnode != NULL ) {
+          if( wRocNetNode.getid(rrnode) > data->highestID )
+            data->highestID = wRocNetNode.getid(rrnode);
+          rrnode = wRocNet.nextrocnetnode(data->ini, rrnode);
+        }
       }
-      highestID++;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send %d a new ID: %d", sndr, highestID );
+      data->highestID++;
+      byte* rnID = allocMem(32);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send %d a new ID: %d", sndr, data->highestID );
       rnID[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
       rnReceipientAddresToPacket( sndr, rnID, data->seven );
       rnSenderAddresToPacket( wRocNet.getid(data->rnini), rnID, data->seven );
       rnID[RN_PACKET_ACTION] = RN_PROGRAMMING_WRNID;
       rnID[RN_PACKET_LEN] = 2;
-      rnID[RN_PACKET_DATA + 0] = highestID / 256;
-      rnID[RN_PACKET_DATA + 1] = highestID % 256;
+      rnID[RN_PACKET_DATA + 0] = data->highestID / 256;
+      rnID[RN_PACKET_DATA + 1] = data->highestID % 256;
       ThreadOp.post( data->writer, (obj)rnID );
       break;
     }
@@ -655,6 +657,8 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       wRocNetNode.setnrio(rnnode, rn[RN_PACKET_DATA+4]);
       MapOp.put( data->nodemap, key, (obj)rnnode);
       NodeOp.addChild( data->ini, rnnode );
+      if( sndr >= data->highestID )
+        data->highestID = sndr + 1;
     }
     else if( MapOp.haskey( data->nodemap, key ) ) {
       iONode rnnode = (iONode)MapOp.get( data->nodemap, key );

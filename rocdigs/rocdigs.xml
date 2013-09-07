@@ -858,7 +858,8 @@
       <var name="crc" vt="Boolean"/>
       <var name="AckList" vt="iOList"/>
       <var name="nodemap" vt="iOMap"/>
-    </data>
+      <var name="highestID" vt="int"/>
+      </data>
   </object>
 
   <object name="MCS2" interface="$../rocint/rocint.xml:DigInt" use="node,trace,socket,serial,thread,mutex,map" include="$rocint/public/digint" remark="rocNet object">
