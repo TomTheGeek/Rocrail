@@ -26,7 +26,7 @@ else
   echo ""
 fi
 
-sed s/\<BZR\>/$BAZAARREV/ < .package/control.template > ./package/control.tmp
+sed s/\<BZR\>/$BAZAARREV/ < ./package/control.template > ./package/control.tmp
 sed s/\<ARCH\>/$ARCH/ < ./package/control.tmp > ./package/control
 rm ./package/control.tmp
 
@@ -40,20 +40,18 @@ mkdir -p debian/DEBIAN
 mkdir -p debian/opt/rocnetnode
 mkdir -p debian/etc/init.d
 
-cp ./package/control debian/DEBIAN/control
+cp ../package/control debian/DEBIAN/control
 
-cp ../unxbin/rocnetnode debian/opt/rocnetnode
-cp ../unxbin/dcc232.so debian/opt/rocrail
+cp ../../unxbin/rocnetnode debian/opt/rocnetnode
+cp ../../unxbin/dcc232.so debian/opt/rocrail
 
 strip debian/opt/rocnetnode/rocnetnode
 strip debian/opt/rocnetnode/*.so
 
-cp ./package/rocnetnode.sh debian/opt/rocnetnode
-cp ./package/rocnetnoded debian/etc/init.d
+cp ../package/rocnetnode.sh debian/opt/rocnetnode
+cp ../package/rocnetnoded debian/etc/init.d
 chmod +x debian/opt/rocnetnode/*.sh
-cp ./package/rocnetnode.ini debian/opt/rocnetnode
-
-cp -R ../COPYING debian/opt/rocnetnode
+cp ../package/rocnetnode.ini debian/opt/rocnetnode
 
 fakeroot dpkg-deb --build debian
 mv debian.deb rocnetnode-$BAZAARREV-$DIST-$ARCH.deb
