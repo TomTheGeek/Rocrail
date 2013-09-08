@@ -1,0 +1,10 @@
+Package: rocnetnode
+Version: <BZR>
+Section: other
+Priority: optional
+Architecture: <ARCH>
+Depends:
+Installed-Size: 4000
+Maintainer: Rob Versluis <support@rocrail.net>
+Description: Rocrail - Model Railroad Control System.    
+Homepage: http://www.rocrail.net
