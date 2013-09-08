@@ -483,6 +483,16 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         rn[RN_PACKET_DATA + 1] = wProgram.getval2(node);
         ThreadOp.post( data->writer, (obj)rn );
       }
+      else if( wProgram.getcmd( node ) == wProgram.show ) {
+        int i = 0;
+        int rnid = wProgram.getmodid(node);
+        rn[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+        rnReceipientAddresToPacket( rnid, rn, data->seven );
+        rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
+        rn[RN_PACKET_ACTION] = RN_STATIONARY_SHOW;
+        rn[RN_PACKET_LEN] = 0;
+        ThreadOp.post( data->writer, (obj)rn );
+      }
     }
     else if(wProgram.ispom(node)) {
       int addr = wProgram.getaddr( node );
@@ -697,8 +707,14 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     }
     break;
 
-  case RN_STATIONARY_SHOW:
-    /* ToDo: Inform Rocview to show this node. */
+  case RN_STATIONARY_SHOW: {
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(node, sndr);
+    wProgram.setcmd( node, wProgram.show );
+    wProgram.setiid( node, data->iid );
+    wProgram.setlntype(node, wProgram.lntype_rocnet);
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+    }
     break;
 
   default:

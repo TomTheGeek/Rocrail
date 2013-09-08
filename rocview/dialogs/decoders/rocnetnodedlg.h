@@ -60,6 +60,7 @@ class RocnetNodeDlg : public rocnetnodegen
 		void onNodeOptionsWrite( wxCommandEvent& event );
 		void onShutdown( wxCommandEvent& event );
     void onShutdownAll( wxCommandEvent& event );
+    void onShow( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		RocnetNodeDlg( wxWindow* parent, iONode ini );

@@ -210,7 +210,6 @@ void RocnetNodeDlg::initNodeList() {
   if(m_NodeList->GetItemCount() > 0 ) {
     m_NodeList->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
     m_Props = (iONode)m_NodeList->GetItemData(0);
-
   }
 
 }
@@ -272,6 +271,21 @@ void RocnetNodeDlg::event(iONode node) {
       m_IOType->SetSelection( wProgram.getval1(node) );
       m_SecAck->SetValue(wProgram.getval2(node)&0x01?true:false);
     }
+    else if( wProgram.getcmd(node) == wProgram.show ) {
+      // Select idex.
+      m_NodeBook->SetSelection(0);
+
+      if(m_NodeList->GetItemCount() > 0 ) {
+        for( int i = 0; i < m_NodeList->GetItemCount(); i++ ) {
+          iONode l_Props = (iONode)m_NodeList->GetItemData(0);
+          if( wRocNetNode.getid(l_Props) == wProgram.getmodid(node) ) {
+            m_NodeList->SetItemState(i, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+            break;
+          }
+        }
+      }
+
+    }
   }
 }
 
@@ -326,4 +340,17 @@ void RocnetNodeDlg::onShutdownAll( wxCommandEvent& event ) {
   cmd->base.del(cmd);
 }
 
+
+void RocnetNodeDlg::onShow( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
+  wProgram.setcmd( cmd, wProgram.show );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
 
