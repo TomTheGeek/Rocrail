@@ -736,13 +736,13 @@ static void __writePort(iORocNetNode rocnetnode, int port, int value) {
     rdata &= ~mask8; /* fileter out the wanted port */
     wdata8 |= rdata; /* save other port values */
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
         "I2C writeport %d=0x%02X i2caddr=%d shift=%d mask=0x%02X", port, wdata8, i2caddr, shift, mask8 );
     raspiWriteRegI2C(data->i2cdescriptor, 0x20+i2caddr, (shift > 7) ? 0x13:0x12, wdata8);
     MutexOp.post( data->i2cmux );
   }
   else if( port > 0 && port < 32 ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GPIO writeport %d=%d", port, value );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "GPIO writeport %d=%d", port, value );
     raspiWrite(data->ports[port]->ionr, value);
   }
   else {
@@ -1155,7 +1155,7 @@ static void __initPorts(iORocNetNode inst) {
 static void __initIO(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
 
-  raspiSetupIO(-1);
+  data->iorc = raspiSetupIO(-1);
 
   if( data->iotype == 0 ) {
     __initPorts(inst);
@@ -1169,7 +1169,9 @@ static void __initIO(iORocNetNode inst) {
     __initI2C(inst, 1);
   }
 
-  __initControl(inst);
+  if( data->iorc == 0) {
+    __initControl(inst);
+  }
 
 }
 
