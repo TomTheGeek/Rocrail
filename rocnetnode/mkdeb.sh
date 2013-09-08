@@ -37,21 +37,22 @@ fi
 cd ./raspbian
 rm -Rf *.deb
 mkdir -p debian/DEBIAN
-mkdir -p debian/opt/rocnetnode
+mkdir -p debian/opt/rocrail
 mkdir -p debian/etc/init.d
 
 cp ../package/control debian/DEBIAN/control
 
-cp ../../unxbin/rocnetnode debian/opt/rocnetnode
+cp ../../unxbin/rocnetnode debian/opt/rocrail
 cp ../../unxbin/dcc232.so debian/opt/rocrail
 
-strip debian/opt/rocnetnode/rocnetnode
-strip debian/opt/rocnetnode/*.so
+strip debian/opt/rocrail/rocnetnode
+strip debian/opt/rocrail/*.so
 
-cp ../package/rocnetnode.sh debian/opt/rocnetnode
+cp ../package/rocnetnode.sh debian/opt/rocrail
 cp ../package/rocnetnoded debian/etc/init.d
-chmod +x debian/opt/rocnetnode/*.sh
-cp ../package/rocnetnode.ini debian/opt/rocnetnode
+chmod +x debian/opt/rocrail/*.sh
+cp ../package/rocnetnode.ini debian/opt/rocrail
+cp ../package/postinst debian/postinst
 
 fakeroot dpkg-deb --build debian
 mv debian.deb rocnetnode-$BAZAARREV-$DIST-$ARCH.deb

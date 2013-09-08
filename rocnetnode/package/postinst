@@ -1,0 +1,5 @@
+#!/bin/bash
+chmod 755 /etc/init.d/rocnetnoded
+chmod 755 /opt/rocrail/rocnetnode.sh
+update-rc.d rocnetnoded remove
+update-rc.d rocnetnoded defaults
