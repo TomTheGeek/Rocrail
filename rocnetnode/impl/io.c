@@ -119,6 +119,12 @@ int raspiSetupIO(int mask)
 }
 
 
+void raspiConfigPort(int port, int type) {
+  INP_GPIO(port);
+  if( type == 0 )
+    OUT_GPIO(port);
+}
+
 int raspiRead(int port) {
   return GPIO_READ(port);
 }
@@ -147,6 +153,10 @@ void raspiGPIOAlt(int g, int alt) {
 int raspiSetupIO(int mask) {
   TraceOp.trc( "raspi", TRCLEVEL_INFO, __LINE__, 9999, "dummy raspiSetupIO(0x%04X)", mask );
   return 0;
+}
+
+void raspiConfigPort(int port, int type) {
+  TraceOp.trc( "raspi", TRCLEVEL_INFO, __LINE__, 9999, "dummy raspiConfigPort(%d, %d)", port, type );
 }
 
 int raspiRead(int port) {

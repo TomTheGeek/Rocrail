@@ -26,6 +26,7 @@
 
 void raspiGPIOAlt(int g, int alt);
 int raspiSetupIO(int mask);
+void raspiConfigPort(int port, int type);
 int raspiRead(int port);
 void raspiWrite(int port, int val);
 int raspiDummy(void);
