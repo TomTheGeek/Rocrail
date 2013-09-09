@@ -3,3 +3,20 @@ chmod 755 /etc/init.d/rocnetnoded
 chmod 755 /opt/rocrail/rocnetnode.sh
 update-rc.d rocnetnoded remove
 update-rc.d rocnetnoded defaults
+
+if grep "i2c-bcm2708" /etc/modules; then
+  echo "i2c-bcm2708 already listed"
+else
+  echo "i2c-bcm2708" >> /etc/modules
+fi
+
+if grep "i2c-dev" /etc/modules; then
+  echo "i2c-dev already listed"
+else
+  echo "i2c-dev" >> /etc/modules
+fi
+
+sed "s/^blacklist i2c-bcm2708/#blacklist i2c-bcm2708/g" < /etc/modprobe.d/raspi-blacklist.conf > /etc/modprobe.d/raspi-blacklist.conf.tmp
+cp /etc/modprobe.d/raspi-blacklist.conf.tmp /etc/modprobe.d/raspi-blacklist.conf
+rm /etc/modprobe.d/raspi-blacklist.conf.tmp
+
