@@ -1275,6 +1275,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   SocketOp.bind(data->readUDP);
   data->writeUDP = SocketOp.inst( data->addr, data->port, False, True, True );
 
+  ThreadOp.sleep(1000); /* startup sleep */
   __initIO(inst);
 
   __initDigInt(inst);
