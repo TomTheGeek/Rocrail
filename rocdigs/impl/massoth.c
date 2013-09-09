@@ -42,6 +42,8 @@
 #include "rocrail/wrapper/public/FbInfo.h"
 #include "rocrail/wrapper/public/FbMods.h"
 
+#include "rocutils/public/addr.h"
+
 static int instCnt = 0;
 
 /* declarations */
@@ -458,6 +460,11 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
   /* Switch command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
     int addr  = wSwitch.getaddr1( node );
+    int port  = wSwitch.getport1( node );
+
+    if( port > 0 ) {
+      addr = AddrOp.toPADA( addr, port );
+    }
 
     out[0] = 0x4A;
     out[1] = 0; /*xor*/
@@ -475,8 +482,13 @@ static Boolean __translate( iOMassothData data, iONode node, byte* out ) {
   /* Output command */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
     int addr   = wOutput.getaddr( node );
+    int port   = wOutput.getport( node );
     int gate   = wOutput.getgate( node );
     int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+
+    if( port > 0 ) {
+      addr = AddrOp.toPADA( addr, port );
+    }
 
     out[0] = 0x4A;
     out[1] = 0; /*xor*/
