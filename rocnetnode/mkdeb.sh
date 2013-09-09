@@ -44,6 +44,7 @@ cp ../package/control debian/DEBIAN/control
 
 cp ../../unxbin/rocnetnode debian/opt/rocrail
 cp ../../unxbin/dcc232.so debian/opt/rocrail
+cp ../../unxbin/sprog.so debian/opt/rocrail
 
 strip debian/opt/rocrail/rocnetnode
 strip debian/opt/rocrail/*.so
