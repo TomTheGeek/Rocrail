@@ -741,12 +741,9 @@ static void __writePort(iORocNetNode rocnetnode, int port, int value) {
     raspiWriteRegI2C(data->i2cdescriptor, 0x20+i2caddr, (shift > 7) ? 0x13:0x12, wdata8);
     MutexOp.post( data->i2cmux );
   }
-  else if( port > 0 && port < 32 ) {
+  else if( data->iorc == 0 && port > 0 && port < 32 && data->ports[port] != NULL ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "GPIO writeport %d=%d", port, value );
     raspiWrite(data->ports[port]->ionr, value);
-  }
-  else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "port out of range [%d]", port );
   }
 }
 
