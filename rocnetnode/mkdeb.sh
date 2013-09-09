@@ -53,7 +53,7 @@ cp ../package/rocnetnode.sh debian/opt/rocrail
 cp ../package/rocnetnoded debian/etc/init.d
 chmod +x debian/opt/rocrail/*.sh
 cp ../package/rocnetnode.ini debian/opt/rocrail
-cp ../package/postinst debian/postinst
+cp ../package/postinst debian/DEBIAN/postinst
 
 fakeroot dpkg-deb --build debian
 mv debian.deb rocnetnode-$BAZAARREV-$DIST-$ARCH.deb
