@@ -358,6 +358,7 @@ static Boolean _cmd( iOFBack inst, iONode cmd, Boolean update ) {
     iONode clone = (iONode)NodeOp.base.clone( data->props );
     wFeedback.setcounter( clone, data->counter);
     AppOp.broadcastEvent( clone );
+    __checkAction(inst);
   }
   else {
     if( wFeedback.getfbtype(data->props) == wFeedback.fbtype_wheelcounter && wFeedback.isstate(cmd) )
