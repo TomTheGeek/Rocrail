@@ -964,6 +964,7 @@
       <var name="writer" vt="iOThread"/>
       <var name="slots[128]" vt="struct slot"/>
       <var name="power" vt="Boolean"/>
+      <var name="commOK" vt="Boolean"/>
     </data>
   </object>
 

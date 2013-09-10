@@ -306,7 +306,7 @@ static Boolean __transact( iOSprog sprog, char* out, int outsize, char* in, int 
   iOSprogData data = Data(sprog);
   Boolean     rc = False;
 
-  if( MutexOp.wait( data->mux ) ) {
+  if( data->commOK && MutexOp.wait( data->mux ) ) {
     int i = 0;
     ThreadOp.sleep(5);
 
@@ -653,6 +653,14 @@ static void _halt( obj inst, Boolean poweroff ) {
   iOSprogData data = Data(inst);
   data->run = False;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down [%s]...", data->iid );
+  if( poweroff ) {
+    char outa[32];
+    StrOp.fmtb( outa, "-\r" );
+    data->power = False;
+    __transact( (iOSprog)inst, outa, StrOp.len(outa), NULL, 0, 1 );
+  }
+  ThreadOp.sleep(500);
+  data->commOK = False;
   SerialOp.close( data->serial );
   return;
 }
@@ -919,11 +927,11 @@ static void __sprogReader( void* threadinst ) {
 
   do {
 
-    ThreadOp.sleep( 10 );
+    ThreadOp.sleep( data->commOK ? 10:5000 );
 
-    if( MutexOp.wait( data->mux ) ) {
-      int rc = SerialOp.available(data->serial);
-      if( rc > 0 ) {
+    if( data->commOK && MutexOp.wait( data->mux ) ) {
+      int available = SerialOp.available(data->serial);
+      if( available > 0 ) {
         if( SerialOp.read(data->serial, &in[idx], 1) ) {
           TraceOp.dump( NULL, TRCLEVEL_DEBUG, (char*)in, StrOp.len(in) );
           if( idx > 254 ) {
@@ -949,13 +957,22 @@ static void __sprogReader( void* threadinst ) {
           }
         }
       }
-      else if( rc == -1 ) {
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "SPROG read: device error" );
-        ThreadOp.sleep( 5000 );
+      else if( available == -1 || SerialOp.getRc(data->serial) > 0 ) {
+        /* device error */
+        data->commOK = False;
+        SerialOp.close(data->serial);
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error" );
       }
 
       /* Release the mutex. */
       MutexOp.post( data->mux );
+    }
+    else if(!data->commOK) {
+      data->commOK = SerialOp.open( data->serial );
+      if(data->commOK) {
+        SerialOp.setDTR(data->serial, True);
+        SerialOp.setRTS(data->serial, True);
+      }
     }
 
   } while(data->run);
@@ -997,18 +1014,19 @@ static struct OSprog* _inst( const iONode ini ,const iOTrace trc ) {
   SerialOp.setLine( data->serial, 9600, 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 
-  if( SerialOp.open( data->serial ) ) {
+  data->commOK = SerialOp.open( data->serial );
+  if( data->commOK ) {
     SerialOp.setDTR(data->serial, True);
     SerialOp.setRTS(data->serial, True);
-
-    data->reader = ThreadOp.inst( "sprogrx", &__sprogReader, __Sprog );
-    ThreadOp.start( data->reader );
-    data->writer = ThreadOp.inst( "sprogtx", &__sprogWriter, __Sprog );
-    ThreadOp.start( data->writer );
   }
   else {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device = [%s] not ready", data->device );
   }
+
+  data->reader = ThreadOp.inst( "sprogrx", &__sprogReader, __Sprog );
+  ThreadOp.start( data->reader );
+  data->writer = ThreadOp.inst( "sprogtx", &__sprogWriter, __Sprog );
+  ThreadOp.start( data->writer );
 
   instCnt++;
   return __Sprog;

@@ -1346,6 +1346,10 @@ static Boolean _shutdown( void ) {
   msg[RN_PACKET_LEN] = 0;
   __sendRN(__RocNetNode, msg);
 
+  if(data->pDI != NULL) {
+    data->pDI->halt((obj)data->pDI, True);
+  }
+
   data->run = False;
   ThreadOp.sleep(1000);
   bShutdown = True;
