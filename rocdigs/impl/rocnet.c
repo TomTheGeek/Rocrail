@@ -863,6 +863,17 @@ static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
     wFeedback.setaddr( evt, addr );
     wFeedback.setfbtype( evt, wFeedback.fbtype_sensor );
 
+    if( rn[RN_PACKET_LEN] > 4 ) {
+      char ident[32] = {'\0'};
+      int len = rn[RN_PACKET_LEN] - 4;
+      int i = 0;
+      for( i = 0; i < len && i < 31; i++) {
+        ident[i] = rn[RN_PACKET_DATA + 4 + i];
+        ident[i+1] = '\0';
+      }
+      wFeedback.setidentifier( evt, ident );
+    }
+
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );
 
