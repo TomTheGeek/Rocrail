@@ -765,11 +765,11 @@ void BidibIdentDlg::onMenu( wxCommandEvent& event ) {
     GetProductName(wBiDiBnode.getvendor(m_SelectedBidibNode)&0xFF, pid, &l_www);
     wxLaunchDefaultBrowser(wxString(l_www, wxConvUTF8), wxBROWSER_NEW_WINDOW );
   }
-  else if( menuItem == 1002 && m_SelectedBidibNode != NULL ) {
+  else if( (menuItem == 1002 || menuItem == 1005) && m_SelectedBidibNode != NULL ) {
     iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setmodid(cmd, wBiDiBnode.getuid(m_SelectedBidibNode));
     wProgram.setcmd( cmd, wProgram.identify );
-    wProgram.setvalue(cmd, 1);
+    wProgram.setvalue(cmd, (menuItem == 1002) ? 1:0);
     wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
     wProgram.setlntype(cmd, wProgram.lntype_bidib);
     wxGetApp().sendToRocrail( cmd );
@@ -802,10 +802,14 @@ void BidibIdentDlg::onItemRightClick( wxTreeEvent& event ) {
   m_SelectedBidibNode = (iONode)MapOp.get( nodeMap, uid );
   wxMenu menu( wxString(wBiDiBnode.getpath( bidibnode ),wxConvUTF8) );
   menu.Append( 1001, wxGetApp().getMenu("info") );
-  menu.Append( 1002, wxGetApp().getMenu("identify") );
+  wxMenu* identMenu = new wxMenu();
+  identMenu->Append( 1002, wxGetApp().getMenu("on") );
+  identMenu->Append( 1005, wxGetApp().getMenu("off") );
+  menu.Append(-1, wxGetApp().getMenu("identify"), identMenu);
   menu.Append( 1003, wxGetApp().getMenu("ping") );
   menu.Append( 1004, wxGetApp().getMenu("getlasterror") );
   menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BidibIdentDlg::onMenu ), NULL, this );
+  identMenu->Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BidibIdentDlg::onMenu ), NULL, this );
 
   PopupMenu(&menu );
 }
