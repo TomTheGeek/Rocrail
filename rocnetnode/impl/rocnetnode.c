@@ -420,31 +420,53 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     rnSenderAddresToPacket( data->id, msg, 0 );
     msg[RN_PACKET_ACTION] = RN_PROGRAMMING_RDOPT;
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-    msg[RN_PACKET_LEN] = 2;
+    msg[RN_PACKET_LEN] = 4;
     msg[RN_PACKET_DATA + 0] = data->iotype;
     msg[RN_PACKET_DATA + 1] = data->sack ? 0x01:0x00;
+    msg[RN_PACKET_DATA + 2] = data->cstype;
+    msg[RN_PACKET_DATA + 3] = data->csdevice;
     break;
 
   case RN_PROGRAMMING_WROPT:
     data->iotype = rn[RN_PACKET_DATA + 0];
     data->sack   = (rn[RN_PACKET_DATA + 1] & 0x01) ? True:False;
+    data->cstype   = rn[RN_PACKET_DATA + 2];
+    data->csdevice = rn[RN_PACKET_DATA + 3];
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "options: iotype=%d cstype=%d csdevice=%d", data->iotype, data->cstype, data->csdevice );
     msg = allocMem(128);
     msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
     rnReceipientAddresToPacket( sndr, msg, 0 );
     rnSenderAddresToPacket( data->id, msg, 0 );
     msg[RN_PACKET_ACTION] = RN_PROGRAMMING_WROPT;
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-    msg[RN_PACKET_LEN] = 2;
+    msg[RN_PACKET_LEN] = 4;
     msg[RN_PACKET_DATA + 0] = data->iotype;
     msg[RN_PACKET_DATA + 1] = data->sack ? 0x01:0x00;
+    msg[RN_PACKET_DATA + 2] = data->cstype;
+    msg[RN_PACKET_DATA + 3] = data->csdevice;
     /* Save the rocnetnode.ini to persistent the new ID. */
     {
       iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
       iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
+      iONode digintini = NodeOp.findNode(data->ini, wDigInt.name());
       if( wRocNetNodeOptions.getiotype(optionsini) != data->iotype )
         __initIO(rocnetnode);
       wRocNetNodeOptions.setiotype( optionsini, data->iotype );
       wRocNetNodeOptions.setsack( optionsini, data->sack );
+      if( digintini != NULL && data->cstype == 0 ) {
+        NodeOp.removeChild(data->ini, digintini );
+        NodeOp.base.del(digintini);
+      }
+      else if( data->cstype > 0) {
+        if( digintini == NULL ) {
+          iONode digintini = NodeOp.inst(wDigInt.name(), data->ini, ELEMENT_NODE);
+          NodeOp.addChild(data->ini, digintini);
+        }
+        wDigInt.setiid(digintini, "dcc");
+        wDigInt.setlib(digintini, data->cstype==1 ? wDigInt.dcc232:wDigInt.sprog);
+        wDigInt.setdevice(digintini, data->csdevice==0 ? "/dev/ttyUSB0":"/dev/ttyUSB1");
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dcc: lib=%s device=%s", wDigInt.getlib(digintini), wDigInt.getdevice(digintini) );
+      }
     }
     __saveIni(rocnetnode);
     break;
@@ -960,23 +982,26 @@ static void __listener( obj inst, iONode nodeC, int level ) {
 
 static Boolean __initDigInt(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
-  const char*  lib = wDigInt.getlib( data->digintini );
-  const char*  iid = wDigInt.getiid( data->digintini );
-  iIDigInt pDi = NULL;
-  iOLib    pLib = NULL;
-  LPFNROCGETDIGINT pInitFun = (void *) NULL;
-  char* libpath = StrOp.fmt( "%s%c%s", ".", SystemOp.getFileSeparator(), lib );
-  pLib = LibOp.inst( libpath );
-  StrOp.free( libpath );
-  if (pLib == NULL)
-    return False;
-  pInitFun = (LPFNROCGETDIGINT)LibOp.getProc(pLib,"rocGetDigInt");
-  if (pInitFun == NULL)
-    return False;
-  data->pDI = pInitFun(data->digintini,TraceOp.get());
-  data->pDI->setListener( (obj)data->pDI, (obj)inst, &__listener );
+  if( data->digintini != NULL ) {
+    const char*  lib = wDigInt.getlib( data->digintini );
+    const char*  iid = wDigInt.getiid( data->digintini );
+    iIDigInt pDi = NULL;
+    iOLib    pLib = NULL;
+    LPFNROCGETDIGINT pInitFun = (void *) NULL;
+    char* libpath = StrOp.fmt( "%s%c%s", ".", SystemOp.getFileSeparator(), lib );
+    pLib = LibOp.inst( libpath );
+    StrOp.free( libpath );
+    if (pLib == NULL)
+      return False;
+    pInitFun = (LPFNROCGETDIGINT)LibOp.getProc(pLib,"rocGetDigInt");
+    if (pInitFun == NULL)
+      return False;
+    data->pDI = pInitFun(data->digintini,TraceOp.get());
+    data->pDI->setListener( (obj)data->pDI, (obj)inst, &__listener );
 
-  return True;
+    return True;
+  }
+  return False;
 }
 
 static iONode __findPort(iORocNetNode inst, int port) {
@@ -1251,6 +1276,13 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
         TraceOp.setLevel( trc, TraceOp.getLevel( trc ) | TRCLEVEL_CALC );
     }
     data->digintini = NodeOp.findNode(data->ini, wDigInt.name());
+    if( data->digintini != NULL ) {
+      data->cstype = StrOp.equals(wDigInt.dcc232, wDigInt.getlib(data->digintini)) ? 1:2;
+      data->csdevice = StrOp.equals("/dev/ttyUSB1", wDigInt.getdevice(data->digintini)) ? 1:0;
+    }
+    else {
+      data->cstype = 0;
+    }
   }
   else {
     trc = TraceOp.inst( debug | dump | monitor | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );

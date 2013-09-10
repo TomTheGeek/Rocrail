@@ -922,8 +922,8 @@ static void __sprogReader( void* threadinst ) {
     ThreadOp.sleep( 10 );
 
     if( MutexOp.wait( data->mux ) ) {
-
-      if( SerialOp.available(data->serial) ) {
+      int rc = SerialOp.available(data->serial);
+      if( rc > 0 ) {
         if( SerialOp.read(data->serial, &in[idx], 1) ) {
           TraceOp.dump( NULL, TRCLEVEL_DEBUG, (char*)in, StrOp.len(in) );
           if( idx > 254 ) {
@@ -948,6 +948,10 @@ static void __sprogReader( void* threadinst ) {
             idx++;
           }
         }
+      }
+      else if( rc == -1 ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "SPROG read: device error" );
+        ThreadOp.sleep( 5000 );
       }
 
       /* Release the mutex. */
@@ -992,15 +996,19 @@ static struct OSprog* _inst( const iONode ini ,const iOTrace trc ) {
   SerialOp.setFlow( data->serial, cts );
   SerialOp.setLine( data->serial, 9600, 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
-  SerialOp.open( data->serial );
 
-  SerialOp.setDTR(data->serial, True);
-  SerialOp.setRTS(data->serial, True);
+  if( SerialOp.open( data->serial ) ) {
+    SerialOp.setDTR(data->serial, True);
+    SerialOp.setRTS(data->serial, True);
 
-  data->reader = ThreadOp.inst( "sprogrx", &__sprogReader, __Sprog );
-  ThreadOp.start( data->reader );
-  data->writer = ThreadOp.inst( "sprogtx", &__sprogWriter, __Sprog );
-  ThreadOp.start( data->writer );
+    data->reader = ThreadOp.inst( "sprogrx", &__sprogReader, __Sprog );
+    ThreadOp.start( data->reader );
+    data->writer = ThreadOp.inst( "sprogtx", &__sprogWriter, __Sprog );
+    ThreadOp.start( data->writer );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device = [%s] not ready", data->device );
+  }
 
   instCnt++;
   return __Sprog;

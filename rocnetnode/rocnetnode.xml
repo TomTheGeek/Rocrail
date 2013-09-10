@@ -82,6 +82,8 @@
       <var name="LED1timer" vt="int"/>
       <var name="LED2timer" vt="int"/>
       <var name="show" vt="Boolean"/>
+      <var name="cstype" vt="int"/>
+      <var name="csdevice" vt="int"/>
       </data>
   </object>
 

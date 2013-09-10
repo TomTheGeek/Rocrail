@@ -478,9 +478,11 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         rnReceipientAddresToPacket( rnid, rn, data->seven );
         rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
         rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WROPT;
-        rn[RN_PACKET_LEN] = 2;
+        rn[RN_PACKET_LEN] = 4;
         rn[RN_PACKET_DATA + 0] = wProgram.getval1(node);
         rn[RN_PACKET_DATA + 1] = wProgram.getval2(node);
+        rn[RN_PACKET_DATA + 2] = wProgram.getval3(node);
+        rn[RN_PACKET_DATA + 3] = wProgram.getval4(node);
         ThreadOp.post( data->writer, (obj)rn );
       }
       else if( wProgram.getcmd( node ) == wProgram.show ) {
@@ -797,6 +799,8 @@ static void __evaluatePTStationary( iOrocNet rocnet, byte* rn ) {
     wProgram.setcmd( node, wProgram.getoptions );
     wProgram.setval1( node, rn[RN_PACKET_DATA+0] );
     wProgram.setval2( node, rn[RN_PACKET_DATA+1] );
+    wProgram.setval3( node, rn[RN_PACKET_DATA+2] );
+    wProgram.setval4( node, rn[RN_PACKET_DATA+3] );
     wProgram.setiid( node, data->iid );
     wProgram.setlntype(node, wProgram.lntype_rocnet);
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
