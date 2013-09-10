@@ -50,6 +50,7 @@
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/Feedback.h"
 
 #include "rocnetnode/impl/rocnetnode_impl.h"
 
@@ -976,6 +977,24 @@ static void __listener( obj inst, iONode nodeC, int level ) {
   iORocNetNodeData data = Data(inst);
   if( nodeC != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "listener: %s", NodeOp.getName(nodeC) );
+    if(StrOp.equals(NodeOp.getName(nodeC), wFeedback.name())) {
+      byte msg[256];
+      const char* ident = wFeedback.getidentifier(nodeC);
+      msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
+      msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
+      msg[RN_PACKET_LEN] = 4;
+      msg[RN_PACKET_DATA+2] = wFeedback.isstate(nodeC);
+      msg[RN_PACKET_DATA+3] = wFeedback.getaddr(nodeC);
+      rnSenderAddresToPacket( data->id, msg, 0 );
+      if( ident != NULL ) {
+        int len = StrOp.len(ident);
+        int i = 0;
+        msg[RN_PACKET_LEN] += len;
+        for( i = 0; i < len; i++ )
+          msg[RN_PACKET_DATA+4+i] = ident[i];
+      }
+      __sendRN((iORocNetNode)inst, msg);
+    }
     NodeOp.base.del(nodeC);
   }
 }
