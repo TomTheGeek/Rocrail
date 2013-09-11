@@ -606,6 +606,7 @@ static void* __event( void* inst, const void* evt ) {
 
     if( !data->go ) {
       wLoc.setV( data->props, V);
+      data->drvSpeed = V;
     }
     else {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "not using the field velocity because loco %s is in auto mode", wLoc.getid(data->props));
