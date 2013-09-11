@@ -69,6 +69,7 @@ static int instCnt = 0;
 
 
 static void __SoD( iOBiDiB inst, iOBiDiBNode bidibnode );
+static void __handleSensor(iOBiDiB bidib, int bus, int addr, Boolean state, int locoAddr, int type, int load );
 
 
 /** ----- OBase ----- */
@@ -938,7 +939,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       wFeedback.setstate( node, !state);
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
-    rsp = (iONode)NodeOp.base.clone( node );
+    __handleSensor(inst, wFeedback.getbus(node), wFeedback.getaddr(node)-1, wFeedback.isstate(node), atoi(wFeedback.getidentifier(node)), 0, 0 );
   }
 
   /* Program command. */

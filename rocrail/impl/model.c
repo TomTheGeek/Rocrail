@@ -2682,8 +2682,10 @@ static iOLoc _getLocByIdent( iOModel inst, const char* ident, Boolean dir ) {
     else if(wCtrl.iscreateguestonbidi(wRocRail.getctrl( AppOp.getIni()))) {
       /* Guest loco? */
       iOLoc loco = ModelOp.getLoc( inst, ident, NULL, True );
-      iONode locoProps = LocOp.base.properties(loco);
-      wLoc.setplacing( locoProps, dir );
+      if( loco != NULL ) {
+        iONode locoProps = LocOp.base.properties(loco);
+        wLoc.setplacing( locoProps, dir );
+      }
       return loco;
     }
   }
