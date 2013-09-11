@@ -41,6 +41,7 @@
 #include "rocs/public/lib.h"
 
 #include "rocrail/wrapper/public/Cmdline.h"
+#include "rocrail/wrapper/public/ConCmd.h"
 #include "rocrail/wrapper/public/RocNet.h"
 #include "rocrail/wrapper/public/PortSetup.h"
 #include "rocrail/wrapper/public/RocNetNodeOptions.h"
@@ -67,9 +68,6 @@
 #define ROCNETNODEINI "rocnetnode.ini"
 
 static int instCnt = 0;
-
-static int versionH = 1;
-static int versionL = 0;
 
 /*
  * LED1: GPIO 23, normal operation
@@ -286,7 +284,7 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
 
 static void __saveIni(iORocNetNode rocnetnode) {
   iORocNetNodeData data = Data(rocnetnode);
-  iOFile iniFile = FileOp.inst( ROCNETNODEINI, OPEN_WRITE );
+  iOFile iniFile = FileOp.inst( data->inifile, OPEN_WRITE );
 
   int i = 0;
   for( i = 0; i < 128; i++ ) {
@@ -301,7 +299,7 @@ static void __saveIni(iORocNetNode rocnetnode) {
 
   if( iniFile != NULL ) {
     char* iniStr = NodeOp.base.toString( data->ini );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "saving ini %s...", ROCNETNODEINI );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "saving ini %s...", data->inifile );
     FileOp.write( iniFile, iniStr, StrOp.len( iniStr ) );
     FileOp.flush( iniFile );
     FileOp.close( iniFile );
@@ -1019,7 +1017,7 @@ static Boolean __initDigInt(iORocNetNode inst) {
     iIDigInt pDi = NULL;
     iOLib    pLib = NULL;
     LPFNROCGETDIGINT pInitFun = (void *) NULL;
-    char* libpath = StrOp.fmt( "%s%c%s", ".", SystemOp.getFileSeparator(), lib );
+    char* libpath = StrOp.fmt( "%s%c%s", data->libpath, SystemOp.getFileSeparator(), lib );
     pLib = LibOp.inst( libpath );
     StrOp.free( libpath );
     if (pLib == NULL)
@@ -1228,6 +1226,44 @@ static void __initIO(iORocNetNode inst) {
 
 }
 
+static __checkConsole( iORocNetNodeData data ) {
+  /* Check for command. */
+  int c = getchar();
+
+  if( c == wConCmd.debug ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Toggle debug tracelevel." );
+    TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) ^ TRCLEVEL_DEBUG );
+    TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) ^ TRCLEVEL_XMLH );
+  }
+  else if( c == wConCmd.byte ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Toggle byte tracelevel." );
+    TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) ^ TRCLEVEL_BYTE );
+  }
+  else if( c == wConCmd.memtrc ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Toggle memory tracelevel." );
+    TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) ^ TRCLEVEL_MEMORY );
+  }
+  else if( c == wConCmd.automat ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Toggle auto tracelevel." );
+    TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) ^ TRCLEVEL_USER1 );
+  }
+  else if( c == wConCmd.monitor ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Toggle monitor tracelevel." );
+    TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) ^ TRCLEVEL_MONITOR );
+  }
+  else if( c == wConCmd.info ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Toggle info tracelevel." );
+    TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) ^ TRCLEVEL_INFO );
+  }
+  else if( c == wConCmd.quit ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutdown requested." );
+    data->consoleMode = False;
+    RocNetNodeOp.shutdown();
+  }
+}
+
+
+
 static int _Main( iORocNetNode inst, int argc, char** argv ) {
   iORocNetNodeData data = Data(inst);
   iOTrace trc = NULL;
@@ -1241,13 +1277,27 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   tracelevel  parse   = CmdLnOp.hasKey( arg, wCmdline.parse  ) ? TRCLEVEL_PARSE:0;
   tracelevel  monitor = CmdLnOp.hasKey( arg, wCmdline.monitor) ? TRCLEVEL_MONITOR:0;
   tracelevel  info    = CmdLnOp.hasKey( arg, wCmdline.info   ) ? TRCLEVEL_INFO:0;
+  Boolean     console = CmdLnOp.hasKey( arg, wCmdline.console );
 
+  const char* nf     = CmdLnOp.getStr( arg, wCmdline.inifile );
+  data->libpath       = CmdLnOp.getStr( arg, wCmdline.libpath );
+
+  if( data->libpath == NULL ) {
+    data->libpath = ".";
+  }
+
+  if( nf == NULL )
+    data->inifile = ROCNETNODEINI;
+  else
+    data->inifile = nf;
+
+  data->consoleMode = console;
 
   /* Read the Inifile: */
   {
     char* iniXml = NULL;
     iODoc iniDoc = NULL;
-    iOFile iniFile = FileOp.inst( ROCNETNODEINI, True );
+    iOFile iniFile = FileOp.inst( data->inifile, True );
     if( iniFile != NULL ) {
       iniXml = allocMem( FileOp.size( iniFile ) + 1 );
       FileOp.read( iniFile, iniXml, FileOp.size( iniFile ) );
@@ -1265,7 +1315,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       data->ini = DocOp.getRootNode( iniDoc );
     }
     else {
-      printf( "Invalid ini file! [%s]", ROCNETNODEINI );
+      printf( "Invalid ini file! [%s]", data->inifile );
       return -1;
     }
   }
@@ -1370,6 +1420,10 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
     }
     cnt1 = cnt2;
     ThreadOp.sleep( 1000 );
+
+    /* Check for command. */
+    if( data->consoleMode )
+      __checkConsole( data );
   }
 
   return 0;
@@ -1413,6 +1467,8 @@ static struct ORocNetNode* _inst( iONode ini ) {
 
     /* Initialize data->xxx members... */
     SystemOp.inst();
+    data->libpath = ".";
+    data->inifile = ROCNETNODEINI;
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Instance created of the RocNetNode" );
 

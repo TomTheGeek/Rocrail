@@ -84,6 +84,9 @@
       <var name="show" vt="Boolean"/>
       <var name="cstype" vt="int"/>
       <var name="csdevice" vt="int"/>
+      <var name="inifile" vt="const char*"/>
+      <var name="libpath" vt="const char*"/>
+      <var name="consoleMode" vt="Boolean"/>
       </data>
   </object>
 
