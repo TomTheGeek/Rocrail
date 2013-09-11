@@ -717,8 +717,12 @@ void OperatorDlg::onApply( wxCommandEvent& event ) {
 
 
 void OperatorDlg::onCancel( wxCommandEvent& event ) {
-  //EndModal( 0 );
-  Destroy();
+  if( m_bSave ) {
+    Destroy();
+  }
+  else {
+    EndModal( 0 );
+  }
 }
 
 
