@@ -470,7 +470,14 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
           wDigInt.setlib(digintini, wDigInt.sprog);
         if( data->cstype==3 )
           wDigInt.setlib(digintini, wDigInt.rfid12);
-        wDigInt.setdevice(digintini, data->csdevice==0 ? "/dev/ttyUSB0":"/dev/ttyUSB1");
+
+        if( data->csdevice==0 )
+          wDigInt.setdevice(digintini, "/dev/ttyUSB0");
+        else if( data->csdevice==1 )
+          wDigInt.setdevice(digintini, "/dev/ttyUSB1");
+        else if( data->csdevice==2 )
+          wDigInt.setdevice(digintini, "/dev/ttyACM0");
+
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dcc: lib=%s device=%s", wDigInt.getlib(digintini), wDigInt.getdevice(digintini) );
       }
     }
@@ -1308,7 +1315,13 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       else if(StrOp.equals(wDigInt.rfid12, wDigInt.getlib(data->digintini)))
         data->cstype = 3;
 
-      data->csdevice = StrOp.equals("/dev/ttyUSB1", wDigInt.getdevice(data->digintini)) ? 1:0;
+      if( StrOp.equals("/dev/ttyUSB0", wDigInt.getdevice(data->digintini)) )
+        data->csdevice = 0;
+      else if( StrOp.equals("/dev/ttyUSB1", wDigInt.getdevice(data->digintini)) )
+        data->csdevice = 1;
+      else if( StrOp.equals("/dev/ttyACM0", wDigInt.getdevice(data->digintini)) )
+        data->csdevice = 2;
+
     }
     else {
       data->cstype = 0;
