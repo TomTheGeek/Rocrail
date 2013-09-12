@@ -234,7 +234,7 @@ void RocnetNodeDlg::initValues() {
   m_ID->SetValue( wRocNetNode.getid(m_Props) );
   m_VendorName->SetValue( wxString( m_Vendor[wRocNetNode.getvendor(m_Props)&0xFF],wxConvUTF8) );
   m_ProductName->SetValue( wxString(wRocNetNode.getclass(m_Props),wxConvUTF8) );
-  m_Version->SetValue( wxString(wRocNetNode.getversion(m_Props),wxConvUTF8) );
+  m_Version->SetValue( wxString::Format(_T("%d"), wRocNetNode.getrevision(m_Props)) );
 }
 
 void RocnetNodeDlg::event(iONode node) {
