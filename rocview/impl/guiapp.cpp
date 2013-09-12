@@ -143,6 +143,11 @@
 
 IMPLEMENT_APP(RocGui)
 
+RocGui::RocGui():wxApp() {
+  wxSetEnv(wxT("UBUNTU_MENUPROXY"), wxT("0"));
+}
+
+
 static const int itemSize = 32;
 int RocGui::getItemSize() {
   return itemSize;

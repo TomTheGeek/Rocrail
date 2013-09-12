@@ -48,6 +48,7 @@ enum {
 
 class RocGui : public wxApp {
 public:
+  RocGui();
   virtual bool OnInit();
   virtual int OnExit();
   int getItemSize();
