@@ -1753,9 +1753,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
     }
 
     else if( StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ) ) {
-      if( wFeedback.getbus(m_Props) == wFeedback.fbtype_wheelcounter ) {
-        menu.Append( ME_ResetWheelcounter, wxGetApp().getMenu("reset") );
-      }
+      menu.Append( ME_ResetWheelcounter, wxGetApp().getMenu("resetcounters") );
       menu.Append( ME_ResetSensor, wxGetApp().getMenu("resetstatus") );
       wxMenu* identifiermenu = new wxMenu();
       identifiermenu->Append( ME_IdentifierFwd, wxGetApp().getMenu("forwards")  );

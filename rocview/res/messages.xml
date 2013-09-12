@@ -24350,4 +24350,7 @@
   <Msg id="showcounters">
     <en txt="Show counters"/>
   </Msg>
+  <Msg id="resetcounters">
+    <en txt="Reset counters"/>
+  </Msg>
 </Messages>

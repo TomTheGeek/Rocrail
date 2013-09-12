@@ -6659,3 +6659,9 @@ msgstr ""
 msgid "Show counters"
 msgstr ""
 
+#. 
+# id="resetcounters"
+#, c-format
+msgid "Reset counters"
+msgstr ""
+
