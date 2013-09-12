@@ -6653,3 +6653,9 @@ msgstr ""
 msgid "Revision"
 msgstr ""
 
+#. 
+# id="showcounters"
+#, c-format
+msgid "Show counters"
+msgstr ""
+

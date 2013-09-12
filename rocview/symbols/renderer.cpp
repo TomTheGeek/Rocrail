@@ -64,6 +64,7 @@ SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, in
   m_SymMap = symmap;
   m_bRotateable = true;
   m_bShowID = false;
+  m_bShowCounters = false;
   m_iOccupied = 0;
   m_Bitmap = NULL;
   m_Scale = 1.0;
@@ -2126,10 +2127,10 @@ void SymbolRenderer::drawSensor( wxPaintDC& dc, bool occupied, bool actroute, co
 
   double degrees = 0.0;
   char lab[128];
-  if( m_bShowID )
-    StrOp.fmtb(lab, "%s", wItem.getid(m_Props));
-  else
+  if( m_bShowCounters )
     StrOp.fmtb(lab, "%d,%d,%d", wFeedback.getcounter(m_Props), wFeedback.getcarcount(m_Props), wFeedback.getwheelcount(m_Props));
+  else if( m_bShowID )
+    StrOp.fmtb(lab, "%s", wItem.getid(m_Props));
 
   if( StrOp.equals( ori, wItem.south ) ) {
     drawString( wxString(lab,wxConvUTF8), 32, 1, 270.0 );
@@ -2384,9 +2385,10 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
  * Draw dispatcher
  */
 void SymbolRenderer::drawShape( wxPaintDC& dc, wxGraphicsContext* gc, bool occupied, bool actroute,
-    double* bridgepos, bool showID, const char* ori, int status, bool alt )
+    double* bridgepos, bool showID, bool showCounters, const char* ori, int status, bool alt )
 {
   m_bShowID = showID;
+  m_bShowCounters = showCounters;
   m_bAlt = alt;
   m_DC = &dc;
   const char* nodeName = NodeOp.getName( m_Props );

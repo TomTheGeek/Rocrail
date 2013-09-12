@@ -251,6 +251,7 @@ int RocGui::OnExit() {
     wPlanPanel.settracewindow( wGui.getplanpanel( m_Ini ), m_Frame->isTraceWindow() ? True:False );
     wPlanPanel.setscale( wGui.getplanpanel( m_Ini ), m_Frame->getScale() );
     wPlanPanel.setshowid( wGui.getplanpanel( m_Ini ), m_Frame->isShowID() ? True:False );
+    wPlanPanel.setshowcounters( wGui.getplanpanel( m_Ini ), m_Frame->isShowCounters() ? True:False );
     wPlanPanel.setraster( wGui.getplanpanel( m_Ini ), m_Frame->isRaster() ? True:False );
     wPlanPanel.settooltip( wGui.getplanpanel( m_Ini ), m_Frame->isTooltip() ? True:False );
 

@@ -751,7 +751,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
       ori = mod_ori;
     }
 
-    m_Renderer->drawShape( (wxPaintDC&)dc, gc, occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), ori, status, m_PlanPanel->isAlt() );
+    m_Renderer->drawShape( (wxPaintDC&)dc, gc, occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), wxGetApp().getFrame()->isShowCounters(), ori, status, m_PlanPanel->isAlt() );
     if( gc != NULL)
       delete gc;
   }

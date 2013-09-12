@@ -24347,4 +24347,7 @@
   <Msg id="revision">
     <en txt="Revision"/>
   </Msg>
+  <Msg id="showcounters">
+    <en txt="Show counters"/>
+  </Msg>
 </Messages>
