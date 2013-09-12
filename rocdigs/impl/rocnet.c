@@ -539,6 +539,8 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 static void _halt( obj inst, Boolean poweroff ) {
   iOrocNetData data = Data(inst);
 
+  data->shutdown = True;
+
   if( poweroff ) {
     byte* rn;
     rn = allocMem(32);
@@ -625,6 +627,11 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
 
   switch( action ) {
   case RN_STATIONARY_IDENTIFY:
+    if( data->shutdown ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore identify: shutting down...");
+      break;
+    }
+
     subip = rn[RN_PACKET_DATA+5]*256+rn[RN_PACKET_DATA+6];
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Identified: rocnetid=%d class=%s vid=%d revision=%d nrio=%d subip=%d.%d", sndr,

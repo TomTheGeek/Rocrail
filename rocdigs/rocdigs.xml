@@ -859,6 +859,7 @@
       <var name="AckList" vt="iOList"/>
       <var name="nodemap" vt="iOMap"/>
       <var name="highestID" vt="int"/>
+      <var name="shutdown" vt="Boolean"/>
       </data>
   </object>
 
