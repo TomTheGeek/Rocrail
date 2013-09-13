@@ -1064,6 +1064,7 @@ static void __initI2C(iORocNetNode inst, int iotype) {
     raspiGPIOAlt(2, 0);
     raspiGPIOAlt(3, 0);
   }
+  ThreadOp.sleep(100);
 
   MemOp.set(data->iomap, 0, sizeof(data->iomap));
   MemOp.set(data->i2caddr, 0, sizeof(data->i2caddr));
@@ -1118,9 +1119,11 @@ static void __initI2C(iORocNetNode inst, int iotype) {
     for( i = 0; i < 8; i++ ) {
       int rc = 0;
       if( data->i2caddr[i] ) {
+        ThreadOp.sleep(50);
         rc = raspiWriteRegI2C(data->i2cdescriptor, 0x20+i, 0x00, data->iomap[i]&0x00FF);
         if( rc != 0 )
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x20+i, errno );
+        ThreadOp.sleep(50);
         rc = raspiWriteRegI2C(data->i2cdescriptor, 0x20+i, 0x01, (data->iomap[i]&0xFF00) >> 8);
         if( rc != 0 )
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x20+i, errno );
