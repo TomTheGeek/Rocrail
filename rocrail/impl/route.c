@@ -1046,14 +1046,11 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
 
   }
 
-  {
-    iONode lc = LocOp.base.properties(loc);
-    if( wRoute.iscommuter(data->props) && !wLoc.iscommuter(lc)) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Loc [%s] has no permission to use route [%s]; only commuter trains are allowed.",
-                     id, wRoute.getid(data->props) );
-      return suits_not;
-    }
+  if( wRoute.iscommuter(data->props) && !LocOp.isCommuter(loc)) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                   "Loc [%s] has no permission to use route [%s]; only commuter trains are allowed.",
+                   id, wRoute.getid(data->props) );
+    return suits_not;
   }
 
 
@@ -1086,7 +1083,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
         }
       }
 
-      if( wRouteCondition.iscommuter(data->props) && !wLoc.iscommuter(lc) ) {
+      if( wRouteCondition.iscommuter(data->props) && !LocOp.isCommuter(loc) ) {
         cond = wRoute.nextstcondition(data->props, cond);
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                        "Condition does not match: must be a commuter train." );

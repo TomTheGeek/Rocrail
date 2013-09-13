@@ -4580,7 +4580,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
 
         if( stEnterSide == stExitSide ) {
           /* need to change direction but blocksides are used, check if allowed*/
-          if( LocOp.getV(loc) == 0 &&  (fromBlock->isTTBlock(fromBlock) || wLoc.iscommuter( LocOp.base.properties(loc) ) ) ) {
+          if( LocOp.getV(loc) == 0 &&  (fromBlock->isTTBlock(fromBlock) || LocOp.isCommuter( loc ) ) ) {
             if( fromBlock->isTTBlock(fromBlock) ) {
               /* for turntable allow routes with swap still as best when suited well, do not set swap4blockside in that case (REB)*/
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,

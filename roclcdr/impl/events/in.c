@@ -196,8 +196,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
         /* only swap after the IN block event! */
         data->loc->swapPlacing( data->loc, NULL, False, wLoc.getswaptimer(data->loc->base.properties(data->loc)) > 0 ? False:True );
 
-         if( data->stopnonecommuter &&
-             !wLoc.iscommuter( data->loc->base.properties(data->loc)) ) {
+         if( data->stopnonecommuter && !data->loc->isCommuter( data->loc) ) {
             /* Switch to manual mode: */
             data->loc->stop( data->loc, False );
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,

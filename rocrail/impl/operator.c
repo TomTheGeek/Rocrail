@@ -228,6 +228,21 @@ static Boolean _hasCar( struct OOperator* inst, const char* id ) {
 }
 
 
+static Boolean _isCommuter( struct OOperator* inst ) {
+  iOOperatorData data = Data(inst);
+  Boolean commuter = False;
+  iOStrTok tok = StrTokOp.inst(wOperator.getcarids(data->props), ',');
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    iOCar car = ModelOp.getCar(AppOp.getModel(), StrTokOp.nextToken(tok) );
+    if( car != NULL && CarOp.isCommuter(car) ) {
+      commuter = True;
+      break;
+    }
+  }
+  StrTokOp.base.del(tok);
+  return commuter;
+}
+
 static int _getLen( struct OOperator* inst, int* trainweight ) {
   iOOperatorData data = Data(inst);
   /* ToDo: Calculate consist length. */

@@ -2093,6 +2093,20 @@ static int _getLen( iOLoc inst ) {
   return wLoc.getlen( data->props );
 }
 
+
+static Boolean _isCommuter( iOLoc inst ) {
+  iOLocData data = Data(inst);
+  Boolean commuter = wLoc.iscommuter(data->props);
+  if( !commuter && wLoc.gettrain( data->props) != NULL && StrOp.len(wLoc.gettrain( data->props)) > 0 ) {
+    iOOperator train = ModelOp.getOperator(AppOp.getModel(), wLoc.gettrain( data->props) );
+    if( train != NULL ) {
+      commuter = OperatorOp.isCommuter(train);
+    }
+  }
+  return commuter;
+}
+
+
 static void* _getProperties( void* inst ) {
   iOLocData data = Data((iOLoc)inst);
   return data->props;

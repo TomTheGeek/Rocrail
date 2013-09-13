@@ -2594,6 +2594,7 @@
         <var name="fnlights" vt="int" defval="0" range="0-*" remark="Lights function number."/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Car command."/>
         <var name="placing" vt="bool" defval="True"/>
+        <var name="commuter" vt="bool" defval="false" remark="Commuter train?"/>
         <fundef cardinality="n"/>
       </car>
     </carlist>

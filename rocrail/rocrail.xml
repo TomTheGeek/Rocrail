@@ -668,6 +668,9 @@
     <fun name="resetBBT" vt="void">
       <param name="inst" vt="this" remark="Loco instance"/>
     </fun>
+    <fun name="isCommuter" vt="Boolean">
+      <param name="inst" vt="this" remark="Loco instance"/>
+    </fun>
     <data include="$rocint/public/lcdriverint">
       <var name="props" vt="iONode"/>
       <var name="cvMap" vt="iOMap"/>
@@ -2103,6 +2106,9 @@
       <param name="nr" vt="int" remark="CVByte number"/>
       <param name="value" vt="int" remark="CVByte value"/>
     </fun>
+    <fun name="isCommuter" vt="Boolean">
+      <param name="inst" vt="this" remark="Car instance"/>
+    </fun>
     <data>
       <var name="props" vt="iONode"/>
       <var name="fx[32]" vt="Boolean"/>
@@ -2147,6 +2153,9 @@
     <fun name="hasCar" vt="Boolean">
       <param name="inst" vt="this" remark="Operator instance"/>
       <param name="id" vt="const char*"/>
+    </fun>
+    <fun name="isCommuter" vt="Boolean">
+      <param name="inst" vt="this" remark="Operator instance"/>
     </fun>
     <data>
       <var name="props" vt="iONode"/>

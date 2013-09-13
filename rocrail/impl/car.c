@@ -493,7 +493,10 @@ static void _setCV( iOCar car, int nr, int value ) {
   }
 }
 
-
+static Boolean _isCommuter( iOCar inst ) {
+  iOCarData data = Data(inst);
+  return wCar.iscommuter(data->props);
+}
 
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 #include "rocrail/impl/car.fm"
