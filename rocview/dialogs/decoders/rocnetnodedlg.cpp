@@ -279,7 +279,8 @@ void RocnetNodeDlg::event(iONode node) {
 
       if(m_NodeList->GetItemCount() > 0 ) {
         for( int i = 0; i < m_NodeList->GetItemCount(); i++ ) {
-          iONode l_Props = (iONode)m_NodeList->GetItemData(0);
+          iONode l_Props = (iONode)m_NodeList->GetItemData(i);
+          TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "show[%d]->%d", wRocNetNode.getid(l_Props), wProgram.getmodid(node) );
           if( wRocNetNode.getid(l_Props) == wProgram.getmodid(node) ) {
             m_NodeList->SetItemState(i, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
             break;

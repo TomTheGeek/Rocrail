@@ -1275,6 +1275,15 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
     /* New BiDiB dialog for selecting the UID of the identified node. */
     if( m_RocnetNodeDlg != NULL )
       m_RocnetNodeDlg->event( node );
+    else if( wProgram.getcmd(node) == wProgram.show ) {
+      m_RocnetNodeDlg = new RocnetNodeDlg(this, m_RocrailIni);
+      m_RocnetNodeDlg->event(node);
+      if( wxID_OK == m_RocnetNodeDlg->ShowModal() ) {
+        /* Copy UID on the clipboard? */
+      }
+      m_RocnetNodeDlg->Destroy();
+      m_RocnetNodeDlg = NULL;
+    }
   }
   else if( wProgram.getlntype(node) == wProgram.lntype_cs ) {
     if( m_RocrailIniDlg != NULL )
