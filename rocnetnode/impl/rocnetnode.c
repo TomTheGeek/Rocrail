@@ -1140,16 +1140,17 @@ static void __initControl(iORocNetNode inst) {
   int iomap = 0;
   iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read portsetups" );
-
   if( rocnet != NULL ) {
     iOPort port = allocMem( sizeof( struct Port) );
     iONode options = wRocNet.getrocnetnodeoptions(rocnet);
     data->LED1 = wRocNetNodeOptions.getled1(options);
     data->LED2 = wRocNetNodeOptions.getled2(options);
     data->PB1  = wRocNetNodeOptions.getbutton1(options);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init LED1 on port %d", data->LED1 );
     raspiConfigPort(data->LED1, 0);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init LED2 on port %d", data->LED2 );
     raspiConfigPort(data->LED2, 0);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init PB1 on port %d", data->PB1 );
     raspiConfigPort(data->PB1, 1);
 
     port->port = 0;
