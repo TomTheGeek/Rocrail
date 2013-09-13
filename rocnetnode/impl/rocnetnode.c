@@ -805,8 +805,8 @@ static void __scanner( void* threadinst ) {
   /* negative logic level */
   MemOp.set( data->iodata, 0xFF, sizeof(data->iodata) );
 
-  __writePort(rocnetnode, data->LED1, 0, 3 );
-  __writePort(rocnetnode, data->LED2, 0, 3 );
+  __writePort(rocnetnode, data->LED1, 1, 3 );
+  __writePort(rocnetnode, data->LED2, 1, 3 );
 
   while( data->run ) {
     int i;
@@ -814,7 +814,7 @@ static void __scanner( void* threadinst ) {
     Boolean startofday = data->startofday;
 
     data->LED1timer++;
-    if( data->LED1timer >= 100 ) {
+    if( data->LED1timer >= 50 ) {
       data->LED1timer = 0;
       LED1 = !LED1;
       __writePort(rocnetnode, data->LED1, LED1?1:0, 3 );
@@ -822,13 +822,14 @@ static void __scanner( void* threadinst ) {
 
     if( data->show ) {
       data->LED2timer++;
-      if( data->LED2timer >= 50 ) {
+      if( data->LED2timer >= 10 ) {
         data->LED2timer = 0;
         LED2 = !LED2;
         __writePort(rocnetnode, data->LED2, LED2?1:0, 3 );
       }
     }
-
+    else
+      __writePort(rocnetnode, data->LED2, 1, 3 );
 
     if( data->iorc == 0 ) {
         __scanI2C(rocnetnode);
@@ -1159,12 +1160,15 @@ static void __initControl(iORocNetNode inst) {
     data->PB1  = wRocNetNodeOptions.getbutton1(options);
     ThreadOp.sleep(50);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init LED1 on port %d", data->LED1 );
+    raspiGPIOAlt(data->LED1, 0);
     raspiConfigPort(data->LED1, 0);
     ThreadOp.sleep(50);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init LED2 on port %d", data->LED2 );
+    raspiGPIOAlt(data->LED2, 0);
     raspiConfigPort(data->LED2, 0);
     ThreadOp.sleep(50);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init PB1 on port %d", data->PB1 );
+    raspiGPIOAlt(data->PB1, 0);
     raspiConfigPort(data->PB1, 1);
 
     ThreadOp.sleep(50);
