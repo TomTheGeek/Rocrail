@@ -805,6 +805,9 @@ static void __scanner( void* threadinst ) {
   /* negative logic level */
   MemOp.set( data->iodata, 0xFF, sizeof(data->iodata) );
 
+  __writePort(rocnetnode, data->LED1, 0, 3 );
+  __writePort(rocnetnode, data->LED2, 0, 3 );
+
   while( data->run ) {
     int i;
     int nrios = (data->iotype == 0) ? 16:128;
@@ -1154,13 +1157,17 @@ static void __initControl(iORocNetNode inst) {
     data->LED1 = wRocNetNodeOptions.getled1(options);
     data->LED2 = wRocNetNodeOptions.getled2(options);
     data->PB1  = wRocNetNodeOptions.getbutton1(options);
+    ThreadOp.sleep(50);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init LED1 on port %d", data->LED1 );
     raspiConfigPort(data->LED1, 0);
+    ThreadOp.sleep(50);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init LED2 on port %d", data->LED2 );
     raspiConfigPort(data->LED2, 0);
+    ThreadOp.sleep(50);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init PB1 on port %d", data->PB1 );
     raspiConfigPort(data->PB1, 1);
 
+    ThreadOp.sleep(50);
     port->port = 0;
     port->ionr = data->PB1;
     port->delay = 50;
