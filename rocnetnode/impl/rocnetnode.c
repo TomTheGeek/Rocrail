@@ -1479,6 +1479,8 @@ static Boolean _shutdown( void ) {
   data->run = False;
   ThreadOp.sleep(1000);
   bShutdown = True;
+  __writePort(__RocNetNode, data->LED1, 1, 3 );
+  __writePort(__RocNetNode, data->LED2, 1, 3 );
   return False;
 }
 
