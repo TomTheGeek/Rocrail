@@ -911,6 +911,7 @@ static void __scanner( void* threadinst ) {
           if( report ) {
             if( i == 0 ) {
               /* PB1 */
+              inputVal[i] = val;
               msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
               msg[RN_PACKET_ACTION] = RN_STATIONARY_SHOW;
               msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
