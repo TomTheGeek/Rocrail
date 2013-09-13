@@ -708,7 +708,7 @@ static int __readPort(iORocNetNode rocnetnode, int port, int iotype) {
     byte mask = 1 << (((port-1)%16)%8);
     return (data->iodata[idx] & mask) ? 0:1;
   }
-  else  if( port > 0 && port < 32 ) {
+  else  if( port >= 0 && port <= 32 ) {
     return (raspiRead(data->ports[port]->ionr) ? 0:1);
   }
   else {
@@ -912,12 +912,14 @@ static void __scanner( void* threadinst ) {
             if( i == 0 ) {
               /* PB1 */
               inputVal[i] = val;
-              msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
-              msg[RN_PACKET_ACTION] = RN_STATIONARY_SHOW;
-              msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-              msg[RN_PACKET_LEN] = 0;
-              rnSenderAddresToPacket( data->id, msg, 0 );
-              __sendRN(rocnetnode, msg);
+              if( val ){ 
+                msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+                msg[RN_PACKET_ACTION] = RN_STATIONARY_SHOW;
+                msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+                msg[RN_PACKET_LEN] = 0;
+                rnSenderAddresToPacket( data->id, msg, 0 );
+                __sendRN(rocnetnode, msg);
+              } 
             }
             else {
               data->ports[i]->ackpending = True;
@@ -1176,7 +1178,7 @@ static void __initControl(iORocNetNode inst) {
     port->port = 0;
     port->ionr = data->PB1;
     port->delay = 50;
-    port->iotype = 3;
+    port->iotype = 0;
     port->type = 1;
     port->state = False;
     data->ports[0] = port;
