@@ -2668,30 +2668,34 @@ static iOLoc _getLocByAddress( iOModel inst, int addr, const char* iid ) {
 
 static iOLoc _getLocByIdent( iOModel inst, const char* ident, Boolean dir ) {
   iOModelData data = Data(inst);
-  iOLoc locAddr = NULL;
   int i = 0;
   int cnt = ListOp.size( data->locList );
   for( i = 0; i < cnt; i++ ) {
     iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
     char locoAddrStr[32];
     StrOp.fmtb(locoAddrStr, "%d", LocOp.getAddress(loc) );
-    if( StrOp.equals(LocOp.getIdent(loc), ident) )
+
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s ident=%s, event ident=%s ", LocOp.getId(loc), LocOp.getIdent(loc), ident );
+    if( StrOp.equals(LocOp.getIdent(loc), ident) ) {
       return loc;
-    else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident) )
-      locAddr = loc;
-    else if(wCtrl.iscreateguestonbidi(wRocRail.getctrl( AppOp.getIni()))) {
-      /* Guest loco? */
-      iOLoc loco = ModelOp.getLoc( inst, ident, NULL, True );
-      if( loco != NULL ) {
-        iONode locoProps = LocOp.base.properties(loco);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set gen loco %s bidi direction to %s", LocOp.getId(loco), dir?"fwd":"rev" );
-        wLoc.setplacing( locoProps, dir );
-      }
+    }
+    else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident) ) {
+      return loc;
+    }
+  }
+
+  if(wCtrl.iscreateguestonbidi(wRocRail.getctrl( AppOp.getIni()))) {
+    /* Guest loco? */
+    iOLoc loco = ModelOp.getLoc( inst, ident, NULL, True );
+    if( loco != NULL ) {
+      iONode locoProps = LocOp.base.properties(loco);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set gen loco %s bidi direction to %s", LocOp.getId(loco), dir?"fwd":"rev" );
+      wLoc.setplacing( locoProps, dir );
       return loco;
     }
   }
 
-  return locAddr;
+  return NULL;
 }
 
 static iOList _getLocIDs( iOModel inst ) {
