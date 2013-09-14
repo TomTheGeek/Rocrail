@@ -2684,6 +2684,7 @@ static iOLoc _getLocByIdent( iOModel inst, const char* ident, Boolean dir ) {
       iOLoc loco = ModelOp.getLoc( inst, ident, NULL, True );
       if( loco != NULL ) {
         iONode locoProps = LocOp.base.properties(loco);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set gen loco %s bidi direction to %s", LocOp.getId(loco), dir?"fwd":"rev" );
         wLoc.setplacing( locoProps, dir );
       }
       return loco;

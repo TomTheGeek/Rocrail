@@ -535,7 +535,6 @@ static void __broadcastLocoProps( iOLoc inst, const char* cmd ) {
   wLoc.setmanual( node, data->gomanual );
   wLoc.setblockid( node, data->curBlock );
   wLoc.setdestblockid( node, data->destBlock );
-  wLoc.setdir( node, wLoc.isdir(data->props) );
   wLoc.setfn( node, wLoc.isfn(data->props) );
   wLoc.setruntime( node, wLoc.getruntime(data->props) );
   wLoc.setmtime( node, wLoc.getmtime(data->props) );

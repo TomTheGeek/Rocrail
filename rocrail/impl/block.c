@@ -457,6 +457,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
             if( !ModelOp.isAuto(model) && !wItem.isgenerated(locoProps) ) {
               if(wCtrl.isusebididir(wRocRail.getctrl( AppOp.getIni()))) {
                 /* set bidi direction flag */
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s bidi direction to %s", LocOp.getId(identLoc), dir?"fwd":"rev" );
                 wLoc.setplacing(locoProps, dir);
               }
             }
