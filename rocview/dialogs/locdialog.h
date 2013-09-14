@@ -87,12 +87,12 @@ class wxGrid;
 #define ID_LC_SERVICED 10313
 #define ID_LOC_ACTIONS 10380
 #define ID_PANEL_INTERFACE 10010
-#define wxID_STATIC_ADDRESS 10023
-#define ID_TEXTCTRL_ADDRESS 10011
 #define wxID_STATIC_IID 10024
 #define ID_TEXTCTRL_IID 10012
 #define wxID_STATIC_LC_BUS 10250
 #define ID_TEXTCTRL_LC_BUS 10249
+#define wxID_STATIC_ADDRESS 10023
+#define ID_TEXTCTRL_ADDRESS 10011
 #define wxID_STATIC_PROTOCOL 10025
 #define ID_CHOICE_PROTOCOL 10013
 #define wxID_STATIC_PROT_VER 10176
@@ -385,12 +385,12 @@ public:
     wxTextCtrl* m_Remark;
     wxButton* m_Actions;
     wxPanel* m_Interface_Panel;
-    wxStaticText* m_Label_Address;
-    wxTextCtrl* m_Address;
     wxStaticText* m_Label_IID;
     wxTextCtrl* m_IID;
     wxStaticText* m_Label_Bus;
     wxTextCtrl* m_Bus;
+    wxStaticText* m_Label_Address;
+    wxTextCtrl* m_Address;
     wxStaticText* m_Label_Protocol;
     wxChoice* m_Protocol;
     wxStaticText* m_LabelProtVersion;
