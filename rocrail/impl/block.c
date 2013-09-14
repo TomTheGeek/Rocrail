@@ -454,7 +454,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
         if( (identLoc != NULL && data->acceptident ) || (identLoc != NULL && !ModelOp.isAuto(model)) ) {
             iONode cmd = NULL;
             iONode locoProps = LocOp.base.properties(identLoc);
-            if( !ModelOp.isAuto(model) && !wItem.isgenerated(locoProps) ) {
+            if( !ModelOp.isAuto(model) && !LocOp.isAutomode(identLoc) && !wItem.isgenerated(locoProps) ) {
               if(wCtrl.isusebididir(wRocRail.getctrl( AppOp.getIni()))) {
                 /* set bidi direction flag */
                 TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s bidi direction to %s", LocOp.getId(identLoc), dir?"fwd":"rev" );
