@@ -81,7 +81,7 @@ public:
   void onFG( wxCommandEvent& event );
   void onCVCell( wxGridEvent& event );
   void onCVModify( wxCommandEvent& event );
-
+  void onShow( wxCommandEvent& event );
 };
 
 #endif // __cardlg__

@@ -229,7 +229,8 @@ void LocSelDlg::InitIndex() {
         for( int i = 0; i < cnt; i++ ) {
           iONode car = NodeOp.getChild( carlist, i );
           if( wCar.getaddr(car) > 0 ) {
-            ListOp.add( list, (obj)car );
+            if( wCar.isshow(car) )
+              ListOp.add( list, (obj)car );
           }
         }
       }

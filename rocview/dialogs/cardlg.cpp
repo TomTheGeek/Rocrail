@@ -155,6 +155,7 @@ void CarDlg::initLabels() {
   m_CarBook->SetPageText( 4, wxGetApp().getMsg( "functions" ) );
 
   // Index
+  m_Show->SetLabel( wxGetApp().getMsg( "show" ) );
   m_NewCar->SetLabel( wxGetApp().getMsg( "new" ) );
   m_DeleteCar->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_Copy->SetLabel( wxGetApp().getMsg( "copy" ) );
@@ -515,6 +516,7 @@ void CarDlg::initValues() {
   //m_CarImageIndex->Refresh();
 
   // init General
+  m_Show->SetValue(wCar.isshow( m_Props ));
   m_ID->SetValue( wxString(wCar.getid( m_Props ),wxConvUTF8) );
   m_Ident->SetValue( wxString(wCar.getident( m_Props ),wxConvUTF8) );
   m_Number->SetValue( wxString(wCar.getnumber( m_Props ),wxConvUTF8) );
@@ -632,6 +634,7 @@ bool CarDlg::evaluate(){
     return false;
   }
   // evaluate General
+  wCar.setshow( m_Props, m_Show->IsChecked()?True:False);
   wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wCar.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
   wCar.setident( m_Props, m_Ident->GetValue().mb_str(wxConvUTF8) );
@@ -1125,3 +1128,6 @@ void CarDlg::onCVModify( wxCommandEvent& event ) {
 
 }
 
+void CarDlg::onShow( wxCommandEvent& event ) {
+  evaluate();
+}
