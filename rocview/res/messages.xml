@@ -24353,4 +24353,10 @@
   <Msg id="resetcounters">
     <en txt="Reset counters"/>
   </Msg>
+  <Msg id="secureack">
+    <en txt="Acknowledge sensor events"/>
+  </Msg>
+  <Msg id="shutdownall">
+    <en txt="Shutdown all"/>
+  </Msg>
 </Messages>

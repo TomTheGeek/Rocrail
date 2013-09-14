@@ -178,6 +178,28 @@ void RocnetNodeDlg::initLabels() {
     }
   }
 
+  // Index
+  m_Shutdown->SetLabel(wxGetApp().getMsg( "shutdownserver" ));
+  m_ShutdownAll->SetLabel(wxGetApp().getMsg( "shutdownall" ));
+  m_Show->SetLabel(wxGetApp().getMsg( "show" ));
+
+  // RocNet
+  m_labIID->SetLabel(wxGetApp().getMsg( "iid" ));
+  m_labID->SetLabel(wxGetApp().getMsg( "id" ));
+  m_labVendor->SetLabel(wxGetApp().getMsg( "vendor" ));
+  m_labProduct->SetLabel(wxGetApp().getMsg( "product" ));
+  m_labVersion->SetLabel(wxGetApp().getMsg( "revision" ));
+  m_RocnetWrite->SetLabel(wxGetApp().getMsg( "set" ));
+
+  // Options
+  m_RocNetOptionBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "options" ));
+  m_SecAck->SetLabel(wxGetApp().getMsg( "secureack" ));
+  m_NodeOptionsRead->SetLabel(wxGetApp().getMsg( "get" ));
+  m_NodeOptionsWrite->SetLabel(wxGetApp().getMsg( "set" ));
+
+  // Port setup
+  m_PortRead->SetLabel(wxGetApp().getMsg( "get" ));
+  m_PortWrite->SetLabel(wxGetApp().getMsg( "set" ));
 }
 
 

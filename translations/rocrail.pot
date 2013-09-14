@@ -6665,3 +6665,15 @@ msgstr ""
 msgid "Reset counters"
 msgstr ""
 
+#. 
+# id="secureack"
+#, c-format
+msgid "Acknowledge sensor events"
+msgstr ""
+
+#. 
+# id="shutdownall"
+#, c-format
+msgid "Shutdown all"
+msgstr ""
+
