@@ -326,6 +326,12 @@ void RocnetNodeDlg::onShutdown( wxCommandEvent& event ) {
   if( m_Props == NULL )
     return;
 
+  int action = wxMessageDialog( this, _T("Shutdown node " + wxString::Format(wxT("%d"), wRocNetNode.getid(m_Props)) + wxT("?") ),
+      _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION | wxNO_DEFAULT ).ShowModal();
+  if( action == wxID_NO ) {
+    return;
+  }
+
   iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
   wSysCmd.setcmd( cmd, wSysCmd.shutdownnode );
   wSysCmd.setbus(cmd, wRocNetNode.getid(m_Props));
@@ -335,8 +341,11 @@ void RocnetNodeDlg::onShutdown( wxCommandEvent& event ) {
 
 
 void RocnetNodeDlg::onShutdownAll( wxCommandEvent& event ) {
-  if( m_Props == NULL )
+  int action = wxMessageDialog( this, _T("Shutdown all nodes?" ),
+      _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION | wxNO_DEFAULT ).ShowModal();
+  if( action == wxID_NO ) {
     return;
+  }
 
   iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
   wSysCmd.setcmd( cmd, wSysCmd.shutdownnode );
