@@ -44,6 +44,7 @@ MKDIR=mkdir -p
 CPUPDATE=u
 LNK_FLAGS=
 MAKE ?= make
+QUOT="
 
 ifeq ($(NATIVE),WIN32)
 	FS=$\\
@@ -53,6 +54,7 @@ ifeq ($(NATIVE),WIN32)
 	GENSUFFIX=.exe
 	ANSI=
 	MKDIR=mkdir
+	QUOT=
 endif
 
 
@@ -101,7 +103,7 @@ RNOBJS=../unxgen/rocdigs/bin/rocnet/rn-utils.o
 
 TARGET=$(OUTDIR)$(FS)rocnetnode$(BINSUFFIX)
 
-all: $(TARGET) version
+all: version $(TARGET)
 
 $(TARGET): $(OBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(TARGET) $(OBJS) $(RNOBJS) $(RRLIBS) $(LIBS)
