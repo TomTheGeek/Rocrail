@@ -89,6 +89,7 @@
       <var name="inifile" vt="const char*"/>
       <var name="libpath" vt="const char*"/>
       <var name="consoleMode" vt="Boolean"/>
+      <var name="pendingHalt" vt="Boolean"/>
       </data>
   </object>
 

@@ -820,7 +820,7 @@ static void __scanner( void* threadinst ) {
     Boolean startofday = data->startofday;
 
     data->LED1timer++;
-    if( data->LED1timer >= 50 ) {
+    if( data->LED1timer >= 50 || (data->pendingHalt && data->LED1timer >= 10) ) {
       data->LED1timer = 0;
       LED1 = !LED1;
       __writePort(rocnetnode, data->LED1, LED1?1:0, 3 );
@@ -921,10 +921,16 @@ static void __scanner( void* threadinst ) {
               if( data->PB1timer >= 500 ) {
                 /* Shutdown */
                 RocNetNodeOp.sysHalt();
+                data->PB1timer = 0;
+                report = False;
+              }
+              else if( data->PB1timer >= 100 ) {
+                data->pendingHalt = True;
               }
             }
             else {
               data->PB1timer = 0;
+              data->pendingHalt = False;
             }
           }
 
@@ -933,7 +939,7 @@ static void __scanner( void* threadinst ) {
             if( i == 0 ) {
               /* Normal PB1 handling */
               inputVal[i] = val;
-              if( val ) {
+              if( val && ! data->pendingHalt ) {
                 if( data->show ) {
                   data->show = False;
                 }
