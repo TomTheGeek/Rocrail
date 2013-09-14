@@ -48,6 +48,7 @@
     </fun>
     <fun name="shutdown" vt="Boolean"/>
     <fun name="stop" vt="void"/>
+    <fun name="sysHalt" vt="void"/>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="digintini" vt="iONode"/>
@@ -81,6 +82,7 @@
       <var name="PB1" vt="int"/>
       <var name="LED1timer" vt="int"/>
       <var name="LED2timer" vt="int"/>
+      <var name="PB1timer" vt="int"/>
       <var name="show" vt="Boolean"/>
       <var name="cstype" vt="int"/>
       <var name="csdevice" vt="int"/>

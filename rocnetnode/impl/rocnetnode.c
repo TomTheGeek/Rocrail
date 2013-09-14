@@ -487,6 +487,13 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
 }
 
 
+static void _sysHalt(void) {
+  iORocNetNodeData data = Data(__RocNetNode);
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "shutdown the system...");
+  SystemOp.system("halt -p", True, True);
+}
+
+
 static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int port       = rn[RN_PACKET_DATA + 3];
@@ -542,8 +549,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
 
   case RN_STATIONARY_SHUTDOWN:
     if( rn[RN_PACKET_LEN] > 0 && rn[RN_PACKET_DATA+0] == 1 ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "shutdown the system...");
-      SystemOp.system("halt -p", True, True);
+      RocNetNodeOp.sysHalt();
     }
     break;
 
@@ -908,18 +914,38 @@ static void __scanner( void* threadinst ) {
             }
           }
 
+          /* Check PB1 for a 5 second ON */
+          if( i == 0 ) {
+            if( inputVal[i] > 0 ) {
+              data->PB1timer++;
+              if( data->PB1timer >= 500 ) {
+                /* Shutdown */
+                RocNetNodeOp.sysHalt();
+              }
+            }
+            else {
+              data->PB1timer = 0;
+            }
+          }
+
+          /* Report the changed port */
           if( report ) {
             if( i == 0 ) {
-              /* PB1 */
+              /* Normal PB1 handling */
               inputVal[i] = val;
-              if( val ){ 
-                msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
-                msg[RN_PACKET_ACTION] = RN_STATIONARY_SHOW;
-                msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-                msg[RN_PACKET_LEN] = 0;
-                rnSenderAddresToPacket( data->id, msg, 0 );
-                __sendRN(rocnetnode, msg);
-              } 
+              if( val ) {
+                if( data->show ) {
+                  data->show = False;
+                }
+                else {
+                  msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+                  msg[RN_PACKET_ACTION] = RN_STATIONARY_SHOW;
+                  msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+                  msg[RN_PACKET_LEN] = 0;
+                  rnSenderAddresToPacket( data->id, msg, 0 );
+                  __sendRN(rocnetnode, msg);
+                }
+              }
             }
             else {
               data->ports[i]->ackpending = True;
