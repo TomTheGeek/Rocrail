@@ -101,7 +101,7 @@ RNOBJS=../unxgen/rocdigs/bin/rocnet/rn-utils.o
 
 TARGET=$(OUTDIR)$(FS)rocnetnode$(BINSUFFIX)
 
-all: $(TARGET)
+all: $(TARGET) version
 
 $(TARGET): $(OBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(TARGET) $(OBJS) $(RNOBJS) $(RRLIBS) $(LIBS)
@@ -126,4 +126,9 @@ install:
 	-$(COPY) -p $(OUTDIR)$(FS)rocnetnode$(BINSUFFIX) $(DESTDIR)
 	-cp -p package$(FS)rocnetnode.sh $(DESTDIR)
 	-cp -p package$(FS)rocnetnode.ini $(DESTDIR)
+
+version:
+	echo $(QUOT)const int bzr = $(QUOT) > ..$(FS)common$(FS)version.h
+	bzr revno . >> ..$(FS)common$(FS)version.h
+	echo $(QUOT);$(QUOT) >> ..$(FS)common$(FS)version.h
 
