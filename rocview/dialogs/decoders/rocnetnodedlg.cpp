@@ -361,7 +361,7 @@ void RocnetNodeDlg::onShutdown( wxCommandEvent& event ) {
   if( m_Props == NULL )
     return;
 
-  int action = wxMessageDialog( this, _T("Shutdown node " + wxString::Format(wxT("%d"), wRocNetNode.getid(m_Props)) + wxT("?") ),
+  int action = wxMessageDialog( this, wxString::Format(wxGetApp().getMsg( "shutdownnode" ), wRocNetNode.getid(m_Props)),
       _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION | wxNO_DEFAULT ).ShowModal();
   if( action == wxID_NO ) {
     return;
@@ -376,7 +376,7 @@ void RocnetNodeDlg::onShutdown( wxCommandEvent& event ) {
 
 
 void RocnetNodeDlg::onShutdownAll( wxCommandEvent& event ) {
-  int action = wxMessageDialog( this, _T("Shutdown all nodes?" ),
+  int action = wxMessageDialog( this, wxGetApp().getMsg( "shutdownallnodes" ),
       _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION | wxNO_DEFAULT ).ShowModal();
   if( action == wxID_NO ) {
     return;

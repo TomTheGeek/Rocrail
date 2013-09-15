@@ -6677,3 +6677,15 @@ msgstr ""
 msgid "Shutdown all"
 msgstr ""
 
+#. 
+# id="shutdownnode"
+#, c-format
+msgid "Shutdown RocNet node %d?"
+msgstr ""
+
+#. 
+# id="shutdownallnodes"
+#, c-format
+msgid "Shutdown all RocNet nodes?"
+msgstr ""
+
