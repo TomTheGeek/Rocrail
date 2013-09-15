@@ -157,6 +157,11 @@ void RocnetNodeDlg::onClose( wxCloseEvent& event ) {
 
 
 void RocnetNodeDlg::initLabels() {
+  m_NodeBook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
+  //m_NodeBook->SetPageText( 1, wxGetApp().getMsg( "rocnet" ) );
+  m_NodeBook->SetPageText( 2, wxGetApp().getMsg( "options" ) );
+  m_NodeBook->SetPageText( 3, wxGetApp().getMsg( "portsetup" ) );
+
   m_NodeList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(1, wxGetApp().getMsg( "vendor" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(2, wxGetApp().getMsg( "product" ), wxLIST_FORMAT_LEFT );
@@ -194,10 +199,18 @@ void RocnetNodeDlg::initLabels() {
   // Options
   m_RocNetOptionBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "options" ));
   m_SecAck->SetLabel(wxGetApp().getMsg( "secureack" ));
+  m_IOType->SetLabel(wxGetApp().getMsg( "type" ));
+  m_IOType->SetString( 0, wxGetApp().getMsg( "none" ) );
+  m_DCCType->SetLabel(wxGetApp().getMsg( "controller" ));
+  m_DCCDevice->SetLabel(wxGetApp().getMsg( "device" ));
   m_NodeOptionsRead->SetLabel(wxGetApp().getMsg( "get" ));
   m_NodeOptionsWrite->SetLabel(wxGetApp().getMsg( "set" ));
 
   // Port setup
+  m_labPort->SetLabel(wxGetApp().getMsg( "port" ));
+  m_labIO->SetLabel(wxGetApp().getMsg( "number" ));
+  m_labType->SetLabel(wxGetApp().getMsg( "type" ));
+  m_labDelay->SetLabel(wxGetApp().getMsg( "delay" ));
   m_PortRead->SetLabel(wxGetApp().getMsg( "get" ));
   m_PortWrite->SetLabel(wxGetApp().getMsg( "set" ));
 }
