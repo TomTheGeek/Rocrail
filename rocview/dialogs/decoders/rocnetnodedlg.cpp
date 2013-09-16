@@ -211,6 +211,7 @@ void RocnetNodeDlg::initLabels() {
   m_Shutdown->SetLabel(wxGetApp().getMsg( "shutdownserver" ));
   m_ShutdownAll->SetLabel(wxGetApp().getMsg( "shutdownall" ));
   m_Show->SetLabel(wxGetApp().getMsg( "show" ));
+  m_Query->SetLabel(wxGetApp().getMsg( "query" ));
 
   // RocNet
   m_labIID->SetLabel(wxGetApp().getMsg( "iid" ));
