@@ -48,6 +48,7 @@ class rocnetnodegen : public wxDialog
 		wxButton* m_Shutdown;
 		wxButton* m_ShutdownAll;
 		wxButton* m_Show;
+		wxButton* m_Query;
 		wxPanel* m_RocNetPanel;
 		wxStaticText* m_labIID;
 		wxTextCtrl* m_IID;
@@ -119,6 +120,7 @@ class rocnetnodegen : public wxDialog
 		virtual void onShutdown( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onShutdownAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onShow( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onQuery( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onRocnetWrite( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onNodeOptionsRead( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onNodeOptionsWrite( wxCommandEvent& event ) { event.Skip(); }

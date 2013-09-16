@@ -436,3 +436,14 @@ void RocnetNodeDlg::onShow( wxCommandEvent& event ) {
 void RocnetNodeDlg::onGCALogo( wxMouseEvent& event ) {
   wxLaunchDefaultBrowser(wxT("http://www.phgiling.net/"), wxBROWSER_NEW_WINDOW );
 }
+
+void RocnetNodeDlg::onQuery( wxCommandEvent& event ) {
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.query );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+

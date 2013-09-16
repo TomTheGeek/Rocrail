@@ -495,6 +495,13 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         rn[RN_PACKET_LEN] = 0;
         ThreadOp.post( data->writer, (obj)rn );
       }
+      else if( wProgram.getcmd( node ) == wProgram.query ) {
+        rn[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+        rnReceipientAddresToPacket( 0, rn, data->seven );
+        rn[RN_PACKET_ACTION] = RN_STATIONARY_IDENTIFY;
+        rn[RN_PACKET_LEN] = 0;
+        ThreadOp.post( data->writer, (obj)rn );
+      }
     }
     else if(wProgram.ispom(node)) {
       int addr = wProgram.getaddr( node );

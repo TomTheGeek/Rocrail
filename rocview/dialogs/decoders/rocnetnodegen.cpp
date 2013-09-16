@@ -39,6 +39,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_Show = new wxButton( m_IndexPanel, wxID_ANY, wxT("Show"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer93->Add( m_Show, 0, wxALL, 5 );
 	
+	m_Query = new wxButton( m_IndexPanel, wxID_ANY, wxT("Query"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer93->Add( m_Query, 0, wxALL, 5 );
+	
 	bSizer10->Add( bSizer93, 0, wxALIGN_RIGHT, 5 );
 	
 	m_IndexPanel->SetSizer( bSizer10 );
@@ -347,6 +350,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_Shutdown->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShutdown ), NULL, this );
 	m_ShutdownAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShutdownAll ), NULL, this );
 	m_Show->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShow ), NULL, this );
+	m_Query->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onQuery ), NULL, this );
 	m_RocnetWrite->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onRocnetWrite ), NULL, this );
 	m_NodeOptionsRead->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onNodeOptionsRead ), NULL, this );
 	m_NodeOptionsWrite->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onNodeOptionsWrite ), NULL, this );
@@ -367,6 +371,7 @@ rocnetnodegen::~rocnetnodegen()
 	m_Shutdown->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShutdown ), NULL, this );
 	m_ShutdownAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShutdownAll ), NULL, this );
 	m_Show->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShow ), NULL, this );
+	m_Query->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onQuery ), NULL, this );
 	m_RocnetWrite->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onRocnetWrite ), NULL, this );
 	m_NodeOptionsRead->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onNodeOptionsRead ), NULL, this );
 	m_NodeOptionsWrite->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onNodeOptionsWrite ), NULL, this );
