@@ -675,6 +675,16 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       NodeOp.addChild( data->ini, rnnode );
       if( sndr >= data->highestID )
         data->highestID = sndr + 1;
+
+      /* Inform clients */
+      {
+        iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        wProgram.setiid( node, data->iid );
+        wProgram.setcmd(node, wProgram.identify);
+        wProgram.setlntype(node, wProgram.lntype_rocnet);
+        NodeOp.addChild( node, (iONode)NodeOp.base.clone(rnnode) );
+        data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+      }
     }
     else if( MapOp.haskey( data->nodemap, key ) ) {
       iONode rnnode = (iONode)MapOp.get( data->nodemap, key );

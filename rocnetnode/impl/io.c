@@ -164,7 +164,7 @@ int raspiRead(int port) {
   return rand() & 0x01;
 }
 void raspiWrite(int port, int val) {
-  TraceOp.trc( "raspi", TRCLEVEL_INFO, __LINE__, 9999, "dummy raspiWrite(%d, %d)", port, val );
+  TraceOp.trc( "raspi", TRCLEVEL_DEBUG, __LINE__, 9999, "dummy raspiWrite(%d, %d)", port, val );
 }
 
 

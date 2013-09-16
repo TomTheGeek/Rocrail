@@ -330,6 +330,14 @@ void RocnetNodeDlg::event(iONode node) {
       m_DCCType->SetSelection( wProgram.getval3(node) );
       m_DCCDevice->SetSelection( wProgram.getval4(node) );
     }
+    else if( wProgram.getcmd(node) == wProgram.identify ) {
+      if( NodeOp.getChildCnt(node) > 0 ) {
+        iONode rnnode = NodeOp.getChild(node, 0);
+        NodeOp.addChild(m_Digint, (iONode)NodeOp.base.clone(rnnode));
+        m_NodeBook->SetSelection(0);
+        initNodeList();
+      }
+    }
     else if( wProgram.getcmd(node) == wProgram.show ) {
       // Select idex.
       m_NodeBook->SetSelection(0);
