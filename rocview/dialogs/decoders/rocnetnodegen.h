@@ -17,9 +17,9 @@
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/string.h>
+#include <wx/sizer.h>
 #include <wx/listctrl.h>
 #include <wx/button.h>
-#include <wx/sizer.h>
 #include <wx/panel.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
@@ -43,6 +43,7 @@ class rocnetnodegen : public wxDialog
 	protected:
 		wxNotebook* m_NodeBook;
 		wxPanel* m_IndexPanel;
+		wxStaticBitmap* m_RocNetLogo;
 		wxStaticBitmap* m_GCALogo;
 		wxListCtrl* m_NodeList;
 		wxButton* m_Shutdown;
@@ -115,6 +116,7 @@ class rocnetnodegen : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onClose( wxCloseEvent& event ) { event.Skip(); }
+		virtual void onRocNetLogo( wxMouseEvent& event ) { event.Skip(); }
 		virtual void onGCALogo( wxMouseEvent& event ) { event.Skip(); }
 		virtual void onIndexSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void onShutdown( wxCommandEvent& event ) { event.Skip(); }

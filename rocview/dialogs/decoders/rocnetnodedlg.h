@@ -64,6 +64,7 @@ class RocnetNodeDlg : public rocnetnodegen
     void onShow( wxCommandEvent& event );
     void onGCALogo( wxMouseEvent& event );
     void onQuery( wxCommandEvent& event );
+    void onRocNetLogo( wxMouseEvent& event );
 	public:
 		/** Constructor */
 		RocnetNodeDlg( wxWindow* parent, iONode ini );

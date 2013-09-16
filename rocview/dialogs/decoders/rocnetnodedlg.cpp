@@ -55,6 +55,8 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
 
   m_GCALogo->SetBitmap(*_img_gca);
   m_GCALogo->SetToolTip(wxT("http://www.phgiling.net/"));
+  m_RocNetLogo->SetBitmap(*_img_rocnet_logo);
+  m_RocNetLogo->SetToolTip(wxT("http://wiki.rocrail.net/"));
 
 
   initLabels();
@@ -435,6 +437,10 @@ void RocnetNodeDlg::onShow( wxCommandEvent& event ) {
 
 void RocnetNodeDlg::onGCALogo( wxMouseEvent& event ) {
   wxLaunchDefaultBrowser(wxT("http://www.phgiling.net/"), wxBROWSER_NEW_WINDOW );
+}
+
+void RocnetNodeDlg::onRocNetLogo( wxMouseEvent& event ) {
+  wxLaunchDefaultBrowser(wxT("http://wiki.rocrail.net/doku.php?id=rocnet:rocnetnode-en"), wxBROWSER_NEW_WINDOW );
 }
 
 void RocnetNodeDlg::onQuery( wxCommandEvent& event ) {

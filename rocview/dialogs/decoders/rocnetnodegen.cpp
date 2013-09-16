@@ -21,8 +21,16 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	wxBoxSizer* bSizer10;
 	bSizer10 = new wxBoxSizer( wxVERTICAL );
 	
+	wxBoxSizer* bSizer101;
+	bSizer101 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_RocNetLogo = new wxStaticBitmap( m_IndexPanel, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer101->Add( m_RocNetLogo, 0, wxALL, 5 );
+	
 	m_GCALogo = new wxStaticBitmap( m_IndexPanel, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer10->Add( m_GCALogo, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizer101->Add( m_GCALogo, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	bSizer10->Add( bSizer101, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_NodeList = new wxListCtrl( m_IndexPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_REPORT|wxLC_SINGLE_SEL );
 	bSizer10->Add( m_NodeList, 1, wxALL|wxEXPAND, 5 );
@@ -42,7 +50,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_Query = new wxButton( m_IndexPanel, wxID_ANY, wxT("Query"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer93->Add( m_Query, 0, wxALL, 5 );
 	
-	bSizer10->Add( bSizer93, 0, wxALIGN_RIGHT, 5 );
+	bSizer10->Add( bSizer93, 0, wxALIGN_RIGHT|wxEXPAND, 5 );
 	
 	m_IndexPanel->SetSizer( bSizer10 );
 	m_IndexPanel->Layout();
@@ -344,6 +352,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( rocnetnodegen::onClose ) );
+	m_RocNetLogo->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( rocnetnodegen::onRocNetLogo ), NULL, this );
 	m_GCALogo->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( rocnetnodegen::onGCALogo ), NULL, this );
 	m_NodeList->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
 	m_NodeList->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
@@ -365,6 +374,7 @@ rocnetnodegen::~rocnetnodegen()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( rocnetnodegen::onClose ) );
+	m_RocNetLogo->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( rocnetnodegen::onRocNetLogo ), NULL, this );
 	m_GCALogo->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( rocnetnodegen::onGCALogo ), NULL, this );
 	m_NodeList->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
 	m_NodeList->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
