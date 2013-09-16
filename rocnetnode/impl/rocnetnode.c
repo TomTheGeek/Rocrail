@@ -199,6 +199,9 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
 
   switch( action ) {
     case RN_CS_TRACKPOWER:
+      if( actionType == RN_ACTIONTYPE_EVENT ) {
+        break;
+      }
       if( (rn[RN_PACKET_DATA + 0] & 0x01) == 0x00) {
         /* save at power off to persistent the output state */
         __saveIni(rocnetnode);
@@ -506,6 +509,11 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
 
   rcpt = rnReceipientAddrFromPacket(rn, 0);
   sndr = rnSenderAddrFromPacket(rn, 0);
+
+  if( actionType == RN_ACTIONTYPE_EVENT ) {
+    /* ignore */
+    return NULL;
+  }
 
   switch( action ) {
   case RN_STATIONARY_ACK:
