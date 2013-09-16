@@ -41,6 +41,7 @@ class RocnetNodeDlg : public rocnetnodegen
   iONode m_Digint;
   iONode m_Props;
   void initLabels();
+  void initListLabels();
   void initValues();
   void initNodeList();
   void initPorts();
@@ -61,6 +62,7 @@ class RocnetNodeDlg : public rocnetnodegen
 		void onShutdown( wxCommandEvent& event );
     void onShutdownAll( wxCommandEvent& event );
     void onShow( wxCommandEvent& event );
+    void onGCALogo( wxMouseEvent& event );
 	public:
 		/** Constructor */
 		RocnetNodeDlg( wxWindow* parent, iONode ini );

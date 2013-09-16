@@ -41,6 +41,8 @@
 #include "rocs/public/strtok.h"
 #include "rocutils/public/vendors.h"
 
+#include "rocview/res/icons.hpp"
+
 RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   :rocnetnodegen( parent )
 {
@@ -51,7 +53,24 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   __initVendors();
   m_NodeBook->SetSelection(0);
 
+  m_GCALogo->SetBitmap(*_img_gca);
+  m_GCALogo->SetToolTip(wxT("http://www.phgiling.net/"));
+
+
   initLabels();
+  // Resize
+  m_IndexPanel->GetSizer()->Layout();
+  m_RocNetPanel->GetSizer()->Layout();
+  m_OptionsPanel->GetSizer()->Layout();
+  m_PortSetupPanel->GetSizer()->Layout();
+
+  m_NodeBook->Fit();
+
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
+
+
+  initListLabels();
   initNodeList();
 }
 
@@ -156,18 +175,21 @@ void RocnetNodeDlg::onClose( wxCloseEvent& event ) {
 }
 
 
-void RocnetNodeDlg::initLabels() {
-  m_NodeBook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
-  //m_NodeBook->SetPageText( 1, wxGetApp().getMsg( "rocnet" ) );
-  m_NodeBook->SetPageText( 2, wxGetApp().getMsg( "options" ) );
-  m_NodeBook->SetPageText( 3, wxGetApp().getMsg( "portsetup" ) );
-
+void RocnetNodeDlg::initListLabels() {
   m_NodeList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(1, wxGetApp().getMsg( "vendor" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(2, wxGetApp().getMsg( "product" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(3, wxGetApp().getMsg( "revision" ), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(4, wxT("I/O"), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(5, wxT("Sub IP"), wxLIST_FORMAT_CENTER);
+}
+
+
+void RocnetNodeDlg::initLabels() {
+  m_NodeBook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
+  //m_NodeBook->SetPageText( 1, wxGetApp().getMsg( "rocnet" ) );
+  m_NodeBook->SetPageText( 2, wxGetApp().getMsg( "options" ) );
+  m_NodeBook->SetPageText( 3, wxGetApp().getMsg( "portsetup" ) );
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -403,3 +425,6 @@ void RocnetNodeDlg::onShow( wxCommandEvent& event ) {
   cmd->base.del(cmd);
 }
 
+void RocnetNodeDlg::onGCALogo( wxMouseEvent& event ) {
+  wxLaunchDefaultBrowser(wxT("http://www.phgiling.net/"), wxBROWSER_NEW_WINDOW );
+}

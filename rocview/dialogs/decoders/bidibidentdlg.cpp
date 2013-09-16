@@ -314,9 +314,7 @@ void BidibIdentDlg::initLabels() {
   m_MacroPanel->Enable(false);
 
   m_BiDiBlogo->SetBitmap(*_img_bidib);
-  m_FbLogo->SetBitmap(*_img_fb);
   m_BiDiBlogo->SetToolTip(wxT("http://www.bidib.org"));
-  m_FbLogo->SetToolTip(wxT("http://www.fichtelbahn.de/shop"));
 
   // Index
   m_labPath->SetLabel(wxGetApp().getMsg( "path" ));
@@ -1717,10 +1715,6 @@ void BidibIdentDlg::onAccessoryWriteMacroMap( wxCommandEvent& event ) {
 void BidibIdentDlg::onLeftLogo( wxMouseEvent& event ) {
   wxLaunchDefaultBrowser(wxT("http://www.bidib.org"), wxBROWSER_NEW_WINDOW );
 }
-void BidibIdentDlg::onFbLogo( wxMouseEvent& event ) {
-  wxLaunchDefaultBrowser(wxT("http://www.fichtelbahn.de/shop/"), wxBROWSER_NEW_WINDOW );
-}
-
 void BidibIdentDlg::onProductName( wxMouseEvent& event ) {
   if( www != NULL )
     wxLaunchDefaultBrowser(wxString(www, wxConvUTF8), wxBROWSER_NEW_WINDOW );
