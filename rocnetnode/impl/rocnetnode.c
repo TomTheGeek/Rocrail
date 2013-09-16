@@ -195,7 +195,8 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
   rcpt = rnReceipientAddrFromPacket(rn, 0);
   sndr = rnSenderAddrFromPacket(rn, 0);
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CS request %d from %d to %d", action, sndr, rcpt );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "CS %s %d from %d to %d", (actionType == RN_ACTIONTYPE_EVENT)?"event":"request", action, sndr, rcpt );
 
   switch( action ) {
     case RN_CS_TRACKPOWER:
@@ -207,24 +208,24 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
         __saveIni(rocnetnode);
       }
 
-      if(data->pDI != NULL) {
+      if(data->cstype > 0 && data->pDI != NULL) {
         iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE);
         wSysCmd.setcmd(cmd, rn[RN_PACKET_DATA + 0] & 0x01 ? wSysCmd.go:wSysCmd.stop);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CS track power %s", rn[RN_PACKET_DATA + 0] & 0x01 ? "ON":"OFF" );
         data->pDI->cmd( (obj)data->pDI, cmd );
+        data->power = rn[RN_PACKET_DATA + 0] & 0x01 ? True:False;
+        msg = allocMem(32);
+        msg[RN_PACKET_GROUP] = RN_GROUP_CS;
+        rnSenderAddresToPacket( data->id, msg, 0 );
+        msg[RN_PACKET_ACTION] = RN_CS_TRACKPOWER;
+        msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+        msg[RN_PACKET_LEN] = 1;
+        msg[RN_PACKET_DATA + 0] = data->power;
       }
-      data->power = rn[RN_PACKET_DATA + 0] & 0x01 ? True:False;
-      msg = allocMem(32);
-      msg[RN_PACKET_GROUP] = RN_GROUP_CS;
-      rnSenderAddresToPacket( data->id, msg, 0 );
-      msg[RN_PACKET_ACTION] = RN_CS_TRACKPOWER;
-      msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-      msg[RN_PACKET_LEN] = 1;
-      msg[RN_PACKET_DATA + 0] = data->power;
       break;
 
     case RN_CS_POM:
-      if(data->pDI != NULL) {
+      if(data->cstype > 0 && data->pDI != NULL) {
         iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE);
         int cv = rn[RN_PACKET_DATA + 2] * 256 + rn[RN_PACKET_DATA + 3];
         addr = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
@@ -241,43 +242,47 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
       break;
 
     case RN_CS_VELOCITY:
-      addr = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
-      V = rn[RN_PACKET_DATA + 2];
-      dir = rn[RN_PACKET_DATA + 3];
-      lights = rn[RN_PACKET_DATA + 4];
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco addr=%d V=%d dir=%d lights=%d", addr, V, dir, lights );
-      if(data->pDI != NULL) {
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
-        wLoc.setaddr(cmd, addr);
-        wLoc.setV(cmd, V);
-        wLoc.setdir(cmd, dir);
-        wLoc.setfn(cmd, lights);
-        data->pDI->cmd( (obj)data->pDI, cmd );
+      if(data->cstype > 0 && data->pDI != NULL) {
+        addr = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
+        V = rn[RN_PACKET_DATA + 2];
+        dir = rn[RN_PACKET_DATA + 3];
+        lights = rn[RN_PACKET_DATA + 4];
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco addr=%d V=%d dir=%d lights=%d", addr, V, dir, lights );
+        if(data->pDI != NULL) {
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+          wLoc.setaddr(cmd, addr);
+          wLoc.setV(cmd, V);
+          wLoc.setdir(cmd, dir);
+          wLoc.setfn(cmd, lights);
+          data->pDI->cmd( (obj)data->pDI, cmd );
+        }
       }
       break;
 
     case RN_CS_FUNCTION:
-      addr = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco function addr=%d", addr );
-      if(data->pDI != NULL) {
-        iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE);
-        wFunCmd.setaddr(cmd, addr);
-        for( i = 0; i < 8; i++ ) {
-          char key[32];
-          StrOp.fmtb(key, "f%d", i+1);
-          NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 2] & (1 << i)) ? True:False);
+      if(data->cstype > 0 && data->pDI != NULL) {
+        addr = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco function addr=%d", addr );
+        if(data->pDI != NULL) {
+          iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE);
+          wFunCmd.setaddr(cmd, addr);
+          for( i = 0; i < 8; i++ ) {
+            char key[32];
+            StrOp.fmtb(key, "f%d", i+1);
+            NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 2] & (1 << i)) ? True:False);
+          }
+          for( i = 0; i < 8; i++ ) {
+            char key[32];
+            StrOp.fmtb(key, "f%d", i+9);
+            NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 3] & (1 << (i+8))) ? True:False);
+          }
+          for( i = 0; i < 8; i++ ) {
+            char key[32];
+            StrOp.fmtb(key, "f%d", i+17);
+            NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 3] & (1 << (i+16))) ? True:False);
+          }
+          data->pDI->cmd( (obj)data->pDI, cmd );
         }
-        for( i = 0; i < 8; i++ ) {
-          char key[32];
-          StrOp.fmtb(key, "f%d", i+9);
-          NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 3] & (1 << (i+8))) ? True:False);
-        }
-        for( i = 0; i < 8; i++ ) {
-          char key[32];
-          StrOp.fmtb(key, "f%d", i+17);
-          NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 3] & (1 << (i+16))) ? True:False);
-        }
-        data->pDI->cmd( (obj)data->pDI, cmd );
       }
       break;
   }
