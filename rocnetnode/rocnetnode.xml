@@ -52,6 +52,7 @@
     <data>
       <var name="ini" vt="iONode"/>
       <var name="digintini" vt="iONode"/>
+      <var name="rfidini" vt="iONode"/>
       <var name="reader" vt="iOThread"/>
       <var name="scanner" vt="iOThread"/>
       <var name="run" vt="Boolean"/>
@@ -66,6 +67,7 @@
       <var name="writeUDP" vt="iOSocket"/>
       <var name="ports[128]" vt="iOPort"/>
       <var name="pDI" vt="iIDigInt"/>
+      <var name="pRFID" vt="iIDigInt"/>
       <var name="i2cdevice" vt="const char*"/>
       <var name="i2cdescriptor" vt="int"/>
       <var name="iotype" vt="int"/>
@@ -75,6 +77,7 @@
       <var name="i2caddr[8]" vt="Boolean"/>
       <var name="iodata[16]" vt="byte"/>
       <var name="sack" vt="Boolean"/>
+      <var name="rfid" vt="Boolean"/>
       <var name="i2cmux" vt="iOMutex"/>
       <var name="startofday" vt="Boolean"/>
       <var name="LED1" vt="int"/>

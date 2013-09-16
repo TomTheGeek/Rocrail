@@ -330,6 +330,7 @@ void RocnetNodeDlg::event(iONode node) {
     else if( wProgram.getcmd(node) == wProgram.getoptions ) {
       m_IOType->SetSelection( wProgram.getval1(node) );
       m_SecAck->SetValue(wProgram.getval2(node)&0x01?true:false);
+      m_RFID->SetValue(wProgram.getval2(node)&0x02?true:false);
       m_DCCType->SetSelection( wProgram.getval3(node) );
       m_DCCDevice->SetSelection( wProgram.getval4(node) );
     }
@@ -381,7 +382,7 @@ void RocnetNodeDlg::onNodeOptionsWrite( wxCommandEvent& event ) {
   wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
   wProgram.setcmd( cmd, wProgram.setoptions );
   wProgram.setval1( cmd, m_IOType->GetSelection());
-  wProgram.setval2( cmd, m_SecAck->IsChecked()?0x01:0x00);
+  wProgram.setval2( cmd, (m_SecAck->IsChecked()?0x01:0x00) | (m_RFID->IsChecked()?0x02:0x00));
   wProgram.setval3( cmd, m_DCCType->GetSelection());
   wProgram.setval4( cmd, m_DCCDevice->GetSelection());
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );

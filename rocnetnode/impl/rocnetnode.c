@@ -429,7 +429,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
     msg[RN_PACKET_LEN] = 4;
     msg[RN_PACKET_DATA + 0] = data->iotype;
-    msg[RN_PACKET_DATA + 1] = data->sack ? 0x01:0x00;
+    msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00);
     msg[RN_PACKET_DATA + 2] = data->cstype;
     msg[RN_PACKET_DATA + 3] = data->csdevice;
     break;
@@ -437,6 +437,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
   case RN_PROGRAMMING_WROPT:
     data->iotype = rn[RN_PACKET_DATA + 0];
     data->sack   = (rn[RN_PACKET_DATA + 1] & 0x01) ? True:False;
+    data->rfid   = (rn[RN_PACKET_DATA + 1] & 0x02) ? True:False;
     data->cstype   = rn[RN_PACKET_DATA + 2];
     data->csdevice = rn[RN_PACKET_DATA + 3];
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "options: iotype=%d cstype=%d csdevice=%d", data->iotype, data->cstype, data->csdevice );
@@ -448,7 +449,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
     msg[RN_PACKET_LEN] = 4;
     msg[RN_PACKET_DATA + 0] = data->iotype;
-    msg[RN_PACKET_DATA + 1] = data->sack ? 0x01:0x00;
+    msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00);
     msg[RN_PACKET_DATA + 2] = data->cstype;
     msg[RN_PACKET_DATA + 3] = data->csdevice;
     /* Save the rocnetnode.ini to persistent the new ID. */
@@ -460,6 +461,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
         __initIO(rocnetnode);
       wRocNetNodeOptions.setiotype( optionsini, data->iotype );
       wRocNetNodeOptions.setsack( optionsini, data->sack );
+      wRocNetNodeOptions.setrfid( optionsini, data->rfid );
       if( digintini != NULL && data->cstype == 0 ) {
         NodeOp.removeChild(data->ini, digintini );
         NodeOp.base.del(digintini);
@@ -1067,10 +1069,29 @@ static void __listener( obj inst, iONode nodeC, int level ) {
 
 static Boolean __initDigInt(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
+
+  if( data->rfid ) {
+    iOLib    pLib = NULL;
+    LPFNROCGETDIGINT pInitFun = (void *) NULL;
+    char* libpath = StrOp.fmt( "%s%c%s", data->libpath, SystemOp.getFileSeparator(), "rfid12" );
+    pLib = LibOp.inst( libpath );
+    StrOp.free( libpath );
+    if (pLib != NULL) {
+      pInitFun = (LPFNROCGETDIGINT)LibOp.getProc(pLib,"rocGetDigInt");
+      if (pInitFun != NULL) {
+        iONode digintini = NodeOp.inst(wDigInt.name(), NULL, ELEMENT_NODE);
+        wDigInt.setiid(digintini, "rfid-1");
+        wDigInt.setdevice(digintini, "/dev/ttyAMA0"); /* on every RasPi? */
+        wDigInt.setfboffset( digintini, 129 );
+        data->pRFID = pInitFun(digintini,TraceOp.get());
+        data->pRFID->setListener( (obj)data->pRFID, (obj)inst, &__listener );
+      }
+    }
+  }
+
   if( data->digintini != NULL ) {
     const char*  lib = wDigInt.getlib( data->digintini );
     const char*  iid = wDigInt.getiid( data->digintini );
-    iIDigInt pDi = NULL;
     iOLib    pLib = NULL;
     LPFNROCGETDIGINT pInitFun = (void *) NULL;
     char* libpath = StrOp.fmt( "%s%c%s", data->libpath, SystemOp.getFileSeparator(), lib );
@@ -1404,6 +1425,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
     if( NodeOp.findNode(rocnet, wRocNetNodeOptions.name()) != NULL ) {
       iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
       data->sack  = wRocNetNodeOptions.issack(optionsini);
+      data->rfid  = wRocNetNodeOptions.isrfid(optionsini);
       data->iotype = wRocNetNodeOptions.getiotype(optionsini);
     }
     else {
@@ -1463,6 +1485,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast port    [%d]", data->port );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  I/O type [%d]", data->iotype );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor ack [%s]", data->sack?"ON":"OFF" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  RFID [%s]", data->sack?"ON":"OFF" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   data->readUDP = SocketOp.inst( data->addr, data->port, False, True, True );
   SocketOp.bind(data->readUDP);
@@ -1510,6 +1533,10 @@ static Boolean _shutdown( void ) {
   msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
   msg[RN_PACKET_LEN] = 0;
   __sendRN(__RocNetNode, msg);
+
+  if(data->pRFID != NULL) {
+    data->pRFID->halt((obj)data->pRFID, True);
+  }
 
   if(data->pDI != NULL) {
     data->pDI->halt((obj)data->pDI, True);

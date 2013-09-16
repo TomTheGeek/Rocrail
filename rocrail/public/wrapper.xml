@@ -613,6 +613,7 @@
         <var name="wd" vt="bool" defval="false"/>
         <rocnetnodeoptions wrappername="RocNetNodeOptions" cardinality="1">
           <var name="sack" vt="bool" defval="false"/>
+          <var name="rfid" vt="bool" defval="false"/>
           <const name="iotype_gpio" vt="int" val="0"/>
           <const name="iotype_i2c0" vt="int" val="1"/>
           <const name="iotype_i2c1" vt="int" val="2"/>
