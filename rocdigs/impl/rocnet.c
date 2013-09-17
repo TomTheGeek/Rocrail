@@ -640,7 +640,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     }
 
     subip = rn[RN_PACKET_DATA+5]*256+rn[RN_PACKET_DATA+6];
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "Identified: rocnetid=%d class=%s vid=%d revision=%d nrio=%d subip=%d.%d", sndr,
         rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2] *256 + rn[RN_PACKET_DATA+3],
         rn[RN_PACKET_DATA+4], rn[RN_PACKET_DATA+5], rn[RN_PACKET_DATA+6] );
@@ -657,7 +657,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       }
       data->highestID++;
       byte* rnID = allocMem(32);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send %d a new ID: %d", sndr, data->highestID );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "send %d a new ID: %d", sndr, data->highestID );
       rnID[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
       rnReceipientAddresToPacket( sndr, rnID, data->seven );
       rnSenderAddresToPacket( wRocNet.getid(data->rnini), rnID, data->seven );
@@ -880,7 +880,7 @@ static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
   switch( action ) {
   case RN_SENSOR_REPORT:
   {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor report %d:%d %s", sndr, addr, rn[RN_PACKET_DATA+2]?"on":"off" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor report %d:%d %s", sndr, addr, rn[RN_PACKET_DATA+2]?"on":"off" );
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
     wFeedback.setbus( evt, sndr );
