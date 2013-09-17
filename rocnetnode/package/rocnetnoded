@@ -11,7 +11,7 @@
 ### END INIT INFO
 
 rocnetnoded_BIN=/opt/rocrail/rocnetnode
-rocnetnoded_PID=/opt/rocrail/rocnetnoded.pid
+rocnetnoded_PID=/tmp/rocnetnoded.pid
 rocnetnoded_SH=/opt/rocrail/rocnetnode.sh
 
 if [ ! -x $rocnetnoded_BIN ] ; then
@@ -25,7 +25,7 @@ case "$1" in
 		echo "Starting RocNetNode"
 	else
 		echo "rocnetnoded.pid already exists ! "
-#		exit 5
+		exit 5
 	fi
  	su - root -c "$rocnetnoded_SH"
 	;;
