@@ -25,7 +25,7 @@ case "$1" in
 		echo "Starting RocNetNode"
 	else
 		echo "rocnetnoded.pid already exists ! "
-		exit 5
+#		exit 5
 	fi
  	su - root -c "$rocnetnoded_SH"
 	;;
