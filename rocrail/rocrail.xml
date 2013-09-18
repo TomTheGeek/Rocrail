@@ -42,7 +42,9 @@
     <fun name="getControl" vt="iOControl"/>
     <fun name="getClntCon" vt="iOClntCon"/>
     <fun name="getSrcpCon" vt="iOSrcpCon"/>
-    <fun name="shutdown" vt="Boolean"/>
+    <fun name="shutdown" vt="Boolean">
+      <param name="network" vt="int" remark="Shutdown RocNet too."/>
+    </fun>
     <fun name="saveIni" vt="void"/>
     <fun name="stop" vt="void"/>
     <fun name="ebreak" vt="void"/>

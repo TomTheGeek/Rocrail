@@ -94,7 +94,7 @@ static void __signalHandler( int sig ) {
 
   printf( "__signalHandler: shutdown...\n" );
   if( sig != SIGSEGV ) {
-    AppOp.shutdown();
+    AppOp.shutdown(0);
   }
   else {
     /* try todo a power off... */

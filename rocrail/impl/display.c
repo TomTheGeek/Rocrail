@@ -113,7 +113,7 @@ static const char* __getSystemMenu(Boolean select) {
       case 0:
         return "System -> Init Turnouts";
       case 1:
-        if( select ) AppOp.shutdown();
+        if( select ) AppOp.shutdown(0);
         return "System -> Stop";
       case 2:
         return "System -> Restart";

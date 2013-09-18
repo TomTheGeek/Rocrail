@@ -2502,7 +2502,27 @@ bool RocGuiFrame::ShutdownRocRail() {
   if( action == wxID_NO ) {
     return false;
   }
+
+  bool l_bRocNet = false;
+  if( m_RocrailIni != NULL ) {
+    iONode digint = wRocRail.getdigint(m_RocrailIni);
+    while( digint != NULL ) {
+      iONode rocnet = wDigInt.getrocnet(digint);
+      if( rocnet != NULL ) {
+        l_bRocNet = true;
+        break;
+      }
+      digint = wRocRail.nextdigint(m_RocrailIni, digint);
+    }
+  }
+
   iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+
+  action = wxMessageDialog( this, wxGetApp().getMsg("shutdownallnodes"), _T("Rocrail"), wxYES_NO | wxICON_QUESTION ).ShowModal();
+  if( action == wxID_YES ) {
+    wSysCmd.setval( cmd, 1 );
+  }
+
   wSysCmd.setcmd( cmd, wSysCmd.shutdown );
   wxGetApp().sendToRocrail( cmd, true );
   cmd->base.del(cmd);

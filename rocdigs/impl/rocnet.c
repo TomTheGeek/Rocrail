@@ -535,6 +535,21 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
   iOrocNetData data = Data(inst);
   iONode rsp = __translate( (iOrocNet)inst, cmd );
 
+  if( cmd != NULL ) {
+    if(StrOp.equals( NodeOp.getName(cmd), wSysCmd.name() ) ) {
+      if( StrOp.equals( wSysCmd.getcmd(cmd), wSysCmd.shutdown ) && wSysCmd.getval(cmd) == 1 ) {
+        byte* rn = allocMem(32);
+        rn[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+        rnReceipientAddresToPacket( 0, rn, data->seven );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Shutdown all nodes" );
+        rn[RN_PACKET_ACTION] = RN_STATIONARY_SHUTDOWN;
+        rn[RN_PACKET_LEN] = 1;
+        rn[RN_PACKET_DATA + 0] = 1;
+        ThreadOp.post( data->writer, (obj)rn );
+        ThreadOp.sleep(500);
+      }
+    }
+  }
   /* Cleanup Node1 */
   cmd->base.del(cmd);
 

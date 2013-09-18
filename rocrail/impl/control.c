@@ -887,7 +887,7 @@ static void __callback( obj inst, iONode nodeA ) {
         NodeOp.base.del( nodeA );
       }
       else {
-        AppOp.shutdown(  );
+        AppOp.shutdown(wSysCmd.getval( nodeA ));
       }
       return;
     }

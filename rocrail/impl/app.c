@@ -65,8 +65,6 @@
 #include "common/version.h"
 
 
-extern const char svnLog[];
-
 static iOApp __appinst = NULL;
 
 static const char* backtrace[10] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
@@ -540,7 +538,7 @@ static __checkConsole( iOAppData data ) {
   else if( c == wConCmd.quit ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutdown requested." );
     data->consoleMode = False;
-    AppOp.shutdown();
+    AppOp.shutdown(0);
   }
   else if( c == wConCmd.initfield ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Initfield requested." );
@@ -1054,7 +1052,7 @@ static void _saveIni( void ) {
 }
 
 
-static Boolean _shutdown( void ) {
+static Boolean _shutdown( int network ) {
   if( __appinst != NULL ) {
 
     iOAppData data = Data(__appinst);
@@ -1063,6 +1061,7 @@ static Boolean _shutdown( void ) {
     iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE);
     wSysCmd.setcmd( cmd, wSysCmd.shutdown );
     wSysCmd.setinformall( cmd, True );
+    wSysCmd.setval( cmd, network );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SHUTDOWN" );
     if( data->control != NULL )
       ControlOp.cmd( data->control, cmd, NULL );
