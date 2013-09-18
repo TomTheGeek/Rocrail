@@ -125,6 +125,7 @@ clean:
 
 
 install:
+	-$(MKDIR) $(DESTDIR)
 	-$(COPY) -p $(OUTDIR)$(FS)rocnetnode$(BINSUFFIX) $(DESTDIR)
 	-cp -p package$(FS)rocnetnode.sh $(DESTDIR)
 	-cp -p package$(FS)rocnetnode.ini $(DESTDIR)
