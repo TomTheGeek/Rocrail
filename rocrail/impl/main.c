@@ -253,7 +253,7 @@ void WINAPI RocrailServiceCtrlHandler( DWORD Opcode ) {
     case SERVICE_CONTROL_STOP: 
     RocrailServiceStatus.dwCurrentState = SERVICE_STOP_PENDING;
     SetServiceStatus( RocrailServiceStatusHandle, &RocrailServiceStatus ); 
-    AppOp.shutdown();
+    AppOp.shutdown(0);
     return; 
     
     case SERVICE_CONTROL_PAUSE: 
