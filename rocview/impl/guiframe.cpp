@@ -2518,9 +2518,11 @@ bool RocGuiFrame::ShutdownRocRail() {
 
   iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
 
-  action = wxMessageDialog( this, wxGetApp().getMsg("shutdownallnodes"), _T("Rocrail"), wxYES_NO | wxICON_QUESTION ).ShowModal();
-  if( action == wxID_YES ) {
-    wSysCmd.setval( cmd, 1 );
+  if( l_bRocNet ) {
+    action = wxMessageDialog( this, wxGetApp().getMsg("shutdownallnodes"), _T("Rocrail"), wxYES_NO | wxICON_QUESTION ).ShowModal();
+    if( action == wxID_YES ) {
+      wSysCmd.setval( cmd, 1 );
+    }
   }
 
   wSysCmd.setcmd( cmd, wSysCmd.shutdown );
