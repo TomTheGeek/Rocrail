@@ -66,22 +66,32 @@ ifeq ($(PLATFORM),WIN32)
 	CC_EXTRA_FLAGS=-mthreads
 	LNK_FLAGS=-mthreads -static
 	BINSUFFIX=.exe
+	SHAREDSUFFIX=.dll
 else ifeq ($(PLATFORM),WIN64)
 	DIRPREFIX=win
 	LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32 -lwinmm
 	BINSUFFIX=.exe
+	SHAREDSUFFIX=.dll
 	CC_EXTRA_FLAGS=
+else ifeq ($(PLATFORM),MACOSX)
+	LIBS=-lpthread -ldl
+	DIRPREFIX=unx
+	CC_EXTRA_FLAGS=-fPIC
+	BINSUFFIX=
+	SHAREDSUFFIX=.dylib
 else ifeq ($(PLATFORM),OPENBSD)
 	LIBS=-pthread
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fPIC
 	BINSUFFIX=
 	CPUPDATE=
+	SHAREDSUFFIX=.so
 else
 	LIBS=-lpthread -ldl
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fPIC
 	BINSUFFIX=
+	SHAREDSUFFIX=.so
 endif
 
 MOUNTPOINT=..
@@ -127,6 +137,9 @@ clean:
 install:
 	-$(MKDIR) $(DESTDIR)
 	-$(COPY) -p $(OUTDIR)$(FS)rocnetnode$(BINSUFFIX) $(DESTDIR)
+	-$(COPY) -p $(OUTDIR)$(FS)dcc232$(SHAREDSUFFIX) $(DESTDIR)
+	-$(COPY) -p $(OUTDIR)$(FS)sprog$(SHAREDSUFFIX) $(DESTDIR)
+	-$(COPY) -p $(OUTDIR)$(FS)rfid12$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p package$(FS)rocnetnode.sh $(DESTDIR)
 	-cp -p package$(FS)rocnetnode.ini $(DESTDIR)
 
