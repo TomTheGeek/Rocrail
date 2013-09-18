@@ -2,7 +2,7 @@
 set -e
 if [ "$1" = "configure" ]; then
   chmod 755 /etc/init.d/rocnetnoded
-  chmod 755 /opt/rocrail/rocnetnode.sh
+  chmod 755 /opt/rocnet/rocnetnode.sh
   update-rc.d rocnetnoded defaults
 
   if grep "i2c-bcm2708" /etc/modules; then

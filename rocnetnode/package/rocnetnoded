@@ -10,9 +10,9 @@
 # Description: Starts the RocNetNode Daemon
 ### END INIT INFO
 
-rocnetnoded_BIN=/opt/rocrail/rocnetnode
+rocnetnoded_BIN=/opt/rocnet/rocnetnode
 rocnetnoded_PID=/tmp/rocnetnoded.pid
-rocnetnoded_SH=/opt/rocrail/rocnetnode.sh
+rocnetnoded_SH=/opt/rocnet/rocnetnode.sh
 
 if [ ! -x $rocnetnoded_BIN ] ; then
 	echo -n "RocNetNode not installed ! "
