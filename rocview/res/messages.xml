@@ -1219,7 +1219,7 @@
     <sl txt="Zaženi lokomotivo"/>
   </Msg>
   <Msg id="stoploc">
-    <de txt="Zug anhalten" tip="Versetzt Zug in Manualbetrieb."/>
+    <de txt="Lok stoppen" tip="Versetzt Zug in Manualbetrieb."/>
     <en txt="Stop locomotive automat" tip="Put locomotive in manual mode."/>
     <nl txt="Stop auto loc" tip="Zet locomotief in hand mode."/>
     <sv txt="Stoppa lok" tip="Kör lok manuellt."/>
@@ -24595,6 +24595,7 @@
     <sr_latin txt="Zbog licence za Digitrax LocoNet(r), potreban je važeći ključ za podršku."/>
     <ru txt="Компания DigiTrax ввела плату за использование Loconet, поэтому требуется приобрести лицензионный ключ"/>
     <en_GB txt="Due to licence fee for Digitrax LocoNet(r) a valid support key is required."/>
+    <de txt="Wegen Lizenzgebühr für Digitrax LocoNet(r) wird ein gültige Support-Schlüssel benötigt."/>
   </Msg>
   <Msg id="usebididir">
     <en txt="Use BiDi direction"/>
@@ -24615,6 +24616,7 @@
     <ru txt="Версия"/>
     <sl txt="Revizija"/>
     <sv txt="Utgåva"/>
+    <de txt="Revision"/>
   </Msg>
   <Msg id="showcounters">
     <en txt="Show counters"/>
@@ -24622,25 +24624,37 @@
     <pt_BR txt="Mostrar contadores"/>
     <ru txt="Показать счётчики"/>
     <sv txt="Visa Räknare"/>
+    <de txt="Zählerstand anzeigen"/>
   </Msg>
   <Msg id="resetcounters">
     <en txt="Reset counters"/>
     <nl txt="Tellers terugzetten"/>
     <pt_BR txt="Redefinir contadores"/>
     <sv txt="Återställ räknare"/>
+    <de txt="Zähler zurücksetzen"/>
   </Msg>
   <Msg id="secureack">
     <en txt="Acknowledge sensor events"/>
     <nl txt="Melder berichten bevestigen"/>
+    <de txt="Sensor-Ereignisse bestätigen"/>
+    <pt_BR txt="Confirmar eventos dos sensores"/>
   </Msg>
   <Msg id="shutdownall">
     <en txt="Shutdown all"/>
     <nl txt="Alle afsluiten"/>
+    <de txt="Alles herunterfahren"/>
+    <pt_BR txt="Desligar tudo"/>
   </Msg>
   <Msg id="shutdownnode">
     <en txt="Shutdown RocNet node %d?"/>
+    <nl txt="RocNet node %d afsluiten?"/>
+    <de txt="RocNet Knoten %d herunterfahren?"/>
+    <pt_BR txt="Desligar node %d do RocNet?"/>
   </Msg>
   <Msg id="shutdownallnodes">
     <en txt="Shutdown all RocNet nodes?"/>
+    <nl txt="Alle RocNet nodes afsluiten?"/>
+    <de txt="Alle RocNet-Knoten herunterfahren"/>
+    <pt_BR txt="Desligar todos os nodes do RocNet?"/>
   </Msg>
 </Messages>
