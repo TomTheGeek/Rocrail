@@ -89,7 +89,7 @@ OUTDIR=..$(FS)$(DIRPREFIX)bin
 GENDIR=..$(FS)$(DIRPREFIX)gen
 TMPOUTDIR=$(GENDIR)$(FS)rocnetnode$(FS)bin
 DEBUG=-g
-DESTDIR=$(FS)opt$(FS)rocrail
+DESTDIR=$(FS)opt$(FS)rocnet
 BINDIR=..$(FS)rocs$(FS)bin
 
 CPP=$(TOOLPREFIX)gcc
