@@ -3652,13 +3652,15 @@ void RocGuiFrame::OnBiDiB( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnRocNet( wxCommandEvent& event ) {
-  if( m_RocrailIni != NULL ) {
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "*****event int =%d", event.GetInt());
+  if( event.GetInt() == 4711 && m_RocrailIni != NULL ) {
     m_RocnetNodeDlg = new RocnetNodeDlg(this, m_RocrailIni);
     m_RocnetNodeDlg->ShowModal();
     m_RocnetNodeDlg->Destroy();
     m_RocnetNodeDlg = NULL;
   }
   else {
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "request new rocrail.ini");
     wxGetApp().m_InitialRocrailIni = true;
     wxGetApp().m_FireRocNet4RocrailIni = true;
     iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );

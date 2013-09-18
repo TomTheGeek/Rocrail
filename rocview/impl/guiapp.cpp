@@ -990,6 +990,7 @@ static void rocrailCallback( obj me, iONode node ) {
     }
     else if(guiApp->m_FireRocNet4RocrailIni) {
       wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_RocNet );
+      event.SetInt(4711);
       guiApp->m_FireRocNet4RocrailIni = false;
       wxPostEvent( guiApp->getFrame(), event );
     }
