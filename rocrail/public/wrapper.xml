@@ -439,7 +439,6 @@
       <const name="cti" vt="string" val="cti"/>
       <const name="easydcc" vt="string" val="easydcc"/>
       <const name="z21" vt="string" val="z21"/>
-      <const name="raspi" vt="string" val="raspi"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
@@ -644,14 +643,6 @@
       <mcs2 remark="CS2 options" wrappername="MCS2">
         <var name="fbdevid" vt="int" defval="0" range="0-*" remark="Sensor device ID"/>
       </mcs2>
-      
-      <raspi remark="RasPi" wrappername="RasPi">
-        <var name="shutdownport" vt="int" defval="0" remark="Shutdown port; 0 = not used."/>
-        <var name="ebreakport" vt="int" defval="0" remark="Emergency break port; 0 = not used."/>
-        <var name="poweroffport" vt="int" defval="0" remark="Power off port; 0 = not used."/>
-        <var name="poweronport" vt="int" defval="0" remark="Power on port; 0 = not used."/>
-        <var name="usesensors" vt="bool" defval="true"/>
-      </raspi>
       
       <cbus remark="CBUS options" wrappername="CBus">
         <var name="cid" vt="int" defval="1" range="0-*" remark="CANID"/>

@@ -116,7 +116,6 @@ OPENDCCOBJS=$(patsubst impl/opendcc/%.c,$(TMPOUTDIR)/opendcc/%.o,$(wildcard impl
 XPRESSNETOBJS=$(patsubst impl/xpressnet/%.c,$(TMPOUTDIR)/xpressnet/%.o,$(wildcard impl/xpressnet/*.c))
 BIDIBOBJS=$(patsubst impl/bidib/%.c,$(TMPOUTDIR)/bidib/%.o,$(wildcard impl/bidib/*.c))
 CBUSOBJS=$(patsubst impl/cbus/%.c,$(TMPOUTDIR)/cbus/%.o,$(wildcard impl/cbus/*.c))
-RASPIOBJS=$(patsubst impl/raspi/%.c,$(TMPOUTDIR)/raspi/%.o,$(wildcard impl/raspi/*.c))
 SRCPOBJS=$(patsubst impl/srcp/%.c,$(TMPOUTDIR)/srcp/%.o,$(wildcard impl/srcp/*.c))
 
 all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX) $(OUTDIR)$(FS)hsi88$(SHAREDSUFFIX) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX) \
@@ -128,7 +127,7 @@ all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OU
 	$(OUTDIR)$(FS)rmx$(SHAREDSUFFIX) $(OUTDIR)$(FS)massoth$(SHAREDSUFFIX) $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX) $(OUTDIR)$(FS)muet$(SHAREDSUFFIX) $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)zs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX) $(OUTDIR)$(FS)perir$(SHAREDSUFFIX) $(OUTDIR)$(FS)editspro$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)infracar$(SHAREDSUFFIX) $(OUTDIR)$(FS)cti$(SHAREDSUFFIX) $(OUTDIR)$(FS)easydcc$(SHAREDSUFFIX) $(OUTDIR)$(FS)z21$(SHAREDSUFFIX) \
-	$(OUTDIR)$(FS)raspi$(SHAREDSUFFIX)
+	
 	
 
 # ------------------------------------------------------------
@@ -214,8 +213,6 @@ $(OUTDIR)$(FS)easydcc$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)easydcc.o $(COMMONOBJS) $
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)easydcc$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)easydcc.o $(COMMONOBJS) $(NMRAOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)z21$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)z21.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)z21$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)z21.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
-$(OUTDIR)$(FS)raspi$(SHAREDSUFFIX):  $(RASPIOBJS) $(TMPOUTDIR)$(FS)raspi.o $(COMMONOBJS) $(RRLIBS)
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)raspi$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)raspi.o $(RASPIOBJS) $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -250,9 +247,6 @@ $(TMPOUTDIR)/xpressnet/%.o: impl/xpressnet/%.c
 $(TMPOUTDIR)/bidib/%.o: impl/bidib/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
 	
-$(TMPOUTDIR)/raspi/%.o: impl/raspi/%.c
-	$(CPP) $(CC_FLAGS) $< -o $@
-	
 $(TMPOUTDIR)/srcp/%.o: impl/srcp/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
 	
@@ -268,7 +262,6 @@ clean:
 	-$(MKDIR) $(TMPOUTDIR)$(FS)xpressnet
 	-$(MKDIR) $(TMPOUTDIR)$(FS)bidib
 	-$(MKDIR) $(TMPOUTDIR)$(FS)cbus
-	-$(MKDIR) $(TMPOUTDIR)$(FS)raspi
 	-$(MKDIR) $(TMPOUTDIR)$(FS)srcp
 	-$(MKDIR) $(GENDIR)$(FS)rocdigs
 	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
@@ -282,7 +275,6 @@ clean:
 	-$(REMOVE) $(TMPOUTDIR)$(FS)bidib$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)cbus$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)nmra$(FS)*.o
-	-$(REMOVE) $(TMPOUTDIR)$(FS)raspi$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)srcp$(FS)*.o
 	-$(REMOVE) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX)
@@ -325,7 +317,6 @@ clean:
 	-$(REMOVE) $(OUTDIR)$(FS)cti$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)easydcc$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)z21$(SHAREDSUFFIX)
-	-$(REMOVE) $(OUTDIR)$(FS)raspi$(SHAREDSUFFIX)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocdigs$(FS)rocdigs.xml ..$(FS)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)xml2cstr$(GENSUFFIX) ..$(FS)..$(FS)common$(FS)version.xml impl$(FS)version.c svnLog
 
@@ -370,5 +361,4 @@ install:
 	-cp -p $(OUTDIR)$(FS)cti$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)easydcc$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)z21$(SHAREDSUFFIX) $(DESTDIR)
-	-cp -p $(OUTDIR)$(FS)raspi$(SHAREDSUFFIX) $(DESTDIR)
 	
