@@ -13,7 +13,7 @@
 ### END INIT INFO
 
 rocraild_BIN=/opt/rocrail/rocrail
-rocraild_PID=/opt/rocrail/rocraild.pid
+rocraild_PID=/tmp/rocraild.pid
 rocraild_SH=/opt/rocrail/rocraild.sh
 
 if [ ! -x $rocraild_BIN ] ; then
