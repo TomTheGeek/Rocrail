@@ -704,6 +704,9 @@ bool CarDlg::evaluate(){
 
 
 void CarDlg::onCarImage( wxCommandEvent& event ){
+  if( m_Props == NULL )
+    return;
+
   const char* imagepath = wGui.getimagepath( wxGetApp().getIni() );
   TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "imagepath = [%s]", imagepath );
   wxFileDialog* fdlg = new wxFileDialog(this, _T("Search car image"),
@@ -921,7 +924,7 @@ void CarDlg::initSubType(){
     m_SubType->Append( wxGetApp().getMsg( wCar.passenger_baggage ), (void*)wCar.passenger_baggage );
     m_SubType->Append( wxGetApp().getMsg( wCar.passenger_postoffice ), (void*)wCar.passenger_postoffice );
   }
-  if( StrOp.len( wCar.getsubtype( m_Props ) ) > 0 )
+  if( m_Props != NULL && StrOp.len( wCar.getsubtype( m_Props ) ) > 0 )
     m_SubType->SetStringSelection( wxGetApp().getMsg( wCar.getsubtype( m_Props ) ) );
 }
 
@@ -976,6 +979,9 @@ void CarDlg::onListColClick( wxListEvent& event ) {
 
 
 void CarDlg::evaluateFunctions() {
+  if( m_Props == NULL )
+    return;
+
   wxTextCtrl* l_desc[] = {m_F1Desc,m_F2Desc,m_F3Desc,m_F4Desc};
   wxSpinCtrl* l_timer[] = {m_F1Timer,m_F2Timer,m_F3Timer,m_F4Timer};
   wxSpinCtrl* l_fx[] = {m_F1x,m_F2x,m_F3x,m_F4x};
@@ -1021,6 +1027,9 @@ void CarDlg::evaluateFunctions() {
 
 
 void CarDlg::initFunctions() {
+  if( m_Props == NULL )
+    return;
+
   wxStaticText* l_fn[] = {m_F1,m_F2,m_F3,m_F4};
   wxTextCtrl* l_desc[] = {m_F1Desc,m_F2Desc,m_F3Desc,m_F4Desc};
   wxSpinCtrl* l_timer[] = {m_F1Timer,m_F2Timer,m_F3Timer,m_F4Timer};
@@ -1054,6 +1063,9 @@ void CarDlg::initFunctions() {
 
 void CarDlg::onFG( wxCommandEvent& event )
 {
+  if( m_Props == NULL )
+    return;
+
   evaluateFunctions();
   m_FGroup++;
   if( m_FGroup > 6 )
