@@ -2015,6 +2015,9 @@ static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
           Ausgabe-Fifos voll sind. (nur bei Abfrage oder beim Senden einer MSG_CS_DRIVE )
    */
 
+  if( data->power == ((pdata[0] == BIDIB_CS_STATE_OFF) ? False:True) ) {
+    level = TRCLEVEL_DEBUG;
+  }
   TraceOp.trc( name, level, __LINE__, 9999, "CS state=0x%02X [%s][%08X]", pdata[0], __csstate2str(pdata[0], &level), bidibnode!=NULL?bidibnode->uid:0 );
   data->power = (pdata[0] == BIDIB_CS_STATE_OFF) ? False:True;
   if( bidibnode != NULL ) {
@@ -3226,7 +3229,7 @@ static void __watchdogRunner( void* threadinst ) {
     ThreadOp.sleep(data->watchdogInt * 80);
     if( data->power && data->defaultmain != NULL ) {
       iOBiDiBNode bidibnode = data->defaultmain;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "watchdog: send BIDIB_CS_STATE_GO" );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "watchdog: send BIDIB_CS_STATE_GO" );
       msgdata[0] = BIDIB_CS_STATE_GO;
       data->subWrite((obj)bidib, bidibnode->path, MSG_CS_SET_STATE, msgdata, 1, bidibnode);
     }
