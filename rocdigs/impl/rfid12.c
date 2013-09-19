@@ -323,7 +323,7 @@ static void __RFIDReader( void* threadinst ) {
 
   while( data->run ) {
     int bAvail = SerialOp.available(data->serial);
-    if (bAvail < 0) {
+    if (bAvail < 0 || SerialOp.getRc(data->serial) != 0 ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error; exit reader." );
       break;
     }
