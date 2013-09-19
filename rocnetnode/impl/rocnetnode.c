@@ -1526,6 +1526,7 @@ static Boolean _shutdown( void ) {
   byte msg[32];
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutdown the RocNetNode" );
 
+  MemOp.set( msg, 0, sizeof(msg));
   msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
   rnReceipientAddresToPacket( 0, msg, 0 );
   rnSenderAddresToPacket( data->id, msg, 0 );

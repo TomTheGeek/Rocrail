@@ -693,6 +693,8 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       wRocNetNode.setvendor(rnnode, rn[RN_PACKET_DATA+1]);
       wRocNetNode.setrevision(rnnode, rn[RN_PACKET_DATA+2] *256 + rn[RN_PACKET_DATA+3]);
       wRocNetNode.setnrio(rnnode, rn[RN_PACKET_DATA+4]);
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "registering node %s", key );
       MapOp.put( data->nodemap, key, (obj)rnnode);
       NodeOp.addChild( data->ini, rnnode );
       if( sndr >= data->highestID )
@@ -738,6 +740,9 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     StrOp.fmtb( key, "%d-%d", rn[RN_PACKET_NETID], sndr);
     if( MapOp.haskey( data->nodemap, key ) ) {
       NodeOp.removeChild( data->ini, (iONode)MapOp.remove( data->nodemap, key ) );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node %s is not registered", key );
     }
     /* STOP */
     iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
