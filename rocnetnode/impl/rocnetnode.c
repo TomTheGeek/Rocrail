@@ -592,7 +592,7 @@ static void __macro(iORocNetNode rocnetnode, int macro, Boolean on) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "processing macro line %d port=%d delay=%d value=%d", i,
             data->macro[macro]->line[i].port, data->macro[macro]->line[i].delay, data->macro[macro]->line[i].value);
-        ThreadOp.sleep( data->macro[macro]->line[i].delay);
+        ThreadOp.sleep( data->macro[macro]->line[i].delay * 10);
         if( data->macro[macro]->line[i].type == 0 ) {
           __writePort( rocnetnode, data->macro[macro]->line[i].port, data->macro[macro]->line[i].value, 2);
         }
