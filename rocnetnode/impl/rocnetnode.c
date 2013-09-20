@@ -983,7 +983,7 @@ static void __scanner( void* threadinst ) {
 
       for( i = 0; i < nrios; i++ ) {
         if( data->ports[i] != NULL && (data->ports[i]->type&0x7F) == 0 ) {
-          if( (data->ports[i]->type & 0x80)  && data->ports[i]->state ) {
+          if( (data->ports[i]->type & 0x80)  && data->ports[i]->state && data->ports[i]->delay > 0 ) {
             if( data->ports[i]->offtimer + data->ports[i]->delay <= SystemOp.getTick() ) {
               data->ports[i]->offtimer = SystemOp.getTick();
               data->ports[i]->blink = !data->ports[i]->blink;
