@@ -37,6 +37,7 @@
       <var name="acktimer" vt="int"/>
       <var name="ackretry" vt="int"/>
       <var name="ackpending" vt="Boolean"/>
+      <var name="blink" vt="Boolean"/>
     </struct>
     <struct name="MacroLine" typedef="*iOMacroLine">
       <var name="delay" vt="int"/>
@@ -80,7 +81,7 @@
       <var name="nrio" vt="int"/>
       <var name="readUDP" vt="iOSocket"/>
       <var name="writeUDP" vt="iOSocket"/>
-      <var name="ports[128]" vt="iOPort"/>
+      <var name="ports[129]" vt="iOPort"/>
       <var name="pDI" vt="iIDigInt"/>
       <var name="pRFID" vt="iIDigInt"/>
       <var name="i2cdevice" vt="const char*"/>

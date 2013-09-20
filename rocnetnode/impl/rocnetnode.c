@@ -299,7 +299,7 @@ static void __saveIni(iORocNetNode rocnetnode) {
 
   int i = 0;
   for( i = 0; i < 128; i++ ) {
-    if( data->ports[i] != NULL && data->ports[i]->type == 0 ) {
+    if( data->ports[i] != NULL && (data->ports[i]->type&0x7F) == 0 ) {
       iONode portsetup = __findPort(rocnetnode, i);
       if( portsetup != NULL ) {
         wPortSetup.setstate(portsetup, data->ports[i]->state);
@@ -979,10 +979,18 @@ static void __scanner( void* threadinst ) {
       __writePort(rocnetnode, data->LED2, 1, 3 );
 
     if( data->iorc == 0 ) {
-        __scanI2C(rocnetnode);
+      __scanI2C(rocnetnode);
+
       for( i = 0; i < nrios; i++ ) {
-        if( data->ports[i] != NULL && data->ports[i]->type == 0 ) {
-          if( data->ports[i]->delay > 0 && data->ports[i]->state ) {
+        if( data->ports[i] != NULL && (data->ports[i]->type&0x7F) == 0 ) {
+          if( (data->ports[i]->type & 0x80)  && data->ports[i]->state ) {
+            if( data->ports[i]->offtimer + data->ports[i]->delay <= SystemOp.getTick() ) {
+              data->ports[i]->offtimer = SystemOp.getTick();
+              data->ports[i]->blink = !data->ports[i]->blink;
+              __writePort(rocnetnode, i, data->ports[i]->blink?1:0, data->ports[i]->iotype);
+            }
+          }
+          else if( data->ports[i]->delay > 0 && data->ports[i]->state ) {
             if( data->ports[i]->offtimer + data->ports[i]->delay <= SystemOp.getTick() ) {
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "pulse off port %d", i );
               data->ports[i]->state = False;
@@ -1004,7 +1012,7 @@ static void __scanner( void* threadinst ) {
         }
 
         /* Check for pending Ack */
-        if( data->sack && data->ports[i] != NULL && data->ports[i]->type == 1 && data->ports[i]->ackpending) {
+        if( data->sack && data->ports[i] != NULL && (data->ports[i]->type&0x7F) == 1 && data->ports[i]->ackpending) {
           data->ports[i]->acktimer++;
           if( data->ports[i]->acktimer > 50 ) {
             data->ports[i]->ackretry++;
@@ -1030,11 +1038,11 @@ static void __scanner( void* threadinst ) {
         }
 
         /* reset input values to zero to trigger a start of day */
-        if( data->ports[i] != NULL && data->ports[i]->type == 1 && startofday ) {
+        if( data->ports[i] != NULL && (data->ports[i]->type&0x7F) == 1 && startofday ) {
           inputVal[i] = 0;
         }
 
-        if( data->ports[i] != NULL && data->ports[i]->type == 1 && (!data->sack || !data->ports[i]->ackpending) ) {
+        if( data->ports[i] != NULL && (data->ports[i]->type&0x7F) == 1 && (!data->sack || !data->ports[i]->ackpending) ) {
           int val = __readPort(rocnetnode, i, data->ports[i]->iotype);
           Boolean report = inputVal[i] != val;
 
@@ -1308,10 +1316,10 @@ static void __initI2C(iORocNetNode inst, int iotype) {
         port->iotype = iotype;
         port->type = wPortSetup.gettype(portsetup);
         port->invert = wPortSetup.isinvert(portsetup);
-        if( port->type == 0 )
+        if( (port->type&0x7F) == 0 )
           port->state = wPortSetup.isstate(portsetup);
         data->ports[portnr] = port;
-        if( port->type == 1 && port->delay == 0 )
+        if( (port->type&0x7F) == 1 && port->delay == 0 )
           port->delay = 10;
 
         i2caddr = (portnr-1) / 16;
@@ -1322,8 +1330,8 @@ static void __initI2C(iORocNetNode inst, int iotype) {
             data->iomap[i2caddr] |= (1 << shift );
 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-              "portsetup: port=%d i2caddr=%d shift=%d mask=0x%02X type=%d delay=%d",
-              port->port, i2caddr, shift, data->iomap[i2caddr], port->type, port->delay );
+              "portsetup: port=%d i2caddr=%d shift=%d mask=0x%02X type=%d delay=%d blink=%d",
+              port->port, i2caddr, shift, data->iomap[i2caddr], (port->type&0x7F), port->delay, (port->type&0x80)?1:0 );
         }
       }
       portsetup = wRocNet.nextportsetup(rocnet, portsetup);
@@ -1406,7 +1414,7 @@ static void __initPorts(iORocNetNode inst) {
     iONode portsetup = wRocNet.getportsetup(rocnet);
     while( portsetup != NULL ) {
       int portnr = wPortSetup.getport(portsetup);
-      if( portnr < 128 ) {
+      if( portnr < 129 ) {
         iOPort port = allocMem( sizeof( struct Port) );
         port->port = portnr;
         port->ionr = wPortSetup.getionr(portsetup);
@@ -1414,14 +1422,15 @@ static void __initPorts(iORocNetNode inst) {
         port->iotype = 0;
         port->type = wPortSetup.gettype(portsetup);
         port->invert = wPortSetup.isinvert(portsetup);
-        if( port->type == 0 )
+        if( (port->type&0x7F) == 0 )
           port->state = wPortSetup.isstate(portsetup);
         data->ports[portnr] = port;
         if( wPortSetup.gettype(portsetup) == 1 )
           iomap |= (1 << port->ionr );
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "portsetup: port=%d ionr=%d type=%d delay=%d", port->port, port->ionr, port->type, port->delay );
+            "portsetup: port=%d ionr=%d type=%d delay=%d blink=%d",
+            port->port, port->ionr, (port->type&0x7F), port->delay, (port->type&0x80)?1:0 );
       }
       portsetup = wRocNet.nextportsetup(rocnet, portsetup);
     }
@@ -1435,7 +1444,7 @@ static void __initPorts(iORocNetNode inst) {
     int nrios = (data->iotype == 0) ? 16:128;
 
     for( i = 0; i < nrios; i++ ) {
-      if( data->ports[i] != NULL && data->ports[i]->type == 0 ) {
+      if( data->ports[i] != NULL && (data->ports[i]->type&0x7F) == 0 ) {
         __writePort(inst, i, data->ports[i]->state, data->ports[i]->iotype);
       }
     }
