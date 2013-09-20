@@ -587,9 +587,12 @@ static void __macro(iORocNetNode rocnetnode, int macro, Boolean on) {
   if( data->macro[macro] != NULL ) {
     int i = 0;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing macro %d %s", macro, on?"ON":"OFF");
-    for( i = 0; i < 16; i++ ) {
+    for( i = 0; i < 8; i++ ) {
       if( data->macro[macro]->line[i].port > 0 ) {
         ThreadOp.sleep( data->macro[macro]->line[i].delay);
+        if( data->macro[macro]->line[i].type == 0 ) {
+          __writePort( rocnetnode, data->macro[macro]->line[i].port, data->macro[macro]->line[i].value, 2);
+        }
       }
     }
   }
