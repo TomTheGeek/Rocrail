@@ -589,6 +589,9 @@ static void __macro(iORocNetNode rocnetnode, int macro, Boolean on) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing macro %d %s", macro, on?"ON":"OFF");
     for( i = 0; i < 8; i++ ) {
       if( data->macro[macro]->line[i].port > 0 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "processing macro line %d port=%d delay=%d value=%d", i,
+            data->macro[macro]->line[i].port, data->macro[macro]->line[i].delay, data->macro[macro]->line[i].value);
         ThreadOp.sleep( data->macro[macro]->line[i].delay);
         if( data->macro[macro]->line[i].type == 0 ) {
           __writePort( rocnetnode, data->macro[macro]->line[i].port, data->macro[macro]->line[i].value, 2);
@@ -1624,11 +1627,12 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
           data->macro[nr]->hours    = wMacro.gethours(macro);
           data->macro[nr]->minutes  = wMacro.getminutes(macro);
           data->macro[nr]->wday     = wMacro.getwday(macro);
-          while( line != NULL && lineIdx < 16 ) {
+          while( line != NULL && lineIdx < 8 ) {
             data->macro[nr]->line[lineIdx].delay = wMacroLine.getdelay(line);
             data->macro[nr]->line[lineIdx].port  = wMacroLine.getport(line);
             data->macro[nr]->line[lineIdx].type  = wMacroLine.getporttype(line);
             data->macro[nr]->line[lineIdx].value = wMacroLine.getstatus(line);
+            lineIdx++;
             line = wMacro.nextmacroline(macro, line);
           }
         }
