@@ -45,6 +45,7 @@ class RocnetNodeDlg : public rocnetnodegen
   void initValues();
   void initNodeList();
   void initPorts();
+  void initMacro(iONode node);
   int m_PortGroup;
 
 	protected:

@@ -281,6 +281,7 @@ void RocnetNodeDlg::onIndexSelected( wxListEvent& event ) {
     m_PortGroup = 0;
     initPorts();
     initValues();
+    m_MacroLines->ClearGrid();
     SetTitle(wxT("RocNetNode: ") + wxString::Format(_T("%d"), wRocNetNode.getid(m_Props) ) );
     wxCommandEvent cmd;
     onNodeOptionsRead(cmd);
@@ -358,6 +359,11 @@ void RocnetNodeDlg::event(iONode node) {
       }
 
     }
+    else if( wProgram.getcmd(node) == wProgram.macro_get ) {
+      initMacro(node);
+    }
+
+
   }
 }
 
@@ -456,17 +462,57 @@ void RocnetNodeDlg::onQuery( wxCommandEvent& event ) {
 
 
 void RocnetNodeDlg::onMacroNumber( wxSpinEvent& event ) {
-
+  m_MacroLines->ClearGrid();
 }
 
 
 void RocnetNodeDlg::onMacroGet( wxCommandEvent& event ) {
-
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.macro_get );
+  wProgram.setvalue( cmd, m_MacroNr->GetValue() );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
 }
 
 
 void RocnetNodeDlg::onMacroSet( wxCommandEvent& event ) {
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.macro_set );
+  wProgram.setvalue( cmd, m_MacroNr->GetValue() );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_rocnet);
 
+  char key[32] = {'\0'};
+  for( int i = 0; i < 8; i++ ) {
+    StrOp.fmtb(key, "val%d", 1 + i*4);
+    NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i, 0).mb_str(wxConvUTF8)));
+    StrOp.fmtb(key, "val%d", 2 + i*4);
+    NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i, 1).mb_str(wxConvUTF8)) );
+    StrOp.fmtb(key, "val%d", 3 + i*4);
+    NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i, 2).mb_str(wxConvUTF8)) );
+    StrOp.fmtb(key, "val%d", 4 + i*4);
+    NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i,30).mb_str(wxConvUTF8)) );
+  }
+
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
 }
 
+
+void RocnetNodeDlg::initMacro( iONode node ) {
+  m_MacroNr->SetValue( wProgram.getvalue(node) );
+  char key[32] = {'\0'};
+  for( int i = 0; i < 8; i++ ) {
+    StrOp.fmtb(key, "val%d", 1 + i*4);
+    m_MacroLines->SetCellValue(i, 0, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)));
+    StrOp.fmtb(key, "val%d", 2 + i*4);
+    m_MacroLines->SetCellValue(i, 1, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)));
+    StrOp.fmtb(key, "val%d", 3 + i*4);
+    m_MacroLines->SetCellValue(i, 2, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)));
+    StrOp.fmtb(key, "val%d", 4 + i*4);
+    m_MacroLines->SetCellValue(i, 3, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)));
+  }
+}
 
