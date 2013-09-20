@@ -108,7 +108,7 @@
       <var name="libpath" vt="const char*"/>
       <var name="consoleMode" vt="Boolean"/>
       <var name="pendingHalt" vt="Boolean"/>
-      <var name="macro[128]" vt="iOMacro"/>
+      <var name="macro[129]" vt="iOMacro"/>
     </data>
   </object>
 

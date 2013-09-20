@@ -307,7 +307,7 @@ static void __saveIni(iORocNetNode rocnetnode) {
     }
   }
 
-  for( i = 0; i < 128; i++ ) {
+  for( i = 1; i < 129; i++ ) {
     if( data->macro[i] != NULL ) {
       iONode macro = __findMacro(rocnetnode, i);
       if( macro == NULL ) {

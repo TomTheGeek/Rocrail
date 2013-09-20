@@ -192,6 +192,7 @@ void RocnetNodeDlg::initLabels() {
   //m_NodeBook->SetPageText( 1, wxGetApp().getMsg( "rocnet" ) );
   m_NodeBook->SetPageText( 2, wxGetApp().getMsg( "options" ) );
   m_NodeBook->SetPageText( 3, wxGetApp().getMsg( "portsetup" ) );
+  m_NodeBook->SetPageText( 4, wxGetApp().getMsg( "macro" ) );
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -238,6 +239,15 @@ void RocnetNodeDlg::initLabels() {
   m_labDelay->SetLabel(wxGetApp().getMsg( "delay" ));
   m_PortRead->SetLabel(wxGetApp().getMsg( "get" ));
   m_PortWrite->SetLabel(wxGetApp().getMsg( "set" ));
+
+  // Macro
+  m_labMacroNr->SetLabel(wxGetApp().getMsg( "number" ));
+  m_MacroLines->SetColLabelValue(0, wxGetApp().getMsg( "port" ));
+  m_MacroLines->SetColLabelValue(1, wxGetApp().getMsg( "delay" ));
+  m_MacroLines->SetColLabelValue(2, wxGetApp().getMsg( "type" ));
+  m_MacroLines->SetColLabelValue(3, wxGetApp().getMsg( "value" ));
+  m_MacroGet->SetLabel(wxGetApp().getMsg( "get" ));
+  m_MacroSet->SetLabel(wxGetApp().getMsg( "set" ));
 }
 
 
