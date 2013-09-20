@@ -37,7 +37,21 @@
       <var name="acktimer" vt="int"/>
       <var name="ackretry" vt="int"/>
       <var name="ackpending" vt="Boolean"/>
-      </struct>
+    </struct>
+    <struct name="MacroLine" typedef="*iOMacroLine">
+      <var name="delay" vt="int"/>
+      <var name="port" vt="int"/>
+      <var name="type" vt="int"/>
+      <var name="value" vt="int"/>
+    </struct>
+    <struct name="Macro" typedef="*iOMacro">
+	    <var name="slowdown" vt="int"/>
+	    <var name="repeat" vt="int"/>
+	    <var name="minutes" vt="int"/>
+	    <var name="hours" vt="int"/>
+	    <var name="wday" vt="int"/>
+      <var name="line[16]" vt="struct MacroLine"/>
+    </struct>
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode"/>
     </fun>
@@ -55,6 +69,7 @@
       <var name="rfidini" vt="iONode"/>
       <var name="reader" vt="iOThread"/>
       <var name="scanner" vt="iOThread"/>
+      <var name="macroprocessor" vt="iOThread"/>
       <var name="run" vt="Boolean"/>
       <var name="power" vt="Boolean"/>
       <var name="identack" vt="Boolean"/>
@@ -93,7 +108,8 @@
       <var name="libpath" vt="const char*"/>
       <var name="consoleMode" vt="Boolean"/>
       <var name="pendingHalt" vt="Boolean"/>
-      </data>
+      <var name="macro[128]" vt="iOMacro"/>
+    </data>
   </object>
 
 

@@ -455,3 +455,18 @@ void RocnetNodeDlg::onQuery( wxCommandEvent& event ) {
 }
 
 
+void RocnetNodeDlg::onMacroNumber( wxSpinEvent& event ) {
+
+}
+
+
+void RocnetNodeDlg::onMacroGet( wxCommandEvent& event ) {
+
+}
+
+
+void RocnetNodeDlg::onMacroSet( wxCommandEvent& event ) {
+
+}
+
+

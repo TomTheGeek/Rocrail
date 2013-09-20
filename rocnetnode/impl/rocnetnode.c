@@ -52,6 +52,8 @@
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Macro.h"
+#include "rocrail/wrapper/public/MacroLine.h"
 
 #include "rocnetnode/impl/rocnetnode_impl.h"
 
@@ -86,6 +88,7 @@ static int __readPort(iORocNetNode rocnetnode, int port, int iotype);
 static void __saveIni(iORocNetNode rocnetnode);
 static void __initControl(iORocNetNode inst);
 static void __initIO(iORocNetNode rocnetnode);
+static iONode __findMacro(iORocNetNode inst, int nr);
 
 
 /** ----- OBase ----- */
@@ -304,6 +307,36 @@ static void __saveIni(iORocNetNode rocnetnode) {
     }
   }
 
+  for( i = 0; i < 128; i++ ) {
+    if( data->macro[i] != NULL ) {
+      iONode macro = __findMacro(rocnetnode, i);
+      if( macro == NULL ) {
+        macro = NodeOp.inst(wMacro.name(), data->ini, ELEMENT_NODE);
+        NodeOp.addChild(data->ini, macro);
+      }
+      if( macro != NULL ) {
+        int n = 0;
+        for( n = 0; n < 8; n++ ) {
+          iONode line = wMacro.getmacroline(macro);
+          if( line != NULL )
+            NodeOp.removeChild(macro, line);
+        }
+        for( n = 0; n < 8; n++ ) {
+          if( data->macro[i]->line[n].port > 0 ) {
+            iONode line = NodeOp.inst(wMacroLine.name(), macro, ELEMENT_NODE);
+            NodeOp.addChild(macro, line);
+            wMacroLine.setport(line, data->macro[i]->line[n].port);
+            wMacroLine.setporttype(line, data->macro[i]->line[n].type);
+            wMacroLine.setdelay(line, data->macro[i]->line[n].delay);
+            wMacroLine.setstatus(line, data->macro[i]->line[n].value);
+          }
+        }
+      }
+    }
+  }
+
+
+
 
   if( iniFile != NULL ) {
     char* iniStr = NodeOp.base.toString( data->ini );
@@ -360,6 +393,53 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
 
     break;
+
+  case RN_PROGRAMMING_WMACRO:
+  {
+    int i = 0;
+    int nr = rn[RN_PACKET_DATA+0];
+    iOMacro macro = data->macro[nr];
+    if( macro == NULL ) {
+      data->macro[nr] = allocMem(sizeof(struct Macro));
+      macro = data->macro[nr];
+    }
+
+    for( i = 0; i < 8; i++ ) {
+      macro->line[i].port  = rn[RN_PACKET_DATA+1+i*4];
+      macro->line[i].delay = rn[RN_PACKET_DATA+2+i*4];
+      macro->line[i].type  = rn[RN_PACKET_DATA+3+i*4];
+      macro->line[i].value = rn[RN_PACKET_DATA+4+i*4];
+    }
+    __saveIni(rocnetnode);
+  }
+  break;
+
+  case RN_PROGRAMMING_RMACRO:
+  {
+    int i = 0;
+    int nr = rn[RN_PACKET_DATA+0];
+    iOMacro macro = data->macro[nr];
+    if( macro == NULL ) {
+      data->macro[nr] = allocMem(sizeof(struct Macro));
+      macro = data->macro[nr];
+    }
+
+    msg = allocMem(128);
+    msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+    rnReceipientAddresToPacket( sndr, msg, 0 );
+    rnSenderAddresToPacket( data->id, msg, 0 );
+    msg[RN_PACKET_ACTION] = RN_PROGRAMMING_RMACRO;
+    msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+    msg[RN_PACKET_LEN] = 1 + 8*4;
+    msg[RN_PACKET_DATA+0] = nr;
+    for( i = 0; i < 8; i++ ) {
+      msg[RN_PACKET_DATA+1+i*4] = macro->line[i].port ;
+      msg[RN_PACKET_DATA+2+i*4] = macro->line[i].delay;
+      msg[RN_PACKET_DATA+3+i*4] = macro->line[i].type ;
+      msg[RN_PACKET_DATA+4+i*4] = macro->line[i].value;
+    }
+  }
+  break;
 
   case RN_PROGRAMMING_WPORT:
   {
@@ -500,6 +580,41 @@ static void _sysHalt(void) {
 }
 
 
+static void __macro(iORocNetNode rocnetnode, int macro, Boolean on) {
+  iORocNetNodeData data = Data(rocnetnode);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "macro %d %s", macro, on?"ON":"OFF");
+  if( data->macro[macro] != NULL ) {
+    int i = 0;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing macro %d %s", macro, on?"ON":"OFF");
+    for( i = 0; i < 16; i++ ) {
+      if( data->macro[macro]->line[i].port > 0 ) {
+        ThreadOp.sleep( data->macro[macro]->line[i].delay);
+      }
+    }
+  }
+
+}
+
+static void __macroProcessor( void* threadinst ) {
+  iOThread         th         = (iOThread)threadinst;
+  iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
+  iORocNetNodeData data       = Data(rocnetnode);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "macroProcessor started");
+  do {
+    byte* post = (byte*)ThreadOp.getPost( th );
+
+    if (post != NULL) {
+      __macro(rocnetnode, post[0], post[1]);
+      freeMem( post);
+    }
+    ThreadOp.sleep(10);
+  } while(data->run);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "macroProcessor ended");
+
+}
+
+
 static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int port       = rn[RN_PACKET_DATA + 3];
@@ -594,27 +709,35 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
   switch( action ) {
   case RN_OUTPUT_SWITCH:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "output SWITCH(%s) port=%d %s action for %d%s from %d, %d data bytes",
-        rnActionTypeString(rn), port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? "on":"off",
+        "output SWITCH(%s) port=%d type=%d %s action for %d%s from %d, %d data bytes",
+        rnActionTypeString(rn), port, rn[RN_PACKET_DATA + 1], rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? "on":"off",
         rcpt, isThis?"(this)":"", sndr, rn[RN_PACKET_LEN] );
-    if( port < 128 && data->ports[port] != NULL && rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ) {
-      data->ports[port]->offtimer = SystemOp.getTick();
-      data->ports[port]->state = True;
+    if( rn[RN_PACKET_DATA + 1] == wProgram.porttype_macro ) {
+      byte* post = allocMem(32);
+      post[0] = port;
+      post[1] = ((rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON) ?1:0);
+      ThreadOp.post(data->macroprocessor, (obj)post);
     }
-    if(data->ports[port] != NULL) {
-      __writePort(rocnetnode, port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0, data->ports[port]->iotype);
+    else {
+      if( port < 128 && data->ports[port] != NULL && rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ) {
+        data->ports[port]->offtimer = SystemOp.getTick();
+        data->ports[port]->state = True;
+      }
+      if(data->ports[port] != NULL) {
+        __writePort(rocnetnode, port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0, data->ports[port]->iotype);
 
-      msg = allocMem(32);
-      msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
-      rnReceipientAddresToPacket( 0, msg, 0 );
-      rnSenderAddresToPacket( data->id, msg, 0 );
-      msg[RN_PACKET_ACTION] = RN_OUTPUT_SWITCH;
-      msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-      msg[RN_PACKET_LEN] = 4;
-      msg[RN_PACKET_DATA + 0] = rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0;
-      msg[RN_PACKET_DATA + 1] = 0;
-      msg[RN_PACKET_DATA + 2] = 0;
-      msg[RN_PACKET_DATA + 3] = port;
+        msg = allocMem(32);
+        msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
+        rnReceipientAddresToPacket( 0, msg, 0 );
+        rnSenderAddresToPacket( data->id, msg, 0 );
+        msg[RN_PACKET_ACTION] = RN_OUTPUT_SWITCH;
+        msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+        msg[RN_PACKET_LEN] = 4;
+        msg[RN_PACKET_DATA + 0] = rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0;
+        msg[RN_PACKET_DATA + 1] = 0;
+        msg[RN_PACKET_DATA + 2] = 0;
+        msg[RN_PACKET_DATA + 3] = port;
+      }
     }
   break;
 
@@ -1128,6 +1251,23 @@ static iONode __findPort(iORocNetNode inst, int port) {
   return portsetup;
 }
 
+static iONode __findMacro(iORocNetNode inst, int nr) {
+  iORocNetNodeData data = Data(inst);
+  iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+
+  if( rocnet != NULL ) {
+    iONode macro = wRocNet.getmacro(rocnet);
+    while( macro != NULL ) {
+      if( wMacro.getnr(macro) == nr ) {
+        return macro;
+      }
+      macro = wRocNet.nextmacro(rocnet, macro);
+    }
+  }
+
+  return NULL;
+}
+
 static void __initI2C(iORocNetNode inst, int iotype) {
   iORocNetNodeData data = Data(inst);
   iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
@@ -1466,6 +1606,32 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
     else {
       data->cstype = 0;
     }
+
+    if( NodeOp.findNode(data->ini, wMacro.name()) != NULL ) {
+      iONode macro = NodeOp.findNode(data->ini, wMacro.name());
+      while( macro != NULL ) {
+        int nr = wMacro.getnr(macro);
+        if( nr < 128 && data->macro[nr] == NULL ) {
+          iONode line = wMacro.getmacroline(macro);
+          int lineIdx = 0;
+          data->macro[nr] = allocMem(sizeof(struct Macro));
+          data->macro[nr]->slowdown = wMacro.getslowdown(macro);
+          data->macro[nr]->repeat   = wMacro.getrepeat(macro);
+          data->macro[nr]->hours    = wMacro.gethours(macro);
+          data->macro[nr]->minutes  = wMacro.getminutes(macro);
+          data->macro[nr]->wday     = wMacro.getwday(macro);
+          while( line != NULL && lineIdx < 16 ) {
+            data->macro[nr]->line[lineIdx].delay = wMacroLine.getdelay(line);
+            data->macro[nr]->line[lineIdx].port  = wMacroLine.getport(line);
+            data->macro[nr]->line[lineIdx].type  = wMacroLine.getporttype(line);
+            data->macro[nr]->line[lineIdx].value = wMacroLine.getstatus(line);
+            line = wMacro.nextmacroline(macro, line);
+          }
+        }
+        macro = NodeOp.findNextNode(data->ini, macro);
+      }
+    }
+
   }
   else {
     trc = TraceOp.inst( debug | dump | monitor | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
@@ -1501,6 +1667,8 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   ThreadOp.start( data->reader );
   data->scanner = ThreadOp.inst( "rnscanner", &__scanner, __RocNetNode );
   ThreadOp.start( data->scanner );
+  data->macroprocessor = ThreadOp.inst( "rnmacro", &__macroProcessor, __RocNetNode );
+  ThreadOp.start( data->macroprocessor );
 
   /* Memory watcher */
   while( !bShutdown ) {

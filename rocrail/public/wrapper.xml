@@ -638,6 +638,7 @@
           <var name="invert" vt="bool" defval="false"/>
           <var name="state" vt="bool" defval="false" remark="Saved output state."/>
         </portsetup>
+        <macro cardinality="n"/>
       </rocnet>
 
       <mcs2 remark="CS2 options" wrappername="MCS2">

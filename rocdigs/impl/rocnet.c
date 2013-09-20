@@ -246,7 +246,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
     rn[RN_PACKET_LEN] = 4;
     rn[RN_PACKET_DATA + 0] = cmd;
-    rn[RN_PACKET_DATA + 1] = 0;
+    rn[RN_PACKET_DATA + 1] = wSwitch.getporttype(node);
     rn[RN_PACKET_DATA + 2] = wSwitch.getdelay(node);
     rn[RN_PACKET_DATA + 3] = addr;
     if( data->watchdog != NULL ) {
@@ -288,9 +288,10 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
     rn[RN_PACKET_LEN] = 4;
     rn[RN_PACKET_DATA + 0] = cmd;
-    rn[RN_PACKET_DATA + 1] = 0;
+    rn[RN_PACKET_DATA + 1] = wOutput.getporttype(node);
     rn[RN_PACKET_DATA + 2] = 0;
     rn[RN_PACKET_DATA + 3] = addr;
+
     if( data->watchdog != NULL ) {
       byte*  rnwd  = allocMem(32);
       MemOp.copy(rnwd, rn, 32);
@@ -500,6 +501,39 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         rnReceipientAddresToPacket( 0, rn, data->seven );
         rn[RN_PACKET_ACTION] = RN_STATIONARY_IDENTIFY;
         rn[RN_PACKET_LEN] = 0;
+        ThreadOp.post( data->writer, (obj)rn );
+      }
+      else if( wProgram.getcmd( node ) == wProgram.macro_get ) {
+        int i = 0;
+        int rnid = wProgram.getmodid(node);
+        rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+        rnReceipientAddresToPacket( rnid, rn, data->seven );
+        rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
+        rn[RN_PACKET_ACTION] = RN_PROGRAMMING_RMACRO;
+        rn[RN_PACKET_LEN] = 1;
+        rn[RN_PACKET_DATA+0] = wProgram.getvalue(node);
+        ThreadOp.post( data->writer, (obj)rn );
+      }
+      else if( wProgram.getcmd( node ) == wProgram.macro_set ) {
+        char key[32] = {'\0'};
+        int i = 0;
+        int rnid = wProgram.getmodid(node);
+        rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+        rnReceipientAddresToPacket( rnid, rn, data->seven );
+        rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
+        rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WMACRO;
+        rn[RN_PACKET_LEN] = 1 + 8*4;
+        rn[RN_PACKET_DATA + 0] = wProgram.getvalue(node);
+        for( i = 0; i < 8; i++ ) {
+          StrOp.fmtb(key, "val%d", i*4 + 1);
+          rn[RN_PACKET_DATA + 1 + i*4] = NodeOp.getInt(node, key, 0);
+          StrOp.fmtb(key, "val%d", i*4 + 2);
+          rn[RN_PACKET_DATA + 2 + i*4] = NodeOp.getInt(node, key, 0);
+          StrOp.fmtb(key, "val%d", i*4 + 3);
+          rn[RN_PACKET_DATA + 3 + i*4] = NodeOp.getInt(node, key, 0);
+          StrOp.fmtb(key, "val%d", i*4 + 4);
+          rn[RN_PACKET_DATA + 4 + i*4] = NodeOp.getInt(node, key, 0);
+        }
         ThreadOp.post( data->writer, (obj)rn );
       }
     }
@@ -827,6 +861,37 @@ static void __evaluatePTStationary( iOrocNet rocnet, byte* rn ) {
       idx++;
       StrOp.fmtb( key, "val%d", idx );
       NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 3] );
+      idx++;
+    }
+    wProgram.setiid( node, data->iid );
+    wProgram.setlntype(node, wProgram.lntype_rocnet);
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+  break;
+
+  case RN_PROGRAMMING_RMACRO:
+  case RN_PROGRAMMING_WMACRO:
+  {
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    int nrports = (rn[RN_PACKET_LEN]-1) / 4;
+    int i = 0;
+    int idx = 1;
+    char key[32] = {'\0'};
+    wProgram.setmodid(node, sndr);
+    wProgram.setcmd( node, wProgram.macro_get );
+    wProgram.setvalue( node, rn[RN_PACKET_DATA+0] );
+    for( i = 0; i < nrports; i++ ) {
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 1] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 2] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 3] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 4] );
       idx++;
     }
     wProgram.setiid( node, data->iid );
