@@ -312,6 +312,7 @@ static void __saveIni(iORocNetNode rocnetnode) {
       iONode macro = __findMacro(rocnetnode, i);
       if( macro == NULL ) {
         macro = NodeOp.inst(wMacro.name(), data->ini, ELEMENT_NODE);
+        wMacro.setnr(macro, i);
         NodeOp.addChild(data->ini, macro);
       }
       if( macro != NULL ) {

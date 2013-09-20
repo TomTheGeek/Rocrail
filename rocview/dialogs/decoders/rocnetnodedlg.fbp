@@ -4405,10 +4405,10 @@
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="initial">1</property>
-                                                    <property name="max">128</property>
+                                                    <property name="initial">0</property>
+                                                    <property name="max">127</property>
                                                     <property name="maximum_size"></property>
-                                                    <property name="min">1</property>
+                                                    <property name="min">0</property>
                                                     <property name="minimum_size"></property>
                                                     <property name="name">m_MacroNr</property>
                                                     <property name="permission">protected</property>
@@ -4421,7 +4421,7 @@
                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                     <property name="validator_type">wxDefaultValidator</property>
                                                     <property name="validator_variable"></property>
-                                                    <property name="value">1</property>
+                                                    <property name="value">0</property>
                                                     <property name="window_extra_style"></property>
                                                     <property name="window_name"></property>
                                                     <property name="window_style"></property>
@@ -4469,7 +4469,7 @@
                                             <property name="cell_vert_alignment">wxALIGN_TOP</property>
                                             <property name="col_label_horiz_alignment">wxALIGN_CENTRE</property>
                                             <property name="col_label_size">20</property>
-                                            <property name="col_label_values">&quot;Port&quot; &quot;Type&quot; &quot;Delay&quot; &quot;Value&quot;</property>
+                                            <property name="col_label_values">&quot;Port&quot; &quot;Delay&quot; &quot;Type&quot; &quot;Value&quot;</property>
                                             <property name="col_label_vert_alignment">wxALIGN_CENTRE</property>
                                             <property name="cols">4</property>
                                             <property name="column_sizes"></property>

@@ -493,7 +493,7 @@ void RocnetNodeDlg::onMacroSet( wxCommandEvent& event ) {
     StrOp.fmtb(key, "val%d", 3 + i*4);
     NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i, 2).mb_str(wxConvUTF8)) );
     StrOp.fmtb(key, "val%d", 4 + i*4);
-    NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i,30).mb_str(wxConvUTF8)) );
+    NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i, 3).mb_str(wxConvUTF8)) );
   }
 
   wxGetApp().sendToRocrail( cmd );
