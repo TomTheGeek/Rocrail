@@ -601,12 +601,13 @@ static void __macro(iORocNetNode rocnetnode, int macro, Boolean on) {
 
         if( data->macro[macro]->line[i].blink ) {
           if( data->ports[port] != NULL ) {
-            data->ports[port]->blink = True;
+            data->ports[port]->type |= 0x80;
+            data->ports[port]->offtimer = SystemOp.getTick();
             data->ports[port]->delay = data->macro[macro]->line[i].delay;
           }
         }
         else {
-          data->ports[port]->blink = False;
+          data->ports[port]->type &= 0x7F;
           data->ports[port]->delay = 0;
           ThreadOp.sleep( data->macro[macro]->line[i].delay * 10);
         }
@@ -1671,7 +1672,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   else {
     trc = TraceOp.inst( debug | dump | monitor | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using default setup" );
-    data->id    = 4711;
+    data->id    = 65535;
     data->addr  = "224.0.0.1";
     data->port  = 4321;
   }
