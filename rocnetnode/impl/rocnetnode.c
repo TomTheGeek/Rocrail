@@ -905,7 +905,7 @@ static void __scanI2C(iORocNetNode rocnetnode) {
       rc = raspiReadRegI2C(data->i2cdescriptor, 0x20+i, 0x13, &data->iodata[i*2+1]);
       if( rc < 0 )
         data->i2caddr[i] = False;
-      TraceOp.trc( name, iodata != data->iodata[i*2+1]?TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "i2c %dB [0x%02X]", i, data->iodata[i*2+1] );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "i2c %dB [0x%02X]", i, data->iodata[i*2+1] );
     }
   }
   MutexOp.post( data->i2cmux );
