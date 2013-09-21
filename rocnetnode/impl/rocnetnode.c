@@ -409,7 +409,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       macro->line[i].port  = rn[RN_PACKET_DATA+1+i*4];
       macro->line[i].delay = rn[RN_PACKET_DATA+2+i*4];
       macro->line[i].type  = (rn[RN_PACKET_DATA+3+i*4]&0x7F);
-      macro->line[i].blink = (rn[RN_PACKET_DATA+3+i*4]&0x80?True:False);
+      macro->line[i].blink = ((rn[RN_PACKET_DATA+3+i*4]&0x80)?True:False);
       macro->line[i].value = rn[RN_PACKET_DATA+4+i*4];
     }
     __saveIni(rocnetnode);
@@ -595,8 +595,8 @@ static void __macro(iORocNetNode rocnetnode, int macro, Boolean on) {
         int port = data->macro[macro]->line[i].port;
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "processing macro line %d port=%d delay=%d value=%d", i,
-            data->macro[macro]->line[i].port, data->macro[macro]->line[i].delay, data->macro[macro]->line[i].value);
+            "processing macro line %d port=%d delay=%d value=%d blink=%d", i,
+            data->macro[macro]->line[i].port, data->macro[macro]->line[i].delay, data->macro[macro]->line[i].value, data->macro[macro]->line[i].blink);
 
         if( data->macro[macro]->line[i].blink ) {
           if( data->ports[port] != NULL ) {
