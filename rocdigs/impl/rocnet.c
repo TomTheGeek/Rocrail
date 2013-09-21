@@ -240,6 +240,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       cmd = 1;
       addr = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? addr+1 : addr;
     }
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch bus=%d addr=%d cmd=%d", bus, addr, cmd );
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
     rnReceipientAddresToPacket( bus, rn, data->seven );
@@ -260,8 +261,27 @@ static iONode __translate( iOrocNet inst, iONode node ) {
 
   /* Signal command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-        "Signal commands are no longer supported at this level." );
+    int bus    = wSignal.getbus( node );
+    int addr   = wSignal.getaddr(node);
+    int aspect = wSignal.getaspect(node);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "signal bus=%d addr=%d aspect=%d", bus, addr, aspect );
+
+    rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
+    rnReceipientAddresToPacket( bus, rn, data->seven );
+    rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
+    rn[RN_PACKET_LEN] = 4;
+    rn[RN_PACKET_DATA + 0] = RN_OUTPUT_ON;
+    rn[RN_PACKET_DATA + 1] = wProgram.porttype_macro;
+    rn[RN_PACKET_DATA + 2] = 0;
+    rn[RN_PACKET_DATA + 3] = addr + aspect;
+
+    if( data->watchdog != NULL ) {
+      byte*  rnwd  = allocMem(32);
+      MemOp.copy(rnwd, rn, 32);
+      ThreadOp.post( data->watchdog, (obj)rnwd );
+    }
+    ThreadOp.post( data->writer, (obj)rn );
+    return rsp;
   }
 
   /* Sensor command. */
@@ -269,7 +289,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     int addr = wFeedback.getaddr( node );
     Boolean state = wFeedback.isstate( node );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
     rsp = (iONode)NodeOp.base.clone( node );
   }
 
@@ -282,6 +302,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     if( StrOp.equals( wOutput.getcmd( node ), wOutput.off ) ) {
       cmd = RN_OUTPUT_OFF;
     }
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output bus=%d addr=%d cmd=%d", bus, addr, cmd );
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
     rnReceipientAddresToPacket( bus, rn, data->seven );
