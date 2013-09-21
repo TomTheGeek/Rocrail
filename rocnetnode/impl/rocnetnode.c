@@ -599,7 +599,7 @@ static void __macro(iORocNetNode rocnetnode, int macro, Boolean on) {
             "processing macro line %d port=%d delay=%d value=%d blink=%d", i,
             data->macro[macro]->line[i].port, data->macro[macro]->line[i].delay, data->macro[macro]->line[i].value, data->macro[macro]->line[i].blink);
 
-        if( data->macro[macro]->line[i].blink ) {
+        if( on && data->macro[macro]->line[i].blink ) {
           if( data->ports[port] != NULL ) {
             data->ports[port]->type |= 0x80;
             data->ports[port]->offtimer = SystemOp.getTick();
@@ -746,9 +746,15 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
       ThreadOp.post(data->macroprocessor, (obj)post);
     }
     else {
-      if( port < 128 && data->ports[port] != NULL && rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ) {
-        data->ports[port]->offtimer = SystemOp.getTick();
-        data->ports[port]->state = True;
+      if( port < 129 && data->ports[port] != NULL ) {
+        if( rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ) {
+          data->ports[port]->offtimer = SystemOp.getTick();
+          data->ports[port]->state = True;
+        }
+        else {
+          data->ports[port]->offtimer = 0;
+          data->ports[port]->state = False;
+        }
       }
       if(data->ports[port] != NULL) {
         __writePort(rocnetnode, port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0, data->ports[port]->iotype);
