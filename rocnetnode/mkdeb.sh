@@ -54,7 +54,7 @@ cp ../package/update.sh debian/opt/rocnet
 cp ../package/rocnetnode.sh debian/opt/rocnet
 cp ../package/rocnetnoded debian/etc/init.d
 chmod +x debian/opt/rocnet/*.sh
-cp ../package/rocnetnode.ini debian/opt/rocnet
+#cp ../package/rocnetnode.ini debian/opt/rocnet
 cp ../package/postinst debian/DEBIAN/postinst
 
 fakeroot dpkg-deb --build debian

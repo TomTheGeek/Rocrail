@@ -142,7 +142,7 @@ install:
 	-$(COPY) -p $(OUTDIR)$(FS)rfid12$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p package$(FS)rocnetnode.sh $(DESTDIR)
 	-cp -p package$(FS)update.sh $(DESTDIR)
-	-cp -p package$(FS)rocnetnode.ini $(DESTDIR)
+#	-cp -p package$(FS)rocnetnode.ini $(DESTDIR)
 
 version:
 	echo $(QUOT)const int bzr = $(QUOT) > ..$(FS)common$(FS)version.h
