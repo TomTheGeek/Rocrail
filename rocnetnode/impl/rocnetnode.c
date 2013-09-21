@@ -503,6 +503,10 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     }
     break;
 
+  case RN_PROGRAMMING_UPDATE:
+    RocNetNodeOp.sysUpdate( rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1] );
+    break;
+
   case RN_PROGRAMMING_RDOPT:
     msg = allocMem(128);
     msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
@@ -582,6 +586,15 @@ static void _sysHalt(void) {
   iORocNetNodeData data = Data(__RocNetNode);
   TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "shutdown the system...");
   SystemOp.system("halt -p", True, True);
+}
+
+
+static void _sysUpdate(int revision) {
+  iORocNetNodeData data = Data(__RocNetNode);
+  char cmd[256] = {'\0'};
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "update the software to revision %d...", revision);
+  StrOp.fmtb(cmd, "nohup /opt/rocnet/update.sh %d &", revision );
+  SystemOp.system(cmd, True, True);
 }
 
 

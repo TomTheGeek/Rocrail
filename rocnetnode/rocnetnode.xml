@@ -65,6 +65,9 @@
     <fun name="shutdown" vt="Boolean"/>
     <fun name="stop" vt="void"/>
     <fun name="sysHalt" vt="void"/>
+    <fun name="sysUpdate" vt="void">
+      <param name="revision" vt="int"/>
+    </fun>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="digintini" vt="iONode"/>

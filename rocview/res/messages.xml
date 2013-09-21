@@ -24657,4 +24657,7 @@
     <de txt="Alle RocNet-Knoten herunterfahren"/>
     <pt_BR txt="Desligar todos os nodes do RocNet?"/>
   </Msg>
+  <Msg id="updatenode">
+    <en txt="Update RocNet node %d to revision %d?"/>
+  </Msg>
 </Messages>

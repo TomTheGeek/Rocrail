@@ -922,6 +922,7 @@
     <const name="getoptions" vt="int" val="47"/>
     <const name="setoptions" vt="int" val="48"/>
     <const name="show" vt="int" val="49"/>
+    <const name="update" vt="int" val="50"/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>

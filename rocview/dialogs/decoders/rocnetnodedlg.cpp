@@ -583,3 +583,25 @@ void RocnetNodeDlg::onMacroLineChange( wxGridEvent& event ) {
   }
 }
 
+void RocnetNodeDlg::onUpdate( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  int revision = atoi(m_UpdateRevision->GetValue().mb_str(wxConvUTF8));
+  int action = wxMessageDialog( this, wxString::Format(wxGetApp().getMsg( "updatenode" ),
+      wRocNetNode.getid(m_Props), revision ),
+      _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION | wxNO_DEFAULT ).ShowModal();
+  if( action == wxID_NO ) {
+    return;
+  }
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setcmd( cmd, wProgram.update );
+  wProgram.setvalue( cmd, revision );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+

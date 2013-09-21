@@ -106,6 +106,7 @@
 #define RN_PROGRAMMING_WROPT  8
 #define RN_PROGRAMMING_RMACRO  9
 #define RN_PROGRAMMING_WMACRO  10
+#define RN_PROGRAMMING_UPDATE  11
 
 
 /* extended packet offsets */

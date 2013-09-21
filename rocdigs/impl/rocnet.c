@@ -517,6 +517,17 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         rn[RN_PACKET_LEN] = 0;
         ThreadOp.post( data->writer, (obj)rn );
       }
+      else if( wProgram.getcmd( node ) == wProgram.update ) {
+        int rnid = wProgram.getmodid(node);
+        rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+        rnReceipientAddresToPacket( rnid, rn, data->seven );
+        rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
+        rn[RN_PACKET_ACTION] = RN_PROGRAMMING_UPDATE;
+        rn[RN_PACKET_LEN] = 2;
+        rn[RN_PACKET_DATA+0] = wProgram.getvalue(node)/256;
+        rn[RN_PACKET_DATA+1] = wProgram.getvalue(node)%256;
+        ThreadOp.post( data->writer, (obj)rn );
+      }
       else if( wProgram.getcmd( node ) == wProgram.query ) {
         rn[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
         rnReceipientAddresToPacket( 0, rn, data->seven );
