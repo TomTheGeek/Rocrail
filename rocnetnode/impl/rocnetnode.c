@@ -1496,15 +1496,19 @@ static void __initIO(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
 
   data->iorc = raspiSetupIO(-1);
-
+/*
+ * GPIO support disabled.
   if( data->iotype == 0 ) {
     __initPorts(inst);
   }
-  else if(data->iotype == 1) {
+*/
+  if(data->iotype == 1) {
+    /* i2c-0 Rev. 1*/
     data->i2cdevice = "/dev/i2c-0";
     __initI2C(inst, 1);
   }
   else {
+    /* default i2c-1 Rev.2 */
     data->i2cdevice = "/dev/i2c-1";
     __initI2C(inst, 2);
   }
