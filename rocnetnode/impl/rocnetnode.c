@@ -330,6 +330,7 @@ static void __saveIni(iORocNetNode rocnetnode) {
             wMacroLine.setporttype(line, data->macro[i]->line[n].type);
             wMacroLine.setdelay(line, data->macro[i]->line[n].delay);
             wMacroLine.setstatus(line, data->macro[i]->line[n].value);
+            wMacroLine.setblink(line, data->macro[i]->line[n].blink);
           }
         }
       }
@@ -1643,7 +1644,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       iONode macro = NodeOp.findNode(data->ini, wMacro.name());
       while( macro != NULL ) {
         int nr = wMacro.getnr(macro);
-        if( nr < 128 && data->macro[nr] == NULL ) {
+        if( nr < 129 && data->macro[nr] == NULL ) {
           iONode line = wMacro.getmacroline(macro);
           int lineIdx = 0;
           data->macro[nr] = allocMem(sizeof(struct Macro));
@@ -1657,6 +1658,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
             data->macro[nr]->line[lineIdx].port  = wMacroLine.getport(line);
             data->macro[nr]->line[lineIdx].type  = wMacroLine.getporttype(line);
             data->macro[nr]->line[lineIdx].value = wMacroLine.getstatus(line);
+            data->macro[nr]->line[lineIdx].blink = wMacroLine.isblink(line);
             lineIdx++;
             line = wMacro.nextmacroline(macro, line);
           }

@@ -143,6 +143,7 @@
       <var name="porttype" vt="int" defval="0"/>
       <var name="port" vt="int" defval="0"/>
       <var name="status" vt="int" defval="0"/>
+      <var name="blink" vt="bool" defval="false"/>
     </macroline>
   </macro>
 
