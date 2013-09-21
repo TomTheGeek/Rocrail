@@ -231,18 +231,21 @@ void RocnetNodeDlg::initLabels() {
   m_IOType->SetLabel(wxGetApp().getMsg( "type" ));
   m_IOType->SetString( 0, wxGetApp().getMsg( "none" ) );
   m_DCCType->SetLabel(wxGetApp().getMsg( "controller" ));
+  m_DCCType->SetString( 0, wxGetApp().getMsg( "none" ) );
   m_DCCDevice->SetLabel(wxGetApp().getMsg( "device" ));
   m_NodeOptionsRead->SetLabel(wxGetApp().getMsg( "get" ));
   m_NodeOptionsWrite->SetLabel(wxGetApp().getMsg( "set" ));
 
   // Port setup
   m_labPort->SetLabel(wxGetApp().getMsg( "port" ));
-  m_labIO->SetLabel(wxGetApp().getMsg( "number" ));
+  m_labIO->SetLabel(wxT( "GPIO" ));
   m_labType->SetLabel(wxGetApp().getMsg( "type" ));
   m_labDelay->SetLabel(wxGetApp().getMsg( "delay" ));
   m_labBlink->SetLabel(wxGetApp().getMsg( "blink" ));
   m_PortRead->SetLabel(wxGetApp().getMsg( "get" ));
   m_PortWrite->SetLabel(wxGetApp().getMsg( "set" ));
+  wxCommandEvent cmdevt;
+  onIOType(cmdevt);
 
   // Macro
   m_labMacroNr->SetLabel(wxGetApp().getMsg( "number" ));
@@ -352,6 +355,8 @@ void RocnetNodeDlg::event(iONode node) {
       m_RFID->SetValue(wProgram.getval2(node)&0x02?true:false);
       m_DCCType->SetSelection( wProgram.getval3(node) );
       m_DCCDevice->SetSelection( wProgram.getval4(node) );
+      wxCommandEvent cmdevt;
+      onIOType(cmdevt);
     }
     else if( wProgram.getcmd(node) == wProgram.identify ) {
       if( NodeOp.getChildCnt(node) > 0 ) {
@@ -531,6 +536,34 @@ void RocnetNodeDlg::initMacro( iONode node ) {
     m_MacroLines->SetCellValue(i, 2, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)));
     StrOp.fmtb(key, "val%d", 4 + i*4);
     m_MacroLines->SetCellValue(i, 3, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)));
+  }
+}
+
+void RocnetNodeDlg::onIOType( wxCommandEvent& event ) {
+  bool gpio = (m_IOType->GetSelection() == 0);
+  m_labIO->Enable(gpio);
+  m_IO1->Enable(gpio);
+  m_IO2->Enable(gpio);
+  m_IO3->Enable(gpio);
+  m_IO4->Enable(gpio);
+  m_IO5->Enable(gpio);
+  m_IO6->Enable(gpio);
+  m_IO7->Enable(gpio);
+  m_IO8->Enable(gpio);
+}
+
+void RocnetNodeDlg::onMacroLineChange( wxGridEvent& event ) {
+  int row = event.GetRow();
+  int col = event.GetCol();
+  int val = atoi(m_MacroLines->GetCellValue(row, col).mb_str(wxConvUTF8));
+  m_MacroLines->SetCellBackgroundColour(row, col, wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+  if( col == 0 && (val < 0 || val > 128) ) {
+    m_MacroLines->SetCellValue(row, col, wxT("0") );
+    m_MacroLines->SetCellBackgroundColour(row, col, wxColour(255,200,200));
+  }
+  else if( val < 0 || val > 255 ) {
+    m_MacroLines->SetCellValue(row, col, wxT("0") );
+    m_MacroLines->SetCellBackgroundColour(row, col, wxColour(255,200,200));
   }
 }
 
