@@ -612,8 +612,9 @@ static void __macro(iORocNetNode rocnetnode, int macro, Boolean on) {
           ThreadOp.sleep( data->macro[macro]->line[i].delay * 10);
         }
 
-        if( data->macro[macro]->line[i].type == 0 ) {
+        if( (data->macro[macro]->line[i].type&0x7F) == 0 ) {
           __writePort( rocnetnode, port, data->macro[macro]->line[i].value, 2);
+          data->ports[port]->state = (data->macro[macro]->line[i].value > 0 ? True:False);
         }
       }
     }
