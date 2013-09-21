@@ -229,7 +229,6 @@ void RocnetNodeDlg::initLabels() {
   m_RocNetOptionBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "options" ));
   m_SecAck->SetLabel(wxGetApp().getMsg( "secureack" ));
   m_IOType->SetLabel(wxGetApp().getMsg( "type" ));
-  m_IOType->SetString( 0, wxGetApp().getMsg( "none" ) );
   m_DCCType->SetLabel(wxGetApp().getMsg( "controller" ));
   m_DCCType->SetString( 0, wxGetApp().getMsg( "none" ) );
   m_DCCDevice->SetLabel(wxGetApp().getMsg( "device" ));
@@ -486,6 +485,12 @@ void RocnetNodeDlg::onQuery( wxCommandEvent& event ) {
 
 void RocnetNodeDlg::onMacroNumber( wxSpinEvent& event ) {
   m_MacroLines->ClearGrid();
+  for( int i = 0; i < 8; i++ ) {
+    m_MacroLines->SetCellBackgroundColour(i, 0, wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+    m_MacroLines->SetCellBackgroundColour(i, 1, wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+    m_MacroLines->SetCellBackgroundColour(i, 2, wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+    m_MacroLines->SetCellBackgroundColour(i, 3, wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+  }
 }
 
 
@@ -528,6 +533,11 @@ void RocnetNodeDlg::initMacro( iONode node ) {
   m_MacroNr->SetValue( wProgram.getvalue(node) );
   char key[32] = {'\0'};
   for( int i = 0; i < 8; i++ ) {
+    m_MacroLines->SetCellBackgroundColour(i, 0, wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+    m_MacroLines->SetCellBackgroundColour(i, 1, wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+    m_MacroLines->SetCellBackgroundColour(i, 2, wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+    m_MacroLines->SetCellBackgroundColour(i, 3, wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+
     StrOp.fmtb(key, "val%d", 1 + i*4);
     m_MacroLines->SetCellValue(i, 0, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)));
     StrOp.fmtb(key, "val%d", 2 + i*4);
