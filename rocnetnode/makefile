@@ -141,6 +141,7 @@ install:
 	-$(COPY) -p $(OUTDIR)$(FS)sprog$(SHAREDSUFFIX) $(DESTDIR)
 	-$(COPY) -p $(OUTDIR)$(FS)rfid12$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p package$(FS)rocnetnode.sh $(DESTDIR)
+	-cp -p package$(FS)update.sh $(DESTDIR)
 	-cp -p package$(FS)rocnetnode.ini $(DESTDIR)
 
 version:
