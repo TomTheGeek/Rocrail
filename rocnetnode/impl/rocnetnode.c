@@ -1285,16 +1285,13 @@ static iONode __findPort(iORocNetNode inst, int port) {
 
 static iONode __findMacro(iORocNetNode inst, int nr) {
   iORocNetNodeData data = Data(inst);
-  iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+  iONode macro = wRocNet.getmacro(data->ini);
 
-  if( rocnet != NULL ) {
-    iONode macro = wRocNet.getmacro(rocnet);
-    while( macro != NULL ) {
-      if( wMacro.getnr(macro) == nr ) {
-        return macro;
-      }
-      macro = wRocNet.nextmacro(rocnet, macro);
+  while( macro != NULL ) {
+    if( wMacro.getnr(macro) == nr ) {
+      return macro;
     }
+    macro = wRocNet.nextmacro(data->ini, macro);
   }
 
   return NULL;
