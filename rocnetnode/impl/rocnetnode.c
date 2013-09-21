@@ -408,7 +408,8 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     for( i = 0; i < 8; i++ ) {
       macro->line[i].port  = rn[RN_PACKET_DATA+1+i*4];
       macro->line[i].delay = rn[RN_PACKET_DATA+2+i*4];
-      macro->line[i].type  = rn[RN_PACKET_DATA+3+i*4];
+      macro->line[i].type  = (rn[RN_PACKET_DATA+3+i*4]&0x7F);
+      macro->line[i].blink = (rn[RN_PACKET_DATA+3+i*4]&0x80?True:False);
       macro->line[i].value = rn[RN_PACKET_DATA+4+i*4];
     }
     __saveIni(rocnetnode);
@@ -436,7 +437,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     for( i = 0; i < 8; i++ ) {
       msg[RN_PACKET_DATA+1+i*4] = macro->line[i].port ;
       msg[RN_PACKET_DATA+2+i*4] = macro->line[i].delay;
-      msg[RN_PACKET_DATA+3+i*4] = macro->line[i].type ;
+      msg[RN_PACKET_DATA+3+i*4] = macro->line[i].type + (macro->line[i].blink?0x80:0x00);
       msg[RN_PACKET_DATA+4+i*4] = macro->line[i].value;
     }
   }
@@ -586,17 +587,31 @@ static void _sysHalt(void) {
 static void __macro(iORocNetNode rocnetnode, int macro, Boolean on) {
   iORocNetNodeData data = Data(rocnetnode);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "macro %d %s", macro, on?"ON":"OFF");
-  if( data->macro[macro] != NULL ) {
+  if( on && data->macro[macro] != NULL ) {
     int i = 0;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing macro %d %s", macro, on?"ON":"OFF");
     for( i = 0; i < 8; i++ ) {
       if( data->macro[macro]->line[i].port > 0 ) {
+        int port = data->macro[macro]->line[i].port;
+
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "processing macro line %d port=%d delay=%d value=%d", i,
             data->macro[macro]->line[i].port, data->macro[macro]->line[i].delay, data->macro[macro]->line[i].value);
-        ThreadOp.sleep( data->macro[macro]->line[i].delay * 10);
+
+        if( data->macro[macro]->line[i].blink ) {
+          if( data->ports[port] != NULL ) {
+            data->ports[port]->blink = True;
+            data->ports[port]->delay = data->macro[macro]->line[i].delay;
+          }
+        }
+        else {
+          data->ports[port]->blink = False;
+          data->ports[port]->delay = 0;
+          ThreadOp.sleep( data->macro[macro]->line[i].delay * 10);
+        }
+
         if( data->macro[macro]->line[i].type == 0 ) {
-          __writePort( rocnetnode, data->macro[macro]->line[i].port, data->macro[macro]->line[i].value, 2);
+          __writePort( rocnetnode, port, data->macro[macro]->line[i].value, 2);
         }
       }
     }

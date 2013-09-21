@@ -44,7 +44,8 @@
       <var name="port" vt="int"/>
       <var name="type" vt="int"/>
       <var name="value" vt="int"/>
-    </struct>
+      <var name="blink" vt="Boolean"/>
+      </struct>
     <struct name="Macro" typedef="*iOMacro">
 	    <var name="slowdown" vt="int"/>
 	    <var name="repeat" vt="int"/>

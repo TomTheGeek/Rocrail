@@ -252,6 +252,10 @@ void RocnetNodeDlg::initLabels() {
   m_MacroLines->SetColLabelValue(1, wxGetApp().getMsg( "delay" ));
   m_MacroLines->SetColLabelValue(2, wxGetApp().getMsg( "type" ));
   m_MacroLines->SetColLabelValue(3, wxGetApp().getMsg( "value" ));
+  m_MacroLines->SetColLabelValue(4, wxGetApp().getMsg( "blink" ));
+  for( int i = 0; i < 8; i++ ) {
+    m_MacroLines->SetCellRenderer(i, 4, new wxGridCellBoolRenderer);
+  }
   m_MacroGet->SetLabel(wxGetApp().getMsg( "get" ));
   m_MacroSet->SetLabel(wxGetApp().getMsg( "set" ));
 }
@@ -519,7 +523,8 @@ void RocnetNodeDlg::onMacroSet( wxCommandEvent& event ) {
     StrOp.fmtb(key, "val%d", 2 + i*4);
     NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i, 1).mb_str(wxConvUTF8)) );
     StrOp.fmtb(key, "val%d", 3 + i*4);
-    NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i, 2).mb_str(wxConvUTF8)) );
+    NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i, 2).mb_str(wxConvUTF8)) +
+        (atoi(m_MacroLines->GetCellValue(i, 4).mb_str(wxConvUTF8))?0x80:0x00) );
     StrOp.fmtb(key, "val%d", 4 + i*4);
     NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i, 3).mb_str(wxConvUTF8)) );
   }
@@ -543,7 +548,8 @@ void RocnetNodeDlg::initMacro( iONode node ) {
     StrOp.fmtb(key, "val%d", 2 + i*4);
     m_MacroLines->SetCellValue(i, 1, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)));
     StrOp.fmtb(key, "val%d", 3 + i*4);
-    m_MacroLines->SetCellValue(i, 2, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)));
+    m_MacroLines->SetCellValue(i, 2, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)&0x7F));
+    m_MacroLines->SetCellValue(i, 4, wxString::Format(wxT("%d"), (NodeOp.getInt(node, key, 0)&0x80?1:0)));
     StrOp.fmtb(key, "val%d", 4 + i*4);
     m_MacroLines->SetCellValue(i, 3, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)));
   }

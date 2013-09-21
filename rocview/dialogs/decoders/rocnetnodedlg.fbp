@@ -4981,9 +4981,9 @@
                                             <property name="cell_vert_alignment">wxALIGN_TOP</property>
                                             <property name="col_label_horiz_alignment">wxALIGN_CENTRE</property>
                                             <property name="col_label_size">20</property>
-                                            <property name="col_label_values">&quot;Port&quot; &quot;Delay&quot; &quot;Type&quot; &quot;Value&quot;</property>
+                                            <property name="col_label_values">&quot;Port&quot; &quot;Delay&quot; &quot;Type&quot; &quot;Value&quot; &quot;Blink&quot;</property>
                                             <property name="col_label_vert_alignment">wxALIGN_CENTRE</property>
-                                            <property name="cols">4</property>
+                                            <property name="cols">5</property>
                                             <property name="column_sizes"></property>
                                             <property name="context_help"></property>
                                             <property name="context_menu">1</property>
