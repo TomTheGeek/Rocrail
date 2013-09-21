@@ -1406,36 +1406,40 @@ static void __initI2C(iORocNetNode inst, int iotype) {
 static void __initControl(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
   int iomap = 0;
+  iOPort port = allocMem( sizeof( struct Port) );
   iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
 
+  data->LED1 = 23;
+  data->LED2 = 24;
+  data->PB1  = 25;
+
   if( rocnet != NULL ) {
-    iOPort port = allocMem( sizeof( struct Port) );
     iONode options = wRocNet.getrocnetnodeoptions(rocnet);
     data->LED1 = wRocNetNodeOptions.getled1(options);
     data->LED2 = wRocNetNodeOptions.getled2(options);
     data->PB1  = wRocNetNodeOptions.getbutton1(options);
-    ThreadOp.sleep(50);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init LED1 on port %d", data->LED1 );
-    raspiGPIOAlt(data->LED1, 0);
-    raspiConfigPort(data->LED1, 0);
-    ThreadOp.sleep(50);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init LED2 on port %d", data->LED2 );
-    raspiGPIOAlt(data->LED2, 0);
-    raspiConfigPort(data->LED2, 0);
-    ThreadOp.sleep(50);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init PB1 on port %d", data->PB1 );
-    raspiGPIOAlt(data->PB1, 0);
-    raspiConfigPort(data->PB1, 1);
-
-    ThreadOp.sleep(50);
-    port->port = 0;
-    port->ionr = data->PB1;
-    port->delay = 50;
-    port->iotype = 0;
-    port->type = 1;
-    port->state = False;
-    data->ports[0] = port;
   }
+  ThreadOp.sleep(50);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init LED1 on port %d", data->LED1 );
+  raspiGPIOAlt(data->LED1, 0);
+  raspiConfigPort(data->LED1, 0);
+  ThreadOp.sleep(50);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init LED2 on port %d", data->LED2 );
+  raspiGPIOAlt(data->LED2, 0);
+  raspiConfigPort(data->LED2, 0);
+  ThreadOp.sleep(50);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init PB1 on port %d", data->PB1 );
+  raspiGPIOAlt(data->PB1, 0);
+  raspiConfigPort(data->PB1, 1);
+
+  ThreadOp.sleep(50);
+  port->port = 0;
+  port->ionr = data->PB1;
+  port->delay = 50;
+  port->iotype = 0;
+  port->type = 1;
+  port->state = False;
+  data->ports[0] = port;
 }
 
 
