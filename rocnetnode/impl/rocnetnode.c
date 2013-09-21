@@ -1605,7 +1605,11 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
     }
   }
 
-
+  /* set defaults */
+  data->id     = 65535;
+  data->addr   = "224.0.0.1";
+  data->port   = 4321;
+  data->iotype = 2;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Up and running the RocNetNode" );
   if( NodeOp.findNode(data->ini, wRocNet.name()) != NULL ) {
