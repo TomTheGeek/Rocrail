@@ -161,6 +161,8 @@ ScheduleDialog::ScheduleDialog( wxWindow* parent, iONode p_Props, bool save, con
   GetSizer()->SetSizeHints(this);
   initIndex();
 
+  m_Apply->Enable(m_bSave);
+
   if( m_Props != NULL ) {
     initSchedule();
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_SCHEDULE_DESTINATIONS );
