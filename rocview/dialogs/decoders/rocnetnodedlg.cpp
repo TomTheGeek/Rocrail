@@ -92,14 +92,12 @@ void RocnetNodeDlg::onRocnetWrite( wxCommandEvent& event ) {
 
 
 void RocnetNodeDlg::initPorts() {
-  wxSpinCtrl* l_IO[] = { NULL, m_IO1, m_IO2, m_IO3, m_IO4, m_IO5, m_IO6, m_IO7, m_IO8};
   wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
   wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
   wxStaticText* l_labPort[] = { NULL, m_labPort1, m_labPort2, m_labPort3, m_labPort4, m_labPort5, m_labPort6, m_labPort7, m_labPort8 };
   wxCheckBox* l_Blink[] = {NULL, m_Blink1, m_Blink2, m_Blink3, m_Blink4, m_Blink5, m_Blink6, m_Blink7, m_Blink8};
   for( int i = 1; i < 9; i++ ) {
     l_labPort[i]->SetLabel( wxString::Format(wxT("%d"),i + m_PortGroup*8) );
-    l_IO[i]->SetValue(0);
     l_Type[i]->SetSelection(0);
     l_Delay[i]->SetValue(0);
     l_Blink[i]->SetValue(false);
@@ -148,7 +146,6 @@ void RocnetNodeDlg::onPortWrite( wxCommandEvent& event ) {
   wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
   wProgram.setcmd( cmd, wProgram.nvset );
 
-  wxSpinCtrl* l_IO[] = { NULL, m_IO1, m_IO2, m_IO3, m_IO4, m_IO5, m_IO6, m_IO7, m_IO8};
   wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
   wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
   wxCheckBox* l_Blink[] = {NULL, m_Blink1, m_Blink2, m_Blink3, m_Blink4, m_Blink5, m_Blink6, m_Blink7, m_Blink8};
@@ -157,8 +154,8 @@ void RocnetNodeDlg::onPortWrite( wxCommandEvent& event ) {
   for( int i = 0; i < 8; i++ ) {
     StrOp.fmtb(key, "val%d", 1 + i*4);
     NodeOp.setInt( cmd, key, m_PortGroup*8 + 1 + i);
-    StrOp.fmtb(key, "val%d", 2 + i*4);
-    NodeOp.setInt( cmd, key, l_IO[1 + i]->GetValue() );
+    //StrOp.fmtb(key, "val%d", 2 + i*4);
+    // reserved
     StrOp.fmtb(key, "val%d", 3 + i*4);
     NodeOp.setInt( cmd, key, l_Type[1 + i]->GetSelection() + (l_Blink[1 + i]->IsChecked()?0x80:0x00) );
     StrOp.fmtb(key, "val%d", 4 + i*4);
@@ -228,8 +225,6 @@ void RocnetNodeDlg::initLabels() {
   // Options
   m_RocNetOptionBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "options" ));
   m_SecAck->SetLabel(wxGetApp().getMsg( "secureack" ));
-  m_IOType->SetLabel(wxGetApp().getMsg( "type" ));
-  m_IOType->SetString( 0, wxGetApp().getMsg( "default" ) );
   m_DCCType->SetLabel(wxGetApp().getMsg( "controller" ));
   m_DCCType->SetString( 0, wxGetApp().getMsg( "none" ) );
   m_DCCDevice->SetLabel(wxGetApp().getMsg( "device" ));
@@ -238,7 +233,6 @@ void RocnetNodeDlg::initLabels() {
 
   // Port setup
   m_labPort->SetLabel(wxGetApp().getMsg( "port" ));
-  m_labIO->SetLabel(wxT( "GPIO" ));
   m_labType->SetLabel(wxGetApp().getMsg( "type" ));
   m_labDelay->SetLabel(wxGetApp().getMsg( "delay" ));
   m_labBlink->SetLabel(wxGetApp().getMsg( "blink" ));
@@ -324,7 +318,6 @@ void RocnetNodeDlg::event(iONode node) {
   TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "event: \n%s", s );
   StrOp.free(s);
   if( StrOp.equals( wProgram.name(), NodeOp.getName(node)) && wProgram.getlntype(node) == wProgram.lntype_rocnet ) {
-    wxSpinCtrl* l_IO[] = { NULL, m_IO1, m_IO2, m_IO3, m_IO4, m_IO5, m_IO6, m_IO7, m_IO8};
     wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
     wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
     wxCheckBox* l_Blink[] = {NULL, m_Blink1, m_Blink2, m_Blink3, m_Blink4, m_Blink5, m_Blink6, m_Blink7, m_Blink8};
@@ -335,7 +328,7 @@ void RocnetNodeDlg::event(iONode node) {
         StrOp.fmtb(key, "val%d", 1 + i*4);
         int port = NodeOp.getInt( node, key, 0);
         StrOp.fmtb(key, "val%d", 2 + i*4);
-        int ionr = NodeOp.getInt( node, key, 0);
+        int res = NodeOp.getInt( node, key, 0);
         StrOp.fmtb(key, "val%d", 3 + i*4);
         int type = NodeOp.getInt( node, key, 0);
         StrOp.fmtb(key, "val%d", 4 + i*4);
@@ -344,9 +337,6 @@ void RocnetNodeDlg::event(iONode node) {
         type &= 0x7F;
 
         if( port > 0 + m_PortGroup*8 && (port-m_PortGroup*8) < 9) {
-          TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "set ionr[%d]=%d", port, ionr );
-          l_IO[port-m_PortGroup*8]->SetValue(ionr);
-          TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "set delay[%d]=%d", port, delay );
           l_Delay[port-m_PortGroup*8]->SetValue(delay);
           l_Type[port-m_PortGroup*8]->SetSelection(type);
           l_Blink[port-m_PortGroup*8]->SetValue(blink);
@@ -354,7 +344,10 @@ void RocnetNodeDlg::event(iONode node) {
       }
     }
     else if( wProgram.getcmd(node) == wProgram.getoptions ) {
-      m_IOType->SetSelection( wProgram.getval1(node) );
+      int iotype = wProgram.getval1(node);
+      if( iotype > 1 )
+        iotype = 0;
+      m_IOType->SetSelection( iotype );
       m_SecAck->SetValue(wProgram.getval2(node)&0x01?true:false);
       m_RFID->SetValue(wProgram.getval2(node)&0x02?true:false);
       m_DCCType->SetSelection( wProgram.getval3(node) );
@@ -557,16 +550,6 @@ void RocnetNodeDlg::initMacro( iONode node ) {
 }
 
 void RocnetNodeDlg::onIOType( wxCommandEvent& event ) {
-  bool gpio = (m_IOType->GetSelection() == 0);
-  m_labIO->Enable(gpio);
-  m_IO1->Enable(gpio);
-  m_IO2->Enable(gpio);
-  m_IO3->Enable(gpio);
-  m_IO4->Enable(gpio);
-  m_IO5->Enable(gpio);
-  m_IO6->Enable(gpio);
-  m_IO7->Enable(gpio);
-  m_IO8->Enable(gpio);
 }
 
 void RocnetNodeDlg::onMacroLineChange( wxGridEvent& event ) {

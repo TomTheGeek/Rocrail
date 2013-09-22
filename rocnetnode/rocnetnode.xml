@@ -27,7 +27,7 @@
     <struct name="Port" typedef="*iOPort">
       <var name="port" vt="int"/>
       <var name="ionr" vt="int"/>
-      <var name="iotype" vt="int" remark="0=gpio, 1=i2c-0, 2=i2c-1"/>
+      <var name="iotype" vt="int" remark="0=i2c-1, 1=i2c-0, 3=direct"/>
       <var name="type" vt="int"/>
       <var name="delay" vt="int"/>
       <var name="ontimer" vt="unsigned long"/>

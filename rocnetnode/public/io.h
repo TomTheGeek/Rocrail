@@ -24,6 +24,10 @@
 #ifndef ROCNETNODE_IO_H_
 #define ROCNETNODE_IO_H_
 
+#define IO_I2C_1 0
+#define IO_I2C_0 1
+#define IO_DIRECT 3
+
 void raspiGPIOAlt(int g, int alt);
 int raspiSetupIO(int mask);
 void raspiConfigPort(int port, int type);

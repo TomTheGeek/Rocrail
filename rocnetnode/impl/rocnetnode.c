@@ -495,7 +495,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     for( i = from; i <= to; i++ ) {
       if( data->ports[i] != NULL ) {
         msg[RN_PACKET_DATA + 0 + idx * 4] = i;
-        msg[RN_PACKET_DATA + 1 + idx * 4] = data->ports[i]->ionr;
+        msg[RN_PACKET_DATA + 1 + idx * 4] = 0;
         msg[RN_PACKET_DATA + 2 + idx * 4] = data->ports[i]->type;
         msg[RN_PACKET_DATA + 3 + idx * 4] = data->ports[i]->delay;
       }
@@ -704,7 +704,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_DATA+1] = 70;
     msg[RN_PACKET_DATA+2] = bzr/256;
     msg[RN_PACKET_DATA+3] = bzr%256;
-    msg[RN_PACKET_DATA+4] = (data->iotype == 0) ? 16:128;
+    msg[RN_PACKET_DATA+4] = 128;
     msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
     msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];
     break;
@@ -884,18 +884,15 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
 
 static int __readPort(iORocNetNode rocnetnode, int port, int iotype) {
   iORocNetNodeData data = Data(rocnetnode);
-  if( iotype == 3 ) {
+  if( iotype == IO_DIRECT ) {
     return (raspiRead(port) ? 0:1);
   }
-  else if( iotype > 0 && data->i2cdescriptor > 0 && port > 0 && port < 129 ) {
+  else if( data->i2cdescriptor > 0 && port > 0 && port < 129 ) {
     byte rdata = 0;
     /* the __scanI2C must have been called */
     int idx = (port-1)/8;
     byte mask = 1 << (((port-1)%16)%8);
     return (data->iodata[idx] & mask) ? 0:1;
-  }
-  else  if( port >= 0 && port <= 32 ) {
-    return (raspiRead(data->ports[port]->ionr) ? 0:1);
   }
   else {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "port out of range [%d]", port );
@@ -933,12 +930,12 @@ static void __scanI2C(iORocNetNode rocnetnode) {
 
 static void __writePort(iORocNetNode rocnetnode, int port, int value, int iotype) {
   iORocNetNodeData data = Data(rocnetnode);
-  if( iotype == 3 ) {
+  if( iotype == IO_DIRECT ) {
     /* direct GPIO */
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Direct GPIO writeport %d=%d", port, value );
     raspiWrite(port, value);
   }
-  else if( iotype > 0 && data->i2cdescriptor > 0 && port > 0 && port < 129 ) {
+  else if( data->i2cdescriptor > 0 && port > 0 && port < 129 ) {
     /* Read the I2C, then write. */
     int i2caddr = (port-1)/16;
     int shift   = (port-1)%16;
@@ -968,10 +965,6 @@ static void __writePort(iORocNetNode rocnetnode, int port, int value, int iotype
     raspiWriteRegI2C(data->i2cdescriptor, 0x20+i2caddr, (shift > 7) ? 0x13:0x12, wdata8);
     MutexOp.post( data->i2cmux );
   }
-  else if( data->iorc == 0 && port > 0 && port < 32 && data->ports[port] != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "GPIO writeport %d=%d", data->ports[port]->ionr, value );
-    raspiWrite(data->ports[port]->ionr, value);
-  }
 }
 
 static void __scanner( void* threadinst ) {
@@ -991,19 +984,19 @@ static void __scanner( void* threadinst ) {
   /* negative logic level */
   MemOp.set( data->iodata, 0xFF, sizeof(data->iodata) );
 
-  __writePort(rocnetnode, data->LED1, 1, 3 );
-  __writePort(rocnetnode, data->LED2, 1, 3 );
+  __writePort(rocnetnode, data->LED1, 1, IO_DIRECT );
+  __writePort(rocnetnode, data->LED2, 1, IO_DIRECT );
 
   while( data->run ) {
     int i;
-    int nrios = (data->iotype == 0) ? 16:128;
+    int nrios = 128;
     Boolean startofday = data->startofday;
 
     data->LED1timer++;
     if( data->LED1timer >= 50 || (data->pendingHalt && data->LED1timer >= 10) ) {
       data->LED1timer = 0;
       LED1 = !LED1;
-      __writePort(rocnetnode, data->LED1, LED1?1:0, 3 );
+      __writePort(rocnetnode, data->LED1, LED1?1:0, IO_DIRECT );
     }
 
     if( data->show ) {
@@ -1011,11 +1004,11 @@ static void __scanner( void* threadinst ) {
       if( data->LED2timer >= 10 ) {
         data->LED2timer = 0;
         LED2 = !LED2;
-        __writePort(rocnetnode, data->LED2, LED2?1:0, 3 );
+        __writePort(rocnetnode, data->LED2, LED2?1:0, IO_DIRECT );
       }
     }
     else
-      __writePort(rocnetnode, data->LED2, 1, 3 );
+      __writePort(rocnetnode, data->LED2, 1, IO_DIRECT );
 
     if( data->iorc == 0 ) {
       __scanI2C(rocnetnode);
@@ -1082,7 +1075,12 @@ static void __scanner( void* threadinst ) {
         }
 
         if( data->ports[i] != NULL && (data->ports[i]->type&0x7F) == 1 && (!data->sack || !data->ports[i]->ackpending) ) {
-          int val = __readPort(rocnetnode, i, data->ports[i]->iotype);
+          int val = 0;
+          if( data->ports[i]->iotype == IO_DIRECT )
+            val = __readPort(rocnetnode, data->ports[i]->ionr, data->ports[i]->iotype);
+          else
+            val = __readPort(rocnetnode, i, data->ports[i]->iotype);
+
           Boolean report = inputVal[i] != val;
 
           if( data->ports[i]->delay > 0 ) {
@@ -1178,7 +1176,7 @@ static void __scanner( void* threadinst ) {
         msg[RN_PACKET_DATA+1] = 70;
         msg[RN_PACKET_DATA+2] = bzr/256;
         msg[RN_PACKET_DATA+3] = bzr%256;
-        msg[RN_PACKET_DATA+4] = (data->iotype == 0) ? 16:128;
+        msg[RN_PACKET_DATA+4] = 128;
         msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
         msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];
         __sendRN(rocnetnode, msg);
@@ -1324,11 +1322,11 @@ static void __initI2C(iORocNetNode inst, int iotype) {
   iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init I2C [%s]", data->i2cdevice );
 
-  if( data->iotype == 1 ) {
+  if( data->iotype == IO_I2C_0 ) {
     raspiGPIOAlt(28, 0);
     raspiGPIOAlt(29, 0);
   }
-  else if( data->iotype == 2 ) {
+  else {
     raspiGPIOAlt(2, 0);
     raspiGPIOAlt(3, 0);
   }
@@ -1436,7 +1434,7 @@ static void __initControl(iORocNetNode inst) {
   port->port = 0;
   port->ionr = data->PB1;
   port->delay = 50;
-  port->iotype = 0;
+  port->iotype = IO_DIRECT;
   port->type = 1;
   port->state = False;
   data->ports[0] = port;
@@ -1481,7 +1479,7 @@ static void __initPorts(iORocNetNode inst) {
   /* restore persistent state */
   if( data->iorc == 0 ) {
     int i = 0;
-    int nrios = (data->iotype == 0) ? 16:128;
+    int nrios = 128;
 
     for( i = 0; i < nrios; i++ ) {
       if( data->ports[i] != NULL && (data->ports[i]->type&0x7F) == 0 ) {
@@ -1496,13 +1494,8 @@ static void __initIO(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
 
   data->iorc = raspiSetupIO(-1);
-/*
- * GPIO support disabled.
-  if( data->iotype == 0 ) {
-    __initPorts(inst);
-  }
-*/
-  if(data->iotype == 1) {
+
+  if(data->iotype == IO_I2C_0) {
     /* i2c-0 Rev. 1*/
     data->i2cdevice = "/dev/i2c-0";
     __initI2C(inst, 1);
@@ -1617,7 +1610,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   data->id     = 65535;
   data->addr   = "224.0.0.1";
   data->port   = 4321;
-  data->iotype = 2;
+  data->iotype = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Up and running the RocNetNode" );
   if( NodeOp.findNode(data->ini, wRocNet.name()) != NULL ) {
@@ -1782,8 +1775,8 @@ static Boolean _shutdown( void ) {
   data->run = False;
   ThreadOp.sleep(1000);
   bShutdown = True;
-  __writePort(__RocNetNode, data->LED1, 1, 3 );
-  __writePort(__RocNetNode, data->LED2, 1, 3 );
+  __writePort(__RocNetNode, data->LED1, 1, IO_DIRECT );
+  __writePort(__RocNetNode, data->LED2, 1, IO_DIRECT );
   return False;
 }
 
