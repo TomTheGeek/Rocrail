@@ -366,6 +366,7 @@ void RocnetNodeDlg::event(iONode node) {
           }
           rnnode = wRocNet.nextrocnetnode(m_Digint, rnnode);
         }
+        initNodeList();
       }
       else if( NodeOp.getChildCnt(node) > 0 ) {
         iONode rnnode = NodeOp.getChild(node, 0);
