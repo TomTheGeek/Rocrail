@@ -26,7 +26,15 @@
 
 #define IO_I2C_1 0
 #define IO_I2C_0 1
+#define IO_NOT_USED 2
 #define IO_DIRECT 3
+
+#define IO_OUTPUT 0
+#define IO_INPUT 1
+
+#define IO_LED1 23
+#define IO_LED2 24
+#define IO_PB1 25
 
 void raspiGPIOAlt(int g, int alt);
 int raspiSetupIO(int mask);

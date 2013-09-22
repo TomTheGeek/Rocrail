@@ -617,9 +617,6 @@
           <const name="iotype_i2c1" vt="int" val="0"/>
           <const name="iotype_i2c0" vt="int" val="1"/>
           <var name="iotype" vt="int" defval="0"/>
-          <var name="led1" vt="int" defval="23"/>
-          <var name="led2" vt="int" defval="24"/>
-          <var name="button1" vt="int" defval="25"/>
         </rocnetnodeoptions>
         <rocnetnode wrappername="RocNetNode" cardinality="n">
 	        <var name="id" vt="int" defval="10" range="0-*" remark="RocNet sender ID."/>

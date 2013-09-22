@@ -1404,19 +1404,12 @@ static void __initI2C(iORocNetNode inst, int iotype) {
 static void __initControl(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
   int iomap = 0;
-  iOPort port = allocMem( sizeof( struct Port) );
-  iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+  iOPort port = NULL;
 
-  data->LED1 = 23;
-  data->LED2 = 24;
-  data->PB1  = 25;
+  data->LED1 = IO_LED1;
+  data->LED2 = IO_LED2;
+  data->PB1  = IO_PB1;
 
-  if( rocnet != NULL ) {
-    iONode options = wRocNet.getrocnetnodeoptions(rocnet);
-    data->LED1 = wRocNetNodeOptions.getled1(options);
-    data->LED2 = wRocNetNodeOptions.getled2(options);
-    data->PB1  = wRocNetNodeOptions.getbutton1(options);
-  }
   ThreadOp.sleep(50);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init LED1 on port %d", data->LED1 );
   raspiGPIOAlt(data->LED1, 0);
@@ -1431,11 +1424,12 @@ static void __initControl(iORocNetNode inst) {
   raspiConfigPort(data->PB1, 1);
 
   ThreadOp.sleep(50);
+  port = allocMem( sizeof( struct Port) );
   port->port = 0;
   port->ionr = data->PB1;
   port->delay = 50;
   port->iotype = IO_DIRECT;
-  port->type = 1;
+  port->type = IO_INPUT;
   port->state = False;
   data->ports[0] = port;
 }
@@ -1610,7 +1604,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   data->id     = 65535;
   data->addr   = "224.0.0.1";
   data->port   = 4321;
-  data->iotype = 0;
+  data->iotype = IO_I2C_1;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Up and running the RocNetNode" );
   if( NodeOp.findNode(data->ini, wRocNet.name()) != NULL ) {
@@ -1624,6 +1618,10 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       data->sack  = wRocNetNodeOptions.issack(optionsini);
       data->rfid  = wRocNetNodeOptions.isrfid(optionsini);
       data->iotype = wRocNetNodeOptions.getiotype(optionsini);
+      if( data->iotype == IO_NOT_USED ) {
+        /* convert to new type: i2c-1 */
+        data->iotype = IO_I2C_1;
+      }
     }
     else {
       iONode optionsini = NodeOp.inst(wRocNetNodeOptions.name(), rocnet, ELEMENT_NODE );
