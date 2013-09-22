@@ -771,6 +771,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
         iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
         wProgram.setiid( node, data->iid );
         wProgram.setcmd(node, wProgram.identify);
+        wProgram.setvalue( node, 0 );
         wProgram.setlntype(node, wProgram.lntype_rocnet);
         NodeOp.addChild( node, (iONode)NodeOp.base.clone(rnnode) );
         data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
@@ -806,7 +807,17 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     StrOp.fmtb( key, "%d-%d", rn[RN_PACKET_NETID], sndr);
     if( MapOp.haskey( data->nodemap, key ) ) {
       NodeOp.removeChild( data->ini, (iONode)MapOp.remove( data->nodemap, key ) );
-    }
+      /* Inform clients */
+      {
+        iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        wProgram.setiid( node, data->iid );
+        wProgram.setmodid( node, sndr );
+        wProgram.setcmd(node, wProgram.identify);
+        wProgram.setvalue( node, 1 );
+        wProgram.setlntype(node, wProgram.lntype_rocnet);
+        data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+      }
+}
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node %s is not registered", key );
     }

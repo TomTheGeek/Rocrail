@@ -356,7 +356,18 @@ void RocnetNodeDlg::event(iONode node) {
       onIOType(cmdevt);
     }
     else if( wProgram.getcmd(node) == wProgram.identify ) {
-      if( NodeOp.getChildCnt(node) > 0 ) {
+      if( wProgram.getvalue(node) == 1 ) {
+        int id = wProgram.getmodid(node);
+        iONode rnnode = wRocNet.getrocnetnode(m_Digint);
+        while( rnnode != NULL ) {
+          if( wRocNetNode.getid(rnnode) == id ) {
+            NodeOp.removeChild( m_Digint, rnnode);
+            break;
+          }
+          rnnode = wRocNet.nextrocnetnode(m_Digint, rnnode);
+        }
+      }
+      else if( NodeOp.getChildCnt(node) > 0 ) {
         iONode rnnode = NodeOp.getChild(node, 0);
         NodeOp.addChild(m_Digint, (iONode)NodeOp.base.clone(rnnode));
         m_NodeBook->SetSelection(0);
