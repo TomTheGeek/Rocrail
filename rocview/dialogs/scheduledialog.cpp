@@ -430,7 +430,6 @@ void ScheduleDialog::initIndex() {
         const char* id = wItem.getid(sc);
   		  TraceOp.trc( "scdlg", TRCLEVEL_INFO, __LINE__, 9999, "schedule %s", id );
         m_List->Append( wxString(id,wxConvUTF8), sc );
-        m_ScheduleAction->Append( wxString(id,wxConvUTF8) );
   		}
 
       ListOp.sort(listAll, &__sortID);
@@ -440,6 +439,7 @@ void ScheduleDialog::initIndex() {
         const char* id = wItem.getid(sc);
         TraceOp.trc( "scdlg", TRCLEVEL_INFO, __LINE__, 9999, "schedule %s", id );
         //m_LocSchedule->Append( wxString(id,wxConvUTF8) );
+        m_ScheduleAction->Append( wxString(id,wxConvUTF8) );
       }
 
       if( m_Props != NULL ) {
