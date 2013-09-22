@@ -369,10 +369,20 @@ void RocnetNodeDlg::event(iONode node) {
         initNodeList();
       }
       else if( NodeOp.getChildCnt(node) > 0 ) {
-        iONode rnnode = NodeOp.getChild(node, 0);
-        NodeOp.addChild(m_Digint, (iONode)NodeOp.base.clone(rnnode));
-        m_NodeBook->SetSelection(0);
-        initNodeList();
+        iONode newrnnode = NodeOp.getChild(node, 0);
+        if( newrnnode != NULL ) {
+          iONode rnnode = wRocNet.getrocnetnode(m_Digint);
+          while( rnnode != NULL ) {
+            if( wRocNetNode.getid(rnnode) == wRocNetNode.getid(newrnnode) ) {
+              NodeOp.removeChild( m_Digint, rnnode);
+              break;
+            }
+            rnnode = wRocNet.nextrocnetnode(m_Digint, rnnode);
+          }
+          NodeOp.addChild(m_Digint, (iONode)NodeOp.base.clone(newrnnode));
+          m_NodeBook->SetSelection(0);
+          initNodeList();
+        }
       }
     }
     else if( wProgram.getcmd(node) == wProgram.show ) {
