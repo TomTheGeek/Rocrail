@@ -32,8 +32,7 @@
       <var name="delay" vt="int"/>
       <var name="ontimer" vt="unsigned long"/>
       <var name="offtimer" vt="unsigned long"/>
-      <var name="invert" vt="Boolean"/>
-      <var name="state" vt="Boolean"/>
+      <var name="state" vt="int"/>
       <var name="acktimer" vt="int"/>
       <var name="ackretry" vt="int"/>
       <var name="ackpending" vt="Boolean"/>

@@ -37,7 +37,7 @@
 #define IO_PB1 25
 
 void raspiGPIOAlt(int g, int alt);
-int raspiSetupIO(int mask);
+int raspiSetupIO(void);
 void raspiConfigPort(int port, int type);
 int raspiRead(int port);
 void raspiWrite(int port, int val);

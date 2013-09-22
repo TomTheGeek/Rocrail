@@ -68,11 +68,9 @@ void raspiGPIOAlt(int g, int alt) {
 }
 
 /* Set up a memory regions to access GPIO */
-int raspiSetupIO(int mask)
+int raspiSetupIO(void)
 {
-  int g, rep, port, i;
-
-  TraceOp.trc( "raspi", TRCLEVEL_INFO, __LINE__, 9999, "setup RasPi I/O 0x%08X", mask );
+  TraceOp.trc( "raspi", TRCLEVEL_INFO, __LINE__, 9999, "setup RasPi I/O" );
 
    /* open /dev/mem */
    if ((mem_fd = open("/dev/mem", O_RDWR|O_SYNC) ) < 0) {
@@ -99,21 +97,6 @@ int raspiSetupIO(int mask)
 
    /* Always use volatile pointer! */
    gpio = (volatile unsigned *)gpio_map;
-
-
-   if( mask != -1) {
-     for( i = 0; i < 32; i++ ) {
-       /* Always use INP_GPIO(x) before using OUT_GPIO(x) */
-       INP_GPIO(i);
-       if( mask & (1 << i) ) {
-         /* input */
-       }
-       else {
-         /* output */
-         OUT_GPIO(i);
-       }
-     }
-   }
 
    return 0;
 }
@@ -150,8 +133,8 @@ int raspiDummy(void) {
 void raspiGPIOAlt(int g, int alt) {
 }
 
-int raspiSetupIO(int mask) {
-  TraceOp.trc( "raspi", TRCLEVEL_INFO, __LINE__, 9999, "dummy raspiSetupIO(0x%04X)", mask );
+int raspiSetupIO(void) {
+  TraceOp.trc( "raspi", TRCLEVEL_INFO, __LINE__, 9999, "dummy raspiSetupIO()" );
   return 0;
 }
 
