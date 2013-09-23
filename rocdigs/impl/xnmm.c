@@ -148,6 +148,46 @@ static int _version( obj inst ) {
 }
 
 
+static void __writer( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOXNMM xnmm = (iOXNMM)ThreadOp.getParm( th );
+  iOXNMMData data = Data(xnmm);
+
+  byte out[256] = {0xFF, 0xFE};
+  byte* pout = out;
+  int len = 0;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "XNMM writer started." );
+  ThreadOp.sleep( 100 );
+
+  do {
+    ThreadOp.sleep( data->commOK ? 1000:5000 );
+    if( data->commOK && MutexOp.wait( data->mux ) ) {
+      out[2+0] = 0x21;
+      out[2+1] = 0x21;
+      out[2+2] = 0x00;
+      if( data->useHeader ) {
+        pout = out;
+        len = 5;
+      }
+      else {
+        pout = out + 2;
+        len = 3;
+      }
+      /*
+      if( SerialOp.write(data->serial, pout, len) ) {
+        TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)pout, len );
+      }
+      */
+      /* Release the mutex. */
+      MutexOp.post( data->mux );
+    }
+
+  } while(data->run);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "XNMM writer ended." );
+}
+
+
 static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOXNMM xnmm = (iOXNMM)ThreadOp.getParm( th );
@@ -157,7 +197,7 @@ static void __reader( void* threadinst ) {
   int idx = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "XNMM reader started." );
-  ThreadOp.sleep( 1000 );
+  ThreadOp.sleep( 100 );
 
   do {
     ThreadOp.sleep( data->commOK ? 10:5000 );
@@ -166,6 +206,9 @@ static void __reader( void* threadinst ) {
       int available = SerialOp.available(data->serial);
       if( available > 0 ) {
         if( SerialOp.read(data->serial, in, available) ) {
+          if( available > 2 && in[0] == 0xFF && in[1] == 0xFE ) {
+            data->useHeader = True;
+          }
           TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)in, available );
         }
       }
@@ -179,6 +222,7 @@ static void __reader( void* threadinst ) {
       MutexOp.post( data->mux );
     }
     else if(!data->commOK) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "trying to open %d", data->device );
       data->commOK = SerialOp.open( data->serial );
     }
 
@@ -214,8 +258,8 @@ static struct OXNMM* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, cts );
-  SerialOp.setLine( data->serial, 9600, 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
+  SerialOp.setFlow( data->serial, none );
+  SerialOp.setLine( data->serial, wDigInt.getbps(ini), 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 
   data->commOK = SerialOp.open( data->serial );
@@ -225,6 +269,9 @@ static struct OXNMM* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->reader = ThreadOp.inst( "xnmmreader", &__reader, __XNMM );
   ThreadOp.start( data->reader );
+
+  data->writer = ThreadOp.inst( "xnmmwriter", &__writer, __XNMM );
+  ThreadOp.start( data->writer );
 
   instCnt++;
   return __XNMM;

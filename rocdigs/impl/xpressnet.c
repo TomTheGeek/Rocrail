@@ -1012,11 +1012,11 @@ static void __evaluateResponse( iOXpressNet xpressnet, byte* in ) {
           if( data->iid != NULL )
             wFeedback.setiid( nodeC, data->iid );
 
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "Sensor %d=%s", iAddr + data->fboffset, data->fbState[iAddr]?"on":"off");
           if( data->listenerFun != NULL && data->listenerObj != NULL )
             data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-              "Sensor %d=%s", iAddr + data->fboffset, data->fbState[iAddr]?"on":"off");
         }
 
       }
