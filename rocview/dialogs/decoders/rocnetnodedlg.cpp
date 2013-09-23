@@ -38,6 +38,7 @@
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/RocNet.h"
 #include "rocrail/wrapper/public/RocNetNode.h"
+#include "rocrail/wrapper/public/Output.h"
 #include "rocs/public/strtok.h"
 #include "rocutils/public/vendors.h"
 
@@ -515,7 +516,10 @@ void RocnetNodeDlg::onMacroNumber( wxSpinEvent& event ) {
 
 
 void RocnetNodeDlg::onMacroGet( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
   wProgram.setcmd( cmd, wProgram.macro_get );
   wProgram.setvalue( cmd, m_MacroNr->GetValue() );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
@@ -526,7 +530,10 @@ void RocnetNodeDlg::onMacroGet( wxCommandEvent& event ) {
 
 
 void RocnetNodeDlg::onMacroSet( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
   wProgram.setcmd( cmd, wProgram.macro_set );
   wProgram.setvalue( cmd, m_MacroNr->GetValue() );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
@@ -602,6 +609,7 @@ void RocnetNodeDlg::onUpdate( wxCommandEvent& event ) {
   }
 
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
   wProgram.setcmd( cmd, wProgram.update );
   wProgram.setvalue( cmd, revision );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
@@ -610,4 +618,49 @@ void RocnetNodeDlg::onUpdate( wxCommandEvent& event ) {
   cmd->base.del(cmd);
 }
 
+
+void RocnetNodeDlg::onPortTest( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
+  wxButton* l_PortTest[] = {NULL, m_PortTest1, m_PortTest2, m_PortTest3, m_PortTest4, m_PortTest5, m_PortTest6, m_PortTest7, m_PortTest8};
+
+  if( event.GetEventType() != wxEVT_COMMAND_BUTTON_CLICKED ) {
+    return;
+  }
+
+  bool isInput = false;
+  int port = 0;
+  const char* cmd = wOutput.on;
+
+  for( int i = 1; i < 9; i++ ) {
+    if( event.GetEventObject() == l_PortTest[i] ) {
+      port = i + m_PortGroup*8;
+      isInput = (l_Type[i]->GetSelection() == 1 ? true:false);
+      if( l_PortTest[i]->GetLabel().CompareTo(_T("1")) == 0 ) {
+          cmd = wOutput.off;
+          l_PortTest[i]->SetLabel(wxT("0"));
+      }
+      else {
+        cmd = wOutput.on;
+        l_PortTest[i]->SetLabel(wxT("1"));
+      }
+      TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "test button %d clicked", port);
+      break;
+    }
+  }
+
+  if( !isInput && port >  0 ) {
+    iONode swcmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+    wOutput.setaddr( swcmd, port );
+    wOutput.setbus( swcmd, wRocNetNode.getid(m_Props) );
+    wOutput.setiid( swcmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wOutput.setcmd( swcmd, cmd );
+    TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "send test command for port %d:%d...", wRocNetNode.getid(m_Props), port);
+    wxGetApp().sendToRocrail( swcmd );
+    swcmd->base.del( swcmd );
+  }
+
+}
 

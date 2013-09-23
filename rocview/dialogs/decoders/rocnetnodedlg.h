@@ -72,6 +72,7 @@ class RocnetNodeDlg : public rocnetnodegen
     void onIOType( wxCommandEvent& event );
     void onMacroLineChange( wxGridEvent& event );
     void onUpdate( wxCommandEvent& event );
+    void onPortTest( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		RocnetNodeDlg( wxWindow* parent, iONode ini );
