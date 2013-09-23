@@ -24,6 +24,7 @@
 #include "rocrail/wrapper/public/SignalList.h"
 #include "rocrail/wrapper/public/FeedbackList.h"
 #include "rocrail/wrapper/public/TextList.h"
+#include "rocrail/wrapper/public/RouteList.h"
 #include "rocrail/wrapper/public/ZLevel.h"
 
 #include "rocrail/wrapper/public/Block.h"
@@ -479,6 +480,7 @@ static void _rotateModule( iONode model, iONode module, int level, int rotation 
   __rotateList( model, module, level, wTextList.name(), rotation );
   __rotateList( model, module, level, wTurntableList.name(), rotation );
   __rotateList( model, module, level, wSelTabList.name(), rotation );
+  __rotateList( model, module, level, wRouteList.name(), rotation );
 
   wModule.setrotation( module, rotation );
 
