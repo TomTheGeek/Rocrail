@@ -322,6 +322,7 @@ void RocnetNodeDlg::event(iONode node) {
     wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
     wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
     wxCheckBox* l_Blink[] = {NULL, m_Blink1, m_Blink2, m_Blink3, m_Blink4, m_Blink5, m_Blink6, m_Blink7, m_Blink8};
+    wxButton* l_PortTest[] = {NULL, m_PortTest1, m_PortTest2, m_PortTest3, m_PortTest4, m_PortTest5, m_PortTest6, m_PortTest7, m_PortTest8};
 
     char key[32] = {'\0'};
     if( wProgram.getcmd(node) == wProgram.nvget ) {
@@ -329,7 +330,7 @@ void RocnetNodeDlg::event(iONode node) {
         StrOp.fmtb(key, "val%d", 1 + i*4);
         int port = NodeOp.getInt( node, key, 0);
         StrOp.fmtb(key, "val%d", 2 + i*4);
-        int res = NodeOp.getInt( node, key, 0);
+        int value = NodeOp.getInt( node, key, 0);
         StrOp.fmtb(key, "val%d", 3 + i*4);
         int type = NodeOp.getInt( node, key, 0);
         StrOp.fmtb(key, "val%d", 4 + i*4);
@@ -341,6 +342,7 @@ void RocnetNodeDlg::event(iONode node) {
           l_Delay[port-m_PortGroup*8]->SetValue(delay);
           l_Type[port-m_PortGroup*8]->SetSelection(type);
           l_Blink[port-m_PortGroup*8]->SetValue(blink);
+          l_PortTest[port-m_PortGroup*8]->SetLabel(value==0 ? wxT("0"):wxT("1"));
         }
       }
     }

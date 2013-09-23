@@ -493,7 +493,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     for( i = from; i <= to; i++ ) {
       if( data->ports[i] != NULL ) {
         msg[RN_PACKET_DATA + 0 + idx * 4] = i;
-        msg[RN_PACKET_DATA + 1 + idx * 4] = 0;
+        msg[RN_PACKET_DATA + 1 + idx * 4] = data->ports[i]->state;
         msg[RN_PACKET_DATA + 2 + idx * 4] = data->ports[i]->type;
         msg[RN_PACKET_DATA + 3 + idx * 4] = data->ports[i]->delay;
       }
