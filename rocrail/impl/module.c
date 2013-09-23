@@ -197,6 +197,11 @@ static void _getRotationArea( iONode moduleRoot, int* Xmax, int* Ymax ) {
     if( *Ymax == -1 || ymax > *Ymax ) *Ymax = ymax;
   }
 
+  if( __getXYextremes(wRouteList.name(), moduleRoot, &xmax, &ymax) ) {
+    if( *Xmax == -1 || xmax > *Xmax ) *Xmax = xmax;
+    if( *Ymax == -1 || ymax > *Ymax ) *Ymax = ymax;
+  }
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "calculated module size %d, %d", *Xmax, *Ymax );
 
 }
