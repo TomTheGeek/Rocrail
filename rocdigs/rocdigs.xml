@@ -1690,7 +1690,7 @@
       </data>
   </object>
 
-  <object name="RasPi" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,event" include="$rocint/public/digint">
+  <object name="XNMM" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,event" include="$rocint/public/digint">
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -1699,12 +1699,12 @@
       <var name="ini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="run" vt="Boolean"/>
-      <var name="worker" vt="iOThread"/>
-      <var name="listenerObj" vt="obj"/>
-      <var name="listenerFun" vt="digint_listener"/>
-      <var name="power" vt="Boolean"/>
-      <var name="portuse[16]" vt="int"/>
-      <var name="portstate[16]" vt="int"/>
+      <var name="device" vt="const char*"/>
+      <var name="serial" vt="iOSerial"/>
+      <var name="commOK" vt="Boolean"/>
+      <var name="mux" vt="iOMutex"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="writer" vt="iOThread"/>
       </data>
   </object>
 

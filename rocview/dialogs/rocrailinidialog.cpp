@@ -625,6 +625,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.srcp, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.tamsmc, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.vcs, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.xnmm, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.xpressnet, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.z21, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.zimo, wxConvUTF8 ) );

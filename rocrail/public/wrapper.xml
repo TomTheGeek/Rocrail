@@ -440,6 +440,7 @@
       <const name="cti" vt="string" val="cti"/>
       <const name="easydcc" vt="string" val="easydcc"/>
       <const name="z21" vt="string" val="z21"/>
+      <const name="xnmm" vt="string" val="xnmm"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
