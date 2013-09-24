@@ -377,7 +377,12 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
 
   switch( action ) {
   case RN_PROGRAMMING_WRNID:
-    msg = allocMem(32);
+    if( rn[RN_PACKET_LEN] > 2 && ( rn[RN_PACKET_DATA+2] != data->ip[data->ipsize-2] || rn[RN_PACKET_DATA+3] != data->ip[data->ipsize-1]) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new ID %d not for me", rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1] );
+      break;
+    }
+
+    msg = allocMem(128);
     msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
     rnReceipientAddresToPacket( 0, msg, 0 );
     rnSenderAddresToPacket( data->id, msg, 0 );
@@ -398,7 +403,6 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       __saveIni(rocnetnode);
     }
 
-    msg = allocMem(128);
     MemOp.copy(msg, rn, rn[RN_PACKET_LEN] + 8 );
     rnReceipientAddresToPacket( sndr, msg, 0 );
     rnSenderAddresToPacket( data->id, msg, 0 );
@@ -1217,6 +1221,13 @@ static void __reader( void* threadinst ) {
   }
   StrTokOp.base.del(tok);
   data->ipsize = idx;
+
+  if( data->ip[2] == 0 && data->ip[3] == 0 ) {
+    int subip = SystemOp.getMillis() + SystemOp.getpid();
+    data->ipsize = 4;
+    data->ip[2] = (subip / 256) % 256;
+    data->ip[3] = subip % 256;
+  }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet reader started on: %d.%d.%d.%d", data->ip[0], data->ip[1], data->ip[2], data->ip[3] );
 

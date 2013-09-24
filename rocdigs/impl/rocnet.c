@@ -725,7 +725,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
         "Identified: rocnetid=%d class=%s vid=%d revision=%d nrio=%d subip=%d.%d", sndr,
         rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2] *256 + rn[RN_PACKET_DATA+3],
         rn[RN_PACKET_DATA+4], rn[RN_PACKET_DATA+5], rn[RN_PACKET_DATA+6] );
-    if( sndr == 65535 ) {
+    if( sndr == 65535 || sndr == 0 || (sndr == 1 && wRocNet.getid(data->rnini) == 1) ) {
       if( data->highestID == 0 ) {
         /* default address; send a new ID */
         data->highestID = wRocNet.getid(data->rnini);
@@ -743,9 +743,11 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       rnReceipientAddresToPacket( sndr, rnID, data->seven );
       rnSenderAddresToPacket( wRocNet.getid(data->rnini), rnID, data->seven );
       rnID[RN_PACKET_ACTION] = RN_PROGRAMMING_WRNID;
-      rnID[RN_PACKET_LEN] = 2;
+      rnID[RN_PACKET_LEN] = 4;
       rnID[RN_PACKET_DATA + 0] = data->highestID / 256;
       rnID[RN_PACKET_DATA + 1] = data->highestID % 256;
+      rnID[RN_PACKET_DATA + 2] = rn[RN_PACKET_DATA+5];
+      rnID[RN_PACKET_DATA + 3] = rn[RN_PACKET_DATA+6];
       ThreadOp.post( data->writer, (obj)rnID );
       break;
     }
