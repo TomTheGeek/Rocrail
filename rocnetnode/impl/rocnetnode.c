@@ -295,8 +295,16 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
 static void __saveIni(iORocNetNode rocnetnode) {
   iORocNetNodeData data = Data(rocnetnode);
   iOFile iniFile = FileOp.inst( data->inifile, OPEN_WRITE );
+  iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
 
   int i = 0;
+
+  if( rocnet == NULL ) {
+    rocnet = NodeOp.inst(wRocNet.name(), data->ini, ELEMENT_NODE);
+    NodeOp.addChild( data->ini, rocnet );
+  }
+  wRocNet.setid(rocnet, data->id);
+
   for( i = 0; i < 129; i++ ) {
     if( data->ports[i] != NULL && (data->ports[i]->type&0x7F) == 0 ) {
       iONode portsetup = __findPort(rocnetnode, i);
@@ -1576,6 +1584,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
     data->port  = wRocNet.getport(rocnet);
     if( data->id < 2 ) {
       data->id = 65535;
+      wRocNet.setid(rocnet, data->id);
     }
 
     if( NodeOp.findNode(rocnet, wRocNetNodeOptions.name()) != NULL ) {
@@ -1610,6 +1619,10 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       if( wTrace.iscalc( traceini ) )
         TraceOp.setLevel( trc, TraceOp.getLevel( trc ) | TRCLEVEL_CALC );
     }
+    else {
+      trc = TraceOp.inst( debug | dump | monitor | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
+    }
+
     data->digintini = NodeOp.findNode(data->ini, wDigInt.name());
     if( data->digintini != NULL ) {
       if(StrOp.equals(wDigInt.dcc232, wDigInt.getlib(data->digintini)))
