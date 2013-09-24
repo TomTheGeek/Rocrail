@@ -1,7 +1,7 @@
  /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -137,7 +137,9 @@
 #define RN_SENSOR_REPORT    1
 
 
-#define RN_CLASS_RASPI_IO    1
+#define RN_CLASS_IO      0x01
+#define RN_CLASS_CS      0x02
+#define RN_CLASS_SENSOR  0x04
 
 
 #endif /*ROCNETCONST_H_*/

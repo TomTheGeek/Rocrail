@@ -706,6 +706,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   int          actionType = rnActionTypeFromPacket(rn);
   byte* rnReply = NULL;
   char key[32] = {'\0'};
+  char mnemonic[32] = {'\0'};
   int i;
   int subip = 0;
 
@@ -723,7 +724,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     subip = rn[RN_PACKET_DATA+5]*256+rn[RN_PACKET_DATA+6];
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "Identified: rocnetid=%d class=%s vid=%d revision=%d nrio=%d subip=%d.%d", sndr,
-        rnClassString(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2] *256 + rn[RN_PACKET_DATA+3],
+        rnClassString(rn[RN_PACKET_DATA+0], mnemonic), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2] *256 + rn[RN_PACKET_DATA+3],
         rn[RN_PACKET_DATA+4], rn[RN_PACKET_DATA+5], rn[RN_PACKET_DATA+6] );
     if( sndr == 65535 || sndr == 0 || (sndr == 1 && wRocNet.getid(data->rnini) == 1) ) {
       if( data->highestID == 0 ) {
@@ -757,7 +758,8 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       iONode rnnode = NodeOp.inst( wRocNetNode.name(), data->ini, ELEMENT_NODE );
       wRocNetNode.setid(rnnode, sndr);
       wRocNetNode.setsubip(rnnode, subip);
-      wRocNetNode.setclass(rnnode, rnClassString(rn[RN_PACKET_DATA+0]));
+      wRocNetNode.setclass(rnnode, rnClassString(rn[RN_PACKET_DATA+0], mnemonic));
+      wRocNetNode.setmnemonic(rnnode, mnemonic);
       wRocNetNode.setvendor(rnnode, rn[RN_PACKET_DATA+1]);
       wRocNetNode.setrevision(rnnode, rn[RN_PACKET_DATA+2] *256 + rn[RN_PACKET_DATA+3]);
       wRocNetNode.setnrio(rnnode, rn[RN_PACKET_DATA+4]);

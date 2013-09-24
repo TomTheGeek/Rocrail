@@ -85,13 +85,34 @@ const char* rnActionTypeString(unsigned char* rn) {
   }
 }
 
-const char* rnClassString(int pclass) {
-  switch(pclass) {
-    case RN_CLASS_RASPI_IO:
-      return "RasPi I/O";
-    default:
-      return "unsupported";
+const char* rnClassString(int classid, char* mnemonic) {
+  char* classname = NULL;
+  int idx = 0;
+
+  mnemonic[idx] = '\0';
+  if( classid & RN_CLASS_IO ) {
+    if( classname != NULL ) classname = StrOp.cat( classname, ",");
+    classname = StrOp.cat( classname, "Accessory");
+    mnemonic[idx] = 'A';
+    idx++;
+    mnemonic[idx] = '\0';
   }
+  if( classid & RN_CLASS_CS ) {
+    if( classname != NULL ) classname = StrOp.cat( classname, ",");
+    classname = StrOp.cat( classname, "DCC Main");
+    mnemonic[idx] = 'M';
+    idx++;
+    mnemonic[idx] = '\0';
+  }
+  if( classid & RN_CLASS_SENSOR ) {
+    if( classname != NULL ) classname = StrOp.cat( classname, ",");
+    classname = StrOp.cat( classname, "Sensor");
+    mnemonic[idx] = 'O';
+    idx++;
+    mnemonic[idx] = '\0';
+  }
+
+  return classname;
 }
 
 

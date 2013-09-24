@@ -622,6 +622,7 @@
         <rocnetnode wrappername="RocNetNode" cardinality="n">
 	        <var name="id" vt="int" defval="10" range="0-*" remark="RocNet sender ID."/>
           <var name="class" vt="string" defval="" remark="Class ID."/>
+          <var name="mnemonic" vt="string" defval="" remark="Class Mnemonic."/>
           <var name="vendor" vt="int" defval="0" remark="NMRA vendor ID."/>
           <var name="revision" vt="int" defval="0" remark="Repository revision."/>
           <var name="version" vt="string" defval="0.0" remark="Software version."/>
