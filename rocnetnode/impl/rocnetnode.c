@@ -378,6 +378,9 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_LEN] = 0;
 
     data->id = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
+    if( data->id < 2 ) {
+      data->id = 65535;
+    }
 
     data->identack = False;
     /* Save the rocnetnode.ini to persistent the new ID. */
@@ -942,6 +945,11 @@ static void __writePort(iORocNetNode rocnetnode, int port, int value, int iotype
     byte mask8  = 0;
     byte wdata8 = 0;
     byte rdata  = 0;
+
+    if(!data->i2caddr[i2caddr]) {
+      /* return; not initialised */
+      return;
+    }
     /* read the latch byte */
     MutexOp.wait( data->i2cmux );
     raspiReadRegI2C(data->i2cdescriptor, 0x20+i2caddr, (shift > 7) ? 0x15:0x14, &rdata);
@@ -1384,12 +1392,18 @@ static void __initI2C(iORocNetNode inst, int iotype) {
       if( data->i2caddr[i] ) {
         ThreadOp.sleep(50);
         rc = raspiWriteRegI2C(data->i2cdescriptor, 0x20+i, 0x00, data->iomap[i]&0x00FF);
-        if( rc != 0 )
+        if( rc < 0 ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x20+i, errno );
+          data->i2caddr[i] = False;
+          continue;
+        }
         ThreadOp.sleep(50);
         rc = raspiWriteRegI2C(data->i2cdescriptor, 0x20+i, 0x01, (data->iomap[i]&0xFF00) >> 8);
-        if( rc != 0 )
+        if( rc < 0 ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x20+i, errno );
+          data->i2caddr[i] = False;
+          continue;
+        }
       }
     }
   }
@@ -1560,6 +1574,9 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
     data->id    = wRocNet.getid(rocnet);
     data->addr  = wRocNet.getaddr(rocnet);
     data->port  = wRocNet.getport(rocnet);
+    if( data->id < 2 ) {
+      data->id = 65535;
+    }
 
     if( NodeOp.findNode(rocnet, wRocNetNodeOptions.name()) != NULL ) {
       iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
