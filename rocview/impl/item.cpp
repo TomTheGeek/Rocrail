@@ -2489,8 +2489,10 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if( x != -1 && y != -1 ) {
       wItem.setx( m_Props, x );
       wItem.sety( m_Props, y );
-      if( !StrOp.equals( wModelCmd.getcmd( node), wModelCmd.move) &&  wItem.getori( node ) != NULL )
+      if( wItem.getori(node) != NULL && StrOp.len(wItem.getori(node)) > 0 ) {
+        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "%s set ori=%s", wItem.getid(node), wItem.getori(node) );
         wItem.setori( m_Props, wItem.getori( node ) );
+      }
       if( !oncreate )
         setPosition();
     }
