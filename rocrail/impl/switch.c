@@ -1488,6 +1488,7 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       /* dual motor */
       int addr = wSwitch.getaddr1( nodeC );
       int port = wSwitch.getport1( nodeC );
+      __normalizeAddr( &addr, &port );
 
       int addr1 = wSwitch.getaddr1( data->props );
       int port1 = wSwitch.getport1( data->props );
@@ -1496,7 +1497,8 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       __normalizeAddr( &addr1, &port1 );
       __normalizeAddr( &addr2, &port2 );
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] addr=%d port=%d", SwitchOp.getId(inst), addr, port );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "switch [%s] addr=%d port=%d (addr1=%d port1=%d addr2=%d port2=%d)", SwitchOp.getId(inst), addr, port, addr1, port1, addr2, port2 );
       if( addr == addr1 && port == port1 ) {
         if( inv )
           data->fieldState1 = StrOp.equals( state, wSwitch.turnout ) ? 0:1;
