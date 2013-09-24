@@ -1229,7 +1229,8 @@ static void __reader( void* threadinst ) {
     data->ip[3] = subip % 256;
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet reader started on: %d.%d.%d.%d", data->ip[0], data->ip[1], data->ip[2], data->ip[3] );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet reader started on: %d.%d.%d.%d [%s]",
+      data->ip[0], data->ip[1], data->ip[2], data->ip[3], SocketOp.getsockname(data->readUDP) );
 
   while( data->run ) {
     SocketOp.recvfrom( data->readUDP, msg, 0x7F, NULL, NULL );
