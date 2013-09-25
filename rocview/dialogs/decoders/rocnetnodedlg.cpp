@@ -259,6 +259,8 @@ void RocnetNodeDlg::initLabels() {
   m_PortWrite->SetLabel(wxGetApp().getMsg( "set" ));
   m_labPortEventID->SetLabel(wxGetApp().getMsg( "id" ));
   m_labPortEventPort->SetLabel(wxGetApp().getMsg( "port" ));
+  m_labPortEventID->SetToolTip(wxGetApp().getMsg( "event" ));
+  m_labPortEventPort->SetToolTip(wxGetApp().getMsg( "event" ));
   wxCommandEvent cmdevt;
   onIOType(cmdevt);
 

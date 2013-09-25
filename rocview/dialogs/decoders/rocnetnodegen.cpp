@@ -50,7 +50,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_Query = new wxButton( m_IndexPanel, wxID_ANY, wxT("Query"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer93->Add( m_Query, 0, wxALL, 5 );
 	
-	bSizer10->Add( bSizer93, 0, wxALIGN_RIGHT|wxEXPAND, 5 );
+	bSizer10->Add( bSizer93, 0, wxALIGN_RIGHT, 5 );
 	
 	m_IndexPanel->SetSizer( bSizer10 );
 	m_IndexPanel->Layout();
@@ -427,13 +427,13 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_PortNext = new wxButton( m_PortSetupPanel, wxID_ANY, wxT(">"), wxDefaultPosition, wxSize( 50,-1 ), 0 );
 	bSizer8->Add( m_PortNext, 0, wxALL, 5 );
 	
-	m_PortRead = new wxButton( m_PortSetupPanel, wxID_ANY, wxT("Read"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_PortRead = new wxButton( m_PortSetupPanel, wxID_ANY, wxT("Get"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer8->Add( m_PortRead, 0, wxALL, 5 );
 	
-	m_PortWrite = new wxButton( m_PortSetupPanel, wxID_ANY, wxT("Write"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_PortWrite = new wxButton( m_PortSetupPanel, wxID_ANY, wxT("Set"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer8->Add( m_PortWrite, 0, wxALL, 5 );
 	
-	bSizer7->Add( bSizer8, 0, 0, 5 );
+	bSizer7->Add( bSizer8, 0, wxALIGN_RIGHT, 5 );
 	
 	m_PortSetupPanel->SetSizer( bSizer7 );
 	m_PortSetupPanel->Layout();
