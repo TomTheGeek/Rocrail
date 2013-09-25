@@ -885,7 +885,8 @@ static void __sendRN( iORocNetNode rocnetnode, byte* rn ) {
 static void __checkPortEvents( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data = Data(rocnetnode);
   int group     = rn[RN_PACKET_GROUP];
-  int eventid   = rnSenderAddrFromPacket(rn, 0);
+  int eventidA  = rnSenderAddrFromPacket(rn, 0);
+  int eventidB  = rnReceipientAddrFromPacket(rn, 0);
   int eventport = 0;
   int eventval  = 0;
 
@@ -900,12 +901,16 @@ static void __checkPortEvents( iORocNetNode rocnetnode, byte* rn ) {
       break;
   }
 
-  if( eventid > 0 && eventport > 0 ) {
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "check port event: id=%d,%d port=%d val=%d group=%d", eventidA, eventidB, eventport, eventval, group );
+
+  if( eventidA > 0 && eventidB > 0 && eventport > 0 ) {
     int i = 0;
     for( i = 0; i < 129; i++ ) {
       if( data->ports[i] != NULL ) {
-        if( data->ports[i]->type == IO_OUTPUT && data->ports[i]->eventid == eventid && data->ports[i]->eventport == eventport ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "port %d event: id=%d port=%d val=%d", i, eventid, eventport, eventval );
+        if( data->ports[i]->type == IO_OUTPUT &&
+            (data->ports[i]->eventid == eventidA || data->ports[i]->eventid == eventidB) && data->ports[i]->eventport == eventport )
+        {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "match port %d event: id=%d port=%d val=%d", i, data->ports[i]->eventid, eventport, eventval );
           __writePort(rocnetnode, i, eventval, data->ports[i]->iotype);
         }
       }
@@ -1471,7 +1476,7 @@ static void __initI2C(iORocNetNode inst, int iotype) {
       if( portnr < 129 ) {
         iOPort port = data->ports[portnr];
         if( port == NULL ) {
-          iOPort port = allocMem( sizeof( struct Port) );
+          port = allocMem( sizeof( struct Port) );
           data->ports[portnr] = port;
         }
 
@@ -1479,6 +1484,8 @@ static void __initI2C(iORocNetNode inst, int iotype) {
         port->delay = wPortSetup.getdelay(portsetup);
         port->iotype = iotype;
         port->type = wPortSetup.gettype(portsetup);
+        port->eventid = wPortSetup.geteventid(portsetup);
+        port->eventport = wPortSetup.geteventport(portsetup);
         if( (port->type&0x7F) == 0 )
           port->state = wPortSetup.getstate(portsetup);
         if( (port->type&0x7F) == 1 && port->delay == 0 )
