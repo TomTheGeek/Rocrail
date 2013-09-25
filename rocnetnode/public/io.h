@@ -32,6 +32,10 @@
 #define IO_OUTPUT 0
 #define IO_INPUT 1
 
+#define IO_TYPE   0x0F
+#define IO_BLINK  0x80
+#define IO_INVERT 0x40
+
 #define IO_LED1 23
 #define IO_LED2 24
 #define IO_PB1 25
