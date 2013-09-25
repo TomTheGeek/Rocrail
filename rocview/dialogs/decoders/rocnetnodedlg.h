@@ -47,6 +47,7 @@ class RocnetNodeDlg : public rocnetnodegen
   void initPorts();
   void initMacro(iONode node);
   int m_PortGroup;
+  int m_SortCol;
 
 	protected:
 		// Handlers for rocnetnodegen events.
@@ -73,6 +74,7 @@ class RocnetNodeDlg : public rocnetnodegen
     void onMacroLineChange( wxGridEvent& event );
     void onUpdate( wxCommandEvent& event );
     void onPortTest( wxCommandEvent& event );
+    void onListColClick( wxListEvent& event );
 	public:
 		/** Constructor */
 		RocnetNodeDlg( wxWindow* parent, iONode ini );

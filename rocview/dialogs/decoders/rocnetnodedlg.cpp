@@ -51,6 +51,8 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   m_Digint = NULL;
   m_Props = NULL;
   m_PortGroup = 0;
+  m_SortCol  = 0;
+
   __initVendors();
   m_NodeBook->SetSelection(0);
 
@@ -283,15 +285,55 @@ void RocnetNodeDlg::initLabels() {
 }
 
 
+/* comparator for sorting by id: */
+static int __sortID(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int A = wRocNetNode.getid( a );
+    int B = wRocNetNode.getid( b );
+    if( A > B )
+      return 1;
+    if( A < B )
+      return -1;
+    return 0;
+}
+static int __sortSubIP(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int A = wRocNetNode.getsubip( a );
+    int B = wRocNetNode.getsubip( b );
+    if( A > B )
+      return 1;
+    if( A < B )
+      return -1;
+    return 0;
+}
+
+
 void RocnetNodeDlg::initNodeList() {
   m_NodeList->DeleteAllItems();
 
   if( m_Digint == NULL )
     return;
 
-  int index = 0;
+  iOList list = ListOp.inst();
   iONode rnnode = wRocNet.getrocnetnode(m_Digint);
   while( rnnode != NULL ) {
+    ListOp.add(list, (obj)rnnode);
+    rnnode = wRocNet.nextrocnetnode(m_Digint, rnnode);
+  }
+
+  if( m_SortCol == 5 ) {
+    ListOp.sort(list, &__sortSubIP);
+  }
+  else {
+    ListOp.sort(list, &__sortID);
+  }
+
+  for( int index = 0; index < ListOp.size(list); index++ ) {
+    iONode rnnode = (iONode)ListOp.get(list, index);
     m_NodeList->InsertItem( index, wxString::Format(_T("%d"), wRocNetNode.getid(rnnode)));
     m_NodeList->SetItem( index, 1, wxString( m_Vendor[wRocNetNode.getvendor(rnnode)&0xFF],wxConvUTF8) );
     m_NodeList->SetItem( index, 2, wxString(wRocNetNode.getmnemonic(rnnode),wxConvUTF8));
@@ -299,9 +341,11 @@ void RocnetNodeDlg::initNodeList() {
     m_NodeList->SetItem( index, 4, wxString::Format(_T("%d"), wRocNetNode.getnrio(rnnode)));
     m_NodeList->SetItem( index, 5, wxString::Format(_T("%d.%d"), wRocNetNode.getsubip(rnnode)/256, wRocNetNode.getsubip(rnnode)%256));
     m_NodeList->SetItemPtrData(index, (wxUIntPtr)rnnode);
-    index++;
-    rnnode = wRocNet.nextrocnetnode(m_Digint, rnnode);
   }
+
+  /* clean up the temp. list */
+  ListOp.base.del(list);
+
   m_NodeList->SetColumnWidth(0, wxLIST_AUTOSIZE);
   m_NodeList->SetColumnWidth(1, wxLIST_AUTOSIZE);
   m_NodeList->SetColumnWidth(2, wxLIST_AUTOSIZE);
@@ -720,4 +764,10 @@ void RocnetNodeDlg::onPortTest( wxCommandEvent& event ) {
   }
 
 }
+
+void RocnetNodeDlg::onListColClick( wxListEvent& event ) {
+  m_SortCol = event.GetColumn();
+  initNodeList();
+}
+
 
