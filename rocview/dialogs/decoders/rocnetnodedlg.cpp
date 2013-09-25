@@ -264,6 +264,7 @@ void RocnetNodeDlg::initLabels() {
   m_labType->SetLabel(wxGetApp().getMsg( "type" ));
   m_labDelay->SetLabel(wxGetApp().getMsg( "delay" ));
   m_labBlink->SetLabel(wxGetApp().getMsg( "blink" ));
+  m_labPortInv->SetLabel(wxGetApp().getMsg( "invert" ));
   m_PortRead->SetLabel(wxGetApp().getMsg( "get" ));
   m_PortWrite->SetLabel(wxGetApp().getMsg( "set" ));
   m_labPortEventID->SetLabel(wxGetApp().getMsg( "id" ));
