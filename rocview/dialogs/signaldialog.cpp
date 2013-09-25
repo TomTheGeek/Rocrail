@@ -276,7 +276,7 @@ void SignalDialog::initLabels() {
 
   m_labAspect->SetLabel( wxGetApp().getMsg( "aspect" ) + _T(":") );
   m_labPatternAddr1->SetLabel( wxGetApp().getMsg( "red" ).Upper() + _T(" ") + wxGetApp().getMsg( "address" ) + _T(":") );
-  m_labPatternAddr2->SetLabel( wxGetApp().getMsg( "yellow" ).Upper() + _T(" ") + wxGetApp().getMsg( "address" ) + _T(":") );
+  m_labPatternAddr2->SetLabel( wxGetApp().getMsg( "green" ).Upper() + _T(" ") + wxGetApp().getMsg( "address" ) + _T(":") );
   m_labAspectNr->SetLabel( wxGetApp().getMsg( "number" ) + _T(":") );
 
   m_labSignalPatterns->SetLabel( wxGetApp().getMsg( "patterns" ) );
