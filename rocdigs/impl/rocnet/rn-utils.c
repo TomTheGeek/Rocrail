@@ -97,17 +97,17 @@ const char* rnClassString(int classid, char* mnemonic) {
     idx++;
     mnemonic[idx] = '\0';
   }
-  if( classid & RN_CLASS_CS ) {
+  if( classid & RN_CLASS_DCC ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
-    classname = StrOp.cat( classname, "DCC Main");
-    mnemonic[idx] = 'M';
+    classname = StrOp.cat( classname, "DCC");
+    mnemonic[idx] = 'D';
     idx++;
     mnemonic[idx] = '\0';
   }
-  if( classid & RN_CLASS_SENSOR ) {
+  if( classid & RN_CLASS_RFID ) {
     if( classname != NULL ) classname = StrOp.cat( classname, ",");
-    classname = StrOp.cat( classname, "Sensor");
-    mnemonic[idx] = 'O';
+    classname = StrOp.cat( classname, "RFID");
+    mnemonic[idx] = 'I';
     idx++;
     mnemonic[idx] = '\0';
   }

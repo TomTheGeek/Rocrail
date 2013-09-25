@@ -138,8 +138,8 @@
 
 
 #define RN_CLASS_IO      0x01
-#define RN_CLASS_CS      0x02
-#define RN_CLASS_SENSOR  0x04
+#define RN_CLASS_DCC     0x02
+#define RN_CLASS_RFID    0x04
 
 
 #endif /*ROCNETCONST_H_*/

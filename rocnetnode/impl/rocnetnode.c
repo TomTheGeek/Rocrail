@@ -713,7 +713,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_ACTION] = RN_STATIONARY_IDENTIFY;
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
     msg[RN_PACKET_LEN] = 7;
-    msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;
+    msg[RN_PACKET_DATA+0] = data->class;
     msg[RN_PACKET_DATA+1] = 70;
     msg[RN_PACKET_DATA+2] = bzr/256;
     msg[RN_PACKET_DATA+3] = bzr%256;
@@ -1190,7 +1190,7 @@ static void __scanner( void* threadinst ) {
         msg[RN_PACKET_ACTION] = RN_STATIONARY_IDENTIFY;
         msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
         msg[RN_PACKET_LEN] = 7;
-        msg[RN_PACKET_DATA+0] = RN_CLASS_RASPI_IO;
+        msg[RN_PACKET_DATA+0] = data->class;
         msg[RN_PACKET_DATA+1] = 70;
         msg[RN_PACKET_DATA+2] = bzr/256;
         msg[RN_PACKET_DATA+3] = bzr%256;
@@ -1286,6 +1286,7 @@ static Boolean __initDigInt(iORocNetNode inst) {
         wDigInt.setfboffset( digintini, 129 );
         data->pRFID = pInitFun(digintini,TraceOp.get());
         data->pRFID->setListener( (obj)data->pRFID, (obj)inst, &__listener );
+        data->class |= RN_CLASS_RFID;
       }
     }
   }
@@ -1305,6 +1306,7 @@ static Boolean __initDigInt(iORocNetNode inst) {
       return False;
     data->pDI = pInitFun(data->digintini,TraceOp.get());
     data->pDI->setListener( (obj)data->pDI, (obj)inst, &__listener );
+    data->class |= RN_CLASS_DCC;
 
     return True;
   }
@@ -1483,6 +1485,7 @@ static void __initIO(iORocNetNode inst) {
   }
 
   if( data->iorc == 0) {
+    data->class |= RN_CLASS_IO;
     __initControl(inst);
   }
 
@@ -1706,7 +1709,8 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   SocketOp.bind(data->readUDP);
   data->writeUDP = SocketOp.inst( data->addr, data->port, False, True, True );
 
-  ThreadOp.sleep(1000); /* startup sleep */
+  ThreadOp.sleep(500); /* startup sleep */
+  data->class = 0;
   __initIO(inst);
 
   __initDigInt(inst);

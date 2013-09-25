@@ -113,6 +113,7 @@
       <var name="consoleMode" vt="Boolean"/>
       <var name="pendingHalt" vt="Boolean"/>
       <var name="macro[129]" vt="iOMacro"/>
+      <var name="class" vt="int"/>
     </data>
   </object>
 
