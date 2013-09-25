@@ -462,6 +462,17 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         rn[RN_PACKET_DATA + 1] = wProgram.getval2(node);
         ThreadOp.post( data->writer, (obj)rn );
       }
+      else if( wProgram.getcmd( node ) == wProgram.evget ) {
+        int rnid = wProgram.getmodid(node);
+        rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+        rnReceipientAddresToPacket( rnid, rn, data->seven );
+        rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
+        rn[RN_PACKET_ACTION] = RN_PROGRAMMING_RPORTEVENT;
+        rn[RN_PACKET_LEN] = 2;
+        rn[RN_PACKET_DATA + 0] = wProgram.getval1(node);
+        rn[RN_PACKET_DATA + 1] = wProgram.getval2(node);
+        ThreadOp.post( data->writer, (obj)rn );
+      }
       else if( wProgram.getcmd( node ) == wProgram.nvset ) {
         char key[32] = {'\0'};
         int i = 0;
@@ -470,6 +481,27 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         rnReceipientAddresToPacket( rnid, rn, data->seven );
         rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
         rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WPORT;
+        rn[RN_PACKET_LEN] = 8*4;
+        for( i = 0; i < 8; i++ ) {
+          StrOp.fmtb(key, "val%d", i*4 + 1);
+          rn[RN_PACKET_DATA + 0 + i*4] = NodeOp.getInt(node, key, 0);
+          StrOp.fmtb(key, "val%d", i*4 + 2);
+          rn[RN_PACKET_DATA + 1 + i*4] = NodeOp.getInt(node, key, 0);
+          StrOp.fmtb(key, "val%d", i*4 + 3);
+          rn[RN_PACKET_DATA + 2 + i*4] = NodeOp.getInt(node, key, 0);
+          StrOp.fmtb(key, "val%d", i*4 + 4);
+          rn[RN_PACKET_DATA + 3 + i*4] = NodeOp.getInt(node, key, 0);
+        }
+        ThreadOp.post( data->writer, (obj)rn );
+      }
+      else if( wProgram.getcmd( node ) == wProgram.evset ) {
+        char key[32] = {'\0'};
+        int i = 0;
+        int rnid = wProgram.getmodid(node);
+        rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+        rnReceipientAddresToPacket( rnid, rn, data->seven );
+        rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
+        rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WPORTEVENT;
         rn[RN_PACKET_LEN] = 8*4;
         for( i = 0; i < 8; i++ ) {
           StrOp.fmtb(key, "val%d", i*4 + 1);
@@ -896,6 +928,36 @@ static void __evaluatePTStationary( iOrocNet rocnet, byte* rn ) {
     char key[32] = {'\0'};
     wProgram.setmodid(node, sndr);
     wProgram.setcmd( node, wProgram.nvget );
+    for( i = 0; i < nrports; i++ ) {
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 0] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 1] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 2] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 3] );
+      idx++;
+    }
+    wProgram.setiid( node, data->iid );
+    wProgram.setlntype(node, wProgram.lntype_rocnet);
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+  break;
+
+  case RN_PROGRAMMING_RPORTEVENT:
+  case RN_PROGRAMMING_WPORTEVENT:
+  {
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    int nrports = rn[RN_PACKET_LEN] / 4;
+    int i = 0;
+    int idx = 1;
+    char key[32] = {'\0'};
+    wProgram.setmodid(node, sndr);
+    wProgram.setcmd( node, wProgram.evget );
     for( i = 0; i < nrports; i++ ) {
       StrOp.fmtb( key, "val%d", idx );
       NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 0] );

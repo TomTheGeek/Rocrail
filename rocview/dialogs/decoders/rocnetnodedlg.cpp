@@ -150,6 +150,8 @@ void RocnetNodeDlg::onPortWrite( wxCommandEvent& event ) {
   wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
   wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
   wxCheckBox* l_Blink[] = {NULL, m_Blink1, m_Blink2, m_Blink3, m_Blink4, m_Blink5, m_Blink6, m_Blink7, m_Blink8};
+  wxSpinCtrl* l_EventID[] = {NULL, m_PortEventID1, m_PortEventID2, m_PortEventID3, m_PortEventID4, m_PortEventID5, m_PortEventID6, m_PortEventID7, m_PortEventID8};
+  wxSpinCtrl* l_EventPort[] = {NULL, m_PortEventPort1, m_PortEventPort2, m_PortEventPort3, m_PortEventPort4, m_PortEventPort5, m_PortEventPort6, m_PortEventPort7, m_PortEventPort8};
 
   char key[32] = {'\0'};
   for( int i = 0; i < 8; i++ ) {
@@ -165,6 +167,22 @@ void RocnetNodeDlg::onPortWrite( wxCommandEvent& event ) {
 
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
+
+  ThreadOp.sleep(100);
+  wProgram.setcmd( cmd, wProgram.evset );
+
+  for( int i = 0; i < 8; i++ ) {
+    StrOp.fmtb(key, "val%d", 1 + i*4);
+    NodeOp.setInt( cmd, key, m_PortGroup*8 + 1 + i);
+    StrOp.fmtb(key, "val%d", 2 + i*4);
+    NodeOp.setInt( cmd, key, l_EventID[1 + i]->GetValue() / 256);
+    StrOp.fmtb(key, "val%d", 3 + i*4);
+    NodeOp.setInt( cmd, key, l_EventID[1 + i]->GetValue() % 256);
+    StrOp.fmtb(key, "val%d", 4 + i*4);
+    NodeOp.setInt( cmd, key, l_EventPort[1 + i]->GetValue() );
+  }
+
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -239,6 +257,8 @@ void RocnetNodeDlg::initLabels() {
   m_labBlink->SetLabel(wxGetApp().getMsg( "blink" ));
   m_PortRead->SetLabel(wxGetApp().getMsg( "get" ));
   m_PortWrite->SetLabel(wxGetApp().getMsg( "set" ));
+  m_labPortEventID->SetLabel(wxGetApp().getMsg( "id" ));
+  m_labPortEventPort->SetLabel(wxGetApp().getMsg( "port" ));
   wxCommandEvent cmdevt;
   onIOType(cmdevt);
 
@@ -323,6 +343,8 @@ void RocnetNodeDlg::event(iONode node) {
     wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
     wxCheckBox* l_Blink[] = {NULL, m_Blink1, m_Blink2, m_Blink3, m_Blink4, m_Blink5, m_Blink6, m_Blink7, m_Blink8};
     wxButton* l_PortTest[] = {NULL, m_PortTest1, m_PortTest2, m_PortTest3, m_PortTest4, m_PortTest5, m_PortTest6, m_PortTest7, m_PortTest8};
+    wxSpinCtrl* l_EventID[] = {NULL, m_PortEventID1, m_PortEventID2, m_PortEventID3, m_PortEventID4, m_PortEventID5, m_PortEventID6, m_PortEventID7, m_PortEventID8};
+    wxSpinCtrl* l_EventPort[] = {NULL, m_PortEventPort1, m_PortEventPort2, m_PortEventPort3, m_PortEventPort4, m_PortEventPort5, m_PortEventPort6, m_PortEventPort7, m_PortEventPort8};
 
     char key[32] = {'\0'};
     if( wProgram.getcmd(node) == wProgram.nvget ) {
@@ -343,6 +365,33 @@ void RocnetNodeDlg::event(iONode node) {
           l_Type[port-m_PortGroup*8]->SetSelection(type);
           l_Blink[port-m_PortGroup*8]->SetValue(blink);
           l_PortTest[port-m_PortGroup*8]->SetLabel(value==0 ? wxT("0"):wxT("1"));
+        }
+      }
+
+      iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
+      wProgram.setcmd( cmd, wProgram.evget );
+      wProgram.setval1(cmd, 1 + m_PortGroup*8 ); // range
+      wProgram.setval2(cmd, 8 + m_PortGroup*8 );
+      wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+      wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
+    else if( wProgram.getcmd(node) == wProgram.evget ) {
+      for( int i = 0; i < 8; i++ ) {
+        StrOp.fmtb(key, "val%d", 1 + i*4);
+        int port = NodeOp.getInt( node, key, 0);
+        StrOp.fmtb(key, "val%d", 2 + i*4);
+        int eventid = NodeOp.getInt( node, key, 0) * 256;
+        StrOp.fmtb(key, "val%d", 3 + i*4);
+        eventid += NodeOp.getInt( node, key, 0);
+        StrOp.fmtb(key, "val%d", 4 + i*4);
+        int eventport = NodeOp.getInt( node, key, 0);
+
+        if( port > 0 + m_PortGroup*8 && (port-m_PortGroup*8) < 9) {
+          l_EventID[port-m_PortGroup*8]->SetValue(eventid);
+          l_EventPort[port-m_PortGroup*8]->SetValue(eventport);
         }
       }
     }

@@ -487,6 +487,39 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
   }
   break;
 
+  case RN_PROGRAMMING_WPORTEVENT:
+  {
+    iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+    int i = 0;
+
+    if( rocnet == NULL ) {
+      rocnet = NodeOp.inst( wRocNet.name(), data->ini, ELEMENT_NODE);
+      NodeOp.addChild( data->ini, rocnet );
+    }
+
+    for( i = 0; i < 8; i++ ) {
+      int port  = rn[RN_PACKET_DATA+0+i*4];
+      int eventid = rn[RN_PACKET_DATA+1+i*4]*256+rn[RN_PACKET_DATA+2+i*4];
+      int eventport = rn[RN_PACKET_DATA+3+i*4];
+      iONode portsetup = __findPort(rocnetnode, port);
+      if( portsetup == NULL ) {
+        portsetup = NodeOp.inst( wPortSetup.name(), rocnet, ELEMENT_NODE);
+        wPortSetup.setport( portsetup, port);
+        NodeOp.addChild( rocnet, portsetup );
+      }
+      wPortSetup.seteventid( portsetup, eventid);
+      wPortSetup.seteventport( portsetup, eventport);
+
+      if( data->ports[port] != NULL ) {
+        data->ports[port]->eventid= eventid;
+        data->ports[port]->eventport= eventport;
+      }
+
+    }
+    __saveIni(rocnetnode);
+  }
+  break;
+
   case RN_PROGRAMMING_RPORT:
     from = rn[RN_PACKET_DATA+0];
     to   = rn[RN_PACKET_DATA+1];
@@ -511,6 +544,35 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
         msg[RN_PACKET_DATA + 1 + idx * 4] = data->ports[i]->state;
         msg[RN_PACKET_DATA + 2 + idx * 4] = data->ports[i]->type;
         msg[RN_PACKET_DATA + 3 + idx * 4] = data->ports[i]->delay;
+      }
+      idx++;
+    }
+    break;
+
+  case RN_PROGRAMMING_RPORTEVENT:
+    from = rn[RN_PACKET_DATA+0];
+    to   = rn[RN_PACKET_DATA+1];
+    if( from > to ) {
+      from = rn[RN_PACKET_DATA+1];
+      to   = rn[RN_PACKET_DATA+0];
+    }
+    if( to - from > 7 ) {
+      to = from + 7;
+    }
+
+    msg = allocMem(128);
+    msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+    rnReceipientAddresToPacket( sndr, msg, 0 );
+    rnSenderAddresToPacket( data->id, msg, 0 );
+    msg[RN_PACKET_ACTION] = RN_PROGRAMMING_RPORTEVENT;
+    msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+    msg[RN_PACKET_LEN] = ((to-from)+1)*4;
+    for( i = from; i <= to; i++ ) {
+      if( data->ports[i] != NULL ) {
+        msg[RN_PACKET_DATA + 0 + idx * 4] = i;
+        msg[RN_PACKET_DATA + 1 + idx * 4] = data->ports[i]->eventid/256;
+        msg[RN_PACKET_DATA + 2 + idx * 4] = data->ports[i]->eventid%256;
+        msg[RN_PACKET_DATA + 3 + idx * 4] = data->ports[i]->eventport;
       }
       idx++;
     }
@@ -820,6 +882,39 @@ static void __sendRN( iORocNetNode rocnetnode, byte* rn ) {
 }
 
 
+static void __checkPortEvents( iORocNetNode rocnetnode, byte* rn ) {
+  iORocNetNodeData data = Data(rocnetnode);
+  int group     = rn[RN_PACKET_GROUP];
+  int eventid   = rnSenderAddrFromPacket(rn, 0);
+  int eventport = 0;
+  int eventval  = 0;
+
+  switch( group ) {
+    case RN_GROUP_OUTPUT:
+      eventval  = rn[RN_PACKET_DATA + 0];
+      eventport = rn[RN_PACKET_DATA + 3];
+      break;
+    case RN_GROUP_SENSOR:
+      eventval  = rn[RN_PACKET_DATA + 2];
+      eventport = rn[RN_PACKET_DATA + 3];
+      break;
+  }
+
+  if( eventid > 0 && eventport > 0 ) {
+    int i = 0;
+    for( i = 0; i < 129; i++ ) {
+      if( data->ports[i] != NULL ) {
+        if( data->ports[i]->type == IO_OUTPUT && data->ports[i]->eventid == eventid && data->ports[i]->eventport == eventport ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "port %d event: id=%d port=%d val=%d", i, eventid, eventport, eventval );
+          __writePort(rocnetnode, i, eventval, data->ports[i]->iotype);
+        }
+      }
+    }
+  }
+
+}
+
+
 static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data = Data(rocnetnode);
   int group = rn[RN_PACKET_GROUP];
@@ -840,8 +935,9 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
   }
   else if(rcpt != data->id && rcpt != 0) {
     char* str = StrOp.byteToStr(rn, 8 + rn[RN_PACKET_LEN]);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore %s [%s] from %d to %d; address does not match", rnActionTypeString(rn), str, sndr, rcpt );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "ignore %s [%s] from %d to %d; address does not match", rnActionTypeString(rn), str, sndr, rcpt );
     StrOp.free(str);
+    __checkPortEvents(rocnetnode, rn);
     return;
   }
   else {
@@ -1371,15 +1467,20 @@ static void __initI2C(iORocNetNode inst, int iotype) {
     MemOp.set( data->iomap, 0, sizeof(data->iomap));
     while( portsetup != NULL ) {
       int portnr = wPortSetup.getport(portsetup);
-      if( portnr < 128 ) {
-        iOPort port = allocMem( sizeof( struct Port) );
+
+      if( portnr < 129 ) {
+        iOPort port = data->ports[portnr];
+        if( port == NULL ) {
+          iOPort port = allocMem( sizeof( struct Port) );
+          data->ports[portnr] = port;
+        }
+
         port->port = portnr;
         port->delay = wPortSetup.getdelay(portsetup);
         port->iotype = iotype;
         port->type = wPortSetup.gettype(portsetup);
         if( (port->type&0x7F) == 0 )
           port->state = wPortSetup.getstate(portsetup);
-        data->ports[portnr] = port;
         if( (port->type&0x7F) == 1 && port->delay == 0 )
           port->delay = 10;
 

@@ -37,6 +37,8 @@
       <var name="ackretry" vt="int"/>
       <var name="ackpending" vt="Boolean"/>
       <var name="blink" vt="Boolean"/>
+      <var name="eventid" vt="int"/>
+      <var name="eventport" vt="int"/>
     </struct>
     <struct name="MacroLine" typedef="*iOMacroLine">
       <var name="delay" vt="int"/>

@@ -634,6 +634,8 @@
           <var name="type" vt="int" defval="0" range="0-*" remark="0=output, 1=input"/>
           <var name="delay" vt="int" defval="0" range="0-*" remark="0=directly/continous"/>
           <var name="state" vt="int" defval="0" remark="Saved output state."/>
+          <var name="eventid" vt="int" defval="0" remark=""/>
+          <var name="eventport" vt="int" defval="0" remark=""/>
         </portsetup>
         <macro cardinality="n"/>
       </rocnet>
