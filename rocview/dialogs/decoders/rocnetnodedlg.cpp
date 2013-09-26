@@ -884,11 +884,13 @@ void RocnetNodeDlg::onTreeItemRightClick( wxTreeEvent& event ) {
   wxString itemText = m_NodeTree->GetItemText(event.GetItem());
   const char* key = itemText.mb_str(wxConvUTF8);
   m_SelectedNode = (iONode)MapOp.get( m_NodeMap, key );
-  wxMenu menu( wxString(key,wxConvUTF8) );
-  menu.Append( 1001, wxGetApp().getMenu("show") );
-  menu.Append( 1002, wxGetApp().getMenu("shutdownserver") );
-  menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( RocnetNodeDlg::onMenu ), NULL, this );
-  PopupMenu(&menu );
+  if( m_SelectedNode != NULL ) {
+    wxMenu menu( wxString(key,wxConvUTF8) );
+    menu.Append( 1001, wxGetApp().getMenu("show") );
+    menu.Append( 1002, wxGetApp().getMenu("shutdownserver") );
+    menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( RocnetNodeDlg::onMenu ), NULL, this );
+    PopupMenu(&menu );
+  }
 }
 
 
