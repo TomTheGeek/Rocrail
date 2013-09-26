@@ -401,7 +401,7 @@ void RocnetNodeDlg::initNodeList() {
   m_NodeTree->DeleteAllItems();
   MapOp.clear(m_NodeMap);
   MapOp.clear(m_TreeNodeMap);
-  wxTreeItemId root  = m_NodeTree->AddRoot(m_IID->GetValue().mb_str(wxConvUTF8));
+  wxTreeItemId root  = m_NodeTree->AddRoot(m_IID->GetValue());
   iOMap locationMap = MapOp.inst();
   for( int i = 0; i < ListOp.size(list); i++ ) {
     iONode rnnode = (iONode)ListOp.get(list, i);

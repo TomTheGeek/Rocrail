@@ -908,8 +908,6 @@ static void __checkPortEvents( iORocNetNode rocnetnode, byte* rn ) {
       break;
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "check port event: id=%d,%d port=%d val=%d group=%d", eventidA, eventidB, eventport, eventval, group );
-
   if( eventidA > 0 && eventidB > 0 && eventport > 0 ) {
     int i = 0;
     for( i = 0; i < 129; i++ ) {
