@@ -50,7 +50,7 @@ class RocnetNodeDlg : public rocnetnodegen
   void initNodeList();
   void initPorts();
   void initMacro(iONode node);
-  void getZLevel(int level, char* sLevel);
+  const char* getZLevel(int level, char* sLevel);
   void selChanged( iONode rnnode );
   int m_PortGroup;
   int m_SortCol;

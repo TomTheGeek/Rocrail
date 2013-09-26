@@ -343,17 +343,20 @@ static int __sortSubIP(obj* _a, obj* _b)
     return 0;
 }
 
-void RocnetNodeDlg::getZLevel(int level, char* sLevel) {
+const char* RocnetNodeDlg::getZLevel(int level, char* sLevel) {
+  if( sLevel == NULL )
+    return wPlan.gettitle(wxGetApp().getModel());
   iONode zlevel = wPlan.getzlevel( wxGetApp().getModel() );
   while( zlevel != NULL ) {
     if( wZLevel.getz(zlevel) == level ) {
       StrOp.copy( sLevel, wZLevel.gettitle(zlevel) );
-      return;
+      return wPlan.gettitle(wxGetApp().getModel());
     }
     zlevel = wPlan.nextzlevel( wxGetApp().getModel(), zlevel );
   };
 
   StrOp.fmtb(sLevel, "%d", level);
+  return wPlan.gettitle(wxGetApp().getModel());
 }
 
 void RocnetNodeDlg::initNodeList() {
@@ -402,7 +405,7 @@ void RocnetNodeDlg::initNodeList() {
   m_NodeTree->DeleteAllItems();
   MapOp.clear(m_NodeMap);
   MapOp.clear(m_TreeItemMap);
-  wxTreeItemId root  = m_NodeTree->AddRoot(m_IID->GetValue());
+  wxTreeItemId root  = m_NodeTree->AddRoot(wxString(getZLevel(0, NULL), wxConvUTF8));
   iOMap locationMap = MapOp.inst();
   for( int i = 0; i < ListOp.size(list); i++ ) {
     iONode rnnode = (iONode)ListOp.get(list, i);
