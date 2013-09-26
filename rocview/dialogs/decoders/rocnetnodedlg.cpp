@@ -39,6 +39,8 @@
 #include "rocrail/wrapper/public/RocNet.h"
 #include "rocrail/wrapper/public/RocNetNode.h"
 #include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/Plan.h"
+#include "rocrail/wrapper/public/ZLevel.h"
 #include "rocs/public/strtok.h"
 #include "rocutils/public/vendors.h"
 
@@ -52,6 +54,7 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   m_Props = NULL;
   m_PortGroup = 0;
   m_SortCol  = 0;
+  m_NodeMap = MapOp.inst();
 
   __initVendors();
   m_NodeBook->SetSelection(0);
@@ -77,6 +80,10 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
 
   initListLabels();
   initNodeList();
+}
+
+RocnetNodeDlg::~RocnetNodeDlg() {
+  MapOp.base.del(m_NodeMap);
 }
 
 void RocnetNodeDlg::onRocnetWrite( wxCommandEvent& event ) {
@@ -330,6 +337,18 @@ static int __sortSubIP(obj* _a, obj* _b)
     return 0;
 }
 
+void RocnetNodeDlg::getZLevel(int level, char* sLevel) {
+  iONode zlevel = wPlan.getzlevel( wxGetApp().getModel() );
+  while( zlevel != NULL ) {
+    if( wZLevel.getz(zlevel) == level ) {
+      StrOp.copy( sLevel, wZLevel.gettitle(zlevel) );
+      return;
+    }
+    zlevel = wPlan.nextzlevel( wxGetApp().getModel(), zlevel );
+  };
+
+  StrOp.fmtb(sLevel, "%d", level);
+}
 
 void RocnetNodeDlg::initNodeList() {
   m_NodeList->DeleteAllItems();
@@ -386,7 +405,7 @@ void RocnetNodeDlg::initNodeList() {
   for( int i = 0; i < ListOp.size(list); i++ ) {
     iONode rnnode = (iONode)ListOp.get(list, i);
     char location[256] = {'\0'};
-    StrOp.fmtb( location, "%d",  wRocNetNode.getlocation(rnnode) );
+    getZLevel(wRocNetNode.getlocation(rnnode), location);
     wxTreeItemId* plocation = (wxTreeItemId*)MapOp.get( locationMap, location );
     wxTreeItemId cat;
     if( plocation == NULL ) {
@@ -397,14 +416,13 @@ void RocnetNodeDlg::initNodeList() {
     else {
       cat = *plocation;
     }
-    m_NodeTree->AppendItem( cat, wxT("[") + wxString(wRocNetNode.getmnemonic(rnnode),wxConvUTF8) + wxT("] ") + wxString::Format(_T("%d"), wRocNetNode.getid(rnnode)));
-    /*
-    MapOp.put( m_CVMap, wCVByte.getdesc(cv), (obj)cv);
-    char key[32];
-    StrOp.fmtb(key, "%d", wCVByte.getnr(cv) );
-    MapOp.put( m_CVNrMap, key, (obj)cv);
-    */
+    char key[256] = {'\0'};
+    StrOp.fmtb(key, "[%s] %05d", wRocNetNode.getmnemonic(rnnode), wRocNetNode.getid(rnnode) );
+    MapOp.put( m_NodeMap, key, (obj)rnnode);
+    m_NodeTree->AppendItem( cat, wxString(key,wxConvUTF8) );
   }
+  MapOp.base.del(locationMap);
+
   m_NodeTree->ExpandAll();
 
   /* clean up the temp. list */
@@ -436,6 +454,8 @@ void RocnetNodeDlg::initValues() {
   m_VendorName->SetValue( wxString( m_Vendor[wRocNetNode.getvendor(m_Props)&0xFF],wxConvUTF8) );
   m_ProductName->SetValue( wxString(wRocNetNode.getclass(m_Props),wxConvUTF8) );
   m_Version->SetValue( wxString::Format(_T("%d"), wRocNetNode.getrevision(m_Props)) );
+  m_SubIP->SetValue(wxString::Format(_T("%d.%d"), wRocNetNode.getsubip(m_Props)/256, wRocNetNode.getsubip(m_Props)%256));
+  m_IO->SetValue( wxString::Format(_T("%d"), wRocNetNode.getnrio(m_Props)) );
 }
 
 void RocnetNodeDlg::event(iONode node) {
@@ -825,6 +845,34 @@ void RocnetNodeDlg::onPortTest( wxCommandEvent& event ) {
 void RocnetNodeDlg::onListColClick( wxListEvent& event ) {
   m_SortCol = event.GetColumn();
   initNodeList();
+}
+
+
+void RocnetNodeDlg::onItemActivated( wxTreeEvent& event ) {
+
+}
+
+
+void RocnetNodeDlg::onTreeItemRightClick( wxTreeEvent& event ) {
+
+}
+
+
+void RocnetNodeDlg::onTreeSelChanged( wxTreeEvent& event ) {
+  wxString itemText = m_NodeTree->GetItemText(event.GetItem());
+  char* key = StrOp.dup(itemText.mb_str(wxConvUTF8));
+  iONode rnnode = (iONode)MapOp.get( m_NodeMap, key);
+  TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999,"tree selection: %s", key );
+  if( rnnode != NULL ) {
+    m_Props = rnnode;
+    m_PortGroup = 0;
+    initPorts();
+    initValues();
+    m_MacroLines->ClearGrid();
+    SetTitle(wxT("RocNetNode: ") + wxString::Format(_T("%d"), wRocNetNode.getid(m_Props) ) );
+    wxCommandEvent cmd;
+    onNodeOptionsRead(cmd);
+  }
 }
 
 

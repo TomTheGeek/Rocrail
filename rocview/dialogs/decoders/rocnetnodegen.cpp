@@ -64,7 +64,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer13 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_NodeTree = new wxTreeCtrl( m_RocNetPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE|wxTR_SINGLE );
-	bSizer13->Add( m_NodeTree, 0, wxALL|wxEXPAND, 5 );
+	bSizer13->Add( m_NodeTree, 1, wxALL|wxEXPAND, 5 );
 	
 	m_staticline1 = new wxStaticLine( m_RocNetPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer13->Add( m_staticline1, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
@@ -107,8 +107,24 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_labProduct->Wrap( -1 );
 	fgSizer5->Add( m_labProduct, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_ProductName = new wxTextCtrl( m_RocNetPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	m_ProductName = new wxTextCtrl( m_RocNetPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxTE_READONLY );
+	m_ProductName->SetMinSize( wxSize( 200,-1 ) );
+	
 	fgSizer5->Add( m_ProductName, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_labIO = new wxStaticText( m_RocNetPanel, wxID_ANY, wxT("I/O"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labIO->Wrap( -1 );
+	fgSizer5->Add( m_labIO, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_IO = new wxTextCtrl( m_RocNetPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	fgSizer5->Add( m_IO, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_labSubIP = new wxStaticText( m_RocNetPanel, wxID_ANY, wxT("SubIP"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labSubIP->Wrap( -1 );
+	fgSizer5->Add( m_labSubIP, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_SubIP = new wxTextCtrl( m_RocNetPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	fgSizer5->Add( m_SubIP, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_labVersion = new wxStaticText( m_RocNetPanel, wxID_ANY, wxT("Revision"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labVersion->Wrap( -1 );
@@ -134,9 +150,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	fgSizer5->Add( fgSizer4, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
-	bSizer13->Add( fgSizer5, 1, wxEXPAND, 5 );
+	bSizer13->Add( fgSizer5, 0, wxEXPAND, 5 );
 	
-	bSizer6->Add( bSizer13, 0, wxEXPAND, 5 );
+	bSizer6->Add( bSizer13, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
@@ -575,6 +591,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_ShutdownAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShutdownAll ), NULL, this );
 	m_Show->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShow ), NULL, this );
 	m_Query->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onQuery ), NULL, this );
+	m_NodeTree->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( rocnetnodegen::onItemActivated ), NULL, this );
+	m_NodeTree->Connect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( rocnetnodegen::onTreeItemRightClick ), NULL, this );
+	m_NodeTree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( rocnetnodegen::onTreeSelChanged ), NULL, this );
 	m_Update->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onUpdate ), NULL, this );
 	m_RocnetWrite->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onRocnetWrite ), NULL, this );
 	m_IOType->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( rocnetnodegen::onIOType ), NULL, this );
@@ -612,6 +631,9 @@ rocnetnodegen::~rocnetnodegen()
 	m_ShutdownAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShutdownAll ), NULL, this );
 	m_Show->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShow ), NULL, this );
 	m_Query->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onQuery ), NULL, this );
+	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( rocnetnodegen::onItemActivated ), NULL, this );
+	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( rocnetnodegen::onTreeItemRightClick ), NULL, this );
+	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( rocnetnodegen::onTreeSelChanged ), NULL, this );
 	m_Update->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onUpdate ), NULL, this );
 	m_RocnetWrite->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onRocnetWrite ), NULL, this );
 	m_IOType->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( rocnetnodegen::onIOType ), NULL, this );

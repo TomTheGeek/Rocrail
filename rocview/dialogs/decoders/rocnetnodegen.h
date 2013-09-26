@@ -66,6 +66,10 @@ class rocnetnodegen : public wxDialog
 		wxTextCtrl* m_VendorName;
 		wxStaticText* m_labProduct;
 		wxTextCtrl* m_ProductName;
+		wxStaticText* m_labIO;
+		wxTextCtrl* m_IO;
+		wxStaticText* m_labSubIP;
+		wxTextCtrl* m_SubIP;
 		wxStaticText* m_labVersion;
 		wxTextCtrl* m_Version;
 		wxStaticText* m_labUpdate;
@@ -177,6 +181,9 @@ class rocnetnodegen : public wxDialog
 		virtual void onShutdownAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onShow( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onQuery( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onItemActivated( wxTreeEvent& event ) { event.Skip(); }
+		virtual void onTreeItemRightClick( wxTreeEvent& event ) { event.Skip(); }
+		virtual void onTreeSelChanged( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onUpdate( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onRocnetWrite( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onIOType( wxCommandEvent& event ) { event.Skip(); }
