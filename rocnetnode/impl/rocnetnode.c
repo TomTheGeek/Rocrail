@@ -217,6 +217,7 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
         data->pDI->cmd( (obj)data->pDI, cmd );
         data->power = rn[RN_PACKET_DATA + 0] & 0x01 ? True:False;
         msg = allocMem(32);
+        msg[RN_PACKET_NETID] = data->location;
         msg[RN_PACKET_GROUP] = RN_GROUP_CS;
         rnSenderAddresToPacket( data->id, msg, 0 );
         msg[RN_PACKET_ACTION] = RN_CS_TRACKPOWER;
@@ -304,6 +305,7 @@ static void __saveIni(iORocNetNode rocnetnode) {
     NodeOp.addChild( data->ini, rocnet );
   }
   wRocNet.setid(rocnet, data->id);
+  wRocNet.setnet(rocnet, data->location);
 
   for( i = 0; i < 129; i++ ) {
     if( data->ports[i] != NULL && (data->ports[i]->type&IO_TYPE) == 0 ) {
@@ -382,7 +384,10 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       break;
     }
 
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "new ID %d Location %d for me", rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1], rn[RN_PACKET_DATA + 4] );
     msg = allocMem(128);
+    msg[RN_PACKET_NETID] = data->location;
     msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
     rnReceipientAddresToPacket( 0, msg, 0 );
     rnSenderAddresToPacket( data->id, msg, 0 );
@@ -391,23 +396,18 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_LEN] = 0;
 
     data->id = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
+    data->location = rn[RN_PACKET_DATA + 4];
     if( data->id < 2 ) {
       data->id = 65535;
     }
 
-    data->identack = False;
     /* Save the rocnetnode.ini to persistent the new ID. */
     {
       iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
       wRocNet.setid(rocnet, data->id);
       __saveIni(rocnetnode);
     }
-
-    MemOp.copy(msg, rn, rn[RN_PACKET_LEN] + 8 );
-    rnReceipientAddresToPacket( sndr, msg, 0 );
-    rnSenderAddresToPacket( data->id, msg, 0 );
-    msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-
+    data->identack = False;
     break;
 
   case RN_PROGRAMMING_WMACRO:
@@ -442,6 +442,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     }
 
     msg = allocMem(128);
+    msg[RN_PACKET_NETID] = data->location;
     msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
     rnReceipientAddresToPacket( sndr, msg, 0 );
     rnSenderAddresToPacket( data->id, msg, 0 );
@@ -532,6 +533,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     }
 
     msg = allocMem(128);
+    msg[RN_PACKET_NETID] = data->location;
     msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
     rnReceipientAddresToPacket( sndr, msg, 0 );
     rnSenderAddresToPacket( data->id, msg, 0 );
@@ -561,6 +563,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     }
 
     msg = allocMem(128);
+    msg[RN_PACKET_NETID] = data->location;
     msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
     rnReceipientAddresToPacket( sndr, msg, 0 );
     rnSenderAddresToPacket( data->id, msg, 0 );
@@ -584,6 +587,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
 
   case RN_PROGRAMMING_RDOPT:
     msg = allocMem(128);
+    msg[RN_PACKET_NETID] = data->location;
     msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
     rnReceipientAddresToPacket( sndr, msg, 0 );
     rnSenderAddresToPacket( data->id, msg, 0 );
@@ -604,6 +608,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     data->csdevice = rn[RN_PACKET_DATA + 3];
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "options: iotype=%d cstype=%d csdevice=%d", data->iotype, data->cstype, data->csdevice );
     msg = allocMem(128);
+    msg[RN_PACKET_NETID] = data->location;
     msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
     rnReceipientAddresToPacket( sndr, msg, 0 );
     rnSenderAddresToPacket( data->id, msg, 0 );
@@ -769,6 +774,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
   case RN_STATIONARY_IDENTIFY:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "queryids request from %d to %d", sndr, rcpt );
     msg = allocMem(32);
+    msg[RN_PACKET_NETID] = data->location;
     msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
     rnReceipientAddresToPacket( sndr, msg, 0 );
     rnSenderAddresToPacket( data->id, msg, 0 );
@@ -848,6 +854,7 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
         __writePort(rocnetnode, port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0, data->ports[port]->iotype);
 
         msg = allocMem(32);
+        msg[RN_PACKET_NETID] = data->location;
         msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
         rnReceipientAddresToPacket( 0, msg, 0 );
         rnSenderAddresToPacket( data->id, msg, 0 );
@@ -1152,6 +1159,7 @@ static void __scanner( void* threadinst ) {
               data->ports[i]->state = 0;
               __writePort(rocnetnode, i, 0, data->ports[i]->iotype);
 
+              msg[RN_PACKET_NETID] = data->location;
               msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
               rnSenderAddresToPacket( data->id, msg, 0 );
               msg[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
@@ -1175,6 +1183,7 @@ static void __scanner( void* threadinst ) {
             data->ports[i]->acktimer = 0;
             if( data->ports[i]->ackretry <= 10 ) {
               TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no ack for port %d; resend", i );
+              msg[RN_PACKET_NETID] = data->location;
               msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
               msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
               msg[RN_PACKET_LEN] = 4;
@@ -1254,6 +1263,7 @@ static void __scanner( void* threadinst ) {
                   data->show = False;
                 }
                 else {
+                  msg[RN_PACKET_NETID] = data->location;
                   msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
                   msg[RN_PACKET_ACTION] = RN_STATIONARY_SHOW;
                   msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
@@ -1271,6 +1281,7 @@ static void __scanner( void* threadinst ) {
               if( data->ports[i]->type & IO_INVERT ) {
                 val ^= 1;
               }
+              msg[RN_PACKET_NETID] = data->location;
               msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
               msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
               msg[RN_PACKET_LEN] = 4;
@@ -1293,6 +1304,7 @@ static void __scanner( void* threadinst ) {
       identwait++;
       if( identwait > 100 ) {
         identwait = 0;
+        msg[RN_PACKET_NETID] = data->location;
         msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
         rnReceipientAddresToPacket( 0, msg, 0 );
         rnSenderAddresToPacket( data->id, msg, 0 );
@@ -1358,6 +1370,7 @@ static void __listener( obj inst, iONode nodeC, int level ) {
     if(StrOp.equals(NodeOp.getName(nodeC), wFeedback.name())) {
       byte msg[256];
       const char* ident = wFeedback.getidentifier(nodeC);
+      msg[RN_PACKET_NETID] = data->location;
       msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
       msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
       msg[RN_PACKET_LEN] = 4;
@@ -1711,6 +1724,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   if( NodeOp.findNode(data->ini, wRocNet.name()) != NULL ) {
     iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
     data->id    = wRocNet.getid(rocnet);
+    data->location = wRocNet.getnet(rocnet);
     data->addr  = wRocNet.getaddr(rocnet);
     data->port  = wRocNet.getport(rocnet);
     if( data->id < 2 ) {
@@ -1864,6 +1878,7 @@ static Boolean _shutdown( void ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutdown the RocNetNode" );
 
   MemOp.set( msg, 0, sizeof(msg));
+  msg[RN_PACKET_NETID] = data->location;
   msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
   rnReceipientAddresToPacket( 0, msg, 0 );
   rnSenderAddresToPacket( data->id, msg, 0 );

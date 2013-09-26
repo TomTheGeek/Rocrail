@@ -87,6 +87,8 @@ void RocnetNodeDlg::onRocnetWrite( wxCommandEvent& event ) {
   wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
   wProgram.setcmd( cmd, wProgram.nnreq );
   wProgram.setvalue(cmd, m_ID->GetValue() );
+  wProgram.setval1(cmd, m_Location->GetValue() );
+  wProgram.setval2(cmd, wRocNetNode.getsubip(m_Props));
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_rocnet);
   wxGetApp().sendToRocrail( cmd );
@@ -207,11 +209,12 @@ void RocnetNodeDlg::onClose( wxCloseEvent& event ) {
 
 void RocnetNodeDlg::initListLabels() {
   m_NodeList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_RIGHT );
-  m_NodeList->InsertColumn(1, wxGetApp().getMsg( "vendor" ), wxLIST_FORMAT_LEFT );
-  m_NodeList->InsertColumn(2, wxGetApp().getMsg( "class" ), wxLIST_FORMAT_LEFT );
-  m_NodeList->InsertColumn(3, wxGetApp().getMsg( "revision" ), wxLIST_FORMAT_RIGHT );
-  m_NodeList->InsertColumn(4, wxT("I/O"), wxLIST_FORMAT_RIGHT );
-  m_NodeList->InsertColumn(5, wxT("Sub IP"), wxLIST_FORMAT_CENTER);
+  m_NodeList->InsertColumn(1, wxGetApp().getMsg( "location" ), wxLIST_FORMAT_RIGHT );
+  m_NodeList->InsertColumn(2, wxGetApp().getMsg( "vendor" ), wxLIST_FORMAT_LEFT );
+  m_NodeList->InsertColumn(3, wxGetApp().getMsg( "class" ), wxLIST_FORMAT_LEFT );
+  m_NodeList->InsertColumn(4, wxGetApp().getMsg( "revision" ), wxLIST_FORMAT_RIGHT );
+  m_NodeList->InsertColumn(5, wxT("I/O"), wxLIST_FORMAT_RIGHT );
+  m_NodeList->InsertColumn(6, wxT("Sub IP"), wxLIST_FORMAT_CENTER);
 }
 
 
@@ -302,6 +305,18 @@ static int __sortID(obj* _a, obj* _b)
       return -1;
     return 0;
 }
+static int __sortLocation(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int A = wRocNetNode.getlocation( a );
+    int B = wRocNetNode.getlocation( b );
+    if( A > B )
+      return 1;
+    if( A < B )
+      return -1;
+    return 0;
+}
 static int __sortSubIP(obj* _a, obj* _b)
 {
     iONode a = (iONode)*_a;
@@ -329,7 +344,10 @@ void RocnetNodeDlg::initNodeList() {
     rnnode = wRocNet.nextrocnetnode(m_Digint, rnnode);
   }
 
-  if( m_SortCol == 5 ) {
+  if( m_SortCol == 1 ) {
+    ListOp.sort(list, &__sortLocation);
+  }
+  else if( m_SortCol == 6 ) {
     ListOp.sort(list, &__sortSubIP);
   }
   else {
@@ -339,11 +357,12 @@ void RocnetNodeDlg::initNodeList() {
   for( int index = 0; index < ListOp.size(list); index++ ) {
     iONode rnnode = (iONode)ListOp.get(list, index);
     m_NodeList->InsertItem( index, wxString::Format(_T("%d"), wRocNetNode.getid(rnnode)));
-    m_NodeList->SetItem( index, 1, wxString( m_Vendor[wRocNetNode.getvendor(rnnode)&0xFF],wxConvUTF8) );
-    m_NodeList->SetItem( index, 2, wxString(wRocNetNode.getmnemonic(rnnode),wxConvUTF8));
-    m_NodeList->SetItem( index, 3, wxString::Format(_T("%d"), wRocNetNode.getrevision(rnnode)));
-    m_NodeList->SetItem( index, 4, wxString::Format(_T("%d"), wRocNetNode.getnrio(rnnode)));
-    m_NodeList->SetItem( index, 5, wxString::Format(_T("%d.%d"), wRocNetNode.getsubip(rnnode)/256, wRocNetNode.getsubip(rnnode)%256));
+    m_NodeList->SetItem( index, 1, wxString::Format(_T("%d"), wRocNetNode.getlocation(rnnode)));
+    m_NodeList->SetItem( index, 2, wxString( m_Vendor[wRocNetNode.getvendor(rnnode)&0xFF],wxConvUTF8) );
+    m_NodeList->SetItem( index, 3, wxString(wRocNetNode.getmnemonic(rnnode),wxConvUTF8));
+    m_NodeList->SetItem( index, 4, wxString::Format(_T("%d"), wRocNetNode.getrevision(rnnode)));
+    m_NodeList->SetItem( index, 5, wxString::Format(_T("%d"), wRocNetNode.getnrio(rnnode)));
+    m_NodeList->SetItem( index, 6, wxString::Format(_T("%d.%d"), wRocNetNode.getsubip(rnnode)/256, wRocNetNode.getsubip(rnnode)%256));
     m_NodeList->SetItemPtrData(index, (wxUIntPtr)rnnode);
   }
 
@@ -356,6 +375,7 @@ void RocnetNodeDlg::initNodeList() {
   m_NodeList->SetColumnWidth(3, wxLIST_AUTOSIZE);
   m_NodeList->SetColumnWidth(4, wxLIST_AUTOSIZE);
   m_NodeList->SetColumnWidth(5, wxLIST_AUTOSIZE);
+  m_NodeList->SetColumnWidth(6, wxLIST_AUTOSIZE);
 
   if(m_NodeList->GetItemCount() > 0 ) {
     m_NodeList->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
@@ -383,6 +403,7 @@ void RocnetNodeDlg::onIndexSelected( wxListEvent& event ) {
 
 void RocnetNodeDlg::initValues() {
   m_ID->SetValue( wRocNetNode.getid(m_Props) );
+  m_Location->SetValue( wRocNetNode.getlocation(m_Props) );
   m_VendorName->SetValue( wxString( m_Vendor[wRocNetNode.getvendor(m_Props)&0xFF],wxConvUTF8) );
   m_ProductName->SetValue( wxString(wRocNetNode.getclass(m_Props),wxConvUTF8) );
   m_Version->SetValue( wxString::Format(_T("%d"), wRocNetNode.getrevision(m_Props)) );

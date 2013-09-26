@@ -81,6 +81,7 @@
       <var name="identack" vt="Boolean"/>
       <var name="iorc" vt="int"/>
       <var name="id" vt="int"/>
+      <var name="location" vt="int"/>
       <var name="addr" vt="const char*"/>
       <var name="port" vt="int"/>
       <var name="nrio" vt="int"/>

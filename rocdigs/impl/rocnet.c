@@ -442,13 +442,18 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         int i = 0;
         int rnid = wProgram.getmodid(node);
         int newrnid = wProgram.getvalue(node);
+        int location = wProgram.getval1(node);
+        int subip = wProgram.getval2(node);
         rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
         rnReceipientAddresToPacket( rnid, rn, data->seven );
         rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
         rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WRNID;
-        rn[RN_PACKET_LEN] = 2;
+        rn[RN_PACKET_LEN] = 5;
         rn[RN_PACKET_DATA + 0] = newrnid / 256;
         rn[RN_PACKET_DATA + 1] = newrnid % 256;
+        rn[RN_PACKET_DATA + 2] = subip / 256;
+        rn[RN_PACKET_DATA + 3] = subip % 256;
+        rn[RN_PACKET_DATA + 4] = location;
         ThreadOp.post( data->writer, (obj)rn );
       }
       else if( wProgram.getcmd( node ) == wProgram.nvget ) {
@@ -776,11 +781,12 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       rnReceipientAddresToPacket( sndr, rnID, data->seven );
       rnSenderAddresToPacket( wRocNet.getid(data->rnini), rnID, data->seven );
       rnID[RN_PACKET_ACTION] = RN_PROGRAMMING_WRNID;
-      rnID[RN_PACKET_LEN] = 4;
+      rnID[RN_PACKET_LEN] = 5;
       rnID[RN_PACKET_DATA + 0] = data->highestID / 256;
       rnID[RN_PACKET_DATA + 1] = data->highestID % 256;
       rnID[RN_PACKET_DATA + 2] = rn[RN_PACKET_DATA+5];
       rnID[RN_PACKET_DATA + 3] = rn[RN_PACKET_DATA+6];
+      rnID[RN_PACKET_DATA + 4] = rn[RN_PACKET_NETID];
       ThreadOp.post( data->writer, (obj)rnID );
       break;
     }
@@ -789,6 +795,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     if( data->run && !MapOp.haskey( data->nodemap, key ) ) {
       iONode rnnode = NodeOp.inst( wRocNetNode.name(), data->ini, ELEMENT_NODE );
       wRocNetNode.setid(rnnode, sndr);
+      wRocNetNode.setlocation(rnnode, rn[RN_PACKET_NETID]);
       wRocNetNode.setsubip(rnnode, subip);
       wRocNetNode.setclass(rnnode, rnClassString(rn[RN_PACKET_DATA+0], mnemonic));
       wRocNetNode.setmnemonic(rnnode, mnemonic);
@@ -838,10 +845,11 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     break;
 
   case RN_STATIONARY_SHUTDOWN: {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "node %d has been shutdown", sndr );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "node %d has been shutdown", sndr );
 
     StrOp.fmtb( key, "%d-%d", rn[RN_PACKET_NETID], sndr);
     if( MapOp.haskey( data->nodemap, key ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "remove node %s from list", key );
       NodeOp.removeChild( data->ini, (iONode)MapOp.remove( data->nodemap, key ) );
       /* Inform clients */
       {
@@ -853,7 +861,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
         wProgram.setlntype(node, wProgram.lntype_rocnet);
         data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
       }
-}
+    }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node %s is not registered", key );
     }

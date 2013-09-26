@@ -607,7 +607,8 @@
       </ddx>
 
       <rocnet remark="RocNet options" wrappername="RocNet">
-        <var name="id" vt="int" defval="1" range="0-*" remark="RocNet sender ID, 1 is default for Rocrail.(Host)"/>
+        <var name="net" vt="int" defval="0" range="0-255"/>
+        <var name="id" vt="int" defval="1" range="0-65535" remark="RocNet sender ID, 1 is default for Rocrail.(Host)"/>
         <var name="addr" vt="string" defval="224.0.0.1" range="*" remark="multicast address"/>
         <var name="port" vt="int" defval="4321" range="0-*" remark="multicast port"/>
         <var name="crc" vt="bool" defval="false"/>
@@ -620,7 +621,8 @@
           <var name="iotype" vt="int" defval="0"/>
         </rocnetnodeoptions>
         <rocnetnode wrappername="RocNetNode" cardinality="n">
-	        <var name="id" vt="int" defval="10" range="0-*" remark="RocNet sender ID."/>
+	        <var name="id" vt="int" defval="65535" range="0-*" remark="RocNet sender ID."/>
+          <var name="location" vt="int" defval="0" range="0-*" remark="RocNet sender ID."/>
           <var name="class" vt="string" defval="" remark="Class ID."/>
           <var name="mnemonic" vt="string" defval="" remark="Class Mnemonic."/>
           <var name="vendor" vt="int" defval="0" remark="NMRA vendor ID."/>
