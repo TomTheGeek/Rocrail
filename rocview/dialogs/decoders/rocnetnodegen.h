@@ -21,6 +21,8 @@
 #include <wx/listctrl.h>
 #include <wx/button.h>
 #include <wx/panel.h>
+#include <wx/treectrl.h>
+#include <wx/statline.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/spinctrl.h>
@@ -52,6 +54,8 @@ class rocnetnodegen : public wxDialog
 		wxButton* m_Show;
 		wxButton* m_Query;
 		wxPanel* m_RocNetPanel;
+		wxTreeCtrl* m_NodeTree;
+		wxStaticLine* m_staticline1;
 		wxStaticText* m_labIID;
 		wxTextCtrl* m_IID;
 		wxStaticText* m_labID;

@@ -366,9 +366,6 @@ void RocnetNodeDlg::initNodeList() {
     m_NodeList->SetItemPtrData(index, (wxUIntPtr)rnnode);
   }
 
-  /* clean up the temp. list */
-  ListOp.base.del(list);
-
   m_NodeList->SetColumnWidth(0, wxLIST_AUTOSIZE);
   m_NodeList->SetColumnWidth(1, wxLIST_AUTOSIZE);
   m_NodeList->SetColumnWidth(2, wxLIST_AUTOSIZE);
@@ -381,6 +378,38 @@ void RocnetNodeDlg::initNodeList() {
     m_NodeList->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
     m_Props = (iONode)m_NodeList->GetItemData(0);
   }
+
+
+  m_NodeTree->DeleteAllItems();
+  wxTreeItemId root  = m_NodeTree->AddRoot(m_IID->GetValue().mb_str(wxConvUTF8));
+  iOMap locationMap = MapOp.inst();
+  for( int i = 0; i < ListOp.size(list); i++ ) {
+    iONode rnnode = (iONode)ListOp.get(list, i);
+    char location[256] = {'\0'};
+    StrOp.fmtb( location, "%d",  wRocNetNode.getlocation(rnnode) );
+    wxTreeItemId* plocation = (wxTreeItemId*)MapOp.get( locationMap, location );
+    wxTreeItemId cat;
+    if( plocation == NULL ) {
+      cat = m_NodeTree->AppendItem( root, wxString( location, wxConvUTF8));
+      plocation = &cat;
+      MapOp.put(locationMap, location, (obj)new wxTreeItemId(cat.m_pItem) );
+    }
+    else {
+      cat = *plocation;
+    }
+    m_NodeTree->AppendItem( cat, wxT("[") + wxString(wRocNetNode.getmnemonic(rnnode),wxConvUTF8) + wxT("] ") + wxString::Format(_T("%d"), wRocNetNode.getid(rnnode)));
+    /*
+    MapOp.put( m_CVMap, wCVByte.getdesc(cv), (obj)cv);
+    char key[32];
+    StrOp.fmtb(key, "%d", wCVByte.getnr(cv) );
+    MapOp.put( m_CVNrMap, key, (obj)cv);
+    */
+  }
+  m_NodeTree->ExpandAll();
+
+  /* clean up the temp. list */
+  ListOp.base.del(list);
+
 
 }
 

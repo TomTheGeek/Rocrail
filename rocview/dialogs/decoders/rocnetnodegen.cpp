@@ -60,6 +60,15 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
 	
+	wxBoxSizer* bSizer13;
+	bSizer13 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_NodeTree = new wxTreeCtrl( m_RocNetPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE|wxTR_SINGLE );
+	bSizer13->Add( m_NodeTree, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticline1 = new wxStaticLine( m_RocNetPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+	bSizer13->Add( m_staticline1, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	wxFlexGridSizer* fgSizer5;
 	fgSizer5 = new wxFlexGridSizer( 0, 2, 0, 0 );
 	fgSizer5->AddGrowableCol( 1 );
@@ -125,7 +134,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	fgSizer5->Add( fgSizer4, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
-	bSizer6->Add( fgSizer5, 0, wxEXPAND, 5 );
+	bSizer13->Add( fgSizer5, 1, wxEXPAND, 5 );
+	
+	bSizer6->Add( bSizer13, 0, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
