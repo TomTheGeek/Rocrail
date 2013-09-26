@@ -268,6 +268,7 @@ void RocnetNodeDlg::initLabels() {
   m_labUpdate->SetLabel(wxGetApp().getMsg( "newrevision" ));
   m_Update->SetLabel(wxGetApp().getMsg( "update" ));
   m_RocnetWrite->SetLabel(wxGetApp().getMsg( "set" ));
+  m_UpdateOffline->SetLabel(wxGetApp().getMsg( "file" ));
 
   // Options
   m_RocNetOptionBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "options" ));
@@ -804,6 +805,7 @@ void RocnetNodeDlg::onUpdate( wxCommandEvent& event ) {
   wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
   wProgram.setcmd( cmd, wProgram.update );
   wProgram.setvalue( cmd, revision );
+  wProgram.setval1( cmd, m_UpdateOffline->IsChecked()?1:0 );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_rocnet);
   wxGetApp().sendToRocrail( cmd );

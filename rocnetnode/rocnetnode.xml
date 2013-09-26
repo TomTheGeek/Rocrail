@@ -68,7 +68,8 @@
     <fun name="sysHalt" vt="void"/>
     <fun name="sysUpdate" vt="void">
       <param name="revision" vt="int"/>
-    </fun>
+      <param name="offline" vt="int"/>
+      </fun>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="digintini" vt="iONode"/>

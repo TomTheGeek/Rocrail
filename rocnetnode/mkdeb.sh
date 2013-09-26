@@ -51,6 +51,7 @@ strip debian/opt/rocnet/rocnetnode
 strip debian/opt/rocnet/*.so
 
 cp ../package/update.sh debian/opt/rocnet
+cp ../package/update-offline.sh debian/opt/rocnet
 cp ../package/rocnetnode.sh debian/opt/rocnet
 cp ../package/rocnetnoded debian/etc/init.d
 chmod +x debian/opt/rocnet/*.sh
