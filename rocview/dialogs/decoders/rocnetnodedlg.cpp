@@ -255,9 +255,12 @@ void RocnetNodeDlg::initLabels() {
   // RocNet
   m_labIID->SetLabel(wxGetApp().getMsg( "iid" ));
   m_labID->SetLabel(wxGetApp().getMsg( "id" ));
+  m_labLocation->SetLabel(wxGetApp().getMsg( "location" ));
   m_labVendor->SetLabel(wxGetApp().getMsg( "vendor" ));
   m_labProduct->SetLabel(wxGetApp().getMsg( "class" ));
   m_labVersion->SetLabel(wxGetApp().getMsg( "revision" ));
+  m_labUpdate->SetLabel(wxGetApp().getMsg( "newrevision" ));
+  m_Update->SetLabel(wxGetApp().getMsg( "update" ));
   m_RocnetWrite->SetLabel(wxGetApp().getMsg( "set" ));
 
   // Options

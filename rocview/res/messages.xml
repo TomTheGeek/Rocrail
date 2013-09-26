@@ -24660,4 +24660,10 @@
   <Msg id="updatenode">
     <en txt="Update RocNet node %d to revision %d?"/>
   </Msg>
+  <Msg id="update">
+    <en txt="Update"/>
+  </Msg>
+  <Msg id="newrevision">
+    <en txt="New revision"/>
+  </Msg>
 </Messages>

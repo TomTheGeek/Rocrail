@@ -6689,3 +6689,21 @@ msgstr ""
 msgid "Shutdown all RocNet nodes?"
 msgstr ""
 
+#. 
+# id="updatenode"
+#, c-format
+msgid "Update RocNet node %d to revision %d?"
+msgstr ""
+
+#. 
+# id="update"
+#, c-format
+msgid "Update"
+msgstr ""
+
+#. 
+# id="newrevision"
+#, c-format
+msgid "New revision"
+msgstr ""
+
