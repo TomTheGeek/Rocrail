@@ -41,8 +41,9 @@ class RocnetNodeDlg : public rocnetnodegen
   iONode m_Ini;
   iONode m_Digint;
   iONode m_Props;
+  iONode m_SelectedNode;
   iOMap m_NodeMap;
-  iOMap m_TreeNodeMap;
+  iOMap m_TreeItemMap;
   void initLabels();
   void initListLabels();
   void initValues();
@@ -50,6 +51,7 @@ class RocnetNodeDlg : public rocnetnodegen
   void initPorts();
   void initMacro(iONode node);
   void getZLevel(int level, char* sLevel);
+  void selChanged( iONode rnnode );
   int m_PortGroup;
   int m_SortCol;
 
@@ -82,7 +84,7 @@ class RocnetNodeDlg : public rocnetnodegen
     void onItemActivated( wxTreeEvent& event );
     void onTreeItemRightClick( wxTreeEvent& event );
     void onTreeSelChanged( wxTreeEvent& event );
-
+    void onMenu( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		RocnetNodeDlg( wxWindow* parent, iONode ini );

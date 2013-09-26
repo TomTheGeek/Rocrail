@@ -55,7 +55,8 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   m_PortGroup = 0;
   m_SortCol  = 0;
   m_NodeMap = MapOp.inst();
-  m_TreeNodeMap = MapOp.inst();
+  m_TreeItemMap = MapOp.inst();
+  m_SelectedNode = NULL;
 
   __initVendors();
   m_NodeBook->SetSelection(0);
@@ -85,7 +86,7 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
 
 RocnetNodeDlg::~RocnetNodeDlg() {
   MapOp.base.del(m_NodeMap);
-  MapOp.base.del(m_TreeNodeMap);
+  MapOp.base.del(m_TreeItemMap);
 }
 
 void RocnetNodeDlg::onRocnetWrite( wxCommandEvent& event ) {
@@ -400,7 +401,7 @@ void RocnetNodeDlg::initNodeList() {
 
   m_NodeTree->DeleteAllItems();
   MapOp.clear(m_NodeMap);
-  MapOp.clear(m_TreeNodeMap);
+  MapOp.clear(m_TreeItemMap);
   wxTreeItemId root  = m_NodeTree->AddRoot(m_IID->GetValue());
   iOMap locationMap = MapOp.inst();
   for( int i = 0; i < ListOp.size(list); i++ ) {
@@ -421,7 +422,7 @@ void RocnetNodeDlg::initNodeList() {
     StrOp.fmtb(key, "[%s] %05d", wRocNetNode.getmnemonic(rnnode), wRocNetNode.getid(rnnode) );
     MapOp.put( m_NodeMap, key, (obj)rnnode);
     wxTreeItemId child = m_NodeTree->AppendItem( cat, wxString(key,wxConvUTF8) );
-    MapOp.put(m_TreeNodeMap, key, (obj)new wxTreeItemId(child.m_pItem) );
+    MapOp.put(m_TreeItemMap, key, (obj)new wxTreeItemId(child.m_pItem) );
   }
   MapOp.base.del(locationMap);
 
@@ -441,17 +442,11 @@ void RocnetNodeDlg::onIndexSelected( wxListEvent& event ) {
   int index = event.GetIndex();
   m_Props = (iONode)m_NodeList->GetItemData(index);
   if( m_Props != NULL ) {
-    m_PortGroup = 0;
-    initPorts();
-    initValues();
-    m_MacroLines->ClearGrid();
-    SetTitle(wxT("RocNetNode: ") + wxString::Format(_T("%d"), wRocNetNode.getid(m_Props) ) );
-    wxCommandEvent cmd;
-    onNodeOptionsRead(cmd);
+    selChanged(m_Props);
 
     char key[256] = {'\0'};
     StrOp.fmtb(key, "[%s] %05d", wRocNetNode.getmnemonic(m_Props), wRocNetNode.getid(m_Props) );
-    wxTreeItemId* pchild = (wxTreeItemId*)MapOp.get( m_TreeNodeMap, key );
+    wxTreeItemId* pchild = (wxTreeItemId*)MapOp.get( m_TreeItemMap, key );
     if( pchild != NULL )
       m_NodeTree->SelectItem(*pchild);
   }
@@ -672,6 +667,7 @@ void RocnetNodeDlg::onShow( wxCommandEvent& event ) {
   wProgram.setcmd( cmd, wProgram.show );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999,"show: %d", wProgram.getmodid(cmd) );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -865,8 +861,31 @@ void RocnetNodeDlg::onItemActivated( wxTreeEvent& event ) {
 }
 
 
-void RocnetNodeDlg::onTreeItemRightClick( wxTreeEvent& event ) {
+void RocnetNodeDlg::onMenu( wxCommandEvent& event ) {
+  int menuItem = event.GetId();
+  if( m_SelectedNode != NULL ) {
+    TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "action %d", menuItem );
+    if( menuItem == 1001) {
+      m_Props = m_SelectedNode;
+      onShow(event);
+    }
+    else if( menuItem == 1002) {
+      m_Props = m_SelectedNode;
+      onShutdown(event);
+    }
+  }
+}
 
+
+void RocnetNodeDlg::onTreeItemRightClick( wxTreeEvent& event ) {
+  wxString itemText = m_NodeTree->GetItemText(event.GetItem());
+  const char* key = itemText.mb_str(wxConvUTF8);
+  m_SelectedNode = (iONode)MapOp.get( m_NodeMap, key );
+  wxMenu menu( wxString(key,wxConvUTF8) );
+  menu.Append( 1001, wxGetApp().getMenu("show") );
+  menu.Append( 1002, wxGetApp().getMenu("shutdownserver") );
+  menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( RocnetNodeDlg::onMenu ), NULL, this );
+  PopupMenu(&menu );
 }
 
 
@@ -875,6 +894,11 @@ void RocnetNodeDlg::onTreeSelChanged( wxTreeEvent& event ) {
   char* key = StrOp.dup(itemText.mb_str(wxConvUTF8));
   iONode rnnode = (iONode)MapOp.get( m_NodeMap, key);
   TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999,"tree selection: %s", key );
+  selChanged(rnnode);
+}
+
+
+void RocnetNodeDlg::selChanged( iONode rnnode ) {
   if( rnnode != NULL ) {
     m_Props = rnnode;
     m_PortGroup = 0;
@@ -886,5 +910,4 @@ void RocnetNodeDlg::onTreeSelChanged( wxTreeEvent& event ) {
     onNodeOptionsRead(cmd);
   }
 }
-
 
