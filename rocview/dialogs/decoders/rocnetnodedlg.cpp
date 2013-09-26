@@ -55,6 +55,7 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   m_PortGroup = 0;
   m_SortCol  = 0;
   m_NodeMap = MapOp.inst();
+  m_TreeNodeMap = MapOp.inst();
 
   __initVendors();
   m_NodeBook->SetSelection(0);
@@ -84,6 +85,7 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
 
 RocnetNodeDlg::~RocnetNodeDlg() {
   MapOp.base.del(m_NodeMap);
+  MapOp.base.del(m_TreeNodeMap);
 }
 
 void RocnetNodeDlg::onRocnetWrite( wxCommandEvent& event ) {
@@ -396,13 +398,9 @@ void RocnetNodeDlg::initNodeList() {
   m_NodeList->SetColumnWidth(5, wxLIST_AUTOSIZE);
   m_NodeList->SetColumnWidth(6, wxLIST_AUTOSIZE);
 
-  if(m_NodeList->GetItemCount() > 0 ) {
-    m_NodeList->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
-    m_Props = (iONode)m_NodeList->GetItemData(0);
-  }
-
-
   m_NodeTree->DeleteAllItems();
+  MapOp.clear(m_NodeMap);
+  MapOp.clear(m_TreeNodeMap);
   wxTreeItemId root  = m_NodeTree->AddRoot(m_IID->GetValue().mb_str(wxConvUTF8));
   iOMap locationMap = MapOp.inst();
   for( int i = 0; i < ListOp.size(list); i++ ) {
@@ -422,7 +420,8 @@ void RocnetNodeDlg::initNodeList() {
     char key[256] = {'\0'};
     StrOp.fmtb(key, "[%s] %05d", wRocNetNode.getmnemonic(rnnode), wRocNetNode.getid(rnnode) );
     MapOp.put( m_NodeMap, key, (obj)rnnode);
-    m_NodeTree->AppendItem( cat, wxString(key,wxConvUTF8) );
+    wxTreeItemId child = m_NodeTree->AppendItem( cat, wxString(key,wxConvUTF8) );
+    MapOp.put(m_TreeNodeMap, key, (obj)new wxTreeItemId(child.m_pItem) );
   }
   MapOp.base.del(locationMap);
 
@@ -431,6 +430,10 @@ void RocnetNodeDlg::initNodeList() {
   /* clean up the temp. list */
   ListOp.base.del(list);
 
+  if(m_NodeList->GetItemCount() > 0 ) {
+    m_NodeList->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+    m_Props = (iONode)m_NodeList->GetItemData(0);
+  }
 
 }
 
@@ -445,6 +448,12 @@ void RocnetNodeDlg::onIndexSelected( wxListEvent& event ) {
     SetTitle(wxT("RocNetNode: ") + wxString::Format(_T("%d"), wRocNetNode.getid(m_Props) ) );
     wxCommandEvent cmd;
     onNodeOptionsRead(cmd);
+
+    char key[256] = {'\0'};
+    StrOp.fmtb(key, "[%s] %05d", wRocNetNode.getmnemonic(m_Props), wRocNetNode.getid(m_Props) );
+    wxTreeItemId* pchild = (wxTreeItemId*)MapOp.get( m_TreeNodeMap, key );
+    if( pchild != NULL )
+      m_NodeTree->SelectItem(*pchild);
   }
   else
     TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );

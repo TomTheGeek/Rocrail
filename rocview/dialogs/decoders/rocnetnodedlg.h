@@ -42,6 +42,7 @@ class RocnetNodeDlg : public rocnetnodegen
   iONode m_Digint;
   iONode m_Props;
   iOMap m_NodeMap;
+  iOMap m_TreeNodeMap;
   void initLabels();
   void initListLabels();
   void initValues();
