@@ -56,7 +56,9 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   m_SortCol  = 0;
   m_NodeMap = MapOp.inst();
   m_TreeItemMap = MapOp.inst();
+  m_TreeLocationMap = MapOp.inst();
   m_SelectedNode = NULL;
+  m_SelectedZLevel = NULL;
 
   __initVendors();
   m_NodeBook->SetSelection(0);
@@ -87,6 +89,7 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
 RocnetNodeDlg::~RocnetNodeDlg() {
   MapOp.base.del(m_NodeMap);
   MapOp.base.del(m_TreeItemMap);
+  MapOp.base.del(m_TreeLocationMap);
 }
 
 void RocnetNodeDlg::onRocnetWrite( wxCommandEvent& event ) {
@@ -343,20 +346,18 @@ static int __sortSubIP(obj* _a, obj* _b)
     return 0;
 }
 
-const char* RocnetNodeDlg::getZLevel(int level, char* sLevel) {
-  if( sLevel == NULL )
-    return wPlan.gettitle(wxGetApp().getModel());
+iONode RocnetNodeDlg::getZLevel(int level, char* sLevel) {
   iONode zlevel = wPlan.getzlevel( wxGetApp().getModel() );
   while( zlevel != NULL ) {
     if( wZLevel.getz(zlevel) == level ) {
       StrOp.copy( sLevel, wZLevel.gettitle(zlevel) );
-      return wPlan.gettitle(wxGetApp().getModel());
+      return zlevel;
     }
     zlevel = wPlan.nextzlevel( wxGetApp().getModel(), zlevel );
   };
 
   StrOp.fmtb(sLevel, "%d", level);
-  return wPlan.gettitle(wxGetApp().getModel());
+  return NULL;
 }
 
 void RocnetNodeDlg::initNodeList() {
@@ -405,18 +406,20 @@ void RocnetNodeDlg::initNodeList() {
   m_NodeTree->DeleteAllItems();
   MapOp.clear(m_NodeMap);
   MapOp.clear(m_TreeItemMap);
-  wxTreeItemId root  = m_NodeTree->AddRoot(wxString(getZLevel(0, NULL), wxConvUTF8));
+  MapOp.clear(m_TreeLocationMap);
+  wxTreeItemId root  = m_NodeTree->AddRoot(wxString(wPlan.gettitle(wxGetApp().getModel()), wxConvUTF8));
   iOMap locationMap = MapOp.inst();
   for( int i = 0; i < ListOp.size(list); i++ ) {
     iONode rnnode = (iONode)ListOp.get(list, i);
     char location[256] = {'\0'};
-    getZLevel(wRocNetNode.getlocation(rnnode), location);
+    iONode zlevel = getZLevel(wRocNetNode.getlocation(rnnode), location);
     wxTreeItemId* plocation = (wxTreeItemId*)MapOp.get( locationMap, location );
     wxTreeItemId cat;
     if( plocation == NULL ) {
       cat = m_NodeTree->AppendItem( root, wxString( location, wxConvUTF8));
       plocation = &cat;
       MapOp.put(locationMap, location, (obj)new wxTreeItemId(cat.m_pItem) );
+      MapOp.put(m_TreeLocationMap, location, (obj)zlevel );
     }
     else {
       cat = *plocation;
@@ -877,6 +880,16 @@ void RocnetNodeDlg::onMenu( wxCommandEvent& event ) {
       onShutdown(event);
     }
   }
+
+  if( m_SelectedZLevel != NULL ) {
+    if( menuItem == 2002) {
+      shutdownLocation();
+    }
+  }
+
+  if( menuItem == 3002) {
+    onShutdownAll(event);
+  }
 }
 
 
@@ -890,6 +903,24 @@ void RocnetNodeDlg::onTreeItemRightClick( wxTreeEvent& event ) {
     menu.Append( 1002, wxGetApp().getMenu("shutdownserver") );
     menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( RocnetNodeDlg::onMenu ), NULL, this );
     PopupMenu(&menu );
+    return;
+  }
+
+  m_SelectedZLevel = (iONode)MapOp.get( m_TreeLocationMap, key );
+  if( m_SelectedZLevel != NULL ) {
+    wxMenu menu( wxString(key,wxConvUTF8) );
+    menu.Append( 2002, wxGetApp().getMenu("shutdownserver") );
+    menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( RocnetNodeDlg::onMenu ), NULL, this );
+    PopupMenu(&menu );
+    return;
+  }
+
+  if( StrOp.equals(key, wPlan.gettitle(wxGetApp().getModel())) ) {
+    wxMenu menu( wxString(key,wxConvUTF8) );
+    menu.Append( 3002, wxGetApp().getMenu("shutdownall") );
+    menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( RocnetNodeDlg::onMenu ), NULL, this );
+    PopupMenu(&menu );
+    return;
   }
 }
 
@@ -914,5 +945,29 @@ void RocnetNodeDlg::selChanged( iONode rnnode ) {
     wxCommandEvent cmd;
     onNodeOptionsRead(cmd);
   }
+}
+
+void RocnetNodeDlg::shutdownLocation() {
+  if( m_SelectedZLevel == NULL )
+    return;
+
+  int action = wxMessageDialog( this, wxString::Format(wxGetApp().getMsg( "shutdownlocation" ), wZLevel.gettitle(m_SelectedZLevel)),
+      _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION | wxNO_DEFAULT ).ShowModal();
+  if( action == wxID_NO ) {
+    return;
+  }
+
+  iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+  wSysCmd.setcmd( cmd, wSysCmd.shutdownnode );
+
+  iONode rnnode = wRocNet.getrocnetnode(m_Digint);
+  while( rnnode != NULL ) {
+    wSysCmd.setbus(cmd, wRocNetNode.getid(rnnode));
+    wxGetApp().sendToRocrail( cmd );
+    rnnode = wRocNet.nextrocnetnode(m_Digint, rnnode);
+  }
+
+  cmd->base.del(cmd);
+
 }
 

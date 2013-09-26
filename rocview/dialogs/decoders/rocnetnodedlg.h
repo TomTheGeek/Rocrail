@@ -44,14 +44,17 @@ class RocnetNodeDlg : public rocnetnodegen
   iONode m_SelectedNode;
   iOMap m_NodeMap;
   iOMap m_TreeItemMap;
+  iOMap m_TreeLocationMap;
+  iONode m_SelectedZLevel;
   void initLabels();
   void initListLabels();
   void initValues();
   void initNodeList();
   void initPorts();
   void initMacro(iONode node);
-  const char* getZLevel(int level, char* sLevel);
+  iONode getZLevel(int level, char* sLevel);
   void selChanged( iONode rnnode );
+  void shutdownLocation();
   int m_PortGroup;
   int m_SortCol;
 

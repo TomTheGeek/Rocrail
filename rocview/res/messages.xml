@@ -24666,4 +24666,7 @@
   <Msg id="newrevision">
     <en txt="New revision"/>
   </Msg>
+  <Msg id="shutdownlocation">
+    <en txt="Shutdown location %s?"/>
+  </Msg>
 </Messages>

@@ -6707,3 +6707,9 @@ msgstr ""
 msgid "New revision"
 msgstr ""
 
+#. 
+# id="shutdownlocation"
+#, c-format
+msgid "Shutdown location %s?"
+msgstr ""
+
