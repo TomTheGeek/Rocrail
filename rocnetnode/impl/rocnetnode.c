@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -88,6 +88,8 @@ static void __saveIni(iORocNetNode rocnetnode);
 static void __initControl(iORocNetNode inst);
 static void __initIO(iORocNetNode rocnetnode);
 static iONode __findMacro(iORocNetNode inst, int nr);
+static Boolean __initDigInt(iORocNetNode inst);
+static void __unloadDigInt(iORocNetNode inst);
 
 
 /** ----- OBase ----- */
@@ -642,6 +644,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
         if( digintini == NULL ) {
           iONode digintini = NodeOp.inst(wDigInt.name(), data->ini, ELEMENT_NODE);
           NodeOp.addChild(data->ini, digintini);
+          data->digintini = digintini;
         }
         wDigInt.setiid(digintini, "dcc");
         if( data->cstype==1 )
@@ -656,6 +659,8 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
         else
           wDigInt.setdevice(digintini, "/dev/ttyUSB0");
 
+        __unloadDigInt(rocnetnode);
+        __initDigInt(rocnetnode);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dcc: lib=%s device=%s", wDigInt.getlib(digintini), wDigInt.getdevice(digintini) );
       }
     }
@@ -1393,10 +1398,30 @@ static void __listener( obj inst, iONode nodeC, int level ) {
   }
 }
 
+static void __unloadDigInt(iORocNetNode inst) {
+  iORocNetNodeData data = Data(inst);
+
+  if( !data->rfid && data->pRFID != NULL ) {
+    iIDigInt pRFID = data->pRFID;
+    data->pRFID = NULL;
+    pRFID->halt((obj)pRFID, True);
+    ThreadOp.sleep(100);
+    pRFID->base.del(pRFID);
+  }
+
+  if( data->csdevice == 0 && data->pDI != NULL ) {
+    iIDigInt pDI = data->pDI;
+    data->pDI = NULL;
+    pDI->halt((obj)pDI, True);
+    ThreadOp.sleep(100);
+    pDI->base.del(pDI);
+  }
+}
+
 static Boolean __initDigInt(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
 
-  if( data->rfid ) {
+  if( data->rfid && data->pRFID == NULL ) {
     iOLib    pLib = NULL;
     LPFNROCGETDIGINT pInitFun = (void *) NULL;
     char* libpath = StrOp.fmt( "%s%c%s", data->libpath, SystemOp.getFileSeparator(), "rfid12" );
@@ -1416,7 +1441,7 @@ static Boolean __initDigInt(iORocNetNode inst) {
     }
   }
 
-  if( data->digintini != NULL ) {
+  if( data->csdevice > 0 && data->pDI == NULL && data->digintini != NULL ) {
     const char*  lib = wDigInt.getlib( data->digintini );
     const char*  iid = wDigInt.getiid( data->digintini );
     iOLib    pLib = NULL;
