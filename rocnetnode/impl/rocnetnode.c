@@ -89,7 +89,7 @@ static void __initControl(iORocNetNode inst);
 static void __initIO(iORocNetNode rocnetnode);
 static iONode __findMacro(iORocNetNode inst, int nr);
 static Boolean __initDigInt(iORocNetNode inst);
-static void __unloadDigInt(iORocNetNode inst);
+static void __unloadDigInt(iORocNetNode inst, int prevcstype);
 
 
 /** ----- OBase ----- */
@@ -608,6 +608,8 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     break;
 
   case RN_PROGRAMMING_WROPT:
+  {
+    int prevcstype = data->csdevice;
     data->iotype = rn[RN_PACKET_DATA + 0];
     data->sack   = (rn[RN_PACKET_DATA + 1] & 0x01) ? True:False;
     data->rfid   = (rn[RN_PACKET_DATA + 1] & 0x02) ? True:False;
@@ -659,13 +661,16 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
         else
           wDigInt.setdevice(digintini, "/dev/ttyUSB0");
 
-        __unloadDigInt(rocnetnode);
+        __unloadDigInt(rocnetnode, prevcstype);
         __initDigInt(rocnetnode);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dcc: lib=%s device=%s", wDigInt.getlib(digintini), wDigInt.getdevice(digintini) );
       }
     }
     __saveIni(rocnetnode);
-    break;
+  }
+  break;
+
+
   }
 
   return msg;
@@ -1398,7 +1403,7 @@ static void __listener( obj inst, iONode nodeC, int level ) {
   }
 }
 
-static void __unloadDigInt(iORocNetNode inst) {
+static void __unloadDigInt(iORocNetNode inst, int prevcstype) {
   iORocNetNodeData data = Data(inst);
 
   if( !data->rfid && data->pRFID != NULL ) {
@@ -1409,7 +1414,7 @@ static void __unloadDigInt(iORocNetNode inst) {
     pRFID->base.del(pRFID);
   }
 
-  if( data->csdevice == 0 && data->pDI != NULL ) {
+  if( data->csdevice != prevcstype && data->pDI != NULL ) {
     iIDigInt pDI = data->pDI;
     data->pDI = NULL;
     pDI->halt((obj)pDI, True);
