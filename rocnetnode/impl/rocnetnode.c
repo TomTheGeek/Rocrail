@@ -192,6 +192,8 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
   int V = 0;
   int dir = 0;
   int lights = 0;
+  int prot = 0;
+  int spcnt = 0;
   int i = 0;
 
   rcpt = rnReceipientAddrFromPacket(rn, 0);
@@ -250,11 +252,14 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
         V = rn[RN_PACKET_DATA + 2];
         dir = rn[RN_PACKET_DATA + 3];
         lights = rn[RN_PACKET_DATA + 4];
+        prot = rn[RN_PACKET_DATA + 5];
+        spcnt = rn[RN_PACKET_DATA + 6];
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco addr=%d V=%d dir=%d lights=%d", addr, V, dir, lights );
         if(data->pDI != NULL) {
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
           wLoc.setaddr(cmd, addr);
           wLoc.setV(cmd, V);
+          wLoc.setspcnt(cmd, spcnt);
           wLoc.setdir(cmd, dir);
           wLoc.setfn(cmd, lights);
           data->pDI->cmd( (obj)data->pDI, cmd );

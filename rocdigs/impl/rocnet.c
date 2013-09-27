@@ -326,6 +326,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
     int   bus  = wLoc.getbus( node );
     int   addr = wLoc.getaddr( node );
+    int  spcnt = wLoc.getspcnt( node );
     int      V = 0;
     byte    fn = wLoc.isfn( node )  ? RN_MOBILE_LIGHTS_ON:0;
     byte   dir = wLoc.isdir( node ) ? RN_MOBILE_DIR_FORWARDS:0;
@@ -344,13 +345,14 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
       rnReceipientAddresToPacket( bus, rn, data->seven );
       rn[RN_PACKET_ACTION] = RN_CS_VELOCITY;
-      rn[RN_PACKET_LEN] = 6;
+      rn[RN_PACKET_LEN] = 7;
       rn[RN_PACKET_DATA + 0] = addr / 256;
       rn[RN_PACKET_DATA + 1] = addr % 256;
       rn[RN_PACKET_DATA + 2] = V;
       rn[RN_PACKET_DATA + 3] = dir;
       rn[RN_PACKET_DATA + 4] = fn;
       rn[RN_PACKET_DATA + 5] = prot;
+      rn[RN_PACKET_DATA + 6] = spcnt;
     }
     else {
       rn[RN_PACKET_GROUP] |= RN_GROUP_MOBILE;
