@@ -644,12 +644,12 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
         else if( data->cstype==2 )
           wDigInt.setlib(digintini, wDigInt.sprog);
 
-        if( data->csdevice==0 )
-          wDigInt.setdevice(digintini, "/dev/ttyUSB0");
-        else if( data->csdevice==1 )
+        if( data->csdevice==1 )
           wDigInt.setdevice(digintini, "/dev/ttyUSB1");
-        else if( data->csdevice==1 )
+        else if( data->csdevice==2 )
           wDigInt.setdevice(digintini, "/dev/ttyACM0");
+        else
+          wDigInt.setdevice(digintini, "/dev/ttyUSB0");
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dcc: lib=%s device=%s", wDigInt.getlib(digintini), wDigInt.getdevice(digintini) );
       }
