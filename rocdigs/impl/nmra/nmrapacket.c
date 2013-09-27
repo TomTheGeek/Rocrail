@@ -468,7 +468,7 @@ int speedStep128Packet(byte* retVal, int address, Boolean longAddr, int speed, B
   }
 
   if (speed<0 || speed>127) {
-    printf("invalid speed %d\n",speed);
+    printf("invalid speed %d > 127\n",speed);
     return 0;
   }
 
@@ -516,7 +516,7 @@ int speedStep28Packet(byte* retVal, int address, Boolean longAddr, int speed, Bo
   }
 
   if (speed<0 || speed>28) {
-      printf("invalid speed %d\n",speed);
+      printf("invalid speed %d > 28\n",speed);
       return 0;
   }
   int speedC = (speed&0x1F) >> 1;
@@ -549,7 +549,7 @@ int speedStep28Packet(byte* retVal, int address, Boolean longAddr, int speed, Bo
 int speedStep14Packet(byte* retVal, int address, Boolean longAddr, int speed, Boolean fwd, Boolean F0) {
 
   if (speed < 0 || speed > 15) {
-    printf("invalid speed %d\n", speed);
+    printf("invalid speed %d > 15\n", speed);
     return 0;
   }
 

@@ -327,19 +327,13 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     int   bus  = wLoc.getbus( node );
     int   addr = wLoc.getaddr( node );
     int  spcnt = wLoc.getspcnt( node );
-    int      V = 0;
+    int      V = wLoc.getV( node );
     byte    fn = wLoc.isfn( node )  ? RN_MOBILE_LIGHTS_ON:0;
     byte   dir = wLoc.isdir( node ) ? RN_MOBILE_DIR_FORWARDS:0;
     byte  prot = __getProtocol(node);
 
-    if( wLoc.getV( node ) != -1 ) {
-      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
-        V = (wLoc.getV( node ) * 127) / 100;
-      else if( wLoc.getV_max( node ) > 0 )
-        V = (wLoc.getV( node ) * 127) / wLoc.getV_max( node );
-    }
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d:%d V=%d lights=%s dir=%s",
-        bus, addr, V, fn?"on":"off", dir?"forwards":"reverse" );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d:%d V=%d lights=%s dir=%s spcnt=%d",
+        bus, addr, V, fn?"on":"off", dir?"forwards":"reverse", spcnt );
 
     if( bus > 0 ) {
       rn[RN_PACKET_GROUP] |= RN_GROUP_CS;

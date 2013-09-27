@@ -254,7 +254,7 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
         lights = rn[RN_PACKET_DATA + 4];
         prot = rn[RN_PACKET_DATA + 5];
         spcnt = rn[RN_PACKET_DATA + 6];
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco addr=%d V=%d dir=%d lights=%d", addr, V, dir, lights );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco addr=%d V=%d dir=%d lights=%d spcnt=%d", addr, V, dir, lights, spcnt );
         if(data->pDI != NULL) {
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
           wLoc.setaddr(cmd, addr);

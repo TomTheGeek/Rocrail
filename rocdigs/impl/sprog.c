@@ -811,7 +811,7 @@ static void __sprogWriter( void* threadinst ) {
         }
 
 
-        if( data->slots[slotidx].steps == 128 )  {
+        if( data->slots[slotidx].steps > 28 )  {
           int size = speedStep128Packet(dcc, data->slots[slotidx].addr,
               data->slots[slotidx].longaddr, data->slots[slotidx].V, data->slots[slotidx].dir );
           __byteToStr( cmd, dcc, size );
