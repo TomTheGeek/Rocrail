@@ -48,6 +48,8 @@
 //            2013-06-17       kw  added FEATURE_GEN_WATCHDOG, BIDIB_ERR_OVERRUN
 //                                 added useful defines for Accessory States
 //            2013-07-10 V0.12 kw  added BIDIB_BOOT_MAGIC
+//            2013-09-26 V0.13 kw  added MSG_LC_OUTPUT_QUERY, added FEATURE_RELEVANT_PID_BITS
+//                                       FEATURE_CTRL_PORT_QUERY_AVAILABLE
 //
 //===============================================================================
 //
@@ -159,6 +161,7 @@
 #define MSG_LC_CONFIG_SET       (MSG_DLC + 0x01)        // 1:type, 2:port, 3:off_val, 4:on_val, 5:dimm_off, 6:dimm_on
 #define MSG_LC_CONFIG_GET       (MSG_DLC + 0x02)        // 1:type, 2:port
 #define MSG_LC_KEY_QUERY        (MSG_DLC + 0x03)        // 1:port
+#define MSG_LC_OUTPUT_QUERY     (MSG_DLC + 0x04)        // 1:type, 2:port
 
 //-- macro messages
 #define MSG_DMAC                (MSG_DSTRM + 0x48)
@@ -549,6 +552,7 @@ typedef struct                              // t_bidib_cs_pom
 #define FEATURE_CTRL_MAC_SIZE              63   // length of each macro (entries)
 #define FEATURE_CTRL_MAC_START_MAN         64   // (local) manual control of macros enabled
 #define FEATURE_CTRL_MAC_START_DCC         65   // (local) dcc control of macros enabled
+#define FEATURE_CTRL_PORT_QUERY_AVAILABLE  66   // 1: hnode will answer to MSG_LC_OUTPUT_QUERY
 
 //-- dcc gen
 #define FEATURE_GEN_SPYMODE                100  // 1: watch bidib handsets
@@ -562,6 +566,7 @@ typedef struct                              // t_bidib_cs_pom
 #define FEATURE_GEN_LOK_LOST_DETECT        108  // 1: command station annouces lost loco
 #define FEATURE_GEN_NOTIFY_DRIVE_MANUAL    109  // 1: dcc gen reports manual operation
 
+#define FEATURE_RELEVANT_PID_BITS          253  // how many bits of 'vendor32' are relevant for PID (default 16, LSB aligned)
 #define FEATURE_FW_UPDATE_MODE             254  // 0: no fw-update, 1: intel hex (max. 10 byte / record)
 #define FEATURE_EXTENSION                  255  // 1: reserved for future expansion
 
