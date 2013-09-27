@@ -739,7 +739,6 @@ static iONode __mergeModule( iOModPlanData data, iONode model, iONode module, in
     _mergeList(wActionList.name()   , model, moduleRoot, level, r, cx, cy, informClients);
     _mergeList(wLocationList.name() , model, moduleRoot, level, r, cx, cy, informClients);
     _mergeList(wBoosterList.name()  , model, moduleRoot, level, r, cx, cy, informClients);
-    _mergeList(wRouteList.name()    , model, moduleRoot, level, r, cx, cy, informClients);
 
     __resolveRoutes( data, model, module, moduleRoot, level );
 
@@ -1299,7 +1298,6 @@ static void __saveModule( iOModPlan inst, iONode module, int level ) {
   __copyLevel( inst, model, level, wScheduleList.name() );
   __copyLevel( inst, model, level, wActionList.name() );
   __copyLevel( inst, model, level, wBoosterList.name() );
-  __copyLevel( inst, model, level, wRouteList.name() );
 
   __copyResolvedRoutes( inst, model, wModule.getid(module) );
   __copyUnresolvedRoutes( inst, model, level );
