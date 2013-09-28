@@ -1414,7 +1414,7 @@ static void __unloadDigInt(iORocNetNode inst, int prevcstype) {
     pRFID->base.del(pRFID);
   }
 
-  if( data->csdevice != prevcstype && data->pDI != NULL ) {
+  if( data->cstype != prevcstype && data->pDI != NULL ) {
     iIDigInt pDI = data->pDI;
     data->pDI = NULL;
     pDI->halt((obj)pDI, True);
@@ -1446,7 +1446,7 @@ static Boolean __initDigInt(iORocNetNode inst) {
     }
   }
 
-  if( data->csdevice > 0 && data->pDI == NULL && data->digintini != NULL ) {
+  if( data->cstype > 0 && data->pDI == NULL && data->digintini != NULL ) {
     const char*  lib = wDigInt.getlib( data->digintini );
     const char*  iid = wDigInt.getiid( data->digintini );
     iOLib    pLib = NULL;
