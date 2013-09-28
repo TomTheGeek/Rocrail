@@ -396,13 +396,14 @@ void RocnetNodeDlg::initNodeList() {
     m_NodeList->SetItemPtrData(index, (wxUIntPtr)rnnode);
   }
 
-  m_NodeList->SetColumnWidth(0, wxLIST_AUTOSIZE);
-  m_NodeList->SetColumnWidth(1, wxLIST_AUTOSIZE);
-  m_NodeList->SetColumnWidth(2, wxLIST_AUTOSIZE);
-  m_NodeList->SetColumnWidth(3, wxLIST_AUTOSIZE);
-  m_NodeList->SetColumnWidth(4, wxLIST_AUTOSIZE);
-  m_NodeList->SetColumnWidth(5, wxLIST_AUTOSIZE);
-  m_NodeList->SetColumnWidth(6, wxLIST_AUTOSIZE);
+  for( int n = 0; n < 6; n++ ) {
+    m_NodeList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+    int autoheadersize = m_NodeList->GetColumnWidth(n);
+    m_NodeList->SetColumnWidth(n, wxLIST_AUTOSIZE);
+    int autosize = m_NodeList->GetColumnWidth(n);
+    if(autoheadersize > autosize )
+      m_NodeList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+  }
 
   m_NodeTree->DeleteAllItems();
   MapOp.clear(m_NodeMap);
