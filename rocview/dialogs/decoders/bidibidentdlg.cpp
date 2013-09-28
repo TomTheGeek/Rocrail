@@ -796,8 +796,12 @@ void BidibIdentDlg::onMenu( wxCommandEvent& event ) {
 
 void BidibIdentDlg::onItemRightClick( wxTreeEvent& event ) {
   wxString itemText = m_Tree->GetItemText(event.GetItem());
-  const char* uid = itemText.mb_str(wxConvUTF8);
+  char* uid = StrOp.dup(itemText.mb_str(wxConvUTF8));
   m_SelectedBidibNode = (iONode)MapOp.get( nodeMap, uid );
+  TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999, "right click on UID %s", uid );
+  StrOp.free(uid);
+  if( m_SelectedBidibNode == NULL )
+    return;
   wxMenu menu( wxString(wBiDiBnode.getpath( bidibnode ),wxConvUTF8) );
   menu.Append( 1001, wxGetApp().getMenu("info") );
   wxMenu* identMenu = new wxMenu();
