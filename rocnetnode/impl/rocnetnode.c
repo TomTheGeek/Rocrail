@@ -640,9 +640,9 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       wRocNetNodeOptions.setsack( optionsini, data->sack );
       wRocNetNodeOptions.setrfid( optionsini, data->rfid );
 
-      if( !data->rfid || data->cstype == 0 ) {
+      if( !data->rfid || data->cstype !=  prevcstype ) {
         __unloadDigInt(rocnetnode, prevcstype);
-        if( data->digintini != NULL ) {
+        if( data->cstype == 0 && data->digintini != NULL ) {
           NodeOp.removeChild(data->ini, data->digintini );
           NodeOp.base.del(data->digintini);
           data->digintini = NULL;
@@ -669,7 +669,6 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
         else
           wDigInt.setdevice(data->digintini, "/dev/ttyUSB0");
 
-        __unloadDigInt(rocnetnode, prevcstype);
         __initDigInt(rocnetnode);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "%s: lib=%s device=%s", wDigInt.getiid(data->digintini), wDigInt.getlib(data->digintini), wDigInt.getdevice(data->digintini) );
@@ -1425,7 +1424,7 @@ static void __unloadDigInt(iORocNetNode inst, int prevcstype) {
     data->class = (data->class & ~RN_CLASS_RFID);
   }
 
-  if( data->cstype != prevcstype && data->pDI != NULL ) {
+  if( data->cstype != prevcstype && data->pDI != NULL && data->digintini != NULL) {
     iIDigInt pDI = data->pDI;
     data->pDI = NULL;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unloading %s...", wDigInt.getlib(data->digintini) );
