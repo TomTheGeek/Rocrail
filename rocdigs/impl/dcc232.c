@@ -112,7 +112,7 @@ static int __getLocoSlot(iODCC232 dcc232, iONode node, Boolean* isNew ) {
 void __stateChanged( iODCC232 dcc232 ) {
   iODCC232Data data = Data(dcc232);
   iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
-  wState.setiid( node, wDigInt.getiid( data->ini ) );
+  wState.setiid( node, data->iid );
   wState.setpower( node, data->power );
   wState.setprogramming( node, False );
   wState.settrackbus( node, False );
