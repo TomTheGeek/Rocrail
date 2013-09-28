@@ -632,7 +632,6 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     {
       iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
       iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
-      iONode digintini = NodeOp.findNode(data->ini, wDigInt.name());
 
       if( wRocNetNodeOptions.getiotype(optionsini) != data->iotype )
         __initIO(rocnetnode);
@@ -643,39 +642,37 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
 
       if( !data->rfid || data->cstype == 0 ) {
         __unloadDigInt(rocnetnode, prevcstype);
-        if( digintini != NULL ) {
-          NodeOp.removeChild(data->ini, digintini );
-          NodeOp.base.del(digintini);
-          digintini = NULL;
+        if( data->digintini != NULL ) {
+          NodeOp.removeChild(data->ini, data->digintini );
+          NodeOp.base.del(data->digintini);
+          data->digintini = NULL;
         }
-        data->digintini = NULL;
       }
 
       if( data->cstype > 0) {
-        if( digintini == NULL ) {
-          iONode digintini = NodeOp.inst(wDigInt.name(), data->ini, ELEMENT_NODE);
-          NodeOp.addChild(data->ini, digintini);
-          data->digintini = digintini;
+        if( data->digintini == NULL ) {
+          data->digintini = NodeOp.inst(wDigInt.name(), data->ini, ELEMENT_NODE);
+          NodeOp.addChild(data->ini, data->digintini);
         }
 
-        wDigInt.setiid(digintini, "dcc");
+        wDigInt.setiid(data->digintini, "dcc");
 
         if( data->cstype==1 )
-          wDigInt.setlib(digintini, wDigInt.dcc232);
+          wDigInt.setlib(data->digintini, wDigInt.dcc232);
         else if( data->cstype==2 )
-          wDigInt.setlib(digintini, wDigInt.sprog);
+          wDigInt.setlib(data->digintini, wDigInt.sprog);
 
         if( data->csdevice==1 )
-          wDigInt.setdevice(digintini, "/dev/ttyUSB1");
+          wDigInt.setdevice(data->digintini, "/dev/ttyUSB1");
         else if( data->csdevice==2 )
-          wDigInt.setdevice(digintini, "/dev/ttyACM0");
+          wDigInt.setdevice(data->digintini, "/dev/ttyACM0");
         else
-          wDigInt.setdevice(digintini, "/dev/ttyUSB0");
+          wDigInt.setdevice(data->digintini, "/dev/ttyUSB0");
 
         __unloadDigInt(rocnetnode, prevcstype);
         __initDigInt(rocnetnode);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "%s: lib=%s device=%s", wDigInt.getiid(digintini), wDigInt.getlib(digintini), wDigInt.getdevice(digintini) );
+            "%s: lib=%s device=%s", wDigInt.getiid(data->digintini), wDigInt.getlib(data->digintini), wDigInt.getdevice(data->digintini) );
       }
     }
     __saveIni(rocnetnode);
