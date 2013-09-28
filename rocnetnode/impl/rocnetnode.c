@@ -641,10 +641,13 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       wRocNetNodeOptions.setsack( optionsini, data->sack );
       wRocNetNodeOptions.setrfid( optionsini, data->rfid );
 
-      if( digintini != NULL && data->cstype == 0 ) {
+      if( !data->rfid || data->cstype == 0 ) {
         __unloadDigInt(rocnetnode, prevcstype);
-        NodeOp.removeChild(data->ini, digintini );
-        NodeOp.base.del(digintini);
+        if( digintini != NULL ) {
+          NodeOp.removeChild(data->ini, digintini );
+          NodeOp.base.del(digintini);
+          digintini = NULL;
+        }
         data->digintini = NULL;
       }
 
