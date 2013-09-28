@@ -633,22 +633,30 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
       iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
       iONode digintini = NodeOp.findNode(data->ini, wDigInt.name());
+
       if( wRocNetNodeOptions.getiotype(optionsini) != data->iotype )
         __initIO(rocnetnode);
+
       wRocNetNodeOptions.setiotype( optionsini, data->iotype );
       wRocNetNodeOptions.setsack( optionsini, data->sack );
       wRocNetNodeOptions.setrfid( optionsini, data->rfid );
+
       if( digintini != NULL && data->cstype == 0 ) {
+        __unloadDigInt(rocnetnode, prevcstype);
         NodeOp.removeChild(data->ini, digintini );
         NodeOp.base.del(digintini);
+        data->digintini = NULL;
       }
-      else if( data->cstype > 0) {
+
+      if( data->cstype > 0) {
         if( digintini == NULL ) {
           iONode digintini = NodeOp.inst(wDigInt.name(), data->ini, ELEMENT_NODE);
           NodeOp.addChild(data->ini, digintini);
           data->digintini = digintini;
         }
+
         wDigInt.setiid(digintini, "dcc");
+
         if( data->cstype==1 )
           wDigInt.setlib(digintini, wDigInt.dcc232);
         else if( data->cstype==2 )
@@ -663,7 +671,8 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
 
         __unloadDigInt(rocnetnode, prevcstype);
         __initDigInt(rocnetnode);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dcc: lib=%s device=%s", wDigInt.getlib(digintini), wDigInt.getdevice(digintini) );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "%s: lib=%s device=%s", wDigInt.getiid(digintini), wDigInt.getlib(digintini), wDigInt.getdevice(digintini) );
       }
     }
     __saveIni(rocnetnode);
@@ -1409,17 +1418,21 @@ static void __unloadDigInt(iORocNetNode inst, int prevcstype) {
   if( !data->rfid && data->pRFID != NULL ) {
     iIDigInt pRFID = data->pRFID;
     data->pRFID = NULL;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unloading RFID..." );
     pRFID->halt((obj)pRFID, True);
     ThreadOp.sleep(100);
     pRFID->base.del(pRFID);
+    data->class = (data->class & ~RN_CLASS_RFID);
   }
 
   if( data->cstype != prevcstype && data->pDI != NULL ) {
     iIDigInt pDI = data->pDI;
     data->pDI = NULL;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unloading %s...", wDigInt.getlib(data->digintini) );
     pDI->halt((obj)pDI, True);
     ThreadOp.sleep(100);
     pDI->base.del(pDI);
+    data->class = (data->class & ~RN_CLASS_DCC);
   }
 }
 
