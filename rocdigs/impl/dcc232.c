@@ -615,6 +615,7 @@ static void __watchDog( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCC232 watchdog ended." );
 
+  ThreadOp.base.del(th);
 }
 
 
@@ -728,6 +729,7 @@ static void __dccWriter( void* threadinst ) {
   };
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCC232 writer ended." );
+  ThreadOp.base.del(th);
 }
 
 

@@ -908,6 +908,7 @@ static void __sprogWriter( void* threadinst ) {
   };
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPROG writer ended." );
+  ThreadOp.base.del(th);
 }
 
 
@@ -978,6 +979,7 @@ static void __sprogReader( void* threadinst ) {
   } while(data->run);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPROG reader ended." );
+  ThreadOp.base.del(th);
 }
 
 
