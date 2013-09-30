@@ -16956,6 +16956,7 @@
     <zh_CN txt="商品"/>
     <sl txt="Blago"/>
     <pt_BR txt="Mercadoria"/>
+    <sv txt="Vara"/>
   </Msg>
   <Msg id="status">
     <en txt="Status"/>
@@ -17435,6 +17436,7 @@
     <sl txt="Vagon za hlodovino"/>
     <sr_latin txt="Kola za rasuti teret"/>
     <pt_BR txt="Vagão de carga basculante"/>
+    <sv txt="Timmervagn"/>
   </Msg>
   <Msg id="coilcar">
     <en txt="Coilcar"/>
@@ -17458,6 +17460,7 @@
     <sl txt="Vagon za pločevino"/>
     <sr_latin txt="Kola za ugalj"/>
     <pt_BR txt="Vagão de carga pneumático"/>
+    <sv txt="Rullvagn"/>
   </Msg>
   <Msg id="coach">
     <en txt="Coach"/>
@@ -17482,6 +17485,7 @@
     <zh_CN txt="客车（美）"/>
     <sl txt="Potniški vagon"/>
     <pt_BR txt="Vagão de passageiros"/>
+    <sv txt="Passagerarvagn"/>
   </Msg>
   <Msg id="lounge">
     <en txt="Lounge"/>
@@ -20698,6 +20702,7 @@
     <sl txt="Prazno opozorilo ob rdečem glavnem signalu."/>
     <en_GB txt="Blank warning at red main signal."/>
     <pt_BR txt="Aviso em branco no sinal principal vermelho"/>
+    <sv txt="Blank varning vid röd huvudsignal"/>
   </Msg>
   <Msg id="overwriteall">
     <en txt="Overwrite all settings?"/>
@@ -24050,6 +24055,7 @@
     <es txt="Sellar"/>
     <pt_BR txt="Selo"/>
     <en_GB txt="Stamp"/>
+    <sv txt="Stämpel"/>
   </Msg>
   <Msg id="export">
     <en txt="Export"/>
@@ -24242,6 +24248,7 @@
     <es txt="Vendedor CV"/>
     <pt_BR txt="CV do fornecedor"/>
     <en_GB txt="Vendor CV"/>
+    <sv txt="Återförsäljar CV"/>
   </Msg>
   <Msg id="disable">
     <en txt="Disable"/>
@@ -24617,6 +24624,7 @@
     <sl txt="Revizija"/>
     <sv txt="Utgåva"/>
     <de txt="Revision"/>
+    <it txt="Versione"/>
   </Msg>
   <Msg id="showcounters">
     <en txt="Show counters"/>
@@ -24625,6 +24633,8 @@
     <ru txt="Показать счётчики"/>
     <sv txt="Visa Räknare"/>
     <de txt="Zählerstand anzeigen"/>
+    <it txt="Mostrare contatori"/>
+    <sl txt="Prikaži števce"/>
   </Msg>
   <Msg id="resetcounters">
     <en txt="Reset counters"/>
@@ -24632,44 +24642,66 @@
     <pt_BR txt="Redefinir contadores"/>
     <sv txt="Återställ räknare"/>
     <de txt="Zähler zurücksetzen"/>
+    <it txt="Azzerare contatori"/>
+    <sl txt="Prikaži števce"/>
   </Msg>
   <Msg id="secureack">
     <en txt="Acknowledge sensor events"/>
     <nl txt="Melder berichten bevestigen"/>
     <de txt="Sensor-Ereignisse bestätigen"/>
     <pt_BR txt="Confirmar eventos dos sensores"/>
+    <it txt="RIconoscere gli eventi del sensore"/>
+    <sl txt="Potrdi dogodke tipal"/>
   </Msg>
   <Msg id="shutdownall">
     <en txt="Shutdown all"/>
     <nl txt="Alle afsluiten"/>
     <de txt="Alles herunterfahren"/>
     <pt_BR txt="Desligar tudo"/>
+    <it txt="Spegnere tutto"/>
+    <sl txt="Izključi vse"/>
+    <sv txt="Stäng av allt"/>
   </Msg>
   <Msg id="shutdownnode">
     <en txt="Shutdown RocNet node %d?"/>
     <nl txt="RocNet node %d afsluiten?"/>
     <de txt="RocNet Knoten %d herunterfahren?"/>
-    <pt_BR txt="Desligar node %d do RocNet?"/>
+    <pt_BR txt="Desligar entroncamento %d do RocNet?"/>
+    <it txt="Spegnere il nodo RocNet %d?"/>
+    <sl txt="Izključim RocNet vozlišče %d?"/>
+    <sv txt="Stäng av RocNet nod %d?"/>
   </Msg>
   <Msg id="shutdownallnodes">
     <en txt="Shutdown all RocNet nodes?"/>
     <nl txt="Alle RocNet nodes afsluiten?"/>
     <de txt="Alle RocNet-Knoten herunterfahren"/>
-    <pt_BR txt="Desligar todos os nodes do RocNet?"/>
+    <pt_BR txt="Desligar todos os entroncamentos do RocNet?"/>
+    <it txt="Spegnere tutti i nodi RocNet?"/>
+    <sl txt="Izključim vse RocNet vozlišča?"/>
+    <sv txt="Stänga av alla RocNet noder?"/>
   </Msg>
   <Msg id="updatenode">
     <en txt="Update RocNet node %d to revision %d?"/>
+    <nl txt="RocNet node %d bijwerken met revisie %d?"/>
+    <pt_BR txt="Atualizar o entroncamento %d do RocNet para revisão %d?"/>
   </Msg>
   <Msg id="update">
     <en txt="Update"/>
+    <nl txt="Bijwerken"/>
+    <pt_BR txt="Atualizar"/>
   </Msg>
   <Msg id="newrevision">
     <en txt="New revision"/>
+    <nl txt="Nieuwe revisie"/>
+    <pt_BR txt="Nova revisão"/>
   </Msg>
   <Msg id="shutdownlocation">
     <en txt="Shutdown location %s?"/>
+    <nl txt="Locatie %s stoppen?"/>
+    <pt_BR txt="Desligar localidade %s?"/>
   </Msg>
   <Msg id="commuteronly">
     <en txt="Commuter trains only"/>
+    <nl txt="Alleen pendeltreinen"/>
   </Msg>
 </Messages>
