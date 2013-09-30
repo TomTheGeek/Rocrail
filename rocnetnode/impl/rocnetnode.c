@@ -64,6 +64,7 @@
 
 #include "rocnetnode/public/io.h"
 #include "rocnetnode/public/i2c.h"
+#include "rocnetnode/public/ip.h"
 
 #include "common/version.h"
 
@@ -1356,7 +1357,7 @@ static void __reader( void* threadinst ) {
   iORocNetNodeData data       = Data(rocnetnode);
   byte msg[256];
   int idx = 0;
-  iOStrTok tok = StrTokOp.inst(SocketOp.gethostaddr(), '.');
+  iOStrTok tok = StrTokOp.inst(getLocalIP(), '.');
   while( StrTokOp.hasMoreTokens(tok) ) {
     data->ip[idx] = atoi(StrTokOp.nextToken( tok ));
     idx++;
@@ -1371,8 +1372,8 @@ static void __reader( void* threadinst ) {
     data->ip[3] = subip % 256;
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet reader started on: %d.%d.%d.%d [%s]",
-      data->ip[0], data->ip[1], data->ip[2], data->ip[3], SocketOp.getsockname(data->readUDP) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet reader started on: %d.%d.%d.%d",
+      data->ip[0], data->ip[1], data->ip[2], data->ip[3] );
 
   while( data->run ) {
     SocketOp.recvfrom( data->readUDP, msg, 0x7F, NULL, NULL );
