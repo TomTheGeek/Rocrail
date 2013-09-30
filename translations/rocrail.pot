@@ -6713,3 +6713,9 @@ msgstr ""
 msgid "Shutdown location %s?"
 msgstr ""
 
+#. 
+# id="commuteronly"
+#, c-format
+msgid "Commuter trains only"
+msgstr ""
+

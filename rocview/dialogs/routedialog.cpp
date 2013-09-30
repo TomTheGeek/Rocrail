@@ -357,7 +357,7 @@ void RouteDialog::initLabels() {
 
   m_labMaxLen->SetLabel( wxGetApp().getMsg( "maxtrainlen" ) );
   m_labMinLen->SetLabel( wxGetApp().getMsg( "mintrainlen" ) );
-  m_Commuter->SetLabel( wxGetApp().getMsg( "commuter" ) );
+  m_Commuter->SetLabel( wxGetApp().getMsg( "commuteronly" ) );
 
 
   // Conditions

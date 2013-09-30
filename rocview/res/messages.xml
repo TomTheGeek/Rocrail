@@ -24669,4 +24669,7 @@
   <Msg id="shutdownlocation">
     <en txt="Shutdown location %s?"/>
   </Msg>
+  <Msg id="commuteronly">
+    <en txt="Commuter trains only"/>
+  </Msg>
 </Messages>
