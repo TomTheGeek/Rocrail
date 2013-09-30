@@ -659,7 +659,7 @@ static void _halt( obj inst, Boolean poweroff ) {
     data->power = False;
     __transact( (iOSprog)inst, outa, StrOp.len(outa), NULL, 0, 1 );
   }
-  ThreadOp.sleep(500);
+  ThreadOp.sleep(1000);
   data->commOK = False;
   SerialOp.close( data->serial );
   return;
@@ -919,6 +919,7 @@ static void __sprogReader( void* threadinst ) {
 
   char in[256] = {0};
   int idx = 0;
+  int retry = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPROG reader started." );
   ThreadOp.sleep( 1000 );
@@ -928,9 +929,9 @@ static void __sprogReader( void* threadinst ) {
 
   do {
 
-    ThreadOp.sleep( data->commOK ? 10:5000 );
+    ThreadOp.sleep( 10 );
 
-    if( data->commOK && MutexOp.wait( data->mux ) ) {
+    if( data->run && data->commOK && MutexOp.wait( data->mux ) ) {
       int available = SerialOp.available(data->serial);
       if( available > 0 ) {
         if( SerialOp.read(data->serial, &in[idx], 1) ) {
@@ -969,10 +970,14 @@ static void __sprogReader( void* threadinst ) {
       MutexOp.post( data->mux );
     }
     else if(!data->commOK) {
-      data->commOK = SerialOp.open( data->serial );
-      if(data->commOK) {
-        SerialOp.setDTR(data->serial, True);
-        SerialOp.setRTS(data->serial, True);
+      retry++;
+      if( retry >= 500 ) {
+        retry = 0;
+        data->commOK = SerialOp.open( data->serial );
+        if(data->commOK) {
+          SerialOp.setDTR(data->serial, True);
+          SerialOp.setRTS(data->serial, True);
+        }
       }
     }
 
