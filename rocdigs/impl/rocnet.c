@@ -755,6 +755,11 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       break;
     }
 
+    if( actionType != RN_ACTIONTYPE_EVENT) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore identify command...");
+      break;
+    }
+
     subip = rn[RN_PACKET_DATA+5]*256+rn[RN_PACKET_DATA+6];
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "Identified: rocnetid=%d class=%s vid=%d revision=%d nrio=%d subip=%d.%d", sndr,

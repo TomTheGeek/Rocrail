@@ -387,7 +387,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
 
   switch( action ) {
   case RN_PROGRAMMING_WRNID:
-    if( rn[RN_PACKET_LEN] > 2 && ( rn[RN_PACKET_DATA+2] != data->ip[data->ipsize-2] || rn[RN_PACKET_DATA+3] != data->ip[data->ipsize-1]) ) {
+    if( rcpt != data->id || rn[RN_PACKET_LEN] > 2 && ( rn[RN_PACKET_DATA+2] != data->ip[data->ipsize-2] || rn[RN_PACKET_DATA+3] != data->ip[data->ipsize-1]) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new ID %d not for me", rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1] );
       break;
     }
