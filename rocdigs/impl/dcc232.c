@@ -879,6 +879,7 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   if( data->dcc232 == NULL ) {
     data->dcc232 = NodeOp.inst( wDCC232.name(), ini, ELEMENT_NODE );
     NodeOp.addChild( ini, data->dcc232 );
+    wDCC232.setport( data->dcc232, wDigInt.getdevice(ini) );
   }
 
   data->purge = wDCC232.ispurge(data->dcc232);
