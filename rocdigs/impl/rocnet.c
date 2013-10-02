@@ -749,6 +749,12 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   sndr = rnSenderAddrFromPacket(rn, data->seven);
 
   switch( action ) {
+  case RN_STATIONARY_ERROR:
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+        "node %d reports error %d, reason %d on address %d", sndr,
+        rn[RN_PACKET_DATA+0], rn[RN_PACKET_DATA+1],  rn[RN_PACKET_DATA+2] * 256 + rn[RN_PACKET_DATA+3] );
+    break;
+
   case RN_STATIONARY_IDENTIFY:
     if( data->shutdown ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore identify: shutting down...");

@@ -93,6 +93,7 @@
 #define RN_STATIONARY_ACK                10
 #define RN_STATIONARY_SHOW               11
 #define RN_STATIONARY_STARTOFDAY         12
+#define RN_STATIONARY_ERROR              13
 
 
 /* programming group actions */
@@ -142,6 +143,13 @@
 #define RN_CLASS_IO      0x01
 #define RN_CLASS_DCC     0x02
 #define RN_CLASS_RFID    0x04
+
+#define RN_ERROR_RC_IO 1
+#define RN_ERROR_RC_I2C 2
+
+#define RN_ERROR_RS_SETUP 1
+#define RN_ERROR_RS_WRITE 2
+#define RN_ERROR_RS_READ  3
 
 
 #endif /*ROCNETCONST_H_*/

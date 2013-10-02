@@ -91,6 +91,7 @@ static void __initIO(iORocNetNode rocnetnode);
 static iONode __findMacro(iORocNetNode inst, int nr);
 static Boolean __initDigInt(iORocNetNode inst);
 static void __unloadDigInt(iORocNetNode inst, int prevcstype);
+static void __errorReport( iORocNetNode inst, int rc, int rs, int addr);
 
 
 /** ----- OBase ----- */
@@ -1057,15 +1058,19 @@ static void __scanI2C(iORocNetNode rocnetnode) {
     if( data->iomap[i] && 0x00FF ) {
       byte iodata = data->iodata[i*2+0];
       rc = raspiReadRegI2C(data->i2cdescriptor, 0x20+i, 0x12, &data->iodata[i*2+0]);
-      if( rc < 0 )
+      if( rc < 0 ) {
         data->i2caddr[i] = False;
+        __errorReport(rocnetnode, RN_ERROR_RC_I2C, RN_ERROR_RS_READ, i);
+      }
       TraceOp.trc( name, iodata != data->iodata[i*2+0]?TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "i2c %dA [0x%02X]", i, data->iodata[i*2+0] );
     }
     if( data->iomap[i] && 0xFF00 ) {
       byte iodata = data->iodata[i*2+1];
       rc = raspiReadRegI2C(data->i2cdescriptor, 0x20+i, 0x13, &data->iodata[i*2+1]);
-      if( rc < 0 )
+      if( rc < 0 ) {
         data->i2caddr[i] = False;
+        __errorReport(rocnetnode, RN_ERROR_RC_I2C, RN_ERROR_RS_READ, i);
+      }
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "i2c %dB [0x%02X]", i, data->iodata[i*2+1] );
     }
   }
@@ -1513,6 +1518,23 @@ static iONode __findMacro(iORocNetNode inst, int nr) {
   return NULL;
 }
 
+static void __errorReport( iORocNetNode inst, int rc, int rs, int addr) {
+  iORocNetNodeData data = Data(inst);
+  byte msg[32];
+  msg[RN_PACKET_NETID] = data->location;
+  msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+  rnReceipientAddresToPacket( 0, msg, 0 );
+  rnSenderAddresToPacket( data->id, msg, 0 );
+  msg[RN_PACKET_ACTION] = RN_STATIONARY_ERROR;
+  msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+  msg[RN_PACKET_LEN] = 4;
+  msg[RN_PACKET_DATA+0] = rc;
+  msg[RN_PACKET_DATA+1] = rs;
+  msg[RN_PACKET_DATA+2] = addr/256;
+  msg[RN_PACKET_DATA+2] = addr%256;
+  __sendRN(inst, msg);
+}
+
 static void __initI2C(iORocNetNode inst, int iotype) {
   iORocNetNodeData data = Data(inst);
   iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
@@ -1592,6 +1614,7 @@ static void __initI2C(iORocNetNode inst, int iotype) {
         if( rc < 0 ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x20+i, errno );
           data->i2caddr[i] = False;
+          __errorReport(inst, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, i);
           continue;
         }
         ThreadOp.sleep(50);
@@ -1599,6 +1622,7 @@ static void __initI2C(iORocNetNode inst, int iotype) {
         if( rc < 0 ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x20+i, errno );
           data->i2caddr[i] = False;
+          __errorReport(inst, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, i);
           continue;
         }
       }
@@ -1647,6 +1671,10 @@ static void __initIO(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
 
   data->iorc = raspiSetupIO();
+
+  if( data->iorc != 0 ) {
+    __errorReport(inst, RN_ERROR_RC_IO, RN_ERROR_RS_SETUP, 0);
+  }
 
   if(data->iotype == IO_I2C_0) {
     /* i2c-0 Rev. 1*/
