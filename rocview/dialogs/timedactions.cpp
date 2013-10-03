@@ -52,6 +52,7 @@
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/Operator.h"
+#include "rocrail/wrapper/public/AutoCmd.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -917,6 +918,7 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wAction.system_go, wxConvUTF8));
       m_Command->Append(wxString( wAction.system_stop, wxConvUTF8));
       m_Command->Append(wxString( wAction.system_shutdown, wxConvUTF8));
+      m_Command->Append(wxString( wAutoCmd.resume, wxConvUTF8));
       break;
     case 5: // signal
       m_Command->Append(wxString( wAction.signal_red, wxConvUTF8));
