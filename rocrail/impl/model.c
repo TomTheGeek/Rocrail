@@ -593,7 +593,7 @@ static void __updateDigInt( iOModel inst ) {
       if( wFeedback.getiid(fb) != NULL && StrOp.len(wFeedback.getiid(fb)) > 0 ) {
         iid = wFeedback.getiid(fb);
       }
-      if( bus < 32 && unit < 256 ) {
+      if( bus >= 0 && bus < 32 && unit < 256 ) {
         addresses[bus][unit] = 1;
         if( !changed[bus] && addresses[bus][unit] != data->fbAddresses[bus][unit] ) {
           data->fbAddresses[bus][unit] = addresses[bus][unit];
