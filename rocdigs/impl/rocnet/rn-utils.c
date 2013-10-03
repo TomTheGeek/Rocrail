@@ -115,6 +115,27 @@ const char* rnClassString(int classid, char* mnemonic) {
   return classname;
 }
 
+const char* rnGetRC(int rc) {
+  switch( rc ) {
+  case RN_ERROR_RC_IO:
+    return "GPIO";
+  case RN_ERROR_RC_I2C:
+    return "I2C";
+  }
+  return "unknown";
+}
+
+const char* rnGetRS(int rs) {
+  switch( rs ) {
+  case RN_ERROR_RS_SETUP:
+    return "setup";
+  case RN_ERROR_RS_WRITE:
+    return "write";
+  case RN_ERROR_RS_READ:
+    return "read";
+  }
+  return "unknown";
+}
 
 
 

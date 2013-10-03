@@ -751,8 +751,10 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
   switch( action ) {
   case RN_STATIONARY_ERROR:
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
-        "node %d reports error %d, reason %d on address %d", sndr,
-        rn[RN_PACKET_DATA+0], rn[RN_PACKET_DATA+1],  rn[RN_PACKET_DATA+2] * 256 + rn[RN_PACKET_DATA+3] );
+        "node [%d] reports a [%s](%d)error, reason [%s](%d) on address [%d]", sndr,
+        rnGetRC(rn[RN_PACKET_DATA+0]), rn[RN_PACKET_DATA+0],
+        rnGetRS(rn[RN_PACKET_DATA+1]), rn[RN_PACKET_DATA+1],
+        rn[RN_PACKET_DATA+2] * 256 + rn[RN_PACKET_DATA+3] );
     break;
 
   case RN_STATIONARY_IDENTIFY:

@@ -36,6 +36,8 @@ const char* rnActionTypeString(unsigned char* rn);
 int rnActionFromPacket(unsigned char* rn);
 int rnActionTypeFromPacket(unsigned char* rn);
 const char* rnClassString(int pclass, char* mnemonic);
+const char* rnGetRC(int rc);
+const char* rnGetRS(int rs);
 
 
 
