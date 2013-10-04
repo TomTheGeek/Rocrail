@@ -43,6 +43,7 @@
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Response.h"
 #include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/Output.h"
 
 
 static int instCnt = 0;
@@ -247,7 +248,30 @@ static int __translate( iOP50Data o, iONode node, unsigned char* p50, int* insiz
         "Signal commands are no longer supported at this level." );
     return 0;
   }
-  /* TODO: Output */
+  /* Output */
+  if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    int mod = wOutput.getaddr( node );
+    int pin = wOutput.getport( node );
+    int addr = 0;
+    int cmd = 33;
+
+    addr = (mod-1) * 4 + pin;
+
+    if( mod < 1 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "invalid addressing: %d:%d", mod, pin);
+      return 0;
+    }
+    if( StrOp.equals( wOutput.getcmd( node ), wOutput.on ) )
+      cmd = 34;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "output addr=%d cmd=%s", addr, wSwitch.getcmd( node ) );
+
+    p50[0] = (unsigned char)cmd;
+    p50[1] = (unsigned char)addr;
+    return 2;
+  }
+
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
     int   addr = wLoc.getaddr( node );
