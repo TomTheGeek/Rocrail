@@ -1,0 +1,28 @@
+<decoder manu="ESU" type="Switchpilot Servo Stationary Decoder" desc="ESU Switchpilot Servo controller" web="http://www.esu.eu/en/downloads/instruction-manuals/digital-decoders/">
+<cvbyte nr="1" cat="Address - LSB" desc="Base Address (6 LSB of accessory decoder address)" info="Lower 6 bits of the first decoder address for outputs 1-4.  Used in conjunction with CV9 in order to store address."/>
+<cvbyte nr="7" cat="Config" desc="Internal Software Version No." readonly="true" info="Internal software version number."/>
+<cvbyte nr="8" cat="Config" desc="Manufacturer ID" readonly="false" info="NMRA assigned manufacturer's id number. (151=ESU)  Write 8 to reset all CVs to factory defaults."/>
+<cvbyte nr="9" cat="Config" desc="Decoder Address 1 MSB" info="Range 0-7.  Higher 3 bits (6-8) of the first decoder address for outputs 1-4.  Used together with CV1 to store address."/>
+<cvbyte nr="28" cat="Config" desc="Railcom Channel Configuration" readonly="false" info="See Manual"/>
+<cvbyte nr="29" cat="Config" desc="DCC Configuration" readonly="false" info="Bit 7 is read only (DCC=true). See Manual."/>
+
+<cvbyte nr="34" cat="Config" desc="Zoom (fade) Configuration" readonly="false" info="Range 0-31 (4 LSB) See Manual."/>
+<cvbyte nr="37" cat="Config" desc="Servo 1 speed" readonly="false" info="Range 0-63. .25 sec interval."/>
+<cvbyte nr="38" cat="Config" desc="Servo 1 Start (A) Posistion" readonly="false" info="Range 0-63."/>
+<cvbyte nr="39" cat="Config" desc="Servo 1 Stop (B) Position" readonly="false" info="Range 0-63."/>
+
+<cvbyte nr="40" cat="Config" desc="Servo 2 speed" readonly="false" info="Range 0-63.  .25 sec interval."/>
+<cvbyte nr="41" cat="Config" desc="Servo 2 Start (A) Posistion" readonly="false" info="Range 0-63."/>
+<cvbyte nr="42" cat="Config" desc="Servo 2 Stop (B) Position" readonly="false" info="Range 0-63."/>
+
+<cvbyte nr="43" cat="Config" desc="Servo 3 speed" readonly="false" info="Range 0-63. .25 sec interval."/>
+<cvbyte nr="44" cat="Config" desc="Servo 3 Start (A) Posistion" readonly="false" info="Range 0-63."/>
+<cvbyte nr="45" cat="Config" desc="Servo 3 Stop (B) Position" readonly="false" info="Range 0-63."/>
+
+<cvbyte nr="46" cat="Config" desc="Servo 4 speed" readonly="false" info="Range 0-63. .25 sec interval."/>
+<cvbyte nr="47" cat="Config" desc="Servo 4 Start (A) Posistion" readonly="false" info="Range 0-63."/>
+<cvbyte nr="48" cat="Config" desc="Servo 4 Stop (B) Position" readonly="false" info="Range 0-63."/>
+
+<cvbyte nr="49" cat="Config" desc="Extension Relay control" readonly="false" info="Range 0-15. See manual for details."/>
+
+</decoder>
