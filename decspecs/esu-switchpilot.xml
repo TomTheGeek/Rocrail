@@ -1,0 +1,34 @@
+<decoder manu="ESU" type="Stationary Decoder" desc="ESU Switchpilot controller" web="http://www.esu.eu/en/downloads/instruction-manuals/digital-decoders/">
+<cvbyte nr="1" cat="address - LSB" desc="Base Address (6 LSB of accessory decoder address)" info="Lower 6 bits of the first decoder address for outputs 1-4.  Used in conjunction with CV9 in order to store address."/>
+<cvbyte nr="3" cat="config" desc="Configuration of Output #1 (Switchpilot only)" info="Range 0-64 - Config for output #1 - Pulse, blink, etc. - See manual Page 28"/> 
+<cvbyte nr="4" cat="config" desc="Configuration of Output #2 (Switchpilot only)" info="Range 0-64 - Config for output #2 - Pulse, blink, etc. - See manual Page 28"/> 
+<cvbyte nr="5" cat="config" desc="Configuration of Output #3 (Switchpilot only)" info="Range 0-64 - Config for output #3 - Pulse, blink, etc. - See manual Page 28"/> 
+<cvbyte nr="6" cat="config" desc="Configuration of Output #4 (Switchpilot only)" info="Range 0-64 - Config for output #4 - Pulse, blink, etc. - See manual Page 28"/> 
+<cvbyte nr="7" cat="config" desc="Internal Software Version No." readonly="true" info="Internal software version number."/>
+<cvbyte nr="8" cat="config" desc="Manufacturer ID" readonly="false" info="NMRA assigned manufacturer's id number. (151=ESU)  Write 8 to reset all CVs to factory defaults."/>
+<cvbyte nr="9" cat="config" desc="Decoder Address 1 MSB" info="Range 0-7.  Higher 3 bits (6-8) of the first decoder address for outputs 1-4.  Used together with CV1 to store address."/>
+<cvbyte nr="28" cat="config" desc="Railcom Configuration" readonly="false" info="See Manual"/>
+<cvbyte nr="29" cat="config" desc="DCC Configuration" readonly="false" info="See Manual."/>
+<cvbyte nr="33" cat="config" desc="Function Status" readonly="false" info="See Manual."/>
+<cvbyte nr="34" cat="config" desc="Zoom (fade) Configuration" readonly="false" info="Range 0-31 (4 LSB) See Manual."/>
+<!--  CV 35 and 36 are for use with the Switchpilot only  Switchpilot Servo does not use 35 and 36.  -->
+<cvbyte nr="35" cat="config" desc="Decoder address 2 (LSB)" readonly="false" info="Range 1-63 Lower 6 bits (bit 0-5) of the 2nd decoder address for outputs #5 and #6.  Used in conjunction with CV36 to store the address."/>
+<cvbyte nr="36" cat="config" desc="Decoder address 2 (MSB)" readonly="false" info="Lower 6 bits (bit 0-5) of the 2nd decoder address for outputs #5 and #6.  Used in conjunction with CV36 to store the address."/>
+
+<cvbyte nr="37" cat="config" desc="Servo 1 speed" readonly="false" info="Range 0-63."/>
+<cvbyte nr="38" cat="config" desc="Servo 1 Start Posistion" readonly="false" info="Range 0-63."/>
+<cvbyte nr="39" cat="config" desc="Servo 1 Stop Position" readonly="false" info="Range 0-63."/>
+
+<cvbyte nr="40" cat="config" desc="Servo 2 speed" readonly="false" info="Range 0-63."/>
+<cvbyte nr="41" cat="config" desc="Servo 2 Start Posistion" readonly="false" info="Range 0-63."/>
+<cvbyte nr="42" cat="config" desc="Servo 2 Stop Position" readonly="false" info="Range 0-63."/>
+<cvbyte nr="43" cat="config" desc="Servo 3 speed" readonly="false" info="Range 0-63."/>
+<cvbyte nr="44" cat="config" desc="Servo 3 Start Posistion" readonly="false" info="Range 0-63."/>
+<cvbyte nr="45" cat="config" desc="Servo 3 Stop Position" readonly="false" info="Range 0-63."/>
+
+<cvbyte nr="46" cat="config" desc="Servo 4 speed" readonly="false" info="Range 0-63."/>
+<cvbyte nr="47" cat="config" desc="Servo 4 Start Posistion" readonly="false" info="Range 0-63."/>
+<cvbyte nr="48" cat="config" desc="Servo 4 Stop Position" readonly="false" info="Range 0-63."/>
+<cvbyte nr="49" cat="config" desc="Switchpilot extension relay control" readonly="false" info="Range 0-15."/>
+
+</decoder>
