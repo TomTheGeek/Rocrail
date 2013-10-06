@@ -592,6 +592,36 @@ static __checkConsole( iOAppData data ) {
 }
 
 
+static char* __readIniFile(const char* inifilename) {
+  char* iniXml = NULL;
+
+  if( FileOp.exist(inifilename) && FileOp.fileSize(inifilename) > 0 ) {
+    iOFile iniFile = FileOp.inst( inifilename, True );
+    if( iniFile != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using ini file: %s", FileOp.getFilename(iniFile) );
+      freeMem(iniXml);
+      iniXml = allocMem( FileOp.size( iniFile ) + 1 );
+      FileOp.read( iniFile, iniXml, FileOp.size( iniFile ) );
+      FileOp.close( iniFile );
+    }
+  }
+
+  if( iniXml == NULL ) {
+    char* backupfile = StrOp.fmt("%s.bak", inifilename );
+    if( FileOp.exist(backupfile) && FileOp.fileSize(backupfile) > 0 ) {
+      iOFile iniFile = FileOp.inst( backupfile, True );
+      if( iniFile != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "using backup ini file: %s", FileOp.getFilename(iniFile) );
+        iniXml = allocMem( FileOp.size( iniFile ) + 1 );
+        FileOp.read( iniFile, iniXml, FileOp.size( iniFile ) );
+        FileOp.close( iniFile );
+      }
+    }
+    StrOp.free(backupfile);
+  }
+
+  return iniXml;
+}
 
 static Boolean bShutdown = False;
 
@@ -694,18 +724,12 @@ static int _Main( iOApp inst, int argc, char** argv ) {
     char* iniXml = NULL;
     iODoc iniDoc = NULL;
     Boolean newIni = False;
-    iOFile iniFile = FileOp.inst( nf?nf:wRocRail.getfile(NULL), True );
     data->szIniFile = nf?nf:wRocRail.getfile(NULL);
-    if( iniFile != NULL ) {
-      iniXml = allocMem( FileOp.size( iniFile ) + 1 );
-      FileOp.read( iniFile, iniXml, FileOp.size( iniFile ) );
-      if( StrOp.len( iniXml ) == 0 )
-        iniXml = StrOp.fmt( "<%s/>", wRocRail.name());
-      FileOp.close( iniFile );
-    }
-    else {
+    iniXml = __readIniFile(data->szIniFile);
+    if( iniXml == NULL ) {
       iniXml = StrOp.fmt( "<%s/>", wRocRail.name());
       newIni = True;
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "empty ini file! [%s]", data->szIniFile );
     }
 
     /* Parse the Inifile: */
@@ -1009,7 +1033,7 @@ static void _saveIni( void ) {
 
     /* backup existing ini: */
 
-    if( FileOp.exist(data->szIniFile) ) {
+    if( FileOp.exist(data->szIniFile) && FileOp.fileSize(data->szIniFile) > 0 ) {
       char* backupfile = StrOp.fmt( "%s.bak", data->szIniFile );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "backing up %s to %s...",
           data->szIniFile, backupfile );
