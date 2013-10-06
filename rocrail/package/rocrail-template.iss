@@ -18,9 +18,9 @@ OutputBaseFilename=rocrail-<BZR>-win32
 [Tasks]
 ;Name: service; Description: "Register Rocrail as Service"; GroupDescription: "Service"; Flags: unchecked
 Name: demoplan; Description: "Demo plan"
-Name: images; Description: "Rocview images"
-Name: themes; Description: "Rocview SVG Themes"
-Name: symbols; Description: "WebClient Symbols"
+Name: images; Description: "Loco images"
+Name: themes; Description: "SVG Themes"
+;Name: symbols; Description: "WebClient Symbols"
 
 [Run]
 ;Filename: "{sys}\sc.exe"; Parameters: "create rocrail binPath= ""{app}\rocrail.exe -service -w {app}"" start= auto";Tasks: service
@@ -89,7 +89,7 @@ Source: "..\..\winbin\easydcc.dll"; DestDir: "{app}"
 Source: "..\..\winbin\z21.dll"; DestDir: "{app}"
 Source: "..\..\winbin\xnmm.dll"; DestDir: "{app}"
 Source: "..\..\winbin\mingwm10.dll"; DestDir: "{app}"
-Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "plan.xml"; DestDir: "{userdocs}\Rocrail"; Tasks: demoplan; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "rocrail.mib"; DestDir: "{userdocs}\Rocrail";
 Source: "rocraild.ico"; DestDir: "{app}"
 Source: "images\*.*"; DestDir: "{userdocs}\Rocrail\images"; Tasks: images; Flags: onlyifdoesntexist uninsneveruninstall
@@ -106,7 +106,7 @@ Source: "..\..\rocview\svg\themes\Roads\*.*"; DestDir: "{app}\svg\themes\Roads";
 Source: "..\..\rocview\svg\themes\OeBB\*.*"; DestDir: "{app}\svg\themes\OeBB"; Tasks: themes;
 Source: "..\..\rocview\svg\themes\CV19\*.*"; DestDir: "{app}\svg\themes\CV19"; Tasks: themes;
 Source: "..\..\rocview\svg\themes\ILTIS\*.*"; DestDir: "{app}\svg\themes\ILTIS"; Tasks: themes;
-Source: "..\..\rocrail\symbols\*.*"; DestDir: "{app}\symbols"; Tasks: symbols; Flags: onlyifdoesntexist
+;Source: "..\..\rocrail\symbols\*.*"; DestDir: "{app}\symbols"; Tasks: symbols; Flags: onlyifdoesntexist
 Source: "..\..\COPYING"; DestDir: "{app}"
 
 [Icons]
