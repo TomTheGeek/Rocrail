@@ -602,8 +602,9 @@ static void __reader( void* threadinst ) {
         }
         else if( buffer[0] == 'P' ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "programming is ready" );
-          if( data->lastcmd = CV_WRITE ) {
+          if( data->lastcmd == CV_WRITE ) {
             iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "programming write response" );
             wProgram.setcv( node, data->lastcv );
             wProgram.setvalue( node, data->lastvalue );
             wProgram.setcmd( node, wProgram.datarsp );
