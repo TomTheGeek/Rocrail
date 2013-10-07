@@ -122,7 +122,7 @@
     <var name="nr" vt="int" defval="0" range="0-*" remark="CV-Number"/>
     <var name="value" vt="int" defval="0" range="0-*" remark="CV-Value"/>
     <var name="desc" vt="string" defval="NULL" range="*" remark="CV-Description"/>
-    <var name="cat" vt="string" defval="generel" range="*" remark="Category"/>
+    <var name="cat" vt="string" defval="general" range="*" remark="Category"/>
     <var name="info" vt="string" defval="" range="*" remark="Info"/>
     <var name="readonly" vt="bool" defval="false" remark="Disable write operations."/>
     <var name="word" vt="bool" defval="false" remark="16 bit word value"/>
