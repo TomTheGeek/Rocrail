@@ -89,11 +89,13 @@ class RocnetNodeDlg : public rocnetnodegen
     void onTreeSelChanged( wxTreeEvent& event );
     void onMenu( wxCommandEvent& event );
 	public:
+    void onUpdateVersion( wxCommandEvent& event );
 		/** Constructor */
 		RocnetNodeDlg( wxWindow* parent, iONode ini );
 		~RocnetNodeDlg();
 	//// end generated class members
 		void event(iONode node);
+	  int m_AvailableVersion;
 	
 };
 

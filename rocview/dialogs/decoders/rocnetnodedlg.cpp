@@ -31,6 +31,8 @@
 
 
 #include "rocview/public/guiapp.h"
+#include "rocview/wrapper/public/Gui.h"
+#include "rocview/wrapper/public/Release.h"
 
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/DigInt.h"
@@ -46,6 +48,104 @@
 
 #include "rocview/res/icons.hpp"
 
+static int __evaluate( const char* release ) {
+  TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "parsing release info:\n%s", release );
+  iODoc doc = DocOp.parse( release );
+  iONode releaseNode = NULL;
+  int version = 0;
+  if( doc != NULL ) {
+    releaseNode = DocOp.getRootNode(doc);
+    if( releaseNode != NULL ) {
+      version = atoi(wRelease.getversion(releaseNode));
+      TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "release info %d", version );
+    }
+    else {
+      TraceOp.trc( "updates", TRCLEVEL_WARNING, __LINE__, 9999, "empty release info?" );
+    }
+    DocOp.base.del(doc);
+  }
+  else {
+    TraceOp.trc( "updates", TRCLEVEL_WARNING, __LINE__, 9999, "could not parse release info" );
+  }
+  return version;
+}
+
+
+static void __updateReaderThread( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  RocnetNodeDlg* o = (RocnetNodeDlg*)ThreadOp.getParm( th );
+  bool newPatches = false;
+
+  TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "updateReaderThread started" );
+  if( o == NULL ) {
+    ThreadOp.sleep(5000);
+  }
+  else
+    ThreadOp.sleep(100);
+
+  TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "updateReaderThread try to connect with %s", wGui.getupdatesserver(wxGetApp().getIni()) );
+  iOSocket sh = SocketOp.inst( wGui.getupdatesserver(wxGetApp().getIni()), 80, False, False, False );
+  if( SocketOp.connect( sh ) ) {
+    TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "Connected to rocrail.net" );
+
+    char* releasename = StrOp.dup(wGui.releasename);
+    StrOp.replaceAll( releasename, ' ', '\0');
+    // http://rocrail.net/software/rocrail-snapshot/raspi/rocnetnode.xml
+    char* httpget = StrOp.fmt("GET /software/rocrail-snapshot/raspi/rocnetnode.xml HTTP/1.1\nHost: www.rocrail.net\n\n",
+        StrOp.strlwr( releasename ) );
+    TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "%s", httpget );
+    SocketOp.write( sh, httpget, StrOp.len(httpget) );
+    StrOp.free(releasename);
+    StrOp.free(httpget);
+
+    TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "Read response..." );
+    char str[1024] = {'\0'};
+    SocketOp.setRcvTimeout( sh, 1000 );
+    /* Read first HTTP header line: */
+    SocketOp.readln( sh, str );
+    TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, str );
+    /* Reading rest of HTTP header: */
+
+    int contlen = 0;
+    while( SocketOp.isConnected(sh) && !SocketOp.isBroken( sh ) && SocketOp.readln( sh, str ) ) {
+      if( str[0] == '\r' || str[0] == '\n' ) {
+        break;
+      }
+      if( StrOp.find( str, "Content-Length:" ) ) {
+        char* p = StrOp.find( str, ": " ) + 2;
+        contlen = atoi( p );
+        TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "contlen = %d", contlen );
+      }
+      TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, str );
+    };
+    if( SocketOp.isConnected(sh) && !SocketOp.isBroken( sh ) && contlen > 0 ) {
+      char* release = (char*)allocMem(contlen+1);
+      SocketOp.read( sh, release, contlen );
+      TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, release );
+      int version = __evaluate( release );
+      if( o != NULL ) {
+        o->m_AvailableVersion = version;
+        o->Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( RocnetNodeDlg::onUpdateVersion ), NULL, o );
+        wxCommandEvent cmd( wxEVT_COMMAND_MENU_SELECTED, -1 );
+        wxPostEvent( o, cmd );
+      }
+    }
+
+    SocketOp.disConnect(sh);
+  }
+  else {
+    TraceOp.trc( "updates", TRCLEVEL_WARNING, __LINE__, 9999, "could not connected to %s",
+        wGui.getupdatesserver(wxGetApp().getIni()) );
+
+  }
+
+  SocketOp.base.del(sh);
+  ThreadOp.base.del(th);
+  TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "cleaned up thread" );
+}
+
+
+
 RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   :rocnetnodegen( parent )
 {
@@ -59,6 +159,7 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   m_TreeLocationMap = MapOp.inst();
   m_SelectedNode = NULL;
   m_SelectedZLevel = NULL;
+  m_AvailableVersion = 0;
 
   __initVendors();
   m_NodeBook->SetSelection(0);
@@ -84,6 +185,10 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
 
   initListLabels();
   initNodeList();
+
+  iOThread updateReader = ThreadOp.inst( "update", __updateReaderThread, this );
+  ThreadOp.start( updateReader );
+
 }
 
 RocnetNodeDlg::~RocnetNodeDlg() {
@@ -972,5 +1077,9 @@ void RocnetNodeDlg::shutdownLocation() {
 
   cmd->base.del(cmd);
 
+}
+
+void RocnetNodeDlg::onUpdateVersion( wxCommandEvent& event ) {
+  m_UpdateRevision->SetValue( wxString::Format(_T("%d"), m_AvailableVersion) );
 }
 
