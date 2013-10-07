@@ -48,7 +48,7 @@
 
 #include "rocview/res/icons.hpp"
 
-static int __evaluate( const char* release ) {
+static int __evaluate( const char* release, char** info ) {
   TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "parsing release info:\n%s", release );
   iODoc doc = DocOp.parse( release );
   iONode releaseNode = NULL;
@@ -57,7 +57,8 @@ static int __evaluate( const char* release ) {
     releaseNode = DocOp.getRootNode(doc);
     if( releaseNode != NULL ) {
       version = atoi(wRelease.getversion(releaseNode));
-      TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "release info %d", version );
+      *info = StrOp.dup(wRelease.getremark(releaseNode));
+      TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, "release info %d %s", version, info );
     }
     else {
       TraceOp.trc( "updates", TRCLEVEL_WARNING, __LINE__, 9999, "empty release info?" );
@@ -122,7 +123,7 @@ static void __updateReaderThread( void* threadinst ) {
       char* release = (char*)allocMem(contlen+1);
       SocketOp.read( sh, release, contlen );
       TraceOp.trc( "updates", TRCLEVEL_INFO, __LINE__, 9999, release );
-      int version = __evaluate( release );
+      int version = __evaluate( release, &o->m_VersionInfo );
       if( o != NULL ) {
         o->m_AvailableVersion = version;
         o->Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( RocnetNodeDlg::onUpdateVersion ), NULL, o );
@@ -160,6 +161,7 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   m_SelectedNode = NULL;
   m_SelectedZLevel = NULL;
   m_AvailableVersion = 0;
+  m_VersionInfo = NULL;
 
   __initVendors();
   m_NodeBook->SetSelection(0);
@@ -1081,5 +1083,9 @@ void RocnetNodeDlg::shutdownLocation() {
 
 void RocnetNodeDlg::onUpdateVersion( wxCommandEvent& event ) {
   m_UpdateRevision->SetValue( wxString::Format(_T("%d"), m_AvailableVersion) );
+  if( m_VersionInfo != NULL ) {
+    TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "release info: %s", m_VersionInfo );
+    m_RevisionInfo->SetValue( wxString(m_VersionInfo,wxConvUTF8) );
+  }
 }
 

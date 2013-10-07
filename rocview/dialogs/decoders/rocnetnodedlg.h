@@ -96,6 +96,7 @@ class RocnetNodeDlg : public rocnetnodegen
 	//// end generated class members
 		void event(iONode node);
 	  int m_AvailableVersion;
+	  char* m_VersionInfo;
 	
 };
 

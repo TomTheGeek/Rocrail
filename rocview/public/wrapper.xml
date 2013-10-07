@@ -262,6 +262,7 @@
     <var name="version" vt="string" defval="1.0"/>
     <var name="alias" vt="string" defval="Harvest"/>
     <var name="timestamp" vt="long" defval="0"/>
+    <var name="remark" vt="string" defval=""/>
     <patch cardinality="n" wrappername="Patch">
       <var name="file" vt="string" defval=""/>
       <var name="nr" vt="int" defval="0"/>
