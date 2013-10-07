@@ -194,6 +194,9 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
 }
 
 RocnetNodeDlg::~RocnetNodeDlg() {
+  if( m_VersionInfo != NULL )
+    StrOp.free(m_VersionInfo);
+
   MapOp.base.del(m_NodeMap);
   MapOp.base.del(m_TreeItemMap);
   MapOp.base.del(m_TreeLocationMap);
