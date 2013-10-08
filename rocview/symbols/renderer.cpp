@@ -503,7 +503,7 @@ void SymbolRenderer::initSym() {
     int aspects = wSignal.getaspects( m_Props );
     Boolean dwarf = wSignal.isdwarf( m_Props );
     m_iSymType = symtype::i_signal;
-    if( wSignal.getaspects( m_Props ) > 4 ) {
+    if( wSignal.getaspects( m_Props ) > 4 || wSignal.isusesymbolprefix( m_Props ) ) {
       m_iSymSubType = signaltype::i_signalaspect;
       if( m_SymMap != NULL ) {
         const char* prefix = wSignal.getsymbolprefix( m_Props );

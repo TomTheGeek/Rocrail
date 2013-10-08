@@ -275,6 +275,7 @@ public:
     wxStaticText* m_labSymbolPrefix;
     wxTextCtrl* m_SymbolPrefix;
     wxCheckBox* m_Dwarf;
+    wxCheckBox* m_UseSymbolPrefix;
     wxStaticText* m_labSignalPatterns;
     wxStaticText* m_labAspect;
     wxStaticText* m_labPatternAddr1;

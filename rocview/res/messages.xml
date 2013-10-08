@@ -24704,4 +24704,7 @@
     <en txt="Commuter trains only"/>
     <nl txt="Alleen pendeltreinen"/>
   </Msg>
+  <Msg id="useprefix">
+    <en txt="Use prefix"/>
+  </Msg>
 </Messages>
