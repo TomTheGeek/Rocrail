@@ -833,6 +833,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
       data->LED2timer = 0;
       data->show = True;
     }
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "show LED2 %s", data->show?"on":"off" );
     break;
 
   }
