@@ -178,6 +178,8 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   m_RocNetPanel->GetSizer()->Layout();
   m_OptionsPanel->GetSizer()->Layout();
   m_PortSetupPanel->GetSizer()->Layout();
+  m_MacroPanel->GetSizer()->Layout();
+  m_UpdatePanel->GetSizer()->Layout();
 
   m_NodeBook->Fit();
 
@@ -187,10 +189,6 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
 
   initListLabels();
   initNodeList();
-
-  iOThread updateReader = ThreadOp.inst( "update", __updateReaderThread, this );
-  ThreadOp.start( updateReader );
-
 }
 
 RocnetNodeDlg::~RocnetNodeDlg() {
@@ -347,6 +345,7 @@ void RocnetNodeDlg::initLabels() {
   m_NodeBook->SetPageText( 2, wxGetApp().getMsg( "options" ) );
   m_NodeBook->SetPageText( 3, wxGetApp().getMsg( "portsetup" ) );
   m_NodeBook->SetPageText( 4, wxGetApp().getMsg( "macro" ) );
+  m_NodeBook->SetPageText( 5, wxGetApp().getMsg( "update" ) );
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {
@@ -376,7 +375,7 @@ void RocnetNodeDlg::initLabels() {
   m_labProduct->SetLabel(wxGetApp().getMsg( "class" ));
   m_labVersion->SetLabel(wxGetApp().getMsg( "revision" ));
   m_labUpdate->SetLabel(wxGetApp().getMsg( "newrevision" ));
-  m_Update->SetLabel(wxGetApp().getMsg( "update" ));
+  m_Update->SetLabel(wxGetApp().getMsg( "poll" ));
   m_RocnetWrite->SetLabel(wxGetApp().getMsg( "set" ));
   m_UpdateOffline->SetLabel(wxGetApp().getMsg( "file" ));
 
@@ -904,6 +903,13 @@ void RocnetNodeDlg::onUpdate( wxCommandEvent& event ) {
   if( m_Props == NULL )
     return;
 
+  if( m_UpdateRevision->IsEmpty() ) {
+    m_Update->Enable(false);
+    iOThread updateReader = ThreadOp.inst( "update", __updateReaderThread, this );
+    ThreadOp.start( updateReader );
+    return;
+  }
+
   int revision = atoi(m_UpdateRevision->GetValue().mb_str(wxConvUTF8));
   int action = wxMessageDialog( this, wxString::Format(wxGetApp().getMsg( "updatenode" ),
       wRocNetNode.getid(m_Props), revision ),
@@ -1089,6 +1095,15 @@ void RocnetNodeDlg::onUpdateVersion( wxCommandEvent& event ) {
   if( m_VersionInfo != NULL ) {
     TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "release info: %s", m_VersionInfo );
     m_RevisionInfo->SetValue( wxString(m_VersionInfo,wxConvUTF8) );
+  }
+}
+
+void RocnetNodeDlg::onNewRevisionNumber( wxCommandEvent& event ) {
+  if( m_UpdateRevision->IsEmpty() )
+    m_Update->SetLabel(wxGetApp().getMsg( "poll" ));
+  else {
+    m_Update->Enable(true);
+    m_Update->SetLabel(wxGetApp().getMsg( "update" ));
   }
 }
 

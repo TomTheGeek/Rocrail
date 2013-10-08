@@ -88,6 +88,7 @@ class RocnetNodeDlg : public rocnetnodegen
     void onTreeItemRightClick( wxTreeEvent& event );
     void onTreeSelChanged( wxTreeEvent& event );
     void onMenu( wxCommandEvent& event );
+    void onNewRevisionNumber( wxCommandEvent& event );
 	public:
     void onUpdateVersion( wxCommandEvent& event );
 		/** Constructor */
