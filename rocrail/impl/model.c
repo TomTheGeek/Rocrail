@@ -3508,7 +3508,6 @@ static void _event( iOModel inst, iONode nodeC ) {
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
     int type = wSwitch.getporttype( nodeC );
-    Boolean invertstate = False;
     int matchaddr1 = -1;
     int matchport1 = -1;
     int matchtype = 0;
@@ -3547,6 +3546,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     sw = ListOp.first(o->switchList);
     while( sw != NULL ) {
       Boolean flat = False;
+      Boolean invertstate = False;
       iONode props = sw->properties(sw);
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "testing: %d:%d:%d type=%d",
