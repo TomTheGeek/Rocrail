@@ -24707,4 +24707,7 @@
   <Msg id="useprefix">
     <en txt="Use prefix"/>
   </Msg>
+  <Msg id="nodemap">
+    <en txt="Nodemap"/>
+  </Msg>
 </Messages>

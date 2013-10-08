@@ -368,6 +368,7 @@ void RocnetNodeDlg::initLabels() {
   m_Query->SetLabel(wxGetApp().getMsg( "query" ));
 
   // RocNet
+  m_labNodemap->SetLabel(wxGetApp().getMsg( "nodemap" ));
   m_labIID->SetLabel(wxGetApp().getMsg( "iid" ));
   m_labID->SetLabel(wxGetApp().getMsg( "id" ));
   m_labLocation->SetLabel(wxGetApp().getMsg( "location" ));

@@ -6725,3 +6725,9 @@ msgstr ""
 msgid "Use prefix"
 msgstr ""
 
+#. 
+# id="nodemap"
+#, c-format
+msgid "Nodemap"
+msgstr ""
+
