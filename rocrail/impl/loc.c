@@ -378,6 +378,7 @@ static void __restoreFx( void* threadinst ) {
   int i = 0;
 
   ThreadOp.sleep(100 + 200 * data->fxsleep );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restore started for %s", wLoc.getid(data->props) );
 
   if( wLoc.isrestorefx(data->props) ) {
     /* Test for restoring the lights function. */
@@ -385,6 +386,7 @@ static void __restoreFx( void* threadinst ) {
       iONode vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring lights for %s", wLoc.getid(data->props) );
       if ( wLoc.isrestorespeed(data->props) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "restoring speed for %s to %d", wLoc.getid(data->props), wLoc.getV(data->props) );
         wLoc.setV( vcmd, wLoc.getV(data->props) );
       }
       else {
@@ -456,6 +458,7 @@ static void __restoreFx( void* threadinst ) {
     wLoc.setV( vcmd, wLoc.getV(data->props) );
     wLoc.setfn( vcmd, wLoc.isfn(data->props) );
     LocOp.cmd(loc, vcmd);
+    data->speedrestoredbythread = True;
   }
 
 
@@ -473,6 +476,7 @@ static void __sysEvent( obj inst, iONode evtNode ) {
     /* restore fx */
     data->fxrestored = True;
     data->fxrestoredbythread = False;
+    data->speedrestoredbythread = False;
     data->fxsleep = wSysCmd.getval(evtNode);
     if( wLoc.isrestorefx(data->props) || wLoc.isrestorespeed(data->props) ) {
       iOThread th = ThreadOp.inst( NULL, &__restoreFx, inst );
@@ -604,6 +608,8 @@ static void* __event( void* inst, const void* evt ) {
     }
 
     if( !data->go ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s V=%d(%d)",
+          wLoc.getid(data->props), V, wLoc.getV(data->props) );
       wLoc.setV( data->props, V);
       data->drvSpeed = V;
     }
@@ -1140,19 +1146,20 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
 
   /* check for run and stall event */
-  if( V_old != data->drvSpeed ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check function event (curV=%d drvV=%d)", V_old, data->drvSpeed );
-    if( V_old == 0 ) {
-      __funEvent(inst, NULL, run_event, 0);
-      __checkAction(inst, "run");
+  if( !wLoc.isrestorespeed(data->props) || data->speedrestoredbythread ) {
+    if( V_old != data->drvSpeed ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check function event (curV=%d drvV=%d)", V_old, data->drvSpeed );
+      if( V_old == 0 ) {
+        __funEvent(inst, NULL, run_event, 0);
+        __checkAction(inst, "run");
+      }
+      if( data->drvSpeed == 0 ) {
+        __funEvent(inst, NULL, stall_event, 0);
+        __checkAction(inst, "stall");
+      }
+      wLoc.setV(data->props, data->drvSpeed);
     }
-    if( data->drvSpeed == 0 ) {
-      __funEvent(inst, NULL, stall_event, 0);
-      __checkAction(inst, "stall");
-    }
-    wLoc.setV(data->props, data->drvSpeed);
   }
-
 
   /* Check for simple decoders like "Maerklin Delta": */
   if( StrOp.equals( wLoc.V_mode_percent, wLoc.getV_mode( data->props ) ) &&
