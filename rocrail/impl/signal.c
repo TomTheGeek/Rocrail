@@ -1095,7 +1095,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
   /* flip the signal for manual mode */
   if( StrOp.equals( wSignal.flip, state ) ) {
     int nraspects = wSignal.getaspects(o->props);
-    if( nraspects > 4 ) {
+    if( nraspects > 4 || wSignal.isusesymbolprefix(o->props) ) {
       int currentAspect = wSignal.getaspect( o->props ) + 1;
       if( currentAspect >= nraspects )
         currentAspect = 0;

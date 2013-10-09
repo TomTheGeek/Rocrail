@@ -1607,7 +1607,7 @@ void SymbolRenderer::drawSignal( wxPaintDC& dc, bool occupied, bool actroute, co
   if( nr == -1 )
     nr = 0;
   // SVG Symbol:
-  if( nr >= 0 && nr < 32 && aspects > 4 && m_SvgSym[nr] != NULL) {
+  if( nr >= 0 && nr < 32 && (aspects > 4 || wSignal.isusesymbolprefix(m_Props) ) && m_SvgSym[nr] != NULL) {
     if( occupied && m_SvgSymOcc[nr] != NULL)
       drawSvgSym(dc, m_SvgSymOcc[nr], ori);
     else if( actroute && m_SvgSymRoute[nr] != NULL)
