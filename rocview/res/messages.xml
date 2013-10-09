@@ -24710,4 +24710,7 @@
   <Msg id="nodemap">
     <en txt="Nodemap"/>
   </Msg>
+  <Msg id="usedecspec4all">
+    <en txt="Use decoder file for CV numbers"/>
+  </Msg>
 </Messages>

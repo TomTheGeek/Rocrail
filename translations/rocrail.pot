@@ -6731,3 +6731,9 @@ msgstr ""
 msgid "Nodemap"
 msgstr ""
 
+#. 
+# id="usedecspec4all"
+#, c-format
+msgid "Use decoder file for CV numbers"
+msgstr ""
+

@@ -234,6 +234,7 @@
       <var name="timeout" vt="int" defval="30" range="*" unit="s" remark="timeout on ack"/>
       <var name="lissy" vt="bool" defval="false" remark="program the lissy address and config simultaneously"/>
       <var name="save" vt="bool" defval="false"/>
+      <var name="usedecspec4all" vt="bool" defval="false"/>
       <cvcat wrappername="CVcat" cardinality="n" remark="CV category definition">
         <var name="name" vt="string" defval="" range="*" remark="category name"/>
         <var name="nrs" vt="string" defval="" range="*" remark="csv list of CV numbers belonging to this category"/>

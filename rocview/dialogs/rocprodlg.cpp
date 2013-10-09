@@ -102,6 +102,7 @@ RocProDlgGen( parent )
   }
 
   m_Save = wCVconf.issave(m_CVconf) ? true:false;
+  m_UseDecSpec4All = wCVconf.isusedecspec4all(m_CVconf) ? true:false;
   m_SaveCV->SetValue(m_Save);
 
   const char* nrs = wCVconf.getnrs( m_CVconf );
@@ -231,6 +232,11 @@ void RocProDlg::loadDecFile() {
       char key[32];
       StrOp.fmtb(key, "%d", wCVByte.getnr(cv) );
       MapOp.put( m_CVNrMap, key, (obj)cv);
+
+      if( m_UseDecSpec4All ) {
+        m_CVall[i] = wCVByte.getnr(cv);
+        m_CVcountAll = i+1;
+      }
     }
     if( NodeOp.getBool(m_DecNode, "collapse", False ) )
       m_DecTree->CollapseAll();
