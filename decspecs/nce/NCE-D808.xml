@@ -1,0 +1,277 @@
+<!--  This is for the 8 function output NCE decoder.  All NCE 3.5 decoders are the same save for the number of outputs.  -->
+<decoder manu="NCE" type="D808" web="http://www.ncedcc.com/pdf/sw9-sr.pdf" collapse="true">
+  <cvbyte nr="1" cat="Address" desc="Short Decoder Address" info="Range 0-127 - Bits 0-6 contain an address with a value between 1 and 127.  Bit seven must have a value of 0."/>
+<cvbyte nr="7" cat="Info" desc="Manufacturer Version No." readonly="true" info="This is reserved for the manufacturer to store information regarding the version of the decoder."/>
+  <cvbyte nr="8" cat="Info" desc="Manufacturer's ID" readonly="true" info="NCE=11 (0x0B) CV8 contains the NMRA assigned id number of the manufacturer of the decoder."/>
+ <cvbyte nr="11" cat="Decoder" desc="Packet Time Out Value" info="Packet timeout value (in .5 second increments) Time the decoder will wait before braking to a stop after running into a section of track with DC power. 0=Don't brake."/>
+
+  <cvbyte nr="15" cat="Decoder" desc="Decoder Lock Key" info="This CV is always programmable even when locked."/>
+  <cvbyte nr="16" cat="Decoder" desc="Decoder Lock ID" info="When CV15=CV16, programming is unlocked and the decoder will respond to programming commands. If CV15 is not equal to CV16 then decoder programming is locked and it will not program (except CV15) or read."/>
+  
+<cvbyte nr="29" cat="General" desc="Direction, Speed Table, Analog mode" info="bit 0 - 1=direction of operation is reversed, 0= direction is normal
+- bit 1 -  1=28 speed mode (always enabled)
+- bit 2 -  1= analog operation mode enabled, 0 = disabled
+- bit 4  -  1= alternate speed table active, 0= use table defined by CV2,5,6
+- bit 5  -  1=use long address in CV17/18, 0= use short address CV1
+- bits 3,6,7 - ignored by the decoder 
+
+."/>
+
+
+  <cvbyte nr="2" cat="Speed" desc="Vstart" info="Range 0-100 - Vstart is used to define the voltage drive level used as the start voltage on the motor."/>
+  <cvbyte nr="3" cat="Speed" desc="Acceleration Rate" info="Range 0-255 - each unit = 7ms between speed steps."/>
+  <cvbyte nr="4" cat="Speed" desc="Deceleration Rate" info="Range 0-255 - each unit = 7ms between speed steps."/>
+  <cvbyte nr="5" cat="Speed" desc="Vmax" info="Range 0-255 - V-max is used to specify the motor voltage drive levels at the maximum speed step."/>
+  <cvbyte nr="6" cat="Speed" desc="Vmid" info="Range 0-255 - V-mid specifies the voltage drive level at the middle speed step.  Vmid is used to generate a performance curve in the decoder that translate speed step values into motor voltage drive levels and is specified as a fraction of available rectified supply voltage."/>
+   <cvbyte nr="17" cat="Address" desc="Extended address high" info="The Extended Address is the locomotives address when the decoder is set up for extended addressing (indicated by a value of 1 in bit location 5 of CV#29).  CV#17 contains the most significant bits of the two byte address and must have a value between 11000000 and 11100111, inclusive, in order for this two byte address to be valid. CV 18 contains the least significant bits of the address and may contain any value."/>
+  <cvbyte nr="18" cat="Address" desc="Extended address low" info="The Extended Address is the locomotives address when the decoder is set up for extended addressing (indicated by a value of 1 in bit location 5 of CV#29).  CV#17 contains the most significant bits of the two byte address and must have a value between 11000000 and 11100111, inclusive, in order for this two byte address to be valid. CV 18 contains the least significant bits of the address and may contain any value."/>
+  
+
+<cvbyte nr="33" cat="Functions" desc="Function mapping - F0F" info="FWD function mapping "/>  
+<cvbyte nr="34" cat="Functions" desc="Function mapping - F0R" info="REV function mapping "/>
+<cvbyte nr="35" cat="Functions" desc="Function mapping - F1" info="F1 function mapping "/>
+<cvbyte nr="36" cat="Functions" desc="Function mapping - F2" info="F2 function mapping "/>
+<cvbyte nr="37" cat="Functions" desc="Function mapping - F3" info="F3 function mapping "/>
+<cvbyte nr="38" cat="Functions" desc="Function mapping - F4" info="F4 function mapping "/>
+<cvbyte nr="39" cat="Functions" desc="Function mapping - F5" info="F5 function mapping "/>
+<cvbyte nr="40" cat="Functions" desc="Function mapping - F6" info="F6 function mapping "/>
+
+
+  <cvbyte nr="65" cat="Motor" desc="Kick Start" info="Specifies the amount of extra Kick that will supplied to the motor when transitioning between stop and the first speed step."/>
+  <cvbyte nr="67" cat="Speed Table" desc="Index 1" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps)"/>
+  <cvbyte nr="68" cat="Speed Table" desc="Index 2" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="69" cat="Speed Table" desc="Index 3" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="70" cat="Speed Table" desc="Index 4" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="71" cat="Speed Table" desc="Index 5" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="72" cat="Speed Table" desc="Index 6" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="73" cat="Speed Table" desc="Index 7" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="74" cat="Speed Table" desc="Index 8" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="75" cat="Speed Table" desc="Index 9" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="76" cat="Speed Table" desc="Index 10" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="77" cat="Speed Table" desc="Index 11" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="78" cat="Speed Table" desc="Index 12" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="79" cat="Speed Table" desc="Index 13" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="80" cat="Speed Table" desc="Index 14" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="81" cat="Speed Table" desc="Index 15" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="82" cat="Speed Table" desc="Index 16" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="83" cat="Speed Table" desc="Index 17" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="84" cat="Speed Table" desc="Index 18" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="85" cat="Speed Table" desc="Index 19" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="86" cat="Speed Table" desc="Index 20" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="87" cat="Speed Table" desc="Index 21" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="88" cat="Speed Table" desc="Index 22" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="89" cat="Speed Table" desc="Index 23" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="90" cat="Speed Table" desc="Index 24" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="91" cat="Speed Table" desc="Index 25" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="92" cat="Speed Table" desc="Index 26" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="93" cat="Speed Table" desc="Index 27" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="94" cat="Speed Table" desc="Index 28" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="95" cat="Motor" desc="Reverse Trim" info="Reverse trim, values 1-127 add to reverse speed, values 129-255 add to forward speed."/>
+
+  <cvbyte nr="116" cat="Motor" desc="Torque kick rate" info="The  number of 16ms periods in a row that motor is `kicked' with a voltage pulse"/>
+
+
+  <cvbyte nr="117" cat="Motor" desc="Torque kick strength" info=" How much voltage is used to kick the motor at slow speeds. Reduces to 0 as speed is increased."/>
+
+<cvbyte nr="118" cat="Ditch Light Delay" desc="Ditch light hold time " info="Ditch Light hold time (in .25 second increments) after F2 goes off."/>
+
+<cvbyte nr="120" cat="Lighting Effects" desc="Effects - output 1" info="Effects for output 1  Supported effects are:
+0 - On - Off 
+4 -Firebox flicker
+8 - Mars
+12 - Rotary Beacon
+16 - Gyralight
+20 - Double Strobe
+24 - Strobe A
+28 - Strobe B -  alternates with strobe A
+32 - Dim when F0 and F4 on
+26 Dim with F0 and F8 on
+40 - Dim when forward
+44 - Dim when reverse
+48 - Type 2 right Ditch light if F2 on
+52 - Type 2 left Ditch light if F2 on 
+56 - Type 1 right Ditch light 
+60 - Type 1 left Ditch light
+
+- Functions are designed to use 12-16 volt 30-40ma incandescent lamps. If you are using a white LED (with 1K limiting resistor) add 128 to the CV value.
+ - If you want the function to be active only in the reverse direction add 2 to the CV value
+ - If you want the function to be active only in the forward direction add 1 to the CV value
+"/>
+
+<cvbyte nr="121" cat="Lighting Effects" desc="Effects - output 2."  info="Effects for output 2  Supported effects are:
+0 - On - Off 
+4 -Firebox flicker
+8 - Mars
+12 - Rotary Beacon
+16 - Gyralight
+20 - Double Strobe
+24 - Strobe A
+28 - Strobe B -  alternates with strobe A
+32 - Dim when F0 and F4 on
+26 Dim with F0 and F8 on
+40 - Dim when forward
+44 - Dim when reverse
+48 - Type 2 right Ditch light if F2 on
+52 - Type 2 left Ditch light if F2 on 
+56 - Type 1 right Ditch light 
+60 - Type 1 left Ditch light
+
+- Functions are designed to use 12-16 volt 30-40ma incandescent lamps. If you are using a white LED (with 1K limiting resistor) add 128 to the CV value.
+ - If you want the function to be active only in the reverse direction add 2 to the CV value
+ - If you want the function to be active only in the forward direction add 1 to the CV value
+"/>
+
+<cvbyte nr="122" cat="Lighting Effects" desc="Effects - output 3." info="Effects for output 3  Supported effects are:
+0 - On - Off 
+4 -Firebox flicker
+8 - Mars
+12 - Rotary Beacon
+16 - Gyralight
+20 - Double Strobe
+24 - Strobe A
+28 - Strobe B -  alternates with strobe A
+32 - Dim when F0 and F4 on
+26 - Dim with F0 and F8 on
+40 - Dim when forward
+44 - Dim when reverse
+48 - Type 2 right Ditch light if F2 on
+52 - Type 2 left Ditch light if F2 on 
+56 - Type 1 right Ditch light 
+60 - Type 1 left Ditch light
+
+- Functions are designed to use 12-16 volt 30-40ma incandescent lamps. If you are using a white LED (with 1K limiting resistor) add 128 to the CV value.
+ - If you want the function to be active only in the reverse direction add 2 to the CV value
+ - If you want the function to be active only in the forward direction add 1 to the CV value
+"/>
+
+
+<cvbyte nr="123" cat="Lighting Effects" desc="Effects - output 4." info="Effects for output 4  Supported effects are:
+0 - On - Off 
+4 - Firebox flicker
+8 - Mars
+12 - Rotary Beacon
+16 - Gyralight
+20 - Double Strobe
+24 - Strobe A
+28 - Strobe B -  alternates with strobe A
+32 - Dim when F0 and F4 on
+26 - Dim with F0 and F8 on
+40 - Dim when forward
+44 - Dim when reverse
+48 - Type 2 right Ditch light if F2 on
+52 - Type 2 left Ditch light if F2 on 
+56 - Type 1 right Ditch light 
+60 - Type 1 left Ditch light
+
+- Functions are designed to use 12-16 volt 30-40ma incandescent lamps. If you are using a white LED (with 1K limiting resistor) add 128 to the CV value.
+ - If you want the function to be active only in the reverse direction add 2 to the CV value
+ - If you want the function to be active only in the forward direction add 1 to the CV value
+"/>
+
+
+<cvbyte nr="124" cat="Lighting Effects" desc="Effects - output 5." info="Effects for output 5  Supported effects are:
+0 - On - Off 
+4 - Firebox flicker
+8 - Mars
+12 - Rotary Beacon
+16 - Gyralight
+20 - Double Strobe
+24 - Strobe A
+28 - Strobe B -  alternates with strobe A
+32 - Dim when F0 and F4 on
+26 - Dim with F0 and F8 on
+40 - Dim when forward
+44 - Dim when reverse
+48 - Type 2 right Ditch light if F2 on
+52 - Type 2 left Ditch light if F2 on 
+56 - Type 1 right Ditch light 
+60 - Type 1 left Ditch light
+
+- Functions are designed to use 12-16 volt 30-40ma incandescent lamps. If you are using a white LED (with 1K limiting resistor) add 128 to the CV value.
+ - If you want the function to be active only in the reverse direction add 2 to the CV value
+ - If you want the function to be active only in the forward direction add 1 to the CV value
+"/>
+
+<cvbyte nr="125" cat="Lighting Effects" desc="Effects - output 6." info="Effects for output 6  Supported effects are:
+0 - On - Off 
+4 - Firebox flicker
+8 - Mars
+12 - Rotary Beacon
+16 - Gyralight
+20 - Double Strobe
+24 - Strobe A
+28 - Strobe B -  alternates with strobe A
+32 - Dim when F0 and F4 on
+26 - Dim with F0 and F8 on
+40 - Dim when forward
+44 - Dim when reverse
+48 - Type 2 right Ditch light if F2 on
+52 - Type 2 left Ditch light if F2 on 
+56 - Type 1 right Ditch light 
+60 - Type 1 left Ditch light
+
+- Functions are designed to use 12-16 volt 30-40ma incandescent lamps. If you are using a white LED (with 1K limiting resistor) add 128 to the CV value.
+ - If you want the function to be active only in the reverse direction add 2 to the CV value
+ - If you want the function to be active only in the forward direction add 1 to the CV value
+"/>
+
+
+<cvbyte nr="126" cat="Lighting Effects" desc="Effects - output 7." info="Effects for output 7  Supported effects are:
+0 - On - Off 
+4 - Firebox flicker
+8 - Mars
+12 - Rotary Beacon
+16 - Gyralight
+20 - Double Strobe
+24 - Strobe A
+28 - Strobe B -  alternates with strobe A
+32 - Dim when F0 and F4 on
+26 - Dim with F0 and F8 on
+40 - Dim when forward
+44 - Dim when reverse
+48 - Type 2 right Ditch light if F2 on
+52 - Type 2 left Ditch light if F2 on 
+56 - Type 1 right Ditch light 
+60 - Type 1 left Ditch light
+
+- Functions are designed to use 12-16 volt 30-40ma incandescent lamps. If you are using a white LED (with 1K limiting resistor) add 128 to the CV value.
+ - If you want the function to be active only in the reverse direction add 2 to the CV value
+ - If you want the function to be active only in the forward direction add 1 to the CV value
+"/>
+
+<cvbyte nr="127" cat="Lighting Effects" desc="Effects - output 8." info="Effects for output 8  Supported effects are:
+0 - On - Off 
+4 - Firebox flicker
+8 - Mars
+12 - Rotary Beacon
+16 - Gyralight
+20 - Double Strobe
+24 - Strobe A
+28 - Strobe B -  alternates with strobe A
+32 - Dim when F0 and F4 on
+26 - Dim with F0 and F8 on
+40 - Dim when forward
+44 - Dim when reverse
+48 - Type 2 right Ditch light if F2 on
+52 - Type 2 left Ditch light if F2 on 
+56 - Type 1 right Ditch light 
+60 - Type 1 left Ditch light
+
+- Functions are designed to use 12-16 volt 30-40ma incandescent lamps. If you are using a white LED (with 1K limiting resistor) add 128 to the CV value.
+ - If you want the function to be active only in the reverse direction add 2 to the CV value
+ - If you want the function to be active only in the forward direction add 1 to the CV value
+"/>
+
+
+
+<cvbyte nr="19" cat="Consist" desc="Consist Address" info="Contains a seven bit address in bit positions 0-6. Bit 7 indicates the relative direction of this unit within a consist, with a value of 0 indicating normal direction, and a value of 1 indicating a direction opposite the unit's normal direction. If the seven bit address in bits 0-6 is 0000000 the unit is not in a consist."/>
+  <cvbyte nr="21" cat="Consist" desc="Consist Addr Active for F1-F8" info="Defines for functions F1-F8 whether the function is controlled by the consist address."/>
+  <cvbyte nr="22" cat="Consist" desc="Consist Addr Active for FL,F9-F12" info="Defines for function FL whether the function is controlled by the consist address."/>
+  
+  
+
+<cvbyte nr="30" cat="Reset" desc="Reset and Error" info="Set to 2 on the Programming track to reset to factory defaults.  If the decoder has an error condition this Configuration Variable shall contain the error condition as specified by the manufacturer.  0 = no error has occurred."/>
+
+
+</decoder>
+
