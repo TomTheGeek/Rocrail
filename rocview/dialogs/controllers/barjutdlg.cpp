@@ -81,20 +81,17 @@ BarJuTCntrlDlg::BarJuTCntrlDlg( wxWindow* parent, iONode props, const char* devi
 {
   int isSPROGII = StrOp.equals( wDigInt.sprog, wDigInt.getlib(props) );
   int isDCC232  = StrOp.equals( wDigInt.dcc232, wDigInt.getlib(props) );
-  Create(parent, -1, isSPROGII ? _T("SPROG II"):(isDCC232?_T("DCC232"):_T("BarJut")));
+  Create(parent, -1, isSPROGII ? _T("SPROG"):(isDCC232?_T("DCC232"):_T("BarJut")));
   m_Props = props;
   m_Devices = devices;
   initLabels();
 
-  m_labPolling->Enable(!isSPROGII && !isDCC232);
-  m_Polling->Enable(!isSPROGII && !isDCC232);
-
+  GetSizer()->Layout();
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
-  GetSizer()->Layout();
-
   initValues();
+  m_Polling->Enable(!isSPROGII && !isDCC232);
 }
 
 void BarJuTCntrlDlg::initLabels() {
@@ -116,9 +113,7 @@ void BarJuTCntrlDlg::initValues() {
     StrTokOp.base.del(tok);
   }
 
-  char* val = StrOp.fmt( "%d", wDigInt.gettimeout( m_Props ) );
-  m_Polling->SetValue( wxString( val, wxConvUTF8 ) );
-  StrOp.free( val );
+  m_Polling->SetValue( wDigInt.gettimeout( m_Props ) );
 }
 
 
@@ -127,7 +122,7 @@ void BarJuTCntrlDlg::evaluate() {
     return;
   wDigInt.setiid( m_Props, m_IID->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setdevice( m_Props, m_Device->GetValue().mb_str(wxConvUTF8) );
-  wDigInt.settimeout( m_Props, atoi( m_Polling->GetValue().mb_str(wxConvUTF8) ) );
+  wDigInt.settimeout( m_Props, m_Polling->GetValue() );
 }
 
 
@@ -172,45 +167,40 @@ void BarJuTCntrlDlg::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    wxPanel* itemPanel3 = new wxPanel( itemDialog1, ID_PANEL_BARJUT, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    itemBoxSizer2->Add(itemPanel3, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    wxFlexGridSizer* itemFlexGridSizer3 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemBoxSizer2->Add(itemFlexGridSizer3, 0, wxGROW|wxALL, 5);
 
-    wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxVERTICAL);
-    itemPanel3->SetSizer(itemBoxSizer4);
+    m_labIID = new wxStaticText( itemDialog1, ID_STATICTEXT_BARJUT_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer3->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer5 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer5->AddGrowableCol(1);
-    itemBoxSizer4->Add(itemFlexGridSizer5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    m_IID = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_BARJUT_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer3->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_labIID = new wxStaticText( itemPanel3, ID_STATICTEXT_BARJUT_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    m_IID = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_BARJUT_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_IID, 1, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    m_labDevice = new wxStaticText( itemPanel3, ID_STATICTEXT_BARJUT_DEVICE, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_labDevice = new wxStaticText( itemDialog1, ID_STATICTEXT_BARJUT_DEVICE, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer3->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_DeviceStrings;
-    m_Device = new wxComboBox( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_DeviceStrings, wxCB_DROPDOWN );
-    itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_Device = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), m_DeviceStrings, wxCB_DROPDOWN );
+    itemFlexGridSizer3->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_labPolling = new wxStaticText( itemPanel3, ID_STATICTEXT_BARJUT_POLLING, _("Pollingrate"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labPolling, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_labPolling = new wxStaticText( itemDialog1, ID_STATICTEXT_BARJUT_POLLING, _("Pollingrate"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer3->Add(m_labPolling, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_Polling = new wxTextCtrl( itemPanel3, ID_TEXTCTRL_BARJUT_POLLING, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_Polling, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_Polling = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 10000, 0 );
+    itemFlexGridSizer3->Add(m_Polling, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer12 = new wxStdDialogButtonSizer;
+    itemFlexGridSizer3->AddGrowableCol(1);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer12, 0, wxALIGN_RIGHT|wxALL, 5);
-    wxButton* itemButton13 = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer12->AddButton(itemButton13);
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer10 = new wxStdDialogButtonSizer;
 
-    wxButton* itemButton14 = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer12->AddButton(itemButton14);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer10, 0, wxALIGN_RIGHT|wxALL, 5);
+    wxButton* itemButton11 = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer10->AddButton(itemButton11);
 
-    itemStdDialogButtonSizer12->Realize();
+    wxButton* itemButton12 = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer10->AddButton(itemButton12);
+
+    itemStdDialogButtonSizer10->Realize();
 
 ////@end BarJuTCntrlDlg content construction
 }

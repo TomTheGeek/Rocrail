@@ -33,6 +33,7 @@
  */
 
 ////@begin includes
+#include "wx/spinctrl.h"
 ////@end includes
 #include "rocs/public/node.h"
 
@@ -42,6 +43,7 @@
  */
 
 ////@begin forward declarations
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -50,13 +52,11 @@
 
 ////@begin control identifiers
 #define ID_DIALOG_BARJUT_SETTINGS 10034
-#define ID_PANEL_BARJUT 10038
 #define ID_STATICTEXT_BARJUT_IID 10000
 #define ID_TEXTCTRL_BARJUT_IID 10001
 #define ID_STATICTEXT_BARJUT_DEVICE 10002
 #define ID_STATICTEXT_BARJUT_POLLING 10004
-#define ID_TEXTCTRL_BARJUT_POLLING 10006
-#define SYMBOL_BARJUTCNTRLDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
+#define SYMBOL_BARJUTCNTRLDLG_STYLE wxCAPTION|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_BARJUTCNTRLDLG_TITLE _("BarJuT")
 #define SYMBOL_BARJUTCNTRLDLG_IDNAME ID_DIALOG_BARJUT_SETTINGS
 #define SYMBOL_BARJUTCNTRLDLG_SIZE wxDefaultSize
@@ -124,7 +124,7 @@ public:
     wxStaticText* m_labDevice;
     wxComboBox* m_Device;
     wxStaticText* m_labPolling;
-    wxTextCtrl* m_Polling;
+    wxSpinCtrl* m_Polling;
 ////@end BarJuTCntrlDlg member variables
 };
 
