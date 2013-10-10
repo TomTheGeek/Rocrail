@@ -300,6 +300,8 @@ public:
     wxTextCtrl* m_Length;
     wxStaticText* m_labDepartDelay;
     wxSpinCtrl* m_DepartDelay;
+    wxStaticText* m_labFifoSize;
+    wxSpinCtrl* m_FifoSize;
     wxStaticText* m_LabelLocID;
     wxTextCtrl* m_LocID;
     wxButton* m_LocProps;

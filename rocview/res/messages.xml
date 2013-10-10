@@ -24713,4 +24713,7 @@
   <Msg id="usedecspec4all">
     <en txt="Use decoder file for CV numbers"/>
   </Msg>
+  <Msg id="fifosize">
+    <en txt="FiFo size"/>
+  </Msg>
 </Messages>

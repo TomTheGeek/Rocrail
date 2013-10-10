@@ -1848,6 +1848,9 @@
         <var name="remote" vt="bool" defval="false" remark="This flag is set by the R2Rnet object."/>
         <var name="rrid" vt="const char*" defval="" remark="This id is set by the R2Rnet object."/>
 
+        <!-- FiFo support (Automobiles)-->
+        <var name="fifosize" vt="int" defval="0" range="0-*" remark="FiFo size; Must be greater then 0 to be active."/>
+        
         <!-- Track Driver support (Dinamo)-->
         <var name="iid" vt="string" defval="NULL" range="*" remark="TD interface id"/>
         <var name="addr" vt="int" defval="0" range="0-*" remark="TD address"/>

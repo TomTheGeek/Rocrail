@@ -6737,3 +6737,9 @@ msgstr ""
 msgid "Use decoder file for CV numbers"
 msgstr ""
 
+#. 
+# id="fifosize"
+#, c-format
+msgid "FiFo size"
+msgstr ""
+

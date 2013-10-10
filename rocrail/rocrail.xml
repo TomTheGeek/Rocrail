@@ -174,7 +174,9 @@
       <var name="forceblocktimer" vt="Boolean"/>
       <var name="pendingFree" vt="Boolean"/>
       <var name="tempwait" vt="Boolean"/>
-      </data>
+      <var name="muxFiFO" vt="iOMutex"/>
+      <var name="fifoList" vt="iOList"/>
+    </data>
   </object>
 
   <object name="Stage" interface="$../rocint/rocint.xml:BlockBase" use="list,map,node,mutex,thread" include="loc,htmlint,$rocint/public/blockbase" remark="Block object">

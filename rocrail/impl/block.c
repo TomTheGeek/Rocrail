@@ -435,7 +435,11 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
 
   if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
     iOModel model = AppOp.getModel(  );
-    loc = ModelOp.getLoc( model, data->locId, NULL, False );
+    if( wBlock.getfifosize(data->props) > 0 && ListOp.size(data->fifoList) > 1 ) {
+      loc = ModelOp.getLoc( model, (const char*)ListOp.get(data->fifoList, ListOp.size(data->fifoList)-1), NULL, False );
+    }
+    else
+      loc = ModelOp.getLoc( model, data->locId, NULL, False );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s found", data->locId, loc==NULL?"NOT ":"" );
   }
   else {
@@ -942,6 +946,15 @@ static Boolean __hasShortcut(iIBlockBase inst) {
 
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOBlockData data = Data(inst);
+
+  if( wBlock.getfifosize(data->props) > 0 && locId != NULL ) {
+    iOLoc lc = ModelOp.getLoc( AppOp.getModel(), locId, NULL, False );
+    if( lc != NULL && StrOp.equals( wLoc.engine_automobile, LocOp.getEngine(lc)) && ListOp.size(data->fifoList) < wBlock.getfifosize(data->props) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "fifo block [%s] has room free for automobile [%s] idx=%d", data->id, LocOp.getId(lc), ListOp.size(data->fifoList) );
+      return True;
+    }
+  }
 
   if( data->pendingFree ) {
     if( !__isElectricallyFree((iOBlock)inst) ) {
@@ -1583,6 +1596,8 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
 {
   iOBlockData data = NULL;
   Boolean ok = False;
+  Boolean fifo = False;
+  iOLoc lc = ModelOp.getLoc( AppOp.getModel(), id, NULL, False );
 
   if( inst == NULL ) {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "BlockOp.lock( NULL, %s )", id );
@@ -1624,7 +1639,23 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       }
     }
 
-    if( data->locId == NULL || StrOp.len( data->locId ) == 0 || StrOp.equals( "(null)", data->locId) ) {
+    if( wBlock.getfifosize(data->props) > 0 && lc != NULL && StrOp.equals( wLoc.engine_automobile, LocOp.getEngine(lc)) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "fifo block [%s] automobile [%s] idx=%d", data->id, LocOp.getId(lc), ListOp.size(data->fifoList) );
+      ListOp.add(data->fifoList, (obj)LocOp.getId(lc));
+      if( ListOp.size(data->fifoList) == 1 ) {
+        data->locId = id;
+        wBlock.setlocid(data->props, id);
+        ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, data->locId, False, 0, 0, NULL );
+      }
+      else {
+        LocOp.stop(lc, False);
+        fifo = True;
+      }
+      data->crossing = crossing;
+      ok = True;
+    }
+    else if( data->locId == NULL || StrOp.len( data->locId ) == 0 || StrOp.equals( "(null)", data->locId) ) {
       data->locId = id;
       data->crossing = crossing;
       ok = True;
@@ -1637,7 +1668,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       ok = True;
     }
 
-    if( ok ) {
+    if( ok && !fifo ) {
       if( data->prevLocId != NULL && StrOp.equals( id, data->prevLocId ) ) {
         data->prevLocIdCnt++;
       }
@@ -1648,7 +1679,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
     }
 
     /* Broadcast to clients. */
-    if( ok ) {
+    if( ok && !fifo ) {
       iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
       wBlock.setid( nodeD, data->id );
       wBlock.setreserved( nodeD, True );
@@ -1657,13 +1688,13 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       wBlock.setacceptident(nodeD, data->acceptident);
       AppOp.broadcastEvent( nodeD );
     }
-    else {
+    else if(!ok) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                    "Block \"%s\" already locked by \"%s\".",
                    data->id, data->locId );
     }
 
-    if( ok ) {
+    if( ok && !fifo ) {
       /* in case of a managed block of a fiddle yard the manager ID is needed */
       blockid = ModelOp.getManagedID( AppOp.getModel(), blockid );
 
@@ -1678,7 +1709,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
         BlockOp.resetTrigs( inst );
     }
 
-    if( ok ) {
+    if( ok && !fifo ) {
       /* reset occupancy ticker */
       data->occtime = SystemOp.getTick();
       data->indelay = indelay;
@@ -1903,6 +1934,35 @@ static Boolean _unLock( iIBlockBase inst, const char* id, const char* routeId ) 
         return False;
       }
 
+      /* FiFO */
+      if( wBlock.getfifosize(data->props) > 0 && ListOp.size(data->fifoList) > 0 ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+            "fifo unlock block [%s] automobile [%s]", data->id, (const char*)ListOp.get(data->fifoList, 0) );
+        ListOp.remove(data->fifoList, 0);
+        if( ListOp.size(data->fifoList) > 0 ) {
+          iOLoc loc = NULL;
+          data->locId = (const char*)ListOp.get(data->fifoList, 0);
+          loc = ModelOp.getLoc( AppOp.getModel(), data->locId, NULL, False );
+          if( loc != NULL ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "fifo block [%s] setting automobile [%s] to front", data->id, data->locId );
+            LocOp.go(loc);
+            wBlock.setlocid(data->props, "");
+            /* Broadcast to clients. */
+            {
+              iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+              wBlock.setid( nodeD, data->id );
+              wBlock.setreserved( nodeD, True );
+              wBlock.setlocid( nodeD, data->locId );
+              wBlock.setacceptident(nodeD, data->acceptident);
+              AppOp.broadcastEvent( nodeD );
+            }
+            return True;
+          }
+        }
+      }
+
+
       if( data->locId == NULL || StrOp.len(data->locId) == 0 || StrOp.equals( id, data->locId ) || StrOp.equals( id, "*" ) ) {
         iOLocation location = ModelOp.getBlockLocation(AppOp.getModel(), data->id );
         if( data->locId != NULL && StrOp.equals( id, "*" ) ) {
@@ -1995,7 +2055,17 @@ static Boolean _unLock( iIBlockBase inst, const char* id, const char* routeId ) 
 
 
 static void _depart(iIBlockBase inst) {
+  iOBlockData data = Data(inst);
   __checkAction((iOBlock)inst, "depart");
+
+  if(wBlock.getfifosize(data->props) > 0 && ListOp.size( data->fifoList) > 1 ) {
+    iOLoc loc = ModelOp.getLoc( AppOp.getModel(), (const char*)ListOp.get(data->fifoList, 1), NULL, False );
+    if( loc != NULL ) {
+      obj  manager = (obj)(data->manager == NULL ? inst:data->manager);
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "sending fifo [%s] the IN event", LocOp.getId(loc) );
+      LocOp.event( loc, manager, in_event, 1, data->forceblocktimer, NULL );
+    }
+  }
 }
 
 
@@ -2491,6 +2561,9 @@ static iOBlock _inst( iONode props ) {
   wBlock.setmanagerid( data->props, "" );
 
   data->muxLock = MutexOp.inst( NULL, True );
+
+  data->fifoList = ListOp.inst();
+  data->muxFiFO = MutexOp.inst( NULL, True );
 
   NodeOp.removeAttrByName(data->props, "cmd");
 
