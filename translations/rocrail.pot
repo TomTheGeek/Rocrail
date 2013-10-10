@@ -6720,9 +6720,9 @@ msgid "Commuter trains only"
 msgstr ""
 
 #. 
-# id="useprefix"
+# id="forcemultiaspects"
 #, c-format
-msgid "Use prefix"
+msgid "Force multi aspects"
 msgstr ""
 
 #. 

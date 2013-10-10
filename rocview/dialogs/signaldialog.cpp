@@ -272,7 +272,7 @@ void SignalDialog::initLabels() {
 
   m_labAspects->SetLabel( wxGetApp().getMsg( "aspects" ) );
   m_labSymbolPrefix->SetLabel( wxGetApp().getMsg( "prefix" ) );
-  m_UseSymbolPrefix->SetLabel( wxGetApp().getMsg( "useprefix" ) );
+  m_UseSymbolPrefix->SetLabel( wxGetApp().getMsg( "forcemultiaspects" ) );
   m_Dwarf->SetLabel( wxGetApp().getMsg( "dwarfsignal" ) );
 
   m_labAspect->SetLabel( wxGetApp().getMsg( "aspect" ) + _T(":") );

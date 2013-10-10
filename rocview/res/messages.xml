@@ -24704,8 +24704,8 @@
     <en txt="Commuter trains only"/>
     <nl txt="Alleen pendeltreinen"/>
   </Msg>
-  <Msg id="useprefix">
-    <en txt="Use prefix"/>
+  <Msg id="forcemultiaspects">
+    <en txt="Force multi aspects"/>
   </Msg>
   <Msg id="nodemap">
     <en txt="Nodemap"/>
