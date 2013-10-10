@@ -85,7 +85,6 @@ BarJuTCntrlDlg::BarJuTCntrlDlg( wxWindow* parent, iONode props, const char* devi
   m_Props = props;
   m_Devices = devices;
   initLabels();
-  initValues();
 
   m_labPolling->Enable(!isSPROGII && !isDCC232);
   m_Polling->Enable(!isSPROGII && !isDCC232);
@@ -95,6 +94,7 @@ BarJuTCntrlDlg::BarJuTCntrlDlg( wxWindow* parent, iONode props, const char* devi
 
   GetSizer()->Layout();
 
+  initValues();
 }
 
 void BarJuTCntrlDlg::initLabels() {
