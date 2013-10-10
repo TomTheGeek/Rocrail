@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -313,9 +313,11 @@ static Boolean __transact( iOSprog sprog, char* out, int outsize, char* in, int 
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_transact outsize=%d insize=%d", outsize, insize );
 
     for( i = 0; i < repeat; i++ ) {
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SPROG write: %s", out );
       if( rc = SerialOp.write( data->serial, out, outsize ) ) {
         if( insize > 0 ) {
           rc = SerialOp.read( data->serial, in, insize );
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SPROG read: %s", in );
         }
       }
     }
@@ -925,7 +927,7 @@ static void __sprogReader( void* threadinst ) {
   ThreadOp.sleep( 1000 );
 
   StrOp.fmtb( in, "?\r" );
-  SerialOp.write(data->serial, in, StrOp.len(in));
+  __transact( sprog, in, StrOp.len(in), NULL, 0, 1 );
 
   do {
 
@@ -943,11 +945,13 @@ static void __sprogReader( void* threadinst ) {
           }
           else if( in[idx] == '\r' || in[idx] == '\n' ) {
             in[idx+1] = '\0';
+            StrOp.replaceAll( in, '\n', '\0' );
+            StrOp.replaceAll( in, '\r', '\0' );
+            if( StrOp.len(in) > 0 ) {
+              TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SPROG read: [%s]", in );
+              __handleResponse(sprog, in);
+            }
             idx = 0;
-            StrOp.replaceAll( in, '\n', ' ' );
-            StrOp.replaceAll( in, '\r', ' ' );
-            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SPROG read: [%s]", in );
-            __handleResponse(sprog, in);
             in[idx] = '\0';
           }
           else if( StrOp.equals( in, "P> ") || StrOp.equals( in, " P>") || StrOp.equals( in, " P> ") ) {
