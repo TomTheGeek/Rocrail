@@ -57,6 +57,7 @@ void FxDlg::onFunction( wxCommandEvent& event ) {
   int fcv[] = {49,50,51,52,113,114,115,116};
   int f = m_Function->GetSelection();
 
+  m_CVNumber->SetValue(fcv[f]);
   m_CVnr->SetValue(fcv[f]);
 }
 
@@ -71,9 +72,12 @@ void FxDlg::initValues() {
   m_Generation->SetSelection(gen);
   m_Work->SetSelection(act);
 
+  m_CVValue->SetValue(m_FX);
   TraceOp.trc( "fxdlg", TRCLEVEL_INFO, __LINE__, 9999, "initValues FX=0x%02X act=0x%02X gen=0x%02X", m_FX, act, gen );
 
   int cv = m_CVnr->GetValue();
+  m_CVNumber->SetValue(m_CVnr->GetValue());
+
   switch( cv ) {
     case  49: m_Function->SetSelection(0); break;
     case  50: m_Function->SetSelection(1); break;
@@ -84,4 +88,14 @@ void FxDlg::initValues() {
     case 115: m_Function->SetSelection(6); break;
     case 116: m_Function->SetSelection(7); break;
   }
+}
+
+void FxDlg::onGeneration( wxCommandEvent& event ) {
+  int cvnr = 0;
+  int val = getConfig(&cvnr);
+  m_CVValue->SetValue(val);
+}
+
+void FxDlg::onActivation( wxCommandEvent& event ) {
+  onGeneration(event);
 }

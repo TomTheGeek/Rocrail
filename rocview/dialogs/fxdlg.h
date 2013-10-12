@@ -28,6 +28,8 @@ protected:
 	void onCancel( wxCommandEvent& event );
 	void onOK( wxCommandEvent& event );
   void onFunction( wxCommandEvent& event );
+  void onGeneration( wxCommandEvent& event );
+  void onActivation( wxCommandEvent& event );
 
 public:
 	/** Constructor */
