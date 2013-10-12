@@ -6743,3 +6743,9 @@ msgstr ""
 msgid "FiFo size"
 msgstr ""
 
+#. 
+# id="pollingrate"
+#, c-format
+msgid "Polling rate"
+msgstr ""
+

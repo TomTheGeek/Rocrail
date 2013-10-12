@@ -96,7 +96,8 @@ BarJuTCntrlDlg::BarJuTCntrlDlg( wxWindow* parent, iONode props, const char* devi
 
 void BarJuTCntrlDlg::initLabels() {
   m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
-  m_labDevice->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labDevice->SetLabel( wxGetApp().getMsg( "device" ) );
+  m_labPolling->SetLabel( wxGetApp().getMsg( "pollingrate" ) );
 }
 
 void BarJuTCntrlDlg::initValues() {

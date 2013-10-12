@@ -24716,4 +24716,7 @@
   <Msg id="fifosize">
     <en txt="FiFo size"/>
   </Msg>
+  <Msg id="pollingrate">
+    <en txt="Polling rate"/>
+  </Msg>
 </Messages>
