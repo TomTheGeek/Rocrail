@@ -151,6 +151,7 @@ RocProDlgGen( parent )
 
   initLocMap();
   m_CV29->Enable(false);
+  m_Fx->Enable(false);
   m_VCurve->Enable(true);
 
 }
@@ -184,6 +185,11 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
       setCVVal(0);
 
     m_CV29->Enable(nr==29);
+    if(nr==49 || nr==50 || nr==51 || nr==52 || nr==113 || nr==114 || nr==115 || nr==116)
+      m_Fx->Enable(true);
+    else
+      m_Fx->Enable(false);
+
     m_WriteCV->Enable(wCVByte.isreadonly(cv)?false:true);
     m_ValueSlider->Enable(wCVByte.isword(cv)?false:true);
     m_ValueSlider->SetRange(0, wCVByte.isword(cv)?65535:255);
@@ -705,7 +711,9 @@ void RocProDlg::onFx( wxCommandEvent& event ) {
   FxDlg*  dlg = new FxDlg(this, m_Value->GetValue(), m_Nr );
   int rc = dlg->ShowModal();
   if( rc == wxID_OK ) {
-    int val = dlg->getConfig();
+    int cvnr = 0;
+    int val = dlg->getConfig(&cvnr);
+    m_Nr->SetValue(cvnr);
     setCVVal(val);
     doCV( wProgram.set, m_Nr->GetValue(), val );
   }
@@ -798,6 +806,11 @@ void RocProDlg::onNr( wxSpinEvent& event ) {
     setCVVal(0);
   }
   m_CV29->Enable(nr==29);
+  if(nr==49 || nr==50 || nr==51 || nr==52 || nr==113 || nr==114 || nr==115 || nr==116)
+    m_Fx->Enable(true);
+  else
+    m_Fx->Enable(false);
+
   if( cv != NULL )
     m_WriteCV->Enable(wCVByte.isreadonly(cv)?false:true);
   else

@@ -32,7 +32,7 @@ protected:
 public:
 	/** Constructor */
   FxDlg( wxWindow* parent, int p_FX, wxSpinCtrl* p_CVnr );
-  int getConfig();
+  int getConfig(int* cvnr);
 
 
 };

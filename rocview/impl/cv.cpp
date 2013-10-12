@@ -424,7 +424,8 @@ void CV::onDecFX(void) {
   FxDlg*  dlg = new FxDlg(m_Frame, m_FxVal, m_CVnr );
   int rc = dlg->ShowModal();
   if( rc == wxID_OK ) {
-    m_FxVal = dlg->getConfig();
+    int cvnr = 0;
+    m_FxVal = dlg->getConfig(&cvnr);
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "FxVal (%d)", m_FxVal );
     m_CVoperation = CVSET;
     doCV( wProgram.set, m_CVnr->GetValue(), m_FxVal );

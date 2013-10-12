@@ -30,12 +30,25 @@ void FxDlg::onOK( wxCommandEvent& event ) {
   EndModal( wxID_OK );
 }
 
-int FxDlg::getConfig() {
+int FxDlg::getConfig( int* cvnr ) {
   int gen = m_Generation->GetSelection();
   int act = m_Work->GetSelection();
   m_FX  = (act << 4);
   m_FX |= (gen & 0x0F);
-  TraceOp.trc( "fxdlg", TRCLEVEL_INFO, __LINE__, 9999, "getConfig FX=0x%02X act=0x%02X gen=0x%02X", m_FX, act, gen );
+
+  int cv = m_Function->GetSelection();
+  switch( cv ) {
+    case  0: *cvnr=49; break;
+    case  1: *cvnr=50; break;
+    case  2: *cvnr=51; break;
+    case  3: *cvnr=52; break;
+    case  4: *cvnr=113; break;
+    case  5: *cvnr=114; break;
+    case  6: *cvnr=115; break;
+    case  7: *cvnr=116; break;
+  }
+
+  TraceOp.trc( "fxdlg", TRCLEVEL_INFO, __LINE__, 9999, "getConfig FX=0x%02X act=0x%02X gen=0x%02X cvnr=%d", m_FX, act, gen, *cvnr );
 
   return m_FX;
 }
