@@ -12,7 +12,7 @@
 FxDlg::FxDlg( wxWindow* parent, int p_FX, wxSpinCtrl* p_CVnr )
   :fxdlggen( parent )
 {
-  TraceOp.trc( "fxdlg", TRCLEVEL_INFO, __LINE__, 9999, "FxDlg" );
+  TraceOp.trc( "fxdlg", TRCLEVEL_INFO, __LINE__, 9999, "FxDlg fx=%d cv=%d", p_FX, p_CVnr->GetValue() );
   m_FX = p_FX;
   m_CVnr = p_CVnr;
   initLabels();
@@ -33,11 +33,9 @@ void FxDlg::onOK( wxCommandEvent& event ) {
 int FxDlg::getConfig() {
   int gen = m_Generation->GetSelection();
   int act = m_Work->GetSelection();
-
-  if( act > 7 ) act += 2;
-
-  m_FX  = act << 4;
-  m_FX |= gen & 0x0F;
+  m_FX  = (act << 4);
+  m_FX |= (gen & 0x0F);
+  TraceOp.trc( "fxdlg", TRCLEVEL_INFO, __LINE__, 9999, "getConfig FX=0x%02X act=0x%02X gen=0x%02X", m_FX, act, gen );
 
   return m_FX;
 }
@@ -55,12 +53,12 @@ void FxDlg::initLabels() {
 }
 
 void FxDlg::initValues() {
-  TraceOp.trc( "fxdlg", TRCLEVEL_INFO, __LINE__, 9999, "initValues" );
-  int act = m_FX >> 4;
-  int gen = m_FX & 0x0F;
+  int act = ((m_FX & 0xF0) >> 4);
+  int gen = (m_FX & 0x0F);
   m_Generation->SetSelection(gen);
-  if( act > 7 ) act -= 2;
   m_Work->SetSelection(act);
+
+  TraceOp.trc( "fxdlg", TRCLEVEL_INFO, __LINE__, 9999, "initValues FX=0x%02X act=0x%02X gen=0x%02X", m_FX, act, gen );
 
   int cv = m_CVnr->GetValue();
   switch( cv ) {

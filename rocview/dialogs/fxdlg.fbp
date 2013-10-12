@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <wxFormBuilder_Project>
-    <FileVersion major="1" minor="9" />
+    <FileVersion major="1" minor="10" />
     <object class="Project" expanded="1">
         <property name="class_decoration"></property>
         <property name="code_generation">C++</property>
         <property name="disconnect_events">1</property>
+        <property name="disconnect_mode">source_name</property>
+        <property name="disconnect_python_events">0</property>
         <property name="encoding">UTF-8</property>
         <property name="event_generation">connect</property>
         <property name="file">fxdlggen</property>
@@ -16,13 +18,16 @@
         <property name="path">.</property>
         <property name="precompiled_header"></property>
         <property name="relative_path">1</property>
+        <property name="skip_python_events">1</property>
         <property name="use_enum">0</property>
         <property name="use_microsoft_bom">0</property>
         <object class="Dialog" expanded="1">
             <property name="bg"></property>
             <property name="center">wxBOTH</property>
             <property name="context_help"></property>
+            <property name="context_menu">1</property>
             <property name="enabled">1</property>
+            <property name="event_handler">impl_virtual</property>
             <property name="extra_style"></property>
             <property name="fg"></property>
             <property name="font"></property>
@@ -37,6 +42,10 @@
             <property name="subclass"></property>
             <property name="title">FX Setup</property>
             <property name="tooltip"></property>
+            <property name="validator_data_type"></property>
+            <property name="validator_style">wxFILTER_NONE</property>
+            <property name="validator_type">wxDefaultValidator</property>
+            <property name="validator_variable"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
             <property name="window_style"></property>
@@ -83,6 +92,7 @@
                         <property name="bg"></property>
                         <property name="choices">&quot;F0 Fwd&quot; &quot;F0 Rev&quot; &quot;F1&quot; &quot;F2&quot; &quot;F3&quot; &quot;F4&quot; &quot;F5&quot; &quot;F6&quot;</property>
                         <property name="context_help"></property>
+                        <property name="context_menu">1</property>
                         <property name="enabled">1</property>
                         <property name="fg"></property>
                         <property name="font"></property>
@@ -100,6 +110,10 @@
                         <property name="style">wxRA_SPECIFY_ROWS</property>
                         <property name="subclass"></property>
                         <property name="tooltip"></property>
+                        <property name="validator_data_type"></property>
+                        <property name="validator_style">wxFILTER_NONE</property>
+                        <property name="validator_type">wxDefaultValidator</property>
+                        <property name="validator_variable"></property>
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>
                         <property name="window_style"></property>
@@ -144,8 +158,9 @@
                             <property name="proportion">0</property>
                             <object class="wxRadioBox" expanded="1">
                                 <property name="bg"></property>
-                                <property name="choices">&quot;Normal&quot; &quot;Random flicker&quot; &quot;Mars light&quot; &quot;Flashing head light&quot; &quot;Single pulse strobe&quot; &quot;Double pulse strobe&quot; &quot;Rotary beacon simulation&quot; &quot;Gyralite&quot; &quot;Rule 17 dimmable headlight&quot; &quot;FRED&quot; &quot;Right ditch light&quot; &quot;Left ditch light&quot;</property>
+                                <property name="choices">&quot;Normal&quot; &quot;Random flicker&quot; &quot;Mars light&quot; &quot;Flashing head light&quot; &quot;Single pulse strobe&quot; &quot;Double pulse strobe&quot; &quot;Rotary beacon simulation&quot; &quot;Gyralite&quot; &quot;Rule 17 dimmable headlight&quot; &quot;FRED&quot; &quot;Right ditch light&quot; &quot;Left ditch light&quot; &quot;Reserved&quot; &quot;Reserved&quot; &quot;Reserved&quot; &quot;Reserved&quot;</property>
                                 <property name="context_help"></property>
+                                <property name="context_menu">1</property>
                                 <property name="enabled">1</property>
                                 <property name="fg"></property>
                                 <property name="font"></property>
@@ -158,11 +173,15 @@
                                 <property name="name">m_Generation</property>
                                 <property name="permission">protected</property>
                                 <property name="pos"></property>
-                                <property name="selection">4</property>
+                                <property name="selection">11</property>
                                 <property name="size"></property>
                                 <property name="style">wxRA_SPECIFY_COLS</property>
                                 <property name="subclass"></property>
                                 <property name="tooltip"></property>
+                                <property name="validator_data_type"></property>
+                                <property name="validator_style">wxFILTER_NONE</property>
+                                <property name="validator_type">wxDefaultValidator</property>
+                                <property name="validator_variable"></property>
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
@@ -198,8 +217,9 @@
                             <property name="proportion">0</property>
                             <object class="wxRadioBox" expanded="1">
                                 <property name="bg"></property>
-                                <property name="choices">&quot;Forward direction phase A&quot; &quot;Reverse direction phase B&quot; &quot;Non directional phase A&quot; &quot;Non directional phase B&quot; &quot;Forward direction, F0 on, phase A&quot; &quot;Reverse direction, F0 on, phase B&quot; &quot;Forwards ditch light or Rule 17&quot; &quot;Reverse ditch light or Rule 17&quot; &quot;Speed=0, non directional, phase A&quot; &quot;Speed&gt;0, non directional, phase B&quot; &quot;Ditch off phase A&quot; &quot;Ditch off phase B&quot;</property>
+                                <property name="choices">&quot;Forward direction phase A&quot; &quot;Reverse direction phase B&quot; &quot;Non directional phase A&quot; &quot;Non directional phase B&quot; &quot;Forward direction, F0 on, phase A&quot; &quot;Reverse direction, F0 on, phase B&quot; &quot;Forwards ditch light or Rule 17&quot; &quot;Reverse ditch light or Rule 17&quot; &quot;Reserved&quot; &quot;Reserved&quot; &quot;Speed=0, non directional, phase A&quot; &quot;Speed&gt;0, non directional, phase B&quot; &quot;Reserved&quot; &quot;Reserved&quot; &quot;Ditch off phase A&quot; &quot;Ditch off phase B&quot;</property>
                                 <property name="context_help"></property>
+                                <property name="context_menu">1</property>
                                 <property name="enabled">1</property>
                                 <property name="fg"></property>
                                 <property name="font"></property>
@@ -212,11 +232,15 @@
                                 <property name="name">m_Work</property>
                                 <property name="permission">protected</property>
                                 <property name="pos"></property>
-                                <property name="selection">2</property>
+                                <property name="selection">7</property>
                                 <property name="size"></property>
                                 <property name="style">wxRA_SPECIFY_COLS</property>
                                 <property name="subclass"></property>
                                 <property name="tooltip"></property>
+                                <property name="validator_data_type"></property>
+                                <property name="validator_style">wxFILTER_NONE</property>
+                                <property name="validator_type">wxDefaultValidator</property>
+                                <property name="validator_variable"></property>
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
