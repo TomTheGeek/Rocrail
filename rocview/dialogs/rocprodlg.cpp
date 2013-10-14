@@ -214,6 +214,7 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
     // catagory
     m_Info->SetValue(wxString( "", wxConvUTF8));
     m_Nr->SetValue( 0 );
+    setCVVal(0);
   }
   StrOp.free(desc);
 }

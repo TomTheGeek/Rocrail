@@ -1805,7 +1805,7 @@
                                                         <property name="initial">1</property>
                                                         <property name="max">1024</property>
                                                         <property name="maximum_size"></property>
-                                                        <property name="min">1</property>
+                                                        <property name="min">0</property>
                                                         <property name="minimum_size"></property>
                                                         <property name="name">m_Nr</property>
                                                         <property name="permission">protected</property>
