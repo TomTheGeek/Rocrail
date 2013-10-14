@@ -3991,16 +3991,12 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   wxMenuItem* mi_locobook  = menuBar->FindItem(ME_LocoBook);
   mi_locobook->Check( m_bLocoBook );
 
-  if( !l_Expired ) {
-    wxMenuItem* mi_locowidgets  = menuBar->FindItem(ME_LocoWidgets);
-    mi_locowidgets->Check( wGui.islocowidgetstab(m_Ini) );
-    mi_locowidgets->Enable( !l_Expired );
-  }
+  wxMenuItem* mi_locowidgets  = menuBar->FindItem(ME_LocoWidgets);
+  mi_locowidgets->Check( wGui.islocowidgetstab(m_Ini) );
+  mi_locowidgets->Enable( !l_Expired );
 
-  if( !l_Expired ) {
-    wxMenuItem* mi_rocpro  = menuBar->FindItem(ME_RocPro);
-    mi_rocpro->Enable( !l_Expired );
-  }
+  wxMenuItem* mi_rocpro  = menuBar->FindItem(ME_RocPro);
+  mi_rocpro->Enable( !l_Expired );
 
   wxMenuItem* mi_planbook  = menuBar->FindItem(ME_PlanBook);
   mi_planbook->Check( m_bPlanBook );
