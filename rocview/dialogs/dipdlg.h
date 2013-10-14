@@ -46,6 +46,7 @@ class DIPDlg : public wxDialog
   void initDIP();
   void addDIPGroup(iONode group, int idx);
   wxRadioBox* m_RadioBox[32];
+  wxCheckBox* m_CheckBox[32][32];
   iONode m_Group[32][32];
 
   protected:

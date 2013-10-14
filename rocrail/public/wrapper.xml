@@ -125,6 +125,7 @@
       <const name="grouptype_box" vt="int" val="1"/>
       <var name="type" vt="int" defval="0" range="0-*"/>
       <var name="caption" vt="string" defval="DIP Group" range="*"/>
+      <var name="ori" vt="int" defval="0" range="0,1"/>
       <dipvalue wrappername="DIPValue" cardinality="n">
         <const name="valuetype_radiobutton" vt="int" val="0"/>
         <const name="valuetype_checkbox" vt="int" val="1"/>

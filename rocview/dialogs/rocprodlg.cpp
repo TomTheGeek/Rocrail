@@ -155,6 +155,7 @@ RocProDlgGen( parent )
 
   initLocMap();
   m_CV29->Enable(false);
+  m_DIP->Enable(false);
   m_Fx->Enable(false);
   m_VCurve->Enable(true);
 
@@ -193,6 +194,9 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
       m_Fx->Enable(true);
     else
       m_Fx->Enable(false);
+
+    m_DIP->Enable( wCVByte.getadip(m_SelectedCV) != NULL );
+
 
     m_WriteCV->Enable(wCVByte.isreadonly(cv)?false:true);
     m_ValueSlider->Enable(wCVByte.isword(cv)?false:true);
@@ -815,6 +819,8 @@ void RocProDlg::onNr( wxSpinEvent& event ) {
   else
     m_Fx->Enable(false);
 
+  m_DIP->Enable( wCVByte.getadip(m_SelectedCV) != NULL );
+
   if( cv != NULL )
     m_WriteCV->Enable(wCVByte.isreadonly(cv)?false:true);
   else
@@ -989,6 +995,8 @@ void RocProDlg::onHexValue( wxCommandEvent& event ) {
 
 
 void RocProDlg::onDIP( wxCommandEvent& event ) {
+  if( wCVByte.getadip(m_SelectedCV) == NULL )
+    return;
   DIPDlg*  dlg = new DIPDlg(this, wCVByte.getadip(m_SelectedCV) );
   int rc = dlg->ShowModal();
   if( rc == wxID_OK ) {

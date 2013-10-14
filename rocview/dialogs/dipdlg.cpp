@@ -78,14 +78,22 @@ DIPDlg::~DIPDlg()
   m_sdButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DIPDlg::onCancel ), NULL, this );
   m_sdButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DIPDlg::onOK ), NULL, this );
   this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( DIPDlg::onClose ) );
+  for( int i = 0; i < 32; i++ ) {
+    if( m_RadioBox[i] != NULL ) {
+      delete m_RadioBox[i];
+    }
+    else {
+      break;
+    }
+  }
 }
 
 
 
 void DIPDlg::addDIPGroup(iONode group, int idx) {
   TraceOp.trc( "dip", TRCLEVEL_INFO, __LINE__, 9999, "add group [%s]", wDIPGroup.getcaption(group) );
+  int n = NodeOp.getChildCnt(group);
   if( wDIPGroup.gettype(group) == wDIPGroup.grouptype_radiobox ) {
-    int n = NodeOp.getChildCnt(group);
     wxString choices[32];
     for( int i = 0; i < n && i < 32; i++ ) {
       iONode value = NodeOp.getChild(group, i);
@@ -93,9 +101,21 @@ void DIPDlg::addDIPGroup(iONode group, int idx) {
       m_Group[idx][i] = value;
     }
     m_RadioBox[idx] = new wxRadioBox(this, wxID_ANY,
-        wxString( wDIPGroup.getcaption(group), wxConvUTF8), wxDefaultPosition, wxDefaultSize, n, choices);
+        wxString( wDIPGroup.getcaption(group), wxConvUTF8), wxDefaultPosition, wxDefaultSize, n, choices,
+        0, (wDIPGroup.getori(group) == 1) ? wxRA_SPECIFY_ROWS:wxRA_SPECIFY_COLS);
     m_Sizer->Add( m_RadioBox[idx], 0, wxEXPAND|wxALL, 5 );
 
+  }
+  if( wDIPGroup.gettype(group) == wDIPGroup.grouptype_box ) {
+    wxStaticBoxSizer* bSizer =  new wxStaticBoxSizer( (wDIPGroup.getori(group) == 1) ? wxVERTICAL:wxHORIZONTAL, this, wxString( wDIPGroup.getcaption(group), wxConvUTF8) );
+    m_Sizer->Add( bSizer, 0, wxEXPAND|wxALL, 0 );
+    for( int i = 0; i < n && i < 32; i++ ) {
+      iONode value = NodeOp.getChild(group, i);
+      m_Group[idx][i] = value;
+      m_CheckBox[idx][i] = new wxCheckBox(this, wxID_ANY,
+          wxString(wDIPValue.getname(value), wxConvUTF8) );
+      bSizer->Add( m_CheckBox[idx][i], 0, wxEXPAND|wxALL, 5 );
+    }
   }
 }
 
@@ -104,11 +124,13 @@ void DIPDlg::initDIP() {
   SetTitle(wxString( wDIP.gettitle(m_DIP), wxConvUTF8));
 
   MemOp.set(m_RadioBox, 0, sizeof(m_RadioBox) );
+  MemOp.set(m_CheckBox, 0, sizeof(m_CheckBox) );
 
   int idx = 0;
   iONode group = wDIP.getdipgroup(m_DIP);
   while( group != NULL ) {
     addDIPGroup(group, idx);
+    idx++;
     group = wDIP.nextdipgroup(m_DIP, group);
   }
 
@@ -136,8 +158,12 @@ int DIPDlg::getValue() {
       TraceOp.trc( "dip", TRCLEVEL_INFO, __LINE__, 9999,
           "group=%d selection=%d name=%s value=%d", i, sel, wDIPValue.getname(m_Group[i][sel]), val );
     }
-    else {
-      break;
+    for( int n = 0; n < 32; n++ ) {
+      if( m_CheckBox[i][n] != NULL && m_CheckBox[i][n]->IsChecked() ) {
+        val += wDIPValue.getvalue(m_Group[i][n]);
+        TraceOp.trc( "dip", TRCLEVEL_INFO, __LINE__, 9999,
+            "group=%d selection=%d name=%s value=%d", i, n, wDIPValue.getname(m_Group[i][n]), val );
+      }
     }
   }
   return val;
