@@ -117,6 +117,23 @@
       <description cardinality="n"/>
     </product>
   </productlist>
+  
+  <adip wrappername="DIP">
+    <var name="title" vt="string" defval="Dinamic Input Panel" range="*"/>
+    <dipgroup wrappername="DIPGroup" cardinality="n">
+      <const name="grouptype_radiobox" vt="int" val="0"/>
+      <const name="grouptype_box" vt="int" val="1"/>
+      <var name="type" vt="int" defval="0" range="0-*"/>
+      <var name="caption" vt="string" defval="DIP Group" range="*"/>
+      <dipvalue wrappername="DIPValue" cardinality="n">
+        <const name="valuetype_radiobutton" vt="int" val="0"/>
+        <const name="valuetype_checkbox" vt="int" val="1"/>
+        <var name="type" vt="int" defval="0" range="0-*"/>
+        <var name="name" vt="string" defval="Value" range="*"/>
+        <var name="value" vt="int" defval="0" range="0-*"/>
+      </dipvalue>
+    </dipgroup>
+  </adip>
 
   <cvbyte wrappername="CVByte">
     <var name="nr" vt="int" defval="0" range="0-*" remark="CV-Number"/>
@@ -126,6 +143,7 @@
     <var name="info" vt="string" defval="" range="*" remark="Info"/>
     <var name="readonly" vt="bool" defval="false" remark="Disable write operations."/>
     <var name="word" vt="bool" defval="false" remark="16 bit word value"/>
+    <adip cardinality="1"/>
   </cvbyte>
 
   <macro wrappername="Macro" remark="Macro definition for accessories.">
@@ -1648,7 +1666,7 @@
         <var name="aspects" vt="int" defval="3" range="2-16" remark="number of aspects to show"/>
         <var name="dwarf" vt="bool" defval="false"/>
         <var name="symbolprefix" vt="string" defval="" range="*" remark="Optional symbol name prefix for multiaspect signals."/>
-        <var name="usesymbolprefix" vt="bool" defval="flase" remark="Use symbol prefix for aspects < 5."/>
+        <var name="usesymbolprefix" vt="bool" defval="flase" remark="Use symbol prefix for aspects less then 5."/>
 
         <!-- patterns -->
         <const name="use_patterns" vt="int" val="1"/>

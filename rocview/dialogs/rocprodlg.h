@@ -60,6 +60,7 @@ class RocProDlg : public RocProDlgGen
   int m_CVidxAll;
   bool m_UseDecSpec4All;;
   bool m_Save;
+  iONode mCVDip;
 
   bool parseDecFile();
   void initLocMap(const char* locid=NULL);
@@ -99,6 +100,7 @@ class RocProDlg : public RocProDlgGen
     void onReadAllCV( wxCommandEvent& event );
     void onCVInfoEnter( wxCommandEvent& event );
     void onHexValue( wxCommandEvent& event );
+    void onDIP( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		RocProDlg( wxWindow* parent );

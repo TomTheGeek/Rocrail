@@ -56,6 +56,9 @@
 #include "rocrail/wrapper/public/DataReq.h"
 #include "rocrail/wrapper/public/Dec.h"
 #include "rocrail/wrapper/public/Car.h"
+#include "rocrail/wrapper/public/DIP.h"
+#include "rocrail/wrapper/public/DIPGroup.h"
+#include "rocrail/wrapper/public/DIPValue.h"
 
 // JMRI
 #include "rocrail/wrapper/public/DecoderConfig.h"
@@ -72,6 +75,7 @@
 #include "rocview/dialogs/speedcurvedlg.h"
 #include "rocview/dialogs/decconfigdlg.h"
 #include "rocview/dialogs/fxdlg.h"
+#include "rocview/dialogs/dipdlg.h"
 
 #include "rocview/xpm/nopict.xpm"
 
@@ -982,3 +986,15 @@ void RocProDlg::onHexValue( wxCommandEvent& event ) {
   long lhexval = strtol(hexval, (char **)NULL, 16);
   setCVVal(lhexval, true);
 }
+
+
+void RocProDlg::onDIP( wxCommandEvent& event ) {
+  DIPDlg*  dlg = new DIPDlg(this, wCVByte.getadip(m_SelectedCV) );
+  int rc = dlg->ShowModal();
+  if( rc == wxID_OK ) {
+    int val = dlg->getValue();
+    doCV( wProgram.set, m_Nr->GetValue(), val );
+  }
+  dlg->Destroy();
+}
+
