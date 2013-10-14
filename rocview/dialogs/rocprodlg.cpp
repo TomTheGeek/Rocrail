@@ -212,7 +212,7 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
   }
   else {
     // catagory
-    m_Info->SetValue(wxString( "", wxConvUTF8));
+    m_Info->SetValue(wxString( NodeOp.getStr(m_DecNode, "info", "-"), wxConvUTF8));
     m_Nr->SetValue( 0 );
     setCVVal(0);
   }
