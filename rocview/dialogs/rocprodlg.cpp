@@ -215,6 +215,7 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
     m_Info->SetValue(wxString( NodeOp.getStr(m_DecNode, "info", "-"), wxConvUTF8));
     m_Nr->SetValue( 0 );
     setCVVal(0);
+    m_DIP->Enable( false );
   }
   StrOp.free(desc);
 }
