@@ -6749,3 +6749,9 @@ msgstr ""
 msgid "Polling rate"
 msgstr ""
 
+#. 
+# id="usepb"
+#, c-format
+msgid "Use push button"
+msgstr ""
+

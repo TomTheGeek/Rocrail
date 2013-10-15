@@ -383,6 +383,7 @@ void RocnetNodeDlg::initLabels() {
   // Options
   m_RocNetOptionBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "options" ));
   m_SecAck->SetLabel(wxGetApp().getMsg( "secureack" ));
+  m_UsePB->SetLabel(wxGetApp().getMsg( "usepb" ));
   m_DCCType->SetLabel(wxGetApp().getMsg( "controller" ));
   m_DCCType->SetString( 0, wxGetApp().getMsg( "none" ) );
   m_DCCDevice->SetLabel(wxGetApp().getMsg( "device" ));
@@ -654,6 +655,7 @@ void RocnetNodeDlg::event(iONode node) {
       m_IOType->SetSelection( iotype );
       m_SecAck->SetValue(wProgram.getval2(node)&0x01?true:false);
       m_RFID->SetValue(wProgram.getval2(node)&0x02?true:false);
+      m_UsePB->SetValue(wProgram.getval2(node)&0x04?true:false);
       m_DCCType->SetSelection( wProgram.getval3(node) );
       m_DCCDevice->SetSelection( wProgram.getval4(node) );
       wxCommandEvent cmdevt;
@@ -734,7 +736,7 @@ void RocnetNodeDlg::onNodeOptionsWrite( wxCommandEvent& event ) {
   wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
   wProgram.setcmd( cmd, wProgram.setoptions );
   wProgram.setval1( cmd, m_IOType->GetSelection());
-  wProgram.setval2( cmd, (m_SecAck->IsChecked()?0x01:0x00) | (m_RFID->IsChecked()?0x02:0x00));
+  wProgram.setval2( cmd, (m_SecAck->IsChecked()?0x01:0x00) | (m_RFID->IsChecked()?0x02:0x00) | (m_UsePB->IsChecked()?0x04:0x00));
   wProgram.setval3( cmd, m_DCCType->GetSelection());
   wProgram.setval4( cmd, m_DCCDevice->GetSelection());
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );

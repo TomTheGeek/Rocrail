@@ -604,7 +604,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
     msg[RN_PACKET_LEN] = 4;
     msg[RN_PACKET_DATA + 0] = data->iotype;
-    msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00);
+    msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00) | (data->usepb ? 0x04:0x00);
     msg[RN_PACKET_DATA + 2] = data->cstype;
     msg[RN_PACKET_DATA + 3] = data->csdevice;
     break;
@@ -615,6 +615,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     data->iotype = rn[RN_PACKET_DATA + 0];
     data->sack   = (rn[RN_PACKET_DATA + 1] & 0x01) ? True:False;
     data->rfid   = (rn[RN_PACKET_DATA + 1] & 0x02) ? True:False;
+    data->usepb = (rn[RN_PACKET_DATA + 1] & 0x04) ? True:False;
     data->cstype   = rn[RN_PACKET_DATA + 2];
     data->csdevice = rn[RN_PACKET_DATA + 3];
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "options: iotype=%d cstype=%d csdevice=%d", data->iotype, data->cstype, data->csdevice );
@@ -627,7 +628,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
     msg[RN_PACKET_LEN] = 4;
     msg[RN_PACKET_DATA + 0] = data->iotype;
-    msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00);
+    msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00) | (data->usepb ? 0x04:0x00);
     msg[RN_PACKET_DATA + 2] = data->cstype;
     msg[RN_PACKET_DATA + 3] = data->csdevice;
     /* Save the rocnetnode.ini to persistent the new ID. */
@@ -641,6 +642,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       wRocNetNodeOptions.setiotype( optionsini, data->iotype );
       wRocNetNodeOptions.setsack( optionsini, data->sack );
       wRocNetNodeOptions.setrfid( optionsini, data->rfid );
+      wRocNetNodeOptions.setusepb( optionsini, data->usepb );
 
       if( !data->rfid || data->cstype !=  prevcstype ) {
         __unloadDigInt(rocnetnode, prevcstype);
@@ -1263,7 +1265,7 @@ static void __scanner( void* threadinst ) {
 
           /* Check PB1 for a 5 second ON */
           if( i == 0 ) {
-            if( inputVal[i] > 0 ) {
+            if( inputVal[i] > 0 && data->usepb ) {
               data->PB1timer++;
               if( data->PB1timer >= 500 ) {
                 /* Shutdown */
@@ -1286,7 +1288,7 @@ static void __scanner( void* threadinst ) {
             if( i == 0 ) {
               /* Normal PB1 handling */
               inputVal[i] = val;
-              if( val && ! data->pendingHalt ) {
+              if( val && ! data->pendingHalt && data->usepb ) {
                 if( data->show ) {
                   data->show = False;
                 }
@@ -1811,6 +1813,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
       data->sack  = wRocNetNodeOptions.issack(optionsini);
       data->rfid  = wRocNetNodeOptions.isrfid(optionsini);
+      data->usepb = wRocNetNodeOptions.isusepb(optionsini);
       data->iotype = wRocNetNodeOptions.getiotype(optionsini);
       if( data->iotype == IO_NOT_USED ) {
         /* convert to new type: i2c-1 */

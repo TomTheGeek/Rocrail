@@ -101,6 +101,7 @@
       <var name="iodata[16]" vt="byte"/>
       <var name="sack" vt="Boolean"/>
       <var name="rfid" vt="Boolean"/>
+      <var name="usepb" vt="Boolean"/>
       <var name="i2cmux" vt="iOMutex"/>
       <var name="startofday" vt="Boolean"/>
       <var name="LED1" vt="int"/>

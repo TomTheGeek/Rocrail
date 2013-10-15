@@ -24719,4 +24719,7 @@
   <Msg id="pollingrate">
     <en txt="Polling rate"/>
   </Msg>
+  <Msg id="usepb">
+    <en txt="Use push button"/>
+  </Msg>
 </Messages>
