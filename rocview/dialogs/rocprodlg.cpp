@@ -821,7 +821,8 @@ void RocProDlg::onNr( wxSpinEvent& event ) {
   else
     m_Fx->Enable(false);
 
-  m_DIP->Enable( wCVByte.getadip(m_SelectedCV) != NULL );
+  if( cv != NULL )
+    m_DIP->Enable( wCVByte.getadip(cv) != NULL );
 
   if( cv != NULL )
     m_WriteCV->Enable(wCVByte.isreadonly(cv)?false:true);
