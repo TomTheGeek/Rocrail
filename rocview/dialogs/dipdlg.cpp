@@ -102,19 +102,26 @@ DIPDlg::~DIPDlg()
 void DIPDlg::addDIPGroup(iONode group, int idx) {
   TraceOp.trc( "dip", TRCLEVEL_INFO, __LINE__, 9999, "add group [%s]", wDIPGroup.getcaption(group) );
   int n = NodeOp.getChildCnt(group);
+
+  // Radiobuttons
   if( wDIPGroup.gettype(group) == wDIPGroup.grouptype_radiobox ) {
     wxString choices[32];
+    int selection = 0;
     for( int i = 0; i < n && i < 32; i++ ) {
       iONode value = NodeOp.getChild(group, i);
       choices[i] = wxString(wDIPValue.getname(value), wxConvUTF8);
       m_Group[idx][i] = value;
+      if( wDIPValue.getvalue(value) == ( m_Value & wDIPGroup.getmask(group)) )
+        selection = i;
     }
     m_RadioBox[idx] = new wxRadioBox(this, wxID_ANY,
         wxString( wDIPGroup.getcaption(group), wxConvUTF8), wxDefaultPosition, wxDefaultSize, n, choices,
         0, (wDIPGroup.getori(group) == 1) ? wxRA_SPECIFY_ROWS:wxRA_SPECIFY_COLS);
     m_Sizer->Add( m_RadioBox[idx], 0, wxEXPAND|wxALL, 5 );
-
+    m_RadioBox[idx]->SetSelection(selection);
   }
+
+  // Checkboxes
   if( wDIPGroup.gettype(group) == wDIPGroup.grouptype_box ) {
     wxStaticBoxSizer* bSizer =  new wxStaticBoxSizer( (wDIPGroup.getori(group) == 1) ? wxVERTICAL:wxHORIZONTAL, this, wxString( wDIPGroup.getcaption(group), wxConvUTF8) );
     m_Sizer->Add( bSizer, 0, wxEXPAND|wxALL, 0 );
@@ -124,6 +131,8 @@ void DIPDlg::addDIPGroup(iONode group, int idx) {
       m_CheckBox[idx][i] = new wxCheckBox(this, wxID_ANY,
           wxString(wDIPValue.getname(value), wxConvUTF8) );
       bSizer->Add( m_CheckBox[idx][i], 0, wxEXPAND|wxALL, 5 );
+      if( wDIPValue.getvalue(value) & m_Value )
+        m_CheckBox[idx][i]->SetValue(true);
     }
   }
 }
