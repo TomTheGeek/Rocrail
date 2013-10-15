@@ -67,7 +67,6 @@ class RocProDlg : public RocProDlgGen
   iONode getLocoCV(int nr);
   void setCVVal(int val, bool updateval=true);
   void importJMRI(iONode decoder);
-  void doCV(int command, int nr, int value);
   void loadDecFile();
 	protected:
 		// Handlers for RocProDlgGen events.
@@ -106,6 +105,7 @@ class RocProDlg : public RocProDlgGen
 		RocProDlg( wxWindow* parent );
 		~RocProDlg();
     void event(iONode node);
+    void doCV(int command, int nr, int value);
 
 };
 

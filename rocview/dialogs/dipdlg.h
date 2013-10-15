@@ -43,28 +43,33 @@ class DIPDlg : public wxDialog
 {
   private:
   iONode m_DIP;
+  int m_CVNr;
+  int m_Value;
   void initDIP();
   void addDIPGroup(iONode group, int idx);
   wxRadioBox* m_RadioBox[32];
   wxCheckBox* m_CheckBox[32][32];
   iONode m_Group[32][32];
+  wxWindow* m_Parent;
 
   protected:
     wxStdDialogButtonSizer* m_sdButtons;
     wxButton* m_sdButtonsOK;
+    wxButton* m_sdButtonsApply;
     wxButton* m_sdButtonsCancel;
     wxBoxSizer* m_Sizer;
 
 
     void onCancel( wxCommandEvent& event );
     void onOK( wxCommandEvent& event );
+    void onApply( wxCommandEvent& event );
     void onClose( wxCloseEvent& event );
 
 
 
   public:
 
-    DIPDlg( wxWindow* parent, iONode dip );
+    DIPDlg( wxWindow* parent, iONode dip, int cvnr, int value );
     ~DIPDlg();
 
     int getValue();

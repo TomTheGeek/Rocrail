@@ -31,14 +31,19 @@
 #include "rocrail/wrapper/public/DIP.h"
 #include "rocrail/wrapper/public/DIPGroup.h"
 #include "rocrail/wrapper/public/DIPValue.h"
+#include "rocrail/wrapper/public/Program.h"
 
 #include "dipdlg.h"
+#include "rocprodlg.h"
 
 
-DIPDlg::DIPDlg( wxWindow* parent, iONode dip )
+DIPDlg::DIPDlg( wxWindow* parent, iONode dip, int cvnr, int value )
 : wxDialog( parent, wxID_ANY, wxT("DIP"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE )
 {
   m_DIP = dip;
+  m_CVNr = cvnr;
+  m_Value = value;
+  m_Parent = parent;
 
   this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
@@ -51,6 +56,8 @@ DIPDlg::DIPDlg( wxWindow* parent, iONode dip )
   m_sdButtons = new wxStdDialogButtonSizer();
   m_sdButtonsOK = new wxButton( this, wxID_OK );
   m_sdButtons->AddButton( m_sdButtonsOK );
+  m_sdButtonsApply = new wxButton( this, wxID_APPLY );
+  m_sdButtons->AddButton( m_sdButtonsApply );
   m_sdButtonsCancel = new wxButton( this, wxID_CANCEL );
   m_sdButtons->AddButton( m_sdButtonsCancel );
   m_sdButtons->Realize();
@@ -70,6 +77,7 @@ DIPDlg::DIPDlg( wxWindow* parent, iONode dip )
   // Connect Events
   m_sdButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DIPDlg::onCancel ), NULL, this );
   m_sdButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DIPDlg::onOK ), NULL, this );
+  m_sdButtonsApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DIPDlg::onApply ), NULL, this );
   this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( DIPDlg::onClose ) );
 }
 
@@ -77,6 +85,7 @@ DIPDlg::~DIPDlg()
 {
   m_sdButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DIPDlg::onCancel ), NULL, this );
   m_sdButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DIPDlg::onOK ), NULL, this );
+  m_sdButtonsApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DIPDlg::onApply ), NULL, this );
   this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( DIPDlg::onClose ) );
   for( int i = 0; i < 32; i++ ) {
     if( m_RadioBox[i] != NULL ) {
@@ -143,6 +152,10 @@ void DIPDlg::onCancel( wxCommandEvent& event ) {
 
 void DIPDlg::onOK( wxCommandEvent& event ) {
   EndModal( wxID_OK );
+}
+
+void DIPDlg::onApply( wxCommandEvent& event ) {
+  ((RocProDlg*)m_Parent)->doCV(wProgram.set, m_CVNr, getValue());
 }
 
 void DIPDlg::onClose( wxCloseEvent& event ) {
