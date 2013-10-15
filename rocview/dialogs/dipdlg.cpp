@@ -125,7 +125,7 @@ void DIPDlg::addDIPGroup(iONode group, int idx) {
   // Checkboxes
   if( wDIPGroup.gettype(group) == wDIPGroup.grouptype_box ) {
     wxStaticBoxSizer* bSizer =  new wxStaticBoxSizer( (wDIPGroup.getori(group) == 1) ? wxVERTICAL:wxHORIZONTAL, this, wxString( wDIPGroup.getcaption(group), wxConvUTF8) );
-    m_Sizer->Add( bSizer, 0, wxEXPAND|wxALL, 0 );
+    m_Sizer->Add( bSizer, 0, wxEXPAND|wxALL, 5 );
     for( int i = 0; i < n && i < 32; i++ ) {
       iONode value = NodeOp.getChild(group, i);
       m_Group[idx][i] = value;
