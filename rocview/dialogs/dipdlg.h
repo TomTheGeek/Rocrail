@@ -42,6 +42,7 @@
 class DIPDlg : public wxDialog
 {
   private:
+  const char* m_Title;
   iONode m_DIP;
   int m_CVNr;
   int m_Value;
@@ -69,7 +70,7 @@ class DIPDlg : public wxDialog
 
   public:
 
-    DIPDlg( wxWindow* parent, iONode dip, int cvnr, int value );
+    DIPDlg( wxWindow* parent, iONode dip, int cvnr, int value, const char* title=NULL );
     ~DIPDlg();
 
     int getValue();

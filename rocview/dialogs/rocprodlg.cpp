@@ -1000,7 +1000,7 @@ void RocProDlg::onHexValue( wxCommandEvent& event ) {
 void RocProDlg::onDIP( wxCommandEvent& event ) {
   if( wCVByte.getadip(m_SelectedCV) == NULL )
     return;
-  DIPDlg*  dlg = new DIPDlg(this, wCVByte.getadip(m_SelectedCV), m_Nr->GetValue(), m_Value->GetValue() );
+  DIPDlg*  dlg = new DIPDlg(this, wCVByte.getadip(m_SelectedCV), m_Nr->GetValue(), m_Value->GetValue(), wCVByte.getdesc(m_SelectedCV) );
   int rc = dlg->ShowModal();
   if( rc == wxID_OK ) {
     int val = dlg->getValue();

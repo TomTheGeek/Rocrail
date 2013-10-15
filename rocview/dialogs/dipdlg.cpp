@@ -37,9 +37,10 @@
 #include "rocprodlg.h"
 
 
-DIPDlg::DIPDlg( wxWindow* parent, iONode dip, int cvnr, int value )
+DIPDlg::DIPDlg( wxWindow* parent, iONode dip, int cvnr, int value, const char* title )
 : wxDialog( parent, wxID_ANY, wxT("DIP"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE )
 {
+  m_Title = title;
   m_DIP = dip;
   m_CVNr = cvnr;
   m_Value = value;
@@ -138,8 +139,11 @@ void DIPDlg::addDIPGroup(iONode group, int idx) {
 }
 
 void DIPDlg::initDIP() {
-  TraceOp.trc( "dip", TRCLEVEL_INFO, __LINE__, 9999, "init [%s]", wDIP.gettitle(m_DIP) );
-  SetTitle(wxString( wDIP.gettitle(m_DIP), wxConvUTF8));
+  if( m_Title == NULL )
+    m_Title = wDIP.gettitle(m_DIP);
+
+  TraceOp.trc( "dip", TRCLEVEL_INFO, __LINE__, 9999, "init [%s]", m_Title );
+  SetTitle(wxString( m_Title, wxConvUTF8));
 
   MemOp.set(m_RadioBox, 0, sizeof(m_RadioBox) );
   MemOp.set(m_CheckBox, 0, sizeof(m_CheckBox) );
