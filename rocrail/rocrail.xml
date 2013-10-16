@@ -22,7 +22,7 @@
 -->
 <Project name="RocRail" title="RocRail API" docname="rocrailapi" source="$Source: /cvsroot/rojav/rocrail/rocrail.xml,v $" revision="$Revision: 1.56 $">
 
-  <object name="App" use="node" include="clntcon,srcpcon,control,model,http,display,snmp,script" remark="RocRail application">
+  <object name="App" use="node" include="clntcon,srcpcon,control,model,http,snmp,script" remark="RocRail application">
     <fun name="inst" vt="this">
     </fun>
     <fun name="Main" vt="int">
@@ -78,7 +78,6 @@
       <var name="newini" vt="iONode" remark="RocRail ini"/>
       <var name="model" vt="iOModel" remark=""/>
       <var name="control" vt="iOControl" remark=""/>
-      <var name="display" vt="iODisplay" remark=""/>
       <var name="clntCon" vt="iOClntCon" remark=""/>
       <var name="srcpCon" vt="iOSrcpCon" remark=""/>
       <var name="appstartTime" vt="long"/>
@@ -1818,22 +1817,6 @@
       <var name="skip" vt="Boolean"/>
       <var name="html[256]" vt="char"/>
     </struct>
-  </object>
-
-
-  <object name="Display" use="node,js" remark="Display object for LCD">
-    <fun name="inst" vt="this">
-      <param name="ini" vt="iONode" remark="Display node"/>
-    </fun>
-    <data>
-      <var name="props" vt="iONode"/>
-      <var name="jsmap" vt="iONode"/>
-      <var name="lcd" vt="iONode"/>
-      <var name="js" vt="iOJS"/>
-      <var name="map" vt="int"/>
-      <var name="menulevel" vt="int"/>
-      <var name="menuindex[5]" vt="int"/>
-    </data>
   </object>
 
 

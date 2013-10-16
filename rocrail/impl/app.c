@@ -918,9 +918,6 @@ static int _Main( iOApp inst, int argc, char** argv ) {
 
   /* Control */
   data->control = ControlOp.inst( nocom );
-  if( lcd ) {
-    data->display = DisplayOp.inst( data->ini );
-  }
 
   /* Client connection */
   {
