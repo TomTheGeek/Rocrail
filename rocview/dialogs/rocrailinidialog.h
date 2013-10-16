@@ -76,10 +76,6 @@ class wxSpinCtrl;
 #define ID_TEXTCTRL_RR_HTTPPORT 10004
 #define wxID_STATIC_RR_SEVICE_REFRESH 10319
 #define ID_TEXTCTRL_RR_SERVICE_REFRESH 10320
-#define wxID_STATIC_RR_WEBSERVICE_PORT 10321
-#define ID_TEXTCTRL_RR_WEBSERVICE_PORT 10322
-#define wxID_STATIC_RR_WEBSERVICE_REFRESH 10323
-#define ID_TEXTCTRL_RR_WEBSERVICE_REFRESH 10324
 #define wxID_STATIC_RR_CLOCK_DEVIDER 10103
 #define ID_TEXTCTRL_RR_CLOCK_DEVIDER 10104
 #define wxID_STATIC_RR_CLOCK_HOUR 10155
@@ -277,11 +273,6 @@ public:
     wxTextCtrl* m_HttpPort;
     wxStaticText* m_LabServiceRefresh;
     wxTextCtrl* m_ServiceRefresh;
-    wxStaticBoxSizer* m_WebServiceBox;
-    wxStaticText* m_LabWebServicePort;
-    wxTextCtrl* m_WebServicePort;
-    wxStaticText* m_LabWebServiceRefresh;
-    wxTextCtrl* m_WebServiceRefresh;
     wxStaticBoxSizer* m_ClockBox;
     wxStaticText* m_labDevider;
     wxTextCtrl* m_Divider;
