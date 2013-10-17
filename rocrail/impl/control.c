@@ -1218,6 +1218,7 @@ static Boolean __initDigInts( iOControl inst ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "--------------------------------------------------" );
       wDigInt.setrestricted(digint, True);
       */
+      wDigInt.setrestricted(digint, False);
     }
     else {
       o->needkey4loconet = False;

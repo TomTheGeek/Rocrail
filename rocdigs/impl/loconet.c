@@ -2072,6 +2072,8 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
       if( wDigInt.isrestricted( data->ini ) ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
             "Restricted functionality due to missing valid support key; Loco command ignored for %s.", wLoc.getid(node) );
+        /* Release the mutex. */
+        MutexOp.post( data->slotmux );
         return 0;
       }
 
