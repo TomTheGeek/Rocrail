@@ -1030,7 +1030,10 @@ void RocProDlg::onDIP( wxCommandEvent& event ) {
   DIPDlg*  dlg = new DIPDlg(this, dip, m_Nr->GetValue(), m_Value->GetValue(), wCVByte.getdesc(m_SelectedCV) );
   int rc = dlg->ShowModal();
   if( rc == wxID_OK ) {
-    int val = dlg->getValue();
+    int cv = 0;
+    int val = dlg->getValue(&cv);
+    if( cv > 0 )
+      m_Nr->SetValue(cv);
     doCV( wProgram.set, m_Nr->GetValue(), val );
   }
   dlg->Destroy();

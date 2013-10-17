@@ -168,30 +168,42 @@ void DIPDlg::onOK( wxCommandEvent& event ) {
 }
 
 void DIPDlg::onApply( wxCommandEvent& event ) {
-  ((RocProDlg*)m_Parent)->doCV(wProgram.set, m_CVNr, getValue());
+  int value = getValue(&m_CVNr);
+  ((RocProDlg*)m_Parent)->doCV(wProgram.set, m_CVNr, value);
 }
 
 void DIPDlg::onClose( wxCloseEvent& event ) {
   EndModal(0);
 }
 
-int DIPDlg::getValue() {
+int DIPDlg::getValue(int* cvnr) {
   int val = 0;
+  int cv = 0;
   for( int i = 0; i < 32; i++ ) {
     if( m_RadioBox[i] != NULL ) {
       int sel = m_RadioBox[i]->GetSelection();
-      val += wDIPValue.getvalue(m_Group[i][sel]);
+      if( wDIPValue.gettype(m_Group[i][sel]) == wDIPValue.valuetype_value )
+        val += wDIPValue.getvalue(m_Group[i][sel]);
+      else if( wDIPValue.gettype(m_Group[i][sel]) == wDIPValue.valuetype_cv )
+        cv = wDIPValue.getvalue(m_Group[i][sel]);
       TraceOp.trc( "dip", TRCLEVEL_INFO, __LINE__, 9999,
           "group=%d selection=%d name=%s value=%d", i, sel, wDIPValue.getname(m_Group[i][sel]), val );
     }
     for( int n = 0; n < 32; n++ ) {
       if( m_CheckBox[i][n] != NULL && m_CheckBox[i][n]->IsChecked() ) {
-        val += wDIPValue.getvalue(m_Group[i][n]);
+        if( wDIPValue.gettype(m_Group[i][n]) == wDIPValue.valuetype_value )
+          val += wDIPValue.getvalue(m_Group[i][n]);
+        else if( wDIPValue.gettype(m_Group[i][n]) == wDIPValue.valuetype_cv )
+          cv = wDIPValue.getvalue(m_Group[i][n]);
         TraceOp.trc( "dip", TRCLEVEL_INFO, __LINE__, 9999,
             "group=%d selection=%d name=%s value=%d", i, n, wDIPValue.getname(m_Group[i][n]), val );
       }
     }
   }
+
+  if( cvnr != NULL && cv > 0 )
+    *cvnr = cv;
+
   return val;
 }
 
