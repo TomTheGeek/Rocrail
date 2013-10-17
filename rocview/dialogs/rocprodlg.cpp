@@ -149,6 +149,7 @@ RocProDlgGen( parent )
   m_CVMap = MapOp.inst();
   m_CVNrMap = MapOp.inst();
   m_CatMap = MapOp.inst();
+  m_DIPMap = MapOp.inst();
   m_LocoImage->SetBitmap( wxBitmap(nopict_xpm) );
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
@@ -165,6 +166,7 @@ RocProDlg::~RocProDlg() {
   MapOp.base.del(m_CVMap);
   MapOp.base.del(m_CVNrMap);
   MapOp.base.del(m_CatMap);
+  MapOp.base.del(m_DIPMap);
   if( m_DecFilename != NULL )
     StrOp.free(m_DecFilename);
 }
@@ -196,6 +198,11 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
       m_Fx->Enable(false);
 
     m_DIP->Enable( wCVByte.getadip(m_SelectedCV) != NULL );
+
+    if(wCVByte.getdipid(m_SelectedCV) != NULL && StrOp.len(wCVByte.getdipid(m_SelectedCV)) > 0 ) {
+      if( MapOp.haskey(m_DIPMap, wCVByte.getdipid(m_SelectedCV) ) )
+        m_DIP->Enable( true );
+    }
 
 
     m_WriteCV->Enable(wCVByte.isreadonly(cv)?false:true);
@@ -248,6 +255,13 @@ void RocProDlg::loadDecFile() {
       char key[32];
       StrOp.fmtb(key, "%d", wCVByte.getnr(cv) );
       MapOp.put( m_CVNrMap, key, (obj)cv);
+
+      if( wCVByte.getadip(cv) != NULL ) {
+        iONode dip = wCVByte.getadip(cv);
+        if( wDIP.getid(dip) != NULL && StrOp.len(wDIP.getid(dip)) > 0 ) {
+          MapOp.put(m_DIPMap, wDIP.getid(dip), (obj)dip);
+        }
+      }
 
       if( m_UseDecSpec4All ) {
         m_CVall[i] = wCVByte.getnr(cv);
@@ -821,8 +835,13 @@ void RocProDlg::onNr( wxSpinEvent& event ) {
   else
     m_Fx->Enable(false);
 
-  if( cv != NULL )
+  if( cv != NULL ) {
     m_DIP->Enable( wCVByte.getadip(cv) != NULL );
+    if(wCVByte.getdipid(cv) != NULL && StrOp.len(wCVByte.getdipid(cv)) > 0 ) {
+      if( MapOp.haskey(m_DIPMap, wCVByte.getdipid(cv) ) )
+        m_DIP->Enable( true );
+    }
+  }
 
   if( cv != NULL )
     m_WriteCV->Enable(wCVByte.isreadonly(cv)?false:true);
@@ -998,9 +1017,17 @@ void RocProDlg::onHexValue( wxCommandEvent& event ) {
 
 
 void RocProDlg::onDIP( wxCommandEvent& event ) {
-  if( wCVByte.getadip(m_SelectedCV) == NULL )
+  iONode dip = NULL;
+  if(wCVByte.getdipid(m_SelectedCV) != NULL && StrOp.len(wCVByte.getdipid(m_SelectedCV)) > 0 ) {
+    dip = (iONode)MapOp.get(m_DIPMap, wCVByte.getdipid(m_SelectedCV) );
+  }
+  if( dip == NULL )
+    dip = wCVByte.getadip(m_SelectedCV);
+
+  if( dip == NULL )
     return;
-  DIPDlg*  dlg = new DIPDlg(this, wCVByte.getadip(m_SelectedCV), m_Nr->GetValue(), m_Value->GetValue(), wCVByte.getdesc(m_SelectedCV) );
+
+  DIPDlg*  dlg = new DIPDlg(this, dip, m_Nr->GetValue(), m_Value->GetValue(), wCVByte.getdesc(m_SelectedCV) );
   int rc = dlg->ShowModal();
   if( rc == wxID_OK ) {
     int val = dlg->getValue();

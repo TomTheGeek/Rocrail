@@ -61,6 +61,7 @@ class RocProDlg : public RocProDlgGen
   bool m_UseDecSpec4All;;
   bool m_Save;
   iONode mCVDip;
+  iOMap m_DIPMap;
 
   bool parseDecFile();
   void initLocMap(const char* locid=NULL);

@@ -120,6 +120,7 @@
   
   <adip wrappername="DIP">
     <var name="title" vt="string" defval="Dinamic Input Panel" range="*"/>
+    <var name="id" vt="string" defval="" range="*"/>
     <dipgroup wrappername="DIPGroup" cardinality="n">
       <const name="grouptype_radiobox" vt="int" val="0"/>
       <const name="grouptype_box" vt="int" val="1"/>
@@ -145,6 +146,7 @@
     <var name="info" vt="string" defval="" range="*" remark="Info"/>
     <var name="readonly" vt="bool" defval="false" remark="Disable write operations."/>
     <var name="word" vt="bool" defval="false" remark="16 bit word value"/>
+    <var name="dipid" vt="string" defval="" range="*" remark="Reference to an existing DIP definition."/>
     <adip cardinality="1"/>
   </cvbyte>
 
