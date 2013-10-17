@@ -561,7 +561,7 @@ static void __signalHandler( int sig ) {
 
 
 bool RocGui::OnInit() {
-
+  wxLog::EnableLogging(false);
   /* Initialize the signal handler. */
   /* Not all OS's support this signal. */
 #ifdef SIGBREAK
