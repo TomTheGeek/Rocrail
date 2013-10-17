@@ -39,6 +39,7 @@
 
 static iOMap nodeMap = NULL;
 static iOMap descMap = NULL;
+static iODoc doc = NULL;
 
 static const char* lang = NULL;
 
@@ -88,11 +89,11 @@ int main( int argc, const char* argv[] ) {
 
   /* Check commandline arguments. */
   arg = CmdLnOp.inst( argc, argv );
-  
+
   lang = CmdLnOp.getStrDef( arg, "-lang", "en" );
   descfile = CmdLnOp.getStrDef( arg, "-desc", NULL );
   descMap = MapOp.inst();
-  
+
   if( descfile != NULL ) {
     __fillDescMap( descfile, lang );
   }
@@ -105,7 +106,6 @@ int main( int argc, const char* argv[] ) {
     {
       iOFile constXml = FileOp.inst( argv[1], OPEN_READONLY );
       char* xmlStr = allocMem( FileOp.size( constXml ) + 1 );
-      iODoc doc = NULL;
       iONode root = NULL;
 
       TraceOp.println( "Reading %s...", argv[1] );
@@ -170,10 +170,10 @@ static const char* __getRemark( iONode node ) {
     iONode parent = NodeOp.getParent( node );
     char* id = NULL;
     const char* desc = NULL;
-    
+
     if( parent == NULL )
       return NodeOp.getStr( node, "remark", "" );
-    id = StrOp.fmt( "%s.%s", NodeOp.getName( parent ), NodeOp.getStr( node, "name", "" ) );  
+    id = StrOp.fmt( "%s.%s", NodeOp.getName( parent ), NodeOp.getStr( node, "name", "" ) );
     desc = (const char*)MapOp.get( descMap, StrOp.strlwr( id ) );
     StrOp.free( id );
     return desc == NULL ? NodeOp.getStr( node, "remark", "" ):desc;
@@ -206,10 +206,10 @@ static void __fillDescMap( const char* descfile, const char* lang ) {
   if( doc == NULL )
     return;
   root = DocOp.getRootNode( doc );
-  
+
   if( root == NULL )
     return;
-    
+
   {
     int childCnt = NodeOp.getChildCnt( root );
     int i = 0;
@@ -222,14 +222,14 @@ static void __fillDescMap( const char* descfile, const char* lang ) {
           const char* id = NodeOp.getStr( child, "id", NULL );
           const char* text = NodeOp.getStr( langnode, "text", NULL );
           if( id != NULL && text != NULL ) {
-            MapOp.put( descMap, StrOp.strlwr( id ), (obj)StrOp.dup(text) ); 
+            MapOp.put( descMap, StrOp.strlwr( id ), (obj)StrOp.dup(text) );
             TraceOp.println( "descMap: %s, [%-20.20s...] added.", id, text );
           }
         }
       }
     }
   }
-  
+
 }
 
 
@@ -412,23 +412,44 @@ static int __processPrefix( iOFile fHdr, iOFile fImpl, iOFile fDoc, iOFile fInde
 
   FileOp.flush( fImpl );
 
+  /*
+    <font class='heading'><a name='XIni'>XIni</a></font>
+   */
   TraceOp.println( "Processing Prefix D" );
   FileOp.fmt( fDoc, "<html>\n" );
   FileOp.fmt( fDoc, "<head>\n  <title>%s</title>\n", title );
-  FileOp.fmt( fDoc, "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" );
+  FileOp.fmt( fDoc, "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=%s\">\n", DocOp.isUTF8Encoded(doc) ? "UTF-8":"ISO-8859-15" );
+  FileOp.fmt( fDoc, "  <style type='text/css'>\n" );
+  FileOp.fmt( fDoc, "    body{ font-family: arial; font-size: 10pt;}\n" );
+  FileOp.fmt( fDoc, "    table{ empty-cells: show; width: 100%; border-collapse: collapse; font-family: arial; font-size: 10pt; padding: 1px 2px 1px 2px;}\n" );
+  FileOp.fmt( fDoc, "    th{ border: 1px solid black; text-align: center; background: #CCD5DF;}\n" );
+  FileOp.fmt( fDoc, "    td{ border: 1px solid black;}\n" );
+  FileOp.fmt( fDoc, "    .heading{ color: #D31409; font-weight: bold; font-size: 14pt;}\n" );
+  FileOp.fmt( fDoc, "    .link{ color: #D31409; text-decoration: none;}\n" );
+  FileOp.fmt( fDoc, "  </style>\n" );
   FileOp.fmt( fDoc, "</head>\n" );
-  
+
   FileOp.fmt( fDoc, "<body>\n" );
   FileOp.fmt( fDoc, "<h2>%s</h2>\n", title );
   FileOp.fmt( fDoc, "Module: %s<br>\n", modulename );
   FileOp.fmt( fDoc, "Auto generated at: %s<br>\n", ctime( &clock ) );
-  /*FileOp.fmt( fDoc, "Index: <a href=\"%s-index.html\">wrapper-index.html</a><br>\n", docname, ctime( &clock ) );*/
+  /*FileOp.fmt( fDoc, "Index: <a class='link' href=\"%s-index.html\">wrapper-index.html</a><br>\n", docname, ctime( &clock ) );*/
 
   FileOp.flush( fDoc );
 
   TraceOp.println( "Processing Prefix E" );
   FileOp.fmt( fIndex, "<html>\n" );
-  FileOp.fmt( fIndex, "<head>\n  <title>Index for %s</title>\n</head>\n", title );
+  FileOp.fmt( fIndex, "<head>\n  <title>Index for %s</title>\n", title );
+  FileOp.fmt( fIndex, "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=%s\">\n", DocOp.isUTF8Encoded(doc) ? "UTF-8":"ISO-8859-15" );
+  FileOp.fmt( fIndex, "  <style type='text/css'>\n" );
+  FileOp.fmt( fIndex, "    body{ font-family: arial; font-size: 10pt;}\n" );
+  FileOp.fmt( fIndex, "    table{ empty-cells: show; width: 100%; border-collapse: collapse; font-family: arial; font-size: 10pt; padding: 1px 2px 1px 2px;}\n" );
+  FileOp.fmt( fIndex, "    th{ border: 1px solid black; text-align: center; background: #CCD5DF;}\n" );
+  FileOp.fmt( fIndex, "    td{ border: 1px solid black;}\n" );
+  FileOp.fmt( fIndex, "    .heading{ color: #D31409; font-weight: bold; font-size: 14pt;}\n" );
+  FileOp.fmt( fIndex, "    .link{ color: #D31409; text-decoration: none;}\n" );
+  FileOp.fmt( fIndex, "  </style>\n" );
+  FileOp.fmt( fIndex, "</head>\n" );
   FileOp.fmt( fIndex, "<body>\n" );
   FileOp.fmt( fIndex, "<h2>%s</h2>\n", title );
   FileOp.fmt( fIndex, "Module: %s<br>\n", modulename );
@@ -582,7 +603,7 @@ static Boolean __evalType( iONode var, char** vt, char** vtNode, char** prefix )
   return NodeOp.getBool( var, "readonly", False );;
 }
 
-static void __wrpAddVar( iONode var, iOFile fPublH, iOFile fImplC, iOList opList, iOList attrList, const char* structName, Boolean getname  ) {
+static void __wrpAddVar( iONode var, iOFile fPublH, iOFile fImplC, iOList opList, iOList attrList, const char* structName, Boolean getname ) {
   char* vt = "const char*";
   char* vtNode = "Str";
   char* prefix = "get";
@@ -594,14 +615,14 @@ static void __wrpAddVar( iONode var, iOFile fPublH, iOFile fImplC, iOList opList
   FileOp.fmt( fPublH, "  %s (*%s%s)(iONode);\n", vt, prefix, wrapperName );
 
   {
-    char* l_attrName = StrOp.fmt( "__%s", attrName );
+    char* l_attrName = StrOp.fmt( "RocsWgen_%s", attrName );
     ListOp.add( attrList, (obj)l_attrName );
   }
 
   FileOp.fmt( fImplC, "\n\n/* -a-t-t-r-i-b-u-t-e------------------------------------------\n" );
   FileOp.fmt( fImplC, " * %s\n", attrName );
   FileOp.fmt( fImplC, " */\n" );
-  FileOp.fmt( fImplC, "static struct __attrdef __%s = {\n", attrName );
+  FileOp.fmt( fImplC, "static struct __attrdef RocsWgen_%s = {\n", attrName );
   FileOp.fmt( fImplC, "  \"%s\",", NodeOp.getStr( var, "name", "?" ) );
   FileOp.fmt( fImplC, "  \"%s\",", __getRemark(var) );
   FileOp.fmt( fImplC, "  \"%s\",", NodeOp.getStr( var, "unit", "" ) );
@@ -619,12 +640,12 @@ static void __wrpAddVar( iONode var, iOFile fPublH, iOFile fImplC, iOList opList
   FileOp.fmt( fImplC, "};\n" );
 
   FileOp.fmt( fImplC, "static %s _%s%s(iONode node) {\n", vt, prefix, wrapperName );
-  FileOp.fmt( fImplC, "  %s defval = x%s( __%s );\n", vt, vtNode, attrName );
+  FileOp.fmt( fImplC, "  %s defval = x%s( RocsWgen_%s );\n", vt, vtNode, attrName );
   FileOp.fmt( fImplC, "  \n" );
   FileOp.fmt( fImplC, "  if( node == NULL ) {\n" );
   FileOp.fmt( fImplC, "    return defval;\n" );
   FileOp.fmt( fImplC, "  }\n" );
-  FileOp.fmt( fImplC, "  xNode( __%s, node );\n", structName );
+  FileOp.fmt( fImplC, "  xNode( RocsWgen_%s, node );\n", structName );
   FileOp.fmt( fImplC, "  return NodeOp.get%s( node, \"%s\", defval );\n", vtNode, attrName );
   FileOp.fmt( fImplC, "}\n" );
   {
@@ -638,7 +659,7 @@ static void __wrpAddVar( iONode var, iOFile fPublH, iOFile fImplC, iOList opList
     FileOp.fmt( fPublH, "  void (*set%s)(iONode,%s);\n", wrapperName, vt );
     FileOp.fmt( fImplC, "static void _set%s(iONode node, %s p_%s) {\n", wrapperName, vt, attrName );
     FileOp.fmt( fImplC, "  if( node == NULL ) return;\n" );
-    FileOp.fmt( fImplC, "  xNode( __%s, node );\n", structName );
+    FileOp.fmt( fImplC, "  xNode( RocsWgen_%s, node );\n", structName );
     FileOp.fmt( fImplC, "  NodeOp.set%s( node, \"%s\", p_%s );\n", vtNode, attrName, attrName );
     FileOp.fmt( fImplC, "}\n" );
   }
@@ -663,7 +684,7 @@ static void __wrpAddNode( iONode node, iOFile fPublH, iOFile fImplC, iOList opLi
   FileOp.fmt( fImplC, " * %s\n", nodeName );
   FileOp.fmt( fImplC, " */\n" );
 
-  FileOp.fmt( fImplC, "static struct __nodedef __%s = {\n", nodeName );
+  FileOp.fmt( fImplC, "static struct __nodedef RocsWgen_%s = {\n", nodeName );
   FileOp.fmt( fImplC, "  \"%s\",", nodeName );
   FileOp.fmt( fImplC, "  \"%s\",", __getRemark(node) );
   FileOp.fmt( fImplC, "  %s,", NodeOp.getBool( node, "required", False )?"True":"False" );
@@ -671,12 +692,12 @@ static void __wrpAddNode( iONode node, iOFile fPublH, iOFile fImplC, iOList opLi
   FileOp.fmt( fImplC, "};\n" );
 
   {
-    char* l_nodeName = StrOp.fmt( "__%s", nodeName );
+    char* l_nodeName = StrOp.fmt( "RocsWgen_%s", nodeName );
     ListOp.add( nodeList, (obj)l_nodeName );
   }
 
   FileOp.fmt( fImplC, "static iONode _get%s(iONode node) {\n", nodeName );
-  FileOp.fmt( fImplC, "  xNode( __%s, node );\n", structName );
+  FileOp.fmt( fImplC, "  xNode( RocsWgen_%s, node );\n", structName );
   FileOp.fmt( fImplC, "  return NodeOp.findNode( node, \"%s\");\n", xmlName );
   FileOp.fmt( fImplC, "}\n" );
   {
@@ -685,7 +706,7 @@ static void __wrpAddNode( iONode node, iOFile fPublH, iOFile fImplC, iOList opLi
   }
   FileOp.fmt( fPublH, "  iONode (*next%s)(iONode,iONode);\n", nodeName );
   FileOp.fmt( fImplC, "\n\nstatic iONode _next%s(iONode node, iONode child) {\n", nodeName );
-  FileOp.fmt( fImplC, "  xNode( __%s, node );\n", structName );
+  FileOp.fmt( fImplC, "  xNode( RocsWgen_%s, node );\n", structName );
   FileOp.fmt( fImplC, "  return NodeOp.findNextNode( node, child);\n" );
   FileOp.fmt( fImplC, "}\n" );
   {
@@ -697,7 +718,7 @@ static void __wrpAddNode( iONode node, iOFile fPublH, iOFile fImplC, iOList opLi
     ListOp.add( opList, (obj)opName );
     FileOp.fmt( fPublH, "  void (*set%s)(iONode,iONode);\n", nodeName );
     FileOp.fmt( fImplC, "static void _set%s(iONode node, iONode p_%s) {\n", nodeName, nodeName );
-    FileOp.fmt( fImplC, "  xNode( __%s, node );\n", structName );
+    FileOp.fmt( fImplC, "  xNode( RocsWgen_%s, node );\n", structName );
     FileOp.fmt( fImplC, "  TraceOp.println( \"!!!!!TODO!!!!! Wrapper setNode()\" );\n" );
     FileOp.fmt( fImplC, "}\n" );
   }
@@ -746,13 +767,13 @@ static void __wrpCreate( iONode node, const char* modulename ) {
   iOList subnodeList = ListOp.inst();
 
   TraceOp.println( "creating wrapper \"%s\"", wrpName );
-  
+
   if( fPublH != NULL && fImplC != NULL ) {
     int childCnt = NodeOp.getChildCnt( node );
     int i = 0;
     __wrpPrefix( fPublH, fImplC, wrpName, modulename );
 
-    FileOp.fmt( fImplC, "static struct __nodedef __%s = {\n", nodeName );
+    FileOp.fmt( fImplC, "static struct __nodedef RocsWgen_%s = {\n", nodeName );
     FileOp.fmt( fImplC, "  \"%s\",", xmlName );
     FileOp.fmt( fImplC, "  \"%s\",", __getRemark(node) );
     FileOp.fmt( fImplC, "  %s,", NodeOp.getBool( node, "required", False )?"True":"False" );
@@ -761,25 +782,25 @@ static void __wrpCreate( iONode node, const char* modulename ) {
 
     FileOp.fmt( fPublH, "  const char* (*name)(void);\n" );
     FileOp.fmt( fImplC, "static const char* _node_name(void) {\n" );
-    FileOp.fmt( fImplC, "  return __%s.name;\n", nodeName );
+    FileOp.fmt( fImplC, "  return RocsWgen_%s.name;\n", nodeName );
     FileOp.fmt( fImplC, "}\n" );
     ListOp.add( opList, (obj)"_node_name" );
 
     FileOp.fmt( fPublH, "  const char* (*remark)(void);\n" );
     FileOp.fmt( fImplC, "static const char* _node_remark(void) {\n" );
-    FileOp.fmt( fImplC, "  return __%s.remark;\n", nodeName );
+    FileOp.fmt( fImplC, "  return RocsWgen_%s.remark;\n", nodeName );
     FileOp.fmt( fImplC, "}\n" );
     ListOp.add( opList, (obj)"_node_remark" );
 
     FileOp.fmt( fPublH, "  Boolean (*required)(void);\n" );
     FileOp.fmt( fImplC, "static Boolean _node_required(void) {\n" );
-    FileOp.fmt( fImplC, "  return __%s.required;\n", nodeName );
+    FileOp.fmt( fImplC, "  return RocsWgen_%s.required;\n", nodeName );
     FileOp.fmt( fImplC, "}\n" );
     ListOp.add( opList, (obj)"_node_required" );
 
     FileOp.fmt( fPublH, "  const char* (*cardinality)(void);\n" );
     FileOp.fmt( fImplC, "static const char* _node_cardinality(void) {\n" );
-    FileOp.fmt( fImplC, "  return __%s.cardinality;\n", nodeName );
+    FileOp.fmt( fImplC, "  return RocsWgen_%s.cardinality;\n", nodeName );
     FileOp.fmt( fImplC, "}\n" );
     ListOp.add( opList, (obj)"_node_cardinality" );
 
@@ -834,7 +855,7 @@ static void __wrpCreate( iONode node, const char* modulename ) {
       FileOp.fmt( fImplC, "static struct __nodedef* nodeList[%d] = {NULL};\n", n + 1 );
     }
     FileOp.fmt( fImplC, "static Boolean _node_dump(iONode node) {\n" );
-    FileOp.fmt( fImplC, "  if( node == NULL && __%s.required ) {\n", nodeName );
+    FileOp.fmt( fImplC, "  if( node == NULL && RocsWgen_%s.required ) {\n", nodeName );
     FileOp.fmt( fImplC, "    TraceOp.trc( \"param\", TRCLEVEL_EXCEPTION, __LINE__, 9999, \">>>>> Required node %s not found!\" );\n", nodeName );
     FileOp.fmt( fImplC, "    return False;\n" );
     FileOp.fmt( fImplC, "  }\n" );
@@ -953,13 +974,13 @@ static Boolean __processChild( char* indexStr, iONode child, iOFile fHdr, iOFile
   }
 
   if( level == 0 && pub ) {
-    FileOp.fmt( fDoc, "<p><a name=\"%s\"/><h3>%s %s</h3>\n", docTitle, indexStr, docTitle );
+    FileOp.fmt( fDoc, "<p><a name=\"%s\"/><font class='heading'>%s %s</font>\n", docTitle, indexStr, docTitle );
     FileOp.fmt( fDoc, "<table border=\"1\" cellpadding=\"4\" cellspacing=\"0\" width=\"100%%\">\n" );
     FileOp.fmt( fDoc, "<tr><th>Node</th><th>Parent node<br>Attribute/Constant</th><th>vType</th><th>Remark</th><th>Unit</th><th>Default</th><th>Range</th><th>Required</th></tr>\n" );
-    FileOp.fmt( fIndex, "<li><a href=\"%s-%s.html#%s\"><big><b>%s</b></big> - w%s</a>\n", docname, lang, docTitle, docTitle, wrpName );
+    FileOp.fmt( fIndex, "<li><a class='link' href=\"%s-%s.html#%s\"><big><b>%s</b></big> - w%s</a>\n", docname, lang, docTitle, docTitle, wrpName );
   }
   else if( pub )
-    FileOp.fmt( fIndex, "<li><a href=\"%s-%s.html#%s\">%s - w%s</a>\n", docname, lang, docTitle, docTitle, wrpName );
+    FileOp.fmt( fIndex, "<li><a class='link' href=\"%s-%s.html#%s\">%s - w%s</a>\n", docname, lang, docTitle, docTitle, wrpName );
 
   if( pub ) { /* Processing attributes. */
     int i = 0;
@@ -979,7 +1000,7 @@ static Boolean __processChild( char* indexStr, iONode child, iOFile fHdr, iOFile
                   NodeOp.getBool( child, "required", False )?"Yes":"No"
                  );
     else
-      FileOp.fmt( fDoc, "<tr bgcolor=\"#e8e8e8\"><td><a href=\"#%s\"/><small>%s%s</small> <b>%s</b> <small>(%s)%s</small></td><td>%s%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n",
+      FileOp.fmt( fDoc, "<tr bgcolor=\"#e8e8e8\"><td><a class='link' href=\"#%s\"/><small>%s%s</small> <b>%s</b> <small>(%s)%s</small></td><td>%s%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n",
                   docName, indexStr, level == 0?"0":"",
                   xmlName,NodeOp.getStr( child, "cardinality", "1" ),
                   extWrapper ? "(extern)":"",
@@ -1085,6 +1106,10 @@ static int __gConstHdr( iONode node, const char* fileName, Boolean docAll, const
   iOFile fDoc = FileOp.inst( docFileName, OPEN_WRITE );
   iOFile fIndex = FileOp.inst( idxFileName, OPEN_WRITE );
 
+  if( fHdr == NULL || fImpl == NULL || fDoc == NULL || fIndex == NULL ) {
+    TraceOp.println( "unable to create the output files..." );
+    return -1;
+  }
   nodeMap = MapOp.inst();
 
   TraceOp.println( "Generating wrapper.h" );
