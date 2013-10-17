@@ -134,6 +134,7 @@
         <var name="type" vt="int" defval="0" range="0-*"/>
         <var name="name" vt="string" defval="Value" range="*"/>
         <var name="value" vt="int" defval="0" range="0-*"/>
+        <var name="info" vt="string" defval="" range="*"/>
       </dipvalue>
     </dipgroup>
   </adip>

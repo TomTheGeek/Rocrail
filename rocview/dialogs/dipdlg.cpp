@@ -107,21 +107,28 @@ void DIPDlg::addDIPGroup(iONode group, int idx) {
   // Radiobuttons
   if( wDIPGroup.gettype(group) == wDIPGroup.grouptype_radiobox ) {
     wxString choices[32];
+    wxString infos[32];
     int selection = 0;
+    int items = 0;
     for( int i = 0; i < n && i < 32; i++ ) {
       iONode value = NodeOp.getChild(group, i);
       choices[i] = wxString(wDIPValue.getname(value), wxConvUTF8);
+      infos[i] = wxString(wDIPValue.getinfo(value), wxConvUTF8);
       m_Group[idx][i] = value;
       if( wDIPValue.gettype(value) == wDIPValue.valuetype_cv &&  wDIPValue.getvalue(value) == m_CVNr )
         selection = i;
       else if( wDIPValue.getvalue(value) == ( m_Value & wDIPGroup.getmask(group)) )
         selection = i;
+      items++;
     }
     m_RadioBox[idx] = new wxRadioBox(this, wxID_ANY,
         wxString( wDIPGroup.getcaption(group), wxConvUTF8), wxDefaultPosition, wxDefaultSize, n, choices,
         0, (wDIPGroup.getori(group) == 1) ? wxRA_SPECIFY_ROWS:wxRA_SPECIFY_COLS);
     m_Sizer->Add( m_RadioBox[idx], 0, wxEXPAND|wxALL, 5 );
     m_RadioBox[idx]->SetSelection(selection);
+    for( int x = 0; x < items && x < 32; x++ ) {
+      m_RadioBox[idx]->SetItemToolTip(x, infos[x]);
+    }
   }
 
   // Checkboxes
@@ -139,6 +146,8 @@ void DIPDlg::addDIPGroup(iONode group, int idx) {
         m_CheckBox[idx][i]->SetValue(true);
       else if( wDIPValue.getvalue(value) & m_Value )
         m_CheckBox[idx][i]->SetValue(true);
+
+      m_CheckBox[idx][i]->SetToolTip(wxString(wDIPValue.getinfo(value), wxConvUTF8));
     }
   }
 }
