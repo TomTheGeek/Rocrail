@@ -112,7 +112,9 @@ void DIPDlg::addDIPGroup(iONode group, int idx) {
       iONode value = NodeOp.getChild(group, i);
       choices[i] = wxString(wDIPValue.getname(value), wxConvUTF8);
       m_Group[idx][i] = value;
-      if( wDIPValue.getvalue(value) == ( m_Value & wDIPGroup.getmask(group)) )
+      if( wDIPValue.gettype(value) == wDIPValue.valuetype_cv &&  wDIPValue.getvalue(value) == m_CVNr )
+        selection = i;
+      else if( wDIPValue.getvalue(value) == ( m_Value & wDIPGroup.getmask(group)) )
         selection = i;
     }
     m_RadioBox[idx] = new wxRadioBox(this, wxID_ANY,
@@ -132,7 +134,10 @@ void DIPDlg::addDIPGroup(iONode group, int idx) {
       m_CheckBox[idx][i] = new wxCheckBox(this, wxID_ANY,
           wxString(wDIPValue.getname(value), wxConvUTF8) );
       bSizer->Add( m_CheckBox[idx][i], 0, wxEXPAND|wxALL, 5 );
-      if( wDIPValue.getvalue(value) & m_Value )
+
+      if( wDIPValue.gettype(value) == wDIPValue.valuetype_cv &&  wDIPValue.getvalue(value) == m_CVNr )
+        m_CheckBox[idx][i]->SetValue(true);
+      else if( wDIPValue.getvalue(value) & m_Value )
         m_CheckBox[idx][i]->SetValue(true);
     }
   }
