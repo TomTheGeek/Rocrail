@@ -1538,7 +1538,7 @@ static void __errorReport( iORocNetNode inst, int rc, int rs, int addr) {
   msg[RN_PACKET_DATA+0] = rc;
   msg[RN_PACKET_DATA+1] = rs;
   msg[RN_PACKET_DATA+2] = addr/256;
-  msg[RN_PACKET_DATA+2] = addr%256;
+  msg[RN_PACKET_DATA+3] = addr%256;
   __sendRN(inst, msg);
 }
 
