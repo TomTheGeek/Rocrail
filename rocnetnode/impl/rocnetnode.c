@@ -940,10 +940,11 @@ static void __checkPortEvents( iORocNetNode rocnetnode, byte* rn ) {
       break;
   }
 
-  if( eventidA > 0 && eventidB > 0 && eventport > 0 ) {
+  if( (eventidA > 0 || eventidB > 0) && eventport > 0 ) {
     int i = 0;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "event: id=%d,%d port=%d val=%d", eventidA, eventidB, eventport, eventval );
     for( i = 0; i < 129; i++ ) {
-      if( data->ports[i] != NULL ) {
+      if( data->ports[i] != NULL  && data->ports[i]->eventid > 0 && data->ports[i]->eventid > 0 ) {
         if( data->ports[i]->type == IO_OUTPUT &&
             (data->ports[i]->eventid == eventidA || data->ports[i]->eventid == eventidB) && data->ports[i]->eventport == eventport )
         {
