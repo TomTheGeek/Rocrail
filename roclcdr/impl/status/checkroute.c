@@ -96,6 +96,11 @@ void statusCheckRoute( iILcDriverInt inst ) {
           ThreadOp.sleep(data->signalWait);
         }
 
+        if( !data->run || data->curBlock == NULL ) {
+          /* loco was reset by user... */
+          return;
+        }
+
         /* wait for departdelay if set for the current block*/
         departdelay = data->curBlock->getDepartDelay( data->curBlock ) ;
         if( wLoc.isusedepartdelay(lcprops) && departdelay > 0 ) {
