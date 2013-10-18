@@ -988,6 +988,10 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
     StrOp.free(str);
   }
 
+  if(rcpt != data->id && rcpt == 0) {
+    __checkPortEvents(rocnetnode, rn);
+  }
+
   TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)rn, 8 + rn[RN_PACKET_LEN] );
 
   switch( group ) {
