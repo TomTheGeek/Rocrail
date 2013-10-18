@@ -855,6 +855,10 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
   rcpt = rnReceipientAddrFromPacket(rn, 0);
   sndr = rnSenderAddrFromPacket(rn, 0);
 
+  if( actionType == RN_ACTIONTYPE_EVENT ) {
+    return NULL;
+  }
+
   switch( action ) {
   case RN_OUTPUT_SWITCH:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -1543,6 +1547,8 @@ static void __initI2C(iORocNetNode inst, int iotype) {
   iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init I2C [%s]", data->i2cdevice );
 
+  MutexOp.wait( data->i2cmux );
+
   if( data->iotype == IO_I2C_0 ) {
     raspiGPIOAlt(28, 0);
     raspiGPIOAlt(29, 0);
@@ -1607,6 +1613,7 @@ static void __initI2C(iORocNetNode inst, int iotype) {
     data->i2cdescriptor = raspiOpenI2C(data->i2cdevice);
     if( data->i2cdescriptor < 0 ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not open I2C device %s errno=%d", data->i2cdevice, errno );
+      MutexOp.post( data->i2cmux );
       return;
     }
     for( i = 0; i < 8; i++ ) {
@@ -1632,6 +1639,7 @@ static void __initI2C(iORocNetNode inst, int iotype) {
     }
   }
 
+  MutexOp.post( data->i2cmux );
 
 }
 
