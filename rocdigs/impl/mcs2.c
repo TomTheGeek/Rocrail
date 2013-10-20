@@ -694,6 +694,7 @@ static void __reader( void* threadinst ) {
   iOMCS2Data data = Data(mcs2);
   char in[16];
   int mod = 0;
+  int len = 0;
   unsigned char store[1024];
   for( mod = 0; mod < 1024; mod++) {
     store[mod] = 0;
@@ -719,6 +720,7 @@ static void __reader( void* threadinst ) {
     else {
       if( data->conOK && SerialOp.available(data->serial) ) {
         if( SerialOp.read( data->serial, in, 5 ) ) {
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 5 );
           if( !SerialOp.read( data->serial, in+5, (in[4]&0x0F) ) ) {
             ThreadOp.sleep(100);
             if( data->run ) continue;
@@ -738,7 +740,9 @@ static void __reader( void* threadinst ) {
       }
     }
 
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
+    len = (in[4] & 0x0F);
+
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, in, len );
     /* CS2 communication consists of commands (command byte always even) and replies. Reply byte is equal to command byte but with
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
        is broadcasted. When a command is issued from the CS2 user interface, both the command and the reply is broadcasted.
