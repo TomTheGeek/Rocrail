@@ -801,8 +801,10 @@ static void __writer( void* threadinst ) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, cmd, 13 );
       if( data->udp )
         SocketOp.sendto( data->writeUDP, cmd, 13, NULL, 0 );
-      else
-        SerialOp.write( data->serial, cmd, 13 );
+      else {
+        int len = cmd[4];
+        SerialOp.write( data->serial, cmd, 5 + len );
+      }
 
       freeMem( cmd );
     }
