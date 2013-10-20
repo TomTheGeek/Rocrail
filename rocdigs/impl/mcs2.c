@@ -857,11 +857,15 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device      [%s]", wDigInt.getdevice(data->ini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  flow        [%s]", wDigInt.getflow(data->ini) );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps         [%d]", 500000 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
     data->serial = SerialOp.inst( wDigInt.getdevice(data->ini) );
-    SerialOp.setFlow( data->serial, cts );
+    if( StrOp.equals( wDigInt.getflow( data->ini ), wDigInt.cts ) )
+      SerialOp.setFlow( data->serial, cts );
+    else
+      SerialOp.setFlow( data->serial, none );
     SerialOp.setLine( data->serial, 500000, 8, 1, none, wDigInt.isrtsdisabled(data->ini) );
     SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
     data->conOK = SerialOp.open( data->serial );

@@ -128,6 +128,7 @@ public:
     wxStaticBox* m_OptionsBox;
     wxCheckBox* m_SystemInfo;
     wxCheckBox* m_LocoList;
+    wxCheckBox* m_CTS;
     wxButton* m_SertFbAddr;
     wxSpinCtrl* m_FbAddr;
     wxButton* m_OK;
