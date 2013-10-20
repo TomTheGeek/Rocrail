@@ -718,7 +718,14 @@ static void __reader( void* threadinst ) {
     }
     else {
       if( data->conOK && SerialOp.available(data->serial) ) {
-        if( !SerialOp.read( data->serial, in, 13 ) ) {
+        if( SerialOp.read( data->serial, in, 5 ) ) {
+          if( !SerialOp.read( data->serial, in+5, in[4] ) ) {
+            ThreadOp.sleep(100);
+            if( data->run ) continue;
+            else break;
+          }
+        }
+        else {
           ThreadOp.sleep(100);
           if( data->run ) continue;
           else break;
