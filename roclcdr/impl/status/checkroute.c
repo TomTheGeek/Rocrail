@@ -96,8 +96,9 @@ void statusCheckRoute( iILcDriverInt inst ) {
           ThreadOp.sleep(data->signalWait);
         }
 
-        if( !data->run || data->curBlock == NULL ) {
+        if( data->curBlock == NULL ) {
           /* loco was reset by user... */
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "curBlock is not set..." );
           return;
         }
 
