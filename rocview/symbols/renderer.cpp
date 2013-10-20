@@ -907,8 +907,8 @@ void SymbolRenderer::sizeToScale( double symsize, double scale, double bktext, i
     if (ttdiam < 1)
       ttdiam = 1;
 
-    if (ttdiam > 10)
-      ttdiam = 10;
+    if (ttdiam > 12)
+      ttdiam = 12;
 
     *cx = ttdiam;
     *cy = ttdiam;
@@ -2265,8 +2265,8 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
   if (ttdiam < 1)
     ttdiam = 1;
 
-  if (ttdiam > 10)
-    ttdiam = 10;
+  if (ttdiam > 12)
+    ttdiam = 12;
 
   double delta = (32 * ttdiam)/2;  /* 79.0; for the original one */
 

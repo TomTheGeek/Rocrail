@@ -808,6 +808,7 @@ void TurntableDialog::CreateControls()
     m_GeneralPanel->SetSizer(itemBoxSizer5);
 
     wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
     m_LabelID = new wxStaticText( m_GeneralPanel, wxID_STATIC_TT_ID, _("id"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -820,8 +821,6 @@ void TurntableDialog::CreateControls()
 
     m_Desc = new wxTextCtrl( m_GeneralPanel, ID_TEXTCTRL_TT_DESC, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_Desc, 0, wxALIGN_LEFT|wxGROW|wxALL, 5);
-
-    itemFlexGridSizer6->AddGrowableCol(1);
 
     wxStaticBox* itemStaticBoxSizer11Static = new wxStaticBox(m_GeneralPanel, wxID_ANY, _("Options"));
     m_OptionsBox = new wxStaticBoxSizer(itemStaticBoxSizer11Static, wxVERTICAL);
@@ -870,7 +869,7 @@ void TurntableDialog::CreateControls()
     m_labSize = new wxStaticText( m_LocationPanel, wxID_ANY, _("Size"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer18->Add(m_labSize, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Size = new wxSpinCtrl( m_LocationPanel, wxID_ANY, _T("5"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 2, 10, 5 );
+    m_Size = new wxSpinCtrl( m_LocationPanel, wxID_ANY, _T("5"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 2, 12, 5 );
     itemFlexGridSizer18->Add(m_Size, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Notebook->AddPage(m_LocationPanel, _("Location"));
@@ -882,6 +881,7 @@ void TurntableDialog::CreateControls()
     wxBoxSizer* itemBoxSizer29 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer28->Add(itemBoxSizer29, 0, wxGROW, 5);
     wxFlexGridSizer* itemFlexGridSizer30 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer30->AddGrowableCol(1);
     itemBoxSizer29->Add(itemFlexGridSizer30, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
     m_Labeliid = new wxStaticText( m_Interface, wxID_STATIC_TT_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer30->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -955,8 +955,6 @@ void TurntableDialog::CreateControls()
     m_Pause = new wxSpinCtrl( m_Interface, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 10, 0 );
     itemFlexGridSizer30->Add(m_Pause, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    itemFlexGridSizer30->AddGrowableCol(1);
-
     m_Inv = new wxCheckBox( m_Interface, wxID_ANY, _("Invert"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Inv->SetValue(false);
     itemBoxSizer29->Add(m_Inv, 0, wxALIGN_LEFT|wxALL, 5);
@@ -967,6 +965,7 @@ void TurntableDialog::CreateControls()
     wxBoxSizer* itemBoxSizer57 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer28->Add(itemBoxSizer57, 1, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer58 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer58->AddGrowableCol(1);
     itemBoxSizer57->Add(itemFlexGridSizer58, 1, wxGROW|wxALL, 5);
     m_labProt = new wxStaticText( m_Interface, wxID_ANY, _("protocol"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer58->Add(m_labProt, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1009,8 +1008,6 @@ void TurntableDialog::CreateControls()
     wxArrayString m_PSenStrings;
     m_PSen = new wxComboBox( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_PSenStrings, wxCB_DROPDOWN );
     itemFlexGridSizer58->Add(m_PSen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
-
-    itemFlexGridSizer58->AddGrowableCol(1);
 
     m_SwapRotation = new wxCheckBox( m_Interface, wxID_ANY, _("Swap rotation direction"), wxDefaultPosition, wxDefaultSize, 0 );
     m_SwapRotation->SetValue(false);
