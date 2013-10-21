@@ -694,7 +694,6 @@ static void __reader( void* threadinst ) {
   iOMCS2Data data = Data(mcs2);
   char in[16];
   int mod = 0;
-  int len = 0;
   unsigned char store[1024];
   for( mod = 0; mod < 1024; mod++) {
     store[mod] = 0;
@@ -719,15 +718,7 @@ static void __reader( void* threadinst ) {
     }
     else {
       if( data->conOK && SerialOp.available(data->serial) ) {
-        if( SerialOp.read( data->serial, in, 5 ) ) {
-          TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 5 );
-          if( !SerialOp.read( data->serial, in+5, (in[4]&0x0F) ) ) {
-            ThreadOp.sleep(100);
-            if( data->run ) continue;
-            else break;
-          }
-        }
-        else {
+        if( !SerialOp.read( data->serial, in, 13 ) ) {
           ThreadOp.sleep(100);
           if( data->run ) continue;
           else break;
@@ -740,9 +731,7 @@ static void __reader( void* threadinst ) {
       }
     }
 
-    len = (in[4] & 0x0F);
-
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, in, len );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
     /* CS2 communication consists of commands (command byte always even) and replies. Reply byte is equal to command byte but with
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
        is broadcasted. When a command is issued from the CS2 user interface, both the command and the reply is broadcasted.
@@ -801,10 +790,8 @@ static void __writer( void* threadinst ) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, cmd, 13 );
       if( data->udp )
         SocketOp.sendto( data->writeUDP, cmd, 13, NULL, 0 );
-      else {
-        int len = cmd[4];
-        SerialOp.write( data->serial, cmd, 5 + len );
-      }
+      else
+        SerialOp.write( data->serial, cmd, 13 );
 
       freeMem( cmd );
     }
@@ -870,15 +857,12 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device      [%s]", wDigInt.getdevice(data->ini) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  flow        [%s]", wDigInt.getflow(data->ini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  flow        [%s]", wDigInt.cts );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps         [%d]", 500000 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
     data->serial = SerialOp.inst( wDigInt.getdevice(data->ini) );
-    if( StrOp.equals( wDigInt.getflow( data->ini ), wDigInt.cts ) )
-      SerialOp.setFlow( data->serial, cts );
-    else
-      SerialOp.setFlow( data->serial, none );
+    SerialOp.setFlow( data->serial, cts );
     SerialOp.setLine( data->serial, 500000, 8, 1, none, wDigInt.isrtsdisabled(data->ini) );
     SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
     data->conOK = SerialOp.open( data->serial );
