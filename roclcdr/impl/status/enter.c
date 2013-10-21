@@ -160,6 +160,8 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                         data->next1Block->base.id(data->next1Block),
                 &data->next2RouteFromTo );
       Boolean swapDir = False;
+      Boolean dirOK = True;
+      Boolean speedAdjusted = False;
 
       if(re_enter) {
         data->loc->resetBBT(data->loc);
@@ -185,8 +187,37 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
 
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset next2Block  ***** test with unlock flag *****" );
         resetNext2( (iOLcDriver)inst, True );
+        dirOK = False;
       }
-      else if( initializeDestination( (iOLcDriver)inst,
+
+      /* Adjust speed in case it should slow down. */
+      if( !data->gomanual && !re_enter && data->loc->getV(data->loc) > 0 ) {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        if( wBlock.getincline( bkprops ) == wBlock.incline_up &&
+            data->direction == LC_DIR_FORWARDS &&
+            !wLoc.isregulated( data->loc->base.properties( data->loc ) ) ) {
+          wLoc.setV_hint( cmd, wLoc.climb );
+        }
+        else {
+          int maxkmh = 0;
+          wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route, !data->next1RouteFromTo, &maxkmh ) );
+          wLoc.setV_maxkmh(cmd, maxkmh);
+        }
+        wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+
+        if( data->loc->compareVhint(data->loc, wLoc.getV_hint(cmd) ) < 0 ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "adjust loco speed before setting the route..." );
+          data->loc->cmd( data->loc, cmd );
+          speedAdjusted = True;
+        }
+        else {
+          NodeOp.base.del(cmd);
+        }
+      }
+
+
+      /* Initialize destination. */
+      if( dirOK && initializeDestination( (iOLcDriver)inst,
                        data->next2Block,
                        data->next2Route,
                        data->next1Block,
@@ -207,7 +238,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                        "Setting state for \"%s\" from %s to LC_WAIT4EVENT.",
                        data->loc->getId( data->loc ), re_enter?"LC_RE_ENTERBLOCK":"LC_ENTERBLOCK" );
 
-        if( !data->gomanual && !re_enter ) {
+        if( !data->gomanual && !re_enter && !speedAdjusted ) {
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
           if( wBlock.getincline( bkprops ) == wBlock.incline_up &&
               data->direction == LC_DIR_FORWARDS &&
