@@ -1039,3 +1039,9 @@ void RocProDlg::onDIP( wxCommandEvent& event ) {
   dlg->Destroy();
 }
 
+void RocProDlg::onTreeDIP( wxTreeEvent& event ) {
+  wxCommandEvent cmd;
+  onDIP(cmd);
+}
+
+

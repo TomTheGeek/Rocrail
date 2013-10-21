@@ -160,7 +160,7 @@
                                         <event name="OnTreeEndDrag"></event>
                                         <event name="OnTreeEndLabelEdit"></event>
                                         <event name="OnTreeGetInfo"></event>
-                                        <event name="OnTreeItemActivated"></event>
+                                        <event name="OnTreeItemActivated">onTreeDIP</event>
                                         <event name="OnTreeItemCollapsed"></event>
                                         <event name="OnTreeItemCollapsing"></event>
                                         <event name="OnTreeItemExpanded"></event>
