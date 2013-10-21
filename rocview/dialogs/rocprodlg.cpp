@@ -917,7 +917,13 @@ void RocProDlg::doCV(int command, int nr, int value) {
 
 void RocProDlg::onMenu( wxCommandEvent& event ) {
   int nr = event.GetId();
-  wxLaunchDefaultBrowser(wxString( NodeOp.getStr(m_DecNode, "web", ""), wxConvUTF8), wxBROWSER_NEW_WINDOW );
+  if( nr == 1001 ) {
+    wxLaunchDefaultBrowser(wxString( NodeOp.getStr(m_DecNode, "web", ""), wxConvUTF8), wxBROWSER_NEW_WINDOW );
+  }
+  else if( nr == 1002 ) {
+    wxCommandEvent cmd;
+    onDIP(cmd);
+  }
 }
 
 void RocProDlg::onTreeItemPopup( wxTreeEvent& event ) {
@@ -926,7 +932,9 @@ void RocProDlg::onTreeItemPopup( wxTreeEvent& event ) {
   iONode cv = (iONode)MapOp.get( m_CVMap, desc );
   if( cv != NULL ) {
     wxMenu menu( wxString::Format(_T("cv %d"), wCVByte.getnr(cv)) );
-    menu.Append( wCVByte.getnr(cv), wxGetApp().getMenu("info") );
+    menu.Append( 1001, wxGetApp().getMenu("info") );
+    if( m_DIP->IsEnabled() )
+      menu.Append( 1002, wxT("DIP") );
     menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( RocProDlg::onMenu ), NULL, this );
     PopupMenu(&menu );
   }
