@@ -3263,6 +3263,12 @@ static Boolean _init( iOModel inst ) {
     }
   }
 
+  if( wCtrl.getrouteswtime( wRocRail.getctrl( AppOp.getIni() ) ) > 100 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset route switch time to 100ms" );
+    wCtrl.setrouteswtime( wRocRail.getctrl( AppOp.getIni() ), 100 );
+  }
+
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init clearingMaps..." );
   __clearMap( o->blockMap );
   __clearMap( o->blockGroupMap );
