@@ -1025,6 +1025,10 @@ void RocProDlg::onHexValue( wxCommandEvent& event ) {
 
 
 void RocProDlg::onDIP( wxCommandEvent& event ) {
+  if( m_SelectedCV == NULL ) {
+    return;
+  }
+
   iONode dip = NULL;
   if(wCVByte.getdipid(m_SelectedCV) != NULL && StrOp.len(wCVByte.getdipid(m_SelectedCV)) > 0 ) {
     dip = (iONode)MapOp.get(m_DIPMap, wCVByte.getdipid(m_SelectedCV) );
