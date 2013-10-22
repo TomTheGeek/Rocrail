@@ -1052,6 +1052,11 @@ void RocProDlg::onDIP( wxCommandEvent& event ) {
 }
 
 void RocProDlg::onTreeDIP( wxTreeEvent& event ) {
+  if( m_SelectedCV == NULL ) {
+    // call default handler
+    event.Skip(true);
+    return;
+  }
   wxCommandEvent cmd;
   onDIP(cmd);
 }
