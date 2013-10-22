@@ -1345,7 +1345,7 @@ void RocGui::setModel( iONode node ) {
     m_Model = (iONode)node->base.clone( node );
 }
 
-const char* RocGui::findID( bool output, int addr, int bus, int porttype, char** type ) {
+const char* RocGui::findID( bool output, int addr, int bus, int porttype, const char** type ) {
   // TODO: Lookup ID in model.
   if( m_Model != NULL ) {
     if( output ) {
@@ -1368,6 +1368,7 @@ const char* RocGui::findID( bool output, int addr, int bus, int porttype, char**
       iONode sglist = wPlan.getsglist( m_Model );
       if( sglist != NULL ) {
         int cnt = NodeOp.getChildCnt( sglist );
+        if( type != NULL ) *type="signal";
         for( int i = 0; i < cnt; i++ ) {
           iONode sg = NodeOp.getChild( sglist, i );
           if( addr == wSignal.getport1( sg ) || addr == wSignal.getaddr( sg ) ) {
@@ -1392,6 +1393,7 @@ const char* RocGui::findID( bool output, int addr, int bus, int porttype, char**
       iONode colist = wPlan.getcolist( m_Model );
       if( colist != NULL ) {
         int cnt = NodeOp.getChildCnt( colist );
+        if( type != NULL ) *type="output";
         for( int i = 0; i < cnt; i++ ) {
           iONode co = NodeOp.getChild( colist, i );
           if( addr == wOutput.getport( co ) || addr == wOutput.getaddr( co ) ) {
@@ -1404,6 +1406,7 @@ const char* RocGui::findID( bool output, int addr, int bus, int porttype, char**
       iONode ttlist = wPlan.getttlist( m_Model );
       if( ttlist != NULL ) {
         int cnt = NodeOp.getChildCnt( ttlist );
+        if( type != NULL ) *type="turntable";
         for( int i = 0; i < cnt; i++ ) {
           iONode tt = NodeOp.getChild( ttlist, i );
           if( addr == wTurntable.getport0( tt ) ) {
@@ -1433,6 +1436,7 @@ const char* RocGui::findID( bool output, int addr, int bus, int porttype, char**
       iONode seltablist = wPlan.getseltablist( m_Model );
       if( seltablist != NULL ) {
         int cnt = NodeOp.getChildCnt( seltablist );
+        if( type != NULL ) *type="fiddleyard";
         for( int i = 0; i < cnt; i++ ) {
           iONode seltab = NodeOp.getChild( seltablist, i );
           if( addr == wSelTab.getport0( seltab ) ) {
@@ -1459,6 +1463,7 @@ const char* RocGui::findID( bool output, int addr, int bus, int porttype, char**
       iONode fblist = wPlan.getfblist( m_Model );
       if( fblist != NULL ) {
         int cnt = NodeOp.getChildCnt( fblist );
+        if( type != NULL ) *type="sensor";
         for( int i = 0; i < cnt; i++ ) {
           iONode fb = NodeOp.getChild( fblist, i );
           if( addr == wFeedback.getaddr( fb ) && wFeedback.getbus(fb) == bus ) {

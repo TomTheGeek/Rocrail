@@ -1141,11 +1141,12 @@ void RocnetNodeDlg::onReport( wxCommandEvent& event ) {
     iONode rnnode = (iONode)MapOp.first( m_NodeMap );
     while( rnnode != NULL ) {
       int rnid = wRocNetNode.getid(rnnode);
+      TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999,"reporting %d...", rnid );
       for( int i = 0; i < 128; i++ ) {
         const char* type = "";
-        const char* id = wxGetApp().findID( false, i+1, rnid, 0, (char**)&type );
+        const char* id = wxGetApp().findID( false, i+1, rnid, 0, &type );
         if( StrOp.equals( id, "not used" ) ) {
-          id = wxGetApp().findID( true, i+1, rnid, 0, (char**)&type );
+          id = wxGetApp().findID( true, i+1, rnid, 0, &type );
         }
         if( !StrOp.equals( id, "not used" ) ) {
           FileOp.fmt(l_ReportFile, "\"%d\",\"%d\",\"%s\",\"%s\"\n",

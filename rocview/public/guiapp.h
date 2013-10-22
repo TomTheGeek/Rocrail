@@ -89,7 +89,7 @@ public:
   bool isRestrictedEdit();
   bool isForceTabView() { return m_bForceTabView; }
   bool isTabViewRotated() { return m_bTabViewRotated; }
-  const char* findID(bool output, int addr, int bus=0, int porttype=0, char** type=NULL);
+  const char* findID(bool output, int addr, int bus=0, int porttype=0, const char** type=NULL);
   iOScript getScript(){return m_Script;}
   iOList getSensorEvents(){return m_SensorEvents;}
   void sensorEvent(iONode event);
