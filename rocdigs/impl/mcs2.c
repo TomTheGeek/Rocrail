@@ -692,7 +692,7 @@ static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
   iOMCS2Data data = Data(mcs2);
-  char in[32];
+  char in[16];
   int mod = 0;
   unsigned char store[1024];
   for( mod = 0; mod < 1024; mod++) {
@@ -703,8 +703,7 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 reader started." );
 
   do {
-    int inlen = 13;
-    MemOp.set(in, 0, 32);
+    MemOp.set(in, 0, 16);
     if( data->udp ) {
       if( SocketOp.recvfrom( data->readUDP, in, 13, NULL, NULL ) <= 0 ) {
         SocketOp.base.del(data->readUDP);
@@ -719,19 +718,11 @@ static void __reader( void* threadinst ) {
     }
     else {
       if( data->conOK && SerialOp.available(data->serial) ) {
-        int retry = 0;
-        int idx = 0;
-        while( data->conOK && idx < 13 && retry < 10 ) {
-          if( SerialOp.available(data->serial) && SerialOp.read( data->serial, in+idx, 1 ) ) {
-            idx++;
-            retry = 0;
-          }
-          else {
-            retry++;
-            ThreadOp.sleep(10);
-          }
+        if( !SerialOp.read( data->serial, in, 13 ) ) {
+          ThreadOp.sleep(100);
+          if( data->run ) continue;
+          else break;
         }
-        inlen = idx;
       }
       else {
         ThreadOp.sleep(100);
@@ -740,7 +731,7 @@ static void __reader( void* threadinst ) {
       }
     }
 
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, in, inlen );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
     /* CS2 communication consists of commands (command byte always even) and replies. Reply byte is equal to command byte but with
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
        is broadcasted. When a command is issued from the CS2 user interface, both the command and the reply is broadcasted.
@@ -866,7 +857,6 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device      [%s]", wDigInt.getdevice(data->ini) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  flow        [%s]", wDigInt.cts );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps         [%d]", 500000 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
