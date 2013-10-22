@@ -719,12 +719,17 @@ static void __reader( void* threadinst ) {
     }
     else {
       if( data->conOK && SerialOp.available(data->serial) ) {
+        int retry = 0;
         int idx = 0;
-        while( data->conOK && SerialOp.available(data->serial) && idx < 13) {
-          if( !SerialOp.read( data->serial, in+idx, 1 ) ) {
-            break;
+        while( data->conOK && idx < 13 && retry < 10 ) {
+          if( SerialOp.available(data->serial) && SerialOp.read( data->serial, in+idx, 1 ) ) {
+            idx++;
+            retry = 0;
           }
-          idx++;
+          else {
+            retry++;
+            ThreadOp.sleep(10);
+          }
         }
         inlen = idx;
       }
@@ -794,11 +799,8 @@ static void __writer( void* threadinst ) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, cmd, 13 );
       if( data->udp )
         SocketOp.sendto( data->writeUDP, cmd, 13, NULL, 0 );
-      else {
-        int i = 0;
-        for( i = 0; i < 13; i++ )
-          SerialOp.write( data->serial, cmd+i, 1 );
-      }
+      else
+        SerialOp.write( data->serial, cmd, 13 );
 
       freeMem( cmd );
     }
