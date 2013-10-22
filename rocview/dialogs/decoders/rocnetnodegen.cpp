@@ -167,7 +167,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_RocNetPanel->SetSizer( bSizer6 );
 	m_RocNetPanel->Layout();
 	bSizer6->Fit( m_RocNetPanel );
-	m_NodeBook->AddPage( m_RocNetPanel, wxT("RocNet"), false );
+	m_NodeBook->AddPage( m_RocNetPanel, wxT("RocNet"), true );
 	m_OptionsPanel = new wxPanel( m_NodeBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer91;
 	bSizer91 = new wxBoxSizer( wxVERTICAL );
@@ -575,7 +575,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_MacroPanel->SetSizer( bSizer11 );
 	m_MacroPanel->Layout();
 	bSizer11->Fit( m_MacroPanel );
-	m_NodeBook->AddPage( m_MacroPanel, wxT("Macro"), true );
+	m_NodeBook->AddPage( m_MacroPanel, wxT("Macro"), false );
 	m_UpdatePanel = new wxPanel( m_NodeBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer15;
 	bSizer15 = new wxBoxSizer( wxVERTICAL );
@@ -650,7 +650,6 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_NodeTree->Connect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( rocnetnodegen::onBeginDrag ), NULL, this );
 	m_NodeTree->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( rocnetnodegen::onItemActivated ), NULL, this );
 	m_NodeTree->Connect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( rocnetnodegen::onTreeItemRightClick ), NULL, this );
-	m_NodeTree->Connect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( rocnetnodegen::onTreeItemRightClick ), NULL, this );
 	m_NodeTree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( rocnetnodegen::onTreeSelChanged ), NULL, this );
 	m_RocnetWrite->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onRocnetWrite ), NULL, this );
 	m_IOType->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( rocnetnodegen::onIOType ), NULL, this );
@@ -697,7 +696,6 @@ rocnetnodegen::~rocnetnodegen()
 	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( rocnetnodegen::onBeginDrag ), NULL, this );
 	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( rocnetnodegen::onItemActivated ), NULL, this );
 	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( rocnetnodegen::onTreeItemRightClick ), NULL, this );
-	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( rocnetnodegen::onTreeItemRightClick ), NULL, this );
 	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( rocnetnodegen::onTreeSelChanged ), NULL, this );
 	m_RocnetWrite->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onRocnetWrite ), NULL, this );
 	m_IOType->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( rocnetnodegen::onIOType ), NULL, this );

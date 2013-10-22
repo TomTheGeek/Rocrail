@@ -424,6 +424,8 @@ void RocnetNodeDlg::initLabels() {
   }
   m_MacroGet->SetLabel(wxGetApp().getMsg( "get" ));
   m_MacroSet->SetLabel(wxGetApp().getMsg( "set" ));
+  m_MacroExport->SetLabel(wxGetApp().getMsg( "export" ) + wxT("..."));
+  m_MacroImport->SetLabel(wxGetApp().getMsg( "import" ) + wxT("..."));
 }
 
 
@@ -825,6 +827,8 @@ void RocnetNodeDlg::onMacroNumber( wxSpinEvent& event ) {
     m_MacroLines->SetCellBackgroundColour(i, 2, wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
     m_MacroLines->SetCellBackgroundColour(i, 3, wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
   }
+  wxCommandEvent cmd;
+  onMacroGet(cmd);
 }
 
 
@@ -992,7 +996,7 @@ void RocnetNodeDlg::onListColClick( wxListEvent& event ) {
 
 
 void RocnetNodeDlg::onItemActivated( wxTreeEvent& event ) {
-
+  event.Skip(true);
 }
 
 
@@ -1070,9 +1074,12 @@ void RocnetNodeDlg::selChanged( iONode rnnode ) {
     initPorts();
     initValues();
     m_MacroLines->ClearGrid();
+    m_MacroNr->SetValue(1);
     SetTitle(wxT("RocNetNode: ") + wxString::Format(_T("%d"), wRocNetNode.getid(m_Props) ) );
     wxCommandEvent cmd;
     onNodeOptionsRead(cmd);
+    onMacroGet(cmd);
+    onPortRead(cmd);
   }
 }
 
