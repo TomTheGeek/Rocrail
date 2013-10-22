@@ -640,6 +640,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_Show->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShow ), NULL, this );
 	m_Query->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onQuery ), NULL, this );
 	m_Report->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onReport ), NULL, this );
+	m_NodeTree->Connect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( rocnetnodegen::onBeginDrag ), NULL, this );
 	m_NodeTree->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( rocnetnodegen::onItemActivated ), NULL, this );
 	m_NodeTree->Connect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( rocnetnodegen::onTreeItemRightClick ), NULL, this );
 	m_NodeTree->Connect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( rocnetnodegen::onTreeItemRightClick ), NULL, this );
@@ -683,6 +684,7 @@ rocnetnodegen::~rocnetnodegen()
 	m_Show->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShow ), NULL, this );
 	m_Query->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onQuery ), NULL, this );
 	m_Report->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onReport ), NULL, this );
+	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( rocnetnodegen::onBeginDrag ), NULL, this );
 	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( rocnetnodegen::onItemActivated ), NULL, this );
 	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( rocnetnodegen::onTreeItemRightClick ), NULL, this );
 	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( rocnetnodegen::onTreeItemRightClick ), NULL, this );

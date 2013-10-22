@@ -189,6 +189,7 @@ class rocnetnodegen : public wxDialog
 		virtual void onShow( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onQuery( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onReport( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onBeginDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onItemActivated( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onTreeItemRightClick( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onTreeSelChanged( wxTreeEvent& event ) { event.Skip(); }

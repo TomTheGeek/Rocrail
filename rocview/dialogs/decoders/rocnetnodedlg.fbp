@@ -868,7 +868,7 @@
                                                             <event name="OnRightUp"></event>
                                                             <event name="OnSetFocus"></event>
                                                             <event name="OnSize"></event>
-                                                            <event name="OnTreeBeginDrag"></event>
+                                                            <event name="OnTreeBeginDrag">onBeginDrag</event>
                                                             <event name="OnTreeBeginLabelEdit"></event>
                                                             <event name="OnTreeBeginRDrag"></event>
                                                             <event name="OnTreeDeleteItem"></event>

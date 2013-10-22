@@ -1164,3 +1164,16 @@ void RocnetNodeDlg::onReport( wxCommandEvent& event ) {
 
 }
 
+void RocnetNodeDlg::onBeginDrag( wxTreeEvent& event ) {
+  wxString itemText = m_NodeTree->GetItemText(event.GetItem());
+  char* key = StrOp.dup(itemText.mb_str(wxConvUTF8));
+  iONode rnnode = (iONode)MapOp.get( m_NodeMap, key);
+
+  wxString my_text = _T("bus:")+wxString::Format(_T("%d"), wRocNetNode.getid(rnnode) );
+  wxTextDataObject my_data(my_text);
+  wxDropSource dragSource( this );
+  dragSource.SetData( my_data );
+  wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+
+}
+
