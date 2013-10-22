@@ -881,7 +881,7 @@
                                                             <event name="OnTreeItemExpanded"></event>
                                                             <event name="OnTreeItemExpanding"></event>
                                                             <event name="OnTreeItemGetTooltip"></event>
-                                                            <event name="OnTreeItemMenu"></event>
+                                                            <event name="OnTreeItemMenu">onTreeItemRightClick</event>
                                                             <event name="OnTreeItemMiddleClick"></event>
                                                             <event name="OnTreeItemRightClick">onTreeItemRightClick</event>
                                                             <event name="OnTreeKeyDown"></event>

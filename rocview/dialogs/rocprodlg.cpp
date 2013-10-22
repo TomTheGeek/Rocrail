@@ -272,6 +272,8 @@ void RocProDlg::loadDecFile() {
       m_DecTree->CollapseAll();
     else
       m_DecTree->ExpandAll();
+
+    m_DecTree->ScrollTo(root);
   }
 
 }

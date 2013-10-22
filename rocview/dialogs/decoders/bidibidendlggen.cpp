@@ -850,6 +850,7 @@ BidibIdentDlgGen::BidibIdentDlgGen( wxWindow* parent, wxWindowID id, const wxStr
 	m_Notebook->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( BidibIdentDlgGen::onPageChanged ), NULL, this );
 	m_Tree->Connect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( BidibIdentDlgGen::onBeginDrag ), NULL, this );
 	m_Tree->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( BidibIdentDlgGen::onItemActivated ), NULL, this );
+	m_Tree->Connect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BidibIdentDlgGen::onItemRightClick ), NULL, this );
 	m_Tree->Connect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( BidibIdentDlgGen::onItemRightClick ), NULL, this );
 	m_Tree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BidibIdentDlgGen::onTreeSelChanged ), NULL, this );
 	m_BiDiBlogo->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( BidibIdentDlgGen::onLeftLogo ), NULL, this );
@@ -913,6 +914,7 @@ BidibIdentDlgGen::~BidibIdentDlgGen()
 	m_Notebook->Disconnect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( BidibIdentDlgGen::onPageChanged ), NULL, this );
 	m_Tree->Disconnect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( BidibIdentDlgGen::onBeginDrag ), NULL, this );
 	m_Tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( BidibIdentDlgGen::onItemActivated ), NULL, this );
+	m_Tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BidibIdentDlgGen::onItemRightClick ), NULL, this );
 	m_Tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( BidibIdentDlgGen::onItemRightClick ), NULL, this );
 	m_Tree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BidibIdentDlgGen::onTreeSelChanged ), NULL, this );
 	m_BiDiBlogo->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( BidibIdentDlgGen::onLeftLogo ), NULL, this );

@@ -298,6 +298,7 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( RocProDlgGen::onClose ) );
 	m_DecTree->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( RocProDlgGen::onTreeDIP ), NULL, this );
+	m_DecTree->Connect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( RocProDlgGen::onTreeItemPopup ), NULL, this );
 	m_DecTree->Connect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( RocProDlgGen::onTreeItemPopup ), NULL, this );
 	m_DecTree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( RocProDlgGen::onTreeSelChanged ), NULL, this );
 	m_Info->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( RocProDlgGen::onCVInfoEnter ), NULL, this );
@@ -339,6 +340,7 @@ RocProDlgGen::~RocProDlgGen()
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( RocProDlgGen::onClose ) );
 	m_DecTree->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( RocProDlgGen::onTreeDIP ), NULL, this );
+	m_DecTree->Disconnect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( RocProDlgGen::onTreeItemPopup ), NULL, this );
 	m_DecTree->Disconnect( wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler( RocProDlgGen::onTreeItemPopup ), NULL, this );
 	m_DecTree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( RocProDlgGen::onTreeSelChanged ), NULL, this );
 	m_Info->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( RocProDlgGen::onCVInfoEnter ), NULL, this );

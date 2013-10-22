@@ -259,7 +259,7 @@
                                             <event name="OnTreeItemExpanded"></event>
                                             <event name="OnTreeItemExpanding"></event>
                                             <event name="OnTreeItemGetTooltip"></event>
-                                            <event name="OnTreeItemMenu"></event>
+                                            <event name="OnTreeItemMenu">onItemRightClick</event>
                                             <event name="OnTreeItemMiddleClick"></event>
                                             <event name="OnTreeItemRightClick">onItemRightClick</event>
                                             <event name="OnTreeKeyDown"></event>
