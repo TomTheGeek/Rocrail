@@ -692,7 +692,7 @@ static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
   iOMCS2Data data = Data(mcs2);
-  char in[16];
+  char in[32];
   int mod = 0;
   unsigned char store[1024];
   for( mod = 0; mod < 1024; mod++) {
@@ -703,7 +703,8 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 reader started." );
 
   do {
-    MemOp.set(in, 0, 16);
+    int inlen = 13;
+    MemOp.set(in, 0, 32);
     if( data->udp ) {
       if( SocketOp.recvfrom( data->readUDP, in, 13, NULL, NULL ) <= 0 ) {
         SocketOp.base.del(data->readUDP);
@@ -718,11 +719,14 @@ static void __reader( void* threadinst ) {
     }
     else {
       if( data->conOK && SerialOp.available(data->serial) ) {
-        if( !SerialOp.read( data->serial, in, 13 ) ) {
-          ThreadOp.sleep(100);
-          if( data->run ) continue;
-          else break;
+        int idx = 0;
+        while( data->conOK && SerialOp.available(data->serial) && idx < 13) {
+          if( !SerialOp.read( data->serial, in+idx, 1 ) ) {
+            break;
+          }
+          idx++;
         }
+        inlen = idx;
       }
       else {
         ThreadOp.sleep(100);
@@ -731,7 +735,7 @@ static void __reader( void* threadinst ) {
       }
     }
 
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, in, inlen );
     /* CS2 communication consists of commands (command byte always even) and replies. Reply byte is equal to command byte but with
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
        is broadcasted. When a command is issued from the CS2 user interface, both the command and the reply is broadcasted.
@@ -790,8 +794,11 @@ static void __writer( void* threadinst ) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, cmd, 13 );
       if( data->udp )
         SocketOp.sendto( data->writeUDP, cmd, 13, NULL, 0 );
-      else
-        SerialOp.write( data->serial, cmd, 13 );
+      else {
+        int i = 0;
+        for( i = 0; i < 13; i++ )
+          SerialOp.write( data->serial, cmd+i, 1 );
+      }
 
       freeMem( cmd );
     }
