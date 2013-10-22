@@ -166,6 +166,8 @@ class rocnetnodegen : public wxDialog
 		wxStaticText* m_labMacroNr;
 		wxSpinCtrl* m_MacroNr;
 		wxGrid* m_MacroLines;
+		wxButton* m_MacroExport;
+		wxButton* m_MacroImport;
 		wxButton* m_MacroGet;
 		wxButton* m_MacroSet;
 		wxPanel* m_UpdatePanel;
@@ -182,6 +184,7 @@ class rocnetnodegen : public wxDialog
 		virtual void onClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void onRocNetLogo( wxMouseEvent& event ) { event.Skip(); }
 		virtual void onGCALogo( wxMouseEvent& event ) { event.Skip(); }
+		virtual void onBeginListDrag( wxListEvent& event ) { event.Skip(); }
 		virtual void onListColClick( wxListEvent& event ) { event.Skip(); }
 		virtual void onIndexSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void onShutdown( wxCommandEvent& event ) { event.Skip(); }
@@ -204,6 +207,8 @@ class rocnetnodegen : public wxDialog
 		virtual void onPortWrite( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onMacroNumber( wxSpinEvent& event ) { event.Skip(); }
 		virtual void onMacroLineChange( wxGridEvent& event ) { event.Skip(); }
+		virtual void onMacroExport( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onMacroImport( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onMacroGet( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onMacroSet( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onNewRevisionNumber( wxCommandEvent& event ) { event.Skip(); }

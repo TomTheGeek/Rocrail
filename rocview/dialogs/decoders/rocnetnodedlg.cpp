@@ -48,6 +48,8 @@
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/ZLevel.h"
+#include "rocrail/wrapper/public/Macro.h"
+#include "rocrail/wrapper/public/MacroLine.h"
 #include "rocs/public/strtok.h"
 #include "rocutils/public/vendors.h"
 
@@ -1176,4 +1178,122 @@ void RocnetNodeDlg::onBeginDrag( wxTreeEvent& event ) {
   wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
 
 }
+
+void RocnetNodeDlg::onBeginListDrag( wxListEvent& event ) {
+  int index = event.GetIndex();
+  if( m_Props != NULL ) {
+    wxString my_text = _T("bus:")+wxString::Format(_T("%d"), wRocNetNode.getid(m_Props) );
+    wxTextDataObject my_data(my_text);
+    wxDropSource dragSource( this );
+    dragSource.SetData( my_data );
+    wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+  }
+}
+
+
+void RocnetNodeDlg::onMacroExport( wxCommandEvent& event ) {
+  const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  wxString ms_FileExt = _T("Macro (*.xml)|*.xml");
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("export"), wxString(l_openpath,wxConvUTF8),
+                       wxString::Format( _T("rocnet-macro-%d.xml"), m_MacroNr->GetValue()), ms_FileExt, wxFD_SAVE);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    iONode model = wxGetApp().getModel();
+    // Check for existence.
+    wxString path = fdlg->GetPath();
+    if( FileOp.exist( path.mb_str(wxConvUTF8) ) ) {
+      int action = wxMessageDialog( this, wxGetApp().getMsg("fileexistwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+      if( action == wxID_NO ) {
+        fdlg->Destroy();
+        return;
+      }
+    }
+    if( !path.Contains( _T(".xml") ) )
+      path.Append( _T(".xml") );
+
+    iOFile f = FileOp.inst( path.mb_str(wxConvUTF8), OPEN_WRITE );
+    if( f != NULL ) {
+      iONode macro = NodeOp.inst( wMacro.name(), NULL, ELEMENT_NODE );
+      wMacro.setuid(macro, m_ID->GetValue() );
+      wMacro.setnr(macro, m_MacroNr->GetValue());
+
+      for( int i = 0; i < 8; i++ ) {
+        iONode macroline = NodeOp.inst( wMacroLine.name(), macro, ELEMENT_NODE );
+        NodeOp.addChild(macro, macroline);
+        wMacroLine.setnr(macroline, i);
+        // ToDo: Set line values.
+        int val1 = atoi( m_MacroLines->GetCellValue( i, 0 ).mb_str(wxConvUTF8) );
+        int val2 = atoi( m_MacroLines->GetCellValue( i, 1 ).mb_str(wxConvUTF8) );
+        int val3 = atoi( m_MacroLines->GetCellValue( i, 2 ).mb_str(wxConvUTF8) );
+        int val4 = atoi( m_MacroLines->GetCellValue( i, 3 ).mb_str(wxConvUTF8) );
+        int val5 = atoi( m_MacroLines->GetCellValue( i, 4 ).mb_str(wxConvUTF8) );
+
+        wMacroLine.setport( macroline, val1 );
+        wMacroLine.setdelay( macroline, val2 );
+        wMacroLine.setporttype( macroline, val3 );
+        wMacroLine.setstatus( macroline, val4 );
+        wMacroLine.setblink( macroline, val5?True:False );
+      }
+
+      char* s = NodeOp.base.toString(macro);
+      FileOp.writeStr(f, s);
+      StrOp.free(s);
+      NodeOp.base.del(macro);
+      FileOp.base.del( f );
+    }
+
+  }
+
+  fdlg->Destroy();
+
+}
+
+
+void RocnetNodeDlg::onMacroImport( wxCommandEvent& event ) {
+  wxString ms_FileExt = _T("Macro (*.xml)|*.xml");
+  const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("import"), wxString(l_openpath,wxConvUTF8) , _T(""), ms_FileExt, wxFD_OPEN);
+  if( fdlg->ShowModal() == wxID_OK ) {
+
+    wGui.setopenpath( wxGetApp().getIni(), fdlg->GetPath().mb_str(wxConvUTF8) );
+    // strip filename:
+    wGui.setopenpath( wxGetApp().getIni(), FileOp.getPath(wGui.getopenpath( wxGetApp().getIni() ) ) );
+
+    TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "reading [%s]...", (const char*)fdlg->GetPath().mb_str(wxConvUTF8));
+    iOFile f = FileOp.inst( fdlg->GetPath().mb_str(wxConvUTF8), OPEN_READONLY );
+    if( f != NULL ) {
+      TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "file opened...");
+      char* macroXml = (char*)allocMem( FileOp.size( f ) + 1 );
+      FileOp.read( f, macroXml, FileOp.size( f ) );
+      FileOp.close( f );
+      FileOp.base.del(f );
+
+      iODoc macroDoc = DocOp.parse( macroXml );
+      freeMem( macroXml );
+      if( macroDoc != NULL ) {
+        iONode macro = DocOp.getRootNode( macroDoc );
+        if( macro != NULL ) {
+
+          int idx = 0;
+          iONode macroline = wMacro.getmacroline(macro);
+          while( macroline != NULL ) {
+            m_MacroLines->SetCellValue(idx, 0, wxString::Format(_T("%d"), wMacroLine.getport(macroline)) );
+            m_MacroLines->SetCellValue(idx, 1, wxString::Format(_T("%d"), wMacroLine.getdelay(macroline)) );
+            m_MacroLines->SetCellValue(idx, 2, wxString::Format(_T("%d"), wMacroLine.getporttype(macroline)) );
+            m_MacroLines->SetCellValue(idx, 3, wxString::Format(_T("%d"), wMacroLine.getstatus(macroline)) );
+            m_MacroLines->SetCellValue(idx, 4, wxString::Format(_T("%d"), wMacroLine.isblink(macroline)?1:0) );
+            idx++;
+            macroline = wMacro.nextmacroline(macro, macroline);
+          }
+
+          NodeOp.base.del(macro);
+        }
+        DocOp.base.del(macroDoc);
+      }
+    }
+  }
+
+  fdlg->Destroy();
+
+}
+
 

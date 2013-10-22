@@ -58,7 +58,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_IndexPanel->SetSizer( bSizer10 );
 	m_IndexPanel->Layout();
 	bSizer10->Fit( m_IndexPanel );
-	m_NodeBook->AddPage( m_IndexPanel, wxT("Index"), true );
+	m_NodeBook->AddPage( m_IndexPanel, wxT("Index"), false );
 	m_RocNetPanel = new wxPanel( m_NodeBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
@@ -558,6 +558,12 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	wxBoxSizer* bSizer12;
 	bSizer12 = new wxBoxSizer( wxHORIZONTAL );
 	
+	m_MacroExport = new wxButton( m_MacroPanel, wxID_ANY, wxT("Export..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer12->Add( m_MacroExport, 0, wxALL, 5 );
+	
+	m_MacroImport = new wxButton( m_MacroPanel, wxID_ANY, wxT("Import..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer12->Add( m_MacroImport, 0, wxALL, 5 );
+	
 	m_MacroGet = new wxButton( m_MacroPanel, wxID_ANY, wxT("Get"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer12->Add( m_MacroGet, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -569,7 +575,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_MacroPanel->SetSizer( bSizer11 );
 	m_MacroPanel->Layout();
 	bSizer11->Fit( m_MacroPanel );
-	m_NodeBook->AddPage( m_MacroPanel, wxT("Macro"), false );
+	m_NodeBook->AddPage( m_MacroPanel, wxT("Macro"), true );
 	m_UpdatePanel = new wxPanel( m_NodeBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer15;
 	bSizer15 = new wxBoxSizer( wxVERTICAL );
@@ -632,6 +638,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( rocnetnodegen::onClose ) );
 	m_RocNetLogo->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( rocnetnodegen::onRocNetLogo ), NULL, this );
 	m_GCALogo->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( rocnetnodegen::onGCALogo ), NULL, this );
+	m_NodeList->Connect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( rocnetnodegen::onBeginListDrag ), NULL, this );
 	m_NodeList->Connect( wxEVT_COMMAND_LIST_COL_CLICK, wxListEventHandler( rocnetnodegen::onListColClick ), NULL, this );
 	m_NodeList->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
 	m_NodeList->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
@@ -663,6 +670,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_PortWrite->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortWrite ), NULL, this );
 	m_MacroNr->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( rocnetnodegen::onMacroNumber ), NULL, this );
 	m_MacroLines->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( rocnetnodegen::onMacroLineChange ), NULL, this );
+	m_MacroExport->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroExport ), NULL, this );
+	m_MacroImport->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroImport ), NULL, this );
 	m_MacroGet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroGet ), NULL, this );
 	m_MacroSet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroSet ), NULL, this );
 	m_UpdateRevision->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( rocnetnodegen::onNewRevisionNumber ), NULL, this );
@@ -676,6 +685,7 @@ rocnetnodegen::~rocnetnodegen()
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( rocnetnodegen::onClose ) );
 	m_RocNetLogo->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( rocnetnodegen::onRocNetLogo ), NULL, this );
 	m_GCALogo->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( rocnetnodegen::onGCALogo ), NULL, this );
+	m_NodeList->Disconnect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( rocnetnodegen::onBeginListDrag ), NULL, this );
 	m_NodeList->Disconnect( wxEVT_COMMAND_LIST_COL_CLICK, wxListEventHandler( rocnetnodegen::onListColClick ), NULL, this );
 	m_NodeList->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
 	m_NodeList->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( rocnetnodegen::onIndexSelected ), NULL, this );
@@ -707,6 +717,8 @@ rocnetnodegen::~rocnetnodegen()
 	m_PortWrite->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortWrite ), NULL, this );
 	m_MacroNr->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( rocnetnodegen::onMacroNumber ), NULL, this );
 	m_MacroLines->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( rocnetnodegen::onMacroLineChange ), NULL, this );
+	m_MacroExport->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroExport ), NULL, this );
+	m_MacroImport->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroImport ), NULL, this );
 	m_MacroGet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroGet ), NULL, this );
 	m_MacroSet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroSet ), NULL, this );
 	m_UpdateRevision->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( rocnetnodegen::onNewRevisionNumber ), NULL, this );
