@@ -29,6 +29,11 @@
 #include "wx/defs.h"
 #endif
 
+#include <wx/clipbrd.h>
+#include <wx/dataobj.h>
+#include <wx/dnd.h>
+#include <wx/filedlg.h>
+
 
 #include "rocview/public/guiapp.h"
 #include "rocview/wrapper/public/Gui.h"
@@ -1108,5 +1113,53 @@ void RocnetNodeDlg::onNewRevisionNumber( wxCommandEvent& event ) {
     m_Update->Enable(true);
     m_Update->SetLabel(wxGetApp().getMsg( "update" ));
   }
+}
+
+void RocnetNodeDlg::onReport( wxCommandEvent& event ) {
+  const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
+  wxString ms_FileExt = _T("RocNet-Report (*.csv)|*.csv");
+  wxFileDialog* fdlg = new wxFileDialog(this, wxGetApp().getMenu("saveas"), wxString(l_openpath,wxConvUTF8),
+                       wxString::Format( _T("rocnet-report.csv")), ms_FileExt, wxFD_SAVE);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    iONode model = wxGetApp().getModel();
+    // Check for existence.
+    wxString path = fdlg->GetPath();
+    if( FileOp.exist( path.mb_str(wxConvUTF8) ) ) {
+      int action = wxMessageDialog( this, wxGetApp().getMsg("fileexistwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+      if( action == wxID_NO ) {
+        fdlg->Destroy();
+        return;
+      }
+    }
+    if( !path.Contains( _T(".csv") ) )
+      path.Append( _T(".csv") );
+
+    iOFile l_ReportFile = FileOp.inst( path.mb_str(wxConvUTF8), OPEN_WRITE );
+    FileOp.fmt(l_ReportFile, "\"id\",\"port\",\"type\",\"RocrailID\"\n");
+    FileOp.flush(l_ReportFile);
+
+    iONode rnnode = (iONode)MapOp.first( m_NodeMap );
+    while( rnnode != NULL ) {
+      int rnid = wRocNetNode.getid(rnnode);
+      for( int i = 0; i < 128; i++ ) {
+        const char* type = "";
+        const char* id = wxGetApp().findID( false, i+1, rnid, 0, (char**)&type );
+        if( StrOp.equals( id, "not used" ) ) {
+          id = wxGetApp().findID( true, i+1, rnid, 0, (char**)&type );
+        }
+        if( !StrOp.equals( id, "not used" ) ) {
+          FileOp.fmt(l_ReportFile, "\"%d\",\"%d\",\"%s\",\"%s\"\n",
+              rnid, i+1, type, id);
+        }
+      }
+      rnnode = (iONode)MapOp.next( m_NodeMap );
+    }
+
+    TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999,"open report %s...", FileOp.getFilename(l_ReportFile) );
+    wxShell(wxString(FileOp.getFilename(l_ReportFile), wxConvUTF8));
+    FileOp.base.del(l_ReportFile);
+  }
+  fdlg->Destroy();
+
 }
 

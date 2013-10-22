@@ -1345,13 +1345,14 @@ void RocGui::setModel( iONode node ) {
     m_Model = (iONode)node->base.clone( node );
 }
 
-const char* RocGui::findID( bool output, int addr, int bus, int porttype ) {
+const char* RocGui::findID( bool output, int addr, int bus, int porttype, char** type ) {
   // TODO: Lookup ID in model.
   if( m_Model != NULL ) {
     if( output ) {
       iONode swlist = wPlan.getswlist( m_Model );
       if( swlist != NULL ) {
         int cnt = NodeOp.getChildCnt( swlist );
+        if( type != NULL ) *type="switch";
         for( int i = 0; i < cnt; i++ ) {
           iONode sw = NodeOp.getChild( swlist, i );
           if( addr == wSwitch.getport1( sw ) || addr == wSwitch.getaddr1( sw ) ) {
