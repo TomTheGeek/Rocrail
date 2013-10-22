@@ -468,8 +468,8 @@ void BlockDialog::initLabels() {
   m_PermType->SetLabel( wxGetApp().getMsg( "type" ) );
   m_PermTypeNone->SetLabel( wxGetApp().getMsg( "none" ) );
   m_PermTypeGoods->SetLabel( wxGetApp().getMsg( "goods" ) );
-  m_PermTypeLocal->SetLabel( wxGetApp().getMsg( "local" ) );
-  m_PermTypePerson->SetLabel( wxGetApp().getMsg( "regional" ) );
+  m_PermTypeLocal->SetLabel( wxGetApp().getMsg( "regional" ) );
+  m_PermTypePerson->SetLabel( wxGetApp().getMsg( "local" ) );
   m_PermTypeMixed->SetLabel( wxGetApp().getMsg( "mixed" ) );
   m_PermTypeCleaning->SetLabel( wxGetApp().getMsg( "cleaning" ) );
   m_PermTypeICE->SetLabel( wxGetApp().getMsg( "ice" ) );
