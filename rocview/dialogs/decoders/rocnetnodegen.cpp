@@ -261,6 +261,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_labPort1 = new wxStaticText( m_PortSetupPanel, wxID_ANY, wxT("1"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labPort1->Wrap( -1 );
+	m_labPort1->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
 	fgSizer6->Add( m_labPort1, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	wxString m_Type1Choices[] = { wxT("0"), wxT("1") };
@@ -289,6 +291,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_labPort2 = new wxStaticText( m_PortSetupPanel, wxID_ANY, wxT("2"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labPort2->Wrap( -1 );
+	m_labPort2->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
 	fgSizer6->Add( m_labPort2, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	wxString m_Type2Choices[] = { wxT("0"), wxT("1") };
@@ -317,6 +321,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_labPort3 = new wxStaticText( m_PortSetupPanel, wxID_ANY, wxT("3"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labPort3->Wrap( -1 );
+	m_labPort3->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
 	fgSizer6->Add( m_labPort3, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	wxString m_Type3Choices[] = { wxT("0"), wxT("1") };
@@ -345,6 +351,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_labPort4 = new wxStaticText( m_PortSetupPanel, wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labPort4->Wrap( -1 );
+	m_labPort4->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
 	fgSizer6->Add( m_labPort4, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	wxString m_Type4Choices[] = { wxT("0"), wxT("1") };
@@ -373,6 +381,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_labPort5 = new wxStaticText( m_PortSetupPanel, wxID_ANY, wxT("5"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labPort5->Wrap( -1 );
+	m_labPort5->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
 	fgSizer6->Add( m_labPort5, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	wxString m_Type5Choices[] = { wxT("0"), wxT("1") };
@@ -401,6 +411,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_labPort6 = new wxStaticText( m_PortSetupPanel, wxID_ANY, wxT("6"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labPort6->Wrap( -1 );
+	m_labPort6->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
 	fgSizer6->Add( m_labPort6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	wxString m_Type6Choices[] = { wxT("0"), wxT("1") };
@@ -429,6 +441,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_labPort7 = new wxStaticText( m_PortSetupPanel, wxID_ANY, wxT("7"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labPort7->Wrap( -1 );
+	m_labPort7->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
 	fgSizer6->Add( m_labPort7, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	wxString m_Type7Choices[] = { wxT("0"), wxT("1") };
@@ -457,6 +471,8 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_labPort8 = new wxStaticText( m_PortSetupPanel, wxID_ANY, wxT("8"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labPort8->Wrap( -1 );
+	m_labPort8->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
 	fgSizer6->Add( m_labPort8, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	wxString m_Type8Choices[] = { wxT("0"), wxT("1") };
