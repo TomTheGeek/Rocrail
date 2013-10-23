@@ -160,6 +160,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_PortEventPort8;
 		wxButton* m_PortPrev;
 		wxButton* m_PortNext;
+		wxButton* m_PortRemove;
 		wxButton* m_PortRead;
 		wxButton* m_PortWrite;
 		wxPanel* m_MacroPanel;
@@ -203,6 +204,7 @@ class rocnetnodegen : public wxDialog
 		virtual void onPortTest( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortPrev( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortNext( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onPortRemove( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortRead( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortWrite( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onMacroNumber( wxSpinEvent& event ) { event.Skip(); }

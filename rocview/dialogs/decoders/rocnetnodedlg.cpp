@@ -248,6 +248,8 @@ void RocnetNodeDlg::onPortPrev( wxCommandEvent& event )
   if( m_PortGroup > 0 ) {
     m_PortGroup--;
     initPorts();
+    wxCommandEvent cmd;
+    onPortRead(cmd);
   }
 }
 
@@ -259,6 +261,8 @@ void RocnetNodeDlg::onPortNext( wxCommandEvent& event )
   if(nrio > (m_PortGroup+1) * 8) {
     m_PortGroup++;
     initPorts();
+    wxCommandEvent cmd;
+    onPortRead(cmd);
   }
 }
 
@@ -405,6 +409,7 @@ void RocnetNodeDlg::initLabels() {
   m_labPortInv->SetLabel(wxGetApp().getMsg( "invert" ));
   m_PortRead->SetLabel(wxGetApp().getMsg( "get" ));
   m_PortWrite->SetLabel(wxGetApp().getMsg( "set" ));
+  m_PortRemove->SetLabel(wxGetApp().getMsg( "delete" ));
   m_labPortEventID->SetLabel(wxGetApp().getMsg( "id" ));
   m_labPortEventPort->SetLabel(wxGetApp().getMsg( "port" ));
   m_labPortEventID->SetToolTip(wxGetApp().getMsg( "event" ));
@@ -1301,6 +1306,36 @@ void RocnetNodeDlg::onMacroImport( wxCommandEvent& event ) {
 
   fdlg->Destroy();
 
+}
+
+
+void RocnetNodeDlg::onPortRemove( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  int action = wxMessageDialog( this, wxGetApp().getMsg( "delete" ),
+      _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION | wxNO_DEFAULT ).ShowModal();
+  if( action == wxID_NO ) {
+    return;
+  }
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
+  wProgram.setcmd( cmd, wProgram.unlearn );
+
+  char key[32] = {'\0'};
+  for( int i = 0; i < 8; i++ ) {
+    StrOp.fmtb(key, "val%d", 1 + i);
+    NodeOp.setInt( cmd, key, m_PortGroup*8 + 1 + i);
+  }
+
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
+
+  cmd->base.del(cmd);
+
+  initPorts();
 }
 
 

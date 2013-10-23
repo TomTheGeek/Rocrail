@@ -110,6 +110,7 @@
 #define RN_PROGRAMMING_UPDATE  11
 #define RN_PROGRAMMING_RPORTEVENT 12
 #define RN_PROGRAMMING_WPORTEVENT 13
+#define RN_PROGRAMMING_RMPORT  14
 
 
 /* extended packet offsets */

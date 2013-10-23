@@ -497,6 +497,36 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
   }
   break;
 
+  case RN_PROGRAMMING_RMPORT:
+  {
+    iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+    int i = 0;
+
+    if( rocnet == NULL ) {
+      rocnet = NodeOp.inst( wRocNet.name(), data->ini, ELEMENT_NODE);
+      NodeOp.addChild( data->ini, rocnet );
+    }
+
+    for( i = 0; i < 8; i++ ) {
+      int port  = rn[RN_PACKET_DATA+0+i];
+      iONode portsetup = __findPort(rocnetnode, port);
+      if( portsetup != NULL ) {
+        iOPort portdef = data->ports[port];
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "removing port %d", port);
+        NodeOp.removeChild( rocnet, portsetup );
+        NodeOp.base.del(portsetup);
+
+        if( portdef != NULL ) {
+          data->ports[port] = NULL;
+          freeMem(portdef);
+        }
+      }
+    }
+    __saveIni(rocnetnode);
+    __initIO(rocnetnode);
+  }
+  break;
+
   case RN_PROGRAMMING_WPORTEVENT:
   {
     iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
