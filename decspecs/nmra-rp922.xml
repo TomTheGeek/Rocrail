@@ -28,7 +28,28 @@
   <cvbyte nr="29" cat="config" desc="Configuration Data #1" info="Configuration for direction, addressing, speed steps, RailCom and DC operation."/>
   <cvbyte nr="30" desc="Error Information" info="In the case where the decoder has an error condition this Configuration Variable shall contain the error condition as specified by the manufacturer. A value of 0 indicates that no error has occurred."/>
   <cvbyte nr="31" desc="Index High Byte" info="Primary index for CV 257-51"/>
-  <cvbyte nr="32" desc="Index Low Byte" info="Secondary index for CV 257-51"/>
+  <cvbyte nr="32" desc="Index Low Byte" info="Secondary index for CV 257-51">
+    <adip id="cv50">
+      <dipgroup caption="CV" type="0" ori="1">
+        <dipvalue name="cv32" value="32" type="1"/>
+        <dipvalue name="cv50" value="50" type="1"/>
+      </dipgroup>
+      <dipgroup caption="Type" type="0" ori="1" mask="7">
+        <dipvalue name="1" value="0" info="info1"/>
+        <dipvalue name="2" value="1" info="info2"/>
+        <dipvalue name="3" value="2" info="info3"/>
+        <dipvalue name="4" value="3" info="info4"/>
+        <dipvalue name="5" value="4" info="info5"/>
+      </dipgroup>
+      <dipgroup caption="Options" type="1" ori="1">
+        <dipvalue name="EMF activated" value="32" info="This option should be used by default."/>
+        <dipvalue name="Control switched OFF" value="64"/>
+        <dipvalue name="Low frequency control (approx. 19Hz)." value="128" info="23kHz is default."/>
+      </dipgroup>
+    </adip>
+  </cvbyte>
+  
+  <cvbyte nr="50" cat="motor" desc="Motor configuration" dipid="cv50"/>
   <cvbyte nr="65" cat="motor" desc="Kick Start" info="Specifies the amount of extra Kick that will supplied to the motor when transitioning between stop and the first speed step."/>
   <cvbyte nr="66" cat="motor" desc="Forward Trim" info="Specifies a scale factor by which a voltage drive level should be multiplied, when the controller is driving the unit in the forward direction."/>
   <cvbyte nr="67" cat="Speed Table" desc="Index 1"/>

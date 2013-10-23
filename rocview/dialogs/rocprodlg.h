@@ -89,7 +89,6 @@ class RocProDlg : public RocProDlgGen
     void onSaveCV( wxCommandEvent& event );
     void onTreeItemPopup( wxTreeEvent& event );
     void onMenu( wxCommandEvent& event );
-    void onFx( wxCommandEvent& event );
     void onNr( wxSpinEvent& event );
     void onNrText( wxCommandEvent& event );
     void onExtAddrRead( wxCommandEvent& event );
