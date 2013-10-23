@@ -201,6 +201,7 @@ class rocnetnodegen : public wxDialog
 		virtual void onIOType( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onNodeOptionsRead( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onNodeOptionsWrite( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onPort1Drag( wxMouseEvent& event ) { event.Skip(); }
 		virtual void onPortTest( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortPrev( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortNext( wxCommandEvent& event ) { event.Skip(); }

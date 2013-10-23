@@ -95,6 +95,7 @@ class RocnetNodeDlg : public rocnetnodegen
     void onMacroExport( wxCommandEvent& event );
     void onMacroImport( wxCommandEvent& event );
     void onPortRemove( wxCommandEvent& event );
+    void onPort1Drag( wxMouseEvent& event );
 	public:
     void onUpdateVersion( wxCommandEvent& event );
 		/** Constructor */

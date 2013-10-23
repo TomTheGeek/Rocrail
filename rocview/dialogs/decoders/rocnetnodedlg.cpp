@@ -1203,6 +1203,17 @@ void RocnetNodeDlg::onBeginListDrag( wxListEvent& event ) {
 }
 
 
+void RocnetNodeDlg::onPort1Drag( wxMouseEvent& event ) {
+  wxStaticText* port = (wxStaticText*)event.GetEventObject();
+
+  wxString my_text = _T("bus:")+wxString::Format(_T("%d:"), wRocNetNode.getid(m_Props) ) + port->GetLabel();
+  wxTextDataObject my_data(my_text);
+  wxDropSource dragSource( this );
+  dragSource.SetData( my_data );
+  wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+}
+
+
 void RocnetNodeDlg::onMacroExport( wxCommandEvent& event ) {
   const char* l_openpath = wGui.getopenpath( wxGetApp().getIni() );
   wxString ms_FileExt = _T("Macro (*.xml)|*.xml");
