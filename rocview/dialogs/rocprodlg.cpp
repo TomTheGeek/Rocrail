@@ -73,7 +73,6 @@
 #include "rocprodlg.h"
 
 #include "rocview/dialogs/speedcurvedlg.h"
-#include "rocview/dialogs/decconfigdlg.h"
 #include "rocview/dialogs/dipdlg.h"
 
 #include "rocview/xpm/nopict.xpm"
@@ -154,7 +153,6 @@ RocProDlgGen( parent )
   GetSizer()->SetSizeHints(this);
 
   initLocMap();
-  m_CV29->Enable(false);
   m_DIP->Enable(false);
   m_VCurve->Enable(true);
 
@@ -188,8 +186,6 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
     }
     else
       setCVVal(0);
-
-    m_CV29->Enable(nr==29);
 
     m_DIP->Enable( wCVByte.getadip(m_SelectedCV) != NULL );
 
@@ -727,16 +723,6 @@ void RocProDlg::setCVVal(int val, bool updateval) {
   }
 }
 
-void RocProDlg::onConfig( wxCommandEvent& event ) {
-  DecConfigDlg*  dlg = new DecConfigDlg(this, m_Value->GetValue() );
-  int rc = dlg->ShowModal();
-  if( rc == wxID_OK ) {
-    int val = dlg->getConfig();
-    setCVVal(val);
-  }
-  dlg->Destroy();
-}
-
 void RocProDlg::onVCurve( wxCommandEvent& event ) {
   int action = wxMessageDialog( this, wxGetApp().getMsg("readspeedcurve"), _T("Rocrail"), wxYES_NO ).ShowModal();
   if( action == wxID_NO ) {
@@ -812,7 +798,6 @@ void RocProDlg::onNr( wxSpinEvent& event ) {
   else {
     setCVVal(0);
   }
-  m_CV29->Enable(nr==29);
 
   if( cv != NULL ) {
     m_DIP->Enable( wCVByte.getadip(cv) != NULL );

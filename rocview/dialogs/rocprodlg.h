@@ -76,7 +76,6 @@ class RocProDlg : public RocProDlgGen
 		void onOK( wxCommandEvent& event );
     void onClose( wxCloseEvent& event );
     void onLocoList( wxCommandEvent& event );
-    void onConfig( wxCommandEvent& event );
     void onVCurve( wxCommandEvent& event );
     void onVCurve();
     void onValueSlider( wxScrollEvent& event );

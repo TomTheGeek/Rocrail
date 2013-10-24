@@ -260,9 +260,6 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_VCurve = new wxButton( this, wxID_ANY, wxT("V Curve..."), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer6->Add( m_VCurve, 0, wxRIGHT|wxLEFT, 5 );
 	
-	m_CV29 = new wxButton( this, wxID_ANY, wxT("Config..."), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer6->Add( m_CV29, 0, wxRIGHT|wxLEFT, 5 );
-	
 	m_DIP = new wxButton( this, wxID_ANY, wxT("DIP..."), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer6->Add( m_DIP, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 	
@@ -272,9 +269,9 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_PTOFF = new wxButton( this, wxID_ANY, wxT("PT Off"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer6->Add( m_PTOFF, 0, wxRIGHT, 5 );
 	
-	m_Special->Add( bSizer6, 0, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+	m_Special->Add( bSizer6, 0, wxEXPAND|wxALIGN_RIGHT, 5 );
 	
-	bSizer9->Add( m_Special, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
+	bSizer9->Add( m_Special, 0, wxRIGHT|wxLEFT|wxALIGN_RIGHT, 5 );
 	
 	bSizer8->Add( bSizer9, 0, wxEXPAND, 5 );
 	
@@ -323,7 +320,6 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_ExtAddrRead->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onExtAddrRead ), NULL, this );
 	m_ExtAddrWrite->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onExtAddrWrite ), NULL, this );
 	m_VCurve->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onVCurve ), NULL, this );
-	m_CV29->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onConfig ), NULL, this );
 	m_DIP->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onDIP ), NULL, this );
 	m_PTON->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onPTON ), NULL, this );
 	m_PTOFF->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onPTOFF ), NULL, this );
@@ -363,7 +359,6 @@ RocProDlgGen::~RocProDlgGen()
 	m_ExtAddrRead->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onExtAddrRead ), NULL, this );
 	m_ExtAddrWrite->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onExtAddrWrite ), NULL, this );
 	m_VCurve->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onVCurve ), NULL, this );
-	m_CV29->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onConfig ), NULL, this );
 	m_DIP->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onDIP ), NULL, this );
 	m_PTON->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onPTON ), NULL, this );
 	m_PTOFF->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( RocProDlgGen::onPTOFF ), NULL, this );
