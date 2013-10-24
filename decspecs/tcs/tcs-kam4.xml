@@ -1,0 +1,448 @@
+<!--  This is for the 6 output TCS decoder.   -->
+<decoder manu="TCS" type="Mobile Decoder" web="http://www.TCSdcc.com" info="TCS Family of Decoders with keep-alive - All of the TCS decoders are the same except for the number of outputs." collapse="true">
+  <cvbyte nr="1" cat="Address" desc="Primary Address" info="Range 0-127 - Bits 0-6 contain an address with a value between 1 and 127.  Bit seven must have a value of 0."/>
+
+
+<cvbyte nr="7" cat="Info" desc="Manufacturer Version No." readonly="true" info="This is reserved for the manufacturer to store information regarding the version of the decoder."/>
+  
+<cvbyte nr="8" cat="Info" desc="Manufacturer's ID" readonly="true" info="TCS=153 CV8 contains the NMRA assigned id number of the manufacturer of the decoder."/>
+   <cvbyte nr="10" cat="Info" desc="BEMF Cutout"  info="Back EMF Cutout."/>
+
+  <cvbyte nr="13" cat="Decoder" desc="Function active in analog mode" info="Default = 255"/>
+
+
+  <cvbyte nr="15" cat="Decoder" desc="Decoder Unlock" info="This CV is always programmable even when locked."/>
+  <cvbyte nr="16" cat="Decoder" desc="Decoder Unlock Number " info="When CV15=CV16, programming is unlocked and the decoder will respond to programming commands. If CV15 is not equal to CV16 then decoder programming is locked and it will not program (except CV15) or read."/>
+  
+<cvbyte nr="29" cat="General" desc="Direction, Speed Table, Analog mode" info="DIP.">
+<adip title="General Decoder Configuration">
+ <dipgroup caption="General Configuration" type="1" ori="1">
+      <dipvalue name="Reverse Direction (+1)" value="1"/>
+      <dipvalue name="28/128 speeds (+2)" value="2"/>
+      <dipvalue name="Analog Mode(+4)" value="4"/>
+      <dipvalue name="Railcom(+8)" value="8"/>
+      <dipvalue name="Activate Speed Tables(+16)" value="16"/>
+      <dipvalue name="4 digit addressing (+32)" value="32"/>
+
+  </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+
+  <cvbyte nr="2" cat="Speed" desc="Vstart" info="Range 0-100 - Vstart is used to define the voltage drive level used as the start voltage on the motor."/>
+  <cvbyte nr="3" cat="Motor Momentum" desc="Acceleration Rate 1" info="Range 0-255 - each unit = 7ms between speed steps."/>
+  <cvbyte nr="5" cat="Speed" desc="Vmax" info="Range 0-255 - V-max is used to specify the motor voltage drive levels at the maximum speed step."/>
+  <cvbyte nr="6" cat="Speed" desc="Vmid" info="Range 0-255 - V-mid specifies the voltage drive level at the middle speed step.  Vmid is used to generate a performance curve in the decoder that translate speed step values into motor voltage drive levels and is specified as a fraction of available rectified supply voltage."/>
+   <cvbyte nr="17" cat="Address" desc="Extended address high" info="The Extended Address is the locomotives address when the decoder is set up for extended addressing (indicated by a value of 1 in bit location 5 of CV#29).  CV#17 contains the most significant bits of the two byte address and must have a value between 11000000 and 11100111, inclusive, in order for this two byte address to be valid. CV 18 contains the least significant bits of the address and may contain any value."/>
+  
+<cvbyte nr="18" cat="Address" desc="Extended address low" info="The Extended Address is the locomotives address when the decoder is set up for extended addressing (indicated by a value of 1 in bit location 5 of CV#29).  CV#17 contains the most significant bits of the two byte address and must have a value between 11000000 and 11100111, inclusive, in order for this two byte address to be valid. CV 18 contains the least significant bits of the address and may contain any value."/>
+
+<cvbyte nr="33" cat="Function Maps" desc="Function Map - All CVs" info="Default = 1  ALL functions mapping ">  
+<adip id ="cv33">
+<dipgroup caption="Output" type="0" ori="1">
+        <dipvalue name="Fwd F0 white wire (cv33)" value="cv33" type="1" info="."/>
+        <dipvalue name="Rev F0 yellow wire (cv34)" value="34" type="1"/>
+        <dipvalue name="F1 Green wire (cv35)" value="35" type="1"/>
+        <dipvalue name="F2 Purple wire(cv36)" value="36" type="1"/>
+        <dipvalue name="F3 Brown Wire (cv39)" value="39" type="1"/>
+        <dipvalue name="F4 Pink Wire(cv40)" value="40" type="1"/>
+        <dipvalue name="F5 Pink/Purple wire (cv43)" value="43" type="1"/>
+        <dipvalue name="F6 Green/Brown Wire(cv44)" value="44" type="1"/>
+        <dipvalue name="F7 Button Control of Motor(cv134)" value="134" type="1"/>
+        <dipvalue name="F8 On/Off for Rule 17(cv123)" value="123" type="1"/>
+        <dipvalue name="F9 To make Ditch lights blink(cv124)" value="124" type="1"/>
+
+
+      </dipgroup> 
+   <dipgroup caption="Function button" type="0" ori="1" mask="207">
+      <dipvalue name="F0-Fwd(1)" value="1"/>
+      <dipvalue name="F0-Rev (2)" value="2"/>
+      <dipvalue name="F1(4)" value="4"/>
+      <dipvalue name="F2 (8)" value="8"/>
+      <dipvalue name="F3(16)" value="16"/>
+      <dipvalue name="F4(32)" value="32"/>
+      <dipvalue name="F5(64)" value="64"/>
+      <dipvalue name="F6 (128)" value="128"/>
+      <dipvalue name="F7(4)" value="4"/>
+      <dipvalue name="F8(15)" value="15"/>
+      <dipvalue name="F9(5)" value="5"/>
+      <dipvalue name="Double Pulse Strobe 2 (64)" value="64"/>
+      <dipvalue name="Constant Dim 1 (12)" value="12"/>
+      <dipvalue name="Constant Dim 2 (66)" value="66"/>
+      </dipgroup>
+   
+
+</adip>
+</cvbyte> 
+
+
+<cvbyte nr="33" cat="Function Maps" desc="Forward Light Map" info="Default = 1  FWD light mapping ">  
+<adip title="Lighting Effects">
+<dipgroup caption="Function button" type="0" ori="1" mask="207">
+      <dipvalue name="F0-Fwd(1)" value="1"/>
+      <dipvalue name="F0-Rev (2)" value="2"/>
+      <dipvalue name="F1(4)" value="4"/>
+      <dipvalue name="F2 (8)" value="8"/>
+      <dipvalue name="F3(16)" value="16"/>
+      <dipvalue name="F4(32)" value="32"/>
+      <dipvalue name="F5(64)" value="64"/>
+      <dipvalue name="F6 (128)" value="128"/>
+      <dipvalue name="F7(4)" value="4"/>
+      <dipvalue name="F8(15)" value="15"/>
+      <dipvalue name="F9(5)" value="5"/>
+      <dipvalue name="Double Pulse Strobe 2 (64)" value="64"/>
+      <dipvalue name="Constant Dim 1 (12)" value="12"/>
+      <dipvalue name="Constant Dim 2 (66)" value="66"/>
+      </dipgroup>
+</adip>
+</cvbyte> 
+
+
+
+<cvbyte nr="34" cat="Function Maps" desc="Reverse Light Map" info="Default = 2  Rev light mapping "> 
+<adip id="cv34">
+<dipgroup caption="Function button" type="0" ori="1" mask="207">
+      <dipvalue name="F0-Fwd(1)" value="1"/>
+      <dipvalue name="F0-Rev (2)" value="2"/>
+      <dipvalue name="F1(4)" value="4"/>
+      <dipvalue name="F2 (8)" value="8"/>
+      <dipvalue name="F3(16)" value="16"/>
+      <dipvalue name="F4(32)" value="32"/>
+      <dipvalue name="F5(64)" value="64"/>
+      <dipvalue name="F6 (128)" value="128"/>
+      <dipvalue name="F7(4)" value="4"/>
+      <dipvalue name="F8(15)" value="15"/>
+      <dipvalue name="F9(5)" value="5"/>
+      <dipvalue name="Double Pulse Strobe 2 (64)" value="64"/>
+      <dipvalue name="Constant Dim 1 (12)" value="12"/>
+      <dipvalue name="Constant Dim 2 (66)" value="66"/>
+      </dipgroup>
+</adip>
+</cvbyte> 
+
+
+ 
+<cvbyte nr="35" cat="Function Maps" desc="F1 mapping (Green 0-6)" dipid="cv34" info="Default = 4  FWD function mapping "/>  
+<cvbyte nr="36" cat="Function Maps" desc="F2 mapping (Purple 0-6" dipid="cv34" info="Default = 8  REV function mapping "/>
+<cvbyte nr="37" cat="Function Maps" desc="F1 mapping (Green 7-12)" dipid="cv34" info="Default = 0  F1 function mapping "/>
+<cvbyte nr="38" cat="Function Maps" desc="F2 mapping (Purple 7-12)" dipid="cv34" info="Default = 0  F2 function mapping "/>
+<cvbyte nr="39" cat="Function Maps" desc="F3 mapping (Brown 0-6)" dipid="cv34" info="Default = 16  F3 function mapping "/>
+<cvbyte nr="40" cat="Function Maps" desc="F4 mapping (Pink 0-6)" dipid="cv34" info="Default = 32  F4 function mapping "/>
+<cvbyte nr="41" cat="Function Maps" desc="F3 mapping (Brown 7-12)" dipid="cv34" info="Default = 0  F3 function mapping "/>
+<cvbyte nr="42" cat="Function Maps" desc="F4 mapping (Pink 7-12)" dipid="cv34" info="Default = 0  F4 function mapping "/>
+
+<cvbyte nr="43" cat="Function Maps" desc="F5 mapping (Pink/Purple 0-6)" dipid="cv34" info="Default=64  F5 function mapping "/>
+<cvbyte nr="44" cat="Function Maps" desc="F6 mapping (Green/Blown 0-6)" dipid="cv34" info="Default=128  F6 function mapping "/>
+<cvbyte nr="45" cat="Function Maps" desc="F5 mapping (Pink/Purple 7-12)" dipid="cv34" info="Default=0  F5 function mapping "/>
+<cvbyte nr="46" cat="Function Maps" desc="F6 mapping (Green/Brown 7-12)" dipid="cv34" info="Default=0  F5 function mapping "/>
+
+<cvbyte nr="49" cat="Lighting Effects" desc="Light Effects - All CVs" info="DIP* Default=0"  >
+<adip title="Lighting Effects">
+
+<dipgroup caption="Output" type="0" ori="1">
+        <dipvalue name="Fwd Light Effects (cv49)" value="49" type="1" info="23kHz is default."/>
+        <dipvalue name="Rev Light Effects (cv50)" value="50" type="1"/>
+        <dipvalue name="F1 Light Effects (cv51)" value="51" type="1"/>
+        <dipvalue name="F2 Light Effects (cv52)" value="52" type="1"/>
+        <dipvalue name="F3 Light Effects (cv53)" value="53" type="1"/>
+        <dipvalue name="F4 Light Effects (cv54)" value="54" type="1"/>
+        <dipvalue name="F5 Light Effects (cv55)" value="55" type="1"/>
+        <dipvalue name="F6 Light Effects (cv58)" value="58" type="1"/>
+      </dipgroup> 
+   <dipgroup caption="Base Effects" type="0" ori="1" mask="207">
+      <dipvalue name="On-Off Lighting (0)" value="0"/>
+      <dipvalue name="Mars (2)" value="2"/>
+      <dipvalue name="Flashing Light (3)" value="3"/>
+      <dipvalue name="Gyralight (7)" value="7"/>
+      <dipvalue name="Rule 17 Dimmable (8)" value="8"/>
+      <dipvalue name="Ditch Light (R or L) (10)" value="10"/>
+      <dipvalue name="Ditch Light (Other side) (11)" value="11"/>
+      <dipvalue name="Auto-Mars (13)" value="13"/>
+      <dipvalue name="Single Pulse Strobe 1 (4)" value="4"/>
+      <dipvalue name="Single Pulse Strobe 2 (15)" value="15"/>
+      <dipvalue name="Double Pulse Strobe 1 (5)" value="5"/>
+      <dipvalue name="Double Pulse Strobe 2 (64)" value="64"/>
+      <dipvalue name="Constant Dim 1 (12)" value="12"/>
+      <dipvalue name="Constant Dim 2 (66)" value="66"/>
+      <dipvalue name="Constant Dim 3 (67)" value="67"/>
+      <dipvalue name="Constant Dim 4 (68)" value="68"/>
+      <dipvalue name="Random Flicker 1 (1)" value="1"/>
+      <dipvalue name="Random Flicker 2 (65)" value="65"/>
+      <dipvalue name="Rotary Beacon (6)" value="6"/>
+      <dipvalue name="Brake Lights (14)" value="14"/>
+</dipgroup>
+   <dipgroup caption="Effects Options" type="0" ori="1" mask="48">
+        <dipvalue name="Forward only (+0) " value="0"/>
+        <dipvalue name="Reverse only (+16)" value="16"/>
+        <dipvalue name="Forward and Reverse (+32)" value="32"/>
+   </dipgroup>
+
+</adip>
+</cvbyte> 
+
+<cvbyte nr="49" cat="Lighting Effects" desc="Forward Light Effects (White wire)" info="Default=16  ">
+<adip id="cv49">
+   <dipgroup caption="Base Effects" type="0" ori="1">
+      <dipvalue name="On-Off Lighting (0)" value="0"/>
+      <dipvalue name="Mars (2)" value="2"/>
+      <dipvalue name="Flashing Light (3)" value="3"/>
+      <dipvalue name="Gyralight (7)" value="7"/>
+      <dipvalue name="Rule 17 Dimmable (8)" value="8"/>
+      <dipvalue name="Ditch Light (R or L) (10)" value="10"/>
+      <dipvalue name="Ditch Light (Other side) (11)" value="11"/>
+      <dipvalue name="Auto-Mars (13)" value="13"/>
+      <dipvalue name="Single Pulse Strobe 1 (4)" value="4"/>
+      <dipvalue name="Single Pulse Strobe 2 (15)" value="15"/>
+      <dipvalue name="Double Pulse Strobe 1 (5)" value="5"/>
+      <dipvalue name="Double Pulse Strobe 2 (64)" value="64"/>
+      <dipvalue name="Constant Dim 1 (12)" value="12"/>
+      <dipvalue name="Constant Dim 2 (66)" value="66"/>
+      <dipvalue name="Constant Dim 3 (67)" value="67"/>
+      <dipvalue name="Constant Dim 4 (68)" value="68"/>
+      <dipvalue name="Random Flicker 1 (1)" value="1"/>
+      <dipvalue name="Random Flicker 2 (65)" value="65"/>
+      <dipvalue name="Rotary Beacon (6)" value="6"/>
+      <dipvalue name="Brake Lights (14)" value="14"/>
+   </dipgroup>
+
+   <dipgroup caption="Effects Options" type="0" ori="1">
+        <dipvalue name="Forward only (+0) " value="0"/>
+        <dipvalue name="Reverse only (+16)" value="16"/>
+        <dipvalue name="Forward and Reverse (+32)" value="32"/>
+   </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+
+<cvbyte nr="50" cat="Lighting Effects" dipid="cv49" desc="Reverse Light Effects (Yellow wire)" info="DIP* Default=16  "/>
+<cvbyte nr="51" cat="Lighting Effects" dipid="cv49" desc="Function 1 Effects (Green wire))" info="Default=32  "/>
+<cvbyte nr="52" cat="Lighting Effects" dipid="cv49" desc="Function Two Effects (Violet wire)"  info="Default=32"/>
+<cvbyte nr="53" cat="Lighting Effects" dipid="cv49" desc="Function Three effects (Brown)" info="Default=32 "/>
+<cvbyte nr="54" cat="Lighting Effects" dipid="cv49" desc="Function Four effects (Pink)" info="Default=32 "/>
+<cvbyte nr="55" cat="Lighting Effects" dipid="cv49" desc="Function Five effects (Pink/Purple)" info="Default=32 "/>
+<cvbyte nr="58" cat="Lighting Effects" dipid="cv49" desc="Function Six feature (Green/Brown)" info="Default=32 "/>
+
+
+<cvbyte nr="56" cat="Dither" desc="Dither Frequency" info="Default=3 "/>
+<cvbyte nr="57" cat="Dither" desc="Dither Amplitude" info="Default=10 "/>
+
+
+<cvbyte nr="61" cat="BEMF,Brake Light, and Rule 17 Options" desc="BEMF Options" info="Default=1 Also see CV10">
+<adip title="CV61 BEMF + Rule 17 Options">
+      <dipgroup caption="BEMF" type="0" mask="3" ori="1">
+        <dipvalue name="Disable BEMF (0) " value="0"/>
+        <dipvalue name="Enable BEMF (+1) " value="1"/>
+        <dipvalue name="Enable BEMF + BEMF Button control (+3) " value="3"/>
+        
+
+      </dipgroup>
+<dipgroup caption="Rule 17 Dimming" type="1" ori="1">
+<dipvalue name="Dim when Stopped(+16)" value="16"/>
+        <dipvalue name="Opposite Dim(+32)" value="32"/>
+</dipgroup>
+
+<dipgroup caption="Brake Light Options" type="1" ori="1">
+	  <dipvalue name="Button Control of Braking" value="8" info="Defaults to F6."/>
+        <dipvalue name="Braking tail lights" value="128" info="Defaults to F6."/>
+</dipgroup>
+
+
+</adip>
+  </cvbyte> 
+
+
+
+<cvbyte nr="63" cat="Ditch Light Options" desc="Ditch Light Blink Hold Over" info="Default=64 "/>
+
+
+  <cvbyte nr="66" cat="Motor" desc="Forward Motor Trim" info="Default=128"/>
+  <cvbyte nr="67" cat="Speed Table" desc="Index 1" info="Default = 2 -  Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps)"/>
+  <cvbyte nr="68" cat="Speed Table" desc="Index 2" info=" Default = 5 - Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="69" cat="Speed Table" desc="Index 3" info=" Default = 7 - Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="70" cat="Speed Table" desc="Index 4" info=" Default = 12 - Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="71" cat="Speed Table" desc="Index 5" info=" Default = 16 - Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="72" cat="Speed Table" desc="Index 6" info="Default = 21 - Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="73" cat="Speed Table" desc="Index 7" info="Default = 26 - Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="74" cat="Speed Table" desc="Index 8" info="Default = 30 Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="75" cat="Speed Table" desc="Index 9" info="Default = 35 Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="76" cat="Speed Table" desc="Index 10" info="Default = 40 Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="77" cat="Speed Table" desc="Index 11" info="Default = 47 Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="78" cat="Speed Table" desc="Index 12" info="Default = 51 Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="79" cat="Speed Table" desc="Index 13" info="Default = 58  Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="80" cat="Speed Table" desc="Index 14" info="Default = 65  Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="81" cat="Speed Table" desc="Index 15" info="Default = 72  Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="82" cat="Speed Table" desc="Index 16" info="Default = 79  Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="83" cat="Speed Table" desc="Index 17" info="Default = 84  Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="84" cat="Speed Table" desc="Index 18" info="Default = 93  Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="85" cat="Speed Table" desc="Index 19" info="Default = 100 Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="86" cat="Speed Table" desc="Index 20" info="Default = 112 Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="87" cat="Speed Table" desc="Index 21" info="Default = 121 Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="88" cat="Speed Table" desc="Index 22" info="Default = 135  Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="89" cat="Speed Table" desc="Index 23" info=" Default = 147 Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="90" cat="Speed Table" desc="Index 24" info="Default = 161  Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="91" cat="Speed Table" desc="Index 25" info="Default = 177  Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="92" cat="Speed Table" desc="Index 26" info="Default = 196  Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="93" cat="Speed Table" desc="Index 27" info="Default = 219 Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="94" cat="Speed Table" desc="Index 28" info="Default = 255 Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="95" cat="Motor" desc="Reverse Trim" info="Default = 128 Reverse trim, values 1-127 add to reverse speed, values 129-255 add to forward speed."/>
+
+  <cvbyte nr="104" cat="User ID" desc="User ID1" info="Default = 0."/>
+  <cvbyte nr="105" cat="User ID" desc="User ID2" info="Default = 0."/>
+  <cvbyte nr="106" cat="User ID" desc="User ID3" info="Default = 0."/>
+
+  <cvbyte nr="112" cat="Mars/Gyralight Options" desc="MARS Min Brightness" info=""/>
+
+  <cvbyte nr="113" cat="Mars/Gyralight Options" desc="MARS Max Bright time" info=""/>
+
+  <cvbyte nr="114" cat="Mars/Gyralight Options" desc="MARS Total Light Cycle" info=""/>
+
+  <cvbyte nr="115" cat="Mars/Gyralight Options" desc="MARS Mid brightness" info=""/>
+  <cvbyte nr="116" cat="Mars/Gyralight Options" desc="MARS Max brightness" info=""/>
+  <cvbyte nr="117" cat="Ditch Light Options" desc="Ditch Light Blink Rate" info=""/>
+
+  <cvbyte nr="118" cat="Rotary Beacon Options" desc="Rotary min brightness" info="default = 1"/>
+
+  <cvbyte nr="119" cat="Rotary Beacon Options" desc="Rotary max bright time" info="default = 5"/>
+
+  <cvbyte nr="120" cat="Rotary Beacon Options" desc="Rotary total light cycle" info="default = 1"/>
+
+  <cvbyte nr="121" cat="Rotary Beacon Options" desc="Rotary Mid brightness" info="default = 15"/>
+
+  <cvbyte nr="122" cat="Rotary Beacon Options" desc="Rotary Max brightness" info="defauilt = 25"/>
+
+  <cvbyte nr="122" cat="Effect Options" desc="On/Off Rule 17 Dimming"  info="defauilt = 32"/>
+  <cvbyte nr="123" cat="Ditch Light Options" desc="On/Off Ditch light blink"  info="defauilt = 8"/>
+
+  <cvbyte nr="124" cat="Ditch Light Options" desc="Ditch light button map"  info="defauilt = 8"/>
+
+  <cvbyte nr="125" cat="Motor Momentum" desc="Rate 2 starting point"  info="defauilt = 0"/>
+  <cvbyte nr="126" cat="Motor Momentum" desc="Acceleration Rate 2 "  info="defauilt = 0"/>
+  <cvbyte nr="127" cat="Motor Momentum" desc="Rate 3 starting point"  info="defauilt = 0"/>
+  <cvbyte nr="128" cat="Motor Momentum" desc="Acceleration Rate 3 "  info="defauilt = 0"/>
+
+
+
+<cvbyte nr="131" cat="Motor Momentum" desc="Rate 4 ending point"  info="defauilt = 0"/>
+  <cvbyte nr="132" cat="Motor Momentum" desc="Deceleration Rate 4"  info="defauilt = 0"/>
+<cvbyte nr="129" cat="Motor Momentum" desc="Rate 5  ending point"  info="defauilt = 0"/>
+  <cvbyte nr="130" cat="Motor Momentum" desc="Deceleration Rate 5 "  info="defauilt = 0"/>
+
+
+  <cvbyte nr="4" cat="Motor Momentum" desc="Deceleration Rate 6" info="Range 0-255 - each unit = 7ms between speed steps."/>
+
+  <cvbyte nr="133" cat="Effect Options" desc="Power for Button Control"  info="defauilt = 255"/>
+  <cvbyte nr="134" cat="Effect Options" desc="Button Control of Motor Circuit"  info="defauilt = 2"/>
+  <cvbyte nr="135" cat="Effect Options" desc="Random Flicker 1 Adjust"  info="defauilt = 16"/>
+
+  <cvbyte nr="136" cat="Effect Options" desc="BEMF Map"  info="defauilt = 2"/>
+
+  <cvbyte nr="137" cat="Effect Options" desc="Brake Light off delay - fine "  info="defauilt = 128"/>
+  <cvbyte nr="138" cat="Effect Options" desc="Brake Light off delay - coarse "  info="defauilt = 16"/>
+  <cvbyte nr="139" cat="Effect Options" desc="Brake map (button)"  info="defauilt = 128"/>
+
+  <cvbyte nr="140" cat="Single Pulse Strobe Options" desc="Single Pulse Strobe 1 Length of OFF pulse"  info="defauilt = 140"/>
+  <cvbyte nr="141" cat="Single Pulse Strobe Options" desc="Single Pulse Strobe 1 Length of ON pulse"  info="defauilt = 5"/>
+
+<cvbyte nr="142" cat="Single Pulse Strobe Options" desc="Single Pulse Strobe 2 Length of OFF pulse"  info="defauilt = 124"/>
+  <cvbyte nr="143" cat="Single Pulse Strobe Options" desc="Single Pulse Strobe 2 Length of ON pulse"  info="defauilt = 4"/>
+
+  <cvbyte nr="144" cat="Flashing Light Options" desc="Flash off time"  info="defauilt = 144"/>
+  <cvbyte nr="145" cat="Flashing Light Options" desc="Flash on time"  info="defauilt = 48"/>
+
+  <cvbyte nr="146" cat="Double Pulse Strobe Options" desc="Double Pulse Strobe 1 Off time"  info="defauilt = 112"/>
+  <cvbyte nr="147" cat="Double Pulse Strobe Options" desc="Double Pulse Strobe 1 On time"  info="defauilt = 5"/>
+
+<cvbyte nr="148" cat="Double Pulse Strobe Options" desc="Double Pulse Strobe 1 short off time"  info="defauilt = 16"/>
+<cvbyte nr="149" cat="Double Pulse Strobe Options" desc="Double Pulse Strobe 2 off time"  info="defauilt = 117"/>
+
+<cvbyte nr="150" cat="Double Pulse Strobe Options" desc="Double Pulse Strobe 2 on time"  info="defauilt = 5"/>
+<cvbyte nr="151" cat="Double Pulse Strobe Options" desc="Double Pulse Strobe 2 short off time"  info="defauilt = 16"/>
+<cvbyte nr="152" cat="Effect Options" desc="Random Flicker 2 Adjustment"  info="defauilt = 16"/>
+
+<cvbyte nr="64" cat="Constant Dim" desc="Constant Dim 1 Adjustment" info="Default=5 "/>
+
+<cvbyte nr="153" cat="Constant Dim" desc="Constant Dim 2 Adjustment"  info="defauilt = 5"/>
+<cvbyte nr="154" cat="Constant Dim" desc="Constant Dim 3 Adjustment"  info="defauilt = 5"/>
+<cvbyte nr="155" cat="Constant Dim" desc="Constant Dim 4 Adjustment"  info="defauilt = 5"/>
+
+<cvbyte nr="156" cat="Constant Dim" desc="Headlight"  info="defauilt = 0  Range 1-32 (0 = no dimming, goes from dimmest [1] to least dim [32]"/>
+<cvbyte nr="157" cat="Constant Dim" desc="Rev light"  info="defauilt = 0  Range 1-32 (0 = no dimming, goes from dimmest [1] to least dim [32]"/>
+
+
+<cvbyte nr="178" cat="Railcom" desc="Railcom CV content address pointer"  info="defauilt = 0"/>
+<cvbyte nr="180" cat="Railcom" desc="Select Railcom identifiers"  info="defauilt = 0"/>
+<cvbyte nr="181" cat="Railcom" desc="Options for  Railcom identifiers"  info="defauilt = 0"/>
+
+<cvbyte nr="182" cat="Keep Alive CV182" desc="Enable Keep alive"  info="defauilt = 2">
+<adip title="Keep Alive">
+   <dipgroup caption="Keep Alive" type="0" ori="1">
+      <dipvalue name="Keep Alive Off (0)" value="0"/>
+
+      <dipvalue name="Keep Alive On (2)" value="2"/>
+
+      </dipgroup>
+</adip>
+  </cvbyte> 
+
+
+<cvbyte nr="250" cat="Info" desc="Month of Manufacture"  readonly="true" info="readonly"/>
+<cvbyte nr="251" cat="Info" desc="Day of Manufacture"  readonly="true" info="readonly"/>
+<cvbyte nr="252" cat="Info" desc="Year of Manufacture"  readonly="true" info="readonly"/>
+
+
+<cvbyte nr="19" cat="Consist Address" desc="Consist Address" info="Contains a seven bit address in bit positions 0-6. Bit 7 indicates the relative direction of this unit within a consist, with a value of 0 indicating normal direction, and a value of 1 indicating a direction opposite the unit's normal direction. If the seven bit address in bits 0-6 is 0000000 the unit is not in a consist."/>
+
+<cvbyte nr="21" cat="Consist Lighting" desc="Consist Lighting (F1-F6)" info="Defines for functions F1-F8 whether the function is controlled by the consist address.">
+<dipvalue name="F1 (green)" value="1"/>
+<adip title="Consist Lighting Output">
+   <dipgroup caption="Funcion" type="1" ori="1">
+
+      <dipvalue name="F1 (green)" value="1"/>
+      <dipvalue name="F2 (purple)" value="2"/>
+      <dipvalue name="F3 (brown)" value="4"/>
+      <dipvalue name="F4 (pink)" value="8"/>
+      <dipvalue name="F5 (pink/purple)" value="16"/>
+      <dipvalue name="F6 (green/brown)" value="32"/>
+</dipgroup>
+</adip>
+  </cvbyte> 
+
+<cvbyte nr="22" cat="Consist Lighting" desc="Consist lighting (F0)">
+<adip title="Consist Lighting Output">
+   <dipgroup caption="Funcion" type="1" ori="1">
+            <dipvalue name="F0 Forward (white)" value="1"/>
+            <dipvalue name="F0 Reverse (yellow)" value="2"/>
+</dipgroup>
+</adip>
+  </cvbyte> 
+
+
+<cvbyte nr="23" cat="Consist Speed" desc="Acceleration in Consist" info="Default = 0."/>
+<cvbyte nr="24" cat="Consist Speed" desc="Deceleration in Consist" info="Default = 0."/>
+
+<cvbyte nr="28" cat="Railcom" desc="Railcom Broadcast Enable." info="Default = 0."/>
+
+
+<cvbyte nr="8" cat="Quick Lighting Preset and Reset" desc="Preset and Reset" info="DIP - Set to 2 on the Programming track to reset to factory defaults.  ">
+<adip title="Preset and Reset">
+   <dipgroup caption="Presets" type="0" ori="1">
+            <dipvalue name="No Presets" value="0"/>
+
+            <dipvalue name="Green and Violet = ditch lights" value="10"/>
+            <dipvalue name="Default trolley settings" value="11"/>
+            <dipvalue name="Standard trolley settings and tail lights" value="12"/>
+
+
+</dipgroup>
+
+</adip>
+  </cvbyte> 
+<cvbyte nr="8" cat="Quick Lighting Preset and Reset" desc="Reset" info="Set to 2 while on the Programming track, then power cycle the decoder to reset to factory defaults.  "/>
+
+
+</decoder>
+
