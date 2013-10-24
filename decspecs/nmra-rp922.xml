@@ -27,13 +27,13 @@
   <cvbyte nr="28" cat="config" desc="Bi-Directional Communication Configuration" info="Used to Configure decoder's Bi-Directional communication characteristics when CV29-Bit 3 is set."/>
   <cvbyte nr="29" cat="config" desc="Configuration Data #1" info="Configuration for direction, addressing, speed steps, RailCom and DC operation.">
     <adip>
-      <dipgroup caption="General Configuration" type="1" ori="1">
-        <dipvalue name="Invert Direction " value="1"/>
-        <dipvalue name="28/128 speeds " value="2"/>
-        <dipvalue name="Analog Mode" value="4"/>
+      <dipgroup caption="General Configuration" type="1" ori="1" spacing="2">
+        <dipvalue name="Invert direction" value="1"/>
+        <dipvalue name="28/128 speed steps" value="2"/>
+        <dipvalue name="DC Operation support" value="4"/>
         <dipvalue name="RailCom" value="8"/>
-        <dipvalue name="Activate Speed Tables" value="16"/>
-        <dipvalue name="4 digit addressing " value="32"/>
+        <dipvalue name="Activate speed tables" value="16"/>
+        <dipvalue name="Extended addressing" value="32"/>
       </dipgroup>
     </adip>
   </cvbyte>

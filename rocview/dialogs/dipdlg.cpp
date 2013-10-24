@@ -140,7 +140,7 @@ void DIPDlg::addDIPGroup(iONode group, int idx) {
       m_Group[idx][i] = value;
       m_CheckBox[idx][i] = new wxCheckBox(this, wxID_ANY,
           wxString(wDIPValue.getname(value), wxConvUTF8) );
-      bSizer->Add( m_CheckBox[idx][i], 0, wxEXPAND|wxALL, 5 );
+      bSizer->Add( m_CheckBox[idx][i], 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT|(i==0?wxTOP:0), wDIPGroup.getspacing(group) );
 
       if( wDIPValue.gettype(value) == wDIPValue.valuetype_cv &&  wDIPValue.getvalue(value) == m_CVNr )
         m_CheckBox[idx][i]->SetValue(true);
