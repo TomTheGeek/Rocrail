@@ -1171,7 +1171,11 @@ void RocnetNodeDlg::onReport( wxCommandEvent& event ) {
     }
 
     TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999,"open report %s...", FileOp.getFilename(l_ReportFile) );
+#if wxCHECK_VERSION(3, 0, 0)
+    wxLaunchDefaultApplication(wxString(FileOp.getFilename(l_ReportFile), wxConvUTF8));
+#else
     wxShell(wxString(FileOp.getFilename(l_ReportFile), wxConvUTF8));
+#endif
     FileOp.base.del(l_ReportFile);
   }
   fdlg->Destroy();
