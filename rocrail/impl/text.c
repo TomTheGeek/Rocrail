@@ -253,7 +253,7 @@ static void* __event( void* inst, const void* evt ) {
       location = ModelOp.getBlockLocation(AppOp.getModel(), bk->getFromBlockId(bk));
       if( location != NULL ) {
         const char* frombkloc = LocationOp.base.id(location);
-        MapOp.put(map, "bkloc", (obj)frombkloc);
+        MapOp.put(map, "frombkloc", (obj)frombkloc);
       }
 
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
