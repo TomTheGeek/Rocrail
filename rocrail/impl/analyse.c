@@ -379,6 +379,20 @@ static Boolean isDoubleTrackRRCrossing( iONode node ) {
   return( False );
 }
 
+static Boolean isSimpleCrossing( iONode node ) {
+  if( StrOp.equals( NodeOp.getName(node), wSwitch.name() ) &&
+      ( wSwitch.getaddr1(node) == 0 ) &&
+      ( wSwitch.getport1(node) == 0 ) && 
+      ( StrOp.equals( wSwitch.gettype(node), wSwitch.crossing ) || 
+        StrOp.equals( wSwitch.gettype(node), wSwitch.ccrossing ) 
+      )
+    ) {
+    /* crossing or centered crossing (without motor) */
+    return( True );
+  }
+  return( False );
+}
+
 static Boolean isTrackNo3( iONode item ) {
   if( StrOp.equals( NodeOp.getName(item), "tk" ) &&
       StrOp.equals( wItem.gettype(item), wTrack.tracknr ) &&
@@ -5759,10 +5773,7 @@ static int __analyseAllLists(iOAnalyse inst) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll: REACHED END BLOCK [%s][%s]", NodeOp.getName(item), wItem.getid(item) );
       }
       else if( StrOp.equals( NodeOp.getName(item), wSwitch.name()) ) {
-        if( ( wSwitch.getaddr1(item) == 0 ) &&
-            ( wSwitch.getport1(item) == 0 ) && 
-            ( StrOp.equals( wSwitch.gettype(item), wSwitch.crossing ) || 
-              StrOp.equals( wSwitch.gettype(item), wSwitch.ccrossing ) ) ) {
+        if( isSimpleCrossing(item) ) {
           /* crossing and centered crossing are not relevant for SG/FB */
         } else if( StrOp.equals( wItem.gettype(item), wSwitch.decoupler ) ) {
           /* decoupler is not relevant for SG/FB */
@@ -6049,12 +6060,7 @@ static int __analyseAllLists(iOAnalyse inst) {
       } /* sg */
       else if( StrOp.equals( NodeOp.getName(item), wSwitch.name()) ) {
         /* a real switch is always the end of the blockid settings */
-        if( ( wSwitch.getaddr1(item) == 0 ) &&
-            ( wSwitch.getport1(item) == 0 ) && 
-            ( StrOp.equals( wSwitch.gettype(item), wSwitch.crossing ) || 
-              StrOp.equals( wSwitch.gettype(item), wSwitch.ccrossing ) ) ) {
-          /* crossing and centered crossing without address are not relevant for end of blockID setting */
-        } else if( StrOp.equals( wItem.gettype(item), wSwitch.decoupler ) ) {
+        if( StrOp.equals( wItem.gettype(item), wSwitch.decoupler ) ) {
           /* decoupler is not relevant for end of blockID setting */
         } else if( isSingleTrackRRCrossing(item) || isDoubleTrackRRCrossing(item) ) {
           /* railroad crossing is not relevant for end of blockID setting */
@@ -6452,7 +6458,8 @@ static int __generateRoutes(iOAnalyse inst) {
       if( StrOp.equals( NodeOp.getName(item), wTrack.name()) ||
           StrOp.equals( NodeOp.getName(item), wFeedback.name()) ||
           StrOp.equals( NodeOp.getName(item), wSignal.name()) ||
-          isSingleTrackRRCrossing(item)
+          isSingleTrackRRCrossing(item) ||
+          isSimpleCrossing(item)
         ) {
 
         iONode tracknode = NULL;
@@ -6483,13 +6490,13 @@ static int __generateRoutes(iOAnalyse inst) {
           tracknode = SignalOp.base.properties(track);
         }
 
-        if( isSingleTrackRRCrossing(item) ) {
+        if( isSingleTrackRRCrossing(item) || isSimpleCrossing(item) ) {
           iOSwitch track = ModelOp.getSwitch( data->model, wItem.getid(item) );
           tracknode = SwitchOp.base.properties(track);
         }
 
-        /* set routeids for tk|fb|sg */
-        if( addToList && data->setRouteId ) {
+        /* set routeids for tk|fb|sg|RRcross|SimpleCross */
+        if( addToList && data->setRouteId && ( tracknode != NULL ) ) {
           char* prevrouteids = StrOp.dup( wItem.getrouteids(tracknode) );
           if( prevrouteids != NULL ) {
             iOStrTok tok = StrTokOp.inst( prevrouteids, ',' );
@@ -6525,7 +6532,7 @@ static int __generateRoutes(iOAnalyse inst) {
     }
 
     /* merge into stlist */
-    if( addToList) {
+    if( addToList ) {
 
       if ( !(StrOp.equals( wRoute.getbka(newRoute), wRoute.getbkb(newRoute))) ) {
         /* set some useful defaults... */
