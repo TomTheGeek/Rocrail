@@ -72,6 +72,6 @@ uninstall:
 
 version:
 	echo $(QUOT)const int bzr = $(QUOT) > common$(FS)version.h
-	bzr revno . >> common$(FS)version.h
+	bzr revno --tree >> common$(FS)version.h
 	echo $(QUOT);$(QUOT) >> common$(FS)version.h
 

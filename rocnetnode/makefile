@@ -146,6 +146,6 @@ install:
 
 version:
 	echo $(QUOT)const int bzr = $(QUOT) > ..$(FS)common$(FS)version.h
-	bzr revno . >> ..$(FS)common$(FS)version.h
+	bzr revno --tree >> ..$(FS)common$(FS)version.h
 	echo $(QUOT);$(QUOT) >> ..$(FS)common$(FS)version.h
 
