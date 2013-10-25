@@ -738,14 +738,14 @@ static void _sysUpdate(int revision, int offline) {
 static void __macro(iORocNetNode rocnetnode, int macro, Boolean on, int offset) {
   iORocNetNodeData data = Data(rocnetnode);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "macro %d %s", macro, on?"ON":"OFF");
+  if( offset > 0 )
+    offset--;
   if( on && data->macro[macro] != NULL ) {
     int i = 0;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing macro %d %s offset=%d", macro, on?"ON":"OFF", offset);
     for( i = 0; i < 8; i++ ) {
       if( data->macro[macro]->line[i].port > 0 ) {
         int port = data->macro[macro]->line[i].port;
-        if( offset > 0 )
-          offset--;
         port += offset;
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
