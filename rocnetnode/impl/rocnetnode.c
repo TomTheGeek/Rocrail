@@ -735,15 +735,18 @@ static void _sysUpdate(int revision, int offline) {
 }
 
 
-static void __macro(iORocNetNode rocnetnode, int macro, Boolean on) {
+static void __macro(iORocNetNode rocnetnode, int macro, Boolean on, int offset) {
   iORocNetNodeData data = Data(rocnetnode);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "macro %d %s", macro, on?"ON":"OFF");
   if( on && data->macro[macro] != NULL ) {
     int i = 0;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing macro %d %s", macro, on?"ON":"OFF");
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing macro %d %s offset=%d", macro, on?"ON":"OFF", offset);
     for( i = 0; i < 8; i++ ) {
       if( data->macro[macro]->line[i].port > 0 ) {
         int port = data->macro[macro]->line[i].port;
+        if( offset > 0 )
+          offset--;
+        port += offset;
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "processing macro line %d port=%d delay=%d value=%d blink=%d", i,
@@ -782,7 +785,7 @@ static void __macroProcessor( void* threadinst ) {
     byte* post = (byte*)ThreadOp.getPost( th );
 
     if (post != NULL) {
-      __macro(rocnetnode, post[0], post[1]);
+      __macro(rocnetnode, post[0], post[1], post[2]);
       freeMem( post);
     }
     ThreadOp.sleep(10);
@@ -875,6 +878,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
 static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int port       = rn[RN_PACKET_DATA + 3];
+  int offset     = rn[RN_PACKET_DATA + 4];
   int rcpt       = 0;
   int sndr       = 0;
   int action     = rnActionFromPacket(rn);
@@ -899,6 +903,7 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
       byte* post = allocMem(32);
       post[0] = port;
       post[1] = ((rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON) ?1:0);
+      post[2] = offset;
       ThreadOp.post(data->macroprocessor, (obj)post);
     }
     else {
