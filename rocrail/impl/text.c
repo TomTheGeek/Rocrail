@@ -260,8 +260,8 @@ static void* __event( void* inst, const void* evt ) {
       wText.settext(data->props, msg );
       wText.setblock(data->props, bk->base.id(bk) );
       if( MapOp.haskey(map, "frombkloc") ) {
-        iOLocation location = (iOLocation)MapOp.get(map, "frombkloc");
-        wText.setlocation(data->props, location->base.id(location) );
+        const char* location = (const char*)MapOp.get(map, "frombkloc");
+        wText.setlocation(data->props, location );
       }
       else
         wText.setlocation(data->props, "" );
