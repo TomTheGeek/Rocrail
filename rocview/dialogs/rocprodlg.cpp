@@ -227,6 +227,7 @@ void RocProDlg::loadDecFile() {
     wxTreeItemId root  = m_DecTree->AddRoot(wxString( NodeOp.getStr(m_DecNode, "manu", "?"), wxConvUTF8)+wxT(" ")+wxString( NodeOp.getStr(m_DecNode, "type", "?"), wxConvUTF8));
     iOMap catMap = MapOp.inst();
     int cnt = NodeOp.getChildCnt(m_DecNode);
+    int idx = 0;
     for( int i = 0; i < cnt; i++ ) {
       iONode cv = NodeOp.getChild(m_DecNode, i);
       if( StrOp.equals(wCVByte.name(), NodeOp.getName(cv)) ) {
@@ -255,9 +256,10 @@ void RocProDlg::loadDecFile() {
         }
 
         if( m_UseDecSpec4All ) {
-          m_CVall[i] = wCVByte.getnr(cv);
-          m_CVcountAll = i+1;
+          m_CVall[idx] = wCVByte.getnr(cv);
+          m_CVcountAll = idx+1;
         }
+        idx++;
       }
     }
 
