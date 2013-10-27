@@ -356,6 +356,7 @@ public:
   void putChild( void* item, int z  );
   void resetPowerCtrlRef() {m_PowerCtrl=NULL;}
   void resetSensorMonitorRef() {m_SensorMonitor=NULL;}
+  void resetRocNetNodeRef() {m_RocnetNodeDlg=NULL;}
 
 private:
   void Save();

@@ -331,11 +331,15 @@ void RocnetNodeDlg::onPortWrite( wxCommandEvent& event ) {
 }
 
 void RocnetNodeDlg::onOK( wxCommandEvent& event ) {
-  EndModal( wxID_OK );
+  //EndModal( wxID_OK );
+  wxGetApp().getFrame()->resetRocNetNodeRef();
+  Destroy();
 }
 
 void RocnetNodeDlg::onClose( wxCloseEvent& event ) {
-  EndModal( wxID_OK );
+  //EndModal( wxID_OK );
+  wxGetApp().getFrame()->resetRocNetNodeRef();
+  Destroy();
 }
 
 

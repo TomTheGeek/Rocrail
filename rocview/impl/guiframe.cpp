@@ -1278,11 +1278,7 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
     else if( wProgram.getcmd(node) == wProgram.show ) {
       m_RocnetNodeDlg = new RocnetNodeDlg(this, m_RocrailIni);
       m_RocnetNodeDlg->event(node);
-      if( wxID_OK == m_RocnetNodeDlg->ShowModal() ) {
-        /* Copy UID on the clipboard? */
-      }
-      m_RocnetNodeDlg->Destroy();
-      m_RocnetNodeDlg = NULL;
+      m_RocnetNodeDlg->Show(true);
     }
   }
   else if( wProgram.getlntype(node) == wProgram.lntype_cs ) {
@@ -3655,11 +3651,9 @@ void RocGuiFrame::OnBiDiB( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnRocNet( wxCommandEvent& event ) {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "*****event int =%d", event.GetInt());
-  if( event.GetInt() == 4711 && m_RocrailIni != NULL ) {
+  if( event.GetInt() == 4711 && m_RocrailIni != NULL && m_RocnetNodeDlg == NULL) {
     m_RocnetNodeDlg = new RocnetNodeDlg(this, m_RocrailIni);
-    m_RocnetNodeDlg->ShowModal();
-    m_RocnetNodeDlg->Destroy();
-    m_RocnetNodeDlg = NULL;
+    m_RocnetNodeDlg->Show(true);
   }
   else {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "request new rocrail.ini");
