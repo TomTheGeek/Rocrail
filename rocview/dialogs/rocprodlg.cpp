@@ -229,35 +229,38 @@ void RocProDlg::loadDecFile() {
     int cnt = NodeOp.getChildCnt(m_DecNode);
     for( int i = 0; i < cnt; i++ ) {
       iONode cv = NodeOp.getChild(m_DecNode, i);
-      const char* catName = wCVByte.getcat(cv);
-      wxTreeItemId* pcat = (wxTreeItemId*)MapOp.get( catMap, catName );
-      wxTreeItemId cat;
-      if( pcat == NULL ) {
-        cat = m_DecTree->AppendItem( root, wxString( catName, wxConvUTF8));
-        pcat = &cat;
-        MapOp.put(catMap, catName, (obj)new wxTreeItemId(cat.m_pItem) );
-      }
-      else {
-        cat = *pcat;
-      }
-      m_DecTree->AppendItem( cat, wxString( wCVByte.getdesc(cv), wxConvUTF8));
-      MapOp.put( m_CVMap, wCVByte.getdesc(cv), (obj)cv);
-      char key[32];
-      StrOp.fmtb(key, "%d", wCVByte.getnr(cv) );
-      MapOp.put( m_CVNrMap, key, (obj)cv);
+      if( StrOp.equals(wCVByte.name(), NodeOp.getName(cv)) ) {
+        const char* catName = wCVByte.getcat(cv);
+        wxTreeItemId* pcat = (wxTreeItemId*)MapOp.get( catMap, catName );
+        wxTreeItemId cat;
+        if( pcat == NULL ) {
+          cat = m_DecTree->AppendItem( root, wxString( catName, wxConvUTF8));
+          pcat = &cat;
+          MapOp.put(catMap, catName, (obj)new wxTreeItemId(cat.m_pItem) );
+        }
+        else {
+          cat = *pcat;
+        }
+        m_DecTree->AppendItem( cat, wxString( wCVByte.getdesc(cv), wxConvUTF8));
+        MapOp.put( m_CVMap, wCVByte.getdesc(cv), (obj)cv);
+        char key[32];
+        StrOp.fmtb(key, "%d", wCVByte.getnr(cv) );
+        MapOp.put( m_CVNrMap, key, (obj)cv);
 
-      if( wCVByte.getadip(cv) != NULL ) {
-        iONode dip = wCVByte.getadip(cv);
-        if( wDIP.getid(dip) != NULL && StrOp.len(wDIP.getid(dip)) > 0 ) {
-          MapOp.put(m_DIPMap, wDIP.getid(dip), (obj)dip);
+        if( wCVByte.getadip(cv) != NULL ) {
+          iONode dip = wCVByte.getadip(cv);
+          if( wDIP.getid(dip) != NULL && StrOp.len(wDIP.getid(dip)) > 0 ) {
+            MapOp.put(m_DIPMap, wDIP.getid(dip), (obj)dip);
+          }
+        }
+
+        if( m_UseDecSpec4All ) {
+          m_CVall[i] = wCVByte.getnr(cv);
+          m_CVcountAll = i+1;
         }
       }
-
-      if( m_UseDecSpec4All ) {
-        m_CVall[i] = wCVByte.getnr(cv);
-        m_CVcountAll = i+1;
-      }
     }
+
     if( NodeOp.getBool(m_DecNode, "collapse", False ) )
       m_DecTree->CollapseAll();
     else
