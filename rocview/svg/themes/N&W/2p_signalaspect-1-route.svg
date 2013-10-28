@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 2,12 L 3,13 L 10,13 L 11,12 L 15,12 L 16,13 L 23,13 L 24,12 L 31,12 L 31,19 L 0,19 z " />
+    <!--yellow-->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+    <!-- signal -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 1,3 L 4,0 L 9,0 L 12,3 L 12,5 L 28,5 L 28,2 L 30,2 L 30,9 L 28,9 L 28,6 L 12,6 L 12,8 L 9,11 L 4,11 L 1,8 z " />
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 14,3 L 17,0 L 22,0 L 25,3 L 25,8 L 22,11 L 17,11 L 14,8 z " />
+    <!-- Top Green Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 2,4 L 3,4 L 4,5 L 4,6 L 3,7 L 2,7 L 1,6 L 1,5 z " />
+    <!-- Bottom Green Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 10,4 L 11,4 L 12,5 L 12,6 L 11,7 L 10,7 L 9,6 L 9,5 z "></path>
+    <!-- Centre Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 6,4 L 7,4 L 8,5 L 8,6 L 7,7 L 6,7 L 5,6 L 5,5 z " />
+    <!--Left Red Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 6,8 L 7,8 L 8,9 L 8,10 L 7,11 L 6,11 L 5,10 L 5,9 z " />
+    <!-- Right Red Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 6,0 L 7,0 L 8,1 L 8,2 L 7,3 L 6,3 L 5,2 L 5,1 z "></path>
+    <!-- Right Yellow Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 3,1 L 4,1 L 5,2 L 5,3 L 4,4 L 3,4 L 2,3 L 2,2 z "></path>
+    <!-- Left Yellow Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 9,7 L 10,7 L 11,8 L 11,9 L 10,10 L 9,10 L 8,9 L 8,8 z " />
+    <!-- Right Lunar Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 9,1 L 10,1 L 11,2 L 11,3 L 10,4 L 9,4 L 8,3 L 8,2 z " />
+    <!-- Left Lunar Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 3,7 L 4,7 L 5,8 L 5,9 L 4,10 L 3,10 L 2,9 L 2,8 z "></path>
+    <!-- Top Green Lamp 2-->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 15,4 L 16,4 L17,5 L 17,6 L 16,7 L 15,7 L 14,6 L 14,5 z " />
+    <!-- Bottom Green Lamp 2-->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 23,4 L 24,4 L 25,5 L 25,6 L 24,7 L 23,7 L 22,6 L 22,5 z "></path>
+    <!--Red Centre Lamp 2-->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 19,4 L 20,4 L 21,5 L 21,6 L 20,7 L 19,7 L 18,6 L 18,5 z "></path>
+    <!--Left Red Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 19,8 L 20,8 L 21,9 L 21,10 L 20,11 L 19,11 L 18,10 L 18,9 z " />
+    <!-- Right Red Lamp 2-->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 19,0 L 20,0 L 21,1 L 21,2 L 20,3 L 19,3 L 18,2 L 18,1 z "></path>
+    <!-- Right Yellow Lamp 2-->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 16,1 L 17,1 L 18,2 L 18,3 L 17,4 L 16,4 L 15,3 L 15,2 z "></path>
+    <!-- Left Yellow Lamp 2-->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 22,7 L 23,7 L 24,8 L 24,9 L 23,10 L 22,10 L 21,9 L 21,8 z " />
+    <!-- Right Lunar Lamp 2-->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 22,1 L 23,1 L 24,2 L 24,3 L 23,4 L 22,4 L 21,3 L 21,2 z " />
+    <!-- Left Lunar Lamp 2-->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 16,7 L 17,7 L 18,8 L 18,9 L 17,10 L 16,10 L 15,9 L 15,8 z "></path>
+  </g>
+</svg>

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!--yellow-->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+    <!-- signal -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 17,4 L 19,2 L 28,2 L 30,2 L 30,9 L 19,9 L 17,7 z" />
+    <!-- Top Lamp -->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 20,4 L 21,4 L 22,5 L 22,6 L 21,7 L 20,7 L 19,6 L 19,5 z " />
+    <!-- Bottom Lamp -->
+    <path stroke="rgb(90,90,90)" fill="rgb(90,90,90)" d="M 26,4 L 27,4 L 28,5 L 28,6 L 27,7 L 26,7 L 25,6 L 25,5 z " />
+  </g>
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!--yellow-->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+    <!-- signal -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 17,4 L 19,2 L 28,2 L 30,2 L 30,9 L 19,9 L 17,7 z" />
+    <!-- Top Lamp -->
+    <path stroke="rgb(90,90,90)" fill="rgb(90,90,90)" d="M 20,4 L 21,4 L 22,5 L 22,6 L 21,7 L 20,7 L 19,6 L 19,5 z " />
+    <!-- Bottom Lamp -->
+    <path stroke="rgb(90,90,90)" fill="rgb(90,90,90)" d="M 26,4 L 27,4 L 28,5 L 28,6 L 27,7 L 26,7 L 25,6 L 25,5 z " />
+  </g>
+</svg>
