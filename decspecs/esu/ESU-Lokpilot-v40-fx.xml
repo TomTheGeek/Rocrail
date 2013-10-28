@@ -1,0 +1,168 @@
+<!--  This is for the 8 function output ESU decoder.   -->
+<decoder manu="ESU" type="V4.0" web="http://www.esu.eu" collapse="true">
+  <cvbyte nr="1" cat="Address" desc="Short Decoder Address" info="Range 0-127 - Bits 0-6 contain an address with a value between 1 and 127.  Bit seven must have a value of 0."/>
+<cvbyte nr="7" cat="Info" desc="Manufacturer Version No." readonly="true" info="This is reserved for the manufacturer to store information regarding the version of the decoder."/>
+  <cvbyte nr="8" cat="Info" desc="Manufacturer's ID" readonly="true" info="ESU=151 CV8 contains the NMRA assigned id number of the manufacturer of the decoder."/>
+
+  
+<cvbyte nr="29" cat="General" desc="Direction, Speed Table, Analog mode" info=".">
+
+<adip title="General Decoder Configuration">
+ <dipgroup caption="General Configuration" type="1" ori="1">
+      <dipvalue name="Invert direction" value="1"/>
+      <dipvalue name="28/128 speed steps" value="2"/>
+      <dipvalue name="Enable Analog mode" value="4"/>
+      <dipvalue name="Enable speed table" value="8"/>
+      <dipvalue name="Long addressing" value="16"/>
+
+  </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+
+  <cvbyte nr="2" cat="Speed" desc="Vstart" info="Range 0-100 - Vstart is used to define the voltage drive level used as the start voltage on the motor."/>
+  <cvbyte nr="4" cat="Speed" desc="Deceleration Rate" info="Range 0-255 - each unit = 7ms between speed steps."/>
+   <cvbyte nr="17" cat="Address" desc="Extended address high" info="The Extended Address is the locomotives address when the decoder is set up for extended addressing (indicated by a value of 1 in bit location 5 of CV#29).  CV#17 contains the most significant bits of the two byte address and must have a value between 11000000 and 11100111, inclusive, in order for this two byte address to be valid. CV 18 contains the least significant bits of the address and may contain any value."/>
+  <cvbyte nr="18" cat="Address" desc="Extended address low" info="The Extended Address is the locomotives address when the decoder is set up for extended addressing (indicated by a value of 1 in bit location 5 of CV#29).  CV#17 contains the most significant bits of the two byte address and must have a value between 11000000 and 11100111, inclusive, in order for this two byte address to be valid. CV 18 contains the least significant bits of the address and may contain any value."/>
+  
+<cvbyte nr="27" cat="Brake Mode" desc="Brake Mode" info="">  
+<adip title="Brake Configuration">
+ <dipgroup caption="Brake Configuration" type="1" ori="1">
+      <dipvalue name="ABC Braking - Voltage higher on right side" value="1"/>
+      <dipvalue name="ABC Braking - Voltage higher on left side" value="2"/>
+      <dipvalue name="Zimo HLU Brakes Active" value="4"/>
+      <dipvalue name="Brake On DC if polarity with driving direction" value="8"/>
+      <dipvalue name="Brake on DC if polarity against driving direction" value="16"/>
+
+  </dipgroup>
+
+</adip>
+</cvbyte> 
+<cvbyte nr="28" cat="Railcom" desc="Railcom" info="">  
+<adip title="Railcom Configuration">
+ <dipgroup caption="Railcom  Configuration" type="1" ori="1">
+
+      <dipvalue name="Channel 1 Broadcast disabled" value="1"/>
+      <dipvalue name="Data transmission allowed on channel 2" value="2"/>
+      <dipvalue name="Railcom Plus automatic loco recognition" value="128"/>
+
+  </dipgroup>
+</adip>
+</cvbyte> 
+
+<cvbyte nr="31" cat="Index Registers" desc="Index Register H" info=" "/>  
+<cvbyte nr="32" cat="Index Registers" desc="Index Register L" info=" "/>  
+
+
+
+<cvbyte nr="33" cat="Function Mappings" desc="Function mapping " info="Due to the complexity of ESU function mapping, please use a Lok-Programmer."/>  
+
+<cvbyte nr="47" cat="Protocol Selection" desc="ESU Protocol Selection" info="" >  
+<adip title="Protocol Select">
+ <dipgroup caption="ESU Protocol Select" type="1" ori="1">
+
+      <dipvalue name="Enable DCC protocol" value="1"/>
+      <dipvalue name="Enable M4 protocol" value="2"/>
+      <dipvalue name="Enable Motorola protocol" value="4"/>
+      <dipvalue name="Enable Selectrix protocol" value="8"/>
+
+        </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+
+<cvbyte nr="49" cat="Extended Configuration" desc="ESU Extended Configuration #1" info="">  
+<adip title="Extended Configuration #1">
+ <dipgroup caption="Extended  Configuration #1" type="1" ori="1">
+
+      <dipvalue name="40kc motor PWM frequency (20kc is default)" value="2"/>
+      <dipvalue name="Enable Marklin Delta mode" value="4"/>
+      <dipvalue name="Enable Marklin 2nd address" value="8"/>
+      <dipvalue name="Enable automatic DCC speed step detection" value="16"/>
+      <dipvalue name="Enable LGB button function mode" value="32"/>
+      <dipvalue name="Enable Zimo Manual Function" value="64"/>
+  </dipgroup>
+
+</adip>
+</cvbyte> 
+<cvbyte nr="124" cat="Extended Configuration" desc="Extended Configuration #2" info="">
+<adip title="Extended Configuration #2">
+ <dipgroup caption="Extended  Configuration #2" type="1" ori="1">
+
+      <dipvalue name="Enable driving direction when shifting direction." value="1"/>
+      <dipvalue name="Enable decoder lock with CV15/16" value="2"/>
+      <dipvalue name="Enable serial protocol for C-Sinus" value="8"/>
+      <dipvalue name="Constant (non-adaptive) regulation frequency" value="16"/>
+        </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+
+<cvbyte nr="50" cat="Analog Mode" desc="ESU analog mode" info="">  
+<adip title="Analog mode ">
+ <dipgroup caption="Analog mode" type="1" ori="1">
+
+      <dipvalue name="Enable AC Analog mode" value="1"/>
+      <dipvalue name="Enable DC Analog mode" value="2"/>
+        </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+  <cvbyte nr="67" cat="Speed Table" desc="Index 1" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps)"/>
+  <cvbyte nr="68" cat="Speed Table" desc="Index 2" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="69" cat="Speed Table" desc="Index 3" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="70" cat="Speed Table" desc="Index 4" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="71" cat="Speed Table" desc="Index 5" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="72" cat="Speed Table" desc="Index 6" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="73" cat="Speed Table" desc="Index 7" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="74" cat="Speed Table" desc="Index 8" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="75" cat="Speed Table" desc="Index 9" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="76" cat="Speed Table" desc="Index 10" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="77" cat="Speed Table" desc="Index 11" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="78" cat="Speed Table" desc="Index 12" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="79" cat="Speed Table" desc="Index 13" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="80" cat="Speed Table" desc="Index 14" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="81" cat="Speed Table" desc="Index 15" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="82" cat="Speed Table" desc="Index 16" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="83" cat="Speed Table" desc="Index 17" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="84" cat="Speed Table" desc="Index 18" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="85" cat="Speed Table" desc="Index 19" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="86" cat="Speed Table" desc="Index 20" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="87" cat="Speed Table" desc="Index 21" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="88" cat="Speed Table" desc="Index 22" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="89" cat="Speed Table" desc="Index 23" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="90" cat="Speed Table" desc="Index 24" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="91" cat="Speed Table" desc="Index 25" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="92" cat="Speed Table" desc="Index 26" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="93" cat="Speed Table" desc="Index 27" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="94" cat="Speed Table" desc="Index 28" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
+  <cvbyte nr="95" cat="Motor" desc="Reverse Trim" info="Reverse trim, values 1-127 add to reverse speed, values 129-255 add to forward speed."/>
+  <cvbyte nr="105" cat="Scratchpad" desc="Spare CV for storage" info="Scratchpad CV #1."/>
+  <cvbyte nr="106" cat="Scratchpad" desc="Spare CV for storage" info="Scratchpad CV #2."/>
+
+  <cvbyte nr="116" cat="Motor" desc="Torque kick rate" info="The  number of 16ms periods in a row that motor is `kicked' with a voltage pulse"/>
+
+
+  <cvbyte nr="117" cat="Motor" desc="Torque kick strength" info=" How much voltage is used to kick the motor at slow speeds. Reduces to 0 as speed is increased."/>
+
+
+
+<cvbyte nr="19" cat="Consist" desc="Consist Address" info="Contains a seven bit address in bit positions 0-6. Bit 7 indicates the relative direction of this unit within a consist, with a value of 0 indicating normal direction, and a value of 1 indicating a direction opposite the unit's normal direction. If the seven bit address in bits 0-6 is 0000000 the unit is not in a consist."/>
+  <cvbyte nr="21" cat="Consist" desc="Consist Addr Active for F1-F8" info="Defines for functions F1-F8 whether the function is controlled by the consist address."/>
+  <cvbyte nr="22" cat="Consist" desc="Consist Addr Active for FL,F9-F12" info="Defines for function FL whether the function is controlled by the consist address."/>
+  
+  
+
+<cvbyte nr="30" cat="Reset" desc="Reset" info="Set to 8 on the Programming track to reset to factory defaults."/>
+
+
+</decoder>
+

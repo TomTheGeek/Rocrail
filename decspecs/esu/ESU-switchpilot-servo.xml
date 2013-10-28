@@ -1,0 +1,77 @@
+<decoder manu="ESU" type="ESU Switchpilot Servo" desc="ESU Switchpilot Servo controller" collapse="true" info="ESU Switchpilot Servo" web="http://www.esu.eu/en/downloads/instruction-manuals/digital-decoders/">
+<cvbyte nr="1" cat="Address - LSB" desc="Base Address (6 LSB of accessory decoder address)" info="Lower 6 bits of the first decoder address for outputs 1-4.  Used in conjunction with CV9 in order to store address."/>
+<cvbyte nr="7" cat="Config" desc="Internal Software Version No." readonly="true" info="Internal software version number."/>
+<cvbyte nr="8" cat="Config" desc="Manufacturer ID" readonly="false" info="NMRA assigned manufacturer's id number. (151=ESU)  Write 8 to reset all CVs to factory defaults."/>
+<cvbyte nr="9" cat="Config" desc="Decoder Address 1 MSB" info="Range 0-7.  Higher 3 bits (6-8) of the first decoder address for outputs 1-4.  Used together with CV1 to store address."/>
+<cvbyte nr="28" cat="Railcom" desc="Railcom Channel Configuration" readonly="false" info="See Manual">
+
+<adip title="Railcom Configuration">
+ <dipgroup caption="Railcom" type="1" ori="1">
+      <dipvalue name="Enable Data transfer on channel 2" value="2"/>
+      <dipvalue name="Enable confirmation on channel 1" value="4"/>
+  </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+
+
+<cvbyte nr="29" cat="Railcom" desc="Railcom Enable" readonly="false" info="Bit 7 is read only (DCC=true). See Manual.">
+<adip title="Railcom enable">
+ <dipgroup caption="Enable Railcom" type="1" ori="1">
+      <dipvalue name="Enable Railcom" value="8"/>
+  </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+
+<cvbyte nr="34" cat="Zoom" desc="Zoom (fade) Configuration" readonly="false" info="Range 0-31 (4 LSB) See Manual.">
+
+<adip title="Zoom (Fade) Configuration">
+ <dipgroup caption="Zoom" type="1" ori="1">
+      <dipvalue name="Activate Zoom for ouput 1" value="1"/>
+      <dipvalue name="Activate Zoom for ouput 2" value="2"/>
+      <dipvalue name="Activate Zoom for ouput 3" value="4"/>
+      <dipvalue name="Activate Zoom for ouput 4" value="8"/>
+  </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+
+
+<cvbyte nr="37" cat="Servo Positions" desc="Servo 1 Speed" readonly="false" info="Range 0-63. .25 sec interval."/>
+<cvbyte nr="38" cat="Servo Positions" desc="Servo 1 Start (A) Position" readonly="false" info="Range 0-63."/>
+<cvbyte nr="39" cat="Servo Positions" desc="Servo 1 Stop (B) Position" readonly="false" info="Range 0-63."/>
+
+<cvbyte nr="40" cat="Servo Positions" desc="Servo 2 Speed" readonly="false" info="Range 0-63.  .25 sec interval."/>
+<cvbyte nr="41" cat="Servo Positions" desc="Servo 2 Start (A) Position" readonly="false" info="Range 0-63."/>
+<cvbyte nr="42" cat="Servo Positions" desc="Servo 2 Stop (B) Position" readonly="false" info="Range 0-63."/>
+
+<cvbyte nr="43" cat="Servo Positions" desc="Servo 3 Speed" readonly="false" info="Range 0-63. .25 sec interval."/>
+<cvbyte nr="44" cat="Servo Positions" desc="Servo 3 Start (A) Position" readonly="false" info="Range 0-63."/>
+<cvbyte nr="45" cat="Servo Positions" desc="Servo 3 Stop (B) Position" readonly="false" info="Range 0-63."/>
+
+<cvbyte nr="46" cat="Servo Positions" desc="Servo 4 Speed" readonly="false" info="Range 0-63. .25 sec interval."/>
+<cvbyte nr="47" cat="Servo Positions" desc="Servo 4 Start (A) Position" readonly="false" info="Range 0-63."/>
+<cvbyte nr="48" cat="Servo Positions" desc="Servo 4 Stop (B) Position" readonly="false" info="Range 0-63."/>
+
+<cvbyte nr="49" cat="Relay Configuration" desc="Extension Relay control" readonly="false" info="Range 0-15. See manual for details.">
+
+<adip title="Relay Extension Configuration">
+ <dipgroup caption="Extension" type="1" ori="1">
+      <dipvalue name="Relay 1 decelerated switch" value="1"/>
+      <dipvalue name="Relay 2 decelerated switch" value="2"/>
+      <dipvalue name="Relay 3 decelerated switch" value="4"/>
+      <dipvalue name="Relay 4 decelerated switch" value="8"/>
+  </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+</decoder>

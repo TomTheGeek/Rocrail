@@ -1,0 +1,95 @@
+<decoder manu="ESU" type="Stationary Decoder" desc="ESU Switchpilot controller" collapse="true" web="http://www.esu.eu/en/downloads/instruction-manuals/digital-decoders/" info="ESU Switchpilot" >
+<cvbyte nr="1" cat="address - LSB" desc="Base Address (6 LSB of accessory decoder address)" info="Lower 6 bits of the first decoder address for outputs 1-4.  Used in conjunction with CV9 in order to store address."/>
+
+<cvbyte nr="3" cat="Output config" desc="Configuration of Output #1" info="Range 0-64 - Config for output #1 - Pulse, blink, etc. - See manual Page 28"> 
+<adip id="cv3">
+ <dipgroup caption="Output #1 Options" type="0" ori="1">
+
+      <dipvalue name="Variable (K82 compatible" value="0"/>
+
+      <dipvalue name="Pulse mode (PECO)" value="1"/>
+
+      <dipvalue name="Bistable - (K84 compatible)" value="64"/>
+  </dipgroup>
+</adip>
+</cvbyte> 
+
+
+<cvbyte nr="4" cat="Output config" dipid="cv3" desc="Configuration of Output #2 (Switchpilot only)" info="Range 0-64 "/> 
+
+
+<cvbyte nr="5" cat="Output config" dipid="cv3" desc="Configuration of Output #3 (Switchpilot only)" info="Range 0-64 - Config for output #3 - Pulse, blink, etc. - See manual Page 28"/> 
+<cvbyte nr="6" cat="Output config" dipid="cv3" desc="Configuration of Output #4 (Switchpilot only)" info="Range 0-64 - Config for output #4 - Pulse, blink, etc. - See manual Page 28"/> 
+
+
+
+
+<cvbyte nr="7" cat="Config" desc="Internal Software Version No." readonly="true" info="Internal software version number."/>
+<cvbyte nr="8" cat="Config" desc="Manufacturer ID" readonly="false" info="NMRA assigned manufacturer's id number. (151=ESU)  Write 8 to reset all CVs to factory defaults."/>
+<cvbyte nr="9" cat="Config" desc="Decoder Address 1 MSB" info="Range 0-7.  Higher 3 bits (6-8) of the first decoder address for outputs 1-4.  Used together with CV1 to store address."/>
+
+
+<cvbyte nr="28" cat="Railcom" desc="Railcom Channel Configuration" readonly="false" info="See Manual">
+
+<adip title="Railcom Configuration">
+ <dipgroup caption="Railcom" type="1" ori="1">
+      <dipvalue name="Enable Data transfer on channel 2" value="2"/>
+      <dipvalue name="Enable confirmation on channel 1" value="4"/>
+  </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+
+
+<cvbyte nr="29" cat="Railcom" desc="Railcom Enable" readonly="false" info="Bit 7 is read only (DCC=true). See Manual.">
+<adip title="Railcom enable">
+ <dipgroup caption="Enable Railcom" type="1" ori="1">
+      <dipvalue name="Enable Railcom" value="8"/>
+  </dipgroup>
+
+</adip>
+</cvbyte> 
+<cvbyte nr="33" cat="Config" desc="Function Status" readonly="false" info="See Manual."/>
+<!--  CV 35 and 36 are for use with the Switchpilot only  Switchpilot Servo does not use 35 and 36.  -->
+<cvbyte nr="35" cat="Decoder Addr" desc="Decoder address 2 (LSB)" readonly="false" info="Range 1-63 Lower 6 bits (bit 0-5) of the 2nd decoder address for outputs #5 and #6.  Used in conjunction with CV36 to store the address."/>
+<cvbyte nr="36" cat="Decoder Addr" desc="Decoder address 2 (MSB)" readonly="false" info="Lower 6 bits (bit 0-5) of the 2nd decoder address for outputs #5 and #6.  Used in conjunction with CV36 to store the address."/>
+
+<cvbyte nr="37" cat="Servo Config" desc="Servo 1 speed" readonly="false" info="Range 0-63."/>
+<cvbyte nr="38" cat="Servo Config" desc="Servo 1 Start Posistion" readonly="false" info="Range 0-63."/>
+<cvbyte nr="39" cat="Servo Config" desc="Servo 1 Stop Position" readonly="false" info="Range 0-63."/>
+
+<cvbyte nr="40" cat="Servo Config" desc="Servo 2 speed" readonly="false" info="Range 0-63."/>
+<cvbyte nr="41" cat="Servo Config" desc="Servo 2 Start Posistion" readonly="false" info="Range 0-63."/>
+<cvbyte nr="42" cat="Servo Config" desc="Servo 2 Stop Position" readonly="false" info="Range 0-63."/>
+
+<cvbyte nr="49" cat="Relay Configuration" desc="Extension Relay control" readonly="false" info="Range 0-15. See manual for details.">
+
+<adip title="Relay Extension Configuration">
+ <dipgroup caption="Extension" type="1" ori="1">
+      <dipvalue name="Relay 1 decelerated switch" value="1"/>
+      <dipvalue name="Relay 2 decelerated switch" value="2"/>
+      <dipvalue name="Relay 3 decelerated switch" value="4"/>
+      <dipvalue name="Relay 4 decelerated switch" value="8"/>
+  </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+<cvbyte nr="34" cat="Zoom" desc="Zoom (fade) Configuration" readonly="false" info="Range 0-31 (4 LSB) See Manual.">
+
+<adip title="Zoom (Fade) Configuration">
+ <dipgroup caption="Zoom" type="1" ori="1">
+      <dipvalue name="Activate Zoom for ouput 1" value="1"/>
+      <dipvalue name="Activate Zoom for ouput 2" value="2"/>
+      <dipvalue name="Activate Zoom for ouput 3" value="4"/>
+      <dipvalue name="Activate Zoom for ouput 4" value="8"/>
+  </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+</decoder>

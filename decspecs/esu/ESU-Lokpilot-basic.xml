@@ -1,0 +1,52 @@
+<!--  This is for the Lokpilot basic ESU decoder.   -->
+<decoder manu="ESU" type="V1.0" web="http://www.esu.eu" collapse="true">
+  <cvbyte nr="1" cat="Address" desc="Short Decoder Address" info="Range 0-127 - Bits 0-6 contain an address with a value between 1 and 127.  Bit seven must have a value of 0."/>
+<cvbyte nr="7" cat="Info" desc="Manufacturer Version No." readonly="true" info="This is reserved for the manufacturer to store information regarding the version of the decoder."/>
+  <cvbyte nr="8" cat="Info" desc="Manufacturer's ID" readonly="true" info="ESU=151 CV8 contains the NMRA assigned id number of the manufacturer of the decoder."/>
+
+  
+<cvbyte nr="29" cat="General" desc="Direction, Speed Table, Analog mode" info=".">
+
+<adip title="General Decoder Configuration">
+ <dipgroup caption="General Configuration" type="1" ori="1">
+      <dipvalue name="Invert direction" value="1"/>
+      <dipvalue name="28/128 speed steps" value="2"/>
+      <dipvalue name="Enable Analog mode" value="4"/>
+      <dipvalue name="Long addressing" value="32"/>
+
+  </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+
+  <cvbyte nr="2" cat="Speed" desc="Vstart" info="Range 0-100 - Vstart is used to define the voltage drive level used as the start voltage on the motor."/>
+  <cvbyte nr="3" cat="Speed" desc="Acceleration Rate" info="Range 0-255 - each unit = 7ms between speed steps."/>
+  <cvbyte nr="4" cat="Speed" desc="Deceleration Rate" info="Range 0-255 - each unit = 7ms between speed steps."/>
+  <cvbyte nr="5" cat="Speed" desc="Maximum Speed" info="Range 0-255 - V-max is used to specify the motor voltage drive levels at the maximum speed step."/>
+   <cvbyte nr="17" cat="Address" desc="Extended address high" info="The Extended Address is the locomotives address when the decoder is set up for extended addressing (indicated by a value of 1 in bit location 5 of CV#29).  CV#17 contains the most significant bits of the two byte address and must have a value between 11000000 and 11100111, inclusive, in order for this two byte address to be valid. CV 18 contains the least significant bits of the address and may contain any value."/>
+  <cvbyte nr="18" cat="Address" desc="Extended address low" info="The Extended Address is the locomotives address when the decoder is set up for extended addressing (indicated by a value of 1 in bit location 5 of CV#29).  CV#17 contains the most significant bits of the two byte address and must have a value between 11000000 and 11100111, inclusive, in order for this two byte address to be valid. CV 18 contains the least significant bits of the address and may contain any value."/>
+  
+<cvbyte nr="49" cat="BEMF" desc="ESU BEMF" info="">  
+<adip title="BEMF">
+ <dipgroup caption="BEMF" type="0" ori="1">
+      <dipvalue name="Disable back EMF" value="0"/>
+
+      <dipvalue name="Enable back EMF" value="1"/>
+        </dipgroup>
+
+</adip>
+</cvbyte> 
+
+
+<cvbyte nr="54" cat="BEMF control #2" desc="ESU BEMF Configure #2" info="Range 0-63 Default=32"/>  
+<cvbyte nr="55" cat="BEMF control #3" desc="ESU BEMF Configure #3" info="Range 0-63 Default=24"/>  
+<cvbyte nr="63" cat="Lamp Brightness" desc="Lamp Brightness Level" info="Range 0-7 Default=7"/>  
+<cvbyte nr="8" cat="Reset" desc="Reset Decoder" readonly="false" info="Write 8 to reset decoder to factory defaults.r."/>
+
+
+
+
+</decoder>
+
