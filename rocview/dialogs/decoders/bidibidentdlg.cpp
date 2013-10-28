@@ -129,7 +129,8 @@ void BidibIdentDlg::initProducts() {
 
 
 void BidibIdentDlg::onCancel( wxCommandEvent& event ) {
-  EndModal( 0 );
+  wxGetApp().getFrame()->resetBidibIdentRef();
+  Destroy();
 }
 
 
@@ -149,7 +150,8 @@ void BidibIdentDlg::onOK( wxCommandEvent& event ) {
     //delete cb;
   }
 
-  EndModal( wxID_OK );
+  wxGetApp().getFrame()->resetBidibIdentRef();
+  Destroy();
 }
 
 void BidibIdentDlg::event(iONode node) {

@@ -1264,11 +1264,7 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
       m_BidibIdentDlg->event( node );
     else if( wProgram.getcmd(node) == wProgram.type ) {
       m_BidibIdentDlg = new BidibIdentDlg(this, node);
-      if( wxID_OK == m_BidibIdentDlg->ShowModal() ) {
-        /* Copy UID on the clipboard? */
-      }
-      m_BidibIdentDlg->Destroy();
-      m_BidibIdentDlg = NULL;
+      m_BidibIdentDlg->Show(true);
     }
   }
   else if( wProgram.getlntype(node) == wProgram.lntype_rocnet ) {
@@ -3636,9 +3632,7 @@ void RocGuiFrame::OnCBusNode( wxCommandEvent& event ) {
 void RocGuiFrame::OnBiDiB( wxCommandEvent& event ) {
   if( m_RocrailIni != NULL ) {
     m_BidibIdentDlg = new BidibIdentDlg(this);
-    m_BidibIdentDlg->ShowModal();
-    m_BidibIdentDlg->Destroy();
-    m_BidibIdentDlg = NULL;
+    m_BidibIdentDlg->Show(true);
   }
   else {
     wxGetApp().m_InitialRocrailIni = true;

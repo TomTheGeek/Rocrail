@@ -357,6 +357,7 @@ public:
   void resetPowerCtrlRef() {m_PowerCtrl=NULL;}
   void resetSensorMonitorRef() {m_SensorMonitor=NULL;}
   void resetRocNetNodeRef() {m_RocnetNodeDlg=NULL;}
+  void resetBidibIdentRef() {m_BidibIdentDlg=NULL;}
 
 private:
   void Save();
