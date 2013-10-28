@@ -2597,12 +2597,13 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     int countedcars = wFeedback.getcountedcars( node );
     int val = wFeedback.getval( node );
     int load = wFeedback.getload( node );
+    int bus = wFeedback.getbus( m_Props );
     int addr = wFeedback.getaddr( m_Props );
     const char* info = wFeedback.getinfo( node );
 
     StrOp.free(m_Tip);
-    m_Tip = StrOp.fmt( "%s addr=%d ident=%s val=%d count=%d info=%s cars=%d/%d wheelcount=%d load=%d",
-                           wFeedback.getid( node ), addr, ident, val, counter, info, countedcars, carcount, wheelcount, load );
+    m_Tip = StrOp.fmt( "%s addr=%d:%d ident=%s val=%d count=%d info=%s cars=%d/%d wheelcount=%d load=%d",
+                           wFeedback.getid( node ), bus, addr, ident, val, counter, info, countedcars, carcount, wheelcount, load );
 
     showTooltip(wxGetApp().getFrame()->isTooltip());
 
@@ -2640,6 +2641,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     const char* locid = wSwitch.getlocid( node );
     Boolean isSet = wSwitch.isset(node);
     Boolean isLocked = (wSwitch.getlocid( node )==NULL?False:True);
+    int bus   = wSwitch.getbus( m_Props );
     int port  = wSwitch.getport1( m_Props );
     int addr  = wSwitch.getaddr1( m_Props );
     int gate  = wSwitch.getgate1( m_Props );
@@ -2682,10 +2684,10 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
     if( !StrOp.equals( wSwitch.decoupler, wSwitch.gettype( m_Props ) ) ) {
       if( addr2 > 0 || pada2 > 0 )
-        l_locidStr = StrOp.fmt( "%s addr1=%d(%d) addr2=%d(%d) lock=%s", wSwitch.getid( node ), addr, pada, addr2, pada2,
+        l_locidStr = StrOp.fmt( "%s addr1=%d:%d(%d) addr2=%d(%d) lock=%s", wSwitch.getid( node ), bus, addr, pada, addr2, pada2,
                              wSwitch.getlocid( node )==NULL?"unlocked":wSwitch.getlocid( node ) );
       else
-        l_locidStr = StrOp.fmt( "%s addr=%d(%d) lock=%s", wSwitch.getid( node ), addr, pada,
+        l_locidStr = StrOp.fmt( "%s addr=%d:%d(%d) lock=%s", wSwitch.getid( node ), bus, addr, pada,
                              wSwitch.getlocid( node )==NULL?"unlocked":wSwitch.getlocid( node ) );
       StrOp.free(m_Tip);
       m_Tip = StrOp.dup(l_locidStr);
@@ -2704,6 +2706,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     }
 
     int port = wSignal.getport1( m_Props );
+    int bus  = wSignal.getbus( m_Props );
     int addr = wSignal.getaddr( m_Props );
     int gate = wSignal.getgate1( m_Props );
     int pada = 0;
@@ -2717,9 +2720,9 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     else if( addr == 0 && port > 0 )
       pada = port;
 
-    l_tipStr = StrOp.fmt( "%s addr=%d(%d)",
+    l_tipStr = StrOp.fmt( "%s addr=%d:%d(%d)",
                            wSignal.getid( node ),
-                           addr, pada );
+                           bus, addr, pada );
 
     StrOp.free( m_locidStr );
     m_locidStr = l_tipStr;
