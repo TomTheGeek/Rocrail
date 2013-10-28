@@ -1445,7 +1445,7 @@
     <zh_CN txt="属性"/>
     <sl txt="Lastnosti"/>
   </Msg>
-  <Msg id="clearmsg">
+  <Msg id="clearmsg" key="Alt-K">
     <de txt="Meldungen löschen" tip="Löscht den kompletten Inhalt der Meldungsansicht."/>
     <en txt="Clear messages" tip="Clear all messages."/>
     <nl txt="Verwijder boodschappen" tip="Verwijdert de inhoud van de mededelingen vensters."/>
