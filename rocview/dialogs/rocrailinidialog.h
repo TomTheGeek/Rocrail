@@ -322,7 +322,7 @@ public:
     wxStaticText* m_labSavePosTime;
     wxSpinCtrl* m_SavePosTime;
     wxStaticText* m_labEventTimeout;
-    wxTextCtrl* m_EventTimeout;
+    wxSpinCtrl* m_EventTimeout;
     wxStaticText* m_labSignalReset;
     wxSpinCtrl* m_SignalReset;
     wxStaticText* m_labRouteSwTime;
