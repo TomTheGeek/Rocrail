@@ -53,6 +53,11 @@ RocNetDlg::RocNetDlg( wxWindow* parent, iONode props, const char* devices ):rocn
   __initVendors();
 
   initLabels();
+
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
+  GetSizer()->Layout();
+
   initValues();
 }
 
