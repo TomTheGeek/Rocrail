@@ -53,12 +53,15 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_Report = new wxButton( m_IndexPanel, wxID_ANY, wxT("Report..."), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer93->Add( m_Report, 0, wxALL, 5 );
 	
+	m_Shell = new wxButton( m_IndexPanel, wxID_ANY, wxT("PuTTY..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer93->Add( m_Shell, 0, wxALL, 5 );
+	
 	bSizer10->Add( bSizer93, 0, wxALIGN_RIGHT, 5 );
 	
 	m_IndexPanel->SetSizer( bSizer10 );
 	m_IndexPanel->Layout();
 	bSizer10->Fit( m_IndexPanel );
-	m_NodeBook->AddPage( m_IndexPanel, wxT("Index"), false );
+	m_NodeBook->AddPage( m_IndexPanel, wxT("Index"), true );
 	m_RocNetPanel = new wxPanel( m_NodeBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
@@ -167,7 +170,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_RocNetPanel->SetSizer( bSizer6 );
 	m_RocNetPanel->Layout();
 	bSizer6->Fit( m_RocNetPanel );
-	m_NodeBook->AddPage( m_RocNetPanel, wxT("RocNet"), true );
+	m_NodeBook->AddPage( m_RocNetPanel, wxT("RocNet"), false );
 	m_OptionsPanel = new wxPanel( m_NodeBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer91;
 	bSizer91 = new wxBoxSizer( wxVERTICAL );
@@ -666,6 +669,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_Show->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShow ), NULL, this );
 	m_Query->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onQuery ), NULL, this );
 	m_Report->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onReport ), NULL, this );
+	m_Shell->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShell ), NULL, this );
 	m_NodeTree->Connect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( rocnetnodegen::onBeginDrag ), NULL, this );
 	m_NodeTree->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( rocnetnodegen::onItemActivated ), NULL, this );
 	m_NodeTree->Connect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( rocnetnodegen::onTreeItemRightClick ), NULL, this );
@@ -721,6 +725,7 @@ rocnetnodegen::~rocnetnodegen()
 	m_Show->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShow ), NULL, this );
 	m_Query->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onQuery ), NULL, this );
 	m_Report->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onReport ), NULL, this );
+	m_Shell->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onShell ), NULL, this );
 	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_BEGIN_DRAG, wxTreeEventHandler( rocnetnodegen::onBeginDrag ), NULL, this );
 	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( rocnetnodegen::onItemActivated ), NULL, this );
 	m_NodeTree->Disconnect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( rocnetnodegen::onTreeItemRightClick ), NULL, this );

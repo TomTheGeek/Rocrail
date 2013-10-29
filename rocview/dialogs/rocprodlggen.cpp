@@ -74,7 +74,7 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	fgSizer4->Add( m_IID, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_LocoList = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY|wxCB_SIMPLE ); 
-	fgSizer4->Add( m_LocoList, 0, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
+	fgSizer4->Add( m_LocoList, 0, wxEXPAND|wxTOP|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer9->Add( fgSizer4, 0, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -100,7 +100,7 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_SaveAs = new wxButton( this, wxID_ANY, wxT("Save..."), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer81->Add( m_SaveAs, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxTOP|wxRIGHT, 5 );
 	
-	fgSizer8->Add( bSizer81, 0, 0, 5 );
+	fgSizer8->Add( bSizer81, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_labImage = new wxStaticText( this, wxID_ANY, wxT("Image"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labImage->Wrap( -1 );

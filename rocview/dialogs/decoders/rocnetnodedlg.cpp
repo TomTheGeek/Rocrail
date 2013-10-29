@@ -1358,3 +1358,10 @@ void RocnetNodeDlg::onPortRemove( wxCommandEvent& event ) {
 }
 
 
+void RocnetNodeDlg::onShell( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+  wxExecute(wxString::Format(wxT("putty 192.168.%d.%d"),  wRocNetNode.getsubip(m_Props)/256, wRocNetNode.getsubip(m_Props)%256 ));
+}
+
+

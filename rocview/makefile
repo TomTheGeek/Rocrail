@@ -47,7 +47,7 @@ WXSUBINCL=/wx-2.8
 WXMSVCINCL=
 WXCONFIG=wx-config
 wxversion=2.8
-LINKTOOL=c++
+LINKTOOL=g++
 
 ifeq ($(NATIVE),WIN32)
 	FS=$\\
@@ -120,7 +120,7 @@ else ifeq ($(PLATFORM),OPENBSD)
 else
 	LIBS=-lpthread -ldl
 	DIRPREFIX=unx
-	CC_EXTRA_FLAGS=-fPIC
+	CC_EXTRA_FLAGS=-fPIC -fno-common
 	BINSUFFIX=
 	LNK_FLAGS=`$(WXCONFIG) --libs`
 	WX_FLAGS=`$(WXCONFIG) --cflags`
@@ -134,7 +134,7 @@ DEBUG=-g
 DESTDIR=$(FS)opt$(FS)rocrail
 BINDIR=..$(FS)rocs$(FS)bin
 
-CPP=$(TOOLPREFIX)c++
+CPP=$(TOOLPREFIX)g++
 CC=$(TOOLPREFIX)gcc
 LNK=$(TOOLPREFIX)$(LINKTOOL)
 INCL_PATH=$(MOUNTPOINT)

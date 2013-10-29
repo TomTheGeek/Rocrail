@@ -54,6 +54,7 @@ class rocnetnodegen : public wxDialog
 		wxButton* m_Show;
 		wxButton* m_Query;
 		wxButton* m_Report;
+		wxButton* m_Shell;
 		wxPanel* m_RocNetPanel;
 		wxStaticText* m_labNodemap;
 		wxTreeCtrl* m_NodeTree;
@@ -193,6 +194,7 @@ class rocnetnodegen : public wxDialog
 		virtual void onShow( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onQuery( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onReport( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onShell( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onBeginDrag( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onItemActivated( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onTreeItemRightClick( wxTreeEvent& event ) { event.Skip(); }
