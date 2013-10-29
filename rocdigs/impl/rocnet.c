@@ -263,7 +263,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {
     int bus    = wSignal.getbus( node );
     int addr   = wSignal.getaddr(node);
-    int aspect = wSignal.getaspect(node);
+    int aspect = wSignal.getaspect(node) + 1; /* Aspects numbers are zero based. */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "signal bus=%d addr=%d aspect=%d", bus, addr, aspect );
 
     rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
