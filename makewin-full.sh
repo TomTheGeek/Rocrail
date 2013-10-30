@@ -18,9 +18,9 @@ echo "Checking Parameters..."
 # Get the Bazaar revision number if available
 
 echo "Getting Bazaar revision number..."
-if which bzr --tree > /dev/null
+if which bzr > /dev/null
 then
-	BAZAARREV=`bzr revno`
+	BAZAARREV=`bzr revno --tree`
 	echo "    Revision number is $BAZAARREV"
 	echo ""
 else
