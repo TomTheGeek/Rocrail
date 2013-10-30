@@ -94,6 +94,7 @@ class RocProDlgGen : public wxDialog
 		wxButton* m_ExtAddrWrite;
 		wxCheckBox* m_ExtAddrBidi;
 		wxButton* m_VCurve;
+		wxButton* m_CVURL;
 		wxButton* m_DIP;
 		wxButton* m_PTON;
 		wxButton* m_PTOFF;
@@ -124,6 +125,7 @@ class RocProDlgGen : public wxDialog
 		virtual void onExtAddrRead( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onExtAddrWrite( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onVCurve( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onCVURL( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onDIP( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPTON( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPTOFF( wxCommandEvent& event ) { event.Skip(); }

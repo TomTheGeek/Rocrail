@@ -149,6 +149,7 @@
     <var name="readonly" vt="bool" defval="false" remark="Disable write operations."/>
     <var name="word" vt="bool" defval="false" remark="16 bit word value"/>
     <var name="dipid" vt="string" defval="" range="*" remark="Reference to an existing DIP definition."/>
+    <var name="url" vt="string" defval="NULL" range="*" remark="CV-URL"/>
     <adip cardinality="1"/>
   </cvbyte>
 

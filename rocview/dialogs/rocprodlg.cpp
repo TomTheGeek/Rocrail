@@ -155,6 +155,7 @@ RocProDlgGen( parent )
   initLocMap();
   m_DIP->Enable(false);
   m_VCurve->Enable(true);
+  m_CVURL->Enable(false);
 
 }
 
@@ -188,6 +189,7 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
       setCVVal(0);
 
     m_DIP->Enable( wCVByte.getadip(m_SelectedCV) != NULL );
+    m_CVURL->Enable( wCVByte.geturl(m_SelectedCV) != NULL );
 
     if(wCVByte.getdipid(m_SelectedCV) != NULL && StrOp.len(wCVByte.getdipid(m_SelectedCV)) > 0 ) {
       if( MapOp.haskey(m_DIPMap, wCVByte.getdipid(m_SelectedCV) ) )
@@ -213,6 +215,7 @@ void RocProDlg::onTreeSelChanged( wxTreeEvent& event )
     m_Nr->SetValue( 0 );
     setCVVal(0);
     m_DIP->Enable( false );
+    m_CVURL->Enable( false );
   }
   StrOp.free(desc);
 }
@@ -805,6 +808,7 @@ void RocProDlg::onNr( wxSpinEvent& event ) {
   }
 
   if( cv != NULL ) {
+    m_CVURL->Enable( wCVByte.geturl(cv) != NULL );
     m_DIP->Enable( wCVByte.getadip(cv) != NULL );
     if(wCVByte.getdipid(cv) != NULL && StrOp.len(wCVByte.getdipid(cv)) > 0 ) {
       if( MapOp.haskey(m_DIPMap, wCVByte.getdipid(cv) ) )
@@ -893,6 +897,10 @@ void RocProDlg::onMenu( wxCommandEvent& event ) {
     wxCommandEvent cmd;
     onDIP(cmd);
   }
+  else if( nr == 1003 ) {
+    wxCommandEvent cmd;
+    onCVURL(cmd);
+  }
 }
 
 void RocProDlg::onTreeItemPopup( wxTreeEvent& event ) {
@@ -904,6 +912,8 @@ void RocProDlg::onTreeItemPopup( wxTreeEvent& event ) {
     menu.Append( 1001, wxGetApp().getMenu("info") );
     if( m_DIP->IsEnabled() )
       menu.Append( 1002, wxT("DIP") );
+    if( m_CVURL->IsEnabled() )
+      menu.Append( 1003, wxT("URL") );
     menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( RocProDlg::onMenu ), NULL, this );
     PopupMenu(&menu );
   }
@@ -1030,4 +1040,10 @@ void RocProDlg::onTreeDIP( wxTreeEvent& event ) {
   onDIP(cmd);
 }
 
+
+void RocProDlg::onCVURL( wxCommandEvent& event ) {
+  if( m_SelectedCV != NULL && wCVByte.geturl(m_SelectedCV) != NULL ) {
+    wxLaunchDefaultBrowser(wxString( wCVByte.geturl(m_SelectedCV), wxConvUTF8), wxBROWSER_NEW_WINDOW );
+  }
+}
 
