@@ -35,6 +35,7 @@
 #include "wx/notebook.h"
 #include "wx/listctrl.h"
 #include "wx/spinctrl.h"
+#include "wx/statline.h"
 #include "wx/grid.h"
 ////@end includes
 
@@ -314,9 +315,9 @@ public:
     wxCheckBox* m_PermTypeLight;
     wxStaticText* m_labMaxLen;
     wxSpinCtrl* m_MaxLen;
-    wxCheckBox* m_Commuter;
     wxStaticText* m_labMinLen;
     wxSpinCtrl* m_MinLen;
+    wxRadioBox* m_Commuter;
     wxPanel* m_ConditionsPanel;
     wxGrid* m_CondGrid;
     wxCheckBox* m_CondNotFromBlock;

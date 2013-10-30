@@ -1054,6 +1054,14 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
   }
 
 
+  if( wRoute.isnocommuter(data->props) && LocOp.isCommuter(loc)) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                   "Loc [%s] has no permission to use route [%s]; commuter trains are not allowed.",
+                   id, wRoute.getid(data->props) );
+    return suits_not;
+  }
+
+
   /* Check conditions: Return True if one condition is OK or no conditions are specified. */
   if( wRoute.getstcondition(data->props) != NULL )
   {
