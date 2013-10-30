@@ -24672,7 +24672,7 @@
   <Msg id="secureack">
     <en txt="Acknowledge sensor events"/>
     <nl txt="Melder berichten bevestigen"/>
-    <de txt="Sensor-Ereignisse bestätigen"/>
+    <de txt="Rückmelder-Ereignisse bestätigen"/>
     <pt_BR txt="Confirmar eventos dos sensores"/>
     <it txt="RIconoscere gli eventi del sensore"/>
     <sl txt="Potrdi dogodke tipal"/>
@@ -24695,7 +24695,7 @@
   <Msg id="shutdownnode">
     <en txt="Shutdown RocNet node %d?"/>
     <nl txt="RocNet node %d afsluiten?"/>
-    <de txt="RocNet Knoten %d herunterfahren?"/>
+    <de txt="RocNet-Knoten %d herunterfahren?"/>
     <pt_BR txt="Desligar entroncamento %d do RocNet?"/>
     <it txt="Spegnere il nodo RocNet %d?"/>
     <sl txt="Izključim RocNet vozlišče %d?"/>
@@ -24777,6 +24777,7 @@
     <pt_BR txt="Forçar múltiplos aspectos"/>
     <ru txt="Мультиаспекты принудительно"/>
     <sl txt="Vsili več stanj"/>
+    <sr_latin txt="Prinudni višestruki pristup"/>
   </Msg>
   <Msg id="nodemap">
     <en txt="Nodemap"/>
@@ -24808,6 +24809,7 @@
     <sl txt="Velikost FiFo"/>
     <sv txt="FiFo storlek"/>
     <sr_latin txt="Veličina FiFo"/>
+    <de txt="FiFo-Größe"/>
   </Msg>
   <Msg id="pollingrate">
     <en txt="Polling rate"/>
@@ -24818,6 +24820,7 @@
     <sl txt="Interval poizvedovanja"/>
     <sv txt="Pollningsfrekvens"/>
     <sr_latin txt="Nivo izveštaja"/>
+    <ru txt="Polling rate"/>
   </Msg>
   <Msg id="usepb">
     <en txt="Use push button"/>
@@ -24828,5 +24831,6 @@
     <sl txt="Uporabi tipko"/>
     <sv txt="Använd tryckknapp"/>
     <sr_latin txt="Koristi taster"/>
+    <en_GB txt="Use push button"/>
   </Msg>
 </Messages>
