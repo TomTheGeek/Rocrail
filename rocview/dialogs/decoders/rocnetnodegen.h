@@ -92,6 +92,7 @@ class rocnetnodegen : public wxDialog
 		wxStaticText* m_labDelay;
 		wxStaticText* m_labBlink;
 		wxStaticText* m_labPortInv;
+		wxStaticText* m_labPortToggle;
 		wxStaticText* m_labPortTest;
 		wxStaticText* m_labPortEventID;
 		wxStaticText* m_labPortEventPort;
@@ -100,6 +101,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_Delay1;
 		wxCheckBox* m_Blink1;
 		wxCheckBox* m_PortInv1;
+		wxCheckBox* m_PortToggle1;
 		wxButton* m_PortTest1;
 		wxSpinCtrl* m_PortEventID1;
 		wxSpinCtrl* m_PortEventPort1;
@@ -108,6 +110,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_Delay2;
 		wxCheckBox* m_Blink2;
 		wxCheckBox* m_PortInv2;
+		wxCheckBox* m_PortToggle2;
 		wxButton* m_PortTest2;
 		wxSpinCtrl* m_PortEventID2;
 		wxSpinCtrl* m_PortEventPort2;
@@ -116,6 +119,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_Delay3;
 		wxCheckBox* m_Blink3;
 		wxCheckBox* m_PortInv3;
+		wxCheckBox* m_PortToggle3;
 		wxButton* m_PortTest3;
 		wxSpinCtrl* m_PortEventID3;
 		wxSpinCtrl* m_PortEventPort3;
@@ -124,6 +128,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_Delay4;
 		wxCheckBox* m_Blink4;
 		wxCheckBox* m_PortInv4;
+		wxCheckBox* m_PortToggle4;
 		wxButton* m_PortTest4;
 		wxSpinCtrl* m_PortEventID4;
 		wxSpinCtrl* m_PortEventPort4;
@@ -132,6 +137,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_Delay5;
 		wxCheckBox* m_Blink5;
 		wxCheckBox* m_PortInv5;
+		wxCheckBox* m_PortToggle5;
 		wxButton* m_PortTest5;
 		wxSpinCtrl* m_PortEventID5;
 		wxSpinCtrl* m_PortEventPort5;
@@ -140,6 +146,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_Delay6;
 		wxCheckBox* m_Blink6;
 		wxCheckBox* m_PortInv6;
+		wxCheckBox* m_PortToggle6;
 		wxButton* m_PortTest6;
 		wxSpinCtrl* m_PortEventID6;
 		wxSpinCtrl* m_PortEventPort6;
@@ -148,6 +155,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_Delay7;
 		wxCheckBox* m_Blink7;
 		wxCheckBox* m_PortInv7;
+		wxCheckBox* m_PortToggle7;
 		wxButton* m_PortTest7;
 		wxSpinCtrl* m_PortEventID7;
 		wxSpinCtrl* m_PortEventPort7;
@@ -156,6 +164,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_Delay8;
 		wxCheckBox* m_Blink8;
 		wxCheckBox* m_PortInv8;
+		wxCheckBox* m_PortToggle8;
 		wxButton* m_PortTest8;
 		wxSpinCtrl* m_PortEventID8;
 		wxSpinCtrl* m_PortEventPort8;

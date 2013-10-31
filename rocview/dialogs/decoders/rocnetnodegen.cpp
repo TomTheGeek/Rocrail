@@ -226,7 +226,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer6;
-	fgSizer6 = new wxFlexGridSizer( 0, 8, 0, 0 );
+	fgSizer6 = new wxFlexGridSizer( 0, 9, 0, 0 );
 	fgSizer6->SetFlexibleDirection( wxBOTH );
 	fgSizer6->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -249,6 +249,10 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_labPortInv = new wxStaticText( m_PortSetupPanel, wxID_ANY, wxT("Invert"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labPortInv->Wrap( -1 );
 	fgSizer6->Add( m_labPortInv, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM|wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	m_labPortToggle = new wxStaticText( m_PortSetupPanel, wxID_ANY, wxT("Toggle"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labPortToggle->Wrap( -1 );
+	fgSizer6->Add( m_labPortToggle, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_labPortTest = new wxStaticText( m_PortSetupPanel, wxID_ANY, wxT("Test"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labPortTest->Wrap( -1 );
@@ -283,6 +287,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_PortInv1 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer6->Add( m_PortInv1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_PortToggle1 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer6->Add( m_PortToggle1, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
 	m_PortTest1 = new wxButton( m_PortSetupPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 35,-1 ), 0 );
 	fgSizer6->Add( m_PortTest1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -312,6 +319,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_PortInv2 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer6->Add( m_PortInv2, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_PortToggle2 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer6->Add( m_PortToggle2, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_PortTest2 = new wxButton( m_PortSetupPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 35,-1 ), 0 );
 	fgSizer6->Add( m_PortTest2, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
@@ -343,6 +353,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_PortInv3 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer6->Add( m_PortInv3, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
+	m_PortToggle3 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer6->Add( m_PortToggle3, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_PortTest3 = new wxButton( m_PortSetupPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 35,-1 ), 0 );
 	fgSizer6->Add( m_PortTest3, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
@@ -372,6 +385,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_PortInv4 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer6->Add( m_PortInv4, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	m_PortToggle4 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer6->Add( m_PortToggle4, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_PortTest4 = new wxButton( m_PortSetupPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 35,-1 ), 0 );
 	fgSizer6->Add( m_PortTest4, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -403,6 +419,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_PortInv5 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer6->Add( m_PortInv5, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_PortToggle5 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer6->Add( m_PortToggle5, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_PortTest5 = new wxButton( m_PortSetupPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 35,-1 ), 0 );
 	fgSizer6->Add( m_PortTest5, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -432,6 +451,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_PortInv6 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer6->Add( m_PortInv6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_PortToggle6 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer6->Add( m_PortToggle6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_PortTest6 = new wxButton( m_PortSetupPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 35,-1 ), 0 );
 	fgSizer6->Add( m_PortTest6, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
@@ -463,6 +485,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_PortInv7 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer6->Add( m_PortInv7, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_PortToggle7 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer6->Add( m_PortToggle7, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_PortTest7 = new wxButton( m_PortSetupPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 35,-1 ), 0 );
 	fgSizer6->Add( m_PortTest7, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -492,6 +517,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_PortInv8 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer6->Add( m_PortInv8, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_PortToggle8 = new wxCheckBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer6->Add( m_PortToggle8, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_PortTest8 = new wxButton( m_PortSetupPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 35,-1 ), 0 );
 	fgSizer6->Add( m_PortTest8, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );

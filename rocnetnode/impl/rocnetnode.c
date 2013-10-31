@@ -1127,6 +1127,20 @@ static void __scanI2C(iORocNetNode rocnetnode) {
 
 static void __writePort(iORocNetNode rocnetnode, int port, int value, int iotype) {
   iORocNetNodeData data = Data(rocnetnode);
+
+  if( data->ports[port] != NULL && (data->ports[port]->type & IO_TOGGLE) ) {
+    if( value ) {
+      data->ports[port]->toggle = !data->ports[port]->toggle;
+      value = data->ports[port]->toggle ? 1:0;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "toggle port %d value=%d", port, value );
+    }
+    else {
+      /* ignore off */
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore low value for toggle port %d toggle=%d", port, data->ports[port]->toggle );
+      return;
+    }
+  }
+
   if( data->ports[port] != NULL && (data->ports[port]->type & IO_INVERT)) {
     value ^= 1;
   }

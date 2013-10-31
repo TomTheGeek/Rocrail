@@ -230,6 +230,7 @@ void RocnetNodeDlg::initPorts() {
   wxStaticText* l_labPort[] = { NULL, m_labPort1, m_labPort2, m_labPort3, m_labPort4, m_labPort5, m_labPort6, m_labPort7, m_labPort8 };
   wxCheckBox* l_Blink[] = {NULL, m_Blink1, m_Blink2, m_Blink3, m_Blink4, m_Blink5, m_Blink6, m_Blink7, m_Blink8};
   wxCheckBox* l_Invert[] = {NULL, m_PortInv1, m_PortInv2, m_PortInv3, m_PortInv4, m_PortInv5, m_PortInv6, m_PortInv7, m_PortInv8};
+  wxCheckBox* l_Toggle[] = {NULL, m_PortToggle1, m_PortToggle2, m_PortToggle3, m_PortToggle4, m_PortToggle5, m_PortToggle6, m_PortToggle7, m_PortToggle8};
   wxSpinCtrl* l_EventID[] = {NULL, m_PortEventID1, m_PortEventID2, m_PortEventID3, m_PortEventID4, m_PortEventID5, m_PortEventID6, m_PortEventID7, m_PortEventID8};
   wxSpinCtrl* l_EventPort[] = {NULL, m_PortEventPort1, m_PortEventPort2, m_PortEventPort3, m_PortEventPort4, m_PortEventPort5, m_PortEventPort6, m_PortEventPort7, m_PortEventPort8};
   for( int i = 1; i < 9; i++ ) {
@@ -238,6 +239,7 @@ void RocnetNodeDlg::initPorts() {
     l_Delay[i]->SetValue(0);
     l_Blink[i]->SetValue(false);
     l_Invert[i]->SetValue(false);
+    l_Toggle[i]->SetValue(false);
     l_EventID[i]->SetValue(0);
     l_EventPort[i]->SetValue(0);
   }
@@ -293,6 +295,7 @@ void RocnetNodeDlg::onPortWrite( wxCommandEvent& event ) {
   wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
   wxCheckBox* l_Blink[] = {NULL, m_Blink1, m_Blink2, m_Blink3, m_Blink4, m_Blink5, m_Blink6, m_Blink7, m_Blink8};
   wxCheckBox* l_Invert[] = {NULL, m_PortInv1, m_PortInv2, m_PortInv3, m_PortInv4, m_PortInv5, m_PortInv6, m_PortInv7, m_PortInv8};
+  wxCheckBox* l_Toggle[] = {NULL, m_PortToggle1, m_PortToggle2, m_PortToggle3, m_PortToggle4, m_PortToggle5, m_PortToggle6, m_PortToggle7, m_PortToggle8};
   wxSpinCtrl* l_EventID[] = {NULL, m_PortEventID1, m_PortEventID2, m_PortEventID3, m_PortEventID4, m_PortEventID5, m_PortEventID6, m_PortEventID7, m_PortEventID8};
   wxSpinCtrl* l_EventPort[] = {NULL, m_PortEventPort1, m_PortEventPort2, m_PortEventPort3, m_PortEventPort4, m_PortEventPort5, m_PortEventPort6, m_PortEventPort7, m_PortEventPort8};
 
@@ -303,7 +306,8 @@ void RocnetNodeDlg::onPortWrite( wxCommandEvent& event ) {
     //StrOp.fmtb(key, "val%d", 2 + i*4);
     // reserved
     StrOp.fmtb(key, "val%d", 3 + i*4);
-    NodeOp.setInt( cmd, key, l_Type[1 + i]->GetSelection() + (l_Blink[1 + i]->IsChecked()?0x80:0x00) + (l_Invert[1 + i]->IsChecked()?0x40:0x00) );
+    NodeOp.setInt( cmd, key, l_Type[1 + i]->GetSelection() + (l_Blink[1 + i]->IsChecked()?0x80:0x00) +
+        (l_Invert[1 + i]->IsChecked()?0x40:0x00) + (l_Toggle[1 + i]->IsChecked()?0x20:0x00) );
     StrOp.fmtb(key, "val%d", 4 + i*4);
     NodeOp.setInt( cmd, key, l_Delay[1 + i]->GetValue() );
   }
@@ -611,6 +615,7 @@ void RocnetNodeDlg::event(iONode node) {
     wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
     wxCheckBox* l_Blink[] = {NULL, m_Blink1, m_Blink2, m_Blink3, m_Blink4, m_Blink5, m_Blink6, m_Blink7, m_Blink8};
     wxCheckBox* l_Invert[] = {NULL, m_PortInv1, m_PortInv2, m_PortInv3, m_PortInv4, m_PortInv5, m_PortInv6, m_PortInv7, m_PortInv8};
+    wxCheckBox* l_Toggle[] = {NULL, m_PortToggle1, m_PortToggle2, m_PortToggle3, m_PortToggle4, m_PortToggle5, m_PortToggle6, m_PortToggle7, m_PortToggle8};
     wxButton* l_PortTest[] = {NULL, m_PortTest1, m_PortTest2, m_PortTest3, m_PortTest4, m_PortTest5, m_PortTest6, m_PortTest7, m_PortTest8};
     wxSpinCtrl* l_EventID[] = {NULL, m_PortEventID1, m_PortEventID2, m_PortEventID3, m_PortEventID4, m_PortEventID5, m_PortEventID6, m_PortEventID7, m_PortEventID8};
     wxSpinCtrl* l_EventPort[] = {NULL, m_PortEventPort1, m_PortEventPort2, m_PortEventPort3, m_PortEventPort4, m_PortEventPort5, m_PortEventPort6, m_PortEventPort7, m_PortEventPort8};
@@ -628,6 +633,7 @@ void RocnetNodeDlg::event(iONode node) {
         int delay = NodeOp.getInt( node, key, 0);
         bool blink = (type&0x80)?true:false;
         bool invert = (type&0x40)?true:false;
+        bool toggle = (type&0x20)?true:false;
         type &= 0x0F;
 
         if( port > 0 + m_PortGroup*8 && (port-m_PortGroup*8) < 9) {
@@ -635,6 +641,7 @@ void RocnetNodeDlg::event(iONode node) {
           l_Type[port-m_PortGroup*8]->SetSelection(type);
           l_Blink[port-m_PortGroup*8]->SetValue(blink);
           l_Invert[port-m_PortGroup*8]->SetValue(invert);
+          l_Toggle[port-m_PortGroup*8]->SetValue(toggle);
           l_PortTest[port-m_PortGroup*8]->SetLabel(value==0 ? wxT("0"):wxT("1"));
         }
       }
