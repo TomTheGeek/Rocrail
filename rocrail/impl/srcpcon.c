@@ -1941,7 +1941,7 @@ static iONode __srcp2rr(iOSrcpCon srcpcon, __iOSrcpService o, const char* req, i
       getSrcpIid( data, srcpBus, srcpBusIid);
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SET FB srcpBus[%d]=[%s] srcpAddr[%d] value[%d]",
-                   srcpBus, srcpAddr, value, srcpBusIid );
+                   srcpBus, srcpBusIid, srcpAddr, value );
 
       /* find feedback */
       fb = getFeedbackByIidAndAddr( srcpBusIid, srcpAddr );
