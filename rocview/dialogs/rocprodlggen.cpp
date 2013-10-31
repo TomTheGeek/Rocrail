@@ -88,7 +88,7 @@ RocProDlgGen::RocProDlgGen( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_labFile->Wrap( -1 );
 	fgSizer8->Add( m_labFile, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	m_DecFile = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), wxTE_READONLY );
+	m_DecFile = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), 0 );
 	fgSizer8->Add( m_DecFile, 0, wxALIGN_CENTER_VERTICAL|wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	wxBoxSizer* bSizer81;

@@ -816,7 +816,7 @@
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
                                                 <property name="size">200,-1</property>
-                                                <property name="style">wxTE_READONLY</property>
+                                                <property name="style"></property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
                                                 <property name="validator_data_type"></property>
