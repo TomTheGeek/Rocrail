@@ -148,6 +148,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
   iOSerialData o = Data(inst);
   char* device = o->device;
   int r,w;
+  int speed;
 
   /* open read/write, no controlling terminal */
   if( StrOp.equalsi( "com1", o->device ) )
@@ -198,7 +199,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
   r = access( device, R_OK );
   w = access( device, W_OK );
 
-  TraceOp.terrno( name, TRCLEVEL_INFO, __LINE__, 9999, errno, "rocs_serial_open:open rc=%d read=%d write=%d", errno, r, w );
+  TraceOp.terrno( name, TRCLEVEL_INFO, __LINE__, 9999, errno, "open rc=%d read=%d write=%d", errno, r, w );
 
   if( o->sh > 0 ) {
     struct termios tio;
@@ -230,7 +231,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
 #ifdef CRTSCTS
 
     if( o->line.flow == cts )
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocs_serial_open: set CRTSCTS" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set CRTSCTS" );
     tio.c_cflag |= o->line.flow == cts ? CRTSCTS:0;
 #endif
     /* ignore modem, enable receiver */
@@ -262,8 +263,10 @@ Boolean rocs_serial_open( iOSerial inst ) {
     tio.c_cc[VTIME] = (o->timeout.read / 100) ? (o->timeout.read / 100):0;
 
     /* insert speed */
-    cfsetospeed( &tio, __symbolicSpeed(o->line.bps) );
-    cfsetispeed( &tio, __symbolicSpeed(o->line.bps) );
+    speed = __symbolicSpeed(o->line.bps);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set speed to %d (requested=%d)", speed, o->line.bps );
+    cfsetospeed( &tio, speed );
+    cfsetispeed( &tio, speed );
 
     errno = 0;
     /* set attribute now */
