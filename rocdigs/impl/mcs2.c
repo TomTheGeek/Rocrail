@@ -692,9 +692,11 @@ static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
   iOMCS2Data data = Data(mcs2);
-  char in[16];
+  char in[32];
   int mod = 0;
   unsigned char store[1024];
+  int retry = 0;
+
   for( mod = 0; mod < 1024; mod++) {
     store[mod] = 0;
     /* storage container for feedback states to check on changes */
@@ -702,8 +704,12 @@ static void __reader( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 reader started." );
 
+  if( !data->udp && data->serial != NULL ) {
+    SerialOp.flush(data->serial);
+  }
+
   do {
-    MemOp.set(in, 0, 16);
+    MemOp.set(in, 0, 32);
     if( data->udp ) {
       if( SocketOp.recvfrom( data->readUDP, in, 13, NULL, NULL ) <= 0 ) {
         SocketOp.base.del(data->readUDP);
@@ -717,21 +723,62 @@ static void __reader( void* threadinst ) {
       }
     }
     else {
-      if( data->conOK && SerialOp.available(data->serial) ) {
-        if( !SerialOp.read( data->serial, in, 13 ) ) {
-          ThreadOp.sleep(100);
+      if( data->conOK ) {
+        int available = SerialOp.available(data->serial);
+        if( available > 0 ) {
+          int idx = 0;
+          while(SerialOp.available(data->serial) > 0 && idx < 13) {
+            if( SerialOp.read( data->serial, in+idx, 1 ) ) {
+              if( SerialOp.available(data->serial) == 0 )
+                ThreadOp.sleep(10);
+              idx++;
+            }
+            else {
+              break;
+            }
+          }
+          if( idx == 13 && SerialOp.available(data->serial) > 0 ) {
+            int nrTrash = SerialOp.available(data->serial);
+            char* trash = allocMem(nrTrash);
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "nr of trash bytes is %d", nrTrash );
+            if( SerialOp.read( data->serial, trash, nrTrash ) ) {
+            }
+            freeMem(trash);
+          }
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "%d bytes read, nr of data bytes is %d", idx, in[4]&0x0F );
+
+        }
+        else if( available == -1 || SerialOp.getRc(data->serial) > 0 ) {
+          /* device error */
+          data->conOK = False;
+          SerialOp.close(data->serial);
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error" );
+          ThreadOp.sleep(10);
+          if( data->run ) continue;
+          else break;
+        }
+        else {
+          ThreadOp.sleep(10);
           if( data->run ) continue;
           else break;
         }
       }
       else {
         ThreadOp.sleep(100);
+        retry++;
+        if( retry >= 50 ) {
+          retry = 0;
+          data->conOK = SerialOp.open( data->serial );
+          if(data->conOK)
+            SerialOp.flush(data->serial);
+        }
         if( data->run ) continue;
         else break;
       }
     }
 
     TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
+
     /* CS2 communication consists of commands (command byte always even) and replies. Reply byte is equal to command byte but with
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
        is broadcasted. When a command is issued from the CS2 user interface, both the command and the reply is broadcasted.
@@ -767,7 +814,8 @@ static void __reader( void* threadinst ) {
       __evaluateCCSwitch( data, in );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Unhandled packet:" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unhandled packet: CAN-ID=0x%02X len=%d", in[1]&0xFF, in[4]&0x0F );
+      TraceOp.dump( NULL, TRCLEVEL_INFO, in, 13 );
     }
     ThreadOp.sleep(10);
 
