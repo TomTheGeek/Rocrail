@@ -1102,7 +1102,7 @@ static void __scanI2C(iORocNetNode rocnetnode) {
     if( !data->i2caddr[i] )
       continue;
 
-    if( data->iomap[i] && 0x00FF ) {
+    if( data->iomap[i] & 0x00FF ) {
       byte iodata = data->iodata[i*2+0];
       rc = raspiReadRegI2C(data->i2cdescriptor, 0x20+i, 0x12, &data->iodata[i*2+0]);
       if( rc < 0 ) {
@@ -1111,7 +1111,7 @@ static void __scanI2C(iORocNetNode rocnetnode) {
       }
       TraceOp.trc( name, iodata != data->iodata[i*2+0]?TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "i2c %dA [0x%02X]", i, data->iodata[i*2+0] );
     }
-    if( data->iomap[i] && 0xFF00 ) {
+    if( data->iomap[i] & 0xFF00 ) {
       byte iodata = data->iodata[i*2+1];
       rc = raspiReadRegI2C(data->i2cdescriptor, 0x20+i, 0x13, &data->iodata[i*2+1]);
       if( rc < 0 ) {
