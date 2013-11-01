@@ -81,51 +81,79 @@ Boolean rocs_serial_close( iOSerial inst ) {
 }
 
 /* Conversions */
-static speed_t __symbolicSpeed( int bps ) {
+static speed_t __symbolicSpeed( int bps, int* actbps ) {
   /* AIX does not support speeds above 38k. */
 
 
 #ifdef B1000000
-  if( bps >= 1000000 )
+  if( bps >= 1000000 ) {
+    *actbps = 1000000;
     return B1000000;
+  }
 #endif
 
 
 #ifdef B500000
-  if( bps >= 500000 )
+  if( bps >= 500000 ) {
+    *actbps = 500000;
     return B500000;
+  }
 #endif
 
 
 #ifdef B230400
-  if( bps >= 230400 )
+  if( bps >= 230400 ) {
+    *actbps = 230400;
     return B230400;
+  }
 #endif
 
 
 #ifdef B115200
-  if( bps >= 115200 )
+  if( bps >= 115200 ) {
+    *actbps = 115200;
     return B115200;
+  }
 #endif
 
 #ifdef B57600
-
-  if( bps >=  57600 )
+  if( bps >= 57600 ) {
+    *actbps = 57600;
     return B57600;
+  }
 #endif
 
-  if( bps >=  38400 )
+  if( bps >= 38400 ) {
+    *actbps = 38400;
     return B38400;
-  if( bps >=  19200 )
+  }
+
+  if( bps >= 19200 ) {
+    *actbps = 19200;
     return B19200;
-  if( bps >=   9600 )
+  }
+
+  if( bps >= 9600 ) {
+    *actbps = 9600;
     return B9600;
-  if( bps >=   4800 )
+  }
+
+  if( bps >= 4800 ) {
+    *actbps = 4800;
     return B4800;
-  if( bps >=   2400 )
+  }
+
+  if( bps >= 2400 ) {
+    *actbps = 2400;
     return B2400;
-  if( bps >=   1200 )
+  }
+
+  if( bps >= 1200 ) {
+    *actbps = 1200;
     return B1200;
+  }
+
+  *actbps = 600;
   return B600;
 }
 static int __symbolicBits( int bits ) {
@@ -148,7 +176,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
   iOSerialData o = Data(inst);
   char* device = o->device;
   int r,w;
-  int speed;
+  int symbps, actbps;
 
   /* open read/write, no controlling terminal */
   if( StrOp.equalsi( "com1", o->device ) )
@@ -263,10 +291,10 @@ Boolean rocs_serial_open( iOSerial inst ) {
     tio.c_cc[VTIME] = (o->timeout.read / 100) ? (o->timeout.read / 100):0;
 
     /* insert speed */
-    speed = __symbolicSpeed(o->line.bps);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set speed to %d (requested=%d)", speed, o->line.bps );
-    cfsetospeed( &tio, speed );
-    cfsetispeed( &tio, speed );
+    symbps = __symbolicSpeed(o->line.bps, &actbps);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set bps to %d (requested=%d)", actbps, o->line.bps );
+    cfsetospeed( &tio, symbps );
+    cfsetispeed( &tio, symbps );
 
     errno = 0;
     /* set attribute now */
