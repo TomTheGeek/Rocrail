@@ -156,6 +156,9 @@ static int instCnt = 0;
 
 #define MIN_CONNECTOR_COUNTERPART_NR 10
 
+#define ROUTE_ALL         "all enter +"
+#define ROUTE_ALL_REVERSE "all enter -"
+
 /* some forward declaration */
 static Boolean _checkPlanHealth(iOAnalyse inst);
 static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
@@ -692,7 +695,6 @@ static Boolean isValidScheduleId( iOAnalyse inst, const char* lcid, const char* 
       iONode node;
       const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
       int i = 0;
-      Boolean thisNodeChanged ;
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidScheduleId: Checking %d %s nodes", listSize, listType );
       for( i = 0 ; i < listSize ; i++ ) {
@@ -1920,6 +1922,15 @@ static Boolean ismemberoflist( iOList list, obj o) {
   return False;
 }
 
+/* route translations: "all" -> "all enter +" ; "all-reverse" -> "all enter -" */
+static const char* translateUniversalRoute( const char *route ) {
+  if( StrOp.equals( route, wFeedbackEvent.from_all) )
+    return (const char*) ROUTE_ALL ;
+  if( StrOp.equals( route, wFeedbackEvent.from_all_reverse) )
+    return (const char*) ROUTE_ALL_REVERSE ;
+  return route;
+}
+
 static Boolean markMatchingFbevtForRemoval( iOList delList, iONode bkNode, iONode fbevt, const char* action ) {
   Boolean found = False;
 
@@ -2011,7 +2022,8 @@ static Boolean blockFeedbackActionCheck( iOAnalyse inst, Boolean repair ) {
         const char* fbid    = wFeedbackEvent.getid( fbevtFrom );
         const char* action  = wFeedbackEvent.getaction( fbevtFrom );
 
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block feedback action check: bl(ori)[%s] from[%s] byroute[%s] fbid[%s] action[%s]", bkid, from, byroute, fbid, action );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block feedback action check: bl(ori)[%s] from[%s] byroute[%s] fbid[%s] action[%s]",
+            bkid, translateUniversalRoute(from), translateUniversalRoute(byroute), fbid, action );
 
         Boolean foundEnter  = False;
         Boolean foundIn     = False;
@@ -2040,7 +2052,7 @@ static Boolean blockFeedbackActionCheck( iOAnalyse inst, Boolean repair ) {
               else {
                 foundEnterMulti = True;
                 TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] fbid[%s] action[%s] after (%s %s %s %s)",
-                    bkid, from, byroute, fbid, action, wFeedbackEvent.enter_event, wFeedbackEvent.enter2pre_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.enter2in_event );
+                    bkid, translateUniversalRoute(from), translateUniversalRoute(byroute), fbid, action, wFeedbackEvent.enter_event, wFeedbackEvent.enter2pre_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.enter2in_event );
               }
             }
             if( StrOp.equals( checkAction, wFeedbackEvent.in_event ) ) {
@@ -2051,7 +2063,7 @@ static Boolean blockFeedbackActionCheck( iOAnalyse inst, Boolean repair ) {
               else {
                 foundInMulti = True;
                 TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] fbid[%s] action[%s] after (%s %s)",
-                    bkid, from, byroute, fbid, action, wFeedbackEvent.in_event, wFeedbackEvent.enter2in_event );
+                    bkid, translateUniversalRoute(from), translateUniversalRoute(byroute), fbid, action, wFeedbackEvent.in_event, wFeedbackEvent.enter2in_event );
               }
             }
             if( StrOp.equals( checkAction, wFeedbackEvent.enter2in_event ) ) {
@@ -2062,7 +2074,7 @@ static Boolean blockFeedbackActionCheck( iOAnalyse inst, Boolean repair ) {
               else {
                 foundEnterMulti = True;
                 TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] fbid[%s] action[%s] after (%s %s %s %s)", 
-                    bkid, from, byroute, fbid, action, wFeedbackEvent.enter_event, wFeedbackEvent.enter2pre_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.enter2in_event );
+                    bkid, translateUniversalRoute(from), translateUniversalRoute(byroute), fbid, action, wFeedbackEvent.enter_event, wFeedbackEvent.enter2pre_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.enter2in_event );
               }
               if( ! foundIn ) {
                 foundIn = True;
@@ -2071,7 +2083,7 @@ static Boolean blockFeedbackActionCheck( iOAnalyse inst, Boolean repair ) {
               else {
                 foundInMulti = True;
                 TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] fbid[%s] action[%s] after (%s %s)",
-                    bkid, from, byroute, fbid, action, wFeedbackEvent.in_event, wFeedbackEvent.enter2in_event );
+                    bkid, translateUniversalRoute(from), translateUniversalRoute(byroute), fbid, action, wFeedbackEvent.in_event, wFeedbackEvent.enter2in_event );
               }
             }
           }
@@ -2081,26 +2093,26 @@ static Boolean blockFeedbackActionCheck( iOAnalyse inst, Boolean repair ) {
         if( foundEnterMulti ) {
           if( repair ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] found multiple usage of (%s %s %s %s): not repaired",
-                bkid, from, byroute, wFeedbackEvent.enter_event, wFeedbackEvent.enter2pre_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.enter2in_event );
+                bkid, translateUniversalRoute(from), translateUniversalRoute(byroute), wFeedbackEvent.enter_event, wFeedbackEvent.enter2pre_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.enter2in_event );
           } else {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] found multiple usage of (%s %s %s %s)",
-                bkid, from, byroute, wFeedbackEvent.enter_event, wFeedbackEvent.enter2pre_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.enter2in_event );
+                bkid, translateUniversalRoute(from), translateUniversalRoute(byroute), wFeedbackEvent.enter_event, wFeedbackEvent.enter2pre_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.enter2in_event );
             numProblems++;
           }
         }
         if( foundInMulti ) {
           if( repair ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] found multiple usage of (%s %s): not repaired",
-              bkid, from, byroute, wFeedbackEvent.in_event, wFeedbackEvent.enter2in_event );
+              bkid, translateUniversalRoute(from), translateUniversalRoute(byroute), wFeedbackEvent.in_event, wFeedbackEvent.enter2in_event );
           } else {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] found multiple usage of (%s %s)",
-                bkid, from, byroute, wFeedbackEvent.in_event, wFeedbackEvent.enter2in_event );
+                bkid, translateUniversalRoute(from), translateUniversalRoute(byroute), wFeedbackEvent.in_event, wFeedbackEvent.enter2in_event );
             numProblems++;
           }
         }
         if( ! foundEnter && foundIn ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] found (%s) but no (%s %s %s)",
-              bkid, from, byroute, wFeedbackEvent.in_event, wFeedbackEvent.enter_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.enter2pre_event );
+              bkid, translateUniversalRoute(from), translateUniversalRoute(byroute), wFeedbackEvent.in_event, wFeedbackEvent.enter_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.enter2pre_event );
           if( repair ) {
             markMatchingFbevtForRemoval( delList, bkNode, fbevtFrom, wFeedbackEvent.in_event ) ;
           }
@@ -2108,7 +2120,7 @@ static Boolean blockFeedbackActionCheck( iOAnalyse inst, Boolean repair ) {
         }
         if( foundEnter && ! foundIn ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback action check: bl[%s] from[%s] byroute[%s] found (%s %s %s) but no (%s)",
-              bkid, from, byroute, wFeedbackEvent.enter_event, wFeedbackEvent.enter2pre_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.in_event );
+              bkid, translateUniversalRoute(from), translateUniversalRoute(byroute), wFeedbackEvent.enter_event, wFeedbackEvent.enter2pre_event, wFeedbackEvent.enter2shortin_event, wFeedbackEvent.in_event );
           if( repair ) {
             markMatchingFbevtForRemoval( delList, bkNode, fbevtFrom, wFeedbackEvent.enter_event ) ;
             markMatchingFbevtForRemoval( delList, bkNode, fbevtFrom, wFeedbackEvent.enter2pre_event ) ;
@@ -2730,7 +2742,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
       }
 
       __createKey( key, node, 0+modx, 0+mody, 0);
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  checking key %s for %s type: %s ori: %s name: %s",
           key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
       if( StrOp.equals( NodeOp.getName(node), wTrack.name() )
         && (  StrOp.equals( type, wTrack.curve90 ) || StrOp.equals( type, wTrack.dcurve  ) )
@@ -6624,7 +6636,8 @@ static int _analyse(iOAnalyse inst) {
       iOList list = ModelOp.getLevelItems( data->model, zlevel, &cx, &cy, True);
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-           "preparing module: %s", wModule.gettitle( mod) );
+           "preparing module: title[%s] id[%s] modx[%d] mody[%d] rotation[%d]",
+           wModule.gettitle(mod), wModule.getid(mod), wModule.getx(mod), wModule.gety(mod), wModule.getrotation(mod) );
       __prepare(inst, list, wModule.getx(mod), wModule.gety(mod));
 
       zlevel++;
@@ -6743,6 +6756,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
   iOMap accessoryMap = MapOp.inst();
   int dbs = NodeOp.getChildCnt(data->plan);
   int i = 0;
+  iONode modplan = ModelOp.getModPlan( data->model );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking plan health..." );
 
@@ -7063,7 +7077,6 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
   int zlevel = 0;
   MapOp.clear(data->objectmap);
 
-  iONode modplan = ModelOp.getModPlan( data->model );
   if( modplan == NULL) {
     int i;
     for( i = 0; i <= data->maxZlevel ; i++) {
@@ -7079,12 +7092,28 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
   else {
     iONode mod = wModPlan.getmodule( modplan );
     while( mod != NULL ) {
-      iOList list = ModelOp.getLevelItems( data->model, zlevel, &cx, &cy, True);
-      /* add tt st tx ... to list ??? */
-      __addMissingLevelItems( inst, zlevel, &cx, &cy, list );
-      if( ! __prepare(inst, list, wModule.getx(mod), wModule.gety(mod)) )
-        healthy = False;
-      zlevel++;
+      if( StrOp.equals( wModule.gettitle(mod), "Rename me!" ) ) {
+        /* <module/> - entry in plan file creates empty/dummy/default module */
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+            " _checkPlanHealth(module): title[%s] id[%d] filename[%s] modx[%d] mody[%d] zlevel[%d] rotation[%d] (SKIPPED)",
+            wModule.gettitle(mod), wModule.getid(mod), wModule.getfilename(mod), wModule.getx(mod), wModule.gety(mod), zlevel, wModule.getrotation(mod) );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+            "WARNING: incomplete/empty module definition in plan before module at level[%d] (SKIPPED)", zlevel );
+        /* skip empty module node */
+      }
+      else {
+        /* add module node */
+        iOList list = ModelOp.getLevelItems( data->model, zlevel, &cx, &cy, True);
+        /* add tt st tx ... to list ??? */
+        __addMissingLevelItems( inst, zlevel, &cx, &cy, list );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+            " _checkPlanHealth(module): title[%s] id[%d] filename[%s] modx[%d] mody[%d] zlevel[%d] rotation[%d]",
+            wModule.gettitle(mod), wModule.getid(mod), wModule.getfilename(mod), wModule.getx(mod), wModule.gety(mod), zlevel, wModule.getrotation(mod) );
+
+        if( ! __prepare(inst, list, wModule.getx(mod), wModule.gety(mod)) )
+          healthy = False;
+        zlevel++;
+      }
       mod = wModPlan.nextmodule( modplan, mod );
     }
   }
@@ -7174,6 +7203,25 @@ static Boolean textCheck( iOAnalyse inst, Boolean repair ) {
           int txCY = wText.getcy( tx ) ;
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "textCheck: text[%s][%s]: xyz[%d-%d-%d] cx[%d] cy[%d]",
               txId, txText, txX, txY, txZ, txCX, txCY );
+          if( StrOp.len( txText ) == 0 ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING/INFO: object [tx] with id[%s] at [%d,%d,%d]: Text is emtpy",
+                txId, txX, txY, txZ );
+          }else {
+            int i;
+            Boolean allWhiteChars = True;
+            for( i = 0 ; i < StrOp.len( txText ) ; i++ ) {
+              if( ! isspace( txText[i] ) ) {
+                TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "textCheck: tx[%s][%d]=\"%c\" no space", txId, i, txText[i] );
+                allWhiteChars = False ;
+              }else {
+                TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "textCheck: tx[%s][%d]=\"%c\" space", txId, i, txText[i] );
+              }
+            }
+            if( allWhiteChars ) {
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING/INFO: object [tx] with id[%s] at [%d,%d,%d]: Text contains only white chars",
+                  txId, txX, txY, txZ );
+            }
+          }
           if( txCX <= 0 ||
               txCY <= 0 ||
               ! isValidZlevel( inst, txZ )
@@ -8168,7 +8216,8 @@ static int _cleanupBlocksFbEvtBasic( iONode blocklist ) {
               modifications++;
               thisBlockChanged = True;
               ListOp.add( delList, (obj)fbevt );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupBlocksFbEvtBasic: Marking  from %s fbid %s action %s to remove", from, fbid, action );
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupBlocksFbEvtBasic: Marking  from %s fbid %s action %s to remove",
+                  translateUniversalRoute(from), fbid, action );
             }
             fbevt = wBlock.nextfbevent( blocknode, fbevt );
           }
@@ -8179,7 +8228,7 @@ static int _cleanupBlocksFbEvtBasic( iONode blocklist ) {
             fb = (iONode)ListOp.first( delList );
             while( fb != NULL ) {
               TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupBlocksFbEvtBasic: Deleting from %s fbid %s action %s", 
-                  wFeedbackEvent.getfrom(fb), wFeedbackEvent.getid(fb), wFeedbackEvent.getaction(fb) );
+                  translateUniversalRoute(wFeedbackEvent.getfrom(fb)), wFeedbackEvent.getid(fb), wFeedbackEvent.getaction(fb) );
               NodeOp.removeChild( blocknode, fb );
               NodeOp.base.del(fb);
               fb = (iONode)ListOp.next( delList );
@@ -8272,7 +8321,8 @@ static int _cleanupSelTabsFbEvtBasic( iONode seltablist ) {
               modifications++;
               thisSelTabChanged = True;
               ListOp.add( delList, (obj)fbevt );
-              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupSelTabsFbEvtBasic: Marking  from %s fbid %s action %s to remove", from, fbid, action );
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupSelTabsFbEvtBasic: Marking  from %s fbid %s action %s to remove",
+                  translateUniversalRoute(from), fbid, action );
             }
             fbevt = wSelTab.nextfbevent( seltabnode, fbevt );
           }
@@ -8283,7 +8333,7 @@ static int _cleanupSelTabsFbEvtBasic( iONode seltablist ) {
             fb = (iONode)ListOp.first( delList );
             while( fb != NULL ) {
               TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupSelTabsFbEvtBasic: Deleting from %s fbid %s action %s", 
-                  wFeedbackEvent.getfrom(fb), wFeedbackEvent.getid(fb), wFeedbackEvent.getaction(fb) );
+                  translateUniversalRoute(wFeedbackEvent.getfrom(fb)), wFeedbackEvent.getid(fb), wFeedbackEvent.getaction(fb) );
               NodeOp.removeChild( seltabnode, fb );
               NodeOp.base.del(fb);
               fb = (iONode)ListOp.next( delList );
