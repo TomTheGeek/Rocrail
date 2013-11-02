@@ -1873,6 +1873,7 @@ static void __stopAllLocs( iOModel inst ) {
   iOModelData data = Data(inst);
   int i = 0;
   int cnt = ListOp.size( data->locList );
+  data->pendingstartall = False;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Stopping all Locs..." );
   for( i = 0; i < cnt; i++ ) {
     iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
@@ -1930,7 +1931,7 @@ static void __startAllLocosRunner( void* threadinst ) {
   int cnt = ListOp.size( data->locList );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s locos...", ThreadOp.getName(th) );
-  for( i = 0; i < cnt; i++ ) {
+  for( i = 0; i < cnt && data->pendingstartall; i++ ) {
     iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
     Boolean lcgo = True;
     if( resume && !LocOp.isResumeAutomode(loc) )
@@ -1943,7 +1944,7 @@ static void __startAllLocosRunner( void* threadinst ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Loco %s could not be started; skipping start gap.", LocOp.getId(loc) );
   }
 
-  if( MapOp.size(data->stageMap) > 0 ) {
+  if( MapOp.size(data->stageMap) > 0 && data->pendingstartall) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s stages...", ThreadOp.getName(th) );
     iOStage stage = (iOStage)MapOp.first( data->stageMap );
     while( stage != NULL ) {
