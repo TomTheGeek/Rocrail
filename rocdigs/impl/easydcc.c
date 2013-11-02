@@ -512,6 +512,7 @@ static void __writer( void* threadinst ) {
       EventOp.reset(data->readyEvt);
 
     }
+    ThreadOp.sleep(10);
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC writer ended." );
