@@ -737,16 +737,6 @@ static void __reader( void* threadinst ) {
               break;
             }
           }
-          /*
-          if( idx == 13 && SerialOp.available(data->serial) > 0 ) {
-            int nrTrash = SerialOp.available(data->serial);
-            char* trash = allocMem(nrTrash);
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "nr of trash bytes is %d", nrTrash );
-            if( SerialOp.read( data->serial, trash, nrTrash ) ) {
-            }
-            freeMem(trash);
-          }
-          */
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "%d bytes read, nr of data bytes is %d", idx, in[4]&0x0F );
 
         }
