@@ -50,7 +50,9 @@
 #include <sys/select.h>
 #include <sys/time.h>
 #include <time.h>
+#if defined __APPLE__
 #include <IOKit/serial/ioss.h>
+#endif
 #else
 #include <termio.h>
 #include <termios.h>
@@ -299,7 +301,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
     errno = 0;
     tcsetattr( o->sh, TCSANOW, &tio );
 
-#if defined __APPLE__ || defined __OpenBSD__
+#if defined __APPLE__
     if( actbps !=  o->line.bps ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying IOSSIOSPEED for set bps to %d", o->line.bps );
       if( ioctl(o->sh, IOSSIOSPEED, &o->line.bps) == -1 )
