@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!-- Ausleuchtung rot-->
+    <path stroke="rgb(255,0,0)" fill="rgb(255,0,0)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+    <!-- signal mast-->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 25,25 L 28,25 L 28,22 L 30,22 L 30,29 L 28,29 L 28,26 L 25,26 z ">
+      <!-- Base-->
+    </path>
+    <path stroke="rgb(224,224,224)" fill="rgb(240,240,240)" d="M 1,25 L 25,25 L 25,26 L 1,26 z ">
+      <!-- mast-->
+    </path>
+    <!-- Top signal arm-->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 6,21 L 6,31 L 7,30 L 8,31 L 8,21 z " />
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 6,28 L 6,29 L 7,28 L 8,29 L 8,28 L 7,27 z " />
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 6,21 L 6,23 L 8,23 L 8,21 z " />
+    <!-- Top Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(255,255,0)" d="M 10,21 L 11,21 L 12,22 L 12,23 L 11,24 L 10,24 L 9,23 L 9,22 z ">
+      <!-- Red bit-->
+    </path>
+    <path stroke="rgb(0,0,0)" fill="rgb(0,40,90)" d="M 7,20 L 8,20 L 9,21 L 9,22 L 8,23 L 7,23 L 6,22 L 6,21 z ">
+      <!-- Green bit-->
+    </path>
+  </g>
+</svg>

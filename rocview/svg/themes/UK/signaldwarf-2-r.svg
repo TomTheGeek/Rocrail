@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!-- Ausleuchtung grau -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+    <!-- signal -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 18,28 L 22,21 L 28,21 L 28,31 L 18,31 z " />
+    <!-- Top Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,90)" d="M 20,27 L 21,27 L 22,28 L 22,29 L 21,30 L 20,30 L 19,29 L 19,28 z " />
+    <!-- Left Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(255,0,0)" d="M 24,22 L 25,22 L 26,23 L 26,24 L 25,25 L 24,25 L 23,24 L 23,23 z " />
+    <!-- Right Lamp -->
+    <path stroke="rgb(0,0,0)" fill="rgb(255,0,0)" d="M 24,27 L 25,27 L 26,28 L 26,29 L 25,30 L 24,30 L 23,29 L 23,28 z " />
+  </g>
+</svg>

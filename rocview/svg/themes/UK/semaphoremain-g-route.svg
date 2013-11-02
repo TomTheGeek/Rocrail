@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!-- Ausleuchtung geld -->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+    <!-- signal mast-->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 25,25 L 28,25 L 28,22 L 30,22 L 30,29 L 28,29 L 28,26 L 25,26 z ">
+      <!-- Base-->
+    </path>
+    <path stroke="rgb(224,224,224)" fill="rgb(240,240,240)" d="M 1,25 L 25,25 L 25,26 L 1,26 z ">
+      <!-- mast-->
+    </path>
+    <!-- Upper signal arm-->
+    <path stroke="rgb(255,0,0)" fill="rgb(255,0,0)" d="M 9,21 L 11,23 L 3,31 L 1,29 z ">
+      <!-- Main arm-->
+    </path>
+    <path stroke="rgb(255,255,255)" fill="rgb(255,255,255)" d="M 5,29 L 3,27 L 2,28 L 4,30 z ">
+      <!-- Band-->
+    </path>
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 9,21 L 10,20 L 12,22 L 11,23 z ">
+      <!-- Lamp end-->
+    </path>
+    <!-- Upper spectacle -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,255,0)" d="M 10,21 L 11,21 L 12,22 L 12,23 L 11,24 L 10,24 L 9,23 L 9,22 z ">
+      <!-- Green bit-->
+    </path>
+    <path stroke="rgb(0,0,0)" fill="rgb(90,0,0)" d="M 11,24 L 12,24 L 13,25 L 13,26 L 12,27 L 11,27 L 10,26 L 10,25 z ">
+      <!-- Green bit-->
+    </path>
+    <!-- Lower signal arm-->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 21,21 L 23,23 L 15,31 L 15,29 L 13,29 z ">
+      <!-- Main arm-->
+    </path>
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 17,29 L 17,27 L 15,27 L 14,28 L 16,28 L 16,30 z ">
+      <!-- Band-->
+    </path>
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 21,21 L 22,20 L 24,22 L 23,23 z ">
+      <!-- Lamp end-->
+    </path>
+    <!-- Lower spectacle -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,255,0)" d="M 22,21 L 23,21 L 24,22 L 24,23 L 23,24 L 22,24 L 21,23 L 21,22 z ">
+      <!--Green bit-->
+    </path>
+    <path stroke="rgb(0,0,0)" fill="rgb(90,90,0)" d="M 23,24 L 24,24 L 25,25 L 25,26 L 24,27 L 23,27 L 22,26 L 22,25 z ">
+      <!-- Yellow bit-->
+    </path>
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!-- Ausleuchtung rot -->
+    <path stroke="rgb(255,0,0)" fill="rgb(255,0,0)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+    <!-- signal -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 1,24 L 3,22 L 6,22 L 8,24 L 8,25 L 28,25 L 28,22 L 30,22 L 30,29 L 28,29 L 28,26 L 8,26 L 8,27 L 6,29 L 3,29 L 1,27 z " />
+    <!-- Top Lamp -->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 4,24 L 5,24 L 6,25 L 6,26 L 5,27 L 4,27 L 3,26 L 3,25 z " />
+  </g>
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!-- Ausleuchtung grau -->
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+    <!-- signal -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 1,24 L 3,22 L 6,22 L 8,24 L 8,25 L 28,25 L 28,22 L 30,22 L 30,29 L 28,29 L 28,26 L 8,26 L 8,27 L 6,29 L 3,29 L 1,27 z " />
+    <!-- Top Lamp -->
+    <path stroke="rgb(90,90,90)" fill="rgb(90,90,90)" d="M 4,24 L 5,24 L 6,25 L 6,26 L 5,27 L 4,27 L 3,26 L 3,25 z " />
+  </g>
+</svg>

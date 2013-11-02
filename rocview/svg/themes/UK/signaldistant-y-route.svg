@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!-- Ausleuchtung geld -->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+    <!-- signal -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 1,24 L 3,22 L 18,22 L 20,24 L 20,25 L 28,25 L 28,22 L 30,22 L 30,29 L 28,29 L 28,26 L 20,26 L 20,27 L 18,29 L 3,29 L 1,27 z " />
+    <!-- Top Lamp -->
+    <path stroke="rgb(90,90,90)" fill="rgb(90,90,90)" d="M 4,24 L 5,24 L 6,25 L 6,26 L 5,27 L 4,27 L 3,26 L 3,25 z " />
+    <!-- Middle Lamp -->
+    <path stroke="rgb(90,90,90)" fill="rgb(90,90,90)" d="M 10,24 L 11,24 L 12,25 L 12,26 L 11,27 L 10,27 L 9,26 L 9,25 z " />
+    <!-- Bottom Lamp -->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 16,24 L 17,24 L 18,25 L 18,26 L 17,27 L 16,27 L 15,26 L 15,25 z " />
+  </g>
+</svg>

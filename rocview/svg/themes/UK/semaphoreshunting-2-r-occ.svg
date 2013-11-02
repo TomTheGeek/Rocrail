@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!-- Ausleuchtung rot-->
+    <path stroke="rgb(255,0,0)" fill="rgb(255,0,0)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+    <!-- signal base-->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 26,25 L 26,21 L 28,21 L 28,29 L 26,29 L 26,26 L 22,26 L 22,25 z " />
+    <!--signal disc-->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 16,24 L 18,22 L 20,22 L 22,24 L 22,26 L 20,28 L 18,28 L 16,26 z " />
+    <!--Bar-->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 18,22 L 20,22 L 20,28 L 18,28 z " />
+  </g>
+</svg>
