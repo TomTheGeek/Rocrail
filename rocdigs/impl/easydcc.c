@@ -576,6 +576,7 @@ static void __reader( void* threadinst ) {
   iOEasyDCC easydcc = (iOEasyDCC)ThreadOp.getParm( th );
   iOEasyDCCData data = Data(easydcc);
   char buffer[BUFFERSIZE];
+  int retry = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC reader started." );
   ThreadOp.sleep( 100 );
@@ -595,45 +596,66 @@ static void __reader( void* threadinst ) {
   while( data->run ) {
     Boolean ok = True;
 
-    if( SerialOp.available(data->serial) > 0 ) {
-      if( __readResponse(data, buffer) > 0 ) {
-        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "read response: [%s]", buffer );
-        if( buffer[0] == 'O' ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC is ready" );
-        }
-        else if( buffer[0] == 'P' ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "programming is ready" );
-          if( data->lastcmd == CV_WRITE ) {
-            iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "programming write response" );
-            wProgram.setcv( node, data->lastcv );
-            wProgram.setvalue( node, data->lastvalue );
-            wProgram.setcmd( node, wProgram.datarsp );
-            if( data->iid != NULL )
-              wProgram.setiid( node, data->iid );
+    int available = SerialOp.available(data->serial);
 
-            if( data->listenerFun != NULL && data->listenerObj != NULL )
-              data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
-
-            data->lastcmd = 0;
+    if( data->serialOK ) {
+      if( available > 0 ) {
+        if( __readResponse(data, buffer) > 0 ) {
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "read response: [%s]", buffer );
+          if( buffer[0] == 'O' ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "EasyDCC is ready" );
           }
-        }
-        else if( buffer[0] == '?' ) {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unknown command" );
-        }
-        else if( buffer[0] == 'C' ) {
-          /* CVxxxyy<CR>
-           * R 012
-           * [3-4 second delay]
-           * CV012EA
-           * */
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming response: %s", buffer );
-          __evaluateCV(data, buffer);
-        }
+          else if( buffer[0] == 'P' ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "programming is ready" );
+            if( data->lastcmd == CV_WRITE ) {
+              iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "programming write response" );
+              wProgram.setcv( node, data->lastcv );
+              wProgram.setvalue( node, data->lastvalue );
+              wProgram.setcmd( node, wProgram.datarsp );
+              if( data->iid != NULL )
+                wProgram.setiid( node, data->iid );
 
-        EventOp.set(data->readyEvt);
+              if( data->listenerFun != NULL && data->listenerObj != NULL )
+                data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+              data->lastcmd = 0;
+            }
+          }
+          else if( buffer[0] == '?' ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unknown command" );
+          }
+          else if( buffer[0] == 'C' ) {
+            /* CVxxxyy<CR>
+             * R 012
+             * [3-4 second delay]
+             * CV012EA
+             * */
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Programming response: %s", buffer );
+            __evaluateCV(data, buffer);
+          }
+
+          EventOp.set(data->readyEvt);
+        }
+      }
+      else if( available == -1 || SerialOp.getRc(data->serial) > 0 ) {
+        /* device error */
+        data->serialOK = False;
+        SerialOp.close(data->serial);
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error" );
       }
     }
+    else {
+      ThreadOp.sleep(100);
+      retry++;
+      if( retry >= 50 ) {
+        retry = 0;
+        data->serialOK = SerialOp.open( data->serial );
+        if(data->serialOK)
+          SerialOp.flush(data->serial);
+      }
+    }
+
     ThreadOp.sleep( 10 );
   }
 
