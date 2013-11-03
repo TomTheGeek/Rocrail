@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg width="32" height="32">
+  <g>
+    <!-- Track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z " />
+    <!--yellow-->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
+    <!-- signal -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 1,4 L 3,2 L 6,2 L 8,4 L 10,2 L 13,2 L 15,4 L 15,5 L 28,5 L 28,2 L 30,2 L 30,9 L 28,9 L 28,6 L 15,6 L 15,7 L 13,9 L 10,9 L 8,7 L 6,9 L 3,9 L 1,7 z " />
+    <!-- Top Lamp -->
+    <path stroke="rgb(255,0,0)" fill="rgb(255,0,0)" d="M 4,4 L 5,4 L 6,5 L 6,6 L 5,7 L 4,7 L 3,6 L 3,5 z " />
+    <!-- Bottom Lamp -->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 11,4 L 12,4 L 13,5 L 13,6 L 12,7 L 11,7 L 10,6 L 10,5 z " />
+  </g>
+</svg>
