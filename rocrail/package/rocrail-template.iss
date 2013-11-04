@@ -20,6 +20,7 @@ OutputBaseFilename=rocrail-<BZR>-win32
 Name: demoplan; Description: "Demo plan"
 Name: images; Description: "Loco images"
 Name: themes; Description: "SVG Themes"
+Name: americanthemes; Description: "SVG American Themes"
 ;Name: symbols; Description: "WebClient Symbols"
 
 [Run]
@@ -54,6 +55,7 @@ Source: "images\*.*"; DestDir: "{userdocs}\Rocrail\images"; Tasks: images; Flags
 Source: "..\..\stylesheets\*.*"; DestDir: "{userdocs}\Rocrail\stylesheets";
 Source: "..\..\decspecs\*.*"; DestDir: "{userdocs}\Rocrail\decspecs"; Flags: recursesubdirs
 Source: "..\..\rocview\svg\themes\*.*"; DestDir: "{app}\svg\themes"; Tasks: themes; Flags: recursesubdirs
+Source: "..\..\rocview\svg\americanthemes\*.*"; DestDir: "{app}\svg\themes"; Tasks: americanthemes; Flags: recursesubdirs
 ;Source: "..\..\rocrail\symbols\*.*"; DestDir: "{app}\symbols"; Tasks: symbols; Flags: onlyifdoesntexist
 Source: "..\..\COPYING"; DestDir: "{app}"
 
