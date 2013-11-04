@@ -164,6 +164,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst);
 static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int travel,
     int turnoutstate, int depth, Boolean toPreRTlist);
 static int _cleanupAutogenRouteids( iONode tracklist );
+static Boolean checkDigints( iOAnalyse inst );
 static Boolean connectorCheck( iOAnalyse inst, Boolean repair );
 static Boolean blockCheck( iOAnalyse inst, Boolean repair );
 static Boolean routeCheck( iOAnalyse inst, Boolean repair );
@@ -6760,6 +6761,10 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checking plan health..." );
 
+  /* check digints */
+  if( checkDigints( inst ) == False )
+    healthy = False;
+
   /* checking ID's */
   for( i = 0; i < dbs; i++ ) {
     iOMap idMap = MapOp.inst();
@@ -7464,6 +7469,52 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
   return retVal;
 }
 
+
+/* check valid and unique iid of all command stations */
+static Boolean checkDigints( iOAnalyse inst ) {
+  iOAnalyseData data = Data(inst);
+  iONode ini    = AppOp.getIni();
+  iONode plan   = ModelOp.getModel( data->model );
+  iONode modeldigint = plan?wPlan.getdigint( plan ):NULL;
+  iONode digint = wRocRail.getdigint( ini );
+  Boolean bModelDigints = modeldigint == NULL ? False:True;
+  int i = 0;
+  Boolean healthy = True;
+  iOMap digintMap = MapOp.inst();
+
+  while( digint != NULL ) {
+    i++;
+    const char* digintIid = wDigInt.getiid( digint );
+    if( StrOp.len( digintIid ) == 0 ) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: controller[%d] Interface ID is EMPTY",
+          i );
+      healthy = False;
+    }else {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkDigints: digint[%d] iid=\"%s\"",
+          i, digintIid );
+      if( MapOp.haskey( digintMap, digintIid ) ) {
+        iONode digintItem = (iONode)MapOp.get( digintMap, digintIid );
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: a controller with Interface ID \"%s\" is already present",
+            digintIid );
+        healthy = False;
+      }
+      else {
+        MapOp.put( digintMap, digintIid, (obj)digint );
+      }
+    }
+
+    if( bModelDigints )
+      digint = wPlan.nextdigint( ModelOp.getModel( data->model ), digint );
+    else
+      digint = wRocRail.nextdigint( ini, digint );
+  }
+
+  MapOp.base.del(digintMap);
+
+  return healthy;
+}
+
+
 /* is the given iid a valid iid of a command station */
 static Boolean isValidInterfaceID( iOAnalyse inst, const char *iid )
 {
@@ -7519,6 +7570,11 @@ static Boolean _checkExtended(iOAnalyse inst) {
   /* BASIC ELEMENT CHECKS */
   if( data->basicCheck ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Basic checks starting..." );
+
+    /* check valid and unique iid of all command stations */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " digint test: in progress..." );
+    res = checkDigints( inst );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " digint test: %s problems detected", res?"no":"some" );
 
     /* check zlevels and all items on zlevels */
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " zlevel test: in progress..." );
