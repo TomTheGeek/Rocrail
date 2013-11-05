@@ -545,9 +545,9 @@ static Boolean __checkSerialDevice( iODCC232 dcc232) {
   if( !data->comOK ) {
     data->comOK = SerialOp.open( data->serial );
     if( data->comOK ) {
-      SerialOp.setOutputFlow(data->serial,False);          /* suspend output */
+      SerialOp.setOutputFlow(data->serial, data->power);
       SerialOp.setRTS(data->serial,True);  /* +12V for ever on RTS   */
-      SerialOp.setDTR(data->serial,False); /* disable booster output */
+      SerialOp.setDTR(data->serial,data->power); /* disable booster output */
       SerialOp.setSerialMode(data->serial,dcc);
     }
   }
@@ -561,7 +561,7 @@ static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize, 
   int idlestreamsize = 0;
 
   if( !__checkSerialDevice(dcc232) ) {
-    ThreadOp.sleep(100);
+    ThreadOp.sleep(1000);
     return False;
   }
 
