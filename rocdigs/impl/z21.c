@@ -672,7 +672,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     }
     else {
       rsp = __translate( (iOZ21)inst, cmd );
-      NodeOp.base.del(cmd);
+      cmd->base.del(cmd);
     }
   }
   return rsp;

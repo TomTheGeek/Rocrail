@@ -229,7 +229,7 @@ static iONode _cmd( obj inst ,const iONode node ) {
   else {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "command not supported: %s:%s", NodeOp.getName(node), wSysCmd.getcmd(node) );
   }
-  NodeOp.base.del(node);
+  node->base.del(node);
   return NULL;
 }
 

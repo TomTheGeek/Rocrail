@@ -342,7 +342,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     }
 
     /* Cleanup command node */
-    NodeOp.base.del(cmd);
+    cmd->base.del(cmd);
   }
 
 
@@ -432,7 +432,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     }
 
     /* Cleanup command node */
-    NodeOp.base.del(cmd);
+    cmd->base.del(cmd);
   }
 
   /*

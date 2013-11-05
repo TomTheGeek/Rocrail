@@ -1028,7 +1028,7 @@ static iONode _cmd( obj inst, const iONode cmd ) {
   if ( !data->connected ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no ECoS connection" );
     if( cmd != NULL )
-      NodeOp.base.del(cmd);
+      cmd->base.del(cmd);
     return NULL;
   } else {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Connected to ECoS" );
@@ -1052,7 +1052,7 @@ static iONode _cmd( obj inst, const iONode cmd ) {
   }
 
   if( cmd != NULL )
-    NodeOp.base.del(cmd);
+    cmd->base.del(cmd);
 
   return NULL;
 }
