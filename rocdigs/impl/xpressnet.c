@@ -888,12 +888,17 @@ static void __evaluateLoco( iOXpressNet xpressnet, byte* in ) {
   if( steps == 0 ) steps = 14;
   else if( steps == 0x01 ) steps = 27;
   else if( steps == 0x02 ) steps = 28;
-  else steps = 128;
+  else steps = 127;
 
   if( steps == 27 || steps == 28 ) {
     int bit4 = (speed & 0x10) >> 4;
     speed &= 0x0F;
     speed = (speed << 1) + bit4;
+  }
+
+  if( speed > 0 ) {
+    /* remove ebreak */
+    speed--;
   }
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
