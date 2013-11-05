@@ -430,6 +430,8 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         data->slots[slot].fnstream[0] = compFunction(data->slots[slot].fnstream, data->slots[slot].addr,
                                                      data->slots[slot].longaddr, data->slots[slot].changedfgrp, data->slots[slot].fn);
 
+        data->slots[slot].idle = SystemOp.getTick();
+
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
           "function group %d changed for loco %d", group, addr );
 
