@@ -32,6 +32,7 @@ static int instCnt = 0;
 
 static int __getcvbyte(iODCC232 inst, int cv);
 static Boolean __setcvbyte(iODCC232 inst, int cv, int val);
+static Boolean __checkSerialDevice( iODCC232 dcc232);
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -138,13 +139,19 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     if( StrOp.equals( cmd, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
       data->power = False;
-      SerialOp.setDTR(data->serial, False);
+      __checkSerialDevice(dcc232);
+      if( data->comOK ) {
+        SerialOp.setDTR(data->serial, False);
+      }
       __stateChanged(dcc232);
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
-      SerialOp.setDTR(data->serial, True);
-      SerialOp.setOutputFlow(data->serial, True);
+      __checkSerialDevice(dcc232);
+      if( data->comOK ) {
+        SerialOp.setDTR(data->serial, True);
+        SerialOp.setOutputFlow(data->serial, True);
+      }
       data->power = True;
       __stateChanged(dcc232);
     }
@@ -250,13 +257,19 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     else {
       if(  wProgram.getcmd( node ) == wProgram.pton ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT ON" );
-        data->ptflag = True;
-        SerialOp.setRTS(data->serial, True);
+        __checkSerialDevice(dcc232);
+        if( data->comOK ) {
+          SerialOp.setRTS(data->serial, True);
+          data->ptflag = True;
+        }
       }
       else if(  wProgram.getcmd( node ) == wProgram.ptoff ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT OFF" );
-        data->ptflag = False;
-        SerialOp.setRTS(data->serial, False);
+        __checkSerialDevice(dcc232);
+        if( data->comOK ) {
+          SerialOp.setRTS(data->serial, False);
+          data->ptflag = False;
+        }
       }
       else if( wProgram.getcmd( node ) == wProgram.get && data->ptflag ) {
         rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
@@ -460,9 +473,11 @@ static void _halt( obj inst, Boolean poweroff ) {
   iODCC232Data data = Data(inst);
   data->run = False;
   data->power = False;
-  SerialOp.setDTR(data->serial, False);
+  if( data->comOK ) {
+    SerialOp.setDTR(data->serial, False);
+    SerialOp.close( data->serial );
+  }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down [%s]...", data->iid );
-  SerialOp.close( data->serial );
   __stateChanged((iODCC232)inst);
   return;
 }
@@ -489,7 +504,8 @@ static byte* _cmdRaw( obj inst, const byte* cmd ) {
 static void _shortcut( obj inst ) {
   iODCC232Data data = Data(inst);
   data->power = False;
-  SerialOp.setDTR(data->serial, False);
+  if( data->comOK )
+    SerialOp.setDTR(data->serial, False);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "external shortcut event [%s]...", data->iid );
   __stateChanged((iODCC232)inst);
   return;
@@ -521,11 +537,31 @@ static int _version( obj inst ) {
 }
 
 
+static Boolean __checkSerialDevice( iODCC232 dcc232) {
+  iODCC232Data data = Data(dcc232);
+
+  if( !data->comOK ) {
+    data->comOK = SerialOp.open( data->serial );
+    if( data->comOK ) {
+      SerialOp.setOutputFlow(data->serial,False);          /* suspend output */
+      SerialOp.setRTS(data->serial,True);  /* +12V for ever on RTS   */
+      SerialOp.setDTR(data->serial,False); /* disable booster output */
+      SerialOp.setSerialMode(data->serial,dcc);
+    }
+  }
+  return data->comOK;
+}
+
 static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize, Boolean longIdle ) {
   iODCC232Data data = Data(dcc232);
   Boolean     rc = False;
   byte idlestream[100];
   int idlestreamsize = 0;
+
+  if( !__checkSerialDevice(dcc232) ) {
+    ThreadOp.sleep(100);
+    return False;
+  }
 
   idlestreamsize = idlePacket(idlestream, longIdle);
 
@@ -551,7 +587,9 @@ static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize, 
     /* error */
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "transmit error=%d (Power Off)", SerialOp.getRc(data->serial) );
     data->power = False;
+    data->comOK = False;
     SerialOp.setDTR(data->serial, False);
+    SerialOp.close(data->serial);
     __stateChanged(dcc232);
   }
   else {
@@ -583,7 +621,7 @@ static void __watchDog( void* threadinst ) {
 
     ThreadOp.sleep(100);
 
-    if( data->power ) {
+    if( data->power && data->comOK ) {
 
       if ( ( SerialOp.isDSR(data->serial) && !inversedsr ) ) {
         TraceOp.trc( __FILE__, TRCLEVEL_DEBUG, __LINE__, 9999, "shortcut detected" );
@@ -629,8 +667,6 @@ static void __dccWriter( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCC232 writer started. (0x%08X)", dcc232 );
 
   ThreadOp.setHigh( th );
-  SerialOp.setSerialMode(data->serial,dcc);
-
 
   while(data->run) {
 
@@ -761,6 +797,11 @@ static int __getcvbyte(iODCC232 inst, int cv) {
      return 0;
    }
 
+   if( !data->comOK ) {
+     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "PT: serial device is not ready");
+     return 0;
+   }
+
    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: enable booster output");
    /* enable booster output */
    SerialOp.setDTR(data->serial,True);
@@ -839,6 +880,11 @@ static Boolean __setcvbyte(iODCC232 inst, int cv, int val) {
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT: cvset for %d=%d", cv, val);
 
+  if( !data->comOK ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "PT: serial device is not ready");
+    return False;
+  }
+
   int sendsize = createCVsetpacket(cv, val, SendStream, True);
 
 
@@ -912,11 +958,13 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   SerialOp.setLine( data->serial, 19200, 8, 0, 0, True );
   SerialOp.setCTS( data->serial, False); /*Don't use CTS handshake*/
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
-  SerialOp.open( data->serial );
+  data->comOK = SerialOp.open( data->serial );
 
-  SerialOp.setOutputFlow(data->serial,False);          /* suspend output */
-  SerialOp.setRTS(data->serial,True);  /* +12V for ever on RTS   */
-  SerialOp.setDTR(data->serial,False); /* disable booster output */
+  if( data->comOK ) {
+    SerialOp.setOutputFlow(data->serial,False);          /* suspend output */
+    SerialOp.setRTS(data->serial,True);  /* +12V for ever on RTS   */
+    SerialOp.setDTR(data->serial,False); /* disable booster output */
+  }
 
   if( data->shortcut ) {
     data->watchdog = ThreadOp.inst( "watchdog", &__watchDog, __DCC232 );

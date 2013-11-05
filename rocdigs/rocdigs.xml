@@ -1002,6 +1002,7 @@
       <var name="mux" vt="iOMutex"/>
       <var name="slotmux" vt="iOMutex"/>
       <var name="run" vt="Boolean"/>
+      <var name="comOK" vt="Boolean"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="reader" vt="iOThread"/>

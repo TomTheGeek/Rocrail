@@ -74,7 +74,7 @@ Boolean rocs_serial_close( iOSerial inst ) {
     rc = close( o->sh );
     o->sh = 0;
     if( rc == -1 )
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "rocs_serial_close rc=%d", errno );
+      TraceOp.terrno( name, TRCLEVEL_WARNING, __LINE__, 9999, errno, "error on close" );
   }
   return rc == 0 ? True:False;
 #else
@@ -468,7 +468,7 @@ Boolean rocs_serial_isCTS( iOSerial inst ) {
     __printmsr(msr);
   }
   if( rc < 0 ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,"TIOCMGET returns rc=%d errno=%d\n", rc, errno );
+    TraceOp.terrno( name, TRCLEVEL_WARNING, __LINE__, 9999, errno, "TIOCMGET returns rc=%d", rc );
     if( errno == ENXIO )
       return -1;
   }
@@ -495,7 +495,7 @@ Boolean rocs_serial_isDSR( iOSerial inst ) {
     __printmsr(msr);
   }
   if( rc < 0 )
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,"TIOCMGET returns rc=%d errno=%d\n", rc, errno );
+    TraceOp.terrno( name, TRCLEVEL_WARNING, __LINE__, 9999, errno, "TIOCMGET returns rc=%d", rc );
   if (msr & TIOCM_DSR)
     return True;
   else
@@ -533,7 +533,7 @@ Boolean rocs_serial_write( iOSerial inst, char* buffer, int size ) {
   if (o->blocking)
     tcdrain(o->sh);
   if( size != written ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "rocs_serial_write size=%d written=%d errno=%d", size, written, errno );
+    TraceOp.terrno( name, TRCLEVEL_WARNING, __LINE__, 9999, errno, "write error size=%d written=%d", size, written );
   }
   return written != size ? False:True;
 #else
@@ -562,7 +562,7 @@ int rocs_serial_avail( iOSerial inst ) {
 
   rc = ioctl( o->sh, TIOCINQ, &nbytes );
   if( rc<0 ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ioctl TIOCINQ error" );
+    TraceOp.terrno( name, TRCLEVEL_WARNING, __LINE__, 9999, errno, "ioctl TIOCINQ error" );
   }
 #endif
 
@@ -580,7 +580,7 @@ int rocs_serial_getWaiting( iOSerial inst ) {
    * It may not even support TIOCOUTQ... */
   rc = ioctl(o->sh,TIOCOUTQ, &nbytes);
   if( rc<0 ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ioctl TIOCOUTQ error" );
+    TraceOp.terrno( name, TRCLEVEL_WARNING, __LINE__, 9999, errno, "ioctl TIOCOUTQ error" );
   }
   return nbytes;
 #endif
@@ -767,7 +767,7 @@ void rocs_serial_setSerialMode( iOSerial inst, serial_mode mode ) {
   }
   /* set attribute now */
   if (!o->directIO && tcsetattr( o->sh, TCSAFLUSH, &tio ) != 0)
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "tcsetattr failed!" );
+    TraceOp.terrno( name, TRCLEVEL_WARNING, __LINE__, 9999, errno, "tcsetattr failed!" );
   //        tcgetattr( o->sh, &tio );
   //    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Current output baud rate is %d\n", (int) cfgetospeed(&tio) );
 #endif
