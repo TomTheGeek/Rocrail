@@ -572,45 +572,46 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
   iOSRCPData data = Data( inst );
   char cmd[1024] = {0};
   iONode rsp = NULL;
-  int rc = data->subConnect((obj)inst, False);
-
-  if( rc == SRCPCONNECT_RECONNECTED ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnected");
-    __srcpInitConnect((iOSRCP)inst);
-  }
-
-  rc = 0;
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node=%s cmd=%s", NodeOp.getName(nodeA), wLoc.getcmd(nodeA)!=NULL?wLoc.getcmd(nodeA):"-" );
-  rsp = __translate( (iOSRCP)inst, nodeA, cmd );
-
-  if( StrOp.len( cmd ) > 0 ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "translation = %s...", cmd);
-    rc = __srcpWrite((obj)inst, cmd, NULL);
-  }
-
-  if( rc == -1 ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying to reconnect...");
-    if( data->subConnect((obj)inst, False) == SRCPCONNECT_ERROR ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnect at next command...");
-    }
-    else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnected");
-      if( __srcpInitConnect((iOSRCP)inst) ) {
-        rsp = __translate( (iOSRCP)inst, nodeA, cmd );
-        if( StrOp.len( cmd ) > 0 ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "retransmit = %s...", cmd);
-          __srcpWrite((obj)inst, cmd, NULL);
-        }
-      }
-      else {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not initialize the connection");
-      }
-    }
-  }
 
   if( nodeA != NULL ) {
-    NodeOp.base.del(nodeA);
+    int rc = data->subConnect((obj)inst, False);
+
+    if( rc == SRCPCONNECT_RECONNECTED ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnected");
+      __srcpInitConnect((iOSRCP)inst);
+    }
+
+    rc = 0;
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node=%s cmd=%s", NodeOp.getName(nodeA), wLoc.getcmd(nodeA)!=NULL?wLoc.getcmd(nodeA):"-" );
+    rsp = __translate( (iOSRCP)inst, nodeA, cmd );
+
+    if( StrOp.len( cmd ) > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "translation = %s...", cmd);
+      rc = __srcpWrite((obj)inst, cmd, NULL);
+    }
+
+    if( rc == -1 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying to reconnect...");
+      if( data->subConnect((obj)inst, False) == SRCPCONNECT_ERROR ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnect at next command...");
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reconnected");
+        if( __srcpInitConnect((iOSRCP)inst) ) {
+          rsp = __translate( (iOSRCP)inst, nodeA, cmd );
+          if( StrOp.len( cmd ) > 0 ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "retransmit = %s...", cmd);
+            __srcpWrite((obj)inst, cmd, NULL);
+          }
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not initialize the connection");
+        }
+      }
+    }
+
+    nodeA->base.del(nodeA);
   }
 
   return rsp;
