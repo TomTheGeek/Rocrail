@@ -665,6 +665,7 @@ static void __dccWriter( void* threadinst ) {
   iODCC232 dcc232 = (iODCC232)ThreadOp.getParm( th );
   iODCC232Data data = Data(dcc232);
   int slotidx = 0;
+  int refreshCnt = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DCC232 writer started. (0x%08X)", dcc232 );
 
@@ -687,6 +688,7 @@ static void __dccWriter( void* threadinst ) {
         }
       }
       else if( data->slots[slotidx].addr > 0 ) {
+        refreshCnt++;
         if( MutexOp.trywait( data->slotmux, 5 ) ) {
           int size = 0;
           byte dccpacket[64];
@@ -754,6 +756,11 @@ static void __dccWriter( void* threadinst ) {
       if(slotidx >= 128) {
         slotidx = 0;
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "recycle" );
+        if( refreshCnt == 0 ) {
+          /* nothing to do: why hurry? */
+          ThreadOp.sleep(5);
+        }
+        refreshCnt = 0;
       }
 
      /* transmit big idle packet */
