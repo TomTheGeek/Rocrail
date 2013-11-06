@@ -461,6 +461,7 @@
       <const name="easydcc" vt="string" val="easydcc"/>
       <const name="z21" vt="string" val="z21"/>
       <const name="xnmm" vt="string" val="xnmm"/>
+      <const name="dtc" vt="string" val="dtc"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
