@@ -774,6 +774,7 @@
       <var name="bbtInTimer" vt="int"/>
       <var name="bbtStepCount" vt="int"/>
       <var name="lastfncmd" vt="long"/>
+      <var name="govirtual" vt="Boolean"/>
       </data>
   </object>
 

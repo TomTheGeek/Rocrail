@@ -1779,6 +1779,10 @@ static void __runner( void* threadinst ) {
         wLoc.setruntime( data->props, data->runtime );
       }
       tick = 0;
+
+      if( data->go && data->govirtual && data->driver != NULL ) {
+        data->driver->stepvirtual(data->driver);
+      }
     }
 
 
@@ -2410,6 +2414,7 @@ static Boolean _go( iOLoc inst ) {
 
         data->go = True;
         data->released = False;
+        data->govirtual = False;
         data->gomanual = False;
         if( data->driver != NULL )
           data->driver->go( data->driver, data->gomanual );
@@ -2530,6 +2535,7 @@ static void __stopgo( iOLoc inst ) {
   iOLocData data = Data(inst);
   data->go = !data->go;
   data->gomanual = False;
+  data->govirtual = False;
   if( data->go )
     _go( inst );
   else
@@ -2545,6 +2551,27 @@ static void __gomanual( iOLoc inst ) {
     if( block != NULL ) {
       data->go = True;
       data->gomanual = True;
+      data->govirtual = False;
+      data->released = False;
+      if( data->driver != NULL )
+        data->driver->go( data->driver, data->gomanual );
+    }
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] cannot be started because it is not in a block.", LocOp.getId(inst) );
+  }
+}
+
+
+static void __govirtual( iOLoc inst ) {
+  iOLocData data = Data(inst);
+  iOModel model = AppOp.getModel();
+  if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
+    iIBlockBase block = ModelOp.getBlock( model, data->curBlock );
+    if( block != NULL ) {
+      data->go = True;
+      data->gomanual = False;
+      data->govirtual = True;
       data->released = False;
       if( data->driver != NULL )
         data->driver->go( data->driver, data->gomanual );
@@ -2738,6 +2765,9 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       }
       else if( StrOp.equals( wLoc.gomanual, cmd ) ) {
         __gomanual( inst );
+      }
+      else if( StrOp.equals( wLoc.govirtual, cmd ) ) {
+        __govirtual( inst );
       }
       else if( StrOp.equals( wLoc.stopgo, cmd ) ) {
         __stopgo( inst );

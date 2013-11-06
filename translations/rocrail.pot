@@ -6755,3 +6755,9 @@ msgstr ""
 msgid "Use push button"
 msgstr ""
 
+#. 
+# id="govirtual"
+#, c-format
+msgid "Virtual automatic"
+msgstr ""
+

@@ -2452,6 +2452,7 @@
         <var name="sw" vt="bool" deprecated="true" defval="false" remark="Change direction in P50 protocol.(Use dir=true/false)"/>
         <const name="go" vt="string" val="go" remark="Start loc in automatic mode."/>
         <const name="gomanual" vt="string" val="gomanual" remark="Start loc in half-automatic mode."/>
+        <const name="govirtual" vt="string" val="govirtual" remark="Start loc in virtual-automatic mode."/>
         <const name="stop" vt="string" val="stop" remark="Stop loc in next or current block."/>
         <const name="stopgo" vt="string" val="stopgo" remark="Stop loc, reset and go."/>
         <const name="brake" vt="string" val="brake" remark="Stop immidiately"/>

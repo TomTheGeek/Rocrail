@@ -139,6 +139,7 @@ enum {
     ME_LocSwap,
     ME_LocSwapBlockSide,
     ME_LocGoManual,
+    ME_LocGoVirtual,
     ME_LocStop,
     ME_LocReset,
     ME_LocResetAll,
@@ -209,6 +210,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_FYGo, Symbol::OnFYGo)
   EVT_MENU     (ME_TTGo, Symbol::OnTTGo)
   EVT_MENU     (ME_LocGoManual  , Symbol::OnLocGoManual  )
+  EVT_MENU     (ME_LocGoVirtual  , Symbol::OnLocGoVirtual  )
   EVT_MENU     (ME_LocStop, Symbol::OnLocStop)
   EVT_MENU     (ME_LocReset, Symbol::OnLocReset)
   EVT_MENU     (ME_LocResetAll, Symbol::OnLocResetAll)
@@ -1393,6 +1395,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
         menu.AppendSeparator();
         menu.Append( ME_LocGo, wxGetApp().getMenu("startloc") );
         menu.Append( ME_LocGoManual, wxGetApp().getMenu("gomanual") );
+        menu.Append( ME_LocGoVirtual, wxGetApp().getMenu("govirtual") );
         menu.Append( ME_LocStop, wxGetApp().getMenu("stoploc") );
         menu.Append( ME_LocSwap, wxGetApp().getMenu("swapplacing"), wxGetApp().getTip("swapplacing") );
         menu.Append( ME_LocSwapBlockSide, wxGetApp().getMenu("swapblockenterside"), wxGetApp().getTip("swapblockenterside") );
@@ -1576,6 +1579,9 @@ void Symbol::OnPopup(wxMouseEvent& event)
         if( !wxGetApp().getFrame()->isAutoMode() )
           mi->Enable( false );
         mi = menu.FindItem( ME_LocGoManual );
+        if( !wxGetApp().getFrame()->isAutoMode() )
+          mi->Enable( false );
+        mi = menu.FindItem( ME_LocGoVirtual );
         if( !wxGetApp().getFrame()->isAutoMode() )
           mi->Enable( false );
         mi = menu.FindItem( ME_ScheduleGo );
@@ -2083,6 +2089,16 @@ void Symbol::OnLocGoManual(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
   wLoc.setcmd( cmd, wLoc.gomanual );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+
+void Symbol::OnLocGoVirtual(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, wBlock.getlocid( m_Props ) );
+  wLoc.setcmd( cmd, wLoc.govirtual );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }

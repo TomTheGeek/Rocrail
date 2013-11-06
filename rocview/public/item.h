@@ -70,6 +70,7 @@ public:
   void OnFYGo(wxCommandEvent& event);
   void OnTTGo(wxCommandEvent& event);
   void OnLocGoManual(wxCommandEvent& event);
+  void OnLocGoVirtual(wxCommandEvent& event);
   void OnLocStop(wxCommandEvent& event);
   void OnLocReset(wxCommandEvent& event);
   void OnLocResetAll(wxCommandEvent& event);

@@ -52,6 +52,7 @@
 #include "rocrail/wrapper/public/Link.h"
 #include "rocrail/wrapper/public/Ctrl.h"
 #include "rocrail/wrapper/public/Tour.h"
+#include "rocrail/wrapper/public/FeedbackEvent.h"
 
 static int instCnt = 0;
 
@@ -339,6 +340,23 @@ static void _goNet( iILcDriverInt inst, Boolean gomanual, const char* curblock, 
   data->next1Block = data->model->getBlock( data->model, nextblock );
   data->next1Route = data->model->getRoute( data->model, nextroute );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "goNet: curblock=%s nextblock=%s nextroute=%s", curblock, nextblock, nextroute );
+}
+
+
+static void _stepvirtual( iILcDriverInt inst ) {
+  iOLcDriverData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "step virtual [%s] state=%d...", data->loc->getId(data->loc), data->state );
+  switch( data->state ) {
+  case LC_GO:
+    if( data->next1Block != NULL ) {
+      iONode fbevt = NodeOp.inst(wFeedbackEvent.name(), NULL, ELEMENT_NODE );
+      wFeedbackEvent.setid(fbevt, data->loc->getId(data->loc));
+      wFeedbackEvent.setaction(fbevt, wFeedbackEvent.enter2in_event);
+      data->next1Block->event(data->next1Block, True, "enter", 0, 0, 0, fbevt, True );
+      NodeOp.base.del(fbevt);
+    }
+    break;
+  }
 }
 
 

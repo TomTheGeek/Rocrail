@@ -24833,4 +24833,7 @@
     <sr_latin txt="Koristi taster"/>
     <en_GB txt="Use push button"/>
   </Msg>
+  <Msg id="govirtual">
+    <en txt="Virtual automatic"/>
+  </Msg>
 </Messages>
