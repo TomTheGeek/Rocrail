@@ -352,6 +352,7 @@ static void _stepvirtual( iILcDriverInt inst ) {
       iONode fbevt = NodeOp.inst(wFeedbackEvent.name(), NULL, ELEMENT_NODE );
       wFeedbackEvent.setid(fbevt, data->loc->getId(data->loc));
       wFeedbackEvent.setaction(fbevt, wFeedbackEvent.enter2in_event);
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "send virtual event to [%s][%s]", data->next1Block->base.name(), data->next1Block->base.id(data->next1Block) );
       data->next1Block->event(data->next1Block, True, "enter", 0, 0, 0, fbevt, True );
       NodeOp.base.del(fbevt);
     }
