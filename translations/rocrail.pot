@@ -6761,3 +6761,9 @@ msgstr ""
 msgid "Virtual automatic"
 msgstr ""
 
+#. 
+# id="maxdelay"
+#, c-format
+msgid "Max. delay"
+msgstr ""
+

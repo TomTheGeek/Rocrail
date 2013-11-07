@@ -24836,4 +24836,7 @@
   <Msg id="govirtual">
     <en txt="Virtual automatic"/>
   </Msg>
+  <Msg id="maxdelay">
+    <en txt="Max. delay"/>
+  </Msg>
 </Messages>

@@ -251,6 +251,8 @@ public:
     wxSpinCtrl* m_ToHour;
     wxStaticText* m_labCycle;
     wxSpinCtrl* m_Cycle;
+    wxStaticText* m_labMaxDelay;
+    wxSpinCtrl* m_MaxDelay;
     wxRadioBox* m_TimeProcessing;
     wxGrid* m_Entries;
     wxStaticText* m_LabelLocation;

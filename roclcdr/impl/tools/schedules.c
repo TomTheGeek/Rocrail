@@ -216,6 +216,7 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
     int timeframe      = wSchedule.gettimeframe(schedule);
     int fromhour       = wSchedule.getfromhour(schedule);
     int tohour         = wSchedule.gettohour(schedule);
+    int maxdelay       = wSchedule.getmaxdelay(schedule);
 
     iONode entry = wSchedule.getscentry( schedule );
 
@@ -276,11 +277,15 @@ Boolean checkScheduleTime( iILcDriverInt inst, const char* scheduleID, int sched
 
         /* compare clock with departure time */
         if( scheduleminutes <= modelminutes ) {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-              "train must leave now %d <= %d", scheduleminutes, modelminutes );
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-              "train is delayed by %d minutes", modelminutes - scheduleminutes );
-          go = True;
+          if( (modelminutes - scheduleminutes) <= maxdelay ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "train must leave now %d <= %d and is delayed by %d minutes", scheduleminutes, modelminutes, modelminutes - scheduleminutes );
+            go = True;
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "train exceeded the max.(%d) delay time: %d", maxdelay, modelminutes - scheduleminutes );
+          }
         }
         else {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,

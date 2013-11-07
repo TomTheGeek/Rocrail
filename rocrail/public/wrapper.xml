@@ -1826,6 +1826,7 @@
         <var name="timeframe" vt="int" defval="1" range="0-*" units="min" remark="time frame for accepting a delay"/>
         <var name="fromhour" vt="int" defval="0" range="0-23*" units="hours"/>
         <var name="tohour" vt="int" defval="0" range="0-23*" units="hours"/>
+        <var name="maxdelay" vt="int" defval="60" range="0-*" units="min" remark="Depart only if the time is not delayed more than this number of minutes."/>
         <scentry cardinality="n" wrappername="ScheduleEntry">
           <var name="location" vt="string" defval="NULL" range="*" required="false" remark="Location from the locationlist"/>
           <var name="block" vt="string" defval="NULL" range="*" required="false" remark="Block from the blocklist"/>
