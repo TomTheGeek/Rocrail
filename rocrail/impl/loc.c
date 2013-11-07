@@ -1783,8 +1783,10 @@ static void __runner( void* threadinst ) {
       if( data->go && data->govirtual && data->driver != NULL ) {
         if( !data->driver->stepvirtual(data->driver) ) {
           /* Block type not supported. */
-          LocOp.stop( loc, False );
-          LocOp.resetPrevBlock(loc);
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+          wLoc.setid( cmd, LocOp.getId(loc) );
+          wLoc.setcmd( cmd, wLoc.stop );
+          LocOp.cmd( loc, cmd );
         }
       }
     }
