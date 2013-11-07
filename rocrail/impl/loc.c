@@ -1775,8 +1775,10 @@ static void __runner( void* threadinst ) {
     /* this is approximately a second */
     if( tick % 10 == 0 && tick != 0 ) {
       if( data->drvSpeed > 0 || (!data->go && wLoc.getV(data->props) > 0) ) {
-        data->runtime++;
-        wLoc.setruntime( data->props, data->runtime );
+        if( !data->govirtual ) {
+          data->runtime++;
+          wLoc.setruntime( data->props, data->runtime );
+        }
       }
       tick = 0;
 
@@ -2569,12 +2571,13 @@ static void __gomanual( iOLoc inst ) {
 }
 
 
-static void __govirtual( iOLoc inst ) {
+static void _govirtual( iOLoc inst ) {
   iOLocData data = Data(inst);
   iOModel model = AppOp.getModel();
   if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
     iIBlockBase block = ModelOp.getBlock( model, data->curBlock );
     if( block != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] start virtual in block %s.", LocOp.getId(inst), block->base.id(block) );
       data->go = True;
       data->gomanual = False;
       data->govirtual = True;
@@ -2773,7 +2776,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
         __gomanual( inst );
       }
       else if( StrOp.equals( wLoc.govirtual, cmd ) ) {
-        __govirtual( inst );
+        _govirtual( inst );
       }
       else if( StrOp.equals( wLoc.stopgo, cmd ) ) {
         __stopgo( inst );

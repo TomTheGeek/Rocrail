@@ -6767,3 +6767,15 @@ msgstr ""
 msgid "Max. delay"
 msgstr ""
 
+#. 
+# id="startallvirtual"
+#, c-format
+msgid "Start all locs virtual"
+msgstr ""
+
+#. 
+# id="startallvirtual"
+#, c-format
+msgid "Put all locs in virtual auto mode."
+msgstr ""
+

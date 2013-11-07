@@ -24839,4 +24839,7 @@
   <Msg id="maxdelay">
     <en txt="Max. delay"/>
   </Msg>
+  <Msg id="startallvirtual">
+    <en txt="Start all locs virtual" tip="Put all locs in virtual auto mode."/>
+  </Msg>
 </Messages>

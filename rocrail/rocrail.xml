@@ -517,6 +517,9 @@
     <fun name="go" vt="Boolean">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
+    <fun name="govirtual" vt="Boolean">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
     <fun name="goNet" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="curblock" vt="const char*" remark="Current block"/>
@@ -1237,6 +1240,7 @@
       <var name="sysEventListeners" vt="iOList"/>
       <var name="pendinginitfield" vt="Boolean"/>
       <var name="pendingstartall" vt="Boolean"/>
+      <var name="pendingstartallvirtual" vt="Boolean"/>
       <var name="muxSysEvent" vt="iOMutex"/>
       <var name="timedoff" vt="iOThread"/>
       <var name="locationMux" vt="iOMutex"/>

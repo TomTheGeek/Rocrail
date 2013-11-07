@@ -1930,14 +1930,18 @@ static void __startAllLocosRunner( void* threadinst ) {
   int i = 0;
   int cnt = ListOp.size( data->locList );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s locos...", ThreadOp.getName(th) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s locos%s...", ThreadOp.getName(th), data->pendingstartallvirtual?" virtual":"" );
   for( i = 0; i < cnt && data->pendingstartall; i++ ) {
     iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
     Boolean lcgo = True;
     if( resume && !LocOp.isResumeAutomode(loc) )
       lcgo = False;
 
-    if( lcgo && LocOp.go( loc ) ) {
+
+    if( lcgo && data->pendingstartallvirtual && LocOp.govirtual( loc ) ) {
+      ThreadOp.sleep( 10 + gap * 1000 );
+    }
+    else if( lcgo && LocOp.go( loc ) ) {
       ThreadOp.sleep( 10 + gap * 1000 );
     }
     else
@@ -1957,10 +1961,11 @@ static void __startAllLocosRunner( void* threadinst ) {
   }
 
   data->pendingstartall = False;
+  data->pendingstartallvirtual = False;
   ThreadOp.base.del(threadinst);
 }
 
-static void __startAllLocs( iOModel inst ) {
+static void __startAllLocs( iOModel inst, Boolean virtual ) {
   /* Start a thread for starting all loco's with bigger intervals then 10ms. */
   /* The auto section of the rocrail.ini must be extended with a start delay parameter in seconds. */
 
@@ -1971,6 +1976,8 @@ static void __startAllLocs( iOModel inst ) {
   else {
     iOThread t = ThreadOp.inst( "startall", &__startAllLocosRunner, inst );
     data->pendingstartall = True;
+    data->pendingstartallvirtual = virtual;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "startAllLocs%s...", data->pendingstartallvirtual?" virtual":"" );
     ThreadOp.start( t );
   }
  }
@@ -1983,6 +1990,7 @@ static void __resumeAllLocs( iOModel inst ) {
   else {
     iOThread t = ThreadOp.inst( "resumeall", &__startAllLocosRunner, inst );
     data->pendingstartall = True;
+    data->pendingstartallvirtual = False;
     ThreadOp.start( t );
   }
 }
@@ -2062,7 +2070,10 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
       __reset( inst, True );
     }
     else if( StrOp.equals( wAutoCmd.start, cmdVal ) ) {
-      __startAllLocs( inst );
+      __startAllLocs( inst, False );
+    }
+    else if( StrOp.equals( wAutoCmd.startvirtual, cmdVal ) ) {
+      __startAllLocs( inst, True );
     }
     else if( StrOp.equals( wAutoCmd.resume, cmdVal ) ) {
       __resumeAllLocs( inst );

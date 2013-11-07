@@ -1164,6 +1164,7 @@
     <const name="on" vt="string" val="on"/>
     <const name="off" vt="string" val="off"/>
     <const name="start" vt="string" val="start"/>
+    <const name="startvirtual" vt="string" val="startvirtual"/>
     <const name="resume" vt="string" val="resume"/>
     <const name="stop" vt="string" val="stop"/>
     <const name="reset" vt="string" val="reset"/>

@@ -292,6 +292,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_EmergencyBreak , RocGuiFrame::OnEmergencyBreak)
     EVT_MENU( ME_AutoMode       , RocGuiFrame::OnAutoMode)
     EVT_MENU( ME_AutoGo         , RocGuiFrame::OnAutoGo)
+    EVT_MENU( ME_AutoGoVirtual  , RocGuiFrame::OnAutoGoVirtual)
     EVT_MENU( ME_AutoResume     , RocGuiFrame::OnAutoResume)
     EVT_MENU( ME_AutoStop       , RocGuiFrame::OnAutoStop)
     EVT_MENU( ME_AutoReset      , RocGuiFrame::OnAutoReset)
@@ -402,6 +403,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_GRID_SELECT_CELL( RocGuiFrame::OnSelectCell )
 
     EVT_MENU     (ME_GridLocGo      , RocGuiFrame::OnLocGo  )
+    EVT_MENU     (ME_GridLocGoVirtual, RocGuiFrame::OnLocGoVirtual  )
     EVT_MENU     (ME_GridLocStop    , RocGuiFrame::OnLocStop)
     EVT_MENU     (ME_GridLocReset   , RocGuiFrame::OnLocReset)
     EVT_MENU     (ME_GridLocResetAll, RocGuiFrame::OnLocResetAll)
@@ -1840,6 +1842,7 @@ void RocGuiFrame::initFrame() {
   menuAuto->AppendCheckItem(ME_AutoMode, wxGetApp().getMenu("automode"), wxGetApp().getTip("automode") );
   menuAuto->AppendSeparator();
   menuAuto->Append(ME_AutoGo  , wxGetApp().getMenu("startall"), wxGetApp().getTip("startall") );
+  menuAuto->Append(ME_AutoGoVirtual  , wxGetApp().getMenu("startallvirtual"), wxGetApp().getTip("startallvirtual") );
   menuAuto->Append(ME_AutoResume, wxGetApp().getMenu("resumeall"), wxGetApp().getTip("resumeall") );
 
   wxMenuItem *stop_menuAuto = new wxMenuItem(menuAuto, ME_AutoStop, wxGetApp().getMenu("stopall"), wxGetApp().getTip("stopall") );
@@ -3761,6 +3764,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_AutoGo);
   if( mi != NULL ) mi->Enable( !l_bOffline && m_bAutoMode );
+  mi = menuBar->FindItem(ME_AutoGoVirtual);
+  if( mi != NULL ) mi->Enable( !l_bOffline && m_bAutoMode );
   mi = menuBar->FindItem(ME_AutoResume);
   if( mi != NULL ) mi->Enable( !l_bOffline && m_bAutoMode );
   mi = menuBar->FindItem(ME_AutoStop);
@@ -4039,6 +4044,17 @@ void RocGuiFrame::OnAutoGo( wxCommandEvent& event ) {
   }
   iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
   wAutoCmd.setcmd( cmd, wAutoCmd.start );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void RocGuiFrame::OnAutoGoVirtual( wxCommandEvent& event ) {
+  int action = wxMessageDialog( this, wxGetApp().getMsg("startallwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO ) {
+    return;
+  }
+  iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+  wAutoCmd.setcmd( cmd, wAutoCmd.startvirtual );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -4555,6 +4571,9 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
     menu.Append( ME_GridLocGo, wxGetApp().getMenu("start"), wxGetApp().getTip("start"));
     wxMenuItem *mi = menu.FindItem( ME_GridLocGo );
     mi->Enable( isAutoMode() );
+    menu.Append( ME_GridLocGoVirtual, wxGetApp().getMenu("govirtual"), wxGetApp().getTip("govirtual"));
+    mi = menu.FindItem( ME_GridLocGoVirtual );
+    mi->Enable( isAutoMode() );
     menu.Append( ME_GridLocStop, wxGetApp().getMenu("stop"), wxGetApp().getTip("stop"));
     menu.AppendSeparator();
     menu.Append( ME_GridLocReset, wxGetApp().getMenu("softresetall"), wxGetApp().getTip("softresetall") );
@@ -4613,6 +4632,17 @@ void RocGuiFrame::OnLocGo(wxCommandEvent& event) {
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
+
+void RocGuiFrame::OnLocGoVirtual(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, m_LocID );
+  wLoc.setcmd( cmd, wLoc.govirtual );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+
 
 void RocGuiFrame::OnLocActivate(wxCommandEvent& event) {
   /* Inform RocRail... */

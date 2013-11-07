@@ -133,6 +133,7 @@ public:
   void OnEmergencyBreak(wxCommandEvent& event);
   void OnAutoMode(wxCommandEvent& event);
   void OnAutoGo(wxCommandEvent& event);
+  void OnAutoGoVirtual(wxCommandEvent& event);
   void OnAutoResume(wxCommandEvent& event);
   void OnAutoStop(wxCommandEvent& event);
   void OnAutoReset(wxCommandEvent& event);
@@ -208,6 +209,7 @@ public:
   void OnCellRightClick( wxGridEvent& event );
   void OnSelectCell( wxGridEvent& event );
   void OnLocGo(wxCommandEvent& event);
+  void OnLocGoVirtual(wxCommandEvent& event);
   void OnLocStop(wxCommandEvent& event);
   void OnLocReset(wxCommandEvent& event);
   void OnLocResetAll(wxCommandEvent& event);
@@ -481,6 +483,7 @@ enum
     ME_EmergencyBreak,
     ME_AutoMode,
     ME_AutoGo,
+    ME_AutoGoVirtual,
     ME_AutoResume,
     ME_AutoStop,
     ME_AutoReset,
@@ -523,6 +526,7 @@ enum
     ME_EditTimedActions,
     INIT_NOTEBOOK,
     ME_GridLocGo,
+    ME_GridLocGoVirtual,
     ME_GridLocStop,
     ME_GridLocReset,
     ME_GridLocResetAll,
