@@ -83,7 +83,7 @@
     <fun name="gogo" vt="void">
       <param name="inst" vt="this" remark="LcDriver instance"/>
     </fun>
-    <fun name="stepvirtual" vt="void">
+    <fun name="stepvirtual" vt="Boolean">
       <param name="inst" vt="this" remark="LcDriver instance"/>
     </fun>
     <fun name="stop" vt="void">

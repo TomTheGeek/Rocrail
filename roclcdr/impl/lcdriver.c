@@ -343,21 +343,81 @@ static void _goNet( iILcDriverInt inst, Boolean gomanual, const char* curblock, 
 }
 
 
-static void _stepvirtual( iILcDriverInt inst ) {
+static Boolean __isVirtualSupported(iIBlockBase block) {
+  if( StrOp.equals( BlockOp.base.name(), block->base.name() ) ) {
+    return True;
+  }
+  if( StrOp.equals( SelTabOp.base.name(), block->base.name() ) ) {
+    return True;
+  }
+  return False;
+}
+
+static const char* __getStateName(int state) {
+  switch( state ) {
+  case LC_IDLE:
+    return "IDLE";
+  case LC_FINDDEST:
+    return "FINDDEST";
+  case LC_INITDEST:
+    return "INITDEST";
+  case LC_CHECKROUTE:
+    return "CHECKROUTE";
+  case LC_PRE2GO:
+    return "PRE2GO";
+  case LC_GO:
+    return "GO";
+  case LC_EXITBLOCK:
+    return "EXITBLOCK";
+  case LC_OUTBLOCK:
+    return "OUTBLOCK";
+  case LC_ENTERBLOCK:
+    return "ENTERBLOCK";
+  case LC_RE_ENTERBLOCK:
+    return "RE_ENTERBLOCK";
+  case LC_PRE2INBLOCK:
+    return "PRE2INBLOCK";
+  case LC_INBLOCK:
+    return "INBLOCK";
+  case LC_PRE_WAITBLOCK:
+    return "PRE_WAITBLOCK";
+  case LC_WAITBLOCK:
+    return "WAITBLOCK";
+  case LC_TIMER:
+    return "TIMER";
+  case LC_WAIT4EVENT:
+    return "WAIT4EVENT";
+  case LC_PAUSE:
+    return "PAUSE";
+  case LC_MANAGED:
+    return "MANAGED";
+  }
+  return "UNKNOWN";
+}
+
+static Boolean _stepvirtual( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "step virtual [%s] state=%d...", data->loc->getId(data->loc), data->state );
+  Boolean rc = True;
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "step virtual [%s] state=[%s]...", data->loc->getId(data->loc), __getStateName(data->state) );
   switch( data->state ) {
   case LC_GO:
     if( data->next1Block != NULL ) {
-      iONode fbevt = NodeOp.inst(wFeedbackEvent.name(), NULL, ELEMENT_NODE );
-      wFeedbackEvent.setid(fbevt, data->loc->getId(data->loc));
-      wFeedbackEvent.setaction(fbevt, wFeedbackEvent.enter2in_event);
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "send virtual event to [%s][%s]", data->next1Block->base.name(), data->next1Block->base.id(data->next1Block) );
-      data->next1Block->event(data->next1Block, True, "enter", 0, 0, 0, fbevt, True );
-      NodeOp.base.del(fbevt);
+      if( __isVirtualSupported( data->next1Block) ) {
+        iONode fbevt = NodeOp.inst(wFeedbackEvent.name(), NULL, ELEMENT_NODE );
+        wFeedbackEvent.setid(fbevt, data->loc->getId(data->loc));
+        wFeedbackEvent.setaction(fbevt, wFeedbackEvent.enter2in_event);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "send virtual event to [%s][%s]", data->next1Block->base.name(), data->next1Block->base.id(data->next1Block) );
+        data->next1Block->event(data->next1Block, True, "enter", 0, 0, 0, fbevt, True );
+        NodeOp.base.del(fbevt);
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block type [%s][%s] is not supported in virtual mode", data->next1Block->base.name(), data->next1Block->base.id(data->next1Block) );
+        rc = False;
+      }
     }
     break;
   }
+  return rc;
 }
 
 

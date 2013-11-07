@@ -1781,7 +1781,11 @@ static void __runner( void* threadinst ) {
       tick = 0;
 
       if( data->go && data->govirtual && data->driver != NULL ) {
-        data->driver->stepvirtual(data->driver);
+        if( !data->driver->stepvirtual(data->driver) ) {
+          /* Block type not supported. */
+          LocOp.stop( loc, False );
+          LocOp.resetPrevBlock(loc);
+        }
       }
     }
 
