@@ -884,6 +884,18 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       wAutoCmd.setcmd( cmd, wAutoCmd.resume );
       pfun( (obj)AppOp.getControl(), cmd );
     }
+    else if( StrOp.equals( wAutoCmd.on, wAction.getcmd( data->action ) ) ) {
+      clntcon_callback pfun = ControlOp.getCallback(AppOp.getControl());
+      iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+      wAutoCmd.setcmd( cmd, wAutoCmd.on );
+      pfun( (obj)AppOp.getControl(), cmd );
+    }
+    else if( StrOp.equals( wAutoCmd.off, wAction.getcmd( data->action ) ) ) {
+      clntcon_callback pfun = ControlOp.getCallback(AppOp.getControl());
+      iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+      wAutoCmd.setcmd( cmd, wAutoCmd.off );
+      pfun( (obj)AppOp.getControl(), cmd );
+    }
     else {
       iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
       wSysCmd.setcmd( cmd, wAction.getcmd( data->action ) );

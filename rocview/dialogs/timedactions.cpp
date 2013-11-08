@@ -919,6 +919,8 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wAction.system_stop, wxConvUTF8));
       m_Command->Append(wxString( wAction.system_shutdown, wxConvUTF8));
       m_Command->Append(wxString( wAutoCmd.resume, wxConvUTF8));
+      m_Command->Append(wxString( wAutoCmd.on, wxConvUTF8));
+      m_Command->Append(wxString( wAutoCmd.off, wxConvUTF8));
       break;
     case 5: // signal
       m_Command->Append(wxString( wAction.signal_red, wxConvUTF8));
