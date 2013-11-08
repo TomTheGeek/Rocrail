@@ -36,6 +36,8 @@ class wxNotebook;
 ////@begin control identifiers
 #define ID_ACTIONSCTRLDLG 10191
 #define ID_ACTIONCTRL_LIST 10235
+#define ID_ACTIONCTRL_UP 10185
+#define ID_ACTIONCTRL_DOWN 10187
 #define ID_RADIOBOX 10331
 #define ID_ACTIONCTRL_ADD 10192
 #define ID_ACTIONCTRL_DELETE 10193
@@ -63,7 +65,7 @@ class ActionsCtrlDlg: public wxDialog
     DECLARE_DYNAMIC_CLASS( ActionsCtrlDlg )
     DECLARE_EVENT_TABLE()
 
-    void initIndex();
+    void initIndex(int cursel);
     void initLabels();
     void initValues();
     void initCondValues();
@@ -100,6 +102,12 @@ public:
 
     /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_ACTIONCTRL_LIST
     void OnActionctrlListSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONCTRL_UP
+    void OnActionctrlUpClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONCTRL_DOWN
+    void OnActionctrlDownClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONCTRL_ADD
     void OnActionctrlAddClick( wxCommandEvent& event );
@@ -155,6 +163,8 @@ public:
     wxNotebook* m_Notebook;
     wxPanel* m_IndexPanel;
     wxListBox* m_CtrlList;
+    wxButton* m_Up;
+    wxButton* m_Down;
     wxStaticText* m_labID;
     wxChoice* m_ID;
     wxStaticText* m_labState;
