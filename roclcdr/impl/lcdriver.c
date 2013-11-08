@@ -44,6 +44,7 @@
 
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/Schedule.h"
 #include "rocrail/wrapper/public/ScheduleEntry.h"
@@ -344,11 +345,14 @@ static void _goNet( iILcDriverInt inst, Boolean gomanual, const char* curblock, 
 
 
 static Boolean __isVirtualSupported(iIBlockBase block) {
-  if( StrOp.equals( "OBlock", block->base.name() ) ) {
-    return True;
-  }
-  if( StrOp.equals( "OSelTab", block->base.name() ) ) {
-    return True;
+  iONode props = block->base.properties(block);
+  if( props != NULL ) {
+    if( StrOp.equals( wBlock.name(), NodeOp.getName(props) ) ) {
+      return True;
+    }
+    if( StrOp.equals( wSelTab.name(), NodeOp.getName(props) ) ) {
+      return True;
+    }
   }
   return False;
 }
