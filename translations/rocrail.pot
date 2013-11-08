@@ -6779,3 +6779,9 @@ msgstr ""
 msgid "Put all locs in virtual auto mode."
 msgstr ""
 
+#. 
+# id="paste"
+#, c-format
+msgid "Paste"
+msgstr ""
+

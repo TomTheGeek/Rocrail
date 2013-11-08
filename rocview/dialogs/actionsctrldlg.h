@@ -38,6 +38,8 @@ class wxNotebook;
 #define ID_ACTIONCTRL_LIST 10235
 #define ID_ACTIONCTRL_UP 10185
 #define ID_ACTIONCTRL_DOWN 10187
+#define ID_ACTIONCTRL_COPY 10189
+#define ID_ACTIONCTRL_PASTE 10190
 #define ID_RADIOBOX 10331
 #define ID_ACTIONCTRL_ADD 10192
 #define ID_ACTIONCTRL_DELETE 10193
@@ -109,6 +111,12 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONCTRL_DOWN
     void OnActionctrlDownClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONCTRL_COPY
+    void OnActionctrlCopyClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONCTRL_PASTE
+    void OnActionctrlPasteClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONCTRL_ADD
     void OnActionctrlAddClick( wxCommandEvent& event );
 
@@ -165,6 +173,8 @@ public:
     wxListBox* m_CtrlList;
     wxButton* m_Up;
     wxButton* m_Down;
+    wxButton* m_Copy;
+    wxButton* m_Paste;
     wxStaticText* m_labID;
     wxChoice* m_ID;
     wxStaticText* m_labState;

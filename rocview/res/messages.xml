@@ -24842,4 +24842,7 @@
   <Msg id="startallvirtual">
     <en txt="Start all locs virtual" tip="Put all locs in virtual auto mode."/>
   </Msg>
+  <Msg id="paste">
+    <en txt="Paste"/>
+  </Msg>
 </Messages>
