@@ -1782,13 +1782,15 @@ static void __runner( void* threadinst ) {
       }
       tick = 0;
 
-      if( data->go && data->govirtual && data->driver != NULL ) {
-        if( !data->driver->stepvirtual(data->driver) ) {
-          /* Block type not supported. */
-          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-          wLoc.setid( cmd, LocOp.getId(loc) );
-          wLoc.setcmd( cmd, wLoc.stop );
-          LocOp.cmd( loc, cmd );
+      if( StrOp.equals( wLoc.mode_auto, wLoc.getmode(data->props) ) ) {
+        if( data->govirtual && data->driver != NULL ) {
+          if( !data->driver->stepvirtual(data->driver) ) {
+            /* Block type not supported. */
+            iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+            wLoc.setid( cmd, LocOp.getId(loc) );
+            wLoc.setcmd( cmd, wLoc.stop );
+            LocOp.cmd( loc, cmd );
+          }
         }
       }
     }
@@ -2571,7 +2573,7 @@ static void __gomanual( iOLoc inst ) {
 }
 
 
-static void _govirtual( iOLoc inst ) {
+static Boolean _govirtual( iOLoc inst ) {
   iOLocData data = Data(inst);
   iOModel model = AppOp.getModel();
   if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
@@ -2584,11 +2586,13 @@ static void _govirtual( iOLoc inst ) {
       data->released = False;
       if( data->driver != NULL )
         data->driver->go( data->driver, data->gomanual );
+      return True;
     }
   }
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] cannot be started because it is not in a block.", LocOp.getId(inst) );
   }
+  return False;
 }
 
 
