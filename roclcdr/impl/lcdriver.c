@@ -344,10 +344,10 @@ static void _goNet( iILcDriverInt inst, Boolean gomanual, const char* curblock, 
 
 
 static Boolean __isVirtualSupported(iIBlockBase block) {
-  if( StrOp.equals( BlockOp.base.name(), block->base.name() ) ) {
+  if( StrOp.equals( "OBlock", block->base.name() ) ) {
     return True;
   }
-  if( StrOp.equals( SelTabOp.base.name(), block->base.name() ) ) {
+  if( StrOp.equals( "OSelTab", block->base.name() ) ) {
     return True;
   }
   return False;
