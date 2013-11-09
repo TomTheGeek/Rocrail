@@ -289,8 +289,10 @@ void ActionsCtrlDlg::initIndex(int cursel) {
     actionctrl = NodeOp.findNextNode( m_Props, actionctrl );
   };
 
-  if(m_CtrlList->GetCount() > 0)
+  if(m_CtrlList->GetCount() > 0) {
+    m_iCursel = (cursel>=0?cursel:0);
     m_CtrlList->SetSelection(cursel>=0?cursel:0);
+  }
 
 }
 
