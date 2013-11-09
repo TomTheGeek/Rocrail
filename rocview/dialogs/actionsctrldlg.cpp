@@ -1120,6 +1120,7 @@ void ActionsCtrlDlg::OnActionctrlDownClick( wxCommandEvent& event )
     }
 
     ListOp.base.del(list);
+    m_iCursel = cursel+1;
     m_CtrlList->SetSelection(cursel+1);
   }
 }
@@ -1162,6 +1163,7 @@ void ActionsCtrlDlg::OnActionctrlUpClick( wxCommandEvent& event )
     }
 
     ListOp.base.del(list);
+    m_iCursel = cursel-1;
     m_CtrlList->SetSelection(cursel-1);
   }
 }
