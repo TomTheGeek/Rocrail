@@ -25,7 +25,7 @@
 #include "rocs/public/system.h"
 
 
-static wxString __getAddrStr(iONode Item, bool* longaddr) {
+wxString __getAddrStr(iONode Item, bool* longaddr) {
   if( StrOp.equals( wOutput.name(), NodeOp.getName(Item) ) )
     return wxString::Format(_T("%d-%d"), wOutput.getaddr(Item), wOutput.getport(Item));
   else if( StrOp.equals( wSwitch.name(), NodeOp.getName(Item) ) ) {

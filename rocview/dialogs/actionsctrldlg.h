@@ -82,6 +82,7 @@ class ActionsCtrlDlg: public wxDialog
     void deleteSelectedCond();
     void addActionCond();
     iONode m_Props;
+    int m_iCursel;
 
 public:
     /// Constructors

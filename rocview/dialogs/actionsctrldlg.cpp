@@ -123,6 +123,7 @@ ActionsCtrlDlg::ActionsCtrlDlg( wxWindow* parent, iONode node, const char* state
   Create(parent, -1, wxGetApp().getMsg("actionctrl"));
 
   m_Props = node;
+  m_iCursel = wxNOT_FOUND;
 
   initLabels();
 
@@ -298,11 +299,9 @@ void ActionsCtrlDlg::initValues() {
   if( m_Props == NULL )
     return;
 
-  int cursel = m_CtrlList->GetSelection();
 
-
-  if( cursel != wxNOT_FOUND ) {
-    iONode actionctrl = (iONode)m_CtrlList->GetClientData(cursel);
+  if( m_iCursel != wxNOT_FOUND ) {
+    iONode actionctrl = (iONode)m_CtrlList->GetClientData(m_iCursel);
     m_ID->SetStringSelection( m_CtrlList->GetStringSelection() );
 
     m_LocoID->SetSelection(0);
@@ -354,7 +353,6 @@ void ActionsCtrlDlg::initCondValues() {
     return;
 
   int cursel = m_Conditions->GetSelection();
-
 
   if( cursel != wxNOT_FOUND ) {
     iONode actioncond = (iONode)m_Conditions->GetClientData(cursel);
@@ -494,7 +492,7 @@ void ActionsCtrlDlg::evaluate() {
 
     wActionCtrl.setstate(node, m_State->GetValue().mb_str(wxConvUTF8) );
 
-    m_CtrlList->SetString(cursel, m_ID->GetStringSelection() );
+    m_CtrlList->SetString(m_iCursel, m_ID->GetStringSelection() );
     m_ConditionsPanel->Enable(true);
 
   }
@@ -502,9 +500,8 @@ void ActionsCtrlDlg::evaluate() {
 
 
 void ActionsCtrlDlg::evaluateCond() {
-  int curlistsel = m_CtrlList->GetSelection();
 
-  if( curlistsel != wxNOT_FOUND ) {
+  if( m_iCursel != wxNOT_FOUND ) {
     int cursel = m_Conditions->GetSelection();
 
     if( cursel != wxNOT_FOUND ) {
@@ -569,14 +566,13 @@ void ActionsCtrlDlg::apply() {
  * Remove selection.
  */
 void ActionsCtrlDlg::deleteSelected() {
-  int cursel = m_CtrlList->GetSelection();
 
-  if( cursel != wxNOT_FOUND ) {
-    iONode node = (iONode)m_CtrlList->GetClientData(cursel);
+  if( m_iCursel != wxNOT_FOUND ) {
+    iONode node = (iONode)m_CtrlList->GetClientData(m_iCursel);
     NodeOp.base.del(node);
-    m_CtrlList->Delete(cursel);
+    m_CtrlList->Delete(m_iCursel);
     if( m_CtrlList->GetCount() > 0 ) {
-      m_CtrlList->SetSelection(cursel>0 ? cursel-1 : 0);
+      m_CtrlList->SetSelection(m_iCursel>0 ? m_iCursel-1 : 0);
 //      m_CtrlList->SetSelection(0);
       initValues();
     }
@@ -585,12 +581,11 @@ void ActionsCtrlDlg::deleteSelected() {
 
 
 void ActionsCtrlDlg::deleteSelectedCond() {
-  int cursel = m_CtrlList->GetSelection();
 
-  if( cursel == wxNOT_FOUND )
+  if( m_iCursel == wxNOT_FOUND )
     return;
 
-  iONode actionctrl = (iONode)m_CtrlList->GetClientData(cursel);
+  iONode actionctrl = (iONode)m_CtrlList->GetClientData(m_iCursel);
 
   int condsel = m_Conditions->GetSelection();
 
@@ -628,13 +623,11 @@ void ActionsCtrlDlg::addActionCond() {
   if( m_CondID->GetStringSelection().Len() == 0 )
     return;
 
-  int cursel = m_CtrlList->GetSelection();
-
-  if( cursel == wxNOT_FOUND )
+  if( m_iCursel == wxNOT_FOUND )
     return;
 
 
-  iONode actionctrl = (iONode)m_CtrlList->GetClientData(cursel);
+  iONode actionctrl = (iONode)m_CtrlList->GetClientData(m_iCursel);
 
   iONode node = NodeOp.inst( wActionCond.name(), actionctrl, ELEMENT_NODE);
 
@@ -760,7 +753,7 @@ void ActionsCtrlDlg::CreateControls()
     m_IndexPanel->SetSizer(itemBoxSizer5);
 
     wxArrayString m_CtrlListStrings;
-    m_CtrlList = new wxListBox( m_IndexPanel, ID_ACTIONCTRL_LIST, wxDefaultPosition, wxSize(-1, 100), m_CtrlListStrings, wxLB_SINGLE );
+    m_CtrlList = new wxListBox( m_IndexPanel, ID_ACTIONCTRL_LIST, wxDefaultPosition, wxSize(-1, 140), m_CtrlListStrings, wxLB_EXTENDED );
     itemBoxSizer5->Add(m_CtrlList, 1, wxGROW|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer7 = new wxBoxSizer(wxHORIZONTAL);
@@ -1006,7 +999,24 @@ void ActionsCtrlDlg::OnOkClick( wxCommandEvent& event )
 
 void ActionsCtrlDlg::OnActionctrlListSelected( wxCommandEvent& event )
 {
-  initValues();
+  wxArrayInt ai;
+  int cnt = m_CtrlList->GetSelections(ai);
+  if( cnt == 0 ) {
+    return;
+  }
+  m_Up->Enable(cnt==1);
+  m_Down->Enable(cnt==1);
+  m_Delete->Enable(cnt==1);
+  m_Modify->Enable(cnt==1);
+  m_ConditionsPanel->Enable(cnt==1);
+
+  if( cnt == 1 ) {
+    m_iCursel = ai.Item(0);
+    initValues();
+  }
+  else {
+    m_iCursel = wxNOT_FOUND;
+  }
 }
 
 
@@ -1075,9 +1085,10 @@ void ActionsCtrlDlg::OnActionctrlCondModifyClick( wxCommandEvent& event )
 
 void ActionsCtrlDlg::OnActionctrlDownClick( wxCommandEvent& event )
 {
-  if( m_Props == NULL )
+  if( m_Props == NULL || m_iCursel == wxNOT_FOUND)
     return;
-  int cursel = m_CtrlList->GetSelection();
+
+  int cursel = m_iCursel;
   int count  = m_CtrlList->GetCount();
 
   TraceOp.trc( "acdlg", TRCLEVEL_INFO, __LINE__, 9999, "down: cursel=%d count=%d", cursel, count );
@@ -1117,9 +1128,9 @@ void ActionsCtrlDlg::OnActionctrlDownClick( wxCommandEvent& event )
 
 void ActionsCtrlDlg::OnActionctrlUpClick( wxCommandEvent& event )
 {
-  if( m_Props == NULL )
+  if( m_Props == NULL || m_iCursel == wxNOT_FOUND)
     return;
-  int cursel = m_CtrlList->GetSelection();
+  int cursel = m_iCursel;
   int count  = m_CtrlList->GetCount();
 
   TraceOp.trc( "acdlg", TRCLEVEL_INFO, __LINE__, 9999, "down: cursel=%d count=%d", cursel, count );
@@ -1161,13 +1172,21 @@ void ActionsCtrlDlg::OnActionctrlCopyClick( wxCommandEvent& event )
 {
   if( m_Props == NULL )
     return;
-  int cursel = m_CtrlList->GetSelection();
 
-  if( cursel == wxNOT_FOUND )
+  wxArrayInt ai;
+  int cnt = m_CtrlList->GetSelections(ai);
+
+  if( cnt == 0 )
     return;
 
-  iONode actionctrl = (iONode)m_CtrlList->GetClientData(cursel);
-  char* str = NodeOp.toEscString(actionctrl);
+  iONode container = NodeOp.inst(wItem.name(), NULL, ELEMENT_NODE);
+  for( int i = 0; i < cnt; i++ ) {
+    int idx = ai.Item(i);
+    iONode actionctrl = (iONode)NodeOp.base.clone(m_CtrlList->GetClientData(idx));
+    NodeOp.addChild( container, actionctrl);
+  }
+
+  char* str = NodeOp.toEscString(container);
 
   wxString text(str,wxConvUTF8);
   wxClipboard* cb = wxTheClipboard;
@@ -1180,6 +1199,9 @@ void ActionsCtrlDlg::OnActionctrlCopyClick( wxCommandEvent& event )
       cb->Close();
     }
   }
+
+  StrOp.free(str);
+  NodeOp.base.del(container);
 }
 
 
@@ -1198,9 +1220,15 @@ void ActionsCtrlDlg::OnActionctrlPasteClick( wxCommandEvent& event )
         char* str = StrOp.dup(data.GetText().mb_str(wxConvUTF8) );
         iODoc doc = DocOp.parse(str);
         if( doc != NULL ) {
-          iONode actionctrl = DocOp.getRootNode(doc);
-          if( actionctrl != NULL ) {
-            m_CtrlList->Append( wxString( wActionCtrl.getid(actionctrl),wxConvUTF8 ), actionctrl );
+          iONode container = DocOp.getRootNode(doc);
+          if( container != NULL ) {
+            int cnt = NodeOp.getChildCnt(container);
+            for( int i = 0; i < cnt; i++ ) {
+              iONode actionctrl = NodeOp.getChild(container, i);
+              if( StrOp.equals( wActionCtrl.name(), NodeOp.getName(actionctrl)))
+                m_CtrlList->Append( wxString( wActionCtrl.getid(actionctrl),wxConvUTF8 ), NodeOp.base.clone(actionctrl) );
+            }
+            NodeOp.base.del(container);
           }
           DocOp.base.del(doc);
         }
