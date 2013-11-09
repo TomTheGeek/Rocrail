@@ -960,6 +960,7 @@ static Boolean __processAspectNrCmd( iOSignal inst, const char* state, int nr ) 
   iOControl control = AppOp.getControl(  );
   const char* iid = wSignal.getiid( o->props );
   int aspect = 0;
+  char saspect[32] = {'\0'};
 
   iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
 
@@ -982,6 +983,9 @@ static Boolean __processAspectNrCmd( iOSignal inst, const char* state, int nr ) 
   /* reset all outputs */
   if( iid != NULL )
     wSignal.setiid( cmd, iid );
+
+  StrOp.fmtb(saspect, "%d", aspect);
+  wSignal.setstate(o->props, saspect);
 
   wSignal.setbus( cmd, wSignal.getbus( o->props ) );
 
@@ -1045,6 +1049,7 @@ static void __checkAction( iOSignal inst ) {
   iONode       sgaction = wSignal.getactionctrl( data->props );
   iIBlockBase  bk       = NULL;
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "signal action check for state: [%s]", wSignal.getstate(data->props));
   while( sgaction != NULL) {
       if( StrOp.len( wActionCtrl.getstate(sgaction) ) == 0 ||
           StrOp.equals(wActionCtrl.getstate(sgaction), wSignal.getstate(data->props) ) )

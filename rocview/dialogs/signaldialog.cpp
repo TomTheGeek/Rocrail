@@ -1342,7 +1342,7 @@ void SignalDialog::OnSignalActionsClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
-  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props, "red,yellow,green,white" );
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props, "red,yellow,green,white,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15" );
 
   if( wxID_OK == dlg->ShowModal() ) {
     // TODO: inform
