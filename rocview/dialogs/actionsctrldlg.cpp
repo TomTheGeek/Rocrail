@@ -568,11 +568,14 @@ void ActionsCtrlDlg::apply() {
 void ActionsCtrlDlg::deleteSelected() {
 
   if( m_iCursel != wxNOT_FOUND ) {
-    iONode node = (iONode)m_CtrlList->GetClientData(m_iCursel);
+    int cursel = m_iCursel;
+    iONode node = (iONode)m_CtrlList->GetClientData(cursel);
     NodeOp.base.del(node);
-    m_CtrlList->Delete(m_iCursel);
+    m_CtrlList->Delete(cursel);
+    m_CtrlList->SetSelection(wxNOT_FOUND);
     if( m_CtrlList->GetCount() > 0 ) {
-      m_CtrlList->SetSelection(m_iCursel>0 ? m_iCursel-1 : 0);
+      m_iCursel = (cursel>0 ? cursel-1 : 0);
+      m_CtrlList->SetSelection(m_iCursel);
 //      m_CtrlList->SetSelection(0);
       initValues();
     }
