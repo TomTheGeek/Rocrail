@@ -426,6 +426,141 @@ static Boolean isStageBlockById( iOModel model, const char* blockid  ) {
 }
 
 
+/* check loco attributes */
+static Boolean checkLocos( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getlclist(data->plan);
+  int listSize = 0;
+  int numProblems = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkLocos: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkLocos: Checking %d %s nodes", listSize, listType );
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        int                addr = wLoc.getaddr( node );
+        const char*  identifier = wLoc.getidentifier( node );
+        const char*          id = wLoc.getid( node);
+        Boolean  V_mode_percent = StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent );
+        int               V_min = wLoc.getV_min( node );
+        int               V_mid = wLoc.getV_mid( node );
+        int               V_cru = wLoc.getV_cru( node );
+        int               V_max = wLoc.getV_max( node );
+        int              V_Rmin = wLoc.getV_Rmin( node );
+        int              V_Rmid = wLoc.getV_Rmid( node );
+        int              V_Rcru = wLoc.getV_Rcru( node );
+        int              V_Rmax = wLoc.getV_Rmax( node );
+        const char*   startScId = wLoc.getstartupscid( node );
+        const char* startTourId = wLoc.getstartuptourid( node );
+
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkLocos: lclist[%d] id[%s] addr[%d] identifier[%s] V_mode_percent[%d]",
+            i, id, addr, identifier, V_mode_percent );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkLocos: V_min[%d] V_mid[%d] V_cru[%d] V_max[%d] V_Rmin[%d] V_Rmid[%d] V_Rcru[%d] V_Rmax[%d]",
+            V_min, V_mid, V_cru, V_max, V_Rmin, V_Rmid, V_Rcru, V_Rmax );
+
+        if(  ( V_min == 0 )
+          || ( V_mid == 0 )
+          || ( V_max == 0 )
+          ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: loco[%s] not all mandatory speed settings present (V_min[%d] V_mid[%d] V_max[%d])",
+              id, V_min, V_mid, V_max );
+          numProblems++ ;
+        }
+
+        if(  V_mode_percent
+          && (    ( V_min  > 100 )
+               || ( V_mid  > 100 )
+               || ( V_cru  > 100 )
+               || ( V_max  > 100 )
+               || ( V_Rmin > 100 )
+               || ( V_Rmid > 100 )
+               || ( V_Rcru > 100 )
+               || ( V_Rmax > 100 )               
+             )
+          ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: loco[%s] has V_mode percent but at least one speed is above 100%%",
+              id );
+          numProblems++ ;
+        }
+
+        if(  ( V_min > V_mid )
+          || ( V_min > V_max )
+          || ( ( V_cru > 0 ) && ( ( V_mid > V_cru ) || ( V_cru > V_max ) ) )
+          || ( V_mid > V_max )
+          ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: loco[%s] speed settings not increasing",
+              id );
+          numProblems++ ;
+        }
+
+        if(  ( ( V_Rmin >  0 ) && ( V_Rmid >  0 ) && ( V_Rmin > V_Rmid ) )
+          || ( ( V_Rmin == 0 ) && ( V_Rmid >  0 ) && ( V_min  > V_Rmid ) )
+          || ( ( V_Rmin >  0 ) && ( V_Rmid == 0 ) && ( V_Rmin > V_mid  ) )
+
+          || ( ( V_Rmin >  0 ) && ( V_Rcru >  0 ) && ( V_Rmin > V_Rcru ) )
+          || ( ( V_Rmin == 0 ) && ( V_Rcru >  0 ) && ( V_min  > V_Rcru ) )
+          || ( ( V_Rmin >  0 ) && ( V_Rcru == 0 ) && ( V_cru  >  0 ) && ( V_Rmin > V_cru ) )
+
+          || ( ( V_Rmin >  0 ) && ( V_Rmax >  0 ) && ( V_Rmin > V_Rmax ) )
+          || ( ( V_Rmin == 0 ) && ( V_Rmax >  0 ) && ( V_min  > V_Rmax ) )
+          || ( ( V_Rmin >  0 ) && ( V_Rmax == 0 ) && ( V_Rmin > V_max  ) )
+
+          || ( ( V_Rmid >  0 ) && ( V_Rcru >  0 ) && ( V_Rmid > V_Rcru ) )
+          || ( ( V_Rmid == 0 ) && ( V_Rcru >  0 ) && ( V_mid  > V_Rcru ) )
+          || ( ( V_Rmid >  0 ) && ( V_Rcru == 0 ) && ( V_cru  >  0 ) && ( V_Rmid > V_cru ) )
+
+          || ( ( V_Rmid >  0 ) && ( V_Rmax >  0 ) && ( V_Rmid > V_Rmax ) )
+          || ( ( V_Rmid == 0 ) && ( V_Rmax >  0 ) && ( V_mid  > V_Rmax ) )
+          || ( ( V_Rmid >  0 ) && ( V_Rmax == 0 ) && ( V_Rmid > V_max  ) )
+
+          || ( ( V_Rcru >  0 ) && ( V_Rmax >  0 ) && ( V_Rcru > V_Rmax ) )
+          || ( ( V_Rcru == 0 ) && ( V_cru  >  0 ) && ( V_Rmax >  0 ) && ( V_cru  > V_Rmax ) )
+          || ( ( V_Rcru >  0 ) && ( V_Rmax == 0 ) && ( V_Rcru > V_max  ) )
+          ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: loco[%s] reverse speed settings not increasing",
+              id );
+          numProblems++ ;
+        }
+
+        if( StrOp.len( startTourId ) ) {
+          iONode tour = ModelOp.getTour( AppOp.getModel(), startTourId );
+          if( tour == NULL ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: loco[%s] startup tour[%s] not found",
+                id, startTourId );
+            numProblems++ ;
+          }
+        }
+        else if( StrOp.len( startScId ) ) {
+          iONode schedule = ModelOp.getSchedule( AppOp.getModel(), startScId );
+          if( schedule == NULL ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: loco[%s] startup schedule[%s] not found",
+                id, startScId );
+            numProblems++ ;
+          }
+        }
+      }
+    }
+  }
+
+  if( numProblems ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "loco check: %d problematic entries", numProblems );
+    return False;
+  }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco check: %d problematic enries", numProblems );
+
+  return (numProblems == 0);
+}
+
+
 /* check if state is a valid loco identifier */
 static Boolean isLocoIdentifier( iOAnalyse inst, const char* state ) {
   iOAnalyseData data = Data(inst);
@@ -441,13 +576,11 @@ static Boolean isLocoIdentifier( iOAnalyse inst, const char* state ) {
     iONode node;
     const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
     int i = 0;
-    Boolean thisNodeChanged ;
 
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isLocoIdentifier: Checking %d %s nodes", listSize, listType );
     for( i = 0 ; i < listSize ; i++ ) {
       node = NodeOp.getChild(list, i);
       if( node ) {
-        thisNodeChanged = False;
         int               addr = wLoc.getaddr( node );
         const char* identifier = wLoc.getidentifier( node );
         const char*         id = wLoc.getid( node);
@@ -663,7 +796,7 @@ static Boolean locoFnChecks( const char* state ) {
 }
 
 
-static Boolean isValidScheduleId( iOAnalyse inst, const char* lcid, const char* lcAcCondSchedule ) {
+static Boolean isValidLocoActionScheduleId( iOAnalyse inst, const char* lcid, const char* lcAcCondSchedule ) {
   iOAnalyseData data = Data(inst);
   iONode list = wPlan.getsclist(data->plan);
   iOStrTok tok = StrTokOp.inst( lcAcCondSchedule, ':');
@@ -680,14 +813,14 @@ static Boolean isValidScheduleId( iOAnalyse inst, const char* lcid, const char* 
     scidx = atoi(StrTokOp.nextToken(tok));
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
-      "isValidScheduleId for lcid[%s]: scstate[%s] scid[%s] scidx[%d]", lcid, scstate, scid, scidx );
+      "isValidLocoActionScheduleId for lcid[%s]: scstate[%s] scid[%s] scidx[%d]", lcid, scstate, scid, scidx );
 
   if( scid != NULL ) {
     /* verify schedule id (scid) and optional index (scidx) */
 
     int listSize = 0;
 
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidScheduleId: Checking [%08.8X]", list );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidLocoActionScheduleId: Checking [%08.8X]", list );
     if( list != NULL ) {
       listSize = NodeOp.getChildCnt( list );
     }
@@ -697,17 +830,16 @@ static Boolean isValidScheduleId( iOAnalyse inst, const char* lcid, const char* 
       const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
       int i = 0;
 
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidScheduleId: Checking %d %s nodes", listSize, listType );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidLocoActionScheduleId: Checking %d %s nodes", listSize, listType );
       for( i = 0 ; i < listSize ; i++ ) {
         node = NodeOp.getChild(list, i);
         if( node ) {
           int acIdx = 0;
-          iONode action = wSchedule.getactionctrl( node );
           const char* id = wSchedule.getid( node);
           int scEntries = NodeOp.getChildCnt(node);
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidScheduleId: id[%s] #entries[%d]", id, scEntries );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidLocoActionScheduleId: id[%s] #entries[%d]", id, scEntries );
           if( StrOp.equals( id, scid ) && ( ( -1 == scidx ) || ( scEntries >= scidx ) ) ) {
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidScheduleId: rc = True" );
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "isValidLocoActionScheduleId: rc = True" );
             rc = True ;
           }
         }
@@ -751,7 +883,7 @@ static Boolean checkActionCondLoco( iOAnalyse inst, const char* acLcid, const ch
         ! StrOp.equals( token, "reverse"    ) &&
         ! StrOp.equals( token, "+"          ) &&
         ! StrOp.equals( token, "-"          ) &&
-        ! ( StrOp.startsWith( token, "schedule:" ) && isValidScheduleId( inst, lcid, token ) )
+        ! ( StrOp.startsWith( token, "schedule:" ) && isValidLocoActionScheduleId( inst, lcid, token ) )
       ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondLoco for lc[%s]: lc[%s] invalid state[%s]",
           acLcid, lcid, token );
@@ -794,7 +926,7 @@ static Boolean checkActionCondLocoWc( iOAnalyse inst, const char* acLcid, const 
         ! StrOp.equals( token, "reverse"  ) &&
         ! StrOp.equals( token, "+"        ) &&
         ! StrOp.equals( token, "-"        ) &&
-        ! ( StrOp.startsWith( token, "schedule:" ) && isValidScheduleId( inst, acLcid, token ) )
+        ! ( StrOp.startsWith( token, "schedule:" ) && isValidLocoActionScheduleId( inst, acLcid, token ) )
       ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondLocoWcfor lc[%s]: lc[*] invalid state[%s]",
           acLcid, token );
@@ -7612,6 +7744,11 @@ static Boolean _checkExtended(iOAnalyse inst) {
     if( modifications > 0 )
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid routeid test: %d invalid entries detected", modifications );
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid routeid test: %s problems detected", (modifications == 0)?"no":"some" );
+
+    /* check locos */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " loco test: in progress..." );
+    res = checkLocos( inst, False );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " loco test: %s problems detected", res?"no":"some" );
 
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Basic checks finished" );
   }
