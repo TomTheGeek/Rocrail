@@ -418,7 +418,7 @@ void ActionsCtrlDlg::initCondIDs() {
 
     switch( typenr ) {
       case 0: statelist = "straight,turnout,left,right"; break;
-      case 1: statelist = "red,yellow,green,white"; break;
+      case 1: statelist = "red,yellow,green,white,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"; break;
       case 2: statelist = "on,off,active"; break;
       case 3: statelist = "true,false,identifier"; break;
       case 4: statelist = "forwards,reverse,diesel,steam,electric,min,mid,cruise,max,fon,foff,+,-,#,x"; break;
