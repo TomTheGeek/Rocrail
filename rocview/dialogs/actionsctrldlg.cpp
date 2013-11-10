@@ -305,7 +305,7 @@ void ActionsCtrlDlg::initValues() {
 
   if( m_iCursel != wxNOT_FOUND ) {
     iONode actionctrl = (iONode)m_CtrlList->GetClientData(m_iCursel);
-    m_ID->SetStringSelection( m_CtrlList->GetStringSelection() );
+    m_ID->SetStringSelection( wxString(wActionCtrl.getid(actionctrl),wxConvUTF8) );
 
     m_LocoID->SetSelection(0);
     if( wActionCtrl.getlcid(actionctrl) != NULL ) {
