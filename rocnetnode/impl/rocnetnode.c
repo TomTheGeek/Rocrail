@@ -356,7 +356,24 @@ static void __saveIni(iORocNetNode rocnetnode) {
   }
 
 
+  TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) & ~TRCLEVEL_INFO );
+  if( data->tl_info )
+    TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) | TRCLEVEL_INFO );
 
+  TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) & ~TRCLEVEL_MONITOR );
+  if( data->tl_monitor )
+    TraceOp.setLevel( NULL, TraceOp.getLevel( NULL ) | TRCLEVEL_MONITOR );
+
+  if( NodeOp.findNode(data->ini, wTrace.name()) == NULL ) {
+    iONode traceini = NodeOp.inst(wTrace.name(), data->ini, ELEMENT_NODE);
+    NodeOp.addChild(data->ini, traceini);
+  }
+
+  if( NodeOp.findNode(data->ini, wTrace.name()) != NULL ) {
+    iONode traceini = NodeOp.findNode(data->ini, wTrace.name());
+    wTrace.setinfo(traceini, TraceOp.getLevel( NULL ) & TRCLEVEL_INFO );
+    wTrace.setmonitor(traceini, TraceOp.getLevel( NULL ) & TRCLEVEL_MONITOR );
+  }
 
   if( iniFile != NULL ) {
     char* iniStr = NodeOp.base.toString( data->ini );
@@ -635,6 +652,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_LEN] = 4;
     msg[RN_PACKET_DATA + 0] = data->iotype;
     msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00) | (data->usepb ? 0x04:0x00);
+    msg[RN_PACKET_DATA + 1] |= (data->tl_info ? 0x10:0x00) | (data->tl_monitor ? 0x20:0x00);
     msg[RN_PACKET_DATA + 2] = data->cstype;
     msg[RN_PACKET_DATA + 3] = data->csdevice;
     break;
@@ -646,6 +664,8 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     data->sack   = (rn[RN_PACKET_DATA + 1] & 0x01) ? True:False;
     data->rfid   = (rn[RN_PACKET_DATA + 1] & 0x02) ? True:False;
     data->usepb = (rn[RN_PACKET_DATA + 1] & 0x04) ? True:False;
+    data->tl_info = (rn[RN_PACKET_DATA + 1] & 0x10) ? True:False;
+    data->tl_monitor = (rn[RN_PACKET_DATA + 1] & 0x20) ? True:False;
     data->cstype   = rn[RN_PACKET_DATA + 2];
     data->csdevice = rn[RN_PACKET_DATA + 3];
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "options: iotype=%d cstype=%d csdevice=%d", data->iotype, data->cstype, data->csdevice );
@@ -1890,7 +1910,8 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
     if( NodeOp.findNode(data->ini, wTrace.name()) != NULL ) {
       iONode traceini = NodeOp.findNode(data->ini, wTrace.name());
       tf = wTrace.getrfile(traceini);
-      trc = TraceOp.inst( debug | dump | monitor | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
+      trc = TraceOp.inst( debug | dump | monitor | wTrace.ismonitor(traceini) | parse |
+                          wTrace.isinfo(traceini) | TRCLEVEL_CALC, tf, True );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using ini setup" );
 
       if( wTrace.isdebug( traceini ) || debug )
@@ -1907,6 +1928,9 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
     else {
       trc = TraceOp.inst( debug | dump | monitor | parse | TRCLEVEL_INFO | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
     }
+
+    data->tl_info = TraceOp.getLevel( trc ) & TRCLEVEL_INFO;
+    data->tl_monitor = TraceOp.getLevel( trc ) & TRCLEVEL_MONITOR;
 
     data->digintini = NodeOp.findNode(data->ini, wDigInt.name());
     if( data->digintini != NULL ) {

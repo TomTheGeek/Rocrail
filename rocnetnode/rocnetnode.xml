@@ -103,6 +103,8 @@
       <var name="sack" vt="Boolean"/>
       <var name="rfid" vt="Boolean"/>
       <var name="usepb" vt="Boolean"/>
+      <var name="tl_info" vt="Boolean"/>
+      <var name="tl_monitor" vt="Boolean"/>
       <var name="i2cmux" vt="iOMutex"/>
       <var name="startofday" vt="Boolean"/>
       <var name="LED1" vt="int"/>
