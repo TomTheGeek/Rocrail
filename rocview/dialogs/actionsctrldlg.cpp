@@ -470,7 +470,7 @@ void ActionsCtrlDlg::initCondIDs() {
 
 
 void ActionsCtrlDlg::evaluate() {
-  int cursel = m_CtrlList->GetSelection();
+  int cursel = m_iCursel;
 
   if( cursel != wxNOT_FOUND ) {
     iONode node = (iONode)m_CtrlList->GetClientData(cursel);
