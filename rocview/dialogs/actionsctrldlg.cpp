@@ -290,6 +290,7 @@ void ActionsCtrlDlg::initIndex(int cursel) {
   };
 
   if(m_CtrlList->GetCount() > 0) {
+    m_CtrlList->SetSelection( wxNOT_FOUND );
     m_iCursel = (cursel>=0?cursel:0);
     m_CtrlList->SetSelection(cursel>=0?cursel:0);
   }
@@ -581,6 +582,9 @@ void ActionsCtrlDlg::deleteSelected() {
 //      m_CtrlList->SetSelection(0);
       initValues();
     }
+    else {
+      m_iCursel = wxNOT_FOUND;
+    }
   }
 }
 
@@ -617,8 +621,10 @@ void ActionsCtrlDlg::addActionCtrl() {
   iONode node = NodeOp.inst( wActionCtrl.name(), NULL, ELEMENT_NODE);
   wActionCtrl.setid(node, m_ID->GetStringSelection().mb_str(wxConvUTF8) );
   m_CtrlList->Append( wxString( wActionCtrl.getid(node),wxConvUTF8 ), node );
-  m_CtrlList->SetStringSelection( m_ID->GetStringSelection() );
-  m_CtrlList->SetFirstItem( m_ID->GetStringSelection() );
+  m_CtrlList->SetSelection( wxNOT_FOUND );
+  m_CtrlList->SetSelection( m_CtrlList->GetCount()-1 );
+  m_CtrlList->SetFirstItem( m_CtrlList->GetCount()-1 );
+  m_iCursel = m_CtrlList->GetCount()-1;
   evaluate();
   initValues();
 }
@@ -1122,6 +1128,7 @@ void ActionsCtrlDlg::OnActionctrlDownClick( wxCommandEvent& event )
     }
 
     ListOp.base.del(list);
+    m_CtrlList->SetSelection( wxNOT_FOUND );
     m_iCursel = cursel+1;
     m_CtrlList->SetSelection(cursel+1);
   }
@@ -1165,6 +1172,7 @@ void ActionsCtrlDlg::OnActionctrlUpClick( wxCommandEvent& event )
     }
 
     ListOp.base.del(list);
+    m_CtrlList->SetSelection( wxNOT_FOUND );
     m_iCursel = cursel-1;
     m_CtrlList->SetSelection(cursel-1);
   }
