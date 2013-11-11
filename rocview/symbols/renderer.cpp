@@ -1606,6 +1606,20 @@ void SymbolRenderer::drawSignal( wxPaintDC& dc, bool occupied, bool actroute, co
 
   if( nr == -1 )
     nr = 0;
+
+  if( nr >= 0 && nr < 5 && wSignal.getusepatterns( m_Props ) == wSignal.use_aspectnrs ) {
+    if( wSignal.getgreennr(m_Props) == nr )
+      state = wSignal.green;
+    else if( wSignal.getrednr(m_Props) == nr )
+      state = wSignal.red;
+    else if( wSignal.getyellownr(m_Props) == nr )
+      state = wSignal.yellow;
+    else if( wSignal.getwhitenr(m_Props) == nr )
+      state = wSignal.white;
+    else if( wSignal.getblanknr(m_Props) == nr )
+      state = wSignal.blank;
+  }
+
   // SVG Symbol:
   if( nr >= 0 && nr < 32 && (aspects > 4 || wSignal.isusesymbolprefix(m_Props) ) && m_SvgSym[nr] != NULL) {
     if( occupied && m_SvgSymOcc[nr] != NULL)
