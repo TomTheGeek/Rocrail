@@ -249,6 +249,16 @@ void ActionsCtrlDlg::initLabels() {
 }
 
 
+void ActionsCtrlDlg::clearIndexSelection() {
+  if(m_CtrlList->GetCount() > 0) {
+    wxArrayInt ai;
+    int cnt = m_CtrlList->GetSelections(ai);
+    for( int i = 0; i < cnt; i++ ) {
+      m_CtrlList->Deselect( ai.Item(i) );
+    }
+  }
+}
+
 void ActionsCtrlDlg::initIndex(int cursel) {
   TraceOp.trc( "scdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
   m_ID->Clear();
@@ -290,7 +300,7 @@ void ActionsCtrlDlg::initIndex(int cursel) {
   };
 
   if(m_CtrlList->GetCount() > 0) {
-    m_CtrlList->SetSelection( wxNOT_FOUND );
+    clearIndexSelection();
     m_iCursel = (cursel>=0?cursel:0);
     m_CtrlList->SetSelection(cursel>=0?cursel:0);
   }
@@ -575,7 +585,7 @@ void ActionsCtrlDlg::deleteSelected() {
     iONode node = (iONode)m_CtrlList->GetClientData(cursel);
     NodeOp.base.del(node);
     m_CtrlList->Delete(cursel);
-    m_CtrlList->SetSelection(wxNOT_FOUND);
+    clearIndexSelection();
     if( m_CtrlList->GetCount() > 0 ) {
       m_iCursel = (cursel>0 ? cursel-1 : 0);
       m_CtrlList->SetSelection(m_iCursel);
@@ -621,7 +631,7 @@ void ActionsCtrlDlg::addActionCtrl() {
   iONode node = NodeOp.inst( wActionCtrl.name(), NULL, ELEMENT_NODE);
   wActionCtrl.setid(node, m_ID->GetStringSelection().mb_str(wxConvUTF8) );
   m_CtrlList->Append( wxString( wActionCtrl.getid(node),wxConvUTF8 ), node );
-  m_CtrlList->SetSelection( wxNOT_FOUND );
+  clearIndexSelection();
   m_CtrlList->SetSelection( m_CtrlList->GetCount()-1 );
   m_CtrlList->SetFirstItem( m_CtrlList->GetCount()-1 );
   m_iCursel = m_CtrlList->GetCount()-1;
@@ -1128,7 +1138,7 @@ void ActionsCtrlDlg::OnActionctrlDownClick( wxCommandEvent& event )
     }
 
     ListOp.base.del(list);
-    m_CtrlList->SetSelection( wxNOT_FOUND );
+    clearIndexSelection();
     m_iCursel = cursel+1;
     m_CtrlList->SetSelection(cursel+1);
   }
@@ -1172,7 +1182,7 @@ void ActionsCtrlDlg::OnActionctrlUpClick( wxCommandEvent& event )
     }
 
     ListOp.base.del(list);
-    m_CtrlList->SetSelection( wxNOT_FOUND );
+    clearIndexSelection();
     m_iCursel = cursel-1;
     m_CtrlList->SetSelection(cursel-1);
   }
