@@ -108,27 +108,27 @@ void RocNetDlg::initValues() {
   else
     m_BPS->SetSelection(1); // default 19200
 
-  if( StrOp.equals( wDigInt.sublib_udp, wDigInt.getsublib(m_Props) ) ) {
-    m_Sublib->SetSelection(0);
-    m_BPS->Enable(false);
-    m_Device->Enable(false);
-    m_Address->Enable(true);
-    m_Port->Enable(true);
-  }
-  else if( StrOp.equals( wDigInt.sublib_tcp, wDigInt.getsublib(m_Props) )) {
+  if( StrOp.equals( wDigInt.sublib_tcp, wDigInt.getsublib(m_Props) )) {
     m_Sublib->SetSelection(2);
     m_BPS->Enable(false);
     m_Device->Enable(false);
     m_Address->Enable(true);
     m_Port->Enable(true);
   }
-  else {
+  else  if( StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib(m_Props) )) {
     // Serial
     m_Sublib->SetSelection(1);
     m_BPS->Enable(true);
     m_Device->Enable(true);
     m_Address->Enable(false);
     m_Port->Enable(false);
+  }
+  else {
+    m_Sublib->SetSelection(0);
+    m_BPS->Enable(false);
+    m_Device->Enable(false);
+    m_Address->Enable(true);
+    m_Port->Enable(true);
   }
 
   m_CRC->SetValue( wRocNet.iscrc(rnini) ? true:false);
