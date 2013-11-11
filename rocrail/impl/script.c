@@ -133,6 +133,11 @@ static char* _convertNode(iONode node, Boolean addstamp) {
       scriptline = StrOp.cat( scriptline, ",");
       scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "exitstate", NULL));
     }
+    if( NodeOp.getStr(node, "V", NULL) != NULL ) {
+      scriptline = StrOp.cat( scriptline, ",");
+      scriptline = StrOp.cat( scriptline, "V");
+      scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "V", NULL));
+    }
 
     if( addstamp ) {
       char* stamp = StrOp.createStamp();
@@ -213,16 +218,21 @@ static iONode _parseLine(const char* scriptline) {
       /* lc,<id>,go */
       node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       wLoc.setid( node, parm1 );
-      wLoc.setcmd( node, parm2 );
-      if( parm3 != NULL ) {
-        /* lc,<id>,gotoblock,<bkid> */
-        if( StrOp.equalsi(wLoc.gotoblock, parm2) )
-          wLoc.setblockid(node, parm3);
-        /* lc,<id>,useschedule,<scid> */
-        if( StrOp.equalsi(wLoc.useschedule, parm2) )
-          wLoc.setscheduleid(node, parm3);
-        if( StrOp.equalsi(wLoc.assigntrain, parm2) )
-          wLoc.settrain(node, parm3);
+      if( parm2[0]=='V' ) {
+        wLoc.setV(node, atoi(parm2+1));
+      }
+      else {
+        wLoc.setcmd( node, parm2 );
+        if( parm3 != NULL ) {
+          /* lc,<id>,gotoblock,<bkid> */
+          if( StrOp.equalsi(wLoc.gotoblock, parm2) )
+            wLoc.setblockid(node, parm3);
+          /* lc,<id>,useschedule,<scid> */
+          if( StrOp.equalsi(wLoc.useschedule, parm2) )
+            wLoc.setscheduleid(node, parm3);
+          if( StrOp.equalsi(wLoc.assigntrain, parm2) )
+            wLoc.settrain(node, parm3);
+        }
       }
     }
 

@@ -661,6 +661,16 @@
           <var name="eventid" vt="int" defval="0" remark=""/>
           <var name="eventport" vt="int" defval="0" remark=""/>
         </portsetup>
+        <pwmchannelsetup wrappername="PWMChannelSetup" cardinality="n">
+          <var name="i2caddr" vt="int" defval="64" range="64-71" remark="0x40...0x47"/>
+          <var name="channel" vt="int" defval="0" range="0-15"/>
+          <var name="delay" vt="int" defval="0" range="0-*" remark="0=10ms, 1=20ms, ..."/>
+          <var name="stepamount" vt="int" defval="10" range="1-4096"/>
+          <var name="startpos" vt="int" defval="10" range="0-4095"/>
+          <var name="stoppos" vt="int" defval="10" range="0-4095"/>
+          <var name="options" vt="int" defval="0"/>
+          <var name="state" vt="int" defval="0" remark="Saved output state."/>
+        </pwmchannelsetup>
         <macro cardinality="n"/>
       </rocnet>
 
