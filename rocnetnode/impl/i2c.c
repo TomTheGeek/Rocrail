@@ -23,6 +23,7 @@
 
 #include "rocs/public/trace.h"
 #include "rocs/public/str.h"
+#include "rocs/public/thread.h"
 
 #include "rocnetnode/public/i2c.h"
 
@@ -98,5 +99,37 @@ int raspiCloseI2C( int descriptor ) {
 }
 
 #endif
+
+
+int pwmSetFreq(int descriptor, unsigned char dev_addr, int freq) {
+  char oldmode = 0;
+  char newmode = 0;
+  int rc = 0;
+
+  /* Sets the PWM frequency */
+  float prescaleval = 25000000.0;    /* 25MHz */
+  float prescale = 0.0;
+  prescaleval /= 4096.0;       /* 12-bit */
+  prescaleval /= (float)freq;
+  prescaleval -= 1.0;
+  prescale = (int)(prescaleval + 0.5);
+
+  rc = raspiReadRegI2C(descriptor, dev_addr, PWM_MODE1, &oldmode);
+  newmode = (oldmode & 0x7F) | 0x10;
+  raspiWriteRegI2C( descriptor, dev_addr, PWM_MODE1, newmode);
+  raspiWriteRegI2C( descriptor, dev_addr, PWM_PRESCALE, (int)prescale );
+  raspiWriteRegI2C( descriptor, dev_addr, PWM_MODE1, oldmode);
+  ThreadOp.sleep(10);
+  return raspiWriteRegI2C( descriptor, dev_addr, PWM_MODE1, oldmode | 0x80);
+}
+
+int pwmSetChannel(int descriptor, unsigned char dev_addr, int channel, int on, int off) {
+  int rc = 0;
+  rc = raspiWriteRegI2C( descriptor, dev_addr, PWM_LED0_ON_L+4*channel, on & 0xFF);
+  rc = raspiWriteRegI2C( descriptor, dev_addr, PWM_LED0_ON_H+4*channel, on >> 8);
+  rc = raspiWriteRegI2C( descriptor, dev_addr, PWM_LED0_OFF_L+4*channel, off & 0xFF);
+  rc = raspiWriteRegI2C( descriptor, dev_addr, PWM_LED0_OFF_H+4*channel, off >> 8);
+  return rc;
+}
 
 
