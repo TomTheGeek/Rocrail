@@ -117,10 +117,15 @@ int pwmSetFreq(int descriptor, unsigned char dev_addr, int freq) {
   TraceOp.trc( "raspi-i2c", TRCLEVEL_INFO, __LINE__, 9999, "set PWM freq. to %d on device 0x%02X prescale=%f", freq, dev_addr, prescale );
 
   rc = raspiReadRegI2C(descriptor, dev_addr, PWM_MODE1, &oldmode);
+  if( rc < 0 ) return rc;
+  TraceOp.trc( "raspi-i2c", TRCLEVEL_INFO, __LINE__, 9999, "PWM mode1=0x%02X", oldmode & 0xFF );
   newmode = (oldmode & 0x7F) | 0x10;
-  raspiWriteRegI2C( descriptor, dev_addr, PWM_MODE1, newmode);
-  raspiWriteRegI2C( descriptor, dev_addr, PWM_PRESCALE, (int)prescale );
-  raspiWriteRegI2C( descriptor, dev_addr, PWM_MODE1, oldmode);
+  rc = raspiWriteRegI2C( descriptor, dev_addr, PWM_MODE1, newmode);
+  if( rc < 0 ) return rc;
+  rc = raspiWriteRegI2C( descriptor, dev_addr, PWM_PRESCALE, (int)prescale );
+  if( rc < 0 ) return rc;
+  rc = raspiWriteRegI2C( descriptor, dev_addr, PWM_MODE1, oldmode);
+  if( rc < 0 ) return rc;
   ThreadOp.sleep(10);
   return raspiWriteRegI2C( descriptor, dev_addr, PWM_MODE1, oldmode | 0x80);
 }
@@ -129,8 +134,11 @@ int pwmSetChannel(int descriptor, unsigned char dev_addr, int channel, int on, i
   int rc = 0;
   TraceOp.trc( "raspi-i2c", TRCLEVEL_BYTE, __LINE__, 9999, "set PWM channel %d on device 0x%02X to %d,%d", channel, dev_addr, on, off );
   rc = raspiWriteRegI2C( descriptor, dev_addr, PWM_LED0_ON_L+4*channel, on & 0xFF);
+  if( rc < 0 ) return rc;
   rc = raspiWriteRegI2C( descriptor, dev_addr, PWM_LED0_ON_H+4*channel, on >> 8);
+  if( rc < 0 ) return rc;
   rc = raspiWriteRegI2C( descriptor, dev_addr, PWM_LED0_OFF_L+4*channel, off & 0xFF);
+  if( rc < 0 ) return rc;
   rc = raspiWriteRegI2C( descriptor, dev_addr, PWM_LED0_OFF_H+4*channel, off >> 8);
   return rc;
 }
