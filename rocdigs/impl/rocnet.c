@@ -454,14 +454,23 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         ThreadOp.post( data->writer, (obj)rn );
       }
       else if( wProgram.getcmd( node ) == wProgram.nvget ) {
+        int porttype = wProgram.getporttype(node);
         int rnid = wProgram.getmodid(node);
         rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
         rnReceipientAddresToPacket( rnid, rn, data->seven );
         rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
-        rn[RN_PACKET_ACTION] = RN_PROGRAMMING_RPORT;
-        rn[RN_PACKET_LEN] = 2;
-        rn[RN_PACKET_DATA + 0] = wProgram.getval1(node);
-        rn[RN_PACKET_DATA + 1] = wProgram.getval2(node);
+        if( porttype == wProgram.porttype_servo ) {
+          rn[RN_PACKET_ACTION] = RN_PROGRAMMING_RCHANNEL;
+          rn[RN_PACKET_LEN] = 2;
+          rn[RN_PACKET_DATA + 0] = wProgram.getval1(node);
+          rn[RN_PACKET_DATA + 1] = wProgram.getval2(node);
+        }
+        else {
+          rn[RN_PACKET_ACTION] = RN_PROGRAMMING_RPORT;
+          rn[RN_PACKET_LEN] = 2;
+          rn[RN_PACKET_DATA + 0] = wProgram.getval1(node);
+          rn[RN_PACKET_DATA + 1] = wProgram.getval2(node);
+        }
         ThreadOp.post( data->writer, (obj)rn );
       }
       else if( wProgram.getcmd( node ) == wProgram.evget ) {
@@ -478,21 +487,43 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       else if( wProgram.getcmd( node ) == wProgram.nvset ) {
         char key[32] = {'\0'};
         int i = 0;
+        int porttype = wProgram.getporttype(node);
         int rnid = wProgram.getmodid(node);
         rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
         rnReceipientAddresToPacket( rnid, rn, data->seven );
         rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
-        rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WPORT;
-        rn[RN_PACKET_LEN] = 8*4;
-        for( i = 0; i < 8; i++ ) {
-          StrOp.fmtb(key, "val%d", i*4 + 1);
-          rn[RN_PACKET_DATA + 0 + i*4] = NodeOp.getInt(node, key, 0);
-          StrOp.fmtb(key, "val%d", i*4 + 2);
-          rn[RN_PACKET_DATA + 1 + i*4] = NodeOp.getInt(node, key, 0);
-          StrOp.fmtb(key, "val%d", i*4 + 3);
-          rn[RN_PACKET_DATA + 2 + i*4] = NodeOp.getInt(node, key, 0);
-          StrOp.fmtb(key, "val%d", i*4 + 4);
-          rn[RN_PACKET_DATA + 3 + i*4] = NodeOp.getInt(node, key, 0);
+        if( porttype == wProgram.porttype_servo ) {
+          rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WCHANNEL;
+          rn[RN_PACKET_LEN] = 8*7;
+          for( i = 0; i < 8; i++ ) {
+            /* channel#   startH  startL  stopH   stopL   stepamount  delay */
+            StrOp.fmtb(key, "val%d", i*7 + 1);
+            rn[RN_PACKET_DATA + 0 + i*7] = NodeOp.getInt(node, key, 0);
+            StrOp.fmtb(key, "val%d", i*7 + 2);
+            rn[RN_PACKET_DATA + 1 + i*7] = NodeOp.getInt(node, key, 0)/256;
+            rn[RN_PACKET_DATA + 2 + i*7] = NodeOp.getInt(node, key, 0)%256;
+            StrOp.fmtb(key, "val%d", i*7 + 3);
+            rn[RN_PACKET_DATA + 3 + i*7] = NodeOp.getInt(node, key, 0)/256;
+            rn[RN_PACKET_DATA + 4 + i*7] = NodeOp.getInt(node, key, 0)%256;
+            StrOp.fmtb(key, "val%d", i*7 + 4);
+            rn[RN_PACKET_DATA + 5 + i*7] = NodeOp.getInt(node, key, 0);
+            StrOp.fmtb(key, "val%d", i*7 + 5);
+            rn[RN_PACKET_DATA + 6 + i*7] = NodeOp.getInt(node, key, 0);
+          }
+        }
+        else {
+          rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WPORT;
+          rn[RN_PACKET_LEN] = 8*4;
+          for( i = 0; i < 8; i++ ) {
+            StrOp.fmtb(key, "val%d", i*4 + 1);
+            rn[RN_PACKET_DATA + 0 + i*4] = NodeOp.getInt(node, key, 0);
+            StrOp.fmtb(key, "val%d", i*4 + 2);
+            rn[RN_PACKET_DATA + 1 + i*4] = NodeOp.getInt(node, key, 0);
+            StrOp.fmtb(key, "val%d", i*4 + 3);
+            rn[RN_PACKET_DATA + 2 + i*4] = NodeOp.getInt(node, key, 0);
+            StrOp.fmtb(key, "val%d", i*4 + 4);
+            rn[RN_PACKET_DATA + 3 + i*4] = NodeOp.getInt(node, key, 0);
+          }
         }
         ThreadOp.post( data->writer, (obj)rn );
       }

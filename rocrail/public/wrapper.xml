@@ -994,6 +994,24 @@
     <var name="val30" vt="int" defval="0" range="0-255"/>
     <var name="val31" vt="int" defval="0" range="0-255"/>
     <var name="val32" vt="int" defval="0" range="0-255"/>
+    <var name="val33" vt="int" defval="0" range="0-255"/>
+    <var name="val34" vt="int" defval="0" range="0-255"/>
+    <var name="val35" vt="int" defval="0" range="0-255"/>
+    <var name="val36" vt="int" defval="0" range="0-255"/>
+    <var name="val37" vt="int" defval="0" range="0-255"/>
+    <var name="val38" vt="int" defval="0" range="0-255"/>
+    <var name="val39" vt="int" defval="0" range="0-255"/>
+    <var name="val40" vt="int" defval="0" range="0-255"/>
+    <var name="val41" vt="int" defval="0" range="0-255"/>
+    <var name="val42" vt="int" defval="0" range="0-255"/>
+    <var name="val43" vt="int" defval="0" range="0-255"/>
+    <var name="val44" vt="int" defval="0" range="0-255"/>
+    <var name="val45" vt="int" defval="0" range="0-255"/>
+    <var name="val46" vt="int" defval="0" range="0-255"/>
+    <var name="val47" vt="int" defval="0" range="0-255"/>
+    <var name="val48" vt="int" defval="0" range="0-255"/>
+    <var name="val49" vt="int" defval="0" range="0-255"/>
+    <var name="val50" vt="int" defval="0" range="0-255"/>
     <var name="pom" vt="bool" defval="false" remark="POM Program On the Main"/>
     <var name="acc" vt="bool" defval="false" remark="POM Program On the Main for accessory decoders"/>
     <var name="decaddr" vt="int" defval="0" range="*" remark="decoder address in case of POM"/>

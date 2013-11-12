@@ -524,6 +524,38 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
   }
   break;
 
+  case RN_PROGRAMMING_WCHANNEL:
+  {
+    iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+    int i = 0;
+
+    if( rocnet == NULL ) {
+      rocnet = NodeOp.inst( wRocNet.name(), data->ini, ELEMENT_NODE);
+      NodeOp.addChild( data->ini, rocnet );
+    }
+
+    for( i = 0; i < 8; i++ ) {
+      int channel    = rn[RN_PACKET_DATA+0+i*7];
+      int startpos   = rn[RN_PACKET_DATA+1+i*7]*256 + rn[RN_PACKET_DATA+2+i*7];
+      int stoppos    = rn[RN_PACKET_DATA+3+i*7]*256 + rn[RN_PACKET_DATA+4+i*7];
+      int stepamount = rn[RN_PACKET_DATA+5+i*7];
+      int delay      = rn[RN_PACKET_DATA+6+i*7];
+      iONode channelsetup = __findChannel(rocnetnode, channel);
+      if( channelsetup == NULL ) {
+        channelsetup = NodeOp.inst( wChannelSetup.name(), rocnet, ELEMENT_NODE);
+        wChannelSetup.setchannel( channelsetup, channel);
+        NodeOp.addChild( rocnet, channelsetup );
+      }
+      wChannelSetup.setstartpos( channelsetup, startpos);
+      wChannelSetup.setstoppos( channelsetup, stoppos);
+      wChannelSetup.setstepamount( channelsetup, stepamount);
+      wChannelSetup.setdelay( channelsetup, delay);
+    }
+    __saveIni(rocnetnode);
+    __initIO(rocnetnode);
+  }
+  break;
+
   case RN_PROGRAMMING_RMPORT:
   {
     iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
@@ -612,6 +644,39 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
         msg[RN_PACKET_DATA + 1 + idx * 4] = data->ports[i]->state;
         msg[RN_PACKET_DATA + 2 + idx * 4] = data->ports[i]->type;
         msg[RN_PACKET_DATA + 3 + idx * 4] = data->ports[i]->delay;
+      }
+      idx++;
+    }
+    break;
+
+  case RN_PROGRAMMING_RCHANNEL:
+    from = rn[RN_PACKET_DATA+0];
+    to   = rn[RN_PACKET_DATA+1];
+    if( from > to ) {
+      from = rn[RN_PACKET_DATA+1];
+      to   = rn[RN_PACKET_DATA+0];
+    }
+    if( to - from > 7 ) {
+      to = from + 7;
+    }
+
+    msg = allocMem(128);
+    msg[RN_PACKET_NETID] = data->location;
+    msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+    rnReceipientAddresToPacket( sndr, msg, 0 );
+    rnSenderAddresToPacket( data->id, msg, 0 );
+    msg[RN_PACKET_ACTION] = RN_PROGRAMMING_RCHANNEL;
+    msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+    msg[RN_PACKET_LEN] = ((to-from)+1)*7;
+    for( i = from; i <= to; i++ ) {
+      if( data->channels[i] != NULL ) {
+        msg[RN_PACKET_DATA + 0 + idx * 7] = i;
+        msg[RN_PACKET_DATA + 1 + idx * 7] = data->channels[i]->startpos/256;
+        msg[RN_PACKET_DATA + 2 + idx * 7] = data->channels[i]->startpos%256;
+        msg[RN_PACKET_DATA + 3 + idx * 7] = data->channels[i]->stoppos/256;
+        msg[RN_PACKET_DATA + 4 + idx * 7] = data->channels[i]->stoppos%256;
+        msg[RN_PACKET_DATA + 5 + idx * 7] = data->channels[i]->stepamount;
+        msg[RN_PACKET_DATA + 6 + idx * 7] = data->channels[i]->delay;
       }
       idx++;
     }
