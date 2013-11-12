@@ -1236,7 +1236,10 @@ static void __writeChannel(iORocNetNode rocnetnode, int channel, int pos) {
 
   i2caddr = (data->channels[channel]->channel - 1) / 16;
 
+  MutexOp.wait( data->i2cmux );
   rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, data->channels[channel]->channel - 1, 0, pos);
+  MutexOp.post( data->i2cmux );
+
   if( rc < 0 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x40+i2caddr, errno );
     data->i2caddr40[i2caddr] = False;
