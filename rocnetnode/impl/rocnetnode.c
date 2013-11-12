@@ -1342,9 +1342,9 @@ static void __pwm( void* threadinst ) {
             if( data->channels[i]->curpos > gotopos )
               data->channels[i]->curpos = gotopos;
           }
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set channel %d pwm from %d to %d",
-              data->channels[i]->channel, oldcurpos, data->channels[i]->curpos );
-          __writeChannel(rocnetnode, i, data->channels[i]->curpos);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set channel %d pwm from %d to %d, gotopos=%d",
+              data->channels[i]->channel-1, oldcurpos, data->channels[i]->curpos, gotopos );
+          __writeChannel(rocnetnode, data->channels[i]->channel, data->channels[i]->curpos);
           ThreadOp.sleep(0);
         }
 
@@ -2153,8 +2153,8 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
     if( NodeOp.findNode(data->ini, wTrace.name()) != NULL ) {
       iONode traceini = NodeOp.findNode(data->ini, wTrace.name());
       tf = wTrace.getrfile(traceini);
-      trc = TraceOp.inst( debug | dump | monitor | wTrace.ismonitor(traceini)?TRCLEVEL_MONITOR:0 | parse |
-                          wTrace.isinfo(traceini)?TRCLEVEL_INFO:0 | TRCLEVEL_CALC, tf, True );
+      trc = TraceOp.inst( debug | dump | monitor | (wTrace.ismonitor(traceini)?TRCLEVEL_MONITOR:0) | parse |
+                          (wTrace.isinfo(traceini)?TRCLEVEL_INFO:0) | TRCLEVEL_CALC, tf, True );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using ini setup" );
 
       if( wTrace.isdebug( traceini ) || debug )
