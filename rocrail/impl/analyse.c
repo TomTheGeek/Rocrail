@@ -142,6 +142,7 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/ActionList.h"
 #include "rocrail/wrapper/public/TurntableList.h"
 #include "rocrail/wrapper/public/TextList.h"
+#include "rocrail/wrapper/public/SelTabList.h"
 
 #include "rocrail/public/app.h"
 #include "rocrail/public/model.h"
@@ -606,6 +607,19 @@ static Boolean checkActionCondSwitch( const char* state ) {
   return False;
 }
 
+
+static Boolean isValidAspect0to31( const char* token ) {
+  if( StrOp.len( token) > 0 ) {
+    int aspect = atoi( token );
+    if( ( aspect == 0 ) && StrOp.equals( token, "0" ) )
+      return True;
+    if( ( aspect > 0 ) && ( aspect <= 31 ) )
+      return True;
+  }
+
+  return False;
+}
+
 /* condState(signal) == [red, yellow, green, white] multiple(CSV) */
 static Boolean checkActionCondSignal( const char* state ) {
   if( StrOp.len( state ) == 0 )
@@ -619,7 +633,8 @@ static Boolean checkActionCondSignal( const char* state ) {
     if( ! StrOp.equals( token, wSignal.red    ) &&
         ! StrOp.equals( token, wSignal.yellow ) &&
         ! StrOp.equals( token, wSignal.green  ) &&
-        ! StrOp.equals( token, wSignal.white  )
+        ! StrOp.equals( token, wSignal.white  ) &&
+        ! isValidAspect0to31( token )
       ) {
       rc = False;
     }
@@ -2291,6 +2306,189 @@ static Boolean blockFeedbackActionCheck( iOAnalyse inst, Boolean repair ) {
     return False;
   }
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block feedback action check: %d problematic enries", numProblems );
+  return True;
+}
+
+
+
+/* merge local fb list into global fb list and report duplicates */
+static int mergeFBlists( iOList global, iOList local ) {
+  int numProblems = 0;
+  if( ( global == NULL ) || ( local == NULL ) )
+    return numProblems;
+
+  if( ListOp.size(local) > 0 ) {
+    iOFBack fb = (iOFBack)ListOp.first( local );
+    while( fb != NULL ) {
+      iONode node = FBackOp.base.properties(fb);
+      const char* fbid = wFeedback.getid(node);
+      if( ismemberoflist( global, (obj)fb ) ) {
+        numProblems++ ;
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: feedback[%s] is used in more than one block", fbid );
+      }else {
+        ListOp.add( global, (obj)fb );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "mergeFBlists: add local fb[%s] to global list", fbid );
+      }
+      fb = (iOFBack)ListOp.next( local );
+    }
+  }
+  return numProblems;
+}
+
+
+/* are all fb used in fbevents of all kinds of blocks used only once ? */
+static Boolean blockFbackUniqueCheck( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  int numProblems = 0;
+  iOList globalFbList = ListOp.inst();
+
+  /* block */
+  iONode bklist = wPlan.getbklist(data->plan);
+  if( bklist != NULL ) {
+    iONode bk = wBlockList.getbk( bklist );
+    while( bk != NULL ) {
+      const char* bkid = wItem.getid(bk);
+      iIBlockBase block = ModelOp.getBlock( data->model, bkid );
+      iONode bkNode = BlockOp.base.properties( block );
+      iOList localFbList = ListOp.inst();
+
+      iONode fbevt = wBlock.getfbevent( bkNode );
+      while( fbevt != NULL ) {
+        const char* fbid    = wFeedbackEvent.getid( fbevt );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block feedback unique check: bl[%s] fbid[%s](%d)",
+            bkid, fbid, StrOp.len(fbid) );
+        if( StrOp.len( fbid ) > 0 ) {
+          iOFBack fb = ModelOp.getFBack( data->model, fbid );
+          if( fb != NULL ) {
+            if( ! ismemberoflist( localFbList, (obj)fb ) ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block feedback unique check: bl[%s] add fb[%s](ADD)", bkid, fbid );
+              ListOp.add( localFbList, (obj)fb );
+            }else {
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block feedback unique check: bl[%s] add fb[%s](SKIIPED)", bkid, fbid );
+            }
+          }
+        }
+        fbevt = wBlock.nextfbevent( bkNode, fbevt );
+      }
+
+      /* merge local list into global list */
+      numProblems += mergeFBlists( globalFbList, localFbList );
+      ListOp.base.del(localFbList);
+
+      bk =  wBlockList.nextbk( bklist, bk );
+    }
+  }
+
+  /* stage block */
+  iONode sblist = wPlan.getsblist(data->plan);
+  if( sblist != NULL ) {
+    iONode sb = wStageList.getsb( sblist );
+    while( sb != NULL ) {
+      iOList localFbList = ListOp.inst();
+      const char* sbid = wStage.getid( sb );
+      iONode section = wStage.getsection(sb);
+      while( section) {
+        const char* secid = wStageSection.getid(section);
+        const char* fbid  = wStageSection.getfbid(section);
+        const char* occid = wStageSection.getfbidocc(section);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block feedback unique check: sb[%s] sec[%s] fb[%s] occ[%s]", 
+            sbid, secid, fbid, occid );
+        if( StrOp.len( fbid ) > 0 ) {
+          iOFBack fb = ModelOp.getFBack( data->model, fbid );
+          if( fb != NULL ) {
+            if( ! ismemberoflist( localFbList, (obj)fb ) ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block feedback unique check: sb[%s] add fb[%s](ADD)", sbid, fbid );
+              ListOp.add( localFbList, (obj)fb );
+            }else {
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block feedback unique check: sb[%s] add fb[%s](SKIIPED)", sbid, fbid );
+            }
+          }
+        }
+        if( StrOp.len( occid ) > 0 ) {
+          iOFBack fb = ModelOp.getFBack( data->model, occid );
+          if( fb != NULL ) {
+            if( ! ismemberoflist( localFbList, (obj)fb ) ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block feedback unique check: sb[%s] add fbocc[%s](ADD)", sbid, occid );
+              ListOp.add( localFbList, (obj)fb );
+            }else {
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block feedback unique check: sb[%s] add fbocc[%s](SKIIPED)", sbid, occid );
+            }
+          }
+        }
+        section = wStage.nextsection( sb, section );
+      }
+
+      /* merge local list into global list */
+      numProblems += mergeFBlists( globalFbList, localFbList );
+      ListOp.base.del(localFbList);
+
+      sb =  wStageList.nextsb( sblist, sb );
+    }
+  }
+
+  /* selecton table */
+  iONode seltablist = wPlan.getseltablist(data->plan);
+  int seltabListSize = 0;
+  if( seltablist ) {
+    seltabListSize = NodeOp.getChildCnt( seltablist );
+    iONode seltab = wSelTabList.getseltab( seltablist );
+    while( seltab != NULL ) {
+      iOList localFbList = ListOp.inst();
+      const char* seltabid = wSelTab.getid( seltab );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block feedback unique check: seltab[%s]", seltabid );
+
+      /* only test if prerequisites are ok */
+      if( wSelTab.issharedfb(seltab) && wSelTab.ismanager(seltab) ) {
+        iONode fbevt = wSelTab.getfbevent( seltab );
+        while( fbevt != NULL ) {
+          const char* fbid = wFeedbackEvent.getid( fbevt );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block feedback unique check: seltab[%s] fbid[%s]", seltabid, fbid );
+          /* LRLRLR missing code */
+          if( StrOp.len( fbid ) > 0 ) {
+            iOFBack fb = ModelOp.getFBack( data->model, fbid );
+            if( fb != NULL ) {
+              if( ! ismemberoflist( localFbList, (obj)fb ) ) {
+                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block feedback unique check: seltab[%s] add fb[%s](ADD)", seltabid, fbid );
+                ListOp.add( localFbList, (obj)fb );
+              }else {
+                TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block feedback unique check: seltab[%s] add fb[%s](SKIIPED)", seltabid, fbid );
+              }
+            }
+          }
+          fbevt = wSelTab.nextfbevent( seltab, fbevt );
+        }
+
+      }
+
+      /* merge local list into global list */
+      numProblems += mergeFBlists( globalFbList, localFbList );
+      ListOp.base.del(localFbList);
+
+      seltab = wSelTabList.nextseltab( seltablist, seltab );
+    }
+  }
+
+  /* debug output of global list */
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block feedback unique check: globalFbListSIZE=%d",
+      ListOp.size(globalFbList) );
+  if( ListOp.size(globalFbList) > 0 ) {
+    iOFBack fb = (iOFBack)ListOp.first( globalFbList );
+    while( fb != NULL ) {
+      iONode node = FBackOp.base.properties(fb);
+      const char* fbid = wFeedback.getid(node);
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block feedback unique check: (global list) fb[%s]",
+          fbid );
+      fb = (iOFBack)ListOp.next( globalFbList );
+    }
+  }
+
+  ListOp.base.del(globalFbList);
+
+  if( numProblems ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block feedback unique check: %d problematic entries", numProblems );
+    return False;
+  }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block feedback unique check: %d problematic enries", numProblems );
   return True;
 }
 
@@ -7763,6 +7961,7 @@ static Boolean _checkExtended(iOAnalyse inst) {
     res = blockCheck( inst, False );
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block test: %s problems detected", res?"no":"some" );
 
+    /* check feedback actions of blocks */
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block feedback/action check: in progress..." );
     res = blockFeedbackActionCheck( inst, False );
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Block feedback/action check: %s problems detected", res?"no":"some" );
@@ -7776,6 +7975,11 @@ static Boolean _checkExtended(iOAnalyse inst) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Selection table route/feedback validation: in progress..." );
     res = seltabRouteFbValidation( inst, False );
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Selection table route/feedback validation: %s problems detected", res?"no":"some" );
+
+    /* are all fb used in fbevents of all kinds of blocks unique  */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Feedback unique check: in progress..." );
+    res = blockFbackUniqueCheck( inst, False );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Feedback unique check: %s problems detected", res?"no":"some" );
 
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block checks finished" );
   }
