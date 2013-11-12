@@ -47,6 +47,7 @@
 			<var name="stepamount" vt="int"/>
 			<var name="startpos" vt="int"/>
 			<var name="stoppos" vt="int"/>
+      <var name="curpos" vt="int"/>
 			<var name="options" vt="int"/>
 			<var name="state" vt="int"/>
     </struct>
@@ -86,6 +87,7 @@
       <var name="rfidini" vt="iONode"/>
       <var name="reader" vt="iOThread"/>
       <var name="scanner" vt="iOThread"/>
+      <var name="pwm" vt="iOThread"/>
       <var name="macroprocessor" vt="iOThread"/>
       <var name="run" vt="Boolean"/>
       <var name="power" vt="Boolean"/>

@@ -95,6 +95,7 @@ static iONode __findMacro(iORocNetNode inst, int nr);
 static Boolean __initDigInt(iORocNetNode inst);
 static void __unloadDigInt(iORocNetNode inst, int prevcstype);
 static void __errorReport( iORocNetNode inst, int rc, int rs, int addr);
+static iONode __findChannel(iORocNetNode inst, int channel);
 
 
 /** ----- OBase ----- */
@@ -324,6 +325,12 @@ static void __saveIni(iORocNetNode rocnetnode) {
       iONode portsetup = __findPort(rocnetnode, i);
       if( portsetup != NULL ) {
         wPortSetup.setstate(portsetup, data->ports[i]->state);
+      }
+    }
+    if( data->channels[i] != NULL ) {
+      iONode channelsetup = __findChannel(rocnetnode, i);
+      if( channelsetup != NULL ) {
+        wChannelSetup.setstate(channelsetup, data->channels[i]->state);
       }
     }
   }
@@ -931,7 +938,7 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
     }
     else if( rn[RN_PACKET_DATA + 1] == wProgram.porttype_servo ) {
       if( port < 129 && data->channels[port] != NULL ) {
-        __writeChannel(rocnetnode, port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0);
+        data->channels[port]->state = (rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON) ? 1:0;
       }
     }
     else {
@@ -1153,20 +1160,14 @@ static void __scanI2C(iORocNetNode rocnetnode) {
 }
 
 
-static void __writeChannel(iORocNetNode rocnetnode, int channel, int value) {
+static void __writeChannel(iORocNetNode rocnetnode, int channel, int pos) {
   iORocNetNodeData data = Data(rocnetnode);
   int rc  = 0;
-  int pos = 0;
   int i2caddr = 0x40;
 
   if( data->channels[channel] == NULL ) {
     return;
   }
-
-  if( value > 0 )
-    pos = data->channels[channel]->stoppos;
-  else
-    pos = data->channels[channel]->startpos;
 
   i2caddr = (data->channels[channel]->channel - 1) / 16;
 
@@ -1240,6 +1241,55 @@ static void __writePort(iORocNetNode rocnetnode, int port, int value, int iotype
     MutexOp.post( data->i2cmux );
   }
 }
+
+
+static void __pwm( void* threadinst ) {
+  iOThread         th         = (iOThread)threadinst;
+  iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
+  iORocNetNodeData data       = Data(rocnetnode);
+  int i = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet pwm started" );
+
+  while( data->run ) {
+    for( i = 0; i < 129; i++ ) {
+      if( data->channels[i] != NULL ) {
+        int gotopos = data->channels[i]->curpos;
+        if( data->channels[i]->state && data->channels[i]->curpos != data->channels[i]->stoppos ) {
+          gotopos = data->channels[i]->stoppos;
+        }
+        else if( data->channels[i]->state == 0 && data->channels[i]->curpos != data->channels[i]->startpos ) {
+          gotopos = data->channels[i]->startpos;
+        }
+
+        if( data->channels[i]->curpos != gotopos ) {
+          int oldcurpos = data->channels[i]->curpos;
+          if( data->channels[i]->curpos > gotopos ) {
+            data->channels[i]->curpos -= data->channels[i]->stepamount;
+            if( data->channels[i]->curpos < gotopos )
+              data->channels[i]->curpos = gotopos;
+          }
+          else {
+            data->channels[i]->curpos += data->channels[i]->stepamount;
+            if( data->channels[i]->curpos > gotopos )
+              data->channels[i]->curpos = gotopos;
+          }
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set channel %d pwm from %d to %d",
+              data->channels[i]->channel, oldcurpos, data->channels[i]->curpos );
+          __writeChannel(rocnetnode, i, data->channels[i]->curpos);
+          ThreadOp.sleep(0);
+        }
+
+      }
+    }
+
+    ThreadOp.sleep(10);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet pwm stopped" );
+
+}
+
 
 static void __scanner( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
@@ -1620,6 +1670,24 @@ static iONode __findPort(iORocNetNode inst, int port) {
   return portsetup;
 }
 
+static iONode __findChannel(iORocNetNode inst, int channel) {
+  iORocNetNodeData data = Data(inst);
+  iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+  iONode channelsetup = NULL;
+
+  if( rocnet != NULL ) {
+    iONode channelsetup = wRocNet.getchannelsetup(rocnet);
+    while( channelsetup != NULL ) {
+      if( wChannelSetup.getchannel(channelsetup) == channel ) {
+        return channelsetup;
+      }
+      channelsetup = wRocNet.nextchannelsetup(rocnet, channelsetup);
+    }
+  }
+
+  return channelsetup;
+}
+
 static iONode __findMacro(iORocNetNode inst, int nr) {
   iORocNetNodeData data = Data(inst);
   iONode macro = wRocNet.getmacro(data->ini);
@@ -1697,7 +1765,8 @@ static void __initI2CPWM(iORocNetNode inst) {
               __errorReport(inst, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, 0x40+i2caddr);
             }
             else {
-              rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, channel->channel-1, 0, channel->state);
+              channel->curpos = channel->state ? channel->stoppos:channel->startpos;
+              rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, channel->channel-1, 0, channel->curpos);
               if( rc < 0 ) {
                 TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x40+i2caddr, errno );
                 data->i2caddr40[i2caddr] = False;
@@ -2016,8 +2085,8 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
     if( NodeOp.findNode(data->ini, wTrace.name()) != NULL ) {
       iONode traceini = NodeOp.findNode(data->ini, wTrace.name());
       tf = wTrace.getrfile(traceini);
-      trc = TraceOp.inst( debug | dump | monitor | wTrace.ismonitor(traceini) | parse |
-                          wTrace.isinfo(traceini) | TRCLEVEL_CALC, tf, True );
+      trc = TraceOp.inst( debug | dump | monitor | wTrace.ismonitor(traceini)?TRCLEVEL_MONITOR:0 | parse |
+                          wTrace.isinfo(traceini)?TRCLEVEL_INFO:0 | TRCLEVEL_CALC, tf, True );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using ini setup" );
 
       if( wTrace.isdebug( traceini ) || debug )
@@ -2120,6 +2189,8 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   ThreadOp.start( data->reader );
   data->scanner = ThreadOp.inst( "rnscanner", &__scanner, __RocNetNode );
   ThreadOp.start( data->scanner );
+  data->pwm = ThreadOp.inst( "rnpwm", &__pwm, __RocNetNode );
+  ThreadOp.start( data->pwm );
   data->macroprocessor = ThreadOp.inst( "rnmacro", &__macroProcessor, __RocNetNode );
   ThreadOp.start( data->macroprocessor );
 
