@@ -86,6 +86,7 @@ static iONode __findPort(iORocNetNode inst, int port);
 static void __initI2C(iORocNetNode inst, int iotype);
 static void __initI2CPWM(iORocNetNode inst);
 static void __writePort(iORocNetNode rocnetnode, int port, int value, int iotype);
+static void __writeChannel(iORocNetNode rocnetnode, int channel, int value);
 static int __readPort(iORocNetNode rocnetnode, int port, int iotype);
 static void __saveIni(iORocNetNode rocnetnode);
 static void __initControl(iORocNetNode inst);
@@ -928,6 +929,11 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
       post[2] = offset;
       ThreadOp.post(data->macroprocessor, (obj)post);
     }
+    else if( rn[RN_PACKET_DATA + 1] == wProgram.porttype_servo ) {
+      if( port < 129 && data->channels[port] != NULL ) {
+        __writeChannel(rocnetnode, port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0);
+      }
+    }
     else {
       if( port < 129 && data->ports[port] != NULL ) {
         if( rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ) {
@@ -1144,6 +1150,33 @@ static void __scanI2C(iORocNetNode rocnetnode) {
     }
   }
   MutexOp.post( data->i2cmux );
+}
+
+
+static void __writeChannel(iORocNetNode rocnetnode, int channel, int value) {
+  iORocNetNodeData data = Data(rocnetnode);
+  int rc  = 0;
+  int pos = 0;
+  int i2caddr = 0x40;
+
+  if( data->channels[channel] == NULL ) {
+    return;
+  }
+
+  if( value > 0 )
+    pos = data->channels[channel]->stoppos;
+  else
+    pos = data->channels[channel]->startpos;
+
+  i2caddr = (data->channels[channel]->channel - 1) / 16;
+
+  rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, data->channels[channel]->channel - 1, 0, pos);
+  if( rc < 0 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x40+i2caddr, errno );
+    data->i2caddr40[i2caddr] = False;
+    __errorReport(rocnetnode, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, 0x40+i2caddr);
+  }
+
 }
 
 
@@ -1650,6 +1683,7 @@ static void __initI2CPWM(iORocNetNode inst) {
         channel->stepamount = wChannelSetup.getstepamount(channelsetup);
         channel->startpos = wChannelSetup.getstartpos(channelsetup);
         channel->stoppos = wChannelSetup.getstoppos(channelsetup);
+        channel->state = wChannelSetup.getstate(channelsetup);
 
         i2caddr = (channelnr-1) / 16;
         if( i2caddr >= 0 && i2caddr < 8 ) {
@@ -1663,15 +1697,15 @@ static void __initI2CPWM(iORocNetNode inst) {
               __errorReport(inst, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, 0x40+i2caddr);
             }
             else {
-              rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, channel->channel-1, channel->startpos, channel->stoppos);
+              rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, channel->channel-1, 0, channel->state);
               if( rc < 0 ) {
                 TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x40+i2caddr, errno );
                 data->i2caddr40[i2caddr] = False;
                 __errorReport(inst, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, 0x40+i2caddr);
               }
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                  "channelsetup: channel=%d i2caddr=0x%02X startpos=%d stoppos=%d stepamount=%d, delay=%d",
-                  channel->channel, i2caddr + 0x40, channel->startpos, channel->stoppos, channel->stepamount, channel->delay );
+                  "channelsetup: channel=%d i2caddr=0x%02X startpos=%d stoppos=%d stepamount=%d, delay=%d state=%d",
+                  channel->channel, i2caddr + 0x40, channel->startpos, channel->stoppos, channel->stepamount, channel->delay, channel->state );
             }
           }
 
