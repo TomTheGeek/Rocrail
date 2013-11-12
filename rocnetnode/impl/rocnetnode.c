@@ -839,7 +839,7 @@ static void __macro(iORocNetNode rocnetnode, int macro, Boolean on, int offset) 
     int i = 0;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing macro %d %s offset=%d", macro, on?"ON":"OFF", offset);
     for( i = 0; i < 8; i++ ) {
-      if( data->macro[macro]->line[i].port > 0 ) {
+      if( data->macro[macro]->line[i].port > 0 && data->macro[macro]->line[i].type == 0) {
         int port = data->macro[macro]->line[i].port;
         port += offset;
 
@@ -855,16 +855,28 @@ static void __macro(iORocNetNode rocnetnode, int macro, Boolean on, int offset) 
           }
         }
         else {
-          data->ports[port]->type &= IO_TYPE;
-          data->ports[port]->delay = 0;
-          ThreadOp.sleep( data->macro[macro]->line[i].delay * 10);
+          if( data->ports[port] != NULL ) {
+            data->ports[port]->type &= IO_TYPE;
+            data->ports[port]->delay = 0;
+            ThreadOp.sleep( data->macro[macro]->line[i].delay * 10);
+          }
         }
 
-        if( (data->macro[macro]->line[i].type&IO_TYPE) == 0 ) {
+        if( (data->macro[macro]->line[i].type&IO_TYPE) == 0 && data->ports[port] != NULL ) {
           __writePort( rocnetnode, port, data->macro[macro]->line[i].value, 2);
           data->ports[port]->state = (data->macro[macro]->line[i].value);
         }
+        else if( (data->macro[macro]->line[i].type&IO_TYPE) == 2 && data->channels[port] != NULL) {
+          int pos = (data->macro[macro]->line[i].value ? data->channels[port]->stoppos:data->channels[port]->startpos);
+          if( data->macro[macro]->line[i].value > 1 ) {
+            __writeChannel( rocnetnode, port, data->macro[macro]->line[i].value * 16);
+          }
+          else
+            __writeChannel( rocnetnode, port, pos);
+          data->channels[port]->state = (data->macro[macro]->line[i].value?1:0);
+        }
       }
+
     }
   }
 
