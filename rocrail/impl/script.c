@@ -137,6 +137,8 @@ static char* _convertNode(iONode node, Boolean addstamp) {
       scriptline = StrOp.cat( scriptline, ",");
       scriptline = StrOp.cat( scriptline, "V");
       scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "V", NULL));
+      scriptline = StrOp.cat( scriptline, ",");
+      scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "dir", "true"));
     }
 
     if( addstamp ) {
@@ -220,6 +222,8 @@ static iONode _parseLine(const char* scriptline) {
       wLoc.setid( node, parm1 );
       if( parm2[0]=='V' ) {
         wLoc.setV(node, atoi(parm2+1));
+        if( parm3 != NULL )
+          wLoc.setdir(node, StrOp.equals(parm3, "true") );
       }
       else {
         wLoc.setcmd( node, parm2 );
