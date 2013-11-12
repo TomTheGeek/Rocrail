@@ -41,6 +41,15 @@
       <var name="eventid" vt="int"/>
       <var name="eventport" vt="int"/>
     </struct>
+    <struct name="Channel" typedef="*iOChannel">
+			<var name="channel" vt="int"/>
+			<var name="delay" vt="int"/>
+			<var name="stepamount" vt="int"/>
+			<var name="startpos" vt="int"/>
+			<var name="stoppos" vt="int"/>
+			<var name="options" vt="int"/>
+			<var name="state" vt="int"/>
+    </struct>
     <struct name="MacroLine" typedef="*iOMacroLine">
       <var name="delay" vt="int"/>
       <var name="port" vt="int"/>
@@ -90,6 +99,7 @@
       <var name="readUDP" vt="iOSocket"/>
       <var name="writeUDP" vt="iOSocket"/>
       <var name="ports[129]" vt="iOPort"/>
+      <var name="channels[129]" vt="iOChannel"/>
       <var name="pDI" vt="iIDigInt"/>
       <var name="pRFID" vt="iIDigInt"/>
       <var name="i2cdevice" vt="const char*"/>
@@ -99,6 +109,7 @@
       <var name="ipsize" vt="int"/>
       <var name="iomap[8]" vt="int"/>
       <var name="i2caddr[8]" vt="Boolean"/>
+      <var name="i2caddr40[8]" vt="Boolean"/>
       <var name="iodata[16]" vt="byte"/>
       <var name="sack" vt="Boolean"/>
       <var name="rfid" vt="Boolean"/>
