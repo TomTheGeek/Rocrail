@@ -161,6 +161,7 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   m_Digint = NULL;
   m_Props = NULL;
   m_PortGroup = 0;
+  m_ChannelGroup = 0;
   m_SortCol  = 0;
   m_NodeMap = MapOp.inst();
   m_TreeItemMap = MapOp.inst();
@@ -612,6 +613,7 @@ void RocnetNodeDlg::event(iONode node) {
   TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "event: \n%s", s );
   StrOp.free(s);
   if( StrOp.equals( wProgram.name(), NodeOp.getName(node)) && wProgram.getlntype(node) == wProgram.lntype_rocnet ) {
+    // Ports
     wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
     wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
     wxCheckBox* l_Blink[] = {NULL, m_Blink1, m_Blink2, m_Blink3, m_Blink4, m_Blink5, m_Blink6, m_Blink7, m_Blink8};
@@ -621,8 +623,15 @@ void RocnetNodeDlg::event(iONode node) {
     wxSpinCtrl* l_EventID[] = {NULL, m_PortEventID1, m_PortEventID2, m_PortEventID3, m_PortEventID4, m_PortEventID5, m_PortEventID6, m_PortEventID7, m_PortEventID8};
     wxSpinCtrl* l_EventPort[] = {NULL, m_PortEventPort1, m_PortEventPort2, m_PortEventPort3, m_PortEventPort4, m_PortEventPort5, m_PortEventPort6, m_PortEventPort7, m_PortEventPort8};
 
+    // Channels
+    wxSpinCtrl* l_OffPos[] = {NULL, m_OffPos1, m_OffPos2, m_OffPos3, m_OffPos4, m_OffPos5, m_OffPos6, m_OffPos7, m_OffPos8};
+    wxSpinCtrl* l_OnPos[] = {NULL, m_OnPos1, m_OnPos2, m_OnPos3, m_OnPos4, m_OnPos5, m_OnPos6, m_OnPos7, m_OnPos8};
+    wxSpinCtrl* l_OffSteps[] = {NULL, m_OffSteps1, m_OffSteps2, m_OffSteps3, m_OffSteps4, m_OffSteps5, m_OffSteps6, m_OffSteps7, m_OffSteps8};
+    wxSpinCtrl* l_OnSteps[] = {NULL, m_OnSteps1, m_OnSteps2, m_OnSteps3, m_OnSteps4, m_OnSteps5, m_OnSteps6, m_OnSteps7, m_OnSteps8};
+    wxCheckBox* l_ChannelBlink[] = {NULL, m_ChannelBlink1, m_ChannelBlink2, m_ChannelBlink3, m_ChannelBlink4, m_ChannelBlink5, m_ChannelBlink6, m_ChannelBlink7, m_ChannelBlink8};
+
     char key[32] = {'\0'};
-    if( wProgram.getcmd(node) == wProgram.nvget ) {
+    if( wProgram.getcmd(node) == wProgram.nvget && wProgram.getporttype(node) == 0 ) {
       for( int i = 0; i < 8; i++ ) {
         StrOp.fmtb(key, "val%d", 1 + i*4);
         int port = NodeOp.getInt( node, key, 0);
@@ -657,6 +666,34 @@ void RocnetNodeDlg::event(iONode node) {
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }
+
+    else if( wProgram.getcmd(node) == wProgram.nvget && wProgram.getporttype(node) == wProgram.porttype_servo ) {
+      for( int i = 0; i < 8; i++ ) {
+        StrOp.fmtb(key, "val%d", 1 + i*6);
+        int channel = NodeOp.getInt( node, key, 0);
+        StrOp.fmtb(key, "val%d", 2 + i*6);
+        int offpos = NodeOp.getInt( node, key, 0);
+        StrOp.fmtb(key, "val%d", 3 + i*6);
+        int onpos = NodeOp.getInt( node, key, 0);
+        StrOp.fmtb(key, "val%d", 4 + i*6);
+        int offsteps = NodeOp.getInt( node, key, 0);
+        StrOp.fmtb(key, "val%d", 5 + i*6);
+        int onsteps = NodeOp.getInt( node, key, 0);
+        StrOp.fmtb(key, "val%d", 6 + i*6);
+        int options = NodeOp.getInt( node, key, 0);
+
+        bool blink = (options&0x80)?true:false;
+
+        if( channel > 0 + m_ChannelGroup*8 && (channel-m_ChannelGroup*8) < 9) {
+          l_OffPos[channel-m_ChannelGroup*8]->SetValue(offpos);
+          l_OnPos[channel-m_ChannelGroup*8]->SetValue(onpos);
+          l_OffSteps[channel-m_ChannelGroup*8]->SetValue(offsteps);
+          l_OnSteps[channel-m_ChannelGroup*8]->SetValue(onsteps);
+          l_ChannelBlink[channel-m_ChannelGroup*8]->SetValue(blink);
+        }
+      }
+    }
+
     else if( wProgram.getcmd(node) == wProgram.evget ) {
       for( int i = 0; i < 8; i++ ) {
         StrOp.fmtb(key, "val%d", 1 + i*4);
@@ -1091,7 +1128,9 @@ void RocnetNodeDlg::selChanged( iONode rnnode ) {
   if( rnnode != NULL ) {
     m_Props = rnnode;
     m_PortGroup = 0;
+    m_ChannelGroup = 0;
     initPorts();
+    initChannels();
     initValues();
     m_MacroLines->ClearGrid();
     m_MacroNr->SetValue(1);
@@ -1100,6 +1139,7 @@ void RocnetNodeDlg::selChanged( iONode rnnode ) {
     onNodeOptionsRead(cmd);
     onMacroGet(cmd);
     onPortRead(cmd);
+    onChannelRead(cmd);
   }
 }
 
@@ -1373,6 +1413,134 @@ void RocnetNodeDlg::onShell( wxCommandEvent& event ) {
   if( m_Props == NULL )
     return;
   wxExecute(wxString::Format(wxT("putty 192.168.%d.%d"),  wRocNetNode.getsubip(m_Props)/256, wRocNetNode.getsubip(m_Props)%256 ));
+}
+
+
+
+
+
+void RocnetNodeDlg::onChannelPrev( wxCommandEvent& event ) {
+  if( m_ChannelGroup > 0 ) {
+    m_ChannelGroup--;
+    initChannels();
+    wxCommandEvent cmd;
+    onChannelRead(cmd);
+  }
+}
+
+
+void RocnetNodeDlg::onChannelNext( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+  if( 128 > (m_ChannelGroup+1) * 8) {
+    m_ChannelGroup++;
+    initChannels();
+    wxCommandEvent cmd;
+    onChannelRead(cmd);
+  }
+}
+
+
+void RocnetNodeDlg::onChannelRemove( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  int action = wxMessageDialog( this, wxGetApp().getMsg( "delete" ),
+      _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION | wxNO_DEFAULT ).ShowModal();
+  if( action == wxID_NO ) {
+    return;
+  }
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
+  wProgram.setcmd( cmd, wProgram.unlearn );
+  wProgram.setporttype( cmd, wProgram.porttype_servo );
+
+  char key[32] = {'\0'};
+  for( int i = 0; i < 8; i++ ) {
+    StrOp.fmtb(key, "val%d", 1 + i);
+    NodeOp.setInt( cmd, key, m_ChannelGroup*8 + 1 + i);
+  }
+
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
+
+  cmd->base.del(cmd);
+
+  initChannels();
+}
+
+
+void RocnetNodeDlg::onChannelRead( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
+  wProgram.setcmd( cmd, wProgram.nvget );
+  wProgram.setporttype( cmd, wProgram.porttype_servo );
+  wProgram.setval1(cmd, 1 + m_ChannelGroup*8 ); // range
+  wProgram.setval2(cmd, 8 + m_ChannelGroup*8 );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+
+void RocnetNodeDlg::onChannelWrite( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
+  wProgram.setcmd( cmd, wProgram.nvset );
+
+  wxSpinCtrl* l_OffPos[] = {NULL, m_OffPos1, m_OffPos2, m_OffPos3, m_OffPos4, m_OffPos5, m_OffPos6, m_OffPos7, m_OffPos8};
+  wxSpinCtrl* l_OnPos[] = {NULL, m_OnPos1, m_OnPos2, m_OnPos3, m_OnPos4, m_OnPos5, m_OnPos6, m_OnPos7, m_OnPos8};
+  wxSpinCtrl* l_OffSteps[] = {NULL, m_OffSteps1, m_OffSteps2, m_OffSteps3, m_OffSteps4, m_OffSteps5, m_OffSteps6, m_OffSteps7, m_OffSteps8};
+  wxSpinCtrl* l_OnSteps[] = {NULL, m_OnSteps1, m_OnSteps2, m_OnSteps3, m_OnSteps4, m_OnSteps5, m_OnSteps6, m_OnSteps7, m_OnSteps8};
+  wxCheckBox* l_Blink[] = {NULL, m_ChannelBlink1, m_ChannelBlink2, m_ChannelBlink3, m_ChannelBlink4, m_ChannelBlink5, m_ChannelBlink6, m_ChannelBlink7, m_ChannelBlink8};
+
+  char key[32] = {'\0'};
+  for( int i = 0; i < 8; i++ ) {
+    StrOp.fmtb(key, "val%d", 1 + i*6);
+    NodeOp.setInt( cmd, key, m_ChannelGroup*8 + 1 + i);
+    StrOp.fmtb(key, "val%d", 2 + i*6);
+    NodeOp.setInt( cmd, key, l_OffPos[i+1]->GetValue() );
+    StrOp.fmtb(key, "val%d", 3 + i*6);
+    NodeOp.setInt( cmd, key, l_OnPos[i+1]->GetValue() );
+    StrOp.fmtb(key, "val%d", 4 + i*6);
+    NodeOp.setInt( cmd, key, l_OffSteps[i+1]->GetValue() );
+    StrOp.fmtb(key, "val%d", 5 + i*6);
+    NodeOp.setInt( cmd, key, l_OnSteps[i+1]->GetValue() );
+    StrOp.fmtb(key, "val%d", 6 + i*6);
+    NodeOp.setInt( cmd, key, (l_Blink[1 + i]->IsChecked()?0x80:0x00) );
+  }
+
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
+}
+
+
+void RocnetNodeDlg::initChannels() {
+  wxStaticText* l_labChannel[] = { NULL, m_labChannel1, m_labChannel2, m_labChannel3, m_labChannel4, m_labChannel5, m_labChannel6, m_labChannel7, m_labChannel8 };
+  wxSpinCtrl* l_OffPos[] = {NULL, m_OffPos1, m_OffPos2, m_OffPos3, m_OffPos4, m_OffPos5, m_OffPos6, m_OffPos7, m_OffPos8};
+  wxSpinCtrl* l_OnPos[] = {NULL, m_OnPos1, m_OnPos2, m_OnPos3, m_OnPos4, m_OnPos5, m_OnPos6, m_OnPos7, m_OnPos8};
+  wxSpinCtrl* l_OffSteps[] = {NULL, m_OffSteps1, m_OffSteps2, m_OffSteps3, m_OffSteps4, m_OffSteps5, m_OffSteps6, m_OffSteps7, m_OffSteps8};
+  wxSpinCtrl* l_OnSteps[] = {NULL, m_OnSteps1, m_OnSteps2, m_OnSteps3, m_OnSteps4, m_OnSteps5, m_OnSteps6, m_OnSteps7, m_OnSteps8};
+  wxCheckBox* l_Blink[] = {NULL, m_ChannelBlink1, m_ChannelBlink2, m_ChannelBlink3, m_ChannelBlink4, m_ChannelBlink5, m_ChannelBlink6, m_ChannelBlink7, m_ChannelBlink8};
+
+  for( int i = 1; i < 9; i++ ) {
+    l_labChannel[i]->SetLabel( wxString::Format(wxT("%d"),i + m_ChannelGroup*8) );
+    l_OffPos[i]->SetValue(0);
+    l_OnPos[i]->SetValue(0);
+    l_OffSteps[i]->SetValue(0);
+    l_OnSteps[i]->SetValue(0);
+    l_Blink[i]->SetValue(false);
+  }
 }
 
 

@@ -588,6 +588,36 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
   }
   break;
 
+  case RN_PROGRAMMING_RMCHANNEL:
+  {
+    iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+    int i = 0;
+
+    if( rocnet == NULL ) {
+      rocnet = NodeOp.inst( wRocNet.name(), data->ini, ELEMENT_NODE);
+      NodeOp.addChild( data->ini, rocnet );
+    }
+
+    for( i = 0; i < 8; i++ ) {
+      int channel  = rn[RN_PACKET_DATA+0+i];
+      iONode channelsetup = __findChannel(rocnetnode, channel);
+      if( channelsetup != NULL ) {
+        iOChannel channeldef = data->channels[channel];
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "removing channel %d", channel);
+        NodeOp.removeChild( rocnet, channelsetup );
+        NodeOp.base.del(channelsetup);
+
+        if( channeldef != NULL ) {
+          data->channels[channel] = NULL;
+          freeMem(channeldef);
+        }
+      }
+    }
+    __saveIni(rocnetnode);
+    __initIO(rocnetnode);
+  }
+  break;
+
   case RN_PROGRAMMING_WPORTEVENT:
   {
     iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());

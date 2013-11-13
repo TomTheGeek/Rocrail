@@ -113,6 +113,7 @@
 #define RN_PROGRAMMING_RMPORT  14
 #define RN_PROGRAMMING_RCHANNEL  15
 #define RN_PROGRAMMING_WCHANNEL  16
+#define RN_PROGRAMMING_RMCHANNEL  17
 
 
 /* extended packet offsets */

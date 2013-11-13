@@ -51,11 +51,13 @@ class RocnetNodeDlg : public rocnetnodegen
   void initValues();
   void initNodeList();
   void initPorts();
+  void initChannels();
   void initMacro(iONode node);
   iONode getZLevel(int level, char* sLevel);
   void selChanged( iONode rnnode );
   void shutdownLocation();
   int m_PortGroup;
+  int m_ChannelGroup;
   int m_SortCol;
 
 	protected:
@@ -97,6 +99,12 @@ class RocnetNodeDlg : public rocnetnodegen
     void onPortRemove( wxCommandEvent& event );
     void onPort1Drag( wxMouseEvent& event );
     void onShell( wxCommandEvent& event );
+    void onChannelPrev( wxCommandEvent& event );
+    void onChannelNext( wxCommandEvent& event );
+    void onChannelRemove( wxCommandEvent& event );
+    void onChannelRead( wxCommandEvent& event );
+    void onChannelWrite( wxCommandEvent& event );
+
 	public:
     void onUpdateVersion( wxCommandEvent& event );
 		/** Constructor */

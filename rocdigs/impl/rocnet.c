@@ -536,7 +536,10 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
         rnReceipientAddresToPacket( rnid, rn, data->seven );
         rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
-        rn[RN_PACKET_ACTION] = RN_PROGRAMMING_RMPORT;
+        if( wProgram.getporttype( node ) == wProgram.porttype_servo )
+          rn[RN_PACKET_ACTION] = RN_PROGRAMMING_RMCHANNEL;
+        else
+          rn[RN_PACKET_ACTION] = RN_PROGRAMMING_RMPORT;
         rn[RN_PACKET_LEN] = 8;
         for( i = 0; i < 8; i++ ) {
           StrOp.fmtb(key, "val%d", i + 1);

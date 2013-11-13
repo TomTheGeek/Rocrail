@@ -664,10 +664,10 @@
         <channelsetup wrappername="ChannelSetup" cardinality="n">
           <var name="channel" vt="int" defval="0" range="0-15"/>
           <var name="delay" vt="int" defval="0" range="0-*" remark="0=10ms, 1=20ms, ..."/>
-          <var name="onsteps" vt="int" defval="0" range="0-255"/>
-          <var name="offsteps" vt="int" defval="0" range="0-255"/>
-          <var name="onpos" vt="int" defval="10" range="0-4095"/>
-          <var name="offpos" vt="int" defval="10" range="0-4095"/>
+          <var name="onsteps" vt="int" defval="10" range="0-255"/>
+          <var name="offsteps" vt="int" defval="10" range="0-255"/>
+          <var name="onpos" vt="int" defval="600" range="0-4095"/>
+          <var name="offpos" vt="int" defval="150" range="0-4095"/>
           <var name="options" vt="int" defval="0"/>
           <var name="state" vt="int" defval="0" remark="Saved output state."/>
         </channelsetup>
