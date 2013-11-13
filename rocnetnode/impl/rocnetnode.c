@@ -1382,13 +1382,45 @@ static void __pwm( void* threadinst ) {
           int oldcurpos = data->channels[i]->curpos;
           if( data->channels[i]->curpos > gotopos ) {
             data->channels[i]->curpos -= steps;
-            if( data->channels[i]->curpos < gotopos || steps == 0 )
+            if( data->channels[i]->curpos <= gotopos || steps == 0 ) {
               data->channels[i]->curpos = gotopos;
+              if( data->channels[i]->options & PWM_REPORT ) {
+                byte* msg = allocMem(32);
+                msg[RN_PACKET_NETID] = data->location;
+                msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
+                rnReceipientAddresToPacket( 0, msg, 0 );
+                rnSenderAddresToPacket( data->id, msg, 0 );
+                msg[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
+                msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+                msg[RN_PACKET_LEN] = 4;
+                msg[RN_PACKET_DATA + 0] = 0; /* off */
+                msg[RN_PACKET_DATA + 1] = wProgram.porttype_servo;
+                msg[RN_PACKET_DATA + 2] = 0;
+                msg[RN_PACKET_DATA + 3] = data->channels[i]->channel;
+                __sendRN(rocnetnode, msg);
+              }
+            }
           }
           else {
             data->channels[i]->curpos += steps;
-            if( data->channels[i]->curpos > gotopos || steps == 0 )
+            if( data->channels[i]->curpos >= gotopos || steps == 0 ) {
               data->channels[i]->curpos = gotopos;
+              if( data->channels[i]->options & PWM_REPORT ) {
+                byte* msg = allocMem(32);
+                msg[RN_PACKET_NETID] = data->location;
+                msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
+                rnReceipientAddresToPacket( 0, msg, 0 );
+                rnSenderAddresToPacket( data->id, msg, 0 );
+                msg[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
+                msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+                msg[RN_PACKET_LEN] = 4;
+                msg[RN_PACKET_DATA + 0] = 1; /* off */
+                msg[RN_PACKET_DATA + 1] = wProgram.porttype_servo;
+                msg[RN_PACKET_DATA + 2] = 0;
+                msg[RN_PACKET_DATA + 3] = data->channels[i]->channel;
+                __sendRN(rocnetnode, msg);
+              }
+            }
           }
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set channel %d pwm from %d to %d, gotopos=%d",
               data->channels[i]->channel-1, oldcurpos, data->channels[i]->curpos, gotopos );

@@ -577,7 +577,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer18 = new wxBoxSizer( wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer62;
-	fgSizer62 = new wxFlexGridSizer( 0, 6, 0, 0 );
+	fgSizer62 = new wxFlexGridSizer( 0, 7, 0, 0 );
 	fgSizer62->SetFlexibleDirection( wxBOTH );
 	fgSizer62->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -605,6 +605,10 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_labChannelBlink->Wrap( -1 );
 	fgSizer62->Add( m_labChannelBlink, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_labChannelReport = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("Report"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labChannelReport->Wrap( -1 );
+	fgSizer62->Add( m_labChannelReport, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_labChannel1 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("1"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel1->Wrap( -1 );
 	m_labChannel1->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
@@ -625,6 +629,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_ChannelBlink1 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer62->Add( m_ChannelBlink1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_ChannelReport1 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer62->Add( m_ChannelReport1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_labChannel2 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("2"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel2->Wrap( -1 );
@@ -647,6 +654,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_ChannelBlink2 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer62->Add( m_ChannelBlink2, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_ChannelReport2 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer62->Add( m_ChannelReport2, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_labChannel3 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("3"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel3->Wrap( -1 );
 	m_labChannel3->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
@@ -667,6 +677,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_ChannelBlink3 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer62->Add( m_ChannelBlink3, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_ChannelReport3 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer62->Add( m_ChannelReport3, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_labChannel4 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel4->Wrap( -1 );
@@ -689,6 +702,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_ChannelBlink4 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer62->Add( m_ChannelBlink4, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_ChannelReport4 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer62->Add( m_ChannelReport4, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_labChannel5 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("5"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel5->Wrap( -1 );
 	m_labChannel5->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
@@ -709,6 +725,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_ChannelBlink5 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer62->Add( m_ChannelBlink5, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_ChannelReport5 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer62->Add( m_ChannelReport5, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_labChannel6 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("6"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel6->Wrap( -1 );
@@ -731,6 +750,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_ChannelBlink6 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer62->Add( m_ChannelBlink6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_ChannelReport6 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer62->Add( m_ChannelReport6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_labChannel7 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("7"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel7->Wrap( -1 );
 	m_labChannel7->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
@@ -752,6 +774,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_ChannelBlink7 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer62->Add( m_ChannelBlink7, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_ChannelReport7 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer62->Add( m_ChannelReport7, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_labChannel8 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("8"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel8->Wrap( -1 );
 	m_labChannel8->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
@@ -772,6 +797,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_ChannelBlink8 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer62->Add( m_ChannelBlink8, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_ChannelReport8 = new wxCheckBox( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer62->Add( m_ChannelReport8, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer18->Add( fgSizer62, 1, wxEXPAND, 5 );
 	

@@ -41,6 +41,10 @@
 #define IO_LED2 24
 #define IO_PB1 25
 
+#define PWM_BLINK  0x80
+#define PWM_REPORT 0x40
+
+
 void raspiGPIOAlt(int g, int alt);
 int raspiSetupIO(void);
 void raspiConfigPort(int port, int type);
