@@ -1368,6 +1368,15 @@ static void __pwm( void* threadinst ) {
   while( data->run ) {
     for( i = 0; i < 129; i++ ) {
       if( data->channels[i] != NULL ) {
+        int delay = (data->channels[i]->options & 0x0F);
+        if( delay > 0 ) {
+          if( data->channels[i]->delay < delay ) {
+            data->channels[i]->delay++;
+            continue;
+          }
+          data->channels[i]->delay = 0;
+        }
+
         int gotopos = data->channels[i]->curpos;
         int steps = 0;
         if( data->channels[i]->state && data->channels[i]->curpos != data->channels[i]->onpos ) {
