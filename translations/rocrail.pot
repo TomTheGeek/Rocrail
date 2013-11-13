@@ -6785,3 +6785,9 @@ msgstr ""
 msgid "Paste"
 msgstr ""
 
+#. 
+# id="channelsetup"
+#, c-format
+msgid "Channel Setup"
+msgstr ""
+

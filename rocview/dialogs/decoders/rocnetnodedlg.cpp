@@ -363,8 +363,9 @@ void RocnetNodeDlg::initLabels() {
   //m_NodeBook->SetPageText( 1, wxGetApp().getMsg( "rocnet" ) );
   m_NodeBook->SetPageText( 2, wxGetApp().getMsg( "options" ) );
   m_NodeBook->SetPageText( 3, wxGetApp().getMsg( "portsetup" ) );
-  m_NodeBook->SetPageText( 4, wxGetApp().getMsg( "macro" ) );
-  m_NodeBook->SetPageText( 5, wxGetApp().getMsg( "update" ) );
+  m_NodeBook->SetPageText( 4, wxGetApp().getMsg( "channelsetup" ) );
+  m_NodeBook->SetPageText( 5, wxGetApp().getMsg( "macro" ) );
+  m_NodeBook->SetPageText( 6, wxGetApp().getMsg( "update" ) );
 
   iONode l_RocrailIni = wxGetApp().getFrame()->getRocrailIni();
   if( l_RocrailIni != NULL ) {

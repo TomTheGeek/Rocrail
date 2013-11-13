@@ -24845,4 +24845,7 @@
   <Msg id="paste">
     <en txt="Paste"/>
   </Msg>
+  <Msg id="channelsetup">
+    <en txt="Channel Setup"/>
+  </Msg>
 </Messages>
