@@ -1496,6 +1496,7 @@ void RocnetNodeDlg::onChannelWrite( wxCommandEvent& event ) {
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
   wProgram.setcmd( cmd, wProgram.nvset );
+  wProgram.setporttype( cmd, wProgram.porttype_servo );
 
   wxSpinCtrl* l_OffPos[] = {NULL, m_OffPos1, m_OffPos2, m_OffPos3, m_OffPos4, m_OffPos5, m_OffPos6, m_OffPos7, m_OffPos8};
   wxSpinCtrl* l_OnPos[] = {NULL, m_OnPos1, m_OnPos2, m_OnPos3, m_OnPos4, m_OnPos5, m_OnPos6, m_OnPos7, m_OnPos8};
