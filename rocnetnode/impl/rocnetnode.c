@@ -1399,6 +1399,9 @@ static void __pwm( void* threadinst ) {
                 msg[RN_PACKET_DATA + 3] = data->channels[i]->channel;
                 __sendRN(rocnetnode, msg);
               }
+              if( data->channels[i]->options & PWM_BLINK ) {
+                data->channels[i]->state = !data->channels[i]->state;
+              }
             }
           }
           else {
@@ -1419,6 +1422,9 @@ static void __pwm( void* threadinst ) {
                 msg[RN_PACKET_DATA + 2] = 0;
                 msg[RN_PACKET_DATA + 3] = data->channels[i]->channel;
                 __sendRN(rocnetnode, msg);
+              }
+              if( data->channels[i]->options & PWM_BLINK ) {
+                data->channels[i]->state = !data->channels[i]->state;
               }
             }
           }
