@@ -44,9 +44,10 @@
     <struct name="Channel" typedef="*iOChannel">
 			<var name="channel" vt="int"/>
 			<var name="delay" vt="int"/>
-			<var name="stepamount" vt="int"/>
-			<var name="startpos" vt="int"/>
-			<var name="stoppos" vt="int"/>
+			<var name="onsteps" vt="int"/>
+      <var name="offsteps" vt="int"/>
+			<var name="onpos" vt="int"/>
+			<var name="offpos" vt="int"/>
       <var name="curpos" vt="int"/>
 			<var name="options" vt="int"/>
 			<var name="state" vt="int"/>

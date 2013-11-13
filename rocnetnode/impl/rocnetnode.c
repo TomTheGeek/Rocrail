@@ -535,21 +535,23 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     }
 
     for( i = 0; i < 8; i++ ) {
-      int channel    = rn[RN_PACKET_DATA+0+i*7];
-      int startpos   = rn[RN_PACKET_DATA+1+i*7]*256 + rn[RN_PACKET_DATA+2+i*7];
-      int stoppos    = rn[RN_PACKET_DATA+3+i*7]*256 + rn[RN_PACKET_DATA+4+i*7];
-      int stepamount = rn[RN_PACKET_DATA+5+i*7];
-      int delay      = rn[RN_PACKET_DATA+6+i*7];
+      int channel    = rn[RN_PACKET_DATA+0+i*8];
+      int offpos   = rn[RN_PACKET_DATA+1+i*8]*256 + rn[RN_PACKET_DATA+2+i*8];
+      int onpos    = rn[RN_PACKET_DATA+3+i*8]*256 + rn[RN_PACKET_DATA+4+i*8];
+      int offsteps = rn[RN_PACKET_DATA+5+i*8];
+      int onsteps  = rn[RN_PACKET_DATA+6+i*8];
+      int options  = rn[RN_PACKET_DATA+7+i*8];
       iONode channelsetup = __findChannel(rocnetnode, channel);
       if( channelsetup == NULL ) {
         channelsetup = NodeOp.inst( wChannelSetup.name(), rocnet, ELEMENT_NODE);
         wChannelSetup.setchannel( channelsetup, channel);
         NodeOp.addChild( rocnet, channelsetup );
       }
-      wChannelSetup.setstartpos( channelsetup, startpos);
-      wChannelSetup.setstoppos( channelsetup, stoppos);
-      wChannelSetup.setstepamount( channelsetup, stepamount);
-      wChannelSetup.setdelay( channelsetup, delay);
+      wChannelSetup.setoffpos( channelsetup, offpos);
+      wChannelSetup.setonpos( channelsetup, onpos);
+      wChannelSetup.setoffsteps( channelsetup, offsteps);
+      wChannelSetup.setonsteps( channelsetup, onsteps);
+      wChannelSetup.setoptions( channelsetup, options);
     }
     __saveIni(rocnetnode);
     __initIO(rocnetnode);
@@ -667,16 +669,17 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     rnSenderAddresToPacket( data->id, msg, 0 );
     msg[RN_PACKET_ACTION] = RN_PROGRAMMING_RCHANNEL;
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-    msg[RN_PACKET_LEN] = ((to-from)+1)*7;
+    msg[RN_PACKET_LEN] = ((to-from)+1)*8;
     for( i = from; i <= to; i++ ) {
       if( data->channels[i] != NULL ) {
-        msg[RN_PACKET_DATA + 0 + idx * 7] = i;
-        msg[RN_PACKET_DATA + 1 + idx * 7] = data->channels[i]->startpos/256;
-        msg[RN_PACKET_DATA + 2 + idx * 7] = data->channels[i]->startpos%256;
-        msg[RN_PACKET_DATA + 3 + idx * 7] = data->channels[i]->stoppos/256;
-        msg[RN_PACKET_DATA + 4 + idx * 7] = data->channels[i]->stoppos%256;
-        msg[RN_PACKET_DATA + 5 + idx * 7] = data->channels[i]->stepamount;
-        msg[RN_PACKET_DATA + 6 + idx * 7] = data->channels[i]->delay;
+        msg[RN_PACKET_DATA + 0 + idx * 8] = i;
+        msg[RN_PACKET_DATA + 1 + idx * 8] = data->channels[i]->offpos/256;
+        msg[RN_PACKET_DATA + 2 + idx * 8] = data->channels[i]->offpos%256;
+        msg[RN_PACKET_DATA + 3 + idx * 8] = data->channels[i]->onpos/256;
+        msg[RN_PACKET_DATA + 4 + idx * 8] = data->channels[i]->onpos%256;
+        msg[RN_PACKET_DATA + 5 + idx * 8] = data->channels[i]->offsteps;
+        msg[RN_PACKET_DATA + 6 + idx * 8] = data->channels[i]->onsteps;
+        msg[RN_PACKET_DATA + 7 + idx * 8] = data->channels[i]->options;
       }
       idx++;
     }
@@ -867,7 +870,7 @@ static void __macro(iORocNetNode rocnetnode, int macro, Boolean on, int offset) 
           data->ports[port]->state = (data->macro[macro]->line[i].value);
         }
         else if( (data->macro[macro]->line[i].type&IO_TYPE) == 2 && data->channels[port] != NULL) {
-          int pos = (data->macro[macro]->line[i].value ? data->channels[port]->stoppos:data->channels[port]->startpos);
+          int pos = (data->macro[macro]->line[i].value ? data->channels[port]->onpos:data->channels[port]->offpos);
           if( data->macro[macro]->line[i].value > 1 ) {
             __writeChannel( rocnetnode, port, data->macro[macro]->line[i].value * 16);
           }
@@ -1335,23 +1338,26 @@ static void __pwm( void* threadinst ) {
     for( i = 0; i < 129; i++ ) {
       if( data->channels[i] != NULL ) {
         int gotopos = data->channels[i]->curpos;
-        if( data->channels[i]->state && data->channels[i]->curpos != data->channels[i]->stoppos ) {
-          gotopos = data->channels[i]->stoppos;
+        int steps = 0;
+        if( data->channels[i]->state && data->channels[i]->curpos != data->channels[i]->onpos ) {
+          gotopos = data->channels[i]->onpos;
+          steps   = data->channels[i]->onsteps;
         }
-        else if( data->channels[i]->state == 0 && data->channels[i]->curpos != data->channels[i]->startpos ) {
-          gotopos = data->channels[i]->startpos;
+        else if( data->channels[i]->state == 0 && data->channels[i]->curpos != data->channels[i]->offpos ) {
+          gotopos = data->channels[i]->offpos;
+          steps   = data->channels[i]->offsteps;
         }
 
         if( data->channels[i]->curpos != gotopos ) {
           int oldcurpos = data->channels[i]->curpos;
           if( data->channels[i]->curpos > gotopos ) {
-            data->channels[i]->curpos -= data->channels[i]->stepamount;
-            if( data->channels[i]->curpos < gotopos )
+            data->channels[i]->curpos -= steps;
+            if( data->channels[i]->curpos < gotopos || steps == 0 )
               data->channels[i]->curpos = gotopos;
           }
           else {
-            data->channels[i]->curpos += data->channels[i]->stepamount;
-            if( data->channels[i]->curpos > gotopos )
+            data->channels[i]->curpos += steps;
+            if( data->channels[i]->curpos > gotopos || steps == 0 )
               data->channels[i]->curpos = gotopos;
           }
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set channel %d pwm from %d to %d, gotopos=%d",
@@ -1826,12 +1832,13 @@ static void __initI2CPWM(iORocNetNode inst) {
           data->channels[channelnr] = channel;
         }
 
-        channel->channel = channelnr;
-        channel->delay = wChannelSetup.getdelay(channelsetup);
-        channel->stepamount = wChannelSetup.getstepamount(channelsetup);
-        channel->startpos = wChannelSetup.getstartpos(channelsetup);
-        channel->stoppos = wChannelSetup.getstoppos(channelsetup);
-        channel->state = wChannelSetup.getstate(channelsetup);
+        channel->channel  = channelnr;
+        channel->options  = wChannelSetup.getoptions(channelsetup);
+        channel->offsteps = wChannelSetup.getoffsteps(channelsetup);
+        channel->onsteps  = wChannelSetup.getonsteps(channelsetup);
+        channel->offpos   = wChannelSetup.getoffpos(channelsetup);
+        channel->onpos    = wChannelSetup.getonpos(channelsetup);
+        channel->state    = wChannelSetup.getstate(channelsetup);
 
         i2caddr = (channelnr-1) / 16;
         if( i2caddr >= 0 && i2caddr < 8 ) {
@@ -1845,7 +1852,7 @@ static void __initI2CPWM(iORocNetNode inst) {
               __errorReport(inst, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, 0x40+i2caddr);
             }
             else {
-              channel->curpos = channel->state ? channel->stoppos:channel->startpos;
+              channel->curpos = channel->state ? channel->onpos:channel->offpos;
               rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, (channel->channel%16)-1, 0, channel->curpos);
               if( rc < 0 ) {
                 TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x40+i2caddr, errno );
@@ -1853,8 +1860,8 @@ static void __initI2CPWM(iORocNetNode inst) {
                 __errorReport(inst, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, 0x40+i2caddr);
               }
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                  "channelsetup: channel=%d i2caddr=0x%02X startpos=%d stoppos=%d stepamount=%d, delay=%d state=%d",
-                  channel->channel, i2caddr + 0x40, channel->startpos, channel->stoppos, channel->stepamount, channel->delay, channel->state );
+                  "channelsetup: channel=%d i2caddr=0x%02X offpos=%d onpos=%d offsteps=%d onsteps=%d options=0s%02X state=%d",
+                  channel->channel, i2caddr + 0x40, channel->offpos, channel->onpos, channel->offsteps, channel->onsteps, channel->options, channel->state );
             }
           }
 

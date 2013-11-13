@@ -494,21 +494,23 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
         if( porttype == wProgram.porttype_servo ) {
           rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WCHANNEL;
-          rn[RN_PACKET_LEN] = 8*7;
+          rn[RN_PACKET_LEN] = 8*8;
           for( i = 0; i < 8; i++ ) {
             /* channel#   startH  startL  stopH   stopL   stepamount  delay */
-            StrOp.fmtb(key, "val%d", i*7 + 1);
-            rn[RN_PACKET_DATA + 0 + i*7] = NodeOp.getInt(node, key, 0);
-            StrOp.fmtb(key, "val%d", i*7 + 2);
-            rn[RN_PACKET_DATA + 1 + i*7] = NodeOp.getInt(node, key, 0)/256;
-            rn[RN_PACKET_DATA + 2 + i*7] = NodeOp.getInt(node, key, 0)%256;
-            StrOp.fmtb(key, "val%d", i*7 + 3);
-            rn[RN_PACKET_DATA + 3 + i*7] = NodeOp.getInt(node, key, 0)/256;
-            rn[RN_PACKET_DATA + 4 + i*7] = NodeOp.getInt(node, key, 0)%256;
-            StrOp.fmtb(key, "val%d", i*7 + 4);
-            rn[RN_PACKET_DATA + 5 + i*7] = NodeOp.getInt(node, key, 0);
-            StrOp.fmtb(key, "val%d", i*7 + 5);
-            rn[RN_PACKET_DATA + 6 + i*7] = NodeOp.getInt(node, key, 0);
+            StrOp.fmtb(key, "val%d", i*8 + 1);
+            rn[RN_PACKET_DATA + 0 + i*8] = NodeOp.getInt(node, key, 0);
+            StrOp.fmtb(key, "val%d", i*8 + 2);
+            rn[RN_PACKET_DATA + 1 + i*8] = NodeOp.getInt(node, key, 0)/256;
+            rn[RN_PACKET_DATA + 2 + i*8] = NodeOp.getInt(node, key, 0)%256;
+            StrOp.fmtb(key, "val%d", i*8 + 3);
+            rn[RN_PACKET_DATA + 3 + i*8] = NodeOp.getInt(node, key, 0)/256;
+            rn[RN_PACKET_DATA + 4 + i*8] = NodeOp.getInt(node, key, 0)%256;
+            StrOp.fmtb(key, "val%d", i*8 + 4);
+            rn[RN_PACKET_DATA + 5 + i*8] = NodeOp.getInt(node, key, 0);
+            StrOp.fmtb(key, "val%d", i*8 + 5);
+            rn[RN_PACKET_DATA + 6 + i*8] = NodeOp.getInt(node, key, 0);
+            StrOp.fmtb(key, "val%d", i*8 + 6);
+            rn[RN_PACKET_DATA + 7 + i*8] = NodeOp.getInt(node, key, 0);
           }
         }
         else {
@@ -1005,6 +1007,43 @@ static void __evaluatePTStationary( iOrocNet rocnet, byte* rn ) {
       idx++;
       StrOp.fmtb( key, "val%d", idx );
       NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 3] );
+      idx++;
+    }
+    wProgram.setiid( node, data->iid );
+    wProgram.setlntype(node, wProgram.lntype_rocnet);
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+  break;
+
+  case RN_PROGRAMMING_RCHANNEL:
+  case RN_PROGRAMMING_WCHANNEL:
+  {
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    int nrports = rn[RN_PACKET_LEN] / 8;
+    int i = 0;
+    int idx = 1;
+    char key[32] = {'\0'};
+    wProgram.setmodid(node, sndr);
+    wProgram.setcmd( node, wProgram.nvget );
+    wProgram.setporttype( node, wProgram.porttype_servo );
+    for( i = 0; i < nrports; i++ ) {
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 0] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 1] * 256 + rn[RN_PACKET_DATA + i*4 + 2] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 3] * 256 + rn[RN_PACKET_DATA + i*4 + 4] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 5] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 6] );
+      idx++;
+      StrOp.fmtb( key, "val%d", idx );
+      NodeOp.setInt(node, key, rn[RN_PACKET_DATA + i*4 + 7] );
       idx++;
     }
     wProgram.setiid( node, data->iid );
