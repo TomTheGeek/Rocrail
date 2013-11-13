@@ -1049,6 +1049,7 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
     else if( rn[RN_PACKET_DATA + 1] == wProgram.porttype_servo ) {
       if( port < 129 && data->channels[port] != NULL ) {
         data->channels[port]->state = (rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON) ? 1:0;
+        data->channels[port]->blink = (rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON) ? True:False;
       }
     }
     else {
@@ -1399,7 +1400,7 @@ static void __pwm( void* threadinst ) {
                 msg[RN_PACKET_DATA + 3] = data->channels[i]->channel;
                 __sendRN(rocnetnode, msg);
               }
-              if( data->channels[i]->options & PWM_BLINK ) {
+              if( data->channels[i]->options & PWM_BLINK && data->channels[i]->blink ) {
                 data->channels[i]->state = !data->channels[i]->state;
               }
             }
@@ -1423,7 +1424,7 @@ static void __pwm( void* threadinst ) {
                 msg[RN_PACKET_DATA + 3] = data->channels[i]->channel;
                 __sendRN(rocnetnode, msg);
               }
-              if( data->channels[i]->options & PWM_BLINK ) {
+              if( data->channels[i]->options & PWM_BLINK && data->channels[i]->blink ) {
                 data->channels[i]->state = !data->channels[i]->state;
               }
             }
