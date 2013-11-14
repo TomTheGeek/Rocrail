@@ -577,7 +577,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer18 = new wxBoxSizer( wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer62;
-	fgSizer62 = new wxFlexGridSizer( 0, 8, 0, 0 );
+	fgSizer62 = new wxFlexGridSizer( 0, 9, 0, 0 );
 	fgSizer62->SetFlexibleDirection( wxBOTH );
 	fgSizer62->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -613,6 +613,10 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_labChannelDelay->Wrap( -1 );
 	fgSizer62->Add( m_labChannelDelay, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_labChannelTune = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("Tune"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labChannelTune->Wrap( -1 );
+	fgSizer62->Add( m_labChannelTune, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_labChannel1 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("1"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel1->Wrap( -1 );
 	m_labChannel1->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
@@ -639,6 +643,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_ChannelDelay1 = new wxSpinCtrl( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 65,-1 ), wxSP_ARROW_KEYS, 0, 15, 0 );
 	fgSizer62->Add( m_ChannelDelay1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_ChannelTune1 = new wxButton( m_PWMSetupPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer62->Add( m_ChannelTune1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_labChannel2 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("2"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel2->Wrap( -1 );
@@ -667,6 +674,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_ChannelDelay2 = new wxSpinCtrl( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 65,-1 ), wxSP_ARROW_KEYS, 0, 15, 0 );
 	fgSizer62->Add( m_ChannelDelay2, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_ChannelTune2 = new wxButton( m_PWMSetupPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer62->Add( m_ChannelTune2, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_labChannel3 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("3"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel3->Wrap( -1 );
 	m_labChannel3->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
@@ -693,6 +703,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_ChannelDelay3 = new wxSpinCtrl( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 65,-1 ), wxSP_ARROW_KEYS, 0, 15, 0 );
 	fgSizer62->Add( m_ChannelDelay3, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_ChannelTune3 = new wxButton( m_PWMSetupPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer62->Add( m_ChannelTune3, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_labChannel4 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("4"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel4->Wrap( -1 );
@@ -721,6 +734,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_ChannelDelay4 = new wxSpinCtrl( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 65,-1 ), wxSP_ARROW_KEYS, 0, 15, 0 );
 	fgSizer62->Add( m_ChannelDelay4, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_ChannelTune4 = new wxButton( m_PWMSetupPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer62->Add( m_ChannelTune4, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_labChannel5 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("5"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel5->Wrap( -1 );
 	m_labChannel5->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
@@ -747,6 +763,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_ChannelDelay5 = new wxSpinCtrl( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 65,-1 ), wxSP_ARROW_KEYS, 0, 15, 0 );
 	fgSizer62->Add( m_ChannelDelay5, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_ChannelTune5 = new wxButton( m_PWMSetupPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer62->Add( m_ChannelTune5, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_labChannel6 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("6"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel6->Wrap( -1 );
@@ -775,6 +794,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_ChannelDelay6 = new wxSpinCtrl( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 65,-1 ), wxSP_ARROW_KEYS, 0, 15, 0 );
 	fgSizer62->Add( m_ChannelDelay6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_ChannelTune6 = new wxButton( m_PWMSetupPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer62->Add( m_ChannelTune6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_labChannel7 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("7"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel7->Wrap( -1 );
 	m_labChannel7->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
@@ -802,6 +824,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_ChannelDelay7 = new wxSpinCtrl( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 65,-1 ), wxSP_ARROW_KEYS, 0, 15, 0 );
 	fgSizer62->Add( m_ChannelDelay7, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_ChannelTune7 = new wxButton( m_PWMSetupPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer62->Add( m_ChannelTune7, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
 	m_labChannel8 = new wxStaticText( m_PWMSetupPanel, wxID_ANY, wxT("8"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labChannel8->Wrap( -1 );
 	m_labChannel8->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
@@ -828,6 +853,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_ChannelDelay8 = new wxSpinCtrl( m_PWMSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 65,-1 ), wxSP_ARROW_KEYS, 0, 15, 0 );
 	fgSizer62->Add( m_ChannelDelay8, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_ChannelTune8 = new wxButton( m_PWMSetupPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer62->Add( m_ChannelTune8, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer18->Add( fgSizer62, 1, wxEXPAND, 5 );
 	
@@ -1027,13 +1055,21 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_PortRead->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortRead ), NULL, this );
 	m_PortWrite->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortWrite ), NULL, this );
 	m_labChannel1->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune1->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel2->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune2->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel3->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune3->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel4->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune4->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel5->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune5->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel6->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune6->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel7->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune7->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel8->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune8->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_ChannelPrev->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelPrev ), NULL, this );
 	m_ChannelNext->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelNext ), NULL, this );
 	m_ChannelRemove->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelRemove ), NULL, this );
@@ -1096,13 +1132,21 @@ rocnetnodegen::~rocnetnodegen()
 	m_PortRead->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortRead ), NULL, this );
 	m_PortWrite->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onPortWrite ), NULL, this );
 	m_labChannel1->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune1->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel2->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune2->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel3->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune3->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel4->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune4->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel5->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune5->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel6->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune6->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel7->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune7->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_labChannel8->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( rocnetnodegen::onChannelDrag ), NULL, this );
+	m_ChannelTune8->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelTune ), NULL, this );
 	m_ChannelPrev->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelPrev ), NULL, this );
 	m_ChannelNext->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelNext ), NULL, this );
 	m_ChannelRemove->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelRemove ), NULL, this );

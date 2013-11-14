@@ -184,6 +184,7 @@ class rocnetnodegen : public wxDialog
 		wxStaticText* m_labChannelBlink;
 		wxStaticText* m_labChannelReport;
 		wxStaticText* m_labChannelDelay;
+		wxStaticText* m_labChannelTune;
 		wxStaticText* m_labChannel1;
 		wxSpinCtrl* m_OffPos1;
 		wxSpinCtrl* m_OnPos1;
@@ -192,6 +193,7 @@ class rocnetnodegen : public wxDialog
 		wxCheckBox* m_ChannelBlink1;
 		wxCheckBox* m_ChannelReport1;
 		wxSpinCtrl* m_ChannelDelay1;
+		wxButton* m_ChannelTune1;
 		wxStaticText* m_labChannel2;
 		wxSpinCtrl* m_OffPos2;
 		wxSpinCtrl* m_OnPos2;
@@ -200,6 +202,7 @@ class rocnetnodegen : public wxDialog
 		wxCheckBox* m_ChannelBlink2;
 		wxCheckBox* m_ChannelReport2;
 		wxSpinCtrl* m_ChannelDelay2;
+		wxButton* m_ChannelTune2;
 		wxStaticText* m_labChannel3;
 		wxSpinCtrl* m_OffPos3;
 		wxSpinCtrl* m_OnPos3;
@@ -208,6 +211,7 @@ class rocnetnodegen : public wxDialog
 		wxCheckBox* m_ChannelBlink3;
 		wxCheckBox* m_ChannelReport3;
 		wxSpinCtrl* m_ChannelDelay3;
+		wxButton* m_ChannelTune3;
 		wxStaticText* m_labChannel4;
 		wxSpinCtrl* m_OffPos4;
 		wxSpinCtrl* m_OnPos4;
@@ -216,6 +220,7 @@ class rocnetnodegen : public wxDialog
 		wxCheckBox* m_ChannelBlink4;
 		wxCheckBox* m_ChannelReport4;
 		wxSpinCtrl* m_ChannelDelay4;
+		wxButton* m_ChannelTune4;
 		wxStaticText* m_labChannel5;
 		wxSpinCtrl* m_OffPos5;
 		wxSpinCtrl* m_OnPos5;
@@ -224,6 +229,7 @@ class rocnetnodegen : public wxDialog
 		wxCheckBox* m_ChannelBlink5;
 		wxCheckBox* m_ChannelReport5;
 		wxSpinCtrl* m_ChannelDelay5;
+		wxButton* m_ChannelTune5;
 		wxStaticText* m_labChannel6;
 		wxSpinCtrl* m_OffPos6;
 		wxSpinCtrl* m_OnPos6;
@@ -232,6 +238,7 @@ class rocnetnodegen : public wxDialog
 		wxCheckBox* m_ChannelBlink6;
 		wxCheckBox* m_ChannelReport6;
 		wxSpinCtrl* m_ChannelDelay6;
+		wxButton* m_ChannelTune6;
 		wxStaticText* m_labChannel7;
 		wxSpinCtrl* m_OffPos7;
 		wxSpinCtrl* m_OnPos7;
@@ -240,6 +247,7 @@ class rocnetnodegen : public wxDialog
 		wxCheckBox* m_ChannelBlink7;
 		wxCheckBox* m_ChannelReport7;
 		wxSpinCtrl* m_ChannelDelay7;
+		wxButton* m_ChannelTune7;
 		wxStaticText* m_labChannel8;
 		wxSpinCtrl* m_OffPos8;
 		wxSpinCtrl* m_OnPos8;
@@ -248,6 +256,7 @@ class rocnetnodegen : public wxDialog
 		wxCheckBox* m_ChannelBlink8;
 		wxCheckBox* m_ChannelReport8;
 		wxSpinCtrl* m_ChannelDelay8;
+		wxButton* m_ChannelTune8;
 		wxButton* m_ChannelPrev;
 		wxButton* m_ChannelNext;
 		wxButton* m_ChannelRemove;
@@ -300,6 +309,7 @@ class rocnetnodegen : public wxDialog
 		virtual void onPortRead( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortWrite( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onChannelDrag( wxMouseEvent& event ) { event.Skip(); }
+		virtual void onChannelTune( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onChannelPrev( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onChannelNext( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onChannelRemove( wxCommandEvent& event ) { event.Skip(); }

@@ -22,6 +22,8 @@
 */
 
 #include "rocnetnodedlg.h"
+#include "channeltunedlg.h"
+
 #include "wx/wxprec.h"
 
 #ifndef WX_PRECOMP
@@ -1565,6 +1567,20 @@ void RocnetNodeDlg::onChannelDrag( wxMouseEvent& event ) {
   wxDropSource dragSource( this );
   dragSource.SetData( my_data );
   wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+}
+
+
+void RocnetNodeDlg::setPortValue( int port, int value, int type ) {
+
+}
+
+
+void RocnetNodeDlg::onChannelTune( wxCommandEvent& event ) {
+  ChannelTuneDlg* dlg = new ChannelTuneDlg(this);
+  if( wxID_OK == dlg->ShowModal() ) {
+  }
+  dlg->Destroy();
+
 }
 
 
