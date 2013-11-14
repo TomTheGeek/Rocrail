@@ -1557,3 +1557,14 @@ void RocnetNodeDlg::initChannels() {
 }
 
 
+void RocnetNodeDlg::onChannelDrag( wxMouseEvent& event ) {
+  wxStaticText* channel = (wxStaticText*)event.GetEventObject();
+
+  wxString my_text = _T("bus:")+wxString::Format(_T("%d:"), wRocNetNode.getid(m_Props) ) + channel->GetLabel() + wxT(":2");
+  wxTextDataObject my_data(my_text);
+  wxDropSource dragSource( this );
+  dragSource.SetData( my_data );
+  wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+}
+
+

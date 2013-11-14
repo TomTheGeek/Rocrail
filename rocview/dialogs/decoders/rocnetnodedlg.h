@@ -104,6 +104,7 @@ class RocnetNodeDlg : public rocnetnodegen
     void onChannelRemove( wxCommandEvent& event );
     void onChannelRead( wxCommandEvent& event );
     void onChannelWrite( wxCommandEvent& event );
+    void onChannelDrag( wxMouseEvent& event );
 
 	public:
     void onUpdateVersion( wxCommandEvent& event );

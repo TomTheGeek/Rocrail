@@ -475,12 +475,20 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
         )
     {
       wItem.setbus(m_Props, atoi(dropid));
+
       if( StrOp.len(fromid) > 0 ) {
         TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: set address to %s", fromid );
         if( StrOp.equals(wSwitch.name(), NodeOp.getName(m_Props) ) )
           wSwitch.setaddr1(m_Props, atoi(fromid));
         else
           wItem.setaddr(m_Props, atoi(fromid));
+      }
+
+      if( StrTokOp.hasMoreTokens(tok) ) {
+        const char* porttype  = StrTokOp.nextToken(tok);
+        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: set porttype to %s", porttype );
+        wSwitch.setporttype(m_Props, atoi(porttype));
+        wSwitch.setaccessory(m_Props, False);
       }
 
       if( !wxGetApp().isStayOffline() ) {

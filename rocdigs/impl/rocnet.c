@@ -1274,6 +1274,7 @@ static void __evaluateRN( iOrocNet rocnet, byte* rn ) {
         wSwitch.setaddr1( nodeC, port );
         wSwitch.setaddr1( nodeC, port );
         wSwitch.setstate( nodeC, (rn[RN_PACKET_DATA + 0] == 0) ?"straight":"turnout" );
+        wSwitch.setporttype( nodeC, rn[RN_PACKET_DATA + 1] & 0x0F );
         if( data->iid != NULL )
           wSwitch.setiid( nodeC, data->iid );
 
