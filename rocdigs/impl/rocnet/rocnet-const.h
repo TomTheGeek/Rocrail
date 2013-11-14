@@ -114,6 +114,7 @@
 #define RN_PROGRAMMING_RCHANNEL  15
 #define RN_PROGRAMMING_WCHANNEL  16
 #define RN_PROGRAMMING_RMCHANNEL  17
+#define RN_PROGRAMMING_SETCHANNEL  18
 
 
 /* extended packet offsets */

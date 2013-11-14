@@ -1351,7 +1351,7 @@ void RocnetNodeDlg::onMacroImport( wxCommandEvent& event ) {
     TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "reading [%s]...", (const char*)fdlg->GetPath().mb_str(wxConvUTF8));
     iOFile f = FileOp.inst( fdlg->GetPath().mb_str(wxConvUTF8), OPEN_READONLY );
     if( f != NULL ) {
-      TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "file opened...");
+      TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "file opened...");
       char* macroXml = (char*)allocMem( FileOp.size( f ) + 1 );
       FileOp.read( f, macroXml, FileOp.size( f ) );
       FileOp.close( f );
@@ -1571,12 +1571,50 @@ void RocnetNodeDlg::onChannelDrag( wxMouseEvent& event ) {
 
 
 void RocnetNodeDlg::setPortValue( int port, int value, int type ) {
+  wxSpinCtrl* l_OffPos[] = {NULL, m_OffPos1, m_OffPos2, m_OffPos3, m_OffPos4, m_OffPos5, m_OffPos6, m_OffPos7, m_OffPos8};
+  wxSpinCtrl* l_OnPos[] = {NULL, m_OnPos1, m_OnPos2, m_OnPos3, m_OnPos4, m_OnPos5, m_OnPos6, m_OnPos7, m_OnPos8};
+
+  TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "set channel %d to value %d, type=%d", port, value, type);
+  int channel = port - m_ChannelGroup*8;
+  if( type == 0 )
+    l_OffPos[channel]->SetValue(value);
+  else
+    l_OnPos[channel]->SetValue(value);
+
+  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
+  wProgram.setcmd( cmd, wProgram.setchannel );
+  wProgram.setporttype( cmd, wProgram.porttype_servo );
+  wProgram.setval1( cmd, port );
+  wProgram.setval2( cmd, value );
+  wProgram.setval3( cmd, type );
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wxGetApp().sendToRocrail( cmd );
 
 }
 
 
 void RocnetNodeDlg::onChannelTune( wxCommandEvent& event ) {
-  ChannelTuneDlg* dlg = new ChannelTuneDlg(this);
+  wxButton* l_Tune[] = {NULL, m_ChannelTune1, m_ChannelTune2, m_ChannelTune3, m_ChannelTune4, m_ChannelTune5, m_ChannelTune6, m_ChannelTune7, m_ChannelTune8};
+  wxSpinCtrl* l_OffPos[] = {NULL, m_OffPos1, m_OffPos2, m_OffPos3, m_OffPos4, m_OffPos5, m_OffPos6, m_OffPos7, m_OffPos8};
+  wxSpinCtrl* l_OnPos[] = {NULL, m_OnPos1, m_OnPos2, m_OnPos3, m_OnPos4, m_OnPos5, m_OnPos6, m_OnPos7, m_OnPos8};
+  wxButton* tuneButton = (wxButton*)event.GetEventObject();
+  int i = 0;
+  int channel = 1;
+  for( i = 1; i < 9; i++ ) {
+    if( tuneButton == l_Tune[i] ) {
+      channel = i;
+      break;
+    }
+  }
+
+  if( i > 8 )
+    return;
+
+  channel += m_ChannelGroup*8;
+
+  ChannelTuneDlg* dlg = new ChannelTuneDlg(this, this, channel, wProgram.porttype_servo, l_OffPos[channel]->GetValue(), l_OnPos[channel]->GetValue());
   if( wxID_OK == dlg->ShowModal() ) {
   }
   dlg->Destroy();

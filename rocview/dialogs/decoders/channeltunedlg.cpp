@@ -23,49 +23,88 @@
 
 #include "channeltunedlg.h"
 
-ChannelTuneDlg::ChannelTuneDlg( wxWindow* parent )
-:
-ChannelTuneDlgGen( parent )
+ChannelTuneDlg::ChannelTuneDlg( wxWindow* parent, DecoderBase* decoderbase, int channel, int type, int offpos, int onpos ):ChannelTuneDlgGen( parent )
 {
-
+  m_DecoderBase = decoderbase;
+  m_Channel = channel;
+  m_Type = type;
+  m_OffPos->SetValue(offpos);
+  m_OnPos->SetValue(onpos);
+  m_RangePreset->SetSelection(1);
+  wxCommandEvent cmd;
+  onPreset(cmd);
+  SetTitle(wxString::Format(wxT("Channel %d fine tuning"), m_Channel));
 }
 
 void ChannelTuneDlg::onMaxRange( wxSpinEvent& event )
 {
-// TODO: Implement onMaxRange
+  onMinRange(event);
 }
 
 void ChannelTuneDlg::onMinRange( wxSpinEvent& event )
 {
-// TODO: Implement onMinRange
+  int min = m_MinRange->GetValue();
+  int max = m_MaxRange->GetValue();
+  m_OffPos->SetRange(min, max);
+  m_OnPos->SetRange(min, max);
 }
 
 void ChannelTuneDlg::onPreset( wxCommandEvent& event )
 {
-// TODO: Implement onPreset
+  int preset = m_RangePreset->GetSelection();
+  if( preset == 0 ) {
+    // Servo
+    m_OffPos->SetRange(150, 600);
+    m_OnPos->SetRange(150, 600);
+    m_MaxRange->SetValue(600);
+    m_MinRange->SetValue(150);
+    m_MaxRange->Enable(false);
+    m_MinRange->Enable(false);
+  }
+  else if( preset == 1 ) {
+    // Servo
+    m_OffPos->SetRange(0, 4095);
+    m_OnPos->SetRange(0, 4095);
+    m_MaxRange->SetValue(4095);
+    m_MinRange->SetValue(0);
+    m_MaxRange->Enable(false);
+    m_MinRange->Enable(false);
+  }
+  else {
+    m_MaxRange->Enable(true);
+    m_MinRange->Enable(true);
+  }
 }
 
 void ChannelTuneDlg::onOffPos( wxScrollEvent& event )
 {
-// TODO: Implement onOffPos
 }
 
 void ChannelTuneDlg::onOffPosRelease( wxScrollEvent& event )
 {
-// TODO: Implement onOffPosRelease
+  m_DecoderBase->setPortValue(m_Channel, m_OffPos->GetValue(), 0);
 }
 
 void ChannelTuneDlg::onOnPos( wxScrollEvent& event )
 {
-// TODO: Implement onOnPos
 }
 
 void ChannelTuneDlg::onOnPosRelease( wxScrollEvent& event )
 {
-// TODO: Implement onOnPosRelease
+  m_DecoderBase->setPortValue(m_Channel, m_OnPos->GetValue(), 1);
 }
 
 void ChannelTuneDlg::onOK( wxCommandEvent& event )
 {
   EndModal( wxID_OK );
 }
+
+int ChannelTuneDlg::getOffPos() {
+  return m_OffPos->GetValue();
+}
+
+
+int ChannelTuneDlg::getOnPos() {
+  return m_OnPos->GetValue();
+}
+

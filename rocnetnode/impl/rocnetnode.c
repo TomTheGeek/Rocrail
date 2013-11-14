@@ -524,6 +524,24 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
   }
   break;
 
+  case RN_PROGRAMMING_SETCHANNEL:
+  {
+    int channel = rn[RN_PACKET_DATA+0];
+    int pos     = rn[RN_PACKET_DATA+1]*256 + rn[RN_PACKET_DATA+2];
+    int type    = rn[RN_PACKET_DATA+3];
+    if( data->channels[channel] != NULL ) {
+      if( type == 0 ) {
+        data->channels[channel]->offpos = pos;
+        data->channels[channel]->state  = 0;
+      }
+      else {
+        data->channels[channel]->onpos = pos;
+        data->channels[channel]->state  = 1;
+      }
+    }
+  }
+  break;
+
   case RN_PROGRAMMING_WCHANNEL:
   {
     iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());

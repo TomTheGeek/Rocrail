@@ -486,6 +486,20 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         rn[RN_PACKET_DATA + 1] = wProgram.getval2(node);
         ThreadOp.post( data->writer, (obj)rn );
       }
+      else if( wProgram.getcmd( node ) == wProgram.setchannel ) {
+        int porttype = wProgram.getporttype(node);
+        int rnid = wProgram.getmodid(node);
+        rn[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
+        rnReceipientAddresToPacket( rnid, rn, data->seven );
+        rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
+        rn[RN_PACKET_ACTION] = RN_PROGRAMMING_SETCHANNEL;
+        rn[RN_PACKET_LEN] = 4;
+        rn[RN_PACKET_DATA + 0] = wProgram.getval1(node);
+        rn[RN_PACKET_DATA + 1] = wProgram.getval2(node)/256;
+        rn[RN_PACKET_DATA + 2] = wProgram.getval2(node)%256;
+        rn[RN_PACKET_DATA + 3] = wProgram.getval3(node);
+        ThreadOp.post( data->writer, (obj)rn );
+      }
       else if( wProgram.getcmd( node ) == wProgram.nvset ) {
         char key[32] = {'\0'};
         int i = 0;
