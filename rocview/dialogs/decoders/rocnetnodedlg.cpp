@@ -1273,7 +1273,7 @@ void RocnetNodeDlg::onBeginListDrag( wxListEvent& event ) {
 void RocnetNodeDlg::onPort1Drag( wxMouseEvent& event ) {
   wxStaticText* port = (wxStaticText*)event.GetEventObject();
 
-  wxString my_text = _T("bus:")+wxString::Format(_T("%d:"), wRocNetNode.getid(m_Props) ) + port->GetLabel();
+  wxString my_text = _T("bus:")+wxString::Format(_T("%d:"), wRocNetNode.getid(m_Props) ) + port->GetLabel() + wxT(":0");
   wxTextDataObject my_data(my_text);
   wxDropSource dragSource( this );
   dragSource.SetData( my_data );
