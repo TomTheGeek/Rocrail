@@ -99,6 +99,7 @@
 #include "rocrail/wrapper/public/Location.h"
 #include "rocrail/wrapper/public/LocationList.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
+#include "rocrail/wrapper/public/Program.h"
 
 #include "rocview/wrapper/public/Gui.h"
 #include "rocview/wrapper/public/PlanPanel.h"
@@ -489,6 +490,9 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
         TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: set porttype to %s", porttype );
         wSwitch.setporttype(m_Props, atoi(porttype));
         wSwitch.setaccessory(m_Props, False);
+        if( StrOp.equals(wSwitch.name(), NodeOp.getName(m_Props) ) && wSwitch.getporttype(m_Props) == wProgram.porttype_servo ) {
+          wSwitch.setsinglegate(m_Props, True);
+        }
       }
 
       if( !wxGetApp().isStayOffline() ) {
