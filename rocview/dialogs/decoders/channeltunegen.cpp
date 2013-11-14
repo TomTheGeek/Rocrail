@@ -49,7 +49,7 @@ ChannelTuneDlgGen::ChannelTuneDlgGen( wxWindow* parent, wxWindowID id, const wxS
 	m_labOffPos->Wrap( -1 );
 	bSizer24->Add( m_labOffPos, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 	
-	m_OffPos = new wxSlider( this, wxID_ANY, 2050, 0, 4095, wxDefaultPosition, wxDefaultSize, wxSL_INVERSE|wxSL_LABELS|wxSL_VERTICAL );
+	m_OffPos = new wxSlider( this, wxID_ANY, 2050, 0, 4095, wxDefaultPosition, wxDefaultSize, wxSL_INVERSE|wxSL_VERTICAL );
 	bSizer24->Add( m_OffPos, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 	
 	bSizer23->Add( bSizer24, 1, wxEXPAND, 5 );
@@ -61,7 +61,7 @@ ChannelTuneDlgGen::ChannelTuneDlgGen( wxWindow* parent, wxWindowID id, const wxS
 	m_labOnPos->Wrap( -1 );
 	bSizer26->Add( m_labOnPos, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 	
-	m_OnPos = new wxSlider( this, wxID_ANY, 2050, 0, 4095, wxDefaultPosition, wxDefaultSize, wxSL_INVERSE|wxSL_LABELS|wxSL_VERTICAL );
+	m_OnPos = new wxSlider( this, wxID_ANY, 2050, 0, 4095, wxDefaultPosition, wxDefaultSize, wxSL_INVERSE|wxSL_VERTICAL );
 	bSizer26->Add( m_OnPos, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 	
 	bSizer23->Add( bSizer26, 1, wxEXPAND, 5 );

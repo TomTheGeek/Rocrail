@@ -1618,6 +1618,7 @@ void RocnetNodeDlg::onChannelTune( wxCommandEvent& event ) {
   if( wxID_OK == dlg->ShowModal() ) {
   }
   dlg->Destroy();
+  Raise();
 
 }
 
