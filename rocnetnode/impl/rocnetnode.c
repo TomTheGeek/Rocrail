@@ -1471,7 +1471,7 @@ static void __pwm( void* threadinst ) {
               }
             }
           }
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set channel %d pwm from %d to %d, gotopos=%d",
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "set channel %d pwm from %d to %d, gotopos=%d",
               data->channels[i]->channel-1, oldcurpos, data->channels[i]->curpos, gotopos );
           __writeChannel(rocnetnode, data->channels[i]->channel, data->channels[i]->curpos);
           ThreadOp.sleep(0);
