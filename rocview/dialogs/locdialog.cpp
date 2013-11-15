@@ -617,7 +617,7 @@ void LocDialog::InitValues() {
 
   TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitValues %s", wLoc.getid( m_Props ) );
   // Init General
-  if( wLoc.getimage( m_Props ) != NULL ) {
+  if( wLoc.getimage( m_Props ) != NULL && StrOp.len(wLoc.getimage(m_Props)) > 0 ) {
     wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
     if( StrOp.endsWithi( wLoc.getimage( m_Props ), ".gif" ) )
       bmptype = wxBITMAP_TYPE_GIF;
