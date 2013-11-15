@@ -751,65 +751,73 @@ static void __callback( obj inst, iONode nodeA ) {
     if( wDataReq.getcmd(nodeA) == wDataReq.get ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DataReq filename=[%s]", wDataReq.getfilename(nodeA) );
       if( wDataReq.gettype(nodeA) == wDataReq.image || wDataReq.gettype(nodeA) == wDataReq.smallimage ) {
-        iOFile f = NULL;
-        Boolean smallimage = (wDataReq.gettype(nodeA) == wDataReq.smallimage) ? True:False;
-        char* filename = StrOp.fmt( "%s%c%s", AppOp.getImgPath(),
-            SystemOp.getFileSeparator(), FileOp.ripPath(wDataReq.getfilename(nodeA)) );
-        char* sfilename = StrOp.fmt( "%s%csmall%c%s", AppOp.getImgPath(),
-            SystemOp.getFileSeparator(), SystemOp.getFileSeparator(), FileOp.ripPath(wDataReq.getfilename(nodeA)) );
 
-        if( !wRocRail.isfsutf8(AppOp.getIni()) ) {
-          if( smallimage && FileOp.exist( sfilename ) ) {
-            char* tmp = sfilename;
-            sfilename = SystemOp.utf2latin(sfilename);
-            StrOp.free(tmp);
+        if( wDataReq.getfilename(nodeA) != NULL && StrOp.len(wDataReq.getfilename(nodeA)) > 0 ) {
+          iOFile f = NULL;
+          Boolean smallimage = (wDataReq.gettype(nodeA) == wDataReq.smallimage) ? True:False;
+          char* filename = StrOp.fmt( "%s%c%s", AppOp.getImgPath(),
+              SystemOp.getFileSeparator(), FileOp.ripPath(wDataReq.getfilename(nodeA)) );
+          char* sfilename = StrOp.fmt( "%s%csmall%c%s", AppOp.getImgPath(),
+              SystemOp.getFileSeparator(), SystemOp.getFileSeparator(), FileOp.ripPath(wDataReq.getfilename(nodeA)) );
+
+          if( !wRocRail.isfsutf8(AppOp.getIni()) ) {
+            if( smallimage && FileOp.exist( sfilename ) ) {
+              char* tmp = sfilename;
+              sfilename = SystemOp.utf2latin(sfilename);
+              StrOp.free(tmp);
+            }
+            else {
+              char* tmp = filename;
+              filename = SystemOp.utf2latin(filename);
+              StrOp.free(tmp);
+            }
+          }
+
+          if( smallimage && FileOp.exist( sfilename ) )
+            f = FileOp.inst( sfilename, OPEN_READONLY);
+          else if(FileOp.exist( filename ))
+            f = FileOp.inst( filename, OPEN_READONLY);
+
+          StrOp.free(filename);
+          StrOp.free(sfilename);
+
+          if( f != NULL ) {
+            int   size    = FileOp.size(f);
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server filename=[%s]", FileOp.getFilename(f) );
+            if( size > 0 && size < (50*1024) ) {
+              byte* buffer  = allocMem( size );
+              char* byteStr = NULL;
+
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "reading %d bytes...", size );
+              FileOp.read( f, buffer, size );
+              FileOp.base.del(f);
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "convert %d bytes to string...", size );
+              byteStr = StrOp.byteToStr( buffer, size );
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "free buffer..." );
+              freeMem(buffer);
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "setdata..." );
+              wDataReq.setdata( nodeA, byteStr );
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "free byteStr..." );
+              StrOp.free( byteStr );
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "post event..." );
+              ClntConOp.postEvent( AppOp.getClntCon(), nodeA, wCommand.getserver( nodeA ) );
+              return;
+            }
+            else {
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "image file size out of range! [%d]", size );
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "post empty datareq..." );
+              ClntConOp.postEvent( AppOp.getClntCon(), nodeA, wCommand.getserver( nodeA ) );
+              return;
+            }
           }
           else {
-            char* tmp = filename;
-            filename = SystemOp.utf2latin(filename);
-            StrOp.free(tmp);
-          }
-        }
-
-        if( smallimage && FileOp.exist( sfilename ) )
-          f = FileOp.inst( sfilename, OPEN_READONLY);
-        else if(FileOp.exist( filename ))
-          f = FileOp.inst( filename, OPEN_READONLY);
-
-        StrOp.free(filename);
-        StrOp.free(sfilename);
-
-        if( f != NULL ) {
-          int   size    = FileOp.size(f);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Server filename=[%s]", FileOp.getFilename(f) );
-          if( size > 0 && size < (50*1024) ) {
-            byte* buffer  = allocMem( size );
-            char* byteStr = NULL;
-
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "reading %d bytes...", size );
-            FileOp.read( f, buffer, size );
-            FileOp.base.del(f);
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "convert %d bytes to string...", size );
-            byteStr = StrOp.byteToStr( buffer, size );
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "free buffer..." );
-            freeMem(buffer);
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "setdata..." );
-            wDataReq.setdata( nodeA, byteStr );
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "free byteStr..." );
-            StrOp.free( byteStr );
-            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "post event..." );
-            ClntConOp.postEvent( AppOp.getClntCon(), nodeA, wCommand.getserver( nodeA ) );
-            return;
-          }
-          else {
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "image file size out of range! [%d]", size );
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "post empty datareq..." );
             ClntConOp.postEvent( AppOp.getClntCon(), nodeA, wCommand.getserver( nodeA ) );
             return;
           }
         }
         else {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "post empty datareq..." );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "empty image name..." );
           ClntConOp.postEvent( AppOp.getClntCon(), nodeA, wCommand.getserver( nodeA ) );
           return;
         }
