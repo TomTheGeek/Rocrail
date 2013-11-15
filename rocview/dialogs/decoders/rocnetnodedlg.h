@@ -107,6 +107,7 @@ class RocnetNodeDlg : public rocnetnodegen, public DecoderBase
     void onChannelWrite( wxCommandEvent& event );
     void onChannelDrag( wxMouseEvent& event );
     void onChannelTune( wxCommandEvent& event );
+    void onChannelTest( wxCommandEvent& event );
 
 	public:
     void onUpdateVersion( wxCommandEvent& event );

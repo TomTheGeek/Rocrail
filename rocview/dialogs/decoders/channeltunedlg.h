@@ -53,7 +53,7 @@ class ChannelTuneDlg : public ChannelTuneDlgGen
 		void onOK( wxCommandEvent& event );
 	public:
 		/** Constructor */
-		ChannelTuneDlg( wxWindow* parent, DecoderBase* decoderbase, int channel, int type, int offpos, int onpos );
+		ChannelTuneDlg( wxWindow* parent, DecoderBase* decoderbase, int channel, int type, int offpos, int onpos, bool servo );
 	//// end generated class members
 		int getOffPos();
     int getOnPos();

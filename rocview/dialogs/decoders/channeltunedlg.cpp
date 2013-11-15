@@ -23,16 +23,16 @@
 
 #include "channeltunedlg.h"
 
-ChannelTuneDlg::ChannelTuneDlg( wxWindow* parent, DecoderBase* decoderbase, int channel, int type, int offpos, int onpos ):ChannelTuneDlgGen( parent )
+ChannelTuneDlg::ChannelTuneDlg( wxWindow* parent, DecoderBase* decoderbase, int channel, int type, int offpos, int onpos, bool servo ):ChannelTuneDlgGen( parent )
 {
   m_DecoderBase = decoderbase;
   m_Channel = channel;
   m_Type = type;
-  m_OffPos->SetValue(offpos);
-  m_OnPos->SetValue(onpos);
-  m_RangePreset->SetSelection(1);
+  m_RangePreset->SetSelection( servo?0:1 );
   wxCommandEvent cmd;
   onPreset(cmd);
+  m_OffPos->SetValue(offpos);
+  m_OnPos->SetValue(onpos);
   SetTitle(wxString::Format(wxT("Channel %d fine tuning"), m_Channel));
 }
 

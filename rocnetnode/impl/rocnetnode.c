@@ -530,6 +530,9 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     int pos     = rn[RN_PACKET_DATA+1]*256 + rn[RN_PACKET_DATA+2];
     int type    = rn[RN_PACKET_DATA+3];
     if( data->channels[channel] != NULL ) {
+      data->channels[i]->ready = False;
+      data->channels[i]->sleep = False;
+      data->channels[i]->idle  = 0;
       if( type == 0 ) {
         data->channels[channel]->offpos = pos;
         data->channels[channel]->state  = 0;
@@ -920,10 +923,11 @@ static void __macro(iORocNetNode rocnetnode, int macro, Boolean on, int offset) 
         else if( (data->macro[macro]->line[i].type&IO_TYPE) == 2 && data->channels[port] != NULL) {
           int pos = (data->macro[macro]->line[i].value ? data->channels[port]->onpos:data->channels[port]->offpos);
           if( data->macro[macro]->line[i].value > 1 ) {
-            __writeChannel( rocnetnode, port, data->macro[macro]->line[i].value * 16);
+              data->channels[port]->onpos = data->macro[macro]->line[i].value * 16;
           }
-          else
-            __writeChannel( rocnetnode, port, pos);
+          data->channels[i]->ready = False;
+          data->channels[i]->sleep = False;
+          data->channels[i]->idle  = 0;
           data->channels[port]->state = (data->macro[macro]->line[i].value?1:0);
         }
       }
@@ -1068,6 +1072,9 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
       if( port < 129 && data->channels[port] != NULL ) {
         data->channels[port]->state = (rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON) ? 1:0;
         data->channels[port]->blink = (rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON) ? True:False;
+        data->channels[port]->ready = False;
+        data->channels[port]->sleep = False;
+        data->channels[port]->idle  = 0;
       }
     }
     else {
@@ -1301,7 +1308,7 @@ static void __writeChannel(iORocNetNode rocnetnode, int channel, int pos) {
   i2caddr = (data->channels[channel]->channel - 1) / 16;
 
   MutexOp.wait( data->i2cmux );
-  rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, (data->channels[channel]->channel%16) - 1, 0, pos);
+  rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, (data->channels[channel]->channel%16) - 1, -1, pos);
   MutexOp.post( data->i2cmux );
 
   if( rc < 0 ) {
@@ -1426,9 +1433,13 @@ static void __pwm( void* threadinst ) {
                 msg[RN_PACKET_DATA + 2] = 0;
                 msg[RN_PACKET_DATA + 3] = data->channels[i]->channel;
                 __sendRN(rocnetnode, msg);
+                data->channels[i]->ready = True;
               }
               if( data->channels[i]->options & PWM_BLINK && data->channels[i]->blink ) {
                 data->channels[i]->state = !data->channels[i]->state;
+                data->channels[i]->ready = False;
+                data->channels[i]->sleep = False;
+                data->channels[i]->idle  = 0;
               }
             }
           }
@@ -1450,9 +1461,13 @@ static void __pwm( void* threadinst ) {
                 msg[RN_PACKET_DATA + 2] = 0;
                 msg[RN_PACKET_DATA + 3] = data->channels[i]->channel;
                 __sendRN(rocnetnode, msg);
+                data->channels[i]->ready = True;
               }
               if( data->channels[i]->options & PWM_BLINK && data->channels[i]->blink ) {
                 data->channels[i]->state = !data->channels[i]->state;
+                data->channels[i]->ready = False;
+                data->channels[i]->sleep = False;
+                data->channels[i]->idle  = 0;
               }
             }
           }
@@ -1460,6 +1475,16 @@ static void __pwm( void* threadinst ) {
               data->channels[i]->channel-1, oldcurpos, data->channels[i]->curpos, gotopos );
           __writeChannel(rocnetnode, data->channels[i]->channel, data->channels[i]->curpos);
           ThreadOp.sleep(0);
+        }
+
+        if( data->channels[i]->options & PWM_SERVO && data->channels[i]->ready ) {
+          if( data->channels[i]->idle < 100 ) {
+            data->channels[i]->idle++;
+          }
+          if( data->channels[i]->idle >= 100 && !data->channels[i]->sleep ) {
+            data->channels[i]->sleep = True;
+            __writeChannel(rocnetnode, data->channels[i]->channel, 4095);
+          }
         }
 
       }

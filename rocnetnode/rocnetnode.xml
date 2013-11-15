@@ -52,7 +52,10 @@
 			<var name="options" vt="int"/>
       <var name="blink" vt="Boolean"/>
 			<var name="state" vt="int"/>
-    </struct>
+      <var name="ready" vt="Boolean"/>
+			<var name="idle" vt="int"/>
+			<var name="sleep" vt="Boolean"/>
+			</struct>
     <struct name="MacroLine" typedef="*iOMacroLine">
       <var name="delay" vt="int"/>
       <var name="port" vt="int"/>

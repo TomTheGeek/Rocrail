@@ -632,6 +632,7 @@ void RocnetNodeDlg::event(iONode node) {
     wxSpinCtrl* l_OnSteps[] = {NULL, m_OnSteps1, m_OnSteps2, m_OnSteps3, m_OnSteps4, m_OnSteps5, m_OnSteps6, m_OnSteps7, m_OnSteps8};
     wxCheckBox* l_ChannelBlink[] = {NULL, m_ChannelBlink1, m_ChannelBlink2, m_ChannelBlink3, m_ChannelBlink4, m_ChannelBlink5, m_ChannelBlink6, m_ChannelBlink7, m_ChannelBlink8};
     wxCheckBox* l_Report[] = {NULL, m_ChannelReport1, m_ChannelReport2, m_ChannelReport3, m_ChannelReport4, m_ChannelReport5, m_ChannelReport6, m_ChannelReport7, m_ChannelReport8};
+    wxCheckBox* l_Servo[] = {NULL, m_ChannelServo1, m_ChannelServo2, m_ChannelServo3, m_ChannelServo4, m_ChannelServo5, m_ChannelServo6, m_ChannelServo7, m_ChannelServo8};
     wxSpinCtrl* l_ChannelDelay[] = {NULL, m_ChannelDelay1, m_ChannelDelay2, m_ChannelDelay3, m_ChannelDelay4, m_ChannelDelay5, m_ChannelDelay6, m_ChannelDelay7, m_ChannelDelay8};
 
     char key[32] = {'\0'};
@@ -688,6 +689,7 @@ void RocnetNodeDlg::event(iONode node) {
 
         bool blink = (options&0x80)?true:false;
         bool report = (options&0x40)?true:false;
+        bool servo = (options&0x20)?true:false;
         int delay = (options&0x0F);
 
         if( channel > 0 + m_ChannelGroup*8 && (channel-m_ChannelGroup*8) < 9) {
@@ -697,6 +699,7 @@ void RocnetNodeDlg::event(iONode node) {
           l_OnSteps[channel-m_ChannelGroup*8]->SetValue(onsteps);
           l_ChannelBlink[channel-m_ChannelGroup*8]->SetValue(blink);
           l_Report[channel-m_ChannelGroup*8]->SetValue(report);
+          l_Servo[channel-m_ChannelGroup*8]->SetValue(servo);
           l_ChannelDelay[channel-m_ChannelGroup*8]->SetValue(delay);
         }
       }
@@ -1512,6 +1515,7 @@ void RocnetNodeDlg::onChannelWrite( wxCommandEvent& event ) {
   wxSpinCtrl* l_OnSteps[] = {NULL, m_OnSteps1, m_OnSteps2, m_OnSteps3, m_OnSteps4, m_OnSteps5, m_OnSteps6, m_OnSteps7, m_OnSteps8};
   wxCheckBox* l_Blink[] = {NULL, m_ChannelBlink1, m_ChannelBlink2, m_ChannelBlink3, m_ChannelBlink4, m_ChannelBlink5, m_ChannelBlink6, m_ChannelBlink7, m_ChannelBlink8};
   wxCheckBox* l_Report[] = {NULL, m_ChannelReport1, m_ChannelReport2, m_ChannelReport3, m_ChannelReport4, m_ChannelReport5, m_ChannelReport6, m_ChannelReport7, m_ChannelReport8};
+  wxCheckBox* l_Servo[] = {NULL, m_ChannelServo1, m_ChannelServo2, m_ChannelServo3, m_ChannelServo4, m_ChannelServo5, m_ChannelServo6, m_ChannelServo7, m_ChannelServo8};
   wxSpinCtrl* l_Delay[] = {NULL, m_ChannelDelay1, m_ChannelDelay2, m_ChannelDelay3, m_ChannelDelay4, m_ChannelDelay5, m_ChannelDelay6, m_ChannelDelay7, m_ChannelDelay8};
 
   char key[32] = {'\0'};
@@ -1527,7 +1531,8 @@ void RocnetNodeDlg::onChannelWrite( wxCommandEvent& event ) {
     StrOp.fmtb(key, "val%d", 5 + i*6);
     NodeOp.setInt( cmd, key, l_OnSteps[i+1]->GetValue() );
     StrOp.fmtb(key, "val%d", 6 + i*6);
-    NodeOp.setInt( cmd, key, (l_Blink[1 + i]->IsChecked()?0x80:0x00) + (l_Report[1 + i]->IsChecked()?0x40:0x00) + (l_Delay[i+1]->GetValue() & 0x0F) );
+    NodeOp.setInt( cmd, key, (l_Blink[1 + i]->IsChecked()?0x80:0x00) + (l_Report[1 + i]->IsChecked()?0x40:0x00) +
+        (l_Servo[1 + i]->IsChecked()?0x20:0x00) + (l_Delay[i+1]->GetValue() & 0x0F) );
   }
 
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
@@ -1544,7 +1549,9 @@ void RocnetNodeDlg::initChannels() {
   wxSpinCtrl* l_OnSteps[] = {NULL, m_OnSteps1, m_OnSteps2, m_OnSteps3, m_OnSteps4, m_OnSteps5, m_OnSteps6, m_OnSteps7, m_OnSteps8};
   wxCheckBox* l_Blink[] = {NULL, m_ChannelBlink1, m_ChannelBlink2, m_ChannelBlink3, m_ChannelBlink4, m_ChannelBlink5, m_ChannelBlink6, m_ChannelBlink7, m_ChannelBlink8};
   wxCheckBox* l_Report[] = {NULL, m_ChannelReport1, m_ChannelReport2, m_ChannelReport3, m_ChannelReport4, m_ChannelReport5, m_ChannelReport6, m_ChannelReport7, m_ChannelReport8};
+  wxCheckBox* l_Servo[] = {NULL, m_ChannelServo1, m_ChannelServo2, m_ChannelServo3, m_ChannelServo4, m_ChannelServo5, m_ChannelServo6, m_ChannelServo7, m_ChannelServo8};
   wxSpinCtrl* l_Delay[] = {NULL, m_ChannelDelay1, m_ChannelDelay2, m_ChannelDelay3, m_ChannelDelay4, m_ChannelDelay5, m_ChannelDelay6, m_ChannelDelay7, m_ChannelDelay8};
+  wxToggleButton* l_Test[] = {NULL, m_ChannelTest1, m_ChannelTest2, m_ChannelTest3, m_ChannelTest4, m_ChannelTest5, m_ChannelTest6, m_ChannelTest7, m_ChannelTest8};
 
   for( int i = 1; i < 9; i++ ) {
     l_labChannel[i]->SetLabel( wxString::Format(wxT("%d"),i + m_ChannelGroup*8) );
@@ -1554,7 +1561,10 @@ void RocnetNodeDlg::initChannels() {
     l_OnSteps[i]->SetValue(0);
     l_Blink[i]->SetValue(false);
     l_Report[i]->SetValue(false);
+    l_Servo[i]->SetValue(false);
     l_Delay[i]->SetValue(0);
+    l_Test[i]->SetLabel(wxT("0"));
+    l_Test[i]->SetValue(false);
   }
 }
 
@@ -1599,6 +1609,7 @@ void RocnetNodeDlg::onChannelTune( wxCommandEvent& event ) {
   wxButton* l_Tune[] = {NULL, m_ChannelTune1, m_ChannelTune2, m_ChannelTune3, m_ChannelTune4, m_ChannelTune5, m_ChannelTune6, m_ChannelTune7, m_ChannelTune8};
   wxSpinCtrl* l_OffPos[] = {NULL, m_OffPos1, m_OffPos2, m_OffPos3, m_OffPos4, m_OffPos5, m_OffPos6, m_OffPos7, m_OffPos8};
   wxSpinCtrl* l_OnPos[] = {NULL, m_OnPos1, m_OnPos2, m_OnPos3, m_OnPos4, m_OnPos5, m_OnPos6, m_OnPos7, m_OnPos8};
+  wxCheckBox* l_Servo[] = {NULL, m_ChannelServo1, m_ChannelServo2, m_ChannelServo3, m_ChannelServo4, m_ChannelServo5, m_ChannelServo6, m_ChannelServo7, m_ChannelServo8};
   wxButton* tuneButton = (wxButton*)event.GetEventObject();
   int i = 0;
   int channel = 1;
@@ -1614,12 +1625,46 @@ void RocnetNodeDlg::onChannelTune( wxCommandEvent& event ) {
 
   channel += m_ChannelGroup*8;
 
-  ChannelTuneDlg* dlg = new ChannelTuneDlg(this, this, channel, wProgram.porttype_servo, l_OffPos[channel]->GetValue(), l_OnPos[channel]->GetValue());
+  ChannelTuneDlg* dlg = new ChannelTuneDlg(this, this, channel, wProgram.porttype_servo,
+      l_OffPos[channel]->GetValue(), l_OnPos[channel]->GetValue(), l_Servo[channel]->IsChecked());
   if( wxID_OK == dlg->ShowModal() ) {
   }
   dlg->Destroy();
   Raise();
 
+}
+
+
+void RocnetNodeDlg::onChannelTest( wxCommandEvent& event ) {
+  wxToggleButton* l_Test[] = {NULL, m_ChannelTest1, m_ChannelTest2, m_ChannelTest3, m_ChannelTest4, m_ChannelTest5, m_ChannelTest6, m_ChannelTest7, m_ChannelTest8};
+  wxToggleButton* testButton = (wxToggleButton*)event.GetEventObject();
+  int i = 0;
+  int channel = 1;
+  for( i = 1; i < 9; i++ ) {
+    if( testButton == l_Test[i] ) {
+      channel = i;
+      break;
+    }
+  }
+
+  if( i > 8 )
+    return;
+
+  channel += m_ChannelGroup*8;
+
+  testButton->SetLabel(testButton->GetValue()?wxT("1"):wxT("0"));
+
+  const char* cmd = testButton->GetValue() ? wOutput.on:wOutput.off;
+
+  iONode swcmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+  wOutput.setaddr( swcmd, channel );
+  wOutput.setporttype( swcmd, wProgram.porttype_servo );
+  wOutput.setbus( swcmd, wRocNetNode.getid(m_Props) );
+  wOutput.setiid( swcmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wOutput.setcmd( swcmd, cmd );
+  TraceOp.trc( "cbusdlg", TRCLEVEL_INFO, __LINE__, 9999, "send test command for channel %d:%d...", wRocNetNode.getid(m_Props), channel);
+  wxGetApp().sendToRocrail( swcmd );
+  swcmd->base.del( swcmd );
 }
 
 

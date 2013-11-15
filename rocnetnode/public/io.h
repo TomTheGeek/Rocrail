@@ -43,6 +43,7 @@
 
 #define PWM_BLINK  0x80
 #define PWM_REPORT 0x40
+#define PWM_SERVO  0x20
 
 
 void raspiGPIOAlt(int g, int alt);
