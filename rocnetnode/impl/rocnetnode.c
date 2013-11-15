@@ -1966,7 +1966,7 @@ static void __initI2CPWM(iORocNetNode inst) {
           int rc = 0;
           if( !data->i2caddr40[i2caddr] ) {
             data->i2caddr40[i2caddr] = True;
-            rc = pwmSetFreq(data->i2cdescriptor, 0x40+i2caddr, 60);
+            rc = pwmStop(data->i2cdescriptor, 0x40+i2caddr);
             if( rc < 0 ) {
               TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x40+i2caddr, errno );
               data->i2caddr40[i2caddr] = False;
@@ -1991,6 +1991,18 @@ static void __initI2CPWM(iORocNetNode inst) {
 
       channelsetup = wRocNet.nextchannelsetup(rocnet, channelsetup);
     }
+
+    for( i2caddr = 0; i2caddr < 8; i2caddr++ ) {
+      if( data->i2caddr40[i2caddr] ) {
+        int rc = pwmSetFreq(data->i2cdescriptor, 0x40+i2caddr, 60);
+        if( rc < 0 ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x40+i2caddr, errno );
+          data->i2caddr40[i2caddr] = False;
+          __errorReport(inst, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, 0x40+i2caddr);
+        }
+      }
+    }
+
   }
 
   MutexOp.post( data->i2cmux );

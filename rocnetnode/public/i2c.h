@@ -46,6 +46,8 @@ int raspiCloseI2C( int descriptor );
 
 int pwmSetFreq(int descriptor, unsigned char dev_addr, int freq);
 int pwmSetChannel(int descriptor, unsigned char dev_addr, int channel, int on, int off);
+int pwmStop(int descriptor, unsigned char dev_addr);
+int pwmStart(int descriptor, unsigned char dev_addr);
 
 #endif
 

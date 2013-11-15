@@ -101,6 +101,24 @@ int raspiCloseI2C( int descriptor ) {
 #endif
 
 
+int pwmStop(int descriptor, unsigned char dev_addr) {
+  char curmode = 0;
+  int rc = raspiReadRegI2C(descriptor, dev_addr, PWM_MODE1, &curmode);
+  if( rc < 0 ) return rc;
+  TraceOp.trc( "raspi-i2c", TRCLEVEL_INFO, __LINE__, 9999, "PWM stop mode1=0x%02X", curmode & 0xFF );
+  return raspiWriteRegI2C( descriptor, dev_addr, PWM_MODE1, curmode | 0x10);
+}
+
+
+int pwmStart(int descriptor, unsigned char dev_addr) {
+  char curmode = 0;
+  int rc = raspiReadRegI2C(descriptor, dev_addr, PWM_MODE1, &curmode);
+  if( rc < 0 ) return rc;
+  TraceOp.trc( "raspi-i2c", TRCLEVEL_INFO, __LINE__, 9999, "PWM start mode1=0x%02X", curmode & 0xFF );
+  return raspiWriteRegI2C( descriptor, dev_addr, PWM_MODE1, curmode & 0xEF);
+}
+
+
 int pwmSetFreq(int descriptor, unsigned char dev_addr, int freq) {
   char curmode = 0;
   int rc = 0;
