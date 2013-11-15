@@ -122,7 +122,7 @@ static char* __toStr( iONode n, int level, Boolean escaped ) {
   char* str2 = NULL;
   char*  fmt = NULL;
 
-  if( level == 0 && escaped && xmlprolog ) {
+  if( level == 0 && xmlprolog ) {
     char* p = DocOp.getEncodingProperty();
     str = StrOp.catID( str, p, RocsDocID );
     str = StrOp.catID( str, "\n", RocsDocID );
