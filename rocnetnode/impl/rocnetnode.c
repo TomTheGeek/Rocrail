@@ -1964,6 +1964,7 @@ static void __initI2CPWM(iORocNetNode inst) {
         i2caddr = (channelnr-1) / 16;
         if( i2caddr >= 0 && i2caddr < 8 ) {
           int rc = 0;
+
           if( !data->i2caddr40[i2caddr] ) {
             data->i2caddr40[i2caddr] = True;
             rc = pwmStop(data->i2cdescriptor, 0x40+i2caddr);
@@ -1972,18 +1973,19 @@ static void __initI2CPWM(iORocNetNode inst) {
               data->i2caddr40[i2caddr] = False;
               __errorReport(inst, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, 0x40+i2caddr);
             }
-            else {
-              channel->curpos = channel->state ? channel->onpos:channel->offpos;
-              rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, (channel->channel%16)-1, 0, channel->curpos);
-              if( rc < 0 ) {
-                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x40+i2caddr, errno );
-                data->i2caddr40[i2caddr] = False;
-                __errorReport(inst, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, 0x40+i2caddr);
-              }
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                  "channelsetup: channel=%d i2caddr=0x%02X offpos=%d onpos=%d offsteps=%d onsteps=%d options=0s%02X state=%d",
-                  channel->channel, i2caddr + 0x40, channel->offpos, channel->onpos, channel->offsteps, channel->onsteps, channel->options, channel->state );
+          }
+
+          if( data->i2caddr40[i2caddr] ) {
+            channel->curpos = channel->state ? channel->onpos:channel->offpos;
+            rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, (channel->channel%16)-1, 0, channel->curpos);
+            if( rc < 0 ) {
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x40+i2caddr, errno );
+              data->i2caddr40[i2caddr] = False;
+              __errorReport(inst, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, 0x40+i2caddr);
             }
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "channelsetup: channel=%d i2caddr=0x%02X offpos=%d onpos=%d offsteps=%d onsteps=%d options=0s%02X state=%d",
+                channel->channel, i2caddr + 0x40, channel->offpos, channel->onpos, channel->offsteps, channel->onsteps, channel->options, channel->state );
           }
 
         }
