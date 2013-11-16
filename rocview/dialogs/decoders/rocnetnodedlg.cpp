@@ -188,6 +188,7 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   m_RocNetPanel->GetSizer()->Layout();
   m_OptionsPanel->GetSizer()->Layout();
   m_PortSetupPanel->GetSizer()->Layout();
+  m_PWMSetupPanel->GetSizer()->Layout();
   m_MacroPanel->GetSizer()->Layout();
   m_UpdatePanel->GetSizer()->Layout();
 

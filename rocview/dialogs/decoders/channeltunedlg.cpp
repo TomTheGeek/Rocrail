@@ -22,18 +22,36 @@
 */
 
 #include "channeltunedlg.h"
+#include "rocview/public/guiapp.h"
 
 ChannelTuneDlg::ChannelTuneDlg( wxWindow* parent, DecoderBase* decoderbase, int channel, int type, int offpos, int onpos, bool servo ):ChannelTuneDlgGen( parent )
 {
   m_DecoderBase = decoderbase;
   m_Channel = channel;
   m_Type = type;
+
+  initLabels();
+  // Resize
+  GetSizer()->Layout();
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
+
+
   m_RangePreset->SetSelection( servo?0:1 );
   wxCommandEvent cmd;
   onPreset(cmd);
   m_OffPos->SetValue(offpos);
   m_OnPos->SetValue(onpos);
   SetTitle(wxString::Format(wxT("Channel %d fine tuning"), m_Channel));
+}
+
+void ChannelTuneDlg::initLabels() {
+  m_RangePreset->SetLabel(wxGetApp().getMsg( "preset" ));
+  m_RangePreset->SetString(0, wxGetApp().getMsg( "servo" ));
+  m_RangePreset->SetString(1, wxGetApp().getMsg( "max" ));
+  m_RangePreset->SetString(2, wxGetApp().getMsg( "manually" ));
+  m_labOffPos->SetLabel(wxGetApp().getMsg( "left" ));
+  m_labOnPos->SetLabel(wxGetApp().getMsg( "right" ));
 }
 
 void ChannelTuneDlg::onMaxRange( wxSpinEvent& event )

@@ -40,6 +40,7 @@ class ChannelTuneDlg : public ChannelTuneDlgGen
   DecoderBase* m_DecoderBase;
   int m_Channel;
   int m_Type;
+  void initLabels();
 
 	protected:
 		// Handlers for ChannelTuneDlgGen events.
