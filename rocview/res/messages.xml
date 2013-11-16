@@ -24848,4 +24848,10 @@
   <Msg id="channelsetup">
     <en txt="Channel Setup"/>
   </Msg>
+  <Msg id="finetune">
+    <en txt="Fine-tune"/>
+  </Msg>
+  <Msg id="channel">
+    <en txt="Channel"/>
+  </Msg>
 </Messages>

@@ -429,6 +429,22 @@ void RocnetNodeDlg::initLabels() {
   wxCommandEvent cmdevt;
   onIOType(cmdevt);
 
+  // Channel setup
+  m_labChannel->SetLabel(wxGetApp().getMsg( "channel" ));
+  m_labOffPos->SetLabel(wxGetApp().getMsg( "left" ));
+  m_labOnPos->SetLabel(wxGetApp().getMsg( "right" ));
+  m_labOffSteps->SetLabel(wxGetApp().getMsg( "left" ) + wxT(" ") + wxGetApp().getMsg( "steps" ));
+  m_labOnSteps->SetLabel(wxGetApp().getMsg( "right" ) + wxT(" ") + wxGetApp().getMsg( "steps" ));
+  m_labChannelBlink->SetLabel(wxGetApp().getMsg( "blink" ));
+  m_labChannelReport->SetLabel(wxGetApp().getMsg( "report" ));
+  m_labChannelServo->SetLabel(wxGetApp().getMsg( "servo" ));
+  m_labChannelDelay->SetLabel(wxGetApp().getMsg( "delay" ));
+  m_labChannelTune->SetLabel(wxGetApp().getMsg( "finetune" ));
+  m_labChannelTest->SetLabel(wxGetApp().getMsg( "test" ));
+  m_ChannelRead->SetLabel(wxGetApp().getMsg( "get" ));
+  m_ChannelWrite->SetLabel(wxGetApp().getMsg( "set" ));
+  m_ChannelRemove->SetLabel(wxGetApp().getMsg( "delete" ));
+
   // Macro
   m_labMacroNr->SetLabel(wxGetApp().getMsg( "number" ));
   m_MacroLines->SetColLabelValue(0, wxGetApp().getMsg( "port" ));

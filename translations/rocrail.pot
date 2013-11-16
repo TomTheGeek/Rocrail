@@ -6791,3 +6791,15 @@ msgstr ""
 msgid "Channel Setup"
 msgstr ""
 
+#. 
+# id="finetune"
+#, c-format
+msgid "Fine-tune"
+msgstr ""
+
+#. 
+# id="channel"
+#, c-format
+msgid "Channel"
+msgstr ""
+
