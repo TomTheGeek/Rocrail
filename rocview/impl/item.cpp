@@ -2929,23 +2929,24 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if( StrOp.equals( wBlock.open, state ) ) {
       Boolean isReserved    = wBlock.isreserved( node );
       Boolean isEntering    = wBlock.isentering( node );
+      const char* fifoids   = wBlock.getfifoids(node);
 
       wBlock.setreserved( m_Props, isReserved );
 
       if( wBlock.issmallsymbol(m_Props) && StrOp.len(locoid) > 0 )
-        l_locidStr = StrOp.fmt( "%s", locoid );
+        l_locidStr = StrOp.fmt( "%s", fifoids!=NULL?fifoids:locoid );
       else if( showID && wBlock.issmallsymbol(m_Props) )
         l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
       else {
-        if(showID)
-          l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), locoid );
+        if(showID && fifoids == NULL)
+          l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), fifoids!=NULL?fifoids:locoid );
         else
-          l_locidStr = StrOp.fmt( "%s", locoid );
+          l_locidStr = StrOp.fmt( "%s", fifoids!=NULL?fifoids:locoid );
       }
 
       // compose the ToolTip and update occupied state
       if( StrOp.len( locoid ) > 0 ) {
-        char* tip = StrOp.fmt( wxGetApp().getMsg("clickblock").mb_str(wxConvUTF8), locoid );
+        char* tip = StrOp.fmt( wxGetApp().getMsg("clickblock").mb_str(wxConvUTF8), fifoids!=NULL?fifoids:locoid );
         StrOp.free(m_Tip);
         m_Tip = StrOp.fmt("%s: %s", wBlock.getid( node ), tip);
         StrOp.free(tip);
