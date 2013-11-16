@@ -42,7 +42,7 @@ ChannelTuneDlg::ChannelTuneDlg( wxWindow* parent, DecoderBase* decoderbase, int 
   onPreset(cmd);
   m_OffPos->SetValue(offpos);
   m_OnPos->SetValue(onpos);
-  SetTitle(wxString::Format(wxT("Channel %d fine tuning"), m_Channel));
+  SetTitle( wxGetApp().getMsg( "channel" ) + wxString::Format(wxT(" %d"), m_Channel));
 }
 
 void ChannelTuneDlg::initLabels() {

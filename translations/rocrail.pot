@@ -6803,3 +6803,9 @@ msgstr ""
 msgid "Channel"
 msgstr ""
 
+#. 
+# id="preset"
+#, c-format
+msgid "Preset"
+msgstr ""
+

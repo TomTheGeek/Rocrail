@@ -24854,4 +24854,7 @@
   <Msg id="channel">
     <en txt="Channel"/>
   </Msg>
+  <Msg id="preset">
+    <en txt="Preset"/>
+  </Msg>
 </Messages>
