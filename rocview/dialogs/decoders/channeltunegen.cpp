@@ -19,7 +19,6 @@ ChannelTuneDlgGen::ChannelTuneDlgGen( wxWindow* parent, wxWindowID id, const wxS
 	wxBoxSizer* bSizer21;
 	bSizer21 = new wxBoxSizer( wxHORIZONTAL );
 	
-	wxStaticBoxSizer* m_RangeBox;
 	m_RangeBox = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Range") ), wxVERTICAL );
 	
 	m_MaxRange = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), wxSP_ARROW_KEYS, 0, 4095, 4095 );

@@ -42,7 +42,8 @@ class ChannelTuneDlgGen : public wxDialog
 		wxSlider* m_OnPos;
 		wxStdDialogButtonSizer* m_StdButton;
 		wxButton* m_StdButtonOK;
-		
+	  wxStaticBoxSizer* m_RangeBox;
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void onMaxRange( wxSpinEvent& event ) { event.Skip(); }
 		virtual void onMinRange( wxSpinEvent& event ) { event.Skip(); }

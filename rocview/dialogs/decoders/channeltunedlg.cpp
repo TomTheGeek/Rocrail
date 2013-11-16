@@ -46,6 +46,7 @@ ChannelTuneDlg::ChannelTuneDlg( wxWindow* parent, DecoderBase* decoderbase, int 
 }
 
 void ChannelTuneDlg::initLabels() {
+  m_RangeBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "range" ));;
   m_RangePreset->SetLabel(wxGetApp().getMsg( "preset" ));
   m_RangePreset->SetString(0, wxGetApp().getMsg( "servo" ));
   m_RangePreset->SetString(1, wxGetApp().getMsg( "max" ));
