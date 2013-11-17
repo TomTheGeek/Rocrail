@@ -113,14 +113,14 @@ else ifeq ($(PLATFORM),WIN32)
 else ifeq ($(PLATFORM),OPENBSD)
 	LIBS=-pthread
 	DIRPREFIX=unx
-	CC_EXTRA_FLAGS=-fPIC
+	CC_EXTRA_FLAGS=
 	BINSUFFIX=
 	LNK_FLAGS=`$(WXCONFIG) --libs`
 	WX_FLAGS=`$(WXCONFIG) --cflags`
 else
-	LIBS=-lpthread -ldl
+	LIBS=-lpthread -ldl -liconv
 	DIRPREFIX=unx
-	CC_EXTRA_FLAGS=-fPIC -fno-common
+	CC_EXTRA_FLAGS=-fno-common
 	BINSUFFIX=
 	LNK_FLAGS=`$(WXCONFIG) --libs`
 	WX_FLAGS=`$(WXCONFIG) --cflags`
@@ -137,6 +137,13 @@ BINDIR=..$(FS)rocs$(FS)bin
 CPP=$(TOOLPREFIX)g++
 CC=$(TOOLPREFIX)gcc
 LNK=$(TOOLPREFIX)$(LINKTOOL)
+
+ifeq ($(PLATFORM),MACOSX)
+	CPP=`$(WXCONFIG) --cxx`
+	LNK=`$(WXCONFIG) --cxx`
+endif
+
+
 INCL_PATH=$(MOUNTPOINT)
 CC_FLAGS=-c $(CC_EXTRA_FLAGS) $(DEBUG) -I$(INCL_PATH) -I$(GENDIR)
 
