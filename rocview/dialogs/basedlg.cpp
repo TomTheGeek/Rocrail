@@ -630,6 +630,7 @@ void BaseDialog::doDoc( wxCommandEvent& event, const char* xslName ) {
   iONode model = wxGetApp().getModel();
   // serialize the model into a string:
   NodeOp.setStr(model, "guiimagepath", wGui.getimagepath(wxGetApp().getIni()));
+  char* encodingString = DocOp.getEncodingProperty();
   DocOp.setXMLProlog(False);
   char* xml = model->base.toString( model );
   DocOp.setXMLProlog(True);
@@ -663,6 +664,8 @@ void BaseDialog::doDoc( wxCommandEvent& event, const char* xslName ) {
         xslPath, SystemOp.getFileSeparator(), xslName, lang );
     StrOp.free(xslPath);
 
+    FileOp.write( planFile, encodingString, StrOp.len( encodingString ) );
+    FileOp.write( planFile, "\n", 1 );
     // write the stylsheet line at the beginning of the file:
     FileOp.write( planFile, styleSheet, StrOp.len( styleSheet ) );
     // write the rest:
@@ -684,5 +687,6 @@ void BaseDialog::doDoc( wxCommandEvent& event, const char* xslName ) {
   
   /* Cleanup. */
   StrOp.free(fileName);
+  StrOp.free(encodingString);
   
 }
