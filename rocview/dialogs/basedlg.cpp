@@ -630,7 +630,9 @@ void BaseDialog::doDoc( wxCommandEvent& event, const char* xslName ) {
   iONode model = wxGetApp().getModel();
   // serialize the model into a string:
   NodeOp.setStr(model, "guiimagepath", wGui.getimagepath(wxGetApp().getIni()));
+  DocOp.setXMLProlog(False);
   char* xml = model->base.toString( model );
+  DocOp.setXMLProlog(True);
   
   // create a path and filename:
   char* fileName = StrOp.fmt( "%s%c%s-doc.xml", FileOp.pwd(), SystemOp.getFileSeparator(), xslName );
