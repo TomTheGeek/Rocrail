@@ -118,7 +118,7 @@ else ifeq ($(PLATFORM),OPENBSD)
 	LNK_FLAGS=`$(WXCONFIG) --libs`
 	WX_FLAGS=`$(WXCONFIG) --cflags`
 else
-	LIBS=-lpthread -ldl -liconv
+	LIBS=-lpthread -ldl
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fno-common
 	BINSUFFIX=
