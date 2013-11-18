@@ -1954,7 +1954,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id, const char* routeId ) 
 
 
       /* wait only 10ms for getting the mutex: */
-      if( !MutexOp.trywait( data->muxLock, 100 ) ) {
+      if( !MutexOp.trywait( data->muxLock, 10 ) ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
                        "time out on unlocking block \"%s\" by \"%s\"",
                        data->id, id );
@@ -1975,16 +1975,18 @@ static Boolean _unLock( iIBlockBase inst, const char* id, const char* routeId ) 
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "fifo block [%s] setting automobile [%s] to front", data->id, data->locId );
             LocOp.go(loc);
-            wBlock.setlocid(data->props, "");
+            wBlock.setlocid(data->props, LocOp.getId(loc));
             /* Broadcast to clients. */
             {
               iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
               wBlock.setid( nodeD, data->id );
               wBlock.setreserved( nodeD, True );
               wBlock.setlocid( nodeD, data->locId );
+              wBlock.setfifoids( nodeD, wBlock.getfifoids(data->props) );
               wBlock.setacceptident(nodeD, data->acceptident);
               AppOp.broadcastEvent( nodeD );
             }
+            MutexOp.post( data->muxLock );
             return True;
           }
         }
