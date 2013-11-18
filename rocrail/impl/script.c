@@ -40,6 +40,7 @@
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/Clock.h"
 
 static int instCnt = 0;
 
@@ -110,9 +111,22 @@ static iONode _getLine( iOScript inst, int linenr ) {
 /* Used for recording a node. */
 static char* _convertNode(iONode node, Boolean addstamp) {
   char* scriptline = NULL;
+  char* nodestring = NULL;
+
+  /*<clock divider="2" time="1384775340" temp="20"/>*/
 
   if( node != NULL ) {
     scriptline = StrOp.fmt( "%s,%s", NodeOp.getName(node), NodeOp.getStr(node, "id", "?") );
+    if( StrOp.equals( wClock.name(), NodeOp.getName(node))) {
+      if( NodeOp.getStr(node, "divider", NULL) != NULL ) {
+        scriptline = StrOp.cat( scriptline, ",");
+        scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "divider", NULL));
+      }
+      if( NodeOp.getStr(node, "time", NULL) != NULL ) {
+        scriptline = StrOp.cat( scriptline, ",");
+        scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "time", NULL));
+      }
+    }
     if( NodeOp.getStr(node, "cmd", NULL) != NULL ) {
       scriptline = StrOp.cat( scriptline, ",");
       scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "cmd", NULL));
@@ -150,7 +164,9 @@ static char* _convertNode(iONode node, Boolean addstamp) {
     scriptline = StrOp.cat( scriptline, "\n");
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node converted: [%s]", scriptline);
+  nodestring = NodeOp.toEscString(node);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node converted: [%s] %s", scriptline, nodestring);
+  StrOp.free(nodestring);
 
   return scriptline;
 }
@@ -285,6 +301,13 @@ static iONode _parseLine(const char* scriptline) {
       else {
         wStage.setcmd( node, parm2 );
       }
+    }
+
+    else if( StrOp.equalsi( wClock.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+      /* clock,<id>,divider,time */
+      node = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+      wClock.setdivider( node, atoi(parm1) );
+      wClock.settime( node, atol(parm2) );
     }
 
     else if( parm1 != NULL && parm2 != NULL ) {
