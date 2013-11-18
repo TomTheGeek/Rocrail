@@ -195,13 +195,57 @@ static void* __event( void* inst, const void* evt ) {
   iOTextData data = Data(inst);
   iONode node = (iONode)evt;
   if( node != NULL && StrOp.equals( wText.name(), NodeOp.getName(node))) {
-    iOLoc       lc = ModelOp.getLoc(AppOp.getModel(), wText.getreflcid(node), NULL, False);
+    iOLoc       lc = ModelOp.getLocByIdent(AppOp.getModel(), wText.getreflcid(node), True);
     iIBlockBase bk = ModelOp.getBlock(AppOp.getModel(), wText.getrefbkid(node));
+
+    if( lc == NULL )
+      lc = ModelOp.getLoc(AppOp.getModel(), wText.getreflcid(node), NULL, False);
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "text event [%s-%s][%s]",
         wText.getreflcid(node), wText.getrefbkid(node), wText.getformat(node) );
 
-    if( lc != NULL && bk != NULL ) {
+    if( lc != NULL && bk == NULL ) {
+      iONode lcprops = LocOp.base.properties(lc);
+      char* msg = NULL;
+      iOMap map = MapOp.inst();
+      int scidx = 0;
+      const char* scid = LocOp.getSchedule(lc, &scidx);
+
+      iONode sc = ModelOp.getSchedule(AppOp.getModel(), scid);
+      char* scidxStr = StrOp.fmt("%d", scidx);
+
+      char hour[8];
+      char min[8];
+
+      __evaluateSchedule(sc, scidx, map, hour, min);
+
+      MapOp.put(map, "counter", (obj)NodeOp.getStr(node, "counter", "0") );
+      MapOp.put(map, "carcount", (obj)NodeOp.getStr(node, "carcount", "0") );
+      MapOp.put(map, "countedcars", (obj)NodeOp.getStr(node, "countedcars", "0") );
+      MapOp.put(map, "wheelcount", (obj)NodeOp.getStr(node, "wheelcount", "0") );
+      MapOp.put(map, "lcid", (obj)LocOp.getId(lc));
+      MapOp.put(map, "lcident", (obj)wLoc.getidentifier(lcprops));
+      MapOp.put(map, "lcdest", (obj)LocOp.getDestination(lc));
+      MapOp.put(map, "lcscid", (obj)scid);
+      MapOp.put(map, "lcscidx", (obj)scidxStr);
+      MapOp.put(map, "lcnr", (obj)wLoc.getnumber(lcprops));
+      MapOp.put(map, "lcdesc", (obj)wLoc.getdesc(lcprops));
+      MapOp.put(map, "lcimg", (obj)wLoc.getimage(lcprops));
+      MapOp.put(map, "lcdir", (obj)(LocOp.getDir(lc)?"fwd":"rev" ) );
+      MapOp.put(map, "lcplacing", (obj)(wLoc.isplacing(lcprops)?"norm":"swap" ) );
+
+      msg = _replaceAllSubstitutions(wText.getformat(node), map);
+      wText.settext(data->props, msg );
+
+      MapOp.base.del(map);
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
+      __checkAction(inst, msg);
+
+      StrOp.free(scidxStr);
+      StrOp.free(msg);
+    }
+    else if( lc != NULL && bk != NULL ) {
       iONode lcprops = LocOp.base.properties(lc);
       iONode bkprops = bk->base.properties(bk);
       iIBlockBase frombk = ModelOp.getBlock(AppOp.getModel(), bk->getFromBlockId(bk));
