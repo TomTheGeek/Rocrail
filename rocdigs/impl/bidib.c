@@ -2695,7 +2695,10 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   bidibnode = (iOBiDiBNode)MapOp.get( data->localmap, pathKey );
 
   if( bidibnode == NULL ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "node not found by local address [%s]", pathKey );
+    if( path[0] == 0 && path[1] == 0 && path[2] == 0 && path[3] == 0  )
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node not found by local address [%s]", pathKey );
+    else
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "node not found by local address [%s]", pathKey );
   }
 
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999,
