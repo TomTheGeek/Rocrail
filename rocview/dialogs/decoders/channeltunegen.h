@@ -19,6 +19,7 @@
 #include <wx/statbox.h>
 #include <wx/stattext.h>
 #include <wx/slider.h>
+#include <wx/textctrl.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
 
@@ -39,8 +40,10 @@ class ChannelTuneDlgGen : public wxDialog
 		wxRadioBox* m_RangePreset;
 		wxStaticText* m_labOffPos;
 		wxSlider* m_OffPos;
+		wxTextCtrl* m_OffPosValue;
 		wxStaticText* m_labOnPos;
 		wxSlider* m_OnPos;
+		wxTextCtrl* m_OnPosValue;
 		wxStdDialogButtonSizer* m_StdButton;
 		wxButton* m_StdButtonOK;
 		

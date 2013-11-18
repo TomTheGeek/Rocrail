@@ -42,6 +42,9 @@ ChannelTuneDlg::ChannelTuneDlg( wxWindow* parent, DecoderBase* decoderbase, int 
   onPreset(cmd);
   m_OffPos->SetValue(offpos);
   m_OnPos->SetValue(onpos);
+  m_OffPosValue->SetValue( wxString::Format(wxT("%d"), offpos));
+  m_OnPosValue->SetValue( wxString::Format(wxT("%d"), onpos));
+
   SetTitle( wxGetApp().getMsg( "channel" ) + wxString::Format(wxT(" %d"), m_Channel));
 }
 
@@ -97,6 +100,7 @@ void ChannelTuneDlg::onPreset( wxCommandEvent& event )
 
 void ChannelTuneDlg::onOffPos( wxScrollEvent& event )
 {
+  m_OffPosValue->SetValue( wxString::Format(wxT("%d"), m_OffPos->GetValue()));
 }
 
 void ChannelTuneDlg::onOffPosRelease( wxScrollEvent& event )
@@ -106,6 +110,7 @@ void ChannelTuneDlg::onOffPosRelease( wxScrollEvent& event )
 
 void ChannelTuneDlg::onOnPos( wxScrollEvent& event )
 {
+  m_OnPosValue->SetValue( wxString::Format(wxT("%d"), m_OnPos->GetValue()));
 }
 
 void ChannelTuneDlg::onOnPosRelease( wxScrollEvent& event )
