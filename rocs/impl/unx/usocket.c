@@ -732,7 +732,7 @@ Boolean rocs_socket_readpeek( iOSocket inst, char* buf, int size, Boolean peek )
 int rocs_socket_recvfrom( iOSocket inst, char* buf, int size, char* client, int* port ) {
   iOSocketData o = Data(inst);
   struct sockaddr_in sin;
-  int sin_len = sizeof(sin);
+  socklen_t sin_len = sizeof(sin);
   int rc = 0;
   if( buf == NULL ) {
     char l_buf[256];
@@ -955,7 +955,7 @@ Boolean rocs_socket_LoadCerts( iOSocket inst, const char *cFile, const char *kFi
 const char* rocs_socket_getsockname(iOSocket inst) {
   iOSocketData data = Data(inst);
   struct sockaddr_in sa;
-  int sa_len;
+  socklen_t sa_len;
   sa_len = sizeof(sa);
   if (getsockname(data->sh, (struct sockaddr*)&sa, &sa_len) != -1) {
     return inet_ntoa(sa.sin_addr);

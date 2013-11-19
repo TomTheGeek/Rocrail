@@ -79,7 +79,7 @@ int main( int argc, const char* argv[] ) {
 
         while( readed != infileLen ) {
           long toRead = BUFFERSIZE <= infileLen - readed ? BUFFERSIZE:(infileLen - readed);
-          if( FileOp.read( msgXml, inBuffer, toRead ) ) {
+          if( FileOp.read( msgXml, (char*)inBuffer, toRead ) ) {
             int i = 0;
             int len = 0;
             readed += toRead;

@@ -32,6 +32,7 @@
 
 #include <pthread.h>
 #include <sched.h>
+#include <unistd.h>
 
 
 #ifndef __ROCS_THREAD__

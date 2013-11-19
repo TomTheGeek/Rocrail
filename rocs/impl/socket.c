@@ -24,6 +24,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <errno.h>
+#include <unistd.h>
 
 #ifdef _WIN32
 #include <winsock.h>

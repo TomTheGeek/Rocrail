@@ -753,6 +753,8 @@ static int __mime64( const char* infile, const char* outfile, int action )
 
 
   fclose( fin );
+
+  return 0;
 }
 
 

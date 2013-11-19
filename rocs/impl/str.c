@@ -24,6 +24,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <time.h>
+#include <ctype.h>
 
 #include "rocs/public/str.h"
 #include "rocs/public/mem.h"

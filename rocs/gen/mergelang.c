@@ -119,7 +119,7 @@ int main( int argc, const char* argv[] ) {
 
       TraceOp.println( "Writing %s...", outfile );
       fo = FileOp.inst( outfile, OPEN_WRITE );
-      xmlOut = NodeOp.base.serialize( oroot, &serializeSize );
+      xmlOut = (char*)NodeOp.base.serialize( oroot, &serializeSize );
       FileOp.write( fo, xmlOut, StrOp.len( xmlOut ) );
       FileOp.close( fo );
       FileOp.base.del( fo );

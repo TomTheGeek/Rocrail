@@ -46,6 +46,7 @@
 #include <signal.h>
 #include <errno.h>
 #include <time.h>
+#include <string.h>
 
 /* ------------------------------------------------------------
  * platform dependent interfaces.
