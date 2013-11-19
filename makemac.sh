@@ -32,7 +32,7 @@ else
 fi
 
 echo "Getting Bazaar revision number..."
-if which bzr > /dev/null
+if which git > /dev/null
 then
 	BAZAARREV=`git rev-list --count HEAD`
 	echo "    Revision number is $BAZAARREV"
