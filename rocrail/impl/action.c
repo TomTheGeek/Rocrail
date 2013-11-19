@@ -132,7 +132,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
 
   if( actionctrl != NULL ) {
     iONode actionCond = wActionCtrl.getactioncond(actionctrl);
-    if( automode && wActionCtrl.isauto(actionctrl) || !automode && wActionCtrl.ismanual(actionctrl) ) {
+    if( (automode && wActionCtrl.isauto(actionctrl)) || (!automode && wActionCtrl.ismanual(actionctrl)) ) {
       while( actionCond != NULL && rc ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Action condition: [%s-%s:%s] ",
             wActionCond.gettype(actionCond),

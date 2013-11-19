@@ -219,7 +219,7 @@ static Boolean _isCreateModplan( void ) {
 static Boolean _isRunAtStartup( void ) {
   if( __appinst != NULL ) {
     iOAppData data = Data(__appinst);
-    data->run;
+    return data->run;
   }
   return False;
 }
@@ -406,7 +406,7 @@ static int __logo( void ) {
   return svn;
 }
 
-static __help( void ) {
+static void __help( void ) {
   /* Help. */
   TraceOp.println( "----------------------------------------------------------------------"  );
   TraceOp.println( "Rocrail commandline options:"  );
@@ -502,7 +502,7 @@ static void __queryModules() {
 
 
 
-static __checkConsole( iOAppData data ) {
+static void __checkConsole( iOAppData data ) {
   /* Check for command. */
   int c = getchar();
 

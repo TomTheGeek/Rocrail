@@ -128,7 +128,7 @@ static void __infoWriter( void* threadinst ) {
 
         NodeOp.setInt( xml, "size", infoLen );
         XmlhOp.addNode( xmlh, xml );
-        xmlhStr = XmlhOp.base.serialize( xmlh, &xmlhLen );
+        xmlhStr = (char*)XmlhOp.base.serialize( xmlh, &xmlhLen );
         XmlhOp.base.del( xmlh );
 
         TraceOp.trc( name, TRCLEVEL_XMLH, __LINE__, 9999, "%s", xmlhStr );
@@ -190,7 +190,7 @@ static Boolean __readXmlh( iOSocket sh, iOXmlh xmlh ) {
   char b = 0;
   while( SocketOp.peek( sh, &b, 1 ) ) {
     SocketOp.read( sh, &b, 1 );
-    if( XmlhOp.read( xmlh, &b, 1 ) ) {
+    if( XmlhOp.read( xmlh, (byte*)&b, 1 ) ) {
       return True;
     }
     else if( XmlhOp.isError( xmlh ) ){
@@ -245,7 +245,7 @@ static void __cmdReader( void* threadinst ) {
       continue;
     }
     XmlhOp.reset( xmlh );
-    if( ok = __readXmlh( o->clntSocket, xmlh ) ) {
+    if( (ok = __readXmlh( o->clntSocket, xmlh )) ) {
       long size = XmlhOp.getSizeByTagName( xmlh, XmlhOp.xml_tagname, 0 );
       int len = 0;
       freeMem( cmd );

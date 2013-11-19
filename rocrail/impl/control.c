@@ -364,7 +364,7 @@ static Boolean _cmd( iOControl inst, iONode node, int* error ) {
       }
     }
 
-    if( StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) && wSysCmd.isinformall(node) ||
+    if( (StrOp.equals( wSysCmd.name(), NodeOp.getName(node) ) && wSysCmd.isinformall(node)) ||
         StrOp.equals( wClock.name(), NodeOp.getName(node) ) )
     {
       /* inform all */
@@ -789,7 +789,7 @@ static void __callback( obj inst, iONode nodeA ) {
               char* byteStr = NULL;
 
               TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "reading %d bytes...", size );
-              FileOp.read( f, buffer, size );
+              FileOp.read( f, (char*)buffer, size );
               FileOp.base.del(f);
               TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "convert %d bytes to string...", size );
               byteStr = StrOp.byteToStr( buffer, size );

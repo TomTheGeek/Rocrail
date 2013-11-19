@@ -147,7 +147,7 @@ static void __checkAction( iOFBack inst ) {
   /* loop over all actions */
   while( fbaction != NULL ) {
     int counter = atoi(wActionCtrl.getstate( fbaction ));
-    if( counter == 0 && StrOp.len(wActionCtrl.getstate( fbaction )) > 0 && wActionCtrl.getstate( fbaction )[0] != '0' ||
+    if( (counter == 0 && StrOp.len(wActionCtrl.getstate( fbaction )) > 0 && wActionCtrl.getstate( fbaction )[0] != '0') ||
         StrOp.len(wActionCtrl.getstate( fbaction )) == 0 )
     {
       counter = -1;
@@ -155,8 +155,8 @@ static void __checkAction( iOFBack inst ) {
 
     if( StrOp.equals( data->state?"on":"off"    , wActionCtrl.getstate( fbaction ) ) ||
         StrOp.equals( data->state?"true":"false", wActionCtrl.getstate( fbaction ) ) ||
-        data->state && StrOp.len(wActionCtrl.getstate( fbaction )) == 0 ||
-        counter >= 0 && data->counter == counter )
+        (data->state && StrOp.len(wActionCtrl.getstate( fbaction )) == 0) ||
+        (counter >= 0 && data->counter == counter) )
     {
       if( data->counter == counter && wActionCtrl.isreset( fbaction ) ) {
         /* reset counter */

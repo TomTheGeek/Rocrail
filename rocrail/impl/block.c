@@ -543,7 +543,9 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
 
     __measureVelocity( (iOBlock)inst, evt );
 
-    if( StrOp.len(ident) > 0 && StrOp.len(locident) > 0 && !StrOp.equals(ident, locident) || StrOp.len(ident) > 0 && StrOp.len(locident) == 0 ) {
+    if( (StrOp.len(ident) > 0 && StrOp.len(locident) > 0 && !StrOp.equals(ident, locident)) ||
+        (StrOp.len(ident) > 0 && StrOp.len(locident) == 0) )
+    {
       /* TODO: Check MU consist */
       if( LocOp.matchIdent(loc, ident) ) {
         TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "ident matched: block=%s loc(MU)=%d ident=%s",
