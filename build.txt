@@ -36,8 +36,15 @@ Updating the local tree
 cd rocrail
 bzr update
 
+=====GIT=====
+git clone https://github.com/rocrail/Rocrail.git Rocrail
 
-Get Hardware Sources
+Updating the local tree
+cd Rocrail
+git pull https://github.com/rocrail/Rocrail.git
+
+
+=====Get Hardware Sources=====
 
 Read Only
 bzr checkout --lightweight https://launchpad.net/hardware-dev hardware
