@@ -8,7 +8,7 @@
 VERSION=$1
 CPU=$2
 BUILDROOT=/home/$USER/rpmbuild
-BAZAARREV=`bzr revno`
+BAZAARREV=`git rev-list --count HEAD`
 
 if [ !  $1 ] || [ ! $2 ]; then
   echo "usage: mkrpm.sh version cpu"
@@ -27,7 +27,8 @@ fi
 mkdir rocrail-$VERSION
 cd rocrail-$VERSION
 pwd
-bzr co --lightweight https://launchpad.net/rocrail Rocrail
+#bzr co --lightweight https://launchpad.net/rocrail Rocrail
+git clone https://github.com/rocrail/Rocrail.git Rocrail
 sed s/\<BZR\>/$BAZAARREV/ < Rocrail/rocrail/rocrail-template.spec > Rocrail/rocrail/rocrail-1.spec
 sed s/\<VERSION\>/$VERSION/ < Rocrail/rocrail/rocrail-1.spec > Rocrail/rocrail/rocrail.spec
 cd ..

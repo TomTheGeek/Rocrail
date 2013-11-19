@@ -18,9 +18,9 @@ echo "Checking Parameters..."
 # Get the Bazaar revision number if available
 
 echo "Getting Bazaar revision number..."
-if which bzr > /dev/null
+if which git > /dev/null
 then
-	BAZAARREV=`bzr revno --tree`
+	BAZAARREV=`git rev-list --count HEAD`
 	echo "    Revision number is $BAZAARREV"
 	echo ""
 else

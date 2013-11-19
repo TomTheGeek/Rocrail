@@ -76,9 +76,9 @@ fi
 
 if [ ! $4 ] || [ "$4" = "auto" ]; then
   echo "Getting Bazaar revision number..."
-  if which bzr > /dev/null
+  if which git > /dev/null
   then
-    BAZAARREVNO=`bzr revno`
+    BAZAARREVNO=`git rev-list --count HEAD`
     echo "    Revision number is $BAZAARREVNO"
     echo ""
   else
