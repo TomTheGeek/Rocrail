@@ -953,7 +953,7 @@
     <typedef def="enum {onestopbit=1,twostopbits=2} serial_stopbits"/>
     <typedef def="enum {eight=8,seven=7} serial_databits"/>
     <typedef def="enum {undefined=0,mm=1,dcc=2,mma=3} serial_mode"/>
-    <typedef def="serial_bps"/>
+    <typedef def="int serial_bps"/>
     <fun name="inst" vt="this" remark="Object creator.">
       <param name="device" vt="const char*" remark="Device name like com1 or ttyS0."/>
     </fun>

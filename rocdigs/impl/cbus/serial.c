@@ -89,7 +89,7 @@ Boolean serialConnect( obj inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, data->cts ? cts:none );
+  SerialOp.setFlow( data->serial, data->cts ? cts:0 );
   SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 
@@ -116,7 +116,7 @@ void serialDisconnect( obj inst ) {
 Boolean serialRead ( obj inst, unsigned char *frame, int len ) {
   iOCBUSData data = Data(inst);
   if( !data->dummyio )
-    return data->serial == NULL ? False:SerialOp.read(data->serial, frame, len);
+    return data->serial == NULL ? False:SerialOp.read(data->serial, (char*)frame, len);
   else
     return False;
 }

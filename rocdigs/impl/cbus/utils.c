@@ -36,17 +36,17 @@ int makeFrame(byte* frame, int prio, byte* cmd, int datalen, int cid, Boolean et
   int i = 0;
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "makeFrame for OPC=0x%02X", cmd[0] );
 
-  StrOp.fmtb( frame+1, ":%c%02X%02XN%02X;", (eth?'Y':'S'), (0x80 + (prio << 5) + (cid >> 3)) &0xFF, (cid << 5) & 0xFF, cmd[0] );
+  StrOp.fmtb( (char*)(frame+1), ":%c%02X%02XN%02X;", (eth?'Y':'S'), (0x80 + (prio << 5) + (cid >> 3)) &0xFF, (cid << 5) & 0xFF, cmd[0] );
 
   if( datalen > 0 ) {
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "datalen=%d", datalen );
     for( i = 0; i < datalen; i++ ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "makeframe: %s", frame+1 );
-      StrOp.fmtb( frame+1+9+i*2, "%02X;", cmd[i+1] );
+      StrOp.fmtb( (char*)(frame+1+9+i*2), "%02X;", cmd[i+1] );
     }
   }
 
-  frame[0] = StrOp.len(frame+1);
+  frame[0] = StrOp.len((char*)(frame+1));
 
   return frame[0];
 }
@@ -56,17 +56,17 @@ int makeExtFrame(byte* frame, int prio, byte* cmd, int datalen, int cid ) {
 
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "makeExtFrame for OPC=0x%02X", cmd[0] );
 
-  StrOp.fmtb( frame+1, ":X%02X%02X%02X%02XN%02X;", 0x00, 0x08, prio, cid, cmd[0] );
+  StrOp.fmtb( (char*)(frame+1), ":X%02X%02X%02X%02XN%02X;", 0x00, 0x08, prio, cid, cmd[0] );
 
   if( datalen > 0 ) {
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "datalen=%d", datalen );
     for( i = 0; i < datalen; i++ ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "makeExtFrame: %s", frame+1 );
-      StrOp.fmtb( frame+1+13+i*2, "%02X;", cmd[i+1] );
+      StrOp.fmtb( (char*)(frame+1+13+i*2), "%02X;", cmd[i+1] );
     }
   }
 
-  frame[0] = StrOp.len(frame+1);
+  frame[0] = StrOp.len((char*)(frame+1));
 
   return frame[0];
 }

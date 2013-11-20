@@ -93,7 +93,7 @@ static void __reader( void* threadinst ) {
       int available = SerialOp.available(data->serial);
       if( available > 0 ) {
 
-        if(SerialOp.read(data->serial, &c, 1) ) {
+        if(SerialOp.read(data->serial, (char*)&c, 1) ) {
           TraceOp.trc( "bidib", TRCLEVEL_DEBUG, __LINE__, 9999, "byte read: 0x%02X", c );
 
           if( c == BIDIB_PKT_MAGIC ) {

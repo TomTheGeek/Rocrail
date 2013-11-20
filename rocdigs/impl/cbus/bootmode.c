@@ -163,9 +163,9 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr, Boolean ee
   byte* frame = allocMem(32);
 
   // offset 0x200 for pic program
-  StrOp.copy( frame+1, ":X00080004N000200000D020000;" );
+  StrOp.copy( (char*)(frame+1), ":X00080004N000200000D020000;" );
 
-  frame[0] = StrOp.len(frame+1);
+  frame[0] = StrOp.len((char*)(frame+1));
   ThreadOp.post(data->writer, (obj)frame);
 
   int i = 0;
@@ -183,10 +183,10 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr, Boolean ee
     if( i % 16 == 0 )
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending PROGRAM block[%d of %d] (%d)", i+1, nrlines, i*8*2 );
     frame = allocMem(32);
-    StrOp.copy( frame+1, ":X00080005N");
-    MemOp.copy( frame+1+11, &bootData->data[PROGRAM_BLOCK][i*8*2], 16 );
-    StrOp.copy( frame+1+11+16, ";");
-    frame[0] = StrOp.len(frame+1);
+    StrOp.copy( (char*)(frame+1), ":X00080005N");
+    MemOp.copy( (char*)(frame+1+11), &bootData->data[PROGRAM_BLOCK][i*8*2], 16 );
+    StrOp.copy( (char*)(frame+1+11+16), ";");
+    frame[0] = StrOp.len((char*)(frame+1));
     ThreadOp.sleep(wCBus.getloadertime(data->cbusini));
     ThreadOp.post(data->writer, (obj)frame);
     // compute checksum
@@ -202,8 +202,8 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr, Boolean ee
   if( bootData->count[CONFIG_BLOCK] > 0 ) {
     byte* frame = allocMem(32);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending CONFIG block" );
-    StrOp.copy( frame+1, ":X00080004N000030000D000000;" );
-    frame[0] = StrOp.len(frame+1);
+    StrOp.copy( (char*)(frame+1), ":X00080004N000030000D000000;" );
+    frame[0] = StrOp.len((char*)(frame+1));
     ThreadOp.sleep(wCBus.getloadertime(data->cbusini) + 50);
     ThreadOp.post(data->writer, (obj)frame);
 
@@ -214,10 +214,10 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr, Boolean ee
 
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sending CONFIG block[%d of %d]", i+1, nrlines );
       frame = allocMem(32);
-      StrOp.copy( frame+1, ":X00080005N");
-      MemOp.copy( frame+1+11, &bootData->data[CONFIG_BLOCK][i*8*2], 16 );
-      StrOp.copy( frame+1+11+16, ";");
-      frame[0] = StrOp.len(frame+1);
+      StrOp.copy( (char*)(frame+1), ":X00080005N");
+      MemOp.copy( (char*)(frame+1+11), &bootData->data[CONFIG_BLOCK][i*8*2], 16 );
+      StrOp.copy( (char*)(frame+1+11+16), ";");
+      frame[0] = StrOp.len((char*)(frame+1));
       ThreadOp.sleep(wCBus.getloadertime(data->cbusini) + 50);
       ThreadOp.post(data->writer, (obj)frame);
       for ( j = 0; j < 8; j++ ) {
@@ -233,8 +233,8 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr, Boolean ee
   if( eewrite && bootData->count[EEPROM_BLOCK] > 0 ) {
     byte* frame = allocMem(32);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending EEPROM block" );
-    StrOp.copy( frame+1, ":X00080004N0000F0000D000000;" );
-    frame[0] = StrOp.len(frame+1);
+    StrOp.copy( (char*)(frame+1), ":X00080004N0000F0000D000000;" );
+    frame[0] = StrOp.len((char*)(frame+1));
     ThreadOp.sleep(wCBus.getloadertime(data->cbusini) + 50);
     ThreadOp.post(data->writer, (obj)frame);
 
@@ -245,10 +245,10 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr, Boolean ee
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending EEPROM block[%d of %d]", i+1, nrlines );
       frame = allocMem(32);
-      StrOp.copy( frame+1, ":X00080005N");
-      MemOp.copy( frame+1+11, &bootData->data[EEPROM_BLOCK][i*8*2], 16 );
-      StrOp.copy( frame+1+11+16, ";");
-      frame[0] = StrOp.len(frame+1);
+      StrOp.copy( (char*)(frame+1), ":X00080005N");
+      MemOp.copy( (char*)(frame+1+11), &bootData->data[EEPROM_BLOCK][i*8*2], 16 );
+      StrOp.copy( (char*)(frame+1+11+16), ";");
+      frame[0] = StrOp.len((char*)(frame+1));
       ThreadOp.sleep(wCBus.getloadertime(data->cbusini) + 20);
       ThreadOp.post(data->writer, (obj)frame);
       for ( j = 0; j < 8; j++ ) {
@@ -264,15 +264,15 @@ static void sendData(obj inst, struct BootData* bootData, int nodenr, Boolean ee
   int checksum = 65536 - (bootData->checksum & 0xFFFF);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checksum data bytes: 0x%04X", checksum );
   frame = allocMem(32);
-  StrOp.fmtb( frame+1, ":X00080004N000000000D03%02X%02X;", checksum & 0xFF, (checksum >> 8) & 0xFF );
-  frame[0] = StrOp.len(frame+1);
+  StrOp.fmtb( (char*)(frame+1), ":X00080004N000000000D03%02X%02X;", checksum & 0xFF, (checksum >> 8) & 0xFF );
+  frame[0] = StrOp.len((char*)(frame+1));
   ThreadOp.sleep(wCBus.getloadertime(data->cbusini) + 50);
   ThreadOp.post(data->writer, (obj)frame);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset" );
   frame = allocMem(32);
-  StrOp.copy( frame+1, ":X00080004N000000000D010000;" );
-  frame[0] = StrOp.len(frame+1);
+  StrOp.copy( (char*)(frame+1), ":X00080004N000000000D010000;" );
+  frame[0] = StrOp.len((char*)(frame+1));
   ThreadOp.sleep(wCBus.getloadertime(data->cbusini) + 50);
   ThreadOp.post(data->writer, (obj)frame);
 

@@ -124,7 +124,7 @@ Boolean udpWrite( obj inst, unsigned char *path, unsigned char code, unsigned ch
   TraceOp.dump ( "preWrite", TRCLEVEL_BYTE, (char*)msg, size );
   size = bidibMakeMessage(msg, size);
 
-  data->commOK = SocketOp.sendto( data->rwUDP, msg, size, NULL, 0 );
+  data->commOK = SocketOp.sendto( data->rwUDP, (char*)msg, size, NULL, 0 );
   return data->commOK;
 }
 

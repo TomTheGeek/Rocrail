@@ -156,7 +156,7 @@ Boolean tcpRead ( obj inst, unsigned char *frame, int len ) {
     return False;
   }
   
-  if( !SocketOp.isBroken(data->socket) && SocketOp.read( data->socket, frame, len ) ) {
+  if( !SocketOp.isBroken(data->socket) && SocketOp.read( data->socket, (char*)frame, len ) ) {
     return True;
   }
   else {
@@ -175,7 +175,7 @@ Boolean tcpWrite( obj inst, unsigned char *frame, int len ) {
     return False;
   }
 
-  if( !SocketOp.isBroken(data->socket) && SocketOp.write( data->socket, frame, len ) ) {
+  if( !SocketOp.isBroken(data->socket) && SocketOp.write( data->socket, (char*)frame, len ) ) {
     TraceOp.dump ( "cbustcp", TRCLEVEL_BYTE, (char*)frame, len );
     data->lastcmdtick = SystemOp.getTick();
     return True;
