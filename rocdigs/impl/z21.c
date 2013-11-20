@@ -514,6 +514,20 @@ static iONode __translate(iOZ21 inst, iONode node) {
     rsp = (iONode)NodeOp.base.clone( node );
   }
 
+  /* Loc dispatch command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals( wLoc.dispatch, wLoc.getcmd(node) ) ) {
+    int addr  = wLoc.getaddr( node );
+    byte* packet = allocMem(32);
+    packet[0] = 0x06;
+    packet[1] = 0x00;
+    packet[2] = 0xA3;
+    packet[3] = 0x00;
+    packet[4] = addr / 256; /*MSB*/
+    packet[5] = addr % 256; /*LSB*/
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dispatch loco %d", addr );
+    ThreadOp.post(data->writer, (obj)packet);
+  }
+
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
     int addr  = wLoc.getaddr( node );
@@ -584,6 +598,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
     int cv = wProgram.getcv( node );
     int value = wProgram.getvalue( node );
     int addr = wProgram.getaddr( node );
+    Boolean accessory = wProgram.isacc( node );
 
     if( wProgram.getcmd( node ) == wProgram.fb_setaddr ) {
       byte* packet = allocMem(32);
@@ -599,7 +614,32 @@ static iONode __translate(iOZ21 inst, iONode node) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d on %s...", cv, wProgram.ispom(node)?"POM":"PT" );
 
       if( wProgram.ispom(node) ) {
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CV get by POM is not supported" );
+        byte* packet = allocMem(32);
+        if( cv > 0 )
+          cv--;
+        packet[0] = 0x0C;
+        packet[1] = 0x00;
+        packet[2] = 0x40;
+        packet[3] = 0x00;
+        packet[4] = 0xE6;
+        if( accessory ) {
+          packet[5] = 0x31;
+          packet[6] = (addr << 5);
+          packet[7] = (addr & 0x0F) << 4;
+          packet[8] = 0xE4 + ((cv / 256) & 0x03);
+          packet[9] = cv % 256;
+          packet[10] = 0;
+        }
+        else {
+          packet[5] = 0x30;
+          packet[6] = addr / 256;
+          packet[7] = addr % 256;
+          packet[8] = 0xE4 + ((cv / 256) & 0x03);
+          packet[9] = cv % 256;
+          packet[10] = 0;
+        }
+        packet[11] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8] ^ packet[9] ^ packet[10]; /*xor*/
+        ThreadOp.post(data->writer, (obj)packet);
       }
       else {
         byte* packet = allocMem(32);
@@ -630,12 +670,22 @@ static iONode __translate(iOZ21 inst, iONode node) {
         packet[2] = 0x40;
         packet[3] = 0x00;
         packet[4] = 0xE6;
-        packet[5] = 0x30;
-        packet[6] = addr / 256;
-        packet[7] = addr % 256;
-        packet[8] = 0xEC + cv / 256;
-        packet[9] = cv % 256;
-        packet[10] = value;
+        if( accessory ) {
+          packet[5] = 0x31;
+          packet[6] = (addr << 5);
+          packet[7] = (addr & 0x0F) << 4;
+          packet[8] = 0xEC + ((cv / 256) & 0x03);
+          packet[9] = cv % 256;
+          packet[10] = value;
+        }
+        else {
+          packet[5] = 0x30;
+          packet[6] = addr / 256;
+          packet[7] = addr % 256;
+          packet[8] = 0xEC + cv / 256;
+          packet[9] = cv % 256;
+          packet[10] = value;
+        }
         packet[11] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8] ^ packet[9] ^ packet[10]; /*xor*/
         ThreadOp.post(data->writer, (obj)packet);
       }
