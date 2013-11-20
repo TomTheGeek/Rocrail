@@ -145,8 +145,8 @@ Boolean initializeGroup( iOLcDriver inst, iIBlockBase block, iIBlockBase curBloc
   }
 
   /* unlock only for init a next block */
-  if( group != NULL && data->blockgroup != NULL && group != data->blockgroup ||
-      group == NULL && data->blockgroup != NULL && curgroup != data->blockgroup ) {
+  if( (group != NULL && data->blockgroup != NULL && group != data->blockgroup) ||
+      (group == NULL && data->blockgroup != NULL && curgroup != data->blockgroup) ) {
     /* unlock previous group; entering another one */
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock previous blockgroup %s", data->blockgroup );
     unlockBlockGroup(inst, data->blockgroup );

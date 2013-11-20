@@ -247,6 +247,12 @@ static void _drive( iILcDriverInt inst, obj emitter, int event ) {
   /* The state machine. */
   switch( data->state ) {
 
+    case LC_MANAGED:
+      break;
+
+    case LC_PRE_WAITBLOCK:
+      break;
+
     case LC_PAUSE:
       statusPause( inst, reverse );
       break;
@@ -403,8 +409,7 @@ static Boolean _stepvirtual( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
   Boolean rc = True;
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "step virtual [%s] state=[%s]...", data->loc->getId(data->loc), __getStateName(data->state) );
-  switch( data->state ) {
-  case LC_GO:
+  if( data->state == LC_GO ) {
     if( data->next1Block != NULL ) {
       if( __isVirtualSupported( data->next1Block) ) {
         iONode fbevt = NodeOp.inst(wFeedbackEvent.name(), NULL, ELEMENT_NODE );
@@ -419,7 +424,6 @@ static Boolean _stepvirtual( iILcDriverInt inst ) {
         rc = False;
       }
     }
-    break;
   }
   return rc;
 }

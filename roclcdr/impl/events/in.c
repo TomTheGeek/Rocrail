@@ -89,9 +89,9 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     return;
   }
 
-  if( newInEvent && dstBlockEvent && data->state == LC_ENTERBLOCK ||
-      newInEvent && dstBlockEvent && data->state == LC_RE_ENTERBLOCK ||
-      newInEvent && dstBlockEvent && data->state == LC_WAIT4EVENT ) {
+  if( (newInEvent && dstBlockEvent && data->state == LC_ENTERBLOCK) ||
+      (newInEvent && dstBlockEvent && data->state == LC_RE_ENTERBLOCK) ||
+      (newInEvent && dstBlockEvent && data->state == LC_WAIT4EVENT) ) {
     data->state = LC_INBLOCK;
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Setting state for \"%s\" to LC_INBLOCK.",

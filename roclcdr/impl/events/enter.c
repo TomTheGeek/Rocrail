@@ -71,9 +71,9 @@ void eventEnter( iOLcDriver inst, const char* blockId, Boolean curBlockEvent, Bo
     if( data->state == LC_GO || data->state == LC_PRE2GO ) /* || data->state == LC_CHECKROUTE ) */
       dontcare = True;
 
-    if( dstBlockEvent && data->state == LC_EXITBLOCK ||
-        dstBlockEvent && data->state == LC_OUTBLOCK ||
-        dstBlockEvent && dontcare )
+    if( (dstBlockEvent && data->state == LC_EXITBLOCK) ||
+        (dstBlockEvent && data->state == LC_OUTBLOCK) ||
+        (dstBlockEvent && dontcare) )
     {
       data->state = LC_ENTERBLOCK;
       data->loc->setMode(data->loc, wLoc.mode_auto);
