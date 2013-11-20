@@ -93,6 +93,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BITMAPBUTTON_INFO_SPLASH
     void OnBitmapbuttonInfoSplashClick( wxCommandEvent& event );
 
+    /// wxEVT_LEFT_UP event handler for wxID_STATIC_INFO_BUILD
+    void onBuildRevision( wxMouseEvent& event );
+
 ////@end InfoDialog event handler declarations
 
 ////@begin InfoDialog member function declarations

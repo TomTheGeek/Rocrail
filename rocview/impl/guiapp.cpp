@@ -772,13 +772,14 @@ bool RocGui::OnInit() {
   TraceOp.println( "--------------------------------------------------" );
 
   // trace version
-  TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, " %s %d", wGui.productname, bzr );
+  TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, " %s %d [%s]", wGui.productname, revisionnr, commithash );
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, " build %s %s",
       wGui.buildDate,
       wGui.buildTime );
 
-  if( bzr > 0 ) {
-    m_Svn = bzr;
+  if( revisionnr > 0 ) {
+    m_RevisionNr = revisionnr;
+    m_CommitHash = commithash;
     /*TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," bzr %d", m_Svn );*/
   }
   else {
@@ -787,8 +788,8 @@ bool RocGui::OnInit() {
       iONode log = DocOp.getRootNode(doc);
       DocOp.base.del(doc);
       if( log != NULL ) {
-        m_Svn = wSvnLogEntry.getrevision( wSvnLog.getlogentry(log) );
-        TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," svn %d", m_Svn );
+        m_RevisionNr = wSvnLogEntry.getrevision( wSvnLog.getlogentry(log) );
+        TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," svn %d", m_RevisionNr );
         NodeOp.base.del(log);
       }
     }

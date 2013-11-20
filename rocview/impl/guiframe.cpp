@@ -2613,7 +2613,7 @@ void RocGuiFrame::Save() {
   if( f != NULL ) {
     long size = 0;
     char* buffer = NULL;
-    char* version = StrOp.fmt( "%d.%d.%d revision %d", wGui.vmajor, wGui.vminor, wGui.patch,  wxGetApp().getSvn() );
+    char* version = StrOp.fmt( "%d.%d.%d revision %d", wGui.vmajor, wGui.vminor, wGui.patch,  wxGetApp().getRevisionNr() );
     wPlan.setrocguiversion( model, version );
     buffer = (char*)NodeOp.base.toString( model );
     size = StrOp.len( buffer );

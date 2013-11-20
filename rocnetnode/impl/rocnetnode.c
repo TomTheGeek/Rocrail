@@ -1005,8 +1005,8 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_LEN] = 7;
     msg[RN_PACKET_DATA+0] = data->class;
     msg[RN_PACKET_DATA+1] = 70;
-    msg[RN_PACKET_DATA+2] = bzr/256;
-    msg[RN_PACKET_DATA+3] = bzr%256;
+    msg[RN_PACKET_DATA+2] = revisionnr/256;
+    msg[RN_PACKET_DATA+3] = revisionnr%256;
     msg[RN_PACKET_DATA+4] = 128;
     msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
     msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];
@@ -1713,8 +1713,8 @@ static void __scanner( void* threadinst ) {
         msg[RN_PACKET_LEN] = 7;
         msg[RN_PACKET_DATA+0] = data->class;
         msg[RN_PACKET_DATA+1] = 70;
-        msg[RN_PACKET_DATA+2] = bzr/256;
-        msg[RN_PACKET_DATA+3] = bzr%256;
+        msg[RN_PACKET_DATA+2] = revisionnr/256;
+        msg[RN_PACKET_DATA+3] = revisionnr%256;
         msg[RN_PACKET_DATA+4] = 128;
         msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
         msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];
@@ -2388,7 +2388,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   data->i2cmux = MutexOp.inst( NULL, True );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  revision [%d]", bzr );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  revision [%d]", revisionnr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ID [%d]", data->id );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast address [%s]", data->addr );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast port    [%d]", data->port );

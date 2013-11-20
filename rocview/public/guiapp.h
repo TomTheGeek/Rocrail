@@ -80,7 +80,8 @@ public:
   void setLocalModelModified(bool modified=true){m_LocalModelModified=modified;}
   bool isLocalModelModified(){return m_LocalModelModified;}
   int getTabAlign();
-  int getSvn() { return m_Svn; }
+  int getRevisionNr() { return m_RevisionNr; }
+  const char* getCommitHash() { return m_CommitHash; }
   int getTabSel() { return m_TabSel; }
   int getLocoTabSel() { return m_LocoTabSel; }
   bool isModView() { return m_bModView; }
@@ -98,7 +99,8 @@ public:
   iORCon        m_RCon;
   const char*   m_Host;
   int           m_Port;
-  int           m_Svn;
+  int           m_RevisionNr;
+  const char*  m_CommitHash;
   iONode        m_Ini;
   RocGuiFrame*  m_Frame;
   bool          m_bOffline;

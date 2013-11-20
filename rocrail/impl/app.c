@@ -363,11 +363,10 @@ static int __logo( void ) {
   TraceOp.println( " License: GNU GPL V3"                               );
   TraceOp.println( "   http://www.gnu.org/licenses/gpl-3.0-standalone.html" );
   TraceOp.println( "--------------------------------------------------" );
-  TraceOp.println( " %s %d", wGlobal.productname, bzr );
+  TraceOp.println( " %s %d [%s]", wGlobal.productname, revisionnr, commithash );
 
-  if( bzr > 0 ){
-    /*TraceOp.println( " Revision: %d", bzr );*/
-    svn = bzr;
+  if( revisionnr > 0 ){
+    svn = revisionnr;
   }
   else {
 /*

@@ -63,7 +63,7 @@
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/Route.h"
 
-extern const int bzr;
+extern const int revisionnr;
 
 static int instCnt = 0;
 
@@ -3906,7 +3906,7 @@ static void __SrcpService( void* threadinst ) {
 
   ThreadOp.setDescription( th, "SRCP Client command reader" );
 
-  StrOp.fmtb(str, SRCPVERSION, (int) bzr, "\n" );
+  StrOp.fmtb(str, SRCPVERSION, (int) revisionnr, "\n" );
   if( o->clntSocket != NULL ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SRCP service started for: %s, with session ID %d",
         SocketOp.getPeername(o->clntSocket), o->id );

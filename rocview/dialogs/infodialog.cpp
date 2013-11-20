@@ -85,7 +85,7 @@ InfoDialog::InfoDialog( wxWindow* parent, wxWindowID id, const wxString& caption
   m_Splash->SetBitmapLabel( *_img_rocrail_logo );
   m_Splash->Refresh();
 
-  char* str = StrOp.fmt("%s revision %d", wGui.buildDate, wxGetApp().getSvn());
+  char* str = StrOp.fmt("%s revision %d", wGui.buildDate, wxGetApp().getRevisionNr());
   m_Build->SetLabel( wxString(str,wxConvUTF8) );
   StrOp.free( str );
 
@@ -168,15 +168,14 @@ void InfoDialog::CreateControls()
     itemDialog1->SetSizer(itemBoxSizer2);
 
     wxFlexGridSizer* itemFlexGridSizer3 = new wxFlexGridSizer(0, 1, 0, 0);
-    itemFlexGridSizer3->AddGrowableRow(0);
-    itemFlexGridSizer3->AddGrowableCol(0);
     itemBoxSizer2->Add(itemFlexGridSizer3, 1, wxGROW|wxALL, 5);
 
     m_Splash = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_INFO_SPLASH, wxNullBitmap, wxDefaultPosition, wxSize(360, 115), wxBU_AUTODRAW );
     itemFlexGridSizer3->Add(m_Splash, 1, wxGROW|wxGROW|wxALL, 5);
 
     m_Build = new wxStaticText( itemDialog1, wxID_STATIC_INFO_BUILD, _("build"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-    itemFlexGridSizer3->Add(m_Build, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    m_Build->SetFont(wxFont(10, wxDEFAULT, wxNORMAL, wxBOLD, false, wxT("Ubuntu")));
+    itemFlexGridSizer3->Add(m_Build, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxStaticBox* itemStaticBoxSizer6Static = new wxStaticBox(itemDialog1, wxID_ANY, _("Server"));
     wxStaticBoxSizer* itemStaticBoxSizer6 = new wxStaticBoxSizer(itemStaticBoxSizer6Static, wxVERTICAL);
@@ -203,6 +202,11 @@ void InfoDialog::CreateControls()
     m_Thanks = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_INFO_THANKS, wxEmptyString, wxDefaultPosition, wxSize(-1, 100), wxTE_MULTILINE|wxTE_READONLY );
     itemFlexGridSizer3->Add(m_Thanks, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
+    itemFlexGridSizer3->AddGrowableRow(0);
+    itemFlexGridSizer3->AddGrowableCol(0);
+
+    // Connect events and objects
+    m_Build->Connect(wxID_STATIC_INFO_BUILD, wxEVT_LEFT_UP, wxMouseEventHandler(InfoDialog::onBuildRevision), NULL, this);
 ////@end InfoDialog content construction
 }
 
@@ -249,4 +253,14 @@ void InfoDialog::OnBitmapbuttonInfoSplashClick( wxCommandEvent& event )
   EndModal( wxID_OK );
 }
 
+
+
+/*!
+ * wxEVT_LEFT_UP event handler for wxID_STATIC_INFO_BUILD
+ */
+
+void InfoDialog::onBuildRevision( wxMouseEvent& event )
+{
+  wxLaunchDefaultBrowser(wxString::Format(wxT("https://github.com/rocrail/Rocrail/commit/%s"), wxGetApp().getCommitHash()), wxBROWSER_NEW_WINDOW );
+}
 
