@@ -428,8 +428,12 @@ static Boolean _stepvirtual( iILcDriverInt inst ) {
 static void _gogo( iILcDriverInt inst ) {
   iOLcDriverData data = Data(inst);
   if( data->timer > 0 ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset wait timer from %d to 0", data->timer );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset wait timer for %s from %d to 0", data->loc->getId(data->loc), data->timer );
     data->timer = 0;
+  }
+  if( data->reqstop ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset stop request for %s", data->loc->getId(data->loc) );
+    data->reqstop = False;
   }
 }
 
