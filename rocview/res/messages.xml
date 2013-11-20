@@ -24857,4 +24857,7 @@
   <Msg id="preset">
     <en txt="Preset"/>
   </Msg>
+  <Msg id="resetfifo">
+    <en txt="Reset FiFo"/>
+  </Msg>
 </Messages>

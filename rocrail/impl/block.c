@@ -2221,6 +2221,14 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     return True;
   }
 
+  if( cmd != NULL && StrOp.equals(cmd, wBlock.resetfifo) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset FiFo list in [%s]", data->id);
+    ListOp.clear(data->fifoList);
+    __dumpFiFo(inst);
+    NodeOp.base.del(nodeA);
+    return True;
+  }
+
   if( NodeOp.findAttr(nodeA, wAction.block_acceptident) != NULL ) {
     if( data->acceptident && wBlock.isacceptident(nodeA) )
       inst->acceptIdent(inst, False);

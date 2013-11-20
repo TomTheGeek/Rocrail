@@ -150,6 +150,7 @@ enum {
     ME_CloseBlock,
     ME_OpenBlock,
     ME_ResetWC,
+    ME_ResetFiFo,
     ME_CloseExitBlock,
     ME_OpenExitBlock,
     ME_AcceptIdent,
@@ -222,6 +223,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_CloseExitBlock, Symbol::OnCloseExitBlock)
   EVT_MENU     (ME_OpenBlock, Symbol::OnOpenBlock)
   EVT_MENU     (ME_ResetWC, Symbol::OnResetWC)
+  EVT_MENU     (ME_ResetFiFo, Symbol::OnResetFiFo)
   EVT_MENU     (ME_OpenExitBlock, Symbol::OnOpenExitBlock)
   EVT_MENU     (ME_AcceptIdent, Symbol::OnAcceptIdent)
 
@@ -1641,6 +1643,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
         menu.Append( ME_OpenBlock, wxGetApp().getMenu("operational") );
       }
       menu.Append( ME_ResetWC, wxGetApp().getMenu("resetwc") );
+      menu.Append( ME_ResetFiFo, wxGetApp().getMenu("resetfifo") );
     }
     else if( StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) ) {
       //if( !wxGetApp().getFrame()->isAutoMode() )
@@ -2191,6 +2194,15 @@ void Symbol::OnResetWC(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( NodeOp.getName(m_Props), NULL, ELEMENT_NODE );
   wBlock.setid( cmd, wBlock.getid( m_Props ) );
   wBlock.setcmd( cmd, wBlock.resetwc );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void Symbol::OnResetFiFo(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( NodeOp.getName(m_Props), NULL, ELEMENT_NODE );
+  wBlock.setid( cmd, wBlock.getid( m_Props ) );
+  wBlock.setcmd( cmd, wBlock.resetfifo );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }

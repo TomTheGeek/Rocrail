@@ -6809,3 +6809,9 @@ msgstr ""
 msgid "Preset"
 msgstr ""
 
+#. 
+# id="resetfifo"
+#, c-format
+msgid "Reset FiFo"
+msgstr ""
+
