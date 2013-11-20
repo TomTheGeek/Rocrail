@@ -533,8 +533,8 @@ static char *creaRspBusDescr(char *str, struct timeval *time, int srcpBus ) {
     StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d DESCRIPTION SESSION SERVER TIME\n",
         (*time).tv_sec, (*time).tv_usec / 1000L, 0);
   }else if( srcpBus > 0 ){
-    /* announce "normal" capabilities for all command station *
-    /* SM and LOCK currently not supported through srcp server */
+    /* announce "normal" capabilities for all command station
+       SM and LOCK currently not supported through srcp server */
     StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d DESCRIPTION GA GL FB POWER DESCRIPTION\n",
         (*time).tv_sec, (*time).tv_usec / 1000L, srcpBus );
   }else
@@ -3331,8 +3331,8 @@ static void sendBusList2InfoChannel( __iOSrcpService o, iOSrcpCon srcpcon ) {
 
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sendBusList2InfoChannel: srcpBus[%d] srcpIid[%s]", srcpBus, digintIid );
 
-    /* announce "normal" capabilities for all command station *
-    /* SM and LOCK currently not supported through srcp server */
+    /* announce "normal" capabilities for all command station
+       SM and LOCK currently not supported through srcp server */
     StrOp.fmtb(str, "%lu.%.3lu 100 INFO %d DESCRIPTION GA GL FB POWER DESCRIPTION\n",
         time.tv_sec, time.tv_usec / 1000L, srcpBus );
     infoStr = StrOp.cat( infoStr, str );
@@ -4107,7 +4107,7 @@ static struct OSrcpCon* _inst( iONode ini, srcpcon_callback callbackfun, obj cal
   if( wSrcpCon.getdevice(ini) != NULL && StrOp.len(wSrcpCon.getdevice(ini)) > 0 ) {
     data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
 
-    SerialOp.setFlow( data->serial, none );
+    SerialOp.setFlow( data->serial, 0 );
 
     SerialOp.setLine( data->serial, 115200, 8, 1, none, False );
     SerialOp.setTimeout( data->serial, 500, 500 );

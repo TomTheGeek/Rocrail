@@ -618,7 +618,7 @@ static void* __event( void* inst, const void* evt ) {
     }
 
     if( wCtrl.isallowzerothrottleid( AppOp.getIniNode( wCtrl.name() ) ) ||
-        StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) ) {
+        (StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) ) ) {
       wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
       /* TODO: inform consist slaves */
       __checkConsist(inst, evtNode, True);
@@ -644,7 +644,7 @@ static void* __event( void* inst, const void* evt ) {
     wLoc.setfn( data->props, data->fn0);
 
     if( wCtrl.isallowzerothrottleid( AppOp.getIniNode( wCtrl.name() ) ) ||
-        StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) )
+        ( StrOp.len(wLoc.getthrottleid(evtNode)) > 0 && !StrOp.equals( "0", wLoc.getthrottleid(evtNode) ) ) )
     {
       wLoc.setthrottleid( data->props, wLoc.getthrottleid(evtNode) );
       if( SystemOp.getTick() - data->lastfncmd > 100 ) {
@@ -899,7 +899,7 @@ static void __doSound(iOLoc inst, iONode cmd) {
 
   if( wFunCmd.getfnchanged(cmd) != -1 ) {
     int fx = wLoc.getfx( data->props );
-    if( fx & 1 << wFunCmd.getfnchanged(cmd)-1 ) {
+    if( fx & 1 << (wFunCmd.getfnchanged(cmd)-1) ) {
       const char* sound = __getFnSound(inst, wFunCmd.getfnchanged(cmd) );
       if( sound != NULL && StrOp.len(sound) > 0 ) {
         /* play */
@@ -1798,7 +1798,7 @@ static void __runner( void* threadinst ) {
 
     fx = wLoc.getfx( data->props );
     for( i = 0; i < 28; i++ ) {
-      if( i == 0 && data->fn0 && data->fxtimer[i] > 0 || i > 0 && (fx & (1 << (i-1))) && data->fxtimer[i] > 0 ) {
+      if( ( i == 0 && data->fn0 && data->fxtimer[i] > 0 ) || ( i > 0 && (fx & (1 << (i-1))) && data->fxtimer[i] > 0 ) ) {
         data->fxtimer[i]--;
         if( data->fxtimer[i] == 0 ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset timed function %d", i);
@@ -1907,10 +1907,10 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer ) {
 
     if( isonevent ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "onevent[%s] evt[%d]", onevent, evt );
-      if( StrOp.equals( wFunDef.enter_block, onevent ) && evt == enter_event ||
-          StrOp.equals( wFunDef.in_block   , onevent ) && evt == in_event    ||
-          StrOp.equals( wFunDef.exit_block , onevent ) && evt == exit_event  ||
-          StrOp.equals( wFunDef.run        , onevent ) && evt == run_event
+      if( (StrOp.equals( wFunDef.enter_block, onevent ) && evt == enter_event) ||
+          (StrOp.equals( wFunDef.in_block   , onevent ) && evt == in_event)    ||
+          (StrOp.equals( wFunDef.exit_block , onevent ) && evt == exit_event)  ||
+          (StrOp.equals( wFunDef.run        , onevent ) && evt == run_event)
          ) {
         iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "On Event for funcion %d.", fn );
@@ -1923,10 +1923,10 @@ static void __funEvent( iOLoc inst, const char* blockid, int evt, int timer ) {
 
     if( isoffevent ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "offevent[%s] evt[%d]", offevent, evt );
-      if( StrOp.equals( wFunDef.enter_block, offevent ) && evt == enter_event ||
-          StrOp.equals( wFunDef.in_block   , offevent ) && evt == in_event    ||
-          StrOp.equals( wFunDef.exit_block , offevent ) && evt == exit_event  ||
-          StrOp.equals( wFunDef.stall      , offevent ) && evt == stall_event
+      if( (StrOp.equals( wFunDef.enter_block, offevent ) && evt == enter_event) ||
+          (StrOp.equals( wFunDef.in_block   , offevent ) && evt == in_event)    ||
+          (StrOp.equals( wFunDef.exit_block , offevent ) && evt == exit_event)  ||
+          (StrOp.equals( wFunDef.stall      , offevent ) && evt == stall_event)
          ) {
         iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Off Event for funcion %d.", fn );
@@ -2177,7 +2177,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
     }
   }
 
-  if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && !StrOp.equals(id, data->curBlock) || data->prevBlock == NULL ) {
+  if( (data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && !StrOp.equals(id, data->curBlock)) || data->prevBlock == NULL ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "set previous block to [%s]", data->curBlock == NULL ? "":data->curBlock );
     data->prevBlock = data->curBlock;
   }

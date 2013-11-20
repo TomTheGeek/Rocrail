@@ -3648,17 +3648,16 @@ static void _event( iOModel inst, iONode nodeC ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"bus %d=%d, addr1 %d=%d, addr2 %d=%d, port1 %d=%d, port2 %d=%d, type %d=%d %s",
           wSwitch.getbus(props), bus, matchaddr1, addr, matchaddr2, addr, matchport1, port, matchport2, port, matchtype, type, flat?"(flat)":"");
 
-      if( wSwitch.getbus(props) == bus && matchaddr1 == addr && matchport1 == port && matchtype == type ||
-          wSwitch.getbus(props) == bus && matchaddr2 == addr && matchport2 == port && matchtype == type )
+      if( (wSwitch.getbus(props) == bus && matchaddr1 == addr && matchport1 == port && matchtype == type) ||
+          (wSwitch.getbus(props) == bus && matchaddr2 == addr && matchport2 == port && matchtype == type) )
       {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
             "matching sw=%s iid=[%s] (iid=%s defiid=%s) bus=%d addr=%d port=%d %s",
             sw->id(sw), wSwitch.getiid(props)!=NULL?wSwitch.getiid(props):"?", iid, defiid,
                 wSwitch.getbus(props), matchaddr1, matchport1, flat?"(flat)":"");
 
-        if( StrOp.len( wSwitch.getiid(props) ) > 0 && StrOp.equals(iid, wSwitch.getiid(props)) ||
-            ( ( StrOp.len( wSwitch.getiid(props) ) == 0 ) &&
-                (iid == NULL || StrOp.equals( iid, defiid ) || StrOp.len(iid) == 0 ) ) )
+        if( (StrOp.len( wSwitch.getiid(props) ) > 0 && StrOp.equals(iid, wSwitch.getiid(props))) ||
+            ( ( StrOp.len( wSwitch.getiid(props) ) == 0 ) && (iid == NULL || StrOp.equals( iid, defiid ) || StrOp.len(iid) == 0 ) ) )
         {
           iONode clone = (iONode)NodeOp.base.clone(nodeC);
           if( invertstate ) {

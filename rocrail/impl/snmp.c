@@ -226,7 +226,7 @@ static char* __getString(byte* in, int* offset, char* val) {
   }
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "string type expected: %d,%d", in[0], *offset );
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 32 );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 32 );
     return val;
   }
 }
@@ -362,7 +362,7 @@ static int __getOID(byte* in, char* oid ) {
   }
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "wrong type for oid = %d", in[0] );
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 32 );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 32 );
   }
 
   return offset;
@@ -783,7 +783,7 @@ static int __handleGetRequest(iOSNMP snmp, iOSnmpHdr hdr, byte* in, byte* out, i
               TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "next request for %s=%s", oid, val );
             }
             else {
-              val == NULL;
+              val = NULL;
               break;
             }
           }
@@ -1146,13 +1146,13 @@ static void __server( void* threadinst ) {
   do {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP waiting..." );
     MemOp.set(in, 0, 1024);
-    int inlen = SocketOp.recvfrom( data->snmpSock, in, 1024, client, &port );
+    int inlen = SocketOp.recvfrom( data->snmpSock, (char*)in, 1024, client, &port );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP received from %s:%d", client, port );
 
     if( inlen > 0 ) {
       __updateVars(snmp);
 
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, in, inlen );
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, inlen );
       int outlen =  __handleRequest(snmp, in, inlen, out);
 
       if( outlen > 0 ) {
@@ -1165,8 +1165,8 @@ static void __server( void* threadinst ) {
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending SNMP response of %d bytes...", outlen );
         TraceOp.setDumpsize( NULL, outlen );
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
-        if( SocketOp.sendto( data->snmpSock, out, outlen, client, port ) ) {
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, outlen );
+        if( SocketOp.sendto( data->snmpSock, (char*)out, outlen, client, port ) ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP response is send" );
         }
       }
@@ -1208,8 +1208,8 @@ static struct OSNMP* _inst( iONode ini ) {
       data->trap = True;
       byte out[256];
       int outlen = __makeTrap(RocsOgen_SNMP, out, SNMPOp.trap_COLDSTART, wSnmpService.trapColdStart, "Normal startup." );
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
-      if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, outlen );
+      if( SocketOp.sendto( data->snmpTrapSock, (char*)out, outlen, NULL, 0 ) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
       }
       else {
@@ -1253,8 +1253,8 @@ static void _shutdown( struct OSNMP* inst ) {
   byte out[256];
   if(data->snmpTrapSock == NULL) return;
   int outlen = __makeTrap(inst, out, SNMPOp.trap_USER, wSnmpService.privTrapShutDown, "Shutdown" );
-  TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
-  if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
+  TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, outlen );
+  if( SocketOp.sendto( data->snmpTrapSock, (char*)out, outlen, NULL, 0 ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
   }
 }
@@ -1269,8 +1269,8 @@ static void _link( struct OSNMP* inst, int count, Boolean up ) {
   if(data->snmpTrapSock == NULL) return;
   StrOp.fmtb( sCnt, "currently=%d, total=%d", data->linkup, count );
   int outlen = __makeTrap(inst, out, up?SNMPOp.trap_LINKUP:SNMPOp.trap_LINKDOWN, up?wSnmpService.trapLinkUp:wSnmpService.trapLinkDown, sCnt );
-  TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
-  if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
+  TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, outlen );
+  if( SocketOp.sendto( data->snmpTrapSock, (char*)out, outlen, NULL, 0 ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
   }
 }
@@ -1280,8 +1280,8 @@ static void _exception( struct OSNMP* inst, const char* msg ) {
   byte out[256];
   if(data->snmpTrapSock == NULL) return;
   int outlen = __makeTrap(inst, out, SNMPOp.trap_USER, wSnmpService.privTrapException, msg );
-  TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outlen );
-  if( SocketOp.sendto( data->snmpTrapSock, out, outlen, NULL, 0 ) ) {
+  TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, outlen );
+  if( SocketOp.sendto( data->snmpTrapSock, (char*)out, outlen, NULL, 0 ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SNMP trap send" );
   }
   if(data->lastexc!= NULL)

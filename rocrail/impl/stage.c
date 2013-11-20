@@ -1684,7 +1684,7 @@ static Boolean __dumpSections( iOStage inst ) {
     if( fbocc != NULL )
       occ |= FBackOp.isState(fbocc, "true");
 
-    if( occ && lcid == NULL || occ && StrOp.len(lcid) == 0 ) {
+    if( (occ && lcid == NULL) || (occ && StrOp.len(lcid) == 0) ) {
       eOcc = True;
     }
 

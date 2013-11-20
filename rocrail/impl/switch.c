@@ -381,12 +381,12 @@ static const char* __checkFbState( iOSwitch inst ) {
     if( data->fb2Rinv ) fb2R = !fb2R;
   }
 
-  if( data->fbR && data->fbG && ( fbR && fbG || !fbR && !fbG ) ) {
+  if( data->fbR && data->fbG && ( (fbR && fbG) || (!fbR && !fbG) ) ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
       "Switch:%s: fbG[%d] && fbR[%d] have the same state!",
       SwitchOp.getId( inst ), fbG, fbR );
   }
-  if( data->fb2R && data->fb2G && ( fb2R && fb2G || !fb2R && !fb2G ) ) {
+  if( data->fb2R && data->fb2G && ( (fb2R && fb2G) || (!fb2R && !fb2G) ) ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
       "Switch:%s: fb2G[%d] && fb2R[%d] have the same state!",
       SwitchOp.getId( inst ), fb2G, fb2R );
@@ -658,7 +658,7 @@ static Boolean _lock( iOSwitch inst, const char* id, iORoute route ) {
 
 static Boolean _unLock( iOSwitch inst, const char* id, iORoute route, Boolean force ) {
   iOSwitchData data = Data(inst);
-  if( force || StrOp.equals( id, data->lockedId ) && (route != NULL ? (data->route == route):True )) {
+  if( force || (StrOp.equals( id, data->lockedId ) && (route != NULL ? (data->route == route):True )) ) {
     data->lockedId = NULL;
     data->savepostimer = wCtrl.getsavepostime( wRocRail.getctrl( AppOp.getIni(  ) ) ) * 10;
     /* Broadcast to clients. Node6 */
@@ -738,7 +738,7 @@ static Boolean _isSet( iOSwitch inst ) {
   iOSwitchData data  = Data(inst);
   Boolean      isSet = True;
 
-  if( data->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel()) || wSwitch.isfbusefield(data->props) ) {
+  if( (data->hasFbSignal && ModelOp.isEnableSwFb(AppOp.getModel())) || wSwitch.isfbusefield(data->props) ) {
     sw_state stateCmd = SW_STRAIGHT;
 
     if( StrOp.equals( wSwitch.straight, wSwitch.getstate( data->props ) ) )
@@ -930,7 +930,7 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     return True;
   }
 
-  if( o->fbOcc != NULL && FBackOp.getState(o->fbOcc) ||  o->fbOcc2 != NULL && FBackOp.getState(o->fbOcc2) ) {
+  if( (o->fbOcc != NULL && FBackOp.getState(o->fbOcc)) ||  (o->fbOcc2 != NULL && FBackOp.getState(o->fbOcc2)) ) {
     /* reject command because its electically occupied */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reject command because switch [%s] electically occupied",
                  SwitchOp.getId( inst ) );

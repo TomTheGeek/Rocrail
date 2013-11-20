@@ -1016,7 +1016,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                        "Loc [%s] has no permission to use route [%s]; cargo does not fit. (%s!=%s)",
                        id, wRoute.getid(data->props), permtype, cargo );
-        return suits_not;
+        return False;
       }
     }
   }
@@ -1030,7 +1030,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                        "Loc [%s] has no permission to use route [%s]; train length exceeds the max. allowed length. (%d>%d)",
                        id, wRoute.getid(data->props), LocOp.getLen(loc), maxlen );
-        return suits_not;
+        return False;
       }
     }
 
@@ -1039,7 +1039,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                        "Loc [%s] has no permission to use route [%s]; train length is less then the min. allowed length. (%d<%d)",
                        id, wRoute.getid(data->props), LocOp.getLen(loc), minlen );
-        return suits_not;
+        return False;
       }
     }
 
@@ -1050,7 +1050,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Loc [%s] has no permission to use route [%s]; only commuter trains are allowed.",
                    id, wRoute.getid(data->props) );
-    return suits_not;
+    return False;
   }
 
 
@@ -1058,7 +1058,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Loc [%s] has no permission to use route [%s]; commuter trains are not allowed.",
                    id, wRoute.getid(data->props) );
-    return suits_not;
+    return False;
   }
 
 
@@ -1135,7 +1135,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
       /**/
       return True;
     };
-    return suits_not;
+    return False;
   }
 
   return True;

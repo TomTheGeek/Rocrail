@@ -813,7 +813,7 @@ static int __getOccTrackBlocks(iIBlockBase inst, long* oldestOccTick) {
     iIBlockBase block = ModelOp.getBlock( model, wSelTabPos.getbkid(pos) );
     if( block != NULL && !block->isFree(block, NULL) ) {
       long blockOccTime = block->getOccTime(block);
-      if( blockOccTime > 0 && blockOccTime < *oldestOccTick || blockOccTime > 0 && *oldestOccTick == 0 )
+      if( (blockOccTime > 0 && blockOccTime < *oldestOccTick) || (blockOccTime > 0 && *oldestOccTick == 0) )
         *oldestOccTick = block->getOccTime(block);
       occBlocks++;
     }

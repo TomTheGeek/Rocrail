@@ -923,9 +923,9 @@ static Boolean _work( struct OPClient* inst ) {
     else if( StrOp.find( str, "GET" ) && StrOp.find( str, "/favicon.ico" ) ) {
       __getFavicon( inst );
     }
-    else if( StrOp.find( str, "GET" ) && StrOp.find( str, wWebClient.getsymbolpath( data->ini ) ) && StrOp.find( str, " /" ) ||
-             StrOp.find( str, "GET" ) && StrOp.find( str, wWebClient.getwebcampath( data->ini ) ) && StrOp.find( str, " /" ) ||
-             StrOp.find( str, "GET" ) && StrOp.find( str, "images" ) && StrOp.find( str, " /" ) )
+    else if( (StrOp.find( str, "GET" ) && StrOp.find( str, wWebClient.getsymbolpath( data->ini ) ) && StrOp.find( str, " /" )) ||
+             (StrOp.find( str, "GET" ) && StrOp.find( str, wWebClient.getwebcampath( data->ini ) ) && StrOp.find( str, " /" )) ||
+             (StrOp.find( str, "GET" ) && StrOp.find( str, "images" ) && StrOp.find( str, " /" )) )
     {
       char* symbolfile = StrOp.dup( StrOp.find( str, " /" ) + 2 ) ;
       char* p = StrOp.find( symbolfile, "HTTP" );

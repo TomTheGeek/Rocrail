@@ -63,6 +63,7 @@ static int __getNextTrack( iOTT inst, int tracknr );
 static int __getPrevTrack( iOTT inst, int tracknr );
 static void __polarize(obj inst, int pos, Boolean polarization);
 static void __sortTracks(iOTT tt);
+static void __cpFn2Node( iOTT inst, iONode fcmd );
 
 
 /*
@@ -1819,7 +1820,7 @@ static Boolean _setListener( iOTT inst, obj listenerObj, const tt_listener liste
   return True;
 }
 
-__cpFn2Node( iOTT inst, iONode fcmd ) {
+static void __cpFn2Node( iOTT inst, iONode fcmd ) {
   iOTTData data = Data(inst);
   int i = 0;
   for( i = 0; i < 28; i++ ) {
@@ -2208,7 +2209,7 @@ static void __fbBridgeEvent( obj inst, Boolean puls, const char* id, const char*
   /* sMid */
   else if( StrOp.equals( id, wTurntable.getsMid( data->props ) ) ) {
     stateMid1 = puls;
-    if( data->triggerSmid2 && !data->triggerSmid1 || !data->hasMid2 && !data->triggerSmid1 ) {
+    if( (data->triggerSmid2 && !data->triggerSmid1) || (!data->hasMid2 && !data->triggerSmid1) ) {
       /* enter event */
       data->triggerSmid1 = True;
       event = wFeedbackEvent.pre2in_event;

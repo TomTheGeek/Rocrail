@@ -84,7 +84,7 @@ static const char* __name( void ) {
 
 static unsigned char* __serialize( void* inst, long* size ) {
   iOModPlanData data = Data(inst);
-  return NodeOp.base.toString( data->modplan );
+  return (unsigned char*)NodeOp.base.toString( data->modplan );
 }
 
 static void __deserialize( void* inst,unsigned char* bytestream ) {
@@ -1205,7 +1205,7 @@ static void __saveModPlan( iOModPlan inst, const char* filename ) {
   /* routes must not be a part of an other file! */
   iOModPlanData data = Data(inst);
   /* Serialize plan. */
-  char* xml = ModPlanOp.base.serialize(inst, NULL);
+  char* xml = (char*)ModPlanOp.base.serialize(inst, NULL);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Serialized Modplan=%d", StrOp.len( xml ) );
   __backupSave( filename, xml );
   /* clean up */

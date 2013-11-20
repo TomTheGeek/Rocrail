@@ -3480,14 +3480,14 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
       }
 
       if( StrOp.equals( itemori, wItem.west ) || StrOp.equals( itemori, wItem.east )) {
-        if( (travel == 2) ) {
+        if( travel == 2 ) {
           *x = step;
           return travel;
         } else if ( travel == 0)
           return travel;
       }
       else if( StrOp.equals( itemori, wItem.north ) || StrOp.equals( itemori, wItem.south )) {
-        if( (travel == 3) ) {
+        if( travel == 3 ) {
           *y = step;
           return travel;
         } else if ( travel == 1)
@@ -3502,14 +3502,14 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
       int step = 3;
 
       if( StrOp.equals( itemori, wItem.west ) || StrOp.equals( itemori, wItem.east )) {
-        if( (travel == 2) ) {
+        if( travel == 2 ) {
           *x = step;
           return travel;
         } else if ( travel == 0)
           return travel;
       }
       else if( StrOp.equals( itemori, wItem.north ) || StrOp.equals( itemori, wItem.south )) {
-        if( (travel == 3) ) {
+        if( travel == 3 ) {
           *y = step;
           return travel;
         } else if ( travel == 1)
@@ -3524,14 +3524,14 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
       int step = wSelTab.getnrtracks(item) - 1 ;
 
       if( StrOp.equals( itemori, wItem.west ) || StrOp.equals( itemori, wItem.east )) {
-        if( (travel == 2) ) {
+        if( travel == 2 ) {
           *x = step;
           return travel;
         } else if ( travel == 0)
           return travel;
       }
       else if( StrOp.equals( itemori, wItem.north ) || StrOp.equals( itemori, wItem.south )) {
-        if( (travel == 3) ) {
+        if( travel == 3 ) {
           *y = step;
           return travel;
         } else if ( travel == 1)
@@ -3759,7 +3759,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
 
       /* dcrossing */
       else if( StrOp.equals( subtype, wSwitch.dcrossing ) ||
-               StrOp.equals( subtype, wSwitch.crossing ) && (wSwitch.getaddr1(item) != 0 || wSwitch.getport1(item) != 0 ) )
+               (StrOp.equals( subtype, wSwitch.crossing ) && (wSwitch.getaddr1(item) != 0 || wSwitch.getport1(item) != 0 )) )
       {
         /* if dcrossing has subtype left or right then skip search in wrong direction */
         if( StrOp.equals( subtype, wSwitch.dcrossing ) )
@@ -3776,7 +3776,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
 
         if( !wSwitch.isdir(item)  ) { /* left */
           if( StrOp.equals( itemori, wItem.west ) ) { /* left west */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 0) {
                 return travel+dcrossing;
               } else if( turnoutstate == 2) {
@@ -3807,7 +3807,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
             }
           }
           if( StrOp.equals( itemori, wItem.east ) ) { /* left east */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 0) {
                 return travel+dcrossing;
               } else if( turnoutstate == 3) {
@@ -3838,7 +3838,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
             }
           }
           else if( StrOp.equals( itemori, wItem.north )) { /* left north */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 1) {
                 return travel+dcrossing;
               } else if( turnoutstate == 2) {
@@ -3869,7 +3869,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
             }
           }
           else if( StrOp.equals( itemori, wItem.south )) { /* left south */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 1) {
                 return travel+dcrossing;
               } else if( turnoutstate == 3) {
@@ -3901,7 +3901,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           }
         } else if( wSwitch.isdir(item) ) { /* right */
           if( StrOp.equals( itemori, wItem.west )) { /* right west */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 0) {
                 return travel+dcrossing;
               } else if( turnoutstate == 3) {
@@ -3933,7 +3933,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           }
 
           if( StrOp.equals( itemori, wItem.east )) { /* right east */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 0) {
                 return travel+dcrossing;
               } else if( turnoutstate == 2) {
@@ -3964,7 +3964,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
             }
           }
           else if( StrOp.equals( itemori, wItem.north )) { /* right north */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 1) {
                 *y = 1;
                 return travel+dcrossing;
@@ -3995,7 +3995,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
             }
           }
           else if( StrOp.equals( itemori, wItem.south )) { /* right south */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 1) {
                 *y = 1;
                 return travel+dcrossing;
@@ -4036,7 +4036,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
       else if( StrOp.equals( subtype, wSwitch.threeway ) ) {
 
         if( StrOp.equals( itemori, wItem.west )) {
-          if( (travel == 0) ) {
+          if( travel == 0 ) {
             if( turnoutstate == 0) { /* center */
               return travel+threeWayTurnout;
             } else if (turnoutstate == 1) { /* left */
@@ -4059,7 +4059,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           }
         }
         else if( StrOp.equals( itemori, wItem.north )) {
-          if( (travel == 0) ) {
+          if( travel == 0 ) {
             *turnoutstate_out = 1;
             return oriNorth;
           }
@@ -4082,7 +4082,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           }
         }
         else if( StrOp.equals( itemori, wItem.east )) {
-          if( (travel == 0) ) {
+          if( travel == 0 ) {
             *turnoutstate_out = 0;
             return travel;
           }
@@ -4105,7 +4105,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           }
         }
         else if( StrOp.equals( itemori, wItem.south )) {
-          if( (travel == 0) ) {
+          if( travel == 0 ) {
             *turnoutstate_out = 2;
             return oriSouth;
           }
@@ -4387,7 +4387,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
 
         if( !wSwitch.isdir(item)  ) { /* left */
           if( StrOp.equals( itemori, wItem.west ) ) { /* left west */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 0) {
                 return travel+dcrossing;
               } else if( turnoutstate == 2) {
@@ -4418,7 +4418,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
             }
           }
           if( StrOp.equals( itemori, wItem.east ) ) { /* left east */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 0) {
                 return travel+dcrossing;
               } else if( turnoutstate == 3) {
@@ -4449,7 +4449,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
             }
           }
           else if( StrOp.equals( itemori, wItem.north )) { /* left north */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 1) {
                 *y = -1;
                 return travel+dcrossing;
@@ -4480,7 +4480,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
             }
           }
           else if( StrOp.equals( itemori, wItem.south )) { /* left south */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 1) {
                 *y = -1;
                 return travel+dcrossing;
@@ -4512,7 +4512,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           }
         } else if( wSwitch.isdir(item) ) { /* right */
           if( StrOp.equals( itemori, wItem.west )) { /* right west */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 0) {
                 return travel+dcrossing;
               } else if( turnoutstate == 3) {
@@ -4544,7 +4544,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           }
 
           if( StrOp.equals( itemori, wItem.east )) { /* right east */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 0) {
                 return travel+dcrossing;
               } else if( turnoutstate == 2) {
@@ -4575,7 +4575,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
             }
           }
           else if( StrOp.equals( itemori, wItem.north )) { /* right north */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 1) {
                 *y = 1;
                 return travel+dcrossing;
@@ -4606,7 +4606,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
             }
           }
           else if( StrOp.equals( itemori, wItem.south )) { /* right south */
-            if( (travel == 0) ) {
+            if( travel == 0 ) {
               if ( turnoutstate == 1) {
                 *y = 1;
                 return travel+dcrossing;
@@ -4647,7 +4647,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
       if( StrOp.equals( subtype, wSwitch.threeway ) ) {
 
         if( StrOp.equals( itemori, wItem.west )) {
-          if( (travel == 0) ) {
+          if( travel == 0 ) {
             if( turnoutstate == 0) { /* center */
               return travel+threeWayTurnout;
             } else if (turnoutstate == 1) { /* left */
@@ -4672,7 +4672,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           }
         }
         else if( StrOp.equals( itemori, wItem.north )) {
-          if( (travel == 0) ) {
+          if( travel == 0 ) {
             *turnoutstate_out = 1;
             return oriNorth;
           }
@@ -4697,7 +4697,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           }
         }
         else if( StrOp.equals( itemori, wItem.east )) {
-          if( (travel == 0) ) {
+          if( travel == 0 ) {
             *turnoutstate_out = 0;
             return travel;
           }
@@ -4722,7 +4722,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
           }
         }
         else if( StrOp.equals( itemori, wItem.south )) {
-          if( (travel == 0) ) {
+          if( travel == 0 ) {
             *turnoutstate_out = 2;
             return oriSouth;
           }

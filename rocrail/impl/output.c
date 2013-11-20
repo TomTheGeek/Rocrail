@@ -148,7 +148,7 @@ static void __checkActions(iOOutput inst, const char* cmd) {
 
 
   while( coaction != NULL ) {
-    if( StrOp.equals(wOutput.on, wOutput.getstate(data->props)) && StrOp.len( wActionCtrl.getstate(coaction) ) == 0 ||
+    if( (StrOp.equals(wOutput.on, wOutput.getstate(data->props)) && StrOp.len( wActionCtrl.getstate(coaction) ) == 0) ||
         StrOp.equals(wActionCtrl.getstate(coaction), wOutput.getstate(data->props) ) )
     {
       iOAction action = ModelOp.getAction(model, wActionCtrl.getid(coaction) );
