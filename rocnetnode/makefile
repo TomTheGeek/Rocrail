@@ -148,7 +148,7 @@ version:
 	echo $(QUOT)const int revisionnr = $(QUOT) > ..$(FS)common$(FS)version.h
 	git rev-list --count HEAD >> ..$(FS)common$(FS)version.h
 	echo $(QUOT);$(QUOT) >> ..$(FS)common$(FS)version.h
-	echo -n $(QUOT)const char* commithash = \"$(QUOT) >> ..$(FS)common$(FS)version.h
-	git log -n 1 --pretty=format:$(QUOT)%H$(QUOT) >> ..$(FS)common$(FS)version.h
-	echo $(QUOT)\";$(QUOT) >> ..$(FS)common$(FS)version.h
+	echo $(QUOT)const char* commithash = $(QUOT) >> ..$(FS)common$(FS)version.h
+	git log -n 1 --pretty=format:\"%H\" >> ..$(FS)common$(FS)version.h
+	echo $(QUOT);$(QUOT) >> ..$(FS)common$(FS)version.h
 

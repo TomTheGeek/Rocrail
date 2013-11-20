@@ -43,8 +43,6 @@ ifeq ($(NATIVE),WIN32)
 	QUOT=
 endif
 
-
-
 PLATFORM=LINUX
 ARCH=
 
@@ -71,10 +69,10 @@ uninstall:
 
 
 version:
-	echo -n $(QUOT)const int revisionnr = $(QUOT) > common$(FS)version.h
+	@echo $(QUOT)const int revisionnr = $(QUOT) > common$(FS)version.h
 	git rev-list --count HEAD >> common$(FS)version.h
-	echo $(QUOT);$(QUOT) >> common$(FS)version.h
-	echo -n $(QUOT)const char* commithash = \"$(QUOT) >> common$(FS)version.h
-	git log -n 1 --pretty=format:$(QUOT)%H$(QUOT) >> common$(FS)version.h
-	echo $(QUOT)\";$(QUOT) >> common$(FS)version.h
+	@echo $(QUOT);$(QUOT) >> common$(FS)version.h
+	@echo $(QUOT)const char* commithash = $(QUOT) >> common$(FS)version.h
+	git log -n 1 --pretty=format:\"%H\" >> common$(FS)version.h
+	@echo $(QUOT);$(QUOT) >> common$(FS)version.h
 
