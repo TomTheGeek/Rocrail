@@ -1982,7 +1982,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id, const char* routeId ) 
             {
               iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
               wBlock.setid( nodeD, data->id );
-              wBlock.setreserved( nodeD, True );
+              wBlock.setreserved( nodeD, False );
               wBlock.setlocid( nodeD, data->locId );
               wBlock.setfifoids( nodeD, wBlock.getfifoids(data->props) );
               wBlock.setacceptident(nodeD, data->acceptident);
