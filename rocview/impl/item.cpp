@@ -2931,6 +2931,9 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       Boolean isEntering    = wBlock.isentering( node );
       const char* fifoids   = wBlock.getfifoids(node);
 
+      if( fifoids != NULL && StrOp.len(fifoids) == 0 )
+        fifoids = NULL;
+
       wBlock.setreserved( m_Props, isReserved );
 
       if( wBlock.issmallsymbol(m_Props) && StrOp.len(locoid) > 0 )

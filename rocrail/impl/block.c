@@ -2623,6 +2623,7 @@ static iOBlock _inst( iONode props ) {
 
   data->fifoList = ListOp.inst();
   data->muxFiFO = MutexOp.inst( NULL, True );
+  wBlock.setfifoids(data->props, "" );
 
   NodeOp.removeAttrByName(data->props, "cmd");
 
