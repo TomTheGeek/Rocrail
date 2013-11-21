@@ -105,5 +105,5 @@ int monitor_NrOfMLocos();
 int monitor_NrOfNLocos();
 int monitor_LastRfrCmd();
 char monitor_Cycle();
-
+int get_maerklin_speed(int addr);
 #endif

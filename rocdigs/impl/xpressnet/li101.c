@@ -29,7 +29,7 @@
 Boolean li101Connect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
   data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
-  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:none );
+  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:0 );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
   SerialOp.setLine( data->serial, wDigInt.getbps( data->ini ), 8, 1, 0, wDigInt.isrtsdisabled( data->ini ) );
   return SerialOp.open( data->serial );
@@ -119,7 +119,7 @@ int li101Read(obj xpressnet, byte* buffer, Boolean* rspreceived) {
 
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "trying to read..." );
   if( MutexOp.wait( data->serialmux ) ) {
-    if( SerialOp.read( data->serial, buffer, 1 ) ) {
+    if( SerialOp.read( data->serial, (char*)buffer, 1 ) ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "header byte read = 0x%02X", buffer[0] );
       len = (buffer[0] & 0x0f) + 1;
       ok = SerialOp.read( data->serial, (char*)buffer+1, len );

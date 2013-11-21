@@ -37,7 +37,7 @@ Boolean serialInit( obj inst ) {
 
   data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
 
-  SerialOp.setFlow( data->serial, none );
+  SerialOp.setFlow( data->serial, 0 );
 
   SerialOp.setLine( data->serial, 115200, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
@@ -98,7 +98,7 @@ int serialRead ( obj inst, char *cmd, Boolean info ) {
 int serialWrite( obj inst, const char *cmd, char* rsp, Boolean info ) {
   iOSRCPData data = Data(inst);
   int retstate = 0;
-  Boolean rc = False;
+  int rc = 0;
 
   if( data->serial == NULL ) {
     return retstate;

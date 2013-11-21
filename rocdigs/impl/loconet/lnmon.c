@@ -653,8 +653,8 @@ void traceLocoNet(byte* msg) {
         if ( ((sw2 & 0xCF) == 0x0F)  && ((sw1 & 0xFC) == 0x78) ) { // broadcast address LPU V1.0 page 12
             TraceOp.trc( "lnmon", TRCLEVEL_MONITOR, __LINE__, 9999, "Request Switch to broadcast address with bits a=%s c=%d b=%d Output %s",
                 ((sw2&0x20)>>5)+((sw2 & OPC_SW_REQ_DIR)!=0 ? " (Closed)" : " (Thrown)"),
-                " c="+ ((sw1 & 0x02)>>1),
-                " b="+ ((sw1 & 0x01)),
+                ((sw1 & 0x02)>>1),
+                ((sw1 & 0x01)),
                 ((sw2 & OPC_SW_REQ_OUT)!=0 ? "On"     : "Off"));
 
         } else if ( ((sw2 & 0xCF) == 0x07)  && ((sw1 & 0xFC) == 0x78) ) { // broadcast address LPU V1.0 page 13
@@ -1592,6 +1592,7 @@ void traceLocoNet(byte* msg) {
 
     default:
         TraceOp.trc( "lnmon", TRCLEVEL_DEBUG, __LINE__, 9999, "Command 0x%02X is not defined in Loconet Personal Use Edition 1.0", msg[0] );
+        break;
 
     }  // end switch over opcode type - default handles unrecognized cases, so can't reach here
 }  // end of format() member function

@@ -27,6 +27,7 @@
 
 Boolean rnTcpConnect( obj inst ) {
   iOrocNetData data = Data(inst);
+  return True;
 }
 
 void rnTcpDisconnect( obj inst ) {

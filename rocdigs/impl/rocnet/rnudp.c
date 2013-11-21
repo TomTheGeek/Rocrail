@@ -46,7 +46,7 @@ void rnUDPDisconnect( obj inst ) {
 
 int rnUDPRead ( obj inst, unsigned char *msg ) {
   iOrocNetData data = Data(inst);
-  SocketOp.recvfrom( data->readUDP, msg, 0x7F, NULL, NULL );
+  SocketOp.recvfrom( data->readUDP, (char*)msg, 0x7F, NULL, NULL );
   return 0;
 }
 
@@ -54,7 +54,7 @@ int rnUDPRead ( obj inst, unsigned char *msg ) {
 Boolean rnUDPWrite( obj inst, unsigned char *msg, int len ) {
   iOrocNetData data = Data(inst);
 
-  SocketOp.sendto( data->writeUDP, msg, len, NULL, 0 );
+  SocketOp.sendto( data->writeUDP, (char*)msg, len, NULL, 0 );
 
   return True;
 }

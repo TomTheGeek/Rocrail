@@ -22,6 +22,7 @@
 */
 #include "rocdigs/impl/rocnet_impl.h"
 #include "rocdigs/impl/rocnet/rnserial.h"
+#include "rocdigs/impl/rocnet/rn-utils.h"
 #include "rocrail/wrapper/public/DigInt.h"
 
 
@@ -40,7 +41,7 @@ Boolean rnSerialConnect( obj inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serialCon = SerialOp.inst( wDigInt.getdevice( data->ini ) );
-  SerialOp.setFlow( data->serialCon, data->cts ? cts:none );
+  SerialOp.setFlow( data->serialCon, data->cts ? cts:0 );
   SerialOp.setLine( data->serialCon, wDigInt.getbps( data->ini ), 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   SerialOp.setTimeout( data->serialCon, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 
@@ -76,7 +77,7 @@ int rnSerialRead ( obj inst, unsigned char *msg ) {
     if( !SerialOp.available(data->serialCon) )
       return 0;
 
-    ok = SerialOp.read(data->serialCon, &c, 1);
+    ok = SerialOp.read(data->serialCon, (char*)&c, 1);
     if(c < 0x80) {
       ThreadOp.sleep(10);
       bucket[garbage] = c;
@@ -92,27 +93,27 @@ int rnSerialRead ( obj inst, unsigned char *msg ) {
   if( ok && ( c & 0x80 ) ) {
     int dataLen = 0;
     msg[0] = c;
-    ok = SerialOp.read(data->serialCon, msg+1, 7);
+    ok = SerialOp.read(data->serialCon, (char*)(msg+1), 7);
     if( !ok ) {
       return 0;
     }
     dataLen = msg[7];
     if( ok && dataLen > 0 ) {
-      ok = SerialOp.read(data->serialCon, msg+8, dataLen);
+      ok = SerialOp.read(data->serialCon, (char*)(msg+8), dataLen);
     }
     if( ok && data->crc ) {
       byte crc = 0;
-      ok = SerialOp.read(data->serialCon, &crc, 1);
+      ok = SerialOp.read(data->serialCon, (char*)&crc, 1);
       if( ok && crc != rnChecksum(msg, 8 + dataLen) ) {
         /* checksum error */
         TraceOp.trc( "rnserial", TRCLEVEL_EXCEPTION, __LINE__, 9999, "checksum error; 0x%02X expected, got 0x%02X", rnChecksum(msg, 8 + dataLen), crc );
-        TraceOp.dump ( "rnserial", TRCLEVEL_BYTE, msg, 8 + dataLen );
+        TraceOp.dump ( "rnserial", TRCLEVEL_BYTE, (char*)msg, 8 + dataLen );
         return 0;
       }
       msg[8 + dataLen] = crc;
     }
     if(ok) {
-      TraceOp.dump ( "rnserial", TRCLEVEL_BYTE, msg, 8 + dataLen + (data->crc ? 1:0));
+      TraceOp.dump ( "rnserial", TRCLEVEL_BYTE, (char*)msg, 8 + dataLen + (data->crc ? 1:0));
       return 8 + dataLen;
     }
   }
@@ -157,8 +158,8 @@ Boolean rnSerialWrite( obj inst, unsigned char *msg, int len ) {
     msg[len] = rnChecksum(msg, len);
     len++;
   }
-  TraceOp.dump ( "rnserial", TRCLEVEL_BYTE, msg, len );
-  ok = SerialOp.write( data->serialCon, msg, len );
+  TraceOp.dump ( "rnserial", TRCLEVEL_BYTE, (char*)msg, len );
+  ok = SerialOp.write( data->serialCon, (char*)msg, len );
 
   return ok;
 }

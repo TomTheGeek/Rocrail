@@ -211,7 +211,7 @@ int accDecoderPkt2(byte* retVal, int addr, int active, int outputChannel) {
   int highAddr = ( (~addr) >> 6) & 0x07;
 
   retVal[0] = (byte) (0x80 | lowAddr);
-  retVal[1] = (byte) (0x80 | (highAddr << 4 ) | ( active << 3) | outputChannel&0x07);
+  retVal[1] = (byte) (0x80 | (highAddr << 4 ) | ( active << 3) | (outputChannel&0x07));
   retVal[2] = (byte) (retVal[0] ^ retVal[1]);
 
   return 3;
@@ -258,7 +258,7 @@ int accDecoderPkt2(byte* retVal, int addr, int active, int outputChannel) {
   int highCVnum = ((cvNum-1) >> 8) & 0x03;
 
   retVal[0] = (byte) (0x80 | lowAddr);
-  retVal[1] = (byte) (0x80 | (highAddr << 4 ) | ( active << 3) | outputChannel&0x07);
+  retVal[1] = (byte) (0x80 | (highAddr << 4 ) | ( active << 3) | (outputChannel&0x07));
   retVal[2] = (byte) (0xEC | highCVnum);
   retVal[3] = (byte) (lowCVnum);
   retVal[4] = (byte) (0xFF & data);

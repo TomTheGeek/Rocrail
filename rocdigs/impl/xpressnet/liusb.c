@@ -24,6 +24,7 @@
 #include "rocdigs/impl/xpressnet_impl.h"
 #include "rocdigs/impl/xpressnet/liusb.h"
 #include "rocdigs/impl/xpressnet/li101.h"
+#include "rocdigs/impl/xpressnet/common.h"
 #include "rocrail/wrapper/public/DigInt.h"
 
 
@@ -36,7 +37,7 @@ Boolean liusbConnect(obj xpressnet) {
     - kein Handshake
    */
   data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
-  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:none );
+  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:0 );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
   SerialOp.setLine( data->serial, 57600, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   return SerialOp.open( data->serial );
@@ -64,10 +65,10 @@ int liusbRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
 
   if( MutexOp.wait( data->serialmux ) ) {
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "reading bytes from LI-USB..." );
-    if( SerialOp.read( data->serial, buffer, 2 ) ) {
+    if( SerialOp.read( data->serial, (char*)buffer, 2 ) ) {
       /* TODO: check if it is the expected frame */
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, 2 );
-      if( SerialOp.read( data->serial, buffer, 1 ) ) {
+      if( SerialOp.read( data->serial, (char*)buffer, 1 ) ) {
         len = (buffer[0] & 0x0f) + 1;
         ok = SerialOp.read( data->serial, (char*)buffer+1, len );
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len + 1 );

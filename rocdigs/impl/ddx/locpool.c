@@ -81,6 +81,8 @@ typedef struct _locorefreshdata {
 }
 locorefreshdata ;
 
+void rocrail_ddxStateChanged(obj inst);
+
 /****** routines and data types for maerklin packet pool ******/
 
 static iOMutex maerklin_pktpool_mutex = NULL;
@@ -530,6 +532,7 @@ int refresh_loco(iOSerial serial, locorefreshdata* locorefresh) {
   locorefresh->maerklin_refresh = !locorefresh->maerklin_refresh;
   //  if( rc <= 0 )
   //    TraceOp.trc( "locpool", TRCLEVEL_EXCEPTION, __LINE__, 9999, "Refresh Loco rc=%d errno=%d\n", rc, errno );
+  return 0;
 }
 
 void cancel_refresh_cycle(obj inst) {

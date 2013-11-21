@@ -57,7 +57,7 @@ Boolean lbserialConnect( obj inst ) {
   data->serial = SerialOp.inst( data->device );
   if( native ) {
     /* MS100 bps=16457 */
-    SerialOp.setFlow( data->serial, none );
+    SerialOp.setFlow( data->serial, 0 );
     if( SystemOp.isWindows() ) {
       SerialOp.setLine( data->serial, 16457, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
     }
@@ -71,7 +71,7 @@ Boolean lbserialConnect( obj inst ) {
   }
   else if( pr3 ) {
     /* PR3 bps=57600 Always use flow control. */
-    SerialOp.setFlow( data->serial, data->cts? cts:none );
+    SerialOp.setFlow( data->serial, data->cts? cts:0 );
     SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
     SerialOp.setRTS(data->serial, True);    // not connected in some serial ports and adapters
     SerialOp.setDTR(data->serial, True);   // pin 1 in DIN8; on main connector, this is DTR
@@ -87,7 +87,7 @@ Boolean lbserialConnect( obj inst ) {
     data->initPacket[6] = LocoNetOp.checksum( data->initPacket+1, 5 );
   }
   else {
-    SerialOp.setFlow( data->serial, data->cts? cts:none );
+    SerialOp.setFlow( data->serial, data->cts? cts:0 );
     SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   }
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
@@ -141,7 +141,7 @@ int lbserialRead ( obj inst, unsigned char *msg ) {
     if( !SerialOp.available(data->serial) )
       return 0;
 
-    ok = SerialOp.read(data->serial, &c, 1);
+    ok = SerialOp.read(data->serial, (char*)&c, 1);
     if(c < 0x80) {
       ThreadOp.sleep(10);
       bucket[garbage] = c;
@@ -191,7 +191,7 @@ int lbserialRead ( obj inst, unsigned char *msg ) {
       index = 1;
       break;
   case 0xe0:
-      SerialOp.read(data->serial, &c, 1);
+      SerialOp.read(data->serial, (char*)&c, 1);
       msg[1] = c & 0x7F;
       index = 2;
       msglen = c & 0x7F;
@@ -204,7 +204,7 @@ int lbserialRead ( obj inst, unsigned char *msg ) {
 
   ok = False;
   if( msglen > 0 && msglen <= 0x7F && msglen >= index ) {
-		ok = SerialOp.read(data->serial, &msg[index], msglen - index);
+		ok = SerialOp.read(data->serial, (char*)&msg[index], msglen - index);
   }
 
   if( ok ) {

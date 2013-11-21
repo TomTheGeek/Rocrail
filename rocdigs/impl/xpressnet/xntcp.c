@@ -43,7 +43,7 @@ static void __availwd( void* threadinst ) {
       }
       if( !data->availFlag && data->socket != NULL && !SocketOp.isBroken(data->socket)) {
         data->startbyte = 0;
-        data->availFlag = SocketOp.read( data->socket, &data->startbyte, 1 );
+        data->availFlag = SocketOp.read( data->socket, (char*)&data->startbyte, 1 );
       }
       MutexOp.post( data->serialmux );
       if( data->socket != NULL && SocketOp.isBroken(data->socket)) {
@@ -120,10 +120,10 @@ int xntcpRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   int len = 0;
 
   if( data->socket != NULL && !SocketOp.isBroken(data->socket) && MutexOp.wait( data->serialmux ) ) {
-    if( data->availFlag || SocketOp.read( data->socket, &data->startbyte, 1 ) ) {
+    if( data->availFlag || SocketOp.read( data->socket, (char*)&data->startbyte, 1 ) ) {
       buffer[0] = data->startbyte;
       len = (buffer[0] & 0x0F) + 1;
-      if( SocketOp.read( data->socket, buffer+1, len ) )
+      if( SocketOp.read( data->socket, (char*)(buffer+1), len ) )
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len+1 );
       else
         len = 0;
@@ -165,7 +165,7 @@ Boolean xntcpWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
 
   if( data->socket != NULL ) {
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
-    rc = SocketOp.write( data->socket, out, len );
+    rc = SocketOp.write( data->socket, (char*)out, len );
   }
   return rc;
 }

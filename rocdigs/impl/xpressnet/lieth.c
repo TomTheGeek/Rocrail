@@ -24,7 +24,9 @@
 #include "rocdigs/impl/xpressnet_impl.h"
 #include "rocdigs/impl/xpressnet/lieth.h"
 #include "rocdigs/impl/xpressnet/li101.h"
+#include "rocdigs/impl/xpressnet/common.h"
 #include "rocrail/wrapper/public/DigInt.h"
+#include <time.h>
 
 Boolean liethConnectInternal(obj xpressnet);
 Boolean liethConnect(obj xpressnet);
@@ -185,10 +187,10 @@ int liethRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   }
 
   if( data->socket != NULL && !SocketOp.isBroken(data->socket) && MutexOp.wait( data->serialmux ) ) {
-    if( data->availFlag || SocketOp.read( data->socket, buffer, 2 ) ) {
-      SocketOp.read( data->socket, buffer, 1 );
+    if( data->availFlag || SocketOp.read( data->socket, (char*)buffer, 2 ) ) {
+      SocketOp.read( data->socket, (char*)buffer, 1 );
       len = (buffer[0] & 0x0F) + 1;
-      if( SocketOp.read( data->socket, buffer+1, len ) ) {
+      if( SocketOp.read( data->socket, (char*)(buffer+1), len ) ) {
         TraceOp.trc( "lieth", TRCLEVEL_BYTE, __LINE__, 9999, "read from LI-ETH" );
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)buffer, len+1 );
       }
@@ -244,7 +246,7 @@ Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   if( data->socket != NULL && !SocketOp.isBroken(data->socket) ) {
     TraceOp.trc( "lieth", TRCLEVEL_BYTE, __LINE__, 9999, "write to LI-ETH" );
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
-    ok = SocketOp.write( data->socket, out, len );
+    ok = SocketOp.write( data->socket, (char*)out, len );
     data->lastcmd = time(NULL);
     if( ok ) {
       *rspexpected = True; /* LIUSB/ETH or CS will confirm every command */

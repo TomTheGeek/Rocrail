@@ -36,6 +36,7 @@
 #include "rocs/public/thread.h"
 #include "rocs/public/mutex.h"
 
+void rocrail_ddxStateChanged(obj inst);
 
 /* functions to open, initialize and close comport */
 

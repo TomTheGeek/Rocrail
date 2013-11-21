@@ -106,7 +106,7 @@ static void __reader( void* threadinst ) {
   
     do {
 		  if( SerialOp.available(data->serial) ) {
-				ok = SerialOp.read(data->serial, &c, 1);
+				ok = SerialOp.read(data->serial, (char*)&c, 1);
 				if(c < 0x80) {
 				  ThreadOp.sleep(10);
 				  bucket[garbage] = c;
@@ -172,7 +172,7 @@ static void __reader( void* threadinst ) {
           index = 1;
           break;
       case 0xe0:
-          SerialOp.read(data->serial, &c, 1);
+          SerialOp.read(data->serial, (char*)&c, 1);
           msg[1] = c & 0x7F;
           index = 2;
           msglen = (c & 0x7F);
@@ -187,7 +187,7 @@ static void __reader( void* threadinst ) {
 
     ok = False;
     if( msglen > 0 && msglen <= 0x7F && msglen >= index ) {
-  		ok = SerialOp.read(data->serial, &msg[index], msglen - index);
+  		ok = SerialOp.read(data->serial, (char*)&msg[index], msglen - index);
     }
 
     if( ok && msglen > 0 && !ignore ) {
@@ -296,7 +296,7 @@ Boolean ulniConnect( obj inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, none );
+  SerialOp.setFlow( data->serial, 0 );
   SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 
