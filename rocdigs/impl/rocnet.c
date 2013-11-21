@@ -1554,6 +1554,9 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->AckList = ListOp.inst();
   data->nodemap = MapOp.inst();
 
+  if( wDigInt.getiid(ini) != NULL )
+    data->iid = StrOp.dup(wDigInt.getiid( ini ));
+
   if( data->rnini == NULL ) {
     data->rnini = NodeOp.inst( wRocNet.name(), ini, ELEMENT_NODE );
     NodeOp.addChild( ini, data->rnini );
