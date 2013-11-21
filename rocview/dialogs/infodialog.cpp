@@ -261,6 +261,8 @@ void InfoDialog::OnBitmapbuttonInfoSplashClick( wxCommandEvent& event )
 
 void InfoDialog::onBuildRevision( wxMouseEvent& event )
 {
-  wxLaunchDefaultBrowser(wxString::Format(wxT("https://github.com/rocrail/Rocrail/commit/%s"), wxGetApp().getCommitHash()), wxBROWSER_NEW_WINDOW );
+  char* url = StrOp.fmt("https://github.com/rocrail/Rocrail/commit/%s", wxGetApp().getCommitHash() );
+  wxLaunchDefaultBrowser(wxString(url,wxConvUTF8), wxBROWSER_NEW_WINDOW );
+  StrOp.free(url);
 }
 
