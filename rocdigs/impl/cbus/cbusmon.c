@@ -44,8 +44,8 @@ void cbusMon(byte* frame, int opc) {
   int frange  = 0;
   int fdat    = 0;
 
-  int hh   = HEXA2Byte((char*)(frame + 2));
-  int hl   = HEXA2Byte((char*)(frame + 4));
+  int hh   = HEXA2Byte(frame + 2);
+  int hl   = HEXA2Byte(frame + 4);
 
   int canid = ((hh&0x0F) << 3) + ((hl&0xE0) >> 5);
 
@@ -84,37 +84,37 @@ void cbusMon(byte* frame, int opc) {
     break;
 
   case OPC_RLOC:
-    addrh   = HEXA2Byte((char*)(frame + OFFSET_D1 + offset)) & 0x3F;
-    addrl   = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
+    addrh   = HEXA2Byte(frame + OFFSET_D1 + offset) & 0x3F;
+    addrl   = HEXA2Byte(frame + OFFSET_D2 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_RLOC(0x%02X) request loco %d assignment", canid, opc, addrl+addrh*256 );
     break;
 
   case OPC_KLOC:
-    session = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
+    session = HEXA2Byte(frame + OFFSET_D1 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_KLOC(0x%02X) release loco: session=%d", canid, opc, session );
     break;
 
   case OPC_QLOC:
-    session = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
+    session = HEXA2Byte(frame + OFFSET_D1 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "[%03d] OPC_QLOC(0x%02X) query loco: session=%d", canid, opc, session );
     break;
 
   case OPC_PLOC:
-    session = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-    addrh   = HEXA2Byte((char*)(frame + OFFSET_D2 + offset)) & 0x3F;
-    addrl   = HEXA2Byte((char*)(frame + OFFSET_D3 + offset));
-    speed   = HEXA2Byte((char*)(frame + OFFSET_D4 + offset));
-    f0      = HEXA2Byte((char*)(frame + OFFSET_D5 + offset));
-    f1      = HEXA2Byte((char*)(frame + OFFSET_D6 + offset));
-    f2      = HEXA2Byte((char*)(frame + OFFSET_D7 + offset));
+    session = HEXA2Byte(frame + OFFSET_D1 + offset);
+    addrh   = HEXA2Byte(frame + OFFSET_D2 + offset) & 0x3F;
+    addrl   = HEXA2Byte(frame + OFFSET_D3 + offset);
+    speed   = HEXA2Byte(frame + OFFSET_D4 + offset);
+    f0      = HEXA2Byte(frame + OFFSET_D5 + offset);
+    f1      = HEXA2Byte(frame + OFFSET_D6 + offset);
+    f2      = HEXA2Byte(frame + OFFSET_D7 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "[%03d] OPC_PLOC(0x%02X) loco %d report: session=%d speed=%d dir=%s f0-4=0x%02X f5-8=0x%02X f9-12=0x%02X",
         canid, opc, addrl+addrh*256, session, speed&0x7F, (speed&0x80)?"fwd":"rev", f0, f1, f2 );
     break;
 
   case OPC_STMOD:
-    session = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-    flags   = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
+    session = HEXA2Byte(frame + OFFSET_D1 + offset);
+    flags   = HEXA2Byte(frame + OFFSET_D2 + offset);
     if( flags & 0x02 ) steps = 28;
     else if( flags & 0x01 ) steps = 14;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
@@ -123,16 +123,16 @@ void cbusMon(byte* frame, int opc) {
     break;
 
   case OPC_DSPD:
-    session = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-    speed   = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
+    session = HEXA2Byte(frame + OFFSET_D1 + offset);
+    speed   = HEXA2Byte(frame + OFFSET_D2 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "[%03d] OPC_DSPD(0x%02X) loco speed/dir: session=%d speed=%d dir=%s",
         canid, opc, session, speed&0x7F, (speed&0x80)?"fwd":"rev" );
     break;
 
   case OPC_DFLG:
-    session = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-    flags   = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
+    session = HEXA2Byte(frame + OFFSET_D1 + offset);
+    flags   = HEXA2Byte(frame + OFFSET_D2 + offset);
     if( flags & 0x02 ) steps = 28;
     else if( flags & 0x01 ) steps = 14;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
@@ -141,16 +141,16 @@ void cbusMon(byte* frame, int opc) {
     break;
 
   case OPC_DFUN:
-    session = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-    frange  = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
-    fdat    = HEXA2Byte((char*)(frame + OFFSET_D3 + offset));
+    session = HEXA2Byte(frame + OFFSET_D1 + offset);
+    frange  = HEXA2Byte(frame + OFFSET_D2 + offset);
+    fdat    = HEXA2Byte(frame + OFFSET_D3 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "[%03d] OPC_DFUN(0x%02X) loco functions: session=%d range=0x%02X functions=0x%02X",
         canid, opc, session, frange, fdat );
     break;
 
   case OPC_DKEEP:
-    session = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
+    session = HEXA2Byte(frame + OFFSET_D1 + offset);
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
         "[%03d] OPC_DKEEP(0x%02X) keep alive for cab: session=%d",
         canid, opc, session );
@@ -163,13 +163,13 @@ void cbusMon(byte* frame, int opc) {
     char char2  = '\0';
     char char3  = '\0';
     int display = 0;
-    addrh   = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-    addrl   = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
-    display = HEXA2Byte((char*)(frame + OFFSET_D3 + offset));
-    char0   = HEXA2Byte((char*)(frame + OFFSET_D4 + offset));
-    char1   = HEXA2Byte((char*)(frame + OFFSET_D5 + offset));
-    char2   = HEXA2Byte((char*)(frame + OFFSET_D6 + offset));
-    char3   = HEXA2Byte((char*)(frame + OFFSET_D7 + offset));
+    addrh   = HEXA2Byte(frame + OFFSET_D1 + offset);
+    addrl   = HEXA2Byte(frame + OFFSET_D2 + offset);
+    display = HEXA2Byte(frame + OFFSET_D3 + offset);
+    char0   = HEXA2Byte(frame + OFFSET_D4 + offset);
+    char1   = HEXA2Byte(frame + OFFSET_D5 + offset);
+    char2   = HEXA2Byte(frame + OFFSET_D6 + offset);
+    char3   = HEXA2Byte(frame + OFFSET_D7 + offset);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "OPC_ACDAT(0x%02X) address=%d display=%d line=%d nr=%d text=[%c%c%c%c]",
         opc, addrh*256+addrl, display&0x03, ((display&0x04) >> 2), ((display&0xF0) >> 4),
@@ -180,18 +180,18 @@ void cbusMon(byte* frame, int opc) {
   case OPC_DSPLOC:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "OPC_DSPLOC(0x%02X) session=%d",
-        opc, HEXA2Byte((char*)(frame + OFFSET_D1 + offset)) );
+        opc, HEXA2Byte(frame + OFFSET_D1 + offset) );
     break;
 
   default:
     if( opc != OPC_ACK ) {
-      char char0  = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-      char char1  = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
-      char char2  = HEXA2Byte((char*)(frame + OFFSET_D3 + offset));
-      char char3  = HEXA2Byte((char*)(frame + OFFSET_D4 + offset));
-      char char4  = HEXA2Byte((char*)(frame + OFFSET_D5 + offset));
-      char char5  = HEXA2Byte((char*)(frame + OFFSET_D6 + offset));
-      char char6  = HEXA2Byte((char*)(frame + OFFSET_D7 + offset));
+      char char0  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      char char1  = HEXA2Byte(frame + OFFSET_D2 + offset);
+      char char2  = HEXA2Byte(frame + OFFSET_D3 + offset);
+      char char3  = HEXA2Byte(frame + OFFSET_D4 + offset);
+      char char4  = HEXA2Byte(frame + OFFSET_D5 + offset);
+      char char5  = HEXA2Byte(frame + OFFSET_D6 + offset);
+      char char6  = HEXA2Byte(frame + OFFSET_D7 + offset);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%03d] evaluate OPC=0x%02X data=%02X%02X%02X%02X%02X%02X%02X",
           canid, opc, char0&0xFF, char1&0xFF, char2&0xFF, char3&0xFF, char4&0xFF, char5&0xFF, char6&0xFF );
     }

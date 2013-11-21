@@ -63,16 +63,16 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
   case OPC_PNN:
   {
     int offset = (frame[1] == 'S') ? 0:4;
-    int nnh  = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-    int nnl  = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
+    int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+    int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
     int nn = nnh * 256 + nnl;
-    int manu  = HEXA2Byte((char*)(frame + OFFSET_D3 + offset));
-    int prod  = HEXA2Byte((char*)(frame + OFFSET_D4 + offset));
-    int nv1   = HEXA2Byte((char*)(frame + OFFSET_D5 + offset));
+    int manu  = HEXA2Byte(frame + OFFSET_D3 + offset);
+    int prod  = HEXA2Byte(frame + OFFSET_D4 + offset);
+    int nv1   = HEXA2Byte(frame + OFFSET_D5 + offset);
 
     int l_sidh, l_sidl, canid;
-    l_sidh = HEXA2Byte((char*)(frame + OFFSET_SIDH));
-    l_sidl = HEXA2Byte((char*)(frame + OFFSET_SIDL));
+    l_sidh = HEXA2Byte(frame + OFFSET_SIDH);
+    l_sidl = HEXA2Byte(frame + OFFSET_SIDL);
     canid = (l_sidl >> 5 ) + ((l_sidh&0x1F) << 3);
 
     iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
@@ -93,11 +93,11 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
   case OPC_PARAN:
   {
     int offset = (frame[1] == 'S') ? 0:4;
-    int nnh  = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-    int nnl  = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
+    int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+    int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
     int nn = nnh * 256 + nnl;
-    int idx  = HEXA2Byte((char*)(frame + OFFSET_D3 + offset));
-    int val  = HEXA2Byte((char*)(frame + OFFSET_D4 + offset));
+    int idx  = HEXA2Byte(frame + OFFSET_D3 + offset);
+    int val  = HEXA2Byte(frame + OFFSET_D4 + offset);
 
     iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
     wProgram.setcmd( node, wProgram.get );
@@ -116,8 +116,8 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
   case OPC_RQNN:
     {
       int offset = (frame[1] == 'S') ? 0:4;
-      int nnh  = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-      int nnl  = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
+      int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
       data->nnsetup = nnh * 256 + nnl;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: request node[%d] parameters", data->nnsetup );
       *extraMsg = allocMem(32);
@@ -139,13 +139,13 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
         Para 7 Not yet allocated.
       */
       int offset = (frame[1] == 'S') ? 0:4;
-      int para1  = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-      int para2  = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
-      int para3  = HEXA2Byte((char*)(frame + OFFSET_D3 + offset));
-      int para4  = HEXA2Byte((char*)(frame + OFFSET_D4 + offset));
-      int para5  = HEXA2Byte((char*)(frame + OFFSET_D5 + offset));
-      int para6  = HEXA2Byte((char*)(frame + OFFSET_D6 + offset));
-      int para7  = HEXA2Byte((char*)(frame + OFFSET_D7 + offset));
+      int para1  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int para2  = HEXA2Byte(frame + OFFSET_D2 + offset);
+      int para3  = HEXA2Byte(frame + OFFSET_D3 + offset);
+      int para4  = HEXA2Byte(frame + OFFSET_D4 + offset);
+      int para5  = HEXA2Byte(frame + OFFSET_D5 + offset);
+      int para6  = HEXA2Byte(frame + OFFSET_D6 + offset);
+      int para7  = HEXA2Byte(frame + OFFSET_D7 + offset);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node parameters received" );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "nodeNr=%d, manuID=%d, version=%d.%d, moduleID=%d", data->nnsetup, para1, para7, para2, para3 );
@@ -169,8 +169,8 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
     {
       iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       int offset = (frame[1] == 'S') ? 0:4;
-      int nnh  = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-      int nnl  = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
+      int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
       int nn = nnh * 256 + nnl;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node number confirmed [%d]", nn );
       /*
@@ -193,16 +193,16 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
     {
       /* <0xF2><NN hi><NN lo><EN3><EN2><EN1><EN0><EN#> */
       int offset = (frame[1] == 'S') ? 0:4;
-      int nnh  = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-      int nnl  = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
+      int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
       int nn = nnh * 256 + nnl;
-      int en3  = HEXA2Byte((char*)(frame + OFFSET_D3 + offset));
-      int en2  = HEXA2Byte((char*)(frame + OFFSET_D4 + offset));
+      int en3  = HEXA2Byte(frame + OFFSET_D3 + offset);
+      int en2  = HEXA2Byte(frame + OFFSET_D4 + offset);
       int ennn = en3 * 256 + en2;
-      int en1  = HEXA2Byte((char*)(frame + OFFSET_D5 + offset));
-      int en0  = HEXA2Byte((char*)(frame + OFFSET_D6 + offset));
+      int en1  = HEXA2Byte(frame + OFFSET_D5 + offset);
+      int en0  = HEXA2Byte(frame + OFFSET_D6 + offset);
       int enaddr = en1 * 256 + en0;
-      int ennr = HEXA2Byte((char*)(frame + OFFSET_D7 + offset));
+      int ennr = HEXA2Byte(frame + OFFSET_D7 + offset);
 
       iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       wProgram.setcmd( node, wProgram.evget );
@@ -223,14 +223,14 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
     {
       /* <D3><EN3><EN2><EN1><EN0><EV#><EVval> */
       int offset = (frame[1] == 'S') ? 0:4;
-      int en3  = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-      int en2  = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
+      int en3  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int en2  = HEXA2Byte(frame + OFFSET_D2 + offset);
       int ennn = en3 * 256 + en2;
-      int en1  = HEXA2Byte((char*)(frame + OFFSET_D3 + offset));
-      int en0  = HEXA2Byte((char*)(frame + OFFSET_D4 + offset));
+      int en1  = HEXA2Byte(frame + OFFSET_D3 + offset);
+      int en0  = HEXA2Byte(frame + OFFSET_D4 + offset);
       int enaddr = en1 * 256 + en0;
-      int ennr  = HEXA2Byte((char*)(frame + OFFSET_D5 + offset));
-      int enval = HEXA2Byte((char*)(frame + OFFSET_D6 + offset));
+      int ennr  = HEXA2Byte(frame + OFFSET_D5 + offset);
+      int enval = HEXA2Byte(frame + OFFSET_D6 + offset);
 
       iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
 
@@ -251,11 +251,11 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       /* <97><NNhi><NNlo><NV#><NV val> */
       iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       int offset = (frame[1] == 'S') ? 0:4;
-      int nnh  = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-      int nnl  = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
+      int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
       int nn = nnh * 256 + nnl;
-      int idx  = HEXA2Byte((char*)(frame + OFFSET_D3 + offset));
-      int val  = HEXA2Byte((char*)(frame + OFFSET_D4 + offset));
+      int idx  = HEXA2Byte(frame + OFFSET_D3 + offset);
+      int val  = HEXA2Byte(frame + OFFSET_D4 + offset);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node [%d] node variable %d=%d response", nn, idx, val );
       wProgram.setcmd( node, wProgram.get );
       wProgram.setiid( node, data->iid );
@@ -271,8 +271,8 @@ iONode processFLiM(obj inst, int opc, byte *frame, byte **extraMsg) {
       /* <59><NNhi><NNlo> */
       iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
       int offset = (frame[1] == 'S') ? 0:4;
-      int nnh  = HEXA2Byte((char*)(frame + OFFSET_D1 + offset));
-      int nnl  = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
+      int nnh  = HEXA2Byte(frame + OFFSET_D1 + offset);
+      int nnl  = HEXA2Byte(frame + OFFSET_D2 + offset);
       int nn = nnh * 256 + nnl;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "FLiM: node [%d] write acknowledge", nn );
       wProgram.setcmd( node, wProgram.statusrsp );

@@ -72,7 +72,7 @@ int makeExtFrame(byte* frame, int prio, byte* cmd, int datalen, int cid ) {
 }
 
 
-byte HEXA2Byte( const char* s ) {
+byte HEXA2Byte( const byte* s ) {
   char val[3] = {0};
   val[0] = s[0];
   val[1] = s[1];

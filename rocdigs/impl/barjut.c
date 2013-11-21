@@ -353,12 +353,12 @@ __sendCommand(
 	{
 		if( i < sizeof ( sendData ) )
 		{
-			SerialOp.read( o->serial, sendData, i );
+			SerialOp.read( o->serial, (char*)sendData, i );
 			break;
 		}
 		else
 		{
-			if( !SerialOp.read( o->serial, sendData, sizeof ( sendData ) ) )
+			if( !SerialOp.read( o->serial, (char*)sendData, sizeof ( sendData ) ) )
 				break;
 		}
 		i -= sizeof ( sendData );
@@ -384,7 +384,7 @@ __sendCommand(
 	//  if( CheckCTS( o ) )
 	//  {
 	// Send start
-	ok = SerialOp.write( o->serial, &sendData[0], 1 );
+	ok = SerialOp.write( o->serial, (char*)&sendData[0], 1 );
 	if( !ok )
 		return False;
 	// Send command and data with converting with special character
@@ -393,11 +393,11 @@ __sendCommand(
 		if( ( sendData[i] == STX ) || ( sendData[i] == DLE ) )
 		{
 			ch = DLE;
-			ok = SerialOp.write( o->serial, &ch, 1 );
+			ok = SerialOp.write( o->serial, (char*)&ch, 1 );
 			if( !ok )
 				return False;
 		}
-		ok = SerialOp.write( o->serial, &sendData[i], 1 );
+		ok = SerialOp.write( o->serial, (char*)&sendData[i], 1 );
 		if( !ok )
 			return False;
 	}
@@ -441,7 +441,7 @@ __receiveData(
 				if( !SerialOp.available( o->serial ) )
 					break;
 			}
-			if( !SerialOp.read( o->serial, &c, 1 ) )
+			if( !SerialOp.read( o->serial, (char*)&c, 1 ) )
 				break;
 
 			//TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%x", c);

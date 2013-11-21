@@ -2397,7 +2397,7 @@ static void __handleIdentify(iOBiDiB bidib, iOBiDiBNode bidibnode, const char* p
 
 static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
   iOBiDiBData data = Data(bidib);
-  char msgdata[256];
+  unsigned char msgdata[256];
 
   if( bidibnode != NULL ) {
     if( pdata[0] == BIDIB_MSG_FW_UPDATE_STAT_READY ) {
@@ -2443,14 +2443,14 @@ static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
 
       if( data->hexfh != NULL ) {
         FILE* fs = FileOp.getStream(data->hexfh);
-        fgets( msgdata+1, 256, fs );
+        fgets( (char*)(msgdata+1), 256, fs );
         if( !ferror(fs) && !feof(fs) ) {
-          StrOp.replaceAll(msgdata+1, '\r', '\0');
-          StrOp.replaceAll(msgdata+1, '\n', '\0');
+          StrOp.replaceAll((char*)(msgdata+1), '\r', '\0');
+          StrOp.replaceAll((char*)(msgdata+1), '\n', '\0');
           TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "update line=%d [%s]", data->hexline++, msgdata+1);
 
           msgdata[0] = BIDIB_MSG_FW_UPDATE_OP_DATA;
-          data->subWrite((obj)bidib, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 1 + StrOp.len(msgdata+1), 0);
+          data->subWrite((obj)bidib, bidibnode->path, MSG_FW_UPDATE_OP, msgdata, 1 + StrOp.len((char*)(msgdata+1)), 0);
           if( data->hexline % 10 == 0 ) {
             iONode rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
             if( data->iid != NULL )

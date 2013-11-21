@@ -41,8 +41,8 @@ void slotServer(obj cbus, int opc, byte* frame) {
   switch(opc) {
   case OPC_RLOC:
     {
-      int addrh = HEXA2Byte((char*)(frame + OFFSET_D1 + offset)) & 0x3F;
-      int addrl = HEXA2Byte((char*)(frame + OFFSET_D2 + offset));
+      int addrh = HEXA2Byte(frame + OFFSET_D1 + offset) & 0x3F;
+      int addrl = HEXA2Byte(frame + OFFSET_D2 + offset);
       byte* frame = allocMem(32);
 
       cmd[0] = OPC_PLOC;
