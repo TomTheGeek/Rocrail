@@ -424,7 +424,7 @@ static void __reader( void* threadinst ) {
 
     ThreadOp.sleep(10);
     if( SerialOp.available(data->serial) ) {
-      SerialOp.read(data->serial, in, 1);
+      SerialOp.read(data->serial, (char*)in, 1);
       TraceOp.dump ( name, TRCLEVEL_INFO, (char*)in, 1 );
     }
   }
@@ -459,7 +459,7 @@ static struct OCTI* _inst( const iONode ini ,const iOTrace trc ) {
   data->run = True;
 
   data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );
-  SerialOp.setFlow( data->serial, none );
+  SerialOp.setFlow( data->serial, 0 );
   SerialOp.setLine( data->serial, 9600, 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
   data->serialOK = SerialOp.open( data->serial );
 

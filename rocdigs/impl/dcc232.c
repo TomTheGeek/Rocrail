@@ -194,7 +194,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         action = 0;
     }
 
-    packetlen = compAccessory(dccpacket, addr, port, dir, action);
+    packetlen = compAccessory((char*)dccpacket, addr, port, dir, action);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
         "turnout %04d %d %-10.10s fada=%04d pada=%04d addr=%d port=%d gate=%d dir=%d action=%d packetlen=%d",
         addr, port, wSwitch.getcmd( node ), fada, pada, addr, port, gate, dir, action, packetlen );
@@ -234,7 +234,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %04d %d %d fada=%04d pada=%04d",
         addr, port, gate, fada, pada );
 
-    packetlen = compAccessory(dccpacket, addr, port, gate, action);
+    packetlen = compAccessory((char*)dccpacket, addr, port, gate, action);
     cmd = allocMem(64);
     cmd[0] = packetlen;
     MemOp.copy(cmd+1, dccpacket, packetlen );
@@ -247,7 +247,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     if( pom ) {
       byte dccpacket[64];
       byte* cmd = NULL;
-      int packetlen = dccPOM(dccpacket, wProgram.getaddr(node), wProgram.islongaddr(node),
+      int packetlen = dccPOM((char*)dccpacket, wProgram.getaddr(node), wProgram.islongaddr(node),
                           wProgram.getcv(node), wProgram.getvalue(node),  wProgram.getcmd( node ) == wProgram.get );
       cmd = allocMem(64);
       cmd[0] = packetlen;
@@ -336,7 +336,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         data->slots[slot].changedfgrp = wLoc.isfn( node ) ? 1:-1;
         data->slots[slot].idle = SystemOp.getTick();
 
-        data->slots[slot].lcstream[0] = compSpeed(data->slots[slot].lcstream+1, data->slots[slot].addr,
+        data->slots[slot].lcstream[0] = compSpeed((char*)(data->slots[slot].lcstream+1), data->slots[slot].addr,
                                                   data->slots[slot].longaddr  , data->slots[slot].dir,
                                                   data->slots[slot].V, data->slots[slot].steps);
 
@@ -356,7 +356,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         data->slots[slot].changedfgrp = 1;
         data->slots[slot].lights = wLoc.isfn( node );
         data->slots[slot].fn[ 0] = wLoc.isfn( node );
-        data->slots[slot].fnstream[0] = compFunction(data->slots[slot].fnstream, data->slots[slot].addr,
+        data->slots[slot].fnstream[0] = compFunction((char*)data->slots[slot].fnstream, data->slots[slot].addr,
                                                      data->slots[slot].longaddr, data->slots[slot].changedfgrp, data->slots[slot].fn);
 
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
@@ -427,7 +427,7 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
         data->slots[slot].fn[27] = wFunCmd.isf27( node );
         data->slots[slot].fn[28] = wFunCmd.isf28( node );
 
-        data->slots[slot].fnstream[0] = compFunction(data->slots[slot].fnstream, data->slots[slot].addr,
+        data->slots[slot].fnstream[0] = compFunction((char*)data->slots[slot].fnstream, data->slots[slot].addr,
                                                      data->slots[slot].longaddr, data->slots[slot].changedfgrp, data->slots[slot].fn);
 
         data->slots[slot].idle = SystemOp.getTick();
@@ -565,7 +565,7 @@ static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize, 
     return False;
   }
 
-  idlestreamsize = idlePacket(idlestream, longIdle);
+  idlestreamsize = idlePacket((char*)idlestream, longIdle);
 
   SerialOp.setSerialMode(data->serial,dcc);
 
@@ -573,15 +573,15 @@ static Boolean __transmit( iODCC232 dcc232, char* bitstream, int bitstreamsize, 
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "transmit size=%d", bitstreamsize );
     rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
     if( rc )
-      rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
+      rc = SerialOp.write( data->serial, (char*)idlestream, idlestreamsize );
     if( rc )
-      rc = SerialOp.write( data->serial, bitstream, bitstreamsize );
+      rc = SerialOp.write( data->serial, (char*)bitstream, bitstreamsize );
     if( rc )
-      rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
+      rc = SerialOp.write( data->serial, (char*)idlestream, idlestreamsize );
   }
   else {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "transmit size=%d", idlestreamsize );
-    rc = SerialOp.write( data->serial, idlestream, idlestreamsize );
+    rc = SerialOp.write( data->serial, (char*)idlestream, idlestreamsize );
   }
 
 
@@ -683,7 +683,7 @@ static void __dccWriter( void* threadinst ) {
           MemOp.copy( dccpacket, post, 64);
           freeMem( post);
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "processing posted packet, size=%d", dccpacket[0] );
-          __transmit( dcc232, dccpacket+1, dccpacket[0], False );
+          __transmit( dcc232, (char*)(dccpacket+1), dccpacket[0], False );
           post = (byte*)ThreadOp.getPost( th );
         }
       }
@@ -725,7 +725,7 @@ static void __dccWriter( void* threadinst ) {
 
 
           /* refresh speed packet */
-          __transmit( dcc232, data->slots[slotidx].lcstream+1, data->slots[slotidx].lcstream[0], False );
+          __transmit( dcc232, (char*)(data->slots[slotidx].lcstream+1), data->slots[slotidx].lcstream[0], False );
           data->slots[slotidx].refreshcnt++;
 
           if( data->slots[slotidx].fgrp > 0 || data->slots[slotidx].refreshcnt > 10 ) {
@@ -735,7 +735,7 @@ static void __dccWriter( void* threadinst ) {
               /* transmit big idle packet */
               __transmit( dcc232, NULL, 0, True );
               /* transmit last function packet */
-              __transmit( dcc232, data->slots[slotidx].fnstream+1, data->slots[slotidx].fnstream[0], False );
+              __transmit( dcc232, (char*)(data->slots[slotidx].fnstream+1), data->slots[slotidx].fnstream[0], False );
             }
           }
 

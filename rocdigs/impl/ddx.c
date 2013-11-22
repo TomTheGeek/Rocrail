@@ -39,8 +39,12 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 
+#include "rocdigs/impl/ddx/accpool.h"
+#include "rocdigs/impl/ddx/init.h"
 #include "rocdigs/impl/ddx/s88.h"
 #include "rocdigs/impl/ddx/nmra.h"
+#include "rocdigs/impl/ddx/motorola.h"
+#include "rocdigs/impl/ddx/locpool.h"
 
 #include "rocutils/public/addr.h"
 
@@ -692,7 +696,7 @@ static struct ODDX* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Starting DDX..." );
   SystemOp.inst();
   data->serial = NULL;
-  ddx_entry( __DDX , ddx_ini );
+  ddx_entry( (obj)__DDX , ddx_ini );
 
   instCnt++;
 //  __inst = __DDX;

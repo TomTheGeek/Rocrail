@@ -229,7 +229,7 @@ static struct OClock* _inst( const iONode ini ,const iOTrace trc ) {
   data->run = True;
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, none );
+  SerialOp.setFlow( data->serial, 0 );
   SerialOp.setLine( data->serial, 9600, 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
   SerialOp.open( data->serial );
 

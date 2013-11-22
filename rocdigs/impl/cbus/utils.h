@@ -45,7 +45,8 @@
 #define OFFSET_D7 21
 
 int makeFrame(byte* frame, int prio, byte* cmd, int datalen, int cid, Boolean eth );
+int makeExtFrame(byte* frame, int prio, byte* cmd, int datalen, int cid );
 byte HEXA2Byte( const byte* s );
-void Byte2HEXA( char* s, byte b );
+void Byte2HEXA( byte* s, byte b );
 
 #endif /* CBUS_UTILS_H_ */

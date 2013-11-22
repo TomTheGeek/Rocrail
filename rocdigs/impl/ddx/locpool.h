@@ -100,6 +100,8 @@ tLocoInfo *get_NMRAPacketPool_LocoInfo(int addr);
 void thr_refresh_cycle(void *threadinst);
 void cancel_refresh_cycle(obj inst);
 
+void update_MaerklinPacketPool_Loco_Data(int addr, int direction, int speed, int func,
+    int f1, int f2, int f3, int f4);
 
 int monitor_NrOfMLocos();
 int monitor_NrOfNLocos();

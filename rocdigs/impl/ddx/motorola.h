@@ -55,5 +55,6 @@ int comp_maerklin_5(int address, int direction, int speed, int func,
 int comp_maerklin_ms(int address, int port, int gate, int action);
 int comp_maerklin_mf(int address, 
                      int f1, int f2, int f3, int f4);
+int comp_maerklin_ms(int address, int port, int gate, int action);
 
 #endif

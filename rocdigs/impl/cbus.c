@@ -693,7 +693,7 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
 }
 
 
-static __evaluateAcc( iOCBUS cbus, byte* frame, Boolean state ) {
+static void __evaluateAcc( iOCBUS cbus, byte* frame, Boolean state ) {
   iOCBUSData data = Data(cbus);
 
   int offset  = (frame[1] == 'S') ? 0:4;
@@ -728,7 +728,7 @@ static __evaluateAcc( iOCBUS cbus, byte* frame, Boolean state ) {
 }
 
 
-static __evaluateErr( iOCBUS cbus, byte* frame ) {
+static void __evaluateErr( iOCBUS cbus, byte* frame ) {
   iOCBUSData data = Data(cbus);
   iONode node = NULL;
 
@@ -784,7 +784,7 @@ static __evaluateErr( iOCBUS cbus, byte* frame ) {
 }
 
 
-static __evaluateCmdErr( iOCBUS cbus, byte* frame ) {
+static void __evaluateCmdErr( iOCBUS cbus, byte* frame ) {
   iOCBUSData data = Data(cbus);
   iONode node = NULL;
 
@@ -838,7 +838,7 @@ static __evaluateCmdErr( iOCBUS cbus, byte* frame ) {
 }
 
 
-static __evaluateCV( iOCBUS cbus, byte* frame ) {
+static void __evaluateCV( iOCBUS cbus, byte* frame ) {
   iOCBUSData data = Data(cbus);
   iONode node = NULL;
 
@@ -875,7 +875,7 @@ static __evaluateCV( iOCBUS cbus, byte* frame ) {
     the unique tag number is only 40 bits, the other bits are used
     for the header and for row and column parity.
  */
-static __evaluateRFID( iOCBUS cbus, byte* frame ) {
+static void __evaluateRFID( iOCBUS cbus, byte* frame ) {
   iOCBUSData data = Data(cbus);
   char ident[64] = {'\0'};
   Boolean isZero = False;
@@ -914,7 +914,7 @@ static __evaluateRFID( iOCBUS cbus, byte* frame ) {
 
 
 
-static __evaluateIR( iOCBUS cbus, byte* frame ) {
+static void __evaluateIR( iOCBUS cbus, byte* frame ) {
   iOCBUSData data = Data(cbus);
 
   int offset  = (frame[1] == 'S') ? 0:4;
@@ -2154,7 +2154,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
       cmd[2] = mid % 256;
       cmd[3] = addr / 256;
       cmd[4] = addr % 256;
-      makeExtFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
+      makeExtFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid );
       ThreadOp.post(data->writer, (obj)frame);
 
       if( wProgram.getcmd( node ) == wProgram.lncvget ) {
@@ -2173,7 +2173,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[2] = cv % 256;
         cmd[3] = val / 256;
         cmd[4] = val % 256;
-        makeExtFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
+        makeExtFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid );
         ThreadOp.post(data->writer, (obj)frame);
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LNCV get: %d %d %d", mid, addr, cv );
       }
@@ -2186,7 +2186,7 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
         cmd[2] = cv % 256;
         cmd[3] = val / 256;
         cmd[4] = val % 256;
-        makeExtFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
+        makeExtFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid );
         ThreadOp.post(data->writer, (obj)frame);
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LNCV set: %d %d %d %d", mid, addr, cv, val );
       }

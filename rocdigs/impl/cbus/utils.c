@@ -81,7 +81,7 @@ byte HEXA2Byte( const byte* s ) {
   return (unsigned char)(strtol( val, NULL, 16)&0xFF);
 }
 
-void Byte2HEXA( char* s, byte b ) {
+void Byte2HEXA( byte* s, byte b ) {
   static char cHex[] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
   int i = 0;
   s[0] = cHex[(b&0xF0)>>4 ];

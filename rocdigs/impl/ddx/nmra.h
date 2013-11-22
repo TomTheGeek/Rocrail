@@ -292,5 +292,6 @@ int protocol_nmra_sm_verify_cvbyte(obj inst, int cv, int value);
 int comp_nmra_fb7(int address, int group, int* f);
 int comp_nmra_fb14(int address, int group, int* f);
 
+int nmragetcvbyte(obj inst, int cv);
 
 #endif
