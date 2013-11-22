@@ -273,14 +273,14 @@ static void __PerIRReader( void* threadinst ) {
 
     while (bAvail > 0) {
       byte c;
-      SerialOp.read( data->serial, &c, 1 );
+      SerialOp.read( data->serial, (char*)&c, 1 );
 
       if( insync ) {
         packet[idx] = c;
         idx++;
         if( idx == 3 ) {
           idx = 0;
-          TraceOp.dump( NULL, TRCLEVEL_BYTE, packet, 3 );
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)packet, 3 );
           if( packet[0] % 2 != 0 ) {
             /* data packet */
             int decoder = packet[0] / 2 + 1;
@@ -380,7 +380,7 @@ static struct OPerIR* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:none );
+  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:0 );
   SerialOp.setLine( data->serial, 9600, 8, 2, none, wDigInt.isrtsdisabled( ini ) );
   data->serialOK = SerialOp.open( data->serial );
 

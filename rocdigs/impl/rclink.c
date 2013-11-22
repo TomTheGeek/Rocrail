@@ -210,7 +210,7 @@ static iONode _cmd( obj inst ,const iONode node ) {
     if( StrOp.equals( wSysCmd.sod, wSysCmd.getcmd(node) ) ) {
       byte cmd = 0x20;
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day" );
-      SerialOp.write(data->serial, &cmd, 1);
+      SerialOp.write(data->serial, (char*)&cmd, 1);
     }
     if( StrOp.equals( wSysCmd.slots, wSysCmd.getcmd(node) ) ) {
       int  rcd = 1;
@@ -218,7 +218,7 @@ static iONode _cmd( obj inst ,const iONode node ) {
       for( rcd = 1; rcd < 25; rcd++) {
         cmd = 0xA0 + rcd;
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "query RCD %d", rcd );
-        SerialOp.write(data->serial, &cmd, 1);
+        SerialOp.write(data->serial, (char*)&cmd, 1);
         ThreadOp.sleep(100);
       }
     }
@@ -281,7 +281,7 @@ static Boolean _supportPT( obj inst ) {
 static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
   iORcLinkData data = Data(inst);
 
-  TraceOp.dump( NULL, TRCLEVEL_BYTE, packet, idx );
+  TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)packet, idx );
 
   switch( packet[0] ) {
   case 0xD1:
@@ -377,7 +377,7 @@ static void __evaluateRC(iORcLink inst, byte* packet, int idx) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "SN=%d Software=%.1f Hardware=%.1f", packet[1]*256 + packet[2],
         ((float)packet[3])/10.0, ((float)packet[4])/10.0 );
-    SerialOp.write(data->serial, &cmd, 1);
+    SerialOp.write(data->serial, (char*)&cmd, 1);
   }
   break;
   case 0xFE:
@@ -439,7 +439,7 @@ static void __RcLinkReader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RcLink reader started." );
   ThreadOp.sleep(500);
   packet[0] = 0x60;
-  SerialOp.write(data->serial, packet, 1);
+  SerialOp.write(data->serial, (char*)packet, 1);
 
   ThreadOp.sleep(100);
 
@@ -456,8 +456,8 @@ static void __RcLinkReader( void* threadinst ) {
 
     while (bAvail > 0) {
       byte c;
-      SerialOp.read( data->serial, &c, 1 );
-      TraceOp.dump( NULL, TRCLEVEL_DEBUG, &c, 1 );
+      SerialOp.read( data->serial, (char*)&c, 1 );
+      TraceOp.dump( NULL, TRCLEVEL_DEBUG, (char*)&c, 1 );
       if( !packetStart && __isStartByte( c, &datalen ) ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "STX 0x%02X datalen=%d", c, datalen );
         /* STX */
@@ -568,7 +568,7 @@ static struct ORcLink* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:none );
+  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:0 );
   SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
   data->serialOK = SerialOp.open( data->serial );
 

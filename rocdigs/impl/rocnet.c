@@ -1347,7 +1347,7 @@ static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOrocNet rocnet = (iOrocNet)ThreadOp.getParm( th );
   iOrocNetData data = Data(rocnet);
-  char rn[0x7F];
+  byte rn[0x7F];
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNet reader started" );
 

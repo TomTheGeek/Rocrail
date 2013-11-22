@@ -185,6 +185,8 @@ static Boolean __transact( iOP50Data o, char* out, int outsize, char* in, int in
         wResponse.setstate( nodeC, wResponse.rcverr );
         errLevel = TRCLEVEL_EXCEPTION;
         break;
+      case P50_ERROR:
+        break;
       }
 
       o->listenerFun( o->listenerObj, nodeC, errLevel );
@@ -453,7 +455,7 @@ static Boolean _supportPT( obj inst ) {
   return False;
 }
 
-static __evaluateState( iOP50Data o, unsigned char* fb1, unsigned char* fb2, int size ) {
+static void __evaluateState( iOP50Data o, unsigned char* fb1, unsigned char* fb2, int size ) {
   int i = 0;
   for( i = 0; i < size; i++ ) {
     if( fb1[i] != fb2[i] ) {
@@ -622,7 +624,7 @@ static iOP50 _inst( const iONode settings, const iOTrace trace ) {
   else if( StrOp.equals( wDigInt.xon, flow ) )
     data->flow = xon;
   else
-    data->flow = none;
+    data->flow = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "p50 %d.%d.%d", vmajor, vminor, patch );

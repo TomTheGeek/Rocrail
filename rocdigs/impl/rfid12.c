@@ -333,7 +333,7 @@ static void __RFIDReader( void* threadinst ) {
       SerialOp.read( data->serial, &c, 1 );
       TraceOp.dump( NULL, TRCLEVEL_BYTE, &c, 1 );
 
-      if( !packetStart && (c == 0x02 || c >= 'A' && c <= 'H' ) ) {
+      if( !packetStart && (c == 0x02 || (c >= 'A' && c <= 'H') ) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "packet start detected: [0x%02X]", c & 0xFF );
         /* STX */
         packetStart = True;

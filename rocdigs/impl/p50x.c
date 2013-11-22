@@ -112,8 +112,8 @@ static Boolean __flushP50x( iOP50xData o ) {
     int bAvail = SerialOp.available(o->serial);
     if( bAvail > 0 && bAvail < 256 ) {
       TraceOp.trc(name, TRCLEVEL_WARNING, __LINE__, 9999, "Flushing %d bytes...", bAvail);
-      SerialOp.read( o->serial, buffer, bAvail );
-      TraceOp.dump( NULL, TRCLEVEL_WARNING, buffer, bAvail );
+      SerialOp.read( o->serial, (char*)buffer, bAvail );
+      TraceOp.dump( NULL, TRCLEVEL_WARNING, (char*)buffer, bAvail );
     }
     else if(bAvail >= 256) {
       TraceOp.trc(name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Can not flush %d bytes, check your hardware!", bAvail);
@@ -232,6 +232,8 @@ static Boolean __transact( iOP50xData o, char* out, int outsize, char* in, int i
         wResponse.setmsg( nodeC, "Read error." );
         wResponse.setstate( nodeC, wResponse.rcverr );
         errLevel = TRCLEVEL_EXCEPTION;
+        break;
+      case P50_ERROR:
         break;
       }
 
@@ -594,7 +596,7 @@ static Boolean __getversion( iOP50x inst ) {
     else
       state = P50_SNDERR;
 
-    if( state = P50_OK ) {
+    if( state == P50_OK ) {
       int bAvail = 0;
       ThreadOp.sleep( 500 );
       bAvail = SerialOp.available(data->serial);
@@ -1176,14 +1178,14 @@ static void __handleLoco(iOP50x p50x, byte* status) {
 
       /* ask for F9 to F16 */
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "check for XFuncXSts F9-F16 of %d", addr );
-      TraceOp.dump( name, TRCLEVEL_BYTE, out, 4 );
+      TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, 4 );
       if( SerialOp.write( data->serial, (char*)out, 4 ) ) {
         Boolean read = SerialOp.read( data->serial, (char*)&in[0], 1 ) ;
         if( read ) {
-          TraceOp.dump( name, TRCLEVEL_DEBUG, in, 1 );
+          TraceOp.dump( name, TRCLEVEL_DEBUG, (char*)in, 1 );
           if (in[0] == 0x00 ) {
             if( SerialOp.read( data->serial, (char*)in+1, 1 ) ) {
-              TraceOp.dump( name, TRCLEVEL_BYTE, in, 2 );
+              TraceOp.dump( name, TRCLEVEL_BYTE, (char*)in, 2 );
 
               wFunCmd.setf9(  nodeC, (in[1] & 0x01) ? True:False );
               wFunCmd.setf10( nodeC, (in[1] & 0x02) ? True:False );
@@ -1219,14 +1221,14 @@ static void __handleLoco(iOP50x p50x, byte* status) {
 
       /* ask for F17 to F28 */
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "check for XFunc34Sts F17-F28 of %d", addr );
-      TraceOp.dump( name, TRCLEVEL_BYTE, out, 4 );
+      TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, 4 );
       if( SerialOp.write( data->serial, (char*)out, 4 ) ) {
         Boolean read = SerialOp.read( data->serial, (char*)&in[0], 1 ) ;
         if( read ) {
-          TraceOp.dump( name, TRCLEVEL_DEBUG, in, 1 );
+          TraceOp.dump( name, TRCLEVEL_DEBUG, (char*)in, 1 );
           if (in[0] == 0x00 ) {
             if( SerialOp.read( data->serial, (char*)in+1, 2 ) ) {
-              TraceOp.dump( name, TRCLEVEL_BYTE, in, 3 );
+              TraceOp.dump( name, TRCLEVEL_BYTE, (char*)in, 3 );
 
               wFunCmd.setf17( nodeC, (in[1] & 0x01) ? True:False );
               wFunCmd.setf18( nodeC, (in[1] & 0x02) ? True:False );
@@ -1365,7 +1367,7 @@ static void __statusReader( void* threadinst ) {
             }
             else {
               TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unable to read switch event");
-              TraceOp.dump( name, TRCLEVEL_WARNING, in, SerialOp.getReadCnt(o->serial) );
+              TraceOp.dump( name, TRCLEVEL_WARNING, (char*)in, SerialOp.getReadCnt(o->serial) );
             }
 
           }
@@ -1381,17 +1383,17 @@ static void __statusReader( void* threadinst ) {
       out[1] = 0xC9;
       /* ask for locomotive changes */
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "check for XEvtLok..." );
-      TraceOp.dump( name, TRCLEVEL_DEBUG, out, 2 );
+      TraceOp.dump( name, TRCLEVEL_DEBUG, (char*)out, 2 );
       ListOp.clear(evtList);
       if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
         byte* evt = NULL;
         do {
           Boolean read = SerialOp.read( o->serial, (char*)&in[0], 1 ) ;
           if( read ) {
-            TraceOp.dump( name, TRCLEVEL_DEBUG, in, 1 );
+            TraceOp.dump( name, TRCLEVEL_DEBUG, (char*)in, 1 );
             if (in[0] < 0x80 ) {
               if( SerialOp.read( o->serial, (char*)in+1, 4 ) ) {
-                TraceOp.dump( name, TRCLEVEL_DEBUG, in, 5 );
+                TraceOp.dump( name, TRCLEVEL_DEBUG, (char*)in, 5 );
                 evt = allocMem(5);
                 MemOp.copy( evt, in, 5);
                 ListOp.add(evtList, (obj)evt);
@@ -1449,7 +1451,7 @@ static void __feedbackReader( void* threadinst ) {
 
   out[0] = 'x';
   out[1] = 0x99;
-  __transact( o, (char*)out, 2, s88_in, 1, -1 );
+  __transact( o, (char*)out, 2, (char*)s88_in, 1, -1 );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Feedback p50x reader initialized." );
 
   do {
@@ -1460,7 +1462,7 @@ static void __feedbackReader( void* threadinst ) {
 
     if( !o->stopio && !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
       if( state == P50_OK ) {
-        TraceOp.dump( NULL, TRCLEVEL_BYTE, out, 2 );
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, 2 );
         if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
           byte module = 0;
           state = P50_OK;
@@ -1468,13 +1470,13 @@ static void __feedbackReader( void* threadinst ) {
             /* modules > 31 are loconet */
             while( module > 0 && module < MAX_FB && state == P50_OK ) {
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbModule = %d", module );
-              TraceOp.dump( NULL, TRCLEVEL_BYTE, &module, 1 );
+              TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)&module, 1 );
 
               if( !SerialOp.read( o->serial, (char*)tmp, 2 ) ) {
                 state = P50_RCVERR;
                 break;
               }
-              TraceOp.dump( NULL, TRCLEVEL_BYTE, tmp, 2 );
+              TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)tmp, 2 );
 
               if( o->swversion >= MIN_OPENDCC_VERSION_FOR_EXTENDED_FUNCTIONS || module < 32 ) {
                 /* s88 */
@@ -1529,7 +1531,7 @@ static void __feedbackReader( void* threadinst ) {
 
       if( !o->stopio && !o->dummyio && MutexOp.trywait( o->mux, o->timeout ) ) {
         if( state == P50_OK ) {
-          TraceOp.dump( NULL, TRCLEVEL_BYTE, out, 2 );
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, 2 );
           if( SerialOp.write( o->serial, (char*)out, 2 ) ) {
             byte module = 0;
             state = P50_OK;
@@ -1550,7 +1552,7 @@ static void __feedbackReader( void* threadinst ) {
                   break;
                 }
 
-                TraceOp.dump( NULL, TRCLEVEL_BYTE, bidi_in, 4 );
+                TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)bidi_in, 4 );
 
                 /* Report BiDi
                  1. Byte:       bit#   7     6     5     4     3     2     1     0

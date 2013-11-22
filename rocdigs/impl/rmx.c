@@ -153,7 +153,7 @@ static Boolean __isChecksum(byte* in) {
 
   if( in[i] != bXor ) {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Xor error: in[%d]=0x%02X xor=0x%02X", i, in[i], bXor );
-    TraceOp.dump( name, TRCLEVEL_EXCEPTION, in, len );
+    TraceOp.dump( name, TRCLEVEL_EXCEPTION, (char*)in, len );
     return False;
   }
 
@@ -666,13 +666,13 @@ static Boolean __readPacket( iORmxData data, byte* in, Boolean cmdResponse ) {
   Boolean rc = data->dummyio;
   /* byte 0 is message header, byte 1 is message length including header and checksum byte */
   if( !data->dummyio ) {
-    rc = SerialOp.read( data->serial, in, 2 );
+    rc = SerialOp.read( data->serial, (char*)in, 2 );
     if( rc && in[0] == 0x7D) {
       int insize = in[1];
-      rc = SerialOp.read( data->serial, in+2, insize - 2 );
+      rc = SerialOp.read( data->serial, (char*)(in+2), insize - 2 );
       if( rc ) {
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Message received" );
-        TraceOp.dump( name, TRCLEVEL_BYTE, in, insize );
+        TraceOp.dump( name, TRCLEVEL_BYTE, (char*)in, insize );
         rc = __isChecksum(in);
         if( !rc ) {
           TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Checksum error in received data" );
@@ -706,9 +706,9 @@ static Boolean __transact( iORmxData data, byte* out, byte* in, byte opcode ) {
     int insize  = 0;
     __addChecksum(out);
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Message send" );
-    TraceOp.dump( name, TRCLEVEL_BYTE, out, outsize );
+    TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, outsize );
     if( !data->dummyio ) {
-      if( rc = SerialOp.write( data->serial, out, outsize ) ) {
+      if( (rc = SerialOp.write( data->serial, (char*)out, outsize )) ) {
         if( in != NULL ) {
           int retries = 0;
           rc = False;
@@ -889,7 +889,7 @@ static struct ORmx* _inst( const iONode ini ,const iOTrace trc ) {
   data->serialOK = False;
   if( !data->dummyio ) {
     data->serial = SerialOp.inst( data->device );
-    SerialOp.setFlow( data->serial, none );
+    SerialOp.setFlow( data->serial, 0 );
     SerialOp.setLine( data->serial, 57600, 8, 2, none, wDigInt.isrtsdisabled( ini ) );
     SerialOp.setTimeout( data->serial, wDigInt.gettimeout(ini), wDigInt.gettimeout(ini) );
     data->serialOK = SerialOp.open( data->serial );
