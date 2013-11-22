@@ -507,8 +507,8 @@ static void __writer( void* threadinst ) {
         EventOp.set(data->readyEvt);
       }
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "send command: %s", out );
-      TraceOp.dump( name, TRCLEVEL_BYTE, out, len );
-      SerialOp.write( data->serial, out, len );
+      TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, len );
+      SerialOp.write( data->serial, (char*)out, len );
       EventOp.reset(data->readyEvt);
 
     }
@@ -690,7 +690,7 @@ static struct OEasyDCC* _inst( const iONode ini ,const iOTrace trc ) {
   data->serialOK = False;
   if( !data->dummyio ) {
     data->serial = SerialOp.inst( wDigInt.getdevice( ini ) );
-    SerialOp.setFlow( data->serial, none );
+    SerialOp.setFlow( data->serial, 0 );
     if( StrOp.equals( wDigInt.dsr, wDigInt.getflow(ini) ) )
       SerialOp.setFlow( data->serial, dsr );
     else if( StrOp.equals( wDigInt.cts, wDigInt.getflow(ini) ) )

@@ -183,13 +183,13 @@ static void __evaluateRsp( iONCEData data, byte* out, int outsize, byte* in, int
 static Boolean __transact( iONCEData data, byte* out, int outsize, byte* in, int insize ) {
   Boolean rc = False;
   if( MutexOp.wait( data->mux ) ) {
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, out, outsize );
-    if( rc = SerialOp.write( data->serial, out, outsize ) ) {
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, outsize );
+    if( (rc = SerialOp.write( data->serial, (char*)out, outsize )) ) {
       if( insize > 0 ) {
         TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "insize=%d", insize);
-        rc = SerialOp.read( data->serial, in, insize );
+        rc = SerialOp.read( data->serial, (char*)in, insize );
         if( rc ) {
-          TraceOp.dump( NULL, TRCLEVEL_BYTE, in, insize );
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, insize );
           __evaluateRsp(data, out, outsize, in, insize);
         }
       }
@@ -451,8 +451,8 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
 
   if( nodeA != NULL ) {
     int size = __translate( data, nodeA, out, &insize );
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, out, size );
-    if( __transact( data, (char*)out, size, (char*)in, insize ) ) {
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, size );
+    if( __transact( data, out, size, in, insize ) ) {
     }
   }
 
@@ -586,7 +586,7 @@ static struct ONCE* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, none );
+  SerialOp.setFlow( data->serial, 0 );
   SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
   SerialOp.open( data->serial );

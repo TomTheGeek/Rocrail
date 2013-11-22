@@ -692,7 +692,7 @@ static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
   iOMCS2Data data = Data(mcs2);
-  char in[32];
+  byte in[32];
   int mod = 0;
   unsigned char store[1024];
   int retry = 0;
@@ -711,7 +711,7 @@ static void __reader( void* threadinst ) {
   do {
     MemOp.set(in, 0, 32);
     if( data->udp ) {
-      if( SocketOp.recvfrom( data->readUDP, in, 13, NULL, NULL ) <= 0 ) {
+      if( SocketOp.recvfrom( data->readUDP, (char*)in, 13, NULL, NULL ) <= 0 ) {
         SocketOp.base.del(data->readUDP);
         ThreadOp.sleep(1000);
         if( data->run ) {
@@ -728,7 +728,7 @@ static void __reader( void* threadinst ) {
         if( available > 0 ) {
           int idx = 0;
           while(SerialOp.available(data->serial) > 0 && idx < 13) {
-            if( SerialOp.read( data->serial, in+idx, 1 ) ) {
+            if( SerialOp.read( data->serial, (char*)(in+idx), 1 ) ) {
               if( SerialOp.available(data->serial) == 0 )
                 ThreadOp.sleep(10);
               idx++;
@@ -769,7 +769,7 @@ static void __reader( void* threadinst ) {
       }
     }
 
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 13 );
 
     /* CS2 communication consists of commands (command byte always even) and replies. Reply byte is equal to command byte but with
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
@@ -807,7 +807,7 @@ static void __reader( void* threadinst ) {
     }
     else {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Unhandled packet: CAN-ID=0x%02X len=%d", in[1]&0xFF, in[4]&0x0F );
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, in, 13 );
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 13 );
     }
     ThreadOp.sleep(10);
 
@@ -827,11 +827,11 @@ static void __writer( void* threadinst ) {
   do {
     byte* cmd = (byte*)ThreadOp.getPost( th );
     if (cmd != NULL) {
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, cmd, 13 );
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)cmd, 13 );
       if( data->udp )
-        SocketOp.sendto( data->writeUDP, cmd, 13, NULL, 0 );
+        SocketOp.sendto( data->writeUDP, (char*)cmd, 13, NULL, 0 );
       else
-        SerialOp.write( data->serial, cmd, 13 );
+        SerialOp.write( data->serial, (char*)cmd, 13 );
 
       freeMem( cmd );
     }

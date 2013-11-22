@@ -86,6 +86,7 @@ static int instCnt = 0;
 
 /* proto types */
 static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size );
+int makereqDispatch(iOLocoNetData data, byte *msg, int slot, iONode node, int status, Boolean activeSlotServer);
 
 /** ----- OBase ----- */
 static const char* __id( void* inst ) {
@@ -1109,6 +1110,12 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
   case OPC_SW_REQ: // B0
     if( !data->serveLConly )
       __post2SlotServer( loconet, rsp, 4 );
+    addr = __address(rsp[1], rsp[2]);
+    value = (rsp[2] & 0x10) >> 4;
+    port  = (rsp[2] & 0x20) >> 5;
+    __handleSwitch(loconet, addr, port, value);
+    break;
+
   case OPC_SW_STATE:    // BC
     addr = __address(rsp[1], rsp[2]);
     value = (rsp[2] & 0x10) >> 4;
@@ -1926,7 +1933,7 @@ static int __processFunctions(iOLocoNet loconet_inst, iONode node, byte* cmd, in
       cmd[3] = REPS;  /* REPS */
       cmd[4] = DHI;   /* DHI  */
 
-      if( ((addr / 256) + 192) & 0x80 > 0 )
+      if( (((addr / 256) + 192) & 0x80) > 0 )
         cmd[4] |= 0x01;
 
       if( ((addr % 256) & 0x80) > 0 )
@@ -2409,7 +2416,7 @@ int makereqDispatch(iOLocoNetData data, byte *msg, int slot, iONode node, int st
 
 
 
-static __writeSlotData(byte* cmd, int slot, int addr, int V, int dirf) {
+static void __writeSlotData(byte* cmd, int slot, int addr, int V, int dirf) {
   cmd[ 0] = OPC_WR_SL_DATA;
   cmd[ 1] = 0x0E; /* message length */
   cmd[ 2] = slot; /* slot number */
@@ -2430,7 +2437,7 @@ static __writeSlotData(byte* cmd, int slot, int addr, int V, int dirf) {
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
   iOLocoNetData data = Data(inst);
-  char out[256];
+  byte out[256];
   Boolean delnode = True;
 
   if( !data->commOK ) {

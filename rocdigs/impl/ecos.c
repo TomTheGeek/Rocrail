@@ -166,6 +166,7 @@ ECoS Keywords:
   */
 
 #include <string.h>
+#include <ctype.h>
 
 #include "rocdigs/impl/ecos_impl.h"
 
@@ -1882,7 +1883,7 @@ static void __processReply( iOECoS inst, iONode node ) {
   const char* rname = NodeOp.getStr( node, "cmd", NULL );
   int oid           = NodeOp.getInt( node, "oid", 0 );
 
-  if( TraceOp.getLevel(NULL) & TRCLEVEL_BYTE == TRCLEVEL_BYTE ) {
+  if( (TraceOp.getLevel(NULL) & TRCLEVEL_BYTE) == TRCLEVEL_BYTE ) {
     char* s = NodeOp.base.toString(node);
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "%s", s);
     StrOp.free(s);

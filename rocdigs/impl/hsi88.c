@@ -126,27 +126,27 @@ static int __availBytes(iOHSI88Data o) {
     return SerialOp.available(o->serial);
 }
 
-static Boolean __readBytes(iOHSI88Data o, byte* buffer, int cnt) {
+static Boolean __readBytes(iOHSI88Data o, char* buffer, int cnt) {
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "reading %d bytes from %s", cnt, o->usb?"USB":"RS232" );
   if( o->usb ) {
     /*
     FileOp.setpos( o->usbh, 0 );
     return FileOp.read( o->usbh, (char*)buffer, cnt );
     */
-    return SystemOp.readDevice( o->devh, (char*)buffer, cnt);
+    return SystemOp.readDevice( o->devh, buffer, cnt);
   }
   else
-    return SerialOp.read( o->serial, (char*)buffer, cnt );
+    return SerialOp.read( o->serial, buffer, cnt );
 }
 
-static Boolean __writeBytes(iOHSI88Data o, byte* buffer, int cnt) {
+static Boolean __writeBytes(iOHSI88Data o, char* buffer, int cnt) {
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "writing %d bytes to %s", cnt, o->usb?"USB":"RS232" );
   if( o->usb ) {
     /*return FileOp.write( o->usbh, (char*)buffer, cnt );*/
-    return SystemOp.writeDevice( o->devh, (char*)buffer, cnt);
+    return SystemOp.writeDevice( o->devh, buffer, cnt);
   }
   else
-    return SerialOp.write( o->serial, (char*)buffer, cnt );
+    return SerialOp.write( o->serial, buffer, cnt );
 }
 
 static int __getRC(iOHSI88Data o) {
@@ -436,7 +436,7 @@ static Boolean __flushHSI88( iOHSI88 inst, Boolean forcetrace ) {
 
   /* Read all pending information on serial port. Interface Hickups if data is pending from previous init! */
   {
-    byte tmp[1000];
+    char tmp[1000];
     int bAvail = 0;
 
     if( o->usb ) {
@@ -565,8 +565,8 @@ static void __HSI88feedbackReader( void* threadinst ) {
   iOHSI88 pHSI88 = (iOHSI88)ThreadOp.getParm( th );
   iOHSI88Data o = Data(pHSI88);
   unsigned char* fb = allocMem(256);
-  unsigned char out[6];
-  unsigned char buffer [512];
+  char out[6];
+  char buffer [512];
   int k = 0;
   Boolean crDetected = False;
   int waitcounter = 0;
@@ -748,7 +748,7 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
   data->stopBits = 1;
   data->timeout  = wDigInt.gettimeout( ini );
   data->parity   = none;
-  data->flow     = none;
+  data->flow     = 0;
   data->ctsretry = wDigInt.getctsretry( ini );
   data->dummyio  = wDigInt.isdummyio( ini );
 

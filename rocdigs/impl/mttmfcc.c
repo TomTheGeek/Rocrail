@@ -50,7 +50,7 @@
 
 static int instCnt = 0;
 
-static __evaluateFB( iOMttmFccData data );
+static void __evaluateFB( iOMttmFccData data );
 
 
 /** ----- OBase ----- */
@@ -187,7 +187,7 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot, Boolean* vdfChanged
 }
 
 
-static Boolean __updateSlots(iOMttmFccData data) {
+static void __updateSlots(iOMttmFccData data) {
   if( MutexOp.wait( data->lcmux ) ) {
     iOSlot slot = (iOSlot)MapOp.first( data->lcmap );
     while( slot != NULL ) {
@@ -301,14 +301,14 @@ static Boolean __transact( iOMttmFccData data, byte* out, int outsize, byte* in,
   Boolean rc = data->dummyio;
 
   if( MutexOp.wait( data->mux ) ) {
-    TraceOp.dump( name, TRCLEVEL_BYTE, out, outsize );
+    TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, outsize );
     if( !data->dummyio ) {
-      if( rc = SerialOp.write( data->serial, out, outsize ) ) {
+      if( (rc = SerialOp.write( data->serial, (char*)out, outsize )) ) {
         if( insize > 0 ) {
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "insize=%d", insize);
-          rc = SerialOp.read( data->serial, in, insize );
+          rc = SerialOp.read( data->serial, (char*)in, insize );
           if( rc ) {
-            TraceOp.dump( name, TRCLEVEL_BYTE, in, insize );
+            TraceOp.dump( name, TRCLEVEL_BYTE, (char*)in, insize );
             __evaluateRsp(data, out, outsize, in, insize);
           }
         }
@@ -825,7 +825,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
 }
 
 
-static __evaluateFB( iOMttmFccData data ) {
+static void __evaluateFB( iOMttmFccData data ) {
   int bus = 0;
   int mod = 0;
 
@@ -1018,8 +1018,8 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     }
     else {
       int size = __translate( data, cmd, out, &insize );
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, out, size );
-      if( __transact( data, (char*)out, size, (char*)in, insize ) ) {
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, size );
+      if( __transact( data, out, size, in, insize ) ) {
       }
     }
   }
@@ -1117,7 +1117,7 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
   data->serialOK = False;
   if( !data->dummyio ) {
     data->serial = SerialOp.inst( data->device );
-    SerialOp.setFlow( data->serial, none );
+    SerialOp.setFlow( data->serial, 0 );
     SerialOp.setLine( data->serial, 230400, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
     SerialOp.setTimeout( data->serial, wDigInt.gettimeout(ini), wDigInt.gettimeout(ini) );
     data->serialOK = SerialOp.open( data->serial );

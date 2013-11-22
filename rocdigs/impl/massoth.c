@@ -126,12 +126,12 @@ static Boolean __readPacket( iOMassothData data, byte* in ) {
     Boolean isInfo = False;
     int insize = 0;
     int offset = 0;
-    rc = SerialOp.read( data->serial, in, 1 );
+    rc = SerialOp.read( data->serial, (char*)in, 1 );
     if( rc ) {
 
       if( (in[0] & 0x1F) == 0 ) {
         /* info or answer received */
-        rc = SerialOp.read( data->serial, in+1, 2 );
+        rc = SerialOp.read( data->serial, (char*)(in+1), 2 );
         insize = in[2];
         offset = 3;
         isInfo = True;
@@ -144,10 +144,10 @@ static Boolean __readPacket( iOMassothData data, byte* in ) {
       }
 
       if( rc ) {
-        rc = SerialOp.read( data->serial, in+offset, insize );
+        rc = SerialOp.read( data->serial, (char*)(in+offset), insize );
         if( rc ) {
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "%s packet read:", isInfo ? "info":"command" );
-          TraceOp.dump( name, TRCLEVEL_BYTE, in, insize+offset );
+          TraceOp.dump( name, TRCLEVEL_BYTE, (char*)in, insize+offset );
         }
         else {
           /* error reading data */
@@ -175,9 +175,9 @@ static Boolean __transact( iOMassothData data, byte* out, byte* in, byte id, Boo
     int insize  = 0;
     __addChecksum(out);
 
-    TraceOp.dump( name, TRCLEVEL_BYTE, out, outsize );
+    TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, outsize );
     if( !data->dummyio ) {
-      if( rc = SerialOp.write( data->serial, out, outsize ) ) {
+      if( (rc = SerialOp.write( data->serial, (char*)out, outsize )) ) {
         if( in != NULL ) {
           int wait = 0;
           do {
@@ -380,7 +380,7 @@ static iOSlot __getSlot(iOMassothData data, iONode node) {
       }
       else {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unknown response for loco %s", wLoc.getid(node) );
-        TraceOp.dump( name, TRCLEVEL_INFO, rsp, 3 + rsp[2] );
+        TraceOp.dump( name, TRCLEVEL_INFO, (char*)rsp, 3 + rsp[2] );
       }
     }
     else {
@@ -1099,7 +1099,7 @@ static struct OMassoth* _inst( const iONode ini ,const iOTrace trc ) {
   data->fbreset    = wDigInt.isfbreset(ini);
   data->systeminfo = wDigInt.issysteminfo(ini);
   data->useParallelFunctions = True;
-  data->flow       = none;
+  data->flow       = 0;
 
   if( StrOp.equals( wDigInt.dsr, wDigInt.getflow( ini ) ) )
     data->flow = dsr;

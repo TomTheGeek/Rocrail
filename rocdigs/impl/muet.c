@@ -603,7 +603,7 @@ static void __writer( void* threadinst ) {
 }
 
 
-static __evaluateFB( iOMuet muet, byte in, int addr, int bus ) {
+static void __evaluateFB( iOMuet muet, byte in, int addr, int bus ) {
   iOMuetData data = Data(muet);
 
   if( in != data->fbstate[bus][addr] ) {
@@ -700,16 +700,16 @@ static void __reader( void* threadinst ) {
   while( data->run ) {
     byte in[8] = {0};
     if( SerialOp.available(data->serial) ) {
-      if( SerialOp.read(data->serial, in, 1) ) {
+      if( SerialOp.read(data->serial, (char*)in, 1) ) {
         if(in[0] == 126 ) {
-          if( SerialOp.read(data->serial, in+1, 1) ) {
+          if( SerialOp.read(data->serial, (char*)(in+1), 1) ) {
             TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 2 );
             data->activebus = in[1] & 0x7F;
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "active bus=%d.", data->activebus );
           }
         }
         else if(in[0] >= 128 && in[0] <= (128 + 31) ) {
-          if( SerialOp.read(data->serial, in+1, 2) ) {
+          if( SerialOp.read(data->serial, (char*)(in+1), 2) ) {
             char key[32] = {'\0'};
             int bus  = (in[0]-128) & 0x7F;
             int addr = in[1] & 0x7F;
@@ -807,7 +807,7 @@ static void __reader( void* threadinst ) {
         }
         else if(in[0] < 126 ) {
           int addr = in[0] & 0x7F;
-          if( SerialOp.read(data->serial, in+1, 1) ) {
+          if( SerialOp.read(data->serial, (char*)(in+1), 1) ) {
             char key[32] = {'\0'};
             char ident[32];
             int val = in[1] & 0x7F;

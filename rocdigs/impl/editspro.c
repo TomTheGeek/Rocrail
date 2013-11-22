@@ -369,7 +369,7 @@ static int _version( obj inst ) {
 }
 
 
-static __evaluateState( iOEditsProData data, int mod, byte val ) {
+static void __evaluateState( iOEditsProData data, int mod, byte val ) {
 
   if( data->fb[mod] != val )  {
     int n = 0;
@@ -420,11 +420,11 @@ static void __poller( void* threadinst ) {
 
           out[0] = 0x37;
           out[1] = 0x20 + fbmodIdx;
-          if( SerialOp.write( data->serial, &out[0], 1 ) ) {
-            if( SerialOp.read( data->serial, &out[0], 1 ) ) {
-              if( SerialOp.write( data->serial, &out[1], 1 ) ) {
-                if( SerialOp.read( data->serial, &out[1], 1 ) ) {
-                  if( SerialOp.read( data->serial, &out[2], 1 ) ) {
+          if( SerialOp.write( data->serial, (char*)&out[0], 1 ) ) {
+            if( SerialOp.read( data->serial, (char*)&out[0], 1 ) ) {
+              if( SerialOp.write( data->serial, (char*)&out[1], 1 ) ) {
+                if( SerialOp.read( data->serial, (char*)&out[1], 1 ) ) {
+                  if( SerialOp.read( data->serial, (char*)&out[2], 1 ) ) {
                     /* the data byte... */
                     __evaluateState(data, fbmodIdx+1, out[2]);
                   }
@@ -437,14 +437,14 @@ static void __poller( void* threadinst ) {
       else {
         /* V1.2 */
         out[0] = 190;
-        if( SerialOp.write( data->serial, &out[0], 1 ) ) {
-          if( SerialOp.read( data->serial, &out[0], 1 ) ) {
+        if( SerialOp.write( data->serial, (char*)&out[0], 1 ) ) {
+          if( SerialOp.read( data->serial,(char*) &out[0], 1 ) ) {
             if( out[0] > 0 && out[0] < 65 ) {
               int mod = out[0];
               ThreadOp.sleep(5);
               out[0] = 191 + mod;
-              if( SerialOp.write( data->serial, &out[0], 1 ) ) {
-                if( SerialOp.read( data->serial, &out[0], 1 ) ) {
+              if( SerialOp.write( data->serial, (char*)&out[0], 1 ) ) {
+                if( SerialOp.read( data->serial, (char*)&out[0], 1 ) ) {
                   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "fb module %d = 0x%02X ", mod, out[0] );
                   __evaluateState(data, mod, out[0]);
                 }
@@ -497,9 +497,9 @@ static void __writer( void* threadinst ) {
         TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
 
         for( i = 0; i < len; i++ ) {
-          if( SerialOp.write( data->serial, &out[i], 1 ) ) {
+          if( SerialOp.write( data->serial, (char*)&out[i], 1 ) ) {
             byte b = 0;
-            if( SerialOp.read( data->serial, &b, 1 ) ) {
+            if( SerialOp.read( data->serial, (char*)&b, 1 ) ) {
               if( b != out[i] ) {
                 TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "read 0x%02X, expected 0x%02X", b, out[i] );
                 ThreadOp.sleep(500);
@@ -575,7 +575,7 @@ static Boolean __flush( iOEditsProData data ) {
 
 
 
-__initAddrMap(iOEditsPro  edits) {
+static void __initAddrMap(iOEditsPro  edits) {
   iOEditsProData data = Data(edits);
   data->addr[ 0] = 0x00; data->addr[10] = 0x33; data->addr[20] = 0x11;
   data->addr[ 1] = 0x03; data->addr[11] = 0x31; data->addr[21] = 0x1C;
@@ -679,7 +679,7 @@ static struct OEditsPro* _inst( const iONode ini ,const iOTrace trc ) {
   }
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:none );
+  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:0 );
   SerialOp.setLine( data->serial, 9600, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
   data->serialOK = SerialOp.open( data->serial );
