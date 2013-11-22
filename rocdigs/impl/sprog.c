@@ -314,7 +314,7 @@ static Boolean __transact( iOSprog sprog, char* out, int outsize, char* in, int 
 
     for( i = 0; i < repeat; i++ ) {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SPROG write: %s", out );
-      if( rc = SerialOp.write( data->serial, out, outsize ) ) {
+      if( (rc = SerialOp.write( data->serial, out, outsize )) ) {
         if( insize > 0 ) {
           rc = SerialOp.read( data->serial, in, insize );
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "SPROG read: %s", in );
@@ -806,7 +806,7 @@ static void __sprogWriter( void* threadinst ) {
           }
         }
         else {
-          data->slots[slotidx].V_prev == data->slots[slotidx].V;
+          data->slots[slotidx].V_prev = data->slots[slotidx].V;
           data->slots[slotidx].fgrp = data->slots[slotidx].changedfgrp;
           data->slots[slotidx].changedfgrp = 0;
           data->slots[slotidx].idle = SystemOp.getTick();

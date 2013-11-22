@@ -331,7 +331,7 @@ static int __translate( iOSLX slx, iONode node, byte* cmd, int* bus ) {
   /* TODO: bus. System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmdstr = wSysCmd.getcmd( node );
-    if( StrOp.equals( cmdstr, wSysCmd.stop ) || StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+    if( StrOp.equals( cmdstr, wSysCmd.stop ) || StrOp.equals( (char*)cmd, wSysCmd.ebreak ) ) {
       cmd[0] = 127;
       cmd[0] |= WRITE_FLAG;
       cmd[1] = 0x00;
@@ -367,7 +367,7 @@ static int __translate( iOSLX slx, iONode node, byte* cmd, int* bus ) {
   return 0;
 }
 
-static __evaluateFB( iOSLX slx, byte in, int addr, int bus ) {
+static void __evaluateFB( iOSLX slx, byte in, int addr, int bus ) {
   iOSLXData data = Data(slx);
 
   if( in != data->fbstate[bus][addr] ) {

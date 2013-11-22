@@ -537,7 +537,7 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       outa[1] = 6;    /* packet length */
       outa[2] = 0x10; /* command station instruction */
       outa[3] = 10;   /* address control */
-      outa[4] = (addr / 256) & 0x3f | addrFormat;
+      outa[4] = ((addr / 256) & 0x3f) | addrFormat;
       outa[5] = addr % 256;
       outa[6] = 0x80 | 0x20 | (lock ? 0x02 : 0x00) | 0x01;
       outa[7] = 0x03 << (port * 2);
@@ -552,9 +552,9 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       outa[1] = 5;    /* packet length */
       outa[2] = 0x10; /* command station instruction */
       outa[3] = 7;    /* accessory command */
-      outa[4] = (addr / 256) & 0x3f | addrFormat;
+      outa[4] = ((addr / 256) & 0x3f) | addrFormat;
       outa[5] = addr % 256;
-      outa[6] = ((port * 2) + state) & 0x07 | 0x08;  /* gate 0 is red, gate 1 is green */
+      outa[6] = (((port * 2) + state) & 0x07) | 0x08;  /* gate 0 is red, gate 1 is green */
 
       ThreadOp.post( data->transactor, (obj)outa );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch %d:%d:%d %s, 0x%02X", addr, port, gate, state?"green":"red", outa[6]);
@@ -567,7 +567,7 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
       outa[1] = 5;    /* packet length */
       outa[2] = 0x10; /* command station instruction */
       outa[3] = 7;    /* accessory command */
-      outa[4] = (addr / 256) & 0x3f | addrFormat;
+      outa[4] = ((addr / 256) & 0x3f) | addrFormat;
       outa[5] = addr % 256;
       outa[6] = ((port * 2) + state) & 0x07;  /* gate 0 is red, gate 1 is green */
 
@@ -618,9 +618,9 @@ static iONode __translate( iOZimoBin zimobin, iONode node ) {
     outa[1] = 5;    /* packet length */
     outa[2] = 0x10; /* command station instruction */
     outa[3] = 7;    /* accessory command */
-    outa[4] = (addr / 256) & 0x3f | addrFormat;
+    outa[4] = ((addr / 256) & 0x3f) | addrFormat;
     outa[5] = addr % 256;
-    outa[6] = ((port * 2) + gate) & 0x07 | action;
+    outa[6] = (((port * 2) + gate) & 0x07) | action;
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "output %d:%d:%d %s, 0x%02X", addr, port, gate, action?"ON":"OFF", outa[6]);
     ThreadOp.post( data->transactor, (obj)outa );
@@ -1808,7 +1808,7 @@ static Boolean __initComm( iOZimoBin zimobin ) {
       outa[1] = 6;    /* packet length */
       outa[2] = 0x10; /* command station instruction */
       outa[3] = 10;   /* address control */
-      outa[4] = (addr / 256) & 0x3f | addrFormat;
+      outa[4] = ((addr / 256) & 0x3f) | addrFormat;
       outa[5] = addr % 256;
       outa[6] = 0x80 | 0x20 | (lock ? 0x02 : 0x00) | 0x01;
       outa[7] = 0x03 << (port * 2);
@@ -1849,7 +1849,7 @@ static Boolean __initComm( iOZimoBin zimobin ) {
       outa[1] = 6;    /* packet length */
       outa[2] = 0x10; /* command station instruction */
       outa[3] = 10;   /* address control */
-      outa[4] = (addr / 256) & 0x3f | addrFormat;
+      outa[4] = ((addr / 256) & 0x3f) | addrFormat;
       outa[5] = addr % 256;
       outa[6] = 0x81;
       outa[7] = delay / 256;

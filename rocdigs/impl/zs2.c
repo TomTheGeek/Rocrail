@@ -763,7 +763,7 @@ static void __translate( iOZS2 zs2, iONode node ) {
         /* fx1 */
         cmd[2] = (addr+1) & 0x7F;
         cmd[2] |= WRITE_FLAG;
-        cmd[3] = ((slot->fx2 & 0x01) << 7)  | (slot->fx1 >> 1) & 0x7F;
+        cmd[3] = ((slot->fx2 & 0x01) << 7)  | ((slot->fx1 >> 1) & 0x7F);
       }
 
       slot->lastcmd = SystemOp.getTick();
@@ -880,7 +880,7 @@ static Boolean __setActiveBus( iOZS2 zs2, int bus ) {
 }
 
 
-static __evaluateFB( iOZS2 zs2, byte in, int addr, int bus ) {
+static void __evaluateFB( iOZS2 zs2, byte in, int addr, int bus ) {
   iOZS2Data data = Data(zs2);
 
   if( in != data->fbstate[bus][addr] ) {
@@ -1127,7 +1127,7 @@ static void __reader( void* threadinst ) {
   byte in[32] = {0};
   /* clean input buffer: */
   while( data->run && SerialOp.available(data->serial) && junk < 32 ) {
-    if( SerialOp.read(data->serial, in+junk, 1) ) {
+    if( SerialOp.read(data->serial, (char*)(in+junk), 1) ) {
       junk++;
     }
   }
@@ -1140,7 +1140,7 @@ static void __reader( void* threadinst ) {
   while( data->run ) {
     if( SerialOp.available(data->serial) ) {
       /* read 3-Byte-Auto-Mode: in[0]=bus, in[1]=addr, in[2]=value */
-      if( SerialOp.read(data->serial, in, 3) ) {
+      if( SerialOp.read(data->serial, (char*)in, 3) ) {
         int bus  = (in[0]-128) & 0x7F;
         int addr = in[1] & 0x7F;
         int val  = in[2] & 0xFF;
@@ -1288,7 +1288,7 @@ static struct OZS2* _inst( const iONode ini ,const iOTrace trc ) {
         data->device, data->bps, data->timeout );
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( ini ) ) ? cts:none );
+  SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( ini ) ) ? cts:0 );
   SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, none, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 

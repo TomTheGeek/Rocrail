@@ -205,7 +205,7 @@ static void __reader( void* threadinst ) {
     if( data->commOK && MutexOp.wait( data->mux ) ) {
       int available = SerialOp.available(data->serial);
       if( available > 0 ) {
-        if( SerialOp.read(data->serial, in, available) ) {
+        if( SerialOp.read(data->serial, (char*)in, available) ) {
           if( available > 2 && in[0] == 0xFF && in[1] == 0xFE ) {
             data->useHeader = True;
           }
@@ -258,7 +258,7 @@ static struct OXNMM* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, none );
+  SerialOp.setFlow( data->serial, 0 );
   SerialOp.setLine( data->serial, wDigInt.getbps(ini), 8, 1, 0, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 

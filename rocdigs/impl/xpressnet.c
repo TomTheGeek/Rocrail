@@ -969,7 +969,7 @@ static void __evaluateResponse( iOXpressNet xpressnet, byte* in ) {
 
   /* Turnout broadcast: */
   if ( i0 == 0x42 ) {
-    if( i1 <= 0x80 && (b2[1] == 0 && b2[2] == 0) || (b2[1] == 0 && b2[2] == 1)) {
+    if( (i1 <= 0x80 && (b2[1] == 0 && b2[2] == 0)) || ((b2[1] == 0 && b2[2] == 1)) ) {
       int baseadress = i1;
       int k, start;
 

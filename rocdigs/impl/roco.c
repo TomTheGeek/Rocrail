@@ -230,7 +230,7 @@ static void __evaluateResponse( iORoco roco, byte* in, int datalen ) {
   __dec2bin( &b3[0], i3);
 
   /* switch */
-  if ( i0 == 0x00 && i1 == 0x42 && i2 <= 0x80 && (b3[1] == 0 && b3[2] == 0) || (b3[1] == 0 && b3[2] == 1)) {
+  if ( (i0 == 0x00 && i1 == 0x42 && i2 <= 0x80 && (b3[1] == 0 && b3[2] == 0)) || ((b3[1] == 0 && b3[2] == 1)) ) {
     int baseadress = i2;
     int k, start;
 
@@ -1149,7 +1149,7 @@ static struct ORoco* _inst( const iONode ini ,const iOTrace trc ) {
 
   MemOp.set( data->fbState, 0, sizeof( data->fbState ) );
 
-  SerialOp.setFlow( data->serial, none );
+  SerialOp.setFlow( data->serial, 0 );
   SerialOp.setLine( data->serial, wDigInt.getbps( ini ), 8, 1, none, wDigInt.isrtsdisabled( ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( ini ), wDigInt.gettimeout( ini ) );
 

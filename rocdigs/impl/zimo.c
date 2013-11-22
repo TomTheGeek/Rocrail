@@ -117,7 +117,7 @@ static iONode __transact( iOZimo zimo, char* out, int outsize, char* in, int ins
                  out, outsize, insize );
 
     /* Transact */
-    if( rc = SerialOp.write( data->serial, out, outsize ) ) {
+    if( (rc = SerialOp.write( data->serial, out, outsize )) ) {
       if( insize > 0 && in != NULL ) {
         char c;
         int i = 0;

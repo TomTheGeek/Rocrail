@@ -21,6 +21,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+#include <time.h>
 
 #include "rocdigs/impl/z21_impl.h"
 
@@ -1189,7 +1190,7 @@ static void __reader( void* threadinst ) {
     byte packet[256];
     MemOp.set( packet, 0, 256);
 
-    int packetSize = SocketOp.recvfrom( data->rwUDP, packet, 256, NULL, NULL );
+    int packetSize = SocketOp.recvfrom( data->rwUDP, (char*)packet, 256, NULL, NULL );
 
     if( packetSize > 0 && packetSize < 256 ) {
       TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)packet, packetSize );
@@ -1227,7 +1228,7 @@ static void __writer( void* threadinst ) {
       MemOp.copy( packet, post, len);
       freeMem( post);
       TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)packet, len );
-      data->serialOK = SocketOp.sendto( data->rwUDP, packet, len, NULL, 0 );
+      data->serialOK = SocketOp.sendto( data->rwUDP, (char*)packet, len, NULL, 0 );
       if(data->serialOK) {
         data->lastcmd = time(NULL);
       }

@@ -161,7 +161,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
     if(  wProgram.getcmd( cmd ) == wProgram.set && wProgram.ispom( cmd )) {
       iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
       char* str = StrOp.fmt( "XPD %d, %d, %d\r", wProgram.getaddr(cmd), wProgram.getcv(cmd), wProgram.getvalue(cmd) );
-      char* byteStr = StrOp.byteToStr( str, StrOp.len(str) );
+      char* byteStr = StrOp.byteToStr( (byte*)str, StrOp.len(str) );
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, str );
       wBinCmd.setoutlen( lccmd, StrOp.len(str) );
       wBinCmd.setinlen( lccmd, 256 );
@@ -175,7 +175,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       iONode rsp = NULL;
       iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
       char* str = StrOp.fmt( "XPTWD %d, %d\r", wProgram.getcv(cmd), wProgram.getvalue(cmd) );
-      char* byteStr = StrOp.byteToStr( str, StrOp.len(str) );
+      char* byteStr = StrOp.byteToStr( (byte*)str, StrOp.len(str) );
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, str );
       wBinCmd.setoutlen( lccmd, StrOp.len(str) );
       wBinCmd.setinlen( lccmd, 256 );
@@ -202,7 +202,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       iONode rsp = NULL;
       iONode lccmd = NodeOp.inst( wBinCmd.name(), NULL, ELEMENT_NODE );
       char* str = StrOp.fmt( "XPTRD %d\r", wProgram.getcv(cmd) );
-      char* byteStr = StrOp.byteToStr( str, StrOp.len(str) );
+      char* byteStr = StrOp.byteToStr( (byte*)str, StrOp.len(str) );
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, str );
       wBinCmd.setoutlen( lccmd, StrOp.len(str) );
       wBinCmd.setinlen( lccmd, 256 );
