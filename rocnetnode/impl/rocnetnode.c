@@ -415,7 +415,8 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
 
   switch( action ) {
   case RN_PROGRAMMING_WRNID:
-    if( rcpt != data->id || rn[RN_PACKET_LEN] > 2 && ( rn[RN_PACKET_DATA+2] != data->ip[data->ipsize-2] || rn[RN_PACKET_DATA+3] != data->ip[data->ipsize-1]) ) {
+    if( rcpt != data->id || (rn[RN_PACKET_LEN] > 2 &&  rn[RN_PACKET_DATA+2] != data->ip[data->ipsize-2]) || rn[RN_PACKET_DATA+3] != data->ip[data->ipsize-1] )
+    {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new ID %d not for me", rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1] );
       break;
     }
@@ -1122,7 +1123,7 @@ static void __sendRN( iORocNetNode rocnetnode, byte* rn ) {
   char* str = StrOp.byteToStr(rn, 8 + rn[RN_PACKET_LEN]);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %s [%s] to %d", rnActionTypeString(rn), str, rcpt );
   StrOp.free(str);
-  SocketOp.sendto( data->writeUDP, rn, 8 + rn[RN_PACKET_LEN], NULL, 0 );
+  SocketOp.sendto( data->writeUDP, (char*)rn, 8 + rn[RN_PACKET_LEN], NULL, 0 );
 
 }
 
@@ -1754,7 +1755,7 @@ static void __reader( void* threadinst ) {
       data->ip[0], data->ip[1], data->ip[2], data->ip[3] );
 
   while( data->run ) {
-    SocketOp.recvfrom( data->readUDP, msg, 0x7F, NULL, NULL );
+    SocketOp.recvfrom( data->readUDP, (char*)msg, 0x7F, NULL, NULL );
     __evaluateRN(rocnetnode, msg);
     ThreadOp.sleep(10);
   }
@@ -2176,7 +2177,7 @@ static void __initIO(iORocNetNode inst) {
 
 }
 
-static __checkConsole( iORocNetNodeData data ) {
+static void __checkConsole( iORocNetNodeData data ) {
   /* Check for command. */
   int c = getchar();
 
