@@ -530,7 +530,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     int channel = rn[RN_PACKET_DATA+0];
     int pos     = rn[RN_PACKET_DATA+1]*256 + rn[RN_PACKET_DATA+2];
     int type    = rn[RN_PACKET_DATA+3];
-    if( data->channels[channel] != NULL ) {
+    if( channel < 129 && data->channels[channel] != NULL ) {
       data->channels[i]->ready = False;
       data->channels[i]->sleep = False;
       data->channels[i]->idle  = 0;
@@ -1302,7 +1302,7 @@ static void __writeChannel(iORocNetNode rocnetnode, int channel, int pos) {
   int rc  = 0;
   int i2caddr = 0x40;
 
-  if( data->channels[channel] == NULL ) {
+  if( channel > 128 || data->channels[channel] == NULL ) {
     return;
   }
 
