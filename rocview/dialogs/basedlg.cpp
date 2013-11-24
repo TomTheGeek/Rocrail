@@ -604,7 +604,7 @@ bool BaseDialog::existID( wxWindow* dlg, iONode list, iONode props, wxString  id
     return false;
   }
 
-  if( id.Len() == 0 ) {
+  if( id.Len() == 0 || id.Contains(wxT(",")) || id.Contains(wxT(";")) || id.Contains(wxT(":")) ) {
     wxMessageDialog( dlg, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
     return true;
   }
