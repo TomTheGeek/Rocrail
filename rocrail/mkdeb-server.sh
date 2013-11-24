@@ -49,14 +49,12 @@ mkdir -p debian/etc/init.d
 cp ../rocrail/package/control debian/DEBIAN/control
 
 cp ../unxbin/rocrail debian/opt/rocrail
-cp ../unxbin/rocview debian/opt/rocrail
-cp ../unxbin/rocnetnode debian/opt/rocrail
 cp ../unxbin/*.so debian/opt/rocrail
 
 strip debian/opt/rocrail/rocrail
 strip debian/opt/rocrail/*.so
 
-cp ../package/update.sh debian/opt/rocrail
+cp ../rocrail/package/update.sh debian/opt/rocrail
 cp ../rocrail/package/roc*.sh debian/opt/rocrail
 cp ../rocrail/package/rocraild debian/etc/init.d
 chmod +x debian/opt/rocrail/*.sh
@@ -67,7 +65,7 @@ cp -u ../rocrail/package/plan.xml debian/opt/rocrail/default
 cp -R ../rocrail/package/images/*.* debian/opt/rocrail/images
 cp -R ../rocrail/symbols/*.* debian/opt/rocrail/symbols
 cp -R ../COPYING debian/opt/rocrail
-cp ../package/postinst debian/DEBIAN/postinst
+cp ../rocrail/package/postinst debian/DEBIAN/postinst
 
 fakeroot dpkg-deb --build debian
 mv debian.deb rocrail-server-$BAZAARREV-$DIST-$ARCH.deb
