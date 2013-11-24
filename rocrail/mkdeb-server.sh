@@ -56,6 +56,7 @@ cp ../unxbin/*.so debian/opt/rocrail
 strip debian/opt/rocrail/rocrail
 strip debian/opt/rocrail/*.so
 
+cp ../package/update.sh debian/opt/rocrail
 cp ../rocrail/package/roc*.sh debian/opt/rocrail
 cp ../rocrail/package/rocraild debian/etc/init.d
 chmod +x debian/opt/rocrail/*.sh
