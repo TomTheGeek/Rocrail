@@ -2694,11 +2694,25 @@ static Boolean zlevelCheck( iOAnalyse inst, Boolean repair ) {
     for( n = 0; n < items; n++ ) {
       iONode item = NodeOp.getChild( db, n );
       const char* itemName = NodeOp.getName(item) ;
+      const char* itemId = wItem.getid(item) ;
       Boolean show = False;
       Boolean valPlan = False;
       int z = -2;
       numItems++;
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "item[%s]", wItem.getid(item) );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "item[%s]", itemId );
+
+      if(  StrOp.findc( itemId, ',' ) ) {
+        numProblems++;
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: item[%s] of type[%s] contains comma.",
+            itemId, itemName );
+      }
+
+      if(  StrOp.findc( itemId, ';' )
+        || StrOp.findc( itemId, ':' )
+        ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: item[%s] of type[%s] contains invalid chars. This is not recommended.",
+            itemId, itemName );
+      }
 
       /* known types without z-levels ... */
       if( StrOp.equals( itemName, wLoc.name() ) ||
