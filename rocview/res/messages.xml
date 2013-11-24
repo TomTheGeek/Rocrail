@@ -17700,6 +17700,9 @@
     <sl txt="Zakleni"/>
     <pt_BR txt="Travar"/>
   </Msg>
+  <Msg id="invalidchars">
+    <en txt="Special characters are not allowed!"/>
+  </Msg>
   <Msg id="invalidid">
     <en txt="The ID must be at least one character!"/>
     <de txt="Die Kennung muss aus mindestens einem Zeichen bestehen!"/>

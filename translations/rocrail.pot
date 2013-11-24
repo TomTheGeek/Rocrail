@@ -4170,6 +4170,12 @@ msgid "Lock"
 msgstr ""
 
 #. 
+# id="invalidchars"
+#, c-format
+msgid "Special characters are not allowed!"
+msgstr ""
+
+#. 
 # id="invalidid"
 #, c-format
 msgid "The ID must be at least one character!"

@@ -604,8 +604,12 @@ bool BaseDialog::existID( wxWindow* dlg, iONode list, iONode props, wxString  id
     return false;
   }
 
-  if( id.Len() == 0 || id.Contains(wxT(",")) || id.Contains(wxT(";")) || id.Contains(wxT(":")) ) {
+  if( id.Len() == 0 ) {
     wxMessageDialog( dlg, wxGetApp().getMsg("invalidid"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
+    return true;
+  }
+  if( id.Contains(wxT(",")) || id.Contains(wxT(";")) || id.Contains(wxT(":")) ) {
+    wxMessageDialog( dlg, wxGetApp().getMsg("invalidchars"), _T("Rocrail"), wxOK | wxICON_ERROR ).ShowModal();
     return true;
   }
   if( list != NULL ) {
