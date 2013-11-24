@@ -1150,6 +1150,7 @@
     <const name="resetblock" vt="string" val="resetblock" remark="Trackdriver port in valA."/>
     <const name="resetstat" vt="string" val="resetstat"/>
     <const name="shutdownnode" vt="string" val="shutdownnode"/>
+    <const name="updateserver" vt="string" val="updateserver"/>
     <var name="cmd" vt="string" defval="" range="*"/>
     <var name="informall" vt="bool" defval="false" remark="send command to all interfaces"/>
     <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>
@@ -1161,7 +1162,9 @@
     <var name="val" vt="int" defval="0" range="*" remark="optional value"/>
     <var name="valA" vt="int" defval="0" range="*" remark="optional value"/>
     <var name="valB" vt="int" defval="0" range="*" remark="optional value"/>
-  </sys>
+    <var name="dist" vt="string" defval="debian6" range="*" remark="Distribution name"/>
+    <var name="arch" vt="string" defval="i386" range="*" remark="Hardware architecture"/>
+    </sys>
 
   <model remark="Model command." wrappername="ModelCmd">
     <const name="save" vt="string" val="save"/>

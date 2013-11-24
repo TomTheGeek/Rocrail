@@ -899,6 +899,21 @@ static void __callback( obj inst, iONode nodeA ) {
       }
       return;
     }
+    else if( StrOp.equals( wSysCmd.updateserver, wSysCmd.getcmd( nodeA ) ) ) {
+      if( AppOp.isConsoleMode() ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Ignoring update server in console mode." );
+        NodeOp.base.del( nodeA );
+      }
+      else {
+        int revision = wSysCmd.getval(nodeA);
+        char cmd[256] = {'\0'};
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "update the server software to revision %d...", revision);
+        StrOp.fmtb(cmd, "nohup /opt/rocrail/update.sh %d %s %s &", revision, wSysCmd.getdist(nodeA), wSysCmd.getarch(nodeA) );
+        SystemOp.system(cmd, True, True);
+        NodeOp.base.del( nodeA );
+      }
+      return;
+    }
     else if( StrOp.equals( wSysCmd.getini, wSysCmd.getcmd( nodeA ) ) ) {
       iONode ini = (iONode)NodeOp.base.clone( AppOp.getNewIni() );
       if( data->devlist == NULL ) {
