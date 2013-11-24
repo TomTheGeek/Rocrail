@@ -2,6 +2,6 @@
 set -e
 if [ "$1" = "configure" ]; then
   chmod 755 /etc/init.d/rocraild
-  chmod 755 /opt/rocnet/rocrail.sh
+  chmod 755 /opt/rocrail/rocrail.sh
   update-rc.d rocraild defaults
 fi
