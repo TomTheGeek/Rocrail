@@ -2760,7 +2760,8 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     }
   }
 
-  wLoc.setthrottleid( data->props, wLoc.getthrottleid(nodeA) );
+  if( wLoc.getthrottleid(nodeA) != NULL && StrOp.len(wLoc.getthrottleid(nodeA)) > 0 )
+    wLoc.setthrottleid( data->props, wLoc.getthrottleid(nodeA) );
 
   if( TraceOp.getLevel(NULL) & TRCLEVEL_USER1 ) {
     char* cmdstr = NodeOp.base.toString( nodeA );
