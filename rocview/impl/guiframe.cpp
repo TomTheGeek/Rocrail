@@ -1333,6 +1333,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
 
     m_LC->updateLoc( node );
 
+    m_ActiveLocs->Freeze();
     for( int i = 0; i < m_ActiveLocs->GetNumberRows(); i++ ) {
       char* locid = StrOp.dup( m_ActiveLocs->GetCellValue( i, 0 ).mb_str(wxConvUTF8) );
       if( StrOp.equals( wLoc.getid( node ), locid ) ) {
@@ -1461,6 +1462,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         StrOp.free( locid );
       }
     }
+    m_ActiveLocs->Thaw();
   }
   else if( StrOp.equals( wBlock.name(), NodeOp.getName( node ) ) ) {
     /*
@@ -2438,9 +2440,12 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
   TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "Got an info message: %s", text );
 
   if( m_bTraceWindow && m_WarningPanel != NULL ) {
+    m_WarningPanel->Freeze();
+    m_MonitorPanel->Freeze();
     long i = m_WarningPanel->GetLastPosition();
-    if( i > maxlen )
+    if( i > maxlen ) {
       m_WarningPanel->Remove(0, len+1);
+    }
     if( level == TRCLEVEL_EXCEPTION ) {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxRED));
       m_WarningPanel->AppendText( wxString(text,wxConvUTF8) );
@@ -2474,6 +2479,8 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
       m_WarningPanel->AppendText( _T("\n") );
       m_MonitorPanel->ScrollLines(1);
     }
+    m_WarningPanel->Thaw();
+    m_MonitorPanel->Thaw();
   }
 
   // Cleanup node:

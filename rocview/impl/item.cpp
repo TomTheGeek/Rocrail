@@ -742,6 +742,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
       status = wRoute.getstatus(m_Props);
     }
 
+    this->Freeze();
     wxGraphicsContext* gc = NULL;
     if( wGui.isrendergc(wxGetApp().getIni())) {
       gc = wxGraphicsContext::Create(this);
@@ -777,6 +778,7 @@ void Symbol::OnPaint(wxPaintEvent& event)
     m_Renderer->drawShape( (wxPaintDC&)dc, gc, occupied, actroute, &bridgepos, wxGetApp().getFrame()->isShowID(), wxGetApp().getFrame()->isShowCounters(), ori, status, m_PlanPanel->isAlt() );
     if( gc != NULL)
       delete gc;
+    this->Thaw();
   }
   else {
     Show( false );
