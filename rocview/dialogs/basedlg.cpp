@@ -427,10 +427,12 @@ void BaseDialog::fillIndex( iONode Items, bool sort) {
   }
 
   size = ListOp.size( sortlist );
+  m_ItemList->Freeze();
   for( int i = 0; i < size; i++ ) {
     iONode Item = (iONode)ListOp.get( sortlist, i );
     appendItem(Item);
   }
+  m_ItemList->Thaw();
   /* clean up the temp. list */
   ListOp.base.del(sortlist);
 }
