@@ -892,6 +892,8 @@ Boolean rocs_socket_CreateCTX( iOSocket inst ) {
   /* The method describes which SSL protocol we will be using. */
   SSL_METHOD *method;
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SSL_library_init()..." );
+  SSL_library_init();
   /* Load algorithms and error strings. */
   OpenSSL_add_all_algorithms();
   SSL_load_error_strings();
