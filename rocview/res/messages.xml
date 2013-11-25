@@ -1285,7 +1285,7 @@
     <de txt="Zurücksetzen; außer Blockbelegung" tip="Versetzt Automatik zurück in den Anfangszustand außer Blockbelegung."/>
     <en txt="Soft reset" tip="Reset automat but save current block occupancy."/>
     <nl txt="Reset" tip="Reset automaat mode met behoud van blok bezettingen."/>
-    <sv txt="Återställ" tip="Återställ"/>
+    <sv txt="Mjuk återställning" tip="Återställ"/>
     <fr txt="Réinitialisation logiciel" tip="Remise à zéro de toutes les machines."/>
     <tr txt="Locları resetle" tip="Bütün Loc otomatikleri resetle."/>
     <es txt="Reinicio por programa" tip=" Reinicializar las Locs automáticas."/>
@@ -2504,7 +2504,7 @@
     <sr_latin txt="Tabela lokomotiva"/>
     <ja txt="車輛テーブル"/>
     <zh_CN txt="机车库"/>
-    <sl txt="Seznam lokomotiv"/>
+    <sl txt="Lokomotive"/>
     <pt_BR txt="Tabela de locomotivas"/>
   </Msg>
   <Msg id="programming">
@@ -2628,7 +2628,7 @@
     <sr_latin txt="Tabela ruta"/>
     <ja txt="ルートテーブル"/>
     <zh_CN txt="路径列表"/>
-    <sl txt="Seznam poti"/>
+    <sl txt="Poti"/>
     <pt_BR txt="Tabela de rotas"/>
   </Msg>
   <Msg id="blockgrouptable" dialog="true" key="Ctrl-6">
@@ -2658,7 +2658,7 @@
     <sr_latin txt="Tabela blokova po grupama"/>
     <ja txt="ブロックグループテーブル"/>
     <zh_CN txt="区间组列表"/>
-    <sl txt="Seznam skupine odsekov"/>
+    <sl txt="Skupine odsekov"/>
     <pt_BR txt="Tabela do grupo de blocos"/>
   </Msg>
   <Msg id="blocktable" dialog="true" key="Ctrl-3">
@@ -2689,7 +2689,7 @@
     <ja txt="ブロックテーブル"/>
     <pl txt="Blokuj tabele"/>
     <zh_CN txt="区块列表"/>
-    <sl txt="Seznam odsekov"/>
+    <sl txt="Odseki"/>
     <pt_BR txt="Tabela de blocos"/>
   </Msg>
   <Msg id="turnouttable" dialog="true" key="Ctrl-7">
@@ -2719,7 +2719,7 @@
     <sr_latin txt="Tabela skretnica"/>
     <ja txt="ポイントテーブル"/>
     <zh_CN txt="转辙机列表"/>
-    <sl txt="Seznam kretnic"/>
+    <sl txt="Kretnice in dodatki"/>
     <pt_BR txt="Tabela de desvios"/>
   </Msg>
   <Msg id="outputtable" dialog="true" key="Ctrl-9">
@@ -2749,7 +2749,7 @@
     <ja txt="出力テーブル"/>
     <pl txt="Tabela wyjściowa"/>
     <zh_CN txt="输出端列表"/>
-    <sl txt="Seznam izhodov"/>
+    <sl txt="Izhodi"/>
     <pt_BR txt="Tabela de saídas"/>
   </Msg>
   <Msg id="signaltable" dialog="true" key="Ctrl-8">
@@ -2780,7 +2780,7 @@
     <sr_latin txt="Tabela signala"/>
     <ja txt="信号テーブル"/>
     <zh_CN txt="信号灯列表"/>
-    <sl txt="Seznam signalov"/>
+    <sl txt="Signali"/>
     <pt_BR txt="Tabela de sinais"/>
   </Msg>
   <Msg id="turntable" dialog="true">
@@ -2841,7 +2841,7 @@
     <sr_latin txt="Tabela senzora"/>
     <ja txt="センサテーブル"/>
     <zh_CN txt="反馈传感器列表"/>
-    <sl txt="Seznam tipal"/>
+    <sl txt="Tipala"/>
     <pt_BR txt="Tabela de sensores"/>
   </Msg>
   <Msg id="sensorfromblock">
@@ -8260,7 +8260,7 @@
     <fr txt="Définir la destination" tip="Arrêt de la Loco après l'arrivée à destination."/>
     <tr txt="Gidilecek yerlerin belirlenmesi" tip="Gidilecek yere ulaştıktan sonra Loc durur."/>
     <es txt="Fijar destino" tip="Loc se detiene después de llegar a destino."/>
-    <it txt="Imposta destinazione" tip="Il convoglio si ferma una volta a destinazione."/>
+    <it txt="Impostare destinazione" tip="Il convoglio si ferma una volta a destinazione."/>
     <da txt="Sæt destination" tip="Lokomotivet stopper efter at have nået sin destination"/>
     <bg txt="Задайте дестинация"/>
     <el txt="Ορισμός προορισμού"/>
@@ -9837,7 +9837,7 @@
     <sr_latin txt="Tabela rasporeda"/>
     <ja txt="スケジュール表"/>
     <zh_CN txt="计划任务表"/>
-    <sl txt="Seznam urnikov"/>
+    <sl txt="Urniki"/>
     <pt_BR txt="Tabela de agendamentos"/>
   </Msg>
   <Msg id="schedule">
@@ -9955,7 +9955,7 @@
     <sr_latin txt="Tabela lokacija"/>
     <ja txt="場所表"/>
     <zh_CN txt="目的地列表"/>
-    <sl txt="Seznam lokacij"/>
+    <sl txt="Lokacije"/>
     <pt_BR txt="Tabela de localidades"/>
   </Msg>
   <Msg id="location">
@@ -12125,7 +12125,7 @@
     <ro txt="Tabel de acțiuni"/>
     <sr_latin txt="Tabela akcije"/>
     <zh_CN txt="动作列表"/>
-    <sl txt="Seznam dejanj"/>
+    <sl txt="Dejanja"/>
     <pt_BR txt="Tabela de ações"/>
   </Msg>
   <Msg id="actions">
@@ -12579,7 +12579,7 @@
     <fr txt="Régler le temps"/>
     <tr txt="Adjust time"/>
     <es txt="Ajustar tiempo"/>
-    <it txt="Imposta orologio"/>
+    <it txt="Impostare orologio"/>
     <da txt="Juster tid"/>
     <bg txt="Настройте времето"/>
     <el txt="Ρύθμιση του χρόνου"/>
@@ -12740,7 +12740,7 @@
     <fr txt="Lire CV"/>
     <tr txt="Get CV"/>
     <es txt="Obtener CV"/>
-    <it txt="Ottieni CV"/>
+    <it txt="Leggere CV"/>
     <da txt="Hent CV"/>
     <cs txt="Načti CV"/>
     <bg txt="Махни CV"/>
@@ -14202,7 +14202,7 @@
     <fr txt="Réinitinialiser voie de prog." tip="Commandes étendues du Reset"/>
     <tr txt="PT Resets" tip="Extended Reset Commands"/>
     <es txt="PT Resets" tip="Extended Reset Commands"/>
-    <it txt="Reimposta PT" tip="Extended Reset Commands"/>
+    <it txt="Resettare PT" tip="Extended Reset Commands"/>
     <da txt="PT Resets" tip="Extended Reset Commands"/>
     <cs txt="PT Resety"/>
     <bg txt="PT нулира"/>
@@ -14951,7 +14951,7 @@
     <ro txt="Documentație"/>
     <sr_latin txt="Dokumentacija"/>
     <zh_CN txt="文档"/>
-    <sl txt="Dokumentacija"/>
+    <sl txt="Uredi XML"/>
     <pt_BR txt="Documentação"/>
   </Msg>
   <Msg id="xslpath">
@@ -16226,7 +16226,7 @@
   </Msg>
   <Msg id="setshortid">
     <en txt="Set short ID"/>
-    <it txt="Imposta ID breve"/>
+    <it txt="Impostare ID breve"/>
     <sv txt="Ange kortID"/>
     <de txt="Kurz-Kennung setzen"/>
     <fr txt="Définir l'identifiant court"/>
@@ -16304,7 +16304,7 @@
     <sr_latin txt="Tabela vozila"/>
     <ja txt="機関車表"/>
     <zh_CN txt="车厢列表"/>
-    <sl txt="Seznam vagonov"/>
+    <sl txt="Vagoni"/>
     <pt_BR txt="Tabela de vagões"/>
   </Msg>
   <Msg id="waybilltable" dialog="true" key="Alt-5">
@@ -16331,7 +16331,7 @@
     <sr_latin txt="Tabela putnih lista"/>
     <ja txt="乗客名簿"/>
     <zh_CN txt="运单表"/>
-    <sl txt="Seznam tovornih listov"/>
+    <sl txt="Tovorni listi"/>
     <pt_BR txt="Tabela de guia de transporte"/>
   </Msg>
   <Msg id="operatortable" dialog="true" key="Alt-6">
@@ -16358,7 +16358,7 @@
     <ja txt="オペレータ表"/>
     <sv txt="Operatörstabell."/>
     <zh_CN txt="操作表"/>
-    <sl txt="Seznam operaterjev"/>
+    <sl txt="Operaterji"/>
     <pt_BR txt="Tabela de operador"/>
   </Msg>
   <Msg id="operator">
@@ -16830,6 +16830,7 @@
     <zh_CN txt="在两事件即将同时发生时停止"/>
     <sl txt="Stop ob dogodku \&quot;pre2in\&quot;"/>
     <pt_BR txt="Parar no evento pre2in"/>
+    <sv txt="Stanna vid pre2in händelse"/>
   </Msg>
   <Msg id="routing">
     <en txt="Routing"/>
@@ -17702,6 +17703,7 @@
   </Msg>
   <Msg id="invalidchars">
     <en txt="Special characters are not allowed!"/>
+    <nl txt="Leestekens zijn niet toegestaan!"/>
   </Msg>
   <Msg id="invalidid">
     <en txt="The ID must be at least one character!"/>
@@ -18636,7 +18638,7 @@
     <en_CA txt="Post"/>
     <en_GB txt="Post"/>
     <nb txt="Post"/>
-    <sr_latin txt="Objaviti"/>
+    <sr_latin txt="Poštanski"/>
     <zh_CN txt="提交"/>
     <sl txt="Poštni"/>
     <pt_BR txt="Correio"/>
@@ -20088,7 +20090,7 @@
     <pt txt="Configurar"/>
     <ca txt="Configura"/>
     <es txt="Configuración"/>
-    <it txt="Imposta"/>
+    <it txt="Impostare"/>
     <sr_latin txt="Postaviti"/>
     <ja txt="設定"/>
     <sv txt="Inställningar."/>
@@ -20109,7 +20111,7 @@
     <hu txt="Alaphelyzet"/>
     <pt txt="Reiniciar"/>
     <ru txt="Сброс"/>
-    <it txt="Reimposta"/>
+    <it txt="Resettare"/>
     <en_AU txt="Reset"/>
     <en_CA txt="Reset"/>
     <en_GB txt="Reset"/>
@@ -21171,7 +21173,7 @@
     <fr txt="Met la loco"/>
     <ru txt="Установить локомотив"/>
     <es txt="Seleccionar loco"/>
-    <it txt="Imposta locomotiva"/>
+    <it txt="Impostare locomotiva"/>
     <sr_latin txt="Postavi loko."/>
     <ja txt="機関車設定"/>
     <cs txt="Nastavení lokomotivy"/>
@@ -21308,6 +21310,7 @@
     <ru txt="Goto Turntable"/>
     <en_GB txt="Goto Turntable"/>
     <pt_BR txt="Vá para o Virador"/>
+    <sv txt="Gå till vändskiva"/>
   </Msg>
   <Msg id="cbusrocrailini">
     <en txt="Please load the Rocrail server settings before configuring CBUS nodes."/>
@@ -21432,7 +21435,7 @@
     <ca txt="Aconsegueix"/>
     <ru txt="Получить"/>
     <es txt="Obtener"/>
-    <it txt="Prendere"/>
+    <it txt="Leggere"/>
     <sr_latin txt="Primi"/>
     <ja txt="取得"/>
     <cs txt="Načíst"/>
@@ -21452,7 +21455,7 @@
     <ca txt="Estableix"/>
     <ru txt="Установить"/>
     <es txt="Seleccionar"/>
-    <it txt="Imposta"/>
+    <it txt="Scrivere"/>
     <sr_latin txt="Namesti"/>
     <ja txt="セット"/>
     <cs txt="Nastavit"/>
@@ -21471,7 +21474,7 @@
     <fr txt="Tout obtenir"/>
     <ru txt="Получить всё"/>
     <es txt="Ontener todos"/>
-    <it txt="Prendere tutto"/>
+    <it txt="Leggere tutto"/>
     <sr_latin txt="Primi sve"/>
     <ja txt="全て取得"/>
     <cs txt="Načíst vše"/>
@@ -21490,7 +21493,7 @@
     <fr txt="Tout effacer"/>
     <ru txt="Очистить полностью"/>
     <es txt="Borrar todo"/>
-    <it txt="Resetta"/>
+    <it txt="Azzerare tutto"/>
     <sr_latin txt="Obriši sve"/>
     <ja txt="全てクリア"/>
     <cs txt="Vyčistit vše"/>
@@ -21609,6 +21612,7 @@
     <sl txt="Kratki dogodki"/>
     <pt_BR txt="Eventos rápidos"/>
     <en_GB txt="Short events"/>
+    <sv txt="Korta händelser"/>
   </Msg>
   <Msg id="startofday">
     <en txt="Start of day"/>
@@ -22096,6 +22100,7 @@
     <ru txt="Poll info"/>
     <pt_BR txt="Informação de consulta"/>
     <en_GB txt="Poll info"/>
+    <sv txt="Pollningsinfo"/>
   </Msg>
   <Msg id="releaseonidle">
     <en txt="Release loco on idle"/>
@@ -22361,7 +22366,7 @@
     <nl txt="Ga offline"/>
     <es txt="Desconectarse"/>
     <it txt="Disconnetti"/>
-    <sr_latin txt="Idi na offline."/>
+    <sr_latin txt="Isključi se sa mreže"/>
     <ja txt="オフラインにする"/>
     <cs txt="režim offline"/>
     <zh_CN txt="设成离线"/>
@@ -24136,7 +24141,7 @@
     <nl txt="Functie decoders"/>
     <it txt="Accessori"/>
     <zh_CN txt="附件表"/>
-    <sl txt="Seznam dodatne opreme"/>
+    <sl txt="Dodatna oprema"/>
     <de txt="Zubehör-Tabelle"/>
     <sr_latin txt="Tabela pomoćnih uređaja"/>
     <ru txt="Аксессуары"/>
@@ -24677,7 +24682,7 @@
     <nl txt="Melder berichten bevestigen"/>
     <de txt="Rückmelder-Ereignisse bestätigen"/>
     <pt_BR txt="Confirmar eventos dos sensores"/>
-    <it txt="RIconoscere gli eventi del sensore"/>
+    <it txt="Riconoscere gli eventi del sensore"/>
     <sl txt="Potrdi dogodke tipal"/>
     <en_GB txt="Acknowledge sensor events"/>
     <ru txt="События датчика подтверждения"/>
@@ -24729,6 +24734,7 @@
     <sl txt="Posodobi RocNet vozlišče %d na revizijo %d?"/>
     <sv txt="Uppdatera RocNet nod %d till version %d"/>
     <sr_latin txt="Osveži RocNet čvor %d za reviziju %d?"/>
+    <de txt="RocNet-Knoten %d auf Revision %d aktualisieren?"/>
   </Msg>
   <Msg id="update">
     <en txt="Update"/>
@@ -24740,6 +24746,7 @@
     <sl txt="Posodobi"/>
     <sv txt="Uppdatera"/>
     <sr_latin txt="Osveži"/>
+    <de txt="Aktualisierung"/>
   </Msg>
   <Msg id="newrevision">
     <en txt="New revision"/>
@@ -24750,6 +24757,7 @@
     <ru txt="Новая версия"/>
     <sl txt="Nova revizija"/>
     <sr_latin txt="Nova revizija"/>
+    <de txt="Neue Revision"/>
   </Msg>
   <Msg id="shutdownlocation">
     <en txt="Shutdown location %s?"/>
@@ -24771,6 +24779,7 @@
     <sl txt="Samo primestne garniture"/>
     <sv txt="Endast pendeltåg"/>
     <sr_latin txt="Samo prigradski vozovi"/>
+    <de txt="Nur Pendelzüge"/>
   </Msg>
   <Msg id="forcemultiaspects">
     <en txt="Force multi aspects"/>
@@ -24781,6 +24790,7 @@
     <ru txt="Мультиаспекты принудительно"/>
     <sl txt="Vsili več stanj"/>
     <sr_latin txt="Prinudni višestruki pristup"/>
+    <de txt="Viel-Begriffe erzwingen"/>
   </Msg>
   <Msg id="nodemap">
     <en txt="Nodemap"/>
@@ -24791,6 +24801,7 @@
     <ru txt="Nodemap"/>
     <sl txt="Karta vozlišč"/>
     <sr_latin txt="Mapa čvorišta"/>
+    <de txt="Knoten-Baum"/>
   </Msg>
   <Msg id="usedecspec4all">
     <en txt="Use decoder file for CV numbers"/>
@@ -24801,6 +24812,7 @@
     <ru txt="Использовать файл декодера для номеров CV"/>
     <sl txt="Uporabi datoteko dekoderja za CV številke"/>
     <sr_latin txt="Koristi fajl dekodera za CV brojeve"/>
+    <de txt="Dekoder-Datei für CV-Nummer verwenden"/>
   </Msg>
   <Msg id="fifosize">
     <en txt="FiFo size"/>
@@ -24813,6 +24825,7 @@
     <sv txt="FiFo storlek"/>
     <sr_latin txt="Veličina FiFo"/>
     <de txt="FiFo-Größe"/>
+    <es txt="tamaño de la cola"/>
   </Msg>
   <Msg id="pollingrate">
     <en txt="Polling rate"/>
@@ -24824,6 +24837,8 @@
     <sv txt="Pollningsfrekvens"/>
     <sr_latin txt="Nivo izveštaja"/>
     <ru txt="Polling rate"/>
+    <de txt="Abfrage-Rate"/>
+    <es txt="velocidad de sondeo"/>
   </Msg>
   <Msg id="usepb">
     <en txt="Use push button"/>
@@ -24835,32 +24850,101 @@
     <sv txt="Använd tryckknapp"/>
     <sr_latin txt="Koristi taster"/>
     <en_GB txt="Use push button"/>
+    <de txt="Drucktaste verwenden"/>
+    <es txt="usa el pulsador"/>
   </Msg>
   <Msg id="govirtual">
     <en txt="Virtual automatic"/>
+    <de txt="Virtuelle Automatik"/>
+    <es txt="atutomatica virtual"/>
+    <nl txt="Virtueel automatisch"/>
+    <pt_BR txt="Automático virtual"/>
+    <sr_latin txt="Automatski virtualno"/>
+    <en_GB txt="Virtual automatic"/>
+    <it txt="Modalità automatica virtuale"/>
+    <sl txt="Virtualna avtomatika"/>
   </Msg>
   <Msg id="maxdelay">
     <en txt="Max. delay"/>
+    <de txt="Max. Verzögerung"/>
+    <es txt="maximo retraso"/>
+    <nl txt="Max. vertraging"/>
+    <pt_BR txt="Atraso máximo"/>
+    <sr_latin txt="Maks. zakašnjenje"/>
+    <en_GB txt="Max. delay"/>
+    <it txt="Ritardo massimo"/>
+    <sl txt="Maks. zakasnitev"/>
+    <sv txt="Max. fördröjning"/>
   </Msg>
   <Msg id="startallvirtual">
     <en txt="Start all locs virtual" tip="Put all locs in virtual auto mode."/>
+    <de txt="Alle Loks virtuell starten"/>
+    <es txt="comienzo de todos los locs virtuales"/>
+    <nl txt="Start alle loks virtueel"/>
+    <pt_BR txt="Iniciar todas locomotivas virtuais"/>
+    <sr_latin txt="Pokreni sve lokomotive virtualno"/>
+    <en_GB txt="Start all locs virtual"/>
+    <it txt="Avviare tutte le loco virtuali"/>
+    <sl txt="Poženi vse lokomotive virtualno"/>
+    <sv txt="Starta alla lok virtuellt"/>
   </Msg>
   <Msg id="paste">
     <en txt="Paste"/>
+    <de txt="Einfügen"/>
+    <es txt="Pega"/>
+    <nl txt="Plakken"/>
+    <pt_BR txt="Colar"/>
+    <sr_latin txt="Prilepi"/>
+    <en_GB txt="Paste"/>
+    <it txt="Incolla"/>
+    <sl txt="Prilepi"/>
+    <sv txt="Klistra in"/>
   </Msg>
   <Msg id="channelsetup">
     <en txt="Channel Setup"/>
+    <de txt="Kanal-Einstellung"/>
+    <es txt="configuracion de canal"/>
+    <nl txt="Kanaal configuratie"/>
+    <pt_BR txt="Configuração de canais"/>
+    <sr_latin txt="Postavka kanala"/>
+    <en_GB txt="Channel Setup"/>
+    <it txt="Configurazione canale"/>
+    <sl txt="Nastavitev kanalov"/>
   </Msg>
   <Msg id="finetune">
     <en txt="Fine-tune"/>
+    <nl txt="Bijstellen"/>
+    <pt_BR txt="Afinar"/>
+    <sr_latin txt="Uštimavanje"/>
+    <en_GB txt="Fine tune"/>
+    <it txt="Regolazione"/>
+    <sl txt="Umerjanje"/>
   </Msg>
   <Msg id="channel">
     <en txt="Channel"/>
+    <nl txt="Kanaal"/>
+    <pt_BR txt="Canal"/>
+    <sr_latin txt="Kanal"/>
+    <en_GB txt="Channel"/>
+    <it txt="Canale"/>
+    <sl txt="Kanal"/>
   </Msg>
   <Msg id="preset">
     <en txt="Preset"/>
+    <nl txt="Voorinstelling"/>
+    <pt_BR txt="Predefinir"/>
+    <sr_latin txt="Postavljeno"/>
+    <en_GB txt="Preset"/>
+    <it txt="Preimpostazione"/>
+    <sl txt="Prednastavljeno"/>
   </Msg>
   <Msg id="resetfifo">
     <en txt="Reset FiFo"/>
+    <nl txt="FiFo terug zetten"/>
+    <pt_BR txt="Redefinir FiFo"/>
+    <sr_latin txt="Poništi FiFo"/>
+    <en_GB txt="Reset FiFo"/>
+    <it txt="Resettare FiFo"/>
+    <sl txt="Ponastavi FiFo"/>
   </Msg>
 </Messages>
