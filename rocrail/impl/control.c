@@ -895,7 +895,7 @@ static void __callback( obj inst, iONode nodeA ) {
         NodeOp.base.del( nodeA );
       }
       else {
-        AppOp.shutdown(wSysCmd.getval( nodeA ));
+        AppOp.shutdown(wSysCmd.getval( nodeA ), "System command");
       }
       return;
     }

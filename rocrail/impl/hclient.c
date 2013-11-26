@@ -791,7 +791,7 @@ static Boolean _work( struct OHClient* inst ) {
     else if( StrOp.find( str, "GET" ) && StrOp.find( str, " /shutdown?ok=true" ) ) {
       __getBlank( inst );
       SocketOp.disConnect( data->socket );
-      AppOp.shutdown(0);
+      AppOp.shutdown(0, "WEB Client command");
       return True;
     }
     else if( StrOp.find( str, "GET" ) && StrOp.find( str, " /shutdown?ok=false" ) ) {

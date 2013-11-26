@@ -537,7 +537,7 @@ static void __checkConsole( iOAppData data ) {
   else if( c == wConCmd.quit ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutdown requested." );
     data->consoleMode = False;
-    AppOp.shutdown(0);
+    AppOp.shutdown(0, "Console command");
   }
   else if( c == wConCmd.initfield ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Initfield requested." );
@@ -1072,7 +1072,7 @@ static void _saveIni( void ) {
 }
 
 
-static Boolean _shutdown( int network ) {
+static Boolean _shutdown( int network, const char* signame ) {
   if( __appinst != NULL ) {
 
     iOAppData data = Data(__appinst);
@@ -1122,7 +1122,11 @@ static Boolean _shutdown( int network ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Informing all threads..." );
     ThreadOp.requestQuitAll();
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down..." );
+    if( signame != NULL )
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Shutting down because of [%s]", signame );
+    else
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shutting down..." );
+
     {
       iOList thList = ThreadOp.getAll();
       int cnt = ListOp.size( thList );
@@ -1145,10 +1149,6 @@ static Boolean _shutdown( int network ) {
     /* signal main loop */
     bShutdown = True;
 
-    /*
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Exit." );
-    exit(0);
-    */
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Exit." );
     return True;
   }

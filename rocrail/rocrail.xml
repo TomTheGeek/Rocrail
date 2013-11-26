@@ -44,6 +44,7 @@
     <fun name="getSrcpCon" vt="iOSrcpCon"/>
     <fun name="shutdown" vt="Boolean">
       <param name="network" vt="int" remark="Shutdown RocNet too."/>
+      <param name="signalname" vt="const char*" remark="Signal name."/>
     </fun>
     <fun name="saveIni" vt="void"/>
     <fun name="stop" vt="void"/>

@@ -94,7 +94,7 @@ static void __signalHandler( int sig ) {
 
   printf( "__signalHandler: shutdown...\n" );
   if( sig != SIGSEGV ) {
-    AppOp.shutdown(0);
+    AppOp.shutdown(0, sigName);
   }
   else {
     /* try todo a power off... */
@@ -253,7 +253,7 @@ void WINAPI RocrailServiceCtrlHandler( DWORD Opcode ) {
     case SERVICE_CONTROL_STOP: 
     RocrailServiceStatus.dwCurrentState = SERVICE_STOP_PENDING;
     SetServiceStatus( RocrailServiceStatusHandle, &RocrailServiceStatus ); 
-    AppOp.shutdown(0);
+    AppOp.shutdown(0, "SERVICE_CONTROL_STOP");
     return; 
     
     case SERVICE_CONTROL_PAUSE: 
