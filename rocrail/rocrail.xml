@@ -477,7 +477,7 @@
   </object>
 
 
-  <object name="Loc" interface="HtmlInt" use="node,thread,map" include="htmlint" remark="Loc object">
+  <object name="Loc" interface="HtmlInt" use="node,thread,map,mutex" include="htmlint" remark="Loc object">
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Loc node"/>
     </fun>
@@ -781,6 +781,7 @@
       <var name="bbtStepCount" vt="int"/>
       <var name="lastfncmd" vt="long"/>
       <var name="govirtual" vt="Boolean"/>
+      <var name="muxEngine" vt="iOMutex"/>
       </data>
   </object>
 

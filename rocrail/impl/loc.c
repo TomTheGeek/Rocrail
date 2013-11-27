@@ -612,6 +612,10 @@ static void* __event( void* inst, const void* evt ) {
     }
   }
 
+  if( !MutexOp.trywait( data->muxEngine, 100 ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "(event) loco %s mutex timeout", wLoc.getid(data->props) );
+    return NULL;
+  }
 
   if( StrOp.equals( wLoc.name(), NodeOp.getName(evtNode) )) {
     int V = __getVfromRaw(inst, evtNode);
@@ -713,6 +717,8 @@ static void* __event( void* inst, const void* evt ) {
   else if( StrOp.equals( wSysCmd.name(), NodeOp.getName(evtNode) ) ) {
     __sysEvent( inst, evtNode );
   }
+
+  MutexOp.post( data->muxEngine );
 
   return NULL;
 }
@@ -957,6 +963,7 @@ static void __doSound(iOLoc inst, iONode cmd) {
 static void __engine( iOLoc inst, iONode cmd ) {
   iOLocData    data = Data(inst);
   iOControl control = AppOp.getControl();
+  Boolean didPost = False;
 
   const char* V_hint   = NULL;
   int         V_maxkmh = 0;
@@ -965,6 +972,11 @@ static void __engine( iOLoc inst, iONode cmd ) {
   iONode      cmdTD    = NULL;
   iONode      cmdFn    = NULL;
   int      fnchanged   = -1;
+
+  if( !MutexOp.trywait( data->muxEngine, 100 ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s mutex timeout", LocOp.getId(inst) );
+    return;
+  }
 
   if( cmd != NULL )
   {
@@ -1299,6 +1311,9 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
     }
 
+    MutexOp.post( data->muxEngine );
+    didPost = True;
+
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sending command...V=%d dir=%s",wLoc.getV(cmd), wLoc.isdir(cmd)?"fwd":"rev" );
     if( cmdFn != NULL ) {
       if( wLoc.getaddr( cmdFn ) == 0 && !StrOp.equals( wLoc.prot_A, wLoc.getprot( data->props ))) {
@@ -1331,6 +1346,9 @@ static void __engine( iOLoc inst, iONode cmd ) {
       data->released = True;
     }
   }
+
+  if( !didPost )
+    MutexOp.post( data->muxEngine );
 
   data->step++;
 }
@@ -3608,6 +3626,8 @@ static iOLoc _inst( iONode props ) {
   data->timedfn = -1; /* function 0 is also used */
   data->released = True;
   data->bbtMap = MapOp.inst();
+  data->muxEngine = MutexOp.inst( NULL, True );
+
 
   if( wRocRail.isresetspfx(AppOp.getIni()) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "global reset speed and functions for loco [%s]", wLoc.getid(props));
