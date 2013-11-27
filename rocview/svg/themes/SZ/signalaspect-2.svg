@@ -1,0 +1,20 @@
+<svg width="32" height="32">
+  <g>
+      <!-- Track -->
+      <path d="M 0,12 L 31,12 L 31,19 L 0,19 z " fill="rgb(0,0,0)" stroke="rgb(0,0,0)" />
+      <!-- Illumination grau -->
+      <path d="M 8,14 L 23,14 L 23,17 L 8,17 z " fill="rgb(192,192,192)" stroke="rgb(192,192,192)" />
+      <!-- signal -->
+      <path d="M 0,4 L 1,2 L 3,1 L 23,1 L 25,2 L 26,4 L 30,4 L 30,2 L 31,2 L 31,8 L 30,8 L 30,6 L 26,6 L 25,8 L 23,9 L 3,9 L 1,8 L 0,6 z" fill="rgb(0,0,0)" stroke="rgb(0,0,0)" />
+	  <path d="M 26,4 L 30,4 L 30,6 L 26,6 z" fill="rgb(255,255,255)" stroke="rgb(255,255,255)" />
+	  <path d="M 27,4 L 29,4 L 29,6 L 27,6 z" fill="rgb(255,0,0)" stroke="rgb(255,0,0)" />
+      <!-- Yellow1 -->
+      <path d="M 3,3 L 5,3 L 6,4 L 6,6 L 5,7 L 3,7 L 2,6 L 2,4 z" fill="rgb(88,88,0)" stroke="rgb(88,88,0)" />
+      <!-- Red -->
+      <path d="M 9,3 L 11,3 L 12,4 L 12,6 L 11,7 L 9,7 L 8,6 L 8,4 z" fill="rgb(88,0,0)" stroke="rgb(88,0,0)" />
+      <!-- Green -->
+      <path d="M 15,3 L 17,3 L 18,4 L 18,6 L 17,7 L 15,7 L 14,6 L 14,4 z" fill="rgb(0,88,0)" stroke="rgb(0,88,0)" />
+	  <!-- Yellow 2 -->
+	  <path d="M 21,3 L 23,3 L 24,4 L 24,6 L 23,7 L 21,7 L 20,6 L 20,4 z" fill="rgb(255,255,0)" stroke="rgb(255,255,0)" />
+  </g>
+</svg>
