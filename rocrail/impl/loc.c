@@ -973,8 +973,8 @@ static void __engine( iOLoc inst, iONode cmd ) {
   iONode      cmdFn    = NULL;
   int      fnchanged   = -1;
 
-  if( !MutexOp.trywait( data->muxEngine, 100 ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s mutex timeout", LocOp.getId(inst) );
+  if( !MutexOp.trywait( data->muxEngine, 1000 ) ) {
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "loco %s mutex timeout", LocOp.getId(inst) );
     return;
   }
 
