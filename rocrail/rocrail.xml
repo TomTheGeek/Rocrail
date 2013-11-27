@@ -738,6 +738,8 @@
       <var name="fxrestoredbythread" vt="Boolean"/>
       <var name="speedrestoredbythread" vt="Boolean"/>
       <var name="fxsleep" vt="int"/>
+      <var name="fxgroup" vt="int"/>
+      <var name="fxresetpending" vt="Boolean"/>
       <var name="enter" vt="Boolean"/>
       <var name="enterId" vt="const char*"/>
       <var name="enterTick" vt="int"/>

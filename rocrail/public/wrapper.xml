@@ -1151,6 +1151,7 @@
     <const name="resetstat" vt="string" val="resetstat"/>
     <const name="shutdownnode" vt="string" val="shutdownnode"/>
     <const name="updateserver" vt="string" val="updateserver"/>
+    <const name="resetfx" vt="string" val="resetfx"/>
     <var name="cmd" vt="string" defval="" range="*"/>
     <var name="informall" vt="bool" defval="false" remark="send command to all interfaces"/>
     <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID"/>

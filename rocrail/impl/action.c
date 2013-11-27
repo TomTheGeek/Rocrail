@@ -905,6 +905,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     else {
       iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
       wSysCmd.setcmd( cmd, wAction.getcmd( data->action ) );
+      wSysCmd.setvalA( cmd, atoi(wAction.getparam(data->action)) );
       ControlOp.cmd( AppOp.getControl(), cmd, &error );
     }
   }

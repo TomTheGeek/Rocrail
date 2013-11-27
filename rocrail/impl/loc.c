@@ -368,6 +368,22 @@ static Boolean __cpNode2Fn(iOLoc inst, iONode cmd) {
 }
 
 
+static void __resetFx( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOLoc loc = (iOLoc)ThreadOp.getParm( th );
+  iOLocData data = Data(loc);
+  iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+
+  ThreadOp.sleep(100 + 200 * data->fxsleep );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "resetfx group %d for %s", data->fxgroup, wLoc.getid(data->props) );
+
+  wFunCmd.setgroup(fcmd, data->fxgroup);
+  LocOp.cmd(loc, fcmd);
+
+  data->fxresetpending = False;
+  ThreadOp.base.del(th);
+}
+
 
 static void __restoreFx( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
@@ -472,7 +488,16 @@ static void __sysEvent( obj inst, iONode evtNode ) {
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sysEvent [%s] for [%s]...", cmd, LocOp.getId((iOLoc)inst) );
 
-  if( wLoc.isshow(data->props) && StrOp.equals( wSysCmd.go, cmd ) && !data->fxrestored ) {
+  if( StrOp.equals( wSysCmd.resetfx, cmd ) ) {
+    data->fxsleep = wSysCmd.getval(evtNode);
+    {
+      iOThread th = ThreadOp.inst( NULL, &__resetFx, inst );
+      data->fxresetpending = True;
+      data->fxgroup = wSysCmd.getvalA(evtNode);
+      ThreadOp.start(th);
+    }
+  }
+  else if( wLoc.isshow(data->props) && StrOp.equals( wSysCmd.go, cmd ) && !data->fxrestored ) {
     /* restore fx */
     data->fxrestored = True;
     data->fxrestoredbythread = False;
