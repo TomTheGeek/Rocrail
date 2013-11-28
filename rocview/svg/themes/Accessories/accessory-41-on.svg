@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="32">
+  <g>
+    <!-- Bridge deck -->
+    <path stroke="rgb(0,0,0)" fill="none" d="M 0,6 L 127,6 L 127,25 L 0,25 z " />
+    <!-- Track 1 -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 127,12 L 127,19 L 0,19 z " />
+    <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,14 L 118,14 L 118,17 L 8,17 z " />
+  </g>
+</svg>

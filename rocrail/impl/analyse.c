@@ -384,6 +384,26 @@ static Boolean isDoubleTrackRRCrossing( iONode node ) {
   return( False );
 }
 
+static Boolean isDoubleTrackBridge( iONode node ) {
+  if( StrOp.equals( NodeOp.getName(node), wSwitch.name() ) &&
+      StrOp.equals( wItem.gettype(node), wSwitch.accessory ) &&
+      wSwitch.getaccnr(node) == 40
+    ) {
+    return( True );
+  }
+  return( False );
+}
+
+static Boolean isSingleTrackBridge( iONode node ) {
+  if( StrOp.equals( NodeOp.getName(node), wSwitch.name() ) &&
+      StrOp.equals( wItem.gettype(node), wSwitch.accessory ) &&
+      wSwitch.getaccnr(node) == 41
+    ) {
+    return( True );
+  }
+  return( False );
+}
+
 static Boolean isSimpleCrossing( iONode node ) {
   if( StrOp.equals( NodeOp.getName(node), wSwitch.name() ) &&
       ( wSwitch.getaddr1(node) == 0 ) &&
@@ -2443,7 +2463,7 @@ static Boolean blockFbackUniqueCheck( iOAnalyse inst, Boolean repair ) {
         while( fbevt != NULL ) {
           const char* fbid = wFeedbackEvent.getid( fbevt );
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block feedback unique check: seltab[%s] fbid[%s]", seltabid, fbid );
-          /* LRLRLR missing code */
+
           if( StrOp.len( fbid ) > 0 ) {
             iOFBack fb = ModelOp.getFBack( data->model, fbid );
             if( fb != NULL ) {
@@ -2507,7 +2527,38 @@ static Boolean blockCheck( iOAnalyse inst, Boolean repair ) {
       iIBlockBase block = ModelOp.getBlock( data->model, bkid );
       iONode bkNode = BlockOp.base.properties( block );
       iOList delList = ListOp.inst();
+      const char*  signal  = wBlock.getsignal(   bkNode );
+      const char* wsignal  = wBlock.getwsignal(  bkNode );
+      const char*  signalR = wBlock.getsignalR(  bkNode );
+      const char* wsignalR = wBlock.getwsignalR( bkNode );
 
+      /* check signal and distant (if defined) */
+      if( StrOp.len( signal ) > 0 ) {
+        iOSignal sg = ModelOp.getSignal( data->model, signal );
+        if( sg == NULL ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block check: block[%s] signal[%s] not defined", bkid, signal );
+        }
+      }
+      if( StrOp.len( wsignal ) > 0 ) {
+        iOSignal sg = ModelOp.getSignal( data->model, wsignal );
+        if( sg == NULL ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block check: block[%s] wsignal[%s] not defined", bkid, wsignal );
+        }
+      }
+      if( StrOp.len( signalR ) > 0 ) {
+        iOSignal sg = ModelOp.getSignal( data->model, signalR );
+        if( sg == NULL ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block check: block[%s] signalR[%s] not defined", bkid, signalR );
+        }
+      }
+      if( StrOp.len( wsignalR ) > 0 ) {
+        iOSignal sg = ModelOp.getSignal( data->model, wsignalR );
+        if( sg == NULL ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block check: block[%s] wsignalR[%s] not defined", bkid, wsignalR );
+        }
+      }
+
+      /* check fb events */
       iONode fbevt = wBlock.getfbevent( bkNode );
       while( fbevt != NULL ) {
         int numProblemsPre = numProblems ;
@@ -2647,7 +2698,7 @@ static Boolean zlevelCheck( iOAnalyse inst, Boolean repair ) {
       const char* titleFollower = wZLevel.gettitle( zlevelFollower );
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "zlevel cross checking: level[%d] title[%s] <-> level[%d] title[%s]", 
           level, title, levelFollower, titleFollower );
-      if( level == levelFollower ) {
+      if( ( level == levelFollower ) || StrOp.equals( title, titleFollower ) ) {
         numWarnings++;
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: definition of level[%d] title[%s] is following level[%d] title[%s] (first definition is valid)",
             levelFollower, titleFollower, level, title );
@@ -2656,7 +2707,6 @@ static Boolean zlevelCheck( iOAnalyse inst, Boolean repair ) {
           ListOp.add( delList, (obj)zlevelFollower );
         }
       }
-      
       zlevelFollower = wPlan.nextzlevel( data->plan, zlevelFollower );
     }
     zlevel = wPlan.nextzlevel( data->plan, zlevel );
@@ -3014,13 +3064,14 @@ static Boolean isSignalMain( iONode node ) {
   return( StrOp.equals( wSignal.main, signaltype ) );
 }
 
+
 static Boolean isSignalDistant( iONode node ) {
   const char* signaltype = wSignal.getsignal( node );
   if( signaltype == NULL) {
     return( False );
   }
   return( StrOp.equals( wSignal.distant, signaltype ) );
- }
+}
  
 
 static void __notifyOverlapError( iONode node, iOMap map, const char* key ) {
@@ -3176,7 +3227,74 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
               MapOp.put( data->objectmap, key, (obj)node);
           }
         }
+
+        if( isDoubleTrackBridge( node ) ) {
+          /* 2x4 fields ! */
+          int i,j;
+          for (i=0;i<4;i++) {
+            for (j=0;j<=1;j++) {
+              if( ! ( (i == 0) && (j == 0) ) ) {
+                if( StrOp.equals( ori, wItem.east ) || StrOp.equals( ori, wItem.west ) ) {
+                  __createKey( key, node, i, j, 0);
+                  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+                      key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
+
+                  if( MapOp.haskey( data->objectmap, key) ) {
+                    healthy = False;
+                    __notifyOverlapError( node, data->objectmap, key );
+                  }
+                  else
+                    MapOp.put( data->objectmap, key, (obj)node);
+                }
+                if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
+                  __createKey( key, node, j, i, 0);
+                  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+                      key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
+
+                  if( MapOp.haskey( data->objectmap, key) ) {
+                    healthy = False;
+                    __notifyOverlapError( node, data->objectmap, key );
+                  }
+                  else
+                    MapOp.put( data->objectmap, key, (obj)node);
+                }
+              }
+            }
+          }
+        }
+
+        if( isSingleTrackBridge( node ) ) {
+          /* 1x4 fields ! */
+          int i;
+          for (i=1;i<4;i++) {
+            if( StrOp.equals( ori, wItem.east ) || StrOp.equals( ori, wItem.west ) ) {
+              __createKey( key, node, i, 0, 0);
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+                  key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
+
+              if( MapOp.haskey( data->objectmap, key) ) {
+                healthy = False;
+                __notifyOverlapError( node, data->objectmap, key );
+              }
+              else
+                MapOp.put( data->objectmap, key, (obj)node);
+            }
+            if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
+              __createKey( key, node, 0, i, 0);
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+                  key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
+
+              if( MapOp.haskey( data->objectmap, key) ) {
+                healthy = False;
+                __notifyOverlapError( node, data->objectmap, key );
+              }
+              else
+                MapOp.put( data->objectmap, key, (obj)node);
+            }
+          }
+        }
       } /* switch */
+
       else if( StrOp.equals( NodeOp.getName(node), wBlock.name() ) ) {
         int fields = 4;
         if( wBlock.issmallsymbol(node) ) {
@@ -3556,6 +3674,24 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
 
     /* decoupler */
     else if( __getType(item) == typeSwitch && StrOp.equals( subtype, wSwitch.decoupler)) {
+      return travel;
+    }
+
+    /* accessory 40 (double track bridge (2x4) */
+    /* accessory 41 (single track bridge (1x4) */
+    else if( isDoubleTrackBridge( item ) || isSingleTrackBridge( item ) ) {
+      if( StrOp.equals( itemori, wItem.west )  || StrOp.equals( itemori, wItem.east ) ) {
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__travel: bridge WE ori[%s] travel[%d] tos[%d] tos_o[%d]", itemori, travel, turnoutstate, *turnoutstate_out );
+        if( travel == 2 ) {
+          *x = 3;
+        }
+      }
+      else if( StrOp.equals( itemori, wItem.north )  || StrOp.equals( itemori, wItem.south ) ) {
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__travel: bridge NS ori[%s] travel[%d] tos[%d] tos_o[%d]", itemori, travel, turnoutstate, *turnoutstate_out );
+        if( travel == 3 ) {
+          *y = 3;
+        }
+      }
       return travel;
     }
 
@@ -5687,6 +5823,100 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
         }
       }
       return False;
+    }
+    else if(  isSingleTrackBridge( nextitem )
+           || isDoubleTrackBridge( nextitem )
+           ) {
+      /* single track bridge */
+      /* double track bridge */
+      int baseX = 0;
+      int baseY = 0;
+      int nextitemOri = __getOri( nextitem );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "bridge: [%s](%d-%d-%d) travel[%d] , rrx[%s](%d-%d-%d) travelp[%d] ori[%d]",
+          wItem.getid(item), wItem.getx(item), wItem.gety(item), wItem.getz(item), travel,
+          wItem.getid(nextitem), wItem.getx(nextitem), wItem.gety(nextitem), wItem.getz(nextitem), travelp, nextitemOri );
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%-20s] travel: [%d] name=%s type=%s",
+          wItem.getid(nextitem), travel, NodeOp.getName(nextitem), wItem.gettype(nextitem) );
+
+      /* add nextitem to route fragment */
+      depth++;
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "depth: [%d]", depth );
+      iONode itemA = (iONode)NodeOp.base.clone( nextitem);
+      wItem.setstate(itemA, state);
+      ListOp.add( route, (obj)itemA );
+
+      if( nextitemOri == oriWest || nextitemOri == oriEast ) {
+        baseX = wItem.getx(nextitem) ;
+        baseY = wItem.gety(item) ;
+      }else if( nextitemOri == oriNorth || nextitemOri == oriSouth ) {
+        baseX = wItem.getx(item) ;
+        baseY = wItem.gety(nextitem) ;
+      }
+
+      /* rows: travel  */
+      /* cols: itemori */
+      /*                        itemori W  N  E  S     travel */
+      const int xoffsetArray[4][4] = {{-1, 0,-1, 0}, /* west  */
+                                      { 0, 0, 0, 0}, /* north */
+                                      { 4, 0, 4, 0}, /* east  */
+                                      { 0, 0, 0, 0}};/* south */
+
+      const int yoffsetArray[4][4] = {{ 0, 0, 0, 0}, /* west  */
+                                      { 0,-1, 0,-1}, /* north */
+                                      { 0, 0, 0, 0}, /* east  */
+                                      { 0, 4, 0, 4}};/* south */
+
+      xoffset = xoffsetArray[travel][nextitemOri] ;
+      yoffset = yoffsetArray[travel][nextitemOri] ;
+      StrOp.fmtb( key, "%d-%d-%d", baseX+xoffset, baseY+yoffset, wItem.getz(nextitem) );
+
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "bridge: baseX %d baseY %d xoffset %d yoffset %d nextNext key: %s", baseX, baseY, xoffset, yoffset, key);
+
+      /* get item after nextitem. name it nextNextItem */
+      iONode nextNextItem = (iONode)MapOp.get( data->objectmap, key);
+
+      if( nextNextItem != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "bridge: item[%s](%d-%d-%d) travel[%d] , nitem[%s](%d-%d-%d) travelp[%d] , nnitem[%s](%d-%d-%d)",
+            wItem.getid(item), wItem.getx(item), wItem.gety(item), wItem.getz(item), travel,
+            wItem.getid(nextitem), wItem.getx(nextitem), wItem.gety(nextitem), wItem.getz(nextitem), travelp,
+            wItem.getid(nextNextItem), wItem.getx(nextNextItem), wItem.gety(nextNextItem), wItem.getz(nextNextItem) );
+
+        /* check if direction of nextNextItem suits */
+        int travelp2 = __travel( inst, nextNextItem, travel, 0, &turnoutstate_out, &x, &y, key);
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "TRAVEL NEXTNEXT travelp2[%d] x[%d] y[%d]", travelp2, x, y );
+        if( (travelp2 == itemNotInDirection || travelp2 == -1) && travelp2 != dcrossingAhead) {
+          /* nextNextItem is also not fitting -> give up -> save route fragment in notRTlist and end this search */
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, " -> stop: nextNext [%s][%s] not fitting -> end tr[%d] trp[%d] trp2[%d] oI[%d] oNI[%d] oNI2[%d]",
+              NodeOp.getName(nextNextItem), wItem.getid(nextNextItem), travel, travelp, travelp2, __getOri( item ), __getOri( nextitem ), __getOri( nextNextItem ) );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, " -> stop: nextNext [%s][%s] not fitting -> end of search",
+              NodeOp.getName(nextNextItem), wItem.getid(nextNextItem) );
+          ListOp.add( data->notRTlist, (obj)route);
+          return False;
+        }
+        else {
+          if( StrOp.equals(NodeOp.getName(nextNextItem), wBlock.name() ) ||
+              StrOp.equals(NodeOp.getName(nextNextItem), wStage.name() ) ||
+              StrOp.equals(NodeOp.getName(nextNextItem), wSelTab.name() ) ) {
+            /* nextNext is a block -> save route and end search */
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "end   analyzing item [%-20s] travel: [%d] name=%s type=%s",
+                wItem.getid(nextNextItem), travel, NodeOp.getName(nextNextItem), wItem.gettype(nextNextItem) );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, " next is a block: [%s]", wItem.getid(nextNextItem));
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  -> LIST: block [%s] travel: [%d] depth: [%d] tos: [%d]",
+                wItem.getid(nextNextItem), travel, depth, turnoutstate);
+
+            finalizeRouteWithItemAsDestinationblock( inst, route, nextNextItem, travel, toPreRTlist );
+
+            return True;
+          }else {
+            depth++;
+            /* continue at nextNextItem */
+            __analyseItem(inst, nextNextItem, route, travel, turnoutstate, depth, toPreRTlist);
+            return False;
+          }
+        }
+      }
+      return False;
     }/* if bk || sw */
 
     depth++;
@@ -6136,6 +6366,8 @@ static int __analyseAllLists(iOAnalyse inst) {
           /* decoupler is not relevant for SG/FB */
         } else if( isSingleTrackRRCrossing(item) || isDoubleTrackRRCrossing(item) ) {
           /* railroad crossing is not relevant for SG/FB */
+        } else if( isSingleTrackBridge( item ) || isDoubleTrackBridge(item) ) {
+          /* bridge is not relevant for SG/FB */
         } else {
           /* a regular switch is always the end of assignments to the starting block */
           rt_addSg = False;
@@ -6421,6 +6653,8 @@ static int __analyseAllLists(iOAnalyse inst) {
           /* decoupler is not relevant for end of blockID setting */
         } else if( isSingleTrackRRCrossing(item) || isDoubleTrackRRCrossing(item) ) {
           /* railroad crossing is not relevant for end of blockID setting */
+        } else if( isSingleTrackBridge( item ) || isDoubleTrackBridge(item) ) {
+          /* bridge is not relevant for end of blockID setting */
         } else {
           TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop1: [%s] [%s] SWITCH DETECTED ( %s )", NodeOp.getName(item), wItem.getid(item), bka );
 
@@ -6809,6 +7043,13 @@ static int __generateRoutes(iOAnalyse inst) {
         iONode swcmd = NodeOp.inst( wSwitchCmd.name(), NULL, ELEMENT_NODE );
         wItem.setid( swcmd, wItem.getid(item));
         wSwitchCmd.setcmd( swcmd, wItem.getstate(item));
+        NodeOp.addChild( newRoute, swcmd );
+      }
+
+      if( isSingleTrackBridge(item) || isDoubleTrackBridge(item) ) {
+        iONode swcmd = NodeOp.inst( wSwitchCmd.name(), NULL, ELEMENT_NODE );
+        wItem.setid( swcmd, wItem.getid(item));
+        wSwitchCmd.setcmd( swcmd, wSwitch.straight);
         NodeOp.addChild( newRoute, swcmd );
       }
 
@@ -7660,16 +7901,16 @@ static Boolean connectorCheck( iOAnalyse inst, Boolean repair ) {
                 wTrack.gettknr(tk), wItem.getid(tk) );
           } else if( numConnectors == 1 ) {
             /* only one... */
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: connector [%s] with tknr[%d] : no counterpart found.",
-                tkid, wTrack.gettknr(tk) );
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: connector [%s] at (%d-%d-%d) with number[%d] : no counterpart found.",
+                tkid, wItem.getx(tk), wItem.gety(tk), wItem.getz(tk), wTrack.gettknr(tk) );
           } else if( numConnectors == 2 ) {
             /* everything OK */
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "connectorCheck: tknr[%d] [%s] : 2 found.",
                 wTrack.gettknr(tk), wItem.getid(tk) );
           } else if( numConnectors > 2 ) {
             /* Ooops, too many connectors */
-            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: connector [%s] tknr[%d] : Too many counterparts (total %d)",
-                tkid, wTrack.gettknr(tk), numConnectors );
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: connector [%s] at (%d-%d-%d) number[%d] : Too many counterparts (total %d)",
+                tkid, wItem.getx(tk), wItem.gety(tk), wItem.getz(tk), wTrack.gettknr(tk), numConnectors );
             retVal = False;
           }
         }
@@ -7902,7 +8143,7 @@ static Boolean _checkExtended(iOAnalyse inst) {
   int modifications = 0;
   Boolean res;
 
-  TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. BEGIN" );
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Extended plan checks starting..." );
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ExtChk: basic[%d]c[%d] block[%d]c[%d] route[%d]c[%d] action[%d]c[%d]",
       data->basicCheck,  data->basicClean,
       data->blockCheck,  data->blockClean,
@@ -7942,6 +8183,7 @@ static Boolean _checkExtended(iOAnalyse inst) {
     modifications += invalidBlockidCheck( inst, wPlan.getswlist(data->plan), False );
     modifications += invalidBlockidCheck( inst, wPlan.getsglist(data->plan), False );
     modifications += invalidBlockidCheck( inst, wPlan.getfblist(data->plan), False );
+    modifications += invalidBlockidCheck( inst, wPlan.getcolist(data->plan), False );
     if( modifications > 0 )
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid blockid test: %d invalid entries detected", modifications );
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid blockid test: %s problems detected", (modifications == 0)?"no":"some" );
@@ -7953,6 +8195,7 @@ static Boolean _checkExtended(iOAnalyse inst) {
     modifications += invalidRouteidsCheck( inst, wPlan.getswlist(data->plan), False );
     modifications += invalidRouteidsCheck( inst, wPlan.getsglist(data->plan), False );
     modifications += invalidRouteidsCheck( inst, wPlan.getfblist(data->plan), False );
+    modifications += invalidRouteidsCheck( inst, wPlan.getcolist(data->plan), False );
     if( modifications > 0 )
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid routeid test: %d invalid entries detected", modifications );
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid routeid test: %s problems detected", (modifications == 0)?"no":"some" );
@@ -8036,7 +8279,7 @@ static Boolean _checkExtended(iOAnalyse inst) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Action checks finished" );
   }
 
-  TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. END" );
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Extended plan checks finished." );
   return False;
 }
 
@@ -8064,9 +8307,17 @@ static Boolean _cleanExtended(iOAnalyse inst) {
       data->routeCheck,  data->routeClean,
       data->actionCheck, data->actionClean );
 
+  /* is any of the clean options set */
+  if(  ( ! data->basicClean )
+    && ( ! data->blockClean )
+    && ( ! data->routeClean )
+    && ( ! data->actionClean )
+    ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Cleaning/repairing skipped because none of the options is active.");
+  }
   /* clean/repair are only allowed if power _and_ auto mode are off */
   /* requirements should be checked by calling function, but to be sure... */
-  if( automode || isPowerOn ) {
+  else if( automode || isPowerOn ) {
     requirements = False;
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Cleaning/repairing skipped because...");
     /* explain why */
@@ -8076,7 +8327,7 @@ static Boolean _cleanExtended(iOAnalyse inst) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "... track power is on. Switch off to use cleaning/repairing.");
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. BEGIN" );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Extended plan clean starting..." );
 
 
     if( data->basicClean ) {
@@ -8192,7 +8443,7 @@ static Boolean _cleanExtended(iOAnalyse inst) {
     if( planChanged )
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Please restart Rocrail server." );
 
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Extended checks are work in progress. Do not rely on them. END" );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Extended plan clean finished." );
   }
 
   return False;
