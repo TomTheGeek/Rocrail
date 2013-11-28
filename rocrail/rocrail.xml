@@ -176,6 +176,7 @@
       <var name="tempwait" vt="Boolean"/>
       <var name="muxFiFO" vt="iOMutex"/>
       <var name="fifoList" vt="iOList"/>
+      <var name="arrivalPending" vt="Boolean"/>
     </data>
   </object>
 

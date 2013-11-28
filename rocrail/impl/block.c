@@ -969,7 +969,7 @@ static Boolean __hasShortcut(iIBlockBase inst) {
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOBlockData data = Data(inst);
 
-  if( wBlock.getfifosize(data->props) > 0 && locId != NULL ) {
+  if( wBlock.getfifosize(data->props) > 0 && !data->arrivalPending && locId != NULL ) {
     iOLoc lc = ModelOp.getLoc( AppOp.getModel(), locId, NULL, False );
     if( lc != NULL && StrOp.equals( wLoc.engine_automobile, LocOp.getEngine(lc)) && ListOp.size(data->fifoList) < wBlock.getfifosize(data->props) ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -1554,6 +1554,7 @@ static void _inBlock( iIBlockBase inst, const char* id ) {
       LocationOp.locoDidArrive(location, id);
     }
   }
+  data->arrivalPending = False;
 }
 
 
@@ -1665,7 +1666,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       }
     }
 
-    if( wBlock.getfifosize(data->props) > 0 && lc != NULL && StrOp.equals( wLoc.engine_automobile, LocOp.getEngine(lc)) ) {
+    if( wBlock.getfifosize(data->props) > 0 && !data->arrivalPending && lc != NULL && StrOp.equals( wLoc.engine_automobile, LocOp.getEngine(lc)) ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "fifo block [%s] automobile [%s] idx=%d", data->id, LocOp.getId(lc), ListOp.size(data->fifoList) );
       ListOp.add(data->fifoList, (obj)LocOp.getId(lc));
@@ -1745,6 +1746,8 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
 
     /* Unlock the semaphore: */
     MutexOp.post( data->muxLock );
+
+    data->arrivalPending = ok;
 
     return ok;
   }
@@ -2582,7 +2585,7 @@ static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
   }
 
   _resetTD(inst);
-
+  data->arrivalPending = False;
 }
 
 static void _acceptIdent( iIBlockBase inst, Boolean accept ) {
