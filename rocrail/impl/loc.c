@@ -378,7 +378,61 @@ static void __resetFx( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "resetfx group %d for %s", data->fxgroup, wLoc.getid(data->props) );
 
   wFunCmd.setgroup(fcmd, data->fxgroup);
-  LocOp.cmd(loc, fcmd);
+  __cpFn2Node(loc, fcmd, -1, 0);
+  switch(data->fxgroup) {
+  case 0:
+    wFunCmd.setf1(fcmd, False);
+    wFunCmd.setf2(fcmd, False);
+    wFunCmd.setf3(fcmd, False);
+    wFunCmd.setf4(fcmd, False);
+    break;
+  case 1:
+    wFunCmd.setf5(fcmd, False);
+    wFunCmd.setf6(fcmd, False);
+    wFunCmd.setf7(fcmd, False);
+    wFunCmd.setf8(fcmd, False);
+    break;
+  case 2:
+    wFunCmd.setf9(fcmd, False);
+    wFunCmd.setf10(fcmd, False);
+    wFunCmd.setf11(fcmd, False);
+    wFunCmd.setf12(fcmd, False);
+    break;
+  case 3:
+    wFunCmd.setf13(fcmd, False);
+    wFunCmd.setf14(fcmd, False);
+    wFunCmd.setf15(fcmd, False);
+    wFunCmd.setf16(fcmd, False);
+    break;
+  case 4:
+    wFunCmd.setf17(fcmd, False);
+    wFunCmd.setf18(fcmd, False);
+    wFunCmd.setf19(fcmd, False);
+    wFunCmd.setf20(fcmd, False);
+    break;
+  case 5:
+    wFunCmd.setf21(fcmd, False);
+    wFunCmd.setf22(fcmd, False);
+    wFunCmd.setf23(fcmd, False);
+    wFunCmd.setf24(fcmd, False);
+    break;
+  case 6:
+    wFunCmd.setf25(fcmd, False);
+    wFunCmd.setf26(fcmd, False);
+    wFunCmd.setf27(fcmd, False);
+    wFunCmd.setf28(fcmd, False);
+    break;
+  }
+
+  wFunCmd.setid( fcmd, wLoc.getid( data->props ) );
+  wFunCmd.setaddr( fcmd, wLoc.getaddr( data->props ) );
+  wFunCmd.setf0( fcmd, wLoc.isfn(data->props) );
+  wLoc.setfx( fcmd, wLoc.getfx( data->props ) );
+
+  LocOp.cmd(loc, (iONode)NodeOp.base.clone(fcmd) );
+
+  wLoc.setfx( fcmd, wLoc.getfx( data->props ) );
+  AppOp.broadcastEvent( fcmd );
 
   data->fxresetpending = False;
   ThreadOp.base.del(th);
