@@ -986,6 +986,7 @@ static Boolean __processAspectNrCmd( iOSignal inst, const char* state, int nr ) 
 
   StrOp.fmtb(saspect, "%d", aspect);
   wSignal.setstate(o->props, saspect);
+  wSignal.setaspect(o->props, aspect);
 
   wSignal.setbus( cmd, wSignal.getbus( o->props ) );
 
@@ -1139,6 +1140,7 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
   else if( StrOp.equals( wSignal.aspect, state ) ) {
     wSignal.setaspect( o->props, aspectnr );
     chgState = True;
+    state = wSignal.aspect;
     aspectnr = wSignal.getaspect( nodeA );
     wSignal.setaspect( o->props, aspectnr );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting signal %s to aspect %d",
