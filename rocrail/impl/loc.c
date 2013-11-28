@@ -381,6 +381,8 @@ static void __resetFx( void* threadinst ) {
   __cpFn2Node(loc, fcmd, -1, 0);
   switch(data->fxgroup) {
   case 0:
+    wLoc.setfn(fcmd, False);
+    wFunCmd.setf0(fcmd, False);
     wFunCmd.setf1(fcmd, False);
     wFunCmd.setf2(fcmd, False);
     wFunCmd.setf3(fcmd, False);
