@@ -367,7 +367,7 @@ static Boolean _createEmptyPlan( iOModelData o ) {
       o->moduleplan = ModPlanOp.inst( root );
       o->model = ModPlanOp.parse( o->moduleplan );
       o->title = wModPlan.gettitle( o->model );
-      planXml = NodeOp.base.toString( root );
+      planXml = NodeOp.toEscString( root );
     }
     else {
       iONode zlevel = NULL;
@@ -376,7 +376,7 @@ static Boolean _createEmptyPlan( iOModelData o ) {
       wZLevel.settitle(zlevel, "Level 0" );
       NodeOp.addChild(o->model, zlevel );
       o->title = wPlan.gettitle( o->model );
-      planXml = NodeOp.base.toString( o->model );
+      planXml = NodeOp.toEscString( o->model );
     }
 
     FileOp.write( o->planFile, planXml, StrOp.len( planXml ) );
@@ -2466,11 +2466,11 @@ static void _save( iOModel inst, Boolean removeGen ) {
         if( oprlist != NULL )
           NodeOp.removeChild(clone, oprlist);
       }
-      xml = NodeOp.base.toString( clone );
+      xml = NodeOp.toEscString( clone );
       NodeOp.base.del(clone);
     }
     else {
-      xml = o->model->base.toString( o->model );
+      xml = o->model->toEscString( o->model );
     }
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Serialized Plan=%d", StrOp.len( xml ) );
     if( StrOp.len( xml ) > 0 ) {
@@ -5131,7 +5131,7 @@ static void _saveBlockOccupancy( iOModel inst, const char* occfilename ) {
 
   /* save */
   {
-    char* modoccStr = NodeOp.base.toString( modocc );
+    char* modoccStr = NodeOp.toEscString( modocc );
     iOFile f = NULL;
 
     /* file name */

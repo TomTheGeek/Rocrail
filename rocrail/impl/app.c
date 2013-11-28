@@ -1060,7 +1060,7 @@ static void _saveIni( void ) {
       iOFile iniFile = FileOp.inst( data->szIniFile, OPEN_WRITE );
 
       if( iniFile != NULL ) {
-        char* iniStr = NodeOp.base.toString( ini );
+        char* iniStr = NodeOp.toEscString( ini );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "saving ini %s%s...", data->szIniFile, data->newini==NULL?"":"(new)" );
         FileOp.write( iniFile, iniStr, StrOp.len( iniStr ) );

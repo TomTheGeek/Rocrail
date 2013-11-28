@@ -2622,7 +2622,7 @@ void RocGuiFrame::Save() {
     char* buffer = NULL;
     char* version = StrOp.fmt( "%d.%d.%d revision %d", wGui.vmajor, wGui.vminor, wGui.patch,  wxGetApp().getRevisionNr() );
     wPlan.setrocguiversion( model, version );
-    buffer = (char*)NodeOp.base.toString( model );
+    buffer = (char*)NodeOp.toEscString( model );
     size = StrOp.len( buffer );
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Saving (%ld bytes) %s...",
                  size, localplan );

@@ -307,7 +307,7 @@ int RocGui::OnExit() {
       }
     }
 
-    char* l_Ini = NodeOp.base.toString( m_Ini );
+    char* l_Ini = NodeOp.toEscString( m_Ini );
     printf( "ini=%s\n", l_Ini );
     m_IniFileName = CmdLnOp.getStrDef( m_CmdLn,"-i", wGui.inifile );
     iOFile iniFile = FileOp.inst( m_IniFileName, False );
