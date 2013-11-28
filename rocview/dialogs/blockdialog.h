@@ -63,6 +63,7 @@ class wxSpinCtrl;
 #define ID_LISTCTRLINDEX_BK 10219
 #define ID_BUTTON_BLOCK_NEW 10063
 #define ID_BUTTON_BLOCK_DELETE 10064
+#define ID_BLOCK_DOC 10203
 #define ID_PANEL_BK_GENERAL 10004
 #define wxID_STATIC_ID_BLOCK 10001
 #define ID_TEXTCTRL_ID_BLOCK 10005
@@ -220,6 +221,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BLOCK_DELETE
     void OnButtonBlockDeleteClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BLOCK_DOC
+    void onDoc( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_BK_LOCPROPS
     void OnButtonBkLocpropsClick( wxCommandEvent& event );
 
@@ -291,6 +295,7 @@ public:
     wxListCtrl* m_List2;
     wxButton* m_New;
     wxButton* m_Delete;
+    wxButton* m_Doc;
     wxPanel* m_General_Panel;
     wxStaticText* m_label_ID;
     wxTextCtrl* m_ID;
