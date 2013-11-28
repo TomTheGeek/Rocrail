@@ -227,14 +227,12 @@ static char* __addBlockProperties(iOMap map, iIBlockBase bk) {
 }
 
 
-static char* __addLocoProperties(iOMap map, iOLoc lc) {
+static char* __addLocoProperties(iOMap map, iOLoc lc, char* hour, char* min) {
   iONode lcprops = LocOp.base.properties(lc);
   int scidx = 0;
   const char* scid = LocOp.getSchedule(lc, &scidx);
   iONode sc = ModelOp.getSchedule(AppOp.getModel(), scid);
   char* scidxStr = StrOp.fmt("%d", scidx);
-  char hour[8];
-  char min[8];
   __evaluateSchedule(sc, scidx, map, hour, min);
   MapOp.put(map, "lcid", (obj)LocOp.getId(lc));
   MapOp.put(map, "lcident", (obj)wLoc.getidentifier(lcprops));
@@ -253,6 +251,9 @@ static char* __addLocoProperties(iOMap map, iOLoc lc) {
 static void* __event( void* inst, const void* evt ) {
   iOTextData data = Data(inst);
   iONode node = (iONode)evt;
+  char hour[8];
+  char min[8];
+
   if( node != NULL && StrOp.equals( wText.name(), NodeOp.getName(node))) {
     iOLoc       lc = ModelOp.getLocByIdent(AppOp.getModel(), wText.getreflcid(node), True);
     iIBlockBase bk = ModelOp.getBlock(AppOp.getModel(), wText.getrefbkid(node));
@@ -270,7 +271,7 @@ static void* __event( void* inst, const void* evt ) {
 
       __addActionProperties(map, node);
 
-      scidxStr = __addLocoProperties(map, lc);
+      scidxStr = __addLocoProperties(map, lc, hour, min);
 
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
       wText.settext(data->props, msg );
@@ -292,7 +293,7 @@ static void* __event( void* inst, const void* evt ) {
 
       __addActionProperties(map, node);
 
-      scidxStr = __addLocoProperties(map, lc);
+      scidxStr = __addLocoProperties(map, lc, hour, min);
       speedStr = __addBlockProperties(map, bk);
 
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
