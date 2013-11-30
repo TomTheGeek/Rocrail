@@ -869,7 +869,7 @@ static void _init( iIBlockBase inst ) {
     iONode section = (iONode)ListOp.get( data->sectionList, i);
     if( wStageSection.getlcid(section) != NULL && StrOp.len( wStageSection.getlcid(section) ) > 0 ) {
       iOLoc loc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(section), NULL, False );
-      if( loc != NULL ) {
+      if( loc != NULL && !LocOp.isAutomode(loc) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
             "set current block for loco %s to %s", wStageSection.getlcid(section), data->id );
         LocOp.setCurBlock( loc, data->id );

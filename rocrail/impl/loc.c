@@ -3539,7 +3539,10 @@ static const char* _getV_hint( iOLoc loc ) {
 
 static Boolean _isAutomode( iOLoc loc ) {
   iOLocData data = Data(loc);
-  return data->go;
+  Boolean isRun = False;
+  if( data->driver != NULL )
+    isRun = data->driver->isRun( data->driver );
+  return data->go | isRun ;
 }
 
 
