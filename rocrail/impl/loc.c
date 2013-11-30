@@ -3542,7 +3542,7 @@ static Boolean _isAutomode( iOLoc loc ) {
   Boolean isRun = False;
   if( data->driver != NULL )
     isRun = data->driver->isRun( data->driver );
-  return data->go | isRun ;
+  return (data->go || isRun);
 }
 
 
