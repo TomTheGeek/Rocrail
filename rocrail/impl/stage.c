@@ -860,6 +860,12 @@ static void _init( iIBlockBase inst ) {
   int sections = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init stageblock [%s]", data->id );
+
+  if( data->pendingFree || data->pendingMove ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "reject init stageblock [%s] because of pending operations", data->id );
+    return;
+  }
+
   StageOp.red( inst, False, False );
   StageOp.red( inst, True, False );
 

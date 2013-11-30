@@ -2186,6 +2186,11 @@ static void _init( iIBlockBase inst ) {
   if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
     iOLoc loc = ModelOp.getLoc( model, data->locId, NULL, False );
     if( loc != NULL ) {
+      if( LocOp.isAutomode(loc) ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+            "reject init block [%s] because loco [%s] is still in automode", data->id, LocOp.getId( loc ) );
+        return;
+      }
       LocOp.setCurBlock( loc, data->id );
       /* overwrite data->locId with the static id from the loc object: */
       data->locId = LocOp.getId( loc );
