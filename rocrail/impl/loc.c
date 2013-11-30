@@ -425,6 +425,7 @@ static void __resetFx( void* threadinst ) {
     wFunCmd.setf28(fcmd, False);
     break;
   }
+  __cpNode2Fn(loc, fcmd);
 
   wFunCmd.setid( fcmd, wLoc.getid( data->props ) );
   wFunCmd.setaddr( fcmd, wLoc.getaddr( data->props ) );
