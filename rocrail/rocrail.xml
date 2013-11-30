@@ -1546,6 +1546,7 @@
       <var name="listeners" vt="iOList"/>
       <var name="testThread" vt="iOThread"/>
       <var name="testRun" vt="Boolean"/>
+      <var name="pendingSet" vt="Boolean"/>
       </data>
   </object>
 

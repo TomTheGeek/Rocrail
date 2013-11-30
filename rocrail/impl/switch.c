@@ -760,6 +760,9 @@ static Boolean _isSet( iOSwitch inst ) {
       isSet = StrOp.equals(wSwitch.getstate(data->props), wSwitch.getfieldstate(data->props));
     }
   }
+  else {
+    return !data->pendingSet;
+  }
 
   return isSet;
 }
@@ -1312,6 +1315,7 @@ static void __doCmdThread( void* threadinst ) {
   iOSwitchData data = Data(sw);
 
   iONode nodeA = (iONode)ThreadOp.getPost(th);
+  data->pendingSet = True;
   if( nodeA != NULL ) {
     Boolean update = wSwitch.iscmd_update(nodeA);
     int extra = wSwitch.getcmd_extra(nodeA);
@@ -1321,6 +1325,7 @@ static void __doCmdThread( void* threadinst ) {
     ThreadOp.sleep(wSwitch.getpause(nodeA));
     __doCmd(sw, nodeA, update, extra, &error, lcid);
   }
+  data->pendingSet = False;
   ThreadOp.base.del(th);
 }
 
