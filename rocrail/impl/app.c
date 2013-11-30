@@ -1033,7 +1033,8 @@ static void _saveIni( void ) {
       char* backupfile = StrOp.fmt( "%s.bak", data->szIniFile );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "backing up %s to %s...",
           data->szIniFile, backupfile );
-      FileOp.remove( backupfile );
+      if( FileOp.exist(backupfile) )
+        FileOp.remove( backupfile );
       FileOp.rename( data->szIniFile, backupfile );
       StrOp.free( backupfile );
     }
