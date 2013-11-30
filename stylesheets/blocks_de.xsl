@@ -13,13 +13,16 @@
   <table border="1" rules="all" cellpadding="5" cellspacing="0" width="80%">
       <THEAD>
 	  <TR>
-	     <TH width="20%" height="30" bgcolor="lightgrey">ID</TH>
+	     <TH width="20%" height="30" bgcolor="lightgrey">Block</TH>
  	     <TH width="40%" bgcolor="lightgrey">Beschreibung</TH>
  	     <TH width="10%" bgcolor="lightgrey">L&#227;nge</TH>
  	     <TH width="10%" bgcolor="lightgrey">Typ</TH>
+ 	     <TH width="10%" bgcolor="lightgrey">ausser Betrieb</TH>
  	     <TH width="10%" bgcolor="lightgrey">elektrifiziert</TH>
- 	     <TH width="10%" bgcolor="lightgrey">Kopfbahnhof</TH>
+ 	     <TH width="10%" bgcolor="lightgrey">Kopf- bahnhof</TH>
+ 	     <TH width="10%" bgcolor="lightgrey">Richtungs- wechsel</TH>
  	     <TH width="10%" bgcolor="lightgrey">BBT</TH>
+ 	     <TH width="10%" bgcolor="lightgrey">Pendel- zug</TH>
  	     <TH width="10%" bgcolor="lightgrey">Berechtigung</TH>
 	  </TR>
       </THEAD> 
@@ -73,7 +76,74 @@
        </xsl:choose>
 
 	   </TD>
-		  <TD align="center"><xsl:value-of select="@type" /></TD> 
+	   
+	   <xsl:variable name="type" select="@type" />
+		  <TD align="center"> 
+		  <xsl:choose>
+       <xsl:when test="$type = 'none'">
+         <xsl:text>Keine</xsl:text>
+       </xsl:when>  
+       <xsl:when test="$type = 'ice'">
+         <xsl:text>Fernverkehr</xsl:text>
+       </xsl:when>
+       <xsl:when test="$type = 'shunting'">
+         <xsl:text>Rangieren</xsl:text>
+       </xsl:when>
+       <xsl:when test="$type = 'local'">
+         <xsl:text>Nahverkehr</xsl:text>
+       </xsl:when>
+       <xsl:when test="$type = 'goods'">
+         <xsl:text>G&#252;terverkehr</xsl:text>
+       </xsl:when>
+       <xsl:when test="$type = 'regional'">
+         <xsl:text>Regionalzug</xsl:text>
+       </xsl:when>
+       <xsl:when test="$type = 'light'">
+         <xsl:text>Nebenbahn</xsl:text>
+       </xsl:when>
+       <xsl:when test="$type = 'lightgoods'">
+         <xsl:text>G&#252;ter-Nebenbahn</xsl:text>
+       </xsl:when>
+       <xsl:when test="$type = 'turntable'">
+         <xsl:text>Drehscheibe</xsl:text>
+       </xsl:when>
+       <xsl:when test="$type = 'post'">
+         <xsl:text>Post</xsl:text>
+       </xsl:when>
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+            
+       <xsl:otherwise>
+         <xsl:value-of select="@type" />
+       </xsl:otherwise>
+       </xsl:choose>
+
+		  
+		  
+		  
+		  </TD>
+		  
+			<xsl:variable name="state" select="@state" />
+	   <TD align="center">
+	   <xsl:choose>
+         <xsl:when test="$state = 'open'">
+         <xsl:text></xsl:text>
+       </xsl:when>
+       <xsl:otherwise>
+         <xsl:text>Ja</xsl:text>
+       </xsl:otherwise>
+       </xsl:choose>
+
+	   </TD>		  
+		  
 		  
 	   <xsl:variable name="electrified" select="@electrified" />
 	   <TD align="center">
@@ -101,6 +171,18 @@
 
 	   </TD>
 
+			<xsl:variable name="allowchgdir" select="@allowchgdir" />
+	   <TD align="center">
+	   <xsl:choose>
+         <xsl:when test="$allowchgdir = 'true'">
+         <xsl:text>Ja</xsl:text>
+       </xsl:when>
+       <xsl:otherwise>
+         <xsl:text></xsl:text>
+       </xsl:otherwise>
+       </xsl:choose>
+
+	   </TD>		  
 
 	   <xsl:variable name="allowbbt" select="@allowbbt" />
 	   <TD align="center">
@@ -115,7 +197,24 @@
 
 	   </TD>
 	   
-	   
+	   <xsl:variable name="commuter" select="@commuter" />
+	   <TD align="center">
+	   <xsl:choose>
+       <xsl:when test="$commuter = 'no'">
+         <xsl:text>Nein</xsl:text>
+       </xsl:when>  
+       <xsl:when test="$commuter = 'yes'">
+         <xsl:text>Ja</xsl:text>
+       </xsl:when>
+       <xsl:when test="$commuter = 'only'">
+         <xsl:text>Nur</xsl:text>
+       </xsl:when>     
+       <xsl:otherwise>
+         <xsl:value-of select="@commuter" />
+       </xsl:otherwise>
+       </xsl:choose>
+
+	   </TD>
 	   
 	   <TD align="center"><xsl:value-of select="@typeperm" /></TD>
 	</TR>
@@ -144,7 +243,7 @@
 
 	<TR>	
 	   <TD></TD>
-	   <TD colspan="3">
+	   <TD colspan="4">
 			Einschluss: <xsl:value-of select="@id" />
 		</TD>	
 	</TR>	   
