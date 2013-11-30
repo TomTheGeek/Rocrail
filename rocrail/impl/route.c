@@ -317,6 +317,7 @@ static Boolean __syncGo( iORoute inst ) {
   int error = 0;
   int retry = 0;
   iONode sw_retry = NULL;
+  int swdelay = 0;
 
 
   __checkAction(inst, "go");
@@ -412,6 +413,8 @@ static Boolean __syncGo( iORoute inst ) {
       else {
         iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setcmd( cmd, swCmd );
+        wSwitch.setpause( cmd, wCtrl.getrouteswtime( wRocRail.getctrl( AppOp.getIni() ) ) * swdelay );
+        swdelay++;
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "go() %s:%s", swId, swCmd );
 
         if( !SwitchOp.cmd( isw, cmd, True, 0, &error, o->lockedId ) && lock ) {
@@ -443,7 +446,7 @@ static Boolean __syncGo( iORoute inst ) {
             return False;
           }
         }
-        ThreadOp.sleep( wCtrl.getrouteswtime( wRocRail.getctrl( AppOp.getIni() ) ) );
+        ThreadOp.sleep( 10 );
       }
     }
 

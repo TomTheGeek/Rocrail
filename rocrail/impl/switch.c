@@ -880,23 +880,8 @@ static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean rel
   }
 }
 
-
-static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int* error, const char* lcid ) {
+static int __checkCmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int* error, const char* lcid ) {
   iOSwitchData o = Data(inst);
-  iOControl control = AppOp.getControl(  );
-
-  const char* state     = wSwitch.getcmd( nodeA );
-  const char* prevstate = wSwitch.getcmd( o->props );
-  Boolean inv1 = wSwitch.isinv( o->props );
-  Boolean inv2 = wSwitch.isinv2( o->props );
-  const char* iid = wSwitch.getiid( o->props );
-
-  /*ToDo: If the frog polarisation needs to be switched separately.
-   * addrpol1,portpol1
-   * addrpol2,portpol2
-   */
-
-
   if( SwitchOp.isLocked(inst, NULL, wSwitch.ismanualcmd( nodeA )) ) {
     if( lcid == NULL || !StrOp.equals( lcid, o->lockedId ) || StrOp.len(lcid) == 0 ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch [%s] is locked by [%s]: reject any commands from others",
@@ -907,19 +892,17 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
       }
       else {
         NodeOp.base.del(nodeA);
-        return False;
+        return 0;
       }
     }
   }
-
-  o->savepostimer = wCtrl.getsavepostime( wRocRail.getctrl( AppOp.getIni(  ) ) ) * 10;
 
   if( StrOp.equals( wSwitch.unlock, wSwitch.getcmd( nodeA ) ) ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unlock switch [%s]",
                  SwitchOp.getId( inst ) );
     SwitchOp.unLock( inst, o->lockedId, NULL, False );
     NodeOp.base.del(nodeA);
-    return True;
+    return 1;
   }
 
 
@@ -927,16 +910,15 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Switch [%s] has no address.",
                    SwitchOp.getId( inst ) );
     NodeOp.base.del(nodeA);
-    return True;
+    return 1;
   }
 
   if( (o->fbOcc != NULL && FBackOp.getState(o->fbOcc)) ||  (o->fbOcc2 != NULL && FBackOp.getState(o->fbOcc2)) ) {
     /* reject command because its electically occupied */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reject command because switch [%s] electically occupied",
                  SwitchOp.getId( inst ) );
-    return False;
+    return 0;
   }
-
 
   /* Test */
   if( StrOp.equals( wSwitch.teston, wSwitch.getcmd( nodeA ) ) && o->testThread == NULL ) {
@@ -954,11 +936,27 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
     return True;
   }
 
+
+  return -1;
+}
+
+
+static Boolean __doCmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int* error, const char* lcid ) {
+  iOSwitchData o = Data(inst);
+  iOControl control = AppOp.getControl();
+
+  const char* state     = wSwitch.getcmd( nodeA );
+  const char* prevstate = wSwitch.getcmd( o->props );
+  Boolean inv1 = wSwitch.isinv( o->props );
+  Boolean inv2 = wSwitch.isinv2( o->props );
+  const char* iid = wSwitch.getiid( o->props );
+
+  o->savepostimer = wCtrl.getsavepostime( wRocRail.getctrl( AppOp.getIni(  ) ) ) * 10;
+
   if( !MutexOp.trywait( o->muxCmd, 100 ) ) {
     NodeOp.base.del(nodeA);
     return False;
   }
-
 
   __polariseFrog(inst, 0, False, False);
   __polariseFrog(inst, 1, False, False);
@@ -1306,6 +1304,49 @@ static Boolean _cmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, int
   MutexOp.post( o->muxCmd );
   return True;
 }
+
+
+static void __doCmdThread( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOSwitch sw = (iOSwitch)ThreadOp.getParm( th );
+  iOSwitchData data = Data(sw);
+
+  iONode nodeA = (iONode)ThreadOp.getPost(th);
+  if( nodeA != NULL ) {
+    Boolean update = wSwitch.iscmd_update(nodeA);
+    int extra = wSwitch.getcmd_extra(nodeA);
+    const char* lcid = wSwitch.getcmd_lcid(nodeA);
+    int error = 0;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delay command for switch[%s] %dms", data->id, wSwitch.getpause(nodeA) );
+    ThreadOp.sleep(wSwitch.getpause(nodeA));
+    __doCmd(sw, nodeA, update, extra, &error, lcid);
+  }
+  ThreadOp.base.del(th);
+}
+
+static Boolean _cmd(iOSwitch inst, iONode nodeA, Boolean update, int extra, int* error, const char* lcid) {
+  iOSwitchData data = Data(inst);
+
+  int rc = __checkCmd( inst, nodeA, update, extra, error, lcid );
+  if( rc != -1 ) {
+    return (rc==1?True:False);
+  }
+
+  if( wSwitch.getpause(nodeA) > 0 ) {
+    iOThread th = ThreadOp.inst(NULL, &__doCmdThread, inst);
+    wSwitch.setcmd_update(nodeA, update);
+    wSwitch.setcmd_extra(nodeA, extra);
+    wSwitch.setcmd_lcid(nodeA, lcid);
+    ThreadOp.post(th, (obj)nodeA);
+    ThreadOp.start(th);
+  }
+  else {
+    return __doCmd(inst, nodeA, update, extra, error, lcid);
+  }
+
+  return True;
+}
+
 
 /**
  * Checks for property changes.

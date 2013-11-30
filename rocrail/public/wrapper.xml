@@ -1535,6 +1535,12 @@
         <var name="gatevalue" vt="int" defval="-1" range="0-1" required="false"/>
         <var name="inv" vt="bool" defval="false" remark="Switch inverted. (Software wiring correction)"/>
         <var name="inv2" vt="bool" defval="false" remark="Switch inverted. (Software wiring correction)"/>
+
+        <var name="pause" vt="int" defval="0" range="0-*" required="false" remark="Pause ms before executing command."/>
+        <var name="cmd_update" vt="bool" defval="false"/>
+        <var name="cmd_extra" vt="int" defval="0"/>
+        <var name="cmd_lcid" vt="const char*" defval="NULL"/>
+        
         <var name="delay" vt="int" defval="0" range="0-*" required="false" remark="overwrites control.swtimeout if greater then 0"/>
         <var name="delaytime" vt="long" defval="0" range="0-*" required="false" remark="Delay timer for internal use only."/>
         <var name="actdelay" vt="bool" defval="false" remark="if false: delay is programmed in central unit or module"/>
