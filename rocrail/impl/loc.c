@@ -429,7 +429,6 @@ static void __resetFx( void* threadinst ) {
 
   wFunCmd.setid( fcmd, wLoc.getid( data->props ) );
   wFunCmd.setaddr( fcmd, wLoc.getaddr( data->props ) );
-  wFunCmd.setf0( fcmd, wLoc.isfn(data->props) );
   wLoc.setfx( fcmd, wLoc.getfx( data->props ) );
 
   LocOp.cmd(loc, (iONode)NodeOp.base.clone(fcmd) );
