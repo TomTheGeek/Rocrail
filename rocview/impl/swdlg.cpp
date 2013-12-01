@@ -105,9 +105,9 @@ SwCtrlDlg::SwCtrlDlg(wxWindow *parent)
   m_Bus  = wSwCtrl.getbus(swctrl);
 
   m_labBus = new wxStaticText( this, -1, wxGetApp().getMsg("bus"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-  m_BusSpin = new wxSpinCtrl( this, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 9, 0 );
+  m_BusSpin = new wxTextCtrl( this, -1, _T("0"), wxDefaultPosition, wxDefaultSize, 0 );
   m_BusSpin->SetToolTip( wxGetApp().getTip("bus") );
-  m_BusSpin->SetValue( m_Bus );
+  m_BusSpin->SetValue( wxString::Format(wxT("%d"), m_Bus) );
 
   m_UnitSpin = new wxSpinCtrl( this, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 256, 0 );
   m_UnitSpin->SetToolTip( wxGetApp().getTip("decoder") );
@@ -177,15 +177,15 @@ void SwCtrlDlg::OnButton(wxCommandEvent& event)
   int pin = 0;
   const char* cmd = wSwitch.straight;
 
-  m_Bus  = m_BusSpin->GetValue();
+  m_Bus  = atoi( m_BusSpin->GetValue().mb_str(wxConvUTF8) );
   m_Unit = m_UnitSpin->GetValue();
   
   if ( event.GetEventObject() == m_Quit ) {
     iONode swctrl = wGui.getswctrl( wxGetApp().getIni() );
 
     wSwCtrl.setiid(swctrl, m_IID->GetValue().mb_str(wxConvUTF8));
-    wSwCtrl.setbus(swctrl, m_BusSpin->GetValue());
-    wSwCtrl.setmodule(swctrl, m_UnitSpin->GetValue());
+    wSwCtrl.setbus(swctrl, m_Bus);
+    wSwCtrl.setmodule(swctrl, m_Unit);
     Destroy();
     //EndModal(0);
   }

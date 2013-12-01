@@ -54,7 +54,7 @@ private:
   wxTextCtrl* m_IID;
 
   wxStaticText* m_labBus;
-  wxSpinCtrl* m_BusSpin;
+  wxTextCtrl* m_BusSpin;
 
   wxSpinCtrl* m_UnitSpin;
   wxButton*   m_Quit;
