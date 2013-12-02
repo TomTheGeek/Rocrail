@@ -6821,3 +6821,9 @@ msgstr ""
 msgid "Reset FiFo"
 msgstr ""
 
+#. 
+# id="useallspeedsteps"
+#, c-format
+msgid "Use all speed steps"
+msgstr ""
+

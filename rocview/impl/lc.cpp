@@ -343,7 +343,7 @@ void LC::OnSlider(wxScrollEvent& event)
   if ( event.GetEventObject() == m_Vslider && event.GetEventType() != wxEVT_SCROLL_THUMBTRACK ) {
     int speed = m_Vslider->GetValue();
     TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "slider new=%d old=%d steps=%d", speed, m_iSpeed, wLoc.getspcnt(m_LocProps));
-    if(wLoc.getspcnt(m_LocProps) > 28 ) {
+    if( !wGui.isuseallspeedsteps(wxGetApp().getIni()) && wLoc.getspcnt(m_LocProps) > 28 ) {
       int step = wLoc.getspcnt(m_LocProps) / 28;
       if( speed > m_iSpeed ) {
         if( speed - m_iSpeed >= step ){

@@ -309,6 +309,7 @@ void Slider::keyPressed(wxKeyEvent& event) {
     event.Skip();
     return;
   }
+  PrevWheelTime = SystemOp.getTick();
   moveThumb();
 }
 

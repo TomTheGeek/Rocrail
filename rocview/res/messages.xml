@@ -24947,4 +24947,7 @@
     <it txt="Resettare FiFo"/>
     <sl txt="Ponastavi FiFo"/>
   </Msg>
+  <Msg id="useallspeedsteps">
+    <en txt="Use all speed steps"/>
+  </Msg>
 </Messages>
