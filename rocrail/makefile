@@ -82,6 +82,11 @@ else
 	BINSUFFIX=
 endif
 
+ifeq ($(PLATFORM),MACOSX)
+	CPUPDATE=
+endif
+
+
 MOUNTPOINT=..
 OUTDIR=..$(FS)$(DIRPREFIX)bin
 GENDIR=..$(FS)$(DIRPREFIX)gen
@@ -191,7 +196,7 @@ endif
 
 # for unix based systems only
 install_all:
-	-rm -Rf $(DESTDIR)
+#	-rm -Rf $(DESTDIR)
 #	-mkdir -p ~$(FS)rocrail$(FS)locxpm
 	-mkdir -p $(DESTDIR)
 	-mkdir -p $(DESTDIR)$(FS)default
@@ -208,7 +213,9 @@ install_all:
 	-cp -Rp$(CPUPDATE) ..$(FS)stylesheets $(DESTDIR)
 	-cp -Rp$(CPUPDATE) package$(FS)images $(DESTDIR)
 	-cp -Rp$(CPUPDATE) ..$(FS)decspecs $(DESTDIR)
+ifeq (,$(wildcard $(DESTDIR)$(FS)default$(FS)plan.xml))
 	-cp -p$(CPUPDATE) package$(FS)plan.xml $(DESTDIR)$(FS)default
+endif
 	-cp -p package$(FS)rocrail.sh $(DESTDIR)
 	-cp -p package$(FS)rocview.sh $(DESTDIR)
 	-chmod +x $(DESTDIR)$(FS)rocrail.sh
