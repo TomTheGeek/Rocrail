@@ -41,6 +41,8 @@
 
 int raspiWriteRegI2C( int descriptor, unsigned char dev_addr, unsigned char regaddr, unsigned char data );
 int raspiReadRegI2C( int descriptor, unsigned char dev_addr, unsigned char regaddr, unsigned char* data );
+int raspiWriteI2C( int descriptor, unsigned char dev_addr, unsigned char data );
+int raspiReadI2C(int descriptor, unsigned char dev_addr, unsigned char* data);
 int raspiOpenI2C( const char* devicename );
 int raspiCloseI2C( int descriptor );
 

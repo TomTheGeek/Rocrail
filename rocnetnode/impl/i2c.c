@@ -52,6 +52,21 @@ int raspiWriteRegI2C(int descriptor, unsigned char dev_addr, unsigned char reg_a
   return ioctl(descriptor, I2C_RDWR, &packets);
 }
 
+int raspiWriteI2C(int descriptor, unsigned char dev_addr, unsigned char data) {
+  unsigned char buff[1];
+  struct i2c_rdwr_ioctl_data packets;
+  struct i2c_msg messages[1];
+  buff[0] = data;
+  messages[0].addr = dev_addr;
+  messages[0].flags = 0;
+  messages[0].len = sizeof(buff);
+  messages[0].buf = buff;
+  packets.msgs = messages;
+  packets.nmsgs = 1;
+  TraceOp.trc( "raspi-i2c", TRCLEVEL_BYTE, __LINE__, 9999, "write I2C: addr=0x%02X msg=0x%02X", dev_addr, data );
+  return ioctl(descriptor, I2C_RDWR, &packets);
+}
+
 int raspiReadRegI2C(int descriptor, unsigned char dev_addr, unsigned char reg_addr, unsigned char* data) {
   unsigned char *inbuff, outbuff;
   struct i2c_rdwr_ioctl_data packets;
@@ -72,6 +87,21 @@ int raspiReadRegI2C(int descriptor, unsigned char dev_addr, unsigned char reg_ad
   return ioctl(descriptor, I2C_RDWR, &packets);
 }
 
+int raspiReadI2C(int descriptor, unsigned char dev_addr, unsigned char* data) {
+  unsigned char *inbuff;
+  struct i2c_rdwr_ioctl_data packets;
+  struct i2c_msg messages[1];
+  inbuff = data;
+  messages[0].addr = dev_addr;
+  messages[0].flags = I2C_M_RD;
+  messages[0].len = sizeof(*inbuff);
+  messages[0].buf = inbuff;
+  packets.msgs = messages;
+  packets.nmsgs = 1;
+  TraceOp.trc( "raspi-i2c", TRCLEVEL_BYTE, __LINE__, 9999, "read I2C: addr=0x%02X", dev_addr );
+  return ioctl(descriptor, I2C_RDWR, &packets);
+}
+
 int raspiOpenI2C( const char* i2cdevice ) {
   return open(i2cdevice, O_RDWR);
 }
@@ -83,11 +113,19 @@ int raspiCloseI2C( int i2cdescriptor ) {
 #else
 
 int raspiWriteRegI2C(int descriptor, unsigned char dev_addr, unsigned char reg_addr, unsigned char data) {
-  return 0;
+  return -1;
+}
+
+int raspiWriteI2C(int descriptor, unsigned char dev_addr, unsigned char data) {
+  return -1;
 }
 
 int raspiReadRegI2C(int descriptor, unsigned char dev_addr, unsigned char reg_addr, unsigned char* data) {
-  return 0;
+  return -1;
+}
+
+int raspiReadI2C(int descriptor, unsigned char dev_addr, unsigned char* data) {
+  return -1;
 }
 
 int raspiOpenI2C( const char* devicename ) {

@@ -24,6 +24,16 @@
 
 
   <object name="RocNetNode" use="node,trace,thread,socket,mutex" include="$rocint/public/digint">
+    <struct name="RocMouse" typedef="*iORocMouse">
+      <var name="ioaddr" vt="int"/>
+      <var name="adaddr" vt="int"/>
+      <var name="lcaddr" vt="int"/>
+      <var name="io" vt="byte"/>
+      <var name="V_raw" vt="int"/>
+      <var name="dir" vt="Boolean"/>
+      <var name="lights" vt="Boolean"/>
+      <var name="fn[8]" vt="int"/>
+    </struct>
     <struct name="Port" typedef="*iOPort">
       <var name="port" vt="int"/>
       <var name="ionr" vt="int"/>
@@ -140,6 +150,8 @@
       <var name="pendingHalt" vt="Boolean"/>
       <var name="macro[129]" vt="iOMacro"/>
       <var name="class" vt="int"/>
+      <var name="rocmouses[8]" vt="iORocMouse"/>
+      <var name="rocmousescanner" vt="iOThread"/>
     </data>
   </object>
 

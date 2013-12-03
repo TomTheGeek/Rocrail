@@ -1499,6 +1499,78 @@ static void __pwm( void* threadinst ) {
 }
 
 
+static void __rocmousescanner( void* threadinst ) {
+  iOThread         th         = (iOThread)threadinst;
+  iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
+  iORocNetNodeData data       = Data(rocnetnode);
+  byte msg[256];
+
+  ThreadOp.sleep(1000);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocMouse scanner started" );
+
+  while( data->run ) {
+    int rc = 0;
+    int idx = 0;
+    int baseaddr = 0x27;
+
+    MutexOp.wait( data->i2cmux );
+
+    /*
+     * The I/O expander and ADC do not need any configuration.
+     * Try to read the known I2C addresses.
+     * D0 = LED1
+     * D1 = LED2
+     * D2 = LED3
+     * D3 = S5
+     * D4 = S4
+     * D5 = S3
+     * D6 = S2
+     * D7 = S1
+     * AIN0 = P1
+     * AIN1 = RS1
+     * AIN2 = S6
+     * AIN3 =
+     * AOUT = LED4
+     */
+
+    rc = raspiWriteI2C(data->i2cdescriptor, baseaddr, ~0x07);
+    if( rc >= 0 ) {
+      if( data->rocmouses[idx] == NULL ) {
+        data->rocmouses[idx] = allocMem(sizeof( struct RocMouse));
+      }
+      /* OK */
+      rc = raspiReadI2C(data->i2cdescriptor, baseaddr, &data->rocmouses[idx]->io);
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "RocMouse 0x%02X V=%d dir=%d", baseaddr, data->rocmouses[idx]->V_raw, data->rocmouses[idx]->dir );
+
+      msg[RN_PACKET_NETID] = data->location;
+      msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
+      rnSenderAddresToPacket( data->id, msg, 0 );
+      msg[RN_PACKET_ACTION] = RN_MOBILE_ROCMOUSE;
+      msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+      msg[RN_PACKET_LEN] = 8;
+      msg[RN_PACKET_DATA + 0] = baseaddr & 0xFF; /* base address */
+      msg[RN_PACKET_DATA + 1] = data->rocmouses[idx]->V_raw & 0x7F;
+      msg[RN_PACKET_DATA + 2] = data->rocmouses[idx]->dir + (data->rocmouses[idx]->lights << 1);
+      msg[RN_PACKET_DATA + 3] = data->rocmouses[idx]->fn[0] + (data->rocmouses[idx]->fn[1] << 4);
+      msg[RN_PACKET_DATA + 4] = data->rocmouses[idx]->fn[2] + (data->rocmouses[idx]->fn[3] << 4);
+      msg[RN_PACKET_DATA + 5] = data->rocmouses[idx]->fn[4] + (data->rocmouses[idx]->fn[5] << 4);
+      msg[RN_PACKET_DATA + 6] = data->rocmouses[idx]->fn[6] + (data->rocmouses[idx]->fn[7] << 4);
+      msg[RN_PACKET_DATA + 7] = 0;
+      __sendRN(rocnetnode, msg);
+    }
+
+    MutexOp.post( data->i2cmux );
+    ThreadOp.sleep(100);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocMouse scanner stopped" );
+}
+
+
+
+
 static void __scanner( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
@@ -2416,6 +2488,8 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   ThreadOp.start( data->pwm );
   data->macroprocessor = ThreadOp.inst( "rnmacro", &__macroProcessor, __RocNetNode );
   ThreadOp.start( data->macroprocessor );
+  data->rocmousescanner = ThreadOp.inst( "rocmouse", &__rocmousescanner, __RocNetNode );
+  ThreadOp.start( data->rocmousescanner );
 
   /* Memory watcher */
   while( !bShutdown ) {
