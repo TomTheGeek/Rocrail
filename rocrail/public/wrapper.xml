@@ -2524,6 +2524,7 @@
         <const name="assigntrain" vt="string" val="assigntrain" remark="Assign train"/>
         <const name="releasetrain" vt="string" val="releasetrain" remark="Release train"/>
         <const name="bidikmh" vt="string" val="bidikmh" remark="Reported speed by bidi decoder."/>
+        <const name="fieldcmd" vt="string" val="fieldcmd" remark="Command from field; RocMouse."/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Loc command."/>
         <var name="tourid" vt="string" defval="NULL" range="*" remark="Current tour ID."/>
         <var name="scheduleid" vt="string" defval="NULL" range="*" remark="Current schedule ID."/>

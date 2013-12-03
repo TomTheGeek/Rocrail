@@ -860,6 +860,7 @@
       <var name="nodemap" vt="iOMap"/>
       <var name="highestID" vt="int"/>
       <var name="shutdown" vt="Boolean"/>
+      <var name="dispatchAddr" vt="int"/>
       </data>
   </object>
 

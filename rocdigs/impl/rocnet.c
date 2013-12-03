@@ -48,6 +48,7 @@
 #include "rocrail/wrapper/public/RocNetNode.h"
 #include "rocrail/wrapper/public/BinCmd.h"
 #include "rocrail/wrapper/public/Clock.h"
+#include "rocrail/wrapper/public/Command.h"
 
 #include "rocutils/public/addr.h"
 
@@ -321,6 +322,12 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     }
     ThreadOp.post( data->writer, (obj)rn );
     return rsp;
+  }
+
+  /* Loc dispatch command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals(wLoc.dispatch, wLoc.getcmd(node)) ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dispatch loco %s:%d", wLoc.getid(node), wLoc.getaddr(node));
+    data->dispatchAddr = wLoc.getaddr(node);
   }
 
   /* Loco command. */
@@ -799,6 +806,47 @@ static void _shortcut(obj inst) {
 /**  */
 static Boolean _supportPT( obj inst ) {
   return True;
+}
+
+static byte* __evaluateMobile( iOrocNet rocnet, byte* rn ) {
+  iOrocNetData data       = Data(rocnet);
+  Boolean      isThis     = rocnetIsThis( rocnet, rn);
+  int          addr       = 0;
+  int          rcpt       = 0;
+  int          sndr       = 0;
+  int          action     = rnActionFromPacket(rn);
+  int          actionType = rnActionTypeFromPacket(rn);
+  byte* rnReply = NULL;
+
+  rcpt = rnReceipientAddrFromPacket(rn, data->seven);
+  sndr = rnSenderAddrFromPacket(rn, data->seven);
+
+  if( actionType != RN_ACTIONTYPE_EVENT ) {
+    return NULL;
+  }
+
+  switch( action ) {
+  case RN_MOBILE_ROCMOUSE:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "node [%d] reports a rocmouse 0x%02X event", sndr, rn[RN_PACKET_DATA+0] );
+    if( data->dispatchAddr > 0 ) {
+      iONode nodeSpd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      char* throttleid = StrOp.fmt("%d-%d", sndr, rn[RN_PACKET_DATA+0] );
+      wLoc.setthrottleid( nodeSpd, throttleid );
+      StrOp.free(throttleid);
+      wLoc.setaddr(nodeSpd, data->dispatchAddr);
+      wLoc.setV(nodeSpd, rn[RN_PACKET_DATA+1]);
+      wLoc.setdir(nodeSpd, (rn[RN_PACKET_DATA+2] & 0x01)?True:False);
+      wLoc.setfn(nodeSpd, (rn[RN_PACKET_DATA+2] & 0x02)?True:False);
+      wLoc.setiid( nodeSpd, data->iid );
+      wLoc.setcmd(nodeSpd, wLoc.fieldcmd);
+
+      data->listenerFun( data->listenerObj, nodeSpd, TRCLEVEL_INFO );
+    }
+    break;
+  }
+
+  return rnReply;
 }
 
 
@@ -1308,7 +1356,7 @@ static void __evaluateRN( iOrocNet rocnet, byte* rn ) {
       break;
 
     case RN_GROUP_MOBILE:
-      rnReply = rocnetParseMobile( rocnet, rn );
+      rnReply = __evaluateMobile( rocnet, rn );
       break;
 
     case RN_GROUP_STATIONARY:
