@@ -1503,7 +1503,8 @@ static void __rocmousescanner( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
   iORocNetNodeData data       = Data(rocnetnode);
-  int runLED = 10;
+  Boolean runLED = True;
+  Boolean init = False;
   byte msg[256];
 
   ThreadOp.sleep(1000);
@@ -1543,13 +1544,15 @@ static void __rocmousescanner( void* threadinst ) {
 #define RM_RS1 2
 
     /* write outputs (LED1-LED3) */
-    rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 );
+    if( !init )
+      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 );
 
     if( rc >= 0 || data->stress ) {
       if( data->rocmouses[idx] == NULL ) {
         data->rocmouses[idx] = allocMem(sizeof( struct RocMouse));
       }
 
+      init = True;
       rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + data->rocmouses[idx]->fgroup+1 );
 
       /* read inputs (S1-S5) */
@@ -1565,18 +1568,26 @@ static void __rocmousescanner( void* threadinst ) {
       }
       else {
         int i = 0;
-        byte ctrl = 0x44; /* analog out active and auto increment */
-        byte valueP1 = 0;
+        byte ctrl     = 0x44; /* analog out active and auto increment */
+        byte valueP1  = 0;
         byte valueRS1 = 0;
-        byte valueS6 = 0;
-        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_P1, &valueP1 );
-        data->rocmouses[idx]->V_raw = valueP1; /* P1 */
-        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_RS1, &valueRS1 );
-        data->rocmouses[idx]->dir = (valueRS1 > 128 ? True:False); /* RS1 */
-        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_S6, &valueS6 );
+        byte valueS6  = 0;
 
-        /* S6 */
-        if( valueS6 > 0 ) {
+        /* Velocity */
+        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_P1, &valueP1 );
+        data->rocmouses[idx]->V_raw = (valueP1-20) / 8; /* P1 28 steps*/
+
+        /* Direction */
+        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_RS1, &valueRS1 );
+        if( valueRS1 < 40 )
+          data->rocmouses[idx]->dir = True;
+        else if( valueRS1 > 250 )
+          data->rocmouses[idx]->V_raw = 0;
+        else
+          data->rocmouses[idx]->dir = False;
+
+        /* Lights */
+        if( valueS6 < 40 ) {
           data->rocmouses[idx]->lightstrig++;
           if( data->rocmouses[idx]->lightstrig >= 5 ) {
             data->rocmouses[idx]->lightstrig = 0;
@@ -1588,10 +1599,8 @@ static void __rocmousescanner( void* threadinst ) {
         }
 
         /* running LED */
-        rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, runLED );
-        runLED += 10;
-        if( runLED > 255 )
-          runLED = 10;
+        rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, runLED?255:0 );
+        runLED = !runLED;
 
         /* Invert digital input */
         data->rocmouses[idx]->io = ~data->rocmouses[idx]->io;
@@ -1662,6 +1671,9 @@ static void __rocmousescanner( void* threadinst ) {
       if( data->rocmouses[idx] != NULL ) {
         freeMem(data->rocmouses[idx]);
         data->rocmouses[idx] = NULL;
+
+        init = False;
+
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocmouse detached");
 
         msg[RN_PACKET_NETID] = data->location;
