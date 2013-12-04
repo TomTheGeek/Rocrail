@@ -1534,15 +1534,24 @@ static void __rocmousescanner( void* threadinst ) {
      */
 
     rc = raspiWriteI2C(data->i2cdescriptor, baseaddr, ~0x07);
-    if( rc >= 0 ) {
+    if( rc >= 0 || data->stress ) {
       if( data->rocmouses[idx] == NULL ) {
         data->rocmouses[idx] = allocMem(sizeof( struct RocMouse));
       }
       /* OK */
       rc = raspiReadI2C(data->i2cdescriptor, baseaddr, &data->rocmouses[idx]->io);
 
+      if( data->stress ) {
+        data->rocmouses[idx]->V_raw += 4;
+        if(data->rocmouses[idx]->V_raw > 127 ) {
+          data->rocmouses[idx]->V_raw = 0;
+          data->rocmouses[idx]->dir = !data->rocmouses[idx]->dir;
+          data->rocmouses[idx]->lights = !data->rocmouses[idx]->lights;
+        }
+      }
+
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "RocMouse 0x%02X V=%d dir=%d", baseaddr, data->rocmouses[idx]->V_raw, data->rocmouses[idx]->dir );
+          "RocMouse 0x%02X V=%d dir=%d lights=%d", baseaddr, data->rocmouses[idx]->V_raw, data->rocmouses[idx]->dir, data->rocmouses[idx]->lights );
 
       msg[RN_PACKET_NETID] = data->location;
       msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
@@ -1562,7 +1571,7 @@ static void __rocmousescanner( void* threadinst ) {
     }
 
     MutexOp.post( data->i2cmux );
-    ThreadOp.sleep(100);
+    ThreadOp.sleep(1000);
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocMouse scanner stopped" );
@@ -2304,6 +2313,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
 
   const char* nf     = CmdLnOp.getStr( arg, wCmdline.inifile );
   data->libpath       = CmdLnOp.getStr( arg, wCmdline.libpath );
+  data->stress        = CmdLnOp.hasKey( arg, wCmdline.stress );
 
   if( data->libpath == NULL ) {
     data->libpath = ".";

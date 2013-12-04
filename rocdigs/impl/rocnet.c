@@ -328,6 +328,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) && StrOp.equals(wLoc.dispatch, wLoc.getcmd(node)) ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dispatch loco %s:%d", wLoc.getid(node), wLoc.getaddr(node));
     data->dispatchAddr = wLoc.getaddr(node);
+    return rsp;
   }
 
   /* Loco command. */
@@ -828,7 +829,7 @@ static byte* __evaluateMobile( iOrocNet rocnet, byte* rn ) {
   switch( action ) {
   case RN_MOBILE_ROCMOUSE:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "node [%d] reports a rocmouse 0x%02X event", sndr, rn[RN_PACKET_DATA+0] );
+        "node [%d] reports a rocmouse 0x%02X event, dispatchAddr=%d", sndr, rn[RN_PACKET_DATA+0], data->dispatchAddr );
     if( data->dispatchAddr > 0 ) {
       iONode nodeSpd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       char* throttleid = StrOp.fmt("%d-%d", sndr, rn[RN_PACKET_DATA+0] );
