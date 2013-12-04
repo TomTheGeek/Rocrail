@@ -1538,6 +1538,9 @@ static void __rocmousescanner( void* threadinst ) {
      * AIN3 =
      * AOUT = LED4 Run
      */
+#define RM_S6  0
+#define RM_P1  1
+#define RM_RS1 2
 
     /* write outputs (LED1-LED3) */
     rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 );
@@ -1566,11 +1569,11 @@ static void __rocmousescanner( void* threadinst ) {
         byte valueP1 = 0;
         byte valueRS1 = 0;
         byte valueS6 = 0;
-        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl, &valueP1 );
+        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_P1, &valueP1 );
         data->rocmouses[idx]->V_raw = valueP1; /* P1 */
-        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+1, &valueRS1 );
+        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_RS1, &valueRS1 );
         data->rocmouses[idx]->dir = (valueRS1 > 128 ? True:False); /* RS1 */
-        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+2, &valueS6 );
+        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_S6, &valueS6 );
 
         /* S6 */
         if( valueS6 > 0 ) {
