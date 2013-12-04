@@ -1620,21 +1620,33 @@ static void __rocmousescanner( void* threadinst ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "RocMouse 0x%02X V=%d dir=%d lights=%d", baseio, data->rocmouses[idx]->V_raw, data->rocmouses[idx]->dir, data->rocmouses[idx]->lights );
 
-      msg[RN_PACKET_NETID] = data->location;
-      msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
-      rnSenderAddresToPacket( data->id, msg, 0 );
-      msg[RN_PACKET_ACTION] = RN_MOBILE_ROCMOUSE;
-      msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-      msg[RN_PACKET_LEN] = 8;
-      msg[RN_PACKET_DATA + 0] = baseio & 0xFF; /* base address */
-      msg[RN_PACKET_DATA + 1] = data->rocmouses[idx]->V_raw & 0x7F;
-      msg[RN_PACKET_DATA + 2] = data->rocmouses[idx]->dir + (data->rocmouses[idx]->lights << 1);
-      msg[RN_PACKET_DATA + 3] = data->rocmouses[idx]->fn[0] + (data->rocmouses[idx]->fn[1] << 4);
-      msg[RN_PACKET_DATA + 4] = data->rocmouses[idx]->fn[2] + (data->rocmouses[idx]->fn[3] << 4);
-      msg[RN_PACKET_DATA + 5] = data->rocmouses[idx]->fn[4] + (data->rocmouses[idx]->fn[5] << 4);
-      msg[RN_PACKET_DATA + 6] = data->rocmouses[idx]->fn[6] + (data->rocmouses[idx]->fn[7] << 4);
-      msg[RN_PACKET_DATA + 7] = 0;
-      __sendRN(rocnetnode, msg);
+      if( data->rocmouses[idx]->V_raw != data->rocmouses[idx]->prev_V_raw ||
+          data->rocmouses[idx]->dir != data->rocmouses[idx]->prev_dir ||
+          data->rocmouses[idx]->lights != data->rocmouses[idx]->prev_lights ||
+          !MemOp.cmp(data->rocmouses[idx]->fn, data->rocmouses[idx]->prev_fn, 8 * sizeof(int))
+          )
+      {
+        msg[RN_PACKET_NETID] = data->location;
+        msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
+        rnSenderAddresToPacket( data->id, msg, 0 );
+        msg[RN_PACKET_ACTION] = RN_MOBILE_ROCMOUSE;
+        msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+        msg[RN_PACKET_LEN] = 8;
+        msg[RN_PACKET_DATA + 0] = baseio & 0xFF; /* base address */
+        msg[RN_PACKET_DATA + 1] = data->rocmouses[idx]->V_raw & 0x7F;
+        msg[RN_PACKET_DATA + 2] = data->rocmouses[idx]->dir + (data->rocmouses[idx]->lights << 1);
+        msg[RN_PACKET_DATA + 3] = data->rocmouses[idx]->fn[0] + (data->rocmouses[idx]->fn[1] << 4);
+        msg[RN_PACKET_DATA + 4] = data->rocmouses[idx]->fn[2] + (data->rocmouses[idx]->fn[3] << 4);
+        msg[RN_PACKET_DATA + 5] = data->rocmouses[idx]->fn[4] + (data->rocmouses[idx]->fn[5] << 4);
+        msg[RN_PACKET_DATA + 6] = data->rocmouses[idx]->fn[6] + (data->rocmouses[idx]->fn[7] << 4);
+        msg[RN_PACKET_DATA + 7] = 0;
+        __sendRN(rocnetnode, msg);
+
+        data->rocmouses[idx]->prev_V_raw  = data->rocmouses[idx]->V_raw;
+        data->rocmouses[idx]->prev_dir    = data->rocmouses[idx]->dir;
+        data->rocmouses[idx]->prev_lights = data->rocmouses[idx]->lights;
+        MemOp.copy(data->rocmouses[idx]->prev_fn, data->rocmouses[idx]->fn, 8 * sizeof(int));
+      }
     }
     else if( rc == -1 ) {
       if( data->rocmouses[idx] != NULL ) {
