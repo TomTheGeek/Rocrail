@@ -828,6 +828,11 @@
       <var name="timer" vt="long"/>
       <var name="ack" vt="Boolean"/>
     </struct>
+    <struct name="mouse" typedef="*iOMouse">
+      <var name="nodeid" vt="int"/>
+      <var name="baseaddr" vt="int"/>
+      <var name="lcaddr" vt="int"/>
+    </struct>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -861,6 +866,7 @@
       <var name="highestID" vt="int"/>
       <var name="shutdown" vt="Boolean"/>
       <var name="dispatchAddr" vt="int"/>
+      <var name="mousemap" vt="iOMap"/>
       </data>
   </object>
 

@@ -818,6 +818,8 @@ static byte* __evaluateMobile( iOrocNet rocnet, byte* rn ) {
   int          action     = rnActionFromPacket(rn);
   int          actionType = rnActionTypeFromPacket(rn);
   byte* rnReply = NULL;
+  char key[64] = {'\0'};
+  iOMouse Mouse = NULL;
 
   rcpt = rnReceipientAddrFromPacket(rn, data->seven);
   sndr = rnSenderAddrFromPacket(rn, data->seven);
@@ -828,14 +830,45 @@ static byte* __evaluateMobile( iOrocNet rocnet, byte* rn ) {
 
   switch( action ) {
   case RN_MOBILE_ROCMOUSE:
+    StrOp.fmtb(key, "%d-%d", sndr, rn[RN_PACKET_DATA+0]&0x7F );
+    Mouse = (iOMouse)MapOp.get(data->mousemap, key);
+
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "node [%d] reports a rocmouse 0x%02X event, dispatchAddr=%d", sndr, rn[RN_PACKET_DATA+0], data->dispatchAddr );
-    if( data->dispatchAddr > 0 ) {
+
+    if( Mouse != NULL && (rn[RN_PACKET_DATA+0]&0x80) ) {
+      /* Release */
       iONode nodeSpd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-      char* throttleid = StrOp.fmt("%d-%d", sndr, rn[RN_PACKET_DATA+0] );
-      wLoc.setthrottleid( nodeSpd, throttleid );
-      StrOp.free(throttleid);
-      wLoc.setaddr(nodeSpd, data->dispatchAddr);
+      wLoc.setthrottleid( nodeSpd, key );
+      wLoc.setaddr(nodeSpd, Mouse->lcaddr);
+      wLoc.setV(nodeSpd, 0);
+      wLoc.setdir(nodeSpd, True);
+      wLoc.setfn(nodeSpd, False);
+      wLoc.setiid( nodeSpd, data->iid );
+      wLoc.setcmd(nodeSpd, wLoc.fieldcmd);
+
+      data->listenerFun( data->listenerObj, nodeSpd, TRCLEVEL_INFO );
+
+      MapOp.remove(data->mousemap, key);
+      freeMem(Mouse);
+      Mouse = NULL;
+
+      break;
+    }
+
+    if( Mouse == NULL && data->dispatchAddr > 0 ) {
+      Mouse = allocMem( sizeof(struct mouse));
+      MapOp.put(data->mousemap, key, (obj)Mouse);
+      Mouse->nodeid = sndr;
+      Mouse->baseaddr = rn[RN_PACKET_DATA+0]&0x7F;
+      Mouse->lcaddr = data->dispatchAddr;
+      data->dispatchAddr = 0;
+    }
+
+    if( Mouse != NULL ) {
+      iONode nodeSpd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setthrottleid( nodeSpd, key );
+      wLoc.setaddr(nodeSpd, Mouse->lcaddr);
       wLoc.setV(nodeSpd, rn[RN_PACKET_DATA+1]);
       wLoc.setdir(nodeSpd, (rn[RN_PACKET_DATA+2] & 0x01)?True:False);
       wLoc.setfn(nodeSpd, (rn[RN_PACKET_DATA+2] & 0x02)?True:False);
@@ -1601,7 +1634,8 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->ini    = ini;
   data->rnini = wDigInt.getrocnet(ini);
   data->AckList = ListOp.inst();
-  data->nodemap = MapOp.inst();
+  data->nodemap  = MapOp.inst();
+  data->mousemap = MapOp.inst();
 
   if( wDigInt.getiid(ini) != NULL )
     data->iid = StrOp.dup(wDigInt.getiid( ini ));

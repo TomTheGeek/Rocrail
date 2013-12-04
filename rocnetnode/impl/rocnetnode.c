@@ -1634,6 +1634,28 @@ static void __rocmousescanner( void* threadinst ) {
       msg[RN_PACKET_DATA + 7] = 0;
       __sendRN(rocnetnode, msg);
     }
+    else if( rc == -1 ) {
+      if( data->rocmouses[idx] != NULL ) {
+        freeMem(data->rocmouses[idx]);
+        data->rocmouses[idx] = NULL;
+
+        msg[RN_PACKET_NETID] = data->location;
+        msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
+        rnSenderAddresToPacket( data->id, msg, 0 );
+        msg[RN_PACKET_ACTION] = RN_MOBILE_ROCMOUSE;
+        msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+        msg[RN_PACKET_LEN] = 8;
+        msg[RN_PACKET_DATA + 0] = (baseio+0x80) & 0xFF; /* base address */
+        msg[RN_PACKET_DATA + 1] = 0;
+        msg[RN_PACKET_DATA + 2] = 0;
+        msg[RN_PACKET_DATA + 3] = 0;
+        msg[RN_PACKET_DATA + 4] = 0;
+        msg[RN_PACKET_DATA + 5] = 0;
+        msg[RN_PACKET_DATA + 6] = 0;
+        msg[RN_PACKET_DATA + 7] = 0;
+        __sendRN(rocnetnode, msg);
+      }
+    }
 
     MutexOp.post( data->i2cmux );
     ThreadOp.sleep( data->stress ? 1000:100 );
