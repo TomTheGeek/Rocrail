@@ -1503,7 +1503,8 @@ static void __rocmousescanner( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
   iORocNetNodeData data       = Data(rocnetnode);
-  Boolean runLED = True;
+  int runLEDcnt = 0;
+  Boolean runLED = False;
   Boolean init = False;
   byte msg[256];
 
@@ -1575,32 +1576,53 @@ static void __rocmousescanner( void* threadinst ) {
 
         /* Velocity */
         rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_P1, &valueP1 );
-        data->rocmouses[idx]->V_raw = (valueP1-20) / 8; /* P1 28 steps*/
+        if( rc != -1 ) {
+          data->rocmouses[idx]->V_raw = (valueP1-20) / 8; /* P1 28 steps*/
+        }
+        else {
+          valueP1 = 0;
+        }
+
 
         /* Direction */
         rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_RS1, &valueRS1 );
-        if( valueRS1 < 40 )
-          data->rocmouses[idx]->dir = True;
-        else if( valueRS1 > 250 )
-          data->rocmouses[idx]->V_raw = 0;
-        else
-          data->rocmouses[idx]->dir = False;
+        if( rc != -1 ) {
+          if( valueRS1 < 40 )
+            data->rocmouses[idx]->dir = True;
+          else if( valueRS1 > 250 )
+            data->rocmouses[idx]->V_raw = 0;
+          else
+            data->rocmouses[idx]->dir = False;
+        }
+        else {
+          valueRS1 = 0;
+        }
 
         /* Lights */
-        if( valueS6 < 40 ) {
-          data->rocmouses[idx]->lightstrig++;
-          if( data->rocmouses[idx]->lightstrig >= 5 ) {
+        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_S6, &valueS6 );
+        if( rc != -1 ) {
+          if( valueS6 < 40 ) {
+            data->rocmouses[idx]->lightstrig++;
+            if( data->rocmouses[idx]->lightstrig >= 5 ) {
+              data->rocmouses[idx]->lightstrig = 0;
+              data->rocmouses[idx]->lights = !data->rocmouses[idx]->lights;
+            }
+          }
+          else {
             data->rocmouses[idx]->lightstrig = 0;
-            data->rocmouses[idx]->lights = !data->rocmouses[idx]->lights;
           }
         }
         else {
-          data->rocmouses[idx]->lightstrig = 0;
+          valueS6 = 0;
         }
 
         /* running LED */
-        rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, runLED?255:0 );
-        runLED = !runLED;
+        runLEDcnt++;
+        if( runLED >= 10 ) {
+          runLEDcnt = 0;
+          rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, runLED?255:0 );
+          runLED = !runLED;
+        }
 
         /* Invert digital input */
         data->rocmouses[idx]->io = ~data->rocmouses[idx]->io;
