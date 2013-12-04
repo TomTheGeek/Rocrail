@@ -1589,8 +1589,10 @@ static void __rocmousescanner( void* threadinst ) {
         if( rc != -1 ) {
           if( valueRS1 < 40 )
             data->rocmouses[idx]->dir = True;
+          /*
           else if( valueRS1 > 250 )
             data->rocmouses[idx]->V_raw = 0;
+          */
           else
             data->rocmouses[idx]->dir = False;
         }
@@ -1618,7 +1620,7 @@ static void __rocmousescanner( void* threadinst ) {
 
         /* running LED */
         runLEDcnt++;
-        if( runLED >= 10 ) {
+        if( runLEDcnt >= 10 ) {
           runLEDcnt = 0;
           rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, runLED?255:0 );
           runLED = !runLED;
