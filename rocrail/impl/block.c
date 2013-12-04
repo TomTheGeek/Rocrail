@@ -2630,7 +2630,7 @@ static iOBlock _inst( iONode props ) {
   data->acceptident = wBlock.isacceptident( props );
   data->id = wBlock.getid( props );
 
-  wBlock.setacceptident( data->props, False );
+  /*wBlock.setacceptident( data->props, False );*/
   wBlock.setreserved( data->props, False );
   wBlock.setentering( data->props, False );
   wBlock.setupdateenterside( data->props, False );
