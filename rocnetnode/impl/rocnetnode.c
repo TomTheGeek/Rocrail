@@ -1552,7 +1552,7 @@ static void __rocmousescanner( void* threadinst ) {
       /* read inputs (S1-S5) */
       rc = raspiReadI2C(data->i2cdescriptor, baseio, &data->rocmouses[idx]->io);
 
-      if( data->stress ) {
+      if( rc == -1 && data->stress ) {
         data->rocmouses[idx]->V_raw += 4;
         if(data->rocmouses[idx]->V_raw > 127 ) {
           data->rocmouses[idx]->V_raw = 0;
@@ -1563,15 +1563,17 @@ static void __rocmousescanner( void* threadinst ) {
       else {
         int i = 0;
         byte ctrl = 0x44; /* analog out active and auto increment */
-        byte value = 0;
-        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl, &value );
-        data->rocmouses[idx]->V_raw = value; /* P1 */
-        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+1, &value );
-        data->rocmouses[idx]->dir = (value > 128 ? True:False); /* RS1 */
-        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+2, &value );
+        byte valueP1 = 0;
+        byte valueRS1 = 0;
+        byte valueS6 = 0;
+        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl, &valueP1 );
+        data->rocmouses[idx]->V_raw = valueP1; /* P1 */
+        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+1, &valueRS1 );
+        data->rocmouses[idx]->dir = (valueRS1 > 128 ? True:False); /* RS1 */
+        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+2, &valueS6 );
 
         /* S6 */
-        if( value > 0 ) {
+        if( valueS6 > 0 ) {
           data->rocmouses[idx]->lightstrig++;
           if( data->rocmouses[idx]->lightstrig >= 5 ) {
             data->rocmouses[idx]->lightstrig = 0;
@@ -1581,6 +1583,8 @@ static void __rocmousescanner( void* threadinst ) {
         else {
           data->rocmouses[idx]->lightstrig = 0;
         }
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "analog: P1=%d, RS1=%d, S6=%d", valueP1, valueRS1, valueS6 );
+
 
         /* running LED */
         rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, runLED );
@@ -1588,6 +1592,8 @@ static void __rocmousescanner( void* threadinst ) {
         if( runLED > 255 )
           runLED = 10;
 
+        /* Invert digital input */
+        data->rocmouses[idx]->io = ~data->rocmouses[idx]->io;
         /* S5 function group selection */
         if( data->rocmouses[idx]->io & 0x08 ) {
           data->rocmouses[idx]->fgtrig++;
