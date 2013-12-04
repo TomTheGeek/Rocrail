@@ -1627,8 +1627,6 @@ static void __rocmousescanner( void* threadinst ) {
         }
       }
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "RocMouse 0x%02X V=%d dir=%d lights=%d", baseio, data->rocmouses[idx]->V_raw, data->rocmouses[idx]->dir, data->rocmouses[idx]->lights );
 
       if( data->rocmouses[idx]->V_raw != data->rocmouses[idx]->prev_V_raw ||
           data->rocmouses[idx]->dir != data->rocmouses[idx]->prev_dir ||
@@ -1636,6 +1634,8 @@ static void __rocmousescanner( void* threadinst ) {
           !MemOp.cmp(data->rocmouses[idx]->fn, data->rocmouses[idx]->prev_fn, 8 * sizeof(int))
           )
       {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "RocMouse 0x%02X V=%d dir=%d lights=%d", baseio, data->rocmouses[idx]->V_raw, data->rocmouses[idx]->dir, data->rocmouses[idx]->lights );
         msg[RN_PACKET_NETID] = data->location;
         msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
         rnSenderAddresToPacket( data->id, msg, 0 );
@@ -1662,6 +1662,7 @@ static void __rocmousescanner( void* threadinst ) {
       if( data->rocmouses[idx] != NULL ) {
         freeMem(data->rocmouses[idx]);
         data->rocmouses[idx] = NULL;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocmouse detached");
 
         msg[RN_PACKET_NETID] = data->location;
         msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
