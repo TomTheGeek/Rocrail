@@ -1511,13 +1511,16 @@ static void __rocmousescanner( void* threadinst ) {
   while( data->run ) {
     int rc = 0;
     int idx = 0;
-    int baseaddr = 0x27;
+    byte baseio  = 0x27; /* PCF8574A: 0x3F; */
+    byte baseadc = 0x4F;
 
     MutexOp.wait( data->i2cmux );
 
     /*
      * The I/O expander and ADC do not need any configuration.
      * Try to read the known I2C addresses.
+     *
+     * PCF8574
      * D0 = LED1
      * D1 = LED2
      * D2 = LED3
@@ -1526,6 +1529,8 @@ static void __rocmousescanner( void* threadinst ) {
      * D5 = S3
      * D6 = S2
      * D7 = S1
+     *
+     * PCF8591:
      * AIN0 = P1
      * AIN1 = RS1
      * AIN2 = S6
@@ -1533,13 +1538,16 @@ static void __rocmousescanner( void* threadinst ) {
      * AOUT = LED4
      */
 
-    rc = raspiWriteI2C(data->i2cdescriptor, baseaddr, ~0x07);
+    /* write outputs (LED1-LED3) */
+    rc = raspiWriteI2C(data->i2cdescriptor, baseio, ~0x07);
+
     if( rc >= 0 || data->stress ) {
       if( data->rocmouses[idx] == NULL ) {
         data->rocmouses[idx] = allocMem(sizeof( struct RocMouse));
       }
-      /* OK */
-      rc = raspiReadI2C(data->i2cdescriptor, baseaddr, &data->rocmouses[idx]->io);
+
+      /* read inputs (S1-S5) */
+      rc = raspiReadI2C(data->i2cdescriptor, baseio, &data->rocmouses[idx]->io);
 
       if( data->stress ) {
         data->rocmouses[idx]->V_raw += 4;
@@ -1549,9 +1557,20 @@ static void __rocmousescanner( void* threadinst ) {
           data->rocmouses[idx]->lights = !data->rocmouses[idx]->lights;
         }
       }
+      else {
+        byte ctrl = 0x44; /* analog out active and auto increment */
+        byte value = 0;
+        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl, &value );
+        data->rocmouses[idx]->V_raw = value; /* P1 */
+        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+1, &value );
+        data->rocmouses[idx]->dir = (value > 0 ? True:False); /* RS1 */
+        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+2, &value );
+        data->rocmouses[idx]->lights = (value > 0 ? True:False); /* S6 */
+        rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, 255 );
+      }
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "RocMouse 0x%02X V=%d dir=%d lights=%d", baseaddr, data->rocmouses[idx]->V_raw, data->rocmouses[idx]->dir, data->rocmouses[idx]->lights );
+          "RocMouse 0x%02X V=%d dir=%d lights=%d", baseio, data->rocmouses[idx]->V_raw, data->rocmouses[idx]->dir, data->rocmouses[idx]->lights );
 
       msg[RN_PACKET_NETID] = data->location;
       msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
@@ -1559,7 +1578,7 @@ static void __rocmousescanner( void* threadinst ) {
       msg[RN_PACKET_ACTION] = RN_MOBILE_ROCMOUSE;
       msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
       msg[RN_PACKET_LEN] = 8;
-      msg[RN_PACKET_DATA + 0] = baseaddr & 0xFF; /* base address */
+      msg[RN_PACKET_DATA + 0] = baseio & 0xFF; /* base address */
       msg[RN_PACKET_DATA + 1] = data->rocmouses[idx]->V_raw & 0x7F;
       msg[RN_PACKET_DATA + 2] = data->rocmouses[idx]->dir + (data->rocmouses[idx]->lights << 1);
       msg[RN_PACKET_DATA + 3] = data->rocmouses[idx]->fn[0] + (data->rocmouses[idx]->fn[1] << 4);
@@ -1571,7 +1590,7 @@ static void __rocmousescanner( void* threadinst ) {
     }
 
     MutexOp.post( data->i2cmux );
-    ThreadOp.sleep(1000);
+    ThreadOp.sleep( data->stress ? 1000:100 );
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocMouse scanner stopped" );
