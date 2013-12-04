@@ -31,8 +31,12 @@
       <var name="io" vt="byte"/>
       <var name="V_raw" vt="int"/>
       <var name="dir" vt="Boolean"/>
+      <var name="lightstrig" vt="int"/>
       <var name="lights" vt="Boolean"/>
+      <var name="fgtrig" vt="int"/>
+      <var name="fgroup" vt="int"/>
       <var name="fn[8]" vt="int"/>
+      <var name="strig[8]" vt="int"/>
     </struct>
     <struct name="Port" typedef="*iOPort">
       <var name="port" vt="int"/>

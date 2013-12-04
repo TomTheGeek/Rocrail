@@ -1503,6 +1503,7 @@ static void __rocmousescanner( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
   iORocNetNodeData data       = Data(rocnetnode);
+  Boolean runLED = True;
   byte msg[256];
 
   ThreadOp.sleep(1000);
@@ -1521,25 +1522,25 @@ static void __rocmousescanner( void* threadinst ) {
      * Try to read the known I2C addresses.
      *
      * PCF8574
-     * D0 = LED1
-     * D1 = LED2
-     * D2 = LED3
-     * D3 = S5
-     * D4 = S4
-     * D5 = S3
-     * D6 = S2
-     * D7 = S1
+     * 0x01 D0 = LED1 0x04
+     * 0x02 D1 = LED2 0x02
+     * 0x04 D2 = LED3 0x01
+     * 0x08 D3 = S5 fgroup
+     * 0x10 D4 = S4 fn4
+     * 0x20 D5 = S3 fn3
+     * 0x40 D6 = S2 fn2
+     * 0x80 D7 = S1 fn1
      *
      * PCF8591:
-     * AIN0 = P1
-     * AIN1 = RS1
-     * AIN2 = S6
+     * AIN0 = P1  Velocity
+     * AIN1 = RS1 Direction
+     * AIN2 = S6  Lights
      * AIN3 =
-     * AOUT = LED4
+     * AOUT = LED4 Run
      */
 
     /* write outputs (LED1-LED3) */
-    rc = raspiWriteI2C(data->i2cdescriptor, baseio, ~0x07);
+    rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + data->rocmouses[idx]->fgroup+1 );
 
     if( rc >= 0 || data->stress ) {
       if( data->rocmouses[idx] == NULL ) {
@@ -1558,15 +1559,58 @@ static void __rocmousescanner( void* threadinst ) {
         }
       }
       else {
+        int i = 0;
         byte ctrl = 0x44; /* analog out active and auto increment */
         byte value = 0;
         rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl, &value );
         data->rocmouses[idx]->V_raw = value; /* P1 */
         rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+1, &value );
-        data->rocmouses[idx]->dir = (value > 0 ? True:False); /* RS1 */
+        data->rocmouses[idx]->dir = (value > 128 ? True:False); /* RS1 */
         rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+2, &value );
-        data->rocmouses[idx]->lights = (value > 0 ? True:False); /* S6 */
-        rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, 255 );
+
+        /* S6 */
+        if( value > 0 ) {
+          data->rocmouses[idx]->lightstrig++;
+          if( data->rocmouses[idx]->lightstrig >= 5 ) {
+            data->rocmouses[idx]->lightstrig = 0;
+            data->rocmouses[idx]->lights = !data->rocmouses[idx]->lights;
+          }
+        }
+        else {
+          data->rocmouses[idx]->lightstrig = 0;
+        }
+
+        /* running LED */
+        rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, runLED ? 255:0 );
+        runLED = !runLED;
+
+        /* S5 function group selection */
+        if( data->rocmouses[idx]->io & 0x08 ) {
+          data->rocmouses[idx]->fgtrig++;
+          if(data->rocmouses[idx]->fgtrig >= 5) {
+            data->rocmouses[idx]->fgtrig = 0;
+            data->rocmouses[idx]->fgroup++;
+            if(data->rocmouses[idx]->fgroup > 6 )
+              data->rocmouses[idx]->fgroup = 0;
+          }
+        }
+        else {
+          data->rocmouses[idx]->fgtrig = 0;
+        }
+
+        /* S1-S4 functions */
+        for( i = 0; i < 4; i++ ) {
+          if( data->rocmouses[idx]->io & (0x80>>i) ) {
+            data->rocmouses[idx]->strig[i]++;
+            if(data->rocmouses[idx]->strig[i] >= 5) {
+              data->rocmouses[idx]->strig[i] = 0;
+              data->rocmouses[idx]->fn[data->rocmouses[idx]->fgroup] ^= (0x01 << i);
+            }
+          }
+          else {
+            data->rocmouses[idx]->strig[i] = 0;
+          }
+        }
       }
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
