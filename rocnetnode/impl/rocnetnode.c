@@ -1540,12 +1540,14 @@ static void __rocmousescanner( void* threadinst ) {
      */
 
     /* write outputs (LED1-LED3) */
-    rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + data->rocmouses[idx]->fgroup+1 );
+    rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 );
 
     if( rc >= 0 || data->stress ) {
       if( data->rocmouses[idx] == NULL ) {
         data->rocmouses[idx] = allocMem(sizeof( struct RocMouse));
       }
+
+      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + data->rocmouses[idx]->fgroup+1 );
 
       /* read inputs (S1-S5) */
       rc = raspiReadI2C(data->i2cdescriptor, baseio, &data->rocmouses[idx]->io);
