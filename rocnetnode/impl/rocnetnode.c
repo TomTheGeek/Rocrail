@@ -1503,7 +1503,7 @@ static void __rocmousescanner( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
   iORocNetNodeData data       = Data(rocnetnode);
-  Boolean runLED = True;
+  int runLED = 10;
   byte msg[256];
 
   ThreadOp.sleep(1000);
@@ -1581,8 +1581,10 @@ static void __rocmousescanner( void* threadinst ) {
         }
 
         /* running LED */
-        rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, runLED ? 255:0 );
-        runLED = !runLED;
+        rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, runLED );
+        runLED += 10;
+        if( runLED > 255 )
+          runLED = 10;
 
         /* S5 function group selection */
         if( data->rocmouses[idx]->io & 0x08 ) {
