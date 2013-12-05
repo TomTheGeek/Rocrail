@@ -1628,7 +1628,7 @@ static void __rocmousescanner( void* threadinst ) {
 
         /* Invert digital input */
         data->rocmouses[idx]->io = ~data->rocmouses[idx]->io;
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Analog: P1=%d, RS1=%d, S6=%d Digital: IO=0x%02X",
+        TraceOp.trc( name, data->stress ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "Analog: P1=%d, RS1=%d, S6=%d Digital: IO=0x%02X",
             valueP1, valueRS1, valueS6, data->rocmouses[idx]->io );
 
         /* S5 function group selection */
