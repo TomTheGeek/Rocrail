@@ -1554,7 +1554,7 @@ static void __rocmousescanner( void* threadinst ) {
       }
 
       init = True;
-      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + ((data->rocmouses[idx]->fgroup&0x07) + 1) );
+      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + ((6-data->rocmouses[idx]->fgroup) + 1) );
 
       /* read inputs (S1-S5) */
       rc = raspiReadI2C(data->i2cdescriptor, baseio, &data->rocmouses[idx]->io);
@@ -1577,6 +1577,7 @@ static void __rocmousescanner( void* threadinst ) {
         /* Velocity */
         rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_P1, &valueP1 );
         if( rc != -1 ) {
+          rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_P1, &valueP1 );
           data->rocmouses[idx]->V_raw = (valueP1 >> 1);
         }
         else {
@@ -1587,6 +1588,7 @@ static void __rocmousescanner( void* threadinst ) {
         /* Direction */
         rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_RS1, &valueRS1 );
         if( rc != -1 ) {
+          rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_RS1, &valueRS1 );
           if( valueRS1 < 40 )
             data->rocmouses[idx]->dir = True;
           /*
@@ -1603,6 +1605,7 @@ static void __rocmousescanner( void* threadinst ) {
         /* Lights */
         rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_S6, &valueS6 );
         if( rc != -1 ) {
+          rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_S6, &valueS6 );
           if( valueS6 < 40 ) {
             data->rocmouses[idx]->lightstrig++;
             if( data->rocmouses[idx]->lightstrig >= 5 ) {
