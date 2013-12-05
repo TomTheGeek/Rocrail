@@ -2249,10 +2249,12 @@ static void __initI2C(iORocNetNode inst, int iotype) {
   MutexOp.wait( data->i2cmux );
 
   if( data->iotype == IO_I2C_0 ) {
-    raspiGPIOAlt(28, 0);
-    raspiGPIOAlt(29, 0);
+    /* hardware revision 1 */
+    raspiGPIOAlt(0, 0);
+    raspiGPIOAlt(1, 0);
   }
   else {
+    /* hardware revision 2 */
     raspiGPIOAlt(2, 0);
     raspiGPIOAlt(3, 0);
   }
