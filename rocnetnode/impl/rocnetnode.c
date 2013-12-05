@@ -1540,9 +1540,9 @@ static void __rocmousescanner( void* threadinst ) {
      * AIN3 =
      * AOUT = LED4 Run
      */
-#define RM_S6  0
-#define RM_P1  1
-#define RM_RS1 2
+#define RM_P1  0
+#define RM_RS1 1
+#define RM_S6  2
 
     /* write outputs (LED1-LED3) */
     if( !init )
@@ -1554,7 +1554,7 @@ static void __rocmousescanner( void* threadinst ) {
       }
 
       init = True;
-      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + data->rocmouses[idx]->fgroup+1 );
+      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + (7 - data->rocmouses[idx]->fgroup) );
 
       /* read inputs (S1-S5) */
       rc = raspiReadI2C(data->i2cdescriptor, baseio, &data->rocmouses[idx]->io);
@@ -1569,7 +1569,7 @@ static void __rocmousescanner( void* threadinst ) {
       }
       else {
         int i = 0;
-        byte ctrl     = 0x44; /* analog out active and auto increment */
+        byte ctrl     = 0x40; /* analog out active and auto increment */
         byte valueP1  = 0;
         byte valueRS1 = 0;
         byte valueS6  = 0;
@@ -1628,8 +1628,9 @@ static void __rocmousescanner( void* threadinst ) {
 
         /* Invert digital input */
         data->rocmouses[idx]->io = ~data->rocmouses[idx]->io;
-        TraceOp.trc( name, data->stress ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "Analog: P1=%d, RS1=%d, S6=%d Digital: IO=0x%02X",
-            valueP1, valueRS1, valueS6, data->rocmouses[idx]->io );
+        TraceOp.trc( name, data->stress ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999,
+            "Analog: P1=%d, RS1=%d, S6=%d Digital: IO=0x%02X fgroup=%d",
+            valueP1, valueRS1, valueS6, data->rocmouses[idx]->io, data->rocmouses[idx]->fgroup );
 
         /* S5 function group selection */
         if( data->rocmouses[idx]->io & 0x08 ) {
