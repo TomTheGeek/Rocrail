@@ -1577,7 +1577,6 @@ static void __rocmousescanner( void* threadinst ) {
         /* Velocity */
         rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_P1, &valueP1 );
         if( rc != -1 ) {
-          rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_P1, &valueP1 );
           data->rocmouses[idx]->V_raw = (valueP1 >> 1);
         }
         else {
@@ -1588,7 +1587,6 @@ static void __rocmousescanner( void* threadinst ) {
         /* Direction */
         rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_RS1, &valueRS1 );
         if( rc != -1 ) {
-          rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_RS1, &valueRS1 );
           if( valueRS1 < 40 )
             data->rocmouses[idx]->dir = True;
           /*
@@ -1605,7 +1603,6 @@ static void __rocmousescanner( void* threadinst ) {
         /* Lights */
         rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_S6, &valueS6 );
         if( rc != -1 ) {
-          rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_S6, &valueS6 );
           if( valueS6 < 40 ) {
             data->rocmouses[idx]->lightstrig++;
             if( data->rocmouses[idx]->lightstrig >= 5 ) {
