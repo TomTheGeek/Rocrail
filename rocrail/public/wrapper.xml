@@ -2401,6 +2401,7 @@
         <var name="shortin" vt="bool" defval="false" remark="Use shortin event to stop in blocks."/>
         <var name="inatpre2in" vt="bool" defval="false" remark="Use pre2in event to stop in blocks."/>
         <var name="usedepartdelay" vt="bool" defval="true" remark="Use the depart delay defined in the current block."/>
+        <var name="era" vt="int" defval="0" range="0-*"/>
 
         <const name="min" vt="string" val="min" remark="Set speed to minimal."/>
         <const name="mid" vt="string" val="mid" remark="Set speed to middle."/>

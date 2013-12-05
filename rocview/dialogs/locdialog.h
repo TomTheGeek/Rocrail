@@ -463,6 +463,7 @@ public:
     wxCheckBox* m_Check2In;
     wxCheckBox* m_UseDepartDelay;
     wxRadioBox* m_EngineBox;
+    wxRadioBox* m_Era;
     wxPanel* m_FunctionPanel;
     wxStaticText* m_labF0Nr;
     wxStaticText* m_labF0Desc;
