@@ -2263,8 +2263,6 @@ static void __initI2C(iORocNetNode inst, int iotype) {
 
   if( data->iotype == IO_I2C_0 ) {
     /* hardware revision 1 */
-    raspiGPIOAlt(0, 0);
-    raspiGPIOAlt(1, 0);
   }
   else {
     /* hardware revision 2 */
