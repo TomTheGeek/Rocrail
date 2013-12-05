@@ -1540,9 +1540,9 @@ static void __rocmousescanner( void* threadinst ) {
      * AIN3 =
      * AOUT = LED4 Run
      */
-#define RM_P1  0
-#define RM_RS1 1
-#define RM_S6  2
+#define RM_P1  1
+#define RM_RS1 2
+#define RM_S6  0
 
     /* write outputs (LED1-LED3) */
     if( !init )
@@ -1554,7 +1554,7 @@ static void __rocmousescanner( void* threadinst ) {
       }
 
       init = True;
-      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + (7 - data->rocmouses[idx]->fgroup) );
+      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + ((data->rocmouses[idx]->fgroup&0x07) + 1) );
 
       /* read inputs (S1-S5) */
       rc = raspiReadI2C(data->i2cdescriptor, baseio, &data->rocmouses[idx]->io);
@@ -1577,7 +1577,7 @@ static void __rocmousescanner( void* threadinst ) {
         /* Velocity */
         rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_P1, &valueP1 );
         if( rc != -1 ) {
-          data->rocmouses[idx]->V_raw = (valueP1-20) / 8; /* P1 28 steps*/
+          data->rocmouses[idx]->V_raw = (valueP1 >> 1);
         }
         else {
           valueP1 = 0;
