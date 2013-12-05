@@ -1540,9 +1540,15 @@ static void __rocmousescanner( void* threadinst ) {
      * AIN3 =
      * AOUT = LED4 Run
      */
-#define RM_P1  1
-#define RM_RS1 2
-#define RM_S6  0
+#define RM_P1  0
+#define RM_RS1 1
+#define RM_S6  2
+
+    /*
+     * After writing the control byte to the PCF8591 nothing happens for the selected channel.
+     * The data byte read after a write is the channel of the previous control byte...
+     * Thats why the read is done twice after a control byte write.
+     */
 
     /* write outputs (LED1-LED3) */
     if( !init )
@@ -1575,8 +1581,10 @@ static void __rocmousescanner( void* threadinst ) {
         byte valueS6  = 0;
 
         /* Velocity */
-        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_P1, &valueP1 );
+        rc = raspiWriteI2C(data->i2cdescriptor, baseadc, ctrl+RM_P1 );
+        rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueP1 );
         if( rc != -1 ) {
+          rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueP1 );
           data->rocmouses[idx]->V_raw = (valueP1 >> 1);
         }
         else {
@@ -1585,8 +1593,10 @@ static void __rocmousescanner( void* threadinst ) {
 
 
         /* Direction */
-        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_RS1, &valueRS1 );
+        rc = raspiWriteI2C(data->i2cdescriptor, baseadc, ctrl+RM_RS1 );
+        rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueRS1 );
         if( rc != -1 ) {
+          rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueRS1 );
           if( valueRS1 < 40 )
             data->rocmouses[idx]->dir = True;
           /*
@@ -1601,8 +1611,10 @@ static void __rocmousescanner( void* threadinst ) {
         }
 
         /* Lights */
-        rc = raspiReadRegI2C( data->i2cdescriptor, baseadc, ctrl+RM_S6, &valueS6 );
+        rc = raspiWriteI2C(data->i2cdescriptor, baseadc, ctrl+RM_S6 );
+        rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueS6 );
         if( rc != -1 ) {
+          rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueS6 );
           if( valueS6 < 40 ) {
             data->rocmouses[idx]->lightstrig++;
             if( data->rocmouses[idx]->lightstrig >= 5 ) {
