@@ -41,6 +41,7 @@
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/Clock.h"
+#include "rocrail/wrapper/public/FunCmd.h"
 
 static int instCnt = 0;
 
@@ -127,6 +128,19 @@ static char* _convertNode(iONode node, Boolean addstamp) {
         scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "time", NULL));
       }
     }
+
+    if( StrOp.equals( wFunCmd.name(), NodeOp.getName(node))) {
+      if( NodeOp.getStr(node, "fnchanged", NULL) != NULL ) {
+        int fnchanged = wFunCmd.getfnchanged(node);
+        char f[32] = {'\0'};
+        scriptline = StrOp.cat( scriptline, ",");
+        scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "fnchanged", "0"));
+        scriptline = StrOp.cat( scriptline, ",");
+        StrOp.fmtb(f, "f%d", fnchanged);
+        scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, f, "false"));
+      }
+    }
+
     if( NodeOp.getStr(node, "cmd", NULL) != NULL ) {
       scriptline = StrOp.cat( scriptline, ",");
       scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "cmd", NULL));
@@ -254,6 +268,16 @@ static iONode _parseLine(const char* scriptline) {
             wLoc.settrain(node, parm3);
         }
       }
+    }
+
+    else if( StrOp.equalsi( wFunCmd.name(), nodename ) && parm1 != NULL && parm2 != NULL && parm3 != NULL ) {
+      /* fn,<id>,fnchanged,true */
+      char f[32] = {'\0'};
+      node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      wFunCmd.setid( node, parm1 );
+      wFunCmd.setfnchanged(node, atoi(parm2));
+      StrOp.fmtb(f, "f%s", parm2);
+      NodeOp.setStr(node, f, parm3);
     }
 
     else if( StrOp.equalsi( wSwitch.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
