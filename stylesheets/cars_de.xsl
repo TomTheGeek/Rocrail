@@ -128,9 +128,31 @@
 	   
 	   <xsl:variable name="era" select="@era" />
 	   <TD align="center">
-	   <xsl:value-of select="@era + 1" /> 
+     <xsl:choose>
+         <xsl:when test="$era = '0'">
+         <xsl:text>I</xsl:text>
+       </xsl:when>
+         <xsl:when test="$era = '1'">
+         <xsl:text>II</xsl:text>
+       </xsl:when>
+         <xsl:when test="$era = '2'">
+         <xsl:text>III</xsl:text>
+       </xsl:when>
+         <xsl:when test="$era = '3'">
+         <xsl:text>IV</xsl:text>
+       </xsl:when>
+         <xsl:when test="$era = '4'">
+         <xsl:text>V</xsl:text>
+       </xsl:when>
+         <xsl:when test="$era = '5'">
+         <xsl:text>VI</xsl:text>
+       </xsl:when>
+       <xsl:otherwise>
+	        <xsl:value-of select="@era + 1" /> 
+       </xsl:otherwise>
+       </xsl:choose>
        </TD>
-	   
+          
 	   <xsl:variable name="location" select="@location" />
 	   <TD align="center">
 	   <xsl:choose>
