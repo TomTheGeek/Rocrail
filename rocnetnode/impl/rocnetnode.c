@@ -1516,6 +1516,7 @@ static void __rocmousescanner( void* threadinst ) {
     int idx = 0;
     byte baseio  = 0x27; /* PCF8574A: 0x3F; */
     byte baseadc = 0x4F;
+    byte fnLEDs  = 0;
 
     MutexOp.wait( data->i2cmux );
 
@@ -1560,7 +1561,17 @@ static void __rocmousescanner( void* threadinst ) {
       }
 
       init = True;
-      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + ((6-data->rocmouses[idx]->fgroup) + 1) );
+      /*
+      * 0x01 D0 = LED1 0x04
+      * 0x02 D1 = LED2 0x02
+      * 0x04 D2 = LED3 0x01
+      */
+      fnLEDs = 0;
+      fnLEDs |= ((data->rocmouses[idx]->fgroup+1) & 0x01) ? 0x04:0x00;
+      fnLEDs |= ((data->rocmouses[idx]->fgroup+1) & 0x02) ? 0x02:0x00;
+      fnLEDs |= ((data->rocmouses[idx]->fgroup+1) & 0x04) ? 0x01:0x00;
+
+      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + fnLEDs );
 
       /* read inputs (S1-S5) */
       rc = raspiReadI2C(data->i2cdescriptor, baseio, &data->rocmouses[idx]->io);
@@ -1584,8 +1595,13 @@ static void __rocmousescanner( void* threadinst ) {
         rc = raspiWriteI2C(data->i2cdescriptor, baseadc, ctrl+RM_P1 );
         rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueP1 );
         if( rc != -1 ) {
+          float V = 0.0;
+          float Voffset = 20.0;
           rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueP1 );
-          data->rocmouses[idx]->V_raw = (valueP1 >> 1);
+          /* P1 range is 20-255 */
+          V = valueP1 - Voffset;
+          V = (127.0 / (255.0-Voffset)) * V;
+          data->rocmouses[idx]->V_raw = (int)V;
         }
         else {
           valueP1 = 0;
@@ -1616,14 +1632,14 @@ static void __rocmousescanner( void* threadinst ) {
         if( rc != -1 ) {
           rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueS6 );
           if( valueS6 < 40 ) {
-            data->rocmouses[idx]->lightstrig++;
-            if( data->rocmouses[idx]->lightstrig >= 5 ) {
-              data->rocmouses[idx]->lightstrig = 0;
+            if( data->rocmouses[idx]->lightstrig == 0 ) {
+              data->rocmouses[idx]->lightstrig = 5;
               data->rocmouses[idx]->lights = !data->rocmouses[idx]->lights;
             }
           }
           else {
-            data->rocmouses[idx]->lightstrig = 0;
+            if(data->rocmouses[idx]->lightstrig > 0)
+              data->rocmouses[idx]->lightstrig--;
           }
         }
         else {
@@ -1646,29 +1662,29 @@ static void __rocmousescanner( void* threadinst ) {
 
         /* S5 function group selection */
         if( data->rocmouses[idx]->io & 0x08 ) {
-          data->rocmouses[idx]->fgtrig++;
-          if(data->rocmouses[idx]->fgtrig >= 5) {
-            data->rocmouses[idx]->fgtrig = 0;
+          if(data->rocmouses[idx]->fgtrig == 5) {
+            data->rocmouses[idx]->fgtrig = 5;
             data->rocmouses[idx]->fgroup++;
             if(data->rocmouses[idx]->fgroup > 6 )
               data->rocmouses[idx]->fgroup = 0;
           }
         }
         else {
-          data->rocmouses[idx]->fgtrig = 0;
+          if( data->rocmouses[idx]->fgtrig > 0 )
+            data->rocmouses[idx]->fgtrig--;
         }
 
         /* S1-S4 functions */
         for( i = 0; i < 4; i++ ) {
           if( data->rocmouses[idx]->io & (0x80>>i) ) {
-            data->rocmouses[idx]->strig[i]++;
-            if(data->rocmouses[idx]->strig[i] >= 5) {
-              data->rocmouses[idx]->strig[i] = 0;
+            if(data->rocmouses[idx]->strig[i] == 0) {
+              data->rocmouses[idx]->strig[i] = 5;
               data->rocmouses[idx]->fn[data->rocmouses[idx]->fgroup] ^= (0x01 << i);
             }
           }
           else {
-            data->rocmouses[idx]->strig[i] = 0;
+            if(data->rocmouses[idx]->strig[i] > 0)
+              data->rocmouses[idx]->strig[i]--;
           }
         }
       }
