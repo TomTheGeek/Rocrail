@@ -1603,7 +1603,7 @@ static void __rocmousescanner( void* threadinst ) {
           if( valueP1 < Voffset )
             Voffset = valueP1;
           V = valueP1 - Voffset;
-          V = (127.0 / (255.0-Voffset)) * V;
+          V = (28.0 / (255.0-Voffset)) * V;
           data->rocmouses[idx]->V_raw = (int)V;
         }
         else {
@@ -2577,7 +2577,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       iONode traceini = NodeOp.findNode(data->ini, wTrace.name());
       tf = wTrace.getrfile(traceini);
       trc = TraceOp.inst( debug | dump | monitor | (wTrace.ismonitor(traceini)?TRCLEVEL_MONITOR:0) | parse |
-                          (wTrace.isinfo(traceini)?TRCLEVEL_INFO:0) | TRCLEVEL_CALC, tf, True );
+                          info | (wTrace.isinfo(traceini)?TRCLEVEL_INFO:0) | TRCLEVEL_CALC, tf, True );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using ini setup" );
 
       if( wTrace.isdebug( traceini ) || debug )
