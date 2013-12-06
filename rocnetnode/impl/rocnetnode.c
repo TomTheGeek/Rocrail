@@ -1565,13 +1565,14 @@ static void __rocmousescanner( void* threadinst ) {
       * 0x01 D0 = LED1 0x04
       * 0x02 D1 = LED2 0x02
       * 0x04 D2 = LED3 0x01
-      */
       fnLEDs = 0;
       fnLEDs |= ((data->rocmouses[idx]->fgroup+1) & 0x01) ? 0x04:0x00;
       fnLEDs |= ((data->rocmouses[idx]->fgroup+1) & 0x02) ? 0x02:0x00;
       fnLEDs |= ((data->rocmouses[idx]->fgroup+1) & 0x04) ? 0x01:0x00;
 
       rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + fnLEDs );
+      */
+      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + ((6-data->rocmouses[idx]->fgroup) + 1) );
 
       /* read inputs (S1-S5) */
       rc = raspiReadI2C(data->i2cdescriptor, baseio, &data->rocmouses[idx]->io);
@@ -1599,6 +1600,8 @@ static void __rocmousescanner( void* threadinst ) {
           float Voffset = 20.0;
           rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueP1 );
           /* P1 range is 20-255 */
+          if( valueP1 < Voffset )
+            Voffset = valueP1;
           V = valueP1 - Voffset;
           V = (127.0 / (255.0-Voffset)) * V;
           data->rocmouses[idx]->V_raw = (int)V;
@@ -1631,8 +1634,8 @@ static void __rocmousescanner( void* threadinst ) {
         rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueS6 );
         if( rc != -1 ) {
           rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueS6 );
-          if( valueS6 < 40 ) {
-            if( data->rocmouses[idx]->lightstrig == 0 ) {
+          if( data->rocmouses[idx]->lightstrig == 0) {
+            if( valueS6 < 40 ) {
               data->rocmouses[idx]->lightstrig = 5;
               data->rocmouses[idx]->lights = !data->rocmouses[idx]->lights;
             }
@@ -1662,11 +1665,14 @@ static void __rocmousescanner( void* threadinst ) {
 
         /* S5 function group selection */
         if( data->rocmouses[idx]->io & 0x08 ) {
-          if(data->rocmouses[idx]->fgtrig == 5) {
+          if(data->rocmouses[idx]->fgtrig == 0) {
             data->rocmouses[idx]->fgtrig = 5;
             data->rocmouses[idx]->fgroup++;
             if(data->rocmouses[idx]->fgroup > 6 )
               data->rocmouses[idx]->fgroup = 0;
+          }
+          else {
+            data->rocmouses[idx]->fgtrig--;
           }
         }
         else {
@@ -1680,6 +1686,9 @@ static void __rocmousescanner( void* threadinst ) {
             if(data->rocmouses[idx]->strig[i] == 0) {
               data->rocmouses[idx]->strig[i] = 5;
               data->rocmouses[idx]->fn[data->rocmouses[idx]->fgroup] ^= (0x01 << i);
+            }
+            else {
+              data->rocmouses[idx]->strig[i]--;
             }
           }
           else {
