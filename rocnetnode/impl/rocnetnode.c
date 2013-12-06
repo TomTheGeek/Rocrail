@@ -1514,7 +1514,7 @@ static void __rocmousescanner( void* threadinst ) {
   while( data->run ) {
     int rc = 0;
     int idx = 0;
-    byte baseio  = 0x27; /* PCF8574A: 0x3F; */
+    byte baseio  = 0x3F;
     byte baseadc = 0x4F;
     byte fnLEDs  = 0;
 
