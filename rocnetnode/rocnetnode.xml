@@ -29,6 +29,7 @@
       <var name="adaddr" vt="int"/>
       <var name="lcaddr" vt="int"/>
       <var name="io" vt="byte"/>
+      <var name="P1" vt="int"/>
       <var name="V_raw" vt="int"/>
       <var name="prev_V_raw" vt="int"/>
       <var name="dir" vt="Boolean"/>

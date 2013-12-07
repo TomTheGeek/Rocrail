@@ -1592,13 +1592,22 @@ static void __rocmousescanner( void* threadinst ) {
         byte valueRS1 = 0;
         byte valueS6  = 0;
 
-        /* Velocity */
+        /* Velocity
+         *
+         * Moving average
+         * (2 x old value + new value) / 3
+         *   or
+         * (3 x old value + new value) / 4
+         *
+         * */
         rc = raspiWriteI2C(data->i2cdescriptor, baseadc, ctrl+RM_P1 );
         rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueP1 );
         if( rc != -1 ) {
           float V = 0.0;
           float Voffset = 20.0;
           rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueP1 );
+          data->rocmouses[idx]->P1 = ((data->rocmouses[idx]->P1 * 2) + valueP1) / 3;
+          valueP1 = data->rocmouses[idx]->P1;
           /* P1 range is 20-255 */
           if( valueP1 < Voffset )
             Voffset = valueP1;
