@@ -405,11 +405,15 @@ void ECoSCtrlDialog::SublibSelected()
     m_Host->Enable(false);
     m_Port->Enable(false);
     m_Device->Enable(true);
+    m_CTS->Enable(true);
+    m_SLCAN->Enable(true);
   }
   else {
     m_Host->Enable(true);
     m_Port->Enable(StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) )?false:true);
     m_Device->Enable(false);
+    m_CTS->Enable(false);
+    m_SLCAN->Enable(false);
   }
 }
 
