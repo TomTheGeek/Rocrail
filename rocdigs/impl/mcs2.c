@@ -688,6 +688,73 @@ static void __evaluateCCSwitch( iOMCS2Data mcs2, byte* in ) {
   }
 }
 
+
+static byte __HEXA2Byte( const char* s ) {
+  char val[3] = {0};
+  val[0] = s[0];
+  val[1] = s[1];
+  val[2] = '\0';
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "HEXA=[%s]", val );
+  return (unsigned char)(strtol( val, NULL, 16)&0xFF);
+}
+
+static void __Byte2HEXA( char* s, byte b ) {
+  static char cHex[] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+  int i = 0;
+  s[0] = cHex[(b&0xF0)>>4 ];
+  s[1] = cHex[ b&0x0F     ];
+}
+
+static Boolean __convertASCII2Bin( char* inASCII, byte* in) {
+  MemOp.set(in, 0, 32);
+  if( inASCII[0] != 'T') {
+    StrOp.replaceAll(inASCII, '\r', ' ');
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s", inASCII );
+    in[1] = 0xFF;
+    return False;
+  }
+  else {
+    int i = 0;
+    /*
+     * Tiiiiiiii l dd..[CR]
+     * T00360301 5 00 00 00 00 11 [CR] */
+    in[4] = inASCII[8] - '0';
+    in[1] = __HEXA2Byte(inASCII+2);
+
+    for( i = 0; i < in[4]; i++ ) {
+     in[5+i] = __HEXA2Byte(inASCII+10+(i*2));
+    }
+
+    return True;
+  }
+  return False;
+}
+
+
+static int __convertBin2ASCII( const byte* out, char* outASCII) {
+  int i = 0;
+  /*
+   * Tiiiiiiii l dd..[CR]
+   * T00360301 5 00 00 00 00 11 [CR] */
+  outASCII[0] = 'T';
+  outASCII[1] = '\0';
+
+  __Byte2HEXA(outASCII+1, out[0]);
+  __Byte2HEXA(outASCII+3, out[1]);
+  __Byte2HEXA(outASCII+5, out[2]);
+  __Byte2HEXA(outASCII+7, out[3]);
+  outASCII[9] = out[4] + '0';
+
+  for(i = 0; i < out[4]; i++ ) {
+    __Byte2HEXA(outASCII+10+(i*2), out[5+i]);
+  }
+  outASCII[10+(i*2)] = '\r';
+  outASCII[10+(i*2)+1] = '\0';
+
+  return StrOp.len(outASCII);
+}
+
+
 static void __reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
@@ -696,6 +763,7 @@ static void __reader( void* threadinst ) {
   int mod = 0;
   unsigned char store[1024];
   int retry = 0;
+  Boolean initASCII = False;
 
   for( mod = 0; mod < 1024; mod++) {
     store[mod] = 0;
@@ -706,6 +774,14 @@ static void __reader( void* threadinst ) {
 
   if( !data->udp && data->serial != NULL ) {
     SerialOp.flush(data->serial);
+    if( data->conOK ) {
+      if( wDigInt.isascii( data->ini ) ) {
+        const char* initCmd = "S5\rO\r";
+        if( SerialOp.write( data->serial, initCmd, StrOp.len(initCmd) ) ) {
+          initASCII = True;
+        }
+      }
+    }
   }
 
   do {
@@ -724,20 +800,53 @@ static void __reader( void* threadinst ) {
     }
     else {
       if( data->conOK ) {
+        /* Init ASCII protocol if needed. */
+        if( wDigInt.isascii( data->ini ) && !initASCII ) {
+          const char* initCmd = "S5\rO\rV\r";
+          if( SerialOp.write( data->serial, initCmd, StrOp.len(initCmd) ) ) {
+            initASCII = True;
+          }
+        }
+
         int available = SerialOp.available(data->serial);
         if( available > 0 ) {
-          int idx = 0;
-          while(SerialOp.available(data->serial) > 0 && idx < 13) {
-            if( SerialOp.read( data->serial, (char*)(in+idx), 1 ) ) {
-              if( SerialOp.available(data->serial) == 0 )
-                ThreadOp.sleep(10);
-              idx++;
+          if( wDigInt.isascii( data->ini ) ) {
+            char inASCII[64] = {'\0'};
+            Boolean CR = False;
+            int idx = 0;
+            while(SerialOp.available(data->serial) > 0 ) {
+              if( SerialOp.read( data->serial, (char*)(inASCII+idx), 1 ) ) {
+                if( SerialOp.available(data->serial) == 0 )
+                  ThreadOp.sleep(10);
+                idx++;
+                inASCII[idx] = '\0';
+                if( inASCII[idx-1] == '\r' ) {
+                  CR = True;
+                  break;
+                }
+              }
+              else {
+                break;
+              }
             }
-            else {
-              break;
+            if( CR ) {
+              __convertASCII2Bin(inASCII, in);
             }
           }
-          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "%d bytes read, nr of data bytes is %d", idx, in[4]&0x0F );
+          else {
+            int idx = 0;
+            while(SerialOp.available(data->serial) > 0 && idx < 13) {
+              if( SerialOp.read( data->serial, (char*)(in+idx), 1 ) ) {
+                if( SerialOp.available(data->serial) == 0 )
+                  ThreadOp.sleep(10);
+                idx++;
+              }
+              else {
+                break;
+              }
+            }
+            TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "%d bytes read, nr of data bytes is %d", idx, in[4]&0x0F );
+          }
 
         }
         else if( available == -1 || SerialOp.getRc(data->serial) > 0 ) {
@@ -755,14 +864,17 @@ static void __reader( void* threadinst ) {
           else break;
         }
       }
+      /* !data->conOK */
       else {
         ThreadOp.sleep(100);
         retry++;
         if( retry >= 50 ) {
           retry = 0;
           data->conOK = SerialOp.open( data->serial );
-          if(data->conOK)
+          if(data->conOK) {
             SerialOp.flush(data->serial);
+            initASCII = False;
+          }
         }
         if( data->run ) continue;
         else break;
@@ -830,8 +942,16 @@ static void __writer( void* threadinst ) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)cmd, 13 );
       if( data->udp )
         SocketOp.sendto( data->writeUDP, (char*)cmd, 13, NULL, 0 );
-      else
-        SerialOp.write( data->serial, (char*)cmd, 13 );
+      else {
+        if( wDigInt.isascii( data->ini ) ) {
+          char out[64] = {'\0'};
+          int len = __convertBin2ASCII(cmd, out);
+          SerialOp.write( data->serial, out, len );
+        }
+        else {
+          SerialOp.write( data->serial, (char*)cmd, 13 );
+        }
+      }
 
       freeMem( cmd );
     }
@@ -897,12 +1017,13 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device      [%s]", wDigInt.getdevice(data->ini) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps         [%d]", 500000 );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps         [%d]", wDigInt.isascii( data->ini )?115200:500000 );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  SLCAN       [%s]", wDigInt.isascii( data->ini )?"yes":"no" );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
     data->serial = SerialOp.inst( wDigInt.getdevice(data->ini) );
     SerialOp.setFlow( data->serial, cts );
-    SerialOp.setLine( data->serial, 500000, 8, 1, none, wDigInt.isrtsdisabled(data->ini) );
+    SerialOp.setLine( data->serial, wDigInt.isascii( data->ini )?115200:500000, 8, 1, none, wDigInt.isrtsdisabled(data->ini) );
     SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
     data->conOK = SerialOp.open( data->serial );
   }
