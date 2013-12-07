@@ -709,7 +709,7 @@ static Boolean __convertASCII2Bin( char* inASCII, byte* in) {
   MemOp.set(in, 0, 32);
   if( inASCII[0] != 'T') {
     StrOp.replaceAll(inASCII, '\r', ' ');
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s", inASCII );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "ASCII message: %s", inASCII );
     in[1] = 0xFF;
     return False;
   }
@@ -717,10 +717,11 @@ static Boolean __convertASCII2Bin( char* inASCII, byte* in) {
     int i = 0;
     /*
      * Tiiiiiiii l dd..[CR]
-     * T00360301 5 00 00 00 00 11 [CR] */
-    in[4] = inASCII[8] - '0';
+     * T0000030050000000001[CR] */
+    in[4] = inASCII[9] - '0';
     in[1] = __HEXA2Byte(inASCII+2);
 
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "ASCII to bin: len=%d", in[4] );
     for( i = 0; i < in[4]; i++ ) {
      in[5+i] = __HEXA2Byte(inASCII+10+(i*2));
     }
@@ -772,18 +773,6 @@ static void __reader( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 reader started." );
 
-  if( !data->udp && data->serial != NULL ) {
-    SerialOp.flush(data->serial);
-    if( data->conOK ) {
-      if( wDigInt.isascii( data->ini ) ) {
-        const char* initCmd = "S5\rO\r";
-        if( SerialOp.write( data->serial, initCmd, StrOp.len(initCmd) ) ) {
-          initASCII = True;
-        }
-      }
-    }
-  }
-
   do {
     MemOp.set(in, 0, 32);
     if( data->udp ) {
@@ -830,6 +819,7 @@ static void __reader( void* threadinst ) {
               }
             }
             if( CR ) {
+              TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "ASCII read: %s", inASCII );
               __convertASCII2Bin(inASCII, in);
             }
           }
@@ -939,16 +929,19 @@ static void __writer( void* threadinst ) {
   do {
     byte* cmd = (byte*)ThreadOp.getPost( th );
     if (cmd != NULL) {
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)cmd, 13 );
-      if( data->udp )
+      if( data->udp ) {
+        TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)cmd, 13 );
         SocketOp.sendto( data->writeUDP, (char*)cmd, 13, NULL, 0 );
+      }
       else {
         if( wDigInt.isascii( data->ini ) ) {
           char out[64] = {'\0'};
           int len = __convertBin2ASCII(cmd, out);
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "ASCII write: %s", out );
           SerialOp.write( data->serial, out, len );
         }
         else {
+          TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)cmd, 13 );
           SerialOp.write( data->serial, (char*)cmd, 13 );
         }
       }
