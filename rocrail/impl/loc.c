@@ -675,6 +675,7 @@ static void* __event( void* inst, const void* evt ) {
   if( StrOp.equals( wFunCmd.name(), NodeOp.getName(evtNode) ) && StrOp.equals( wLoc.fieldcmd, wLoc.getcmd(evtNode) ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "field function command for [%s] fnchanged=%d", wLoc.getid(data->props), wFunCmd.getfnchanged(evtNode) );
+    NodeOp.removeAttrByName(evtNode, "cmd");
     LocOp.cmd(inst, (iONode)NodeOp.base.clone(evtNode));
     return NULL;
   }
