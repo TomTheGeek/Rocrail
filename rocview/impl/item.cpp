@@ -2255,6 +2255,7 @@ void Symbol::OnInfo(wxCommandEvent& event) {
 }
 
 void Symbol::OnProps(wxCommandEvent& event) {
+  bool refresh = true;
   const char* name = NodeOp.getName( m_Props );
 
   if( StrOp.equals( wBlock.name(), name ) ) {
@@ -2262,7 +2263,6 @@ void Symbol::OnProps(wxCommandEvent& event) {
     blockDlg->ShowModal();
     updateLabel();
     Show(FALSE);
-    Refresh();
     Show(wBlock.isshow(m_Props));
     blockDlg->Destroy();
   }
@@ -2271,67 +2271,67 @@ void Symbol::OnProps(wxCommandEvent& event) {
     swDlg->ShowModal();
     sizeToScale();
     Show(wSwitch.isshow(m_Props));
-    Refresh();
     swDlg->Destroy();
   }
   else if( StrOp.equals( wSignal.name(), name ) ) {
     SignalDialog* sgDlg = new SignalDialog( this, m_Props );
     sgDlg->ShowModal();
-    Refresh();
     sgDlg->Destroy();
   }
   else if( StrOp.equals( wOutput.name(), name ) ) {
     OutputDialog* coDlg = new OutputDialog( this, m_Props );
     coDlg->ShowModal();
     Show(wOutput.isshow(m_Props));
-    Refresh();
     coDlg->Destroy();
   }
   else if( StrOp.equals( wFeedback.name(), name ) ) {
     FeedbackDialog* fbDlg = new FeedbackDialog( this, m_Props );
     fbDlg->ShowModal();
     Show(wFeedback.isshow(m_Props));
-    Refresh();
     fbDlg->Destroy();
   }
   else if( StrOp.equals( wRoute.name(), name ) ) {
     RouteDialog* dlg = new RouteDialog( this, m_Props );
     dlg->ShowModal();
     Show(wRoute.isshow(m_Props));
-    Refresh();
     dlg->Destroy();
   }
   else if( StrOp.equals( wTrack.name(), name ) ) {
     TrackDialog* tkDlg = new TrackDialog( this, m_Props );
     tkDlg->ShowModal();
-    Refresh();
     tkDlg->Destroy();
   }
   else if( StrOp.equals( wText.name(), name ) ) {
     TextDialog* txDlg = new TextDialog( this, m_Props );
     txDlg->ShowModal();
-    Refresh();
     txDlg->Destroy();
   }
   else if( StrOp.equals( wTurntable.name(), name ) ) {
     TurntableDialog* ttDlg = new TurntableDialog( this, m_Props );
     ttDlg->ShowModal();
-    Refresh();
     ttDlg->Destroy();
   }
   else if( StrOp.equals( wSelTab.name(), name ) ) {
     /* dialog for selection table */
     SelTabDialog* dlg = new SelTabDialog( this, m_Props );
     dlg->ShowModal();
-    Refresh();
     dlg->Destroy();
   }
   else if( StrOp.equals( wStage.name(), name ) ) {
     StageDlg* dlg = new StageDlg( this, m_Props );
     dlg->ShowModal();
-    Refresh();
     dlg->Destroy();
   }
+  else {
+    refresh = false;
+  }
+
+  if( refresh ) {
+    Refresh();
+    if( wxGetApp().isOffline() )
+      modelEvent(m_Props, False);
+  }
+
 }
 
 
