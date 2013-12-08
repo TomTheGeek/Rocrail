@@ -932,6 +932,29 @@ static void __reader( void* threadinst ) {
 }
 
 
+static void __discovery( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
+  iOMCS2Data data = Data(mcs2);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 discovery started." );
+
+  do {
+    byte*  msg   = allocMem(32);
+    ThreadOp.sleep(5000);
+    msg[0] = (ID_LOCO_DISCOVERY >> 7);
+    msg[1]  = ((ID_LOCO_DISCOVERY & 0x7F) << 1 );
+    msg[2]  = 0x00;
+    msg[3]  = 0x00;
+    msg[4]  = 1;
+    msg[5]  = 64;
+    ThreadOp.post( data->writer, (obj)msg );
+  } while( data->run );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 discovery stopped." );
+}
+
+
 static void __writer( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
@@ -1068,6 +1091,11 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   if( data->fbmod > 0 ) {
     data->feedbackReader = ThreadOp.inst( "fbreader", &__feedbackMCS2Reader, __MCS2 );
     ThreadOp.start( data->feedbackReader );
+  }
+
+  if( wMCS2.isdiscovery(data->mcs2ini) ) {
+    data->discovery = ThreadOp.inst( "discovery", &__discovery, __MCS2 );
+    ThreadOp.start( data->discovery );
   }
 
   instCnt++;

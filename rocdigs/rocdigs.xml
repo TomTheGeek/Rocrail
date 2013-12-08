@@ -895,6 +895,7 @@
       <var name="swtime" vt="int"/>
       <var name="power" vt="Boolean"/>
       <var name="sensor" vt="Boolean"/>
+      <var name="discovery" vt="iOThread"/>
       </data>
   </object>
 
