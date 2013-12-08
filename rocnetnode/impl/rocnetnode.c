@@ -1517,6 +1517,8 @@ static void __rocmousescanner( void* threadinst ) {
     byte baseio  = 0x3F;
     byte baseadc = 0x4F;
     byte fnLEDs  = 0;
+    Boolean buttonLights = False;
+    Boolean buttonFGroup = False;
 
     MutexOp.wait( data->i2cmux );
 
@@ -1627,10 +1629,8 @@ static void __rocmousescanner( void* threadinst ) {
           rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueRS1 );
           if( valueRS1 < 40 )
             data->rocmouses[idx]->dir = True;
-          /*
           else if( valueRS1 > 250 )
             data->rocmouses[idx]->V_raw = 0;
-          */
           else
             data->rocmouses[idx]->dir = False;
         }
@@ -1647,6 +1647,7 @@ static void __rocmousescanner( void* threadinst ) {
             if( valueS6 < 40 ) {
               data->rocmouses[idx]->lightstrig = 5;
               data->rocmouses[idx]->lights = !data->rocmouses[idx]->lights;
+              buttonLights = True;
             }
           }
           else {
@@ -1679,6 +1680,7 @@ static void __rocmousescanner( void* threadinst ) {
             data->rocmouses[idx]->fgroup++;
             if(data->rocmouses[idx]->fgroup > 6 )
               data->rocmouses[idx]->fgroup = 0;
+            buttonFGroup = True;
           }
           else {
             data->rocmouses[idx]->fgtrig--;
@@ -1737,9 +1739,9 @@ static void __rocmousescanner( void* threadinst ) {
         data->rocmouses[idx]->prev_lights = data->rocmouses[idx]->lights;
         MemOp.copy(data->rocmouses[idx]->prev_fn, data->rocmouses[idx]->fn, 8 * sizeof(int));
       }
-    }
-    else if( rc == -1 ) {
-      if( data->rocmouses[idx] != NULL ) {
+
+      /* Release loco. */
+      if( buttonLights && buttonFGroup ) {
         freeMem(data->rocmouses[idx]);
         data->rocmouses[idx] = NULL;
 
@@ -1763,6 +1765,10 @@ static void __rocmousescanner( void* threadinst ) {
         msg[RN_PACKET_DATA + 7] = 0;
         __sendRN(rocnetnode, msg);
       }
+
+    }
+
+    else if( rc == -1 ) {
     }
 
     MutexOp.post( data->i2cmux );
