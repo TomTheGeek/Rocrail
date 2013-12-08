@@ -897,6 +897,7 @@ static byte* __evaluateMobile( iOrocNet rocnet, byte* rn ) {
           StrOp.fmtb(fnkey, "f%d", i+1);
           fon = rn[RN_PACKET_DATA+3+i/8] & (0x01 << (i%8));
           NodeOp.setBool(nodeFn, fnkey, fon);
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "fnchanged=%d %s=%s", changedFn, fnkey, fon?"ON":"OFF");
         }
 
         data->listenerFun( data->listenerObj, nodeFn, TRCLEVEL_INFO );

@@ -1698,7 +1698,7 @@ static void __rocmousescanner( void* threadinst ) {
             if(data->rocmouses[idx]->strig[i] == 0) {
               data->rocmouses[idx]->strig[i] = 5;
               data->rocmouses[idx]->fn[data->rocmouses[idx]->fgroup] ^= (0x01 << i);
-              changedFn = data->rocmouses[idx]->fgroup * 4 + i;
+              changedFn = data->rocmouses[idx]->fgroup * 4 + i + 1;
             }
             else {
               data->rocmouses[idx]->strig[i]--;
