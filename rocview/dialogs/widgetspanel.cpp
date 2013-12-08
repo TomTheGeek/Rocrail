@@ -125,7 +125,11 @@ void WidgetsPanel::updateLoco(iONode node) {
   if( wLoc.getid( node ) != NULL && StrOp.len(wLoc.getid( node )) > 0 ) {
     LocoWidget* l_LocoWidget = (LocoWidget*)FindWindowByName(wxString(wLoc.getid( node ),wxConvUTF8));
     if( l_LocoWidget != NULL ) {
+      TraceOp.trc( "locopanel", TRCLEVEL_INFO, __LINE__, 9999, "update [%s] widget=%X", wLoc.getid( node ), l_LocoWidget );
       l_LocoWidget->UpdateLoco(node);
+    }
+    else {
+      TraceOp.trc( "locopanel", TRCLEVEL_INFO, __LINE__, 9999, "no widget found for [%s]", wLoc.getid( node ) );
     }
   }
 }
