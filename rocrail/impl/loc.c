@@ -661,8 +661,13 @@ static void* __event( void* inst, const void* evt ) {
   }
 
   if( StrOp.equals( wLoc.name(), NodeOp.getName(evtNode) ) && StrOp.equals( wLoc.fieldcmd, wLoc.getcmd(evtNode) ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "field command for [%s]", wLoc.getid(data->props) );
+    int V = __getVfromRaw(inst, evtNode);
+    int V_raw = wLoc.getV_raw(evtNode);
+    int V_rawMax = wLoc.getV_rawMax(evtNode);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "field command for [%s] V=%d V_raw=%d V_rawMax=%d", wLoc.getid(data->props), V, V_raw, V_rawMax );
     wLoc.setcmd(evtNode, wLoc.velocity );
+    wLoc.setV(evtNode, V );
     LocOp.cmd(inst, (iONode)NodeOp.base.clone(evtNode));
     return NULL;
   }
