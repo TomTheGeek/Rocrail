@@ -1769,6 +1769,7 @@ static void __rocmousescanner( void* threadinst ) {
     }
 
     else if( rc == -1 ) {
+      init = False;
     }
 
     MutexOp.post( data->i2cmux );
