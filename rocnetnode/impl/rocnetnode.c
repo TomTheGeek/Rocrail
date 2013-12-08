@@ -1519,6 +1519,7 @@ static void __rocmousescanner( void* threadinst ) {
     byte fnLEDs  = 0;
     Boolean buttonLights = False;
     Boolean buttonFGroup = False;
+    int changedFn = 0;
 
     MutexOp.wait( data->i2cmux );
 
@@ -1697,6 +1698,7 @@ static void __rocmousescanner( void* threadinst ) {
             if(data->rocmouses[idx]->strig[i] == 0) {
               data->rocmouses[idx]->strig[i] = 5;
               data->rocmouses[idx]->fn[data->rocmouses[idx]->fgroup] ^= (0x01 << i);
+              changedFn = data->rocmouses[idx]->fgroup * 4 + i;
             }
             else {
               data->rocmouses[idx]->strig[i]--;
@@ -1731,7 +1733,7 @@ static void __rocmousescanner( void* threadinst ) {
         msg[RN_PACKET_DATA + 4] = data->rocmouses[idx]->fn[2] + (data->rocmouses[idx]->fn[3] << 4);
         msg[RN_PACKET_DATA + 5] = data->rocmouses[idx]->fn[4] + (data->rocmouses[idx]->fn[5] << 4);
         msg[RN_PACKET_DATA + 6] = data->rocmouses[idx]->fn[6] + (data->rocmouses[idx]->fn[7] << 4);
-        msg[RN_PACKET_DATA + 7] = 0;
+        msg[RN_PACKET_DATA + 7] = changedFn & 0xFF;
         __sendRN(rocnetnode, msg);
 
         data->rocmouses[idx]->prev_V_raw  = data->rocmouses[idx]->V_raw;

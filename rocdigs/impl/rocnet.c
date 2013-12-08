@@ -877,6 +877,31 @@ static byte* __evaluateMobile( iOrocNet rocnet, byte* rn ) {
       wLoc.setcmd(nodeSpd, wLoc.fieldcmd);
 
       data->listenerFun( data->listenerObj, nodeSpd, TRCLEVEL_INFO );
+
+      if( rn[RN_PACKET_DATA+7] > 0 ) {
+        int i = 0;
+        int changedFn = rn[RN_PACKET_DATA+7];
+        iONode nodeFn = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+        wLoc.setthrottleid( nodeFn, key );
+        wFunCmd.setaddr(nodeFn, Mouse->lcaddr);
+        wFunCmd.setfnchanged(nodeFn, changedFn);
+        wFunCmd.setgroup(nodeFn, (changedFn-1)/4);
+
+        wFunCmd.setf0(nodeFn, (rn[RN_PACKET_DATA+2] & 0x02)?True:False);
+        wLoc.setiid( nodeFn, data->iid );
+        wLoc.setcmd(nodeFn, wLoc.fieldcmd);
+
+        for( i = 0; i < 28; i++ ) {
+          Boolean fon = False;
+          char fnkey[32] = {'\0'};
+          StrOp.fmtb(fnkey, "f%d", i+1);
+          fon = rn[RN_PACKET_DATA+3+i/8] & (0x01 << (i%8));
+          NodeOp.setBool(nodeFn, fnkey, fon);
+        }
+
+        data->listenerFun( data->listenerObj, nodeFn, TRCLEVEL_INFO );
+      }
+
     }
     break;
   }
