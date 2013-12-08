@@ -793,6 +793,19 @@ static void __reader( void* threadinst ) {
         if( wDigInt.isascii( data->ini ) && !initASCII ) {
           const char* initCmd = "S5\rO\rV\r";
           if( SerialOp.write( data->serial, initCmd, StrOp.len(initCmd) ) ) {
+            byte cmd[32];
+            char out[64] = {'\0'};
+            int len = 0;
+            MemOp.set(cmd, 0, 32);
+            cmd[0] = (0x360301 & 0xFF000000) >> 24;
+            cmd[1] = (0x360301 & 0x00FF0000) >> 16;
+            cmd[2] = (0x360301 & 0x0000FF00) >> 8;
+            cmd[3] = (0x360301 & 0x000000FF);
+            cmd[4] = 5;
+            cmd[9] = 0x11;
+            len = __convertBin2ASCII(cmd, out);
+            TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "ASCII write: %s", out );
+            SerialOp.write( data->serial, out, len );
             initASCII = True;
           }
         }
