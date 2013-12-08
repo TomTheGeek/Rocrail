@@ -59,6 +59,7 @@ WidgetsPanel::WidgetsPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos,
   Connect( wxEVT_SIZE, wxSizeEventHandler( WidgetsPanel::OnPanelSize ) );
 
   m_Widgets = ListOp.inst();
+  m_WidgetsMap = MapOp.inst();
 }
 
 WidgetsPanel::~WidgetsPanel()
@@ -73,6 +74,7 @@ WidgetsPanel::~WidgetsPanel()
   }
 
   ListOp.base.del(m_Widgets);
+  MapOp.base.del(m_WidgetsMap);
 }
 
 
@@ -105,6 +107,7 @@ void WidgetsPanel::initView(iOList list) {
   }
 
   ListOp.clear(m_Widgets);
+  MapOp.clear(m_WidgetsMap);
 
   for( int i = 0; i < ListOp.size( list ); i++ ) {
     iONode lc = (iONode)ListOp.get( list, i );
@@ -112,6 +115,7 @@ void WidgetsPanel::initView(iOList list) {
       LocoWidget* l_LocoWidget = new LocoWidget(this, lc, m_WidgetWidth);
       m_GridSizer->Add(l_LocoWidget);
       ListOp.add(m_Widgets, (obj)l_LocoWidget);
+      MapOp.put(m_WidgetsMap, wLoc.getid(lc), (obj)l_LocoWidget);
     }
   }
 
@@ -123,7 +127,8 @@ void WidgetsPanel::initView(iOList list) {
 
 void WidgetsPanel::updateLoco(iONode node) {
   if( wLoc.getid( node ) != NULL && StrOp.len(wLoc.getid( node )) > 0 ) {
-    LocoWidget* l_LocoWidget = (LocoWidget*)FindWindowByName(wxString(wLoc.getid( node ),wxConvUTF8));
+    //LocoWidget* l_LocoWidget = (LocoWidget*)FindWindowByName(wxString(wLoc.getid( node ),wxConvUTF8));
+    LocoWidget* l_LocoWidget = (LocoWidget*)MapOp.get(m_WidgetsMap, wLoc.getid( node ));
     if( l_LocoWidget != NULL ) {
       TraceOp.trc( "locopanel", TRCLEVEL_INFO, __LINE__, 9999, "update [%s] widget=%X", wLoc.getid( node ), l_LocoWidget );
       l_LocoWidget->UpdateLoco(node);
