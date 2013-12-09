@@ -61,6 +61,7 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/BinCmd.h"
+#include "rocrail/wrapper/public/Product.h"
 
 #include "rocutils/public/addr.h"
 
@@ -658,6 +659,63 @@ static void __evaluateMCS2Switch( iOMCS2Data mcs2, byte* in ) {
   mcs2->listenerFun( mcs2->listenerObj, nodeC, TRCLEVEL_INFO );
 }
 
+
+static iONode __getUID(iOMCS2Data data, int uid) {
+  int sid = 100;
+  iONode loco = wMCS2.getproduct(data->mcs2ini);
+
+  while( loco != NULL ) {
+    if( wProduct.getsid(loco) > sid ) {
+      sid = wProduct.getsid(loco);
+    }
+    if( wProduct.getpid(loco) == uid ) {
+      return loco;
+    }
+    loco = wMCS2.nextproduct(data->mcs2ini, loco);
+  }
+
+  loco = NodeOp.inst(wProduct.name(), data->mcs2ini, ELEMENT_NODE);
+  NodeOp.addChild(data->mcs2ini, loco);
+  wProduct.setpid( loco, uid);
+  wProduct.setsid( loco, sid+1);
+  return loco;
+}
+
+static void __evaluateMCS2Discovery( iOMCS2Data mcs2, byte* in ) {
+  int dlc = in[4];
+  if( dlc == 5 || dlc == 6 ) {
+    int uid = (in[5] << 24) + (in[6] << 16) + (in[7] << 8) + in[8];
+    if( wMCS2.isdiscovery(mcs2->mcs2ini) ) {
+      byte*  msg   = allocMem(32);
+      iONode loco = __getUID(mcs2, uid);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Discovery UID=0x%04X bind to address %d", uid, wProduct.getsid(loco) );
+
+      msg[0] = (CMD_LOCO_BIND >> 7);
+      msg[1]  = ((CMD_LOCO_BIND & 0x7F) << 1 );
+      msg[2]  = 0x00;
+      msg[3]  = 0x00;
+      msg[4]  = 6;
+      msg[5]  = in[5];
+      msg[6]  = in[6];
+      msg[7]  = in[7];
+      msg[8]  = in[8];
+
+      msg[9]  = (wProduct.getsid(loco) % 256) & 0xFF;
+      msg[10] = (wProduct.getsid(loco) / 256) & 0xFF;
+
+      ThreadOp.post( mcs2->writer, (obj)msg );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Discovery UID=0x%04X (bind is not activated)", uid );
+    }
+
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Discovery echo. dlc=%d", dlc );
+  }
+}
+
+
 static void __evaluateCCSwitch( iOMCS2Data mcs2, byte* in ) {
   int addr1 = in[7] & 0x0F;
   /* mask left nibble of high byte, this is not part of the actual address (always 0x3 for accessory) */
@@ -719,7 +777,10 @@ static Boolean __convertASCII2Bin( char* inASCII, byte* in) {
      * Tiiiiiiii l dd..[CR]
      * T0000030050000000001[CR] */
     in[4] = inASCII[9] - '0';
-    in[1] = __HEXA2Byte(inASCII+2);
+    in[0] = __HEXA2Byte(inASCII+1);
+    in[1] = __HEXA2Byte(inASCII+3);
+    in[2] = __HEXA2Byte(inASCII+5);
+    in[3] = __HEXA2Byte(inASCII+7);
 
     TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "ASCII to bin: len=%d", in[4] );
     for( i = 0; i < in[4]; i++ ) {
@@ -920,6 +981,9 @@ static void __reader( void* threadinst ) {
       /* CC-Schnitte */
       __evaluateCCSwitch( data, in );
     }
+    else if( in[1] == ID_LOCO_DISCOVERY ) {
+      __evaluateMCS2Discovery( data, in );
+    }
     else {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Unhandled packet: CAN-ID=0x%02X len=%d", in[1]&0xFF, in[4]&0x0F );
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 13 );
@@ -942,12 +1006,12 @@ static void __discovery( void* threadinst ) {
   do {
     byte*  msg   = allocMem(32);
     ThreadOp.sleep(5000);
-    msg[0] = (ID_LOCO_DISCOVERY >> 7);
-    msg[1]  = ((ID_LOCO_DISCOVERY & 0x7F) << 1 );
+    msg[0] = (CMD_LOCO_DISCOVERY >> 7);
+    msg[1]  = ((CMD_LOCO_DISCOVERY & 0x7F) << 1 );
     msg[2]  = 0x00;
     msg[3]  = 0x00;
     msg[4]  = 1;
-    msg[5]  = 64;
+    msg[5]  = 96;
     ThreadOp.post( data->writer, (obj)msg );
   } while( data->run );
 
@@ -1045,9 +1109,10 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
     data->conOK = True;
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device      [%s]", wDigInt.getdevice(data->ini) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps         [%d]", wDigInt.isasciiprotocol( data->ini )?115200:500000 );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  SLCAN       [%s]", wDigInt.isasciiprotocol( data->ini )?"yes":"no" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device         [%s]", wDigInt.getdevice(data->ini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps            [%d]", wDigInt.isasciiprotocol( data->ini )?115200:500000 );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  SLCAN          [%s]", wDigInt.isasciiprotocol( data->ini )?"yes":"no" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  discovery&bind [%s]", wMCS2.isdiscovery(data->mcs2ini)?"yes":"no" );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
     data->serial = SerialOp.inst( wDigInt.getdevice(data->ini) );

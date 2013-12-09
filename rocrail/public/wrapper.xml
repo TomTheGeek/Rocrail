@@ -111,6 +111,7 @@
       <var name="vid" vt="int" defval="0" range="0-*" remark="Vendor ID"/>
       <var name="pid" vt="int" defval="0" range="0-*" remark="Product ID"/>
       <var name="cid" vt="int" defval="0" range="0-*" remark="Class ID"/>
+      <var name="sid" vt="int" defval="0" range="0-*" remark="System ID"/>
       <var name="cidext" vt="int" defval="0" range="0-*" remark="Class ID extension"/>
       <var name="desc" vt="string" defval="" range="*" remark="Description"/>
       <var name="url" vt="string" defval="" range="*" remark="Documentation URL"/>

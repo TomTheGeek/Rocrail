@@ -130,6 +130,7 @@ public:
     wxCheckBox* m_LocoList;
     wxCheckBox* m_CTS;
     wxCheckBox* m_SLCAN;
+    wxCheckBox* m_Discovery;
     wxButton* m_SertFbAddr;
     wxSpinCtrl* m_FbAddr;
     wxButton* m_OK;

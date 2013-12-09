@@ -25,6 +25,7 @@
 #include "ecosdlg.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/MCS2.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocview/public/guiapp.h"
 #include "rocs/public/strtok.h"
@@ -46,9 +47,13 @@ BEGIN_EVENT_TABLE( ECoSCtrlDialog, wxDialog )
 
 ////@begin ECoSCtrlDialog event table entries
     EVT_RADIOBOX( ID_SUBLIB, ECoSCtrlDialog::OnSublibSelected )
+
     EVT_BUTTON( ID_BUTTON_SET_FBADDR, ECoSCtrlDialog::OnButtonSetFbaddrClick )
+
     EVT_BUTTON( wxID_OK, ECoSCtrlDialog::OnOkClick )
+
     EVT_BUTTON( wxID_CANCEL, ECoSCtrlDialog::OnCancelClick )
+
 ////@end ECoSCtrlDialog event table entries
 
 END_EVENT_TABLE()
@@ -73,9 +78,15 @@ ECoSCtrlDialog::ECoSCtrlDialog( wxWindow* parent, iONode props, const char* devi
   if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) ) {
     m_Port->Enable(false);
     this->SetTitle( _T("CS2") );
+    if( wDigInt.getmcs2(m_Props) == NULL ) {
+      iONode mcs2 = NodeOp.inst(wMCS2.name(), m_Props, ELEMENT_NODE);
+      NodeOp.addChild(m_Props, mcs2);
+    }
   }
   else {
     m_FBMod->Enable(false);
+    m_Discovery->Enable(false);
+    m_SLCAN->Enable(false);
   }
 
   GetSizer()->Fit(this);
@@ -128,6 +139,11 @@ void ECoSCtrlDialog::initValues() {
 
   m_CTS->SetValue(  StrOp.equals( wDigInt.getflow( m_Props ), wDigInt.cts ) );
   m_SLCAN->SetValue( wDigInt.isasciiprotocol( m_Props ) );
+  m_Discovery->SetValue(false);
+
+  if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) ) {
+    m_Discovery->SetValue( wMCS2.isdiscovery(wDigInt.getmcs2( m_Props )) );
+  }
 
   SublibSelected();
 
@@ -151,6 +167,10 @@ void ECoSCtrlDialog::evaluate() {
   wDigInt.setlocolist( m_Props, m_LocoList->IsChecked()?True:False );
   wDigInt.setflow( m_Props, m_CTS->IsChecked()?wDigInt.cts:wDigInt.none );
   wDigInt.setasciiprotocol( m_Props, m_SLCAN->IsChecked()?True:False );
+
+  if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) ) {
+    wMCS2.setdiscovery(wDigInt.getmcs2( m_Props), m_Discovery->IsChecked()?True:False );
+  }
 
 }
 
@@ -210,6 +230,7 @@ void ECoSCtrlDialog::Init()
     m_LocoList = NULL;
     m_CTS = NULL;
     m_SLCAN = NULL;
+    m_Discovery = NULL;
     m_SertFbAddr = NULL;
     m_FbAddr = NULL;
     m_OK = NULL;
@@ -242,7 +263,7 @@ void ECoSCtrlDialog::CreateControls()
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( itemPanel3, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_IID = new wxTextCtrl( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_IID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -255,13 +276,13 @@ void ECoSCtrlDialog::CreateControls()
     itemFlexGridSizer6->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labHost = new wxStaticText( itemPanel3, wxID_ANY, _("Host"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_labHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Host = new wxTextCtrl( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
     itemFlexGridSizer6->Add(m_Host, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labPort = new wxStaticText( itemPanel3, wxID_ANY, _("Port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
+    itemFlexGridSizer6->Add(m_labPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Port = new wxTextCtrl( itemPanel3, wxID_ANY, _("15471"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Port->SetMaxLength(5);
@@ -311,26 +332,30 @@ void ECoSCtrlDialog::CreateControls()
     m_SLCAN->SetValue(false);
     itemStaticBoxSizer21->Add(m_SLCAN, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer26 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemStaticBoxSizer21->Add(itemFlexGridSizer26, 0, wxALIGN_LEFT, 5);
+    m_Discovery = new wxCheckBox( itemPanel3, wxID_ANY, _("Discovery"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Discovery->SetValue(false);
+    itemStaticBoxSizer21->Add(m_Discovery, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer27 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemStaticBoxSizer21->Add(itemFlexGridSizer27, 0, wxALIGN_LEFT, 5);
 
     m_SertFbAddr = new wxButton( itemPanel3, ID_BUTTON_SET_FBADDR, _("Program FB"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer26->Add(m_SertFbAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer27->Add(m_SertFbAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_FbAddr = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 255, 0 );
-    itemFlexGridSizer26->Add(m_FbAddr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer27->Add(m_FbAddr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer29 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer30 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer29, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer30, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer29->AddButton(m_OK);
+    itemStdDialogButtonSizer30->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer29->AddButton(m_Cancel);
+    itemStdDialogButtonSizer30->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer29->Realize();
+    itemStdDialogButtonSizer30->Realize();
 
 ////@end ECoSCtrlDialog content construction
 }
