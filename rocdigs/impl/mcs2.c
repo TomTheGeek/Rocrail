@@ -700,8 +700,8 @@ static void __evaluateMCS2Discovery( iOMCS2Data mcs2, byte* in ) {
       msg[7]  = in[7];
       msg[8]  = in[8];
 
-      msg[9]  = (wProduct.getsid(loco) % 256) & 0xFF;
-      msg[10] = (wProduct.getsid(loco) / 256) & 0xFF;
+      msg[9]  = (wProduct.getsid(loco) / 256) & 0xFF;
+      msg[10] = (wProduct.getsid(loco) % 256) & 0xFF;
 
       ThreadOp.post( mcs2->writer, (obj)msg );
     }
@@ -1013,6 +1013,21 @@ static void __discovery( void* threadinst ) {
     msg[4]  = 1;
     msg[5]  = 96;
     ThreadOp.post( data->writer, (obj)msg );
+
+    /* Test
+    msg   = allocMem(32);
+    ThreadOp.sleep(500);
+    msg[0] = (CMD_LOCO_DISCOVERY >> 7);
+    msg[1]  = ((CMD_LOCO_DISCOVERY & 0x7F) << 1 );
+    msg[2]  = 0x00;
+    msg[3]  = 0x00;
+    msg[4]  = 5;
+    msg[5]  = 0x11;
+    msg[6]  = 0x22;
+    msg[7]  = 0x33;
+    msg[8]  = 0x44;
+    ThreadOp.post( data->writer, (obj)msg );
+    */
   } while( data->run );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 discovery stopped." );
