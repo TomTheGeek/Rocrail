@@ -1520,6 +1520,7 @@ static void __rocmousescanner( void* threadinst ) {
     Boolean buttonLights = False;
     Boolean buttonFGroup = False;
     int changedFn = 0;
+    Boolean dirHalt = False;
 
     MutexOp.wait( data->i2cmux );
 
@@ -1558,43 +1559,57 @@ static void __rocmousescanner( void* threadinst ) {
     if( !init )
       rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 );
 
-    if( rc >= 0 || data->stress ) {
+    if( rc >= 0 ) {
+      byte ctrl     = 0x40; /* analog out active and auto increment */
+      byte valueP1  = 0;
+      byte valueRS1 = 0;
+      byte valueS6  = 0;
+
       if( data->rocmouses[idx] == NULL ) {
         data->rocmouses[idx] = allocMem(sizeof( struct RocMouse));
       }
 
-      init = True;
+
       /*
-      * 0x01 D0 = LED1 0x04
-      * 0x02 D1 = LED2 0x02
-      * 0x04 D2 = LED3 0x01
-      fnLEDs = 0;
-      fnLEDs |= ((data->rocmouses[idx]->fgroup+1) & 0x01) ? 0x04:0x00;
-      fnLEDs |= ((data->rocmouses[idx]->fgroup+1) & 0x02) ? 0x02:0x00;
-      fnLEDs |= ((data->rocmouses[idx]->fgroup+1) & 0x04) ? 0x01:0x00;
-
-      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + fnLEDs );
-      */
-      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + ((6-data->rocmouses[idx]->fgroup) + 1) );
-
-      /* read inputs (S1-S5) */
-      rc = raspiReadI2C(data->i2cdescriptor, baseio, &data->rocmouses[idx]->io);
-
-      if( rc == -1 && data->stress ) {
-        data->rocmouses[idx]->V_raw += 4;
-        if(data->rocmouses[idx]->V_raw > 127 ) {
-          data->rocmouses[idx]->V_raw = 0;
-          data->rocmouses[idx]->dir = !data->rocmouses[idx]->dir;
-          data->rocmouses[idx]->lights = !data->rocmouses[idx]->lights;
+       * All I/O.
+       */
+      if( rc >= 0 ) /* write function group LEDs */
+        rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + ((6-data->rocmouses[idx]->fgroup) + 1) );
+      if( rc >= 0 ) /* read inputs (S1-S5) */
+        rc = raspiReadI2C(data->i2cdescriptor, baseio, &data->rocmouses[idx]->io);
+      if( rc >= 0 ) /* write control register for P1 */
+        rc = raspiWriteI2C(data->i2cdescriptor, baseadc, ctrl+RM_P1 );
+      if( rc >= 0 ) /* read previous */
+        rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueP1 );
+      if( rc >= 0 ) /* read P1 */
+        rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueP1 );
+      if( rc >= 0 ) /* write control register for RS1 */
+        rc = raspiWriteI2C(data->i2cdescriptor, baseadc, ctrl+RM_RS1 );
+      if( rc >= 0 ) /* read previous */
+        rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueRS1 );
+      if( rc >= 0 ) /* read RS1 */
+        rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueRS1 );
+      if( rc >= 0 ) { /* running LED */
+        runLEDcnt++;
+        if( runLEDcnt >= 10 ) {
+          runLEDcnt = 0;
+          rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, runLED?255:0 );
+          runLED = !runLED;
         }
+      }
+
+
+      if( rc == -1 ) {
+        init = False;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "error during I/O operations with the RocMouse %d", idx);
       }
       else {
         int i = 0;
-        byte ctrl     = 0x40; /* analog out active and auto increment */
-        byte valueP1  = 0;
-        byte valueRS1 = 0;
-        byte valueS6  = 0;
+        float V = 0.0;
+        float Voffset = 20.0;
+        float steps = 28.0;
 
+        init = True;
         /* Velocity
          *
          * Moving average
@@ -1603,24 +1618,14 @@ static void __rocmousescanner( void* threadinst ) {
          * (3 x old value + new value) / 4
          *
          * */
-        rc = raspiWriteI2C(data->i2cdescriptor, baseadc, ctrl+RM_P1 );
-        rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueP1 );
-        if( rc != -1 ) {
-          float V = 0.0;
-          float Voffset = 20.0;
-          rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueP1 );
-          data->rocmouses[idx]->P1 = ((data->rocmouses[idx]->P1 * 2) + valueP1) / 3;
-          valueP1 = data->rocmouses[idx]->P1;
-          /* P1 range is 20-255 */
-          if( valueP1 < Voffset )
-            Voffset = valueP1;
-          V = valueP1 - Voffset;
-          V = (28.0 / (255.0-Voffset)) * V;
-          data->rocmouses[idx]->V_raw = (int)V;
-        }
-        else {
-          valueP1 = 0;
-        }
+        data->rocmouses[idx]->P1 = ((data->rocmouses[idx]->P1 * 2) + valueP1) / 3;
+        valueP1 = data->rocmouses[idx]->P1;
+        /* P1 range is 20-255 */
+        if( valueP1 < Voffset )
+          Voffset = valueP1;
+        V = valueP1 - Voffset;
+        V = (steps / (255.0 - Voffset)) * V;
+        data->rocmouses[idx]->V_raw = (int)V;
 
 
         /* Direction */
@@ -1630,8 +1635,10 @@ static void __rocmousescanner( void* threadinst ) {
           rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueRS1 );
           if( valueRS1 < 40 )
             data->rocmouses[idx]->dir = True;
-          else if( valueRS1 > 250 )
+          else if( valueRS1 > 200 ) {
             data->rocmouses[idx]->V_raw = 0;
+            dirHalt = True;
+          }
           else
             data->rocmouses[idx]->dir = False;
         }
@@ -1640,32 +1647,20 @@ static void __rocmousescanner( void* threadinst ) {
         }
 
         /* Lights */
-        rc = raspiWriteI2C(data->i2cdescriptor, baseadc, ctrl+RM_S6 );
-        rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueS6 );
-        if( rc != -1 ) {
-          rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueS6 );
-          if( data->rocmouses[idx]->lightstrig == 0) {
-            if( valueS6 < 40 ) {
-              data->rocmouses[idx]->lightstrig = 5;
-              data->rocmouses[idx]->lights = !data->rocmouses[idx]->lights;
+        if( data->rocmouses[idx]->lightstrig == 0) {
+          if( valueS6 < 40 ) {
+            if( dirHalt ) {
               buttonLights = True;
             }
-          }
-          else {
-            if(data->rocmouses[idx]->lightstrig > 0)
-              data->rocmouses[idx]->lightstrig--;
+            else {
+              data->rocmouses[idx]->lightstrig = 5;
+              data->rocmouses[idx]->lights = !data->rocmouses[idx]->lights;
+            }
           }
         }
         else {
-          valueS6 = 0;
-        }
-
-        /* running LED */
-        runLEDcnt++;
-        if( runLEDcnt >= 10 ) {
-          runLEDcnt = 0;
-          rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, runLED?255:0 );
-          runLED = !runLED;
+          if(data->rocmouses[idx]->lightstrig > 0)
+            data->rocmouses[idx]->lightstrig--;
         }
 
         /* Invert digital input */
@@ -1678,10 +1673,14 @@ static void __rocmousescanner( void* threadinst ) {
         if( data->rocmouses[idx]->io & 0x08 ) {
           if(data->rocmouses[idx]->fgtrig == 0) {
             data->rocmouses[idx]->fgtrig = 5;
-            data->rocmouses[idx]->fgroup++;
-            if(data->rocmouses[idx]->fgroup > 6 )
-              data->rocmouses[idx]->fgroup = 0;
-            buttonFGroup = True;
+            if( dirHalt ) {
+              buttonFGroup = True;
+            }
+            else {
+              data->rocmouses[idx]->fgroup++;
+              if(data->rocmouses[idx]->fgroup > 6 )
+                data->rocmouses[idx]->fgroup = 0;
+            }
           }
           else {
             data->rocmouses[idx]->fgtrig--;
@@ -1709,69 +1708,67 @@ static void __rocmousescanner( void* threadinst ) {
               data->rocmouses[idx]->strig[i]--;
           }
         }
+
+
+        if( data->rocmouses[idx]->V_raw != data->rocmouses[idx]->prev_V_raw ||
+            data->rocmouses[idx]->dir != data->rocmouses[idx]->prev_dir ||
+            data->rocmouses[idx]->lights != data->rocmouses[idx]->prev_lights ||
+            !MemOp.cmp(data->rocmouses[idx]->fn, data->rocmouses[idx]->prev_fn, 8 * sizeof(int))
+            )
+        {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "RocMouse 0x%02X V=%d dir=%d lights=%d", baseio, data->rocmouses[idx]->V_raw, data->rocmouses[idx]->dir, data->rocmouses[idx]->lights );
+          msg[RN_PACKET_NETID] = data->location;
+          msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
+          rnSenderAddresToPacket( data->id, msg, 0 );
+          msg[RN_PACKET_ACTION] = RN_MOBILE_ROCMOUSE;
+          msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+          msg[RN_PACKET_LEN] = 9;
+          msg[RN_PACKET_DATA + 0] = baseio & 0xFF; /* base address */
+          msg[RN_PACKET_DATA + 1] = data->rocmouses[idx]->V_raw & 0x7F;
+          msg[RN_PACKET_DATA + 2] = data->rocmouses[idx]->dir + (data->rocmouses[idx]->lights << 1);
+          msg[RN_PACKET_DATA + 3] = data->rocmouses[idx]->fn[0] + (data->rocmouses[idx]->fn[1] << 4);
+          msg[RN_PACKET_DATA + 4] = data->rocmouses[idx]->fn[2] + (data->rocmouses[idx]->fn[3] << 4);
+          msg[RN_PACKET_DATA + 5] = data->rocmouses[idx]->fn[4] + (data->rocmouses[idx]->fn[5] << 4);
+          msg[RN_PACKET_DATA + 6] = data->rocmouses[idx]->fn[6] + (data->rocmouses[idx]->fn[7] << 4);
+          msg[RN_PACKET_DATA + 7] = changedFn & 0xFF;
+          msg[RN_PACKET_DATA + 8] = (((int)steps) & 0x7F);
+          __sendRN(rocnetnode, msg);
+
+          data->rocmouses[idx]->prev_V_raw  = data->rocmouses[idx]->V_raw;
+          data->rocmouses[idx]->prev_dir    = data->rocmouses[idx]->dir;
+          data->rocmouses[idx]->prev_lights = data->rocmouses[idx]->lights;
+          MemOp.copy(data->rocmouses[idx]->prev_fn, data->rocmouses[idx]->fn, 8 * sizeof(int));
+        }
+
+        /* Release loco. */
+        if( dirHalt && buttonLights && buttonFGroup ) {
+          freeMem(data->rocmouses[idx]);
+          data->rocmouses[idx] = NULL;
+
+          init = False;
+
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocmouse detached");
+
+          msg[RN_PACKET_NETID] = data->location;
+          msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
+          rnSenderAddresToPacket( data->id, msg, 0 );
+          msg[RN_PACKET_ACTION] = RN_MOBILE_ROCMOUSE;
+          msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+          msg[RN_PACKET_LEN] = 8;
+          msg[RN_PACKET_DATA + 0] = (baseio+0x80) & 0xFF; /* base address */
+          msg[RN_PACKET_DATA + 1] = 0;
+          msg[RN_PACKET_DATA + 2] = 0;
+          msg[RN_PACKET_DATA + 3] = 0;
+          msg[RN_PACKET_DATA + 4] = 0;
+          msg[RN_PACKET_DATA + 5] = 0;
+          msg[RN_PACKET_DATA + 6] = 0;
+          msg[RN_PACKET_DATA + 7] = 0;
+          __sendRN(rocnetnode, msg);
+        }
+
       }
 
-
-      if( data->rocmouses[idx]->V_raw != data->rocmouses[idx]->prev_V_raw ||
-          data->rocmouses[idx]->dir != data->rocmouses[idx]->prev_dir ||
-          data->rocmouses[idx]->lights != data->rocmouses[idx]->prev_lights ||
-          !MemOp.cmp(data->rocmouses[idx]->fn, data->rocmouses[idx]->prev_fn, 8 * sizeof(int))
-          )
-      {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "RocMouse 0x%02X V=%d dir=%d lights=%d", baseio, data->rocmouses[idx]->V_raw, data->rocmouses[idx]->dir, data->rocmouses[idx]->lights );
-        msg[RN_PACKET_NETID] = data->location;
-        msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
-        rnSenderAddresToPacket( data->id, msg, 0 );
-        msg[RN_PACKET_ACTION] = RN_MOBILE_ROCMOUSE;
-        msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-        msg[RN_PACKET_LEN] = 8;
-        msg[RN_PACKET_DATA + 0] = baseio & 0xFF; /* base address */
-        msg[RN_PACKET_DATA + 1] = data->rocmouses[idx]->V_raw & 0x7F;
-        msg[RN_PACKET_DATA + 2] = data->rocmouses[idx]->dir + (data->rocmouses[idx]->lights << 1);
-        msg[RN_PACKET_DATA + 3] = data->rocmouses[idx]->fn[0] + (data->rocmouses[idx]->fn[1] << 4);
-        msg[RN_PACKET_DATA + 4] = data->rocmouses[idx]->fn[2] + (data->rocmouses[idx]->fn[3] << 4);
-        msg[RN_PACKET_DATA + 5] = data->rocmouses[idx]->fn[4] + (data->rocmouses[idx]->fn[5] << 4);
-        msg[RN_PACKET_DATA + 6] = data->rocmouses[idx]->fn[6] + (data->rocmouses[idx]->fn[7] << 4);
-        msg[RN_PACKET_DATA + 7] = changedFn & 0xFF;
-        __sendRN(rocnetnode, msg);
-
-        data->rocmouses[idx]->prev_V_raw  = data->rocmouses[idx]->V_raw;
-        data->rocmouses[idx]->prev_dir    = data->rocmouses[idx]->dir;
-        data->rocmouses[idx]->prev_lights = data->rocmouses[idx]->lights;
-        MemOp.copy(data->rocmouses[idx]->prev_fn, data->rocmouses[idx]->fn, 8 * sizeof(int));
-      }
-
-      /* Release loco. */
-      if( buttonLights && buttonFGroup ) {
-        freeMem(data->rocmouses[idx]);
-        data->rocmouses[idx] = NULL;
-
-        init = False;
-
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocmouse detached");
-
-        msg[RN_PACKET_NETID] = data->location;
-        msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
-        rnSenderAddresToPacket( data->id, msg, 0 );
-        msg[RN_PACKET_ACTION] = RN_MOBILE_ROCMOUSE;
-        msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-        msg[RN_PACKET_LEN] = 8;
-        msg[RN_PACKET_DATA + 0] = (baseio+0x80) & 0xFF; /* base address */
-        msg[RN_PACKET_DATA + 1] = 0;
-        msg[RN_PACKET_DATA + 2] = 0;
-        msg[RN_PACKET_DATA + 3] = 0;
-        msg[RN_PACKET_DATA + 4] = 0;
-        msg[RN_PACKET_DATA + 5] = 0;
-        msg[RN_PACKET_DATA + 6] = 0;
-        msg[RN_PACKET_DATA + 7] = 0;
-        __sendRN(rocnetnode, msg);
-      }
-
-    }
-
-    else if( rc == -1 ) {
-      init = False;
     }
 
     MutexOp.post( data->i2cmux );

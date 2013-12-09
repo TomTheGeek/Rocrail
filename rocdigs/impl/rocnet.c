@@ -870,7 +870,10 @@ static byte* __evaluateMobile( iOrocNet rocnet, byte* rn ) {
       wLoc.setthrottleid( nodeSpd, key );
       wLoc.setaddr(nodeSpd, Mouse->lcaddr);
       wLoc.setV_raw(nodeSpd, rn[RN_PACKET_DATA+1]);
-      wLoc.setV_rawMax(nodeSpd, 28);
+      if( rn[RN_PACKET_DATA+8] > 0 )
+        wLoc.setV_rawMax(nodeSpd, rn[RN_PACKET_DATA+8]);
+      else
+        wLoc.setV_rawMax(nodeSpd, 28);
       wLoc.setdir(nodeSpd, (rn[RN_PACKET_DATA+2] & 0x01)?True:False);
       wLoc.setfn(nodeSpd, (rn[RN_PACKET_DATA+2] & 0x02)?True:False);
       wLoc.setiid( nodeSpd, data->iid );
