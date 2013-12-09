@@ -704,6 +704,19 @@ static void __evaluateMCS2Discovery( iOMCS2Data mcs2, byte* in ) {
       msg[10] = (wProduct.getsid(loco) % 256) & 0xFF;
 
       ThreadOp.post( mcs2->writer, (obj)msg );
+
+      /* Send UID & SID to the Rocrail server. */
+      {
+        char ident[32] = {'\0'};
+        iONode lc = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+        wLoc.setaddr( lc, wProduct.getsid(loco));
+        StrOp.fmtb(ident, "%d", uid);
+        wLoc.setidentifier(lc, ident);
+        wLoc.setcmd(lc, wLoc.discover);
+        if( mcs2->iid != NULL )
+          wLoc.setiid( lc, mcs2->iid );
+        mcs2->listenerFun( mcs2->listenerObj, lc, TRCLEVEL_INFO );
+      }
     }
     else {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Discovery UID=0x%04X (bind is not activated)", uid );
@@ -1014,7 +1027,6 @@ static void __discovery( void* threadinst ) {
     msg[5]  = 96;
     ThreadOp.post( data->writer, (obj)msg );
 
-    /* Test
     msg   = allocMem(32);
     ThreadOp.sleep(500);
     msg[0] = (CMD_LOCO_DISCOVERY >> 7);
@@ -1027,7 +1039,7 @@ static void __discovery( void* threadinst ) {
     msg[7]  = 0x33;
     msg[8]  = 0x44;
     ThreadOp.post( data->writer, (obj)msg );
-    */
+
   } while( data->run );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 discovery stopped." );

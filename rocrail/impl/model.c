@@ -3512,6 +3512,8 @@ static void _event( iOModel inst, iONode nodeC ) {
     int addr = wLoc.getaddr( nodeC );
     const char* id = wLoc.getid( nodeC );
     const char* iid = wLoc.getiid( nodeC );
+    const char* ident = wLoc.getidentifier( nodeC );
+    const char* cmd = wLoc.getcmd( nodeC );
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco event: %d", addr);
 
@@ -3526,7 +3528,19 @@ static void _event( iOModel inst, iONode nodeC ) {
       LocOp.base.event( lc, nodeC );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "UNKNOWN LC %d", addr );
+      if( cmd != NULL && StrOp.equals( wLoc.discover, cmd ) ) {
+        iOLoc lc = ModelOp.getLocByIdent(inst, ident, True);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "discover loco %s with addr=%d lc=%X", ident, addr, lc );
+        if( lc != NULL ) {
+          iONode props = LocOp.base.properties(lc);
+          wLoc.setaddr(props, wLoc.getaddr(nodeC) );
+          wLoc.setidentifier(props, ident );
+          LocOp.modify(lc, (iONode)NodeOp.base.clone(props));
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s with addr=%d", ident, addr );
+        }
+      }
+      if( lc == NULL )
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "UNKNOWN LC %d", addr );
       /* Cleanup Node3 */
     }
     nodeC->base.del(nodeC);
