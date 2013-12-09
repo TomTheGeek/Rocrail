@@ -523,7 +523,7 @@
       <var name="locolist" vt="bool" defval="false" remark="Initial send the digint the list of locos."/>
       <var name="switchlist" vt="bool" defval="false" remark="Initial send the digint the list of switches."/>
       <var name="overrule" vt="bool" defval="true" remark="Overrule throttle commands."/>
-      <var name="ascii" vt="bool" defval="false" remark="Use an ASCII protocol."/>
+      <var name="asciiprotocol" vt="bool" defval="false" remark="Use an ASCII protocol."/>
       
 
       <!-- HSI88 -->

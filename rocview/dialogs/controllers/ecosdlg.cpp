@@ -127,7 +127,7 @@ void ECoSCtrlDialog::initValues() {
   m_LocoList->SetValue( wDigInt.islocolist( m_Props ) );
 
   m_CTS->SetValue(  StrOp.equals( wDigInt.getflow( m_Props ), wDigInt.cts ) );
-  m_SLCAN->SetValue( wDigInt.isascii( m_Props ) );
+  m_SLCAN->SetValue( wDigInt.isasciiprotocol( m_Props ) );
 
   SublibSelected();
 
@@ -150,7 +150,7 @@ void ECoSCtrlDialog::evaluate() {
   wDigInt.setsysteminfo( m_Props, m_SystemInfo->IsChecked()?True:False );
   wDigInt.setlocolist( m_Props, m_LocoList->IsChecked()?True:False );
   wDigInt.setflow( m_Props, m_CTS->IsChecked()?wDigInt.cts:wDigInt.none );
-  wDigInt.setascii( m_Props, m_SLCAN->IsChecked()?True:False );
+  wDigInt.setasciiprotocol( m_Props, m_SLCAN->IsChecked()?True:False );
 
 }
 

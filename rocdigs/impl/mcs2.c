@@ -790,7 +790,7 @@ static void __reader( void* threadinst ) {
     else {
       if( data->conOK ) {
         /* Init ASCII protocol if needed. */
-        if( wDigInt.isascii( data->ini ) && !initASCII ) {
+        if( wDigInt.isasciiprotocol( data->ini ) && !initASCII ) {
           const char* initCmd = "S5\rO\rV\r";
           if( SerialOp.write( data->serial, initCmd, StrOp.len(initCmd) ) ) {
             byte cmd[32];
@@ -812,7 +812,7 @@ static void __reader( void* threadinst ) {
 
         int available = SerialOp.available(data->serial);
         if( available > 0 ) {
-          if( wDigInt.isascii( data->ini ) ) {
+          if( wDigInt.isasciiprotocol( data->ini ) ) {
             char inASCII[64] = {'\0'};
             Boolean CR = False;
             int idx = 0;
@@ -970,7 +970,7 @@ static void __writer( void* threadinst ) {
         SocketOp.sendto( data->writeUDP, (char*)cmd, 13, NULL, 0 );
       }
       else {
-        if( wDigInt.isascii( data->ini ) ) {
+        if( wDigInt.isasciiprotocol( data->ini ) ) {
           char out[64] = {'\0'};
           int len = __convertBin2ASCII(cmd, out);
           TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "ASCII write: %s", out );
@@ -1046,13 +1046,13 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  device      [%s]", wDigInt.getdevice(data->ini) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps         [%d]", wDigInt.isascii( data->ini )?115200:500000 );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  SLCAN       [%s]", wDigInt.isascii( data->ini )?"yes":"no" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps         [%d]", wDigInt.isasciiprotocol( data->ini )?115200:500000 );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  SLCAN       [%s]", wDigInt.isasciiprotocol( data->ini )?"yes":"no" );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
     data->serial = SerialOp.inst( wDigInt.getdevice(data->ini) );
     SerialOp.setFlow( data->serial, cts );
-    SerialOp.setLine( data->serial, wDigInt.isascii( data->ini )?115200:500000, 8, 1, none, wDigInt.isrtsdisabled(data->ini) );
+    SerialOp.setLine( data->serial, wDigInt.isasciiprotocol( data->ini )?115200:500000, 8, 1, none, wDigInt.isrtsdisabled(data->ini) );
     SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
     data->conOK = SerialOp.open( data->serial );
   }
