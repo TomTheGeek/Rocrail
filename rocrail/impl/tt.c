@@ -243,6 +243,12 @@ static Boolean __bridgeDir( iOTT inst, int destpos, Boolean* ttdir ) {
     return False;
   }
 
+  if( (data->tablepos + 24 == destpos) || (destpos + 24 == data->tablepos) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "wanted destination position[%d] is the opposite of the table position[%d]", destpos, data->tablepos );
+    return False;
+  }
+
   if( destpos > data->tablepos && destpos - data->tablepos <= 24 )
     *ttdir = swap?CW:CCW;
   else if( destpos < data->tablepos && data->tablepos - destpos >= 24 )
