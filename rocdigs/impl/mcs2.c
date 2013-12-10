@@ -846,7 +846,6 @@ static void __reader( void* threadinst ) {
   int mod = 0;
   unsigned char store[1024];
   int retry = 0;
-  Boolean initASCII = False;
 
   for( mod = 0; mod < 1024; mod++) {
     store[mod] = 0;
@@ -872,13 +871,24 @@ static void __reader( void* threadinst ) {
     else {
       if( data->conOK ) {
         /* Init ASCII protocol if needed. */
-        if( wDigInt.isasciiprotocol( data->ini ) && !initASCII ) {
-          const char* initCmd = "S5\rO\rV\r";
-          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "init ASCII: %s", initCmd );
-          if( SerialOp.write( data->serial, initCmd, StrOp.len(initCmd) ) ) {
-            byte cmd[32];
-            char out[64] = {'\0'};
-            int len = 0;
+        if( wDigInt.isasciiprotocol( data->ini ) && !data->initASCII ) {
+          Boolean ok = True;
+          if(ok) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init ASCII: (S5) 250 kBaud" );
+            ok = SerialOp.write( data->serial, "S5\r", 3 );
+          }
+          if(ok) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init ASCII: (O) Open CAN channel." );
+            ok = SerialOp.write( data->serial, "O\r", 2 );
+          }
+          if(ok) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init ASCII: (V) Get hardware version." );
+            ok = SerialOp.write( data->serial, "V\r", 2 );
+          }
+
+
+          if( ok ) {
+            byte*  cmd   = allocMem(32);
             MemOp.set(cmd, 0, 32);
             cmd[0] = (0x360301 & 0xFF000000) >> 24;
             cmd[1] = (0x360301 & 0x00FF0000) >> 16;
@@ -886,10 +896,9 @@ static void __reader( void* threadinst ) {
             cmd[3] = (0x360301 & 0x000000FF);
             cmd[4] = 5;
             cmd[9] = 0x11;
-            len = __convertBin2ASCII(cmd, out);
-            TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "magic ASCII: %s", out );
-            SerialOp.write( data->serial, out, len );
-            initASCII = True;
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send magic ASCII" );
+            ThreadOp.post( data->writer, (obj)cmd );
+            data->initASCII = True;
           }
         }
 
@@ -959,7 +968,7 @@ static void __reader( void* threadinst ) {
           data->conOK = SerialOp.open( data->serial );
           if(data->conOK) {
             SerialOp.flush(data->serial);
-            initASCII = False;
+            data->initASCII = False;
           }
         }
         if( data->run ) continue;
@@ -1050,6 +1059,7 @@ static void __discovery( void* threadinst ) {
       msg[6]  = 0x22;
       msg[7]  = 0x33;
       msg[8]  = 0x44;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send dummy discover response..." );
       ThreadOp.post( data->writer, (obj)msg );
     }
 
@@ -1064,6 +1074,11 @@ static void __writer( void* threadinst ) {
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
   iOMCS2Data data = Data(mcs2);
 
+  if(wDigInt.isasciiprotocol( data->ini )) {
+    while( !data->initASCII && data->run ) {
+      ThreadOp.sleep(10);
+    }
+  }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 writer started." );
 
   do {

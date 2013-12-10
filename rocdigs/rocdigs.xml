@@ -896,6 +896,7 @@
       <var name="power" vt="Boolean"/>
       <var name="sensor" vt="Boolean"/>
       <var name="discovery" vt="iOThread"/>
+      <var name="initASCII" vt="Boolean"/>
       </data>
   </object>
 
