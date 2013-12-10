@@ -682,6 +682,14 @@ static iONode __getUID(iOMCS2Data data, int uid) {
 }
 
 static void __evaluateMCS2Discovery( iOMCS2Data mcs2, byte* in ) {
+/*
+20131209.221315.766 r9999B mcs2read OMCS2    1001 Unhandled packet: CAN-ID=0x03 len=6
+20131209.221315.766 r0000B mcs2read (null)   *trace dump( 0xB78A332C: length=13 )
+    offset:   00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F |ASCII...........|
+    --------------------------------------------------------- |----------------|
+    00000000: 00 03 03 00 06 FF E4 05 FF 18 FF 00 00          |.............   |
+20131209.221315.947 r9999B mcs2read OMCS2    0909 ASCII read: T000303006FFE405FF19FF
+ */
   int dlc = in[4];
   if( dlc == 5 || dlc == 6 ) {
     int uid = (in[5] << 24) + (in[6] << 16) + (in[7] << 8) + in[8];
@@ -866,6 +874,7 @@ static void __reader( void* threadinst ) {
         /* Init ASCII protocol if needed. */
         if( wDigInt.isasciiprotocol( data->ini ) && !initASCII ) {
           const char* initCmd = "S5\rO\rV\r";
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "init ASCII: %s", initCmd );
           if( SerialOp.write( data->serial, initCmd, StrOp.len(initCmd) ) ) {
             byte cmd[32];
             char out[64] = {'\0'};
@@ -878,7 +887,7 @@ static void __reader( void* threadinst ) {
             cmd[4] = 5;
             cmd[9] = 0x11;
             len = __convertBin2ASCII(cmd, out);
-            TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "ASCII write: %s", out );
+            TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "magic ASCII: %s", out );
             SerialOp.write( data->serial, out, len );
             initASCII = True;
           }
@@ -994,7 +1003,7 @@ static void __reader( void* threadinst ) {
       /* CC-Schnitte */
       __evaluateCCSwitch( data, in );
     }
-    else if( in[1] == ID_LOCO_DISCOVERY ) {
+    else if( in[1] == (ID_LOCO_DISCOVERY + BIT_RESPONSE) ) {
       __evaluateMCS2Discovery( data, in );
     }
     else {

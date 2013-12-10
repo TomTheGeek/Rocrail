@@ -36,6 +36,8 @@
 #ifndef MCS2CONST_H_
 #define MCS2CONST_H_
 
+#define BIT_RESPONSE 0x01
+
 /* SYSTEM */
 #define CMD_SYSTEM            0x00
 #define ID_SYSTEM             0x00
