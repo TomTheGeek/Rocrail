@@ -1022,6 +1022,7 @@ static void __discovery( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
   iOMCS2Data data = Data(mcs2);
+  Boolean testResponse = False;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 discovery started." );
 
@@ -1036,18 +1037,21 @@ static void __discovery( void* threadinst ) {
     msg[5]  = 96;
     ThreadOp.post( data->writer, (obj)msg );
 
-    msg   = allocMem(32);
-    ThreadOp.sleep(500);
-    msg[0] = (CMD_LOCO_DISCOVERY >> 7);
-    msg[1]  = ((CMD_LOCO_DISCOVERY & 0x7F) << 1 );
-    msg[2]  = 0x00;
-    msg[3]  = 0x00;
-    msg[4]  = 5;
-    msg[5]  = 0x11;
-    msg[6]  = 0x22;
-    msg[7]  = 0x33;
-    msg[8]  = 0x44;
-    ThreadOp.post( data->writer, (obj)msg );
+    if( testResponse ) {
+      msg   = allocMem(32);
+      ThreadOp.sleep(500);
+      msg[0] = (CMD_LOCO_DISCOVERY >> 7);
+      msg[1]  = ((CMD_LOCO_DISCOVERY & 0x7F) << 1 );
+      msg[1]  |= BIT_RESPONSE;
+      msg[2]  = 0x00;
+      msg[3]  = 0x00;
+      msg[4]  = 5;
+      msg[5]  = 0x11;
+      msg[6]  = 0x22;
+      msg[7]  = 0x33;
+      msg[8]  = 0x44;
+      ThreadOp.post( data->writer, (obj)msg );
+    }
 
   } while( data->run );
 
