@@ -2732,7 +2732,21 @@
         <actionctrl cardinality="n"/>
       </tx>
     </txlist>
-
+    
+    <soundlist cardinality="1" remark="Sound table" wrappername="SoundList">
+      <sound cardinality="n" wrappername="Sound" remark="">
+        <var name="id" vt="string" defval="" range="*" required="true"/>
+        <var name="iid" vt="string" defval="" range="*" required="false"/>
+        <var name="bus" vt="int" defval="0" range="0-*"/>
+        <var name="addr" vt="int" defval="0" range="0-*"/>
+        <var name="file" vt="string" defval="" range="*" required="true"/>
+        <var name="volume" vt="int" defval="10" range="0-*"/>
+		    <var name="minutes" vt="int" defval="0"/>
+		    <var name="hours" vt="int" defval="0"/>
+		    <var name="wday" vt="int" defval="0"/>
+      </sound>
+    </soundlist>
+          
 
     <aclist cardinality="1" remark="timed action table" wrappername="ActionList">
       <ac cardinality="n" wrappername="Action" remark="">
