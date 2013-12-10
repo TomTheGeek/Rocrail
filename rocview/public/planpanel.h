@@ -118,10 +118,10 @@ public:
   const char* m_Ori;
   bool m_OK2Clear;
   void OnTimer(wxTimerEvent& event);
+  void ChangeItemKey( const char* key, const char* prev_key);
 
 
 private:
-  void ChangeItemKey( const char* key, const char* prev_key);
   iOMap m_LockedRoutes;
   int m_dragX;
   int m_dragY;

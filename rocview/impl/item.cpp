@@ -2328,8 +2328,14 @@ void Symbol::OnProps(wxCommandEvent& event) {
 
   if( refresh ) {
     Refresh();
-    if( wxGetApp().isOffline() )
+    if( wxGetApp().isOffline() ) {
+      char key[256];
+      char prev_key[256];
+      m_PlanPanel->itemKey( m_Props, key, prev_key );
+      if( !StrOp.equals(key, prev_key) )
+        m_PlanPanel->ChangeItemKey(key, prev_key);
       modelEvent(m_Props, False);
+    }
   }
 
 }
