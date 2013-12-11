@@ -181,6 +181,8 @@ public:
     wxPanel* m_Interface;
     wxStaticText* m_labIID;
     wxTextCtrl* m_IID;
+    wxStaticText* m_labBus;
+    wxTextCtrl* m_Bus;
     wxStaticText* m_labAddress;
     wxSpinCtrl* m_Address;
     wxStaticText* m_labDisplay;

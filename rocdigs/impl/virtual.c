@@ -39,6 +39,7 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/Action.h"
 
 #include "rocutils/public/addr.h"
 
@@ -229,6 +230,14 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     }
   }
 
+  /* Action command, */
+  else if( StrOp.equals( NodeOp.getName( node ), wAction.name() ) ) {
+    int bus   = wAction.getbus( node );
+    int addr  = wAction.getaddr( node );
+    if( StrOp.equals(wAction.sound_play, wAction.getcmd(node)) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"play sound file [%s] bus=%d addr=%d", wAction.getsndfile(node), bus, addr );
+    }
+  }
 
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {

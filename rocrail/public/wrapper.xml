@@ -2727,27 +2727,13 @@
         <var name="volt" vt="int" defval="0" range="0-*"/>
         <var name="temp" vt="int" defval="0" range="0-*"/>
         <var name="iid" vt="string" defval="" range="*" required="false"/>
+        <var name="bus" vt="int" defval="0" range="0-*"/>
         <var name="addr" vt="int" defval="0" range="0-*"/>
         <var name="display" vt="int" defval="0" range="0-*"/>
         <actionctrl cardinality="n"/>
       </tx>
     </txlist>
     
-    <soundlist cardinality="1" remark="Sound table" wrappername="SoundList">
-      <sound cardinality="n" wrappername="Sound" remark="">
-        <var name="id" vt="string" defval="" range="*" required="true"/>
-        <var name="iid" vt="string" defval="" range="*" required="false"/>
-        <var name="bus" vt="int" defval="0" range="0-*"/>
-        <var name="addr" vt="int" defval="0" range="0-*"/>
-        <var name="file" vt="string" defval="" range="*" required="true"/>
-        <var name="volume" vt="int" defval="10" range="0-*"/>
-		    <var name="minutes" vt="int" defval="0"/>
-		    <var name="hours" vt="int" defval="0"/>
-		    <var name="wday" vt="int" defval="0"/>
-      </sound>
-    </soundlist>
-          
-
     <aclist cardinality="1" remark="timed action table" wrappername="ActionList">
       <ac cardinality="n" wrappername="Action" remark="">
         <const name="output_on" vt="string" val="on"/>
@@ -2787,10 +2773,12 @@
         <const name="route_lockset" vt="string" val="lockset"/>
         <const name="route_unlock" vt="string" val="unlock"/>
         <const name="text_update" vt="string" val="update"/>
+        <const name="sound_play" vt="string" val="play"/>
         <var name="id" vt="string" defval="NULL" range="*" remark="action id"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
         <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>
-        <var name="type" vt="string" defval="co" range="co,sw,st,sys,ext,sg,bk,lc,fn,tt,seltab,tx" required="true" remark="type [ext] is an external program or script to be executed"/>
+        <const name="type_sound" vt="string" val="sound"/>
+        <var name="type" vt="string" defval="co" range="co,sw,st,sys,ext,sg,bk,lc,fn,tt,seltab,tx,sound" required="true" remark="type [ext] is an external program or script to be executed"/>
         <var name="activate" vt="bool" defval="true" remark="action activation at state ON or OFF: default is ON(true)"/>
         <var name="doublequote" vt="bool" defval="true" remark="Double quote under Windows."/>
         <var name="hour" vt="int" defval="0" range="0-23" remark="action hour"/>
@@ -2806,7 +2794,12 @@
         <var name="param" vt="string" defval="" range="*" remark="command parameter like schedule id for lc"/>
         <var name="refid" vt="string" defval="" range="*" remark="Reference ID for getting more information for this action."/>
         <var name="actiontime" vt="int" defval="0" unit="s" remark="function activation time"/>
-      </ac>
+        <var name="iid" vt="string" defval="" range="*" required="false"/>
+        <var name="bus" vt="int" defval="0" range="0-*"/>
+        <var name="addr" vt="int" defval="0" range="0-*"/>
+        <var name="sndfile" vt="string" defval="" range="*" required="true"/>
+        <var name="sndvolume" vt="int" defval="10" range="0-*"/>
+        </ac>
     </aclist>
 
     <seltablist cardinality="1" remark="selection table list" wrappername="SelTabList">

@@ -514,6 +514,21 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     }
   }
 
+  /* sound action */
+  if( StrOp.equals( wAction.type_sound, wAction.gettype( data->action ) ) ) {
+    clntcon_callback pfun = ControlOp.getCallback(AppOp.getControl());
+    iONode cmd = NodeOp.inst( wAction.name(), NULL, ELEMENT_NODE );
+    wAction.setcmd( cmd, wAction.getcmd( data->action ) );
+    wAction.setiid( cmd, wAction.getiid( data->action ) );
+    wAction.setbus( cmd, wAction.getbus( data->action ) );
+    wAction.setaddr( cmd, wAction.getaddr( data->action ) );
+    wAction.setsndfile( cmd, wAction.getparam(data->action) );
+    wAction.setsndvolume( cmd, wAction.getsndvolume( data->action ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s sound [%s]",
+        wAction.getcmd( data->action ), wAction.getparam(data->action));
+    pfun( (obj)AppOp.getControl(), cmd );
+  }
+
   /* sensor action */
   else if( StrOp.equals( wFeedback.name(), wAction.gettype( data->action ) ) ) {
     const char* id = wAction.getoid( data->action );

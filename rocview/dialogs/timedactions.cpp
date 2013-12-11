@@ -174,6 +174,13 @@ void TimedActions::initLabels() {
     m_Type->Append( wxGetApp().getMsg( "text" ) );
     m_Type->Append( wxGetApp().getMsg( "sensor" ) );
     m_Type->Append( wxGetApp().getMsg( "stagingblock" ) );
+    m_Type->Append( wxGetApp().getMsg( "sound" ) );
+
+    // Interface
+    m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
+    m_labBus->SetLabel( wxGetApp().getMsg( "bus" ) );
+    m_labAddress->SetLabel( wxGetApp().getMsg( "address" ) );
+
 }
 
 
@@ -220,6 +227,8 @@ void TimedActions::initValues() {
     m_Type->SetSelection(12);
   else if( StrOp.equals( wStage.name(), type ) )
     m_Type->SetSelection(13);
+  else if( StrOp.equals( wAction.type_sound, type ) )
+    m_Type->SetSelection(14);
 
   initOutputList();
   initCommands();
@@ -239,6 +248,10 @@ void TimedActions::initValues() {
 
   initUse();
 
+  // Interface
+  m_IID->SetValue( wxString(wAction.getiid( m_Props ),wxConvUTF8) );
+  m_Bus->SetValue( wxString::Format(wxT("%d"), wAction.getbus( m_Props )) );
+  m_Address->SetValue( wAction.getaddr( m_Props ) );
 }
 
 void TimedActions::initUse() {
@@ -348,7 +361,14 @@ bool TimedActions::evaluate() {
     case 11: wAction.settype(m_Props, wText.name()); break;
     case 12: wAction.settype(m_Props, wFeedback.name()); break;
     case 13: wAction.settype(m_Props, wStage.name()); break;
+    case 14: wAction.settype(m_Props, wAction.type_sound); break;
   }
+
+  // Interface
+  wAction.setiid( m_Props, m_IID->GetValue().mb_str(wxConvUTF8) );
+  wAction.setbus( m_Props, atoi(m_Bus->GetValue().mb_str(wxConvUTF8)) );
+  wAction.setaddr( m_Props, m_Address->GetValue() );
+
 
   return true;
 
@@ -396,6 +416,7 @@ void TimedActions::initOutputList() {
       case 11: colist = wPlan.gettxlist( model ); break;
       case 12: colist = wPlan.getfblist( model ); break;
       case 13: colist = wPlan.getsblist( model ); break;
+      case 14: return;
     }
 
     m_ExecCmd->Enable(false);
@@ -520,6 +541,13 @@ void TimedActions::Init()
     m_Sec = NULL;
     m_UsePanel = NULL;
     m_UseList = NULL;
+    m_Interface = NULL;
+    m_labIID = NULL;
+    m_IID = NULL;
+    m_labBus = NULL;
+    m_Bus = NULL;
+    m_labAddress = NULL;
+    m_Address = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
     m_Apply = NULL;
@@ -679,21 +707,49 @@ void TimedActions::CreateControls()
 
     m_ActionBook->AddPage(m_UsePanel, _("Use"));
 
+    m_Interface = new wxPanel( m_ActionBook, ID_PANEL_INT, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    wxBoxSizer* itemBoxSizer49 = new wxBoxSizer(wxVERTICAL);
+    m_Interface->SetSizer(itemBoxSizer49);
+
+    wxFlexGridSizer* itemFlexGridSizer50 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemBoxSizer49->Add(itemFlexGridSizer50, 0, wxGROW|wxALL, 5);
+    m_labIID = new wxStaticText( m_Interface, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer50->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_IID = new wxTextCtrl( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer50->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labBus = new wxStaticText( m_Interface, wxID_ANY, _("Bus"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer50->Add(m_labBus, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_Bus = new wxTextCtrl( m_Interface, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(160, -1), 0 );
+    itemFlexGridSizer50->Add(m_Bus, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labAddress = new wxStaticText( m_Interface, wxID_ANY, _("Address"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer50->Add(m_labAddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_Address = new wxSpinCtrl( m_Interface, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(120, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
+    itemFlexGridSizer50->Add(m_Address, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer50->AddGrowableCol(1);
+
+    m_ActionBook->AddPage(m_Interface, _("Interface"));
+
     itemBoxSizer2->Add(m_ActionBook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer48 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer57 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer48, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer57, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer48->AddButton(m_OK);
+    itemStdDialogButtonSizer57->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer48->AddButton(m_Cancel);
+    itemStdDialogButtonSizer57->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer48->AddButton(m_Apply);
+    itemStdDialogButtonSizer57->AddButton(m_Apply);
 
-    itemStdDialogButtonSizer48->Realize();
+    itemStdDialogButtonSizer57->Realize();
 
 ////@end TimedActions content construction
 }
@@ -1000,6 +1056,9 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wStage.exitopen, wxConvUTF8));
       m_Command->Append(wxString( wStage.exitclosed, wxConvUTF8));
       m_Command->Append(wxString( wStage.compress, wxConvUTF8));
+      break;
+    case 14: // sound
+      m_Command->Append(wxString( wAction.sound_play, wxConvUTF8));
       break;
   }
 }

@@ -53,6 +53,7 @@ class wxSpinCtrl;
 #define ID_ACTIONS_EXEC_CMD 10245
 #define ID_USEPANEL 10405
 #define ID_USELIST 10406
+#define ID_PANEL_INT 10399
 #define SYMBOL_TIMEDACTIONS_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL
 #define SYMBOL_TIMEDACTIONS_TITLE _("TimedActions")
 #define SYMBOL_TIMEDACTIONS_IDNAME ID_TIMEDACTIONS
@@ -185,6 +186,13 @@ public:
     wxSpinCtrl* m_Sec;
     wxPanel* m_UsePanel;
     wxListBox* m_UseList;
+    wxPanel* m_Interface;
+    wxStaticText* m_labIID;
+    wxTextCtrl* m_IID;
+    wxStaticText* m_labBus;
+    wxTextCtrl* m_Bus;
+    wxStaticText* m_labAddress;
+    wxSpinCtrl* m_Address;
     wxButton* m_OK;
     wxButton* m_Cancel;
     wxButton* m_Apply;

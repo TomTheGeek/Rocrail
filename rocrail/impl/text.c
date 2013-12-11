@@ -354,6 +354,7 @@ static void* __event( void* inst, const void* evt ) {
     if( wText.getaddr(data->props) > 0 ) {
       iONode node = NodeOp.inst( wText.name(), NULL, ELEMENT_NODE );
       wText.setiid( node, wText.getiid( data->props ) );
+      wText.setbus( node, wText.getbus( data->props ) );
       wText.setaddr( node, wText.getaddr( data->props ) );
       wText.setdisplay( node, wText.getdisplay( data->props ) );
       wText.setid( node, wText.getid( data->props ) );
