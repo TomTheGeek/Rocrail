@@ -793,7 +793,7 @@ static Boolean __convertASCII2Bin( char* inASCII, byte* in) {
   MemOp.set(in, 0, 32);
   if( inASCII[0] != 'T') {
     StrOp.replaceAll(inASCII, '\r', ' ');
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "ASCII message: %s", inASCII );
+    TraceOp.trc( name, inASCII[0] == 'Z' ? TRCLEVEL_DEBUG:TRCLEVEL_MONITOR, __LINE__, 9999, "ASCII message: %s", inASCII );
     in[1] = 0xFF;
     return False;
   }
@@ -929,7 +929,7 @@ static void __reader( void* threadinst ) {
               }
             }
             if( CR ) {
-              TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "ASCII read: %s", inASCII );
+              TraceOp.trc( name, inASCII[0] != 'T' ? TRCLEVEL_DEBUG:TRCLEVEL_BYTE, __LINE__, 9999, "ASCII read: %s", inASCII );
               __convertASCII2Bin(inASCII, in);
             }
           }
@@ -981,7 +981,8 @@ static void __reader( void* threadinst ) {
       }
     }
 
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 13 );
+    if( in[1] != 0xFF )
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 13 );
 
     /* CS2 communication consists of commands (command byte always even) and replies. Reply byte is equal to command byte but with
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
@@ -1020,7 +1021,7 @@ static void __reader( void* threadinst ) {
     else if( in[1] == (ID_LOCO_DISCOVERY + BIT_RESPONSE) ) {
       __evaluateMCS2Discovery( data, in );
     }
-    else {
+    else if( in[1] != 0xFF ) {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Unhandled packet: CAN-ID=0x%02X len=%d", in[1]&0xFF, in[4]&0x0F );
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 13 );
     }
