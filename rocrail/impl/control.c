@@ -1364,6 +1364,11 @@ static long _getTime( iOControl inst ) {
   return data->time;
 }
 
+static void _setTime( iOControl inst, long p_Time ) {
+  iOControlData data = Data(inst);
+  data->time = p_Time;
+}
+
 /* Model seconds */
 static void __checkActions( iOControl control, int seconds ) {
   iOModel model = AppOp.getModel();
@@ -1452,12 +1457,14 @@ static void __clockticker( void* threadinst ) {
   }
   data->devider = wClock.getdivider( clockini );
   update = wClock.getupdate( clockini );
-  if( wClock.gethour( clockini ) < 24 && wClock.getminute( clockini ) < 60 ) {
+  if( data->devider > 1 && wClock.gethour( clockini ) < 24 && wClock.getminute( clockini ) < 60 ) {
     struct tm* ltm = localtime( &data->time );
     ltm->tm_hour = wClock.gethour( clockini );
     ltm->tm_min  = wClock.getminute( clockini );
     ltm->tm_sec  = 0;
     data->time = mktime(ltm);
+    ltm = localtime( &data->time );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Using saved time %d:%02d (%d:%02d)", ltm->tm_hour, ltm->tm_min, wClock.gethour( clockini ), wClock.getminute( clockini ) );
   }
 
   if( data->devider > 100 || data->devider < 1 ) {
@@ -1536,6 +1543,9 @@ static void __clockticker( void* threadinst ) {
     if( firstsync )
       firstsync = False;
 
+    lTime = *localtime( &data->time );
+    wClock.sethour( clockini, lTime.tm_hour );
+    wClock.setminute( clockini, lTime.tm_min );
   };
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ClockTicker ended." );
