@@ -130,6 +130,7 @@ void TimedActions::initLabels() {
   m_ActionBook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
   m_ActionBook->SetPageText( 1, wxGetApp().getMsg( "definition" ) );
   m_ActionBook->SetPageText( 2, wxGetApp().getMsg( "usage" ) );
+  m_ActionBook->SetPageText( 3, wxGetApp().getMsg( "interface" ) );
 
   initList(m_TimedActions, this, false, false, false, false, true);
   m_Doc->SetLabel( wxGetApp().getMsg( "doc_report" ) );
