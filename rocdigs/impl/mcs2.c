@@ -778,7 +778,7 @@ static byte __HEXA2Byte( const char* s ) {
   val[0] = s[0];
   val[1] = s[1];
   val[2] = '\0';
-  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "HEXA=[%s]", val );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "HEXA=[%s]", val );
   return (unsigned char)(strtol( val, NULL, 16)&0xFF);
 }
 
