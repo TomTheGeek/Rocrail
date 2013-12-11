@@ -189,6 +189,51 @@ static byte* __handleClock( iORocNetNode rocnetnode, byte* rn ) {
 }
 
 
+static byte* __handleSound( iORocNetNode rocnetnode, byte* rn ) {
+  iORocNetNodeData data       = Data(rocnetnode);
+  int rcpt       = 0;
+  int sndr       = 0;
+  int action     = rnActionFromPacket(rn);
+  int actionType = rnActionTypeFromPacket(rn);
+  byte* msg = NULL;
+
+  iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+  iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
+
+  rcpt = rnReceipientAddrFromPacket(rn, 0);
+  sndr = rnSenderAddrFromPacket(rn, 0);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Sound request %d from %d to %d", action, sndr, rcpt );
+
+  switch( action ) {
+    case RN_SOUND_PLAY:
+    {
+      char soundfile[128] = {'\0'};
+      int i = 0;
+      for( i = 0; i < rn[RN_PACKET_LEN]; i++ ) {
+        soundfile[i] = rn[RN_PACKET_DATA + i];
+      }
+      soundfile[i] = '\0';
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Play sound [%s]", soundfile );
+
+      if( optionsini != NULL ) {
+        const char* soundpath   = wRocNetNodeOptions.getsoundpath(optionsini);
+        const char* soundplayer = wRocNetNodeOptions.getsoundplayer(optionsini);
+        /* play */
+        char* s = StrOp.fmt("%s \"%s%c%s\"", soundplayer, soundpath, SystemOp.getFileSeparator(), soundfile );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
+        SystemOp.system( s, True, False );
+        StrOp.free(s);
+      }
+
+      break;
+    }
+  }
+
+  return msg;
+}
+
+
 static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int rcpt       = 0;
@@ -1231,6 +1276,10 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
 
     case RN_GROUP_CLOCK:
       rnReply = __handleClock( rocnetnode, rn );
+      break;
+
+    case RN_GROUP_SOUND:
+      rnReply = __handleSound( rocnetnode, rn );
       break;
 
     default:
