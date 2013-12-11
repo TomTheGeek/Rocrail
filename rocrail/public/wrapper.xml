@@ -643,6 +643,8 @@
           <const name="iotype_i2c1" vt="int" val="0"/>
           <const name="iotype_i2c0" vt="int" val="1"/>
           <var name="iotype" vt="int" defval="0"/>
+          <var name="soundpath" vt="string" defval="sounds"/>
+          <var name="soundplayer" vt="string" defval="mplayer"/>
         </rocnetnodeoptions>
         <rocnetnode wrappername="RocNetNode" cardinality="n">
 	        <var name="id" vt="int" defval="65535" range="0-*" remark="RocNet sender ID."/>

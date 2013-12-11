@@ -49,6 +49,7 @@
 #include "rocrail/wrapper/public/BinCmd.h"
 #include "rocrail/wrapper/public/Clock.h"
 #include "rocrail/wrapper/public/Command.h"
+#include "rocrail/wrapper/public/Action.h"
 
 #include "rocutils/public/addr.h"
 
@@ -142,6 +143,25 @@ static iONode __translate( iOrocNet inst, iONode node ) {
 
   /* BinCmd command. */
   if( StrOp.equals( NodeOp.getName( node ), wBinCmd.name() ) ) {
+  }
+
+  /* Action command, */
+  else if( StrOp.equals( NodeOp.getName( node ), wAction.name() ) ) {
+    int bus   = wAction.getbus( node );
+    int i = 0;
+    const char* soundfile = wAction.getsndfile(node);
+    if( StrOp.equals(wAction.sound_play, wAction.getcmd(node)) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"play sound file [%s] on node=%d", wAction.getsndfile(node), bus );
+      rn[RN_PACKET_GROUP] = RN_GROUP_SOUND;
+      rnReceipientAddresToPacket( bus, rn, data->seven );
+      rn[RN_PACKET_ACTION] = RN_SOUND_PLAY;
+      rn[RN_PACKET_LEN] = StrOp.len(soundfile);
+      for( i = 0; i < StrOp.len(soundfile); i++ ) {
+        rn[RN_PACKET_DATA + i] = soundfile[i];
+      }
+      ThreadOp.post( data->writer, (obj)rn );
+      return rsp;
+    }
   }
 
   /* Clock command. */

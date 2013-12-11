@@ -37,6 +37,7 @@
 #define RN_GROUP_SENSOR        8
 #define RN_GROUP_OUTPUT        9
 #define RN_GROUP_INPUT        10
+#define RN_GROUP_SOUND        11
 
 /* host group actions */
 #define RN_HOST_SHUTDOWN     1
@@ -141,6 +142,11 @@
 /* clock group actions */
 #define RN_CLOCK_SET    1
 #define RN_CLOCK_SYNC   2
+
+/* sound group actions */
+#define RN_SOUND_PLAY      1
+#define RN_SOUND_SETPATH   2
+#define RN_SOUND_SETPLAYER 3
 
 /* sensor group actions */
 #define RN_SENSOR_REPORT    1
