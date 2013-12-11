@@ -193,6 +193,8 @@ public:
     wxTextCtrl* m_Bus;
     wxStaticText* m_labAddress;
     wxSpinCtrl* m_Address;
+    wxStaticText* m_labPort;
+    wxSpinCtrl* m_Port;
     wxButton* m_OK;
     wxButton* m_Cancel;
     wxButton* m_Apply;

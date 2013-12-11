@@ -517,13 +517,28 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   /* sound action */
   if( StrOp.equals( wAction.type_sound, wAction.gettype( data->action ) ) ) {
     clntcon_callback pfun = ControlOp.getCallback(AppOp.getControl());
-    iONode cmd = NodeOp.inst( wAction.name(), NULL, ELEMENT_NODE );
-    wAction.setcmd( cmd, wAction.getcmd( data->action ) );
-    wAction.setiid( cmd, wAction.getiid( data->action ) );
-    wAction.setbus( cmd, wAction.getbus( data->action ) );
-    wAction.setaddr( cmd, wAction.getaddr( data->action ) );
-    wAction.setsndfile( cmd, wAction.getparam(data->action) );
-    wAction.setsndvolume( cmd, wAction.getsndvolume( data->action ) );
+    int addr = wAction.getaddr( data->action );
+    int port = wAction.getport( data->action );
+    iONode cmd = NULL;
+
+    if( addr > 0 || port > 0 ) {
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setcmd( cmd, wAction.getcmd( data->action ) );
+      wSwitch.setiid( cmd, wAction.getiid( data->action ) );
+      wSwitch.setbus( cmd, wAction.getbus( data->action ) );
+      wSwitch.setaddr1( cmd, wAction.getaddr( data->action ) );
+      wSwitch.setport1( cmd, wAction.getport( data->action ) );
+    }
+    else {
+      cmd = NodeOp.inst( wAction.name(), NULL, ELEMENT_NODE );
+      wAction.setcmd( cmd, wAction.getcmd( data->action ) );
+      wAction.setiid( cmd, wAction.getiid( data->action ) );
+      wAction.setbus( cmd, wAction.getbus( data->action ) );
+      wAction.setaddr( cmd, wAction.getaddr( data->action ) );
+      wAction.setport( cmd, wAction.getport( data->action ) );
+      wAction.setsndfile( cmd, wAction.getparam(data->action) );
+      wAction.setsndvolume( cmd, wAction.getsndvolume( data->action ) );
+    }
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s sound [%s]",
         wAction.getcmd( data->action ), wAction.getparam(data->action));
     pfun( (obj)AppOp.getControl(), cmd );
