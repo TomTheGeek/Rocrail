@@ -107,6 +107,8 @@ void ECoSCtrlDialog::initLabels() {
   m_OptionsBox->SetLabel( wxGetApp().getMsg( "options" ) );
   m_SystemInfo->SetLabel( wxGetApp().getMsg( "systeminfo" ) );
   m_LocoList->SetLabel( wxGetApp().getMsg( "loctable" ) );
+  m_Discovery->SetLabel( wxGetApp().getMsg( "discover" ) );
+  m_Bind->SetLabel( wxGetApp().getMsg( "bind" ) );
 }
 
 void ECoSCtrlDialog::initValues() {
@@ -140,9 +142,11 @@ void ECoSCtrlDialog::initValues() {
   m_CTS->SetValue(  StrOp.equals( wDigInt.getflow( m_Props ), wDigInt.cts ) );
   m_SLCAN->SetValue( wDigInt.isasciiprotocol( m_Props ) );
   m_Discovery->SetValue(false);
+  m_Bind->SetValue(false);
 
   if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) ) {
     m_Discovery->SetValue( wMCS2.isdiscovery(wDigInt.getmcs2( m_Props )) );
+    m_Bind->SetValue( wMCS2.isbind(wDigInt.getmcs2( m_Props )) );
   }
 
   SublibSelected();
@@ -170,6 +174,7 @@ void ECoSCtrlDialog::evaluate() {
 
   if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) ) {
     wMCS2.setdiscovery(wDigInt.getmcs2( m_Props), m_Discovery->IsChecked()?True:False );
+    wMCS2.setbind(wDigInt.getmcs2( m_Props), m_Bind->IsChecked()?True:False );
   }
 
 }
@@ -231,6 +236,7 @@ void ECoSCtrlDialog::Init()
     m_CTS = NULL;
     m_SLCAN = NULL;
     m_Discovery = NULL;
+    m_Bind = NULL;
     m_SertFbAddr = NULL;
     m_FbAddr = NULL;
     m_OK = NULL;
@@ -336,26 +342,30 @@ void ECoSCtrlDialog::CreateControls()
     m_Discovery->SetValue(false);
     itemStaticBoxSizer21->Add(m_Discovery, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer27 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemStaticBoxSizer21->Add(itemFlexGridSizer27, 0, wxALIGN_LEFT, 5);
+    m_Bind = new wxCheckBox( itemPanel3, wxID_ANY, _("Bind"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Bind->SetValue(false);
+    itemStaticBoxSizer21->Add(m_Bind, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer28 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemStaticBoxSizer21->Add(itemFlexGridSizer28, 0, wxALIGN_LEFT, 5);
 
     m_SertFbAddr = new wxButton( itemPanel3, ID_BUTTON_SET_FBADDR, _("Program FB"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer27->Add(m_SertFbAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer28->Add(m_SertFbAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_FbAddr = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 255, 0 );
-    itemFlexGridSizer27->Add(m_FbAddr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer28->Add(m_FbAddr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer30 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer31 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer30, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer31, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer30->AddButton(m_OK);
+    itemStdDialogButtonSizer31->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer30->AddButton(m_Cancel);
+    itemStdDialogButtonSizer31->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer30->Realize();
+    itemStdDialogButtonSizer31->Realize();
 
 ////@end ECoSCtrlDialog content construction
 }

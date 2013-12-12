@@ -681,6 +681,7 @@
       <mcs2 remark="CS2 options" wrappername="MCS2">
         <var name="fbdevid" vt="int" defval="0" range="0-*" remark="Sensor device ID"/>
         <var name="discovery" vt="bool" defval="false"/>
+        <var name="bind" vt="bool" defval="true"/>
         <product cardinality="n"/>
       </mcs2>
       

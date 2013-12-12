@@ -692,7 +692,7 @@ static void __evaluateMCS2Verify( iOMCS2Data mcs2, byte* in ) {
   int uid = (in[5] << 24) + (in[6] << 16) + (in[7] << 8) + in[8];
   int sid = (in[9] << 8) + in[10];
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Verify UID=0x%04X bind to address %d", uid, sid );
-  if( sid > 0 && wMCS2.isdiscovery(mcs2->mcs2ini) ) {
+  if( sid > 0 && wMCS2.isbind(mcs2->mcs2ini) ) {
     iONode loco = __getUID(mcs2, uid);
     if( wProduct.getsid(loco) != sid ) {
       char ident[32] = {'\0'};
@@ -716,7 +716,7 @@ static void __evaluateMCS2Discovery( iOMCS2Data mcs2, byte* in ) {
   int dlc = in[4];
   if( dlc == 5 ) {
     int uid = (in[5] << 24) + (in[6] << 16) + (in[7] << 8) + in[8];
-    if( wMCS2.isdiscovery(mcs2->mcs2ini) ) {
+    if( wMCS2.isbind(mcs2->mcs2ini) ) {
       byte*  msg   = allocMem(32);
       iONode loco = __getUID(mcs2, uid);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Discovery UID=0x%04X bind to address %d", uid, wProduct.getsid(loco) );

@@ -24950,4 +24950,10 @@
   <Msg id="useallspeedsteps">
     <en txt="Use all speed steps"/>
   </Msg>
+  <Msg id="discover">
+    <en txt="Discover"/>
+  </Msg>
+  <Msg id="bind">
+    <en txt="Bind"/>
+  </Msg>
 </Messages>

@@ -6827,3 +6827,15 @@ msgstr ""
 msgid "Use all speed steps"
 msgstr ""
 
+#. 
+# id="discover"
+#, c-format
+msgid "Discover"
+msgstr ""
+
+#. 
+# id="bind"
+#, c-format
+msgid "Bind"
+msgstr ""
+
