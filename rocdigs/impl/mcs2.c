@@ -124,6 +124,22 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OMCS2 ----- */
+static byte* __makeMsg( int prio, int cmd, Boolean rsp, int len, byte* buffer ) {
+  int i = 0;
+  byte* msg = allocMem(32);
+  msg[0]  = (prio << 1);
+  msg[0] |= (cmd >> 7);
+  msg[1]  = ((cmd & 0x7F) << 1 );
+  msg[1] |= rsp;
+  msg[2]  = 0x03;
+  msg[3]  = 0x00;
+  msg[4]  = len;
+  for(i = 0; i < len; i++ )
+    msg[5+i]  = buffer[i];
+  return msg;
+}
+
+
 
 static Boolean __getFunctionState(iONode node, int fnchanged) {
   switch( fnchanged ) {
@@ -717,24 +733,18 @@ static void __evaluateMCS2Discovery( iOMCS2Data mcs2, byte* in ) {
   if( dlc == 5 ) {
     int uid = (in[5] << 24) + (in[6] << 16) + (in[7] << 8) + in[8];
     if( wMCS2.isbind(mcs2->mcs2ini) ) {
-      byte*  msg   = allocMem(32);
+      byte  buffer[32];
       iONode loco = __getUID(mcs2, uid);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Discovery UID=0x%04X bind to address %d", uid, wProduct.getsid(loco) );
 
-      msg[0] = (CMD_LOCO_BIND >> 7);
-      msg[1]  = ((CMD_LOCO_BIND & 0x7F) << 1 );
-      msg[2]  = 0x00;
-      msg[3]  = 0x00;
-      msg[4]  = 6;
-      msg[5]  = in[5];
-      msg[6]  = in[6];
-      msg[7]  = in[7];
-      msg[8]  = in[8];
+      buffer[0]  = in[5];
+      buffer[1]  = in[6];
+      buffer[2]  = in[7];
+      buffer[3]  = in[8];
+      buffer[4]  = (wProduct.getsid(loco) / 256) & 0xFF;
+      buffer[5]  = (wProduct.getsid(loco) % 256) & 0xFF;
 
-      msg[9]  = (wProduct.getsid(loco) / 256) & 0xFF;
-      msg[10] = (wProduct.getsid(loco) % 256) & 0xFF;
-
-      ThreadOp.post( mcs2->writer, (obj)msg );
+      ThreadOp.post( mcs2->writer, (obj)__makeMsg(0, CMD_LOCO_BIND, False, 6, buffer) );
 
       /* Send UID & SID to the Rocrail server. */
       {
@@ -1063,31 +1073,21 @@ static void __discovery( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 discovery started." );
 
   do {
-    byte*  msg   = allocMem(32);
+    byte buffer[32];
+    buffer[0] = 96;
     ThreadOp.sleep(5000);
-    msg[0] = (CMD_LOCO_DISCOVERY >> 7);
-    msg[1]  = ((CMD_LOCO_DISCOVERY & 0x7F) << 1 );
-    msg[2]  = 0x00;
-    msg[3]  = 0x00;
-    msg[4]  = 1;
-    msg[5]  = 96;
-    ThreadOp.post( data->writer, (obj)msg );
+    ThreadOp.post( data->writer, (obj)__makeMsg(0, CMD_LOCO_DISCOVERY, False, 1, buffer) );
 
     if( testResponse ) {
-      msg   = allocMem(32);
+      byte buffer[32];
+      buffer[0]  = 0x11;
+      buffer[1]  = 0x22;
+      buffer[2]  = 0x33;
+      buffer[3]  = 0x44;
+      buffer[4]  = 0x20;
       ThreadOp.sleep(500);
-      msg[0] = (CMD_LOCO_DISCOVERY >> 7);
-      msg[1]  = ((CMD_LOCO_DISCOVERY & 0x7F) << 1 );
-      msg[1]  |= BIT_RESPONSE;
-      msg[2]  = 0x00;
-      msg[3]  = 0x00;
-      msg[4]  = 5;
-      msg[5]  = 0x11;
-      msg[6]  = 0x22;
-      msg[7]  = 0x33;
-      msg[8]  = 0x44;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send dummy discover response..." );
-      ThreadOp.post( data->writer, (obj)msg );
+      ThreadOp.post( data->writer, (obj)__makeMsg(0, CMD_LOCO_DISCOVERY, True, 5, buffer) );
     }
 
   } while( data->run );
