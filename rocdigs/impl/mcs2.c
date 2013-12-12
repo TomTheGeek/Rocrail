@@ -688,15 +688,10 @@ static iONode __getUID(iOMCS2Data data, int uid) {
 
 static void __evaluateMCS2Discovery( iOMCS2Data mcs2, byte* in ) {
 /*
-20131209.221315.766 r9999B mcs2read OMCS2    1001 Unhandled packet: CAN-ID=0x03 len=6
-20131209.221315.766 r0000B mcs2read (null)   *trace dump( 0xB78A332C: length=13 )
-    offset:   00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F |ASCII...........|
-    --------------------------------------------------------- |----------------|
-    00000000: 00 03 03 00 06 FF E4 05 FF 18 FF 00 00          |.............   |
-20131209.221315.947 r9999B mcs2read OMCS2    0909 ASCII read: T000303006FFE405FF19FF
- */
+  T000303005FFE405E920<\r>
+*/
   int dlc = in[4];
-  if( dlc == 5 || dlc == 6 ) {
+  if( dlc == 5 ) {
     int uid = (in[5] << 24) + (in[6] << 16) + (in[7] << 8) + in[8];
     if( wMCS2.isdiscovery(mcs2->mcs2ini) ) {
       byte*  msg   = allocMem(32);
