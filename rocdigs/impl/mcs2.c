@@ -686,6 +686,29 @@ static iONode __getUID(iOMCS2Data data, int uid) {
   return loco;
 }
 
+
+static void __evaluateMCS2Verify( iOMCS2Data mcs2, byte* in ) {
+/* 00064711 6 FF FA 8C 43 00 05 */
+  int uid = (in[5] << 24) + (in[6] << 16) + (in[7] << 8) + in[8];
+  int sid = (in[9] << 8) + in[10];
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Verify UID=0x%04X bind to address %d", uid, sid );
+  if( sid > 0 && wMCS2.isdiscovery(mcs2->mcs2ini) ) {
+    iONode loco = __getUID(mcs2, uid);
+    if( wProduct.getsid(loco) != sid ) {
+      char ident[32] = {'\0'};
+      iONode lc = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+      wLoc.setaddr( lc, wProduct.getsid(loco));
+      StrOp.fmtb(ident, "%d", uid);
+      wLoc.setidentifier(lc, ident);
+      wLoc.setcmd(lc, wLoc.discover);
+      if( mcs2->iid != NULL )
+        wLoc.setiid( lc, mcs2->iid );
+      mcs2->listenerFun( mcs2->listenerObj, lc, TRCLEVEL_INFO );
+    }
+  }
+}
+
+
 static void __evaluateMCS2Discovery( iOMCS2Data mcs2, byte* in ) {
 /*
   T000303005FFE405E920<\r>
@@ -1015,6 +1038,9 @@ static void __reader( void* threadinst ) {
     }
     else if( in[1] == (ID_LOCO_DISCOVERY + BIT_RESPONSE) ) {
       __evaluateMCS2Discovery( data, in );
+    }
+    else if( in[1] == (ID_LOCO_VERIFY + BIT_RESPONSE) ) {
+      __evaluateMCS2Verify( data, in );
     }
     else if( in[1] != 0xFF ) {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Unhandled packet: CAN-ID=0x%02X len=%d", in[1]&0xFF, in[4]&0x0F );
