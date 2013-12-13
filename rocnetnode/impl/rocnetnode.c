@@ -96,6 +96,7 @@ static Boolean __initDigInt(iORocNetNode inst);
 static void __unloadDigInt(iORocNetNode inst, int prevcstype);
 static void __errorReport( iORocNetNode inst, int rc, int rs, int addr);
 static iONode __findChannel(iORocNetNode inst, int channel);
+static int __checkI2C(iORocNetNode inst, int group);
 
 
 /** ----- OBase ----- */
@@ -817,6 +818,8 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     break;
 
   case RN_PROGRAMMING_RDOPT:
+  {
+    int i2ccheck = 0;
     msg = allocMem(128);
     msg[RN_PACKET_NETID] = data->location;
     msg[RN_PACKET_GROUP] = RN_GROUP_PT_STATIONARY;
@@ -824,13 +827,23 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     rnSenderAddresToPacket( data->id, msg, 0 );
     msg[RN_PACKET_ACTION] = RN_PROGRAMMING_RDOPT;
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-    msg[RN_PACKET_LEN] = 4;
+    msg[RN_PACKET_LEN] = 10;
     msg[RN_PACKET_DATA + 0] = data->iotype;
     msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00) | (data->usepb ? 0x04:0x00);
     msg[RN_PACKET_DATA + 1] |= (data->tl_info ? 0x10:0x00) | (data->tl_monitor ? 0x20:0x00);
     msg[RN_PACKET_DATA + 2] = data->cstype;
     msg[RN_PACKET_DATA + 3] = data->csdevice;
-    break;
+    i2ccheck = __checkI2C(rocnetnode, 0x20);
+    msg[RN_PACKET_DATA + 4] = (i2ccheck/256)&0xFF;
+    msg[RN_PACKET_DATA + 5] = (i2ccheck%256)&0xFF;
+    i2ccheck = __checkI2C(rocnetnode, 0x30);
+    msg[RN_PACKET_DATA + 6] = (i2ccheck/256)&0xFF;
+    msg[RN_PACKET_DATA + 7] = (i2ccheck%256)&0xFF;
+    i2ccheck = __checkI2C(rocnetnode, 0x40);
+    msg[RN_PACKET_DATA + 8] = (i2ccheck/256)&0xFF;
+    msg[RN_PACKET_DATA + 9] = (i2ccheck%256)&0xFF;
+  }
+  break;
 
   case RN_PROGRAMMING_WROPT:
   {
@@ -2256,6 +2269,22 @@ static void __errorReport( iORocNetNode inst, int rc, int rs, int addr) {
   msg[RN_PACKET_DATA+2] = addr/256;
   msg[RN_PACKET_DATA+3] = addr%256;
   __sendRN(inst, msg);
+}
+
+static int __checkI2C(iORocNetNode inst, int group) {
+  iORocNetNodeData data = Data(inst);
+  int result = 0;
+
+  if( data->i2cdescriptor >= 0 ) {
+    int i = 0;
+    byte b = 0;
+    for( i = 0; i < 16; i++ ) {
+      if( raspiReadI2C(data->i2cdescriptor, group + i, &b) >= 0 ) {
+        result |= (0x0001 << i);
+      }
+    }
+  }
+  return result;
 }
 
 

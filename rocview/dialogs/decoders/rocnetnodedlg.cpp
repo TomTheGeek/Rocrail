@@ -751,6 +751,42 @@ void RocnetNodeDlg::event(iONode node) {
       m_TraceLevelMonitor->SetValue(wProgram.getval2(node)&0x20?true:false);
       m_DCCType->SetSelection( wProgram.getval3(node) );
       m_DCCDevice->SetSelection( wProgram.getval4(node) );
+
+      // I2C scan 0x20=val5, 0x30=val6, 0x40=val7
+      char* i2cscan  = NULL;
+      for( int i = 0; i < 16; i++ ) {
+        if( wProgram.getval5(node) & (1 << i) ) {
+          char s[32] = {'\0'};
+          StrOp.fmtb( s, "0x%02X ", 0x20+i );
+          i2cscan = StrOp.cat( i2cscan, s);
+        }
+      }
+      m_I2CScan20->SetValue(i2cscan == NULL ? wxT(""):wxString(i2cscan,wxConvUTF8));
+      if( i2cscan != NULL)
+        StrOp.free(i2cscan);
+
+      for( int i = 0; i < 16; i++ ) {
+        if( wProgram.getval6(node) & (1 << i) ) {
+          char s[32] = {'\0'};
+          StrOp.fmtb( s, "0x%02X ", 0x30+i );
+          i2cscan = StrOp.cat( i2cscan, s);
+        }
+      }
+      m_I2CScan30->SetValue(i2cscan == NULL ? wxT(""):wxString(i2cscan,wxConvUTF8));
+      if( i2cscan != NULL)
+        StrOp.free(i2cscan);
+
+      for( int i = 0; i < 16; i++ ) {
+        if( wProgram.getval7(node) & (1 << i) ) {
+          char s[32] = {'\0'};
+          StrOp.fmtb( s, "0x%02X ", 0x40+i );
+          i2cscan = StrOp.cat( i2cscan, s);
+        }
+      }
+      m_I2CScan40->SetValue(i2cscan == NULL ? wxT(""):wxString(i2cscan,wxConvUTF8));
+      if( i2cscan != NULL)
+        StrOp.free(i2cscan);
+
       wxCommandEvent cmdevt;
       onIOType(cmdevt);
     }

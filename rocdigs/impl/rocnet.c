@@ -1278,6 +1278,10 @@ static void __evaluatePTStationary( iOrocNet rocnet, byte* rn ) {
     wProgram.setval2( node, rn[RN_PACKET_DATA+1] );
     wProgram.setval3( node, rn[RN_PACKET_DATA+2] );
     wProgram.setval4( node, rn[RN_PACKET_DATA+3] );
+    /* I2C scan of 0x20, 0x30 and 0x40 */
+    wProgram.setval5( node, rn[RN_PACKET_DATA+4]*256 + rn[RN_PACKET_DATA+5] );
+    wProgram.setval6( node, rn[RN_PACKET_DATA+6]*256 + rn[RN_PACKET_DATA+7] );
+    wProgram.setval7( node, rn[RN_PACKET_DATA+8]*256 + rn[RN_PACKET_DATA+9] );
     wProgram.setiid( node, data->iid );
     wProgram.setlntype(node, wProgram.lntype_rocnet);
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
