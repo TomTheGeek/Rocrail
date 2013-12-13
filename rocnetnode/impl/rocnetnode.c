@@ -1651,6 +1651,12 @@ static void __rocmousescanner( void* threadinst ) {
         rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueRS1 );
       if( rc >= 0 ) /* read RS1 */
         rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueRS1 );
+      if( rc >= 0 ) /* write control register for RS1 */
+        rc = raspiWriteI2C(data->i2cdescriptor, baseadc, ctrl+RM_S6 );
+      if( rc >= 0 ) /* read previous */
+        rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueS6 );
+      if( rc >= 0 ) /* read RS1 */
+        rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueS6 );
       if( rc >= 0 ) { /* running LED */
         runLEDcnt++;
         if( runLEDcnt >= 10 ) {
@@ -1691,22 +1697,14 @@ static void __rocmousescanner( void* threadinst ) {
 
 
         /* Direction */
-        rc = raspiWriteI2C(data->i2cdescriptor, baseadc, ctrl+RM_RS1 );
-        rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueRS1 );
-        if( rc != -1 ) {
-          rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueRS1 );
-          if( valueRS1 < 40 )
-            data->rocmouses[idx]->dir = True;
-          else if( valueRS1 > 200 ) {
-            data->rocmouses[idx]->V_raw = 0;
-            dirHalt = True;
-          }
-          else
-            data->rocmouses[idx]->dir = False;
+        if( valueRS1 < 40 )
+          data->rocmouses[idx]->dir = True;
+        else if( valueRS1 > 200 ) {
+          data->rocmouses[idx]->V_raw = 0;
+          dirHalt = True;
         }
-        else {
-          valueRS1 = 0;
-        }
+        else
+          data->rocmouses[idx]->dir = False;
 
         /* Lights */
         if( data->rocmouses[idx]->lightstrig == 0) {
