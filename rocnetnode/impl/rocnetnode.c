@@ -2278,6 +2278,9 @@ static int __checkI2C(iORocNetNode inst, int group) {
       if( raspiReadI2C(data->i2cdescriptor, group + i, &b) >= 0 ) {
         result |= (0x0001 << i);
       }
+      else if( raspiReadRegI2C(data->i2cdescriptor, group + i, 0, &b) ) {
+        result |= (0x0001 << i);
+      }
     }
     MutexOp.post( data->i2cmux );
   }
