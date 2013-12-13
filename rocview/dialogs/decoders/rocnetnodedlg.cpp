@@ -753,8 +753,9 @@ void RocnetNodeDlg::event(iONode node) {
       m_DCCDevice->SetSelection( wProgram.getval4(node) );
 
       // I2C scan 0x20=val5, 0x30=val6, 0x40=val7
+      // I/O, GCA-Pi02
       char* i2cscan  = NULL;
-      for( int i = 0; i < 16; i++ ) {
+      for( int i = 0; i < 8; i++ ) {
         if( wProgram.getval5(node) & (1 << i) ) {
           char s[32] = {'\0'};
           StrOp.fmtb( s, "0x%02X ", 0x20+i );
@@ -765,7 +766,8 @@ void RocnetNodeDlg::event(iONode node) {
       if( i2cscan != NULL)
         StrOp.free(i2cscan);
 
-      for( int i = 0; i < 16; i++ ) {
+      // RocMouse, GCA-Pi04
+      for( int i = 8; i < 16; i++ ) {
         if( wProgram.getval6(node) & (1 << i) ) {
           char s[32] = {'\0'};
           StrOp.fmtb( s, "0x%02X ", 0x30+i );
@@ -776,7 +778,8 @@ void RocnetNodeDlg::event(iONode node) {
       if( i2cscan != NULL)
         StrOp.free(i2cscan);
 
-      for( int i = 0; i < 16; i++ ) {
+      // PWM, GCA-Pi03
+      for( int i = 0; i < 8; i++ ) {
         if( wProgram.getval7(node) & (1 << i) ) {
           char s[32] = {'\0'};
           StrOp.fmtb( s, "0x%02X ", 0x40+i );
