@@ -1674,8 +1674,7 @@ static void __rocmousescanner( void* threadinst ) {
       else {
         int i = 0;
         float V = 0.0;
-        float Voffset = 20.0;
-        float steps = 28.0;
+        float steps = 50.0;
 
         init = True;
         /* Velocity
@@ -1688,11 +1687,9 @@ static void __rocmousescanner( void* threadinst ) {
          * */
         data->rocmouses[idx]->P1 = ((data->rocmouses[idx]->P1 * 2) + valueP1) / 3;
         valueP1 = data->rocmouses[idx]->P1;
-        /* P1 range is 20-255 */
-        if( valueP1 < Voffset )
-          Voffset = valueP1;
-        V = valueP1 - Voffset;
-        V = (steps / (255.0 - Voffset)) * V;
+        /* P1 range is 0-255 */
+        V = valueP1;
+        V = (steps / 255.0) * V;
         data->rocmouses[idx]->V_raw = (int)V;
 
 
