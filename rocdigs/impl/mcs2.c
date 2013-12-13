@@ -909,14 +909,17 @@ static void __reader( void* threadinst ) {
           if(ok) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init ASCII: (S5) 250 kBaud" );
             ok = SerialOp.write( data->serial, "S5\r", 3 );
+            ThreadOp.sleep(500); /* sleep baby sleep */
           }
           if(ok) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init ASCII: (O) Open CAN channel." );
             ok = SerialOp.write( data->serial, "O\r", 2 );
+            ThreadOp.sleep(500); /* sleep baby sleep */
           }
           if(ok) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init ASCII: (V) Get hardware version." );
             ok = SerialOp.write( data->serial, "V\r", 2 );
+            ThreadOp.sleep(500); /* sleep baby sleep */
           }
 
 
