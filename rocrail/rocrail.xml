@@ -2427,6 +2427,7 @@
       <var name="model" vt="iOModel"/>
       <var name="plan" vt="iONode"/>
       <var name="objectmap" vt="iOMap"/>
+      <var name="minZlevel" vt="int" remark="minimum level number in plan"/>
       <var name="maxZlevel" vt="int" remark="maximum level number in plan"/>
       <var name="maxConnectorDistance" vt="int" remark="distance to search between 2 connectors"/>
       <var name="maxRecursionDepth" vt="int" remark="maximum recursion depth"/>

@@ -7204,7 +7204,7 @@ static int _analyse(iOAnalyse inst) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "not a modplan" );
 
     int i;
-    for( i = 0; i <= data->maxZlevel ; i++) {
+    for( i = data->minZlevel; i <= data->maxZlevel ; i++) {
       iOList list = ModelOp.getLevelItems( data->model, i, &cx, &cy, True);
 
       if( ListOp.size(list) > 0) {
@@ -7368,6 +7368,9 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
         continue;
       }
 
+      /* set minZlevel */
+      if( data->minZlevel > wItem.getz(item) )
+        data->minZlevel = wItem.getz(item);
       /* set maxZlevel */
       if( data->maxZlevel < wItem.getz(item) )
         data->maxZlevel = wItem.getz(item);
@@ -7669,7 +7672,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
 
   if( modplan == NULL) {
     int i;
-    for( i = 0; i <= data->maxZlevel ; i++) {
+    for( i = data->minZlevel; i <= data->maxZlevel ; i++) {
       iOList list = ModelOp.getLevelItems( data->model, i, &cx, &cy, True);
       /* add tt st tx (suiting level) ... to list ??? */
       __addMissingLevelItems( inst, i, &cx, &cy, list );
@@ -7742,7 +7745,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
         data->maxConnectorDistance = AnalyseOp.MINIMAL_MAX_CONNECTOR_DISTANCE;
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "INFO: analyzer: max connector distance is %d (def/min=%d)", data->maxConnectorDistance, AnalyseOp.MINIMAL_MAX_CONNECTOR_DISTANCE );
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "INFO: analyzer: max z-level is %d", data->maxZlevel );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "INFO: analyzer: min z-level is %d , max z-level is %d", data->minZlevel, data->maxZlevel );
     }
   }
   else {
@@ -9201,6 +9204,7 @@ static struct OAnalyse* _inst() {
 
   data->model     = AppOp.getModel();
   data->plan      = ModelOp.getModel(data->model);
+  data->minZlevel = 0;
   data->maxZlevel = 0;
   data->maxConnectorDistance = AnalyseOp.MINIMAL_MAX_CONNECTOR_DISTANCE;
 
