@@ -60,6 +60,9 @@ class RocnetNodeDlg : public rocnetnodegen, public DecoderBase
   int m_PortGroup;
   int m_ChannelGroup;
   int m_SortCol;
+  int m_I2Cx20;
+  int m_I2Cx30;
+  int m_I2Cx40;
 
 	protected:
 		// Handlers for rocnetnodegen events.

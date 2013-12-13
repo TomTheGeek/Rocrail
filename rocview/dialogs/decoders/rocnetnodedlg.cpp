@@ -172,6 +172,9 @@ RocnetNodeDlg::RocnetNodeDlg( wxWindow* parent, iONode ini )
   m_SelectedZLevel = NULL;
   m_AvailableVersion = 0;
   m_VersionInfo = NULL;
+  m_I2Cx20 = 0;
+  m_I2Cx30 = 0;
+  m_I2Cx40 = 0;
 
   __initVendors();
   m_NodeBook->SetSelection(0);
@@ -247,6 +250,11 @@ void RocnetNodeDlg::initPorts() {
     l_EventID[i]->SetValue(0);
     l_EventPort[i]->SetValue(0);
   }
+  m_PortStatus->SetForegroundColour( (m_I2Cx20 & (1 << (m_PortGroup/2))) ? *wxBLUE:*wxRED);
+  if( m_PortGroup%2  == 0 )
+    m_PortStatus->SetLabel( wxString::Format(wxT("0x%02XA"), 0x20 + (m_PortGroup/2) ));
+  else
+    m_PortStatus->SetLabel( wxString::Format(wxT("0x%02XB"), 0x20 + (m_PortGroup/2) ));
 }
 
 void RocnetNodeDlg::onPortPrev( wxCommandEvent& event )
@@ -755,8 +763,9 @@ void RocnetNodeDlg::event(iONode node) {
       // I2C scan 0x20=val5, 0x30=val6, 0x40=val7
       // I/O, GCA-Pi02
       char* i2cscan  = NULL;
+      m_I2Cx20 = wProgram.getval5(node);
       for( int i = 0; i < 8; i++ ) {
-        if( wProgram.getval5(node) & (1 << i) ) {
+        if( m_I2Cx20 & (1 << i) ) {
           char s[32] = {'\0'};
           StrOp.fmtb( s, "0x%02X ", 0x20+i );
           i2cscan = StrOp.cat( i2cscan, s);
@@ -767,8 +776,9 @@ void RocnetNodeDlg::event(iONode node) {
         StrOp.free(i2cscan);
 
       // RocMouse, GCA-Pi04
+      m_I2Cx30 = wProgram.getval6(node);
       for( int i = 8; i < 16; i++ ) {
-        if( wProgram.getval6(node) & (1 << i) ) {
+        if( m_I2Cx30 & (1 << i) ) {
           char s[32] = {'\0'};
           StrOp.fmtb( s, "0x%02X ", 0x30+i );
           i2cscan = StrOp.cat( i2cscan, s);
@@ -779,8 +789,9 @@ void RocnetNodeDlg::event(iONode node) {
         StrOp.free(i2cscan);
 
       // PWM, GCA-Pi03
+      m_I2Cx40 = wProgram.getval7(node);
       for( int i = 0; i < 8; i++ ) {
-        if( wProgram.getval7(node) & (1 << i) ) {
+        if( m_I2Cx40 & (1 << i) ) {
           char s[32] = {'\0'};
           StrOp.fmtb( s, "0x%02X ", 0x40+i );
           i2cscan = StrOp.cat( i2cscan, s);
@@ -789,6 +800,9 @@ void RocnetNodeDlg::event(iONode node) {
       m_I2CScan40->SetValue(i2cscan == NULL ? wxT(""):wxString(i2cscan,wxConvUTF8));
       if( i2cscan != NULL)
         StrOp.free(i2cscan);
+
+      initPorts();
+      initChannels();
 
       wxCommandEvent cmdevt;
       onIOType(cmdevt);
@@ -1622,6 +1636,11 @@ void RocnetNodeDlg::initChannels() {
     l_Test[i]->SetLabel(wxT("0"));
     l_Test[i]->SetValue(false);
   }
+  m_ChannelStatus->SetForegroundColour( (m_I2Cx40 & (1 << (m_ChannelGroup/2))) ? *wxBLUE:*wxRED);
+  if( m_ChannelGroup%2  == 0 )
+    m_ChannelStatus->SetLabel( wxString::Format(wxT("0x%02XA"), 0x40 + (m_ChannelGroup/2) ));
+  else
+    m_ChannelStatus->SetLabel( wxString::Format(wxT("0x%02XB"), 0x40 + (m_ChannelGroup/2) ));
 }
 
 
