@@ -2278,7 +2278,7 @@ static int __checkI2C(iORocNetNode inst, int group) {
       if( raspiReadI2C(data->i2cdescriptor, group + i, &b) >= 0 ) {
         result |= (0x0001 << i);
       }
-      else if( raspiReadRegI2C(data->i2cdescriptor, group + i, 0, &b) ) {
+      else if( raspiReadRegI2C(data->i2cdescriptor, group + i, 0, &b) >= 0 ) {
         result |= (0x0001 << i);
       }
     }
