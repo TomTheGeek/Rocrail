@@ -1736,7 +1736,7 @@ static void __rocmousescanner( void* threadinst ) {
           min0 = valueP1;
         if( valueP1 > max255 )
           max255 = valueP1;
-        V = valueP1;
+        V = valueP1 - min0;
         V = (steps / (max255-min0)) * V;
         data->rocmouses[idx]->V_raw = (int)V;
 
