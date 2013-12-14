@@ -1667,6 +1667,8 @@ static void __rocmousescanner( void* threadinst ) {
 
       if( data->rocmouses[idx] == NULL ) {
         data->rocmouses[idx] = allocMem(sizeof( struct RocMouse));
+        data->rocmouses[idx]->ioaddr = baseio;
+        data->rocmouses[idx]->adaddr = baseadc;
       }
 
 
@@ -1697,7 +1699,7 @@ static void __rocmousescanner( void* threadinst ) {
         rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueS6 );
 
       if( rc >= 0 ) { /* running LED */
-        int flashfreq = (data->rocmouses[idx]->lcaddr > 0) ? 10:5;
+        int flashfreq = (data->rocmouses[idx]->lcaddr > 0) ? 10:4;
         runLEDcnt++;
         if(  runLEDcnt >= flashfreq ) {
           runLEDcnt = 0;
