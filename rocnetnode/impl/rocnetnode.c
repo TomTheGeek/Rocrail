@@ -518,6 +518,14 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       data->id = 65535;
     }
 
+    if( rn[RN_PACKET_LEN] > 5 ) {
+      int i = 0;
+      for( i = 0; i < (rn[RN_PACKET_LEN] - 5); i++ ) {
+        data->nickname[i] = rn[RN_PACKET_DATA + 5 + i];
+      }
+      data->nickname[i] = '\0';
+    }
+
     /* Save the rocnetnode.ini to persistent the new ID. */
     {
       iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
@@ -915,6 +923,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       wRocNetNodeOptions.setsack( optionsini, data->sack );
       wRocNetNodeOptions.setrfid( optionsini, data->rfid );
       wRocNetNodeOptions.setusepb( optionsini, data->usepb );
+      wRocNetNodeOptions.setnickname( optionsini, data->nickname );
 
       if( !data->rfid || data->cstype !=  prevcstype ) {
         __unloadDigInt(rocnetnode, prevcstype);
@@ -1095,7 +1104,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     rnSenderAddresToPacket( data->id, msg, 0 );
     msg[RN_PACKET_ACTION] = RN_STATIONARY_IDENTIFY;
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-    msg[RN_PACKET_LEN] = 7;
+    msg[RN_PACKET_LEN] = 7 + StrOp.len(data->nickname);
     msg[RN_PACKET_DATA+0] = data->class;
     msg[RN_PACKET_DATA+1] = 70;
     msg[RN_PACKET_DATA+2] = revisionnr/256;
@@ -1103,6 +1112,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_DATA+4] = 128;
     msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
     msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];
+    StrOp.copy((char*)&msg[RN_PACKET_DATA+7], data->nickname);
     break;
 
   case RN_STATIONARY_STARTOFDAY:
@@ -2098,7 +2108,7 @@ static void __scanner( void* threadinst ) {
         rnSenderAddresToPacket( data->id, msg, 0 );
         msg[RN_PACKET_ACTION] = RN_STATIONARY_IDENTIFY;
         msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-        msg[RN_PACKET_LEN] = 7;
+        msg[RN_PACKET_LEN] = 7 + StrOp.len(data->nickname);
         msg[RN_PACKET_DATA+0] = data->class;
         msg[RN_PACKET_DATA+1] = 70;
         msg[RN_PACKET_DATA+2] = revisionnr/256;
@@ -2106,6 +2116,7 @@ static void __scanner( void* threadinst ) {
         msg[RN_PACKET_DATA+4] = 128;
         msg[RN_PACKET_DATA+5] = data->ip[data->ipsize-2];
         msg[RN_PACKET_DATA+6] = data->ip[data->ipsize-1];
+        StrOp.copy((char*)&msg[RN_PACKET_DATA+7], data->nickname);
         __sendRN(rocnetnode, msg);
       }
     }
@@ -2708,6 +2719,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
         /* convert to new type: i2c-1 */
         data->iotype = IO_I2C_1;
       }
+      StrOp.copy( data->nickname, wRocNetNodeOptions.getnickname(optionsini) );
     }
     else {
       iONode optionsini = NodeOp.inst(wRocNetNodeOptions.name(), rocnet, ELEMENT_NODE );

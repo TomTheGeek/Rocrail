@@ -162,7 +162,8 @@
       <var name="rocmouses[8]" vt="iORocMouse"/>
       <var name="rocmousescanner" vt="iOThread"/>
       <var name="stress" vt="Boolean"/>
-    </data>
+      <var name="nickname[64]" vt="char"/>
+      </data>
   </object>
 
 

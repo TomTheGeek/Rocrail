@@ -645,6 +645,7 @@
           <var name="iotype" vt="int" defval="0"/>
           <var name="soundpath" vt="string" defval="sounds"/>
           <var name="soundplayer" vt="string" defval="mplayer"/>
+          <var name="nickname" vt="string" defval="New RocNetNode"/>
         </rocnetnodeoptions>
         <rocnetnode wrappername="RocNetNode" cardinality="n">
 	        <var name="id" vt="int" defval="65535" range="0-*" remark="RocNet sender ID."/>
@@ -656,7 +657,8 @@
           <var name="version" vt="string" defval="0.0" remark="Software version."/>
           <var name="nrio" vt="int" defval="0" range="0-255" remark="Number of I/Os"/>
           <var name="subip" vt="int" defval="0" remark="Last 16 bits of the IP."/>
-        </rocnetnode>
+          <var name="nickname" vt="string" defval=""/>
+          </rocnetnode>
         <portsetup wrappername="PortSetup" cardinality="n">
           <var name="port" vt="int" defval="1" range="1-*"/>
           <var name="type" vt="int" defval="0" range="0-*" remark="0=output, 1=input"/>

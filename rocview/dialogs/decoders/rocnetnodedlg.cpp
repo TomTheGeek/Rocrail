@@ -226,6 +226,7 @@ void RocnetNodeDlg::onRocnetWrite( wxCommandEvent& event ) {
   wProgram.setval2(cmd, wRocNetNode.getsubip(m_Props));
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_rocnet);
+  wProgram.setstrval1(cmd, m_Nickname->GetValue().mb_str(wxConvUTF8) );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -633,6 +634,7 @@ void RocnetNodeDlg::initValues() {
   m_Version->SetValue( wxString::Format(_T("%d"), wRocNetNode.getrevision(m_Props)) );
   m_SubIP->SetValue(wxString::Format(_T("%d.%d"), wRocNetNode.getsubip(m_Props)/256, wRocNetNode.getsubip(m_Props)%256));
   m_IO->SetValue( wxString::Format(_T("%d"), wRocNetNode.getnrio(m_Props)) );
+  m_Nickname->SetValue( wxString(wRocNetNode.getnickname(m_Props),wxConvUTF8) );
 }
 
 void RocnetNodeDlg::event(iONode node) {

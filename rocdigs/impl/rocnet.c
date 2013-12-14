@@ -473,12 +473,13 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         rnReceipientAddresToPacket( rnid, rn, data->seven );
         rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
         rn[RN_PACKET_ACTION] = RN_PROGRAMMING_WRNID;
-        rn[RN_PACKET_LEN] = 5;
+        rn[RN_PACKET_LEN] = 5 + StrOp.len(wProgram.getstrval1(node));
         rn[RN_PACKET_DATA + 0] = newrnid / 256;
         rn[RN_PACKET_DATA + 1] = newrnid % 256;
         rn[RN_PACKET_DATA + 2] = subip / 256;
         rn[RN_PACKET_DATA + 3] = subip % 256;
         rn[RN_PACKET_DATA + 4] = location;
+        StrOp.copy((char*)&rn[RN_PACKET_DATA + 5], wProgram.getstrval1(node));
         ThreadOp.post( data->writer, (obj)rn );
       }
       else if( wProgram.getcmd( node ) == wProgram.nvget ) {
@@ -984,10 +985,12 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     }
 
     subip = rn[RN_PACKET_DATA+5]*256+rn[RN_PACKET_DATA+6];
+    rn[RN_PACKET_DATA + 7 + (rn[RN_PACKET_LEN]-7) ] = 0;
+
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "Identified: rocnetid=%d class=%s vid=%d revision=%d nrio=%d subip=%d.%d", sndr,
+        "Identified: rocnetid=%d class=%s vid=%d revision=%d nrio=%d subip=%d.%d nickname=[%s]", sndr,
         rnClassString(rn[RN_PACKET_DATA+0], mnemonic), rn[RN_PACKET_DATA+1], rn[RN_PACKET_DATA+2] *256 + rn[RN_PACKET_DATA+3],
-        rn[RN_PACKET_DATA+4], rn[RN_PACKET_DATA+5], rn[RN_PACKET_DATA+6] );
+        rn[RN_PACKET_DATA+4], rn[RN_PACKET_DATA+5], rn[RN_PACKET_DATA+6], &rn[RN_PACKET_DATA+7] );
     if( sndr == 65535 || sndr == 0 || (sndr == 1 && wRocNet.getid(data->rnini) == 1) ) {
       if( data->highestID == 0 ) {
         /* default address; send a new ID */
@@ -1027,6 +1030,7 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       wRocNetNode.setvendor(rnnode, rn[RN_PACKET_DATA+1]);
       wRocNetNode.setrevision(rnnode, rn[RN_PACKET_DATA+2] *256 + rn[RN_PACKET_DATA+3]);
       wRocNetNode.setnrio(rnnode, rn[RN_PACKET_DATA+4]);
+      wRocNetNode.setnickname(rnnode, (char*)&rn[RN_PACKET_DATA+7]);
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "registering node %s", key );
       MapOp.put( data->nodemap, key, (obj)rnnode);
