@@ -519,11 +519,14 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     }
 
     if( rn[RN_PACKET_LEN] > 5 ) {
+      iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+      iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
       int i = 0;
       for( i = 0; i < (rn[RN_PACKET_LEN] - 5); i++ ) {
         data->nickname[i] = rn[RN_PACKET_DATA + 5 + i];
       }
       data->nickname[i] = '\0';
+      wRocNetNodeOptions.setnickname( optionsini, data->nickname );
     }
 
     /* Save the rocnetnode.ini to persistent the new ID. */
