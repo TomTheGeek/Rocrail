@@ -3660,6 +3660,9 @@ void RocGuiFrame::OnRocNet( wxCommandEvent& event ) {
     m_RocnetNodeDlg = new RocnetNodeDlg(this, m_RocrailIni);
     m_RocnetNodeDlg->Show(true);
   }
+  else if( m_RocnetNodeDlg != NULL ) {
+    m_RocnetNodeDlg->Raise();
+  }
   else {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "request new rocrail.ini");
     wxGetApp().m_InitialRocrailIni = true;
