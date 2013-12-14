@@ -409,6 +409,7 @@ void RocnetNodeDlg::initLabels() {
   m_labProduct->SetLabel(wxGetApp().getMsg( "class" ));
   m_labVersion->SetLabel(wxGetApp().getMsg( "revision" ));
   m_labUpdate->SetLabel(wxGetApp().getMsg( "newrevision" ));
+  m_labNickname->SetLabel(wxGetApp().getMsg( "nickname" ));
   m_Update->SetLabel(wxGetApp().getMsg( "poll" ));
   m_RocnetWrite->SetLabel(wxGetApp().getMsg( "set" ));
   m_UpdateOffline->SetLabel(wxGetApp().getMsg( "file" ));
@@ -420,6 +421,8 @@ void RocnetNodeDlg::initLabels() {
   m_DCCType->SetLabel(wxGetApp().getMsg( "controller" ));
   m_DCCType->SetString( 0, wxGetApp().getMsg( "none" ) );
   m_DCCDevice->SetLabel(wxGetApp().getMsg( "device" ));
+  m_I2CScan->GetStaticBox()->SetLabel(wxGetApp().getMsg( "i2cdetect" ));
+  m_TraceLevelsBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "trace" ));
   m_NodeOptionsRead->SetLabel(wxGetApp().getMsg( "get" ));
   m_NodeOptionsWrite->SetLabel(wxGetApp().getMsg( "set" ));
 

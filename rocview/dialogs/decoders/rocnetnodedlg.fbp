@@ -2604,7 +2604,7 @@
                                                                             <property name="minimum_size"></property>
                                                                             <property name="name">m_TraceLevelsBox</property>
                                                                             <property name="orient">wxVERTICAL</property>
-                                                                            <property name="permission">none</property>
+                                                                            <property name="permission">protected</property>
                                                                             <event name="OnUpdateUI"></event>
                                                                             <object class="sizeritem" expanded="0">
                                                                                 <property name="border">5</property>
@@ -2795,7 +2795,7 @@
                                                                 <property name="proportion">0</property>
                                                                 <object class="wxStaticBoxSizer" expanded="0">
                                                                     <property name="id">wxID_ANY</property>
-                                                                    <property name="label">I2C Scan</property>
+                                                                    <property name="label">I2C Detect</property>
                                                                     <property name="minimum_size"></property>
                                                                     <property name="name">m_I2CScan</property>
                                                                     <property name="orient">wxVERTICAL</property>

@@ -6839,3 +6839,15 @@ msgstr ""
 msgid "Bind"
 msgstr ""
 
+#. 
+# id="nickname"
+#, c-format
+msgid "Nickname"
+msgstr ""
+
+#. 
+# id="i2cdetect"
+#, c-format
+msgid "I2C Detect"
+msgstr ""
+
