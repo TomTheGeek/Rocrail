@@ -190,6 +190,40 @@ static byte* __handleClock( iORocNetNode rocnetnode, byte* rn ) {
 }
 
 
+static byte* __handleMobile( iORocNetNode rocnetnode, byte* rn ) {
+  iORocNetNodeData data       = Data(rocnetnode);
+  int rcpt       = 0;
+  int sndr       = 0;
+  int action     = rnActionFromPacket(rn);
+  int actionType = rnActionTypeFromPacket(rn);
+  byte* msg = NULL;
+
+  iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+  iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
+
+  rcpt = rnReceipientAddrFromPacket(rn, 0);
+  sndr = rnSenderAddrFromPacket(rn, 0);
+
+  switch( action ) {
+    case RN_MOBILE_ROCMOUSE_BIND:
+    {
+      int mouseaddr = rn[RN_PACKET_DATA + 0];
+      int lcaddr = rn[RN_PACKET_DATA + 1] * 256 + rn[RN_PACKET_DATA + 2];
+      int idx = 0;
+      for( idx = 0; idx < 8; idx++) {
+        if( data->rocmouses[idx] != NULL && data->rocmouses[idx]->ioaddr == mouseaddr ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bind RocMouse 0x%02X to loco %d", mouseaddr, lcaddr );
+          data->rocmouses[idx]->lcaddr = lcaddr;
+        }
+      }
+    }
+    break;
+  }
+
+  return msg;
+}
+
+
 static byte* __handleSound( iORocNetNode rocnetnode, byte* rn ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int rcpt       = 0;
@@ -1295,6 +1329,10 @@ static void __evaluateRN( iORocNetNode rocnetnode, byte* rn ) {
       rnReply = __handleSound( rocnetnode, rn );
       break;
 
+    case RN_GROUP_MOBILE:
+      rnReply = __handleMobile( rocnetnode, rn );
+      break;
+
     default:
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "unsupported group [%d]", group );
       break;
@@ -1657,9 +1695,11 @@ static void __rocmousescanner( void* threadinst ) {
         rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueS6 );
       if( rc >= 0 ) /* read RS1 */
         rc = raspiReadI2C( data->i2cdescriptor, baseadc, &valueS6 );
+
       if( rc >= 0 ) { /* running LED */
+        int flashfreq = (data->rocmouses[idx]->lcaddr > 0) ? 10:5;
         runLEDcnt++;
-        if( runLEDcnt >= 10 ) {
+        if(  runLEDcnt >= flashfreq ) {
           runLEDcnt = 0;
           rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, runLED?255:0 );
           runLED = !runLED;
@@ -1674,6 +1714,8 @@ static void __rocmousescanner( void* threadinst ) {
       else {
         int i = 0;
         float V = 0.0;
+        float min0 = 5.0;
+        float max255 = 250.0;
         float steps = 50.0;
 
         init = True;
@@ -1688,8 +1730,12 @@ static void __rocmousescanner( void* threadinst ) {
         data->rocmouses[idx]->P1 = ((data->rocmouses[idx]->P1 * 2) + valueP1) / 3;
         valueP1 = data->rocmouses[idx]->P1;
         /* P1 range is 0-255 */
+        if( valueP1 < min0 )
+          min0 = valueP1;
+        if( valueP1 > max255 )
+          max255 = valueP1;
         V = valueP1;
-        V = (steps / 255.0) * V;
+        V = (steps / (max255-min0)) * V;
         data->rocmouses[idx]->V_raw = (int)V;
 
 

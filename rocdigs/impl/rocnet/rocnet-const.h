@@ -63,6 +63,7 @@
 #define RN_MOBILE_FUNCTIONS      3
 #define RN_MOBILE_QUERY          4
 #define RN_MOBILE_ROCMOUSE       5
+#define RN_MOBILE_ROCMOUSE_BIND  6
 
 #define RN_MOBILE_DIR_FORWARDS  0x01
 #define RN_MOBILE_LIGHTS_ON     0x01

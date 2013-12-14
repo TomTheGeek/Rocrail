@@ -877,12 +877,23 @@ static byte* __evaluateMobile( iOrocNet rocnet, byte* rn ) {
     }
 
     if( Mouse == NULL && data->dispatchAddr > 0 ) {
+      byte* rnID = allocMem(32);
       Mouse = allocMem( sizeof(struct mouse));
       MapOp.put(data->mousemap, key, (obj)Mouse);
       Mouse->nodeid = sndr;
       Mouse->baseaddr = rn[RN_PACKET_DATA+0]&0x7F;
       Mouse->lcaddr = data->dispatchAddr;
       data->dispatchAddr = 0;
+
+      rnID[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
+      rnReceipientAddresToPacket( sndr, rnID, data->seven );
+      rnSenderAddresToPacket( wRocNet.getid(data->rnini), rnID, data->seven );
+      rnID[RN_PACKET_ACTION] = RN_MOBILE_ROCMOUSE_BIND;
+      rnID[RN_PACKET_LEN] = 3;
+      rnID[RN_PACKET_DATA + 0] = Mouse->baseaddr;
+      rnID[RN_PACKET_DATA + 1] = Mouse->lcaddr / 256;
+      rnID[RN_PACKET_DATA + 2] = Mouse->lcaddr % 256;
+      ThreadOp.post( data->writer, (obj)rnID );
     }
 
     if( Mouse != NULL ) {
