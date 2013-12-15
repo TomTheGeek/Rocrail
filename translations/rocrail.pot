@@ -6840,9 +6840,9 @@ msgid "Bind"
 msgstr ""
 
 #. 
-# id="nickname"
+# id="uidname"
 #, c-format
-msgid "Nickname"
+msgid "UID-Name"
 msgstr ""
 
 #. 

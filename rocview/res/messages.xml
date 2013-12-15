@@ -24956,8 +24956,8 @@
   <Msg id="bind">
     <en txt="Bind"/>
   </Msg>
-  <Msg id="nickname">
-    <en txt="Nickname"/>
+  <Msg id="uidname">
+    <en txt="UID-Name"/>
   </Msg>
   <Msg id="i2cdetect">
     <en txt="I2C Detect"/>

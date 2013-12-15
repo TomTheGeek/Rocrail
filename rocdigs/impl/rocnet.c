@@ -50,6 +50,7 @@
 #include "rocrail/wrapper/public/Clock.h"
 #include "rocrail/wrapper/public/Command.h"
 #include "rocrail/wrapper/public/Action.h"
+#include "rocrail/wrapper/public/Item.h"
 
 #include "rocutils/public/addr.h"
 
@@ -130,13 +131,35 @@ static byte __getProtocol(iONode loc) {
   return prot;
 }
 
+
+static int __getbusByNickname(iOrocNet inst, iONode node) {
+  iOrocNetData data = Data(inst);
+  if( wItem.getuidname(node) != NULL && StrOp.len(wItem.getuidname(node)) > 0 ) {
+    iONode rnnode = wRocNet.getrocnetnode( data->ini );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"searching UID-Name [%s]", wItem.getuidname(node) );
+    while( rnnode != NULL ) {
+      if( StrOp.equals(wItem.getuidname(node) , wRocNetNode.getnickname(rnnode)) ) {
+        return wRocNetNode.getid(rnnode);
+      }
+      rnnode = wRocNet.nextrocnetnode( data->ini, rnnode );
+    }
+  }
+  return -1;
+}
+
 /** ----- OrocNet ----- */
 static iONode __translate( iOrocNet inst, iONode node ) {
   iOrocNetData data = Data(inst);
   byte*  rn  = allocMem(128);
   iONode rsp = NULL;
+  int busByNickname = __getbusByNickname(inst, node);
 
   rn[0] = 0; /* network ID 0=ALL */
+
+  if( busByNickname != -1 ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"found bus %d for UID-Name [%s]", busByNickname, wItem.getuidname(node) );
+    wItem.setbus(node, busByNickname);
+  }
 
   rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
 

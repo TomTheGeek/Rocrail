@@ -409,7 +409,7 @@ void RocnetNodeDlg::initLabels() {
   m_labProduct->SetLabel(wxGetApp().getMsg( "class" ));
   m_labVersion->SetLabel(wxGetApp().getMsg( "revision" ));
   m_labUpdate->SetLabel(wxGetApp().getMsg( "newrevision" ));
-  m_labNickname->SetLabel(wxGetApp().getMsg( "nickname" ));
+  m_labNickname->SetLabel(wxGetApp().getMsg( "uidname" ));
   m_Update->SetLabel(wxGetApp().getMsg( "poll" ));
   m_RocnetWrite->SetLabel(wxGetApp().getMsg( "set" ));
   m_UpdateOffline->SetLabel(wxGetApp().getMsg( "file" ));

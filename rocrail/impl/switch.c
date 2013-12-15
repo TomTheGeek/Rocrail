@@ -54,6 +54,7 @@
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/AccessoryCtrl.h"
+#include "rocrail/wrapper/public/Item.h"
 
 static int instCnt = 0;
 
@@ -831,6 +832,7 @@ static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean rel
         wSwitch.setbus( cmd, wSwitch.getbus(data->props));
       wSwitch.setaddr1( cmd, addrpol1);
       wSwitch.setport1( cmd, portpol1);
+      wItem.setuidname(cmd, wItem.getuidname(data->props));
       wSwitch.setcmd( cmd, relays1?wSwitch.turnout:wSwitch.straight);
     }
     else {
@@ -840,6 +842,7 @@ static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean rel
         wOutput.setbus( cmd, wSwitch.getbuspol(data->props));
       else
         wOutput.setbus( cmd, wSwitch.getbus(data->props));
+      wItem.setuidname(cmd, wItem.getuidname(data->props));
       wOutput.setaddr( cmd, addrpol1);
       wOutput.setport( cmd, portpol1);
       wOutput.setgate( cmd, gatepol1);
@@ -860,6 +863,7 @@ static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean rel
         wSwitch.setbus( cmd, wSwitch.getbuspol(data->props));
       else
         wSwitch.setbus( cmd, wSwitch.getbus(data->props));
+      wItem.setuidname(cmd, wItem.getuidname(data->props));
       wSwitch.setaddr1( cmd, addrpol2);
       wSwitch.setport1( cmd, portpol2);
       wSwitch.setcmd( cmd, relays2?wSwitch.turnout:wSwitch.straight);
@@ -871,6 +875,7 @@ static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean rel
         wOutput.setbus( cmd, wSwitch.getbuspol(data->props));
       else
         wOutput.setbus( cmd, wSwitch.getbus(data->props));
+      wItem.setuidname(cmd, wItem.getuidname(data->props));
       wOutput.setaddr( cmd, addrpol2);
       wOutput.setport( cmd, portpol2);
       wOutput.setgate( cmd, gatepol2);
@@ -1046,6 +1051,7 @@ static Boolean __doCmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, 
     wSwitch.setiid( nodeA, iid );
 
   wSwitch.setprot( nodeA, wSwitch.getprot( o->props ) );
+  wItem.setuidname(nodeA, wItem.getuidname(o->props));
   wSwitch.setbus( nodeA, wSwitch.getbus( o->props ) );
 
   /* three way */

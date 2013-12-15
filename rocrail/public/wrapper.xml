@@ -1301,6 +1301,7 @@
     <var name="id" vt="string" defval="" range="*"/>
     <var name="iid" vt="string" defval="" range="*"/>
     <var name="bus" vt="int" defval="0" range="0-*"/>
+    <var name="uidname" vt="string" defval="" range="*" required="false" remark="Alternative to the UID.(Bus)"/>
     <var name="addr" vt="int" defval="0" range="0-*"/>
     <var name="len" vt="int" defval="0" range="0-*"/>
     <var name="oid" vt="string" defval="" range="*" required="false" remark="object ID"/>
