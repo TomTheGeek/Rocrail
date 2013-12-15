@@ -1375,9 +1375,15 @@ static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
   switch( action ) {
   case RN_SENSOR_REPORT:
   {
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor report %d:%d %s", sndr, addr, rn[RN_PACKET_DATA+2]?"on":"off" );
+    char key[32] = {'\0'};
+    StrOp.fmtb( key, "%d-%d", rn[RN_PACKET_NETID], sndr);
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    iONode rnnode = (iONode)MapOp.get(data->nodemap, key);
 
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor report %d:%d %s", sndr, addr, rn[RN_PACKET_DATA+2]?"on":"off" );
+
+    if( rnnode != NULL )
+      wItem.setuidname(evt, wRocNetNode.getnickname(rnnode));
     wFeedback.setbus( evt, sndr );
     wFeedback.setaddr( evt, addr );
     wFeedback.setfbtype( evt, wFeedback.fbtype_sensor );
@@ -1457,7 +1463,15 @@ static void __evaluateRN( iOrocNet rocnet, byte* rn ) {
     case RN_GROUP_OUTPUT:
       rnReply = rocnetParseOutput( rocnet, rn );
       if( actionType == RN_ACTIONTYPE_EVENT) {
+        char key[32] = {'\0'};
+        iONode rnnode = NULL;
         iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+        StrOp.fmtb( key, "%d-%d", rn[RN_PACKET_NETID], sndr);
+        rnnode = (iONode)MapOp.get(data->nodemap, key);
+
+        if( rnnode != NULL )
+          wItem.setuidname(nodeC, wRocNetNode.getnickname(rnnode));
+
         wSwitch.setbus( nodeC, sndr );
         wSwitch.setaddr1( nodeC, port );
         wSwitch.setaddr1( nodeC, port );

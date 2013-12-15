@@ -2610,23 +2610,17 @@ static iOOperator _getOperator4Car( iOModel inst, const char* id ) {
   return NULL;
 }
 
-static iOSwitch _getSwByAddress( iOModel inst, int addr, int port ) {
-  iOModelData o = Data(inst);
-  iOSwitch sw = (iOSwitch)MapOp.first( o->switchMap );
-  while( sw != NULL ) {
-    if( wSwitch.getaddr1( SwitchOp.base.properties(sw)) == addr && wSwitch.getport1( SwitchOp.base.properties(sw)) == port )
-      return sw;
-    if( wSwitch.getaddr2( SwitchOp.base.properties(sw)) == addr && wSwitch.getport2( SwitchOp.base.properties(sw)) == port )
-      return sw;
-    sw = (iOSwitch)MapOp.next( o->switchMap );
-  };
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no switch found by address [%d,%d]", addr, port );
-  return NULL;
-}
 
+static Boolean __isAddres(int addr, int port, int sgaddr, int sgport) {
+  if( addr > 0 && port == 0 && sgaddr > 0 && sgport == 0 ) {
+    if( addr == sgaddr )
+      return True;
+  }
+  if( addr == 0 && port > 0 && sgaddr == 0 && sgport > 0 ) {
+    if( port == sgport )
+      return True;
+  }
 
-
-static Boolean __isSignalAddres(int addr, int port, int sgaddr, int sgport) {
   if( sgport == 0 && sgaddr > 0 ) {
     int fada = sgaddr;
     sgaddr = fada / 8 + 1;
@@ -2637,40 +2631,80 @@ static Boolean __isSignalAddres(int addr, int port, int sgaddr, int sgport) {
     sgaddr = (pada - 1) / 4 + 1;
     sgport = (pada - 1) % 4 + 1;
   }
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "is signal address: field=[%d,%d] signal=[%d,%d]", addr, port, sgaddr, sgport );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "is address: field=[%d,%d] object=[%d,%d]", addr, port, sgaddr, sgport );
   if( sgaddr == addr && sgport == port )
     return True;
   return False;
 }
 
-static iOSignal _getSgByAddress( iOModel inst, int addr, int port, int type ) {
+
+static obj _getSwByAddress( iOModel inst, const char* iid, int bus, int addr, int port, int type, const char* uidname ) {
+  iOModelData o = Data(inst);
+  obj sw = ListOp.first(o->switchList);
+  while( sw != NULL ) {
+    iONode props = sw->properties(sw);
+
+    if( iid != NULL &&  wItem.getiid(props) != NULL ) {
+      if( !StrOp.equals(iid, wItem.getiid(props)) ) {
+        sw = ListOp.next( o->switchList );
+        continue;
+      }
+    }
+
+    if( wSwitch.getbus(props) == bus || (StrOp.len(uidname) > 0 && StrOp.equals(wItem.getuidname(props),uidname) ) ) {
+      if( wSwitch.getporttype( props ) == type ) {
+        if( __isAddres( addr, port, wSwitch.getaddr1(props), wSwitch.getport1(props) ) )
+          return sw;
+        if( __isAddres( addr, port, wSwitch.getaddr2(props), wSwitch.getport2(props) ) )
+          return sw;
+      }
+    }
+    sw = ListOp.next( o->switchList );
+  };
+  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no switch found by address [%d,%d]", addr, port );
+  return NULL;
+}
+
+
+static iOSignal _getSgByAddress( iOModel inst, const char* iid, int bus, int addr, int port, int type, const char* uidname ) {
   iOModelData o = Data(inst);
   iOSignal sg = (iOSignal)MapOp.first( o->signalMap );
   while( sg != NULL ) {
-    int sgaddr = wSignal.getaddr( SignalOp.base.properties(sg));
-    int sgport = wSignal.getport1( SignalOp.base.properties(sg));
-    int sgtype = wSignal.getporttype( SignalOp.base.properties(sg));
-    if( sgtype == type && __isSignalAddres( addr, port, sgaddr, sgport ) )
-      return sg;
+    iONode props = SignalOp.base.properties(sg);
 
-    sgaddr = wSignal.getaddr2( SignalOp.base.properties(sg));
-    sgport = wSignal.getport2( SignalOp.base.properties(sg));
-    if( sgtype == type && __isSignalAddres( addr, port, sgaddr, sgport ) )
-      return sg;
+    if( iid != NULL &&  wItem.getiid(props) != NULL ) {
+      if( !StrOp.equals(iid, wItem.getiid(props)) ) {
+        sg = (iOSignal)MapOp.next( o->signalMap );
+        continue;
+      }
+    }
 
-    sgaddr = wSignal.getaddr3( SignalOp.base.properties(sg));
-    sgport = wSignal.getport3( SignalOp.base.properties(sg));
-    if( sgtype == type && __isSignalAddres( addr, port, sgaddr, sgport ) )
-      return sg;
+    if( wSignal.getbus(props) == bus || StrOp.equals(wItem.getuidname(props), uidname) ) {
+      int sgaddr = wSignal.getaddr( props );
+      int sgport = wSignal.getport1( props );
+      int sgtype = wSignal.getporttype( props );
+      if( sgtype == type && __isAddres( addr, port, sgaddr, sgport ) )
+        return sg;
 
-    sgaddr = wSignal.getaddr4( SignalOp.base.properties(sg));
-    sgport = wSignal.getport4( SignalOp.base.properties(sg));
-    if( sgtype == type && __isSignalAddres( addr, port, sgaddr, sgport ) )
-      return sg;
+      sgaddr = wSignal.getaddr2( props );
+      sgport = wSignal.getport2( props );
+      if( sgtype == type && __isAddres( addr, port, sgaddr, sgport ) )
+        return sg;
+
+      sgaddr = wSignal.getaddr3( props );
+      sgport = wSignal.getport3( props );
+      if( sgtype == type && __isAddres( addr, port, sgaddr, sgport ) )
+        return sg;
+
+      sgaddr = wSignal.getaddr4( props );
+      sgport = wSignal.getport4( props );
+      if( sgtype == type && __isAddres( addr, port, sgaddr, sgport ) )
+        return sg;
+    }
 
     sg = (iOSignal)MapOp.next( o->signalMap );
   };
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "no signal found by address [%d,%d] type=%d", addr, port, type );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "no signal found by address [%d,%d,%d] type=%d uidname=[%s]", bus, addr, port, type, uidname );
   return NULL;
 }
 
@@ -3410,6 +3444,7 @@ static Boolean _init( iOModel inst ) {
 
 static void _event( iOModel inst, iONode nodeC ) {
   iOModelData o = Data(inst);
+  const char* uidname = wItem.getuidname(nodeC);
 
   if( TraceOp.getLevel(NULL) & TRCLEVEL_DEBUG ) {
     char* strNode = (char*)NodeOp.base.toString( nodeC );
@@ -3439,7 +3474,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     int val = wAccessory.getval1( nodeC );
     const char* iid = wAccessory.getiid( nodeC );
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Accessory event: %d:%d=%d", bus, addr, val);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Accessory event: %d:%d=%d uidname=[%s]", bus, addr, val, uidname);
 
     /* Check for a sensor match: */
     char* key = FBackOp.createAddrKey( bus, addr, iid );
@@ -3480,7 +3515,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     int addr = wFeedback.getaddr( nodeC );
     const char* iid = wFeedback.getiid( nodeC );
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sensor event: %d:%d", bus, addr);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sensor event: %d:%d uidname=[%s]", bus, addr, uidname);
 
     char* key = FBackOp.createAddrKey( bus, addr, iid );
     iOList list = (iOList)MapOp.get( o->fbAddrMap, key );
@@ -3550,152 +3585,18 @@ static void _event( iOModel inst, iONode nodeC ) {
 
   /* Switch */
   if( StrOp.equals( wSwitch.name(), NodeOp.getName( nodeC ) ) ) {
+    const char* iid = wSwitch.getiid( nodeC );
     int bus = wSwitch.getbus( nodeC );
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
     int type = wSwitch.getporttype( nodeC );
-    int matchaddr1 = -1;
-    int matchport1 = -1;
-    int matchtype = 0;
-    int matchaddr2 = -1;
-    int matchport2 = -1;
-    int fada = 0;
-    int pada = 0;
-    const char* iid = wSwitch.getiid( nodeC );
-    const char* defiid;
-    iONode ini    = AppOp.getIni();
-    iONode digint = wRocRail.getdigint( ini );
-    Boolean matched = False;
-    obj sw = NULL;
-
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-        "Switch %sevent: %d:%d:%d type=%d", wSwitch.isaccessory(nodeC)?"accessory ":"", bus, addr, port, type);
-
-    if( digint != NULL)
-      defiid = wDigInt.getiid( digint );
-    else
-      defiid = "vcs-1";
-
-    if( wSwitch.getid(nodeC) != NULL && StrOp.len(wSwitch.getid(nodeC)) > 0 ) {
-      sw = (obj)ModelOp.getSwitch(inst, wSwitch.getid(nodeC) );
-      if( sw != NULL ) {
-        sw->event( sw, nodeC );
-        return;
-      }
-    }
-
-
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "trying to match %s event: %d:%d:%d type=%d",
-        wAccessory.isaccevent(nodeC)?"accessory":"switch", bus, addr, port, type );
-
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "iterating switch list %d", ListOp.size(o->switchList) );
-    sw = ListOp.first(o->switchList);
-    while( sw != NULL ) {
-      Boolean flat = False;
-      Boolean invertstate = False;
-      iONode props = sw->properties(sw);
-
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "testing: %d:%d:%d type=%d",
-          wSwitch.getbus(props), wSwitch.getaddr1(props), wSwitch.getport1(props), wSwitch.getporttype(props) );
-
-      matchaddr1 = wSwitch.getaddr1(props);
-      matchport1 = wSwitch.getport1(props);
-      matchtype = wSwitch.getporttype(props);
-
-      if( wSwitch.isaccessory(nodeC) && wSwitch.isaccessory(props) ) {
-        /* accessory match; disregard port type */
-        matchtype = type;
-      }
-
-      if( matchaddr1 > 0 && matchport1 == 0 && addr > 0 && port == 0 ) {
-        /* 1:1 flat */
-        flat = True;
-        if( matchaddr1 +1 == addr) {
-          invertstate = True;
-        }
-      }
-      else if( matchaddr1 == 0 && matchport1 > 0 && addr == 0 && port > 0 ) {
-        /* 1:1 pada */
-      }
-      else if( matchport1 == 0 && matchaddr1 > 0 ) {
-        fada = matchaddr1;
-        matchaddr1 = fada / 8 + 1;
-        matchport1 = (fada % 8) /2 + 1;
-      }
-      else if( matchaddr1 == 0 && matchport1 > 0 ) {
-        pada = matchport1;
-        matchaddr1 = (pada - 1) / 4 + 1;
-        matchport1 = (pada - 1) % 4 + 1;
-      }
-      else if( matchaddr1 == 0 && matchport1 == 0 ) {
-        matchaddr1 = -1;
-        matchport1 = -1;
-      }
-
-      matchaddr2 = wSwitch.getaddr2(props);
-      matchport2 = wSwitch.getport2(props);
-      if( matchaddr2 > 0 && matchport2 == 0 && addr > 0 && port == 0 ) {
-        /* flat */
-        flat = True;
-        if( matchaddr2 +1 == addr) {
-          invertstate = True;
-        }
-      }
-      else if( matchaddr2 == 0 && matchport2 > 0 && addr == 0 && port > 0 ) {
-        /* 1:1 pada */
-      }
-      else if( matchport2 == 0 && matchaddr2 > 0 ) {
-        fada = matchaddr2;
-        matchaddr2 = fada / 8 + 1;
-        matchport2 = (fada % 8) /2 + 1;
-      }
-      else if( matchaddr2 == 0 && matchport2 > 0 ) {
-        pada = matchport2;
-        matchaddr2 = (pada - 1) / 4 + 1;
-        matchport2 = (pada - 1) % 4 + 1;
-      }
-      else if( matchaddr2 == 0 && matchport2 == 0 ) {
-        matchaddr2 = -1;
-        matchport2 = -1;
-      }
-
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,"bus %d=%d, addr1 %d=%d, addr2 %d=%d, port1 %d=%d, port2 %d=%d, type %d=%d %s",
-          wSwitch.getbus(props), bus, matchaddr1, addr, matchaddr2, addr, matchport1, port, matchport2, port, matchtype, type, flat?"(flat)":"");
-
-      if( (wSwitch.getbus(props) == bus && matchaddr1 == addr && matchport1 == port && matchtype == type) ||
-          (wSwitch.getbus(props) == bus && matchaddr2 == addr && matchport2 == port && matchtype == type) )
-      {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-            "matching sw=%s iid=[%s] (iid=%s defiid=%s) bus=%d addr=%d port=%d %s",
-            sw->id(sw), wSwitch.getiid(props)!=NULL?wSwitch.getiid(props):"?", iid, defiid,
-                wSwitch.getbus(props), matchaddr1, matchport1, flat?"(flat)":"");
-
-        if( (StrOp.len( wSwitch.getiid(props) ) > 0 && StrOp.equals(iid, wSwitch.getiid(props))) ||
-            ( ( StrOp.len( wSwitch.getiid(props) ) == 0 ) && (iid == NULL || StrOp.equals( iid, defiid ) || StrOp.len(iid) == 0 ) ) )
-        {
-          iONode clone = (iONode)NodeOp.base.clone(nodeC);
-          if( invertstate ) {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,"invert state from %s", wSwitch.getstate(clone) );
-            if( StrOp.equals(wSwitch.straight, wSwitch.getstate(clone)) )
-              wSwitch.setstate(clone, wSwitch.turnout);
-            else
-              wSwitch.setstate(clone, wSwitch.straight);
-          }
-          matched = True;
-          sw->event( sw, clone );
-        }
-        else
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "IID does not match" );
-
-      }
-      sw = ListOp.next(o->switchList);
-    }
-
-    if( matched ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match switch event: %d:%d:%d type=%d uidname=[%s]", bus, addr, port, type, uidname );
+    obj sw = ModelOp.getSwByAddress(inst, iid, bus, addr, port, type, uidname);
+    if( sw != NULL ) {
+      sw->event( sw, (iONode)NodeOp.base.clone(nodeC) );
       NodeOp.base.del(nodeC);
       return;
     }
-
     /* Try a signal object... */
     NodeOp.setName(nodeC, wSignal.name() );
   }
@@ -3703,12 +3604,13 @@ static void _event( iOModel inst, iONode nodeC ) {
 
   /* Signal */
   if( StrOp.equals( wSignal.name(), NodeOp.getName( nodeC ) ) ) {
+    const char* iid = wSwitch.getiid( nodeC );
     int bus = wSwitch.getbus( nodeC );
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
     int type = wSwitch.getporttype( nodeC );
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match signal event: %d:%d:%d type=%d", bus, addr, port, type );
-    iOSignal sg = ModelOp.getSgByAddress(inst, addr, port, type);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match signal event: %d:%d:%d type=%d uidname=[%s]", bus, addr, port, type, uidname );
+    iOSignal sg = ModelOp.getSgByAddress(inst, iid, bus, addr, port, type, uidname);
     if( sg != NULL && wCtrl.issgevents( wRocRail.getctrl( AppOp.getIni() ) ) ) {
       SignalOp.event( sg, (iONode)NodeOp.base.clone(nodeC) );
       NodeOp.base.del(nodeC);
@@ -3733,7 +3635,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       type = wOutput.getporttype( nodeC );
     }
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match output event: %d:%d:%d type=%d", bus, addr, port, type );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match output event: %d:%d:%d type=%d uidname=[%s]", bus, addr, port, type, uidname );
 
     const char* iid = wOutput.getiid( nodeC );
     char* key = OutputOp.createAddrKey( bus, addr, port, type, iid );
@@ -3749,9 +3651,9 @@ static void _event( iOModel inst, iONode nodeC ) {
       return;
     }
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match signal event: %d:%d:%d type=%d", bus, addr, port, type );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match signal event: %d:%d:%d type=%d uidname=[%s]", bus, addr, port, type, uidname );
 
-    iOSignal sg = ModelOp.getSgByAddress(inst, addr, port, type);
+    iOSignal sg = ModelOp.getSgByAddress(inst, iid, bus, addr, port, type, uidname);
     if( sg != NULL && wCtrl.issgevents( wRocRail.getctrl( AppOp.getIni() ) ) ) {
       SignalOp.event( sg, nodeC );
       return;
@@ -3769,7 +3671,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       addr = wOutput.getaddr( nodeC );
       port = wOutput.getport( nodeC );
     }
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered event: %s %d:%d:%d", NodeOp.getName(nodeC), bus, addr, port );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered event: %s %d:%d:%d uidname=[%s]", NodeOp.getName(nodeC), bus, addr, port, uidname );
     /* Cleanup Node3 */
     nodeC->base.del(nodeC);
     return;
