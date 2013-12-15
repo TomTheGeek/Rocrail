@@ -2638,6 +2638,32 @@ static Boolean __isAddres(int addr, int port, int sgaddr, int sgport) {
 }
 
 
+static iOList _getSensorsByAddress( iOModel inst, const char* iid, int bus, int addr, const char* uidname ) {
+  iOModelData data = Data(inst);
+  iOList list = ListOp.inst();
+
+  obj fb = MapOp.first( data->feedbackMap );
+  while( fb != NULL ) {
+    iONode props = fb->properties(fb);
+
+    if( iid != NULL && wItem.getiid(props) != NULL && !StrOp.equals(iid, wItem.getiid(props)) ) {
+      fb = MapOp.next( data->feedbackMap );
+      continue;
+    }
+
+    if( bus == wItem.getbus(props) || StrOp.equals(uidname, wItem.getuidname(props)) ) {
+      if( addr == wFeedback.getaddr(props) )
+        ListOp.add(list, (obj)fb);
+    }
+
+    fb = MapOp.next( data->feedbackMap );
+  };
+
+
+  return list;
+}
+
+
 static obj _getSwByAddress( iOModel inst, const char* iid, int bus, int addr, int port, int type, const char* uidname ) {
   iOModelData o = Data(inst);
   obj sw = ListOp.first(o->switchList);
@@ -3472,40 +3498,18 @@ static void _event( iOModel inst, iONode nodeC ) {
     int bus = wAccessory.getnodenr( nodeC );
     int addr = wAccessory.getdevid( nodeC );
     int val = wAccessory.getval1( nodeC );
-    const char* iid = wAccessory.getiid( nodeC );
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Accessory event: %d:%d=%d uidname=[%s]", bus, addr, val, uidname);
+    /* First we try a sensor. */
+    NodeOp.setName(nodeC, wFeedback.name());
+    wFeedback.setbus( nodeC, bus );
+    wFeedback.setaddr( nodeC, addr );
+    wFeedback.setstate(nodeC, val?True:False);
 
-    /* Check for a sensor match: */
-    char* key = FBackOp.createAddrKey( bus, addr, iid );
-    iOList list = (iOList)MapOp.get( o->fbAddrMap, key );
-    StrOp.free( key );
-    if( list != NULL ) {
-      obj fb = ListOp.first( list );
-
-      NodeOp.setName(nodeC, wFeedback.name());
-      wFeedback.setaddr(nodeC, addr);
-      wFeedback.setbus(nodeC, bus);
-      wFeedback.setstate(nodeC, val?True:False);
-
-      while( fb != NULL ) {
-        fb->event(fb, (iONode)NodeOp.base.clone(nodeC));
-        fb = ListOp.next(list);
-      }
-      nodeC->base.del(nodeC);
-      return;
-    }
-    else {
-      /* Try a switch object */
-      NodeOp.setName(nodeC, wSwitch.name());
-      wSwitch.setbus( nodeC, bus );
-      wSwitch.setaddr1( nodeC, addr );
-      wSwitch.setport1( nodeC, 0 );
-      wSwitch.setstate( nodeC, val?"straight":"turnout" );
-      wSwitch.setgatevalue(nodeC, val);
-      wSwitch.setaccessory(nodeC, True);
-    }
-
+    /* Prepare some attributes in case no sensor was found. */
+    wSwitch.setaccessory(nodeC, True);
+    wSwitch.setaddr1( nodeC, addr );
+    wSwitch.setport1( nodeC, 0 );
+    wSwitch.setgatevalue(nodeC, val);
   }
 
 
@@ -3513,12 +3517,11 @@ static void _event( iOModel inst, iONode nodeC ) {
   if( StrOp.equals( wFeedback.name(), NodeOp.getName( nodeC ) ) ) {
     int bus = wFeedback.getbus( nodeC );
     int addr = wFeedback.getaddr( nodeC );
+    Boolean val = wFeedback.isstate(nodeC);
     const char* iid = wFeedback.getiid( nodeC );
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sensor event: %d:%d uidname=[%s]", bus, addr, uidname);
-
-    char* key = FBackOp.createAddrKey( bus, addr, iid );
-    iOList list = (iOList)MapOp.get( o->fbAddrMap, key );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match sensor event: %d:%d uidname=[%s]", bus, addr, uidname );
+    iOList list = ModelOp.getSensorsByAddress(inst, iid, bus, addr, uidname);
     if( list != NULL ) {
       obj fb = ListOp.first( list );
       while( fb != NULL ) {
@@ -3527,16 +3530,16 @@ static void _event( iOModel inst, iONode nodeC ) {
         fb = ListOp.next(list);
       }
       NodeOp.base.del(nodeC);
+      ListOp.base.del(list);
+      return;
     }
-    else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unregistered sensor event: %s %s",
-                   key, wFeedback.isstate( nodeC )?"ON":"OFF" );
-      /* Cleanup Node3 */
-      /* nodeC->base.del(nodeC);*/
-      AppOp.broadcastEvent( nodeC ); /* Send to clients to visualize all sensors. */
+
+    if(wSwitch.isaccessory(nodeC)) {
+      /* Try a switch object */
+      NodeOp.setName(nodeC, wSwitch.name());
+      wSwitch.setstate( nodeC, val?"straight":"turnout" );
     }
-    StrOp.free( key );
-    return;
+
   }
 
 

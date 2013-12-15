@@ -864,6 +864,13 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="Car ID to search for"/>
     </fun>
+    <fun name="getSensorsByAddress" vt="iOList">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="iid" vt="const char*" remark="Optional IID"/>
+      <param name="bus" vt="int" remark="Bus number to search for"/>
+      <param name="addr" vt="int" remark="Decoder address to search for"/>
+      <param name="uidname" vt="const char*" remark="Alternative name for the bus number."/>
+    </fun>
     <fun name="getSwByAddress" vt="obj">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="iid" vt="const char*" remark="Optional IID"/>
