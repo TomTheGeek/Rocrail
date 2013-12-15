@@ -41,6 +41,7 @@
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
+#include "rocrail/wrapper/public/Item.h"
 
 
 static int instCnt = 0;
@@ -207,6 +208,7 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
     wOutput.setiid( nodeA, iid );
 
   wOutput.setbus( nodeA, wOutput.getbus( o->props ) );
+  wItem.setuidname(nodeA, wItem.getuidname(o->props));
 
   wOutput.setprot( nodeA, wOutput.getprot( o->props ) );
   wOutput.setblink( nodeA, wOutput.isblink( o->props ) );
