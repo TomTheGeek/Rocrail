@@ -446,6 +446,7 @@ private:
   iONode m_WorkSpace;
   iONode m_RocrailIni;
   bool m_FakeLeftClick;
+  iOMutex m_TraceMutex;
   // any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
 };

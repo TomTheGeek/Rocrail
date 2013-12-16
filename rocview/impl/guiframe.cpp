@@ -1612,6 +1612,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LNCV               = NULL; 
   m_LocoPanel          = NULL;
   m_CmdRecorder        = NULL;
+  m_TraceMutex         = MutexOp.inst(NULL, True);
 
   if( wxTheClipboard != NULL ) {
     if( wxTheClipboard->Open() ) {
@@ -2430,12 +2431,17 @@ void RocGuiFrame::OnLogo( wxCommandEvent& event ) {
 
 
 void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
+  MutexOp.wait(m_TraceMutex);
+
   // Get the copied node:
   iONode node = (iONode)event.GetClientData();
   const char* text = wException.gettext( node );
   int        level = wException.getlevel( node );
   long      maxlen = wGui.getmonitorsize(m_Ini) * 1024;
   int          len = StrOp.len(text);
+
+  if( maxlen < 1024 )
+    maxlen = 1024;
 
   TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "Got an info message: %s", text );
 
@@ -2444,7 +2450,11 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
     m_MonitorPanel->Freeze();
     long lpwarn = m_WarningPanel->GetLastPosition();
     if( lpwarn > maxlen ) {
-      m_WarningPanel->Remove(0, len+1);
+      TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "***** remove %ld from %ld", len+1, lpwarn );
+      if( len+1 < lpwarn )
+        m_WarningPanel->Remove(0, len+1);
+      else
+        m_WarningPanel->Remove(0, lpwarn-1);
     }
     if( level == TRCLEVEL_EXCEPTION ) {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxRED));
@@ -2467,7 +2477,11 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
     else if( level == TRCLEVEL_MONITOR && m_MonitorPanel != NULL) {
       long lpmon = m_MonitorPanel->GetLastPosition();
       if( lpmon > maxlen ) {
-        m_MonitorPanel->Remove(0, len+1);
+        TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "***** remove %ld from %ld", len+1, lpwarn );
+        if( len+1 < lpmon )
+          m_MonitorPanel->Remove(0, len+1);
+        else
+          m_MonitorPanel->Remove(0, lpmon-1);
       }
       m_MonitorPanel->SetDefaultStyle(wxTextAttr(*wxBLACK));
       m_MonitorPanel->AppendText( wxString(text,wxConvUTF8) );
@@ -2486,6 +2500,7 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
 
   // Cleanup node:
   node->base.del( node );
+  MutexOp.post(m_TraceMutex);
 }
 
 // event handlers
