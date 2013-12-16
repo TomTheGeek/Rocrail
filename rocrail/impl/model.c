@@ -2640,20 +2640,26 @@ static Boolean __isAddres(int addr, int port, int sgaddr, int sgport) {
 
 static iOList _getSensorsByAddress( iOModel inst, const char* iid, int bus, int addr, const char* uidname ) {
   iOModelData data = Data(inst);
-  iOList list = ListOp.inst();
+  iOList list = NULL;
 
   obj fb = MapOp.first( data->feedbackMap );
   while( fb != NULL ) {
     iONode props = fb->properties(fb);
 
-    if( iid != NULL && wItem.getiid(props) != NULL && !StrOp.equals(iid, wItem.getiid(props)) ) {
-      fb = MapOp.next( data->feedbackMap );
-      continue;
+    if( iid != NULL && wItem.getiid(props) != NULL && StrOp.len(wItem.getiid(props)) > 0 ) {
+      if( !StrOp.equals(iid, wItem.getiid(props)) ) {
+        fb = MapOp.next( data->feedbackMap );
+        continue;
+      }
     }
 
     if( bus == wItem.getbus(props) || (StrOp.len(uidname) > 0 && StrOp.equals(uidname, wItem.getuidname(props))) ) {
-      if( addr == wFeedback.getaddr(props) )
+      if( addr == wFeedback.getaddr(props) ) {
+        if( list == NULL )
+          list = ListOp.inst();
+
         ListOp.add(list, (obj)fb);
+      }
     }
 
     fb = MapOp.next( data->feedbackMap );
@@ -2670,7 +2676,7 @@ static obj _getSwByAddress( iOModel inst, const char* iid, int bus, int addr, in
   while( sw != NULL ) {
     iONode props = sw->properties(sw);
 
-    if( iid != NULL &&  wItem.getiid(props) != NULL ) {
+    if( iid != NULL && wItem.getiid(props) != NULL && StrOp.len(wItem.getiid(props)) > 0 ) {
       if( !StrOp.equals(iid, wItem.getiid(props)) ) {
         sw = ListOp.next( o->switchList );
         continue;
@@ -2698,7 +2704,7 @@ static iOSignal _getSgByAddress( iOModel inst, const char* iid, int bus, int add
   while( sg != NULL ) {
     iONode props = SignalOp.base.properties(sg);
 
-    if( iid != NULL &&  wItem.getiid(props) != NULL ) {
+    if( iid != NULL && wItem.getiid(props) != NULL && StrOp.len(wItem.getiid(props)) > 0 ) {
       if( !StrOp.equals(iid, wItem.getiid(props)) ) {
         sg = (iOSignal)MapOp.next( o->signalMap );
         continue;
@@ -3667,6 +3673,7 @@ static void _event( iOModel inst, iONode nodeC ) {
 
   /* Default: Nothing matching found. */
   {
+    const char* iid = wSwitch.getiid( nodeC );
     int bus = wSwitch.getbus( nodeC );
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
@@ -3674,7 +3681,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       addr = wOutput.getaddr( nodeC );
       port = wOutput.getport( nodeC );
     }
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered event: %s %d:%d:%d uidname=[%s]", NodeOp.getName(nodeC), bus, addr, port, uidname );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregistered event: %s [%s]%d:%d:%d uidname=[%s]", NodeOp.getName(nodeC), iid!=NULL?iid:"", bus, addr, port, uidname );
     /* Cleanup Node3 */
     nodeC->base.del(nodeC);
     return;
