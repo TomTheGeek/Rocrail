@@ -1618,17 +1618,17 @@ static void __rocmousescanner( void* threadinst ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int runLEDcnt = 0;
   Boolean runLED = False;
-  Boolean init = False;
+  Boolean init[8] = {False,False,False,False,False,False,False,False};
   byte msg[256];
+  byte baseio  = 0x3F;
+  byte baseadc = 0x4F;
+  int idx = 0;
 
   ThreadOp.sleep(1000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocMouse scanner started" );
 
   while( data->run ) {
     int rc = 0;
-    int idx = 0;
-    byte baseio  = 0x3F;
-    byte baseadc = 0x4F;
     byte fnLEDs  = 0;
     Boolean buttonLights = False;
     Boolean buttonFGroup = False;
@@ -1668,9 +1668,11 @@ static void __rocmousescanner( void* threadinst ) {
      * Thats why the read is done twice after a control byte write.
      */
 
+    baseio  = 0x38 + idx;
+    baseadc = 0x48 + idx;
     /* write outputs (LED1-LED3) */
-    if( !init )
-      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 );
+    if( !init[idx] )
+      rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xFF );
 
     if( rc >= 0 ) {
       byte ctrl     = 0x40; /* analog out active and auto increment */
@@ -1689,7 +1691,7 @@ static void __rocmousescanner( void* threadinst ) {
        * All I/O.
        */
       if( rc >= 0 ) /* write function group LEDs */
-        rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + ((6-data->rocmouses[idx]->fgroup) + 1) );
+        rc = raspiWriteI2C(data->i2cdescriptor, baseio, 0xF8 + (0x07^(data->rocmouses[idx]->fgroup+1)) );
       if( rc >= 0 ) /* read inputs (S1-S5) */
         rc = raspiReadI2C(data->i2cdescriptor, baseio, &data->rocmouses[idx]->io);
       if( rc >= 0 ) /* write control register for P1 */
@@ -1723,7 +1725,7 @@ static void __rocmousescanner( void* threadinst ) {
 
 
       if( rc == -1 ) {
-        init = False;
+        init[idx] = False;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "error during I/O operations with the RocMouse %d", idx);
       }
       else {
@@ -1733,7 +1735,7 @@ static void __rocmousescanner( void* threadinst ) {
         float max255 = 250.0;
         float steps = 50.0;
 
-        init = True;
+        init[idx] = True;
         /* Velocity
          *
          * Moving average
@@ -1864,7 +1866,7 @@ static void __rocmousescanner( void* threadinst ) {
           freeMem(data->rocmouses[idx]);
           data->rocmouses[idx] = NULL;
 
-          init = False;
+          init[idx] = False;
 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocmouse detached");
 
@@ -1890,7 +1892,14 @@ static void __rocmousescanner( void* threadinst ) {
     }
 
     MutexOp.post( data->i2cmux );
-    ThreadOp.sleep( data->stress ? 1000:100 );
+
+    idx++;
+    if( idx > 7 ) {
+      idx = 0;
+      ThreadOp.sleep( 20 );
+    }
+
+    ThreadOp.sleep( 10 );
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocMouse scanner stopped" );
