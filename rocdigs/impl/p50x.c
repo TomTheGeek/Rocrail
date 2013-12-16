@@ -1469,7 +1469,7 @@ static void __feedbackReader( void* threadinst ) {
           if( SerialOp.read( o->serial, (char*)&module, 1 ) ) {
             /* modules > 31 are loconet */
             while( module > 0 && module < MAX_FB && state == P50_OK ) {
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbModule = %d", module );
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "fbModule = %d", module );
               TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)&module, 1 );
 
               if( !SerialOp.read( o->serial, (char*)tmp, 2 ) ) {
