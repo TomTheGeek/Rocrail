@@ -180,6 +180,10 @@ public:
     wxPanel* m_Interface;
     wxStaticText* m_Labeliid;
     wxTextCtrl* m_IID;
+    wxStaticText* m_labBus;
+    wxTextCtrl* m_Bus;
+    wxStaticText* m_labUIDName;
+    wxTextCtrl* m_UIDName;
     wxStaticText* m_LabelType;
     wxComboBox* m_Type;
     wxStaticText* m_LabelAddress0;

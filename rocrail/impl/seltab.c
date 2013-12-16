@@ -54,6 +54,7 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/Item.h"
 
 static void _fbEvent( obj inst ,Boolean puls ,const char* id ,const char* ident, int val );
 static void _sysEvent( obj inst, const char* cmd );
@@ -397,6 +398,8 @@ static void _fbEvent( obj inst ,Boolean state ,const char* id ,const char* ident
 
         /* set the protocol */
         wSwitch.setprot( cmd, wSelTab.getprot(data->props) );
+        wSwitch.setbus( cmd, wItem.getbus(data->props) );
+        wItem.setuidname( cmd, wItem.getuidname(data->props) );
         wSwitch.setaddr1( cmd, wSelTab.getaddr4(data->props) );
         wSwitch.setport1( cmd, wSelTab.getport4(data->props) );
         wOutput.setcmd( cmd, wSelTab.isinvnew(data->props) ? wSwitch.straight:wSwitch.turnout );
@@ -571,6 +574,9 @@ static void __processCmd( struct OSelTab* inst ,iONode nodeA ) {
 
     if( iid != NULL )
       wOutput.setiid( cmd, iid );
+
+    wSwitch.setbus( cmd, wItem.getbus(data->props) );
+    wItem.setuidname( cmd, wItem.getuidname(data->props) );
 
     if( StrOp.equals( wSelTab.prot_MP, wSelTab.getprot(data->props) ) ) {
       /* rename node to program */

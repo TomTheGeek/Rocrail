@@ -212,6 +212,8 @@ public:
     wxTextCtrl* m_IID;
     wxStaticText* m_Label_Bus;
     wxTextCtrl* m_Bus;
+    wxStaticText* m_labUIDName;
+    wxTextCtrl* m_UIDName;
     wxStaticText* m_LabelAddress;
     wxTextCtrl* m_Address;
     wxTextCtrl* m_AddressDir;

@@ -537,6 +537,7 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
   if( port != -1 ) {
     cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
     wOutput.setbus( cmd, wTurntable.getbus( data->props ) );
+    wItem.setuidname( cmd, wItem.getuidname(data->props) );
     wOutput.setaddr( cmd, wTurntable.getaddr( data->props ) );
 
     wOutput.setport( cmd, 8 );
@@ -572,6 +573,7 @@ static Boolean __cmd_dsm( iOTT inst, iONode nodeA ) {
 
     cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
     wOutput.setbus( cmd, wTurntable.getbus( data->props ) );
+    wItem.setuidname( cmd, wItem.getuidname(data->props) );
     wOutput.setaddr( cmd, wTurntable.getaddr( data->props ) );
     const char* iid = wTurntable.getiid( data->props );
     if( iid != NULL )

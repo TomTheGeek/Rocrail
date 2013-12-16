@@ -45,6 +45,7 @@
 #include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Accessory.h"
+#include "rocrail/wrapper/public/Item.h"
 
 #include "rocutils/public/addr.h"
 
@@ -419,6 +420,7 @@ static Boolean __processPairCmd( iOSignal inst, const char* state, Boolean inver
     wSwitch.setiid( swcmd, iid );
 
   wSwitch.setbus( swcmd, wSignal.getbus( o->props ) );
+  wItem.setuidname(swcmd, wItem.getuidname(o->props));
   wSwitch.setprot( swcmd, wSignal.getprot( o->props ) );
   wSwitch.setactdelay( swcmd, False );
 
@@ -636,6 +638,7 @@ static Boolean __processMultiAspectsCmd( iOSignal inst, const char* state, int n
   }
 
   wOutput.setbus( cmd, wSignal.getbus( o->props ) );
+  wItem.setuidname(cmd, wItem.getuidname(o->props));
   wOutput.setprot( cmd, wSignal.getprot( o->props ) );
   wOutput.setaccessory( cmd, wSignal.isaccessory(o->props) );
   wOutput.setporttype( cmd, wSignal.getporttype( o->props ) );
@@ -725,6 +728,7 @@ static Boolean __process4AspectsCmd( iOSignal inst, const char* state ) {
     wOutput.setiid( cmd, iid );
 
   wOutput.setbus( cmd, wSignal.getbus( o->props ) );
+  wItem.setuidname(cmd, wItem.getuidname(o->props));
 
   wOutput.setprot( cmd, wSignal.getprot( o->props ) );
   wOutput.setcmd( cmd, wOutput.off );
@@ -824,6 +828,7 @@ static Boolean __process3AspectsCmd( iOSignal inst, const char* state ) {
     wOutput.setiid( cmd, iid );
 
   wOutput.setbus( cmd, wSignal.getbus( o->props ) );
+  wItem.setuidname(cmd, wItem.getuidname(o->props));
 
   wOutput.setprot( cmd, wSignal.getprot( o->props ) );
   wOutput.setcmd( cmd, wOutput.off );
@@ -905,6 +910,7 @@ static Boolean __process2AspectsCmd( iOSignal inst, const char* state ) {
     wOutput.setiid( cmd, iid );
 
   wOutput.setbus( cmd, wSignal.getbus( o->props ) );
+  wItem.setuidname(cmd, wItem.getuidname(o->props));
 
   wOutput.setprot( cmd, wSignal.getprot( o->props ) );
   wOutput.setcmd( cmd, wOutput.off );
@@ -989,6 +995,7 @@ static Boolean __processAspectNrCmd( iOSignal inst, const char* state, int nr ) 
   wSignal.setaspect(o->props, aspect);
 
   wSignal.setbus( cmd, wSignal.getbus( o->props ) );
+  wItem.setuidname(cmd, wItem.getuidname(o->props));
 
   wSignal.setprot( cmd, wSignal.getprot( o->props ) );
   wSignal.setcmd( cmd, wSignal.aspect );
@@ -1027,6 +1034,7 @@ static Boolean __process2AspectsAsSwitchCmd( iOSignal inst, const char* state ) 
   wSwitch.setprot( cmd, wSignal.getprot( o->props ) );
   wSwitch.setcmd( cmd, wOutput.on );
   wSwitch.setbus( cmd, wSignal.getbus( o->props ) );
+  wItem.setuidname(cmd, wItem.getuidname(o->props));
   wSwitch.setaddr1( cmd, wSignal.getaddr( o->props ) );
   wSwitch.setport1( cmd, wSignal.getport1( o->props ) );
 
