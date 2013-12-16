@@ -2651,7 +2651,7 @@ static iOList _getSensorsByAddress( iOModel inst, const char* iid, int bus, int 
       continue;
     }
 
-    if( bus == wItem.getbus(props) || StrOp.equals(uidname, wItem.getuidname(props)) ) {
+    if( bus == wItem.getbus(props) || (StrOp.len(uidname) > 0 && StrOp.equals(uidname, wItem.getuidname(props))) ) {
       if( addr == wFeedback.getaddr(props) )
         ListOp.add(list, (obj)fb);
     }
@@ -2705,7 +2705,7 @@ static iOSignal _getSgByAddress( iOModel inst, const char* iid, int bus, int add
       }
     }
 
-    if( wSignal.getbus(props) == bus || StrOp.equals(wItem.getuidname(props), uidname) ) {
+    if( wSignal.getbus(props) == bus || (StrOp.len(uidname) > 0 && StrOp.equals(wItem.getuidname(props), uidname)) ) {
       int sgaddr = wSignal.getaddr( props );
       int sgport = wSignal.getport1( props );
       int sgtype = wSignal.getporttype( props );
