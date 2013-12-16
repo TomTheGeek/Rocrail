@@ -2442,8 +2442,8 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
   if( m_bTraceWindow && m_WarningPanel != NULL ) {
     m_WarningPanel->Freeze();
     m_MonitorPanel->Freeze();
-    long i = m_WarningPanel->GetLastPosition();
-    if( i > maxlen ) {
+    long lpwarn = m_WarningPanel->GetLastPosition();
+    if( lpwarn > maxlen ) {
       m_WarningPanel->Remove(0, len+1);
     }
     if( level == TRCLEVEL_EXCEPTION ) {
@@ -2465,9 +2465,10 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
       m_WarningPanel->ScrollLines(1);
     }
     else if( level == TRCLEVEL_MONITOR && m_MonitorPanel != NULL) {
-      long i = m_MonitorPanel->GetLastPosition();
-      if( i > maxlen )
+      long lpmon = m_MonitorPanel->GetLastPosition();
+      if( lpmon > maxlen ) {
         m_MonitorPanel->Remove(0, len+1);
+      }
       m_MonitorPanel->SetDefaultStyle(wxTextAttr(*wxBLACK));
       m_MonitorPanel->AppendText( wxString(text,wxConvUTF8) );
       m_MonitorPanel->AppendText( _T("\n") );
