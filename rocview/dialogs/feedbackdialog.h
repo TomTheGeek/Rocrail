@@ -218,6 +218,8 @@ public:
     wxPanel* m_Interface;
     wxStaticText* m_Labeliid;
     wxTextCtrl* m_iid;
+    wxStaticText* m_labUIDName;
+    wxTextCtrl* m_UIDName;
     wxStaticBox* m_AddressBox;
     wxStaticText* m_labBusNr;
     wxTextCtrl* m_BusNr;

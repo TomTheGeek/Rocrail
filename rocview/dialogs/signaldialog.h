@@ -239,8 +239,8 @@ public:
     wxTextCtrl* m_iid;
     wxStaticText* m_Label_Bus;
     wxTextCtrl* m_Bus;
-    wxStaticText* m_LabelProt;
-    wxChoice* m_Prot;
+    wxStaticText* m_labUIDName;
+    wxTextCtrl* m_UIDName;
     wxStaticBox* m_RedBox;
     wxStaticText* m_labAddress;
     wxStaticText* m_labPort;
@@ -259,6 +259,8 @@ public:
     wxTextCtrl* m_Address4;
     wxTextCtrl* m_Port4;
     wxRadioBox* m_Gate4;
+    wxStaticText* m_LabelProt;
+    wxChoice* m_Prot;
     wxRadioBox* m_SignalControl;
     wxCheckBox* m_Accessory;
     wxRadioBox* m_PortType;
