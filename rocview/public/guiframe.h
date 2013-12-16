@@ -262,6 +262,7 @@ public:
   void OnLangKorean(wxCommandEvent& event);
   void OnLangSerbianLatin(wxCommandEvent& event);
   void OnLangSlovene(wxCommandEvent& event);
+  void OnLangFinnish(wxCommandEvent& event);
 
   void OnRocrailIni(wxCommandEvent& event);
   void OnRocguiIni(wxCommandEvent& event);
@@ -581,6 +582,7 @@ enum
     ME_LangPortugueseBR,
     ME_LangSerbianLatin,
     ME_LangSlovene,
+    ME_LangFinnish,
     ME_RocrailIni,
     ME_PowerEvent,
     ME_RocguiIni,

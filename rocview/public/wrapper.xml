@@ -83,6 +83,7 @@
     <const name="lang_korean" vt="string" val="ko"/>
     <const name="lang_serbianlatin" vt="string" val="sr_latin"/>
     <const name="lang_slovene" vt="string" val="sl"/>
+    <const name="lang_finnish" vt="string" val="fi"/>
     <const name="clock_default" vt="string" val="default"/>
     <const name="clock_ampm" vt="string" val="ampm"/>
     <const name="clock_24h" vt="string" val="24h"/>
