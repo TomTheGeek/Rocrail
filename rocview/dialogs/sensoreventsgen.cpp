@@ -46,6 +46,7 @@ SensorEventsGen::SensorEventsGen( wxWindow* parent, wxWindowID id, const wxStrin
 	
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( SensorEventsGen::onClose ) );
+	m_EventList->Connect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( SensorEventsGen::onDrag ), NULL, this );
 	m_EventList->Connect( wxEVT_COMMAND_LIST_COL_CLICK, wxListEventHandler( SensorEventsGen::onColClick ), NULL, this );
 	m_EventList->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( SensorEventsGen::onListSelected ), NULL, this );
 	m_Refresh->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SensorEventsGen::onRefresh ), NULL, this );
@@ -57,6 +58,7 @@ SensorEventsGen::~SensorEventsGen()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( SensorEventsGen::onClose ) );
+	m_EventList->Disconnect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( SensorEventsGen::onDrag ), NULL, this );
 	m_EventList->Disconnect( wxEVT_COMMAND_LIST_COL_CLICK, wxListEventHandler( SensorEventsGen::onColClick ), NULL, this );
 	m_EventList->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( SensorEventsGen::onListSelected ), NULL, this );
 	m_Refresh->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SensorEventsGen::onRefresh ), NULL, this );

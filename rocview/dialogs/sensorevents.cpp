@@ -20,6 +20,11 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+
+#include <wx/clipbrd.h>
+#include <wx/dataobj.h>
+#include <wx/dnd.h>
+
 #include "sensorevents.h"
 
 #include "rocview/public/guiapp.h"
@@ -316,3 +321,14 @@ void SensorEventsDlg::onColClick( wxListEvent& event ) {
   initValues();
 }
 
+
+void SensorEventsDlg::onDrag( wxListEvent& event ) {
+  if( m_FbEvent == NULL )
+    return;
+
+  wxString my_text = _T("bus:")+wxString::Format(_T("%d:"), wFeedback.getbus(m_FbEvent) )+wxString::Format(_T("%d"), wFeedback.getaddr(m_FbEvent) );
+  wxTextDataObject my_data(my_text);
+  wxDropSource dragSource( this );
+  dragSource.SetData( my_data );
+  wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+}

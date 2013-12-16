@@ -123,7 +123,7 @@
                         <event name="OnLeftDClick"></event>
                         <event name="OnLeftDown"></event>
                         <event name="OnLeftUp"></event>
-                        <event name="OnListBeginDrag"></event>
+                        <event name="OnListBeginDrag">onDrag</event>
                         <event name="OnListBeginLabelEdit"></event>
                         <event name="OnListBeginRDrag"></event>
                         <event name="OnListCacheHint"></event>

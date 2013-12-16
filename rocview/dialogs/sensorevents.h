@@ -52,6 +52,7 @@ class SensorEventsDlg : public SensorEventsGen
 		void onReset( wxCommandEvent& event );
 		void onListSelected( wxListEvent& event );
 		void onColClick( wxListEvent& event );
+		void onDrag( wxListEvent& event );
 		bool Validate();
 	
 };
