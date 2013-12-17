@@ -716,6 +716,9 @@ static struct OVirtual* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "virtual %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  IID:           %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  reset sensors: %s", wDigInt.isfbreset( data->ini )?"yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor timer:  %d ms", wDigInt.getpsleep( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->run = True;
@@ -725,7 +728,7 @@ static struct OVirtual* _inst( const iONode ini ,const iOTrace trc ) {
   ThreadOp.start( data->transactor );
 
   if( wDigInt.isstress(ini) ) {
-    iOThread stressRunner = ThreadOp.inst( "virtstress", &__stressRunner, __Virtual );
+    iOThread stressRunner = ThreadOp.inst( NULL, &__stressRunner, __Virtual );
     ThreadOp.start( stressRunner );
   }
 

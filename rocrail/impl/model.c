@@ -3526,7 +3526,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     Boolean val = wFeedback.isstate(nodeC);
     const char* iid = wFeedback.getiid( nodeC );
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match sensor event: %d:%d uidname=[%s]", bus, addr, uidname );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match sensor event: [%s] %d:%d uidname=[%s]", iid!=NULL?iid:"", bus, addr, uidname );
     iOList list = ModelOp.getSensorsByAddress(inst, iid, bus, addr, uidname);
     if( list != NULL ) {
       obj fb = ListOp.first( list );
