@@ -316,6 +316,7 @@ void SensorEventsDlg::onListSelected( wxListEvent& event ) {
 void SensorEventsDlg::onReset( wxCommandEvent& event ) {
   if( m_FbEvent != NULL && wFeedback.getid( m_FbEvent ) != NULL ) {
     iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    wFeedback.setiid( cmd, wFeedback.getiid( m_FbEvent ) );
     wFeedback.setid( cmd, wFeedback.getid( m_FbEvent ) );
     wFeedback.setcmd( cmd, wFeedback.reset );
     wxGetApp().sendToRocrail( cmd );
@@ -341,7 +342,7 @@ void SensorEventsDlg::onDrag( wxListEvent& event ) {
   if( m_FbEvent == NULL )
     return;
 
-  wxString my_text = _T("bus:")+wxString::Format(_T("%d:"), wFeedback.getbus(m_FbEvent) )+wxString::Format(_T("%d"), wFeedback.getaddr(m_FbEvent) );
+  wxString my_text = _T("bus:")+wxString::Format(_T("%d:"), wFeedback.getbus(m_FbEvent) )+wxString::Format(_T("%d::"), wFeedback.getaddr(m_FbEvent)) + wxString(wFeedback.getiid(m_FbEvent), wxConvUTF8);
   wxTextDataObject my_data(my_text);
   wxDropSource dragSource( this );
   dragSource.SetData( my_data );

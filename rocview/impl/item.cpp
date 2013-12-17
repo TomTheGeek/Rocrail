@@ -489,12 +489,20 @@ bool BlockDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
 
       if( StrTokOp.hasMoreTokens(tok) ) {
         const char* porttype  = StrTokOp.nextToken(tok);
-        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: set porttype to %s", porttype );
-        wSwitch.setporttype(m_Props, atoi(porttype));
-        wSwitch.setaccessory(m_Props, False);
-        if( StrOp.equals(wSwitch.name(), NodeOp.getName(m_Props) ) && wSwitch.getporttype(m_Props) == wProgram.porttype_servo ) {
-          wSwitch.setsinglegate(m_Props, True);
+        if( StrOp.len(porttype) > 0 ) {
+          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: set porttype to %s", porttype );
+          wSwitch.setporttype(m_Props, atoi(porttype));
+          wSwitch.setaccessory(m_Props, False);
+          if( StrOp.equals(wSwitch.name(), NodeOp.getName(m_Props) ) && wSwitch.getporttype(m_Props) == wProgram.porttype_servo ) {
+            wSwitch.setsinglegate(m_Props, True);
+          }
         }
+      }
+
+      if( StrTokOp.hasMoreTokens(tok) ) {
+        const char* iid  = StrTokOp.nextToken(tok);
+        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: set iid to %s", iid );
+        wItem.setiid(m_Props, iid);
       }
 
       if( !wxGetApp().isStayOffline() ) {
