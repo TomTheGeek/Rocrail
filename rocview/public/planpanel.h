@@ -27,6 +27,7 @@
 #include "rocs/public/node.h"
 #include "rocs/public/map.h"
 #include "rocview/public/basepanel.h"
+#include <wx/dnd.h>
 
 class PlanPanel : public BasePanel
 {
@@ -119,6 +120,10 @@ public:
   bool m_OK2Clear;
   void OnTimer(wxTimerEvent& event);
   void ChangeItemKey( const char* key, const char* prev_key);
+  double m_Scale;
+  int m_ItemSize;
+  int m_X;
+  int m_Y;
 
 
 private:
@@ -138,13 +143,9 @@ private:
 	wxWindow* m_Parent;
   wxTimer* m_Timer;
   wxHashTable* m_ChildTable;
-  double m_Scale;
   double m_Bktext;
-  int m_ItemSize;
   int m_mouseX;
   int m_mouseY;
-  int m_X;
-  int m_Y;
   bool m_Initialized;
   bool m_MultiAdd;
   bool m_ProcessingSelect;
@@ -215,6 +216,17 @@ enum {
   ME_PlanColor,
   ME_TimerAlt
 };
+
+
+class PlanPanelDrop : public wxTextDropTarget
+{
+public:
+  PlanPanelDrop( PlanPanel* plan ){m_PlanPanel = plan;};
+  virtual bool OnDropText(wxCoord x, wxCoord y, const wxString& data);
+private:
+  PlanPanel* m_PlanPanel;
+};
+
 
 
 #endif

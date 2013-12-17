@@ -47,6 +47,7 @@
 #include "rocs/public/node.h"
 #include "rocs/public/thread.h"
 #include "rocs/public/str.h"
+#include "rocs/public/strtok.h"
 #include "rocs/public/mem.h"
 #include "rocs/public/system.h"
 #include "rocview/public/planpanel.h"
@@ -181,8 +182,55 @@ BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
 
 END_EVENT_TABLE()
 
+
+bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
+  bool ok = false;
+  TraceOp.trc( "panel", TRCLEVEL_INFO, __LINE__, 9999, "D&D x=%d y=%d data [%s][%d]", x, y, (const char*)data.mb_str(wxConvUTF8), data.Len() );
+  iOStrTok tok = StrTokOp.inst((const char*)data.mb_str(wxConvUTF8), ':');
+  const char* dropcmd = StrTokOp.nextToken(tok);
+
+  if( StrOp.equals( "bus", dropcmd ) ) {
+    if( StrTokOp.hasMoreTokens(tok) ) {
+      const char* busnr  = StrTokOp.nextToken(tok);
+      if( StrTokOp.hasMoreTokens(tok) ) {
+        const char* addr = StrTokOp.nextToken(tok);
+        const char* type = "";
+        const char* iid = "";
+        if( StrTokOp.hasMoreTokens(tok) ) {
+          type = StrTokOp.nextToken(tok);
+          if( StrTokOp.hasMoreTokens(tok) )
+            iid = StrTokOp.nextToken(tok);
+        }
+        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: bus=%s, addr=%s, type=%s, iid=%s", busnr, addr, type, iid );
+        m_PlanPanel->m_X = (int)(x / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
+        m_PlanPanel->m_Y = (int)(y / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
+        if( StrOp.len(type) == 0) {
+          // sensor
+          iONode node = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+          wFeedback.setiid(node, iid);
+          wFeedback.setbus(node, atoi(busnr));
+          wFeedback.setaddr(node, atoi(addr));
+          m_PlanPanel->addItemAttr( node );
+        }
+        else {
+          // switch
+          iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+          wSwitch.setiid(node, iid);
+          wSwitch.setbus(node, atoi(busnr));
+          wSwitch.setaddr1(node, atoi(addr));
+          m_PlanPanel->addItemAttr( node );
+        }
+        ok = true;
+      }
+    }
+  }
+
+  tok->base.del(tok);
+  return ok;
+}
+
 // ----------------------------------------------------------------------------
-// LcDlg
+//
 // ----------------------------------------------------------------------------
 
 PlanPanel::PlanPanel(wxWindow *parent, int itemsize, double scale, double bktext, int z, iONode zlevel, bool showBorder )
@@ -232,6 +280,9 @@ PlanPanel::PlanPanel(wxWindow *parent, int itemsize, double scale, double bktext
   if( !m_Timer->Start(1000, false) ) {
     TraceOp.trc( "plan", TRCLEVEL_WARNING, __LINE__, 9999, "could not start the timer.." );
   }
+
+  SetDropTarget(new PlanPanelDrop(this));
+
 }
 
  PlanPanel::~PlanPanel() {
