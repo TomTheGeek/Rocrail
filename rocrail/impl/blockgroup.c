@@ -314,7 +314,7 @@ static Boolean _unlock( struct OBlockGroup* inst ,const char* LocoId ) {
   iOModel     model  = AppOp.getModel();
 
   if( MapOp.remove( data->lockmap, LocoId) == NULL ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
         "blockgroup %s is not locked by %s", wLink.getid(data->props), LocoId );
     return False;
   }
