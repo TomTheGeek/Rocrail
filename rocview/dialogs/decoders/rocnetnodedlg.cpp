@@ -1349,9 +1349,22 @@ void RocnetNodeDlg::onBeginListDrag( wxListEvent& event ) {
 
 
 void RocnetNodeDlg::onPort1Drag( wxMouseEvent& event ) {
+  wxStaticText* l_labPort[] = { NULL, m_labPort1, m_labPort2, m_labPort3, m_labPort4, m_labPort5, m_labPort6, m_labPort7, m_labPort8 };
+  wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
+  bool isInput = false;
+
   wxStaticText* port = (wxStaticText*)event.GetEventObject();
 
-  wxString my_text = _T("bus:")+wxString::Format(_T("%d:"), wRocNetNode.getid(m_Props) ) + port->GetLabel() + wxT(":0");
+  int i = 0;
+
+  for( i = 1; i < 9; i++ ) {
+    if( l_labPort[i] == port )
+      break;
+  }
+
+  isInput = (l_Type[i]->GetSelection() == 1 ? true:false);
+
+  wxString my_text = _T("bus:")+wxString::Format(_T("%d:"), wRocNetNode.getid(m_Props) ) + port->GetLabel() + (isInput?wxT("::"):wxT(":0:"));
   wxTextDataObject my_data(my_text);
   wxDropSource dragSource( this );
   dragSource.SetData( my_data );
