@@ -917,10 +917,16 @@ static void rocrailCallback( obj me, iONode node ) {
   /* Capture all feedback events for visualisation. */
   if( StrOp.equals( wFeedback.name(), NodeOp.getName( node ) ) ) {
     bool FoundEvent = false;
+    const char* fbiid = wFeedback.getiid(node);
+
     for( int i = 0; i < ListOp.size(guiApp->getSensorEvents()); i++ ) {
       iONode fbevent = (iONode)ListOp.get( guiApp->getSensorEvents(), i);
       if( wFeedback.getbus(node) == wFeedback.getbus(fbevent) && wFeedback.getaddr(node) == wFeedback.getaddr(fbevent) ) {
-        TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "update sensor event %d", wFeedback.getaddr(node) );
+        if( fbiid != NULL && StrOp.len(fbiid) > 0 ) {
+          if( !StrOp.equals(fbiid, wFeedback.getiid(fbevent) ) )
+            continue;
+        }
+        TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "update sensor event [%s] %d:%d", fbiid!=NULL?fbiid:"", wFeedback.getbus(node), wFeedback.getaddr(node) );
         wFeedback.setstate(fbevent, wFeedback.isstate(node));
         wFeedback.setidentifier(fbevent, wFeedback.getidentifier(node));
         wFeedback.setcounter(fbevent, wFeedback.getcounter(node));
@@ -935,7 +941,7 @@ static void rocrailCallback( obj me, iONode node ) {
       }
     }
     if( !FoundEvent ) {
-      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "add sensor event %d", wFeedback.getaddr(node) );
+      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "add sensor event [%s] %d:%d", fbiid!=NULL?fbiid:"", wFeedback.getbus(node), wFeedback.getaddr(node) );
       iONode fbevent = (iONode)NodeOp.base.clone(node);
       char* stamp = StrOp.createStamp();
       NodeOp.setStr( fbevent, "stamp", stamp);

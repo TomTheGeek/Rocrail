@@ -64,20 +64,31 @@ SensorEventsDlg::SensorEventsDlg( wxWindow* parent )
 
 void SensorEventsDlg::initLabels() {
   SetTitle(wxGetApp().getMsg( "sensormonitor" ));
-  m_EventList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
-  m_EventList->InsertColumn(1, wxGetApp().getMsg( "bus" ), wxLIST_FORMAT_RIGHT );
-  m_EventList->InsertColumn(2, wxGetApp().getMsg( "address" ), wxLIST_FORMAT_RIGHT );
-  m_EventList->InsertColumn(3, wxGetApp().getMsg( "state" ), wxLIST_FORMAT_CENTER );
-  m_EventList->InsertColumn(4, wxGetApp().getMsg( "identifier" ), wxLIST_FORMAT_LEFT );
-  m_EventList->InsertColumn(5, wxGetApp().getMsg( "counter" ), wxLIST_FORMAT_RIGHT );
-  m_EventList->InsertColumn(6, wxGetApp().getMsg( "wheelcount" ), wxLIST_FORMAT_RIGHT );
-  m_EventList->InsertColumn(7, wxGetApp().getMsg( "countedcars" ), wxLIST_FORMAT_RIGHT );
-  m_EventList->InsertColumn(8, wxGetApp().getMsg( "stamp" ), wxLIST_FORMAT_LEFT );
+  m_EventList->InsertColumn(0, wxGetApp().getMsg( "iid" ), wxLIST_FORMAT_LEFT );
+  m_EventList->InsertColumn(1, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
+  m_EventList->InsertColumn(2, wxGetApp().getMsg( "bus" ), wxLIST_FORMAT_RIGHT );
+  m_EventList->InsertColumn(3, wxGetApp().getMsg( "address" ), wxLIST_FORMAT_RIGHT );
+  m_EventList->InsertColumn(4, wxGetApp().getMsg( "state" ), wxLIST_FORMAT_CENTER );
+  m_EventList->InsertColumn(5, wxGetApp().getMsg( "identifier" ), wxLIST_FORMAT_LEFT );
+  m_EventList->InsertColumn(6, wxGetApp().getMsg( "counter" ), wxLIST_FORMAT_RIGHT );
+  m_EventList->InsertColumn(7, wxGetApp().getMsg( "wheelcount" ), wxLIST_FORMAT_RIGHT );
+  m_EventList->InsertColumn(8, wxGetApp().getMsg( "countedcars" ), wxLIST_FORMAT_RIGHT );
+  m_EventList->InsertColumn(9, wxGetApp().getMsg( "stamp" ), wxLIST_FORMAT_LEFT );
   m_Refresh->SetLabel(wxGetApp().getMsg( "refresh" ));
   m_Reset->SetLabel(wxGetApp().getMsg( "reset" ));
 }
 
 static bool m_bSortInvert = false;
+
+static int __sortIID(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wItem.getiid( a );
+    const char* idB = wItem.getiid( b );
+    return m_bSortInvert ? strcmp( idB, idA ):strcmp( idA, idB );
+}
+
 
 static int __sortID(obj* _a, obj* _b)
 {
@@ -198,27 +209,30 @@ void SensorEventsDlg::initValues() {
   iOList list = wxGetApp().getSensorEvents();
 
   if( m_SortCol == 1 ) {
-    ListOp.sort(list, &__sortBus);
+    ListOp.sort(list, &__sortIID);
   }
   else if( m_SortCol == 2 ) {
-    ListOp.sort(list, &__sortAddr);
+    ListOp.sort(list, &__sortBus);
   }
   else if( m_SortCol == 3 ) {
-    ListOp.sort(list, &__sortState);
+    ListOp.sort(list, &__sortAddr);
   }
   else if( m_SortCol == 4 ) {
-    ListOp.sort(list, &__sortIdent);
+    ListOp.sort(list, &__sortState);
   }
   else if( m_SortCol == 5 ) {
-    ListOp.sort(list, &__sortCounter);
+    ListOp.sort(list, &__sortIdent);
   }
   else if( m_SortCol == 6 ) {
-    ListOp.sort(list, &__sortWheelCount);
+    ListOp.sort(list, &__sortCounter);
   }
   else if( m_SortCol == 7 ) {
-    ListOp.sort(list, &__sortCarCount);
+    ListOp.sort(list, &__sortWheelCount);
   }
   else if( m_SortCol == 8 ) {
+    ListOp.sort(list, &__sortCarCount);
+  }
+  else if( m_SortCol == 9 ) {
     ListOp.sort(list, &__sortStamp);
   }
   else {
@@ -229,19 +243,20 @@ void SensorEventsDlg::initValues() {
   int cnt = ListOp.size( list );
   for( int i = 0; i < cnt; i++ ) {
     iONode fbevent = (iONode)ListOp.get( list, i );
-    m_EventList->InsertItem( i, wxString(wFeedback.getid(fbevent), wxConvUTF8) );
-    m_EventList->SetItem( i, 1, wxString::Format(wxT("%d"), wFeedback.getbus(fbevent) ) );
-    m_EventList->SetItem( i, 2, wxString::Format(wxT("%d"), wFeedback.getaddr(fbevent) ) );
-    m_EventList->SetItem( i, 3, wxString::Format(wxT("%d"), wFeedback.isstate(fbevent)?1:0 ) );
-    m_EventList->SetItem( i, 4, wxString(wFeedback.getidentifier(fbevent), wxConvUTF8) );
-    m_EventList->SetItem( i, 5, wxString::Format(wxT("%d"), wFeedback.getcounter(fbevent) ) );
-    m_EventList->SetItem( i, 6, wxString::Format(wxT("%d"), wFeedback.getwheelcount(fbevent) ) );
-    m_EventList->SetItem( i, 7, wxString::Format(wxT("%d"), wFeedback.getcountedcars(fbevent) ) );
-    m_EventList->SetItem( i, 8, wxString(NodeOp.getStr(fbevent, "stamp", ""), wxConvUTF8) );
+    m_EventList->InsertItem( i, wxString(wFeedback.getiid(fbevent), wxConvUTF8) );
+    m_EventList->SetItem( i, 1, wxString(wFeedback.getid(fbevent), wxConvUTF8) );
+    m_EventList->SetItem( i, 2, wxString::Format(wxT("%d"), wFeedback.getbus(fbevent) ) );
+    m_EventList->SetItem( i, 3, wxString::Format(wxT("%d"), wFeedback.getaddr(fbevent) ) );
+    m_EventList->SetItem( i, 4, wxString::Format(wxT("%d"), wFeedback.isstate(fbevent)?1:0 ) );
+    m_EventList->SetItem( i, 5, wxString(wFeedback.getidentifier(fbevent), wxConvUTF8) );
+    m_EventList->SetItem( i, 6, wxString::Format(wxT("%d"), wFeedback.getcounter(fbevent) ) );
+    m_EventList->SetItem( i, 7, wxString::Format(wxT("%d"), wFeedback.getwheelcount(fbevent) ) );
+    m_EventList->SetItem( i, 8, wxString::Format(wxT("%d"), wFeedback.getcountedcars(fbevent) ) );
+    m_EventList->SetItem( i, 9, wxString(NodeOp.getStr(fbevent, "stamp", ""), wxConvUTF8) );
     m_EventList->SetItemPtrData(i, (wxUIntPtr)fbevent);
   }
   // resize
-  for( int n = 0; n < 9; n++ ) {
+  for( int n = 0; n < 10; n++ ) {
     m_EventList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
     int autoheadersize = m_EventList->GetColumnWidth(n);
     m_EventList->SetColumnWidth(n, wxLIST_AUTOSIZE);
