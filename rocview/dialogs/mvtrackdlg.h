@@ -35,6 +35,7 @@ class wxSpinCtrl;
 
 ////@begin control identifiers
 #define ID_MVTRACKDLG 10135
+#define ID_MVTRACK_ACTIONS 10318
 #define SYMBOL_MVTRACKDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL
 #define SYMBOL_MVTRACKDLG_TITLE _("MVTrackDlg")
 #define SYMBOL_MVTRACKDLG_IDNAME ID_MVTRACKDLG
@@ -77,6 +78,9 @@ public:
 
 ////@begin MVTrackDlg event handler declarations
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_MVTRACK_ACTIONS
+    void OnMvtrackActionsClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
 
@@ -109,6 +113,7 @@ public:
     wxComboBox* m_Sensor1;
     wxStaticText* m_labSensor2;
     wxComboBox* m_Sensor2;
+    wxButton* m_Actions;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end MVTrackDlg member variables

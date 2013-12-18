@@ -19,6 +19,8 @@
 #include "rocrail/wrapper/public/MVTrack.h"
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Action.h"
+#include "rocrail/wrapper/public/ActionCtrl.h"
 
 
 static void _fbEvent( obj inst ,Boolean puls ,const char* id ,const char* ident, int val );
@@ -85,6 +87,35 @@ static void* __properties( void* inst ) {
 }
 
 /** ----- OMVTrack ----- */
+/**
+ * check and execute actions
+ */
+static void __checkActions(iOMVTrack inst, const char* state, float kmh) {
+  iOMVTrackData data    = Data(inst);
+  iOModel      model    = AppOp.getModel();
+  iONode       mvaction = wMVTrack.getactionctrl(data->props);
+
+
+  while( mvaction != NULL ) {
+    if( StrOp.len(wActionCtrl.getstate( mvaction )) == 0 || StrOp.equals(state, wActionCtrl.getstate( mvaction )) )
+    {
+      iOAction action = ModelOp.getAction(model, wActionCtrl.getid(mvaction) );
+      if( action != NULL ) {
+        wActionCtrl.setmvspeed(mvaction, kmh );
+        ActionOp.exec(action, mvaction);
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
+          wActionCtrl.getstate( mvaction ), state );
+    }
+
+    mvaction = wMVTrack.nextactionctrl(data->props, mvaction);
+  }
+
+}
+
+
 
 
 static void _fbEvent( obj inst ,Boolean puls ,const char* id ,const char* ident, int val ) {
@@ -135,6 +166,7 @@ static void _fbEvent( obj inst ,Boolean puls ,const char* id ,const char* ident,
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "**enter**" );
     data->mvMillis = ms;
     data->mvTime   = t;
+    __checkActions((iOMVTrack)inst, "enter", 0);
   }
   else if( event == 2 ) {
     /* in */
@@ -155,6 +187,7 @@ static void _fbEvent( obj inst ,Boolean puls ,const char* id ,const char* ident,
         TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, 
           "average velocity on MVTrack was %.1f KM/H", kmh );
       }
+      __checkActions((iOMVTrack)inst, "in", kmh);
     }
   }
   
@@ -182,6 +215,8 @@ static void __initSensors( iOMVTrack inst ) {
 static void _modify( iOMVTrack inst, iONode props ) {
   iOMVTrackData data = Data(inst);
   iOModel model = AppOp.getModel();
+  int cnt = 0;
+  int i   = 0;
   iOFBack s1 = ModelOp.getFBack( model, wMVTrack.gets1(data->props) );
   iOFBack s2 = ModelOp.getFBack( model, wMVTrack.gets2(data->props) );
   if( s1 != NULL && s2 != NULL ) {
@@ -194,6 +229,26 @@ static void _modify( iOMVTrack inst, iONode props ) {
   wMVTrack.sets2( data->props, wMVTrack.gets2(props) );
   wMVTrack.setmph( data->props, wMVTrack.ismph(props) );
   
+
+  /* delete all childs to make 'room' for the new ones: */
+  cnt = NodeOp.getChildCnt( data->props );
+  while( cnt > 0 ) {
+    iONode child = NodeOp.getChild( data->props, 0 );
+    iONode removedChild = NodeOp.removeChild( data->props, child );
+    if( removedChild != NULL) {
+      NodeOp.base.del(removedChild);
+    }
+    cnt = NodeOp.getChildCnt( data->props );
+  }
+
+  /* add the new or modified childs: */
+  cnt = NodeOp.getChildCnt( props );
+  for( i = 0; i < cnt; i++ ) {
+    iONode child = NodeOp.getChild( props, i );
+    NodeOp.addChild( data->props, (iONode)NodeOp.base.clone(child) );
+  }
+
+
   s1 = ModelOp.getFBack( model, wMVTrack.gets1(data->props) );
   s2 = ModelOp.getFBack( model, wMVTrack.gets2(data->props) );
   if( s1 != NULL && s2 != NULL ) {

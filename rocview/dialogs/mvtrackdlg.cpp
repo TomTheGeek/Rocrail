@@ -23,6 +23,7 @@
 ////@end includes
 
 #include "mvtrackdlg.h"
+#include "actionsctrldlg.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -48,6 +49,8 @@ IMPLEMENT_DYNAMIC_CLASS( MVTrackDlg, wxDialog )
 BEGIN_EVENT_TABLE( MVTrackDlg, wxDialog )
 
 ////@begin MVTrackDlg event table entries
+    EVT_BUTTON( ID_MVTRACK_ACTIONS, MVTrackDlg::OnMvtrackActionsClick )
+
     EVT_BUTTON( wxID_OK, MVTrackDlg::OnOkClick )
 
     EVT_BUTTON( wxID_CANCEL, MVTrackDlg::OnCancelClick )
@@ -109,7 +112,8 @@ void MVTrackDlg::initLabels() {
   m_labSensor1->SetLabel( wxGetApp().getMsg( "sensor" ) + _T(" 1") );
   m_labSensor2->SetLabel( wxGetApp().getMsg( "sensor" ) + _T(" 2") );
   m_MPH->SetLabel( wxGetApp().getMsg( "convert2mph" ) );
-	
+  m_Actions->SetLabel( wxGetApp().getMsg( "actions" )+_T("...") );
+
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
 }
@@ -218,6 +222,7 @@ void MVTrackDlg::Init()
     m_Sensor1 = NULL;
     m_labSensor2 = NULL;
     m_Sensor2 = NULL;
+    m_Actions = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end MVTrackDlg member initialisation
@@ -281,16 +286,19 @@ void MVTrackDlg::CreateControls()
     m_Sensor2 = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(130, -1), m_Sensor2Strings, wxCB_DROPDOWN );
     itemFlexGridSizer12->Add(m_Sensor2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer17 = new wxStdDialogButtonSizer;
+    m_Actions = new wxButton( itemDialog1, ID_MVTRACK_ACTIONS, _("Actions..."), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer2->Add(m_Actions, 0, wxALIGN_LEFT|wxALL, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer17, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer18 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer18, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer17->AddButton(m_OK);
+    itemStdDialogButtonSizer18->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer17->AddButton(m_Cancel);
+    itemStdDialogButtonSizer18->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer17->Realize();
+    itemStdDialogButtonSizer18->Realize();
 
 ////@end MVTrackDlg content construction
 }
@@ -350,5 +358,24 @@ void MVTrackDlg::OnOkClick( wxCommandEvent& event )
 {
   evaluate();
   EndModal( wxID_OK );
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_MVTRACK_ACTIONS
+ */
+
+void MVTrackDlg::OnMvtrackActionsClick( wxCommandEvent& event )
+{
+  if( m_Props == NULL )
+    return;
+
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props, "enter,in" );
+
+  if( wxID_OK == dlg->ShowModal() ) {
+    // TODO: inform
+  }
+
+  dlg->Destroy();
 }
 

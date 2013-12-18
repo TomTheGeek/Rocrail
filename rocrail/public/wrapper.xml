@@ -1406,6 +1406,7 @@
     <var name="reset" vt="bool" defval="true" remark="Reset counter."/>
     <var name="param" vt="string" defval="" range="*"/>
     <var name="desc" vt="string" defval="" range="*"/>
+    <var name="mvspeed" vt="float" defval="0.0" range="*"/>
     <actioncond cardinality="n" remark="Optional condition." wrappername="ActionCond">
       <var name="id" vt="string" defval="" range="*" required="true"/>
       <var name="type" vt="string" defval="" range="co,sw,sg,fb,lc,bk" required="true"/>
@@ -1495,6 +1496,7 @@
       <var name="s1" vt="string" defval="" range="*" required="true" remark="Feedback ID"/>
       <var name="s2" vt="string" defval="" range="*" required="true" remark="Feedback ID"/>
       <var name="mph" vt="bool" defval="false" remark="convert to MPH"/>
+      <actionctrl cardinality="n"/>
     </mv>
     <swlist cardinality="1" remark="Turnout table" wrappername="SwitchList">
       <sw cardinality="n" wrappername="Switch" remark="Switch definition.">
@@ -2729,6 +2731,7 @@
         <var name="countedcars" vt="int" defval="0" range="0-*"/>
         <var name="carcount" vt="int" defval="0" range="0-*"/>
         <var name="wheelcount" vt="int" defval="0" range="0-*"/>
+        <var name="mvspeed" vt="float" defval="0.0" range="*"/>
         <var name="load" vt="int" defval="0" range="0-*"/>
         <var name="volt" vt="int" defval="0" range="0-*"/>
         <var name="temp" vt="int" defval="0" range="0-*"/>
