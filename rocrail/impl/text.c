@@ -191,12 +191,14 @@ static void __evaluateSchedule(iONode schedule, int scidx, iOMap map, char* hour
 }
 
 
-static void __addActionProperties(iOMap map, iONode node) {
+static char* __addActionProperties(iOMap map, iONode node) {
+  char* mvspeedStr = StrOp.fmt("%.1f", wActionCtrl.getmvspeed(node));
+  MapOp.put(map, "mvspeed", (obj)mvspeedStr );
   MapOp.put(map, "counter", (obj)NodeOp.getStr(node, "counter", "0") );
   MapOp.put(map, "carcount", (obj)NodeOp.getStr(node, "carcount", "0") );
   MapOp.put(map, "countedcars", (obj)NodeOp.getStr(node, "countedcars", "0") );
   MapOp.put(map, "wheelcount", (obj)NodeOp.getStr(node, "wheelcount", "0") );
-  MapOp.put(map, "mvspeed", (obj)NodeOp.getStr(node, "mvspeed", "0") );
+  return mvspeedStr;
 }
 
 
@@ -268,9 +270,10 @@ static void* __event( void* inst, const void* evt ) {
     if( lc != NULL && bk == NULL ) {
       char* msg = NULL;
       char* scidxStr = NULL;
+      char* mvspeedStr = NULL;
       iOMap map = MapOp.inst();
 
-      __addActionProperties(map, node);
+      mvspeedStr = __addActionProperties(map, node);
 
       scidxStr = __addLocoProperties(map, lc, hour, min);
 
@@ -282,6 +285,7 @@ static void* __event( void* inst, const void* evt ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
       __checkAction(inst, msg);
 
+      StrOp.free(mvspeedStr);
       StrOp.free(scidxStr);
       StrOp.free(msg);
     }
@@ -291,8 +295,9 @@ static void* __event( void* inst, const void* evt ) {
 
       char* scidxStr = NULL;
       char* speedStr = NULL;
+      char* mvspeedStr = NULL;
 
-      __addActionProperties(map, node);
+      mvspeedStr = __addActionProperties(map, node);
 
       scidxStr = __addLocoProperties(map, lc, hour, min);
       speedStr = __addBlockProperties(map, bk);
@@ -312,6 +317,7 @@ static void* __event( void* inst, const void* evt ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
       __checkAction(inst, msg);
 
+      StrOp.free(mvspeedStr);
       StrOp.free(speedStr);
       StrOp.free(scidxStr);
       StrOp.free(msg);
@@ -319,9 +325,10 @@ static void* __event( void* inst, const void* evt ) {
     else if( bk != NULL ) {
       char* msg = NULL;
       char* speedStr = NULL;
+      char* mvspeedStr = NULL;
       iOMap map = MapOp.inst();
 
-      __addActionProperties(map, node);
+      mvspeedStr = __addActionProperties(map, node);
       speedStr = __addBlockProperties(map, bk);
 
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
@@ -336,12 +343,14 @@ static void* __event( void* inst, const void* evt ) {
       __checkAction(inst, msg);
       StrOp.free(msg);
       StrOp.free(speedStr);
+      StrOp.free(mvspeedStr);
     }
     else {
       char* msg = NULL;
+      char* mvspeedStr = NULL;
       iOMap map = MapOp.inst();
 
-      __addActionProperties(map, node);
+      mvspeedStr = __addActionProperties(map, node);
 
       msg = _replaceAllSubstitutions(wText.getformat(node), map);
       MapOp.base.del(map);
@@ -349,6 +358,7 @@ static void* __event( void* inst, const void* evt ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
       __checkAction(inst, msg);
       StrOp.free(msg);
+      StrOp.free(mvspeedStr);
     }
 
 
