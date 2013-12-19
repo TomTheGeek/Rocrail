@@ -3539,6 +3539,17 @@ static void _event( iOModel inst, iONode nodeC ) {
       ListOp.base.del(list);
       return;
     }
+    else {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unregistered sensor event: [%s] %d:%d uidname=[%s]", iid!=NULL?iid:"", bus, addr, uidname );
+      if( wSwitch.isaccessory(nodeC)) {
+        /* could be a switch or a signal... */
+        AppOp.broadcastEvent( (iONode)NodeOp.base.clone(nodeC) ); /* Send to clients to visualize all sensors. */
+      }
+      else {
+        AppOp.broadcastEvent( nodeC ); /* Send to clients to visualize all sensors. */
+        return;
+      }
+    }
 
     if(wSwitch.isaccessory(nodeC)) {
       /* Try a switch object */
