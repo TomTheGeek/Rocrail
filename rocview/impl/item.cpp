@@ -1222,7 +1222,7 @@ void Symbol::OnLeftDown(wxMouseEvent& event) {
       wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
     }
     else {
-      wxTextDataObject my_data(_T("goto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8) + _T(":") + wxString(wBlock.getid(m_Props),wxConvUTF8)+_T(":") );
+      wxTextDataObject my_data(wxT("goto:") + wxString(wBlock.getlocid(m_Props),wxConvUTF8) + wxT(":") + wxString(wBlock.getid(m_Props),wxConvUTF8) + wxT(":\0") );
       wxDropSource dragSource( this );
       dragSource.SetData( my_data );
       wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);

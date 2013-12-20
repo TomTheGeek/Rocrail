@@ -2445,14 +2445,13 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
   if( maxlen < 1024 )
     maxlen = 1024;
 
-  TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "Got an info message: %s", text );
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Got an info message: %s", text );
 
   if( m_bTraceWindow && m_WarningPanel != NULL ) {
     m_WarningPanel->Freeze();
     m_MonitorPanel->Freeze();
     long lpwarn = m_WarningPanel->GetLastPosition();
     if( lpwarn > maxlen ) {
-      TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "***** remove %ld from %ld", len+1, lpwarn );
       if( len+1 < lpwarn )
         m_WarningPanel->Remove(0, len+1);
       else
@@ -2476,7 +2475,6 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
     else if( level == TRCLEVEL_MONITOR && m_MonitorPanel != NULL) {
       long lpmon = m_MonitorPanel->GetLastPosition();
       if( lpmon > maxlen ) {
-        TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "***** remove %ld from %ld", len+1, lpwarn );
         if( len+1 < lpmon )
           m_MonitorPanel->Remove(0, len+1);
         else
