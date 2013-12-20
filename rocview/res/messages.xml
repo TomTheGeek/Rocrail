@@ -373,7 +373,7 @@
     <nb txt="kun"/>
     <pl txt="tylko"/>
     <zh_TW txt="僅"/>
-    <fi txt="vain"/>
+    <fi txt="ainoastaan"/>
     <id txt="hanya"/>
     <en_AU txt="only"/>
     <en_CA txt="only"/>
@@ -774,7 +774,7 @@
     <nb txt="Rediger plan"/>
     <pl txt="Edytuj panel"/>
     <zh_TW txt="編輯設置"/>
-    <fi txt="Muokkauspaneeli"/>
+    <fi txt="Muokkaa paneelia"/>
     <id txt="Sunting panel"/>
     <en_AU txt="Edit panel"/>
     <en_CA txt="Edit panel"/>
@@ -876,7 +876,7 @@
     <nb txt="Info"/>
     <pl txt="Info"/>
     <zh_TW txt="資訊"/>
-    <fi txt="Tietoa"/>
+    <fi txt="Tiedot"/>
     <id txt="Info"/>
     <en_AU txt="Info"/>
     <en_CA txt="Info"/>
@@ -909,7 +909,7 @@
     <nb txt="Strøm På"/>
     <pl txt="Włącz"/>
     <zh_TW txt="開啟電源"/>
-    <fi txt="Käynnistys"/>
+    <fi txt="Virta päälle"/>
     <id txt="Power Hidup"/>
     <en_AU txt="Power On"/>
     <en_CA txt="Power On"/>
@@ -1615,7 +1615,7 @@
     <ja txt="テスト"/>
     <zh_CN txt="测试"/>
     <sl txt="Test"/>
-    <fi txt="Testaus"/>
+    <fi txt="Testaa"/>
   </Msg>
   <Msg id="automode">
     <de txt="Automatikmodus" accel="1" tip="Schaltet Automatikmodus ein."/>
@@ -1966,7 +1966,7 @@
     <zh_CN txt="查看"/>
     <sl txt="Pogled"/>
     <pt_BR txt="Visualizar"/>
-    <fi txt="Tarkastele"/>
+    <fi txt="Näytä"/>
   </Msg>
   <Msg id="extra">
     <de txt="Extra" accel="0"/>
@@ -2517,7 +2517,7 @@
     <zh_CN txt="通勤车"/>
     <sl txt="Primestna garnitura"/>
     <pt_BR txt="Trem suburbano"/>
-    <fi txt="Paikallisjuna"/>
+    <fi txt="Lähiliikennejuna"/>
   </Msg>
   <Msg id="loctable" dialog="true" key="Ctrl-1">
     <de txt="Lokomotiven" tip="Lokomotiven"/>
@@ -2549,7 +2549,7 @@
     <zh_CN txt="机车库"/>
     <sl txt="Lokomotive"/>
     <pt_BR txt="Tabela de locomotivas"/>
-    <fi txt="Veturilista"/>
+    <fi txt="Veturit"/>
   </Msg>
   <Msg id="programming">
     <de txt="Programmieren"/>
@@ -2677,7 +2677,7 @@
     <zh_CN txt="路径列表"/>
     <sl txt="Poti"/>
     <pt_BR txt="Tabela de rotas"/>
-    <fi txt="Reittilista"/>
+    <fi txt="Reitit"/>
   </Msg>
   <Msg id="blockgrouptable" dialog="true" key="Ctrl-6">
     <de txt="Blockgruppen" tip="Blockgruppen Tabelle"/>
@@ -2708,7 +2708,7 @@
     <zh_CN txt="区间组列表"/>
     <sl txt="Skupine odsekov"/>
     <pt_BR txt="Tabela do grupo de blocos"/>
-    <fi txt="Lohkoryhmien lista"/>
+    <fi txt="Lohkoryhmät"/>
   </Msg>
   <Msg id="blocktable" dialog="true" key="Ctrl-3">
     <de txt="Blöcke" tip="Blöcke"/>
@@ -2740,7 +2740,7 @@
     <zh_CN txt="区块列表"/>
     <sl txt="Odseki"/>
     <pt_BR txt="Tabela de blocos"/>
-    <fi txt="Lohkolista"/>
+    <fi txt="Lohkot"/>
   </Msg>
   <Msg id="turnouttable" dialog="true" key="Ctrl-7">
     <de txt="Weichen" tip="Weichen"/>
@@ -2771,7 +2771,7 @@
     <zh_CN txt="转辙机列表"/>
     <sl txt="Kretnice in dodatki"/>
     <pt_BR txt="Tabela de desvios"/>
-    <fi txt="Vaihdelista"/>
+    <fi txt="Vaihteet"/>
   </Msg>
   <Msg id="outputtable" dialog="true" key="Ctrl-9">
     <de txt="Ausgänge" tip="Ausgänge"/>
@@ -2802,7 +2802,7 @@
     <zh_CN txt="输出端列表"/>
     <sl txt="Izhodi"/>
     <pt_BR txt="Tabela de saídas"/>
-    <fi txt="Kytkentälista"/>
+    <fi txt="Kytkennät"/>
   </Msg>
   <Msg id="signaltable" dialog="true" key="Ctrl-8">
     <de txt="Signale" tip="Signale"/>
@@ -2834,7 +2834,7 @@
     <zh_CN txt="信号灯列表"/>
     <sl txt="Signali"/>
     <pt_BR txt="Tabela de sinais"/>
-    <fi txt="Opastinlista"/>
+    <fi txt="Opastimet"/>
   </Msg>
   <Msg id="turntable" dialog="true">
     <de txt="Drehscheibe" tip="Drehscheibe"/>
@@ -2897,7 +2897,7 @@
     <zh_CN txt="反馈传感器列表"/>
     <sl txt="Tipala"/>
     <pt_BR txt="Tabela de sensores"/>
-    <fi txt="Anturilista"/>
+    <fi txt="Anturit"/>
   </Msg>
   <Msg id="sensorfromblock">
     <de txt="Rückmelder von Block %s aus:"/>
@@ -3090,7 +3090,7 @@
     <zh_CN txt="表格"/>
     <sl txt="Seznami"/>
     <pt_BR txt="Tabelas"/>
-    <fi txt="Listat"/>
+    <fi txt="Luettelot"/>
   </Msg>
   <Msg id="language">
     <de txt="Sprache" accel="0"/>
@@ -5415,7 +5415,7 @@
     <zh_CN txt="中间值"/>
     <sl txt="Sredina"/>
     <pt_BR txt="Metade"/>
-    <fi txt="Keskim."/>
+    <fi txt="Keski"/>
   </Msg>
   <Msg id="cruise">
     <de txt="Reise"/>
@@ -5445,7 +5445,7 @@
     <zh_CN txt="巡航速度"/>
     <sl txt="Potovalna"/>
     <pt_BR txt="Viagem"/>
-    <fi txt="Matkanopeus"/>
+    <fi txt="Matka"/>
   </Msg>
   <Msg id="max">
     <de txt="Max."/>
@@ -5698,7 +5698,7 @@
     <zh_CN txt="无"/>
     <sl txt="Noben"/>
     <pt_BR txt="Nenhum"/>
-    <fi txt="Ei mitään"/>
+    <fi txt="Ei määritelty"/>
   </Msg>
   <Msg id="up">
     <de txt="Aufwärts"/>
@@ -6531,7 +6531,7 @@
     <zh_CN txt="最小值"/>
     <sl txt="V_Min"/>
     <pt_BR txt="V_Mín"/>
-    <fi txt="Nop_alin"/>
+    <fi txt="Alin_nop"/>
   </Msg>
   <Msg id="v_mid">
     <de txt="V_Mid" tip="Mittlere Geschwindigkeit vorwärts"/>
@@ -6563,7 +6563,7 @@
     <zh_CN txt="中间值"/>
     <sl txt="V_Mid"/>
     <pt_BR txt="V_Méd"/>
-    <fi txt="Nop_kesk"/>
+    <fi txt="Kesk_nop"/>
   </Msg>
   <Msg id="v_cru">
     <en txt="V_Cru"/>
@@ -6580,7 +6580,7 @@
     <en_GB txt="V_Cru"/>
     <pt_BR txt="V_Cruz"/>
     <sv txt="V_Cru"/>
-    <fi txt="Nop_matk"/>
+    <fi txt="Matkanop"/>
   </Msg>
   <Msg id="v_max">
     <de txt="V_Max" tip="Maximale Geschwindigkeit vorwärts"/>
@@ -6612,7 +6612,7 @@
     <zh_CN txt="最大值"/>
     <sl txt="V_Max"/>
     <pt_BR txt="V_Máx"/>
-    <fi txt="Nop_ylin"/>
+    <fi txt="Ylin_nop"/>
   </Msg>
   <Msg id="v_rmin">
     <de txt="V_RMin" tip="Minimale Geschwindigkeit rückwärts"/>
@@ -6642,7 +6642,7 @@
     <zh_CN txt="倒车最小值"/>
     <sl txt="V_RMin"/>
     <pt_BR txt="V_RMín"/>
-    <fi txt="Nop_PAlin"/>
+    <fi txt="Alin_per_nop"/>
   </Msg>
   <Msg id="v_rmid">
     <de txt="V_RMid" tip="Mittlere Geschwindigkeit rückwärts"/>
@@ -6672,7 +6672,7 @@
     <zh_CN txt="倒车中间值"/>
     <sl txt="V_RMid"/>
     <pt_BR txt="V_RMéd"/>
-    <fi txt="Nop_Pkesk"/>
+    <fi txt="Kesk_per_nop"/>
   </Msg>
   <Msg id="v_rcru">
     <en txt="V_RCru"/>
@@ -6689,7 +6689,7 @@
     <en_GB txt="V_RCru"/>
     <pt_BR txt="V_RCruz"/>
     <sv txt="V_RCru"/>
-    <fi txt="Matkaperuutusnopeus"/>
+    <fi txt="Matka_per_nop"/>
   </Msg>
   <Msg id="v_rmax">
     <de txt="V_RMax" tip="Maximale Geschwindigkeit rückwärts"/>
@@ -6719,7 +6719,7 @@
     <zh_CN txt="倒车最大值"/>
     <sl txt="V_RMax"/>
     <pt_BR txt="V_RMáx"/>
-    <fi txt="Ylin peruutusnopeus"/>
+    <fi txt="Ylin_per_nop"/>
   </Msg>
   <Msg id="v_step">
     <de txt="V_Step"/>
@@ -7305,7 +7305,7 @@
     <zh_CN txt="轨迹"/>
     <sl txt="Sledenje"/>
     <pt_BR txt="Rastrear"/>
-    <fi txt="Jäljitä"/>
+    <fi txt="Jäljitys"/>
   </Msg>
   <Msg id="tracefile">
     <de txt="Log Datei"/>
@@ -7818,7 +7818,7 @@
     <zh_CN txt="传感器模块（左，中，右，尺寸）"/>
     <sl txt="MOduli tipal (levo,sredina,desno,velikost)"/>
     <pt_BR txt="Módulos de Sensores (esquerda, meio, direita, tamanho)"/>
-    <fi txt="Anturimodulit (vasen, keskimm�inen, oikea, koko)"/>
+    <fi txt="Anturimodulit (vasen, keskimmäinen, oikea, koko)"/>
   </Msg>
   <Msg id="erddcdports">
     <de txt="Erddcd Ports (cmd,sensor,info)"/>
@@ -8150,7 +8150,7 @@
     <zh_CN txt="被占据"/>
     <sl txt="Zaklenjeno s strani"/>
     <pt_BR txt="Travado por"/>
-    <fi txt="Lukinnut"/>
+    <fi txt="Lukitsija"/>
   </Msg>
   <Msg id="invert">
     <de txt="Umkehren"/>
@@ -8209,7 +8209,7 @@
     <zh_CN txt="直轨反馈"/>
     <sl txt="Tipalo v premo"/>
     <pt_BR txt="Sensor reto"/>
-    <fi txt="Anturi suoraan"/>
+    <fi txt="Suoran suunnan anturi"/>
   </Msg>
   <Msg id="sensor_red">
     <de txt="Rückmeldung Abbiegen"/>
@@ -8239,7 +8239,7 @@
     <zh_CN txt="道岔反馈"/>
     <sl txt="Tipalo za odklon"/>
     <pt_BR txt="Sensor do desvio"/>
-    <fi txt="Anturi sivulle"/>
+    <fi txt="Poikkeavan suunnan anturi"/>
   </Msg>
   <Msg id="opposite">
     <de txt="Entgegengesetzt"/>
@@ -8270,7 +8270,7 @@
     <zh_CN txt="反向"/>
     <sl txt="Nasproten"/>
     <pt_BR txt="Oposto"/>
-    <fi txt="Vastap�inen"/>
+    <fi txt="Vastapäinen"/>
   </Msg>
   <Msg id="tracknr">
     <de txt="Gleisnummer"/>
@@ -8608,7 +8608,7 @@
     <zh_CN txt="填充轨道"/>
     <sl txt="Zapolni tire"/>
     <pt_BR txt="Preencher trilhos"/>
-    <fi txt="T�yt� rataosat"/>
+    <fi txt="Täytä rataosat"/>
   </Msg>
   <Msg id="outoforder">
     <de txt="Außer Betrieb setzen"/>
@@ -8638,7 +8638,7 @@
     <zh_CN txt="停止运行"/>
     <sl txt="Izključi iz delovanja"/>
     <pt_BR txt="Colocar fora de operação"/>
-    <fi txt="Poista k�yt�st�"/>
+    <fi txt="Poista käytöstä"/>
   </Msg>
   <Msg id="operational">
     <de txt="In Betrieb nehmen"/>
@@ -8698,7 +8698,7 @@
     <zh_CN txt="显示网格"/>
     <sl txt="Prikaži mrežo"/>
     <pt_BR txt="Exibir grade"/>
-    <fi txt="N�yt� ruudukko"/>
+    <fi txt="Näytä ruudukko"/>
   </Msg>
   <Msg id="locseldlg">
     <de txt="Lok Auswahl"/>
@@ -8825,7 +8825,7 @@
     <zh_CN txt="未使用"/>
     <sl txt="neuporabljen"/>
     <pt_BR txt="não usado"/>
-    <fi txt="k�ytt�m�t�n"/>
+    <fi txt="käyttämätön"/>
   </Msg>
   <Msg id="lights">
     <de txt="Beleuchtung"/>
@@ -8946,7 +8946,7 @@
     <zh_CN txt="起始速度"/>
     <sl txt="Korak začetne hitrosti"/>
     <pt_BR txt="Passo de velocidade inicial"/>
-    <fi txt="Aloita nopeuden askellus"/>
+    <fi txt="Aloitusnopeuden askellus"/>
   </Msg>
   <Msg id="acceleration_rate">
     <de txt="Beschleunigungstufe"/>
@@ -9066,7 +9066,7 @@
     <zh_CN txt="中间速度"/>
     <sl txt="Korak srednje hitrosti"/>
     <pt_BR txt="Passo de velocidade do meio"/>
-    <fi txt="Keskimm�inen nopeus"/>
+    <fi txt="Keskimmäinen nopeus"/>
   </Msg>
   <Msg id="version">
     <de txt="Version"/>
@@ -9162,7 +9162,7 @@
     <zh_CN txt="指南"/>
     <sl txt="Vodilo"/>
     <pt_BR txt="Guia"/>
-    <fi txt="Opas"/>
+    <fi txt="Ohjekirja"/>
   </Msg>
   <Msg id="fbmodsize">
     <de txt="FB ports"/>
@@ -9282,7 +9282,7 @@
     <zh_CN txt="信号灯操作"/>
     <sl txt="Signalna dejanja"/>
     <pt_BR txt="Ação do sinal"/>
-    <fi txt="Opestimen toimenpide"/>
+    <fi txt="Opastimen toimenpide"/>
   </Msg>
   <Msg id="streetaction">
     <de txt="Fahrstraße stellen"/>
@@ -9342,7 +9342,7 @@
     <zh_CN txt="系统操作"/>
     <sl txt="Sistemska dejanja"/>
     <pt_BR txt="Ação do sistema"/>
-    <fi txt="J�rjestelm�n toimenpide"/>
+    <fi txt="Järjestelmän toimenpide"/>
   </Msg>
   <Msg id="enableaction">
     <de txt="Aktiviere Aktion"/>
@@ -9372,7 +9372,7 @@
     <zh_CN txt="启用操作"/>
     <sl txt="Omogoči dejanja"/>
     <pt_BR txt="Ativar ação"/>
-    <fi txt="Aseta toiminto päälle"/>
+    <fi txt="Aseta toimenpide päälle"/>
   </Msg>
   <Msg id="action">
     <de txt="Aktion"/>
@@ -9463,7 +9463,7 @@
     <zh_CN txt="可用"/>
     <sl txt="vidno"/>
     <pt_BR txt="Visível"/>
-    <fi txt="n�kyv�"/>
+    <fi txt="Näkyvissä"/>
   </Msg>
   <Msg id="module">
     <de txt="Module"/>
@@ -9552,7 +9552,7 @@
     <zh_CN txt="起始区间"/>
     <sl txt="Vir bolka"/>
     <pt_BR txt="Bloco de origem"/>
-    <fi txt="L�ht�lohko"/>
+    <fi txt="Lähtölohko"/>
   </Msg>
   <Msg id="linkedblocks">
     <de txt="Verbundene Blöcke"/>
@@ -9611,7 +9611,7 @@
     <zh_CN txt="激活"/>
     <sl txt="Aktiviraj"/>
     <pt_BR txt="Ativar"/>
-    <fi txt="Aktivoi"/>
+    <fi txt="Ota käyttöön"/>
   </Msg>
   <Msg id="signal_type">
     <de txt="Signaltyp"/>
@@ -9673,7 +9673,7 @@
     <zh_CN txt="远端信号"/>
     <sl txt="Predsignal"/>
     <pt_BR txt="Sinal distante"/>
-    <fi txt="Et�opastin"/>
+    <fi txt="Esiopastin"/>
   </Msg>
   <Msg id="main_signal">
     <de txt="Hauptsignal"/>
@@ -9734,7 +9734,7 @@
     <zh_CN txt="支线信号"/>
     <sl txt="Ranžirni signal"/>
     <pt_BR txt="Sinal de manobra"/>
-    <fi txt="J�rjestelyopastin"/>
+    <fi txt="Raideopastin"/>
   </Msg>
   <Msg id="signification">
     <de txt="Bedeutung"/>
@@ -9827,7 +9827,7 @@
     <zh_CN txt="臂板信号机"/>
     <sl txt="Semafor"/>
     <pt_BR txt="Semáforo"/>
-    <fi txt="Viittaopastin"/>
+    <fi txt="Siipiopastin"/>
   </Msg>
   <Msg id="bus">
     <de txt="Bus"/>
@@ -9856,7 +9856,7 @@
     <zh_CN txt="总线"/>
     <sl txt="Vodilo"/>
     <pt_BR txt="Barramento"/>
-    <fi txt="V�yl�"/>
+    <fi txt="Väylä"/>
   </Msg>
   <Msg id="free">
     <de txt="frei"/>
@@ -9974,7 +9974,7 @@
     <zh_CN txt="终端脉冲"/>
     <sl txt="končni impulz"/>
     <pt_BR txt="pulso final"/>
-    <fi txt="loppusyk�ys"/>
+    <fi txt="loppusykäys"/>
   </Msg>
   <Msg id="ghost">
     <de txt="Geist"/>
@@ -10063,7 +10063,7 @@
     <zh_CN txt="优先执行路径表中所存在的事件"/>
     <sl txt="Prednost imajo novi dogodki v zavihku Poti."/>
     <pt_BR txt="Os novos eventos encontrados na aba de Rotas são preferidos."/>
-    <fi txt="Reitti-v�lilehdelt� l�ydetyt uudet tapahtumat ovat etusijalla."/>
+    <fi txt="Reitti-välilehdeltä löydetyt uudet tapahtumat ovat etusijalla."/>
   </Msg>
   <Msg id="notsaved">
     <de txt="Änderungen speichern?"/>
@@ -10125,7 +10125,7 @@
     <zh_CN txt="计划任务表"/>
     <sl txt="Urniki"/>
     <pt_BR txt="Tabela de agendamentos"/>
-    <fi txt="Aikataululista"/>
+    <fi txt="Aikataulut"/>
   </Msg>
   <Msg id="schedule">
     <de txt="Fahrplan"/>
@@ -10247,7 +10247,7 @@
     <zh_CN txt="目的地列表"/>
     <sl txt="Lokacije"/>
     <pt_BR txt="Tabela de localidades"/>
-    <fi txt="Sijaintilista"/>
+    <fi txt="Sijainnit"/>
   </Msg>
   <Msg id="location">
     <de txt="Ortschaft"/>
@@ -10338,7 +10338,7 @@
     <zh_CN txt="从"/>
     <sl txt="iz"/>
     <pt_BR txt="de"/>
-    <fi txt="mist�"/>
+    <fi txt="mistä"/>
   </Msg>
   <Msg id="to">
     <de txt="nach"/>
@@ -10464,7 +10464,7 @@
     <zh_CN txt="修改"/>
     <sl txt="uredi"/>
     <pt_BR txt="Modificar"/>
-    <fi txt="muokkaa"/>
+    <fi txt="Muokkaa"/>
   </Msg>
   <Msg id="refresh">
     <de txt="aktualisieren"/>
@@ -10496,7 +10496,7 @@
     <zh_CN txt="刷新"/>
     <sl txt="osveži"/>
     <pt_BR txt="atualizar"/>
-    <fi txt="virkist�"/>
+    <fi txt="päivitä"/>
   </Msg>
   <Msg id="webclient">
     <de txt="WebClient"/>
@@ -10769,7 +10769,7 @@
     <zh_CN txt="使用"/>
     <sl txt="Uporabi"/>
     <pt_BR txt="Usar"/>
-    <fi txt="K�yt�"/>
+    <fi txt="Käytä"/>
   </Msg>
   <Msg id="ric">
     <de txt="RIC" tip="Rocrail Innovative Controller"/>
@@ -10830,7 +10830,7 @@
     <zh_CN txt="退出前停止运行"/>
     <sl txt="Ustavi ob izhodu"/>
     <pt_BR txt="Pare após sair"/>
-    <fi txt="Pys�yt� poistuttaessa"/>
+    <fi txt="Pysäytä poistuttaessa"/>
   </Msg>
   <Msg id="rocguiini" dialog="true">
     <de txt="Rocview Eigenschaften" accel="0" tip="Rocview Eigenschaften ändern."/>
@@ -11003,7 +11003,7 @@
     <zh_CN txt="相同目的地方向"/>
     <sl txt="smer enake destinacije"/>
     <pt_BR txt="direção do mesmo destino"/>
-    <fi txt="saman määränpään suunta"/>
+    <fi txt="sama määränpään suunta"/>
   </Msg>
   <Msg id="oppositedir">
     <de txt="Fahrziel entgegen der Fahrtrichtung" tip="Sucht neues Fahrziel in der entgegengesetzten Fahrtrichtung."/>
@@ -11088,7 +11088,7 @@
     <zh_CN txt="停用"/>
     <sl txt="Onemogoči"/>
     <pt_BR txt="Desativar"/>
-    <fi txt="Pura"/>
+    <fi txt="Poista käytöstä"/>
   </Msg>
   <Msg id="criticalsection">
     <de txt="Kritischer Blockabschnitt"/>
@@ -11399,7 +11399,7 @@
     <zh_CN txt="当转换运行方向时 V=0"/>
     <sl txt="V=0 pri spremembi smeri"/>
     <pt_BR txt="V=0 na mudança de direção"/>
-    <fi txt="V=0 suunnanmuutoksen j�lkeen"/>
+    <fi txt="V=0 suunnanmuutoksen jälkeen"/>
   </Msg>
   <Msg id="destinations">
     <de txt="Ziele"/>
@@ -11486,7 +11486,7 @@
     <zh_CN txt="交汇区间"/>
     <sl txt="odsek križanja"/>
     <pt_BR txt="bloco de cruzamento"/>
-    <fi txt="Ylitett�v� lohko"/>
+    <fi txt="Kauttakuljettava lohko"/>
   </Msg>
   <Msg id="crossingblocks">
     <de txt="Kreuzende Blöcke" tip="Comma separated list of crossing blocks."/>
@@ -11514,7 +11514,7 @@
     <zh_CN txt="交汇区间"/>
     <sl txt="Odseki križanja"/>
     <pt_BR txt="Blocos de cruzamento"/>
-    <fi txt="Ylitett�v�t lohkot"/>
+    <fi txt="Kauttakuljettavat lohkot"/>
   </Msg>
   <Msg id="overlappedturnouts">
     <de txt="überlappende Weichen"/>
@@ -11541,7 +11541,7 @@
     <zh_CN txt="交分"/>
     <sl txt="Prekrivajoči kretnici"/>
     <pt_BR txt="Desvios sobrepostos"/>
-    <fi txt="Päälllekkäiset vaihteet"/>
+    <fi txt="Päällekkäiset vaihteet"/>
   </Msg>
   <Msg id="departure">
     <de txt="Abfahrt"/>
@@ -11571,7 +11571,7 @@
     <zh_CN txt="出发"/>
     <sl txt="Odhod"/>
     <pt_BR txt="Partida"/>
-    <fi txt="L�ht�"/>
+    <fi txt="Lähtöaika"/>
   </Msg>
   <Msg id="usepatterns">
     <de txt="Muster benutzen"/>
@@ -11599,7 +11599,7 @@
     <zh_CN txt="使用方式"/>
     <sl txt="uporabi vzorce"/>
     <pt_BR txt="usar modelos"/>
-    <fi txt="k�yt� malleja"/>
+    <fi txt="käytä malleja"/>
   </Msg>
   <Msg id="purgetime">
     <de txt="Slot Freigabezeit (s)"/>
@@ -11626,7 +11626,7 @@
     <zh_CN txt="Slot清洗时间"/>
     <sl txt="Čas sproščanja prehoda (s)"/>
     <pt_BR txt="Campo Remoção de tempo (s)"/>
-    <fi txt="Aikav�lin tyhjennysaika (s)"/>
+    <fi txt="Aikavälin tyhjennysaika (s)"/>
   </Msg>
   <Msg id="useidle">
     <de txt="Benutze IDLE anstatt GPOFF" tip="Der LocoBuffer-USB braucht das RailSync."/>
@@ -11654,7 +11654,7 @@
     <zh_CN txt="用IDLE 替换 GPOFF"/>
     <sl txt="Uporabi NEDEJAVEN namesto GPOFF"/>
     <pt_BR txt="Usar IDLE ao invés de GPOFF"/>
-    <fi txt="K�yt� IDLE:� GPOFF:in sijasta"/>
+    <fi txt="Käytä IDLE:ä GPOFF:in sijasta"/>
   </Msg>
   <Msg id="ptiid">
     <de txt="PT IID" tip="Diesen Controller zum programmieren benutzen."/>
@@ -11905,7 +11905,7 @@
     <zh_CN txt="绿色"/>
     <sl txt="zelena"/>
     <pt_BR txt="Verde"/>
-    <fi txt="vihre�"/>
+    <fi txt="vihreä"/>
   </Msg>
   <Msg id="white">
     <de txt="weiß"/>
@@ -11989,7 +11989,7 @@
     <zh_CN txt="禁用机车"/>
     <sl txt="Zavrni lokomotivo"/>
     <pt_BR txt="Proibir Locomotiva"/>
-    <fi txt="Est� veturit"/>
+    <fi txt="Estä veturit"/>
   </Msg>
   <Msg id="include">
     <de txt="Lok zulassen"/>
@@ -12213,7 +12213,7 @@
     <zh_CN txt="适用"/>
     <sl txt="Uporaba"/>
     <pt_BR txt="Uso"/>
-    <fi txt="K�ytt�"/>
+    <fi txt="Käyttö"/>
   </Msg>
   <Msg id="rundirection">
     <de txt="Fahrtrichtung"/>
@@ -12327,7 +12327,7 @@
     <zh_CN txt="超越信号"/>
     <sl txt="Signali na prihodnjem pogonu"/>
     <pt_BR txt="Sinais na direção à frente"/>
-    <fi txt="Eetenp�inajon opastimet"/>
+    <fi txt="Eteenpäinajon opastimet"/>
   </Msg>
   <Msg id="reversesignals">
     <de txt="Signale bei Rückwärtsfahrt"/>
@@ -12355,7 +12355,7 @@
     <zh_CN txt="反向行驶信号"/>
     <sl txt="Signali na obratnem pogonu"/>
     <pt_BR txt="Sinais na direção reversa"/>
-    <fi txt="Taaksep�inajon opastimet"/>
+    <fi txt="Taaksepäinajon opastimet"/>
   </Msg>
   <Msg id="multipleunit">
     <de txt="Mehrfachtraktion"/>
@@ -12384,7 +12384,7 @@
     <zh_CN txt="多机"/>
     <sl txt="Večdelna enota"/>
     <pt_BR txt="Unidade Múltipla"/>
-    <fi txt="Usea yksikk�"/>
+    <fi txt="Usea yksikkö"/>
   </Msg>
   <Msg id="consist">
     <de txt="Mehrfachtraktion"/>
@@ -12440,7 +12440,7 @@
     <zh_CN txt="成员"/>
     <sl txt="Člani"/>
     <pt_BR txt="Membros"/>
-    <fi txt="J�senet"/>
+    <fi txt="Jäsenet"/>
   </Msg>
   <Msg id="zconnector">
     <de txt="Verbinder"/>
@@ -12467,7 +12467,7 @@
     <zh_CN txt="水平连接器"/>
     <sl txt="Povezovalnik nivoja"/>
     <pt_BR txt="Conector de nível"/>
-    <fi txt="Tasojen yhdist�j�"/>
+    <fi txt="Tasojen yhdistäjä"/>
   </Msg>
   <Msg id="actiontable" dialog="true" key="Alt-3">
     <de txt="Aktionen"/>
@@ -12495,7 +12495,7 @@
     <zh_CN txt="动作列表"/>
     <sl txt="Dejanja"/>
     <pt_BR txt="Tabela de ações"/>
-    <fi txt="Toimenpidelista"/>
+    <fi txt="Toimenpiteet"/>
   </Msg>
   <Msg id="actions">
     <de txt="Aktionen"/>
@@ -12579,7 +12579,7 @@
     <zh_CN txt="启动时间"/>
     <sl txt="Čas aktivacije"/>
     <pt_BR txt="Hora de ativação"/>
-    <fi txt="Aktivointiaika"/>
+    <fi txt="Käyttöönottoaika"/>
   </Msg>
   <Msg id="next_locomotive">
     <de txt="Nächste Lok"/>
@@ -12664,7 +12664,7 @@
     <zh_CN txt="显示全部"/>
     <sl txt="Pokaži vse"/>
     <pt_BR txt="Exibir todos"/>
-    <fi txt="N�yt� kaikki"/>
+    <fi txt="Näytä kaikki"/>
   </Msg>
   <Msg id="startblock">
     <de txt="Anfangsblock"/>
@@ -12692,7 +12692,7 @@
     <zh_CN txt="起始区间"/>
     <sl txt="Začetni odsek"/>
     <pt_BR txt="Bloco inicial"/>
-    <fi txt="Aloita lohko"/>
+    <fi txt="Aloituslohko"/>
   </Msg>
   <Msg id="select">
     <de txt="Auswählen"/>
@@ -12811,7 +12811,7 @@
     <zh_CN txt="移动"/>
     <sl txt="Premakni"/>
     <pt_BR txt="Mover"/>
-    <fi txt="Siirr�"/>
+    <fi txt="Siirrä"/>
   </Msg>
   <Msg id="copy">
     <de txt="Kopieren"/>
@@ -12926,7 +12926,7 @@
     <zh_CN txt="按照时间表时间出发"/>
     <sl txt="uporabi čas iz voznega reda odhodov"/>
     <pt_BR txt="Usar horário de partida agendado"/>
-    <fi txt="käytä aikataulun mukaista lähtöä"/>
+    <fi txt="Käytä aikataulun mukaista lähtöä"/>
   </Msg>
   <Msg id="clock">
     <de txt="Uhr"/>
@@ -13011,7 +13011,7 @@
     <zh_CN txt="标记"/>
     <sl txt="Opomba"/>
     <pt_BR txt="Anotação"/>
-    <fi txt="Huomautus"/>
+    <fi txt="Kommentti"/>
   </Msg>
   <Msg id="option">
     <de txt="Auswahl"/>
@@ -13176,7 +13176,7 @@
     <zh_CN txt="等候PT"/>
     <sl txt="Čakaj na PT"/>
     <pt_BR txt="Aguardar o PT"/>
-    <fi txt="Odota PT:t�"/>
+    <fi txt="Odota PT:tä"/>
   </Msg>
   <Msg id="soget">
     <de txt="Auslesen von Register"/>
@@ -13258,7 +13258,7 @@
     <zh_CN txt="软件更新"/>
     <sl txt="Posodobitve programske opreme"/>
     <pt_BR txt="Atualizações do Programa"/>
-    <fi txt="Ohjelmistop�ivitykset"/>
+    <fi txt="Ohjelmistopäivitykset"/>
   </Msg>
   <Msg id="availableupdates">
     <de txt="Verfügbare Aktualisierungen"/>
@@ -13286,7 +13286,7 @@
     <zh_CN txt="可用更新"/>
     <sl txt="Posodobitve, ki so na voljo"/>
     <pt_BR txt="Atualizações Disponíveis"/>
-    <fi txt="saatavilla olevat p�ivitykset"/>
+    <fi txt="saatavilla olevat päivitykset"/>
   </Msg>
   <Msg id="updateinfo">
     <de txt="Info Aktualisierungen"/>
@@ -13314,7 +13314,7 @@
     <zh_CN txt="升级信息"/>
     <sl txt="Informacije o posodobitvi"/>
     <pt_BR txt="Atualizar informação"/>
-    <fi txt="Tietoa p�ivityksest�"/>
+    <fi txt="Tietoa päivityksestä"/>
   </Msg>
   <Msg id="searchingupdates">
     <de txt="Suche nach verfügbaren Aktualisierungen..."/>
@@ -13370,7 +13370,7 @@
     <zh_CN txt="正在下载更新..."/>
     <sl txt="Prejemanje posodobitev ..."/>
     <pt_BR txt="Recebendo atualizações..."/>
-    <fi txt="Ladataan p�ivityksi�..."/>
+    <fi txt="Ladataan päivityksiä..."/>
   </Msg>
   <Msg id="successfullydownloaded">
     <de txt="Aktualisierungen erfolgreich heruntergeladen."/>
@@ -13398,7 +13398,7 @@
     <zh_CN txt="更新已成功下载"/>
     <sl txt="Posodobitve uspešno prenešene."/>
     <pt_BR txt="Atualizações recebidas com sucesso."/>
-    <fi txt="P�ivitykset ladattu onnistuneesti."/>
+    <fi txt="Päivitykset ladattu onnistuneesti."/>
   </Msg>
   <Msg id="updatespath">
     <de txt="Aktualisierungszeichnis"/>
@@ -13426,7 +13426,7 @@
     <zh_CN txt="更新目录"/>
     <sl txt="Pot za posodobitve"/>
     <pt_BR txt="Caminho das atualizações"/>
-    <fi txt="P�ivitysten polku"/>
+    <fi txt="Päivitysten polku"/>
   </Msg>
   <Msg id="errorondownloading">
     <de txt="Fehler beim Herunterladen! Details finden Sie im Logfile."/>
@@ -13454,7 +13454,7 @@
     <zh_CN txt="下载出错！请查阅详情"/>
     <sl txt="Napaka pri prenosu! Preveri sledenje za podrobnosti."/>
     <pt_BR txt="Erro no recebimento! Verifique os arquivos de rastreamento para detalhes."/>
-    <fi txt="Virhe latauksessa! Tarkista j�ljitys."/>
+    <fi txt="Virhe latauksessa! Tarkista jäljitys."/>
   </Msg>
   <Msg id="program">
     <de txt="Ext. Programm starten."/>
@@ -13537,7 +13537,7 @@
     <sl txt="Vodila"/>
     <sr_latin txt="Međuveze"/>
     <pt_BR txt="Barramentos"/>
-    <fi txt="V�yl�t"/>
+    <fi txt="Väylät"/>
   </Msg>
   <Msg id="ecos">
     <de txt="Ecos - Märklin CS1"/>
@@ -13730,7 +13730,7 @@
     <zh_CN txt="用户组"/>
     <sl txt="Skupina uporabnikov"/>
     <pt_BR txt="Grupo de usuários"/>
-    <fi txt="K�ytt�jryhm�"/>
+    <fi txt="Käyttäjäryhmä"/>
   </Msg>
   <Msg id="rug">
     <all txt="http://forum.rocrail.net/portal.php"/>
@@ -13851,7 +13851,7 @@
     <zh_CN txt="功能要求"/>
     <sl txt="Zahteva po novi funkcionalnosti"/>
     <pt_BR txt="Requisição de funcionalidade"/>
-    <fi txt="Ominaisuuspyynt�"/>
+    <fi txt="Ominaisuuspyyntö"/>
   </Msg>
   <Msg id="rocrail_feature">
     <all txt="https://bugs.launchpad.net/rocrail"/>
@@ -13881,7 +13881,7 @@
     <zh_CN txt="使用PT"/>
     <sl txt="Uporabi PT"/>
     <pt_BR txt="Use PT"/>
-    <fi txt="K�yt� PT:t�"/>
+    <fi txt="Käytä PT:tä"/>
   </Msg>
   <Msg id="shortcutchecking">
     <de txt="Kurzschlussüberwachung"/>
@@ -13988,7 +13988,7 @@
     <zh_CN txt="刷新机车解码器"/>
     <sl txt="Osveži dekoder lokomotive"/>
     <pt_BR txt="Atualizar decodificador da locomotiva"/>
-    <fi txt="Virkist� veturin dekooderi"/>
+    <fi txt="Päivitä veturin dekooderi"/>
   </Msg>
   <Msg id="singlegate">
     <de txt="Ein Ausgang"/>
@@ -14042,7 +14042,7 @@
     <zh_CN txt="多相位"/>
     <sl txt="Stanja"/>
     <pt_BR txt="Aparências"/>
-    <fi txt="Asemat"/>
+    <fi txt="Merkitykset"/>
   </Msg>
   <Msg id="aspect">
     <de txt="Begriff"/>
@@ -14069,7 +14069,7 @@
     <zh_CN txt="相位"/>
     <sl txt="Stanje"/>
     <pt_BR txt="Aparência"/>
-    <fi txt="Asema"/>
+    <fi txt="Merkitys"/>
   </Msg>
   <Msg id="panelcolor">
     <de txt="Gleisplanfarbe"/>
@@ -14097,7 +14097,7 @@
     <zh_CN txt="轨道规划颜色"/>
     <sl txt="Barva tirnega načrta"/>
     <pt_BR txt="Cor do diagrama de trilhos"/>
-    <fi txt="Ratasuunnitelman v�ri"/>
+    <fi txt="Ratasuunnitelman väri"/>
   </Msg>
   <Msg id="functiongroup">
     <de txt="Funktionsgruppe"/>
@@ -14124,7 +14124,7 @@
     <zh_CN txt="功能组"/>
     <sl txt="Skuina funkcij"/>
     <pt_BR txt="Grupo de funções"/>
-    <fi txt="Tapahtumaryhm�"/>
+    <fi txt="Tapahtumaryhmä"/>
   </Msg>
   <Msg id="iconnotfound">
     <de txt="Rocview Icon(s) wurden nicht gefunden ! Einstellungen überprüfen. [%s]"/>
@@ -14152,7 +14152,7 @@
     <zh_CN txt="Rocview 的图标找不见了! 请检查您的设置情况. [%s]"/>
     <sl txt="Rocview ikone ne najdem! Preveri nastavitve. [%s]"/>
     <pt_BR txt="Ícone(s) do Rocview não foram encontrados! Verifique suas configurações. [%s]"/>
-    <fi txt="Rocview kuvaketta/kuvakkeita ei l�ytnyt. Tarkista asetukset. [%s]"/>
+    <fi txt="Rocview kuvaketta/kuvakkeita ei löytynyt. Tarkista asetukset. [%s]"/>
   </Msg>
   <Msg id="dwarfsignal">
     <de txt="Zwergsignal"/>
@@ -14206,7 +14206,7 @@
     <zh_CN txt="配件解码器"/>
     <sl txt="Dekoder dodatne opreme"/>
     <pt_BR txt="Decodificador de Acessório"/>
-    <fi txt="Lis�dekooderi"/>
+    <fi txt="Lisälaitedekooderi"/>
   </Msg>
   <Msg id="functiononleftturnout">
     <de txt="bei Weiche links"/>
@@ -14289,7 +14289,7 @@
     <zh_CN txt="停用条件"/>
     <sl txt="Dogodek deaktivacije"/>
     <pt_BR txt="Evento de desativação"/>
-    <fi txt="Pura tapahtuma"/>
+    <fi txt="Käytöstäpoistotapahtuma"/>
   </Msg>
   <Msg id="pairgates">
     <de txt="Ausgänge paaren"/>
@@ -14423,7 +14423,7 @@
     <zh_CN txt="抛出"/>
     <sl txt="Odklonjeno"/>
     <pt_BR txt="Lançado"/>
-    <fi txt="Käännetty"/>
+    <fi txt="Poikkeava"/>
   </Msg>
   <Msg id="savepos">
     <de txt="Sichere Weichenlage"/>
@@ -14450,7 +14450,7 @@
     <zh_CN txt="存储位置"/>
     <sl txt="Shrani položaj"/>
     <pt_BR txt="Salvar posição"/>
-    <fi txt="Tallenna asema"/>
+    <fi txt="Tallenna sijainti"/>
   </Msg>
   <Msg id="savepostime">
     <de txt="Zeit nach der Weichen in Vorzugslage zurückschalten"/>
@@ -14476,7 +14476,7 @@
     <zh_CN txt="存储位置定时器"/>
     <sl txt="Shrani položaj časovnika"/>
     <pt_BR txt="Salvar posição do temporizador"/>
-    <fi txt="Tallenna aseman ajastin"/>
+    <fi txt="Tallenna sijainnin ajastin"/>
   </Msg>
   <Msg id="theme">
     <de txt="Thema"/>
@@ -14584,7 +14584,7 @@
     <zh_CN txt="预留下一区间"/>
     <sl txt="Rezerviraj drugi naslednji odsek."/>
     <pt_BR txt="Reservar o segundo bloco à frente"/>
-    <fi txt="Varaa toisena seuraava lohko"/>
+    <fi txt="Varaa toiseksi seuraava lohko"/>
   </Msg>
   <Msg id="dccformat">
     <de txt="DCC Format" tip="Voreinstellung DCC Format"/>
@@ -15066,7 +15066,7 @@
     <zh_CN txt="停车场"/>
     <sl txt="Skrita postaja"/>
     <pt_BR txt="Campo de Manobras"/>
-    <fi txt="Järjestelyratapiha"/>
+    <fi txt="Järjestelypiha"/>
   </Msg>
   <Msg id="seltabpos">
     <de txt="Schiebebühnen-Position"/>
@@ -15147,7 +15147,7 @@
     <zh_CN txt="低电平有效"/>
     <sl txt="Aktivna nizko"/>
     <pt_BR txt="Ativo baixo"/>
-    <fi txt="AKtiivinen matala"/>
+    <fi txt="Aktiivinen matala"/>
   </Msg>
   <Msg id="timedactions" dialog="true">
     <de txt="Zeitgesteuerte Aktionen" tip="Aktionen zu einer bestimmten Zeit starten"/>
@@ -15427,7 +15427,7 @@
     <zh_CN txt="文档"/>
     <sl txt="Uredi XML"/>
     <pt_BR txt="Documentação"/>
-    <fi txt="Ohjeistus"/>
+    <fi txt="Ohjeet"/>
   </Msg>
   <Msg id="xslpath">
     <de txt="XSL-Verzeichnis"/>
@@ -15894,7 +15894,7 @@
     <zh_CN txt="附件"/>
     <sl txt="Dodatna oprema"/>
     <pt_BR txt="Acessório"/>
-    <fi txt="Tarvike"/>
+    <fi txt="Lisälaite"/>
   </Msg>
   <Msg id="accnr">
     <de txt="Zubehör#"/>
@@ -15922,7 +15922,7 @@
     <zh_CN txt="附件#"/>
     <sl txt="Dodatna oprema#"/>
     <pt_BR txt="Acessório#"/>
-    <fi txt="Tarvike nro"/>
+    <fi txt="Lisälaite nro."/>
   </Msg>
   <Msg id="portbase">
     <de txt="Portbasis"/>
@@ -16059,7 +16059,7 @@
     <zh_CN txt="减速"/>
     <sl txt="Zmanjšaj hitrost"/>
     <pt_BR txt="Reduzir velocidade"/>
-    <fi txt="VÄhennä nopeutta"/>
+    <fi txt="Laske nopeutta"/>
   </Msg>
   <Msg id="conditions">
     <de txt="Bedingungen"/>
@@ -16222,7 +16222,7 @@
     <zh_CN txt="默认相位信号"/>
     <sl txt="Privzeto stanje signala"/>
     <pt_BR txt="Aparência de sinal padrão"/>
-    <fi txt="Opastimen oletustila"/>
+    <fi txt="Opastimen oletusmerkitys"/>
   </Msg>
   <Msg id="greenaspect">
     <de txt="Grün wenn nächstes Signal Rot"/>
@@ -16249,7 +16249,7 @@
     <zh_CN txt="若前方为红色则显示绿灯"/>
     <sl txt="Zeleni signal če je naslednji rdeči"/>
     <pt_BR txt="Aparência verde se o próximo estiver vermelho"/>
-    <fi txt="Vihreä tila, mikäli seuraava on punainen"/>
+    <fi txt="Vihreä merkitys, mikäli seuraava on punainen"/>
   </Msg>
   <Msg id="routeids">
     <de txt="Fahrstraßen-Kennungen"/>
@@ -16525,7 +16525,7 @@
     <zh_CN txt="跟进"/>
     <sl txt="Spremljaj"/>
     <pt_BR txt="Acompanhamento"/>
-    <fi txt="Seuraa"/>
+    <fi txt="Seuraava"/>
   </Msg>
   <Msg id="ctsflow">
     <en txt="CTS Flow"/>
@@ -16803,7 +16803,7 @@
     <zh_CN txt="发送短地址"/>
     <sl txt="Oddajaj kratke ID-je"/>
     <pt_BR txt="Transmitir identificações curtas"/>
-    <fi txt="Låhetä lyhyet ID:t"/>
+    <fi txt="Lähetä lyhyet ID:t"/>
   </Msg>
   <Msg id="cartable" dialog="true" key="Alt-4">
     <de txt="Wagenliste" tip="Wagontabelle"/>
@@ -16831,7 +16831,7 @@
     <zh_CN txt="车厢列表"/>
     <sl txt="Vagoni"/>
     <pt_BR txt="Tabela de vagões"/>
-    <fi txt="Vaunulista"/>
+    <fi txt="Vaunut"/>
   </Msg>
   <Msg id="waybilltable" dialog="true" key="Alt-5">
     <de txt="Frachtscheine" tip="Frachtzetteltabelle"/>
@@ -16859,7 +16859,7 @@
     <zh_CN txt="运单表"/>
     <sl txt="Tovorni listi"/>
     <pt_BR txt="Tabela de guia de transporte"/>
-    <fi txt="Rahtikirjalista"/>
+    <fi txt="Rahtikirjat"/>
   </Msg>
   <Msg id="operatortable" dialog="true" key="Alt-6">
     <en txt="Operator table" alttxt="Operators" tip="Operator table"/>
@@ -16887,7 +16887,7 @@
     <zh_CN txt="操作表"/>
     <sl txt="Operaterji"/>
     <pt_BR txt="Tabela de operador"/>
-    <fi txt="Kuljettajalista"/>
+    <fi txt="Kuljettajat"/>
   </Msg>
   <Msg id="operator">
     <en txt="Operator"/>
@@ -17566,7 +17566,7 @@
     <zh_CN txt="等待中"/>
     <sl txt="Čakanje"/>
     <pt_BR txt="Aguardando"/>
-    <fi txt="Odotus"/>
+    <fi txt="Odottaa"/>
   </Msg>
   <Msg id="shipping">
     <en txt="Shipping"/>
@@ -17593,7 +17593,7 @@
     <sl txt="Dostava"/>
     <pt_BR txt="Remessa"/>
     <sv txt="Frakta"/>
-    <fi txt="Lähetys"/>
+    <fi txt="Lähetetty"/>
   </Msg>
   <Msg id="delivered">
     <en txt="Delivered"/>
@@ -17705,7 +17705,7 @@
     <zh_CN txt="维护"/>
     <sl txt="Vzdrževanje"/>
     <pt_BR txt="Manutenção"/>
-    <fi txt="Huolto"/>
+    <fi txt="Huollossa"/>
   </Msg>
   <Msg id="boxcar">
     <en txt="Boxcar"/>
@@ -18550,7 +18550,7 @@
     <sl txt="Čas do servisa"/>
     <pt_BR txt="Tempo-Manut."/>
     <sv txt="M-Tid"/>
-    <fi txt="M-aika"/>
+    <fi txt="Huoltoaika"/>
   </Msg>
   <Msg id="mint">
     <en txt="M-Int" tip="Maintenance interval in hours."/>
@@ -18572,7 +18572,7 @@
     <sl txt="Serv.-Int"/>
     <zh_CN txt="M-Int"/>
     <pt_BR txt="Interv-M"/>
-    <fi txt="M-Int"/>
+    <fi txt="Huoltoväli"/>
   </Msg>
   <Msg id="offpos">
     <en txt="Shutdown position"/>
@@ -18596,7 +18596,7 @@
     <sl txt="Položaj zaustavitve"/>
     <pt_BR txt="Posição de desligamento"/>
     <sv txt="Nedstängningsposition"/>
-    <fi txt="Sammutuksen aikainen asema"/>
+    <fi txt="Sammutuksen aikainen tilanne"/>
   </Msg>
   <Msg id="position">
     <en txt="Position"/>
@@ -18623,7 +18623,7 @@
     <zh_CN txt="位置"/>
     <sl txt="Položaj"/>
     <pt_BR txt="Posição"/>
-    <fi txt="Asema"/>
+    <fi txt="Sijainti"/>
   </Msg>
   <Msg id="motoroffdelay">
     <en txt="Motor off delay"/>
@@ -19273,7 +19273,7 @@
     <sl txt="Poštni"/>
     <pt_BR txt="Correio"/>
     <sv txt="Publicera"/>
-    <fi txt="Lähetä"/>
+    <fi txt="Posti"/>
   </Msg>
   <Msg id="all">
     <en txt="All"/>
@@ -20058,7 +20058,7 @@
     <zh_CN txt="Rocrail的运行完全是由义务劳动进行的。然而，Rocrail也需要资金的支持。您的继续支持对Rocrail的存在来说至关重要的。如果你已经做了支持，您可以问通过电子邮件： donate@rocrail.net来向Rocrail申请一个注册号来消除这个启动对话框。"/>
     <sl txt="Rocrail deluje popolnoma na prostovoljnem delu. Vendar Rocrail potrebuje tudi denarne prispevke. Vaša nadaljnja podpora je bistvenega pomena za vzdrževanje Rocrail-a. Če ste že podprli Rocrail, lahko zaprosite za ključ da onemogočite to pogovorno okno ob zagonu: donate@rocrail.net"/>
     <pt_BR txt="O Rocrail é criado inteiramente através de trabalho voluntário. Entretanto, o Rocrail também precisa de contribuições em dinheiro. A sua ajuda contínua é vital para manter o Rocrail disponível. Se você já contribuiu, você pode solicitar uma chave de registro para desativar este painel inicial através do endereço: donate@rocrail.net"/>
-    <fi txt="Rocrailia ylläpidetään täysin vapaaehtoisvoimin, mutta tarvitsee myös lahjoituksia. Jatkuva tukene on elintärkeää pitämään Rocrail saatavilla. Jos olet jo tukenut ohjelmistoa, voit pyytää avainta, jolla poistuu käynnistyksen aikainen valintaikkuna: donate@rocrail.net"/>
+    <fi txt="Rocrailia ylläpidetään täysin vapaaehtoisvoimin, mutta tarvitsee myös lahjoituksia. Jatkuva tukenne on elintärkeää pitämään Rocrail saatavilla. Jos olet jo tukenut ohjelmistoa, voit pyytää avainta, jolla poistuu käynnistyksen aikainen valintaikkuna: donate@rocrail.net"/>
   </Msg>
   <Msg id="donatethanks">
     <en txt="Thanks for your support! Enjoy using Rocrail."/>
@@ -20452,7 +20452,7 @@
     <sl txt="Regionalni"/>
     <pt_BR txt="Regional"/>
     <sv txt="Regional"/>
-    <fi txt="LÄhiliikenne"/>
+    <fi txt="Paikallisjuna"/>
   </Msg>
   <Msg id="size">
     <en txt="size"/>
@@ -20891,7 +20891,7 @@
     <sl txt="Ročno"/>
     <da txt="Manuelt"/>
     <pt_BR txt="Manualmente"/>
-    <fi txt="Manuaalisesti"/>
+    <fi txt="Manuaalinen ajo"/>
   </Msg>
   <Msg id="evtcorrection">
     <en txt="Event correction"/>
@@ -21026,7 +21026,7 @@
     <da txt="Tillad opfølgning"/>
     <pt_BR txt="Permitir acompanhamento"/>
     <sv txt="Tillåt uppföljning"/>
-    <fi txt="Salli seuraaminen"/>
+    <fi txt="Salli seuraava"/>
   </Msg>
   <Msg id="fiddleyard2go">
     <en txt="Goto FiddleYard"/>
@@ -21087,7 +21087,7 @@
     <sl txt="Dovoli prazen ID nadzornika hitrosti"/>
     <pt_BR txt="Permitir identificação de aceleração zero"/>
     <sv txt="Tillåt okända körkontroller"/>
-    <fi txt="Salli käsiohjaimen tyhjä ID"/>
+    <fi txt="Salli säätimen tyhjä ID"/>
   </Msg>
   <Msg id="monitoring">
     <en txt="Monitoring"/>
@@ -21302,7 +21302,7 @@
     <en_GB txt="Stop none commuter in terminal"/>
     <pt_BR txt="Parar no terminal por ausência de vagão suburbano"/>
     <sv txt="Stoppa icke pendeltåg på station"/>
-    <fi txt="Älä pysäytä mitään lähijunaa pääteasemalla"/>
+    <fi txt="Älä pysäytä mitään lähiliikennejunaa pääteasemalla"/>
   </Msg>
   <Msg id="slotmanagement">
     <en txt="Slot management"/>
@@ -21436,7 +21436,7 @@
     <en_GB txt="Blank warning at red main signal."/>
     <pt_BR txt="Aviso em branco no sinal principal vermelho"/>
     <sv txt="Blank varning vid röd huvudsignal"/>
-    <fi txt="Tyhjennä varoitus punaisella pääopastimella"/>
+    <fi txt="Tyhjennä varoitus kun pääopastin on punainen"/>
   </Msg>
   <Msg id="overwriteall">
     <en txt="Overwrite all settings?"/>
@@ -21821,7 +21821,7 @@
     <sl txt="Število stanj"/>
     <en_GB txt="Aspect numbers"/>
     <pt_BR txt="Números de aparência"/>
-    <fi txt="Asentonumerot"/>
+    <fi txt="Merkitysnumerot"/>
   </Msg>
   <Msg id="planhealth">
     <en txt="Plan health"/>
@@ -22702,7 +22702,7 @@
     <pt_BR txt="Vagão suburbano"/>
     <sv txt="Pendlare"/>
     <en_GB txt="Commuters"/>
-    <fi txt="Lähijunat"/>
+    <fi txt="Lähiliikennejunat"/>
   </Msg>
   <Msg id="locoviewspecial" key="Alt-P">
     <en txt="Specials"/>
@@ -22774,7 +22774,7 @@
     <pt_BR txt="Classificar locomotivas pelo endereço"/>
     <sv txt="Sortera lok via adress"/>
     <en_GB txt="Sort locos by address"/>
-    <fi txt="Aseta veturit osoitteen perusteella"/>
+    <fi txt="Järjestä veturit osoitteen mukaan"/>
   </Msg>
   <Msg id="selecttour" dialog="true">
     <en txt="Select tour"/>
@@ -22793,7 +22793,7 @@
     <pt_BR txt="Selecionar viagem"/>
     <sv txt="Välj rutt"/>
     <en_GB txt="Select tour"/>
-    <fi txt="Valitse kiertomatka"/>
+    <fi txt="Valitse matka"/>
   </Msg>
   <Msg id="tourtable" dialog="true">
     <en txt="Tour table" alttxt="Tours" tip="Tour table"/>
@@ -22812,7 +22812,7 @@
     <sv txt="Turlista."/>
     <pt_BR txt="Tabela de viagem"/>
     <en_GB txt="Tour table"/>
-    <fi txt="Kiertomatkalista"/>
+    <fi txt="Matkat"/>
   </Msg>
   <Msg id="tour">
     <en txt="Tour"/>
@@ -22831,7 +22831,7 @@
     <sv txt="Tur."/>
     <pt_BR txt="Viagem"/>
     <en_GB txt="Tour"/>
-    <fi txt="Kiertomatka"/>
+    <fi txt="Matka"/>
   </Msg>
   <Msg id="resetspfx">
     <en txt="Reset speed and functions"/>
@@ -22903,7 +22903,7 @@
     <pt_BR txt="Informação de consulta"/>
     <en_GB txt="Poll info"/>
     <sv txt="Pollningsinfo"/>
-    <fi txt="Kysele tietoa"/>
+    <fi txt="Kysy tieto"/>
   </Msg>
   <Msg id="releaseonidle">
     <en txt="Release loco on idle"/>
@@ -23276,7 +23276,7 @@
     <sv txt="varje"/>
     <pt_BR txt="cada"/>
     <en_GB txt="every"/>
-    <fi txt="jokainen"/>
+    <fi txt="Joka"/>
   </Msg>
   <Msg id="startofday">
     <en txt="Start of Day" tip="Initialize accessories and query sensors."/>
@@ -23649,7 +23649,7 @@
     <ru txt="Классическая маршрутизация устарела: Пожалуйста, перейдите к маршрутизации с использованием сторон блока."/>
     <pt_BR txt="Roteamento clássico está desatualizado; Favor migrar para o roteamento pelos lados do bloco."/>
     <en_GB txt="Classic routing is deprecated; Please migrate to block side routing."/>
-    <fi txt="Perinteinen reititys on vanhentunut. Siirry käyttämään lohkoreititystä."/>
+    <fi txt="Perinteinen reititys on vanhentunut. Siirry käyttämään lohkopuolen reititystä."/>
   </Msg>
   <Msg id="checkplanhealth">
     <en txt="Check plan health"/>
@@ -23665,7 +23665,7 @@
     <sl txt="Preveri stanje načrta"/>
     <pt_BR txt="Verificar adequação do diagrama"/>
     <en_GB txt="Check plan health"/>
-    <fi txt="Tarksita suunnitelman tila"/>
+    <fi txt="Tarkista suunnitelman tila"/>
   </Msg>
   <Msg id="extendedcheck">
     <en txt="Extended plan check"/>
@@ -23716,7 +23716,7 @@
     <ru txt="Управление действиями"/>
     <pt_BR txt="Controle de ações"/>
     <en_GB txt="Action control"/>
-    <fi txt="Toimntojen hallinta"/>
+    <fi txt="Toimintojen hallinta"/>
   </Msg>
   <Msg id="carcard">
     <en txt="Car card"/>
@@ -23805,7 +23805,7 @@
     <da txt="Forlad"/>
     <pt_BR txt="Deixar"/>
     <en_GB txt="Leave"/>
-    <fi txt="Poistu"/>
+    <fi txt="Poista"/>
   </Msg>
   <Msg id="parameter">
     <en txt="Parameter"/>
@@ -23863,7 +23863,7 @@
     <da txt="Definition"/>
     <pt_BR txt="Definição"/>
     <en_GB txt="Definition"/>
-    <fi txt="Määritelmä"/>
+    <fi txt="Määritykset"/>
   </Msg>
   <Msg id="switched">
     <en txt="Switched"/>
@@ -23963,7 +23963,7 @@
     <da txt="Vend"/>
     <pt_BR txt="Inverter"/>
     <en_GB txt="Flip"/>
-    <fi txt="Peilaa"/>
+    <fi txt="Käännetty"/>
   </Msg>
   <Msg id="analog">
     <en txt="Analog"/>
@@ -24084,7 +24084,7 @@
     <ru txt="Loco Widgets"/>
     <pt_BR txt="Ferramentas da locomotiva"/>
     <en_GB txt="Loco Widgets"/>
-    <fi txt="Veturiohjelmat"/>
+    <fi txt="Veturilisukkeet"/>
   </Msg>
   <Msg id="guestloco" dialog="true">
     <en txt="Guest Loco"/>
@@ -24205,7 +24205,7 @@
     <ru txt="Установить ID для всех блоков"/>
     <pt_BR txt="Definir identificador de blocos para todos os blocos"/>
     <en_GB txt="Set blockid for all blocks"/>
-    <fi txt="Aseta blockid kaikille lohkoille"/>
+    <fi txt="Aseta lohkon ID kaikille lohkoille"/>
   </Msg>
   <Msg id="ana_resetBlockId">
     <en txt="Reset blockid in whole plan"/>
@@ -24251,7 +24251,7 @@
     <pt_BR txt="Redefinir atribuições de sinais em todos os blocos"/>
     <en_GB txt="Reset signal assignments in all blocks"/>
     <sv txt="Återställ signaltilldelning i alla block"/>
-    <fi txt="Tyhjennä opastimien määritys lohkoihin"/>
+    <fi txt="Tyhjennä opastimien määritys kaikissa lohkoissa"/>
   </Msg>
   <Msg id="ana_addFeedbackBlockAssignment">
     <en txt="assign feedbacks to blocks"/>
@@ -24281,7 +24281,7 @@
     <pt_BR txt="Redefinir atribuições de retorno em todos os blocos"/>
     <en_GB txt="Reset feedback assignments in all blocks"/>
     <sv txt="Återställ återkopplingsstatus i alla block"/>
-    <fi txt="Tyhjennä anturien määritys lohkoihin"/>
+    <fi txt="Tyhjennä anturien määritys kaikissa lohkoissa"/>
   </Msg>
   <Msg id="ana_basicCheck">
     <en txt="Basic checks on all items"/>
@@ -24504,7 +24504,7 @@
     <pt_BR txt="Anular aceleração"/>
     <en_GB txt="Overrule throttle"/>
     <sv txt="Överrid körhandtag"/>
-    <fi txt="Kumoa käsisäädin"/>
+    <fi txt="Kumoa säädin"/>
   </Msg>
   <Msg id="resetwc">
     <en txt="Reset wheel counter"/>
@@ -24574,7 +24574,7 @@
     <pt_BR txt="Viagem de inicialização"/>
     <sv txt="Startrutt"/>
     <en_GB txt="Startup tour"/>
-    <fi txt="Aloitusesittely"/>
+    <fi txt="Aloitusmatka"/>
   </Msg>
   <Msg id="resetrouteidswarning">
     <en txt="Reset all route IDs."/>
@@ -24669,7 +24669,7 @@
     <ru txt="Gain"/>
     <pt_BR txt="Ganho"/>
     <en_GB txt="Gain"/>
-    <fi txt="Saapua"/>
+    <fi txt="Lisäys"/>
   </Msg>
   <Msg id="usedepartdelay">
     <en txt="Use depart delay"/>
@@ -24698,7 +24698,7 @@
     <es txt="Parpadeo"/>
     <pt_BR txt="Piscar"/>
     <en_GB txt="Blink"/>
-    <fi txt="Vilkuta"/>
+    <fi txt="Vilkkuva"/>
   </Msg>
   <Msg id="actiontimer60">
     <en txt="Action timer 60 sec."/>
@@ -24850,7 +24850,7 @@
     <pt_BR txt="Aceleração alternativa"/>
     <sv txt="Alternativ körkontroll"/>
     <en_GB txt="Alternative throttle"/>
-    <fi txt="Vaihtoehtoinen käsiohjain"/>
+    <fi txt="Vaihtoehtoinen säädin"/>
   </Msg>
   <Msg id="openlocofile" dialog="true">
     <en txt="Open locomotive file"/>
@@ -25091,7 +25091,7 @@
     <pt_BR txt="Tabela de acessórios"/>
     <sv txt="Tillbehörstabell"/>
     <en_GB txt="Accessory table"/>
-    <fi txt="Lisälaitelista"/>
+    <fi txt="Lisälaitteet"/>
   </Msg>
   <Msg id="calc">
     <en txt="Calculation"/>
@@ -25775,7 +25775,7 @@
     <sv txt="Endast pendeltåg"/>
     <sr_latin txt="Samo prigradski vozovi"/>
     <de txt="Nur Pendelzüge"/>
-    <fi txt="Vain lähijunat"/>
+    <fi txt="Vain lähiliikennejunat"/>
   </Msg>
   <Msg id="forcemultiaspects">
     <en txt="Force multi aspects"/>
@@ -25787,7 +25787,7 @@
     <sl txt="Vsili več stanj"/>
     <sr_latin txt="Prinudni višestruki pristup"/>
     <de txt="Viel-Begriffe erzwingen"/>
-    <fi txt="Pakota useat tilat"/>
+    <fi txt="Pakota useita merkityksiä"/>
   </Msg>
   <Msg id="nodemap">
     <en txt="Nodemap"/>
