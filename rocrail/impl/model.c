@@ -3674,8 +3674,13 @@ static void _event( iOModel inst, iONode nodeC ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match signal event: %d:%d:%d type=%d uidname=[%s]", bus, addr, port, type, uidname );
 
     iOSignal sg = ModelOp.getSgByAddress(inst, iid, bus, addr, port, type, uidname);
-    if( sg != NULL && wCtrl.issgevents( wRocRail.getctrl( AppOp.getIni() ) ) ) {
-      SignalOp.event( sg, nodeC );
+    if( sg != NULL ) {
+      if( wCtrl.issgevents( wRocRail.getctrl( AppOp.getIni() ) ) ) {
+        SignalOp.event( sg, nodeC );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "signal event processing is disabled; skip [%s].", SignalOp.getId(sg) );
+      }
       return;
     }
 
