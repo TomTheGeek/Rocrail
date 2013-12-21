@@ -1,7 +1,7 @@
-<!--  This is for the 8 function output ESU decoder.   -->
-<decoder manu="ESU" type="V4.0 without FX" web="http://www.esu.eu" collapse="true">
+<!--  This is for the 8 function output ESU decoder.  v1.3.8(r) 2103-12-21 -->
+<decoder manu="ESU" type="V4.0 without FX" web="http://www.esu.eu" collapse="true" info="The ESU decoder is one of, if not the most feature rich decoders on the market today.  Please consult the manual before making changes.">
   <cvbyte nr="1" cat="Address" desc="Short Decoder Address" info="Range 0-127 - Bits 0-6 contain an address with a value between 1 and 127.  Bit seven must have a value of 0."/>
-<cvbyte nr="7" cat="Info" desc="Manufacturer Version No." readonly="true" info="This is reserved for the manufacturer to store information regarding the version of the decoder."/>
+  <cvbyte nr="7" cat="Info" desc="Manufacturer Version No." readonly="true" info="This is reserved for the manufacturer to store information regarding the version of the decoder."/>
   <cvbyte nr="8" cat="Info" desc="Manufacturer's ID" readonly="true" info="ESU=151 CV8 contains the NMRA assigned id number of the manufacturer of the decoder."/>
 
   
@@ -12,7 +12,7 @@
       <dipvalue name="Invert direction" value="1"/>
       <dipvalue name="28/128 speed steps" value="2"/>
       <dipvalue name="Disable Analog Mode" value="4"/>
-      <dipvalue name="RailCom" value="8"/>
+      <dipvalue name="Enable RailCom" value="8"/>
       <dipvalue name="Speed Curve CV 67-94" value="16"/>
       <dipvalue name="Long addresses (CV17, CV18)" value="32"/>
 
@@ -24,7 +24,8 @@
 
 
 
-  <cvbyte nr="2" cat="Speed" desc="Vstart" info="Range 0-100 - Vstart is used to define the voltage drive level used as the start voltage on the motor."/>
+  <cvbyte nr="2" cat="Speed" desc="Vstart" info="Range 0-100 - Default 3 - Vstart is used to define the voltage drive level used as the start voltage on the motor."/>
+
   <cvbyte nr="3" cat="Speed" desc="Acceleration Rate" info="Range 0-255 - each unit = 7ms between speed steps."/>
   <cvbyte nr="4" cat="Speed" desc="Deceleration Rate" info="Range 0-255 - each unit = 7ms between speed steps."/>
   <cvbyte nr="5" cat="Speed" desc="Vmax" info="Range 0-255 - V-max is used to specify the motor voltage drive levels at the maximum speed step."/>
@@ -112,6 +113,8 @@
       <dipvalue name="Enable decoder lock with CV15/16" value="2"/>
       <dipvalue name="Enable serial protocol for C-Sinus" value="8"/>
       <dipvalue name="Constant (non-adaptive) regulation frequency" value="16"/>
+      <dipvalue name="Motor Safety when Blocked" value="32" />
+
         </dipgroup>
 
 </adip>
@@ -129,6 +132,19 @@
 
 </adip>
 </cvbyte> 
+<cvbyte nr="2" cat="Motor Control" desc="Vstart" info="Range 0-100 - also see Motor Control - Section 11 of the manual - Vstart is used to define the voltage drive level used as the start voltage on the motor."/>
+
+  <cvbyte nr="51" cat="Motor Control" desc="Parameter I Slow" info="Adjusts the inertia of the motor separately for slow speeds and starting from a stop."/>
+  <cvbyte nr="52" cat="Motor Control" desc="Parameter K Slow" info="Defines the power of load control. The higher the value, the stronger the motor will be controlled by the decoder."/>
+  <cvbyte nr="53" cat="Motor Control" desc="EMF Reference Voltage" info="Defines the Back EMF voltage, which the motor should generate at maximum speed. The higher the efficiency of the motor, the higher this value may be set. If the engine does not reach maximum speed, reduce this parameter."/>
+  <cvbyte nr="54" cat="Motor Control" desc="Parameter K" info="Defines the effect of load control. The higher the value, the stronger the effect of Back EMF control."/>
+  <cvbyte nr="55" cat="Motor Control" desc="Parameter I" info="Defines the momentum (inertia) of the motor. The higher the momentum of the motor (large flywheel or bigger motor diameter), the higher this value has to be set."/>
+  <cvbyte nr="56" cat="Motor Control" desc="Control Influence" info="Defines up to which speed in % load control will be active. A value of 32 indicates that load control will be switched off after reaching half speed."/>
+
+  <cvbyte nr="66" cat="Motor Trim &amp; Torque" desc="Forward Trim" info="Divided by 128 is the factor used to multiple the motor voltage. A value of zero deactivates."/>
+  <cvbyte nr="95" cat="Motor Trim &amp; Torque" desc="Reverse Trim" info="Reverse trim, values 1-127 add to reverse speed, values 129-255 add to forward speed."/>
+  <cvbyte nr="116" cat="Motor Trim &amp; Torque" desc="Torque kick rate" info="The  number of 16ms periods in a row that motor is `kicked' with a voltage pulse"/>
+  <cvbyte nr="117" cat="Motor Trim &amp; Torque" desc="Torque kick strength" info=" How much voltage is used to kick the motor at slow speeds. Reduces to 0 as speed is increased."/>
 
 
   <cvbyte nr="67" cat="Speed Table" desc="Index 1" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps)"/>
@@ -159,18 +175,14 @@
   <cvbyte nr="92" cat="Speed Table" desc="Index 26" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
   <cvbyte nr="93" cat="Speed Table" desc="Index 27" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
   <cvbyte nr="94" cat="Speed Table" desc="Index 28" info=" Uploadable speed table steps 1-28 (128 speed mode calculates intermediate steps"/>
-  <cvbyte nr="95" cat="Motor" desc="Reverse Trim" info="Reverse trim, values 1-127 add to reverse speed, values 129-255 add to forward speed."/>
+  
   <cvbyte nr="105" cat="Scratchpad" desc="Spare CV" info="Scratchpad CV #1."/>
   <cvbyte nr="106" cat="Scratchpad" desc="Spare CV" info="Scratchpad CV #2."/>
   <cvbyte nr="112" cat="Blink Frequency" desc="Blink rate" info="Default 30  Range 4-64  Multiples of 0.065536 seconds"/>
 
   <cvbyte nr="113" cat="Power Fail" desc="Power Fail Bypass" info="Default 50  Range 0-255 "/>
-
-  <cvbyte nr="116" cat="Motor" desc="Torque kick rate" info="The  number of 16ms periods in a row that motor is `kicked' with a voltage pulse"/>
-
-
-  <cvbyte nr="117" cat="Motor" desc="Torque kick strength" info=" How much voltage is used to kick the motor at slow speeds. Reduces to 0 as speed is increased."/>
-
+  
+  
 
 <cvbyte nr="125" cat="Analog Options" desc="Starting Voltage analog DC." info=""/>
 <cvbyte nr="126" cat="Analog Options" desc="Maximum Speed Analog DC" info=""/>
@@ -182,10 +194,16 @@
 <cvbyte nr="21" cat="Consist" desc="Consist Addr Active for F1-F8" info="Defines for functions F1-F8 whether the function is controlled by the consist address."/>
 <cvbyte nr="22" cat="Consist" desc="Consist Addr Active for FL,F9-F12" info="Defines for function FL whether the function is controlled by the consist address."/>
   
-  
+  <cvbyte nr="246" cat="Coupling" desc="Auto decoupling driving speed" />
+<cvbyte nr="247" cat="Coupling" desc="Decouping remove time." info="Value * .016"/>
+<cvbyte nr="248" cat="Coupling" desc="Decouple pushing time." info="Value * .016"/>
+
+
+<cvbyte nr="253" cat="Constant Brake" desc="Constant Brake mode. " info="Only active is CV254 > 0"/>
+<cvbyte nr="254" cat="Constant Brake" desc="Constant Brake Distance Fwd" info="Please see manual."/>
+<cvbyte nr="255" cat="Constant Brake" desc="Constant Brake Distance Rev" info="Please see manual"/>
 
 <cvbyte nr="30" cat="Reset" desc="Reset and Error" info="Set to 8 on the Programming track to reset to factory defaults.  If the decoder has an error condition this Configuration Variable shall contain the error condition as specified by the manufacturer.  0 = no error has occurred."/>
-
 
 </decoder>
 
