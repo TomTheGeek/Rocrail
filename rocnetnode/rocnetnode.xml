@@ -42,7 +42,9 @@
       <var name="fn[8]" vt="int"/>
       <var name="prev_fn[8]" vt="int"/>
       <var name="strig[8]" vt="int"/>
-    </struct>
+      <var name="runLEDcnt" vt="int"/>
+      <var name="runLED" vt="Boolean"/>
+      </struct>
     <struct name="Port" typedef="*iOPort">
       <var name="port" vt="int"/>
       <var name="ionr" vt="int"/>

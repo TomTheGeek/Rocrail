@@ -1616,8 +1616,6 @@ static void __rocmousescanner( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
   iORocNetNodeData data       = Data(rocnetnode);
-  int runLEDcnt = 0;
-  Boolean runLED = False;
   Boolean init[8] = {False,False,False,False,False,False,False,False};
   byte msg[256];
   byte baseio  = 0x3F;
@@ -1715,11 +1713,11 @@ static void __rocmousescanner( void* threadinst ) {
 
       if( rc >= 0 ) { /* running LED */
         int flashfreq = (data->rocmouses[idx]->lcaddr > 0) ? 10:4;
-        runLEDcnt++;
-        if(  runLEDcnt >= flashfreq ) {
-          runLEDcnt = 0;
-          rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, runLED?255:0 );
-          runLED = !runLED;
+        data->rocmouses[idx]->runLEDcnt++;
+        if(  data->rocmouses[idx]->runLEDcnt >= flashfreq ) {
+          data->rocmouses[idx]->runLEDcnt = 0;
+          rc = raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, data->rocmouses[idx]->runLED?255:0 );
+          data->rocmouses[idx]->runLED = !data->rocmouses[idx]->runLED;
         }
       }
 
@@ -1786,8 +1784,8 @@ static void __rocmousescanner( void* threadinst ) {
         /* Invert digital input */
         data->rocmouses[idx]->io = ~data->rocmouses[idx]->io;
         TraceOp.trc( name, data->stress ? TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999,
-            "Analog: P1=%d, RS1=%d, S6=%d Digital: IO=0x%02X fgroup=%d",
-            valueP1, valueRS1, valueS6, data->rocmouses[idx]->io, data->rocmouses[idx]->fgroup );
+            "base=0x%02X,0x%02X idx=%d P1=%d, RS1=%d, S6=%d IO=0x%02X fgroup=%d",
+            baseio, baseadc, idx, valueP1, valueRS1, valueS6, data->rocmouses[idx]->io, data->rocmouses[idx]->fgroup );
 
         /* S5 function group selection */
         if( data->rocmouses[idx]->io & 0x08 ) {
