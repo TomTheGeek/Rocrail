@@ -1374,6 +1374,7 @@ static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
 
   switch( action ) {
   case RN_SENSOR_REPORT:
+  case RN_SENSORID_REPORT:
   {
     char key[32] = {'\0'};
     StrOp.fmtb( key, "%d-%d", rn[RN_PACKET_NETID], sndr);
@@ -1396,7 +1397,10 @@ static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
         ident[i] = rn[RN_PACKET_DATA + 4 + i];
         ident[i+1] = '\0';
       }
-      wFeedback.setidentifier( evt, ident );
+      if( action == RN_SENSORID_REPORT )
+        wFeedback.setid( evt, ident );
+      else
+        wFeedback.setidentifier( evt, ident );
     }
 
     if( data->iid != NULL )

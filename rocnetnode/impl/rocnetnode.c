@@ -1394,7 +1394,7 @@ static void __scanI2C(iORocNetNode rocnetnode) {
         data->i2caddr[i] = False;
         __errorReport(rocnetnode, RN_ERROR_RC_I2C, RN_ERROR_RS_READ, i);
       }
-      TraceOp.trc( name, iodata != data->iodata[i*2+0]?TRCLEVEL_INFO:TRCLEVEL_DEBUG, __LINE__, 9999, "i2c %dA [0x%02X]", i, data->iodata[i*2+0] );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "i2c %dA [0x%02X]", i, data->iodata[i*2+0] );
     }
     if( data->iomap[i] & 0xFF00 ) {
       byte iodata = data->iodata[i*2+1];
@@ -2181,17 +2181,24 @@ static void __listener( obj inst, iONode nodeC, int level ) {
       const char* ident = wFeedback.getidentifier(nodeC);
       msg[RN_PACKET_NETID] = data->location;
       msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
-      msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
+      msg[RN_PACKET_ACTION] = RN_SENSORID_REPORT;
       msg[RN_PACKET_LEN] = 4;
       msg[RN_PACKET_DATA+2] = wFeedback.isstate(nodeC);
       msg[RN_PACKET_DATA+3] = wFeedback.getaddr(nodeC);
       rnSenderAddresToPacket( data->id, msg, 0 );
+
+      if( !wFeedback.isstate(nodeC) && ident == NULL && StrOp.len(data->lastrfid) > 0 ) {
+        /* report off state of last seen RFID tag */
+        ident = data->lastrfid;
+      }
+
       if( ident != NULL ) {
         int len = StrOp.len(ident);
         int i = 0;
         msg[RN_PACKET_LEN] += len;
         for( i = 0; i < len; i++ )
           msg[RN_PACKET_DATA+4+i] = ident[i];
+        StrOp.fmtb(data->lastrfid, "%s", ident);
       }
       __sendRN((iORocNetNode)inst, msg);
     }

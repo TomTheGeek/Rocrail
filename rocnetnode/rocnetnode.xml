@@ -165,6 +165,7 @@
       <var name="rocmousescanner" vt="iOThread"/>
       <var name="stress" vt="Boolean"/>
       <var name="nickname[64]" vt="char"/>
+      <var name="lastrfid[64]" vt="char"/>
       </data>
   </object>
 

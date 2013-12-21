@@ -151,6 +151,7 @@
 
 /* sensor group actions */
 #define RN_SENSOR_REPORT    1
+#define RN_SENSORID_REPORT  2
 
 
 #define RN_CLASS_IO      0x01
