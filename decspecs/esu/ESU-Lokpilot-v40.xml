@@ -11,9 +11,11 @@
  <dipgroup caption="General Configuration" type="1" ori="1">
       <dipvalue name="Invert direction" value="1"/>
       <dipvalue name="28/128 speed steps" value="2"/>
-      <dipvalue name="Enable Analog mode" value="4"/>
-      <dipvalue name="Enable speed table" value="8"/>
-      <dipvalue name="Long addressing" value="16"/>
+      <dipvalue name="Disable Analog Mode" value="4"/>
+      <dipvalue name="RailCom" value="8"/>
+      <dipvalue name="Speed Curve CV 67-94" value="16"/>
+      <dipvalue name="Long addresses (CV17, CV18)" value="32"/>
+
 
   </dipgroup>
 
@@ -36,8 +38,8 @@
       <dipvalue name="ABC Braking - Voltage higher on right side" value="1"/>
       <dipvalue name="ABC Braking - Voltage higher on left side" value="2"/>
       <dipvalue name="Zimo HLU Brakes Active" value="4"/>
-      <dipvalue name="Brake On DC if polarity with driving direction" value="8"/>
-      <dipvalue name="Brake on DC if polarity against driving direction" value="16"/>
+      <dipvalue name="Brake On DC if polarity against driving direction" value="8"/>
+      <dipvalue name="Brake on DC if polarity with driving direction" value="16"/>
 
   </dipgroup>
 
