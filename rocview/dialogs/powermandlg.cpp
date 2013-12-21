@@ -121,19 +121,30 @@ void PowerManDlg::initLabels() {
   m_labDistrict->SetLabel( wxGetApp().getMsg( "powerdistrict" ) );
 
   iONode model = wxGetApp().getModel();
+  iOList list = ListOp.inst();
   if( model != NULL ) {
-    iONode blocklist = wPlan.getbklist( model );
-    if( blocklist != NULL ) {
-      iONode block = wBlockList.getbk( blocklist );
-      while( block != NULL ) {
-        const char* id = wBlock.getid( block );
+    iONode bklist = wPlan.getbklist( model );
+    if( bklist != NULL ) {
+      int cnt = NodeOp.getChildCnt( bklist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode bk = NodeOp.getChild( bklist, i );
+        const char* id = wBlock.getid( bk );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)id);
+        }
+      }
+      ListOp.sort(list, &__sortStr);
+      cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        const char* id = (const char*)ListOp.get( list, i );
         m_BlocksCombo->Append( wxString(id,wxConvUTF8) );
-        block = wBlockList.nextbk( blocklist, block );
       }
     }
   }
+  /* clean up the temp. list */
+  ListOp.base.del(list);
 
-  iOList list = ListOp.inst();
+  list = ListOp.inst();
   if( model != NULL ) {
     iONode fblist = wPlan.getfblist( model );
     if( fblist != NULL ) {
