@@ -622,9 +622,9 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     int pos     = rn[RN_PACKET_DATA+1]*256 + rn[RN_PACKET_DATA+2];
     int type    = rn[RN_PACKET_DATA+3];
     if( channel < 129 && data->channels[channel] != NULL ) {
-      data->channels[i]->ready = False;
-      data->channels[i]->sleep = False;
-      data->channels[i]->idle  = 0;
+      data->channels[channel]->ready = False;
+      data->channels[channel]->sleep = False;
+      data->channels[channel]->idle  = 0;
       if( type == 0 ) {
         data->channels[channel]->offpos = pos;
         data->channels[channel]->state  = 0;
