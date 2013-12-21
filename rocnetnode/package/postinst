@@ -22,4 +22,15 @@ if [ "$1" = "configure" ]; then
     cp /etc/modprobe.d/raspi-blacklist.conf.tmp /etc/modprobe.d/raspi-blacklist.conf
     rm /etc/modprobe.d/raspi-blacklist.conf.tmp
   fi
+  
+  if [ -f "/etc/inittab" ]; then
+    sed "s/^T0:23:respawn:\/sbin\/getty -L ttyAMA0 115200 vt100/#T0:23:respawn:\/sbin\/getty -L ttyAMA0 115200 vt100/g" < /etc/inittab > /etc/inittab.tmp
+    cp /etc/inittab.tmp /etc/inittab
+    rm /etc/inittab.tmp
+  fi
+  
+  if [ -f "/boot/cmdline.txt" ]; then
+    echo "dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait" > /boot/cmdline.txt 
+  fi
+  
 fi
