@@ -1652,6 +1652,7 @@ static void __motorPWM( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init VPWML on port %d", data->VPWML );
   raspiConfigPort(data->VPWML, 0);
 
+  ThreadOp.setHigh(th);
 
   while( data->run ) {
     int Vraw = data->Vraw;
@@ -1663,9 +1664,9 @@ static void __motorPWM( void* threadinst ) {
 
     if( Vraw > 0 )
       __writePort(rocnetnode, data->VPWM, 1, IO_DIRECT );
-    SystemOp.uBusyWait(Vraw * 200);
+    SystemOp.uBusyWait(Vraw * 100);
     __writePort(rocnetnode, data->VPWM, 0, IO_DIRECT );
-    SystemOp.uBusyWait((100 - Vraw) * 200);
+    SystemOp.uBusyWait((100 - Vraw) * 100);
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Motor PWM stopped" );
