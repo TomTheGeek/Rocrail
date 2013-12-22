@@ -90,6 +90,7 @@ void DonKey::OnLoadKey( wxCommandEvent& event )
     }
     initValues();
   }
+  fdlg->Destroy();
 }
 
 void DonKey::OnDonateNow( wxCommandEvent& event )
