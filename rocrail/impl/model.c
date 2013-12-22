@@ -3530,10 +3530,10 @@ static void _event( iOModel inst, iONode nodeC ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match sensor event: [%s] %d:%d uidname=[%s]", iid!=NULL?iid:"", bus, addr, uidname );
 
     if( id != NULL && StrOp.len(id) > 0 ) {
-      obj fb = ModelOp.getFBack( inst, id );
+      iOFBack fb = ModelOp.getFBack( inst, id );
       if( fb != NULL ) {
-        NodeOp.base.del(nodeC);
         fb->event(fb, (iONode)NodeOp.base.clone(nodeC));
+        NodeOp.base.del(nodeC);
         return;
       }
     }
