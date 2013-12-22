@@ -197,6 +197,7 @@ static byte* __handleMobile( iORocNetNode rocnetnode, byte* rn ) {
   int action     = rnActionFromPacket(rn);
   int actionType = rnActionTypeFromPacket(rn);
   byte* msg = NULL;
+  int i = 0;
 
   iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
   iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
@@ -205,6 +206,27 @@ static byte* __handleMobile( iORocNetNode rocnetnode, byte* rn ) {
   sndr = rnSenderAddrFromPacket(rn, 0);
 
   switch( action ) {
+    case RN_MOBILE_VELOCITY:
+      if( data->id == rcpt ) {
+        data->Vraw  = rn[RN_PACKET_DATA + 0];
+        data->Vdir  = rn[RN_PACKET_DATA + 1]?True:False;
+        data->fn[0] = rn[RN_PACKET_DATA + 2]?True:False;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "mobile V=%d dir=%d lights=%d", data->Vraw, data->Vdir, data->fn[0] );
+      }
+      break;
+
+    case RN_MOBILE_FUNCTIONS:
+      if( data->id == rcpt ) {
+        data->fchanged = rn[RN_PACKET_DATA + 3];
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "mobile fchanged=%d", data->fchanged );
+        for( i = 0; i < 8; i++ ) {
+          data->fn[i+1] = (rn[RN_PACKET_DATA + 0] & (1 << i)) ? True:False;
+          data->fn[i+8+1] = (rn[RN_PACKET_DATA + 1] & (1 << i)) ? True:False;
+          data->fn[i+16+1] = (rn[RN_PACKET_DATA + 2] & (1 << i)) ? True:False;
+        }
+      }
+      break;
+
     case RN_MOBILE_ROCMOUSE_BIND:
     {
       int mouseaddr = rn[RN_PACKET_DATA + 0];
@@ -343,12 +365,7 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
         prot = rn[RN_PACKET_DATA + 5];
         spcnt = rn[RN_PACKET_DATA + 6];
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco bus=%d addr=%d V=%d dir=%d lights=%d spcnt=%d", rcpt, addr, V, dir, lights, spcnt );
-        if( data->id == rcpt ) {
-          data->Vraw = V;
-          data->Vdir = dir?True:False;
-          data->fn[0] = lights?True:False;
-        }
-        else if(data->pDI != NULL) {
+        if(data->pDI != NULL) {
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
           wLoc.setaddr(cmd, addr);
           wLoc.setV(cmd, V);
@@ -364,14 +381,7 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
       if(data->cstype > 0 && data->pDI != NULL) {
         addr = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco function bus=%d addr=%d", rcpt, addr );
-        if( data->id == rcpt ) {
-          for( i = 0; i < 8; i++ ) {
-            data->fn[i+1] = (rn[RN_PACKET_DATA + 2] & (1 << i)) ? True:False;
-            data->fn[i+8+1] = (rn[RN_PACKET_DATA + 3] & (1 << i)) ? True:False;
-            data->fn[i+16+1] = (rn[RN_PACKET_DATA + 4] & (1 << i)) ? True:False;
-          }
-        }
-        else if(data->pDI != NULL) {
+        if(data->pDI != NULL) {
           iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE);
           wFunCmd.setaddr(cmd, addr);
           for( i = 0; i < 8; i++ ) {

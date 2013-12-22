@@ -463,8 +463,8 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_LEN] = 3;
       rn[RN_PACKET_DATA + 0] = fb1;
       rn[RN_PACKET_DATA + 1] = fb2;
-      rn[RN_PACKET_DATA + 3] = fb3;
-      rn[RN_PACKET_DATA + 4] = prot;
+      rn[RN_PACKET_DATA + 2] = fb3;
+      rn[RN_PACKET_DATA + 3] = wFunCmd.getfnchanged(node) & 0xFF;
     }
     ThreadOp.post( data->writer, (obj)rn );
     return rsp;

@@ -172,6 +172,7 @@
       <var name="VPWML" vt="int"/>
       <var name="VPWMR" vt="int"/>
       <var name="motorPWM" vt="iOThread"/>
+      <var name="fchanged" vt="int"/>
       <var name="fn[32]" vt="Boolean"/>
       </data>
   </object>
