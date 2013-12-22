@@ -342,8 +342,13 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
         lights = rn[RN_PACKET_DATA + 4];
         prot = rn[RN_PACKET_DATA + 5];
         spcnt = rn[RN_PACKET_DATA + 6];
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco addr=%d V=%d dir=%d lights=%d spcnt=%d", addr, V, dir, lights, spcnt );
-        if(data->pDI != NULL) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco bus=%d addr=%d V=%d dir=%d lights=%d spcnt=%d", rcpt, addr, V, dir, lights, spcnt );
+        if( data->id == rcpt ) {
+          data->Vraw = V;
+          data->Vdir = dir?True:False;
+          data->fn[0] = lights?True:False;
+        }
+        else if(data->pDI != NULL) {
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
           wLoc.setaddr(cmd, addr);
           wLoc.setV(cmd, V);
@@ -358,8 +363,15 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
     case RN_CS_FUNCTION:
       if(data->cstype > 0 && data->pDI != NULL) {
         addr = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco function addr=%d", addr );
-        if(data->pDI != NULL) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco function bus=%d addr=%d", rcpt, addr );
+        if( data->id == rcpt ) {
+          for( i = 0; i < 8; i++ ) {
+            data->fn[i+1] = (rn[RN_PACKET_DATA + 2] & (1 << i)) ? True:False;
+            data->fn[i+8+1] = (rn[RN_PACKET_DATA + 3] & (1 << i)) ? True:False;
+            data->fn[i+16+1] = (rn[RN_PACKET_DATA + 4] & (1 << i)) ? True:False;
+          }
+        }
+        else if(data->pDI != NULL) {
           iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE);
           wFunCmd.setaddr(cmd, addr);
           for( i = 0; i < 8; i++ ) {
@@ -375,7 +387,7 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
           for( i = 0; i < 8; i++ ) {
             char key[32];
             StrOp.fmtb(key, "f%d", i+17);
-            NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 3] & (1 << (i+16))) ? True:False);
+            NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 4] & (1 << (i+16))) ? True:False);
           }
           data->pDI->cmd( (obj)data->pDI, cmd );
         }
@@ -1610,6 +1622,56 @@ static void __pwm( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet pwm stopped" );
 
 }
+
+
+static void __motorPWM( void* threadinst ) {
+  iOThread         th         = (iOThread)threadinst;
+  iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
+  iORocNetNodeData data       = Data(rocnetnode);
+
+
+  ThreadOp.sleep(1000);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Motor PWM started" );
+
+  /* hard coded ports for motor */
+  data->VPWMR = 8;  /* pin 24 */
+  data->VPWML = 7;  /* pin 26 */
+  data->VPWM  = 22; /* pin 15 */
+
+  if( data->iorc != 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Motor PWM stopped because I/O is not initialized" );
+    return;
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init VPWM on port %d", data->VPWM );
+  raspiConfigPort(data->VPWM, 0);
+  ThreadOp.sleep(100);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init VPWMR on port %d", data->VPWMR );
+  raspiConfigPort(data->VPWMR, 0);
+  ThreadOp.sleep(100);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init VPWML on port %d", data->VPWML );
+  raspiConfigPort(data->VPWML, 0);
+
+
+  while( data->run ) {
+    int Vraw = data->Vraw;
+    __writePort(rocnetnode, data->VPWMR, data->Vdir?1:0, IO_DIRECT );
+    __writePort(rocnetnode, data->VPWML, data->Vdir?0:1, IO_DIRECT );
+
+    if( Vraw > 100 )
+      Vraw = 100;
+
+    if( Vraw > 0 )
+      __writePort(rocnetnode, data->VPWM, 1, IO_DIRECT );
+    SystemOp.uBusyWait(Vraw * 200);
+    __writePort(rocnetnode, data->VPWM, 0, IO_DIRECT );
+    SystemOp.uBusyWait((100 - Vraw) * 200);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Motor PWM stopped" );
+
+}
+
 
 
 static void __rocmousescanner( void* threadinst ) {
@@ -2856,6 +2918,8 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   ThreadOp.start( data->macroprocessor );
   data->rocmousescanner = ThreadOp.inst( "rocmouse", &__rocmousescanner, __RocNetNode );
   ThreadOp.start( data->rocmousescanner );
+  data->motorPWM = ThreadOp.inst( "motorpwm", &__motorPWM, __RocNetNode );
+  ThreadOp.start( data->motorPWM );
 
   /* Memory watcher */
   while( !bShutdown ) {

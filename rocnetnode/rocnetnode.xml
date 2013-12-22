@@ -166,6 +166,13 @@
       <var name="stress" vt="Boolean"/>
       <var name="nickname[64]" vt="char"/>
       <var name="lastrfid[64]" vt="char"/>
+      <var name="Vraw" vt="int"/>
+      <var name="Vdir" vt="Boolean"/>
+      <var name="VPWM" vt="int"/>
+      <var name="VPWML" vt="int"/>
+      <var name="VPWMR" vt="int"/>
+      <var name="motorPWM" vt="iOThread"/>
+      <var name="fn[32]" vt="Boolean"/>
       </data>
   </object>
 
