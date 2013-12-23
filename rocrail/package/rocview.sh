@@ -12,16 +12,20 @@ if [ ! -e ~/rocrail/svg ] ; then
 fi
 
 if [ ! -e ~/rocrail/images ] ; then
-	cp -r /opt/rocrail/images ~/rocrail/images
+  mkdir ~/rocrail/images
 fi
+cp -pur /opt/rocrail/images ~/rocrail
 
 if [ ! -e ~/rocrail/decspecs ] ; then
-  cp -r /opt/rocrail/decspecs ~/rocrail/decspecs
+  mkdir ~/rocrail/decspecs
 fi
+cp -pur /opt/rocrail/decspecs ~/rocrail
 
 if [ ! -e ~/rocrail/stylesheets ] ; then
-  cp -r /opt/rocrail/stylesheets ~/rocrail/stylesheets
+  mkdir ~/rocrail/stylesheets
 fi
+cp -pur /opt/rocrail/stylesheets ~/rocrail
+
 
 cd ~/rocrail
 
