@@ -764,9 +764,6 @@ static void __evaluateMCS2Discovery( iOMCS2Data mcs2, byte* in ) {
     }
 
   }
-  else {
-    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Discovery echo. dlc=%d", dlc );
-  }
 }
 
 
