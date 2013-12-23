@@ -335,6 +335,10 @@ static char* __createAccessorymapKeyFromAPGPVIB( char key[], int addr, int port,
     fAddr = (addr-1)*8 + (port-1)*2 + gate ;
   }
 
+  if( ( iid == NULL ) || ( StrOp.len( iid ) == 0 ) ) {
+    iid = wDigInt.getiid(AppOp.getIniNode( wDigInt.name() ) );
+  }
+
   StrOp.fmtb( key, "%d-%d-%d-%s-%d", fAddr, param, value, iid, bus );
 
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__createAccessorymapKeyFromAPGPVIB: addr[%d] port[%d] gate[%d] param[%d] value[%d] iid[%s] bus[%d] ( fAddr[%d] ) -> key[%s]",
@@ -7602,6 +7606,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
             if( aspects <= 4 ) {
               const char *iid = wItem.getiid(item);
               int bus = wSignal.getbus(item);
+              Boolean asSwitch = (aspects == 2) ? wSignal.isasswitch(item) : False;
 
               int addr1 = wSignal.getaddr (item);
               int port1 = wSignal.getport1(item);
@@ -7639,24 +7644,26 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
                 MapOp.put( accessoryMap, key, (obj)item );
               }
 
-              __createAccessorymapKeyFromAPGPVIB( key, addr2, port2, gate2, 0, 1, iid, bus );
-              accessoryMapItem = (iONode)MapOp.get( accessoryMap, key );
-              if( accessoryMapItem != NULL ) {
-                Boolean iMain = StrOp.equals( wSignal.main, wSignal.getsignal( item ) ) ;
-                Boolean iDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( item ) ) ;
-                Boolean amiMain = StrOp.equals( wSignal.main, wSignal.getsignal( accessoryMapItem ) ) ;
-                Boolean amiDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( accessoryMapItem ) ) ;
-                Boolean typeMatch = ( iMain && amiDistant ) || ( iDistant && amiMain );
-                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING%s: signal %s(%s) GREEN uses same address %d-%d-%d as %s(%s) (aMapKey=%s)",
-                    typeMatch?"(minor)":"", wItem.getid(item), wSignal.getsignal( item ), addr2, port2, gate2, wItem.getid(accessoryMapItem), wSignal.getsignal(accessoryMapItem), key );
-                if( typeMatch && iMain ) {
-                  /* replace distant entry by main entry */
-                  MapOp.remove( accessoryMap, key );
+              if( ( addr2 != 0 ) || ( port2 != 0 ) || ( aspects > 2 ) || ( ( aspects == 2 ) && ( ! asSwitch ) ) ) {
+                __createAccessorymapKeyFromAPGPVIB( key, addr2, port2, gate2, 0, 1, iid, bus );
+                accessoryMapItem = (iONode)MapOp.get( accessoryMap, key );
+                if( accessoryMapItem != NULL ) {
+                  Boolean iMain = StrOp.equals( wSignal.main, wSignal.getsignal( item ) ) ;
+                  Boolean iDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( item ) ) ;
+                  Boolean amiMain = StrOp.equals( wSignal.main, wSignal.getsignal( accessoryMapItem ) ) ;
+                  Boolean amiDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( accessoryMapItem ) ) ;
+                  Boolean typeMatch = ( iMain && amiDistant ) || ( iDistant && amiMain );
+                  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING%s: signal %s(%s) GREEN uses same address %d-%d-%d as %s(%s) (aMapKey=%s)",
+                      typeMatch?"(minor)":"", wItem.getid(item), wSignal.getsignal( item ), addr2, port2, gate2, wItem.getid(accessoryMapItem), wSignal.getsignal(accessoryMapItem), key );
+                  if( typeMatch && iMain ) {
+                    /* replace distant entry by main entry */
+                    MapOp.remove( accessoryMap, key );
+                    MapOp.put( accessoryMap, key, (obj)item );
+                  }
+                }
+                else {
                   MapOp.put( accessoryMap, key, (obj)item );
                 }
-              }
-              else {
-                MapOp.put( accessoryMap, key, (obj)item );
               }
 
               if( aspects >= 3 ) {
