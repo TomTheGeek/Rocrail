@@ -976,7 +976,7 @@
     <nb txt="Init felt"/>
     <pl txt="wartość początkowa"/>
     <zh_TW txt="初始值"/>
-    <fi txt="Alusta kenttä"/>
+    <fi txt="Alusta vaihteet"/>
     <id txt="Init field"/>
     <en_AU txt="Init field"/>
     <en_CA txt="Init field"/>
@@ -1647,7 +1647,7 @@
     <ja txt="自動モード"/>
     <zh_CN txt="自动模式"/>
     <sl txt="Avto način"/>
-    <fi txt="Automaattinen tila"/>
+    <fi txt="Automaattiajo"/>
   </Msg>
   <Msg id="shutdownwarning">
     <de txt="Der Rocrail Server wird hiermit beendet! Herunterfahren und beenden?"/>
@@ -1933,7 +1933,7 @@
     <zh_CN txt="自动"/>
     <sl txt="Samodejno"/>
     <pt_BR txt="Automático"/>
-    <fi txt="Automaattinen"/>
+    <fi txt="Automaattiajo"/>
   </Msg>
   <Msg id="view">
     <de txt="Ansicht" accel="1"/>
@@ -6248,7 +6248,7 @@
     <zh_CN txt="界面地址"/>
     <sl txt="ID vmesnika"/>
     <pt_BR txt="Identificação da interface"/>
-    <fi txt="Liittymän ID"/>
+    <fi txt="Ohjaimen ID"/>
   </Msg>
   <Msg id="event">
     <de txt="Ereignis"/>
@@ -7243,7 +7243,7 @@
     <zh_CN txt="运转"/>
     <sl txt="Upravljanje"/>
     <pt_BR txt="Operar"/>
-    <fi txt="Käyttää"/>
+    <fi txt="Operointi"/>
   </Msg>
   <Msg id="zoom">
     <de txt="Zoom" tip="Gleisbildgröße."/>
@@ -10557,7 +10557,7 @@
     <zh_CN txt="半自动运行"/>
     <sl txt="Pol avtomatsko"/>
     <pt_BR txt="Semi automático"/>
-    <fi txt="Puoliautomaattinen"/>
+    <fi txt="Puoliautomaattiajo"/>
   </Msg>
   <Msg id="schedule2go">
     <de txt="Starte mit Tour oder Fahrplan"/>
@@ -22407,7 +22407,7 @@
     <da txt="Dagens begyndelse"/>
     <pt_BR txt="Início do dia"/>
     <en_GB txt="Start of day"/>
-    <fi txt="Päivän alku"/>
+    <fi txt="Ajopäivän aloitus"/>
   </Msg>
   <Msg id="resetstatus">
     <en txt="Reset status"/>
@@ -22605,7 +22605,7 @@
     <sl txt="Filter prikaza lokomotiv"/>
     <pt_BR txt="Filtro da visualização da locomotiva"/>
     <en_GB txt="Loco view filter"/>
-    <fi txt="Vetureiden näyttösuodatin"/>
+    <fi txt="Näytä veturit"/>
   </Msg>
   <Msg id="locoviewall" key="Alt-A">
     <en txt="View All"/>
@@ -23294,7 +23294,7 @@
     <sv txt="Start på dagen."/>
     <pt_BR txt="Início do Dia"/>
     <en_GB txt="Start of Day"/>
-    <fi txt="Päivän alku"/>
+    <fi txt="Ajopäivän aloitus"/>
   </Msg>
   <Msg id="querysensors">
     <en txt="Query sensors" tip="Query actual state of all sensors."/>
@@ -23311,7 +23311,7 @@
     <pt_BR txt="Consultar sensores"/>
     <sv txt="Hämta sensorstatus"/>
     <en_GB txt="Query sensors"/>
-    <fi txt="Kyselyanturit"/>
+    <fi txt="Hae antureiden tilat"/>
   </Msg>
   <Msg id="canid">
     <en txt="CAN ID"/>
@@ -23497,7 +23497,7 @@
     <sv txt="Verktygstips"/>
     <pt_BR txt="Dica"/>
     <en_GB txt="Tooltip"/>
-    <fi txt="Työkaluvihje"/>
+    <fi txt="Näytä vihjeet"/>
   </Msg>
   <Msg id="icon">
     <en txt="Icon"/>
@@ -24175,7 +24175,7 @@
     <ru txt="Установить ID для всех, обнаруженных автоматически, маршрутов"/>
     <pt_BR txt="Definir identificador de rotas para todas as rotas detectadas"/>
     <en_GB txt="Set routeid for all automatic detected routes"/>
-    <fi txt="Aseta routeid kaikille automaattsesti tunnistetuille reiteille"/>
+    <fi txt="Aseta routeid kaikille automaattisesti tunnistetuille reiteille"/>
   </Msg>
   <Msg id="ana_cleanRouteId">
     <en txt="Clean routeid of all automatic detected routes"/>
@@ -24404,7 +24404,7 @@
     <ru txt="Удаление результатов анализа"/>
     <pt_BR txt="Limpar toda análise"/>
     <en_GB txt="Clean all analyse"/>
-    <fi txt="Selvitä koko analysointi"/>
+    <fi txt="Tyhjennä analysointitiedot"/>
   </Msg>
   <Msg id="macro">
     <en txt="Macro"/>
@@ -25332,7 +25332,7 @@
     <es txt="Control del sensor"/>
     <pt_BR txt="Monitor de sensores"/>
     <en_GB txt="Sensor monitor"/>
-    <fi txt="Anturin seuranta"/>
+    <fi txt="Anturien seuranta"/>
   </Msg>
   <Msg id="wheelcount">
     <en txt="Wheel count"/>
@@ -26011,6 +26011,7 @@
     <pt_BR txt="Nome UID"/>
     <ru txt="UID-Имя"/>
     <sr_latin txt="Ime-UID"/>
+    <sl txt="UID-Ime"/>
   </Msg>
   <Msg id="i2cdetect">
     <en txt="I2C Detect"/>
@@ -26019,5 +26020,6 @@
     <fi txt="I2C tunnistus"/>
     <pt_BR txt="Detecção I2C"/>
     <sr_latin txt="Prepoznaj I2C"/>
+    <sl txt="I2C Zaznava"/>
   </Msg>
 </Messages>
