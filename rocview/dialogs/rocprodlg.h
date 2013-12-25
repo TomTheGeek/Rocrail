@@ -92,8 +92,7 @@ class RocProDlg : public RocProDlgGen
     void onNrText( wxCommandEvent& event );
     void onExtAddrRead( wxCommandEvent& event );
     void onExtAddrWrite( wxCommandEvent& event );
-    void onPTON( wxCommandEvent& event );
-    void onPTOFF( wxCommandEvent& event );
+    void onPT( wxCommandEvent& event );
     void onImgOpen( wxCommandEvent& event );
     void onReadAllCV( wxCommandEvent& event );
     void onCVInfoEnter( wxCommandEvent& event );

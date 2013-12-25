@@ -956,19 +956,12 @@ void RocProDlg::onExtAddrWrite( wxCommandEvent& event ) {
 }
 
 
-void RocProDlg::onPTON( wxCommandEvent& event ) {
+void RocProDlg::onPT( wxCommandEvent& event ) {
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-  wProgram.setcmd( cmd, wProgram.pton );
+  wProgram.setcmd( cmd, m_PT->GetValue()?wProgram.pton:wProgram.ptoff );
   wxGetApp().sendToRocrail( cmd );
   NodeOp.base.del(cmd);
-}
-
-
-void RocProDlg::onPTOFF( wxCommandEvent& event ) {
-  iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-  wProgram.setcmd( cmd, wProgram.ptoff );
-  wxGetApp().sendToRocrail( cmd );
-  NodeOp.base.del(cmd);
+  m_PT->SetLabel( m_PT->GetValue() ? wxT("PT is on"):wxT("PT") );
 }
 
 
