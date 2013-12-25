@@ -168,6 +168,8 @@
       <var name="lastrfid[64]" vt="char"/>
       <var name="Vraw" vt="int"/>
       <var name="Vdir" vt="Boolean"/>
+      <var name="Vmass" vt="int"/>
+      <var name="Vmax" vt="int"/>
       <var name="VPWM" vt="int"/>
       <var name="VPWML" vt="int"/>
       <var name="VPWMR" vt="int"/>

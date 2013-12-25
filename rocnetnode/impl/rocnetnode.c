@@ -211,6 +211,8 @@ static byte* __handleMobile( iORocNetNode rocnetnode, byte* rn ) {
         data->Vraw  = rn[RN_PACKET_DATA + 0];
         data->Vdir  = rn[RN_PACKET_DATA + 1]?True:False;
         data->fn[0] = rn[RN_PACKET_DATA + 2]?True:False;
+        data->Vmass = rn[RN_PACKET_DATA + 3];
+        data->Vmax  = rn[RN_PACKET_DATA + 4];
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "mobile V=%d dir=%d lights=%d", data->Vraw, data->Vdir, data->fn[0] );
       }
       break;
@@ -1646,6 +1648,8 @@ static void __motorPWM( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
   iORocNetNodeData data       = Data(rocnetnode);
+  int Vcurr = 0;
+  int Vloop = 0;
 
 
   ThreadOp.sleep(1000);
@@ -1673,18 +1677,33 @@ static void __motorPWM( void* threadinst ) {
   ThreadOp.setHigh(th);
 
   while( data->run ) {
-    int Vraw = data->Vraw;
+    int Vraw  = data->Vraw;  /* wanted speed */
+    int Vmax  = data->Vmax;  /* max PWM */
+    int Vmass = data->Vmass; /* acceleration, deceleration */
+
     __writePort(rocnetnode, data->VPWMR, data->Vdir?1:0, IO_DIRECT );
     __writePort(rocnetnode, data->VPWML, data->Vdir?0:1, IO_DIRECT );
 
     if( Vraw > 100 )
       Vraw = 100;
+    if( Vmax > 100 )
+      Vmax = 100;
 
-    if( Vraw > 0 )
+    if( Vloop >= Vmass ) {
+      Vloop = 0;
+      if( Vcurr < Vraw )
+        Vcurr++;
+      if( Vcurr > Vraw )
+        Vcurr--;
+    }
+
+    if( Vcurr > 0 )
       __writePort(rocnetnode, data->VPWM, 1, IO_DIRECT );
-    SystemOp.uBusyWait(Vraw * 100);
+    SystemOp.uBusyWait(Vcurr * Vmax);
     __writePort(rocnetnode, data->VPWM, 0, IO_DIRECT );
-    SystemOp.uBusyWait((100 - Vraw) * 100);
+    SystemOp.uBusyWait((((100-Vmax)+100) - Vcurr) * 100);
+
+    Vloop++;
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Motor PWM stopped" );
