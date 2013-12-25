@@ -46,6 +46,7 @@
 #include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/ActionCond.h"
 #include "rocrail/wrapper/public/Route.h"
+#include "rocrail/wrapper/public/Operator.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -206,6 +207,7 @@ void ActionsCtrlDlg::initLabels() {
   m_CondType->Append(wxGetApp().getMsg( "block" ));
   m_CondType->Append(wxGetApp().getMsg( "system" ));
   m_CondType->Append(wxGetApp().getMsg( "route" ));
+  m_CondType->Append(wxGetApp().getMsg( "train" ));
 
 
   // Std buttons
@@ -386,6 +388,8 @@ void ActionsCtrlDlg::initCondValues() {
       m_CondType->SetSelection(6);
     else if( StrOp.equals( wRoute.name(), type ) )
       m_CondType->SetSelection(7);
+    else if( StrOp.equals( wOperator.name(), type ) )
+      m_CondType->SetSelection(8);
     initCondIDs();
     m_CondID->SetStringSelection( m_Conditions->GetStringSelection() );
     m_CondState->SetValue( wxString(wActionCond.getstate(actioncond),wxConvUTF8) );
@@ -436,6 +440,7 @@ void ActionsCtrlDlg::initCondIDs() {
       case 5: statelist = "free,!free,occupied,open,closed"; break;
       case 6: statelist = "go,stop"; break;
       case 7: statelist = "locked,unlocked"; break;
+      case 8: statelist = ""; break;
     }
     iOStrTok tok = StrTokOp.inst(statelist, ',');
     while( StrTokOp.hasMoreTokens(tok) ) {
@@ -455,6 +460,7 @@ void ActionsCtrlDlg::initCondIDs() {
       case 5: colist = wPlan.getbklist( model ); break;
       case 6: colist = NULL; break;
       case 7: colist = wPlan.getstlist( model ); break;
+      case 8: colist = wPlan.getoperatorlist(model); break;
     }
 
 
@@ -533,6 +539,7 @@ void ActionsCtrlDlg::evaluateCond() {
         case 5: type = wBlock.name(); break;
         case 6: type = wSysCmd.name(); break;
         case 7: type = wRoute.name(); break;
+        case 8: type = wOperator.name(); break;
       }
       wActionCond.settype(node, type);
 

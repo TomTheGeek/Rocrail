@@ -59,6 +59,7 @@
 #include "rocrail/wrapper/public/Text.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/Operator.h"
 
 static int instCnt = 0;
 static int levelCnt = 0;
@@ -262,6 +263,27 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           else
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "object not found [%s]", id );
         }
+
+        /* train (operator) */
+        else if( StrOp.equals( wOperator.name(), wActionCond.gettype(actionCond) ) ) {
+          const char* id = wActionCond.getid( actionCond );
+          const char* state = wActionCond.getstate(actionCond);
+          iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL, False);
+          iOOperator opr = ModelOp.getOperator( model, id);
+          rc = False;
+          if( lc != NULL && opr != NULL ) {
+            const char* train = wLoc.gettrain(LocOp.base.properties(lc));
+            if( train != NULL && StrOp.equals(train, id) ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "train ID [%s] match with loco [%s]", id, LocOp.getId(lc));
+              rc = True;
+            }
+            else {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "train ID [%s] does not match with loco [%s]-[%s]", id, LocOp.getId(lc), train);
+            }
+          }
+        }
+
+        /* loco */
         else if( StrOp.equals( wLoc.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
           const char* state = wActionCond.getstate(actionCond);
