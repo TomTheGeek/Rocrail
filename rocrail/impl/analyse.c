@@ -501,6 +501,7 @@ static Boolean checkLocos( iOAnalyse inst, Boolean repair ) {
         int              V_Rmax = wLoc.getV_Rmax( node );
         const char*   startScId = wLoc.getstartupscid( node );
         const char* startTourId = wLoc.getstartuptourid( node );
+        const char*       train = wLoc.gettrain( node );
 
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkLocos: lclist[%d] id[%s] addr[%d] identifier[%s] V_mode_percent[%d]",
             i, id, addr, identifier, V_mode_percent );
@@ -585,6 +586,21 @@ static Boolean checkLocos( iOAnalyse inst, Boolean repair ) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: loco[%s] startup schedule[%s] not found",
                 id, startScId );
             numProblems++ ;
+          }
+        }
+
+        if( StrOp.len( train ) > 0 ) {
+          if( NULL == ModelOp.getOperator( AppOp.getModel(), train ) ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: loco[%s] assigned train[%s] not found",
+                id, train );
+            numProblems++ ;
+            if( repair ) {
+              iOLoc lc = ModelOp.getLoc( AppOp.getModel(), id, NULL, False);
+              iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+              wLoc.setcmd( cmd, wLoc.releasetrain );
+              LocOp.cmd(lc, cmd);
+              numCleanups++ ;
+            }
           }
         }
 
@@ -1048,6 +1064,30 @@ static Boolean checkActionCondLocoWc( iOAnalyse inst, const char* acLcid, const 
   return rc;
 }
 
+/* train (operator) == valid( operator ) AND condState(NULL_loco) */
+static Boolean checkActionCondOperator( iOAnalyse inst, const char* opId, const char* opState ) {
+  iOAnalyseData data = Data(inst);
+  Boolean rc = True;
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkActionCondOperator: opId[%s] opState[%s]",
+      opId, opState );
+
+  iONode operatorlist = wPlan.getoperatorlist( data->plan );
+  if( operatorlist != NULL ) {
+    int cnt = NodeOp.getChildCnt( operatorlist );
+    int i;
+    for( i = 0; i < cnt; i++ ) {
+      const char* id = wOperator.getid( NodeOp.getChild( operatorlist, i ) );
+      if( ( id != NULL ) && StrOp.equals( id, opId ) ) {
+        if( ! checkActionCondLoco( inst, NULL, NULL, opState ) ) {
+          rc = False;
+        }
+      }
+    }
+  }
+  return rc;
+}
+
 /* condState(block) == [free, !free, occupied, open, closed] */
 static Boolean checkActionCondBlock( const char* state ) {
   if( StrOp.equals( state, "free"        ) ||
@@ -1137,6 +1177,10 @@ static int checkAction( iOAnalyse inst, int acIdx, iONode action, Boolean repair
     }else if ( StrOp.equals( condType, wFeedback.name() ) ) {
       ptr = (char *) ModelOp.getFBack( data->model, condId );
       if( ptr && checkActionCondFeedback( inst, condState ) )
+        condOK = True;
+    }else if ( StrOp.equals( condType, wOperator.name() ) ) {
+      ptr = (char *) ModelOp.getOperator( data->model, condId );
+      if( ptr && checkActionCondOperator( inst, condId, condState ) )
         condOK = True;
     }else if ( StrOp.equals( condType, wLoc.name() ) ) {
       ptr = (char *) ModelOp.getLoc( data->model, condId, NULL, False );
