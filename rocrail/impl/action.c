@@ -124,10 +124,10 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OAction ----- */
 
-static Boolean __checkLocoState(const char* id, const char* state, iONode actionctrl, iONode actionCond) {
+static Boolean __checkLocoState(const char* locoid, const char* id, const char* state, iONode actionctrl, iONode actionCond) {
   iOModel model = AppOp.getModel();
   Boolean automode = ModelOp.isAuto(model);
-  iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL, False);
+  iOLoc lc = ModelOp.getLoc(model, locoid, NULL, False);
   Boolean rc = False;
 
   if( lc != NULL && state[0] == '#' ) {
@@ -482,7 +482,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "train ID [%s] match with loco [%s]", id, LocOp.getId(lc));
               rc = True;
               if( state != NULL && StrOp.len(state) > 0 ) {
-                rc = __checkLocoState(LocOp.getId(lc), state, actionctrl, actionCond);
+                rc = __checkLocoState(LocOp.getId(lc), LocOp.getId(lc), state, actionctrl, actionCond);
               }
             }
             else {
@@ -495,7 +495,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
         else if( StrOp.equals( wLoc.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
           const char* state = wActionCond.getstate(actionCond);
-          rc = __checkLocoState(id, state, actionctrl, actionCond);
+          rc = __checkLocoState(wActionCtrl.getlcid(actionctrl), id, state, actionctrl, actionCond);
         }
 
         /* */
