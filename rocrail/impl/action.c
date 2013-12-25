@@ -124,6 +124,211 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OAction ----- */
 
+static Boolean __checkLocoState(const char* id, const char* state, iONode actionctrl, iONode actionCond) {
+  iOModel model = AppOp.getModel();
+  Boolean automode = ModelOp.isAuto(model);
+  iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL, False);
+  Boolean rc = False;
+
+  if( lc != NULL && state[0] == '#' ) {
+    iOStrTok tok = StrTokOp.inst(state, ',');
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "check if loco address %d fits in [%s]", LocOp.getAddress(lc), state );
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      const char* sAddr = StrTokOp.nextToken(tok);
+      char* sHAddr = StrOp.find( sAddr, "-" );
+      if( sHAddr != NULL ) {
+        int addr = 0;
+        int hAddr = atoi(sHAddr+1);
+        *sHAddr = '\0';
+        addr = atoi(sAddr+1);
+        if( LocOp.getAddress(lc) >= addr && LocOp.getAddress(lc) <= hAddr ) {
+          rc = True;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "loco address %d fits in range [%d-%d]", LocOp.getAddress(lc), addr, hAddr );
+          break; /* break out the while loop */
+        }
+      }
+      else {
+        int addr = atoi(sAddr+1);
+        if( addr == LocOp.getAddress(lc) ) {
+          rc = True;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "loco address %d equals [%d]", LocOp.getAddress(lc), addr );
+          break; /* break out the while loop */
+        }
+      }
+    };
+    StrTokOp.base.del(tok);
+  }
+  else if( lc != NULL && state[0] == 'x' ) {
+    iOStrTok tok = StrTokOp.inst(state, ',');
+    rc = True;
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "check if loco address %d does not match [%s]", LocOp.getAddress(lc), state );
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      const char* sAddr = StrTokOp.nextToken(tok);
+      char* sHAddr = StrOp.find( sAddr, "-" );
+      if( sHAddr != NULL ) {
+        int addr = 0;
+        int hAddr = atoi(sHAddr+1);
+        *sHAddr = '\0';
+        addr = atoi(sAddr+1);
+        if( LocOp.getAddress(lc) >= addr && LocOp.getAddress(lc) <= hAddr ) {
+          rc = False;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "loco address %d falls in excluded range [%d-%d]", LocOp.getAddress(lc), addr, hAddr );
+          break; /* break out the while loop */
+        }
+      }
+      else {
+        int addr = atoi(sAddr+1);
+        if( addr == LocOp.getAddress(lc) ) {
+          rc = False;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "loco address %d equals exclusion [%d]", LocOp.getAddress(lc), addr );
+          break; /* break out the while loop */
+        }
+      }
+    };
+    StrTokOp.base.del(tok);
+  }
+  else if( lc != NULL && ( StrOp.equals( state, "diesel" ) ||
+          StrOp.equals( state, "steam" ) || StrOp.equals( state, "electric" ) ) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check type of loco id [%s]", LocOp.getId(lc) );
+    rc = StrOp.equals( state, LocOp.getEngine(lc) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "loco type [%s] does %smatch condtion [%s]", LocOp.getEngine(lc), rc?"":"not ", state );
+  }
+  else if( lc != NULL && ( StrOp.startsWithi( state, "schedule" ) ) ) {
+    iOStrTok tok = StrTokOp.inst(state, ':');
+    const char* scstate = NULL;
+    const char* scid = NULL;
+    int scidx = -1;
+    if( StrTokOp.hasMoreTokens(tok) )
+      scstate = StrTokOp.nextToken(tok);
+    if( StrTokOp.hasMoreTokens(tok) )
+      scid = StrTokOp.nextToken(tok);
+    if( StrTokOp.hasMoreTokens(tok) )
+      scidx = atoi(StrTokOp.nextToken(tok));
+    rc = False;
+    if( scid != NULL ) {
+      int lcscidx = 0;
+      const char* lcscid = LocOp.getSchedule(lc, &lcscidx);
+      if( StrOp.equals(scid, lcscid) && (scidx == -1 || scidx == lcscidx) ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco id [%s] is in schedule %s:%d", LocOp.getId(lc), lcscid, lcscidx );
+        rc = True;
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+            "loco id [%s] is not in schedule %s(%s):%d(%d)", LocOp.getId(lc), scid, lcscid, scidx, lcscidx );
+      }
+    }
+    StrTokOp.base.del(tok);
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "check if loco id [%s] equals [%s]", id, wActionCtrl.getlcid(actionctrl) );
+    if( StrOp.equals("*", id ) || StrOp.equals( wActionCtrl.getlcid(actionctrl), id ) ) {
+      iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL, False);
+      if( lc != NULL ) {
+        Boolean dir = LocOp.getDir(lc);
+        Boolean enterside = LocOp.getBlockEnterSide(lc);
+        Boolean placing = LocOp.getPlacing(lc);
+        if( !placing )
+          dir = !dir;
+        rc = True;
+        if( StrOp.equals( "forwards", wActionCond.getstate(actionCond) ) && !dir ) {
+          rc = False;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "loco %s direction %s does not match [%s]", LocOp.getId(lc),
+              dir?"forwards":"reverse", wActionCond.getstate(actionCond) );
+        }
+        else if( StrOp.equals( "reverse", wActionCond.getstate(actionCond) ) && dir ) {
+          rc = False;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "loco %s direction %s does not match [%s]", LocOp.getId(lc),
+              dir?"forwards":"reverse", wActionCond.getstate(actionCond) );
+        }
+        else if(StrOp.equals( "+", wActionCond.getstate(actionCond) ) && !enterside ) {
+          rc = False;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "loco %s block enter side %s does not match [%s]", LocOp.getId(lc),
+              enterside?"+":"-", wActionCond.getstate(actionCond) );
+        }
+        else if(StrOp.equals( "-", wActionCond.getstate(actionCond) ) && enterside ) {
+          rc = False;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "loco %s block enter side %s does not match [%s]", LocOp.getId(lc),
+              enterside?"+":"-", wActionCond.getstate(actionCond) );
+        }
+        else if( StrOp.equals( wActionCond.getstate(actionCond), wLoc.min ) || StrOp.equals( wActionCond.getstate(actionCond), wLoc.mid )
+              || StrOp.equals( wActionCond.getstate(actionCond), wLoc.cruise ) || StrOp.equals( wActionCond.getstate(actionCond), wLoc.max ) ) {
+          if( !StrOp.equals( wActionCond.getstate(actionCond), LocOp.getV_hint(lc) ) ) {
+            rc = False;
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "loco %s speed %s does not match [%s]", LocOp.getId(lc),
+                LocOp.getV_hint(lc), wActionCond.getstate(actionCond) );
+          } else {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "loco %s speed %s matches [%s]", LocOp.getId(lc),
+                LocOp.getV_hint(lc), wActionCond.getstate(actionCond) );
+          }
+        }
+        else if( StrOp.startsWith( wActionCond.getstate(actionCond), "fon" ) || StrOp.startsWith( wActionCond.getstate(actionCond), "foff" ) ) {
+          iOStrTok tok = StrTokOp.inst(wActionCond.getstate(actionCond), ',');
+          const char* fonoff = NULL;
+          const char* fnumber = NULL;
+          if(StrTokOp.hasMoreTokens(tok))
+            fonoff = StrTokOp.nextToken(tok);
+          if(StrTokOp.hasMoreTokens(tok))
+            fnumber = StrTokOp.nextToken(tok);
+          StrTokOp.base.del(tok);
+
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "checking function of loco %s", LocOp.getId(lc) );
+
+          if( fonoff != NULL && fnumber != NULL ) {
+            int nr = atoi(fnumber);
+            int fx = wLoc.getfx(LocOp.base.properties(lc));
+            Boolean lights = wLoc.isfn(LocOp.base.properties(lc));
+            rc = False;
+            if( StrOp.equals( "fon", fonoff ) && nr == 0 )
+              rc = lights;
+            else if( StrOp.equals( "foff", fonoff ) && nr == 0 )
+              rc = !lights;
+            else if( StrOp.equals( "fon", fonoff ) && nr != 0 )
+              rc = ( fx & (1 << (nr-1)) );
+            else if( StrOp.equals( "foff", fonoff ) && nr != 0 )
+              rc = ( !(fx & (1 << (nr-1)) ) );
+
+            if( !rc ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                  "loco %s function %d does not match state [%s]", LocOp.getId(lc), nr, fonoff );
+            }
+            else {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                  "loco %s function %d does match state [%s]", LocOp.getId(lc), nr, fonoff );
+            }
+
+          }
+          else {
+            rc = False;
+          }
+        }
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+            "loco id [%s] not found", wActionCtrl.getlcid(actionctrl) );
+        rc = False;
+      }
+    }
+    else
+      rc = StrOp.equals(id, wActionCtrl.getlcid(actionctrl) );
+  }
+
+  return rc;
+}
 
 static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
   iOActionData data = Data(inst);
@@ -276,6 +481,9 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
             if( train != NULL && StrOp.equals(train, id) ) {
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "train ID [%s] match with loco [%s]", id, LocOp.getId(lc));
               rc = True;
+              if( state != NULL && StrOp.len(state) > 0 ) {
+                rc = __checkLocoState(LocOp.getId(lc), state, actionctrl, actionCond);
+              }
             }
             else {
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "train ID [%s] does not match with loco [%s]-[%s]", id, LocOp.getId(lc), train);
@@ -287,208 +495,10 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
         else if( StrOp.equals( wLoc.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
           const char* state = wActionCond.getstate(actionCond);
-          iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL, False);
-          rc = False;
-
-          if( lc != NULL && state[0] == '#' ) {
-            iOStrTok tok = StrTokOp.inst(state, ',');
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                "check if loco address %d fits in [%s]", LocOp.getAddress(lc), state );
-            while( StrTokOp.hasMoreTokens(tok) ) {
-              const char* sAddr = StrTokOp.nextToken(tok);
-              char* sHAddr = StrOp.find( sAddr, "-" );
-              if( sHAddr != NULL ) {
-                int addr = 0;
-                int hAddr = atoi(sHAddr+1);
-                *sHAddr = '\0';
-                addr = atoi(sAddr+1);
-                if( LocOp.getAddress(lc) >= addr && LocOp.getAddress(lc) <= hAddr ) {
-                  rc = True;
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                      "loco address %d fits in range [%d-%d]", LocOp.getAddress(lc), addr, hAddr );
-                  break; /* break out the while loop */
-                }
-              }
-              else {
-                int addr = atoi(sAddr+1);
-                if( addr == LocOp.getAddress(lc) ) {
-                  rc = True;
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                      "loco address %d equals [%d]", LocOp.getAddress(lc), addr );
-                  break; /* break out the while loop */
-                }
-              }
-            };
-            StrTokOp.base.del(tok);
-          }
-          else if( lc != NULL && state[0] == 'x' ) {
-            iOStrTok tok = StrTokOp.inst(state, ',');
-            rc = True;
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                "check if loco address %d does not match [%s]", LocOp.getAddress(lc), state );
-            while( StrTokOp.hasMoreTokens(tok) ) {
-              const char* sAddr = StrTokOp.nextToken(tok);
-              char* sHAddr = StrOp.find( sAddr, "-" );
-              if( sHAddr != NULL ) {
-                int addr = 0;
-                int hAddr = atoi(sHAddr+1);
-                *sHAddr = '\0';
-                addr = atoi(sAddr+1);
-                if( LocOp.getAddress(lc) >= addr && LocOp.getAddress(lc) <= hAddr ) {
-                  rc = False;
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                      "loco address %d falls in excluded range [%d-%d]", LocOp.getAddress(lc), addr, hAddr );
-                  break; /* break out the while loop */
-                }
-              }
-              else {
-                int addr = atoi(sAddr+1);
-                if( addr == LocOp.getAddress(lc) ) {
-                  rc = False;
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                      "loco address %d equals exclusion [%d]", LocOp.getAddress(lc), addr );
-                  break; /* break out the while loop */
-                }
-              }
-            };
-            StrTokOp.base.del(tok);
-          }
-          else if( lc != NULL && ( StrOp.equals( state, "diesel" ) ||
-                  StrOp.equals( state, "steam" ) || StrOp.equals( state, "electric" ) ) ) {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check type of loco id [%s]", LocOp.getId(lc) );
-            rc = StrOp.equals( state, LocOp.getEngine(lc) );
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                "loco type [%s] does %smatch condtion [%s]", LocOp.getEngine(lc), rc?"":"not ", state );
-          }
-          else if( lc != NULL && ( StrOp.startsWithi( state, "schedule" ) ) ) {
-            iOStrTok tok = StrTokOp.inst(state, ':');
-            const char* scstate = NULL;
-            const char* scid = NULL;
-            int scidx = -1;
-            if( StrTokOp.hasMoreTokens(tok) )
-              scstate = StrTokOp.nextToken(tok);
-            if( StrTokOp.hasMoreTokens(tok) )
-              scid = StrTokOp.nextToken(tok);
-            if( StrTokOp.hasMoreTokens(tok) )
-              scidx = atoi(StrTokOp.nextToken(tok));
-            rc = False;
-            if( scid != NULL ) {
-              int lcscidx = 0;
-              const char* lcscid = LocOp.getSchedule(lc, &lcscidx);
-              if( StrOp.equals(scid, lcscid) && (scidx == -1 || scidx == lcscidx) ) {
-                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco id [%s] is in schedule %s:%d", LocOp.getId(lc), lcscid, lcscidx );
-                rc = True;
-              }
-              else {
-                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                    "loco id [%s] is not in schedule %s(%s):%d(%d)", LocOp.getId(lc), scid, lcscid, scidx, lcscidx );
-              }
-            }
-            StrTokOp.base.del(tok);
-          }
-          else {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                "check if loco id [%s] equals [%s]", id, wActionCtrl.getlcid(actionctrl) );
-            if( StrOp.equals("*", id ) || StrOp.equals( wActionCtrl.getlcid(actionctrl), id ) ) {
-              iOLoc lc = ModelOp.getLoc(model, wActionCtrl.getlcid(actionctrl), NULL, False);
-              if( lc != NULL ) {
-                Boolean dir = LocOp.getDir(lc);
-                Boolean enterside = LocOp.getBlockEnterSide(lc);
-                Boolean placing = LocOp.getPlacing(lc);
-                if( !placing )
-                  dir = !dir;
-                rc = True;
-                if( StrOp.equals( "forwards", wActionCond.getstate(actionCond) ) && !dir ) {
-                  rc = False;
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                      "loco %s direction %s does not match [%s]", LocOp.getId(lc),
-                      dir?"forwards":"reverse", wActionCond.getstate(actionCond) );
-                }
-                else if( StrOp.equals( "reverse", wActionCond.getstate(actionCond) ) && dir ) {
-                  rc = False;
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                      "loco %s direction %s does not match [%s]", LocOp.getId(lc),
-                      dir?"forwards":"reverse", wActionCond.getstate(actionCond) );
-                }
-                else if(StrOp.equals( "+", wActionCond.getstate(actionCond) ) && !enterside ) {
-                  rc = False;
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                      "loco %s block enter side %s does not match [%s]", LocOp.getId(lc),
-                      enterside?"+":"-", wActionCond.getstate(actionCond) );
-                }
-                else if(StrOp.equals( "-", wActionCond.getstate(actionCond) ) && enterside ) {
-                  rc = False;
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                      "loco %s block enter side %s does not match [%s]", LocOp.getId(lc),
-                      enterside?"+":"-", wActionCond.getstate(actionCond) );
-                }
-                else if( StrOp.equals( wActionCond.getstate(actionCond), wLoc.min ) || StrOp.equals( wActionCond.getstate(actionCond), wLoc.mid )
-                      || StrOp.equals( wActionCond.getstate(actionCond), wLoc.cruise ) || StrOp.equals( wActionCond.getstate(actionCond), wLoc.max ) ) {
-                  if( !StrOp.equals( wActionCond.getstate(actionCond), LocOp.getV_hint(lc) ) ) {
-                    rc = False;
-                    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                        "loco %s speed %s does not match [%s]", LocOp.getId(lc),
-                        LocOp.getV_hint(lc), wActionCond.getstate(actionCond) );
-                  } else {
-                    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                        "loco %s speed %s matches [%s]", LocOp.getId(lc),
-                        LocOp.getV_hint(lc), wActionCond.getstate(actionCond) );
-                  }
-                }
-                else if( StrOp.startsWith( wActionCond.getstate(actionCond), "fon" ) || StrOp.startsWith( wActionCond.getstate(actionCond), "foff" ) ) {
-                  iOStrTok tok = StrTokOp.inst(wActionCond.getstate(actionCond), ',');
-                  const char* fonoff = NULL;
-                  const char* fnumber = NULL;
-                  if(StrTokOp.hasMoreTokens(tok))
-                    fonoff = StrTokOp.nextToken(tok);
-                  if(StrTokOp.hasMoreTokens(tok))
-                    fnumber = StrTokOp.nextToken(tok);
-                  StrTokOp.base.del(tok);
-
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                      "checking function of loco %s", LocOp.getId(lc) );
-
-                  if( fonoff != NULL && fnumber != NULL ) {
-                    int nr = atoi(fnumber);
-                    int fx = wLoc.getfx(LocOp.base.properties(lc));
-                    Boolean lights = wLoc.isfn(LocOp.base.properties(lc));
-                    rc = False;
-                    if( StrOp.equals( "fon", fonoff ) && nr == 0 )
-                      rc = lights;
-                    else if( StrOp.equals( "foff", fonoff ) && nr == 0 )
-                      rc = !lights;
-                    else if( StrOp.equals( "fon", fonoff ) && nr != 0 )
-                      rc = ( fx & (1 << (nr-1)) );
-                    else if( StrOp.equals( "foff", fonoff ) && nr != 0 )
-                      rc = ( !(fx & (1 << (nr-1)) ) );
-
-                    if( !rc ) {
-                      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                          "loco %s function %d does not match state [%s]", LocOp.getId(lc), nr, fonoff );
-                    }
-                    else {
-                      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                          "loco %s function %d does match state [%s]", LocOp.getId(lc), nr, fonoff );
-                    }
-
-                  }
-                  else {
-                    rc = False;
-                  }
-                }
-              }
-              else {
-                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                    "loco id [%s] not found", wActionCtrl.getlcid(actionctrl) );
-                rc = False;
-              }
-            }
-            else
-              rc = StrOp.equals(id, wActionCtrl.getlcid(actionctrl) );
-          }
+          rc = __checkLocoState(id, state, actionctrl, actionCond);
         }
 
-
+        /* */
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, rc?"Condition is true.":"Condition is not true; skip action." );
 
 
