@@ -224,6 +224,14 @@ static byte* __handleMobile( iORocNetNode rocnetnode, byte* rn ) {
           data->fn[i+8+1] = (rn[RN_PACKET_DATA + 1] & (1 << i)) ? True:False;
           data->fn[i+16+1] = (rn[RN_PACKET_DATA + 2] & (1 << i)) ? True:False;
         }
+        if( data->fchanged > 0 && data->fchanged <= 16 && data->channels[data->fchanged] != NULL ) {
+          data->channels[data->fchanged]->state = data->fn[data->fchanged] ? 1:0;
+          data->channels[data->fchanged]->blink = data->fn[data->fchanged] ? True:False;
+          data->channels[data->fchanged]->ready = False;
+          data->channels[data->fchanged]->sleep = False;
+          data->channels[data->fchanged]->idle  = 0;
+        }
+
       }
       break;
 

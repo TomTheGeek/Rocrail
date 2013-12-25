@@ -60,6 +60,7 @@
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/BBT.h"
 #include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/Action.h"
 
 static int instCnt = 0;
 
@@ -987,13 +988,14 @@ static int __getFnAddr( iOLoc inst, int function, int* mappedfn) {
   return 0;
 }
 
-static const char* __getFnSound( iOLoc inst, int function) {
+static const char* __getFnSound( iOLoc inst, int function, int* addr) {
   iOLocData    data = Data(inst);
 
   iONode fundef = wLoc.getfundef( data->props );
 
   while( fundef != NULL ) {
     if( wFunDef.getfn(fundef) == function ) {
+      *addr = wFunDef.getaddr(fundef);
       return wFunDef.getsound(fundef);
     }
     fundef = wLoc.nextfundef( data->props, fundef );
@@ -1007,22 +1009,34 @@ static void __doSound(iOLoc inst, iONode cmd) {
   if( wFunCmd.getfnchanged(cmd) != -1 ) {
     int fx = wLoc.getfx( data->props );
     if( fx & 1 << (wFunCmd.getfnchanged(cmd)-1) ) {
-      const char* sound = __getFnSound(inst, wFunCmd.getfnchanged(cmd) );
+      int addr = 0;
+      const char* sound = __getFnSound(inst, wFunCmd.getfnchanged(cmd), &addr );
       if( sound != NULL && StrOp.len(sound) > 0 ) {
-        /* play */
-        char* s = NULL;
-        if( wRocRail.issoundplayerlocation(AppOp.getIni()) && data->curBlock != NULL && data->curSensor != NULL )
-          s = StrOp.fmt("%s \"%s%c%s\" \"%s\" \"%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
-              wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound, data->curBlock, data->curSensor );
-        else if( wRocRail.issoundplayerlocation(AppOp.getIni()) && data->curBlock != NULL )
-          s = StrOp.fmt("%s \"%s%c%s\" \"%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
-              wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound, data->curBlock );
-        else
-          s = StrOp.fmt("%s \"%s%c%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
-              wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound );
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
-        SystemOp.system( s, True, False );
-        StrOp.free(s);
+        if( addr == 0 ) {
+          /* play */
+          char* s = NULL;
+          if( wRocRail.issoundplayerlocation(AppOp.getIni()) && data->curBlock != NULL && data->curSensor != NULL )
+            s = StrOp.fmt("%s \"%s%c%s\" \"%s\" \"%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
+                wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound, data->curBlock, data->curSensor );
+          else if( wRocRail.issoundplayerlocation(AppOp.getIni()) && data->curBlock != NULL )
+            s = StrOp.fmt("%s \"%s%c%s\" \"%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
+                wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound, data->curBlock );
+          else
+            s = StrOp.fmt("%s \"%s%c%s\"", wRocRail.getsoundplayer(AppOp.getIni()),
+                wRocRail.getsoundpath(AppOp.getIni()), SystemOp.getFileSeparator(), sound );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "executing [%s]", s );
+          SystemOp.system( s, True, False );
+          StrOp.free(s);
+        }
+        else {
+          iONode cmd = NodeOp.inst( wAction.name(), NULL, ELEMENT_NODE );
+          wAction.setcmd( cmd, wAction.sound_play );
+          wAction.setiid( cmd, wLoc.getiid( data->props ) );
+          wAction.setbus( cmd, wLoc.getaddr( data->props ) );
+          wAction.setsndfile( cmd, sound );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sound action on bus %d [%s]", wLoc.getaddr( data->props ), sound );
+          ControlOp.cmd( AppOp.getControl(), cmd, NULL );
+        }
       }
     }
   }
