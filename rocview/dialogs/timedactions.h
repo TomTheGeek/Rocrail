@@ -44,6 +44,7 @@ class wxSpinCtrl;
 #define ID_ACTIONBOOK 10254
 #define ID_INDEXPANEL 10403
 #define ID_LISTCTRL 10412
+#define ID_AC_IDNAME 10321
 #define ID_BT_ADD 10217
 #define ID_BT_DEL 10218
 #define ID_BUTTON_AC_DOC 10143
@@ -105,6 +106,9 @@ public:
     /// wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTCTRL
     void OnListctrlColLeftClick( wxListEvent& event );
 
+    /// wxEVT_COMMAND_TEXT_ENTER event handler for ID_AC_IDNAME
+    void OnApplyClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BT_ADD
     void OnBtAddClick( wxCommandEvent& event );
 
@@ -131,9 +135,6 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_APPLY
-    void OnApplyClick( wxCommandEvent& event );
 
 ////@end TimedActions event handler declarations
 

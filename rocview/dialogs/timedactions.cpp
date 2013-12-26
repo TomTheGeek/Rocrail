@@ -76,26 +76,17 @@ BEGIN_EVENT_TABLE( TimedActions, wxDialog )
 ////@begin TimedActions event table entries
     EVT_LIST_ITEM_SELECTED( ID_LISTCTRL, TimedActions::OnListctrlSelected )
     EVT_LIST_COL_CLICK( ID_LISTCTRL, TimedActions::OnListctrlColLeftClick )
-
+    EVT_TEXT_ENTER( ID_AC_IDNAME, TimedActions::OnApplyClick )
     EVT_BUTTON( ID_BT_ADD, TimedActions::OnBtAddClick )
-
     EVT_BUTTON( ID_BT_DEL, TimedActions::OnBtDelClick )
-
     EVT_BUTTON( ID_BUTTON_AC_DOC, TimedActions::OnButtonAcDocClick )
-
     EVT_CHOICE( ID_ACTIONS_TYPE, TimedActions::OnActionsTypeSelected )
-
     EVT_BUTTON( ID_ACTIONS_EXEC_CMD, TimedActions::OnActionsExecCmdClick )
-
     EVT_LISTBOX( ID_USELIST, TimedActions::OnUselistSelected )
     EVT_LISTBOX_DCLICK( ID_USELIST, TimedActions::OnUselistDoubleClicked )
-
     EVT_BUTTON( wxID_OK, TimedActions::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, TimedActions::OnCancelClick )
-
     EVT_BUTTON( wxID_APPLY, TimedActions::OnApplyClick )
-
 ////@end TimedActions event table entries
 
 END_EVENT_TABLE()
@@ -582,7 +573,7 @@ void TimedActions::CreateControls()
     m_TimedActions = new wxListCtrl( m_IndexPanel, ID_LISTCTRL, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES );
     itemBoxSizer5->Add(m_TimedActions, 1, wxGROW|wxALL, 5);
 
-    m_ActionID = new wxTextCtrl( m_IndexPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_ActionID = new wxTextCtrl( m_IndexPanel, ID_AC_IDNAME, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
     itemBoxSizer5->Add(m_ActionID, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer(wxHORIZONTAL);
@@ -897,6 +888,7 @@ void TimedActions::OnBtAddClick( wxCommandEvent& event )
         wAction.setid( ac, "NEW" );
         m_Props = ac;
         appendItem(ac);
+        setIDSelection(wItem.getid(ac));
         initValues();
       }
     }
