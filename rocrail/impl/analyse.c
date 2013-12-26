@@ -172,6 +172,7 @@ static Boolean blockCheck( iOAnalyse inst, Boolean repair );
 static Boolean routeCheck( iOAnalyse inst, Boolean repair );
 static Boolean isValidInterfaceID( iOAnalyse inst, const char *iid );
 static Boolean ismemberoflist( iOList list, obj o);
+static Boolean isInList( char *idlist, const char *id );
 static int invalidBlockidCheck(  iOAnalyse inst, iONode tracklist, Boolean repair );
 static int invalidRouteidsCheck( iOAnalyse inst, iONode tracklist, Boolean repair );
 static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, int* turnoutstate_out, int* x, int* y, const char* key );
@@ -465,6 +466,24 @@ static Boolean isStageBlockById( iOModel model, const char* blockid  ) {
 }
 
 
+iONode findCarById( iONode model, const char* carid ) {
+  iONode carlist = wPlan.getcarlist( model );
+  if( carlist != NULL ) {
+    int cnt = NodeOp.getChildCnt( carlist );
+    int i;
+    for( i=0 ; i<cnt ; i++ ) {
+      iONode car = NodeOp.getChild( carlist, i );
+      const char* id = wCar.getid( car );
+
+      if( id != NULL && StrOp.equals( carid, id ) ) {
+        return car;
+      }
+    }
+  }
+  return NULL;
+}
+                                                      
+
 /* check loco attributes */
 static Boolean checkLocos( iOAnalyse inst, Boolean repair ) {
   iOAnalyseData data = Data(inst);
@@ -667,6 +686,97 @@ static Boolean checkLocos( iOAnalyse inst, Boolean repair ) {
     return False;
   }
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco check: %d problematic enries", numProblems );
+
+  return (numProblems == 0);
+}
+
+
+/* check train attributes */
+static Boolean checkTrains( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getoperatorlist(data->plan);
+  int listSize = 0;
+  int numProblems = 0;
+  int numCleanups = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkTrains: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkTrains: Checking %d %s nodes", listSize, listType );
+    for( i = 0; i < listSize; i++ ) {
+      iONode node = NodeOp.getChild(list, i);
+      if( node ) {
+        const char* id = wOperator.getid( node );
+        const char* carids = wOperator.getcarids( node );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkTrains: Checking train[%s] carids[%s}", id, carids );
+        if( StrOp.len( carids ) > 0 ) {
+          Boolean thisOplistChanged = False;
+          char *repaircarids = StrOp.dup("");
+          iOStrTok tok = StrTokOp.inst( carids, ',');
+          while( StrTokOp.hasMoreTokens(tok) ) {
+            const char* carId = StrTokOp.nextToken(tok);
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkTrains: Checking train[%s] car[%s]", id, carId );
+            iONode car = findCarById( data->plan, carId );
+            if( car == NULL ) {
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "  train[%s]: car[%s] not found", id, carId );
+              numProblems++ ;
+              thisOplistChanged = True;
+            }
+            else {
+              if( isInList( repaircarids, carId ) ) {
+                /* already in list -> duplicate entry -> skip */
+                TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "checkTrains: [%s][%s] duplicate entry car[%s] in carids[%s]",
+                    id, carId, carids );
+                numProblems++ ;
+                thisOplistChanged = True;
+              }
+              else{
+                /* valid car so append to repair list */
+                if( StrOp.len(repaircarids) > 0 ) {
+                  repaircarids = StrOp.cat( repaircarids, ",");
+                }
+                repaircarids = StrOp.cat( repaircarids, carId );
+              }
+            }
+          }
+          StrTokOp.base.del(tok);
+
+          if( repair && thisOplistChanged ) {
+            /* only set carids if they are really different */
+            if( ! StrOp.equals( carids, repaircarids ) ) {
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " train[%s]: car list changed ",
+                  id );
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "checkTrains: train[%s] replace oplist[%s] by oplist[%s]",
+                  id, carids, repaircarids );
+              numCleanups++ ;
+              wOperator.setcarids( node, repaircarids );
+            }
+            else
+              StrOp.free(repaircarids);
+          }
+          else
+            StrOp.free(repaircarids);
+        }
+      }
+    }
+  }
+
+  if( numProblems ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " train check: %d problematic entries", numProblems );
+    if( numCleanups ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " train check: %d operator lists modified", numCleanups );
+    }
+    if( repair )
+      return ( numCleanups == 0 );
+    return False;
+  }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, " train check: %d problematic enries", numProblems );
 
   return (numProblems == 0);
 }
@@ -8372,6 +8482,11 @@ static Boolean _checkExtended(iOAnalyse inst) {
     res = checkLocos( inst, False );
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " loco test: %s problems detected", res?"no":"some" );
 
+    /* check trains */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " train test: in progress..." );
+    res = checkTrains( inst, False );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " train test: %s problems detected", res?"no":"some" );
+
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Basic checks finished" );
   }
 
@@ -8553,6 +8668,13 @@ static Boolean _cleanExtended(iOAnalyse inst) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " loco clean: in progress..." );
       res = checkLocos( inst, True );
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " loco clean: %s items deleted", res?"no":"some" );
+      if( res == False )
+        planChanged = True;
+
+      /* clean trains */
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " train clean: in progress..." );
+      res = checkTrains( inst, True );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " train clean: %s items deleted", res?"no":"some" );
       if( res == False )
         planChanged = True;
 
