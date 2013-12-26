@@ -1104,7 +1104,8 @@ static Boolean checkActionCondBlock( const char* state ) {
 /* condState(syscmd) == [go, stop] */
 static Boolean checkActionCondSysCmd( const char* state ) {
   if( StrOp.equals( state, wSysCmd.go   ) ||
-      StrOp.equals( state, wSysCmd.stop )
+      StrOp.equals( state, wSysCmd.stop ) ||
+      StrOp.equals( state, wSysCmd.init )
     )
     return True;
 

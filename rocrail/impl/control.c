@@ -1617,7 +1617,7 @@ static iOControl _inst( Boolean nocom ) {
 
     if( !nocom ) {
       if( __initDigInts( control ) ) {
-        __checkAction(control, "init", "event");
+        __checkAction(control, wSysCmd.init, "event");
       }
     }
 

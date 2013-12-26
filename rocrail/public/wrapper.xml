@@ -1129,6 +1129,7 @@
     <const name="stoplocs" vt="string" val="stoplocs"/>
     <const name="stop" vt="string" val="stop"/>
     <const name="go" vt="string" val="go"/>
+    <const name="init" vt="string" val="init"/>
     <const name="test" vt="string" val="test"/>
     <const name="save" vt="string" val="save"/>
     <const name="shutdown" vt="string" val="shutdown"/>
