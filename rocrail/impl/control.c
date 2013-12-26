@@ -1616,7 +1616,9 @@ static iOControl _inst( Boolean nocom ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "devices: \"%s\"", data->devlist );
 
     if( !nocom ) {
-      __initDigInts( control );
+      if( __initDigInts( control ) ) {
+        __checkAction(control, "init", "event");
+      }
     }
 
     {
