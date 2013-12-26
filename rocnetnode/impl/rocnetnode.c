@@ -1644,12 +1644,27 @@ static void __pwm( void* threadinst ) {
 }
 
 
+static void __setLightFunction(iORocNetNode inst, int fnr, Boolean on) {
+  iORocNetNodeData data = Data(inst);
+
+  if( data->channels[fnr] != NULL ) {
+    data->channels[fnr]->state = on ? 1:0;
+    data->channels[fnr]->blink = on ? True:False;
+    data->channels[fnr]->ready = False;
+    data->channels[fnr]->sleep = False;
+    data->channels[fnr]->idle  = 0;
+  }
+}
+
+
 static void __motorPWM( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
   iORocNetNodeData data       = Data(rocnetnode);
   int Vcurr = 0;
   int Vloop = 0;
+  Boolean Vdir = True;
+  Boolean lights = False;
 
 
   ThreadOp.sleep(1000);
@@ -1681,14 +1696,29 @@ static void __motorPWM( void* threadinst ) {
     int Vmax  = data->Vmax;  /* max PWM */
     int Vmass = data->Vmass; /* acceleration, deceleration */
 
+    /* light functions */
+    if( Vdir != data->Vdir || lights != data->fn[0] ) {
+      Vdir   = data->Vdir;
+      lights = data->fn[0];
+      __setLightFunction(rocnetnode,  9,  Vdir && lights );
+      __setLightFunction(rocnetnode, 10,  Vdir && lights );
+      __setLightFunction(rocnetnode, 11,  Vdir && lights );
+      __setLightFunction(rocnetnode, 12, !Vdir && lights );
+      __setLightFunction(rocnetnode, 13, !Vdir && lights );
+      __setLightFunction(rocnetnode, 14, !Vdir && lights );
+    }
+
+    /* motor direction */
     __writePort(rocnetnode, data->VPWMR, data->Vdir?1:0, IO_DIRECT );
     __writePort(rocnetnode, data->VPWML, data->Vdir?0:1, IO_DIRECT );
 
+    /* check limits */
     if( Vraw > 100 )
       Vraw = 100;
     if( Vmax > 100 )
       Vmax = 100;
 
+    /* acceleration */
     if( Vloop >= Vmass ) {
       Vloop = 0;
       if( Vcurr < Vraw )
