@@ -414,7 +414,14 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 /**  */
 static void _halt( obj inst, Boolean poweroff ) {
   iOMCS2Data data = Data(inst);
+  if( poweroff ) {
+    byte* out = allocMem(32);
+    __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_STOP, 0, 0, 0);
+    ThreadOp.post( data->writer, (obj)out );
+    ThreadOp.sleep(200);
+  }
   data->run = False;
+
   if( data->conOK && wDigInt.isasciiprotocol( data->ini ) && data->initASCII ) {
     ThreadOp.sleep(100);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init ASCII: (C) Close CAN channel" );
