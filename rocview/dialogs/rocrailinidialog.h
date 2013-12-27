@@ -194,11 +194,11 @@ public:
 
 ////@begin RocrailIniDialog member function declarations
 
-    iONode GetProps() const { return m_Props ; }
-    void SetProps(iONode value) { m_Props = value ; }
-
     iONode GetController() const { return m_Controller ; }
     void SetController(iONode value) { m_Controller = value ; }
+
+    iONode GetProps() const { return m_Props ; }
+    void SetProps(iONode value) { m_Props = value ; }
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -381,6 +381,7 @@ public:
     wxButton* m_ControllerAdd;
     wxStaticBox* m_ControllerOptionsBox;
     wxCheckBox* m_PowerOffOnExit;
+    wxCheckBox* m_PowerOnAtInit;
     wxCheckBox* m_NoDevCheck;
     wxPanel* m_R2RnetPanel;
     wxStaticText* m_labR2RnetID;
@@ -416,8 +417,8 @@ public:
     wxCheckBox* m_ActionClean;
     wxButton* m_OK;
     wxButton* m_Cancel;
-    iONode m_Props;
     iONode m_Controller;
+    iONode m_Props;
 ////@end RocrailIniDialog member variables
     void event( iONode event );
 

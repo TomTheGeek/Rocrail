@@ -954,6 +954,10 @@ static int _Main( iOApp inst, int argc, char** argv ) {
   }
 
 
+  if( wRocRail.ispoweronatinit(data->ini) ) {
+    AppOp.go();
+  }
+
   ModelOp.initField( data->model, initfield );
 
   /* update the feedback arrays */
