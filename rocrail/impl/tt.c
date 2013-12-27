@@ -2328,19 +2328,21 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident
   iOControl control = AppOp.getControl();
   int prevpos = data->tablepos;
   Boolean polarization;
-  int pos = __evaluatePos( (iOTT)inst, puls, id, &polarization );
+  int pos = data->tablepos;
   Boolean stop = False;
+
+  if( !puls ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OFF events are not used..." );
+    return;
+  }
+
+  pos = __evaluatePos( (iOTT)inst, puls, id, &polarization );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbEvent for Turntable [%s] fb=[%s] val=[%d] pos=[%d] polarization=[%d] ",
       inst->id(inst), id, val, pos, polarization );
 
   if( control == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "controller is not initialized..." );
-    return;
-  }
-
-  if( !puls ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OFF events are not used..." );
     return;
   }
 
