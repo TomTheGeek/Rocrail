@@ -363,7 +363,7 @@
 
   </xsl:template>
 
-  <xsl:template match="incl">
+  <xsl:template match="bklist/bk/incl">
 
 
     <TR>
@@ -377,7 +377,7 @@
     <xsl:apply-templates/>
 
   </xsl:template>
-  <xsl:template match="excl">
+  <xsl:template match="bklist/bk/excl">
 
     <TR>
       <TD></TD>
