@@ -3024,7 +3024,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     // All other block states
     else {
       // Accept
-      if(isAcceptIdent) {
+      if( !StrOp.equals( wBlock.closed, state ) && isAcceptIdent) {
         l_locidStr = StrOp.fmt( "%s Accepting", wBlock.getid( node ) );
         occupied = isAcceptIdent ? 7:occupied;
       }

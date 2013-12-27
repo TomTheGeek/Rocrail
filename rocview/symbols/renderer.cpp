@@ -1821,7 +1821,7 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
   svgSym[7] = (m_bSmall && m_SvgSym14 != NULL)?m_SvgSym14:m_SvgSym13;
   svgSym[8] = (m_bSmall && m_SvgSym16 != NULL)?m_SvgSym16:m_SvgSym15;
 
-  if( m_rotate && m_iOccupied != 0 && m_iOccupied != 2 ) {
+  if( m_rotate && m_iOccupied != 0 && m_iOccupied != 2 && m_iOccupied != 7 ) {
     if( StrOp.equals(ori, wItem.west))
         ori = wItem.east;
     else if(StrOp.equals(ori, wItem.east))
