@@ -4444,6 +4444,7 @@ static const char* _getManagedID(iOModel inst, const char* fromBlockId) {
   iIBlockBase block = ModelOp.getBlock(inst, fromBlockId);
   if( block != NULL && block->getManager(block) != NULL ) {
     iIBlockBase seltab = block->getManager(block);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "managed ID for block [%s] is [%s]", fromBlockId, seltab->base.id(seltab));
     return seltab->base.id(seltab);
   }
   return fromBlockId;
