@@ -777,8 +777,10 @@ void RocnetNodeDlg::event(iONode node) {
         }
       }
       m_I2CScan20->SetValue(i2cscan == NULL ? wxT(""):wxString(i2cscan,wxConvUTF8));
-      if( i2cscan != NULL)
+      if( i2cscan != NULL) {
         StrOp.free(i2cscan);
+        i2cscan = NULL;
+      }
 
       // RocMouse, GCA-Pi04
       m_I2Cx30 = wProgram.getval6(node);
@@ -790,8 +792,10 @@ void RocnetNodeDlg::event(iONode node) {
         }
       }
       m_I2CScan30->SetValue(i2cscan == NULL ? wxT(""):wxString(i2cscan,wxConvUTF8));
-      if( i2cscan != NULL)
+      if( i2cscan != NULL) {
         StrOp.free(i2cscan);
+        i2cscan = NULL;
+      }
 
       // PWM, GCA-Pi03
       m_I2Cx40 = wProgram.getval7(node);
@@ -803,8 +807,10 @@ void RocnetNodeDlg::event(iONode node) {
         }
       }
       m_I2CScan40->SetValue(i2cscan == NULL ? wxT(""):wxString(i2cscan,wxConvUTF8));
-      if( i2cscan != NULL)
+      if( i2cscan != NULL) {
         StrOp.free(i2cscan);
+        i2cscan = NULL;
+      }
 
       initPorts();
       initChannels();
