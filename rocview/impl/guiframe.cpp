@@ -173,6 +173,7 @@
 #include "rocrail/wrapper/public/Issue.h"
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/Operator.h"
+#include "rocrail/wrapper/public/Turntable.h"
 
 
 #include "rocview/symbols/svg.h"
@@ -590,6 +591,7 @@ bool RocGuiFrame::isInStage( const char* locid, const char* blockid ) {
 iONode RocGuiFrame::findBlock4Loc( const char* locid, const char* blockid ) {
   iONode model = wxGetApp().getModel();
   iONode bklist = wPlan.getbklist( model );
+  iONode ttlist = wPlan.getttlist( model );
   if( bklist != NULL ) {
     int cnt = NodeOp.getChildCnt( bklist );
     if( blockid != NULL ) {
@@ -611,6 +613,32 @@ iONode RocGuiFrame::findBlock4Loc( const char* locid, const char* blockid ) {
       }
     }
   }
+
+  if( ttlist != NULL ) {
+    int cnt = NodeOp.getChildCnt( ttlist );
+    if( blockid != NULL ) {
+      for( int i = 0; i < cnt; i++ ) {
+        iONode tt = NodeOp.getChild( ttlist, i );
+        const char* id = wItem.getid( tt );
+
+        if( id != NULL && StrOp.equals( blockid, id ) ) {
+          return tt;
+        }
+      }
+    }
+    for( int i = 0; i < cnt; i++ ) {
+      iONode tt = NodeOp.getChild( ttlist, i );
+      const char* id = wTurntable.getlocid( tt );
+
+      if( id != NULL && StrOp.equals( locid, id ) ) {
+        return tt;
+      }
+    }
+
+  }
+
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "no block [%s] found for loco %s", blockid!=NULL?blockid:"?", locid);
+
   return NULL;
 }
 

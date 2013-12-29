@@ -341,13 +341,13 @@ static Boolean __syncGo( iORoute inst ) {
         }
         else {
           if( !TTOp.getRunDir(isw) ) {
-            /*
-            iOLoc lc = ModelOp.getLoc(model, o->lockedId );
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%s] must swap placing on the turntable.", o->lockedId );
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Turntable 180 route..." );
+            iOLoc lc = ModelOp.getLoc(model, o->lockedId, NULL, False );
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "[%s] must (re)swap placing on the turntable.", o->lockedId );
             if( lc != NULL ) {
-              LocOp.swapPlacing(lc);
+              LocOp.swapBlockEnterSide(lc, NULL);
+              LocOp.swapPlacing(lc, NULL, False, True);
             }
-            */
           }
         }
       }

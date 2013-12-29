@@ -235,6 +235,8 @@ static Boolean __bridgeDir( iOTT inst, int destpos, Boolean* ttdir ) {
   iOTTData data = Data(inst);
   Boolean swap = wTurntable.isswaprotation(data->props);
 
+  data->lcdir = True;
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "from track[%d] to track[%d]", data->tablepos, destpos );
 
   if( data->tablepos == destpos ) {
@@ -246,6 +248,8 @@ static Boolean __bridgeDir( iOTT inst, int destpos, Boolean* ttdir ) {
   if( (data->tablepos + 24 == destpos) || (destpos + 24 == data->tablepos) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "wanted destination position[%d] is the opposite of the table position[%d]", destpos, data->tablepos );
+    if( destpos != data->tablepos )
+      data->lcdir = False;
     return False;
   }
 

@@ -2311,7 +2311,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
   }
 
   if( (data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && !StrOp.equals(id, data->curBlock)) || data->prevBlock == NULL ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "set previous block to [%s]", data->curBlock == NULL ? "":data->curBlock );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "set previous block to [%s], new to [%s]", data->curBlock == NULL ? "":data->curBlock, id );
     data->prevBlock = data->curBlock;
   }
   data->curBlock = id;
@@ -3505,8 +3505,10 @@ static void _setCV( iOLoc loc, int nr, int value ) {
  */
 static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist, Boolean direct ) {
   iOLocData data = Data(loc);
+  Boolean swap = False;
 
-  Boolean swap = wLoc.isplacing( cmd );
+  if( cmd != NULL )
+    swap = wLoc.isplacing( cmd );
 
   if( cmd == NULL || !NodeOp.findAttr(cmd, "placing"))
     swap = !wLoc.isplacing( data->props );

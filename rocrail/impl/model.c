@@ -2942,6 +2942,8 @@ static iIBlockBase _getBlock( iOModel inst, const char* id ) {
   iIBlockBase bk = (iIBlockBase)MapOp.get( o->blockMap, id );
   if( bk == NULL )
     bk = (iIBlockBase)MapOp.get( o->stageMap, id );
+  if( bk == NULL )
+    bk = (iIBlockBase)MapOp.get( o->ttMap, id );
   return bk;
 }
 
