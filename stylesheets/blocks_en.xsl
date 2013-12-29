@@ -52,7 +52,8 @@
 
 
   <xsl:template match="bk">
-
+  <xsl:variable name="waitmode" select="@waitmode" />
+        <xsl:variable name="wait" select="@wait" />  
     <TR>
 
       <!-- Blockkennung -->
@@ -78,9 +79,7 @@
 
       <!-- Wait -->
       <TD align="center">
-        <xsl:variable name="waitmode" select="@waitmode" />
-        <xsl:variable name="wait" select="@wait" />      
-        <xsl:choose>
+          <xsl:choose>
           <xsl:when test="$wait = 'false'">
             <xsl:text>no</xsl:text>
           </xsl:when>    
@@ -102,8 +101,6 @@
       </TD>
 
       <!-- Wait details -->
-      <xsl:variable name="waitmode" select="@waitmode" />
-      <xsl:variable name="wait" select="@wait" />
       <TD align="center">
         <xsl:choose>
         <xsl:when test="$wait = 'false'">

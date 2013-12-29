@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="html" encoding="UTF-8"/>
-
+    
   <xsl:template match="/">
-
+	
     <html>
       <head>
         <title>Rocrail Block report</title>
@@ -50,9 +50,10 @@
 
   </xsl:template>
 
-
+  <!-- Vorlage für Blöcke -->
   <xsl:template match="bk">
-
+	<xsl:variable name="waitmode" select="@waitmode" />
+	<xsl:variable name="wait" select="@wait" />
     <TR>
 
       <!-- Blockkennung -->
@@ -78,10 +79,8 @@
 
       <!-- Warten Zufall Fest Block Nein -->
       <TD align="center">
-        <xsl:variable name="waitmode" select="@waitmode" />
-        <xsl:variable name="wait" select="@wait" />      
         <xsl:choose>
-          <xsl:when test="$wait = 'false'">
+		  <xsl:when test="$wait = 'false'">
             <xsl:text>Nein</xsl:text>
           </xsl:when>    
           <xsl:otherwise> 
@@ -102,8 +101,6 @@
       </TD>
 
       <!-- Wartedetails -->
-      <xsl:variable name="waitmode" select="@waitmode" />
-      <xsl:variable name="wait" select="@wait" />
       <TD align="center">
         <xsl:choose>
         <xsl:when test="$wait = 'false'">
