@@ -334,6 +334,13 @@ static Boolean __syncGo( iORoute inst ) {
       if( isw != NULL ) {
         iONode cmd = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
         wTurntable.setcmd( cmd,  NodeOp.getStr( sw, "track", "0") );
+
+        /* The byroute flag will disable the option to check if the wanted track is opposite of the bridge
+         * which will lead to wrong loco placing.
+         * ToDo: Try to make it possibel.
+         * */
+        wTurntable.setcmdbyroute( cmd,  True );
+
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "go() %s:%s.%d", swId, swCmd, wSwitchCmd.gettrack(sw) );
         if( !TTOp.cmd( (iIBlockBase)isw, cmd ) ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Turntable could not process command." );

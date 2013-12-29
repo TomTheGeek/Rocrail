@@ -231,7 +231,7 @@ static iONode __getTrackNode( iOTT inst, int tracknr ) {
  */
 static const Boolean CCW = True;
 static const Boolean CW  = False;
-static Boolean __bridgeDir( iOTT inst, int destpos, Boolean* ttdir ) {
+static Boolean __bridgeDir( iOTT inst, int destpos, Boolean* ttdir, Boolean byroute ) {
   iOTTData data = Data(inst);
   Boolean swap = wTurntable.isswaprotation(data->props);
 
@@ -245,7 +245,7 @@ static Boolean __bridgeDir( iOTT inst, int destpos, Boolean* ttdir ) {
     return False;
   }
 
-  if( (data->tablepos + 24 == destpos) || (destpos + 24 == data->tablepos) ) {
+  if( !byroute && ((data->tablepos + 24 == destpos) || (destpos + 24 == data->tablepos)) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "wanted destination position[%d] is the opposite of the table position[%d]", destpos, data->tablepos );
     if( destpos != data->tablepos )
@@ -343,7 +343,7 @@ static Boolean __cmd_digitalbahn( iOTT inst, iONode nodeA ) {
     /* DA Save tracknumber for 180 degrees turn */
     int orig_tracknr = tracknr;
 
-    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir, wTurntable.iscmdbyroute(nodeA) );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Goto track %d, current pos=%d", tracknr, data->tablepos );
@@ -700,7 +700,7 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
     /* DA Save tracknumber for 180 degrees turn */
     int orig_tracknr = tracknr;
 
-    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir, wTurntable.iscmdbyroute(nodeA) );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Goto track %d, current pos=%d", tracknr, data->tablepos );
@@ -920,7 +920,7 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
-    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir, wTurntable.iscmdbyroute(nodeA) );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Goto track %d, current pos=%d", tracknr, data->tablepos );
@@ -951,7 +951,7 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
 
     if( StrOp.equals( wTurntable.prot_MP, wTurntable.getprot(data->props) ) ) {
       Boolean ttdir = True;
-      Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+      Boolean move = __bridgeDir(inst, tracknr, &ttdir, wTurntable.iscmdbyroute(nodeA) );
       /* rename node to program */
       NodeOp.setName( cmd, wProgram.name() );
       /* set type to multiport */
@@ -1116,7 +1116,7 @@ static Boolean __cmd_f6915( iOTT inst, iONode nodeA ) {
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
-    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir, wTurntable.iscmdbyroute(nodeA) );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Goto track %d, current pos=%d", tracknr, data->tablepos );
@@ -1257,7 +1257,7 @@ static Boolean __cmd_muet( iOTT inst, iONode nodeA ) {
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
-    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir, wTurntable.iscmdbyroute(nodeA) );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Goto track %d, current pos=%d", tracknr, data->tablepos );
@@ -1378,7 +1378,7 @@ static Boolean __cmd_slx815( iOTT inst, iONode nodeA ) {
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
-    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir, wTurntable.iscmdbyroute(nodeA) );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Goto track %d, current pos=%d", tracknr, data->tablepos );
@@ -1471,7 +1471,7 @@ static Boolean __cmd_accdec( iOTT inst, iONode nodeA ) {
   else {
     /* Tracknumber */
     int tracknr = atoi( cmdStr );
-    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir, wTurntable.iscmdbyroute(nodeA) );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Goto track %d, current pos=%d direction=%s", tracknr, data->tablepos, ttdir?"CCW":"CW" );
@@ -1576,7 +1576,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
   else {
     /* Tracknumber */
     tracknr = atoi( cmdStr );
-    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir, wTurntable.iscmdbyroute(nodeA) );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Goto track %d, current pos=%d", tracknr, data->tablepos );
@@ -1756,7 +1756,7 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
   else {
     /* Tracknumber */
     int tracknr = atoi( cmdStr );
-    Boolean move = __bridgeDir(inst, tracknr, &ttdir );
+    Boolean move = __bridgeDir(inst, tracknr, &ttdir, wTurntable.iscmdbyroute(nodeA) );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "Goto track %d, current pos=%d", tracknr, data->tablepos );
