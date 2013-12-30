@@ -334,7 +334,7 @@ static void __measureVelocity( iOBlock inst, int event ) {
   iOBlockData data = Data(inst);
 
   /*if( !wBlock.ismvactive( data->props ) )*/
-  if( wBlock.getmvdistance(data->props) == 0 )
+  if( wBlock.getmvdistance(data->props) == 0 || wBlock.getmvscale(data->props) == 0 )
   {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "measure velocity not set...");
     return;
