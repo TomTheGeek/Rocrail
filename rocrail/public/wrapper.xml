@@ -1944,7 +1944,7 @@
         <var name="td" vt="bool" defval="false" remark="trackdriver connected to this block"/>
 
         <var name="mvdistance" vt="int" defval="0" units="mm" remark="Distance between the enter and in event."/>
-        <var name="mvscale" vt="int" defval="87" remark="Scale of locomotives."/>
+        <var name="mvscale" vt="int" defval="0" remark="Scale of locomotives."/>
         <var name="mvmph" vt="bool" defval="false" remark="convert to MPH"/>
 
         <var name="extstop" vt="bool" defval="false" remark="An external stop module will take over the throttle. Use only with enter2in! (Lenz ABC.)"/>
