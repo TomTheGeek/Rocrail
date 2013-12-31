@@ -1050,7 +1050,7 @@ static void __doSound(iOLoc inst, iONode cmd) {
    Called by the loc runner in a 100ms cycle or
    some object called it with a command node.
 */
-static void __engine( iOLoc inst, iONode cmd ) {
+static Boolean __engine( iOLoc inst, iONode cmd ) {
   iOLocData    data = Data(inst);
   iOControl control = AppOp.getControl();
   Boolean didPost = False;
@@ -1065,7 +1065,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
 
   if( !MutexOp.trywait( data->muxEngine, 1000 ) ) {
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "loco %s mutex timeout", LocOp.getId(inst) );
-    return;
+    return False;
   }
 
   if( cmd != NULL )
@@ -1441,6 +1441,7 @@ static void __engine( iOLoc inst, iONode cmd ) {
     MutexOp.post( data->muxEngine );
 
   data->step++;
+  return True;
 }
 
 
@@ -1953,7 +1954,10 @@ static void __runner( void* threadinst ) {
     if( fncmd != NULL ) {
       wLoc.setV( fncmd, -1 );
       broadcast = (iONode)NodeOp.base.clone(fncmd);
-      __engine( loc, fncmd );
+      if( !__engine( loc, fncmd ) ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "loco %s engine blocked...", LocOp.getId( loc ) );
+        NodeOp.base.del(fncmd);
+      }
 
       /* Broadcast to clients. */
       wLoc.setid( broadcast, wLoc.getid( data->props ) );
@@ -1983,7 +1987,9 @@ static void __runner( void* threadinst ) {
     }
     else {
       /* call this function for updating velocity for unmanaged decoders */
-      __engine( loc, NULL );
+      if( !__engine( loc, NULL ) ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "loco %s engine blocked...", LocOp.getId( loc ) );
+      }
     }
 
     if( !wLoc.isusebbt(data->props) ) {
@@ -3110,7 +3116,11 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   if( data->driver != NULL )
     data->driver->info( data->driver, nodeA );
 
-  __engine( inst, nodeA );
+  if( !__engine( inst, nodeA ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not process function command for %s", LocOp.getId(inst));
+    NodeOp.base.del(nodeA);
+  }
+
   __checkConsist(inst, nodeF, False);
 
   /* Broadcast to clients. */
