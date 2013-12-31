@@ -1166,6 +1166,8 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   iOMCS2 __MCS2 = allocMem( sizeof( struct OMCS2 ) );
   iOMCS2Data data = allocMem( sizeof( struct OMCS2Data ) );
   MemOp.basecpy( __MCS2, &MCS2Op, 0, sizeof( struct OMCS2 ), data );
+  int portTX = 15731;
+  int portRX = 15730;
 
   /* Initialize data->xxx members... */
   TraceOp.set( trc );
@@ -1187,14 +1189,18 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sublib      [%s]", wDigInt.getsublib(data->ini) );
   if( data->udp ) {
+    if( wDigInt.getudpportTX(data->ini) > 0 )
+      portTX = wDigInt.getudpportTX(data->ini);
+    if( wDigInt.getudpportRX(data->ini) > 0 )
+      portRX = wDigInt.getudpportRX(data->ini);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp address [%s]", wDigInt.gethost(data->ini) );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp tx port [%d]", 15731 );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp rx port [%d]", 15730 );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp tx port [%d]", portTX );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  udp rx port [%d]", portRX );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-    data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15730, False, True, False );
+    data->readUDP = SocketOp.inst( wDigInt.gethost(data->ini), portRX, False, True, False );
     SocketOp.bind(data->readUDP);
-    data->writeUDP = SocketOp.inst( wDigInt.gethost(data->ini), 15731, False, True, False );
+    data->writeUDP = SocketOp.inst( wDigInt.gethost(data->ini), portTX, False, True, False );
     data->conOK = True;
   }
   else {

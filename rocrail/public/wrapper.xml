@@ -552,6 +552,8 @@
       <!-- tcpip connection -->
       <var name="host" vt="string" defval="" remark="hostname."/>
       <var name="port" vt="int" defval="0" remark="command port."/>
+      <var name="udpportTX" vt="int" defval="0" remark="send port."/>
+      <var name="udpportRX" vt="int" defval="0" remark="receive port."/>
       <var name="localip" vt="string" defval="" remark="Local interface IP."/>
 
       <opendcc remark="OpenDCC options" wrappername="OpenDCC">

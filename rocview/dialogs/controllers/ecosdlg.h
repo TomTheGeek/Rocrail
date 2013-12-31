@@ -120,6 +120,9 @@ public:
     wxTextCtrl* m_Host;
     wxStaticText* m_labPort;
     wxTextCtrl* m_Port;
+    wxStaticText* m_labUDPPorts;
+    wxTextCtrl* m_PortTX;
+    wxTextCtrl* m_PortRX;
     wxStaticText* m_labFBMod;
     wxSpinCtrl* m_FBMod;
     wxStaticText* m_labVersion;

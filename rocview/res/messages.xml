@@ -26022,4 +26022,7 @@
     <sr_latin txt="Prepoznaj I2C"/>
     <sl txt="I2C Zaznava"/>
   </Msg>
+  <Msg id="udpports">
+    <en txt="UDP Ports"/>
+  </Msg>
 </Messages>

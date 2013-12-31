@@ -6851,3 +6851,9 @@ msgstr ""
 msgid "I2C Detect"
 msgstr ""
 
+#. 
+# id="udpports"
+#, c-format
+msgid "UDP Ports"
+msgstr ""
+
