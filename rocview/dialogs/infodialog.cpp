@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -90,7 +90,7 @@ InfoDialog::InfoDialog( wxWindow* parent, wxWindowID id, const wxString& caption
   StrOp.free( str );
 
   m_Home->SetLabel( _T("http://www.rocrail.net") );
-  m_Support->SetLabel( _T("TM and Copyright 2002-2013 Rob Versluis.") );
+  m_Support->SetLabel( _T("TM and Copyright 2002-2014 Rob Versluis.") );
   m_labLic->SetLabel( _T("All Rights Reserved. License: GNU GPL V3") );
   //m_ThanksLine->SetLabel( wxGetApp().getMsg( "license" ) );
   m_ThanksLine->SetLabel( _T("") );

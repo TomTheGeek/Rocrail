@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -356,7 +356,7 @@ static int __logo( void ) {
   TraceOp.println( " rrr     ooo ooo ccc    rrr     aaa aaa iii lll   " );
   TraceOp.println( " rrr      ooooo   ccccc rrr      aaaaaa iii  lll  " );
   TraceOp.println( "--------------------------------------------------" );
-  TraceOp.println( " TM and Copyright 2002-2013 Rob Versluis."          );
+  TraceOp.println( " TM and Copyright 2002-2014 Rob Versluis."          );
   TraceOp.println( " All Rights Reserved."                              );
   TraceOp.println( "   r.j.versluis@rocrail.net"                        );
   TraceOp.println( "   http://www.rocrail.net"                          );
