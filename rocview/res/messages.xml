@@ -26025,4 +26025,7 @@
   <Msg id="udpports">
     <en txt="UDP Ports"/>
   </Msg>
+  <Msg id="center">
+    <en txt="Center"/>
+  </Msg>
 </Messages>

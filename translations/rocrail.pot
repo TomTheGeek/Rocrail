@@ -6857,3 +6857,9 @@ msgstr ""
 msgid "UDP Ports"
 msgstr ""
 
+#. 
+# id="center"
+#, c-format
+msgid "Center"
+msgstr ""
+

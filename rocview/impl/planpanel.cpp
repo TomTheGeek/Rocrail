@@ -145,6 +145,7 @@ BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
   EVT_MENU( ME_AddSwitchRight    , PlanPanel::addSwitchRight)
   EVT_MENU( ME_AddSwitchCrossing , PlanPanel::addSwitchCrossing)
   EVT_MENU( ME_AddSwitchDCrossing, PlanPanel::addSwitchDCrossing)
+  EVT_MENU( ME_AddSwitchCenterCrossing , PlanPanel::addSwitchCenterCrossing)
   EVT_MENU( ME_AddSwitchRectCrossing , PlanPanel::addSwitchRectCrossing)
   EVT_MENU( ME_AddSwitchLeftCrossing , PlanPanel::addSwitchLeftCrossing)
   EVT_MENU( ME_AddSwitchLeftDCrossing, PlanPanel::addSwitchLeftDCrossing)
@@ -1064,6 +1065,7 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
 
       wxMenu* menuCrossing = new wxMenu();
       menuCrossing->Append( ME_AddSwitchRectCrossing , wxGetApp().getMenu("rectangular") );
+      menuCrossing->Append( ME_AddSwitchCenterCrossing , wxGetApp().getMenu("center") );
       menuCrossing->Append( ME_AddSwitchLeftCrossing , wxGetApp().getMenu("left") );
       menuCrossing->Append( ME_AddSwitchCrossing , wxGetApp().getMenu("right") );
       menuTurnout->Append( -1, wxGetApp().getMenu("crossing"), menuCrossing  );
@@ -1540,8 +1542,13 @@ void PlanPanel::addSwitchRectCrossing(wxCommandEvent& event) {
   iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.settype( node, wSwitch.crossing );
   wSwitch.setrectcrossing( node, True );
-  if( event.GetId() == ME_AddRoadCrossing )
-    wItem.setroad(node, True);
+  addItemAttr( node );
+}
+
+void PlanPanel::addSwitchCenterCrossing(wxCommandEvent& event) {
+  iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+  wSwitch.settype( node, wSwitch.ccrossing );
+  wSwitch.setrectcrossing( node, False );
   addItemAttr( node );
 }
 
@@ -1549,8 +1556,6 @@ void PlanPanel::addSwitchLeftCrossing(wxCommandEvent& event) {
   iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.settype( node, wSwitch.crossing );
   wSwitch.setrectcrossing( node, False );
-  if( event.GetId() == ME_AddRoadCrossing )
-    wItem.setroad(node, True);
   addItemAttr( node );
 }
 
