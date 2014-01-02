@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -1804,10 +1804,71 @@ double SymbolRenderer::getRadians( double degrees ) {
 /**
  * Block object
  */
+void SymbolRenderer::drawBlockTriangle( wxPaintDC& dc, const char* ori ) {
+  if( ! ( m_iOccupied != 0 && m_iOccupied != 2 && m_iOccupied != 4 && m_iOccupied != 7 ) )
+    return;
+
+  const wxBrush& b = dc.GetBrush();
+  setBrush( *wxBLACK );
+  setPen( wxPen( *wxBLACK, 1));
+  static wxPoint p[4];
+  int end ;
+
+  if( StrOp.equals( wItem.west, ori ) || StrOp.equals( wItem.east, ori ) ) {
+    // horizontal triangle
+    p[0].x = 3; p[0].y = 15;
+    p[1].x = 6; p[1].y = 18;
+    p[2].x = 6; p[2].y = 12;
+    p[3].x = 3; p[3].y = 15;
+
+    if(  ( StrOp.equals( wItem.east, ori ) && ! m_rotate )
+      || ( StrOp.equals( wItem.west, ori ) && m_rotate )
+      ) {
+      // mirror to other end
+      end = (m_cx*32) - 1 ;
+      p[0].x = end - p[0].x;
+      p[1].x = end - p[1].x;
+      p[2].x = end - p[2].x;
+      p[3].x = end - p[3].x;
+    }
+  }
+  else {
+    // vertical triangle
+    p[0].x = 15; p[0].y = 3;
+    p[1].x = 18; p[1].y = 6;
+    p[2].x = 12; p[2].y = 6;
+    p[3].x = 15; p[3].y = 3;
+
+    if(  ( StrOp.equals( wItem.north, ori ) && ! m_rotate )
+      || ( StrOp.equals( wItem.south, ori ) && m_rotate )
+      ) {
+      // mirror to other end
+      end = (m_cy*32) - 1 ;
+      p[0].y = end - p[0].y;
+      p[1].y = end - p[1].y;
+      p[2].y = end - p[2].y;
+      p[3].y = end - p[3].y;
+    }
+  }
+
+  if( m_UseGC ) {
+    wxGraphicsPath path = m_GC->CreatePath();
+    path.MoveToPoint(p[0].x, p[0].y);
+    path.AddLineToPoint(p[1].x, p[1].y);
+    path.AddLineToPoint(p[2].x, p[2].y);
+    path.AddLineToPoint(p[3].x, p[3].y);
+    path.AddLineToPoint(p[4].x, p[4].y);
+    m_GC->FillPath(path);
+  }
+  else {
+    dc.DrawPolygon( 4, p, 0, 0 );
+  }
+
+}
+
 void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) {
   m_bRotateable = true;
   Boolean m_bSmall = wBlock.issmallsymbol(m_Props);
-  int blocklen = m_bSmall ? 2:4;
   const char* textOri = ori;
 
   svgSymbol* svgSym[9];
@@ -1820,17 +1881,6 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
   svgSym[6] = (m_bSmall && m_SvgSym12 != NULL)?m_SvgSym12:m_SvgSym6;
   svgSym[7] = (m_bSmall && m_SvgSym14 != NULL)?m_SvgSym14:m_SvgSym13;
   svgSym[8] = (m_bSmall && m_SvgSym16 != NULL)?m_SvgSym16:m_SvgSym15;
-
-  if( m_rotate && m_iOccupied != 0 && m_iOccupied != 2 && m_iOccupied != 7 ) {
-    if( StrOp.equals(ori, wItem.west))
-        ori = wItem.east;
-    else if(StrOp.equals(ori, wItem.east))
-        ori = wItem.west;
-    else if(StrOp.equals(ori, wItem.north))
-        ori = wItem.south;
-    else if(StrOp.equals(ori, wItem.south))
-        ori = wItem.north;
-  }
 
   // SVG Symbol:
   if( (svgSym[1]!=NULL && m_iOccupied == 0) ||
@@ -1864,11 +1914,13 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
   }
   else if( svgSym[8]!=NULL && m_iOccupied == 7 ) {
      /* aident */
-     drawSvgSym(dc, svgSym[8], ori);
-   }
+    drawSvgSym(dc, svgSym[8], ori);
+  }
   else if( svgSym[1]!=NULL ) {
-     drawSvgSym(dc, svgSym[1], ori);
-   }
+    drawSvgSym(dc, svgSym[1], ori);
+  }
+
+  drawBlockTriangle( dc, ori );
 
   if( StrOp.len(m_Label) > 0 ) {
     int red = 0;
@@ -1903,18 +1955,17 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
       drawString( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0, false );
     }
     else if( StrOp.equals( textOri, wItem.north ) ) {
-      drawString( wxString(m_Label,wxConvUTF8), 7, (32 * blocklen)-3, 90.0, false );
+      drawString( wxString(m_Label,wxConvUTF8), 7, (32 * m_cy)-3, 90.0, false );
     }
     else {
 #ifdef __WIN32__
       drawString( wxString(m_Label,wxConvUTF8), 9, 8, 0.0, false );
 #else
-      drawString( wxString(m_Label,wxConvUTF8), ((32*blocklen-width)/2), (32-height)/2, 0.0, false );
+      drawString( wxString(m_Label,wxConvUTF8), ((32*m_cx-width)/2), (32-height)/2, 0.0, false );
 #endif
     }
 
     delete font;
-
   }
 
 }

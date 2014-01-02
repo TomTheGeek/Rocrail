@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -128,6 +128,7 @@ public:
   void drawOutput( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
   void drawSensor( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
   void drawRoute( wxPaintDC& dc, bool occupied, const char* ori, int status );
+  void drawBlockTriangle( wxPaintDC& dc, const char* ori );
   void drawBlock( wxPaintDC& dc, bool occupied, const char* ori );
   void drawStage( wxPaintDC& dc, bool occupied, const char* ori );
   void drawSelTab( wxPaintDC& dc, bool occupied, const char* ori );
