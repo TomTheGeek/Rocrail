@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2013 Rob Versluis <r.j.versluis@rocrail.net>,
+ Copyright (C) 2002-2014 Rob Versluis <r.j.versluis@rocrail.net>,
                          Jean-Michel Fischer <jmf@polygonpunkt.de>,
                          Lothar Roth <lothar.roth@lothar-roth.de>
 
@@ -731,7 +731,7 @@ static Boolean checkTrains( iOAnalyse inst, Boolean repair ) {
             else {
               if( isInList( repaircarids, carId ) ) {
                 /* already in list -> duplicate entry -> skip */
-                TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "checkTrains: [%s][%s] duplicate entry car[%s] in carids[%s]",
+                TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "checkTrains: [%s] duplicate entry car[%s] in carids[%s]",
                     id, carId, carids );
                 numProblems++ ;
                 thisOplistChanged = True;
@@ -6276,10 +6276,10 @@ static int setBlockidForListItems( iOAnalyse inst, iOList routeFrag, int first, 
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "sBidFLI: setblockid [%s] for [%s][%s]", blid, NodeOp.getName(item), wItem.getid(item) );
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sBidFLI: setblockid [%s] for [%s][%s] skipped because already %s",
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sBidFLI: setblockid [%s] for [%s][%s] skipped because already [%s]",
             blid, NodeOp.getName(item), wItem.getid(item), blockid );
         if( ! StrOp.equals( blid, blockid ) ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sBidFLI: setblockid [%s] for [%s][%s] skipped AND NOT EQUAL to current entry %s",
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sBidFLI: setblockid [%s] for [%s][%s] skipped AND NOT EQUAL to current entry [%s]",
             blid, NodeOp.getName(item), wItem.getid(item), blockid );
         }
       }
@@ -6296,10 +6296,10 @@ static int setBlockidForListItems( iOAnalyse inst, iOList routeFrag, int first, 
             blid, NodeOp.getName(item), wItem.getid(item) );
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sBidFLI: setblockid [%s] for [%s][%s] skipped because already %s",
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sBidFLI: setblockid [%s] for [%s][%s] skipped because already [%s]",
             blid, NodeOp.getName(item), wItem.getid(item), blockid );
         if( ! StrOp.equals( blid, blockid ) ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setblockid [%s] for [%s][%s] skipped. It is not equal to current entry %s",
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setblockid [%s] for [%s][%s] skipped. It is not equal to current entry [%s]",
               blid, NodeOp.getName(item), wItem.getid(item), blockid );
         }
       }
@@ -6316,10 +6316,10 @@ static int setBlockidForListItems( iOAnalyse inst, iOList routeFrag, int first, 
             blid, NodeOp.getName(item), wItem.getid(item) );
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sBidFLI: setblockid [%s] for [%s][%s] skipped because already %s",
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sBidFLI: setblockid [%s] for [%s][%s] skipped because already [%s]",
             blid, NodeOp.getName(item), wItem.getid(item), blockid );
         if( ! StrOp.equals( blid, blockid ) ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setblockid: [%s] for [%s][%s] skipped. It is not equal to current entry %s",
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setblockid: [%s] for [%s][%s] skipped. It is not equal to current entry [%s]",
               blid, NodeOp.getName(item), wItem.getid(item), blockid );
         }
       }
@@ -7001,10 +7001,10 @@ static int __analyseAllLists(iOAnalyse inst) {
           }
         }
         else {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s] skipped because already %s",
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s] skipped because already [%s]",
               bka, NodeOp.getName(item), wItem.getid(item), blockid );
           if( ! StrOp.equals( bka, blockid ) ) {
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "setblockid [%s] for [%s][%s] skipped. It is not equal to current entry %s",
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "INFO: setblockid [%s] for [%s][%s] skipped. It is not equal to current entry [%s]",
                 bka, NodeOp.getName(item), wItem.getid(item), blockid );
           }
         }
