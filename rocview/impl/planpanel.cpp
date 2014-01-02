@@ -145,6 +145,9 @@ BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
   EVT_MENU( ME_AddSwitchRight    , PlanPanel::addSwitchRight)
   EVT_MENU( ME_AddSwitchCrossing , PlanPanel::addSwitchCrossing)
   EVT_MENU( ME_AddSwitchDCrossing, PlanPanel::addSwitchDCrossing)
+  EVT_MENU( ME_AddSwitchRectCrossing , PlanPanel::addSwitchRectCrossing)
+  EVT_MENU( ME_AddSwitchLeftCrossing , PlanPanel::addSwitchLeftCrossing)
+  EVT_MENU( ME_AddSwitchLeftDCrossing, PlanPanel::addSwitchLeftDCrossing)
   EVT_MENU( ME_AddSwitchThreeway , PlanPanel::addSwitchThreeway)
   EVT_MENU( ME_AddSwitchDecoupler, PlanPanel::addSwitchDecoupler)
   EVT_MENU( ME_AddSwitchAccessory,PlanPanel::addSwitchAccessory)
@@ -1053,10 +1056,23 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       menuTrack->Append( ME_AddTrackConnectorCurveLeft, wxGetApp().getMenu("concurveleft") );
 
       wxMenu* menuTurnout = new wxMenu();
-      menuTurnout->Append( ME_AddSwitchRight    , wxGetApp().getMenu("rightturnout") );
-      menuTurnout->Append( ME_AddSwitchLeft     , wxGetApp().getMenu("leftturnout") );
-      menuTurnout->Append( ME_AddSwitchCrossing , wxGetApp().getMenu("crossing") );
-      menuTurnout->Append( ME_AddSwitchDCrossing, wxGetApp().getMenu("dcrossing") );
+
+      wxMenu* menuSwitch = new wxMenu();
+      menuSwitch->Append( ME_AddSwitchLeft     , wxGetApp().getMenu("left") );
+      menuSwitch->Append( ME_AddSwitchRight    , wxGetApp().getMenu("right") );
+      menuTurnout->Append( -1, wxGetApp().getMenu("turnout"), menuSwitch  );
+
+      wxMenu* menuCrossing = new wxMenu();
+      menuCrossing->Append( ME_AddSwitchRectCrossing , wxGetApp().getMenu("rectangular") );
+      menuCrossing->Append( ME_AddSwitchLeftCrossing , wxGetApp().getMenu("left") );
+      menuCrossing->Append( ME_AddSwitchCrossing , wxGetApp().getMenu("right") );
+      menuTurnout->Append( -1, wxGetApp().getMenu("crossing"), menuCrossing  );
+
+      wxMenu* menuDCrossing = new wxMenu();
+      menuDCrossing->Append( ME_AddSwitchLeftDCrossing , wxGetApp().getMenu("left") );
+      menuDCrossing->Append( ME_AddSwitchDCrossing , wxGetApp().getMenu("right") );
+      menuTurnout->Append( -1, wxGetApp().getMenu("dcrossing"), menuDCrossing  );
+
       menuTurnout->Append( ME_AddSwitchThreeway , wxGetApp().getMenu("threeway") );
       menuTurnout->Append( ME_AddSwitchTwoway   , wxGetApp().getMenu("twoway") );
       menuTurnout->Append( ME_AddSwitchDecoupler, wxGetApp().getMenu("decoupler") );
@@ -1506,12 +1522,39 @@ void PlanPanel::addSwitchRight(wxCommandEvent& event) {
 void PlanPanel::addSwitchCrossing(wxCommandEvent& event) {
   iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.settype( node, wSwitch.crossing );
+  wSwitch.setdir( node, True );
+  wSwitch.setrectcrossing( node, False );
   if( event.GetId() == ME_AddRoadCrossing )
     wItem.setroad(node, True);
   addItemAttr( node );
 }
 
 void PlanPanel::addSwitchDCrossing(wxCommandEvent& event) {
+  iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+  wSwitch.settype( node, wSwitch.dcrossing );
+  wSwitch.setdir( node, True );
+  addItemAttr( node );
+}
+
+void PlanPanel::addSwitchRectCrossing(wxCommandEvent& event) {
+  iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+  wSwitch.settype( node, wSwitch.crossing );
+  wSwitch.setrectcrossing( node, True );
+  if( event.GetId() == ME_AddRoadCrossing )
+    wItem.setroad(node, True);
+  addItemAttr( node );
+}
+
+void PlanPanel::addSwitchLeftCrossing(wxCommandEvent& event) {
+  iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+  wSwitch.settype( node, wSwitch.crossing );
+  wSwitch.setrectcrossing( node, False );
+  if( event.GetId() == ME_AddRoadCrossing )
+    wItem.setroad(node, True);
+  addItemAttr( node );
+}
+
+void PlanPanel::addSwitchLeftDCrossing(wxCommandEvent& event) {
   iONode node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
   wSwitch.settype( node, wSwitch.dcrossing );
   addItemAttr( node );
