@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -210,7 +210,7 @@ static Boolean __sendHSI88( iOHSI88 inst, char* out, int size ) {
 }
 
 
-static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd ) {
+static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd, Boolean waitInit ) {
   iOHSI88Data o = Data(inst);
   int waitcounter = 0;
   int idx = 0;
@@ -236,8 +236,10 @@ static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd ) {
       idx++;
       in[idx] = '\0';
       if( in[idx-1] == '\r' ) {
-        TraceOp.dump( name, TRCLEVEL_BYTE, (char*)in, idx );
-        break;
+        if( ! ( waitInit && (idx == 2) ) ) {
+          TraceOp.dump( name, TRCLEVEL_BYTE, (char*)in, idx );
+          break;
+        }
       }
     }
     else {
@@ -251,7 +253,7 @@ static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd ) {
   /* check for echo: */
   if( idx > 0 && cmd != NULL && StrOp.equals( in, cmd ) ) {
     TraceOp.dump( name, TRCLEVEL_WARNING, (char*)in, idx );
-    return __recvHSI88( inst, in, NULL );
+    return __recvHSI88( inst, in, NULL, False );
   }
 
   return idx;
@@ -415,7 +417,7 @@ static void __getVersion( iOHSI88 inst ) {
 
     int len = 0;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Version info requested..." );
-    len = __recvHSI88( inst, version, out );
+    len = __recvHSI88( inst, version, out, False );
 
     if( len == 0 ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Timeout waiting for version response." );
@@ -523,7 +525,7 @@ static Boolean __initHSI88( iOHSI88 inst ) {
   if( __sendHSI88( inst, out, 5 ) )
   {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sent. Waiting for response...");
-    len = __recvHSI88( inst, in, out );
+    len = __recvHSI88( inst, in, out, True );
 
 
     if ( len == 3 && in[0] == 's' )
