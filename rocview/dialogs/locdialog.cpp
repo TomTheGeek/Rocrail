@@ -859,7 +859,7 @@ void LocDialog::InitValues() {
   ListOp.base.del(list);
 
 
-  m_CVList->AutoSize();
+  m_CVList->AutoSizeColumns();
 
   m_BBT->SetValue( wLoc.isusebbt( m_Props ) ? true:false );
   m_BBTSteps->SetValue( wLoc.getbbtsteps( m_Props ) );
