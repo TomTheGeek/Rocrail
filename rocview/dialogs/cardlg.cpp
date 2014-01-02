@@ -616,7 +616,7 @@ void CarDlg::initValues() {
   }
   /* clean up the temp. list */
   ListOp.base.del(list);
-  m_CVList->AutoSize();
+  m_CVList->AutoSizeColumns();
 
 }
 

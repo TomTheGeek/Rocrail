@@ -517,7 +517,7 @@ void ScheduleDialog::initSchedule() {
 
     scentry = wSchedule.nextscentry( m_Props, scentry );
   };
-  m_Entries->AutoSize();
+  m_Entries->AutoSizeColumns();
   m_Entries->FitInside();
   //m_Entries->UpdateDimensions();
   m_Destinations->GetSizer()->Layout();

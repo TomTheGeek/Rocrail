@@ -67,7 +67,7 @@ PowerCtrlDlg::PowerCtrlDlg( wxWindow* parent ):powerctrlgen( parent )
   m_Boosters->AutoSizeColumns();
   m_Boosters->AutoSizeRows();
 
-  m_Boosters->AutoSize();
+  m_Boosters->AutoSizeColumns();
   m_Boosters->FitInside();
   m_Boosters->UpdateDimensions();
   GetSizer()->Layout();

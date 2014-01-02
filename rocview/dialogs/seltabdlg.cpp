@@ -416,7 +416,7 @@ void SelTabDialog::initValues() {
   m_DelTrack->Enable( false );
   m_ModifyTrack->Enable( false );
 
-  m_TracksGrid->AutoSize();
+  m_TracksGrid->AutoSizeColumns();
   m_TracksGrid->FitInside();
   m_TracksGrid->UpdateDimensions();
   m_TracksPanel->GetSizer()->Layout();

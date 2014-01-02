@@ -948,7 +948,7 @@ void RouteDialog::initCondList() {
     cond = wRoute.nextstcondition( m_Props, cond );
   };
 
-  m_CondGrid->AutoSize();
+  m_CondGrid->AutoSizeColumns();
   m_CondGrid->FitInside();
   m_CondGrid->UpdateDimensions();
   m_ConditionsPanel->GetSizer()->Layout();
