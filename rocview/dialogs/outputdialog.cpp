@@ -343,6 +343,7 @@ bool OutputDialog::evaluate() {
     return false;
   }
   // General
+  wItem.setprev_id( m_Props, wItem.getid(m_Props) );
   wOutput.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
   wOutput.setdesc( m_Props, m_Description->GetValue().mb_str(wxConvUTF8) );
   wOutput.setshow( m_Props , m_Show->GetValue() ? True:False);
