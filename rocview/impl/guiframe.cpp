@@ -1207,8 +1207,9 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
   m_ActiveLocs->SelectRow(m_iLcRowSelection);
   m_ActiveLocs->MakeCellVisible(m_iLcRowSelection, m_ActiveLocs->XToCol(0) );
 
-  if( wGui.isrestorelcctrl(m_Ini) ) {
+  if( wGui.isrestorelcctrl(m_Ini) && !m_ThrottlesRestored ) {
     initLocCtrlDialogs();
+    m_ThrottlesRestored = true;
   }
   m_CV->init();
 
@@ -1641,6 +1642,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_LocoPanel          = NULL;
   m_CmdRecorder        = NULL;
   m_TraceMutex         = MutexOp.inst(NULL, True);
+  m_ThrottlesRestored  = false;
 
   if( wxTheClipboard != NULL ) {
     if( wxTheClipboard->Open() ) {
