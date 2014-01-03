@@ -3396,7 +3396,8 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
         }
         if( (  StrOp.equals( type, wSwitch.crossing )
             && ! ( wSwitch.getaddr1(node) == 0 && wSwitch.getport1(node) == 0 && wSwitch.isrectcrossing(node) )
-            && ! isRasterSwitch(node)  
+            && ! isRasterSwitch(node)
+            && ! ( wItem.isroad(node) && wSwitch.isrectcrossing(node) )
             ) 
             ||
             (  StrOp.equals( type, wSwitch.dcrossing )
@@ -3428,6 +3429,38 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
             }
             else
               MapOp.put( data->objectmap, key, (obj)node);
+          }
+          if(  wItem.isroad(node)
+            && StrOp.equals( type, wSwitch.dcrossing )
+            ) {
+            /* road dcrossing is 2x2 but only 1x2 was reserved above */
+            int i;
+            for (i=0;i<=1;i++) {
+              if( StrOp.equals( ori, wItem.east ) || StrOp.equals( ori, wItem.west ) ) {
+                __createKey( key, node, i, 1, 0);
+                TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+                    key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
+
+                if( MapOp.haskey( data->objectmap, key) ) {
+                  healthy = False;
+                  __notifyOverlapError( node, data->objectmap, key );
+                }
+                else
+                  MapOp.put( data->objectmap, key, (obj)node);
+              }
+              if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
+                __createKey( key, node, 1, i, 0);
+                TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
+                    key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
+
+                if( MapOp.haskey( data->objectmap, key) ) {
+                  healthy = False;
+                  __notifyOverlapError( node, data->objectmap, key );
+                }
+                else
+                  MapOp.put( data->objectmap, key, (obj)node);
+              }
+            }
           }
         }
         if( isDoubleTrackRRCrossing( node ) ) {
@@ -3527,7 +3560,10 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
       else if( StrOp.equals( NodeOp.getName(node), wBlock.name() ) ) {
         int fields = 4;
         if( wBlock.issmallsymbol(node) ) {
-          fields = 2;
+          if( wItem.isroad(node) )
+            fields = 1;
+          else
+            fields = 2;
         }
 
         int i;
@@ -3844,8 +3880,11 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
     else if( StrOp.equals( NodeOp.getName(item), wBlock.name() )) {
 
       int step = 3;
-      if( wBlock.issmallsymbol( item )) {
-        step = 1;
+      if( wBlock.issmallsymbol(item) ) {
+        if( wItem.isroad(item) )
+          step = 0;
+        else
+          step = 1;
       }
 
       if( StrOp.equals( itemori, wItem.west ) || StrOp.equals( itemori, wItem.east )) {
@@ -6227,8 +6266,12 @@ static void __analyseBlock(iOAnalyse inst, iONode block, const char* inittravel)
     int yoffset = 0;
 
     int blocklenghth = 4;
-    if( wBlock.issmallsymbol( block ))
-      blocklenghth = 2;
+    if( wBlock.issmallsymbol(block) ) {
+      if( wItem.isroad(block) )
+        blocklenghth = 1;
+      else
+        blocklenghth = 2;
+    }
 
     if( StrOp.equals( inittravel, wItem.east ) ) {
       xoffset = blocklenghth-1;
