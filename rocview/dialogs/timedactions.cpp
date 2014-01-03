@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -1000,6 +1000,7 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wAction.signal_white, wxConvUTF8));
       m_Command->Append(wxString( wAction.block_setloc, wxConvUTF8));
       m_Command->Append(wxString( wAction.block_schedule, wxConvUTF8));
+      m_Command->Append(wxString( wAction.block_schedule_manual, wxConvUTF8));
       m_Command->Append(wxString( wTour.name(), wxConvUTF8));
       m_Command->Append(wxString( wAction.block_event, wxConvUTF8));
       m_Command->Append(wxString( wAction.block_acceptident, wxConvUTF8));

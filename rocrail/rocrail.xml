@@ -1,7 +1,7 @@
 <!--
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.  
@@ -517,6 +517,9 @@
       <param name="carcount" vt="int" remark="Number of cars"/>
     </fun>
     <fun name="go" vt="Boolean">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
+    <fun name="gomanual" vt="Boolean">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
     <fun name="govirtual" vt="Boolean">

@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -2692,7 +2692,7 @@ static void __stopgo( iOLoc inst ) {
 }
 
 
-static void __gomanual( iOLoc inst ) {
+static Boolean _gomanual( iOLoc inst ) {
   iOLocData data = Data(inst);
   iOModel model = AppOp.getModel();
   if( data->curBlock != NULL && StrOp.len(data->curBlock) > 0 && ModelOp.isAuto( AppOp.getModel() ) ) {
@@ -2704,11 +2704,13 @@ static void __gomanual( iOLoc inst ) {
       data->released = False;
       if( data->driver != NULL )
         data->driver->go( data->driver, data->gomanual );
+      return True;
     }
   }
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] cannot be started because it is not in a block.", LocOp.getId(inst) );
   }
+  return False;
 }
 
 
@@ -2917,7 +2919,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
         _go( inst );
       }
       else if( StrOp.equals( wLoc.gomanual, cmd ) ) {
-        __gomanual( inst );
+        _gomanual( inst );
       }
       else if( StrOp.equals( wLoc.govirtual, cmd ) ) {
         _govirtual( inst );

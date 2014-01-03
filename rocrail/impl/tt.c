@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -2674,7 +2674,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
 }
 
 
-static Boolean _setLocSchedule( iIBlockBase inst, const char* scid ) {
+static Boolean _setLocSchedule( iIBlockBase inst, const char* scid, Boolean manual ) {
   Boolean ok = False;
   if( inst != NULL && scid != NULL ) {
     iOTTData data = Data(inst);
@@ -2683,7 +2683,7 @@ static Boolean _setLocSchedule( iIBlockBase inst, const char* scid ) {
 }
 
 
-static Boolean _setLocTour( iIBlockBase inst, const char* tourid ) {
+static Boolean _setLocTour( iIBlockBase inst, const char* tourid, Boolean manual ) {
   Boolean ok = False;
   if( inst != NULL && tourid != NULL ) {
     iOTTData data = Data(inst);

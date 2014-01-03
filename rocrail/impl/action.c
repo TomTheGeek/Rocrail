@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -761,10 +761,13 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         bl->red(bl, False, False);
       }
       else if( StrOp.equals( wAction.block_schedule, wAction.getcmd( data->action ) ) ) {
-        bl->setLocSchedule(bl, wAction.getparam( data->action ));
+        bl->setLocSchedule(bl, wAction.getparam( data->action ), False);
+      }
+      else if( StrOp.equals( wAction.block_schedule_manual, wAction.getcmd( data->action ) ) ) {
+        bl->setLocSchedule(bl, wAction.getparam( data->action ), True);
       }
       else if( StrOp.equals( wTour.name(), wAction.getcmd( data->action ) ) ) {
-        bl->setLocTour(bl, wAction.getparam( data->action ));
+        bl->setLocTour(bl, wAction.getparam( data->action ), False);
       }
       else if( StrOp.equals( wAction.block_acceptident, wAction.getcmd( data->action ) ) ) {
         bl->acceptIdent(bl, True);
@@ -987,10 +990,10 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       }
       else if( StrOp.equals(wLoc.go, wAction.getcmd(data->action) ) ) {
         if( wAction.getparam(data->action) != NULL && StrOp.len( wAction.getparam(data->action) ) > 0 ) {
-          iONode scedule = ModelOp.getSchedule(model, wAction.getparam(data->action));
+          iONode schedule = ModelOp.getSchedule(model, wAction.getparam(data->action));
           iIBlockBase block = ModelOp.getBlock(model, wAction.getparam(data->action));
           iOLocation location = ModelOp.getLocation(model, wAction.getparam(data->action));
-          if( scedule != NULL ) {
+          if( schedule != NULL ) {
             LocOp.useSchedule( lc, wAction.getparam(data->action));
           }
           else if( block != NULL ) {

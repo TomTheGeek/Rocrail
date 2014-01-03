@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -1279,14 +1279,14 @@ static void _setGroup( iIBlockBase inst ,const char* group ) {
 
 
 /**  */
-static Boolean _setLocSchedule( iIBlockBase inst ,const char* scid ) {
+static Boolean _setLocSchedule( iIBlockBase inst ,const char* scid, Boolean manual ) {
   iOStageData data = Data(inst);
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco schedule %s", scid );
   return False;
 }
 
 
-static Boolean _setLocTour( iIBlockBase inst ,const char* tourid ) {
+static Boolean _setLocTour( iIBlockBase inst ,const char* tourid, Boolean manual ) {
   iOStageData data = Data(inst);
   return False;
 }

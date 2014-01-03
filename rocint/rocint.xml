@@ -1,7 +1,7 @@
 <!--
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.  
@@ -201,11 +201,13 @@
     <fun name="setLocSchedule" vt="Boolean">
       <param name="inst" vt="this"/>
       <param name="scid" vt="const char*" remark="schedule for current loc"/>
-    </fun>
+      <param name="manual" vt="Boolean"/>
+      </fun>
     <fun name="setLocTour" vt="Boolean">
       <param name="inst" vt="this"/>
       <param name="tourid" vt="const char*" remark="tour for current loc"/>
-    </fun>
+      <param name="manual" vt="Boolean"/>
+      </fun>
     <fun name="getLoc" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
