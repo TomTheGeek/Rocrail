@@ -210,10 +210,21 @@ static Boolean __sendHSI88( iOHSI88 inst, char* out, int size ) {
 }
 
 
-static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd, Boolean waitInit ) {
+/*
+offset: 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F |ASCII...........|
+--------------------------------------------------------- |----------------|
+00000000: 69 0D 01 00 00 02 00 00 03 00 00 04 00 00 05 00 |i...............|
+00000010: 00 06 00 00 07 00 00 08 00 00 09 00 00 0A 00 00 |................|
+00000020: 0B 00 00 0C 00 00 0D 00 00 0D 56 65 72 2E 20 30 |..........Ver. 0|
+00000030: 2E 36 32 20 2F 20 30 38 2E 30 37 2E 30 32 20 2F |.62 / 08.07.02 /|
+00000040: 20 48 53 49 2D 38 38 20 2F 20 28 63 29 20 4C 44 | HSI-88 / (c) LD|
+00000050: 54 0D |T. |
+ */
+static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd ) {
   iOHSI88Data o = Data(inst);
   int waitcounter = 0;
   int idx = 0;
+  int data2read = 2;
   
   while( waitcounter < 50 && idx < 256 ) {
     /* check for waiting bytes: */
@@ -233,14 +244,32 @@ static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd, Boolean waitIni
 
     if( OK ) {
       waitcounter = 0;
-      idx++;
-      in[idx] = '\0';
-      if( in[idx-1] == '\r' ) {
-        if( ! ( waitInit && (idx == 2) ) ) {
-          TraceOp.dump( name, TRCLEVEL_BYTE, (char*)in, idx );
-          break;
-        }
+      in[idx+1] = '\0';
+
+      if( idx == 0 && in[0] == 's' ) {
+        /* Total number of modules. */
+        data2read = 3;
       }
+      else if( idx == 0 && in[0] == 'V' ) {
+        /* Version string: Read ASCII until <CR>. */
+        data2read = 0;
+      }
+      else if( in[0] == 'i' || in[0] == 'm' ) {
+        /* Report: At least 3 bytes in case of zero modules. */
+        data2read = 3;
+      }
+
+      if( idx == 1 && (in[0] == 'i' || in[0] == 'm') ) {
+        /* Report. */
+        data2read = 3 + (3 * in[1]);
+      }
+
+      if( (data2read >= (idx+1) || data2read == 0) && in[idx] == '\r' ) {
+        /* End of data. */
+        TraceOp.dump( name, TRCLEVEL_BYTE, (char*)in, idx+1 );
+      }
+
+      idx++;
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Read error; check the connection." );
@@ -253,7 +282,7 @@ static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd, Boolean waitIni
   /* check for echo: */
   if( idx > 0 && cmd != NULL && StrOp.equals( in, cmd ) ) {
     TraceOp.dump( name, TRCLEVEL_WARNING, (char*)in, idx );
-    return __recvHSI88( inst, in, NULL, False );
+    return __recvHSI88( inst, in, NULL );
   }
 
   return idx;
@@ -417,7 +446,7 @@ static void __getVersion( iOHSI88 inst ) {
 
     int len = 0;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Version info requested..." );
-    len = __recvHSI88( inst, version, out, False );
+    len = __recvHSI88( inst, version, out );
 
     if( len == 0 ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Timeout waiting for version response." );
@@ -525,7 +554,7 @@ static Boolean __initHSI88( iOHSI88 inst ) {
   if( __sendHSI88( inst, out, 5 ) )
   {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sent. Waiting for response...");
-    len = __recvHSI88( inst, in, out, True );
+    len = __recvHSI88( inst, in, out );
 
 
     if ( len == 3 && in[0] == 's' )
