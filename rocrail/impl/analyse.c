@@ -7704,8 +7704,8 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
 
       if( StrOp.equals( wFeedback.name(), NodeOp.getName(item) ) ) {
         if( wFeedback.getaddr(item) == 0 ) {
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: sensor %s has no address set", wItem.getid(item) );
-          healthy = False;
+          /* Sensor reporting from RocNetNode is by (RF)ID; Address is zero. */
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor %s has no address", wItem.getid(item) );
         }
         else {
           char* key = FBackOp.createAddrKey( wFeedback.getbus(item), wFeedback.getaddr(item), wFeedback.getiid(item) );
