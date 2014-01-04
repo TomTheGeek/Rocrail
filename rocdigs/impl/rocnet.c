@@ -1383,16 +1383,14 @@ static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
     iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
     iONode rnnode = (iONode)MapOp.get(data->nodemap, key);
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor report %d:%d %s", sndr, addr, rn[RN_PACKET_DATA+2]?"on":"off" );
-
     if( rnnode != NULL )
       wItem.setuidname(evt, wRocNetNode.getnickname(rnnode));
     wFeedback.setbus( evt, sndr );
     wFeedback.setaddr( evt, addr );
     wFeedback.setfbtype( evt, wFeedback.fbtype_sensor );
 
+    char ident[32] = {'\0'};
     if( rn[RN_PACKET_LEN] > 4 ) {
-      char ident[32] = {'\0'};
       int len = rn[RN_PACKET_LEN] - 4;
       int i = 0;
       for( i = 0; i < len && i < 31; i++) {
@@ -1404,6 +1402,8 @@ static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
       else
         wFeedback.setidentifier( evt, ident );
     }
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor report %d:%d %s id(ent)=%s", sndr, addr, rn[RN_PACKET_DATA+2]?"on":"off", ident );
 
     if( data->iid != NULL )
       wFeedback.setiid( evt, data->iid );
