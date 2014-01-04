@@ -1,7 +1,7 @@
 /*
  Rocrail - Model Railroad Software
 
- Copyright (C) 2002-2013 Rob Versluis, Rocrail.net
+ Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
  Without an official permission commercial use is not permitted.
  Forking this project is not permitted.
@@ -1657,6 +1657,9 @@ static void __setLightFunction(iORocNetNode inst, int fnr, Boolean on) {
 }
 
 
+/*
+ * The RPM Hall input will generate in the test case 3 pulses per wheel rotation.
+ */
 static void __motorPWM( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
@@ -1666,6 +1669,10 @@ static void __motorPWM( void* threadinst ) {
   Boolean Vdir = True;
   Boolean lights = False;
 
+  int hall = 0;
+  int rpmticks = 0;
+  int rpmtime = 0; /* time in 10ms ticks between the Hall pulse */
+
 
   ThreadOp.sleep(1000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Motor PWM started" );
@@ -1674,6 +1681,7 @@ static void __motorPWM( void* threadinst ) {
   data->VPWMR = 8;  /* pin 24 */
   data->VPWML = 7;  /* pin 26 */
   data->VPWM  = 22; /* pin 15 */
+  data->RPM   = 17; /* pin 11 */
 
   if( data->iorc != 0 ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Motor PWM stopped because I/O is not initialized" );
@@ -1688,6 +1696,9 @@ static void __motorPWM( void* threadinst ) {
   ThreadOp.sleep(100);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init VPWML on port %d", data->VPWML );
   raspiConfigPort(data->VPWML, 0);
+  ThreadOp.sleep(100);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init RPM on port %d", data->RPM );
+  raspiConfigPort(data->RPM, 1);
 
   ThreadOp.setHigh(th);
 
@@ -1696,7 +1707,9 @@ static void __motorPWM( void* threadinst ) {
     int Vmax  = data->Vmax;  /* max PWM */
     int Vmass = data->Vmass; /* acceleration, deceleration */
 
-    /* light functions */
+    /* light functions
+     * ToDo: Do this in another thread?
+     */
     if( Vdir != data->Vdir || lights != data->fn[0] ) {
       Vdir   = data->Vdir;
       lights = data->fn[0];
@@ -1706,6 +1719,24 @@ static void __motorPWM( void* threadinst ) {
       __setLightFunction(rocnetnode, 12, !Vdir && lights );
       __setLightFunction(rocnetnode, 13, !Vdir && lights );
       __setLightFunction(rocnetnode, 14, !Vdir && lights );
+    }
+
+    /* motor rpm Hall */
+    if( Vraw > 0 && __readPort(rocnetnode, data->RPM, IO_DIRECT ) && hall == 0 ) {
+      hall = 1;
+      rpmtime = rpmticks;
+      rpmticks = 0;
+    }
+    else {
+      hall = 0;
+    }
+
+    if( Vraw > 0 ) {
+      rpmticks++;
+    }
+    else {
+      rpmtime = 0;
+      rpmticks = 0;
     }
 
     /* motor direction */
@@ -2963,7 +2994,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast port    [%d]", data->port );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  I/O type [%d]", data->iotype );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor ack [%s]", data->sack?"ON":"OFF" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  RFID [%s]", data->sack?"ON":"OFF" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  RFID [%s]", data->rfid?"ON":"OFF" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   data->readUDP = SocketOp.inst( data->addr, data->port, False, True, True );
   SocketOp.bind(data->readUDP);
