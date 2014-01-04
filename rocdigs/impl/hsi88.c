@@ -254,7 +254,7 @@ static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd ) {
         /* Version string: Read ASCII until <CR>. */
         data2read = 0;
       }
-      else if( in[0] == 'i' || in[0] == 'm' ) {
+      else if( idx == 0 && ( in[0] == 'i' || in[0] == 'm' ) ) {
         /* Report: At least 3 bytes in case of zero modules. */
         data2read = 3;
       }
@@ -267,6 +267,8 @@ static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd ) {
       if( (data2read >= (idx+1) || data2read == 0) && in[idx] == '\r' ) {
         /* End of data. */
         TraceOp.dump( name, TRCLEVEL_BYTE, (char*)in, idx+1 );
+        idx++;
+        break;
       }
 
       idx++;
