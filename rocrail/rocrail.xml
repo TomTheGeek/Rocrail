@@ -786,7 +786,6 @@
       <var name="lastfncmd" vt="long"/>
       <var name="govirtual" vt="Boolean"/>
       <var name="muxEngine" vt="iOMutex"/>
-      <var name="blocking" vt="Boolean"/>
       </data>
   </object>
 
