@@ -2348,7 +2348,7 @@ static void __listener( obj inst, iONode nodeC, int level ) {
       msg[RN_PACKET_DATA+3] = wFeedback.getaddr(nodeC);
       rnSenderAddresToPacket( data->id, msg, 0 );
 
-      if( !wFeedback.isstate(nodeC) && ident == NULL && StrOp.len(data->lastrfid) > 0 ) {
+      if( !wFeedback.isstate(nodeC) && StrOp.len(data->lastrfid) > 0 ) {
         /* report off state of last seen RFID tag */
         ident = data->lastrfid;
       }
