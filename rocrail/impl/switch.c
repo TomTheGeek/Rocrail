@@ -1348,6 +1348,7 @@ static Boolean _cmd(iOSwitch inst, iONode nodeA, Boolean update, int extra, int*
     wSwitch.setcmd_update(nodeA, update);
     wSwitch.setcmd_extra(nodeA, extra);
     wSwitch.setcmd_lcid(nodeA, lcid);
+    data->pendingSet = True;
     ThreadOp.post(th, (obj)nodeA);
     ThreadOp.start(th);
   }
