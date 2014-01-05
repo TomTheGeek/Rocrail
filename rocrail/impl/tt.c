@@ -2662,6 +2662,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
         wTurntable.setlocid( nodeF, data->lockedId );
       if( wTurntable.getiid( data->props ) != NULL )
         wTurntable.setiid( nodeF, wTurntable.getiid( data->props ) );
+      ModelOp.setBlockOccupancy( AppOp.getModel(), TTOp.base.id(inst), data->lockedId, False, 0, 0, NULL );
       AppOp.broadcastEvent( nodeF );
     }
 
@@ -2700,15 +2701,14 @@ static Boolean _unLock( iIBlockBase inst, const char* id, const char* routeid ) 
     /* Broadcast to clients. Node6 */
     {
       iONode nodeF = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
-      wTurntable.setid( nodeF, inst->base.id(inst) );
+      wTurntable.setid( nodeF, TTOp.base.id(inst) );
       wTurntable.setbridgepos( nodeF, wTurntable.getbridgepos( data->props) );
       wTurntable.setlocid( nodeF, NULL );
       wTurntable.setstate1( nodeF, wTurntable.isstate1(data->props) );
       wTurntable.setstate2( nodeF, wTurntable.isstate2(data->props) );
-      if( data->lockedId != NULL )
-        wTurntable.setlocid( nodeF, data->lockedId );
       if( wTurntable.getiid( data->props ) != NULL )
         wTurntable.setiid( nodeF, wTurntable.getiid( data->props ) );
+      ModelOp.setBlockOccupancy( AppOp.getModel(), TTOp.base.id(inst), "", False, 0, 0, NULL );
       AppOp.broadcastEvent( nodeF );
     }
     data->triggerS1 = False;
@@ -3251,8 +3251,7 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOTTData data = Data(inst);
   iOModel model = AppOp.getModel();
 
-  if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 ||
-      StrOp.equals( locId, data->lockedId ) || StrOp.equals( "(null)", data->lockedId ) )
+  if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 || StrOp.equals( locId, data->lockedId ) )
   {
     if( wTurntable.ismanager(data->props) ) {
       /* check if a track block is available */
@@ -3263,7 +3262,7 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
     }
   }
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "turntable is locked by [%s]", data->lockedId );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "turntable is already locked by [%s]", data->lockedId );
   return False;
 }
 
