@@ -1461,10 +1461,9 @@ static int _isSuited( iIBlockBase inst, iOLoc loc, int* restlen, Boolean checkPr
   }
 
   /* TODO: check all other loc properties if it realy suits. */
-  if( StrOp.equals( wLoc.engine_electric, wLoc.getengine( loc->base.properties( loc ) ) ) &&
-      !wBlock.iselectrified( data->props ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                   "Block \"%s\" is not electrified so locs \"%s\" can not enter.",
+  if( StrOp.equals( wLoc.engine_electric, wLoc.getengine( loc->base.properties( loc ) ) ) && !wBlock.iselectrified( data->props ) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                   "Block [%s] is not electrified; E-Loco [%s] can not use it.",
                    data->id, LocOp.getId( loc ) );
     return suits_not;
   }
