@@ -635,7 +635,7 @@ static Boolean _lock( iOSwitch inst, const char* id, iORoute route ) {
     return False;
   }
 
-  if( data->lockedId == NULL || StrOp.equals( id, data->lockedId ) ) {
+  if( data->lockedId == NULL || (StrOp.equals( id, data->lockedId ) && (route != NULL ? (data->route == route):True )) ) {
     data->lockedId = id;
     data->route = route;
     /* Broadcast to clients. Node6 */
