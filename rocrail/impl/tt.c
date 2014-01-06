@@ -202,6 +202,8 @@ static void _modify( iOTT inst, iONode props ) {
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)NodeOp.base.clone( o->props );
+    if( o->lockedId != NULL )
+      wTurntable.setlocid( clone, o->lockedId );
     AppOp.broadcastEvent( clone );
   }
   props->base.del(props);
@@ -1874,6 +1876,8 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
 
     /* Broadcast to clients. */
     NodeOp.setName(nodeA, wTurntable.name());
+    if( data->lockedId != NULL )
+      wTurntable.setlocid( nodeA, data->lockedId );
     AppOp.broadcastEvent( (iONode)NodeOp.base.clone(nodeA) );
   }
 
@@ -2747,7 +2751,14 @@ static Boolean _setLocTour( iIBlockBase inst, const char* tourid, Boolean manual
 
 static Boolean _unLock( iIBlockBase inst, const char* id, const char* routeid ) {
   iOTTData data = Data(inst);
+
+  if( wTurntable.isembeddedblock(data->props) && routeid != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ignore unlock turntable %s by route %s", inst->base.id(inst), routeid==NULL?"-":routeid );
+    return True;
+  }
+
   if( StrOp.equals( id, data->lockedId ) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unlock turntable %s by [%s] route=%s", inst->base.id(inst), data->lockedId, routeid==NULL?"-":routeid );
     data->lockedId = NULL;
     /* Broadcast to clients. Node6 */
     {
@@ -2964,8 +2975,8 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
       iONode nodeD = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
       wTurntable.setid( nodeD, wTurntable.getid(data->props) );
       wTurntable.setentering( nodeD, True );
-      if( data->lockedId != NULL )
-        wTurntable.setlocid( nodeD, data->lockedId );
+      data->lockedId = id;
+      wTurntable.setlocid( nodeD, data->lockedId );
       if( wTurntable.getiid( data->props ) != NULL )
         wTurntable.setiid( nodeD, wTurntable.getiid( data->props ) );
       AppOp.broadcastEvent( nodeD );
@@ -3057,8 +3068,8 @@ static void _inBlock( iIBlockBase inst, const char* id ) {
       iONode nodeD = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
       wTurntable.setid( nodeD, wTurntable.getid(data->props) );
       wTurntable.setentering( nodeD, False );
-      if( data->lockedId != NULL )
-        wTurntable.setlocid( nodeD, data->lockedId );
+      data->lockedId = id;
+      wTurntable.setlocid( nodeD, data->lockedId );
       if( wTurntable.getiid( data->props ) != NULL )
         wTurntable.setiid( nodeD, wTurntable.getiid( data->props ) );
       AppOp.broadcastEvent( nodeD );

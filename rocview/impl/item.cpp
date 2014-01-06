@@ -2795,17 +2795,25 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
   }
   else if( StrOp.equals( wSelTab.name(), NodeOp.getName( m_Props ) ) || StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
     char*  l_locidStr = NULL;
+    Boolean updateEnterside = wBlock.isupdateenterside(node);
     const char* locId = wSelTab.getlocid( node );
     const char* state = wSelTab.getstate( node );
     Boolean   pending = wSelTab.ispending(node);
+
+    if(updateEnterside) {
+      // reset update flag
+      wBlock.setupdateenterside(node, False);
+      // preserve flags
+      locId = wSelTab.getlocid( m_Props );
+    }
+    else {
+      wSelTab.setlocid( m_Props, locId );
+    }
 
     wSelTab.setstate( m_Props, state );
     if( StrOp.equals( wBlock.open, state ) ) {
       wSelTab.setpending( m_Props, pending );
       wSelTab.setlocid( m_Props, locId );
-
-      if( locId != NULL && StrOp.equals( locId, "(null)") )
-        locId = NULL;
 
       int occupied = 0;
       int tablepos = wSelTab.getpos( node );
@@ -2830,8 +2838,8 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     StrOp.free( m_locidStr );
     m_locidStr = l_locidStr;
 
-    TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "id=[%s] pending=[%s] state=[%s] %s",
-        id, pending?"true":"false", state, m_locidStr );
+    TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "id=[%s] pending=[%s] state=[%s] updateenter=%d %s",
+        id, pending?"true":"false", state, updateEnterside, m_locidStr );
 
   }
   else if( StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) ) {
