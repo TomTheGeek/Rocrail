@@ -64,6 +64,7 @@ static int __getPrevTrack( iOTT inst, int tracknr );
 static void __polarize(obj inst, int pos, Boolean polarization);
 static void __sortTracks(iOTT tt);
 static void __cpFn2Node( iOTT inst, iONode fcmd );
+static Boolean __isElectricallyFree( iOTT inst );
 
 
 /*
@@ -2518,6 +2519,56 @@ static void __initTTTrack(iOTT inst, iONode track) {
 }
 
 
+static Boolean __isElectricallyFree( iOTT inst ) {
+  iOTTData data = Data(inst);
+  iOModel model = AppOp.getModel();
+  iONode track = wTurntable.gettrack( data->props );
+
+  const char* s1    = wTurntable.gets1( data->props );
+  const char* s2    = wTurntable.gets2( data->props );
+  const char* sMid  = wTurntable.getsMid( data->props );
+  const char* sMid2 = wTurntable.getsMid2( data->props );
+
+  if( s1 != NULL && StrOp.len( s1 ) > 0 ) {
+    iOFBack fb = ModelOp.getFBack( model, s1 );
+    if( fb != NULL && FBackOp.getState(fb) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "TT [%s] is electrically occupied by sensor [%s]", TTOp.base.id(inst), FBackOp.getId(fb) );
+      return False;
+    }
+  }
+
+  if( s2 != NULL && StrOp.len( s2 ) > 0 ) {
+    iOFBack fb = ModelOp.getFBack( model, s2 );
+    if( fb != NULL && FBackOp.getState(fb) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "TT [%s] is electrically occupied by sensor [%s]", TTOp.base.id(inst), FBackOp.getId(fb) );
+      return False;
+    }
+  }
+
+  if( sMid != NULL && StrOp.len( sMid ) > 0 ) {
+    iOFBack fb = ModelOp.getFBack( model, sMid );
+    if( fb != NULL && FBackOp.getState(fb) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "TT [%s] is electrically occupied by sensor [%s]", TTOp.base.id(inst), FBackOp.getId(fb) );
+      return False;
+    }
+  }
+
+  if( sMid2 != NULL && StrOp.len( sMid2 ) > 0 ) {
+    iOFBack fb = ModelOp.getFBack( model, sMid2 );
+    if( fb != NULL && FBackOp.getState(fb) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "TT [%s] is electrically occupied by sensor [%s]", TTOp.base.id(inst), FBackOp.getId(fb) );
+      return False;
+    }
+  }
+
+
+  return True;
+}
+
 static void __initCallback( iOTT inst ) {
   iOTTData data = Data(inst);
   iOModel model = AppOp.getModel();
@@ -2645,7 +2696,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
     return False;
   }
 
-  if( data->lockedId == NULL || StrOp.len(data->lockedId ) == 0 || StrOp.equals( id, data->lockedId ) ) {
+  if( TTOp.isFree(inst, id) ) {
     data->lockedId = id;
     ok = True;
 
@@ -3254,6 +3305,9 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 || StrOp.equals( locId, data->lockedId ) )
   {
     if( wTurntable.ismanager(data->props) ) {
+      if( !__isElectricallyFree((iOTT)inst) ) {
+        return False;
+      }
       /* check if a track block is available */
       return __findFreeTrack(inst, locId) != NULL ? True:False ;
     }
