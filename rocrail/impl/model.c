@@ -4197,7 +4197,7 @@ static int _getScheduleIndex( iOModel inst, const char* scheduleid, const char* 
  */
 static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* scheduleid,
                                         int* scheduleIdx, const char* curblockid, const char* currouteid, iOLoc loc,
-                                        Boolean swapPlacingInPrevRoute, int *indelay ) {
+                                        Boolean swapPlacingInPrevRoute, int *indelay, Boolean secondnextblock ) {
   iONode entry = NULL;
   iONode schedule = ModelOp.getSchedule( inst, scheduleid );
   int entryIndex = *scheduleIdx;
@@ -4252,7 +4252,7 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "curblockid [%s], gotoBlock [%s]", curblockid, gotoBlock );
 
         iIBlockBase destBlock = ModelOp.findDest( inst, curblockid, currouteid, loc, &routeref, gotoBlock,
-                                  swapPlacingInPrevRoute, False, True);
+                                  swapPlacingInPrevRoute, False, True, secondnextblock);
 
         if( destBlock != NULL && StrOp.equals( gotoBlock, destBlock->base.id(destBlock) ) ) {
           return routeref;
@@ -4455,7 +4455,7 @@ static const char* _getManagedID(iOModel inst, const char* fromBlockId) {
 /* synchronized!!! */
 static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char* fromRouteId, iOLoc loc,
                           iORoute* routeref, const char* gotoBlockId,
-                          Boolean swapPlacingInPrevRoute, Boolean forceOppDir, Boolean schedule) {
+                          Boolean swapPlacingInPrevRoute, Boolean forceOppDir, Boolean schedule, Boolean secondnextblock) {
   iOModelData o = Data(inst);
 
   int size = ListOp.size( o->routeList );
@@ -4572,7 +4572,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
 
         if( stEnterSide == stExitSide ) {
           /* need to change direction but blocksides are used, check if allowed*/
-          if( LocOp.getV(loc) == 0 &&  (fromBlock->isTTBlock(fromBlock) || LocOp.isCommuter( loc ) ) ) {
+          if( !secondnextblock && LocOp.getV(loc) == 0 &&  ( fromBlock->isTTBlock(fromBlock) || LocOp.isCommuter( loc ) ) ) {
             if( fromBlock->isTTBlock(fromBlock) ) {
               /* for turntable allow routes with swap still as best when suited well, do not set swap4blockside in that case (REB)*/
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,

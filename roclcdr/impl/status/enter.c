@@ -79,7 +79,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
         data->next2Block = data->model->findDest( data->model, data->next1Block->base.id( data->next1Block ),
                                               data->next1Route->base.id( data->next1Route ),
                                               data->loc, &data->next2Route, data->gotoBlock,
-                                              data->next1Route->isSwapPost( data->next1Route ), False, False );
+                                              data->next1Route->isSwapPost( data->next1Route ), False, False, False );
       }
       else {
         /* next2Block already locked */
@@ -96,7 +96,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
                                                                data->next1Route != NULL ? data->next1Route->base.id( data->next1Route ):NULL,
                                                                data->loc,
                                                                data->next1Route->isSwapPost( data->next1Route ),
-                                                               &indelay);
+                                                               &indelay, False);
       }
       else {
         /* next2Route already locked by second next option; adjust the schedule index... */

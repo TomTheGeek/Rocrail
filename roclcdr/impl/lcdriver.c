@@ -640,7 +640,7 @@ static void _usetour( iILcDriverInt inst, const char* tourid ) {
       iORoute route = NULL;
       const char* scid = StrTokOp.nextToken(tok);
       route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL, scid, &scheduleIdx,
-                                                    data->loc->getCurBlock( data->loc ), NULL, data->loc, False, &data->indelay );
+                                                    data->loc->getCurBlock( data->loc ), NULL, data->loc, False, &data->indelay, False );
       if( route != NULL )
         break;
       data->tourIdx++;

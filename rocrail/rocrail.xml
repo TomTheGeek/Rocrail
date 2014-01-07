@@ -1023,7 +1023,8 @@
       <param name="swapPlacingInPrevRoute" vt="Boolean" remark="the route bevore is swapping the placement/direction"/>
       <param name="forceOppDir" vt="Boolean" remark="find a destination in the opposite direction of the running train"/>
       <param name="schedule" vt="Boolean"/>
-      </fun>
+      <param name="secondnextblock" vt="Boolean"/>
+    </fun>
     <fun name="getScheduleIndex" vt="int" remark="returns the fitting route">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="scheduleid" vt="const char*" remark="scheduleid"/>
@@ -1040,6 +1041,7 @@
       <param name="loc" vt="iOLoc" remark="Loc instance"/>
       <param name="swapPlacingInPrevRoute" vt="Boolean" remark="Force same direction."/>
       <param name="indelay" vt="int*" remark="in event delay timer"/>
+      <param name="secondnextblock" vt="Boolean"/>
     </fun>
     <fun name="calcRoute" vt="iORoute" remark="returns the route to start with">
       <param name="inst" vt="this" remark="Model instance"/>

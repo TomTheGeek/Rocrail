@@ -51,7 +51,7 @@ void statusFindDest( iILcDriverInt inst ) {
     data->next1Block = data->model->findDest( data->model, data->loc->getCurBlock( data->loc ),
                                         NULL,
                                         data->loc, &data->next1Route, data->gotoBlock,
-                                        False, data->opponly, False ); /* currently is no prev route running */
+                                        False, data->opponly, False, False ); /* currently is no prev route running */
   }
   else {
     Boolean wait = False;
@@ -86,7 +86,7 @@ void statusFindDest( iILcDriverInt inst ) {
         data->prewaitScheduleIdx = -1;
       }
       data->next1Route = data->model->calcRouteFromCurBlock( data->model, (iOList)NULL, data->schedule, &data->scheduleIdx,
-                                                      data->loc->getCurBlock( data->loc ), NULL, data->loc, False, &data->indelay );
+                                                      data->loc->getCurBlock( data->loc ), NULL, data->loc, False, &data->indelay, False );
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reported schedule index=%d", data->scheduleIdx );
     }
 

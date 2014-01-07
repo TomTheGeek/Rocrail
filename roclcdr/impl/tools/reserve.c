@@ -77,7 +77,7 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
       nextRoute = NULL;
       nextBlock = data->model->findDest( data->model, fromBlock->base.id(fromBlock), fromRoute->base.id(fromRoute),
                                          data->loc, &nextRoute, gotoBlock,
-                                         fromRoute->isSwapPost( fromRoute ) ^ swapNext1Route, False, False );
+                                         fromRoute->isSwapPost( fromRoute ) ^ swapNext1Route, False, False, True );
     }
     else {
       /* find destination using schedule */
@@ -86,7 +86,7 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
       /* TODO: force same direction */
       nextRoute = data->model->calcRouteFromCurBlock( data->model,
           (iOList)NULL, data->schedule, &scheduleIdx,
-          fromBlock->base.id(fromBlock), fromRoute->base.id(fromRoute), data->loc, fromRoute->isSwapPost( fromRoute ), &indelay );
+          fromBlock->base.id(fromBlock), fromRoute->base.id(fromRoute), data->loc, fromRoute->isSwapPost( fromRoute ), &indelay, True );
 
       if( nextRoute != NULL ) {
         /* evaluate direction */
