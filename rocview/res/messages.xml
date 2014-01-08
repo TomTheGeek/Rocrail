@@ -303,7 +303,7 @@
     <ru txt="нет"/>
     <pt txt="não"/>
     <nb txt="nei"/>
-    <pl txt="nie"/>
+    <pl txt="Nie"/>
     <zh_TW txt="否"/>
     <fi txt="ei"/>
     <id txt="tidak"/>
@@ -1040,7 +1040,7 @@
     <pt txt="controlo de interruptor"/>
     <cs txt="Ovládání výhybek"/>
     <nb txt="Penskontroll"/>
-    <pl txt="Sterowanie zwrotnicami"/>
+    <pl txt="Sterowanie rozjazdami"/>
     <zh_TW txt="道岔控制"/>
     <fi txt="Vaihteiden hallinta"/>
     <id txt="Saklar Kontrol"/>
@@ -1106,7 +1106,7 @@
     <pt txt="Propriedades do painel"/>
     <cs txt="Vlastnosti panelu trati"/>
     <nb txt="Sporplanegenskaper"/>
-    <pl txt="Właściwości panelu ścieżki"/>
+    <pl txt="Właściwości planu torowiska"/>
     <zh_TW txt="軌道計畫屬性"/>
     <fi txt="Ratapaneelin ominaisuudet"/>
     <en_AU txt="Track panel properties"/>
@@ -2738,7 +2738,7 @@
     <ro txt="Tabelul blocului"/>
     <sr_latin txt="Tabela blokova"/>
     <ja txt="ブロックテーブル"/>
-    <pl txt="Blokuj tabele"/>
+    <pl txt="Tabela Bloków"/>
     <zh_CN txt="区块列表"/>
     <sl txt="Odseki"/>
     <pt_BR txt="Tabela de blocos"/>
@@ -2948,7 +2948,7 @@
     <pt txt="Adicionar painel de circuito"/>
     <cs txt="Přidej panel trati"/>
     <nb txt="Legg til sporplan"/>
-    <pl txt="Dodaj panej ścieżki"/>
+    <pl txt="Dodaj plan torowiska"/>
     <ca txt="Afegeix diagrama de traçat"/>
     <id txt="Tambah panel jalan"/>
     <en_AU txt="Add track panel"/>
@@ -3014,7 +3014,7 @@
     <pt txt="Propriedades do painel"/>
     <cs txt="Vlastnosti panelu"/>
     <nb txt="Panelegenskaper"/>
-    <pl txt="Właściwości panelu"/>
+    <pl txt="Właściwości planu"/>
     <ca txt="Propietats del diagrama de traçat"/>
     <zh_TW txt="面板特性"/>
     <id txt="Properti panel"/>
@@ -3866,6 +3866,7 @@
     <sl txt="dvojnokrižna"/>
     <pt_BR txt="Cruzamento duplo"/>
     <fi txt="Kaksoisristeys"/>
+    <pl txt="Rozjazd angielski"/>
   </Msg>
   <Msg id="ccrossing">
     <de txt="Zentrierte Kreuzung"/>
@@ -3897,6 +3898,7 @@
     <sl txt="Sredinsko križanje"/>
     <pt_BR txt="Cruzamento reto"/>
     <fi txt="Viistoristeys"/>
+    <pl txt="Skrzyżowanie"/>
   </Msg>
   <Msg id="threeway">
     <de txt="Dreiwegeweiche"/>
@@ -4044,7 +4046,7 @@
     <el txt="Προσέλευση"/>
     <pt txt="Interruptor"/>
     <nb txt="Pens"/>
-    <pl txt="Zwrotnica"/>
+    <pl txt="Rozjazd"/>
     <ca txt="Agulla"/>
     <zh_TW txt="轉轍器"/>
     <id txt="Beralih"/>
@@ -7197,7 +7199,7 @@
     <sl txt="Mešano"/>
     <pt_BR txt="Mista"/>
     <fi txt="Sekalainen"/>
-    <pl txt="Mieszane"/>
+    <pl txt="Mieszany"/>
   </Msg>
   <Msg id="cleaning">
     <de txt="Gleisreinigung"/>
@@ -9569,6 +9571,7 @@
     <sl txt="TD"/>
     <pt_BR txt="TD"/>
     <fi txt="ID"/>
+    <pl txt="TD"/>
   </Msg>
   <Msg id="sourceblock">
     <de txt="Quellblock"/>
@@ -10873,6 +10876,7 @@
     <sl txt="RIC"/>
     <pt_BR txt="CIR"/>
     <fi txt="RIc"/>
+    <pl txt="RIC"/>
   </Msg>
   <Msg id="stoponexit">
     <de txt="Halt nach beenden"/>
@@ -13192,7 +13196,7 @@
     <sl txt="Zamenjaj mesto"/>
     <pt_BR txt="Inverter inserção"/>
     <fi txt="Vaihda sijoitusta"/>
-    <pl txt="Zmiana połozenia"/>
+    <pl txt="Zmiana położenia"/>
   </Msg>
   <Msg id="swapplacingpost">
     <de txt="danach Plazierung ändern"/>
@@ -15191,7 +15195,7 @@
     <sl txt="Merilni tir hitrosti"/>
     <pt_BR txt="MVTrilhos"/>
     <fi txt="MV rata"/>
-    <pl txt="V Śr. Toru"/>
+    <pl txt="Prędkość Średnia Toru"/>
   </Msg>
   <Msg id="convert2mph">
     <de txt="Nach MPH umrechnen"/>
@@ -19917,6 +19921,7 @@
     <sl txt="Odpri delovno področje"/>
     <pt_BR txt="Abrir área de trabalho"/>
     <fi txt="Avaa työtila"/>
+    <pl txt="Otwórz obszar roboczy"/>
   </Msg>
   <Msg id="rocrailservernotfound">
     <en txt="The Rocrail server is not found in the following location:"/>
@@ -19961,6 +19966,7 @@
     <sl txt="Privzeto delovno področje"/>
     <pt_BR txt="Área de trabalho padrão"/>
     <fi txt="Oletustyötila"/>
+    <pl txt="Domyślny obszar roboczy"/>
   </Msg>
   <Msg id="startdefaultworkspace">
     <en txt="Use Workspace at startup"/>
@@ -19983,6 +19989,7 @@
     <pt_BR txt="Usar área de trabalho na inicialização"/>
     <sv txt="Använd arbetsyta vid uppstart"/>
     <fi txt="Käytä työtilaa käynnistettäessä"/>
+    <pl txt="Używaj obszaru roboczego przy starcie"/>
   </Msg>
   <Msg id="keepghost">
     <en txt="Keep ghost state"/>
@@ -21070,6 +21077,7 @@
     <da txt="Seneste arbejdsområder"/>
     <pt_BR txt="Áreas de trabalho recentes"/>
     <fi txt="Viimeisimmät työtilat"/>
+    <pl txt="Nowe obszary robocze"/>
   </Msg>
   <Msg id="ignorepowercmds">
     <en txt="Ignore power commands"/>
@@ -26028,6 +26036,7 @@
     <sl txt="Izklopi lokacijo %s?"/>
     <sr_latin txt="Isključi lokaciju %s?"/>
     <fi txt="Sammuta paikka %s?"/>
+    <de txt="Bereich %s herunterfahren"/>
   </Msg>
   <Msg id="commuteronly">
     <en txt="Commuter trains only"/>
@@ -26278,6 +26287,7 @@
     <pt_BR txt="Vincular"/>
     <sr_latin txt="Poveži"/>
     <pl txt="Połącz"/>
+    <de txt="Binden"/>
   </Msg>
   <Msg id="uidname">
     <en txt="UID-Name"/>
@@ -26289,6 +26299,7 @@
     <sr_latin txt="Ime-UID"/>
     <sl txt="UID-Ime"/>
     <en_GB txt="UID-Name"/>
+    <de txt="UID-Name"/>
   </Msg>
   <Msg id="i2cdetect">
     <en txt="I2C Detect"/>
@@ -26319,5 +26330,6 @@
     <pt_BR txt="Centro"/>
     <sl txt="Sredinsko"/>
     <sr_latin txt="Centar"/>
+    <de txt="Mitte"/>
   </Msg>
 </Messages>
