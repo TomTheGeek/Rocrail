@@ -144,6 +144,7 @@ For the Analyzer to work the Plan has to fullfill:
 #include "rocrail/wrapper/public/TextList.h"
 #include "rocrail/wrapper/public/SelTabList.h"
 #include "rocrail/wrapper/public/FunDef.h"
+#include "rocrail/wrapper/public/TrackList.h"
 
 #include "rocrail/public/app.h"
 #include "rocrail/public/model.h"
@@ -349,7 +350,6 @@ static char* __createAccessorymapKeyFromAPGPVIB( char key[], int addr, int port,
 
 
 static char* __createKey( char* key, iONode node, int xoffset, int yoffset, int zoffset) {
-
   int itemx = 0;
   int itemy = 0;
   int itemz = 0;
@@ -3301,16 +3301,127 @@ static Boolean isSignalDistant( iONode node ) {
   }
   return( StrOp.equals( wSignal.distant, signaltype ) );
 }
- 
 
-static void __notifyOverlapError( iONode node, iOMap map, const char* key ) {
+
+/* */
+static char * __getPlanTitleByZlevel( iOAnalyse inst, int z ) {
+  iOAnalyseData data = Data(inst);
+  iONode zlevel = wPlan.getzlevel( data->plan );
+  while( zlevel != NULL ) {
+    if( wZLevel.getz( zlevel ) == z ) {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__getPlanTitleByZlevel: title[%s]",
+         wZLevel.gettitle( zlevel ) );
+      return( StrOp.dup( wZLevel.gettitle( zlevel ) ) );
+    }
+    zlevel = wPlan.nextzlevel( data->plan, zlevel );
+  }
+  return NULL ;
+}
+
+
+static iONode __findListItemById( const char* id, iONode list ) {
+  int listSize = 0;
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__findListItemByIdid[%s] itemid[%s]", id, wItem.getid( node ) );
+        if( StrOp.equals( wItem.getid( node ), id ) ) {
+          return node;
+        }
+      }
+    }
+  }
+  return NULL;
+}
+
+static Boolean __getOriginalData( iOAnalyse inst, iONode node, char **title, int *x, int*y, int *z ) {
+  iOAnalyseData data = Data(inst);
+  const char* nodeName = NodeOp.getName(node);
+  const char *nodeId   = wItem.getid(node);
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__getOriginalData name[%s] id[%s] (%d-%d-%d)",
+      NodeOp.getName(node), wItem.getid(node), wItem.getx(node), wItem.gety(node), wItem.getz(node) );
+
+  iONode item = NULL;
+  if(  ( StrOp.equals( nodeName, wTrack.name()    ) && ( item = __findListItemById( nodeId, wPlan.gettklist(data->plan) ) ) )
+    || ( StrOp.equals( nodeName, wFeedback.name() ) && ( item = __findListItemById( nodeId, wPlan.getfblist(data->plan) ) ) )
+    || ( StrOp.equals( nodeName, wBlock.name()    ) && ( item = __findListItemById( nodeId, wPlan.getbklist(data->plan) ) ) )
+    || ( StrOp.equals( nodeName, wSwitch.name()   ) && ( item = __findListItemById( nodeId, wPlan.getswlist(data->plan) ) ) )
+    || ( StrOp.equals( nodeName, wSignal.name()   ) && ( item = __findListItemById( nodeId, wPlan.getsglist(data->plan) ) ) )
+    || ( StrOp.equals( nodeName, wOutput.name()   ) && ( item = __findListItemById( nodeId, wPlan.getcolist(data->plan) ) ) )
+    || ( StrOp.equals( nodeName, wText.name()     ) && ( item = __findListItemById( nodeId, wPlan.gettxlist(data->plan) ) ) )
+    )
+  {
+    *x = wItem.getx(item) ;
+    *y = wItem.gety(item) ;
+    *z = wItem.getz(item) ;
+    *title = __getPlanTitleByZlevel( inst, *z );
+    return True;
+  }
+
+  return False;
+}
+
+
+static void __notifyOverlapError( iOAnalyse inst, iONode node, iOMap map, const char* key, Boolean isModplan ) {
   iONode prevNode = (iONode)MapOp.get( map, key);
-  TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: object [%s] with id [%s] at [%s] overlaps object [%s] with id [%s]",
-      NodeOp.getName(node), wItem.getid(node), key,
-      NodeOp.getName(prevNode), wItem.getid(prevNode));
+  if( isModplan ) {
+    /* try to get module title and coordinates of "prevNode" and "node" to give relative coordinates inside modules (like rocview) */
+    int xN, yN, zN, xPN, yPN, zPN;
+    char *tN = NULL;
+    char *tPN = NULL;
+    Boolean okN  = __getOriginalData( inst, node, &tN, &xN, &yN, &zN );
+    Boolean okPN = __getOriginalData( inst, prevNode, &tPN, &xPN, &yPN, &zPN );
+    if( okN && okPN ) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: plan position[%s] object[%s] id[%s] from module[%s] at [%d-%d-%d] overlaps object[%s] id[%s] from module[%s] at [%d-%d-%d]",
+          key,
+          NodeOp.getName(node), wItem.getid(node), tN, xN, yN, zN,
+          NodeOp.getName(prevNode), wItem.getid(prevNode), tPN, xPN, yPN, zPN
+          );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: plan position[%s] object[%s] id[%s] overlaps object[%s] id[%s]",
+          key,
+          NodeOp.getName(node), wItem.getid(node),
+          NodeOp.getName(prevNode), wItem.getid(prevNode)
+          );
+    }
+    if( tN != NULL )
+      StrOp.free( tN );
+    if( tPN != NULL )
+      StrOp.free( tPN );
+  }
+  else {
+    /* no module plan so just give all info to user */
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: plan position[%s] object[%s] id[%s] overlaps object[%s] id[%s]",
+        key,
+        NodeOp.getName(node), wItem.getid(node),
+        NodeOp.getName(prevNode), wItem.getid(prevNode));
+  }
 
   return;
 }
+
+/* check overlap of node at key with objects in map */
+static Boolean __checkOverlap( iOAnalyse inst, iONode node, iOMap map, const char* key, Boolean isModplan ) {
+  if( MapOp.haskey( map, key) ) {
+   __notifyOverlapError( inst, node, map, key, isModplan );
+   return False;
+  }
+  else {
+    MapOp.put( map, key, (obj)node);
+    return True;
+  }
+}
+
 
 /* check if switch is in raster mode */
 Boolean isRasterSwitch( iONode node ) {
@@ -3378,12 +3489,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
             wItem.getid(node), type==NULL?"":type, wItem.getx(node), wItem.gety(node), wItem.getz(node) );
       }
 
-      if( MapOp.haskey( data->objectmap, key) ) {
-        healthy = False;
-        __notifyOverlapError( node, data->objectmap, key );
-      }
-      else
-        MapOp.put( data->objectmap, key, (obj)node);
+      healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
 
       wItem.setx( node, wItem.getx(node)+modx);
       wItem.sety( node, wItem.gety(node)+mody);
@@ -3411,24 +3517,14 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
 
-            if( MapOp.haskey( data->objectmap, key) ) {
-              healthy = False;
-              __notifyOverlapError( node, data->objectmap, key );
-            }
-            else
-              MapOp.put( data->objectmap, key, (obj)node);
+            healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
           }
           if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
             __createKey( key, node, 0, 1, 0);
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
 
-            if( MapOp.haskey( data->objectmap, key) ) {
-              healthy = False;
-              __notifyOverlapError( node, data->objectmap, key );
-            }
-            else
-              MapOp.put( data->objectmap, key, (obj)node);
+            healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
           }
           if(  wItem.isroad(node)
             && StrOp.equals( type, wSwitch.dcrossing )
@@ -3441,24 +3537,14 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
                 TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                     key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
 
-                if( MapOp.haskey( data->objectmap, key) ) {
-                  healthy = False;
-                  __notifyOverlapError( node, data->objectmap, key );
-                }
-                else
-                  MapOp.put( data->objectmap, key, (obj)node);
+                healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
               }
               if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
                 __createKey( key, node, 1, i, 0);
                 TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                     key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
 
-                if( MapOp.haskey( data->objectmap, key) ) {
-                  healthy = False;
-                  __notifyOverlapError( node, data->objectmap, key );
-                }
-                else
-                  MapOp.put( data->objectmap, key, (obj)node);
+                healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
               }
             }
           }
@@ -3469,24 +3555,14 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
 
-            if( MapOp.haskey( data->objectmap, key) ) {
-              healthy = False;
-              __notifyOverlapError( node, data->objectmap, key );
-            }
-            else
-              MapOp.put( data->objectmap, key, (obj)node);
+            healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
           }
           if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
             __createKey( key, node, 1, 0, 0);
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, wItem.getori(node), ori );
 
-            if( MapOp.haskey( data->objectmap, key) ) {
-              healthy = False;
-              __notifyOverlapError( node, data->objectmap, key );
-            }
-            else
-              MapOp.put( data->objectmap, key, (obj)node);
+            healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
           }
         }
 
@@ -3501,24 +3577,14 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
                   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                       key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
-                  if( MapOp.haskey( data->objectmap, key) ) {
-                    healthy = False;
-                    __notifyOverlapError( node, data->objectmap, key );
-                  }
-                  else
-                    MapOp.put( data->objectmap, key, (obj)node);
+                  healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
                 }
                 if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
                   __createKey( key, node, j, i, 0);
                   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                       key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
-                  if( MapOp.haskey( data->objectmap, key) ) {
-                    healthy = False;
-                    __notifyOverlapError( node, data->objectmap, key );
-                  }
-                  else
-                    MapOp.put( data->objectmap, key, (obj)node);
+                  healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
                 }
               }
             }
@@ -3534,24 +3600,14 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
               TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                   key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
-              if( MapOp.haskey( data->objectmap, key) ) {
-                healthy = False;
-                __notifyOverlapError( node, data->objectmap, key );
-              }
-              else
-                MapOp.put( data->objectmap, key, (obj)node);
+              healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
             }
             if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
               __createKey( key, node, 0, i, 0);
               TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                   key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
-              if( MapOp.haskey( data->objectmap, key) ) {
-                healthy = False;
-                __notifyOverlapError( node, data->objectmap, key );
-              }
-              else
-                MapOp.put( data->objectmap, key, (obj)node);
+              healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
             }
           }
         }
@@ -3573,24 +3629,14 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
-            if( MapOp.haskey( data->objectmap, key) ) {
-              healthy = False;
-              __notifyOverlapError( node, data->objectmap, key );
-            }
-            else
-              MapOp.put( data->objectmap, key, (obj)node);
+            healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
           }
           if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
             __createKey( key, node, 0, i, 0);
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
-            if( MapOp.haskey( data->objectmap, key) ) {
-              healthy = False;
-              __notifyOverlapError( node, data->objectmap, key );
-            }
-            else
-              MapOp.put( data->objectmap, key, (obj)node);
+            healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
           }
         }
       } /* block */
@@ -3605,24 +3651,14 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
-            if( MapOp.haskey( data->objectmap, key) ) {
-              healthy = False;
-              __notifyOverlapError( node, data->objectmap, key );
-            }
-            else
-              MapOp.put( data->objectmap, key, (obj)node);
+            healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
           }
           if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
             __createKey( key, node, 0, i, 0);
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
-            if( MapOp.haskey( data->objectmap, key) ) {
-              healthy = False;
-              __notifyOverlapError( node, data->objectmap, key );
-            }
-            else
-              MapOp.put( data->objectmap, key, (obj)node);
+            healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
           }
         }
       } /* stage */
@@ -3640,24 +3676,14 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
-            if( MapOp.haskey( data->objectmap, key) ) {
-              healthy = False;
-              __notifyOverlapError( node, data->objectmap, key );
-            }
-            else
-              MapOp.put( data->objectmap, key, (obj)node);
+            healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
           }
           if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
             __createKey( key, node, 0, i, 0);
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), type==NULL?"":type, ori, wItem.getid(node) );
 
-            if( MapOp.haskey( data->objectmap, key) ) {
-              healthy = False;
-              __notifyOverlapError( node, data->objectmap, key );
-            }
-            else
-              MapOp.put( data->objectmap, key, (obj)node);
+            healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
           }
         }
       } /* seltab */
@@ -3697,12 +3723,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s",
                 key, NodeOp.getName(node), traverser?"traverser":"turntable", ori, wItem.getid(node) );
 
-            if( MapOp.haskey( data->objectmap, key) ) {
-              healthy = False;
-              __notifyOverlapError( node, data->objectmap, key );
-            }
-            else
-              MapOp.put( data->objectmap, key, (obj)node);
+            healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
           }
         }
       } /* turntable */
@@ -3746,12 +3767,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
               TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "  adding key %s for %s type: %s ori: %s name: %s [%s]",
                   key, NodeOp.getName(node), type?type:"", ori, txId, txText );
 
-              if( MapOp.haskey( data->objectmap, key) ) {
-                healthy = False;
-                __notifyOverlapError( node, data->objectmap, key );
-              }
-              else
-                MapOp.put( data->objectmap, key, (obj)node);
+              healthy = __checkOverlap( inst, node, data->objectmap, key, isModplan ) && healthy ;
             }
           }
         }
@@ -5264,37 +5280,30 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
 
 static iONode __findConnectorCounterpart(iOAnalyse inst, iONode item ) {
   iOAnalyseData data = Data(inst);
-  iONode tracklist = wPlan.gettklist(data->plan);
-  int trackListSize = 0;
   int tknr = wTrack.gettknr(item);
 
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__fCC: " );
-  if( tracklist != NULL ) {
-    trackListSize = NodeOp.getChildCnt( tracklist );
-  }
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__fCC: item[%-20s] name[%s] type[%s] (%d-%d-%d)",
+      wItem.getid(item), NodeOp.getName(item), wItem.gettype(item), wItem.getx(item), wItem.gety(item), wItem.getz(item) );
 
-  if( trackListSize > 0 ) {
-    iONode tracknode;
-    const char* listType = NodeOp.getName( NodeOp.getChild(tracklist, 0));
-    int i = 0;
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__fCC: Checking %d %s nodes", trackListSize, listType );
-    for( i = trackListSize - 1 ; i >= 0 ; i-- ) {
-      tracknode = NodeOp.getChild(tracklist, i);
-      if( tracknode && 
-          StrOp.equals(NodeOp.getName(tracknode), wTrack.name() ) &&
-          ( StrOp.equals(wItem.gettype(tracknode),  wTrack.connector ) || 
-            StrOp.equals(wItem.gettype(tracknode),  wTrack.concurveleft ) || 
-            StrOp.equals(wItem.gettype(tracknode),  wTrack.concurveright )
-          ) &&
-          ! StrOp.equals(wItem.getid(tracknode),  wItem.getid(item) ) &&
-          ( wTrack.gettknr(tracknode) == tknr )
+  if( data->objectmap != NULL ) {
+    iONode node = (iONode) MapOp.first( data->objectmap );
+    while( node ) {
+      if(  StrOp.equals( NodeOp.getName(node), wTrack.name() )
+        && ! StrOp.equals( wItem.getid(node), wItem.getid(item) )
+        && (  StrOp.equals( wItem.gettype(node), wTrack.connector )
+           || StrOp.equals( wItem.gettype(node), wTrack.concurveleft )
+           || StrOp.equals( wItem.gettype(node), wTrack.concurveright )
+           )
+        && ( wTrack.gettknr(node) == tknr )
         ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__fCC: [%s][%s] [%s] is a connector.   cpid[%s] tknr[%d]",
             NodeOp.getName(item), wItem.gettype(item), wItem.getid(item), wTrack.getcounterpartid(item), wTrack.gettknr(item));
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__fCC: [%s][%s] [%s] is a counterpart. cpid[%s] tknr[%d]",
-            NodeOp.getName(tracknode), wItem.gettype(tracknode), wItem.getid(tracknode), wTrack.getcounterpartid(tracknode), wTrack.gettknr(tracknode));
-        return tracknode;
+            NodeOp.getName(node), wItem.gettype(node), wItem.getid(node), wTrack.getcounterpartid(node), wTrack.gettknr(node));
+
+        return node;
       }
+      node = (iONode) MapOp.next( data->objectmap );
     }
   }
 
@@ -5656,8 +5665,8 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
     return False;
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%-20s] travel: [%d] name[%s] type[%s] (depth[%d])",
-      wItem.getid(item), travel, NodeOp.getName(item), wItem.gettype(item), depth );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start analyzing item [%-20s] travel: [%d] name[%s] type[%s] depth[%d] pos[%d-%d-%d]",
+      wItem.getid(item), travel, NodeOp.getName(item), wItem.gettype(item), depth, wItem.getx(item), wItem.gety(item), wItem.getz(item) );
 
   if( ( ! StrOp.equals(NodeOp.getName(item), wBlock.name() ) && 
         ! StrOp.equals(NodeOp.getName(item), wStage.name() ) && 
@@ -7604,8 +7613,6 @@ static void __ANAaddLevelItem( iOList list, iONode item, int level, int* cx, int
 
 static iOList __addMissingLevelItems( iOAnalyse inst, int level, int *cx, int *cy, iOList list ) {
   iOAnalyseData data = Data(inst);
-  Boolean isModplan = ( NULL != ModelOp.getModPlan( data->model ) );
-
   iONode itemlist, item;
 
   itemlist = wPlan.getttlist(data->plan);
