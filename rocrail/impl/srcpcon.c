@@ -187,6 +187,31 @@ static void __writeRsp(__iOSrcpService o, const char* rsp) {
 }
 
 
+/* trim SRCP request -> remove useless "blanks" */
+static char* trimSrcpRequest( char *req ) {
+  /*
+    - replace all multiple occurences of " " by one " "
+      -> StrOp.replaceAllSub( str, "  ", " ")
+    - strip leading and trailng blank
+      -> StrOp.trim( str )
+  */
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "trimSrcpRequest:  in[%s]", req );
+
+  /* use a temporary copy */
+  char *str = StrOp.dup( req );
+  while( StrOp.find( str, "  " ) ) {
+    str = StrOp.replaceAllSub( str, "  ", " " );
+  }
+  str = StrOp.trim( str );
+
+  /* copy results back */
+  StrOp.copy( req, str );
+  /* free temporary copy */
+  StrOp.free( str );
+
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "trimSrcpRequest: out[%s]", req );
+  return( req );
+}
 
 /* convert model time into SRCP time notation */
 static char* convModelTimeToSRCP(time_t modeltime) {
@@ -3996,6 +4021,9 @@ static void __SrcpService( void* threadinst ) {
       str[strLen-1] = 0;
       strLen--;
     }
+
+    /* remove useless "blanks" */
+    trimSrcpRequest( str );
 
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "__evalRequest %s for ID: %d", str, o->id );
     __evalRequest( srcpcon, o, str);
