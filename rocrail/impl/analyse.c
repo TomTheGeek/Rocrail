@@ -9015,7 +9015,7 @@ static int invalidRouteidsCheck( iOAnalyse inst, iONode tracklist, Boolean repai
                 }
               }else {
                 /* invalid routeid skipped */
-                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "invalidRouteidsCheck: [%s][%s] invalid entry[%s] in routeids[%s]",
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "invalidRouteidsCheck: [%s][%s] invalid entry[%s] in routeids[%.80s...]",
                     wItem.getid( tracknode ), listType, token, prevrouteids );
                 thisTrackChanged = True;
                 modifications++;
