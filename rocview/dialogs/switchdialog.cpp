@@ -2085,7 +2085,7 @@ void SwitchDialog::OnApplyClick( wxCommandEvent& event )
 
 void SwitchDialog::OnCheckboxSwDelayClick( wxCommandEvent& event )
 {
-  m_Delay->Enable( m_ActDelay->GetValue() );
+  //m_Delay->Enable( m_ActDelay->GetValue() );
 }
 
 
