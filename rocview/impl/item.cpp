@@ -2270,8 +2270,7 @@ void Symbol::OnProps(wxCommandEvent& event) {
     BlockDialog* blockDlg = new BlockDialog( this, m_Props );
     blockDlg->ShowModal();
     updateLabel();
-    Show(FALSE);
-    Show(wBlock.isshow(m_Props));
+    sizeToScale();
     blockDlg->Destroy();
   }
   else if( StrOp.equals( wSwitch.name(), name ) ) {
