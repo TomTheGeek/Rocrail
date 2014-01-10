@@ -9002,7 +9002,7 @@ static int invalidRouteidsCheck( iOAnalyse inst, iONode tracklist, Boolean repai
               if( isValidRoute( stlist, token ) ) {
                 if( isInList( userrouteids, token ) ) {
                   /* already in list -> duplicate entry -> skip */
-                  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "invalidRouteidsCheck: [%s][%s] duplicate entry[%s] in routeids[%s]",
+                  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "invalidRouteidsCheck: [%s][%s] duplicate entry[%s] in routeids[%.80s...]",
                       wItem.getid( tracknode ), listType, token, prevrouteids );
                   thisTrackChanged = True;
                   modifications++;
