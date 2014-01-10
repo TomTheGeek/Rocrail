@@ -320,6 +320,7 @@ public:
     wxCheckBox* m_Invert2;
     wxCheckBox* m_ActDelay;
     wxTextCtrl* m_Delay;
+    wxCheckBox* m_SyncDelay;
     wxCheckBox* m_Accessory;
     wxRadioBox* m_PortType;
     wxStaticBox* m_TrackDriverBox;

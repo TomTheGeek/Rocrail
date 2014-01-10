@@ -1327,9 +1327,15 @@ static void __doCmdThread( void* threadinst ) {
     int extra = wSwitch.getcmd_extra(nodeA);
     const char* lcid = wSwitch.getcmd_lcid(nodeA);
     int error = 0;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delay command for switch[%s] %dms", data->id, wSwitch.getpause(nodeA) );
-    ThreadOp.sleep(wSwitch.getpause(nodeA));
+    if( wSwitch.getpause(nodeA) > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delay command for switch[%s] %dms", data->id, wSwitch.getpause(nodeA) );
+      ThreadOp.sleep(wSwitch.getpause(nodeA));
+    }
     __doCmd(sw, nodeA, update, extra, &error, lcid);
+    if( wSwitch.issyncdelay(data->props) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch[%s] sync. delay %dms", data->id, wSwitch.getdelay(data->props) );
+      ThreadOp.sleep(wSwitch.getdelay(data->props));
+    }
   }
   data->pendingSet = False;
   ThreadOp.base.del(th);
@@ -1343,7 +1349,7 @@ static Boolean _cmd(iOSwitch inst, iONode nodeA, Boolean update, int extra, int*
     return (rc==1?True:False);
   }
 
-  if( wSwitch.getpause(nodeA) > 0 ) {
+  if( wSwitch.getpause(nodeA) > 0 || wSwitch.issyncdelay(data->props) ) {
     iOThread th = ThreadOp.inst(NULL, &__doCmdThread, inst);
     wSwitch.setcmd_update(nodeA, update);
     wSwitch.setcmd_extra(nodeA, extra);

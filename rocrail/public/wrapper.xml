@@ -1567,6 +1567,7 @@
         <var name="delay" vt="int" defval="0" range="0-*" required="false" remark="overwrites control.swtimeout if greater then 0"/>
         <var name="delaytime" vt="long" defval="0" range="0-*" required="false" remark="Delay timer for internal use only."/>
         <var name="actdelay" vt="bool" defval="false" remark="if false: delay is programmed in central unit or module"/>
+        <var name="syncdelay" vt="bool" defval="false" remark="Delay until is ready."/>
         <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
         <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>
         <var name="z" vt="int" defval="0" range="0-9" remark="Z-Position in the plan. (level)"/>
