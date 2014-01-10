@@ -420,9 +420,9 @@ static Boolean __syncGo( iORoute inst ) {
       else {
         iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         wSwitch.setcmd( cmd, swCmd );
-        swdelay++;
         wSwitch.setpause( cmd, wCtrl.getrouteswtime( wRocRail.getctrl( AppOp.getIni() ) ) * swdelay );
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "go() %s:%s", swId, swCmd );
+        swdelay++;
 
         if( !SwitchOp.cmd( isw, cmd, True, 0, &error, o->lockedId ) && lock ) {
           if( error == CMD_ERROR ) {
