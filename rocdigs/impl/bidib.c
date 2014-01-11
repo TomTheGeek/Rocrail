@@ -1548,6 +1548,11 @@ static void __handleAccessory(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata)
     }
   }
 
+  if( pdata[3] & 0x01 ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Accessory execute (0x%02X) is pending...", pdata[3] );
+    report = False;
+  }
+
   if( report ) {
     iONode nodeC = NodeOp.inst( wAccessory.name(), NULL, ELEMENT_NODE );
     wAccessory.setnodenr( nodeC, bidibnode->uid );
@@ -3062,7 +3067,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_ACCESSORY_STATE:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "MSG_ACCESSORY_STATE path=%s port=%d aspect=%d", pathKey, pdata[0], pdata[1] );
+        "MSG_ACCESSORY_STATE path=%s port=%d aspect=%d execute=%d", pathKey, pdata[0], pdata[1], pdata[3] );
     if( bidibnode != NULL )
       __handleAccessory(bidib, bidibnode, pdata);
     break;
