@@ -1550,12 +1550,12 @@ static void __handleAccessory(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata)
   else if( pdata[3] & 0x01 ) {
     int wait = pdata[4] & 0x7F;
     if( pdata[4] & 0x80 ) {
-      /* 100ms */
-      wait *= 100;
-    }
-    else {
       /* seconds */
       wait *= 1000;
+    }
+    else {
+      /* 100ms */
+      wait *= 100;
     }
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Accessory execute (0x%02X) is pending, wait=%dms", pdata[3], wait );
     report = False;
