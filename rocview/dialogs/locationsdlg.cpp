@@ -170,11 +170,19 @@ void LocationsDialog::initLabels() {
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
     iONode bklist = wPlan.getbklist( model );
+    iONode sblist = wPlan.getsblist( model );
     if( bklist != NULL ) {
       int cnt = NodeOp.getChildCnt( bklist );
       for( int i = 0; i < cnt; i++ ) {
         iONode bk = NodeOp.getChild( bklist, i );
         ListOp.add(list, (obj)bk);
+      }
+    }
+    if( sblist != NULL ) {
+      int cnt = NodeOp.getChildCnt( sblist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode sb = NodeOp.getChild( sblist, i );
+        ListOp.add(list, (obj)sb);
       }
     }
   }
