@@ -137,6 +137,8 @@ public:
     wxCheckBox* m_Bind;
     wxButton* m_SertFbAddr;
     wxSpinCtrl* m_FbAddr;
+    wxStaticText* m_labSwTime;
+    wxSpinCtrl* m_SwTime;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end ECoSCtrlDialog member variables

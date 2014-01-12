@@ -106,6 +106,8 @@ void ECoSCtrlDialog::initLabels() {
   m_LocoList->SetLabel( wxGetApp().getMsg( "loctable" ) );
   m_Discovery->SetLabel( wxGetApp().getMsg( "discover" ) );
   m_Bind->SetLabel( wxGetApp().getMsg( "bind" ) );
+  m_labSwTime->SetLabel( wxGetApp().getMsg( "switchtime" ) );
+
 }
 
 void ECoSCtrlDialog::initValues() {
@@ -147,6 +149,7 @@ void ECoSCtrlDialog::initValues() {
     m_Discovery->SetValue( wMCS2.isdiscovery(wDigInt.getmcs2( m_Props )) );
     m_Bind->SetValue( wMCS2.isbind(wDigInt.getmcs2( m_Props )) );
   }
+  m_SwTime->SetValue( wDigInt.getswtime( m_Props ) );
 
   SublibSelected();
 
@@ -177,6 +180,7 @@ void ECoSCtrlDialog::evaluate() {
     wMCS2.setdiscovery(wDigInt.getmcs2( m_Props), m_Discovery->IsChecked()?True:False );
     wMCS2.setbind(wDigInt.getmcs2( m_Props), m_Bind->IsChecked()?True:False );
   }
+  wDigInt.setswtime( m_Props, m_SwTime->GetValue() );
 
 }
 
@@ -243,6 +247,8 @@ void ECoSCtrlDialog::Init()
     m_Bind = NULL;
     m_SertFbAddr = NULL;
     m_FbAddr = NULL;
+    m_labSwTime = NULL;
+    m_SwTime = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end ECoSCtrlDialog member initialisation
@@ -373,17 +379,23 @@ void ECoSCtrlDialog::CreateControls()
     m_FbAddr = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 255, 0 );
     itemFlexGridSizer32->Add(m_FbAddr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer35 = new wxStdDialogButtonSizer;
+    m_labSwTime = new wxStaticText( itemPanel3, wxID_ANY, _("Switch time"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer32->Add(m_labSwTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer35, 0, wxALIGN_RIGHT|wxALL, 5);
+    m_SwTime = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 10000, 0 );
+    itemFlexGridSizer32->Add(m_SwTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer37 = new wxStdDialogButtonSizer;
+
+    itemBoxSizer2->Add(itemStdDialogButtonSizer37, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer35->AddButton(m_OK);
+    itemStdDialogButtonSizer37->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer35->AddButton(m_Cancel);
+    itemStdDialogButtonSizer37->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer35->Realize();
+    itemStdDialogButtonSizer37->Realize();
 
 ////@end ECoSCtrlDialog content construction
 }
