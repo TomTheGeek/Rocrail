@@ -531,12 +531,11 @@ static void __evaluateMCS2S88( iOMCS2Data mcs2, byte* in, unsigned char* prev ) 
 
 /* 00 23 67 78 08 00 00 00 0B 00 01 00 00 */
 static void __evaluateSensorEvent( iOMCS2Data mcs2, byte* in ) {
-  int type   = in[4];
   int bus    = in[5] * 256 + in[6];
   int addr   = in[7] * 256 + in[8];
   int state = in[10];
   iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d:%d = %d (type=%d)", bus, addr, state, type );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d:%d state=%d", bus, addr, state );
   wFeedback.setbus( nodeC, bus );
   wFeedback.setaddr( nodeC, addr );
   wFeedback.setstate( nodeC, state?True:False );
