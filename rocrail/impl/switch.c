@@ -677,6 +677,11 @@ static Boolean _unLock( iOSwitch inst, const char* id, iORoute route, Boolean fo
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
         "Switch [%s] is locked by [%s], cannot be unlocked by [%s].",
         SwitchOp.getId( inst ), data->lockedId, id );
+    if( data->route != NULL && route != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "Switch [%s] is locked by route [%s] and cannot be unlocked by route [%s]",
+          SwitchOp.getId( inst ), RouteOp.base.id(data->route), RouteOp.base.id(route) );
+    }
   }
   return False;
 }
