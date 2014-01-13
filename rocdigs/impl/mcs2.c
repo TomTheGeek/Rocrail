@@ -226,6 +226,10 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
       __setSysMsg(out, 0, CMD_SYSTEM, False, 5, 0, CMD_SYSSUB_GO, 0, 0, 0);
       ThreadOp.post( data->writer, (obj)out );
       __reportState(data);
+
+      out = allocMem(32);
+      __setSysMsg(out, 0, CMD_SYSTEM, False, 7, 0, CMD_SYSSUB_SWTIME, (data->swtime/10)/256, (data->swtime/10)%256, 0);
+      ThreadOp.post( data->writer, (obj)out );
       return rsp;
     }
   }
