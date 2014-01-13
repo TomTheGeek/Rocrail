@@ -292,11 +292,11 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
 
     if ( StrOp.equals( wOutput.getcmd( node ), wOutput.on )) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s (%s) on", (address - (dccoutput?0x37FF:0x2FFF) ), gate?"b":"a", dccoutput?"dcc":"mm" );
-      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, gate, 1, swtime/256, swtime%256);
+      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 8, address, gate, 1, swtime/256, swtime%256);
     }
     else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Output %d %s (%s) off", (address - (dccoutput?0x37FF:0x2FFF) ), gate?"b":"a", dccoutput?"dcc":"mm" );
-      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 6, address, gate, 0, swtime/256, swtime%256);
+      __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 8, address, gate, 0, swtime/256, swtime%256);
     }
 
     ThreadOp.post( data->writer, (obj)out );
