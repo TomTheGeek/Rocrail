@@ -5,8 +5,8 @@
                          Jean-Michel Fischer <jmf@polygonpunkt.de>,
                          Lothar Roth <lothar.roth@lothar-roth.de>
 
- Without an official permission commercial use is not permitted.
- Forking this project is not permitted.
+ 
+
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
