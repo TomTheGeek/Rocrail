@@ -550,9 +550,7 @@ static Boolean __initHSI88( iOHSI88 inst ) {
   int len = 0;
   int modcnt = o->fbleft + o->fbmiddle + o->fbright;
 
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "HSI-88 init");
-  __flushHSI88(inst, True);
-
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "HSI-88 init nr of modules");
   if( __sendHSI88( inst, out, 5 ) )
   {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init sent. Waiting for response...");
@@ -618,6 +616,7 @@ static void __HSI88feedbackReader( void* threadinst ) {
   while( o->run ) {
 
     if( !o->dummyio && !o->initOK ) {
+      __flushHSI88(pHSI88, True);
       __getVersion(pHSI88);
       o->initOK = __initHSI88(pHSI88);
       if( !o->initOK ) {
