@@ -735,7 +735,7 @@ static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse, int* oppwait 
   int blockwait = 1;
   *oppwait = 1;
 
-  if( StrOp.equals( wLoc.cargo_cleaning, wLoc.getcargo( (iONode)loc->base.properties( loc ) ) ) ||
+  if( StrOp.equals( wLoc.cargo_cleaning, LocOp.getCargo(loc) ) ||
       StrOp.equals( wBlock.wait_none, wBlock.getwaitmode( data->props ) ) )
   {
     blockwait = 1;

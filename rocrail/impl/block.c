@@ -1149,7 +1149,7 @@ static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse, int* oppwait 
     return 0;
   }
 
-  if( StrOp.equals( wLoc.cargo_cleaning, wLoc.getcargo( (iONode)loc->base.properties( loc ) ) ) ){
+  if( StrOp.equals( wLoc.cargo_cleaning, LocOp.getCargo(loc) ) ){
     return (data->tempwait?1:0);
   }
   else if( wLoc.isuseownwaittime( (iONode)loc->base.properties( loc ) ) ) {
@@ -1198,7 +1198,7 @@ static void _setTempWait(iIBlockBase inst, Boolean wait) {
 /* cross checking block and train types */
 static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait, Boolean checkPrev) {
   iOBlockData data = Data(block);
-  const char* traintype = wLoc.getcargo( LocOp.base.properties(loc) );
+  const char* traintype = LocOp.getCargo(loc);
   const char* blocktype = wBlock.gettype( BlockOp.base.properties(block) );
   Boolean     blockwait = (wBlock.iswait(BlockOp.base.properties(block) ) | data->tempwait);
   Boolean     ttwait    = False;
@@ -1403,7 +1403,7 @@ static int _isSuited( iIBlockBase inst, iOLoc loc, int* restlen, Boolean checkPr
     const char* permtype = wBlock.gettypeperm(data->props);
     if( permtype != NULL && StrOp.len(permtype) > 0 && !StrOp.equals( permtype, wLoc.cargo_all) ) {
       iONode lc = LocOp.base.properties(loc);
-      const char* cargo = wLoc.getcargo(lc);
+      const char* cargo = LocOp.getCargo(loc);
       Boolean hasCargoType = False;
       iOStrTok tok = StrTokOp.inst( permtype, ',' );
       while( StrTokOp.hasMoreTokens(tok) ) {
@@ -1502,7 +1502,7 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse, Boolean* opp
   }
 
 
-  if( StrOp.equals( wLoc.cargo_cleaning, wLoc.getcargo( (iONode)loc->base.properties( loc ) ) ) ){
+  if( StrOp.equals( wLoc.cargo_cleaning, LocOp.getCargo(loc) ) ){
     return data->tempwait;
   }
   __crossCheckType( (iOBlock)inst, loc, &wait, True);

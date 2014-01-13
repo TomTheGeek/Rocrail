@@ -1011,7 +1011,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
     const char* permtype = wRoute.gettypeperm(data->props);
     if( permtype != NULL && StrOp.len(permtype) > 0 && !StrOp.equals( permtype, wLoc.cargo_all) ) {
       iONode lc = LocOp.base.properties(loc);
-      const char* cargo = wLoc.getcargo(lc);
+      const char* cargo = LocOp.getCargo(loc);
       Boolean hasCargoType = False;
       iOStrTok tok = StrTokOp.inst( permtype, ',' );
       while( StrTokOp.hasMoreTokens(tok) ) {
@@ -1123,7 +1123,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
       }
 
       if( traintype != NULL && StrOp.len(traintype) > 0 ) {
-        const char* cargo    = wLoc.getcargo(lc);
+        const char* cargo    = LocOp.getCargo(loc);
         if( !StrOp.equals( traintype, cargo) && !StrOp.equals( traintype, "all") && !StrOp.equals( traintype, "none") && !StrOp.equals( cargo, "cleaning")) {
           cond = wRoute.nextstcondition(data->props, cond);
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,

@@ -682,6 +682,9 @@
     <fun name="isCommuter" vt="Boolean">
       <param name="inst" vt="this" remark="Loco instance"/>
     </fun>
+    <fun name="getCargo" vt="const char*">
+      <param name="inst" vt="this" remark="Loco instance"/>
+    </fun>
     <data include="$rocint/public/lcdriverint">
       <var name="props" vt="iONode"/>
       <var name="cvMap" vt="iOMap"/>
@@ -2173,6 +2176,9 @@
       <param name="id" vt="const char*"/>
     </fun>
     <fun name="isCommuter" vt="Boolean">
+      <param name="inst" vt="this" remark="Operator instance"/>
+    </fun>
+    <fun name="getCargo" vt="const char*">
       <param name="inst" vt="this" remark="Operator instance"/>
     </fun>
     <data>

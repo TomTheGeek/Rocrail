@@ -260,6 +260,19 @@ void OperatorDlg::initLabels() {
   m_ShowCar->SetLabel( wxGetApp().getMsg( "carcard" ) );
   m_ShowWaybill->SetLabel( wxGetApp().getMsg( "waybill" ) );
 
+  m_labCargo->SetLabel( wxGetApp().getMsg( "cargo" ) );
+  m_Cargo->Append(wxGetApp().getMsg( wLoc.cargo_none ));
+  m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_goods ) );
+  m_Cargo->Append( wxGetApp().getMsg( "local" ) ); // wLoc.cargo_person
+  m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_mixed ) );
+  m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_cleaning ) );
+  m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_ice ) );
+  m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_post ) );
+  m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_light ) );
+  m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_lightgoods ) );
+  m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_regional ) );
+
+
   // Buttons
   m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_StdButtonCancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
@@ -311,6 +324,29 @@ void OperatorDlg::evaluate() {
     wOperator.setcarids(m_Props, consist);
 
   TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "carids: [%s]", wOperator.getcarids(m_Props) );
+
+  int cargo = m_Cargo->GetSelection();
+  if( cargo == 0 )
+    wOperator.setcargo( m_Props, wLoc.cargo_none );
+  else if( cargo == 1 )
+    wOperator.setcargo( m_Props, wLoc.cargo_goods );
+  else if( cargo == 2 )
+    wOperator.setcargo( m_Props, wLoc.cargo_person );
+  else if( cargo == 3 )
+    wOperator.setcargo( m_Props, wLoc.cargo_mixed );
+  else if( cargo == 4 )
+    wOperator.setcargo( m_Props, wLoc.cargo_cleaning );
+  else if( cargo == 5 )
+    wOperator.setcargo( m_Props, wLoc.cargo_ice );
+  else if( cargo == 6 )
+    wOperator.setcargo( m_Props, wLoc.cargo_post );
+  else if( cargo == 7 )
+    wOperator.setcargo( m_Props, wLoc.cargo_light );
+  else if( cargo == 8 )
+    wOperator.setcargo( m_Props, wLoc.cargo_lightgoods );
+  else if( cargo == 9 )
+    wOperator.setcargo( m_Props, wLoc.cargo_regional );
+
 }
 
 
@@ -380,6 +416,30 @@ void OperatorDlg::initValues() {
 
   initLocos();
   initConsist();
+
+  int cargo = 0;
+  if( StrOp.equals( wLoc.cargo_none, wOperator.getcargo( m_Props ) ) )
+    cargo = 0;
+  else if( StrOp.equals( wLoc.cargo_goods, wOperator.getcargo( m_Props ) ) )
+    cargo = 1;
+  else if( StrOp.equals( wLoc.cargo_person, wOperator.getcargo( m_Props ) ) )
+    cargo = 2;
+  else if( StrOp.equals( wLoc.cargo_mixed, wOperator.getcargo( m_Props ) ) )
+    cargo = 3;
+  else if( StrOp.equals( wLoc.cargo_cleaning, wOperator.getcargo( m_Props ) ) )
+    cargo = 4;
+  else if( StrOp.equals( wLoc.cargo_ice, wOperator.getcargo( m_Props ) ) )
+    cargo = 5;
+  else if( StrOp.equals( wLoc.cargo_post, wOperator.getcargo( m_Props ) ) )
+    cargo = 6;
+  else if( StrOp.equals( wLoc.cargo_light, wOperator.getcargo( m_Props ) ) )
+    cargo = 7;
+  else if( StrOp.equals( wLoc.cargo_lightgoods, wOperator.getcargo( m_Props ) ) )
+    cargo = 8;
+  else if( StrOp.equals( wLoc.cargo_regional, wOperator.getcargo( m_Props ) ) )
+    cargo = 9;
+  m_Cargo->SetSelection( cargo );
+
 }
 
 

@@ -2625,7 +2625,8 @@
         <var name="lcid" vt="string" defval="" range="*" required="true"/>
         <var name="carids" vt="string" defval="" range="*" remark="Comma separated car IDs"/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Operator command."/>
-      </operator>
+        <var name="cargo" vt="string" defval="none"/>
+        </operator>
     </operatorlist>
 
     <carlist cardinality="1" remark="Car table" wrappername="CarList">

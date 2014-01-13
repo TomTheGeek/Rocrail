@@ -2263,6 +2263,19 @@ static Boolean _isCommuter( iOLoc inst ) {
 }
 
 
+static const char* _getCargo( iOLoc inst ) {
+  iOLocData data = Data(inst);
+  const char* cargo = wLoc.getcargo(data->props);
+  if( wLoc.gettrain( data->props) != NULL && StrOp.len(wLoc.gettrain( data->props)) > 0 ) {
+    iOOperator train = ModelOp.getOperator(AppOp.getModel(), wLoc.gettrain( data->props) );
+    if( train != NULL ) {
+      cargo = OperatorOp.getCargo(train);
+    }
+  }
+  return cargo;
+}
+
+
 static void* _getProperties( void* inst ) {
   iOLocData data = Data((iOLoc)inst);
   return data->props;

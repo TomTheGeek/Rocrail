@@ -243,6 +243,13 @@ static Boolean _isCommuter( struct OOperator* inst ) {
   return commuter;
 }
 
+
+static const char* _getCargo( struct OOperator* inst ) {
+  iOOperatorData data = Data(inst);
+  return wOperator.getcargo(data->props);
+}
+
+
 static int _getLen( struct OOperator* inst, int* trainweight ) {
   iOOperatorData data = Data(inst);
   /* ToDo: Calculate consist length. */
