@@ -189,22 +189,20 @@ static Boolean __sendHSI88( iOHSI88 inst, char* out, int size ) {
 
   TraceOp.dump( name, TRCLEVEL_BYTE, (char*)out, size );
 
-  for( i = 0; i < size; i++ ) {
-    if( CheckCTS(o) ) {
-      int rc = 0;
-      ok = __writeBytes( o, &out[i], 1 );
-      rc = __getRC(o);
+  if( CheckCTS(o) ) {
+    int rc = 0;
+    ok = __writeBytes( o, out, size );
+    rc = __getRC(o);
 
-      if( !ok ) {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Problem writing data, rc=%d", rc );
-        return False;
-      }
-      ThreadOp.sleep(50);
-    }
-    else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "CTS timeout, check the connection." );
+    if( !ok ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Problem writing data, rc=%d", rc );
       return False;
     }
+    ThreadOp.sleep(50);
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "CTS timeout, check the connection." );
+    return False;
   }
   return True;
 }
@@ -264,11 +262,16 @@ static int __recvHSI88( iOHSI88 inst, char* in, const char* cmd ) {
         data2read = 3 + (3 * in[1]);
       }
 
-      if( (data2read >= (idx+1) || data2read == 0) && in[idx] == '\r' ) {
+      if( ((idx+1) >= data2read || data2read == 0) && in[idx] == '\r' ) {
         /* End of data. */
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "end of data: [%c] expected length: %d idx=%d", in[0], data2read, idx );
         TraceOp.dump( name, TRCLEVEL_BYTE, (char*)in, idx+1 );
         idx++;
         break;
+      }
+
+      if( idx == 0 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "response: [%c] expected length: %d", in[0], data2read );
       }
 
       idx++;
