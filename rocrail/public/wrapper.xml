@@ -1951,7 +1951,8 @@
 
         <var name="extstop" vt="bool" defval="false" remark="An external stop module will take over the throttle. Use only with enter2in! (Lenz ABC.)"/>
         <var name="allowbbt" vt="bool" defval="true"/>
-
+        <var name="mainline" vt="bool" defval="false"/>
+        
         <var name="updateenterside" vt="bool" defval="false" remark="For internal use only: Event for updating the loco block enter side only."/>
         <const name="shortcut" vt="string" val="shortcut"/>
         <const name="shortcutcleared" vt="string" val="shortcutcleared"/>

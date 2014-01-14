@@ -325,6 +325,7 @@ public:
     wxCheckBox* m_ExtStop;
     wxCheckBox* m_AcceptIdent;
     wxCheckBox* m_AllowBBT;
+    wxCheckBox* m_MainLine;
     wxButton* m_BlockActions;
     wxPanel* m_LocationPanel;
     wxStaticBox* m_Location;

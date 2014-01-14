@@ -1943,6 +1943,10 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
   iOBlockData data = Data(inst);
   iOLocation location = ModelOp.getBlockLocation(AppOp.getModel(), data->id );
 
+  if( wBlock.ismainline(data->props) ) {
+    return True;
+  }
+
   if( location != NULL ) {
     return LocationOp.isDepartureAllowed( location, id );
   }
