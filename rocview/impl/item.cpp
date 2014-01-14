@@ -1738,7 +1738,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
       while( track != NULL ) {
         m_PlanPanel->addItem( NodeOp.getName(track), wTTTrack.getposfb( track ), this );
         int tracknr = wTTTrack.getnr( track );
-        if( tracknr >=0 && tracknr < 48 ) {
+        if( tracknr >=0 && tracknr < 48 && wTTTrack.isshow(track) ) {
           char* nrstr = StrOp.fmt( "%d %s", tracknr, wTTTrack.getdesc(track) );
           trackmenu->Append( ME_TTTrack+tracknr, wxString(nrstr,wxConvUTF8) );
           StrOp.free( nrstr );
