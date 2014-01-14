@@ -237,8 +237,13 @@ static const Boolean CW  = False;
 static Boolean __bridgeDir( iOTT inst, int destpos, Boolean* ttdir, Boolean byroute ) {
   iOTTData data = Data(inst);
   Boolean swap = wTurntable.isswaprotation(data->props);
+  Boolean move4opp = wTurntable.ismove4opp(data->props);
 
   data->lcdir = True;
+
+  if( !byroute ) {
+    byroute = move4opp;
+  }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "from track[%d] to track[%d]", data->tablepos, destpos );
 

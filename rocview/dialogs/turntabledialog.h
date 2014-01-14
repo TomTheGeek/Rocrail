@@ -197,6 +197,7 @@ public:
     wxCheckBox* m_Manager;
     wxCheckBox* m_EmbeddedBlock;
     wxCheckBox* m_Traverser;
+    wxCheckBox* m_Move4Opp;
     wxButton* m_Actions;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;

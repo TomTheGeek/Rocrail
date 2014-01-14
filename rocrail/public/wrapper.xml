@@ -2270,7 +2270,8 @@
         <var name="poladdr" vt="int" defval="0" range="0-*" required="false" remark="Polarization relay address."/>
         <var name="motoroffdelay" vt="int" defval="1000" range="0-*" required="false" remark="shut off delay for locdec motor"/>
         <var name="inv" vt="bool" defval="false" remark="invert the commands"/>
-
+        <var name="move4opp" vt="bool" defval="true" remark="Move bridge if the target track is opposite of the current position."/>
+        
         <var name="addr0" vt="int" defval="0" range="0-*" required="true" remark="bit 0 of track"/>
         <var name="port0" vt="int" defval="0" range="0-4" required="true" remark="bit 0 of track"/>
         <var name="addr1" vt="int" defval="0" range="0-*" required="true" remark="bit 1 of track"/>

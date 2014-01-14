@@ -26470,4 +26470,7 @@
   <Msg id="mainline">
     <en txt="Mainline"/>
   </Msg>
+  <Msg id="move4opp">
+    <en txt="Move bridge if target position is opposite"/>
+  </Msg>
 </Messages>

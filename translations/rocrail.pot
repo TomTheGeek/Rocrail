@@ -6869,3 +6869,9 @@ msgstr ""
 msgid "Mainline"
 msgstr ""
 
+#. 
+# id="move4opp"
+#, c-format
+msgid "Move bridge if target position is opposite"
+msgstr ""
+
