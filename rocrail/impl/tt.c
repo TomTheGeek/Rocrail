@@ -2289,6 +2289,10 @@ static void __polarize(obj inst, int pos, Boolean polarization) {
   iOTTData data = Data(inst);
   iOControl control = AppOp.getControl();
 
+  if( !data->lcdir ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "skipping bridge polarization for opposite position" );
+    return;
+  }
 
   if( pos != -1 ) {
     iONode track = wTurntable.gettrack( data->props );
