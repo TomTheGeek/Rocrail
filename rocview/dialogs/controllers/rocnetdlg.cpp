@@ -69,6 +69,7 @@ void RocNetDlg::initLabels() {
   m_Sublib->SetLabel(wxGetApp().getMsg( "sublib" ));
   m_Address->SetLabel(wxGetApp().getMsg( "address" ));
   m_Port->SetLabel(wxGetApp().getMsg( "port" ));
+  m_Sack->SetLabel(wxGetApp().getMsg( "secureack" ));
 
   m_NodeList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(1, wxGetApp().getMsg( "vendor" ), wxLIST_FORMAT_LEFT );
@@ -132,6 +133,7 @@ void RocNetDlg::initValues() {
   }
 
   m_CRC->SetValue( wRocNet.iscrc(rnini) ? true:false);
+  m_Sack->SetValue( wRocNet.issack(rnini) ? true:false);
   m_Watchdog->SetValue( wRocNet.iswd(rnini) ? true:false);
   m_Address->SetValue( wxString( wRocNet.getaddr( rnini ), wxConvUTF8 ) );
   m_Port->SetValue( wRocNet.getport( rnini ) );
@@ -171,6 +173,7 @@ void RocNetDlg::evaluate() {
 
   wRocNet.setcrc(m_Props, m_CRC->IsChecked()?True:False);
   wRocNet.setwd(m_Props, m_Watchdog->IsChecked()?True:False);
+  wRocNet.setsack(m_Props, m_Sack->IsChecked()?True:False);
 }
 
 

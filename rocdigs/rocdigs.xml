@@ -867,6 +867,7 @@
       <var name="shutdown" vt="Boolean"/>
       <var name="dispatchAddr" vt="int"/>
       <var name="mousemap" vt="iOMap"/>
+      <var name="sack" vt="Boolean"/>
       </data>
   </object>
 

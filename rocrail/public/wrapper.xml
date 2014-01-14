@@ -639,6 +639,7 @@
         <var name="port" vt="int" defval="4321" range="0-*" remark="multicast port"/>
         <var name="crc" vt="bool" defval="false"/>
         <var name="wd" vt="bool" defval="false"/>
+        <var name="sack" vt="bool" defval="false"/>
         <rocnetnodeoptions wrappername="RocNetNodeOptions" cardinality="1">
           <var name="sack" vt="bool" defval="false"/>
           <var name="rfid" vt="bool" defval="false"/>

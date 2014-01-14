@@ -1412,14 +1412,16 @@ static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
 
     data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
 
-    rnReply = allocMem(32);
-    rnReply[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
-    rnReceipientAddresToPacket( sndr, rnReply, data->seven );
-    rnSenderAddresToPacket( wRocNet.getid(data->rnini), rnReply, data->seven );
-    rnReply[RN_PACKET_ACTION] = RN_STATIONARY_ACK;
-    rnReply[RN_PACKET_LEN] = 2;
-    rnReply[RN_PACKET_DATA+0] = RN_SENSOR_REPORT;
-    rnReply[RN_PACKET_DATA+1] = addr;
+    if( data->sack ) {
+      rnReply = allocMem(32);
+      rnReply[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+      rnReceipientAddresToPacket( sndr, rnReply, data->seven );
+      rnSenderAddresToPacket( wRocNet.getid(data->rnini), rnReply, data->seven );
+      rnReply[RN_PACKET_ACTION] = RN_STATIONARY_ACK;
+      rnReply[RN_PACKET_LEN] = 2;
+      rnReply[RN_PACKET_DATA+0] = RN_SENSOR_REPORT;
+      rnReply[RN_PACKET_DATA+1] = addr;
+    }
     break;
   }
   default:
@@ -1757,12 +1759,14 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
     NodeOp.addChild( ini, data->rnini );
   }
   data->crc = wRocNet.iscrc(data->rnini);
+  data->sack = wRocNet.issack(data->rnini);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNET %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid     = %s", wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib  = %s", wDigInt.getsublib( ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "crc     = %s", data->crc ? "on":"off" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid        = %s", wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib     = %s", wDigInt.getsublib( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "crc        = %s", data->crc ? "on":"off" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "secure ack = %s", data->sack ? "on":"off" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
 
