@@ -609,7 +609,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.rmx, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.rocnet, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.roco, wxConvUTF8 ) );
-#if defined __linux__
+#if defined __linux__ &! defined __APPLE__
   m_Lib->Append( wxString( wDigInt.rocomp, wxConvUTF8 ) );
 #endif
   m_Lib->Append( wxString( wDigInt.slx, wxConvUTF8 ) );
