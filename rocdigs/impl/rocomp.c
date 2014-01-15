@@ -248,7 +248,11 @@ static Boolean __openUSB(iORocoMP inst) {
 
     for (dev = bus->devices; dev; dev = dev->next) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "USB class %d 0x%04X:0x%04X", dev->descriptor.bDeviceClass, dev->descriptor.idVendor, dev->descriptor.idProduct );
+          "USB class %d ID 0x%04X:0x%04X nrconf=%d protocol=%d maxpacket=%d device %s bus %s interface class %d",
+          dev->descriptor.bDeviceClass, dev->descriptor.idVendor, dev->descriptor.idProduct,
+          dev->descriptor.bNumConfigurations, dev->descriptor.bDeviceProtocol, dev->descriptor.bMaxPacketSize0,
+          dev->filename, bus->dirname, dev->config->interface->altsetting->bInterfaceClass);
+
 
       if( dev->descriptor.idVendor == VENDOR && dev->descriptor.idProduct == PRODUCT ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found RocoMP" );
