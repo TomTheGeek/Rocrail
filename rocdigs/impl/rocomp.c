@@ -119,7 +119,7 @@ static void __translate( iORocoMP inst, iONode node ) {
 
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       byte* outa = allocMem(32);
-      outa[0] = 5;
+      outa[0] = 0x80 + 5;
       outa[1] = 5;
       outa[2] = 0x40;
       outa[3] = 0x21;
@@ -130,7 +130,7 @@ static void __translate( iORocoMP inst, iONode node ) {
     }
     else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
       byte* outa = allocMem(32);
-      outa[0] = 4;
+      outa[0] = 0x80 + 4;
       outa[1] = 4;
       outa[2] = 0x40;
       outa[3] = 0x80;
@@ -140,7 +140,7 @@ static void __translate( iORocoMP inst, iONode node ) {
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
       byte* outa = allocMem(32);
-      outa[0] = 5;
+      outa[0] = 0x80 + 5;
       outa[1] = 5;
       outa[2] = 0x40;
       outa[3] = 0x21;
@@ -245,6 +245,9 @@ static const char* __usbDescription(int vendor, int product) {
     if( product == 0xbfdd ) return "OpenDCC GBMBoost Master";
     return "FTDI";
   }
+  if( vendor == VENDOR ) {
+    if( product == PRODUCT ) return "Roco 10786 Multizentrale";
+  }
   return "-";
 }
 
@@ -342,7 +345,7 @@ static Boolean __writeUSB(iORocoMP inst, byte* out, int len) {
   int rc = 0;
 
 #if defined __linux__
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %d", len );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %d...", len );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
   if( data->husb != NULL ) {
     rc = usb_bulk_write((usb_dev_handle *)data->husb, 1, out, len, 1000);
@@ -355,10 +358,10 @@ static Boolean __writeUSB(iORocoMP inst, byte* out, int len) {
 
 static Boolean __readUSB(iORocoMP inst, byte* in, int len) {
   iORocoMPData data = Data(inst);
-  int rc = 0;
+  int rc = -1;
 
 #if defined __linux__
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %d", len );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read %d...", len );
   if( data->husb != NULL ) {
     rc = usb_bulk_read((usb_dev_handle *)data->husb, 1, in, len, 1000);
     if( rc == 0 )
@@ -397,6 +400,7 @@ static void __transactor( void* threadinst ) {
 
     if( didRead ) {
       /* evaluate */
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "evaluate packet..." );
     }
 
     ThreadOp.sleep(10);
@@ -429,6 +433,7 @@ static struct ORocoMP* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocomp %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ID %04X:%04X", VENDOR, PRODUCT );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   __openUSB(__RocoMP);
