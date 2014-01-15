@@ -2053,5 +2053,31 @@
     </fun>
   </object>
 
-
+  <object name="USB" remark="LibUSB interface">
+    <fun name="inst" vt="this" remark="Object creator."/>
+    <fun name="open" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="vendor" vt="int"/>
+      <param name="product" vt="int"/>
+      <param name="configNr" vt="int"/>
+      <param name="interfaceNr" vt="int"/>
+    </fun>
+    <fun name="close" vt="Boolean">
+      <param name="inst" vt="this"/>
+    </fun>
+    <fun name="read" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="buf" vt="unsigned char*"/>
+      <param name="len" vt="int"/>
+    </fun>
+    <fun name="write" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="buf" vt="unsigned char*"/>
+      <param name="len" vt="int"/>
+    </fun>
+    <data>
+      <var name="husb" vt="void*"/>
+    </data>
+  </object>
+  
 </Project>
