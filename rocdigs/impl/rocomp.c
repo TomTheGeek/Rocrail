@@ -48,6 +48,7 @@ static Boolean __openUSB(iORocoMP inst);
 static Boolean __closeUSB(iORocoMP inst);
 static Boolean __writeUSB(iORocoMP inst, byte* out, int len);
 static Boolean __readUSB(iORocoMP inst, byte* in, int len);
+static byte __makeXor(byte* buf, int len);
 
 static int instCnt = 0;
 
@@ -110,6 +111,40 @@ static void* __event( void* inst, const void* evt ) {
 static void __translate( iORocoMP inst, iONode node ) {
   iORocoMPData data = Data(inst);
 
+  /* System command. */
+  if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+    const char* cmd = wSysCmd.getcmd( node );
+
+    byte outa[32];
+    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+      outa[0] = 5;
+      outa[1] = 0x40;
+      outa[2] = 0x21;
+      outa[3] = 0x80;
+      outa[4] = __makeXor(outa, 4);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
+      __writeUSB(inst, outa, 5);
+    }
+    else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      outa[0] = 4;
+      outa[1] = 0x40;
+      outa[2] = 0x80;
+      outa[3] = __makeXor(outa, 3);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
+      __writeUSB(inst, outa, 4);
+    }
+    else if( StrOp.equals( cmd, wSysCmd.go ) ) {
+      outa[0] = 5;
+      outa[1] = 0x40;
+      outa[2] = 0x21;
+      outa[3] = 0x81;
+      outa[4] = __makeXor(outa, 4);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
+      __writeUSB(inst, outa, 5);
+    }
+
+
+  }
 }
 
 
@@ -174,6 +209,17 @@ static Boolean _supportPT( obj inst ) {
 }
 
 
+static byte __makeXor(byte* buf, int len) {
+  int i = 0;
+  int xor = 0;
+
+  for(i = 2; i < len; i++) {
+    xor ^= buf[i];
+  }
+  return xor;
+}
+
+
 static Boolean __openUSB(iORocoMP inst) {
   iORocoMPData data = Data(inst);
 
@@ -194,7 +240,7 @@ static Boolean __openUSB(iORocoMP inst) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "USB class %d 0x%04X:0x%04X", dev->descriptor.bDeviceClass, dev->descriptor.idVendor, dev->descriptor.idProduct );
 
-      if( dev->descriptor.bDeviceClass == DEVCLASS && dev->descriptor.idVendor == VENDOR && dev->descriptor.idProduct == PRODUCT ) {
+      if( dev->descriptor.idVendor == VENDOR && dev->descriptor.idProduct == PRODUCT ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found RocoMP" );
         data->husb = usb_open(dev);
         break;
@@ -203,6 +249,9 @@ static Boolean __openUSB(iORocoMP inst) {
   }
 #endif
 
+  if( data->husb == NULL ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no RocoMP found" );
+  }
   return data->husb == NULL ? False:True;
 }
 
@@ -229,6 +278,7 @@ static Boolean __writeUSB(iORocoMP inst, byte* out, int len) {
 
 #if defined __linux__
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %d", len );
+  TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
   if( data->husb != NULL ) {
     rc = usb_bulk_write((usb_dev_handle *)data->husb, 1, out, len, 1000);
   }
@@ -246,6 +296,8 @@ static Boolean __readUSB(iORocoMP inst, byte* in, int len) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %d", len );
   if( data->husb != NULL ) {
     rc = usb_bulk_read((usb_dev_handle *)data->husb, 1, in, len, 1000);
+    if( rc == 0 )
+      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, len );
   }
 #endif
 
