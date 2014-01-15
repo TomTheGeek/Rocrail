@@ -35,7 +35,7 @@
 #include "rocrail/wrapper/public/State.h"
 #include "rocutils/public/addr.h"
 
-#if defined __linux__
+#if defined __linux__ &! defined __APPLE__
 /* sudo apt-get install libusb-dev */
 #include <usb.h>
 #endif
@@ -256,7 +256,7 @@ static const char* __usbDescription(int vendor, int product) {
 static void* __openUSB(int vendor, int product, int configNr, int interfaceNr ) {
   void* husb = NULL;
 
-#if defined __linux__
+#if defined __linux__ &! defined __APPLE__
   struct usb_bus *busses;
   struct usb_bus *bus;
 
@@ -326,7 +326,7 @@ static void* __openUSB(int vendor, int product, int configNr, int interfaceNr ) 
 static Boolean __closeUSB(void* husb) {
   int rc = 0;
 
-#if defined __linux__
+#if defined __linux__ &! defined __APPLE__
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "close USB of RocoMP" );
   if( husb != NULL ) {
     usb_release_interface((usb_dev_handle *)husb, INTERFACE);
@@ -342,7 +342,7 @@ static Boolean __closeUSB(void* husb) {
 static Boolean __writeUSB(void* husb, byte* out, int len) {
   int rc = 0;
 
-#if defined __linux__
+#if defined __linux__ &! defined __APPLE__
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %d...", len );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
   if( husb != NULL ) {
@@ -357,7 +357,7 @@ static Boolean __writeUSB(void* husb, byte* out, int len) {
 static Boolean __readUSB(void* husb, byte* in, int len) {
   int rc = -1;
 
-#if defined __linux__
+#if defined __linux__ &! defined __APPLE__
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read %d...", len );
   if( husb != NULL ) {
     rc = usb_bulk_read((usb_dev_handle *)husb, 1, in, len, 1000);
