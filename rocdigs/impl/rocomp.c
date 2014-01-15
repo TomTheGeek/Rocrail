@@ -117,32 +117,37 @@ static void __translate( iORocoMP inst, iONode node ) {
   if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
 
-    byte outa[32];
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+      byte* outa = allocMem(32);
       outa[0] = 5;
-      outa[1] = 0x40;
-      outa[2] = 0x21;
-      outa[3] = 0x80;
-      outa[4] = __makeXor(outa, 4);
+      outa[1] = 5;
+      outa[2] = 0x40;
+      outa[3] = 0x21;
+      outa[4] = 0x80;
+      outa[5] = __makeXor(outa+1, 4);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
-      __writeUSB(inst, outa, 5);
+      ThreadOp.post( data->transactor, (obj)outa );
     }
     else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
+      byte* outa = allocMem(32);
       outa[0] = 4;
-      outa[1] = 0x40;
-      outa[2] = 0x80;
-      outa[3] = __makeXor(outa, 3);
+      outa[1] = 4;
+      outa[2] = 0x40;
+      outa[3] = 0x80;
+      outa[4] = __makeXor(outa+1, 3);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
-      __writeUSB(inst, outa, 4);
+      ThreadOp.post( data->transactor, (obj)outa );
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
+      byte* outa = allocMem(32);
       outa[0] = 5;
-      outa[1] = 0x40;
-      outa[2] = 0x21;
-      outa[3] = 0x81;
-      outa[4] = __makeXor(outa, 4);
+      outa[1] = 5;
+      outa[2] = 0x40;
+      outa[3] = 0x21;
+      outa[4] = 0x81;
+      outa[5] = __makeXor(outa+1, 4);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
-      __writeUSB(inst, outa, 5);
+      ThreadOp.post( data->transactor, (obj)outa );
     }
 
 
@@ -173,6 +178,9 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
+  iORocoMPData data = Data(inst);
+  data->run = False;
+  ThreadOp.sleep(500);
   __closeUSB((iORocoMP)inst);
   return;
 }
@@ -338,7 +346,40 @@ static Boolean __readUSB(iORocoMP inst, byte* in, int len) {
 }
 
 
+static void __transactor( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iORocoMP roco = (iORocoMP)ThreadOp.getParm(th);
+  iORocoMPData data = Data(roco);
+  byte in[128];
 
+  ThreadOp.setDescription( th, "Transactor for RocoMP" );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Transactor started." );
+
+  while( data->run ) {
+    Boolean doRead = False;
+    Boolean didRead = False;
+
+    byte* post = (byte*)ThreadOp.getPost( th );
+    if( post != NULL ) {
+      __writeUSB(roco, post+1, post[0]&0x7F);
+      doRead = (post[0] & 0x80) ? True:False;
+      freeMem(post);
+    }
+
+    if( doRead ) {
+      MemOp.set(in, 0, sizeof(in));
+      didRead = __readUSB(roco, in, 64);
+    }
+
+    if( didRead ) {
+      /* evaluate */
+    }
+
+    ThreadOp.sleep(10);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Transactor ended." );
+}
 
 
 /** vmajor*1000 + vminor*100 + patch */
@@ -367,6 +408,11 @@ static struct ORocoMP* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   __openUSB(__RocoMP);
+
+  data->run = True;
+
+  data->transactor = ThreadOp.inst( "transactor", &__transactor, __RocoMP );
+  ThreadOp.start( data->transactor );
 
   instCnt++;
   return __RocoMP;
