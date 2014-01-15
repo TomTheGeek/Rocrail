@@ -230,6 +230,26 @@ static byte __makeXor(byte* buf, int len) {
 }
 
 
+static const char* __usbDescription(int vendor, int product) {
+  if( vendor == 0x0403 ) {
+    /* FTDI */
+    if( product == 0x6001 ) return "FDTI FT232 USB-Serial (UART) IC";
+    if( product == 0x6007 ) return "FDTI Serial Converter";
+    if( product == 0x6008 ) return "FDTI Serial Converter";
+    if( product == 0x6009 ) return "FDTI Serial Converter";
+    if( product == 0xbfd8 ) return "OpenDCC";
+    if( product == 0xbfd9 ) return "OpenDCC Sniffer";
+    if( product == 0xbfda ) return "OpenDCC Throttle";
+    if( product == 0xbfdb ) return "OpenDCC Gateway";
+    if( product == 0xbfdc ) return "OpenDCC GBM";
+    if( product == 0xbfdd ) return "OpenDCC GBMBoost Master";
+    return "FTDI";
+  }
+  return "-";
+}
+
+/* ToDo: Move the USB related calls to the Rocs library. */
+
 static Boolean __openUSB(iORocoMP inst) {
   iORocoMPData data = Data(inst);
 
@@ -248,10 +268,10 @@ static Boolean __openUSB(iORocoMP inst) {
 
     for (dev = bus->devices; dev; dev = dev->next) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "USB class %d ID 0x%04X:0x%04X nrconf=%d protocol=%d maxpacket=%d device %s bus %s interface class %d",
-          dev->descriptor.bDeviceClass, dev->descriptor.idVendor, dev->descriptor.idProduct,
-          dev->descriptor.bNumConfigurations, dev->descriptor.bDeviceProtocol, dev->descriptor.bMaxPacketSize0,
-          dev->filename, bus->dirname, dev->config->interface->altsetting->bInterfaceClass);
+          "bus %s device %s class %02X:%02X ID 0x%04X:0x%04X protocol=%02d maxpacket=%02d [%s]",
+          bus->dirname, dev->filename, dev->descriptor.bDeviceClass, dev->config->interface->altsetting->bInterfaceClass,
+          dev->descriptor.idVendor, dev->descriptor.idProduct, dev->descriptor.bDeviceProtocol,
+          dev->descriptor.bMaxPacketSize0, __usbDescription(dev->descriptor.idVendor, dev->descriptor.idProduct) );
 
 
       if( dev->descriptor.idVendor == VENDOR && dev->descriptor.idProduct == PRODUCT ) {
