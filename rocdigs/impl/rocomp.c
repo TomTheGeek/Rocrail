@@ -297,6 +297,7 @@ static Boolean __closeUSB(iORocoMP inst) {
   if( data->husb != NULL ) {
     usb_release_interface((usb_dev_handle *)data->husb, INTERFACE);
     rc = usb_close((usb_dev_handle *)data->husb);
+    usb_exit();
   }
 #endif
 
