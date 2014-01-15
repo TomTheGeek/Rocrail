@@ -43,6 +43,8 @@
 #define VENDOR 0x16d0
 #define PRODUCT 0x04d3
 #define DEVCLASS 3
+#define CONFIG  1
+#define INTERFACE 0
 
 static Boolean __openUSB(iORocoMP inst);
 static Boolean __closeUSB(iORocoMP inst);
@@ -243,6 +245,35 @@ static Boolean __openUSB(iORocoMP inst) {
       if( dev->descriptor.idVendor == VENDOR && dev->descriptor.idProduct == PRODUCT ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found RocoMP" );
         data->husb = usb_open(dev);
+
+        if( data->husb == NULL ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not open USB device" );
+          break;
+        }
+
+        if(usb_kernel_driver_active(data->husb, 0) == 1) {
+          if( usb_detach_kernel_driver(data->husb, 0) != 0 ) {
+            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not detach kernel driver" );
+            usb_close((usb_dev_handle *)data->husb);
+            data->husb = NULL;
+            break;
+          }
+        }
+
+        if( usb_set_configuration((usb_dev_handle *)data->husb, CONFIG) != 0 ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not set configuration %d", CONFIG );
+          usb_close((usb_dev_handle *)data->husb);
+          data->husb = NULL;
+          break;
+        }
+
+        if( usb_claim_interface(data->husb, INTERFACE) != 0 ) {
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not claim interface %d", INTERFACE );
+          usb_close((usb_dev_handle *)data->husb);
+          data->husb = NULL;
+          break;
+        }
+
         break;
       }
     }
@@ -264,6 +295,7 @@ static Boolean __closeUSB(iORocoMP inst) {
 #if defined __linux__
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "close USB of RocoMP" );
   if( data->husb != NULL ) {
+    usb_release_interface((usb_dev_handle *)data->husb, INTERFACE);
     rc = usb_close((usb_dev_handle *)data->husb);
   }
 #endif
