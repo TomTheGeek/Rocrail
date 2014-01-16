@@ -82,7 +82,7 @@ else ifeq ($(PLATFORM),OPENBSD)
 	LNK=gcc
 	SHAREDSUFFIX=.so
 else
-	LIBS=-lpthread -ldl -lusb
+	LIBS=-lpthread -ldl
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fPIC
 	LNK_FLAGS=-shared

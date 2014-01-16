@@ -1,7 +1,7 @@
 # ------------------------------------------------------------
 # Rocs - OS independent C library
 #
-# Copyright (C) 2002-2012 Rob Versluis, Rocrail.net
+# Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 #
 # Without an official permission commercial use is not permitted.
 # Forking this project is not permitted.  
@@ -78,7 +78,7 @@ ifeq ($(PLATFORM),WIN64)
     CC_EXTRA_FLAGS=
 endif 
 ifeq ($(PLATFORM),LINUX)
-	LIBS=-lpthread -ldl
+	LIBS=-lpthread -ldl -lusb
 endif
 ifeq ($(PLATFORM),MACOSX)
 	LIBS=-lpthread -ldl
