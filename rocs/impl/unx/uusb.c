@@ -34,10 +34,10 @@
 static const char* __usbDescription(int vendor, int product) {
   if( vendor == 0x0403 ) {
     /* FTDI */
-    if( product == 0x6001 ) return "FDTI FT232 USB-Serial (UART) IC";
-    if( product == 0x6007 ) return "FDTI Serial Converter";
-    if( product == 0x6008 ) return "FDTI Serial Converter";
-    if( product == 0x6009 ) return "FDTI Serial Converter";
+    if( product == 0x6001 ) return "FTDI FT232 USB-Serial (UART) IC";
+    if( product == 0x6007 ) return "FTDI Serial Converter";
+    if( product == 0x6008 ) return "FTDI Serial Converter";
+    if( product == 0x6009 ) return "FTDI Serial Converter";
     if( product == 0xbfd8 ) return "OpenDCC";
     if( product == 0xbfd9 ) return "OpenDCC Sniffer";
     if( product == 0xbfda ) return "OpenDCC Throttle";
@@ -47,7 +47,7 @@ static const char* __usbDescription(int vendor, int product) {
     return "FTDI";
   }
   if( vendor == 0x16d0 ) {
-    if( product == 0x04d3 ) return "Roco 10786 Multizentrale";
+    if( product == 0x04d3 ) return "Roco 10786 MultizentralePro";
   }
   return "-";
 }
