@@ -139,7 +139,7 @@ Boolean rocs_usb_closeUSB(void* husb, int interfaceNr) {
   int rc = 0;
 
 #if defined __linux__ &! defined __APPLE__
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "close USB of RocoMP" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "close USB (interface %d)", interfaceNr );
   if( husb != NULL ) {
     usb_release_interface((usb_dev_handle *)husb, interfaceNr);
     rc = usb_close((usb_dev_handle *)husb);
