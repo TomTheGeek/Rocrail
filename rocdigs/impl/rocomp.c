@@ -181,7 +181,7 @@ static void __translate( iORocoMP inst, iONode node ) {
     outa[6] = addr%256;
     outa[7] = speed + (dir?0x80:0x00);
     outa[8] = 0x00;
-    outa[9] = __makeXor(outa+1, 7);
+    outa[9] = __makeXor(outa+1, 8);
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d velocity=%d dir=%s fn=%d", addr, speed, (dir?"fwd":"rev"), fn );
     ThreadOp.post( data->transactor, (obj)outa );
@@ -196,10 +196,67 @@ static void __translate( iORocoMP inst, iONode node ) {
     outa[5] = addr/256;
     outa[6] = addr%256;
     outa[7] = fn;
-    outa[8] = __makeXor(outa+1, 6);
+    outa[8] = __makeXor(outa+1, 7);
     ThreadOp.post( data->transactor, (obj)outa );
 
   }
+
+
+  /* Switch command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    byte* outb = allocMem(32);
+    int addr = wSwitch.getaddr1( node );
+    int port = wSwitch.getport1( node );
+    int gate = wSwitch.getgate1( node );
+
+    if( port == 0 )
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
+    else if( addr == 0 && port > 0 )
+      AddrOp.fromPADA( port, &addr, &port );
+
+    if( port > 0 ) port--;
+    if( addr > 0 ) addr--;
+
+    int gate1  = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x00:0x01; //0 = use gate 1, 1 = use gate 2
+    int action = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x00:0x08; //0 = gate off, 8 = gate on
+
+    outb[0] = 0x80 + 7;
+    outb[1] = 7;
+    outb[2] = 0x40;
+    outb[3] = 0x53;
+    outb[4] = addr/256;
+    outb[5] = addr%256;
+
+    if( wSwitch.issinglegate( node ) ) {
+      //when single gate turn gate on (cmd straight) or off (cmd turnout)
+      outb[6] = 0x90 | action | (port << 1) | gate; //first rocomotion trace shows roco uses 0x9 as high nibble against 0x8 as official xpressnet
+      outb[7] = __makeXor(outb+1, 6);
+      ThreadOp.post( data->transactor, (obj)outb );
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout gate %d %d %d %s", addr+1, port+1, gate, action==0?"off":"on" );
+    } else {
+      //otherwise turn gate 1 (cmd turnout) or gate 2 (cmd straight) on and 100 ms later off again
+      outb[6] = 0x90 | 0x08 | (port << 1) | gate1;  //turn gate on
+      outb[7] = __makeXor(outb+1, 6);
+      ThreadOp.post( data->transactor, (obj)outb );
+
+      ThreadOp.sleep(100);
+
+      outb = allocMem(32);
+      outb[0] = 0x80 + 7;
+      outb[1] = 7;
+      outb[2] = 0x40;
+      outb[3] = 0x53;
+      outb[4] = addr/256;
+      outb[5] = addr%256;
+      outb[6] = 0x90 | 0x00 | (port << 1) | gate1;  //turn gate off
+      outb[7] = __makeXor(outb+1, 6);
+      ThreadOp.post( data->transactor, (obj)outb );
+
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout %d %d %s", addr+1, port+1, wSwitch.getcmd( node ) );
+    }
+  }
+
 
 }
 
