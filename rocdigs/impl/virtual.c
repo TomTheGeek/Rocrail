@@ -439,7 +439,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reset statistics for booster [%d]", wSysCmd.getbus(node) );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "syscmd=%s", cmd );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "syscmd=%s", cmd );
     }
 
   }
