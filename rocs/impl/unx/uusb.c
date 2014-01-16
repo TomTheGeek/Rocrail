@@ -32,6 +32,12 @@
 
 
 static const char* __usbDescription(int vendor, int product) {
+  if( vendor == 0x16d0 ) {
+    if( product == 0x04d3 ) return "Roco 10786 MultizentralePro";
+  }
+  if( vendor == 0x1d6b ) {
+    return "Linux Foundation";
+  }
   if( vendor == 0x0403 ) {
     /* FTDI */
     if( product == 0x6001 ) return "FTDI FT232 USB-Serial (UART) IC";
@@ -46,8 +52,14 @@ static const char* __usbDescription(int vendor, int product) {
     if( product == 0xbfdd ) return "OpenDCC GBMBoost Master";
     return "FTDI";
   }
-  if( vendor == 0x16d0 ) {
-    if( product == 0x04d3 ) return "Roco 10786 MultizentralePro";
+  if( vendor == 0x045E ) {
+    return "Microsoft Corp.";
+  }
+  if( vendor == 0x046D ) {
+    return "Logitech, Inc.";
+  }
+  if( vendor == 0x8087 ) {
+    return "Intel Corp.";
   }
   return "-";
 }
