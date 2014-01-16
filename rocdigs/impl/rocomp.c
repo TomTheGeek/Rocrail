@@ -22,6 +22,7 @@
 #include "rocdigs/impl/rocomp_impl.h"
 
 #include "rocs/public/mem.h"
+#include "rocs/public/usb.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -35,21 +36,12 @@
 #include "rocrail/wrapper/public/State.h"
 #include "rocutils/public/addr.h"
 
-#if defined __linux__ &! defined __APPLE__
-/* sudo apt-get install libusb-dev */
-#include <usb.h>
-#endif
-
 #define VENDOR 0x16d0
 #define PRODUCT 0x04d3
 #define DEVCLASS 3
 #define CONFIG  1
 #define INTERFACE 0
 
-static void* __openUSB(int vendor, int product, int configNr, int interfaceNr);
-static Boolean __closeUSB(void* husb);
-static Boolean __writeUSB(void* husb, byte* out, int len);
-static Boolean __readUSB(void* husb, byte* in, int len);
 static byte __makeXor(byte* buf, int len);
 
 static int instCnt = 0;
@@ -181,7 +173,7 @@ static void _halt( obj inst ,Boolean poweroff ) {
   iORocoMPData data = Data(inst);
   data->run = False;
   ThreadOp.sleep(500);
-  __closeUSB(data->husb);
+  USBOp.close(data->usb);
   return;
 }
 
@@ -230,146 +222,6 @@ static byte __makeXor(byte* buf, int len) {
 }
 
 
-static const char* __usbDescription(int vendor, int product) {
-  if( vendor == 0x0403 ) {
-    /* FTDI */
-    if( product == 0x6001 ) return "FDTI FT232 USB-Serial (UART) IC";
-    if( product == 0x6007 ) return "FDTI Serial Converter";
-    if( product == 0x6008 ) return "FDTI Serial Converter";
-    if( product == 0x6009 ) return "FDTI Serial Converter";
-    if( product == 0xbfd8 ) return "OpenDCC";
-    if( product == 0xbfd9 ) return "OpenDCC Sniffer";
-    if( product == 0xbfda ) return "OpenDCC Throttle";
-    if( product == 0xbfdb ) return "OpenDCC Gateway";
-    if( product == 0xbfdc ) return "OpenDCC GBM";
-    if( product == 0xbfdd ) return "OpenDCC GBMBoost Master";
-    return "FTDI";
-  }
-  if( vendor == VENDOR ) {
-    if( product == PRODUCT ) return "Roco 10786 Multizentrale";
-  }
-  return "-";
-}
-
-/* ToDo: Move the USB related calls to the Rocs library. */
-
-static void* __openUSB(int vendor, int product, int configNr, int interfaceNr ) {
-  void* husb = NULL;
-
-#if defined __linux__ &! defined __APPLE__
-  struct usb_bus *busses;
-  struct usb_bus *bus;
-
-  usb_init();
-  usb_find_busses();
-  usb_find_devices();
-
-  busses = usb_get_busses();
-
-  for (bus = busses; bus; bus = bus->next) {
-    struct usb_device *dev;
-
-    for (dev = bus->devices; dev; dev = dev->next) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "bus %s device %s class %02X:%02X ID 0x%04X:0x%04X protocol=%02d maxpacket=%02d [%s]",
-          bus->dirname, dev->filename, dev->descriptor.bDeviceClass, dev->config->interface->altsetting->bInterfaceClass,
-          dev->descriptor.idVendor, dev->descriptor.idProduct, dev->descriptor.bDeviceProtocol,
-          dev->descriptor.bMaxPacketSize0, __usbDescription(dev->descriptor.idVendor, dev->descriptor.idProduct) );
-
-
-      if( dev->descriptor.idVendor == vendor && dev->descriptor.idProduct == product ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found RocoMP" );
-        husb = usb_open(dev);
-
-        if( husb == NULL ) {
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not open USB device" );
-          break;
-        }
-
-        if(usb_kernel_driver_active(husb, 0) == 1) {
-          if( usb_detach_kernel_driver(husb, 0) != 0 ) {
-            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not detach kernel driver" );
-            usb_close((usb_dev_handle *)husb);
-            husb = NULL;
-            break;
-          }
-        }
-
-        if( usb_set_configuration((usb_dev_handle *)husb, configNr) != 0 ) {
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not set configuration %d", CONFIG );
-          usb_close((usb_dev_handle *)husb);
-          husb = NULL;
-          break;
-        }
-
-        if( usb_claim_interface(husb, interfaceNr) != 0 ) {
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not claim interface %d", INTERFACE );
-          usb_close((usb_dev_handle *)husb);
-          husb = NULL;
-          break;
-        }
-
-        break;
-      }
-    }
-  }
-#endif
-
-  if( husb == NULL ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no RocoMP found" );
-  }
-  return husb;
-}
-
-
-
-static Boolean __closeUSB(void* husb) {
-  int rc = 0;
-
-#if defined __linux__ &! defined __APPLE__
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "close USB of RocoMP" );
-  if( husb != NULL ) {
-    usb_release_interface((usb_dev_handle *)husb, INTERFACE);
-    rc = usb_close((usb_dev_handle *)husb);
-    usb_exit();
-  }
-#endif
-
-  return rc == 0 ? True:False;
-}
-
-
-static Boolean __writeUSB(void* husb, byte* out, int len) {
-  int rc = 0;
-
-#if defined __linux__ &! defined __APPLE__
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %d...", len );
-  TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
-  if( husb != NULL ) {
-    rc = usb_bulk_write((usb_dev_handle *)husb, 1, out, len, 1000);
-  }
-#endif
-
-  return rc == 0 ? True:False;
-}
-
-
-static Boolean __readUSB(void* husb, byte* in, int len) {
-  int rc = -1;
-
-#if defined __linux__ &! defined __APPLE__
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read %d...", len );
-  if( husb != NULL ) {
-    rc = usb_bulk_read((usb_dev_handle *)husb, 1, in, len, 1000);
-    if( rc == 0 )
-      TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, len );
-  }
-#endif
-
-  return rc == 0 ? True:False;
-}
-
-
 static void __transactor( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iORocoMP roco = (iORocoMP)ThreadOp.getParm(th);
@@ -385,14 +237,14 @@ static void __transactor( void* threadinst ) {
 
     byte* post = (byte*)ThreadOp.getPost( th );
     if( post != NULL ) {
-      __writeUSB(data->husb, post+1, post[0]&0x7F);
+      USBOp.write(data->usb, post+1, post[0]&0x7F);
       doRead = (post[0] & 0x80) ? True:False;
       freeMem(post);
     }
 
     if( doRead ) {
       MemOp.set(in, 0, sizeof(in));
-      didRead = __readUSB(data->husb, in, 64);
+      didRead = USBOp.read(data->usb, in, 64);
     }
 
     if( didRead ) {
@@ -433,7 +285,8 @@ static struct ORocoMP* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ID %04X:%04X", VENDOR, PRODUCT );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->husb = __openUSB(VENDOR, PRODUCT, CONFIG, INTERFACE);
+  data->usb = USBOp.inst();
+  USBOp.open(data->usb, VENDOR, PRODUCT, CONFIG, INTERFACE);
 
   data->run = True;
 

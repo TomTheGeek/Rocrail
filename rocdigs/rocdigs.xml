@@ -1739,7 +1739,7 @@
     </data>
   </object>
 
-  <object name="RocoMP" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint">
+  <object name="RocoMP" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,usb" include="$rocint/public/digint">
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -1751,7 +1751,7 @@
       <var name="transactor" vt="iOThread"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
-      <var name="husb" vt="void*"/>
+      <var name="usb" vt="iOUSB"/>
       </data>
   </object>
 

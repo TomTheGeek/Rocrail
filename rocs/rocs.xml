@@ -2077,6 +2077,7 @@
     </fun>
     <data>
       <var name="husb" vt="void*"/>
+      <var name="interfaceNr" vt="int"/>
     </data>
   </object>
   
