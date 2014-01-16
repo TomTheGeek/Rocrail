@@ -141,9 +141,66 @@ static void __translate( iORocoMP inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
       ThreadOp.post( data->transactor, (obj)outa );
     }
+  }
 
+  /* Loc command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    byte* outa = allocMem(32);
+    int  addr = wLoc.getaddr( node );
+    int   dir = wLoc.isdir( node );
+    int    fn = wLoc.isfn( node );
+    int spcnt = wLoc.getspcnt( node );
+    int speed = 0;
+
+    if( wLoc.getV( node ) != -1 ) {
+      if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+        speed = (wLoc.getV( node ) * spcnt) / 100;
+      else if( wLoc.getV_max( node ) > 0 )
+        speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
+    }
+
+    /* PC control 07 40 E3 F0 00 03 */
+    outa[0] = 0x80 + 7;
+    outa[1] = 7;
+    outa[2] = 0x40;
+    outa[3] = 0xE3;
+    outa[4] = 0xF0;
+    outa[5] = addr/256;
+    outa[6] = addr%256;
+    outa[7] = __makeXor(outa+1, 6);
+    ThreadOp.post( data->transactor, (obj)outa );
+
+    /* Speed and direction 09 40 E5 13 00 03 90 00 */
+    outa = allocMem(32);
+    outa[0] = 0x80 + 9;
+    outa[1] = 9;
+    outa[2] = 0x40;
+    outa[3] = 0xE5;
+    outa[4] = 0x13;
+    outa[5] = addr/256;
+    outa[6] = addr%256;
+    outa[7] = speed + (dir?0x80:0x00);
+    outa[8] = 0x00;
+    outa[9] = __makeXor(outa+1, 7);
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d velocity=%d dir=%s fn=%d", addr, speed, (dir?"fwd":"rev"), fn );
+    ThreadOp.post( data->transactor, (obj)outa );
+
+    /* Light function 08 40 E4 F8 00 01 00 */
+    outa = allocMem(32);
+    outa[0] = 0x80 + 8;
+    outa[1] = 8;
+    outa[2] = 0x40;
+    outa[3] = 0xE4;
+    outa[4] = 0xF8;
+    outa[5] = addr/256;
+    outa[6] = addr%256;
+    outa[7] = fn;
+    outa[8] = __makeXor(outa+1, 6);
+    ThreadOp.post( data->transactor, (obj)outa );
 
   }
+
 }
 
 
