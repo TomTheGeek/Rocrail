@@ -411,6 +411,12 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_DATA + 2] = fn;
       rn[RN_PACKET_DATA + 3] = mass;
       rn[RN_PACKET_DATA + 4] = spcnt;
+
+      if( data->watchdog != NULL ) {
+        byte*  rnwd  = allocMem(32);
+        MemOp.copy(rnwd, rn, 32);
+        ThreadOp.post( data->watchdog, (obj)rnwd );
+      }
     }
     ThreadOp.post( data->writer, (obj)rn );
     return rsp;
@@ -467,6 +473,12 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_DATA + 1] = fb2;
       rn[RN_PACKET_DATA + 2] = fb3;
       rn[RN_PACKET_DATA + 3] = wFunCmd.getfnchanged(node) & 0xFF;
+
+      if( data->watchdog != NULL ) {
+        byte*  rnwd  = allocMem(32);
+        MemOp.copy(rnwd, rn, 32);
+        ThreadOp.post( data->watchdog, (obj)rnwd );
+      }
     }
     ThreadOp.post( data->writer, (obj)rn );
     return rsp;

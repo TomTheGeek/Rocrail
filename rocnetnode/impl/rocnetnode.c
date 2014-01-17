@@ -214,6 +214,14 @@ static byte* __handleMobile( iORocNetNode rocnetnode, byte* rn ) {
         data->Vmass = rn[RN_PACKET_DATA + 3];
         data->Vmax  = rn[RN_PACKET_DATA + 4];
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "mobile V=%d dir=%d lights=%d", data->Vraw, data->Vdir, data->fn[0] );
+        /* always acknowledge */
+        msg = allocMem(32);
+        msg[RN_PACKET_NETID] = data->location;
+        msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
+        rnSenderAddresToPacket( data->id, msg, 0 );
+        msg[RN_PACKET_ACTION] = RN_MOBILE_ACK;
+        msg[RN_PACKET_LEN] = 1;
+        msg[RN_PACKET_DATA + 0] = RN_MOBILE_VELOCITY;
       }
       break;
 
@@ -234,6 +242,14 @@ static byte* __handleMobile( iORocNetNode rocnetnode, byte* rn ) {
           data->channels[data->fchanged]->idle  = 0;
         }
 
+        /* always acknowledge */
+        msg = allocMem(32);
+        msg[RN_PACKET_NETID] = data->location;
+        msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
+        rnSenderAddresToPacket( data->id, msg, 0 );
+        msg[RN_PACKET_ACTION] = RN_MOBILE_ACK;
+        msg[RN_PACKET_LEN] = 1;
+        msg[RN_PACKET_DATA + 0] = RN_MOBILE_FUNCTIONS;
       }
       break;
 
