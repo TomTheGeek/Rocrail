@@ -898,6 +898,7 @@
       <var name="sensor" vt="Boolean"/>
       <var name="discovery" vt="iOThread"/>
       <var name="initASCII" vt="Boolean"/>
+      <var name="cmdpause" vt="int"/>
       </data>
   </object>
 

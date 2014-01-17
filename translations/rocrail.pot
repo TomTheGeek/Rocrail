@@ -6875,3 +6875,9 @@ msgstr ""
 msgid "Move bridge if target position is opposite"
 msgstr ""
 
+#. 
+# id="cmdpause"
+#, c-format
+msgid "Command pause"
+msgstr ""
+

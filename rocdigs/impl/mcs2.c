@@ -1142,7 +1142,7 @@ static void __writer( void* threadinst ) {
       freeMem( cmd );
     }
 
-    ThreadOp.sleep(10);
+    ThreadOp.sleep(data->cmdpause);
   } while( data->run );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 writer stopped." );
@@ -1188,6 +1188,9 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
     NodeOp.addChild( ini, data->mcs2ini);
   }
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor device ID [%d]", wMCS2.getfbdevid(data->mcs2ini) );
+
+  data->cmdpause = wMCS2.getcmdpause(data->mcs2ini);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  command pause [%d]ms", data->cmdpause );
 
   data->udp = !StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib(data->ini));
 

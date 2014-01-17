@@ -696,6 +696,7 @@
         <var name="fbdevid" vt="int" defval="0" range="0-*" remark="Sensor device ID"/>
         <var name="discovery" vt="bool" defval="false"/>
         <var name="bind" vt="bool" defval="true"/>
+        <var name="cmdpause" vt="int" defval="10" range="10-500"/>
         <product cardinality="n"/>
       </mcs2>
       

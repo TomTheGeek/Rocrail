@@ -26473,4 +26473,7 @@
   <Msg id="move4opp">
     <en txt="Move bridge if target position is opposite"/>
   </Msg>
+  <Msg id="cmdpause">
+    <en txt="Command pause"/>
+  </Msg>
 </Messages>

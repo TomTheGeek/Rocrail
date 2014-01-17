@@ -139,6 +139,8 @@ public:
     wxSpinCtrl* m_FbAddr;
     wxStaticText* m_labSwTime;
     wxSpinCtrl* m_SwTime;
+    wxStaticText* m_labCmdPause;
+    wxSpinCtrl* m_CmdPause;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end ECoSCtrlDialog member variables
