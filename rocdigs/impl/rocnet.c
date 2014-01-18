@@ -450,7 +450,8 @@ static iONode __translate( iOrocNet inst, iONode node ) {
         fb3 |= (1 << i);
     }
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d:%d fb1=0x%02X fb2=0x%02X fb3=0x%02X", fb1, fb2, fb3);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d:%d fb1=0x%02X fb2=0x%02X fb3=0x%02X changed=%d",
+        bus, addr, fb1, fb2, fb3, wFunCmd.getfnchanged(node));
 
     if( bus > 0 ) {
       rn[RN_PACKET_GROUP] |= RN_GROUP_CS;

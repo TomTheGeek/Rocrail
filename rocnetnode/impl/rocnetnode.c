@@ -424,12 +424,12 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
           for( i = 0; i < 8; i++ ) {
             char key[32];
             StrOp.fmtb(key, "f%d", i+9);
-            NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 3] & (1 << (i+8))) ? True:False);
+            NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 3] & (1 << i)) ? True:False);
           }
           for( i = 0; i < 8; i++ ) {
             char key[32];
             StrOp.fmtb(key, "f%d", i+17);
-            NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 4] & (1 << (i+16))) ? True:False);
+            NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 4] & (1 << i)) ? True:False);
           }
           wFunCmd.setfnchanged(cmd, rn[RN_PACKET_DATA + 6]);
           wFunCmd.setgroup(cmd, rn[RN_PACKET_DATA + 6]/4 + 1);
