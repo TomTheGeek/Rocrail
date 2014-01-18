@@ -456,13 +456,14 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
       rnReceipientAddresToPacket( bus, rn, data->seven );
       rn[RN_PACKET_ACTION] = RN_CS_FUNCTION;
-      rn[RN_PACKET_LEN] = 6;
+      rn[RN_PACKET_LEN] = 7;
       rn[RN_PACKET_DATA + 0] = addr / 256;
       rn[RN_PACKET_DATA + 1] = addr % 256;
       rn[RN_PACKET_DATA + 2] = fb1;
       rn[RN_PACKET_DATA + 3] = fb2;
       rn[RN_PACKET_DATA + 4] = fb3;
       rn[RN_PACKET_DATA + 5] = prot;
+      rn[RN_PACKET_DATA + 6] = wFunCmd.getfnchanged(node) & 0xFF;
     }
     else {
       rn[RN_PACKET_GROUP] |= RN_GROUP_MOBILE;
@@ -1647,7 +1648,9 @@ static void __watchdog( void* threadinst ) {
         rn[RN_PACKET_ACTION] &= RN_ACTION_CODE_MASK;
         for( i = 0; i < size; i++ ) {
           iORNreq req = (iORNreq)ListOp.get( data->AckList, i );
-          if( sndr == rnReceipientAddrFromPacket(req->req, data->seven) && rn[RN_PACKET_LEN] == req->req[RN_PACKET_LEN] && MemOp.cmp(rn+RN_PACKET_GROUP, req->req+RN_PACKET_GROUP, 2 + rn[RN_PACKET_LEN]) ) {
+          if( sndr == rnReceipientAddrFromPacket(req->req, data->seven) && rn[RN_PACKET_LEN] == req->req[RN_PACKET_LEN] &&
+              MemOp.cmp(rn+RN_PACKET_GROUP, req->req+RN_PACKET_GROUP, 2 + rn[RN_PACKET_LEN]) )
+          {
             req->ack = True;
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request %d is acknowledged", i );
           }

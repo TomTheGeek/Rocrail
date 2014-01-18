@@ -205,6 +205,10 @@ static byte* __handleMobile( iORocNetNode rocnetnode, byte* rn ) {
   rcpt = rnReceipientAddrFromPacket(rn, 0);
   sndr = rnSenderAddrFromPacket(rn, 0);
 
+  if( actionType == RN_ACTIONTYPE_EVENT ) {
+    return NULL;
+  }
+
   switch( action ) {
     case RN_MOBILE_VELOCITY:
       if( data->id == rcpt ) {
@@ -219,9 +223,10 @@ static byte* __handleMobile( iORocNetNode rocnetnode, byte* rn ) {
         msg[RN_PACKET_NETID] = data->location;
         msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
         rnSenderAddresToPacket( data->id, msg, 0 );
-        msg[RN_PACKET_ACTION] = RN_MOBILE_ACK;
-        msg[RN_PACKET_LEN] = 1;
-        msg[RN_PACKET_DATA + 0] = RN_MOBILE_VELOCITY;
+        msg[RN_PACKET_ACTION] = RN_MOBILE_VELOCITY;
+        msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+        msg[RN_PACKET_LEN] = rn[RN_PACKET_LEN];
+        MemOp.copy(msg+RN_PACKET_DATA, rn+RN_PACKET_DATA, rn[RN_PACKET_LEN]);
       }
       break;
 
@@ -247,9 +252,10 @@ static byte* __handleMobile( iORocNetNode rocnetnode, byte* rn ) {
         msg[RN_PACKET_NETID] = data->location;
         msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
         rnSenderAddresToPacket( data->id, msg, 0 );
-        msg[RN_PACKET_ACTION] = RN_MOBILE_ACK;
-        msg[RN_PACKET_LEN] = 1;
-        msg[RN_PACKET_DATA + 0] = RN_MOBILE_FUNCTIONS;
+        msg[RN_PACKET_ACTION] = RN_MOBILE_FUNCTIONS;
+        msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+        msg[RN_PACKET_LEN] = rn[RN_PACKET_LEN];
+        MemOp.copy(msg+RN_PACKET_DATA, rn+RN_PACKET_DATA, rn[RN_PACKET_LEN]);
       }
       break;
 
@@ -425,6 +431,8 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
             StrOp.fmtb(key, "f%d", i+17);
             NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 4] & (1 << (i+16))) ? True:False);
           }
+          wFunCmd.setfnchanged(cmd, rn[RN_PACKET_DATA + 6]);
+          wFunCmd.setgroup(cmd, rn[RN_PACKET_DATA + 6]/4 + 1);
           data->pDI->cmd( (obj)data->pDI, cmd );
         }
       }
