@@ -65,6 +65,7 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/RouteCondition.h"
 #include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/Operator.h"
 
 #include "rocs/public/strtok.h"
 
@@ -464,25 +465,39 @@ void RouteDialog::initLabels() {
 void RouteDialog::initLocPermissionList() {
   iONode model = wxGetApp().getModel();
   iOList list = ListOp.inst();
+  int cnt = 0;
 
   if( model != NULL ) {
     iONode lclist = wPlan.getlclist( model );
+    iONode oplist = wPlan.getoperatorlist( model );
     if( lclist != NULL ) {
-      int cnt = NodeOp.getChildCnt( lclist );
+      cnt = NodeOp.getChildCnt( lclist );
       for( int i = 0; i < cnt; i++ ) {
         iONode lc = NodeOp.getChild( lclist, i );
         const char* id = wLoc.getid( lc );
         if( id != NULL ) {
           ListOp.add(list, (obj)id);
-    }
-    }
-      ListOp.sort(list, &__sortStr);
-      cnt = ListOp.size( list );
-      for( int i = 0; i < cnt; i++ ) {
-        const char* id = (const char*)ListOp.get( list, i );
-        m_IncludeList->Append( wxString(id,wxConvUTF8) );
-        m_ExcludeList->Append( wxString(id,wxConvUTF8) );
+        }
       }
+    }
+    if( oplist != NULL ) {
+      cnt = NodeOp.getChildCnt( oplist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode op = NodeOp.getChild( oplist, i );
+        const char* id = wOperator.getid( op );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)id);
+        }
+      }
+    }
+
+
+    ListOp.sort(list, &__sortStr);
+    cnt = ListOp.size( list );
+    for( int i = 0; i < cnt; i++ ) {
+      const char* id = (const char*)ListOp.get( list, i );
+      m_IncludeList->Append( wxString(id,wxConvUTF8) );
+      m_ExcludeList->Append( wxString(id,wxConvUTF8) );
     }
   }
   /* clean up the temp. list */

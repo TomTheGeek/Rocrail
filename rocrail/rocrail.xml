@@ -485,7 +485,10 @@
     <fun name="getId" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
-     <fun name="getEngine" vt="const char*">
+    <fun name="getTrain" vt="const char*">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
+    <fun name="getEngine" vt="const char*">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
     <fun name="getCurBlock" vt="const char*">

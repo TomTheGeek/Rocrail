@@ -2171,6 +2171,12 @@ static const char* _getEngine( iOLoc inst ) {
 }
 
 
+static const char* _getTrain( iOLoc inst ) {
+  iOLocData data = Data(inst);
+  return wLoc.gettrain(data->props);
+}
+
+
 static void __adjustAccel(iOLoc inst, int accel) {
   iOLocData data = Data(inst);
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );

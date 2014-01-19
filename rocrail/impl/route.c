@@ -965,6 +965,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
   iORouteData data = Data(inst);
 
   const char* id = LocOp.getId( loc );
+  const char* train = LocOp.getTrain( loc );
 
   /* Permissions */
   iONode incl = wRoute.getincl( data->props );
@@ -974,7 +975,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
   if( incl != NULL ) {
     Boolean included = False;
     while( incl != NULL ) {
-      if( StrOp.equals( id, wPermInclude.getid(incl) )) {
+      if( StrOp.equals( id, wPermInclude.getid(incl) ) || StrOp.equals( train, wPermInclude.getid(incl) ) ) {
         included = True;
         break;
       }
@@ -992,7 +993,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
   if( excl != NULL ) {
     Boolean excluded = False;
     while( excl != NULL ) {
-      if( StrOp.equals( id, wPermExclude.getid(excl) )) {
+      if( StrOp.equals( id, wPermExclude.getid(excl) ) || StrOp.equals( train, wPermExclude.getid(incl) ) ) {
         excluded = True;
         break;
       }
