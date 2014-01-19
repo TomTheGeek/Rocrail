@@ -512,12 +512,12 @@ static Boolean _cmd( iORoute inst, iONode nodeA ) {
     RouteOp.reset(inst);
   }
   else if( state != NULL && StrOp.equals( wBlock.closed, state ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "close route %s", RouteOp.getId(inst) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "close route %s", RouteOp.getId(inst) );
     wRoute.setstatus(o->props, wRoute.status_closed);
     __broadcast(inst);
   }
   else if( state != NULL && StrOp.equals( wBlock.open, state ) && wRoute.getstatus(o->props) == wRoute.status_closed ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "open route %s", RouteOp.getId(inst) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "open route %s", RouteOp.getId(inst) );
     wRoute.setstatus(o->props, wRoute.status_free);
     __broadcast(inst);
   }

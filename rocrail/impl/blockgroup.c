@@ -160,7 +160,7 @@ static Boolean _lock( struct OBlockGroup* inst ,const char* BlockId ,const char*
     StrTokOp.base.del(tok);
 
     if( !grouplocked ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
           "unable to lock blockgroup %s for loco %s", wLink.getid(data->props), LocoId);
       __rewind(inst, LocoId);
       data->firstBlock = NULL;
