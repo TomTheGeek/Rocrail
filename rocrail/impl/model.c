@@ -2374,7 +2374,7 @@ static void _addFbKey(iOModel inst, const char* key, obj fb) {
     multiple = True;
   }
   ListOp.add( list, fb );
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "addFbKey %s%s: size=%d.", key, multiple?"(**multiple**)":"", MapOp.size(data->fbAddrMap) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "addFbKey %s%s: size=%d.", key, multiple?"(**multiple**)":"", MapOp.size(data->fbAddrMap) );
 }
 
 static void _createFbAddrMap( iOModel inst ) {
@@ -2664,7 +2664,6 @@ static iOList _getSensorsByAddress( iOModel inst, const char* iid, int bus, int 
 
     fb = MapOp.next( data->feedbackMap );
   };
-
 
   return list;
 }
@@ -3540,7 +3539,14 @@ static void _event( iOModel inst, iONode nodeC ) {
       }
     }
 
+    Boolean cleanList = True;
     iOList list = ModelOp.getSensorsByAddress(inst, iid, bus, addr, uidname);
+    if( list == NULL ) {
+      char* key = FBackOp.createAddrKey( bus, addr, iid );
+      list = (iOList)MapOp.get( o->fbAddrMap, key );
+      cleanList = False;
+    }
+
     if( list != NULL ) {
       obj fb = ListOp.first( list );
       while( fb != NULL ) {
@@ -3549,7 +3555,10 @@ static void _event( iOModel inst, iONode nodeC ) {
         fb = ListOp.next(list);
       }
       NodeOp.base.del(nodeC);
-      ListOp.base.del(list);
+
+      if( cleanList )
+        ListOp.base.del(list);
+
       return;
     }
     else {
