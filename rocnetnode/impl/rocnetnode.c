@@ -412,11 +412,12 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
     case RN_CS_FUNCTION:
       if(data->cstype > 0 && data->pDI != NULL) {
         addr = rn[RN_PACKET_DATA + 0] * 256 + rn[RN_PACKET_DATA + 1];
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco function bus=%d addr=%d", rcpt, addr );
         if(data->pDI != NULL) {
           iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE);
           int fnchanged = rn[RN_PACKET_DATA + 6] & 0x7F;
           Boolean lights = (rn[RN_PACKET_DATA + 6] & 0x80 ? True:False);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "loco function bus=%d addr=%d lights=%d fnchanged=%d", rcpt, addr, lights, fnchanged );
           wFunCmd.setaddr(cmd, addr);
           wFunCmd.setf0(cmd, lights);
           for( i = 0; i < 8; i++ ) {
