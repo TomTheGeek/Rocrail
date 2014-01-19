@@ -465,7 +465,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_DATA + 3] = fb2;
       rn[RN_PACKET_DATA + 4] = fb3;
       rn[RN_PACKET_DATA + 5] = prot + (lights << 7);
-      rn[RN_PACKET_DATA + 6] = wFunCmd.getfnchanged(node) & 0xFF;
+      rn[RN_PACKET_DATA + 6] = (wFunCmd.getfnchanged(node) & 0x7F) + (lights << 7);
     }
     else {
       rn[RN_PACKET_GROUP] |= RN_GROUP_MOBILE;
