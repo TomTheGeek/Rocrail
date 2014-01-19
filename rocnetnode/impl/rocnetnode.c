@@ -415,7 +415,10 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco function bus=%d addr=%d", rcpt, addr );
         if(data->pDI != NULL) {
           iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE);
+          int fnchanged = rn[RN_PACKET_DATA + 6] & 0x7F;
+          Boolean lights = (rn[RN_PACKET_DATA + 6] & 0x80 ? True:False);
           wFunCmd.setaddr(cmd, addr);
+          wFunCmd.setf0(cmd, lights);
           for( i = 0; i < 8; i++ ) {
             char key[32];
             StrOp.fmtb(key, "f%d", i+1);
@@ -431,8 +434,8 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
             StrOp.fmtb(key, "f%d", i+17);
             NodeOp.setBool(cmd, key, (rn[RN_PACKET_DATA + 4] & (1 << i)) ? True:False);
           }
-          wFunCmd.setfnchanged(cmd, rn[RN_PACKET_DATA + 6]);
-          wFunCmd.setgroup(cmd, rn[RN_PACKET_DATA + 6]/4 + 1);
+          wFunCmd.setfnchanged(cmd, fnchanged);
+          wFunCmd.setgroup(cmd, fnchanged/4 + 1);
           data->pDI->cmd( (obj)data->pDI, cmd );
         }
       }
