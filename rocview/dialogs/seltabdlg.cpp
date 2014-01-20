@@ -229,7 +229,7 @@ void SelTabDialog::initLabels() {
   m_InvertNew->SetLabel( wxGetApp().getMsg( "invert" ) );
   m_SingleGate->SetLabel( wxGetApp().getMsg( "singlegate" ) );
   m_labPosSen->SetLabel( wxGetApp().getMsg( "posfb" ) );
-  m_NewPosBox->SetLabel( wxGetApp().getMsg( "New Position Flag" ) );
+  m_NewPosBox->SetLabel( wxGetApp().getMsg( "newposflag" ) );
   m_labb0Sen->SetLabel( wxT("b0 ") + wxGetApp().getMsg( "sensor" ) );
   m_labb1Sen->SetLabel( wxT("b1 ") + wxGetApp().getMsg( "sensor" ) );
   m_labb2Sen->SetLabel( wxT("b2 ") + wxGetApp().getMsg( "sensor" ) );
