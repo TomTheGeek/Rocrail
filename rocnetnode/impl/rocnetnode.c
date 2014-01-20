@@ -2929,8 +2929,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       data->ini = DocOp.getRootNode( iniDoc );
     }
     else {
-      printf( "Invalid ini file! [%s]", data->inifile );
-      return -1;
+      data->ini = NodeOp.inst( "rocnetnode", NULL, ELEMENT_NODE );
     }
   }
 
