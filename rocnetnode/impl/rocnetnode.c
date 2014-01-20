@@ -2886,26 +2886,34 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   {
     char* iniXml = NULL;
     iODoc iniDoc = NULL;
-    iOFile iniFile = FileOp.inst( data->inifile, True );
-    if( iniFile != NULL ) {
-      iniXml = allocMem( FileOp.size( iniFile ) + 1 );
-      FileOp.read( iniFile, iniXml, FileOp.size( iniFile ) );
-      if( StrOp.len( iniXml ) == 0 )
-        iniXml = StrOp.fmt( "<%s/>", "rocnetnode");
-      FileOp.close( iniFile );
-      FileOp.base.del(iniFile);
+    if( FileOp.exist(data->inifile) && FileOp.fileSize(data->inifile) > 0 ) {
+      iOFile iniFile = FileOp.inst( data->inifile, True );
+      if( iniFile != NULL ) {
+        iniXml = allocMem( FileOp.size( iniFile ) + 1 );
+        FileOp.read( iniFile, iniXml, FileOp.size( iniFile ) );
+        FileOp.close( iniFile );
+        FileOp.base.del(iniFile);
+        if( StrOp.len( iniXml ) == 0 ) {
+          freeMem(iniXml);
+          iniXml = NULL;
+        }
+      }
     }
 
     if( iniXml == NULL ) {
       char* backupfile = StrOp.fmt("%s.bak", data->inifile );
       if( FileOp.exist(backupfile) && FileOp.fileSize(backupfile) > 0 ) {
-        iniFile = FileOp.inst( backupfile, True );
+        iOFile iniFile = FileOp.inst( backupfile, True );
         if( iniFile != NULL ) {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "using backup ini file: %s", FileOp.getFilename(iniFile) );
           iniXml = allocMem( FileOp.size( iniFile ) + 1 );
           FileOp.read( iniFile, iniXml, FileOp.size( iniFile ) );
           FileOp.close( iniFile );
           FileOp.base.del(iniFile);
+          if( StrOp.len( iniXml ) == 0 ) {
+            freeMem(iniXml);
+            iniXml = NULL;
+          }
         }
       }
       StrOp.free(backupfile);
