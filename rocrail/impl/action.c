@@ -1063,8 +1063,18 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   /* check for a function command */
   else if( StrOp.equals( wFunCmd.name(), wAction.gettype( data->action ) ) ) {
     iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ), NULL, False);
-    iOStrTok tok = StrTokOp.inst(wAction.getparam(data->action), ',');
     Boolean fon = StrOp.equals( "on", wAction.getcmd( data->action ) );
+    Boolean random = StrOp.startsWith(wAction.getparam(data->action), "?");
+    iOStrTok tok = StrTokOp.inst(wAction.getparam(data->action)+(random?1:0), ',');
+    int fncnt = StrTokOp.countTokens(tok);
+    int fnpick = 0;
+    int fnidx = 0;
+
+    if( random && fncnt > 1 ) {
+      int randNumber = rand();
+      fnpick = randNumber % fncnt;
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "random function index %d of %d", fnpick, fncnt);
+    }
 
     if( lc == NULL && wActionCtrl.getlcid(actionctrl) != NULL) {
       lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL, False );
@@ -1074,7 +1084,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       while( StrTokOp.hasMoreTokens(tok) ) {
         int fnaction = LocOp.getFnNrByDesc(lc, StrTokOp.nextToken(tok));
         if( fnaction != -1 )
-        __doFunction(data, lc, fon, fnaction);
+          if( !random || fnpick == fnidx )
+            __doFunction(data, lc, fon, fnaction);
+        fnidx++;
       }
     }
     else {
@@ -1083,7 +1095,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         while( StrTokOp.hasMoreTokens(tok) ) {
           int fnaction = CarOp.getFnNrByDesc(car, StrTokOp.nextToken(tok));
           if( fnaction != -1 )
-            __doCarFunction(data, car, fon, fnaction);
+            if( !random || fnpick == fnidx )
+              __doCarFunction(data, car, fon, fnaction);
+          fnidx++;
         }
       }
       else {
@@ -1091,7 +1105,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         if( opr != NULL ) {
           while( StrTokOp.hasMoreTokens(tok) ) {
             int fnaction = atoi(StrTokOp.nextToken(tok));
-            __doOperatorFunction(data, opr, fon, fnaction);
+            if( !random || fnpick == fnidx )
+              __doOperatorFunction(data, opr, fon, fnaction);
+            fnidx++;
           }
         }
       }
