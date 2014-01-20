@@ -2548,7 +2548,7 @@ static void _goNet( iOLoc inst, const char* curblock, const char* nextblock, con
   data->goNet = True; /* signal that the current block is from the net */
   data->go = True;
   data->released = False;
-  data->gomanual = False;
+  data->gomanual = (data->manual?True:False);
   if( data->driver != NULL )
     data->driver->goNet( data->driver, data->gomanual, curblock, nextblock, nextroute );
 }
@@ -2580,7 +2580,7 @@ static Boolean _go( iOLoc inst ) {
         data->go = True;
         data->released = False;
         data->govirtual = False;
-        data->gomanual = False;
+        data->gomanual = (data->manual?True:False);
         if( data->driver != NULL )
           data->driver->go( data->driver, data->gomanual );
 
@@ -2699,7 +2699,7 @@ static void _reset( iOLoc inst, Boolean saveCurBlock ) {
 static void __stopgo( iOLoc inst ) {
   iOLocData data = Data(inst);
   data->go = !data->go;
-  data->gomanual = False;
+  data->gomanual = (data->manual?True:False);
   data->govirtual = False;
   if( data->go )
     _go( inst );
@@ -2738,7 +2738,7 @@ static Boolean _govirtual( iOLoc inst ) {
     if( block != NULL ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] start virtual in block %s.", LocOp.getId(inst), block->base.id(block) );
       data->go = True;
-      data->gomanual = False;
+      data->gomanual = (data->manual?True:False);
       data->govirtual = True;
       data->released = False;
       if( data->driver != NULL )
@@ -2929,6 +2929,13 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   if( cmd != NULL && !StrOp.equals( wLoc.direction, cmd )  && !StrOp.equals( wLoc.velocity, cmd ) && !StrOp.equals( wLoc.dirfun, cmd ) ) {
     Boolean broadcast = False;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing cmd=\"%s\" for [%s]",  cmd, LocOp.getId( inst ) );
+
+    if( StrOp.equals( wLoc.setmanualmode, cmd ) ) {
+      data->manual = True;
+    }
+    else if( StrOp.equals( wLoc.resetmanualmode, cmd ) ) {
+      data->manual = False;
+    }
 
     if( ModelOp.isAuto( AppOp.getModel() ) ) {
       if( StrOp.equals( wLoc.go, cmd ) ) {

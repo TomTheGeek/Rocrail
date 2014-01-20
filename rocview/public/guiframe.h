@@ -208,6 +208,8 @@ public:
   void OnCellLeftClick( wxGridEvent& event );
   void OnCellRightClick( wxGridEvent& event );
   void OnSelectCell( wxGridEvent& event );
+  void OnLocSetManual(wxCommandEvent& event);
+  void OnLocResetManual(wxCommandEvent& event);
   void OnLocGo(wxCommandEvent& event);
   void OnLocGoVirtual(wxCommandEvent& event);
   void OnLocStop(wxCommandEvent& event);
@@ -528,6 +530,8 @@ enum
     ME_EditMVTrack,
     ME_EditTimedActions,
     INIT_NOTEBOOK,
+    ME_GridLocSetManual,
+    ME_GridLocResetManual,
     ME_GridLocGo,
     ME_GridLocGoVirtual,
     ME_GridLocStop,

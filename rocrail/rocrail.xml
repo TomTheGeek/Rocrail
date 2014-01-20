@@ -765,6 +765,7 @@
       <var name="outId" vt="const char*"/>
       <var name="outTick" vt="int"/>
       <var name="gomanual" vt="Boolean"/>
+      <var name="manual" vt="Boolean"/>
       <var name="runtime" vt="long"/>
       <var name="secondnextblock" vt="Boolean"/>
       <var name="usemanualroutes" vt="Boolean"/>

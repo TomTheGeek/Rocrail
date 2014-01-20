@@ -404,6 +404,8 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_GRID_CELL_RIGHT_CLICK( RocGuiFrame::OnCellRightClick )
     EVT_GRID_SELECT_CELL( RocGuiFrame::OnSelectCell )
 
+    EVT_MENU     (ME_GridLocSetManual  , RocGuiFrame::OnLocSetManual  )
+    EVT_MENU     (ME_GridLocResetManual, RocGuiFrame::OnLocResetManual  )
     EVT_MENU     (ME_GridLocGo      , RocGuiFrame::OnLocGo  )
     EVT_MENU     (ME_GridLocGoVirtual, RocGuiFrame::OnLocGoVirtual  )
     EVT_MENU     (ME_GridLocStop    , RocGuiFrame::OnLocStop)
@@ -4626,6 +4628,9 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
     mi->Enable( isAutoMode() );
     menu.Append( ME_GridLocStop, wxGetApp().getMenu("stop"), wxGetApp().getTip("stop"));
     menu.AppendSeparator();
+    menu.Append( ME_GridLocSetManual, wxGetApp().getMenu("manualoperated"), wxGetApp().getTip("manualoperated"));
+    menu.Append( ME_GridLocResetManual, wxGetApp().getMenu("autooperated"), wxGetApp().getTip("autooperated"));
+    menu.AppendSeparator();
     menu.Append( ME_GridLocReset, wxGetApp().getMenu("softresetall"), wxGetApp().getTip("softresetall") );
     menu.Append( ME_GridLocResetAll, wxGetApp().getMenu("resetall"), wxGetApp().getTip("resetall") );
     menu.Append( ME_GridLocSwap, wxGetApp().getMenu("swapplacing"), wxGetApp().getTip("swapplacing") );
@@ -4672,6 +4677,24 @@ void RocGuiFrame::OnSelectCell( wxGridEvent& event ){
   }
 
   event.Skip(true);
+}
+
+void RocGuiFrame::OnLocSetManual(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, m_LocID );
+  wLoc.setcmd( cmd, wLoc.setmanualmode );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void RocGuiFrame::OnLocResetManual(wxCommandEvent& event) {
+  /* Inform RocRail... */
+  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+  wLoc.setid( cmd, m_LocID );
+  wLoc.setcmd( cmd, wLoc.resetmanualmode );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
 }
 
 void RocGuiFrame::OnLocGo(wxCommandEvent& event) {
