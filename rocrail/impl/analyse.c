@@ -2787,6 +2787,10 @@ static Boolean blockCheck( iOAnalyse inst, Boolean repair ) {
         }
       }
 
+      if( wBlock.getevttimer( bkNode ) > 100 || wBlock.getevttimer2( bkNode ) > 100 ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block check: block[%s] event timer > 100", bkid );
+      }
+
       /* check fb events */
       iONode fbevt = wBlock.getfbevent( bkNode );
       while( fbevt != NULL ) {
