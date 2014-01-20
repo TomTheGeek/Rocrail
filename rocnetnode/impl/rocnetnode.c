@@ -448,8 +448,8 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
 
 static void __saveIni(iORocNetNode rocnetnode) {
   iORocNetNodeData data = Data(rocnetnode);
-  iOFile iniFile = FileOp.inst( data->inifile, OPEN_WRITE );
   iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
+  iOFile iniFile = NULL;
 
   int i = 0;
 
@@ -525,12 +525,24 @@ static void __saveIni(iORocNetNode rocnetnode) {
     wTrace.setmonitor(traceini, TraceOp.getLevel( NULL ) & TRCLEVEL_MONITOR );
   }
 
+  /* backup existing ini: */
+  if( FileOp.exist(data->inifile) && FileOp.fileSize(data->inifile) > 0 ) {
+    char* backupfile = StrOp.fmt( "%s.bak", data->inifile );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "backing up %s to %s...", data->inifile, backupfile );
+    if( FileOp.exist(backupfile) )
+      FileOp.remove( backupfile );
+    FileOp.rename( data->inifile, backupfile );
+    StrOp.free( backupfile );
+  }
+
+  iniFile = FileOp.inst( data->inifile, OPEN_WRITE );
   if( iniFile != NULL ) {
     char* iniStr = NodeOp.base.toString( data->ini );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "saving ini %s...", data->inifile );
     FileOp.write( iniFile, iniStr, StrOp.len( iniStr ) );
     FileOp.flush( iniFile );
     FileOp.close( iniFile );
+    FileOp.base.del(iniFile);
     StrOp.free(iniStr);
   }
 }
