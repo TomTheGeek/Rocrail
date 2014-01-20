@@ -1350,7 +1350,8 @@ static int _isSuited( iIBlockBase inst, iOLoc loc, int* restlen, Boolean checkPr
 
   int bklen = wBlock.getlen( data->props );
   int lclen = LocOp.getLen( loc );
-  const char* id = LocOp.getId( loc );
+  const char* id    = LocOp.getId( loc );
+  const char* train = LocOp.getTrain( loc );
 
   /* Permissions */
   iONode incl = wBlock.getincl( data->props );
@@ -1366,7 +1367,7 @@ static int _isSuited( iIBlockBase inst, iOLoc loc, int* restlen, Boolean checkPr
   if( incl != NULL ) {
     Boolean included = False;
     while( incl != NULL ) {
-      if( StrOp.equals( id, wPermInclude.getid(incl) )) {
+      if( StrOp.equals( id, wPermInclude.getid(incl) ) || StrOp.equals( train, wPermInclude.getid(incl) ) ) {
         included = True;
         break;
       }
@@ -1384,7 +1385,7 @@ static int _isSuited( iIBlockBase inst, iOLoc loc, int* restlen, Boolean checkPr
   if( excl != NULL ) {
     Boolean excluded = False;
     while( excl != NULL ) {
-      if( StrOp.equals( id, wPermExclude.getid(excl) )) {
+      if( StrOp.equals( id, wPermExclude.getid(excl) ) || StrOp.equals( train, wPermExclude.getid(excl) ) ) {
         excluded = True;
         break;
       }

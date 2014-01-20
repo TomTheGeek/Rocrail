@@ -12071,7 +12071,7 @@
   </Msg>
   <Msg id="exclude">
     <de txt="Lok ausschliessen"/>
-    <en txt="Deny Loco"/>
+    <en txt="Exclude"/>
     <nl txt="Loc negeren"/>
     <sv txt="Neka lok"/>
     <fr txt="Refuser les locomotives"/>
@@ -12100,7 +12100,7 @@
   </Msg>
   <Msg id="include">
     <de txt="Lok zulassen"/>
-    <en txt="Allow Loco"/>
+    <en txt="Include"/>
     <nl txt="Loc toelaten"/>
     <sv txt="Tillåt lok"/>
     <fr txt="Accepter les locomovies"/>

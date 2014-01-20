@@ -2660,13 +2660,13 @@ msgstr ""
 #. 
 # id="exclude"
 #, c-format
-msgid "Deny Loco"
+msgid "Exclude"
 msgstr ""
 
 #. 
 # id="include"
 #, c-format
-msgid "Allow Loco"
+msgid "Include"
 msgstr ""
 
 #. 
