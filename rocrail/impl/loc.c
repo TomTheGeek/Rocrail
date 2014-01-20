@@ -2930,13 +2930,6 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     Boolean broadcast = False;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing cmd=\"%s\" for [%s]",  cmd, LocOp.getId( inst ) );
 
-    if( StrOp.equals( wLoc.setmanualmode, cmd ) ) {
-      data->manual = True;
-    }
-    else if( StrOp.equals( wLoc.resetmanualmode, cmd ) ) {
-      data->manual = False;
-    }
-
     if( ModelOp.isAuto( AppOp.getModel() ) ) {
       if( StrOp.equals( wLoc.go, cmd ) ) {
         _go( inst );
@@ -3094,6 +3087,20 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       }
       broadcast = True;
     }
+    else if( StrOp.equals( wLoc.setmanualmode, cmd ) ) {
+      data->manual = True;
+      data->gomanual = True;
+      wLoc.setmanual(data->props, True);
+      broadcast = True;
+    }
+    else if( StrOp.equals( wLoc.resetmanualmode, cmd ) ) {
+      data->manual = False;
+      data->gomanual = False;
+      wLoc.setmanual(data->props, False);
+      broadcast = True;
+    }
+
+
 
     if(broadcast) {
       nodeF = (iONode)NodeOp.base.clone( nodeA );

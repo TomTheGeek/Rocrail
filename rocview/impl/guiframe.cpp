@@ -4617,6 +4617,7 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
 
     iONode lc = m_LC->getLocProps();
     Boolean active = wLoc.isactive(lc);
+    Boolean manual = wLoc.ismanual(lc);
 
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "OnCellRightClick %s", m_LocID );
     wxMenu menu( str );
@@ -4628,8 +4629,10 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
     mi->Enable( isAutoMode() );
     menu.Append( ME_GridLocStop, wxGetApp().getMenu("stop"), wxGetApp().getTip("stop"));
     menu.AppendSeparator();
-    menu.Append( ME_GridLocSetManual, wxGetApp().getMenu("manualoperated"), wxGetApp().getTip("manualoperated"));
-    menu.Append( ME_GridLocResetManual, wxGetApp().getMenu("autooperated"), wxGetApp().getTip("autooperated"));
+    if( manual )
+      menu.Append( ME_GridLocResetManual, wxGetApp().getMenu("autooperated"), wxGetApp().getTip("autooperated"));
+    else
+      menu.Append( ME_GridLocSetManual, wxGetApp().getMenu("manualoperated"), wxGetApp().getTip("manualoperated"));
     menu.AppendSeparator();
     menu.Append( ME_GridLocReset, wxGetApp().getMenu("softresetall"), wxGetApp().getTip("softresetall") );
     menu.Append( ME_GridLocResetAll, wxGetApp().getMenu("resetall"), wxGetApp().getTip("resetall") );
