@@ -623,6 +623,10 @@ static Boolean checkLocos( iOAnalyse inst, Boolean repair ) {
           }
         }
 
+        if( wLoc.getevttimer( node ) > 10 ) {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkLocos: loco[%s] event timer > 10", id );
+        }
+
         /* function definitions */
         unsigned int fundefIdx = 0;
         iONode fundef = wLoc.getfundef( node );
