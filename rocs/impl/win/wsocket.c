@@ -500,7 +500,7 @@ Boolean rocs_socket_write( iOSocket inst, char* buf, int size ) {
 
   while( size > 0 && twritten < size && !o->broken ) {
 
-    if( o->ssl && o->openssl_support ) {
+    if( o->ssl ) {
       #ifdef __OPENSSL__
       if (o->ssl_sh){
         l_InvalidSocketHandle = 0;
@@ -532,6 +532,13 @@ Boolean rocs_socket_write( iOSocket inst, char* buf, int size ) {
 
       rocs_socket_close(o);
 
+      if( o->ssl ) {
+      #ifdef __OPENSSL__
+        ERR_print_errors_fp( (FILE*)TraceOp.getF(NULL) );
+        fflush( (FILE*)TraceOp.getF(NULL) );
+      #endif
+      }
+
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "send() failed [%d]", o->rc );
       o->broken = True;
       return False;
@@ -556,8 +563,11 @@ Boolean rocs_socket_readpeek( iOSocket inst, char* buf, int size, Boolean peek )
 
   while( treaded < size ) {
 
-    if( o->ssl && o->openssl_support && !peek ) {
+    if( o->ssl ) {
       #ifdef __OPENSSL__
+      if( peek )
+        readed = SSL_peek( o->ssl_sh, buf + treaded, size - treaded );
+      else
       readed = SSL_read( o->ssl_sh, buf + treaded, size - treaded );
       #endif
     }
@@ -577,7 +587,14 @@ Boolean rocs_socket_readpeek( iOSocket inst, char* buf, int size, Boolean peek )
       o->rc = WSAGetLastError();
       o->peeked = readed;
       if( readed == -1 && o->rc != 0 && o->rc != WSAETIMEDOUT && o->rc != WSAEINTR && o->rc != WSAEWOULDBLOCK ) {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "*broken* errno=%d, rc=%d, read=%d", errno, o->rc, readed );
+        if( o->ssl ) {
+        #ifdef __OPENSSL__
+          ERR_print_errors_fp( (FILE*)TraceOp.getF(NULL) );
+          fflush( (FILE*)TraceOp.getF(NULL) );
+        #endif
+        }
+
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "*broken* errno=%d, rc=%d, readed=%d", errno, o->rc, readed );
         o->broken = True;
       }
         /* WinSock problems: http://sources.redhat.com/ml/cygwin/2001-08/msg00628.html
@@ -598,7 +615,15 @@ Boolean rocs_socket_readpeek( iOSocket inst, char* buf, int size, Boolean peek )
       if( o->rc == WSAEWOULDBLOCK || o->rc == WSAESHUTDOWN || o->rc == WSAENOTSOCK || o->rc == WSAETIMEDOUT || o->rc == WSAECONNRESET )
         rocs_socket_close(o);
 
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "recv() failed [%d] size=%d read=%d", o->rc, size, treaded );
+      if( o->ssl ) {
+      #ifdef __OPENSSL__
+        ERR_print_errors_fp( (FILE*)TraceOp.getF(NULL) );
+        fflush( (FILE*)TraceOp.getF(NULL) );
+      #endif
+      }
+
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "recv() failed [%d] size=%d readed=%d", o->rc, size, treaded );
+
       return False;
     }
     treaded += readed;
