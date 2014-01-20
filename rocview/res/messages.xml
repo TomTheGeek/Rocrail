@@ -971,7 +971,7 @@
     <ru txt="Инициализация области"/>
     <pt txt="Inicializar campo"/>
     <nb txt="Init felt"/>
-    <pl txt="wartość początkowa"/>
+    <pl txt="Wartość początkowa"/>
     <zh_TW txt="初始值"/>
     <fi txt="Alusta vaihteet"/>
     <id txt="Init field"/>
@@ -5538,7 +5538,7 @@
     <pl txt="Teren podmiejski"/>
     <id txt="Lokal"/>
     <en_AU txt="Suburban"/>
-    <en_CA txt="Local"/>
+    <en_CA txt="Suburban"/>
     <en_GB txt="Suburban"/>
     <sr_latin txt="Podzemni"/>
     <ja txt="郊外"/>
@@ -5640,6 +5640,7 @@
     <sl txt="Ranžirna"/>
     <pt_BR txt="Manobra"/>
     <fi txt="Järjestely"/>
+    <pl txt="Przetaczanie"/>
   </Msg>
   <Msg id="incline">
     <de txt="Steigung"/>
@@ -5894,7 +5895,7 @@
     <ro txt="Locomotivă"/>
     <sr_latin txt="Lok."/>
     <ja txt="機関車"/>
-    <pl txt="Loc"/>
+    <pl txt="Lokomotywa"/>
     <zh_CN txt="机车"/>
     <sl txt="Lokomotiva"/>
     <pt_BR txt="Locomotiva"/>
@@ -6588,6 +6589,8 @@
     <sv txt="V_Cru"/>
     <fi txt="Matkanop"/>
     <pl txt="V Rejs"/>
+    <en_AU txt="V_Cru"/>
+    <en_CA txt="V_Cru"/>
   </Msg>
   <Msg id="v_max">
     <de txt="V_Max" tip="Maximale Geschwindigkeit vorwärts"/>
@@ -6698,6 +6701,8 @@
     <sv txt="V_RCru"/>
     <fi txt="Matka_per_nop"/>
     <pl txt="V Rejs Cof."/>
+    <en_AU txt="V_RCru"/>
+    <en_CA txt="V_RCru"/>
   </Msg>
   <Msg id="v_rmax">
     <de txt="V_RMax" tip="Maximale Geschwindigkeit rückwärts"/>
@@ -7227,7 +7232,7 @@
     <sl txt="Čistilni"/>
     <pt_BR txt="Limpadora"/>
     <fi txt="Puhdistus"/>
-    <pl txt="Czyszczenie"/>
+    <pl txt="Czyszczący"/>
   </Msg>
   <Msg id="ctrlmode">
     <de txt="Bedienung" tip="Gleisbild bedienen."/>
@@ -8303,6 +8308,7 @@
     <sl txt="Nasproten"/>
     <pt_BR txt="Oposto"/>
     <fi txt="Vastapäinen"/>
+    <pl txt="Przeciwieństwo"/>
   </Msg>
   <Msg id="tracknr">
     <de txt="Gleisnummer"/>
@@ -9174,6 +9180,7 @@
     <sl txt="ID proizvajalca"/>
     <pt_BR txt="Identificação do fabricante"/>
     <fi txt="Valmistajan ID"/>
+    <pl txt="ID producenta"/>
   </Msg>
   <Msg id="documentation" dialog="true">
     <de txt="Handbuch" accel="0" tip="Das Online Handbuch."/>
@@ -10650,8 +10657,8 @@
     <nb txt="Schedule and Go"/>
     <pl txt="Idź zgodnie z podróżą albo harmonogramem"/>
     <id txt="Pergi sesuai jadwal"/>
-    <en_AU txt="Go with schedule"/>
-    <en_CA txt="Go with schedule"/>
+    <en_AU txt="Go with tour or schedule"/>
+    <en_CA txt="Go with tour or schedule"/>
     <en_GB txt="Go with tour or schedule"/>
     <ro txt="Respectă planificarea"/>
     <em_GB txt="Go with schedule"/>
@@ -13057,6 +13064,7 @@
     <sl txt="uporabi čas iz voznega reda odhodov"/>
     <pt_BR txt="Usar horário de partida agendado"/>
     <fi txt="Käytä aikataulun mukaista lähtöä"/>
+    <pl txt="Używaj planowej godziny odjazdu"/>
   </Msg>
   <Msg id="clock">
     <de txt="Uhr"/>
@@ -18533,6 +18541,8 @@
     <fi txt="Erikoismerkit eivät ole sallittuja!"/>
     <de txt="Sonderzeichen sind unzulässig!"/>
     <fr txt="caracteres speciaux non autorises"/>
+    <en_AU txt="Special characters are not allowed!"/>
+    <en_CA txt="Special characters are not allowed!"/>
   </Msg>
   <Msg id="invalidid">
     <en txt="The ID must be at least one character!"/>
@@ -19553,7 +19563,7 @@
     <sl txt="Vsi"/>
     <pt_BR txt="Todos"/>
     <fi txt="Kaikki"/>
-    <pl txt="Wszystko"/>
+    <pl txt="Wszystkie"/>
   </Msg>
   <Msg id="netroutes">
     <en txt="NetRoutes"/>
@@ -20216,7 +20226,7 @@
     <sl txt="E-pošta"/>
     <pt_BR txt="E-mail"/>
     <fi txt="Sähköposti"/>
-    <pl txt="Poczta elektroniczna"/>
+    <pl txt="Adres e-mail"/>
   </Msg>
   <Msg id="expdate">
     <en txt="Expiration date"/>
@@ -20241,6 +20251,7 @@
     <sl txt="Datum poteka"/>
     <pt_BR txt="Data de validade"/>
     <fi txt="Vanhenemisaika"/>
+    <pl txt="Data ważności"/>
   </Msg>
   <Msg id="donatenow">
     <en txt="Support now"/>
@@ -20254,8 +20265,8 @@
     <pt txt="Doar já"/>
     <ru txt="Сделать пожертвование"/>
     <es txt="Ayude ahora"/>
-    <en_AU txt="Donate now"/>
-    <en_CA txt="Donate now"/>
+    <en_AU txt="Support now"/>
+    <en_CA txt="Support now"/>
     <en_GB txt="Support now"/>
     <sr_latin txt="Podrži sada"/>
     <zh_CN txt="现在已经支持"/>
@@ -20277,8 +20288,8 @@
     <ru txt="Пожертвование"/>
     <es txt="Ayuda"/>
     <tr txt="Bağış"/>
-    <en_AU txt="Donate"/>
-    <en_CA txt="Donate"/>
+    <en_AU txt="Support"/>
+    <en_CA txt="Support"/>
     <en_GB txt="Support"/>
     <nb txt="Doner"/>
     <sr_latin txt="Podrška"/>
@@ -20323,8 +20334,8 @@
     <ru txt="Rocrail создаётся исключительно на добровольнох началах. Тем не менее, Rocrail  нуждается  в финансовой помощи. Ваша постоянная поддержка является жизненно важным для поддержания жизнедеятельности проекта Rocrail. Если вы уже сделали пожертвование, Вы можете попросить ключ, чтобы отключить этот диалог при запуске: donate@rocrail.net"/>
     <es txt="Rocrail solo funciona gracias al trabajo de voluntarios, pero necesita también dinero. Su continua ayuda es vital para que este proyecto continúe. Si usted ya ayudó económicamente puede solicitar una clave que eliminará este mensaje en: donate@rocrail.net"/>
     <fr txt="Rocrail vie uniquement grâce au volontariat. Cependant, Rocrail nécessite aussi des contributions monétaires. Votre support continue est vital pour garder Rocrail en vie.\r\nSi vous avez déjà contribué au support de Rocrail vous pouvez demander une clef pour désactiver cette fenêtre de démarrage à : donate@rocrail.net"/>
-    <en_AU txt="Rocrail relies on volunteers. However, Rocrail also needs donations. Your continued support is vital for keeping Rocrail available. If you have donated you can ask for a key to disable this message: donate@rocrail.net"/>
-    <en_CA txt="Rocrail relies on volunteers. However, Rocrail also needs donations. Your continued support is vital for keeping Rocrail available. If you have donated you can ask for a key to disable this message: donate@rocrail.net"/>
+    <en_AU txt="Rocrail runs entirely on volunteer labor. However, Rocrail also needs contributions of money. Your continued support is vital for keeping Rocrail available. If you already did support you can ask a key to disable this on startup dialog: donate@rocrail.net"/>
+    <en_CA txt="Rocrail runs entirely on volunteer labor. However, Rocrail also needs contributions of money. Your continued support is vital for keeping Rocrail available. If you already did support you can ask a key to disable this on startup dialog: donate@rocrail.net"/>
     <en_GB txt="Rocrail runs entirely on volunteer labour. However, Rocrail also needs contributions of money. Your continued support is vital for keeping Rocrail available. If you have already supported you can ask a key to disable this on start-up dialogue: donate@rocrail.net"/>
     <sr_latin txt="Rocrail se pokreće u potpunosti dobrovoljnim radom. Međutim, Rocrail  iziskuje novčani doprinos u novcu. Vaša neprekidna podrška od vitalnog je značaja za dostupnost Rocrail-a. Ukoliko ste već donirali možete zatražiti ključ da bi onemogućili ovaj prikaz: donate@rocrail.net\&quot;"/>
     <sv txt="Rocrail utvecklas helt på ideell basis, dock behövs alltid ett tillskott av pengar, detta för att Rocrail ska kunna leva vidare och utvecklas. Har du redan donerat pengar kan du be om en licensnyckel för att ta bort denna ruta vid uppstart. Fråga efter nyckel genom att skicka ett mail till: donate@rocrail.net"/>
@@ -20344,8 +20355,8 @@
     <pt txt="Obrigada pelo donativo! Divirta-se com Rocrail."/>
     <ru txt="Спасибо за Ваш вклад! Удачного использования RocRail."/>
     <es txt="¡Gracias por su ayuda! Disfrute de Rocrail."/>
-    <en_AU txt="Thanks for donating! Enjoy using Rocrail."/>
-    <en_CA txt="Thanks for donating! Enjoy using Rocrail."/>
+    <en_AU txt="Thanks for your support! Enjoy using Rocrail."/>
+    <en_CA txt="Thanks for your support! Enjoy using Rocrail."/>
     <en_GB txt="Thanks for your support! Enjoy using Rocrail."/>
     <fr txt="Merci pour votre contribution! Bon train avec Rocrail."/>
     <sr_latin txt="Zahvaljujemo na podršci! Uživajte koristeći Rocrail."/>
@@ -21400,6 +21411,7 @@
     <da txt="Overvågning"/>
     <pt_BR txt="Monitoramento"/>
     <fi txt="Monitorointi"/>
+    <en_CA txt="Monitoring"/>
   </Msg>
   <Msg id="notfromblock">
     <en txt="Not from block"/>
@@ -21422,6 +21434,7 @@
     <pt_BR txt="Não vindo do bloco"/>
     <sv txt="Inte från block"/>
     <fi txt="Ei lohkosta"/>
+    <en_CA txt="Not from block"/>
   </Msg>
   <Msg id="allowschedules">
     <en txt="Allow schedules"/>
@@ -21443,6 +21456,7 @@
     <da txt="Tillad tidsplan"/>
     <pt_BR txt="Permitir agendamentos"/>
     <fi txt="Salli aikataulut"/>
+    <en_CA txt="Allow schedules"/>
   </Msg>
   <Msg id="not">
     <en txt="Not"/>
@@ -21468,6 +21482,7 @@
     <pt_BR txt="Negativo"/>
     <fi txt="Ei"/>
     <pl txt="Nie"/>
+    <en_CA txt="Not"/>
   </Msg>
   <Msg id="speak4block">
     <en txt="Speak for block"/>
@@ -21490,6 +21505,7 @@
     <pt_BR txt="Fale ao bloco"/>
     <sv txt="Berätta om block"/>
     <fi txt="Lohkon osoitus"/>
+    <en_CA txt="Speak for block"/>
   </Msg>
   <Msg id="speakcmd">
     <en txt="Speak command"/>
@@ -21512,6 +21528,7 @@
     <da txt="Indtal kommando"/>
     <pt_BR txt="Comando de fala"/>
     <fi txt="Osoituskomento"/>
+    <en_CA txt="Speak command"/>
   </Msg>
   <Msg id="acceptident">
     <en txt="Accept BiDi Loco"/>
@@ -21533,6 +21550,7 @@
     <sv txt="Acceptera BiDi lok"/>
     <fi txt="Salli BIDi veturi"/>
     <pl txt="Akceptuj Lokomotywy BiDi"/>
+    <en_CA txt="Accept BiDi Loco"/>
   </Msg>
   <Msg id="useblockside">
     <en txt="Use block side for routes"/>
@@ -21553,6 +21571,7 @@
     <en_GB txt="Use block side for routes"/>
     <pt_BR txt="Usar lados do bloco para rotas"/>
     <fi txt="Käytä lohkon puolta reiteille"/>
+    <en_CA txt="Use block side for routes"/>
   </Msg>
   <Msg id="swapblockenterside">
     <en txt="Swap block enter side"/>
@@ -21574,6 +21593,7 @@
     <pt_BR txt="Inverter lado de entrada do bloco"/>
     <sv txt="Byt ingångssida till block"/>
     <fi txt="Vaihda lohkon sisääntulopuolta"/>
+    <en_CA txt="Swap block enter side"/>
   </Msg>
   <Msg id="stopnonecommuter">
     <en txt="Stop none commuter in terminal"/>
@@ -21593,6 +21613,7 @@
     <pt_BR txt="Parar no terminal por ausência de vagão suburbano"/>
     <sv txt="Stoppa icke pendeltåg på station"/>
     <fi txt="Älä pysäytä mitään lähiliikennejunaa pääteasemalla"/>
+    <en_CA txt="Stop none commuter in terminal"/>
   </Msg>
   <Msg id="slotmanagement">
     <en txt="Slot management"/>
@@ -21612,6 +21633,7 @@
     <pt_BR txt="Gerenciamento de vagas"/>
     <sv txt="Slothantering"/>
     <fi txt="Varausten hallinta"/>
+    <en_CA txt="Slot management"/>
   </Msg>
   <Msg id="decodertype">
     <en txt="Decoder type"/>
@@ -21637,6 +21659,7 @@
     <pt_BR txt="Tipo de decodificador"/>
     <fi txt="Dekooderin tyyppi"/>
     <pl txt="Typ dekodera"/>
+    <en_CA txt="Decoder type"/>
   </Msg>
   <Msg id="analyze">
     <en txt="Analyze" tip="Analyze track plan for generating routes."/>
@@ -21647,7 +21670,7 @@
     <em_AU txt="Analyze" tip="Analyze track plan for generating routes."/>
     <pt txt="Analisar"/>
     <ru txt="Анализ плана"/>
-    <en_AU txt="Analyze"/>
+    <en_AU txt="Analyse"/>
     <es txt="Analizar"/>
     <it txt="Analyser"/>
     <sr_latin txt="Analiza"/>
@@ -21661,6 +21684,7 @@
     <pt_BR txt="Analisar"/>
     <fi txt="Analysointi"/>
     <pl txt="Analiza"/>
+    <en_CA txt="Analyse"/>
   </Msg>
   <Msg id="systeminfo">
     <en txt="System info" tip="Enable extra CS system info."/>
@@ -21687,6 +21711,7 @@
     <pt_BR txt="Informações do sistema"/>
     <fi txt="Järjestelmätiedot"/>
     <pl txt="Informacje systemowe"/>
+    <en_CA txt="System info"/>
   </Msg>
   <Msg id="showonlystartschedules">
     <en txt="Show only start schedules"/>
@@ -21710,6 +21735,7 @@
     <pt_BR txt="Exibir apenas agendamentos de início"/>
     <sv txt="Visa enbart startscheman"/>
     <fi txt="Näytä vain aloitusaikataulut"/>
+    <en_CA txt="Show only start schedules"/>
   </Msg>
   <Msg id="blankatredsignal">
     <en txt="Blank warning at red main signal."/>
@@ -21731,6 +21757,7 @@
     <sv txt="Blank varning vid röd huvudsignal"/>
     <fi txt="Tyhjennä varoitus kun pääopastin on punainen"/>
     <pl txt="Puste ostrzeżenie przy czerwonym sygnale głównym."/>
+    <en_CA txt="Blank warning at red main signal."/>
   </Msg>
   <Msg id="overwriteall">
     <en txt="Overwrite all settings?"/>
@@ -21756,6 +21783,7 @@
     <pt_BR txt="Sobrescrever todas configurações?"/>
     <fi txt="Korvataanko kaikki asetukset?"/>
     <pl txt="Zastąpić wszystkie ustawienia?"/>
+    <en_CA txt="Overwrite all settings?"/>
   </Msg>
   <Msg id="free2go">
     <en txt="Free before start"/>
@@ -21778,6 +21806,7 @@
     <pt_BR txt="Liberar antes de iniciar"/>
     <sv txt="Ledig före start"/>
     <fi txt="Vapauta ennen käynnistystä"/>
+    <en_CA txt="Free before start"/>
   </Msg>
   <Msg id="embeddedblock">
     <en txt="Embedded block"/>
@@ -21798,6 +21827,7 @@
     <pt_BR txt="Bloco encaixados"/>
     <sv txt="Inbyggda block"/>
     <fi txt="Sulautettu lohko"/>
+    <en_CA txt="Embedded block"/>
   </Msg>
   <Msg id="setupsvgtheme">
     <en txt="No SVG Theme was found; Check the Rocview SVG settings."/>
@@ -21818,6 +21848,7 @@
     <pt_BR txt="Nenhum Tema SVG foi encontrado; Verifique as configurações SVG do Rocview."/>
     <en_GB txt="No SVG Theme was found; Check the Rocview SVG settings."/>
     <fi txt="SVG teemaa ei löytynyt; tarkista Rocview:n SVG asetukset"/>
+    <en_CA txt="No SVG Theme was found; Check the Rocview SVG settings."/>
   </Msg>
   <Msg id="useownwaittime">
     <en txt="Use own wait time in blocks"/>
@@ -21838,6 +21869,7 @@
     <pt_BR txt="Usar os próprios tempos de espera nos blocos"/>
     <sv txt="Använd egen väntetid i block"/>
     <fi txt="Käytä lohkojen omaa odotusaikaa"/>
+    <en_CA txt="Use own wait time in blocks"/>
   </Msg>
   <Msg id="forceblocktimer">
     <en txt="Force block timer"/>
@@ -21858,6 +21890,7 @@
     <pt_BR txt="Forçar temporizador de blocos"/>
     <sv txt="Tvinga blocktimer"/>
     <fi txt="Pakota lohkon ajastin"/>
+    <en_CA txt="Force block timer"/>
   </Msg>
   <Msg id="useseq">
     <en txt="Use sequence check"/>
@@ -21877,6 +21910,7 @@
     <pt_BR txt="Usar verificação de sequência"/>
     <sv txt="Använd sekvenskontroll"/>
     <fi txt="Käytä järjestyksen tarkistusta"/>
+    <en_CA txt="Use sequence check"/>
   </Msg>
   <Msg id="usedouble">
     <en txt="Use double packets"/>
@@ -21896,6 +21930,7 @@
     <pt_BR txt="Usar pacotes duplos"/>
     <sv txt="Använd dubbla paket"/>
     <fi txt="Käytä kaksoispaketteja"/>
+    <en_CA txt="Use double packets"/>
   </Msg>
   <Msg id="rectangular">
     <en txt="Rectangular"/>
@@ -21917,6 +21952,7 @@
     <da txt="Firkantet"/>
     <pt_BR txt="Retangular"/>
     <fi txt="Suora"/>
+    <en_CA txt="Rectangular"/>
   </Msg>
   <Msg id="sublib">
     <en txt="Sub-Library"/>
@@ -21935,6 +21971,7 @@
     <da txt="underbibliotek"/>
     <pt_BR txt="Sub-biblioteca"/>
     <fi txt="Alikirjasto"/>
+    <en_CA txt="Sub-Library"/>
   </Msg>
   <Msg id="nodes">
     <en txt="Nodes"/>
@@ -21956,6 +21993,7 @@
     <da txt="Noder"/>
     <pt_BR txt="Entroncamentos"/>
     <fi txt="Kohdat"/>
+    <en_CA txt="Nodes"/>
   </Msg>
   <Msg id="stagingyard">
     <en txt="Staging yard"/>
@@ -21974,6 +22012,7 @@
     <pt_BR txt="Pátio de estacionamento"/>
     <sv txt="Bangård"/>
     <fi txt="Järjestelyratapiha"/>
+    <en_CA txt="Staging yard"/>
   </Msg>
   <Msg id="stagingblock">
     <en txt="Staging block"/>
@@ -21992,6 +22031,7 @@
     <pt_BR txt="Bloco de estacionamento"/>
     <sv txt="Bangårdsblock"/>
     <fi txt="Järjestelylohko"/>
+    <en_CA txt="Staging block"/>
   </Msg>
   <Msg id="sections">
     <en txt="Sections"/>
@@ -22015,6 +22055,7 @@
     <pt_BR txt="Seções"/>
     <fi txt="Alueet"/>
     <pl txt="Sekcje"/>
+    <en_CA txt="Sections"/>
   </Msg>
   <Msg id="section">
     <en txt="Section"/>
@@ -22038,6 +22079,7 @@
     <pt_BR txt="Seção"/>
     <fi txt="Alue"/>
     <pl txt="Sekcja"/>
+    <en_CA txt="Section"/>
   </Msg>
   <Msg id="train">
     <en txt="Train"/>
@@ -22061,6 +22103,7 @@
     <pt_BR txt="Trem"/>
     <fi txt="Juna"/>
     <pl txt="Pociąg"/>
+    <en_CA txt="Train"/>
   </Msg>
   <Msg id="gap">
     <en txt="gap"/>
@@ -22083,6 +22126,7 @@
     <pt_BR txt="Intervalo"/>
     <fi txt="väli"/>
     <pl txt="dystans"/>
+    <en_CA txt="gap"/>
   </Msg>
   <Msg id="patterns">
     <en txt="Patterns"/>
@@ -22105,6 +22149,7 @@
     <pt_BR txt="Padronagens"/>
     <fi txt="Kuviot"/>
     <pl txt="Wzorce"/>
+    <en_CA txt="Patterns"/>
   </Msg>
   <Msg id="aspectnr">
     <en txt="Aspect numbers"/>
@@ -22122,6 +22167,7 @@
     <en_GB txt="Aspect numbers"/>
     <pt_BR txt="Números de aparência"/>
     <fi txt="Merkitysnumerot"/>
+    <en_CA txt="Aspect numbers"/>
   </Msg>
   <Msg id="planhealth">
     <en txt="Plan health"/>
@@ -22138,6 +22184,7 @@
     <en_GB txt="Plan health"/>
     <pt_BR txt="Adequação do diagrama"/>
     <fi txt="Suunnitelman tila"/>
+    <en_CA txt="Plan health"/>
   </Msg>
   <Msg id="communication">
     <en txt="Communication"/>
@@ -22160,6 +22207,7 @@
     <da txt="Kommunikation"/>
     <pt_BR txt="Comunicação"/>
     <fi txt="Yhteys"/>
+    <en_CA txt="Communication"/>
   </Msg>
   <Msg id="swaptimer">
     <en txt="Swap timer"/>
@@ -22179,6 +22227,7 @@
     <pt_BR txt="Inverter temporizador"/>
     <sv txt="Byt timer"/>
     <fi txt="Vaihda ajastin"/>
+    <en_CA txt="Swap timer"/>
   </Msg>
   <Msg id="slotping">
     <en txt="Slot ping"/>
@@ -22194,6 +22243,7 @@
     <sv txt="Slot ping"/>
     <fi txt="Lokeron kaiutus"/>
     <sl txt="Slot ping"/>
+    <en_CA txt="Slot ping"/>
   </Msg>
   <Msg id="localip">
     <en txt="Local IP"/>
@@ -22216,6 +22266,7 @@
     <da txt="Lokal IP"/>
     <pt_BR txt="IP local"/>
     <fi txt="Paikallinen IP"/>
+    <en_CA txt="Local IP"/>
   </Msg>
   <Msg id="setloco">
     <en txt="Set loco"/>
@@ -22236,6 +22287,7 @@
     <pt_BR txt="Definir locomotiva"/>
     <sv txt="Välj lok"/>
     <fi txt="Aseta veturi"/>
+    <en_CA txt="Set loco"/>
   </Msg>
   <Msg id="compress">
     <en txt="Compress"/>
@@ -22256,12 +22308,13 @@
     <sv txt="Komprimera"/>
     <pt_BR txt="Compactar"/>
     <fi txt="Pakkaa"/>
+    <en_CA txt="Compress"/>
   </Msg>
   <Msg id="syncroutes">
     <en txt="Synchronize routes"/>
     <nl txt="Syncroniseer rijwegen"/>
     <de txt="Synchronisierte Fahrstraßen"/>
-    <en_AU txt="Synchronize routes"/>
+    <en_AU txt="Synchronise routes"/>
     <pt txt="Sincronizar Rotas"/>
     <ru txt="Синхронизировать маршруты"/>
     <fr txt="Synchroniser les routes"/>
@@ -22278,12 +22331,13 @@
     <pt_BR txt="Sincronizar rotas"/>
     <fi txt="Synkronoi reitit"/>
     <pl txt="Synchronizuj trasy"/>
+    <en_CA txt="Synchronize routes"/>
   </Msg>
   <Msg id="syncroutetimeout">
     <en txt="Route synchronizer timeout"/>
     <nl txt="Rijweg syncronisatie timeout"/>
     <de txt="Zeitüberschreitung bei synchronisierten Fahrstraßen"/>
-    <en_AU txt="Route synchronizer timeout"/>
+    <en_AU txt="Route synchroniser timeout"/>
     <ru txt="Таймаут синхронизатора маршрута"/>
     <fr txt="Fin de temps de syncronisation d'itinéraire"/>
     <es txt="Desconexión del sincronizador de rutas"/>
@@ -22298,6 +22352,7 @@
     <sv txt="Ruttsynkronisering timeout"/>
     <fi txt="Reitin synkronoinnin aikakatkaisu"/>
     <pl txt="Timeout synchronizatora trasy"/>
+    <en_CA txt="Route synchronizer timeout"/>
   </Msg>
   <Msg id="startupschedule">
     <en txt="Startup schedule"/>
@@ -22318,6 +22373,7 @@
     <da txt="start tidsplan"/>
     <pt_BR txt="Iniciar agendamentos"/>
     <fi txt="Aloitusaikataulu"/>
+    <en_CA txt="Startup schedule"/>
   </Msg>
   <Msg id="cmdtime">
     <en txt="Command time"/>
@@ -22335,6 +22391,7 @@
     <en_GB txt="Command time"/>
     <pt_BR txt="Tempo do comando"/>
     <fi txt="Komentoaika"/>
+    <en_CA txt="Command time"/>
   </Msg>
   <Msg id="controlcode">
     <en txt="Control code"/>
@@ -22354,6 +22411,7 @@
     <sv txt="Kontrollkod"/>
     <pt_BR txt="Código de controle"/>
     <fi txt="Ohjauskoodi"/>
+    <en_CA txt="Control code"/>
   </Msg>
   <Msg id="turntable2go">
     <en txt="Goto Turntable"/>
@@ -22373,6 +22431,7 @@
     <pt_BR txt="Vá para o Virador"/>
     <sv txt="Gå till vändskiva"/>
     <fi txt="Siirry kääntöpöytään"/>
+    <en_CA txt="Goto Turntable"/>
   </Msg>
   <Msg id="cbusrocrailini">
     <en txt="Please load the Rocrail server settings before configuring CBUS nodes."/>
@@ -22392,6 +22451,7 @@
     <pt_BR txt="Por favor carregue as configurações do servidor Rocrail antes de configurar os entroncamentos CBUS."/>
     <sv txt="Vänligen ladda Rocrails serverinställningar innan konfigurering av CBUS noder."/>
     <fi txt="Lataa Rocrail-palvelimen asetukset ennen CBUS-noodien konfigurointia."/>
+    <en_CA txt="Please load the Rocrail server settings before configuring CBUS nodes."/>
   </Msg>
   <Msg id="node">
     <en txt="Node"/>
@@ -22411,6 +22471,7 @@
     <en_GB txt="Node"/>
     <pt_BR txt="Entroncamento"/>
     <fi txt="Noodi"/>
+    <en_CA txt="Node"/>
   </Msg>
   <Msg id="variables">
     <en txt="Variables"/>
@@ -22432,6 +22493,7 @@
     <pt_BR txt="Variáveis"/>
     <fi txt="Muuttujat"/>
     <pl txt="Zmienne"/>
+    <en_CA txt="Variables"/>
   </Msg>
   <Msg id="variable">
     <en txt="Variable"/>
@@ -22453,6 +22515,7 @@
     <pt_BR txt="Variável"/>
     <fi txt="Muuttuja"/>
     <pl txt="Zmienna"/>
+    <en_CA txt="Variable"/>
   </Msg>
   <Msg id="events">
     <en txt="Events"/>
@@ -22475,6 +22538,7 @@
     <pt_BR txt="Eventos"/>
     <fi txt="Tapahtumat"/>
     <pl txt="Zdarzenia"/>
+    <en_CA txt="Events"/>
   </Msg>
   <Msg id="firmware">
     <en txt="Firmware"/>
@@ -22496,6 +22560,7 @@
     <pt_BR txt="Firmware"/>
     <en_GB txt="Firmware"/>
     <fi txt="Laiteohjelmisto"/>
+    <en_CA txt="Firmware"/>
   </Msg>
   <Msg id="get">
     <en txt="Get"/>
@@ -22518,6 +22583,7 @@
     <en_GB txt="Get"/>
     <fi txt="Hae"/>
     <pl txt="Pobierz"/>
+    <en_CA txt="Get"/>
   </Msg>
   <Msg id="set">
     <en txt="Set"/>
@@ -22540,6 +22606,7 @@
     <en_GB txt="Set"/>
     <fi txt="Aseta"/>
     <pl txt="Ustaw"/>
+    <en_CA txt="Set"/>
   </Msg>
   <Msg id="getall">
     <en txt="Get all"/>
@@ -22561,6 +22628,7 @@
     <en_GB txt="Get all"/>
     <fi txt="Hae kaikki"/>
     <pl txt="Pobierz wszystko"/>
+    <en_CA txt="Get all"/>
   </Msg>
   <Msg id="clearall">
     <en txt="Clear all"/>
@@ -22582,6 +22650,7 @@
     <en_GB txt="Clear all"/>
     <fi txt="Tyhjennä"/>
     <pl txt="Wyczyść wszystko"/>
+    <en_CA txt="Clear all"/>
   </Msg>
   <Msg id="learn">
     <en txt="Learn"/>
@@ -22602,6 +22671,7 @@
     <sv txt="Inlärning"/>
     <en_GB txt="Learn"/>
     <fi txt="Opi"/>
+    <en_CA txt="Learn"/>
   </Msg>
   <Msg id="unlearn">
     <en txt="Unlearn"/>
@@ -22621,6 +22691,7 @@
     <pt_BR txt="Desaprender"/>
     <en_GB txt="Unlearn"/>
     <fi txt="Unohda"/>
+    <en_CA txt="Unlearn"/>
   </Msg>
   <Msg id="send">
     <en txt="Send"/>
@@ -22643,6 +22714,7 @@
     <en_GB txt="Send"/>
     <fi txt="Lähetä"/>
     <pl txt="Wyślij"/>
+    <en_CA txt="Send"/>
   </Msg>
   <Msg id="bootmode">
     <en txt="Boot mode"/>
@@ -22662,6 +22734,7 @@
     <en_GB txt="Boot mode"/>
     <sv txt="Återstartsläge"/>
     <fi txt="Käynnistystapa"/>
+    <en_CA txt="Boot mode"/>
   </Msg>
   <Msg id="loadertime">
     <en txt="Loader time (ms)"/>
@@ -22680,6 +22753,7 @@
     <pt_BR txt="Tempo do carregador (ms)"/>
     <en_GB txt="Loader time (ms)"/>
     <fi txt="Latausaika (ms)"/>
+    <en_CA txt="Loader time (ms)"/>
   </Msg>
   <Msg id="shortevents">
     <en txt="Short events"/>
@@ -22699,6 +22773,7 @@
     <en_GB txt="Short events"/>
     <sv txt="Korta händelser"/>
     <fi txt="Lyhyet taphtumat"/>
+    <en_CA txt="Short events"/>
   </Msg>
   <Msg id="startofday">
     <en txt="Start of day"/>
@@ -22719,6 +22794,7 @@
     <pt_BR txt="Início do dia"/>
     <en_GB txt="Start of day"/>
     <fi txt="Ajopäivän aloitus"/>
+    <en_CA txt="Start of day"/>
   </Msg>
   <Msg id="resetstatus">
     <en txt="Reset status"/>
@@ -22739,6 +22815,7 @@
     <en_GB txt="Reset status"/>
     <fi txt="Alusta tila"/>
     <pl txt="Wyczyść status"/>
+    <en_CA txt="Reset status"/>
   </Msg>
   <Msg id="occupancy">
     <en txt="Occupancy"/>
@@ -22759,6 +22836,7 @@
     <en_GB txt="Occupancy"/>
     <fi txt="Varaus"/>
     <pl txt="Zajętość"/>
+    <en_CA txt="Occupancy"/>
   </Msg>
   <Msg id="restorespeed">
     <en txt="Restore speed"/>
@@ -22780,6 +22858,7 @@
     <en_GB txt="Restore speed"/>
     <fi txt="Palauta nopeus"/>
     <pl txt="Przywróć prędkość"/>
+    <en_CA txt="Restore speed"/>
   </Msg>
   <Msg id="calibrate">
     <en txt="Calibrate"/>
@@ -22801,6 +22880,8 @@
     <en_GB txt="Calibrate"/>
     <fi txt="Kalibroi"/>
     <pl txt="Skalibruj"/>
+    <en_AU txt="Calibrate"/>
+    <en_CA txt="Calibrate"/>
   </Msg>
   <Msg id="traverser">
     <en txt="Traverser"/>
@@ -22816,6 +22897,8 @@
     <pt_BR txt="Atravessador"/>
     <en_GB txt="Traverser"/>
     <fi txt="Ylittäjä"/>
+    <en_AU txt="Traverser"/>
+    <en_CA txt="Traverser"/>
   </Msg>
   <Msg id="subtitle">
     <en txt="Sub title"/>
@@ -22834,6 +22917,8 @@
     <pt_BR txt="Sub-título"/>
     <en_GB txt="Sub title"/>
     <fi txt="Aliotsikko"/>
+    <en_AU txt="Sub title"/>
+    <en_CA txt="Sub title"/>
   </Msg>
   <Msg id="timedsensors">
     <en txt="Timed sensors"/>
@@ -22852,6 +22937,8 @@
     <sv txt="Tidsstyrda sensorer"/>
     <en_GB txt="Timed sensors"/>
     <fi txt="Ajastetut anturit"/>
+    <en_AU txt="Timed sensors"/>
+    <en_CA txt="Timed sensors"/>
   </Msg>
   <Msg id="enableanalyzer">
     <en txt="Enable analyzer"/>
@@ -22872,6 +22959,8 @@
     <en_GB txt="Enable analyser"/>
     <fi txt="Käytä analysaattoria"/>
     <pl txt="Włącz analizator"/>
+    <en_AU txt="Enable analyser"/>
+    <en_CA txt="Enable analyzer"/>
   </Msg>
   <Msg id="forceunlockatebreak">
     <en txt="Force unlock at EBreak"/>
@@ -22888,6 +22977,8 @@
     <en_GB txt="Force unlock at EBreak"/>
     <sv txt="Tvinga upplåsning vid nödstopp"/>
     <fi txt="Pakota vapautus EBreakin tapahtuessa"/>
+    <en_AU txt="Force unlock at EBreak"/>
+    <en_CA txt="Force unlock at EBreak"/>
   </Msg>
   <Msg id="triggerblockevents">
     <en txt="Trigger block events"/>
@@ -22905,6 +22996,8 @@
     <pt_BR txt="Eventos de bloco disparador"/>
     <en_GB txt="Trigger block events"/>
     <fi txt="Laukaise lohkotapahtumat"/>
+    <en_AU txt="Trigger block events"/>
+    <en_CA txt="Trigger block events"/>
   </Msg>
   <Msg id="locofilter">
     <en txt="Loco view filter"/>
@@ -22923,6 +23016,8 @@
     <en_GB txt="Loco view filter"/>
     <fi txt="Näytä veturit"/>
     <pl txt="Filtr widoku lokomotyw"/>
+    <en_AU txt="Loco view filter"/>
+    <en_CA txt="Loco view filter"/>
   </Msg>
   <Msg id="locoviewall" key="Alt-A">
     <en txt="View All"/>
@@ -22944,6 +23039,8 @@
     <en_GB txt="View All"/>
     <fi txt="Näytä kaikki"/>
     <pl txt="Pokaż wszystkie"/>
+    <en_AU txt="View All"/>
+    <en_CA txt="View All"/>
   </Msg>
   <Msg id="locoviewsteam" key="Alt-S">
     <en txt="Steamers"/>
@@ -22964,6 +23061,8 @@
     <en_GB txt="Steamers"/>
     <fi txt="Höyryveturit"/>
     <pl txt="Parowozy"/>
+    <en_AU txt="Steamers"/>
+    <en_CA txt="Steamers"/>
   </Msg>
   <Msg id="locoviewdiesel" key="Alt-I">
     <en txt="Diesels"/>
@@ -22985,6 +23084,8 @@
     <en_GB txt="Diesels"/>
     <fi txt="Dieselveturit"/>
     <pl txt="Diesle"/>
+    <en_AU txt="Diesels"/>
+    <en_CA txt="Diesels"/>
   </Msg>
   <Msg id="locoviewelectric" key="Alt-E">
     <en txt="Electrics"/>
@@ -23005,6 +23106,8 @@
     <pt_BR txt="Locomotivas Elétricas"/>
     <en_GB txt="Electrics"/>
     <fi txt="Sähköveturit"/>
+    <en_AU txt="Electrics"/>
+    <en_CA txt="Electrics"/>
   </Msg>
   <Msg id="locoviewcommuter" key="Alt-C">
     <en txt="Commuters"/>
@@ -23023,6 +23126,8 @@
     <sv txt="Pendlare"/>
     <en_GB txt="Commuters"/>
     <fi txt="Lähiliikennejunat"/>
+    <en_AU txt="Commuters"/>
+    <en_CA txt="Commuters"/>
   </Msg>
   <Msg id="locoviewspecial" key="Alt-P">
     <en txt="Specials"/>
@@ -23043,6 +23148,8 @@
     <sv txt="Specialare"/>
     <en_GB txt="Specials"/>
     <fi txt="Erikoiset"/>
+    <en_AU txt="Specials"/>
+    <en_CA txt="Specials"/>
   </Msg>
   <Msg id="locoviewautomobile">
     <en txt="Automobiles and trucks"/>
@@ -23060,6 +23167,9 @@
     <pt_BR txt="Automóveis e caminhões"/>
     <en_GB txt="Cars and lorries"/>
     <fi txt="Autot ja pakettiautot"/>
+    <en_AU txt="Automobiles and trucks"/>
+    <en_CA txt="Automobiles and trucks"/>
+    <pl txt="Samochody i ciężarówki"/>
   </Msg>
   <Msg id="locoviewtrain">
     <en txt="Trains"/>
@@ -23077,6 +23187,8 @@
     <en_GB txt="Trains"/>
     <fi txt="Junat"/>
     <pl txt="Pociągi"/>
+    <en_AU txt="Trains"/>
+    <en_CA txt="Trains"/>
   </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
@@ -23097,6 +23209,8 @@
     <en_GB txt="Sort locos by address"/>
     <fi txt="Järjestä veturit osoitteen mukaan"/>
     <pl txt="Sortuj lokomotywy według adresu"/>
+    <en_AU txt="Sort locos by address"/>
+    <en_CA txt="Sort locos by address"/>
   </Msg>
   <Msg id="selecttour" dialog="true">
     <en txt="Select tour"/>
@@ -23116,6 +23230,8 @@
     <sv txt="Välj rutt"/>
     <en_GB txt="Select tour"/>
     <fi txt="Valitse matka"/>
+    <en_AU txt="Select tour"/>
+    <en_CA txt="Select tour"/>
   </Msg>
   <Msg id="tourtable" dialog="true">
     <en txt="Tour table" alttxt="Tours" tip="Tour table"/>
@@ -23135,6 +23251,8 @@
     <pt_BR txt="Tabela de viagem"/>
     <en_GB txt="Tour table"/>
     <fi txt="Matkat"/>
+    <en_AU txt="Tour table"/>
+    <en_CA txt="Tour table"/>
   </Msg>
   <Msg id="tour">
     <en txt="Tour"/>
@@ -23154,6 +23272,8 @@
     <pt_BR txt="Viagem"/>
     <en_GB txt="Tour"/>
     <fi txt="Matka"/>
+    <en_AU txt="Tour"/>
+    <en_CA txt="Tour"/>
   </Msg>
   <Msg id="resetspfx">
     <en txt="Reset speed and functions"/>
@@ -23173,6 +23293,8 @@
     <pt_BR txt="Redefinir velocidade e funções"/>
     <en_GB txt="Reset speed and functions"/>
     <fi txt="Alusta nopeus ja toiminnot"/>
+    <en_AU txt="Reset speed and functions"/>
+    <en_CA txt="Reset speed and functions"/>
   </Msg>
   <Msg id="divider">
     <en txt="divider"/>
@@ -23190,6 +23312,8 @@
     <en_GB txt="divider"/>
     <sv txt="avdelare"/>
     <fi txt="erottaja"/>
+    <en_AU txt="divider"/>
+    <en_CA txt="divider"/>
   </Msg>
   <Msg id="temperature">
     <en txt="temperature"/>
@@ -23211,6 +23335,8 @@
     <en_GB txt="temperature"/>
     <fi txt="lämpötila"/>
     <pl txt="temperatura"/>
+    <en_AU txt="temperature"/>
+    <en_CA txt="temperature"/>
   </Msg>
   <Msg id="info4throttle">
     <en txt="Poll info"/>
@@ -23227,6 +23353,8 @@
     <en_GB txt="Poll info"/>
     <sv txt="Pollningsinfo"/>
     <fi txt="Kysy tieto"/>
+    <en_AU txt="Poll info"/>
+    <en_CA txt="Poll info"/>
   </Msg>
   <Msg id="releaseonidle">
     <en txt="Release loco on idle"/>
@@ -23244,6 +23372,8 @@
     <en_GB txt="Release loco on idle"/>
     <sv txt="Frigör inaktivt lok"/>
     <fi txt="Vapauta joutilas veturi"/>
+    <en_AU txt="Release loco on idle"/>
+    <en_CA txt="Release loco on idle"/>
   </Msg>
   <Msg id="sleep">
     <en txt="Sleep"/>
@@ -23262,6 +23392,8 @@
     <pt_BR txt="Suspender"/>
     <en_GB txt="Sleep"/>
     <fi txt="Lepää"/>
+    <en_AU txt="Sleep"/>
+    <en_CA txt="Sleep"/>
   </Msg>
   <Msg id="closeonghost">
     <en txt="Close block on ghost"/>
@@ -23279,6 +23411,8 @@
     <en_GB txt="Close block on ghost"/>
     <fi txt="Sulje lohko, jossa havaittu haamujuna"/>
     <fr txt="fermeture du bloc sur fantome"/>
+    <en_AU txt="Close block on ghost"/>
+    <en_CA txt="Close block on ghost"/>
   </Msg>
   <Msg id="display">
     <en txt="Display"/>
@@ -23297,6 +23431,8 @@
     <pt_BR txt="Tela"/>
     <en_GB txt="Display"/>
     <fi txt="Näytä"/>
+    <en_AU txt="Display"/>
+    <en_CA txt="Display"/>
   </Msg>
   <Msg id="systemactions" dialog="true">
     <en txt="System Actions"/>
@@ -23315,6 +23451,8 @@
     <pt_BR txt="Ações do sistema"/>
     <en_GB txt="System Actions"/>
     <fi txt="Järjestelmän tapahtumat"/>
+    <en_AU txt="System Actions"/>
+    <en_CA txt="System Actions"/>
   </Msg>
   <Msg id="sound">
     <en txt="Sound"/>
@@ -23335,6 +23473,8 @@
     <en_GB txt="Sound"/>
     <fi txt="Ääni"/>
     <pl txt="Dźwięk"/>
+    <en_AU txt="Sound"/>
+    <en_CA txt="Sound"/>
   </Msg>
   <Msg id="soundpath">
     <en txt="Sound path"/>
@@ -23354,6 +23494,8 @@
     <en_GB txt="Sound path"/>
     <fi txt="Äänen polku"/>
     <pl txt="Katalog dźwięków"/>
+    <en_AU txt="Sound path"/>
+    <en_CA txt="Sound path"/>
   </Msg>
   <Msg id="soundplayer">
     <en txt="Sound player"/>
@@ -23373,6 +23515,8 @@
     <en_GB txt="Sound player"/>
     <fi txt="Äänen esittäjä"/>
     <pl txt="Odtwarzacz dźwięku"/>
+    <en_AU txt="Sound player"/>
+    <en_CA txt="Sound player"/>
   </Msg>
   <Msg id="soundplayerlocation">
     <en txt="Add location parameter"/>
@@ -23390,6 +23534,8 @@
     <en_GB txt="Add location parameter"/>
     <sv txt="Lägg till platsparameter"/>
     <fi txt="Lisää paikkamääritys"/>
+    <en_AU txt="Add location parameter"/>
+    <en_CA txt="Add location parameter"/>
   </Msg>
   <Msg id="nodenumber">
     <en txt="Node Nr."/>
@@ -23408,6 +23554,8 @@
     <en_GB txt="Node Nr."/>
     <fi txt="Noodi nro"/>
     <fr txt="numero du noeud"/>
+    <en_AU txt="Node Nr."/>
+    <en_CA txt="Node Nr."/>
   </Msg>
   <Msg id="eventnumber">
     <en txt="Event Nr."/>
@@ -23426,6 +23574,8 @@
     <en_GB txt="Event Nr."/>
     <fi txt="Tapahtuma nro:"/>
     <fr txt="numero de l'evenement"/>
+    <en_AU txt="Event Nr."/>
+    <en_CA txt="Event Nr."/>
   </Msg>
   <Msg id="triggerlowevents">
     <en txt="Trigger low events after 100ms"/>
@@ -23441,6 +23591,8 @@
     <pt_BR txt="Disparar eventos simples após 100ms"/>
     <en_GB txt="Trigger low events after 100ms"/>
     <fi txt="Aktivoi matalat tapahtumat 100 ms:n jälkeen"/>
+    <en_AU txt="Trigger low events after 100ms"/>
+    <en_CA txt="Trigger low events after 100ms"/>
   </Msg>
   <Msg id="showsecondhand">
     <en txt="Show secondhand"/>
@@ -23457,6 +23609,8 @@
     <en_GB txt="Show secondhand"/>
     <sv txt="Visa andrahands"/>
     <fi txt="Näytä toissijainen"/>
+    <en_AU txt="Show secondhand"/>
+    <en_CA txt="Show secondhand"/>
   </Msg>
   <Msg id="twoway">
     <en txt="Twoway"/>
@@ -23475,6 +23629,8 @@
     <en_GB txt="Twoway"/>
     <fi txt="Kaksisuuntainen"/>
     <fr txt="deux chemins"/>
+    <en_AU txt="Twoway"/>
+    <en_CA txt="Twoway"/>
   </Msg>
   <Msg id="departdelay">
     <en txt="Depart delay"/>
@@ -23493,6 +23649,8 @@
     <fi txt="Lähtöviive"/>
     <pl txt="Opóźnienie wyjazdu"/>
     <fr txt="delais de demarrage"/>
+    <en_AU txt="Depart delay"/>
+    <en_CA txt="Depart delay"/>
   </Msg>
   <Msg id="existingid">
     <en txt="The ID already exists at position: %d,%d."/>
@@ -23511,6 +23669,8 @@
     <en_GB txt="The ID already exists at position: %d,%d."/>
     <fi txt="ID on o olemassa paikassa: %d, %d."/>
     <fr txt="L'identifiant existe déjà à la position : %d,%d."/>
+    <en_AU txt="The ID already exists at position: %d,%d."/>
+    <en_CA txt="The ID already exists at position: %d,%d."/>
   </Msg>
   <Msg id="gooffline">
     <en txt="Go offline"/>
@@ -23530,6 +23690,8 @@
     <fi txt="Mene offline-tilaan"/>
     <fr txt="utiliser hors ligne"/>
     <pl txt="Rozłącz"/>
+    <en_AU txt="Go offline"/>
+    <en_CA txt="Go offline"/>
   </Msg>
   <Msg id="query">
     <en txt="Query"/>
@@ -23548,6 +23710,8 @@
     <en_GB txt="Query"/>
     <fi txt="Kysely"/>
     <pl txt="Pytanie"/>
+    <en_AU txt="Query"/>
+    <en_CA txt="Query"/>
   </Msg>
   <Msg id="processsignalevents">
     <en txt="Process signal events"/>
@@ -23564,6 +23728,8 @@
     <sv txt="Behandla signalhändelser"/>
     <en_GB txt="Process signal events"/>
     <fi txt="Käsittele opastintapahtumat"/>
+    <en_AU txt="Process signal events"/>
+    <en_CA txt="Process signal events"/>
   </Msg>
   <Msg id="overwritestatus">
     <en txt="Overwrite status"/>
@@ -23581,6 +23747,8 @@
     <en_GB txt="Overwrite status"/>
     <sv txt="Skriv över status"/>
     <fi txt="Korvaa tilanne"/>
+    <en_AU txt="Overwrite status"/>
+    <en_CA txt="Overwrite status"/>
   </Msg>
   <Msg id="closenoevents">
     <en txt="Close on no events"/>
@@ -23596,6 +23764,8 @@
     <pt_BR txt="Fechar se não houver eventos"/>
     <en_GB txt="Close on no events"/>
     <fi txt="Älä sulje minkään tapahtuman vuoksi"/>
+    <en_AU txt="Close on no events"/>
+    <en_CA txt="Close on no events"/>
   </Msg>
   <Msg id="every">
     <en txt="every"/>
@@ -23614,6 +23784,8 @@
     <en_GB txt="every"/>
     <fi txt="Joka"/>
     <pl txt="każdy"/>
+    <en_AU txt="every"/>
+    <en_CA txt="every"/>
   </Msg>
   <Msg id="startofday">
     <en txt="Start of Day" tip="Initialize accessories and query sensors."/>
@@ -23632,6 +23804,8 @@
     <pt_BR txt="Início do Dia"/>
     <en_GB txt="Start of Day"/>
     <fi txt="Ajopäivän aloitus"/>
+    <en_AU txt="Start of Day"/>
+    <en_CA txt="Start of Day"/>
   </Msg>
   <Msg id="querysensors">
     <en txt="Query sensors" tip="Query actual state of all sensors."/>
@@ -23651,6 +23825,8 @@
     <fi txt="Hae antureiden tilat"/>
     <fr txt="capteurs"/>
     <pl txt="Sprawdzenie stanu czujników"/>
+    <en_AU txt="Query sensors"/>
+    <en_CA txt="Query sensors"/>
   </Msg>
   <Msg id="canid">
     <en txt="CAN ID"/>
@@ -23669,6 +23845,8 @@
     <en_GB txt="CAN ID"/>
     <fi txt="CAN ID"/>
     <pl txt="CAN ID"/>
+    <en_AU txt="CAN ID"/>
+    <en_CA txt="CAN ID"/>
   </Msg>
   <Msg id="selectshortestblock">
     <en txt="Select shortest block"/>
@@ -23688,6 +23866,8 @@
     <pt_BR txt="Selecionar bloco mais curto"/>
     <en_GB txt="Select shortest block"/>
     <fi txt="Valitse lyhyin lohko"/>
+    <en_AU txt="Select shortest block"/>
+    <en_CA txt="Select shortest block"/>
   </Msg>
   <Msg id="prefix">
     <en txt="Prefix"/>
@@ -23706,6 +23886,8 @@
     <sv txt="Prefix"/>
     <en_GB txt="Prefix"/>
     <fi txt="Etuliite"/>
+    <en_AU txt="Prefix"/>
+    <en_CA txt="Prefix"/>
   </Msg>
   <Msg id="backup">
     <en txt="Backup"/>
@@ -23724,6 +23906,8 @@
     <pt_BR txt="Cópia de segurança"/>
     <en_GB txt="Backup"/>
     <fi txt="Varmistus"/>
+    <en_AU txt="Backup"/>
+    <en_CA txt="Backup"/>
   </Msg>
   <Msg id="keypath">
     <en txt="Key path"/>
@@ -23741,6 +23925,8 @@
     <en_GB txt="Key path"/>
     <fi txt="Avaimen polku"/>
     <pl txt="Katalog kluczy"/>
+    <en_AU txt="Key path"/>
+    <en_CA txt="Key path"/>
   </Msg>
   <Msg id="openkeyfile">
     <en txt="Open Key file"/>
@@ -23759,6 +23945,8 @@
     <en_GB txt="Open Key file"/>
     <fi txt="Avaa avaintiedosto"/>
     <fr txt="ouverture du fichier des clés"/>
+    <en_AU txt="Open Key file"/>
+    <en_CA txt="Open Key file"/>
   </Msg>
   <Msg id="freeall">
     <en txt="Free all"/>
@@ -23776,6 +23964,8 @@
     <en_GB txt="Free all"/>
     <fi txt="Vapauta kaikki"/>
     <fr txt="tous libres"/>
+    <en_AU txt="Free all"/>
+    <en_CA txt="Free all"/>
   </Msg>
   <Msg id="merge">
     <en txt="Merge"/>
@@ -23793,6 +23983,8 @@
     <pt_BR txt="Mesclar"/>
     <en_GB txt="Merge"/>
     <fi txt="Yhdistä"/>
+    <en_AU txt="Merge"/>
+    <en_CA txt="Merge"/>
   </Msg>
   <Msg id="closeexit">
     <en txt="Close exit"/>
@@ -23808,6 +24000,8 @@
     <pt_BR txt="Fechar saída"/>
     <en_GB txt="Close exit"/>
     <fi txt="Sulje poistuessa"/>
+    <en_AU txt="Close exit"/>
+    <en_CA txt="Close exit"/>
   </Msg>
   <Msg id="openexit">
     <en txt="Open exit"/>
@@ -23823,6 +24017,8 @@
     <pt_BR txt="Abrir saída"/>
     <en_GB txt="Open exit"/>
     <fi txt="Avaa poistuessa"/>
+    <en_AU txt="Open exit"/>
+    <en_CA txt="Open exit"/>
   </Msg>
   <Msg id="tooltip">
     <en txt="Tooltip"/>
@@ -23841,6 +24037,8 @@
     <pt_BR txt="Dica"/>
     <en_GB txt="Tooltip"/>
     <fi txt="Näytä vihjeet"/>
+    <en_AU txt="Tooltip"/>
+    <en_CA txt="Tooltip"/>
   </Msg>
   <Msg id="icon">
     <en txt="Icon"/>
@@ -23860,6 +24058,8 @@
     <pt_BR txt="Ícone"/>
     <en_GB txt="Icon"/>
     <fi txt="Kuvake"/>
+    <en_AU txt="Icon"/>
+    <en_CA txt="Icon"/>
   </Msg>
   <Msg id="swack">
     <en txt="Check switch acknowledge"/>
@@ -23875,6 +24075,8 @@
     <en_GB txt="Check switch acknowledge"/>
     <sv txt="Kontrollera växelåterkoppling"/>
     <fi txt="Tarkista vaihteen ilmoitus vastaanotosta"/>
+    <en_AU txt="Check switch acknowledge"/>
+    <en_CA txt="Check switch acknowledge"/>
   </Msg>
   <Msg id="retries">
     <en txt="Retries"/>
@@ -23893,6 +24095,8 @@
     <pt_BR txt="Repetições"/>
     <en_GB txt="Retries"/>
     <fi txt="Yritykset"/>
+    <en_AU txt="Retries"/>
+    <en_CA txt="Retries"/>
   </Msg>
   <Msg id="issue" dialog="true">
     <en txt="Issue" tip="Create a server issue context."/>
@@ -23909,6 +24113,8 @@
     <en_GB txt="Issue"/>
     <sv txt="Ärende"/>
     <fi txt="Tapaus"/>
+    <en_AU txt="Issue"/>
+    <en_CA txt="Issue"/>
   </Msg>
   <Msg id="issuepath">
     <en txt="Issue path"/>
@@ -23922,6 +24128,8 @@
     <pt_BR txt="Caminho do incidente"/>
     <en_GB txt="Issue path"/>
     <fi txt="Tapauksen polku"/>
+    <en_AU txt="Issue path"/>
+    <en_CA txt="Issue path"/>
   </Msg>
   <Msg id="reconnectafterservershutdown">
     <en txt="Reconnect after server shutdown"/>
@@ -23941,6 +24149,8 @@
     <pt_BR txt="Reconectar após desligar o servidor"/>
     <en_GB txt="Reconnect after server shutdown"/>
     <fi txt="Yhdistä uudelleen palvelimen sammutuksen jälkeen"/>
+    <en_AU txt="Reconnect after server shutdown"/>
+    <en_CA txt="Reconnect after server shutdown"/>
   </Msg>
   <Msg id="linear">
     <en txt="Linear"/>
@@ -23960,6 +24170,8 @@
     <pt_BR txt="Linear"/>
     <en_GB txt="Linear"/>
     <fi txt="Suoraviivainen"/>
+    <en_AU txt="Linear"/>
+    <en_CA txt="Linear"/>
   </Msg>
   <Msg id="restoreschedule">
     <en txt="Restore schedule"/>
@@ -23980,6 +24192,8 @@
     <en_GB txt="Restore schedule"/>
     <fi txt="Palauta aikataulu"/>
     <fr txt="reinitialisation de la pendule"/>
+    <en_AU txt="Restore schedule"/>
+    <en_CA txt="Restore schedule"/>
   </Msg>
   <Msg id="deprecatedrouting">
     <en txt="Classic routing is deprecated; Please migrate to block side routing."/>
@@ -23995,6 +24209,8 @@
     <en_GB txt="Classic routing is deprecated; Please migrate to block side routing."/>
     <fi txt="Perinteinen reititys on vanhentunut. Siirry käyttämään lohkopuolen reititystä."/>
     <pl txt="Routing klasyczny jest przestarzały, proszę użyj blokowego wytyczania trasy"/>
+    <en_AU txt="Classic routing is deprecated; Please migrate to block side routing."/>
+    <en_CA txt="Classic routing is deprecated; Please migrate to block side routing."/>
   </Msg>
   <Msg id="checkplanhealth">
     <en txt="Check plan health"/>
@@ -24011,6 +24227,8 @@
     <pt_BR txt="Verificar adequação do diagrama"/>
     <en_GB txt="Check plan health"/>
     <fi txt="Tarkista suunnitelman tila"/>
+    <en_AU txt="Check plan health"/>
+    <en_CA txt="Check plan health"/>
   </Msg>
   <Msg id="extendedcheck">
     <en txt="Extended plan check"/>
@@ -24029,6 +24247,8 @@
     <sv txt="Utökad spårplanskontroll"/>
     <en_GB txt="Extended plan check"/>
     <fi txt="Laajennettu tilan tarkastus"/>
+    <en_AU txt="Extended plan check"/>
+    <en_CA txt="Extended plan check"/>
   </Msg>
   <Msg id="booster">
     <en txt="Booster"/>
@@ -24048,6 +24268,8 @@
     <en_GB txt="Booster"/>
     <fi txt="Vahvistin"/>
     <pl txt="Wzmacniacz"/>
+    <en_AU txt="Booster"/>
+    <en_CA txt="Booster"/>
   </Msg>
   <Msg id="actionctrl">
     <en txt="Action control"/>
@@ -24063,6 +24285,8 @@
     <pt_BR txt="Controle de ações"/>
     <en_GB txt="Action control"/>
     <fi txt="Toimintojen hallinta"/>
+    <en_AU txt="Action control"/>
+    <en_CA txt="Action control"/>
   </Msg>
   <Msg id="carcard">
     <en txt="Car card"/>
@@ -24080,6 +24304,8 @@
     <pt_BR txt="Cartão do vagão"/>
     <en_GB txt="Car card"/>
     <fi txt="Vaunukortti"/>
+    <en_AU txt="Car card"/>
+    <en_CA txt="Car card"/>
   </Msg>
   <Msg id="reserve">
     <en txt="Reserve"/>
@@ -24096,6 +24322,8 @@
     <pt_BR txt="Reserva"/>
     <en_GB txt="Reserve"/>
     <fi txt="Varaa"/>
+    <en_AU txt="Reserve"/>
+    <en_CA txt="Reserve"/>
   </Msg>
   <Msg id="goto">
     <en txt="Go to"/>
@@ -24113,6 +24341,8 @@
     <pt_BR txt="Ir para"/>
     <en_GB txt="Go to"/>
     <fi txt="Siirry"/>
+    <en_AU txt="Go to"/>
+    <en_CA txt="Go to"/>
   </Msg>
   <Msg id="run">
     <en txt="Run"/>
@@ -24133,6 +24363,8 @@
     <pt_BR txt="Executar"/>
     <en_GB txt="Run"/>
     <fi txt="Suorita"/>
+    <en_AU txt="Run"/>
+    <en_CA txt="Run"/>
   </Msg>
   <Msg id="leave">
     <en txt="Leave"/>
@@ -24152,6 +24384,8 @@
     <pt_BR txt="Deixar"/>
     <en_GB txt="Leave"/>
     <fi txt="Poista"/>
+    <en_AU txt="Leave"/>
+    <en_CA txt="Leave"/>
   </Msg>
   <Msg id="parameter">
     <en txt="Parameter"/>
@@ -24171,6 +24405,8 @@
     <pt_BR txt="Parâmetro"/>
     <en_GB txt="Parameter"/>
     <fi txt="Parametri"/>
+    <en_AU txt="Parameter"/>
+    <en_CA txt="Parameter"/>
   </Msg>
   <Msg id="duration">
     <en txt="Duration"/>
@@ -24191,6 +24427,8 @@
     <pt_BR txt="Duração"/>
     <en_GB txt="Duration"/>
     <fi txt="Kesto"/>
+    <en_AU txt="Duration"/>
+    <en_CA txt="Duration"/>
   </Msg>
   <Msg id="definition">
     <en txt="Definition"/>
@@ -24210,6 +24448,8 @@
     <pt_BR txt="Definição"/>
     <en_GB txt="Definition"/>
     <fi txt="Määritykset"/>
+    <en_AU txt="Definition"/>
+    <en_CA txt="Definition"/>
   </Msg>
   <Msg id="switched">
     <en txt="Switched"/>
@@ -24228,6 +24468,8 @@
     <sv txt="Skiftad"/>
     <fi txt="Kytketty"/>
     <fr txt="commuté"/>
+    <en_AU txt="Switched"/>
+    <en_CA txt="Switched"/>
   </Msg>
   <Msg id="decpath">
     <en txt="Decoder path"/>
@@ -24246,6 +24488,8 @@
     <en_GB txt="Decoder path"/>
     <fi txt="Dekooderin polku"/>
     <pl txt="Katalog specyfikacji dekoderów"/>
+    <en_AU txt="Decoder path"/>
+    <en_CA txt="Decoder path"/>
   </Msg>
   <Msg id="gamepadsupport">
     <en txt="Gamepad support"/>
@@ -24263,6 +24507,8 @@
     <en_GB txt="Gamepad support"/>
     <fi txt="Gamepad-tuki"/>
     <pl txt="Obsługa Gamepad"/>
+    <en_AU txt="Gamepad support"/>
+    <en_CA txt="Gamepad support"/>
   </Msg>
   <Msg id="snmp">
     <en txt="SNMP"/>
@@ -24281,6 +24527,8 @@
     <pt_BR txt="SNMP"/>
     <en_GB txt="SNMP"/>
     <fi txt="SNMP"/>
+    <en_AU txt="SNMP"/>
+    <en_CA txt="SNMP"/>
   </Msg>
   <Msg id="usefieldevent">
     <en txt="Use field events"/>
@@ -24297,6 +24545,8 @@
     <en_GB txt="Use field events"/>
     <fi txt="Käytä kentän tapahtumia"/>
     <fr txt="utiliser le champ des events"/>
+    <en_AU txt="Use field events"/>
+    <en_CA txt="Use field events"/>
   </Msg>
   <Msg id="flip">
     <en txt="Flip"/>
@@ -24315,6 +24565,8 @@
     <en_GB txt="Flip"/>
     <fi txt="Käännetty"/>
     <pl txt="Przełącznik"/>
+    <en_AU txt="Flip"/>
+    <en_CA txt="Flip"/>
   </Msg>
   <Msg id="analog">
     <en txt="Analog"/>
@@ -24334,6 +24586,8 @@
     <en_GB txt="Analogue"/>
     <fi txt="Analoginen"/>
     <pl txt="Analogowy"/>
+    <en_AU txt="Analogue"/>
+    <en_CA txt="Analogue"/>
   </Msg>
   <Msg id="blank">
     <en txt="blank"/>
@@ -24354,6 +24608,8 @@
     <pt_BR txt="vazio"/>
     <en_GB txt="blank"/>
     <fi txt="tyhjä"/>
+    <en_AU txt="blank"/>
+    <en_CA txt="blank"/>
   </Msg>
   <Msg id="powersensor">
     <en txt="Power sensor"/>
@@ -24371,6 +24627,8 @@
     <en_GB txt="Power sensor"/>
     <fi txt="Virta-anturi"/>
     <fr txt="capteur de courant"/>
+    <en_AU txt="Power sensor"/>
+    <en_CA txt="Power sensor"/>
   </Msg>
   <Msg id="poweroutput">
     <en txt="Power output"/>
@@ -24388,6 +24646,8 @@
     <en_GB txt="Power output"/>
     <fi txt="Virransyöttö"/>
     <fr txt="sortie alimentation"/>
+    <en_AU txt="Power output"/>
+    <en_CA txt="Power output"/>
   </Msg>
   <Msg id="uid">
     <en txt="UniqueID"/>
@@ -24407,6 +24667,8 @@
     <pt_BR txt="Identificador único"/>
     <en_GB txt="UniqueID"/>
     <fi txt="Yksilöllinen ID"/>
+    <en_AU txt="UniqueID"/>
+    <en_CA txt="UniqueID"/>
   </Msg>
   <Msg id="bestchoice">
     <en txt="Best choice"/>
@@ -24426,6 +24688,8 @@
     <en_GB txt="Best choice"/>
     <fi txt="Paras vaihtoehto"/>
     <fr txt="meilleur choix"/>
+    <en_AU txt="Best choice"/>
+    <en_CA txt="Best choice"/>
   </Msg>
   <Msg id="locowidgets">
     <en txt="Loco Widgets"/>
@@ -24441,6 +24705,8 @@
     <en_GB txt="Loco Widgets"/>
     <fi txt="Veturilisukkeet"/>
     <fr txt="identifications de la loco"/>
+    <en_AU txt="Loco Widgets"/>
+    <en_CA txt="Loco Widgets"/>
   </Msg>
   <Msg id="guestloco" dialog="true">
     <en txt="Guest Loco"/>
@@ -24457,6 +24723,8 @@
     <en_GB txt="Guest Loco"/>
     <fi txt="Vierasveturi"/>
     <pl txt="Lokomotywa Gość"/>
+    <en_AU txt="Guest Loco"/>
+    <en_CA txt="Guest Loco"/>
   </Msg>
   <Msg id="automobile">
     <en txt="Automobile or truck"/>
@@ -24474,6 +24742,9 @@
     <pt_BR txt="Automóvel ou caminhão"/>
     <en_GB txt="car or lorry"/>
     <fi txt="Auto tai pakettiauto"/>
+    <en_AU txt="Automobile or truck"/>
+    <en_CA txt="Automobile or truck"/>
+    <pl txt="Samochód lub ciężarówka"/>
   </Msg>
   <Msg id="inatlen">
     <en txt="In event at train length"/>
@@ -24488,6 +24759,8 @@
     <en_GB txt="In event at train length"/>
     <sv txt="In händelse vid tåglängd"/>
     <fi txt="Junan pituus -tapahtumassa"/>
+    <en_AU txt="In event at train length"/>
+    <en_CA txt="In event at train length"/>
   </Msg>
   <Msg id="analyser">
     <en txt="Analyser"/>
@@ -24506,6 +24779,8 @@
     <fi txt="Analysaattori"/>
     <pl txt="Analizator"/>
     <fr txt="analyseur"/>
+    <en_AU txt="Analyser"/>
+    <en_CA txt="Analyser"/>
   </Msg>
   <Msg id="extendedclean">
     <en txt="Extended plan clean"/>
@@ -24521,6 +24796,8 @@
     <en_GB txt="Extended plan clean"/>
     <fi txt="Laajennettu suunnitelman siivous"/>
     <fr txt="le plan est correct"/>
+    <en_AU txt="Extended plan clean"/>
+    <en_CA txt="Extended plan clean"/>
   </Msg>
   <Msg id="ana_setRouteId">
     <en txt="Set routeid for all automatic detected routes"/>
@@ -24536,6 +24813,8 @@
     <pt_BR txt="Definir identificador de rotas para todas as rotas detectadas"/>
     <en_GB txt="Set routeid for all automatic detected routes"/>
     <fi txt="Aseta routeid kaikille automaattisesti tunnistetuille reiteille"/>
+    <en_AU txt="Set routeid for all automatic detected routes"/>
+    <en_CA txt="Set routeid for all automatic detected routes"/>
   </Msg>
   <Msg id="ana_cleanRouteId">
     <en txt="Clean routeid of all automatic detected routes"/>
@@ -24551,6 +24830,8 @@
     <sv txt="Rensa ruttID på alla automatiskt upptäckta rutter"/>
     <en_GB txt="Clean routeid of all automatic detected routes"/>
     <fi txt="Poista kaikkien automaattsesti tunnistettujen reittien routeid:t"/>
+    <en_AU txt="Clean routeid of all automatic detected routes"/>
+    <en_CA txt="Clean routeid of all automatic detected routes"/>
   </Msg>
   <Msg id="ana_setBlockId">
     <en txt="Set blockid for all blocks"/>
@@ -24567,6 +24848,8 @@
     <en_GB txt="Set blockid for all blocks"/>
     <fi txt="Aseta lohkon ID kaikille lohkoille"/>
     <fr txt="definit un id de bloc pour tous les blocs"/>
+    <en_AU txt="Set blockid for all blocks"/>
+    <en_CA txt="Set blockid for all blocks"/>
   </Msg>
   <Msg id="ana_resetBlockId">
     <en txt="Reset blockid in whole plan"/>
@@ -24583,6 +24866,8 @@
     <en_GB txt="Reset blockid in whole plan"/>
     <fi txt="Alusta koko suunnitelman blockid:t"/>
     <fr txt="reinitialise l'id de bloc dans tout le plan"/>
+    <en_AU txt="Reset blockid in whole plan"/>
+    <en_CA txt="Reset blockid in whole plan"/>
   </Msg>
   <Msg id="ana_addSignalBlockAssignment">
     <en txt="Assign signals to blocks"/>
@@ -24599,6 +24884,8 @@
     <pt_BR txt="Atribuir sinais aos blocos"/>
     <en_GB txt="Assign signals to blocks"/>
     <fi txt="Määritä opastimet lohkoihin"/>
+    <en_AU txt="Assign signals to blocks"/>
+    <en_CA txt="Assign signals to blocks"/>
   </Msg>
   <Msg id="ana_resetSignalBlockAssignment">
     <en txt="Reset signal assignments in all blocks"/>
@@ -24615,6 +24902,8 @@
     <sv txt="Återställ signaltilldelning i alla block"/>
     <fi txt="Tyhjennä opastimien määritys kaikissa lohkoissa"/>
     <fr txt="reassigne les signaux pour tous les blocs"/>
+    <en_AU txt="Reset signal assignments in all blocks"/>
+    <en_CA txt="Reset signal assignments in all blocks"/>
   </Msg>
   <Msg id="ana_addFeedbackBlockAssignment">
     <en txt="assign feedbacks to blocks"/>
@@ -24631,6 +24920,8 @@
     <sv txt="Tilldela återkoppling till block"/>
     <fi txt="Määritä anturit lohkoihin"/>
     <fr txt="assigne les retours aux blocs"/>
+    <en_AU txt="assign feedbacks to blocks"/>
+    <en_CA txt="assign feedbacks to blocks"/>
   </Msg>
   <Msg id="ana_resetFeedbackBlockAssignment">
     <en txt="Reset feedback assignments in all blocks"/>
@@ -24647,6 +24938,8 @@
     <sv txt="Återställ återkopplingsstatus i alla block"/>
     <fi txt="Tyhjennä anturien määritys kaikissa lohkoissa"/>
     <fr txt="reinitialise le retour pour tous les blocs"/>
+    <en_AU txt="Reset feedback assignments in all blocks"/>
+    <en_CA txt="Reset feedback assignments in all blocks"/>
   </Msg>
   <Msg id="ana_basicCheck">
     <en txt="Basic checks on all items"/>
@@ -24660,6 +24953,8 @@
     <pt_BR txt="Verificações básicas em todos os itens"/>
     <en_GB txt="Basic checks on all items"/>
     <fi txt="Kaikkien kohtien perustarkistus"/>
+    <en_AU txt="Basic checks on all items"/>
+    <en_CA txt="Basic checks on all items"/>
   </Msg>
   <Msg id="ana_blockCheck">
     <en txt="Checks concerning blocks"/>
@@ -24675,6 +24970,8 @@
     <en_GB txt="Checks concerning blocks"/>
     <fi txt="Tarkistaa asiaankuuluvat lohkot"/>
     <fr txt="verification des blocs"/>
+    <en_AU txt="Checks concerning blocks"/>
+    <en_CA txt="Checks concerning blocks"/>
   </Msg>
   <Msg id="ana_routeCheck">
     <en txt="Checks concerning routes"/>
@@ -24690,6 +24987,8 @@
     <en_GB txt="Checks concerning routes"/>
     <fi txt="Tarkistaa asiaankuuluvat reitit"/>
     <fr txt="verification des routes"/>
+    <en_AU txt="Checks concerning routes"/>
+    <en_CA txt="Checks concerning routes"/>
   </Msg>
   <Msg id="ana_actionCheck">
     <en txt="Check actions and conditions"/>
@@ -24704,6 +25003,8 @@
     <en_GB txt="Check actions and conditions"/>
     <fi txt="Tarkista toimenpiteet ja ehdot"/>
     <fr txt="verification des actions et conditions"/>
+    <en_AU txt="Check actions and conditions"/>
+    <en_CA txt="Check actions and conditions"/>
   </Msg>
   <Msg id="ana_basicClean">
     <en txt="Clean basic problems on all items"/>
@@ -24720,6 +25021,8 @@
     <fi txt="Siivoa kaikkien kohtien perusongelmat"/>
     <pl txt="Wyczyść podstawowe problemy dotyczące wszystkich elementów"/>
     <fr txt="supprimer les problèmes simples de tous les objets"/>
+    <en_AU txt="Clean basic problems on all items"/>
+    <en_CA txt="Clean basic problems on all items"/>
   </Msg>
   <Msg id="ana_blockClean">
     <en txt="Clean block problems"/>
@@ -24736,6 +25039,8 @@
     <fi txt="Siivoa lohkojen ongelmat"/>
     <pl txt="Wyczyść problemy bloków"/>
     <fr txt="supprimer les problèmes des blocs"/>
+    <en_AU txt="Clean block problems"/>
+    <en_CA txt="Clean block problems"/>
   </Msg>
   <Msg id="ana_routeClean">
     <en txt="Clean route problems"/>
@@ -24752,6 +25057,8 @@
     <fi txt="Selvitä reittiongelmat"/>
     <pl txt="Wyczyść problemy tras"/>
     <fr txt="supprimer les problèmes des routes"/>
+    <en_AU txt="Clean route problems"/>
+    <en_CA txt="Clean route problems"/>
   </Msg>
   <Msg id="ana_actionClean">
     <en txt="Clean action and condition problems"/>
@@ -24767,6 +25074,8 @@
     <fi txt="Selvitä toiminto- ja ehto-ongelmat"/>
     <pl txt="Wyczyść działania i stan problemów"/>
     <fr txt="supprimer les problèmes des actions et conditions"/>
+    <en_AU txt="Clean action and condition problems"/>
+    <en_CA txt="Clean action and condition problems"/>
   </Msg>
   <Msg id="ana_clean">
     <en txt="Clean all analyze"/>
@@ -24783,6 +25092,8 @@
     <fi txt="Tyhjennä analysointitiedot"/>
     <pl txt="Wyczyścić wszystkie analizy"/>
     <fr txt="nettoyer les analyses"/>
+    <en_AU txt="Clean all analyse"/>
+    <en_CA txt="Clean all analyze"/>
   </Msg>
   <Msg id="macro">
     <en txt="Macro"/>
@@ -24798,6 +25109,8 @@
     <pt_BR txt="Macro"/>
     <en_GB txt="Macro"/>
     <fi txt="Makro"/>
+    <en_AU txt="Macro"/>
+    <en_CA txt="Macro"/>
   </Msg>
   <Msg id="features">
     <en txt="Features"/>
@@ -24813,6 +25126,8 @@
     <sv txt="Funktioner"/>
     <en_GB txt="Features"/>
     <fi txt="Ominaisuudet"/>
+    <en_AU txt="Features"/>
+    <en_CA txt="Features"/>
   </Msg>
   <Msg id="portsetup">
     <en txt="Port setup"/>
@@ -24827,6 +25142,8 @@
     <pt_BR txt="Configuração de porta"/>
     <en_GB txt="Port setup"/>
     <fi txt="Portin asetukset"/>
+    <en_AU txt="Port setup"/>
+    <en_CA txt="Port setup"/>
   </Msg>
   <Msg id="concurveright">
     <en txt="Connector curve right"/>
@@ -24841,6 +25158,8 @@
     <pt_BR txt="Conector de curva para direita"/>
     <en_GB txt="Connector curve right"/>
     <fi txt="Kaartuva yhdistin oikealle"/>
+    <en_AU txt="Connector curve right"/>
+    <en_CA txt="Connector curve right"/>
   </Msg>
   <Msg id="concurveleft">
     <en txt="Connector curve left"/>
@@ -24855,6 +25174,8 @@
     <pt_BR txt="Conector de curva para esquerda"/>
     <en_GB txt="Connector curve left"/>
     <fi txt="Kaartuva yhdistin vasemmalle"/>
+    <en_AU txt="Connector curve left"/>
+    <en_CA txt="Connector curve left"/>
   </Msg>
   <Msg id="watchdog">
     <en txt="Watchdog"/>
@@ -24869,6 +25190,8 @@
     <pt_BR txt="Fiscalizador"/>
     <en_GB txt="Watchdog"/>
     <fi txt="Vahti"/>
+    <en_AU txt="Watchdog"/>
+    <en_CA txt="Watchdog"/>
   </Msg>
   <Msg id="overrulethrottle">
     <en txt="Overrule throttle"/>
@@ -24883,6 +25206,8 @@
     <en_GB txt="Overrule throttle"/>
     <sv txt="Överrid körhandtag"/>
     <fi txt="Kumoa säädin"/>
+    <en_AU txt="Overrule throttle"/>
+    <en_CA txt="Overrule throttle"/>
   </Msg>
   <Msg id="resetwc">
     <en txt="Reset wheel counter"/>
@@ -24898,6 +25223,8 @@
     <en_GB txt="Reset wheel counter"/>
     <fi txt="Alusta pyörälaskuri"/>
     <pl txt="Wyzeruj licznik koła"/>
+    <en_AU txt="Reset wheel counter"/>
+    <en_CA txt="Reset wheel counter"/>
   </Msg>
   <Msg id="restrictedeventtimers">
     <en txt="Restricted event timers"/>
@@ -24912,6 +25239,8 @@
     <sv txt="Begränsade händelse timers"/>
     <en_GB txt="Restricted event timers"/>
     <fi txt="Rajoitetut tapahtuma-ajastimet"/>
+    <en_AU txt="Restricted event timers"/>
+    <en_CA txt="Restricted event timers"/>
   </Msg>
   <Msg id="nodevcheck">
     <en txt="No device check at startup"/>
@@ -24926,6 +25255,8 @@
     <en_GB txt="No device check at startup"/>
     <sv txt="Ingen enhetskontroll vid uppstart"/>
     <fi txt="Ei laitetarkistusta käynnistyessä"/>
+    <en_AU txt="No device check at startup"/>
+    <en_CA txt="No device check at startup"/>
   </Msg>
   <Msg id="monitorsize">
     <en txt="Monitor size (kB)"/>
@@ -24941,6 +25272,8 @@
     <en_GB txt="Monitor size (kB)"/>
     <fi txt="Seurannan koko (kB)"/>
     <pl txt="Rozmiar monitora (kB)"/>
+    <en_AU txt="Monitor size (kB)"/>
+    <en_CA txt="Monitor size (kB)"/>
   </Msg>
   <Msg id="startuptour">
     <en txt="Startup tour"/>
@@ -24955,6 +25288,8 @@
     <sv txt="Startrutt"/>
     <en_GB txt="Startup tour"/>
     <fi txt="Aloitusmatka"/>
+    <en_AU txt="Startup tour"/>
+    <en_CA txt="Startup tour"/>
   </Msg>
   <Msg id="resetrouteidswarning">
     <en txt="Reset all route IDs."/>
@@ -24969,6 +25304,8 @@
     <pt_BR txt="Redefinir todos identificadores de rotas"/>
     <en_GB txt="Reset all route IDs."/>
     <fi txt="Alusta kaikki reitti ID:t"/>
+    <en_AU txt="Reset all route IDs."/>
+    <en_CA txt="Reset all route IDs."/>
   </Msg>
   <Msg id="force">
     <en txt="Force"/>
@@ -24984,6 +25321,8 @@
     <en_GB txt="Force"/>
     <fi txt="Pakota"/>
     <pl txt="Wymuszenie"/>
+    <en_AU txt="Force"/>
+    <en_CA txt="Force"/>
   </Msg>
   <Msg id="ebreakatghost">
     <en txt="EBreak at ghost train"/>
@@ -24997,6 +25336,8 @@
     <sv txt="Nödstopp vid spöktåg"/>
     <en_GB txt="EBreak at ghost train"/>
     <fi txt="Haamujuna aiheuttaa hätäpysäytyksen"/>
+    <en_AU txt="EBreak at ghost train"/>
+    <en_CA txt="EBreak at ghost train"/>
   </Msg>
   <Msg id="doublequote">
     <en txt="Double quote"/>
@@ -25011,6 +25352,8 @@
     <sv txt="Dubbla citationstecken"/>
     <en_GB txt="Double quote"/>
     <fi txt="Lainausmerkki"/>
+    <en_AU txt="Double quote"/>
+    <en_CA txt="Double quote"/>
   </Msg>
   <Msg id="assigntrain">
     <en txt="Assign train"/>
@@ -25026,6 +25369,8 @@
     <en_GB txt="Assign train"/>
     <fi txt="Liitä juna"/>
     <pl txt="Przypisz pociąg"/>
+    <en_AU txt="Assign train"/>
+    <en_CA txt="Assign train"/>
   </Msg>
   <Msg id="releasetrain">
     <en txt="Release train"/>
@@ -25041,6 +25386,8 @@
     <en_GB txt="Release train"/>
     <fi txt="Vapauta juna"/>
     <pl txt="Zwolnij pociąg"/>
+    <en_AU txt="Release train"/>
+    <en_CA txt="Release train"/>
   </Msg>
   <Msg id="gain">
     <en txt="Gain"/>
@@ -25053,6 +25400,8 @@
     <pt_BR txt="Ganho"/>
     <en_GB txt="Gain"/>
     <fi txt="Lisäys"/>
+    <en_AU txt="Gain"/>
+    <en_CA txt="Gain"/>
   </Msg>
   <Msg id="usedepartdelay">
     <en txt="Use depart delay"/>
@@ -25068,6 +25417,8 @@
     <en_GB txt="Use depart delay"/>
     <fi txt="Käytä lähdön viivettä"/>
     <pl txt="Użyj opóźnienia wyjazdu"/>
+    <en_AU txt="Use depart delay"/>
+    <en_CA txt="Use depart delay"/>
   </Msg>
   <Msg id="blink">
     <en txt="Blink"/>
@@ -25083,6 +25434,8 @@
     <pt_BR txt="Piscar"/>
     <en_GB txt="Blink"/>
     <fi txt="Vilkkuva"/>
+    <en_AU txt="Blink"/>
+    <en_CA txt="Blink"/>
   </Msg>
   <Msg id="actiontimer60">
     <en txt="Action timer 60 sec."/>
@@ -25097,6 +25450,8 @@
     <en_GB txt="Action timer 60 sec."/>
     <sv txt="Action timer 60 sek"/>
     <fi txt="Toimintoajastin 60 s."/>
+    <en_AU txt="Action timer 60 sec."/>
+    <en_CA txt="Action timer 60 sec."/>
   </Msg>
   <Msg id="dirimage">
     <en txt="Direction image"/>
@@ -25111,6 +25466,8 @@
     <en_GB txt="Direction image"/>
     <sv txt="Riktningsbild"/>
     <fi txt="Suunnan kuva"/>
+    <en_AU txt="Direction image"/>
+    <en_CA txt="Direction image"/>
   </Msg>
   <Msg id="newposflag">
     <en txt="New Position Flag"/>
@@ -25125,6 +25482,8 @@
     <sv txt="Ny positionsflagga"/>
     <en_GB txt="New Position Flag"/>
     <fi txt="Uuden sijainnin merkki"/>
+    <en_AU txt="New Position Flag"/>
+    <en_CA txt="New Position Flag"/>
   </Msg>
   <Msg id="sectionlength">
     <en txt="Section length"/>
@@ -25139,6 +25498,8 @@
     <pt_BR txt="Comprimento da seção"/>
     <en_GB txt="Section length"/>
     <fi txt="Osuuden pituus"/>
+    <en_AU txt="Section length"/>
+    <en_CA txt="Section length"/>
   </Msg>
   <Msg id="traingap">
     <en txt="Train gap"/>
@@ -25152,6 +25513,8 @@
     <pt_BR txt="Intervalo de trem"/>
     <en_GB txt="Train gap"/>
     <fi txt="Junien väli"/>
+    <en_AU txt="Train gap"/>
+    <en_CA txt="Train gap"/>
   </Msg>
   <Msg id="entersensor">
     <en txt="Enter sensor"/>
@@ -25166,6 +25529,8 @@
     <pt_BR txt="Entrar sensor"/>
     <en_GB txt="Enter sensor"/>
     <fi txt="Enter-anturi"/>
+    <en_AU txt="Enter sensor"/>
+    <en_CA txt="Enter sensor"/>
   </Msg>
   <Msg id="entersignal">
     <en txt="Enter signal"/>
@@ -25180,6 +25545,8 @@
     <pt_BR txt="Sinal de entrada"/>
     <en_GB txt="Enter signal"/>
     <fi txt="Enter-opastin"/>
+    <en_AU txt="Enter signal"/>
+    <en_CA txt="Enter signal"/>
   </Msg>
   <Msg id="exitsignal">
     <en txt="Exit signal"/>
@@ -25194,6 +25561,8 @@
     <pt_BR txt="Sinal de saída"/>
     <en_GB txt="Exit signal"/>
     <fi txt="Exit-opastin"/>
+    <en_AU txt="Exit signal"/>
+    <en_CA txt="Exit signal"/>
   </Msg>
   <Msg id="frog">
     <en txt="Frog"/>
@@ -25208,6 +25577,8 @@
     <en_GB txt="Frog"/>
     <sv txt="Vändslinga"/>
     <fi txt="Vaihteenkieli"/>
+    <en_AU txt="Frog"/>
+    <en_CA txt="Frog"/>
   </Msg>
   <Msg id="showlocked">
     <en txt="Show locked switches" tip="Show locked switches with a different color."/>
@@ -25222,6 +25593,8 @@
     <pt_BR txt="Exibir desvios travados"/>
     <en_GB txt="Show locked switches"/>
     <fi txt="Näytä lukitut vaihteet"/>
+    <en_AU txt="Show locked switches"/>
+    <en_CA txt="Show locked switches"/>
   </Msg>
   <Msg id="altthrottle">
     <en txt="Alternative throttle"/>
@@ -25235,6 +25608,8 @@
     <sv txt="Alternativ körkontroll"/>
     <en_GB txt="Alternative throttle"/>
     <fi txt="Vaihtoehtoinen säädin"/>
+    <en_AU txt="Alternative throttle"/>
+    <en_CA txt="Alternative throttle"/>
   </Msg>
   <Msg id="openlocofile" dialog="true">
     <en txt="Open locomotive file"/>
@@ -25249,6 +25624,8 @@
     <pt_BR txt="Abrir arquivo da locomotiva"/>
     <en_GB txt="Open locomotive file"/>
     <fi txt="Avaa veturitiedosto"/>
+    <en_AU txt="Open locomotive file"/>
+    <en_CA txt="Open locomotive file"/>
   </Msg>
   <Msg id="openoccfile" dialog="true">
     <en txt="Open occupancy file"/>
@@ -25264,6 +25641,8 @@
     <sv txt="Öppna beläggningsfil"/>
     <fi txt="Avaa varaustilatiedosto"/>
     <pl txt="Otwórz plik zajętości"/>
+    <en_AU txt="Open occupancy file"/>
+    <en_CA txt="Open occupancy file"/>
   </Msg>
   <Msg id="guestimport" dialog="true">
     <en txt="Guest import"/>
@@ -25277,6 +25656,8 @@
     <sv txt="Gästimport"/>
     <en_GB txt="Guest import"/>
     <fi txt="Vieraan tuonti"/>
+    <en_AU txt="Guest import"/>
+    <en_CA txt="Guest import"/>
   </Msg>
   <Msg id="resetspeeddir">
     <en txt="Reset speed at direction change"/>
@@ -25291,6 +25672,8 @@
     <pt_BR txt="Redefinir velocidade na mudança de direção"/>
     <en_GB txt="Reset speed at direction change"/>
     <fi txt="Alusta nopeus suunnanvaihdossa"/>
+    <en_AU txt="Reset speed at direction change"/>
+    <en_CA txt="Reset speed at direction change"/>
   </Msg>
   <Msg id="cmdrecorder" dialog="true">
     <en txt="Command recorder"/>
@@ -25306,6 +25689,8 @@
     <sv txt="Kommandoinspelare"/>
     <fi txt="Komentojen nauhoitus"/>
     <pl txt="Rejestrator poleceń"/>
+    <en_AU txt="Command recorder"/>
+    <en_CA txt="Command recorder"/>
   </Msg>
   <Msg id="slavecode">
     <en txt="Slave code"/>
@@ -25320,6 +25705,8 @@
     <en_GB txt="Slave code"/>
     <sv txt="Slavkod"/>
     <fi txt="Alistettu koodi"/>
+    <en_AU txt="Slave code"/>
+    <en_CA txt="Slave code"/>
   </Msg>
   <Msg id="textps">
     <en txt="Text pointsize"/>
@@ -25334,6 +25721,8 @@
     <en_GB txt="Text pointsize"/>
     <sv txt="Textstorlek"/>
     <fi txt="Tekstin pistekoko"/>
+    <en_AU txt="Text pointsize"/>
+    <en_CA txt="Text pointsize"/>
   </Msg>
   <Msg id="rendergc">
     <en txt="Render smooth"/>
@@ -25347,6 +25736,8 @@
     <pt_BR txt="Tornar suave"/>
     <en_GB txt="Render smooth"/>
     <fi txt="Renderöinnin pehmennys"/>
+    <en_AU txt="Render smooth"/>
+    <en_CA txt="Render smooth"/>
   </Msg>
   <Msg id="overload">
     <en txt="Overload"/>
@@ -25362,6 +25753,8 @@
     <pt_BR txt="Sobrecarga"/>
     <en_GB txt="Overload"/>
     <fi txt="Ylikuormitus"/>
+    <en_AU txt="Overload"/>
+    <en_CA txt="Overload"/>
   </Msg>
   <Msg id="processblockevents">
     <en txt="Process block events"/>
@@ -25376,6 +25769,8 @@
     <sv txt="Behandla blockhändelser"/>
     <en_GB txt="Process block events"/>
     <fi txt="Käsittele lohkotapahtumat"/>
+    <en_AU txt="Process block events"/>
+    <en_CA txt="Process block events"/>
   </Msg>
   <Msg id="processrouteevents">
     <en txt="Process route events"/>
@@ -25390,6 +25785,8 @@
     <sv txt="Behandla rutthändelser"/>
     <en_GB txt="Process route events"/>
     <fi txt="Käsittele reitin tapahtumat"/>
+    <en_AU txt="Process route events"/>
+    <en_CA txt="Process route events"/>
   </Msg>
   <Msg id="stamp">
     <en txt="Stamp"/>
@@ -25405,6 +25802,8 @@
     <en_GB txt="Stamp"/>
     <sv txt="Stämpel"/>
     <fi txt="Merkitse"/>
+    <en_AU txt="Stamp"/>
+    <en_CA txt="Stamp"/>
   </Msg>
   <Msg id="export">
     <en txt="Export"/>
@@ -25420,6 +25819,8 @@
     <pt_BR txt="Exportar"/>
     <en_GB txt="Export"/>
     <fi txt="Vie"/>
+    <en_AU txt="Export"/>
+    <en_CA txt="Export"/>
   </Msg>
   <Msg id="insert">
     <en txt="Insert"/>
@@ -25436,6 +25837,8 @@
     <en_GB txt="Insert"/>
     <fi txt="Lisää"/>
     <pl txt="Wstaw"/>
+    <en_AU txt="Insert"/>
+    <en_CA txt="Insert"/>
   </Msg>
   <Msg id="ebreak">
     <en txt="Emergency break"/>
@@ -25450,6 +25853,8 @@
     <pt_BR txt="Parada de emergência"/>
     <en_GB txt="Emergency break"/>
     <fi txt="Hätäkatkaisin"/>
+    <en_AU txt="Emergency break"/>
+    <en_CA txt="Emergency break"/>
   </Msg>
   <Msg id="shutdownserver">
     <en txt="Shutdown"/>
@@ -25465,6 +25870,8 @@
     <pt_BR txt="Desligar"/>
     <en_GB txt="Shutdown"/>
     <fi txt="Sammuta"/>
+    <en_AU txt="Shutdown"/>
+    <en_CA txt="Shutdown"/>
   </Msg>
   <Msg id="accdectable" dialog="true">
     <en txt="Accessory table" alttxt="Accessory Decoders" tip="Accessory decoder table"/>
@@ -25480,6 +25887,8 @@
     <en_GB txt="Accessory table"/>
     <fi txt="Lisälaitteet"/>
     <pl txt="Tabela akcesoriów"/>
+    <en_AU txt="Accessory table"/>
+    <en_CA txt="Accessory table"/>
   </Msg>
   <Msg id="calc">
     <en txt="Calculation"/>
@@ -25494,6 +25903,8 @@
     <pt_BR txt="Cálculos"/>
     <en_GB txt="Calculation"/>
     <fi txt="Laskenta"/>
+    <en_AU txt="Calculation"/>
+    <en_CA txt="Calculation"/>
   </Msg>
   <Msg id="freeallwarning">
     <en txt="This action will free all section reservations. Proceed?"/>
@@ -25507,6 +25918,8 @@
     <en_GB txt="This action will free all section reservations. Proceed?"/>
     <sv txt="Denna åtgärd kommer att frigöra alla sektionsreservationer. Vill du fortsätta?"/>
     <fi txt="Kaikki aluevaraukset vapautetaan. Jatketaanko?"/>
+    <en_AU txt="This action will free all section reservations. Proceed?"/>
+    <en_CA txt="This action will free all section reservations. Proceed?"/>
   </Msg>
   <Msg id="deleteall">
     <en txt="Delete all"/>
@@ -25521,6 +25934,8 @@
     <pt_BR txt="Excluir tudo"/>
     <en_GB txt="Delete all"/>
     <fi txt="Poista kaikki"/>
+    <en_AU txt="Delete all"/>
+    <en_CA txt="Delete all"/>
   </Msg>
   <Msg id="maxdiff">
     <en txt="Max.difference"/>
@@ -25534,6 +25949,8 @@
     <sv txt="Max.skillnad"/>
     <en_GB txt="Max.difference"/>
     <fi txt="Enimmäiserotus"/>
+    <en_AU txt="Max.difference"/>
+    <en_CA txt="Max.difference"/>
   </Msg>
   <Msg id="correction">
     <en txt="Correction"/>
@@ -25547,6 +25964,8 @@
     <pt_BR txt="Correção"/>
     <en_GB txt="Correction"/>
     <fi txt="Korjaus"/>
+    <en_AU txt="Correction"/>
+    <en_CA txt="Correction"/>
   </Msg>
   <Msg id="vendor">
     <en txt="Vendor"/>
@@ -25560,6 +25979,8 @@
     <en_GB txt="Vendor"/>
     <sv txt="Tillverkare"/>
     <fi txt="Valmistaja"/>
+    <en_AU txt="Vendor"/>
+    <en_CA txt="Vendor"/>
   </Msg>
   <Msg id="product">
     <en txt="Product"/>
@@ -25575,6 +25996,8 @@
     <en_GB txt="Product"/>
     <fi txt="Tuote"/>
     <pl txt="Produkt"/>
+    <en_AU txt="Product"/>
+    <en_CA txt="Product"/>
   </Msg>
   <Msg id="class">
     <en txt="Class"/>
@@ -25590,6 +26013,8 @@
     <en_GB txt="Class"/>
     <fi txt="Luokka"/>
     <pl txt="Klasa"/>
+    <en_AU txt="Class"/>
+    <en_CA txt="Class"/>
   </Msg>
   <Msg id="featurecv">
     <en txt="Feature CV"/>
@@ -25603,6 +26028,8 @@
     <en_GB txt="Feature CV"/>
     <sv txt="Funktions CV"/>
     <fi txt="Ominaisuus CV"/>
+    <en_AU txt="Feature CV"/>
+    <en_CA txt="Feature CV"/>
   </Msg>
   <Msg id="vendorcv">
     <en txt="Vendor CV"/>
@@ -25617,6 +26044,8 @@
     <en_GB txt="Vendor CV"/>
     <sv txt="Återförsäljar CV"/>
     <fi txt="Valmistaja CV"/>
+    <en_AU txt="Vendor CV"/>
+    <en_CA txt="Vendor CV"/>
   </Msg>
   <Msg id="disable">
     <en txt="Disable"/>
@@ -25631,6 +26060,8 @@
     <pt_BR txt="Desabilitar"/>
     <en_GB txt="Disable"/>
     <fi txt="Disabloi"/>
+    <en_AU txt="Disable"/>
+    <en_CA txt="Disable"/>
   </Msg>
   <Msg id="macromap">
     <en txt="Macro Map"/>
@@ -25643,6 +26074,8 @@
     <pt_BR txt="Mapa Macro"/>
     <en_GB txt="Macro Map"/>
     <fi txt="Makrokartta"/>
+    <en_AU txt="Macro Map"/>
+    <en_CA txt="Macro Map"/>
   </Msg>
   <Msg id="slowdown">
     <en txt="Slowdown"/>
@@ -25657,6 +26090,8 @@
     <pt_BR txt="Diminuir"/>
     <en_GB txt="Slowdown"/>
     <fi txt="Hidasta"/>
+    <en_AU txt="Slowdown"/>
+    <en_CA txt="Slowdown"/>
   </Msg>
   <Msg id="cycles">
     <en txt="Cycles"/>
@@ -25671,6 +26106,8 @@
     <en_GB txt="Cycles"/>
     <fi txt="Jaksoa"/>
     <pl txt="Cykle"/>
+    <en_AU txt="Cycles"/>
+    <en_CA txt="Cycles"/>
   </Msg>
   <Msg id="minutes">
     <en txt="minutes"/>
@@ -25685,6 +26122,8 @@
     <en_GB txt="minutes"/>
     <fi txt="minuuttia"/>
     <pl txt="minut/y"/>
+    <en_AU txt="minutes"/>
+    <en_CA txt="minutes"/>
   </Msg>
   <Msg id="day">
     <en txt="day"/>
@@ -25700,6 +26139,8 @@
     <en_GB txt="day"/>
     <fi txt="päivä"/>
     <pl txt="dzień"/>
+    <en_AU txt="day"/>
+    <en_CA txt="day"/>
   </Msg>
   <Msg id="preview">
     <en txt="Preview"/>
@@ -25714,6 +26155,8 @@
     <en_GB txt="Preview"/>
     <fi txt="Esikatselu"/>
     <pl txt="Podgląd"/>
+    <en_AU txt="Preview"/>
+    <en_CA txt="Preview"/>
   </Msg>
   <Msg id="sensormonitor">
     <en txt="Sensor monitor"/>
@@ -25727,6 +26170,8 @@
     <pt_BR txt="Monitor de sensores"/>
     <en_GB txt="Sensor monitor"/>
     <fi txt="Anturien seuranta"/>
+    <en_AU txt="Sensor monitor"/>
+    <en_CA txt="Sensor monitor"/>
   </Msg>
   <Msg id="wheelcount">
     <en txt="Wheel count"/>
@@ -25740,6 +26185,8 @@
     <sv txt="Hjulräknare"/>
     <en_GB txt="Wheel count"/>
     <fi txt="Pyörien määrä"/>
+    <en_AU txt="Wheel count"/>
+    <en_CA txt="Wheel count"/>
   </Msg>
   <Msg id="counter">
     <en txt="Counter"/>
@@ -25755,6 +26202,8 @@
     <en_GB txt="Counter"/>
     <fi txt="Laskuri"/>
     <pl txt="Licznik"/>
+    <en_AU txt="Counter"/>
+    <en_CA txt="Counter"/>
   </Msg>
   <Msg id="countedcars">
     <en txt="Counted cars"/>
@@ -25768,6 +26217,8 @@
     <sv txt="Räknade vagnar"/>
     <en_GB txt="Counted cars"/>
     <fi txt="Lasketut vaunut"/>
+    <en_AU txt="Counted cars"/>
+    <en_CA txt="Counted cars"/>
   </Msg>
   <Msg id="report" dialog="true">
     <en txt="Report"/>
@@ -25782,6 +26233,8 @@
     <pt_BR txt="Relatório"/>
     <en_GB txt="Report"/>
     <fi txt="Raportti"/>
+    <en_AU txt="Report"/>
+    <en_CA txt="Report"/>
   </Msg>
   <Msg id="dynamically">
     <en txt="Dynamically"/>
@@ -25795,6 +26248,8 @@
     <pt_BR txt="Dinamicamente"/>
     <en_GB txt="Dynamically"/>
     <fi txt="Dynaamisesti"/>
+    <en_AU txt="Dynamically"/>
+    <en_CA txt="Dynamically"/>
   </Msg>
   <Msg id="startinterval">
     <en txt="Start interval"/>
@@ -25808,6 +26263,8 @@
     <pt_BR txt="Intervalo inicial"/>
     <en_GB txt="Start interval"/>
     <fi txt="Käynnistysväli"/>
+    <en_AU txt="Start interval"/>
+    <en_CA txt="Start interval"/>
   </Msg>
   <Msg id="mintrainlen">
     <en txt="Min. train length"/>
@@ -25821,6 +26278,8 @@
     <sv txt="Min. tåglängd"/>
     <en_GB txt="Min. train length"/>
     <fi txt="Junan vähimmäispituus"/>
+    <en_AU txt="Min. train length"/>
+    <en_CA txt="Min. train length"/>
   </Msg>
   <Msg id="steps">
     <en txt="Steps"/>
@@ -25836,6 +26295,8 @@
     <en_GB txt="Steps"/>
     <fi txt="Askellukset"/>
     <pl txt="Kroki"/>
+    <en_AU txt="Steps"/>
+    <en_CA txt="Steps"/>
   </Msg>
   <Msg id="createguestonbidi">
     <en txt="Create guest on BiDi"/>
@@ -25849,6 +26310,8 @@
     <sv txt="Skapa gästlok med BiDi"/>
     <en_GB txt="Create guest on BiDi"/>
     <fi txt="Luo vieras BiDiin"/>
+    <en_AU txt="Create guest on BiDi"/>
+    <en_CA txt="Create guest on BiDi"/>
   </Msg>
   <Msg id="weight">
     <en txt="Weight"/>
@@ -25864,6 +26327,8 @@
     <en_GB txt="Weight"/>
     <fi txt="Paino"/>
     <pl txt="Waga"/>
+    <en_AU txt="Weight"/>
+    <en_CA txt="Weight"/>
   </Msg>
   <Msg id="acceleration">
     <en txt="Acceleration"/>
@@ -25879,6 +26344,8 @@
     <en_GB txt="Acceleration"/>
     <fi txt="Kiihtyvyys"/>
     <pl txt="Przyśpieszenie"/>
+    <en_AU txt="Acceleration"/>
+    <en_CA txt="Acceleration"/>
   </Msg>
   <Msg id="adjustaccel">
     <en txt="Adjust acceleration"/>
@@ -25893,6 +26360,8 @@
     <en_GB txt="Adjust acceleration"/>
     <fi txt="Säädä kiihtyvyyttä"/>
     <pl txt="Dostosuj przyśpieszenie"/>
+    <en_AU txt="Adjust acceleration"/>
+    <en_CA txt="Adjust acceleration"/>
   </Msg>
   <Msg id="maxload">
     <en txt="Max. load"/>
@@ -25906,6 +26375,8 @@
     <pt_BR txt="Carga máxima"/>
     <en_GB txt="Max. load"/>
     <fi txt="Enimmäiskuorma"/>
+    <en_AU txt="Max. load"/>
+    <en_CA txt="Max. load"/>
   </Msg>
   <Msg id="minaccel">
     <en txt="Min. acceleration"/>
@@ -25920,6 +26391,8 @@
     <sv txt="Min. acceleration"/>
     <fi txt="Vähimmäiskiihtyvyys"/>
     <pl txt="Przyśpieszenie Min."/>
+    <en_AU txt="Min. acceleration"/>
+    <en_CA txt="Min. acceleration"/>
   </Msg>
   <Msg id="maxaccel">
     <en txt="Max. acceleration"/>
@@ -25934,6 +26407,8 @@
     <en_GB txt="Max. acceleration"/>
     <fi txt="Enimmäiskiihtyvyys"/>
     <pl txt="Przyśpieszenie Max."/>
+    <en_AU txt="Max. acceleration"/>
+    <en_CA txt="Max. acceleration"/>
   </Msg>
   <Msg id="minsidesignals">
     <en txt="Minus(-) side signals"/>
@@ -25948,6 +26423,8 @@
     <sv txt="Minus(-) sidessignaler"/>
     <fi txt="Miinus(-) puolen signaalit"/>
     <pl txt="Sygnały boczne Minus(-)"/>
+    <en_AU txt="Minus(-) side signals"/>
+    <en_CA txt="Minus(-) side signals"/>
   </Msg>
   <Msg id="plussidesignals">
     <en txt="Plus(+) side signals"/>
@@ -25962,6 +26439,8 @@
     <sv txt="Plus(+) sidessignaler"/>
     <fi txt="Plus(+) puolen signaalit"/>
     <pl txt="Sygnały boczne Plus(+)"/>
+    <en_AU txt="Plus(+) side signals"/>
+    <en_CA txt="Plus(+) side signals"/>
   </Msg>
   <Msg id="identify">
     <en txt="Identify"/>
@@ -25975,6 +26454,8 @@
     <pt_BR txt="Identifique"/>
     <en_GB txt="Identify"/>
     <fi txt="Tunnista"/>
+    <en_AU txt="Identify"/>
+    <en_CA txt="Identify"/>
   </Msg>
   <Msg id="ping">
     <en txt="Ping"/>
@@ -25988,6 +26469,8 @@
     <en_GB txt="Ping"/>
     <sr_latin txt="Ping"/>
     <fi txt="Pingaa"/>
+    <en_AU txt="Ping"/>
+    <en_CA txt="Ping"/>
   </Msg>
   <Msg id="getlasterror">
     <en txt="Get last error"/>
@@ -26001,6 +26484,8 @@
     <sv txt="Hämta senaste fel"/>
     <en_GB txt="Get last error"/>
     <fi txt="Hae viimeisin virhe"/>
+    <en_AU txt="Get last error"/>
+    <en_CA txt="Get last error"/>
   </Msg>
   <Msg id="loconetlicense">
     <en txt="Due to license fee for Digitrax LocoNet(r) a valid support key is required."/>
@@ -26014,6 +26499,8 @@
     <en_GB txt="Due to licence fee for Digitrax LocoNet(r) a valid support key is required."/>
     <de txt="Wegen Lizenzgebühr für Digitrax LocoNet(r) wird ein gültige Support-Schlüssel benötigt."/>
     <fi txt="Digitrax LocoNet(r):n lisensointimaksusta johtuen vaaditaan voimassa oleva tukiavain."/>
+    <en_AU txt="Due to licence fee for Digitrax LocoNet(r) a valid support key is required."/>
+    <en_CA txt="Due to licence fee for Digitrax LocoNet(r) a valid support key is required."/>
   </Msg>
   <Msg id="usebididir">
     <en txt="Use BiDi direction"/>
@@ -26027,6 +26514,8 @@
     <sl txt="Uporabi BiDi smer"/>
     <en_GB txt="Use BiDi direction"/>
     <fi txt="Käytä BiDi suuntaa"/>
+    <en_AU txt="Use BiDi direction"/>
+    <en_CA txt="Use BiDi direction"/>
   </Msg>
   <Msg id="revision">
     <en txt="Revision"/>
@@ -26040,6 +26529,8 @@
     <en_GB txt="Revision"/>
     <sr_latin txt="Revizija"/>
     <fi txt="Korjausversio"/>
+    <en_AU txt="Revision"/>
+    <en_CA txt="Revision"/>
   </Msg>
   <Msg id="showcounters">
     <en txt="Show counters"/>
@@ -26054,6 +26545,8 @@
     <sr_latin txt="Prikaži brojače"/>
     <fi txt="Näytä laskurit"/>
     <pl txt="Pokaż liczniki"/>
+    <en_AU txt="Show counters"/>
+    <en_CA txt="Show counters"/>
   </Msg>
   <Msg id="resetcounters">
     <en txt="Reset counters"/>
@@ -26068,6 +26561,8 @@
     <sr_latin txt="Poništi brojače"/>
     <fi txt="Alusta laskurit"/>
     <pl txt="Wyzeruj liczniki"/>
+    <en_AU txt="Reset counters"/>
+    <en_CA txt="Reset counters"/>
   </Msg>
   <Msg id="secureack">
     <en txt="Acknowledge sensor events"/>
@@ -26080,6 +26575,8 @@
     <ru txt="События датчика подтверждения"/>
     <sr_latin txt="Potvrda događaja senzora"/>
     <fi txt="Kuittaa anturitapahtumat"/>
+    <en_AU txt="Acknowledge sensor events"/>
+    <en_CA txt="Acknowledge sensor events"/>
   </Msg>
   <Msg id="shutdownall">
     <en txt="Shutdown all"/>
@@ -26093,6 +26590,8 @@
     <ru txt="Выключить всё"/>
     <sr_latin txt="Ugasi sve"/>
     <fi txt="Sammuta kaikki"/>
+    <en_AU txt="Shutdown all"/>
+    <en_CA txt="Shutdown all"/>
   </Msg>
   <Msg id="shutdownnode">
     <en txt="Shutdown RocNet node %d?"/>
@@ -26106,6 +26605,8 @@
     <ru txt="Выключить RocNet узел %d?"/>
     <sr_latin txt="Ugasi RocNet čvor %d?"/>
     <fi txt="Sammutetaanko RocNet noodi %d?"/>
+    <en_AU txt="Shutdown RocNet node %d?"/>
+    <en_CA txt="Shutdown RocNet node %d?"/>
   </Msg>
   <Msg id="shutdownallnodes">
     <en txt="Shutdown all RocNet nodes?"/>
@@ -26119,6 +26620,8 @@
     <ru txt="Выключить все узлы RocNet?"/>
     <sr_latin txt="Ugasi sve RocNet čvorove?"/>
     <fi txt="Sammutetaanko kaikki RocNet noodit?"/>
+    <en_AU txt="Shutdown all RocNet nodes?"/>
+    <en_CA txt="Shutdown all RocNet nodes?"/>
   </Msg>
   <Msg id="updatenode">
     <en txt="Update RocNet node %d to revision %d?"/>
@@ -26132,6 +26635,8 @@
     <sr_latin txt="Osveži RocNet čvor %d za reviziju %d?"/>
     <de txt="RocNet-Knoten %d auf Revision %d aktualisieren?"/>
     <fi txt="Päivitetäänkö RocNet noodi %d versioon %d?"/>
+    <en_AU txt="Update RocNet node %d to revision %d?"/>
+    <en_CA txt="Update RocNet node %d to revision %d?"/>
   </Msg>
   <Msg id="update">
     <en txt="Update"/>
@@ -26146,6 +26651,8 @@
     <de txt="Aktualisierung"/>
     <fi txt="Päivitä"/>
     <pl txt="Aktualizuj"/>
+    <en_AU txt="Update"/>
+    <en_CA txt="Update"/>
   </Msg>
   <Msg id="newrevision">
     <en txt="New revision"/>
@@ -26158,6 +26665,8 @@
     <sr_latin txt="Nova revizija"/>
     <de txt="Neue Revision"/>
     <fi txt="Uusi julkaisu"/>
+    <en_AU txt="New revision"/>
+    <en_CA txt="New revision"/>
   </Msg>
   <Msg id="shutdownlocation">
     <en txt="Shutdown location %s?"/>
@@ -26170,6 +26679,8 @@
     <sr_latin txt="Isključi lokaciju %s?"/>
     <fi txt="Sammuta paikka %s?"/>
     <de txt="Bereich %s herunterfahren"/>
+    <en_AU txt="Shutdown location %s?"/>
+    <en_CA txt="Shutdown location %s?"/>
   </Msg>
   <Msg id="commuteronly">
     <en txt="Commuter trains only"/>
@@ -26183,6 +26694,8 @@
     <sr_latin txt="Samo prigradski vozovi"/>
     <de txt="Nur Pendelzüge"/>
     <fi txt="Vain lähiliikennejunat"/>
+    <en_AU txt="Commuter trains only"/>
+    <en_CA txt="Commuter trains only"/>
   </Msg>
   <Msg id="forcemultiaspects">
     <en txt="Force multi aspects"/>
@@ -26195,6 +26708,8 @@
     <sr_latin txt="Prinudni višestruki pristup"/>
     <de txt="Viel-Begriffe erzwingen"/>
     <fi txt="Pakota useita merkityksiä"/>
+    <en_AU txt="Force multi aspects"/>
+    <en_CA txt="Force multi aspects"/>
   </Msg>
   <Msg id="nodemap">
     <en txt="Nodemap"/>
@@ -26207,6 +26722,8 @@
     <sr_latin txt="Mapa čvorišta"/>
     <de txt="Knoten-Baum"/>
     <fi txt="Noodikartta"/>
+    <en_AU txt="Nodemap"/>
+    <en_CA txt="Nodemap"/>
   </Msg>
   <Msg id="usedecspec4all">
     <en txt="Use decoder file for CV numbers"/>
@@ -26219,6 +26736,8 @@
     <sr_latin txt="Koristi fajl dekodera za CV brojeve"/>
     <de txt="Dekoder-Datei für CV-Nummer verwenden"/>
     <fi txt="Käytä dekooderin tiedostoa CV-numeroille"/>
+    <en_AU txt="Use decoder file for CV numbers"/>
+    <en_CA txt="Use decoder file for CV numbers"/>
   </Msg>
   <Msg id="fifosize">
     <en txt="FiFo size"/>
@@ -26234,6 +26753,8 @@
     <es txt="tamaño de la cola"/>
     <fi txt="FiFo koko"/>
     <pl txt="Rozmiar FiFo"/>
+    <en_AU txt="FiFo size"/>
+    <en_CA txt="FiFo size"/>
   </Msg>
   <Msg id="pollingrate">
     <en txt="Polling rate"/>
@@ -26248,6 +26769,8 @@
     <de txt="Abfrage-Rate"/>
     <es txt="velocidad de sondeo"/>
     <fi txt="Seurannan tiheys"/>
+    <en_AU txt="Polling rate"/>
+    <en_CA txt="Polling rate"/>
   </Msg>
   <Msg id="usepb">
     <en txt="Use push button"/>
@@ -26262,6 +26785,8 @@
     <de txt="Drucktaste verwenden"/>
     <es txt="usa el pulsador"/>
     <fi txt="Käytä painiketta"/>
+    <en_AU txt="Use push button"/>
+    <en_CA txt="Use push button"/>
   </Msg>
   <Msg id="govirtual">
     <en txt="Virtual automatic"/>
@@ -26275,6 +26800,8 @@
     <sl txt="Virtualna avtomatika"/>
     <fi txt="Virtuaalinen automaattiajo"/>
     <ru txt="Виртуальная автоматика"/>
+    <en_AU txt="Virtual automatic"/>
+    <en_CA txt="Virtual automatic"/>
   </Msg>
   <Msg id="maxdelay">
     <en txt="Max. delay"/>
@@ -26289,6 +26816,8 @@
     <sv txt="Max. fördröjning"/>
     <fi txt="Enimmäisviive"/>
     <ru txt="Макс.задержка"/>
+    <en_AU txt="Max. delay"/>
+    <en_CA txt="Max. delay"/>
   </Msg>
   <Msg id="startallvirtual">
     <en txt="Start all locs virtual" tip="Put all locs in virtual auto mode."/>
@@ -26304,6 +26833,8 @@
     <fi txt="Käynnistä kaikki veturit virtuaalisesti"/>
     <ru txt="Запустить все локи в виртуале"/>
     <pl txt="Uruchom wirtualnie wszystkie lokomotywy"/>
+    <en_AU txt="Start all locs virtual"/>
+    <en_CA txt="Start all locs virtual"/>
   </Msg>
   <Msg id="paste">
     <en txt="Paste"/>
@@ -26319,6 +26850,8 @@
     <fi txt="Liitä"/>
     <ru txt="Вставка"/>
     <pl txt="Wklej"/>
+    <en_AU txt="Paste"/>
+    <en_CA txt="Paste"/>
   </Msg>
   <Msg id="channelsetup">
     <en txt="Channel Setup"/>
@@ -26332,6 +26865,8 @@
     <sl txt="Nastavitev kanalov"/>
     <fi txt="Kanavan asetukset"/>
     <ru txt="Настройка канала"/>
+    <en_AU txt="Channel Setup"/>
+    <en_CA txt="Channel Setup"/>
   </Msg>
   <Msg id="finetune">
     <en txt="Fine-tune"/>
@@ -26344,6 +26879,8 @@
     <fi txt="Hienosäädä"/>
     <ru txt="Точная настройка"/>
     <de txt="Feineinstellung"/>
+    <en_AU txt="Fine-tune"/>
+    <en_CA txt="Fine-tune"/>
   </Msg>
   <Msg id="channel">
     <en txt="Channel"/>
@@ -26358,12 +26895,14 @@
     <sv txt="Kanal"/>
     <de txt="Kanal"/>
     <pl txt="Kanał"/>
+    <en_AU txt="Channel"/>
+    <en_CA txt="Channel"/>
   </Msg>
   <Msg id="preset">
     <en txt="Preset"/>
     <nl txt="Voorinstelling"/>
     <pt_BR txt="Predefinir"/>
-    <sr_latin txt="Postavljeno"/>
+    <sr_latin txt="Postavka"/>
     <en_GB txt="Preset"/>
     <it txt="Preimpostazione"/>
     <sl txt="Prednastavljeno"/>
@@ -26371,6 +26910,8 @@
     <ru txt="Предустановка"/>
     <sv txt="Förval"/>
     <de txt="Voreinstellung"/>
+    <en_AU txt="Preset"/>
+    <en_CA txt="Preset"/>
   </Msg>
   <Msg id="resetfifo">
     <en txt="Reset FiFo"/>
@@ -26384,6 +26925,8 @@
     <ru txt="Сброс FiFo"/>
     <sv txt="Återställ FiFo"/>
     <de txt="FiFo zurücksetzen"/>
+    <en_AU txt="Reset FiFo"/>
+    <en_CA txt="Reset FiFo"/>
   </Msg>
   <Msg id="useallspeedsteps">
     <en txt="Use all speed steps"/>
@@ -26397,6 +26940,8 @@
     <sr_latin txt="Koristi sve nivoe u promeni brzine"/>
     <sv txt="Använd alla hastighetssteg"/>
     <de txt="Alle Geschwindigkeitsstufen verwenden"/>
+    <en_AU txt="Use all speed steps"/>
+    <en_CA txt="Use all speed steps"/>
   </Msg>
   <Msg id="discover">
     <en txt="Discover"/>
@@ -26409,6 +26954,8 @@
     <pt_BR txt="Descobrir"/>
     <sr_latin txt="Otkriti"/>
     <de txt="Erkennen"/>
+    <en_AU txt="Discover"/>
+    <en_CA txt="Discover"/>
   </Msg>
   <Msg id="bind">
     <en txt="Bind"/>
@@ -26421,6 +26968,8 @@
     <sr_latin txt="Poveži"/>
     <pl txt="Połącz"/>
     <de txt="Binden"/>
+    <en_AU txt="Bind"/>
+    <en_CA txt="Bind"/>
   </Msg>
   <Msg id="uidname">
     <en txt="UID-Name"/>
@@ -26433,6 +26982,8 @@
     <sl txt="UID-Ime"/>
     <en_GB txt="UID-Name"/>
     <de txt="UID-Name"/>
+    <en_AU txt="UID-Name"/>
+    <en_CA txt="UID-Name"/>
   </Msg>
   <Msg id="i2cdetect">
     <en txt="I2C Detect"/>
@@ -26444,6 +26995,8 @@
     <sl txt="I2C Zaznava"/>
     <de txt="I2C - Erkennung"/>
     <en_GB txt="I2C Detect"/>
+    <en_AU txt="I2C Detect"/>
+    <en_CA txt="I2C Detect"/>
   </Msg>
   <Msg id="udpports">
     <en txt="UDP Ports"/>
@@ -26455,6 +27008,9 @@
     <it txt="Porte UDP"/>
     <sr_latin txt="UDP priključci"/>
     <en_GB txt="UDP Ports"/>
+    <en_AU txt="UDP Ports"/>
+    <en_CA txt="UDP Ports"/>
+    <ru txt="UDP Порты"/>
   </Msg>
   <Msg id="center">
     <en txt="Center"/>
@@ -26466,14 +27022,38 @@
     <sr_latin txt="Centar"/>
     <de txt="Mitte"/>
     <en_GB txt="Centre"/>
+    <en_AU txt="Centre"/>
+    <en_CA txt="Centre"/>
   </Msg>
   <Msg id="mainline">
     <en txt="Mainline"/>
+    <de txt="Hauptlinie"/>
+    <en_AU txt="Mainline"/>
+    <en_CA txt="Mainline"/>
+    <en_GB txt="Mainline"/>
+    <fi txt="Päärata"/>
+    <it txt="Linea principale"/>
+    <nl txt="Hoofdlijn"/>
+    <pt_BR txt="Rota principal"/>
+    <sr_latin txt="Glavna linija"/>
   </Msg>
   <Msg id="move4opp">
     <en txt="Move bridge if target position is opposite"/>
+    <de txt="Brücke drehen, wenn das Ziel auf der anderen Seite ist"/>
+    <en_AU txt="Move bridge if target position is opposite"/>
+    <en_CA txt="Move bridge if target position is opposite"/>
+    <en_GB txt="Move bridge if target position is opposite"/>
+    <fi txt="Käännä silta kohteen ollessa vastapäätä"/>
+    <it txt="Spostare il ponte se la posizione finale è opposta"/>
+    <nl txt="Draai de brug indien de gekozen positie tegenovegesteld ligt"/>
+    <pt_BR txt="Mover ligação caso a posição de destino seja oposta"/>
+    <sr_latin txt="Pomeri most ako je ciljna pozicija nasuprot"/>
   </Msg>
   <Msg id="cmdpause">
     <en txt="Command pause"/>
+    <fi txt="Komentotauko"/>
+    <nl txt="Commando pause"/>
+    <pt_BR txt="Pausa de comandos"/>
+    <sr_latin txt="Pauza komande"/>
   </Msg>
 </Messages>
