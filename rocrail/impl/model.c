@@ -2022,7 +2022,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
 
   if( StrOp.equals( wSysCmd.name(), cmdName ) && !StrOp.equals( wSysCmd.dcc, cmdVal ) &&
       !StrOp.equals( wSysCmd.loccnfg, cmdVal ) && !StrOp.equals( wSysCmd.link, cmdVal ) &&
-      !StrOp.equals( wSysCmd.resetblock, cmdVal ) )
+      !StrOp.equals( wSysCmd.resetblock, cmdVal ) && !StrOp.equals( wSysCmd.ulink, cmdVal ) )
   {
     if( StrOp.equals( wSysCmd.ebreak, cmdVal ) ) {
       if( wCtrl.isebreakforceunlock( wRocRail.getctrl( AppOp.getIni() ) ) ) {
@@ -2035,7 +2035,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
       int idx = 0;
       obj listener = ListOp.first( data->sysEventListeners );
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "informing %d listeners of a system event...", ListOp.size( data->sysEventListeners ) );
+          "informing %d listeners of a system event name=%s val=%s...", ListOp.size( data->sysEventListeners ), cmdName, cmdVal );
       while( listener != NULL ) {
         idx++;
         wSysCmd.setval(cmd, idx);
