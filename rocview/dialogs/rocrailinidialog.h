@@ -99,6 +99,7 @@ class wxSpinCtrl;
 #define ID_LISTBOX_RR_CONTROLLERS 10154
 #define ID_BUTTON_RR_DELETE 10105
 #define ID_BUTTON_RR_PROPS 10156
+#define ID_BUTTON_RR_DEFAULT 10322
 #define ID_COMBOBOX_RR_LIB 10001
 #define ID_BUTTON_RR_ADD 10000
 #define ID_PANEL_R2RNET 10281
@@ -177,6 +178,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_RR_PROPS
     void OnButtonRrPropsClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_RR_DEFAULT
+    void OnButtonRrDefaultClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_RR_ADD
     void OnButtonRrAddClick( wxCommandEvent& event );
@@ -376,6 +380,7 @@ public:
     wxListBox* m_Controllers;
     wxButton* m_ControllerDelete;
     wxButton* m_ControllerProps;
+    wxButton* m_Default;
     wxStaticBoxSizer* m_AddControllerBox;
     wxComboBox* m_Lib;
     wxButton* m_ControllerAdd;
