@@ -12079,12 +12079,12 @@
   <Msg id="exclude">
     <de txt="Lok ausschliessen"/>
     <en txt="Exclude"/>
-    <nl txt="Loc negeren"/>
+    <nl txt="Uitsluiten"/>
     <sv txt="Neka lok"/>
     <fr txt="Refuser les locomotives"/>
     <tr txt="Deny Loco"/>
     <es txt="Denegar Locomotora"/>
-    <it txt="Locomotive escluse"/>
+    <it txt="Escludere"/>
     <da txt="Afvis lokomotiv"/>
     <cs txt="Zakázáná Lokomotiva"/>
     <bg txt="Deny Loco"/>
@@ -12108,12 +12108,12 @@
   <Msg id="include">
     <de txt="Lok zulassen"/>
     <en txt="Include"/>
-    <nl txt="Loc toelaten"/>
+    <nl txt="Toelaten"/>
     <sv txt="Tillåt lok"/>
     <fr txt="Accepter les locomovies"/>
     <tr txt="Allow Loco"/>
     <es txt="Permitir Locomotora"/>
-    <it txt="Locomotive permesse"/>
+    <it txt="Includere"/>
     <da txt="Tillad lokomotiv"/>
     <cs txt="Povolená Lokomotiva"/>
     <bg txt="Разреши Loco"/>
@@ -27036,6 +27036,7 @@
     <nl txt="Hoofdlijn"/>
     <pt_BR txt="Rota principal"/>
     <sr_latin txt="Glavna linija"/>
+    <sl txt="Glavna proga"/>
   </Msg>
   <Msg id="move4opp">
     <en txt="Move bridge if target position is opposite"/>
@@ -27048,6 +27049,8 @@
     <nl txt="Draai de brug indien de gekozen positie tegenovegesteld ligt"/>
     <pt_BR txt="Mover ligação caso a posição de destino seja oposta"/>
     <sr_latin txt="Pomeri most ako je ciljna pozicija nasuprot"/>
+    <ru txt="Перемещать мост, если конечное положение противоположно"/>
+    <sl txt="Premakni most, če je cilj na nasprotni strani"/>
   </Msg>
   <Msg id="cmdpause">
     <en txt="Command pause"/>
@@ -27055,5 +27058,8 @@
     <nl txt="Commando pause"/>
     <pt_BR txt="Pausa de comandos"/>
     <sr_latin txt="Pauza komande"/>
+    <it txt="Pausa comando"/>
+    <ru txt="Командная пауза"/>
+    <sl txt="Premor za ukaz"/>
   </Msg>
 </Messages>
