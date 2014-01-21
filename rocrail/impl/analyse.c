@@ -7566,19 +7566,22 @@ static int _analyse(iOAnalyse inst) {
 
   block = (iONode)ListOp.first(data->bklist);
   while(block) {
+    if( wItem.isroad( block ) ) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "  skipped block[%s] because type road is not supported", wItem.getid( block ) );
+    } else {
+      const char* blockori = wItem.getori(block);
 
-    const char* blockori = wItem.getori(block);
+      if( blockori == NULL) {
+        blockori = wItem.west;
+      }
 
-    if(  blockori == NULL) {
-      blockori = wItem.west;
-    }
-
-    if( StrOp.equals( blockori, wItem.west ) || StrOp.equals( blockori, wItem.east ) ) {
-      __analyseBlock(inst, block, wItem.west);
-      __analyseBlock(inst, block, wItem.east);
-    } else if( StrOp.equals( blockori, wItem.north ) || StrOp.equals( blockori, wItem.south ) ) {
-      __analyseBlock(inst, block, wItem.north);
-      __analyseBlock(inst, block, wItem.south);
+      if( StrOp.equals( blockori, wItem.west ) || StrOp.equals( blockori, wItem.east ) ) {
+        __analyseBlock(inst, block, wItem.west);
+        __analyseBlock(inst, block, wItem.east);
+      } else if( StrOp.equals( blockori, wItem.north ) || StrOp.equals( blockori, wItem.south ) ) {
+        __analyseBlock(inst, block, wItem.north);
+        __analyseBlock(inst, block, wItem.south);
+      }
     }
 
     block = (iONode)ListOp.next(data->bklist);
@@ -9149,7 +9152,7 @@ static int _resetBlockids( iONode tracklist ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_resetBlockids: Checking %d %s nodes", trackListSize, listType );
     for( i = trackListSize - 1 ; i >= 0 ; i-- ) {
       tracknode = NodeOp.getChild(tracklist, i);
-      if( tracknode ) {
+      if( tracknode && ( ! wItem.isroad( tracknode ) ) ) {
         const char* blockid = wItem.getblockid(tracknode);
         if( blockid && StrOp.len( blockid ) ) {
           wItem.setblockid(tracknode, "");
@@ -9205,7 +9208,7 @@ static int _cleanupBlocksFbEvtBasic( iONode blocklist ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupBlocksFbEvtBasic: Checking %d %s nodes", blockListSize, listType );
     for( i = blockListSize - 1 ; i >= 0 ; i-- ) {
       blocknode = NodeOp.getChild(blocklist, i);
-      if( blocknode ) {
+      if( blocknode && ( ! wItem.isroad( blocknode ) ) ) {
         thisBlockChanged = False;
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupBlocksFbEvtBasic: Checking node %s", wBlock.getid( blocknode ) );
 
@@ -9256,8 +9259,8 @@ static int _cleanupBlocksFbEvtBasic( iONode blocklist ) {
         if( thisBlockChanged ) {
           numModifiedBlocks++;  
         }
-      }  
-    }    
+      }
+    }
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cleanup %slist [%4d/%4d nodes]%5d modifications in%5d nodes (fbevents in \"all\" and \"all-reverse\")", 
         listType, blockListSize, NodeOp.getChildCnt( blocklist ), modifications, numModifiedBlocks );
   }
@@ -9453,7 +9456,7 @@ static int _cleanupBlocksSignal( iONode blocklist ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupBlocksSignal: Checking %d %s nodes", blockListSize, listType );
     for( i = blockListSize - 1 ; i >= 0 ; i-- ) {
       blocknode = NodeOp.getChild(blocklist, i);
-      if( blocknode ) {
+      if( blocknode && ( ! wItem.isroad( blocknode ) ) ) {
         thisBlockChanged = False;
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "_cleanupBlocksSignal: Checking node %s", wBlock.getid( blocknode ) );
 
