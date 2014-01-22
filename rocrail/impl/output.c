@@ -179,7 +179,16 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
   int value = wOutput.getvalue( nodeA );
 
   if( StrOp.equals( wOutput.flip, state ) ) {
-    if( StrOp.equals( wOutput.on, wOutput.getstate( o->props ) ) )
+    if( wOutput.istristate(o->props) ) {
+      if( StrOp.equals( wOutput.on, wOutput.getstate( o->props ) ) )
+        state = wOutput.off;
+      else if( StrOp.equals( wOutput.off, wOutput.getstate( o->props ) ) )
+        state = wOutput.active;
+      else
+        state = wOutput.on;
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flip tristate output %s to %s", wOutput.getid( o->props ), state);
+    }
+    else if( StrOp.equals( wOutput.on, wOutput.getstate( o->props ) ) )
       state = wOutput.off;
     else
       state = wOutput.on;
@@ -223,7 +232,7 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
       wSwitch.setaddr1( nodeA, wOutput.getaddr( o->props ) );
       wSwitch.setport1( nodeA, wOutput.getport( o->props ) );
 
-      wSwitch.setcmd( nodeA, StrOp.equals( state, wOutput.on ) ? (inv?wSwitch.straight:wSwitch.turnout):(inv?wSwitch.turnout:wSwitch.straight) );
+      wSwitch.setcmd( nodeA, ( StrOp.equals(state, wOutput.on) || StrOp.equals(state, wOutput.active) ) ? (inv?wSwitch.straight:wSwitch.turnout):(inv?wSwitch.turnout:wSwitch.straight) );
 
     }
     else {
@@ -231,13 +240,13 @@ static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
       wOutput.setport( nodeA, wOutput.getport( o->props ) );
       wOutput.setgate( nodeA, wOutput.getgate( o->props ) );
       wOutput.setcmd( nodeA, state );
-      wOutput.setcmd( nodeA, StrOp.equals( state, wOutput.on ) ? (inv?wOutput.off:wOutput.on):(inv?wOutput.on:wOutput.off) );
+      wOutput.setcmd( nodeA, ( StrOp.equals(state, wOutput.on) || StrOp.equals(state, wOutput.active) ) ? (inv?wOutput.off:wOutput.on):(inv?wOutput.on:wOutput.off) );
     }
 
     wOutput.setaccessory( nodeA, wOutput.isaccessory(o->props) );
     wOutput.setporttype( nodeA, wOutput.getporttype( o->props ) );
     if( !ControlOp.cmd( control, nodeA, NULL ) ) {
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Output \"%s\" could not be set!",
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Output [%s] could not be set!",
                      wOutput.getid( o->props ) );
       return False;
     }
