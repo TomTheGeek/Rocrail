@@ -1835,7 +1835,11 @@ void RocGuiFrame::initFrame() {
 
   wxMenu *menuControl = new wxMenu();
   menuControl->AppendCheckItem(ME_Go, wxGetApp().getMenu("poweron"), wxGetApp().getTip("poweron") );
-  menuControl->Append(ME_EmergencyBreak, wxGetApp().getMenu("break"), wxGetApp().getTip("break") );
+
+  wxMenuItem *break_menuControl = new wxMenuItem(menuControl, ME_EmergencyBreak, wxGetApp().getMenu("ebreak"), wxGetApp().getMsg("ebreak") );
+  break_menuControl->SetBitmap(*_img_stopall);
+  menuControl->Append(break_menuControl);
+
   menuControl->Append(ME_CtrlBoosters, wxGetApp().getMenu("powerctrl"), wxGetApp().getTip("powerctrl") );
 
   menuControl->AppendSeparator();
@@ -1881,7 +1885,7 @@ void RocGuiFrame::initFrame() {
   menuAuto->Append(ME_AutoResume, wxGetApp().getMenu("resumeall"), wxGetApp().getTip("resumeall") );
 
   wxMenuItem *stop_menuAuto = new wxMenuItem(menuAuto, ME_AutoStop, wxGetApp().getMenu("stopall"), wxGetApp().getTip("stopall") );
-  stop_menuAuto->SetBitmap(*_img_stopall);
+  stop_menuAuto->SetBitmap(*_img_stop);
   menuAuto->Append(stop_menuAuto);
 
   menuAuto->AppendSeparator();
@@ -2106,7 +2110,8 @@ void RocGuiFrame::initFrame() {
                         wxNullBitmap, wxGetApp().getTip("poweron") );
   m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), *_img_automode,
                         wxNullBitmap, wxGetApp().getTip("automode") );
-  m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), *_img_stopall, wxGetApp().getTip("stopall") );
+  m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), *_img_stop, wxGetApp().getTip("stopall") );
+  m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), *_img_stopall, wxGetApp().getMsg("ebreak") );
 
 #ifndef __APPLE__
   m_ToolBar->AddSeparator();
@@ -3030,16 +3035,18 @@ void RocGuiFrame::OnStop( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnEmergencyBreak( wxCommandEvent& event ) {
-  if( m_bAutoMode ) {
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "EmergencyBreak" );
-    iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
-    wSysCmd.setcmd( cmd, wSysCmd.ebreak );
-    wSysCmd.setinformall( cmd, True );
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "EmergencyBreak" );
+  iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+  wSysCmd.setcmd( cmd, wSysCmd.ebreak );
+  wSysCmd.setinformall( cmd, True );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+
+  if( this->m_bAutoMode ) {
+    cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+    wAutoCmd.setcmd( cmd, wAutoCmd.off );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
-  }
-  else {
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "EmergencyBreak is for auto mode only." );
   }
 }
 
