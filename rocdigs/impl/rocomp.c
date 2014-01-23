@@ -345,7 +345,30 @@ static void __transactor( void* threadinst ) {
   ThreadOp.setDescription( th, "Transactor for RocoMP" );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Transactor started." );
 
-  while( data->run ) {
+  while( data->run && !data->usbOK ) {
+    data->usbOK = USBOp.open(data->usb, VENDOR, PRODUCT, CONFIG, INTERFACE);
+    ThreadOp.sleep(1000);
+  }
+
+  if( data->run && data->usbOK ) {
+    /* Init sequence:
+     */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Initialize the CS..." );
+    { byte cmd[8] = {0x06,0x50,0x07}; USBOp.write(data->usb, cmd, 3); }
+    { byte cmd[8] = {0x05,0x40,0x21,0x81,0xA0}; USBOp.write(data->usb, cmd, 5); USBOp.read(data->usb, in, 64);}
+    { byte cmd[8] = {0x03,0x81}; USBOp.write(data->usb, cmd, 2); USBOp.read(data->usb, in, 64);}
+    { byte cmd[8] = {0x03,0x81,0x01}; USBOp.write(data->usb, cmd, 3); USBOp.read(data->usb, in, 64);}
+    { byte cmd[8] = {0x05,0x40,0x21,0x21}; USBOp.write(data->usb, cmd, 4); USBOp.read(data->usb, in, 64);}
+    { byte cmd[8] = {0x02,0x01}; USBOp.write(data->usb, cmd, 2); USBOp.read(data->usb, in, 64);}
+    { byte cmd[8] = {0x05,0x40,0xF1,0x0A,0xFB}; USBOp.write(data->usb, cmd, 5); USBOp.read(data->usb, in, 64);}
+    { byte cmd[8] = {0x05,0x40,0xF1,0x0B,0xFA}; USBOp.write(data->usb, cmd, 5); USBOp.read(data->usb, in, 64);}
+    { byte cmd[8] = {0x08,0x40,0xE4,0xE0,0x00,0x00,0x08,0x0C}; USBOp.write(data->usb, cmd, 8);}
+    { byte cmd[8] = {0x02,0x18}; USBOp.write(data->usb, cmd, 2); USBOp.read(data->usb, in, 64);}
+
+  }
+
+
+  while( data->run && data->usbOK ) {
     Boolean doRead = False;
     Boolean didRead = False;
 
@@ -400,7 +423,7 @@ static struct ORocoMP* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->usb = USBOp.inst();
-  USBOp.open(data->usb, VENDOR, PRODUCT, CONFIG, INTERFACE);
+  data->usbOK = USBOp.open(data->usb, VENDOR, PRODUCT, CONFIG, INTERFACE);
 
   data->run = True;
 

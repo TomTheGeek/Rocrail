@@ -1753,6 +1753,7 @@
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="usb" vt="iOUSB"/>
+      <var name="usbOK" vt="Boolean"/>
       </data>
   </object>
 
