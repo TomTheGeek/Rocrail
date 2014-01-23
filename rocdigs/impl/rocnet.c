@@ -284,16 +284,30 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       cmd = 1;
       addr = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? addr+1 : addr;
     }
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch bus=%d addr=%d cmd=%d", bus, addr, cmd );
 
-    rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
-    rnReceipientAddresToPacket( bus, rn, data->seven );
-    rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
-    rn[RN_PACKET_LEN] = 4;
-    rn[RN_PACKET_DATA + 0] = cmd;
-    rn[RN_PACKET_DATA + 1] = wSwitch.getporttype(node);
-    rn[RN_PACKET_DATA + 2] = wSwitch.getdelay(node);
-    rn[RN_PACKET_DATA + 3] = addr;
+    if( StrOp.equals( wSwitch.prot_DEF, wSwitch.getprot(node) ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch bus=%d addr=%d cmd=%d", bus, addr, cmd );
+      rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
+      rnReceipientAddresToPacket( bus, rn, data->seven );
+      rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
+      rn[RN_PACKET_LEN] = 4;
+      rn[RN_PACKET_DATA + 0] = cmd;
+      rn[RN_PACKET_DATA + 1] = wSwitch.getporttype(node);
+      rn[RN_PACKET_DATA + 2] = wSwitch.getdelay(node);
+      rn[RN_PACKET_DATA + 3] = addr;
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch CS addr=%d cmd=%d", wSwitch.getaddr1( node ), cmd );
+      rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
+      rnReceipientAddresToPacket( bus, rn, data->seven );
+      rn[RN_PACKET_ACTION] = RN_CS_SWITCH;
+      rn[RN_PACKET_LEN] = 4;
+      rn[RN_PACKET_DATA + 0] = (StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 1:0);
+      rn[RN_PACKET_DATA + 1] = wSwitch.getporttype(node);
+      rn[RN_PACKET_DATA + 2] = 0;
+      rn[RN_PACKET_DATA + 3] = wSwitch.getaddr1( node );
+    }
+
     if( data->watchdog != NULL ) {
       byte*  rnwd  = allocMem(32);
       MemOp.copy(rnwd, rn, 32);
@@ -347,16 +361,29 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     if( StrOp.equals( wOutput.getcmd( node ), wOutput.off ) ) {
       cmd = RN_OUTPUT_OFF;
     }
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output bus=%d addr=%d cmd=%d", bus, addr, cmd );
 
-    rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
-    rnReceipientAddresToPacket( bus, rn, data->seven );
-    rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
-    rn[RN_PACKET_LEN] = 4;
-    rn[RN_PACKET_DATA + 0] = cmd;
-    rn[RN_PACKET_DATA + 1] = wOutput.getporttype(node);
-    rn[RN_PACKET_DATA + 2] = 0;
-    rn[RN_PACKET_DATA + 3] = addr;
+    if( StrOp.equals( wSwitch.prot_DEF, wSwitch.getprot(node) ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output bus=%d addr=%d cmd=%d", bus, addr, cmd );
+      rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
+      rnReceipientAddresToPacket( bus, rn, data->seven );
+      rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
+      rn[RN_PACKET_LEN] = 4;
+      rn[RN_PACKET_DATA + 0] = cmd;
+      rn[RN_PACKET_DATA + 1] = wOutput.getporttype(node);
+      rn[RN_PACKET_DATA + 2] = 0;
+      rn[RN_PACKET_DATA + 3] = addr;
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output CS addr=%d cmd=%d", addr, cmd );
+      rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
+      rnReceipientAddresToPacket( bus, rn, data->seven );
+      rn[RN_PACKET_ACTION] = RN_CS_OUTPUT;
+      rn[RN_PACKET_LEN] = 4;
+      rn[RN_PACKET_DATA + 0] = cmd;
+      rn[RN_PACKET_DATA + 1] = wOutput.getporttype(node);
+      rn[RN_PACKET_DATA + 2] = 0;
+      rn[RN_PACKET_DATA + 3] = addr;
+    }
 
     if( data->watchdog != NULL ) {
       byte*  rnwd  = allocMem(32);

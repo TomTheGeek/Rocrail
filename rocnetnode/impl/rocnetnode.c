@@ -55,6 +55,8 @@
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Macro.h"
 #include "rocrail/wrapper/public/MacroLine.h"
+#include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Output.h"
 
 #include "rocnetnode/impl/rocnetnode_impl.h"
 
@@ -441,6 +443,27 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
         }
       }
       break;
+
+    case RN_CS_SWITCH:
+      if(data->cstype > 0 && data->pDI != NULL) {
+        iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE);
+        wSwitch.setaddr1( cmd, rn[RN_PACKET_DATA + 3]);
+        wSwitch.setcmd( cmd, rn[RN_PACKET_DATA + 0] == 1 ? wSwitch.turnout:wSwitch.straight);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CS switch %d %s", wSwitch.getaddr1(cmd), wSwitch.getcmd(cmd) );
+        data->pDI->cmd( (obj)data->pDI, cmd );
+      }
+      break;
+
+    case RN_CS_OUTPUT:
+      if(data->cstype > 0 && data->pDI != NULL) {
+        iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE);
+        wOutput.setaddr( cmd, rn[RN_PACKET_DATA + 3]);
+        wOutput.setcmd( cmd, rn[RN_PACKET_DATA + 0] == 1 ? wOutput.on:wOutput.off);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CS output %d %s", wOutput.getaddr(cmd), wOutput.getcmd(cmd) );
+        data->pDI->cmd( (obj)data->pDI, cmd );
+      }
+      break;
+
   }
 
   return msg;

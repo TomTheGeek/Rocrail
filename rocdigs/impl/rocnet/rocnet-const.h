@@ -56,6 +56,8 @@
 #define RN_CS_VELOCITY       6
 #define RN_CS_FUNCTION       7
 #define RN_CS_POM            8
+#define RN_CS_SWITCH         9
+#define RN_CS_OUTPUT         10
 
 /* mobile group actions */
 #define RN_MOBILE_SETUP          1
