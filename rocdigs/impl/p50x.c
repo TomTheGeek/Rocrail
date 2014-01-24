@@ -451,7 +451,7 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
       p50[0] = (byte)'x';
       p50[1] = 0xa5;
       *insize = 1; /* Return code from P50x. */
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Halt" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency Break" );
       return 2;
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
