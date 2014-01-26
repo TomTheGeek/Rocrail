@@ -120,7 +120,8 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
-  return;
+  iOIO8255Data data = Data(inst);
+  data->run = False;
 }
 
 
@@ -167,6 +168,30 @@ static int _version( obj inst ) {
 }
 
 
+static void __initIO(iOIO8255 inst) {
+  iOIO8255Data data = Data(inst);
+
+}
+
+
+static void __reader( void* threadinst ) {
+  iOThread     th     = (iOThread)threadinst;
+  iOIO8255     io8255 = (iOIO8255)ThreadOp.getParm( th );
+  iOIO8255Data data   = Data(io8255);
+
+  ThreadOp.sleep(500);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "io8255 reader started." );
+
+  do {
+
+
+    ThreadOp.sleep(10);
+  } while( data->run );
+
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "io8255 reader ended." );
+}
+
 /**  */
 static struct OIO8255* _inst( const iONode ini ,const iOTrace trc ) {
   iOIO8255 __IO8255 = allocMem( sizeof( struct OIO8255 ) );
@@ -183,6 +208,12 @@ static struct OIO8255* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "io8255 %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "IID = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+
+
+  __initIO(__IO8255);
+
+  data->reader = ThreadOp.inst( "8255reader", &__reader, __IO8255 );
+  ThreadOp.start( data->reader );
 
 
   instCnt++;
