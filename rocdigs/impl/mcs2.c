@@ -400,6 +400,31 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     }
   }
 
+  /* Program command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    Boolean pom = wProgram.ispom(node);
+    int cv = wProgram.getcv( node );
+    int value = wProgram.getvalue( node );
+    int addr = wProgram.getaddr( node );
+
+    if( wProgram.getidentifier(node) != NULL && StrOp.len(wProgram.getidentifier(node))  > 0 ) {
+      addr = atoi(wProgram.getidentifier(node));
+    }
+
+    if( wProgram.getcmd( node ) == wProgram.get ) {
+      byte* out = allocMem(32);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d on %s for loco %d...", cv, pom?"POM":"PT", addr );
+      __setSysMsg(out, 0, CMD_LOCO_READ_CONFIG , False, 7, addr, cv/256, cv%256, 1, 0);
+      ThreadOp.post( data->writer, (obj)out );
+    }
+    else if( wProgram.getcmd( node ) == wProgram.set ) {
+      byte* out = allocMem(32);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set CV%d to %d on %s for loco %d...", cv, value, pom?"POM":"PT", addr );
+      __setSysMsg(out, 0, CMD_LOCO_WRITE_CONFIG , False, 8, addr, cv/256, cv%256, value, pom?0x80:0x00);
+      ThreadOp.post( data->writer, (obj)out );
+    }
+  }
+
   return rsp;
 }
 
@@ -711,6 +736,46 @@ static iONode __getUID(iOMCS2Data data, int uid) {
   wProduct.setpid( loco, uid);
   wProduct.setsid( loco, sid+1);
   return loco;
+}
+
+
+static void __evaluateMCS2ReadConfig( iOMCS2Data data, byte* in ) {
+  int dlc = in[4];
+  if( dlc == 7 ) {
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    int cv = in[9]*256 + in[10];
+    int value = in[11];
+
+    wProgram.setcv( node, cv );
+    wProgram.setvalue( node, value );
+    wProgram.setcmd( node, wProgram.datarsp );
+    if( data->iid != NULL )
+      wProgram.setiid( node, data->iid );
+
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+  }
+}
+
+
+static void __evaluateMCS2WriteConfig( iOMCS2Data data, byte* in ) {
+  int dlc = in[4];
+  if( dlc == 8 ) {
+    iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    int cv = in[9]*256 + in[10];
+    int value = in[11];
+
+    wProgram.setcv( node, cv );
+    wProgram.setvalue( node, value );
+    wProgram.setcmd( node, wProgram.datarsp );
+    if( data->iid != NULL )
+      wProgram.setiid( node, data->iid );
+
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+
+  }
 }
 
 
@@ -1062,6 +1127,12 @@ static void __reader( void* threadinst ) {
     }
     else if( in[1] == (ID_LOCO_VERIFY + BIT_RESPONSE) ) {
       __evaluateMCS2Verify( data, in );
+    }
+    else if( in[1] == (ID_LOCO_READ_CONFIG + BIT_RESPONSE) ) {
+      __evaluateMCS2ReadConfig( data, in );
+    }
+    else if( in[1] == (ID_LOCO_WRITE_CONFIG + BIT_RESPONSE) ) {
+      __evaluateMCS2WriteConfig( data, in );
     }
     else if( in[1] != 0xFF ) {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Unhandled packet: CAN-ID=0x%02X len=%d", in[1]&0xFF, in[4]&0x0F );
