@@ -171,6 +171,12 @@ static int _version( obj inst ) {
 static void __initIO(iOIO8255 inst) {
   iOIO8255Data data = Data(inst);
 
+  /*
+  int port = 4711;
+  byte b = 0;
+  SystemOp.writePort( port, b );
+  SystemOp.readPort( port, b );
+   */
 }
 
 
