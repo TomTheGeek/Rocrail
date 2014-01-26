@@ -44,8 +44,14 @@
 
 void statusWait( iILcDriverInt inst, Boolean reverse ) {
   iOLcDriverData data = Data(inst);
+  iONode bkprops = NULL;
 
-  iONode bkprops = (iONode)data->curBlock->base.properties( data->curBlock );
+  if( data->curBlock == NULL ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no current block set for loco [%s]...",  data->loc->getId( data->loc ) );
+    return;
+  }
+
+  bkprops = (iONode)data->curBlock->base.properties( data->curBlock );
   /* Station wait or all destinations are occupied. */
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Wait in block for [%s]...",
                  data->loc->getId( data->loc ) );
