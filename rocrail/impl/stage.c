@@ -919,7 +919,9 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
     if( fbocc != NULL )
       occ |= FBackOp.isState(fbocc, "true");
 
-    if( (!occ && wStageSection.getlcid(section) == NULL) || (!occ && StrOp.len(wStageSection.getlcid(section)) == 0) ) {
+    if( (!occ && wStageSection.getlcid(section) == NULL) || (!occ && StrOp.len(wStageSection.getlcid(section)) == 0) ||
+         (!occ && StrOp.equals(wStageSection.getlcid(section), locid) ) )
+    {
       /* free section */
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "section[%d] is free", i );
 
