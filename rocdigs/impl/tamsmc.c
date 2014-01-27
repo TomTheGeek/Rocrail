@@ -215,14 +215,23 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
       if(rsp != NULL) {
       /* inform listener */
-        char* cvdata = (char*)StrOp.strToByte(NodeOp.getStr(rsp, "data", "" ));
-        response = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-        wProgram.setcv( response, wProgram.getcv(cmd) );
-        wProgram.setvalue( response, atoi(cvdata ));
-        wProgram.setcmd( response, wProgram.datarsp );
-        if( data->iid != NULL )
-          wProgram.setiid( response, data->iid );
-        freeMem(cvdata);
+        const char* rawdata = NodeOp.getStr(rsp, "data", "" );
+        if( StrOp.len(rawdata ) > 0 ) {
+          char* cvdata;
+          if( rawdata[0] == ']' ) {
+            /* work around for unexpected prefix */
+            cvdata = (char*)StrOp.strToByte(rawdata+1);
+          }
+          else
+            cvdata = (char*)StrOp.strToByte(rawdata);
+          response = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+          wProgram.setcv( response, wProgram.getcv(cmd) );
+          wProgram.setvalue( response, atoi(cvdata ));
+          wProgram.setcmd( response, wProgram.datarsp );
+          if( data->iid != NULL )
+            wProgram.setiid( response, data->iid );
+          freeMem(cvdata);
+        }
         NodeOp.base.del(rsp);
       }
 
