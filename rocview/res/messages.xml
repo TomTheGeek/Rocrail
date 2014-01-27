@@ -12117,7 +12117,7 @@
     <en_CA txt="Deny Loco"/>
     <en_GB txt="Deny Loco"/>
     <ro txt="Refuză locomotiva"/>
-    <sr_latin txt="Ukini loko."/>
+    <sr_latin txt="Isključi"/>
     <zh_CN txt="禁用机车"/>
     <sl txt="Izvzemi"/>
     <pt_BR txt="Excluir"/>
@@ -12146,7 +12146,7 @@
     <en_CA txt="Allow Loco"/>
     <en_GB txt="Allow Loco"/>
     <ro txt="Acceptă locomotiva"/>
-    <sr_latin txt="Dozvoli loko."/>
+    <sr_latin txt="Uključi"/>
     <zh_CN txt="允许的机车"/>
     <sl txt="Vključi"/>
     <pt_BR txt="Incluir"/>
@@ -13661,7 +13661,7 @@
     <sl txt="zaženi zunanji program."/>
     <pt_BR txt="executar programa externo."/>
     <fi txt="aja ulkoinen ohjelma."/>
-    <pl txt="uruchom program zewnętrzny"/>
+    <pl txt="Uruchom program zewnętrzny"/>
   </Msg>
   <Msg id="s88">
     <de txt="S88"/>
