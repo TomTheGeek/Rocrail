@@ -315,7 +315,7 @@ static Boolean _transact( iOLocoNet loconet, byte* out, int outsize, byte* in, i
             __evaluatePacket(loconet, in, *insize);
           }
           retry++;
-        } while( retry < 10 );
+        } while( retry < 16 );
       }
     }
     else {
@@ -754,29 +754,31 @@ static void __slotPing( void* threadinst ) {
     time_t currtime = time(NULL);
     int i;
 
-    if( MutexOp.trywait( data->slotmux, 500 ) ) {
     /* lookup slot for address: */
-      for( i = 0; i < 120; i++ ) {
-
+    for( i = 0; i < 120 && data->run; i++ ) {
+      if( MutexOp.trywait( data->slotmux, 1000 ) ) {
         if( data->locoslot[i] > 0 && ((currtime - data->slotaccessed[i]) >= (data->purgetime/2)) ) {
-          byte cmd[4];
+          byte* cmd = allocMem( 32 );
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sending a ping for slot# %d", i );
 
-          cmd[0] = OPC_LOCO_SPD;
-          cmd[1] = i; /* slot number */
-          cmd[2] = data->slotV[i] & 0x7F;
-          cmd[3] = LocoNetOp.checksum( cmd, 3 );
-          if( LocoNetOp.transact( loconet, cmd, 4, NULL, NULL, 0, 0, False ) ) {
-            data->slotaccessed[i] = currtime;
-          }
-        }
-      }
+          cmd[0] = 4;
+          cmd[1] = OPC_LOCO_SPD;
+          cmd[2] = i;
+          cmd[3] = data->slotV[i] & 0x7F;;
+          cmd[4] = LocoNetOp.checksum( cmd+1, 3 );
+          ThreadOp.post( data->loconetWriter, (obj)cmd );
 
-      /* Release the mutex. */
-      MutexOp.post( data->slotmux );
+          data->slotaccessed[i] = currtime;
+
+        }
+        /* Release the mutex. */
+        MutexOp.post( data->slotmux );
+        ThreadOp.sleep(10);
+      }
     }
 
-    ThreadOp.sleep(1000);
+    if( data->run )
+      ThreadOp.sleep(1000);
   };
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LocoNet slotPing ended." );
@@ -2059,9 +2061,14 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
 
   /* Function command groups > 1 */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) && wFunCmd.getgroup(node) > 2 ) {
-    int status = 0;
-    int slot =  __getLocoSlot( loconet_inst, node, &status);
-    return __processFunctions(loconet_inst, node, cmd, slot);
+    if( MutexOp.trywait( data->slotmux, 1000 ) ) {
+      int status = 0;
+      int slot = __getLocoSlot( loconet_inst, node, &status);
+      int size = __processFunctions(loconet_inst, node, cmd, slot);
+      /* Release the mutex. */
+      MutexOp.post( data->slotmux );
+      return size;
+    }
   }
 
 
