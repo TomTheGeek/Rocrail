@@ -3035,6 +3035,14 @@ void RocGuiFrame::OnStop( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnEmergencyBreak( wxCommandEvent& event ) {
+  if( this->m_bAutoMode ) {
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Auto mode OFF" );
+    iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+    wAutoCmd.setcmd( cmd, wAutoCmd.off );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "EmergencyBreak" );
   iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
   wSysCmd.setcmd( cmd, wSysCmd.ebreak );
@@ -3042,12 +3050,6 @@ void RocGuiFrame::OnEmergencyBreak( wxCommandEvent& event ) {
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 
-  if( this->m_bAutoMode ) {
-    cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
-    wAutoCmd.setcmd( cmd, wAutoCmd.off );
-    wxGetApp().sendToRocrail( cmd );
-    cmd->base.del(cmd);
-  }
 }
 
 void RocGuiFrame::OnInitField( wxCommandEvent& event ) {
