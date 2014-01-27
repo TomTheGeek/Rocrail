@@ -47,7 +47,14 @@ void statusWait( iILcDriverInt inst, Boolean reverse ) {
   iONode bkprops = NULL;
 
   if( data->curBlock == NULL ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no current block set for loco [%s]...",  data->loc->getId( data->loc ) );
+    iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    data->run = False;
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no current block set for loco [%s]: stop auto mode.",  data->loc->getId( data->loc ) );
+    wLoc.setV( cmd, 0 );
+    data->loc->cmd( data->loc, cmd );
+
+    data->state = LC_IDLE;
+    data->loc->setMode(data->loc, wLoc.mode_idle);
     return;
   }
 
