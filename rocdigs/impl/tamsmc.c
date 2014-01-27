@@ -195,6 +195,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         if( data->iid != NULL )
           wProgram.setiid( response, data->iid );
         freeMem(cvdata);
+        NodeOp.base.del(rsp);
       }
 
     }
@@ -222,6 +223,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
         if( data->iid != NULL )
           wProgram.setiid( response, data->iid );
         freeMem(cvdata);
+        NodeOp.base.del(rsp);
       }
 
     }
