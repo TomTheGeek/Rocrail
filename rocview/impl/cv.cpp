@@ -291,6 +291,13 @@ void CV::event( iONode event ) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "event for cv %d...", m_CVidx);
     char* val = StrOp.fmt( "%d", ivalue );
 
+    char* rowstr = StrOp.fmt( "%d", cv );
+    if( cv > 0 && cv < 1024 ) {
+      m_CVTable->SetRowLabelValue( cv-1, wxString(rowstr,wxConvUTF8) );
+      m_CVTable->SetCellValue(cv-1, 0, wxString(val,wxConvUTF8) );
+    }
+    StrOp.free( rowstr );
+
     /*
      * CV18 = addr - 256 * (addr / 256)
      * CV17 = (addr / 256) + 192
@@ -359,13 +366,6 @@ void CV::event( iONode event ) {
       m_CVvalue->SetValue( wxString( val,wxConvUTF8) );
       updateCVbits();
     }
-
-    char* rowstr = StrOp.fmt( "%d", m_CVidx );
-    if( m_CVidx > 0 && m_CVidx < 1024 ) {
-      m_CVTable->SetRowLabelValue( m_CVidx-1, wxString(rowstr,wxConvUTF8) );
-      m_CVTable->SetCellValue(m_CVidx-1, 0, wxString(val,wxConvUTF8) );
-    }
-    StrOp.free( rowstr );
 
     StrOp.free( val );
 
