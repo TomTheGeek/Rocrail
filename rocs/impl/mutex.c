@@ -93,7 +93,7 @@ static Boolean _trywait( iOMutex inst, int t ) {
   iOMutexData data = Data(inst);
   Boolean ok = rocs_mutex_wait( data, t );
   if( !ok )
-    TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, data->rc, "Error on mutex trywait." );
+    TraceOp.terrno( name, TRCLEVEL_WARNING, __LINE__, 9999, data->rc, "Timeout on mutex trywait." );
   return ok;
 }
 
