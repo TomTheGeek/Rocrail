@@ -137,6 +137,10 @@ int main( int argc, const char* argv[] ) {
       TraceOp.println( "Parsing %s...", outfile );
       doc = DocOp.parse( xmlStr );
       freeMem( xmlStr );
+      if( doc == NULL ) {
+        TraceOp.println( "invalid file %s...", outfile );
+        return -1;
+      }
       root = DocOp.getRootNode( doc );
       __createMap(root);
 

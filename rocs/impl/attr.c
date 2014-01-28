@@ -771,7 +771,7 @@ static const char* __escapeStr( iOAttr inst, const char* str ) {
 
         if( DocOp.isUniCodeEscapes() )
           esc = __getHTMLUniEscape( str[i], &len );
-        else if( DocOp.isHTMLEscapes() )
+        else
           esc = __getHTMLEscape( str[i], &len );
 
         if( esc != NULL ) {
