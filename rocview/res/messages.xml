@@ -147,7 +147,7 @@
     <sl txt="Ponovni zagon za spremembo jezika."/>
   </Msg>
   <Msg id="cancel">
-    <de txt="Abbrechen" tip="Dialog beenden."/>
+    <de txt="Abbrechen" tip="Dialog abbrechen"/>
     <en txt="Cancel" tip="Cancel the dialog."/>
     <nl txt="Annuleren" tip="Annuleer de dialoog."/>
     <sv txt="Avbryt" tip="Stäng dialogrutan utan att spara."/>
@@ -384,7 +384,7 @@
     <sl txt="samo"/>
   </Msg>
   <Msg id="stop">
-    <de txt="Stopp" tip="Stopp Lokomotive"/>
+    <de txt="Stopp" tip="Lok anhalten"/>
     <en txt="Stop" tip="Stop locomotive"/>
     <nl txt="Stoppen" tip="Stop locomotief"/>
     <sv txt="Stoppa" tip="Stoppa lok"/>
@@ -452,7 +452,7 @@
     <sl txt="Postaja"/>
   </Msg>
   <Msg id="break">
-    <de txt="H A L T" tip="Nothalt aller Triebfahrzeuge!"/>
+    <de txt="H A L T" tip="Nothalt"/>
     <en txt="B R E A K" tip="Stop loc immediately!"/>
     <nl txt="NOODSTOP" tip="Noodstop!"/>
     <sv txt="B R E A K" tip="Nödstopp!"/>
@@ -485,7 +485,7 @@
     <sl txt="P R E K I N I"/>
   </Msg>
   <Msg id="connect" dialog="true">
-    <de txt="Verbinden mit" tip="Mit einen Rocrail Server verbinden."/>
+    <de txt="Verbinden mit" tip="Mit einem Rocrail-Server verbinden"/>
     <en txt="Connect to" tip="Connect to a Rocrail server."/>
     <nl txt="verbindt met" tip="Met Rocrail server verbinden."/>
     <sv txt="Anslut till" tip="Anslut till en Rocrail server."/>
@@ -519,7 +519,7 @@
     <sl txt="Poveži z"/>
   </Msg>
   <Msg id="open" dialog="true" key="Ctrl-O">
-    <de txt="Öffnen" tip="Ein Gleisbild öffnen."/>
+    <de txt="Öffnen" tip="Gleisplan öffnen"/>
     <en txt="Open" accel="0" tip="Open a track plan."/>
     <nl txt="Open" accel="0" tip="Een spoorplan openen."/>
     <sv txt="Öppna" accel="0" tip="Öppna en spårplan."/>
@@ -553,7 +553,7 @@
     <sl txt="Odpri"/>
   </Msg>
   <Msg id="upload" dialog="true">
-    <de txt="Hochladen" tip="Ein Gleisbild zum Server senden."/>
+    <de txt="Hochladen" tip="Gleisplan zum Server senden"/>
     <en txt="Upload" accel="0" tip="Send a track plan to server."/>
     <nl txt="Uploaden" accel="0" tip="Een spoorplan naar de server zenden."/>
     <sv txt="Skicka upp" accel="0" tip="Sänd spårplan till Rocrail server."/>
@@ -619,7 +619,7 @@
     <sl txt="Strežnik"/>
   </Msg>
   <Msg id="save" key="Ctrl-S">
-    <de txt="Speichern" tip="Gleisbild speichern."/>
+    <de txt="Speichern" tip="Gleisplan speichern"/>
     <en txt="Save" tip="Save track plan."/>
     <nl txt="Opslaan" tip="Spoorplan opslaan."/>
     <sv txt="Spara" tip="Spara spårplan."/>
@@ -652,7 +652,7 @@
     <sl txt="Shrani"/>
   </Msg>
   <Msg id="saveas" dialog="true">
-    <de txt="Speichern unter" tip="Gleisbild unter einem anderen Namen speichern."/>
+    <de txt="Speichern unter" tip="Gleisplan speichern unter"/>
     <en txt="Save As" accel="5" tip="Save track plan with an other name."/>
     <nl txt="Opslaan als" accel="8" tip="Spoorplan met andere naam opslaan."/>
     <sv txt="Spara som" accel="8" tip="Spara spårplan med nytt namn."/>
@@ -685,7 +685,7 @@
     <sl txt="Shrani kot"/>
   </Msg>
   <Msg id="shutdown" key="Ctrl-D">
-    <de txt="Rocrail und Rocview beenden" tip="Rocrail Server beenden."/>
+    <de txt="Rocrail und Rocview beenden" tip="Rocrail-Server herunterfahren und Rocview beenden"/>
     <en txt="Shutdown Rocrail and Rocview" tip="Shutdown Rocrail server and exit Rocview."/>
     <nl txt="Rocrail en Rocview beëindigen" tip="Stop Rocrail server."/>
     <sv txt="Stäng ned Rocrail och Rocview." tip="Avsluta Rocrail server och GUI."/>
@@ -718,7 +718,7 @@
     <sl txt="Zaustavi Rocrail in Rocview"/>
   </Msg>
   <Msg id="exit">
-    <de txt="Beenden" tip="Graphische Benutzeroberfläche beenden."/>
+    <de txt="Beenden" tip="Rocview schließen"/>
     <en txt="Exit" tip="Exit GUI."/>
     <nl txt="Afsluiten" tip="GUI afsluiten."/>
     <sv txt="Avsluta" tip="Avsluta Rocrail GUI."/>
@@ -751,7 +751,7 @@
     <sl txt="Izhod"/>
   </Msg>
   <Msg id="editmode">
-    <de txt="Plan bearbeiten" tip="Gleisbild bearbeiten."/>
+    <de txt="Plan bearbeiten" tip="Gleisplan bearbeiten"/>
     <en txt="Edit panel" tip="Edit track panel."/>
     <nl txt="Bewerk scherm" tip="Spoorplan bewerken."/>
     <sv txt="Ändra spårplan" tip="Bearbeta spårplan."/>
@@ -853,7 +853,7 @@
     <sl txt="Lastnosti lokomotive"/>
   </Msg>
   <Msg id="about" dialog="true">
-    <de txt="Info" accel="0" tip="Information über Rocrail."/>
+    <de txt="Info" accel="0" tip="Informationen über Rocrail"/>
     <en txt="Info" accel="0" tip="Information Rocrail."/>
     <nl txt="Info" accel="0" tip="Informatie over Rocrail."/>
     <sv txt="Information" accel="0" tip="Information om Rocrail."/>
@@ -886,7 +886,7 @@
     <sl txt="Info"/>
   </Msg>
   <Msg id="poweron" key="Ctrl-P">
-    <de txt="Gleisspannung ein" accel="5" tip="Fahrstrom einschalten."/>
+    <de txt="Gleisspannung ein" accel="5" tip="Gleisspannung einschalten"/>
     <en txt="Power On" accel="6" tip="Switch power on."/>
     <nl txt="Schakel in" accel="9" tip="Schakel de baan spanning aan."/>
     <sv txt="Körström på" accel="9" tip="Sänder GO kommando."/>
@@ -920,7 +920,7 @@
     <sl txt="Vklop"/>
   </Msg>
   <Msg id="poweroff">
-    <de txt="Gleisspannung aus" accel="5" tip="Fahrstrom ausschalten."/>
+    <de txt="Gleisspannung aus" accel="5" tip="Gleisspannung ausschalten"/>
     <en txt="Power Off" accel="0" tip="Switch power off."/>
     <nl txt="Schakel uit" accel="9" tip="Schakel de baan spanning uit."/>
     <sv txt="Körström av" accel="9" tip="Sänder STOP kommando."/>
@@ -954,7 +954,7 @@
     <sl txt="Izklopi"/>
   </Msg>
   <Msg id="initfield">
-    <de txt="Feld initialisieren" accel="8" tip="Schaltet Weichen wie im Gleisbild vorgegeben"/>
+    <de txt="Feld initialisieren" accel="8" tip="Weichen wie im Gleisplan angezeigt initialisieren"/>
     <en txt="Init field" accel="0" tip="Initialize switches according the track plan."/>
     <nl txt="Init veld" accel="8" tip="Zet de wissels zoals ze in het spoorplan staan."/>
     <sv txt="Initialisera fält" accel="8" tip="Ställ växlar och signaler enligt spårplan."/>
@@ -987,7 +987,7 @@
     <sl txt="Inicializacijsko polje"/>
   </Msg>
   <Msg id="locctrl" dialog="true" key="Ctrl-L">
-    <de txt="Fahrregler" accel="0" tip="Dialog um Züge zu bedienen."/>
+    <de txt="Fahrregler" accel="0" tip="Dialog zur Steuerung von Lokomotiven"/>
     <en txt="Loc Control" alttxt="Throttle" accel="0" tip="Dialog to control locs."/>
     <nl txt="Loc Besturing" accel="0" tip="Window om locomotieven te besturen."/>
     <sv txt="Lokkontroll" accel="0" tip="Öppna körkontroll för lok."/>
@@ -1020,7 +1020,7 @@
     <sl txt="Nadzor lokomotive"/>
   </Msg>
   <Msg id="swctrl" dialog="true" key="Ctrl-T">
-    <de txt="Weichensteuerung" accel="0" tip="Dialog um Weichen zu testen."/>
+    <de txt="Weichensteuerung" accel="0" tip="Dialog zum Testen von Weichen"/>
     <en txt="Switch Control" accel="0" tip="Dialog to test switches."/>
     <nl txt="Wissels testen" accel="0" tip="Window om wissels te testen."/>
     <sv txt="Växelkontroll" accel="0" tip="Öppna ställverk för växlar."/>
@@ -1053,7 +1053,7 @@
     <sl txt="Nadzor kretnic"/>
   </Msg>
   <Msg id="stctrl" dialog="true" key="Ctrl-R">
-    <de txt="Fahrstraßensteuerung" accel="0" tip="Dialog um Fahrstraßen zu testen."/>
+    <de txt="Fahrstraßensteuerung" accel="0" tip="Dialog zum Testen von Fahrstraßen"/>
     <en txt="Routes Control" accel="1" tip="Dialog to test routes."/>
     <nl txt="Rijweg testen" accel="0" tip="Window om rijwegen te testen."/>
     <sv txt="Tågvägskontroll" accel="0" tip="Öppna ställverk för tågvägar."/>
@@ -1086,7 +1086,7 @@
     <sl txt="Nadzor poti"/>
   </Msg>
   <Msg id="planprops" dialog="true">
-    <de txt="Gleisplan-Eigenschaften" accel="0" tip="Dialog zum abfragen und ändern der Gleisbild Eigenschaften."/>
+    <de txt="Gleisplan-Eigenschaften" accel="0" tip="Dialog zur Anzeige und Einstellung der Gleisplan-Eigenschaften"/>
     <en txt="Track panel properties" accel="0" tip="Dialog to view and set Track panel properties."/>
     <nl txt="Spoorplan eigenschappen" accel="0" tip="Window om de Spoorplan eigenschappen te bekijken en te muteren."/>
     <sv txt="Spårplansegenskaper." accel="0" tip="Öppna spårplansegenskaper."/>
@@ -1120,7 +1120,7 @@
     <sl txt="Panel tirnih lastnosti"/>
   </Msg>
   <Msg id="startall">
-    <de txt="Alle Loks starten" tip="Versetzt alle Züge in den Automatikbetrieb."/>
+    <de txt="Alle Loks starten" tip="Alle Loks in Automatik-Modus versetzen"/>
     <en txt="Start all locs" tip="Put all locs in auto mode."/>
     <nl txt="Start alle loc's" tip="Zet alle locomotieven in automaat mode."/>
     <sv txt="Starta alla lok" tip="Kör alla lok automatiskt."/>
@@ -1153,7 +1153,7 @@
     <sl txt="Poženi vse lokomotive"/>
   </Msg>
   <Msg id="stopall">
-    <de txt="Alle Loks stoppen" tip="Versetzt alle Züge in Manualbetrieb."/>
+    <de txt="Alle Loks stoppen" tip="Alle Loks in den manuellen Modus versetzen"/>
     <en txt="Stop all locs" tip="Put all locs in manual mode."/>
     <nl txt="Stop alle locs" tip="Zet alle locomotieven in hand mode."/>
     <sv txt="Stoppa alla lok" tip="Avsluta lokautomatik."/>
@@ -1186,7 +1186,7 @@
     <sl txt="Ustavi vse lokomotive"/>
   </Msg>
   <Msg id="startloc">
-    <de txt="Lok starten" tip="Versetzt Zug in den Automatikbetrieb."/>
+    <de txt="Lok starten" tip="Lok in Automatik-Modus versetzen"/>
     <en txt="Start locomotive" tip="Put locomotive in auto mode."/>
     <nl txt="Start loc" tip="Zet locomotief in automaat mode."/>
     <sv txt="Starta lok" tip="Kör lok automatiskt."/>
@@ -1219,7 +1219,7 @@
     <sl txt="Zaženi lokomotivo"/>
   </Msg>
   <Msg id="stoploc">
-    <de txt="Lok stoppen" tip="Versetzt Zug in Manualbetrieb."/>
+    <de txt="Lok stoppen" tip="Lok in manuellen Modus versetzen"/>
     <en txt="Stop locomotive automat" tip="Put locomotive in manual mode."/>
     <nl txt="Stop auto loc" tip="Zet locomotief in hand mode."/>
     <sv txt="Stoppa autoläge för lok" tip="Kör lok manuellt."/>
@@ -1251,7 +1251,7 @@
     <fi txt="Lopeta veturin automaattiajo"/>
   </Msg>
   <Msg id="resetall">
-    <de txt="Alles zurücksetzen" tip="Versetzt Automatik zurück in den Anfangszustand."/>
+    <de txt="Alles zurücksetzen" tip="Zurücksetzen der Automatik"/>
     <en txt="Reset all" tip="Reset automat."/>
     <nl txt="Reset alles" tip="Zet automaat in de begin stand."/>
     <sv txt="Återställ alla" tip="Återställ"/>
@@ -1284,7 +1284,7 @@
     <fi txt="Palauta kaikki asetukset"/>
   </Msg>
   <Msg id="softresetall">
-    <de txt="Zurücksetzen; außer Blockbelegung" tip="Versetzt Automatik zurück in den Anfangszustand außer Blockbelegung."/>
+    <de txt="Zurücksetzen; außer Blockbelegung" tip="Automatik zurücksetzen aber aktuelle Blockbelegung sichern"/>
     <en txt="Soft reset" tip="Reset automat but save current block occupancy."/>
     <nl txt="Reset" tip="Reset automaat mode met behoud van blok bezettingen."/>
     <sv txt="Mjuk återställning" tip="Återställ"/>
@@ -1354,7 +1354,7 @@
     <fi txt="Taso"/>
   </Msg>
   <Msg id="levelup">
-    <de txt="höhere Ebene" tip="Zeigt die nächtste Gleisbild Ebene an."/>
+    <de txt="höhere Ebene" tip="Nächste Gleisplan-Ebene"/>
     <en txt="Level up" tip="Next level of track plan."/>
     <nl txt="Nivo hoger" tip="Volgende spoorplan nivo laten zien."/>
     <sv txt="En nivå upp" tip="Nästa spårplansnivå."/>
@@ -1387,7 +1387,7 @@
     <fi txt="Ylempi taso"/>
   </Msg>
   <Msg id="leveldown">
-    <de txt="tiefere Ebene" tip="Zeigt die vorherige Gleisbild Ebene an."/>
+    <de txt="tiefere Ebene" tip="Vorherige Gleisplan-Ebene"/>
     <en txt="Level down" tip="Previous level of track plan."/>
     <nl txt="Nivo lager" tip="Voorgaande spoorplan nivo laten zien."/>
     <sv txt="En nivå ner" tip="Föregående spårplansnivå."/>
@@ -1420,7 +1420,7 @@
     <fi txt="Alempi taso"/>
   </Msg>
   <Msg id="properties" dialog="true">
-    <de txt="Eigenschaften" accel="0" tip="Dialog zum anzeigen und ändern von Eigenschaften."/>
+    <de txt="Eigenschaften" accel="0" tip="Dialog zum Anzeigen und Ändern von Eigenschaften"/>
     <en txt="Properties" accel="0" tip="Dialog to view and set properties."/>
     <nl txt="Eigenschappen" accel="0" tip="Window om eigenschappen te bekijken en te muteren."/>
     <sv txt="Egenskaper" accel="0" tip="Dialog för att se och ändra egenskaper."/>
@@ -1453,7 +1453,7 @@
     <fi txt="Ominaisuudet"/>
   </Msg>
   <Msg id="clearmsg" key="Alt-K">
-    <de txt="Meldungen löschen" tip="Löscht den kompletten Inhalt der Meldungsansicht."/>
+    <de txt="Meldungen löschen" tip="Löschen aller Meldungen"/>
     <en txt="Clear messages" tip="Clear all messages."/>
     <nl txt="Verwijder boodschappen" tip="Verwijdert de inhoud van de mededelingen vensters."/>
     <sv txt="Töm meddelanden" tip="Rensa meddelandefönster."/>
@@ -1615,7 +1615,7 @@
     <fi txt="Testaa"/>
   </Msg>
   <Msg id="automode">
-    <de txt="Automatikmodus" accel="1" tip="Schaltet Automatikmodus ein."/>
+    <de txt="Automatikmodus" accel="1" tip="Automatikmodus einschalten"/>
     <en txt="Auto mode" accel="1" tip="Switch auto mode on."/>
     <nl txt="Auto mode" accel="1" tip="Schakel automaat mode in."/>
     <sv txt="Automatikläge" accel="1" tip="Byt till automatisk driftsmod."/>
@@ -2131,7 +2131,7 @@
     <fi txt="Toiminnot"/>
   </Msg>
   <Msg id="changedirection">
-    <de txt="Fahrtrichtung wechseln" tip="Fahrtrichtung ändern."/>
+    <de txt="Fahrtrichtung wechseln" tip="Ändern der Fahrtrichtung"/>
     <en txt="Change direction" tip="Change direction."/>
     <nl txt="Verander rijrichting" tip="Rij richting wisselen."/>
     <sv txt="Ändra riktning" tip="Ändra riktning."/>
@@ -2359,7 +2359,7 @@
     <fi txt="Vaihdekomennot"/>
   </Msg>
   <Msg id="decoder">
-    <de txt="Dekoder" tip="Decoder Nummer."/>
+    <de txt="Dekoder" tip="Dekodernummer"/>
     <en txt="Decoder" tip="Decoder number."/>
     <nl txt="Decoder" tip="Decoder nummer."/>
     <sv txt="Dekoder" tip="Dekodernummer."/>
@@ -3382,7 +3382,7 @@
     <fi txt="Pois päältä"/>
   </Msg>
   <Msg id="plantitle" dialog="true">
-    <de txt="Gleisplan-Name" accel="0" tip="Gleisplan Name ändern."/>
+    <de txt="Gleisplan-Name" accel="0" tip="Ändern des Gleisplannamens"/>
     <en txt="Track plan title" accel="0" tip="Change track plan title."/>
     <nl txt="Spoorplannaam" accel="0" tip="Naam van het spoorplan wijzigen"/>
     <sv txt="Spårplanstitel" accel="0" tip="Ändra namnet på spårplanen"/>
@@ -3542,7 +3542,7 @@
     <fi txt="Avaa ratasuunnitelma"/>
   </Msg>
   <Msg id="rocrailini" dialog="true">
-    <de txt="Rocrail Eigenschaften" accel="0" tip="Rocrail Eigenschaften ändern."/>
+    <de txt="Rocrail Eigenschaften" accel="0" tip="Bearbeiten der Rocrail-Eigenschaften"/>
     <en txt="Rocrail Properties" accel="0" tip="Edit Rocrail properties."/>
     <nl txt="Rocrail Eigenschappen" accel="0" tip="Rocrail eigenschappen bewerken."/>
     <sv txt="Rocrailegenskaper" accel="0" tip="Ändra egenskaper för Rocrail."/>
@@ -4769,7 +4769,7 @@
     <fi txt="Reitti"/>
   </Msg>
   <Msg id="new" key="Ctrl-N">
-    <de txt="Neu" tip="Neues Gleisbild"/>
+    <de txt="Neu" tip="Neuer Gleisplan"/>
     <en txt="New" tip="New track plan"/>
     <nl txt="Nieuw"/>
     <sv txt="Ny"/>
@@ -7235,7 +7235,7 @@
     <pl txt="Czyszczący"/>
   </Msg>
   <Msg id="ctrlmode">
-    <de txt="Bedienung" tip="Gleisbild bedienen."/>
+    <de txt="Bedienung" tip="Gleisplan Bedienung"/>
     <en txt="Operate" tip="Operate track plan"/>
     <nl txt="Bedienen" tip="Spoorplan bedienen"/>
     <sv txt="Använd" tip="Använd spårplan"/>
@@ -7266,7 +7266,7 @@
     <pl txt="Obsługa"/>
   </Msg>
   <Msg id="zoom">
-    <de txt="Zoom" tip="Gleisbildgröße."/>
+    <de txt="Zoom" tip="Gleisplangröße"/>
     <en txt="Zoom" tip="Track plan size."/>
     <nl txt="Zoom" tip="Spoorplan grootte."/>
     <sv txt="Zoom" tip="Zooma in spårplan."/>
@@ -8530,7 +8530,7 @@
     <pl txt="ID Bloku"/>
   </Msg>
   <Msg id="gotoblock" dialog="true">
-    <de txt="Ziel setzen" tip="Lok stoppt nach erreichen des Ziels."/>
+    <de txt="Ziel setzen" tip="Lok stoppt nach Erreichen des Ziels"/>
     <en txt="Set destination" tip="Loc stops after reaching the destination."/>
     <nl txt="Leg bestemming vast" tip="Loc stopt na het bereiken van de bestemming."/>
     <sv txt="Sätt destination" tip="Lok stannar efter att ha nått sin destination."/>
@@ -8625,7 +8625,7 @@
     <fi txt="Anna teksti"/>
   </Msg>
   <Msg id="fill">
-    <de txt="Gleis auffüllen" tip="Füllt Gleise grau auf."/>
+    <de txt="Gleis auffüllen" tip="Gleise grau auffüllen"/>
     <en txt="Fill tracks" tip="Fills tracks with gray."/>
     <nl txt="Rails vullen" tip="Kleurt de rails grijs in."/>
     <sv txt="Fyllda spår" tip="Svart fyllning."/>
@@ -9187,7 +9187,7 @@
     <pl txt="ID producenta"/>
   </Msg>
   <Msg id="documentation" dialog="true">
-    <de txt="Handbuch" accel="0" tip="Das Online Handbuch."/>
+    <de txt="Handbuch" accel="0" tip="Online-Handbuch"/>
     <en txt="Guide" accel="0" tip="The online Manual."/>
     <nl txt="Handboek" accel="0" tip="Het online handboek."/>
     <sv txt="Guide" accel="0" tip="Manual"/>
@@ -9563,7 +9563,7 @@
     <pl txt="moduł"/>
   </Msg>
   <Msg id="trackdriver">
-    <de txt="TD" tip="Analoge Loksteuerung"/>
+    <de txt="TD" tip="Blockgesteuert"/>
     <en txt="TD" tip="Track Driver"/>
     <nl txt="TD" tip="Analoge locbesturing"/>
     <sv txt="TD" tip="Analog lokdrivare"/>
@@ -10684,7 +10684,7 @@
     <fi txt="Aja matkan tai aikataulun mukaan."/>
   </Msg>
   <Msg id="mic" dialog="true" key="Ctrl-M">
-    <de txt="MIC" tip="Mouse Integrated Controller"/>
+    <de txt="MIC" tip="Lokomotivsteuerung via Maus"/>
     <en txt="MIC" tip="Mouse Integrated Controller"/>
     <nl txt="Muis" tip="Mouse Integrated Controller"/>
     <sv txt="MIC" tip="Mouse Integrated Controller"/>
@@ -10869,7 +10869,7 @@
     <pl txt="Użyj"/>
   </Msg>
   <Msg id="ric">
-    <de txt="RIC" tip="Rocrail Innovative Controller"/>
+    <de txt="RIC" tip="Innovative Rocrail Steuerung"/>
     <en txt="RIC" tip="Rocrail Innovative Controller"/>
     <nl txt="RIC" tip="Rocrail Innovative Controller"/>
     <sv txt="RIC" tip="Rocrail Innovative Controller"/>
@@ -10931,7 +10931,7 @@
     <fi txt="Pysäytä poistuttaessa"/>
   </Msg>
   <Msg id="rocguiini" dialog="true">
-    <de txt="Rocview Eigenschaften" accel="0" tip="Rocview Eigenschaften ändern."/>
+    <de txt="Rocview Eigenschaften" accel="0" tip="Ändern der Rocview Eigenschaften"/>
     <en txt="Rocview Properties" accel="0" tip="Edit Rocview properties."/>
     <nl txt="Rocview eigenschappen" accel="0" tip="Rocview eigenschappen bewerken."/>
     <sv txt="Rocview egenskaper" accel="0" tip="Ändra egenskaper för Rocview."/>
@@ -11023,7 +11023,7 @@
     <pl txt="Brama"/>
   </Msg>
   <Msg id="identifier">
-    <de txt="Identifizierung"/>
+    <de txt="Identifizierung" tip="wenn das Zugerkennungssystem nicht die Dekoderadresse zurückmeldet"/>
     <en txt="Identifier" tip="In case the train detection system returns not the decoder address."/>
     <nl txt="identificatie" tip="Indien de bezetmelder niet het juiste decoderadres teruggeeft."/>
     <sv txt="Identifierare"/>
@@ -11053,7 +11053,7 @@
     <pl txt="Identyfikator"/>
   </Msg>
   <Msg id="dispatch">
-    <de txt="Bereitstellen für Regler" tip="Bereitstellung der Lokadresse für Übernahme am Regler."/>
+    <de txt="Bereitstellen für Regler" tip="Übergeben der Lok an einen Handregler"/>
     <en txt="Dispatch for throttle" tip="Dispath Locaddress to take over by a throttle."/>
     <nl txt="Klaarzetten voor handregelaar" tip="Locadres klaarzetten voor overname door een handregelaar."/>
     <sv txt="Välj för halvautomatik."/>
@@ -11081,7 +11081,7 @@
     <pl txt="Komunikat dla przepustnicy"/>
   </Msg>
   <Msg id="samedir">
-    <de txt="Fahrziel in Fahrtrichtung" tip="Sucht neues Fahrziel ohne die momentane Fahrtrichtung zu ändern."/>
+    <de txt="Fahrziel in Fahrtrichtung" tip="Neues Ziel suchen ohne Änderung der Fahrtrichtung"/>
     <en txt="same destination direction" tip="Search new destination without changing the current direction."/>
     <nl txt="zelfde bestemmings richting" tip="Nieuwe bestemming zoeken zonder richtings verandering."/>
     <sv txt="Samma riktning" tip="Sök ny destination utan att byta riktning."/>
@@ -11110,7 +11110,7 @@
     <pl txt="ten sam kierunek"/>
   </Msg>
   <Msg id="oppositedir">
-    <de txt="Fahrziel entgegen der Fahrtrichtung" tip="Sucht neues Fahrziel in der entgegengesetzten Fahrtrichtung."/>
+    <de txt="Fahrziel entgegen der Fahrtrichtung" tip="Suche neues Fahrziel in nach-von-Richtung"/>
     <en txt="opposite destinations" tip="Search new destination in the to-from direction."/>
     <nl txt="tegengestelde bestemmings richting" tip="Nieuwe bestemming zoeken met richtingsverandering."/>
     <sv txt="Andra riktningen" tip="Sök ny destination i andra riktningen."/>
@@ -11139,7 +11139,7 @@
     <pl txt="kierunek przeciwny"/>
   </Msg>
   <Msg id="forcesamedir">
-    <de txt="Fahrtrichtungswechsel verhindern" tip="Sucht nur neues Fahrziel ohne die momentane Fahrtrichtung zu ändern."/>
+    <de txt="Fahrtrichtungswechsel verhindern" tip="Neues Ziel suchen, ohne die aktuelle Fahrrichtung zu ändern"/>
     <en txt="force same destination direction" tip="Search forced new destination without changing the current direction."/>
     <nl txt="verplichte zelfde richting" tip="xxx Nieuwe bestemming zoeken zonder richtings verandering."/>
     <sv txt="Tvinga samma destinationsriktning." tip="xxx Sök ny destination utan att byta riktning."/>
@@ -11462,7 +11462,7 @@
     <pl txt="Stacja końcowa"/>
   </Msg>
   <Msg id="dirpause">
-    <de txt="Pause bei Richtungswechsel" tip="Pause xxxms nach dem Schalten der letzten Weiche."/>
+    <de txt="Pause bei Richtungswechsel" tip="Warte xxx ms nach letztem Weichenbefehl"/>
     <en txt="DirChange pause" tip="Pause xxxms after last switch command."/>
     <nl txt="Wachttijd voor rijrichtingverandering" tip="Wachttijd in  xxxms na laatste wisselcommando."/>
     <sv txt="Riktningsväxlingspaus" tip="Vänta x ms från senaste växelkommand."/>
@@ -11489,7 +11489,7 @@
     <fi txt="Suunnanmuutoksen tauko"/>
   </Msg>
   <Msg id="dirchgspd">
-    <de txt="V=0 bei Fahrtrichtungswechsel" tip="Setze Geschwindigkeit auf 0 bei Richtungswechsel."/>
+    <de txt="V=0 bei Fahrtrichtungswechsel" tip="Geschwindigkeit auf 0 setzen beim Ändern der Fahrtrichtung"/>
     <en txt="V=0 at dir change" tip="Set velocity to 0 when chang direction."/>
     <nl txt="V=0 bij richtingsverandering" tip="Zet snelheid op 0 bij een richtingsverandering."/>
     <sv txt="V=0 vid riktningsbyte" tip="Sätt hastigheten till noll när riktningen ska bytas."/>
@@ -11608,7 +11608,7 @@
     <pl txt="blok skrzyżowania"/>
   </Msg>
   <Msg id="crossingblocks">
-    <de txt="Kreuzende Blöcke" tip="Comma separated list of crossing blocks."/>
+    <de txt="Kreuzende Blöcke" tip="Liste kreuzender Blöcke, durch Komma getrennt"/>
     <en txt="Crossing blocks" tip="Comma separated list of crossing blocks."/>
     <nl txt="Kruisende blokken" tip="Comma separated list of crossing blocks."/>
     <sv txt="Korsande block" tip="Comma separated list of crossing blocks."/>
@@ -11751,7 +11751,7 @@
     <fi txt="Aikavälin tyhjennysaika (s)"/>
   </Msg>
   <Msg id="useidle">
-    <de txt="Benutze IDLE anstatt GPOFF" tip="Der LocoBuffer-USB braucht das RailSync."/>
+    <de txt="Benutze IDLE anstatt GPOFF" tip="Der USB-LocoBuffer benötigt RailSync"/>
     <en txt="Use IDLE instead of GPOFF" tip="The LocoBuffer-USB needs the RailSync."/>
     <nl txt="Gebruik IDLE inplaats van GPOFF" tip="De LocoBuffer-USB heeft het RailSync nodig."/>
     <sv txt="Använd IDLE istället för GPOFF" tip="LocoBuffer-USB behöver RailSync."/>
@@ -11779,7 +11779,7 @@
     <fi txt="Käytä IDLE:ä GPOFF:in sijasta"/>
   </Msg>
   <Msg id="ptiid">
-    <de txt="PT IID" tip="Diesen Controller zum programmieren benutzen."/>
+    <de txt="PT IID" tip="Diese Zentrale zum Programmieren verwenden"/>
     <en txt="PT IID" tip="Use this controller for programming."/>
     <nl txt="PT IID" tip="Gebruik deze controller voor programmeren."/>
     <sv txt="PT IID" tip="Använd denna kontroller för programmering."/>
@@ -11808,7 +11808,7 @@
     <pl txt="PT IID"/>
   </Msg>
   <Msg id="sviid">
-    <de txt="SV IID" tip="Diesen Controller zum LN-SV programmieren benutzen."/>
+    <de txt="SV IID" tip="Diese Zentrale für LN-SV-Programmierung verwenden"/>
     <en txt="SV IID" tip="Use this controller for LN-SV programming."/>
     <nl txt="SV IID" tip="Gebruik deze controller voor LN-SV programmeren."/>
     <sv txt="SV IID" tip="Använd denna kontroller för LN-SV programmering."/>
@@ -11837,7 +11837,7 @@
     <pl txt="SV IID"/>
   </Msg>
   <Msg id="lciid">
-    <de txt="LC IID" tip="Diesen Controller zum fahren benutzen."/>
+    <de txt="LC IID" tip="Diese Zentrale zur Lokomotivsteuerung verwenden"/>
     <en txt="LC IID" tip="Use this controller for locomotives."/>
     <nl txt="LC IID" tip="Gebruik deze controller voor locomotieven."/>
     <sv txt="LC IID" tip="Använd denna kontroller för loco."/>
@@ -11865,7 +11865,7 @@
     <pl txt="LC IID"/>
   </Msg>
   <Msg id="dpiid">
-    <de txt="DP IID" tip="Use this controller to dispatch locomotives for use with a throttle."/>
+    <de txt="DP IID" tip="Diese Zentrale zur Übergabe von Lokomotiven an Fahrregler verwenden"/>
     <en txt="DP IID" tip="Use this controller to dispatch locomotives for use with a throttle."/>
     <nl txt="DP IID" tip="Gebruik deze controller om locomotieven vrij te geven voor een regelaar."/>
     <sv txt="DP IID" tip="Use this controller to dispatch locomotives for use with a throttle."/>
@@ -12214,7 +12214,7 @@
     <pl txt="Katalog obrazów"/>
   </Msg>
   <Msg id="regulated">
-    <de txt="Lastreglung" tip="Decoder verfügt über eine Lastreglung."/>
+    <de txt="Lastreglung" tip="Decoder hat eine Lastregelung"/>
     <en txt="Regulated" tip="Decoder has a motor regulator."/>
     <nl txt="Lastregeling" tip="Decoder is voorzien van een lastregeling."/>
     <sv txt="Reglerad" tip="Dekoder med fartkontroll."/>
@@ -13403,7 +13403,7 @@
     <pl txt="Poczekaj na CS"/>
   </Msg>
   <Msg id="softwareupdates" dialog="true">
-    <de txt="Software-Aktualisierung" tip="Überprüfung auf verfügbare Aktualisierungen für Rocrail."/>
+    <de txt="Software-Aktualisierung" tip="Überprüfung auf verfügbare Rocrail-Updates"/>
     <en txt="Software Updates" tip="Check for available updates for Rocrail."/>
     <nl txt="Software Updates" tip="Controleer op beschikbare updates van Rocrail."/>
     <sv txt="Mjukvaru-uppdatering" tip="Sök efter Rocrail-uppdateringar."/>
@@ -13892,7 +13892,7 @@
     <pl txt="Nie można połączyć się z "/>
   </Msg>
   <Msg id="usergroup" dialog="true">
-    <de txt="Benutzergruppe" tip="Share your experiences, meet other Rocrailers and have fun!"/>
+    <de txt="Benutzergruppe" tip="Austauschen von Erfahrungen - andere Rocrailer treffen und Spaß haben!"/>
     <en txt="User group" tip="Share your experiences, meet other Rocrailers and have fun!"/>
     <nl txt="Gebruikers groep" tip="Deel je ervaringen, ontmoet andere Rocrailers en geniet!"/>
     <sv txt="Användargemenskap" tip="Dela dina erfarenheter, träffa andra Rocrail-användare och ha kul!"/>
@@ -13929,7 +13929,7 @@
   <Msg id="translations" dialog="true">
     <en txt="Translations" tip="Translations in Launchpad.net"/>
     <nl txt="Vertalingen" tip="Vertalingen bij Launchpad.net"/>
-    <de txt="Übersetzungen" tip="Übersetzungen bei Launchpad.net"/>
+    <de txt="Übersetzungen" tip="Übersetzungen in Launchpad.net"/>
     <cs txt="Překlady"/>
     <fr txt="Traductions"/>
     <hu txt="Fordítások"/>
@@ -13954,7 +13954,7 @@
     <pl txt="Tłumaczenia"/>
   </Msg>
   <Msg id="consrv" dialog="true">
-    <de txt="Konfigurationsdienst" tip="Interactive rocrail.ini configuration."/>
+    <de txt="Konfigurationsdienst" tip="Interaktive Konfiguration der rocrail.ini"/>
     <en txt="Configuration Service" tip="Interactive rocrail.ini configuration."/>
     <nl txt="Netwerk instellingen" tip="Interactive rocrail.ini configuration."/>
     <sv txt="Konfigurationsservice" tip="Interaktiv rocrail.ini konfiguration."/>
@@ -13986,7 +13986,7 @@
     <all txt="https://launchpad.net/rocrail"/>
   </Msg>
   <Msg id="bug" dialog="true">
-    <de txt="Auf einen Programmfehler hinweisen" tip="Fehler gefunden..."/>
+    <de txt="Auf einen Programmfehler hinweisen" tip="Wenn ein Fehler gefunden wird ..."/>
     <en txt="Report a Bug" tip="If you encounter a Bug..."/>
     <nl txt="Meld een Bug" tip="Als je een Bug opmerk..."/>
     <sv txt="Rapportera en bugg" tip="Om du hittar ett fel..."/>
@@ -14018,7 +14018,7 @@
     <all txt="https://bugs.launchpad.net/rocrail"/>
   </Msg>
   <Msg id="feature" dialog="true">
-    <de txt="Erweiterungsantrag" tip="Ich habe eine Idee..."/>
+    <de txt="Erweiterungsantrag" tip="Bei einer guten Idee ..."/>
     <en txt="Feature request" tip="If you have a good idea..."/>
     <nl txt="Uitbreidingsverzoek" tip="Als je een goed idee hebt..."/>
     <sv txt="Funktionsönskemål" tip="If you have a good idea..."/>
@@ -14805,7 +14805,7 @@
     <pl txt="Rezerwuj drugi - następny blok"/>
   </Msg>
   <Msg id="dccformat">
-    <de txt="DCC Format" tip="Voreinstellung DCC Format"/>
+    <de txt="DCC Format" tip="Standard DCC-Format"/>
     <en txt="DCC Format" tip="Default DCC Format"/>
     <nl txt="DCC Formaat" tip="Voor ingesteld DCC Formaat"/>
     <sv txt="DCC Format" tip="Default DCC-format"/>
@@ -14833,7 +14833,7 @@
     <pl txt="Format DCC"/>
   </Msg>
   <Msg id="timing">
-    <de txt="Zeiteinstellung" tip="Timing Takt puls S88-Bus."/>
+    <de txt="Zeiteinstellung" tip="S88-Bus Impulszeitwahl"/>
     <en txt="Timing" tip="Pulse timing S88-Bus."/>
     <nl txt="Timing" tip="Pulse timing S88-Bus."/>
     <sv txt="Timing" tip="Timing för S88-bussen."/>
@@ -14861,7 +14861,7 @@
     <pl txt="Taktowanie"/>
   </Msg>
   <Msg id="ptreset">
-    <de txt="Programmiergleis zurücksetzen" tip="Extended Reset Commands"/>
+    <de txt="Programmiergleis zurücksetzen" tip="Erweiterte zurücksetzen  Befehle"/>
     <en txt="PT Resets" tip="Extended Reset Commands"/>
     <nl txt="PT Resets" tip="Extended Reset Commands"/>
     <sv txt="PT Resets" tip="Utökade resetkommandon"/>
@@ -14887,7 +14887,7 @@
     <fi txt="PT alustukset"/>
   </Msg>
   <Msg id="ptcommands">
-    <de txt="Programmiergleis Befehle" tip="Extended Program Commands"/>
+    <de txt="Programmiergleis Befehle" tip="Erweiterte Programm-Befehle"/>
     <en txt="PT Commands" tip="Extended Program Commands"/>
     <nl txt="PT Commands" tip="Extended Program Commands"/>
     <sv txt="PT Commands" tip="Utökade programmeringskommandon"/>
@@ -14914,7 +14914,7 @@
     <pl txt="Polecenia PT"/>
   </Msg>
   <Msg id="ptpom">
-    <de txt="Programmiergleis POM" tip="Programmieren auf dem Hauptgleis Wiederholung."/>
+    <de txt="Programmiergleis POM" tip="Befehlswiederholung bei Dekoderprogrammierung auf dem Hauptgleis"/>
     <en txt="PT POM" tip="Command repetition for Programming on the Main."/>
     <nl txt="PT POM" tip="Commando herhaling voor programmeren op het hoofd spoor."/>
     <sv txt="PT POM" tip="Kommandorepetition vid programming på huvudspåret (POM)."/>
@@ -14941,7 +14941,7 @@
     <pl txt="PT POM"/>
   </Msg>
   <Msg id="scdmain">
-    <de txt="SCD Main" tip="Abschaltzeit bei Kurzschluß Hauptgleis."/>
+    <de txt="SCD Main" tip="Zeitspanne der Stromkreisabschaltung nach Kurzschlusserkennung am Hauptanschluss (Main)"/>
     <en txt="SCD Main" tip="Power switch off time after short cut detection on the main."/>
     <nl txt="SCD Main" tip="Afschakeltijd bij kortsluiting."/>
     <sv txt="SCD Main" tip="Tid innan strömmen stängs av efter upptäckt kortslutning på huvudspåret."/>
@@ -14968,7 +14968,7 @@
     <pl txt="Główny SCD"/>
   </Msg>
   <Msg id="scdpt">
-    <de txt="SCD PT" tip="Abschaltzeit bei Kurzschluß Programmiergleis."/>
+    <de txt="SCD PT" tip="Ausschaltverzögerung der Gleisspannung nach Kurzschlusserkennung auf dem Programmiergleis"/>
     <en txt="SCD PT" tip="Power switch off time after short cut detection on the programming track."/>
     <nl txt="SCD PT" tip="Afschakeltijd bij kortsluiting op het programmeer spoor."/>
     <sv txt="SCD PT" tip="Tid innan strömmen stängs av efter upptäckt kortslutning på programmeringsspåret."/>
@@ -15220,7 +15220,7 @@
     <pl txt="Pomiar prędkości"/>
   </Msg>
   <Msg id="mvtrack" dialog="true" key="Alt-2">
-    <de txt="Geschwindigkeits-Messstrecke" tip="Strecke für Geschwindigkeitsmessung"/>
+    <de txt="Geschwindigkeits-Messstrecke" tip="Maß - Einheit - der Geschwindigkeitsstrecke"/>
     <en txt="MVTrack" tip="Measure Velocity Track"/>
     <nl txt="MVTrack" tip="Snelheid meet traject"/>
     <sv txt="MVTrack" tip="Hastighetsmätningsspår"/>
@@ -15278,7 +15278,7 @@
     <pl txt="Konwersja do MPH"/>
   </Msg>
   <Msg id="seltab">
-    <de txt="Fiddle Yard"/>
+    <de txt="Fiddle Yard" tip="Schiebebühenentyp"/>
     <en txt="Fiddle Yard" tip="Traverser type."/>
     <nl txt="Fiddle Yard"/>
     <sv txt="Bangård"/>
@@ -15387,7 +15387,7 @@
     <pl txt="Aktywny niski"/>
   </Msg>
   <Msg id="timedactions" dialog="true">
-    <de txt="Zeitgesteuerte Aktionen" tip="Aktionen zu einer bestimmten Zeit starten"/>
+    <de txt="Zeitgesteuerte Aktionen" tip="Aktionen zu einem bestimmten Zeitpunkt ausführen"/>
     <en txt="Timed Actions" tip="Activate actions at a certain time."/>
     <nl txt="Tijdgestuurde akties" tip="Activeer akties op een gedefinieerd tijdstip."/>
     <sv txt="Tidsstyrda händelser" tip="Aktivera händelser vid förbestämda tidpunkter."/>
@@ -15706,7 +15706,7 @@
     <pl txt="Katalog styli (XSL)"/>
   </Msg>
   <Msg id="showid">
-    <de txt="Kennungen anzeigen" tip="Show object ID's."/>
+    <de txt="Kennungen anzeigen" tip="Objektkennungen anzeigen"/>
     <en txt="Show ID's" tip="Show object ID's."/>
     <nl txt="Toon ID's" tip="Toon object ID's."/>
     <sv txt="Visa ID'n." tip="Visa objekt-ID."/>
@@ -16101,7 +16101,7 @@
     <pl txt="Zezwól na zmianę kierunku"/>
   </Msg>
   <Msg id="eventtimeout">
-    <de txt="Ereignis-Zeitüberschreitung"/>
+    <de txt="Ereignis-Zeitüberschreitung" tip="Wartezeit auf ein Ereignis in Sekunden"/>
     <en txt="Event timeout" tip="Time to wait for an event in seconds."/>
     <nl txt="Melder wachttijd" tip="Event wacht tijd in seconden."/>
     <sv txt="Händelsetimeout"/>
@@ -16356,7 +16356,7 @@
     <pl txt="Warunki"/>
   </Msg>
   <Msg id="resumeall">
-    <de txt="Alle Züge wieder starten" tip="Versetzt alle Züge in den Automatikbetrieb aus der letzte Sitzung."/>
+    <de txt="Alle Züge wieder starten" tip="Alle Züge aus letzter Sitzung in Automatik-Modus versetzen?"/>
     <en txt="Resume all locs" tip="Put all locs in auto mode from previous session."/>
     <nl txt="Herstart alle loks" tip="Zet alle locomotieven in automaat mode uit de vorige sessie."/>
     <sv txt="Återuppta alla lok" tip="Put all locs in auto mode from previous session."/>
@@ -16611,7 +16611,7 @@
     <pl txt="Zarządzaj blokami torów"/>
   </Msg>
   <Msg id="skipsetsw">
-    <de txt="Keine Weichenstellung bei richtiger Weichenlage" tip="Skip switch commands in routes if already set"/>
+    <de txt="Keine Weichenstellung bei richtiger Weichenlage" tip="Weichen einer Fahrstraße nicht setzen, falls sie bereits richtig gestellt sind"/>
     <en txt="Skip switch commands" tip="Skip switch commands in routes if already set"/>
     <nl txt="Sla wissel commando's over" tip="Sla wisselcommando's in de rijweg over als de wissels al gezet zijn."/>
     <sv txt="Skippa växelkommandon" tip="Skip switch commands in routes if already set"/>
@@ -17071,7 +17071,7 @@
     <en txt="Transmit short IDs" tip="Transmit short IDs to a connected throttle."/>
     <it txt="Trasmettere ID brevi"/>
     <sv txt="Överför kortID"/>
-    <de txt="Kurz-Kennung übertragen"/>
+    <de txt="Kurz-Kennung übertragen" tip="Kurz-Kennung an angeschlossenen Fahrregler senden"/>
     <fr txt="Transmettre les identifiants courts"/>
     <bg txt="Изпраща кратки документи за самоличност"/>
     <da txt="Send kort ID"/>
@@ -18858,7 +18858,7 @@
     <en txt="Serviced" tip="Set locomotive to serviced."/>
     <cs txt="Obsloužený"/>
     <hu txt="Kiszolgált"/>
-    <de txt="Wartung durchgeführt"/>
+    <de txt="Wartung durchgeführt" tip="Lok als gewartet kennzeichnen"/>
     <fr txt="Révisée"/>
     <nl txt="Onderhouden"/>
     <pt txt="Serviço efectuado"/>
@@ -18882,7 +18882,7 @@
     <en txt="M-Time" tip="Last serviced run time."/>
     <cs txt="M-Čas"/>
     <hu txt="M idő"/>
-    <de txt="letzte Wartung"/>
+    <de txt="letzte Wartung" tip="Laufzeit seit der letzten Wartung"/>
     <fr txt="Temps-M"/>
     <nl txt="O-Tijd"/>
     <pt txt="M-Time"/>
@@ -18905,7 +18905,7 @@
     <en txt="M-Int" tip="Maintenance interval in hours."/>
     <cs txt="M-Int"/>
     <hu txt="M megszakítás"/>
-    <de txt="Wartungsintervall"/>
+    <de txt="Wartungsintervall" tip="Wartungsintervall in Stunden"/>
     <fr txt="M-Int"/>
     <nl txt="O-Int"/>
     <pt txt="M-int"/>
@@ -19198,7 +19198,7 @@
     <pt txt="Booster"/>
     <nl txt="Boosters"/>
     <fr txt="Boosters"/>
-    <de txt="Booster"/>
+    <de txt="Booster" tip="Booster Einstellungen für Gleisspannungs-Verwaltung"/>
     <it txt="Booster"/>
     <ru txt="Бустеры"/>
     <cs txt="Zesilovače"/>
@@ -19225,7 +19225,7 @@
     <ru txt="Управление питанием"/>
     <bs txt="Kontrola struje"/>
     <cs txt="Řízení napájení"/>
-    <de txt="Gleisspannungs-Steuerung"/>
+    <de txt="Gleisspannungs-Steuerung" tip="Hauptschalter Booster"/>
     <it txt="Controllo potenza"/>
     <ca txt="Control de potència"/>
     <da txt="Strømkontrol"/>
@@ -19888,7 +19888,7 @@
     <cs txt="Editování modulového plánu"/>
     <nl txt="Modulenplan bewerken"/>
     <fr txt="Éditer le module"/>
-    <de txt="Modulplan bearbeiten"/>
+    <de txt="Modulplan bearbeiten" tip="Bearbeitung des Modulplans aktivieren"/>
     <it txt="Modifica modulo"/>
     <pt txt="Editar modulo do plano"/>
     <ru txt="Редактировать план модуля"/>
@@ -20054,7 +20054,7 @@
     <cs txt="Otevři pracovní prostor"/>
     <nl txt="Werkruimte openen"/>
     <fr txt="Ouvrir l'environnement de jeu"/>
-    <de txt="Arbeitsbereich öffnen"/>
+    <de txt="Arbeitsbereich öffnen" tip="Einen Arbeitsbereich zum Spielen öffnen."/>
     <it txt="Apri cartella di lavoro"/>
     <pt txt="Abrir espaço de trabalho"/>
     <ru txt="Открыть Workspace"/>
@@ -20101,7 +20101,7 @@
     <cs txt="Defaultní pracovní prostor"/>
     <nl txt="Standaard werkruimte"/>
     <fr txt="Environnement de jeu par défaut"/>
-    <de txt="Standard-Arbeitsbereich"/>
+    <de txt="Standard-Arbeitsbereich" tip="Zu ladender Arbeitsbereich beim Programmstart"/>
     <it txt="Cartella di lavoro predefinita"/>
     <pt txt="Espaço de trabalho default"/>
     <ru txt="Workspace  по-умолчанию"/>
@@ -20171,7 +20171,7 @@
     <cs txt="Priorita"/>
     <nl txt="Prioriteit"/>
     <fr txt="Priorité"/>
-    <de txt="Vorrang"/>
+    <de txt="Vorrang" tip="Die Wartezeit wird mit diesem Wert multipliziert, falls kein Ziel gefunden wird."/>
     <it txt="Priorità"/>
     <pt txt="Prioridade"/>
     <ru txt="Приоритет"/>
@@ -20561,7 +20561,7 @@
   </Msg>
   <Msg id="ctc">
     <en txt="CTC" tip="Centralized Traffic Control"/>
-    <de txt="ZBL" tip="Gleisbildstelltisch"/>
+    <de txt="ZBL" tip="Zentrale Betriebsleitung"/>
     <nl txt="CVL" tip="Centrale verkeersleiding"/>
     <ca txt="CTC"/>
     <cs txt="CTC"/>
@@ -20677,7 +20677,7 @@
     <cs txt="Přeskočit příkazy od signálu"/>
     <da txt="Oversping signalkommandoer"/>
     <nl txt="Negeer  sein commando's"/>
-    <de txt="Keine Signalstellung bei richtiger Stellung"/>
+    <de txt="Keine Signalstellung bei richtiger Stellung" tip="bereits gesetztes Signal nicht erneut setzen"/>
     <it txt="Saltare i comandi segnali se giá impostati"/>
     <ru txt="Пропустить команды сигналов"/>
     <es txt="Saltear comandos de señal"/>
@@ -21366,7 +21366,7 @@
   </Msg>
   <Msg id="odsernum">
     <en txt="Serial Number" tip="OpenDCC serial number"/>
-    <de txt="Seriennummer" tip="OpenDCC Seriennummer"/>
+    <de txt="Seriennummer" tip="OpenDCC-Seriennummer"/>
     <cs txt="Sériové číslo"/>
     <nl txt="Serienummer"/>
     <ru txt="Серийный номер"/>
@@ -21392,7 +21392,7 @@
   </Msg>
   <Msg id="xpnfbmapping">
     <en txt="XpressNet feedback mapping" tip="Read OpenDCC documentation"/>
-    <de txt="Xpressnet-Rückmeldungen zuordnen" tip="OpenDCC Beschreibung lesen"/>
+    <de txt="Xpressnet-Rückmeldungen zuordnen" tip="Siehe OpenDCC-Dokumentation"/>
     <cs txt="XpresNet mapování spětné"/>
     <nl txt="xPressNett terugmelder indeling"/>
     <en_AU txt="XpressNet feedback mapping"/>
@@ -21414,7 +21414,7 @@
     <en txt="Allow follow up" tip="Allow critical section follow up in same direction."/>
     <cs txt="Povol sledování"/>
     <nl txt="Achtervolging toestaan"/>
-    <de txt="Nachfolgende Züge erlauben"/>
+    <de txt="Nachfolgende Züge erlauben" tip="Folgezug in gleicher Richtung im kritischen Blockabschnitt erlauben"/>
     <en_AU txt="Allow follow up"/>
     <en_CA txt="Allow follow up"/>
     <en_GB txt="Allow follow up"/>
@@ -21772,7 +21772,7 @@
     <en txt="Analyze" tip="Analyze track plan for generating routes."/>
     <nl txt="Analyseren"/>
     <fr txt="analyser"/>
-    <de txt="Analysieren"/>
+    <de txt="Analysieren" tip="Gleisplan zur Erzeugung von Fahrstraßen analysieren"/>
     <em_GB txt="Analyze" tip="Analyze track plan for generating routes."/>
     <em_AU txt="Analyze" tip="Analyze track plan for generating routes."/>
     <pt txt="Analisar"/>
@@ -21797,7 +21797,7 @@
     <en txt="System info" tip="Enable extra CS system info."/>
     <nl txt="Systeem info"/>
     <fr txt="Information du système"/>
-    <de txt="Systeminformation"/>
+    <de txt="Systeminformation" tip="Zusätzlich Info's der Zentrale aktivieren"/>
     <nb txt="System info"/>
     <em_GB txt="System info" tip="Enable extra CS system info."/>
     <em_AU txt="System info" tip="Enable extra CS system info."/>
@@ -23898,7 +23898,7 @@
   </Msg>
   <Msg id="startofday">
     <en txt="Start of Day" tip="Initialize accessories and query sensors."/>
-    <de txt="Weichen/Signale/Zähler initialisieren"/>
+    <de txt="Weichen/Signale/Zähler initialisieren" tip="Zubehör initialisieren und Rückmelder abfragen"/>
     <es txt="Inicio de Día"/>
     <fr txt="Début de journée"/>
     <nl txt="Begin van de dag"/>
@@ -23918,7 +23918,7 @@
   </Msg>
   <Msg id="querysensors">
     <en txt="Query sensors" tip="Query actual state of all sensors."/>
-    <de txt="Rückmelder abfragen"/>
+    <de txt="Rückmelder abfragen" tip="aktuellen Status aller Rückmelder abfragen"/>
     <nl txt="Bezetmelders afvragen"/>
     <es txt="Sensores de consulta"/>
     <it txt="Sensori di interrogazione"/>
@@ -24211,7 +24211,7 @@
   <Msg id="issue" dialog="true">
     <en txt="Issue" tip="Create a server issue context."/>
     <nl txt="Incident"/>
-    <de txt="Problemfall"/>
+    <de txt="Problemfall" tip="Server Problemfall erstellen"/>
     <it txt="Segnalazione"/>
     <sr_latin txt="Izdanje"/>
     <cs txt="Úloha"/>
@@ -25696,7 +25696,7 @@
   </Msg>
   <Msg id="showlocked">
     <en txt="Show locked switches" tip="Show locked switches with a different color."/>
-    <de txt="Zeige gesperrte Weichen"/>
+    <de txt="Zeige gesperrte Weichen" tip="Zeige gesperrte Weichen in anderer Farbe"/>
     <nl txt="Laat gereserveerde wissels zien"/>
     <it txt="Mostrare deviatoi bloccati"/>
     <sv txt="Visa låsta växlar."/>
@@ -25995,7 +25995,7 @@
     <it txt="Accessori"/>
     <zh_CN txt="附件表"/>
     <sl txt="Dodatna oprema"/>
-    <de txt="Zubehör-Tabelle"/>
+    <de txt="Zubehör-Tabelle" tip="Zubehör-Decoder-Tabelle"/>
     <sr_latin txt="Tabela pomoćnih uređaja"/>
     <ru txt="Аксессуары"/>
     <pt_BR txt="Tabela de acessórios"/>
@@ -26938,7 +26938,7 @@
   </Msg>
   <Msg id="startallvirtual">
     <en txt="Start all locs virtual" tip="Put all locs in virtual auto mode."/>
-    <de txt="Alle Loks virtuell starten"/>
+    <de txt="Alle Loks virtuell starten" tip="Alle Loks in den virtuellen Modus setzen"/>
     <es txt="comienzo de todos los locs virtuales"/>
     <nl txt="Start alle loks virtueel"/>
     <pt_BR txt="Iniciar todas locomotivas virtuais"/>

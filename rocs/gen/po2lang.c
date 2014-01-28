@@ -197,7 +197,7 @@ static void __merge( const char* aid, const char* msgstr, const char* lang, iONo
   if( msg == NULL ) {
     msg = (iONode)MapOp.get( enMap, aid);
   }
-  else if( msg == NULL ) {
+  if( msg == NULL ) {
     msg = (iONode)MapOp.get( tipMap, aid);
     tip = True;
   }
