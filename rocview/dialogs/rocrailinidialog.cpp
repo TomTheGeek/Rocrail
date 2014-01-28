@@ -564,7 +564,7 @@ void RocrailIniDialog::initValues() {
   m_TimedSensors->SetValue( wCtrl.istimedsensors( ctrl ) ? true:false );
   m_EnableAnalyzer->SetValue( wCtrl.isenableanalyzer( ctrl ) ? true:false );
   m_ForceUnlock->SetValue( wCtrl.isebreakforceunlock( ctrl ) ? true:false );
-  m_ForceUnlock->Enable(m_ForceUnlock->IsChecked());
+  //m_ForceUnlock->Enable(m_ForceUnlock->IsChecked());
   m_ResetFxSp->SetValue( wRocRail.isresetspfx( m_Props ) ? true:false );
   m_ProcessSignalEvents->SetValue( wCtrl.issgevents( ctrl ) ? true:false );
   m_ReleaseOnIdle->SetValue( wCtrl.isreleaseonidle( ctrl ) ? true:false );
