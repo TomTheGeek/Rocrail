@@ -207,7 +207,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, str );
       wBinCmd.setoutlen( lccmd, StrOp.len(str) );
       wBinCmd.setinlen( lccmd, 256 );
-      wBinCmd.setinendbyte( lccmd, '\r' );
+      wBinCmd.setinendbyte( lccmd, ']' );
       wBinCmd.setout( lccmd, byteStr );
       StrOp.free( byteStr );
       StrOp.free( str );
@@ -217,13 +217,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
       /* inform listener */
         const char* rawdata = NodeOp.getStr(rsp, "data", "" );
         if( StrOp.len(rawdata ) > 0 ) {
-          char* cvdata;
-          if( rawdata[0] == ']' ) {
-            /* work around for unexpected prefix */
-            cvdata = (char*)StrOp.strToByte(rawdata+1);
-          }
-          else
-            cvdata = (char*)StrOp.strToByte(rawdata);
+          char* cvdata = (char*)StrOp.strToByte(rawdata);
           response = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
           wProgram.setcv( response, wProgram.getcv(cmd) );
           wProgram.setvalue( response, atoi(cvdata ));
