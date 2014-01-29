@@ -375,7 +375,12 @@ static Boolean __syncGo( iORoute inst ) {
       iOSignal isg = ModelOp.getSignal( model, swId );
 
       if( isg != NULL ) {
-        SignalOp.aspect(isg, NodeOp.getInt( sw, "track", 0));
+        iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+        wSignal.setcmd( cmd, wSignal.aspect );
+        wSignal.setaspect( cmd, NodeOp.getInt( sw, "track", 0) );
+        wSignal.setpause( cmd, wCtrl.getrouteswtime( wRocRail.getctrl( AppOp.getIni() ) ) * swdelay );
+        swdelay++;
+        SignalOp.cmd(isg, cmd, True);
       }
     }
     else if( StrOp.equals( wSignal.red, swCmd ) ||
@@ -386,14 +391,11 @@ static Boolean __syncGo( iORoute inst ) {
       iOSignal isg = ModelOp.getSignal( model, swId );
 
       if( isg != NULL ) {
-        if( StrOp.equals( wSignal.red, swCmd ) )
-          SignalOp.red(isg);
-        else if( StrOp.equals( wSignal.green, swCmd ) )
-          SignalOp.green(isg);
-        else if( StrOp.equals( wSignal.yellow, swCmd ) )
-          SignalOp.yellow(isg);
-        else if( StrOp.equals( wSignal.white, swCmd ) )
-          SignalOp.white(isg);
+        iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+        wSignal.setcmd( cmd, swCmd );
+        wSignal.setpause( cmd, wCtrl.getrouteswtime( wRocRail.getctrl( AppOp.getIni() ) ) * swdelay );
+        swdelay++;
+        SignalOp.cmd(isg, cmd, True);
       }
     }
     else if( StrOp.equals( wOutput.on   , swCmd ) ||

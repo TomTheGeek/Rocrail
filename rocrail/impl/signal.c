@@ -1087,7 +1087,7 @@ static void __checkAction( iOSignal inst ) {
 }
 
 
-static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
+static Boolean __doCmd( iOSignal inst, iONode nodeA, Boolean update ) {
   iOSignalData o = Data(inst);
   iOControl control = AppOp.getControl(  );
   Boolean ok = True;
@@ -1296,6 +1296,44 @@ static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
   nodeA = NULL;
 
   return ok;
+}
+
+
+
+static void __doCmdThread( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOSignal sg = (iOSignal)ThreadOp.getParm( th );
+  iOSignalData data = Data(sg);
+
+  iONode nodeA = (iONode)ThreadOp.getPost(th);
+  if( nodeA != NULL ) {
+    Boolean update = wSwitch.iscmd_update(nodeA);
+    int error = 0;
+    if( wSignal.getpause(nodeA) > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delay command for signal[%s] %dms", SignalOp.getId(sg), wSignal.getpause(nodeA) );
+      ThreadOp.sleep(wSignal.getpause(nodeA));
+    }
+    __doCmd(sg, nodeA, update);
+  }
+  ThreadOp.base.del(th);
+}
+
+
+
+static Boolean _cmd( iOSignal inst, iONode nodeA, Boolean update ) {
+  iOSignalData data = Data(inst);
+
+  if( wSignal.getpause(nodeA) > 0 ) {
+    iOThread th = ThreadOp.inst(NULL, &__doCmdThread, inst);
+    wSwitch.setcmd_update(nodeA, update);
+    ThreadOp.post(th, (obj)nodeA);
+    ThreadOp.start(th);
+  }
+  else {
+    return __doCmd(inst, nodeA, update);
+  }
+
+  return True;
 }
 
 
