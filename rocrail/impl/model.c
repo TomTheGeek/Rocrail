@@ -4516,8 +4516,13 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
 
   fromBlockId = ModelOp.getManagedID(inst, fromBlockId);
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                 "findDest fromBlockID [%s]", fromBlockId );
+  /* Check for selecting shortest block from this block: */
+  if( !selectShortest && fromBlock != NULL ) {
+    iONode props = fromBlock->base.properties(fromBlock);
+    if( wBlock.isselectshortestblock(props) )
+      selectShortest = True;
+  }
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "findDest fromBlockID [%s] selectShortest=%s", fromBlockId, selectShortest?"True":"False" );
 
   /* Lock the semaphore: */
   MutexOp.wait( o->muxFindDest );

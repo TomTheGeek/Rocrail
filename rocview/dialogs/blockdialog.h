@@ -416,6 +416,7 @@ public:
     wxStaticText* m_labTimer2;
     wxTextCtrl* m_Timer2;
     wxCheckBox* m_ForceBlockTimer;
+    wxCheckBox* m_SelectShortestBlock;
     wxButton* m_RouteProps;
     wxButton* m_RouteTest;
     wxPanel* m_Interface;
