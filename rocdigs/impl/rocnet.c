@@ -290,11 +290,12 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
       rnReceipientAddresToPacket( bus, rn, data->seven );
       rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
-      rn[RN_PACKET_LEN] = 4;
+      rn[RN_PACKET_LEN] = 5;
       rn[RN_PACKET_DATA + 0] = cmd;
       rn[RN_PACKET_DATA + 1] = wSwitch.getporttype(node);
       rn[RN_PACKET_DATA + 2] = wSwitch.getdelay(node);
       rn[RN_PACKET_DATA + 3] = addr;
+      rn[RN_PACKET_DATA + 4] = 0;
     }
     else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch CS addr=%d cmd=%d", wSwitch.getaddr1( node ), cmd );
@@ -367,11 +368,12 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
       rnReceipientAddresToPacket( bus, rn, data->seven );
       rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
-      rn[RN_PACKET_LEN] = 4;
+      rn[RN_PACKET_LEN] = 5;
       rn[RN_PACKET_DATA + 0] = cmd;
       rn[RN_PACKET_DATA + 1] = wOutput.getporttype(node);
       rn[RN_PACKET_DATA + 2] = 0;
       rn[RN_PACKET_DATA + 3] = addr;
+      rn[RN_PACKET_DATA + 4] = 0;
     }
     else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output CS addr=%d cmd=%d", addr, cmd );
