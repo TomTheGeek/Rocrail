@@ -2740,6 +2740,7 @@
         <var name="underlined" vt="bool" defval="False"/>
         <var name="italic" vt="bool" defval="False"/>
         <var name="transparent" vt="bool" defval="True"/>
+        <var name="reset" vt="bool" defval="False"/>
         <var name="x" vt="int" defval="0" range="0-*"/>
         <var name="y" vt="int" defval="0" range="0-*"/>
         <var name="z" vt="int" defval="0" range="0-9"/>

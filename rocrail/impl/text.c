@@ -481,6 +481,10 @@ static struct OText* _inst( iONode ini ) {
   /* Initialize data->xxx members... */
   data->props = ini;
 
+  if( wText.isreset(data->props) ) {
+    wText.settext(data->props, "");
+  }
+
   instCnt++;
   return __Text;
 }
