@@ -361,6 +361,11 @@ static iONode __translate( iOrocNet inst, iONode node ) {
 
     if( StrOp.equals( wOutput.getcmd( node ), wOutput.off ) ) {
       cmd = RN_OUTPUT_OFF;
+      if( wOutput.getporttype(node) == wProgram.porttype_macro && wOutput.getparam(node) > 0 ) {
+        addr = wOutput.getparam(node);
+        cmd  = RN_OUTPUT_ON;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output: activate macro %d for off", addr );
+      }
     }
 
     if( StrOp.equals( wSwitch.prot_DEF, wSwitch.getprot(node) ) ) {
