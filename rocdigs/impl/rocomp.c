@@ -20,6 +20,7 @@
 
 
 #include "rocdigs/impl/rocomp_impl.h"
+#include "rocdigs/impl/rocomp/rocomp-const.h"
 
 #include "rocs/public/mem.h"
 #include "rocs/public/usb.h"
@@ -354,15 +355,23 @@ static void __transactor( void* threadinst ) {
     /* Init sequence:
      */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Initialize the CS..." );
-    { byte cmd[8] = {0x06,0x50,0x07}; USBOp.write(data->usb, cmd, 3); }
+    /* set auto inform flags */
+    { byte cmd[8] = {0x06,0x50,0x00,0x00,0x01,0x07}; USBOp.write(data->usb, cmd, 6); }
+
+    /* Xpressnet: Power ON */
     { byte cmd[8] = {0x05,0x40,0x21,0x81,0xA0}; USBOp.write(data->usb, cmd, 5); USBOp.read(data->usb, in, 64);}
-    { byte cmd[8] = {0x03,0x81}; USBOp.write(data->usb, cmd, 2); USBOp.read(data->usb, in, 64);}
+
+    /* Get RMBus data */
+    { byte cmd[8] = {0x03,0x81,0x00}; USBOp.write(data->usb, cmd, 3); USBOp.read(data->usb, in, 64);}
     { byte cmd[8] = {0x03,0x81,0x01}; USBOp.write(data->usb, cmd, 3); USBOp.read(data->usb, in, 64);}
-    { byte cmd[8] = {0x05,0x40,0x21,0x21}; USBOp.write(data->usb, cmd, 4); USBOp.read(data->usb, in, 64);}
+
+    /* Xpressnet: Get version */
+    { byte cmd[8] = {0x05,0x40,0x21,0x21,0x00}; USBOp.write(data->usb, cmd, 5); USBOp.read(data->usb, in, 64);}
+
+    /* Get version */
     { byte cmd[8] = {0x02,0x01}; USBOp.write(data->usb, cmd, 2); USBOp.read(data->usb, in, 64);}
-    { byte cmd[8] = {0x05,0x40,0xF1,0x0A,0xFB}; USBOp.write(data->usb, cmd, 5); USBOp.read(data->usb, in, 64);}
-    { byte cmd[8] = {0x05,0x40,0xF1,0x0B,0xFA}; USBOp.write(data->usb, cmd, 5); USBOp.read(data->usb, in, 64);}
-    { byte cmd[8] = {0x08,0x40,0xE4,0xE0,0x00,0x00,0x08,0x0C}; USBOp.write(data->usb, cmd, 8);}
+
+    /* Get Code */
     { byte cmd[8] = {0x02,0x18}; USBOp.write(data->usb, cmd, 2); USBOp.read(data->usb, in, 64);}
 
   }
