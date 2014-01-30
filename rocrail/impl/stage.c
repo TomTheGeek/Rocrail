@@ -938,7 +938,8 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
     }
     else {
       if( (occ && wStageSection.getlcid(section) == NULL) || ( occ && StrOp.len(wStageSection.getlcid(section)) == 0) ) {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "section[%d] is electrically occupied at sensor %s", i, wStageSection.getfbid(section) );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+            "stage [%s] section[%d] is electrically occupied at sensor [%s]", data->id, i, wStageSection.getfbid(section) );
       }
       break;
     }
