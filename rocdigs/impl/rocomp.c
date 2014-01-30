@@ -114,7 +114,7 @@ static void __translate( iORocoMP inst, iONode node ) {
       byte* outa = allocMem(32);
       outa[0] = 0x80 + 5;
       outa[1] = 5;
-      outa[2] = 0x40;
+      outa[2] = USB_XPRESSNET;
       outa[3] = 0x21;
       outa[4] = 0x80;
       outa[5] = __makeXor(outa+1, 4);
@@ -125,7 +125,7 @@ static void __translate( iORocoMP inst, iONode node ) {
       byte* outa = allocMem(32);
       outa[0] = 0x80 + 4;
       outa[1] = 4;
-      outa[2] = 0x40;
+      outa[2] = USB_XPRESSNET;
       outa[3] = 0x80;
       outa[4] = __makeXor(outa+1, 3);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
@@ -135,7 +135,7 @@ static void __translate( iORocoMP inst, iONode node ) {
       byte* outa = allocMem(32);
       outa[0] = 0x80 + 5;
       outa[1] = 5;
-      outa[2] = 0x40;
+      outa[2] = USB_XPRESSNET;
       outa[3] = 0x21;
       outa[4] = 0x81;
       outa[5] = __makeXor(outa+1, 4);
@@ -160,29 +160,17 @@ static void __translate( iORocoMP inst, iONode node ) {
         speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
     }
 
-    /* PC control 07 40 E3 F0 00 03 */
-    outa[0] = 0x80 + 7;
-    outa[1] = 7;
-    outa[2] = 0x40;
-    outa[3] = 0xE3;
-    outa[4] = 0xF0;
-    outa[5] = addr/256;
-    outa[6] = addr%256;
-    outa[7] = __makeXor(outa+1, 6);
-    ThreadOp.post( data->transactor, (obj)outa );
-
     /* Speed and direction 09 40 E5 13 00 03 90 00 */
     outa = allocMem(32);
-    outa[0] = 0x80 + 9;
-    outa[1] = 9;
-    outa[2] = 0x40;
+    outa[0] = 0x80 + 8;
+    outa[1] = 8;
+    outa[2] = USB_XPRESSNET;
     outa[3] = 0xE5;
-    outa[4] = 0x13;
+    outa[4] = 0x13; /* 128 steps */
     outa[5] = addr/256;
     outa[6] = addr%256;
     outa[7] = speed + (dir?0x80:0x00);
-    outa[8] = 0x00;
-    outa[9] = __makeXor(outa+1, 8);
+    outa[8] = __makeXor(outa+1, 7);
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d velocity=%d dir=%s fn=%d", addr, speed, (dir?"fwd":"rev"), fn );
     ThreadOp.post( data->transactor, (obj)outa );
@@ -191,7 +179,7 @@ static void __translate( iORocoMP inst, iONode node ) {
     outa = allocMem(32);
     outa[0] = 0x80 + 8;
     outa[1] = 8;
-    outa[2] = 0x40;
+    outa[2] = USB_XPRESSNET;
     outa[3] = 0xE4;
     outa[4] = 0xF8;
     outa[5] = addr/256;
@@ -223,7 +211,7 @@ static void __translate( iORocoMP inst, iONode node ) {
 
     outb[0] = 0x80 + 7;
     outb[1] = 7;
-    outb[2] = 0x40;
+    outb[2] = USB_XPRESSNET;
     outb[3] = 0x53;
     outb[4] = addr/256;
     outb[5] = addr%256;
@@ -246,7 +234,7 @@ static void __translate( iORocoMP inst, iONode node ) {
       outb = allocMem(32);
       outb[0] = 0x80 + 7;
       outb[1] = 7;
-      outb[2] = 0x40;
+      outb[2] = USB_XPRESSNET;
       outb[3] = 0x53;
       outb[4] = addr/256;
       outb[5] = addr%256;
