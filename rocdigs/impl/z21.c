@@ -558,7 +558,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
       packet[3] = 0x00;
       packet[4] = 0xE4;
       packet[5] = 0x10+conf; /* speed steps*/
-      packet[6] = addr / 256; /*MSB*/
+      packet[6] = 0xC0 + (addr / 256); /*MSB*/
       packet[7] = addr % 256; /*LSB*/
       packet[8] = (dir?0x80:0x00) + speed;
       packet[9] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8]; /*xor*/
@@ -584,7 +584,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
     packet[3] = 0x00;
     packet[4] = 0xE4;
     packet[5] = 0xF8;
-    packet[6] = addr / 256; /*MSB*/
+    packet[6] = 0xC0 + (addr / 256); /*MSB*/
     packet[7] = addr % 256; /*LSB*/
     packet[8] = (fnstate?0x40:0x00) + fnchanged;
     packet[9] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8]; /*xor*/
@@ -633,7 +633,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
         }
         else {
           packet[5] = 0x30;
-          packet[6] = addr / 256;
+          packet[6] = 0xC0 + (addr / 256);
           packet[7] = addr % 256;
           packet[8] = 0xE4 + ((cv / 256) & 0x03);
           packet[9] = cv % 256;
@@ -681,7 +681,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
         }
         else {
           packet[5] = 0x30;
-          packet[6] = addr / 256;
+          packet[6] = 0xC0 + (addr / 256);
           packet[7] = addr % 256;
           packet[8] = 0xEC + cv / 256;
           packet[9] = cv % 256;
