@@ -28,6 +28,7 @@
 #include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/IO8255.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 
 static int instCnt = 0;
@@ -208,11 +209,21 @@ static struct OIO8255* _inst( const iONode ini ,const iOTrace trc ) {
   SystemOp.inst();
   /* Initialize data->xxx members... */
   data->ini = ini;
+  data->ini8255 = wDigInt.getio8255(data->ini);
   data->iid = StrOp.dup( wDigInt.getiid( ini ) );
+
+  if( data->ini8255 == NULL ) {
+    data->ini8255 = NodeOp.inst(wIO8255.name(), data->ini, ELEMENT_NODE);
+    NodeOp.addChild(data->ini, data->ini8255);
+  }
+
+  data->iomap = wIO8255.getio(data->ini8255);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "io8255 %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "IID = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "IID    = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "offset = 0x%04X", wIO8255.getportoffset(data->ini8255) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "IO-map = 0x%04X", data->iomap );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
 

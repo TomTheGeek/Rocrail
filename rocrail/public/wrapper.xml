@@ -797,7 +797,12 @@
           <var name="speedstep" vt="int" defval="128" range="14,28,128" remark="default decoder speed steps"/>
         </slotserver>
       </loconet>
-
+      
+      <io8255 remark="IO8255 options" wrappername="IO8255">
+        <var name="portoffset" vt="int" defval="768" range="*"  remark="0x300 is the first board."/>
+        <var name="io" vt="int" defval="0" range="0-16777215" remark="A high bit means input port type."/>
+      </io8255>
+          
     </digint>
     <tcp remark="Client service port." wrappername="Tcp">
       <var name="port" vt="int" defval="8051" range="1-65535"/>

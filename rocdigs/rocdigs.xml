@@ -1764,8 +1764,10 @@
     </fun>
     <data>
       <var name="ini" vt="iONode"/>
+      <var name="ini8255" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="run" vt="Boolean"/>
+      <var name="iomap" vt="int"/>
       <var name="reader" vt="iOThread"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
