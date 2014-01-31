@@ -853,6 +853,16 @@ static int __translateVhint(iOLoc inst, const char* V_hint, int V_maxkmh ) {
   int V_min = wLoc.getV_min( data->props );
   int V_cru = wLoc.getV_cru( data->props );
 
+  if( wLoc.gettrain( data->props) != NULL && StrOp.len(wLoc.gettrain( data->props)) > 0 ) {
+    iOOperator train = ModelOp.getOperator(AppOp.getModel(), wLoc.gettrain( data->props) );
+    if( train != NULL ) {
+      int V_max_train = OperatorOp.getVMax(train);
+      if( V_max_train > 0 )
+        V_max = V_max_train;
+    }
+  }
+
+
   if( !wLoc.isdir(data->props) || (wLoc.isdir(data->props) && !wLoc.isplacing( data->props ) ) ){
     if( wLoc.getV_Rmax( data->props ) > 0 ) {
       V_max = wLoc.getV_Rmax( data->props );

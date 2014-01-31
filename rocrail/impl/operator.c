@@ -250,6 +250,12 @@ static const char* _getCargo( struct OOperator* inst ) {
 }
 
 
+static int _getVMax( struct OOperator* inst ) {
+  iOOperatorData data = Data(inst);
+  return wOperator.getV_max(data->props);
+}
+
+
 static int _getLen( struct OOperator* inst, int* trainweight ) {
   iOOperatorData data = Data(inst);
   /* ToDo: Calculate consist length. */

@@ -272,6 +272,7 @@ void OperatorDlg::initLabels() {
   m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_lightgoods ) );
   m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_regional ) );
 
+  m_labVMax->SetLabel( wxGetApp().getMsg( "v_max" ) );
 
   // Buttons
   m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -346,6 +347,8 @@ void OperatorDlg::evaluate() {
     wOperator.setcargo( m_Props, wLoc.cargo_lightgoods );
   else if( cargo == 9 )
     wOperator.setcargo( m_Props, wLoc.cargo_regional );
+
+  wOperator.setV_max( m_Props, m_VMax->GetValue() );
 
 }
 
@@ -439,6 +442,7 @@ void OperatorDlg::initValues() {
   else if( StrOp.equals( wLoc.cargo_regional, wOperator.getcargo( m_Props ) ) )
     cargo = 9;
   m_Cargo->SetSelection( cargo );
+  m_VMax->SetValue( wOperator.getV_max( m_Props ) );
 
 }
 

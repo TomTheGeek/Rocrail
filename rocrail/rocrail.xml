@@ -2185,6 +2185,9 @@
     <fun name="getCargo" vt="const char*">
       <param name="inst" vt="this" remark="Operator instance"/>
     </fun>
+    <fun name="getVMax" vt="int">
+      <param name="inst" vt="this" remark="Operator instance"/>
+    </fun>
     <data>
       <var name="props" vt="iONode"/>
     </data>

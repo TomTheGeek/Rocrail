@@ -2642,7 +2642,8 @@
         <var name="carids" vt="string" defval="" range="*" remark="Comma separated car IDs"/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Operator command."/>
         <var name="cargo" vt="string" defval="none"/>
-        </operator>
+        <var name="V_max" vt="int" defval="0" range="*" remark="Maximal train speed."/>
+      </operator>
     </operatorlist>
 
     <carlist cardinality="1" remark="Car table" wrappername="CarList">
