@@ -858,7 +858,7 @@ static int __translateVhint(iOLoc inst, const char* V_hint, int V_maxkmh ) {
     if( train != NULL ) {
       int V_max_train = OperatorOp.getVMax(train);
       if( V_max_train > 0 )
-        V_max = V_max_train;
+        V_maxkmh = V_max_train;
     }
   }
 
