@@ -2065,16 +2065,18 @@
     <fun name="close" vt="Boolean">
       <param name="inst" vt="this"/>
     </fun>
-    <fun name="read" vt="Boolean">
+    <fun name="read" vt="int">
       <param name="inst" vt="this"/>
       <param name="buf" vt="unsigned char*"/>
       <param name="len" vt="int"/>
-    </fun>
-    <fun name="write" vt="Boolean">
+      <param name="timeout" vt="int"/>
+      </fun>
+    <fun name="write" vt="int">
       <param name="inst" vt="this"/>
       <param name="buf" vt="unsigned char*"/>
       <param name="len" vt="int"/>
-    </fun>
+      <param name="timeout" vt="int"/>
+      </fun>
     <data>
       <var name="husb" vt="void*"/>
       <var name="interfaceNr" vt="int"/>

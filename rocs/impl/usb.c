@@ -26,8 +26,8 @@
 
 void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr);
 Boolean rocs_usb_closeUSB(void* husb, int interfaceNr);
-Boolean rocs_usb_writeUSB(void* husb, byte* out, int len);
-Boolean rocs_usb_readUSB(void* husb, byte* in, int len);
+int rocs_usb_writeUSB(void* husb, byte* out, int len, int timeout);
+int rocs_usb_readUSB(void* husb, byte* in, int len, int timeout);
 
 
 static int instCnt = 0;
@@ -105,16 +105,16 @@ static Boolean _open( struct OUSB* inst ,int vendor ,int product ,int configNr ,
 
 
 /**  */
-static Boolean _read( struct OUSB* inst ,unsigned char* buf ,int len ) {
+static int _read( struct OUSB* inst ,unsigned char* buf ,int len, int timeout ) {
   iOUSBData data = Data(inst);
-  return rocs_usb_readUSB(data->husb, buf, len);
+  return rocs_usb_readUSB(data->husb, buf, len, timeout);
 }
 
 
 /**  */
-static Boolean _write( struct OUSB* inst ,unsigned char* buf ,int len ) {
+static int _write( struct OUSB* inst ,unsigned char* buf ,int len, int timeout ) {
   iOUSBData data = Data(inst);
-  return rocs_usb_writeUSB(data->husb, buf, len);
+  return rocs_usb_writeUSB(data->husb, buf, len, timeout);
 }
 
 

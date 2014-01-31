@@ -344,45 +344,44 @@ static void __transactor( void* threadinst ) {
      */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Initialize the CS..." );
     /* set auto inform flags */
-    { byte cmd[8] = {0x06,0x50,0x00,0x00,0x01,0x07}; USBOp.write(data->usb, cmd, 6); }
+    { byte cmd[8] = {0x06,0x50,0x00,0x00,0x01,0x07}; USBOp.write(data->usb, cmd, 6, data->timeout); }
 
     /* Xpressnet: Power ON */
-    { byte cmd[8] = {0x05,0x40,0x21,0x81,0xA0}; USBOp.write(data->usb, cmd, 5); USBOp.read(data->usb, in, 64);}
+    { byte cmd[8] = {0x05,0x40,0x21,0x81,0xA0}; USBOp.write(data->usb, cmd, 5, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
 
     /* Get RMBus data */
-    { byte cmd[8] = {0x03,0x81,0x00}; USBOp.write(data->usb, cmd, 3); USBOp.read(data->usb, in, 64);}
-    { byte cmd[8] = {0x03,0x81,0x01}; USBOp.write(data->usb, cmd, 3); USBOp.read(data->usb, in, 64);}
+    { byte cmd[8] = {0x03,0x81,0x00}; USBOp.write(data->usb, cmd, 3, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
+    { byte cmd[8] = {0x03,0x81,0x01}; USBOp.write(data->usb, cmd, 3, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
 
     /* Xpressnet: Get version */
-    { byte cmd[8] = {0x05,0x40,0x21,0x21,0x00}; USBOp.write(data->usb, cmd, 5); USBOp.read(data->usb, in, 64);}
+    { byte cmd[8] = {0x05,0x40,0x21,0x21,0x00}; USBOp.write(data->usb, cmd, 5, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
 
     /* Get version */
-    { byte cmd[8] = {0x02,0x01}; USBOp.write(data->usb, cmd, 2); USBOp.read(data->usb, in, 64);}
+    { byte cmd[8] = {0x02,0x01}; USBOp.write(data->usb, cmd, 2, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
 
     /* Get Code */
-    { byte cmd[8] = {0x02,0x18}; USBOp.write(data->usb, cmd, 2); USBOp.read(data->usb, in, 64);}
+    { byte cmd[8] = {0x02,0x18}; USBOp.write(data->usb, cmd, 2, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
 
   }
 
 
   while( data->run && data->usbOK ) {
     Boolean doRead = False;
-    Boolean didRead = False;
+    int didRead = 0;
 
     byte* post = (byte*)ThreadOp.getPost( th );
     if( post != NULL ) {
-      USBOp.write(data->usb, post+1, post[0]&0x7F);
+      USBOp.write(data->usb, post+1, post[0]&0x7F, data->timeout);
       doRead = (post[0] & 0x80) ? True:False;
       freeMem(post);
     }
 
-    if( doRead ) {
-      MemOp.set(in, 0, sizeof(in));
-      didRead = USBOp.read(data->usb, in, 64);
-    }
+    MemOp.set(in, 0, sizeof(in));
+    didRead = USBOp.read(data->usb, in, 64, doRead ? data->timeout:10);
 
-    if( didRead ) {
+    if( didRead > 0 ) {
       /* evaluate */
+
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "evaluate packet..." );
     }
 
@@ -411,12 +410,14 @@ static struct ORocoMP* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.set( trc );
 
   /* Initialize data->xxx members... */
-  data->ini    = ini;
-  data->iid    = StrOp.dup( wDigInt.getiid( ini ) );
+  data->ini     = ini;
+  data->iid     = StrOp.dup( wDigInt.getiid( ini ) );
+  data->timeout = wDigInt.gettimeout( ini );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocomp %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ID %04X:%04X", VENDOR, PRODUCT );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  timeout %dms", data->timeout );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->usb = USBOp.inst();

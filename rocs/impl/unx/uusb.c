@@ -151,32 +151,32 @@ Boolean rocs_usb_closeUSB(void* husb, int interfaceNr) {
 }
 
 
-Boolean rocs_usb_writeUSB(void* husb, byte* out, int len) {
+int rocs_usb_writeUSB(void* husb, byte* out, int len, int timeout) {
   int rc = 0;
 
 #if defined __linux__ &! defined __APPLE__
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %d...", len );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
   if( husb != NULL ) {
-    rc = usb_bulk_write((usb_dev_handle *)husb, 1, out, len, 1000);
+    rc = usb_bulk_write((usb_dev_handle *)husb, 1, out, len, timeout);
   }
 #endif
 
-  return rc == 0 ? True:False;
+  return rc;
 }
 
 
-Boolean rocs_usb_readUSB(void* husb, byte* in, int len) {
+int rocs_usb_readUSB(void* husb, byte* in, int len, int timeout) {
   int rc = -1;
 
 #if defined __linux__ &! defined __APPLE__
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read %d...", len );
   if( husb != NULL ) {
-    rc = usb_bulk_read((usb_dev_handle *)husb, 1, in, len, 1000);
-    if( rc == 0 )
+    rc = usb_bulk_read((usb_dev_handle *)husb, 1, in, len, timeout);
+    if( rc == len )
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, len );
   }
 #endif
 
-  return rc == 0 ? True:False;
+  return rc;
 }

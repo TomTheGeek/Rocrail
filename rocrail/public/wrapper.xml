@@ -799,7 +799,7 @@
       </loconet>
       
       <io8255 remark="IO8255 options" wrappername="IO8255">
-        <var name="portoffset" vt="int" defval="768" range="*"  remark="0x300 is the first board."/>
+        <var name="portoffset" vt="int" defval="256" range="*"  remark="0x100 is the first board."/>
         <var name="io" vt="int" defval="0" range="0-16777215" remark="A high bit means input port type."/>
       </io8255>
           

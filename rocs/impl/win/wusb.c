@@ -30,10 +30,10 @@ Boolean rocs_usb_closeUSB(void* husb, int interfaceNr) {
   return False;
 }
 
-Boolean rocs_usb_writeUSB(void* husb, byte* out, int len) {
-  return False;
+int rocs_usb_writeUSB(void* husb, byte* out, int len, int timeout) {
+  return 0;
 }
 
-Boolean rocs_usb_readUSB(void* husb, byte* in, int len) {
-  return False;
+int rocs_usb_readUSB(void* husb, byte* in, int len, int timeout) {
+  return 0;
 }

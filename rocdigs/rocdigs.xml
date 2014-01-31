@@ -1754,6 +1754,7 @@
       <var name="listenerFun" vt="digint_listener"/>
       <var name="usb" vt="iOUSB"/>
       <var name="usbOK" vt="Boolean"/>
+      <var name="timeout" vt="int"/>
       </data>
   </object>
 
