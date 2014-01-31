@@ -1755,7 +1755,8 @@
       <var name="usb" vt="iOUSB"/>
       <var name="usbOK" vt="Boolean"/>
       <var name="timeout" vt="int"/>
-      </data>
+      <var name="sensor[256]" vt="byte"/>
+    </data>
   </object>
 
   <object name="IO8255" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,usb" include="$rocint/public/digint">

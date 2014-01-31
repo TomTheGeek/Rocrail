@@ -325,6 +325,55 @@ static byte __makeXor(byte* buf, int len) {
 }
 
 
+static void __handleRMBus(iORocoMP roco, byte* packet) {
+  iORocoMPData data = Data(roco);
+  int grp = packet[2];
+  int i = 0;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "evaluate sensor group %d: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X", grp,
+      packet[3+0], packet[3+1], packet[3+2], packet[3+3], packet[3+4],
+      packet[3+5], packet[3+6], packet[3+7], packet[3+8], packet[3+9] );
+
+  for( i = 0; i < 10; i++ ) {
+    int n   = 0;
+    int idx = grp * 10 + i;
+    byte status = packet[3+i];
+    for( n = 0; n < 8; n++ ) {
+      int addr = 1 + grp * 10 + i * 8 + n;
+      byte mask = (1 << n);
+      if( (status & mask) != (data->sensor[idx] & mask) ) {
+        iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        wFeedback.setaddr( nodeC, addr );
+        wFeedback.setstate( nodeC, (status & mask) ? True:False );
+        if( data->iid != NULL )
+          wFeedback.setiid( nodeC, data->iid );
+        if( data->listenerFun != NULL && data->listenerObj != NULL )
+          data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Sensor[%d] %d=%s", idx, addr, (status & mask)?"on":"off");
+      }
+    }
+    data->sensor[idx] = status;
+  }
+}
+
+
+static void __evaluatePacket(iORocoMP roco, byte* in) {
+  iORocoMPData data = Data(roco);
+  int len = in[0];
+  int usb = in[1];
+
+  switch( usb ) {
+  case USB_RMBUS_DATACHANGED:
+    __handleRMBus(roco, in);
+    break;
+  default:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unhandled packet: len=%d usb=0x%02X", len, usb );
+    break;
+  }
+}
+
+
 static void __transactor( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iORocoMP roco = (iORocoMP)ThreadOp.getParm(th);
@@ -381,8 +430,8 @@ static void __transactor( void* threadinst ) {
 
     if( didRead > 0 ) {
       /* evaluate */
-
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "evaluate packet..." );
+      __evaluatePacket(roco, in);
     }
 
     ThreadOp.sleep(10);
