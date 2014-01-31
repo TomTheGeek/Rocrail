@@ -16,6 +16,7 @@
 #define USB_SET_SETTINGS                  0x13
 #define USB_GET_DCCSETTINGS               0x16
 #define USB_SET_DCCSETTINGS               0x17
+#define USB_GET_CODE                      0x18
 #define USB_GET_WIRELESSMODULEVERSION     0x20
 #define USB_XPRESSNET                     0x40
 #define USB_SETAUTOINFORMFLAGS            0x50
