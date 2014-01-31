@@ -2493,6 +2493,7 @@ static void _modify( iOBlock inst, iONode props ) {
     /* re-init timer */
     data->timer  = wBlock.getevttimer( data->props );
     data->timer2 = wBlock.getevttimer2( data->props );
+    data->forceblocktimer = wBlock.isforceblocktimer( data->props );
   }
   else {
     NodeOp.removeAttrByName(data->props, "cmd");
