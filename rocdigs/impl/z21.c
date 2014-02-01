@@ -824,6 +824,79 @@ static void __reportState(iOZ21 inst) {
   }
 }
 
+
+static void __handleLocoNetMultiSense(iOZ21 inst, byte* packet) {
+  iOZ21Data data = Data(inst);
+  byte* msg = packet + 4;
+  int type         = msg[1] & OPC_MULTI_SENSE_MSG;
+  int addr         = ( (msg[1]&0x1F) * 128 ) + msg[2];
+  int boardaddr    = addr/16;
+  int locoaddr     = 0;
+  const char* zone = "";
+  Boolean present  = False;
+  Boolean enter    = (msg[1] & 0x20) != 0 ? True:False;
+  char ident[32];
+
+  boardaddr++;
+  addr++;
+
+  if      ((msg[2]&0x0F) == 0x00) zone = "A";
+  else if ((msg[2]&0x0F) == 0x02) zone = "B";
+  else if ((msg[2]&0x0F) == 0x04) zone = "C";
+  else if ((msg[2]&0x0F) == 0x06) zone = "D";
+  else if ((msg[2]&0x0F) == 0x08) zone = "E";
+  else if ((msg[2]&0x0F) == 0x0A) zone = "F";
+  else if ((msg[2]&0x0F) == 0x0C) zone = "G";
+  else if ((msg[2]&0x0F) == 0x0E) zone = "H";
+
+
+  if (msg[3]==0x7D)
+    locoaddr=msg[4];
+  else
+    locoaddr=msg[3]*128+msg[4];
+
+  switch (type) {
+  case OPC_MULTI_SENSE_PRESENT:  // from transponding app note
+    present  = True;
+    break;
+  case OPC_MULTI_SENSE_ABSENT:
+    present  = False;
+    break;
+  default:
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "*** unsupported multi sense type: 0x%02X (0x%02X)", type, msg[1] );
+    return;
+  }
+
+  {
+    iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+    wFeedback.setaddr( nodeC, addr );
+    wFeedback.setbus( nodeC, wFeedback.fbtype_transponder );
+    wFeedback.setzone( nodeC, zone );
+    wFeedback.setfbtype( nodeC, wFeedback.fbtype_transponder );
+
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+
+    if( present ) {
+      StrOp.fmtb(ident, "%d", locoaddr);
+      wFeedback.setidentifier( nodeC, ident );
+    }
+    wFeedback.setstate( nodeC, present );
+/*
+D0 20 06 7D 01 75
+loconet  0549 Transponder [7] [present] in section [96] zone [D] decoder address [1]
+ */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "BDL[%d] RX[%d] zone [%s] reports [%s] of decoder address [%d]",
+        boardaddr, addr, zone, present?"present":"absend", locoaddr );
+
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+
+}
+
+
 static void __handleLocoNetInput(iOZ21 inst, byte* packet) {
   iOZ21Data data = Data(inst);
   int value = (packet[6] & 0x10) >> 4;
@@ -861,6 +934,9 @@ static void __handleLocoNet(iOZ21 inst, byte* packet) {
     break;
   case OPC_INPUT_REP:
     __handleLocoNetInput(inst, packet);
+    break;
+  case OPC_MULTI_SENSE:
+    __handleLocoNetMultiSense(inst, packet);
     break;
   default:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Loconet: OPC=0x%02X", packet[4] & 0xFF );
