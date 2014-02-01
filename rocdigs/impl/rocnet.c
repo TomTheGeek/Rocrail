@@ -59,6 +59,8 @@
 
 static int instCnt = 0;
 
+static void __shutdownAll(obj inst);
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -805,6 +807,19 @@ static iONode __translate( iOrocNet inst, iONode node ) {
 }
 
 
+static void __shutdownAll(obj inst) {
+  iOrocNetData data = Data(inst);
+  byte* rn = allocMem(32);
+  rn[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
+  rnReceipientAddresToPacket( 0, rn, data->seven );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Shutdown all nodes" );
+  rn[RN_PACKET_ACTION] = RN_STATIONARY_SHUTDOWN;
+  rn[RN_PACKET_LEN] = 1;
+  rn[RN_PACKET_DATA + 0] = 1;
+  ThreadOp.post( data->writer, (obj)rn );
+}
+
+
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
   iOrocNetData data = Data(inst);
@@ -813,14 +828,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
   if( cmd != NULL ) {
     if(StrOp.equals( NodeOp.getName(cmd), wSysCmd.name() ) ) {
       if( StrOp.equals( wSysCmd.getcmd(cmd), wSysCmd.shutdown ) && wSysCmd.getval(cmd) == 1 ) {
-        byte* rn = allocMem(32);
-        rn[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
-        rnReceipientAddresToPacket( 0, rn, data->seven );
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Shutdown all nodes" );
-        rn[RN_PACKET_ACTION] = RN_STATIONARY_SHUTDOWN;
-        rn[RN_PACKET_LEN] = 1;
-        rn[RN_PACKET_DATA + 0] = 1;
-        ThreadOp.post( data->writer, (obj)rn );
+        __shutdownAll(inst);
         ThreadOp.sleep(500);
       }
     }
@@ -848,7 +856,7 @@ static void _halt( obj inst, Boolean poweroff ) {
     rn[RN_PACKET_DATA + 0] = RN_CS_TRACKPOWER_OFF;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
     ThreadOp.post( data->writer, (obj)rn );
-    ThreadOp.sleep(500);
+    ThreadOp.sleep(250);
 
     rn = allocMem(32);
     rnSenderAddresToPacket( wRocNet.getid(data->rnini), rn, data->seven );
@@ -858,7 +866,12 @@ static void _halt( obj inst, Boolean poweroff ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Shutdown" );
     ThreadOp.post( data->writer, (obj)rn );
     /* grab some time to process the request */
-    ThreadOp.sleep(500);
+    ThreadOp.sleep(250);
+  }
+
+  if( wRocNet.isshutdownall(data->rnini) ) {
+    __shutdownAll(inst);
+    ThreadOp.sleep(250);
   }
 
   data->run = False;
@@ -1147,7 +1160,8 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NOP from %d to %d", sndr, rcpt );
     break;
 
-  case RN_STATIONARY_SHUTDOWN: {
+  case RN_STATIONARY_SHUTDOWN:
+  if( sndr != 0 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "node %d has been shutdown", sndr );
 
     StrOp.fmtb( key, "%d-%d", rn[RN_PACKET_NETID], sndr);
