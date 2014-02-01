@@ -1897,6 +1897,8 @@ void Symbol::OnUnLoc(wxCommandEvent& event) {
     iONode cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setid( cmd, wSwitch.getid( m_Props ) );
     wSwitch.setcmd( cmd, wSwitch.unlock );
+    wSwitch.setmanualcmd( cmd, True );
+    wSwitch.setforcecmd( cmd, wxGetKeyState(WXK_CONTROL)?True:False);
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }
