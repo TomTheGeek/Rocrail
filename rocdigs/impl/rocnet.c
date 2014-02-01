@@ -1827,11 +1827,13 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->sack = wRocNet.issack(data->rnini);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "rocNET %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid        = %s", wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib     = %s", wDigInt.getsublib( ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "crc        = %s", data->crc ? "on":"off" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "secure ack = %s", data->sack ? "on":"off" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Rocnet %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  iid          = %s", wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sublib       = %s", wDigInt.getsublib( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  crc          = %s", data->crc ? "on":"off" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  secure ack   = %s", data->sack ? "on":"off" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  watchdog     = %s", wRocNet.iswd(data->rnini) ? "on":"off" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  shutdown all = %s", wRocNet.isshutdownall(data->rnini) ? "on":"off" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
 
@@ -1865,6 +1867,9 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->rnWrite      = rnUDPWrite;
     data->rnAvailable  = rnUDPAvailable;
     data->run = True;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast address [%s]", wRocNet.getaddr(data->rnini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  multicast port    [%d]", wRocNet.getport(data->rnini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib [%s] is not supported", wDigInt.getsublib( ini ) );
