@@ -1373,7 +1373,8 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
         continue;
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "section [%d] is electrically occupied", wStageSection.getidx(section) );
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
+            "stage [%s] section[%d] is electrically occupied", data->id, wStageSection.getidx(section) );
       }
     }
 
