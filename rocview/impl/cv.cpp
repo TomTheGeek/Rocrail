@@ -952,6 +952,9 @@ void CV::doCV( int command, int index, int value ) {
 
 
   update4POM();
+  if( m_LocProps != NULL ) {
+    wProgram.setstrval1(cmd, wLoc.getprot(m_LocProps));
+  }
   wProgram.setcmd( cmd, command );
   wProgram.setaddr( cmd, addr );
   wProgram.setdecaddr( cmd, addr );

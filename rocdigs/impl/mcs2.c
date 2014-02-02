@@ -406,10 +406,21 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     int cv = wProgram.getcv( node );
     int value = wProgram.getvalue( node );
     int addr = wProgram.getaddr( node );
+    int addroffset = 0;
 
     if( wProgram.getidentifier(node) != NULL && StrOp.len(wProgram.getidentifier(node))  > 0 ) {
       addr = atoi(wProgram.getidentifier(node));
     }
+
+    if( StrOp.equals( wProgram.getstrval1( node ), wLoc.prot_N ) ) {
+      addroffset = 0xC000;
+      /* DCC loc adress range start */
+    }
+    else if( StrOp.equals( wProgram.getstrval1( node ), wLoc.prot_P ) ) {
+      addroffset = 0x4000;
+      /* MFX loc address range start */
+    }
+    addr += addroffset;
 
     if( wProgram.getcmd( node ) == wProgram.get ) {
       byte* out = allocMem(32);
