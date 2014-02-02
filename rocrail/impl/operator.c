@@ -252,7 +252,21 @@ static const char* _getCargo( struct OOperator* inst ) {
 
 static int _getVMax( struct OOperator* inst ) {
   iOOperatorData data = Data(inst);
-  return wOperator.getV_max(data->props);
+  int vmax = wOperator.getV_max(data->props);
+  iOStrTok tok = StrTokOp.inst(wOperator.getcarids(data->props), ',');
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    iOCar car = ModelOp.getCar(AppOp.getModel(), StrTokOp.nextToken(tok) );
+    if( car != NULL ) {
+      int vmaxcar = CarOp.getVMax(car);
+      if( vmaxcar > 0 ) {
+        if( vmax == 0 || vmaxcar < vmax)
+          vmax = vmaxcar;
+      }
+    }
+  }
+  StrTokOp.base.del(tok);
+
+  return vmax;
 }
 
 

@@ -498,6 +498,11 @@ static Boolean _isCommuter( iOCar inst ) {
   return wCar.iscommuter(data->props);
 }
 
+static int _getVMax( iOCar inst ) {
+  iOCarData data = Data(inst);
+  return wCar.getV_max(data->props);
+}
+
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 #include "rocrail/impl/car.fm"
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/

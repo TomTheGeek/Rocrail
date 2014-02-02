@@ -211,6 +211,7 @@ void CarDlg::initLabels() {
   m_labWeight->SetLabel( wxGetApp().getMsg( "weight" ) );
   m_labManuId->SetLabel( wxGetApp().getMsg( "manufactured_ID" ) );
   m_labRemark->SetLabel( wxGetApp().getMsg( "remark" ) );
+  m_labVMax->SetLabel( wxGetApp().getMsg( "v_max" ) );
 
   // Interface
   m_labBus->SetLabel( wxGetApp().getMsg( "bus" ) );
@@ -549,6 +550,7 @@ void CarDlg::initValues() {
   m_WeightLoaded->SetValue( wCar.getweight_loaded( m_Props ) );
   m_ManuId->SetValue( wxString(wCar.getmanuid( m_Props ),wxConvUTF8) );
   m_Remark->SetValue( wxString(wCar.getremark( m_Props ),wxConvUTF8) );
+  m_VMax->SetValue( wCar.getV_max( m_Props ) );
 
   // Init Interface
   char* str = StrOp.fmt( "%d", wCar.getbus( m_Props ) );
@@ -670,6 +672,7 @@ bool CarDlg::evaluate(){
 
   wCar.setmanuid( m_Props, m_ManuId->GetValue().mb_str(wxConvUTF8) );
   wCar.setremark( m_Props, m_Remark->GetValue().mb_str(wxConvUTF8) );
+  wCar.setV_max( m_Props, m_VMax->GetValue() );
 
   // evaluate Interface
   int val = atoi( m_Bus->GetValue().mb_str(wxConvUTF8) );

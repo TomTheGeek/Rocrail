@@ -2709,6 +2709,7 @@
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Car command."/>
         <var name="placing" vt="bool" defval="True"/>
         <var name="commuter" vt="bool" defval="false" remark="Commuter train?"/>
+        <var name="V_max" vt="int" defval="0" range="*" remark="Maximal car speed."/>
         <fundef cardinality="n"/>
       </car>
     </carlist>

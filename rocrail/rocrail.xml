@@ -2134,6 +2134,9 @@
     <fun name="isCommuter" vt="Boolean">
       <param name="inst" vt="this" remark="Car instance"/>
     </fun>
+    <fun name="getVMax" vt="int">
+      <param name="inst" vt="this" remark="Car instance"/>
+    </fun>
     <data>
       <var name="props" vt="iONode"/>
       <var name="fx[32]" vt="Boolean"/>
