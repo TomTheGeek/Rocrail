@@ -3214,6 +3214,7 @@ static void __initFieldRunner( void* threadinst ) {
 
     /* Flip the switch. */
     wSwitch.setcmd( cmd, wSwitch.flip );
+    wSwitch.setinitfield( cmd, True );
     SwitchOp.cmd( sw, cmd, False, 0, &error, NULL );
 
     ThreadOp.sleep( pause );
@@ -3221,6 +3222,7 @@ static void __initFieldRunner( void* threadinst ) {
     /* Set the switch. */
     cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     wSwitch.setcmd( cmd, wSwitch.flip );
+    wSwitch.setinitfield( cmd, True );
     SwitchOp.cmd( sw, cmd, True, 0, &error, NULL );
 
     sw = (iOSwitch)MapOp.next( o->switchMap );

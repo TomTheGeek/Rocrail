@@ -1598,6 +1598,7 @@
         <const name="testoff" vt="string" val="testoff"/>
         <const name="unlock" vt="string" val="unlock" remark="Unlock this switch. (Manually)"/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
+        <var name="initfield" vt="bool" defval="false"/>
         <var name="testing" vt="bool" defval="false"/>
         <var name="manualcmd" vt="bool" defval="false" remark="Manual command issued from a client."/>
         <var name="forcecmd" vt="bool" defval="false" remark="Force command."/>
