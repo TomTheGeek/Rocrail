@@ -879,6 +879,7 @@ void RocProDlg::doCV(int command, int nr, int value) {
     wProgram.setdecaddr( cmd, addr );
     wProgram.setfilename( cmd, wLoc.getid( m_LocoProps ) );
     wProgram.setidentifier( cmd, wLoc.getidentifier( m_LocoProps ) );
+    wProgram.setstrval1(cmd, wLoc.getprot(m_LocoProps));
   }
   wProgram.setcv( cmd, nr );
   wProgram.setvalue( cmd, value );
