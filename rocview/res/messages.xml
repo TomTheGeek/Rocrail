@@ -904,7 +904,7 @@
     <pt txt="Ligado"/>
     <bs txt="Uključen"/>
     <nb txt="Strøm På"/>
-    <pl txt="Włącz" tip="Włącza zasilanie"/>
+    <pl txt="Włącz" tip="Włącz zasilanie"/>
     <zh_TW txt="開啟電源"/>
     <fi txt="Virta päälle" tip="Laita virta päälle"/>
     <id txt="Power Hidup"/>
@@ -1004,7 +1004,7 @@
     <pt txt="Controlo da Loc"/>
     <cs txt="Řízení lokomotivy" tip="Panel pro ovládání lokomotiv"/>
     <nb txt="Lok Kontroll"/>
-    <pl txt="Sterowanie lokomotywą" tip="Okno dialogowe sterowania lokomotywą."/>
+    <pl txt="Sterowanie lokomotywą" tip="Sterowanie lokomotywą"/>
     <zh_TW txt="機關車控制"/>
     <fi txt="Veturien hallinta" tip="Veturien hallinta."/>
     <id txt="Kontrol Lokomotif"/>
@@ -1037,7 +1037,7 @@
     <pt txt="controlo de interruptor"/>
     <cs txt="Ovládání výhybek" tip="Panelpro zkoušení výhybek"/>
     <nb txt="Penskontroll"/>
-    <pl txt="Sterowanie rozjazdami" tip="Okno dialogowe do testowania rozjazdów"/>
+    <pl txt="Sterowanie rozjazdami" tip="Sterowanie rozjazdami"/>
     <zh_TW txt="道岔控制"/>
     <fi txt="Vaihteiden hallinta" tip="Vaihteiden testaus."/>
     <id txt="Saklar Kontrol"/>
@@ -1137,7 +1137,7 @@
     <pt txt="Iniciar todas as locs"/>
     <cs txt="Zapni všechny lokomotivy" tip="Přepni všechny lokomotivy na automatické řízení"/>
     <nb txt="Start alle lok"/>
-    <pl txt="Uruchom wszystkie lokomotywy" tip="Włącza tryb automatyczny we wszystkich lokomotywach."/>
+    <pl txt="Uruchom wszystkie lokomotywy" tip="Włącz tryb automatyczny we wszystkich lokomotywach."/>
     <zh_TW txt="啟動所有機關車"/>
     <fi txt="Käynnistä kaikki veturit" tip="Aseta kaikki  veturit automaattiajolle"/>
     <id txt="Jalankan semua lokomotif"/>
@@ -1170,7 +1170,7 @@
     <pt txt="Parar todas as locs"/>
     <cs txt="Zastav všechny lokomotivy" tip="Přepni všechny lokomotivy na ruční řízení"/>
     <nb txt="Stopp alle lok"/>
-    <pl txt="Zatrzymaj wszystkie lokomotywy" tip="Włącza tryb sterowania ręcznego we wszystkich lokomotywach."/>
+    <pl txt="Zatrzymaj wszystkie lokomotywy" tip="Włącz tryb sterowania ręcznego we wszystkich lokomotywach."/>
     <zh_TW txt="停止所有機關車"/>
     <fi txt="Pysäytä kaikki veturit" tip="Aseta kaikki veturit manuualiseen tilaan"/>
     <id txt="Hentikan semua lokomotif"/>
@@ -1203,7 +1203,7 @@
     <pt txt="Iniciar locomotiva"/>
     <cs txt="Zapni lokomotivu" tip="Přepni lokomotivu na automatické řízení"/>
     <nb txt="Start lokomotiv"/>
-    <pl txt="Uruchom lokomotywę" tip="Włącza tryb automatyczny w lokomotywie."/>
+    <pl txt="Uruchom lokomotywę" tip="Włącz tryb automatyczny w lokomotywie."/>
     <zh_TW txt="啟動單一機關車"/>
     <fi txt="Käynnistä veturi" tip="Aseta veturi automaattiajolle"/>
     <id txt="Jalankan lokomotif"/>
@@ -1236,7 +1236,7 @@
     <pt txt="Parar locomotiva automaticamente"/>
     <cs txt="Zastav automaticky řízenou lokomotivu" tip="Přepni lokomotivu na ruční řízení"/>
     <nb txt="Stopp lokomotiv automatikk"/>
-    <pl txt="Zatrzymaj automatykę lokomotywy" tip="Włącza tryb sterowania ręcznego lokomotywą."/>
+    <pl txt="Zatrzymaj automatykę lokomotywy" tip="Włącz tryb sterowania ręcznego lokomotywą."/>
     <id txt="Hentikan lokomotif secara otomatis"/>
     <en_AU txt="Stop locomotive automat" tip="Put locomotive in manual mode."/>
     <en_CA txt="Stop locomotive automat" tip="Put locomotive in manual mode."/>
@@ -1632,7 +1632,7 @@
     <ru txt="Авторежим" tip="Включить автоматический режим."/>
     <pt txt="Modo automático"/>
     <nb txt="Auto modus"/>
-    <pl txt="Tryb automatyczny" tip="Włącza tryb automatyczny"/>
+    <pl txt="Tryb automatyczny" tip="Włącz tryb automatyczny"/>
     <zh_TW txt="自動模式"/>
     <id txt="Moda otomatis"/>
     <en_AU txt="Auto mode" tip="Switch auto mode on."/>
@@ -3927,7 +3927,7 @@
     <sl txt="Trismerno"/>
     <pt_BR txt="Desvio triplo"/>
     <fi txt="Kolmoisvaihde"/>
-    <pl txt="Potrójny"/>
+    <pl txt="Rozjazd potrójny"/>
   </Msg>
   <Msg id="additem">
     <de txt="Symbol hinzufügen"/>
@@ -8796,7 +8796,7 @@
     <pt txt="Direcção"/>
     <bs txt="Smjer"/>
     <nb txt="Retning"/>
-    <pl txt="Kierunkowy"/>
+    <pl txt="Kierunek"/>
     <ca txt="Unidireccional"/>
     <id txt="Arah"/>
     <en_AU txt="Direction"/>
@@ -8828,7 +8828,7 @@
     <bs txt="Oba smjera"/>
     <cs txt="Oba směry"/>
     <nb txt="Begge retninger"/>
-    <pl txt="W obie strony"/>
+    <pl txt="Kierunek w obie strony"/>
     <ca txt="Ambdós sentits"/>
     <id txt="Kedua arah"/>
     <en_AU txt="Both directions"/>
@@ -12116,9 +12116,9 @@
     <pt txt="Negar locomotiva"/>
     <nb txt="Avslå lok"/>
     <ca txt="Rebutja la locomotora"/>
-    <en_AU txt="Deny Loco"/>
-    <en_CA txt="Deny Loco"/>
-    <en_GB txt="Deny Loco"/>
+    <en_AU txt="Exclude"/>
+    <en_CA txt="Exclude"/>
+    <en_GB txt="Exclude"/>
     <ro txt="Refuză locomotiva"/>
     <sr_latin txt="Isključi"/>
     <zh_CN txt="禁用机车"/>
@@ -12145,9 +12145,9 @@
     <pt txt="Permitir locomotiva"/>
     <nb txt="Tillat lok"/>
     <ca txt="Permet la locomotora"/>
-    <en_AU txt="Allow Loco"/>
-    <en_CA txt="Allow Loco"/>
-    <en_GB txt="Allow Loco"/>
+    <en_AU txt="Include"/>
+    <en_CA txt="Include"/>
+    <en_GB txt="Include"/>
     <ro txt="Acceptă locomotiva"/>
     <sr_latin txt="Uključi"/>
     <zh_CN txt="允许的机车"/>
@@ -23755,6 +23755,7 @@
     <fr txt="deux chemins"/>
     <en_AU txt="Twoway"/>
     <en_CA txt="Twoway"/>
+    <pl txt="Rozjazd podwójny"/>
   </Msg>
   <Msg id="departdelay">
     <en txt="Depart delay"/>
@@ -27200,5 +27201,8 @@
     <it txt="Pausa comando"/>
     <ru txt="Командная пауза"/>
     <sl txt="Premor za ukaz"/>
+    <en_AU txt="Command pause"/>
+    <en_CA txt="Command pause"/>
+    <en_GB txt="Command pause"/>
   </Msg>
 </Messages>
