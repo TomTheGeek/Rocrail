@@ -593,7 +593,7 @@ void RocnetNodeDlg::initNodeList() {
       cat = *plocation;
     }
     char key[256] = {'\0'};
-    StrOp.fmtb(key, "[%s] %05d", wRocNetNode.getmnemonic(rnnode), wRocNetNode.getid(rnnode) );
+    StrOp.fmtb(key, "[%s] %05d %s", wRocNetNode.getmnemonic(rnnode), wRocNetNode.getid(rnnode), wRocNetNode.getnickname(rnnode) );
     MapOp.put( m_NodeMap, key, (obj)rnnode);
     wxTreeItemId child = m_NodeTree->AppendItem( cat, wxString(key,wxConvUTF8) );
     MapOp.put(m_TreeItemMap, key, (obj)new wxTreeItemId(child.m_pItem) );
