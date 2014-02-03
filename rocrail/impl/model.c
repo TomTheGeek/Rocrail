@@ -3224,9 +3224,27 @@ static void __initFieldRunner( void* threadinst ) {
     wSwitch.setcmd( cmd, wSwitch.flip );
     wSwitch.setinitfield( cmd, True );
     SwitchOp.cmd( sw, cmd, True, 0, &error, NULL );
+    ThreadOp.sleep( pause );
+
+    if( SwitchOp.getAddrKey2(sw) != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sw [%s] has two motors: flip again", SwitchOp.getId( sw ) );
+      cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setcmd( cmd, wSwitch.flip );
+      wSwitch.setinitfield( cmd, True );
+      SwitchOp.cmd( sw, cmd, True, 0, &error, NULL );
+      ThreadOp.sleep( pause );
+
+      if( !StrOp.equals( wSwitch.gettype( SwitchOp.base.properties(sw) ), wSwitch.threeway ) ) {
+        cmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+        wSwitch.setcmd( cmd, wSwitch.flip );
+        wSwitch.setinitfield( cmd, True );
+        SwitchOp.cmd( sw, cmd, True, 0, &error, NULL );
+        ThreadOp.sleep( pause );
+      }
+
+    }
 
     sw = (iOSwitch)MapOp.next( o->switchMap );
-    ThreadOp.sleep( pause );
   }
 
   ThreadOp.sleep( pause );
