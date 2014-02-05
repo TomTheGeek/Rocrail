@@ -503,7 +503,7 @@
     <ru txt="Подключиться к" tip="Соединиться с сервером Rocrail."/>
     <pt txt="Ligar a"/>
     <nb txt="Koble til"/>
-    <pl txt="Połącz z" tip="Łączy z serwerem Rocrail."/>
+    <pl txt="Połącz z" tip="Połącz z serwerem Rocrail."/>
     <zh_TW txt="連接至"/>
     <fi txt="Yhdistä" tip="Yhdistä Rocrail-palvelimeen."/>
     <id txt="Sambung ke"/>
@@ -537,7 +537,7 @@
     <ru txt="Открыть" tip="Открыть план пути"/>
     <pt txt="Abrir"/>
     <nb txt="Åpne"/>
-    <pl txt="Otwórz" tip="Otwiera plan torowiska."/>
+    <pl txt="Otwórz" tip="Otwórz plan torowiska."/>
     <zh_TW txt="開啟"/>
     <fi txt="Avaa" tip="Avaa ratasuunnitelma."/>
     <id txt="Buka"/>
@@ -637,7 +637,7 @@
     <ru txt="Сохранить" tip="Сохранить план пути"/>
     <pt txt="Guardar"/>
     <nb txt="Lagre"/>
-    <pl txt="Zapisz" tip="Zapisuje plan torowiska."/>
+    <pl txt="Zapisz" tip="Zapisz plan torowiska."/>
     <zh_TW txt="儲存"/>
     <fi txt="Tallenna" tip="Tallenna ratasuunnitelma."/>
     <id txt="Simpan"/>
@@ -904,7 +904,7 @@
     <pt txt="Ligado"/>
     <bs txt="Uključen"/>
     <nb txt="Strøm På"/>
-    <pl txt="Włącz" tip="Włącz zasilanie"/>
+    <pl txt="Włącz" tip="Zasilanie"/>
     <zh_TW txt="開啟電源"/>
     <fi txt="Virta päälle" tip="Laita virta päälle"/>
     <id txt="Power Hidup"/>
@@ -1170,7 +1170,7 @@
     <pt txt="Parar todas as locs"/>
     <cs txt="Zastav všechny lokomotivy" tip="Přepni všechny lokomotivy na ruční řízení"/>
     <nb txt="Stopp alle lok"/>
-    <pl txt="Zatrzymaj wszystkie lokomotywy" tip="Włącz tryb sterowania ręcznego we wszystkich lokomotywach."/>
+    <pl txt="Zatrzymaj wszystkie lokomotywy" tip="Tryb sterowania ręcznego we wszystkich lokomotywach."/>
     <zh_TW txt="停止所有機關車"/>
     <fi txt="Pysäytä kaikki veturit" tip="Aseta kaikki veturit manuualiseen tilaan"/>
     <id txt="Hentikan semua lokomotif"/>
@@ -1632,7 +1632,7 @@
     <ru txt="Авторежим" tip="Включить автоматический режим."/>
     <pt txt="Modo automático"/>
     <nb txt="Auto modus"/>
-    <pl txt="Tryb automatyczny" tip="Włącz tryb automatyczny"/>
+    <pl txt="Tryb automatyczny" tip="Tryb automatyczny"/>
     <zh_TW txt="自動模式"/>
     <id txt="Moda otomatis"/>
     <en_AU txt="Auto mode" tip="Switch auto mode on."/>
@@ -3729,7 +3729,7 @@
     <en_GB txt="Left"/>
     <sr_latin txt="Levo"/>
     <ja txt="左"/>
-    <pl txt="Lewy"/>
+    <pl txt="Do lewej"/>
     <zh_CN txt="向左"/>
     <sl txt="Levo"/>
     <pt_BR txt="Esquerda"/>
@@ -6918,7 +6918,7 @@
     <sl txt="Privzeto"/>
     <pt_BR txt="Padrão"/>
     <fi txt="Oletus"/>
-    <pl txt="Domyślnie"/>
+    <pl txt="Domyślny"/>
   </Msg>
   <Msg id="fromto">
     <de txt="Von - Nach"/>
@@ -11952,6 +11952,7 @@
     <sl txt="OpenDecoder"/>
     <pt_BR txt="Decodificador Aberto"/>
     <fi txt="OpenDecoder"/>
+    <pl txt="OpenDecoder"/>
   </Msg>
   <Msg id="red">
     <de txt="rot"/>
@@ -12328,6 +12329,7 @@
     <sl txt="Večvrstično"/>
     <pt_BR txt="Multi linha"/>
     <fi txt="Monirivinen"/>
+    <pl txt="Wielowierszowo"/>
   </Msg>
   <Msg id="usage">
     <de txt="Benutzung"/>
@@ -14612,7 +14614,7 @@
     <sl txt="Izklopi"/>
     <pt_BR txt="Desligar"/>
     <fi txt="Sammuta"/>
-    <pl txt="Skręć"/>
+    <pl txt="Zakręt"/>
   </Msg>
   <Msg id="thrown">
     <de txt="Abzweigend"/>
@@ -16130,7 +16132,7 @@
     <sl txt="Časovna omejitev dogodka" tip="Čas čakanja na dogodek v sekundah."/>
     <pt_BR txt="Limite de tempo do evento" tip="Tempo de espera para um evento em segundos."/>
     <fi txt="Tapahtuman aikakatkaisu" tip="Tapahtuman odotusaika sekunneissa."/>
-    <pl txt="Przekroczenie maksymalnego czasu zdarzenia"/>
+    <pl txt="Przekroczenie maksymalnego czasu zdarzenia" tip="Czas oczekiwania na zdarzenia w sekundach."/>
   </Msg>
   <Msg id="accessory">
     <de txt="Zubehör"/>
@@ -16245,6 +16247,7 @@
     <sl txt="Preveri Tx"/>
     <pt_BR txt="Verificar Transmissão (TX)"/>
     <fi txt="Tarkista TX"/>
+    <pl txt="Sprawdź Tx"/>
   </Msg>
   <Msg id="signalreset">
     <de txt="Signal zurücksetzen"/>
@@ -17360,6 +17363,7 @@
     <sl txt="Ime"/>
     <pt_BR txt="Nome do caminho"/>
     <fi txt="Ajonimi"/>
+    <pl txt="Koleje"/>
   </Msg>
   <Msg id="era">
     <de txt="Epoche"/>
@@ -17389,6 +17393,7 @@
     <sl txt="Era"/>
     <pt_BR txt="Era"/>
     <fi txt="Aikakausi"/>
+    <pl txt="Era"/>
   </Msg>
   <Msg id="subtype">
     <de txt="Untergruppe"/>
@@ -17476,6 +17481,7 @@
     <sl txt="Naslov polarizacije."/>
     <pt_BR txt="Endereço de polarização"/>
     <fi txt="Polarisaatio-osoite"/>
+    <pl txt="Adres polaryzacji"/>
   </Msg>
   <Msg id="ttbridgepolarization">
     <en txt="Bridge polarization"/>
@@ -17639,6 +17645,7 @@
     <pt_BR txt="Parar na limpeza"/>
     <sv txt="Stanna vid rensning"/>
     <fi txt="Pysäytä tyhjennyksen vuoksi"/>
+    <pl txt="Zatrzymaj się podczas zerowania"/>
   </Msg>
   <Msg id="useshortinevent">
     <en txt="Use shortin event"/>
@@ -17663,6 +17670,7 @@
     <pt_BR txt="Usar evento shortin"/>
     <sv txt="Använd kortin händelse"/>
     <fi txt="Käytä Shortin-tapahtumaa"/>
+    <pl txt="Użyj krótkich zdarzeń"/>
   </Msg>
   <Msg id="inatpre2in">
     <en txt="Stop at pre2in event"/>
@@ -17687,6 +17695,7 @@
     <pt_BR txt="Parar no evento pre2in"/>
     <sv txt="Stanna vid pre2in händelse"/>
     <fi txt="Pysäytä Pre2in-tapahtumassa"/>
+    <pl txt="Zatrzymaj w przypadku zdarzenia pre2in"/>
   </Msg>
   <Msg id="routing">
     <en txt="Routing"/>
@@ -19935,6 +19944,7 @@
     <sl txt="Uporabite stolpični način za odpremo"/>
     <pt_BR txt="Usar coluna de modo para enviar"/>
     <fi txt="Käytä tilasaraketta lähettämisessä"/>
+    <pl txt="Użyj tryb kolumn do wysyłania"/>
   </Msg>
   <Msg id="poweroffatghost">
     <en txt="Power off at ghost train"/>
@@ -21328,6 +21338,7 @@
     <pt_BR txt="Correção de eventos"/>
     <sv txt="Händelserättning"/>
     <fi txt="Tapahtumakorjaus"/>
+    <pl txt="Korekta zdarzenia"/>
   </Msg>
   <Msg id="relay">
     <en txt="Relay"/>
@@ -21373,6 +21384,7 @@
     <pt_BR txt="Contar vagões antes de disparar eventos."/>
     <sv txt="Räkna vagnar innan start av händelse"/>
     <fi txt="Laske vaunut ennen tapahtuman käynnistystä"/>
+    <pl txt="Liczba wagonów przed wywołaniem zdarzeń."/>
   </Msg>
   <Msg id="odsernum">
     <en txt="Serial Number" tip="OpenDCC serial number"/>
@@ -22896,6 +22908,7 @@
     <sv txt="Korta händelser"/>
     <fi txt="Lyhyet taphtumat"/>
     <en_CA txt="Short events"/>
+    <pl txt="Krótkie zdarzenia"/>
   </Msg>
   <Msg id="startofday">
     <en txt="Start of day"/>
@@ -23121,6 +23134,7 @@
     <fi txt="Laukaise lohkotapahtumat"/>
     <en_AU txt="Trigger block events"/>
     <en_CA txt="Trigger block events"/>
+    <pl txt="Wyzwalacz zdarzeń blokowych"/>
   </Msg>
   <Msg id="locofilter">
     <en txt="Loco view filter"/>
@@ -23700,6 +23714,7 @@
     <fr txt="numero de l'evenement"/>
     <en_AU txt="Event Nr."/>
     <en_CA txt="Event Nr."/>
+    <pl txt="Zdarzenie Nr."/>
   </Msg>
   <Msg id="triggerlowevents">
     <en txt="Trigger low events after 100ms"/>
@@ -23717,6 +23732,7 @@
     <fi txt="Aktivoi matalat tapahtumat 100 ms:n jälkeen"/>
     <en_AU txt="Trigger low events after 100ms"/>
     <en_CA txt="Trigger low events after 100ms"/>
+    <pl txt="Aktywuj niskie zdarzenia po 100ms"/>
   </Msg>
   <Msg id="showsecondhand">
     <en txt="Show secondhand"/>
@@ -23855,6 +23871,7 @@
     <fi txt="Käsittele opastintapahtumat"/>
     <en_AU txt="Process signal events"/>
     <en_CA txt="Process signal events"/>
+    <pl txt="Przetwarzanie zdarzeń sygnałowych"/>
   </Msg>
   <Msg id="overwritestatus">
     <en txt="Overwrite status"/>
@@ -24038,7 +24055,7 @@
   <Msg id="keypath">
     <en txt="Key path"/>
     <nl txt="Sleutel map"/>
-    <de txt="Spenden-Schlüssel-Verzeichnis"/>
+    <de txt="Spenden-Schlüssel-Pfad"/>
     <es txt="Directorio de la clave de registro"/>
     <it txt="Percorso chiavi"/>
     <sr_latin txt="Putanja ključa"/>
@@ -27081,6 +27098,7 @@
     <de txt="Alle Geschwindigkeitsstufen verwenden"/>
     <en_AU txt="Use all speed steps"/>
     <en_CA txt="Use all speed steps"/>
+    <pl txt="Użyj wszystkich stopni prędkości"/>
   </Msg>
   <Msg id="discover">
     <en txt="Discover"/>
