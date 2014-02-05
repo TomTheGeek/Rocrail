@@ -1374,6 +1374,10 @@ static void __checkActions( iOControl control, int seconds ) {
   iOModel model = AppOp.getModel();
   iOControlData data = Data(control);
 
+  char state[64] = {'\0'};
+  struct tm* ltm = localtime( &data->time );
+  StrOp.fmtb(state, "%02d:%02d", ltm->tm_hour, ltm->tm_min );
+
   if( model != NULL ) {
     iONode plan   = ModelOp.getModel( model );
     if( plan != NULL ) {
@@ -1387,6 +1391,29 @@ static void __checkActions( iOControl control, int seconds ) {
           action = wActionList.nextac( aclist, action );
         };
       }
+
+      if( seconds == 60 ) {
+        iONode system = wPlan.getsystem(plan);
+        if( system != NULL ) {
+          iONode action = wSystemActions.getactionctrl(system);
+          /* loop over all actions */
+          while( action != NULL ) {
+            if( StrOp.equals(state, wActionCtrl.getstate( action )) )
+            {
+              iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
+              if( Action != NULL ) {
+                ActionOp.exec(Action, action);
+              }
+            }
+            else {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "action state does not match: [%s-%s]",
+                  wActionCtrl.getstate( action ), state );
+            }
+            action = wSystemActions.nextactionctrl( system, action );
+          }
+        }
+      }
+
     }
   }
 
