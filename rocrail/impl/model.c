@@ -4286,8 +4286,14 @@ static iORoute _calcRouteFromCurBlock( iOModel inst, iOList stlist, const char* 
         if( destBlock != NULL && StrOp.equals( gotoBlock, destBlock->base.id(destBlock) ) ) {
           return routeref;
         }
+        else if( destBlock != NULL && routeref != NULL ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "using alternative route [%s] to block [%s]",
+              RouteOp.getId(routeref), destBlock->base.id(destBlock) );
+          return routeref;
+        }
         else {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route [%s] to block [%s] is not usable", RouteOp.getId(route), gotoBlock );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route [%s] to block [%s] is not usable (destblock=%s, routeref=%s)",
+              RouteOp.getId(route), gotoBlock, destBlock != NULL ? destBlock->base.id(destBlock):"-", routeref!=NULL ? RouteOp.getId(routeref):"-" );
           return NULL;
         }
 
@@ -4925,6 +4931,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   MutexOp.post( o->muxFindDest );
 
   /* TODO: return the iIBlockBase interface; could be a FY */
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "blockBest=0x%X gotoinwrongdir=%d",blockBest , gotoinwrongdir );
   return gotoinwrongdir?NULL:blockBest;
 }
 
