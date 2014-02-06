@@ -1277,8 +1277,14 @@ static void _exec( struct OAction* inst, iONode actionctrl ) {
 
   if( wAction.istimed(data->action) && wAction.isevery(data->action) && actionctrl != NULL) {
     data->enabled = StrOp.equals( wOutput.on, wActionCtrl.getstate(actionctrl) );
+    if( !data->enabled ) {
+      /* check if its a time */
+      const char* l_State = wActionCtrl.getstate(actionctrl);
+      if( StrOp.len(l_State) == 5 && l_State[2] == ':' )
+        data->enabled = True;
+    }
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "%s the timed every action %s", data->enabled?"enable":"disable", wAction.getid(data->action) );
+        "%s the timed every action=%s state=%s", data->enabled?"enable":"disable", wAction.getid(data->action), wActionCtrl.getstate(actionctrl) );
     levelCnt--;
     return;
   }
