@@ -1156,9 +1156,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           data->cv = wProgram.getcv( node );
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%08X get CV%d...", data->defaultprog->uid, data->cv );
           if( data->defaultprog != NULL ) {
-            msgdata[0] = data->cv % 256;
-            msgdata[1] = data->cv / 256;
-            data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_READ, msgdata, 2, data->defaultprog);
+            msgdata[0] = 0x01; // BIDIB_CS_PROG_RD_BYTE
+            msgdata[1] = data->cv % 256;
+            msgdata[2] = data->cv / 256;
+            data->subWrite((obj)inst, data->defaultprog->path, MSG_CS_PROG, msgdata, 3, data->defaultprog);
           }
         }
         else if( wProgram.getcmd( node ) == wProgram.set ) {
@@ -1166,10 +1167,11 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           data->value = wProgram.getvalue( node );
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%08X set CV%d to %d...", data->defaultprog->uid, data->cv, data->value );
           if( data->defaultprog != NULL ) {
-            msgdata[0] = data->cv % 256;
-            msgdata[1] = data->cv / 256;
-            msgdata[2] = data->value;
-            data->subWrite((obj)inst, data->defaultprog->path, MSG_PRG_CV_WRITE, msgdata, 3, data->defaultprog);
+            msgdata[0] = 0x03; // BIDIB_CS_PROG_WR_BYTE
+            msgdata[1] = data->cv % 256;
+            msgdata[2] = data->cv / 256;
+            msgdata[3] = data->value;
+            data->subWrite((obj)inst, data->defaultprog->path, MSG_CS_PROG, msgdata, 4, data->defaultprog);
           }
         }
       }
@@ -1587,18 +1589,21 @@ static void __handleAccessoryAck(iOBiDiB bidib, int uid, byte* pdata) {
 }
 
 
-static void __handlePT(iOBiDiB bidib, int state, int val) {
+static void __handlePT(iOBiDiB bidib, byte* pdata) {
   iOBiDiBData data = Data(bidib);
+  int state = pdata[0];
+  int cv = pdata[2] + pdata[3] * 256;
+  int val = pdata[4];
 
   iONode node = NULL;
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT response %d:%d", state, val );
+  data->cv = cv;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT response state=%d cv=%d data=%d", state, cv, val );
   if( state == 3 ) {
+    // BIDIB_CS_PROG_RD_OKAY, BIDIB_CS_PROG_WR_OKAY
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cv %d has a value of %d", data->cv, val );
     data->value = val;
-  }
-  else if( state == 6 ) {
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cv %d is programmed to %d", data->cv, data->value );
   }
   else {
     return;
@@ -2940,9 +2945,9 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
   }
 
-  case MSG_PRG_CV_STAT:
+  case MSG_CS_PROG_STATE:
   {
-    __handlePT(bidib, pdata[0], pdata[1]);
+    __handlePT(bidib, pdata);
     break;
   }
 

@@ -54,6 +54,8 @@
 //            2013-10-06       kw  added FEATURE_SPORT_CONFIG_AVAILABLE, added Ctrltype BACKLIGHT
 //                                 added FEATURE_CTRL_BACKLIGHT_COUNT, BIDIB_OUTTYPE_BACKLIGHT
 //            2013-12-15 V0.15 kw  added FEATURE_STRING_SIZE, MSG_STRING_GET, _STRING_SET _STRING
+//            2014-01-22 V0.16 kw  added MSG_BM_DYN_STATE, MSG_CS_PROG, MSG_CS_PROG_STATE, FEATURE_BM_DYN_STATE_INTERVAL
+//            2014-02-07           added MSG_ACCESSORY_NOTIFY
 //
 //===============================================================================
 //
@@ -186,11 +188,7 @@
 #define  MSG_CS_BIN_STATE       (MSG_DGEN + 0x06)       // 1:addrl, 2:addrh, 3:bin_statl, 4:bin_stath
 #define  MSG_CS_POM             (MSG_DGEN + 0x07)       // 1..4:addr, 5:MID, 6:opcode, 7:cv_l, 8:cv_h, 9:cv_x, 10..13: data
                                                         // 1:did[0], 2:did[1], 3:did[2], 4:did[4]
-#define  MSG_PRG_CV_WRITE       (MSG_DGEN + 0x0C)       // 1:method, 2:CV_ADDR_L, 3:CV_ADDR_H, 4:CV_DAT
-#define  MSG_PRG_CV_BLOCKWRITE  (MSG_DGEN + 0x0D)
-#define  MSG_PRG_CV_READ        (MSG_DGEN + 0x0E)       // 1:method, 2:CV_ADDR_L, 3:CV_ADDR_H
-#define  MSG_PRG_CV_BLOCKREAD   (MSG_DGEN + 0x0F)
-
+#define  MSG_CS_PROG            (MSG_DGEN + 0x08)       // 1:opcode, 2:cv_l, 3:cv_h, 4: data
 
 //-- local message
 #define MSG_DLOCAL              (MSG_DSTRM + 0x70)      // only locally used
@@ -245,6 +243,7 @@
 #define MSG_BM_CURRENT          (MSG_UBM + 0x07)        // 1:mnum, 2:current
 #define MSG_BM_BLOCK_CV         (MSG_UBM + 0x08)        //
 #define MSG_BM_CONFIDENCE       (MSG_UBM + 0x09)        // 1:void, 2:freeze, 3:signal
+#define MSG_BM_DYN_STATE        (MSG_UBM + 0x0a)        // 1:mnum, 2:addr_l, 3:addr_h, 4:dyn_num, 5:value (from loco)
 
 //-- booster messages
 #define MSG_UBST                (MSG_USTRM +  0x30)
@@ -257,8 +256,9 @@
 
 //-- accessory control messages
 #define MSG_UACC                (MSG_USTRM + 0x38)
-#define MSG_ACCESSORY_STATE     (MSG_UACC + 0x00)       // 1:port, 2:aspect, 3:total, 4:execute, 5:wait
+#define MSG_ACCESSORY_STATE     (MSG_UACC + 0x00)       // 1:port, 2:aspect, 3:total, 4:execute, 5:wait (Quittung)
 #define MSG_ACCESSORY_PARA      (MSG_UACC + 0x01)       // 1:anum, 2:para_num, 3..n: data
+#define MSG_ACCESSORY_NOTIFY    (MSG_UACC + 0x02)       // 1:port, 2:aspect, 3:total, 4:execute, 5:wait (Spontan)
 
 //-- switch/light control messages
 #define MSG_ULC                 (MSG_USTRM +  0x40)
@@ -283,7 +283,7 @@
 #define MSG_CS_POM_ACK          (MSG_UGEN + 0x04)
 #define MSG_CS_DRIVE_MANUAL     (MSG_UGEN + 0x05)       // 1:addrl, 2:addrh, 3:format, 4:active, 5:speed, 6:1-4, 7:5-12, 8:13-20, 9:21-28
 #define MSG_CS_DRIVE_EVENT      (MSG_UGEN + 0x06)       // 1:addrl, 2:addrh, 3:eventtype, Parameters
-#define MSG_PRG_CV_STAT         (MSG_UGEN + 0x0C)       // 1: PRG_STATE, 2:PRG_DATA
+#define MSG_CS_PROG_STATE       (MSG_UGEN + 0x0F)       // 1: PROG_STATE, 2:PROG_DATA
 
 //-- local message
 #define MSG_ULOCAL              (MSG_USTRM +  0x70)     // only locally used
@@ -556,6 +556,10 @@ typedef struct                              // t_bidib_cs_pom
 #define FEATURE_BST_CV_ON                  25   // CV readback enabled
 #define FEATURE_BST_INHIBIT_AUTOSTART      26   // 1: Booster does no automatic BOOST_ON when DCC at input wakes up.
 #define FEATURE_BST_INHIBIT_LOCAL_ONOFF    27   // 1: Booster annouces local STOP/GO key stroke only, no local action
+
+//-- booster/occupancy2
+#define FEATURE_BM_DYN_STATE_INTERVAL      28   // transmit interval of MSG_BM_DYN_STATE (unit 100ms)
+
 
 //-- accessory
 #define FEATURE_ACCESSORY_COUNT            40   // number of objects
