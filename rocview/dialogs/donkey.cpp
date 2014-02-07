@@ -77,7 +77,13 @@ void DonKey::OnLoadKey( wxCommandEvent& event )
         wxGetApp().m_donkey = StrOp.dup( StrTokOp.nextToken(tok) );
       StrTokOp.base.del( tok );
 
+#if defined __APPLE__ || defined __OpenBSD__
+      char* licPath = StrOp.fmt("%s/rocrail/lic.dat", SystemOp.getProperty("HOME") );
+      f = FileOp.inst( licPath, OPEN_WRITE );
+      StrOp.free(licPath);
+#else
       f = FileOp.inst( "lic.dat", OPEN_WRITE );
+#endif
       if( f != NULL ) {
         FileOp.write( f, buffer, StrOp.len(buffer) );
         FileOp.base.del( f );

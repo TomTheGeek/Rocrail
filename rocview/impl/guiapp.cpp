@@ -677,8 +677,14 @@ bool RocGui::OnInit() {
   if( m_Ini == NULL )
     m_Ini = NodeOp.inst( wGui.name(), NULL, ELEMENT_NODE );
 
-  if( FileOp.exist("lic.dat") ) {
-    iOFile f = FileOp.inst( "lic.dat", OPEN_READONLY );
+#if defined __APPLE__ || defined __OpenBSD__
+  char* licPath = StrOp.fmt("%s/rocrail/lic.dat", SystemOp.getProperty("HOME") );
+  if( FileOp.exist(licPath) ) {
+    iOFile f = FileOp.inst( licPath, OPEN_READONLY );
+#else
+    if( FileOp.exist("lic.dat") ) {
+      iOFile f = FileOp.inst( "lic.dat", OPEN_READONLY );
+#endif
     char* buffer = (char*)allocMem( FileOp.size( f ) +1 );
     FileOp.read( f, buffer, FileOp.size( f ) );
     FileOp.base.del( f );
@@ -690,6 +696,11 @@ bool RocGui::OnInit() {
     StrTokOp.base.del( tok );
     freeMem(buffer);
   }
+
+#if defined __APPLE__ || defined __OpenBSD__
+    StrOp.free(licPath);
+#endif
+
   if( m_donkey == NULL || StrOp.len(m_donkey) == 0 ) {
     m_donkey = wGui.getdonkey( m_Ini );
     m_donkey = wGui.getdoneml( m_Ini );
