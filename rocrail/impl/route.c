@@ -995,7 +995,7 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
   if( excl != NULL ) {
     Boolean excluded = False;
     while( excl != NULL ) {
-      if( StrOp.equals( id, wPermExclude.getid(excl) ) || StrOp.equals( train, wPermExclude.getid(incl) ) ) {
+      if( StrOp.equals( id, wPermExclude.getid(excl) ) || StrOp.equals( train, wPermExclude.getid(excl) ) ) {
         excluded = True;
         break;
       }
