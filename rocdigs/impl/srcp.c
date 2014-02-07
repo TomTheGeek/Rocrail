@@ -706,10 +706,11 @@ static Boolean __initInfoConnection(iOSRCP inst) {
 }
 
 
-static void __handleFB(iOSRCP srcp, int addr, int val) {
+static void __handleFB(iOSRCP srcp, int busnr, int addr, int val) {
   iOSRCPData o = Data( srcp );
   if( o->listenerFun != NULL ) {
     iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    wFeedback.setbus( nodeC, busnr );
     wFeedback.setaddr( nodeC, addr );
     wFeedback.setstate( nodeC, val ? True : False );
     if ( o->iid != NULL )
@@ -831,27 +832,17 @@ static void __infoReader( void * threadinst ) {
     if( inlen > 0 ) {
       char*    fbAddrStr   = NULL;
       iOStrTok tok         = NULL;
-      int      infotype    = 0; /* 0=FB, 1=GA , 2=GL*/
+      int      infotype    = -1; /* 0=FB, 1=GA , 2=GL*/
       Boolean  ignoreRest  = False;
       char*    infotypeStr = "";
       int      msgnr       = 0;
+      int      busnr       = 0;
+      const char* group    = NULL;
 
       StrOp.replaceAll(inbuf, '\n', ' ');
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inforeader: [%s]", inbuf );
 
       if( StrOp.find( inbuf, "INFO ") ) {
-        if( StrOp.find( inbuf, "FB ") ) {
-          infotype = 0;
-          infotypeStr = "sensor";
-        }
-        else if( StrOp.find( inbuf, "GA ") ) {
-          infotype = 1;
-          infotypeStr = "accessory";
-        }
-        else if( StrOp.find( inbuf, "GL ") ) {
-          infotype = 2;
-          infotypeStr = "locomotive";
-        }
 
         tok = StrTokOp.inst( inbuf, ' ' );
         if( StrTokOp.hasMoreTokens( tok ) ) {
@@ -862,8 +853,34 @@ static void __infoReader( void * threadinst ) {
             msgnr = atoi(nr);
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "info number = %d(%s)", msgnr, nr);
           }
+          if( StrTokOp.hasMoreTokens( tok ) ) {
+            const char* infoType = StrTokOp.nextToken( tok );
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "info type = %s", infoType);
+          }
+          if( StrTokOp.hasMoreTokens( tok ) ) {
+            const char* infoBus = StrTokOp.nextToken( tok );
+            busnr = atoi(infoBus);
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "info bus = %s(%d)", infoBus, busnr);
+          }
+          if( StrTokOp.hasMoreTokens( tok ) ) {
+            group = StrTokOp.nextToken( tok );
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "info group = %s", group);
+          }
         }
         tok->base.del(tok);
+
+        if( StrOp.equals( group, "FB") ) {
+          infotype = 0;
+          infotypeStr = "sensor";
+        }
+        else if( StrOp.equals( inbuf, "GA") ) {
+          infotype = 1;
+          infotypeStr = "accessory";
+        }
+        else if( StrOp.equals( inbuf, "GL") ) {
+          infotype = 2;
+          infotypeStr = "locomotive";
+        }
 
         if( !StrOp.find( inbuf, "FB POWER") ) {
           if( infotype == 0 )
@@ -876,7 +893,7 @@ static void __infoReader( void * threadinst ) {
 
       }
 
-      if( !fbAddrStr ) {
+      if( fbAddrStr == NULL ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "no FB/GA/GL info..." );
         ThreadOp.sleep( 10 );
         continue;
@@ -974,8 +991,8 @@ static void __infoReader( void * threadinst ) {
             /* FB */
             valStr = StrTokOp.nextToken( tok );
             val = atoi( valStr );
-            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d = %d", addr, val );
-            __handleFB(srcp, addr, val);
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d:%d=%d", busnr, addr, val );
+            __handleFB(srcp, busnr, addr, val);
           }
 
         }
