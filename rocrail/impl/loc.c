@@ -1836,7 +1836,7 @@ static void __runner( void* threadinst ) {
     obj   udata = NULL;
 
     /* BBT 10ms cycle */
-    if( wLoc.isusebbt(data->props) ) {
+    if( !data->gomanual && wLoc.isusebbt(data->props) ) {
       if( StrOp.equals( wLoc.mode_wait, wLoc.getmode(data->props) ) ) {
         __BBT(loc);
       }
