@@ -56,6 +56,7 @@
 //            2013-12-15 V0.15 kw  added FEATURE_STRING_SIZE, MSG_STRING_GET, _STRING_SET _STRING
 //            2014-01-22 V0.16 kw  added MSG_BM_DYN_STATE, MSG_CS_PROG, MSG_CS_PROG_STATE, FEATURE_BM_DYN_STATE_INTERVAL
 //            2014-02-07           added MSG_ACCESSORY_NOTIFY
+//            2014-02-08       kw  fixed some typos; removed MSG_PRG_CV_*; moved MSG_CS_PROG
 //
 //===============================================================================
 //
@@ -188,7 +189,8 @@
 #define  MSG_CS_BIN_STATE       (MSG_DGEN + 0x06)       // 1:addrl, 2:addrh, 3:bin_statl, 4:bin_stath
 #define  MSG_CS_POM             (MSG_DGEN + 0x07)       // 1..4:addr, 5:MID, 6:opcode, 7:cv_l, 8:cv_h, 9:cv_x, 10..13: data
                                                         // 1:did[0], 2:did[1], 3:did[2], 4:did[4]
-#define  MSG_CS_PROG            (MSG_DGEN + 0x08)       // 1:opcode, 2:cv_l, 3:cv_h, 4: data
+//-- service mode
+#define  MSG_CS_PROG            (MSG_DGEN + 0x0F)       // 1:opcode, 2:cv_l, 3:cv_h, 4: data
 
 //-- local message
 #define MSG_DLOCAL              (MSG_DSTRM + 0x70)      // only locally used
@@ -283,6 +285,7 @@
 #define MSG_CS_POM_ACK          (MSG_UGEN + 0x04)
 #define MSG_CS_DRIVE_MANUAL     (MSG_UGEN + 0x05)       // 1:addrl, 2:addrh, 3:format, 4:active, 5:speed, 6:1-4, 7:5-12, 8:13-20, 9:21-28
 #define MSG_CS_DRIVE_EVENT      (MSG_UGEN + 0x06)       // 1:addrl, 2:addrh, 3:eventtype, Parameters
+//-- service mode
 #define MSG_CS_PROG_STATE       (MSG_UGEN + 0x0F)       // 1: PROG_STATE, 2:PROG_DATA
 
 //-- local message
@@ -729,6 +732,16 @@ typedef struct                              // t_bidib_cs_pom
 #define BIDIB_CS_xPOM_RD_BYTE          0x81
 #define BIDIB_CS_xPOM_WR_BIT           0x82
 #define BIDIB_CS_xPOM_WR_BYTE          0x83
+
+#define BIDIB_CS_PROG_START            0x00  // service mode (MSG_CS_PROG_STATE)
+#define BIDIB_CS_PROG_RUNNING          0x01
+#define BIDIB_CS_PROG_WR_OKAY          0x80
+#define BIDIB_CS_PROG_RD_OKAY          0x81
+#define BIDIB_CS_PROG_STOPPED          0xC0
+#define BIDIB_CS_PROG_NO_LOCO          0xC1
+#define BIDIB_CS_PROG_WR_NO_ANSWER     0xC2
+#define BIDIB_CS_PROG_SHORT            0xC3
+#define BIDIB_CS_PROG_RD_NO_ANSWER     0xC4
 
 //===============================================================================
 //
