@@ -3648,6 +3648,12 @@ static Boolean _isUseManualRoutes( iOLoc loc ) {
 }
 
 
+static Boolean _isGoManual( iOLoc loc ) {
+  iOLocData data = Data(loc);
+  return data->gomanual;
+}
+
+
 static Boolean _matchIdent( iOLoc loc, const char* ident ) {
   iOLocData data = Data(loc);
   Boolean match = False;

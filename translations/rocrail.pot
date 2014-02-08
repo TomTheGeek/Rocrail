@@ -6881,3 +6881,9 @@ msgstr ""
 msgid "Command pause"
 msgstr ""
 
+#. 
+# id="disableblockwait4gomanual"
+#, c-format
+msgid "Disable block wait for half automatic"
+msgstr ""
+

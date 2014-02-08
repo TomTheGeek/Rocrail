@@ -374,6 +374,7 @@ public:
     wxCheckBox* m_RestoreSchedule;
     wxCheckBox* m_SelectShortestBlock;
     wxCheckBox* m_CloseNoEvents;
+    wxCheckBox* m_DisableBlockWait4GoManual;
     wxCheckBox* m_GreenAspect;
     wxRadioBox* m_DefAspect;
     wxPanel* m_ControllersPanel;

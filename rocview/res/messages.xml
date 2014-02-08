@@ -27223,4 +27223,7 @@
     <en_CA txt="Command pause"/>
     <en_GB txt="Command pause"/>
   </Msg>
+  <Msg id="disableblockwait4gomanual">
+    <en txt="Disable block wait for half automatic"/>
+  </Msg>
 </Messages>

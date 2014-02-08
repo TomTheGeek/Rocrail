@@ -1152,6 +1152,9 @@ static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse, int* oppwait 
   if( StrOp.equals( wLoc.cargo_cleaning, LocOp.getCargo(loc) ) ){
     return (data->tempwait?1:0);
   }
+  else if( LocOp.isGoManual(loc) && wCtrl.isdisableblockwait4gomanual( AppOp.getIniNode( wCtrl.name() ) ) ){
+    return (data->tempwait?1:0);
+  }
   else if( wLoc.isuseownwaittime( (iONode)loc->base.properties( loc ) ) ) {
     return wLoc.getblockwaittime( (iONode)loc->base.properties( loc ) );
   }
