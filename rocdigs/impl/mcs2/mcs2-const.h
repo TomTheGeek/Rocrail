@@ -89,6 +89,9 @@
 #define CAN_CMD_PING         0x18
 #define CAN_ID_PING          0x30
 
+/* Sensors */
+#define CAN_S88_REPORT       0x21
+#define CAN_SENSOR_EVENT     0x23
 
 
 #endif /* MCS2CONST_H_ */

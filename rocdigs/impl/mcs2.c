@@ -1107,14 +1107,11 @@ static void __reader( void* threadinst ) {
       /*System command */
       __evaluateMCS2System( data, in );
     }
-    else if( in[1] == 0x21 ) {
+    else if( in[1] == CAN_S88_REPORT ) {
       /* unoffcial reply to unofficial polling command, don't care if the poll was from Rocrail or not, always good to have the S88 state. */
       __evaluateMCS2S88( data, in, store );
     }
-    else if( in[1] == 0x22 ) { /* Without response bit set!? */
-      __evaluateSensorEvent( data, in );
-    }
-    else if( in[1] == 0x23 ) {
+    else if( in[1] == CAN_SENSOR_EVENT ) {
       __evaluateSensorEvent( data, in );
     }
     else if( in[1] == ID_LOCO_DIRECTION | in[1] == 0x08 ) {
