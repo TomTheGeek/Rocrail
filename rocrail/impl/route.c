@@ -1326,8 +1326,8 @@ static Boolean _unLock( iORoute inst, const char* lcid, const char** resblocks, 
     return True;
   }
   else if(o->lockedId == NULL) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "cannot unlock with %s; route %s because it is not locked",
-        lcid, RouteOp.getId(inst) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route %s is not locked", RouteOp.getId(inst) );
+    return True;
   }
   else {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "cannot unlock with %s; route %s already locked by %s",
