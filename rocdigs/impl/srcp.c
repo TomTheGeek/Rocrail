@@ -706,7 +706,7 @@ static Boolean __initInfoConnection(iOSRCP inst) {
 }
 
 
-static void __handleFB(iOSRCP srcp, int busnr, int addr, int val) {
+static void __handleFB(iOSRCP srcp, int busnr, int addr, int val, const char* ident) {
   iOSRCPData o = Data( srcp );
   if( o->listenerFun != NULL ) {
     iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
@@ -715,6 +715,8 @@ static void __handleFB(iOSRCP srcp, int busnr, int addr, int val) {
     wFeedback.setstate( nodeC, val ? True : False );
     if ( o->iid != NULL )
       wFeedback.setiid( nodeC, o->iid );
+    if ( ident != NULL )
+      wFeedback.setidentifier( nodeC, ident );
     o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );
   }
 }
@@ -838,6 +840,7 @@ static void __infoReader( void * threadinst ) {
       int      msgnr       = 0;
       int      busnr       = 0;
       const char* group    = NULL;
+      const char* ident    = NULL;
 
       StrOp.replaceAll(inbuf, '\n', ' ');
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inforeader: [%s]", inbuf );
@@ -991,8 +994,11 @@ static void __infoReader( void * threadinst ) {
             /* FB */
             valStr = StrTokOp.nextToken( tok );
             val = atoi( valStr );
-            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d:%d=%d", busnr, addr, val );
-            __handleFB(srcp, busnr, addr, val);
+            if( StrTokOp.hasMoreTokens( tok ) ) {
+              ident = StrTokOp.nextToken( tok );
+            }
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d:%d=%d ident=%s", busnr, addr, val, ident!=NULL?ident:"" );
+            __handleFB(srcp, busnr, addr, val, ident);
           }
 
         }
