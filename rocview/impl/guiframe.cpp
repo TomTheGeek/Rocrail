@@ -3687,9 +3687,12 @@ void RocGuiFrame::OnCBusNode( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnBiDiB( wxCommandEvent& event ) {
-  if( m_RocrailIni != NULL ) {
+  if( event.GetInt() == 4712 && m_RocrailIni != NULL && m_BidibIdentDlg == NULL) {
     m_BidibIdentDlg = new BidibIdentDlg(this);
     m_BidibIdentDlg->Show(true);
+  }
+  else if( m_BidibIdentDlg != NULL ) {
+    m_BidibIdentDlg->Raise();
   }
   else {
     wxGetApp().m_InitialRocrailIni = true;

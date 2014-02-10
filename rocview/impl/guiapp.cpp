@@ -1003,6 +1003,7 @@ static void rocrailCallback( obj me, iONode node ) {
 
     if(guiApp->m_FireBiDiB4RocrailIni) {
       wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_BiDiB );
+      event.SetInt(4712);
       guiApp->m_FireBiDiB4RocrailIni = false;
       wxPostEvent( guiApp->getFrame(), event );
     }

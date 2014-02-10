@@ -908,7 +908,7 @@ void BidibIdentDlg::handleFeature(iONode node) {
     }
   }
   else {
-    TraceOp.trc( "bidibident", TRCLEVEL_WARNING, __LINE__, 9999,"bidib node \"%s\" not found", uidKey );
+    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"bidib node \"%s\" not found", uidKey );
   }
 }
 
