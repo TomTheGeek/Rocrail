@@ -1107,7 +1107,7 @@ static void __reader( void* threadinst ) {
       /*System command */
       __evaluateMCS2System( data, in );
     }
-    else if( in[1] == CAN_S88_REPORT ) {
+    else if( in[1] == CAN_S88_REPORT && in[4] == 7 ) {
       /* unoffcial reply to unofficial polling command, don't care if the poll was from Rocrail or not, always good to have the S88 state. */
       __evaluateMCS2S88( data, in, store );
     }
