@@ -14,7 +14,7 @@ if [ ! $2 ]; then
   ARCH="i386"
 fi
 
-echo "Getting Bazaar revision number..."
+echo "Getting revision number..."
 if which git > /dev/null
 then
   BAZAARREV=`git rev-list --count HEAD`
@@ -22,7 +22,7 @@ then
   echo ""
 else
   BAZAARREV="user"
-  echo "    Revision number not found or Bazaar not installed, using \"user\""
+  echo "    Revision number not found, using \"user\""
   echo ""
 fi
 

@@ -17,7 +17,7 @@ echo "Checking Parameters..."
 
 # Get the Bazaar revision number if available
 
-echo "Getting Bazaar revision number..."
+echo "Getting revision number..."
 if which git > /dev/null
 then
 	BAZAARREV=`git rev-list --count HEAD`

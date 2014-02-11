@@ -23,7 +23,7 @@ if [ !  $1 ]; then
   echo ""
   echo "    Example: \"makemac.sh lion\" will build "
   echo "    \"rocrail-XXXX-osx-lion.dmg\" where \"XXXX\" is "
-  echo "    the Bazaar revision number or \"user\" if Bazaar is not installed."
+  echo "    the revision number or \"user\" if the version control program is not installed."
   echo ""
   exit $?
 else
@@ -31,7 +31,7 @@ else
   echo ""
 fi
 
-echo "Getting Bazaar revision number..."
+echo "Getting revision number..."
 if which git > /dev/null
 then
 	BAZAARREV=`git rev-list --count HEAD`
