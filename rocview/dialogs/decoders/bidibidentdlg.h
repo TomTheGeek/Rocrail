@@ -65,7 +65,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
   iOMutex servoSetMutex;
   bool eventUpdate;
   wxTreeItemId findTreeItem( const wxTreeItemId& root, const wxString& text);
-  int getLevel(const char* path, int* n, int* o, int* p );
+  int getLevel(const char* path, int* n, int* o, int* p, char** key, char** parentkey);
   wxTreeItemId addTreeChild( const wxTreeItemId& root, iONode bidibnode);
   void handleFeature(iONode node);
   void clearFeatureList();

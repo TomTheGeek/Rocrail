@@ -248,40 +248,66 @@ static int __sortPath(obj* _a, obj* _b)
 }
 
 
-int BidibIdentDlg::getLevel(const char* path, int* n, int* o, int* p ) {
-  int level = 0;
+int BidibIdentDlg::getLevel(const char* path, int* n, int* o, int* p, char** key, char** parentkey ) {
+  int level = 4;
   int idx = 0;
   iOStrTok tok = StrTokOp.inst(path, '.');
 
   *n = 0;
   *o = 0;
   *p = 0;
+
   const char* prevLevel = "0";
   while(StrTokOp.hasMoreTokens(tok) ) {
     const char* s = StrTokOp.nextToken(tok);
-    if( idx == 0 && atoi(s) == 0) {
-      level = 0;
-      break;
+    if( idx == 0 ) {
+      *key = StrOp.cat( *key, s);
+      if( atoi(s) == 0) {
+        level = 0;
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"level=%d path=%s key=%s", level, path, *key );
+        break;
+      }
     }
 
     if( idx == 1 ) {
       *n = atoi(prevLevel);
+      *parentkey = StrOp.dup(*key);
+      (*parentkey)[StrOp.len(*parentkey)-1] = '0';
+      *key = StrOp.cat( *key, ".");
+      *key = StrOp.cat( *key, s);
       if( atoi(s) == 0) {
         level = 1;
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"level=%d path=%s key=%s parent=%s", level, path, *key, *parentkey );
         break;
       }
     }
     if( idx == 2 ) {
       *o = atoi(prevLevel);
+      *parentkey = StrOp.dup(*key);
+      (*parentkey)[StrOp.len(*parentkey)-1] = '0';
+      *key = StrOp.cat( *key, ".");
+      *key = StrOp.cat( *key, s);
       if( atoi(s) == 0) {
         level = 2;
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"level=%d path=%s key=%s parent=%s", level, path, *key, *parentkey );
         break;
       }
     }
     if( idx == 3 ) {
       *p = atoi(prevLevel);
+      *parentkey = StrOp.dup(*key);
+      *key = StrOp.cat( *key, ".");
+      *key = StrOp.cat( *key, s);
       if( atoi(s) == 0) {
+        (*parentkey)[StrOp.len(*parentkey)-1] = '0';
         level = 3;
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"level=%d path=%s key=%s parent=%s", level, path, *key, *parentkey );
+        break;
+      }
+      else {
+        *parentkey = StrOp.cat( *parentkey, ".0");
+        level = 4;
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"level=%d path=%s key=%s parent=%s", level, path, *key, *parentkey );
         break;
       }
     }
@@ -473,41 +499,49 @@ void BidibIdentDlg::initLabels() {
      *     2.0.0.0      Level 1
      *   1.2.0.0        Level 2
      */
+    iOList r1 = ListOp.inst();
+    iOList r2 = ListOp.inst();
+    iOList r3 = ListOp.inst();
+    iOList r4 = ListOp.inst();
 
-
-    iONode* r1 = (iONode*)allocMem(128 * sizeof(iONode));
-    iONode** r2 = (iONode**)allocMem(128 * sizeof(iONode*));
-    iONode*** r3 = (iONode***)allocMem(128 * sizeof(iONode**));
-
-    // ToDo: Maybe alloc first when needed?
-    for(int x=0; x<128; x++) {
-      r2[x] = (iONode*)allocMem(128 * sizeof(iONode));
-      r3[x] = (iONode**)allocMem(128 * sizeof(iONode*));
-      for(int y=0; y<128; y++)
-        r3[x][y] = (iONode*)allocMem(128 * sizeof(iONode));
-    }
+    iOMap m1 = MapOp.inst();
 
     for( int i = 1; i < ListOp.size(nodeList); i++ ) {
       iONode bidibnode = (iONode)ListOp.get( nodeList, i );
       TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"%s", wBiDiBnode.getpath(bidibnode) );
+
+      char* parentkey = NULL;
+      char* key = NULL;
       int n = 0;
       int o = 0;
       int p = 0;
-      int childLevel = getLevel(wBiDiBnode.getpath(bidibnode), &n, &o, &p);
+      int childLevel = getLevel(wBiDiBnode.getpath(bidibnode), &n, &o, &p, &key, &parentkey);
+      if( key != NULL ) {
+        if( parentkey != NULL ) {
+          TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"parentkey=%s key=%s path=%s", parentkey, key, wBiDiBnode.getpath(bidibnode) );
+          wBiDiBnode.setparentkey(bidibnode, parentkey);
+          StrOp.free(parentkey);
+        }
+        wBiDiBnode.setkey(bidibnode, key);
+        StrOp.free(key);
+      }
+
+
       if( childLevel == 1 ) {
-        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"[%d] childLevel=%d", n, childLevel );
-        r1[n] = bidibnode;
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"[%d] path=%s", n, wBiDiBnode.getpath(bidibnode) );
+        ListOp.add(r1, (obj)bidibnode);
       }
       else if( childLevel == 2 ) {
-        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"[%d][%d]", n, o );
-        r2[n][o] = bidibnode;
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"[%d][%d] path=%s", n, o, wBiDiBnode.getpath(bidibnode) );
+        ListOp.add(r2, (obj)bidibnode);
       }
       else if( childLevel == 3 ) {
-        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"[%d][%d][%d]", n, o, p );
-        r3[n][o][p] = bidibnode;
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"[%d][%d][%d] path=%s", n, o, p, wBiDiBnode.getpath(bidibnode) );
+        ListOp.add(r3, (obj)bidibnode);
       }
       else {
-        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"Oops! childLevel=%d", childLevel );
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"path=%s", wBiDiBnode.getpath(bidibnode) );
+        ListOp.add(r4, (obj)bidibnode);
       }
     }
 
@@ -521,34 +555,56 @@ void BidibIdentDlg::initLabels() {
     wxTreeItemId root  = m_Tree->AddRoot(wxString( key, wxConvUTF8));
     MapOp.put( nodeMap, key, (obj)bidibnode);
 
-    for(int n = 1; n < 127; n++ ) {
-      if( r1[n] == NULL )
-        break;
-      wxTreeItemId child1 = addTreeChild( root, r1[n]);
-      for(int o = 1; o < 127; o++ ) {
-        if( r2[n][o] == NULL )
-          break;
-        wxTreeItemId child2 = addTreeChild( child1, r2[n][o]);
-        for(int p = 1; p < 127; p++ ) {
-          if( r3[n][o][p] == NULL )
-            break;
-          wxTreeItemId child3 = addTreeChild( child2, r3[n][o][p]);
-        }
+    for(int n = 0; n < ListOp.size(r1); n++ ) {
+      bidibnode = (iONode)ListOp.get(r1,n);
+      wxTreeItemId* child = new wxTreeItemId( addTreeChild( root, bidibnode) );
+      TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"put node with key=%s 0x%X", wBiDiBnode.getkey(bidibnode), &child );
+      MapOp.put(m1, wBiDiBnode.getkey(bidibnode), (obj)child );
+    }
+
+    for(int o = 0; o < ListOp.size(r2); o++ ) {
+      bidibnode = (iONode)ListOp.get(r2,o);
+      const char* parentKey = wBiDiBnode.getparentkey(bidibnode);
+      wxTreeItemId* parent = (wxTreeItemId*)MapOp.get(m1, parentKey );
+      if( parent == NULL )
+        TraceOp.trc( "bidibident", TRCLEVEL_WARNING, __LINE__, 9999,"no parent found with key=%s", parentKey );
+      else {
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"parent found with key=%s for path=%s 0x%X", parentKey, wBiDiBnode.getpath(bidibnode), parent );
+        wxTreeItemId* child = new wxTreeItemId(addTreeChild( *parent, bidibnode));
+        MapOp.put(m1, wBiDiBnode.getkey(bidibnode), (obj)(child) );
       }
     }
 
-    for(int x=0; x<128; x++) {
-      freeMem(r2[x]);
-      for(int y=0; y<128; y++)
-        freeMem(r3[x][y]);
-      freeMem(r3[x]);
+    for(int p = 0; p < ListOp.size(r3); p++ ) {
+      bidibnode = (iONode)ListOp.get(r3,p);
+      const char* parentKey = wBiDiBnode.getparentkey(bidibnode);
+      wxTreeItemId* parent = (wxTreeItemId*)MapOp.get(m1, parentKey );
+      if( parent == NULL )
+        TraceOp.trc( "bidibident", TRCLEVEL_WARNING, __LINE__, 9999,"no parent found with key=%s", parentKey );
+      else {
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"parent found with key=%s for path=%s", parentKey, wBiDiBnode.getpath(bidibnode) );
+        wxTreeItemId* child = new wxTreeItemId( addTreeChild( *parent, bidibnode) );
+        MapOp.put(m1, wBiDiBnode.getkey(bidibnode), (obj)(child) );
+      }
     }
 
-    freeMem(r1);
-    freeMem(r2);
-    freeMem(r3);
+    for(int q = 0; q < ListOp.size(r4); q++ ) {
+      bidibnode = (iONode)ListOp.get(r4,q);
+      const char* parentKey = wBiDiBnode.getparentkey(bidibnode);
+      wxTreeItemId* parent = (wxTreeItemId*)MapOp.get(m1, parentKey );
+      if( parent == NULL )
+        TraceOp.trc( "bidibident", TRCLEVEL_WARNING, __LINE__, 9999,"no parent found with key=%s", parentKey );
+      else {
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"parent found with key=%s for path=%s", parentKey, wBiDiBnode.getpath(bidibnode) );
+        wxTreeItemId child = addTreeChild( *parent, bidibnode);
+      }
+    }
 
-
+    ListOp.base.del(r1);
+    ListOp.base.del(r2);
+    ListOp.base.del(r3);
+    ListOp.base.del(r4);
+    MapOp.base.del(m1);
 
     m_Tree->ExpandAll();
     if( node == NULL ) {
