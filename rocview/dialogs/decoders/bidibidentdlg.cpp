@@ -604,6 +604,12 @@ void BidibIdentDlg::initLabels() {
     ListOp.base.del(r2);
     ListOp.base.del(r3);
     ListOp.base.del(r4);
+
+    wxTreeItemId* treeItem = (wxTreeItemId*)MapOp.first(m1);
+    while( treeItem != NULL ) {
+      delete treeItem;
+      treeItem = (wxTreeItemId*)MapOp.next(m1);
+    }
     MapOp.base.del(m1);
 
     m_Tree->ExpandAll();
