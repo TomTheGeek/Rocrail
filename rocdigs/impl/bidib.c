@@ -1760,6 +1760,7 @@ static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata, byte* path) {
     char mnemonic[32] = {'\0'};
     byte l_msg[32];
     int size = 0;
+    int i = 0;
     int msgidx = 0;
     Boolean bridge = False;
     char* classname = bidibGetClassName(classid, mnemonic, &bridge);
@@ -1771,8 +1772,13 @@ static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata, byte* path) {
     node->pendingfeature = -1;
 
 
-    MemOp.copy(node->path+1, path, 3);
-    node->path[0] = localaddr;
+    MemOp.copy(node->path, path, 4);
+    for(i = 0; i < 4; i++) {
+      if( node->path[i] == 0 ) {
+        node->path[i] = localaddr;
+        break;
+      }
+    }
 
     StrOp.fmtb( localKey, "%d.%d.%d.%d", node->path[0], node->path[1], node->path[2], node->path[3] );
 
