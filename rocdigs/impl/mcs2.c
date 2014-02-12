@@ -197,27 +197,18 @@ static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, lon
 
 static void __SoD( iOMCS2 inst ) {
   iOMCS2Data data = Data(inst);
+  long dummy = 0x5263526C;
+  int mod = 0;
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day..." );
 
-  if( wDigInt.getprotver( data->ini ) == 2 ) {
-    byte*  msg   = allocMem(32);
-    msg[0] = (CMD_ACC_SENSOR >> 7);
-    msg[1]  = ((CMD_ACC_SENSOR & 0x7F) << 1 );
-    msg[2]  = 0x03;
-    msg[3]  = 0x00;
-    msg[4]  = 7;
-    msg[5]  = wMCS2.getfbdevid(data->mcs2ini) / 256; /* Geraetekenner */
-    msg[6]  = wMCS2.getfbdevid(data->mcs2ini) % 256;
-    msg[7]  = (0 & 0xFF00) >> 8; /* Kontaktkennung Start */
-    msg[8]  = (0 & 0x00FF);
-    msg[9]  = (0x3FFF & 0xFF00) >> 8; /* Kontaktkennung Ende */
-    msg[10] = (0x3FFF & 0x00FF);
-    msg[11] = 0xFF; /* Broadcast ein */
-    msg[12] = 0;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Activate sensor events for version 2..." );
-    ThreadOp.post( data->writer, (obj)msg );
+  for( mod = 0; mod < data->fbmod; mod++ ) {
+    byte* out = allocMem(16);
+    __setSysMsg(out, 0, 0x10, False, 5, dummy, mod, 0, 0, 0);
+    /* unofficial command 0x10 request status of feedback module mod, one module has 16 inputs */
+    ThreadOp.post( data->writer, (obj)out );
   }
+
 }
 
 
@@ -540,8 +531,6 @@ static void __feedbackMCS2Reader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
   iOMCS2Data data = Data(mcs2);
-  int mod = 0;
-  long dummy = 0x5263526C;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 feedbackpoll started, polling %d S88 units", data->fbmod );
   ThreadOp.sleep( 100 );
@@ -552,16 +541,13 @@ static void __feedbackMCS2Reader( void* threadinst ) {
     if( data->fbmod == 0 )
       continue;
 
-    for( mod = 0; mod < data->fbmod; mod++ ) {
-      byte* out = allocMem(16);
-      __setSysMsg(out, 0, 0x10, False, 5, dummy, mod, 0, 0, 0);
-      /* unofficial command 0x10 request status of feedback module mod, one module has 16 inputs */
-      ThreadOp.post( data->writer, (obj)out );
-    }
+    __SoD(mcs2);
 
     if( wDigInt.getprotver( data->ini ) == 2 ) {
       /* Just poll once for Start of Day. */
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Just poll once for Start of Day. V2" );
+      ThreadOp.sleep( 500 );
+      __SoD(mcs2);
       break;
     }
 
@@ -1344,7 +1330,24 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   data->writer = ThreadOp.inst( "mcs2writer", &__writer, __MCS2 );
   ThreadOp.start( data->writer );
 
-  __SoD(__MCS2);
+  if( wDigInt.getprotver( data->ini ) == 2 ) {
+    byte*  msg   = allocMem(32);
+    msg[0] = (CMD_ACC_SENSOR >> 7);
+    msg[1]  = ((CMD_ACC_SENSOR & 0x7F) << 1 );
+    msg[2]  = 0x03;
+    msg[3]  = 0x00;
+    msg[4]  = 7;
+    msg[5]  = wMCS2.getfbdevid(data->mcs2ini) / 256; /* Geraetekenner */
+    msg[6]  = wMCS2.getfbdevid(data->mcs2ini) % 256;
+    msg[7]  = (0 & 0xFF00) >> 8; /* Kontaktkennung Start */
+    msg[8]  = (0 & 0x00FF);
+    msg[9]  = (0x3FFF & 0xFF00) >> 8; /* Kontaktkennung Ende */
+    msg[10] = (0x3FFF & 0x00FF);
+    msg[11] = 0xFF; /* Broadcast ein */
+    msg[12] = 0;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Activate sensor events for version 2..." );
+    ThreadOp.post( data->writer, (obj)msg );
+  }
 
   if( data->fbmod > 0 ) {
     data->feedbackReader = ThreadOp.inst( "fbreader", &__feedbackMCS2Reader, __MCS2 );
