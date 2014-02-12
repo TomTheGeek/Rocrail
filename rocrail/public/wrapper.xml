@@ -593,7 +593,9 @@
           <var name="soundcnt" vt="int" defval="0" remark="Number of ports."/>
           <var name="motorcnt" vt="int" defval="0" remark="Number of ports."/>
           <var name="analogcnt" vt="int" defval="0" remark="Number of ports."/>
-        </bidibnode>
+          <var name="key" vt="string" defval=""/>
+          <var name="parentkey" vt="string" defval=""/>
+          </bidibnode>
       </bidib>
 
       <srcp remark="SRCP init" wrappername="SRCP">
