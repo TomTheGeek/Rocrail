@@ -195,6 +195,32 @@ static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, lon
   msg[12] = subcmd4;
 }
 
+static void __SoD( iOMCS2 inst ) {
+  iOMCS2Data data = Data(inst);
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day..." );
+
+  if( wDigInt.getprotver( data->ini ) == 2 ) {
+    byte*  msg   = allocMem(32);
+    msg[0] = (CMD_ACC_SENSOR >> 7);
+    msg[1]  = ((CMD_ACC_SENSOR & 0x7F) << 1 );
+    msg[2]  = 0x03;
+    msg[3]  = 0x00;
+    msg[4]  = 7;
+    msg[5]  = wMCS2.getfbdevid(data->mcs2ini) / 256; /* Geraetekenner */
+    msg[6]  = wMCS2.getfbdevid(data->mcs2ini) % 256;
+    msg[7]  = (0 & 0xFF00) >> 8; /* Kontaktkennung Start */
+    msg[8]  = (0 & 0x00FF);
+    msg[9]  = (0x3FFF & 0xFF00) >> 8; /* Kontaktkennung Ende */
+    msg[10] = (0x3FFF & 0x00FF);
+    msg[11] = 0xFF; /* Broadcast ein */
+    msg[12] = 0;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Activate sensor events for version 2..." );
+    ThreadOp.post( data->writer, (obj)msg );
+  }
+}
+
+
 static iONode __translate( iOMCS2 inst, iONode node ) {
   iOMCS2Data data = Data(inst);
   iONode rsp   = NULL;
@@ -230,6 +256,10 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
       out = allocMem(32);
       __setSysMsg(out, 0, CMD_SYSTEM, False, 7, 0, CMD_SYSSUB_SWTIME, (data->swtime/10)/256, (data->swtime/10)%256, 0);
       ThreadOp.post( data->writer, (obj)out );
+      return rsp;
+    }
+    else if( StrOp.equals( cmd, wSysCmd.sod ) ) {
+      __SoD(inst);
       return rsp;
     }
   }
@@ -1314,25 +1344,7 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   data->writer = ThreadOp.inst( "mcs2writer", &__writer, __MCS2 );
   ThreadOp.start( data->writer );
 
-
-  if( wDigInt.getprotver( data->ini ) == 2 ) {
-    byte*  msg   = allocMem(32);
-    msg[0] = (CMD_ACC_SENSOR >> 7);
-    msg[1]  = ((CMD_ACC_SENSOR & 0x7F) << 1 );
-    msg[2]  = 0x03;
-    msg[3]  = 0x00;
-    msg[4]  = 7;
-    msg[5]  = wMCS2.getfbdevid(data->mcs2ini) / 256; /* Geraetekenner */
-    msg[6]  = wMCS2.getfbdevid(data->mcs2ini) % 256;
-    msg[7]  = (0 & 0xFF00) >> 8; /* Kontaktkennung Start */
-    msg[8]  = (0 & 0x00FF);
-    msg[9]  = (0x3FFF & 0xFF00) >> 8; /* Kontaktkennung Ende */
-    msg[10] = (0x3FFF & 0x00FF);
-    msg[11] = 0xFF; /* Broadcast ein */
-    msg[12] = 0;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Activate sensor events for version 2..." );
-    ThreadOp.post( data->writer, (obj)msg );
-  }
+  __SoD(__MCS2);
 
   if( data->fbmod > 0 ) {
     data->feedbackReader = ThreadOp.inst( "fbreader", &__feedbackMCS2Reader, __MCS2 );
