@@ -27226,4 +27226,7 @@
   <Msg id="disableblockwait4gomanual">
     <en txt="Disable block wait for half automatic"/>
   </Msg>
+  <Msg id="simulatesensors">
+    <en txt="Simulate sensors"/>
+  </Msg>
 </Messages>

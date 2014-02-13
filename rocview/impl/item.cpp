@@ -1170,7 +1170,7 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
         wxCommandEvent evt( wxEVT_COMMAND_MENU_SELECTED, ME_IdentifierFwd );
         OnIdentifierFwd(evt);
       }
-      else {
+      else if(wGui.issimulatesensors(wxGetApp().getIni()) ) {
         iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
         wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
         // simulate the invert state:

@@ -292,6 +292,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Stop           , RocGuiFrame::OnStop)
     EVT_MENU( ME_EmergencyBreak , RocGuiFrame::OnEmergencyBreak)
     EVT_MENU( ME_AutoMode       , RocGuiFrame::OnAutoMode)
+    EVT_MENU( ME_SimulateSensors, RocGuiFrame::OnSimulateSensors)
     EVT_MENU( ME_AutoGo         , RocGuiFrame::OnAutoGo)
     EVT_MENU( ME_AutoGoVirtual  , RocGuiFrame::OnAutoGoVirtual)
     EVT_MENU( ME_AutoResume     , RocGuiFrame::OnAutoResume)
@@ -1883,6 +1884,7 @@ void RocGuiFrame::initFrame() {
   menuAuto->Append(ME_AutoGo  , wxGetApp().getMenu("startall"), wxGetApp().getTip("startall") );
   menuAuto->Append(ME_AutoGoVirtual  , wxGetApp().getMenu("startallvirtual"), wxGetApp().getTip("startallvirtual") );
   menuAuto->Append(ME_AutoResume, wxGetApp().getMenu("resumeall"), wxGetApp().getTip("resumeall") );
+  menuAuto->AppendCheckItem(ME_SimulateSensors, wxGetApp().getMenu("simulatesensors"), wxGetApp().getTip("simulatesensors") );
 
   wxMenuItem *stop_menuAuto = new wxMenuItem(menuAuto, ME_AutoStop, wxGetApp().getMenu("stopall"), wxGetApp().getTip("stopall") );
   stop_menuAuto->SetBitmap(*_img_stop);
@@ -3905,6 +3907,9 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_LocoViewTrain);
   if( mi != NULL ) mi->Check( m_LocoCategory & LOCO_VIEW_TRAIN );
 
+  mi = menuBar->FindItem(ME_SimulateSensors);
+  if( mi != NULL ) mi->Check( wGui.issimulatesensors( m_Ini) ? true:false );
+
   mi = menuBar->FindItem(ME_LangEnglish);
   if( mi != NULL )
     mi->Check( StrOp.equals( wGui.lang_english, wGui.getlang( wxGetApp().getIni() ) ) );
@@ -4067,6 +4072,14 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   wxMenuItem* mi_tooltip  = menuBar->FindItem(ME_Tooltip);
   mi_tooltip->Check( m_bTooltip );
 
+}
+
+void RocGuiFrame::OnSimulateSensors( wxCommandEvent& event ) {
+  wxMenuItem* mi_automode = menuBar->FindItem(ME_SimulateSensors);
+  if( mi_automode == NULL )
+    return;
+
+  wGui.setsimulatesensors( m_Ini, event.IsChecked() ? True:False);
 }
 
 void RocGuiFrame::OnAutoMode( wxCommandEvent& event ) {

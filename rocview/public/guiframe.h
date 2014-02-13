@@ -132,6 +132,7 @@ public:
   void OnStop(wxCommandEvent& event);
   void OnEmergencyBreak(wxCommandEvent& event);
   void OnAutoMode(wxCommandEvent& event);
+  void OnSimulateSensors(wxCommandEvent& event);
   void OnAutoGo(wxCommandEvent& event);
   void OnAutoGoVirtual(wxCommandEvent& event);
   void OnAutoResume(wxCommandEvent& event);
@@ -642,6 +643,7 @@ enum
     ME_DonKey,
     ME_DonKeyInfo,
     ME_SensorEvents,
+    ME_SimulateSensors,
     ME_F1,
     ME_F2,
     ME_F3,
