@@ -4849,7 +4849,11 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                      "Block [%s] is shortest, restlen=%d,  of the well suited for [%s]",
                      blockBest->base.id(blockBest), shortest, LocOp.getId( loc ) );
     }
-    else {
+    else if(schedule) {
+      /* No alternative destinations for schedules. */
+      *routeref = NULL;
+    }
+    else  {
       int randNumber = rand();
       int randChoice = randNumber % cnt;
       blockBest = (iIBlockBase)ListOp.get( fitBlocks, randChoice );
@@ -4861,7 +4865,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
     /* when using blocksides the best route can be, in case of commuter,
        a destination in the other direction. For a commuter to change direction
        the block must allow change direction and the loc must be swapped. */
-    if( wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) ) && MapOp.haskey( swapRoutes, (*routeref)->base.id(*routeref) ) )
+    if( *routeref != NULL && wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) ) && MapOp.haskey( swapRoutes, (*routeref)->base.id(*routeref) ) )
     {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Loco [%s] must swap for this route.",
