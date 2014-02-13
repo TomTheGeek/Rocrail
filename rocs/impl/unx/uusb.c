@@ -25,9 +25,9 @@
 #include "rocs/public/system.h"
 #include "rocs/public/str.h"
 
-#if defined __linux__ &! defined __APPLE__
-/* sudo apt-get install libusb-dev */
-#include <usb.h>
+#if defined __linux__
+/* sudo apt-get install libusb-1.0-0-dev */
+#include <libusb-1.0/libusb.h>
 #endif
 
 
@@ -65,66 +65,83 @@ static const char* __usbDescription(int vendor, int product) {
 }
 
 
+static Boolean isWantedDevice( libusb_device *dev, int vendor, int product )
+{
+  struct libusb_device_descriptor desc;
+  int r = libusb_get_device_descriptor( dev, &desc );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "ID 0x%04X:0x%04X [%s]",
+      desc.idVendor, desc.idProduct,
+      __usbDescription(desc.idVendor, desc.idProduct) );
+
+  if( desc.idVendor == vendor && desc.idProduct == product ){
+    return True;
+  }
+
+  return False;
+}
+
+
 void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr) {
   void* husb = NULL;
 
-#if defined __linux__ &! defined __APPLE__
-  struct usb_bus *busses;
-  struct usb_bus *bus;
+#if defined __linux__
+  // discover devices
+  libusb_device **list;
+  libusb_device *found = NULL;
+  libusb_context *ctx = NULL;
+  int attached = 0;
 
-  usb_init();
-  usb_find_busses();
-  usb_find_devices();
+  libusb_init(&ctx);
+  libusb_set_debug(ctx,3);
+  ssize_t cnt = libusb_get_device_list(ctx, &list);
+  ssize_t i = 0;
+  int err = 0;
 
-  busses = usb_get_busses();
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%d USB devices found", cnt );
 
-  for (bus = busses; bus; bus = bus->next) {
-    struct usb_device *dev;
-
-    for (dev = bus->devices; dev; dev = dev->next) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "bus %s device %s class %02X:%02X ID 0x%04X:0x%04X protocol=%02d maxpacket=%02d [%s]",
-          bus->dirname, dev->filename, dev->descriptor.bDeviceClass, dev->config->interface->altsetting->bInterfaceClass,
-          dev->descriptor.idVendor, dev->descriptor.idProduct, dev->descriptor.bDeviceProtocol,
-          dev->descriptor.bMaxPacketSize0, __usbDescription(dev->descriptor.idVendor, dev->descriptor.idProduct) );
-
-
-      if( dev->descriptor.idVendor == vendor && dev->descriptor.idProduct == product ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found wanted device 0x%04X:0x%04X", dev->descriptor.idVendor, dev->descriptor.idProduct );
-        husb = usb_open(dev);
-
-        if( husb == NULL ) {
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not open USB device" );
-          break;
-        }
-
-        if(usb_kernel_driver_active(husb, 0) == 1) {
-          if( usb_detach_kernel_driver(husb, 0) != 0 ) {
-            TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not detach kernel driver" );
-            usb_close((usb_dev_handle *)husb);
-            husb = NULL;
-            break;
-          }
-        }
-
-        if( usb_set_configuration((usb_dev_handle *)husb, configNr) != 0 ) {
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not set configuration %d", configNr );
-          usb_close((usb_dev_handle *)husb);
-          husb = NULL;
-          break;
-        }
-
-        if( usb_claim_interface(husb, interfaceNr) != 0 ) {
-          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not claim interface %d", interfaceNr );
-          usb_close((usb_dev_handle *)husb);
-          husb = NULL;
-          break;
-        }
-
-        break;
-      }
+  // find our device
+  for(i = 0; i < cnt; i++){
+    libusb_device *device = list[i];
+    if( isWantedDevice(device, vendor, product) ){
+      found = device;
+      break;
     }
   }
+
+  if( found != NULL ) {
+    libusb_device_handle *handle;
+    err = libusb_open(found, &handle);
+
+    if (err) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not open USB device: %s", libusb_error_name(err) );
+      return False;
+    }
+    husb = handle;
+
+    if ( libusb_kernel_driver_active(husb,0) ){
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "detach kernel driver..." );
+      err = libusb_detach_kernel_driver(husb,0);
+      if(err) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "detach kernel driver: %s", libusb_error_name(err) );
+      }
+    }
+    else
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Device free from kernel" );
+
+    err = libusb_claim_interface( husb, 0 );
+    if (err) {
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not claim interface: %s", libusb_error_name(err) );
+      libusb_close(handle);
+      husb = NULL;
+    }
+
+  }
+
+  libusb_free_device_list(list, 1);
+
+
 #endif
 
   if( husb == NULL ) {
@@ -138,27 +155,29 @@ void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr) {
 Boolean rocs_usb_closeUSB(void* husb, int interfaceNr) {
   int rc = 0;
 
-#if defined __linux__ &! defined __APPLE__
+#if defined __linux__
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "close USB (interface %d)", interfaceNr );
   if( husb != NULL ) {
-    usb_release_interface((usb_dev_handle *)husb, interfaceNr);
-    rc = usb_close((usb_dev_handle *)husb);
-    usb_exit();
+    libusb_close( (libusb_device_handle *)husb );
+    //libusb_exit( ctx );
   }
 #endif
 
   return rc == 0 ? True:False;
 }
 
+#define BULK_EP_OUT     0x82
+#define BULK_EP_IN      0x08
 
 int rocs_usb_writeUSB(void* husb, byte* out, int len, int timeout) {
   int rc = 0;
 
-#if defined __linux__ &! defined __APPLE__
+#if defined __linux__
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %d...", len );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
   if( husb != NULL ) {
-    rc = usb_bulk_write((usb_dev_handle *)husb, 1, out, len, timeout);
+    int transferred = 0;
+    rc = libusb_bulk_transfer ((libusb_device_handle *)husb, BULK_EP_OUT, out, len, &transferred, timeout);
   }
 #endif
 
@@ -169,11 +188,12 @@ int rocs_usb_writeUSB(void* husb, byte* out, int len, int timeout) {
 int rocs_usb_readUSB(void* husb, byte* in, int len, int timeout) {
   int rc = -1;
 
-#if defined __linux__ &! defined __APPLE__
+#if defined __linux__
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read %d...", len );
   if( husb != NULL ) {
-    rc = usb_bulk_read((usb_dev_handle *)husb, 1, in, len, timeout);
-    if( rc == len )
+    int transferred = 0;
+    rc = libusb_bulk_transfer ((libusb_device_handle *)husb, BULK_EP_IN, in, len, &transferred, timeout);
+    if( transferred == len )
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, len );
   }
 #endif

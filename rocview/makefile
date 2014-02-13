@@ -243,6 +243,7 @@ macapp:
 	cp Run Rocrail.app/Contents/MacOS/
 	-cp /usr/lib/libwx* Rocrail.app/Contents/MacOS/
 	-cp /usr/local/lib/libwx* Rocrail.app/Contents/MacOS/
+	-cp /usr/local/lib/libusb-1.0.0.dylib Rocrail.app/Contents/MacOS/
 	rm -rf ../unxbin/Rocrail.app
 	mv -f Rocrail.app ../unxbin
 	

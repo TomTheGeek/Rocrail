@@ -68,7 +68,7 @@ else ifeq ($(PLATFORM),WIN64)
 	SHAREDSUFFIX=.dll
 	CC_EXTRA_FLAGS=
 else ifeq ($(PLATFORM),MACOSX)
-	LIBS=-lpthread -ldl
+	LIBS=-lpthread -ldl -lusb-1.0
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fPIC
 	LNK_FLAGS=-dynamiclib -flat_namespace -undefined suppress
@@ -82,7 +82,7 @@ else ifeq ($(PLATFORM),OPENBSD)
 	LNK=gcc
 	SHAREDSUFFIX=.so
 else
-	LIBS=-lpthread -ldl -lusb
+	LIBS=-lpthread -ldl -lusb-1.0
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fPIC
 	LNK_FLAGS=-shared

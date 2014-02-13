@@ -78,10 +78,10 @@ ifeq ($(PLATFORM),WIN64)
     CC_EXTRA_FLAGS=
 endif 
 ifeq ($(PLATFORM),LINUX)
-	LIBS=-lpthread -ldl -lusb
+	LIBS=-lpthread -ldl -lusb-1.0
 endif
 ifeq ($(PLATFORM),MACOSX)
-	LIBS=-lpthread -ldl
+	LIBS=-lpthread -ldl -lusb-1.0
 endif
 ifeq ($(PLATFORM),HP)
 	LIBS=-lpthread -ldld
