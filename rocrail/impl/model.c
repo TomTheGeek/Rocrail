@@ -4357,7 +4357,7 @@ static iORoute _calcRoute( iOModel inst, iOList stlist, const char* currBlockId,
         }
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Got a route to block \"%s\".", id );
         block = (iIBlockBase)MapOp.get( data->blockMap, id );
-        if( block->isFree( block, LocOp.getId( loc ) ) ) {
+        if( block->isFree( block, LocOp.getId( loc ) ) && block->isSuited(block, loc, NULL, False) != suits_not ) {
           /* OK, first free block. */
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Block \"%s\" is free.", id );
           break;
