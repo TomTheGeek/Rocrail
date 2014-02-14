@@ -24,10 +24,10 @@
 #include "rocs/public/mem.h"
 
 
-void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr);
+void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr, int* input, int* output);
 Boolean rocs_usb_closeUSB(void* husb, int interfaceNr);
-int rocs_usb_writeUSB(void* husb, byte* out, int len, int timeout);
-int rocs_usb_readUSB(void* husb, byte* in, int len, int timeout);
+int rocs_usb_writeUSB(void* husb, int endpoint, byte* out, int len, int timeout);
+int rocs_usb_readUSB(void* husb, int endpoint, byte* in, int len, int timeout);
 
 
 static int instCnt = 0;
@@ -99,7 +99,7 @@ static Boolean _close( struct OUSB* inst ) {
 static Boolean _open( struct OUSB* inst ,int vendor ,int product ,int configNr ,int interfaceNr ) {
   iOUSBData data = Data(inst);
   data->interfaceNr = interfaceNr;
-  data->husb = rocs_usb_openUSB(vendor, product, configNr, interfaceNr);
+  data->husb = rocs_usb_openUSB(vendor, product, configNr, interfaceNr, &data->input_ep, &data->output_ep);
   return data->husb != NULL ? True:False;
 }
 
@@ -107,14 +107,14 @@ static Boolean _open( struct OUSB* inst ,int vendor ,int product ,int configNr ,
 /**  */
 static int _read( struct OUSB* inst ,unsigned char* buf ,int len, int timeout ) {
   iOUSBData data = Data(inst);
-  return rocs_usb_readUSB(data->husb, buf, len, timeout);
+  return rocs_usb_readUSB(data->husb, data->input_ep, buf, len, timeout);
 }
 
 
 /**  */
 static int _write( struct OUSB* inst ,unsigned char* buf ,int len, int timeout ) {
   iOUSBData data = Data(inst);
-  return rocs_usb_writeUSB(data->husb, buf, len, timeout);
+  return rocs_usb_writeUSB(data->husb, data->output_ep, buf, len, timeout);
 }
 
 

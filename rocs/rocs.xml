@@ -2080,7 +2080,9 @@
     <data>
       <var name="husb" vt="void*"/>
       <var name="interfaceNr" vt="int"/>
-    </data>
+      <var name="input_ep" vt="int"/>
+      <var name="output_ep" vt="int"/>
+      </data>
   </object>
   
 </Project>

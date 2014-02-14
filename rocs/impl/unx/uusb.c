@@ -65,7 +65,42 @@ static const char* __usbDescription(int vendor, int product) {
 }
 
 
-static Boolean isWantedDevice( libusb_device *dev, int vendor, int product )
+static int getEndpoint(libusb_device *dev, int* input, int* output) {
+  struct libusb_config_descriptor *config;
+  int altsetting_index,interface_index=0,ret_active;
+  int i,ret_print;
+
+  *input = 0;
+  *output = 0;
+
+  ret_active = libusb_get_active_config_descriptor(dev,&config);
+
+  for(interface_index = 0; interface_index < config->bNumInterfaces; interface_index++)
+  {
+      const struct libusb_interface *iface = &config->interface[interface_index];
+      for( altsetting_index = 0; altsetting_index < iface->num_altsetting; altsetting_index++ )
+      {
+          const struct libusb_interface_descriptor *altsetting = &iface->altsetting[altsetting_index];
+
+          int endpoint_index;
+          for(endpoint_index=0;endpoint_index<altsetting->bNumEndpoints;endpoint_index++)
+          {
+              const struct libusb_endpoint_descriptor *endpoint = &altsetting->endpoint[endpoint_index];
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"EP addr=0x%02X type=%d packetsize=%d",
+                  endpoint->bEndpointAddress, endpoint->bDescriptorType, endpoint->wMaxPacketSize );
+              if( endpoint->bEndpointAddress & 0x80 )
+                *input = endpoint->bEndpointAddress;
+              else
+                *output = endpoint->bEndpointAddress;
+          }
+      }
+  }
+  libusb_free_config_descriptor(NULL);
+
+  return 0;
+}
+
+static Boolean isWantedDevice( libusb_device *dev, int vendor, int product, int* input, int* output )
 {
   struct libusb_device_descriptor desc;
   int r = libusb_get_device_descriptor( dev, &desc );
@@ -75,6 +110,8 @@ static Boolean isWantedDevice( libusb_device *dev, int vendor, int product )
       desc.idVendor, desc.idProduct,
       __usbDescription(desc.idVendor, desc.idProduct) );
 
+  getEndpoint(dev, input, output);
+
   if( desc.idVendor == vendor && desc.idProduct == product ){
     return True;
   }
@@ -83,7 +120,7 @@ static Boolean isWantedDevice( libusb_device *dev, int vendor, int product )
 }
 
 
-void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr) {
+void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr, int* input, int* output) {
   void* husb = NULL;
 
 #if defined __linux__
@@ -104,7 +141,7 @@ void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr) {
   // find our device
   for(i = 0; i < cnt; i++){
     libusb_device *device = list[i];
-    if( isWantedDevice(device, vendor, product) ){
+    if( isWantedDevice(device, vendor, product, input, output) ){
       found = device;
       break;
     }
@@ -166,10 +203,7 @@ Boolean rocs_usb_closeUSB(void* husb, int interfaceNr) {
   return rc == 0 ? True:False;
 }
 
-#define BULK_EP_OUT     0x82
-#define BULK_EP_IN      0x08
-
-int rocs_usb_writeUSB(void* husb, byte* out, int len, int timeout) {
+int rocs_usb_writeUSB(void* husb, int endpoint, byte* out, int len, int timeout) {
   int rc = 0;
 
 #if defined __linux__
@@ -177,7 +211,7 @@ int rocs_usb_writeUSB(void* husb, byte* out, int len, int timeout) {
   TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
   if( husb != NULL ) {
     int transferred = 0;
-    rc = libusb_bulk_transfer ((libusb_device_handle *)husb, BULK_EP_OUT, out, len, &transferred, timeout);
+    rc = libusb_bulk_transfer ((libusb_device_handle *)husb, endpoint, out, len, &transferred, timeout);
   }
 #endif
 
@@ -185,14 +219,14 @@ int rocs_usb_writeUSB(void* husb, byte* out, int len, int timeout) {
 }
 
 
-int rocs_usb_readUSB(void* husb, byte* in, int len, int timeout) {
+int rocs_usb_readUSB(void* husb, int endpoint, byte* in, int len, int timeout) {
   int rc = -1;
 
 #if defined __linux__
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read %d...", len );
   if( husb != NULL ) {
     int transferred = 0;
-    rc = libusb_bulk_transfer ((libusb_device_handle *)husb, BULK_EP_IN, in, len, &transferred, timeout);
+    rc = libusb_bulk_transfer ((libusb_device_handle *)husb, endpoint, in, len, &transferred, timeout);
     if( transferred == len )
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, len );
   }

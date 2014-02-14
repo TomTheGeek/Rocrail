@@ -22,7 +22,7 @@
 #include "rocs/public/mem.h"
 
 
-void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr) {
+void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr, int* input, int* output) {
   return NULL;
 }
 
@@ -30,10 +30,10 @@ Boolean rocs_usb_closeUSB(void* husb, int interfaceNr) {
   return False;
 }
 
-int rocs_usb_writeUSB(void* husb, byte* out, int len, int timeout) {
+int rocs_usb_writeUSB(void* husb, int endpoint, byte* out, int len, int timeout) {
   return 0;
 }
 
-int rocs_usb_readUSB(void* husb, byte* in, int len, int timeout) {
+int rocs_usb_readUSB(void* husb, int endpoint, byte* in, int len, int timeout) {
   return 0;
 }
