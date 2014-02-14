@@ -314,9 +314,9 @@ static void _setIni( iONode ini ) {
         trcLvlNew &= ~TRCLEVEL_BYTE ;
 
       if( wTrace.isdebug( curtrace ) )
-        trcLvlNew |= (TRCLEVEL_DEBUG & TRCLEVEL_XMLH) ;
+        trcLvlNew |= (TRCLEVEL_DEBUG | TRCLEVEL_XMLH) ;
       else
-        trcLvlNew &= ~(TRCLEVEL_DEBUG & TRCLEVEL_XMLH) ;
+        trcLvlNew &= ~(TRCLEVEL_DEBUG | TRCLEVEL_XMLH) ;
 
       if( wTrace.ismonitor( curtrace ) )
         trcLvlNew |= TRCLEVEL_MONITOR ;
