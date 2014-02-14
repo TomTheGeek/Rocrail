@@ -410,21 +410,58 @@ static void __transactor( void* threadinst ) {
     /* Init sequence:
      */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Initialize the CS..." );
-    /* set auto inform flags */
-    { byte cmd[64] = {0x06,USB_SETAUTOINFORMFLAGS,0x00,0x00,0x01,0x07}; USBOp.write(data->usb, cmd, 64, data->timeout); }
+
+    {
+      byte cmd[64] = {0x06,USB_SETAUTOINFORMFLAGS,0x00,0x00,0x01,0x07};
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Set auto inform flags" );
+      USBOp.write(data->usb, cmd, 64, data->timeout);
+      if( USBOp.read(data->usb, cmd, 64, data->timeout) == 0 )
+        __evaluatePacket(roco, cmd);
+    }
 
     /* Xpressnet: Power ON */
-    { byte cmd[64] = {0x05,USB_XPRESSNET,0x21,0x81,0xA0}; USBOp.write(data->usb, cmd, 64, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
+    {
+      byte cmd[64] = {0x05,USB_XPRESSNET,0x21,0x81,0xA0};
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Xpressnet: Power ON" );
+      USBOp.write(data->usb, cmd, 64, data->timeout);
+      if( USBOp.read(data->usb, cmd, 64, data->timeout) == 0 )
+        __evaluatePacket(roco, cmd);
+    }
 
     /* Get RMBus data */
-    { byte cmd[64] = {0x03,USB_RMBUS_GETDATA,0x00}; USBOp.write(data->usb, cmd, 64, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
-    { byte cmd[64] = {0x03,USB_RMBUS_GETDATA,0x01}; USBOp.write(data->usb, cmd, 64, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
+    {
+      byte cmd[64] = {0x03,USB_RMBUS_GETDATA,0x00};
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Get RMBus data 0" );
+      USBOp.write(data->usb, cmd, 64, data->timeout);
+      if( USBOp.read(data->usb, cmd, 64, data->timeout) == 0 )
+        __evaluatePacket(roco, cmd);
+    }
+
+    {
+      byte cmd[64] = {0x03,USB_RMBUS_GETDATA,0x01};
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Get RMBus data 1" );
+      USBOp.write(data->usb, cmd, 64, data->timeout);
+      if( USBOp.read(data->usb, cmd, 64, data->timeout) == 0 )
+        __evaluatePacket(roco, cmd);
+    }
 
     /* Xpressnet: Get version */
-    { byte cmd[64] = {0x05,USB_XPRESSNET,0x21,0x21,0x00}; USBOp.write(data->usb, cmd, 64, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
+    {
+      byte cmd[64] = {0x05,USB_XPRESSNET,0x21,0x21,0x00};
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Xpressnet: Get version" );
+      USBOp.write(data->usb, cmd, 64, data->timeout);
+      if( USBOp.read(data->usb, cmd, 64, data->timeout) == 0 )
+        __evaluatePacket(roco, cmd);
+    }
 
     /* Get version */
-    { byte cmd[64] = {0x02,USB_FIRMWARE_INFO}; USBOp.write(data->usb, cmd, 64, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
+    {
+      byte cmd[64] = {0x02,USB_FIRMWARE_INFO};
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Get version" );
+      USBOp.write(data->usb, cmd, 64, data->timeout);
+      if( USBOp.read(data->usb, cmd, 64, data->timeout) == 0 )
+        __evaluatePacket(roco, cmd);
+    }
 
   }
 
