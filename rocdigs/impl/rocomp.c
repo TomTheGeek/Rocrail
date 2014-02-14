@@ -441,9 +441,9 @@ static void __transactor( void* threadinst ) {
     }
 
     MemOp.set(in, 0, sizeof(in));
-    didRead = USBOp.read(data->usb, in, 64, doRead ? data->timeout:10);
+    didRead = USBOp.read(data->usb, in, 64, data->timeout);
 
-    if( didRead > 0 ) {
+    if( didRead == 0 ) {
       /* evaluate */
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "evaluate packet..." );
       __evaluatePacket(roco, in);
