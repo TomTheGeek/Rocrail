@@ -441,7 +441,7 @@ static void __transactor( void* threadinst ) {
     }
 
     MemOp.set(in, 0, sizeof(in));
-    didRead = USBOp.read(data->usb, in, 64, data->timeout);
+    didRead = USBOp.read(data->usb, in, 64, doRead?100:data->timeout);
 
     if( didRead == 0 ) {
       /* evaluate */
