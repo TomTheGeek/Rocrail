@@ -207,7 +207,7 @@ int rocs_usb_writeUSB(void* husb, int endpoint, byte* out, int len, int timeout)
   int rc = 0;
 
 #if defined __linux__
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %d...", len );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "write %d...", len );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
   if( husb != NULL ) {
     int transferred = 0;
@@ -223,7 +223,7 @@ int rocs_usb_readUSB(void* husb, int endpoint, byte* in, int len, int timeout) {
   int rc = -1;
 
 #if defined __linux__
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "read %d...", len );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "read %d...", len );
   if( husb != NULL ) {
     int transferred = 0;
     rc = libusb_bulk_transfer ((libusb_device_handle *)husb, endpoint, in, len, &transferred, timeout);
