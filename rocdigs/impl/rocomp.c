@@ -111,7 +111,7 @@ static void __translate( iORocoMP inst, iONode node ) {
     const char* cmd = wSysCmd.getcmd( node );
 
     if( StrOp.equals( cmd, wSysCmd.stop ) ) {
-      byte* outa = allocMem(32);
+      byte* outa = allocMem(65);
       outa[0] = 0x80 + 5;
       outa[1] = 5;
       outa[2] = USB_XPRESSNET;
@@ -122,7 +122,7 @@ static void __translate( iORocoMP inst, iONode node ) {
       ThreadOp.post( data->transactor, (obj)outa );
     }
     else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
-      byte* outa = allocMem(32);
+      byte* outa = allocMem(65);
       outa[0] = 0x80 + 4;
       outa[1] = 4;
       outa[2] = USB_XPRESSNET;
@@ -132,7 +132,7 @@ static void __translate( iORocoMP inst, iONode node ) {
       ThreadOp.post( data->transactor, (obj)outa );
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
-      byte* outa = allocMem(32);
+      byte* outa = allocMem(65);
       outa[0] = 0x80 + 5;
       outa[1] = 5;
       outa[2] = USB_XPRESSNET;
@@ -146,7 +146,7 @@ static void __translate( iORocoMP inst, iONode node ) {
 
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
-    byte* outa = allocMem(32);
+    byte* outa = allocMem(65);
     int  addr = wLoc.getaddr( node );
     int   dir = wLoc.isdir( node );
     int    fn = wLoc.isfn( node );
@@ -161,7 +161,7 @@ static void __translate( iORocoMP inst, iONode node ) {
     }
 
     /* Speed and direction 09 40 E5 13 00 03 90 00 */
-    outa = allocMem(32);
+    outa = allocMem(65);
     outa[0] = 0x80 + 8;
     outa[1] = 8;
     outa[2] = USB_XPRESSNET;
@@ -176,7 +176,7 @@ static void __translate( iORocoMP inst, iONode node ) {
     ThreadOp.post( data->transactor, (obj)outa );
 
     /* Light function 08 40 E4 F8 00 01 00 */
-    outa = allocMem(32);
+    outa = allocMem(65);
     outa[0] = 0x80 + 8;
     outa[1] = 8;
     outa[2] = USB_XPRESSNET;
@@ -193,7 +193,7 @@ static void __translate( iORocoMP inst, iONode node ) {
 
   /* Switch command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
-    byte* outb = allocMem(32);
+    byte* outb = allocMem(65);
     int addr = wSwitch.getaddr1( node );
     int port = wSwitch.getport1( node );
     int gate = wSwitch.getgate1( node );
@@ -231,7 +231,7 @@ static void __translate( iORocoMP inst, iONode node ) {
 
       ThreadOp.sleep(100);
 
-      outb = allocMem(32);
+      outb = allocMem(65);
       outb[0] = 0x80 + 7;
       outb[1] = 7;
       outb[2] = USB_XPRESSNET;
@@ -411,20 +411,20 @@ static void __transactor( void* threadinst ) {
      */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Initialize the CS..." );
     /* set auto inform flags */
-    { byte cmd[8] = {0x06,USB_SETAUTOINFORMFLAGS,0x00,0x00,0x01,0x07}; USBOp.write(data->usb, cmd, 6, data->timeout); }
+    { byte cmd[64] = {0x06,USB_SETAUTOINFORMFLAGS,0x00,0x00,0x01,0x07}; USBOp.write(data->usb, cmd, 64, data->timeout); }
 
     /* Xpressnet: Power ON */
-    { byte cmd[8] = {0x05,USB_XPRESSNET,0x21,0x81,0xA0}; USBOp.write(data->usb, cmd, 5, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
+    { byte cmd[64] = {0x05,USB_XPRESSNET,0x21,0x81,0xA0}; USBOp.write(data->usb, cmd, 64, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
 
     /* Get RMBus data */
-    { byte cmd[8] = {0x03,USB_RMBUS_GETDATA,0x00}; USBOp.write(data->usb, cmd, 3, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
-    { byte cmd[8] = {0x03,USB_RMBUS_GETDATA,0x01}; USBOp.write(data->usb, cmd, 3, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
+    { byte cmd[64] = {0x03,USB_RMBUS_GETDATA,0x00}; USBOp.write(data->usb, cmd, 64, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
+    { byte cmd[64] = {0x03,USB_RMBUS_GETDATA,0x01}; USBOp.write(data->usb, cmd, 64, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
 
     /* Xpressnet: Get version */
-    { byte cmd[8] = {0x05,USB_XPRESSNET,0x21,0x21,0x00}; USBOp.write(data->usb, cmd, 5, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
+    { byte cmd[64] = {0x05,USB_XPRESSNET,0x21,0x21,0x00}; USBOp.write(data->usb, cmd, 64, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
 
     /* Get version */
-    { byte cmd[8] = {0x02,USB_FIRMWARE_INFO}; USBOp.write(data->usb, cmd, 2, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
+    { byte cmd[64] = {0x02,USB_FIRMWARE_INFO}; USBOp.write(data->usb, cmd, 64, data->timeout); USBOp.read(data->usb, in, 64, data->timeout);}
 
   }
 
@@ -435,7 +435,7 @@ static void __transactor( void* threadinst ) {
 
     byte* post = (byte*)ThreadOp.getPost( th );
     if( post != NULL ) {
-      USBOp.write(data->usb, post+1, post[0]&0x7F, data->timeout);
+      USBOp.write(data->usb, post+1, 64, data->timeout);
       doRead = (post[0] & 0x80) ? True:False;
       freeMem(post);
     }

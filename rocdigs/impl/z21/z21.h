@@ -38,6 +38,7 @@
 /* Mit 0xA2 kannst Du also Meldungen in den LocoNet-Bus schicken */
 
 #define LAN_LOCONET_DISPATCH_ADDR 0xA3 // Lokadresse dispatchen (Parameter: Lokadresse, little endian)
+#define LAN_LOCONET_DETECTOR 0xA4 //
 
 
 
