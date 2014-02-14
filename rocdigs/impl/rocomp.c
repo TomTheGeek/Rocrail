@@ -377,7 +377,7 @@ static void __evaluatePacket(iORocoMP roco, byte* in) {
 
   switch( usb ) {
   case USB_FIRMWARE_INFO:
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Firmware version %d.%d.%d.%d", in[6], in[7], in[8], in[9] );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Firmware version %d.%d.%d.%d", in[8], in[9], in[10], in[11] );
     break;
   case USB_XPRESSNET:
     __evaluateXpressnet(roco, in);
@@ -466,6 +466,7 @@ static void __transactor( void* threadinst ) {
   }
 
 
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start transactor loop." );
   while( data->run && data->usbOK ) {
     Boolean doRead = False;
     int didRead = 0;
