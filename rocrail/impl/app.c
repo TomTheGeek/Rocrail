@@ -284,9 +284,59 @@ static void _setIni( iONode ini ) {
 
     if( trace != NULL && curtrace != NULL) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "trace levels changes are activated, other setting at restart..." );
+
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "_setIni: trace levels [old][new]: auto[%d][%d] byte[%d][%d] debug[%d][%d] monitor[%d][%d] info[%d][%d] calc[%d][%d]",
+          wTrace.isautomatic( curtrace ), wTrace.isautomatic( trace ),
+          wTrace.isbyte(      curtrace ), wTrace.isbyte(      trace ),
+          wTrace.isdebug(     curtrace ), wTrace.isdebug(     trace ),
+          wTrace.ismonitor(   curtrace ), wTrace.ismonitor(   trace ),
+          wTrace.isinfo(      curtrace ), wTrace.isinfo(      trace ),
+          wTrace.iscalc(      curtrace ), wTrace.iscalc(      trace ) );
+
       wTrace.setautomatic( curtrace, wTrace.isautomatic( trace ) );
       wTrace.setbyte( curtrace, wTrace.isbyte( trace ) );
       wTrace.setdebug( curtrace, wTrace.isdebug( trace ) );
+      wTrace.setmonitor( curtrace, wTrace.ismonitor( trace ) );
+      wTrace.setinfo( curtrace, wTrace.isinfo( trace ) );
+      wTrace.setcalc( curtrace, wTrace.iscalc( trace ) );
+
+      tracelevel trcLvlOld = TraceOp.getLevel( NULL );
+      tracelevel trcLvlNew = trcLvlOld ;
+
+      if( wTrace.isautomatic( curtrace ) )
+        trcLvlNew |= TRCLEVEL_USER1 ;
+      else
+        trcLvlNew &= ~TRCLEVEL_USER1 ;
+
+      if( wTrace.isbyte( curtrace ) )
+        trcLvlNew |= TRCLEVEL_BYTE ;
+      else
+        trcLvlNew &= ~TRCLEVEL_BYTE ;
+
+      if( wTrace.isdebug( curtrace ) )
+        trcLvlNew |= (TRCLEVEL_DEBUG & TRCLEVEL_XMLH) ;
+      else
+        trcLvlNew &= ~(TRCLEVEL_DEBUG & TRCLEVEL_XMLH) ;
+
+      if( wTrace.ismonitor( curtrace ) )
+        trcLvlNew |= TRCLEVEL_MONITOR ;
+      else
+        trcLvlNew &= ~TRCLEVEL_MONITOR ;
+
+      if( wTrace.isinfo( curtrace ) )
+        trcLvlNew |= TRCLEVEL_INFO ;
+      else
+        trcLvlNew &= ~TRCLEVEL_INFO ;
+
+      if( wTrace.iscalc( curtrace ) )
+        trcLvlNew |= TRCLEVEL_CALC ;
+      else
+        trcLvlNew &= ~TRCLEVEL_CALC ;
+
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "_setIni: trcLvlOld[%08.8X] trcLvlNew[%08.8X]", trcLvlOld, trcLvlNew );
+
+      if( trcLvlOld != trcLvlNew )
+        TraceOp.setLevel( NULL, trcLvlNew );
     }
 
     /* free up newini from previous setIni */
