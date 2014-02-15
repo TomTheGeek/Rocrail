@@ -149,9 +149,27 @@ static void __translate( iORocoMP inst, iONode node ) {
     byte* outa = allocMem(65);
     int  addr = wLoc.getaddr( node );
     int   dir = wLoc.isdir( node );
-    int    fn = wLoc.isfn( node );
     int spcnt = wLoc.getspcnt( node );
     int speed = 0;
+
+    int reqid = 0x12; /* default 28 speed steps */
+    switch( spcnt ) {
+      case 27:
+        reqid = 0x11;
+        break;
+      case 14:
+        reqid = 0x10;
+        break;
+      case 127:
+      case 128:
+        reqid = 0x13;
+        spcnt = 127;
+        break;
+      default:
+        reqid = 0x12;
+        spcnt = 28;
+        break;
+    }
 
     if( wLoc.getV( node ) != -1 ) {
       if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
@@ -166,22 +184,82 @@ static void __translate( iORocoMP inst, iONode node ) {
     outa[1] = 8;
     outa[2] = USB_XPRESSNET;
     outa[3] = 0xE5;
-    outa[4] = 0x13; /* 128 steps */
+    outa[4] = reqid; /* 128 steps */
     outa[5] = addr/256;
     outa[6] = addr%256;
     outa[7] = speed + (dir?0x80:0x00);
     outa[8] = __makeXor(outa+1, 7);
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d velocity=%d dir=%s fn=%d", addr, speed, (dir?"fwd":"rev"), fn );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d velocity=%d dir=%s", addr, speed, (dir?"fwd":"rev") );
     ThreadOp.post( data->transactor, (obj)outa );
+  }
 
-    /* Light function 08 40 E4 F8 00 01 00 */
-    outa = allocMem(65);
+
+  /* Function command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    int addr      = wFunCmd.getaddr( node );
+    int fgroup    = wFunCmd.getgroup( node );
+    int fnchanged = wFunCmd.getfnchanged( node );
+    byte fn = 0;
+
+    byte* outa = allocMem(65);
     outa[0] = 0x80 + 8;
     outa[1] = 8;
     outa[2] = USB_XPRESSNET;
     outa[3] = 0xE4;
-    outa[4] = 0xF8;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d set function=%d", addr, fnchanged );
+
+    if( fnchanged < 5 ) {
+      /* F1-F4 */
+      fn |= wFunCmd.isf0(node) ? 0x10:0x00;
+      fn |= wFunCmd.isf1(node) ? 0x01:0x00;
+      fn |= wFunCmd.isf2(node) ? 0x02:0x00;
+      fn |= wFunCmd.isf3(node) ? 0x04:0x00;
+      fn |= wFunCmd.isf4(node) ? 0x08:0x00;
+      outa[4] = 0x20;
+    }
+    else if( fnchanged < 9 ) {
+      /* F5-F8 */
+      fn |= wFunCmd.isf5(node) ? 0x01:0x00;
+      fn |= wFunCmd.isf6(node) ? 0x02:0x00;
+      fn |= wFunCmd.isf7(node) ? 0x04:0x00;
+      fn |= wFunCmd.isf8(node) ? 0x08:0x00;
+      outa[4] = 0x21;
+    }
+    else if( fnchanged < 13 ) {
+      /* F9-F12 */
+      fn |= wFunCmd.isf9 (node) ? 0x01:0x00;
+      fn |= wFunCmd.isf10(node) ? 0x02:0x00;
+      fn |= wFunCmd.isf11(node) ? 0x04:0x00;
+      fn |= wFunCmd.isf12(node) ? 0x08:0x00;
+      outa[4] = 0x22;
+    }
+    else if( fnchanged < 21 ) {
+      /* F13-F20 */
+      fn |= wFunCmd.isf13(node) ? 0x01:0x00;
+      fn |= wFunCmd.isf14(node) ? 0x02:0x00;
+      fn |= wFunCmd.isf15(node) ? 0x04:0x00;
+      fn |= wFunCmd.isf16(node) ? 0x08:0x00;
+      fn |= wFunCmd.isf17(node) ? 0x10:0x00;
+      fn |= wFunCmd.isf18(node) ? 0x20:0x00;
+      fn |= wFunCmd.isf19(node) ? 0x40:0x00;
+      fn |= wFunCmd.isf20(node) ? 0x80:0x00;
+      outa[4] = 0xF3;
+    }
+    else {
+      /* F21-F28 */
+      fn |= wFunCmd.isf21(node) ? 0x01:0x00;
+      fn |= wFunCmd.isf22(node) ? 0x02:0x00;
+      fn |= wFunCmd.isf23(node) ? 0x04:0x00;
+      fn |= wFunCmd.isf24(node) ? 0x08:0x00;
+      fn |= wFunCmd.isf25(node) ? 0x10:0x00;
+      fn |= wFunCmd.isf26(node) ? 0x20:0x00;
+      fn |= wFunCmd.isf27(node) ? 0x40:0x00;
+      fn |= wFunCmd.isf28(node) ? 0x80:0x00;
+      outa[4] = 0xF4;
+    }
+
     outa[5] = addr/256;
     outa[6] = addr%256;
     outa[7] = fn;
@@ -246,6 +324,37 @@ static void __translate( iORocoMP inst, iONode node ) {
     }
   }
 
+  /* Output command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+
+    int addr   = wOutput.getaddr( node );
+    int port   = wOutput.getport( node );
+    int gate   = wOutput.getgate( node );
+
+    if( port == 0 )
+      AddrOp.fromFADA( addr, &addr, &port, &gate );
+    else if( addr == 0 && port > 0 )
+      AddrOp.fromPADA( port, &addr, &port );
+
+    if( port > 0 ) port--;
+    if( addr > 0 ) addr--;
+
+    int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x08:0x00;
+
+    // make message:
+    byte* outb = allocMem(65);
+    outb[0] = 0x80 + 7;
+    outb[1] = 7;
+    outb[2] = USB_XPRESSNET;
+    outb[3] = 0x53;
+    outb[4] = addr/256;
+    outb[5] = addr%256;
+    outb[6] = 0x90 | action | (port << 1) | gate;
+    outb[7] = __makeXor(outb+1, 6);
+    ThreadOp.post( data->transactor, (obj)outb );
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d %d %d %s", addr+1, port+1, gate, wOutput.getcmd( node ) );
+  }
 
 }
 
