@@ -698,6 +698,7 @@
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
       <var name="fboffset" vt="int"/>
+      <var name="protver" vt="int"/>
       <var name="readerTick[8]" vt="unsigned long"/>
     </data>
   </object>

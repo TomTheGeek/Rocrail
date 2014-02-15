@@ -258,7 +258,12 @@ static void __evaluateRFID(iORFID12 inst, char* rfid, int idx) {
   wFeedback.setstate( evt, True );
   wFeedback.setaddr( evt, addr );
   wFeedback.setfbtype( evt, wFeedback.fbtype_rfid );
-  wFeedback.setidentifier( evt, ident );
+
+  if( data->protver == 1 )
+    wFeedback.setid( evt, ident );
+  else
+    wFeedback.setidentifier( evt, ident );
+
   if( data->iid != NULL )
     wFeedback.setiid( evt, data->iid );
 
@@ -394,6 +399,7 @@ static struct ORFID12* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->bps      = wDigInt.getbps( ini );
   data->fboffset = wDigInt.getfboffset( ini );
+  data->protver  = wDigInt.getprotver( ini );
   
   MemOp.set( data->readerTick, 0, sizeof(data->readerTick) );
 
@@ -406,6 +412,7 @@ static struct ORFID12* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps       = 9600 (fixed)" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "handshake = RTS/CTS (fixed)" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fboffset  = %d", data->fboffset );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "protocol  = %d", data->protver );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
 
