@@ -560,6 +560,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
     int delay = wSwitch.getdelay(node) > 0 ? wSwitch.getdelay(node):data->swtime;
     int addr = wSwitch.getaddr1( node );
+    if( addr == 0 )
+      addr = wSwitch.getport1( node );
 
     StrOp.fmtb( uidKey, "0x%08X", wSwitch.getbus(node) );
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
@@ -666,6 +668,9 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     int addr = wSignal.getaddr(node);
     int aspect = wSignal.getaspect(node);
 
+    if( addr == 0 )
+      addr = wSignal.getport1(node);
+
     StrOp.fmtb( uidKey, "0x%08X", wSignal.getbus(node) );
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
     if( bidibnode == NULL ) {
@@ -699,6 +704,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     Boolean setvalue = StrOp.equals( wOutput.getcmd( node ), wOutput.value );
     int addr  = wOutput.getaddr( node );
     int value = wOutput.getvalue( node );
+
+    if( addr == 0 )
+      addr = wOutput.getport(node);
+
 
     StrOp.fmtb( uidKey, "0x%08X", wOutput.getbus(node) );
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
