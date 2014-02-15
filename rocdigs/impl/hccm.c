@@ -121,11 +121,35 @@ static iONode __translate(obj inst , iONode node) {
 
     if( analog ) {
       byte* cmd = allocMem(32);
-      cmd[0] = 2;
+      cmd[0] = 2; /* packet size */
       cmd[1] = block;
       cmd[2] = speed;
       ThreadOp.post( data->transactor, (obj)cmd );
     }
+  }
+
+  /* Switch command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
+    byte* cmd = allocMem(32);
+    int addr = wSwitch.getaddr1( node );
+    int port = wSwitch.getport1( node );
+    int gate = wSwitch.getgate1( node );
+
+    cmd[0] = 2;
+    cmd[1] = addr;
+    cmd[2] = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x01:0x00;
+    ThreadOp.post( data->transactor, (obj)cmd );
+  }
+
+  /* Output command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    byte* cmd = allocMem(32);
+    int addr = wOutput.getaddr( node );
+
+    cmd[0] = 2;
+    cmd[1] = addr;
+    cmd[2] = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x01:0x00;
+    ThreadOp.post( data->transactor, (obj)cmd );
   }
 
   return rsp;
@@ -200,6 +224,17 @@ static void __evaluatePacket(iOHCCM hccm, byte* in) {
   iOHCCMData data = Data(hccm);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluate 0x%02X 0x%02X", in[0], in[1] );
 
+  /* example to generate a sensor event */
+  if( in[0] == 0xFF ) {
+    int addr = in[1];
+    iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    wFeedback.setaddr( nodeC, addr );
+    wFeedback.setstate( nodeC, (in[0] & 0x01 ) ? True:False );
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+
 }
 
 
@@ -224,8 +259,10 @@ static void __transactor( void* threadinst ) {
       freeMem(post);
     }
 
-    if( SerialOp.read(data->serial, (char*)in, 2) ) {
-      __evaluatePacket(hccm, in);
+    if( SerialOp.available(data->serial) ) {
+      if( SerialOp.read(data->serial, (char*)in, 2) ) {
+        __evaluatePacket(hccm, in);
+      }
     }
 
     ThreadOp.sleep(10);
