@@ -466,6 +466,7 @@
       <const name="dtc" vt="string" val="dtc"/>
       <const name="rocomp" vt="string" val="rocomp"/>
       <const name="io8255" vt="string" val="io8255"/>
+      <const name="hccm" vt="string" val="hccm"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
