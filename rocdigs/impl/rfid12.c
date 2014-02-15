@@ -249,6 +249,7 @@ static void __evaluateRFID(iORFID12 inst, char* rfid, int idx) {
   if( rfid[0] >= 'A' ) {
     addr = (rfid[0] - 'A') + 1;
   }
+  StrOp.copy(data->ident[addr-1], ident);
 
   data->readerTick[addr-1] = SystemOp.getTick();
   addr = addr + data->fboffset;
@@ -286,6 +287,8 @@ static void __RFIDTicker( void* threadinst ) {
         wFeedback.setaddr( evt, i + 1 + data->fboffset );
         wFeedback.setfbtype( evt, wFeedback.fbtype_rfid );
         wFeedback.setidentifier( evt, 0 );
+        if( data->protver == 1 )
+          wFeedback.setid( evt, data->ident[i] );
         if( data->iid != NULL )
           wFeedback.setiid( evt, data->iid );
 

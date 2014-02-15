@@ -700,7 +700,8 @@
       <var name="fboffset" vt="int"/>
       <var name="protver" vt="int"/>
       <var name="readerTick[8]" vt="unsigned long"/>
-    </data>
+      <var name="ident[8][64]" vt="char"/>
+      </data>
   </object>
 
 
