@@ -2140,7 +2140,7 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
       data->bbtIn = SystemOp.getTick();
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT pre2in=%ld block=%s", data->bbtIn, data->bbtInBlock );
     }
-    else if( evt == in_event && data->bbtIn == 0 && data->bbtEnter > 0 ) {
+    else if( evt == in_event && data->bbtIn == 0 && data->bbtEnter > 0 && StrOp.equals(blockid, data->bbtEnterBlock) ) {
       if( timer == 0 ) {
         data->bbtInBlock = blockid;
         data->bbtIn = SystemOp.getTick();
