@@ -52,8 +52,8 @@ all: version
 server: version
 	cd rocrail$(CS) $(MAKE) server TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) ARCH=$(ARCH) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL) WXCONFIG=$(WXCONFIG)
 
-offlineall:
-	cd rocrail$(CS) $(MAKE) rocrail TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) ARCH=$(ARCH) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL) WXCONFIG=$(WXCONFIG)
+offline: versionoffline
+	cd rocrail$(CS) $(MAKE) fromtar TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) ARCH=$(ARCH) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL) WXCONFIG=$(WXCONFIG)
 
 fromtar: version
 	cd rocrail$(CS) $(MAKE) fromtar TOOLPREFIX=$(TOOLPREFIX) LIBSUFFIX=$(LIBSUFFIX) PLATFORM=$(PLATFORM) ARCH=$(ARCH) NATIVE=$(NATIVE) MINGWINSTALL=$(MINGWINSTALL) WXCONFIG=$(WXCONFIG)
@@ -74,5 +74,11 @@ version:
 	@echo $(QUOT);$(QUOT) >> common$(FS)version.h
 	@echo $(QUOT)const char* commithash = $(QUOT) >> common$(FS)version.h
 	git log -n 1 --pretty=format:\"%H\" >> common$(FS)version.h
+	@echo $(QUOT);$(QUOT) >> common$(FS)version.h
+
+versionoffline:
+	@echo $(QUOT)const int revisionnr = 0$(QUOT) > common$(FS)version.h
+	@echo $(QUOT);$(QUOT) >> common$(FS)version.h
+	@echo $(QUOT)const char* commithash = 0$(QUOT) >> common$(FS)version.h
 	@echo $(QUOT);$(QUOT) >> common$(FS)version.h
 
