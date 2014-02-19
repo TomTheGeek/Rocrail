@@ -208,7 +208,7 @@ static void __translate( iORocoMP inst, iONode node ) {
     outa[2] = USB_XPRESSNET;
     outa[3] = 0xE4;
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d set function=%d", addr, fnchanged );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d change function=%d", addr, fnchanged );
 
     if( fnchanged < 5 ) {
       /* F1-F4 */
