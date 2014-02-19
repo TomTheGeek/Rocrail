@@ -404,10 +404,11 @@ static Boolean __syncGo( iORoute inst ) {
       iOOutput ico = ModelOp.getOutput( model, swId );
 
       if( ico != NULL ) {
-        if( StrOp.equals( wOutput.on, swCmd ) )
-          OutputOp.on(ico);
-        else
-          OutputOp.off(ico);
+        iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+        wOutput.setcmd( cmd, swCmd );
+        wOutput.setpause( cmd, wCtrl.getrouteswtime( wRocRail.getctrl( AppOp.getIni() ) ) * swdelay );
+        swdelay++;
+        OutputOp.cmd(ico, cmd, True);
       }
     }
     else {

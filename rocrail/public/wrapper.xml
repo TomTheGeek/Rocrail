@@ -1798,6 +1798,7 @@
 
         <var name="tristate" vt="bool" defval="false" remark="Tri-state flag."/>
         <var name="toggleswitch" vt="bool" defval="true" remark="Toggle switch or push button."/>
+        <var name="pause" vt="int" defval="0" range="0-*" required="false" remark="Pause ms before executing command."/>
         <const name="sod" vt="string" val="sod"/>
         <const name="on" vt="string" val="on"/>
         <const name="active" vt="string" val="active"/>

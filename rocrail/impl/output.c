@@ -170,7 +170,7 @@ static void __checkActions(iOOutput inst, const char* cmd) {
 
 
 /**  */
-static Boolean _cmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
+static Boolean __doCmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
   iOOutputData o = Data(inst);
   iOControl control = AppOp.getControl(  );
 
@@ -438,6 +438,42 @@ static void _on( struct OOutput* inst ) {
 static Boolean _isState( iOOutput inst, const char* state ) {
   iOOutputData data = Data(inst);
   return StrOp.equals( state, wOutput.getstate(data->props) );
+}
+
+static void __doCmdThread( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOOutput op = (iOOutput)ThreadOp.getParm( th );
+  iOOutputData data = Data(op);
+
+  iONode nodeA = (iONode)ThreadOp.getPost(th);
+  if( nodeA != NULL ) {
+    Boolean update = wSwitch.iscmd_update(nodeA);
+    int error = 0;
+    if( wOutput.getpause(nodeA) > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delay command for output[%s] %dms", OutputOp.getId(op), wOutput.getpause(nodeA) );
+      ThreadOp.sleep(wOutput.getpause(nodeA));
+    }
+    __doCmd(op, nodeA, update);
+  }
+  ThreadOp.base.del(th);
+}
+
+
+
+static Boolean _cmd( iOOutput inst, iONode nodeA, Boolean update ) {
+  iOOutputData data = Data(inst);
+
+  if( wOutput.getpause(nodeA) > 0 ) {
+    iOThread th = ThreadOp.inst(NULL, &__doCmdThread, inst);
+    wSwitch.setcmd_update(nodeA, update);
+    ThreadOp.post(th, (obj)nodeA);
+    ThreadOp.start(th);
+  }
+  else {
+    return __doCmd(inst, nodeA, update);
+  }
+
+  return True;
 }
 
 
