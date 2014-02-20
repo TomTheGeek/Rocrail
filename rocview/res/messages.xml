@@ -1703,7 +1703,7 @@
     <en_GB txt="This action also resets all block reservations. Proceed?"/>
     <sr_latin txt="Ovo takođe poništava sve rezervacije blokova. Prosledi?"/>
     <ja txt="全てのブロックの予約をリセットします。進めてよいですか？"/>
-    <pl txt="Zostaną zresetowane wszystkie rezerwacje blokków . Kontynuować ?"/>
+    <pl txt="Zostaną zresetowane wszystkie rezerwacje bloków . Kontynuować ?"/>
     <zh_CN txt="这一操作将重置所有区间的赋值，你还要继续吗？"/>
     <sl txt="To dejanje ponastavi tudi rezervacije odsekov. Nadaljujem?"/>
     <pt_BR txt="Esta ação também redefinirá todas as reservas do bloco. Prosseguir?"/>
@@ -8530,7 +8530,7 @@
     <sl txt="ID odseka"/>
     <pt_BR txt="Identificação do bloco"/>
     <fi txt="Lohkon ID"/>
-    <pl txt="ID Bloku"/>
+    <pl txt="ID bloku"/>
   </Msg>
   <Msg id="gotoblock" dialog="true">
     <de txt="Ziel setzen" tip="Lok stoppt nach Erreichen des Ziels"/>
@@ -19054,7 +19054,7 @@
     <pt_BR txt="Desligar em caso de desencontro de identificação"/>
     <sv txt="Strömlöst när identitet inte stämmer"/>
     <fi txt="Sammutus tunnistumisen ristiriidan vuoksi"/>
-    <pl txt="Wyłączenie zasilania w przypadku błędnej identyfikacji"/>
+    <pl txt="Wyłączenie zasilania toru w przypadku błędnej identyfikacji"/>
   </Msg>
   <Msg id="manualoperated">
     <en txt="Manual operated"/>
@@ -20000,7 +20000,7 @@
     <sl txt="Izklopi napajanje ob navideznih vlakih"/>
     <pt_BR txt="Desligar se houver trem desgovernado"/>
     <fi txt="Sammuta haamujunan esiintyessä"/>
-    <pl txt="Wyłącz zasilanie gdy pojawi się pociąg widmo"/>
+    <pl txt="Wyłącz zasilanie toru w przypadku pojawienia się pociągu widmo"/>
   </Msg>
   <Msg id="timer">
     <en txt="Timer"/>
@@ -21040,6 +21040,7 @@
     <sl txt="Ukazi za stanje dodatne opreme pri vklopu"/>
     <pt_BR txt="Estado Ligado para comandos de acessório"/>
     <fi txt="Virran tila lisälaitteiden komennoille"/>
+    <pl txt="Włącz zasilanie toru dla poleceń wyposażenia dodatkowego"/>
   </Msg>
   <Msg id="extstop">
     <en txt="Stop controller"/>
@@ -21089,6 +21090,7 @@
     <sl txt="Prezri spročilo o zasedenosti"/>
     <pt_BR txt="Ignorar mensagem de ocupado"/>
     <fi txt="Hylkää varattu-viestit"/>
+    <pl txt="Ignoruj komunikat Busy (zajęty)"/>
   </Msg>
   <Msg id="indelay">
     <en txt="IN delay"/>
@@ -21112,6 +21114,7 @@
     <pt_BR txt="Atraso IN"/>
     <sv txt="IN fördröjning"/>
     <fi txt="IN viive"/>
+    <pl txt="Opóźnienia wejść"/>
   </Msg>
   <Msg id="led">
     <en txt="LED"/>
@@ -21164,6 +21167,7 @@
     <pt_BR txt="Desligar após redefinição"/>
     <sv txt="Strömlöst vid återställning"/>
     <fi txt="Sammuta resetoitaessa"/>
+    <pl txt="Wyłącz zasilanie toru przy resetowaniu"/>
   </Msg>
   <Msg id="poweroffonexit">
     <en txt="Power off on exit"/>
@@ -21189,6 +21193,7 @@
     <pt_BR txt="Desligar após sair"/>
     <sv txt="Strömlöst vid programavslut"/>
     <fi txt="Sammuta poistuttaessa"/>
+    <pl txt="Wyłącz zasilanie toru przy wyjściu"/>
   </Msg>
   <Msg id="polarization">
     <en txt="Polarization"/>
@@ -21238,6 +21243,7 @@
     <sv txt="Servo"/>
     <pt_BR txt="Servo"/>
     <fi txt="Servo"/>
+    <pl txt="Serwo"/>
   </Msg>
   <Msg id="setup">
     <en txt="Setup"/>
@@ -21692,6 +21698,7 @@
     <sv txt="Berätta om block"/>
     <fi txt="Lohkon osoitus"/>
     <en_CA txt="Speak for block"/>
+    <pl txt="Komunikat do bloku"/>
   </Msg>
   <Msg id="speakcmd">
     <en txt="Speak command"/>
@@ -22183,6 +22190,7 @@
     <pt_BR txt="Entroncamentos"/>
     <fi txt="Kohdat"/>
     <en_CA txt="Nodes"/>
+    <pl txt="Węzły"/>
   </Msg>
   <Msg id="stagingyard">
     <en txt="Staging yard"/>
@@ -22202,6 +22210,7 @@
     <sv txt="Bangård"/>
     <fi txt="Järjestelyratapiha"/>
     <en_CA txt="Staging yard"/>
+    <pl txt="Plac postojowy"/>
   </Msg>
   <Msg id="stagingblock">
     <en txt="Staging block"/>
@@ -22221,6 +22230,7 @@
     <sv txt="Bangårdsblock"/>
     <fi txt="Järjestelylohko"/>
     <en_CA txt="Staging block"/>
+    <pl txt="Blok postojowy"/>
   </Msg>
   <Msg id="sections">
     <en txt="Sections"/>
@@ -23613,6 +23623,7 @@
     <fr txt="fermeture du bloc sur fantome"/>
     <en_AU txt="Close block on ghost"/>
     <en_CA txt="Close block on ghost"/>
+    <pl txt="Zamknij blok po pojawieniu się pociągu widmo"/>
   </Msg>
   <Msg id="display">
     <en txt="Display"/>
@@ -27300,6 +27311,8 @@
     <pt_BR txt="Desabilitar a espera no bloco em modo semi-automático"/>
     <sl txt="Onemogoči čakanje v bloku za pol-avtomatiko"/>
     <sr_latin txt="Ukini čekanje u bloku za polu automatski"/>
+    <fi txt="Estä lohkon odotusaika puoliautomaattiajossa"/>
+    <it txt="Disabilitare l'attesa blocco in modalità semiautomatica"/>
   </Msg>
   <Msg id="simulatesensors">
     <en txt="Simulate sensors"/>
@@ -27308,5 +27321,7 @@
     <pt_BR txt="Simular sensores"/>
     <sl txt="Simuliranje tipal"/>
     <sr_latin txt="Simuliraj senzore"/>
+    <fi txt="Simuloi anturit"/>
+    <it txt="Sensori simulati"/>
   </Msg>
 </Messages>
