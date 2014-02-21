@@ -1342,10 +1342,13 @@ static void __timedqueue( void* threadinst ) {
         byte* outa = allocMem(32);
 
         if( cmd->out[0] == 0x09 && cmd->out[2] == 0x40 && cmd->out[4] == 0x53 ) {
-          int addr = cmd->out[5] + (256 * cmd->out[6]);
+          int addr = (cmd->out[5] * 256) + cmd->out[6];
           iOPoint point = __getPointByAddr(z21, addr);
           if( point != NULL ) {
             point->timerpending = False;
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "point %d not found", addr );
           }
         }
 
