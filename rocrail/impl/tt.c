@@ -963,6 +963,7 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
       /* rename node to program */
       NodeOp.setName( cmd, wProgram.name() );
       /* set type to multiport */
+      wProgram.setiid( cmd, wTurntable.getiid(data->props) );
       wProgram.setlntype( cmd, wProgram.lntype_mp );
       wProgram.setcmd( cmd, wProgram.lncvset );
       wProgram.setaddr( cmd, wTurntable.getaddr0(data->props) );
@@ -980,6 +981,8 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
 
       NodeOp.setName( cmd, wSwitch.name() );
 
+      wSwitch.setiid( cmd, wTurntable.getiid(data->props) );
+      wSwitch.setbus( cmd, wTurntable.getbus(data->props) );
       /* set the protocol */
       wSwitch.setprot( cmd, wTurntable.getprot(data->props) );
       wSwitch.setsinglegate( cmd, wTurntable.issinglegatepos(data->props) );
