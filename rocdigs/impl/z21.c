@@ -423,7 +423,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
         packet[4] = 0x53;
         packet[5] = addr / 256; /*MSB*/
         packet[6] = addr % 256; /*LSB*/
-        packet[7] = 0x80 + (active?0x08:0x00) + (turnout?0x00:0x01); /*1000A00P*/
+        packet[7] = 0x80 + 0x20 + (active?0x08:0x00) + (turnout?0x00:0x01); /* 0x20 is a patch for DCC */
         packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
       }
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dual gate switch %d: %s", addr, wSwitch.getcmd(node) );
@@ -457,7 +457,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
           cmd->out[4] = 0x53;
           cmd->out[5] = addr / 256; /*MSB*/
           cmd->out[6] = addr % 256; /*LSB*/
-          cmd->out[7] = 0x80 + (active?0x08:0x00) + (turnout?0x00:0x01); /*1000A00P*/
+          cmd->out[7] = 0x80 + 0x20 + (active?0x08:0x00) + (turnout?0x00:0x01); /*1000A00P*/
           cmd->out[8] = cmd->out[4] ^ cmd->out[5] ^ cmd->out[6] ^ cmd->out[7]; /*xor*/
         }
         ThreadOp.post(data->timedqueue, (obj)cmd);
@@ -499,7 +499,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
       packet[4] = 0x53;
       packet[5] = addr / 256; /*MSB*/
       packet[6] = addr % 256; /*LSB*/
-      packet[7] = 0x80 + (active?0x08:0x00) + gate; /*1000A00P*/
+      packet[7] = 0x80 + 0x20 + (active?0x08:0x00) + gate; /*1000A00P*/
       packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
     }
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d.%d: %s", addr, gate, wSwitch.getcmd(node) );
