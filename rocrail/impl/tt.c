@@ -991,8 +991,11 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
       wSwitch.setaddr1( cmd, wTurntable.getaddr5(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport5(data->props) );
       wSwitch.setcmd( cmd, invnew ? wSwitch.straight:wSwitch.turnout );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset position flag %d:%d:%d %s",
+          wSwitch.getbus(cmd), wSwitch.getaddr1(cmd), wSwitch.getport1(data->props), wSwitch.getcmd(cmd) );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
+      ThreadOp.sleep(10);
 
       wSwitch.setaddr1( cmd, wTurntable.getaddr0(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport0(data->props) );
@@ -1000,8 +1003,11 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
         wSwitch.setcmd( cmd, tracknr & 0x01 ? wSwitch.straight:wSwitch.turnout );
       else
         wSwitch.setcmd( cmd, tracknr & 0x01 ? wSwitch.turnout:wSwitch.straight );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "position 0 %d:%d:%d %s",
+          wSwitch.getbus(cmd), wSwitch.getaddr1(cmd), wSwitch.getport1(data->props), wSwitch.getcmd(cmd) );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
+      ThreadOp.sleep(10);
 
       wSwitch.setaddr1( cmd, wTurntable.getaddr1(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport1(data->props) );
@@ -1009,8 +1015,11 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
         wSwitch.setcmd( cmd, tracknr & 0x02 ? wSwitch.straight:wSwitch.turnout );
       else
         wSwitch.setcmd( cmd, tracknr & 0x02 ? wSwitch.turnout:wSwitch.straight );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "position 1 %d:%d:%d %s",
+          wSwitch.getbus(cmd), wSwitch.getaddr1(cmd), wSwitch.getport1(data->props), wSwitch.getcmd(cmd) );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
+      ThreadOp.sleep(10);
 
       wSwitch.setaddr1( cmd, wTurntable.getaddr2(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport2(data->props) );
@@ -1018,8 +1027,11 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
         wSwitch.setcmd( cmd, tracknr & 0x04 ? wSwitch.straight:wSwitch.turnout );
       else
         wSwitch.setcmd( cmd, tracknr & 0x04 ? wSwitch.turnout:wSwitch.straight );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "position 2 %d:%d:%d %s",
+          wSwitch.getbus(cmd), wSwitch.getaddr1(cmd), wSwitch.getport1(data->props), wSwitch.getcmd(cmd) );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
+      ThreadOp.sleep(10);
 
       wSwitch.setaddr1( cmd, wTurntable.getaddr3(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport3(data->props) );
@@ -1028,7 +1040,10 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
       else
         wSwitch.setcmd( cmd, tracknr & 0x08 ? wSwitch.turnout:wSwitch.straight );
       lcmd = (iONode)NodeOp.base.clone(cmd);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "position 3 %d:%d:%d %s",
+          wSwitch.getbus(cmd), wSwitch.getaddr1(cmd), wSwitch.getport1(data->props), wSwitch.getcmd(cmd) );
       ControlOp.cmd( control, lcmd, NULL );
+      ThreadOp.sleep(10);
 
       wSwitch.setaddr1( cmd, wTurntable.getaddr4(data->props) );
       wSwitch.setport1( cmd, wTurntable.getport4(data->props) );
@@ -1036,8 +1051,11 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
         wSwitch.setcmd( cmd, tracknr & 0x10 ? wSwitch.straight:wSwitch.turnout );
       else
         wSwitch.setcmd( cmd, tracknr & 0x10 ? wSwitch.turnout:wSwitch.straight );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "position 4 %d:%d:%d %s",
+          wSwitch.getbus(cmd), wSwitch.getaddr1(cmd), wSwitch.getport1(data->props), wSwitch.getcmd(cmd) );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
+      ThreadOp.sleep(10);
 
       if( wTurntable.getaddr6(data->props) > 0 || wTurntable.getport6(data->props) > 0 ) {
         wSwitch.setaddr1( cmd, wTurntable.getaddr6(data->props) );
@@ -1046,8 +1064,11 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
           wSwitch.setcmd( cmd, tracknr & 0x20 ? wSwitch.straight:wSwitch.turnout );
         else
           wSwitch.setcmd( cmd, tracknr & 0x20 ? wSwitch.turnout:wSwitch.straight );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "position 5 %d:%d:%d %s",
+            wSwitch.getbus(cmd), wSwitch.getaddr1(cmd), wSwitch.getport1(data->props), wSwitch.getcmd(cmd) );
         lcmd = (iONode)NodeOp.base.clone(cmd);
         ControlOp.cmd( control, lcmd, NULL );
+        ThreadOp.sleep(10);
       }
 
       /* signal new position is set: */
@@ -1055,8 +1076,11 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
       wSwitch.setport1( cmd, wTurntable.getport5(data->props) );
       wSwitch.setsinglegate( cmd, wTurntable.issinglegatenew(data->props) );
       wOutput.setcmd( cmd, invnew ? wSwitch.turnout:wSwitch.straight );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set position flag %d:%d:%d %s",
+          wSwitch.getbus(cmd), wSwitch.getaddr1(cmd), wSwitch.getport1(data->props), wSwitch.getcmd(cmd) );
       lcmd = (iONode)NodeOp.base.clone(cmd);
       ControlOp.cmd( control, lcmd, NULL );
+      ThreadOp.sleep(10);
 
     }
 
