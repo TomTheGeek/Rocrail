@@ -27324,4 +27324,7 @@
     <fi txt="Simuloi anturit"/>
     <it txt="Sensori simulati"/>
   </Msg>
+  <Msg id="locoimage">
+    <en txt="Loco image"/>
+  </Msg>
 </Messages>

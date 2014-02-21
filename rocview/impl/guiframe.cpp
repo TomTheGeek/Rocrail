@@ -344,6 +344,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_LocoBook       , RocGuiFrame::OnLocoBook)
     EVT_MENU( ME_LocoWidgets    , RocGuiFrame::OnLocoWidgets)
     EVT_MENU( ME_PlanBook       , RocGuiFrame::OnPlanBook)
+    EVT_MENU( ME_LocoImage      , RocGuiFrame::OnLocoImage)
     EVT_MENU( ME_TraceWindow    , RocGuiFrame::OnTraceWindow)
     EVT_MENU( ME_LocoSortByAddr , RocGuiFrame::OnLocoSortByAddr)
     EVT_MENU( ME_LocoViewAll    , RocGuiFrame::OnLocoViewAll)
@@ -1015,8 +1016,10 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] was selected", m_LocID );
   }
 
-  m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
-  m_LocImage->Refresh();
+  if( m_LocImage != NULL ) {
+    m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+    m_LocImage->Refresh();
+  }
 
   m_ActiveLocs->EnableEditing(false);
   m_ActiveLocs->EnableDragGridSize(false);
@@ -1948,6 +1951,7 @@ void RocGuiFrame::initFrame() {
   menuView->AppendSeparator();
 
   menuView->AppendCheckItem( ME_LocoBook, wxGetApp().getMenu("locobook"), wxGetApp().getTip("locobook") );
+  menuView->AppendCheckItem( ME_LocoImage, wxGetApp().getMenu("locoimage"), wxGetApp().getTip("locoimage") );
   menuView->AppendCheckItem( ME_LocoWidgets, wxGetApp().getMenu("locowidgets"), wxGetApp().getTip("locowidgets") );
   menuView->AppendCheckItem( ME_PlanBook, wxGetApp().getMenu("panel"), wxGetApp().getTip("panel") );
   menuView->AppendCheckItem( ME_TraceWindow, wxGetApp().getMenu("trace"), wxGetApp().getTip("trace") );
@@ -2295,8 +2299,11 @@ void RocGuiFrame::create() {
   m_ActiveLocsPanel->SetSizer(activeLocsSizer);
 
   wxBitmap m_LocImageBitmap(wxNullBitmap);
-  m_LocImage = new BitmapButton( m_ActiveLocsPanel, -1, m_LocImageBitmap, wxDefaultPosition, wxSize(250,88), wxBU_AUTODRAW|wxBU_EXACTFIT );
-  activeLocsSizer->Add(m_LocImage, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
+  m_LocImage = NULL;
+  if( wGui.isshowlocoimage(m_Ini) ) {
+    m_LocImage = new BitmapButton( m_ActiveLocsPanel, -1, m_LocImageBitmap, wxDefaultPosition, wxSize(250,88), wxBU_AUTODRAW|wxBU_EXACTFIT );
+    activeLocsSizer->Add(m_LocImage, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
+  }
 
   m_ActiveLocs = new wxGrid( m_ActiveLocsPanel, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
   m_ActiveLocs->SetRowLabelSize(0);
@@ -2325,7 +2332,9 @@ void RocGuiFrame::create() {
   m_LC = new LC( m_LCPanel );
   activeLocsSizer->Add(m_LCPanel, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
-  m_LocImage->setLC(m_LC);
+  if( m_LocImage != NULL ) {
+    m_LocImage->setLC(m_LC);
+  }
 
 
   m_StatNotebook->AddPage(m_ActiveLocsPanel, wxGetApp().getMsg("activelocs") );
@@ -3361,6 +3370,11 @@ void RocGuiFrame::OnPlanBook( wxCommandEvent& event ) {
   }
 }
 
+void RocGuiFrame::OnLocoImage( wxCommandEvent& event ) {
+  wxMenuItem* mi = menuBar->FindItem(ME_LocoImage);
+  wGui.setshowlocoimage( m_Ini, mi->IsChecked() ?True:False);
+}
+
 void RocGuiFrame::OnLocoSortByAddr( wxCommandEvent& event ) {
   wxMenuItem* mi = menuBar->FindItem(ME_LocoSortByAddr);
   m_LocoSortByAddress = mi->IsChecked();
@@ -4049,6 +4063,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   wxMenuItem* mi_locobook  = menuBar->FindItem(ME_LocoBook);
   mi_locobook->Check( m_bLocoBook );
+  wxMenuItem* mi_locoimage  = menuBar->FindItem(ME_LocoImage);
+  mi_locoimage->Check( wGui.isshowlocoimage(m_Ini) );
 
   wxMenuItem* mi_locowidgets  = menuBar->FindItem(ME_LocoWidgets);
   mi_locowidgets->Check( wGui.islocowidgetstab(m_Ini) );
@@ -4604,8 +4620,10 @@ void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
       static char pixpath[256];
       StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wLoc.getimage( lc ) ) );
 
-      if( FileOp.exist(pixpath))
-        m_LocImage->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
+      if( FileOp.exist(pixpath)) {
+        if( m_LocImage != NULL )
+          m_LocImage->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
+      }
       else {
         m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
         // request the image from server:
@@ -4617,13 +4635,15 @@ void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
         wxGetApp().sendToRocrail( node );
       }
     }
-    else
-      m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+    else {
+      if( m_LocImage != NULL )
+        m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+    }
 
-    m_LocImage->Refresh();
-
-    m_LocImage->SetToolTip(wxString(wLoc.getid( lc ),wxConvUTF8) + _T(" ") + wxString(wLoc.getdesc( lc ),wxConvUTF8));
-
+    if( m_LocImage != NULL ) {
+      m_LocImage->Refresh();
+      m_LocImage->SetToolTip(wxString(wLoc.getid( lc ),wxConvUTF8) + _T(" ") + wxString(wLoc.getdesc( lc ),wxConvUTF8));
+    }
     // Cleanup node:
     NodeOp.base.del( lc );
   }

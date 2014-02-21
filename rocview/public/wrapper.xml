@@ -128,6 +128,7 @@
     <var name="locosortbyaddress" vt="bool" defval="false"/>
     <var name="monitorsize" vt="int" defval="4"/>
     <var name="rendergc" vt="bool" defval="false"/>
+    <var name="showlocoimage" vt="bool" defval="true"/>
     <workspaces cardinality="1" wrappername="WorkSpaces">
       <workspace cardinality="n" wrappername="WorkSpace">
         <var name="title" vt="string" defval="New"/>

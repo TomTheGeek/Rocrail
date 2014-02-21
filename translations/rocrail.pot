@@ -6893,3 +6893,9 @@ msgstr ""
 msgid "Simulate sensors"
 msgstr ""
 
+#. 
+# id="locoimage"
+#, c-format
+msgid "Loco image"
+msgstr ""
+
