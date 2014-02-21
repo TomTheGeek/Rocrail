@@ -464,7 +464,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reject switch %s command: timed off is pending", wSwitch.getid(node) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reject switch %d command: timed off is pending", addr );
     }
   }
 
