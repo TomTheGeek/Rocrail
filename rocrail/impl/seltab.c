@@ -600,6 +600,7 @@ static void __processCmd( struct OSelTab* inst ,iONode nodeA ) {
 
       /* set the protocol */
       wSwitch.setprot( cmd, wSelTab.getprot(data->props) );
+      wSwitch.setbus( cmd, wSelTab.getbus(data->props) );
 
       /* signal new position will be set: */
       wSwitch.setaddr1( cmd, wSelTab.getaddr4(data->props) );
