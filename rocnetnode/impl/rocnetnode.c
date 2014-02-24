@@ -1093,26 +1093,29 @@ static void __macro(iORocNetNode rocnetnode, int macro, Boolean on, int offset) 
     int i = 0;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing macro %d %s offset=%d", macro, on?"ON":"OFF", offset);
     for( i = 0; i < 8; i++ ) {
-      if( data->macro[macro]->line[i].port > 0 && data->macro[macro]->line[i].type == 0) {
+      if( data->macro[macro]->line[i].port > 0) {
         int port = data->macro[macro]->line[i].port;
         port += offset;
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "processing macro line %d port=%d delay=%d value=%d blink=%d", i,
-            data->macro[macro]->line[i].port, data->macro[macro]->line[i].delay, data->macro[macro]->line[i].value, data->macro[macro]->line[i].blink);
+            "processing macro line %d port=%d type=%d delay=%d value=%d blink=%d", i,
+            data->macro[macro]->line[i].port, data->macro[macro]->line[i].type&IO_TYPE,
+            data->macro[macro]->line[i].delay, data->macro[macro]->line[i].value, data->macro[macro]->line[i].blink);
 
-        if( on && data->macro[macro]->line[i].blink ) {
-          if( data->ports[port] != NULL ) {
-            data->ports[port]->type |= IO_BLINK;
-            data->ports[port]->offtimer = SystemOp.getTick();
-            data->ports[port]->delay = data->macro[macro]->line[i].delay;
+        if((data->macro[macro]->line[i].type&IO_TYPE) == 0) {
+          if( on && data->macro[macro]->line[i].blink ) {
+            if( data->ports[port] != NULL ) {
+              data->ports[port]->type |= IO_BLINK;
+              data->ports[port]->offtimer = SystemOp.getTick();
+              data->ports[port]->delay = data->macro[macro]->line[i].delay;
+            }
           }
-        }
-        else {
-          if( data->ports[port] != NULL ) {
-            data->ports[port]->type &= IO_TYPE;
-            data->ports[port]->delay = 0;
-            ThreadOp.sleep( data->macro[macro]->line[i].delay * 10);
+          else {
+            if( data->ports[port] != NULL ) {
+              data->ports[port]->type &= IO_TYPE;
+              data->ports[port]->delay = 0;
+              ThreadOp.sleep( data->macro[macro]->line[i].delay * 10);
+            }
           }
         }
 
@@ -1125,9 +1128,9 @@ static void __macro(iORocNetNode rocnetnode, int macro, Boolean on, int offset) 
           if( data->macro[macro]->line[i].value > 1 ) {
               data->channels[port]->onpos = data->macro[macro]->line[i].value * 16;
           }
-          data->channels[i]->ready = False;
-          data->channels[i]->sleep = False;
-          data->channels[i]->idle  = 0;
+          data->channels[port]->ready = False;
+          data->channels[port]->sleep = False;
+          data->channels[port]->idle  = 0;
           data->channels[port]->state = (data->macro[macro]->line[i].value?1:0);
         }
       }

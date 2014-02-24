@@ -2353,6 +2353,7 @@ void Symbol::OnSelect(wxCommandEvent& event) {
   iONode sel = NodeOp.inst( "selection", NULL, ELEMENT_NODE );
   NodeOp.setInt( sel, "x", wItem.getx(m_Props) );
   NodeOp.setInt( sel, "y", wItem.gety(m_Props) );
+  NodeOp.setInt( sel, "z", wItem.getz(m_Props) );
   NodeOp.setInt( sel, "cx", 1 );
   NodeOp.setInt( sel, "cy", 1 );
   evt.SetClientData( sel );

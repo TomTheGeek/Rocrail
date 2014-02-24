@@ -1735,7 +1735,7 @@
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <var name="pause" vt="int" defval="0" range="0-*" required="false" remark="Pause ms before executing command."/>
         <var name="aspect" vt="int" defval="0" range="0-15" remark="Aspect to show: Extended DCC."/>
-        <var name="prot" vt="string" defval="M" range="M,N,D,mdd,om32"
+        <var name="prot" vt="string" defval="D" range="M,N,D,mdd,om32"
              remark="Protocol to use for this output."/>
         <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>
         <const name="prot_M" vt="string" val="M" remark="Motorola"/>

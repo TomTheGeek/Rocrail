@@ -194,7 +194,19 @@ void SelectDialog::initValues(iONode sel) {
     m_TargetX->SetValue( NodeOp.getInt( sel, "x", 0 ) );
     m_TargetY->SetValue( NodeOp.getInt( sel, "y", 0 ) );
     m_destZ = NodeOp.getInt( sel, "z", 0 );
-    m_Level->SetStringSelection( wxString(NodeOp.getStr( sel, "title", "" ),wxConvUTF8) );
+    if( NodeOp.getStr( sel, "title", NULL ) != NULL )
+      m_Level->SetStringSelection( wxString(NodeOp.getStr( sel, "title", "" ),wxConvUTF8) );
+    else {
+      iONode zlevel = wPlan.getzlevel( wxGetApp().getModel() );
+
+      while( zlevel != NULL ) {
+        if(wZLevel.getz(zlevel) == m_destZ ) {
+          m_Level->SetStringSelection( wxString(wZLevel.gettitle(zlevel),wxConvUTF8) );
+          break;
+        }
+        zlevel = wPlan.nextzlevel( wxGetApp().getModel(), zlevel );
+      };
+    }
   }
 }
 

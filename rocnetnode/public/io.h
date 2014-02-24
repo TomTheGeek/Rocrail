@@ -40,6 +40,7 @@
 #define IO_LED1 23
 #define IO_LED2 24
 #define IO_PB1 25
+#define IO_RELAIS 9
 
 #define PWM_BLINK  0x80
 #define PWM_REPORT 0x40
