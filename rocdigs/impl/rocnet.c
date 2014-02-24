@@ -288,7 +288,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     }
 
     if( StrOp.equals( wSwitch.prot_DEF, wSwitch.getprot(node) ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch bus=%d addr=%d cmd=%d", bus, addr, cmd );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch bus=%d addr=%d cmd=%d type=%d", bus, addr, cmd, wSwitch.getporttype(node) );
       rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
       rnReceipientAddresToPacket( bus, rn, data->seven );
       rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
@@ -300,7 +300,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_DATA + 4] = 0;
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch CS addr=%d cmd=%d", wSwitch.getaddr1( node ), cmd );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch CS addr=%d cmd=%d type=%d", wSwitch.getaddr1( node ), cmd, wSwitch.getporttype(node) );
       rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
       rnReceipientAddresToPacket( bus, rn, data->seven );
       rn[RN_PACKET_ACTION] = RN_CS_SWITCH;
@@ -371,7 +371,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     }
 
     if( StrOp.equals( wSwitch.prot_DEF, wSwitch.getprot(node) ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output bus=%d addr=%d cmd=%d", bus, addr, cmd );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output bus=%d addr=%d cmd=%d type=%d", bus, addr, cmd, wOutput.getporttype(node) );
       rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
       rnReceipientAddresToPacket( bus, rn, data->seven );
       rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
@@ -383,7 +383,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_DATA + 4] = 0;
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output CS addr=%d cmd=%d", addr, cmd );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output CS addr=%d cmd=%d type=%d", addr, cmd, wOutput.getporttype(node) );
       rn[RN_PACKET_GROUP] |= RN_GROUP_CS;
       rnReceipientAddresToPacket( bus, rn, data->seven );
       rn[RN_PACKET_ACTION] = RN_CS_OUTPUT;

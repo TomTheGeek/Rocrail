@@ -954,6 +954,8 @@ static Boolean __process2AspectsCmd( iOSignal inst, const char* state ) {
     wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
   }
 
+  wOutput.setaccessory( cmd, wSignal.isaccessory(o->props) );
+  wOutput.setporttype( cmd, wSignal.getporttype( o->props ) );
 
   /* invoke the command by calling the control */
   if( !ControlOp.cmd( control, cmd, NULL ) ) {
