@@ -1665,6 +1665,7 @@
     </struct>
     <struct name="point" typedef="*iOPoint">
       <var name="id" vt="char*"/>
+      <var name="bus" vt="int"/>
       <var name="addr" vt="int"/>
       <var name="timerpending" vt="Boolean"/>
       </struct>

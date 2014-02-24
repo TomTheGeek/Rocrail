@@ -213,11 +213,12 @@ static iOPoint __getPointByAddr(iOZ21 inst, int swaddr) {
 
 static iOPoint __getPoint(iOZ21 inst, iONode node) {
   iOZ21Data data = Data(inst);
+  int     bus   = wSwitch.getbus(node);
   int     addr  = wSwitch.getaddr1(node);
   char    key[256] = {'\0'};
   iOPoint point = NULL;
 
-  StrOp.fmtb(key, "%s-%d", wSwitch.getid(node), addr );
+  StrOp.fmtb(key, "%d-%d", bus, addr );
 
   point = (iOPoint)MapOp.get( data->swmap, key );
   if( point != NULL ) {
@@ -225,6 +226,7 @@ static iOPoint __getPoint(iOZ21 inst, iONode node) {
     return point;
   }
   point = allocMem( sizeof( struct point) );
+  point->bus  = bus;
   point->addr = addr;
   point->id  = StrOp.dup(wSwitch.getid(node));
 
@@ -1338,13 +1340,13 @@ static void __timedqueue( void* threadinst ) {
     int i = 0;
     for( i = 0; i < ListOp.size(list); i++ ) {
       iQCmd cmd = (iQCmd)ListOp.get(list, i);
+      int addr = (cmd->out[5] * 256) + cmd->out[6];
       if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
         byte* outa = allocMem(32);
 
-        if( cmd->out[0] == 0x09 && cmd->out[2] == 0x40 && cmd->out[4] == 0x53 ||
-            cmd->out[0] == 0x08 && cmd->out[2] == LAN_LOCONET_FROM_LAN && cmd->out[4] == OPC_SW_REQ )
+        if( (cmd->out[0] == 0x09 && cmd->out[2] == 0x40 && cmd->out[4] == 0x53) ||
+            (cmd->out[0] == 0x08 && cmd->out[2] == LAN_LOCONET_FROM_LAN && cmd->out[4] == OPC_SW_REQ) )
         {
-          int addr = (cmd->out[5] * 256) + cmd->out[6];
           iOPoint point = __getPointByAddr(z21, addr);
           if( point != NULL ) {
             point->timerpending = False;
@@ -1353,12 +1355,15 @@ static void __timedqueue( void* threadinst ) {
             TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "point %d not found", addr );
           }
         }
+        else {
+          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "not a point %d", addr );
+          TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)cmd, cmd->out[0] );
+        }
 
         MemOp.copy( outa, cmd->out, 32 );
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command for addr=%d", addr );
         ThreadOp.post( data->writer, (obj)outa );
         ListOp.removeObj(list, (obj)cmd);
-        i = -1; // reset to start of list
         freeMem(cmd);
         break;
       }
