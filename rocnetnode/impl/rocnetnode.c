@@ -1729,6 +1729,7 @@ static void __motorPWM( void* threadinst ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int Vcurr = 0;
   int Vloop = 0;
+  int Vwait = 0;
   Boolean Vdir = True;
   Boolean lights = False;
 
@@ -1762,6 +1763,10 @@ static void __motorPWM( void* threadinst ) {
   ThreadOp.sleep(100);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init RPM on port %d", data->RPM );
   raspiConfigPort(data->RPM, 1);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init relais on port %d", IO_RELAIS );
+  raspiConfigPort(IO_RELAIS, 0);
+
+  __writePort(rocnetnode, IO_RELAIS, 1, IO_DIRECT );
 
   ThreadOp.setHigh(th);
 
@@ -1802,10 +1807,6 @@ static void __motorPWM( void* threadinst ) {
       rpmticks = 0;
     }
 
-    /* motor direction */
-    __writePort(rocnetnode, data->VPWMR, data->Vdir?1:0, IO_DIRECT );
-    __writePort(rocnetnode, data->VPWML, data->Vdir?0:1, IO_DIRECT );
-
     /* check limits */
     if( Vraw > 100 )
       Vraw = 100;
@@ -1821,13 +1822,29 @@ static void __motorPWM( void* threadinst ) {
         Vcurr--;
     }
 
-    if( Vcurr > 0 )
-      __writePort(rocnetnode, data->VPWM, 1, IO_DIRECT );
-    SystemOp.uBusyWait(Vcurr * Vmax);
-    __writePort(rocnetnode, data->VPWM, 0, IO_DIRECT );
-    SystemOp.uBusyWait((((100-Vmax)+100) - Vcurr) * 100);
+    /* motor direction */
+    if( Vcurr == 0 ) {
+      __writePort(rocnetnode, data->VPWMR, data->Vdir?1:0, IO_DIRECT );
+      __writePort(rocnetnode, data->VPWML, data->Vdir?0:1, IO_DIRECT );
+    }
 
-    Vloop++;
+    /* PWM 20Hz */
+    if( Vwait >= 5 ) {
+      Vwait = 0;
+      if( Vcurr > 0 )
+        __writePort(rocnetnode, data->VPWM, 1, IO_DIRECT );
+      SystemOp.uBusyWait( (Vcurr * Vmax) * 5 );
+      __writePort(rocnetnode, data->VPWM, 0, IO_DIRECT );
+      SystemOp.uBusyWait( ((((100-Vmax)+100) - Vcurr) * 100) * 5 );
+
+      Vloop++;
+    }
+    else {
+      SystemOp.uBusyWait( 10000 );
+    }
+
+    Vwait++;
+
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Motor PWM stopped" );
