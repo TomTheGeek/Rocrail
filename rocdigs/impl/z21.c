@@ -1341,7 +1341,9 @@ static void __timedqueue( void* threadinst ) {
       if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
         byte* outa = allocMem(32);
 
-        if( cmd->out[0] == 0x09 && cmd->out[2] == 0x40 && cmd->out[4] == 0x53 ) {
+        if( cmd->out[0] == 0x09 && cmd->out[2] == 0x40 && cmd->out[4] == 0x53 ||
+            cmd->out[0] == 0x08 && cmd->out[2] == LAN_LOCONET_FROM_LAN && cmd->out[4] == OPC_SW_REQ )
+        {
           int addr = (cmd->out[5] * 256) + cmd->out[6];
           iOPoint point = __getPointByAddr(z21, addr);
           if( point != NULL ) {
@@ -1356,6 +1358,7 @@ static void __timedqueue( void* threadinst ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
         ThreadOp.post( data->writer, (obj)outa );
         ListOp.removeObj(list, (obj)cmd);
+        i = -1; // reset to start of list
         freeMem(cmd);
         break;
       }
