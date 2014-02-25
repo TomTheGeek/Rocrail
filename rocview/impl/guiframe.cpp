@@ -2090,7 +2090,7 @@ void RocGuiFrame::initFrame() {
 
 
   // Create tool bar
-  m_ToolBar = CreateToolBar(wGui.isverticaltoolbar(m_Ini)?wxTB_VERTICAL:wxTB_HORIZONTAL);
+  m_ToolBar = CreateToolBar( (wGui.isverticaltoolbar(m_Ini)?wxTB_VERTICAL:wxTB_HORIZONTAL) | wxNO_BORDER | wxTB_FLAT );
   //m_ToolBar->SetToolBitmapSize(wxSize(32, 32));
 
   m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect_32, SystemOp.isWindows()?*_img_connect_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
