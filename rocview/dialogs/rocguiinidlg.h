@@ -179,6 +179,7 @@ public:
     wxCheckBox* m_RenderGC;
     wxCheckBox* m_FSUTF8;
     wxCheckBox* m_VerticalToolbar;
+    wxCheckBox* m_LocoImage;
     wxStaticText* m_labWidgetWidth;
     wxSpinCtrl* m_WidgetWidth;
     wxStaticText* m_labMonitorSize;

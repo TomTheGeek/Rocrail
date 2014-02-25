@@ -344,7 +344,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_LocoBook       , RocGuiFrame::OnLocoBook)
     EVT_MENU( ME_LocoWidgets    , RocGuiFrame::OnLocoWidgets)
     EVT_MENU( ME_PlanBook       , RocGuiFrame::OnPlanBook)
-    EVT_MENU( ME_LocoImage      , RocGuiFrame::OnLocoImage)
+    //EVT_MENU( ME_LocoImage      , RocGuiFrame::OnLocoImage)
     EVT_MENU( ME_TraceWindow    , RocGuiFrame::OnTraceWindow)
     EVT_MENU( ME_LocoSortByAddr , RocGuiFrame::OnLocoSortByAddr)
     EVT_MENU( ME_LocoViewAll    , RocGuiFrame::OnLocoViewAll)
@@ -1951,7 +1951,7 @@ void RocGuiFrame::initFrame() {
   menuView->AppendSeparator();
 
   menuView->AppendCheckItem( ME_LocoBook, wxGetApp().getMenu("locobook"), wxGetApp().getTip("locobook") );
-  menuView->AppendCheckItem( ME_LocoImage, wxGetApp().getMenu("locoimage"), wxGetApp().getTip("locoimage") );
+  //menuView->AppendCheckItem( ME_LocoImage, wxGetApp().getMenu("locoimage"), wxGetApp().getTip("locoimage") );
   menuView->AppendCheckItem( ME_LocoWidgets, wxGetApp().getMenu("locowidgets"), wxGetApp().getTip("locowidgets") );
   menuView->AppendCheckItem( ME_PlanBook, wxGetApp().getMenu("panel"), wxGetApp().getTip("panel") );
   menuView->AppendCheckItem( ME_TraceWindow, wxGetApp().getMenu("trace"), wxGetApp().getTip("trace") );
@@ -4063,8 +4063,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   wxMenuItem* mi_locobook  = menuBar->FindItem(ME_LocoBook);
   mi_locobook->Check( m_bLocoBook );
-  wxMenuItem* mi_locoimage  = menuBar->FindItem(ME_LocoImage);
-  mi_locoimage->Check( wGui.isshowlocoimage(m_Ini) );
+  //wxMenuItem* mi_locoimage  = menuBar->FindItem(ME_LocoImage);
+  //mi_locoimage->Check( wGui.isshowlocoimage(m_Ini) );
 
   wxMenuItem* mi_locowidgets  = menuBar->FindItem(ME_LocoWidgets);
   mi_locowidgets->Check( wGui.islocowidgetstab(m_Ini) );
