@@ -27327,4 +27327,7 @@
   <Msg id="locoimage">
     <en txt="Loco image"/>
   </Msg>
+  <Msg id="verticaltoolbar">
+    <en txt="Vertical toolbar"/>
+  </Msg>
 </Messages>

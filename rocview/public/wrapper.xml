@@ -122,6 +122,7 @@
     <var name="resetspeeddir" vt="bool" defval="false"/>
     <var name="useallspeedsteps" vt="bool" defval="true"/>
     <var name="simulatesensors" vt="bool" defval="true"/>
+    <var name="verticaltoolbar" vt="bool" defval="false"/>
     <var name="statusboosteruid" vt="int" defval="0"/>
     <trace extern="true"/>
     <var name="restorelcctrl" vt="bool" defval="true"/>

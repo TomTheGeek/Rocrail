@@ -178,6 +178,7 @@ public:
     wxCheckBox* m_UseAllSpeedSteps;
     wxCheckBox* m_RenderGC;
     wxCheckBox* m_FSUTF8;
+    wxCheckBox* m_VerticalToolbar;
     wxStaticText* m_labWidgetWidth;
     wxSpinCtrl* m_WidgetWidth;
     wxStaticText* m_labMonitorSize;

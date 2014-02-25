@@ -6899,3 +6899,9 @@ msgstr ""
 msgid "Loco image"
 msgstr ""
 
+#. 
+# id="verticaltoolbar"
+#, c-format
+msgid "Vertical toolbar"
+msgstr ""
+
