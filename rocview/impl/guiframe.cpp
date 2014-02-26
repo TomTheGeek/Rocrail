@@ -709,7 +709,8 @@ BasePanel* RocGuiFrame::InitNotebookPage( iONode zlevel  ) {
   if( m_Scale < 0.1 )
     m_Scale = 0.5;
 
-  m_ScaleComboBox->SetValue( wxString::Format( _T("%d"), (int)(m_Scale*100)) );
+  if( m_ScaleComboBox != NULL )
+    m_ScaleComboBox->SetValue( wxString::Format( _T("%d"), (int)(m_Scale*100)) );
 
   if( wxGetApp().isModView() && !wxGetApp().isOffline() ) {
     return initModPanel( zlevel );
@@ -1648,6 +1649,8 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_CmdRecorder        = NULL;
   m_TraceMutex         = MutexOp.inst(NULL, True);
   m_ThrottlesRestored  = false;
+  m_ScaleComboBox      = NULL;
+
 
   if( wxTheClipboard != NULL ) {
     if( wxTheClipboard->Open() ) {
@@ -2111,29 +2114,31 @@ void RocGuiFrame::initFrame() {
   m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), *_img_swctrl_32, SystemOp.isWindows()?*_img_swctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("swctrl") );
   m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), *_img_routes_32, SystemOp.isWindows()?*_img_routes_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stctrl") );
 
-  m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(60,-1), 0, NULL, wxTE_PROCESS_ENTER );
-  m_ScaleComboBox->Append(_T("10"));
-  m_ScaleComboBox->Append(_T("20"));
-  m_ScaleComboBox->Append(_T("30"));
-  m_ScaleComboBox->Append(_T("40"));
-  m_ScaleComboBox->Append(_T("50"));
-  m_ScaleComboBox->Append(_T("60"));
-  m_ScaleComboBox->Append(_T("70"));
-  m_ScaleComboBox->Append(_T("80"));
-  m_ScaleComboBox->Append(_T("90"));
-  m_ScaleComboBox->Append(_T("100"));
-  m_ScaleComboBox->Append(_T("110"));
-  m_ScaleComboBox->Append(_T("120"));
-  m_ScaleComboBox->Append(_T("130"));
-  m_ScaleComboBox->Append(_T("140"));
-  m_ScaleComboBox->Append(_T("150"));
-  m_ScaleComboBox->Append(_T("160"));
-  m_ScaleComboBox->Append(_T("170"));
-  m_ScaleComboBox->Append(_T("180"));
-  m_ScaleComboBox->Append(_T("190"));
-  m_ScaleComboBox->Append(_T("200"));
-  m_ToolBar->AddControl(m_ScaleComboBox);
-
+  m_ScaleComboBox = NULL;
+  if( !wGui.isverticaltoolbar(m_Ini) ) {
+    m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(60,-1), 0, NULL, wxTE_PROCESS_ENTER );
+    m_ScaleComboBox->Append(_T("10"));
+    m_ScaleComboBox->Append(_T("20"));
+    m_ScaleComboBox->Append(_T("30"));
+    m_ScaleComboBox->Append(_T("40"));
+    m_ScaleComboBox->Append(_T("50"));
+    m_ScaleComboBox->Append(_T("60"));
+    m_ScaleComboBox->Append(_T("70"));
+    m_ScaleComboBox->Append(_T("80"));
+    m_ScaleComboBox->Append(_T("90"));
+    m_ScaleComboBox->Append(_T("100"));
+    m_ScaleComboBox->Append(_T("110"));
+    m_ScaleComboBox->Append(_T("120"));
+    m_ScaleComboBox->Append(_T("130"));
+    m_ScaleComboBox->Append(_T("140"));
+    m_ScaleComboBox->Append(_T("150"));
+    m_ScaleComboBox->Append(_T("160"));
+    m_ScaleComboBox->Append(_T("170"));
+    m_ScaleComboBox->Append(_T("180"));
+    m_ScaleComboBox->Append(_T("190"));
+    m_ScaleComboBox->Append(_T("200"));
+    m_ToolBar->AddControl(m_ScaleComboBox);
+  }
 
   m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates_32, SystemOp.isWindows()?*_img_updates_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("softwareupdates") );
   m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), *_img_manual_32, SystemOp.isWindows()?*_img_manual_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("documentation") );
@@ -3157,7 +3162,8 @@ void RocGuiFrame::Zoom( int zoom ) {
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "scale is %lf", scale );
 
-  m_ScaleComboBox->SetValue( wxString::Format( _T("%d"), (int)(m_Scale*100)) );
+  if( m_ScaleComboBox != NULL )
+    m_ScaleComboBox->SetValue( wxString::Format( _T("%d"), (int)(m_Scale*100)) );
 
 }
 
