@@ -51,6 +51,7 @@
 #include <wx/dnd.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
+#include <wx/sysopt.h>
 
 #include "rocs/public/str.h"
 #include "rocs/public/file.h"
@@ -2091,28 +2092,36 @@ void RocGuiFrame::initFrame() {
 
 
   // Create tool bar
+  bool l_useDisableIcons = false;
+  if( SystemOp.isWindows() && ::wxDisplayDepth() >= 32 ) {
+    wxSystemOptions::SetOption("msw.remap", 2);
+  }
+  else if( SystemOp.isWindows() ) {
+    l_useDisableIcons = true;
+  }
   m_ToolBar = CreateToolBar( (wGui.isverticaltoolbar(m_Ini)?wxTB_VERTICAL:wxTB_HORIZONTAL) | wxNO_BORDER | wxTB_FLAT | wxTB_DOCKABLE );
   m_ToolBar->SetToolBitmapSize(wxSize(32, 32));
 
-  m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect_32, SystemOp.isWindows()?*_img_connect_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
-  m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system_32, SystemOp.isWindows()?*_img_system_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("openworkspace") );
+  m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect_32, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
+  //m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect_32, l_useDisableIcons?*_img_connect_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
+  m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system_32, l_useDisableIcons?*_img_system_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("openworkspace") );
 
-  m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), *_img_new_32, SystemOp.isWindows()?*_img_new_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("new") );
-  m_ToolBar->AddTool(ME_Open, wxGetApp().getMsg("open"), *_img_open_32, SystemOp.isWindows()?*_img_open_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("open") );
-  m_ToolBar->AddTool(ME_Save, wxGetApp().getMsg("save"), *_img_save_32, SystemOp.isWindows()?*_img_save_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("save") );
-  m_ToolBar->AddTool(ME_Undo, wxGetApp().getMsg("undo"), *_img_undo_32, SystemOp.isWindows()?*_img_undo_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("undo") );
+  m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), *_img_new_32, l_useDisableIcons?*_img_new_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("new") );
+  m_ToolBar->AddTool(ME_Open, wxGetApp().getMsg("open"), *_img_open_32, l_useDisableIcons?*_img_open_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("open") );
+  m_ToolBar->AddTool(ME_Save, wxGetApp().getMsg("save"), *_img_save_32, l_useDisableIcons?*_img_save_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("save") );
+  m_ToolBar->AddTool(ME_Undo, wxGetApp().getMsg("undo"), *_img_undo_32, l_useDisableIcons?*_img_undo_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("undo") );
   m_ToolBar->EnableTool(ME_Undo, false );
 
-  m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), *_img_poweron_32, SystemOp.isWindows()?*_img_poweron_32_disabled:wxNullBitmap, wxGetApp().getTip("poweron") );
-  m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), *_img_automode_32, SystemOp.isWindows()?*_img_automode_32_disabled:wxNullBitmap, wxGetApp().getTip("automode") );
-  m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), *_img_stop_32, SystemOp.isWindows()?*_img_stop_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stopall") );
-  m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), *_img_stopall_32, SystemOp.isWindows()?*_img_stopall_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getMsg("ebreak") );
+  m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), *_img_poweron_32, l_useDisableIcons?*_img_poweron_32_disabled:wxNullBitmap, wxGetApp().getTip("poweron") );
+  m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), *_img_automode_32, l_useDisableIcons?*_img_automode_32_disabled:wxNullBitmap, wxGetApp().getTip("automode") );
+  m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), *_img_stop_32, l_useDisableIcons?*_img_stop_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stopall") );
+  m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), *_img_stopall_32, l_useDisableIcons?*_img_stopall_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getMsg("ebreak") );
 
-  m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), *_img_operator_32, SystemOp.isWindows()?*_img_operator_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("operator") );
-  m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), *_img_mic_32, SystemOp.isWindows()?*_img_mic_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("mic") );
-  m_ToolBar->AddTool(ME_LcDlg, wxGetApp().getMsg("locctrl"), *_img_locctrl_32, SystemOp.isWindows()?*_img_locctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("locctrl") );
-  m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), *_img_swctrl_32, SystemOp.isWindows()?*_img_swctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("swctrl") );
-  m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), *_img_routes_32, SystemOp.isWindows()?*_img_routes_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stctrl") );
+  m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), *_img_operator_32, l_useDisableIcons?*_img_operator_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("operator") );
+  m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), *_img_mic_32, l_useDisableIcons?*_img_mic_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("mic") );
+  m_ToolBar->AddTool(ME_LcDlg, wxGetApp().getMsg("locctrl"), *_img_locctrl_32, l_useDisableIcons?*_img_locctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("locctrl") );
+  m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), *_img_swctrl_32, l_useDisableIcons?*_img_swctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("swctrl") );
+  m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), *_img_routes_32, l_useDisableIcons?*_img_routes_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stctrl") );
 
   m_ScaleComboBox = NULL;
   if( SystemOp.isWindows() && wGui.isverticaltoolbar(m_Ini) ) {
@@ -2145,8 +2154,8 @@ void RocGuiFrame::initFrame() {
     m_ToolBar->AddControl(m_ScaleComboBox);
   }
 
-  m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates_32, SystemOp.isWindows()?*_img_updates_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("softwareupdates") );
-  m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), *_img_manual_32, SystemOp.isWindows()?*_img_manual_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("documentation") );
+  m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates_32, l_useDisableIcons?*_img_updates_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("softwareupdates") );
+  m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), *_img_manual_32, l_useDisableIcons?*_img_manual_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("documentation") );
 
   m_ToolBar->Realize();
 
