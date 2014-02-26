@@ -2094,28 +2094,16 @@ void RocGuiFrame::initFrame() {
   m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect_32, SystemOp.isWindows()?*_img_connect_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
   m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system_32, SystemOp.isWindows()?*_img_system_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("openworkspace") );
 
-#ifndef __APPLE__
-  m_ToolBar->AddSeparator();
-#endif
-
   m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), *_img_new_32, SystemOp.isWindows()?*_img_new_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("new") );
   m_ToolBar->AddTool(ME_Open, wxGetApp().getMsg("open"), *_img_open_32, SystemOp.isWindows()?*_img_open_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("open") );
   m_ToolBar->AddTool(ME_Save, wxGetApp().getMsg("save"), *_img_save_32, SystemOp.isWindows()?*_img_save_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("save") );
   m_ToolBar->AddTool(ME_Undo, wxGetApp().getMsg("undo"), *_img_undo_32, SystemOp.isWindows()?*_img_undo_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("undo") );
   m_ToolBar->EnableTool(ME_Undo, false );
 
-#ifndef __APPLE__
-  m_ToolBar->AddSeparator();
-#endif
-
   m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), *_img_poweron_32, SystemOp.isWindows()?*_img_poweron_32_disabled:wxNullBitmap, wxGetApp().getTip("poweron") );
   m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), *_img_automode_32, SystemOp.isWindows()?*_img_automode_32_disabled:wxNullBitmap, wxGetApp().getTip("automode") );
   m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), *_img_stop_32, SystemOp.isWindows()?*_img_stop_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stopall") );
   m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), *_img_stopall_32, SystemOp.isWindows()?*_img_stopall_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getMsg("ebreak") );
-
-#ifndef __APPLE__
-  m_ToolBar->AddSeparator();
-#endif
 
   m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), *_img_operator_32, SystemOp.isWindows()?*_img_operator_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("operator") );
   m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), *_img_mic_32, SystemOp.isWindows()?*_img_mic_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("mic") );
@@ -2123,11 +2111,7 @@ void RocGuiFrame::initFrame() {
   m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), *_img_swctrl_32, SystemOp.isWindows()?*_img_swctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("swctrl") );
   m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), *_img_routes_32, SystemOp.isWindows()?*_img_routes_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stctrl") );
 
-#ifndef __APPLE__
-  m_ToolBar->AddSeparator();
-#endif
-
-  m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(80,-1), 0, NULL, wxTE_PROCESS_ENTER );
+  m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(60,-1), 0, NULL, wxTE_PROCESS_ENTER );
   m_ScaleComboBox->Append(_T("10"));
   m_ScaleComboBox->Append(_T("20"));
   m_ScaleComboBox->Append(_T("30"));
@@ -2150,10 +2134,6 @@ void RocGuiFrame::initFrame() {
   m_ScaleComboBox->Append(_T("200"));
   m_ToolBar->AddControl(m_ScaleComboBox);
 
-
-#ifndef __APPLE__
-  m_ToolBar->AddSeparator();
-#endif
 
   m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates_32, SystemOp.isWindows()?*_img_updates_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("softwareupdates") );
   m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), *_img_manual_32, SystemOp.isWindows()?*_img_manual_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("documentation") );
