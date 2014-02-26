@@ -2093,17 +2093,13 @@ void RocGuiFrame::initFrame() {
 
   // Create tool bar
   bool l_useDisableIcons = false;
-  if( SystemOp.isWindows() && ::wxDisplayDepth() >= 32 ) {
-    wxSystemOptions::SetOption("msw.remap", 2);
-  }
-  else if( SystemOp.isWindows() ) {
+  if( SystemOp.isWindows() ) {
     l_useDisableIcons = true;
   }
   m_ToolBar = CreateToolBar( (wGui.isverticaltoolbar(m_Ini)?wxTB_VERTICAL:wxTB_HORIZONTAL) | wxNO_BORDER | wxTB_FLAT | wxTB_DOCKABLE );
   m_ToolBar->SetToolBitmapSize(wxSize(32, 32));
 
-  m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect_32, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
-  //m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect_32, l_useDisableIcons?*_img_connect_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
+  m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect_32, l_useDisableIcons?*_img_connect_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
   m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system_32, l_useDisableIcons?*_img_system_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("openworkspace") );
 
   m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), *_img_new_32, l_useDisableIcons?*_img_new_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("new") );
