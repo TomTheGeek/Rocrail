@@ -281,7 +281,6 @@ public:
   void OnLocoBook(wxCommandEvent& event);
   void OnLocoWidgets(wxCommandEvent& event);
   void OnPlanBook(wxCommandEvent& event);
-  void OnLocoImage(wxCommandEvent& event);
   void OnTraceWindow(wxCommandEvent& event);
   void OnLocoSortByAddr(wxCommandEvent& event);
   void OnLocoViewAll(wxCommandEvent& event);
@@ -600,7 +599,6 @@ enum
     ME_LocoBook,
     ME_LocoWidgets,
     ME_PlanBook,
-    ME_LocoImage,
     ME_TraceWindow,
     ME_LocoViewAll,
     ME_LocoViewSteam,
