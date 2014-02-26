@@ -2115,7 +2115,10 @@ void RocGuiFrame::initFrame() {
   m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), *_img_routes_32, SystemOp.isWindows()?*_img_routes_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stctrl") );
 
   m_ScaleComboBox = NULL;
-  if( !wGui.isverticaltoolbar(m_Ini) ) {
+  if( SystemOp.isWindows() && wGui.isverticaltoolbar(m_Ini) ) {
+    // Windows cannot handle a combobox in case of a vertical toolbar.
+  }
+  else {
     m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(60,-1), 0, NULL, wxTE_PROCESS_ENTER );
     m_ScaleComboBox->Append(_T("10"));
     m_ScaleComboBox->Append(_T("20"));
