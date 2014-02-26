@@ -2091,7 +2091,7 @@ void RocGuiFrame::initFrame() {
 
 
   // Create tool bar
-  m_ToolBar = CreateToolBar( (wGui.isverticaltoolbar(m_Ini)?wxTB_VERTICAL:wxTB_HORIZONTAL) | wxNO_BORDER | wxTB_FLAT );
+  m_ToolBar = CreateToolBar( (wGui.isverticaltoolbar(m_Ini)?wxTB_VERTICAL:wxTB_HORIZONTAL) | wxNO_BORDER | wxTB_FLAT | wxTB_DOCKABLE );
   m_ToolBar->SetToolBitmapSize(wxSize(32, 32));
 
   m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect_32, SystemOp.isWindows()?*_img_connect_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
@@ -2122,11 +2122,13 @@ void RocGuiFrame::initFrame() {
     m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(60,-1), 0, NULL, wxTE_PROCESS_ENTER );
     m_ScaleComboBox->Append(_T("10"));
     m_ScaleComboBox->Append(_T("20"));
+    m_ScaleComboBox->Append(_T("25"));
     m_ScaleComboBox->Append(_T("30"));
     m_ScaleComboBox->Append(_T("40"));
     m_ScaleComboBox->Append(_T("50"));
     m_ScaleComboBox->Append(_T("60"));
     m_ScaleComboBox->Append(_T("70"));
+    m_ScaleComboBox->Append(_T("75"));
     m_ScaleComboBox->Append(_T("80"));
     m_ScaleComboBox->Append(_T("90"));
     m_ScaleComboBox->Append(_T("100"));
