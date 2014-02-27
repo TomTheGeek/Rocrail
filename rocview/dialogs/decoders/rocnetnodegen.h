@@ -85,6 +85,7 @@ class rocnetnodegen : public wxDialog
 		wxCheckBox* m_UsePB;
 		wxCheckBox* m_RFID;
 		wxCheckBox* m_ADCSensor;
+		wxCheckBox* m_Mobile;
 		wxRadioBox* m_IOType;
 		wxRadioBox* m_DCCType;
 		wxRadioBox* m_DCCDevice;

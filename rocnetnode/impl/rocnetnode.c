@@ -99,7 +99,7 @@ static void __unloadDigInt(iORocNetNode inst, int prevcstype);
 static void __errorReport( iORocNetNode inst, int rc, int rs, int addr);
 static iONode __findChannel(iORocNetNode inst, int channel);
 static int __checkI2C(iORocNetNode inst, int group);
-static void __initADCThreads(iORocNetNode inst);
+static void __initThreads(iORocNetNode inst);
 
 
 /** ----- OBase ----- */
@@ -971,7 +971,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_LEN] = 10;
     msg[RN_PACKET_DATA + 0] = data->iotype;
     msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00) | (data->usepb ? 0x04:0x00) | (data->adcsensor ? 0x08:0x00);
-    msg[RN_PACKET_DATA + 1] |= (data->tl_info ? 0x10:0x00) | (data->tl_monitor ? 0x20:0x00);
+    msg[RN_PACKET_DATA + 1] |= (data->tl_info ? 0x10:0x00) | (data->tl_monitor ? 0x20:0x00) | (data->ismobile ? 0x40:0x00);
     msg[RN_PACKET_DATA + 2] = data->cstype;
     msg[RN_PACKET_DATA + 3] = data->csdevice;
     i2ccheck = __checkI2C(rocnetnode, 0x20);
@@ -993,6 +993,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     data->sack   = (rn[RN_PACKET_DATA + 1] & 0x01) ? True:False;
     data->rfid   = (rn[RN_PACKET_DATA + 1] & 0x02) ? True:False;
     data->adcsensor = (rn[RN_PACKET_DATA + 1] & 0x08) ? True:False;
+    data->ismobile = (rn[RN_PACKET_DATA + 1] & 0x40) ? True:False;
     data->usepb = (rn[RN_PACKET_DATA + 1] & 0x04) ? True:False;
     data->tl_info = (rn[RN_PACKET_DATA + 1] & 0x10) ? True:False;
     data->tl_monitor = (rn[RN_PACKET_DATA + 1] & 0x20) ? True:False;
@@ -1008,7 +1009,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
     msg[RN_PACKET_LEN] = 4;
     msg[RN_PACKET_DATA + 0] = data->iotype;
-    msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00) | (data->usepb ? 0x04:0x00) | (data->adcsensor ? 0x08:0x00);
+    msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00) | (data->usepb ? 0x04:0x00) | (data->adcsensor ? 0x08:0x00) | (data->ismobile ? 0x40:0x00);
     msg[RN_PACKET_DATA + 2] = data->cstype;
     msg[RN_PACKET_DATA + 3] = data->csdevice;
     /* Save the rocnetnode.ini to persistent the new ID. */
@@ -1023,6 +1024,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       wRocNetNodeOptions.setsack( optionsini, data->sack );
       wRocNetNodeOptions.setrfid( optionsini, data->rfid );
       wRocNetNodeOptions.setadcsensor( optionsini, data->adcsensor );
+      wRocNetNodeOptions.setmobile( optionsini, data->ismobile );
       wRocNetNodeOptions.setusepb( optionsini, data->usepb );
       wRocNetNodeOptions.setnickname( optionsini, data->nickname );
 
@@ -1061,7 +1063,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       }
     }
     __saveIni(rocnetnode);
-    __initADCThreads(rocnetnode);
+    __initThreads(rocnetnode);
   }
   break;
 
@@ -1777,7 +1779,7 @@ static void __motorPWM( void* threadinst ) {
 
   ThreadOp.setHigh(th);
 
-  while( data->run ) {
+  while( data->run && data->ismobile ) {
     int Vraw  = data->Vraw;  /* wanted speed */
     int Vmax  = data->Vmax;  /* max PWM */
     int Vmass = data->Vmass; /* acceleration, deceleration */
@@ -2969,7 +2971,7 @@ static void __checkConsole( iORocNetNodeData data ) {
 }
 
 
-static void __initADCThreads(iORocNetNode inst) {
+static void __initThreads(iORocNetNode inst) {
   iORocNetNodeData data = Data(inst);
 
   if( data->adcsensor &&  data->adcsensorscanner == NULL ) {
@@ -2979,6 +2981,11 @@ static void __initADCThreads(iORocNetNode inst) {
   else if( !data->adcsensor &&  data->rocmousescanner == NULL ) {
     data->rocmousescanner = ThreadOp.inst( "rocmouse", &__rocmousescanner, __RocNetNode );
     ThreadOp.start( data->rocmousescanner );
+  }
+
+  if( data->ismobile &&  data->motorPWM == NULL ) {
+    data->motorPWM = ThreadOp.inst( "motorpwm", &__motorPWM, __RocNetNode );
+    ThreadOp.start( data->motorPWM );
   }
 
 }
@@ -3087,6 +3094,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       data->sack  = wRocNetNodeOptions.issack(optionsini);
       data->rfid  = wRocNetNodeOptions.isrfid(optionsini);
       data->adcsensor = wRocNetNodeOptions.isadcsensor(optionsini);
+      data->ismobile = wRocNetNodeOptions.ismobile(optionsini);
       data->usepb = wRocNetNodeOptions.isusepb(optionsini);
       data->iotype = wRocNetNodeOptions.getiotype(optionsini);
       if( data->iotype == IO_NOT_USED ) {
@@ -3192,6 +3200,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor ack [%s]", data->sack?"ON":"OFF" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  RFID [%s]", data->rfid?"ON":"OFF" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ADC Sensors [%s]", data->adcsensor?"ON":"OFF" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  motor PWM [%s]", data->ismobile?"ON":"OFF" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   data->readUDP = SocketOp.inst( data->addr, data->port, False, True, True );
   SocketOp.bind(data->readUDP);
@@ -3213,10 +3222,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   data->macroprocessor = ThreadOp.inst( "rnmacro", &__macroProcessor, __RocNetNode );
   ThreadOp.start( data->macroprocessor );
 
-  __initADCThreads(inst);
-
-  data->motorPWM = ThreadOp.inst( "motorpwm", &__motorPWM, __RocNetNode );
-  ThreadOp.start( data->motorPWM );
+  __initThreads(inst);
 
   /* Memory watcher */
   while( !bShutdown ) {

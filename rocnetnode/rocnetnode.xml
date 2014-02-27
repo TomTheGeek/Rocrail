@@ -169,6 +169,7 @@
       <var name="stress" vt="Boolean"/>
       <var name="nickname[64]" vt="char"/>
       <var name="lastrfid[64]" vt="char"/>
+      <var name="ismobile" vt="Boolean"/>
       <var name="Vraw" vt="int"/>
       <var name="Vdir" vt="Boolean"/>
       <var name="Vmass" vt="int"/>

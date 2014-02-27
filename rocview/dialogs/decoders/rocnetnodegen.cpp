@@ -203,6 +203,9 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_ADCSensor = new wxCheckBox( m_OptionsPanel, wxID_ANY, wxT("ADC Sensor"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer23->Add( m_ADCSensor, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
+	m_Mobile = new wxCheckBox( m_OptionsPanel, wxID_ANY, wxT("Mobile"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer23->Add( m_Mobile, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
 	wxString m_IOTypeChoices[] = { wxT("I2C-1"), wxT("I2C-0") };
 	int m_IOTypeNChoices = sizeof( m_IOTypeChoices ) / sizeof( wxString );
 	m_IOType = new wxRadioBox( m_OptionsPanel, wxID_ANY, wxT("I2C"), wxDefaultPosition, wxDefaultSize, m_IOTypeNChoices, m_IOTypeChoices, 1, wxRA_SPECIFY_ROWS );
