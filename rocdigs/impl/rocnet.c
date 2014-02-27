@@ -1427,6 +1427,7 @@ static void __evaluateClock( iOrocNet rocnet, byte* rn ) {
 static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
   iOrocNetData data       = Data(rocnet);
   int          addr       = rn[RN_PACKET_DATA+3];
+  int          load       = (rn[RN_PACKET_LEN] > 4 ? rn[RN_PACKET_DATA+4]:0);
   int          rcpt       = 0;
   int          sndr       = 0;
   Boolean      isThis     = rocnetIsThis( rocnet, rn);
@@ -1450,6 +1451,7 @@ static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
       wItem.setuidname(evt, wRocNetNode.getnickname(rnnode));
     wFeedback.setbus( evt, sndr );
     wFeedback.setaddr( evt, addr );
+    wFeedback.setload( evt, load );
     wFeedback.setfbtype( evt, wFeedback.fbtype_sensor );
 
     char ident[32] = {'\0'};

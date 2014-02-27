@@ -1870,9 +1870,10 @@ static void __reportADCSensor(iORocNetNode rocnetnode, int port, Boolean sensorS
   msg[RN_PACKET_NETID] = data->location;
   msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
   msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
-  msg[RN_PACKET_LEN] = 4;
+  msg[RN_PACKET_LEN] = 5;
   msg[RN_PACKET_DATA+2] = sensorState;
   msg[RN_PACKET_DATA+3] = port;
+  msg[RN_PACKET_DATA+4] = value;
   rnSenderAddresToPacket( data->id, msg, 0 );
   __sendRN(rocnetnode, msg);
 }
