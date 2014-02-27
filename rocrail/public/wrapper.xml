@@ -649,6 +649,7 @@
         <rocnetnodeoptions wrappername="RocNetNodeOptions" cardinality="1">
           <var name="sack" vt="bool" defval="false"/>
           <var name="rfid" vt="bool" defval="false"/>
+          <var name="adcsensor" vt="bool" defval="false"/>
           <var name="usepb" vt="bool" defval="false"/>
           <const name="iotype_i2c1" vt="int" val="0"/>
           <const name="iotype_i2c0" vt="int" val="1"/>

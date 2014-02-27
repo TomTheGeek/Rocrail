@@ -969,7 +969,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
     msg[RN_PACKET_LEN] = 10;
     msg[RN_PACKET_DATA + 0] = data->iotype;
-    msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00) | (data->usepb ? 0x04:0x00);
+    msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00) | (data->usepb ? 0x04:0x00) | (data->adcsensor ? 0x08:0x00);
     msg[RN_PACKET_DATA + 1] |= (data->tl_info ? 0x10:0x00) | (data->tl_monitor ? 0x20:0x00);
     msg[RN_PACKET_DATA + 2] = data->cstype;
     msg[RN_PACKET_DATA + 3] = data->csdevice;
@@ -991,6 +991,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     data->iotype = rn[RN_PACKET_DATA + 0];
     data->sack   = (rn[RN_PACKET_DATA + 1] & 0x01) ? True:False;
     data->rfid   = (rn[RN_PACKET_DATA + 1] & 0x02) ? True:False;
+    data->adcsensor = (rn[RN_PACKET_DATA + 1] & 0x08) ? True:False;
     data->usepb = (rn[RN_PACKET_DATA + 1] & 0x04) ? True:False;
     data->tl_info = (rn[RN_PACKET_DATA + 1] & 0x10) ? True:False;
     data->tl_monitor = (rn[RN_PACKET_DATA + 1] & 0x20) ? True:False;
@@ -1006,7 +1007,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
     msg[RN_PACKET_LEN] = 4;
     msg[RN_PACKET_DATA + 0] = data->iotype;
-    msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00) | (data->usepb ? 0x04:0x00);
+    msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00) | (data->usepb ? 0x04:0x00) | (data->adcsensor ? 0x08:0x00);
     msg[RN_PACKET_DATA + 2] = data->cstype;
     msg[RN_PACKET_DATA + 3] = data->csdevice;
     /* Save the rocnetnode.ini to persistent the new ID. */
@@ -1020,6 +1021,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       wRocNetNodeOptions.setiotype( optionsini, data->iotype );
       wRocNetNodeOptions.setsack( optionsini, data->sack );
       wRocNetNodeOptions.setrfid( optionsini, data->rfid );
+      wRocNetNodeOptions.setadcsensor( optionsini, data->adcsensor );
       wRocNetNodeOptions.setusepb( optionsini, data->usepb );
       wRocNetNodeOptions.setnickname( optionsini, data->nickname );
 
@@ -1854,6 +1856,77 @@ static void __motorPWM( void* threadinst ) {
 
 }
 
+
+static void __reportADCSensor(iORocNetNode rocnetnode, int port, Boolean sensorState, byte value ) {
+  iORocNetNodeData data       = Data(rocnetnode);
+  byte msg[256];
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ADC Sensor %d report %s [%d]", port, sensorState?"ON":"OFF", value );
+
+  msg[RN_PACKET_NETID] = data->location;
+  msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
+  msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
+  msg[RN_PACKET_LEN] = 4;
+  msg[RN_PACKET_DATA+2] = sensorState;
+  msg[RN_PACKET_DATA+3] = port;
+  rnSenderAddresToPacket( data->id, msg, 0 );
+  __sendRN(rocnetnode, msg);
+}
+
+
+
+static void __adcsensorscanner( void* threadinst ) {
+  iOThread         th         = (iOThread)threadinst;
+  iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
+  iORocNetNodeData data       = Data(rocnetnode);
+
+  byte baseadc = 0x48;
+  int idx = 0;
+  byte ctrl = 0x40;
+  byte threshold = 15;
+
+  ThreadOp.sleep(1000);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ADC Sensor scanner started" );
+
+  while( data->run ) {
+    int rc = 0;
+    int i = 0;
+    byte value = 0;
+
+    baseadc = 0x48 + idx;
+
+    for( i = 0; i < 4; i++ ) {
+      rc = raspiWriteI2C(data->i2cdescriptor, baseadc, ctrl+i );
+      if( rc >= 0 ) {
+        rc = raspiReadI2C( data->i2cdescriptor, baseadc, &value );
+        if( rc >= 0 ) {
+          if( value > threshold && data->adcsensorvalue[idx*4+i] == 0) {
+            /* report on */
+            data->adcsensorvalue[idx*4+i] = value;
+            __reportADCSensor(rocnetnode, idx*4+i, True, value );
+          }
+          else if( data->adcsensorvalue[idx*4+i] > 0) {
+            /* report off */
+            data->adcsensorvalue[idx*4+i] = 0;
+            __reportADCSensor(rocnetnode, idx*4+i, False, value );
+          }
+        }
+        else
+          break;
+      }
+      else
+        break;
+    }
+
+    idx++;
+    if( idx > 7 )
+      idx = 0;
+
+    ThreadOp.sleep(20);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ADC Sensor scanner ended" );
+}
 
 
 static void __rocmousescanner( void* threadinst ) {
@@ -2998,6 +3071,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       iONode optionsini = NodeOp.findNode(rocnet, wRocNetNodeOptions.name());
       data->sack  = wRocNetNodeOptions.issack(optionsini);
       data->rfid  = wRocNetNodeOptions.isrfid(optionsini);
+      data->adcsensor = wRocNetNodeOptions.isadcsensor(optionsini);
       data->usepb = wRocNetNodeOptions.isusepb(optionsini);
       data->iotype = wRocNetNodeOptions.getiotype(optionsini);
       if( data->iotype == IO_NOT_USED ) {
@@ -3102,6 +3176,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  I/O type [%d]", data->iotype );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor ack [%s]", data->sack?"ON":"OFF" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  RFID [%s]", data->rfid?"ON":"OFF" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  ADC Sensors [%s]", data->adcsensor?"ON":"OFF" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   data->readUDP = SocketOp.inst( data->addr, data->port, False, True, True );
   SocketOp.bind(data->readUDP);
@@ -3122,8 +3197,14 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   ThreadOp.start( data->pwm );
   data->macroprocessor = ThreadOp.inst( "rnmacro", &__macroProcessor, __RocNetNode );
   ThreadOp.start( data->macroprocessor );
-  data->rocmousescanner = ThreadOp.inst( "rocmouse", &__rocmousescanner, __RocNetNode );
-  ThreadOp.start( data->rocmousescanner );
+  if( data->adcsensor ) {
+    data->adcsensorscanner = ThreadOp.inst( "rnadcsens", &__adcsensorscanner, __RocNetNode );
+    ThreadOp.start( data->adcsensorscanner );
+  }
+  else {
+    data->rocmousescanner = ThreadOp.inst( "rocmouse", &__rocmousescanner, __RocNetNode );
+    ThreadOp.start( data->rocmousescanner );
+  }
   data->motorPWM = ThreadOp.inst( "motorpwm", &__motorPWM, __RocNetNode );
   ThreadOp.start( data->motorPWM );
 

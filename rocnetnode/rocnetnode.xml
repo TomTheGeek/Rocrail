@@ -141,6 +141,7 @@
       <var name="iodata[16]" vt="byte"/>
       <var name="sack" vt="Boolean"/>
       <var name="rfid" vt="Boolean"/>
+      <var name="adcsensor" vt="Boolean"/>
       <var name="usepb" vt="Boolean"/>
       <var name="tl_info" vt="Boolean"/>
       <var name="tl_monitor" vt="Boolean"/>
@@ -163,6 +164,8 @@
       <var name="class" vt="int"/>
       <var name="rocmouses[8]" vt="iORocMouse"/>
       <var name="rocmousescanner" vt="iOThread"/>
+      <var name="adcsensorscanner" vt="iOThread"/>
+      <var name="adcsensorvalue[32]" vt="int"/>
       <var name="stress" vt="Boolean"/>
       <var name="nickname[64]" vt="char"/>
       <var name="lastrfid[64]" vt="char"/>
