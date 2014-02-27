@@ -99,6 +99,7 @@ static void __unloadDigInt(iORocNetNode inst, int prevcstype);
 static void __errorReport( iORocNetNode inst, int rc, int rs, int addr);
 static iONode __findChannel(iORocNetNode inst, int channel);
 static int __checkI2C(iORocNetNode inst, int group);
+static void __initADCThreads(iORocNetNode inst);
 
 
 /** ----- OBase ----- */
@@ -1060,6 +1061,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       }
     }
     __saveIni(rocnetnode);
+    __initADCThreads(rocnetnode);
   }
   break;
 
@@ -1888,7 +1890,7 @@ static void __adcsensorscanner( void* threadinst ) {
   ThreadOp.sleep(1000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ADC Sensor scanner started" );
 
-  while( data->run ) {
+  while( data->run && data->adcsensor ) {
     int rc = 0;
     int i = 0;
     byte value = 0;
@@ -1942,7 +1944,7 @@ static void __rocmousescanner( void* threadinst ) {
   ThreadOp.sleep(1000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocMouse scanner started" );
 
-  while( data->run ) {
+  while( data->run && !data->adcsensor ) {
     int rc = 0;
     byte fnLEDs  = 0;
     Boolean buttonLights = False;
@@ -2967,6 +2969,19 @@ static void __checkConsole( iORocNetNodeData data ) {
 }
 
 
+static void __initADCThreads(iORocNetNode inst) {
+  iORocNetNodeData data = Data(inst);
+
+  if( data->adcsensor &&  data->adcsensorscanner == NULL ) {
+    data->adcsensorscanner = ThreadOp.inst( "rnadcsens", &__adcsensorscanner, __RocNetNode );
+    ThreadOp.start( data->adcsensorscanner );
+  }
+  else if( !data->adcsensor &&  data->rocmousescanner == NULL ) {
+    data->rocmousescanner = ThreadOp.inst( "rocmouse", &__rocmousescanner, __RocNetNode );
+    ThreadOp.start( data->rocmousescanner );
+  }
+
+}
 
 static int _Main( iORocNetNode inst, int argc, char** argv ) {
   iORocNetNodeData data = Data(inst);
@@ -3197,14 +3212,9 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   ThreadOp.start( data->pwm );
   data->macroprocessor = ThreadOp.inst( "rnmacro", &__macroProcessor, __RocNetNode );
   ThreadOp.start( data->macroprocessor );
-  if( data->adcsensor ) {
-    data->adcsensorscanner = ThreadOp.inst( "rnadcsens", &__adcsensorscanner, __RocNetNode );
-    ThreadOp.start( data->adcsensorscanner );
-  }
-  else {
-    data->rocmousescanner = ThreadOp.inst( "rocmouse", &__rocmousescanner, __RocNetNode );
-    ThreadOp.start( data->rocmousescanner );
-  }
+
+  __initADCThreads(inst);
+
   data->motorPWM = ThreadOp.inst( "motorpwm", &__motorPWM, __RocNetNode );
   ThreadOp.start( data->motorPWM );
 
