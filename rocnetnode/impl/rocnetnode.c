@@ -1865,14 +1865,14 @@ static void __reportADCSensor(iORocNetNode rocnetnode, int port, Boolean sensorS
   iORocNetNodeData data       = Data(rocnetnode);
   byte msg[256];
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ADC Sensor %d report %s [%d]", port, sensorState?"ON":"OFF", value );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ADC Sensor %d report %s [%d]", 128 + port, sensorState?"ON":"OFF", value );
 
   msg[RN_PACKET_NETID] = data->location;
   msg[RN_PACKET_GROUP] = RN_GROUP_SENSOR;
   msg[RN_PACKET_ACTION] = RN_SENSOR_REPORT;
   msg[RN_PACKET_LEN] = 5;
   msg[RN_PACKET_DATA+2] = sensorState;
-  msg[RN_PACKET_DATA+3] = port;
+  msg[RN_PACKET_DATA+3] = 128 + port;
   msg[RN_PACKET_DATA+4] = value;
   rnSenderAddresToPacket( data->id, msg, 0 );
   __sendRN(rocnetnode, msg);
