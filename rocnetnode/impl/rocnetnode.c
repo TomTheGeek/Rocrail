@@ -1911,7 +1911,7 @@ static void __adcsensorscanner( void* threadinst ) {
             data->adcsensorvalue[idx*4+i] = value;
             __reportADCSensor(rocnetnode, idx*4+i, True, value );
           }
-          else if( data->adcsensorvalue[idx*4+i] > 0) {
+          else if( value < threshold && data->adcsensorvalue[idx*4+i] > 0) {
             /* report off */
             data->adcsensorvalue[idx*4+i] = 0;
             __reportADCSensor(rocnetnode, idx*4+i, False, value );
