@@ -269,12 +269,19 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_I2CScan40 = new wxTextCtrl( m_OptionsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	fgSizer7->Add( m_I2CScan40, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_labI2CScan401 = new wxStaticText( m_OptionsPanel, wxID_ANY, wxT("GCA-Pi04"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labI2CScan401->Wrap( -1 );
-	fgSizer7->Add( m_labI2CScan401, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	m_labI2CScan30 = new wxStaticText( m_OptionsPanel, wxID_ANY, wxT("GCA-Pi04"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labI2CScan30->Wrap( -1 );
+	fgSizer7->Add( m_labI2CScan30, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_I2CScan30 = new wxTextCtrl( m_OptionsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	fgSizer7->Add( m_I2CScan30, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	
+	m_labI2CScan48 = new wxStaticText( m_OptionsPanel, wxID_ANY, wxT("ADC"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labI2CScan48->Wrap( -1 );
+	fgSizer7->Add( m_labI2CScan48, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_I2CScan48 = new wxTextCtrl( m_OptionsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer7->Add( m_I2CScan48, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
 	
 	m_I2CScan->Add( fgSizer7, 1, wxEXPAND, 5 );
 	

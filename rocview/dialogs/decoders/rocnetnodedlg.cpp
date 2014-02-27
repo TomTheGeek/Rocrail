@@ -814,6 +814,19 @@ void RocnetNodeDlg::event(iONode node) {
         i2cscan = NULL;
       }
 
+      for( int i = 8; i < 16; i++ ) {
+        if( m_I2Cx40 & (1 << i) ) {
+          char s[32] = {'\0'};
+          StrOp.fmtb( s, "0x%02X ", 0x40+i );
+          i2cscan = StrOp.cat( i2cscan, s);
+        }
+      }
+      m_I2CScan48->SetValue(i2cscan == NULL ? wxT(""):wxString(i2cscan,wxConvUTF8));
+      if( i2cscan != NULL) {
+        StrOp.free(i2cscan);
+        i2cscan = NULL;
+      }
+
       initPorts();
       initChannels();
 

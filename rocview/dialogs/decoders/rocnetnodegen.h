@@ -98,8 +98,10 @@ class rocnetnodegen : public wxDialog
 		wxTextCtrl* m_I2CScan20;
 		wxStaticText* m_labI2CScan40;
 		wxTextCtrl* m_I2CScan40;
-		wxStaticText* m_labI2CScan401;
+		wxStaticText* m_labI2CScan30;
 		wxTextCtrl* m_I2CScan30;
+		wxStaticText* m_labI2CScan48;
+		wxTextCtrl* m_I2CScan48;
 		wxButton* m_NodeOptionsRead;
 		wxButton* m_NodeOptionsWrite;
 		wxPanel* m_PortSetupPanel;
