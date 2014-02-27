@@ -2249,6 +2249,16 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
     if(  wProgram.getcmd( node ) == wProgram.ptstat ) {
       return 0;
     }
+    else if(  wProgram.getcmd( node ) == wProgram.raw ) {
+      int len = StrOp.len(wProgram.getstrval1(node)) / 2;
+      byte* l_cmd = StrOp.strToByte(wProgram.getstrval1(node));
+      int i = 0;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "raw command[%s] len=%d", wProgram.getstrval1(node), len );
+      for( i = 0; i < len; i++ )
+        cmd[i] = l_cmd[i];
+      freeMem(l_cmd);
+      return len;
+    }
     else if(  wProgram.getcmd( node ) == wProgram.pton ) {
       /* if cs == ibcom */
       if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn( data->loconet ) ) ) {

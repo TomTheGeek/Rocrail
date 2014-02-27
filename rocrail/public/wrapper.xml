@@ -990,6 +990,7 @@
     <const name="show" vt="int" val="49"/>
     <const name="update" vt="int" val="50"/>
     <const name="setchannel" vt="int" val="51" remark="val1=channel, val2=value"/>
+    <const name="raw" vt="int" val="52" remark="strval1=hexa"/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>
