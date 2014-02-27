@@ -1816,10 +1816,18 @@ void SymbolRenderer::drawBlockTriangle( wxPaintDC& dc, const char* ori ) {
 
   if( StrOp.equals( wItem.west, ori ) || StrOp.equals( wItem.east, ori ) ) {
     // horizontal triangle
-    p[0].x = 3; p[0].y = 15;
-    p[1].x = 6; p[1].y = 18;
-    p[2].x = 6; p[2].y = 12;
-    p[3].x = 3; p[3].y = 15;
+    if( m_cx <= 3 ) {
+      p[0].x =  8; p[0].y =  8;
+      p[1].x = 11; p[1].y = 11;
+      p[2].x = 11; p[2].y =  5;
+      p[3].x =  8; p[3].y =  8;
+    }
+    else {
+      p[0].x = 3; p[0].y = 15;
+      p[1].x = 6; p[1].y = 18;
+      p[2].x = 6; p[2].y = 12;
+      p[3].x = 3; p[3].y = 15;
+    }
 
     if(  ( StrOp.equals( wItem.east, ori ) && ! m_rotate )
       || ( StrOp.equals( wItem.west, ori ) && m_rotate )
@@ -1834,10 +1842,18 @@ void SymbolRenderer::drawBlockTriangle( wxPaintDC& dc, const char* ori ) {
   }
   else {
     // vertical triangle
-    p[0].x = 15; p[0].y = 3;
-    p[1].x = 18; p[1].y = 6;
-    p[2].x = 12; p[2].y = 6;
-    p[3].x = 15; p[3].y = 3;
+    if( m_cy <= 3 ) {
+      p[0].x =  8; p[0].y =  8;
+      p[1].x = 11; p[1].y = 11;
+      p[2].x =  5; p[2].y = 11;
+      p[3].x =  8; p[3].y =  8;
+    }
+    else {
+      p[0].x = 15; p[0].y = 3;
+      p[1].x = 18; p[1].y = 6;
+      p[2].x = 12; p[2].y = 6;
+      p[3].x = 15; p[3].y = 3;
+    }
 
     if(  ( StrOp.equals( wItem.north, ori ) && ! m_rotate )
       || ( StrOp.equals( wItem.south, ori ) && m_rotate )
