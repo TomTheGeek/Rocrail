@@ -1427,7 +1427,7 @@ static void __evaluateClock( iOrocNet rocnet, byte* rn ) {
 static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
   iOrocNetData data       = Data(rocnet);
   int          addr       = rn[RN_PACKET_DATA+3];
-  int          load       = (rn[RN_PACKET_LEN] > 4 ? rn[RN_PACKET_DATA+4]:0);
+  int          load       = 0;
   int          rcpt       = 0;
   int          sndr       = 0;
   Boolean      isThis     = rocnetIsThis( rocnet, rn);
@@ -1451,21 +1451,26 @@ static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
       wItem.setuidname(evt, wRocNetNode.getnickname(rnnode));
     wFeedback.setbus( evt, sndr );
     wFeedback.setaddr( evt, addr );
-    wFeedback.setload( evt, load );
     wFeedback.setfbtype( evt, wFeedback.fbtype_sensor );
 
     char ident[32] = {'\0'};
-    if( rn[RN_PACKET_LEN] > 4 ) {
-      int len = rn[RN_PACKET_LEN] - 4;
-      int i = 0;
-      for( i = 0; i < len && i < 31; i++) {
-        ident[i] = rn[RN_PACKET_DATA + 4 + i];
-        ident[i+1] = '\0';
+    if( action == RN_SENSORID_REPORT ) {
+      if( rn[RN_PACKET_LEN] > 4 ) {
+        int len = rn[RN_PACKET_LEN] - 4;
+        int i = 0;
+        for( i = 0; i < len && i < 31; i++) {
+          ident[i] = rn[RN_PACKET_DATA + 4 + i];
+          ident[i+1] = '\0';
+        }
+        if( action == RN_SENSORID_REPORT )
+          wFeedback.setid( evt, ident );
+        else
+          wFeedback.setidentifier( evt, ident );
       }
-      if( action == RN_SENSORID_REPORT )
-        wFeedback.setid( evt, ident );
-      else
-        wFeedback.setidentifier( evt, ident );
+    }
+    else {
+      load = (rn[RN_PACKET_LEN] > 4 ? rn[RN_PACKET_DATA+4]:0);
+      wFeedback.setload( evt, load );
     }
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor report %d:%d %s id(ent)=%s load=%d", sndr, addr, rn[RN_PACKET_DATA+2]?"on":"off", ident, load );
