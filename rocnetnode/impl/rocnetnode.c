@@ -988,6 +988,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
 
   case RN_PROGRAMMING_WROPT:
   {
+    int i2ccheck = 0;
     int prevcstype = data->csdevice;
     data->iotype = rn[RN_PACKET_DATA + 0];
     data->sack   = (rn[RN_PACKET_DATA + 1] & 0x01) ? True:False;
@@ -1013,6 +1014,15 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     msg[RN_PACKET_DATA + 1] |= (data->tl_info ? 0x10:0x00) | (data->tl_monitor ? 0x20:0x00) | (data->ismobile ? 0x40:0x00);
     msg[RN_PACKET_DATA + 2] = data->cstype;
     msg[RN_PACKET_DATA + 3] = data->csdevice;
+    i2ccheck = __checkI2C(rocnetnode, 0x20);
+    msg[RN_PACKET_DATA + 4] = (i2ccheck/256)&0xFF;
+    msg[RN_PACKET_DATA + 5] = (i2ccheck%256)&0xFF;
+    i2ccheck = __checkI2C(rocnetnode, 0x30);
+    msg[RN_PACKET_DATA + 6] = (i2ccheck/256)&0xFF;
+    msg[RN_PACKET_DATA + 7] = (i2ccheck%256)&0xFF;
+    i2ccheck = __checkI2C(rocnetnode, 0x40);
+    msg[RN_PACKET_DATA + 8] = (i2ccheck/256)&0xFF;
+    msg[RN_PACKET_DATA + 9] = (i2ccheck%256)&0xFF;
     /* Save the rocnetnode.ini to persistent the new ID. */
     {
       iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());
