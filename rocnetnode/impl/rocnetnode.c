@@ -1739,7 +1739,6 @@ static void __motorPWM( void* threadinst ) {
   iORocNetNodeData data       = Data(rocnetnode);
   int Vcurr = 0;
   int Vloop = 0;
-  int Vwait = 0;
   Boolean Vdir = True;
   Boolean lights = False;
 
@@ -1838,22 +1837,13 @@ static void __motorPWM( void* threadinst ) {
       __writePort(rocnetnode, data->VPWML, data->Vdir?0:1, IO_DIRECT );
     }
 
-    /* PWM 20Hz */
-    if( Vwait >= 5 ) {
-      Vwait = 0;
-      if( Vcurr > 0 )
-        __writePort(rocnetnode, data->VPWM, 1, IO_DIRECT );
-      SystemOp.uBusyWait( (Vcurr * Vmax) * 5 );
-      __writePort(rocnetnode, data->VPWM, 0, IO_DIRECT );
-      SystemOp.uBusyWait( ((((100-Vmax)+100) - Vcurr) * 100) * 5 );
+    if( Vcurr > 0 )
+      __writePort(rocnetnode, data->VPWM, 1, IO_DIRECT );
+    SystemOp.uBusyWait( (Vcurr * Vmax) * 5 );
+    __writePort(rocnetnode, data->VPWM, 0, IO_DIRECT );
+    SystemOp.uBusyWait( ((((100-Vmax)+100) - Vcurr) * 100) * 5 );
 
-      Vloop++;
-    }
-    else {
-      SystemOp.uBusyWait( 10000 );
-    }
-
-    Vwait++;
+    Vloop++;
 
   }
 
