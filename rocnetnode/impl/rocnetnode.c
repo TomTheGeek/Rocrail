@@ -1552,22 +1552,25 @@ static void __writeChannel(iORocNetNode rocnetnode, int channel, int pos) {
 static void __writePort(iORocNetNode rocnetnode, int port, int value, int iotype) {
   iORocNetNodeData data = Data(rocnetnode);
 
-  if( data->ports[port] != NULL && (data->ports[port]->type & IO_TOGGLE) ) {
-    if( value ) {
-      data->ports[port]->toggle = !data->ports[port]->toggle;
-      value = data->ports[port]->toggle ? 1:0;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "toggle port %d value=%d", port, value );
+  if( iotype != IO_DIRECT && data->i2cdescriptor > 0 && port > 0 && port < 129 ) {
+    if( data->ports[port] != NULL && (data->ports[port]->type & IO_TOGGLE) ) {
+      if( value ) {
+        data->ports[port]->toggle = !data->ports[port]->toggle;
+        value = data->ports[port]->toggle ? 1:0;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "toggle port %d value=%d", port, value );
+      }
+      else {
+        /* ignore off */
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore low value for toggle port %d toggle=%d", port, data->ports[port]->toggle );
+        return;
+      }
     }
-    else {
-      /* ignore off */
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ignore low value for toggle port %d toggle=%d", port, data->ports[port]->toggle );
-      return;
+
+    if( data->ports[port] != NULL && (data->ports[port]->type & IO_INVERT)) {
+      value ^= 1;
     }
   }
 
-  if( data->ports[port] != NULL && (data->ports[port]->type & IO_INVERT)) {
-    value ^= 1;
-  }
   if( iotype == IO_DIRECT ) {
     /* direct GPIO */
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Direct GPIO writeport %d=%d", port, value );
@@ -1782,9 +1785,10 @@ static void __motorPWM( void* threadinst ) {
   ThreadOp.sleep(100);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init RPM on port %d", data->RPM );
   raspiConfigPort(data->RPM, 1);
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init relais on port %d", IO_RELAIS );
   raspiConfigPort(IO_RELAIS, 0);
-
+  ThreadOp.sleep(100);
   __writePort(rocnetnode, IO_RELAIS, 1, IO_DIRECT );
 
   ThreadOp.setHigh(th);
