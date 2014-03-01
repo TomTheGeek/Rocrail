@@ -1751,6 +1751,7 @@ static void __motorPWM( void* threadinst ) {
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
   iORocNetNodeData data       = Data(rocnetnode);
   int Vcurr = 0;
+  int Vprev = 0;
   int Vloop = 0;
   Boolean Vdir = True;
   Boolean lights = False;
@@ -1790,6 +1791,9 @@ static void __motorPWM( void* threadinst ) {
   raspiConfigPort(IO_RELAIS, 0);
   ThreadOp.sleep(100);
   __writePort(rocnetnode, IO_RELAIS, 1, IO_DIRECT );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init GPIO18 as PWM" );
+  raspiInitPWM(40); /* ToDo: MaxPWM variable. */
 
   ThreadOp.setHigh(th);
 
@@ -1851,11 +1855,20 @@ static void __motorPWM( void* threadinst ) {
       __writePort(rocnetnode, data->VPWML, data->Vdir?0:1, IO_DIRECT );
     }
 
+    if( Vcurr != Vprev || Vcurr == 0 ) {
+      raspiSetPWM(Vcurr);
+      Vprev = Vcurr;
+    }
+
+    /* 100Hz */
+    /*
     if( Vcurr > 0 )
       __writePort(rocnetnode, data->VPWM, 1, IO_DIRECT );
-    SystemOp.uBusyWait(Vcurr * Vmax);
+    SystemOp.uBusyWait( (Vcurr * Vmax)  );
     __writePort(rocnetnode, data->VPWM, 0, IO_DIRECT );
-    SystemOp.uBusyWait((((100-Vmax)+100) - Vcurr) * 100);
+    SystemOp.uBusyWait( (((100-Vmax)+100) - Vcurr) * 100 );
+    */
+    ThreadOp.sleep(10);
 
     Vloop++;
 

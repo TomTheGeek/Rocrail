@@ -33,6 +33,15 @@
 
 #define BCM2708_PERI_BASE        0x20000000
 #define GPIO_BASE                (BCM2708_PERI_BASE + 0x200000) /* GPIO controller */
+#define PWM_BASE                 (BCM2708_PERI_BASE + 0x20C000) /* PWM controller */
+#define CLOCK_BASE               (BCM2708_PERI_BASE + 0x101000)
+
+#define PWM_CTL  0
+#define PWM_RNG1 4
+#define PWM_DAT1 5
+
+#define PWMCLK_CNTL 40
+#define PWMCLK_DIV  41
 
 
 #include <stdio.h>
@@ -49,6 +58,8 @@ void *gpio_map;
 
 /* I/O access */
 volatile unsigned *gpio = NULL;
+volatile unsigned *pwm = NULL;
+volatile unsigned *clk = NULL;
 
 
 /* GPIO setup macros. Always use INP_GPIO(x) before using OUT_GPIO(x) or SET_GPIO_ALT(x,y) */
@@ -67,36 +78,60 @@ void raspiGPIOAlt(int g, int alt) {
   }
 }
 
+/* map 4k register memory for direct access from user space and return a user space pointer to it */
+volatile unsigned *mapRegisterMemory(int base)
+{
+  static int mem_fd = 0;
+  char *mem, *map;
+
+  /* open /dev/mem */
+  if (!mem_fd) {
+    if ((mem_fd = open("/dev/mem", O_RDWR|O_SYNC) ) < 0) {
+      TraceOp.trc( "raspi", TRCLEVEL_EXCEPTION, __LINE__, 9999, "can't open /dev/mem" );
+      return NULL;
+    }
+  }
+
+  /* mmap register */
+
+  /* Allocate MAP block */
+  if ((mem = malloc(BLOCK_SIZE + (PAGE_SIZE-1))) == NULL) {
+    return NULL;
+  }
+
+  /* Make sure pointer is on 4K boundary */
+  if ((unsigned long)mem % PAGE_SIZE)
+    mem += PAGE_SIZE - ((unsigned long)mem % PAGE_SIZE);
+
+  /* Now map it */
+  map = (char *)mmap(
+    (void*)mem,
+    BLOCK_SIZE,
+    PROT_READ|PROT_WRITE,
+    MAP_SHARED|MAP_FIXED,
+    mem_fd,
+    base
+  );
+
+  if ((long)map < 0) {
+    printf("mmap error %d\n", (int)map);
+    TraceOp.trc( "raspi", TRCLEVEL_EXCEPTION, __LINE__, 9999, "mmap error %d", (int)map );
+    return NULL;
+  }
+
+  /* Always use volatile pointer! */
+  return (volatile unsigned *)map;
+}
+
 /* Set up a memory regions to access GPIO */
 int raspiSetupIO(void)
 {
   TraceOp.trc( "raspi", TRCLEVEL_INFO, __LINE__, 9999, "setup RasPi I/O" );
 
-   /* open /dev/mem */
-   if ((mem_fd = open("/dev/mem", O_RDWR|O_SYNC) ) < 0) {
-      TraceOp.trc( "raspi", TRCLEVEL_EXCEPTION, __LINE__, 9999, "can't open /dev/mem" );
-      return -1;
-   }
-
-   /* mmap GPIO */
-   gpio_map = mmap(
-      NULL,
-      BLOCK_SIZE,
-      PROT_READ|PROT_WRITE,
-      MAP_SHARED,
-      mem_fd,
-      GPIO_BASE
-   );
-
-   close(mem_fd); /* No need to keep mem_fd open after mmap */
-
-   if (gpio_map == MAP_FAILED) {
-      TraceOp.trc( "raspi", TRCLEVEL_EXCEPTION, __LINE__, 9999, "mmap error %d", (int)gpio_map );
-      return -1;
-   }
-
-   /* Always use volatile pointer! */
-   gpio = (volatile unsigned *)gpio_map;
+  /* Always use volatile pointer! */
+   gpio = mapRegisterMemory(GPIO_BASE);
+   pwm  = mapRegisterMemory(PWM_BASE);
+   clk  = mapRegisterMemory(CLOCK_BASE);
 
    return 0;
 }
@@ -124,7 +159,72 @@ int raspiDummy(void) {
   return 0;
 }
 
+void raspiSetPWM(int percent)
+{
+  int bitCount;
+  unsigned int bits = 0;
+
+  bitCount = (32 * percent) / 100;
+  if (bitCount > 32) bitCount = 32;
+  bits = 0;
+  while (bitCount) {
+    bits <<= 1;
+    bits |= 1;
+    bitCount--;
+  }
+  *(pwm + PWM_DAT1) = bits;
+}
+
+/* init hardware */
+void raspiInitPWM(int maxpwm)
+{
+  /* set PWM alternate function for GPIO18 */
+  SET_GPIO_ALT(18, 5);
+
+  /* disable PWM */
+  *(pwm + PWM_CTL) = 0;
+
+  /* needs some time until the PWM module gets disabled, without the delay the PWM module crashs */
+  usleep(100);
+
+  /* stop clock and waiting for busy flag doesn't work, so kill clock */
+  *(clk + PWMCLK_CNTL) = 0x5A000000 | (1 << 5);
+  usleep(100);
+
+  /* set frequency 19200000 / 20000 = 960 */
+  int idiv = 28;
+  *(clk + PWMCLK_DIV)  = 0x5A000000 | (idiv<<12);
+
+  /* source=osc and enable clock */
+  *(clk + PWMCLK_CNTL) = 0x5A000011;
+
+  /* disable PWM */
+  *(pwm + PWM_CTL) = 0;
+
+  /* needs some time until the PWM module gets disabled, without the delay the PWM module crashs */
+  usleep(100);
+
+  *(pwm + PWM_RNG1) = 32 + ((100-maxpwm)*64)/100;
+  usleep(100);
+
+  /* 32 bits = 2 milliseconds, init with 1 millisecond */
+  raspiSetPWM(0);
+
+  /* start PWM1 in serializer mode */
+  *(pwm + PWM_CTL) = 3;
+  usleep(100);
+}
+
+
 #else
+
+void raspiSetPWM(int percent) {
+
+}
+
+void raspiInitPWM(int maxPWM) {
+
+}
 
 int raspiDummy(void) {
   return 1;

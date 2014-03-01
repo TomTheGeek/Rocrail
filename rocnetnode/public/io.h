@@ -53,5 +53,7 @@ void raspiConfigPort(int port, int type);
 int raspiRead(int port);
 void raspiWrite(int port, int val);
 int raspiDummy(void);
+void raspiSetPWM(int percent);
+void raspiInitPWM(int maxpwm);
 #endif
 
