@@ -819,12 +819,12 @@ static Boolean isLocoIdentifier( iOAnalyse inst, const char* state ) {
   return False;
 }
 
-/* condState(switch) == [straight, turnout, left, right] */
-static Boolean checkActionCondSwitch( const char* state ) {
-  if( StrOp.equals( state, wSwitch.straight ) ||
-      StrOp.equals( state, wSwitch.turnout  ) ||
-      StrOp.equals( state, wSwitch.left     ) ||
-      StrOp.equals( state, wSwitch.right    )
+/* command(switch) == [straight, turnout, left, right] */
+static Boolean checkSwitchCmd( const char* cmd ) {
+  if( StrOp.equals( cmd, wSwitch.straight ) ||
+      StrOp.equals( cmd, wSwitch.turnout  ) ||
+      StrOp.equals( cmd, wSwitch.left     ) ||
+      StrOp.equals( cmd, wSwitch.right    )
     )
     return True;
 
@@ -844,39 +844,55 @@ static Boolean isValidAspect0to31( const char* token ) {
   return False;
 }
 
-/* condState(signal) == [red, yellow, green, white] multiple(CSV) */
-static Boolean checkActionCondSignal( const char* state ) {
-  if( StrOp.len( state ) == 0 )
+/* command(signal) == [red, green, yellow, white, blank, aspect[0..31]] */
+static Boolean checkSignalCmd( const char* cmd ) {
+  if( StrOp.equals( cmd, wSignal.red    ) ||
+      StrOp.equals( cmd, wSignal.green  ) ||
+      StrOp.equals( cmd, wSignal.yellow ) ||
+      StrOp.equals( cmd, wSignal.white  ) ||
+      StrOp.equals( cmd, wSignal.blank  ) ||
+      isValidAspect0to31( cmd )
+    )
+    return True;
+
+  return False;
+}
+
+/* command(output) == [on, off, active] */
+static Boolean checkOutputCmd( const char* cmd ) {
+  if( StrOp.equals( cmd, wOutput.on     ) ||
+      StrOp.equals( cmd, wOutput.off    ) ||
+      StrOp.equals( cmd, wOutput.active )
+    )
+    return True;
+
+  return False;
+}
+
+static Boolean checkActionCondSwitch( const char* condState ) {
+  return( checkSwitchCmd( condState ) );
+}
+
+/* multiple(CSV) allowed in action conditions */
+static Boolean checkActionCondSignal( const char* condState ) {
+  if( StrOp.len( condState ) == 0 )
     return False;
 
   Boolean rc = True;
 
-  iOStrTok tok = StrTokOp.inst( state, ',');
+  iOStrTok tok = StrTokOp.inst( condState, ',');
   while( StrTokOp.hasMoreTokens(tok) ) {
     const char* token = StrTokOp.nextToken( tok );
-    if( ! StrOp.equals( token, wSignal.red    ) &&
-        ! StrOp.equals( token, wSignal.yellow ) &&
-        ! StrOp.equals( token, wSignal.green  ) &&
-        ! StrOp.equals( token, wSignal.white  ) &&
-        ! isValidAspect0to31( token )
-      ) {
+    if( checkSignalCmd( token ) == False )
       rc = False;
-    }
   }
   StrTokOp.base.del(tok);
 
   return rc;
 }
 
-/* condState(output) == [on, off, active] */
-static Boolean checkActionCondOutput( const char* state ) {
-  if( StrOp.equals( state, wOutput.on     ) ||
-      StrOp.equals( state, wOutput.off    ) ||
-      StrOp.equals( state, wOutput.active )
-    )
-    return True;
-
-  return False;
+static Boolean checkActionCondOutput( const char* condState ) {
+  return( checkOutputCmd( condState ) );
 }
 
 /* condState(feedback) == [true, false, Lok-Kennung|*[forwards, reverse]] */
@@ -8277,12 +8293,13 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
       for( i = 0 ; i < stSize ; i++ ) {
         stNode = NodeOp.getChild(stlist, i);
         if( stNode ) {
+          const char* stid = wRoute.getid( stNode );
           const char* bka = wRoute.getbka( stNode );
           const char* bkb = wRoute.getbkb( stNode );
           const char* bkc = wRoute.getbkc( stNode );
 
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "routeCheck: st[%d] [%s] bka[%s] bkb[%s] bkc[%s]",
-              i, wRoute.getid(stNode), bka, bkb, bkc );
+              i, stid, bka, bkb, bkc );
 
           iOList delList = ListOp.inst();
           iONode swCmd = wRoute.getswcmd( stNode );
@@ -8291,20 +8308,43 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
             const char* swcmd = wSwitchCmd.getcmd( swCmd );
             Boolean swlock = wSwitchCmd.islock( swCmd );
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "routeCheck: st[%d] [%s] swid[%s] swcmd[%s] swlock[%d]",
-                i, wRoute.getid(stNode), swid, swcmd, swlock );
-            /* validate swid */
+                i, stid, swid, swcmd, swlock );
+            /* verify swid */
             iOSwitch sw = ModelOp.getSwitch( data->model, swid );
             iOSignal sg = ModelOp.getSignal( data->model, swid );
             iOOutput co = ModelOp.getOutput( data->model, swid );
             iOSelTab st = ModelOp.getSelectiontable( data->model, swid );
             iOTT     tt = ModelOp.getTurntable( data->model, swid );
             if( sw == NULL && sg == NULL && co == NULL && st == NULL && tt == NULL ) {
-              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: routeCheck: route[%d] [%s] id[%s] in command does not exist",
-                  i, wRoute.getid(stNode), swid );
+              TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ERROR: routeCheck: route[%s] id[%s] in command does not exist",
+                  stid, swid );
               numProblems++;
               retVal = False;
               if( repair && ! ismemberoflist( delList, (obj)swCmd ) ) {
                 ListOp.add( delList, (obj)swCmd );
+              }
+            }
+
+            /* verify swcmd */
+            if( sw != NULL ) {
+              if( checkSwitchCmd( swcmd ) == False ) {
+                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: routeCheck: route[%s] switch[%s] : invalid command[%s]",
+                    stid, swid, swcmd, swlock );
+                numProblems++;
+              }
+            }
+            if( sg != NULL ) {
+              if( checkSignalCmd( swcmd )== False ) {
+                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: routeCheck: route[%s] signal[%s] : invalid command[%s]",
+                    stid, swid, swcmd );
+                numProblems++;
+              }
+            }
+            if( co != NULL ) {
+              if( checkOutputCmd( swcmd ) == False ) {
+                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: routeCheck: route[%s] output[%s] : invalid command[%s]",
+                    stid, swid, swcmd );
+                numProblems++;
               }
             }
 
