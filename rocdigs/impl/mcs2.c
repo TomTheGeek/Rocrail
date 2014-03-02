@@ -200,7 +200,7 @@ static void __SoD( iOMCS2 inst ) {
   long dummy = 0x5263526C;
   int mod = 0;
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day..." );
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Start of Day..." );
 
   for( mod = 0; mod < data->fbmod; mod++ ) {
     byte* out = allocMem(16);
