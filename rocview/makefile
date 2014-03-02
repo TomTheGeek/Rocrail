@@ -170,7 +170,7 @@ $(TARGET): $(ROBJS) $(IOBJS) $(UTILOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) 
 	$(LNK) -o $(TARGET) $(ROBJS) $(IOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(UTILOBJS) $(WINRESOURCE) $(RRLIBS) $(LNK_FLAGS) $(WX_LIBS) $(LIBS) $(WINLIBS)
 
 $(WINRESOURCE): rocview.rc
-	$(TOOLPREFIX)windres -irocview.rc -o$(WINRESOURCE)
+	`$(FS)usr$(FS)i586-mingw32msvc$(FS)bin$(FS)wx-config --rescomp` -irocview.rc -o$(WINRESOURCE)
 
 
 $(TMPOUTDIR)/%.o: impl/%.cpp
