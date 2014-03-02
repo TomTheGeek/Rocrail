@@ -1539,6 +1539,9 @@
     <fun name="unLink" vt="Boolean">
       <param name="inst" vt="this" remark="Switch instance"/>
     </fun>
+    <fun name="has2Units" vt="Boolean">
+      <param name="inst" vt="this"/>
+    </fun>
     <data include="fback">
       <var name="id" vt="const char*"/>
       <var name="lockedId" vt="const char*"/>

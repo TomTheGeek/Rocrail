@@ -1133,8 +1133,17 @@ static Boolean __doCmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, 
       return False;
     }
 
-    /* sleep the switch delay time */
-    ThreadOp.sleep( wSwitch.getdelay( o->props ) );
+    if( wSwitch.getpause(nodeA) > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delay command for switch[%s] %dms", o->id, wSwitch.getpause(nodeA) );
+      if( wSwitch.getdelay( o->props ) > wSwitch.getpause(nodeA) )
+        ThreadOp.sleep(wSwitch.getdelay( o->props ));
+      else
+        ThreadOp.sleep(wSwitch.getpause(nodeA));
+    }
+    else {
+      /* sleep the switch delay time */
+      ThreadOp.sleep( wSwitch.getdelay( o->props ) );
+    }
 
     wSwitch.setdelay( nodeA2, wSwitch.getdelay( o->props ) );
     wSwitch.setactdelay( nodeA2, wSwitch.isactdelay( o->props ) );
@@ -1193,8 +1202,18 @@ static Boolean __doCmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, 
         MutexOp.post( o->muxCmd );
         return False;
       }
-      /* sleep the switch delay time */
-      ThreadOp.sleep( wSwitch.getdelay( o->props ) );
+
+      if( wSwitch.getpause(nodeA) > 0 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delay command for switch[%s] %dms", o->id, wSwitch.getpause(nodeA) );
+        if( wSwitch.getdelay( o->props ) > wSwitch.getpause(nodeA) )
+          ThreadOp.sleep(wSwitch.getdelay( o->props ));
+        else
+          ThreadOp.sleep(wSwitch.getpause(nodeA));
+      }
+      else {
+        /* sleep the switch delay time */
+        ThreadOp.sleep( wSwitch.getdelay( o->props ) );
+      }
 
       wSwitch.setaddr1( nodeA2, wSwitch.getaddr2( o->props ) );
       wSwitch.setport1( nodeA2, wSwitch.getport2( o->props ) );
@@ -1370,6 +1389,12 @@ static Boolean _cmd(iOSwitch inst, iONode nodeA, Boolean update, int extra, int*
   return True;
 }
 
+
+static Boolean _has2Units(iOSwitch inst) {
+  iOSwitchData o = Data(inst);
+  Boolean has2Units = ( wSwitch.getaddr2( o->props ) > 0 || wSwitch.getport2( o->props ) > 0 )  ? True:False;
+  return has2Units;
+}
 
 /**
  * Checks for property changes.
