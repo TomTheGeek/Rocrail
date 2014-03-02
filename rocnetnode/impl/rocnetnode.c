@@ -1792,8 +1792,10 @@ static void __motorPWM( void* threadinst ) {
   ThreadOp.sleep(100);
   __writePort(rocnetnode, IO_RELAIS, 1, IO_DIRECT );
 
+  /*
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init GPIO18 as PWM" );
-  raspiInitPWM(40); /* ToDo: MaxPWM variable. */
+  raspiInitPWM(40);
+  */
 
   ThreadOp.setHigh(th);
 
@@ -1855,20 +1857,20 @@ static void __motorPWM( void* threadinst ) {
       __writePort(rocnetnode, data->VPWML, data->Vdir?0:1, IO_DIRECT );
     }
 
+    /*
     if( Vcurr != Vprev || Vcurr == 0 ) {
       raspiSetPWM(Vcurr);
       Vprev = Vcurr;
     }
+    ThreadOp.sleep(10);
+    */
 
     /* 100Hz */
-    /*
     if( Vcurr > 0 )
       __writePort(rocnetnode, data->VPWM, 1, IO_DIRECT );
     SystemOp.uBusyWait( (Vcurr * Vmax)  );
     __writePort(rocnetnode, data->VPWM, 0, IO_DIRECT );
     SystemOp.uBusyWait( (((100-Vmax)+100) - Vcurr) * 100 );
-    */
-    ThreadOp.sleep(10);
 
     Vloop++;
 
