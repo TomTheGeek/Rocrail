@@ -14759,6 +14759,7 @@
     <sl txt="Preveri prosto destinacijo dokler ne doseže V (IN)"/>
     <pt_BR txt="Verificar se há destino disponível até atingir a Entrada (IN)"/>
     <fi txt="Tarkista vapaa määränpää IN:iin saapumiseen saakka"/>
+    <pl txt="Sprawdź dostępność miejsca przeznaczenia, aby osiągnąć cel (IN)"/>
   </Msg>
   <Msg id="locobook">
     <de txt="Lok-Steuerung"/>
@@ -14897,7 +14898,7 @@
     <sl txt="PT Ponastavitve" tip="Razširjeni ukazi za ponastavitev"/>
     <pt_BR txt="Redefinições PT" tip="Comandos de redefinição extendidos"/>
     <fi txt="PT alustukset" tip="Laajennetut alustuskomennot"/>
-    <pl tip="Rozszerzone polecenia resetowania"/>
+    <pl tip="Rozszerzone polecenia resetowania" txt="Resetuj Tor Programowania"/>
   </Msg>
   <Msg id="ptcommands">
     <de txt="Programmiergleis Befehle" tip="Erweiterte Programm-Befehle"/>
@@ -14951,7 +14952,7 @@
     <zh_CN txt="主轨道编程" tip="在主轨上编程"/>
     <pt_BR txt="PT POM" tip="Repetição de comandos para Programação na Linha Principal."/>
     <fi txt="PT POM" tip="Komennon toisto radalla ohjelmoinnissa"/>
-    <pl txt="PT POM"/>
+    <pl txt="PT POM" tip="Powtórz polecenie programowania na głównej linii."/>
   </Msg>
   <Msg id="scdmain">
     <de txt="SCD Main" tip="Zeitspanne der Stromkreisabschaltung nach Kurzschlusserkennung am Hauptanschluss (Main)"/>
@@ -20552,7 +20553,7 @@
     <pt_BR txt="http://wiki.rocrail.net/doku.php?id=donate-en"/>
     <sv txt="http://wiki.rocrail.net/doku.php?id=donate-en"/>
     <fi txt="http://wiki.rocrail.net/doku.php?id=donate-en"/>
-    <pl txt="http://wiki.rocrail.net/doku.php"/>
+    <pl txt="http://wiki.rocrail.net/doku.php?id=donate-en"/>
   </Msg>
   <Msg id="tristate">
     <en txt="Tri-State"/>
@@ -20712,6 +20713,7 @@
     <pt_BR txt="Desabilitar furto de controle de locomotivas"/>
     <sv txt="Inaktivera lokövertagande kontroll"/>
     <fi txt="Estä veturinohjauksen riisto"/>
+    <pl txt="Wyłącz przejęcie sterowania lokomotywą"/>
   </Msg>
   <Msg id="blockinitpause">
     <en txt="Block init pause"/>
@@ -21827,6 +21829,7 @@
     <sv txt="Slothantering"/>
     <fi txt="Varausten hallinta"/>
     <en_CA txt="Slot management"/>
+    <pl txt="Zarządzanie slotem"/>
   </Msg>
   <Msg id="decodertype">
     <en txt="Decoder type"/>
@@ -22444,6 +22447,7 @@
     <fi txt="Lokeron kaiutus"/>
     <sl txt="Slot ping"/>
     <en_CA txt="Slot ping"/>
+    <pl txt="Ping slotu"/>
   </Msg>
   <Msg id="localip">
     <en txt="Local IP"/>
@@ -22467,6 +22471,7 @@
     <pt_BR txt="IP local"/>
     <fi txt="Paikallinen IP"/>
     <en_CA txt="Local IP"/>
+    <pl txt="Lokalny adres IP"/>
   </Msg>
   <Msg id="setloco">
     <en txt="Set loco"/>
@@ -22488,6 +22493,7 @@
     <sv txt="Välj lok"/>
     <fi txt="Aseta veturi"/>
     <en_CA txt="Set loco"/>
+    <pl txt="Ustaw lokomotywę"/>
   </Msg>
   <Msg id="compress">
     <en txt="Compress"/>
@@ -22509,6 +22515,7 @@
     <pt_BR txt="Compactar"/>
     <fi txt="Pakkaa"/>
     <en_CA txt="Compress"/>
+    <pl txt="Kompresuj"/>
   </Msg>
   <Msg id="syncroutes">
     <en txt="Synchronize routes"/>
@@ -27313,6 +27320,8 @@
     <sr_latin txt="Ukini čekanje u bloku za polu automatski"/>
     <fi txt="Estä lohkon odotusaika puoliautomaattiajossa"/>
     <it txt="Disabilitare l'attesa blocco in modalità semiautomatica"/>
+    <de txt="Block-Wartezeit für Halbautomatik deaktivieren"/>
+    <ru txt="Отключить ожидание Блока при Полуавтомате"/>
   </Msg>
   <Msg id="simulatesensors">
     <en txt="Simulate sensors"/>
@@ -27323,9 +27332,18 @@
     <sr_latin txt="Simuliraj senzore"/>
     <fi txt="Simuloi anturit"/>
     <it txt="Sensori simulati"/>
+    <de txt="Rückmelder simulieren"/>
+    <ru txt="Симуляция датчиков"/>
   </Msg>
   <Msg id="locoimage">
     <en txt="Loco image"/>
+    <fi txt="Veturin kuva"/>
+    <it txt="Immagine loco"/>
+    <nl txt="Locomotief afbeelding"/>
+    <pt_BR txt="Imagem da locomotiva"/>
+    <ru txt="Картинка Локомотива"/>
+    <sl txt="Slika lokomotive"/>
+    <sr_latin txt="Slika lokomotive"/>
   </Msg>
   <Msg id="verticaltoolbar">
     <en txt="Vertical toolbar"/>
