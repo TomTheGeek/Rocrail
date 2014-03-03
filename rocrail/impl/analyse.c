@@ -8328,9 +8328,16 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
             /* verify swcmd */
             if( sw != NULL ) {
               if( checkSwitchCmd( swcmd ) == False ) {
-                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: routeCheck: route[%s] switch[%s] : invalid command[%s]",
-                    stid, swid, swcmd, swlock );
-                numProblems++;
+                if( isSimpleCrossing( SwitchOp.base.properties(sw) ) ) {
+                  /* simple crossing (no motor) may have any command, also empty or blank(s) (-> analyzer ) */
+                  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "routeCheck: route[%s] switch[%s] : simple crossing with any command[%s] is OK",
+                      stid, swid, swcmd );
+                }
+                else {
+                  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: routeCheck: route[%s] switch[%s] : invalid command[%s]",
+                      stid, swid, swcmd );
+                  numProblems++;
+                }
               }
             }
             if( sg != NULL ) {
