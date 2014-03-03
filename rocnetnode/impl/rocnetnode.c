@@ -1529,19 +1529,22 @@ static void __writeChannel(iORocNetNode rocnetnode, int channel, int pos) {
   iORocNetNodeData data = Data(rocnetnode);
   int rc  = 0;
   int i2caddr = 0x40;
+  int devchannel = 0;
 
   if( channel > 128 || data->channels[channel] == NULL ) {
     return;
   }
 
   i2caddr = (data->channels[channel]->channel - 1) / 16;
+  devchannel = ((data->channels[channel]->channel - 1) % 16);
 
   MutexOp.wait( data->i2cmux );
-  rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, (data->channels[channel]->channel%16) - 1, -1, pos);
+  rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, devchannel, -1, pos);
   MutexOp.post( data->i2cmux );
 
   if( rc < 0 ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write to I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x40+i2caddr, errno );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write channel %d(%d) to I2C device %s addr 0x%02X errno=%d",
+        channel, devchannel, data->i2cdevice, 0x40+i2caddr, errno );
     data->i2caddr40[i2caddr] = False;
     __errorReport(rocnetnode, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, 0x40+i2caddr);
   }
@@ -1647,6 +1650,7 @@ static void __pwm( void* threadinst ) {
 
         if( data->channels[i]->curpos != gotopos ) {
           int oldcurpos = data->channels[i]->curpos;
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "adjusting pwm channel %d, curpos=%d gotopos=%d", i, data->channels[i]->curpos, gotopos );
           if( data->channels[i]->curpos > gotopos ) {
             data->channels[i]->curpos -= steps;
             if( data->channels[i]->curpos <= gotopos || steps == 0 ) {
