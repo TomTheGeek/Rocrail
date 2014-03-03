@@ -631,6 +631,7 @@ bool RocGui::OnInit() {
   const char* lang    = CmdLnOp.getStr( m_CmdLn, wCmdline.langfile );
   m_bForceTabView     = CmdLnOp.hasKey(m_CmdLn, wCmdline.tabview);
   m_bTabViewRotated   = CmdLnOp.hasKey(m_CmdLn, wCmdline.tabviewrotated);
+  Boolean fs          = CmdLnOp.hasKey(m_CmdLn, wCmdline.fullscreen);
 
   if( m_bTabViewRotated ) {
     m_bForceTabView = true;
@@ -852,6 +853,12 @@ bool RocGui::OnInit() {
   if( !m_bOffline ) {
     iOThread th = ThreadOp.inst( "conthread", &conThread, this );
     ThreadOp.start( th );
+  }
+
+  if( fs ) {
+    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ME_FullScreen );
+    event.SetInt(4711);
+    wxPostEvent( m_Frame, event );
   }
 
   return TRUE;

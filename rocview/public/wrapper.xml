@@ -39,7 +39,8 @@
     <const name="themespath" vt="string" val="-themespath" defval="." range="*" remark="Themes path offset"/>
     <const name="serverpath" vt="string" val="-sp" defval="" range="*" remark="Server path to start Rocrail in a workspace."/>
     <const name="langfile" vt="string" val="-lang" defval="*" range="*" remark="Alternative translations file: -lang [file]"/>
-  </Cmdline>
+    <const name="fullscreen" vt="string" val="-fs" defval="" range="*" remark="Start in fullscreen mode."/>
+    </Cmdline>
 
   <gui structname="GUI" wrappername="Gui">
     <const name="productname" vt="string" val="Rocrail"/>

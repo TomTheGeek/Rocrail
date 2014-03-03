@@ -3217,6 +3217,9 @@ void RocGuiFrame::OnShowLocked( wxCommandEvent& event ) {
 void RocGuiFrame::OnFullScreen( wxCommandEvent& event ) {
   wxMenuItem* mi_fullscreen = menuBar->FindItem(ME_FullScreen);
 
+  if( event.GetInt() == 4711 )
+    mi_fullscreen->Check(true);
+
   if( mi_fullscreen->IsChecked() ) {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "full screen on" );
     ShowFullScreen(true, wxFULLSCREEN_NOTOOLBAR | wxFULLSCREEN_NOSTATUSBAR | wxFULLSCREEN_NOBORDER | wxFULLSCREEN_NOCAPTION );
