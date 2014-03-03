@@ -1270,6 +1270,8 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
 
   /* Initialize data->xxx members... */
   TraceOp.set( trc );
+  if( wDigInt.getprotver( data->ini ) > 2 )
+    wDigInt.setprotver( data->ini, 2 );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2(%d) %d.%d.%d", wDigInt.getprotver( data->ini ), vmajor, vminor, patch );
