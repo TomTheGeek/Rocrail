@@ -187,6 +187,7 @@ void Slider::SetValue(int value, bool force) {
   // MaxPos = 0, MinPos = ThumbRange
   ThumbPos = ThumbRange - (Value * Step);
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "SET Value=%d Step=%f ThumbPos=%d ThumbRange=%d", Value, Step, ThumbPos, ThumbRange );
+  moveThumb();
   Refresh(true);
 }
 
@@ -213,20 +214,24 @@ void Slider::mouseDown(wxMouseEvent& event)
   PrevFocusWindow = FindFocus();
   SetFocus();
   if( event.m_y > ThumbPos+ThumbHeight/2 ) {
+    TraceOp.trc( "slider", TRCLEVEL_DEBUG, __LINE__, 9999, "mouseDown: %d > %d", event.m_y, ThumbPos+ThumbHeight/2);
     Move = ThumbPos + ThumbRange/10;
     ThumbPos = Move;
   }
   else if( event.m_y < ThumbPos-ThumbHeight/2 ) {
+    TraceOp.trc( "slider", TRCLEVEL_DEBUG, __LINE__, 9999, "mouseDown: %d < %d", event.m_y, ThumbPos-ThumbHeight/2);
     Move = ThumbPos - ThumbRange/10;
     ThumbPos = Move;
   }
   else {
+    TraceOp.trc( "slider", TRCLEVEL_DEBUG, __LINE__, 9999, "mouseDown: %d", event.m_y);
     Move = event.m_y;
     ThumbPos = Move - (ThumbHeight/2);
   }
 
   Drag = true;
 
+  TraceOp.trc( "slider", TRCLEVEL_DEBUG, __LINE__, 9999, "mouseDown: ThumbPos=%d range=%d", ThumbPos, ThumbRange);
   if( ThumbPos < 0 )
     ThumbPos = 0;
   if( ThumbPos > ThumbRange )
