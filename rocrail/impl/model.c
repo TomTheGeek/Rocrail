@@ -1891,12 +1891,34 @@ static void __V0Locos( iOModel inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "V0 all Locos..." );
   for( i = 0; i < cnt; i++ ) {
     iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
-    iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-    wLoc.setcmd(cmd, wLoc.velocity);
-    wLoc.setV(cmd, 0);
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Loco [%s] set V=0", LocOp.getId(loc) );
-    LocOp.cmd(loc, cmd);
-    ThreadOp.sleep( 10 );
+    if( LocOp.saveSpeed(loc, False) > 0 ) {
+      iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+      wLoc.setcmd(cmd, wLoc.velocity);
+      wLoc.setV(cmd, 0);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Loco [%s] set V=0", LocOp.getId(loc) );
+      LocOp.cmd(loc, cmd);
+      ThreadOp.sleep( 10 );
+    }
+  }
+}
+
+static void __VRestoreLocos( iOModel inst ) {
+  iOModelData data = Data(inst);
+  int i = 0;
+  int cnt = ListOp.size( data->locList );
+  data->pendingstartall = False;
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "V0 all Locos..." );
+  for( i = 0; i < cnt; i++ ) {
+    iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
+    int restoreV = LocOp.saveSpeed(loc, True);
+    if( restoreV > 0 ) {
+      iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+      wLoc.setcmd(cmd, wLoc.velocity);
+      wLoc.setV(cmd, restoreV);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Loco [%s] restore V=%", LocOp.getId(loc), restoreV );
+      LocOp.cmd(loc, cmd);
+      ThreadOp.sleep( 10 );
+    }
   }
 }
 
@@ -2082,6 +2104,9 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
     }
     else if( StrOp.equals( wAutoCmd.v0locos, cmdVal ) ) {
       __V0Locos( inst );
+    }
+    else if( StrOp.equals( wAutoCmd.vrestorelocos, cmdVal ) ) {
+      __VRestoreLocos( inst );
     }
     else if( StrOp.equals( wAutoCmd.reset, cmdVal ) ) {
       __reset( inst, False );

@@ -691,6 +691,10 @@
     <fun name="isGoManual" vt="Boolean">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
+    <fun name="saveSpeed" vt="int">
+      <param name="inst" vt="this" remark="Loc instance"/>
+      <param name="reset" vt="Boolean"/>
+    </fun>
     <data include="$rocint/public/lcdriverint">
       <var name="props" vt="iONode"/>
       <var name="cvMap" vt="iOMap"/>
@@ -796,7 +800,8 @@
       <var name="lastfncmd" vt="long"/>
       <var name="govirtual" vt="Boolean"/>
       <var name="muxEngine" vt="iOMutex"/>
-      </data>
+      <var name="savedSpeed" vt="int"/>
+    </data>
   </object>
 
 

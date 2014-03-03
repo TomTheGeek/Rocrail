@@ -2940,6 +2940,9 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     Boolean broadcast = False;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "processing cmd=\"%s\" for [%s]",  cmd, LocOp.getId( inst ) );
 
+    /* Reset saved speed. */
+    data->savedSpeed = 0;
+
     if( ModelOp.isAuto( AppOp.getModel() ) ) {
       if( StrOp.equals( wLoc.go, cmd ) ) {
         _go( inst );
@@ -3612,6 +3615,18 @@ static Boolean _getPlacing( iOLoc loc ) {
 static int _getV( iOLoc loc ) {
   iOLocData data = Data(loc);
   return data->drvSpeed;
+}
+
+
+static int _saveSpeed( iOLoc loc, Boolean reset ) {
+  iOLocData data = Data(loc);
+  if( reset ) {
+    int savedSpeed = data->savedSpeed;
+    data->savedSpeed = 0;
+    return savedSpeed;
+  }
+  data->savedSpeed = data->drvSpeed;
+  return data->savedSpeed;
 }
 
 
