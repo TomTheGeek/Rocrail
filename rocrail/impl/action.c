@@ -956,6 +956,12 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       wAutoCmd.setcmd( cmd, wAutoCmd.v0locos );
       pfun( (obj)AppOp.getControl(), cmd );
     }
+    else if( StrOp.equals( wAutoCmd.vrestorelocos, wAction.getcmd( data->action ) ) ) {
+      clntcon_callback pfun = ControlOp.getCallback(AppOp.getControl());
+      iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+      wAutoCmd.setcmd( cmd, wAutoCmd.vrestorelocos );
+      pfun( (obj)AppOp.getControl(), cmd );
+    }
     else if( StrOp.equals( wAutoCmd.on, wAction.getcmd( data->action ) ) ) {
       clntcon_callback pfun = ControlOp.getCallback(AppOp.getControl());
       iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );

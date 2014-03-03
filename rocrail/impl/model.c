@@ -1906,8 +1906,7 @@ static void __VRestoreLocos( iOModel inst ) {
   iOModelData data = Data(inst);
   int i = 0;
   int cnt = ListOp.size( data->locList );
-  data->pendingstartall = False;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "V0 all Locos..." );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "V restore all Locos..." );
   for( i = 0; i < cnt; i++ ) {
     iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
     int restoreV = LocOp.saveSpeed(loc, True);
