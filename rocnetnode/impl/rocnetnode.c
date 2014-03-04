@@ -1921,6 +1921,7 @@ static void __adcsensorscanner( void* threadinst ) {
     int rc = 0;
     int i = 0;
     byte value = 0;
+    Boolean inputON = False;
 
     baseadc = 0x48 + idx;
 
@@ -1929,6 +1930,10 @@ static void __adcsensorscanner( void* threadinst ) {
       if( rc >= 0 ) {
         rc = raspiReadI2C( data->i2cdescriptor, baseadc, &value );
         if( rc >= 0 ) {
+
+          if( value > threshold )
+            inputON = True;
+
           if( value > threshold && data->adcsensorvalue[idx*4+i] == 0) {
             /* report on */
             data->adcsensorvalue[idx*4+i] = value;
@@ -1946,6 +1951,10 @@ static void __adcsensorscanner( void* threadinst ) {
       else
         break;
     }
+
+    /* Show LED in case one or more inputs are above the threshold. */
+    raspiWriteRegI2C( data->i2cdescriptor, baseadc, ctrl, inputON?255:0 );
+
 
     idx++;
     if( idx > 7 )
