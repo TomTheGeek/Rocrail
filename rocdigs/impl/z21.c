@@ -1261,8 +1261,33 @@ static void __reader( void* threadinst ) {
   packet[3] = 0x00;
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_RAILCOM_GETDATA" );
   ThreadOp.post(data->writer, (obj)packet);
+  ThreadOp.sleep(100);
 
+  // SoD LocoNet
+  packet = allocMem(32);
+  packet[0] = 0x07;
+  packet[1] = 0x00;
+  packet[2] = LAN_LOCONET_DETECTOR;
+  packet[3] = 0x00;
+  packet[4] = 0x81;
+  packet[5] = 0xf8;
+  packet[6] = 0x03;
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_LOCONET_DETECTOR: Reportasdress 1017" );
+  ThreadOp.post(data->writer, (obj)packet);
+  ThreadOp.sleep(100);
 
+  // SoD LocoNet
+  packet = allocMem(32);
+  packet[0] = 0x07;
+  packet[1] = 0x00;
+  packet[2] = LAN_LOCONET_DETECTOR;
+  packet[3] = 0x00;
+  packet[4] = 0x80;
+  packet[5] = 0x00;
+  packet[6] = 0x00;
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_LOCONET_DETECTOR: SIC Request für Digitrax" );
+  ThreadOp.post(data->writer, (obj)packet);
+  ThreadOp.sleep(100);
 
   do {
     byte packet[256];
