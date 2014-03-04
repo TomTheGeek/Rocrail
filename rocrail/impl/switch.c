@@ -963,6 +963,7 @@ static Boolean __doCmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, 
   Boolean inv1 = wSwitch.isinv( o->props );
   Boolean inv2 = wSwitch.isinv2( o->props );
   const char* iid = wSwitch.getiid( o->props );
+  int pause = wSwitch.getpause(nodeA);
 
   o->savepostimer = wCtrl.getsavepostime( wRocRail.getctrl( AppOp.getIni(  ) ) ) * 10;
 
@@ -1133,12 +1134,12 @@ static Boolean __doCmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, 
       return False;
     }
 
-    if( wSwitch.getpause(nodeA) > 0 ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delay command for switch[%s] %dms", o->id, wSwitch.getpause(nodeA) );
-      if( wSwitch.getdelay( o->props ) > wSwitch.getpause(nodeA) )
+    if( pause > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delay command for switch[%s] %dms", o->id, pause );
+      if( wSwitch.getdelay( o->props ) > pause )
         ThreadOp.sleep(wSwitch.getdelay( o->props ));
       else
-        ThreadOp.sleep(wSwitch.getpause(nodeA));
+        ThreadOp.sleep(pause);
     }
     else {
       /* sleep the switch delay time */
@@ -1203,12 +1204,12 @@ static Boolean __doCmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, 
         return False;
       }
 
-      if( wSwitch.getpause(nodeA) > 0 ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delay command for switch[%s] %dms", o->id, wSwitch.getpause(nodeA) );
-        if( wSwitch.getdelay( o->props ) > wSwitch.getpause(nodeA) )
+      if( pause > 0 ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "delay command for switch[%s] %dms", o->id, pause );
+        if( wSwitch.getdelay( o->props ) > pause )
           ThreadOp.sleep(wSwitch.getdelay( o->props ));
         else
-          ThreadOp.sleep(wSwitch.getpause(nodeA));
+          ThreadOp.sleep(pause);
       }
       else {
         /* sleep the switch delay time */
