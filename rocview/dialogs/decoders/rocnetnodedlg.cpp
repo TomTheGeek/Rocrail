@@ -1740,7 +1740,7 @@ void RocnetNodeDlg::onChannelTune( wxCommandEvent& event ) {
   channel += m_ChannelGroup*8;
 
   ChannelTuneDlg* dlg = new ChannelTuneDlg(this, this, channel, wProgram.porttype_servo,
-      l_OffPos[channel]->GetValue(), l_OnPos[channel]->GetValue(), l_Servo[channel]->IsChecked());
+      l_OffPos[i]->GetValue(), l_OnPos[i]->GetValue(), l_Servo[i]->IsChecked());
   if( wxID_OK == dlg->ShowModal() ) {
   }
   dlg->Destroy();
