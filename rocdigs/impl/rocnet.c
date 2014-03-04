@@ -114,6 +114,25 @@ static void* __event( void* inst, const void* evt ) {
   return NULL;
 }
 
+static void __reportState(iOrocNet inst, Boolean emergency) {
+  iOrocNetData data = Data(inst);
+  if( data->listenerFun != NULL && data->listenerObj != NULL ) {
+    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+
+    if( data->iid != NULL )
+      wState.setiid( node, data->iid );
+
+    wState.setpower( node, data->power );
+    wState.settrackbus( node, data->connected );
+    wState.setsensorbus( node, data->sensor );
+    wState.setemergency( node, emergency );
+    wState.setaccessorybus( node, data->connected );
+
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+}
+
+
 
 static byte __getProtocol(iONode loc) {
   byte prot = 0;
@@ -241,6 +260,8 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_LEN] = 1;
       rn[RN_PACKET_DATA + 0] = RN_CS_TRACKPOWER_OFF;
       ThreadOp.post( data->writer, (obj)rn );
+      data->power = False;
+      __reportState(inst, False);
       return rsp;
     }
     else if( StrOp.equals( cmd, wSysCmd.go ) ) {
@@ -249,6 +270,8 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_LEN] = 1;
       rn[RN_PACKET_DATA + 0] = RN_CS_TRACKPOWER_ON;
       ThreadOp.post( data->writer, (obj)rn );
+      data->power = True;
+      __reportState(inst, False);
       return rsp;
     }
     else if( StrOp.equals( cmd, wSysCmd.sod ) ) {
@@ -353,6 +376,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
     rsp = (iONode)NodeOp.base.clone( node );
+    return rsp;
   }
 
   /* Output command. */
@@ -1183,11 +1207,8 @@ static byte* __evaluateStationary( iOrocNet rocnet, byte* rn ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node %s is not registered", key );
     }
     /* STOP */
-    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
-    wState.setiid( node, wDigInt.getiid( data->ini ) );
-    wState.setpower( node, False );
-    wState.setemergency( node, True );
-    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+    data->power = False;
+    __reportState(rocnet, True);
     }
     break;
 
@@ -1499,6 +1520,9 @@ static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
     break;
   }
 
+  data->sensor = True;
+  __reportState(rocnet, False);
+
   return rnReply;
 }
 
@@ -1622,7 +1646,7 @@ static void __reader( void* threadinst ) {
     data->connected = data->rnConnect((obj)rocnet);
     ThreadOp.sleep(2500);
   };
-
+  __reportState(rocnet, False);
 
   while( data->connected && data->run ) {
     int extended = False;

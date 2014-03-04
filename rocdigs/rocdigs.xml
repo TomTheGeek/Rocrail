@@ -870,7 +870,9 @@
       <var name="dispatchAddr" vt="int"/>
       <var name="mousemap" vt="iOMap"/>
       <var name="sack" vt="Boolean"/>
-      </data>
+      <var name="power" vt="Boolean"/>
+      <var name="sensor" vt="Boolean"/>
+    </data>
   </object>
 
   <object name="MCS2" interface="$../rocint/rocint.xml:DigInt" use="node,trace,socket,serial,thread,mutex,map" include="$rocint/public/digint" remark="rocNet object">
