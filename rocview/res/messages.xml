@@ -77,7 +77,7 @@
     <all txt="Magyar nyelv" tip="Hungarian"/>
   </Msg>
   <Msg id="lang_pl">
-    <all txt="Polszczyzna" tip="Polish"/>
+    <all txt="Polski" tip="Polish"/>
   </Msg>
   <Msg id="lang_nb">
     <all txt="Bokmål" tip="Norwegian"/>
