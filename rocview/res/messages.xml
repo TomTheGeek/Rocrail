@@ -20737,6 +20737,7 @@
     <pt_BR txt="Pausa inicial do bloco"/>
     <sv txt="Blockinitieringspause"/>
     <fi txt="Lohkon alustuksen viive"/>
+    <pl txt="Pauza przy inicjalizacji bloku"/>
   </Msg>
   <Msg id="skipsetsg">
     <en txt="Skip signal commands" tip="Skip signal commands if already set"/>
@@ -21492,7 +21493,7 @@
     <fi txt="XpressNet palautekartoitus" tip="Tutustu OpenDCC:n ohjeistukseen"/>
     <sv tip="Läs OpenDCC dokumentation."/>
     <da tip="Læs OpenDCC dokumentation"/>
-    <pl txt="Mapowanie informacji zwrotnej XpressNet"/>
+    <pl txt="Mapowanie informacji zwrotnej XpressNet" tip="Czytaj dokumentację OpenDCC"/>
   </Msg>
   <Msg id="allowfollowup">
     <en txt="Allow follow up" tip="Allow critical section follow up in same direction."/>
@@ -21516,6 +21517,7 @@
     <pt_BR txt="Permitir acompanhamento" tip="Permitir acompanhamento de seção crítica na mesma direção."/>
     <sv txt="Tillåt uppföljning"/>
     <fi txt="Salli seuraava" tip="Salli seuraava kriittinen alue samaan suuntaan"/>
+    <pl txt="Pozwól na śledzenie" tip="Pozwól sekcji krytycznej śledzić w tym samym kierunku."/>
   </Msg>
   <Msg id="fiddleyard2go">
     <en txt="Goto FiddleYard"/>
@@ -21558,6 +21560,7 @@
     <pt_BR txt="Retransmissão de polarização"/>
     <sv txt="Polarisationsrelä"/>
     <fi txt="Polarisaatiorele"/>
+    <pl txt="Polaryzacja przekaźnika"/>
   </Msg>
   <Msg id="allowzerothrottleid">
     <en txt="Allow zero throttle ID"/>
@@ -21651,6 +21654,7 @@
     <pt_BR txt="Permitir agendamentos"/>
     <fi txt="Salli aikataulut"/>
     <en_CA txt="Allow schedules"/>
+    <pl txt="Rozkłady jazdy dozwalone"/>
   </Msg>
   <Msg id="not">
     <en txt="Not"/>
@@ -21724,6 +21728,7 @@
     <pt_BR txt="Comando de fala"/>
     <fi txt="Osoituskomento"/>
     <en_CA txt="Speak command"/>
+    <pl txt="Polecenie do rozgłoszenia"/>
   </Msg>
   <Msg id="acceptident">
     <en txt="Accept BiDi Loco"/>
@@ -21767,6 +21772,7 @@
     <pt_BR txt="Usar lados do bloco para rotas"/>
     <fi txt="Käytä lohkon puolta reiteille"/>
     <en_CA txt="Use block side for routes"/>
+    <pl txt="Użyj strony bloku na trasach"/>
   </Msg>
   <Msg id="swapblockenterside">
     <en txt="Swap block enter side"/>
@@ -21789,6 +21795,7 @@
     <sv txt="Byt ingångssida till block"/>
     <fi txt="Vaihda lohkon sisääntulopuolta"/>
     <en_CA txt="Swap block enter side"/>
+    <pl txt="Zmiana strony wejścia do bloku"/>
   </Msg>
   <Msg id="stopnonecommuter">
     <en txt="Stop none commuter in terminal"/>
@@ -21809,6 +21816,7 @@
     <sv txt="Stoppa icke pendeltåg på station"/>
     <fi txt="Älä pysäytä mitään lähiliikennejunaa pääteasemalla"/>
     <en_CA txt="Stop none commuter in terminal"/>
+    <pl txt="Nie zatrzymuj pociągów podmiejskich na stacji końcowej"/>
   </Msg>
   <Msg id="slotmanagement">
     <en txt="Slot management"/>
@@ -21906,7 +21914,7 @@
     <da txt="System info"/>
     <pt_BR txt="Informações do sistema" tip="Ativar informações do sistema da CS extra"/>
     <fi txt="Järjestelmätiedot" tip="Salli ylimääräinen CS järjestelmätieto"/>
-    <pl txt="Informacje systemowe"/>
+    <pl txt="Informacje systemowe" tip="Włącz dodatkowe informacje o systemie CS."/>
     <en_CA txt="System info" tip="Enable extra CS system info."/>
   </Msg>
   <Msg id="showonlystartschedules">
@@ -22004,6 +22012,7 @@
     <sv txt="Ledig före start"/>
     <fi txt="Vapauta ennen käynnistystä"/>
     <en_CA txt="Free before start"/>
+    <pl txt="Odblokować przed uruchomieniem"/>
   </Msg>
   <Msg id="embeddedblock">
     <en txt="Embedded block"/>
@@ -22025,6 +22034,7 @@
     <sv txt="Inbyggda block"/>
     <fi txt="Sulautettu lohko"/>
     <en_CA txt="Embedded block"/>
+    <pl txt="Blok zintegrowany"/>
   </Msg>
   <Msg id="setupsvgtheme">
     <en txt="No SVG Theme was found; Check the Rocview SVG settings."/>
@@ -24093,6 +24103,7 @@
     <fi txt="Valitse lyhyin lohko"/>
     <en_AU txt="Select shortest block"/>
     <en_CA txt="Select shortest block"/>
+    <pl txt="Wybierz najkrótszy blok"/>
   </Msg>
   <Msg id="prefix">
     <en txt="Prefix"/>
@@ -27255,6 +27266,7 @@
     <en_AU txt="UDP Ports"/>
     <en_CA txt="UDP Ports"/>
     <ru txt="UDP Порты"/>
+    <pl txt="Porty UDP"/>
   </Msg>
   <Msg id="center">
     <en txt="Center"/>
@@ -27322,6 +27334,9 @@
     <it txt="Disabilitare l'attesa blocco in modalità semiautomatica"/>
     <de txt="Block-Wartezeit für Halbautomatik deaktivieren"/>
     <ru txt="Отключить ожидание Блока при Полуавтомате"/>
+    <en_AU txt="Disable block wait for half automatic"/>
+    <en_CA txt="Disable block wait for half automatic"/>
+    <pl txt="Wyłącz oczekiwanie w bloku półautomatycznym"/>
   </Msg>
   <Msg id="simulatesensors">
     <en txt="Simulate sensors"/>
@@ -27334,6 +27349,9 @@
     <it txt="Sensori simulati"/>
     <de txt="Rückmelder simulieren"/>
     <ru txt="Симуляция датчиков"/>
+    <en_AU txt="Simulate sensors"/>
+    <en_CA txt="Simulate sensors"/>
+    <pl txt="Symuluj czujniki"/>
   </Msg>
   <Msg id="locoimage">
     <en txt="Loco image"/>
@@ -27344,8 +27362,15 @@
     <ru txt="Картинка Локомотива"/>
     <sl txt="Slika lokomotive"/>
     <sr_latin txt="Slika lokomotive"/>
+    <de txt="Lokomotivbild"/>
+    <en_AU txt="Loco image"/>
+    <en_CA txt="Loco image"/>
+    <en_GB txt="Loco image"/>
+    <pl txt="Zdjęcie lokomotywy"/>
   </Msg>
   <Msg id="verticaltoolbar">
     <en txt="Vertical toolbar"/>
+    <de txt="Vertikale Symbolleiste"/>
+    <nl txt="Verticale werkbalk"/>
   </Msg>
 </Messages>
