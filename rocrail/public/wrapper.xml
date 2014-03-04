@@ -463,7 +463,6 @@
       <const name="easydcc" vt="string" val="easydcc"/>
       <const name="z21" vt="string" val="z21"/>
       <const name="xnmm" vt="string" val="xnmm"/>
-      <const name="dtc" vt="string" val="dtc"/>
       <const name="rocomp" vt="string" val="rocomp"/>
       <const name="io8255" vt="string" val="io8255"/>
       <const name="hccm" vt="string" val="hccm"/>
