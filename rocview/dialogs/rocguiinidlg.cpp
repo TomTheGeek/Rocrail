@@ -196,6 +196,7 @@ void RocguiIniDialog::initLabels() {
   m_labDirImage->SetLabel( wxGetApp().getMsg( "dirimage" ) );
   m_VerticalToolbar->SetLabel( wxGetApp().getMsg( "verticaltoolbar" ) );
   m_LocoImage->SetLabel( wxGetApp().getMsg( "locoimage" ) );
+  m_labWidgetWidth->SetLabel( wxGetApp().getMsg( "widgetwidth" ) );
 
   m_labSpeak4Block->SetLabel( wxGetApp().getMsg( "speak4block" ) );
   m_labSpeakCmd->SetLabel( wxGetApp().getMsg( "speakcmd" ) );

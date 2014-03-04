@@ -6905,3 +6905,9 @@ msgstr ""
 msgid "Vertical toolbar"
 msgstr ""
 
+#. 
+# id="widgetwidth"
+#, c-format
+msgid "Widget width"
+msgstr ""
+

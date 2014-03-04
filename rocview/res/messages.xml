@@ -27373,4 +27373,7 @@
     <de txt="Vertikale Symbolleiste"/>
     <nl txt="Verticale werkbalk"/>
   </Msg>
+  <Msg id="widgetwidth">
+    <en txt="Widget width"/>
+  </Msg>
 </Messages>
