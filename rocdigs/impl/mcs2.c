@@ -582,6 +582,11 @@ static void __evaluateMCS2S88( iOMCS2Data mcs2, byte* in, unsigned char* prev ) 
       }
     }
   }
+
+  if(!mcs2->sensor) {
+    mcs2->sensor = True;
+    __reportState(mcs2);
+  }
 }
 
 
@@ -598,6 +603,12 @@ static void __evaluateSensorEvent( iOMCS2Data mcs2, byte* in ) {
   if( mcs2->iid != NULL )
     wFeedback.setiid( nodeC, mcs2->iid );
   mcs2->listenerFun( mcs2->listenerObj, nodeC, TRCLEVEL_INFO );
+
+  if(!mcs2->sensor) {
+    mcs2->sensor = True;
+    __reportState(mcs2);
+  }
+
 }
 
 
