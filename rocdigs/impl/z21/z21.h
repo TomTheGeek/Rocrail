@@ -19,6 +19,14 @@
 #define bcLocoNet         0x01000000 // LocoNet Meldungen an LAN Client weiterleiten (ohne Loks und Weichen)
 #define bcLocoNetLocos    0x02000000 // Lok-spezifische LocoNet Meldungen an LAN Client weiterleiten
 #define bcLocoNetSwitches 0x04000000 // Weichen-spezifische LocoNet Meldungen an LAN Client weiterleiten
+
+
+
+#define X_BUS_TUNNEL 0x40
+#define LAN_X_SET_TURNOUT 0x53
+#define LAN_X_SET_LOCO_DRIVE 0xE4
+
+
 /*
  * 3 separate Flags damit da nichts unnötig doppelt herumgeschickt wird (XPressNet und LocoNet)
  */

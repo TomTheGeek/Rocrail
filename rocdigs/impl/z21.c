@@ -354,7 +354,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
       byte* packet = allocMem(32);
       packet[0] = 0x07;
       packet[1] = 0x00;
-      packet[2] = 0x40;
+      packet[2] = X_BUS_TUNNEL;
       packet[3] = 0x00;
       packet[4] = 0x21;
       packet[5] = 0x80;
@@ -368,7 +368,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
       byte* packet = allocMem(32);
       packet[0] = 0x07;
       packet[1] = 0x00;
-      packet[2] = 0x40;
+      packet[2] = X_BUS_TUNNEL;
       packet[3] = 0x00;
       packet[4] = 0x21;
       packet[5] = 0x81;
@@ -382,7 +382,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
       byte* packet = allocMem(32);
       packet[0] = 0x06;
       packet[1] = 0x00;
-      packet[2] = 0x40;
+      packet[2] = X_BUS_TUNNEL;
       packet[3] = 0x00;
       packet[4] = 0x80;
       packet[5] = 0x80;
@@ -420,9 +420,9 @@ static iONode __translate(iOZ21 inst, iONode node) {
       else {
         packet[0] = 0x09;
         packet[1] = 0x00;
-        packet[2] = 0x40;
+        packet[2] = X_BUS_TUNNEL;
         packet[3] = 0x00;
-        packet[4] = 0x53;
+        packet[4] = LAN_X_SET_TURNOUT;
         packet[5] = addr / 256; /*MSB*/
         packet[6] = addr % 256; /*LSB*/
         packet[7] = 0x80 + 0x20 + (active?0x08:0x00) + (turnout?0x00:0x01); /* 0x20 is a patch for DCC */
@@ -454,9 +454,9 @@ static iONode __translate(iOZ21 inst, iONode node) {
         else {
           cmd->out[0] = 0x09;
           cmd->out[1] = 0x00;
-          cmd->out[2] = 0x40;
+          cmd->out[2] = X_BUS_TUNNEL;
           cmd->out[3] = 0x00;
-          cmd->out[4] = 0x53;
+          cmd->out[4] = LAN_X_SET_TURNOUT;
           cmd->out[5] = addr / 256; /*MSB*/
           cmd->out[6] = addr % 256; /*LSB*/
           cmd->out[7] = 0x80 + 0x20 + (active?0x08:0x00) + (turnout?0x00:0x01); /*1000A00P*/
@@ -496,9 +496,9 @@ static iONode __translate(iOZ21 inst, iONode node) {
     else {
       packet[0] = 0x09;
       packet[1] = 0x00;
-      packet[2] = 0x40;
+      packet[2] = X_BUS_TUNNEL;
       packet[3] = 0x00;
-      packet[4] = 0x53;
+      packet[4] = LAN_X_SET_TURNOUT;
       packet[5] = addr / 256; /*MSB*/
       packet[6] = addr % 256; /*LSB*/
       packet[7] = 0x80 + 0x20 + (active?0x08:0x00) + gate; /*1000A00P*/
@@ -523,7 +523,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
     byte* packet = allocMem(32);
     packet[0] = 0x06;
     packet[1] = 0x00;
-    packet[2] = 0xA3;
+    packet[2] = LAN_LOCONET_DISPATCH_ADDR;
     packet[3] = 0x00;
     packet[4] = addr / 256; /*MSB*/
     packet[5] = addr % 256; /*LSB*/
@@ -556,9 +556,9 @@ static iONode __translate(iOZ21 inst, iONode node) {
       slot->dir = dir;
       packet[0] = 0x0A;
       packet[1] = 0x00;
-      packet[2] = 0x40;
+      packet[2] = X_BUS_TUNNEL;
       packet[3] = 0x00;
-      packet[4] = 0xE4;
+      packet[4] = LAN_X_SET_LOCO_DRIVE;
       packet[5] = 0x10+conf; /* speed steps*/
       packet[6] = 0xC0 + (addr / 256); /*MSB*/
       packet[7] = addr % 256; /*LSB*/
@@ -582,7 +582,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
 
     packet[0] = 0x0A;
     packet[1] = 0x00;
-    packet[2] = 0x40;
+    packet[2] = X_BUS_TUNNEL;
     packet[3] = 0x00;
     packet[4] = 0xE4;
     packet[5] = 0xF8;
