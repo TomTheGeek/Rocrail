@@ -375,8 +375,8 @@ void RocnetNodeDlg::initLabels() {
   m_NodeBook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
   //m_NodeBook->SetPageText( 1, wxGetApp().getMsg( "rocnet" ) );
   m_NodeBook->SetPageText( 2, wxGetApp().getMsg( "options" ) );
-  m_NodeBook->SetPageText( 3, wxGetApp().getMsg( "portsetup" ) );
-  m_NodeBook->SetPageText( 4, wxGetApp().getMsg( "channelsetup" ) );
+  m_NodeBook->SetPageText( 3, wxT("Pi02 ") + wxGetApp().getMsg( "portsetup" ) );
+  m_NodeBook->SetPageText( 4, wxT("Pi03 ") + wxGetApp().getMsg( "channelsetup" ) );
   m_NodeBook->SetPageText( 5, wxGetApp().getMsg( "macro" ) );
   m_NodeBook->SetPageText( 6, wxGetApp().getMsg( "update" ) );
 
@@ -435,7 +435,7 @@ void RocnetNodeDlg::initLabels() {
   m_PortRead->SetLabel(wxGetApp().getMsg( "get" ));
   m_PortWrite->SetLabel(wxGetApp().getMsg( "set" ));
   m_PortRemove->SetLabel(wxGetApp().getMsg( "delete" ));
-  m_labPortEventID->SetLabel(wxGetApp().getMsg( "id" ));
+  m_labPortEventID->SetLabel(wxGetApp().getMsg( "event" ) + wxT(" ") + wxGetApp().getMsg( "id" ));
   m_labPortEventPort->SetLabel(wxGetApp().getMsg( "port" ));
   m_labPortEventID->SetToolTip(wxGetApp().getMsg( "event" ));
   m_labPortEventPort->SetToolTip(wxGetApp().getMsg( "event" ));
