@@ -187,7 +187,7 @@ void Slider::SetValue(int value, bool force) {
   // MaxPos = 0, MinPos = ThumbRange
   ThumbPos = ThumbRange - (Value * Step);
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "SET Value=%d Step=%f ThumbPos=%d ThumbRange=%d", Value, Step, ThumbPos, ThumbRange );
-  moveThumb();
+  PrevThumbPos = ThumbPos;
   Refresh(true);
 }
 
