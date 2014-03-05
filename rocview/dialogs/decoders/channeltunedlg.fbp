@@ -306,7 +306,7 @@
                                         <property name="permission">none</property>
                                         <object class="sizeritem" expanded="1">
                                             <property name="border">5</property>
-                                            <property name="flag">wxEXPAND</property>
+                                            <property name="flag">wxEXPAND|wxRIGHT|wxLEFT</property>
                                             <property name="proportion">1</property>
                                             <object class="wxBoxSizer" expanded="1">
                                                 <property name="minimum_size"></property>
@@ -466,7 +466,7 @@
                                                         <property name="permission">protected</property>
                                                         <property name="pos"></property>
                                                         <property name="size">60,-1</property>
-                                                        <property name="style">wxTE_READONLY</property>
+                                                        <property name="style">wxTE_CENTRE|wxTE_READONLY</property>
                                                         <property name="subclass"></property>
                                                         <property name="tooltip"></property>
                                                         <property name="validator_data_type"></property>
@@ -510,7 +510,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="1">
                                             <property name="border">5</property>
-                                            <property name="flag">wxEXPAND</property>
+                                            <property name="flag">wxEXPAND|wxRIGHT</property>
                                             <property name="proportion">1</property>
                                             <object class="wxBoxSizer" expanded="1">
                                                 <property name="minimum_size"></property>
@@ -652,7 +652,7 @@
                                                 </object>
                                                 <object class="sizeritem" expanded="1">
                                                     <property name="border">5</property>
-                                                    <property name="flag">wxTOP|wxBOTTOM|wxALIGN_CENTER_HORIZONTAL</property>
+                                                    <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxTOP|wxBOTTOM</property>
                                                     <property name="proportion">0</property>
                                                     <object class="wxTextCtrl" expanded="1">
                                                         <property name="bg"></property>
@@ -670,7 +670,7 @@
                                                         <property name="permission">protected</property>
                                                         <property name="pos"></property>
                                                         <property name="size">60,-1</property>
-                                                        <property name="style">wxTE_READONLY</property>
+                                                        <property name="style">wxTE_CENTRE|wxTE_READONLY</property>
                                                         <property name="subclass"></property>
                                                         <property name="tooltip"></property>
                                                         <property name="validator_data_type"></property>

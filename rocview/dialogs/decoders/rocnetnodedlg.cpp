@@ -429,7 +429,7 @@ void RocnetNodeDlg::initLabels() {
   // Port setup
   m_labPort->SetLabel(wxGetApp().getMsg( "port" ));
   m_labType->SetLabel(wxGetApp().getMsg( "type" ));
-  m_labDelay->SetLabel(wxGetApp().getMsg( "delay" ));
+  m_labDelay->SetLabel(wxGetApp().getMsg( "delay" ) + wxT(" * 10ms"));
   m_labBlink->SetLabel(wxGetApp().getMsg( "blink" ));
   m_labPortInv->SetLabel(wxGetApp().getMsg( "invert" ));
   m_PortRead->SetLabel(wxGetApp().getMsg( "get" ));
@@ -451,7 +451,7 @@ void RocnetNodeDlg::initLabels() {
   m_labChannelBlink->SetLabel(wxGetApp().getMsg( "blink" ));
   m_labChannelReport->SetLabel(wxGetApp().getMsg( "report" ));
   m_labChannelServo->SetLabel(wxGetApp().getMsg( "servo" ));
-  m_labChannelDelay->SetLabel(wxGetApp().getMsg( "delay" ));
+  m_labChannelDelay->SetLabel(wxGetApp().getMsg( "delay" ) + wxT(" * 10ms"));
   m_labChannelTune->SetLabel(wxGetApp().getMsg( "finetune" ));
   m_labChannelTest->SetLabel(wxGetApp().getMsg( "test" ));
   m_ChannelRead->SetLabel(wxGetApp().getMsg( "get" ));
