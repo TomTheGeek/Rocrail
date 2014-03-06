@@ -22056,6 +22056,7 @@
     <en_GB txt="No SVG Theme was found; Check the Rocview SVG settings."/>
     <fi txt="SVG teemaa ei löytynyt; tarkista Rocview:n SVG asetukset"/>
     <en_CA txt="No SVG Theme was found; Check the Rocview SVG settings."/>
+    <pl txt="Motyw SVG nie został znaleziony, sprawdź ustawienia SVG w Rocview"/>
   </Msg>
   <Msg id="useownwaittime">
     <en txt="Use own wait time in blocks"/>
@@ -22077,6 +22078,7 @@
     <sv txt="Använd egen väntetid i block"/>
     <fi txt="Käytä lohkojen omaa odotusaikaa"/>
     <en_CA txt="Use own wait time in blocks"/>
+    <pl txt="Użyj mojego czasu oczekiwania w blokach"/>
   </Msg>
   <Msg id="forceblocktimer">
     <en txt="Force block timer"/>
@@ -22119,6 +22121,7 @@
     <sv txt="Använd sekvenskontroll"/>
     <fi txt="Käytä järjestyksen tarkistusta"/>
     <en_CA txt="Use sequence check"/>
+    <pl txt="Użyj listy kontrolnej"/>
   </Msg>
   <Msg id="usedouble">
     <en txt="Use double packets"/>
@@ -22139,6 +22142,7 @@
     <sv txt="Använd dubbla paket"/>
     <fi txt="Käytä kaksoispaketteja"/>
     <en_CA txt="Use double packets"/>
+    <pl txt="Użyj podwójnych pakietów"/>
   </Msg>
   <Msg id="rectangular">
     <en txt="Rectangular"/>
@@ -22181,6 +22185,7 @@
     <pt_BR txt="Sub-biblioteca"/>
     <fi txt="Alikirjasto"/>
     <en_CA txt="Sub-Library"/>
+    <pl txt="Dodatkowe biblioteki"/>
   </Msg>
   <Msg id="nodes">
     <en txt="Nodes"/>
@@ -22380,6 +22385,7 @@
     <pt_BR txt="Números de aparência"/>
     <fi txt="Merkitysnumerot"/>
     <en_CA txt="Aspect numbers"/>
+    <pl txt="Znaczenie numerów"/>
   </Msg>
   <Msg id="planhealth">
     <en txt="Plan health"/>
@@ -22397,6 +22403,7 @@
     <pt_BR txt="Adequação do diagrama"/>
     <fi txt="Suunnitelman tila"/>
     <en_CA txt="Plan health"/>
+    <pl txt="Spójność planu"/>
   </Msg>
   <Msg id="communication">
     <en txt="Communication"/>
@@ -22420,6 +22427,7 @@
     <pt_BR txt="Comunicação"/>
     <fi txt="Yhteys"/>
     <en_CA txt="Communication"/>
+    <pl txt="Komunikacja"/>
   </Msg>
   <Msg id="swaptimer">
     <en txt="Swap timer"/>
@@ -22591,6 +22599,7 @@
     <pt_BR txt="Iniciar agendamentos"/>
     <fi txt="Aloitusaikataulu"/>
     <en_CA txt="Startup schedule"/>
+    <pl txt="Uruchom harmonogram"/>
   </Msg>
   <Msg id="cmdtime">
     <en txt="Command time"/>
@@ -22609,6 +22618,7 @@
     <pt_BR txt="Tempo do comando"/>
     <fi txt="Komentoaika"/>
     <en_CA txt="Command time"/>
+    <pl txt="Polecenie czas"/>
   </Msg>
   <Msg id="controlcode">
     <en txt="Control code"/>
@@ -22629,6 +22639,7 @@
     <pt_BR txt="Código de controle"/>
     <fi txt="Ohjauskoodi"/>
     <en_CA txt="Control code"/>
+    <pl txt="Kod dostępu"/>
   </Msg>
   <Msg id="turntable2go">
     <en txt="Goto Turntable"/>
@@ -22670,6 +22681,7 @@
     <sv txt="Vänligen ladda Rocrails serverinställningar innan konfigurering av CBUS noder."/>
     <fi txt="Lataa Rocrail-palvelimen asetukset ennen CBUS-noodien konfigurointia."/>
     <en_CA txt="Please load the Rocrail server settings before configuring CBUS nodes."/>
+    <pl txt="Proszę załadowywać ustawienia serwera Rocrail przed konfiguracją węzłów CBUS."/>
   </Msg>
   <Msg id="node">
     <en txt="Node"/>
@@ -22690,6 +22702,7 @@
     <pt_BR txt="Entroncamento"/>
     <fi txt="Noodi"/>
     <en_CA txt="Node"/>
+    <pl txt="Węzeł"/>
   </Msg>
   <Msg id="variables">
     <en txt="Variables"/>
@@ -22779,6 +22792,7 @@
     <en_GB txt="Firmware"/>
     <fi txt="Laiteohjelmisto"/>
     <en_CA txt="Firmware"/>
+    <pl txt="Oprogramowanie układu"/>
   </Msg>
   <Msg id="get">
     <en txt="Get"/>
@@ -22890,6 +22904,7 @@
     <en_GB txt="Learn"/>
     <fi txt="Opi"/>
     <en_CA txt="Learn"/>
+    <pl txt="Zapamiętaj"/>
   </Msg>
   <Msg id="unlearn">
     <en txt="Unlearn"/>
@@ -22910,6 +22925,7 @@
     <en_GB txt="Unlearn"/>
     <fi txt="Unohda"/>
     <en_CA txt="Unlearn"/>
+    <pl txt="Wyrzuć z pamięci"/>
   </Msg>
   <Msg id="send">
     <en txt="Send"/>
@@ -22953,6 +22969,7 @@
     <sv txt="Återstartsläge"/>
     <fi txt="Käynnistystapa"/>
     <en_CA txt="Boot mode"/>
+    <pl txt="Tryb uruchamiania"/>
   </Msg>
   <Msg id="loadertime">
     <en txt="Loader time (ms)"/>
@@ -22972,6 +22989,7 @@
     <en_GB txt="Loader time (ms)"/>
     <fi txt="Latausaika (ms)"/>
     <en_CA txt="Loader time (ms)"/>
+    <pl txt="Czas ładowania (ms)"/>
   </Msg>
   <Msg id="shortevents">
     <en txt="Short events"/>
@@ -23119,6 +23137,7 @@
     <fi txt="Ylittäjä"/>
     <en_AU txt="Traverser"/>
     <en_CA txt="Traverser"/>
+    <pl txt="Przesuwnica"/>
   </Msg>
   <Msg id="subtitle">
     <en txt="Sub title"/>
@@ -23541,6 +23560,7 @@
     <fi txt="erottaja"/>
     <en_AU txt="divider"/>
     <en_CA txt="divider"/>
+    <pl txt="izolator"/>
   </Msg>
   <Msg id="temperature">
     <en txt="temperature"/>
@@ -23621,6 +23641,7 @@
     <fi txt="Lepää"/>
     <en_AU txt="Sleep"/>
     <en_CA txt="Sleep"/>
+    <pl txt="Tryb uśpienia"/>
   </Msg>
   <Msg id="closeonghost">
     <en txt="Close block on ghost"/>
@@ -23661,6 +23682,7 @@
     <fi txt="Näytä"/>
     <en_AU txt="Display"/>
     <en_CA txt="Display"/>
+    <pl txt="Ekran"/>
   </Msg>
   <Msg id="systemactions" dialog="true">
     <en txt="System Actions"/>
@@ -23785,6 +23807,7 @@
     <fr txt="numero du noeud"/>
     <en_AU txt="Node Nr."/>
     <en_CA txt="Node Nr."/>
+    <pl txt="Numer węzła"/>
   </Msg>
   <Msg id="eventnumber">
     <en txt="Event Nr."/>
@@ -24124,6 +24147,7 @@
     <fi txt="Etuliite"/>
     <en_AU txt="Prefix"/>
     <en_CA txt="Prefix"/>
+    <pl txt="Przedrostek"/>
   </Msg>
   <Msg id="backup">
     <en txt="Backup"/>
@@ -24144,6 +24168,7 @@
     <fi txt="Varmistus"/>
     <en_AU txt="Backup"/>
     <en_CA txt="Backup"/>
+    <pl txt="Kopia zapasowa"/>
   </Msg>
   <Msg id="keypath">
     <en txt="Key path"/>
@@ -24221,6 +24246,7 @@
     <fi txt="Yhdistä"/>
     <en_AU txt="Merge"/>
     <en_CA txt="Merge"/>
+    <pl txt="Połącz"/>
   </Msg>
   <Msg id="closeexit">
     <en txt="Close exit"/>
@@ -24297,6 +24323,7 @@
     <fi txt="Kuvake"/>
     <en_AU txt="Icon"/>
     <en_CA txt="Icon"/>
+    <pl txt="Ikona"/>
   </Msg>
   <Msg id="swack">
     <en txt="Check switch acknowledge"/>
@@ -24564,6 +24591,7 @@
     <fi txt="Varaa"/>
     <en_AU txt="Reserve"/>
     <en_CA txt="Reserve"/>
+    <pl txt="Rezerwa"/>
   </Msg>
   <Msg id="goto">
     <en txt="Go to"/>
@@ -24583,6 +24611,7 @@
     <fi txt="Siirry"/>
     <en_AU txt="Go to"/>
     <en_CA txt="Go to"/>
+    <pl txt="Idź do"/>
   </Msg>
   <Msg id="run">
     <en txt="Run"/>
@@ -25353,6 +25382,7 @@
     <fi txt="Makro"/>
     <en_AU txt="Macro"/>
     <en_CA txt="Macro"/>
+    <pl txt="Makro"/>
   </Msg>
   <Msg id="features">
     <en txt="Features"/>
@@ -25370,6 +25400,7 @@
     <fi txt="Ominaisuudet"/>
     <en_AU txt="Features"/>
     <en_CA txt="Features"/>
+    <pl txt="Cechy"/>
   </Msg>
   <Msg id="portsetup">
     <en txt="Port setup"/>
@@ -25386,6 +25417,7 @@
     <fi txt="Portin asetukset"/>
     <en_AU txt="Port setup"/>
     <en_CA txt="Port setup"/>
+    <pl txt="Konfiguracja portu"/>
   </Msg>
   <Msg id="concurveright">
     <en txt="Connector curve right"/>
@@ -25402,6 +25434,7 @@
     <fi txt="Kaartuva yhdistin oikealle"/>
     <en_AU txt="Connector curve right"/>
     <en_CA txt="Connector curve right"/>
+    <pl txt="Łącznik łuku prawego"/>
   </Msg>
   <Msg id="concurveleft">
     <en txt="Connector curve left"/>
@@ -25418,6 +25451,7 @@
     <fi txt="Kaartuva yhdistin vasemmalle"/>
     <en_AU txt="Connector curve left"/>
     <en_CA txt="Connector curve left"/>
+    <pl txt="Łącznik łuku lewego"/>
   </Msg>
   <Msg id="watchdog">
     <en txt="Watchdog"/>
@@ -25434,6 +25468,7 @@
     <fi txt="Vahti"/>
     <en_AU txt="Watchdog"/>
     <en_CA txt="Watchdog"/>
+    <pl txt="Dozór (Watchdog)"/>
   </Msg>
   <Msg id="overrulethrottle">
     <en txt="Overrule throttle"/>
@@ -25599,6 +25634,7 @@
     <fi txt="Lainausmerkki"/>
     <en_AU txt="Double quote"/>
     <en_CA txt="Double quote"/>
+    <pl txt="Cudzysłów"/>
   </Msg>
   <Msg id="assigntrain">
     <en txt="Assign train"/>
@@ -25647,6 +25683,7 @@
     <fi txt="Lisäys"/>
     <en_AU txt="Gain"/>
     <en_CA txt="Gain"/>
+    <pl txt="Wzmocnienie"/>
   </Msg>
   <Msg id="usedepartdelay">
     <en txt="Use depart delay"/>
@@ -25681,6 +25718,7 @@
     <fi txt="Vilkkuva"/>
     <en_AU txt="Blink"/>
     <en_CA txt="Blink"/>
+    <pl txt="Miganie"/>
   </Msg>
   <Msg id="actiontimer60">
     <en txt="Action timer 60 sec."/>
@@ -25714,6 +25752,7 @@
     <fi txt="Suunnan kuva"/>
     <en_AU txt="Direction image"/>
     <en_CA txt="Direction image"/>
+    <pl txt="Obraz kierunek"/>
   </Msg>
   <Msg id="newposflag">
     <en txt="New Position Flag"/>
@@ -25825,6 +25864,7 @@
     <fi txt="Vaihteenkieli"/>
     <en_AU txt="Frog"/>
     <en_CA txt="Frog"/>
+    <pl txt="Krzyżownica"/>
   </Msg>
   <Msg id="showlocked">
     <en txt="Show locked switches" tip="Show locked switches with a different color."/>
@@ -26053,6 +26093,7 @@
     <fi txt="Merkitse"/>
     <en_AU txt="Stamp"/>
     <en_CA txt="Stamp"/>
+    <pl txt="Znacznik czasu"/>
   </Msg>
   <Msg id="export">
     <en txt="Export"/>
@@ -26070,6 +26111,7 @@
     <fi txt="Vie"/>
     <en_AU txt="Export"/>
     <en_CA txt="Export"/>
+    <pl txt="Eksport"/>
   </Msg>
   <Msg id="insert">
     <en txt="Insert"/>
@@ -26122,6 +26164,7 @@
     <fi txt="Sammuta"/>
     <en_AU txt="Shutdown"/>
     <en_CA txt="Shutdown"/>
+    <pl txt="Wyłącz"/>
   </Msg>
   <Msg id="accdectable" dialog="true">
     <en txt="Accessory table" alttxt="Accessory Decoders" tip="Accessory decoder table"/>
@@ -26313,6 +26356,7 @@
     <fi txt="Disabloi"/>
     <en_AU txt="Disable"/>
     <en_CA txt="Disable"/>
+    <pl txt="Wyłącz"/>
   </Msg>
   <Msg id="macromap">
     <en txt="Macro Map"/>
@@ -26846,6 +26890,7 @@
     <fi txt="Sammuta kaikki"/>
     <en_AU txt="Shutdown all"/>
     <en_CA txt="Shutdown all"/>
+    <pl txt="Wyłącz wszystko"/>
   </Msg>
   <Msg id="shutdownnode">
     <en txt="Shutdown RocNet node %d?"/>
@@ -26861,6 +26906,7 @@
     <fi txt="Sammutetaanko RocNet noodi %d?"/>
     <en_AU txt="Shutdown RocNet node %d?"/>
     <en_CA txt="Shutdown RocNet node %d?"/>
+    <pl txt="Wyłączyć %d węzeł RocNet?"/>
   </Msg>
   <Msg id="shutdownallnodes">
     <en txt="Shutdown all RocNet nodes?"/>
@@ -26876,6 +26922,7 @@
     <fi txt="Sammutetaanko kaikki RocNet noodit?"/>
     <en_AU txt="Shutdown all RocNet nodes?"/>
     <en_CA txt="Shutdown all RocNet nodes?"/>
+    <pl txt="Wyłączyć wszystkie węzły RocNet?"/>
   </Msg>
   <Msg id="updatenode">
     <en txt="Update RocNet node %d to revision %d?"/>
@@ -26891,6 +26938,7 @@
     <fi txt="Päivitetäänkö RocNet noodi %d versioon %d?"/>
     <en_AU txt="Update RocNet node %d to revision %d?"/>
     <en_CA txt="Update RocNet node %d to revision %d?"/>
+    <pl txt="Zaktualizować %d węzeł RocNet do wersji %d?"/>
   </Msg>
   <Msg id="update">
     <en txt="Update"/>
@@ -26935,6 +26983,7 @@
     <de txt="Bereich %s herunterfahren"/>
     <en_AU txt="Shutdown location %s?"/>
     <en_CA txt="Shutdown location %s?"/>
+    <pl txt="Wyłączyć lokalizację %s?"/>
   </Msg>
   <Msg id="commuteronly">
     <en txt="Commuter trains only"/>
@@ -26978,6 +27027,7 @@
     <fi txt="Noodikartta"/>
     <en_AU txt="Nodemap"/>
     <en_CA txt="Nodemap"/>
+    <pl txt="Drzewo węzłów"/>
   </Msg>
   <Msg id="usedecspec4all">
     <en txt="Use decoder file for CV numbers"/>
@@ -27166,6 +27216,7 @@
     <de txt="Voreinstellung"/>
     <en_AU txt="Preset"/>
     <en_CA txt="Preset"/>
+    <pl txt="Domyślny"/>
   </Msg>
   <Msg id="resetfifo">
     <en txt="Reset FiFo"/>
@@ -27181,6 +27232,7 @@
     <de txt="FiFo zurücksetzen"/>
     <en_AU txt="Reset FiFo"/>
     <en_CA txt="Reset FiFo"/>
+    <pl txt="Reset FIFO"/>
   </Msg>
   <Msg id="useallspeedsteps">
     <en txt="Use all speed steps"/>
@@ -27211,6 +27263,7 @@
     <de txt="Erkennen"/>
     <en_AU txt="Discover"/>
     <en_CA txt="Discover"/>
+    <pl txt="Wykryj"/>
   </Msg>
   <Msg id="bind">
     <en txt="Bind"/>
@@ -27372,9 +27425,19 @@
     <en txt="Vertical toolbar"/>
     <de txt="Vertikale Symbolleiste"/>
     <nl txt="Verticale werkbalk"/>
+    <pl txt="Pionowy pasek narzędzi"/>
+    <pt_BR txt="Barra de ferramentas vertical"/>
+    <ru txt="Вертикальная Панель инструментов"/>
+    <sl txt="Navpična orodna vrstica"/>
+    <sr_latin txt="Vertikalni meni"/>
   </Msg>
   <Msg id="widgetwidth">
     <en txt="Widget width"/>
+    <de txt="Lok-Steuerelement-Breite"/>
+    <nl txt="Widget breedte"/>
+    <pt_BR txt="Largura da caixa de ferramentas"/>
+    <sl txt="Širina pripomočka"/>
+    <sr_latin txt="Širina vidžeta"/>
   </Msg>
   <Msg id="load">
     <en txt="Load"/>
