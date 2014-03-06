@@ -1753,6 +1753,7 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
     iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
     if( wTurntable.getiid(data->props) != NULL )
       wTurntable.setiid( fcmd, wTurntable.getiid(data->props) );
+    wFunCmd.setid( fcmd, wTurntable.getid( data->props ) );
     wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
     wFunCmd.setfnchanged( fcmd, f);
     data->f[f] = True;
@@ -1766,6 +1767,7 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
     iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
     if( wTurntable.getiid(data->props) != NULL )
       wTurntable.setiid( fcmd, wTurntable.getiid(data->props) );
+    wFunCmd.setid( fcmd, wTurntable.getid( data->props ) );
     wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
     wFunCmd.setfnchanged( fcmd, f);
     data->f[f] = False;
@@ -1779,6 +1781,7 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
     iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
     if( wTurntable.getiid(data->props) != NULL )
       wTurntable.setiid( fcmd, wTurntable.getiid(data->props) );
+    wFunCmd.setid( fcmd, wTurntable.getid( data->props ) );
     wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
     wFunCmd.setfnchanged( fcmd, f);
     data->f[f] = StrOp.equals( wTurntable.getcmd(nodeA), wTurntable.fon );
@@ -1817,6 +1820,7 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
     /* pending move operation */
     data->pending = True;
 
+    wLoc.setid( vcmd, wTurntable.getid( data->props ) );
     wLoc.setaddr( vcmd, wTurntable.getaddr( data->props ) );
 
     /* Using the Loc wrapper for the other parameters: */
@@ -1833,6 +1837,7 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
       iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
       if( iid != NULL )
         wTurntable.setiid( fcmd, iid );
+      wFunCmd.setid( fcmd, wTurntable.getid( data->props ) );
       wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
       wFunCmd.setfnchanged( fcmd, wTurntable.getactfn( data->props ));
       data->f[wTurntable.getactfn( data->props )] = True;
@@ -2142,6 +2147,7 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, const cha
       if( iid != NULL )
         wTurntable.setiid( cmd, iid );
 
+      wLoc.setid( cmd, wTurntable.getid( data->props ) );
       wLoc.setaddr( cmd, wTurntable.getaddr( data->props ) );
 
       /* Using the Loc wrapper for the other parameters: */
@@ -2154,6 +2160,7 @@ static void __fbPositionEvent( obj inst, Boolean puls, const char* id, const cha
         iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
         if( iid != NULL )
           wTurntable.setiid( fcmd, iid );
+        wFunCmd.setid( fcmd, wTurntable.getid( data->props ) );
         wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
         wFunCmd.setfnchanged( fcmd, wTurntable.getactfn( data->props ));
         data->f[wTurntable.getactfn( data->props )] = False;
@@ -2446,6 +2453,7 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident
       wTurntable.setiid( cmd, iid );
 
     wLoc.setprot( cmd, wTurntable.getprot( data->props ) );
+    wLoc.setid( cmd, wTurntable.getid( data->props ) );
     wLoc.setaddr( cmd, wTurntable.getaddr( data->props ) );
 
     /* Using the Loc wrapper for the other parameters: */
@@ -2458,6 +2466,7 @@ static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident
       iONode fcmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
       if( iid != NULL )
         wTurntable.setiid( fcmd, iid );
+      wFunCmd.setid( fcmd, wTurntable.getid( data->props ) );
       wFunCmd.setaddr( fcmd, wTurntable.getaddr( data->props ) );
       wFunCmd.setfnchanged( fcmd, wTurntable.getactfn( data->props ));
       data->f[wTurntable.getactfn( data->props )] = False;
