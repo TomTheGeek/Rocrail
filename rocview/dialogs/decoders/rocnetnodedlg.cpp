@@ -233,7 +233,7 @@ void RocnetNodeDlg::onRocnetWrite( wxCommandEvent& event ) {
 
 
 void RocnetNodeDlg::initPorts() {
-  wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
+  wxChoice* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
   wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
   wxStaticText* l_labPort[] = { NULL, m_labPort1, m_labPort2, m_labPort3, m_labPort4, m_labPort5, m_labPort6, m_labPort7, m_labPort8 };
   wxCheckBox* l_Blink[] = {NULL, m_Blink1, m_Blink2, m_Blink3, m_Blink4, m_Blink5, m_Blink6, m_Blink7, m_Blink8};
@@ -304,7 +304,7 @@ void RocnetNodeDlg::onPortWrite( wxCommandEvent& event ) {
   wProgram.setmodid(cmd, wRocNetNode.getid(m_Props));
   wProgram.setcmd( cmd, wProgram.nvset );
 
-  wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
+  wxChoice* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
   wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
   wxCheckBox* l_Blink[] = {NULL, m_Blink1, m_Blink2, m_Blink3, m_Blink4, m_Blink5, m_Blink6, m_Blink7, m_Blink8};
   wxCheckBox* l_Invert[] = {NULL, m_PortInv1, m_PortInv2, m_PortInv3, m_PortInv4, m_PortInv5, m_PortInv6, m_PortInv7, m_PortInv8};
@@ -439,6 +439,12 @@ void RocnetNodeDlg::initLabels() {
   m_labPortEventPort->SetLabel(wxGetApp().getMsg( "port" ));
   m_labPortEventID->SetToolTip(wxGetApp().getMsg( "event" ));
   m_labPortEventPort->SetToolTip(wxGetApp().getMsg( "event" ));
+  wxChoice* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
+  for( int i = 1; i < 9; i++ ) {
+    l_Type[i]->Clear();
+    l_Type[i]->Append(wxGetApp().getMsg( "output" ));
+    l_Type[i]->Append(wxGetApp().getMsg( "input" ));
+  }
   wxCommandEvent cmdevt;
   onIOType(cmdevt);
 
@@ -646,7 +652,7 @@ void RocnetNodeDlg::event(iONode node) {
   StrOp.free(s);
   if( StrOp.equals( wProgram.name(), NodeOp.getName(node)) && wProgram.getlntype(node) == wProgram.lntype_rocnet ) {
     // Ports
-    wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
+    wxChoice* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
     wxSpinCtrl* l_Delay[] = { NULL, m_Delay1, m_Delay2, m_Delay3, m_Delay4, m_Delay5, m_Delay6, m_Delay7, m_Delay8};
     wxCheckBox* l_Blink[] = {NULL, m_Blink1, m_Blink2, m_Blink3, m_Blink4, m_Blink5, m_Blink6, m_Blink7, m_Blink8};
     wxCheckBox* l_Invert[] = {NULL, m_PortInv1, m_PortInv2, m_PortInv3, m_PortInv4, m_PortInv5, m_PortInv6, m_PortInv7, m_PortInv8};
@@ -1112,7 +1118,7 @@ void RocnetNodeDlg::onPortTest( wxCommandEvent& event ) {
   if( m_Props == NULL )
     return;
 
-  wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
+  wxChoice* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
   wxButton* l_PortTest[] = {NULL, m_PortTest1, m_PortTest2, m_PortTest3, m_PortTest4, m_PortTest5, m_PortTest6, m_PortTest7, m_PortTest8};
 
   if( event.GetEventType() != wxEVT_COMMAND_BUTTON_CLICKED ) {
@@ -1371,7 +1377,7 @@ void RocnetNodeDlg::onBeginListDrag( wxListEvent& event ) {
 
 void RocnetNodeDlg::onPort1Drag( wxMouseEvent& event ) {
   wxStaticText* l_labPort[] = { NULL, m_labPort1, m_labPort2, m_labPort3, m_labPort4, m_labPort5, m_labPort6, m_labPort7, m_labPort8 };
-  wxRadioBox* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
+  wxChoice* l_Type[] = {NULL, m_Type1, m_Type2, m_Type3, m_Type4, m_Type5, m_Type6, m_Type7, m_Type8};
   bool isInput = false;
 
   wxStaticText* port = (wxStaticText*)event.GetEventObject();

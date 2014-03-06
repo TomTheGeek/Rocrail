@@ -2154,7 +2154,7 @@
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Options</property>
-                            <property name="select">1</property>
+                            <property name="select">0</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
@@ -3536,7 +3536,7 @@
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Port Setup</property>
-                            <property name="select">0</property>
+                            <property name="select">1</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
@@ -4165,13 +4165,13 @@
                                                     <event name="OnUpdateUI"></event>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem" expanded="0">
+                                            <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL</property>
+                                                <property name="flag">wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL</property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxRadioBox" expanded="0">
+                                                <object class="wxChoice" expanded="1">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;0&quot; &quot;1&quot;</property>
+                                                    <property name="choices">&quot;output&quot; &quot;input&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -4179,8 +4179,6 @@
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label"></property>
-                                                    <property name="majorDimension">1</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
                                                     <property name="name">m_Type1</property>
@@ -4188,7 +4186,6 @@
                                                     <property name="pos"></property>
                                                     <property name="selection">0</property>
                                                     <property name="size"></property>
-                                                    <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
                                                     <property name="tooltip"></property>
                                                     <property name="validator_data_type"></property>
@@ -4199,6 +4196,7 @@
                                                     <property name="window_name"></property>
                                                     <property name="window_style"></property>
                                                     <event name="OnChar"></event>
+                                                    <event name="OnChoice"></event>
                                                     <event name="OnEnterWindow"></event>
                                                     <event name="OnEraseBackground"></event>
                                                     <event name="OnKeyDown"></event>
@@ -4215,7 +4213,6 @@
                                                     <event name="OnMouseEvents"></event>
                                                     <event name="OnMouseWheel"></event>
                                                     <event name="OnPaint"></event>
-                                                    <event name="OnRadioBox"></event>
                                                     <event name="OnRightDClick"></event>
                                                     <event name="OnRightDown"></event>
                                                     <event name="OnRightUp"></event>
@@ -4688,13 +4685,13 @@
                                                     <event name="OnUpdateUI"></event>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem" expanded="0">
+                                            <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxRIGHT|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxRadioBox" expanded="0">
+                                                <object class="wxChoice" expanded="1">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;0&quot; &quot;1&quot;</property>
+                                                    <property name="choices">&quot;output&quot; &quot;input&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -4702,8 +4699,6 @@
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label"></property>
-                                                    <property name="majorDimension">1</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
                                                     <property name="name">m_Type2</property>
@@ -4711,7 +4706,6 @@
                                                     <property name="pos"></property>
                                                     <property name="selection">0</property>
                                                     <property name="size"></property>
-                                                    <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
                                                     <property name="tooltip"></property>
                                                     <property name="validator_data_type"></property>
@@ -4722,6 +4716,7 @@
                                                     <property name="window_name"></property>
                                                     <property name="window_style"></property>
                                                     <event name="OnChar"></event>
+                                                    <event name="OnChoice"></event>
                                                     <event name="OnEnterWindow"></event>
                                                     <event name="OnEraseBackground"></event>
                                                     <event name="OnKeyDown"></event>
@@ -4738,7 +4733,6 @@
                                                     <event name="OnMouseEvents"></event>
                                                     <event name="OnMouseWheel"></event>
                                                     <event name="OnPaint"></event>
-                                                    <event name="OnRadioBox"></event>
                                                     <event name="OnRightDClick"></event>
                                                     <event name="OnRightDown"></event>
                                                     <event name="OnRightUp"></event>
@@ -5211,13 +5205,13 @@
                                                     <event name="OnUpdateUI"></event>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem" expanded="0">
+                                            <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL</property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxRadioBox" expanded="0">
+                                                <object class="wxChoice" expanded="1">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;0&quot; &quot;1&quot;</property>
+                                                    <property name="choices">&quot;output&quot; &quot;input&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -5225,8 +5219,6 @@
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label"></property>
-                                                    <property name="majorDimension">1</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
                                                     <property name="name">m_Type3</property>
@@ -5234,7 +5226,6 @@
                                                     <property name="pos"></property>
                                                     <property name="selection">0</property>
                                                     <property name="size"></property>
-                                                    <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
                                                     <property name="tooltip"></property>
                                                     <property name="validator_data_type"></property>
@@ -5245,6 +5236,7 @@
                                                     <property name="window_name"></property>
                                                     <property name="window_style"></property>
                                                     <event name="OnChar"></event>
+                                                    <event name="OnChoice"></event>
                                                     <event name="OnEnterWindow"></event>
                                                     <event name="OnEraseBackground"></event>
                                                     <event name="OnKeyDown"></event>
@@ -5261,7 +5253,6 @@
                                                     <event name="OnMouseEvents"></event>
                                                     <event name="OnMouseWheel"></event>
                                                     <event name="OnPaint"></event>
-                                                    <event name="OnRadioBox"></event>
                                                     <event name="OnRightDClick"></event>
                                                     <event name="OnRightDown"></event>
                                                     <event name="OnRightUp"></event>
@@ -5734,13 +5725,13 @@
                                                     <event name="OnUpdateUI"></event>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem" expanded="0">
+                                            <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL</property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxRadioBox" expanded="0">
+                                                <object class="wxChoice" expanded="1">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;0&quot; &quot;1&quot;</property>
+                                                    <property name="choices">&quot;output&quot; &quot;input&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -5748,8 +5739,6 @@
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label"></property>
-                                                    <property name="majorDimension">1</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
                                                     <property name="name">m_Type4</property>
@@ -5757,7 +5746,6 @@
                                                     <property name="pos"></property>
                                                     <property name="selection">0</property>
                                                     <property name="size"></property>
-                                                    <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
                                                     <property name="tooltip"></property>
                                                     <property name="validator_data_type"></property>
@@ -5768,6 +5756,7 @@
                                                     <property name="window_name"></property>
                                                     <property name="window_style"></property>
                                                     <event name="OnChar"></event>
+                                                    <event name="OnChoice"></event>
                                                     <event name="OnEnterWindow"></event>
                                                     <event name="OnEraseBackground"></event>
                                                     <event name="OnKeyDown"></event>
@@ -5784,7 +5773,6 @@
                                                     <event name="OnMouseEvents"></event>
                                                     <event name="OnMouseWheel"></event>
                                                     <event name="OnPaint"></event>
-                                                    <event name="OnRadioBox"></event>
                                                     <event name="OnRightDClick"></event>
                                                     <event name="OnRightDown"></event>
                                                     <event name="OnRightUp"></event>
@@ -6257,13 +6245,13 @@
                                                     <event name="OnUpdateUI"></event>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem" expanded="0">
+                                            <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL</property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxRadioBox" expanded="0">
+                                                <object class="wxChoice" expanded="1">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;0&quot; &quot;1&quot;</property>
+                                                    <property name="choices">&quot;output&quot; &quot;input&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -6271,8 +6259,6 @@
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label"></property>
-                                                    <property name="majorDimension">1</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
                                                     <property name="name">m_Type5</property>
@@ -6280,7 +6266,6 @@
                                                     <property name="pos"></property>
                                                     <property name="selection">0</property>
                                                     <property name="size"></property>
-                                                    <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
                                                     <property name="tooltip"></property>
                                                     <property name="validator_data_type"></property>
@@ -6291,6 +6276,7 @@
                                                     <property name="window_name"></property>
                                                     <property name="window_style"></property>
                                                     <event name="OnChar"></event>
+                                                    <event name="OnChoice"></event>
                                                     <event name="OnEnterWindow"></event>
                                                     <event name="OnEraseBackground"></event>
                                                     <event name="OnKeyDown"></event>
@@ -6307,7 +6293,6 @@
                                                     <event name="OnMouseEvents"></event>
                                                     <event name="OnMouseWheel"></event>
                                                     <event name="OnPaint"></event>
-                                                    <event name="OnRadioBox"></event>
                                                     <event name="OnRightDClick"></event>
                                                     <event name="OnRightDown"></event>
                                                     <event name="OnRightUp"></event>
@@ -6780,13 +6765,13 @@
                                                     <event name="OnUpdateUI"></event>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem" expanded="0">
+                                            <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL</property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxRadioBox" expanded="0">
+                                                <object class="wxChoice" expanded="1">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;0&quot; &quot;1&quot;</property>
+                                                    <property name="choices">&quot;output&quot; &quot;input&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -6794,8 +6779,6 @@
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label"></property>
-                                                    <property name="majorDimension">1</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
                                                     <property name="name">m_Type6</property>
@@ -6803,7 +6786,6 @@
                                                     <property name="pos"></property>
                                                     <property name="selection">0</property>
                                                     <property name="size"></property>
-                                                    <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
                                                     <property name="tooltip"></property>
                                                     <property name="validator_data_type"></property>
@@ -6814,6 +6796,7 @@
                                                     <property name="window_name"></property>
                                                     <property name="window_style"></property>
                                                     <event name="OnChar"></event>
+                                                    <event name="OnChoice"></event>
                                                     <event name="OnEnterWindow"></event>
                                                     <event name="OnEraseBackground"></event>
                                                     <event name="OnKeyDown"></event>
@@ -6830,7 +6813,6 @@
                                                     <event name="OnMouseEvents"></event>
                                                     <event name="OnMouseWheel"></event>
                                                     <event name="OnPaint"></event>
-                                                    <event name="OnRadioBox"></event>
                                                     <event name="OnRightDClick"></event>
                                                     <event name="OnRightDown"></event>
                                                     <event name="OnRightUp"></event>
@@ -7303,13 +7285,13 @@
                                                     <event name="OnUpdateUI"></event>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem" expanded="0">
+                                            <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL</property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxRadioBox" expanded="0">
+                                                <object class="wxChoice" expanded="1">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;0&quot; &quot;1&quot;</property>
+                                                    <property name="choices">&quot;output&quot; &quot;input&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -7317,8 +7299,6 @@
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label"></property>
-                                                    <property name="majorDimension">1</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
                                                     <property name="name">m_Type7</property>
@@ -7326,7 +7306,6 @@
                                                     <property name="pos"></property>
                                                     <property name="selection">0</property>
                                                     <property name="size"></property>
-                                                    <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
                                                     <property name="tooltip"></property>
                                                     <property name="validator_data_type"></property>
@@ -7337,6 +7316,7 @@
                                                     <property name="window_name"></property>
                                                     <property name="window_style"></property>
                                                     <event name="OnChar"></event>
+                                                    <event name="OnChoice"></event>
                                                     <event name="OnEnterWindow"></event>
                                                     <event name="OnEraseBackground"></event>
                                                     <event name="OnKeyDown"></event>
@@ -7353,7 +7333,6 @@
                                                     <event name="OnMouseEvents"></event>
                                                     <event name="OnMouseWheel"></event>
                                                     <event name="OnPaint"></event>
-                                                    <event name="OnRadioBox"></event>
                                                     <event name="OnRightDClick"></event>
                                                     <event name="OnRightDown"></event>
                                                     <event name="OnRightUp"></event>
@@ -7826,13 +7805,13 @@
                                                     <event name="OnUpdateUI"></event>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem" expanded="0">
+                                            <object class="sizeritem" expanded="1">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT</property>
+                                                <property name="flag">wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL</property>
                                                 <property name="proportion">0</property>
-                                                <object class="wxRadioBox" expanded="0">
+                                                <object class="wxChoice" expanded="1">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;0&quot; &quot;1&quot;</property>
+                                                    <property name="choices">&quot;output&quot; &quot;input&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
@@ -7840,8 +7819,6 @@
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label"></property>
-                                                    <property name="majorDimension">1</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
                                                     <property name="name">m_Type8</property>
@@ -7849,7 +7826,6 @@
                                                     <property name="pos"></property>
                                                     <property name="selection">0</property>
                                                     <property name="size"></property>
-                                                    <property name="style">wxRA_SPECIFY_ROWS</property>
                                                     <property name="subclass"></property>
                                                     <property name="tooltip"></property>
                                                     <property name="validator_data_type"></property>
@@ -7860,6 +7836,7 @@
                                                     <property name="window_name"></property>
                                                     <property name="window_style"></property>
                                                     <event name="OnChar"></event>
+                                                    <event name="OnChoice"></event>
                                                     <event name="OnEnterWindow"></event>
                                                     <event name="OnEraseBackground"></event>
                                                     <event name="OnKeyDown"></event>
@@ -7876,7 +7853,6 @@
                                                     <event name="OnMouseEvents"></event>
                                                     <event name="OnMouseWheel"></event>
                                                     <event name="OnPaint"></event>
-                                                    <event name="OnRadioBox"></event>
                                                     <event name="OnRightDClick"></event>
                                                     <event name="OnRightDown"></event>
                                                     <event name="OnRightUp"></event>

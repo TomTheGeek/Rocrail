@@ -29,6 +29,7 @@
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>
 #include <wx/statbox.h>
+#include <wx/choice.h>
 #include <wx/tglbtn.h>
 #include <wx/grid.h>
 #include <wx/notebook.h>
@@ -115,7 +116,7 @@ class rocnetnodegen : public wxDialog
 		wxStaticText* m_labPortEventID;
 		wxStaticText* m_labPortEventPort;
 		wxStaticText* m_labPort1;
-		wxRadioBox* m_Type1;
+		wxChoice* m_Type1;
 		wxSpinCtrl* m_Delay1;
 		wxCheckBox* m_Blink1;
 		wxCheckBox* m_PortInv1;
@@ -124,7 +125,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_PortEventID1;
 		wxSpinCtrl* m_PortEventPort1;
 		wxStaticText* m_labPort2;
-		wxRadioBox* m_Type2;
+		wxChoice* m_Type2;
 		wxSpinCtrl* m_Delay2;
 		wxCheckBox* m_Blink2;
 		wxCheckBox* m_PortInv2;
@@ -133,7 +134,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_PortEventID2;
 		wxSpinCtrl* m_PortEventPort2;
 		wxStaticText* m_labPort3;
-		wxRadioBox* m_Type3;
+		wxChoice* m_Type3;
 		wxSpinCtrl* m_Delay3;
 		wxCheckBox* m_Blink3;
 		wxCheckBox* m_PortInv3;
@@ -142,7 +143,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_PortEventID3;
 		wxSpinCtrl* m_PortEventPort3;
 		wxStaticText* m_labPort4;
-		wxRadioBox* m_Type4;
+		wxChoice* m_Type4;
 		wxSpinCtrl* m_Delay4;
 		wxCheckBox* m_Blink4;
 		wxCheckBox* m_PortInv4;
@@ -151,7 +152,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_PortEventID4;
 		wxSpinCtrl* m_PortEventPort4;
 		wxStaticText* m_labPort5;
-		wxRadioBox* m_Type5;
+		wxChoice* m_Type5;
 		wxSpinCtrl* m_Delay5;
 		wxCheckBox* m_Blink5;
 		wxCheckBox* m_PortInv5;
@@ -160,7 +161,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_PortEventID5;
 		wxSpinCtrl* m_PortEventPort5;
 		wxStaticText* m_labPort6;
-		wxRadioBox* m_Type6;
+		wxChoice* m_Type6;
 		wxSpinCtrl* m_Delay6;
 		wxCheckBox* m_Blink6;
 		wxCheckBox* m_PortInv6;
@@ -169,7 +170,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_PortEventID6;
 		wxSpinCtrl* m_PortEventPort6;
 		wxStaticText* m_labPort7;
-		wxRadioBox* m_Type7;
+		wxChoice* m_Type7;
 		wxSpinCtrl* m_Delay7;
 		wxCheckBox* m_Blink7;
 		wxCheckBox* m_PortInv7;
@@ -178,7 +179,7 @@ class rocnetnodegen : public wxDialog
 		wxSpinCtrl* m_PortEventID7;
 		wxSpinCtrl* m_PortEventPort7;
 		wxStaticText* m_labPort8;
-		wxRadioBox* m_Type8;
+		wxChoice* m_Type8;
 		wxSpinCtrl* m_Delay8;
 		wxCheckBox* m_Blink8;
 		wxCheckBox* m_PortInv8;

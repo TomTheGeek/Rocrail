@@ -307,7 +307,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_OptionsPanel->SetSizer( bSizer91 );
 	m_OptionsPanel->Layout();
 	bSizer91->Fit( m_OptionsPanel );
-	m_NodeBook->AddPage( m_OptionsPanel, wxT("Options"), true );
+	m_NodeBook->AddPage( m_OptionsPanel, wxT("Options"), false );
 	m_PortSetupPanel = new wxPanel( m_NodeBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
@@ -359,11 +359,11 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	fgSizer6->Add( m_labPort1, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
-	wxString m_Type1Choices[] = { wxT("0"), wxT("1") };
+	wxString m_Type1Choices[] = { wxT("output"), wxT("input") };
 	int m_Type1NChoices = sizeof( m_Type1Choices ) / sizeof( wxString );
-	m_Type1 = new wxRadioBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_Type1NChoices, m_Type1Choices, 1, wxRA_SPECIFY_ROWS );
+	m_Type1 = new wxChoice( m_PortSetupPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_Type1NChoices, m_Type1Choices, 0 );
 	m_Type1->SetSelection( 0 );
-	fgSizer6->Add( m_Type1, 0, wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL, 5 );
+	fgSizer6->Add( m_Type1, 0, wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_Delay1 = new wxSpinCtrl( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
 	fgSizer6->Add( m_Delay1, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
@@ -392,11 +392,11 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	fgSizer6->Add( m_labPort2, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
-	wxString m_Type2Choices[] = { wxT("0"), wxT("1") };
+	wxString m_Type2Choices[] = { wxT("output"), wxT("input") };
 	int m_Type2NChoices = sizeof( m_Type2Choices ) / sizeof( wxString );
-	m_Type2 = new wxRadioBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_Type2NChoices, m_Type2Choices, 1, wxRA_SPECIFY_ROWS );
+	m_Type2 = new wxChoice( m_PortSetupPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_Type2NChoices, m_Type2Choices, 0 );
 	m_Type2->SetSelection( 0 );
-	fgSizer6->Add( m_Type2, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	fgSizer6->Add( m_Type2, 0, wxRIGHT|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_Delay2 = new wxSpinCtrl( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
 	fgSizer6->Add( m_Delay2, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
@@ -425,11 +425,11 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	fgSizer6->Add( m_labPort3, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxString m_Type3Choices[] = { wxT("0"), wxT("1") };
+	wxString m_Type3Choices[] = { wxT("output"), wxT("input") };
 	int m_Type3NChoices = sizeof( m_Type3Choices ) / sizeof( wxString );
-	m_Type3 = new wxRadioBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_Type3NChoices, m_Type3Choices, 1, wxRA_SPECIFY_ROWS );
+	m_Type3 = new wxChoice( m_PortSetupPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_Type3NChoices, m_Type3Choices, 0 );
 	m_Type3->SetSelection( 0 );
-	fgSizer6->Add( m_Type3, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	fgSizer6->Add( m_Type3, 0, wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_Delay3 = new wxSpinCtrl( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
 	fgSizer6->Add( m_Delay3, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
@@ -458,11 +458,11 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	fgSizer6->Add( m_labPort4, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxString m_Type4Choices[] = { wxT("0"), wxT("1") };
+	wxString m_Type4Choices[] = { wxT("output"), wxT("input") };
 	int m_Type4NChoices = sizeof( m_Type4Choices ) / sizeof( wxString );
-	m_Type4 = new wxRadioBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_Type4NChoices, m_Type4Choices, 1, wxRA_SPECIFY_ROWS );
+	m_Type4 = new wxChoice( m_PortSetupPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_Type4NChoices, m_Type4Choices, 0 );
 	m_Type4->SetSelection( 0 );
-	fgSizer6->Add( m_Type4, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	fgSizer6->Add( m_Type4, 0, wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_Delay4 = new wxSpinCtrl( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
 	fgSizer6->Add( m_Delay4, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -491,11 +491,11 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	fgSizer6->Add( m_labPort5, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxString m_Type5Choices[] = { wxT("0"), wxT("1") };
+	wxString m_Type5Choices[] = { wxT("output"), wxT("input") };
 	int m_Type5NChoices = sizeof( m_Type5Choices ) / sizeof( wxString );
-	m_Type5 = new wxRadioBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_Type5NChoices, m_Type5Choices, 1, wxRA_SPECIFY_ROWS );
+	m_Type5 = new wxChoice( m_PortSetupPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_Type5NChoices, m_Type5Choices, 0 );
 	m_Type5->SetSelection( 0 );
-	fgSizer6->Add( m_Type5, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	fgSizer6->Add( m_Type5, 0, wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_Delay5 = new wxSpinCtrl( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
 	fgSizer6->Add( m_Delay5, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -524,11 +524,11 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	fgSizer6->Add( m_labPort6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxString m_Type6Choices[] = { wxT("0"), wxT("1") };
+	wxString m_Type6Choices[] = { wxT("output"), wxT("input") };
 	int m_Type6NChoices = sizeof( m_Type6Choices ) / sizeof( wxString );
-	m_Type6 = new wxRadioBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_Type6NChoices, m_Type6Choices, 1, wxRA_SPECIFY_ROWS );
+	m_Type6 = new wxChoice( m_PortSetupPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_Type6NChoices, m_Type6Choices, 0 );
 	m_Type6->SetSelection( 0 );
-	fgSizer6->Add( m_Type6, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	fgSizer6->Add( m_Type6, 0, wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_Delay6 = new wxSpinCtrl( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
 	fgSizer6->Add( m_Delay6, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -557,11 +557,11 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	fgSizer6->Add( m_labPort7, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxString m_Type7Choices[] = { wxT("0"), wxT("1") };
+	wxString m_Type7Choices[] = { wxT("output"), wxT("input") };
 	int m_Type7NChoices = sizeof( m_Type7Choices ) / sizeof( wxString );
-	m_Type7 = new wxRadioBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_Type7NChoices, m_Type7Choices, 1, wxRA_SPECIFY_ROWS );
+	m_Type7 = new wxChoice( m_PortSetupPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_Type7NChoices, m_Type7Choices, 0 );
 	m_Type7->SetSelection( 0 );
-	fgSizer6->Add( m_Type7, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	fgSizer6->Add( m_Type7, 0, wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_Delay7 = new wxSpinCtrl( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
 	fgSizer6->Add( m_Delay7, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -590,11 +590,11 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	fgSizer6->Add( m_labPort8, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxString m_Type8Choices[] = { wxT("0"), wxT("1") };
+	wxString m_Type8Choices[] = { wxT("output"), wxT("input") };
 	int m_Type8NChoices = sizeof( m_Type8Choices ) / sizeof( wxString );
-	m_Type8 = new wxRadioBox( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_Type8NChoices, m_Type8Choices, 1, wxRA_SPECIFY_ROWS );
+	m_Type8 = new wxChoice( m_PortSetupPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_Type8NChoices, m_Type8Choices, 0 );
 	m_Type8->SetSelection( 0 );
-	fgSizer6->Add( m_Type8, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	fgSizer6->Add( m_Type8, 0, wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_Delay8 = new wxSpinCtrl( m_PortSetupPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
 	fgSizer6->Add( m_Delay8, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -646,7 +646,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_PortSetupPanel->SetSizer( bSizer7 );
 	m_PortSetupPanel->Layout();
 	bSizer7->Fit( m_PortSetupPanel );
-	m_NodeBook->AddPage( m_PortSetupPanel, wxT("Port Setup"), false );
+	m_NodeBook->AddPage( m_PortSetupPanel, wxT("Port Setup"), true );
 	m_PWMSetupPanel = new wxPanel( m_NodeBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer18;
 	bSizer18 = new wxBoxSizer( wxVERTICAL );
