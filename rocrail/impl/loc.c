@@ -2122,6 +2122,10 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
     return;
   }
 
+  if( id != NULL && StrOp.len(id) > 0 && StrOp.equals("eventtimeout", id) ) {
+    __checkAction(inst, "eventtimeout" );
+  }
+
   /* BBT timers */
   if( wLoc.isusebbt(data->props) && block != NULL && block->allowBBT(block) && !block->hasExtStop(block) ) {
     if( evt == enter_event && (data->bbtEnter == 0 || !StrOp.equals(blockid, data->bbtEnterBlock) ) ) {
