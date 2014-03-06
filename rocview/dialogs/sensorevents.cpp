@@ -73,7 +73,8 @@ void SensorEventsDlg::initLabels() {
   m_EventList->InsertColumn(6, wxGetApp().getMsg( "counter" ), wxLIST_FORMAT_RIGHT );
   m_EventList->InsertColumn(7, wxGetApp().getMsg( "wheelcount" ), wxLIST_FORMAT_RIGHT );
   m_EventList->InsertColumn(8, wxGetApp().getMsg( "countedcars" ), wxLIST_FORMAT_RIGHT );
-  m_EventList->InsertColumn(9, wxGetApp().getMsg( "stamp" ), wxLIST_FORMAT_LEFT );
+  m_EventList->InsertColumn(9, wxGetApp().getMsg( "load" ), wxLIST_FORMAT_RIGHT );
+  m_EventList->InsertColumn(10, wxGetApp().getMsg( "stamp" ), wxLIST_FORMAT_LEFT );
   m_Refresh->SetLabel(wxGetApp().getMsg( "refresh" ));
   m_Reset->SetLabel(wxGetApp().getMsg( "reset" ));
 }
@@ -204,6 +205,20 @@ static int __sortCarCount(obj* _a, obj* _b)
 }
 
 
+static int __sortLoad(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int addrA = wFeedback.getload( a );
+    int addrB = wFeedback.getload( b );
+    if( addrA > addrB )
+      return m_bSortInvert ? -1:1;
+    if( addrA < addrB )
+      return m_bSortInvert ? 1:-1;
+    return 0;
+}
+
+
 void SensorEventsDlg::initValues() {
   m_EventList->DeleteAllItems();
   iOList list = wxGetApp().getSensorEvents();
@@ -233,6 +248,9 @@ void SensorEventsDlg::initValues() {
     ListOp.sort(list, &__sortCarCount);
   }
   else if( m_SortCol == 9 ) {
+    ListOp.sort(list, &__sortLoad);
+  }
+  else if( m_SortCol == 10 ) {
     ListOp.sort(list, &__sortStamp);
   }
   else {
@@ -252,11 +270,12 @@ void SensorEventsDlg::initValues() {
     m_EventList->SetItem( i, 6, wxString::Format(wxT("%d"), wFeedback.getcounter(fbevent) ) );
     m_EventList->SetItem( i, 7, wxString::Format(wxT("%d"), wFeedback.getwheelcount(fbevent) ) );
     m_EventList->SetItem( i, 8, wxString::Format(wxT("%d"), wFeedback.getcountedcars(fbevent) ) );
-    m_EventList->SetItem( i, 9, wxString(NodeOp.getStr(fbevent, "stamp", ""), wxConvUTF8) );
+    m_EventList->SetItem( i, 9, wxString::Format(wxT("%d"), wFeedback.getload(fbevent) ) );
+    m_EventList->SetItem( i, 10, wxString(NodeOp.getStr(fbevent, "stamp", ""), wxConvUTF8) );
     m_EventList->SetItemPtrData(i, (wxUIntPtr)fbevent);
   }
   // resize
-  for( int n = 0; n < 10; n++ ) {
+  for( int n = 0; n < 11; n++ ) {
     m_EventList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
     int autoheadersize = m_EventList->GetColumnWidth(n);
     m_EventList->SetColumnWidth(n, wxLIST_AUTOSIZE);

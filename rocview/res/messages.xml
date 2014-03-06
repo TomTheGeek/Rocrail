@@ -27376,4 +27376,7 @@
   <Msg id="widgetwidth">
     <en txt="Widget width"/>
   </Msg>
+  <Msg id="load">
+    <en txt="Load"/>
+  </Msg>
 </Messages>

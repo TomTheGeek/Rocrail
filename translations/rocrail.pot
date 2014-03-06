@@ -6911,3 +6911,9 @@ msgstr ""
 msgid "Widget width"
 msgstr ""
 
+#. 
+# id="load"
+#, c-format
+msgid "Load"
+msgstr ""
+
