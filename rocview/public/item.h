@@ -82,6 +82,7 @@ public:
   void OnInfo(wxCommandEvent& event);
   void OnResetWheelcounter(wxCommandEvent& event);
   void OnResetSensor(wxCommandEvent& event);
+  void OnSetSensorLoad(wxCommandEvent& event);
   void OnIdentifierFwd(wxCommandEvent& event);
   void OnIdentifierRev(wxCommandEvent& event);
   void OnCompress(wxCommandEvent& event);

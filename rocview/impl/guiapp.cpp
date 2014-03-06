@@ -951,6 +951,7 @@ static void rocrailCallback( obj me, iONode node ) {
         wFeedback.setcounter(fbevent, wFeedback.getcounter(node));
         wFeedback.setwheelcount(fbevent, wFeedback.getwheelcount(node));
         wFeedback.setcountedcars(fbevent, wFeedback.getcountedcars(node));
+        wFeedback.setload(fbevent, wFeedback.getload(node));
         char* stamp = StrOp.createStamp();
         NodeOp.setStr( fbevent, "stamp", stamp);
         StrOp.free(stamp);

@@ -156,6 +156,7 @@ enum {
     ME_AcceptIdent,
     ME_ResetWheelcounter,
     ME_ResetSensor,
+    ME_SetSensorLoad,
     ME_IdentifierFwd,
     ME_IdentifierRev,
     ME_Compress,
@@ -255,6 +256,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_ResetSensor, Symbol::OnResetSensor)
   EVT_MENU     (ME_IdentifierFwd, Symbol::OnIdentifierFwd)
   EVT_MENU     (ME_IdentifierRev, Symbol::OnIdentifierRev)
+  EVT_MENU     (ME_SetSensorLoad, Symbol::OnSetSensorLoad)
   EVT_MENU     (ME_Compress, Symbol::OnCompress)
 
   EVT_MENU     (ME_FYGo+0, Symbol::OnFYGo)
@@ -909,6 +911,20 @@ void Symbol::OnIdentifierRev(wxCommandEvent& event) {
     iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
     wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
     wFeedback.setidentifier( cmd, dlg->GetValue().mb_str(wxConvUTF8)  );
+    wFeedback.setstate( cmd, True);
+    wFeedback.setdirection( cmd, False);
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+  dlg->Destroy();
+}
+
+void Symbol::OnSetSensorLoad(wxCommandEvent& event) {
+  wxTextEntryDialog* dlg = new wxTextEntryDialog(m_PlanPanel, wxGetApp().getMenu("load") );
+  if( wxID_OK == dlg->ShowModal() ) {
+    iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
+    wFeedback.setload( cmd, atoi(dlg->GetValue().mb_str(wxConvUTF8)) );
     wFeedback.setstate( cmd, True);
     wFeedback.setdirection( cmd, False);
     wxGetApp().sendToRocrail( cmd );
@@ -1788,6 +1804,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
     else if( StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ) ) {
       menu.Append( ME_ResetWheelcounter, wxGetApp().getMenu("resetcounters") );
       menu.Append( ME_ResetSensor, wxGetApp().getMenu("resetstatus") );
+      menu.Append( ME_SetSensorLoad, wxGetApp().getMenu("load") );
       wxMenu* identifiermenu = new wxMenu();
       identifiermenu->Append( ME_IdentifierFwd, wxGetApp().getMenu("forwards")  );
       identifiermenu->Append( ME_IdentifierRev, wxGetApp().getMenu("reverse")  );
