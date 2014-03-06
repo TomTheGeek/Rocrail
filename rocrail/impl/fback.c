@@ -298,6 +298,7 @@ static void _resetCounter( iOFBack inst ) {
     wFeedback.setcountedcars( nodeD, data->countedcars );
     wFeedback.setwheelcount( nodeD, data->wheelcount );
     wFeedback.setload( nodeD, wFeedback.getload(data->props) );
+    wFeedback.setmaxload( nodeD, wFeedback.getmaxload(data->props) );
     AppOp.broadcastEvent( nodeD );
   }
 }
@@ -330,6 +331,7 @@ static void _setState( iOFBack inst, Boolean state ) {
     wFeedback.setcountedcars( nodeD, data->countedcars );
     wFeedback.setwheelcount( nodeD, data->wheelcount );
     wFeedback.setload( nodeD, wFeedback.getload(data->props) );
+    wFeedback.setmaxload( nodeD, wFeedback.getmaxload(data->props) );
     AppOp.broadcastEvent( nodeD );
   }
 }
@@ -460,6 +462,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
       wFeedback.setidentifier( nodeD, wFeedback.getidentifier( nodeC ) );
       wFeedback.setwheelcount( nodeD, wFeedback.getwheelcount( nodeC ) + data->wheelcount );
       wFeedback.setload( nodeD, wFeedback.getload(data->props) );
+      wFeedback.setmaxload( nodeD, wFeedback.getmaxload(data->props) );
       AppOp.broadcastEvent( nodeD );
     }
     nodeC->base.del(nodeC);
@@ -525,6 +528,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
     wFeedback.setcountedcars( nodeD, data->countedcars );
     wFeedback.setwheelcount( nodeD, wFeedback.getwheelcount( nodeC ) + data->wheelcount );
     wFeedback.setload( nodeD, wFeedback.getload(data->props) );
+    wFeedback.setmaxload( nodeD, wFeedback.getmaxload(data->props) );
     AppOp.broadcastEvent( nodeD );
   }
 
@@ -744,6 +748,7 @@ static void _doTimedOff( iOFBack inst ) {
       wFeedback.setbus( nodeD, wFeedback.getbus( data->props ) );
       wFeedback.setfbtype( nodeD, wFeedback.getfbtype( data->props ) );
       wFeedback.setload( nodeD, wFeedback.getload(data->props) );
+      wFeedback.setmaxload( nodeD, wFeedback.getmaxload(data->props) );
       AppOp.broadcastEvent( nodeD );
 
       {

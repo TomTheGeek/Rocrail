@@ -1863,6 +1863,7 @@
         <var name="zone" vt="string" defval="" remark="transponder zone"/>
         <var name="wheelcount" vt="int" defval="0" remark="counted wheels; sofar"/>
         <var name="load" vt="int" defval="0" units="mA" remark="current"/>
+        <var name="maxload" vt="int" defval="0"/>
         <const name="reset" vt="string" val="reset"/>
         <const name="resetstatus" vt="string" val="resetstatus"/>
         <const name="setcounterval" vt="string" val="setcounterval"/>

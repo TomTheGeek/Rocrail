@@ -2683,6 +2683,18 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
     SetBackgroundColour( wFeedback.isshortcut(node) ? *wxRED:m_PlanPanel->GetBackgroundColour() );
 
+    if( !wFeedback.isshortcut(node) ) {
+      if( load > 0 && wFeedback.getmaxload(node) > 0 ) {
+        wxColour color( m_PlanPanel->GetBackgroundColour());
+        int maxload = wFeedback.getmaxload(node);
+        int red = (load * 255) / maxload;
+        if( red > 255 )
+          red = 255;
+        color.Set(255, 255-red, 255-red);
+        SetBackgroundColour(color);
+      }
+    }
+
     wFeedback.setshortcut( m_Props, wFeedback.isshortcut(node) );
     wFeedback.setstate( m_Props, state );
     wFeedback.setcounter( m_Props, wFeedback.getcounter( node ) );
@@ -2692,6 +2704,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     wFeedback.setidentifier( m_Props, wFeedback.getidentifier( node ) );
     wFeedback.setval( m_Props, wFeedback.getval( node ) );
     wFeedback.setload( m_Props, wFeedback.getload( node ) );
+    wFeedback.setmaxload( m_Props, wFeedback.getmaxload( node ) );
 
     m_PlanPanel->blockEvent( wFeedback.getid( m_Props ) );
     refresh = true;

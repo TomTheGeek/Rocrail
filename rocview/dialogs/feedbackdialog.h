@@ -202,6 +202,8 @@ public:
     wxSpinCtrl* m_AccNr;
     wxStaticText* m_labTimer;
     wxSpinCtrl* m_Timer;
+    wxStaticText* m_labMaxLoad;
+    wxSpinCtrl* m_MaxLoad;
     wxCheckBox* m_State;
     wxCheckBox* m_Road;
     wxCheckBox* m_Show;
