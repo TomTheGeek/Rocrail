@@ -477,6 +477,7 @@ void RocnetNodeDlg::initLabels() {
   for( int i = 0; i < 8; i++ ) {
     m_MacroLines->SetCellEditor(i, 2, new wxGridCellChoiceEditor(3, m_sType));
     m_MacroLines->SetCellRenderer(i, 4, new wxGridCellBoolRenderer() );
+    m_MacroLines->SetCellEditor(i, 4, new wxGridCellBoolEditor() );
   }
   m_MacroGet->SetLabel(wxGetApp().getMsg( "get" ));
   m_MacroSet->SetLabel(wxGetApp().getMsg( "set" ));
