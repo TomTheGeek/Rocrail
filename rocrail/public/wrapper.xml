@@ -1237,6 +1237,8 @@
     <const name="stop" vt="string" val="stop"/>
     <const name="reset" vt="string" val="reset"/>
     <const name="softreset" vt="string" val="softreset"/>
+    <const name="v0locos" vt="string" val="v0locos"/>
+    <const name="vrestorelocos" vt="string" val="vrestorelocos"/>
     <var name="cmd" vt="string" defval="" range="on,off,start,stop,reset"/>
   </auto>
 
