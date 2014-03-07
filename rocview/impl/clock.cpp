@@ -227,7 +227,6 @@ void Clock::calculate() {
     ltime = wxDateTime::GetTimeNow();
     datetime->Set( ltime );
   }
-  SetToolTip( datetime->FormatISOTime());
 
   /*
   if ((datetime->GetSecond() == 0) || start)
