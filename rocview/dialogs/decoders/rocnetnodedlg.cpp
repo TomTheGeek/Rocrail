@@ -487,6 +487,7 @@ void RocnetNodeDlg::initLabels() {
 }
 
 
+static bool revSortOrder = false;
 /* comparator for sorting by id: */
 static int __sortID(obj* _a, obj* _b)
 {
@@ -495,9 +496,9 @@ static int __sortID(obj* _a, obj* _b)
     int A = wRocNetNode.getid( a );
     int B = wRocNetNode.getid( b );
     if( A > B )
-      return 1;
+      return revSortOrder?-1:1;
     if( A < B )
-      return -1;
+      return revSortOrder?1:-1;
     return 0;
 }
 static int __sortUID(obj* _a, obj* _b)
@@ -506,7 +507,7 @@ static int __sortUID(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* A = wRocNetNode.getnickname( a );
     const char* B = wRocNetNode.getnickname( b );
-    return strcmp( A, B );
+    return revSortOrder?strcmp( B, A ):strcmp( A, B );
 }
 static int __sortLocation(obj* _a, obj* _b)
 {
@@ -515,9 +516,9 @@ static int __sortLocation(obj* _a, obj* _b)
     int A = wRocNetNode.getlocation( a );
     int B = wRocNetNode.getlocation( b );
     if( A > B )
-      return 1;
+      return revSortOrder?-1:1;
     if( A < B )
-      return -1;
+      return revSortOrder?1:-1;
     return 0;
 }
 static int __sortSubIP(obj* _a, obj* _b)
@@ -527,9 +528,9 @@ static int __sortSubIP(obj* _a, obj* _b)
     int A = wRocNetNode.getsubip( a );
     int B = wRocNetNode.getsubip( b );
     if( A > B )
-      return 1;
+      return revSortOrder?-1:1;
     if( A < B )
-      return -1;
+      return revSortOrder?1:-1;
     return 0;
 }
 
@@ -1187,7 +1188,12 @@ void RocnetNodeDlg::onPortTest( wxCommandEvent& event ) {
 }
 
 void RocnetNodeDlg::onListColClick( wxListEvent& event ) {
-  m_SortCol = event.GetColumn();
+  int l_SortCol = event.GetColumn();
+  if(m_SortCol == l_SortCol)
+    revSortOrder = !revSortOrder;
+  else
+    revSortOrder = false;
+  m_SortCol = l_SortCol;
   initNodeList();
 }
 
