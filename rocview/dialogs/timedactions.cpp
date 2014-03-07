@@ -982,8 +982,6 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wAutoCmd.on, wxConvUTF8));
       m_Command->Append(wxString( wAutoCmd.off, wxConvUTF8));
       m_Command->Append(wxString( wSysCmd.ebreak, wxConvUTF8));
-      m_Command->Append(wxString( wAutoCmd.v0locos, wxConvUTF8));
-      m_Command->Append(wxString( wAutoCmd.vrestorelocos, wxConvUTF8));
       m_Command->Append(wxString( wSysCmd.resetfx, wxConvUTF8));
       break;
     case 5: // signal
