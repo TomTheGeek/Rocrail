@@ -500,6 +500,14 @@ static int __sortID(obj* _a, obj* _b)
       return -1;
     return 0;
 }
+static int __sortUID(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* A = wRocNetNode.getnickname( a );
+    const char* B = wRocNetNode.getnickname( b );
+    return strcmp( A, B );
+}
 static int __sortLocation(obj* _a, obj* _b)
 {
     iONode a = (iONode)*_a;
@@ -557,6 +565,9 @@ void RocnetNodeDlg::initNodeList() {
   }
   else if( m_SortCol == 6 ) {
     ListOp.sort(list, &__sortSubIP);
+  }
+  else if( m_SortCol == 7 ) {
+    ListOp.sort(list, &__sortUID);
   }
   else {
     ListOp.sort(list, &__sortID);
