@@ -471,8 +471,12 @@ void RocnetNodeDlg::initLabels() {
   m_MacroLines->SetColLabelValue(2, wxGetApp().getMsg( "type" ));
   m_MacroLines->SetColLabelValue(3, wxGetApp().getMsg( "value" ));
   m_MacroLines->SetColLabelValue(4, wxGetApp().getMsg( "blink" ));
+  m_sType[0] = wxGetApp().getMsg( "output" );
+  m_sType[1] = wxGetApp().getMsg( "input" );
+  m_sType[2] = wxGetApp().getMsg( "channel" );
   for( int i = 0; i < 8; i++ ) {
-    m_MacroLines->SetCellRenderer(i, 4, new wxGridCellBoolRenderer);
+    m_MacroLines->SetCellEditor(i, 2, new wxGridCellChoiceEditor(3, m_sType));
+    m_MacroLines->SetCellRenderer(i, 4, new wxGridCellBoolRenderer() );
   }
   m_MacroGet->SetLabel(wxGetApp().getMsg( "get" ));
   m_MacroSet->SetLabel(wxGetApp().getMsg( "set" ));
@@ -1033,7 +1037,16 @@ void RocnetNodeDlg::onMacroSet( wxCommandEvent& event ) {
     StrOp.fmtb(key, "val%d", 2 + i*4);
     NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i, 1).mb_str(wxConvUTF8)) );
     StrOp.fmtb(key, "val%d", 3 + i*4);
-    NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i, 2).mb_str(wxConvUTF8)) +
+
+    int type = 0;
+    for( int n = 0; n < 3; n++ ) {
+      if( m_MacroLines->GetCellValue( i, 2 ) == m_sType[n] ) {
+        type = n;
+        break;
+      }
+    }
+
+    NodeOp.setInt( cmd, key, type +
         (atoi(m_MacroLines->GetCellValue(i, 4).mb_str(wxConvUTF8))?0x80:0x00) );
     StrOp.fmtb(key, "val%d", 4 + i*4);
     NodeOp.setInt( cmd, key, atoi(m_MacroLines->GetCellValue(i, 3).mb_str(wxConvUTF8)) );
@@ -1058,7 +1071,7 @@ void RocnetNodeDlg::initMacro( iONode node ) {
     StrOp.fmtb(key, "val%d", 2 + i*4);
     m_MacroLines->SetCellValue(i, 1, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)));
     StrOp.fmtb(key, "val%d", 3 + i*4);
-    m_MacroLines->SetCellValue(i, 2, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)&0x7F));
+    m_MacroLines->SetCellValue(i, 2, m_sType[NodeOp.getInt(node, key, 0)&0x03] );
     m_MacroLines->SetCellValue(i, 4, wxString::Format(wxT("%d"), (NodeOp.getInt(node, key, 0)&0x80?1:0)));
     StrOp.fmtb(key, "val%d", 4 + i*4);
     m_MacroLines->SetCellValue(i, 3, wxString::Format(wxT("%d"), NodeOp.getInt(node, key, 0)));
@@ -1431,7 +1444,17 @@ void RocnetNodeDlg::onMacroExport( wxCommandEvent& event ) {
         // ToDo: Set line values.
         int val1 = atoi( m_MacroLines->GetCellValue( i, 0 ).mb_str(wxConvUTF8) );
         int val2 = atoi( m_MacroLines->GetCellValue( i, 1 ).mb_str(wxConvUTF8) );
-        int val3 = atoi( m_MacroLines->GetCellValue( i, 2 ).mb_str(wxConvUTF8) );
+
+        int val3 = 0;
+        TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "port type [%s]...", (const char*)m_MacroLines->GetCellValue( i, 2 ).mb_str(wxConvUTF8));
+        for( int n = 0; n < 3; n++ ) {
+          if( m_MacroLines->GetCellValue( i, 2 ) == m_sType[n] ) {
+            val3 = n;
+            TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "port type %d [%s]...", n, (const char*)m_sType[n].mb_str(wxConvUTF8));
+            break;
+          }
+        }
+
         int val4 = atoi( m_MacroLines->GetCellValue( i, 3 ).mb_str(wxConvUTF8) );
         int val5 = atoi( m_MacroLines->GetCellValue( i, 4 ).mb_str(wxConvUTF8) );
 
@@ -1466,7 +1489,7 @@ void RocnetNodeDlg::onMacroImport( wxCommandEvent& event ) {
     // strip filename:
     wGui.setopenpath( wxGetApp().getIni(), FileOp.getPath(wGui.getopenpath( wxGetApp().getIni() ) ) );
 
-    TraceOp.trc( "bidib", TRCLEVEL_INFO, __LINE__, 9999, "reading [%s]...", (const char*)fdlg->GetPath().mb_str(wxConvUTF8));
+    TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "reading [%s]...", (const char*)fdlg->GetPath().mb_str(wxConvUTF8));
     iOFile f = FileOp.inst( fdlg->GetPath().mb_str(wxConvUTF8), OPEN_READONLY );
     if( f != NULL ) {
       TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "file opened...");
@@ -1486,7 +1509,7 @@ void RocnetNodeDlg::onMacroImport( wxCommandEvent& event ) {
           while( macroline != NULL ) {
             m_MacroLines->SetCellValue(idx, 0, wxString::Format(_T("%d"), wMacroLine.getport(macroline)) );
             m_MacroLines->SetCellValue(idx, 1, wxString::Format(_T("%d"), wMacroLine.getdelay(macroline)) );
-            m_MacroLines->SetCellValue(idx, 2, wxString::Format(_T("%d"), wMacroLine.getporttype(macroline)) );
+            m_MacroLines->SetCellValue(idx, 2, m_sType[wMacroLine.getporttype(macroline)&0x03] );
             m_MacroLines->SetCellValue(idx, 3, wxString::Format(_T("%d"), wMacroLine.getstatus(macroline)) );
             m_MacroLines->SetCellValue(idx, 4, wxString::Format(_T("%d"), wMacroLine.isblink(macroline)?1:0) );
             idx++;

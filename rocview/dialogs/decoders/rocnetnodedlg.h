@@ -63,6 +63,7 @@ class RocnetNodeDlg : public rocnetnodegen, public DecoderBase
   int m_I2Cx20;
   int m_I2Cx30;
   int m_I2Cx40;
+  wxString m_sType[3];
 
 	protected:
 		// Handlers for rocnetnodegen events.
