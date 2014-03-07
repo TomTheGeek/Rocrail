@@ -368,6 +368,7 @@ void RocnetNodeDlg::initListLabels() {
   m_NodeList->InsertColumn(4, wxGetApp().getMsg( "revision" ), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(5, wxT("I/O"), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(6, wxT("Sub IP"), wxLIST_FORMAT_CENTER);
+  m_NodeList->InsertColumn(7, wxGetApp().getMsg( "uidname" ), wxLIST_FORMAT_LEFT);
 }
 
 
@@ -570,10 +571,11 @@ void RocnetNodeDlg::initNodeList() {
     m_NodeList->SetItem( index, 4, wxString::Format(_T("%d"), wRocNetNode.getrevision(rnnode)));
     m_NodeList->SetItem( index, 5, wxString::Format(_T("%d"), wRocNetNode.getnrio(rnnode)));
     m_NodeList->SetItem( index, 6, wxString::Format(_T("%d.%d"), wRocNetNode.getsubip(rnnode)/256, wRocNetNode.getsubip(rnnode)%256));
+    m_NodeList->SetItem( index, 7, wxString(wRocNetNode.getnickname(rnnode),wxConvUTF8));
     m_NodeList->SetItemPtrData(index, (wxUIntPtr)rnnode);
   }
 
-  for( int n = 0; n < 6; n++ ) {
+  for( int n = 0; n < 7; n++ ) {
     m_NodeList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
     int autoheadersize = m_NodeList->GetColumnWidth(n);
     m_NodeList->SetColumnWidth(n, wxLIST_AUTOSIZE);
