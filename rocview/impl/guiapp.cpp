@@ -726,6 +726,7 @@ bool RocGui::OnInit() {
   m_Port = wRRCon.getport( wGui.getrrcon( m_Ini ) );
   m_Port = CmdLnOp.getIntDef( m_CmdLn,wCmdline.port, m_Port );
 
+
   // create the language object:
   m_Res = ResOp.inst( messages, wGui.getlang( m_Ini ) );
 
@@ -783,6 +784,9 @@ bool RocGui::OnInit() {
   TraceOp.println( " License: GNU GPL 3"                                );
   TraceOp.println( "   http://www.gnu.org/licenses/gpl-3.0-standalone.html" );
   TraceOp.println( "--------------------------------------------------" );
+  for( int x = 0; x < argc; x++ )
+    TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," command line arg%d = [%s]", x, (const char**)argv_c[x] );
+
 
   // trace version
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, " %s %d [%s]", wGui.productname, revisionnr, commithash );
