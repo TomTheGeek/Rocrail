@@ -2889,6 +2889,11 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   const char* nodename = NodeOp.getName( nodeA );
   const char* cmd  = wLoc.getcmd( nodeA );
 
+  if( !data->run ) {
+    NodeOp.base.del(nodeA);
+    return False;
+  }
+
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%scommand %s:%s for loco %s",
       wLoc.isconsistcmd(nodeA)?"consist ":"", nodename, (cmd==NULL?"-":cmd), wLoc.getid( data->props ) );
 
