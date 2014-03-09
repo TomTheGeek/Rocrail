@@ -968,7 +968,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     rnSenderAddresToPacket( data->id, msg, 0 );
     msg[RN_PACKET_ACTION] = RN_PROGRAMMING_RDOPT;
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-    msg[RN_PACKET_LEN] = 10;
+    msg[RN_PACKET_LEN] = 11;
     msg[RN_PACKET_DATA + 0] = data->iotype;
     msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00) | (data->usepb ? 0x04:0x00) | (data->adcsensor ? 0x08:0x00);
     msg[RN_PACKET_DATA + 1] |= (data->tl_info ? 0x10:0x00) | (data->tl_monitor ? 0x20:0x00) | (data->ismobile ? 0x40:0x00);
@@ -983,6 +983,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     i2ccheck = __checkI2C(rocnetnode, 0x40);
     msg[RN_PACKET_DATA + 8] = (i2ccheck/256)&0xFF;
     msg[RN_PACKET_DATA + 9] = (i2ccheck%256)&0xFF;
+    msg[RN_PACKET_DATA + 10] = data->adcthreshold&0xFF;
   }
   break;
 
@@ -994,6 +995,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     data->sack   = (rn[RN_PACKET_DATA + 1] & 0x01) ? True:False;
     data->rfid   = (rn[RN_PACKET_DATA + 1] & 0x02) ? True:False;
     data->adcsensor = (rn[RN_PACKET_DATA + 1] & 0x08) ? True:False;
+    data->adcthreshold = rn[RN_PACKET_DATA + 4];
     data->ismobile = (rn[RN_PACKET_DATA + 1] & 0x40) ? True:False;
     data->usepb = (rn[RN_PACKET_DATA + 1] & 0x04) ? True:False;
     data->tl_info = (rn[RN_PACKET_DATA + 1] & 0x10) ? True:False;
@@ -1035,6 +1037,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
       wRocNetNodeOptions.setsack( optionsini, data->sack );
       wRocNetNodeOptions.setrfid( optionsini, data->rfid );
       wRocNetNodeOptions.setadcsensor( optionsini, data->adcsensor );
+      wRocNetNodeOptions.setadcthreshold( optionsini, data->adcthreshold );
       wRocNetNodeOptions.setmobile( optionsini, data->ismobile );
       wRocNetNodeOptions.setusepb( optionsini, data->usepb );
       wRocNetNodeOptions.setnickname( optionsini, data->nickname );
@@ -1912,7 +1915,6 @@ static void __adcsensorscanner( void* threadinst ) {
   byte baseadc = 0x48;
   int idx = 0;
   byte ctrl = 0x40;
-  byte threshold = 15;
 
   ThreadOp.sleep(1000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ADC Sensor scanner started" );
@@ -1930,19 +1932,33 @@ static void __adcsensorscanner( void* threadinst ) {
       if( rc >= 0 ) {
         rc = raspiReadI2C( data->i2cdescriptor, baseadc, &value );
         if( rc >= 0 ) {
+          /*
+           * After writing the control byte to the PCF8591 nothing happens for the selected channel.
+           * The data byte read after a write is the channel of the previous control byte...
+           */
+          int port = 0;
+          if( i == 0 )
+            port = 3;
+          else
+            port = i - 1;
 
-          if( value > threshold )
+          if( value > data->adcthreshold )
             inputON = True;
 
-          if( value > threshold && data->adcsensorvalue[idx*4+i] == 0) {
+          if( value > data->adcthreshold && data->adcsensorvalue[idx*4+port] == 0) {
             /* report on */
-            data->adcsensorvalue[idx*4+i] = value;
-            __reportADCSensor(rocnetnode, idx*4+i, True, value );
+            data->adcsensorvalue[idx*4+port] = value;
+            __reportADCSensor(rocnetnode, idx*4+port, True, value );
           }
-          else if( value < threshold && data->adcsensorvalue[idx*4+i] > 0) {
+          else if( value > data->adcthreshold && data->adcsensorvalue[idx*4+port] > 0 && abs(data->adcsensorvalue[idx*4+port] - value) > data->adcthreshold ) {
             /* report off */
-            data->adcsensorvalue[idx*4+i] = 0;
-            __reportADCSensor(rocnetnode, idx*4+i, False, value );
+            data->adcsensorvalue[idx*4+port] = value;
+            __reportADCSensor(rocnetnode, idx*4+port, True, value );
+          }
+          else if( value < data->adcthreshold && data->adcsensorvalue[idx*4+port] > 0) {
+            /* report off */
+            data->adcsensorvalue[idx*4+port] = 0;
+            __reportADCSensor(rocnetnode, idx*4+port, False, value );
           }
         }
         else
@@ -3128,6 +3144,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       data->sack  = wRocNetNodeOptions.issack(optionsini);
       data->rfid  = wRocNetNodeOptions.isrfid(optionsini);
       data->adcsensor = wRocNetNodeOptions.isadcsensor(optionsini);
+      data->adcthreshold = wRocNetNodeOptions.getadcthreshold(optionsini);
       data->ismobile = wRocNetNodeOptions.ismobile(optionsini);
       data->usepb = wRocNetNodeOptions.isusepb(optionsini);
       data->iotype = wRocNetNodeOptions.getiotype(optionsini);

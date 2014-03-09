@@ -791,6 +791,7 @@ void RocnetNodeDlg::event(iONode node) {
       m_TraceLevelMonitor->SetValue(wProgram.getval2(node)&0x20?true:false);
       m_DCCType->SetSelection( wProgram.getval3(node) );
       m_DCCDevice->SetSelection( wProgram.getval4(node) );
+      m_ADCThreshold->SetValue(wProgram.getval5(node));
 
       // I2C scan 0x20=val5, 0x30=val6, 0x40=val7
       // I/O, GCA-Pi02
@@ -937,6 +938,7 @@ void RocnetNodeDlg::onNodeOptionsWrite( wxCommandEvent& event ) {
                           (m_TraceLevelInfo->IsChecked()?0x10:0x00) | (m_TraceLevelMonitor->IsChecked()?0x20:0x00) | (m_Mobile->IsChecked()?0x40:0x00) );
   wProgram.setval3( cmd, m_DCCType->GetSelection());
   wProgram.setval4( cmd, m_DCCDevice->GetSelection());
+  wProgram.setval5( cmd, m_ADCThreshold->GetValue());
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setlntype(cmd, wProgram.lntype_rocnet);
   wxGetApp().sendToRocrail( cmd );

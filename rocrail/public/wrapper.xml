@@ -655,7 +655,8 @@
           <var name="soundpath" vt="string" defval="sounds"/>
           <var name="soundplayer" vt="string" defval="mplayer"/>
           <var name="nickname" vt="string" defval="New RocNetNode"/>
-        </rocnetnodeoptions>
+          <var name="adcthreshold" vt="int" defval="15"/>
+          </rocnetnodeoptions>
         <rocnetnode wrappername="RocNetNode" cardinality="n">
 	        <var name="id" vt="int" defval="65535" range="0-*" remark="RocNet sender ID."/>
           <var name="location" vt="int" defval="0" range="0-*" remark="RocNet sender ID."/>
