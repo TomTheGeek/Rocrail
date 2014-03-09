@@ -1010,7 +1010,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     rnSenderAddresToPacket( data->id, msg, 0 );
     msg[RN_PACKET_ACTION] = RN_PROGRAMMING_WROPT;
     msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
-    msg[RN_PACKET_LEN] = 4;
+    msg[RN_PACKET_LEN] = 5;
     msg[RN_PACKET_DATA + 0] = data->iotype;
     msg[RN_PACKET_DATA + 1] = (data->sack ? 0x01:0x00) | (data->rfid ? 0x02:0x00) | (data->usepb ? 0x04:0x00) | (data->adcsensor ? 0x08:0x00);
     msg[RN_PACKET_DATA + 1] |= (data->tl_info ? 0x10:0x00) | (data->tl_monitor ? 0x20:0x00) | (data->ismobile ? 0x40:0x00);
@@ -1025,6 +1025,7 @@ static byte* __handlePTStationary( iORocNetNode rocnetnode, byte* rn ) {
     i2ccheck = __checkI2C(rocnetnode, 0x40);
     msg[RN_PACKET_DATA + 8] = (i2ccheck/256)&0xFF;
     msg[RN_PACKET_DATA + 9] = (i2ccheck%256)&0xFF;
+    msg[RN_PACKET_DATA + 10] = data->adcthreshold;
     /* Save the rocnetnode.ini to persistent the new ID. */
     {
       iONode rocnet = NodeOp.findNode(data->ini, wRocNet.name());

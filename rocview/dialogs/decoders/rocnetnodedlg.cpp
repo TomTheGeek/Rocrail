@@ -419,7 +419,7 @@ void RocnetNodeDlg::initLabels() {
   m_RocNetOptionBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "options" ));
   m_SecAck->SetLabel(wxGetApp().getMsg( "secureack" ));
   m_UsePB->SetLabel(wxGetApp().getMsg( "usepb" ));
-  m_ADCSensor->SetLabel(wxGetApp().getMsg( "adcsensors" ));
+  m_ADCSensor->SetLabel(wxT( "GCA-Pi07" ));
   m_ADCThreshold->SetLabel(wxGetApp().getMsg( "threshold" ));
   m_Mobile->SetLabel(wxT( "GCA-Pi05" ));
   m_DCCType->SetLabel(wxGetApp().getMsg( "controller" ));
@@ -794,7 +794,7 @@ void RocnetNodeDlg::event(iONode node) {
       m_TraceLevelMonitor->SetValue(wProgram.getval2(node)&0x20?true:false);
       m_DCCType->SetSelection( wProgram.getval3(node) );
       m_DCCDevice->SetSelection( wProgram.getval4(node) );
-      m_ADCThreshold->SetValue(wProgram.getval5(node));
+      m_ADCThreshold->SetValue(wProgram.getval8(node));
 
       // I2C scan 0x20=val5, 0x30=val6, 0x40=val7
       // I/O, GCA-Pi02
