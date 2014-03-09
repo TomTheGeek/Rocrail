@@ -421,7 +421,7 @@ void RocnetNodeDlg::initLabels() {
   m_UsePB->SetLabel(wxGetApp().getMsg( "usepb" ));
   m_ADCSensor->SetLabel(wxGetApp().getMsg( "adcsensors" ));
   m_ADCThreshold->SetLabel(wxGetApp().getMsg( "threshold" ));
-  m_Mobile->SetLabel(wxGetApp().getMsg( "locomotive" ));
+  m_Mobile->SetLabel(wxT( "GCA-Pi05" ));
   m_DCCType->SetLabel(wxGetApp().getMsg( "controller" ));
   m_DCCType->SetString( 0, wxGetApp().getMsg( "none" ) );
   m_DCCDevice->SetLabel(wxGetApp().getMsg( "device" ));
