@@ -695,7 +695,7 @@ static void __evaluateMCS2Function( iOMCS2Data mcs2, byte* in ) {
 
 
 static void __reportState(iOMCS2Data data) {
-  if( data->listenerFun != NULL && data->listenerObj != NULL ) {
+  if( wDigInt.isreportstate(data->ini) && data->listenerFun != NULL && data->listenerObj != NULL ) {
     iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
 
     if( data->iid != NULL )
@@ -1323,6 +1323,7 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bps            [%d]", wDigInt.isasciiprotocol( data->ini )?115200:500000 );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  SLCAN          [%s]", wDigInt.isasciiprotocol( data->ini )?"yes":"no" );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  discovery&bind [%s]", wMCS2.isdiscovery(data->mcs2ini)?"yes":"no" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  report state   [%s]", wDigInt.isreportstate(data->ini)?"yes":"no" );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
     data->serial = SerialOp.inst( wDigInt.getdevice(data->ini) );

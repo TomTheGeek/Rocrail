@@ -526,6 +526,7 @@
       <var name="switchlist" vt="bool" defval="false" remark="Initial send the digint the list of switches."/>
       <var name="overrule" vt="bool" defval="true" remark="Overrule throttle commands."/>
       <var name="asciiprotocol" vt="bool" defval="false" remark="Use an ASCII protocol."/>
+      <var name="reportstate" vt="bool" defval="true"/>
       
 
       <!-- HSI88 -->
