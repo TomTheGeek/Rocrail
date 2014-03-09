@@ -419,6 +419,8 @@ void RocnetNodeDlg::initLabels() {
   m_RocNetOptionBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "options" ));
   m_SecAck->SetLabel(wxGetApp().getMsg( "secureack" ));
   m_UsePB->SetLabel(wxGetApp().getMsg( "usepb" ));
+  m_ADCSensor->SetLabel(wxGetApp().getMsg( "adcsensors" ));
+  m_ADCThreshold->SetLabel(wxGetApp().getMsg( "threshold" ));
   m_DCCType->SetLabel(wxGetApp().getMsg( "controller" ));
   m_DCCType->SetString( 0, wxGetApp().getMsg( "none" ) );
   m_DCCDevice->SetLabel(wxGetApp().getMsg( "device" ));

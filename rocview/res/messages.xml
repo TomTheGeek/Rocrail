@@ -27445,4 +27445,10 @@
   <Msg id="input">
     <en txt="Input"/>
   </Msg>
+  <Msg id="adcsensors">
+    <en txt="ADC Sensors"/>
+  </Msg>
+  <Msg id="threshold">
+    <en txt="Threshold"/>
+  </Msg>
 </Messages>

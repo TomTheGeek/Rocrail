@@ -6923,3 +6923,15 @@ msgstr ""
 msgid "Input"
 msgstr ""
 
+#. 
+# id="adcsensors"
+#, c-format
+msgid "ADC Sensors"
+msgstr ""
+
+#. 
+# id="threshold"
+#, c-format
+msgid "Threshold"
+msgstr ""
+
