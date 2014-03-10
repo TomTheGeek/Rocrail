@@ -2578,13 +2578,13 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     sizeToScale();
   }
 
-  if( !StrOp.equals( id, wItem.getid( m_Props ) ) ) {
+  if( id != NULL && StrOp.len(id) > 0 && !StrOp.equals( id, wItem.getid( m_Props ) ) ) {
     if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
       // Could be a turntable (invisible) feedback...
       iONode track = wTurntable.gettrack( m_Props );
       TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "sensor [%s] event for turntable", id );
       while( track != NULL ) {
-        if( StrOp.equals( id, wTTTrack.getposfb( track ) ) ) {
+        if( StrOp.len(wTTTrack.getposfb(track)) > 0 && StrOp.equals( id, wTTTrack.getposfb( track ) ) ) {
           TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "posfb \"%s\" for nr %d = %s",
                        id, wTTTrack.getnr( track ),
                        wFeedback.isstate( node ) ? "ON":"OFF" );
