@@ -916,7 +916,7 @@ static Boolean __process2AspectsCmd( iOSignal inst, const char* state ) {
   wOutput.setcmd( cmd, wOutput.off );
 
   /* reset only if two addresses have been setup */
-  if( wSignal.getaddr2( o->props ) > 0 ) {
+  if( wSignal.getaddr2( o->props ) > 0 || wSignal.getport2( o->props ) > 0 ) {
     wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
     wOutput.setport( cmd, wSignal.getport1( o->props ) );
     wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
@@ -932,14 +932,14 @@ static Boolean __process2AspectsCmd( iOSignal inst, const char* state ) {
 	  ThreadOp.sleep(wSignal.getcmdtime( o->props ));
   }
 
-  if( StrOp.equals( wSignal.green, state ) && wSignal.getaddr2( o->props ) > 0 ) {
+  if( StrOp.equals( wSignal.green, state ) && (wSignal.getaddr2( o->props ) > 0 || wSignal.getport2( o->props ) > 0) ) {
     /* two address signal */
     wOutput.setcmd( cmd, wOutput.on );
     wOutput.setaddr( cmd, wSignal.getaddr2( o->props ) );
     wOutput.setport( cmd, wSignal.getport2( o->props ) );
     wOutput.setgate( cmd, wSignal.getgate2( o->props ) );
   }
-  else if( StrOp.equals( wSignal.green, state ) && wSignal.getaddr2( o->props ) == 0 ) {
+  else if( StrOp.equals( wSignal.green, state ) && (wSignal.getaddr2( o->props ) == 0 && wSignal.getport2( o->props ) == 0) ) {
     /* single address signal */
     wOutput.setcmd( cmd, wOutput.off );
     wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
