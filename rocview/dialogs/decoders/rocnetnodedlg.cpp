@@ -590,7 +590,7 @@ void RocnetNodeDlg::initNodeList() {
     m_NodeList->SetItemPtrData(index, (wxUIntPtr)rnnode);
   }
 
-  for( int n = 0; n < 7; n++ ) {
+  for( int n = 0; n < 8; n++ ) {
     m_NodeList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
     int autoheadersize = m_NodeList->GetColumnWidth(n);
     m_NodeList->SetColumnWidth(n, wxLIST_AUTOSIZE);
