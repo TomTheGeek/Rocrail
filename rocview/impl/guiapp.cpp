@@ -784,6 +784,7 @@ bool RocGui::OnInit() {
   TraceOp.println( " License: GNU GPL 3"                                );
   TraceOp.println( "   http://www.gnu.org/licenses/gpl-3.0-standalone.html" );
   TraceOp.println( "--------------------------------------------------" );
+  TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," pwd = [%s]", FileOp.pwd() );
   for( int x = 0; x < argc; x++ )
     TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999," command line arg%d = [%s]", x, (const char**)argv_c[x] );
 
