@@ -12,4 +12,4 @@ fi
 if [ ! -e ~/rocrail/plan.xml ] ; then
   cp $mypath/../../../rocdata/plan.xml ~/rocrail/plan.xml
 fi
-$mypath/rocview -i ~/rocrail/rocview.ini -t $mypath/../../../rocdata/trace/rocview.trace -sp $mypath
+$mypath/rocview -i ~/rocrail/rocview.ini -t $mypath/../../../rocdata/trace/rocview.trace -sp $mypath -themespath $mypath/../../..
