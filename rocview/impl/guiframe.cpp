@@ -2369,6 +2369,8 @@ void RocGuiFrame::create() {
   m_TraceSplitter = new wxSplitterWindow( m_Splitter );
   m_TraceSplitter->SetMinimumPaneSize(20);
 
+  Boolean dontwrap = wSplitPanel.isdontwrap( wGui.getsplitpanel(m_Ini));
+
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating Serverpanel..." );
   wxBoxSizer* warningSizer = new wxBoxSizer(wxVERTICAL);
   wxPanel* warningPanel = new wxPanel(m_TraceSplitter);
@@ -2376,7 +2378,7 @@ void RocGuiFrame::create() {
   wxStaticText* warningTitle = new wxStaticText( warningPanel, -1, wxGetApp().getMsg("server") );
   m_WarningPanel = new wxTextCtrl( warningPanel, 4, _T(""),
                          wxDefaultPosition, wxDefaultSize,
-                         wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP );
+                         wxTE_MULTILINE | wxTE_READONLY | (dontwrap?wxTE_DONTWRAP:0) );
   warningSizer->Add(warningTitle, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
   warningSizer->Add(m_WarningPanel, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
 
@@ -2388,7 +2390,7 @@ void RocGuiFrame::create() {
   wxStaticText* monitorTitle = new wxStaticText( monitorPanel, -1, wxGetApp().getMsg("controller") );
   m_MonitorPanel = new wxTextCtrl( monitorPanel, 4, _T(""),
                          wxDefaultPosition, wxDefaultSize,
-                         wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP );
+                         wxTE_MULTILINE | wxTE_READONLY | (dontwrap?wxTE_DONTWRAP:0) );
   monitorSizer->Add(monitorTitle, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
   monitorSizer->Add(m_MonitorPanel, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
 

@@ -6935,3 +6935,9 @@ msgstr ""
 msgid "Threshold"
 msgstr ""
 
+#. 
+# id="monitordontwrap"
+#, c-format
+msgid "Monitor don't wrap"
+msgstr ""
+

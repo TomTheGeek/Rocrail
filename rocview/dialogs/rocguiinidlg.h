@@ -180,6 +180,7 @@ public:
     wxCheckBox* m_FSUTF8;
     wxCheckBox* m_VerticalToolbar;
     wxCheckBox* m_LocoImage;
+    wxCheckBox* m_MonitorDontWrap;
     wxStaticText* m_labWidgetWidth;
     wxSpinCtrl* m_WidgetWidth;
     wxStaticText* m_labMonitorSize;

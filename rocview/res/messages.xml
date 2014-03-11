@@ -27451,4 +27451,7 @@
   <Msg id="threshold">
     <en txt="Threshold"/>
   </Msg>
+  <Msg id="monitordontwrap">
+    <en txt="Monitor don't wrap"/>
+  </Msg>
 </Messages>
