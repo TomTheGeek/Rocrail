@@ -13815,7 +13815,7 @@
     <sl txt="Zbiraj"/>
     <pt_BR txt="Consulta"/>
     <fi txt="Pollaa"/>
-    <pl txt="Głosowanie"/>
+    <pl txt="Nasłuch"/>
   </Msg>
   <Msg id="options">
     <de txt="Optionen"/>
@@ -23178,6 +23178,7 @@
     <fi txt="Ajastetut anturit"/>
     <en_AU txt="Timed sensors"/>
     <en_CA txt="Timed sensors"/>
+    <pl txt="Czujniki czasowe"/>
   </Msg>
   <Msg id="enableanalyzer">
     <en txt="Enable analyzer"/>
@@ -23218,6 +23219,7 @@
     <fi txt="Pakota vapautus EBreakin tapahtuessa"/>
     <en_AU txt="Force unlock at EBreak"/>
     <en_CA txt="Force unlock at EBreak"/>
+    <pl txt="Wymuś zwolnienie po zatrzymaniu awaryjnym"/>
   </Msg>
   <Msg id="triggerblockevents">
     <en txt="Trigger block events"/>
@@ -23541,6 +23543,7 @@
     <fi txt="Alusta nopeus ja toiminnot"/>
     <en_AU txt="Reset speed and functions"/>
     <en_CA txt="Reset speed and functions"/>
+    <pl txt="Reset prędkości i funkcji"/>
   </Msg>
   <Msg id="divider">
     <en txt="divider"/>
@@ -23602,6 +23605,7 @@
     <fi txt="Kysy tieto"/>
     <en_AU txt="Poll info"/>
     <en_CA txt="Poll info"/>
+    <pl txt="Informacje z nasłuchu"/>
   </Msg>
   <Msg id="releaseonidle">
     <en txt="Release loco on idle"/>
@@ -24006,6 +24010,7 @@
     <fi txt="Korvaa tilanne"/>
     <en_AU txt="Overwrite status"/>
     <en_CA txt="Overwrite status"/>
+    <pl txt="Nadpisz status"/>
   </Msg>
   <Msg id="closenoevents">
     <en txt="Close on no events"/>
@@ -24208,6 +24213,7 @@
     <fr txt="ouverture du fichier des clés"/>
     <en_AU txt="Open Key file"/>
     <en_CA txt="Open Key file"/>
+    <pl txt="Otwórz plik klucza"/>
   </Msg>
   <Msg id="freeall">
     <en txt="Free all"/>
@@ -24227,6 +24233,7 @@
     <fr txt="tous libres"/>
     <en_AU txt="Free all"/>
     <en_CA txt="Free all"/>
+    <pl txt="Za darmo"/>
   </Msg>
   <Msg id="merge">
     <en txt="Merge"/>
@@ -25068,6 +25075,7 @@
     <fr txt="le plan est correct"/>
     <en_AU txt="Extended plan clean"/>
     <en_CA txt="Extended plan clean"/>
+    <pl txt="Oczyszczanie niespójnych zapisów"/>
   </Msg>
   <Msg id="ana_setRouteId">
     <en txt="Set routeid for all automatic detected routes"/>
@@ -25434,7 +25442,7 @@
     <fi txt="Kaartuva yhdistin oikealle"/>
     <en_AU txt="Connector curve right"/>
     <en_CA txt="Connector curve right"/>
-    <pl txt="Łącznik łuku prawego"/>
+    <pl txt="Łącznik poziomów łuk prawy"/>
   </Msg>
   <Msg id="concurveleft">
     <en txt="Connector curve left"/>
@@ -25451,7 +25459,7 @@
     <fi txt="Kaartuva yhdistin vasemmalle"/>
     <en_AU txt="Connector curve left"/>
     <en_CA txt="Connector curve left"/>
-    <pl txt="Łącznik łuku lewego"/>
+    <pl txt="Łącznik poziomów łuk lewy"/>
   </Msg>
   <Msg id="watchdog">
     <en txt="Watchdog"/>
@@ -26027,6 +26035,7 @@
     <fi txt="Renderöinnin pehmennys"/>
     <en_AU txt="Render smooth"/>
     <en_CA txt="Render smooth"/>
+    <pl txt="Wygładzanie krawędzi"/>
   </Msg>
   <Msg id="overload">
     <en txt="Overload"/>
@@ -27075,6 +27084,7 @@
     <fi txt="Seurannan tiheys"/>
     <en_AU txt="Polling rate"/>
     <en_CA txt="Polling rate"/>
+    <pl txt="Częstotliwość nasłuchu"/>
   </Msg>
   <Msg id="usepb">
     <en txt="Use push button"/>
@@ -27430,6 +27440,10 @@
     <ru txt="Вертикальная Панель инструментов"/>
     <sl txt="Navpična orodna vrstica"/>
     <sr_latin txt="Vertikalni meni"/>
+    <en_AU txt="Vertical toolbar"/>
+    <en_CA txt="Vertical toolbar"/>
+    <en_GB txt="Vertical toolbar"/>
+    <it txt="Barra strumenti verticale"/>
   </Msg>
   <Msg id="widgetwidth">
     <en txt="Widget width"/>
@@ -27438,18 +27452,43 @@
     <pt_BR txt="Largura da caixa de ferramentas"/>
     <sl txt="Širina pripomočka"/>
     <sr_latin txt="Širina vidžeta"/>
+    <en_AU txt="Widget width"/>
+    <en_CA txt="Widget width"/>
+    <en_GB txt="Widget width"/>
+    <it txt="Larghezza Widget"/>
+    <ru txt="Widget ширина"/>
   </Msg>
   <Msg id="load">
     <en txt="Load"/>
+    <en_AU txt="Load"/>
+    <en_CA txt="Load"/>
+    <en_GB txt="Load"/>
+    <it txt="Carico"/>
+    <nl txt="Belasting"/>
+    <pt_BR txt="Carregar"/>
+    <sr_latin txt="Opterećenje"/>
   </Msg>
   <Msg id="input">
     <en txt="Input"/>
+    <en_AU txt="Input"/>
+    <en_CA txt="Input"/>
+    <en_GB txt="Input"/>
+    <nl txt="Ingang"/>
+    <pt_BR txt="Entrar dados"/>
+    <ru txt="Вход"/>
+    <sr_latin txt="Unos"/>
   </Msg>
   <Msg id="adcsensors">
     <en txt="ADC Sensors"/>
+    <nl txt="ADC Melders"/>
+    <ru txt="ADC датчики"/>
+    <sr_latin txt="ADC senzori"/>
   </Msg>
   <Msg id="threshold">
     <en txt="Threshold"/>
+    <nl txt="Drempelwaarde"/>
+    <ru txt="Порог"/>
+    <sr_latin txt="Osetljivost"/>
   </Msg>
   <Msg id="monitordontwrap">
     <en txt="Monitor don't wrap"/>
