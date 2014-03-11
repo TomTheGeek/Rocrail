@@ -1965,7 +1965,7 @@ void PlanPanel::modelEvent( iONode node ) {
     }
     if( StrOp.equals( wFeedback.name(), name ) ) {
       // could be invisible feedback for a turntable...
-      TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "feedback event item=[%s]", key );
+      TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "feedback event item=[%s]", key );
       iONode ini = wGui.getplanpanel(wxGetApp().getIni());
       if( wPlanPanel.isprocessblockevents(ini) ) {
         wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATETT_EVENT );
@@ -1976,7 +1976,7 @@ void PlanPanel::modelEvent( iONode node ) {
     }
     else if( StrOp.equals( wRoute.name(), name ) ) {
       // could be invisible feedback for a turntable...
-      TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "route event item=[%s]", key );
+      TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "route event item=[%s]", key );
 
       iONode ini = wGui.getplanpanel(wxGetApp().getIni());
       if( wPlanPanel.isprocessrouteevents(ini) ) {

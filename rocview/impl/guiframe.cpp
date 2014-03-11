@@ -2481,7 +2481,7 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
   if( maxlen < 1024 )
     maxlen = 1024;
 
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Got an info message: %s", text );
+  TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "Got an info message: %s", text );
 
   if( m_bTraceWindow && m_WarningPanel != NULL ) {
     wxDateTime now = wxDateTime::Now();
