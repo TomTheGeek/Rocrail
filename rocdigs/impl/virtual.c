@@ -704,10 +704,14 @@ static void __sensorGenerator( void* threadinst ) {
   ThreadOp.sleep(5000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Virtual sensor generator started." );
 
+  if( data->fbmod == 0 )
+    data->fbmod = 10;
+
   /* try to get the system status: */
   while( data->run ) {
     if( data->power ) {
-      int addr = rand() % 4000;
+      int addr = rand() % data->fbmod;
+      addr += data->fboffset;
       Boolean state = True;
       iONode node = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
       wFeedback.setaddr(node, addr);
@@ -755,16 +759,20 @@ static struct OVirtual* _inst( const iONode ini ,const iOTrace trc ) {
   SystemOp.inst();
 
   /* Initialize data->xxx members... */
-  data->ini    = ini;
-  data->iid    = StrOp.dup( wDigInt.getiid( ini ) );
-  data->fbmod  = wDigInt.getfbmod( ini );
-  data->readfb = wDigInt.isreadfb( ini );
+  data->ini      = ini;
+  data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
+  data->fbmod    = wDigInt.getfbmod( ini );
+  data->fboffset = wDigInt.getfboffset( ini );
+  data->readfb   = wDigInt.isreadfb( ini );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "virtual %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  IID:           %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  reset sensors: %s", wDigInt.isfbreset( data->ini )?"yes":"no" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor timer:  %d ms", wDigInt.getpsleep( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  IID: %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  reset sensors   : %s", wDigInt.isfbreset( data->ini )?"yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor timer    : %d ms", wDigInt.getpsleep( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor modules  : %d", data->fbmod );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor offset   : %d", data->fboffset );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  protocol version: %d", wDigInt.getprotver(ini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->run = True;
