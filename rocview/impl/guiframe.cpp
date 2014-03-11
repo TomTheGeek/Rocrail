@@ -2181,7 +2181,7 @@ void RocGuiFrame::initFrame() {
   // check for theme properties:
   char* propPath = NULL;
 
-  if( FileOp.isAbsolute( wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ) ) )
+  if( FileOp.isAbsolute( wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ) ) || m_ThemesPath == NULL )
     propPath = StrOp.fmt( "%s%cproperties.xml", wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ), SystemOp.getFileSeparator() );
   else
     propPath = StrOp.fmt( "%s%c%s%cproperties.xml", m_ThemesPath, SystemOp.getFileSeparator(), wPlanPanel.getsvgpath( wGui.getplanpanel(m_Ini) ), SystemOp.getFileSeparator() );
