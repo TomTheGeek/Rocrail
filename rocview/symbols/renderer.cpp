@@ -2294,7 +2294,7 @@ void SymbolRenderer::drawLine(int x, int y, int cx, int cy) {
  */
 void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridgepos, const char* ori ) {
 
-  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "turntable with bridge pos=%f", *bridgepos );
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "turntable with bridge pos=%f (%d)", *bridgepos, wTurntable.getbridgepos(m_Props) );
   
   // Traverser
   if( wTurntable.istraverser( m_Props ) ) {

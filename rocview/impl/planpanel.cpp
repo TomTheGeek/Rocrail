@@ -1817,7 +1817,7 @@ void PlanPanel::addItem( iONode child, bool add2list, bool focus ) {
 }
 
 void PlanPanel::addItem( const char* nodename, const char* id, wxWindow* item ) {
-  if( id != NULL ) {
+  if( id != NULL && StrOp.len(id) > 0 ) {
     char key[256];
     itemKey( nodename, id, key );
 

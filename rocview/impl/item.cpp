@@ -2585,7 +2585,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "sensor [%s] event for turntable", id );
       while( track != NULL ) {
         if( StrOp.len(wTTTrack.getposfb(track)) > 0 && StrOp.equals( id, wTTTrack.getposfb( track ) ) ) {
-          TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "posfb \"%s\" for nr %d = %s",
+          TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "posfb \"%s\" for nr %d = %s",
                        id, wTTTrack.getnr( track ),
                        wFeedback.isstate( node ) ? "ON":"OFF" );
           wTTTrack.setstate( track, wFeedback.isstate( node ) );
@@ -2614,25 +2614,23 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
   }
 
   if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) ) {
-    // turntable bridge position
-    int pos = wTurntable.getbridgepos( node );
-    wTurntable.setbridgepos(m_Props, pos );
-    wTurntable.setstate1(m_Props, wTurntable.isstate1( node ) );
-    wTurntable.setstate2(m_Props, wTurntable.isstate2( node ) );
-    wTurntable.setstateMid(m_Props, wTurntable.isstateMid( node ) );
-    wTurntable.setlocid(m_Props, wTurntable.getlocid( node ) );
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "bridgepos=%d", pos );
-    {
+    if( StrOp.equals( wTurntable.name(), NodeOp.getName(node)) ) {
+      // turntable bridge position
+      int pos = wTurntable.getbridgepos( node );
+      wTurntable.setbridgepos(m_Props, pos );
+      wTurntable.setstate1(m_Props, wTurntable.isstate1( node ) );
+      wTurntable.setstate2(m_Props, wTurntable.isstate2( node ) );
+      wTurntable.setstateMid(m_Props, wTurntable.isstateMid( node ) );
+      wTurntable.setlocid(m_Props, wTurntable.getlocid( node ) );
+      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "bridgepos=%d %s=%s", pos, NodeOp.getName(node), id==NULL?"-":id );
+      refresh = true;
       iONode track = wTurntable.gettrack( m_Props );
       while( track != NULL ) {
-        if( StrOp.equals( id, wTTTrack.getposfb( track ) ) ) {
-          int tracknr = wTTTrack.getnr( track );
-          wTTTrack.setstate( track, tracknr == pos ? True:False );
-        }
+        int tracknr = wTTTrack.getnr( track );
+        wTTTrack.setstate( track, tracknr == pos ? True:False );
         track = wTurntable.nexttrack( m_Props, track );
       }
     }
-    refresh = true;
   }
 
   const char* type = wItem.gettype( node );
