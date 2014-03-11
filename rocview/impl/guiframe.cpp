@@ -2484,6 +2484,8 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Got an info message: %s", text );
 
   if( m_bTraceWindow && m_WarningPanel != NULL ) {
+    wxDateTime now = wxDateTime::Now();
+
     m_WarningPanel->Freeze();
     m_MonitorPanel->Freeze();
     m_WarningPanel->SetInsertionPoint(0);
@@ -2495,15 +2497,15 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
     }
     if( level == TRCLEVEL_EXCEPTION ) {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxRED));
-      m_WarningPanel->WriteText( wxString(text,wxConvUTF8) + wxT("\n") );
+      m_WarningPanel->WriteText( now.FormatTime() + wxT(" ") + wxString(text,wxConvUTF8) + wxT("\n") );
     }
     else if( level == TRCLEVEL_WARNING ) {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxBLACK));
-      m_WarningPanel->WriteText( wxString(text,wxConvUTF8) + wxT("\n") );
+      m_WarningPanel->WriteText( now.FormatTime() + wxT(" ") + wxString(text,wxConvUTF8) + wxT("\n") );
     }
     else if( level == TRCLEVEL_CALC ) {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxBLUE));
-      m_WarningPanel->WriteText( wxString(text,wxConvUTF8) + wxT("\n") );
+      m_WarningPanel->WriteText( now.FormatTime() + wxT(" ") + wxString(text,wxConvUTF8) + wxT("\n") );
     }
     else if( level == TRCLEVEL_MONITOR && m_MonitorPanel != NULL) {
       long lpmon = m_MonitorPanel->GetLastPosition();
@@ -2511,11 +2513,11 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
         m_MonitorPanel->Remove(maxlen, lpmon-1);
       }
       m_MonitorPanel->SetDefaultStyle(wxTextAttr(*wxBLACK));
-      m_MonitorPanel->WriteText( wxString(text,wxConvUTF8) + wxT("\n") );
+      m_MonitorPanel->WriteText( now.FormatTime() + wxT(" ") + wxString(text,wxConvUTF8) + wxT("\n") );
     }
     else {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxBLUE));
-      m_WarningPanel->WriteText( wxString(text,wxConvUTF8) + wxT("\n") );
+      m_WarningPanel->WriteText( now.FormatTime() + wxT(" ") + wxString(text,wxConvUTF8) + wxT("\n") );
     }
     m_WarningPanel->Thaw();
     m_MonitorPanel->Thaw();
