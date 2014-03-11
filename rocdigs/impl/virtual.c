@@ -696,6 +696,46 @@ static void __stressRunner( void* threadinst ) {
 
 
 
+static void __sensorGenerator( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOVirtual virt = (iOVirtual)ThreadOp.getParm( th );
+  iOVirtualData data = Data(virt);
+
+  ThreadOp.sleep(5000);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Virtual sensor generator started." );
+
+  /* try to get the system status: */
+  while( data->run ) {
+    if( data->power ) {
+      int addr = rand() % 4000;
+      Boolean state = True;
+      iONode node = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+      wFeedback.setaddr(node, addr);
+      wFeedback.setstate( node, state);
+      wFeedback.setiid(node, data->iid);
+
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "generate fb addr=%d state=%s", addr, state?"true":"false" );
+      data->listenerFun( data->listenerObj, (iONode)NodeOp.base.clone( node ), TRCLEVEL_INFO );
+
+      {
+        iQCmd cmd = allocMem(sizeof(struct QCmd));
+        cmd->time  = SystemOp.getTick();
+        cmd->delay = wDigInt.getpsleep( data->ini ) / 10; /* ms -> ticks */
+        cmd->node  = node;
+        wFeedback.setstate( cmd->node, False );
+        ThreadOp.post( data->transactor, (obj)cmd );
+      }
+    }
+
+    ThreadOp.sleep(1000);
+  };
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Virtual sensor generator ended." );
+}
+
+
+
+
 /* VERSION: */
 static int vmajor = 2;
 static int vminor = 0;
@@ -738,6 +778,10 @@ static struct OVirtual* _inst( const iONode ini ,const iOTrace trc ) {
     ThreadOp.start( stressRunner );
   }
 
+  if( wDigInt.getprotver(ini) == 2 ) {
+    iOThread sensorGenerator = ThreadOp.inst( NULL, &__sensorGenerator, __Virtual );
+    ThreadOp.start( sensorGenerator );
+  }
 
   instCnt++;
   return __Virtual;
