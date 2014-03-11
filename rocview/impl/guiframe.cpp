@@ -2486,44 +2486,36 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
   if( m_bTraceWindow && m_WarningPanel != NULL ) {
     m_WarningPanel->Freeze();
     m_MonitorPanel->Freeze();
+    m_WarningPanel->SetInsertionPoint(0);
+    m_MonitorPanel->SetInsertionPoint(0);
+
     long lpwarn = m_WarningPanel->GetLastPosition();
     if( lpwarn > maxlen ) {
-      if( len+1 < lpwarn )
-        m_WarningPanel->Remove(0, len+1);
-      else
-        m_WarningPanel->Remove(0, lpwarn-1);
+      m_WarningPanel->Remove(maxlen, lpwarn-1);
     }
     if( level == TRCLEVEL_EXCEPTION ) {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxRED));
-      m_WarningPanel->AppendText( wxString(text,wxConvUTF8) + wxT("\n") );
-      m_WarningPanel->ScrollLines(1);
+      m_WarningPanel->WriteText( wxString(text,wxConvUTF8) + wxT("\n") );
     }
     else if( level == TRCLEVEL_WARNING ) {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxBLACK));
-      m_WarningPanel->AppendText( wxString(text,wxConvUTF8) + wxT("\n") );
-      m_WarningPanel->ScrollLines(1);
+      m_WarningPanel->WriteText( wxString(text,wxConvUTF8) + wxT("\n") );
     }
     else if( level == TRCLEVEL_CALC ) {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxBLUE));
-      m_WarningPanel->AppendText( wxString(text,wxConvUTF8) + wxT("\n") );
-      m_WarningPanel->ScrollLines(1);
+      m_WarningPanel->WriteText( wxString(text,wxConvUTF8) + wxT("\n") );
     }
     else if( level == TRCLEVEL_MONITOR && m_MonitorPanel != NULL) {
       long lpmon = m_MonitorPanel->GetLastPosition();
       if( lpmon > maxlen ) {
-        if( len+1 < lpmon )
-          m_MonitorPanel->Remove(0, len+1);
-        else
-          m_MonitorPanel->Remove(0, lpmon-1);
+        m_MonitorPanel->Remove(maxlen, lpmon-1);
       }
       m_MonitorPanel->SetDefaultStyle(wxTextAttr(*wxBLACK));
-      m_MonitorPanel->AppendText( wxString(text,wxConvUTF8) + wxT("\n") );
-      m_MonitorPanel->ScrollLines(1);
+      m_MonitorPanel->WriteText( wxString(text,wxConvUTF8) + wxT("\n") );
     }
     else {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxBLUE));
-      m_WarningPanel->AppendText( wxString(text,wxConvUTF8) + wxT("\n") );
-      m_MonitorPanel->ScrollLines(1);
+      m_WarningPanel->WriteText( wxString(text,wxConvUTF8) + wxT("\n") );
     }
     m_WarningPanel->Thaw();
     m_MonitorPanel->Thaw();
