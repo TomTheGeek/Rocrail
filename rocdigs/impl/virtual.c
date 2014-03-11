@@ -705,12 +705,12 @@ static void __sensorGenerator( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Virtual sensor generator started." );
 
   if( data->fbmod == 0 )
-    data->fbmod = 10;
+    data->fbmod = 1;
 
   /* try to get the system status: */
   while( data->run ) {
     if( data->power ) {
-      int addr = rand() % data->fbmod;
+      int addr = rand() % (data->fbmod * 8);
       addr += data->fboffset;
       Boolean state = True;
       iONode node = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
@@ -731,7 +731,7 @@ static void __sensorGenerator( void* threadinst ) {
       }
     }
 
-    ThreadOp.sleep(1000);
+    ThreadOp.sleep(wDigInt.gettimeout(data->ini));
   };
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Virtual sensor generator ended." );
