@@ -711,11 +711,13 @@ static void __sensorGenerator( void* threadinst ) {
   while( data->run ) {
     if( data->power ) {
       int addr = rand() % (data->fbmod * 8);
+      int load = rand() % 255;
       addr += data->fboffset;
       Boolean state = True;
       iONode node = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
       wFeedback.setaddr(node, addr);
       wFeedback.setstate( node, state);
+      wFeedback.setload( node, load);
       wFeedback.setiid(node, data->iid);
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "generate fb addr=%d state=%s", addr, state?"true":"false" );
@@ -725,6 +727,7 @@ static void __sensorGenerator( void* threadinst ) {
         iQCmd cmd = allocMem(sizeof(struct QCmd));
         cmd->time  = SystemOp.getTick();
         cmd->delay = wDigInt.getpsleep( data->ini ) / 10; /* ms -> ticks */
+        wFeedback.setload( node, 0);
         cmd->node  = node;
         wFeedback.setstate( cmd->node, False );
         ThreadOp.post( data->transactor, (obj)cmd );
