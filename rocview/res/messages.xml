@@ -27493,4 +27493,7 @@
   <Msg id="monitordontwrap">
     <en txt="Monitor don't wrap"/>
   </Msg>
+  <Msg id="subject">
+    <en txt="Subject"/>
+  </Msg>
 </Messages>
