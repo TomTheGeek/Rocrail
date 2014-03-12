@@ -114,7 +114,7 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
     gc->SetBrush( *wxWHITE_BRUSH );
   else
     gc->SetBrush( pressedDown ? *wxGREY_BRUSH:(ON?wxBrush(wxColour(255,200,200)):(useLED?wxBrush(wxColour(200,255,200)):*wxLIGHT_GREY_BRUSH)) );
-  gc->DrawRoundedRectangle(1, 1, buttonWidth-2, buttonHeight-2, 5.0);
+  //gc->DrawRoundedRectangle(1, 1, buttonWidth-2, buttonHeight-2, 5.0);
   gc->DrawRoundedRectangle(0, 0, buttonWidth-2, buttonHeight-2, 5.0);
 
   if( useLED && ON) {
@@ -145,6 +145,7 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
       double height;
       double descent;
       double externalLeading;
+      gc->Clip(0, 0, buttonWidth-2, buttonHeight-2);
       gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
       int border = (w*10)/100;
       if( width > (w-border) ) {
@@ -163,6 +164,7 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
         }
       }
       gc->DrawText( text, (buttonWidth-width)/2, (buttonHeight-height)/2 );
+      gc->ResetClip();
     }
   }
   delete gc;
