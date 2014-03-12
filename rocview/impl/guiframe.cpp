@@ -2087,6 +2087,8 @@ void RocGuiFrame::initFrame() {
 
 
   // Create tool bar
+  Boolean l_Expired = SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
+      StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL, wGlobal.vmajor, wGlobal.vminor);
   bool l_useDisableIcons = false;
   if( SystemOp.isWindows() ) {
     l_useDisableIcons = true;
@@ -2109,6 +2111,8 @@ void RocGuiFrame::initFrame() {
   m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), *_img_stopall_32, l_useDisableIcons?*_img_stopall_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getMsg("ebreak") );
 
   m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), *_img_operator_32, l_useDisableIcons?*_img_operator_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("operator") );
+  if( !l_Expired )
+    m_ToolBar->AddTool(ME_RocPro, _T("RocPro"), *_img_rocpro_32, wxNullBitmap, wxITEM_NORMAL );
   m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), *_img_mic_32, l_useDisableIcons?*_img_mic_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("mic") );
   m_ToolBar->AddTool(ME_LcDlg, wxGetApp().getMsg("locctrl"), *_img_locctrl_32, l_useDisableIcons?*_img_locctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("locctrl") );
   m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), *_img_swctrl_32, l_useDisableIcons?*_img_swctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("swctrl") );
