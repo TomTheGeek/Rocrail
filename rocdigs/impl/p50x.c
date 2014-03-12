@@ -603,7 +603,7 @@ static Boolean __getversion( iOP50x inst ) {
       if( bAvail > 0 && bAvail < 32 )
         SerialOp.read( data->serial, (char*)in, bAvail );
       if( bAvail == 1 ) {
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Wrong protocol syntax detected! Set the interface syntax to 6050 & IB." );
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Wrong protocol syntax detected! Set the interface syntax to 6050 & IB. (SO2=2)" );
         MutexOp.post( data->mux );
         return False;
       }
