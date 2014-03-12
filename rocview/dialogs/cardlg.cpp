@@ -209,6 +209,8 @@ void CarDlg::initLabels() {
   m_labSubtype->SetLabel( wxGetApp().getMsg( "subtype" ) );
   m_labLength->SetLabel( wxGetApp().getMsg( "length" ) );
   m_labWeight->SetLabel( wxGetApp().getMsg( "weight" ) );
+  m_labWeightEmpty->SetLabel( wxGetApp().getMsg( "empty" ) );
+  m_labWeightLoaded->SetLabel( wxGetApp().getMsg( "loaded" ) );
   m_labManuId->SetLabel( wxGetApp().getMsg( "manufactured_ID" ) );
   m_labRemark->SetLabel( wxGetApp().getMsg( "remark" ) );
   m_labVMax->SetLabel( wxGetApp().getMsg( "v_max" ) );
