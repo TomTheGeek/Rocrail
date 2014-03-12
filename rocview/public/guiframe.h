@@ -273,6 +273,7 @@ public:
   void OnPowerEvent(wxCommandEvent& event);
 
   void Zoom(int zoom );
+  void OnZoomX(wxCommandEvent& event);
   void OnZoom25(wxCommandEvent& event);
   void OnZoom50(wxCommandEvent& event);
   void OnZoom75(wxCommandEvent& event);
@@ -592,6 +593,7 @@ enum
     ME_RocrailIni,
     ME_PowerEvent,
     ME_RocguiIni,
+    ME_ZoomX,
     ME_Zoom25,
     ME_Zoom50,
     ME_Zoom75,

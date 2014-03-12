@@ -338,6 +338,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_BiDiB          , RocGuiFrame::OnBiDiB)
     EVT_MENU( ME_RocNet         , RocGuiFrame::OnRocNet)
     EVT_MENU( ME_RocPro         , RocGuiFrame::OnRocPro)
+    EVT_MENU( ME_ZoomX          , RocGuiFrame::OnZoomX)
     EVT_MENU( ME_Zoom25         , RocGuiFrame::OnZoom25)
     EVT_MENU( ME_Zoom50         , RocGuiFrame::OnZoom50)
     EVT_MENU( ME_Zoom75         , RocGuiFrame::OnZoom75)
@@ -1940,6 +1941,7 @@ void RocGuiFrame::initFrame() {
   menuZoom->AppendCheckItem( ME_Zoom50, _T("50%") );
   menuZoom->AppendCheckItem( ME_Zoom75, _T("75%") );
   menuZoom->AppendCheckItem( ME_Zoom100, _T("100%") );
+  menuZoom->Append( ME_ZoomX, wxGetApp().getMenu("zoom") + wxT("..."), wxGetApp().getTip("zoom") );
 
   wxMenu *menuView = new wxMenu();
 
@@ -2120,10 +2122,7 @@ void RocGuiFrame::initFrame() {
   m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), *_img_routes_32, l_useDisableIcons?*_img_routes_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stctrl") );
 
   m_ScaleComboBox = NULL;
-  if( SystemOp.isWindows() && wGui.isverticaltoolbar(m_Ini) ) {
-    // Windows cannot handle a combobox in case of a vertical toolbar.
-  }
-  else {
+  if( !wGui.isverticaltoolbar(m_Ini) ) {
     m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(60,-1), 0, NULL, wxTE_PROCESS_ENTER );
     m_ScaleComboBox->Append(_T("10"));
     m_ScaleComboBox->Append(_T("20"));
@@ -3098,6 +3097,13 @@ void RocGuiFrame::OnCtrlMode( wxCommandEvent& event ) {
 }
 
 
+void RocGuiFrame::OnZoomX( wxCommandEvent& event ) {
+  wxTextEntryDialog* dlg = new wxTextEntryDialog(this, wxGetApp().getTip("zoom"), wxGetApp().getMsg("zoom"), wxString::Format(wxT("%d"), (int)(m_Scale*100)) );
+  if( wxID_OK == dlg->ShowModal() ) {
+    Zoom(atoi(dlg->GetValue().mb_str(wxConvUTF8)));
+  }
+  dlg->Destroy();
+}
 void RocGuiFrame::OnZoom25( wxCommandEvent& event ) {
   Zoom(25);
 }
