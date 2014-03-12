@@ -3100,7 +3100,9 @@ void RocGuiFrame::OnCtrlMode( wxCommandEvent& event ) {
 void RocGuiFrame::OnZoomX( wxCommandEvent& event ) {
   wxTextEntryDialog* dlg = new wxTextEntryDialog(this, wxGetApp().getTip("zoom"), wxGetApp().getMsg("zoom"), wxString::Format(wxT("%d"), (int)(m_Scale*100)) );
   if( wxID_OK == dlg->ShowModal() ) {
-    Zoom(atoi(dlg->GetValue().mb_str(wxConvUTF8)));
+    int l_Zoom = atoi(dlg->GetValue().mb_str(wxConvUTF8));
+    if( l_Zoom >= 10 && l_Zoom <= 250 )
+      Zoom(l_Zoom);
   }
   dlg->Destroy();
 }
