@@ -126,7 +126,7 @@ void Slider::OnPaint(wxPaintEvent& WXUNUSED(event))
     gc->DrawRoundedRectangle(Width/2-2, ThumbHeight/2, 4, Height-ThumbHeight, 1.0);
 
     //gc->DrawRoundedRectangle(2+1, ThumbPos+3, Width-4, ThumbHeight-4, 5.0);
-    gc->DrawRoundedRectangle(2+0, ThumbPos+2, Width-4, ThumbHeight-4, 5.0);
+    gc->DrawRoundedRectangle(2+0, ThumbPos+2, Width-4, ThumbHeight-4, 3.0);
 
     wxGraphicsPath path = gc->CreatePath();
     path.MoveToPoint(4, ThumbPos+5);
