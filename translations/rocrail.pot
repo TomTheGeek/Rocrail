@@ -6947,3 +6947,9 @@ msgstr ""
 msgid "Subject"
 msgstr ""
 
+#. 
+# id="nrcars"
+#, c-format
+msgid "Nr. of cars"
+msgstr ""
+

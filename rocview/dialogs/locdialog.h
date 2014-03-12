@@ -76,7 +76,6 @@ class wxGrid;
 #define wxID_STATIC_DESCRIPTION 10018
 #define ID_TEXTCTRL_DESCRIPTION 10006
 #define wxID_STATIC_LENGTH 10019
-#define ID_TEXTCTRL_LENGTH 10007
 #define wxID_STATIC_CATALOGNR 10020
 #define ID_TEXTCTRL_CATALOGNR 10008
 #define ID_BUTTON_SHOWDOC 10391
@@ -355,9 +354,11 @@ public:
     wxTextCtrl* m_Description;
     wxStaticText* m_labImageName;
     wxTextCtrl* m_ImageName;
+    wxStaticText* m_labImageNr;
     wxSpinCtrl* m_ImageNr;
     wxStaticText* m_Label_Length;
-    wxTextCtrl* m_Length;
+    wxSpinCtrl* m_Length;
+    wxStaticText* m_labNrCars;
     wxSpinCtrl* m_NrCars;
     wxStaticText* m_Label_CatalogNr;
     wxTextCtrl* m_CatNr;

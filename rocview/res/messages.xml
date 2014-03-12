@@ -27496,4 +27496,7 @@
   <Msg id="subject">
     <en txt="Subject"/>
   </Msg>
+  <Msg id="nrcars">
+    <en txt="Nr. of cars"/>
+  </Msg>
 </Messages>
