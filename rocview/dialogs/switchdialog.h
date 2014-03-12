@@ -128,6 +128,7 @@ class wxSpinCtrl;
 #define ID_PANEL_SWITCH_CONTROL 10370
 #define ID_PANEL_SWITCH_FROG 10244
 #define ID_FROG_ACCESSORY 10049
+#define ID_SW_TRACKDRIVER 10323
 #define SYMBOL_SWITCHDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_SWITCHDIALOG_TITLE _("Turnouts")
 #define SYMBOL_SWITCHDIALOG_IDNAME ID_DIALOG_SW
@@ -323,14 +324,6 @@ public:
     wxCheckBox* m_SyncDelay;
     wxCheckBox* m_Accessory;
     wxRadioBox* m_PortType;
-    wxStaticBox* m_TrackDriverBox;
-    wxStaticText* m_labTrackDriverIID;
-    wxTextCtrl* m_TrackDriverIID;
-    wxStaticText* m_labTrackDriverAddr;
-    wxTextCtrl* m_TrackDriverAddr;
-    wxStaticText* m_labTrackDriverPort;
-    wxTextCtrl* m_TrackDriverPort;
-    wxCheckBox* m_TrackDriverEnable;
     wxPanel* m_WireringPanel;
     wxStaticBox* m_WiringBox;
     wxStaticText* m_LabelFb1R;
@@ -428,6 +421,14 @@ public:
     wxCheckBox* m_FrogAsSwitch;
     wxCheckBox* m_FrogAccessory;
     wxRadioBox* m_FrogPortType;
+    wxPanel* m_TrackdriverPanel;
+    wxStaticText* m_labTrackDriverIID;
+    wxTextCtrl* m_TrackDriverIID;
+    wxStaticText* m_labTrackDriverAddr;
+    wxTextCtrl* m_TrackDriverAddr;
+    wxStaticText* m_labTrackDriverPort;
+    wxTextCtrl* m_TrackDriverPort;
+    wxCheckBox* m_TrackDriverEnable;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;
