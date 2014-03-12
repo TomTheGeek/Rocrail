@@ -17205,7 +17205,7 @@
     <fi txt="Kuljettajat"/>
     <pl txt="Stół operatora"/>
   </Msg>
-  <Msg id="operator">
+  <Msg id="operator" dialog="true">
     <en txt="Operator"/>
     <cs txt="Operátor"/>
     <hu txt="Kezelő"/>
@@ -26462,7 +26462,7 @@
     <en_AU txt="Preview"/>
     <en_CA txt="Preview"/>
   </Msg>
-  <Msg id="sensormonitor">
+  <Msg id="sensormonitor" dialog="true">
     <en txt="Sensor monitor"/>
     <sr_latin txt="Monitor senzora"/>
     <nl txt="Melder monitor"/>

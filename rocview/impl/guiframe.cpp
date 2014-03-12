@@ -1998,17 +1998,10 @@ void RocGuiFrame::initFrame() {
   menuMGV->Append( ME_MGV141, _T("GCA141") + wxString(_T("...")), _T("GCA141") );
   menuProgramming->Append( -1, _T("GCA"), menuMGV );
 
-  //wxMenu *menuPTDCC = new wxMenu();
-  //menuPTDCC->Append( ME_OpenDecoder, wxGetApp().getMenu("opendecoder"), wxGetApp().getTip("opendecoder") );
-  //menuProgramming->Append( -1, _T("NMRA DCC"), menuPTDCC );
-
-  //wxMenu *menuCBus = new wxMenu();
-  //menuCBus->Append( ME_CBusNode, _T("CBUS Node"), _T("CBUS Node") );
-  //menuProgramming->Append( -1, _T("CBUS"), menuCBus );
-  menuProgramming->Append( ME_CBusNode, _T("CBUS Node"), _T("CBUS Node") );
-  menuProgramming->Append( ME_BiDiB, _T("BiDiB"), _T("BiDiB") );
-  menuProgramming->Append( ME_RocNet, _T("RocNet"), _T("RocNet") );
-  menuProgramming->Append( ME_RocPro, _T("RocPro"), _T("RocPro") );
+  menuProgramming->Append( ME_CBusNode, _T("CBUS..."), _T("CBUS Nodes") );
+  menuProgramming->Append( ME_BiDiB, _T("BiDiB..."), _T("BiDiB Nodes") );
+  menuProgramming->Append( ME_RocNet, _T("RocNet..."), _T("RocNet Nodes") );
+  menuProgramming->Append( ME_RocPro, _T("RocPro..."), _T("RocPro Decoder Programming") );
 
   // the "About" item should be in the help menu
   wxMenu *menuHelp = new wxMenu();
