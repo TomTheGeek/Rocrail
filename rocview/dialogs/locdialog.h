@@ -378,6 +378,7 @@ public:
     wxStaticText* m_labMTime;
     wxTextCtrl* m_MTime;
     wxCheckBox* m_UseShortID;
+    wxStaticText* m_labThrottleNr;
     wxSpinCtrl* m_ThrottleNr;
     wxButton* m_Serviced;
     wxStaticText* m_labMInt;

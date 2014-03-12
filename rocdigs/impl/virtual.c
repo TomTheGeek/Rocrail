@@ -334,7 +334,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     int  spcnt = wLoc.getspcnt( node );
 
     if( StrOp.equals( wLoc.shortid, wLoc.getcmd(node) ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "shortID=[%s]", wLoc.getshortid(node) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "shortID=[%s] on throttle %d", wLoc.getshortid(node), wLoc.getthrottlenr(node) );
     }
     else {
       if( wLoc.getV( node ) != -1 ) {
@@ -422,6 +422,9 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     }
     else if( StrOp.equals( cmd, wSysCmd.ebreak ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency break" );
+    }
+    else if( StrOp.equals( cmd, wSysCmd.clearshortids ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cleart short IDs on the throttle" );
     }
     else if( StrOp.equals( cmd, wSysCmd.txshortids ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "send short IDs to the throttle" );
