@@ -20,9 +20,23 @@
 #include "rocdigs/impl/zimocan_impl.h"
 #include "rocdigs/impl/zimocan/udp.h"
 
+#include "rocs/public/trace.h"
+#include "rocs/public/mem.h"
+#include "rocs/public/str.h"
+#include "rocs/public/strtok.h"
+#include "rocs/public/thread.h"
+#include "rocs/public/serial.h"
+#include "rocs/public/system.h"
+
+#include "rocrail/wrapper/public/DigInt.h"
+
+
 
 Boolean UDPConnect( obj inst ) {
   iOZimoCANData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "host    = %s", wDigInt.gethost( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "port    = %d", wDigInt.getport( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   return True;
 }
 

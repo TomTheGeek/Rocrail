@@ -117,6 +117,7 @@ XPRESSNETOBJS=$(patsubst impl/xpressnet/%.c,$(TMPOUTDIR)/xpressnet/%.o,$(wildcar
 BIDIBOBJS=$(patsubst impl/bidib/%.c,$(TMPOUTDIR)/bidib/%.o,$(wildcard impl/bidib/*.c))
 CBUSOBJS=$(patsubst impl/cbus/%.c,$(TMPOUTDIR)/cbus/%.o,$(wildcard impl/cbus/*.c))
 SRCPOBJS=$(patsubst impl/srcp/%.c,$(TMPOUTDIR)/srcp/%.o,$(wildcard impl/srcp/*.c))
+ZIMOCANOBJS=$(patsubst impl/zimocan/%.c,$(TMPOUTDIR)/zimocan/%.o,$(wildcard impl/zimocan/*.c))
 
 all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX) $(OUTDIR)$(FS)hsi88$(SHAREDSUFFIX) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)roco$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimo$(SHAREDSUFFIX) $(OUTDIR)$(FS)dinamo$(SHAREDSUFFIX) $(OUTDIR)$(FS)om32$(SHAREDSUFFIX) \
@@ -217,8 +218,8 @@ $(OUTDIR)$(FS)xnmm$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)xnmm.o $(COMMONOBJS) $(RRLIB
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)xnmm$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)xnmm.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)rocomp$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)rocomp.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)rocomp$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)rocomp.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
-$(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)zimocan.o $(COMMONOBJS) $(RRLIBS)
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)zimocan.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX): $(ZIMOCANOBJS) $(TMPOUTDIR)$(FS)zimocan.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)zimocan.o $(ZIMOCANOBJS) $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -256,6 +257,9 @@ $(TMPOUTDIR)/bidib/%.o: impl/bidib/%.c
 $(TMPOUTDIR)/srcp/%.o: impl/srcp/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
 	
+$(TMPOUTDIR)/zimocan/%.o: impl/zimocan/%.c
+	$(CPP) $(CC_FLAGS) $< -o $@
+	
 clean:
 	-$(MKDIR) $(OUTDIR)
 	-$(MKDIR) $(TMPOUTDIR)$(FS)ddx
@@ -269,6 +273,7 @@ clean:
 	-$(MKDIR) $(TMPOUTDIR)$(FS)bidib
 	-$(MKDIR) $(TMPOUTDIR)$(FS)cbus
 	-$(MKDIR) $(TMPOUTDIR)$(FS)srcp
+	-$(MKDIR) $(TMPOUTDIR)$(FS)zimocan
 	-$(MKDIR) $(GENDIR)$(FS)rocdigs
 	-$(REMOVE) $(TMPOUTDIR)$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)ddx$(FS)*.o
@@ -282,6 +287,7 @@ clean:
 	-$(REMOVE) $(TMPOUTDIR)$(FS)cbus$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)nmra$(FS)*.o
 	-$(REMOVE) $(TMPOUTDIR)$(FS)srcp$(FS)*.o
+	-$(REMOVE) $(TMPOUTDIR)$(FS)zimocan$(FS)*.o
 	-$(REMOVE) $(OUTDIR)$(FS)p50$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)p50x$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)srcp$(SHAREDSUFFIX)

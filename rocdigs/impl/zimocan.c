@@ -30,6 +30,9 @@
 
 #include "rocrail/wrapper/public/DigInt.h"
 
+#include "rocdigs/impl/zimocan/serial.h"
+#include "rocdigs/impl/zimocan/udp.h"
+
 static int instCnt = 0;
 
 /** ----- OBase ----- */
@@ -168,6 +171,26 @@ static struct OZimoCAN* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid    = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib = %s", wDigInt.getsublib( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+
+  /* choose interface: */
+  if( StrOp.equals( wDigInt.sublib_udp, wDigInt.getsublib( ini ) ) ) {
+    /* serial */
+    data->subConnect    = UDPConnect;
+    data->subDisconnect = UDPDisconnect;
+    data->subRead       = UDPRead;
+    data->subWrite      = UDPWrite;
+    data->subAvailable  = UDPAvailable;
+  }
+  else  {
+    /* serial */
+    data->subConnect    = SerialConnect;
+    data->subDisconnect = SerialDisconnect;
+    data->subRead       = SerialRead;
+    data->subWrite      = SerialWrite;
+    data->subAvailable  = SerialAvailable;
+  }
+
+  data->connOK = data->subConnect((obj)__ZimoCAN);
 
   instCnt++;
   return __ZimoCAN;

@@ -30,9 +30,9 @@ Boolean SerialConnect( obj inst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
-  SerialOp.setFlow( data->serialCon, cts );
-  SerialOp.setLine( data->serialCon, wDigInt.getbps( data->ini ), 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
-  SerialOp.setTimeout( data->serialCon, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
+  SerialOp.setFlow( data->serial, cts );
+  SerialOp.setLine( data->serial, wDigInt.getbps( data->ini ), 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
+  SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 
   if( SerialOp.open( data->serial ) ) {
     return True;
