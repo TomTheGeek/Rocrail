@@ -125,7 +125,9 @@ void Slider::OnPaint(wxPaintEvent& WXUNUSED(event))
     // make a path that contains a circle and some lines
     gc->DrawRoundedRectangle(Width/2-2, ThumbHeight/2, 4, Height-ThumbHeight, 1.0);
 
-    gc->SetBrush( Drag?wxBrush(wxColour(255,200,200)):wxBrush(wxColour(230,230,230)) );
+    int red   = (55 * GetValue()) / 100;
+    int green = (55 * (100 - GetValue()) ) / 100;
+    gc->SetBrush( Drag?wxBrush(wxColour(200+red,200+green,200)):wxBrush(wxColour(230,230,230)) );
     //gc->DrawRoundedRectangle(2+1, ThumbPos+3, Width-4, ThumbHeight-4, 5.0);
     gc->DrawRoundedRectangle(2+0, ThumbPos+2, Width-4, ThumbHeight-4, 3.0);
 
