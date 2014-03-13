@@ -29,6 +29,22 @@
 #include "rocs/public/system.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/SysCmd.h"
+#include "rocrail/wrapper/public/Command.h"
+#include "rocrail/wrapper/public/FunCmd.h"
+#include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Signal.h"
+#include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Response.h"
+#include "rocrail/wrapper/public/FbInfo.h"
+#include "rocrail/wrapper/public/FbMods.h"
+#include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/Accessory.h"
+#include "rocrail/wrapper/public/Clock.h"
+#include "rocrail/wrapper/public/Text.h"
 
 #include "rocdigs/impl/zimocan/serial.h"
 #include "rocdigs/impl/zimocan/udp.h"
@@ -90,10 +106,50 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OZimoCAN ----- */
 
+static iONode __translate( iOZimoCAN inst, iONode node ) {
+  iOZimoCANData data = Data(inst);
+  iONode rsp = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "translate: %s", NodeOp.getName( node ) );
+
+  if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
+  }
+
+  /* System command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
+    const char* cmdstr = wSysCmd.getcmd( node );
+    if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
+      /* CS off */
+      byte* cmd = allocMem(32);
+      cmd[0] = 13;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power OFF" );
+      ThreadOp.post(data->writer, (obj)cmd);
+    }
+
+    else if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
+      /* CS on */
+      byte* cmd = allocMem(32);
+      cmd[0] = 13;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power ON" );
+      ThreadOp.post(data->writer, (obj)cmd);
+    }
+  }
+
+  return rsp;
+}
+
 
 /**  */
 static iONode _cmd( obj inst ,const iONode cmd ) {
-  return 0;
+  iOZimoCANData data = Data(inst);
+  iONode rsp = NULL;
+
+  if( cmd != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "zimocan cmd = %s", NodeOp.getName(cmd) );
+    rsp = __translate( (iOZimoCAN)inst, cmd );
+    cmd->base.del(cmd);
+  }
+  return rsp;
 }
 
 
@@ -105,7 +161,9 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
-  return;
+  iOZimoCANData data = Data(inst);
+  data->run = False;
+  ThreadOp.sleep(100);
 }
 
 
@@ -152,6 +210,63 @@ static int _version( obj inst ) {
 }
 
 
+static void __reader( void* threadinst ) {
+  iOThread      th      = (iOThread)threadinst;
+  iOZimoCAN     zimocan = (iOZimoCAN)ThreadOp.getParm( th );
+  iOZimoCANData data    = Data(zimocan);
+  byte msg[256];
+  int size = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ZimoCAN reader started." );
+
+  while( data->run ) {
+    if( !data->subAvailable( (obj)zimocan) ) {
+      ThreadOp.sleep( 10 );
+      continue;
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CAN message available" );
+    }
+
+    size = data->subRead( (obj)zimocan, msg );
+    ThreadOp.sleep(10);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ZimoCAN reader ended." );
+}
+
+
+static void __writer( void* threadinst ) {
+  iOThread      th      = (iOThread)threadinst;
+  iOZimoCAN     zimocan = (iOZimoCAN)ThreadOp.getParm( th );
+  iOZimoCANData data    = Data(zimocan);
+  byte msg[256];
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ZimoCAN writer started." );
+
+  while( data->run ) {
+    byte * post = NULL;
+    int len = 0;
+
+    post = (byte*)ThreadOp.getPost( th );
+
+    if (post != NULL) {
+      /* first byte is the message length */
+      len = post[0];
+      MemOp.copy( msg, post+1, len);
+      freeMem( post);
+      if( data->subWrite((obj)zimocan, msg, len) ) {
+
+      }
+    }
+
+    ThreadOp.sleep(10);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ZimoCAN writer ended." );
+}
+
+
 /**  */
 static struct OZimoCAN* _inst( const iONode ini ,const iOTrace trc ) {
   iOZimoCAN __ZimoCAN = allocMem( sizeof( struct OZimoCAN ) );
@@ -173,15 +288,7 @@ static struct OZimoCAN* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   /* choose interface: */
-  if( StrOp.equals( wDigInt.sublib_udp, wDigInt.getsublib( ini ) ) ) {
-    /* serial */
-    data->subConnect    = UDPConnect;
-    data->subDisconnect = UDPDisconnect;
-    data->subRead       = UDPRead;
-    data->subWrite      = UDPWrite;
-    data->subAvailable  = UDPAvailable;
-  }
-  else  {
+  if( StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib( ini ) ) ) {
     /* serial */
     data->subConnect    = SerialConnect;
     data->subDisconnect = SerialDisconnect;
@@ -189,8 +296,24 @@ static struct OZimoCAN* _inst( const iONode ini ,const iOTrace trc ) {
     data->subWrite      = SerialWrite;
     data->subAvailable  = SerialAvailable;
   }
+  else  {
+    /* UDP */
+    data->subConnect    = UDPConnect;
+    data->subDisconnect = UDPDisconnect;
+    data->subRead       = UDPRead;
+    data->subWrite      = UDPWrite;
+    data->subAvailable  = UDPAvailable;
+  }
 
   data->connOK = data->subConnect((obj)__ZimoCAN);
+  data->run = True;
+
+  data->reader = ThreadOp.inst( "zcanreader", &__reader, __ZimoCAN );
+  ThreadOp.start( data->reader );
+
+  data->writer = ThreadOp.inst( "zcanwriter", &__writer, __ZimoCAN );
+  ThreadOp.start( data->writer );
+
 
   instCnt++;
   return __ZimoCAN;

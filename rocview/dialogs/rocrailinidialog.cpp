@@ -627,6 +627,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.z21, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.zimo, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.zimobin, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.zimocan, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.zs2, wxConvUTF8 ) );
 
   m_Lib->SetSelection( 0 );
@@ -2071,6 +2072,8 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   else if( StrOp.equals( wDigInt.loconet, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new LocoNetCtrlDlg(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.ecos, wDigInt.getlib( m_Controller ) ) )
+    m_CSDialog = new ECoSCtrlDialog(this,m_Controller,devices);
+  else if( StrOp.equals( wDigInt.zimocan, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new ECoSCtrlDialog(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.opendcc, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new OpenDCCCtrlDlg(this,m_Controller, devices);
