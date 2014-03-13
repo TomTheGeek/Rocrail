@@ -110,7 +110,7 @@ void Slider::OnPaint(wxPaintEvent& WXUNUSED(event))
     wxPen pen( wxColour(100, 100, 100), wxSOLID );
     pen.SetWidth(1);
     gc->SetPen( pen );
-    gc->SetBrush( *wxLIGHT_GREY_BRUSH );
+    gc->SetBrush( wxBrush(wxColour(230,230,230)) );
 
     double tick = (double)ThumbRange / 10.0;
     for( int i = 0; i < 10; i++ ) {
@@ -125,6 +125,7 @@ void Slider::OnPaint(wxPaintEvent& WXUNUSED(event))
     // make a path that contains a circle and some lines
     gc->DrawRoundedRectangle(Width/2-2, ThumbHeight/2, 4, Height-ThumbHeight, 1.0);
 
+    gc->SetBrush( Drag?wxBrush(wxColour(255,200,200)):wxBrush(wxColour(230,230,230)) );
     //gc->DrawRoundedRectangle(2+1, ThumbPos+3, Width-4, ThumbHeight-4, 5.0);
     gc->DrawRoundedRectangle(2+0, ThumbPos+2, Width-4, ThumbHeight-4, 3.0);
 

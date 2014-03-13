@@ -113,7 +113,7 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
   if(textOnly)
     gc->SetBrush( *wxWHITE_BRUSH );
   else
-    gc->SetBrush( pressedDown ? *wxGREY_BRUSH:(ON?wxBrush(wxColour(255,200,200)):(useLED?wxBrush(wxColour(200,255,200)):*wxLIGHT_GREY_BRUSH)) );
+    gc->SetBrush( pressedDown ? *wxGREY_BRUSH:(ON?wxBrush(wxColour(255,200,200)):(useLED?wxBrush(wxColour(200,255,200)):wxBrush(wxColour(230,230,230)))) );
   //gc->DrawRoundedRectangle(1, 1, buttonWidth-2, buttonHeight-2, 5.0);
   gc->DrawRoundedRectangle(0, 0, buttonWidth-2, buttonHeight-2, 3.0);
 
