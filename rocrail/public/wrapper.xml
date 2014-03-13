@@ -464,6 +464,7 @@
       <const name="z21" vt="string" val="z21"/>
       <const name="xnmm" vt="string" val="xnmm"/>
       <const name="rocomp" vt="string" val="rocomp"/>
+      <const name="zimocan" vt="string" val="zimocan"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>

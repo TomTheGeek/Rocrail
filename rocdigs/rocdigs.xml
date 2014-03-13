@@ -1746,4 +1746,28 @@
     </data>
   </object>
 
+  <object name="ZimoCAN" interface="$../rocint/rocint.xml:DigInt" use="node,serial,socket,trace,thread" include="$rocint/public/digint">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="const iONode" remark="Ini node"/>
+      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
+    </fun>
+    <data>
+      <var name="ini" vt="iONode"/>
+      <var name="iid" vt="const char*"/>
+      <var name="run" vt="Boolean"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="writer" vt="iOThread"/>
+      <var name="listenerObj" vt="obj"/>
+      <var name="listenerFun" vt="digint_listener"/>
+      <var name="serial" vt="iOSerial"/>
+      <var name="socket" vt="iOSocket"/>
+      <var name="serialmux" vt="iOMutex"/>
+      <var name="subConnect" vt="sublib_connect"/>
+      <var name="subDisconnect" vt="sublib_disconnect"/>
+      <var name="subRead" vt="sublib_read"/>
+      <var name="subWrite" vt="sublib_write"/>
+      <var name="subAvailable" vt="sublib_available"/>
+    </data>
+  </object>
+
 </Project>
