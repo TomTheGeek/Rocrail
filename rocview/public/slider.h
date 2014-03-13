@@ -52,7 +52,7 @@ public:
     void SetValue(int value, bool force=false);
     int GetValue();
     void SetRange(int minValue, int maxValue);
-    void moveThumb();
+    void moveThumb(bool forceRefresh=false);
     void OnPaint(wxPaintEvent& event);
 
     // some useful events

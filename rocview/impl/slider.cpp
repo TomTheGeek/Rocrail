@@ -125,8 +125,9 @@ void Slider::OnPaint(wxPaintEvent& WXUNUSED(event))
     // make a path that contains a circle and some lines
     gc->DrawRoundedRectangle(Width/2-2, ThumbHeight/2, 4, Height-ThumbHeight, 1.0);
 
-    int red   = (55 * GetValue()) / 100;
-    int green = (55 * (100 - GetValue()) ) / 100;
+    int range = Max - Min;
+    int red   = (55 * GetValue()) / range;
+    int green = (55 * (range - GetValue()) ) / range;
     gc->SetBrush( Drag?wxBrush(wxColour(200+red,200+green,200)):wxBrush(wxColour(230,230,230)) );
     //gc->DrawRoundedRectangle(2+1, ThumbPos+3, Width-4, ThumbHeight-4, 5.0);
     gc->DrawRoundedRectangle(2+0, ThumbPos+2, Width-4, ThumbHeight-4, 3.0);
@@ -246,7 +247,7 @@ void Slider::mouseReleased(wxMouseEvent& event)
 {
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "mouseReleased");
   Drag = false;
-  moveThumb();
+  moveThumb(true);
 }
 void Slider::mouseLeftWindow(wxMouseEvent& event)
 {
@@ -321,7 +322,7 @@ void Slider::keyPressed(wxKeyEvent& event) {
   moveThumb();
 }
 
-void Slider::moveThumb() {
+void Slider::moveThumb(bool forceRefresh) {
   if( ThumbPos < 0 )
     ThumbPos = 0;
   if( ThumbPos > ThumbRange )
@@ -338,6 +339,8 @@ void Slider::moveThumb() {
     wxPostEvent( Parent, cmdevent);
   }
   else {
+    if( forceRefresh )
+      Refresh(true);
     TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "PrevThumbPos = ThumbPos %d", ThumbPos);
   }
 }
