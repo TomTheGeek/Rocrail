@@ -1773,7 +1773,8 @@
       <var name="subWrite" vt="sublib_write"/>
       <var name="subAvailable" vt="sublib_available"/>
       <var name="connOK" vt="Boolean"/>
-    </data>
+      <var name="connAck" vt="Boolean"/>
+      </data>
   </object>
 
 </Project>
