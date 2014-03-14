@@ -148,6 +148,7 @@
       <var name="tl_monitor" vt="Boolean"/>
       <var name="i2cmux" vt="iOMutex"/>
       <var name="startofday" vt="Boolean"/>
+      <var name="adcstartofday" vt="Boolean"/>
       <var name="LED1" vt="int"/>
       <var name="LED2" vt="int"/>
       <var name="PB1" vt="int"/>

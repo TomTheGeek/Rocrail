@@ -1239,6 +1239,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
 
   case RN_STATIONARY_STARTOFDAY:
     data->startofday = True;
+    data->adcstartofday = True;
     break;
 
   case RN_STATIONARY_SHUTDOWN:
@@ -1916,6 +1917,7 @@ static void __adcsensorscanner( void* threadinst ) {
   byte baseadc = 0x48;
   int idx = 0;
   byte ctrl = 0x40;
+  Boolean startofday = False;
 
   ThreadOp.sleep(1000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ADC Sensor scanner started" );
@@ -1946,7 +1948,7 @@ static void __adcsensorscanner( void* threadinst ) {
           if( value > data->adcthreshold )
             inputON = True;
 
-          if( value > data->adcthreshold && data->adcsensorvalue[idx*4+port] == 0) {
+          if( value > data->adcthreshold && ( startofday || data->adcsensorvalue[idx*4+port] == 0) ) {
             /* report on */
             data->adcsensorvalue[idx*4+port] = value;
             __reportADCSensor(rocnetnode, idx*4+port, True, value );
@@ -1956,7 +1958,7 @@ static void __adcsensorscanner( void* threadinst ) {
             data->adcsensorvalue[idx*4+port] = value;
             __reportADCSensor(rocnetnode, idx*4+port, True, value );
           }
-          else if( value < data->adcthreshold && data->adcsensorvalue[idx*4+port] > 0) {
+          else if( value < data->adcthreshold && (startofday || data->adcsensorvalue[idx*4+port] > 0) ) {
             /* report off */
             data->adcsensorvalue[idx*4+port] = 0;
             __reportADCSensor(rocnetnode, idx*4+port, False, value );
@@ -1974,8 +1976,14 @@ static void __adcsensorscanner( void* threadinst ) {
 
 
     idx++;
-    if( idx > 7 )
+    if( idx > 7 ) {
       idx = 0;
+      if( startofday ) {
+        startofday = False;
+        data->adcstartofday = False;
+      }
+      startofday = data->adcstartofday;
+    }
 
     ThreadOp.sleep(20);
   }
