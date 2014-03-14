@@ -168,6 +168,7 @@
       <var name="rocmousescanner" vt="iOThread"/>
       <var name="adcsensorscanner" vt="iOThread"/>
       <var name="adcsensorvalue[32]" vt="int"/>
+      <var name="adcsensortimer[32]" vt="long"/>
       <var name="stress" vt="Boolean"/>
       <var name="nickname[64]" vt="char"/>
       <var name="lastrfid[64]" vt="char"/>

@@ -1951,6 +1951,7 @@ static void __adcsensorscanner( void* threadinst ) {
           if( value > data->adcthreshold && ( startofday || data->adcsensorvalue[idx*4+port] == 0) ) {
             /* report on */
             data->adcsensorvalue[idx*4+port] = value;
+            data->adcsensortimer[idx*4+port] = SystemOp.getTick();
             __reportADCSensor(rocnetnode, idx*4+port, True, value );
           }
           else if( value > data->adcthreshold && data->adcsensorvalue[idx*4+port] > 0 && abs(data->adcsensorvalue[idx*4+port] - value) > data->adcthreshold ) {
@@ -1959,9 +1960,12 @@ static void __adcsensorscanner( void* threadinst ) {
             __reportADCSensor(rocnetnode, idx*4+port, True, value );
           }
           else if( value < data->adcthreshold && (startofday || data->adcsensorvalue[idx*4+port] > 0) ) {
-            /* report off */
-            data->adcsensorvalue[idx*4+port] = 0;
-            __reportADCSensor(rocnetnode, idx*4+port, False, value );
+            if( startofday || (data->adcsensortimer[idx*4+port] + 200 < SystemOp.getTick()) ) {
+              /* report off */
+              data->adcsensorvalue[idx*4+port] = 0;
+              data->adcsensortimer[idx*4+port] = 0;
+              __reportADCSensor(rocnetnode, idx*4+port, False, value );
+            }
           }
         }
         else
