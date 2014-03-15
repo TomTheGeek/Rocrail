@@ -1955,8 +1955,9 @@ static void __adcsensorscanner( void* threadinst ) {
             __reportADCSensor(rocnetnode, idx*4+port, True, value );
           }
           else if( value > data->adcthreshold && data->adcsensorvalue[idx*4+port] > 0 && abs(data->adcsensorvalue[idx*4+port] - value) > data->adcthreshold ) {
-            /* report off */
+            /* report on changed */
             data->adcsensorvalue[idx*4+port] = value;
+            data->adcsensortimer[idx*4+port] = SystemOp.getTick();
             __reportADCSensor(rocnetnode, idx*4+port, True, value );
           }
           else if( value < data->adcthreshold && (startofday || data->adcsensorvalue[idx*4+port] > 0) ) {
