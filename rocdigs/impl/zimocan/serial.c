@@ -25,13 +25,14 @@
 Boolean SerialConnect( obj inst ) {
   iOZimoCANData data = Data(inst);
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  =%s", wDigInt.getdevice( data->ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps     =%d", wDigInt.getbps( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  = %s", wDigInt.getdevice( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps     = %d", 500000 );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout = %d", wDigInt.gettimeout( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
   SerialOp.setFlow( data->serial, cts );
-  SerialOp.setLine( data->serial, wDigInt.getbps( data->ini ), 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
+  SerialOp.setLine( data->serial, 500000, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 
   if( SerialOp.open( data->serial ) ) {
@@ -56,17 +57,54 @@ void SerialDisconnect( obj inst ) {
 
 int SerialRead ( obj inst, unsigned char *msg ) {
   iOZimoCANData data = Data(inst);
+  int len = 0;
+  Boolean headerZ = False;
+  Boolean header2 = False;
 
+  if( data->serial != NULL ) {
+    do {
+      char in = 0;;
+      if( SerialOp.read(data->serial, &in, 1) ) {
+        if( !headerZ && in == 'Z' ) {
+          headerZ = True;
+          msg[len] = in;
+          len++;
+          continue;
+        }
+        if( headerZ && !header2 && in == '2' ) {
+          header2 = True;
+          msg[len] = in;
+          len++;
+          continue;
+        }
 
-  return 0;
+        if( headerZ && header2 && len < 19 ) {
+          msg[len] = in;
+          len++;
+        }
+
+        if( len == 19 ) {
+          TraceOp.dump ( "zcanserial", TRCLEVEL_BYTE, (char*)msg, len );
+          break;
+        }
+
+      }
+      else {
+        break;
+      }
+    } while(data->serial != NULL);
+  }
+  return len;
 }
 
 
 Boolean SerialWrite( obj inst, unsigned char *msg, int len ) {
   iOZimoCANData data = Data(inst);
-  Boolean ok = True;
-
-
+  Boolean ok = False;
+  if( data->serial != NULL ) {
+    TraceOp.dump ( "zcanserial", TRCLEVEL_BYTE, (char*)msg, len );
+    ok = SerialOp.write( data->serial, (char*)msg, len );
+  }
   return ok;
 }
 

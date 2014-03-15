@@ -53,7 +53,7 @@
 static int instCnt = 0;
 
 
-static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int id, int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7 );
+static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int id, int addr, int d2, int d3, int d4, int d5, int d6, int d7 );
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -125,7 +125,7 @@ static iONode __translate( iOZimoCAN inst, iONode node ) {
     if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
       /* CS off */
       byte* msg = allocMem(32);
-      msg[0] = __makePacket(msg+1, SYSTEM_CONTROL_GROUP, SYSTEM_POWER, 0x01, 4, 0xC000, 0, 0x40, 0, 0, 0, 0, 0, 0);
+      msg[0] = __makePacket(msg+1, SYSTEM_CONTROL_GROUP, SYSTEM_POWER, 0x01, 4, 0, 0xC000, 0, 0x40, 0, 0, 0, 0);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power OFF" );
       ThreadOp.post(data->writer, (obj)msg);
     }
@@ -133,7 +133,7 @@ static iONode __translate( iOZimoCAN inst, iONode node ) {
     else if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
       /* CS on */
       byte* msg = allocMem(32);
-      msg[0] = __makePacket(msg+1, SYSTEM_CONTROL_GROUP, SYSTEM_POWER, 0x01, 4, 0xC000, 0, 0x20, 0, 0, 0, 0, 0, 0);
+      msg[0] = __makePacket(msg+1, SYSTEM_CONTROL_GROUP, SYSTEM_POWER, 0x01, 4, 0, 0xC000, 0, 0x20, 0, 0, 0, 0);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power ON" );
       ThreadOp.post(data->writer, (obj)msg);
     }
@@ -264,19 +264,19 @@ static int __checkSum16(byte* packet, int len) {
 Header Size  Group Cmd+Mode NId    Data0...7 CRC16 Tail
 16Bit  8Bit  8Bit  8Bit     16Bit  8x8Bit    16Bit 16 Bit
  */
-static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int id, int d0, int d1, int d2, int d3, int d4, int d5, int d6, int d7 ) {
+static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int id, int addr, int d2, int d3, int d4, int d5, int d6, int d7 ) {
   int crc = 0;
 
-  msg[0]  = (HEADER & 0xFF);
-  msg[1]  = ((HEADER >> 8) & 0xFF);
-  msg[2]  = 13; /* size ? */
+  msg[0]  = ((HEADER >> 8) & 0xFF);
+  msg[1]  = (HEADER & 0xFF);
+  msg[2]  = dlc;
   msg[3]  = group;
   msg[4]  = (cmd << 2);
   msg[4] |= (mode & 0x03);
   msg[5]  = (id & 0xFF);
   msg[6]  = ((id >> 8) & 0xFF);
-  msg[7]  = d0;
-  msg[8]  = d1;
+  msg[7]  = (addr & 0xFF);
+  msg[8]  = ((addr >> 8) & 0xFF);
   msg[9]  = d2;
   msg[10] = d3;
   msg[11] = d4;
@@ -288,8 +288,8 @@ static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int i
   msg[15] = (crc & 0xFF);
   msg[16] = ((crc >> 8) & 0xFF);
 
-  msg[17] = (TAIL & 0xFF);
-  msg[18] = ((TAIL >> 8) & 0xFF);
+  msg[17] = ((TAIL >> 8) & 0xFF);
+  msg[18] = (TAIL & 0xFF);
 
   return 19;
 }
