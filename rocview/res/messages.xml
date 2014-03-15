@@ -27499,4 +27499,7 @@
   <Msg id="nrcars">
     <en txt="Nr. of cars"/>
   </Msg>
+  <Msg id="sleeponclosed">
+    <en txt="Sleep on closed"/>
+  </Msg>
 </Messages>

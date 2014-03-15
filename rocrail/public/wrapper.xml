@@ -1952,6 +1952,7 @@
         <var name="forceblocktimer" vt="bool" defval="false" remark="Force the block event timer to overrule the optional loco event timer."/>
         <var name="departdelay" vt="int" defval="0" range="0-*" unit="s" remark="delay time to wait before loco starts when depart is raised"/>
         <var name="acceptghost" vt="bool" defval="false" remark="accept a ghosttrain and signal the block occupied."/>
+        <var name="sleeponclosed" vt="bool" defval="false" remark="Ignore events in case of closed."/>
         <var name="terminalstation" vt="bool" defval="false" remark="swap placing of an incomming loc to get another default direction.(terminal station)"/>
         <var name="allowchgdir" vt="bool" defval="true" remark="Allow using a route in the opposite running direction."/>
         <var name="smallsymbol" vt="bool" defval="false" remark="Show this block with the small representation."/>

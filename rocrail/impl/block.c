@@ -224,8 +224,7 @@ static Boolean __acceptGhost( obj inst ) {
   if( ( data->locId == NULL || StrOp.equals( data->locId, "") || StrOp.equals( data->locId, "?") || StrOp.equals( data->locId, "GHOST")) && wBlock.isacceptghost( data->props ) ) {
     data->locId = "GHOST";
     data->ghost = True;
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Block:%s accepted a Ghosttrain",
-                 data->id );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Block:%s accepted a Ghosttrain", data->id );
     {
       iONode node = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
       wBlock.setid( node, data->id );
@@ -389,6 +388,11 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
   Boolean convertEnter2In = False;
   /* The use blockside option works only with one way type, so both directions will fail. */
   char    key[256] = {'\0'};
+
+  if( StrOp.equals( wBlock.closed, wBlock.getstate( data->props ) ) && wBlock.issleeponclosed( data->props ) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ignore event in sleep on closed block %s", data->id );
+    return 0;
+  }
 
   if( fbevt == NULL && data->byRouteId != NULL && StrOp.len(data->byRouteId) > 0 ) {
     iORoute byRoute = ModelOp.getRoute( AppOp.getModel(), data->byRouteId );

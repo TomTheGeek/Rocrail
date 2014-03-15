@@ -6953,3 +6953,9 @@ msgstr ""
 msgid "Nr. of cars"
 msgstr ""
 
+#. 
+# id="sleeponclosed"
+#, c-format
+msgid "Sleep on closed"
+msgstr ""
+
