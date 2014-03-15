@@ -21,18 +21,19 @@
 #include "rocdigs/impl/zimocan/serial.h"
 #include "rocrail/wrapper/public/DigInt.h"
 
+#define BAUDRATE 512000
 
 Boolean SerialConnect( obj inst ) {
   iOZimoCANData data = Data(inst);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  = %s", wDigInt.getdevice( data->ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps     = %d", 500000 );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps     = %d", BAUDRATE );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout = %d", wDigInt.gettimeout( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
   SerialOp.setFlow( data->serial, cts );
-  SerialOp.setLine( data->serial, 500000, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
+  SerialOp.setLine( data->serial, BAUDRATE, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 
   if( SerialOp.open( data->serial ) ) {
