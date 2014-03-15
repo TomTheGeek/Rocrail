@@ -32,5 +32,6 @@
 
 #define NETWORK_GROUP 0X0A
 #define NETWORK_PING  0X00
+#define NETWORK_MODULINFO  0X08
 
 #endif

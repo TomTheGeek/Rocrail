@@ -267,8 +267,8 @@ Header Size  Group Cmd+Mode NId    Data0...7 CRC16 Tail
 static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int id, int addr, int d2, int d3, int d4, int d5, int d6, int d7 ) {
   int crc = 0;
 
-  msg[0]  = ((HEADER >> 8) & 0xFF);
-  msg[1]  = (HEADER & 0xFF);
+  msg[0]  = 0x5A;
+  msg[1]  = 0x32;
   msg[2]  = dlc;
   msg[3]  = group;
   msg[4]  = (cmd << 2);
@@ -288,10 +288,57 @@ static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int i
   msg[15] = (crc & 0xFF);
   msg[16] = ((crc >> 8) & 0xFF);
 
-  msg[17] = ((TAIL >> 8) & 0xFF);
-  msg[18] = (TAIL & 0xFF);
+  msg[17] = 0x32;
+  msg[18] = 0x5A;
 
   return 19;
+}
+
+
+static void __evauluateNetworkGroup( iOZimoCAN zimocan, byte* msg ) {
+  iOZimoCANData data    = Data(zimocan);
+  int cmd  = (msg[4] >> 2);
+  int mode = (msg[4] &0x03);
+
+  switch( cmd ) {
+  case NETWORK_PING:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NETWORK PING" );
+    if( !data->connAck ) {
+      byte* msg = allocMem(32);
+      data->connAck = True;
+      /* Get software info */
+      msg[0] = __makePacket(msg+1, NETWORK_GROUP, NETWORK_MODULINFO, 0x00, 4, 0, 0xC000, 2, 0, 0, 0, 0, 0);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request info" );
+      ThreadOp.post(data->writer, (obj)msg);
+    }
+    break;
+  case NETWORK_MODULINFO:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NETWORK MODULINFO: %d %d %d %d", msg[9], msg[10], msg[11], msg[12] );
+    break;
+  }
+}
+
+
+static void __evaluateMsg( iOZimoCAN zimocan, byte* msg ) {
+  iOZimoCANData data    = Data(zimocan);
+  int group = msg[3];
+  int id    = msg[5] + (msg[6] * 256);
+  int addr  = msg[7] + (msg[8] * 256);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Message from 0x%04X addr=0x%04X", id, addr );
+
+  switch( group ) {
+  case SYSTEM_CONTROL_GROUP:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SYSTEM CONTROL GROUP" );
+    break;
+  case NETWORK_GROUP:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NETWORK GROUP" );
+    __evauluateNetworkGroup(zimocan, msg);
+    break;
+  default:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GROUP: 0x%02X", group );
+    break;
+  }
 }
 
 
@@ -314,6 +361,7 @@ static void __reader( void* threadinst ) {
     }
 
     size = data->subRead( (obj)zimocan, msg );
+    __evaluateMsg(zimocan, msg);
     ThreadOp.sleep(10);
   }
 
