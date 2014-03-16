@@ -80,7 +80,7 @@ void statusWait4Event( iILcDriverInt inst ) {
           /* set the velocity back */
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
           int maxkmh = 0;
-          wLoc.setV_hint( cmd, getBlockV_hint(inst, data->curBlock, False, data->next1Route, !data->next1RouteFromTo, &maxkmh ) );
+          wLoc.setV_hint( cmd, getBlockV_hint(inst, data->next1Block, False, data->next1Route, !data->next1RouteFromTo, &maxkmh ) );
           wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
           wLoc.setV_maxkmh(cmd, maxkmh);
           data->loc->cmd( data->loc, cmd );
