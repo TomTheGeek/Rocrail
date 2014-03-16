@@ -2484,14 +2484,15 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
   if( m_bTraceWindow && m_WarningPanel != NULL ) {
     wxDateTime now = wxDateTime::Now();
 
-    m_WarningPanel->Freeze();
-    m_MonitorPanel->Freeze();
+    //m_WarningPanel->Freeze();
+    //m_MonitorPanel->Freeze();
     m_WarningPanel->SetInsertionPoint(0);
     m_MonitorPanel->SetInsertionPoint(0);
 
     long lpwarn = m_WarningPanel->GetLastPosition();
     if( lpwarn > maxlen ) {
       m_WarningPanel->Remove(maxlen, lpwarn-1);
+      m_WarningPanel->SetInsertionPoint(0);
     }
     if( level == TRCLEVEL_EXCEPTION ) {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxRED));
@@ -2509,6 +2510,7 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
       long lpmon = m_MonitorPanel->GetLastPosition();
       if( lpmon > maxlen ) {
         m_MonitorPanel->Remove(maxlen, lpmon-1);
+        m_MonitorPanel->SetInsertionPoint(0);
       }
       m_MonitorPanel->SetDefaultStyle(wxTextAttr(*wxBLACK));
       m_MonitorPanel->WriteText( now.FormatTime() + wxT(" ") + wxString(text,wxConvUTF8) + wxT("\n") );
@@ -2517,8 +2519,8 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxBLUE));
       m_WarningPanel->WriteText( now.FormatTime() + wxT(" ") + wxString(text,wxConvUTF8) + wxT("\n") );
     }
-    m_WarningPanel->Thaw();
-    m_MonitorPanel->Thaw();
+    //m_WarningPanel->Thaw();
+    //m_MonitorPanel->Thaw();
   }
 
   // Cleanup node:
