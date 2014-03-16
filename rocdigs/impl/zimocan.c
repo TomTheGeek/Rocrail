@@ -54,6 +54,7 @@ static int instCnt = 0;
 
 
 static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int id, int addr, int d2, int d3, int d4, int d5, int d6, int d7 );
+static int __getNID(byte* msg);
 
 /** ----- OBase ----- */
 static void __del( void* inst ) {
@@ -125,7 +126,7 @@ static iONode __translate( iOZimoCAN inst, iONode node ) {
     if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
       /* CS off */
       byte* msg = allocMem(32);
-      msg[0] = __makePacket(msg+1, SYSTEM_CONTROL_GROUP, SYSTEM_POWER, 0x01, 4, 0, 0xC000, 0, 0x40, 0, 0, 0, 0);
+      msg[0] = __makePacket(msg+1, SYSTEM_CONTROL_GROUP, SYSTEM_POWER, MODE_CMD, 4, data->NID, data->masterNID, SYSTEM_POWER_TRACK1, SYSTEM_POWER_OFF, 0, 0, 0, 0);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power OFF" );
       ThreadOp.post(data->writer, (obj)msg);
     }
@@ -133,7 +134,7 @@ static iONode __translate( iOZimoCAN inst, iONode node ) {
     else if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
       /* CS on */
       byte* msg = allocMem(32);
-      msg[0] = __makePacket(msg+1, SYSTEM_CONTROL_GROUP, SYSTEM_POWER, 0x01, 4, 0, 0xC000, 0, 0x20, 0, 0, 0, 0);
+      msg[0] = __makePacket(msg+1, SYSTEM_CONTROL_GROUP, SYSTEM_POWER, MODE_CMD, 4, data->NID, data->masterNID, SYSTEM_POWER_TRACK1, SYSTEM_POWER_ON, 0, 0, 0, 0);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power ON" );
       ThreadOp.post(data->writer, (obj)msg);
     }
@@ -264,7 +265,7 @@ static int __checkSum16(byte* packet, int len) {
 Header Size  Group Cmd+Mode NId    Data0...7 CRC16 Tail
 16Bit  8Bit  8Bit  8Bit     16Bit  8x8Bit    16Bit 16 Bit
  */
-static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int id, int addr, int d2, int d3, int d4, int d5, int d6, int d7 ) {
+static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int nid, int nidTarget, int d2, int d3, int d4, int d5, int d6, int d7 ) {
   int crc = 0;
 
   msg[0]  = 0x5A;
@@ -273,10 +274,10 @@ static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int i
   msg[3]  = group;
   msg[4]  = (cmd << 2);
   msg[4] |= (mode & 0x03);
-  msg[5]  = (id & 0xFF);
-  msg[6]  = ((id >> 8) & 0xFF);
-  msg[7]  = (addr & 0xFF);
-  msg[8]  = ((addr >> 8) & 0xFF);
+  msg[5]  = (nid & 0xFF);
+  msg[6]  = ((nid >> 8) & 0xFF);
+  msg[7]  = (nidTarget & 0xFF);
+  msg[8]  = ((nidTarget >> 8) & 0xFF);
   msg[9]  = d2;
   msg[10] = d3;
   msg[11] = d4;
@@ -294,6 +295,11 @@ static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int i
   return 19;
 }
 
+static int __getNID(byte* msg) {
+  int nid = msg[5] + (msg[6] * 256);
+  return nid;
+}
+
 
 static void __evauluateNetworkGroup( iOZimoCAN zimocan, byte* msg ) {
   iOZimoCANData data    = Data(zimocan);
@@ -304,12 +310,13 @@ static void __evauluateNetworkGroup( iOZimoCAN zimocan, byte* msg ) {
   case NETWORK_PING:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NETWORK PING" );
     if( !data->connAck ) {
-      byte* msg = allocMem(32);
+      byte* msgInfo = allocMem(32);
       data->connAck = True;
+      data->masterNID = __getNID(msg);
       /* Get software info */
-      msg[0] = __makePacket(msg+1, NETWORK_GROUP, NETWORK_MODULINFO, 0x00, 4, 0, 0xC000, 2, 0, 0, 0, 0, 0);
+      msgInfo[0] = __makePacket(msgInfo+1, NETWORK_GROUP, NETWORK_MODULINFO, MODE_REQ, 4, data->NID, data->masterNID, 2, 0, 0, 0, 0, 0);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request info" );
-      ThreadOp.post(data->writer, (obj)msg);
+      ThreadOp.post(data->writer, (obj)msgInfo);
     }
     break;
   case NETWORK_MODULINFO:
@@ -421,8 +428,10 @@ static struct OZimoCAN* _inst( const iONode ini ,const iOTrace trc ) {
   SystemOp.inst();
   /* Initialize data->xxx members... */
 
-  data->ini      = ini;
-  data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
+  data->ini = ini;
+  data->iid = StrOp.dup( wDigInt.getiid( ini ) );
+  data->NID = 0xC200;
+  data->masterNID = 0xAFFA; /* Dummy */
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ZimoCAN %d.%d.%d", vmajor, vminor, patch );
