@@ -441,7 +441,7 @@ static Boolean __isSet(obj inst, const char* strState) {
   Boolean isSet = True;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-    "Switch[%s] current state [%s], reported state [%s]",
+    "is switch[%s] set? current state [%s], compare state [%s]",
     SwitchOp.getId( (iOSwitch)inst ), wSwitch.getstate( data->props), strState );
 
   if( !StrOp.equals( strState, wSwitch.getstate( data->props) ) ) {
