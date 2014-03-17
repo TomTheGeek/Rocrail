@@ -52,6 +52,13 @@
     </fun>
   </object>
   
+  <object name="CRC" use="list" remark="CRC Calculator.">
+    <fun name="checkSum16" vt="int">
+      <param name="packet" vt="byte*"/>
+      <param name="len" vt="int"/>
+    </fun>
+  </object>
+  
 </Project>
 
 
