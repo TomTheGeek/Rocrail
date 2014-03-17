@@ -487,9 +487,23 @@ static void __evauluateMobileControlGroup( iOZimoCAN zimocan, byte* msg ) {
   case MOBILE_SPEED:
     {
       int nid = __getObjectNID(msg);
-      int V = msg[9] + (msg[10] * 256);
+      int V = (msg[9] + (msg[10] * 256)) & 0x01FF;
+      Boolean Dir = (msg[10] & 0x04) ? True:False;
       iOSlot slot = __getSlotByNID(zimocan, nid);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MOBILE SPEED: [%s] NID=%d speed=%d", slot==NULL?"-":slot->id, nid, V );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MOBILE SPEED: [%s] NID=%d speed=%d dir=%s", slot==NULL?"-":slot->id, nid, V, Dir?"fwd":"rev" );
+      if( slot != NULL ) {
+        iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        if( data->iid != NULL )
+          wLoc.setiid( nodeC, data->iid );
+        wLoc.setid( nodeC, slot->id );
+        wLoc.setaddr( nodeC, slot->addr );
+        wLoc.setdir( nodeC, Dir );
+        wLoc.setV_raw( nodeC, V );
+        wLoc.setV_rawMax( nodeC, slot->steps );
+        wLoc.setthrottleid( nodeC, "zimo" );
+        wLoc.setcmd( nodeC, wLoc.velocity );
+        data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+      }
     }
     break;
   }
