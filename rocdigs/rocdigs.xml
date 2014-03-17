@@ -1755,6 +1755,7 @@
     <struct name="slot" typedef="*iOSlot" remark="Loco slot">
       <var name="id" vt="char*"/>
       <var name="addr" vt="int"/>
+      <var name="nid" vt="int"/>
       <var name="V" vt="int"/>
       <var name="Vraw" vt="int"/>
       <var name="steps" vt="int"/>
@@ -1764,6 +1765,12 @@
       <var name="lights" vt="Boolean"/>
       <var name="f[32]" vt="Boolean"/>
     </struct>
+    <struct name="point" typedef="*iOPoint">
+      <var name="id" vt="char*"/>
+      <var name="nid" vt="int"/>
+      <var name="addr" vt="int"/>
+      <var name="prot" vt="int"/>
+      </struct>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -1790,7 +1797,9 @@
       <var name="masterNID" vt="int"/>
       <var name="lcmux" vt="iOMutex"/>
       <var name="lcmap" vt="iOMap"/>
-    </data>
+      <var name="swmux" vt="iOMutex"/>
+      <var name="swmap" vt="iOMap"/>
+      </data>
   </object>
 
 </Project>
