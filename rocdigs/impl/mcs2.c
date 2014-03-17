@@ -543,7 +543,7 @@ static void __feedbackMCS2Reader( void* threadinst ) {
 
     __SoD(mcs2);
 
-    if( wDigInt.getprotver( data->ini ) == 2 ) {
+    if( wDigInt.getprotver( data->ini ) >= 2 ) {
       /* Just poll once for Start of Day. */
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Just poll once for Start of Day. V2" );
       ThreadOp.sleep( 500 );
@@ -1281,13 +1281,12 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
 
   /* Initialize data->xxx members... */
   TraceOp.set( trc );
-  if( wDigInt.getprotver( data->ini ) > 2 )
-    wDigInt.setprotver( data->ini, 2 );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2(%d) %d.%d.%d", wDigInt.getprotver( data->ini ), vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  s88 modules [%d]", wDigInt.getfbmod( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  version [%d]", wDigInt.getprotver( ini ) );
 
   data->ini = ini;
   data->mcs2ini = wDigInt.getmcs2(ini);
