@@ -1282,21 +1282,20 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   /* Initialize data->xxx members... */
   TraceOp.set( trc );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2(%d) %d.%d.%d", wDigInt.getprotver( data->ini ), vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  s88 modules [%d]", wDigInt.getfbmod( ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  version [%d]", wDigInt.getprotver( ini ) );
-
   data->ini = ini;
   data->mcs2ini = wDigInt.getmcs2(ini);
   if( data->mcs2ini == NULL ) {
     data->mcs2ini = NodeOp.inst( wMCS2.name(), NULL, ELEMENT_NODE );
     NodeOp.addChild( ini, data->mcs2ini);
   }
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor device ID [%d]", wMCS2.getfbdevid(data->mcs2ini) );
-
   data->cmdpause = wMCS2.getcmdpause(data->mcs2ini);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  s88 modules [%d]", wDigInt.getfbmod( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  version [%d]", wDigInt.getprotver( ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor device ID [%d]", wMCS2.getfbdevid(data->mcs2ini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  command pause [%d]ms", data->cmdpause );
 
   data->udp = !StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib(data->ini));
