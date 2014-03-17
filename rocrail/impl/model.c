@@ -3620,7 +3620,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     if(wSwitch.isaccessory(nodeC)) {
       /* Try a switch object */
       NodeOp.setName(nodeC, wSwitch.name());
-      wSwitch.setstate( nodeC, val?"straight":"turnout" );
+      wSwitch.setstate( nodeC, val==0?"straight":"turnout" );
     }
 
   }
