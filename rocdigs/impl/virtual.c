@@ -218,6 +218,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       else if( addr == 0 && port > 0 )
         AddrOp.fromPADA( port, &addr, &port );
 
+      wSwitch.setbus( nodeC, wSwitch.getbus( node ) );
       wSwitch.setaddr1( nodeC, wSwitch.getaddr1( node ) );
       wSwitch.setport1( nodeC, wSwitch.getport1( node ) );
 
