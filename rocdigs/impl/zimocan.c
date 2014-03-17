@@ -27,6 +27,8 @@
 #include "rocs/public/str.h"
 #include "rocs/public/strtok.h"
 #include "rocs/public/system.h"
+#include "rocs/public/map.h"
+#include "rocs/public/list.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -114,6 +116,89 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OZimoCAN ----- */
 
+
+static iOSlot __getSlot(iOZimoCAN inst, iONode node) {
+  iOZimoCANData data = Data(inst);
+  int    addr  = wLoc.getaddr(node);
+  iOSlot slot  = NULL;
+  byte* msg    = NULL;
+  byte M1      = 0;
+  byte M2      = 0;
+
+  slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+  if( slot != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot exist for %s", wLoc.getid(node) );
+    return slot;
+  }
+
+  slot = allocMem( sizeof( struct slot) );
+  slot->addr    = addr;
+  slot->id      = StrOp.dup(wLoc.getid(node));
+  slot->lights  = wLoc.isfn(node);
+  slot->dir     = wLoc.isdir(node);
+  slot->steps   = wLoc.getspcnt(node);
+  slot->fncnt   = wLoc.getfncnt(node);
+
+  if( StrOp.equals( wLoc.prot_M, wLoc.getprot( node ) ) ) /* Motorola */
+    slot->prot = 2;
+  else if( StrOp.equals( wLoc.prot_F, wLoc.getprot( node ) ) ) /* MFX */
+    slot->prot = 4;
+  else /* Default DCC */
+    slot->prot = 1;
+
+  if( MutexOp.wait( data->lcmux ) ) {
+    MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+    MutexOp.post(data->lcmux);
+  }
+
+  msg = allocMem(32);
+  M1 = slot->steps + (slot->prot << 4);
+  M2 = slot->fncnt;
+  msg[0] = __makePacket(msg+1, MOBILE_CONTROL_GROUP, MOBILE_MODE, MODE_CMD, 4, data->NID, slot->addr, M1, M2, 0, 0, 0, 0);
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set mode parameters, M1=%d M2=%d, for loco %s", M1, M2, slot->id );
+  ThreadOp.post(data->writer, (obj)msg);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+  return slot;
+}
+
+Boolean __getFState(iONode fcmd, int fn) {
+  switch( fn ) {
+    case 0 : return (wFunCmd.isf0 (fcmd) | wLoc.isfn(fcmd));
+    case 1 : return wFunCmd.isf1 (fcmd);
+    case 2 : return wFunCmd.isf2 (fcmd);
+    case 3 : return wFunCmd.isf3 (fcmd);
+    case 4 : return wFunCmd.isf4 (fcmd);
+    case 5 : return wFunCmd.isf5 (fcmd);
+    case 6 : return wFunCmd.isf6 (fcmd);
+    case 7 : return wFunCmd.isf7 (fcmd);
+    case 8 : return wFunCmd.isf8 (fcmd);
+    case 9 : return wFunCmd.isf9 (fcmd);
+    case 10: return wFunCmd.isf10(fcmd);
+    case 11: return wFunCmd.isf11(fcmd);
+    case 12: return wFunCmd.isf12(fcmd);
+    case 13: return wFunCmd.isf13(fcmd);
+    case 14: return wFunCmd.isf14(fcmd);
+    case 15: return wFunCmd.isf15(fcmd);
+    case 16: return wFunCmd.isf16(fcmd);
+    case 17: return wFunCmd.isf17(fcmd);
+    case 18: return wFunCmd.isf18(fcmd);
+    case 19: return wFunCmd.isf19(fcmd);
+    case 20: return wFunCmd.isf20(fcmd);
+    case 21: return wFunCmd.isf21(fcmd);
+    case 22: return wFunCmd.isf22(fcmd);
+    case 23: return wFunCmd.isf23(fcmd);
+    case 24: return wFunCmd.isf24(fcmd);
+    case 25: return wFunCmd.isf25(fcmd);
+    case 26: return wFunCmd.isf26(fcmd);
+    case 27: return wFunCmd.isf27(fcmd);
+    case 28: return wFunCmd.isf28(fcmd);
+  }
+  return False;
+}
+
+
+
 static iONode __translate( iOZimoCAN inst, iONode node ) {
   iOZimoCANData data = Data(inst);
   iONode rsp = NULL;
@@ -139,6 +224,40 @@ static iONode __translate( iOZimoCAN inst, iONode node ) {
       byte* msg = allocMem(32);
       msg[0] = __makePacket(msg+1, SYSTEM_CONTROL_GROUP, SYSTEM_POWER, MODE_CMD, 4, data->NID, data->masterNID, SYSTEM_POWER_TRACK1, SYSTEM_POWER_ON, 0, 0, 0, 0);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "request power ON" );
+      ThreadOp.post(data->writer, (obj)msg);
+    }
+  }
+
+  /* Loco command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    iOSlot slot = __getSlot( inst, node );
+    if( slot != NULL ) {
+      byte* msg = allocMem(32);
+      int Div = 1; /* Speed divider */
+      int V = 0;
+
+      if( wLoc.getV( node ) != -1 ) {
+        if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+          V = (wLoc.getV( node ) * slot->steps) / 100;
+        else if( wLoc.getV_max( node ) > 0 )
+          V = (wLoc.getV( node ) * slot->steps) / wLoc.getV_max( node );
+      }
+
+      msg[0] = __makePacket(msg+1, MOBILE_CONTROL_GROUP, MOBILE_SPEED, MODE_CMD, 6, data->NID, slot->addr, (V&0xFF), (V>>8), Div, 0, 0, 0);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Set loco speed to %d for %s", V, slot->id );
+      ThreadOp.post(data->writer, (obj)msg);
+    }
+  }
+
+  /* Function command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    iOSlot slot = __getSlot( inst, node );
+    if( slot != NULL ) {
+      byte* msg = allocMem(32);
+      int fn = wFunCmd.getfnchanged(node);
+      int fs = __getFState(node, fn);
+      msg[0] = __makePacket(msg+1, MOBILE_CONTROL_GROUP, MOBILE_FUNCTION, MODE_CMD, 6, data->NID, slot->addr, (fn&0xFF), (fn>>8), (fs&0xFF), (fs>>8), 0, 0);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Set loco function %d to %d for %s", fn, fs, slot->id );
       ThreadOp.post(data->writer, (obj)msg);
     }
   }
@@ -389,6 +508,8 @@ static struct OZimoCAN* _inst( const iONode ini ,const iOTrace trc ) {
   data->iid = StrOp.dup( wDigInt.getiid( ini ) );
   data->NID = 0xC200;
   data->masterNID = 0xAFFA; /* Dummy */
+  data->lcmap  = MapOp.inst();
+  data->lcmux  = MutexOp.inst( NULL, True );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ZimoCAN %d.%d.%d", vmajor, vminor, patch );

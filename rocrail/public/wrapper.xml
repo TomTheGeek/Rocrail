@@ -2515,6 +2515,7 @@
         <const name="prot_C" vt="string" val="C" remark="Car Decoder"/>
         <const name="prot_S" vt="string" val="S" remark="SX1"/>
         <const name="prot_X" vt="string" val="X" remark="SX2"/>
+        <const name="prot_F" vt="string" val="F" remark="MFX"/>
         <var name="protver" vt="int" defval="1" range="*" remark="Protocol version"/>
         <var name="spcnt" vt="int" defval="14" range="*" remark="Speed steps count"/>
         <var name="regulated" vt="bool" defval="true" remark="Decoder regulates the motor."/>

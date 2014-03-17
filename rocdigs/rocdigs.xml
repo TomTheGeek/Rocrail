@@ -1746,13 +1746,25 @@
     </data>
   </object>
 
-  <object name="ZimoCAN" interface="$../rocint/rocint.xml:DigInt" use="node,serial,socket,trace,thread" include="$rocint/public/digint">
+  <object name="ZimoCAN" interface="$../rocint/rocint.xml:DigInt" use="node,serial,socket,trace,thread,map,mutex,list" include="$rocint/public/digint">
     <typedef def="Boolean(*sublib_connect)(obj)"/>
     <typedef def="void(*sublib_disconnect)(obj)"/>
     <typedef def="int(*sublib_read)(obj,byte*)"/>
     <typedef def="Boolean(*sublib_write)(obj,byte*,int)"/>
     <typedef def="Boolean(*sublib_available)(obj)"/>
-      <fun name="inst" vt="this">
+    <struct name="slot" typedef="*iOSlot" remark="Loco slot">
+      <var name="id" vt="char*"/>
+      <var name="addr" vt="int"/>
+      <var name="V" vt="int"/>
+      <var name="Vraw" vt="int"/>
+      <var name="steps" vt="int"/>
+      <var name="prot" vt="int"/>
+      <var name="fncnt" vt="int"/>
+      <var name="dir" vt="Boolean"/>
+      <var name="lights" vt="Boolean"/>
+      <var name="f[32]" vt="Boolean"/>
+    </struct>
+    <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
     </fun>
@@ -1776,6 +1788,8 @@
       <var name="connAck" vt="Boolean"/>
       <var name="NID" vt="int"/>
       <var name="masterNID" vt="int"/>
+      <var name="lcmux" vt="iOMutex"/>
+      <var name="lcmap" vt="iOMap"/>
     </data>
   </object>
 
