@@ -170,6 +170,26 @@ static iOSlot __getSlot(iOZimoCAN inst, iONode node) {
 }
 
 
+static iOSlot __getSlotByNID(iOZimoCAN inst, int nid) {
+  iOZimoCANData data = Data(inst);
+  iOSlot slot = NULL;
+  if( MutexOp.wait( data->lcmux ) ) {
+    slot = (iOSlot)MapOp.first( data->lcmap);
+    while( slot != NULL ) {
+      if( slot->nid == nid ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot found for %s by NID %d", slot->id, nid );
+        break;
+      }
+      slot = (iOSlot)MapOp.next( data->lcmap);
+    };
+    MutexOp.post(data->lcmux);
+  }
+  return slot;
+}
+
+
+
+
 static iOPoint __getPoint(iOZimoCAN inst, iONode node) {
   iOZimoCANData data = Data(inst);
   int     bus   = wSwitch.getbus(node);
@@ -427,6 +447,12 @@ static int __getNID(byte* msg) {
 }
 
 
+static int __getObjectNID(byte* msg) {
+  int nid = msg[7] + (msg[8] * 256);
+  return nid;
+}
+
+
 static void __evauluateNetworkGroup( iOZimoCAN zimocan, byte* msg ) {
   iOZimoCANData data    = Data(zimocan);
   int cmd  = (msg[4] >> 2);
@@ -446,7 +472,25 @@ static void __evauluateNetworkGroup( iOZimoCAN zimocan, byte* msg ) {
     }
     break;
   case NETWORK_MODULINFO:
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NETWORK MODULINFO: %d %d %d %d", msg[9], msg[10], msg[11], msg[12] );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NETWORK MODULINFO: nid:%d %d %d %d", msg[9], msg[10], msg[11], msg[12] );
+    break;
+  }
+}
+
+
+static void __evauluateMobileControlGroup( iOZimoCAN zimocan, byte* msg ) {
+  iOZimoCANData data    = Data(zimocan);
+  int cmd  = (msg[4] >> 2);
+  int mode = (msg[4] &0x03);
+
+  switch( cmd ) {
+  case MOBILE_SPEED:
+    {
+      int nid = __getObjectNID(msg);
+      int V = msg[9] + (msg[10] * 256);
+      iOSlot slot = __getSlotByNID(zimocan, nid);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MOBILE SPEED: [%s] NID=%d speed=%d", slot==NULL?"-":slot->id, nid, V );
+    }
     break;
   }
 }
@@ -467,6 +511,13 @@ static void __evaluateMsg( iOZimoCAN zimocan, byte* msg ) {
   case NETWORK_GROUP:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "NETWORK GROUP" );
     __evauluateNetworkGroup(zimocan, msg);
+    break;
+  case ACCESSORY_COMMAND_GROUP:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ACCESSORY COMMAND GROUP" );
+    break;
+  case MOBILE_CONTROL_GROUP:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MOBILE CONTROL GROUP" );
+    __evauluateMobileControlGroup(zimocan, msg);
     break;
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GROUP: 0x%02X", group );
