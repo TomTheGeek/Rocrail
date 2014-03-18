@@ -2423,6 +2423,13 @@ static Boolean blockFeedbackActionCheck( iOAnalyse inst, Boolean repair ) {
   if( bklist != NULL ) {
     iONode bk = wBlockList.getbk( bklist );
     while( bk != NULL ) {
+      const char* type = wItem.gettype( bk );
+      if( StrOp.equals( type, wBlock.type_turntable ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block feedback action check: bk[%s] of type[%s] skip tests", wItem.getid( bk ), type  );
+        bk =  wBlockList.nextbk( bklist, bk );
+        continue;
+      }
+
       const char* bkid = wItem.getid(bk);
       iIBlockBase block = ModelOp.getBlock( data->model, bkid );
       iONode bkNode = BlockOp.base.properties( block );
@@ -2619,6 +2626,13 @@ static Boolean blockFbackUniqueCheck( iOAnalyse inst, Boolean repair ) {
   if( bklist != NULL ) {
     iONode bk = wBlockList.getbk( bklist );
     while( bk != NULL ) {
+      const char* type = wItem.gettype( bk );
+      if( StrOp.equals( type, wBlock.type_turntable ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block feedback unique check: bk[%s] of type[%s] skip tests", wItem.getid( bk ), type  );
+        bk =  wBlockList.nextbk( bklist, bk );
+        continue;
+      }
+
       const char* bkid = wItem.getid(bk);
       iIBlockBase block = ModelOp.getBlock( data->model, bkid );
       iONode bkNode = BlockOp.base.properties( block );
@@ -2774,6 +2788,13 @@ static Boolean blockCheck( iOAnalyse inst, Boolean repair ) {
   if( bklist != NULL ) {
     iONode bk = wBlockList.getbk( bklist );
     while( bk != NULL ) {
+      const char* type = wItem.gettype( bk );
+      if( StrOp.equals( type, wBlock.type_turntable ) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block check: bk[%s] of type[%s] skip tests", wItem.getid( bk ), type  );
+        bk =  wBlockList.nextbk( bklist, bk );
+        continue;
+      }
+
       Boolean hasAtLeastOneFbevent = False;
       const char* bkid = wItem.getid(bk);
       iIBlockBase block = ModelOp.getBlock( data->model, bkid );
@@ -3486,10 +3507,10 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
     }
     else {
       /* visible item */
-
-      if( StrOp.equals( NodeOp.getName(node), wBlock.name()  ) ||
-          StrOp.equals( NodeOp.getName(node), wStage.name()  ) ||
-          StrOp.equals( NodeOp.getName(node), wSelTab.name() ) ) {
+      if(  ( StrOp.equals( NodeOp.getName(node), wBlock.name() ) && ! StrOp.equals( wItem.gettype(node), wBlock.type_turntable ) )
+        || StrOp.equals( NodeOp.getName(node), wStage.name()  )
+        || StrOp.equals( NodeOp.getName(node), wSelTab.name() )
+        ) {
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, " ------>  block %s with key (old) %s",
             wBlock.getid(node), __createKey( key, node, 0+modx, 0+mody, 0) );
 
@@ -7585,8 +7606,12 @@ static int _analyse(iOAnalyse inst) {
 
   block = (iONode)ListOp.first(data->bklist);
   while(block) {
+    const char* type = wItem.gettype( block );
     if( wItem.isroad( block ) ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "  skipped block[%s] because type road is not supported", wItem.getid( block ) );
+    } else if( StrOp.equals( type, wBlock.type_turntable ) ) {
+      /* should not happen because already checked in __prepare */
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "analyse: bk[%s] of type[%s] skip analysing", wItem.getid( block ), type  );
     } else {
       const char* blockori = wItem.getori(block);
 
