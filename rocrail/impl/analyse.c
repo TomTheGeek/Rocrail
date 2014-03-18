@@ -2252,16 +2252,19 @@ static Boolean isFeedbackOfBlock( iOModel model, iONode bl, const char* id ) {
   if( StrOp.equals(NodeOp.getName(bl), wBlock.name() ) ) {
     const char* bkid = wItem.getid(bl);
     iIBlockBase block = ModelOp.getBlock( model, bkid );
-    iONode bkNode = BlockOp.base.properties( block );
-
-    iONode fbevt = wBlock.getfbevent( bkNode );
-    while( fbevt != NULL ) {
-      const char* fbid = wFeedbackEvent.getid( fbevt );
-      if( ( StrOp.len(fbid) > 0 ) && StrOp.equals( fbid, id ) ) {
-        /* fb is used in given block */
-        return True ;
+    if( block != NULL ) {
+      iONode bkNode = BlockOp.base.properties( block );
+      if( bkNode != NULL ) {
+        iONode fbevt = wBlock.getfbevent( bkNode );
+        while( fbevt != NULL ) {
+          const char* fbid = wFeedbackEvent.getid( fbevt );
+          if( ( StrOp.len(fbid) > 0 ) && StrOp.equals( fbid, id ) ) {
+            /* fb is used in given block */
+            return True ;
+          }
+          fbevt = wBlock.nextfbevent( bkNode, fbevt );
+        }
       }
-      fbevt = wBlock.nextfbevent( bkNode, fbevt );
     }
   }
   else if( StrOp.equals(NodeOp.getName(bl), wStage.name() ) ) {
