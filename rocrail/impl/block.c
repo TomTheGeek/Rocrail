@@ -2465,6 +2465,12 @@ static void _modify( iOBlock inst, iONode props ) {
   int cnt = NodeOp.getAttrCnt( props );
   Boolean move = StrOp.equals( wModelCmd.getcmd( props ), wModelCmd.move );
 
+  if( data->props == NULL ) {
+    NodeOp.base.del(props);
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "block [%s][%s] properties are empty.", wBlock.getid(props), wItem.getprev_id(props));
+    return;
+  }
+
   int i = 0;
   for( i = 0; i < cnt; i++ ) {
     iOAttr attr = NodeOp.getAttr( props, i );

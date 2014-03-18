@@ -598,6 +598,10 @@ static void __renameSensorDeps(iONode model, const char* id, const char* previd,
  */
 static Boolean _renameItemDependencies( iONode model ,const char* id ,const char* previd ,iONode props ) {
 
+  if( props == NULL ) {
+    return False;
+  }
+
   if( StrOp.equals( wBlock.name(), NodeOp.getName(props) )) {
     __renameBlockDeps(model, id, previd, props, True);
     return True;
