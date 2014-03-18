@@ -265,6 +265,12 @@ void CV::event( iONode event ) {
     return;
   }
 
+  if( cv == -1 || (cmd == wProgram.datarsp && cv > 0 && cv != m_CVidx) ) {
+    // forced data response
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "reject CV%d(%d)=%d ", cv, m_CVidx, ivalue);
+    return;
+  }
+
   if( cmd == wProgram.datarsp || cmd == wProgram.statusrsp )
     datarsp = true;
 
@@ -288,7 +294,7 @@ void CV::event( iONode event ) {
     }
   }
   else if( ivalue != -1 && cmd == wProgram.datarsp ) {
-    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "event for cv %d...", m_CVidx);
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "event for cv%d=%d (reported cv%d)...", m_CVidx, ivalue, cv);
     char* val = StrOp.fmt( "%d", ivalue );
 
     char* rowstr = StrOp.fmt( "%d", cv );
@@ -303,23 +309,27 @@ void CV::event( iONode event ) {
      * CV17 = (addr / 256) + 192
      */
     if( m_CVidx == 17 ) {
-      m_CV17 = ivalue;
-      int laddr = (m_CV17&0x3f) * 256 + m_CV18;
-      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "part 1 of long address(%d) cv%d=%d",
-          laddr, m_CVidx, ivalue );
-      char* lval = StrOp.fmt("%d", laddr);
-      m_CVlongaddress->SetValue( wxString( lval,wxConvUTF8) );
-      StrOp.free(lval);
+      if( !m_POM ) {
+        m_CV17 = ivalue;
+        int laddr = (m_CV17&0x3f) * 256 + m_CV18;
+        TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "part 1 of long address(%d) cv%d=%d",
+            laddr, m_CVidx, ivalue );
+        char* lval = StrOp.fmt("%d", laddr);
+        m_CVlongaddress->SetValue( wxString( lval,wxConvUTF8) );
+        StrOp.free(lval);
+      }
       doCV( wProgram.get, 18, 0 );
     }
     else if( m_CVidx == 18 ) {
-      m_CV18 = ivalue;
-      int laddr = (m_CV17&0x3f) * 256 + m_CV18;
-      TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "part 2 of long address(%d) cv%d=%d",
-          laddr, m_CVidx, ivalue );
-      char* lval = StrOp.fmt("%d", laddr);
-      m_CVlongaddress->SetValue( wxString( lval,wxConvUTF8) );
-      StrOp.free(lval);
+      if( !m_POM ) {
+        m_CV18 = ivalue;
+        int laddr = (m_CV17&0x3f) * 256 + m_CV18;
+        TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "part 2 of long address(%d) cv%d=%d",
+            laddr, m_CVidx, ivalue );
+        char* lval = StrOp.fmt("%d", laddr);
+        m_CVlongaddress->SetValue( wxString( lval,wxConvUTF8) );
+        StrOp.free(lval);
+      }
       m_bLongAddress = false;
     }
     else if( m_CVidx >= 67 && m_CVidx <= 94 ) {
@@ -353,11 +363,16 @@ void CV::event( iONode event ) {
     else {
       wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( m_CVidx + VAL_CV, m_Parent );
       if( tc != NULL ) {
-        tc->SetValue( wxString( val,wxConvUTF8) );
-        if( cv == 8 ) {
-          tc->SetToolTip(wxString( m_Vendor[ivalue&0xFF],wxConvUTF8));
-          TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "DCC Manufacturer: %s", m_Vendor[ivalue&0xFF] );
-          wLoc.setdectype(m_LocProps, m_Vendor[ivalue&0xFF] );
+        if( m_POM && cv == 1 ) {
+          // Skip this value in case of POM
+        }
+        else {
+          tc->SetValue( wxString( val,wxConvUTF8) );
+          if( cv == 8 ) {
+            tc->SetToolTip(wxString( m_Vendor[ivalue&0xFF],wxConvUTF8));
+            TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "DCC Manufacturer: %s", m_Vendor[ivalue&0xFF] );
+            wLoc.setdectype(m_LocProps, m_Vendor[ivalue&0xFF] );
+          }
         }
       }
     }
