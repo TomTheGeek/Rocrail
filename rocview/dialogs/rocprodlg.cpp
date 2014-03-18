@@ -456,6 +456,13 @@ void RocProDlg::event(iONode node) {
 
     TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "event cmd=%d cv=%d value=%d", cmd, cv, value );
 
+    if( cv == -1 || (cmd == wProgram.datarsp && cv > 0 && cv != m_PendingCV) ) {
+      // forced data response
+      TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "reject CV%d(%d)=%d ", cv, m_PendingCV, value);
+      return;
+    }
+
+
     if( cmd == wProgram.datarsp || cmd == wProgram.statusrsp ) {
 
       if( m_bSpeedCurve && m_PendingCV >= 67 && m_PendingCV <= 94) {
