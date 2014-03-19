@@ -309,7 +309,7 @@ void CV::event( iONode event ) {
      * CV17 = (addr / 256) + 192
      */
     if( m_CVidx == 17 ) {
-      if( !m_POM ) {
+      if( !m_bPOM ) {
         m_CV17 = ivalue;
         int laddr = (m_CV17&0x3f) * 256 + m_CV18;
         TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "part 1 of long address(%d) cv%d=%d",
@@ -321,7 +321,7 @@ void CV::event( iONode event ) {
       doCV( wProgram.get, 18, 0 );
     }
     else if( m_CVidx == 18 ) {
-      if( !m_POM ) {
+      if( !m_bPOM ) {
         m_CV18 = ivalue;
         int laddr = (m_CV17&0x3f) * 256 + m_CV18;
         TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "part 2 of long address(%d) cv%d=%d",
@@ -363,7 +363,7 @@ void CV::event( iONode event ) {
     else {
       wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( m_CVidx + VAL_CV, m_Parent );
       if( tc != NULL ) {
-        if( m_POM && cv == 1 ) {
+        if( m_bPOM && cv == 1 ) {
           // Skip this value in case of POM
         }
         else {
