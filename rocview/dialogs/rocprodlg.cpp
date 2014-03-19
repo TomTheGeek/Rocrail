@@ -91,6 +91,7 @@ RocProDlgGen( parent )
   m_CV17 = 0;
   m_CV18 = 0;
 
+  m_CVexpected = 0;
   m_CVidx = 0;
   m_CVidxAll = 0;
   m_CVoperation = 0;
@@ -456,9 +457,9 @@ void RocProDlg::event(iONode node) {
 
     TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "event cmd=%d cv=%d value=%d", cmd, cv, value );
 
-    if( cv == -1 || (cmd == wProgram.datarsp && cv > 0 && cv != m_PendingCV) ) {
+    if( cv == -1 || (cmd == wProgram.datarsp && cv > 0 && cv != m_CVexpected) ) {
       // forced data response
-      TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "reject CV%d(%d)=%d ", cv, m_PendingCV, value);
+      TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "reject CV%d(%d)=%d ", cv, m_CVexpected, value);
       return;
     }
 
@@ -875,6 +876,7 @@ void RocProDlg::onSaveCV( wxCommandEvent& event ) {
 }
 
 void RocProDlg::doCV(int command, int nr, int value) {
+  m_CVexpected = nr;
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
   wProgram.setcmd( cmd, command );
   wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8)  );

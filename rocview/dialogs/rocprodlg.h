@@ -58,6 +58,7 @@ class RocProDlg : public RocProDlgGen
   int m_CVall[1024];
   int m_CVcountAll;
   int m_CVidxAll;
+  int m_CVexpected;
   bool m_UseDecSpec4All;;
   bool m_Save;
   iONode mCVDip;
