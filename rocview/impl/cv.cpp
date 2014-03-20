@@ -254,11 +254,16 @@ void CV::setLocProps( iONode props ) {
 
 
 void CV::updateCV(int cv, int value) {
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "update cv%d=%d", cv, value);
+
   char* val = StrOp.fmt( "%d", value );
   char* rowstr = StrOp.fmt( "%d", cv );
   if( cv > 0 && cv < 1024 ) {
     m_CVTable->SetRowLabelValue( cv-1, wxString(rowstr,wxConvUTF8) );
     m_CVTable->SetCellValue(cv-1, 0, wxString(val,wxConvUTF8) );
+  }
+  else {
+    TraceOp.trc( "cv", TRCLEVEL_WARNING, __LINE__, 9999, "cv%d out of range", cv);
   }
   StrOp.free( rowstr );
 
@@ -277,11 +282,21 @@ void CV::updateCV(int cv, int value) {
     updateCVbits();
   }
 
-  wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( m_CVidx + VAL_CV, m_Parent );
-  if( tc != NULL && (!m_bPOM || cv != 1) ) {
-    tc->SetValue( wxString( val,wxConvUTF8) );
+  switch( cv ) {
+  case 1: m_CVaddress->SetValue( wxString( val,wxConvUTF8) ); break;
+  case 2: m_CVVstart->SetValue( wxString( val,wxConvUTF8) ); break;
+  case 3: m_CVaccel->SetValue( wxString( val,wxConvUTF8) ); break;
+  case 4: m_CVdecel->SetValue( wxString( val,wxConvUTF8) ); break;
+  case 5: m_CVVhigh->SetValue( wxString( val,wxConvUTF8) ); break;
+  case 6: m_CVVmid->SetValue( wxString( val,wxConvUTF8) ); break;
+  case 7: m_CVversion->SetValue( wxString( val,wxConvUTF8) ); break;
+  case 8:
+    m_CVmanufacturedID->SetValue( wxString( val,wxConvUTF8) );
+    m_CVmanufacturedID->SetToolTip(wxString( m_Vendor[value&0xFF],wxConvUTF8));
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "DCC Manufacturer: %s", m_Vendor[value&0xFF] );
+    wLoc.setdectype(m_LocProps, m_Vendor[value&0xFF] );
+    break;
   }
-
 
   StrOp.free( val );
 }
@@ -301,8 +316,8 @@ void CV::event( iONode event ) {
 
   if( cv == -1 || (cmd == wProgram.datarsp && cv > 0 && cv != m_CVidx) ) {
     // forced data response
-    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "reject CV%d(%d)=%d ", cv, m_CVidx, ivalue);
-    if( cmd == wProgram.datarsp && cv > 0 )
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "update unexpected CV%d(%d)=%d ", cv, m_CVidx, ivalue);
+    if( cmd == wProgram.datarsp && cv > 0 && cv < 1024)
       updateCV(cv, ivalue);
     return;
   }
@@ -312,6 +327,8 @@ void CV::event( iONode event ) {
 
   if( cv == 0 && datarsp )
     cv = m_CVidx;
+
+  updateCV(cv, ivalue);
 
   TraceOp.trc( "cv", ivalue != -1 ? TRCLEVEL_INFO:TRCLEVEL_WARNING, __LINE__, 9999,
       "got program event...cmd=%d cv=%d value=%d %s", cmd, cv, ivalue, cmd == wProgram.datarsp ? "datarsp":"statusrsp" );
@@ -331,15 +348,6 @@ void CV::event( iONode event ) {
   }
   else if( ivalue != -1 && cmd == wProgram.datarsp ) {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "event for cv%d=%d (reported cv%d)...", m_CVidx, ivalue, cv);
-    char* val = StrOp.fmt( "%d", ivalue );
-
-    char* rowstr = StrOp.fmt( "%d", cv );
-    if( cv > 0 && cv < 1024 ) {
-      m_CVTable->SetRowLabelValue( cv-1, wxString(rowstr,wxConvUTF8) );
-      m_CVTable->SetCellValue(cv-1, 0, wxString(val,wxConvUTF8) );
-    }
-    StrOp.free( rowstr );
-
     /*
      * CV18 = addr - 256 * (addr / 256)
      * CV17 = (addr / 256) + 192
@@ -396,39 +404,12 @@ void CV::event( iONode event ) {
       m_Timer->Stop();
       onDecFX();
     }
-    else {
-      wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( m_CVidx + VAL_CV, m_Parent );
-      if( tc != NULL ) {
-        if( m_bPOM && cv == 1 ) {
-          // Skip this value in case of POM
-        }
-        else {
-          tc->SetValue( wxString( val,wxConvUTF8) );
-          if( cv == 8 ) {
-            tc->SetToolTip(wxString( m_Vendor[ivalue&0xFF],wxConvUTF8));
-            TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "DCC Manufacturer: %s", m_Vendor[ivalue&0xFF] );
-            wLoc.setdectype(m_LocProps, m_Vendor[ivalue&0xFF] );
-          }
-        }
-      }
-    }
 
     if( m_CVnr->GetValue() == m_CVidx ) {
-      m_CVvalue->SetValue( wxString( val,wxConvUTF8) );
+      m_CVvalue->SetValue( wxString::Format(wxT("%d"), ivalue) );
       updateCVbits();
     }
 
-    StrOp.free( val );
-
-  }
-  else if( cmd == wProgram.statusrsp ) {
-    wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( m_CVidx + VAL_CV, m_Parent );
-    if( tc != NULL ) {
-      char* rowstr = StrOp.fmt( "%d", m_CVidx );
-      m_CVTable->SetRowLabelValue( m_CVidx-1, wxString(rowstr,wxConvUTF8) );
-      m_CVTable->SetCellValue(m_CVidx-1, 0, tc->GetValue() );
-      StrOp.free( rowstr );
-    }
   }
   else if( cmd == wProgram.save ) {
   }
