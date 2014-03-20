@@ -110,6 +110,7 @@ private:
     void initPresets( int nr, const char* val );
     void readAll();
     void writeAll();
+    void updateCV(int cv, int value);
 
     void onDecConfig();
     void onDecFX();

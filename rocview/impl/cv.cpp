@@ -253,6 +253,40 @@ void CV::setLocProps( iONode props ) {
 }
 
 
+void CV::updateCV(int cv, int value) {
+  char* val = StrOp.fmt( "%d", value );
+  char* rowstr = StrOp.fmt( "%d", cv );
+  if( cv > 0 && cv < 1024 ) {
+    m_CVTable->SetRowLabelValue( cv-1, wxString(rowstr,wxConvUTF8) );
+    m_CVTable->SetCellValue(cv-1, 0, wxString(val,wxConvUTF8) );
+  }
+  StrOp.free( rowstr );
+
+  if( cv == 17 ) {
+    m_CV17 = value;
+    int laddr = (m_CV17&0x3f) * 256 + m_CV18;
+    m_CVlongaddress->SetValue( wxString::Format(wxT("%d"), laddr) );
+  }
+  else if( cv == 18 ) {
+    m_CV18 = value;
+    int laddr = (m_CV17&0x3f) * 256 + m_CV18;
+    m_CVlongaddress->SetValue( wxString::Format(wxT("%d"), laddr) );
+  }
+  else if( m_CVnr->GetValue() == cv ) {
+    m_CVvalue->SetValue( wxString( val,wxConvUTF8) );
+    updateCVbits();
+  }
+
+  wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( m_CVidx + VAL_CV, m_Parent );
+  if( tc != NULL && (!m_bPOM || cv != 1) ) {
+    tc->SetValue( wxString( val,wxConvUTF8) );
+  }
+
+
+  StrOp.free( val );
+}
+
+
 void CV::event( iONode event ) {
   int cmd = wProgram.getcmd(event);
   int cv  = wProgram.getcv (event);
@@ -268,6 +302,8 @@ void CV::event( iONode event ) {
   if( cv == -1 || (cmd == wProgram.datarsp && cv > 0 && cv != m_CVidx) ) {
     // forced data response
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "reject CV%d(%d)=%d ", cv, m_CVidx, ivalue);
+    if( cmd == wProgram.datarsp && cv > 0 )
+      updateCV(cv, ivalue);
     return;
   }
 
