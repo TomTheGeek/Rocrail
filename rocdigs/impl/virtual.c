@@ -470,6 +470,17 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
         else
           wProgram.setvalue( rsp, data->cvval[cv] );
         wProgram.setcmd( rsp, wProgram.datarsp );
+
+        if( wDigInt.isreadbidi( data->ini ) ) {
+          if( data->listenerFun != NULL && data->listenerObj != NULL )
+            data->listenerFun( data->listenerObj, (iONode)NodeOp.base.clone(rsp), TRCLEVEL_INFO );
+          ThreadOp.sleep(50);
+          if( wDigInt.isptsupport( data->ini ) )
+            wProgram.setvalue( rsp, rand() % 256 );
+          else
+            wProgram.setvalue( rsp, data->cvval[cv] );
+        }
+
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "out of range CV%d...", cv );
