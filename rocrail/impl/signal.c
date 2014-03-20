@@ -1040,6 +1040,7 @@ static Boolean __process2AspectsAsSwitchCmd( iOSignal inst, const char* state ) 
   if( iid != NULL )
     wSwitch.setiid( cmd, iid );
 
+  wSwitch.setaccessory( cmd, wSignal.isaccessory( o->props ) );
   wSwitch.setprot( cmd, wSignal.getprot( o->props ) );
   wSwitch.setcmd( cmd, wOutput.on );
   wSwitch.setbus( cmd, wSignal.getbus( o->props ) );
