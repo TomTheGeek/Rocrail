@@ -184,12 +184,12 @@ void CV::initValues() {
 }
 
 void CV::initPresets( int nr, const char* val ) {
-  if( nr < 9 ) {
-    wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( nr + VAL_CV, m_Parent );
-    if( tc != NULL ) {
-      tc->SetValue( wxString( val,wxConvUTF8) );
+  if( nr > 0 && nr < 9 ) {
+    wxTextCtrl* tc[] = {NULL, m_CVaddress,m_CVVstart,m_CVaccel,m_CVdecel,m_CVVhigh,m_CVVmid,m_CVversion,m_CVmanufacturedID};
+    if( tc[nr] != NULL ) {
+      tc[nr]->SetValue( wxString( val,wxConvUTF8) );
       if( nr == 8 )
-        tc->SetToolTip(wxString( m_Vendor[atoi(val)&0xFF],wxConvUTF8));
+        tc[nr]->SetToolTip(wxString( m_Vendor[atoi(val)&0xFF],wxConvUTF8));
     }
   }
 }
@@ -893,30 +893,27 @@ void CV::getLongAddress() {
 }
 
 void CV::setLongAddress() {
-  wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( VAL_LADDRESS, m_Parent );
-  if( tc != NULL ) {
-    int addr = atoi( tc->GetValue().mb_str(wxConvUTF8) );
-    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "set long address to %d..." );
+  int addr = atoi( m_CVlongaddress->GetValue().mb_str(wxConvUTF8) );
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "set long address to %d..." );
+  m_CVoperation = CVSET;
+  doCV( wProgram.set, 17, (addr / 256) + 192 );
+  m_CVoperation = CVSET;
+  doCV( wProgram.set, 18, addr - 256 * (addr / 256) );
+  if( wCVconf.islissy( m_CVconf ) ) {
     m_CVoperation = CVSET;
-    doCV( wProgram.set, 17, (addr / 256) + 192 );
+    doCV( wProgram.set, 117, (addr / 256) + 192 );
     m_CVoperation = CVSET;
-    doCV( wProgram.set, 18, addr - 256 * (addr / 256) );
-    if( wCVconf.islissy( m_CVconf ) ) {
-      m_CVoperation = CVSET;
-      doCV( wProgram.set, 117, (addr / 256) + 192 );
-      m_CVoperation = CVSET;
-      doCV( wProgram.set, 118, addr - 256 * (addr / 256) );
-    }
-    if( m_LocProps != NULL ) {
-      wLoc.setaddr(m_LocProps, addr);
-      if( !wxGetApp().isStayOffline() ) {
-        /* Notify RocRail. */
-        iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-        wModelCmd.setcmd( cmd, wModelCmd.modify );
-        NodeOp.addChild( cmd, (iONode)m_LocProps->base.clone( m_LocProps ) );
-        wxGetApp().sendToRocrail( cmd );
-        cmd->base.del(cmd);
-      }
+    doCV( wProgram.set, 118, addr - 256 * (addr / 256) );
+  }
+  if( m_LocProps != NULL ) {
+    wLoc.setaddr(m_LocProps, addr);
+    if( !wxGetApp().isStayOffline() ) {
+      /* Notify RocRail. */
+      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+      wModelCmd.setcmd( cmd, wModelCmd.modify );
+      NodeOp.addChild( cmd, (iONode)m_LocProps->base.clone( m_LocProps ) );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
     }
   }
 }
@@ -953,9 +950,9 @@ void CV::doCV( int id ) {
     return;
   }
 
-  wxTextCtrl* tc = (wxTextCtrl*)wxWindow::FindWindowById( index + VAL_CV, m_Parent );
-  if( tc != NULL )
-    val = atoi( tc->GetValue().mb_str(wxConvUTF8) );
+  wxTextCtrl* tc[] = {NULL, m_CVaddress,m_CVVstart,m_CVaccel,m_CVdecel,m_CVVhigh,m_CVVmid,m_CVversion,m_CVmanufacturedID};
+  if( index < 9 && tc[index] != NULL )
+    val = atoi( tc[index]->GetValue().mb_str(wxConvUTF8) );
   else if( command == wProgram.set ) {
     TraceOp.trc( "cv", TRCLEVEL_WARNING, __LINE__, 9999, "No VAL_CV found for index=%d", index );
     return;
