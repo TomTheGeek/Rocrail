@@ -449,6 +449,32 @@ void RocProDlg::onClose( wxCloseEvent& event ) {
   EndModal(0);
 }
 
+
+void RocProDlg::updateCV(int cv, int value) {
+
+  if( m_bSpeedCurve && m_CVoperation == wProgram.get && cv >= 67 && cv <= 94) {
+    m_Curve[m_PendingCV-67] = value;
+  }
+  else if( cv == 17 ) {
+    m_CV17 = value;
+    int laddr = (m_CV17&0x3f) * 256 + m_CV18;
+    m_ExtAddr->SetValue( laddr );
+  }
+  else if( cv == 18 ) {
+    m_CV18 = value;
+    int laddr = (m_CV17&0x3f) * 256 + m_CV18;
+    m_ExtAddr->SetValue( laddr );
+  }
+  else {
+    if( cv > 0 )
+      m_Nr->SetValue( cv );
+    if( cv != -1 )
+      setCVVal(value);
+  }
+
+}
+
+
 void RocProDlg::event(iONode node) {
   if( StrOp.equals(NodeOp.getName(node), wProgram.name() ) ) {
     int cmd = wProgram.getcmd(node);
@@ -460,6 +486,9 @@ void RocProDlg::event(iONode node) {
     if( cv == -1 || (cmd == wProgram.datarsp && cv > 0 && cv != m_CVexpected) ) {
       // forced data response
       TraceOp.trc( "rocpro", TRCLEVEL_INFO, __LINE__, 9999, "reject CV%d(%d)=%d ", cv, m_CVexpected, value);
+      if( cmd == wProgram.datarsp && cv > 0 ) {
+        updateCV(cv, value);
+      }
       return;
     }
 

@@ -70,6 +70,8 @@ class RocProDlg : public RocProDlgGen
   void setCVVal(int val, bool updateval=true);
   void importJMRI(iONode decoder);
   void loadDecFile();
+  void updateCV(int cv, int value);
+
 	protected:
 		// Handlers for RocProDlgGen events.
 		void onTreeSelChanged( wxTreeEvent& event );
