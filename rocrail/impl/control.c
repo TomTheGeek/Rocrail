@@ -1107,8 +1107,8 @@ static void __listener( obj inst, iONode nodeC, int level ) {
     }
 
     /* Broadcast to clients. Node3 */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Program event %d: cv%d=%d addr=%d",
-        wProgram.getcmd( nodeC ), wProgram.getcv( nodeC ), wProgram.getvalue( nodeC ), wProgram.getdecaddr( nodeC ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Program event %d: cv%d=%d addr=%d type=%d",
+        wProgram.getcmd( nodeC ), wProgram.getcv( nodeC ), wProgram.getvalue( nodeC ), wProgram.getdecaddr( nodeC ), wProgram.getlntype( nodeC ) );
     AppOp.broadcastEvent( nodeC );
   }
   else if( StrOp.equals( wState.name(), NodeOp.getName( nodeC ) ) ) {
