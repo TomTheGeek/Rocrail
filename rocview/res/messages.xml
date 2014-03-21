@@ -27630,4 +27630,7 @@
     <sl txt="Spanje, ko je zaprto"/>
     <sr_latin txt="Uspavati zatvoreno"/>
   </Msg>
+  <Msg id="sensorrange">
+    <en txt="Sensor range"/>
+  </Msg>
 </Messages>

@@ -704,6 +704,8 @@
         <var name="discovery" vt="bool" defval="false"/>
         <var name="bind" vt="bool" defval="true"/>
         <var name="cmdpause" vt="int" defval="10" range="10-500"/>
+        <var name="sensorbegin" vt="int" defval="0" range="0-16000"/>
+        <var name="sensorend" vt="int" defval="0" range="0-16000"/>
         <product cardinality="n"/>
       </mcs2>
       

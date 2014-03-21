@@ -904,7 +904,9 @@
       <var name="discovery" vt="iOThread"/>
       <var name="initASCII" vt="Boolean"/>
       <var name="cmdpause" vt="int"/>
-      </data>
+      <var name="sensorbegin" vt="int"/>
+      <var name="sensorend" vt="int"/>
+    </data>
   </object>
 
   <object name="Clock" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread" include="$rocint/public/digint" remark="clock driver object">

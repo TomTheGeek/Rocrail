@@ -209,6 +209,25 @@ static void __SoD( iOMCS2 inst ) {
     ThreadOp.post( data->writer, (obj)out );
   }
 
+  if( wDigInt.getprotver( data->ini ) >= 2 && (data->sensorend - data->sensorbegin) > 0 ) {
+    byte*  msg   = allocMem(32);
+    msg[0] = (CMD_ACC_SENSOR >> 7);
+    msg[1]  = ((CMD_ACC_SENSOR & 0x7F) << 1 );
+    msg[2]  = 0x03;
+    msg[3]  = 0x00;
+    msg[4]  = 7;
+    msg[5]  = wMCS2.getfbdevid(data->mcs2ini) / 256; /* Geraetekenner */
+    msg[6]  = wMCS2.getfbdevid(data->mcs2ini) % 256;
+    msg[7]  = (data->sensorbegin & 0xFF00) >> 8; /* Kontaktkennung Start */
+    msg[8]  = (data->sensorbegin & 0x00FF);
+    msg[9]  = (data->sensorend & 0xFF00) >> 8; /* Kontaktkennung Ende */
+    msg[10] = (data->sensorend & 0x00FF);
+    msg[11] = 0xFF; /* Broadcast ein */
+    msg[12] = 0;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Queary sensor states for version >= 2..." );
+    ThreadOp.post( data->writer, (obj)msg );
+  }
+
 }
 
 
@@ -1289,6 +1308,8 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
     NodeOp.addChild( ini, data->mcs2ini);
   }
   data->cmdpause = wMCS2.getcmdpause(data->mcs2ini);
+  data->sensorbegin = wMCS2.getsensorbegin(data->mcs2ini);
+  data->sensorend   = wMCS2.getsensorend(data->mcs2ini);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 %d.%d.%d", vmajor, vminor, patch );
@@ -1297,6 +1318,7 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  version [%d]", wDigInt.getprotver( ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor device ID [%d]", wMCS2.getfbdevid(data->mcs2ini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  command pause [%d]ms", data->cmdpause );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  sensor range [%d-%d]", data->sensorbegin, data->sensorend );
 
   data->udp = !StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib(data->ini));
 
@@ -1342,24 +1364,7 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   data->writer = ThreadOp.inst( "mcs2writer", &__writer, __MCS2 );
   ThreadOp.start( data->writer );
 
-  if( wDigInt.getprotver( data->ini ) == 2 ) {
-    byte*  msg   = allocMem(32);
-    msg[0] = (CMD_ACC_SENSOR >> 7);
-    msg[1]  = ((CMD_ACC_SENSOR & 0x7F) << 1 );
-    msg[2]  = 0x03;
-    msg[3]  = 0x00;
-    msg[4]  = 7;
-    msg[5]  = wMCS2.getfbdevid(data->mcs2ini) / 256; /* Geraetekenner */
-    msg[6]  = wMCS2.getfbdevid(data->mcs2ini) % 256;
-    msg[7]  = (0 & 0xFF00) >> 8; /* Kontaktkennung Start */
-    msg[8]  = (0 & 0x00FF);
-    msg[9]  = (0x3FFF & 0xFF00) >> 8; /* Kontaktkennung Ende */
-    msg[10] = (0x3FFF & 0x00FF);
-    msg[11] = 0xFF; /* Broadcast ein */
-    msg[12] = 0;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Activate sensor events for version 2..." );
-    ThreadOp.post( data->writer, (obj)msg );
-  }
+  __SoD(__MCS2);
 
   if( data->fbmod > 0 ) {
     data->feedbackReader = ThreadOp.inst( "fbreader", &__feedbackMCS2Reader, __MCS2 );

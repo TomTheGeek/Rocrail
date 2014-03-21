@@ -6959,3 +6959,9 @@ msgstr ""
 msgid "Sleep on closed"
 msgstr ""
 
+#. 
+# id="sensorrange"
+#, c-format
+msgid "Sensor range"
+msgstr ""
+

@@ -125,6 +125,9 @@ public:
     wxTextCtrl* m_PortRX;
     wxStaticText* m_labFBMod;
     wxSpinCtrl* m_FBMod;
+    wxStaticText* m_labSensorRange;
+    wxSpinCtrl* m_SensorBegin;
+    wxSpinCtrl* m_SensorEnd;
     wxStaticText* m_labVersion;
     wxSpinCtrl* m_Version;
     wxRadioBox* m_SubLib;
