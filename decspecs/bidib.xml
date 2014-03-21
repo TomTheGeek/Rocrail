@@ -16,7 +16,9 @@
 	  <product vid="13" pid="113" desc="BiDiBOne OneTester 24 LED-Testboard" url="http://www.opendcc.de/elektronik/bidibone/onetester.html"/> 
 	  <product vid="13" pid="114" desc="BiDiBOne OneHub BiDiBus Hub" url="http://www.opendcc.de/elektronik/bidibone/onehub.html"/> 
 	  <product vid="13" pid="115" desc="BiDiBOne OneDMX DMX Controller" url="http://www.opendcc.de/elektronik/bidibone/onedmx.html"/> 
-	  <product vid="13" pid="220" desc="Switch-64" url="http://www.bidib.org/support/product_id.html"/> 
+    <product vid="13" pid="116" desc="BiDiBOne OneOC" url="http://wiki.fichtelbahn.de/doku.php?id=oneoc"/> 
+	  <product vid="13" pid="117" desc="BiDiBOne OneControl" url="http://wiki.fichtelbahn.de/doku.php?id=onecontrol"/> 
+    <product vid="13" pid="220" desc="Switch-64" url="http://www.bidib.org/support/product_id.html"/> 
 	  <product vid="13" pid="221" desc="LED-Optics" url="http://www.bidib.org/support/product_id.html"/> 
 	</productlist>
 </bidib>
