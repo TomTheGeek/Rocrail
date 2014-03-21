@@ -782,7 +782,7 @@ void RocnetNodeDlg::event(iONode node) {
     }
     else if( wProgram.getcmd(node) == wProgram.getoptions ) {
       int iotype = wProgram.getval1(node);
-      if( iotype > 1 )
+      if( iotype > 2 )
         iotype = 0;
       m_IOType->SetSelection( iotype );
       m_SecAck->SetValue(wProgram.getval2(node)&0x01?true:false);

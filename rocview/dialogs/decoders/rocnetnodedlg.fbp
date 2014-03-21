@@ -2662,7 +2662,7 @@
                                                                 <property name="proportion">0</property>
                                                                 <object class="wxRadioBox" expanded="0">
                                                                     <property name="bg"></property>
-                                                                    <property name="choices">&quot;I2C-1&quot; &quot;I2C-0&quot;</property>
+                                                                    <property name="choices">&quot;I2C-1&quot; &quot;I2C-0&quot; &quot;I2C-2&quot;</property>
                                                                     <property name="context_help"></property>
                                                                     <property name="context_menu">1</property>
                                                                     <property name="enabled">1</property>
