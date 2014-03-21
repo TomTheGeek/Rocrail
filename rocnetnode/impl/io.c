@@ -49,6 +49,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <errno.h>
 
 #define PAGE_SIZE (4*1024)
 #define BLOCK_SIZE (4*1024)
@@ -113,9 +114,8 @@ volatile unsigned *mapRegisterMemory(int base)
     base
   );
 
-  if ((long)map < 0) {
-    printf("mmap error %d\n", (int)map);
-    TraceOp.trc( "raspi", TRCLEVEL_EXCEPTION, __LINE__, 9999, "mmap error %d", (int)map );
+  if ((long)map == -1) {
+    TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, errno, "mmap error" );
     return NULL;
   }
 
