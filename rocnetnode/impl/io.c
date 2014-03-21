@@ -115,7 +115,7 @@ volatile unsigned *mapRegisterMemory(int base)
   );
 
   if ((long)map == -1) {
-    TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, errno, "mmap error" );
+    TraceOp.terrno( "raspi", TRCLEVEL_EXCEPTION, __LINE__, 9999, errno, "mmap error" );
     return NULL;
   }
 
