@@ -1160,6 +1160,9 @@ static void __reader( void* threadinst ) {
     else if( in[1] == CAN_SENSOR_EVENT ) {
       __evaluateSensorEvent( data, in );
     }
+    else if( in[1] == 0x22 && in[4] == 8 ) { /* Without response bit set!? (CAN Digital Bahn) */
+      __evaluateSensorEvent( data, in );
+    }
     else if( in[1] == ID_LOCO_DIRECTION | in[1] == 0x08 ) {
       /* loc speed or direction comamnd, not from Rocrail. */
       __evaluateMCS2Loc( data, in );
