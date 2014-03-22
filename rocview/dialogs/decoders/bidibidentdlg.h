@@ -136,6 +136,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onProductName( wxMouseEvent& event );
     int getProductID(int uid);
     void onReport( wxCommandEvent& event );
+    void onUsernameSet( wxCommandEvent& event );
 
 	public:
 		/** Constructor */

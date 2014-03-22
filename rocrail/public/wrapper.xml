@@ -595,7 +595,9 @@
           <var name="analogcnt" vt="int" defval="0" remark="Number of ports."/>
           <var name="key" vt="string" defval=""/>
           <var name="parentkey" vt="string" defval=""/>
-          </bidibnode>
+          <var name="productname" vt="string" defval=""/>
+          <var name="username" vt="string" defval=""/>
+        </bidibnode>
       </bidib>
 
       <srcp remark="SRCP init" wrappername="SRCP">
@@ -994,6 +996,7 @@
     <const name="update" vt="int" val="50"/>
     <const name="setchannel" vt="int" val="51" remark="val1=channel, val2=value"/>
     <const name="raw" vt="int" val="52" remark="strval1=hexa"/>
+    <const name="setstring" vt="int" val="53" remark="strval1=userstring val1=id"/>
     <var name="cmd" vt="int" defval="0" range="0-*"/>
     <const name="lncvstart" vt="int" val="1"/>
     <const name="lncvend" vt="int" val="2"/>

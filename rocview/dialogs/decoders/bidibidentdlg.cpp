@@ -679,8 +679,20 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
     int pid = getProductID(wBiDiBnode.getuid(bidibnode));
     m_PID->SetValue( wxString::Format(_T("%02X"), pid ) );
     m_PIDD->SetValue( wxString::Format(_T("%d"), pid ) );
-    m_ProductName->SetValue( wxString( GetProductName(wBiDiBnode.getvendor(bidibnode)&0xFF, pid, &www), wxConvUTF8) );
-    m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
+    if(wBiDiBnode.getproductname(bidibnode) != NULL && StrOp.len(wBiDiBnode.getproductname(bidibnode)) > 0 ) {
+      m_ProductName->SetValue( wxString(wBiDiBnode.getproductname(bidibnode), wxConvUTF8) );
+      GetProductName(wBiDiBnode.getvendor(bidibnode)&0xFF, pid, &www);
+      m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
+    }
+    else {
+      m_ProductName->SetValue( wxString( GetProductName(wBiDiBnode.getvendor(bidibnode)&0xFF, pid, &www), wxConvUTF8) );
+      m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
+    }
+
+    m_Username->SetValue( wxT("") );
+    if(wBiDiBnode.getusername(bidibnode) != NULL && StrOp.len(wBiDiBnode.getusername(bidibnode)) > 0 ) {
+      m_Username->SetValue( wxString(wBiDiBnode.getusername(bidibnode), wxConvUTF8) );
+    }
 
     SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(bidibnode) ) + wxT(" ") + wxString( wBiDiBnode.getclass(bidibnode), wxConvUTF8) );
 
@@ -739,8 +751,20 @@ void BidibIdentDlg::initValues() {
     int pid = getProductID(wProgram.getmodid(node));
     m_PID->SetValue( wxString::Format(_T("%02X"), pid ) );
     m_PIDD->SetValue( wxString::Format(_T("%d"), pid ) );
-    m_ProductName->SetValue( wxString( GetProductName(wProgram.getmanu(node)&0xFF, pid, &www), wxConvUTF8) );
-    m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
+    if(wBiDiBnode.getproductname(node) != NULL && StrOp.len(wBiDiBnode.getproductname(node)) > 0 ) {
+      m_ProductName->SetValue( wxString(wBiDiBnode.getproductname(node), wxConvUTF8) );
+      GetProductName(wBiDiBnode.getvendor(node)&0xFF, pid, &www);
+      m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
+    }
+    else {
+      m_ProductName->SetValue( wxString( GetProductName(wProgram.getmanu(node)&0xFF, pid, &www), wxConvUTF8) );
+      m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
+    }
+
+    m_Username->SetValue( wxT("") );
+    if(wBiDiBnode.getusername(node) != NULL && StrOp.len(wBiDiBnode.getusername(node)) > 0 ) {
+      m_Username->SetValue( wxString(wBiDiBnode.getusername(node), wxConvUTF8) );
+    }
 
     char key[32];
     StrOp.fmtb(key, "[%s] %08X", mnemonic, wProgram.getmodid(node) );
@@ -763,8 +787,20 @@ void BidibIdentDlg::initValues() {
     int pid = getProductID(wBiDiBnode.getuid(node));
     m_PID->SetValue( wxString::Format(_T("%02X"), pid ) );
     m_PIDD->SetValue( wxString::Format(_T("%d"), pid ) );
-    m_ProductName->SetValue( wxString( GetProductName(wBiDiBnode.getvendor(node)&0xFF, pid, &www), wxConvUTF8) );
-    m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
+    if(wBiDiBnode.getproductname(node) != NULL && StrOp.len(wBiDiBnode.getproductname(node)) > 0 ) {
+      m_ProductName->SetValue( wxString(wBiDiBnode.getproductname(node), wxConvUTF8) );
+      GetProductName(wBiDiBnode.getvendor(node)&0xFF, pid, &www);
+      m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
+    }
+    else {
+      m_ProductName->SetValue( wxString( GetProductName(wBiDiBnode.getvendor(node)&0xFF, pid, &www), wxConvUTF8) );
+      m_ProductName->SetToolTip(wxString(www, wxConvUTF8));
+    }
+
+    m_Username->SetValue( wxT("") );
+    if(wBiDiBnode.getusername(node) != NULL && StrOp.len(wBiDiBnode.getusername(node)) > 0 ) {
+      m_Username->SetValue( wxString(wBiDiBnode.getusername(node), wxConvUTF8) );
+    }
 
     SetTitle(wxT("BiDiB: ") + wxString::Format(_T("%08X"), wBiDiBnode.getuid(node) ) + wxT(" ") + wxString( wBiDiBnode.getclass(node), wxConvUTF8) );
   }
@@ -1962,4 +1998,20 @@ void BidibIdentDlg::onReport( wxCommandEvent& event ) {
   fdlg->Destroy();
 
 }
+
+
+void BidibIdentDlg::onUsernameSet( wxCommandEvent& event ) {
+  if( bidibnode != NULL ) {
+    iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setmodid(cmd, wBiDiBnode.getuid(bidibnode));
+    wProgram.setcmd( cmd, wProgram.setstring );
+    wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
+    wProgram.setlntype(cmd, wProgram.lntype_bidib);
+    wProgram.setval1(cmd, 1);
+    wProgram.setstrval1(cmd, m_Username->GetValue().mb_str(wxConvUTF8) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
+}
+
 

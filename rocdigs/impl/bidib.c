@@ -971,7 +971,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     }
 
     else if( wProgram.getlntype(node) == wProgram.lntype_bidib ) {
-      byte msgdata[32];
+      byte msgdata[64];
       char uidKey[32];
       iOBiDiBNode bidibnode = NULL;
       StrOp.fmtb( uidKey, "0x%08X", wProgram.getmodid(node) );
@@ -1016,6 +1016,15 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
                 "loading hex file %s into node %d is pending: line=%d", data->hexfile, data->hexnode->uid, data->hexline );
           }
 
+        }
+        else if( wProgram.getcmd( node ) == wProgram.setstring ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set string %d to %s, len=%d",
+              wProgram.getval1(node), wProgram.getstrval1(node), StrOp.len(wProgram.getstrval1(node)) );
+          msgdata[0] = 0; /* name space */
+          msgdata[1] = wProgram.getval1(node); /* string ID */
+          msgdata[2] = StrOp.len(wProgram.getstrval1(node));
+          StrOp.copy((char*)(msgdata+3), wProgram.getstrval1(node));
+          data->subWrite((obj)inst, bidibnode->path, MSG_STRING_SET, msgdata, msgdata[2]+3, bidibnode);
         }
         else if( wProgram.getcmd( node ) == wProgram.vendorcvenable ) {
           Boolean enable = wProgram.getvalue(node) == 1;
@@ -1842,6 +1851,15 @@ static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata, byte* path) {
       data->subWrite((obj)bidib, node->path, MSG_FEATURE_GET, msgdata, 1, node);
       msgdata[0] = FEATURE_CTRL_LPORT_COUNT;
       data->subWrite((obj)bidib, node->path, MSG_FEATURE_GET, msgdata, 1, node);
+    }
+
+    if(True) {
+      byte msgdata[32];
+      msgdata[0] = 0;
+      msgdata[1] = 0;
+      data->subWrite((obj)bidib, node->path, MSG_STRING_GET, msgdata, 2, node);
+      msgdata[1] = 1;
+      data->subWrite((obj)bidib, node->path, MSG_STRING_GET, msgdata, 2, node);
     }
 
     StrOp.free(classname);
@@ -3153,6 +3171,25 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_SYS_PONG:
     if( bidibnode != NULL )
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,"MSG_SYS_PONG: from %d with echoed value %d", bidibnode->uid, pdata[0] );
+    break;
+
+  case MSG_STRING:
+    *(pdata+3+pdata[2]) = 0; // make the char string null terminated
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+        "MSG_STRING path=%s namespace=%d id=%d size=%d string=%s", pathKey, pdata[0], pdata[1], pdata[2], pdata+3 );
+    if( bidibnode != NULL && pdata[2] > 0 ) {
+      iONode child = __getIniNode(bidib, bidibnode->uid);
+      if( child != NULL ) {
+        if( pdata[0] == 0 && pdata[1] == 0) {
+          // Productname
+          wBiDiBnode.setproductname(child, pdata+3);
+        }
+        else if( pdata[0] == 0 && pdata[1] == 1) {
+          // Username
+          wBiDiBnode.setusername(child, pdata+3);
+        }
+      }
+    }
     break;
 
   default:
