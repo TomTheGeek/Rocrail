@@ -133,6 +133,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
     void onAccessoryReadMacroMap( wxCommandEvent& event );
     void onAccessoryWriteMacroMap( wxCommandEvent& event );
     void onLeftLogo( wxMouseEvent& event );
+    void onFBLogo( wxMouseEvent& event );
     void onProductName( wxMouseEvent& event );
     int getProductID(int uid);
     void onReport( wxCommandEvent& event );

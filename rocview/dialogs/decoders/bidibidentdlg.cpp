@@ -5,6 +5,8 @@
 
  
 
+ Without an official permission commercial use is not permitted.
+ Forking this project is not permitted.
 
  This program is free software; you can redistribute it and/or
  as published by the Free Software Foundation; either version 2
@@ -342,7 +344,10 @@ void BidibIdentDlg::initLabels() {
   m_MacroPanel->Enable(false);
 
   m_BiDiBlogo->SetBitmap(*_img_bidib);
+  m_FbLogo->SetBitmap(*_img_fb);
   m_BiDiBlogo->SetToolTip(wxT("http://www.bidib.org"));
+  m_FbLogo->SetToolTip(wxT("http://www.fichtelbahn.de/shop"));
+
 
   // Index
   m_labPath->SetLabel(wxGetApp().getMsg( "path" ));
@@ -1819,6 +1824,12 @@ void BidibIdentDlg::onAccessoryWriteMacroMap( wxCommandEvent& event ) {
 void BidibIdentDlg::onLeftLogo( wxMouseEvent& event ) {
   wxLaunchDefaultBrowser(wxT("http://www.bidib.org"), wxBROWSER_NEW_WINDOW );
 }
+
+
+void BidibIdentDlg::onFBLogo( wxMouseEvent& event ) {
+  wxLaunchDefaultBrowser(wxT("http://shop.fichtelbahn.de"), wxBROWSER_NEW_WINDOW );
+}
+
 void BidibIdentDlg::onProductName( wxMouseEvent& event ) {
   if( www != NULL )
     wxLaunchDefaultBrowser(wxString(www, wxConvUTF8), wxBROWSER_NEW_WINDOW );
