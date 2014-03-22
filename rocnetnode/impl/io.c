@@ -28,7 +28,8 @@
 
 #include "rocnetnode/public/io.h"
 
-#ifdef __arm__
+#if defined __arm__ &! defined __ARM_ARCH_7A__
+
 /* Access from ARM Running Linux */
 
 #define BCM2708_PERI_BASE        0x20000000
