@@ -261,6 +261,8 @@ const char* bidibGetFeatureName(int feature) {
   if( feature == FEATURE_CTRL_MAC_SIZE ) return "MAC size";
   if( feature == FEATURE_CTRL_MAC_START_MAN ) return "MAC start manuel";
   if( feature == FEATURE_CTRL_MAC_START_DCC ) return "MAC start DCC";
+  if( feature == FEATURE_CTRL_PORT_QUERY_AVAILABLE ) return "support output query";
+  if( feature == FEATURE_SPORT_CONFIG_AVAILABLE ) return "can configure SPORTs";
 
   /* DCC Gen */
   if( feature == FEATURE_GEN_SPYMODE ) return "DCC spymode";
@@ -276,11 +278,13 @@ const char* bidibGetFeatureName(int feature) {
 
   if( feature == FEATURE_FW_UPDATE_MODE ) return "firmware update mode";
   if( feature == FEATURE_EXTENSION ) return "reserved for future expansion";
+  if( feature == FEATURE_STRING_SIZE ) return "length of user strings";
 
   /* accessory */
   if( feature == FEATURE_ACCESSORY_COUNT ) return "number of objects";
   if( feature == FEATURE_ACCESSORY_SURVEILLED ) return "annouce if operated outside bidib";
   if( feature == FEATURE_ACCESSORY_MACROMAPPED ) return "accessory aspects are mapped to macros";
+
 
   return "*** unknown feature ***";
 }
