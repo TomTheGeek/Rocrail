@@ -27,7 +27,6 @@
 #define IO_I2C_1 0
 #define IO_I2C_0 1
 #define IO_I2C_2 2
-#define IO_NOT_USED 2
 #define IO_DIRECT 3
 
 #define IO_OUTPUT 0

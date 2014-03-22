@@ -3169,10 +3169,6 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
       data->ismobile = wRocNetNodeOptions.ismobile(optionsini);
       data->usepb = wRocNetNodeOptions.isusepb(optionsini);
       data->iotype = wRocNetNodeOptions.getiotype(optionsini);
-      if( data->iotype == IO_NOT_USED ) {
-        /* convert to new type: i2c-1 */
-        data->iotype = IO_I2C_1;
-      }
       StrOp.copy( data->nickname, wRocNetNodeOptions.getnickname(optionsini) );
     }
     else {
