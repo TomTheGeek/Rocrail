@@ -3217,6 +3217,17 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
           // Username
           wBiDiBnode.setusername(child, (const char*)(pdata+3));
           StrOp.copy( bidibnode->username, (const char*)(pdata+3) );
+
+          iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+          wProgram.setcmd( node, wProgram.setstring );
+          wProgram.setiid( node, data->iid );
+          wProgram.setlntype(node, wProgram.lntype_bidib);
+          wProgram.setmodid(node, bidibnode->uid);
+          wProgram.setmanu(node, bidibnode->vendorid);
+          wProgram.setprod(node, bidibnode->classid);
+          wProgram.setval1(node, 1);
+          wProgram.setstrval1(node, bidibnode->username);
+          data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
         }
       }
     }

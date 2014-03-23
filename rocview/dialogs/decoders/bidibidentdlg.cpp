@@ -175,6 +175,29 @@ void BidibIdentDlg::event(iONode node) {
     StrOp.free(classname);
     NodeOp.base.del(node);
   }
+  else if(  wProgram.getcmd( node ) == wProgram.setstring && wProgram.getval1(node) == 1 ) {
+    char mnemonic[32];
+    char* classname = bidibGetClassName(wProgram.getprod(node), mnemonic, NULL);
+    char key[256];
+    StrOp.fmtb(key, "[%s] %08X", mnemonic, wProgram.getmodid(node) );
+    wxTreeItemId item = findTreeItem( m_Tree->GetRootItem(), wxString( key, wxConvUTF8));
+    if( item.IsOk() ) {
+      iONode l_bidibnode = (iONode)MapOp.get( nodeMap, key );
+      if( l_bidibnode != NULL ) {
+        TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"bidibnode %s found, new username=%s", key, wProgram.getstrval1(node) );
+        wBiDiBnode.setusername(l_bidibnode, wProgram.getstrval1(node));
+      }
+      else
+        TraceOp.trc( "bidibident", TRCLEVEL_WARNING, __LINE__, 9999,"bidibnode %s not found", key );
+
+      m_Tree->SelectItem(item);
+      m_Tree->ScrollTo(item);
+      StrOp.fmtb(key, "[%s] %08X %s", mnemonic, wProgram.getmodid(node), wProgram.getstrval1(node) );
+      m_Tree->SetItemText(item, wxString( key, wxConvUTF8) );
+    }
+    StrOp.free(classname);
+    NodeOp.base.del(node);
+  }
   else if(  wProgram.getcmd( node ) == wProgram.vendorcvget ) {
     eventUpdate = true;
     m_VendorCVName->SetValue( wxString( wProgram.getstrval1(node),wxConvUTF8));
@@ -324,9 +347,10 @@ int BidibIdentDlg::getLevel(const char* path, int* n, int* o, int* p, char** key
 }
 
 wxTreeItemId BidibIdentDlg::addTreeChild( const wxTreeItemId& root, iONode bidibnode) {
-  char key[32];
+  char key[256];
   StrOp.fmtb(key, "[%s] %08X %s", wBiDiBnode.getclassmnemonic(bidibnode), wBiDiBnode.getuid(bidibnode), wBiDiBnode.getusername(bidibnode) );
   wxTreeItemId item = m_Tree->AppendItem( root, wxString( key, wxConvUTF8));
+  StrOp.fmtb(key, "[%s] %08X", wBiDiBnode.getclassmnemonic(bidibnode), wBiDiBnode.getuid(bidibnode) );
   MapOp.put( nodeMap, key, (obj)bidibnode);
   MapOp.put( nodePathMap, wBiDiBnode.getpath(bidibnode), (obj)bidibnode);
   return item;
@@ -554,7 +578,7 @@ void BidibIdentDlg::initLabels() {
     iONode bidibnode = (iONode)ListOp.get( nodeList, 0 );
     iONode rootnode  = (iONode)ListOp.get( nodeList, 0 );
 
-    char key[32];
+    char key[2656];
     int level = 0;
     StrOp.fmtb(key, "[%s] %08X", wBiDiBnode.getclassmnemonic(bidibnode), wBiDiBnode.getuid(bidibnode) );
     wxTreeItemId root  = m_Tree->AddRoot(wxString( key, wxConvUTF8));
@@ -667,6 +691,19 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
   wxString itemText = m_Tree->GetItemText(event.GetItem());
   char* uid = StrOp.dup(itemText.mb_str(wxConvUTF8));
   bidibnode = (iONode)MapOp.get( nodeMap, uid );
+  if( bidibnode == NULL ) {
+    iONode node = (iONode)MapOp.first(nodeMap);
+    while( node != NULL ) {
+      char key[256];
+      StrOp.fmtb(key, "%08X", wBiDiBnode.getuid(node) );
+      if( StrOp.find(uid, key) != NULL ) {
+        bidibnode = node;
+        break;
+      }
+      node = (iONode)MapOp.next(nodeMap);
+    }
+  }
+
   if( bidibnode != NULL ) {
     TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"tree selection: %s (%s)", wBiDiBnode.getpath(bidibnode), uid );
     TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"vid=%d uid=%d", wBiDiBnode.getvendor(bidibnode), wBiDiBnode.getuid(bidibnode) );
@@ -771,7 +808,7 @@ void BidibIdentDlg::initValues() {
       m_Username->SetValue( wxString(wBiDiBnode.getusername(node), wxConvUTF8) );
     }
 
-    char key[32];
+    char key[256];
     StrOp.fmtb(key, "[%s] %08X", mnemonic, wProgram.getmodid(node) );
     wxTreeItemId item = findTreeItem( m_Tree->GetRootItem(), wxString( key, wxConvUTF8));
     if( item.IsOk() ) {
@@ -826,7 +863,7 @@ wxTreeItemId BidibIdentDlg::findTreeItem( const wxTreeItemId& root, const wxStri
   while(item.IsOk())
   {
     itemtext = m_Tree->GetItemText(item);
-    bFound = itemtext == findtext;
+    bFound = itemtext.StartsWith(findtext);
     if(bFound)
       return item;
     child = m_Tree->GetFirstChild(item, cookie);
@@ -979,7 +1016,7 @@ void BidibIdentDlg::handleFeature(iONode node) {
   char* classname = bidibGetClassName(wProgram.getprod(node), mnemonic, NULL);
   StrOp.free(classname);
 
-  char uidKey[32];
+  char uidKey[256];
   StrOp.fmtb(uidKey, "[%s] %08X", mnemonic, wProgram.getmodid(node) );
   iONode l_bidibnode = (iONode)MapOp.get( nodeMap, uidKey );
   if( l_bidibnode != NULL ) {
