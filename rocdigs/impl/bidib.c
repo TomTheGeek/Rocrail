@@ -70,7 +70,7 @@ static int instCnt = 0;
 
 
 static void __SoD( iOBiDiB inst, iOBiDiBNode bidibnode );
-static void __handleSensor(iOBiDiB bidib, int bus, int addr, Boolean state, int locoAddr, int type, int load );
+static void __handleSensor(iOBiDiB bidib, iOBiDiBNode bidibnode, int addr, Boolean state, int locoAddr, int type, int load );
 
 
 /** ----- OBase ----- */
@@ -972,12 +972,17 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wFeedback.name() ) ) {
     int addr = wFeedback.getaddr( node );
     Boolean state = wFeedback.isstate( node );
+    iOBiDiBNode bidibnode = NULL;
+    char uidKey[32];
+    StrOp.fmtb( uidKey, "0x%08X", wSwitch.getbus(node) );
+    bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
 
     if( wFeedback.isactivelow(node) )
       wFeedback.setstate( node, !state);
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
-    __handleSensor(inst, wFeedback.getbus(node), wFeedback.getaddr(node)-1, wFeedback.isstate(node), atoi(wFeedback.getidentifier(node)), 0, 0 );
+    if( bidibnode != NULL )
+      __handleSensor(inst, bidibnode, wFeedback.getaddr(node)-1, wFeedback.isstate(node), atoi(wFeedback.getidentifier(node)), 0, 0 );
   }
 
   /* Program command. */
@@ -1375,7 +1380,7 @@ static Boolean _supportPT( obj inst ) {
  * 01  Accessory-Adresse
  * 11  Extended Accessory
  */
-static void __handleSensor(iOBiDiB bidib, int bus, int addr, Boolean state, int locoAddr, int type, int load ) {
+static void __handleSensor(iOBiDiB bidib, iOBiDiBNode bidibnode, int addr, Boolean state, int locoAddr, int type, int load ) {
   iOBiDiBData data = Data(bidib);
   char ident[32];
 
@@ -1393,17 +1398,19 @@ static void __handleSensor(iOBiDiB bidib, int bus, int addr, Boolean state, int 
 
   addr++; /* increase address with one */
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-      "sensor bus=%08X addr=%d state=%s ident=%d type=%s", bus, addr, state?"occ":"free", locoAddr, sType );
+      "sensor bus=%08X addr=%d state=%s ident=%d type=%s username=%s", bidibnode->uid, addr, state?"occ":"free", locoAddr, sType, bidibnode->username );
 
   if( type == -1 || type == 0 || type == 2 ) {
     /* occ event */
     /* inform listener: Node3 */
     iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
-    wFeedback.setbus( nodeC, bus );
+    wFeedback.setbus( nodeC, bidibnode->uid );
     wFeedback.setaddr( nodeC, addr );
     wFeedback.setload( nodeC, load );
     wFeedback.setfbtype( nodeC, wFeedback.fbtype_sensor );
+    if( bidibnode != NULL )
+      wItem.setuidname(nodeC, bidibnode->username);
 
     if( data->iid != NULL )
       wFeedback.setiid( nodeC, data->iid );
@@ -1423,7 +1430,7 @@ static void __handleSensor(iOBiDiB bidib, int bus, int addr, Boolean state, int 
 }
 
 
-static void __handleMultipleSensors(iOBiDiB bidib, int bus, const byte* pdata, int size) {
+static void __handleMultipleSensors(iOBiDiB bidib, iOBiDiBNode bidibnode, const byte* pdata, int size) {
   iOBiDiBData data = Data(bidib);
 
   // 06 00 02 A2 00 08 01 8B
@@ -1435,7 +1442,7 @@ static void __handleMultipleSensors(iOBiDiB bidib, int bus, const byte* pdata, i
   for( i = 0; i < cnt; i++ ) {
     int bit = 0;
     for( bit = 0; bit < 8; bit++ ) {
-      __handleSensor(bidib, bus, bit+(i*8), pdata[2+i] & (0x01 << bit), 0, -1, 0);
+      __handleSensor(bidib, bidibnode, bit+(i*8), pdata[2+i] & (0x01 << bit), 0, -1, 0);
     }
   }
 
@@ -2868,7 +2875,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     if( bidibnode != NULL ) {
       if(!bidibnode->occ[pdata[0]]) {
         bidibnode->occ[pdata[0]] = True;
-        __handleSensor(bidib, bidibnode->uid, pdata[0], True, 0, -1, bidibnode->bmload[pdata[0]]);
+        __handleSensor(bidib, bidibnode, pdata[0], True, 0, -1, bidibnode->bmload[pdata[0]]);
       }
       __seqAck(bidib, bidibnode, MSG_BM_MIRROR_OCC, pdata, datasize);
     }
@@ -2880,7 +2887,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"BM port %d free", pdata[0]);
     if( bidibnode != NULL ) {
       bidibnode->occ[pdata[0]] = False;
-      __handleSensor(bidib, bidibnode->uid, pdata[0], False, 0, -1, bidibnode->bmload[pdata[0]]);
+      __handleSensor(bidib, bidibnode, pdata[0], False, 0, -1, bidibnode->bmload[pdata[0]]);
       __seqAck(bidib, bidibnode, MSG_BM_MIRROR_FREE, pdata, datasize);
     }
     break;
@@ -2889,7 +2896,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   case MSG_BM_MULTIPLE:
   {
     if( bidibnode != NULL ) {
-      __handleMultipleSensors(bidib, bidibnode->uid, pdata, size);
+      __handleMultipleSensors(bidib, bidibnode, pdata, size);
       __seqAck(bidib, bidibnode, MSG_BM_MIRROR_MULTIPLE, pdata, datasize);
     }
     break;
@@ -2918,7 +2925,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"BM port %d reports loco %d", port, locoAddr);
       if( bidibnode != NULL && locoAddr > 0 ) {
         bidibnode->occ[port] = True;
-        __handleSensor(bidib, bidibnode->uid, pdata[0], bidibnode->occ[port], locoAddr, type, bidibnode->bmload[port] );
+        __handleSensor(bidib, bidibnode, pdata[0], bidibnode->occ[port], locoAddr, type, bidibnode->bmload[port] );
       }
     }
     break;
@@ -2968,7 +2975,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
         "MSG_BM_CURRENT, path=%s seq=%d port=%d current=%dmA", pathKey, Seq, port, current );
     if( bidibnode != NULL && port < 128) {
       bidibnode->bmload[port] = current;
-      __handleSensor(bidib, bidibnode->uid, port, bidibnode->occ[port], 0, -1, bidibnode->bmload[port]);
+      __handleSensor(bidib, bidibnode, port, bidibnode->occ[port], 0, -1, bidibnode->bmload[port]);
     }
     break;
   }
@@ -3136,7 +3143,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_LC_KEY path=%s port=%d state=%d", pathKey, pdata[0], pdata[1] );
     if( bidibnode != NULL )
-      __handleSensor(bidib, bidibnode->uid, pdata[0], pdata[1] > 0 ? True:False, 0, -1, 0);
+      __handleSensor(bidib, bidibnode, pdata[0], pdata[1] > 0 ? True:False, 0, -1, 0);
     break;
 
   case MSG_ACCESSORY_STATE:
