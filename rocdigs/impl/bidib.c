@@ -46,6 +46,7 @@
 #include "rocrail/wrapper/public/Command.h"
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Output.h"
@@ -476,6 +477,19 @@ static Boolean __macroCommand(iOBiDiB inst, iONode node) {
   }
 
 
+static iOBiDiBNode __findNodeByName(iOBiDiB inst, const char* uidname) {
+  iOBiDiBData data = Data(inst);
+  iOBiDiBNode bidibnode = (iOBiDiBNode)MapOp.first(data->nodemap);
+  while(bidibnode != NULL) {
+    if( StrOp.equals(uidname, bidibnode->username ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found node [%08X] by username: [%s]", bidibnode->uid, bidibnode->username );
+      break;
+    }
+    bidibnode = (iOBiDiBNode)MapOp.next(data->nodemap);
+  }
+  return bidibnode;
+}
+
 
 static iONode __translate( iOBiDiB inst, iONode node ) {
   iOBiDiBData data = Data(inst);
@@ -565,6 +579,11 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
     StrOp.fmtb( uidKey, "0x%08X", wSwitch.getbus(node) );
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
+
+    if( bidibnode == NULL && StrOp.len( wItem.getuidname(node) ) > 0 ) {
+      bidibnode = __findNodeByName(inst, wItem.getuidname(node));
+    }
+
     if( bidibnode == NULL ) {
       if( wSwitch.isaccessory(node) && StrOp.equals( wSwitch.getprot( node ), wSwitch.prot_N ) )
         bidibnode = data->defaultmain;
@@ -673,6 +692,11 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
     StrOp.fmtb( uidKey, "0x%08X", wSignal.getbus(node) );
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
+
+    if( bidibnode == NULL && StrOp.len( wItem.getuidname(node) ) > 0 ) {
+      bidibnode = __findNodeByName(inst, wItem.getuidname(node));
+    }
+
     if( bidibnode == NULL ) {
         bidibnode = data->defaultmain;
     }
@@ -711,6 +735,11 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
 
     StrOp.fmtb( uidKey, "0x%08X", wOutput.getbus(node) );
     bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
+
+    if( bidibnode == NULL && StrOp.len( wItem.getuidname(node) ) > 0 ) {
+      bidibnode = __findNodeByName(inst, wItem.getuidname(node));
+    }
+
     if( bidibnode == NULL ) {
       if( wOutput.isaccessory(node) && StrOp.equals( wOutput.getprot( node ), wSwitch.prot_N ) )
         bidibnode = data->defaultmain;
@@ -3177,16 +3206,17 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     *(pdata+3+pdata[2]) = 0; // make the char string null terminated
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_STRING path=%s namespace=%d id=%d size=%d string=%s", pathKey, pdata[0], pdata[1], pdata[2], pdata+3 );
-    if( bidibnode != NULL && pdata[2] > 0 ) {
+    if( bidibnode != NULL ) {
       iONode child = __getIniNode(bidib, bidibnode->uid);
       if( child != NULL ) {
         if( pdata[0] == 0 && pdata[1] == 0) {
           // Productname
-          wBiDiBnode.setproductname(child, pdata+3);
+          wBiDiBnode.setproductname(child, (const char*)(pdata+3));
         }
         else if( pdata[0] == 0 && pdata[1] == 1) {
           // Username
-          wBiDiBnode.setusername(child, pdata+3);
+          wBiDiBnode.setusername(child, (const char*)(pdata+3));
+          StrOp.copy( bidibnode->username, (const char*)(pdata+3) );
         }
       }
     }
