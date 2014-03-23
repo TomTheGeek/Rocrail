@@ -325,7 +325,7 @@ int BidibIdentDlg::getLevel(const char* path, int* n, int* o, int* p, char** key
 
 wxTreeItemId BidibIdentDlg::addTreeChild( const wxTreeItemId& root, iONode bidibnode) {
   char key[32];
-  StrOp.fmtb(key, "[%s] %08X", wBiDiBnode.getclassmnemonic(bidibnode), wBiDiBnode.getuid(bidibnode) );
+  StrOp.fmtb(key, "[%s] %08X %s", wBiDiBnode.getclassmnemonic(bidibnode), wBiDiBnode.getuid(bidibnode), wBiDiBnode.getusername(bidibnode) );
   wxTreeItemId item = m_Tree->AppendItem( root, wxString( key, wxConvUTF8));
   MapOp.put( nodeMap, key, (obj)bidibnode);
   MapOp.put( nodePathMap, wBiDiBnode.getpath(bidibnode), (obj)bidibnode);
