@@ -328,16 +328,14 @@ class cbusnodedlggen : public wxDialog
 		wxStaticText* m_labGC4SOD;
 		wxSpinCtrl* m_GC4SOD;
 		wxPanel* m_CANGC6Panel;
-		wxStaticText* m_labGC6Servo1Left;
-		wxStaticText* m_labGC6Servo1Right;
+		wxButton* m_GC6Servo1LTest;
+		wxButton* m_GC6Servo1RTest;
 		wxStaticText* m_labGC6Servo1Speed;
 		wxStaticText* m_labGC6Servo1SpeedR;
 		wxSlider* m_GC6Servo1LeftAng;
 		wxSlider* m_GC6Servo1RightAng;
 		wxSlider* m_GC6Servo1Speed;
 		wxSlider* m_GC6Servo1SpeedR;
-		wxButton* m_GC6Servo1LTest;
-		wxButton* m_GC6Servo1RTest;
 		wxStaticLine* m_staticline4;
 		wxCheckBox* m_GC6Servo1Relay;
 		wxCheckBox* m_GC6Servo1ExtFb;
@@ -348,16 +346,14 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_GC6Servo1SwEvent;
 		wxStaticText* m_labGC6SensorEvent;
 		wxSpinCtrl* m_GC6Servo1FbEvent;
-		wxStaticText* m_labGC6Servo2Left;
-		wxStaticText* m_labGC6Servo2Right;
+		wxButton* m_GC6Servo2LTest;
+		wxButton* m_GC6Servo2RTest;
 		wxStaticText* m_labGC6Servo2Speed;
 		wxStaticText* m_labGC6Servo2SpeedR;
 		wxSlider* m_GC6Servo2LeftAng;
 		wxSlider* m_GC6Servo2RightAng;
 		wxSlider* m_GC6Servo2Speed;
 		wxSlider* m_GC6Servo2SpeedR;
-		wxButton* m_GC6Servo2LTest;
-		wxButton* m_GC6Servo2RTest;
 		wxStaticLine* m_staticline41;
 		wxCheckBox* m_GC6Servo2Relay;
 		wxCheckBox* m_GC6Servo2ExtFb;
@@ -368,16 +364,14 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_GC6Servo2SwEvent;
 		wxStaticText* m_labGC6Servo2FbEvent;
 		wxSpinCtrl* m_GC6Servo2FbEvent;
-		wxStaticText* m_labGC6Servo3Left;
-		wxStaticText* m_labGC6Servo3Right;
+		wxButton* m_GC6Servo3LTest;
+		wxButton* m_GC6Servo3RTest;
 		wxStaticText* m_labGC6Servo3Speed;
 		wxStaticText* m_labGC6Servo3SpeedR;
 		wxSlider* m_GC6Servo3LeftAng;
 		wxSlider* m_GC6Servo3RightAng;
 		wxSlider* m_GC6Servo3Speed;
 		wxSlider* m_GC6Servo3SpeedR;
-		wxButton* m_GC6Servo3LTest;
-		wxButton* m_GC6Servo3RTest;
 		wxStaticLine* m_staticline42;
 		wxCheckBox* m_GC6Servo3Relay;
 		wxCheckBox* m_GC6Servo3ExtFb;
@@ -388,16 +382,14 @@ class cbusnodedlggen : public wxDialog
 		wxSpinCtrl* m_GC6Servo3SwEvent;
 		wxStaticText* m_labGC6Servo3FbEvent;
 		wxSpinCtrl* m_GC6Servo3FbEvent;
-		wxStaticText* m_labGC6Servo4Left;
-		wxStaticText* m_labGC6Servo4Right;
+		wxButton* m_GC6Servo4LTest;
+		wxButton* m_GC6Servo4RTest;
 		wxStaticText* m_labGC6Servo4Speed;
 		wxStaticText* m_labGC6Servo4SpeedR;
 		wxSlider* m_GC6Servo4LeftAng;
 		wxSlider* m_GC6Servo4RightAng;
 		wxSlider* m_GC6Servo4Speed;
 		wxSlider* m_GC6Servo4SpeedR;
-		wxButton* m_GC6Servo4LTest;
-		wxButton* m_GC6Servo4RTest;
 		wxStaticLine* m_staticline43;
 		wxCheckBox* m_GC6Servo4Relay;
 		wxCheckBox* m_GC6Servo4ExtFb;
@@ -518,11 +510,11 @@ class cbusnodedlggen : public wxDialog
 		virtual void onSoD( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onGC4GetAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onGC4SetAll( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onGC6Servo1LTest( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onGC6Servo1RTest( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnServoLeftAngle( wxScrollEvent& event ) { event.Skip(); }
 		virtual void OnServoRightAngle( wxScrollEvent& event ) { event.Skip(); }
 		virtual void OnServoSpeed( wxScrollEvent& event ) { event.Skip(); }
-		virtual void onGC6Servo1LTest( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onGC6Servo1RTest( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnServoRelay( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnExtSensors( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnBounce( wxCommandEvent& event ) { event.Skip(); }

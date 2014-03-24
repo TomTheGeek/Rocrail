@@ -1289,21 +1289,19 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	fgSizer61->SetFlexibleDirection( wxVERTICAL );
 	fgSizer61->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_labGC6Servo1Left = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("L"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC6Servo1Left->Wrap( -1 );
-	fgSizer61->Add( m_labGC6Servo1Left, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	m_GC6Servo1LTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxT("L"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer61->Add( m_GC6Servo1LTest, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	m_labGC6Servo1Right = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("R"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC6Servo1Right->Wrap( -1 );
-	fgSizer61->Add( m_labGC6Servo1Right, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	m_GC6Servo1RTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxT("R"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer61->Add( m_GC6Servo1RTest, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_labGC6Servo1Speed = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("SpL"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC6Servo1Speed->Wrap( -1 );
-	fgSizer61->Add( m_labGC6Servo1Speed, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	fgSizer61->Add( m_labGC6Servo1Speed, 0, wxALIGN_CENTER_HORIZONTAL|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_labGC6Servo1SpeedR = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("SpR"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC6Servo1SpeedR->Wrap( -1 );
-	fgSizer61->Add( m_labGC6Servo1SpeedR, 0, wxRIGHT|wxLEFT, 5 );
+	fgSizer61->Add( m_labGC6Servo1SpeedR, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_GC6Servo1LeftAng = new wxSlider( m_CANGC6Panel, wxID_ANY, 100, 50, 250, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_INVERSE|wxSL_VERTICAL );
 	fgSizer61->Add( m_GC6Servo1LeftAng, 0, wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxALL, 5 );
@@ -1316,12 +1314,6 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC6Servo1SpeedR = new wxSlider( m_CANGC6Panel, wxID_ANY, 5, 1, 20, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_INVERSE|wxSL_VERTICAL );
 	fgSizer61->Add( m_GC6Servo1SpeedR, 0, wxALL|wxEXPAND, 5 );
-	
-	m_GC6Servo1LTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
-	fgSizer61->Add( m_GC6Servo1LTest, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
-	
-	m_GC6Servo1RTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
-	fgSizer61->Add( m_GC6Servo1RTest, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	m_GC6Servo1->Add( fgSizer61, 1, 0, 5 );
 	
@@ -1365,7 +1357,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC6Servo1->Add( fgSizer20, 0, 0, 5 );
 	
-	bSizer26->Add( m_GC6Servo1, 0, wxEXPAND, 5 );
+	bSizer26->Add( m_GC6Servo1, 0, wxEXPAND|wxALL, 5 );
 	
 	wxStaticBoxSizer* m_GC6Servo2;
 	m_GC6Servo2 = new wxStaticBoxSizer( new wxStaticBox( m_CANGC6Panel, wxID_ANY, wxT("Servo 2") ), wxVERTICAL );
@@ -1376,21 +1368,19 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	fgSizer611->SetFlexibleDirection( wxVERTICAL );
 	fgSizer611->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_labGC6Servo2Left = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("L"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC6Servo2Left->Wrap( -1 );
-	fgSizer611->Add( m_labGC6Servo2Left, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	m_GC6Servo2LTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxT("L"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer611->Add( m_GC6Servo2LTest, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_labGC6Servo2Right = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("R"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC6Servo2Right->Wrap( -1 );
-	fgSizer611->Add( m_labGC6Servo2Right, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	m_GC6Servo2RTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxT("R"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer611->Add( m_GC6Servo2RTest, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 	
 	m_labGC6Servo2Speed = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("SpL"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC6Servo2Speed->Wrap( -1 );
-	fgSizer611->Add( m_labGC6Servo2Speed, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	fgSizer611->Add( m_labGC6Servo2Speed, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	m_labGC6Servo2SpeedR = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("SpR"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC6Servo2SpeedR->Wrap( -1 );
-	fgSizer611->Add( m_labGC6Servo2SpeedR, 0, wxRIGHT|wxLEFT, 5 );
+	fgSizer611->Add( m_labGC6Servo2SpeedR, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_GC6Servo2LeftAng = new wxSlider( m_CANGC6Panel, wxID_ANY, 100, 50, 250, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_INVERSE|wxSL_VERTICAL );
 	fgSizer611->Add( m_GC6Servo2LeftAng, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
@@ -1403,12 +1393,6 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC6Servo2SpeedR = new wxSlider( m_CANGC6Panel, wxID_ANY, 5, 1, 20, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_INVERSE|wxSL_VERTICAL );
 	fgSizer611->Add( m_GC6Servo2SpeedR, 0, wxALL|wxEXPAND, 5 );
-	
-	m_GC6Servo2LTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
-	fgSizer611->Add( m_GC6Servo2LTest, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
-	
-	m_GC6Servo2RTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
-	fgSizer611->Add( m_GC6Servo2RTest, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	m_GC6Servo2->Add( fgSizer611, 1, 0, 5 );
 	
@@ -1452,7 +1436,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC6Servo2->Add( fgSizer201, 0, 0, 5 );
 	
-	bSizer26->Add( m_GC6Servo2, 0, wxEXPAND, 5 );
+	bSizer26->Add( m_GC6Servo2, 0, wxEXPAND|wxALL, 5 );
 	
 	wxStaticBoxSizer* m_GC6Servo3;
 	m_GC6Servo3 = new wxStaticBoxSizer( new wxStaticBox( m_CANGC6Panel, wxID_ANY, wxT("Servo 3") ), wxVERTICAL );
@@ -1463,21 +1447,19 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	fgSizer612->SetFlexibleDirection( wxVERTICAL );
 	fgSizer612->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_labGC6Servo3Left = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("L"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC6Servo3Left->Wrap( -1 );
-	fgSizer612->Add( m_labGC6Servo3Left, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	m_GC6Servo3LTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxT("L"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer612->Add( m_GC6Servo3LTest, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_labGC6Servo3Right = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("R"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC6Servo3Right->Wrap( -1 );
-	fgSizer612->Add( m_labGC6Servo3Right, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	m_GC6Servo3RTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxT("R"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer612->Add( m_GC6Servo3RTest, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 	
 	m_labGC6Servo3Speed = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("SpL"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC6Servo3Speed->Wrap( -1 );
-	fgSizer612->Add( m_labGC6Servo3Speed, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	fgSizer612->Add( m_labGC6Servo3Speed, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	m_labGC6Servo3SpeedR = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("SpR"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC6Servo3SpeedR->Wrap( -1 );
-	fgSizer612->Add( m_labGC6Servo3SpeedR, 0, wxRIGHT|wxLEFT, 5 );
+	fgSizer612->Add( m_labGC6Servo3SpeedR, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_GC6Servo3LeftAng = new wxSlider( m_CANGC6Panel, wxID_ANY, 100, 50, 250, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_INVERSE|wxSL_VERTICAL );
 	fgSizer612->Add( m_GC6Servo3LeftAng, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
@@ -1490,12 +1472,6 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC6Servo3SpeedR = new wxSlider( m_CANGC6Panel, wxID_ANY, 5, 1, 20, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_INVERSE|wxSL_VERTICAL );
 	fgSizer612->Add( m_GC6Servo3SpeedR, 0, wxALL|wxEXPAND, 5 );
-	
-	m_GC6Servo3LTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
-	fgSizer612->Add( m_GC6Servo3LTest, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
-	
-	m_GC6Servo3RTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
-	fgSizer612->Add( m_GC6Servo3RTest, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	m_GC6Servo3->Add( fgSizer612, 1, 0, 5 );
 	
@@ -1539,7 +1515,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC6Servo3->Add( fgSizer202, 0, 0, 5 );
 	
-	bSizer26->Add( m_GC6Servo3, 0, wxEXPAND, 5 );
+	bSizer26->Add( m_GC6Servo3, 0, wxEXPAND|wxALL, 5 );
 	
 	wxStaticBoxSizer* m_GC6Servo4;
 	m_GC6Servo4 = new wxStaticBoxSizer( new wxStaticBox( m_CANGC6Panel, wxID_ANY, wxT("Servo 4") ), wxVERTICAL );
@@ -1550,21 +1526,19 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	fgSizer613->SetFlexibleDirection( wxVERTICAL );
 	fgSizer613->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_labGC6Servo4Left = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("L"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC6Servo4Left->Wrap( -1 );
-	fgSizer613->Add( m_labGC6Servo4Left, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	m_GC6Servo4LTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxT("L"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer613->Add( m_GC6Servo4LTest, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_labGC6Servo4Right = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("R"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labGC6Servo4Right->Wrap( -1 );
-	fgSizer613->Add( m_labGC6Servo4Right, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	m_GC6Servo4RTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxT("R"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	fgSizer613->Add( m_GC6Servo4RTest, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 	
 	m_labGC6Servo4Speed = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("SpL"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC6Servo4Speed->Wrap( -1 );
-	fgSizer613->Add( m_labGC6Servo4Speed, 0, wxALIGN_CENTER_HORIZONTAL|wxRIGHT|wxLEFT, 5 );
+	fgSizer613->Add( m_labGC6Servo4Speed, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	m_labGC6Servo4SpeedR = new wxStaticText( m_CANGC6Panel, wxID_ANY, wxT("SpR"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labGC6Servo4SpeedR->Wrap( -1 );
-	fgSizer613->Add( m_labGC6Servo4SpeedR, 0, wxRIGHT|wxLEFT, 5 );
+	fgSizer613->Add( m_labGC6Servo4SpeedR, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_GC6Servo4LeftAng = new wxSlider( m_CANGC6Panel, wxID_ANY, 100, 50, 250, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_INVERSE|wxSL_VERTICAL );
 	fgSizer613->Add( m_GC6Servo4LeftAng, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
@@ -1577,12 +1551,6 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC6Servo4SpeedR = new wxSlider( m_CANGC6Panel, wxID_ANY, 5, 1, 20, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_INVERSE|wxSL_VERTICAL );
 	fgSizer613->Add( m_GC6Servo4SpeedR, 0, wxALL|wxEXPAND, 5 );
-	
-	m_GC6Servo4LTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
-	fgSizer613->Add( m_GC6Servo4LTest, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
-	
-	m_GC6Servo4RTest = new wxButton( m_CANGC6Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
-	fgSizer613->Add( m_GC6Servo4RTest, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	m_GC6Servo4->Add( fgSizer613, 1, 0, 5 );
 	
@@ -1626,7 +1594,7 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_GC6Servo4->Add( fgSizer203, 0, 0, 5 );
 	
-	bSizer26->Add( m_GC6Servo4, 0, wxEXPAND, 5 );
+	bSizer26->Add( m_GC6Servo4, 0, wxEXPAND|wxALL, 5 );
 	
 	bSizer81->Add( bSizer26, 1, wxEXPAND, 5 );
 	
@@ -2020,45 +1988,45 @@ cbusnodedlggen::cbusnodedlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GC2SoD->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onSoD ), NULL, this );
 	m_GC4GetAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC4GetAll ), NULL, this );
 	m_GC4SetAll->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC4SetAll ), NULL, this );
+	m_GC6Servo1LTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo1LTest ), NULL, this );
+	m_GC6Servo1RTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo1RTest ), NULL, this );
 	m_GC6Servo1LeftAng->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoLeftAngle ), NULL, this );
 	m_GC6Servo1RightAng->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoRightAngle ), NULL, this );
 	m_GC6Servo1Speed->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
 	m_GC6Servo1SpeedR->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
-	m_GC6Servo1LTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo1LTest ), NULL, this );
-	m_GC6Servo1RTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo1RTest ), NULL, this );
 	m_GC6Servo1Relay->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnServoRelay ), NULL, this );
 	m_GC6Servo1ExtFb->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnExtSensors ), NULL, this );
 	m_GC6Servo1Bounce->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnBounce ), NULL, this );
 	m_GC6Servo1SwEvent->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onGC6SwEvent ), NULL, this );
 	m_GC6Servo1FbEvent->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onGC6FbEvent ), NULL, this );
+	m_GC6Servo2LTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo2LTest ), NULL, this );
+	m_GC6Servo2RTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo2RTest ), NULL, this );
 	m_GC6Servo2LeftAng->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoLeftAngle ), NULL, this );
 	m_GC6Servo2RightAng->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoRightAngle ), NULL, this );
 	m_GC6Servo2Speed->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
 	m_GC6Servo2SpeedR->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
-	m_GC6Servo2LTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo2LTest ), NULL, this );
-	m_GC6Servo2RTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo2RTest ), NULL, this );
 	m_GC6Servo2Relay->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnServoRelay ), NULL, this );
 	m_GC6Servo2ExtFb->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnExtSensors ), NULL, this );
 	m_GC6Servo2Bounce->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnBounce ), NULL, this );
 	m_GC6Servo2SwEvent->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onGC6SwEvent ), NULL, this );
 	m_GC6Servo2FbEvent->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onGC6FbEvent ), NULL, this );
+	m_GC6Servo3LTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo3LTest ), NULL, this );
+	m_GC6Servo3RTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo3RTest ), NULL, this );
 	m_GC6Servo3LeftAng->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoLeftAngle ), NULL, this );
 	m_GC6Servo3RightAng->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoRightAngle ), NULL, this );
 	m_GC6Servo3Speed->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
 	m_GC6Servo3SpeedR->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
-	m_GC6Servo3LTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo3LTest ), NULL, this );
-	m_GC6Servo3RTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo3RTest ), NULL, this );
 	m_GC6Servo3Relay->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnServoRelay ), NULL, this );
 	m_GC6Servo3ExtFb->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnExtSensors ), NULL, this );
 	m_GC6Servo3Bounce->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnBounce ), NULL, this );
 	m_GC6Servo3SwEvent->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onGC6SwEvent ), NULL, this );
 	m_GC6Servo3FbEvent->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onGC6FbEvent ), NULL, this );
+	m_GC6Servo4LTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo4LTest ), NULL, this );
+	m_GC6Servo4RTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo4RTest ), NULL, this );
 	m_GC6Servo4LeftAng->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoLeftAngle ), NULL, this );
 	m_GC6Servo4RightAng->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoRightAngle ), NULL, this );
 	m_GC6Servo4Speed->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
 	m_GC6Servo4SpeedR->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
-	m_GC6Servo4LTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo4LTest ), NULL, this );
-	m_GC6Servo4RTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo4RTest ), NULL, this );
 	m_GC6Servo4Relay->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnServoRelay ), NULL, this );
 	m_GC6Servo4ExtFb->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnExtSensors ), NULL, this );
 	m_GC6Servo4Bounce->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnBounce ), NULL, this );
@@ -2166,45 +2134,45 @@ cbusnodedlggen::~cbusnodedlggen()
 	m_GC2SoD->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onSoD ), NULL, this );
 	m_GC4GetAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC4GetAll ), NULL, this );
 	m_GC4SetAll->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC4SetAll ), NULL, this );
+	m_GC6Servo1LTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo1LTest ), NULL, this );
+	m_GC6Servo1RTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo1RTest ), NULL, this );
 	m_GC6Servo1LeftAng->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoLeftAngle ), NULL, this );
 	m_GC6Servo1RightAng->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoRightAngle ), NULL, this );
 	m_GC6Servo1Speed->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
 	m_GC6Servo1SpeedR->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
-	m_GC6Servo1LTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo1LTest ), NULL, this );
-	m_GC6Servo1RTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo1RTest ), NULL, this );
 	m_GC6Servo1Relay->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnServoRelay ), NULL, this );
 	m_GC6Servo1ExtFb->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnExtSensors ), NULL, this );
 	m_GC6Servo1Bounce->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnBounce ), NULL, this );
 	m_GC6Servo1SwEvent->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onGC6SwEvent ), NULL, this );
 	m_GC6Servo1FbEvent->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onGC6FbEvent ), NULL, this );
+	m_GC6Servo2LTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo2LTest ), NULL, this );
+	m_GC6Servo2RTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo2RTest ), NULL, this );
 	m_GC6Servo2LeftAng->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoLeftAngle ), NULL, this );
 	m_GC6Servo2RightAng->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoRightAngle ), NULL, this );
 	m_GC6Servo2Speed->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
 	m_GC6Servo2SpeedR->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
-	m_GC6Servo2LTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo2LTest ), NULL, this );
-	m_GC6Servo2RTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo2RTest ), NULL, this );
 	m_GC6Servo2Relay->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnServoRelay ), NULL, this );
 	m_GC6Servo2ExtFb->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnExtSensors ), NULL, this );
 	m_GC6Servo2Bounce->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnBounce ), NULL, this );
 	m_GC6Servo2SwEvent->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onGC6SwEvent ), NULL, this );
 	m_GC6Servo2FbEvent->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onGC6FbEvent ), NULL, this );
+	m_GC6Servo3LTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo3LTest ), NULL, this );
+	m_GC6Servo3RTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo3RTest ), NULL, this );
 	m_GC6Servo3LeftAng->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoLeftAngle ), NULL, this );
 	m_GC6Servo3RightAng->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoRightAngle ), NULL, this );
 	m_GC6Servo3Speed->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
 	m_GC6Servo3SpeedR->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
-	m_GC6Servo3LTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo3LTest ), NULL, this );
-	m_GC6Servo3RTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo3RTest ), NULL, this );
 	m_GC6Servo3Relay->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnServoRelay ), NULL, this );
 	m_GC6Servo3ExtFb->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnExtSensors ), NULL, this );
 	m_GC6Servo3Bounce->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnBounce ), NULL, this );
 	m_GC6Servo3SwEvent->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onGC6SwEvent ), NULL, this );
 	m_GC6Servo3FbEvent->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( cbusnodedlggen::onGC6FbEvent ), NULL, this );
+	m_GC6Servo4LTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo4LTest ), NULL, this );
+	m_GC6Servo4RTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo4RTest ), NULL, this );
 	m_GC6Servo4LeftAng->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoLeftAngle ), NULL, this );
 	m_GC6Servo4RightAng->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoRightAngle ), NULL, this );
 	m_GC6Servo4Speed->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
 	m_GC6Servo4SpeedR->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( cbusnodedlggen::OnServoSpeed ), NULL, this );
-	m_GC6Servo4LTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo4LTest ), NULL, this );
-	m_GC6Servo4RTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( cbusnodedlggen::onGC6Servo4RTest ), NULL, this );
 	m_GC6Servo4Relay->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnServoRelay ), NULL, this );
 	m_GC6Servo4ExtFb->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnExtSensors ), NULL, this );
 	m_GC6Servo4Bounce->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( cbusnodedlggen::OnBounce ), NULL, this );
