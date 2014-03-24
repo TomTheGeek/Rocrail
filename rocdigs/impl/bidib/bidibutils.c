@@ -271,7 +271,7 @@ const char* bidibGetFeatureName(int feature) {
   if( feature == FEATURE_GEN_SWITCH_ACK ) return "DCC switch ack";
   if( feature == FEATURE_GEN_LOK_DB_SIZE ) return "DCC loco DB size";
   if( feature == FEATURE_GEN_LOK_DB_STRING ) return "DCC loco DB string";
-  if( feature == FEATURE_GEN_SERVICE_MODES ) return "DCC service modes";
+  if( feature == FEATURE_GEN_POM_REPEAT ) return "DCC service modes";
   if( feature == FEATURE_GEN_DRIVE_BUS ) return "DCC bus driver";
   if( feature == FEATURE_GEN_LOK_LOST_DETECT ) return "Loco lost detection";
   if( feature == FEATURE_GEN_NOTIFY_DRIVE_MANUAL ) return "Manual drive notification";

@@ -56,7 +56,9 @@
 //            2013-12-15 V0.15 kw  added FEATURE_STRING_SIZE, MSG_STRING_GET, _STRING_SET _STRING
 //            2014-01-22 V0.16 kw  added MSG_BM_DYN_STATE, MSG_CS_PROG, MSG_CS_PROG_STATE, FEATURE_BM_DYN_STATE_INTERVAL
 //            2014-02-07           added MSG_ACCESSORY_NOTIFY
-//            2014-02-08       kw  fixed some typos; removed MSG_PRG_CV_*; moved MSG_CS_PROG
+//            2014-02-08 V0.17 kw  fixed some typos; removed MSG_PRG_CV_*; moved MSG_CS_PROG
+//                                 added BIDIB_CS_PROG_QUERY, removed t_bidib_macro_state
+//                                 added FEATURE_GEN_POM_REPEAT
 //
 //===============================================================================
 //
@@ -281,12 +283,14 @@
 #define MSG_CS_ALLOC_ACK        (MSG_UGEN + 0x00)       // noch genauer zu klaeren
 #define MSG_CS_STATE            (MSG_UGEN + 0x01)
 #define MSG_CS_DRIVE_ACK        (MSG_UGEN + 0x02)
-#define MSG_CS_ACCESSORY_ACK    (MSG_UGEN + 0x03)
-#define MSG_CS_POM_ACK          (MSG_UGEN + 0x04)
+#define MSG_CS_ACCESSORY_ACK    (MSG_UGEN + 0x03)       // 1:addrl, 2:addrh, 3:data 
+#define MSG_CS_POM_ACK          (MSG_UGEN + 0x04)       // 1:addrl, 2:addrh, 3:addrxl, 4:addrxh, 5:mid, 6:data 
 #define MSG_CS_DRIVE_MANUAL     (MSG_UGEN + 0x05)       // 1:addrl, 2:addrh, 3:format, 4:active, 5:speed, 6:1-4, 7:5-12, 8:13-20, 9:21-28
 #define MSG_CS_DRIVE_EVENT      (MSG_UGEN + 0x06)       // 1:addrl, 2:addrh, 3:eventtype, Parameters
+#define MSG_CS_ACCESSORY_MANUAL (MSG_UGEN + 0x07)       // 1:addrl, 2:addrh, 3:data 
+
 //-- service mode
-#define MSG_CS_PROG_STATE       (MSG_UGEN + 0x0F)       // 1: PROG_STATE, 2:PROG_DATA
+#define MSG_CS_PROG_STATE       (MSG_UGEN + 0x0F)       // 1: state, 2:time, 3:cv_l, 4:cv_h, 5:data
 
 //-- local message
 #define MSG_ULOCAL              (MSG_USTRM +  0x70)     // only locally used
@@ -329,13 +333,6 @@ typedef struct
         unsigned long vendor32;
       };
   } t_bidib_unique_id;
-
-typedef enum
-  { BIDIB_MACRO_OFF     = 0,
-    BIDIB_MACRO_RUN     = 1,
-    BIDIB_MACRO_SAVE    = 254,
-    BIDIB_MACRO_DELETE  = 255,
-  } t_bidib_macro_state;
 
 // typedef for control operations - execute
 typedef struct
@@ -381,6 +378,12 @@ typedef struct
     unsigned char speed;
     unsigned char reserved0;
   } t_bidib_servo_cfg;                  // for Servos
+  
+typedef struct 
+  {
+    unsigned char fb_state;             // state of the execution
+    unsigned char error_code;           // 0 or error code
+  } t_bidib_accessory_state;            // for accessory state messages
 
 typedef struct                              //  t_bidib_cs_accessory
   {
@@ -524,6 +527,37 @@ typedef struct                              // t_bidib_cs_pom
     unsigned char data;
   } t_bidib_cs_pom;
 
+typedef struct                              // t_bidib_cs_pom
+  {
+    unsigned char opcode;                   // 0=Break, 1=RdByte, 2=WrBit, 3=WrByte
+    union
+      {
+        struct
+          {
+            unsigned char cv_addrl;         // low byte of cv addr
+            unsigned char cv_addrh;         // high byte of cv addr
+          };
+        unsigned int  cv_addr;              // true cv address (start with 0)
+      };
+    unsigned char data;
+  } t_bidib_cs_prog;
+
+typedef struct                              // t_bidib_cs_pom
+  {
+    unsigned char result;                   // 
+    unsigned char time;                   // 
+    union
+      {
+        struct
+          {
+            unsigned char cv_addrl;         // low byte of cv addr
+            unsigned char cv_addrh;         // high byte of cv addr
+          };
+        unsigned int  cv_addr;              // true cv address (start with 0)
+      };
+    unsigned char data;
+  } t_bidib_cs_prog_state;
+
 //===============================================================================
 //
 // 4. Feature Codes
@@ -596,7 +630,7 @@ typedef struct                              // t_bidib_cs_pom
 #define FEATURE_GEN_SWITCH_ACK             103  // not used
 #define FEATURE_GEN_LOK_DB_SIZE            104  //
 #define FEATURE_GEN_LOK_DB_STRING          105  //
-#define FEATURE_GEN_SERVICE_MODES          106  // supported service modes
+#define FEATURE_GEN_POM_REPEAT             106  // supported service modes
 #define FEATURE_GEN_DRIVE_BUS              107  // 1: this node drive the dcc bus.
 #define FEATURE_GEN_LOK_LOST_DETECT        108  // 1: command station annouces lost loco
 #define FEATURE_GEN_NOTIFY_DRIVE_MANUAL    109  // 1: dcc gen reports manual operation
@@ -733,15 +767,20 @@ typedef struct                              // t_bidib_cs_pom
 #define BIDIB_CS_xPOM_WR_BIT           0x82
 #define BIDIB_CS_xPOM_WR_BYTE          0x83
 
-#define BIDIB_CS_PROG_START            0x00  // service mode (MSG_CS_PROG_STATE)
-#define BIDIB_CS_PROG_RUNNING          0x01
-#define BIDIB_CS_PROG_WR_OKAY          0x80
-#define BIDIB_CS_PROG_RD_OKAY          0x81
+#define BIDIB_CS_PROG_BREAK             0   // service mode commands (MSG_CS_PROG)
+#define BIDIB_CS_PROG_QUERY             1
+#define BIDIB_CS_PROG_RD_BYTE           2
+#define BIDIB_CS_PROG_RDWR_BIT          3
+#define BIDIB_CS_PROG_WR_BYTE           4
+
+#define BIDIB_CS_PROG_START            0x00  // service mode answer (MSG_CS_PROG_STATE)
+#define BIDIB_CS_PROG_RUNNING          0x01  // generell rule: MSB: 0: running, 1: finished
+#define BIDIB_CS_PROG_OKAY             0x80  //               Bit6: 0: okay,    1: fail
 #define BIDIB_CS_PROG_STOPPED          0xC0
 #define BIDIB_CS_PROG_NO_LOCO          0xC1
-#define BIDIB_CS_PROG_WR_NO_ANSWER     0xC2
+#define BIDIB_CS_PROG_NO_ANSWER        0xC2
 #define BIDIB_CS_PROG_SHORT            0xC3
-#define BIDIB_CS_PROG_RD_NO_ANSWER     0xC4
+#define BIDIB_CS_PROG_VERIFY_FAILED    0xC4
 
 //===============================================================================
 //
