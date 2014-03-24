@@ -40,6 +40,7 @@
 #include "rocrail/wrapper/public/CustomCmd.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Loc.h"
 
 
 #define STX	0x02
@@ -705,9 +706,8 @@ __getBarjutData(
 								 */
 								//           if( MapOp.get( map, key ) == NULL )
 								{
-									iONode          evt =
-										NodeOp.inst( wFeedback.name(  ), NULL,
-														 ELEMENT_NODE );
+									iONode evt   = NodeOp.inst( wFeedback.name(  ), NULL, ELEMENT_NODE );
+                  iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
 
 									MapOp.put( map, key, ( obj ) "RFI" );
 
@@ -718,22 +718,15 @@ __getBarjutData(
 									wFeedback.setidentifier( evt, ident );
 									if( o->iid != NULL )
 										wFeedback.setiid( evt, o->iid );
+									o->listenerFun( o->listenerObj, evt, TRCLEVEL_INFO );
 
-//                   iONode          evt =
-//                      NodeOp.inst( wBlock.name(  ), NULL, ELEMENT_NODE );
-//                   MapOp.put( map, key, ( obj ) "RFI" );
-//
-//                   wBlock.setaddr( evt, address );
-//                   wBlock.setport( evt, address );
-//                   wBlock.setid( evt, "Test" );
-//                   wBlock.setlocid( evt, "Mein Test" );
-//                   wBlock.setfba( evt, "-" );
-//                   wBlock.setfbb( evt, "-" );
-//                   if( o->iid != NULL )
-//                      wBlock.setiid( evt, o->iid );
+						      wLoc.setidentifier( nodeC, ident );
+						      wLoc.setV_realkmh( nodeC, speed );
+						      wLoc.setcmd( nodeC, wLoc.bidikmh );
+                  if( o->iid != NULL )
+                    wLoc.setiid( nodeC, o->iid );
+						      o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );
 
-									o->listenerFun( o->listenerObj, evt,
-														 TRCLEVEL_INFO );
 
 								}
 								//           else {
