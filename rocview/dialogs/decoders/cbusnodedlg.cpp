@@ -2129,6 +2129,28 @@ void CBusNodeDlg::OnServoRightAngle( wxScrollEvent& event ) {
   }
 }
 
+void CBusNodeDlg::GC6ServoTest( int servo, bool left ) {
+  if( left ) {
+    wxSlider* slider[] = {m_GC6Servo1LeftAng, m_GC6Servo2LeftAng, m_GC6Servo3LeftAng, m_GC6Servo4LeftAng};
+    varSet( 4 + servo*5, slider[servo]->GetValue(), false );
+  }
+  else {
+    wxSlider* slider[] = {m_GC6Servo1RightAng, m_GC6Servo2RightAng, m_GC6Servo3RightAng, m_GC6Servo4RightAng};
+    varSet( 5 + servo*5, slider[servo]->GetValue(), false );
+  }
+}
+
+void CBusNodeDlg::onGC6Servo1LTest( wxCommandEvent& event ) {GC6ServoTest(0, true);}
+void CBusNodeDlg::onGC6Servo1RTest( wxCommandEvent& event ) {GC6ServoTest(0, false);}
+void CBusNodeDlg::onGC6Servo2LTest( wxCommandEvent& event ) {GC6ServoTest(1, true);}
+void CBusNodeDlg::onGC6Servo2RTest( wxCommandEvent& event ) {GC6ServoTest(1, false);}
+void CBusNodeDlg::onGC6Servo3LTest( wxCommandEvent& event ) {GC6ServoTest(2, true);}
+void CBusNodeDlg::onGC6Servo3RTest( wxCommandEvent& event ) {GC6ServoTest(2, false);}
+void CBusNodeDlg::onGC6Servo4LTest( wxCommandEvent& event ) {GC6ServoTest(3, true);}
+void CBusNodeDlg::onGC6Servo4RTest( wxCommandEvent& event ) {GC6ServoTest(3, false);}
+
+
+
 void CBusNodeDlg::OnServoSpeed( wxScrollEvent& event ) {
   wxSlider* slider[] = {m_GC6Servo1Speed, m_GC6Servo2Speed, m_GC6Servo3Speed, m_GC6Servo4Speed};
   for( int i = 0; i < 4; i++ ) {

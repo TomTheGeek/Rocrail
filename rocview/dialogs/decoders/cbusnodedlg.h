@@ -109,6 +109,7 @@ class CBusNodeDlg : public cbusnodedlggen
   void initGC8Event(int idx, int nn, int addr);
   void onIndexLeftClick( wxListEvent& event );
   void sortOnColumn( int col );
+  void GC6ServoTest( int servo, bool left );
 
   wxTimer* m_Timer;
   wxTimer* m_ReportTimer;
@@ -220,6 +221,14 @@ protected:
   void onLogo( wxMouseEvent& event );
   void onGCA( wxMouseEvent& event );
   void onReport( wxCommandEvent& event );
+  void onGC6Servo1LTest( wxCommandEvent& event );
+  void onGC6Servo1RTest( wxCommandEvent& event );
+  void onGC6Servo2LTest( wxCommandEvent& event );
+  void onGC6Servo2RTest( wxCommandEvent& event );
+  void onGC6Servo3LTest( wxCommandEvent& event );
+  void onGC6Servo3RTest( wxCommandEvent& event );
+  void onGC6Servo4LTest( wxCommandEvent& event );
+  void onGC6Servo4RTest( wxCommandEvent& event );
 
 public:
 	/** Constructor */
