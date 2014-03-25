@@ -1208,7 +1208,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           data->cv = wProgram.getcv( node );
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%08X get CV%d...", data->defaultprog->uid, data->cv );
           if( data->defaultprog != NULL ) {
-            msgdata[0] = 0x01; // BIDIB_CS_PROG_RD_BYTE
+            msgdata[0] = BIDIB_CS_PROG_RD_BYTE;
             msgdata[1] = data->cv % 256;
             msgdata[2] = data->cv / 256;
             data->subWrite((obj)inst, data->defaultprog->path, MSG_CS_PROG, msgdata, 3, data->defaultprog);
@@ -1219,7 +1219,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           data->value = wProgram.getvalue( node );
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%08X set CV%d to %d...", data->defaultprog->uid, data->cv, data->value );
           if( data->defaultprog != NULL ) {
-            msgdata[0] = 0x03; // BIDIB_CS_PROG_WR_BYTE
+            msgdata[0] = BIDIB_CS_PROG_WR_BYTE;
             msgdata[1] = data->cv % 256;
             msgdata[2] = data->cv / 256;
             msgdata[3] = data->value;
