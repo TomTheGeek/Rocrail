@@ -3066,7 +3066,7 @@
     <fr txt="Objets"/>
     <tr txt="Tablolar" accel="0"/>
     <es txt="Tablas" accel="0"/>
-    <it txt="Tabelle"/>
+    <it txt="Pannelli"/>
     <da txt="Tabeller" accel="0"/>
     <bs txt="Tabele"/>
     <cs txt="Seznamy"/>
@@ -10129,7 +10129,7 @@
     <fr txt="Les nouveaux événements trouvés sur l'onglet itinéraires sont prioritaires."/>
     <tr txt="Rota sekmesinde bulunan yeni olaylar tercih edildi."/>
     <es txt="El nuevo suceso encontrado en Tabla de Rutas es preferido."/>
-    <it txt="I nuovi eventi della tabella degli itinerari sono prioritari"/>
+    <it txt="I nuovi eventi del pannello degli itinerari sono prioritari"/>
     <da txt="De nye hændelsestyper under togvej er at foretrække."/>
     <bg txt="Новият Събития намерени в раздела маршрути са за предпочитане."/>
     <el txt="Οι νέες εκδηλώσεις που βρέθηκαν κατά την καρτέλα Διαδρομές προτιμάται."/>
@@ -26214,7 +26214,7 @@
   <Msg id="accdectable" dialog="true">
     <en txt="Accessory table" alttxt="Accessory Decoders" tip="Accessory decoder table"/>
     <nl txt="Functie decoders" tip="Functie decoder lijst"/>
-    <it txt="Accessori" tip="Tabella decoder accessori"/>
+    <it txt="Accessori" tip="Pannello decoder accessori"/>
     <zh_CN txt="附件表" tip="解码器附件表"/>
     <sl txt="Dodatna oprema" tip="Seznam dekoderjev dodatne opreme"/>
     <de txt="Zubehör-Tabelle" tip="Zubehör-Decoder-Tabelle"/>
@@ -27522,6 +27522,7 @@
     <en_GB txt="Vertical toolbar"/>
     <it txt="Barra strumenti verticale"/>
     <sv txt="Vertikalt verktygsfält"/>
+    <fi txt="Pystysuora työkalurivi"/>
   </Msg>
   <Msg id="widgetwidth">
     <en txt="Widget width"/>
@@ -27536,6 +27537,7 @@
     <it txt="Larghezza Widget"/>
     <ru txt="Widget ширина"/>
     <pl txt="Szerokość widżetu"/>
+    <fi txt="Elementin leveys"/>
   </Msg>
   <Msg id="load">
     <en txt="Load"/>
@@ -27550,6 +27552,7 @@
     <pl txt="Załadunek"/>
     <sl txt="Naloži"/>
     <sv txt="Ladda"/>
+    <fi txt="LataaSyöte"/>
   </Msg>
   <Msg id="input">
     <en txt="Input"/>
@@ -27564,6 +27567,7 @@
     <pl txt="Wejście"/>
     <sl txt="Vhod"/>
     <sv txt="Ingång"/>
+    <fi txt="Syöte"/>
   </Msg>
   <Msg id="adcsensors">
     <en txt="ADC Sensors"/>
@@ -27577,6 +27581,8 @@
     <pl txt="Czujniki ADC"/>
     <sl txt="ADC Tipala"/>
     <sv txt="ADC sensorer"/>
+    <fi txt="ADC anturit"/>
+    <it txt="Sensori ADC"/>
   </Msg>
   <Msg id="threshold">
     <en txt="Threshold"/>
@@ -27589,6 +27595,8 @@
     <en_GB txt="Threshold"/>
     <pl txt="Próg"/>
     <sl txt="Prag"/>
+    <fi txt="Raja-arvo"/>
+    <it txt="Soglia"/>
   </Msg>
   <Msg id="monitordontwrap">
     <en txt="Monitor don't wrap"/>
@@ -27596,6 +27604,8 @@
     <nl txt="Monitor geen tekstterugloop"/>
     <pl txt="Nie zawijaj monitora"/>
     <sr_latin txt="Nadgledati ne uvijati"/>
+    <fi txt="Ei näytön kiertoa"/>
+    <it txt="Monitor non troncare"/>
   </Msg>
   <Msg id="subject">
     <en txt="Subject"/>
@@ -27605,6 +27615,9 @@
     <nl txt="Onderwerp"/>
     <pl txt="Temat"/>
     <sr_latin txt="Predmet"/>
+    <fi txt="Aihe"/>
+    <it txt="Oggetto"/>
+    <sl txt="Predmet"/>
   </Msg>
   <Msg id="nrcars">
     <en txt="Nr. of cars"/>
@@ -27617,6 +27630,8 @@
     <pl txt="Liczba samochodów"/>
     <sl txt="Št. vozil"/>
     <sr_latin txt="Br. kola"/>
+    <fi txt="Vaunujen määrä"/>
+    <ru txt="№ вагонов"/>
   </Msg>
   <Msg id="sleeponclosed">
     <en txt="Sleep on closed"/>
@@ -27629,8 +27644,13 @@
     <pl txt="Uśpij podczas zamyknia"/>
     <sl txt="Spanje, ko je zaprto"/>
     <sr_latin txt="Uspavati zatvoreno"/>
+    <fi txt="Aseta suljettaessa lepotilaan"/>
   </Msg>
   <Msg id="sensorrange">
     <en txt="Sensor range"/>
+    <fi txt="Anturialue"/>
+    <it txt="Intervallo sensore"/>
+    <nl txt="Melder bereik"/>
+    <sl txt="Območje tipala"/>
   </Msg>
 </Messages>
