@@ -397,8 +397,8 @@ void CarDlg::initIndex(){
         m_CarList2->InsertItem( i, wxString(id,wxConvUTF8) );
         m_CarList2->SetItem( i, 1, wxString(wCar.getroadname( car ), wxConvUTF8) );
         m_CarList2->SetItem( i, 2, wxString(wCar.getnumber( car ), wxConvUTF8) );
-        m_CarList2->SetItem( i, 3, wxGetApp().getMsg( wCar.gettype( car ) ) );
-        m_CarList2->SetItem( i, 4, wxGetApp().getMsg(wCar.getsubtype( car )) );
+        m_CarList2->SetItem( i, 3, StrOp.len(wCar.gettype( car )) > 0 ? wxGetApp().getMsg( wCar.gettype( car ) ):wxT("") );
+        m_CarList2->SetItem( i, 4, StrOp.len(wCar.getsubtype( car )) > 0 ? wxGetApp().getMsg(wCar.getsubtype( car )):wxT("") );
         m_CarList2->SetItem( i, 5, wxString::Format(wxT("%d"), wCar.getlen( car )) );
         m_CarList2->SetItem( i, 6, wxString(wCar.getlocation( car ), wxConvUTF8) );
         m_CarList2->SetItem( i, 7, wxString(findTrain(id), wxConvUTF8) );
