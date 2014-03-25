@@ -633,6 +633,7 @@ static void __broadcastLocoProps( iOLoc inst, const char* cmd ) {
   }
   wLoc.settrain( node, wLoc.gettrain(data->props) );
   wLoc.settrainlen( node, wLoc.gettrainlen(data->props) );
+  wLoc.settrainweight( node, wLoc.gettrainweight(data->props) );
   wLoc.setV_realkmh( node, wLoc.getV_realkmh(data->props) );
   if( cmd != NULL )
     wLoc.setcmd( node, cmd );
@@ -1986,6 +1987,7 @@ static void __runner( void* threadinst ) {
       }
       wLoc.settrain( broadcast, wLoc.gettrain(data->props) );
       wLoc.settrainlen( broadcast, wLoc.gettrainlen(data->props) );
+      wLoc.settrainweight( broadcast, wLoc.gettrainweight(data->props) );
       AppOp.broadcastEvent( broadcast );
     }
     else {
@@ -2386,6 +2388,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
 
     wLoc.settrain( node, wLoc.gettrain(data->props) );
     wLoc.settrainlen( node, wLoc.gettrainlen(data->props) );
+    wLoc.settrainweight( node, wLoc.gettrainweight(data->props) );
     AppOp.broadcastEvent( node );
   }
 }
@@ -2423,6 +2426,7 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
   }
   wLoc.settrain( node, wLoc.gettrain(data->props) );
   wLoc.settrainlen( node, wLoc.gettrainlen(data->props) );
+  wLoc.settrainweight( node, wLoc.gettrainweight(data->props) );
   AppOp.broadcastEvent( node );
 }
 
@@ -2551,6 +2555,7 @@ static void _setMode( iOLoc inst, const char* mode ) {
     }
     wLoc.settrain( node, wLoc.gettrain(data->props) );
     wLoc.settrainlen( node, wLoc.gettrainlen(data->props) );
+    wLoc.settrainweight( node, wLoc.gettrainweight(data->props) );
     AppOp.broadcastEvent( node );
   }
 }
@@ -3104,6 +3109,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "consist [%s] released from loco [%s]", wLoc.gettrain(data->props), wLoc.getid( data->props ) );
       wLoc.settrain(data->props, "");
       wLoc.settrainlen(data->props, 0);
+      wLoc.settrainweight( data->props, 0 );
       if( wLoc.isadjustaccel(data->props) ) {
         __adjustAccel(inst, wLoc.getaccelmin(data->props) );
       }
@@ -3149,6 +3155,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       wLoc.setactive( nodeF, wLoc.isactive(data->props) );
       wLoc.settrain( nodeF, wLoc.gettrain(data->props) );
       wLoc.settrainlen( nodeF, wLoc.gettrainlen(data->props) );
+      wLoc.settrainweight( nodeF, wLoc.gettrainweight(data->props) );
       AppOp.broadcastEvent( nodeF );
     }
 
@@ -3198,6 +3205,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   }
   wLoc.settrain( nodeF, wLoc.gettrain(data->props) );
   wLoc.settrainlen( nodeF, wLoc.gettrainlen(data->props) );
+  wLoc.settrainweight( nodeF, wLoc.gettrainweight(data->props) );
   AppOp.broadcastEvent( nodeF );
 
   return True;
@@ -3763,6 +3771,7 @@ static void _setBlockEnterSide( iOLoc loc, Boolean enterside, const char* blockI
     }
     wLoc.settrain( node, wLoc.gettrain(data->props) );
     wLoc.settrainlen( node, wLoc.gettrainlen(data->props) );
+    wLoc.settrainweight( node, wLoc.gettrainweight(data->props) );
     AppOp.broadcastEvent( node );
   }
 }

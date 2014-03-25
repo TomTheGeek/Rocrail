@@ -1112,7 +1112,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ID, wxALIGN_LEFT, wxALIGN_CENTRE );
 
         if( wLoc.gettrain(lc) != NULL && StrOp.len(wLoc.gettrain(lc)) > 0 ) {
-          char* val = StrOp.fmt( "%s(%d)", wLoc.gettrain( lc ), wLoc.gettrainlen( lc ) );
+          char* val = StrOp.fmt( "%s(%d,%d)", wLoc.gettrain( lc ), wLoc.gettrainlen( lc ), wLoc.gettrainweight(lc) );
           m_ActiveLocs->SetCellValue( i, LOC_COL_CONSIST, wxString(val,wxConvUTF8) );
           StrOp.free( val );
         }
@@ -1484,7 +1484,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
         }
 
         if( wLoc.gettrain(node) != NULL && StrOp.len(wLoc.gettrain(node)) > 0 ) {
-          val = StrOp.fmt( "%s(%d)", wLoc.gettrain( node ), wLoc.gettrainlen( node ) );
+          val = StrOp.fmt( "%s(%d,%d)", wLoc.gettrain( node ), wLoc.gettrainlen( node ), wLoc.gettrainweight( node ) );
           m_ActiveLocs->SetCellValue( i, LOC_COL_CONSIST, wxString(val,wxConvUTF8) );
           StrOp.free( val );
         }
