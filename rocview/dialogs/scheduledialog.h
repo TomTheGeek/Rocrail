@@ -125,11 +125,11 @@ class ScheduleDialog: public wxDialog, public BaseDialog
   void initActions();
   void setSelection(const char* ID);
   int findID( const char* ID );
-  const char* getStart( iONode sc );
-  const char* getEnd( iONode sc );
 
 
 public:
+  static const char* getStart( iONode sc );
+  static const char* getEnd( iONode sc );
     /// Constructors
     ScheduleDialog( );
     ~ScheduleDialog( );
@@ -297,6 +297,8 @@ public:
     int m_SelectedRow;
     bool m_bSave;
     const char* m_StartBlock;
+    int m_SortCol;
+
 };
 
 #endif

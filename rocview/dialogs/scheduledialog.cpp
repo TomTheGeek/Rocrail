@@ -130,6 +130,8 @@ END_EVENT_TABLE()
  * ScheduleDialog constructors
  */
 
+static bool m_bSortInverse = false;
+
 ScheduleDialog::ScheduleDialog( )
 {
 }
@@ -147,6 +149,8 @@ ScheduleDialog::ScheduleDialog( wxWindow* parent, iONode p_Props, bool save, con
   m_bSave = save;
   m_StartBlock = startblock;
   m_SelectedRow = -1;
+  m_SortCol = 0;
+  m_bSortInverse = false;
 
   m_ShowAll->SetValue((startblock==NULL)?true:false);
   m_ShowAll->Enable((startblock!=NULL)?true:false);
@@ -360,7 +364,32 @@ static int __sortID(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* idA = wItem.getid( a );
     const char* idB = wItem.getid( b );
-    return strcmp( idA, idB );
+    return m_bSortInverse ? strcmp( idB, idA ):strcmp( idA, idB );
+}
+/* comparator for sorting by scaction: */
+static int __sortFollowup(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wSchedule.getscaction( a );
+    const char* idB = wSchedule.getscaction( b );
+    return m_bSortInverse ? strcmp( idB, idA ):strcmp( idA, idB );
+}
+static int __sortStart(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = ScheduleDialog::getStart( a );
+    const char* idB = ScheduleDialog::getStart( b );
+    return m_bSortInverse ? strcmp( idB, idA ):strcmp( idA, idB );
+}
+static int __sortEnd(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = ScheduleDialog::getEnd( a );
+    const char* idB = ScheduleDialog::getEnd( b );
+    return m_bSortInverse ? strcmp( idB, idA ):strcmp( idA, idB );
 }
 
 
@@ -428,9 +457,17 @@ void ScheduleDialog::initIndex() {
             }
           }
         }
-	   }
+	    }
 
-  	  ListOp.sort(list, &__sortID);
+      if( m_SortCol == 1 )
+        ListOp.sort(list, &__sortStart);
+      else if( m_SortCol == 2 )
+        ListOp.sort(list, &__sortEnd);
+      else if( m_SortCol == 3 )
+        ListOp.sort(list, &__sortFollowup);
+      else
+  	    ListOp.sort(list, &__sortID);
+
       cnt = ListOp.size( list );
       for( int i = 0; i < cnt; i++ ) {
         iONode sc = (iONode)ListOp.get( list, i );
@@ -453,7 +490,15 @@ void ScheduleDialog::initIndex() {
       }
 
 
-      ListOp.sort(listAll, &__sortID);
+      if( m_SortCol == 1 )
+        ListOp.sort(listAll, &__sortStart);
+      else if( m_SortCol == 2 )
+        ListOp.sort(listAll, &__sortEnd);
+      else if( m_SortCol == 3 )
+        ListOp.sort(listAll, &__sortFollowup);
+      else
+        ListOp.sort(listAll, &__sortID);
+
       cnt = ListOp.size( listAll );
       for( int i = 0; i < cnt; i++ ) {
         iONode sc = (iONode)ListOp.get( listAll, i );
@@ -1511,9 +1556,10 @@ void ScheduleDialog::OnButtonScheduleCopyClick( wxCommandEvent& event )
 
 void ScheduleDialog::OnListboxScheduleListColLeftClick( wxListEvent& event )
 {
-////@begin wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTBOX_SCHEDULE_LIST in ScheduleDialog.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTBOX_SCHEDULE_LIST in ScheduleDialog. 
+  int SortCol = event.GetColumn();
+  if( SortCol == m_SortCol)
+    m_bSortInverse = !m_bSortInverse;
+  m_SortCol = SortCol;
+  initIndex();
 }
 
