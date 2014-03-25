@@ -76,7 +76,8 @@ IMPLEMENT_DYNAMIC_CLASS( ScheduleDialog, wxDialog )
 BEGIN_EVENT_TABLE( ScheduleDialog, wxDialog )
 
 ////@begin ScheduleDialog event table entries
-    EVT_LISTBOX( ID_LISTBOX_SCHEDULE_LIST, ScheduleDialog::OnListboxScheduleListSelected )
+    EVT_LIST_ITEM_SELECTED( ID_LISTBOX_SCHEDULE_LIST, ScheduleDialog::OnListboxScheduleListSelected )
+    EVT_LIST_COL_CLICK( ID_LISTBOX_SCHEDULE_LIST, ScheduleDialog::OnListboxScheduleListColLeftClick )
 
     EVT_CHECKBOX( ID_CHECKBOX_SCHEDULES_SHOW_ALL, ScheduleDialog::OnCheckboxSchedulesShowAllClick )
 
@@ -103,6 +104,8 @@ BEGIN_EVENT_TABLE( ScheduleDialog, wxDialog )
 
     EVT_BUTTON( wxID_BUTTON_SCHEDULE_ADD_BLOCK, ScheduleDialog::OnAddBlockClick )
 
+    EVT_BUTTON( wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS, ScheduleDialog::OnButtonScheduleEntryActionsClick )
+
     EVT_BUTTON( wxID_BUTTON_SCHEDULE_REMOVE_DESTINATION, ScheduleDialog::OnRemoveDestinationClick )
 
     EVT_BUTTON( wxID_BUTTON_SCHEDULE_MODIFY_DESTINATION, ScheduleDialog::OnModifyDestinationClick )
@@ -110,8 +113,6 @@ BEGIN_EVENT_TABLE( ScheduleDialog, wxDialog )
     EVT_BUTTON( ID_DESTUP, ScheduleDialog::OnDestupClick )
 
     EVT_BUTTON( ID_DESTDOWN, ScheduleDialog::OnDestdownClick )
-
-    EVT_BUTTON( wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS, ScheduleDialog::OnButtonScheduleEntryActionsClick )
 
     EVT_BUTTON( ID_SCHEDULE_ACTIONS, ScheduleDialog::OnScheduleActionsClick )
 
@@ -287,6 +288,11 @@ void ScheduleDialog::initLabels() {
   m_Entries->SetColLabelSize(20);
 
   // Index
+  m_List->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
+  m_List->InsertColumn(1, wxGetApp().getMsg( "start" ), wxLIST_FORMAT_LEFT );
+  m_List->InsertColumn(2, wxGetApp().getMsg( "destination" ), wxLIST_FORMAT_LEFT );
+  m_List->InsertColumn(3, wxGetApp().getMsg( "followup" ), wxLIST_FORMAT_LEFT );
+
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_ShowAll->SetLabel( wxGetApp().getMsg( "showall" ) );
@@ -361,7 +367,7 @@ static int __sortID(obj* _a, obj* _b)
 void ScheduleDialog::initIndex() {
   TraceOp.trc( "scdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitIndex" );
 
-  m_List->Clear();
+  m_List->DeleteAllItems();
 
   m_ScheduleAction->Clear();
   m_ScheduleAction->Append( _T("") );
@@ -430,8 +436,22 @@ void ScheduleDialog::initIndex() {
         iONode sc = (iONode)ListOp.get( list, i );
         const char* id = wItem.getid(sc);
   		  TraceOp.trc( "scdlg", TRCLEVEL_INFO, __LINE__, 9999, "schedule %s", id );
-        m_List->Append( wxString(id,wxConvUTF8), sc );
+        m_List->InsertItem( i, wxString(id,wxConvUTF8) );
+        m_List->SetItem( i, 1, wxString(getStart( sc ), wxConvUTF8) );
+        m_List->SetItem( i, 2, wxString(getEnd( sc ), wxConvUTF8) );
+        m_List->SetItem( i, 3, wxString(wSchedule.getscaction( sc ), wxConvUTF8) );
+        m_List->SetItemPtrData(i, (wxUIntPtr)sc);
   		}
+      // resize
+      for( int n = 0; n < 4; n++ ) {
+        m_List->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+        int autoheadersize = m_List->GetColumnWidth(n);
+        m_List->SetColumnWidth(n, wxLIST_AUTOSIZE);
+        int autosize = m_List->GetColumnWidth(n);
+        if(autoheadersize > autosize )
+          m_List->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+      }
+
 
       ListOp.sort(listAll, &__sortID);
       cnt = ListOp.size( listAll );
@@ -444,9 +464,13 @@ void ScheduleDialog::initIndex() {
       }
 
       if( m_Props != NULL ) {
-        m_List->SetStringSelection( wxString(wSchedule.getid( m_Props ),wxConvUTF8) );
-        m_List->SetFirstItem( wxString(wSchedule.getid( m_Props ),wxConvUTF8) );
+        setSelection(wSchedule.getid(m_Props));
       }
+      else if(m_List->GetItemCount() > 0 ) {
+        m_List->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+        m_Props = (iONode)m_List->GetItemData(0);
+      }
+
     }
   }
   /* clean up the temp. list */
@@ -462,6 +486,49 @@ void ScheduleDialog::initIndex() {
   m_DestDown->Enable( false );
 
 }
+
+const char* ScheduleDialog::getStart( iONode sc ) {
+  iONode scentry = wSchedule.getscentry( sc );
+  if( scentry != NULL ) {
+    if( wScheduleEntry.getblock(scentry) != NULL && StrOp.len(wScheduleEntry.getblock(scentry)) > 0 )
+      return wScheduleEntry.getblock(scentry);
+    if( wScheduleEntry.getlocation(scentry) != NULL && StrOp.len(wScheduleEntry.getlocation(scentry)) > 0 )
+      return wScheduleEntry.getlocation(scentry);
+  }
+  return "";
+}
+
+
+const char* ScheduleDialog::getEnd( iONode sc ) {
+  iONode scentry = wSchedule.getscentry( sc );
+  iONode node = scentry;
+  while( scentry != NULL ) {
+    scentry = wSchedule.nextscentry( sc, scentry );
+    if( scentry != NULL )
+      node = scentry;
+  };
+  scentry = node;
+  if( scentry != NULL ) {
+    if( wScheduleEntry.getblock(scentry) != NULL && StrOp.len(wScheduleEntry.getblock(scentry)) > 0 )
+      return wScheduleEntry.getblock(scentry);
+    if( wScheduleEntry.getlocation(scentry) != NULL && StrOp.len(wScheduleEntry.getlocation(scentry)) > 0 )
+      return wScheduleEntry.getlocation(scentry);
+  }
+  return "";
+}
+
+void ScheduleDialog::setSelection(const char* ID) {
+  int size = m_List->GetItemCount();
+  for( int index = 0; index < size; index++ ) {
+    iONode node = (iONode)m_List->GetItemData(index);
+    if( StrOp.equals( ID, wSchedule.getid(node) ) ) {
+      m_List->SetItemState(index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      break;
+    }
+  }
+}
+
+
 
 
 void ScheduleDialog::initSchedule() {
@@ -657,11 +724,11 @@ bool ScheduleDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_Free2Go = NULL;
     m_labInDelay = NULL;
     m_InDelay = NULL;
+    m_EntryActions = NULL;
     m_RemoveDestination = NULL;
     m_ModifyDestination = NULL;
     m_DestUp = NULL;
     m_DestDown = NULL;
-    m_EntryActions = NULL;
     m_ScheduleActions = NULL;
     m_ScheduleBox = NULL;
     m_ScheduleAction = NULL;
@@ -703,8 +770,7 @@ void ScheduleDialog::CreateControls()
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     m_Index->SetSizer(itemBoxSizer5);
 
-    wxArrayString m_ListStrings;
-    m_List = new wxListBox( m_Index, ID_LISTBOX_SCHEDULE_LIST, wxDefaultPosition, wxDefaultSize, m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
+    m_List = new wxListCtrl( m_Index, ID_LISTBOX_SCHEDULE_LIST, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES );
     itemBoxSizer5->Add(m_List, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 3, 0, 0);
@@ -804,7 +870,7 @@ void ScheduleDialog::CreateControls()
     m_Entries->SetColLabelSize(25);
     m_Entries->SetRowLabelSize(50);
     m_Entries->CreateGrid(1, 5, wxGrid::wxGridSelectRows);
-    itemBoxSizer34->Add(m_Entries, 2, wxGROW|wxALL, 5);
+    itemBoxSizer34->Add(m_Entries, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer36 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer34->Add(itemFlexGridSizer36, 0, wxGROW|wxALL, 5);
@@ -861,33 +927,33 @@ void ScheduleDialog::CreateControls()
 
     m_Free2Go = new wxCheckBox( m_Destinations, wxID_ANY, _("Free before start"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Free2Go->SetValue(false);
-    itemStaticBoxSizer51->Add(m_Free2Go, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemStaticBoxSizer51->Add(m_Free2Go, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
 
     wxFlexGridSizer* itemFlexGridSizer54 = new wxFlexGridSizer(0, 2, 0, 0);
     itemStaticBoxSizer51->Add(itemFlexGridSizer54, 0, wxGROW, 5);
     m_labInDelay = new wxStaticText( m_Destinations, wxID_ANY, _("IN delay"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer54->Add(m_labInDelay, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer54->Add(m_labInDelay, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_InDelay = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 10000, 0 );
-    itemFlexGridSizer54->Add(m_InDelay, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    wxBoxSizer* itemBoxSizer57 = new wxBoxSizer(wxHORIZONTAL);
-    itemBoxSizer34->Add(itemBoxSizer57, 0, wxALIGN_LEFT, 5);
-    m_RemoveDestination = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_REMOVE_DESTINATION, _("Remove"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_RemoveDestination->SetDefault();
-    itemBoxSizer57->Add(m_RemoveDestination, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    m_ModifyDestination = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_MODIFY_DESTINATION, _("Modify"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer57->Add(m_ModifyDestination, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    m_DestUp = new wxButton( m_Destinations, ID_DESTUP, _("Up"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer57->Add(m_DestUp, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    m_DestDown = new wxButton( m_Destinations, ID_DESTDOWN, _("Down"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer57->Add(m_DestDown, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer54->Add(m_InDelay, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_EntryActions = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS, _("Actions..."), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer57->Add(m_EntryActions, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemStaticBoxSizer51->Add(m_EntryActions, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    wxBoxSizer* itemBoxSizer58 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer34->Add(itemBoxSizer58, 0, wxALIGN_LEFT, 5);
+    m_RemoveDestination = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_REMOVE_DESTINATION, _("Remove"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_RemoveDestination->SetDefault();
+    itemBoxSizer58->Add(m_RemoveDestination, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_ModifyDestination = new wxButton( m_Destinations, wxID_BUTTON_SCHEDULE_MODIFY_DESTINATION, _("Modify"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer58->Add(m_ModifyDestination, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_DestUp = new wxButton( m_Destinations, ID_DESTUP, _("Up"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer58->Add(m_DestUp, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_DestDown = new wxButton( m_Destinations, ID_DESTDOWN, _("Down"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer58->Add(m_DestDown, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_NoteBook->AddPage(m_Destinations, _("Destinations"));
 
@@ -994,15 +1060,26 @@ void ScheduleDialog::OnButtonScheduleDeleteClick( wxCommandEvent& event )
 }
 
 
+int ScheduleDialog::findID( const char* ID ) {
+  int size = m_List->GetItemCount();
+  for( int index = 0; index < size; index++ ) {
+    iONode node = (iONode)m_List->GetItemData(index);
+    if( StrOp.equals( ID, wSchedule.getid(node) ) ) {
+      return index;
+    }
+  }
+  return wxNOT_FOUND;
+}
+
+
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SCHEDULE_NEW
  */
 
 void ScheduleDialog::OnButtonScheduleNewClick( wxCommandEvent& event )
 {
-  int i = m_List->FindString( _T("NEW") );
+  int i = findID("NEW");
   if( i == wxNOT_FOUND ) {
-    m_List->Append( _T("NEW") );
     iONode model = wxGetApp().getModel();
     if( model != NULL ) {
       iONode sclist = wPlan.getsclist( model );
@@ -1020,8 +1097,8 @@ void ScheduleDialog::OnButtonScheduleNewClick( wxCommandEvent& event )
       }
     }
   }
-  m_List->SetStringSelection( _T("NEW") );
-  m_List->SetFirstItem( _T("NEW") );
+  initIndex();
+  setSelection(wSchedule.getid(m_Props));
   initSchedule();
 }
 
@@ -1030,9 +1107,10 @@ void ScheduleDialog::OnButtonScheduleNewClick( wxCommandEvent& event )
  * wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_SCHEDULE_LIST
  */
 
-void ScheduleDialog::OnListboxScheduleListSelected( wxCommandEvent& event )
+void ScheduleDialog::OnListboxScheduleListSelected( wxListEvent& event )
 {
-  m_Props = (iONode)m_List->GetClientData(m_List->GetSelection() );
+  int index = event.GetIndex();
+  m_Props = (iONode)m_List->GetItemData(index);
   m_SelectedRow = -1;
   initSchedule();
 }
@@ -1424,5 +1502,18 @@ void ScheduleDialog::OnButtonScheduleCopyClick( wxCommandEvent& event )
 
     }
   }
+}
+
+
+/*!
+ * wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTBOX_SCHEDULE_LIST
+ */
+
+void ScheduleDialog::OnListboxScheduleListColLeftClick( wxListEvent& event )
+{
+////@begin wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTBOX_SCHEDULE_LIST in ScheduleDialog.
+    // Before editing this code, remove the block markers.
+    event.Skip();
+////@end wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTBOX_SCHEDULE_LIST in ScheduleDialog. 
 }
 

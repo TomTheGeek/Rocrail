@@ -33,6 +33,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/listctrl.h"
 #include "wx/spinctrl.h"
 #include "wx/statline.h"
 #include "wx/grid.h"
@@ -49,6 +50,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxListCtrl;
 class wxSpinCtrl;
 class wxGrid;
 ////@end forward declarations
@@ -79,11 +81,11 @@ class wxGrid;
 #define ID_COMBOBOX_SCHEDULE_TO_LOCATION 10006
 #define wxID_BUTTON_SCHEDULE_ADD_LOCATION 10243
 #define wxID_BUTTON_SCHEDULE_ADD_BLOCK 10274
+#define wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS 10343
 #define wxID_BUTTON_SCHEDULE_REMOVE_DESTINATION 10297
 #define wxID_BUTTON_SCHEDULE_MODIFY_DESTINATION 10330
 #define ID_DESTUP 10397
 #define ID_DESTDOWN 10398
-#define wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS 10343
 #define ID_PANEL_SCHEDULES_ACTIONS 10079
 #define ID_SCHEDULE_ACTIONS 10209
 #define SYMBOL_SCHEDULEDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -121,7 +123,10 @@ class ScheduleDialog: public wxDialog, public BaseDialog
   void initOutputList();
   void initLocIDList();
   void initActions();
-
+  void setSelection(const char* ID);
+  int findID( const char* ID );
+  const char* getStart( iONode sc );
+  const char* getEnd( iONode sc );
 
 
 public:
@@ -140,8 +145,11 @@ public:
 
 ////@begin ScheduleDialog event handler declarations
 
-    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX_SCHEDULE_LIST
-    void OnListboxScheduleListSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LISTBOX_SCHEDULE_LIST
+    void OnListboxScheduleListSelected( wxListEvent& event );
+
+    /// wxEVT_COMMAND_LIST_COL_CLICK event handler for ID_LISTBOX_SCHEDULE_LIST
+    void OnListboxScheduleListColLeftClick( wxListEvent& event );
 
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX_SCHEDULES_SHOW_ALL
     void OnCheckboxSchedulesShowAllClick( wxCommandEvent& event );
@@ -185,6 +193,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_BUTTON_SCHEDULE_ADD_BLOCK
     void OnAddBlockClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS
+    void OnButtonScheduleEntryActionsClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_BUTTON_SCHEDULE_REMOVE_DESTINATION
     void OnRemoveDestinationClick( wxCommandEvent& event );
 
@@ -196,9 +207,6 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_DESTDOWN
     void OnDestdownClick( wxCommandEvent& event );
-
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS
-    void OnButtonScheduleEntryActionsClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SCHEDULE_ACTIONS
     void OnScheduleActionsClick( wxCommandEvent& event );
@@ -232,7 +240,7 @@ public:
 ////@begin ScheduleDialog member variables
     wxNotebook* m_NoteBook;
     wxPanel* m_Index;
-    wxListBox* m_List;
+    wxListCtrl* m_List;
     wxCheckBox* m_ShowAll;
     wxStaticText* m_labStartBlock;
     wxTextCtrl* m_StartBlockID;
@@ -271,11 +279,11 @@ public:
     wxCheckBox* m_Free2Go;
     wxStaticText* m_labInDelay;
     wxSpinCtrl* m_InDelay;
+    wxButton* m_EntryActions;
     wxButton* m_RemoveDestination;
     wxButton* m_ModifyDestination;
     wxButton* m_DestUp;
     wxButton* m_DestDown;
-    wxButton* m_EntryActions;
     wxPanel* m_ScheduleActions;
     wxStaticBox* m_ScheduleBox;
     wxComboBox* m_ScheduleAction;
