@@ -6965,3 +6965,9 @@ msgstr ""
 msgid "Sensor range"
 msgstr ""
 
+#. 
+# id="gridfontsizeadjust"
+#, c-format
+msgid "Grid fontsize adjust"
+msgstr ""
+

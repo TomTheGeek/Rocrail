@@ -27653,4 +27653,7 @@
     <nl txt="Melder bereik"/>
     <sl txt="Območje tipala"/>
   </Msg>
+  <Msg id="gridfontsizeadjust">
+    <en txt="Grid fontsize adjust"/>
+  </Msg>
 </Messages>

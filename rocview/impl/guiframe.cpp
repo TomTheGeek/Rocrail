@@ -2299,11 +2299,11 @@ void RocGuiFrame::create() {
   m_ActiveLocs->CreateGrid(1, 7, wxGrid::wxGridSelectRows);
 
   wxFont* fontHeader = new wxFont( m_ActiveLocs->GetLabelFont() );
-  fontHeader->SetPointSize( (int)(fontHeader->GetPointSize() - 1 ) );
+  fontHeader->SetPointSize( (int)(fontHeader->GetPointSize() + wGui.getgridfontsizeadjust(m_Ini) ) );
   m_ActiveLocs->SetLabelFont( *fontHeader );
 
   wxFont* font = new wxFont( m_ActiveLocs->GetDefaultCellFont() );
-  font->SetPointSize( (int)(font->GetPointSize() - 1 ) );
+  font->SetPointSize( (int)(font->GetPointSize()  + wGui.getgridfontsizeadjust(m_Ini) ) );
   m_ActiveLocs->SetSelectionMode(wxGrid::wxGridSelectRows);
   m_ActiveLocs->SetDefaultCellFont( *font );
   //m_ActiveLocs->SetDefaultRowSize(20);

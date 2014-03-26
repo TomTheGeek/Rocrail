@@ -181,10 +181,6 @@ public:
     wxCheckBox* m_VerticalToolbar;
     wxCheckBox* m_LocoImage;
     wxCheckBox* m_MonitorDontWrap;
-    wxStaticText* m_labWidgetWidth;
-    wxSpinCtrl* m_WidgetWidth;
-    wxStaticText* m_labMonitorSize;
-    wxSpinCtrl* m_MonitorSize;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;
@@ -220,6 +216,12 @@ public:
     wxTextCtrl* m_DirImageRev;
     wxStaticText* m_labBoosterUID;
     wxTextCtrl* m_BoosterUID;
+    wxStaticText* m_labWidgetWidth;
+    wxSpinCtrl* m_WidgetWidth;
+    wxStaticText* m_labMonitorSize;
+    wxSpinCtrl* m_MonitorSize;
+    wxStaticText* m_labGridFontSizeAdjust;
+    wxSpinCtrl* m_GridFontSizeAdjust;
     wxPanel* m_TracePanel;
     wxStaticBoxSizer* m_TraceLevel;
     wxCheckBox* m_Debug;
