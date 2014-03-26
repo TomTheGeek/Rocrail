@@ -2297,10 +2297,15 @@ void RocGuiFrame::create() {
   m_ActiveLocs = new wxGrid( m_ActiveLocsPanel, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
   m_ActiveLocs->SetRowLabelSize(0);
   m_ActiveLocs->CreateGrid(1, 7, wxGrid::wxGridSelectRows);
-  //wxFont* font = new wxFont( m_ActiveLocs->GetDefaultCellFont() );
-  //font->SetPointSize( (int)(font->GetPointSize() - 1 ) );
+
+  wxFont* fontHeader = new wxFont( m_ActiveLocs->GetLabelFont() );
+  fontHeader->SetPointSize( (int)(fontHeader->GetPointSize() - 1 ) );
+  m_ActiveLocs->SetLabelFont( *fontHeader );
+
+  wxFont* font = new wxFont( m_ActiveLocs->GetDefaultCellFont() );
+  font->SetPointSize( (int)(font->GetPointSize() - 1 ) );
   m_ActiveLocs->SetSelectionMode(wxGrid::wxGridSelectRows);
-  //m_ActiveLocs->SetDefaultCellFont( *font );
+  m_ActiveLocs->SetDefaultCellFont( *font );
   //m_ActiveLocs->SetDefaultRowSize(20);
   //m_ActiveLocs->SetColLabelSize(m_ActiveLocs->GetDefaultRowSize());
   m_ActiveLocs->SetColLabelValue(LOC_COL_ID, wxGetApp().getMsg("id") );
