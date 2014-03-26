@@ -27652,6 +27652,8 @@
     <it txt="Intervallo sensore"/>
     <nl txt="Melder bereik"/>
     <sl txt="Območje tipala"/>
+    <pl txt="Zasięg czujnika"/>
+    <sr_latin txt="Opseg senzora"/>
   </Msg>
   <Msg id="gridfontsizeadjust">
     <en txt="Grid fontsize adjust"/>
