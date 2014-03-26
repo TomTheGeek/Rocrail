@@ -34,6 +34,7 @@
 ////@begin includes
 #include "wx/notebook.h"
 #include "wx/spinctrl.h"
+#include "wx/statline.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -164,6 +165,22 @@ public:
     wxPanel* m_GeneralTab;
     wxRadioBox* m_ClockType;
     wxRadioBox* m_TabAlignType;
+    wxStaticText* m_labWidgetWidth;
+    wxSpinCtrl* m_WidgetWidth;
+    wxStaticText* m_labMonitorSize;
+    wxSpinCtrl* m_MonitorSize;
+    wxStaticText* m_labGridFontSizeAdjust;
+    wxSpinCtrl* m_GridFontSizeAdjust;
+    wxStaticBox* m_labPanelSize;
+    wxStaticText* m_labCX;
+    wxSpinCtrl* m_CX;
+    wxStaticText* m_labCY;
+    wxSpinCtrl* m_CY;
+    wxStaticBox* m_labModPlanSize;
+    wxStaticText* m_labCXMod;
+    wxSpinCtrl* m_CXMod;
+    wxStaticText* m_labCYMod;
+    wxSpinCtrl* m_CYMod;
     wxCheckBox* m_RestrictEdit4Auto;
     wxCheckBox* m_Check4Updates;
     wxCheckBox* m_JsSupport;
@@ -181,12 +198,6 @@ public:
     wxCheckBox* m_VerticalToolbar;
     wxCheckBox* m_LocoImage;
     wxCheckBox* m_MonitorDontWrap;
-    wxStaticText* m_labWidgetWidth;
-    wxSpinCtrl* m_WidgetWidth;
-    wxStaticText* m_labMonitorSize;
-    wxSpinCtrl* m_MonitorSize;
-    wxStaticText* m_labGridFontSizeAdjust;
-    wxSpinCtrl* m_GridFontSizeAdjust;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;
@@ -203,16 +214,6 @@ public:
     wxStaticBox* m_labDecPath;
     wxTextCtrl* m_DecPath;
     wxButton* m_DecPathDlg;
-    wxStaticBox* m_labPanelSize;
-    wxStaticText* m_labCX;
-    wxSpinCtrl* m_CX;
-    wxStaticText* m_labCY;
-    wxSpinCtrl* m_CY;
-    wxStaticBox* m_labModPlanSize;
-    wxStaticText* m_labCXMod;
-    wxSpinCtrl* m_CXMod;
-    wxStaticText* m_labCYMod;
-    wxSpinCtrl* m_CYMod;
     wxStaticText* m_labSpeak4Block;
     wxTextCtrl* m_Speak4Block;
     wxStaticText* m_labSpeakCmd;
