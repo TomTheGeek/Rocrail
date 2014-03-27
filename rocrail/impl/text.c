@@ -484,6 +484,7 @@ static struct OText* _inst( iONode ini ) {
   if( wText.isreset(data->props) ) {
     wText.settext(data->props, "");
   }
+  wText.setblock(data->props, "");
 
   instCnt++;
   return __Text;
