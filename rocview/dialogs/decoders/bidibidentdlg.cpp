@@ -1020,32 +1020,51 @@ void BidibIdentDlg::handleFeature(iONode node) {
   StrOp.fmtb(uidKey, "[%s] %08X", mnemonic, wProgram.getmodid(node) );
   iONode l_bidibnode = (iONode)MapOp.get( nodeMap, uidKey );
   if( l_bidibnode != NULL ) {
-    iONode program = (iONode)NodeOp.base.clone(node);
     int feature = wProgram.getcv(node);
-    int value   = wProgram.getvalue(node);
     const char* featureName = bidibGetFeatureName(feature);
-    m_FeatureList->Append( wxString(featureName,wxConvUTF8), program);
 
-    if( feature == FEATURE_CTRL_MAC_COUNT ) {
-      m_MacroList->Clear();
-      for( int i = 0; i < value; i++ ) {
-        m_MacroList->Append( wxString::Format(_T("macro %d"), i+1));
+    int i = wxNOT_FOUND;
+    if( !m_FeatureList->IsEmpty() )
+      i = m_FeatureList->FindString( wxString(featureName,wxConvUTF8) );
+
+    if( i == wxNOT_FOUND ) {
+      iONode program = (iONode)NodeOp.base.clone(node);
+      int value   = wProgram.getvalue(node);
+      m_FeatureList->Append( wxString(featureName,wxConvUTF8), program);
+
+      if( feature == FEATURE_CTRL_MAC_COUNT ) {
+        m_MacroList->Clear();
+        for( int i = 0; i < value; i++ ) {
+          m_MacroList->Append( wxString::Format(_T("macro %d"), i+1));
+        }
+        if( value > 0 ) {
+          m_MacroList->Select(0);
+          m_MacroList->SetFirstItem(0);
+          m_MacroPanel->Enable(true);
+        }
+        else {
+          m_MacroPanel->Enable(false);
+        }
       }
-      if( value > 0 ) {
-        m_MacroList->Select(0);
-        m_MacroList->SetFirstItem(0);
-        m_MacroPanel->Enable(true);
+      else if( feature == FEATURE_CTRL_MAC_SIZE ) {
+        macrosize = value;
       }
-      else {
-        m_MacroPanel->Enable(false);
+      else if( feature == FEATURE_CTRL_MAC_LEVEL ) {
+        macrolevel = value;
       }
     }
-    else if( feature == FEATURE_CTRL_MAC_SIZE ) {
-      macrosize = value;
+    else {
+      // update feature values
+      iONode program = (iONode)m_FeatureList->GetClientData(i);
+      if( program != NULL ) {
+        wProgram.setvalue( program, wProgram.getvalue(node));
+      }
+      if( i == m_FeatureList->GetSelection() ) {
+        m_Feature->SetValue(wProgram.getcv(node));
+        m_FeatureValue->SetValue(wProgram.getvalue(node));
+      }
     }
-    else if( feature == FEATURE_CTRL_MAC_LEVEL ) {
-      macrolevel = value;
-    }
+
   }
   else {
     TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"bidib node \"%s\" not found", uidKey );
