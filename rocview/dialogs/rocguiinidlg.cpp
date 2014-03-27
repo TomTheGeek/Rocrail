@@ -116,8 +116,8 @@ RocguiIniDialog::RocguiIniDialog( wxWindow* parent, iONode ini )
   Create(parent, -1, _("Rocview"));
   initLabels();
   m_Ini = ini;
-  initValues();
 
+  m_GeneralTab->GetSizer()->Layout();
   m_TracePanel->GetSizer()->Layout();
   m_MICpanel->GetSizer()->Layout();
   m_PTpanel->GetSizer()->Layout();
@@ -127,6 +127,8 @@ RocguiIniDialog::RocguiIniDialog( wxWindow* parent, iONode ini )
   m_Notebook->Fit();
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
+
+  initValues();
 }
 
 
