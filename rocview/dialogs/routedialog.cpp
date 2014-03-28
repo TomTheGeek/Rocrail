@@ -261,6 +261,7 @@ void RouteDialog::initLabels() {
   m_Speed->SetString( 4, wxGetApp().getMsg( "max" ) );
   m_Speed->SetString( 5, _T("%") );
   m_ReduceV->SetLabel( wxGetApp().getMsg( "reducespeed" ) );
+  m_labMaxKmH->SetLabel( wxGetApp().getMsg( "maxkmh" ) );
 
   m_DetailsBox->SetLabel( wxGetApp().getMsg( "options" ) );
   m_SwapPost->SetLabel( wxGetApp().getMsg( "swapplacingpost" ) );

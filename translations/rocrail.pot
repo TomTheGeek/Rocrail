@@ -6971,3 +6971,9 @@ msgstr ""
 msgid "Grid fontsize adjust"
 msgstr ""
 
+#. 
+# id="maxkmh"
+#, c-format
+msgid "Max. KmH"
+msgstr ""
+

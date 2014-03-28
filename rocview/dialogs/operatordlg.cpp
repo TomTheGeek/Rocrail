@@ -272,7 +272,7 @@ void OperatorDlg::initLabels() {
   m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_lightgoods ) );
   m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_regional ) );
 
-  m_labVMax->SetLabel( wxGetApp().getMsg( "v_max" ) );
+  m_labVMax->SetLabel( wxGetApp().getMsg( "maxkmh" ) );
 
   // Buttons
   m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );

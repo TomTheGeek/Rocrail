@@ -213,7 +213,7 @@ void CarDlg::initLabels() {
   m_labWeightLoaded->SetLabel( wxGetApp().getMsg( "loaded" ) );
   m_labManuId->SetLabel( wxGetApp().getMsg( "manufactured_ID" ) );
   m_labRemark->SetLabel( wxGetApp().getMsg( "remark" ) );
-  m_labVMax->SetLabel( wxGetApp().getMsg( "v_max" ) );
+  m_labVMax->SetLabel( wxGetApp().getMsg( "maxkmh" ) );
 
   // Interface
   m_labBus->SetLabel( wxGetApp().getMsg( "bus" ) );

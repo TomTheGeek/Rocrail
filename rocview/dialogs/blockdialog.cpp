@@ -388,6 +388,7 @@ void BlockDialog::initLabels() {
   m_StopSpeed->SetString( 0, wxGetApp().getMsg( "min" ) );
   m_StopSpeed->SetString( 1, wxGetApp().getMsg( "mid" ) );
   m_StopSpeed->SetString( 2, _T("%") );
+  m_labMaxKmH->SetLabel( wxGetApp().getMsg( "maxkmh" ) );
 
   m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
   m_Type->SetString( 0, wxGetApp().getMsg( "none" ) );
