@@ -590,7 +590,7 @@ static Boolean _getDirection( iORoute inst, const char* blockid, Boolean* fromto
     return False;
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unknown blockid %s", blockid );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "blockid [%s] is not part of this route", blockid );
     return False;
   }
 }
