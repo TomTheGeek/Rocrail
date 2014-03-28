@@ -27659,6 +27659,6 @@
     <en txt="Grid fontsize adjust"/>
   </Msg>
   <Msg id="maxkmh">
-    <en txt="Max. KmH"/>
+    <en txt="Max. km/h"/>
   </Msg>
 </Messages>
