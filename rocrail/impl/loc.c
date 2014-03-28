@@ -862,7 +862,7 @@ static int __translateVhint(iOLoc inst, const char* V_hint, int V_maxkmh ) {
     iOOperator train = ModelOp.getOperator(AppOp.getModel(), wLoc.gettrain( data->props) );
     if( train != NULL ) {
       int V_max_train = OperatorOp.getVMax(train);
-      if( V_max_train > 0 )
+      if( V_max_train > 0 && (V_max_train < V_maxkmh) || V_maxkmh == 0 )
         V_maxkmh = V_max_train;
     }
   }
