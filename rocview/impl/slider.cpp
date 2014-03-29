@@ -125,6 +125,11 @@ void Slider::OnPaint(wxPaintEvent& WXUNUSED(event))
     // make a path that contains a circle and some lines
     gc->DrawRoundedRectangle(Width/2-2, ThumbHeight/2, 4, Height-ThumbHeight, 1.0);
 
+    TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "Max=%d Min=%d range=%d value=%d", Max, Min, Max-Min, GetValue() );
+    if( Max <= Min ) {
+      Max = 100;
+      Min = 0;
+    }
     int range = Max - Min;
     int red   = (55 * GetValue()) / range;
     int green = (55 * (range - GetValue()) ) / range;
@@ -209,6 +214,10 @@ int Slider::GetValue() {
 void Slider::SetRange(int minValue, int maxValue) {
   Min = minValue;
   Max = maxValue;
+  if( Max <= Min ) {
+    Max = 100;
+    Min = 0;
+  }
   SetValue(Value);
 }
 
