@@ -731,7 +731,7 @@ static Boolean __checkCrossingBlocks( iORoute inst, const char* id ) {
         }
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No block object found for %s", bkc );
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "crossing block [%s] in route [%s] does not exist", bk, wRoute.getid(o->props) );
         StrTokOp.base.del(tok);
         return False;
       }
@@ -744,7 +744,7 @@ static Boolean __checkCrossingBlocks( iORoute inst, const char* id ) {
   return True;
 }
 
-static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char** resblocks );
+static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char** resblocks, Boolean force );
 static Boolean __lockCrossingBlocks( iORoute inst, const char* id ) {
   iORouteData o = Data(inst);
   iOModel  model = AppOp.getModel(  );
@@ -762,7 +762,7 @@ static Boolean __lockCrossingBlocks( iORoute inst, const char* id ) {
         }
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No block object found for %s", bkc );
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "crossing block [%s] in route [%s] does not exist", bk, wRoute.getid(o->props) );
         StrTokOp.base.del(tok);
         return False;
       }
@@ -792,7 +792,7 @@ static Boolean __isReservedBlock(const char* id, const char** resblocks) {
   return False;
 }
 
-static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char** resblocks ) {
+static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char** resblocks, Boolean force ) {
   iORouteData  o = Data(inst);
   Boolean      ok = True;
   iOModel   model = AppOp.getModel(  );
@@ -800,6 +800,7 @@ static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char*
 
   if( bkc != NULL && StrOp.len( bkc ) > 0 ) {
     iOStrTok tok = StrTokOp.inst( bkc, ',' );
+    TraceOp.trc( name, force?TRCLEVEL_WARNING:TRCLEVEL_USER1, __LINE__, 9999, "%sunlocking crossing blocks [%s]", force?"Force ":"", bkc );
 
     while( StrTokOp.hasMoreTokens(tok) ) {
       const char* bk = StrTokOp.nextToken( tok );
@@ -810,8 +811,7 @@ static Boolean __unlockCrossingBlocks( iORoute inst, const char* id, const char*
             ok = False;
         }
         else {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No block object found for %s", bkc );
-          StrTokOp.base.del(tok);
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "crossing block [%s] in route [%s] does not exist", bk, wRoute.getid(o->props) );
           ok = False;
         }
       }
@@ -839,13 +839,9 @@ static Boolean __lockSwitches( iORoute inst, const char* locId ) {
       iOSelTab iseltab = ModelOp.getSelectiontable( model, swId );
       iOTT itt = ModelOp.getTurntable( model, swId );
       if( itt != NULL ) {
-        if( !TTOp.lock( (iIBlockBase)itt,
-            locId,
-            NULL,
-      NULL,
-            False,
-            False,
-            wRoute.isswappost( o->props ) ? !o->reverse : o->reverse, 0 ) ) {
+        if( !TTOp.lock( (iIBlockBase)itt, locId, NULL, NULL, False, False,
+            wRoute.isswappost( o->props ) ? !o->reverse : o->reverse, 0 ) )
+        {
           /* Rewind. */
           __unlockSwitches( inst, locId, False );
           return False;
@@ -1322,7 +1318,7 @@ static Boolean _unLock( iORoute inst, const char* lcid, const char** resblocks, 
     if( unlockswitches )
       __unlockSwitches( inst, lcid, force );
 
-    __unlockCrossingBlocks( inst, lcid, resblocks );
+    __unlockCrossingBlocks( inst, lcid, resblocks, force );
     o->lockedId = NULL;
     o->requestId = NULL;
     __broadcast(inst);
