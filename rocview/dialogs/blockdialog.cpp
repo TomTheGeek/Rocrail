@@ -703,18 +703,27 @@ void BlockDialog::initValues() {
   if( model != NULL ) {
     iONode stlist = wPlan.getstlist( model );
     if( stlist != NULL ) {
+      iOList list = ListOp.inst();
       int cnt = NodeOp.getChildCnt( stlist );
       for( int i = 0; i < cnt; i++ ) {
         iONode st = NodeOp.getChild( stlist, i );
+        if( (wRoute.getbkb( st ) != NULL && StrOp.equals( wRoute.getbkb( st ), wBlock.getid( m_Props ) ))) {
+          ListOp.add(list, (obj) st);
+        }
+      }
+
+      ListOp.sort(list, &__sortID);
+      for( int i = 0; i < ListOp.size(list); i++ ) {
+        iONode st = (iONode)ListOp.get( list, i );
         const char* id = wRoute.getid( st );
         const char* bka = wRoute.getbka( st );
         const char* bkb = wRoute.getbkb( st );
-        if( (bkb != NULL && StrOp.equals( bkb, wBlock.getid( m_Props ) ))) {
-          char* str = StrOp.fmt( "%s = from \"%s\" to \"%s\"", id, bka, bkb );
-          m_Routes->Append( wxString(str,wxConvUTF8), st );
-          StrOp.free( str );
-        }
+        char* str = StrOp.fmt( "%s = from \"%s\" to \"%s\"", id, bka, bkb );
+        m_Routes->Append( wxString(str,wxConvUTF8), st );
+        StrOp.free( str );
       }
+      ListOp.base.del(list);
+
     }
   }
 
