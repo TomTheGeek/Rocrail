@@ -1723,10 +1723,10 @@ void BlockDialog::CreateControls()
     m_RoutesPanel->SetSizer(itemBoxSizer117);
 
     wxBoxSizer* itemBoxSizer118 = new wxBoxSizer(wxVERTICAL);
-    itemBoxSizer117->Add(itemBoxSizer118, 0, wxGROW|wxALL, 5);
+    itemBoxSizer117->Add(itemBoxSizer118, 1, wxGROW|wxALL, 5);
     wxArrayString m_RoutesStrings;
     m_Routes = new wxListBox( m_RoutesPanel, ID_LISTBOX_BK_ROUTES, wxDefaultPosition, wxSize(-1, 100), m_RoutesStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
-    itemBoxSizer118->Add(m_Routes, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemBoxSizer118->Add(m_Routes, 1, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_LabelSensorsFromBlock = new wxStaticText( m_RoutesPanel, wxID_STATIC_SENSORS_TITLE, _("..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer118->Add(m_LabelSensorsFromBlock, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
