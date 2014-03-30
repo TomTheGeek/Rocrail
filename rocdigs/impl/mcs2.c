@@ -738,11 +738,11 @@ static void __evaluateMCS2System( iOMCS2Data data, byte* in ) {
   int addr1 = in[5];
 
   if ( (addr1 == 0) && (addr2 == 0) && (addr3 == 0) && (addr4 == 0) ) {
-    if (cmd == 0) {
+    if (cmd == CMD_SYSSUB_STOP) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CS2 STOP" );
       data->power = False;
     }
-    else {
+    else if (cmd == CMD_SYSSUB_GO) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "CS2 GO" );
       data->power = True;
     }
@@ -1149,7 +1149,7 @@ static void __reader( void* threadinst ) {
        response bit (lsb) set, so always odd. When Rocrail sends a command, this is not broadcasted by the CS2, only the reply
        is broadcasted. When a command is issued from the CS2 user interface, both the command and the reply is broadcasted.
        This means that when a command (even) is received, Rocrail did not send that command. */
-    if( in[1] == ID_SYSTEM ) {
+    if( in[1] == ID_SYSTEM || in[1] == (ID_SYSTEM + BIT_RESPONSE) ) {
       /*System command */
       __evaluateMCS2System( data, in );
     }
