@@ -138,6 +138,7 @@ public:
     wxCheckBox* m_SLCAN;
     wxCheckBox* m_Discovery;
     wxCheckBox* m_Bind;
+    wxCheckBox* m_ReportState;
     wxButton* m_SertFbAddr;
     wxSpinCtrl* m_FbAddr;
     wxStaticText* m_labSwTime;

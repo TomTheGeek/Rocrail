@@ -27661,4 +27661,7 @@
   <Msg id="maxkmh">
     <en txt="Max. km/h"/>
   </Msg>
+  <Msg id="reportstate">
+    <en txt="Report state"/>
+  </Msg>
 </Messages>
