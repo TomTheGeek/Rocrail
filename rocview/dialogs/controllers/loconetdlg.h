@@ -156,6 +156,8 @@ public:
     wxTextCtrl* m_PurgeTime;
     wxStaticText* m_labQueryAddr;
     wxTextCtrl* m_QueryAddr;
+    wxStaticText* m_labFBMod;
+    wxSpinCtrl* m_FBMod;
     wxCheckBox* m_SlotPing;
     wxCheckBox* m_ResetLissy;
     wxCheckBox* m_SwAck;

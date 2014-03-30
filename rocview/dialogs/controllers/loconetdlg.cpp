@@ -69,13 +69,9 @@ BEGIN_EVENT_TABLE( LocoNetCtrlDlg, wxDialog )
 
 ////@begin LocoNetCtrlDlg event table entries
     EVT_RADIOBOX( wxID_ANY, LocoNetCtrlDlg::OnSublibSelected )
-
     EVT_COMBOBOX( ID_COMBOBOX_LOCONET_CMDSTN, LocoNetCtrlDlg::OnComboboxLoconetCmdstnSelected )
-
     EVT_BUTTON( wxID_OK, LocoNetCtrlDlg::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, LocoNetCtrlDlg::OnCancelClick )
-
 ////@end LocoNetCtrlDlg event table entries
 
 END_EVENT_TABLE()
@@ -199,6 +195,7 @@ void LocoNetCtrlDlg::initValues() {
 
     val = StrOp.fmt( "%d", wLocoNet.getreportaddr( loconet ) );
     m_QueryAddr->SetValue( wxString( val, wxConvUTF8 ) ); StrOp.free( val );
+    m_FBMod->SetValue( wDigInt.getfbmod(m_Props) );
 
     m_Flow->SetValue( StrOp.equals( wDigInt.cts, wDigInt.getflow(m_Props) ) ? true:false );
 
@@ -318,6 +315,7 @@ void LocoNetCtrlDlg::evaluate() {
 
     wLocoNet.setpurgetime( loconet, atoi( m_PurgeTime->GetValue().mb_str(wxConvUTF8) ) );
     wLocoNet.setreportaddr( loconet, atoi( m_QueryAddr->GetValue().mb_str(wxConvUTF8) ) );
+    wDigInt.setfbmod(m_Props, m_FBMod->GetValue() );
 
     wDigInt.setfastclock( m_Props, m_UseFC->IsChecked() ? True:False );
     wLocoNet.setusefc(loconet, m_UseFC->IsChecked() ? True:False );
@@ -410,6 +408,8 @@ void LocoNetCtrlDlg::Init()
     m_PurgeTime = NULL;
     m_labQueryAddr = NULL;
     m_QueryAddr = NULL;
+    m_labFBMod = NULL;
+    m_FBMod = NULL;
     m_SlotPing = NULL;
     m_ResetLissy = NULL;
     m_SwAck = NULL;
@@ -453,29 +453,28 @@ void LocoNetCtrlDlg::CreateControls()
     m_InterfacePanel->SetSizer(itemBoxSizer5);
 
     wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW|wxALL, 5);
     m_labIID = new wxStaticText( m_InterfacePanel, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer6->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     m_IID = new wxTextCtrl( m_InterfacePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_labDevice = new wxStaticText( m_InterfacePanel, wxID_ANY, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer6->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_DeviceStrings;
     m_Device = new wxComboBox( m_InterfacePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_DeviceStrings, wxCB_DROPDOWN );
     itemFlexGridSizer6->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_labHost = new wxStaticText( m_InterfacePanel, wxID_STATIC, _("Host"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer6->Add(m_labHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
 
     m_Host = new wxTextCtrl( m_InterfacePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_Host, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labPort = new wxStaticText( m_InterfacePanel, wxID_ANY, _("Port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer6->Add(m_labPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer6->Add(m_labPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
 
     m_Port = new wxTextCtrl( m_InterfacePanel, wxID_ANY, _("1234"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Port->SetMaxLength(5);
@@ -486,6 +485,8 @@ void LocoNetCtrlDlg::CreateControls()
 
     m_LocalIP = new wxTextCtrl( m_InterfacePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_LocalIP, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+
+    itemFlexGridSizer6->AddGrowableCol(1);
 
     wxBoxSizer* itemBoxSizer17 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer5->Add(itemBoxSizer17, 0, wxGROW|wxALL, 5);
@@ -546,14 +547,14 @@ void LocoNetCtrlDlg::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer30 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer29->Add(itemFlexGridSizer30, 0, wxGROW|wxALL, 5);
     m_labSWTime = new wxStaticText( m_DetailsPanel, wxID_ANY, _("Switchtime"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer30->Add(m_labSWTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer30->Add(m_labSWTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
 
     m_SWTime = new wxTextCtrl( m_DetailsPanel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_SWTime->SetMaxLength(4);
     itemFlexGridSizer30->Add(m_SWTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labPurgeTime = new wxStaticText( m_DetailsPanel, wxID_ANY, _("Purgetime"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer30->Add(m_labPurgeTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer30->Add(m_labPurgeTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
 
     m_PurgeTime = new wxTextCtrl( m_DetailsPanel, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_PurgeTime->SetMaxLength(3);
@@ -564,6 +565,12 @@ void LocoNetCtrlDlg::CreateControls()
 
     m_QueryAddr = new wxTextCtrl( m_DetailsPanel, wxID_ANY, _("1017"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer30->Add(m_QueryAddr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+
+    m_labFBMod = new wxStaticText( m_DetailsPanel, wxID_ANY, _("S88"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer30->Add(m_labFBMod, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    m_FBMod = new wxSpinCtrl( m_DetailsPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0 );
+    itemFlexGridSizer30->Add(m_FBMod, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_SlotPing = new wxCheckBox( m_DetailsPanel, wxID_ANY, _("Slot ping"), wxDefaultPosition, wxDefaultSize, 0 );
     m_SlotPing->SetValue(false);
@@ -577,80 +584,81 @@ void LocoNetCtrlDlg::CreateControls()
     m_SwAck->SetValue(false);
     itemBoxSizer29->Add(m_SwAck, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer40 = new wxFlexGridSizer(0, 3, 0, 0);
-    itemBoxSizer29->Add(itemFlexGridSizer40, 0, wxALIGN_LEFT|wxLEFT, 30);
+    wxFlexGridSizer* itemFlexGridSizer42 = new wxFlexGridSizer(0, 3, 0, 0);
+    itemBoxSizer29->Add(itemFlexGridSizer42, 0, wxALIGN_LEFT|wxLEFT, 30);
     m_labSwRetries = new wxStaticText( m_DetailsPanel, wxID_ANY, _("Retries"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer40->Add(m_labSwRetries, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer42->Add(m_labSwRetries, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_SwRetries = new wxSpinCtrl( m_DetailsPanel, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 1, 100, 10 );
-    itemFlexGridSizer40->Add(m_SwRetries, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer42->Add(m_SwRetries, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labSwRetriesSuffix = new wxStaticText( m_DetailsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer40->Add(m_labSwRetriesSuffix, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer42->Add(m_labSwRetriesSuffix, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_labSwSleep = new wxStaticText( m_DetailsPanel, wxID_ANY, _("Sleep"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer40->Add(m_labSwSleep, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer42->Add(m_labSwSleep, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_SwSleep = new wxSpinCtrl( m_DetailsPanel, wxID_ANY, _T("50"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 10, 250, 50 );
-    itemFlexGridSizer40->Add(m_SwSleep, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer42->Add(m_SwSleep, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_SwSleepUnit = new wxStaticText( m_DetailsPanel, wxID_ANY, _("ms"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer40->Add(m_SwSleepUnit, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxRIGHT, 5);
+    itemFlexGridSizer42->Add(m_SwSleepUnit, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxRIGHT, 5);
 
     m_FastClockBox = new wxStaticBox(m_DetailsPanel, wxID_ANY, _("Fast Clock"));
-    wxStaticBoxSizer* itemStaticBoxSizer47 = new wxStaticBoxSizer(m_FastClockBox, wxVERTICAL);
-    itemBoxSizer29->Add(itemStaticBoxSizer47, 0, wxGROW|wxALL, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer49 = new wxStaticBoxSizer(m_FastClockBox, wxVERTICAL);
+    itemBoxSizer29->Add(itemStaticBoxSizer49, 0, wxGROW|wxALL, 5);
     m_UseFC = new wxCheckBox( m_DetailsPanel, wxID_ANY, _("Enable"), wxDefaultPosition, wxDefaultSize, 0 );
     m_UseFC->SetValue(false);
-    itemStaticBoxSizer47->Add(m_UseFC, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemStaticBoxSizer49->Add(m_UseFC, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
     m_SyncFC = new wxCheckBox( m_DetailsPanel, wxID_ANY, _("Synchronize"), wxDefaultPosition, wxDefaultSize, 0 );
     m_SyncFC->SetValue(false);
-    itemStaticBoxSizer47->Add(m_SyncFC, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemStaticBoxSizer49->Add(m_SyncFC, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
     m_SlotServerBox = new wxStaticBox(m_DetailsPanel, wxID_ANY, _("Slot server"));
-    wxStaticBoxSizer* itemStaticBoxSizer50 = new wxStaticBoxSizer(m_SlotServerBox, wxVERTICAL);
-    itemBoxSizer29->Add(itemStaticBoxSizer50, 0, wxGROW|wxALL, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer52 = new wxStaticBoxSizer(m_SlotServerBox, wxVERTICAL);
+    itemBoxSizer29->Add(itemStaticBoxSizer52, 0, wxGROW|wxALL, 5);
     m_SlotServerActive = new wxCheckBox( m_DetailsPanel, wxID_ANY, _("Active"), wxDefaultPosition, wxDefaultSize, 0 );
     m_SlotServerActive->SetValue(false);
-    itemStaticBoxSizer50->Add(m_SlotServerActive, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemStaticBoxSizer52->Add(m_SlotServerActive, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
     m_MobileOnly = new wxCheckBox( m_DetailsPanel, wxID_ANY, _("Mobile only"), wxDefaultPosition, wxDefaultSize, 0 );
     m_MobileOnly->SetValue(false);
-    itemStaticBoxSizer50->Add(m_MobileOnly, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemStaticBoxSizer52->Add(m_MobileOnly, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
     m_PurgeSlots = new wxCheckBox( m_DetailsPanel, wxID_ANY, _("Purge slots"), wxDefaultPosition, wxDefaultSize, 0 );
     m_PurgeSlots->SetValue(false);
-    itemStaticBoxSizer50->Add(m_PurgeSlots, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemStaticBoxSizer52->Add(m_PurgeSlots, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
     m_StopAtPurge = new wxCheckBox( m_DetailsPanel, wxID_ANY, _("Stop at purge"), wxDefaultPosition, wxDefaultSize, 0 );
     m_StopAtPurge->SetValue(false);
-    itemStaticBoxSizer50->Add(m_StopAtPurge, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemStaticBoxSizer52->Add(m_StopAtPurge, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer55 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer55->AddGrowableCol(1);
-    itemStaticBoxSizer50->Add(itemFlexGridSizer55, 0, wxGROW, 5);
+    wxFlexGridSizer* itemFlexGridSizer57 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemStaticBoxSizer52->Add(itemFlexGridSizer57, 0, wxGROW, 5);
     m_labDispatchIID = new wxStaticText( m_DetailsPanel, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer55->Add(m_labDispatchIID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer57->Add(m_labDispatchIID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_DispatchIID = new wxTextCtrl( m_DetailsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer55->Add(m_DispatchIID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer57->Add(m_DispatchIID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer57->AddGrowableCol(1);
 
     itemNotebook3->AddPage(m_DetailsPanel, _("Details"));
 
     itemBoxSizer2->Add(itemNotebook3, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer58 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer60 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer58, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer60, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer58->AddButton(m_OK);
+    itemStdDialogButtonSizer60->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer58->AddButton(m_Cancel);
+    itemStdDialogButtonSizer60->AddButton(m_Cancel);
 
-    itemStdDialogButtonSizer58->Realize();
+    itemStdDialogButtonSizer60->Realize();
 
 ////@end LocoNetCtrlDlg content construction
 }
