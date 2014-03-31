@@ -2090,7 +2090,10 @@ void RocGuiFrame::initFrame() {
   Boolean l_Expired = SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
       StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL, wGlobal.vmajor, wGlobal.vminor);
   bool l_useDisableIcons = false;
-  if( SystemOp.isWindows() ) {
+
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "wxWidgets %d",  wxMAJOR_VERSION );
+
+  if( SystemOp.isWindows() && wxMAJOR_VERSION < 3 ) {
     l_useDisableIcons = true;
   }
   m_ToolBar = CreateToolBar( (wGui.isverticaltoolbar(m_Ini)?wxTB_VERTICAL:wxTB_HORIZONTAL) | wxNO_BORDER | wxTB_FLAT | wxTB_DOCKABLE );
