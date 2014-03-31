@@ -23565,6 +23565,7 @@
     <en_AU txt="divider"/>
     <en_CA txt="divider"/>
     <pl txt="izolator"/>
+    <fr txt="diviseur"/>
   </Msg>
   <Msg id="temperature">
     <en txt="temperature"/>
@@ -27583,6 +27584,7 @@
     <sv txt="ADC sensorer"/>
     <fi txt="ADC anturit"/>
     <it txt="Sensori ADC"/>
+    <pt_BR txt="Sensores ADC"/>
   </Msg>
   <Msg id="threshold">
     <en txt="Threshold"/>
@@ -27597,6 +27599,7 @@
     <sl txt="Prag"/>
     <fi txt="Raja-arvo"/>
     <it txt="Soglia"/>
+    <pt_BR txt="Limite mínimo"/>
   </Msg>
   <Msg id="monitordontwrap">
     <en txt="Monitor don't wrap"/>
@@ -27606,6 +27609,11 @@
     <sr_latin txt="Nadgledati ne uvijati"/>
     <fi txt="Ei näytön kiertoa"/>
     <it txt="Monitor non troncare"/>
+    <en_AU txt="Don't wrap monitor"/>
+    <en_CA txt="Don't wrap monitor"/>
+    <en_GB txt="Don't wrap monitor"/>
+    <pt_BR txt="Sem envolvimento dos monitores"/>
+    <sl txt="Pogled brez prehajanja"/>
   </Msg>
   <Msg id="subject">
     <en txt="Subject"/>
@@ -27618,6 +27626,8 @@
     <fi txt="Aihe"/>
     <it txt="Oggetto"/>
     <sl txt="Predmet"/>
+    <de txt="Thema"/>
+    <pt_BR txt="Assunto"/>
   </Msg>
   <Msg id="nrcars">
     <en txt="Nr. of cars"/>
@@ -27632,6 +27642,7 @@
     <sr_latin txt="Br. kola"/>
     <fi txt="Vaunujen määrä"/>
     <ru txt="№ вагонов"/>
+    <pt_BR txt="Número de vagões"/>
   </Msg>
   <Msg id="sleeponclosed">
     <en txt="Sleep on closed"/>
@@ -27645,6 +27656,7 @@
     <sl txt="Spanje, ko je zaprto"/>
     <sr_latin txt="Uspavati zatvoreno"/>
     <fi txt="Aseta suljettaessa lepotilaan"/>
+    <pt_BR txt="Parar quando fechado"/>
   </Msg>
   <Msg id="sensorrange">
     <en txt="Sensor range"/>
@@ -27654,14 +27666,30 @@
     <sl txt="Območje tipala"/>
     <pl txt="Zasięg czujnika"/>
     <sr_latin txt="Opseg senzora"/>
+    <de txt="Rückmelder-Bereich"/>
+    <en_AU txt="Sensor range"/>
+    <en_CA txt="Sensor range"/>
+    <en_GB txt="Sensor range"/>
+    <pt_BR txt="Intervalo do sensor"/>
   </Msg>
   <Msg id="gridfontsizeadjust">
     <en txt="Grid fontsize adjust"/>
+    <de txt="Tabellen-Schriftgröße anpassen"/>
+    <nl txt="Lettertype tabel aanpassen"/>
+    <pl txt="Dostosuj rozmiar czcionki tabeli"/>
+    <pt_BR txt="Ajustar tamanho de letra da matriz"/>
+    <sl txt="Velikost pisave na mreži"/>
+    <sr_latin txt="Podesi raster veličine slova"/>
   </Msg>
   <Msg id="maxkmh">
     <en txt="Max. km/h"/>
+    <nl txt="Max. km/h"/>
+    <pl txt="Max. km/h"/>
+    <sl txt="Max. km/h"/>
   </Msg>
   <Msg id="reportstate">
     <en txt="Report state"/>
+    <nl txt="Status melden"/>
+    <sl txt="Sporoči stanje"/>
   </Msg>
 </Messages>
