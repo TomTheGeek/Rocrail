@@ -1565,6 +1565,7 @@ static Boolean _unLock( iIBlockBase inst ,const char* locid, const char* routeid
   if( locid != NULL ) {
     if(__freeSections(inst, locid)) {
       __checkAction((iOStage)inst, "free");
+      ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, "", False, 0, 0, NULL );
       return True;
     }
   }
