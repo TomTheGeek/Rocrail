@@ -20,7 +20,7 @@ OutputBaseFilename=rocrail-<BZR>-win32
 Name: demoplan; Description: "Demo plan"
 Name: images; Description: "Loco images"
 Name: themes; Description: "SVG Themes"
-Name: americanthemes; Description: "SVG American Themes"
+Name: americanthemes; Description: "SVG American Themes"; Flags: unchecked
 ;Name: symbols; Description: "WebClient Symbols"
 
 [Run]
