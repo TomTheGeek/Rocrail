@@ -522,6 +522,7 @@ public:
     wxPanel* m_ConsistsPanel;
     wxStaticBox* m_labDetails;
     wxCheckBox* m_LightsOff;
+    wxCheckBox* m_SyncLights;
     wxCheckBox* m_SyncFun;
     wxCheckBox* m_FSync1;
     wxCheckBox* m_FSync2;

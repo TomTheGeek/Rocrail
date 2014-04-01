@@ -2712,7 +2712,8 @@ static void __checkConsist( iOLoc inst, iONode nodeA, Boolean byEvent ) {
           wLoc.setfn( consistcmd, False );
         }
         else {
-          wLoc.setignorefn(consistcmd, True);
+          if( !wLoc.isconsist_synclights(data->props) )
+            wLoc.setignorefn(consistcmd, True);
         }
 
         wLoc.setconsistcmd( consistcmd, True );

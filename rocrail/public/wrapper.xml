@@ -2621,6 +2621,7 @@
         <cvbyte cardinality="n"/>
 
         <var name="consist_lightsoff" vt="bool" defval="False" remark="Keep lights turned off for all slave locos."/>
+        <var name="consist_synclights" vt="bool" defval="False" remark="Synchronise lights for all slave locos."/>
         <var name="consist_syncfun" vt="bool" defval="False" remark="Synchronise functions for all slave locos."/>
         <var name="consist_syncfunmap" vt="int" defval="0" remark="Function map."/>
         <var name="consist" vt="string" defval="" range="*" remark="Slave locomotives"/>
