@@ -223,7 +223,7 @@
     <splitpanel wrappername="SplitPanel">
       <var name="main" vt="int" defval="455" remark="vertical plan/message split position"/>
       <var name="msg" vt="int" defval="400" remark="horizontal message/exception split position"/>
-      <var name="plan" vt="int" defval="324" remark="horizontal plan/plan split position"/>
+      <var name="plan" vt="int" defval="360" remark="horizontal plan/plan split position"/>
       <var name="dontwrap" vt="bool" defval="false"/>
       </splitpanel>
     <window wrappername="Window">
