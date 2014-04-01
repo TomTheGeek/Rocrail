@@ -70,6 +70,9 @@ class wxGrid;
 #define ID_BUTTON_LOCO_DOC 10353
 #define ID_LOC_COPY 10280
 #define ID_BUTTON_IMPORTLOCOS 10253
+#define ID_INDEX_RESTOREFUN 10428
+#define ID_INDEX_RESTORESPEED 10349
+#define ID_INDEX_SHOW 10338
 #define ID_PANEL_GENERAL 10004
 #define wxID_STATIC_ID 10017
 #define ID_TEXTCTRL_ID 10005
@@ -136,6 +139,7 @@ class wxGrid;
 #define ID_TEXTCTRL_F4 10042
 #define ID_BUTTON_F4 10043
 #define ID_PANEL_LOC_CONSIST 10200
+#define ID_CONSIST_LIGHTSOFF 10324
 #define ID_BUTTON_LOC_CONSIST_ADD 10201
 #define ID_BUTTON_LOC_CONSIST_DELETE 10213
 #define ID_PANEL_LOC_CV 10345
@@ -228,13 +232,13 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_IMPORTLOCOS
     void OnButtonImportlocosClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_ANY
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_INDEX_RESTOREFUN
     void OnRestoreFxClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_ANY
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_INDEX_RESTORESPEED
     void OnRestoreSpeedClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for wxID_ANY
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_INDEX_SHOW
     void OnShowClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SHOWDOC
@@ -275,6 +279,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F4
     void OnButtonF4Click( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CONSIST_LIGHTSOFF
+    void OnConsistLightsoffClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LOC_CONSIST_ADD
     void OnButtonLocConsistAddClick( wxCommandEvent& event );

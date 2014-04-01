@@ -94,11 +94,11 @@ BEGIN_EVENT_TABLE( LocDialog, wxDialog )
 
     EVT_BUTTON( ID_BUTTON_IMPORTLOCOS, LocDialog::OnButtonImportlocosClick )
 
-    EVT_CHECKBOX( wxID_ANY, LocDialog::OnRestoreFxClick )
+    EVT_CHECKBOX( ID_INDEX_RESTOREFUN, LocDialog::OnRestoreFxClick )
 
-    EVT_CHECKBOX( wxID_ANY, LocDialog::OnRestoreSpeedClick )
+    EVT_CHECKBOX( ID_INDEX_RESTORESPEED, LocDialog::OnRestoreSpeedClick )
 
-    EVT_CHECKBOX( wxID_ANY, LocDialog::OnShowClick )
+    EVT_CHECKBOX( ID_INDEX_SHOW, LocDialog::OnShowClick )
 
     EVT_BUTTON( ID_BUTTON_SHOWDOC, LocDialog::OnButtonShowdocClick )
 
@@ -124,6 +124,8 @@ BEGIN_EVENT_TABLE( LocDialog, wxDialog )
     EVT_BUTTON( ID_BUTTON_F3, LocDialog::OnButtonF3Click )
 
     EVT_BUTTON( ID_BUTTON_F4, LocDialog::OnButtonF4Click )
+
+    EVT_CHECKBOX( ID_CONSIST_LIGHTSOFF, LocDialog::OnConsistLightsoffClick )
 
     EVT_BUTTON( ID_BUTTON_LOC_CONSIST_ADD, LocDialog::OnButtonLocConsistAddClick )
 
@@ -848,6 +850,7 @@ void LocDialog::InitValues() {
   }
 
   m_LightsOff->SetValue( wLoc.isconsist_lightsoff( m_Props ) ? true:false );
+  m_SyncLights->Enable(!m_LightsOff->IsChecked());
   m_SyncFun->SetValue( wLoc.isconsist_syncfun( m_Props ) ? true:false );
   m_SyncLights->SetValue( wLoc.isconsist_synclights( m_Props ) ? true:false );
   m_ConsistList->Clear();
@@ -1563,15 +1566,15 @@ void LocDialog::CreateControls()
 
     wxFlexGridSizer* itemFlexGridSizer17 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer8->Add(itemFlexGridSizer17, 0, wxGROW|wxALL, 5);
-    m_RestoreFx = new wxCheckBox( m_IndexPanel, wxID_ANY, _("Restore functions"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_RestoreFx = new wxCheckBox( m_IndexPanel, ID_INDEX_RESTOREFUN, _("Restore functions"), wxDefaultPosition, wxDefaultSize, 0 );
     m_RestoreFx->SetValue(false);
     itemFlexGridSizer17->Add(m_RestoreFx, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_RestoreSpeed = new wxCheckBox( m_IndexPanel, wxID_ANY, _("Restore speed"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_RestoreSpeed = new wxCheckBox( m_IndexPanel, ID_INDEX_RESTORESPEED, _("Restore speed"), wxDefaultPosition, wxDefaultSize, 0 );
     m_RestoreSpeed->SetValue(false);
     itemFlexGridSizer17->Add(m_RestoreSpeed, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Show = new wxCheckBox( m_IndexPanel, wxID_ANY, _("Show"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Show = new wxCheckBox( m_IndexPanel, ID_INDEX_SHOW, _("Show"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Show->SetValue(false);
     itemFlexGridSizer17->Add(m_Show, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -2285,7 +2288,7 @@ void LocDialog::CreateControls()
     m_labDetails = new wxStaticBox(m_ConsistsPanel, wxID_ANY, _("Details"));
     wxStaticBoxSizer* itemStaticBoxSizer236 = new wxStaticBoxSizer(m_labDetails, wxVERTICAL);
     itemBoxSizer235->Add(itemStaticBoxSizer236, 0, wxGROW|wxALL, 5);
-    m_LightsOff = new wxCheckBox( m_ConsistsPanel, wxID_ANY, _("Keep lights off"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_LightsOff = new wxCheckBox( m_ConsistsPanel, ID_CONSIST_LIGHTSOFF, _("Keep lights off"), wxDefaultPosition, wxDefaultSize, 0 );
     m_LightsOff->SetValue(false);
     itemStaticBoxSizer236->Add(m_LightsOff, 0, wxALIGN_LEFT|wxALL, 5);
 
@@ -2752,6 +2755,8 @@ void LocDialog::OnApplyClick( wxCommandEvent& event )
 {
   if( m_Props == NULL )
     return;
+
+  TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "apply" );
 
   if( !Evaluate() )
     return;
@@ -3274,6 +3279,8 @@ void LocDialog::OnShowClick( wxCommandEvent& event )
   if( m_Props == NULL )
     return;
 
+  TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "show" );
+
   if( !Evaluate() )
     return;
 
@@ -3454,4 +3461,14 @@ void LocDialog::initBBT() {
   }
 }
 
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CONSIST_LIGHTSOFF
+ */
+
+void LocDialog::OnConsistLightsoffClick( wxCommandEvent& event )
+{
+  m_SyncLights->Enable(!m_LightsOff->IsChecked());
+}
 
