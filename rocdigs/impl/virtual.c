@@ -323,6 +323,9 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       wFeedback.setstate( cmd->node, !state );
       ThreadOp.post( data->transactor, (obj)cmd );
     }
+    else if( addr < 1024) {
+      data->fbState[addr] = wFeedback.isstate( node );
+    }
 
   }
 
@@ -441,6 +444,19 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     else if( StrOp.equals( cmd, wSysCmd.resetstat ) ) {
       data->boosteruid = wSysCmd.getbus(node);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reset statistics for booster [%d]", wSysCmd.getbus(node) );
+    }
+    else if( StrOp.equals( cmd, wSysCmd.sod ) ) {
+      int i = 0;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Start of Day" );
+      for( i = 0; i < 1024; i++ ) {
+        if( data->fbState[i] ) {
+          iONode sensor = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+          wFeedback.setaddr(sensor, i);
+          wFeedback.setstate(sensor, True);
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "report sensor %d for SoD", i );
+          data->listenerFun( data->listenerObj, sensor, TRCLEVEL_INFO );
+        }
+      }
     }
     else {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "syscmd=%s", cmd );
