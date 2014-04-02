@@ -1777,7 +1777,7 @@ void RocGuiFrame::initFrame() {
   menuFile->AppendSeparator();
   wxMenu *menuAnalyze = new wxMenu();
   menuAnalyze->Append(ME_Analyze, wxGetApp().getMenu("analyze"), wxGetApp().getTip("analyze") );
-  menuAnalyze->Append(ME_AnalyzeClean, wxGetApp().getMenu("clearall") + _T(" ") +  wxGetApp().getMenu("analyze"), wxGetApp().getTip("analyze") );
+  menuAnalyze->Append(ME_AnalyzeClean, wxGetApp().getMenu("ana_clean"), wxGetApp().getTip("analyze") );
   menuAnalyze->Append(ME_AnalyzeHealth, wxGetApp().getMenu("checkplanhealth"), wxGetApp().getTip("analyze") );
   menuAnalyze->Append(ME_AnalyzeExtChk, wxGetApp().getMenu("extendedcheck"), wxGetApp().getTip("analyze") );
   menuAnalyze->Append(ME_AnalyzeExtClean, wxGetApp().getMenu("extendedclean"), wxGetApp().getTip("analyze") );
