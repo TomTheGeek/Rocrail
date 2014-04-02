@@ -343,7 +343,6 @@ iONode WaybillDlg::getSelectedWaybill() {
 void WaybillDlg::onNewWaybill( wxCommandEvent& event ){
   int i = m_WaybillList->FindString( _T("NEW") );
   if( i == wxNOT_FOUND ) {
-    m_WaybillList->Append( _T("NEW") );
     iONode model = wxGetApp().getModel();
     if( model != NULL ) {
       iONode waybilllist = wPlan.getwaybilllist( model );
@@ -357,6 +356,7 @@ void WaybillDlg::onNewWaybill( wxCommandEvent& event ){
         wWaybill.setid( waybill, "NEW" );
         m_Props = waybill;
         initValues();
+        m_WaybillList->Append( _T("NEW"), m_Props );
       }
     }
   }
