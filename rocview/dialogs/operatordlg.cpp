@@ -68,7 +68,6 @@ OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props, bool save )
   m_CarProps = NULL;
 
   initLabels();
-  initIndex();
 
   m_IndexPanel->GetSizer()->Layout();
   m_ControlPanel->GetSizer()->Layout();
@@ -78,6 +77,8 @@ OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props, bool save )
 
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
+
+  initIndex();
 
   m_OperatorList->SetFocus();
 
@@ -393,12 +394,15 @@ void OperatorDlg::initIndex() {
       if( m_Props != NULL ) {
         m_OperatorList->SetStringSelection( wxString(wOperator.getid( m_Props ),wxConvUTF8) );
         m_OperatorList->SetFirstItem( wxString(wOperator.getid( m_Props ),wxConvUTF8) );
-        char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("operator").mb_str(wxConvUTF8), wOperator.getid( m_Props ) );
-        SetTitle( wxString(title,wxConvUTF8) );
-        StrOp.free( title );
+        wxCommandEvent cmd;
+        onOperatorList(cmd);
       }
-      else
+      else if( m_OperatorList->GetCount() > 0 ) {
+        //m_OperatorList->SetSelection(0);
+        //wxCommandEvent cmd;
+        //onOperatorList(cmd);
         TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection" );
+      }
     }
 
   }
@@ -520,6 +524,12 @@ void OperatorDlg::initConsist() {
     if(autoheadersize > autosize )
       m_CarList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
   }
+
+  if(m_CarList->GetItemCount() > 0 ) {
+    m_CarList->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+    m_CarProps = (iONode)m_CarList->GetItemData(0);
+  }
+
 
 }
 
