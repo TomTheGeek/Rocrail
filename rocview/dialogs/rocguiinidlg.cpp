@@ -190,6 +190,7 @@ void RocguiIniDialog::initLabels() {
   m_labMonitorSize->SetLabel( wxGetApp().getMsg( "monitorsize" ) );
 
   m_ClockType->SetLabel( wxGetApp().getMsg( "clocktype" ) );
+  m_ClockType->SetString( 0, wxGetApp().getMsg( "default" ) );
   m_labImagePath->SetLabel( wxGetApp().getMsg( "imagepath" ) );
   m_labUpdatesPath->SetLabel( wxGetApp().getMsg( "updatespath" ) );
   m_labXSLPath->SetLabel( wxGetApp().getMsg( "xslpath" ) );
