@@ -413,7 +413,8 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
 
   if( fbevt == NULL ) {
     /* event without description; look up in map */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ident = %s", ident!=NULL?ident:"-");
+    if( ident != NULL && StrOp.len(ident) > 0 )
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%s reports ident = %s", id, ident!=NULL?ident:"-");
     fbevt = ModPlanOp.getEvent4Block( NULL, NULL , data->props, data->fromBlockId, id);
   }
 
