@@ -28,6 +28,7 @@ class basenotebook;
 #include <wx/bmpbuttn.h>
 #include <wx/combobox.h>
 #include <wx/statbox.h>
+#include <wx/listctrl.h>
 #include <wx/spinctrl.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
@@ -65,7 +66,7 @@ class operatordlggen : public wxDialog
 		wxButton* m_GotoMan;
 		wxPanel* m_ConsistPanel;
 		wxBitmapButton* m_CarImage;
-		wxListBox* m_CarList;
+		wxListCtrl* m_CarList;
 		wxStaticText* m_labCargo;
 		wxComboBox* m_Cargo;
 		wxStaticText* m_labVMax;
@@ -90,7 +91,7 @@ class operatordlggen : public wxDialog
 		virtual void onRun( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onGotoMan( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onCarImage( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onCarList( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onCarListSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void onAddCar( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onLeaveCar( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onCarCard( wxCommandEvent& event ) { event.Skip(); }

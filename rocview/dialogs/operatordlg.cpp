@@ -65,6 +65,8 @@ OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props, bool save )
   m_TabAlign = wxGetApp().getTabAlign();
   m_Props    = p_Props;
   m_bSave    = save;
+  m_CarProps = NULL;
+
   initLabels();
   initIndex();
 
@@ -274,6 +276,9 @@ void OperatorDlg::initLabels() {
 
   m_labVMax->SetLabel( wxGetApp().getMsg( "maxkmh" ) );
 
+  m_CarList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
+  m_CarList->InsertColumn(1, wxGetApp().getMsg( "waybill" ), wxLIST_FORMAT_LEFT );
+
   // Buttons
   m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_StdButtonCancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
@@ -305,11 +310,12 @@ void OperatorDlg::evaluate() {
   wOperator.setid( m_Props, m_Operator->GetValue().mb_str(wxConvUTF8) );
   wOperator.setlcid( m_Props, m_LocoID->GetStringSelection().mb_str(wxConvUTF8) );
 
-  int carcnt = m_CarList->GetCount();
+  int carcnt = m_CarList->GetItemCount();
   char* consist = NULL;
   TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "carids[%d]", carcnt );
   for( int i = 0; i < carcnt; i++ ) {
-    iONode car = (iONode)m_CarList->GetClientData(i);
+    iONode car = (iONode)m_CarList->GetItemData(i);
+
     TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "adding carid [%s]", wCar.getid(car) );
     if( consist == NULL ) {
       consist = StrOp.cat(consist, wCar.getid(car));
@@ -447,9 +453,11 @@ void OperatorDlg::initValues() {
 }
 
 
-void OperatorDlg::onCarList( wxCommandEvent& event ){
-  if( m_CarList->GetSelection() != wxNOT_FOUND ) {
-    iONode car = (iONode)m_CarList->GetClientData(m_CarList->GetSelection());
+void OperatorDlg::onCarListSelected( wxListEvent& event ){
+  int index = event.GetIndex();
+  if( index != wxNOT_FOUND ) {
+    iONode car = (iONode)m_CarList->GetItemData(index);
+    m_CarProps = car;
     if( car != NULL && wCar.getimage( car ) != NULL && StrOp.len(wCar.getimage(car)) > 0 ) {
       wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
       if( StrOp.endsWithi( wCar.getimage( car ), ".gif" ) )
@@ -481,21 +489,38 @@ void OperatorDlg::onCarList( wxCommandEvent& event ){
 }
 
 void OperatorDlg::initConsist() {
-  m_CarList->Clear();
+  m_CarList->DeleteAllItems();
 
   if( m_Props == NULL )
     return;
 
+  m_CarProps = NULL;
+
   const char* carids = wOperator.getcarids(m_Props);
   iOStrTok strtok = StrTokOp.inst( carids, ',' );
+  int i = 0;
   while( StrTokOp.hasMoreTokens( strtok ) ) {
     const char* carid  = StrTokOp.nextToken( strtok );
     iONode car = wxGetApp().getFrame()->findCar( carid );
     if( car != NULL ) {
       const char* id = wCar.getid( car );
-      m_CarList->Append( wxString(id,wxConvUTF8) + wxString(_T(": ")) + wxString(wCar.getwaybills(car), wxConvUTF8), car );
+
+      m_CarList->InsertItem( i, wxString(id,wxConvUTF8) );
+      m_CarList->SetItem( i, 1, wxString(wCar.getwaybills(car), wxConvUTF8) );
+      m_CarList->SetItemPtrData(i, (wxUIntPtr)car);
+      i++;
     }
   }
+  // resize
+  for( int n = 0; n < 2; n++ ) {
+    m_CarList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+    int autoheadersize = m_CarList->GetColumnWidth(n);
+    m_CarList->SetColumnWidth(n, wxLIST_AUTOSIZE);
+    int autosize = m_CarList->GetColumnWidth(n);
+    if(autoheadersize > autosize )
+      m_CarList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+  }
+
 }
 
 
@@ -688,8 +713,12 @@ void OperatorDlg::onAddCar( wxCommandEvent& event ) {
     if( car != NULL ) {
       const char* id = wCar.getid( car );
       TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "adding car [%s]", id );
-      m_CarList->Append( wxString(id,wxConvUTF8) + wxString(_T(": ")) + wxString(wCar.getwaybills(car), wxConvUTF8), car );
+      int carcnt = m_CarList->GetItemCount();
+      m_CarList->InsertItem( carcnt, wxString(id,wxConvUTF8) );
+      m_CarList->SetItem( carcnt, 1, wxString(wCar.getwaybills(car), wxConvUTF8) );
+      m_CarList->SetItemPtrData(carcnt, (wxUIntPtr)car);
       evaluate();
+      initConsist();
     }
   }
   dlg->Destroy();
@@ -697,12 +726,28 @@ void OperatorDlg::onAddCar( wxCommandEvent& event ) {
 }
 
 
+int OperatorDlg::findCarID( const char* ID ) {
+  int size = m_CarList->GetItemCount();
+  for( int index = 0; index < size; index++ ) {
+    iONode node = (iONode)m_CarList->GetItemData(index);
+    if( StrOp.equals( ID, wCar.getid(node) ) ) {
+      return index;
+    }
+  }
+  return wxNOT_FOUND;
+}
+
+
 void OperatorDlg::onLeaveCar( wxCommandEvent& event ) {
-  if( m_CarList->GetSelection() != wxNOT_FOUND ) {
+  if( m_CarProps == NULL )
+    return;
+
+  int idx = findCarID(wCar.getid(m_CarProps));
+  if( idx != wxNOT_FOUND ) {
     int action = wxMessageDialog( this, wxGetApp().getMsg("removewarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
     if( action == wxID_NO )
       return;
-    m_CarList->Delete(m_CarList->GetSelection());
+    m_CarList->DeleteItem(idx);
     m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
     m_CarImage->Refresh();
     evaluate();
@@ -712,8 +757,12 @@ void OperatorDlg::onLeaveCar( wxCommandEvent& event ) {
 
 
 void OperatorDlg::onCarCard( wxCommandEvent& event ) {
-  if( m_CarList->GetSelection() != wxNOT_FOUND ) {
-    iONode car = (iONode)m_CarList->GetClientData(m_CarList->GetSelection());
+  if( m_CarProps == NULL )
+    return;
+
+  int idx = findCarID(wCar.getid(m_CarProps));
+  if( idx != wxNOT_FOUND ) {
+    iONode car = (iONode)m_CarList->GetItemData(idx);
     if( car != NULL ) {
       CarDlg* dlg = new CarDlg(this, car, false );
       if( wxID_OK == dlg->ShowModal() ) {
@@ -727,8 +776,12 @@ void OperatorDlg::onCarCard( wxCommandEvent& event ) {
 
 
 void OperatorDlg::onWayBill( wxCommandEvent& event ) {
-  if( m_CarList->GetSelection() != wxNOT_FOUND ) {
-    iONode car = (iONode)m_CarList->GetClientData(m_CarList->GetSelection());
+  if( m_CarProps == NULL )
+    return;
+
+  int idx = findCarID(wCar.getid(m_CarProps));
+  if( idx != wxNOT_FOUND ) {
+    iONode car = (iONode)m_CarList->GetItemData(idx);
     if( car != NULL ) {
       iONode waybill = NULL;
       const char* waybills = wCar.getwaybills(car);

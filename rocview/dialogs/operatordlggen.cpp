@@ -131,7 +131,7 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_ControlPanel->SetSizer( bSizer4 );
 	m_ControlPanel->Layout();
 	bSizer4->Fit( m_ControlPanel );
-	m_OperatorBook->AddPage( m_ControlPanel, wxT("Control"), true );
+	m_OperatorBook->AddPage( m_ControlPanel, wxT("Control"), false );
 	m_ConsistPanel = new wxPanel( m_OperatorBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -139,8 +139,8 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_CarImage = new wxBitmapButton( m_ConsistPanel, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize( -1,84 ), wxBU_AUTODRAW );
 	bSizer2->Add( m_CarImage, 0, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
 	
-	m_CarList = new wxListBox( m_ConsistPanel, wxID_ANY, wxDefaultPosition, wxSize( -1,200 ), 0, NULL, 0 ); 
-	bSizer2->Add( m_CarList, 1, wxALL|wxEXPAND, 5 );
+	m_CarList = new wxListCtrl( m_ConsistPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_REPORT|wxLC_SINGLE_SEL );
+	bSizer2->Add( m_CarList, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	wxFlexGridSizer* fgSizer5;
 	fgSizer5 = new wxFlexGridSizer( 0, 2, 0, 0 );
@@ -184,7 +184,7 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_ConsistPanel->SetSizer( bSizer2 );
 	m_ConsistPanel->Layout();
 	bSizer2->Fit( m_ConsistPanel );
-	m_OperatorBook->AddPage( m_ConsistPanel, wxT("Consist"), false );
+	m_OperatorBook->AddPage( m_ConsistPanel, wxT("Consist"), true );
 	
 	bSizer1->Add( m_OperatorBook, 1, wxEXPAND | wxALL, 5 );
 	
@@ -215,7 +215,7 @@ operatordlggen::operatordlggen( wxWindow* parent, wxWindowID id, const wxString&
 	m_Run->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onRun ), NULL, this );
 	m_GotoMan->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onGotoMan ), NULL, this );
 	m_CarImage->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onCarImage ), NULL, this );
-	m_CarList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( operatordlggen::onCarList ), NULL, this );
+	m_CarList->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( operatordlggen::onCarListSelected ), NULL, this );
 	m_AddCar->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onAddCar ), NULL, this );
 	m_LeaveCar->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onLeaveCar ), NULL, this );
 	m_ShowCar->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onCarCard ), NULL, this );
@@ -238,7 +238,7 @@ operatordlggen::~operatordlggen()
 	m_Run->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onRun ), NULL, this );
 	m_GotoMan->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onGotoMan ), NULL, this );
 	m_CarImage->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onCarImage ), NULL, this );
-	m_CarList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( operatordlggen::onCarList ), NULL, this );
+	m_CarList->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( operatordlggen::onCarListSelected ), NULL, this );
 	m_AddCar->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onAddCar ), NULL, this );
 	m_LeaveCar->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onLeaveCar ), NULL, this );
 	m_ShowCar->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( operatordlggen::onCarCard ), NULL, this );
