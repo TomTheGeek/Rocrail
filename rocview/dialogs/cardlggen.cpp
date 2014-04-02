@@ -89,7 +89,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	m_labRoadname = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Roadname"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labRoadname->Wrap( -1 );
-	fgSizer1->Add( m_labRoadname, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
+	fgSizer1->Add( m_labRoadname, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT|wxALIGN_RIGHT, 5 );
 	
 	m_Roadname = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer1->Add( m_Roadname, 0, wxEXPAND|wxTOP|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
@@ -232,7 +232,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_DetailsPanel->SetSizer( bSizer4 );
 	m_DetailsPanel->Layout();
 	bSizer4->Fit( m_DetailsPanel );
-	m_CarBook->AddPage( m_DetailsPanel, wxT("Details"), true );
+	m_CarBook->AddPage( m_DetailsPanel, wxT("Details"), false );
 	m_InterfacePanel = new wxPanel( m_CarBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
@@ -473,7 +473,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_CVPanel->SetSizer( bSizer5 );
 	m_CVPanel->Layout();
 	bSizer5->Fit( m_CVPanel );
-	m_CarBook->AddPage( m_CVPanel, wxT("CVs"), false );
+	m_CarBook->AddPage( m_CVPanel, wxT("CVs"), true );
 	
 	bSizer1->Add( m_CarBook, 1, wxEXPAND | wxALL, 5 );
 	
