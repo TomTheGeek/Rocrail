@@ -166,9 +166,7 @@ void CarDlg::initLabels() {
   m_DeleteCar->Enable( m_bSave );
   m_Copy->Enable( m_bSave );
   m_Import->Enable( m_bSave );
-  m_Doc->Enable( m_bSave );
 
-  m_labID->Enable( m_bSave );
   m_ID->Enable( m_bSave );
 
   m_CarList2->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
