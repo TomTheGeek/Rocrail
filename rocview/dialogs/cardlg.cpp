@@ -168,10 +168,8 @@ void CarDlg::initLabels() {
   m_Import->Enable( m_bSave );
   m_Doc->Enable( m_bSave );
 
-  m_GeneralPanel->Enable( m_bSave );
-  m_DetailsPanel->Enable( m_bSave );
-  m_InterfacePanel->Enable( m_bSave );
-  m_FunctionPanel->Enable( m_bSave );
+  m_labID->Enable( m_bSave );
+  m_ID->Enable( m_bSave );
 
   m_CarList2->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
   m_CarList2->InsertColumn(1, wxGetApp().getMsg( "roadname" ), wxLIST_FORMAT_LEFT );
