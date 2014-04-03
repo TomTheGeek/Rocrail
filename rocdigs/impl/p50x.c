@@ -861,7 +861,7 @@ static iONode _cmd( obj inst, const iONode nodeA ) {
             /*wResponse.seterror( nodeB, True );*/
           }
         }
-        else {
+        else if( !StrOp.equals( NodeOp.getName( nodeA ), wProgram.name() ) ) {
           char* s = StrOp.byteToStr( in, insize );
           nodeB = NodeOp.inst( NodeOp.getName( nodeA ), NULL, ELEMENT_NODE );
           wResponse.setdata( nodeB, s );
