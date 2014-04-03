@@ -186,6 +186,7 @@ static void __ctcActionLED( void* inst ) {
       node = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
       if( wSwitch.getctciidled1( data->props ) != NULL )
         wSwitch.setiid( node, wSwitch.getctciidled1( data->props ) );
+      wSwitch.setbus( node, wSwitch.getctcbusled1( data->props ) );
       wSwitch.setaddr1( node, wSwitch.getctcaddrled1( data->props ) );
       wSwitch.setport1( node, wSwitch.getctcportled1( data->props ) );
       wSwitch.setgate1( node, wSwitch.getctcgateled1( data->props ) );
@@ -195,6 +196,7 @@ static void __ctcActionLED( void* inst ) {
       node = NodeOp.inst(wOutput.name(), NULL, ELEMENT_NODE );
       if( wSwitch.getctciidled1( data->props ) != NULL )
         wOutput.setiid( node, wSwitch.getctciidled1( data->props ) );
+      wOutput.setbus( node, wSwitch.getctcbusled1( data->props ) );
       wOutput.setaddr( node, wSwitch.getctcaddrled1( data->props ) );
       wOutput.setport( node, wSwitch.getctcportled1( data->props ) );
       wOutput.setgate( node, wSwitch.getctcgateled1( data->props ) );
@@ -210,6 +212,7 @@ static void __ctcActionLED( void* inst ) {
       node = NodeOp.inst(wSwitch.name(), NULL, ELEMENT_NODE );
       if( wSwitch.getctciidled2( data->props ) != NULL )
         wSwitch.setiid( node, wSwitch.getctciidled2( data->props ) );
+      wSwitch.setbus( node, wSwitch.getctcbusled2( data->props ) );
       wSwitch.setaddr1( node, wSwitch.getctcaddrled2( data->props ) );
       wSwitch.setport1( node, wSwitch.getctcportled2( data->props ) );
       wSwitch.setgate1( node, wSwitch.getctcgateled2( data->props ) );
@@ -219,6 +222,7 @@ static void __ctcActionLED( void* inst ) {
       node = NodeOp.inst(wOutput.name(), NULL, ELEMENT_NODE );
       if( wSwitch.getctciidled2( data->props ) != NULL )
         wOutput.setiid( node, wSwitch.getctciidled2( data->props ) );
+      wOutput.setbus( node, wSwitch.getctcbusled2( data->props ) );
       wOutput.setaddr( node, wSwitch.getctcaddrled2( data->props ) );
       wOutput.setport( node, wSwitch.getctcportled2( data->props ) );
       wOutput.setgate( node, wSwitch.getctcgateled2( data->props ) );
