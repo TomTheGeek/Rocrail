@@ -103,6 +103,8 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
   iOOpenDCCData data = Data(inst);
   iONode response = NULL;
 
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "command: %s", NodeOp.getName( cmd ) );
+
   /* TODO: check for OpenDCC specific commands like programming the CS
    * and make bincmd's for the p50x
    * wProgram.getlntype == wProgram.lntype_cs
@@ -213,7 +215,7 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( cmd ), wProgram.name() ) &&
-      wProgram.getlntype( cmd ) == wProgram.lntype_cs )
+      wProgram.getlntype( cmd ) == wProgram.lntype_cs && !wProgram.ispom( cmd ) )
   {
     iONode ptcmd = NULL;
     Boolean getCV = False;
@@ -347,7 +349,8 @@ static iONode _cmd( obj inst ,const iONode cmd ) {
 
 
   /* Program command. */
-  else if( wProgram.ispom( cmd ) && wProgram.isacc( cmd ) && wProgram.getcmd( cmd ) == wProgram.set )
+  else if( StrOp.equals( NodeOp.getName( cmd ), wProgram.name() ) &&
+      wProgram.ispom( cmd ) && wProgram.isacc( cmd ) && wProgram.getcmd( cmd ) == wProgram.set )
   {
     iONode ptcmd = NULL;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "POM set for ACC %d %d=%d",
