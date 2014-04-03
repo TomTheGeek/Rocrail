@@ -824,6 +824,14 @@ void OperatorDlg::onWayBill( wxCommandEvent& event ) {
         iONode waybill = dlg->getSelectedWaybill();
         if( waybill != NULL ) {
           wCar.setwaybills( car, wWaybill.getid(waybill) );
+          if( !wxGetApp().isStayOffline() ) {
+            /* Notify RocRail. */
+            iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+            wModelCmd.setcmd( cmd, wModelCmd.modify );
+            NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_CarProps ) );
+            wxGetApp().sendToRocrail( cmd );
+            cmd->base.del(cmd);
+          }
           initConsist();
         }
       }
