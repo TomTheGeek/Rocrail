@@ -68,7 +68,7 @@ BEGIN_EVENT_TABLE(Clock, wxPanel)
 END_EVENT_TABLE()
 
 Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_devider, int clocktype, bool showsecondhand)
-                  : wxPanel(parent, id,  wxPoint(x, y), wxSize(100,100), wxBORDER_NONE)
+                  : wxPanel(parent, id,  wxPoint(x, y), wxSize(110,110), wxBORDER_NONE)
 {
   start = true;
   run   = true;
