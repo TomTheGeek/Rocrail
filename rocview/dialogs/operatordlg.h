@@ -50,6 +50,8 @@ class OperatorDlg : public operatordlggen
   void initLocos();
   void initLocationCombo();
   int findCarID( const char* ID );
+  void addCarToConsistList( int idx, iONode car );
+  void resizeConsistColumns();
 
 public:
 	/** Constructor */

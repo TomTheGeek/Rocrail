@@ -509,28 +509,12 @@ void OperatorDlg::initConsist() {
     const char* carid  = StrTokOp.nextToken( strtok );
     iONode car = wxGetApp().getFrame()->findCar( carid );
     if( car != NULL ) {
-      const char* id = wCar.getid( car );
-
-      m_CarList->InsertItem( i, wxString(id,wxConvUTF8) );
-      m_CarList->SetItem( i, 1, wxString(wCar.getwaybills(car), wxConvUTF8) );
-      m_CarList->SetItem( i, 2, wxString(wCar.getlocation(car), wxConvUTF8) );
-      iONode waybill = wxGetApp().getFrame()->findWaybill( wCar.getwaybills(car) );
-      if( waybill != NULL ) {
-        m_CarList->SetItem( i, 3, wxString(wWaybill.getdestination(waybill), wxConvUTF8) );
-      }
-      m_CarList->SetItemPtrData(i, (wxUIntPtr)car);
+      addCarToConsistList(i, car);
       i++;
     }
   }
-  // resize
-  for( int n = 0; n < 4; n++ ) {
-    m_CarList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
-    int autoheadersize = m_CarList->GetColumnWidth(n);
-    m_CarList->SetColumnWidth(n, wxLIST_AUTOSIZE);
-    int autosize = m_CarList->GetColumnWidth(n);
-    if(autoheadersize > autosize )
-      m_CarList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
-  }
+
+  resizeConsistColumns();
 
   if(m_CarList->GetItemCount() > 0 ) {
     m_CarList->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
@@ -722,25 +706,43 @@ void OperatorDlg::onCarImage( wxCommandEvent& event ) {
 }
 
 
+void OperatorDlg::addCarToConsistList( int idx, iONode car ) {
+  const char* id = wCar.getid( car );
+  TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "adding car [%s]", id );
+  m_CarList->InsertItem( idx, wxString(id,wxConvUTF8) );
+  m_CarList->SetItem( idx, 1, wxString(wCar.getwaybills(car), wxConvUTF8) );
+  m_CarList->SetItem( idx, 2, wxString(wCar.getlocation(car), wxConvUTF8) );
+  iONode waybill = wxGetApp().getFrame()->findWaybill( wCar.getwaybills(car) );
+  if( waybill != NULL ) {
+    m_CarList->SetItem( idx, 3, wxString(wWaybill.getdestination(waybill), wxConvUTF8) );
+  }
+  m_CarList->SetItemPtrData(idx, (wxUIntPtr)car);
+}
+
+
+void OperatorDlg::resizeConsistColumns() {
+  // resize
+  for( int n = 0; n < 4; n++ ) {
+    m_CarList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+    int autoheadersize = m_CarList->GetColumnWidth(n);
+    m_CarList->SetColumnWidth(n, wxLIST_AUTOSIZE);
+    int autosize = m_CarList->GetColumnWidth(n);
+    if(autoheadersize > autosize )
+      m_CarList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+  }
+}
+
+
 void OperatorDlg::onAddCar( wxCommandEvent& event ) {
   CarDlg* dlg = new CarDlg(this, NULL, false );
   if( wxID_OK == dlg->ShowModal() ) {
     /* Notify Notebook. */
     iONode car = dlg->getSelectedCar();
     if( car != NULL ) {
-      const char* id = wCar.getid( car );
-      TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "adding car [%s]", id );
       int carcnt = m_CarList->GetItemCount();
-      m_CarList->InsertItem( carcnt, wxString(id,wxConvUTF8) );
-      m_CarList->SetItem( carcnt, 1, wxString(wCar.getwaybills(car), wxConvUTF8) );
-      m_CarList->SetItem( carcnt, 2, wxString(wCar.getlocation(car), wxConvUTF8) );
-      iONode waybill = wxGetApp().getFrame()->findWaybill( wCar.getwaybills(car) );
-      if( waybill != NULL ) {
-        m_CarList->SetItem( carcnt, 3, wxString(wWaybill.getdestination(waybill), wxConvUTF8) );
-      }
-      m_CarList->SetItemPtrData(carcnt, (wxUIntPtr)car);
+      addCarToConsistList(carcnt, car);
+      resizeConsistColumns();
       evaluate();
-      initConsist();
     }
   }
   dlg->Destroy();
