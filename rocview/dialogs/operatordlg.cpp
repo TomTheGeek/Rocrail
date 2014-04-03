@@ -820,12 +820,16 @@ void OperatorDlg::onWayBill( wxCommandEvent& event ) {
         }
       }
 
-      WaybillDlg* dlg = new WaybillDlg(this, waybill, false );
+      WaybillDlg* dlg = new WaybillDlg(this, waybill, true );
       if( wxID_OK == dlg->ShowModal() ) {
         /* Notify Notebook. */
         iONode waybill = dlg->getSelectedWaybill();
         if( waybill != NULL ) {
-          wCar.setwaybills( car, wWaybill.getid(waybill) );
+          if( dlg->isDelivered() )
+            wCar.setwaybills( car, "" );
+          else
+            wCar.setwaybills( car, wWaybill.getid(waybill) );
+
           if( !wxGetApp().isStayOffline() ) {
             /* Notify RocRail. */
             iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );

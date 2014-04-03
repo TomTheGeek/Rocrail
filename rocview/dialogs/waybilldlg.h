@@ -61,6 +61,7 @@ public:
   void onSetPage( wxCommandEvent& event );
 
   iONode getSelectedWaybill();
+  bool isDelivered();
 
 };
 

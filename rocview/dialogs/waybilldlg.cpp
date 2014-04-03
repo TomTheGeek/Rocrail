@@ -338,6 +338,10 @@ iONode WaybillDlg::getSelectedWaybill() {
   return m_Props;
 }
 
+bool WaybillDlg::isDelivered() {
+  return (m_Status->GetSelection() == 2 ? true:false);
+}
+
 
 
 void WaybillDlg::onNewWaybill( wxCommandEvent& event ){
