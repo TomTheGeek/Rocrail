@@ -2202,6 +2202,10 @@
     <fun name="getVMax" vt="int">
       <param name="inst" vt="this" remark="Operator instance"/>
     </fun>
+    <fun name="setLocality" vt="void">
+      <param name="inst" vt="this" remark="Operator instance"/>
+      <param name="bkid" vt="const char*" remark="Block ID"/>
+    </fun>
     <data>
       <var name="props" vt="iONode"/>
     </data>

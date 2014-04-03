@@ -270,6 +270,20 @@ static int _getVMax( struct OOperator* inst ) {
 }
 
 
+static void _setLocality( struct OOperator* inst, const char* bkid ) {
+  iOOperatorData data = Data(inst);
+  iOStrTok tok = StrTokOp.inst(wOperator.getcarids(data->props), ',');
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set locality to %s for operator %s", bkid==NULL?"-":bkid, wOperator.getid(data->props) );
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    iOCar car = ModelOp.getCar(AppOp.getModel(), StrTokOp.nextToken(tok) );
+    if( car != NULL ) {
+      CarOp.setLocality(car, bkid);
+    }
+  }
+  StrTokOp.base.del(tok);
+}
+
+
 static int _getLen( struct OOperator* inst, int* trainweight ) {
   iOOperatorData data = Data(inst);
   /* ToDo: Calculate consist length. */

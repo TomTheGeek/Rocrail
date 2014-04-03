@@ -371,6 +371,11 @@ static void _setLocality( struct OCar* inst, const char* id ) {
   iOCarData data = Data(inst);
   wCar.setlocation(data->props, id);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "car [%s] arrived in block [%s]", CarOp.base.id(inst), id );
+  /* Broadcast to clients. */
+  {
+    iONode clone = (iONode)NodeOp.base.clone( data->props );
+    AppOp.broadcastEvent( clone );
+  }
 }
 
 

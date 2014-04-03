@@ -2191,6 +2191,17 @@ static void __adjustAccel(iOLoc inst, int accel) {
 }
 
 
+static void __setCurBlock4Train(iOLoc inst, const char* id) {
+  iOLocData data = Data(inst);
+  if( wLoc.gettrain( data->props) != NULL && StrOp.len(wLoc.gettrain( data->props)) > 0 ) {
+    iOOperator train = ModelOp.getOperator(AppOp.getModel(), wLoc.gettrain( data->props) );
+    if( train != NULL ) {
+      OperatorOp.setLocality(train, id);
+    }
+  }
+}
+
+
 static void __calcTrainLen(iOLoc inst) {
   iOLocData data = Data(inst);
   Boolean report = False;
@@ -2333,6 +2344,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
     data->prevBlock = data->curBlock;
   }
   data->curBlock = id;
+  __setCurBlock4Train(inst, data->curBlock);
   wLoc.setblockid( data->props, id==NULL?"":id );
 
   if( data->driver != NULL )
@@ -2346,6 +2358,7 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
   iOLocData data = Data(inst);
   data->destBlock = destid;
   data->curBlock  = curid;
+  __setCurBlock4Train(inst, curid);
   /* Broadcast to clients. */
   __broadcastLocoProps( inst, NULL, NULL, NULL );
 }
@@ -2460,6 +2473,7 @@ static void _goNet( iOLoc inst, const char* curblock, const char* nextblock, con
   iOLocData data = Data(inst);
   wLoc.setresumeauto( data->props, False);
   data->curBlock = StrOp.dup(curblock); /* make a copy before it is freed up */
+  __setCurBlock4Train(inst, data->curBlock);
   data->goNet = True; /* signal that the current block is from the net */
   data->go = True;
   data->released = False;
@@ -2591,6 +2605,8 @@ static void _reset( iOLoc inst, Boolean saveCurBlock ) {
     wLoc.setblockid(data->props, "");
     wLoc.setscidx(data->props, -1);
     data->curBlock = NULL;
+    __setCurBlock4Train(inst, data->curBlock);
+
     if( data->driver != NULL )
       data->driver->useschedule(data->driver, NULL);
   }
