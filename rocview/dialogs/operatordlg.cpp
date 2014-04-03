@@ -279,6 +279,8 @@ void OperatorDlg::initLabels() {
 
   m_CarList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
   m_CarList->InsertColumn(1, wxGetApp().getMsg( "waybill" ), wxLIST_FORMAT_LEFT );
+  m_CarList->InsertColumn(2, wxGetApp().getMsg( "location" ), wxLIST_FORMAT_LEFT );
+  m_CarList->InsertColumn(3, wxGetApp().getMsg( "destination" ), wxLIST_FORMAT_LEFT );
 
   // Buttons
   m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -511,12 +513,17 @@ void OperatorDlg::initConsist() {
 
       m_CarList->InsertItem( i, wxString(id,wxConvUTF8) );
       m_CarList->SetItem( i, 1, wxString(wCar.getwaybills(car), wxConvUTF8) );
+      m_CarList->SetItem( i, 2, wxString(wCar.getlocation(car), wxConvUTF8) );
+      iONode waybill = wxGetApp().getFrame()->findWaybill( wCar.getwaybills(car) );
+      if( waybill != NULL ) {
+        m_CarList->SetItem( i, 3, wxString(wWaybill.getdestination(waybill), wxConvUTF8) );
+      }
       m_CarList->SetItemPtrData(i, (wxUIntPtr)car);
       i++;
     }
   }
   // resize
-  for( int n = 0; n < 2; n++ ) {
+  for( int n = 0; n < 4; n++ ) {
     m_CarList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
     int autoheadersize = m_CarList->GetColumnWidth(n);
     m_CarList->SetColumnWidth(n, wxLIST_AUTOSIZE);
@@ -726,6 +733,11 @@ void OperatorDlg::onAddCar( wxCommandEvent& event ) {
       int carcnt = m_CarList->GetItemCount();
       m_CarList->InsertItem( carcnt, wxString(id,wxConvUTF8) );
       m_CarList->SetItem( carcnt, 1, wxString(wCar.getwaybills(car), wxConvUTF8) );
+      m_CarList->SetItem( carcnt, 2, wxString(wCar.getlocation(car), wxConvUTF8) );
+      iONode waybill = wxGetApp().getFrame()->findWaybill( wCar.getwaybills(car) );
+      if( waybill != NULL ) {
+        m_CarList->SetItem( carcnt, 3, wxString(wWaybill.getdestination(waybill), wxConvUTF8) );
+      }
       m_CarList->SetItemPtrData(carcnt, (wxUIntPtr)car);
       evaluate();
       initConsist();
