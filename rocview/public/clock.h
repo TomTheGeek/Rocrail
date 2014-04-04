@@ -54,6 +54,7 @@ class Clock : public wxPanel{
 
 	private:
     wxBitmap* m_Logo;
+    wxWindow* m_Parent;
 		wxTimer *WxTimer;
 		double x,y,z;
 		bool start;

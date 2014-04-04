@@ -179,7 +179,8 @@ void RocguiIniDialog::initLabels() {
 
   m_ClockType->SetLabel( wxGetApp().getMsg( "clocktype" ) );
   m_ClockType->SetString( 0, wxGetApp().getMsg( "default" ) );
-  m_ClockType->SetString( 3, wxGetApp().getMsg( "none" ) );
+  m_ClockType->SetString( 3, wxGetApp().getMsg( "digital" ) );
+  m_ClockType->SetString( 4, wxGetApp().getMsg( "none" ) );
   m_labImagePath->SetLabel( wxGetApp().getMsg( "imagepath" ) );
   m_labUpdatesPath->SetLabel( wxGetApp().getMsg( "updatespath" ) );
   m_labXSLPath->SetLabel( wxGetApp().getMsg( "xslpath" ) );
@@ -391,8 +392,10 @@ void RocguiIniDialog::initValues() {
     type = 1;
   else if( StrOp.equals( wGui.clock_24h, clocktype ) )
     type = 2;
-  else if( StrOp.equals( wGui.clock_none, clocktype ) )
+  else if( StrOp.equals( wGui.clock_digital, clocktype ) )
     type = 3;
+  else if( StrOp.equals( wGui.clock_none, clocktype ) )
+    type = 4;
   m_ClockType->SetSelection( type );
 
   m_TabAlignType->SetSelection( wGui.gettabalign( m_Ini ) );
@@ -533,6 +536,8 @@ void RocguiIniDialog::evaluate() {
   else if( type == 2 )
     wGui.setclocktype( m_Ini, wGui.clock_24h );
   else if( type == 3 )
+    wGui.setclocktype( m_Ini, wGui.clock_digital );
+  else if( type == 4 )
     wGui.setclocktype( m_Ini, wGui.clock_none );
 
   wGui.settabalign( m_Ini, m_TabAlignType->GetSelection() );
@@ -744,6 +749,7 @@ void RocguiIniDialog::CreateControls()
     m_ClockTypeStrings.Add(_("&Default"));
     m_ClockTypeStrings.Add(_("&AM/PM"));
     m_ClockTypeStrings.Add(_("&24h"));
+    m_ClockTypeStrings.Add(_("&digital"));
     m_ClockTypeStrings.Add(_("&none"));
     m_ClockType = new wxRadioBox( m_GeneralTab, wxID_ANY, _("Clocktype"), wxDefaultPosition, wxDefaultSize, m_ClockTypeStrings, 1, wxRA_SPECIFY_COLS );
     m_ClockType->SetSelection(0);

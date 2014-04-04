@@ -6983,3 +6983,9 @@ msgstr ""
 msgid "Report state"
 msgstr ""
 
+#. 
+# id="digital"
+#, c-format
+msgid "Digital"
+msgstr ""
+

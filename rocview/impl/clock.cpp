@@ -68,8 +68,9 @@ BEGIN_EVENT_TABLE(Clock, wxPanel)
 END_EVENT_TABLE()
 
 Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_devider, int clocktype, bool showsecondhand)
-                  : wxPanel(parent, id,  wxPoint(x, y), wxSize(110,110), wxBORDER_NONE)
+                  : wxPanel(parent, id,  wxPoint(x, y), clocktype==3?wxDefaultSize:wxSize(110,110), wxBORDER_NONE)
 {
+  m_Parent = parent;
   start = true;
   run   = true;
   deviderchanged = false;
@@ -268,6 +269,38 @@ void Clock::drawNewClock() {
     return;
 
   TraceOp.trc( "clock", TRCLEVEL_DEBUG, __LINE__, 9999, "draw new clock" );
+
+  if( type == 3 ) {
+    // digital clock
+    wxPaintDC dc(this);
+    wxGraphicsContext* gc = wxGraphicsContext::Create(dc);
+
+    wxString timestring = wxString::Format(_T("%02d:%02d"), hours, minutes);
+
+    wxFont font(18, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    gc->SetFont(font,*wxBLACK);
+
+    double w;
+    double h;
+    double descent;
+    double externalLeading;
+    gc->GetTextExtent( timestring,(wxDouble*)&w,(wxDouble*)&h,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+
+    wxPen borderPen( wxColour(100, 100, 100), wxSOLID );
+    borderPen.SetWidth(2);
+    gc->SetPen( borderPen );
+
+    gc->DrawRoundedRectangle( 1.0, 1.0, w+8, h+8, 5.0);
+    gc->DrawText( timestring, 4, 4 );
+
+    SetSize( wxDefaultCoord, wxDefaultCoord, w + 10, h + 10, wxSIZE_FORCE );
+
+    delete gc;
+
+    return;
+  }
+
+
 #if defined __WIN32
   SetBackgroundStyle(wxBG_STYLE_CUSTOM);
   wxBufferedPaintDC dc(this);
@@ -334,7 +367,7 @@ void Clock::drawNewClock() {
 
   gc->SetPen(*wxBLACK_PEN);
 
-  if( type > 0 ) {
+  if( type == 1 || type == 2 ) {
     wxString timestring;
     if( type == 1 && hours < 12 )
       timestring = wxString::Format(_T("AM %d:%02d"), hours, minutes);

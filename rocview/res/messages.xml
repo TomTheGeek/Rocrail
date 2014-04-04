@@ -27692,4 +27692,7 @@
     <nl txt="Status melden"/>
     <sl txt="Sporoči stanje"/>
   </Msg>
+  <Msg id="digital">
+    <en txt="Digital"/>
+  </Msg>
 </Messages>
