@@ -513,6 +513,7 @@ void OperatorDlg::initConsist() {
       i++;
     }
   }
+  StrTokOp.base.del(strtok);
 
   resizeConsistColumns();
 
@@ -734,19 +735,21 @@ void OperatorDlg::resizeConsistColumns() {
 
 
 void OperatorDlg::onAddCar( wxCommandEvent& event ) {
-  CarDlg* dlg = new CarDlg(this, NULL, false );
-  if( wxID_OK == dlg->ShowModal() ) {
-    /* Notify Notebook. */
-    iONode car = dlg->getSelectedCar();
-    if( car != NULL ) {
-      int carcnt = m_CarList->GetItemCount();
-      addCarToConsistList(carcnt, car);
-      resizeConsistColumns();
-      evaluate();
+  if( m_Props != NULL ) {
+    CarDlg* dlg = new CarDlg(this, NULL, false, wOperator.getid( m_Props ), wOperator.getcarids(m_Props) );
+    if( wxID_OK == dlg->ShowModal() ) {
+      /* Notify Notebook. */
+      iONode car = dlg->getSelectedCar();
+      if( car != NULL ) {
+        int carcnt = m_CarList->GetItemCount();
+        addCarToConsistList(carcnt, car);
+        resizeConsistColumns();
+        evaluate();
+      }
     }
+    dlg->Destroy();
+    Raise();
   }
-  dlg->Destroy();
-  Raise();
 }
 
 

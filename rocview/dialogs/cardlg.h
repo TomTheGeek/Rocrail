@@ -47,6 +47,8 @@ class CarDlg : public cardlggen, public BaseDialog
   const char* m_CVDesc[256];
   int m_iSelectedCV;
   iONode m_CVNodes[1024];
+  const char* m_Train4Add;
+  const char* m_Train4AddConsist;
 
   void initLabels();
   bool evaluate();
@@ -62,7 +64,7 @@ class CarDlg : public cardlggen, public BaseDialog
 public:
   static const char* findTrain(const char* carid);
 	/** Constructor */
-  CarDlg( wxWindow* parent, iONode p_Props, bool save=true );
+  CarDlg( wxWindow* parent, iONode p_Props, bool save=true, const char* train=NULL, const char* consist=NULL );
 
   void onCarImage( wxCommandEvent& event );
   void onCarList2( wxListEvent& event );
@@ -82,6 +84,8 @@ public:
   void onCVCell( wxGridEvent& event );
   void onCVModify( wxCommandEvent& event );
   void onShow( wxCommandEvent& event );
+  void onListAvailableOnly( wxCommandEvent& event );
+
 };
 
 #endif // __cardlg__

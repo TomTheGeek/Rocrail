@@ -52,7 +52,7 @@
 
 #include "rocview/xpm/nopict.xpm"
 
-CarDlg::CarDlg( wxWindow* parent, iONode p_Props, bool save )
+CarDlg::CarDlg( wxWindow* parent, iONode p_Props, bool save, const char* train, const char* consist )
   :cardlggen( parent )
 {
   TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "cardlg" );
@@ -61,6 +61,8 @@ CarDlg::CarDlg( wxWindow* parent, iONode p_Props, bool save )
   m_bSave    = save;
   m_SortCol  = 0;
   m_FGroup   = 0;
+  m_Train4Add = train;
+  m_Train4AddConsist = consist;
   initLabels();
   initCVDesc();
   initIndex();
@@ -193,6 +195,9 @@ void CarDlg::initLabels() {
   m_Status->SetString( 0, wxGetApp().getMsg( "empty" ) );
   m_Status->SetString( 1, wxGetApp().getMsg( "loaded" ) );
   m_Status->SetString( 2, wxGetApp().getMsg( "maintenance" ) );
+
+  m_ListAvailableOnly->Enable( !m_bSave );
+  m_ListAvailableOnly->SetValue( !m_bSave );
 
   initLocationCombo();
 
@@ -345,6 +350,8 @@ void CarDlg::initIndex(){
   SetTitle(wxGetApp().getMsg( "cartable" ));
 
   m_CarList2->DeleteAllItems();
+  m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+  m_Props = NULL;
 
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
@@ -389,7 +396,29 @@ void CarDlg::initIndex(){
       cnt = ListOp.size( list );
       for( int i = 0; i < cnt; i++ ) {
         iONode car = (iONode)ListOp.get( list, i );
+        bool doNotList = false;
         const char* id = wCar.getid( car );
+        if( m_ListAvailableOnly->IsChecked() ) {
+          const char* train = findTrain(id);
+          if( m_Train4Add != NULL && StrOp.equals( m_Train4Add, train ) )
+            continue; // already belongs to this train
+          if( m_Train4Add != NULL && !StrOp.equals( m_Train4Add, train ) && StrOp.len(train) > 0 )
+            continue; // belongs to another train
+          if( m_Train4AddConsist != NULL ) {
+            iOStrTok strtok = StrTokOp.inst( m_Train4AddConsist, ',' );
+            while( StrTokOp.hasMoreTokens( strtok ) ) {
+              const char* carid  = StrTokOp.nextToken( strtok );
+              if( StrOp.equals(id, carid) ) {
+                doNotList = true; // already in the consist
+                break;
+              }
+            }
+            StrTokOp.base.del(strtok);
+          }
+        }
+        if(doNotList)
+          continue;
+
         m_CarList2->InsertItem( i, wxString(id,wxConvUTF8) );
         m_CarList2->SetItem( i, 1, wxString(wCar.getroadname( car ), wxConvUTF8) );
         m_CarList2->SetItem( i, 2, wxString(wCar.getnumber( car ), wxConvUTF8) );
@@ -422,7 +451,7 @@ void CarDlg::initIndex(){
         setSelection(wCar.getid( m_Props ));
 
       }
-      else if(m_CarList2->GetItemCount() > 0 ) {
+      else if(m_CarList2->GetItemCount() > 0 && !m_ListAvailableOnly->IsChecked() ) {
         TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection" );
         m_CarList2->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
         m_Props = (iONode)m_CarList2->GetItemData(0);
@@ -1144,3 +1173,9 @@ void CarDlg::onCVModify( wxCommandEvent& event ) {
 void CarDlg::onShow( wxCommandEvent& event ) {
   evaluate();
 }
+
+
+void CarDlg::onListAvailableOnly( wxCommandEvent& event ) {
+  initIndex();
+}
+
