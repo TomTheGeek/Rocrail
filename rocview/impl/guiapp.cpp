@@ -892,13 +892,13 @@ static Boolean __hasIDinList(iONode list, const char* newid ) {
 static void rocrailCallback( obj me, iONode node ) {
   RocGui* guiApp = (RocGui*)me;
 
-  if( (TraceOp.getLevel(NULL) & TRCLEVEL_DEBUG) == TRCLEVEL_DEBUG ) {
+  //if( (TraceOp.getLevel(NULL) & TRCLEVEL_DEBUG) == TRCLEVEL_DEBUG ) {
     if( !StrOp.equals( NodeOp.getName(node), wPlan.name()) ) {
       char* xmlStr = NodeOp.base.toString(node);
-      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback %.240s", xmlStr );
+      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback %.500s", xmlStr );
       StrOp.free(xmlStr);
     }
-  }
+  //}
 
   /* Plan */
   if( StrOp.equals( wPlan.name(), NodeOp.getName( node ) ) ) {
@@ -1100,6 +1100,13 @@ static void rocrailCallback( obj me, iONode node ) {
     // Make a copy of the node for using it out of this scope:
     event.SetClientData( node->base.clone( node ) );
     wxPostEvent( guiApp->getFrame(), event );
+  }
+  else if( StrOp.equals( wCar.name(), NodeOp.getName( node ) ) ) {
+    iONode car = wxGetApp().getFrame()->findCar(wItem.getid(node));
+    if( car != NULL ) {
+      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "update car=%s", wItem.getid(car) );
+      NodeOp.mergeNode( car, node, True, True, True ); // Update Car
+    }
   }
   /* DataReq (loco image?) */
   else if( StrOp.equals( wDataReq.name(), NodeOp.getName( node ) ) ) {
