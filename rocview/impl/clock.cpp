@@ -289,7 +289,7 @@ void Clock::drawNewClock() {
     wxPen borderPen( wxColour(100, 100, 100), wxSOLID );
     borderPen.SetWidth(2);
     gc->SetPen( borderPen );
-
+    gc->SetBrush(*wxWHITE_BRUSH);
     gc->DrawRoundedRectangle( 1.0, 1.0, w+8, h+8, 5.0);
     gc->DrawText( timestring, 4, 4 );
 
