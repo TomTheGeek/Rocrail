@@ -77,12 +77,14 @@ void LC::init() {
 }
 
 void LC::SyncClock( iONode node ) {
-  m_Clock->SyncClock( node );
+  if(m_Clock != NULL)
+    m_Clock->SyncClock( node );
 }
 
 
 void LC::stopTimer() {
-  m_Clock->stopTimer();
+  if(m_Clock != NULL)
+    m_Clock->stopTimer();
 }
 
 
@@ -957,12 +959,19 @@ void LC::CreateControls() {
 
   const char* clocktype = wGui.getclocktype( wxGetApp().getIni() );
   int type = 0;
-  if( StrOp.equals( wGui.clock_ampm, clocktype ) ) type = 1;
-  else if( StrOp.equals( wGui.clock_24h, clocktype ) ) type = 2;
+  if( StrOp.equals( wGui.clock_ampm, clocktype ) )
+    type = 1;
+  else if( StrOp.equals( wGui.clock_24h, clocktype ) )
+    type = 2;
 
-  TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "creating clock...");
-  m_Clock = new Clock(m_Parent, -1, 0, 0, 2, 1, type, wGui.isshowsecondhand( wxGetApp().getIni() ));
-  m_SliderSizer->Add(m_Clock, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
+  if( !StrOp.equals( wGui.clock_none, clocktype ) ) {
+    TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "creating clock...");
+    m_Clock = new Clock(m_Parent, -1, 0, 0, 2, 1, type, wGui.isshowsecondhand( wxGetApp().getIni() ));
+    m_SliderSizer->Add(m_Clock, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
+  }
+  else {
+    m_Clock = NULL;
+  }
 
 }
 
