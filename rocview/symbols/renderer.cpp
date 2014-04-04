@@ -1968,10 +1968,10 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
     }
 
     if( StrOp.equals( textOri, wItem.south ) ) {
-      drawString( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0, false );
+      drawString( wxString(m_Label,wxConvUTF8), 32-5, 9, 270.0, false );
     }
     else if( StrOp.equals( textOri, wItem.north ) ) {
-      drawString( wxString(m_Label,wxConvUTF8), 7, (32 * m_cy)-3, 90.0, false );
+      drawString( wxString(m_Label,wxConvUTF8), 7, (32 * m_cy)-8, 90.0, false );
     }
     else {
 #ifdef __WIN32__
