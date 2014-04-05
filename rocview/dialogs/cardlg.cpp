@@ -52,7 +52,7 @@
 
 #include "rocview/xpm/nopict.xpm"
 
-CarDlg::CarDlg( wxWindow* parent, iONode p_Props, bool save, const char* train, const char* consist )
+CarDlg::CarDlg( wxWindow* parent, iONode p_Props, bool save, const char* train, const char* consist, const char* locality )
   :cardlggen( parent )
 {
   TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "cardlg" );
@@ -63,6 +63,7 @@ CarDlg::CarDlg( wxWindow* parent, iONode p_Props, bool save, const char* train, 
   m_FGroup   = 0;
   m_Train4Add = train;
   m_Train4AddConsist = consist;
+  m_Train4AddLocality = locality;
   initLabels();
   initCVDesc();
   initIndex();
@@ -414,6 +415,12 @@ void CarDlg::initIndex(){
               }
             }
             StrTokOp.base.del(strtok);
+          }
+          if( m_Train4AddLocality != NULL && StrOp.len(m_Train4AddLocality) > 0 ) {
+            if( !StrOp.equals( m_Train4AddLocality, wCar.getlocation( car ) ) ) {
+              doNotList = true; // not in the same locality
+              break;
+            }
           }
         }
         if(doNotList)

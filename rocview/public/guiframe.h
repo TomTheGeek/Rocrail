@@ -200,7 +200,8 @@ public:
   iONode findBlock( const char* blockid );
   iONode findSensor( const char* sensorid );
   iONode findCar(const char* carid);
-  iONode findWaybill(const char* carid);
+  iONode findOperator(const char* oprid);
+  iONode findWaybill(const char* wbid);
   iONode findBlock4Loc(const char* locid, const char* blockid);
   bool isInStage(const char* locid, const char* blockid);
   iONode getRocrailIni(){return m_RocrailIni;}

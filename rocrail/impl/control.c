@@ -81,6 +81,7 @@
 #include "rocrail/wrapper/public/SystemActions.h"
 #include "rocrail/wrapper/public/Issue.h"
 #include "rocrail/wrapper/public/Devices.h"
+#include "rocrail/wrapper/public/Operator.h"
 
 #include "rocutils/public/devices.h"
 
@@ -730,6 +731,13 @@ static void __callback( obj inst, iONode nodeA ) {
     iOAction action = ModelOp.getAction( model, wAction.getid( nodeA ) );
     if( action != NULL ) {
       ActionOp.cmd( action, nodeA );
+      return;
+    }
+  }
+  else if( StrOp.equals( wOperator.name(), nodeName ) ) {
+    iOOperator opr = ModelOp.getOperator( model, wOperator.getid( nodeA ) );
+    if( opr != NULL ) {
+      OperatorOp.cmd( opr, nodeA );
       return;
     }
   }

@@ -499,6 +499,24 @@ iONode RocGuiFrame::findCar( const char* carid ) {
 }
 
 
+iONode RocGuiFrame::findOperator( const char* oprid ) {
+  iONode model = wxGetApp().getModel();
+  iONode oprlist = wPlan.getoperatorlist( model );
+  if( oprlist != NULL ) {
+    int cnt = NodeOp.getChildCnt( oprlist );
+    for( int i = 0; i < cnt; i++ ) {
+      iONode opr = NodeOp.getChild( oprlist, i );
+      const char* id = wCar.getid( opr );
+
+      if( id != NULL && StrOp.equals( oprid, id ) ) {
+        return opr;
+      }
+    }
+  }
+  return NULL;
+}
+
+
 iONode RocGuiFrame::findRoute( const char* routeid ) {
   iONode model = wxGetApp().getModel();
   iONode stlist = wPlan.getstlist( model );

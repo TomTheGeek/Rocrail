@@ -76,6 +76,7 @@ public:
     void onOperatorList( wxCommandEvent& event );
     void onCarListSelected( wxListEvent& event );
     void OnCopy( wxCommandEvent& event );
+    void onSetLocation( wxCommandEvent& event ) ;
     iONode getSelected();
 
 };

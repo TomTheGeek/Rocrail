@@ -135,7 +135,6 @@ static struct OOperator* _inst( iONode ini ) {
 
 static Boolean _cmd( iOOperator inst, iONode nodeA ) {
   iOOperatorData data = Data(inst);
-  iOStrTok tok = StrTokOp.inst(wOperator.getcarids(data->props), ',');
 
   const char* nodename = NodeOp.getName( nodeA );
   const char* cmd      = wOperator.getcmd( nodeA );
@@ -143,13 +142,19 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command %s:%s for operator %s",
       nodename, (cmd==NULL?"-":cmd), wOperator.getid(data->props) );
 
-  while( StrTokOp.hasMoreTokens(tok) ) {
-    iOCar car = ModelOp.getCar(AppOp.getModel(), StrTokOp.nextToken(tok) );
-    if( car != NULL ) {
-      CarOp.cmd(car, (iONode)NodeOp.base.clone(nodeA));
-    }
+  if( StrOp.equals( wLoc.block, cmd ) ) {
+    OperatorOp.setLocality(inst, wOperator.getlocation(nodeA));
   }
-  StrTokOp.base.del(tok);
+  else {
+    iOStrTok tok = StrTokOp.inst(wOperator.getcarids(data->props), ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      iOCar car = ModelOp.getCar(AppOp.getModel(), StrTokOp.nextToken(tok) );
+      if( car != NULL ) {
+        CarOp.cmd(car, (iONode)NodeOp.base.clone(nodeA));
+      }
+    }
+    StrTokOp.base.del(tok);
+  }
 
   nodeA->base.del(nodeA);
   return True;
@@ -281,6 +286,12 @@ static void _setLocality( struct OOperator* inst, const char* bkid ) {
     }
   }
   StrTokOp.base.del(tok);
+  wOperator.setlocation(data->props, bkid);
+
+  {
+    iONode clone = (iONode)NodeOp.base.clone( data->props );
+    AppOp.broadcastEvent( clone );
+  }
 }
 
 

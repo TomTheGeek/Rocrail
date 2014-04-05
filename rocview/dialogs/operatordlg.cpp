@@ -140,6 +140,8 @@ void OperatorDlg::initLocos() {
         }
       }
 
+      m_LocoID->Append( wxString("",wxConvUTF8) );
+
       ListOp.sort(list, &__sortID);
       cnt = ListOp.size( list );
       for( int i = 0; i < cnt; i++ ) {
@@ -161,6 +163,9 @@ void OperatorDlg::initLocos() {
           else {
             m_Location->SetStringSelection( wxString(wLoc.getblockid( lc ),wxConvUTF8) );
           }
+        }
+        else {
+          m_Location->SetStringSelection( wxString(wOperator.getlocation( m_Props ),wxConvUTF8) );
         }
       }
       else
@@ -255,6 +260,7 @@ void OperatorDlg::initLabels() {
   m_labLocoID->SetLabel( wxGetApp().getMsg( "locomotive" ) );
   m_labLocation->GetStaticBox()->SetLabel( wxGetApp().getMsg( "location" ) );
   m_Reserve->SetLabel( wxGetApp().getMsg( "reserve" ) );
+  m_SetLocation->SetLabel( wxGetApp().getMsg( "set" ) );
   m_labGoto->GetStaticBox()->SetLabel( wxGetApp().getMsg( "goto" ) );
   m_Run->SetLabel( wxGetApp().getMsg( "run" ) );
   m_GotoMan->SetLabel( wxGetApp().getMsg( "manually" ) );
@@ -659,14 +665,15 @@ void OperatorDlg::onLocomotiveCombo( wxCommandEvent& event ) {
 
 
 void OperatorDlg::onReserve( wxCommandEvent& event ) {
-  /* Inform RocRail... */
-  iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-  wLoc.setid( cmd, wOperator.getlcid( m_Props ) );
-  wLoc.setcmd( cmd, wLoc.block );
-  wLoc.setblockid( cmd, m_Location->GetStringSelection().mb_str(wxConvUTF8) );
-  wxGetApp().sendToRocrail( cmd );
-  cmd->base.del(cmd);
-
+  if( wOperator.getlcid( m_Props ) != NULL && StrOp.len(wOperator.getlcid( m_Props ) ) > 0 ) {
+    /* Inform RocRail... */
+    iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    wLoc.setid( cmd, wOperator.getlcid( m_Props ) );
+    wLoc.setcmd( cmd, wLoc.block );
+    wLoc.setblockid( cmd, m_Location->GetStringSelection().mb_str(wxConvUTF8) );
+    wxGetApp().sendToRocrail( cmd );
+    cmd->base.del(cmd);
+  }
 }
 
 
@@ -736,7 +743,7 @@ void OperatorDlg::resizeConsistColumns() {
 
 void OperatorDlg::onAddCar( wxCommandEvent& event ) {
   if( m_Props != NULL ) {
-    CarDlg* dlg = new CarDlg(this, NULL, false, wOperator.getid( m_Props ), wOperator.getcarids(m_Props) );
+    CarDlg* dlg = new CarDlg(this, NULL, false, wOperator.getid( m_Props ), wOperator.getcarids(m_Props), wOperator.getlocation(m_Props) );
     if( wxID_OK == dlg->ShowModal() ) {
       /* Notify Notebook. */
       iONode car = dlg->getSelectedCar();
@@ -888,4 +895,15 @@ void OperatorDlg::onOK( wxCommandEvent& event ) {
     EndModal( wxID_OK );
   }
 }
+
+
+void OperatorDlg::onSetLocation( wxCommandEvent& event )  {
+  iONode cmd = NodeOp.inst( wOperator.name(), NULL, ELEMENT_NODE );
+  wOperator.setid( cmd, wOperator.getid( m_Props ) );
+  wOperator.setcmd( cmd, wLoc.block );
+  wOperator.setlocation( cmd, m_Location->GetStringSelection().mb_str(wxConvUTF8) );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
 

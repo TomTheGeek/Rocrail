@@ -1108,6 +1108,13 @@ static void rocrailCallback( obj me, iONode node ) {
       NodeOp.mergeNode( car, node, True, True, True ); // Update Car
     }
   }
+  else if( StrOp.equals( wOperator.name(), NodeOp.getName( node ) ) ) {
+    iONode opr = wxGetApp().getFrame()->findOperator(wItem.getid(node));
+    if( opr != NULL ) {
+      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "update operator=%s", wItem.getid(opr) );
+      NodeOp.mergeNode( opr, node, True, True, True ); // Update Operator
+    }
+  }
   /* DataReq (loco image?) */
   else if( StrOp.equals( wDataReq.name(), NodeOp.getName( node ) ) ) {
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATE_ACTIVELOCS_EVENT );
