@@ -353,6 +353,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     byte* out2 = allocMem(32);
     byte* out3 = allocMem(32);
     Boolean sw     = wLoc.issw( node );
+    const char* id = wLoc.getid( node );
     int addr       = wLoc.getaddr( node );
     int fn         = wLoc.isfn( node );
     int addroffset = 0;
@@ -389,12 +390,12 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     }
 
     if (sw) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d (%s) %s", addr, prot, (dir==1)?"forwards":"backwards" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %s %d (%s) %s", id, addr, prot, (dir==1)?"forwards":"backwards" );
       __setSysMsg(out, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0, 0, 0);
       __setSysMsg(out2, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2, 0, 0);
       /* when changing direction cs2 set speed to 0 internally, so after direction change also send speed */
     } else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d (%s) speedstep=%d %s", addr, prot, (speed * wLoc.getspcnt( node ) / 1000), (dir==1)?"forwards":"backwards");
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %s %d (%s) speedstep=%d %s", id, addr, prot, (speed * wLoc.getspcnt( node ) / 1000), (dir==1)?"forwards":"backwards");
       __setSysMsg(out2, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2, 0, 0);
       /* also send direction to prevent going wrong way when user has changed direction on the cs2 */
       __setSysMsg(out, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0, 0, 0);
@@ -411,6 +412,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     byte* out = allocMem(32);
     int fnchanged  = wFunCmd.getfnchanged(node);
+    const char* id = wFunCmd.getid( node );
     int addr       = wFunCmd.getaddr( node );
     int addroffset = 0;
     char prot[4];
@@ -431,7 +433,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     long address = addr + addroffset;
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "Loc %d (%s) function f%d to %s", addr, prot, fnchanged, __getFunctionState(node, fnchanged)?"on":"off" );
+        "loco %s %d (%s) function f%d to %s", id, addr, prot, fnchanged, __getFunctionState(node, fnchanged)?"on":"off" );
 
     if( fnchanged != -1 ) {
       __setSysMsg(out, 0, CMD_LOCO_FUNCTION , False, 6, address, fnchanged, __getFunctionState(node, fnchanged), 0, 0);

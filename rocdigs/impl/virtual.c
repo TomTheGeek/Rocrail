@@ -331,6 +331,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
 
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
+    const char* id = wLoc.getid( node );
     int   addr = wLoc.getaddr( node );
     int  speed = 0;
     Boolean fn = wLoc.isfn( node );
@@ -348,8 +349,8 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
           speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "speed=%d", speed );
       }
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "addr=%d V=%d(%d) dir=%s lights=%s throttleid=%s",
-          addr, speed, wLoc.getV( node ), wLoc.isdir( node )?"fwd":"rev", fn?"on":"off", wLoc.getthrottleid(node) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "id=%s addr=%d V=%d(%d) dir=%s lights=%s throttleid=%s",
+          id, addr, speed, wLoc.getV( node ), wLoc.isdir( node )?"fwd":"rev", fn?"on":"off", wLoc.getthrottleid(node) );
     }
 
     if( wDigInt.isoverrule(data->ini) ) {
@@ -367,6 +368,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
 
   /* Function command. */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
+    const char* id = wFunCmd.getid( node );
     int   addr = wFunCmd.getaddr( node );
     int fc = wFunCmd.getfnchanged(node);
     int group = wFunCmd.getgroup(node);
@@ -387,7 +389,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     Boolean f14 = wFunCmd.isf14( node );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-            "decoder %d f%d(%d)=%s", addr, fc, group , __getFnState(node,fc)?"on":"off" );
+            "id=%s decoder %d f%d(%d)=%s", id, addr, fc, group , __getFnState(node,fc)?"on":"off" );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
             "decoder %d f0=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s f13=%s f14=%s",
