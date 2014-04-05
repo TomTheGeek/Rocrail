@@ -295,7 +295,7 @@ void Clock::drawNewClock() {
     gc->DrawRoundedRectangle( 1.0, 1.0, w+8, h+8, 5.0);
     gc->DrawText( timestring, 4, 4 );
 
-    SetSize( wxDefaultCoord, wxDefaultCoord, w + 10, h + 10, wxSIZE_FORCE );
+    SetSize( wxDefaultCoord, wxDefaultCoord, w + 10, h + 11, wxSIZE_FORCE );
 
     delete gc;
 
