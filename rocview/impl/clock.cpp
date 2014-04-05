@@ -73,6 +73,7 @@ Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_
   m_Parent = parent;
   start = true;
   run   = true;
+  second = true;
   deviderchanged = false;
   this->showsecondhand = showsecondhand;
   m_Logo  = _img_logo;
@@ -275,7 +276,8 @@ void Clock::drawNewClock() {
     wxPaintDC dc(this);
     wxGraphicsContext* gc = wxGraphicsContext::Create(dc);
 
-    wxString timestring = wxString::Format(_T("%02d:%02d"), hours, minutes);
+    wxString timestring = wxString::Format(_T("%02d%c%02d"), hours, second?':':' ', minutes);
+    second = !second;
 
     wxFont font(18, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     gc->SetFont(font,*wxBLACK);

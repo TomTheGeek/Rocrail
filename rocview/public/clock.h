@@ -67,6 +67,7 @@ class Clock : public wxPanel{
     bool showsecondhand;
     int type;
     int hours, minutes;
+    bool second;
 
 		DECLARE_EVENT_TABLE()
 };
