@@ -1311,7 +1311,7 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean loc
 static Boolean _unLock( iORoute inst, const char* lcid, const char** resblocks, Boolean unlockswitches, Boolean force ) {
   iORouteData o = Data(inst);
   if( force || StrOp.equals( lcid, o->lockedId ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlocking route %s by %s", RouteOp.getId(inst), force?"**force**":lcid );
+    TraceOp.trc( name, force?TRCLEVEL_WARNING:TRCLEVEL_INFO, __LINE__, 9999, "unlocking route %s by %s", RouteOp.getId(inst), force?"**force**":lcid );
     if( !force )
       __checkAction(inst, "unlock");
 
