@@ -771,9 +771,6 @@ void OperatorDlg::onLeaveCar( wxCommandEvent& event ) {
 
   int idx = findCarID(wCar.getid(m_CarProps));
   if( idx != wxNOT_FOUND ) {
-    int action = wxMessageDialog( this, wxGetApp().getMsg("removewarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
-    if( action == wxID_NO )
-      return;
     m_CarList->DeleteItem(idx);
     m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
     m_CarImage->Refresh();
