@@ -73,11 +73,13 @@ public:
     void onCancel( wxCommandEvent& event );
     void onOK( wxCommandEvent& event );
     void onSetPage( wxCommandEvent& event );
-    void onOperatorList( wxCommandEvent& event );
+    void onOperatorlist( wxListEvent& event );
     void onCarListSelected( wxListEvent& event );
     void OnCopy( wxCommandEvent& event );
     void onSetLocation( wxCommandEvent& event ) ;
     iONode getSelected();
+    void setSelection(const char* ID);
+    int findID( const char* ID );
 
 };
 

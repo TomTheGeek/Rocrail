@@ -283,6 +283,10 @@ void OperatorDlg::initLabels() {
 
   m_labVMax->SetLabel( wxGetApp().getMsg( "maxkmh" ) );
 
+  m_OperatorList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
+  m_OperatorList->InsertColumn(1, wxGetApp().getMsg( "location" ), wxLIST_FORMAT_LEFT );
+  m_OperatorList->InsertColumn(2, wxGetApp().getMsg( "locomotive" ), wxLIST_FORMAT_LEFT );
+
   m_CarList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
   m_CarList->InsertColumn(1, wxGetApp().getMsg( "waybill" ), wxLIST_FORMAT_LEFT );
   m_CarList->InsertColumn(2, wxGetApp().getMsg( "location" ), wxLIST_FORMAT_LEFT );
@@ -297,9 +301,10 @@ void OperatorDlg::initLabels() {
 }
 
 
-void OperatorDlg::onOperatorList( wxCommandEvent& event ) {
-  if( m_OperatorList->GetSelection() != wxNOT_FOUND ) {
-    m_Props = (iONode)m_OperatorList->GetClientData(m_OperatorList->GetSelection());
+void OperatorDlg::onOperatorlist( wxListEvent& event ) {
+  int index = event.GetIndex();
+  if( index != wxNOT_FOUND ) {
+    m_Props = (iONode)m_OperatorList->GetItemData( index );
     if( m_Props != NULL )
       initValues();
     else
@@ -373,7 +378,7 @@ void OperatorDlg::initIndex() {
 
   SetTitle(wxGetApp().getMsg( "operatortable" ));
 
-  m_OperatorList->Clear();
+  m_OperatorList->DeleteAllItems();
 
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
@@ -394,27 +399,45 @@ void OperatorDlg::initIndex() {
       for( int i = 0; i < cnt; i++ ) {
         iONode op = (iONode)ListOp.get( list, i );
         const char* id = wOperator.getid( op );
-        m_OperatorList->Append( wxString(id,wxConvUTF8), op );
+        m_OperatorList->InsertItem( i, wxString(id,wxConvUTF8) );
+        m_OperatorList->SetItem( i, 1, wxString(wOperator.getlocation(op), wxConvUTF8) );
+        m_OperatorList->SetItem( i, 2, wxString(wOperator.getlcid(op), wxConvUTF8) );
+        m_OperatorList->SetItemPtrData(i, (wxUIntPtr)op);
       }
       /* clean up the temp. list */
       ListOp.base.del(list);
 
-      if( m_Props != NULL ) {
-        m_OperatorList->SetStringSelection( wxString(wOperator.getid( m_Props ),wxConvUTF8) );
-        m_OperatorList->SetFirstItem( wxString(wOperator.getid( m_Props ),wxConvUTF8) );
-        wxCommandEvent cmd;
-        onOperatorList(cmd);
+      for( int n = 0; n < 3; n++ ) {
+        m_OperatorList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+        int autoheadersize = m_OperatorList->GetColumnWidth(n);
+        m_OperatorList->SetColumnWidth(n, wxLIST_AUTOSIZE);
+        int autosize = m_OperatorList->GetColumnWidth(n);
+        if(autoheadersize > autosize )
+          m_OperatorList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
       }
-      else if( m_OperatorList->GetCount() > 0 ) {
-        //m_OperatorList->SetSelection(0);
-        //wxCommandEvent cmd;
-        //onOperatorList(cmd);
+
+      if( m_Props != NULL ) {
+        setSelection(wOperator.getid( m_Props ));
+      }
+      else if( m_OperatorList->GetItemCount() > 0 ) {
         TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection" );
       }
     }
 
   }
 
+}
+
+
+void OperatorDlg::setSelection(const char* ID) {
+  int size = m_OperatorList->GetItemCount();
+  for( int index = 0; index < size; index++ ) {
+    iONode node = (iONode)m_OperatorList->GetItemData(index);
+    if( StrOp.equals( ID, wOperator.getid(node) ) ) {
+      m_OperatorList->SetItemState(index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      break;
+    }
+  }
 
 }
 
@@ -532,10 +555,23 @@ void OperatorDlg::initConsist() {
 }
 
 
+int OperatorDlg::findID( const char* ID ) {
+  int size = m_OperatorList->GetItemCount();
+  for( int index = 0; index < size; index++ ) {
+    iONode node = (iONode)m_OperatorList->GetItemData(index);
+    if( StrOp.equals( ID, wOperator.getid(node) ) ) {
+      return index;
+    }
+  }
+  return wxNOT_FOUND;
+}
+
+
+
+
 void OperatorDlg::onNewOperator( wxCommandEvent& event ) {
-  int i = m_OperatorList->FindString( _T("NEW") );
+  int i = findID("NEW");
   if( i == wxNOT_FOUND ) {
-    m_OperatorList->Append( _T("NEW") );
     iONode model = wxGetApp().getModel();
     if( model != NULL ) {
       iONode operatorlist = wPlan.getoperatorlist( model );
@@ -548,12 +584,12 @@ void OperatorDlg::onNewOperator( wxCommandEvent& event ) {
         NodeOp.addChild( operatorlist, op );
         wOperator.setid( op, "NEW" );
         m_Props = op;
+        initIndex();
         initValues();
+        setSelection(wOperator.getid( op ));
       }
     }
   }
-  m_OperatorList->SetStringSelection( _T("NEW") );
-  m_OperatorList->SetFirstItem( _T("NEW") );
 }
 
 
