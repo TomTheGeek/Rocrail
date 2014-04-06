@@ -200,6 +200,7 @@ public:
   iONode findBlock( const char* blockid );
   iONode findSensor( const char* sensorid );
   iONode findCar(const char* carid);
+  bool hasCars( const char* bkid );
   iONode findOperator(const char* oprid);
   iONode findWaybill(const char* wbid);
   iONode findBlock4Loc(const char* locid, const char* blockid);

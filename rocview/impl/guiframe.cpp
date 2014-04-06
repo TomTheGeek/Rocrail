@@ -499,6 +499,27 @@ iONode RocGuiFrame::findCar( const char* carid ) {
 }
 
 
+bool RocGuiFrame::hasCars( const char* bkid ) {
+  if( bkid == NULL || StrOp.len(bkid) == 0 )
+    return false;
+
+  iONode model = wxGetApp().getModel();
+  iONode carlist = wPlan.getcarlist( model );
+  if( carlist != NULL ) {
+    int cnt = NodeOp.getChildCnt( carlist );
+    for( int i = 0; i < cnt; i++ ) {
+      iONode car = NodeOp.getChild( carlist, i );
+      const char* location = wCar.getlocation( car );
+
+      if( location != NULL && StrOp.len(location) > 0 && StrOp.equals( location, bkid ) ) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+
 iONode RocGuiFrame::findOperator( const char* oprid ) {
   iONode model = wxGetApp().getModel();
   iONode oprlist = wPlan.getoperatorlist( model );

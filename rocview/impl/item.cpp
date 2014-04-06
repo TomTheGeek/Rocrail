@@ -2991,6 +2991,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
     wBlock.setstate( m_Props, state );
 
+    bool hasCars = wxGetApp().getFrame()->hasCars(wBlock.getid(m_Props));
     // Open block
     if( StrOp.equals( wBlock.open, state ) ) {
       Boolean isReserved    = wBlock.isreserved( node );
@@ -3003,14 +3004,14 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       wBlock.setreserved( m_Props, isReserved );
 
       if( wBlock.issmallsymbol(m_Props) && StrOp.len(locoid) > 0 )
-        l_locidStr = StrOp.fmt( "%s", fifoids!=NULL?fifoids:locoid );
+        l_locidStr = StrOp.fmt( "%s%s", fifoids!=NULL?fifoids:locoid, hasCars?"#":"" );
       else if( showID && wBlock.issmallsymbol(m_Props) )
-        l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
+        l_locidStr = StrOp.fmt( "%s%s", wBlock.getid( node ), hasCars?"#":"" );
       else {
         if(showID && fifoids == NULL)
-          l_locidStr = StrOp.fmt( "%s %s", wBlock.getid( node ), fifoids!=NULL?fifoids:locoid );
+          l_locidStr = StrOp.fmt( "%s%s%s", wBlock.getid( node ), hasCars?"#":" ", fifoids!=NULL?fifoids:locoid );
         else
-          l_locidStr = StrOp.fmt( "%s", fifoids!=NULL?fifoids:locoid );
+          l_locidStr = StrOp.fmt( "%s%s", fifoids!=NULL?fifoids:locoid, hasCars?"#":"" );
       }
 
       // compose the ToolTip and update occupied state
@@ -3070,10 +3071,10 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       // Closed
       else if( StrOp.equals( wBlock.closed, state ) ) {
         if( !wBlock.issmallsymbol(m_Props) ) {
-          l_locidStr = StrOp.fmt( "%s CLOSED", wBlock.getid( node ) );
+          l_locidStr = StrOp.fmt( "%s%sCLOSED", wBlock.getid( node ), hasCars?"#":" " );
         }
         else {
-          l_locidStr = StrOp.fmt( "%s", wBlock.getid( node ) );
+          l_locidStr = StrOp.fmt( "%s%s", wBlock.getid( node ), hasCars?"#":" " );
         }
         occupied = 4;
       }
