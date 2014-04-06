@@ -1841,7 +1841,7 @@ static void __runner( void* threadinst ) {
     obj   udata = NULL;
 
     /* BBT 10ms cycle */
-    if( !data->gomanual && wLoc.isusebbt(data->props) ) {
+    if( !data->gomanual && wLoc.isusebbt(data->props)  && !data->bbtExternalStop ) {
       if( StrOp.equals( wLoc.mode_wait, wLoc.getmode(data->props) ) ) {
         __BBT(loc);
       }
@@ -2109,6 +2109,7 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
   }
 
   /* BBT timers */
+  data->bbtExternalStop = block->hasExtStop(block);
   if( wLoc.isusebbt(data->props) && block != NULL && block->allowBBT(block) && !block->hasExtStop(block) ) {
     if( evt == enter_event && (data->bbtEnter == 0 || !StrOp.equals(blockid, data->bbtEnterBlock) ) ) {
       data->bbtEnterBlock = blockid;
