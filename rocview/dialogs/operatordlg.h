@@ -80,6 +80,7 @@ public:
     iONode getSelected();
     void setSelection(const char* ID);
     int findID( const char* ID );
+    void onTabChanged( wxNotebookEvent& event );
 
 };
 

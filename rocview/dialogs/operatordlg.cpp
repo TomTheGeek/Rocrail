@@ -938,8 +938,17 @@ void OperatorDlg::onSetLocation( wxCommandEvent& event )  {
   wOperator.setid( cmd, wOperator.getid( m_Props ) );
   wOperator.setcmd( cmd, wLoc.block );
   wOperator.setlocation( cmd, m_Location->GetStringSelection().mb_str(wxConvUTF8) );
+  wOperator.setlocation( m_Props, wOperator.getlocation(cmd) );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+  initIndex();
 }
 
+
+void OperatorDlg::onTabChanged( wxNotebookEvent& event ) {
+  if( event.GetSelection() == 2) {
+    initConsist();
+  }
+  event.Skip();
+}
 
