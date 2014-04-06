@@ -884,12 +884,14 @@ static struct ORmx* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = %s", data->device );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "baudrate = 57600 (fix)" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "flow     = %s", wDigInt.getflow(ini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serialOK = False;
   if( !data->dummyio ) {
+    const char* flow = wDigInt.getflow( ini );
     data->serial = SerialOp.inst( data->device );
-    SerialOp.setFlow( data->serial, 0 );
+    SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, flow )?cts:0 );
     SerialOp.setLine( data->serial, 57600, 8, 2, none, wDigInt.isrtsdisabled( ini ) );
     SerialOp.setTimeout( data->serial, wDigInt.gettimeout(ini), wDigInt.gettimeout(ini) );
     data->serialOK = SerialOp.open( data->serial );
