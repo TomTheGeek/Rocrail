@@ -4802,7 +4802,8 @@ void RocGuiFrame::OnLocDeActivate(wxCommandEvent& event) {
 
 
 void RocGuiFrame::OnLocAssignConsist(wxCommandEvent& event) {
-  OperatorDlg* dlg = new OperatorDlg(this, NULL, false);
+  iONode lc = this->findLoc(m_LocID);
+  OperatorDlg* dlg = new OperatorDlg(this, NULL, false, lc==NULL?NULL:wLoc.getblockid(lc));
   if( dlg->ShowModal() == wxID_OK ) {
     iONode props = dlg->getSelected();
     if( props != NULL ) {

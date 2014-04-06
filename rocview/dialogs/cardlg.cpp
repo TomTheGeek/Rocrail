@@ -197,6 +197,7 @@ void CarDlg::initLabels() {
   m_Status->SetString( 1, wxGetApp().getMsg( "loaded" ) );
   m_Status->SetString( 2, wxGetApp().getMsg( "maintenance" ) );
 
+  m_ListAvailableOnly->SetLabel( wxGetApp().getMsg( "showall" ) );
   m_ListAvailableOnly->Enable( !m_bSave );
   m_ListAvailableOnly->SetValue( !m_bSave );
 

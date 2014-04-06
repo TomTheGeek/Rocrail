@@ -41,6 +41,7 @@ class OperatorDlg : public operatordlggen
   bool   m_bSave;
   int    m_TabAlign;
   int    m_SetPage;
+  const char* m_BlockID;
 
   void initLabels();
   void evaluate();
@@ -55,7 +56,7 @@ class OperatorDlg : public operatordlggen
 
 public:
 	/** Constructor */
-	OperatorDlg( wxWindow* parent, iONode p_Props, bool save=true );
+	OperatorDlg( wxWindow* parent, iONode p_Props, bool save=true, const char* blockid=NULL );
 
 	void onNewOperator( wxCommandEvent& event );
     void onDelOperator( wxCommandEvent& event );
@@ -81,6 +82,8 @@ public:
     void setSelection(const char* ID);
     int findID( const char* ID );
     void onTabChanged( wxNotebookEvent& event );
+    void onShowAllOperators( wxCommandEvent& event );
+
 
 };
 

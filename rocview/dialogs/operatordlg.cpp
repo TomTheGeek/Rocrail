@@ -58,7 +58,7 @@
 #include "rocview/xpm/nopict.xpm"
 
 
-OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props, bool save )
+OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props, bool save, const char* blockid )
   :operatordlggen( parent )
 {
   TraceOp.trc( "opdlg", TRCLEVEL_INFO, __LINE__, 9999, "cardlg" );
@@ -66,6 +66,7 @@ OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props, bool save )
   m_Props    = p_Props;
   m_bSave    = save;
   m_CarProps = NULL;
+  m_BlockID  = blockid;
 
   initLabels();
 
@@ -96,6 +97,11 @@ OperatorDlg::OperatorDlg( wxWindow* parent, iONode p_Props, bool save )
   }
   wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, -1 );
   wxPostEvent( m_OperatorBook, event );
+
+  if( m_BlockID == NULL ) {
+    m_ShowAllOperators->SetValue(true);
+    m_ShowAllOperators->Enable(false);
+  }
 
 }
 
@@ -256,6 +262,8 @@ void OperatorDlg::initLabels() {
   m_NewOperator->SetLabel( wxGetApp().getMsg( "new" ) );
   m_DelOperator->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_Copy->SetLabel( wxGetApp().getMsg( "copy" ) );
+  m_ShowAllOperators->SetLabel( wxGetApp().getMsg( "showall" ) );
+
   m_labOperator->SetLabel( wxGetApp().getMsg( "name" ) );
   m_labLocoID->SetLabel( wxGetApp().getMsg( "locomotive" ) );
   m_labLocation->GetStaticBox()->SetLabel( wxGetApp().getMsg( "location" ) );
@@ -396,13 +404,20 @@ void OperatorDlg::initIndex() {
 
       ListOp.sort(list, &__sortID);
       cnt = ListOp.size( list );
+      int idx = 0;
       for( int i = 0; i < cnt; i++ ) {
         iONode op = (iONode)ListOp.get( list, i );
+        if( !m_ShowAllOperators->IsChecked() && m_BlockID != NULL && StrOp.len(m_BlockID) > 0 ) {
+          if( wOperator.getlocation(op) != NULL && StrOp.len(wOperator.getlocation(op)) && !StrOp.equals(m_BlockID, wOperator.getlocation(op)) ) {
+            continue; // not in wanted block
+          }
+        }
         const char* id = wOperator.getid( op );
-        m_OperatorList->InsertItem( i, wxString(id,wxConvUTF8) );
-        m_OperatorList->SetItem( i, 1, wxString(wOperator.getlocation(op), wxConvUTF8) );
-        m_OperatorList->SetItem( i, 2, wxString(wOperator.getlcid(op), wxConvUTF8) );
-        m_OperatorList->SetItemPtrData(i, (wxUIntPtr)op);
+        m_OperatorList->InsertItem( idx, wxString(id,wxConvUTF8) );
+        m_OperatorList->SetItem( idx, 1, wxString(wOperator.getlocation(op), wxConvUTF8) );
+        m_OperatorList->SetItem( idx, 2, wxString(wOperator.getlcid(op), wxConvUTF8) );
+        m_OperatorList->SetItemPtrData(idx, (wxUIntPtr)op);
+        idx++;
       }
       /* clean up the temp. list */
       ListOp.base.del(list);
@@ -950,5 +965,10 @@ void OperatorDlg::onTabChanged( wxNotebookEvent& event ) {
     initConsist();
   }
   event.Skip();
+}
+
+
+void OperatorDlg::onShowAllOperators( wxCommandEvent& event ) {
+  initIndex();
 }
 
