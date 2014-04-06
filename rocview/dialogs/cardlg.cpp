@@ -197,9 +197,9 @@ void CarDlg::initLabels() {
   m_Status->SetString( 1, wxGetApp().getMsg( "loaded" ) );
   m_Status->SetString( 2, wxGetApp().getMsg( "maintenance" ) );
 
-  m_ListAvailableOnly->SetLabel( wxGetApp().getMsg( "showall" ) );
-  m_ListAvailableOnly->Enable( !m_bSave );
-  m_ListAvailableOnly->SetValue( !m_bSave );
+  m_ShowAll->SetLabel( wxGetApp().getMsg( "showall" ) );
+  m_ShowAll->Enable( !m_bSave );
+  m_ShowAll->SetValue( m_bSave );
 
   initLocationCombo();
 
@@ -400,7 +400,7 @@ void CarDlg::initIndex(){
         iONode car = (iONode)ListOp.get( list, i );
         bool doNotList = false;
         const char* id = wCar.getid( car );
-        if( m_ListAvailableOnly->IsChecked() ) {
+        if( !m_ShowAll->IsChecked() ) {
           const char* train = findTrain(id);
           if( m_Train4Add != NULL && StrOp.equals( m_Train4Add, train ) )
             continue; // already belongs to this train
@@ -460,7 +460,7 @@ void CarDlg::initIndex(){
         setSelection(wCar.getid( m_Props ));
 
       }
-      else if(m_CarList2->GetItemCount() > 0 && !m_ListAvailableOnly->IsChecked() ) {
+      else if(m_CarList2->GetItemCount() > 0 && m_ShowAll->IsChecked() ) {
         TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection" );
         m_CarList2->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
         m_Props = (iONode)m_CarList2->GetItemData(0);
