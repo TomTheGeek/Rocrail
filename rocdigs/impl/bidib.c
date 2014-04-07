@@ -2988,9 +2988,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
       type[i] = (pdata[i*2+2] >> 6);
     }
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"BM port %d reports loco %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",
-        port, locoAddr[0], locoAddr[1], locoAddr[2], locoAddr[3], locoAddr[4], locoAddr[5], locoAddr[6], locoAddr[7], locoAddr[8],
-        locoAddr[9], locoAddr[10], locoAddr[11], locoAddr[12], locoAddr[13], locoAddr[14], locoAddr[15]);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"BM port %d reports loco %d, %d, %d, %d",
+        port, locoAddr[0], locoAddr[1], locoAddr[2], locoAddr[3]);
     if( bidibnode != NULL && locoAddr > 0 ) {
       bidibnode->occ[port] = True;
       __handleMultiAddrSensor(bidib, bidibnode, pdata[0], bidibnode->occ[port], locoAddr, type, bidibnode->bmload[port], cnt );
