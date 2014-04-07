@@ -2203,6 +2203,20 @@ static void __setCurBlock4Train(iOLoc inst, const char* id) {
 }
 
 
+static Boolean __matchTrainIdent(iOLoc inst, const char* ident1, const char* ident2, const char* ident3, const char* ident4 ) {
+  iOLocData data = Data(inst);
+  Boolean match = False;
+
+  if( wLoc.gettrain( data->props) != NULL && StrOp.len(wLoc.gettrain( data->props)) > 0 ) {
+    iOOperator train = ModelOp.getOperator(AppOp.getModel(), wLoc.gettrain( data->props) );
+    if( train != NULL ) {
+      match = OperatorOp.matchIdent(train, ident1, ident2, ident3, ident4 );
+    }
+  }
+  return match;
+}
+
+
 static void __calcTrainLen(iOLoc inst) {
   iOLocData data = Data(inst);
   Boolean report = False;
@@ -3593,6 +3607,9 @@ static Boolean _matchIdent( iOLoc loc, const char* ident, const char* ident2, co
     };
     StrTokOp.base.del( consist );
   }
+
+  if( !match )
+    match = __matchTrainIdent(loc, ident, ident2, ident3, ident4);
 
   return match;
 }

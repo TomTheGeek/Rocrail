@@ -2210,6 +2210,13 @@
       <param name="inst" vt="this" remark="Operator instance"/>
       <param name="bkid" vt="const char*" remark="Block ID"/>
     </fun>
+    <fun name="matchIdent" vt="Boolean">
+      <param name="inst" vt="this" remark="Operator instance"/>
+      <param name="ident1" vt="const char*" remark="Loco ident code"/>
+      <param name="ident2" vt="const char*" remark="Loco ident code"/>
+      <param name="ident3" vt="const char*" remark="Loco ident code"/>
+      <param name="ident4" vt="const char*" remark="Loco ident code"/>
+    </fun>
     <data>
       <var name="props" vt="iONode"/>
     </data>

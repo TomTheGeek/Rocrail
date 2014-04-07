@@ -295,6 +295,38 @@ static void _setLocality( struct OOperator* inst, const char* bkid ) {
 }
 
 
+static Boolean _matchIdent( struct OOperator* inst, const char* ident1, const char* ident2, const char* ident3, const char* ident4 ) {
+  iOOperatorData data = Data(inst);
+  Boolean match = False;
+  iOStrTok tok = StrTokOp.inst(wOperator.getcarids(data->props), ',');
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    iOCar car = ModelOp.getCar(AppOp.getModel(), StrTokOp.nextToken(tok) );
+    if( car != NULL ) {
+      if( ident1 != NULL && StrOp.equals(ident1, CarOp.getIdent(car) ) ) {
+        match == True;
+        break;
+      }
+      else if( ident2 != NULL && StrOp.equals(ident2, CarOp.getIdent(car) ) ) {
+        match == True;
+        break;
+      }
+      else if( ident3 != NULL && StrOp.equals(ident3, CarOp.getIdent(car) ) ) {
+        match == True;
+        break;
+      }
+      else if( ident4 != NULL && StrOp.equals(ident4, CarOp.getIdent(car) ) ) {
+        match == True;
+        break;
+      }
+
+    }
+  }
+  StrTokOp.base.del(tok);
+
+  return match;
+}
+
+
 static int _getLen( struct OOperator* inst, int* trainweight ) {
   iOOperatorData data = Data(inst);
   /* ToDo: Calculate consist length. */
