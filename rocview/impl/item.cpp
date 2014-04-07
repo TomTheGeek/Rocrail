@@ -2991,7 +2991,8 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
     wBlock.setstate( m_Props, state );
 
-    bool hasCars = wxGetApp().getFrame()->hasCars(wBlock.getid(m_Props));
+    char* carList = wxGetApp().getFrame()->listCars(wBlock.getid(m_Props));
+    bool hasCars = (carList==NULL ? false:true);
     // Open block
     if( StrOp.equals( wBlock.open, state ) ) {
       Boolean isReserved    = wBlock.isreserved( node );
@@ -3016,7 +3017,12 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
       // compose the ToolTip and update occupied state
       if( StrOp.len( locoid ) > 0 ) {
-        char* tip = StrOp.fmt( wxGetApp().getMsg("clickblock").mb_str(wxConvUTF8), fifoids!=NULL?fifoids:locoid );
+        char* tip = NULL;
+        if( hasCars )
+          tip = StrOp.fmt( "%s#%s", fifoids!=NULL?fifoids:locoid, carList );
+        else
+          tip = StrOp.fmt( wxGetApp().getMsg("clickblock").mb_str(wxConvUTF8), fifoids!=NULL?fifoids:locoid );
+
         StrOp.free(m_Tip);
         m_Tip = StrOp.fmt("%s: %s", wBlock.getid( node ), tip);
         StrOp.free(tip);
@@ -3027,9 +3033,14 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
         occupied = StrOp.equals(wBlock.closed,wBlock.getstate( node ))?4:occupied;
       }
       else {
+        char* tip = NULL;
+        if( hasCars )
+          tip = StrOp.fmt( "%s: %s", wBlock.getid( node ), carList );
+        else
+          tip = StrOp.fmt( "%s", wBlock.getid( node ) );
         occupied = isAcceptIdent ? 7:occupied;
         StrOp.free(m_Tip);
-        m_Tip = StrOp.dup(wBlock.getid( node ));
+        m_Tip = tip;
         showTooltip(wxGetApp().getFrame()->isTooltip());
       }
 
@@ -3071,10 +3082,10 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       // Closed
       else if( StrOp.equals( wBlock.closed, state ) ) {
         if( !wBlock.issmallsymbol(m_Props) ) {
-          l_locidStr = StrOp.fmt( "%s%sCLOSED", wBlock.getid( node ), hasCars?"#":" " );
+          l_locidStr = StrOp.fmt( "%s%sCLOSED %s", wBlock.getid( node ), hasCars?"#":" ", hasCars?carList:"" );
         }
         else {
-          l_locidStr = StrOp.fmt( "%s%s", wBlock.getid( node ), hasCars?"#":" " );
+          l_locidStr = StrOp.fmt( "%s%s%s", wBlock.getid( node ), hasCars?"#":" ", hasCars?carList:"" );
         }
         occupied = 4;
       }
@@ -3110,6 +3121,9 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       showTooltip(wxGetApp().getFrame()->isTooltip());
 
     }
+
+    if( carList != NULL )
+      StrOp.free(carList);
 
     TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "id=[%s] occupied=[%d] rotate=[%d] state=[%s] locoid=[%s]",
         id, occupied, m_RotateSym, state, locoid );

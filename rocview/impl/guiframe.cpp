@@ -499,9 +499,11 @@ iONode RocGuiFrame::findCar( const char* carid ) {
 }
 
 
-bool RocGuiFrame::hasCars( const char* bkid ) {
+char* RocGuiFrame::listCars( const char* bkid ) {
   if( bkid == NULL || StrOp.len(bkid) == 0 )
-    return false;
+    return NULL;
+
+  char* carList = NULL;
 
   iONode model = wxGetApp().getModel();
   iONode carlist = wPlan.getcarlist( model );
@@ -512,11 +514,13 @@ bool RocGuiFrame::hasCars( const char* bkid ) {
       const char* location = wCar.getlocation( car );
 
       if( location != NULL && StrOp.len(location) > 0 && StrOp.equals( location, bkid ) ) {
-        return true;
+        if( carList != NULL )
+          carList = StrOp.cat( carList, ",");
+        carList = StrOp.cat( carList, wCar.getid( car ));
       }
     }
   }
-  return false;
+  return carList;
 }
 
 
