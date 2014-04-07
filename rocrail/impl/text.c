@@ -258,7 +258,7 @@ static void* __event( void* inst, const void* evt ) {
   char min[8];
 
   if( node != NULL && StrOp.equals( wText.name(), NodeOp.getName(node))) {
-    iOLoc       lc = ModelOp.getLocByIdent(AppOp.getModel(), wText.getreflcid(node), True);
+    iOLoc       lc = ModelOp.getLocByIdent(AppOp.getModel(), wText.getreflcid(node), NULL, NULL, NULL, True);
     iIBlockBase bk = ModelOp.getBlock(AppOp.getModel(), wText.getrefbkid(node));
 
     if( lc == NULL )

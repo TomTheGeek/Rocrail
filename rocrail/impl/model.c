@@ -2787,7 +2787,7 @@ static iOLoc _getLocByAddress( iOModel inst, int addr, const char* iid ) {
   return NULL;
 }
 
-static iOLoc _getLocByIdent( iOModel inst, const char* ident, Boolean dir ) {
+static iOLoc _getLocByIdent( iOModel inst, const char* ident1, const char* ident2, const char* ident3, const char* ident4, Boolean dir ) {
   iOModelData data = Data(inst);
   int i = 0;
   int cnt = ListOp.size( data->locList );
@@ -2796,18 +2796,28 @@ static iOLoc _getLocByIdent( iOModel inst, const char* ident, Boolean dir ) {
     char locoAddrStr[32];
     StrOp.fmtb(locoAddrStr, "%d", LocOp.getAddress(loc) );
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s ident=%s, event ident=%s ", LocOp.getId(loc), LocOp.getIdent(loc), ident );
-    if( StrOp.equals(LocOp.getIdent(loc), ident) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s ident=%s, event ident=%s, %s, %s, %s",
+        LocOp.getId(loc), LocOp.getIdent(loc), ident1!=NULL?ident1:"-", ident2!=NULL?ident2:"-", ident3!=NULL?ident3:"-", ident4!=NULL?ident4:"-" );
+    if( LocOp.matchIdent(loc, ident1, ident2, ident3, ident4) ) {
       return loc;
     }
-    else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident) ) {
+    else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident1) ) {
+      return loc;
+    }
+    else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident2) ) {
+      return loc;
+    }
+    else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident3) ) {
+      return loc;
+    }
+    else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident4) ) {
       return loc;
     }
   }
 
   if(wCtrl.iscreateguestonbidi(wRocRail.getctrl( AppOp.getIni()))) {
     /* Guest loco? */
-    iOLoc loco = ModelOp.getLoc( inst, ident, NULL, True );
+    iOLoc loco = ModelOp.getLoc( inst, ident1, NULL, True );
     if( loco != NULL ) {
       iONode locoProps = LocOp.base.properties(loco);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set gen loco %s bidi direction to %s", LocOp.getId(loco), dir?"fwd":"rev" );
@@ -3650,7 +3660,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     }
     else {
       if( cmd != NULL && StrOp.equals( wLoc.discover, cmd ) ) {
-        iOLoc lc = ModelOp.getLocByIdent(inst, ident, True);
+        iOLoc lc = ModelOp.getLocByIdent(inst, ident, NULL, NULL, NULL, True);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "discover loco %s with addr=%d lc=%X", ident, addr, lc );
         if( lc != NULL ) {
           iONode props = LocOp.base.properties(lc);

@@ -918,7 +918,10 @@
     </fun>
     <fun name="getLocByIdent" vt="iOLoc">
       <param name="inst" vt="this" remark="Model instance"/>
-      <param name="ident" vt="const char*" remark="Loc identifier to search for"/>
+      <param name="ident1" vt="const char*" remark="Loc identifier to search for"/>
+      <param name="ident2" vt="const char*" remark="Loc identifier to search for"/>
+      <param name="ident3" vt="const char*" remark="Loc identifier to search for"/>
+      <param name="ident4" vt="const char*" remark="Loc identifier to search for"/>
       <param name="dir" vt="Boolean" remark="Loco direction"/>
     </fun>
     <fun name="getCarByIdent" vt="iOCar">
