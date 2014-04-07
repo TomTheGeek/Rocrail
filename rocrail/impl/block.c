@@ -379,7 +379,7 @@ static void __measureVelocity( iOBlock inst, int event ) {
 /**
  * event listener callback for all fbevents
  */
-static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, iONode fbevt, Boolean dir ) {
+static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const char* ident, const char* ident2, const char* ident3, const char* ident4, int val, int wheelcount, iONode fbevt, Boolean dir ) {
   iOBlockData data = Data(inst);
   iOLoc        loc = NULL;
   obj      manager = (obj)(data->manager == NULL ? inst:data->manager);
@@ -430,7 +430,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
   }
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block[%s] fbid=%s state=%s ident=%s fbfrom=%s from=%s byroute=%s",
-      data->id, key, puls?"true":"false", ident,
+      data->id, key, puls?"true":"false", ident != NULL ? ident:"-",
                  fbevt != NULL ? wFeedbackEvent.getfrom(fbevt):"NULL",
                  data->fromBlockId?data->fromBlockId:"?",
                  data->byRouteId?data->byRouteId:"?" );
@@ -552,7 +552,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
         (StrOp.len(ident) > 0 && StrOp.len(locident) == 0) )
     {
       /* TODO: Check MU consist */
-      if( LocOp.matchIdent(loc, ident) ) {
+      if( LocOp.matchIdent(loc, ident, ident2, ident3, ident4) ) {
         TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "ident matched: block=%s loc(MU)=%d ident=%s",
             data->id, locident, ident );
       }
@@ -726,10 +726,10 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
   return countwheels;
 }
 
-static void _fbEvent( obj inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, Boolean dir ) {
+static void _fbEvent( obj inst, Boolean puls, const char* id, const char* ident, const char* ident2, const char* ident3, const char* ident4, int val, int wheelcount, Boolean dir ) {
   iOBlockData data = Data(inst);
 
-  if( _event( (iIBlockBase)inst, puls, id, ident, val, wheelcount, NULL, dir ) ) {
+  if( _event( (iIBlockBase)inst, puls, id, ident, ident2, ident3, ident4, val, wheelcount, NULL, dir ) ) {
     if( wheelcount > 0 ) {
       data->wheelcount = wheelcount;
       data->wheelcounterId = id;

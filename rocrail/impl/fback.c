@@ -486,7 +486,8 @@ static void _event( iOFBack inst, iONode nodeC ) {
 
   /* Call listener. */
   if( data->listenerFun != NULL ) {
-    data->listenerFun( data->listenerObj, data->state, FBackOp.getId( inst ), wFeedback.getidentifier( nodeC ),
+    data->listenerFun( data->listenerObj, data->state, FBackOp.getId( inst ),
+        wFeedback.getidentifier( nodeC ), wFeedback.getidentifier2( nodeC ), wFeedback.getidentifier3( nodeC ), wFeedback.getidentifier4( nodeC ),
         wFeedback.getval( nodeC ), wFeedback.getwheelcount( nodeC ) + data->wheelcount, wFeedback.isdirection(nodeC) );
     hasListener = True;
   }
@@ -732,7 +733,7 @@ static void _doTimedOff( iOFBack inst ) {
           "timed off event for %s", FBackOp.getId( inst ));
 
       if( data->listenerFun != NULL ) {
-        data->listenerFun( data->listenerObj, data->state, FBackOp.getId( inst ), 0, 0, 0, True );
+        data->listenerFun( data->listenerObj, data->state, FBackOp.getId( inst ), NULL, NULL, NULL, NULL, 0, 0, True );
       }
 
       __ctcAction( inst );

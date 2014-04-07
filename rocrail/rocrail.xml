@@ -385,7 +385,7 @@
 
 
   <object name="FBack" interface="HtmlInt" use="node,list" include="htmlint" remark="Feedback object">
-    <typedef def="void (*fback_listener)(obj,Boolean,const char*,const char*,int,int,Boolean)"/>
+    <typedef def="void (*fback_listener)(obj,Boolean,const char*,const char*,const char*,const char*,const char*,int,int,Boolean)"/>
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Feedback node"/>
     </fun>
@@ -664,7 +664,10 @@
     </fun>
     <fun name="matchIdent" vt="Boolean">
       <param name="inst" vt="this" remark="Loco instance"/>
-      <param name="ident" vt="const char*" remark="Loco ident code"/>
+      <param name="ident1" vt="const char*" remark="Loco ident code"/>
+      <param name="ident2" vt="const char*" remark="Loco ident code"/>
+      <param name="ident3" vt="const char*" remark="Loco ident code"/>
+      <param name="ident4" vt="const char*" remark="Loco ident code"/>
     </fun>
     <fun name="getCarCount" vt="int">
       <param name="inst" vt="this" remark="Loco instance"/>

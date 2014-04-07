@@ -404,7 +404,7 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
 
 
 /**  */
-static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* ident ,int val, int wheelcount ,iONode evtDescr, Boolean dir ) {
+static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const char* ident, const char* ident2, const char* ident3, const char* ident4 ,int val, int wheelcount ,iONode evtDescr, Boolean dir ) {
   iOStageData data = Data(inst);
   iONode section = (iONode)MapOp.get( data->fbMap, id );
   Boolean endSection = __isEndSection(inst, section);
@@ -623,8 +623,8 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
   return True;
 }
 
-static void _fbEvent( obj inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, Boolean dir ) {
-  _event( (iIBlockBase)inst, puls, id, ident, val, wheelcount, NULL, dir );
+static void _fbEvent( obj inst, Boolean puls, const char* id, const char* ident, const char* ident2, const char* ident3, const char* ident4, int val, int wheelcount, Boolean dir ) {
+  _event( (iIBlockBase)inst, puls, id, ident, ident2, ident3, ident4, val, wheelcount, NULL, dir );
 }
 
 

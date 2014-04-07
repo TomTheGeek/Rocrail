@@ -460,7 +460,7 @@ static Boolean __isSet(obj inst, const char* strState) {
 }
 
 
-static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, Boolean dir ) {
+static void __fbEvent( obj inst, Boolean puls, const char* id, const char* ident, const char* ident2, const char* ident3, const char* ident4, int val, int wheelcount, Boolean dir ) {
   iOSwitchData data = Data(inst);
   const char* strState = __checkFbState( (iOSwitch)inst );
   Boolean isSet = __isSet(inst, strState);

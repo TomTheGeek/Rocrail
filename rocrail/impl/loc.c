@@ -3554,11 +3554,17 @@ static Boolean _isGoManual( iOLoc loc ) {
 }
 
 
-static Boolean _matchIdent( iOLoc loc, const char* ident ) {
+static Boolean _matchIdent( iOLoc loc, const char* ident, const char* ident2, const char* ident3, const char* ident4 ) {
   iOLocData data = Data(loc);
   Boolean match = False;
 
   if( StrOp.equals( wLoc.getidentifier( data->props ), ident) )
+    match = True;
+  else if( ident2 != NULL && StrOp.equals( wLoc.getidentifier( data->props ), ident2) )
+    match = True;
+  else if( ident3 != NULL && StrOp.equals( wLoc.getidentifier( data->props ), ident3) )
+    match = True;
+  else if( ident4 != NULL && StrOp.equals( wLoc.getidentifier( data->props ), ident4) )
     match = True;
   else {
     /* check consist */
@@ -3567,7 +3573,19 @@ static Boolean _matchIdent( iOLoc loc, const char* ident ) {
       const char* tok = StrTokOp.nextToken( consist );
       iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL, False );
       if( consistloc != NULL ) {
-        if( ident == LocOp.getIdent(consistloc) ) {
+        if( StrOp.equals( ident, LocOp.getIdent(consistloc) ) ) {
+          match = True;
+          break;
+        }
+        else if( ident2 != NULL && StrOp.equals( ident2, LocOp.getIdent(consistloc) ) ) {
+          match = True;
+          break;
+        }
+        else if( ident3 != NULL && StrOp.equals( ident3, LocOp.getIdent(consistloc) ) ) {
+          match = True;
+          break;
+        }
+        else if( ident4 != NULL && StrOp.equals( ident4, LocOp.getIdent(consistloc) ) ) {
           match = True;
           break;
         }

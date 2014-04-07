@@ -473,7 +473,7 @@ static void _fbEvent( obj inst ,Boolean state ,const char* id ,const char* ident
 
           /* dispatch */
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dispatching [%s]", key);
-          block->event( block, state, id, ident, val, 0, fbevt, True );
+          block->event( block, state, id, ident, NULL, NULL, NULL, val, 0, fbevt, True );
         }
         break;
       }
@@ -1273,12 +1273,12 @@ static const char* _getInLoc( iIBlockBase inst ) {
   return block != NULL ? block->getInLoc( block ) : "";
 }
 
-static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const char* ident, int val, int wheelcount, iONode fbevt, Boolean dir ) {
+static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const char* ident, const char* ident2, const char* ident3, const char* ident4, int val, int wheelcount, iONode fbevt, Boolean dir ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "event");
   /* dispatch to active tracke block */
   if( block != NULL && !data->pending ) {
-    return block->event( block, puls, id, ident, val, 0, fbevt, dir );
+    return block->event( block, puls, id, ident, NULL, NULL, NULL, val, 0, fbevt, dir );
   }
   return False;
 }

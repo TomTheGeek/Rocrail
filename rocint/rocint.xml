@@ -344,7 +344,10 @@
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="puls" vt="Boolean" remark="event value"/>
       <param name="id" vt="const char*" remark="event(fb) ID"/>
-      <param name="ident" vt="const char*" remark="ID of object which triggered the event."/>
+      <param name="ident1" vt="const char*" remark="ID of object which triggered the event."/>
+      <param name="ident2" vt="const char*" remark="ID of object which triggered the event."/>
+      <param name="ident3" vt="const char*" remark="ID of object which triggered the event."/>
+      <param name="ident4" vt="const char*" remark="ID of object which triggered the event."/>
       <param name="val" vt="int" remark="Value of object which triggered the event."/>
       <param name="wheelcount" vt="int" remark="Number of wheels counted sofar."/>
       <param name="evtDescr" vt="iONode" remark="event description: optional"/>
