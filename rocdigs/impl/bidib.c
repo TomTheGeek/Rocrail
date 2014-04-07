@@ -1430,6 +1430,60 @@ static void __handleSensor(iOBiDiB bidib, iOBiDiBNode bidibnode, int addr, Boole
 }
 
 
+static void __handleMultiAddrSensor(iOBiDiB bidib, iOBiDiBNode bidibnode, int addr, Boolean state, int* locoAddr, int* type, int load, int cnt ) {
+  iOBiDiBData data = Data(bidib);
+  char* ident = NULL;
+  char identaddr[32] = {'\0'};
+  int i = 0;
+
+  /* Type:
+    00  Lokadresse, Fahrtrichtung vorwärts
+    10  Lokadresse, Fahrtrichtung rückwärts
+    01  Accessory-Adresse
+    11  Extended Accessory
+  */
+
+  addr++; /* increase address with one */
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+      "sensor bus=%08X, addr=%d, state=%s, first ident=%d of %d, type=%d, username=%s",
+      bidibnode->uid, addr, state?"occ":"free", locoAddr[0], cnt, type[0], bidibnode->username );
+
+  for( i = 0; i < cnt; i++ ) {
+    if( type[i] == -1 || type[i] == 0 || type[i] == 2 ) {
+      if( ident != NULL )
+        ident = StrOp.cat( ident, "," );
+
+      StrOp.fmtb(identaddr, "%d", locoAddr);
+      ident = StrOp.cat( ident, identaddr );
+    }
+    else if( type[i] == 1 || type[i] == 3 ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "accessory events not jet supported" );
+    }
+  }
+
+  /* occ event */
+  /* inform listener: Node3 */
+  iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+  wFeedback.setbus( nodeC, bidibnode->uid );
+  wFeedback.setaddr( nodeC, addr );
+  wFeedback.setload( nodeC, load );
+  wFeedback.setfbtype( nodeC, wFeedback.fbtype_sensor );
+  if( bidibnode != NULL )
+    wItem.setuidname(nodeC, bidibnode->username);
+
+  if( data->iid != NULL )
+    wFeedback.setiid( nodeC, data->iid );
+
+  wFeedback.setstate( nodeC, state );
+  wFeedback.setidentifier( nodeC, ident);
+  if( type[0] == 0 || type[0] == 2 )
+    wFeedback.setdirection( nodeC, type == 0 ? True:False );
+
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+}
+
+
 static void __handleMultipleSensors(iOBiDiB bidib, iOBiDiBNode bidibnode, const byte* pdata, int size) {
   iOBiDiBData data = Data(bidib);
 
@@ -2912,21 +2966,34 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   }
 
   case MSG_BM_ADDRESS:
-  { //             MNUM, ADDRL, ADDRH
+  { //             MNUM, ADDRL, ADDRH, [ADDRL, ADDRH], ... max. 16 addresses
     // 06 00 0C A3 04    5E     13 C4
-    int locoAddr = (pdata[2]&0x3F) * 256 + pdata[1];
-    int type = (pdata[2] >> 6);
+    int locoAddr[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    int type[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    int cnt = 0;
+    int i = 0;
     int port = pdata[0] & 0xFF;
 
     if( port > 127 ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,"BM port out of range: %d", port);
+      break;
     }
-    else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"BM port %d reports loco %d", port, locoAddr);
-      if( bidibnode != NULL && locoAddr > 0 ) {
-        bidibnode->occ[port] = True;
-        __handleSensor(bidib, bidibnode, pdata[0], bidibnode->occ[port], locoAddr, type, bidibnode->bmload[port] );
-      }
+
+    locoAddr[0] = (pdata[2]&0x3F) * 256 + pdata[1];
+    type[0] = (pdata[2] >> 6);
+
+    cnt = (datasize - 1) / 2;
+    for( i = 0; i < cnt; i++ ) {
+      locoAddr[i] = (pdata[i*2+2]&0x3F) * 256 + pdata[i*2+1];
+      type[i] = (pdata[i*2+2] >> 6);
+    }
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"BM port %d reports loco %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",
+        port, locoAddr[0], locoAddr[1], locoAddr[2], locoAddr[3], locoAddr[4], locoAddr[5], locoAddr[6], locoAddr[7], locoAddr[8],
+        locoAddr[9], locoAddr[10], locoAddr[11], locoAddr[12], locoAddr[13], locoAddr[14], locoAddr[15]);
+    if( bidibnode != NULL && locoAddr > 0 ) {
+      bidibnode->occ[port] = True;
+      __handleMultiAddrSensor(bidib, bidibnode, pdata[0], bidibnode->occ[port], locoAddr, type, bidibnode->bmload[port], cnt );
     }
     break;
   }
