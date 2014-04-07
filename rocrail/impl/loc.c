@@ -623,8 +623,8 @@ static void __broadcastLocoProps( iOLoc inst, const char* cmd, iONode node, cons
   if( blockId != NULL )
     wLoc.setdestblockid(node, blockId );
   else
-    wLoc.setblockid( node, data->curBlock );
-  wLoc.setdestblockid( node, data->destBlock );
+    wLoc.setdestblockid( node, data->destBlock );
+  wLoc.setblockid( node, data->curBlock );
   wLoc.setfn( node, wLoc.isfn(data->props) );
   wLoc.setruntime( node, wLoc.getruntime(data->props) );
   wLoc.setmtime( node, wLoc.getmtime(data->props) );
