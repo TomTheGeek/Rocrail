@@ -3646,7 +3646,11 @@ static void _setBlockEnterSide( iOLoc loc, Boolean enterside, const char* blockI
   ModelOp.setBlockOccupancy( AppOp.getModel(), data->curBlock, wLoc.getid(data->props), False, wLoc.isplacing( data->props) ? 1:2, wLoc.isblockenterside( data->props) ? 1:2, NULL );
 
   /* Broadcast to clients. */
-  __broadcastLocoProps( loc, NULL, NULL, blockId );
+  if( blockId != NULL )
+    __broadcastLocoProps( loc, NULL, NULL, blockId );
+  else
+    __broadcastLocoProps( loc, NULL, NULL, data->curBlock );
+
 }
 
 
