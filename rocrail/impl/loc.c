@@ -2359,7 +2359,7 @@ static void _informBlock( iOLoc inst, const char* destid, const char* curid ) {
   iOLocData data = Data(inst);
   data->destBlock = destid;
   data->curBlock  = curid;
-  __setCurBlock4Train(inst, curid);
+  __setCurBlock4Train(inst, destid);
   /* Broadcast to clients. */
   __broadcastLocoProps( inst, NULL, NULL, NULL );
 }
