@@ -1432,9 +1432,11 @@ static void __handleSensor(iOBiDiB bidib, iOBiDiBNode bidibnode, int addr, Boole
 
 static void __handleMultiAddrSensor(iOBiDiB bidib, iOBiDiBNode bidibnode, int addr, Boolean state, int* locoAddr, int* type, int load, int cnt ) {
   iOBiDiBData data = Data(bidib);
-  char* ident = NULL;
-  char identaddr[32] = {'\0'};
+  char ident[32] = {'\0'};
   int i = 0;
+  int idx = 0;
+  Boolean report = False;
+  iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
   /* Type:
     00  Lokadresse, Fahrtrichtung vorwärts
@@ -1444,43 +1446,51 @@ static void __handleMultiAddrSensor(iOBiDiB bidib, iOBiDiBNode bidibnode, int ad
   */
 
   addr++; /* increase address with one */
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-      "sensor bus=%08X, addr=%d, state=%s, first ident=%d of %d, type=%d, username=%s",
-      bidibnode->uid, addr, state?"occ":"free", locoAddr[0], cnt, type[0], bidibnode->username );
 
   for( i = 0; i < cnt; i++ ) {
     if( type[i] == -1 || type[i] == 0 || type[i] == 2 ) {
-      if( ident != NULL )
-        ident = StrOp.cat( ident, "," );
-
-      StrOp.fmtb(identaddr, "%d", locoAddr);
-      ident = StrOp.cat( ident, identaddr );
+      report = True;
+      StrOp.fmtb(ident, "%d", locoAddr[i]);
+      if( idx == 0 ) wFeedback.setidentifier( nodeC, ident);
+      else if( idx == 1 ) wFeedback.setidentifier2( nodeC, ident);
+      else if( idx == 2 ) wFeedback.setidentifier3( nodeC, ident);
+      else if( idx == 3 ) wFeedback.setidentifier4( nodeC, ident);
+      idx++;
     }
     else if( type[i] == 1 || type[i] == 3 ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "accessory events not jet supported" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "accessory events not supported" );
     }
   }
 
-  /* occ event */
-  /* inform listener: Node3 */
-  iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+  if( report ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "sensor bus=%08X addr=%d state=%s ident=%s,%s,%s,%s cnt=%d username=%s",
+        bidibnode->uid, addr, state?"occ":"free",
+        wFeedback.getidentifier(nodeC), wFeedback.getidentifier2(nodeC), wFeedback.getidentifier3(nodeC), wFeedback.getidentifier4(nodeC),
+        cnt, bidibnode->username );
 
-  wFeedback.setbus( nodeC, bidibnode->uid );
-  wFeedback.setaddr( nodeC, addr );
-  wFeedback.setload( nodeC, load );
-  wFeedback.setfbtype( nodeC, wFeedback.fbtype_sensor );
-  if( bidibnode != NULL )
-    wItem.setuidname(nodeC, bidibnode->username);
+    /* occ event */
+    /* inform listener: Node3 */
+    wFeedback.setbus( nodeC, bidibnode->uid );
+    wFeedback.setaddr( nodeC, addr );
+    wFeedback.setload( nodeC, load );
+    wFeedback.setfbtype( nodeC, wFeedback.fbtype_sensor );
+    if( bidibnode != NULL )
+      wItem.setuidname(nodeC, bidibnode->username);
 
-  if( data->iid != NULL )
-    wFeedback.setiid( nodeC, data->iid );
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
 
-  wFeedback.setstate( nodeC, state );
-  wFeedback.setidentifier( nodeC, ident);
-  if( type[0] == 0 || type[0] == 2 )
-    wFeedback.setdirection( nodeC, type == 0 ? True:False );
+    wFeedback.setstate( nodeC, state );
+    if( type[0] == 0 || type[0] == 2 )
+      wFeedback.setdirection( nodeC, type == 0 ? True:False );
 
-  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+  else {
+    NodeOp.base.del(nodeC);
+  }
+
 }
 
 
@@ -2983,7 +2993,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     type[0] = (pdata[2] >> 6);
 
     cnt = (datasize - 1) / 2;
-    for( i = 0; i < cnt; i++ ) {
+    for( i = 0; i < cnt && i < 16; i++ ) {
       locoAddr[i] = (pdata[i*2+2]&0x3F) * 256 + pdata[i*2+1];
       type[i] = (pdata[i*2+2] >> 6);
     }

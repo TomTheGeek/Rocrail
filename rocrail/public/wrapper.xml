@@ -1863,7 +1863,10 @@
         <var name="ori" vt="string" defval="NULL" range="north,south,west,east" remark="Orientation in the plan."/>
         <var name="val" vt="int" defval="0" remark="multiple port value"/>
         <var name="accnr" vt="int" defval="0" range="0-*" required="false" remark="Accessory number."/>
-        <var name="identifier" vt="string" defval="" remark="Loc identifier"/>
+        <var name="identifier" vt="string" defval="" remark="Loc identifier 1"/>
+        <var name="identifier2" vt="string" defval="" remark="Loc identifier 2"/>
+        <var name="identifier3" vt="string" defval="" remark="Loc identifier 3"/>
+        <var name="identifier4" vt="string" defval="" remark="Loc identifier 4"/>
         <var name="category" vt="int" defval="0" remark="Train category."/>
         <var name="counter" vt="int" defval="0" remark="occupied counter"/>
         <var name="carcount" vt="int" defval="0" remark="car counter (only for client info)"/>
