@@ -312,7 +312,8 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       wFeedback.setstate( node, !state);
     wFeedback.setiid(node, data->iid);
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s", addr, state?"true":"false" );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "simulate fb addr=%d state=%s ident=%s,%s,%s,%s",
+        addr, state?"true":"false", wFeedback.getidentifier(node), wFeedback.getidentifier2(node), wFeedback.getidentifier3(node), wFeedback.getidentifier4(node) );
     rsp = (iONode)NodeOp.base.clone( node );
 
     if( wDigInt.isfbreset( data->ini ) && state ) {

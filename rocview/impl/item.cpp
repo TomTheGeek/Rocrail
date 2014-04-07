@@ -900,7 +900,20 @@ void Symbol::OnIdentifierFwd(wxCommandEvent& event) {
   if( wxID_OK == dlg->ShowModal() ) {
     iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
     wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
-    wFeedback.setidentifier( cmd, dlg->GetValue().mb_str(wxConvUTF8)  );
+
+    char* idents = StrOp.dup(dlg->GetValue().mb_str(wxConvUTF8));
+    iOStrTok tok = StrTokOp.inst(idents, ',');
+    int idx = 0;
+    while( StrTokOp.hasMoreTokens(tok) && idx < 4 ) {
+      if( idx == 0 ) wFeedback.setidentifier( cmd, StrTokOp.nextToken(tok) );
+      if( idx == 1 ) wFeedback.setidentifier2( cmd, StrTokOp.nextToken(tok) );
+      if( idx == 2 ) wFeedback.setidentifier3( cmd, StrTokOp.nextToken(tok) );
+      if( idx == 3 ) wFeedback.setidentifier4( cmd, StrTokOp.nextToken(tok) );
+      idx++;
+    }
+    StrTokOp.base.del(tok);
+    StrOp.free(idents);
+
     wFeedback.setstate( cmd, True);
     wFeedback.setdirection( cmd, True);
     wxGetApp().sendToRocrail( cmd );
@@ -914,7 +927,20 @@ void Symbol::OnIdentifierRev(wxCommandEvent& event) {
   if( wxID_OK == dlg->ShowModal() ) {
     iONode cmd = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
     wFeedback.setid( cmd, wFeedback.getid( m_Props ) );
-    wFeedback.setidentifier( cmd, dlg->GetValue().mb_str(wxConvUTF8)  );
+
+    char* idents = StrOp.dup(dlg->GetValue().mb_str(wxConvUTF8));
+    iOStrTok tok = StrTokOp.inst(idents, ',');
+    int idx = 0;
+    while( StrTokOp.hasMoreTokens(tok) && idx < 4 ) {
+      if( idx == 0 ) wFeedback.setidentifier( cmd, StrTokOp.nextToken(tok) );
+      if( idx == 1 ) wFeedback.setidentifier2( cmd, StrTokOp.nextToken(tok) );
+      if( idx == 2 ) wFeedback.setidentifier3( cmd, StrTokOp.nextToken(tok) );
+      if( idx == 3 ) wFeedback.setidentifier4( cmd, StrTokOp.nextToken(tok) );
+      idx++;
+    }
+    StrTokOp.base.del(tok);
+    StrOp.free(idents);
+
     wFeedback.setstate( cmd, True);
     wFeedback.setdirection( cmd, False);
     wxGetApp().sendToRocrail( cmd );
