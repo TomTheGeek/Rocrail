@@ -984,6 +984,16 @@ static int locBlockComparator(obj* o1, obj* o2) {
 }
 
 
+static int locDestBlockComparator(obj* o1, obj* o2) {
+  if( *o1 == NULL || *o2 == NULL )
+    return 0;
+  if( ms_LocoSortInvert )
+    return strcmp( wLoc.getdestblockid( (iONode)*o2 ), wLoc.getdestblockid( (iONode)*o1 ) );
+  else
+    return strcmp( wLoc.getdestblockid( (iONode)*o1 ), wLoc.getdestblockid( (iONode)*o2 ) );
+}
+
+
 static int locTrainComparator(obj* o1, obj* o2) {
   if( *o1 == NULL || *o2 == NULL )
     return 0;
@@ -1000,6 +1010,17 @@ static int locAddrComparator(obj* o1, obj* o2) {
   if( wLoc.getaddr( (iONode)*o1) == wLoc.getaddr( (iONode)*o2 ) )
     return ms_LocoSortInvert?1:0;
   if( wLoc.getaddr( (iONode)*o1)  > wLoc.getaddr( (iONode)*o2 ) )
+    return ms_LocoSortInvert?0:1;
+  return -1;
+}
+
+
+static int locSpeedComparator(obj* o1, obj* o2) {
+  if( *o1 == NULL || *o2 == NULL )
+    return 0;
+  if( wLoc.getV( (iONode)*o1) == wLoc.getV( (iONode)*o2 ) )
+    return ms_LocoSortInvert?1:0;
+  if( wLoc.getV( (iONode)*o1)  > wLoc.getV( (iONode)*o2 ) )
     return ms_LocoSortInvert?0:1;
   return -1;
 }
@@ -1150,11 +1171,11 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         else if(m_LocoSortColumn == 2)
           ListOp.sort( list, locBlockComparator );
         else if(m_LocoSortColumn == 3)
-          ;
+          ListOp.sort( list, locSpeedComparator );
         else if(m_LocoSortColumn == 4)
           ;
         else if(m_LocoSortColumn == 5)
-          ;
+          ListOp.sort( list, locDestBlockComparator );
         else if(m_LocoSortColumn == 6)
           ListOp.sort( list, locTrainComparator );
         else
@@ -1269,6 +1290,16 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
 
 
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE, wxALIGN_LEFT, wxALIGN_CENTRE );
+
+        if( wLoc.getdestblockid( lc ) != NULL ) {
+          if( wLoc.getscidx(node) == -1 )
+            m_ActiveLocs->SetCellValue( i, LOC_COL_DESTBLOCK, wxString(wLoc.getdestblockid( lc ),wxConvUTF8) );
+          else {
+            val = StrOp.fmt( "[%s:%d] %s", wLoc.getscheduleid(node), wLoc.getscidx( lc ), wLoc.getdestblockid( lc ) );
+            m_ActiveLocs->SetCellValue( i, LOC_COL_DESTBLOCK, wxString(val,wxConvUTF8) );
+            StrOp.free( val );
+          }
+        }
 
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_DESTBLOCK, wxALIGN_LEFT, wxALIGN_CENTRE );
       }
@@ -1562,7 +1593,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
 
         if( wLoc.getdestblockid( node ) != NULL ) {
           if( wLoc.getscidx(node) == -1 )
-          m_ActiveLocs->SetCellValue( i, LOC_COL_DESTBLOCK, wxString(wLoc.getdestblockid( node ),wxConvUTF8) );
+            m_ActiveLocs->SetCellValue( i, LOC_COL_DESTBLOCK, wxString(wLoc.getdestblockid( node ),wxConvUTF8) );
           else {
             val = StrOp.fmt( "[%s:%d] %s", wLoc.getscheduleid(node), wLoc.getscidx( node ), wLoc.getdestblockid( node ) );
             m_ActiveLocs->SetCellValue( i, LOC_COL_DESTBLOCK, wxString(val,wxConvUTF8) );
@@ -4615,11 +4646,6 @@ void RocGuiFrame::OnCellLeftDClick( wxGridEvent& event ){
 
 void RocGuiFrame::OnLabelLeftClick( wxGridEvent& event ){
   int column = event.GetCol();
-  if( column == 3 || column == 4 || column == 5 ) {
-    // skip
-    return;
-  }
-
   if( m_LocoSortColumn == column )
     ms_LocoSortInvert = !ms_LocoSortInvert;
   else {
