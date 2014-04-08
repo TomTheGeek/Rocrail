@@ -994,6 +994,16 @@ static int locDestBlockComparator(obj* o1, obj* o2) {
 }
 
 
+static int locModeComparator(obj* o1, obj* o2) {
+  if( *o1 == NULL || *o2 == NULL )
+    return 0;
+  if( ms_LocoSortInvert )
+    return strcmp( wLoc.getmode( (iONode)*o2 ), wLoc.getmode( (iONode)*o1 ) );
+  else
+    return strcmp( wLoc.getmode( (iONode)*o1 ), wLoc.getmode( (iONode)*o2 ) );
+}
+
+
 static int locTrainComparator(obj* o1, obj* o2) {
   if( *o1 == NULL || *o2 == NULL )
     return 0;
@@ -1173,7 +1183,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         else if(m_LocoSortColumn == 3)
           ListOp.sort( list, locSpeedComparator );
         else if(m_LocoSortColumn == 4)
-          ;
+          ListOp.sort( list, locModeComparator );
         else if(m_LocoSortColumn == 5)
           ListOp.sort( list, locDestBlockComparator );
         else if(m_LocoSortColumn == 6)
@@ -1284,8 +1294,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
 
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE, true );
         m_ActiveLocs->SetCellBackgroundColour( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE,
-            wLoc.isactive(lc)?
-                m_ActiveLocs->GetCellBackgroundColour(m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK):wxColour(240,200,200));
+            wLoc.isactive(lc)?m_ActiveLocs->GetCellBackgroundColour(m_ActiveLocs->GetNumberRows()-1, LOC_COL_BLOCK):wxColour(240,200,200));
 
 
 
