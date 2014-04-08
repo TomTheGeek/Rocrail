@@ -27698,4 +27698,7 @@
   <Msg id="stopatin4gomanual">
     <en txt="Stop at IN for half automatic mode"/>
   </Msg>
+  <Msg id="v0atpoweron">
+    <en txt="Send zero speed command at power on"/>
+  </Msg>
 </Messages>

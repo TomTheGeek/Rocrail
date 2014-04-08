@@ -539,11 +539,39 @@ static void __restoreFx( void* threadinst ) {
 }
 
 
+
+static void __V0AtPowerOn( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOLoc loc = (iOLoc)ThreadOp.getParm( th );
+  iOLocData data = Data(loc);
+  iONode node = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+
+  ThreadOp.sleep(100 + 200 * data->fxsleep );
+
+  wLoc.setV( node, 0 );
+  wLoc.setfn( node, wLoc.isfn(data->props) );
+  wLoc.setdir( node, wLoc.isdir(data->props) );
+  LocOp.cmd(loc, node);
+
+  data->v0pending = False;
+  ThreadOp.base.del(th);
+}
+
+
 static void __sysEvent( obj inst, iONode evtNode ) {
   iOLocData data = Data(inst);
   const char* cmd = wSysCmd.getcmd(evtNode);
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sysEvent [%s] for [%s]...", cmd, LocOp.getId((iOLoc)inst) );
+
+  if( wLoc.isshow(data->props) && StrOp.equals( wSysCmd.go, cmd ) ) {
+    if( !data->v0pending && data->drvSpeed == 0 && wCtrl.isv0atpoweron( AppOp.getIniNode(wCtrl.name())) ) {
+      iOThread th = ThreadOp.inst( NULL, &__V0AtPowerOn, inst );
+      data->v0sleep = wSysCmd.getval(evtNode);
+      data->v0pending = True;
+      ThreadOp.start(th);
+    }
+  }
 
   if( StrOp.equals( wSysCmd.resetfx, cmd ) ) {
     data->fxsleep = wSysCmd.getval(evtNode);

@@ -6995,3 +6995,9 @@ msgstr ""
 msgid "Stop at IN for half automatic mode"
 msgstr ""
 
+#. 
+# id="v0ongo"
+#, c-format
+msgid "Send zero speed command at power on"
+msgstr ""
+

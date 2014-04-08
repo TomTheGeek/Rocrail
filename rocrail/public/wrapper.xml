@@ -880,6 +880,7 @@
       <var name="usebididir" vt="bool" defval="false"/>
       <var name="disableblockwait4gomanual" vt="bool" defval="false"/>
       <var name="stopatin4gomanual" vt="bool" defval="true"/>
+      <var name="v0atpoweron" vt="bool" defval="false"/>
     </ctrl>
     <anaopt remark="Analyser options." wrappername="AnaOpt">
       <!-- option -->
