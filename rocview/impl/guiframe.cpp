@@ -976,22 +976,35 @@ static int locComparator(obj* o1, obj* o2) {
 
 
 static int locBlockComparator(obj* o1, obj* o2) {
+  const char* block1 = "";
+  const char* block2 = "";
   if( *o1 == NULL || *o2 == NULL )
     return 0;
+  if( wLoc.getblockid( (iONode)*o1 ) != NULL )
+    block1 = wLoc.getblockid( (iONode)*o1 );
+  if( wLoc.getblockid( (iONode)*o2 ) != NULL )
+    block2 = wLoc.getblockid( (iONode)*o2 );
   if( ms_LocoSortInvert )
-    return strcmp( wLoc.getblockid( (iONode)*o2 ), wLoc.getblockid( (iONode)*o1 ) );
+    return strcmp( block2, block1 );
   else
-    return strcmp( wLoc.getblockid( (iONode)*o1 ), wLoc.getblockid( (iONode)*o2 ) );
+    return strcmp( block1, block2 );
 }
 
 
 static int locDestBlockComparator(obj* o1, obj* o2) {
+  const char* destblock1 = "";
+  const char* destblock2 = "";
   if( *o1 == NULL || *o2 == NULL )
     return 0;
+  if( wLoc.getdestblockid( (iONode)*o1 ) != NULL )
+    destblock1 = wLoc.getdestblockid( (iONode)*o1 );
+  if( wLoc.getdestblockid( (iONode)*o2 ) != NULL )
+    destblock2 = wLoc.getdestblockid( (iONode)*o2 );
+
   if( ms_LocoSortInvert )
-    return strcmp( wLoc.getdestblockid( (iONode)*o2 ), wLoc.getdestblockid( (iONode)*o1 ) );
+    return strcmp( destblock2, destblock1 );
   else
-    return strcmp( wLoc.getdestblockid( (iONode)*o1 ), wLoc.getdestblockid( (iONode)*o2 ) );
+    return strcmp( destblock1, destblock2 );
 }
 
 
