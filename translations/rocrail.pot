@@ -6989,3 +6989,9 @@ msgstr ""
 msgid "Digital"
 msgstr ""
 
+#. 
+# id="stopatin4gomanual"
+#, c-format
+msgid "Stop at IN for half automatic mode"
+msgstr ""
+

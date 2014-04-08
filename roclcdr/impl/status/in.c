@@ -53,7 +53,7 @@ void statusIn( iILcDriverInt inst ) {
           "block %s has a stop module; not sending velocity 0 to loco %s",
           data->next1Block->base.id(data->next1Block), data->loc->getId(data->loc));
     }
-    else {
+    else if( !data->gomanual || ( data->gomanual && data->stopatin4gomanual ) ) {
       iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       wLoc.setV( cmd, 0 );
       wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );

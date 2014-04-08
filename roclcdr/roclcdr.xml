@@ -97,7 +97,8 @@
       <var name="reentertimer" vt="int"/>
       <var name="pendingSwap" vt="Boolean"/>
       <var name="entryActionsChecked" vt="int"/>
-      </data>
+      <var name="stopatin4gomanual" vt="Boolean"/>
+    </data>
   </object>
 
 

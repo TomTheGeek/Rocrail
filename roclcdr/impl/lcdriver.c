@@ -678,17 +678,18 @@ static iOLcDriver _inst( const iOLoc loc, const iOModel model, const iOTrace tra
 
   TraceOp.set( trace );
 
-  data->loc              = loc;
-  data->state            = LC_IDLE;
-  data->model            = model;
-  data->ignevt           = wCtrl.getignevt(ctrl);
-  data->secondnextblock  = wCtrl.issecondnextblock(ctrl);
-  data->eventTimeoutTime = wCtrl.geteventtimeout(ctrl) * 10;
-  data->signalResetTime  = wCtrl.getsignalreset(ctrl) * 10;
-  data->greenaspect      = wCtrl.isgreenaspect(ctrl);
-  data->semaphoreWait    = wCtrl.getsemaphorewait(ctrl) * 1000;
-  data->signalWait       = wCtrl.getsignalwait(ctrl) * 1000;
-  data->stopnonecommuter = wCtrl.isstopnonecommuter(ctrl);
+  data->loc               = loc;
+  data->state             = LC_IDLE;
+  data->model             = model;
+  data->ignevt            = wCtrl.getignevt(ctrl);
+  data->secondnextblock   = wCtrl.issecondnextblock(ctrl);
+  data->eventTimeoutTime  = wCtrl.geteventtimeout(ctrl) * 10;
+  data->signalResetTime   = wCtrl.getsignalreset(ctrl) * 10;
+  data->greenaspect       = wCtrl.isgreenaspect(ctrl);
+  data->semaphoreWait     = wCtrl.getsemaphorewait(ctrl) * 1000;
+  data->signalWait        = wCtrl.getsignalwait(ctrl) * 1000;
+  data->stopnonecommuter  = wCtrl.isstopnonecommuter(ctrl);
+  data->stopatin4gomanual = wCtrl.isstopatin4gomanual(ctrl);
 
   instCnt++;
 

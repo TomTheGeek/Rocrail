@@ -27695,4 +27695,7 @@
   <Msg id="digital">
     <en txt="Digital"/>
   </Msg>
+  <Msg id="stopatin4gomanual">
+    <en txt="Stop at IN for half automatic mode"/>
+  </Msg>
 </Messages>
