@@ -208,6 +208,7 @@ public:
   iONode getRocrailIni(){return m_RocrailIni;}
   void setRocrailIni(iONode ini){m_RocrailIni = ini;}
   void OnCellLeftDClick( wxGridEvent& event );
+  void OnLabelLeftClick( wxGridEvent& event );
   void OnCellLeftClick( wxGridEvent& event );
   void OnCellRightClick( wxGridEvent& event );
   void OnSelectCell( wxGridEvent& event );
@@ -425,6 +426,7 @@ private:
   bool  m_bTraceWindow;
   bool  m_LocoSortByAddress;
   int   m_LocoCategory; // 0=all 1=steam 2=diesel 3=electric 4=commuter 5=special
+  int   m_LocoSortColumn;
   bool  m_bShowID;
   bool  m_bShowCounters;
   bool  m_bShowLocked;

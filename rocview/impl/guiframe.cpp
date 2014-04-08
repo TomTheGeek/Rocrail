@@ -406,6 +406,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_GRID_CELL_LEFT_DCLICK( RocGuiFrame::OnCellLeftDClick )
     EVT_GRID_CELL_RIGHT_CLICK( RocGuiFrame::OnCellRightClick )
     EVT_GRID_SELECT_CELL( RocGuiFrame::OnSelectCell )
+    EVT_GRID_LABEL_LEFT_CLICK( RocGuiFrame::OnLabelLeftClick )
 
     EVT_MENU     (ME_GridLocSetManual  , RocGuiFrame::OnLocSetManual  )
     EVT_MENU     (ME_GridLocResetManual, RocGuiFrame::OnLocResetManual  )
@@ -961,10 +962,35 @@ void RocGuiFrame::OnInitNotebook( wxCommandEvent& event ) {
 
 }
 
+static bool ms_LocoSortInvert = false;
+
 static int locComparator(obj* o1, obj* o2) {
   if( *o1 == NULL || *o2 == NULL )
     return 0;
-  return strcmp( wLoc.getid( (iONode)*o1 ), wLoc.getid( (iONode)*o2 ) );
+  if( ms_LocoSortInvert )
+    return strcmp( wLoc.getid( (iONode)*o2 ), wLoc.getid( (iONode)*o1 ) );
+  else
+    return strcmp( wLoc.getid( (iONode)*o1 ), wLoc.getid( (iONode)*o2 ) );
+}
+
+
+static int locBlockComparator(obj* o1, obj* o2) {
+  if( *o1 == NULL || *o2 == NULL )
+    return 0;
+  if( ms_LocoSortInvert )
+    return strcmp( wLoc.getblockid( (iONode)*o2 ), wLoc.getblockid( (iONode)*o1 ) );
+  else
+    return strcmp( wLoc.getblockid( (iONode)*o1 ), wLoc.getblockid( (iONode)*o2 ) );
+}
+
+
+static int locTrainComparator(obj* o1, obj* o2) {
+  if( *o1 == NULL || *o2 == NULL )
+    return 0;
+  if( ms_LocoSortInvert )
+    return strcmp( wLoc.gettrain( (iONode)*o2 ), wLoc.gettrain( (iONode)*o1 ) );
+  else
+    return strcmp( wLoc.gettrain( (iONode)*o1 ), wLoc.gettrain( (iONode)*o2 ) );
 }
 
 
@@ -972,9 +998,9 @@ static int locAddrComparator(obj* o1, obj* o2) {
   if( *o1 == NULL || *o2 == NULL )
     return 0;
   if( wLoc.getaddr( (iONode)*o1) == wLoc.getaddr( (iONode)*o2 ) )
-    return 0;
+    return ms_LocoSortInvert?1:0;
   if( wLoc.getaddr( (iONode)*o1)  > wLoc.getaddr( (iONode)*o2 ) )
-    return 1;
+    return ms_LocoSortInvert?0:1;
   return -1;
 }
 
@@ -1115,7 +1141,25 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
       }
 
       // Sort the list:
-      ListOp.sort( list, m_LocoSortByAddress ? locAddrComparator:locComparator );
+      if( m_LocoSortColumn == -1 )
+        ListOp.sort( list, m_LocoSortByAddress ? locAddrComparator:locComparator );
+      else {
+        // 0=ID 1=Address 2=Block 3=V 4=Mode 5=Destination 6=Train
+        if(m_LocoSortColumn == 1)
+          ListOp.sort( list, locAddrComparator );
+        else if(m_LocoSortColumn == 2)
+          ListOp.sort( list, locBlockComparator );
+        else if(m_LocoSortColumn == 3)
+          ;
+        else if(m_LocoSortColumn == 4)
+          ;
+        else if(m_LocoSortColumn == 5)
+          ;
+        else if(m_LocoSortColumn == 6)
+          ListOp.sort( list, locTrainComparator );
+        else
+          ListOp.sort( list, locComparator );
+      }
 
 
       if( wGui.islocowidgetstab(m_Ini) && m_LocoPanel != NULL) {
@@ -1686,6 +1730,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_WorkSpace          = NULL;
   m_LocoCategory       = LOCO_VIEW_ALL;
   m_LocoSortByAddress  = wGui.islocosortbyaddress(m_Ini)?true:false;
+  m_LocoSortColumn     = -1;
   m_FakeLeftClick      = false;
   m_LC                 = NULL;
   m_CV                 = NULL;
@@ -4566,6 +4611,26 @@ void RocGuiFrame::OnCellLeftDClick( wxGridEvent& event ){
   OnCellLeftClick(event);
   OnLcDlg(event);
 }
+
+
+void RocGuiFrame::OnLabelLeftClick( wxGridEvent& event ){
+  int column = event.GetCol();
+  if( column == 3 || column == 4 || column == 5 ) {
+    // skip
+    return;
+  }
+
+  if( m_LocoSortColumn == column )
+    ms_LocoSortInvert = !ms_LocoSortInvert;
+  else {
+    ms_LocoSortInvert = false;
+    m_LocoSortColumn = column;
+  }
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "OnLabelLeftClick column=%d invert=%s", m_LocoSortColumn, ms_LocoSortInvert?"true":"false" );
+  wxCommandEvent cmdevent;
+  InitActiveLocs(cmdevent);
+}
+
 
 void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
   if( event.GetEventObject() == m_ActiveLocs || event.GetEventObject() == NULL ) {
