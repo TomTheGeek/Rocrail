@@ -232,6 +232,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
 
     EVT_MENU( ADDEXCEPTION_EVENT, RocGuiFrame::OnAddException)
     EVT_MENU( LOC_EVENT, RocGuiFrame::OnLocEvent)
+    EVT_MENU( CAR_EVENT, RocGuiFrame::OnCarEvent)
     EVT_MENU( AUTO_EVENT, RocGuiFrame::OnAutoEvent)
     EVT_MENU( SYSTEM_EVENT, RocGuiFrame::OnSystemEvent)
     EVT_MENU( STATE_EVENT, RocGuiFrame::OnStateEvent)
@@ -4511,6 +4512,76 @@ void RocGuiFrame::OnMIC(wxCommandEvent& event){
 
 void RocGuiFrame::OnLocEvent( wxCommandEvent& event ) {
   UpdateActiveLocs( event );
+}
+
+void RocGuiFrame::OnCarEvent( wxCommandEvent& event ) {
+  iONode node = (iONode)event.GetClientData();
+  if( node != NULL ) {
+    TraceOp.trc("frame", TRCLEVEL_INFO, __LINE__, 9999, "car [%s] event: new location=%s prev location=%s",
+        wCar.getid(node), wCar.getlocation(node), wCar.getprevlocation1(node) );
+    // ToDo: Inform both locations.
+    if( wCar.getlocation(node) != NULL ) {
+      iONode block = findBlock( wCar.getlocation(node) );
+      if(block != NULL ) {
+        if( m_ModPanel != NULL) {
+          m_ModPanel->modelEvent( block );
+        }
+        else {
+          int pagecnt = getNotebook()->GetPageCount();
+          for( int i = 0; i < pagecnt; i++ ) {
+            PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
+            p->modelEvent( block );
+          }
+        }
+      }
+    }
+    if( wCar.getprevlocation1(node) != NULL ) {
+      iONode block = findBlock( wCar.getprevlocation1(node) );
+      if(block != NULL ) {
+        if( m_ModPanel != NULL) {
+          m_ModPanel->modelEvent( block );
+        }
+        else {
+          int pagecnt = getNotebook()->GetPageCount();
+          for( int i = 0; i < pagecnt; i++ ) {
+            PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
+            p->modelEvent( block );
+          }
+        }
+      }
+      if( wCar.getprevlocation2(node) != NULL && !StrOp.equals(wCar.getprevlocation2(node), wCar.getprevlocation1(node)) ) {
+        iONode block = findBlock( wCar.getprevlocation2(node) );
+        if(block != NULL ) {
+          if( m_ModPanel != NULL) {
+            m_ModPanel->modelEvent( block );
+          }
+          else {
+            int pagecnt = getNotebook()->GetPageCount();
+            for( int i = 0; i < pagecnt; i++ ) {
+              PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
+              p->modelEvent( block );
+            }
+          }
+        }
+        if( wCar.getprevlocation3(node) != NULL && !StrOp.equals(wCar.getprevlocation3(node), wCar.getprevlocation2(node)) ) {
+          iONode block = findBlock( wCar.getprevlocation3(node) );
+          if(block != NULL ) {
+            if( m_ModPanel != NULL) {
+              m_ModPanel->modelEvent( block );
+            }
+            else {
+              int pagecnt = getNotebook()->GetPageCount();
+              for( int i = 0; i < pagecnt; i++ ) {
+                PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
+                p->modelEvent( block );
+              }
+            }
+          }
+        }
+      }
+    }
+
+  }
 }
 
 void RocGuiFrame::OnAutoEvent( wxCommandEvent& event ) {

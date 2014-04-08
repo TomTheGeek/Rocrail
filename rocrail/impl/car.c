@@ -369,6 +369,10 @@ static int _getWeight( struct OCar* inst ) {
 /**  */
 static void _setLocality( struct OCar* inst, const char* id ) {
   iOCarData data = Data(inst);
+
+  wCar.setprevlocation3(data->props, wCar.getprevlocation2(data->props) );
+  wCar.setprevlocation2(data->props, wCar.getprevlocation1(data->props) );
+  wCar.setprevlocation1(data->props, wCar.getlocation(data->props) );
   wCar.setlocation(data->props, id);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "car [%s] arrived in block [%s]", CarOp.base.id(inst), id );
   /* Broadcast to clients. */

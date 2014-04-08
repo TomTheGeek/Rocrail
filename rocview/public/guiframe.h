@@ -144,6 +144,7 @@ public:
   void OnLogo( wxCommandEvent& event );
   void OnAddException( wxCommandEvent& event );
   void OnLocEvent( wxCommandEvent& event );
+  void OnCarEvent( wxCommandEvent& event );
   void OnAutoEvent( wxCommandEvent& event );
   void OnStateEvent( wxCommandEvent& event );
   void OnSystemEvent( wxCommandEvent& event );
@@ -507,6 +508,7 @@ enum
     ME_TxShortIDs,
     ADDEXCEPTION_EVENT,
     LOC_EVENT,
+    CAR_EVENT,
     AUTO_EVENT,
     SYSTEM_EVENT,
     STATE_EVENT,

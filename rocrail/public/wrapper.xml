@@ -2688,6 +2688,9 @@
         <var name="owner" vt="string" defval="" range="*"/>
         <var name="color" vt="string" defval="" range="*"/>
         <var name="location" vt="string" defval="" range="*"/>
+        <var name="prevlocation1" vt="string" defval="" range="*"/>
+        <var name="prevlocation2" vt="string" defval="" range="*"/>
+        <var name="prevlocation3" vt="string" defval="" range="*"/>
         <const name="cartype_freight" vt="string" val="goods"/>
         <const name="cartype_passenger" vt="string" val="passenger"/>
         <var name="type" vt="string" defval="freight" range="freight,passenger" remark="Car main type."/>

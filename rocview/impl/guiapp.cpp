@@ -1106,6 +1106,9 @@ static void rocrailCallback( obj me, iONode node ) {
     if( car != NULL ) {
       TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "update car=%s", wItem.getid(car) );
       NodeOp.mergeNode( car, node, True, True, True ); // Update Car
+      wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, CAR_EVENT );
+      event.SetClientData( node->base.clone( node ) );
+      wxPostEvent( guiApp->getFrame(), event );
     }
   }
   else if( StrOp.equals( wOperator.name(), NodeOp.getName( node ) ) ) {
