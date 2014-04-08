@@ -2264,7 +2264,7 @@ static void __calcTrainLen(iOLoc inst) {
     StrTokOp.base.del( consist );
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] train length=%d weight=%d",
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "loco [%s] train length=%d weight=%d",
       wLoc.getid(data->props), wLoc.gettrainlen(data->props), wLoc.gettrainweight(data->props) );
 }
 
@@ -2477,7 +2477,7 @@ static void _setMode( iOLoc inst, const char* mode ) {
   if( !StrOp.equals( wLoc.getmode(data->props), mode ) ) {
     iONode node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Loco [%s] mode=%s prevmode=%s", LocOp.getId(inst), mode, wLoc.getmode(data->props) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco [%s] mode=%s prevmode=%s", LocOp.getId(inst), mode, wLoc.getmode(data->props) );
     wLoc.setmode(data->props, mode);
 
     __broadcastLocoProps( inst, NULL, NULL, NULL );

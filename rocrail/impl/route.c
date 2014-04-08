@@ -671,7 +671,7 @@ static Boolean __checkSwitches( iORoute inst, const char* id ) {
     {
       iOSignal isw = ModelOp.getSignal( model, swId );
       if( isw == NULL ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No signal object found for %s", swId );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No signal object found for %s in route %s", swId, wRoute.getid(o->props) );
         return False;
       }
     }
@@ -687,7 +687,7 @@ static Boolean __checkSwitches( iORoute inst, const char* id ) {
           return False;
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No turntable object found for %s", swId );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No turntable object found for %s in route %s", swId, wRoute.getid(o->props) );
         return False;
       }
     }
@@ -701,7 +701,7 @@ static Boolean __checkSwitches( iORoute inst, const char* id ) {
           return False;
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No switch object found for %s", swId );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "*PANIC* No switch object found for %s in route %s", swId, wRoute.getid(o->props) );
         return False;
       }
     }
