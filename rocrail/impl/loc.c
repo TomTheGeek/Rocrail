@@ -2389,8 +2389,11 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
   }
   data->curBlock = id;
   __setCurBlock4Train(inst, data->curBlock);
+
+  if( id != NULL && !StrOp.equals(id, wLoc.getblockid(data->props) ) )
+    wLoc.setfifotop(data->props, False);
+
   wLoc.setblockid( data->props, id==NULL?"":id );
-  wLoc.setfifotop(data->props, False);
 
   if( data->driver != NULL )
     data->driver->curblock( data->driver, id );

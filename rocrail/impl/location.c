@@ -119,6 +119,20 @@ static struct OLocation* _inst( iONode ini ) {
 }
 
 
+static void __informLocoFiFoTop( iOLocation inst ) {
+  iOLocationData data = Data(inst);
+  if( data->fifo && ListOp.size(data->arriveList) > 0 ) {
+    /* Inform the loco. */
+    const char* locoid = (const char*)ListOp.get( data->arriveList, 0);
+    if( locoid != NULL ) {
+      iOLoc lc = ModelOp.getLoc( AppOp.getModel(), locoid, NULL, False);
+      if( lc != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inform loco %s that its on FiFo top in location %s", locoid, wLocation.getid(data->props) );
+        LocOp.fifoTop(lc);
+      }
+    }
+  }
+}
 
 static void __initArriveList( iOLocation inst ) {
   iOLocationData data = Data(inst);
@@ -139,6 +153,7 @@ static void __initArriveList( iOLocation inst ) {
     MutexOp.post( data->listmux );
   }
   __dumpOcc(inst);
+  __informLocoFiFoTop(inst);
 }
 
 
@@ -252,18 +267,7 @@ static void _locoDidDepart( struct OLocation* inst ,const char* LocoId ) {
     MutexOp.post( data->listmux );
   }
 
-
-  if( data->fifo && ListOp.size(data->arriveList) > 0 ) {
-    /* Inform the loco. */
-    const char* locoid = (const char*)ListOp.get( data->arriveList, 0);
-    if( locoid != NULL ) {
-      iOLoc lc = ModelOp.getLoc( AppOp.getModel(), locoid, NULL, False);
-      if( lc != NULL ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inform loco %s that its on FiFo top in location %s", locoid, wLocation.getid(data->props) );
-        LocOp.fifoTop(lc);
-      }
-    }
-  }
+  __informLocoFiFoTop(inst);
 }
 
 
