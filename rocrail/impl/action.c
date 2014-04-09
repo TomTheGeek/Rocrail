@@ -193,13 +193,28 @@ static Boolean __checkLocoState(const char* locoid, const char* id, const char* 
     };
     StrTokOp.base.del(tok);
   }
-  else if( lc != NULL && ( StrOp.equals( state, "diesel" ) ||
-          StrOp.equals( state, "steam" ) || StrOp.equals( state, "electric" ) ) ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check type of loco id [%s]", LocOp.getId(lc) );
+
+  /* Loco engine */
+  else if( lc != NULL && ( StrOp.equals( state, "diesel" ) || StrOp.equals( state, "steam" ) || StrOp.equals( state, "electric" ) ) )
+  {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check engine of loco id [%s]", LocOp.getId(lc) );
     rc = StrOp.equals( state, LocOp.getEngine(lc) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "loco engine [%s] does %smatch condtion [%s]", LocOp.getEngine(lc), rc?"":"not ", state );
+  }
+
+  /* Loco type */
+  else if( lc != NULL && ( StrOp.equals(state, "ice") || StrOp.equals(state, "mixed") || StrOp.equals(state, "post") ||
+      StrOp.equals(state, "mixed") || StrOp.equals(state, "goods") || StrOp.equals(state, "person") ||
+      StrOp.equals(state, "regional") || StrOp.equals(state, "light") || StrOp.equals(state, "lightgoods") ) )
+  {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "check type of loco id [%s]", LocOp.getId(lc) );
+    rc = StrOp.equals( state, LocOp.getCargo(lc) );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
         "loco type [%s] does %smatch condtion [%s]", LocOp.getEngine(lc), rc?"":"not ", state );
   }
+
+  /* Loco schedule */
   else if( lc != NULL && ( StrOp.startsWithi( state, "schedule" ) ) ) {
     iOStrTok tok = StrTokOp.inst(state, ':');
     const char* scstate = NULL;

@@ -436,11 +436,11 @@ void ActionsCtrlDlg::initCondIDs() {
       case 1: statelist = "red,yellow,green,white,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"; break;
       case 2: statelist = "on,off,active"; break;
       case 3: statelist = "true,false,identifier"; break;
-      case 4: statelist = "forwards,reverse,diesel,steam,electric,min,mid,cruise,max,fon,foff,+,-,#,x"; break;
+      case 4: statelist = "forwards,reverse,diesel,steam,electric,min,mid,cruise,max,fon,foff,+,-,#,x,light,lightgoods,person,goods,post,ice,mixed,regional"; break;
       case 5: statelist = "free,!free,occupied,open,closed"; break;
       case 6: statelist = "go,stop,init"; break;
       case 7: statelist = "locked,unlocked"; break;
-      case 8: statelist = "forwards,reverse,diesel,steam,electric,min,mid,cruise,max,fon,foff,+,-,#,x"; break;
+      case 8: statelist = "forwards,reverse,diesel,steam,electric,min,mid,cruise,max,fon,foff,+,-,#,x,light,lightgoods,person,goods,post,ice,mixed,regional"; break;
     }
     iOStrTok tok = StrTokOp.inst(statelist, ',');
     while( StrTokOp.hasMoreTokens(tok) ) {
