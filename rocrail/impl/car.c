@@ -346,6 +346,12 @@ static const char* _getIdent( struct OCar* inst ) {
 }
 
 
+static const char* _getLocality( struct OCar* inst ) {
+  iOCarData data = Data(inst);
+  return wCar.getlocation(data->props);
+}
+
+
 /**  */
 static int _getLen( struct OCar* inst ) {
   iOCarData data = Data(inst);

@@ -1240,6 +1240,10 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="slaveID" vt="const char*"/>
     </fun>
+    <fun name="hasBlockCars" vt="Boolean">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="id" vt="const char*" remark="BlockID to search for"/>
+    </fun>
     <data include="mvtrack,modplan">
       <var name="callback" vt="model_listener"/>
       <var name="cbCargo" vt="obj"/>
@@ -2158,6 +2162,9 @@
       <param name="inst" vt="this" remark="Car instance"/>
     </fun>
     <fun name="getVMax" vt="int">
+      <param name="inst" vt="this" remark="Car instance"/>
+    </fun>
+    <fun name="getLocality" vt="const char*">
       <param name="inst" vt="this" remark="Car instance"/>
     </fun>
     <data>

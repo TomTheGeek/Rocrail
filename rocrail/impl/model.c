@@ -2617,6 +2617,19 @@ static iOCar _getCarByIdent( iOModel inst, const char* ident ) {
   return NULL;
 }
 
+static Boolean _hasBlockCars( iOModel inst, const char* bkid ) {
+  iOModelData o = Data(inst);
+  iOCar carAddr = NULL;
+  iOCar car = (iOCar)MapOp.first( o->carMap );
+  while( car != NULL ) {
+    if( StrOp.equals(CarOp.getLocality(car), bkid) )
+      return True;
+    car = (iOCar)MapOp.next( o->carMap );
+  };
+
+  return False;
+}
+
 static iOOperator _getOperator( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
   return (iOOperator)MapOp.get( o->operatorMap, id );
