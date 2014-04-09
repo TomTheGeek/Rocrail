@@ -14762,7 +14762,7 @@
     <pl txt="Sprawdź dostępność miejsca przeznaczenia, aby osiągnąć cel (IN)"/>
   </Msg>
   <Msg id="locobook">
-    <de txt="Lok-Steuerung"/>
+    <de txt="Lok-Bedienfeld"/>
     <en txt="Loco Panel"/>
     <nl txt="Loc scherm"/>
     <sv txt="Lokpanel"/>
@@ -17913,7 +17913,7 @@
     <en txt="Shipping"/>
     <cs txt="Doprava"/>
     <hu txt="Szállítás alatt"/>
-    <de txt="Versendet"/>
+    <de txt="Versandt"/>
     <bg txt="Спедиция"/>
     <el txt="Αποστολή"/>
     <fr txt="Expédition"/>
@@ -23416,6 +23416,7 @@
     <en_AU txt="Automobiles and trucks"/>
     <en_CA txt="Automobiles and trucks"/>
     <pl txt="Samochody i ciężarówki"/>
+    <cs txt="Automobily a náklaďáky"/>
   </Msg>
   <Msg id="locoviewtrain">
     <en txt="Trains"/>
@@ -23435,6 +23436,7 @@
     <pl txt="Pociągi"/>
     <en_AU txt="Trains"/>
     <en_CA txt="Trains"/>
+    <cs txt="Vlaky"/>
   </Msg>
   <Msg id="locosortbyaddr">
     <en txt="Sort locos by address"/>
@@ -25185,7 +25187,7 @@
     <nl txt="Verwijder alle signaal verbindingen uit de blokken"/>
     <it txt="Azzerare assegnazioni segnale in tutti i blocchi"/>
     <es txt="Reasignar señales a los bloques"/>
-    <de txt="SIgnalzuordnung in allen Blöcken löschen"/>
+    <de txt="Signalzuordnung in allen Blöcken löschen"/>
     <sr_latin txt="Poništenje dodele signala u svim blokovima"/>
     <zh_CN txt="复位所有阻塞区段的信号灯状态"/>
     <sl txt="Ponastavi signale na vseh odsekih"/>
@@ -25412,6 +25414,7 @@
     <en_AU txt="Macro"/>
     <en_CA txt="Macro"/>
     <pl txt="Makro"/>
+    <cs txt="Makro"/>
   </Msg>
   <Msg id="features">
     <en txt="Features"/>
@@ -25430,6 +25433,7 @@
     <en_AU txt="Features"/>
     <en_CA txt="Features"/>
     <pl txt="Cechy"/>
+    <cs txt="Vlastnosti"/>
   </Msg>
   <Msg id="portsetup">
     <en txt="Port setup"/>
@@ -25667,6 +25671,7 @@
     <en_AU txt="Double quote"/>
     <en_CA txt="Double quote"/>
     <pl txt="Cudzysłów"/>
+    <cs txt="Dvojitá uvozovka"/>
   </Msg>
   <Msg id="assigntrain">
     <en txt="Assign train"/>
@@ -27680,25 +27685,39 @@
     <pt_BR txt="Ajustar tamanho de letra da matriz"/>
     <sl txt="Velikost pisave na mreži"/>
     <sr_latin txt="Podesi raster veličine slova"/>
+    <en_GB txt="Grid fontsize adjust"/>
   </Msg>
   <Msg id="maxkmh">
     <en txt="Max. km/h"/>
     <nl txt="Max. km/h"/>
     <pl txt="Max. km/h"/>
     <sl txt="Max. km/h"/>
+    <de txt="Max. km/h"/>
+    <en_GB txt="Max. km/h"/>
+    <sr_latin txt="Maks. km/h"/>
   </Msg>
   <Msg id="reportstate">
     <en txt="Report state"/>
     <nl txt="Status melden"/>
     <sl txt="Sporoči stanje"/>
+    <de txt="Status melden"/>
+    <en_GB txt="Report state"/>
+    <pl txt="Komunikaty o stanie"/>
+    <sr_latin txt="Prijavi stanje"/>
   </Msg>
   <Msg id="digital">
     <en txt="Digital"/>
+    <de txt="Digital"/>
+    <nl txt="Digitaal"/>
   </Msg>
   <Msg id="stopatin4gomanual">
     <en txt="Stop at IN for half automatic mode"/>
+    <de txt="Stop bei IN im Halbautomatik-Modus"/>
+    <nl txt="Stop bij IN voor half automatisch rijden"/>
   </Msg>
   <Msg id="v0atpoweron">
     <en txt="Send zero speed command at power on"/>
+    <de txt="Bei Gleisspannung EIN Geschwindigkeits-Befehl Null senden"/>
+    <nl txt="Zend een nul snelheid commando na baanspanning aan"/>
   </Msg>
 </Messages>
