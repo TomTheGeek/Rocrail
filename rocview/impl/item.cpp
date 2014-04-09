@@ -3019,6 +3019,8 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
 
     char* carList = wxGetApp().getFrame()->listCars(wBlock.getid(m_Props));
     bool hasCars = (carList==NULL ? false:true);
+    if( hasCars )
+      TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "block %s has cars: %s", wBlock.getid(m_Props), carList);
     // Open block
     if( StrOp.equals( wBlock.open, state ) ) {
       Boolean isReserved    = wBlock.isreserved( node );
@@ -3141,6 +3143,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
             l_locidStr = StrOp.fmt( "%s", StrOp.len(locoid) > 0 ? wBlock.getid( node ):locoid );
         }
       }
+
       // Tooltip for other state
       StrOp.free(m_Tip);
       m_Tip = StrOp.dup(l_locidStr);
@@ -3154,21 +3157,11 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "id=[%s] occupied=[%d] rotate=[%d] state=[%s] locoid=[%s]",
         id, occupied, m_RotateSym, state, locoid );
 
-
-    if( updateEnterside ) {
-      m_Renderer->setLabel( m_locidStr, -1, m_RotateSym );
-      if( l_locidStr != NULL ) {
-        // Unused local string.
-        StrOp.free( l_locidStr );
-      }
-    }
-    else {
-      m_Renderer->setLabel( l_locidStr, occupied, m_RotateSym );
-      // Free previous string.
-      StrOp.free( m_locidStr );
-      // Save current string in member.
-      m_locidStr = l_locidStr;
-    }
+    m_Renderer->setLabel( l_locidStr, updateEnterside ? -1:occupied, m_RotateSym );
+    // Free previous string.
+    StrOp.free( m_locidStr );
+    // Save current string in member.
+    m_locidStr = l_locidStr;
 
     m_PlanPanel->blockEvent( wBlock.getid( m_Props ) );
 

@@ -4530,12 +4530,16 @@ void RocGuiFrame::OnLocEvent( wxCommandEvent& event ) {
 void RocGuiFrame::OnCarEvent( wxCommandEvent& event ) {
   iONode node = (iONode)event.GetClientData();
   if( node != NULL ) {
-    TraceOp.trc("frame", TRCLEVEL_INFO, __LINE__, 9999, "car [%s] event: new location=%s prev location=%s",
-        wCar.getid(node), wCar.getlocation(node), wCar.getprevlocation1(node) );
-    // ToDo: Inform both locations.
-    if( wCar.getlocation(node) != NULL ) {
-      iONode block = findBlock( wCar.getlocation(node) );
+    const char* location = wCar.getlocation(node);
+    const char* prevloc1 = wCar.getprevlocation1(node);
+    TraceOp.trc("frame", TRCLEVEL_DEBUG, __LINE__, 9999, "car [%s] event: new location=%s prev location=%s",
+        wCar.getid(node), location, prevloc1 );
+
+    // Inform both locations.
+    if( location != NULL ) {
+      iONode block = findBlock( location );
       if(block != NULL ) {
+        TraceOp.trc("frame", TRCLEVEL_DEBUG, __LINE__, 9999, "update block %s for car %s", wBlock.getid(block), wCar.getid(node) );
         if( m_ModPanel != NULL) {
           m_ModPanel->modelEvent( block );
         }
@@ -4548,9 +4552,11 @@ void RocGuiFrame::OnCarEvent( wxCommandEvent& event ) {
         }
       }
     }
-    if( wCar.getprevlocation1(node) != NULL ) {
-      iONode block = findBlock( wCar.getprevlocation1(node) );
+
+    if( prevloc1 != NULL && !StrOp.equals(prevloc1, location) ) {
+      iONode block = findBlock( prevloc1 );
       if(block != NULL ) {
+        TraceOp.trc("frame", TRCLEVEL_DEBUG, __LINE__, 9999, "update block %s for car %s", wBlock.getid(block), wCar.getid(node) );
         if( m_ModPanel != NULL) {
           m_ModPanel->modelEvent( block );
         }
@@ -4559,36 +4565,6 @@ void RocGuiFrame::OnCarEvent( wxCommandEvent& event ) {
           for( int i = 0; i < pagecnt; i++ ) {
             PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
             p->modelEvent( block );
-          }
-        }
-      }
-      if( wCar.getprevlocation2(node) != NULL && !StrOp.equals(wCar.getprevlocation2(node), wCar.getprevlocation1(node)) ) {
-        iONode block = findBlock( wCar.getprevlocation2(node) );
-        if(block != NULL ) {
-          if( m_ModPanel != NULL) {
-            m_ModPanel->modelEvent( block );
-          }
-          else {
-            int pagecnt = getNotebook()->GetPageCount();
-            for( int i = 0; i < pagecnt; i++ ) {
-              PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
-              p->modelEvent( block );
-            }
-          }
-        }
-        if( wCar.getprevlocation3(node) != NULL && !StrOp.equals(wCar.getprevlocation3(node), wCar.getprevlocation2(node)) ) {
-          iONode block = findBlock( wCar.getprevlocation3(node) );
-          if(block != NULL ) {
-            if( m_ModPanel != NULL) {
-              m_ModPanel->modelEvent( block );
-            }
-            else {
-              int pagecnt = getNotebook()->GetPageCount();
-              for( int i = 0; i < pagecnt; i++ ) {
-                PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
-                p->modelEvent( block );
-              }
-            }
           }
         }
       }

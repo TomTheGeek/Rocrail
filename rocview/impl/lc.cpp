@@ -289,10 +289,10 @@ bool LC::setFX( iONode l_LocProps, iONode node ) {
 bool LC::updateLoc( iONode node ) {
   if( m_LocProps != NULL && node != NULL ) {
     if( StrOp.equals( wLoc.getid( m_LocProps ), wLoc.getid( node ) ) ) {
-      TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "updating %s", wLoc.getid( node ) );
+      TraceOp.trc( "lc", TRCLEVEL_DEBUG, __LINE__, 9999, "updating %s", wLoc.getid( node ) );
 
       if( StrOp.equals( wFunCmd.name(), NodeOp.getName( node ) ) ) {
-        TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "function update %s", wLoc.getid( node ) );
+        TraceOp.trc( "lc", TRCLEVEL_DEBUG, __LINE__, 9999, "function update %s", wLoc.getid( node ) );
 
         setFX(m_LocProps, node);
 
@@ -302,7 +302,7 @@ bool LC::updateLoc( iONode node ) {
           m_bFn = wFunCmd.isf0( node )?true:false;
           wLoc.setfn( m_LocProps, m_bFn?True:False );
           setButtonColor( m_F0, !m_bFn );
-          TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "function lights=%d", m_bFn );
+          TraceOp.trc( "lc", TRCLEVEL_DEBUG, __LINE__, 9999, "function lights=%d", m_bFn );
         }
 
       }
@@ -314,7 +314,7 @@ bool LC::updateLoc( iONode node ) {
         value.Printf( _T("%d"), m_iSpeed );
         m_V->SetValue( value );
 
-        TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "velocity update %d", m_iSpeed );
+        TraceOp.trc( "lc", TRCLEVEL_DEBUG, __LINE__, 9999, "velocity update %d", m_iSpeed );
 
         m_bDir = wLoc.isdir( node )?true:false;
         wLoc.setdir( m_LocProps, m_bDir?True:False );
@@ -330,7 +330,7 @@ bool LC::updateLoc( iONode node ) {
           m_bFn = wLoc.isfn( node )?true:false;
           wLoc.setfn( m_LocProps, m_bFn?True:False );
           setButtonColor( m_F0, !m_bFn );
-          TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "velocity lights=%d", m_bFn );
+          TraceOp.trc( "lc", TRCLEVEL_DEBUG, __LINE__, 9999, "velocity lights=%d", m_bFn );
         }
       }
       return true;

@@ -125,7 +125,7 @@ void Slider::OnPaint(wxPaintEvent& WXUNUSED(event))
     // make a path that contains a circle and some lines
     gc->DrawRoundedRectangle(Width/2-2, ThumbHeight/2, 4, Height-ThumbHeight, 1.0);
 
-    TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "Max=%d Min=%d range=%d value=%d", Max, Min, Max-Min, GetValue() );
+    TraceOp.trc( "slider", TRCLEVEL_DEBUG, __LINE__, 9999, "Max=%d Min=%d range=%d value=%d", Max, Min, Max-Min, GetValue() );
     if( Max <= Min ) {
       Max = 100;
       Min = 0;
@@ -195,7 +195,7 @@ void Slider::SetValue(int value, bool force) {
   Step = (double)ThumbRange / (double)Max;
   // MaxPos = 0, MinPos = ThumbRange
   ThumbPos = ThumbRange - (Value * Step);
-  TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "SET Value=%d Step=%f ThumbPos=%d ThumbRange=%d", Value, Step, ThumbPos, ThumbRange );
+  TraceOp.trc( "slider", TRCLEVEL_DEBUG, __LINE__, 9999, "SET Value=%d Step=%f ThumbPos=%d ThumbRange=%d", Value, Step, ThumbPos, ThumbRange );
   PrevThumbPos = ThumbPos;
   Refresh(true);
 }

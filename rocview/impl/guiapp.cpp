@@ -895,7 +895,7 @@ static void rocrailCallback( obj me, iONode node ) {
   //if( (TraceOp.getLevel(NULL) & TRCLEVEL_DEBUG) == TRCLEVEL_DEBUG ) {
     if( !StrOp.equals( NodeOp.getName(node), wPlan.name()) ) {
       char* xmlStr = NodeOp.base.toString(node);
-      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "rocrailCallback %.500s", xmlStr );
+      TraceOp.trc( "app", TRCLEVEL_DEBUG, __LINE__, 9999, "rocrailCallback %.500s", xmlStr );
       StrOp.free(xmlStr);
     }
   //}
@@ -1104,7 +1104,7 @@ static void rocrailCallback( obj me, iONode node ) {
   else if( StrOp.equals( wCar.name(), NodeOp.getName( node ) ) ) {
     iONode car = wxGetApp().getFrame()->findCar(wItem.getid(node));
     if( car != NULL ) {
-      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "update car=%s", wItem.getid(car) );
+      TraceOp.trc( "app", TRCLEVEL_DEBUG, __LINE__, 9999, "update car=%s", wItem.getid(car) );
       NodeOp.mergeNode( car, node, True, True, True ); // Update Car
       wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, CAR_EVENT );
       event.SetClientData( node->base.clone( node ) );
@@ -1114,7 +1114,7 @@ static void rocrailCallback( obj me, iONode node ) {
   else if( StrOp.equals( wOperator.name(), NodeOp.getName( node ) ) ) {
     iONode opr = wxGetApp().getFrame()->findOperator(wItem.getid(node));
     if( opr != NULL ) {
-      TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "update operator=%s", wItem.getid(opr) );
+      TraceOp.trc( "app", TRCLEVEL_DEBUG, __LINE__, 9999, "update operator=%s", wItem.getid(opr) );
       NodeOp.mergeNode( opr, node, True, True, True ); // Update Operator
     }
   }
