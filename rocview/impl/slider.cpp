@@ -254,13 +254,13 @@ void Slider::mouseDown(wxMouseEvent& event)
 }
 void Slider::mouseReleased(wxMouseEvent& event)
 {
-  TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "mouseReleased");
+  TraceOp.trc( "slider", TRCLEVEL_DEBUG, __LINE__, 9999, "mouseReleased");
   Drag = false;
   moveThumb(true);
 }
 void Slider::mouseLeftWindow(wxMouseEvent& event)
 {
-  TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "mouseLeftWindow");
+  TraceOp.trc( "slider", TRCLEVEL_DEBUG, __LINE__, 9999, "mouseLeftWindow");
   //if(Drag)
     //mouseReleased(event);
 
@@ -340,7 +340,7 @@ void Slider::moveThumb(bool forceRefresh) {
   if( PrevThumbPos != ThumbPos ) {
     Refresh(true);
     PrevThumbPos = ThumbPos;
-    TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "moveThumb %d", ThumbPos);
+    TraceOp.trc( "slider", TRCLEVEL_DEBUG, __LINE__, 9999, "moveThumb %d", ThumbPos);
 
     wxCommandEvent cmdevent( wxEVT_SCROLL_THUMBRELEASE,-1 );
     cmdevent.SetId(-1);
@@ -350,7 +350,7 @@ void Slider::moveThumb(bool forceRefresh) {
   else {
     if( forceRefresh )
       Refresh(true);
-    TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "PrevThumbPos = ThumbPos %d", ThumbPos);
+    TraceOp.trc( "slider", TRCLEVEL_DEBUG, __LINE__, 9999, "PrevThumbPos = ThumbPos %d", ThumbPos);
   }
 }
 

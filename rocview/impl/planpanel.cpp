@@ -929,7 +929,7 @@ void PlanPanel::OnLeftUp(wxMouseEvent& event) {
 
       setPosition();
 
-      TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "drag end x=%d(%d), y=%d(%d)", p.x, m_dragX, p.y, m_dragY );
+      TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "drag end x=%d(%d), y=%d(%d)", p.x, m_dragX, p.y, m_dragY );
 
       /* Notify RocRail. */
       TraceOp.trc( "panel", TRCLEVEL_INFO, __LINE__, 9999,
@@ -2302,10 +2302,10 @@ void PlanPanel::OnLeftDown(wxMouseEvent& event) {
     m_selX = (x - sx) + (xoff*m_ItemSize*m_Scale);
     m_selY = (y - sy) + (yoff*m_ItemSize*m_Scale);
     m_Selecting = true;
-    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "select start %d,%d (%d,%d)", m_selX, m_selY );
+    TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "select start %d,%d (%d,%d)", m_selX, m_selY );
     CaptureMouse();
   }
-  TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "drag start x=%d, y=%d (%d,%d)", x, y, event.GetX(), event.GetY() );
+  TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "drag start x=%d, y=%d (%d,%d)", x, y, event.GetX(), event.GetY() );
 
 }
 

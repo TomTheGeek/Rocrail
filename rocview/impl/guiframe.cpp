@@ -1072,7 +1072,7 @@ void RocGuiFrame::modifyLoc( iONode props, bool deep ) {
   }
 
   if( loc != NULL ) {
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "%s loc [%s]", deep?"merge":"update", wLoc.getid(loc) );
+    TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "%s loc [%s]", deep?"merge":"update", wLoc.getid(loc) );
     int cnt = NodeOp.getAttrCnt( props );
     for( i = 0; i < cnt; i++ ) {
       iOAttr attr = NodeOp.getAttr( props, i );

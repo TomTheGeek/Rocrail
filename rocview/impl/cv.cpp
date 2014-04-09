@@ -671,7 +671,7 @@ void CV::saveCVtoFile() {
 
 void CV::OnButton(wxCommandEvent& event)
 {
-  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "button event: 0x%08X", event.GetEventObject() );
+  TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "button event: 0x%08X", event.GetEventObject() );
 
   if( event.GetEventObject() == m_loadFile ) {
     loadCVfromFile();
@@ -845,7 +845,7 @@ void CV::OnButton(wxCommandEvent& event)
     }
   }
   else {
-    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "default doCV" );
+    TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "default doCV" );
     doCV( event.GetId() );
   }
 
