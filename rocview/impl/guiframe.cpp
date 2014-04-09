@@ -1540,7 +1540,7 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
           }
         }
 
-        val = StrOp.fmt( "%d", wLoc.getaddr( node ) );
+        val = StrOp.fmt( "%d%s", wLoc.getaddr( node ), wLoc.isfifotop( node )?"+":"" );
         m_ActiveLocs->SetCellValue( i, LOC_COL_ADDR, wxString(val,wxConvUTF8) );
         StrOp.free( val );
 

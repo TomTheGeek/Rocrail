@@ -246,11 +246,23 @@ static void _locoDidDepart( struct OLocation* inst ,const char* LocoId ) {
         char* locoid = (char*)ListOp.remove( data->arriveList, i);
         if( locoid != NULL )
           StrOp.free(locoid);
-        MutexOp.post( data->listmux );
-        return;
+        break;
       }
     }
     MutexOp.post( data->listmux );
+  }
+
+
+  if( data->fifo && ListOp.size(data->arriveList) > 0 ) {
+    /* Inform the loco. */
+    const char* locoid = (const char*)ListOp.get( data->arriveList, 0);
+    if( locoid != NULL ) {
+      iOLoc lc = ModelOp.getLoc( AppOp.getModel(), locoid, NULL, False);
+      if( lc != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inform loco %s that its on FiFo top in location %s", locoid, wLocation.getid(data->props) );
+        LocOp.fifoTop(lc);
+      }
+    }
   }
 }
 

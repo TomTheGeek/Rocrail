@@ -669,6 +669,7 @@ static void __broadcastLocoProps( iOLoc inst, const char* cmd, iONode node, cons
   wLoc.setV_realkmh( node, wLoc.getV_realkmh(data->props) );
   if( cmd != NULL )
     wLoc.setcmd( node, cmd );
+  wLoc.setfifotop( node, wLoc.isfifotop( data->props ) );
   AppOp.broadcastEvent( node );
 }
 
@@ -2389,6 +2390,7 @@ static void _setCurBlock( iOLoc inst, const char* id ) {
   data->curBlock = id;
   __setCurBlock4Train(inst, data->curBlock);
   wLoc.setblockid( data->props, id==NULL?"":id );
+  wLoc.setfifotop(data->props, False);
 
   if( data->driver != NULL )
     data->driver->curblock( data->driver, id );
@@ -3554,6 +3556,11 @@ static int _saveSpeed( iOLoc loc, Boolean reset ) {
   return data->savedSpeed;
 }
 
+static void _fifoTop( iOLoc loc ) {
+  iOLocData data = Data(loc);
+  wLoc.setfifotop(data->props, True);
+  __broadcastLocoProps( loc, NULL, NULL, NULL );
+}
 
 static const char* _getV_hint( iOLoc loc ) {
   iOLocData data = Data(loc);
@@ -3714,6 +3721,7 @@ static iOLoc _inst( iONode props ) {
   data->bbtMap = MapOp.inst();
   data->muxEngine = MutexOp.inst( NULL, True );
 
+  wLoc.setfifotop(data->props, False);
 
   if( wRocRail.isresetspfx(AppOp.getIni()) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "global reset speed and functions for loco [%s]", wLoc.getid(props));
