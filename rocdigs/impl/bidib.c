@@ -1234,7 +1234,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
   /* Clock command. */
   else if( StrOp.equals( NodeOp.getName( node ), wClock.name() ) ) {
     /* Fast Clock */
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "clock: %s", wClock.getcmd( node ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "clock: %s", wClock.getcmd( node ) );
 
     if(  StrOp.equals( wClock.getcmd( node ), wClock.freeze ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "freeze clock" );
@@ -1246,7 +1246,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       wClock.setcmd( node, wClock.set );
     }
     else if(  StrOp.equals( wClock.getcmd( node ), wClock.sync ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sync clock" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sync clock" );
       if( !data->fcsync ) {
         wClock.setcmd( node, wClock.set );
         data->fcsync = True;
@@ -1270,7 +1270,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       else
         wday = 6;
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
          "set clock to %d:%02d wday=%d divider=%d", hours, mins, wday, div );
       /*
       TCODE0  00mmmmmm  mmmmmm = Angabe der Minute, Wertebereich 0...59.
@@ -1821,7 +1821,7 @@ static Boolean __delNode(iOBiDiB bidib, byte* pdata) {
       iONode node = __getIniNode(bidib, bidibnode->uid);
       char localKey[32];
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "removing node %s", uidKey);
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "removing lost node %s", uidKey);
 
 
       MapOp.remove( data->nodemap, uidKey );
@@ -1869,7 +1869,7 @@ static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata, byte* path) {
 
   //TraceOp.dump ( "bidibWrite", TRCLEVEL_INFO, (char*)pdata, 10 );
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "add node: class=0x%02X vid=%d uid=%s", classid, vid, uidKey);
 
   iOBiDiBNode node = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
@@ -1986,14 +1986,14 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
     iONode child = __getIniNode(bidib, bidibnode->uid);
 
     if( Type == MSG_FEATURE_COUNT ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "MSG_FEATURE_COUNT, uid=%08X features=%d", bidibnode->uid, pdata[0] );
       data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode);
     }
     else if( Type == MSG_FEATURE ) {
       int feature = pdata[0];
       int value   = pdata[1];
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "MSG_FEATURE, uid=%08X feature=(%d) %s value=%d", bidibnode->uid, feature, bidibGetFeatureName(feature), value );
 
       if( feature == FEATURE_FW_UPDATE_MODE ) {
@@ -2002,7 +2002,7 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
 
       if( feature == FEATURE_GEN_WATCHDOG ) {
         data->watchdogInt = value;
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "watchdog timer set to %d for %08X", value, bidibnode->uid );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "watchdog timer set to %d for %08X", value, bidibnode->uid );
       }
 
       if( feature == FEATURE_CTRL_SERVO_COUNT ) {
@@ -2486,7 +2486,7 @@ static void __handleNewNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, i
 
 static void __handleLostNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, int size) {
   iOBiDiBData data = Data(bidib);
-  TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "MSG_NODE_LOST" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "node lost" );
   if( __delNode(bidib, pdata) && bidibnode != NULL) {
     data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode);
     {
@@ -2885,7 +2885,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_SYS_SW_VERSION:
   { // len = 6
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "MSG_SYS_SW_VERSION, path=%s version=%d.%d.%d", pathKey, pdata[2], pdata[1], pdata[0] );
 
     if( bidibnode != NULL ) {
