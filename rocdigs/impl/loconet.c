@@ -1104,9 +1104,9 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
 
   case OPC_SW_REP: {    // B1
     addr = __address(rsp[1], rsp[2]);
-    value = (rsp[2] & 0x10) >> 4; // thown
-    port  = (rsp[2] & 0x20) >> 5; // closed
-    __handleSensor(loconet, addr, value?1:0);
+    value = (rsp[2] & OPC_SW_REP_THROWN) >> 4; // thown
+    port  = (rsp[2] & OPC_SW_REP_CLOSED) >> 5; // closed
+    __handleSensor(loconet, addr+1, value?1:0);
     break;
   }
 
@@ -1421,6 +1421,7 @@ static void __loconetReader( void* threadinst ) {
     if( StrOp.equals( wLocoNet.cs_ibcom, wLocoNet.getcmdstn( data->loconet ) ) )
       initIBCom(loconet);
   }
+
 
   while( data->run && !data->dummyio ) {
     int available = data->lnAvailable( (obj)loconet);
