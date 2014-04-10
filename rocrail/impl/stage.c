@@ -487,9 +487,9 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
 
   else if( section != NULL && !data->wait4enter ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "sensors [%s] %s event for stage [%s] section [%s][%d] of [%d] target=%d sectionidx=%d",
+        "sensors [%s] %s event for stage [%s] section [%s][%d] of [%d] target=%d sectionidx=%d ident=%s",
         id, puls?"on":"off", data->id, wStageSection.getid(section), wStageSection.getnr(section),
-        data->sectionCount, data->targetSection, wStageSection.getidx(section) );
+        data->sectionCount, data->targetSection, wStageSection.getidx(section), ident!=NULL?ident:"-" );
 
     __dumpSections((iOStage)inst);
 
@@ -602,7 +602,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
 
       }
     }
-    else if(puls) {
+    else if(puls && data->locId != NULL) {
       iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId, NULL, False);
       if( loc != NULL && StageOp.hasExtStop(inst) && !data->early2in ) {
         /* Check if train length does already fit inside for generating the **in** event:  */
@@ -618,6 +618,21 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
         }
       }
     }
+
+    /* unexpected */
+    else if(puls && data->locId == NULL && section != NULL && wStageSection.getlcid(section) == NULL ) {
+      if( ident != NULL && StrOp.len(ident) > 0 ) {
+        if( wCtrl.isusebicom( wRocRail.getctrl( AppOp.getIni())) && wCtrl.isuseident( wRocRail.getctrl( AppOp.getIni())) ) {
+          iOLoc loc = ModelOp.getLocByIdent(AppOp.getModel(), ident, ident2, ident3, ident4, dir);
+          if( loc != NULL ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                "unexpected loco %s accepted by ident:%s in section:%s", LocOp.getId(loc), ident, wStageSection.getid(section) );
+            __occSection(inst, wStageSection.getid(section), LocOp.getId(loc));
+          }
+        }
+      }
+    }
+
     else if(!puls) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensors [%s] for stage [%s] came free; move locos...", id, data->id );
       __moveStageLocos(inst);
