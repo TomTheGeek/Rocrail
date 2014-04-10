@@ -411,7 +411,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
   Boolean endSection = __isEndSection(inst, section);
 
 
-  if( data->locId == NULL && puls && !data->wait4enter && ident != NULL && StrOp.len(ident) > 0 ) {
+  if( StrOp.equals( wStage.getfbenterid(data->props), id ) && data->locId == NULL && puls && !data->wait4enter && ident != NULL && StrOp.len(ident) > 0 ) {
     if( wCtrl.isusebicom( wRocRail.getctrl( AppOp.getIni())) && wCtrl.isuseident( wRocRail.getctrl( AppOp.getIni())) ) {
       iOLoc loc = ModelOp.getLocByIdent(AppOp.getModel(), ident, ident2, ident3, ident4, dir);
       if( loc != NULL && StageOp.lock(inst, LocOp.getId(loc), NULL, NULL, False, False, False, 0) ) {
