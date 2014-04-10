@@ -104,6 +104,7 @@ If a train reaches the exit section it will be put back into auto mode.
 #include "rocrail/wrapper/public/FeedbackEvent.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Signal.h"
+#include "rocrail/wrapper/public/RocRail.h"
 
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
@@ -408,6 +409,17 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
   iOStageData data = Data(inst);
   iONode section = (iONode)MapOp.get( data->fbMap, id );
   Boolean endSection = __isEndSection(inst, section);
+
+
+  if( data->locId == NULL && puls && !data->wait4enter && ident != NULL && StrOp.len(ident) > 0 ) {
+    if( wCtrl.isusebicom( wRocRail.getctrl( AppOp.getIni())) && wCtrl.isuseident( wRocRail.getctrl( AppOp.getIni())) ) {
+      iOLoc loc = ModelOp.getLocByIdent(AppOp.getModel(), ident, ident2, ident3, ident4, dir);
+      if( loc != NULL && StageOp.lock(inst, LocOp.getId(loc), NULL, NULL, False, False, False, 0) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unexpected loco %s accepted by ident:%s", data->locId, ident );
+      }
+    }
+  }
+
 
   if( StrOp.equals( wStage.getfbenterid(data->props), id ) ) {
     if( data->locId != NULL && StrOp.len(data->locId) > 0 && data->wait4enter ) {
