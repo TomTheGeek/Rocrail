@@ -1193,8 +1193,10 @@ static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
              "reset stageblock [%s][%d]", data->id, sections );
 
   StageOp.resetTrigs(inst);
-  data->wait4enter = False;
-
+  data->wait4enter     = False;
+  data->pendingFree    = True;
+  data->pendingSection = -1;
+  data->pendingMove    = False;
 
   /* Unlock the occupyied sections */
   for( i = 0; i < sections; i++ ) {
