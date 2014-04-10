@@ -1103,9 +1103,10 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
       break;
 
   case OPC_SW_REP: {    // B1
-    int thrown = (rsp[2] & 0x10) >> 4;
-    int closed = (rsp[2] & 0x20) >> 5;
     addr = __address(rsp[1], rsp[2]);
+    value = (rsp[2] & 0x10) >> 4; // thown
+    port  = (rsp[2] & 0x20) >> 5; // closed
+    __handleSensor(loconet, addr, value?1:0);
     break;
   }
 
