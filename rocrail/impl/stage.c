@@ -620,6 +620,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
     }
 
     /* unexpected */
+    /*
     else if(puls && data->locId == NULL && section != NULL && wStageSection.getlcid(section) == NULL ) {
       if( ident != NULL && StrOp.len(ident) > 0 ) {
         if( wCtrl.isusebicom( wRocRail.getctrl( AppOp.getIni())) && wCtrl.isuseident( wRocRail.getctrl( AppOp.getIni())) ) {
@@ -632,6 +633,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
         }
       }
     }
+    */
 
     else if(!puls) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensors [%s] for stage [%s] came free; move locos...", id, data->id );
