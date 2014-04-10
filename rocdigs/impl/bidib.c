@@ -3000,7 +3000,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"BM port %d reports loco %d, %d, %d, %d",
         port, locoAddr[0], locoAddr[1], locoAddr[2], locoAddr[3]);
-    if( bidibnode != NULL && locoAddr > 0 ) {
+    if( bidibnode != NULL && locoAddr[0] > 0 ) {
       bidibnode->occ[port] = True;
       __handleMultiAddrSensor(bidib, bidibnode, pdata[0], bidibnode->occ[port], locoAddr, type, bidibnode->bmload[port], cnt );
     }
