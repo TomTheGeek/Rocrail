@@ -71,6 +71,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
   void clearFeatureList();
   void handleMacro(iONode node);
   void handleAccessory(iONode node);
+  iONode findNodeByUID( const char* uid);
 
 
   protected:

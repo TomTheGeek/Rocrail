@@ -688,23 +688,26 @@ const char* BidibIdentDlg::GetProductName(int vid, int pid, char** www) {
 }
 
 
+iONode BidibIdentDlg::findNodeByUID( const char* uid) {
+  iONode node = (iONode)MapOp.first(nodeMap);
+  while( node != NULL ) {
+    char key[256];
+    StrOp.fmtb(key, "%08X", wBiDiBnode.getuid(node) );
+    if( StrOp.find(uid, key) != NULL ) {
+      return node;
+    }
+    node = (iONode)MapOp.next(nodeMap);
+  }
+  return NULL;
+}
+
 
 void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
   wxString itemText = m_Tree->GetItemText(event.GetItem());
   char* uid = StrOp.dup(itemText.mb_str(wxConvUTF8));
   bidibnode = (iONode)MapOp.get( nodeMap, uid );
-  if( bidibnode == NULL ) {
-    iONode node = (iONode)MapOp.first(nodeMap);
-    while( node != NULL ) {
-      char key[256];
-      StrOp.fmtb(key, "%08X", wBiDiBnode.getuid(node) );
-      if( StrOp.find(uid, key) != NULL ) {
-        bidibnode = node;
-        break;
-      }
-      node = (iONode)MapOp.next(nodeMap);
-    }
-  }
+  if( bidibnode == NULL )
+    bidibnode = findNodeByUID(uid);
 
   if( bidibnode != NULL ) {
     TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"tree selection: %s (%s)", wBiDiBnode.getpath(bidibnode), uid );
@@ -888,13 +891,18 @@ void BidibIdentDlg::onBeginDrag( wxTreeEvent& event ) {
   wxString itemText = m_Tree->GetItemText(event.GetItem());
   const char* uid = itemText.mb_str(wxConvUTF8);
   iONode bidibnode = (iONode)MapOp.get( nodeMap, uid );
+  if( bidibnode == NULL )
+    bidibnode = findNodeByUID(uid);
 
-  wxString my_text = _T("bus:")+wxString::Format(_T("%d"), wBiDiBnode.getuid(bidibnode) );
-  wxTextDataObject my_data(my_text);
-  wxDropSource dragSource( this );
-  dragSource.SetData( my_data );
-  wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
-  //event.Allow();
+  if( bidibnode != NULL ) {
+    char* dragText = StrOp.fmt("bus:%d", wBiDiBnode.getuid(bidibnode));
+    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999, "drag action for UID %s (%s)", dragText, uid );
+    wxTextDataObject my_data( wxString(dragText,wxConvUTF8) );
+    wxDropSource dragSource( this );
+    dragSource.SetData( my_data );
+    wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+    //event.Allow();
+  }
 }
 
 
@@ -942,6 +950,8 @@ void BidibIdentDlg::onItemRightClick( wxTreeEvent& event ) {
   wxString itemText = m_Tree->GetItemText(event.GetItem());
   char* uid = StrOp.dup(itemText.mb_str(wxConvUTF8));
   m_SelectedBidibNode = (iONode)MapOp.get( nodeMap, uid );
+  if( m_SelectedBidibNode == NULL )
+    m_SelectedBidibNode = findNodeByUID(uid);
   TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999, "right click on UID %s", uid );
   StrOp.free(uid);
   if( m_SelectedBidibNode == NULL )
