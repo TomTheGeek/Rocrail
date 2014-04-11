@@ -3298,7 +3298,17 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
         }
         else if( pdata[0] == 0 && pdata[1] == 1) {
           // Username
-          wBiDiBnode.setusername(child, (const char*)(pdata+3));
+          const char* username = (const char*)(pdata+3);
+          int len = StrOp.len(username);
+          int x = 0;
+          Boolean invalidString = False;
+          for( x = 0; x < len; x++ ) {
+            if( username[x] < ' ' || username[x] > '}' ) {
+              invalidString = True;
+              break;
+            }
+          }
+          wBiDiBnode.setusername(child, invalidString?"":(const char*)(pdata+3));
           StrOp.copy( bidibnode->username, (const char*)(pdata+3) );
 
           iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );

@@ -1446,6 +1446,7 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
     else if( wProgram.getcmd(node) == wProgram.type ) {
       m_BidibIdentDlg = new BidibIdentDlg(this, node);
       m_BidibIdentDlg->Show(true);
+      m_BidibIdentDlg->Raise();
     }
   }
   else if( wProgram.getlntype(node) == wProgram.lntype_rocnet ) {
@@ -3851,6 +3852,7 @@ void RocGuiFrame::OnBiDiB( wxCommandEvent& event ) {
   if( event.GetInt() == 4712 && m_RocrailIni != NULL && m_BidibIdentDlg == NULL) {
     m_BidibIdentDlg = new BidibIdentDlg(this);
     m_BidibIdentDlg->Show(true);
+    m_BidibIdentDlg->Raise();
   }
   else if( m_BidibIdentDlg != NULL ) {
     m_BidibIdentDlg->Raise();

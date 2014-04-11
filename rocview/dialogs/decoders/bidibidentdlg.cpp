@@ -349,6 +349,7 @@ int BidibIdentDlg::getLevel(const char* path, int* n, int* o, int* p, char** key
 wxTreeItemId BidibIdentDlg::addTreeChild( const wxTreeItemId& root, iONode bidibnode) {
   char key[256];
   StrOp.fmtb(key, "[%s] %08X %s", wBiDiBnode.getclassmnemonic(bidibnode), wBiDiBnode.getuid(bidibnode), wBiDiBnode.getusername(bidibnode) );
+  TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"append tree node: key=%s", key );
   wxTreeItemId item = m_Tree->AppendItem( root, wxString( key, wxConvUTF8));
   StrOp.fmtb(key, "[%s] %08X", wBiDiBnode.getclassmnemonic(bidibnode), wBiDiBnode.getuid(bidibnode) );
   MapOp.put( nodeMap, key, (obj)bidibnode);
@@ -535,9 +536,10 @@ void BidibIdentDlg::initLabels() {
 
     iOMap m1 = MapOp.inst();
 
-    for( int i = 1; i < ListOp.size(nodeList); i++ ) {
+    int listSize = ListOp.size(nodeList);
+    for( int i = 1; i < listSize; i++ ) {
       iONode bidibnode = (iONode)ListOp.get( nodeList, i );
-      TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"%s", wBiDiBnode.getpath(bidibnode) );
+      TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"bidibnode path=%s, %d of %d", wBiDiBnode.getpath(bidibnode), i, listSize );
 
       char* parentkey = NULL;
       char* key = NULL;
@@ -1275,6 +1277,7 @@ void BidibIdentDlg::onSelectUpdateFile( wxCommandEvent& event ) {
     }
   }
   fdlg->Destroy();
+  Raise();
 }
 
 void BidibIdentDlg::onUpdateStart( wxCommandEvent& event ) {
