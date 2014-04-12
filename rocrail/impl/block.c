@@ -468,7 +468,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
       /* Set in block if a loco was found with the ident. */
       if( wCtrl.isuseident( wRocRail.getctrl( AppOp.getIni())) ) {
         iOModel model = AppOp.getModel(  );
-        iOLoc identLoc = ModelOp.getLocByIdent(model, ident, ident2, ident3, ident4, dir);
+        iOLoc identLoc = ModelOp.getLocByIdent(model, ident, NULL, NULL, NULL, dir);
         if( (identLoc != NULL && data->acceptident ) || (identLoc != NULL && !ModelOp.isAuto(model)) ) {
             iONode cmd = NULL;
             iONode locoProps = LocOp.base.properties(identLoc);

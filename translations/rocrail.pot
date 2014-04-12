@@ -6996,8 +6996,14 @@ msgid "Stop at IN for half automatic mode"
 msgstr ""
 
 #. 
-# id="v0ongo"
+# id="v0atpoweron"
 #, c-format
 msgid "Send zero speed command at power on"
+msgstr ""
+
+#. 
+# id="useonlyfirstident"
+#, c-format
+msgid "Use only the first identifier"
 msgstr ""
 

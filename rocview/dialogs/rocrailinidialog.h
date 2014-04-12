@@ -370,6 +370,7 @@ public:
     wxCheckBox* m_ForceUnlock;
     wxCheckBox* m_ReleaseOnIdle;
     wxCheckBox* m_CloseOnGhost;
+    wxCheckBox* m_UseOnlyFirstIdent;
     wxCheckBox* m_ActionTimer60;
     wxCheckBox* m_RestoreSchedule;
     wxCheckBox* m_SelectShortestBlock;

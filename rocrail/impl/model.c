@@ -2803,6 +2803,8 @@ static iOLoc _getLocByAddress( iOModel inst, int addr, const char* iid ) {
 static iOLoc _getLocByIdent( iOModel inst, const char* ident1, const char* ident2, const char* ident3, const char* ident4, Boolean dir ) {
   iOModelData data = Data(inst);
   int i = 0;
+  Boolean onlyFirstIdent = wCtrl.isuseonlyfirstident( wRocRail.getctrl( AppOp.getIni() ) );
+
   int cnt = ListOp.size( data->locList );
   for( i = 0; i < cnt; i++ ) {
     iOLoc loc = (iOLoc)ListOp.get( data->locList, i );
@@ -2811,20 +2813,31 @@ static iOLoc _getLocByIdent( iOModel inst, const char* ident1, const char* ident
 
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s ident=%s, event ident=%s, %s, %s, %s",
         LocOp.getId(loc), LocOp.getIdent(loc), ident1!=NULL?ident1:"-", ident2!=NULL?ident2:"-", ident3!=NULL?ident3:"-", ident4!=NULL?ident4:"-" );
-    if( LocOp.matchIdent(loc, ident1, ident2, ident3, ident4) ) {
-      return loc;
+
+    if( onlyFirstIdent ) {
+      if( LocOp.matchIdent(loc, ident1, NULL, NULL, NULL) ) {
+        return loc;
+      }
+      else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident1) ) {
+        return loc;
+      }
     }
-    else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident1) ) {
-      return loc;
-    }
-    else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident2) ) {
-      return loc;
-    }
-    else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident3) ) {
-      return loc;
-    }
-    else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident4) ) {
-      return loc;
+    else {
+      if( LocOp.matchIdent(loc, ident1, ident2, ident3, ident4) ) {
+        return loc;
+      }
+      else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident1) ) {
+        return loc;
+      }
+      else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident2) ) {
+        return loc;
+      }
+      else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident3) ) {
+        return loc;
+      }
+      else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident4) ) {
+        return loc;
+      }
     }
   }
 

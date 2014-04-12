@@ -27720,4 +27720,7 @@
     <de txt="Bei Gleisspannung EIN Geschwindigkeits-Befehl Null senden"/>
     <nl txt="Zend een nul snelheid commando na baanspanning aan"/>
   </Msg>
+  <Msg id="useonlyfirstident">
+    <en txt="Use only the first identifier"/>
+  </Msg>
 </Messages>
