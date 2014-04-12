@@ -3326,9 +3326,12 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     }
     break;
 
+  case MSG_STALL:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"MSG_STALL: from %d with value %d", bidibnode->uid, pdata[0] );
+    break;
+
   default:
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-        "UNSUPPORTED: msg=0x%02X, path=%s", Type, pathKey );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "UNSUPPORTED: msg=0x%02X, path=%s", Type, pathKey );
     TraceOp.dump ( name, TRCLEVEL_INFO, (char*)msg, size );
     break;
 
