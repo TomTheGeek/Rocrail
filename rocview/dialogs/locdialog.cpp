@@ -87,9 +87,9 @@ BEGIN_EVENT_TABLE( LocDialog, wxDialog )
     EVT_BUTTON( ID_BUTTON_LOCO_DOC, LocDialog::OnButtonLocoDocClick )
     EVT_BUTTON( ID_LOC_COPY, LocDialog::OnLocCopyClick )
     EVT_BUTTON( ID_BUTTON_IMPORTLOCOS, LocDialog::OnButtonImportlocosClick )
-    EVT_CHECKBOX( wxID_ANY, LocDialog::OnRestoreFxClick )
-    EVT_CHECKBOX( wxID_ANY, LocDialog::OnRestoreSpeedClick )
-    EVT_CHECKBOX( wxID_ANY, LocDialog::OnShowClick )
+    EVT_CHECKBOX( ID_LOC_ONRESTOREFX, LocDialog::OnRestoreFxClick )
+    EVT_CHECKBOX( ID_LOC_RESTORESPEED, LocDialog::OnRestoreSpeedClick )
+    EVT_CHECKBOX( ID_LOC_SHOW, LocDialog::OnShowClick )
     EVT_BUTTON( ID_BUTTON_SHOWDOC, LocDialog::OnButtonShowdocClick )
     EVT_BUTTON( ID_LC_SERVICED, LocDialog::OnLcServicedClick )
     EVT_BUTTON( ID_LOC_ACTIONS, LocDialog::OnLocActionsClick )
@@ -1532,15 +1532,15 @@ void LocDialog::CreateControls()
 
     wxFlexGridSizer* itemFlexGridSizer17 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer8->Add(itemFlexGridSizer17, 0, wxGROW|wxALL, 5);
-    m_RestoreFx = new wxCheckBox( m_IndexPanel, wxID_ANY, _("Restore functions"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_RestoreFx = new wxCheckBox( m_IndexPanel, ID_LOC_ONRESTOREFX, _("Restore functions"), wxDefaultPosition, wxDefaultSize, 0 );
     m_RestoreFx->SetValue(false);
     itemFlexGridSizer17->Add(m_RestoreFx, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_RestoreSpeed = new wxCheckBox( m_IndexPanel, wxID_ANY, _("Restore speed"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_RestoreSpeed = new wxCheckBox( m_IndexPanel, ID_LOC_RESTORESPEED, _("Restore speed"), wxDefaultPosition, wxDefaultSize, 0 );
     m_RestoreSpeed->SetValue(false);
     itemFlexGridSizer17->Add(m_RestoreSpeed, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_Show = new wxCheckBox( m_IndexPanel, wxID_ANY, _("Show"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Show = new wxCheckBox( m_IndexPanel, ID_LOC_SHOW, _("Show"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Show->SetValue(false);
     itemFlexGridSizer17->Add(m_Show, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
