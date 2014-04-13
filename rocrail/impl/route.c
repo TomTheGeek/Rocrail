@@ -1177,6 +1177,15 @@ static Boolean _isLocked( iORoute inst ) {
 }
 
 
+static Boolean _isClosed( iORoute inst ) {
+  iORouteData data = Data(inst);
+
+  if( wRoute.status_closed == wRoute.getstatus(data->props) )
+    return True;
+  return False;
+}
+
+
 static Boolean _isFree( iORoute inst, const char* id ) {
   iORouteData data = Data(inst);
   Boolean isset = False;

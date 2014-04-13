@@ -1454,6 +1454,9 @@
     <fun name="setClosed" vt="void">
       <param name="inst" vt="this" remark="Route instance"/>
     </fun>
+    <fun name="isClosed" vt="Boolean">
+      <param name="inst" vt="this" remark="Route instance"/>
+    </fun>
     <data>
       <var name="lockedId" vt="const char*"/>
       <var name="requestId" vt="const char*"/>
