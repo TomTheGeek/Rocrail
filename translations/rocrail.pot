@@ -7007,3 +7007,9 @@ msgstr ""
 msgid "Use only the first identifier"
 msgstr ""
 
+#. 
+# id="useident"
+#, c-format
+msgid "Use identifier to set in block"
+msgstr ""
+

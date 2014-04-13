@@ -356,6 +356,7 @@ public:
     wxCheckBox* m_UseBiCom;
     wxCheckBox* m_CreateGuestOnBiDi;
     wxCheckBox* m_UseBiDiDirection;
+    wxCheckBox* m_UseIdent;
     wxCheckBox* m_StopAtIdentMisMatch;
     wxCheckBox* m_PowerOffAtGhost;
     wxCheckBox* m_EBreakAtGhost;

@@ -27723,4 +27723,7 @@
   <Msg id="useonlyfirstident">
     <en txt="Use only the first identifier"/>
   </Msg>
+  <Msg id="useident">
+    <en txt="Use identifier to set in block"/>
+  </Msg>
 </Messages>
