@@ -480,7 +480,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
               }
             }
 
-            if( !StrOp.equals( LocOp.getId(identLoc), data->locId )) {
+            if( !StrOp.equals( LocOp.getId(identLoc), data->locId ) && !LocOp.isAutomode(identLoc) ) {
               if( loc != NULL ) {
                 iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
                 wBlock.setid( cmd, data->id );
