@@ -120,6 +120,7 @@ static Boolean __moveStageLocos(iIBlockBase inst);
 static Boolean __dumpSections( iOStage inst );
 static Boolean __freeSections(iIBlockBase inst, const char* locid);
 static Boolean __getLength2Section( iOStage inst, const char* sectionid );
+static Boolean __unregisterCallback( iOStage inst );
 
 
 /** ----- OBase ----- */
@@ -133,6 +134,7 @@ static void __del( void* inst ) {
       ThreadOp.sleep(100);
       waitcnt++;
     }
+    __unregisterCallback(inst);
     freeMem( data );
     freeMem( inst );
     instCnt--;
@@ -1763,6 +1765,36 @@ static Boolean __getLength2Section( iOStage inst, const char* sectionid ) {
     section = wStage.nextsection( data->props, section );
   }
   return len;
+}
+
+
+static Boolean __unregisterCallback( iOStage inst ) {
+  iOStageData data = Data(inst);
+  iOModel model = AppOp.getModel();
+  iONode section = wStage.getsection( data->props );
+  iOFBack  fb = ModelOp.getFBack( model, wStage.getfbenterid(data->props) );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregister sensors for stage %s...", data->id );
+
+  if( fb != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregister enter sensor %s for stage %s...", wStage.getfbenterid(data->props), data->id );
+    FBackOp.setListener( fb, (obj)NULL, NULL );
+  }
+
+  while( section != NULL ) {
+    const char* fbid = wStageSection.getfbid( section );
+
+    if( StrOp.len( fbid ) > 0 ) {
+      fb = ModelOp.getFBack( model, fbid );
+      if( fb != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unregister section sensor %s for stage %s...", fbid, data->id );
+        FBackOp.setListener( fb, (obj)NULL, NULL );
+      }
+    }
+    section = wStage.nextsection( data->props, section );
+  }
+
+  return True;
 }
 
 /**

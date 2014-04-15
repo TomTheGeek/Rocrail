@@ -1596,6 +1596,7 @@
       <var name="fieldState1" vt="int"/>
       <var name="fieldState2" vt="int"/>
       <var name="accThread" vt="iOThread"/>
+      <var name="accrun" vt="Boolean"/>
       <var name="run" vt="Boolean"/>
       <var name="ctc1" vt="Boolean"/>
       <var name="ctc2" vt="Boolean"/>

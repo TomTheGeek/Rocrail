@@ -258,11 +258,14 @@ static char* __toString(void* inst) {
 }
 static void __del(void* inst) {
   iOSwitchData data = Data(inst);
-  if( data->run ) {
-    data->run = False;
-    ThreadOp.sleep(1000);
-    data->accctrl = NULL;
+  int waitcnt = 0;
+  /* Cleanup data->xxx members...*/
+  data->run = False;
+  while( data->accrun && waitcnt < 10 ) {
+    ThreadOp.sleep(100);
+    waitcnt++;
   }
+  data->accctrl = NULL;
   __unregisterCallback(inst);
   freeMem( data );
   freeMem( inst );
@@ -1809,6 +1812,7 @@ static void __accThread( void* threadinst ) {
   int elapseddelay = 0;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Accessory control thread for \"%s\" started.", data->id );
+  data->accrun = True;
 
   do {
     ThreadOp.sleep(1000);
@@ -1894,6 +1898,10 @@ static void __accThread( void* threadinst ) {
 
 
   } while( data->run );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Accessory control thread for \"%s\" ended.", data->id );
+  data->accrun = False;
+
 }
 
 
