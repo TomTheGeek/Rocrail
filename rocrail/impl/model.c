@@ -4630,6 +4630,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
 
     for( i = 0; i < size; i++ ) {
       iORoute route = (iORoute)ListOp.get( o->routeList, i );
+      ThreadOp.sleep(10);
 
       if( route != NULL )
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Evaluating route [%s].", RouteOp.getId(route));
@@ -4899,6 +4900,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
           blockBest = (iIBlockBase)ListOp.get( fitBlocks, i );
           *routeref = (iORoute)ListOp.get( fitRoutes, i );
         }
+        ThreadOp.sleep(10);
       }
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Block [%s] is shortest, restlen=%d,  of the well suited for [%s]",
@@ -4949,6 +4951,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
           blockBest = (iIBlockBase)ListOp.get( altBlocks, i );
           *routeref = (iORoute)ListOp.get( altRoutes, i );
         }
+        ThreadOp.sleep(10);
       }
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                      "Block [%s] is shortest, restlen=%d, of the well suited for [%s]",

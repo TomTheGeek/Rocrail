@@ -464,7 +464,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
   if( wCtrl.isusebicom( wRocRail.getctrl( AppOp.getIni())) ) {
     /*if( fbevt != NULL && _getEventCode( wFeedbackEvent.getaction( fbevt ) ) == ident_event ) {*/
     /*if( fbevt != NULL && ident > 0 ) {*/
-    if( StrOp.len(ident) > 0 ) {
+    if( ident != NULL && StrOp.len(ident) > 0 ) {
       /* Set in block if a loco was found with the ident. */
       if( wCtrl.isuseident( wRocRail.getctrl( AppOp.getIni())) ) {
         iOModel model = AppOp.getModel(  );
