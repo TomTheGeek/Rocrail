@@ -1231,7 +1231,7 @@ static Boolean checkActionCondBlock( const char* state ) {
   return False;
 }
 
-/* condState(syscmd) == [go, stop] */
+/* condState(syscmd) == [go, stop, init] */
 static Boolean checkActionCondSysCmd( const char* state ) {
   if( StrOp.equals( state, wSysCmd.go   ) ||
       StrOp.equals( state, wSysCmd.stop ) ||
@@ -1242,10 +1242,12 @@ static Boolean checkActionCondSysCmd( const char* state ) {
   return False;
 }
 
-/* condState(route) == [locked, unlocked] */
+/* condState(route) == [locked, unlocked, closed, open] */
 static Boolean checkActionCondRoute( const char* state ) {
   if( StrOp.equals( state, "unlocked" ) ||
-      StrOp.equals( state, "locked"   )
+      StrOp.equals( state, "locked"   ) ||
+      StrOp.equals( state, "closed"   ) ||
+      StrOp.equals( state, "open"     )
     )
     return True;
 
