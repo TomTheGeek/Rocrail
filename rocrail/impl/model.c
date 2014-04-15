@@ -2839,6 +2839,7 @@ static iOLoc _getLocByIdent( iOModel inst, const char* ident1, const char* ident
         return loc;
       }
     }
+    ThreadOp.sleep(10);
   }
 
   if(wCtrl.iscreateguestonbidi(wRocRail.getctrl( AppOp.getIni()))) {
