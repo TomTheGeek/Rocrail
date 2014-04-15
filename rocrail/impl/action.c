@@ -435,6 +435,9 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
             else if( !RouteOp.isClosed(st) && StrOp.equals(state, "closed") ) {
               rc = False;
             }
+            else if( RouteOp.isClosed(st) && StrOp.equals(state, "open") ) {
+              rc = False;
+            }
           }
         }
 
