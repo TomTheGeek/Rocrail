@@ -225,6 +225,7 @@
       <var name="moveMux" vt="iOMutex"/>
       <var name="watchdog" vt="iOThread"/>
       <var name="run" vt="Boolean"/>
+      <var name="wdrun" vt="Boolean"/>
       </data>
   </object>
 

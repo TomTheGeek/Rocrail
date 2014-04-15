@@ -126,8 +126,13 @@ static Boolean __getLength2Section( iOStage inst, const char* sectionid );
 static void __del( void* inst ) {
   if( inst != NULL ) {
     iOStageData data = Data(inst);
+    int waitcnt = 0;
     /* Cleanup data->xxx members...*/
-    
+    data->run = False;
+    while( data->wdrun && waitcnt < 10 ) {
+      ThreadOp.sleep(100);
+      waitcnt++;
+    }
     freeMem( data );
     freeMem( inst );
     instCnt--;
@@ -1862,6 +1867,7 @@ static void __watchdog( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOStage stage = (iOStage)ThreadOp.getParm( th );
   iOStageData data = Data(stage);
+  data->wdrun = True;
 
   ThreadOp.sleep(2000);
 
@@ -1903,6 +1909,7 @@ static void __watchdog( void* threadinst ) {
   } while(data->run);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Watchdog thread for staging block \"%s\" ended.", data->id );
+  data->wdrun = False;
 }
 
 
