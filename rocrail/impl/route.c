@@ -735,7 +735,6 @@ static Boolean __checkCrossingBlocks( iORoute inst, const char* id ) {
         StrTokOp.base.del(tok);
         return False;
       }
-      ThreadOp.sleep(10);
     };
     StrTokOp.base.del(tok);
 
