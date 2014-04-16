@@ -4631,10 +4631,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
 
     for( i = 0; i < size; i++ ) {
       iORoute route = (iORoute)ListOp.get( o->routeList, i );
-      ThreadOp.sleep(100);
-
-      if( route != NULL )
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Evaluating route [%s].", RouteOp.getId(route));
+      ThreadOp.sleep(10);
 
       if( route != NULL ) {
         Boolean fromTo = True;
@@ -4645,70 +4642,69 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
         const char* stTo = RouteOp.getToBlock( route );
         Boolean swap4BlockSide = False;
 
-        stExitSide = wRoute.isbkaside(route->base.properties(route));
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block exit side is [%s]", stExitSide?"+":"-" );
-
-        if( usemanualroutes ) {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco must use manual routes.");
-          if( !ismanual ) {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Skip none manual route [%s].", RouteOp.getId(route));
-            continue;
-          }
-          else if( ismanual && !isset ) {
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Skip manual route [%s] because it is not set free to use.", RouteOp.getId(route));
-            continue;
-          }
-        }
-
-        if( !isfree ) {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                "ignoring route [%s] because it is not free",
-                RouteOp.getId(route) );
-          continue;
-        }
-
-        if( stEnterSide == stExitSide ) {
-          /* need to change direction but blocksides are used, check if allowed*/
-          if( !secondnextblock && LocOp.getV(loc) == 0 &&  ( fromBlock->isTTBlock(fromBlock) || (LocOp.isCommuter( loc ) && allowChgDir ) ) ) {
-            if( fromBlock->isTTBlock(fromBlock) ) {
-              /* for turntable allow routes with swap still as best when suited well, do not set swap4blockside in that case (REB)*/
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                "allow route [%s] from a turntable: the exit side is equal to the enter side [%s]. Swap needed.",
-                RouteOp.getId(route), stEnterSide?"+":"-" );
-            }
-            else {
-              /* commuter: allow, set swap4BlockSide flag so that well suited routes are put in the alt list and not in the best list. (REB)*/
-              swap4BlockSide = True;
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                "allow route [%s] for a commuter train: the exit side is equal to the enter side [%s]. Swap needed.",
-                RouteOp.getId(route), stEnterSide?"+":"-" );
-            }
-            MapOp.put( swapRoutes, route->base.id(route), (obj)route );
-          }
-          else {
-            /* other case, do not allow */
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                "ignoring route [%s] because the exit side is equal to the enter side [%s]",
-                RouteOp.getId(route), stEnterSide?"+":"-" );
-            continue;
-          }
-        }
-
-
-
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "[%d] FromBlock [%s] ToBlock [%s]", i, stFrom, stTo );
-
-        destdir = RouteOp.getDirection( route, fromBlockId, &fromTo );
-        samedir = ( ( swapPlacingInPrevRoute ? !locdir : locdir ) == destdir ? True : False);
-
-        if( swap4BlockSide ) {
-          samedir = False;
-        }
-
         /* Must match the fromBlock: */
         if( R2RnetOp.compare( fromBlockId, stFrom ) )
         {
-          iIBlockBase block = (iIBlockBase)MapOp.get( o->blockMap, stTo );
+          iIBlockBase block = NULL;
+
+          stExitSide = wRoute.isbkaside(route->base.properties(route));
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block exit side is [%s]", stExitSide?"+":"-" );
+
+          if( usemanualroutes ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco must use manual routes.");
+            if( !ismanual ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Skip none manual route [%s].", RouteOp.getId(route));
+              continue;
+            }
+            else if( ismanual && !isset ) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Skip manual route [%s] because it is not set free to use.", RouteOp.getId(route));
+              continue;
+            }
+          }
+
+          if( !isfree ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                  "ignoring route [%s] because it is not free",
+                  RouteOp.getId(route) );
+            continue;
+          }
+
+          if( stEnterSide == stExitSide ) {
+            /* need to change direction but blocksides are used, check if allowed*/
+            if( !secondnextblock && LocOp.getV(loc) == 0 &&  ( fromBlock->isTTBlock(fromBlock) || (LocOp.isCommuter( loc ) && allowChgDir ) ) ) {
+              if( fromBlock->isTTBlock(fromBlock) ) {
+                /* for turntable allow routes with swap still as best when suited well, do not set swap4blockside in that case (REB)*/
+                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                  "allow route [%s] from a turntable: the exit side is equal to the enter side [%s]. Swap needed.",
+                  RouteOp.getId(route), stEnterSide?"+":"-" );
+              }
+              else {
+                /* commuter: allow, set swap4BlockSide flag so that well suited routes are put in the alt list and not in the best list. (REB)*/
+                swap4BlockSide = True;
+                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                  "allow route [%s] for a commuter train: the exit side is equal to the enter side [%s]. Swap needed.",
+                  RouteOp.getId(route), stEnterSide?"+":"-" );
+              }
+              MapOp.put( swapRoutes, route->base.id(route), (obj)route );
+            }
+            else {
+              /* other case, do not allow */
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                  "ignoring route [%s] because the exit side is equal to the enter side [%s]",
+                  RouteOp.getId(route), stEnterSide?"+":"-" );
+              continue;
+            }
+          }
+
+          destdir = RouteOp.getDirection( route, fromBlockId, &fromTo );
+          samedir = ( ( swapPlacingInPrevRoute ? !locdir : locdir ) == destdir ? True : False);
+
+          if( swap4BlockSide ) {
+            samedir = False;
+          }
+
+          block = (iIBlockBase)MapOp.get( o->blockMap, stTo );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Evaluating route [%s].", RouteOp.getId(route));
 
           /* check if it is a net block */
           if( block == NULL && StrOp.find( stTo, "::" ) != NULL ) {
