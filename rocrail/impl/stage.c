@@ -379,7 +379,6 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
             "freelen=%d loco=%s freeupsection=%d nrOccSections=%d", freelen, data->locId, freeupsection, nrOccSections );
         break;
       }
-      ThreadOp.sleep(10);
     }
 
     /* check the sections */
@@ -391,7 +390,6 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
         wStageSection.setlcid(section, NULL );
         ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, "", False, 0, 0, wStageSection.getid(section) );
       }
-      ThreadOp.sleep(10);
     }
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -919,7 +917,7 @@ static void _init( iIBlockBase inst ) {
         LocOp.setCurBlock( loc, data->id );
       }
     }
-    ThreadOp.sleep(10);
+
   }
 
 }
@@ -981,7 +979,6 @@ static Boolean __willLocoFit(iIBlockBase inst ,const char* locid, Boolean lock) 
       }
       break;
     }
-    ThreadOp.sleep(10);
   }
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%d free sections, target section is %d", data->freeSections, targetSection );
 
@@ -1409,7 +1406,6 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
   int i = 0;
   for( i = ListOp.size(data->sectionList)-1; i >= 0; i--) {
     iONode section = (iONode)ListOp.get(data->sectionList, i);
-    ThreadOp.sleep(10);
 
     if( nextFreeSection == NULL && (wStageSection.getlcid(section) == NULL || StrOp.len(wStageSection.getlcid(section)) == 0) ) {
       if( __isSectionElectricallyFree(inst, section ) ) {
@@ -1537,7 +1533,6 @@ static Boolean __freeSections(iIBlockBase inst, const char* locid) {
       ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, "", False, 0, 0, wStageSection.getid(section) );
       unlocked = True;
     }
-    ThreadOp.sleep(10);
   }
 
   if( unlocked ) {
@@ -1574,7 +1569,6 @@ static Boolean __freeSection(iIBlockBase inst, const char* secid) {
       ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, "", False, 0, 0, secid );
       unlocked = True;
     }
-    ThreadOp.sleep(10);
   }
 
   return unlocked;
@@ -1596,7 +1590,6 @@ static Boolean __occSection(iIBlockBase inst, const char* secid, const char* lci
       ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, lcid, False, 0, 0, secid );
       locked = True;
     }
-    ThreadOp.sleep(10);
   }
 
   return locked;
@@ -1878,7 +1871,6 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
       if( __isEndSection(inst, section) )
         return True;
     }
-    ThreadOp.sleep(10);
   }
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
       "departure of loco %s from stage %s is not allowed; its not in the end section", id, data->id );
@@ -1901,7 +1893,6 @@ static void _setSectionOcc(iOStage inst, const char* sectionid, const char* loco
       wStageSection.setlcid( section, locoid);
       break;
     }
-    ThreadOp.sleep(10);
   }
 }
 
@@ -1933,7 +1924,6 @@ static void __watchdog( void* threadinst ) {
               __moveStageLocos((iIBlockBase)stage);
               break;
             }
-            ThreadOp.sleep(10);
           }
         }
         else if( wStageSection.getlcid(section) != NULL && StrOp.len(wStageSection.getlcid(section)) > 0 ) {
