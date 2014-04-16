@@ -331,17 +331,17 @@ static char* __createAccessorymapKeyFromAPGPVIB( char key[], int addr, int port,
 
   if( addr == 0 ) {
     /* PADA -> FADA */
-    fAddr = (port-1)*2 + gate;
+    fAddr = (port-1)*2;
   }else if( port != 0 ) {
     /* MADA (NMRA) -> FADA */
-    fAddr = (addr-1)*8 + (port-1)*2 + gate ;
+    fAddr = (addr-1)*8 + (port-1)*2;
   }
 
   if( ( iid == NULL ) || ( StrOp.len( iid ) == 0 ) ) {
     iid = wDigInt.getiid(AppOp.getIniNode( wDigInt.name() ) );
   }
 
-  StrOp.fmtb( key, "%d-%d-%d-%s-%d", fAddr, param, value, iid, bus );
+  StrOp.fmtb( key, "%d-%d-%d-%d-%s-%d", fAddr, gate, param, value, iid, bus );
 
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__createAccessorymapKeyFromAPGPVIB: addr[%d] port[%d] gate[%d] param[%d] value[%d] iid[%s] bus[%d] ( fAddr[%d] ) -> key[%s]",
       addr, port, gate, param, value, iid, bus, fAddr, key);
@@ -1110,7 +1110,7 @@ static Boolean isValidLocoActionScheduleId( iOAnalyse inst, const char* lcid, co
   return rc;
 }
 
-/* conID == loco condState(loco) [min, mid, cruise, max, consist(???)][forwards|reverse] [+|-] */
+/* conID == loco condState(loco) [forwards,reverse,diesel,steam,electric,min,mid,cruise,max,fon,foff,+,-,#,x,light,lightgoods,person,goods,post,ice,mixed,regional] */
 static Boolean checkActionCondLoco( iOAnalyse inst, const char* acLcid, const char* lcid, const char* state ) {
   if( state == NULL || StrOp.len( state ) == 0 )
     return True;
@@ -1130,61 +1130,29 @@ static Boolean checkActionCondLoco( iOAnalyse inst, const char* acLcid, const ch
   iOStrTok tok = StrTokOp.inst( state, ',');
   while( StrTokOp.hasMoreTokens(tok) ) {
     const char* token = StrTokOp.nextToken( tok );
-    if( ! StrOp.equals( token, wLoc.min     ) &&
-        ! StrOp.equals( token, wLoc.mid     ) &&
-        ! StrOp.equals( token, wLoc.cruise  ) &&
-        ! StrOp.equals( token, wLoc.max     ) &&
-        ! StrOp.equals( token, "forwards"   ) &&
-        ! StrOp.equals( token, "reverse"    ) &&
-        ! StrOp.equals( token, "+"          ) &&
-        ! StrOp.equals( token, "-"          ) &&
-        ! ( StrOp.startsWith( token, "schedule:" ) && isValidLocoActionScheduleId( inst, lcid, token ) )
+    if( ! StrOp.equals( token, "forwards"            ) &&
+        ! StrOp.equals( token, "reverse"             ) &&
+        ! StrOp.equals( token, wLoc.engine_diesel    ) &&
+        ! StrOp.equals( token, wLoc.engine_steam     ) &&
+        ! StrOp.equals( token, wLoc.engine_electric  ) &&
+        ! StrOp.equals( token, wLoc.min              ) &&
+        ! StrOp.equals( token, wLoc.mid              ) &&
+        ! StrOp.equals( token, wLoc.cruise           ) &&
+        ! StrOp.equals( token, wLoc.max              ) &&
+        ! StrOp.equals( token, "+"                   ) &&
+        ! StrOp.equals( token, "-"                   ) &&
+        ! StrOp.equals( token, wLoc.cargo_light      ) &&
+        ! StrOp.equals( token, wLoc.cargo_lightgoods ) &&
+        ! StrOp.equals( token, wLoc.cargo_person     ) &&
+        ! StrOp.equals( token, wLoc.cargo_goods      ) &&
+        ! StrOp.equals( token, wLoc.cargo_post       ) &&
+        ! StrOp.equals( token, wLoc.cargo_ice        ) &&
+        ! StrOp.equals( token, wLoc.cargo_mixed      ) &&
+        ! StrOp.equals( token, wLoc.cargo_regional   ) &&
+        ! ( StrOp.startsWith( token, "schedule:" ) && isValidLocoActionScheduleId( inst, (lcid!=NULL)?lcid:acLcid, token ) )
       ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondLoco for lc[%s]: lc[%s] invalid state[%s]",
-          acLcid, lcid, token );
-      rc = False;
-    }
-  }
-
-  StrTokOp.base.del(tok);
-
-  return rc;
-}
-
-/* conID == "*"  condState(loco_wildcard) == [][diesel, steam, electric][forwards|reverse]][+|-][#addr[,#addr]][#addr-addr] */
-static Boolean checkActionCondLocoWc( iOAnalyse inst, const char* acLcid, const char* state ) {
-  if( state == NULL || StrOp.len( state ) == 0 ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "checkActionCondLocoWc for lc[%s]: lc[*] state[%s] is empty state.",
-        acLcid, state );
-    return True;
-  }
-
-  if( StrOp.startsWith( state, "#" ) ||
-      StrOp.startsWith( state, "x" )
-    )
-    return locoRangeChecks( state );
-
-  if( StrOp.startsWith( state, "fon"  ) ||
-      StrOp.startsWith( state, "foff" )
-    )
-    return locoFnChecks( state );
-
-  Boolean rc = True;
-
-  iOStrTok tok = StrTokOp.inst( state, ',');
-  while( StrTokOp.hasMoreTokens(tok) ) {
-    const char* token = StrTokOp.nextToken( tok );
-    if( ! StrOp.equals( token, "diesel"   ) &&
-        ! StrOp.equals( token, "steam"    ) &&
-        ! StrOp.equals( token, "electric" ) &&
-        ! StrOp.equals( token, "forwards" ) &&
-        ! StrOp.equals( token, "reverse"  ) &&
-        ! StrOp.equals( token, "+"        ) &&
-        ! StrOp.equals( token, "-"        ) &&
-        ! ( StrOp.startsWith( token, "schedule:" ) && isValidLocoActionScheduleId( inst, acLcid, token ) )
-      ) {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "checkActionCondLocoWcfor lc[%s]: lc[*] invalid state[%s]",
-          acLcid, token );
+          acLcid, (lcid!=NULL)?lcid:acLcid, token );
       rc = False;
     }
   }
@@ -1322,7 +1290,7 @@ static int checkAction( iOAnalyse inst, int acIdx, iONode action, Boolean repair
       }else if( StrOp.equals( condId, "*" ) ) {
         /* "*" is always a valid loco */
         ptr = (char *) ~0 ;
-        if( checkActionCondLocoWc( inst, acLcid, condState ) ) {
+        if( checkActionCondLoco( inst, acLcid, NULL, condState ) ) {
           condOK = True;
         }
       }
@@ -7907,24 +7875,27 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
               }
 
               if( ( addr2 != 0 ) || ( port2 != 0 ) || ( aspects > 2 ) || ( ( aspects == 2 ) && ( ! asSwitch ) ) ) {
-                __createAccessorymapKeyFromAPGPVIB( key, addr2, port2, gate2, 0, 1, iid, bus );
-                accessoryMapItem = (iONode)MapOp.get( accessoryMap, key );
-                if( accessoryMapItem != NULL ) {
-                  Boolean iMain = StrOp.equals( wSignal.main, wSignal.getsignal( item ) ) ;
-                  Boolean iDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( item ) ) ;
-                  Boolean amiMain = StrOp.equals( wSignal.main, wSignal.getsignal( accessoryMapItem ) ) ;
-                  Boolean amiDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( accessoryMapItem ) ) ;
-                  Boolean typeMatch = ( iMain && amiDistant ) || ( iDistant && amiMain );
-                  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING%s: signal %s(%s) GREEN uses same address %d-%d-%d as %s(%s) (aMapKey=%s)",
-                      typeMatch?"(minor)":"", wItem.getid(item), wSignal.getsignal( item ), addr2, port2, gate2, wItem.getid(accessoryMapItem), wSignal.getsignal(accessoryMapItem), key );
-                  if( typeMatch && iMain ) {
-                    /* replace distant entry by main entry */
-                    MapOp.remove( accessoryMap, key );
+                /* only test GREEN if addr port and gate are not default (valid config) */
+                if( ( addr2 != 0 ) || ( port2 != 0 ) || ( gate2 != 0 ) ) {
+                  __createAccessorymapKeyFromAPGPVIB( key, addr2, port2, gate2, 0, 1, iid, bus );
+                  accessoryMapItem = (iONode)MapOp.get( accessoryMap, key );
+                  if( accessoryMapItem != NULL ) {
+                    Boolean iMain = StrOp.equals( wSignal.main, wSignal.getsignal( item ) ) ;
+                    Boolean iDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( item ) ) ;
+                    Boolean amiMain = StrOp.equals( wSignal.main, wSignal.getsignal( accessoryMapItem ) ) ;
+                    Boolean amiDistant = StrOp.equals( wSignal.distant, wSignal.getsignal( accessoryMapItem ) ) ;
+                    Boolean typeMatch = ( iMain && amiDistant ) || ( iDistant && amiMain );
+                    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING%s: signal %s(%s) GREEN uses same address %d-%d-%d as %s(%s) (aMapKey=%s)",
+                        typeMatch?"(minor)":"", wItem.getid(item), wSignal.getsignal( item ), addr2, port2, gate2, wItem.getid(accessoryMapItem), wSignal.getsignal(accessoryMapItem), key );
+                    if( typeMatch && iMain ) {
+                      /* replace distant entry by main entry */
+                      MapOp.remove( accessoryMap, key );
+                      MapOp.put( accessoryMap, key, (obj)item );
+                    }
+                  }
+                  else {
                     MapOp.put( accessoryMap, key, (obj)item );
                   }
-                }
-                else {
-                  MapOp.put( accessoryMap, key, (obj)item );
                 }
               }
 
@@ -8142,7 +8113,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
   if( healthy ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Plan is healthy" );
   } else {
-    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Plan is NOT healthty. See ERROR lines above." );
+    TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Plan is NOT healthty. See previous ERROR lines." );
   }
 
   return healthy;
