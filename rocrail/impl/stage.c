@@ -805,11 +805,13 @@ static int _getWait( iIBlockBase inst ,iOLoc loc ,Boolean reverse, int* oppwait 
     blockwait = wStage.getwaittime( data->props );
   }
   else if( StrOp.equals( wBlock.wait_none, wStage.getwaitmode( data->props ) ) ) {
-    blockwait = 0;
+    blockwait = 1;
   }
+  if( blockwait < 1 )
+    blockwait = 1;
 
   *oppwait = blockwait;
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "wait for %d seconds", blockwait );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "wait for %d seconds in %s", blockwait, data->id );
   return blockwait;
 }
 

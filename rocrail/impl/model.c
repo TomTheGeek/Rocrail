@@ -4631,7 +4631,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
 
     for( i = 0; i < size; i++ ) {
       iORoute route = (iORoute)ListOp.get( o->routeList, i );
-      ThreadOp.sleep(10);
+      ThreadOp.sleep(100);
 
       if( route != NULL )
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Evaluating route [%s].", RouteOp.getId(route));
@@ -4646,7 +4646,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
         Boolean swap4BlockSide = False;
 
         stExitSide = wRoute.isbkaside(route->base.properties(route));
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block exit side is [%s]", stExitSide?"+":"-" );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block exit side is [%s]", stExitSide?"+":"-" );
 
         if( usemanualroutes ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco must use manual routes.");
@@ -4696,8 +4696,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
 
 
 
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                       "[%d] FromBlock [%s] ToBlock [%s]", i, stFrom, stTo );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "[%d] FromBlock [%s] ToBlock [%s]", i, stFrom, stTo );
 
         destdir = RouteOp.getDirection( route, fromBlockId, &fromTo );
         samedir = ( ( swapPlacingInPrevRoute ? !locdir : locdir ) == destdir ? True : False);
