@@ -210,10 +210,15 @@ static const char* __createRoute( iOModPlanData data, iONode model, iOList route
     }
     if( routeseg != toRoute ) {
       iONode swcmd  = wRoute.getswcmd(routeseg);
+      iONode fbevent  = wRoute.getfbevent(routeseg);
       iONode acctrl = wRoute.getactionctrl(routeseg);
       while(swcmd != NULL) {
         NodeOp.addChild( newRoute, (iONode)NodeOp.base.clone(swcmd) );
         swcmd = wRoute.nextswcmd(routeseg, swcmd);
+      }
+      while(fbevent != NULL) {
+        NodeOp.addChild( newRoute, (iONode)NodeOp.base.clone(fbevent) );
+        fbevent = wRoute.nextfbevent(routeseg, fbevent);
       }
       while(acctrl != NULL) {
         NodeOp.addChild( newRoute, (iONode)NodeOp.base.clone(acctrl) );
