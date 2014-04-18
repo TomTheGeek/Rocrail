@@ -1341,7 +1341,7 @@
                                             </object>
                                             <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
+                                                <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND</property>
                                                 <property name="proportion">0</property>
                                                 <object class="wxTextCtrl" expanded="0">
                                                     <property name="bg"></property>
@@ -1476,7 +1476,7 @@
                                                     <property name="name">m_OwnSectionLength</property>
                                                     <property name="permission">protected</property>
                                                     <property name="pos"></property>
-                                                    <property name="size">100,-1</property>
+                                                    <property name="size">120,-1</property>
                                                     <property name="style">wxSP_ARROW_KEYS</property>
                                                     <property name="subclass"></property>
                                                     <property name="tooltip"></property>
