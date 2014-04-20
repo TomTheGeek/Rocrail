@@ -39,11 +39,17 @@ class StageDlg : public stagedlggen
   iONode m_Section;
   int    m_TabAlign;
   int    m_SetPage;
+  int    m_SortCol;
 
   void initLabels();
   bool evaluate();
   void initSections();
   void initValues();
+  void initIndex();
+  int findID( const char* ID );
+  void setSelection(const char* ID);
+  int getLength(iONode stage, int* nrsection);
+
 
 protected:
 	// Handlers for stagedlggen events.
@@ -58,6 +64,10 @@ protected:
   void OnSetLoco( wxCommandEvent& event );
   void OnFreeAll( wxCommandEvent& event );
   void onActions( wxCommandEvent& event );
+  void onStageColumn( wxListEvent& event );
+  void onStageList( wxListEvent& event );
+  void onIndexNew( wxCommandEvent& event );
+  void onIndexDelete( wxCommandEvent& event );
 
 public:
 	/** Constructor */

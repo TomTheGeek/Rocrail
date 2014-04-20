@@ -102,6 +102,7 @@
 #include "rocview/dialogs/throttledlg.h"
 #include "rocview/dialogs/accdecdlg.h"
 #include "rocview/dialogs/sensorevents.h"
+#include "rocview/dialogs/stagedlg.h"
 
 
 
@@ -320,6 +321,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_EditRoutes     , RocGuiFrame::OnEditRoutes)
     EVT_MENU( ME_EditBlocks     , RocGuiFrame::OnEditBlocks)
     EVT_MENU( ME_EditBlockGroups, RocGuiFrame::OnEditBlockGroups)
+    EVT_MENU( ME_EditStages     , RocGuiFrame::OnEditStages)
     EVT_MENU( ME_EditSignals    , RocGuiFrame::OnEditSignals)
     EVT_MENU( ME_EditOutputs    , RocGuiFrame::OnEditOutputs)
     EVT_MENU( ME_EditSchedules  , RocGuiFrame::OnEditSchedules)
@@ -1967,6 +1969,7 @@ void RocGuiFrame::initFrame() {
   menuTables->Append(ME_EditOperators, wxGetApp().getMenu("operatortable"), wxGetApp().getTip("operatortable") );
   menuTables->Append(ME_EditRoutes, wxGetApp().getMenu("routetable"), wxGetApp().getTip("routetable") );
   menuTables->Append(ME_EditBlocks, wxGetApp().getMenu("blocktable"), wxGetApp().getTip("blocktable") );
+  menuTables->Append(ME_EditStages, wxGetApp().getMenu("stagetable"), wxGetApp().getTip("stagetable") );
   menuTables->Append(ME_EditSchedules, wxGetApp().getMenu("scheduletable"), wxGetApp().getTip("scheduletable") );
   menuTables->Append(ME_EditTours, wxGetApp().getMenu("tourtable"), wxGetApp().getTip("tourtable") );
   menuTables->Append(ME_EditLocations, wxGetApp().getMenu("locationtable"), wxGetApp().getTip("locationtable") );
@@ -3751,6 +3754,14 @@ void RocGuiFrame::OnEditBlocks( wxCommandEvent& event ) {
   dlg->Destroy();
 }
 
+void RocGuiFrame::OnEditStages( wxCommandEvent& event ) {
+  StageDlg*  dlg = new StageDlg(this, (iONode)NULL );
+  if( wxID_OK == dlg->ShowModal() ) {
+    /* Notify RocRail. */
+  }
+  dlg->Destroy();
+}
+
 void RocGuiFrame::OnEditBlockGroups( wxCommandEvent& event ) {
   BlockGroupingDialog*  dlg = new BlockGroupingDialog(this, (iONode)NULL, true );
   if( wxID_OK == dlg->ShowModal() ) {
@@ -4012,6 +4023,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_EditSensors);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
   mi = menuBar->FindItem(ME_EditBlocks);
+  if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
+  mi = menuBar->FindItem(ME_EditStages);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );
   mi = menuBar->FindItem(ME_EditBlockGroups);
   if( mi != NULL ) mi->Enable( !m_bAutoMode || !wxGetApp().isRestrictedEdit() );

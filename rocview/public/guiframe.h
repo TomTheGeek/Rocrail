@@ -172,6 +172,7 @@ public:
   void OnEditRoutes(wxCommandEvent& event);
   void OnEditBlocks(wxCommandEvent& event);
   void OnEditBlockGroups(wxCommandEvent& event);
+  void OnEditStages(wxCommandEvent& event);
   void OnEditSignals(wxCommandEvent& event);
   void OnEditOutputs(wxCommandEvent& event);
   void OnEditSchedules(wxCommandEvent& event);
@@ -526,6 +527,7 @@ enum
     ME_EditWaybills,
     ME_EditBlocks,
     ME_EditBlockGroups,
+    ME_EditStages,
     ME_EditRoutes,
     ME_EditTurnouts,
     ME_EditSensors,

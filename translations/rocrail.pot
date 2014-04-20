@@ -7013,3 +7013,9 @@ msgstr ""
 msgid "Use identifier to set in block"
 msgstr ""
 
+#. 
+# id="stagetable"
+#, c-format
+msgid "Staging block table"
+msgstr ""
+

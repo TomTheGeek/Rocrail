@@ -34,6 +34,7 @@
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/StageList.h"
 #include "rocrail/wrapper/public/StageSection.h"
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
@@ -49,6 +50,7 @@ StageDlg::StageDlg( wxWindow* parent, iONode p_Props ):stagedlggen( parent )
   m_TabAlign = wxGetApp().getTabAlign();
   m_Props = p_Props;
   m_Section = NULL;
+  m_SortCol = 0;
   initLabels();
 
   m_General->GetSizer()->Layout();
@@ -64,8 +66,10 @@ StageDlg::StageDlg( wxWindow* parent, iONode p_Props ):stagedlggen( parent )
 
   if( m_Props != NULL ) {
     initValues();
-    m_SetPage = wxGetApp().getFrame()->isAutoMode()?1:0;
+    m_SetPage = wxGetApp().getFrame()->isAutoMode()?2:1;
   }
+  initIndex();
+
   wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_STAGEBOOK );
   wxPostEvent( m_Notebook, event );
 
@@ -88,9 +92,10 @@ static int __sortStr(obj* _a, obj* _b)
 
 void StageDlg::initLabels() {
   SetTitle(wxGetApp().getMsg( "stagingblock" ));
-  m_Notebook->SetPageText( 0, wxGetApp().getMsg( "general" ) );
-  m_Notebook->SetPageText( 1, wxGetApp().getMsg( "sections" ) );
-  m_Notebook->SetPageText( 2, wxGetApp().getMsg( "details" ) );
+  m_Notebook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
+  m_Notebook->SetPageText( 1, wxGetApp().getMsg( "general" ) );
+  m_Notebook->SetPageText( 2, wxGetApp().getMsg( "sections" ) );
+  m_Notebook->SetPageText( 3, wxGetApp().getMsg( "details" ) );
 
   if( wxGetApp().getFrame()->isAutoMode() ) {
     m_General->Enable(false);
@@ -99,6 +104,14 @@ void StageDlg::initLabels() {
     m_DeleteSection->Enable(false);
     m_SectionSensor->Enable(false);
   }
+
+  // Index
+  m_StageList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
+  m_StageList->InsertColumn(1, wxGetApp().getMsg( "description" ), wxLIST_FORMAT_LEFT );
+  m_StageList->InsertColumn(2, wxGetApp().getMsg( "sections" ), wxLIST_FORMAT_LEFT );
+  m_StageList->InsertColumn(3, wxGetApp().getMsg( "length" ), wxLIST_FORMAT_LEFT );
+  m_IndexNew->SetLabel( wxGetApp().getMsg( "new" ) );
+  m_IndexDelete->SetLabel( wxGetApp().getMsg( "delete" ) );
 
   // General
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
@@ -314,6 +327,24 @@ void StageDlg::initSections() {
   m_SetLoco->Enable(false);
   m_FreeSection->Enable(false);
 
+}
+
+int StageDlg::getLength(iONode stage, int* nrsections) {
+  // init Sections
+  int cnt = 0;
+  int length = 0;
+  iONode section = wStage.getsection(stage);
+  while( section != NULL ) {
+    int sectionlength = wStageSection.getlen(section);
+    if( sectionlength > 0 )
+      length += sectionlength;
+    else
+      length += wStage.getslen(stage);
+    section = wStage.nextsection(stage, section);
+    cnt++;
+  }
+  *nrsections = cnt;
+  return length;
 }
 
 void StageDlg::initValues() {
@@ -547,3 +578,193 @@ void StageDlg::onActions( wxCommandEvent& event ) {
   }
   dlg->Destroy();
 }
+
+
+void StageDlg::onStageColumn( wxListEvent& event ) {
+  m_SortCol = event.GetColumn();
+  initIndex();
+}
+
+
+void StageDlg::onStageList( wxListEvent& event ) {
+  int index = event.GetIndex();
+  m_Props = (iONode)m_StageList->GetItemData(index);
+  if( m_Props != NULL )
+    initValues();
+  else
+    TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+}
+
+
+void StageDlg::onIndexNew( wxCommandEvent& event ) {
+  int i = findID("NEW");
+  if( i == wxNOT_FOUND ) {
+    iONode model = wxGetApp().getModel();
+    if( model != NULL ) {
+      iONode sblist = wPlan.getsblist( model );
+      if( sblist == NULL ) {
+        sblist = NodeOp.inst( wStageList.name(), model, ELEMENT_NODE );
+        NodeOp.addChild( model, sblist );
+      }
+      if( sblist != NULL ) {
+        iONode stage = NodeOp.inst( wStage.name(), sblist, ELEMENT_NODE );
+        NodeOp.addChild( sblist, stage );
+        wStage.setid( stage, "NEW" );
+        wStage.setx( stage, 0 );
+        wStage.sety( stage, 0 );
+        wStage.setz( stage, 0 );
+        m_Props = stage;
+        initValues();
+        initIndex();
+        setSelection(wStage.getid( stage ));
+      }
+    }
+  }
+}
+
+
+void StageDlg::onIndexDelete( wxCommandEvent& event ) {
+  if( m_Props == NULL )
+    return;
+
+  int action = wxMessageDialog( this, wxGetApp().getMsg("removewarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO )
+    return;
+
+  wxGetApp().pushUndoItem( (iONode)NodeOp.base.clone( m_Props ) );
+  /* Notify RocRail. */
+  iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+  wModelCmd.setcmd( cmd, wModelCmd.remove );
+  NodeOp.addChild( cmd, (iONode)m_Props->base.clone( m_Props ) );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+
+  iONode model = wxGetApp().getModel();
+  if( model != NULL ) {
+    iONode sblist = wPlan.getsblist( model );
+    if( sblist != NULL ) {
+      NodeOp.removeChild( sblist, m_Props );
+      m_Props = NULL;
+    }
+  }
+
+  initIndex();
+}
+
+
+/* comparator for sorting by id: */
+static int __sortID(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wItem.getid( a );
+    const char* idB = wItem.getid( b );
+    return strcmp( idA, idB );
+}
+
+static int __sortDesc(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wItem.getdesc( a );
+    const char* idB = wItem.getdesc( b );
+    return strcmp( idA, idB );
+}
+
+
+void StageDlg::initIndex() {
+  TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "initIndex" );
+
+  SetTitle(wxGetApp().getMsg( "stagetable" ));
+
+  m_StageList->DeleteAllItems();
+  iONode model = wxGetApp().getModel();
+  if( model != NULL ) {
+    iONode sblist = wPlan.getsblist( model );
+    if( sblist != NULL ) {
+      iOList list = ListOp.inst();
+      int cnt = NodeOp.getChildCnt( sblist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode stage = NodeOp.getChild( sblist, i );
+        const char* id = wStage.getid( stage );
+        if( id != NULL ) {
+          ListOp.add(list, (obj)stage);
+        }
+      }
+
+      if( m_SortCol == 1 ) {
+        ListOp.sort(list, &__sortDesc);
+      }
+      else {
+        ListOp.sort(list, &__sortID);
+      }
+
+      int idx = 0;
+      cnt = ListOp.size( list );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode stage = (iONode)ListOp.get( list, i );
+        const char* id = wStage.getid( stage );
+        m_StageList->InsertItem( idx, wxString(id,wxConvUTF8) );
+        m_StageList->SetItem( idx, 1, wxString(wStage.getdesc( stage ), wxConvUTF8) );
+
+        int nrsections = 0;
+        int len = getLength(stage, &nrsections);
+        m_StageList->SetItem( idx, 2, wxString::Format(wxT("%d"), nrsections) );
+        m_StageList->SetItem( idx, 3, wxString::Format(wxT("%d"), len) );
+
+        m_StageList->SetItemPtrData(idx, (wxUIntPtr)stage);
+        idx++;
+      }
+
+      // resize
+      for( int n = 0; n < 4; n++ ) {
+        m_StageList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+        int autoheadersize = m_StageList->GetColumnWidth(n);
+        m_StageList->SetColumnWidth(n, wxLIST_AUTOSIZE);
+        int autosize = m_StageList->GetColumnWidth(n);
+        if(autoheadersize > autosize )
+          m_StageList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+      }
+
+      /* clean up the temp. list */
+      ListOp.base.del(list);
+
+      if( m_Props != NULL ) {
+        setSelection(wStage.getid( m_Props ));
+      }
+      else if(m_StageList->GetItemCount() > 0 ) {
+        TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection" );
+        m_StageList->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+        m_Props = (iONode)m_StageList->GetItemData(0);
+      }
+
+    }
+  }
+}
+
+
+int StageDlg::findID( const char* ID ) {
+  int size = m_StageList->GetItemCount();
+  for( int index = 0; index < size; index++ ) {
+    iONode node = (iONode)m_StageList->GetItemData(index);
+    if( StrOp.equals( ID, wStage.getid(node) ) ) {
+      return index;
+    }
+  }
+  return wxNOT_FOUND;
+}
+
+
+void StageDlg::setSelection(const char* ID) {
+  int size = m_StageList->GetItemCount();
+  for( int index = 0; index < size; index++ ) {
+    iONode node = (iONode)m_StageList->GetItemData(index);
+    if( StrOp.equals( ID, wStage.getid(node) ) ) {
+      m_StageList->SetItemState(index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      break;
+    }
+  }
+
+}
+
+

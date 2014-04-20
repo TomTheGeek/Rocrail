@@ -27726,4 +27726,7 @@
   <Msg id="useident">
     <en txt="Use identifier to set in block"/>
   </Msg>
+  <Msg id="stagetable" dialog="true">
+    <en txt="Staging block table" alttxt="Staging Blocks" tip="Staging block table"/>
+  </Msg>
 </Messages>
