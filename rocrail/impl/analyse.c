@@ -5552,6 +5552,12 @@ static Boolean finalizeRouteWithItemAsDestinationblock( iOAnalyse inst, iOList r
     /* route starting at enter side of staging block */
     ListOp.add( data->notRTlist, (obj)route);
   }
+  else if( StrOp.equals( NodeOp.getName(startBlock), wSelTab.name() ) && ( ! wSelTab.ismanager(startBlock) || ! wSelTab.issharedfb(startBlock) ) ) {
+    /* start of route is a selection table that is not in manager mode or not in sharedfb mode */
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, 
+        "FiddleYard[%s] is not manager or not using shared feedback -> notRTlist", wItem.getid(startBlock) );
+    ListOp.add( data->notRTlist, (obj)route);
+  }
   else if( StrOp.equals(NodeOp.getName(item), wStage.name() ) && StrOp.equals( state, "-" ) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Route Destination [sb] %s%s -> notRTlist", wItem.getid(item), state );
     /* route ending at exit side of staging block */
@@ -5566,6 +5572,8 @@ static Boolean finalizeRouteWithItemAsDestinationblock( iOAnalyse inst, iOList r
   else {
     /* if end of route is a selection table that is not in manager mode or not in sharedfb mode then do not create a valid route to it */
     if( StrOp.equals( NodeOp.getName(item), wSelTab.name() ) && ( ! wSelTab.ismanager(item) || ! wSelTab.issharedfb(item) ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, 
+          "FiddleYard[%s] is not manager or not using shared feedback -> notRTlist", wItem.getid(item) );
       toPreRTlist = False;
     }
     if( toPreRTlist ) {
