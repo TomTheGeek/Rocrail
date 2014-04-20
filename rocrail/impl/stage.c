@@ -634,7 +634,10 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
           if( loc != NULL ) {
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
                 "unexpected loco %s accepted by ident:%s in section:%s", LocOp.getId(loc), ident, wStageSection.getid(section) );
-            __occSection(inst, wStageSection.getid(section), LocOp.getId(loc));
+            if( __occSection(inst, wStageSection.getid(section), LocOp.getId(loc)) ) {
+              /* Broadcast to clients. */
+              AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
+            }
           }
         }
       }
@@ -1225,8 +1228,7 @@ static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
   iOStageData data = Data(inst);
   int sections = ListOp.size( data->sectionList );
   int i = 0;
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-             "reset stageblock [%s][%d]", data->id, sections );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reset stageblock [%s][%d]", data->id, sections );
 
   StageOp.resetTrigs(inst);
   data->wait4enter     = False;
@@ -1243,6 +1245,7 @@ static void _reset( iIBlockBase inst, Boolean saveCurBlock ) {
         /* free section */
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unlock section[%d] from %s", i, locid );
         wStageSection.setlcid(section, NULL);
+        ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, "", False, 0, 0, wStageSection.getid(section) );
       }
       else {
         /* soft reset: just inform about occupation */
