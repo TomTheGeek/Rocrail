@@ -40,6 +40,7 @@ class StageDlg : public stagedlggen
   int    m_TabAlign;
   int    m_SetPage;
   int    m_SortCol;
+  bool   m_SortOrder;
 
   void initLabels();
   bool evaluate();
@@ -68,6 +69,7 @@ protected:
   void onStageList( wxListEvent& event );
   void onIndexNew( wxCommandEvent& event );
   void onIndexDelete( wxCommandEvent& event );
+  void OnApply( wxCommandEvent& event );
 
 public:
 	/** Constructor */

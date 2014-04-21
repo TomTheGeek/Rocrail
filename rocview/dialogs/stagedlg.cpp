@@ -543,8 +543,8 @@ void StageDlg::OnSectionDelete( wxCommandEvent& event )
   }
 }
 
-void StageDlg::OnOK( wxCommandEvent& event )
-{
+
+void StageDlg::OnApply( wxCommandEvent& event ) {
   if( m_Props == NULL )
     return;
   if( !evaluate() )
@@ -560,8 +560,16 @@ void StageDlg::OnOK( wxCommandEvent& event )
   else {
     wxGetApp().setLocalModelModified(true);
   }
+  initIndex();
+}
+
+
+void StageDlg::OnOK( wxCommandEvent& event )
+{
+  OnApply(event);
   EndModal( wxID_OK );
 }
+
 void StageDlg::OnCancel( wxCommandEvent& event )
 {
   EndModal( 0 );
