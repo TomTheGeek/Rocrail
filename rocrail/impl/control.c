@@ -759,14 +759,15 @@ static void __callback( obj inst, iONode nodeA ) {
     if( wDataReq.getcmd(nodeA) == wDataReq.get ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "DataReq filename=[%s]", wDataReq.getfilename(nodeA) );
       if( wDataReq.gettype(nodeA) == wDataReq.image || wDataReq.gettype(nodeA) == wDataReq.smallimage ) {
+        const char* imageFilename = FileOp.isAbsolute(wDataReq.getfilename(nodeA)) ? FileOp.ripPath(wDataReq.getfilename(nodeA)):wDataReq.getfilename(nodeA);
 
         if( wDataReq.getfilename(nodeA) != NULL && StrOp.len(wDataReq.getfilename(nodeA)) > 0 ) {
           iOFile f = NULL;
           Boolean smallimage = (wDataReq.gettype(nodeA) == wDataReq.smallimage) ? True:False;
           char* filename = StrOp.fmt( "%s%c%s", AppOp.getImgPath(),
-              SystemOp.getFileSeparator(), FileOp.ripPath(wDataReq.getfilename(nodeA)) );
+              SystemOp.getFileSeparator(), imageFilename );
           char* sfilename = StrOp.fmt( "%s%csmall%c%s", AppOp.getImgPath(),
-              SystemOp.getFileSeparator(), SystemOp.getFileSeparator(), FileOp.ripPath(wDataReq.getfilename(nodeA)) );
+              SystemOp.getFileSeparator(), SystemOp.getFileSeparator(), imageFilename );
 
           if( !wRocRail.isfsutf8(AppOp.getIni()) ) {
             if( smallimage && FileOp.exist( sfilename ) ) {

@@ -2100,6 +2100,8 @@
         <var name="x" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
         <var name="y" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>
         <var name="z" vt="int" defval="0" range="0-9" remark="Z-Position in the plan. (level)"/>
+        <var name="totallength" vt="int" defval="0" range="0-*" remark="Temporary calculated stageblock length for viewing usage only. (Dialog)"/>
+        <var name="totalsections" vt="int" defval="0" range="0-*" remark="Temporary calculated number of sections for viewing usage only. (Dialog)"/>
         <var name="slen" vt="int" defval="30" range="0-*" unit="cm" remark="Section length."/>
         <var name="gap" vt="int" defval="5" range="0-*" unit="cm" remark="Train gap."/>
         <var name="remote" vt="bool" defval="false" remark="This flag is set by the R2Rnet object."/>
