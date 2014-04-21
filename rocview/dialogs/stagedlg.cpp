@@ -44,6 +44,8 @@
 
 #include "actionsctrldlg.h"
 
+static bool m_SortOrder;
+
 StageDlg::StageDlg( wxWindow* parent, iONode p_Props ):stagedlggen( parent )
 {
   TraceOp.trc( "stagedlg", TRCLEVEL_INFO, __LINE__, 9999, "stagedlg" );
@@ -51,6 +53,7 @@ StageDlg::StageDlg( wxWindow* parent, iONode p_Props ):stagedlggen( parent )
   m_Props = p_Props;
   m_Section = NULL;
   m_SortCol = 0;
+  m_SortOrder = true;
   initLabels();
 
   m_General->GetSizer()->Layout();
@@ -589,7 +592,12 @@ void StageDlg::onActions( wxCommandEvent& event ) {
 
 
 void StageDlg::onStageColumn( wxListEvent& event ) {
-  m_SortCol = event.GetColumn();
+  int sortcol = event.GetColumn();
+  if( sortcol == m_SortCol )
+    m_SortOrder = !m_SortOrder;
+  else
+    m_SortOrder = true;
+  m_SortCol = sortcol;
   initIndex();
 }
 
@@ -667,7 +675,7 @@ static int __sortID(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* idA = wItem.getid( a );
     const char* idB = wItem.getid( b );
-    return strcmp( idA, idB );
+    return m_SortOrder ? strcmp( idA, idB ):strcmp( idB, idA );
 }
 
 static int __sortDesc(obj* _a, obj* _b)
@@ -676,7 +684,33 @@ static int __sortDesc(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* idA = wItem.getdesc( a );
     const char* idB = wItem.getdesc( b );
-    return strcmp( idA, idB );
+    return m_SortOrder ? strcmp( idA, idB ):strcmp( idB, idA );
+}
+
+static int __sortNrSections(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int iA = wStage.gettotalsections( a );
+    int iB = wStage.gettotalsections( b );
+    if( iA > iB )
+      return (m_SortOrder ? 1:-1);
+    if( iA < iB )
+      return (m_SortOrder ? -1:1);
+    return 0;
+}
+
+static int __sortLength(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    int iA = wStage.gettotallength( a );
+    int iB = wStage.gettotallength( b );
+    if( iA > iB )
+      return (m_SortOrder ? 1:-1);
+    if( iA < iB )
+      return (m_SortOrder ? -1:1);
+    return 0;
 }
 
 
@@ -703,6 +737,12 @@ void StageDlg::initIndex() {
       if( m_SortCol == 1 ) {
         ListOp.sort(list, &__sortDesc);
       }
+      else if( m_SortCol == 2 ) {
+        ListOp.sort(list, &__sortNrSections);
+      }
+      else if( m_SortCol == 3 ) {
+        ListOp.sort(list, &__sortLength);
+      }
       else {
         ListOp.sort(list, &__sortID);
       }
@@ -719,6 +759,8 @@ void StageDlg::initIndex() {
         int len = getLength(stage, &nrsections);
         m_StageList->SetItem( idx, 2, wxString::Format(wxT("%d"), nrsections) );
         m_StageList->SetItem( idx, 3, wxString::Format(wxT("%d"), len) );
+        wStage.settotallength(stage, len);
+        wStage.settotalsections(stage, nrsections);
 
         m_StageList->SetItemPtrData(idx, (wxUIntPtr)stage);
         idx++;

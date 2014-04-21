@@ -40,7 +40,6 @@ class StageDlg : public stagedlggen
   int    m_TabAlign;
   int    m_SetPage;
   int    m_SortCol;
-  bool   m_SortOrder;
 
   void initLabels();
   bool evaluate();
