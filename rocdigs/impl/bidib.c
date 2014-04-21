@@ -3286,41 +3286,48 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     break;
 
   case MSG_STRING:
-    *(pdata+3+pdata[2]) = 0; // make the char string null terminated
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "MSG_STRING path=%s namespace=%d id=%d size=%d string=%s", pathKey, pdata[0], pdata[1], pdata[2], pdata+3 );
-    if( bidibnode != NULL ) {
-      iONode child = __getIniNode(bidib, bidibnode->uid);
-      if( child != NULL ) {
-        if( pdata[0] == 0 && pdata[1] == 0) {
-          // Productname
-          wBiDiBnode.setproductname(child, (const char*)(pdata+3));
-        }
-        else if( pdata[0] == 0 && pdata[1] == 1) {
-          // Username
-          const char* username = (const char*)(pdata+3);
-          int len = StrOp.len(username);
-          int x = 0;
-          Boolean invalidString = False;
-          for( x = 0; x < len; x++ ) {
-            if( username[x] < ' ' || username[x] > '}' ) {
-              invalidString = True;
-              break;
-            }
+    {
+      char string[128] = {'\0'};
+      int i = 0;
+      for( i = 0; i < pdata[2]; i++ ) {
+        string[i] = pdata[3+i];
+        string[i+1] = '\0';
+      }
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "MSG_STRING path=%s namespace=%d id=%d size=%d string=%s", pathKey, pdata[0], pdata[1], pdata[2], string );
+      if( bidibnode != NULL ) {
+        iONode child = __getIniNode(bidib, bidibnode->uid);
+        if( child != NULL ) {
+          if( pdata[0] == 0 && pdata[1] == 0) {
+            // Productname
+            wBiDiBnode.setproductname(child, (const char*)string);
           }
-          wBiDiBnode.setusername(child, invalidString?"":(const char*)(pdata+3));
-          StrOp.copy( bidibnode->username, (const char*)(pdata+3) );
+          else if( pdata[0] == 0 && pdata[1] == 1) {
+            // Username
+            const char* username = (const char*)string;
+            int len = StrOp.len(username);
+            int x = 0;
+            Boolean invalidString = False;
+            for( x = 0; x < len; x++ ) {
+              if( username[x] < ' ' || username[x] > '}' ) {
+                invalidString = True;
+                break;
+              }
+            }
+            wBiDiBnode.setusername(child, invalidString?"":(const char*)string);
+            StrOp.copy( bidibnode->username, (const char*)string );
 
-          iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-          wProgram.setcmd( node, wProgram.setstring );
-          wProgram.setiid( node, data->iid );
-          wProgram.setlntype(node, wProgram.lntype_bidib);
-          wProgram.setmodid(node, bidibnode->uid);
-          wProgram.setmanu(node, bidibnode->vendorid);
-          wProgram.setprod(node, bidibnode->classid);
-          wProgram.setval1(node, 1);
-          wProgram.setstrval1(node, bidibnode->username);
-          data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+            iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+            wProgram.setcmd( node, wProgram.setstring );
+            wProgram.setiid( node, data->iid );
+            wProgram.setlntype(node, wProgram.lntype_bidib);
+            wProgram.setmodid(node, bidibnode->uid);
+            wProgram.setmanu(node, bidibnode->vendorid);
+            wProgram.setprod(node, bidibnode->classid);
+            wProgram.setval1(node, 1);
+            wProgram.setstrval1(node, bidibnode->username);
+            data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+          }
         }
       }
     }
@@ -3338,6 +3345,21 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   }
 
   return data->magicOK;
+}
+
+
+static void __processMultipleBidiMsg(iOBiDiB bidib, byte* msg, int size) {
+  iOBiDiBData data  = Data(bidib);
+  TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg, size );
+  if( size > msg[0]+1 ) {
+    int idx = 0;
+    do {
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "multiple messages index=%d size=%d startbyte=%02X %02X %02X", idx, msg[0+idx]+1, msg[idx], msg[idx+1], msg[idx+2] );
+      TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg+idx, msg[0+idx]+1 );
+      __processBidiMsg(bidib, msg+idx, msg[0+idx]+1);
+      idx += msg[0+idx]+1;
+    } while( idx < (size-1) );
+  }
 }
 
 
@@ -3393,13 +3415,7 @@ static void __bidibReader( void* threadinst ) {
     size = data->subRead( (obj)bidib, msg );
     if( size > 0 ) {
       if( size > msg[0]+1 ) {
-        int idx = 0;
-        do {
-          TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "multiple messages index=%d", idx );
-          TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)msg+idx, msg[0+idx]+1 );
-          __processBidiMsg(bidib, msg+idx, msg[0+idx]+1);
-          idx += msg[0+idx]+1;
-        } while( idx < size );
+        __processMultipleBidiMsg(bidib, msg, size);
       }
       else
         __processBidiMsg(bidib, msg, size);
@@ -3547,6 +3563,17 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
     data->subWrite      = udpWrite;
     data->subAvailable  = udpAvailable;
   }
+
+  /* multiple message test
+  {
+    int len = 37;
+    byte msg[] = {0x14, 0x03, 0x00, 0x01, 0x95, 0x00, 0x00, 0x0D, 0x47, 0x42, 0x4D, 0x42, 0x6F, 0x6F, 0x73, 0x74,
+                  0x20, 0x4E, 0x6F, 0x64, 0x65, 0x0E, 0x03, 0x00, 0x02, 0x95, 0x00, 0x01, 0x07, 0x53, 0x42, 0x46,
+                  0x5F, 0x31, 0x5F, 0x34, 0xF6};
+    __processMultipleBidiMsg(__BiDiB, msg, len);
+    return __BiDiB;
+  }
+  */
 
   data->subInit((obj)__BiDiB);
 
