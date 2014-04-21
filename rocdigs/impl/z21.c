@@ -1285,7 +1285,7 @@ static void __reader( void* threadinst ) {
   packet[4] = 0x80;
   packet[5] = 0x00;
   packet[6] = 0x00;
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_LOCONET_DETECTOR: SIC Request für Digitrax" );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_LOCONET_DETECTOR: SOD Request für Digitrax" );
   ThreadOp.post(data->writer, (obj)packet);
   ThreadOp.sleep(100);
 
