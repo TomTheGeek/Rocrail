@@ -582,7 +582,7 @@ void BidibIdentDlg::initLabels() {
 
     char key[2656];
     int level = 0;
-    StrOp.fmtb(key, "[%s] %08X", wBiDiBnode.getclassmnemonic(bidibnode), wBiDiBnode.getuid(bidibnode) );
+    StrOp.fmtb(key, "[%s] %08X %s", wBiDiBnode.getclassmnemonic(bidibnode), wBiDiBnode.getuid(bidibnode), wBiDiBnode.getusername(bidibnode) );
     wxTreeItemId root  = m_Tree->AddRoot(wxString( key, wxConvUTF8));
     MapOp.put( nodeMap, key, (obj)bidibnode);
 
