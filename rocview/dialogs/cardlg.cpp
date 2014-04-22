@@ -235,6 +235,7 @@ void CarDlg::initLabels() {
   // Functions
   m_labFDesc->SetLabel( wxGetApp().getMsg( "description" ) );
   m_labFTimer->SetLabel( wxGetApp().getMsg( "timer" ) );
+  m_labIcon->SetLabel( wxGetApp().getMsg( "icon" ) );
 
   //CV
   m_CVList->SetRowLabelSize(0);
@@ -1024,6 +1025,7 @@ void CarDlg::evaluateFunctions() {
   wxTextCtrl* l_desc[] = {m_F1Desc,m_F2Desc,m_F3Desc,m_F4Desc};
   wxSpinCtrl* l_timer[] = {m_F1Timer,m_F2Timer,m_F3Timer,m_F4Timer};
   wxSpinCtrl* l_fx[] = {m_F1x,m_F2x,m_F3x,m_F4x};
+  wxTextCtrl* l_icon[] = {m_F1Icon,m_F2Icon,m_F3Icon,m_F4Icon};
   int function[] = {0,0,0,0};
 
   for( int i = 0; i < 4; i++ ) {
@@ -1043,6 +1045,7 @@ void CarDlg::evaluateFunctions() {
       wFunDef.settext( fundef, l_desc[(fnr-1) - m_FGroup*4]->GetValue().mb_str(wxConvUTF8)  );
       wFunDef.settimer( fundef, l_timer[(fnr-1) - m_FGroup*4]->GetValue() );
       wFunDef.setmappedfn( fundef, l_fx[(fnr-1) - m_FGroup*4]->GetValue() );
+      wFunDef.seticon( fundef, l_icon[(fnr-1) - m_FGroup*4]->GetValue().mb_str(wxConvUTF8)  );
 
       function[(fnr-1) - m_FGroup*4] = 0;
     }
@@ -1059,6 +1062,7 @@ void CarDlg::evaluateFunctions() {
       wFunDef.settext( fundef, l_desc[i]->GetValue().mb_str(wxConvUTF8)  );
       wFunDef.settimer( fundef, l_timer[i]->GetValue() );
       wFunDef.setmappedfn( fundef, l_fx[i]->GetValue() );
+      wFunDef.seticon( fundef, l_icon[i]->GetValue().mb_str(wxConvUTF8)  );
     }
   }
 
@@ -1073,12 +1077,14 @@ void CarDlg::initFunctions() {
   wxTextCtrl* l_desc[] = {m_F1Desc,m_F2Desc,m_F3Desc,m_F4Desc};
   wxSpinCtrl* l_timer[] = {m_F1Timer,m_F2Timer,m_F3Timer,m_F4Timer};
   wxSpinCtrl* l_fx[] = {m_F1x,m_F2x,m_F3x,m_F4x};
+  wxTextCtrl* l_icon[] = {m_F1Icon,m_F2Icon,m_F3Icon,m_F4Icon};
 
   for( int i = 0; i < 4; i++ ) {
     l_fn[i]->SetLabel( wxString::Format(_T("F%d"), i+1+m_FGroup*4 ) );
     l_desc[i]->SetValue( _T("") );
     l_timer[i]->SetValue(0);
     l_fx[i]->SetValue(0);
+    l_icon[i]->SetValue( _T("") );
   }
 
   iONode fundef = wCar.getfundef( m_Props );
@@ -1093,6 +1099,7 @@ void CarDlg::initFunctions() {
       l_desc[(funnr - 1) - m_FGroup * 4]->SetValue( fntxt );
       l_timer[(funnr - 1) - m_FGroup * 4]->SetValue( wFunDef.gettimer(fundef) );
       l_fx[(funnr - 1) - m_FGroup * 4]->SetValue( wFunDef.getmappedfn(fundef) );
+      l_icon[(funnr - 1) - m_FGroup * 4]->SetValue( wxString( wFunDef.geticon(fundef), wxConvUTF8) );
     }
 
     fundef = wCar.nextfundef( m_Props, fundef );
