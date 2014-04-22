@@ -1054,8 +1054,7 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
 
     if( !StrOp.equals( wBlock.type_shunting, wBlock.gettype(data->props) ) ) {
       if( ModelOp.hasBlockCars( AppOp.getModel(), data->id ) ) {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                       "Block [%s] is occupied by cars; set the shunting option.", data->id);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Block [%s] is occupied by cars", data->id);
       }
     }
 

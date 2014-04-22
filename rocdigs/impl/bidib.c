@@ -320,8 +320,6 @@ static void __SoD( iOBiDiB inst, iOBiDiBNode bidibnode ) {
         node->pendingfeature = FEATURE_BM_SIZE;
         msgdata[0] = FEATURE_BM_SIZE;
         data->subWrite((obj)inst, node->path, MSG_FEATURE_GET, msgdata, 1, node);
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-            "get FEATURE_BM_SIZE for node uid=0x%08X seq=%d", node->uid, node->seq );
         ThreadOp.sleep(10);
         node = (iOBiDiBNode)MapOp.next(data->nodemap);
         continue;
