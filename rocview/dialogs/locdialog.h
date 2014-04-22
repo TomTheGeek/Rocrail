@@ -130,18 +130,22 @@ class wxGrid;
 #define wxID_STATIC_F1 10044
 #define ID_TEXTCTRL_F1 10036
 #define ID_BUTTON_F1 10037
+#define ID_LOC_SOUND1 10435
 #define ID_LOC_ICONF1 10324
 #define wxID_STATIC_F2 10045
 #define ID_TEXTCTRL_F2 10038
 #define ID_BUTTON_F2 10039
+#define ID_LOC_SOUND2 10436
 #define ID_LOC_ICONF2 10428
 #define wxID_STATIC_F3 10046
 #define ID_TEXTCTRL_F3 10040
 #define ID_BUTTON_F3 10041
+#define ID_LOC_SOUND3 10437
 #define ID_LOC_ICONF3 10429
 #define wxID_STATIC_F4 10047
 #define ID_TEXTCTRL_F4 10042
 #define ID_BUTTON_F4 10043
+#define ID_LOC_SOUND4 10438
 #define ID_LOC_ICONF4 10430
 #define ID_PANEL_LOC_CONSIST 10200
 #define ID_CONSTS_LIGHTSOFF 10349
@@ -280,11 +284,17 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F1
     void OnButtonF1Click( wxCommandEvent& event );
 
+    /// wxEVT_LEFT_DCLICK event handler for ID_LOC_SOUND1
+    void OnLocSound1( wxMouseEvent& event );
+
     /// wxEVT_LEFT_DCLICK event handler for ID_LOC_ICONF1
     void OnLocIconf1( wxMouseEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F2
     void OnButtonF2Click( wxCommandEvent& event );
+
+    /// wxEVT_LEFT_DCLICK event handler for ID_LOC_SOUND2
+    void OnLocSound2( wxMouseEvent& event );
 
     /// wxEVT_LEFT_DCLICK event handler for ID_LOC_ICONF2
     void OnLocIconf2( wxMouseEvent& event );
@@ -292,11 +302,17 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F3
     void OnButtonF3Click( wxCommandEvent& event );
 
+    /// wxEVT_LEFT_DCLICK event handler for ID_LOC_SOUND3
+    void OnLocSound3( wxMouseEvent& event );
+
     /// wxEVT_LEFT_DCLICK event handler for ID_LOC_ICONF3
     void OnLocIconf3( wxMouseEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_F4
     void OnButtonF4Click( wxCommandEvent& event );
+
+    /// wxEVT_LEFT_DCLICK event handler for ID_LOC_SOUND4
+    void OnLocSound4( wxMouseEvent& event );
 
     /// wxEVT_LEFT_DCLICK event handler for ID_LOC_ICONF4
     void OnLocIconf4( wxMouseEvent& event );

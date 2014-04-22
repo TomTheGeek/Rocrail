@@ -2159,7 +2159,7 @@ void LocDialog::CreateControls()
     m_Button_f1 = new wxButton( m_FunctionPanel, ID_BUTTON_F1, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
     itemFlexGridSizer193->Add(m_Button_f1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Sound1 = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_Sound1 = new wxTextCtrl( m_FunctionPanel, ID_LOC_SOUND1, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer193->Add(m_Sound1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Icon_f1 = new wxTextCtrl( m_FunctionPanel, ID_LOC_ICONF1, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -2183,7 +2183,7 @@ void LocDialog::CreateControls()
     m_Button_f2 = new wxButton( m_FunctionPanel, ID_BUTTON_F2, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
     itemFlexGridSizer193->Add(m_Button_f2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Sound2 = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_Sound2 = new wxTextCtrl( m_FunctionPanel, ID_LOC_SOUND2, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer193->Add(m_Sound2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Icon_f2 = new wxTextCtrl( m_FunctionPanel, ID_LOC_ICONF2, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -2207,7 +2207,7 @@ void LocDialog::CreateControls()
     m_Button_f3 = new wxButton( m_FunctionPanel, ID_BUTTON_F3, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
     itemFlexGridSizer193->Add(m_Button_f3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Sound3 = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_Sound3 = new wxTextCtrl( m_FunctionPanel, ID_LOC_SOUND3, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer193->Add(m_Sound3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Icon_f3 = new wxTextCtrl( m_FunctionPanel, ID_LOC_ICONF3, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -2231,7 +2231,7 @@ void LocDialog::CreateControls()
     m_Button_f4 = new wxButton( m_FunctionPanel, ID_BUTTON_F4, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
     itemFlexGridSizer193->Add(m_Button_f4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 2);
 
-    m_Sound4 = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_Sound4 = new wxTextCtrl( m_FunctionPanel, ID_LOC_SOUND4, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer193->Add(m_Sound4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Icon_f4 = new wxTextCtrl( m_FunctionPanel, ID_LOC_ICONF4, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -2634,9 +2634,13 @@ void LocDialog::CreateControls()
 
     // Connect events and objects
     m_F0Icon->Connect(ID_LOC_ICONF0, wxEVT_LEFT_DCLICK, wxMouseEventHandler(LocDialog::OnLocIconf0), NULL, this);
+    m_Sound1->Connect(ID_LOC_SOUND1, wxEVT_LEFT_DCLICK, wxMouseEventHandler(LocDialog::OnLocSound1), NULL, this);
     m_Icon_f1->Connect(ID_LOC_ICONF1, wxEVT_LEFT_DCLICK, wxMouseEventHandler(LocDialog::OnLocIconf1), NULL, this);
+    m_Sound2->Connect(ID_LOC_SOUND2, wxEVT_LEFT_DCLICK, wxMouseEventHandler(LocDialog::OnLocSound2), NULL, this);
     m_Icon_f2->Connect(ID_LOC_ICONF2, wxEVT_LEFT_DCLICK, wxMouseEventHandler(LocDialog::OnLocIconf2), NULL, this);
+    m_Sound3->Connect(ID_LOC_SOUND3, wxEVT_LEFT_DCLICK, wxMouseEventHandler(LocDialog::OnLocSound3), NULL, this);
     m_Icon_f3->Connect(ID_LOC_ICONF3, wxEVT_LEFT_DCLICK, wxMouseEventHandler(LocDialog::OnLocIconf3), NULL, this);
+    m_Sound4->Connect(ID_LOC_SOUND4, wxEVT_LEFT_DCLICK, wxMouseEventHandler(LocDialog::OnLocSound4), NULL, this);
     m_Icon_f4->Connect(ID_LOC_ICONF4, wxEVT_LEFT_DCLICK, wxMouseEventHandler(LocDialog::OnLocIconf4), NULL, this);
 ////@end LocDialog content construction
 }
@@ -3521,6 +3525,62 @@ void LocDialog::OnLocIconf0( wxMouseEvent& event )
       _T("PNG files (*.png)|*.png"), wxFD_OPEN);
   if( fdlg->ShowModal() == wxID_OK ) {
     m_F0Icon->SetValue( fdlg->GetFilename() );
+  }
+}
+
+
+/*!
+ * wxEVT_LEFT_DCLICK event handler for ID_LOC_SOUND1
+ */
+
+void LocDialog::OnLocSound1( wxMouseEvent& event )
+{
+  wxFileDialog* fdlg = new wxFileDialog(this, _T("Search sound"),  wxString(wxT("."),wxConvUTF8), _T(""),
+      _T("MP3 files (*.mp3)|*.mp3|Wave files (*.wav)|*.wav"), wxFD_OPEN);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    m_Sound1->SetValue( fdlg->GetFilename() );
+  }
+}
+
+
+/*!
+ * wxEVT_LEFT_DCLICK event handler for ID_LOC_SOUND2
+ */
+
+void LocDialog::OnLocSound2( wxMouseEvent& event )
+{
+  wxFileDialog* fdlg = new wxFileDialog(this, _T("Search sound"),  wxString(wxT("."),wxConvUTF8), _T(""),
+      _T("MP3 files (*.mp3)|*.mp3|Wave files (*.wav)|*.wav"), wxFD_OPEN);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    m_Sound2->SetValue( fdlg->GetFilename() );
+  }
+}
+
+
+/*!
+ * wxEVT_LEFT_DCLICK event handler for ID_LOC_SOUND3
+ */
+
+void LocDialog::OnLocSound3( wxMouseEvent& event )
+{
+  wxFileDialog* fdlg = new wxFileDialog(this, _T("Search sound"),  wxString(wxT("."),wxConvUTF8), _T(""),
+      _T("MP3 files (*.mp3)|*.mp3|Wave files (*.wav)|*.wav"), wxFD_OPEN);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    m_Sound3->SetValue( fdlg->GetFilename() );
+  }
+}
+
+
+/*!
+ * wxEVT_LEFT_DCLICK event handler for ID_LOC_SOUND4
+ */
+
+void LocDialog::OnLocSound4( wxMouseEvent& event )
+{
+  wxFileDialog* fdlg = new wxFileDialog(this, _T("Search sound"),  wxString(wxT("."),wxConvUTF8), _T(""),
+      _T("MP3 files (*.mp3)|*.mp3|Wave files (*.wav)|*.wav"), wxFD_OPEN);
+  if( fdlg->ShowModal() == wxID_OK ) {
+    m_Sound4->SetValue( fdlg->GetFilename() );
   }
 }
 
