@@ -2032,18 +2032,14 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting sensor count to %d for %08X", value, bidibnode->uid );
         bidibnode->sensorcnt = value;
 
-        if( bidibnode->pendingfeature == feature )
-          bidibnode->pendingfeature = -1;
-        else
-          data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode);
-
         if( bidibnode->sensorcnt > 0 )
           __SoD(bidib, bidibnode);
         if( child!= NULL ) {
           wBiDiBnode.setsensorcnt(child, value);
         }
       }
-      else {
+
+      /* Inform clients... */ {
         iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
         wProgram.setcmd( node, wProgram.datarsp );
         wProgram.setiid( node, data->iid );
@@ -2060,6 +2056,7 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
         else
           data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode);
       }
+
     }
     else if( Type == MSG_FEATURE_NA ) {
       int feature = pdata[0];
