@@ -2033,7 +2033,8 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
         bidibnode->sensorcnt = value;
         if( bidibnode->pendingfeature == feature )
           bidibnode->pendingfeature = -1;
-        __SoD(bidib, bidibnode);
+        if( bidibnode->sensorcnt > 0 )
+          __SoD(bidib, bidibnode);
         if( child!= NULL ) {
           wBiDiBnode.setsensorcnt(child, value);
         }
