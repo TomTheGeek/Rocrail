@@ -2031,8 +2031,12 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
       if( feature == FEATURE_BM_SIZE && !bidibnode->sod ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting sensor count to %d for %08X", value, bidibnode->uid );
         bidibnode->sensorcnt = value;
+
         if( bidibnode->pendingfeature == feature )
           bidibnode->pendingfeature = -1;
+        else
+          data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode);
+
         if( bidibnode->sensorcnt > 0 )
           __SoD(bidib, bidibnode);
         if( child!= NULL ) {
