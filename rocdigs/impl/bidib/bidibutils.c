@@ -228,6 +228,7 @@ const char* bidibGetFeatureName(int feature) {
   if( feature == FEATURE_BM_ISTSPEED_INTERVAL ) return "dcc-speed enabled";
   if( feature == FEATURE_BM_CV_AVAILABLE ) return "cv-messages available";
   if( feature == FEATURE_BM_CV_ON ) return "cv-messages enabled";
+  if( feature == FEATURE_BM_DYN_STATE_INTERVAL ) return "transmit interval of MSG_BM_DYN_STATE";
 
   /* Booster */
   if( feature == FEATURE_BST_VOLT_ADJUSTABLE ) return "adjustable output voltage";
