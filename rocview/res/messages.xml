@@ -27729,4 +27729,7 @@
   <Msg id="stagetable" dialog="true">
     <en txt="Staging block table" alttxt="Staging Blocks" tip="Staging block table"/>
   </Msg>
+  <Msg id="others">
+    <en txt="Others"/>
+  </Msg>
 </Messages>

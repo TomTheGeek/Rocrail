@@ -391,7 +391,7 @@ void BlockDialog::initLabels() {
   m_labMaxKmH->SetLabel( wxGetApp().getMsg( "maxkmh" ) );
 
   m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
-  m_Type->SetString( 0, wxGetApp().getMsg( "none" ) );
+  m_Type->SetString( 0, wxGetApp().getMsg( "others" ) );
   m_Type->SetString( 1, wxGetApp().getMsg( "local" ) );
   m_Type->SetString( 2, wxGetApp().getMsg( "ice" ) );
   m_Type->SetString( 3, wxGetApp().getMsg( "goods" ) );
@@ -444,7 +444,7 @@ void BlockDialog::initLabels() {
   m_labExclude->SetLabel( wxGetApp().getMsg( "exclude" ) );
 
   m_PermType->SetLabel( wxGetApp().getMsg( "type" ) );
-  m_PermTypeNone->SetLabel( wxGetApp().getMsg( "none" ) );
+  m_PermTypeNone->SetLabel( wxGetApp().getMsg( "others" ) );
   m_PermTypeGoods->SetLabel( wxGetApp().getMsg( "goods" ) );
   m_PermTypeLocal->SetLabel( wxGetApp().getMsg( "regional" ) );
   m_PermTypePerson->SetLabel( wxGetApp().getMsg( "local" ) );

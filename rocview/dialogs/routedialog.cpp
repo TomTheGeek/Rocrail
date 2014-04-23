@@ -319,7 +319,7 @@ void RouteDialog::initLabels() {
   m_labExclude->SetLabel( wxGetApp().getMsg( "exclude" ) );
 
   m_PermType->SetLabel( wxGetApp().getMsg( "type" ) );
-  m_PermTypeNone->SetLabel( wxGetApp().getMsg( "none" ) );
+  m_PermTypeNone->SetLabel( wxGetApp().getMsg( "others" ) );
   m_PermTypeGoods->SetLabel( wxGetApp().getMsg( "goods" ) );
   m_PermTypeLocal->SetLabel( wxGetApp().getMsg( "local" ) );
   m_PermTypeMixed->SetLabel( wxGetApp().getMsg( "mixed" ) );

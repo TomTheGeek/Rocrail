@@ -302,7 +302,7 @@ void LocDialog::initLabels() {
   m_EngineBox->SetString( 2, wxGetApp().getMsg( "electric" ) );
   m_EngineBox->SetString( 3, wxGetApp().getMsg( "automobile" ) );
   m_CargoBox->SetLabel( wxGetApp().getMsg( "cargo" ) );
-  m_CargoBox->SetString( 0, wxGetApp().getMsg( "none" ) );
+  m_CargoBox->SetString( 0, wxGetApp().getMsg( "others" ) );
   m_CargoBox->SetString( 1, wxGetApp().getMsg( "goods" ) );
   m_CargoBox->SetString( 2, wxGetApp().getMsg( "local" ) );
   m_CargoBox->SetString( 3, wxGetApp().getMsg( "mixed" ) );
