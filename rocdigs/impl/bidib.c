@@ -301,7 +301,7 @@ static void __SoD( iOBiDiB inst, iOBiDiBNode bidibnode ) {
   iOBiDiBData data = Data(inst);
   byte msgdata[127];
 
-  if( bidibnode != NULL && bidibnode->sensorcnt > 0 ) {
+  if( bidibnode != NULL ) {
     bidibnode->sod = True;
     data->subWrite((obj)inst, bidibnode->path, MSG_SYS_ENABLE, NULL, 0, bidibnode);
     if( bidibnode->sensorcnt > 0 ) {
