@@ -2028,18 +2028,15 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
       }
 
 
-      if( feature == FEATURE_BM_SIZE && !bidibnode->sod ) {
+      if( feature == FEATURE_BM_SIZE && !bidibnode->sod && value > 0 ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting sensor count to %d for %08X", value, bidibnode->uid );
         bidibnode->sensorcnt = value;
-
-        if( bidibnode->sensorcnt > 0 )
-          __SoD(bidib, bidibnode);
+        __SoD(bidib, bidibnode);
         if( child!= NULL ) {
           wBiDiBnode.setsensorcnt(child, value);
         }
       }
-
-      /* Inform clients... */ {
+      else {
         iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
         wProgram.setcmd( node, wProgram.datarsp );
         wProgram.setiid( node, data->iid );
