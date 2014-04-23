@@ -270,16 +270,12 @@ static void __SoD4Node( iOBiDiB inst, iOBiDiBNode node, Boolean force ) {
   msgdata[0] = 0; // address range
   msgdata[1] = node->sensorcnt;
   data->subWrite((obj)inst, node->path, MSG_BM_GET_RANGE, msgdata, 2, node);
-  node->sod = True;
   ThreadOp.sleep(10);
 
   if( data->stressnode == NULL )
     data->stressnode = node;
 
   if( !force ) {
-    data->subWrite((obj)inst, node->path, MSG_SYS_ENABLE, NULL, 0, node);
-    ThreadOp.sleep(10);
-
     if( data->secAck && data->secAckInt > 0 ) {
       // MSG_FEATURE_SET
       msgdata[0] = FEATURE_BM_SECACK_AVAILABLE;
@@ -305,8 +301,13 @@ static void __SoD( iOBiDiB inst, iOBiDiBNode bidibnode ) {
   iOBiDiBData data = Data(inst);
   byte msgdata[127];
 
-  if( bidibnode != NULL ) {
-    __SoD4Node(inst, bidibnode, False);
+  if( bidibnode != NULL && bidibnode->sensorcnt > 0 ) {
+    bidibnode->sod = True;
+    data->subWrite((obj)inst, bidibnode->path, MSG_SYS_ENABLE, NULL, 0, bidibnode);
+    if( bidibnode->sensorcnt > 0 ) {
+      ThreadOp.sleep(10);
+      __SoD4Node(inst, bidibnode, False);
+    }
     return;
   }
 
@@ -2028,7 +2029,7 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
       }
 
 
-      if( feature == FEATURE_BM_SIZE && !bidibnode->sod && value > 0 ) {
+      if( feature == FEATURE_BM_SIZE && !bidibnode->sod ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting sensor count to %d for %08X", value, bidibnode->uid );
         bidibnode->sensorcnt = value;
         __SoD(bidib, bidibnode);
