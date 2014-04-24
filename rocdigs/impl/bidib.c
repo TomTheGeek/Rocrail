@@ -302,11 +302,13 @@ static void __SoD( iOBiDiB inst, iOBiDiBNode bidibnode ) {
   byte msgdata[127];
 
   if( bidibnode != NULL ) {
-    bidibnode->sod = True;
     data->subWrite((obj)inst, bidibnode->path, MSG_SYS_ENABLE, NULL, 0, bidibnode);
     if( bidibnode->sensorcnt > 0 ) {
       ThreadOp.sleep(10);
       __SoD4Node(inst, bidibnode, False);
+    }
+    else {
+      bidibnode->sod = True;
     }
     return;
   }
