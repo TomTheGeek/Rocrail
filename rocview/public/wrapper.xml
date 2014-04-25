@@ -131,7 +131,7 @@
     <var name="restorelcctrl" vt="bool" defval="true"/>
     <var name="locosortbyaddress" vt="bool" defval="false"/>
     <var name="monitorsize" vt="int" defval="4"/>
-    <var name="rendergc" vt="bool" defval="false"/>
+    <var name="rendergc" vt="bool" defval="true"/>
     <var name="showlocoimage" vt="bool" defval="true"/>
     <var name="gridfontsizeadjust" vt="int" defval="0"/>
     <workspaces cardinality="1" wrappername="WorkSpaces">
@@ -181,7 +181,7 @@
       <var name="cy" vt="int" defval="96"/>
     </modpanel>
     <planpanel wrappername="PlanPanel">
-      <var name="scale" vt="float" defval="0.5"/>
+      <var name="scale" vt="float" defval="1.0"/>
       <var name="bktext" vt="float" defval="1.25" remark="finetune blocktext font size: use 1.75 for Win32"/>
       <var name="bktextid" vt="bool" defval="true"/>
       <var name="bktext_red" vt="int" defval="0"/>
