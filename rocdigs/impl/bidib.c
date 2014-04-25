@@ -307,9 +307,7 @@ static void __SoD( iOBiDiB inst, iOBiDiBNode bidibnode ) {
       ThreadOp.sleep(10);
       __SoD4Node(inst, bidibnode, False);
     }
-    else {
-      bidibnode->sod = True;
-    }
+    bidibnode->sod = True;
     return;
   }
 
