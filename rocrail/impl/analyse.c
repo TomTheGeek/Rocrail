@@ -341,7 +341,7 @@ static char* __createAccessorymapKeyFromAPGPVIB( char key[], int addr, int port,
     iid = wDigInt.getiid(AppOp.getIniNode( wDigInt.name() ) );
   }
 
-  StrOp.fmtb( key, "%d-%d-%d-%d-%s-%d", fAddr, gate, param, value, iid, bus );
+  StrOp.fmtb( key, "%d-%d-%d-%d-%s-%d", fAddr, gate, param, value, iid!=NULL?iid:".", bus );
 
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "__createAccessorymapKeyFromAPGPVIB: addr[%d] port[%d] gate[%d] param[%d] value[%d] iid[%s] bus[%d] ( fAddr[%d] ) -> key[%s]",
       addr, port, gate, param, value, iid, bus, fAddr, key);
