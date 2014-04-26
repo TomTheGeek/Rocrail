@@ -1222,8 +1222,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%08X get CV%d...", data->defaultprog->uid, data->cv );
           if( data->defaultprog != NULL ) {
             msgdata[0] = BIDIB_CS_PROG_RD_BYTE;
-            msgdata[1] = data->cv % 256;
-            msgdata[2] = data->cv / 256;
+            msgdata[1] = (data->cv-1) % 256;
+            msgdata[2] = (data->cv-1) / 256;
             data->subWrite((obj)inst, data->defaultprog->path, MSG_CS_PROG, msgdata, 3, data->defaultprog);
           }
         }
@@ -1233,8 +1233,8 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%08X set CV%d to %d...", data->defaultprog->uid, data->cv, data->value );
           if( data->defaultprog != NULL ) {
             msgdata[0] = BIDIB_CS_PROG_WR_BYTE;
-            msgdata[1] = data->cv % 256;
-            msgdata[2] = data->cv / 256;
+            msgdata[1] = (data->cv-1) % 256;
+            msgdata[2] = (data->cv-1) / 256;
             msgdata[3] = data->value;
             data->subWrite((obj)inst, data->defaultprog->path, MSG_CS_PROG, msgdata, 4, data->defaultprog);
           }
@@ -1731,7 +1731,6 @@ static void __handlePT(iOBiDiB bidib, byte* pdata) {
   data->cv = cv;
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT response state=%d cv=%d data=%d", state, cv, val );
-  TraceOp.dump ( name, TRCLEVEL_INFO, (char*)pdata, 5 );
   if( state == BIDIB_CS_PROG_OKAY ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cv %d has a value of %d", data->cv, val );
     data->value = val;
@@ -1741,7 +1740,7 @@ static void __handlePT(iOBiDiB bidib, byte* pdata) {
   }
 
   node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-  wProgram.setcv( node, data->cv );
+  wProgram.setcv( node, data->cv+1 );
   wProgram.setvalue( node, data->value );
   wProgram.setcmd( node, wProgram.datarsp );
   if( data->iid != NULL )
