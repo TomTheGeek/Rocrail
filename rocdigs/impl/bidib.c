@@ -1203,7 +1203,21 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
         }
       }
       else {
-        if( wProgram.getcmd( node ) == wProgram.get ) {
+        if( wProgram.getcmd( node ) == wProgram.pton ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT ON" );
+          if( data->defaultprog != NULL ) {
+            msgdata[0] = BIDIB_CS_STATE_PROG;
+            data->subWrite((obj)inst, data->defaultmain->path, MSG_CS_SET_STATE, msgdata, 1, data->defaultmain);
+          }
+        }
+        else if( wProgram.getcmd( node ) == wProgram.ptoff ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT OFF" );
+          if( data->defaultprog != NULL ) {
+            msgdata[0] = BIDIB_CS_STATE_OFF;
+            data->subWrite((obj)inst, data->defaultmain->path, MSG_CS_SET_STATE, msgdata, 1, data->defaultmain);
+          }
+        }
+        else if( wProgram.getcmd( node ) == wProgram.get ) {
           data->cv = wProgram.getcv( node );
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%08X get CV%d...", data->defaultprog->uid, data->cv );
           if( data->defaultprog != NULL ) {
