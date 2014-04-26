@@ -37,6 +37,7 @@ byte bidibCheckSum(byte* packet, int len);
 void bidibEscapeMessage(byte* msg, int* newLen, int inLen);
 int bidibMakeMessage(byte* msg, int inLen);
 const char* bidibGetAccError(int rc);
+const char* bidibGetPTState(int state);
 
 /* C++ */
 #ifdef __cplusplus

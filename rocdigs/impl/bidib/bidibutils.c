@@ -305,3 +305,17 @@ const char* bidibGetAccError(int rc) {
 
   return "*** unknown error ***";
 }
+
+
+const char* bidibGetPTState(int state) {
+  if( state == BIDIB_CS_PROG_START ) return "programming is started";
+  if( state == BIDIB_CS_PROG_RUNNING ) return "programming is running";
+  if( state == BIDIB_CS_PROG_OKAY ) return "programming is OK";
+  if( state == BIDIB_CS_PROG_STOPPED ) return "programming has been stopped";
+  if( state == BIDIB_CS_PROG_NO_LOCO ) return "programming detected no decoder";
+  if( state == BIDIB_CS_PROG_NO_ANSWER ) return "programming no decoder acknowledge";
+  if( state == BIDIB_CS_PROG_SHORT ) return "programming detected shortcut";
+  if( state == BIDIB_CS_PROG_VERIFY_FAILED ) return "programming error on verify";
+
+  return "*** unknown PT state ***";
+}
