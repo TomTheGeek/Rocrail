@@ -33,8 +33,8 @@
 
 ////@begin includes
 #include "wx/notebook.h"
-#include "wx/statline.h"
 #include "wx/spinctrl.h"
+#include "wx/statline.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -266,6 +266,10 @@ public:
     wxCheckBox* m_Byte;
     wxCheckBox* m_Info;
     wxCheckBox* m_Debug;
+    wxStaticText* m_labNrTraceFiles;
+    wxSpinCtrl* m_NrTraceFiles;
+    wxStaticText* m_labTraceFileSize;
+    wxSpinCtrl* m_TraceFileSize;
     wxCheckBox* m_SendAllTraces;
     wxStaticText* m_LabelTraceFile;
     wxTextCtrl* m_TraceFile;

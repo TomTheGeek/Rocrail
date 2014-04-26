@@ -27800,4 +27800,10 @@
     <de txt="Andere"/>
     <pt_BR txt="Outros"/>
   </Msg>
+  <Msg id="nrtracefiles">
+    <en txt="Number of trace files"/>
+  </Msg>
+  <Msg id="tracefilesize">
+    <en txt="Trace file size in KB"/>
+  </Msg>
 </Messages>

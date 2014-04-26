@@ -7025,3 +7025,15 @@ msgstr ""
 msgid "Others"
 msgstr ""
 
+#. 
+# id="nrtracefiles"
+#, c-format
+msgid "Number of trace files"
+msgstr ""
+
+#. 
+# id="tracefilesize"
+#, c-format
+msgid "Trace file size in KB"
+msgstr ""
+

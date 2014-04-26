@@ -1731,6 +1731,7 @@ static void __handlePT(iOBiDiB bidib, byte* pdata) {
   data->cv = cv;
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "PT response state=%d cv=%d data=%d", state, cv, val );
+  TraceOp.dump ( name, TRCLEVEL_INFO, (char*)pdata, 5 );
   if( state == BIDIB_CS_PROG_OKAY ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cv %d has a value of %d", data->cv, val );
     data->value = val;
