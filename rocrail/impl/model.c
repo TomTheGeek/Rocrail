@@ -1281,8 +1281,9 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
     if( boosterlist != NULL ) {
       iONode node = wBoosterList.getbooster( boosterlist );
       while( node != NULL ) {
-        if( StrOp.equals( wBooster.getid( item ), wBooster.getid( node ) ) ) {
-          NodeOp.mergeNode( node, item, True, True, True );
+        Boolean prev_id_matched = StrOp.equals( prev_id, wBooster.getid( node ) );
+        if( StrOp.equals( wBooster.getid( item ), wBooster.getid( node ) ) || prev_id_matched ) {
+          NodeOp.mergeNode( node, item, True, True, False );
           booster = node;
           break;
         }
