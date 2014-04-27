@@ -86,6 +86,7 @@ void BidibDlg::initLabels() {
   m_labSecAckInt->SetLabel(wxGetApp().getMsg( "interval" ));
 
   // Nodes
+  m_ConfigureNodes->SetLabel(wxGetApp().getMsg( "setup" ) + wxT("..."));
 
   // Buttons
   m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
