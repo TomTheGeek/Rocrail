@@ -125,7 +125,7 @@
       <TD align="center">
         <xsl:choose>
           <xsl:when test="$cargo = 'none'">
-            <xsl:text>Geen</xsl:text>
+            <xsl:text>Overige</xsl:text>
           </xsl:when>
           <xsl:when test="$cargo = 'goods'">
             <xsl:text>Goederen</xsl:text>

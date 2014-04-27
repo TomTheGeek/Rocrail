@@ -177,7 +177,7 @@
       <TD align="center">
         <xsl:choose>
           <xsl:when test="$type = 'none'">
-            <xsl:text>None</xsl:text>
+            <xsl:text>Others</xsl:text>
           </xsl:when>  
           <xsl:when test="$type = 'ice'">
             <xsl:text>Intercity</xsl:text>
@@ -219,7 +219,7 @@
       <TD align="center">
         <xsl:choose>
           <xsl:when test="$typeperm = 'none'">
-            <xsl:text>-</xsl:text>
+            <xsl:text>Others</xsl:text>
           </xsl:when>
           <xsl:when test="$typeperm = 'ice'">
             <xsl:text>Intercity</xsl:text>

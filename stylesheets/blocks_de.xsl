@@ -22,7 +22,7 @@
               <TH width="8%" bgcolor="lightgrey">Stopp</TH>
               <TH width="5%" bgcolor="lightgrey">Ankunft</TH>
               <TH width="10%" bgcolor="lightgrey">Blocktyp</TH>
-              <TH width="10%" bgcolor="lightgrey">Zugtyp</TH>
+              <TH width="10%" bgcolor="lightgrey">Berechtigung</TH>
               <TH width="10%" bgcolor="lightgrey">Länge</TH>
               <TH width="5%" bgcolor="lightgrey">El.</TH>
               <TH width="8%" bgcolor="lightgrey">Kopfbhf</TH>
@@ -177,7 +177,7 @@
       <TD align="center">
         <xsl:choose>
           <xsl:when test="$type = 'none'">
-            <xsl:text>-</xsl:text>
+            <xsl:text>Andere</xsl:text>
           </xsl:when>
           <xsl:when test="$type = 'ice'">
             <xsl:text>Fernverkehr</xsl:text>
@@ -219,7 +219,7 @@
       <TD align="center">
         <xsl:choose>
           <xsl:when test="$typeperm = 'none'">
-            <xsl:text>-</xsl:text>
+            <xsl:text>Andere</xsl:text>
           </xsl:when>
           <xsl:when test="$typeperm = 'ice'">
             <xsl:text>Fernverkehr</xsl:text>
