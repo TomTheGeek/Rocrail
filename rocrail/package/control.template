@@ -3,7 +3,7 @@ Version: <BZR>
 Section: other
 Priority: optional
 Architecture: <ARCH>
-Depends: libwxgtk2.8-0
+Depends: libwxgtk2.8-0 | libwxgtk3.0-0
 Installed-Size: 34000
 Maintainer: Rob Versluis <support@rocrail.net>
 Description: Rocrail - Model Railroad Control System.    
