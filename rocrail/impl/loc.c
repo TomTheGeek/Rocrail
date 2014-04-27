@@ -1893,7 +1893,7 @@ static void __runner( void* threadinst ) {
       type    = MsgOp.getUsrDataType( msg );
       udata   = MsgOp.getUsrData(msg);
       msg->base.del( msg );
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "new message %d rruns=%d", event, data->nrruns );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "new message %d nrruns=%d", event, data->nrruns );
     }
 
     if( data->driver != NULL ) {
@@ -3501,6 +3501,8 @@ static void _swapPlacing( iOLoc loc, iONode cmd, Boolean consist, Boolean direct
   else if( data->runner != NULL ) {
     iOMsg msg = MsgOp.inst( NULL, swap_event );
     if( wLoc.getswaptimer(data->props) > 0 ) {
+      if( wLoc.getswaptimer(data->props) > 1000 )
+        wLoc.setswaptimer(data->props, 1000 );
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s: sync swap sleep %d", wLoc.getid(data->props), wLoc.getswaptimer(data->props));
       ThreadOp.sleep(wLoc.getswaptimer(data->props));
     }
