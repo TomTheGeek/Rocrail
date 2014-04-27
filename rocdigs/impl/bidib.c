@@ -1735,6 +1735,20 @@ static void __handlePT(iOBiDiB bidib, byte* pdata) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "cv %d has a value of %d", data->cv, val );
     data->value = val;
   }
+  else if( state == BIDIB_CS_PROG_STOPPED || state == BIDIB_CS_PROG_NO_LOCO || state == BIDIB_CS_PROG_NO_ANSWER ||
+           state == BIDIB_CS_PROG_SHORT   || state == BIDIB_CS_PROG_VERIFY_FAILED )
+  {
+    /* inform clients */
+    node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+    wProgram.setcv( node, data->cv+1 );
+    wProgram.setvalue( node, -1 );
+    wProgram.setcmd( node, wProgram.statusrsp );
+    if( data->iid != NULL )
+      wProgram.setiid( node, data->iid );
+
+    if( data->listenerFun != NULL && data->listenerObj != NULL )
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
   else {
     return;
   }
