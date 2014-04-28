@@ -344,7 +344,7 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer71 = new wxBoxSizer( wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer4;
-	fgSizer4 = new wxFlexGridSizer( 0, 5, 0, 0 );
+	fgSizer4 = new wxFlexGridSizer( 0, 4, 0, 0 );
 	fgSizer4->AddGrowableCol( 1 );
 	fgSizer4->SetFlexibleDirection( wxBOTH );
 	fgSizer4->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
@@ -356,10 +356,6 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_labFDesc = new wxStaticText( m_FunctionPanel, wxID_ANY, wxT("Description"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labFDesc->Wrap( -1 );
 	fgSizer4->Add( m_labFDesc, 0, wxTOP|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_labFTimer = new wxStaticText( m_FunctionPanel, wxID_ANY, wxT("Timer"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_labFTimer->Wrap( -1 );
-	fgSizer4->Add( m_labFTimer, 0, wxTOP|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_labFx = new wxStaticText( m_FunctionPanel, wxID_ANY, wxT("Fx"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labFx->Wrap( -1 );
@@ -376,13 +372,12 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_F0Desc = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_F0Desc, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_F0Timer = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 10000, 0 );
-	fgSizer4->Add( m_F0Timer, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
 	m_F0x = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxSP_ARROW_KEYS, 0, 28, 0 );
 	fgSizer4->Add( m_F0x, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_F0Icon = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_F0Icon->SetMinSize( wxSize( 140,-1 ) );
+	
 	fgSizer4->Add( m_F0Icon, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_F1 = new wxStaticText( m_FunctionPanel, wxID_ANY, wxT("F1"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -392,13 +387,12 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_F1Desc = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_F1Desc, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
-	m_F1Timer = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 10000, 0 );
-	fgSizer4->Add( m_F1Timer, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
 	m_F1x = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 60,-1 ), wxSP_ARROW_KEYS, 0, 28, 0 );
 	fgSizer4->Add( m_F1x, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_F1Icon = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_F1Icon->SetMinSize( wxSize( 140,-1 ) );
+	
 	fgSizer4->Add( m_F1Icon, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_F2 = new wxStaticText( m_FunctionPanel, wxID_ANY, wxT("F2"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -408,13 +402,12 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_F2Desc = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_F2Desc, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_F2Timer = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 10000, 0 );
-	fgSizer4->Add( m_F2Timer, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
 	m_F2x = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 60,-1 ), wxSP_ARROW_KEYS, 0, 28, 0 );
 	fgSizer4->Add( m_F2x, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_F2Icon = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_F2Icon->SetMinSize( wxSize( 140,-1 ) );
+	
 	fgSizer4->Add( m_F2Icon, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_F3 = new wxStaticText( m_FunctionPanel, wxID_ANY, wxT("F3"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -424,13 +417,12 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_F3Desc = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_F3Desc, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_F3Timer = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 10000, 0 );
-	fgSizer4->Add( m_F3Timer, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
 	m_F3x = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 60,-1 ), wxSP_ARROW_KEYS, 0, 28, 0 );
 	fgSizer4->Add( m_F3x, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_F3Icon = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_F3Icon->SetMinSize( wxSize( 140,-1 ) );
+	
 	fgSizer4->Add( m_F3Icon, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_F4 = new wxStaticText( m_FunctionPanel, wxID_ANY, wxT("F4"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -440,13 +432,12 @@ cardlggen::cardlggen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_F4Desc = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_F4Desc, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
-	m_F4Timer = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 10000, 0 );
-	fgSizer4->Add( m_F4Timer, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
 	m_F4x = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 60,-1 ), wxSP_ARROW_KEYS, 0, 28, 0 );
 	fgSizer4->Add( m_F4x, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_F4Icon = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_F4Icon->SetMinSize( wxSize( 140,-1 ) );
+	
 	fgSizer4->Add( m_F4Icon, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer71->Add( fgSizer4, 0, wxEXPAND, 5 );
