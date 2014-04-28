@@ -1026,7 +1026,11 @@ void CarDlg::evaluateFunctions() {
   wxSpinCtrl* l_timer[] = {m_F1Timer,m_F2Timer,m_F3Timer,m_F4Timer};
   wxSpinCtrl* l_fx[] = {m_F1x,m_F2x,m_F3x,m_F4x};
   wxTextCtrl* l_icon[] = {m_F1Icon,m_F2Icon,m_F3Icon,m_F4Icon};
+  int f0 = 0;
   int function[] = {0,0,0,0};
+
+  if( m_F0Desc->GetValue().Length() > 0 )
+    f0 = 1;
 
   for( int i = 0; i < 4; i++ ) {
     if( l_desc[i]->GetValue().Length() > 0 )
@@ -1039,7 +1043,14 @@ void CarDlg::evaluateFunctions() {
   iONode fundef = wCar.getfundef( m_Props );
   while( fundef != NULL ) {
     int fnr = wFunDef.getfn( fundef );
-    if( fnr >= 1 + m_FGroup*4 && fnr <= 4 + m_FGroup*4 ) {
+    if( fnr == 0 ) {
+      wFunDef.settext( fundef, m_F0Desc->GetValue().mb_str(wxConvUTF8)  );
+      wFunDef.settimer( fundef, m_F0Timer->GetValue() );
+      wFunDef.setmappedfn( fundef, m_F0x->GetValue() );
+      wFunDef.seticon( fundef, m_F0Icon->GetValue().mb_str(wxConvUTF8)  );
+      f0 = 0;
+    }
+    else if( fnr >= 1 + m_FGroup*4 && fnr <= 4 + m_FGroup*4 ) {
       TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "modify function  %d", fnr );
 
       wFunDef.settext( fundef, l_desc[(fnr-1) - m_FGroup*4]->GetValue().mb_str(wxConvUTF8)  );
@@ -1050,6 +1061,16 @@ void CarDlg::evaluateFunctions() {
       function[(fnr-1) - m_FGroup*4] = 0;
     }
     fundef = wCar.nextfundef( m_Props, fundef );
+  }
+
+  if( f0 == 1 ) {
+    fundef = NodeOp.inst( wFunDef.name(), m_Props, ELEMENT_NODE );
+    NodeOp.addChild( m_Props, fundef );
+    wFunDef.setfn( fundef, 0 );
+    wFunDef.settext( fundef, m_F0Desc->GetValue().mb_str(wxConvUTF8)  );
+    wFunDef.settimer( fundef, m_F0Timer->GetValue() );
+    wFunDef.setmappedfn( fundef, m_F0x->GetValue() );
+    wFunDef.seticon( fundef, m_F0Icon->GetValue().mb_str(wxConvUTF8)  );
   }
 
   for( int i = 0; i < 4; i++ ) {
@@ -1079,6 +1100,11 @@ void CarDlg::initFunctions() {
   wxSpinCtrl* l_fx[] = {m_F1x,m_F2x,m_F3x,m_F4x};
   wxTextCtrl* l_icon[] = {m_F1Icon,m_F2Icon,m_F3Icon,m_F4Icon};
 
+  m_F0Desc->SetValue( _T("") );
+  m_F0Timer->SetValue(0);
+  m_F0x->SetValue(0);
+  m_F0Icon->SetValue( _T("") );
+
   for( int i = 0; i < 4; i++ ) {
     l_fn[i]->SetLabel( wxString::Format(_T("F%d"), i+1+m_FGroup*4 ) );
     l_desc[i]->SetValue( _T("") );
@@ -1095,7 +1121,13 @@ void CarDlg::initFunctions() {
     TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999,
         "function[%d] name[%s]", funnr, wFunDef.gettext( fundef ) );
 
-    if( funnr >= m_FGroup * 4 + 1 && funnr <= m_FGroup * 4 + 4) {
+    if( funnr == 0 ) {
+      m_F0Desc->SetValue( fntxt );
+      m_F0Timer->SetValue(wFunDef.gettimer(fundef));
+      m_F0x->SetValue(wFunDef.getmappedfn(fundef));
+      m_F0Icon->SetValue( wxString( wFunDef.geticon(fundef), wxConvUTF8) );
+    }
+    else if( funnr >= m_FGroup * 4 + 1 && funnr <= m_FGroup * 4 + 4) {
       l_desc[(funnr - 1) - m_FGroup * 4]->SetValue( fntxt );
       l_timer[(funnr - 1) - m_FGroup * 4]->SetValue( wFunDef.gettimer(fundef) );
       l_fx[(funnr - 1) - m_FGroup * 4]->SetValue( wFunDef.getmappedfn(fundef) );
