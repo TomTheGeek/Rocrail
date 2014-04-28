@@ -27459,6 +27459,7 @@
     <sl txt="Glavna proga"/>
     <pl txt="Główna magistrala"/>
     <sv txt="Huvudlinje"/>
+    <ru txt="Магистраль"/>
   </Msg>
   <Msg id="move4opp">
     <en txt="Move bridge if target position is opposite"/>
@@ -27643,6 +27644,7 @@
     <en_GB txt="Don't wrap monitor"/>
     <pt_BR txt="Sem envolvimento dos monitores"/>
     <sl txt="Pogled brez prehajanja"/>
+    <ru txt="Мониторинг без переноса строк"/>
   </Msg>
   <Msg id="subject">
     <en txt="Subject"/>
@@ -27687,6 +27689,7 @@
     <sr_latin txt="Uspavati zatvoreno"/>
     <fi txt="Aseta suljettaessa lepotilaan"/>
     <pt_BR txt="Parar quando fechado"/>
+    <ru txt="Режим сна при закрытом блоке"/>
   </Msg>
   <Msg id="sensorrange">
     <en txt="Sensor range"/>
@@ -27712,6 +27715,7 @@
     <sr_latin txt="Podesi raster veličine slova"/>
     <en_GB txt="Grid fontsize adjust"/>
     <it txt="Griglia regolazione dimensione carattere"/>
+    <ru txt="Шрифт таблицы Локов"/>
   </Msg>
   <Msg id="maxkmh">
     <en txt="Max. km/h"/>
@@ -27724,6 +27728,7 @@
     <it txt="Max km/h"/>
     <pt_BR txt="Máx. km/h"/>
     <sv txt="Max. km/h"/>
+    <ru txt="Макс.км/ч"/>
   </Msg>
   <Msg id="reportstate">
     <en txt="Report state"/>
@@ -27757,6 +27762,7 @@
     <pt_BR txt="Parar no IN em modo semi-automático"/>
     <sl txt="Stop pri IN za pol avtomatski način"/>
     <sv txt="Stopp vid IN i halvautomatiskt läge"/>
+    <ru txt="Остановка по событию IN, в режиме полуавтомата"/>
   </Msg>
   <Msg id="v0atpoweron">
     <en txt="Send zero speed command at power on"/>
@@ -27767,6 +27773,7 @@
     <sr_latin txt="Komanda o nultoj brzini prilikom uključenja"/>
     <pt_BR txt="Enviar comando de velocidade zero ao ligar"/>
     <sl txt="Pošlji ukaz za hitrost 0 pri vklopu"/>
+    <ru txt="Отправить команду нулевой скорости при включении питания"/>
   </Msg>
   <Msg id="useonlyfirstident">
     <en txt="Use only the first identifier"/>
@@ -27793,17 +27800,28 @@
     <nl txt="Opstel blokken"/>
     <de txt="Aufstellblock-Tabelle"/>
     <pt_BR txt="Tabela de blocos de teste"/>
+    <it txt="Blocco di stazionamento"/>
+    <ru txt="Блоки расстановки"/>
+    <sr_latin txt="Tabela bloka za održavanje"/>
   </Msg>
   <Msg id="others">
     <en txt="Others"/>
     <nl txt="Overige"/>
     <de txt="Andere"/>
     <pt_BR txt="Outros"/>
+    <it txt="Altri"/>
+    <sr_latin txt="Drugi"/>
   </Msg>
   <Msg id="nrtracefiles">
     <en txt="Number of trace files"/>
+    <it txt="Numero di file messaggi"/>
+    <sr_latin txt="Broj trejs fajlova"/>
+    <nl txt="Aantal trace bestanden"/>
   </Msg>
   <Msg id="tracefilesize">
     <en txt="Trace file size in KB"/>
+    <it txt="Dimensione file messaggi in KB"/>
+    <sr_latin txt="Veličina trejs fajla u KB"/>
+    <nl txt="Trace bestand grootte in KB"/>
   </Msg>
 </Messages>
