@@ -61,6 +61,7 @@ void ScheduleGraph::OnPaint(wxPaintEvent& event)
   GetSize(&w, &h);
 
   int nrentries = 0;
+  int nrtime = 0;
   iOMap map = MapOp.inst();
   iONode scentry = wSchedule.getscentry( m_Schedule );
   while( scentry != NULL ) {
@@ -78,6 +79,7 @@ void ScheduleGraph::OnPaint(wxPaintEvent& event)
         nrentries++;
       }
     }
+    nrtime++;
     scentry = wSchedule.nextscentry( m_Schedule, scentry );
   };
 
@@ -88,19 +90,37 @@ void ScheduleGraph::OnPaint(wxPaintEvent& event)
     pen.SetWidth(1);
     dc.SetPen(pen);
 
+    wxCoord tw;
+    wxCoord th;
+    dc.GetTextExtent(wxString("M",wxConvUTF8), &tw, &th, 0,0, &dc.GetFont());
+    float twidth  = tw;
+    float theight = th;
+
+
     float margin = 10.0;
-    float v = (float)((w-2*margin) / (nrentries-1));
-    iONode scentry = (iONode)MapOp.first(map);
+    float leftmargin = 40.0;
+    float topmargin = 80.0;
+    float v = (float)((float)(w-2*margin-leftmargin) / (float)(nrentries-1));
+    iONode scentry = wSchedule.getscentry( m_Schedule );
     for( int i = 0; i < nrentries; i++) {
       const char* location = wScheduleEntry.getlocation(scentry);
       const char* block = wScheduleEntry.getblock(scentry);
-      dc.DrawLine( i*v+margin, 50, i*v+margin, h );
+      dc.DrawLine( i*v+leftmargin+margin, topmargin, i*v+leftmargin+margin, h );
       if( location != NULL && StrOp.len(location) > 0 )
-        dc.DrawRotatedText( wxString(location,wxConvUTF8), i*v+margin-10, 50, 90 );
+        dc.DrawRotatedText( wxString(location,wxConvUTF8), i*v+leftmargin+margin-(theight/2), topmargin, 90 );
       else
-        dc.DrawRotatedText( wxString(block,wxConvUTF8), i*v+margin-10, 50, 90 );
-      scentry = (iONode)MapOp.next(map);
+        dc.DrawRotatedText( wxString(block,wxConvUTF8), i*v+leftmargin+margin-(theight/2), topmargin, 90 );
+      scentry = wSchedule.nextscentry( m_Schedule, scentry );
     }
+
+    scentry = wSchedule.getscentry( m_Schedule );
+    float timeh = (h - topmargin - 2*margin) / (nrtime-1);
+    for( int n = 0; n < nrtime; n++) {
+      dc.DrawLine( leftmargin, topmargin + margin + timeh*n, w, topmargin + margin + timeh*n );
+      dc.DrawRotatedText( wxString::Format(wxT("%02d:%02d"),wScheduleEntry.gethour(scentry),wScheduleEntry.getminute(scentry)), margin/2, topmargin + margin + timeh*n - (theight/2), 0 );
+      scentry = wSchedule.nextscentry( m_Schedule, scentry );
+    }
+
   }
 
   MapOp.base.del(map);
