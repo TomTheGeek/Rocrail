@@ -1957,6 +1957,7 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
   iOLocation location = ModelOp.getBlockLocation(AppOp.getModel(), data->id );
 
   if( wBlock.ismainline(data->props) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block [%s] is mainline; allow departure", wBlock.getid(data->props));
     return True;
   }
 
@@ -2268,6 +2269,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   }
   else if( locid != NULL ) {
     iOLocation location = ModelOp.getBlockLocation( AppOp.getModel(), data->id);
+    iOLoc loco = NULL;
 
     if( StrOp.len(locid) == 0 && data->locId != NULL && StrOp.len(data->locId) > 0 ) {
       /* inform loc */
@@ -2284,6 +2286,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
       }
     }
     else if(StrOp.len(locid) > 0) {
+      loco = ModelOp.getLoc( model, locid, NULL, False );
       /* arrive in location */
       if( location != NULL ) {
         LocationOp.locoDidArrive(location, locid);
@@ -2297,6 +2300,14 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"block %s set locid=%s", wBlock.getid(data->props), locid );
     ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, locid, False, 0, 0, NULL );
     occUpdate = True;
+
+    if( wBlock.getfifosize(data->props) > 0 && !data->arrivalPending && loco != NULL && StrOp.equals( wLoc.engine_automobile, LocOp.getEngine(loco)) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+          "fifo block [%s] automobile [%s] idx=%d", data->id, LocOp.getId(loco), ListOp.size(data->fifoList) );
+      ListOp.add(data->fifoList, (obj)LocOp.getId(loco));
+      __dumpFiFo(inst);
+    }
+
   }
 
   if( locid == NULL || StrOp.len(locid) == 0 ) {
