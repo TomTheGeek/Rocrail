@@ -17,6 +17,7 @@ if [ ! -e ~/.rpmmacros ] ; then
 	cp _rpmmacros ~/.rpmmacros
 fi
 
+git pull
 mkdir -p $BUILDROOT
 
 if [ -e rocrail-$VERSION ] ; then
