@@ -13642,7 +13642,7 @@
     <sr_latin txt="Greška prilikom učitavanja! Proveri detalje u traseru"/>
     <zh_CN txt="下载出错！请查阅详情"/>
     <sl txt="Napaka pri prenosu! Preveri sledenje za podrobnosti."/>
-    <pt_BR txt="Erro no recebimento! Verifique os arquivos de rastreamento para detalhes."/>
+    <pt_BR txt="Erro no recebimento! Verifique o rastreamento para detalhes."/>
     <fi txt="Virhe latauksessa! Tarkista jäljitys."/>
     <pl txt="Błąd pobierania! Sprawdź logi aby poznać szczegóły."/>
   </Msg>
@@ -27817,11 +27817,13 @@
     <it txt="Numero di file messaggi"/>
     <sr_latin txt="Broj trejs fajlova"/>
     <nl txt="Aantal trace bestanden"/>
+    <pt_BR txt="Número de arquivos de rastreamento"/>
   </Msg>
   <Msg id="tracefilesize">
     <en txt="Trace file size in KB"/>
     <it txt="Dimensione file messaggi in KB"/>
     <sr_latin txt="Veličina trejs fajla u KB"/>
     <nl txt="Trace bestand grootte in KB"/>
+    <pt_BR txt="Tamanho do arquivo de rastreamento em KB"/>
   </Msg>
 </Messages>
