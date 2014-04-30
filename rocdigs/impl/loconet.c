@@ -1683,6 +1683,7 @@ static int __getLocoSlot(iOLocoNet loconet, iONode node, int* status) {
           cmd[1] = rsp[2];
           cmd[2] = __setDecoderType( rsp[3], node );
           cmd[3] = LocoNetOp.checksum( cmd, 3 );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set decoder type to %02X", cmd[2] );
           LocoNetOp.transact( loconet, cmd, 4, NULL, NULL, 0, 0, False );
         }
 
@@ -2387,10 +2388,11 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
 
 static void __writeStatus( iOLocoNet loconet, int slot, byte status, int statusflag ) {
   byte cmd[4];
-  cmd[0] = OPC_SLOT_STAT1;
+  cmd[0] = 0;
   cmd[1] = slot;
   cmd[2] = (status&~LOCOSTAT_MASK)|statusflag;
   cmd[3] = LocoNetOp.checksum( cmd, 3 );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set decoder type to %02X", cmd[2] );
   LocoNetOp.transact( loconet, cmd, 4, NULL, NULL, 0, 0, False );
 }
 
@@ -2420,6 +2422,7 @@ int makereqDispatch(iOLocoNetData data, byte *msg, int slot, iONode node, int st
 
     byte* bcmd = allocMem( 64 );
     MemOp.copy( bcmd, msg, 32 );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set decoder type to %02X", msg[3] );
     ThreadOp.prioPost( data->loconetWriter, (obj)bcmd, high );
   }
 

@@ -379,22 +379,23 @@ static Boolean __setstat1byte(struct __lnslot* slot, int slotnr, byte stat) {
 
   slot[slotnr].format = 0;
 
-  if( stat & DEC_MODE_128 ) {
+  if( stat & DEC_MODE_128 == DEC_MODE_128 ) {
     slot[slotnr].steps = 128;
   }
-  else if( stat & DEC_MODE_28 ) {
+  else if( stat & DEC_MODE_28 == DEC_MODE_28 ) {
     slot[slotnr].steps = 28;
   }
-  else if( stat & DEC_MODE_14 ) {
+  else if( stat & DEC_MODE_14 == DEC_MODE_14 ) {
     slot[slotnr].steps = 14;
   }
-  else if( stat & DEC_MODE_28TRI )  {
+  else if( stat & DEC_MODE_28TRI == DEC_MODE_28TRI )  {
     slot[slotnr].format = 1;
     slot[slotnr].steps = 28;
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "set stat1byte for slot# %d format=%d steps=%d inuse=%d", slotnr, slot[slotnr].format, slot[slotnr].steps, slot[slotnr].inuse );
+      "set stat1byte for slot# %d format=%d steps=%d inuse=%d stat=0x%02X",
+      slotnr, slot[slotnr].format, slot[slotnr].steps, slot[slotnr].inuse, stat );
 
   return toLoco;
 }
@@ -567,12 +568,14 @@ static int __moveslots(iOLocoNet loconet, byte* msg, struct __lnslot* slot, int*
 static int __slotstatus1(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   iOLocoNetData data = Data(loconet);
   int slotnr = msg[1] & 0x7F;
+  int stat1 = 0;
   if(slotnr == 0 || slot[slotnr].addr == 0 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "illegal slot# %d addr %d", slotnr, slot[slotnr].addr );
     return slotnr;
   }
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set slot# %d status", slotnr );
-  data->listenerFun( data->listenerObj, __locCmd( loconet, slotnr, slot, __setstat1byte( slot, slotnr, msg[3]) ), TRCLEVEL_INFO );
+  stat1 = __setstat1byte( slot, slotnr, msg[2]);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set slot# %d status 0x%02X", slotnr, stat1 );
+  data->listenerFun( data->listenerObj, __locCmd( loconet, slotnr, slot, stat1 ), TRCLEVEL_INFO );
   return slotnr;
 }
 
