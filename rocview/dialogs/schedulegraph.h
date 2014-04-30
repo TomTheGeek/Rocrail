@@ -29,12 +29,14 @@
 #endif
 
 #include "rocs/public/node.h"
+#include "rocs/public/map.h"
 
 
 
 class ScheduleGraph: public wxPanel
 {
   iONode m_Schedule;
+  iONode getEntry( iOMap map, iONode scentry );
 public:
     /// Constructors
     ScheduleGraph(wxWindow* parent, wxWindowID id = -1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxSUNKEN_BORDER|wxTAB_TRAVERSAL);
