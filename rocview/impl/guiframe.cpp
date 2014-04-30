@@ -4750,7 +4750,7 @@ void RocGuiFrame::OnCellLeftClick( wxGridEvent& event ){
     wxString str = m_ActiveLocs->GetCellValue( event.GetRow(), 0 );
     StrOp.free(m_LocID);
     m_LocID = StrOp.dup((const char*)str.mb_str(wxConvUTF8));
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "OnCellLeftClick %s", (const char*)str.mb_str(wxConvUTF8) );
+    TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "OnCellLeftClick %s", (const char*)str.mb_str(wxConvUTF8) );
     iONode lc = findLoc(str.mb_str(wxConvUTF8));
 
     // Dispatching Throttle in the mode column if dispatchmode is on
@@ -4834,7 +4834,7 @@ void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
         else if( StrOp.endsWithi( wLoc.getimage( lc ), ".png" ) )
           bmptype = wxBITMAP_TYPE_PNG;
 
-        TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "***** UpdateLocImage %s", wLoc.getimage( lc ) );
+        TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "UpdateLocImage %s", wLoc.getimage( lc ) );
 
         const char* imagepath = wGui.getimagepath(m_Ini);
         static char pixpath[256];
@@ -4881,7 +4881,7 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
     Boolean active = wLoc.isactive(lc);
     Boolean manual = wLoc.ismanual(lc);
 
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "OnCellRightClick %s", m_LocID );
+    TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "OnCellRightClick %s", m_LocID );
     wxMenu menu( str );
     menu.Append( ME_GridLocGo, wxGetApp().getMenu("start"), wxGetApp().getTip("start"));
     wxMenuItem *mi = menu.FindItem( ME_GridLocGo );
@@ -4934,7 +4934,7 @@ void RocGuiFrame::OnSelectCell( wxGridEvent& event ){
     wxString str = m_ActiveLocs->GetCellValue( event.GetRow(), 0 );
     m_FakeLeftClick = true;
     OnCellLeftClick(event);
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "OnSelectCell %s", (const char*)str.mb_str(wxConvUTF8) );
+    TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "OnSelectCell %s", (const char*)str.mb_str(wxConvUTF8) );
   }
   else {
     if(m_CV!=NULL)

@@ -379,7 +379,7 @@ wxBitmap* LC::getIcon(const char* icon) {
   else if( StrOp.endsWithi( icon, ".png" ) )
     bmptype = wxBITMAP_TYPE_PNG;
 
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "get icon %s", icon );
+  TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "get icon %s", icon );
 
   const char* imagepath = wGui.getimagepath(wxGetApp().m_Ini);
   static char pixpath[256];

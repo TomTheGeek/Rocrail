@@ -165,7 +165,7 @@ void ScheduleGraph::OnPaint(wxPaintEvent& event)
           if( node != NULL )
             x = NodeOp.getInt( node, "gx", 0);
         }
-        TraceOp.trc( "scgraph", TRCLEVEL_INFO, __LINE__, 9999, "draw line from %d,%d to %d,%d", gx,gy,x,y );
+        TraceOp.trc( "scgraph", TRCLEVEL_DEBUG, __LINE__, 9999, "draw line from %d,%d to %d,%d", gx,gy,x,y );
         dc.DrawLine( gx, gy, x, y );
         gx = x;
         gy = y;
