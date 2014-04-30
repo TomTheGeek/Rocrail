@@ -92,7 +92,9 @@ void ScheduleGraph::OnPaint(wxPaintEvent& event)
 
     wxCoord tw;
     wxCoord th;
-    dc.GetTextExtent(wxString("M",wxConvUTF8), &tw, &th, 0,0, &dc.GetFont());
+    wxFont* font = new wxFont(dc.GetFont());
+    dc.GetTextExtent(wxString("M",wxConvUTF8), &tw, &th, 0,0, font);
+    delete font;
     float twidth  = tw;
     float theight = th;
 
