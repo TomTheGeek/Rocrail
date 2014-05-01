@@ -195,7 +195,7 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
   const char* nodename = NodeOp.getName( nodeA );
   const char* cmd      = wCar.getcmd( nodeA );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command %s:%s for car %s",
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "command %s:%s for car %s",
       nodename, (cmd==NULL?"-":cmd), wCar.getid( data->props ) );
 
   if( wCar.getaddr(data->props) > 0 ) {

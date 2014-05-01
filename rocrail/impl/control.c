@@ -1455,7 +1455,7 @@ static void __checkAction( iOControl inst, const char* cmd, const char* by ) {
             }
           }
           else {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "action state does not match: [%s-%s]",
                 wActionCtrl.getstate( action ), state );
           }
 

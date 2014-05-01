@@ -2187,7 +2187,7 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmdstr = wSysCmd.getcmd( node );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SysCmd %s", cmdstr );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SysCmd %s", cmdstr );
 
     if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
       if( !wLocoNet.isignorepowercmds(data->loconet) || !data->powerison ) {
