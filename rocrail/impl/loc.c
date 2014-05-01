@@ -2246,7 +2246,7 @@ static Boolean __matchTrainIdent(iOLoc inst, const char* ident1, const char* ide
 }
 
 
-static void __calcTrainLen(iOLoc inst) {
+static void __calcTrainLen(iOLoc inst, Boolean adjust) {
   iOLocData data = Data(inst);
   Boolean report = False;
 
@@ -2261,7 +2261,7 @@ static void __calcTrainLen(iOLoc inst) {
       wLoc.settrainweight( data->props, weight );
       report = True;
 
-      if( wLoc.isadjustaccel(data->props) ) {
+      if( wLoc.isadjustaccel(data->props) && adjust) {
         float maxload = wLoc.getmaxload(data->props);
         int accelmin = wLoc.getaccelmin(data->props);
         int accelmax = wLoc.getaccelmax(data->props);
@@ -2300,7 +2300,7 @@ static void __calcTrainLen(iOLoc inst) {
 
 static int _getLen( iOLoc inst ) {
   iOLocData data = Data(inst);
-  __calcTrainLen(inst);
+  __calcTrainLen(inst, False);
   if( wLoc.gettrainlen( data->props ) > 0 )
     return wLoc.gettrainlen( data->props );
   return wLoc.getlen( data->props );
@@ -3060,7 +3060,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       wLoc.settrain(data->props, wLoc.gettrain(nodeA));
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "consist [%s] assigned to loco [%s]", wLoc.gettrain(data->props), wLoc.getid( data->props ) );
       /* Update train length. */
-      __calcTrainLen(inst);
+      __calcTrainLen(inst, True);
       __setCurBlock4Train(inst, data->curBlock);
       broadcast = True;
     }
