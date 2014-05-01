@@ -2388,7 +2388,7 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
 
 static void __writeStatus( iOLocoNet loconet, int slot, byte status, int statusflag ) {
   byte cmd[4];
-  cmd[0] = 0;
+  cmd[0] = OPC_SLOT_STAT1;
   cmd[1] = slot;
   cmd[2] = (status&~LOCOSTAT_MASK)|statusflag;
   cmd[3] = LocoNetOp.checksum( cmd, 3 );
