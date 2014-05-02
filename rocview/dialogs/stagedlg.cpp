@@ -550,6 +550,7 @@ void StageDlg::OnSectionDelete( wxCommandEvent& event )
 void StageDlg::OnApply( wxCommandEvent& event ) {
   if( m_Props == NULL )
     return;
+  OnSectionModify(event);
   if( !evaluate() )
     return;
   if( !wxGetApp().isStayOffline() ) {
