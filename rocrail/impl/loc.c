@@ -3726,6 +3726,8 @@ static iOLoc _inst( iONode props ) {
   data->bbtMap = MapOp.inst();
   data->muxEngine = MutexOp.inst( NULL, True );
 
+  wLoc.setmode(data->props, wLoc.mode_idle);
+
   wLoc.setfifotop(data->props, False);
 
   if( wRocRail.isresetspfx(AppOp.getIni()) ) {

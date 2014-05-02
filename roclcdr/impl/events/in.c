@@ -227,5 +227,11 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "unexpected IN event for [%s], state=[%d]",
                    data->loc->getId( data->loc ), data->state );
+    if( data->next2Block == NULL ) {
+      iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      wLoc.setV( cmd, 0 );
+      wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
+      data->loc->cmd( data->loc, cmd );
+    }
   }
 }

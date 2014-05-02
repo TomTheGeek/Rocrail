@@ -974,7 +974,7 @@ static Boolean __hasShortcut(iIBlockBase inst) {
 static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   iOBlockData data = Data(inst);
 
-  if( wBlock.getfifosize(data->props) > 0 && !data->arrivalPending && locId != NULL ) {
+  if( wBlock.getfifosize(data->props) > 0 && !data->arrivalPending && locId != NULL && !StrOp.equals( wBlock.getstate( data->props ), wBlock.closed ) ) {
     iOLoc lc = ModelOp.getLoc( AppOp.getModel(), locId, NULL, False );
     if( lc != NULL && StrOp.equals( wLoc.engine_automobile, LocOp.getEngine(lc)) && ListOp.size(data->fifoList) < wBlock.getfifosize(data->props) ) {
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
@@ -1015,13 +1015,8 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
     }
   }
   else {
-
-    const char* state = wBlock.getstate( data->props );
-
-    if( StrOp.equals( state, wBlock.closed ) ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Block \"%s\" is closed!.",
-                     data->id );
+    if( StrOp.equals( wBlock.getstate( data->props ), wBlock.closed ) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] is closed!.", data->id );
       return False;
     }
 
