@@ -2138,12 +2138,14 @@ static void _depart(iIBlockBase inst) {
     iOLoc loc = ModelOp.getLoc( AppOp.getModel(), (const char*)ListOp.get(data->fifoList, 1), NULL, False );
     __dumpFiFo(inst);
     if( loc != NULL ) {
-      obj  manager = (obj)(data->manager == NULL ? inst:data->manager);
-      iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "inform fifo [%s] of the departure of the first", LocOp.getId(loc) );
-      wLoc.setcmd(cmd, wLoc.velocity);
-      wLoc.setV(cmd, 0);
-      LocOp.cmd(loc, cmd);
+      if( StrOp.equals( data->id, LocOp.getCurBlock(loc) ) ) {
+        obj  manager = (obj)(data->manager == NULL ? inst:data->manager);
+        iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "inform fifo [%s] of the departure of the first", LocOp.getId(loc) );
+        wLoc.setcmd(cmd, wLoc.velocity);
+        wLoc.setV(cmd, 0);
+        LocOp.cmd(loc, cmd);
+      }
     }
   }
 }
