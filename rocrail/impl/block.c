@@ -893,7 +893,8 @@ static Boolean _isReady( iIBlockBase inst ) {
 static Boolean _hasExtStop( iIBlockBase inst ) {
   iOBlockData data = Data(inst);
   if( wBlock.getfifosize(data->props) > 0 && ListOp.size(data->fifoList) > 1 ) {
-    return True;
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fifo block [%s] fifo0departing=%s", data->id, data->fifo0departing ? "false":"true");
+    return (data->fifo0departing ? False:True);
   }
   return wBlock.isextstop(data->props);
 }
@@ -2013,6 +2014,7 @@ static Boolean _unLock( iIBlockBase inst, const char* id, const char* routeId ) 
             return True;
           }
         }
+        data->fifo0departing = False;
       }
 
 
@@ -2148,6 +2150,11 @@ static void _depart(iIBlockBase inst) {
       }
     }
   }
+  if(wBlock.getfifosize(data->props) > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fifo block [%s] fifo0departing", data->id );
+    data->fifo0departing = True;
+  }
+
 }
 
 
