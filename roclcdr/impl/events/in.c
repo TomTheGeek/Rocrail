@@ -229,9 +229,6 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
                    data->loc->getId( data->loc ), data->state );
     if( data->next2Block == NULL ) {
       iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-      wLoc.setV( cmd, 0 );
-      wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
-      data->loc->cmd( data->loc, cmd );
     }
   }
 }
