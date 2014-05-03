@@ -2158,6 +2158,7 @@ static void __rocmousescanner( void* threadinst ) {
             else {
               data->rocmouses[idx]->lightstrig = 5;
               data->rocmouses[idx]->lights = !data->rocmouses[idx]->lights;
+              changedFn = 1;
             }
           }
         }
