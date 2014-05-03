@@ -27826,4 +27826,16 @@
     <nl txt="Trace bestand grootte in KB"/>
     <pt_BR txt="Tamanho do arquivo de rastreamento em KB"/>
   </Msg>
+  <Msg id="recording">
+    <en txt="Recording"/>
+  </Msg>
+  <Msg id="stopped">
+    <en txt="Stopped"/>
+  </Msg>
+  <Msg id="paused">
+    <en txt="Paused"/>
+  </Msg>
+  <Msg id="playing">
+    <en txt="Playing"/>
+  </Msg>
 </Messages>

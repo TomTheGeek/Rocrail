@@ -7037,3 +7037,27 @@ msgstr ""
 msgid "Trace file size in KB"
 msgstr ""
 
+#. 
+# id="recording"
+#, c-format
+msgid "Recording"
+msgstr ""
+
+#. 
+# id="stopped"
+#, c-format
+msgid "Stopped"
+msgstr ""
+
+#. 
+# id="paused"
+#, c-format
+msgid "Paused"
+msgstr ""
+
+#. 
+# id="playing"
+#, c-format
+msgid "Playing"
+msgstr ""
+
