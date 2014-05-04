@@ -1035,6 +1035,7 @@ static byte* __evaluateMobile( iOrocNet rocnet, byte* rn ) {
         wFunCmd.setgroup(nodeFn, (changedFn-1)/4);
 
         wFunCmd.setf0(nodeFn, (rn[RN_PACKET_DATA+2] & 0x02)?True:False);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "f0=%s group=%d", wFunCmd.isf0(nodeFn)?"ON":"OFF", wFunCmd.getgroup(nodeFn));
         wLoc.setiid( nodeFn, data->iid );
         wLoc.setcmd(nodeFn, wLoc.fieldcmd);
 

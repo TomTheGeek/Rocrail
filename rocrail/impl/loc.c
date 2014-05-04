@@ -700,9 +700,11 @@ static void* __event( void* inst, const void* evt ) {
     int V_raw = wLoc.getV_raw(evtNode);
     int V_rawMax = wLoc.getV_rawMax(evtNode);
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "field command for [%s] V=%d V_raw=%d V_rawMax=%d", wLoc.getid(data->props), V, V_raw, V_rawMax );
+        "field command for [%s] V=%d V_raw=%d V_rawMax=%d lights=%d", wLoc.getid(data->props), V, V_raw, V_rawMax, wLoc.isfn(evtNode) );
     wLoc.setcmd(evtNode, wLoc.velocity );
     wLoc.setV(evtNode, V );
+    wLoc.setfn( data->props, wLoc.isfn(evtNode) );
+    data->fn0 = wLoc.isfn(evtNode);
     LocOp.cmd(inst, (iONode)NodeOp.base.clone(evtNode));
     return NULL;
   }
