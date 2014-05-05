@@ -6,8 +6,8 @@
 # X-UnitedLinux-Should-Start: 
 # Required-Stop:     
 # X-UnitedLinux-Should-Stop: 
-# Default-Start:     3
-# Default-Stop:      
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
 # Short-Description: Starts the Rocrail Daemon
 # Description:       Starts the Rocrail Daemon
 ### END INIT INFO
