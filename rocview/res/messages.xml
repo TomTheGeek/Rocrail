@@ -16640,7 +16640,7 @@
     <fr txt="Ne pas exécuter la commande de l'aiguillage" tip="Ne pas exécuter la commande de l'aiguillage s'il est déjà en position pour cet itinéraire"/>
     <tr txt="Skip switch commands" tip="Skip switch commands in routes if already set"/>
     <es txt="Skip switch commands" tip="Saltear comandos de decisiones en rutas ya configuradas"/>
-    <it txt="Saltare i comandi deviatoi negli itinerari se giá impostati" tip="Non comanda i deviatoi dell'itinerario se l'itinerario è già formato"/>
+    <it txt="Saltare i comandi deviatoi negli itinerari se già impostati" tip="Non comanda i deviatoi dell'itinerario se l'itinerario è già formato"/>
     <da txt="spring over sporskifte kommandoer" tip="Drop sporskife kommandoer hvis togvejen er sat"/>
     <bg txt="Прескачане превключвате команди"/>
     <el txt="Περάστε διακόπτη εντολές"/>
@@ -20745,7 +20745,7 @@
     <da txt="Oversping signalkommandoer" tip="Oversping signalkommandoer hvis de allerede er indstillet"/>
     <nl txt="Negeer  sein commando's" tip="Sla sein commando's over als het sein al geset is"/>
     <de txt="Keine Signalstellung bei richtiger Stellung" tip="bereits gesetztes Signal nicht erneut setzen"/>
-    <it txt="Saltare i comandi segnali se giá impostati" tip="Saltare i comandi segnali se giá impostati"/>
+    <it txt="Saltare i comandi segnali se già impostati" tip="Saltare i comandi segnali se già impostati"/>
     <ru txt="Пропустить команды сигналов" tip="Пропустить команды сигналов, если они уже установлены"/>
     <es txt="Saltear comandos de señal" tip="Saltear comandos de señal si ya están configurados"/>
     <en_AU txt="Skip signal commands" tip="Skip signal commands if already set"/>
@@ -24125,7 +24125,7 @@
     <de txt="Wähle kürzesten Block"/>
     <nl txt="Kies het kortste blok"/>
     <es txt="Seleccionar el bloque más corto"/>
-    <it txt="Selezionare il blocco piú corto"/>
+    <it txt="Selezionare il blocco più corto"/>
     <sr_latin txt="Izaberi najkraći blok"/>
     <ja txt="最短のブロックを選択"/>
     <cs txt="Vyberte nejkratší blok"/>
@@ -25807,7 +25807,7 @@
     <en txt="New Position Flag"/>
     <it txt="Segnale nuova posizione"/>
     <nl txt="Nieuwe positie vlag"/>
-    <de txt="Position erreicht"/>
+    <de txt="Neue Position"/>
     <zh_CN txt="新建位置标志"/>
     <sl txt="Nova zastavica položaja"/>
     <sr_latin txt="Oznaka nove pozicije"/>
@@ -27757,7 +27757,7 @@
     <de txt="Stop bei IN im Halbautomatik-Modus"/>
     <nl txt="Stop bij IN voor half automatisch rijden"/>
     <en_GB txt="Stop at IN for half automatic mode"/>
-    <it txt="Fermare all'IN in modalita' semiautomatica"/>
+    <it txt="Fermare all'IN in modalità semiautomatica"/>
     <sr_latin txt="Stop kod IN za polu automatski režim"/>
     <pt_BR txt="Parar no IN em modo semi-automático"/>
     <sl txt="Stop pri IN za pol avtomatski način"/>
@@ -27769,7 +27769,7 @@
     <de txt="Bei Gleisspannung EIN Geschwindigkeits-Befehl Null senden"/>
     <nl txt="Zend een nul snelheid commando na baanspanning aan"/>
     <en_GB txt="Send zero speed command at power on"/>
-    <it txt="Inviare un comando di velocita' zero all'avvio"/>
+    <it txt="Inviare un comando di velocità zero all'avvio"/>
     <sr_latin txt="Komanda o nultoj brzini prilikom uključenja"/>
     <pt_BR txt="Enviar comando de velocidade zero ao ligar"/>
     <sl txt="Pošlji ukaz za hitrost 0 pri vklopu"/>
@@ -27803,6 +27803,7 @@
     <it txt="Blocco di stazionamento"/>
     <ru txt="Блоки расстановки"/>
     <sr_latin txt="Tabela bloka za održavanje"/>
+    <sl txt="Počivališčni odseki"/>
   </Msg>
   <Msg id="others">
     <en txt="Others"/>
@@ -27811,6 +27812,7 @@
     <pt_BR txt="Outros"/>
     <it txt="Altri"/>
     <sr_latin txt="Drugi"/>
+    <sl txt="Drugo"/>
   </Msg>
   <Msg id="nrtracefiles">
     <en txt="Number of trace files"/>
@@ -27818,24 +27820,44 @@
     <sr_latin txt="Broj trejs fajlova"/>
     <nl txt="Aantal trace bestanden"/>
     <pt_BR txt="Número de arquivos de rastreamento"/>
+    <de txt="Anzahl Log-Dateien"/>
+    <sl txt="Število datotek sledenja"/>
   </Msg>
   <Msg id="tracefilesize">
     <en txt="Trace file size in KB"/>
     <it txt="Dimensione file messaggi in KB"/>
     <sr_latin txt="Veličina trejs fajla u KB"/>
-    <nl txt="Trace bestand grootte in KB"/>
+    <nl txt="Trace bestand grootte"/>
     <pt_BR txt="Tamanho do arquivo de rastreamento em KB"/>
+    <de txt="Log-Datei-Größe in kB"/>
+    <sl txt="Velikost datoteke sledenja v kB"/>
   </Msg>
   <Msg id="recording">
     <en txt="Recording"/>
+    <de txt="Aufnahme"/>
+    <it txt="In registrazione"/>
+    <nl txt="Neemt nu op"/>
+    <sl txt="Snemanje"/>
   </Msg>
   <Msg id="stopped">
     <en txt="Stopped"/>
+    <de txt="Gestoppt"/>
+    <it txt="Arrestato"/>
+    <nl txt="Gestopt"/>
+    <sl txt="Ustavljeno"/>
   </Msg>
   <Msg id="paused">
     <en txt="Paused"/>
+    <de txt="Pause"/>
+    <it txt="In pausa"/>
+    <nl txt="Gepauzeerd"/>
+    <sl txt="Premor"/>
   </Msg>
   <Msg id="playing">
     <en txt="Playing"/>
+    <de txt="Wiedergabe"/>
+    <it txt="In riproduzione"/>
+    <nl txt="Speelt af"/>
+    <sl txt="Predvajanje"/>
   </Msg>
 </Messages>
