@@ -229,115 +229,117 @@ static iONode _parseLine(const char* scriptline) {
       __stripNewline(parm4);
     }
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsing command: %s", nodename);
+    if( nodename != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsing command: %s", nodename);
 
-    if( StrOp.equalsi( wFeedback.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
-      /* fb,<id>,<true>,<ident> */
-      node = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-      wFeedback.setid( node, parm1 );
-      wFeedback.setstate( node, StrOp.equalsi("true", parm2) );
-      if( parm3 != NULL )
-        wFeedback.setidentifier(node, parm3);
-    }
-
-    else if( StrOp.equalsi( "pause", nodename ) && parm1 != NULL ) {
-      int seconds = atoi(parm1);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "play: pause %d", seconds );
-      ThreadOp.sleep(1000*seconds);
-    }
-
-    else if( StrOp.equalsi( wLoc.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
-      /* lc,<id>,go */
-      node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-      wLoc.setid( node, parm1 );
-      if( parm2[0]=='V' ) {
-        wLoc.setV(node, atoi(parm2+1));
+      if( StrOp.equalsi( wFeedback.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+        /* fb,<id>,<true>,<ident> */
+        node = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        wFeedback.setid( node, parm1 );
+        wFeedback.setstate( node, StrOp.equalsi("true", parm2) );
         if( parm3 != NULL )
-          wLoc.setdir(node, StrOp.equals(parm3, "true") );
+          wFeedback.setidentifier(node, parm3);
       }
-      else {
-        wLoc.setcmd( node, parm2 );
-        if( parm3 != NULL ) {
-          /* lc,<id>,gotoblock,<bkid> */
-          if( StrOp.equalsi(wLoc.gotoblock, parm2) )
-            wLoc.setblockid(node, parm3);
-          /* lc,<id>,useschedule,<scid> */
-          if( StrOp.equalsi(wLoc.useschedule, parm2) )
-            wLoc.setscheduleid(node, parm3);
-          if( StrOp.equalsi(wLoc.assigntrain, parm2) )
-            wLoc.settrain(node, parm3);
+
+      else if( StrOp.equalsi( "pause", nodename ) && parm1 != NULL ) {
+        int seconds = atoi(parm1);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "play: pause %d", seconds );
+        ThreadOp.sleep(1000*seconds);
+      }
+
+      else if( StrOp.equalsi( wLoc.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+        /* lc,<id>,go */
+        node = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+        wLoc.setid( node, parm1 );
+        if( parm2[0]=='V' ) {
+          wLoc.setV(node, atoi(parm2+1));
+          if( parm3 != NULL )
+            wLoc.setdir(node, StrOp.equals(parm3, "true") );
+        }
+        else {
+          wLoc.setcmd( node, parm2 );
+          if( parm3 != NULL ) {
+            /* lc,<id>,gotoblock,<bkid> */
+            if( StrOp.equalsi(wLoc.gotoblock, parm2) )
+              wLoc.setblockid(node, parm3);
+            /* lc,<id>,useschedule,<scid> */
+            if( StrOp.equalsi(wLoc.useschedule, parm2) )
+              wLoc.setscheduleid(node, parm3);
+            if( StrOp.equalsi(wLoc.assigntrain, parm2) )
+              wLoc.settrain(node, parm3);
+          }
         }
       }
-    }
 
-    else if( StrOp.equalsi( wFunCmd.name(), nodename ) && parm1 != NULL && parm2 != NULL && parm3 != NULL ) {
-      /* fn,<id>,fnchanged,true */
-      char f[32] = {'\0'};
-      node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
-      wFunCmd.setid( node, parm1 );
-      wFunCmd.setfnchanged(node, atoi(parm2));
-      StrOp.fmtb(f, "f%s", parm2);
-      NodeOp.setStr(node, f, parm3);
-    }
-
-    else if( StrOp.equalsi( wSwitch.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
-      /* sw,<id>,straight */
-      node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-      wSwitch.setid( node, parm1 );
-      wSwitch.setcmd( node, parm2 );
-    }
-
-    else if( StrOp.equalsi( wOutput.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
-      /* co,<id>,on */
-      node = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
-      wOutput.setid( node, parm1 );
-      wOutput.setcmd( node, parm2 );
-    }
-
-    else if( StrOp.equalsi( wSignal.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
-      /* sg,<id>,green */
-      node = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
-      wSignal.setid( node, parm1 );
-      wSignal.setcmd( node, parm2 );
-    }
-
-    else if( StrOp.equalsi( wBlock.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
-      /* bk,<id>,open */
-      node = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-      wBlock.setid( node, parm1 );
-      if( StrOp.equals(parm2, wBlock.closed) || StrOp.equals(parm2, wBlock.open) ) {
-        wBlock.setstate(node, parm2);
+      else if( StrOp.equalsi( wFunCmd.name(), nodename ) && parm1 != NULL && parm2 != NULL && parm3 != NULL ) {
+        /* fn,<id>,fnchanged,true */
+        char f[32] = {'\0'};
+        node = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+        wFunCmd.setid( node, parm1 );
+        wFunCmd.setfnchanged(node, atoi(parm2));
+        StrOp.fmtb(f, "f%s", parm2);
+        NodeOp.setStr(node, f, parm3);
       }
-      else {
-        wBlock.setcmd( node, parm2 );
-        if( StrOp.equalsi(wBlock.loc, parm2) )
-          wBlock.setlocid(node, parm3);
-      }
-    }
 
-    else if( StrOp.equalsi( wStage.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
-      /* sb,<id>,open */
-      node = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
-      wStage.setid( node, parm1 );
-      if( StrOp.equals( wBlock.closed, parm2 ) || StrOp.equals( wBlock.open, parm2 ) ) {
-        wStage.setexitstate( node, parm2 );
+      else if( StrOp.equalsi( wSwitch.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+        /* sw,<id>,straight */
+        node = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+        wSwitch.setid( node, parm1 );
+        wSwitch.setcmd( node, parm2 );
       }
-      else {
-        wStage.setcmd( node, parm2 );
+
+      else if( StrOp.equalsi( wOutput.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+        /* co,<id>,on */
+        node = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+        wOutput.setid( node, parm1 );
+        wOutput.setcmd( node, parm2 );
       }
-    }
 
-    else if( StrOp.equalsi( wClock.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
-      /* clock,<id>,divider,time */
-      node = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
-      wClock.setdivider( node, atoi(parm1) );
-      wClock.settime( node, atol(parm2) );
-    }
+      else if( StrOp.equalsi( wSignal.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+        /* sg,<id>,green */
+        node = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+        wSignal.setid( node, parm1 );
+        wSignal.setcmd( node, parm2 );
+      }
 
-    else if( parm1 != NULL && parm2 != NULL ) {
-      node = NodeOp.inst( nodename, NULL, ELEMENT_NODE );
-      wItem.setid( node, parm1 );
-      NodeOp.setStr( node, "cmd", parm2);
+      else if( StrOp.equalsi( wBlock.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+        /* bk,<id>,open */
+        node = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+        wBlock.setid( node, parm1 );
+        if( StrOp.equals(parm2, wBlock.closed) || StrOp.equals(parm2, wBlock.open) ) {
+          wBlock.setstate(node, parm2);
+        }
+        else {
+          wBlock.setcmd( node, parm2 );
+          if( StrOp.equalsi(wBlock.loc, parm2) )
+            wBlock.setlocid(node, parm3);
+        }
+      }
+
+      else if( StrOp.equalsi( wStage.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+        /* sb,<id>,open */
+        node = NodeOp.inst( wStage.name(), NULL, ELEMENT_NODE );
+        wStage.setid( node, parm1 );
+        if( StrOp.equals( wBlock.closed, parm2 ) || StrOp.equals( wBlock.open, parm2 ) ) {
+          wStage.setexitstate( node, parm2 );
+        }
+        else {
+          wStage.setcmd( node, parm2 );
+        }
+      }
+
+      else if( StrOp.equalsi( wClock.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
+        /* clock,<id>,divider,time */
+        node = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+        wClock.setdivider( node, atoi(parm1) );
+        wClock.settime( node, atol(parm2) );
+      }
+
+      else if( parm1 != NULL && parm2 != NULL ) {
+        node = NodeOp.inst( nodename, NULL, ELEMENT_NODE );
+        wItem.setid( node, parm1 );
+        NodeOp.setStr( node, "cmd", parm2);
+      }
     }
 
     StrTokOp.base.del(tok);
