@@ -367,6 +367,9 @@ static iONode _nextLine(iOScript inst) {
       data->playing = False;
     }
   }
+  else {
+    data->playing = False;
+  }
   return node;
 }
 
