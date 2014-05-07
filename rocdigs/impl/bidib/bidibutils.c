@@ -209,6 +209,14 @@ char* bidibGetClassName(int classid, char* mnemonic, Boolean* bridge ) {
   return classname;
 }
 
+const char* bidibGetDynStateName(int dynnum) {
+  if( dynnum == 1 ) return "signal quality";
+  if( dynnum == 2 ) return "temperature";
+  if( dynnum == 3 ) return "container 1";
+  if( dynnum == 4 ) return "container 2";
+  if( dynnum == 5 ) return "container 3";
+  return "reserved";
+}
 
 const char* bidibGetFeatureName(int feature) {
 

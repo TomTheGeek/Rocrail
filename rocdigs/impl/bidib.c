@@ -3045,6 +3045,22 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   }
 
 
+  case MSG_BM_DYN_STATE:
+  { // MNUM, ADDRL, ADDRH, DYN_NUM, VALUE
+    int port = pdata[0] & 0xFF;
+    int locoAddr = (pdata[2]&0x3F) * 256 + pdata[1];
+    int dynnum = pdata[3] & 0xFF;
+    int value  = pdata[4] & 0xFF;
+    iOSlot slot = __getSlotByAddr(bidib, locoAddr);
+    Boolean warning = False;
+    if( dynnum == 1 && value > 10 )
+      warning = True;
+    TraceOp.trc( name, warning?TRCLEVEL_WARNING:TRCLEVEL_CALC, __LINE__, 9999,
+        "BM %s port %d reports loco %s(%d) %s is %d", pathKey, port, slot!=NULL?slot->id:"", locoAddr, bidibGetDynStateName(dynnum), value );
+  }
+  break;
+
+
   case MSG_BM_SPEED:
   { //             ADDRL, ADDRH, DAT
     // 08 00 0D A6 5E     13     02
