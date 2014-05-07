@@ -3124,11 +3124,20 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
   { // MNUM DECVID DECUID[4]
     int nr  = pdata[0] & 0xFF;
     int vid = pdata[1] & 0xFF;
-    int uid = pdata[2] + pdata[2]*0xFF + pdata[3]*0xFFFF + pdata[4]*0xFFFFFF;
+    int uid = pdata[2] + pdata[3]*0xFF + pdata[4]*0xFFFF + pdata[5]*0xFFFFFF;
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "new decoder: #%d VID=%s(%d) UID=%d", nr, m_Vendor[vid], vid, uid);
     break;
   }
 
+  case MSG_ADDR_CHANGE_ACK:
+  { // MNUM, DECVID, DECUID[4], NADDRL, NADDRH
+    int nr  = pdata[0] & 0xFF;
+    int vid = pdata[1] & 0xFF;
+    int uid = pdata[2] + pdata[3]*0xFF + pdata[4]*0xFFFF + pdata[5]*0xFFFFFF;
+    int addr = pdata[6] + pdata[7]*0xFF;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "decoder: #%d VID=%s(%d) UID=%d new address=%d", nr, m_Vendor[vid], vid, uid, addr);
+    break;
+  }
 
   case MSG_NODE_NA:
   {
