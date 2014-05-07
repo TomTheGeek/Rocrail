@@ -3122,20 +3122,31 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
 
   case MSG_NEW_DECODER:
   { // MNUM DECVID DECUID[4]
-    int nr  = pdata[0] & 0xFF;
+    int port = pdata[0] & 0xFF;
     int vid = pdata[1] & 0xFF;
     int uid = pdata[2] + pdata[3]*0xFF + pdata[4]*0xFFFF + pdata[5]*0xFFFFFF;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "new decoder: #%d VID=%s(%d) UID=%d", nr, m_Vendor[vid], vid, uid);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "new decoder on port %d VID=%s(%d) UID=%d", port, m_Vendor[vid], vid, uid);
+    break;
+  }
+
+  case MSG_ID_SEARCH_ACK:
+  { // MNUM, S_VID, S_UID[4], DECVID, DECUID[4]
+    int port = pdata[0] & 0xFF;
+    int svid = pdata[1] & 0xFF;
+    int suid = pdata[2] + pdata[3]*0xFF + pdata[4]*0xFFFF + pdata[5]*0xFFFFFF;
+    int vid = pdata[6] & 0xFF;
+    int uid = pdata[7] + pdata[8]*0xFF + pdata[9]*0xFFFF + pdata[10]*0xFFFFFF;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "decoder search ack on port %d VID=%s(%d) UID=%d", port, m_Vendor[vid], vid, uid);
     break;
   }
 
   case MSG_ADDR_CHANGE_ACK:
   { // MNUM, DECVID, DECUID[4], NADDRL, NADDRH
-    int nr  = pdata[0] & 0xFF;
+    int port = pdata[0] & 0xFF;
     int vid = pdata[1] & 0xFF;
     int uid = pdata[2] + pdata[3]*0xFF + pdata[4]*0xFFFF + pdata[5]*0xFFFFFF;
     int addr = pdata[6] + pdata[7]*0xFF;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "decoder: #%d VID=%s(%d) UID=%d new address=%d", nr, m_Vendor[vid], vid, uid, addr);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "new address report on port %d VID=%s(%d) UID=%d address=%d", port, m_Vendor[vid], vid, uid, addr);
     break;
   }
 
