@@ -64,6 +64,8 @@
 #include "rocdigs/impl/bidib/udp.h"
 #include "rocdigs/impl/bidib/bidibutils.h"
 
+#include "rocutils/public/vendors.h"
+
 #include <time.h>
 
 static int instCnt = 0;
@@ -3057,8 +3059,8 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
       warning = True;
     TraceOp.trc( name, warning?TRCLEVEL_WARNING:TRCLEVEL_CALC, __LINE__, 9999,
         "BM %s port %d reports loco %s(%d) %s is %d", pathKey, port, slot!=NULL?slot->id:"", locoAddr, bidibGetDynStateName(dynnum), value );
+    break;
   }
-  break;
 
 
   case MSG_BM_SPEED:
@@ -3115,6 +3117,15 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
         __inform(bidib, True);
       }
     }
+    break;
+  }
+
+  case MSG_NEW_DECODER:
+  { // MNUM DECVID DECUID[4]
+    int nr  = pdata[0] & 0xFF;
+    int vid = pdata[1] & 0xFF;
+    int uid = pdata[2] + pdata[2]*0xFF + pdata[3]*0xFFFF + pdata[4]*0xFFFFFF;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "new decoder: #%d VID=%s(%d) UID=%d", nr, m_Vendor[vid], vid, uid);
     break;
   }
 
@@ -3547,6 +3558,8 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.set( trc );
   SystemOp.inst();
+  __initVendors();
+
   /* Initialize data->xxx members... */
 
   data->ini      = ini;
