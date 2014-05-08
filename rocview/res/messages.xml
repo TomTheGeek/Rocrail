@@ -12114,7 +12114,7 @@
     <es txt="Excluir"/>
     <it txt="Escludere"/>
     <da txt="Afvis lokomotiv"/>
-    <cs txt="Zakázáná Lokomotiva"/>
+    <cs txt="Vyloučit"/>
     <bg txt="Deny Loco"/>
     <el txt="Απαγορ. Loco"/>
     <hu txt="Kizárt mozdonyok"/>
@@ -12143,7 +12143,7 @@
     <es txt="Incluir"/>
     <it txt="Includere"/>
     <da txt="Tillad lokomotiv"/>
-    <cs txt="Povolená Lokomotiva"/>
+    <cs txt="Zahrnout"/>
     <bg txt="Разреши Loco"/>
     <el txt="Επιτρέψτε Loco"/>
     <hu txt="Megengedett mozdonyok"/>
@@ -18665,6 +18665,7 @@
     <en_AU txt="Special characters are not allowed!"/>
     <en_CA txt="Special characters are not allowed!"/>
     <pl txt="Znaki specjalne nie są dozwolone!"/>
+    <cs txt="Zvláštní znaky nejsou povolené"/>
   </Msg>
   <Msg id="invalidid">
     <en txt="The ID must be at least one character!"/>
@@ -20419,7 +20420,7 @@
     <de txt="Jetzt finanziell unterstützen"/>
     <nl txt="Nu ondersteunen"/>
     <ca txt="Dóna ara"/>
-    <cs txt="Darovat teď"/>
+    <cs txt="Podporovat nyní"/>
     <da txt="Hjælp nu"/>
     <fr txt="Contribuer maintenant"/>
     <it txt="Supportateci ora"/>
@@ -20491,7 +20492,7 @@
     <de txt="Rocrail wird vollständig auf freiwilliger Basis betrieben. Trotzdem benötigt Rocrail Geld. Ihre fortwährende finanzielle Unterstützung ist notwendig, um Rocrail verfügbar zu halten. Falls Sie bereits einen Beitrag geleistet haben, können Sie einen Schlüssel beantragen, um diesen Dialog zu unterdrücken: donate@rocrail.net"/>
     <nl txt="Rocrail wordt uitsluitend door vrijwilligers ontwikkeld. Om Rocrail “in de lucht te houden” en steeds weer aan te kunnen passen aan nieuwe modelspoor hardware is er jaarlijks een bescheiden financieel budget nodig. Vrijwillige bijdragen zijn daarvoor noodzakelijk. Als je al een financiële ondersteuning gegeven hebt kun je op donate@rocrail.net een sleutel aanvragen om dit venster te onderdrukken."/>
     <ca txt="El Rocrail es construeix amb un treball voluntari. No obstant això, es necessiten contribucions de diners. El seu suport és vital per al manteniment Rocrail . Si ja va fer una donació pot demanar una clau per desactivar aquesta caixa de diàleg d'inici: donate@rocrail.net"/>
-    <cs txt="Rocrail běží zcela na dobrovolnické práci. Avšak také Rocrail potřebuje příspěvky peněz. Vaše pokračující podpora je zásadní pro udržení Rocrailu k dispozici. Pokud jste si již věnovali můžete požádat klíč k zakázání tohoto dialogu na startu: donate@rocrail.net"/>
+    <cs txt="Rocrail je zcela založen na dobrovolnické práci. Nicméně, Rocrail také potřebuje peněžní příspěvky. Vaše pokračující podpora je zásadní pro udržení Rocrail v provozu. Pokud jste již podpřili, můžete požádat o klíč k zakázání tohoto spouštěcího dialogového okna: donate@rocrail.net"/>
     <da txt="Rocrail baserer sig udelukkende på frivillig arbejdskraft, men har også brug for penge til drift. Din hjælp er afgørende for at holde Rocrail i live. Hvis du allerede har doneret penge, kan du bede om en nøgle til at fjerne beskeden fra startup skærmen ved at skrive til: donate@rocrail.net"/>
     <it txt="Rocrail è sviluppato grazie a contributi volontari ed ha bisogno del vostro aiuto economico. Il vostro supporto continuo è vitale per mantenere Rocrail disponibile. Se avete già contribuito con una donazione, potete richiedere a donate@rocrail.net il codice per la disattivazione di questa finestra all'avvio."/>
     <pt txt="Rocrail funciona enteiramente em trabalho voluntário. Contudo, Rocrail também precisa de contribuições monetárias. O seu suporte contínuo é vital em manter Rocrail disponível. Se já doou, você pode pedir uma chave para desactivar isto na janela de arranque: donate@rocrail.net"/>
@@ -20514,7 +20515,7 @@
     <de txt="Danke für die Unterstützung. Viel Spaß mit Rocrail."/>
     <nl txt="Bedankt voor de ondersteuning! Veel plezier met Rocrail."/>
     <ca txt="Gràcies per haver fet una donació! Gaudeixi utilitzant el Rocrail."/>
-    <cs txt="Díky za darování! Užijte si s pomocí Rocrail."/>
+    <cs txt="Děkujeme za vaší podporu, věříme, že si užijete Rocrail."/>
     <da txt="Tak for din hjælp! God fornøjelse med Rocrail"/>
     <it txt="Grazie per il vostro supporto! Divertiti usando Rocrail."/>
     <pt txt="Obrigada pelo donativo! Divirta-se com Rocrail."/>
@@ -21561,6 +21562,7 @@
     <sv txt="Polarisationsrelä"/>
     <fi txt="Polarisaatiorele"/>
     <pl txt="Polaryzacja przekaźnika"/>
+    <cs txt="Bistabilními relé"/>
   </Msg>
   <Msg id="allowzerothrottleid">
     <en txt="Allow zero throttle ID"/>
@@ -21582,6 +21584,7 @@
     <sv txt="Tillåt okända körkontroller"/>
     <fi txt="Salli säätimen tyhjä ID"/>
     <pl txt="Pozwól na nieoznakowanie przepustnicy"/>
+    <cs txt="Povolit nulové ID ovladače"/>
   </Msg>
   <Msg id="monitoring">
     <en txt="Monitoring"/>
@@ -21655,6 +21658,7 @@
     <fi txt="Salli aikataulut"/>
     <en_CA txt="Allow schedules"/>
     <pl txt="Rozkłady jazdy dozwalone"/>
+    <cs txt="Povolit jízdní řády"/>
   </Msg>
   <Msg id="not">
     <en txt="Not"/>
@@ -21751,6 +21755,7 @@
     <fi txt="Salli BIDi veturi"/>
     <pl txt="Akceptuj Lokomotywy BiDi"/>
     <en_CA txt="Accept BiDi Loco"/>
+    <cs txt="Přijmout BiDi lokomotivu"/>
   </Msg>
   <Msg id="useblockside">
     <en txt="Use block side for routes"/>
@@ -21838,6 +21843,7 @@
     <fi txt="Varausten hallinta"/>
     <en_CA txt="Slot management"/>
     <pl txt="Zarządzanie slotem"/>
+    <cs txt="Správa slotů"/>
   </Msg>
   <Msg id="decodertype">
     <en txt="Decoder type"/>
@@ -21879,7 +21885,7 @@
     <it txt="Analyser" tip="Analizzare il tracciato binari per generare gli itinerari"/>
     <sr_latin txt="Analiza" tip="Analiziraj plan koloseka za određivanje ruta."/>
     <ja txt="解析"/>
-    <cs txt="Analyzovat"/>
+    <cs txt="Analyzovat" tip="Analyzovat plán trati pro vytváření cest"/>
     <sv txt="Analysera." tip="Analysera spårplan för att generera tågvägar."/>
     <zh_CN txt="分析" tip="从铁路线模拟图进行分析生成路径"/>
     <sl txt="Analiziraj" tip="Analiziraj tirni načrt za generirane poti."/>
@@ -22186,6 +22192,7 @@
     <fi txt="Alikirjasto"/>
     <en_CA txt="Sub-Library"/>
     <pl txt="Dodatkowe biblioteki"/>
+    <cs txt="Pod-knihovna"/>
   </Msg>
   <Msg id="nodes">
     <en txt="Nodes"/>
@@ -24760,6 +24767,7 @@
     <fr txt="commuté"/>
     <en_AU txt="Switched"/>
     <en_CA txt="Switched"/>
+    <cs txt="Přehozen"/>
   </Msg>
   <Msg id="decpath">
     <en txt="Decoder path"/>
@@ -25036,6 +25044,7 @@
     <en_AU txt="Automobile or truck"/>
     <en_CA txt="Automobile or truck"/>
     <pl txt="Samochód lub ciężarówka"/>
+    <cs txt="Automobil, nebo náklaďák"/>
   </Msg>
   <Msg id="inatlen">
     <en txt="In event at train length"/>
@@ -25184,6 +25193,7 @@
     <en_AU txt="Assign signals to blocks"/>
     <en_CA txt="Assign signals to blocks"/>
     <pl txt="Przypisz sygnały do ​​bloków"/>
+    <cs txt="Přiřadit signnály k blokům"/>
   </Msg>
   <Msg id="ana_resetSignalBlockAssignment">
     <en txt="Reset signal assignments in all blocks"/>
@@ -25456,6 +25466,7 @@
     <en_CA txt="Port setup"/>
     <pl txt="Konfiguracja portu"/>
     <es txt="Configuración del puerto"/>
+    <cs txt="Nastavení portu"/>
   </Msg>
   <Msg id="concurveright">
     <en txt="Connector curve right"/>
@@ -27838,6 +27849,7 @@
     <it txt="In registrazione"/>
     <nl txt="Neemt nu op"/>
     <sl txt="Snemanje"/>
+    <pt_BR txt="Gravando"/>
   </Msg>
   <Msg id="stopped">
     <en txt="Stopped"/>
@@ -27845,6 +27857,7 @@
     <it txt="Arrestato"/>
     <nl txt="Gestopt"/>
     <sl txt="Ustavljeno"/>
+    <pt_BR txt="Parado"/>
   </Msg>
   <Msg id="paused">
     <en txt="Paused"/>
@@ -27852,6 +27865,7 @@
     <it txt="In pausa"/>
     <nl txt="Gepauzeerd"/>
     <sl txt="Premor"/>
+    <pt_BR txt="Pausado"/>
   </Msg>
   <Msg id="playing">
     <en txt="Playing"/>
@@ -27859,5 +27873,6 @@
     <it txt="In riproduzione"/>
     <nl txt="Speelt af"/>
     <sl txt="Predvajanje"/>
+    <pt_BR txt="Reproduzindo"/>
   </Msg>
 </Messages>
