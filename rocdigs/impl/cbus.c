@@ -663,7 +663,7 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
 
       slot->session = session;
 
-      cmd[0] = OPC_DFLG;
+      cmd[0] = OPC_STMOD;
       cmd[1] = slot->session;
       if( slot->steps >= 127 )
         cmd[2] = TMOD_SPD_128;
@@ -671,7 +671,6 @@ static void __updateSlot(iOCBUS cbus, byte* frame) {
         cmd[2] = TMOD_SPD_14;
       else if( slot->steps == 28 )
         cmd[2] = TMOD_SPD_28;
-      cmd[2] |= (slot->lights ? 0x04:0x00);
       makeFrame(frame, PRIORITY_NORMAL, cmd, 2, data->cid, False );
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
