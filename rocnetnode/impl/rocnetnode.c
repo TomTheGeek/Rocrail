@@ -1795,7 +1795,6 @@ static void __motorPWM( void* threadinst ) {
   ThreadOp.sleep(100);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init RPM on port %d", data->RPM );
   raspiConfigPort(data->RPM, 1);
-
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "init relais on port %d", IO_RELAIS );
   raspiConfigPort(IO_RELAIS, 0);
   ThreadOp.sleep(100);
@@ -1874,12 +1873,11 @@ static void __motorPWM( void* threadinst ) {
     ThreadOp.sleep(10);
     */
 
-    /* 100Hz */
     if( Vcurr > 0 )
       __writePort(rocnetnode, data->VPWM, 1, IO_DIRECT );
-    SystemOp.uBusyWait( (Vcurr * Vmax)  );
+    SystemOp.uBusyWait( (Vcurr * Vmax) * 5 );
     __writePort(rocnetnode, data->VPWM, 0, IO_DIRECT );
-    SystemOp.uBusyWait( (((100-Vmax)+100) - Vcurr) * 100 );
+    SystemOp.uBusyWait( ((((100-Vmax)+100) - Vcurr) * 100) * 5 );
 
     Vloop++;
 
