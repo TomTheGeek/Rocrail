@@ -2985,7 +2985,7 @@ static void __initIO(iORocNetNode inst) {
     data->i2cdevice = "/dev/i2c-0";
     __initI2C(inst, 1);
   }
-  if(data->iotype == IO_I2C_2) {
+  else if(data->iotype == IO_I2C_2) {
     data->i2cdevice = "/dev/i2c-2";
     __initI2C(inst, 2);
   }
