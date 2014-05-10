@@ -1875,9 +1875,9 @@ static void __motorPWM( void* threadinst ) {
 
     if( Vcurr > 0 )
       __writePort(rocnetnode, data->VPWM, 1, IO_DIRECT );
-    SystemOp.uBusyWait( (Vcurr * Vmax) * 5 );
+    SystemOp.uBusyWait( Vcurr * Vmax );
     __writePort(rocnetnode, data->VPWM, 0, IO_DIRECT );
-    SystemOp.uBusyWait( ((((100-Vmax)+100) - Vcurr) * 100) * 5 );
+    SystemOp.uBusyWait( (((100-Vmax)+100) - Vcurr) * 100 );
 
     Vloop++;
 
