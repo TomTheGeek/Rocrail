@@ -28,7 +28,7 @@ mkdir rocrail-$VERSION
 cd rocrail-$VERSION
 pwd
 #bzr co --lightweight https://launchpad.net/rocrail Rocrail
-git clone --depth 1 https://github.com/rocrail/Rocrail.git Rocrail
+git clone https://github.com/rocrail/Rocrail.git Rocrail
 BAZAARREV=`git rev-list --count HEAD`
 sed s/\<BZR\>/$BAZAARREV/ < Rocrail/rocrail/rocrail-template.spec > Rocrail/rocrail/rocrail-1.spec
 sed s/\<VERSION\>/$VERSION/ < Rocrail/rocrail/rocrail-1.spec > Rocrail/rocrail/rocrail.spec
