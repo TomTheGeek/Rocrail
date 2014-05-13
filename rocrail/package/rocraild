@@ -17,32 +17,47 @@ rocraild_PID=/tmp/rocraild.pid
 rocraild_SH=/opt/rocrail/rocraild.sh
 
 if [ ! -x $rocraild_BIN ] ; then
-	echo -n "Rocrail not installed ! "
-	exit 5
+  echo -n "Rocrail not installed ! "
+  exit 5
 fi
 
 case "$1" in
-    start)
-	if [ ! -e $rocraild_PID ] ; then
-		echo "Starting Rocrail"
-	else
-		echo "rocraild.pid already exists ! "
-		exit 5
-	fi
- 	su - root -c "$rocraild_SH"
-	;;
-    stop)
-	if [ -e $rocraild_PID ] ; then
-		echo "Shutting down Rocrail"
-	else
-		echo "Rocrail not running or missing PID File ! "
-		exit 5
-	fi
-	su - root -c "kill `head $rocraild_PID`"
-	su - root -c "rm $rocraild_PID"
-	;;
+  start)
+  if [ ! -e $rocraild_PID ] ; then
+    echo "Starting Rocrail"
+  else
+    echo "rocraild.pid already exists ! "
+    exit 5
+  fi
+   su - root -c "$rocraild_SH"
+  ;;
+  stop)
+  if [ -e $rocraild_PID ] ; then
+    echo "Shutting down Rocrail"
+  else
+    echo "Rocrail not running or missing PID File ! "
+    exit 5
+  fi
+  su - root -c "kill `head $rocraild_PID`"
+  su - root -c "rm $rocraild_PID"
+  ;;
+  restart)
+  $0 stop
+  sleep 1
+  $0 start
+  ;;
+  status)
+  PROCESSCOUNT=$( ps -ef | grep -v grep | grep -cw rocrail )
+  if [ "$PROCESSCOUNT" -gt 0 ] ; then
+    ROCRAILPID=$( more $rocraild_PID )
+          echo "Rocrail is up and running ! (PID $ROCRAILPID)"
+      else
+          echo "Rocrail is not running ! "
+          exit 5
+  fi
+  ;;
 *)
-	echo "Usage: $0 {start|stop}"
-	exit 1
+  echo "Usage: $0 {start|stop|restart|status}"
+  exit 1
 
 esac
