@@ -2904,6 +2904,9 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
 
   if( StrOp.equals(wLoc.name(), nodename ) && wLoc.getthrottleid(nodeA) != NULL && StrOp.len(wLoc.getthrottleid(nodeA)) > 0 )
     wLoc.setthrottleid( data->props, wLoc.getthrottleid(nodeA) );
+  else
+    wLoc.setthrottleid( data->props, "" );
+
 
   if( TraceOp.getLevel(NULL) & TRCLEVEL_USER1 ) {
     char* cmdstr = NodeOp.base.toString( nodeA );
