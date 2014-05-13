@@ -1571,7 +1571,7 @@ static void __clockticker( void* threadinst ) {
       wClock.setcmd( tick, firstsync ? wClock.set:wClock.sync );
       AppOp.broadcastEvent( (iONode)NodeOp.base.clone(tick) );
       /* inform all digints */
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new clock event %d:%02d.%02d", ltm->tm_hour, ltm->tm_min, ltm->tm_sec );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "new clock event %d:%02d.%02d", ltm->tm_hour, ltm->tm_min, ltm->tm_sec );
       ControlOp.cmd( control, tick, NULL );
       updateticker = 0;
     }
