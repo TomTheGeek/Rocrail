@@ -658,7 +658,7 @@ void Symbol::blockEvent( const char* id ) {
 }
 
 void Symbol::routeEvent( const char* id, bool locked ) {
-  if( StrOp.len(wItem.getrouteids( m_Props )) > 0 && StrOp.find(wItem.getrouteids( m_Props ), id) != NULL ) {
+  if( StrOp.len(wItem.getrouteids( m_Props )) > 0 ) {
     Refresh();
   }
 }
