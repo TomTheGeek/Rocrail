@@ -1317,10 +1317,11 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_MODE, wxALIGN_LEFT, wxALIGN_CENTRE );
 
         if( wLoc.getdestblockid( lc ) != NULL ) {
-          if( wLoc.getscidx(node) == -1 )
+          if( wLoc.getscidx(lc) == -1 ) {
             m_ActiveLocs->SetCellValue( i, LOC_COL_DESTBLOCK, wxString(wLoc.getdestblockid( lc ),wxConvUTF8) );
+          }
           else {
-            val = StrOp.fmt( "[%s:%d] %s", wLoc.getscheduleid(node), wLoc.getscidx( lc ), wLoc.getdestblockid( lc ) );
+            val = StrOp.fmt( "[%s:%d] %s", wLoc.getscheduleid(lc), wLoc.getscidx( lc ), wLoc.getdestblockid( lc ) );
             m_ActiveLocs->SetCellValue( i, LOC_COL_DESTBLOCK, wxString(val,wxConvUTF8) );
             StrOp.free( val );
           }

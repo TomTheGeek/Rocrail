@@ -153,7 +153,10 @@ void LC::speedCmd(bool sendCmd)
   wLoc.setV( cmd, m_iSpeed );
   wLoc.setfn( cmd, m_bFn?True:False );
   wLoc.setdir( cmd, m_bDir?True:False );
-  wLoc.setthrottleid( cmd, "Rocview" );
+
+  char* tid = StrOp.fmt("rv%d", SystemOp.getpid() );
+  wLoc.setthrottleid( cmd, tid );
+  StrOp.free(tid);
 
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
@@ -212,7 +215,9 @@ void LC::funCmd(int fidx)
   wFunCmd.setf26( cmd, m_bFx[25]?True:False );
   wFunCmd.setf27( cmd, m_bFx[26]?True:False );
   wFunCmd.setf28( cmd, m_bFx[27]?True:False );
-  wLoc.setthrottleid( cmd, "Rocview" );
+  char* tid = StrOp.fmt("rv%d", SystemOp.getpid() );
+  wLoc.setthrottleid( cmd, tid );
+  StrOp.free(tid);
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
