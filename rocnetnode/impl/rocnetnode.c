@@ -1970,6 +1970,9 @@ static void __adcsensorscanner( void* threadinst ) {
               __reportADCSensor(rocnetnode, idx*4+port, False, value );
             }
           }
+          else if( value < data->adcthreshold && data->adcsensorvalue[idx*4+port] == 0 ) {
+            data->adcsensorcounter[idx*4+port] = 0;
+          }
         }
         else
           break;
