@@ -229,7 +229,8 @@ void UndoDlg::OnButtonUndoUndoClick( wxCommandEvent& event )
     for( int i = 0; i < ListOp.size( unduList ); i++ ) {
       if( (obj)item == ListOp.get(unduList,i) ) {
         ListOp.remove(unduList,i);
-        wxGetApp().getFrame()->GetToolBar()->EnableTool(ME_Undo, ListOp.size( unduList ) > 0 );
+        if( wxGetApp().getFrame()->GetToolBar() != NULL )
+          wxGetApp().getFrame()->GetToolBar()->EnableTool(ME_Undo, ListOp.size( unduList ) > 0 );
         break;
       }
     }
@@ -294,7 +295,8 @@ void UndoDlg::OnButtonUndoDeleteClick( wxCommandEvent& event )
     for( int i = 0; i < ListOp.size( unduList ); i++ ) {
       if( (obj)item == ListOp.get(unduList,i) ) {
         ListOp.remove(unduList,i);
-        wxGetApp().getFrame()->GetToolBar()->EnableTool(ME_Undo, ListOp.size( unduList ) > 0 );
+        if( wxGetApp().getFrame()->GetToolBar() != NULL )
+          wxGetApp().getFrame()->GetToolBar()->EnableTool(ME_Undo, ListOp.size( unduList ) > 0 );
         break;
       }
     }
