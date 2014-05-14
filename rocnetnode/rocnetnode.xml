@@ -167,6 +167,7 @@
       <var name="rocmouses[8]" vt="iORocMouse"/>
       <var name="rocmousescanner" vt="iOThread"/>
       <var name="adcsensorscanner" vt="iOThread"/>
+      <var name="adcsensorcounter[32]" vt="int"/>
       <var name="adcsensorvalue[32]" vt="int"/>
       <var name="adcsensortimer[32]" vt="long"/>
       <var name="stress" vt="Boolean"/>

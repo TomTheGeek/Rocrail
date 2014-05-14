@@ -1947,10 +1947,14 @@ static void __adcsensorscanner( void* threadinst ) {
             inputON = True;
 
           if( value > data->adcthreshold && ( startofday || data->adcsensorvalue[idx*4+port] == 0) ) {
-            /* report on */
-            data->adcsensorvalue[idx*4+port] = value;
-            data->adcsensortimer[idx*4+port] = SystemOp.getTick();
-            __reportADCSensor(rocnetnode, idx*4+port, True, value );
+            data->adcsensorcounter[idx*4+port]++;
+            if( data->adcsensorcounter[idx*4+port] > 2 ) {
+              /* report on */
+              data->adcsensorcounter[idx*4+port] = 0;
+              data->adcsensorvalue[idx*4+port] = value;
+              data->adcsensortimer[idx*4+port] = SystemOp.getTick();
+              __reportADCSensor(rocnetnode, idx*4+port, True, value );
+            }
           }
           else if( value > data->adcthreshold && data->adcsensorvalue[idx*4+port] > 0 && abs(data->adcsensorvalue[idx*4+port] - value) > data->adcthreshold ) {
             /* report on changed */
