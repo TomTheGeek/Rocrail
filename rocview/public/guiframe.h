@@ -152,7 +152,7 @@ public:
   void OnZLevelEventRemove( wxCommandEvent& event );
   void setPlanTitle( const char* title );
   void OnShutdownRocRail(wxCommandEvent& event);
-  bool ShutdownRocRail();
+  bool ShutdownRocRail(bool mustbe=true);
   void setInfoText( const char* text );
   void setDigintText( const char* text );
   void OnInitField(wxCommandEvent& event);

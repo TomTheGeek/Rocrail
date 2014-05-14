@@ -2691,13 +2691,19 @@ void RocGuiFrame::OnClearMsg( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::OnShutdownRocRail( wxCommandEvent& event ) {
-  ShutdownRocRail();
-  wxGetApp().OnExit();
-  Close(TRUE);
+  if( ShutdownRocRail(true) ) {
+    wxGetApp().OnExit();
+    Close(TRUE);
+  }
 }
 
-bool RocGuiFrame::ShutdownRocRail() {
-  int action = wxMessageDialog( this, wxGetApp().getMsg("shutdownwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+bool RocGuiFrame::ShutdownRocRail(bool mustbe) {
+  int action = 0;
+  if( mustbe )
+    action = wxMessageDialog( this, wxGetApp().getMsg("shutdownwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  else
+    action = wxMessageDialog( this, wxGetApp().getMsg("shutdownquestion"), _T("Rocrail"), wxYES_NO | wxICON_QUESTION ).ShowModal();
+
   if( action == wxID_NO ) {
     return false;
   }
@@ -4373,6 +4379,12 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
     }
 
   }
+
+
+  if( m_bActiveWorkspace ) {
+    ShutdownRocRail(false);
+  }
+
 
   MapOp.clear(m_LocDlgMap);
   if( ListOp.size(m_ThrottleList) > 0 ) {

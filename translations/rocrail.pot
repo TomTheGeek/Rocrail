@@ -7061,3 +7061,9 @@ msgstr ""
 msgid "Playing"
 msgstr ""
 
+#. 
+# id="shutdownquestion"
+#, c-format
+msgid "Shutdown the Rocrail server too?"
+msgstr ""
+

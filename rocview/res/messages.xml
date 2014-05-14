@@ -27875,4 +27875,7 @@
     <sl txt="Predvajanje"/>
     <pt_BR txt="Reproduzindo"/>
   </Msg>
+  <Msg id="shutdownquestion">
+    <en txt="Shutdown the Rocrail server too?"/>
+  </Msg>
 </Messages>
