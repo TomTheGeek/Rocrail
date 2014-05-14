@@ -4374,11 +4374,6 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
 
   }
 
-  if( m_bActiveWorkspace ) {
-    if( !ShutdownRocRail() )
-      return;
-  }
-
   MapOp.clear(m_LocDlgMap);
   if( ListOp.size(m_ThrottleList) > 0 ) {
     ThrottleDlg* dlg = (ThrottleDlg*)ListOp.get(m_ThrottleList, 0);
