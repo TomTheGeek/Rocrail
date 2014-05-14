@@ -2241,7 +2241,7 @@ void RocGuiFrame::initFrame() {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "wxWidgets %d",  wxMAJOR_VERSION );
 
   m_ToolBar = NULL;
-  if( true ) {
+  if( wGui.istoolbar(m_Ini) ) {
     if( SystemOp.isWindows() && wxMAJOR_VERSION < 3 ) {
       l_useDisableIcons = true;
     }
@@ -2304,7 +2304,6 @@ void RocGuiFrame::initFrame() {
     m_ToolBar->Realize();
 
     m_ToolBar->EnableTool(ME_Update, false);
-    m_ToolBar->Show(wGui.istoolbar(m_Ini));
   }
 
   // checking for new updates
