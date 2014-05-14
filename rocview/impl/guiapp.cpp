@@ -369,7 +369,7 @@ void RocGui::readArgs(const char* langfile) {
 
 void RocGui::pushUndoItem( iONode item ) {
    ListOp.insert(m_UndoItems, 0, (obj)item);
-   if( ListOp.size(m_UndoItems) == 1 )
+   if( ListOp.size(m_UndoItems) == 1 && wxGetApp().getFrame()->GetToolBar() != NULL)
      wxGetApp().getFrame()->GetToolBar()->EnableTool(ME_Undo, true );
 }
 
@@ -377,7 +377,8 @@ iONode RocGui::popUndoItem() {
   if( ListOp.size( m_UndoItems ) > 0 ) {
     iONode item = (iONode)ListOp.get( m_UndoItems, 0 );
     ListOp.remove( m_UndoItems, 0 );
-    wxGetApp().getFrame()->GetToolBar()->EnableTool(ME_Undo, ListOp.size( m_UndoItems ) > 0 );
+    if(  wxGetApp().getFrame()->GetToolBar() != NULL )
+      wxGetApp().getFrame()->GetToolBar()->EnableTool(ME_Undo, ListOp.size( m_UndoItems ) > 0 );
     return item;
   }
   else
