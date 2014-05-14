@@ -112,6 +112,7 @@
     <var name="lncvtab" vt="bool" defval="false"/>
     <var name="locowidgetstab" vt="bool" defval="false"/>
     <var name="locowidgetwidth" vt="int" defval="260"/>
+    <var name="toolbar" vt="bool" defval="true"/>
     <var name="jssupport" vt="bool" defval="false"/>
     <var name="dispatchmode" vt="bool" defval="false"/>
     <var name="defaultworkspace" vt="string" defval="" remark="Open workspace at startup."/>

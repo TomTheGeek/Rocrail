@@ -7067,3 +7067,9 @@ msgstr ""
 msgid "Shutdown the Rocrail server too?"
 msgstr ""
 
+#. 
+# id="toolbar"
+#, c-format
+msgid "Toolbar"
+msgstr ""
+

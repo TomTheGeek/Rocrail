@@ -27878,4 +27878,7 @@
   <Msg id="shutdownquestion">
     <en txt="Shutdown the Rocrail server too?"/>
   </Msg>
+  <Msg id="toolbar">
+    <en txt="Toolbar"/>
+  </Msg>
 </Messages>

@@ -365,6 +365,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_FullScreen     , RocGuiFrame::OnFullScreen)
     EVT_MENU( ME_Raster         , RocGuiFrame::OnRaster)
     EVT_MENU( ME_Tooltip        , RocGuiFrame::OnTooltip)
+    EVT_MENU( ME_ToolBar        , RocGuiFrame::OnToolBar)
     EVT_MENU( ME_BackColor      , RocGuiFrame::OnBackColor)
     EVT_MENU( ME_UHL_63350      , RocGuiFrame::OnUhl63350)
     EVT_MENU( ME_UHL_68610      , RocGuiFrame::OnUhl68610)
@@ -2124,6 +2125,7 @@ void RocGuiFrame::initFrame() {
   menuView->AppendCheckItem( ME_ShowLocked, wxGetApp().getMenu("showlocked"), wxGetApp().getTip("showlocked") );
   menuView->AppendCheckItem( ME_Raster, wxGetApp().getMenu("raster"), wxGetApp().getTip("raster") );
   menuView->AppendCheckItem( ME_Tooltip, wxGetApp().getMenu("tooltip"), wxGetApp().getTip("tooltip") );
+  menuView->AppendCheckItem( ME_ToolBar, wxGetApp().getMenu("toolbar"), wxGetApp().getTip("toolbar") );
   menuView->AppendCheckItem( ME_FullScreen, wxGetApp().getMenu("fullscreen"), wxGetApp().getTip("fullscreen") );
   menuView->Append( ME_BackColor, wxGetApp().getMenu("panelcolor"), wxGetApp().getTip("panelcolor") );
 
@@ -2240,68 +2242,72 @@ void RocGuiFrame::initFrame() {
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "wxWidgets %d",  wxMAJOR_VERSION );
 
-  if( SystemOp.isWindows() && wxMAJOR_VERSION < 3 ) {
-    l_useDisableIcons = true;
+  m_ToolBar = NULL;
+  if( true ) {
+    if( SystemOp.isWindows() && wxMAJOR_VERSION < 3 ) {
+      l_useDisableIcons = true;
+    }
+    m_ToolBar = CreateToolBar( (wGui.isverticaltoolbar(m_Ini)?wxTB_VERTICAL:wxTB_HORIZONTAL) | wxNO_BORDER | wxTB_FLAT | wxTB_DOCKABLE );
+    m_ToolBar->SetToolBitmapSize(wxSize(32, 32));
+
+    m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect_32, l_useDisableIcons?*_img_connect_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
+    m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system_32, l_useDisableIcons?*_img_system_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("openworkspace") );
+
+    m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), *_img_new_32, l_useDisableIcons?*_img_new_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("new") );
+    m_ToolBar->AddTool(ME_Open, wxGetApp().getMsg("open"), *_img_open_32, l_useDisableIcons?*_img_open_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("open") );
+    m_ToolBar->AddTool(ME_Save, wxGetApp().getMsg("save"), *_img_save_32, l_useDisableIcons?*_img_save_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("save") );
+    m_ToolBar->AddTool(ME_Undo, wxGetApp().getMsg("undo"), *_img_undo_32, l_useDisableIcons?*_img_undo_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("undo") );
+    m_ToolBar->EnableTool(ME_Undo, false );
+
+    m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), *_img_poweron_32, l_useDisableIcons?*_img_poweron_32_disabled:wxNullBitmap, wxGetApp().getTip("poweron") );
+    m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), *_img_automode_32, l_useDisableIcons?*_img_automode_32_disabled:wxNullBitmap, wxGetApp().getTip("automode") );
+    m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), *_img_stop_32, l_useDisableIcons?*_img_stop_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stopall") );
+    m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), *_img_stopall_32, l_useDisableIcons?*_img_stopall_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getMsg("ebreak") );
+
+    m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), *_img_operator_32, l_useDisableIcons?*_img_operator_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("operator") );
+    if( !l_Expired )
+      m_ToolBar->AddTool(ME_RocPro, _T("RocPro"), *_img_rocpro_32, wxNullBitmap, wxITEM_NORMAL );
+    m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), *_img_mic_32, l_useDisableIcons?*_img_mic_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("mic") );
+    m_ToolBar->AddTool(ME_LcDlg, wxGetApp().getMsg("locctrl"), *_img_locctrl_32, l_useDisableIcons?*_img_locctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("locctrl") );
+    m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), *_img_swctrl_32, l_useDisableIcons?*_img_swctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("swctrl") );
+    m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), *_img_routes_32, l_useDisableIcons?*_img_routes_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stctrl") );
+
+    m_ScaleComboBox = NULL;
+    if( !wGui.isverticaltoolbar(m_Ini) ) {
+      m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(60,-1), 0, NULL, wxTE_PROCESS_ENTER );
+      m_ScaleComboBox->Append(_T("10"));
+      m_ScaleComboBox->Append(_T("20"));
+      m_ScaleComboBox->Append(_T("25"));
+      m_ScaleComboBox->Append(_T("30"));
+      m_ScaleComboBox->Append(_T("40"));
+      m_ScaleComboBox->Append(_T("50"));
+      m_ScaleComboBox->Append(_T("60"));
+      m_ScaleComboBox->Append(_T("70"));
+      m_ScaleComboBox->Append(_T("75"));
+      m_ScaleComboBox->Append(_T("80"));
+      m_ScaleComboBox->Append(_T("90"));
+      m_ScaleComboBox->Append(_T("100"));
+      m_ScaleComboBox->Append(_T("110"));
+      m_ScaleComboBox->Append(_T("120"));
+      m_ScaleComboBox->Append(_T("130"));
+      m_ScaleComboBox->Append(_T("140"));
+      m_ScaleComboBox->Append(_T("150"));
+      m_ScaleComboBox->Append(_T("160"));
+      m_ScaleComboBox->Append(_T("170"));
+      m_ScaleComboBox->Append(_T("180"));
+      m_ScaleComboBox->Append(_T("190"));
+      m_ScaleComboBox->Append(_T("200"));
+      m_ToolBar->AddControl(m_ScaleComboBox);
+    }
+
+    m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates_32, l_useDisableIcons?*_img_updates_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("softwareupdates") );
+    m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), *_img_manual_32, l_useDisableIcons?*_img_manual_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("documentation") );
+
+    m_ToolBar->Realize();
+
+    m_ToolBar->EnableTool(ME_Update, false);
+    m_ToolBar->Show(wGui.istoolbar(m_Ini));
   }
-  m_ToolBar = CreateToolBar( (wGui.isverticaltoolbar(m_Ini)?wxTB_VERTICAL:wxTB_HORIZONTAL) | wxNO_BORDER | wxTB_FLAT | wxTB_DOCKABLE );
-  m_ToolBar->SetToolBitmapSize(wxSize(32, 32));
-
-  m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect_32, l_useDisableIcons?*_img_connect_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
-  m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system_32, l_useDisableIcons?*_img_system_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("openworkspace") );
-
-  m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), *_img_new_32, l_useDisableIcons?*_img_new_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("new") );
-  m_ToolBar->AddTool(ME_Open, wxGetApp().getMsg("open"), *_img_open_32, l_useDisableIcons?*_img_open_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("open") );
-  m_ToolBar->AddTool(ME_Save, wxGetApp().getMsg("save"), *_img_save_32, l_useDisableIcons?*_img_save_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("save") );
-  m_ToolBar->AddTool(ME_Undo, wxGetApp().getMsg("undo"), *_img_undo_32, l_useDisableIcons?*_img_undo_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("undo") );
-  m_ToolBar->EnableTool(ME_Undo, false );
-
-  m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), *_img_poweron_32, l_useDisableIcons?*_img_poweron_32_disabled:wxNullBitmap, wxGetApp().getTip("poweron") );
-  m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), *_img_automode_32, l_useDisableIcons?*_img_automode_32_disabled:wxNullBitmap, wxGetApp().getTip("automode") );
-  m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), *_img_stop_32, l_useDisableIcons?*_img_stop_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stopall") );
-  m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), *_img_stopall_32, l_useDisableIcons?*_img_stopall_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getMsg("ebreak") );
-
-  m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), *_img_operator_32, l_useDisableIcons?*_img_operator_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("operator") );
-  if( !l_Expired )
-    m_ToolBar->AddTool(ME_RocPro, _T("RocPro"), *_img_rocpro_32, wxNullBitmap, wxITEM_NORMAL );
-  m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), *_img_mic_32, l_useDisableIcons?*_img_mic_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("mic") );
-  m_ToolBar->AddTool(ME_LcDlg, wxGetApp().getMsg("locctrl"), *_img_locctrl_32, l_useDisableIcons?*_img_locctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("locctrl") );
-  m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), *_img_swctrl_32, l_useDisableIcons?*_img_swctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("swctrl") );
-  m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), *_img_routes_32, l_useDisableIcons?*_img_routes_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stctrl") );
-
-  m_ScaleComboBox = NULL;
-  if( !wGui.isverticaltoolbar(m_Ini) ) {
-    m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(60,-1), 0, NULL, wxTE_PROCESS_ENTER );
-    m_ScaleComboBox->Append(_T("10"));
-    m_ScaleComboBox->Append(_T("20"));
-    m_ScaleComboBox->Append(_T("25"));
-    m_ScaleComboBox->Append(_T("30"));
-    m_ScaleComboBox->Append(_T("40"));
-    m_ScaleComboBox->Append(_T("50"));
-    m_ScaleComboBox->Append(_T("60"));
-    m_ScaleComboBox->Append(_T("70"));
-    m_ScaleComboBox->Append(_T("75"));
-    m_ScaleComboBox->Append(_T("80"));
-    m_ScaleComboBox->Append(_T("90"));
-    m_ScaleComboBox->Append(_T("100"));
-    m_ScaleComboBox->Append(_T("110"));
-    m_ScaleComboBox->Append(_T("120"));
-    m_ScaleComboBox->Append(_T("130"));
-    m_ScaleComboBox->Append(_T("140"));
-    m_ScaleComboBox->Append(_T("150"));
-    m_ScaleComboBox->Append(_T("160"));
-    m_ScaleComboBox->Append(_T("170"));
-    m_ScaleComboBox->Append(_T("180"));
-    m_ScaleComboBox->Append(_T("190"));
-    m_ScaleComboBox->Append(_T("200"));
-    m_ToolBar->AddControl(m_ScaleComboBox);
-  }
-
-  m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates_32, l_useDisableIcons?*_img_updates_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("softwareupdates") );
-  m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), *_img_manual_32, l_useDisableIcons?*_img_manual_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("documentation") );
-
-  m_ToolBar->Realize();
-
-  m_ToolBar->EnableTool(ME_Update, false);
 
   // checking for new updates
   if(wGui.ischeckupdates(m_Ini)) {
@@ -2382,7 +2388,8 @@ void RocGuiFrame::initFrame() {
 
 void RocGuiFrame::setOffline( bool p_bOffline ) {
   m_bEditMode = p_bOffline;
-  m_ToolBar->EnableTool(ME_Upload, !p_bOffline );
+  if( m_ToolBar != NULL )
+    m_ToolBar->EnableTool(ME_Upload, !p_bOffline );
 }
 
 
@@ -2419,6 +2426,7 @@ void RocGuiFrame::create() {
   m_bShowLocked = (wPlanPanel.isshowlocked( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bRaster = (wPlanPanel.israster( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bTooltip = (wPlanPanel.istooltip( wGui.getplanpanel( m_Ini ) ) ? true:false);
+  m_bToolBar = (wGui.istoolbar(m_Ini) ? true:false);
   m_bLocoBook = (wPlanPanel.islocobook( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bPlanBook = (wPlanPanel.isplanbook( wGui.getplanpanel( m_Ini ) ) ? true:false);
   m_bTraceWindow = (wPlanPanel.istracewindow( wGui.getplanpanel( m_Ini ) ) ? true:false);
@@ -2593,7 +2601,8 @@ void RocGuiFrame::setPlanTitle( const char* title ) {
 
 void RocGuiFrame::OnNewUpdates( wxCommandEvent& event ) {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "OnNewUpdates..." );
-  GetToolBar()->EnableTool(ME_Update, true);
+  if( m_ToolBar != NULL )
+    GetToolBar()->EnableTool(ME_Update, true);
 }
 
 
@@ -3582,6 +3591,12 @@ void RocGuiFrame::OnTooltip( wxCommandEvent& event ) {
   m_LC->showTooltip(m_bTooltip);
 }
 
+void RocGuiFrame::OnToolBar( wxCommandEvent& event ) {
+  wxMenuItem* mi_toolbar = menuBar->FindItem(ME_ToolBar);
+  m_bToolBar = mi_toolbar->IsChecked();
+  m_ToolBar->Show(m_bToolBar);
+}
+
 void RocGuiFrame::OnEditLocs( wxCommandEvent& event ) {
   LocDialog* locdialog = new LocDialog(this, (iONode)NULL );
   if( wxID_OK == locdialog->ShowModal() ) {
@@ -3913,11 +3928,13 @@ void RocGuiFrame::OnRocPro( wxCommandEvent& event ) {
 }
 
 void RocGuiFrame::setOnline( bool online ) {
-  GetToolBar()->EnableTool(ME_New, !online);
-  GetToolBar()->EnableTool(ME_Open, !online);
-  GetToolBar()->EnableTool(ME_Upload, online);
-  GetToolBar()->EnableTool(ME_Connect, (!online && !m_bActiveWorkspace) );
-  GetToolBar()->EnableTool(ME_OpenWorkspace, (!m_bActiveWorkspace && !online) );
+  if( m_ToolBar != NULL ) {
+    GetToolBar()->EnableTool(ME_New, !online);
+    GetToolBar()->EnableTool(ME_Open, !online);
+    GetToolBar()->EnableTool(ME_Upload, online);
+    GetToolBar()->EnableTool(ME_Connect, (!online && !m_bActiveWorkspace) );
+    GetToolBar()->EnableTool(ME_OpenWorkspace, (!m_bActiveWorkspace && !online) );
+  }
 }
 
 
@@ -3960,7 +3977,9 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   if( mi != NULL ) mi->Enable( l_bOffline );
 
 
-  GetToolBar()->EnableTool(ME_Open, l_bOffline);
+  if( m_ToolBar != NULL ) {
+     GetToolBar()->EnableTool(ME_Open, l_bOffline);
+  }
 
   mi = menuBar->FindItem(ME_GoOffline);
   if( mi != NULL ) mi->Enable( !l_bOffline );
@@ -4216,8 +4235,10 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   if( mi != NULL )
     mi->Enable( l_bOffline && !m_bActiveWorkspace);
 
-  GetToolBar()->EnableTool(ME_Connect, (l_bOffline && !m_bActiveWorkspace) );
-  GetToolBar()->EnableTool(ME_OpenWorkspace, (!m_bActiveWorkspace && l_bOffline) );
+  if( m_ToolBar != NULL ) {
+    GetToolBar()->EnableTool(ME_Connect, (l_bOffline && !m_bActiveWorkspace) );
+    GetToolBar()->EnableTool(ME_OpenWorkspace, (!m_bActiveWorkspace && l_bOffline) );
+  }
 
   wxMenuItem* mi_zoom25  = menuBar->FindItem(ME_Zoom25);
   wxMenuItem* mi_zoom50  = menuBar->FindItem(ME_Zoom50);
@@ -4252,6 +4273,8 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi_raster->Check( m_bRaster );
   wxMenuItem* mi_tooltip  = menuBar->FindItem(ME_Tooltip);
   mi_tooltip->Check( m_bTooltip );
+  wxMenuItem* mi_toolbar  = menuBar->FindItem(ME_ToolBar);
+  mi_toolbar->Check( m_bToolBar );
 
 }
 
@@ -4604,7 +4627,8 @@ void RocGuiFrame::OnAutoEvent( wxCommandEvent& event ) {
   wxMenuItem* mi = menuBar->FindItem(ME_AutoMode);
   if( mi != NULL ) mi->Check(autoMode);
 
-  GetToolBar()->ToggleTool(ME_AutoMode, m_bAutoMode);
+  if( m_ToolBar != NULL )
+    GetToolBar()->ToggleTool(ME_AutoMode, m_bAutoMode);
   m_StatusBar->Automode( m_bAutoMode );
 
   // Cleanup node:
@@ -4631,7 +4655,8 @@ void RocGuiFrame::OnStateEvent( wxCommandEvent& event ) {
     m_bServerConsoleMode = console;
 
     if( wGui.getstatusboosteruid(m_Ini) == 0 || wGui.getstatusboosteruid(m_Ini) == wState.getuid(node) ) {
-      GetToolBar()->ToggleTool(ME_Go, power);
+      if( m_ToolBar != NULL )
+        GetToolBar()->ToggleTool(ME_Go, power);
 
       wxMenuItem* mi = menuBar->FindItem(ME_ShutdownRocRail);
       if( mi != NULL ) mi->Enable(!console);
@@ -4674,12 +4699,14 @@ void RocGuiFrame::OnSystemEvent( wxCommandEvent& event ) {
   Boolean go = StrOp.equals( wSysCmd.go, wSysCmd.getcmd( node ) );
 
   if( stop ) {
-    GetToolBar()->ToggleTool(ME_Go, false);
+    if( m_ToolBar != NULL )
+      GetToolBar()->ToggleTool(ME_Go, false);
     wxMenuItem* mi = menuBar->FindItem(ME_Go);
     if( mi != NULL ) mi->Check(false);
   }
   else if( go ) {
-    GetToolBar()->ToggleTool(ME_Go, true);
+    if( m_ToolBar != NULL )
+      GetToolBar()->ToggleTool(ME_Go, true);
     wxMenuItem* mi = menuBar->FindItem(ME_Go);
     if( mi != NULL ) mi->Check(true);
   }
