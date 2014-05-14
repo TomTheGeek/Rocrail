@@ -334,13 +334,6 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
 
   TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "Level %d is active (z=%d)", wZLevel.getz(m_zLevel), m_Z );
 
-  if( wxGetApp().getFrame()->isTooltip() ) {
-    SetToolTip( wxString(wZLevel.getmodid(m_zLevel),wxConvUTF8) + _T(" ") + wxString(wZLevel.gettitle(m_zLevel),wxConvUTF8) );
-  }
-  else {
-    SetToolTip( wxString("",wxConvUTF8) );
-  }
-
   if( wxGetApp().getFrame()->isRaster() ) {
     int x, y;
     GetViewStart( &x, &y );
