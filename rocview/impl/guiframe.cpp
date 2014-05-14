@@ -365,7 +365,6 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_FullScreen     , RocGuiFrame::OnFullScreen)
     EVT_MENU( ME_Raster         , RocGuiFrame::OnRaster)
     EVT_MENU( ME_Tooltip        , RocGuiFrame::OnTooltip)
-    EVT_MENU( ME_ToolBar        , RocGuiFrame::OnToolBar)
     EVT_MENU( ME_BackColor      , RocGuiFrame::OnBackColor)
     EVT_MENU( ME_UHL_63350      , RocGuiFrame::OnUhl63350)
     EVT_MENU( ME_UHL_68610      , RocGuiFrame::OnUhl68610)
@@ -2125,7 +2124,6 @@ void RocGuiFrame::initFrame() {
   menuView->AppendCheckItem( ME_ShowLocked, wxGetApp().getMenu("showlocked"), wxGetApp().getTip("showlocked") );
   menuView->AppendCheckItem( ME_Raster, wxGetApp().getMenu("raster"), wxGetApp().getTip("raster") );
   menuView->AppendCheckItem( ME_Tooltip, wxGetApp().getMenu("tooltip"), wxGetApp().getTip("tooltip") );
-  menuView->AppendCheckItem( ME_ToolBar, wxGetApp().getMenu("toolbar"), wxGetApp().getTip("toolbar") );
   menuView->AppendCheckItem( ME_FullScreen, wxGetApp().getMenu("fullscreen"), wxGetApp().getTip("fullscreen") );
   menuView->Append( ME_BackColor, wxGetApp().getMenu("panelcolor"), wxGetApp().getTip("panelcolor") );
 
@@ -3591,12 +3589,6 @@ void RocGuiFrame::OnTooltip( wxCommandEvent& event ) {
   m_LC->showTooltip(m_bTooltip);
 }
 
-void RocGuiFrame::OnToolBar( wxCommandEvent& event ) {
-  wxMenuItem* mi_toolbar = menuBar->FindItem(ME_ToolBar);
-  m_bToolBar = mi_toolbar->IsChecked();
-  m_ToolBar->Show(m_bToolBar);
-}
-
 void RocGuiFrame::OnEditLocs( wxCommandEvent& event ) {
   LocDialog* locdialog = new LocDialog(this, (iONode)NULL );
   if( wxID_OK == locdialog->ShowModal() ) {
@@ -4273,8 +4265,6 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi_raster->Check( m_bRaster );
   wxMenuItem* mi_tooltip  = menuBar->FindItem(ME_Tooltip);
   mi_tooltip->Check( m_bTooltip );
-  wxMenuItem* mi_toolbar  = menuBar->FindItem(ME_ToolBar);
-  mi_toolbar->Check( m_bToolBar );
 
 }
 

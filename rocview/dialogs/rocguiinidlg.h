@@ -195,6 +195,7 @@ public:
     wxCheckBox* m_UseAllSpeedSteps;
     wxCheckBox* m_RenderGC;
     wxCheckBox* m_FSUTF8;
+    wxCheckBox* m_Toolbar;
     wxCheckBox* m_VerticalToolbar;
     wxCheckBox* m_LocoImage;
     wxCheckBox* m_MonitorDontWrap;

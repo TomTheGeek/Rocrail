@@ -302,7 +302,6 @@ public:
   void OnShowLocked(wxCommandEvent& event);
   void OnRaster(wxCommandEvent& event);
   void OnTooltip(wxCommandEvent& event);
-  void OnToolBar(wxCommandEvent& event);
   void OnBackColor(wxCommandEvent& event);
   void OnFullScreen(wxCommandEvent& event);
 
@@ -338,7 +337,6 @@ public:
   bool isShowLocked() { return m_bShowLocked; }
   bool isRaster() { return m_bRaster; }
   bool isTooltip() { return m_bTooltip; }
-  bool isToolBar() { return m_bToolBar; }
   bool isInitialized() { return m_bInitialized; }
   void setLocID( const char* locid );
   double getScale() { return m_Scale; }
@@ -628,7 +626,6 @@ enum
     ME_FullScreen,
     ME_Raster,
     ME_Tooltip,
-    ME_ToolBar,
     NEWUPDATES_EVENT,
     ME_RUG,
     ME_GCA,

@@ -223,8 +223,6 @@ int RocGui::OnExit() {
 
     RConOp.close( m_RCon );
 
-    wGui.settoolbar( m_Ini, m_Frame->isToolBar() ? True:False );
-
     wxPoint point = this->getFrame()->GetPosition();
     if( wGui.getwindow( m_Ini ) == NULL ) {
       iONode node = NodeOp.inst( wWindow.name(), m_Ini, ELEMENT_NODE );
