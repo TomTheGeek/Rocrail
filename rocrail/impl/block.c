@@ -890,6 +890,12 @@ static Boolean _isReady( iIBlockBase inst ) {
 }
 
 
+static Boolean _isFreeBlockOnEnter( iIBlockBase inst ) {
+  iOBlockData data = Data(inst);
+  return wBlock.isfreeblockonenter( data->props );
+}
+
+
 static Boolean _hasExtStop( iIBlockBase inst ) {
   iOBlockData data = Data(inst);
   if( wBlock.getfifosize(data->props) > 0 && ListOp.size(data->fifoList) > 1 ) {

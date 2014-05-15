@@ -90,7 +90,9 @@ void eventEnter( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolea
 
     /**********************************************/
     /* inserted to free previous block on enter   */
-    if (data->state == LC_ENTERBLOCK && wLoc.isfreeblockonenter(data->loc->base.properties(data->loc))) {
+    if (data->state == LC_ENTERBLOCK && wLoc.isfreeblockonenter(data->loc->base.properties(data->loc)) &&
+        data->next1Block->isFreeBlockOnEnter(data->next1Block) )
+    {
       TraceOp.trc(name, TRCLEVEL_USER1, __LINE__, 9999,
           "Free previous block on enter for [%s] in [%s] with state [%d]", data->loc->getId(data->loc), blockId, data->state);
 

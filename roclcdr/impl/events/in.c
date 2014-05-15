@@ -186,7 +186,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
       /* inserted, to prevent the code executed twice for a train with property clearblockenter.
        * Code already executed at the eventEnter
        */
-      if(!wLoc.isfreeblockonenter( data->loc->base.properties( data->loc ) ) ) {
+      if(!wLoc.isfreeblockonenter( data->loc->base.properties( data->loc ) ) || !data->next1Block->isFreeBlockOnEnter(data->next1Block) ) {
         freePrevBlock(inst, block);
       }
       block->inBlock( block, data->loc->getId( data->loc ) );

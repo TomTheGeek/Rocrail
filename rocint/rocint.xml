@@ -150,6 +150,9 @@
     <fun name="isReady" vt="Boolean">
       <param name="inst" vt="this"/>
     </fun>
+    <fun name="isFreeBlockOnEnter" vt="Boolean">
+      <param name="inst" vt="this"/>
+    </fun>
     <fun name="hasExtStop" vt="Boolean">
       <param name="inst" vt="this"/>
     </fun>

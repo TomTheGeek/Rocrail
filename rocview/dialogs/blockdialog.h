@@ -327,6 +327,7 @@ public:
     wxCheckBox* m_AllowBBT;
     wxCheckBox* m_MainLine;
     wxCheckBox* m_SleepOnClosed;
+    wxCheckBox* m_FreeBlockOnEnter;
     wxButton* m_BlockActions;
     wxPanel* m_LocationPanel;
     wxStaticBox* m_Location;

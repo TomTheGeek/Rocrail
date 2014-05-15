@@ -1106,6 +1106,12 @@ static Boolean _isReady( iIBlockBase inst ) {
 }
 
 
+static Boolean _isFreeBlockOnEnter( iIBlockBase inst ) {
+  iOStageData data = Data(inst);
+  return False;
+}
+
+
 /**  */
 static int _isSuited( iIBlockBase inst ,iOLoc loc, int* restlen, Boolean checkprev ) {
   iOStageData data = Data(inst);

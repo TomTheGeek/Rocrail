@@ -3313,6 +3313,12 @@ static Boolean _isReady( iIBlockBase inst ) {
 }
 
 
+static Boolean _isFreeBlockOnEnter( iIBlockBase inst ) {
+  iOTTData data = Data(inst);
+  return False;
+}
+
+
 static Boolean _hasExtStop( iIBlockBase inst ) {
   return False;
 }
