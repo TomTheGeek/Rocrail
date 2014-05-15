@@ -256,7 +256,6 @@ void Clock::Timer(wxTimerEvent& WXUNUSED(event))
 
   if( run ) {
     calculate();
-    TraceOp.trc( "clock", TRCLEVEL_DEBUG, __LINE__, 9999, "clock timer" );
     Refresh(false);
   }
 }
@@ -268,8 +267,6 @@ void Clock::drawNewClock() {
 
   if( !IsShownOnScreen() )
     return;
-
-  TraceOp.trc( "clock", TRCLEVEL_DEBUG, __LINE__, 9999, "draw new clock" );
 
   if( type == 3 ) {
     // digital clock

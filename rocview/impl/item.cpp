@@ -2614,7 +2614,8 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       if( !oncreate )
         setPosition();
     }
-    if( !oncreate )
+
+    if( !oncreate && ! wxGetApp().getFrame()->isAutoMode() )
       m_Renderer->initSym();
     sizeToScale();
   }

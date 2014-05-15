@@ -4439,7 +4439,6 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
 bool m_isDragging = false;
 void RocGuiFrame::OnMouse(wxMouseEvent& event) {
   m_isDragging = event.Dragging();
-  TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "Dragging=%d", m_isDragging );
 }
 
 void RocGuiFrame::OnSize(wxSizeEvent& event) {

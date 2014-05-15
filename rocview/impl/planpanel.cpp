@@ -1131,8 +1131,6 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
 
 void PlanPanel::OnTimer(wxTimerEvent& event) {
   m_bAlt = !m_bAlt;
-  TraceOp.trc( "planpanel", TRCLEVEL_DEBUG, __LINE__, 9999, "alternate timer: %d", m_bAlt );
-
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
   wxNode* node = (wxNode*)m_ChildTable->Next();
@@ -1718,6 +1716,7 @@ void PlanPanel::updateItemCmd(wxCommandEvent& event) {
 void PlanPanel::updateTTItemCmd(wxCommandEvent& event) {
   // Get the copied node from the event object:
   iONode node = (iONode)event.GetClientData();
+  iONode ini  = wGui.getplanpanel(wxGetApp().getIni());
 
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
@@ -1729,10 +1728,13 @@ void PlanPanel::updateTTItemCmd(wxCommandEvent& event) {
     if( StrOp.equals( nodeName, wTurntable.name() ) ) {
       item->modelEvent( node );
     }
-    else if( StrOp.equals( nodeName, wTrack.name() ) || StrOp.equals( nodeName, wSignal.name() ) ||
-             StrOp.equals( nodeName, wFeedback.name() ) || StrOp.equals( nodeName, wSwitch.name() ) ) {
-      TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "feedback event id=[%s]", wFeedback.getid(node) );
-      item->blockEvent( wFeedback.getid(node));
+    else if(wPlanPanel.isprocessblockevents(ini)) {
+      if( StrOp.equals( nodeName, wTrack.name() ) || StrOp.equals( nodeName, wSignal.name() ) ||
+               StrOp.equals( nodeName, wFeedback.name() ) || StrOp.equals( nodeName, wSwitch.name() ) ) {
+        TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999,
+            "feedback [%s] block event for id=[%s]", wFeedback.getid(node), item->getId() );
+        item->blockEvent( wFeedback.getid(node));
+      }
     }
     tablenode = (wxNode*)m_ChildTable->Next();
   }
