@@ -1970,7 +1970,7 @@
         <var name="remote" vt="bool" defval="false" remark="This flag is set by the R2Rnet object."/>
         <var name="rrid" vt="const char*" defval="" remark="This id is set by the R2Rnet object."/>
         <var name="selectshortestblock" vt="bool" defval="false" remark="Select shortest next block in case block and train length are set."/>
-        <var name="freeblockonenter" vt="bool" defval="true" remark="Use the enter event to free previous block."/> 
+        <var name="freeblockonenter" vt="bool" defval="false" remark="Use the enter event to free previous block."/> 
         
         <!-- FiFo support (Automobiles)-->
         <var name="fifosize" vt="int" defval="0" range="0-*" remark="FiFo size; Must be greater then 0 to be active."/>
