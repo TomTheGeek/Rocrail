@@ -93,53 +93,8 @@ void eventEnter( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolea
     if (data->state == LC_ENTERBLOCK && wLoc.isfreeblockonenter(data->loc->base.properties(data->loc))) {
       TraceOp.trc(name, TRCLEVEL_USER1, __LINE__, 9999,
           "Free previous block on enter for [%s] in [%s] with state [%d]", data->loc->getId(data->loc), blockId, data->state);
-      /* unlink-up after inblock event */
-      data->next1Block->unLink(data->next1Block);
-      data->next1Route->unLink(data->next1Route);
 
-      if (data->next2Block == NULL || (data->next2Block != NULL && data->next2Block != data->curBlock)) {
-        data->curBlock->unLock(data->curBlock, data->loc->getId(data->loc), NULL);
-      }
-      else {
-        data->curBlock->resetTrigs(data->curBlock);
-      }
-      data->curBlock = data->next1Block;
-      data->loc->setCurBlock(data->loc, data->curBlock->base.id(data->curBlock));
-
-      block->inBlock(block, data->loc->getId(data->loc));
-
-      /* free the block group from the previous block */
-      initializeGroup(inst, NULL, block);
-      /*
-       * copied from in.c to free the switches
-       */
-      {
-        /*
-         * unlock the previous route regarding reserved blocks
-         */
-        const char* resblocks[4] = { NULL, NULL, NULL, NULL };
-        if (data->next1Block != NULL) {
-          resblocks[0] = data->next1Block->base.id(data->next1Block);
-          if (data->next2Block != NULL) {
-            resblocks[1] = data->next2Block->base.id(data->next2Block);
-            if (data->next3Block != NULL)
-              resblocks[2] = data->next3Block->base.id(data->next3Block);
-          }
-        }
-        data->next1Route->unLock(data->next1Route, data->loc->getId(data->loc), resblocks, True, False);
-      }
-
-      if (data->next1Block != NULL) {
-        if (StrOp.equals(data->next1Block->base.id(data->next1Block), data->next1Route->getToBlock(data->next1Route)))
-          data->loc->setBlockEnterSide(data->loc,
-              data->next1Route->getToBlockSide(data->next1Route),
-              data->next1Route->getToBlock(data->next1Route));
-        else
-          data->loc->setBlockEnterSide(data->loc,
-              data->next1Route->getFromBlockSide(data->next1Route),
-              data->next1Route->getFromBlock(data->next1Route));
-      }
-
+      freePrevBlock(inst, block);
     }
     /* end insert to free previous block          */
     /**********************************************/

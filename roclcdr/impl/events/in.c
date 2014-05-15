@@ -41,6 +41,56 @@
 #include "rocrail/wrapper/public/Link.h"
 
 
+void freePrevBlock(iOLcDriver inst, iIBlockBase block) {
+  iOLcDriverData data = Data(inst);
+
+  /* unlink-up after inblock event */
+  data->next1Block->unLink( data->next1Block );
+  data->next1Route->unLink(data->next1Route);
+
+  if( data->next2Block == NULL || (data->next2Block != NULL && data->next2Block != data->curBlock) ) {
+    data->curBlock->unLock( data->curBlock, data->loc->getId( data->loc ), NULL );
+  }
+  else {
+    data->curBlock->resetTrigs( data->curBlock );
+  }
+  data->curBlock = data->next1Block;
+  data->loc->setCurBlock( data->loc, data->curBlock->base.id( data->curBlock ) );
+
+  /**/
+  /*
+  data->loc->setCurBlock( data->loc, blockId );
+  */
+
+  /*block->inBlock( block, data->loc->getId( data->loc ) );*/
+
+  /* free the block group from the previous block */
+  initializeGroup(inst, NULL, block);
+
+  {
+    /*
+     * unlock the previous route regarding reserved blocks
+     */
+    const char* resblocks[4] = {NULL, NULL, NULL, NULL};
+    if( data->next1Block != NULL ) {
+      resblocks[0] = data->next1Block->base.id(data->next1Block);
+      if( data->next2Block != NULL ) {
+        resblocks[1] = data->next2Block->base.id(data->next2Block);
+        if( data->next3Block != NULL )
+          resblocks[2] = data->next3Block->base.id(data->next3Block);
+      }
+    }
+    data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), resblocks, True, False );
+  }
+
+  if( data->next1Block != NULL ) {
+    if( StrOp.equals(data->next1Block->base.id(data->next1Block), data->next1Route->getToBlock(data->next1Route)) )
+      data->loc->setBlockEnterSide(data->loc, data->next1Route->getToBlockSide(data->next1Route), data->next1Route->getToBlock(data->next1Route) );
+    else
+      data->loc->setBlockEnterSide(data->loc, data->next1Route->getFromBlockSide(data->next1Route), data->next1Route->getFromBlock(data->next1Route) );
+  }
+}
+
 
 void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean curBlockEvent, Boolean dstBlockEvent, Boolean shortIn ) {
   iOLcDriverData data = Data(inst);
@@ -137,56 +187,10 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
        * Code already executed at the eventEnter
        */
       if(!wLoc.isfreeblockonenter( data->loc->base.properties( data->loc ) ) ) {
-        /* unlink-up after inblock event */
-        data->next1Block->unLink( data->next1Block );
-        data->next1Route->unLink(data->next1Route);
-
-        if( data->next2Block == NULL || (data->next2Block != NULL && data->next2Block != data->curBlock) ) {
-          data->curBlock->unLock( data->curBlock, data->loc->getId( data->loc ), NULL );
-        }
-        else {
-          data->curBlock->resetTrigs( data->curBlock );
-        }
-        data->curBlock = data->next1Block;
-        data->loc->setCurBlock( data->loc, data->curBlock->base.id( data->curBlock ) );
-
-        /**/
-        /*
-        data->loc->setCurBlock( data->loc, blockId );
-        */
-
-        block->inBlock( block, data->loc->getId( data->loc ) );
-
-        /* free the block group from the previous block */
-        initializeGroup(inst, NULL, block);
-
-        {
-          /*
-           * unlock the previous route regarding reserved blocks
-           */
-          const char* resblocks[4] = {NULL, NULL, NULL, NULL};
-          if( data->next1Block != NULL ) {
-            resblocks[0] = data->next1Block->base.id(data->next1Block);
-            if( data->next2Block != NULL ) {
-              resblocks[1] = data->next2Block->base.id(data->next2Block);
-              if( data->next3Block != NULL )
-                resblocks[2] = data->next3Block->base.id(data->next3Block);
-            }
-          }
-          data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), resblocks, True, False );
-        }
-      /* added end block "}" and else for train with previous block cleared by eventEnter */
+        freePrevBlock(inst, block);
       }
-      else {
-        block->inBlock( block, data->loc->getId( data->loc ) );
-      }
+      block->inBlock( block, data->loc->getId( data->loc ) );
 
-      if( data->next1Block != NULL ) {
-        if( StrOp.equals(data->next1Block->base.id(data->next1Block), data->next1Route->getToBlock(data->next1Route)) )
-          data->loc->setBlockEnterSide(data->loc, data->next1Route->getToBlockSide(data->next1Route), data->next1Route->getToBlock(data->next1Route) );
-        else
-          data->loc->setBlockEnterSide(data->loc, data->next1Route->getFromBlockSide(data->next1Route), data->next1Route->getFromBlock(data->next1Route) );
-      }
 
       if ( data->next1Route->isSwapPost( data->next1Route ) ) {
         /* swap post route */
