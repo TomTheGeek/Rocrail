@@ -246,7 +246,6 @@ void RocguiIniDialog::initValues() {
   }
 
   m_Debug->SetValue( wTrace.isdebug( trace ) ? true:false );
-  m_Debug->Enable( wTrace.isdebug( trace ) ? true:false );
 
   m_Info->SetValue( wTrace.isinfo( trace ) ? true:false );
   m_TraceFile->SetValue( wxString(wTrace.getgfile( trace ),wxConvUTF8) );
