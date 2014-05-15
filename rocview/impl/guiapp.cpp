@@ -941,7 +941,7 @@ static void rocrailCallback( obj me, iONode node ) {
   }
 
   /* Capture all feedback events for visualisation. */
-  if( StrOp.equals( wFeedback.name(), NodeOp.getName( node ) ) ) {
+  if( !wxGetApp().getFrame()->isAutoMode() && StrOp.equals( wFeedback.name(), NodeOp.getName( node ) ) ) {
     bool FoundEvent = false;
     const char* fbiid = wFeedback.getiid(node);
 
