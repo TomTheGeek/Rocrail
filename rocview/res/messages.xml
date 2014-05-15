@@ -27881,4 +27881,7 @@
   <Msg id="toolbar">
     <en txt="Toolbar"/>
   </Msg>
+  <Msg id="freeblockonenter"> 
+    <en txt="Free previous block on enter"/> 
+  </Msg>
 </Messages>

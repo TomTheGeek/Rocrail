@@ -133,43 +133,52 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     /* continue if not set to IDLE state */
     if( data->state != LC_IDLE ) {
 
-      /* unlink-up after inblock event */
-      data->next1Block->unLink( data->next1Block );
-      data->next1Route->unLink(data->next1Route);
+      /* inserted, to prevent the code executed twice for a train with property clearblockenter.
+       * Code already executed at the eventEnter
+       */
+      if(!wLoc.isfreeblockonenter( data->loc->base.properties( data->loc ) ) ) {
+        /* unlink-up after inblock event */
+        data->next1Block->unLink( data->next1Block );
+        data->next1Route->unLink(data->next1Route);
 
-      if( data->next2Block == NULL || (data->next2Block != NULL && data->next2Block != data->curBlock) ) {
-        data->curBlock->unLock( data->curBlock, data->loc->getId( data->loc ), NULL );
+        if( data->next2Block == NULL || (data->next2Block != NULL && data->next2Block != data->curBlock) ) {
+          data->curBlock->unLock( data->curBlock, data->loc->getId( data->loc ), NULL );
+        }
+        else {
+          data->curBlock->resetTrigs( data->curBlock );
+        }
+        data->curBlock = data->next1Block;
+        data->loc->setCurBlock( data->loc, data->curBlock->base.id( data->curBlock ) );
+
+        /**/
+        /*
+        data->loc->setCurBlock( data->loc, blockId );
+        */
+
+        block->inBlock( block, data->loc->getId( data->loc ) );
+
+        /* free the block group from the previous block */
+        initializeGroup(inst, NULL, block);
+
+        {
+          /*
+           * unlock the previous route regarding reserved blocks
+           */
+          const char* resblocks[4] = {NULL, NULL, NULL, NULL};
+          if( data->next1Block != NULL ) {
+            resblocks[0] = data->next1Block->base.id(data->next1Block);
+            if( data->next2Block != NULL ) {
+              resblocks[1] = data->next2Block->base.id(data->next2Block);
+              if( data->next3Block != NULL )
+                resblocks[2] = data->next3Block->base.id(data->next3Block);
+            }
+          }
+          data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), resblocks, True, False );
+        }
+      /* added end block "}" and else for train with previous block cleared by eventEnter */
       }
       else {
-        data->curBlock->resetTrigs( data->curBlock );
-      }
-      data->curBlock = data->next1Block;
-      data->loc->setCurBlock( data->loc, data->curBlock->base.id( data->curBlock ) );
-
-      /**/
-      /*
-      data->loc->setCurBlock( data->loc, blockId );
-      */
-
-      block->inBlock( block, data->loc->getId( data->loc ) );
-
-      /* free the block group from the previous block */
-      initializeGroup(inst, NULL, block);
-
-      {
-        /*
-         * unlock the previous route regarding reserved blocks
-         */
-        const char* resblocks[4] = {NULL, NULL, NULL, NULL};
-        if( data->next1Block != NULL ) {
-          resblocks[0] = data->next1Block->base.id(data->next1Block);
-          if( data->next2Block != NULL ) {
-            resblocks[1] = data->next2Block->base.id(data->next2Block);
-            if( data->next3Block != NULL )
-              resblocks[2] = data->next3Block->base.id(data->next3Block);
-          }
-        }
-        data->next1Route->unLock( data->next1Route, data->loc->getId( data->loc ), resblocks, True, False );
+        block->inBlock( block, data->loc->getId( data->loc ) );
       }
 
       if( data->next1Block != NULL ) {
@@ -187,9 +196,7 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
 
       data->next1Route = data->next2Route;
       data->next2Route = data->next3Route;
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Setting state for \"%s\" to LC_INBLOCK.",
-                     data->loc->getId( data->loc ) );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Setting state for \"%s\" to LC_INBLOCK.", data->loc->getId( data->loc ) );
 
       /* swap the loc placing to run backwards in the default direction (to use in terminal stations)*/
       if( data->curBlock->isTerminalStation( data->curBlock ) ) {

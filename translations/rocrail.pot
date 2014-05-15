@@ -7073,3 +7073,9 @@ msgstr ""
 msgid "Toolbar"
 msgstr ""
 
+#. 
+# id="freeblockonenter"
+#, c-format
+msgid "Free previous block on enter"
+msgstr ""
+

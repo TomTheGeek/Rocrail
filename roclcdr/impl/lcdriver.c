@@ -162,7 +162,7 @@ static void __blockEvent( iOLcDriver inst, obj emitter, int event ) {
 
   /*---------- ENTER ----------*/
   case enter_event:
-    eventEnter( inst, blockId, curBlockEvent, dstBlockEvent );
+    eventEnter( inst, blockId, block, curBlockEvent, dstBlockEvent );
     break;
 
 
