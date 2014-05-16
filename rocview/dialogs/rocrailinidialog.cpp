@@ -109,6 +109,7 @@ BEGIN_EVENT_TABLE( RocrailIniDialog, wxDialog )
     EVT_BUTTON( ID_BUTTON_R2RNET_ROUTES, RocrailIniDialog::OnButtonR2rnetRoutesClick )
     EVT_BUTTON( wxID_OK, RocrailIniDialog::OnOkClick )
     EVT_BUTTON( wxID_CANCEL, RocrailIniDialog::OnCancelClick )
+    EVT_BUTTON( wxID_HELP, RocrailIniDialog::OnHelpClick )
 ////@end RocrailIniDialog event table entries
 
 END_EVENT_TABLE()
@@ -2006,13 +2007,16 @@ void RocrailIniDialog::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer257 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer257, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer257, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
     itemStdDialogButtonSizer257->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer257->AddButton(m_Cancel);
+
+    wxButton* itemButton260 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer257->AddButton(itemButton260);
 
     itemStdDialogButtonSizer257->Realize();
 
@@ -2335,6 +2339,25 @@ void RocrailIniDialog::OnButtonRrDefaultClick( wxCommandEvent& event )
       m_Controller = NULL;
       initControllerList();
     }
+  }
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void RocrailIniDialog::OnHelpClick( wxCommandEvent& event )
+{
+  switch( m_RRNotebook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "rocrailini-gen" ); break;
+  case 1: wxGetApp().openLink( "rocrailini-trace" ); break;
+  case 2: wxGetApp().openLink( "rocrailini-service" ); break;
+  case 3: wxGetApp().openLink( "rocrailini-automode" ); break;
+  case 4: wxGetApp().openLink( "rocrailini-controller" ); break;
+  case 5: wxGetApp().openLink( "networking" ); break;
+  case 6: wxGetApp().openLink( "rocrailini-analyser" ); break;
+  default: wxGetApp().openLink( "rocrailini-gen" ); break;
   }
 }
 
